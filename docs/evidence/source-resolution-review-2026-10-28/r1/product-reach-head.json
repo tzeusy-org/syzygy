@@ -1,0 +1,77 @@
+{
+ "built": 253,
+ "entries": 36,
+ "reached": 242,
+ "unreached": 11,
+ "testOnly": 9,
+ "unreachedModules": [
+  {
+   "module": "apps/three-surface-poc/src/polaris-generation/public-source-screening.ts",
+   "importedByTests": 1,
+   "importedByNonTests": [],
+   "testOnly": true
+  },
+  {
+   "module": "apps/three-surface-poc/src/test-deep-dive-markers.ts",
+   "importedByTests": 2,
+   "importedByNonTests": [],
+   "testOnly": true
+  },
+  {
+   "module": "apps/three-surface-poc/src/test-fixture-sweep.global-setup.ts",
+   "importedByTests": 1,
+   "importedByNonTests": [],
+   "testOnly": true
+  },
+  {
+   "module": "apps/three-surface-poc/src/test-http-client.ts",
+   "importedByTests": 4,
+   "importedByNonTests": [],
+   "testOnly": true
+  },
+  {
+   "module": "packages/polaris-dossier/src/broker-client.ts",
+   "importedByTests": 0,
+   "importedByNonTests": [],
+   "testOnly": false
+  },
+  {
+   "module": "packages/polaris-dossier/src/child-process.testkit.ts",
+   "importedByTests": 3,
+   "importedByNonTests": [],
+   "testOnly": true
+  },
+  {
+   "module": "packages/polaris-dossier/src/fs-patch.testkit.ts",
+   "importedByTests": 4,
+   "importedByNonTests": [],
+   "testOnly": true
+  },
+  {
+   "module": "packages/polaris-dossier/src/full-run.testkit.ts",
+   "importedByTests": 5,
+   "importedByNonTests": [
+    "packages/polaris-dossier/test-support/no-egress-driver.ts"
+   ],
+   "testOnly": false
+  },
+  {
+   "module": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+   "importedByTests": 6,
+   "importedByNonTests": [],
+   "testOnly": true
+  },
+  {
+   "module": "packages/three-surface-poc-core/src/test-cleanup.ts",
+   "importedByTests": 2,
+   "importedByNonTests": [],
+   "testOnly": true
+  },
+  {
+   "module": "packages/three-surface-poc-core/src/test-frozen.ts",
+   "importedByTests": 3,
+   "importedByNonTests": [],
+   "testOnly": true
+  }
+ ]
+}

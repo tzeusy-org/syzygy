@@ -1,6 +1,7 @@
 // polaris-generation-core mutation runner — bead syzygy-u05.11 slice 2's
 // rule-6 mutation proof for `canonical-json.ts`, `parse-json.ts`,
-// `pipeline.ts` and `provider-draft.ts`.
+// `pipeline.ts` and `provider-draft.ts` (one of whose guards now lives in
+// `draft-model.ts`).
 //
 // For every hand-listed literal mutation in `generation-mutation.ts`, this
 // runner: (1) mutates exactly that fragment, (2) runs the independent
@@ -18,11 +19,11 @@
 //   npm run poc:generation-mutation-run -- --only canonical-json-cycle-check-disabled
 
 import { execFileSync, spawnSync } from 'node:child_process';
-import { createHash } from 'node:crypto';
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { sha256 } from '@syzygy/support';
 
 import { GENERATION_LITERAL_MUTATIONS, applyLiteralMutation, type LiteralMutation } from './generation-mutation.js';
 
@@ -48,10 +49,6 @@ interface TestRun {
   readonly passed: number;
   readonly failed: number;
   readonly failing: readonly string[];
-}
-
-function sha256(bytes: Uint8Array): string {
-  return createHash('sha256').update(bytes).digest('hex');
 }
 
 function runTests(scratch: string, label: string): TestRun {

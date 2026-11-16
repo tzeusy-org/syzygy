@@ -1,0 +1,14 @@
+drop-early-return killed 2 failing
+unreadable-reads-as-0 killed 1 failing
+unparseable-reads-as-0 killed 1 failing
+empty-inode-accepted killed 1 failing
+namespace-prefix-match killed 1 failing
+namespace-extension-match killed 1 failing
+uid-guard-dropped killed 1 failing
+uid-undefined-means-keep killed 1 failing
+name-anchor-dropped killed 1 failing
+eperm-counts-dead killed 1 failing
+lstat-follows-links killed 1 failing
+control exit 0 passed 21 failing 0
+survivors []
+EXIT 0

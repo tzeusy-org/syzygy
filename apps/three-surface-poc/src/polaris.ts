@@ -1,8 +1,6 @@
-import { createHash } from 'node:crypto';
-
 import { renderPolarisMarkdown } from './polaris-markdown.js';
 import { projectReading, type ProjectReading, type ReadingFigure } from './polaris-reading.js';
-import { escapeHtml } from '@syzygy/cap1-daemon';
+import { escapeHtml } from '@syzygy/http-host';
 import {
   EXTRACTION_CLASSES,
   UNKNOWN_REASON_ROUTES,
@@ -32,7 +30,9 @@ import {
   type ProposedWork,
   type ReasonCounts,
   type RootSummaryDisclosure,
+  type UnknownReason,
 } from '@syzygy/three-surface-poc-core';
+import { sha256 } from '@syzygy/support';
 
 import {
   DEFAULT_READING_MODE,
@@ -369,8 +369,8 @@ function tupleMarks(tier: string, freshness: string | undefined, challenge: stri
  * Unknown reason counts separately, each with its route — never a headline
  * status, a maturity or a success. */
 export function reasonCountsBlock(claimId: string, counts: ReasonCounts): string {
-  const list = (which: 'primary' | 'secondary', entries: Readonly<Partial<Record<string, number>>>): string => {
-    const rows = Object.entries(entries).filter((entry): entry is [string, number] => typeof entry[1] === 'number' && entry[1] > 0);
+  const list = (which: 'primary' | 'secondary', entries: ReasonCounts['primary']): string => {
+    const rows = reasonCountRows(entries);
     if (rows.length === 0) return '';
     return `<p${DISCLOSURE}>${copy(which === 'primary' ? 'label.primary-reasons' : 'label.secondary-reasons')}</p>
       <ul data-reason-counts-${which}="${escapeHtml(claimId)}"${DISCLOSURE}>${rows
@@ -572,18 +572,27 @@ function causeRoutes(reason: string, paths: ReadonlySet<string> | undefined): re
   return undefined;
 }
 
-function routeOf(claim: ProjectShapeClaim, reason: string): string {
+/** A reason-count record's rows, in its own key order, with a positive
+ * count. `Object.entries` widens keys to `string`; a `ReasonCounts` record is
+ * keyed by its reasons, so the rows keep that type. */
+function reasonCountRows(counts: ReasonCounts['primary']): readonly (readonly [UnknownReason, number])[] {
+  return (Object.entries(counts) as [UnknownReason, number | undefined][]).filter((entry): entry is [UnknownReason, number] => typeof entry[1] === 'number' && entry[1] > 0);
+}
+
+/** `deferred` stands for a claim with no Unknown reasons; it has no generic
+ * route, so only its causes or the no-route label can answer. */
+function routeOf(claim: ProjectShapeClaim, reason: UnknownReason | 'deferred'): string {
   const causes = causeRoutes(reason, new Set(claim.support.map((support) => support.path)));
   if (causes !== undefined) return causes.join('; ');
   const route = claim.resolutionRoutes.find((entry) => entry.reason === reason)?.route;
-  return route ?? UNKNOWN_REASON_ROUTES[reason as keyof typeof UNKNOWN_REASON_ROUTES] ?? copyText('label.no-route');
+  return route ?? (reason === 'deferred' ? copyText('label.no-route') : UNKNOWN_REASON_ROUTES[reason]);
 }
 
 /** The route text of one reason in the gaps list: the generic route, then
  * the evaluation's causes when it records any, so the reader reaches the
  * actual cause without leaving the list. */
-function reasonRouteHtml(reason: string): string {
-  const generic = UNKNOWN_REASON_ROUTES[reason as keyof typeof UNKNOWN_REASON_ROUTES] ?? copyText('label.no-route');
+function reasonRouteHtml(reason: UnknownReason): string {
+  const generic = UNKNOWN_REASON_ROUTES[reason];
   const causes = causeRoutes(reason, undefined);
   if (causes === undefined) return `${escapeHtml(generic)}.`;
   // The gaps entry lists one cause per item (syzygy-u05.4; S4-F5); the
@@ -592,7 +601,7 @@ function reasonRouteHtml(reason: string): string {
   return `${escapeHtml(generic)}. <span${copyAttr('label.by-cause')}>${copy('label.by-cause')}</span><ul data-polaris-gap-causes="${causes.length}">${causes.map((cause) => `<li>${escapeHtml(cause)}.</li>`).join('')}</ul>`;
 }
 
-function reasonRemedyHtml(reason: string): string {
+function reasonRemedyHtml(reason: UnknownReason): string {
   const { lead, list } = reasonRouteParts(reason);
   return `<p>${copy('label.route')} ${lead}</p>${list}`;
 }
@@ -601,8 +610,8 @@ function reasonRemedyHtml(reason: string): string {
  * paragraph; `list` is empty unless two or more causes are recorded, when it
  * is an ordered list that must follow the paragraph, never sit inside it.
  * <ol>, not <ul>: the reason-counts oracles end a block at its first </ul>. */
-function reasonRouteParts(reason: string): { lead: string; list: string } {
-  const generic = UNKNOWN_REASON_ROUTES[reason as keyof typeof UNKNOWN_REASON_ROUTES] ?? copyText('label.no-route');
+function reasonRouteParts(reason: UnknownReason): { lead: string; list: string } {
+  const generic = UNKNOWN_REASON_ROUTES[reason];
   const causes = causeRoutes(reason, undefined);
   if (causes === undefined) return { lead: `${escapeHtml(generic)}.`, list: '' };
   const byCause = `<span${copyAttr('label.by-cause')}>${copy('label.by-cause')}</span>`;
@@ -698,11 +707,41 @@ function itemEntry(item: ProjectShapeItem, revision: string): string {
   return `<li data-polaris-item="${escapeHtml(item.claim.claimId)}"><code>${escapeHtml(item.key)}</code> ${support} ${claimTuple(item.claim)}</li>`;
 }
 
-export function denominatorText(aggregate: Pick<ProjectShapeClassAggregate, 'denominator' | 'modeled' | 'unknown' | 'contradicted' | 'sourcesWithUnknownDenominator'>): string {
+export const WITHOUT_ROOT_INDEX_SENTENCE = 'Derived without a read root index.';
+
+export function denominatorText(aggregate: Pick<ProjectShapeClassAggregate, 'denominator' | 'modeled' | 'unknown' | 'contradicted' | 'sourcesWithUnknownDenominator'> & { readonly withoutReadRootIndex?: boolean }): string {
   const denominator = aggregate.denominator.kind === 'known'
     ? `${aggregate.denominator.value} declared`
-    : `denominator Unknown (${aggregate.denominator.reasons.join(', ')})`;
-  return `${denominator}; ${aggregate.modeled} modeled, ${aggregate.unknown} Unknown, ${aggregate.contradicted} contradicted; ${aggregate.sourcesWithUnknownDenominator} source(s) unreadable.`;
+    : `denominator Unknown (${[...aggregate.denominator.reasons, ...(aggregate.denominator.unenumerated === undefined ? [] : [`${aggregate.denominator.unenumerated.reason}: ${aggregate.denominator.unenumerated.headings}`])].join(', ')})`;
+  return `${denominator}; ${aggregate.modeled} modeled, ${aggregate.unknown} Unknown, ${aggregate.contradicted} contradicted; ${aggregate.sourcesWithUnknownDenominator} source(s) unreadable.${aggregate.withoutReadRootIndex === true ? ` ${WITHOUT_ROOT_INDEX_SENTENCE}` : ''}`;
+}
+
+// PWB-REQ-002 (class-granular): each class's own outcome in a source that is
+// partially extracted or carries an unenumerated heading, so the page says
+// which class failed and which read.
+function classOutcomesLine(source: ProjectShapeSource): string {
+  if (!source.partiallyExtracted && source.unenumeratedHeadings.length === 0) return '';
+  const parts = source.classOutcomes.map((outcome) => {
+    const d = outcome.denominator;
+    if (d.kind === 'known') return `${escapeHtml(outcome.class)}: ${d.value} item(s)`;
+    const count = d.unenumeratedHeadings === undefined ? '' : ` (${d.unenumeratedHeadings} unenumerated heading(s))`;
+    return `${escapeHtml(outcome.class)}: Unknown — ${escapeHtml(d.reason)}${count}`;
+  });
+  // The source's own item denominator is Unknown with the signed reason word
+  // and the count, beside the closed reason its claim already carries.
+  const own = source.itemDenominator.kind === 'unknown' && source.itemDenominator.unenumeratedHeadings !== undefined
+    ? `Source item denominator Unknown — unenumerated-heading (${source.itemDenominator.unenumeratedHeadings}). `
+    : '';
+  return `<br><small data-source-class-outcomes="${escapeHtml(source.path)}"${DISCLOSURE}>${source.partiallyExtracted ? 'Partially extracted. ' : ''}${own}${parts.join('; ')}.</small>`;
+}
+
+// Surfaced, never skipped: each heading no grammar row declares, with its
+// level, exact line and a link to its source.
+function unenumeratedHeadingsList(shape: Extract<ProjectShape, { kind: 'observed' }>): string {
+  if (shape.unenumeratedHeadings.length === 0) return '';
+  return `<ul data-polaris-unenumerated="${shape.unenumeratedHeadings.length}">${shape.unenumeratedHeadings
+    .map((heading) => `<li${DISCLOSURE}>Unenumerated heading <code>${escapeHtml('#'.repeat(heading.level))} ${escapeHtml(heading.text)}</code> (${escapeHtml(heading.class)}) — ${sourceRef(heading.path, `${heading.path}:${heading.line}`)}; the grammar has no row for it and mints no item; route: ${escapeHtml(heading.claim.resolutionRoutes[0]?.route ?? '')}.</li>`)
+    .join('')}</ul>`;
 }
 
 /** The aggregate's statement: which admitted sources declare this class —
@@ -728,7 +767,7 @@ function capabilityGuide(shape: Extract<ProjectShape, { kind: 'observed' }>): st
   return `<section class="capability-guide" id="polaris-capability-guide">
     <p class="guide-intro"${copyAttr('label.guide-intro')}>${copy('label.guide-intro')} <a href="#polaris-class-catalog-entry"${copyAttr('label.complete-catalog')}>${copy('label.complete-catalog')}</a></p>
     <div class="guide-grid">${entries.map(([context, members]) => {
-      const guideId = `polaris-guide-context-${sourceSlug(context)}-${createHash('sha256').update(context).digest('hex').slice(0, 12)}`;
+      const guideId = `polaris-guide-context-${sourceSlug(context)}-${sha256(context).slice(0, 12)}`;
       const example = members.find((item) => item.claim.epistemic.label === 'Observed' && item.statement !== undefined);
       if (example === undefined) return `<section class="guide-entry"><h3 id="${escapeHtml(guideId)}"${FACT}>${escapeHtml(context)}</h3><p${SCOPE}>${copy('label.complete-catalog')}</p></section>`;
       const block = shapeClaimBlock(example.claim, shape.identity.revision, 'evidence', `guide:${example.claim.claimId}`);
@@ -977,11 +1016,12 @@ function sourceRow(source: ProjectShapeSource, index: number, revision: string):
   const digest = source.claim.support[0]?.contentDigest;
   const denominator = source.itemDenominator.kind === 'known'
     ? `${source.itemDenominator.value} item(s)`
-    : `${copyText('label.unknown')} — ${source.itemDenominator.unknown.unknownReason}`;
+    : `${copyText('label.unknown')} — ${source.itemDenominator.unknown.unknownReason}${source.itemDenominator.unenumeratedHeadings === undefined ? '' : ` (unenumerated-heading: ${source.itemDenominator.unenumeratedHeadings})`}`;
+  const classOutcomes = classOutcomesLine(source);
   const identityColumn = `<span class="source-record-label">${copy('label.source-record')} — ${escapeHtml(source.path)}</span><br>${identityCell}`;
   const ruleColumn = `${escapeHtml(source.rule)} · ${source.pillar === undefined ? 'no pillar declared' : escapeHtml(source.pillar)}`;
   const outcomeColumn = `${escapeHtml(outcome)} · ${escapeHtml(anchorText(source.anchor))} · ${digest === undefined ? `<small${copyAttr('sentence.no-body-read')}>${copy('sentence.no-body-read')}</small>` : `<code data-parity-field="shape-source-digest">${escapeHtml(shortDigest(digest))}</code>`}`;
-  return `<tr id="polaris-source-${escapeHtml(sourceSlug(source.path))}" data-polaris-source="${escapeHtml(source.claim.claimId)}"${block?.attrs ?? FACT}><td>${index + 1}</td><td><code data-parity-field="shape-source-path">${escapeHtml(source.path)}</code>${activeExactSources.has(source.identity) ? `<br>${exactTextLink(source.identity, source.path)}` : ''}</td><td>${identityColumn}</td><td>${ruleColumn}</td><td>${outcomeColumn}</td><td>${source.claim.epistemic.label === 'Observed' ? `<span data-claim-provenance="${escapeHtml(source.claim.claimId)}">${escapeHtml(denominator)}</span>` : unknownRoutes(source.claim, '')}<br>${claimTuple(source.claim)}</td></tr>`;
+  return `<tr id="polaris-source-${escapeHtml(sourceSlug(source.path))}" data-polaris-source="${escapeHtml(source.claim.claimId)}"${block?.attrs ?? FACT}><td>${index + 1}</td><td><code data-parity-field="shape-source-path">${escapeHtml(source.path)}</code>${activeExactSources.has(source.identity) ? `<br>${exactTextLink(source.identity, source.path)}` : ''}</td><td>${identityColumn}</td><td>${ruleColumn}</td><td>${outcomeColumn}</td><td>${source.claim.epistemic.label === 'Observed' ? `<span data-claim-provenance="${escapeHtml(source.claim.claimId)}">${escapeHtml(denominator)}</span>` : unknownRoutes(source.claim, '')}${classOutcomes}<br>${claimTuple(source.claim)}</td></tr>`;
 }
 
 function exclusionItem(exclusion: Exclusion): string {
@@ -1067,8 +1107,8 @@ function rootIndexSection(shape: Extract<ProjectShape, { kind: 'observed' }>): s
 
 /** The Unknown reasons across every shape claim, counted and routed, with
  * `missing-declaration` foremost (RFC7-15) and `unconsented` next. */
-function gapReasonCounts(claims: readonly ProjectShapeClaim[]): ReadonlyMap<string, number> {
-  const counts = new Map<string, number>();
+function gapReasonCounts(claims: readonly ProjectShapeClaim[]): ReadonlyMap<UnknownReason, number> {
+  const counts = new Map<UnknownReason, number>();
   for (const claim of claims) {
     if ('reasons' in claim.epistemic) {
       const reason = claim.epistemic.reasons.primary;
@@ -1193,7 +1233,7 @@ function shapeEvidence(shape: ProjectShape): string {
     </section>`;
   }
   const identity = shape.identity;
-  const counts = `${shape.counts.classification.classifiedByBasis.body} of ${shape.counts.sources} source bodies readable; ${shape.counts.classification.classifiedByBasis['path-only']} path-only source identities; ${shape.counts.items} items (${shape.counts.modeled} modeled, ${shape.counts.unknown} Unknown, ${shape.counts.contradicted} contradicted); ${shape.counts.facts} facts (${shape.counts.contradictedFacts} contradicted); ${shape.counts.exclusions} exclusion(s).`;
+  const counts = `${shape.counts.classification.classifiedByBasis.body} of ${shape.counts.sources} source bodies readable; ${shape.counts.classification.classifiedByBasis['path-only']} path-only source identities; ${shape.counts.items} items (${shape.counts.modeled} modeled, ${shape.counts.unknown} Unknown, ${shape.counts.contradicted} contradicted); ${shape.counts.facts} facts (${shape.counts.contradictedFacts} contradicted); ${shape.counts.exclusions} exclusion(s).${shape.counts.populationWithoutReadRootIndex ? ` Source-path population: ${WITHOUT_ROOT_INDEX_SENTENCE}` : ''}`;
   const statement = `Declared project shape of ${identity.repositoryId} at revision ${identity.revision.slice(0, 12)}.`;
   const whole = shape.claim.epistemic.label === 'Observed'
     ? ((): string => {
@@ -1221,6 +1261,7 @@ function shapeEvidence(shape: ProjectShape): string {
   <section class="claim-section wide" data-polaris-section="shape:sources">
     ${heading(3, 'polaris-shape-sources', 'evidence.sources')}
     <p${copyAttr('label.browse-source-records')}>${copy('label.browse-source-records')}</p>
+    ${unenumeratedHeadingsList(shape)}
     <p id="polaris-source-legend" class="source-legend"${copyAttr('legend.sources')}>${copy('legend.sources')}</p>
     ${tableRegion('polaris-shape-sources', `<table><thead><tr>${(['table.index', 'table.source', 'table.source-identity', 'table.rule-and-pillar', 'table.outcome-anchor-digest', 'table.items'] as const).map((id) => `<th scope="col"${copyAttr(id)}>${copy(id)}</th>`).join('')}</tr></thead><tbody>${shape.sources.map((source, index) => sourceRow(source, index, shape.identity.revision)).join('')}</tbody></table>`, ' data-source-index aria-describedby="polaris-source-legend"')}
   </section>
@@ -1346,7 +1387,7 @@ function undeclaredContractPart(dive: CapabilityDeepDive, part: 'doctrine' | 'no
     : `The project shape is ${shape.kind}; no declaration was read.`;
   return `<section class="claim-section" data-contract-part="${part}"${ledger.block('contract', `contract:${dive.capabilityId}/${part}`)}>
       ${heading(4, `polaris-${dive.capabilityId}-${part}`, part === 'doctrine' ? 'label.doctrine' : 'label.non-goals')}
-      ${unknownLine(`${dive.capabilityId}/${part}`, reason, UNKNOWN_REASON_ROUTES[reason as keyof typeof UNKNOWN_REASON_ROUTES] ?? 'No route recorded', detail)}
+      ${unknownLine(`${dive.capabilityId}/${part}`, reason, UNKNOWN_REASON_ROUTES[reason], detail)}
     </section>`;
 }
 
@@ -1709,7 +1750,7 @@ export function renderCapabilityDeepDive(dive: CapabilityDeepDive, model: PocMod
   try {
     const shape = model.projectShape;
     const html = capabilityDeepDive(dive, model, shape.kind === 'observed' ? shape.identity.revision : '', inputs.verbatim);
-    return { html, narrative: activeRegistry.narrative() };
+    return { html, narrative: activeRegistry.narrative(model) };
   } finally {
     activeRegistry = undefined;
   }
@@ -1720,6 +1761,11 @@ export function renderCapabilityDeepDive(dive: CapabilityDeepDive, model: PocMod
  * consented content class, and the page says so). */
 export interface PolarisRenderInputs {
   readonly verbatim?: VerbatimLeafReader;
+  /** Test seam: the machine answer the `anchorsResolved` pairs are counted
+   * against (PWB-REQ-014), so a test can serve the narrative again from an
+   * answer with identities withheld while the page still renders. Production
+   * passes none: the model it renders is the answer of the same evaluation. */
+  readonly machineAnswer?: unknown;
 }
 
 /** The presentation artifact and its machine form, from one capture: the
@@ -1731,7 +1777,7 @@ export function renderPolarisPresentation(model: PocModel, mountPrefix = '', vie
   activeViewState = viewState;
   try {
     const html = renderPolarisBody(model, mountPrefix, activeRegistry, inputs, status);
-    return { html, narrative: activeRegistry.narrative() };
+    return { html, narrative: activeRegistry.narrative('machineAnswer' in inputs ? inputs.machineAnswer : model) };
   } finally {
     activeRegistry = undefined;
     activeViewState = {};

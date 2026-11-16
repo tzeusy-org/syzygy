@@ -1,0 +1,4 @@
+copiesAtKill 3 killedAfter 24.8
+afterKill {'dead': 6, 'live': 0, 'foreign': 0, 'legacy': 0} orphans 0
+fresh exit 1 [' Test Files  1 failed | 88 passed | 1 skipped (90)', '      Tests  1 failed | 1110 passed | 2 skipped (1113)', '   Duration  468.18s (transform 33.94s, setup 6.12s, collect 171.87s, tests 1298.43s, environment 149ms, prepare 57.48s)']
+afterFresh {'dead': 0, 'live': 0, 'foreign': 0, 'legacy': 0} readdir(TMPDIR) calls 1 pids [3486777]

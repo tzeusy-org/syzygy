@@ -1,0 +1,502 @@
+{
+ "commit": "c104771f",
+ "population": {
+  "files": 233,
+  "lines": 52432,
+  "namesSha256": "9177691ec3036f60a4568216bf79d5f5737a1e7dc579e2862ccae6164cefcee6"
+ },
+ "sha256Sites": {
+  "total": 62,
+  "byForm": {
+   "digest is not hex": 3,
+   "no .update( directly after the constructor": 1,
+   "replaceable": 58
+  },
+  "rows": [
+   {
+    "file": "apps/three-surface-poc/src/capability-detail.ts",
+    "line": 219,
+    "form": "replaceable"
+   },
+   {
+    "file": "apps/three-surface-poc/src/fresh-checkout-demo-main.ts",
+    "line": 53,
+    "form": "replaceable"
+   },
+   {
+    "file": "apps/three-surface-poc/src/git-observation.ts",
+    "line": 83,
+    "form": "replaceable"
+   },
+   {
+    "file": "apps/three-surface-poc/src/poc-main.ts",
+    "line": 163,
+    "form": "replaceable"
+   },
+   {
+    "file": "apps/three-surface-poc/src/polaris-accessible-names-main.ts",
+    "line": 37,
+    "form": "replaceable"
+   },
+   {
+    "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+    "line": 86,
+    "form": "replaceable"
+   },
+   {
+    "file": "apps/three-surface-poc/src/polaris-generation/draft-preview.ts",
+    "line": 38,
+    "form": "replaceable"
+   },
+   {
+    "file": "apps/three-surface-poc/src/polaris-generation/draft-preview.ts",
+    "line": 120,
+    "form": "replaceable"
+   },
+   {
+    "file": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.ts",
+    "line": 52,
+    "form": "replaceable"
+   },
+   {
+    "file": "apps/three-surface-poc/src/polaris-generation/generation-mutation-run-main.ts",
+    "line": 54,
+    "form": "replaceable"
+   },
+   {
+    "file": "apps/three-surface-poc/src/polaris-generation/public-source-screening.ts",
+    "line": 146,
+    "form": "replaceable"
+   },
+   {
+    "file": "apps/three-surface-poc/src/polaris-generation/redis-shaped-measure-main.ts",
+    "line": 15,
+    "form": "replaceable"
+   },
+   {
+    "file": "apps/three-surface-poc/src/polaris-generation/redis-shaped-measure.ts",
+    "line": 91,
+    "form": "no .update( directly after the constructor"
+   },
+   {
+    "file": "apps/three-surface-poc/src/polaris-generation/repo-corpus.ts",
+    "line": 10,
+    "form": "replaceable"
+   },
+   {
+    "file": "apps/three-surface-poc/src/polaris-generation/self-corpus.ts",
+    "line": 16,
+    "form": "replaceable"
+   },
+   {
+    "file": "apps/three-surface-poc/src/polaris-keyboard-sweep-main.ts",
+    "line": 96,
+    "form": "replaceable"
+   },
+   {
+    "file": "apps/three-surface-poc/src/polaris-reading.ts",
+    "line": 48,
+    "form": "replaceable"
+   },
+   {
+    "file": "apps/three-surface-poc/src/polaris.ts",
+    "line": 731,
+    "form": "replaceable"
+   },
+   {
+    "file": "apps/three-surface-poc/src/pwb-mutation-run-main.ts",
+    "line": 59,
+    "form": "replaceable"
+   },
+   {
+    "file": "apps/three-surface-poc/src/pwb-mutation-sweep-main.ts",
+    "line": 49,
+    "form": "replaceable"
+   },
+   {
+    "file": "apps/three-surface-poc/src/restart.ts",
+    "line": 92,
+    "form": "replaceable"
+   },
+   {
+    "file": "apps/three-surface-poc/src/walkthrough-inputs.ts",
+    "line": 98,
+    "form": "replaceable"
+   },
+   {
+    "file": "packages/cap1-daemon/src/credentials.ts",
+    "line": 379,
+    "form": "digest is not hex"
+   },
+   {
+    "file": "packages/cap1-daemon/src/credentials.ts",
+    "line": 380,
+    "form": "digest is not hex"
+   },
+   {
+    "file": "packages/cap1-system/src/harness.ts",
+    "line": 246,
+    "form": "replaceable"
+   },
+   {
+    "file": "packages/polaris-dossier/src/brief.ts",
+    "line": 202,
+    "form": "replaceable"
+   },
+   {
+    "file": "packages/polaris-dossier/src/check.ts",
+    "line": 198,
+    "form": "replaceable"
+   },
+   {
+    "file": "packages/polaris-dossier/src/close.ts",
+    "line": 89,
+    "form": "replaceable"
+   },
+   {
+    "file": "packages/polaris-dossier/src/design-review.ts",
+    "line": 31,
+    "form": "replaceable"
+   },
+   {
+    "file": "packages/polaris-dossier/src/doctrine-quote.ts",
+    "line": 51,
+    "form": "replaceable"
+   },
+   {
+    "file": "packages/polaris-dossier/src/inventory.ts",
+    "line": 78,
+    "form": "replaceable"
+   },
+   {
+    "file": "packages/polaris-dossier/src/launched.ts",
+    "line": 19,
+    "form": "replaceable"
+   },
+   {
+    "file": "packages/polaris-dossier/src/polaris.ts",
+    "line": 56,
+    "form": "replaceable"
+   },
+   {
+    "file": "packages/polaris-dossier/src/render.ts",
+    "line": 123,
+    "form": "replaceable"
+   },
+   {
+    "file": "packages/polaris-dossier/src/render.ts",
+    "line": 310,
+    "form": "digest is not hex"
+   },
+   {
+    "file": "packages/polaris-dossier/src/review.ts",
+    "line": 64,
+    "form": "replaceable"
+   },
+   {
+    "file": "packages/polaris-dossier/src/screen.ts",
+    "line": 126,
+    "form": "replaceable"
+   },
+   {
+    "file": "packages/polaris-dossier/src/screen.ts",
+    "line": 151,
+    "form": "replaceable"
+   },
+   {
+    "file": "packages/polaris-dossier/src/session-handover.ts",
+    "line": 45,
+    "form": "replaceable"
+   },
+   {
+    "file": "packages/polaris-dossier/src/session-view.ts",
+    "line": 78,
+    "form": "replaceable"
+   },
+   {
+    "file": "packages/polaris-dossier/src/waiting-sessions.ts",
+    "line": 72,
+    "form": "replaceable"
+   },
+   {
+    "file": "packages/polaris-generation-consent/src/consent-ports.ts",
+    "line": 60,
+    "form": "replaceable"
+   },
+   {
+    "file": "packages/polaris-generation-consent/src/package-reader.ts",
+    "line": 57,
+    "form": "replaceable"
+   },
+   {
+    "file": "packages/polaris-generation-core/src/canonical-json.ts",
+    "line": 125,
+    "form": "replaceable"
+   },
+   {
+    "file": "packages/polaris-generation-core/src/dossier-evaluation.ts",
+    "line": 511,
+    "form": "replaceable"
+   },
+   {
+    "file": "packages/polaris-generation-core/src/dossier-profile.ts",
+    "line": 111,
+    "form": "replaceable"
+   },
+   {
+    "file": "packages/polaris-generation-core/src/generation-source.ts",
+    "line": 216,
+    "form": "replaceable"
+   },
+   {
+    "file": "packages/polaris-generation-core/src/generation-source.ts",
+    "line": 253,
+    "form": "replaceable"
+   },
+   {
+    "file": "packages/polaris-generation-core/src/generation-source.ts",
+    "line": 335,
+    "form": "replaceable"
+   },
+   {
+    "file": "packages/polaris-generation-core/src/generation-source.ts",
+    "line": 399,
+    "form": "replaceable"
+   },
+   {
+    "file": "packages/polaris-generation-core/src/pipeline.ts",
+    "line": 306,
+    "form": "replaceable"
+   },
+   {
+    "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+    "line": 57,
+    "form": "replaceable"
+   },
+   {
+    "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+    "line": 35,
+    "form": "replaceable"
+   },
+   {
+    "file": "packages/three-surface-poc-core/src/act-fields.ts",
+    "line": 48,
+    "form": "replaceable"
+   },
+   {
+    "file": "packages/three-surface-poc-core/src/git-object-reader.ts",
+    "line": 288,
+    "form": "replaceable"
+   },
+   {
+    "file": "packages/three-surface-poc-core/src/model.ts",
+    "line": 474,
+    "form": "replaceable"
+   },
+   {
+    "file": "packages/three-surface-poc-core/src/owner-act-drafter.ts",
+    "line": 93,
+    "form": "replaceable"
+   },
+   {
+    "file": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+    "line": 342,
+    "form": "replaceable"
+   },
+   {
+    "file": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+    "line": 337,
+    "form": "replaceable"
+   },
+   {
+    "file": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+    "line": 643,
+    "form": "replaceable"
+   },
+   {
+    "file": "packages/three-surface-poc-core/src/response-identity.ts",
+    "line": 233,
+    "form": "replaceable"
+   },
+   {
+    "file": "packages/three-surface-poc-core/src/walkthrough-readiness.ts",
+    "line": 126,
+    "form": "replaceable"
+   }
+  ]
+ },
+ "localCopies": {
+  "total": 32,
+  "byName": {
+   "sha256": 25,
+   "deepFreeze": 7
+  },
+  "rows": [
+   {
+    "file": "apps/three-surface-poc/src/fresh-checkout-demo-main.ts",
+    "line": 51,
+    "name": "sha256"
+   },
+   {
+    "file": "apps/three-surface-poc/src/polaris-accessible-names-main.ts",
+    "line": 35,
+    "name": "sha256"
+   },
+   {
+    "file": "apps/three-surface-poc/src/polaris-generation/generation-mutation-run-main.ts",
+    "line": 52,
+    "name": "sha256"
+   },
+   {
+    "file": "apps/three-surface-poc/src/polaris-generation/repo-corpus.ts",
+    "line": 9,
+    "name": "sha256"
+   },
+   {
+    "file": "apps/three-surface-poc/src/polaris-generation/self-corpus.ts",
+    "line": 16,
+    "name": "sha256"
+   },
+   {
+    "file": "apps/three-surface-poc/src/polaris-narrative.ts",
+    "line": 131,
+    "name": "deepFreeze"
+   },
+   {
+    "file": "apps/three-surface-poc/src/pwb-mutation-run-main.ts",
+    "line": 57,
+    "name": "sha256"
+   },
+   {
+    "file": "apps/three-surface-poc/src/pwb-mutation-sweep-main.ts",
+    "line": 47,
+    "name": "sha256"
+   },
+   {
+    "file": "packages/polaris-dossier/src/brief.ts",
+    "line": 201,
+    "name": "sha256"
+   },
+   {
+    "file": "packages/polaris-dossier/src/check.ts",
+    "line": 198,
+    "name": "sha256"
+   },
+   {
+    "file": "packages/polaris-dossier/src/close.ts",
+    "line": 89,
+    "name": "sha256"
+   },
+   {
+    "file": "packages/polaris-dossier/src/design-review.ts",
+    "line": 31,
+    "name": "sha256"
+   },
+   {
+    "file": "packages/polaris-dossier/src/inventory.ts",
+    "line": 78,
+    "name": "sha256"
+   },
+   {
+    "file": "packages/polaris-dossier/src/launched.ts",
+    "line": 18,
+    "name": "sha256"
+   },
+   {
+    "file": "packages/polaris-dossier/src/polaris.ts",
+    "line": 56,
+    "name": "sha256"
+   },
+   {
+    "file": "packages/polaris-dossier/src/render.ts",
+    "line": 123,
+    "name": "sha256"
+   },
+   {
+    "file": "packages/polaris-dossier/src/review.ts",
+    "line": 64,
+    "name": "sha256"
+   },
+   {
+    "file": "packages/polaris-dossier/src/session-handover.ts",
+    "line": 45,
+    "name": "sha256"
+   },
+   {
+    "file": "packages/polaris-dossier/src/waiting-sessions.ts",
+    "line": 72,
+    "name": "sha256"
+   },
+   {
+    "file": "packages/polaris-generation-consent/src/consent-ports.ts",
+    "line": 60,
+    "name": "sha256"
+   },
+   {
+    "file": "packages/polaris-generation-consent/src/package-reader.ts",
+    "line": 57,
+    "name": "sha256"
+   },
+   {
+    "file": "packages/polaris-generation-core/src/dossier-evaluation.ts",
+    "line": 510,
+    "name": "sha256"
+   },
+   {
+    "file": "packages/polaris-generation-core/src/prompts.ts",
+    "line": 151,
+    "name": "deepFreeze"
+   },
+   {
+    "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+    "line": 57,
+    "name": "sha256"
+   },
+   {
+    "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+    "line": 34,
+    "name": "sha256"
+   },
+   {
+    "file": "packages/three-surface-poc-core/src/act-fields.ts",
+    "line": 47,
+    "name": "sha256"
+   },
+   {
+    "file": "packages/three-surface-poc-core/src/act-fields.ts",
+    "line": 55,
+    "name": "deepFreeze"
+   },
+   {
+    "file": "packages/three-surface-poc-core/src/model.ts",
+    "line": 381,
+    "name": "deepFreeze"
+   },
+   {
+    "file": "packages/three-surface-poc-core/src/model.ts",
+    "line": 472,
+    "name": "sha256"
+   },
+   {
+    "file": "packages/three-surface-poc-core/src/poc-seeds.ts",
+    "line": 86,
+    "name": "deepFreeze"
+   },
+   {
+    "file": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+    "line": 520,
+    "name": "deepFreeze"
+   },
+   {
+    "file": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+    "line": 356,
+    "name": "deepFreeze"
+   }
+  ]
+ },
+ "supportImporters": {},
+ "secondMethod": {
+  "sha256-single-quoted": 62,
+  "deepFreeze-definitions": 7
+ }
+}

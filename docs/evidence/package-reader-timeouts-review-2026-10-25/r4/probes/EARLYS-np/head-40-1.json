@@ -1,0 +1,41 @@
+{
+ "batch": "EARLYS",
+ "profile": false,
+ "version": "head",
+ "param": 40,
+ "n": 1,
+ "scriptSha256": "7799aa73bae9a4790b75b85a597c57bf07aab4bb4dab6c67570e69af7535128e",
+ "command": "python3 -I <tools>/inject.py trace scripts/measure_vitest_test_durations.py . --file packages/polaris-generation-consent/src/package-reader.test.ts --project @syzygy/polaris-generation-consent --mode alone --runs 1 --out <tmp>/measure-out.json",
+ "sent": [
+  {
+   "t": 0.0449,
+   "signal": "SIGTERM",
+   "to": "pid"
+  }
+ ],
+ "events": [],
+ "scriptExitedAtSeconds": 0.197,
+ "exitCode": -15,
+ "claimedExit": 143,
+ "exitAsClaimed": false,
+ "descendantsSeen": 0,
+ "seenOnlyByCwd": 0,
+ "vitestSeen": false,
+ "npxSeen": false,
+ "treeAfterExit": "",
+ "survivors": {},
+ "recordWritten": false,
+ "recordRuns": null,
+ "recordTests": null,
+ "recordProfileRows": null,
+ "recordExitCode": null,
+ "marks": [],
+ "scriptWrites": null,
+ "tmpdirLeft": [
+  "script.log"
+ ],
+ "trace": [],
+ "outputTail": "",
+ "exercised": true,
+ "passes": true
+}

@@ -1,0 +1,173 @@
+{
+ "files": [
+  {
+   "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-537/clone/apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+   "project": "@syzygy/three-surface-poc-app",
+   "type": "suite",
+   "name": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+   "line": null,
+   "mode": "run",
+   "state": "pass",
+   "durationMs": 4457.233226,
+   "errors": [],
+   "tasks": [
+    {
+     "type": "suite",
+     "name": "opening index (server side)",
+     "line": 276,
+     "mode": "run",
+     "state": "pass",
+     "durationMs": 401.8858830000004,
+     "errors": [],
+     "tasks": [
+      {
+       "type": "test",
+       "name": "lists the nine signed names, in order, on every variant, and routes nowhere for an unrendered target",
+       "line": 277,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 393.0971449999997,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "finds the first exact-source link under a mount prefix",
+       "line": 294,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 2.977574000000004,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses a page without exactly one placeholder",
+       "line": 301,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 3.6156949999999597,
+       "errors": []
+      }
+     ],
+     "hookMs": 2
+    },
+    {
+     "type": "suite",
+     "name": "opening index in a real browser (PWB-REQ-010, P-98)",
+     "line": 307,
+     "mode": "run",
+     "state": "pass",
+     "durationMs": 4048.890994,
+     "errors": [],
+     "tasks": [
+      {
+       "type": "test",
+       "name": "every indexed target renders (1280x900): nine routed rows, recounted offsets, one line after the last-beginning target",
+       "line": 347,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 382.9436520000004,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "the opening Unknown aggregate is absent (1280x900): the gaps row says so and routes nowhere; eight rows route",
+       "line": 354,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 476.744588,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "an unobserved shape (1280x900): only the gaps and claim-strength targets render",
+       "line": 366,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 273.70814999999993,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "every indexed target renders (390x844): nine routed rows, recounted offsets, one line after the last-beginning target",
+       "line": 347,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 451.45302900000024,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "the opening Unknown aggregate is absent (390x844): the gaps row says so and routes nowhere; eight rows route",
+       "line": 354,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 383.58449800000017,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "an unobserved shape (390x844): only the gaps and claim-strength targets render",
+       "line": 366,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 345.90269699999953,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "following the exact-requirement row by keyboard lands on its target and Tab continues from it (fixture render)",
+       "line": 406,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 552.3864299999996,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "the same holds where a later control shares the target's disclosure (synthetic body)",
+       "line": 410,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 252.79233700000077,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "a captured /polaris page meets the oracle at both viewports",
+       "line": 418,
+       "mode": "skip",
+       "state": null,
+       "durationMs": null,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "a tie on the largest offset is broken by document order (synthetic body, hand-counted)",
+       "line": 426,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 130.7177040000006,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "with no indexed target rendered, the line follows the index and gives only the total (synthetic body, hand-counted)",
+       "line": 445,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 113.56688699999995,
+       "errors": []
+      }
+     ],
+     "hookMs": 685
+    }
+   ],
+   "hookMs": 6,
+   "collectMs": 1768.295228,
+   "setupMs": 31.04254500000002,
+   "prepareMs": 103.02774499999998,
+   "environmentMs": 0.2098680000000286
+  }
+ ],
+ "unhandled": []
+}

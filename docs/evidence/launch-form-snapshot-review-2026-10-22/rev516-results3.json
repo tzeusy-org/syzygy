@@ -1,0 +1,24 @@
+{
+ "head": "bddbbf6c3ef2cd3fff2b73946356c57fc5bd5353",
+ "base": "a04069678c02881cd41a25b850e14f79d581c083",
+ "results": [
+  {
+   "mutant": "none",
+   "side": "probe",
+   "testSha256": "0868bce218e513d4dc0ce74133692a1dc7eec13ab80f1e7953bd1d0f3100eba1",
+   "readerSha256": "c7a25b8b45fe12e2add7874f88d46b2bad1eef16ffa4a17e2464d5c671424921",
+   "timedOut": false,
+   "seconds": 24.2,
+   "exitCode": 0,
+   "stdoutTail": "JSON report written to /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/results3/none--probe.vitest.json\n",
+   "restored": true,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 43,
+    "numFailedTests": 0
+   },
+   "failedTests": [],
+   "outcome": "survived"
+  }
+ ]
+}

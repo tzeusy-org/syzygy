@@ -1,0 +1,1 @@
+{"roots":4,"plantedTotal":386,"seen":[{"root":"/tmp/syzygy-profile-9qvlbt","mode":"700","planted":129,"errors":{}},{"root":"/tmp/syzygy-profile-bz2zFi","mode":null,"planted":0,"errors":{"stat":"ENOENT","ENOENT":129}},{"root":"/tmp/syzygy-profile-II3XkM","mode":"700","planted":128,"errors":{"ENOENT":1}},{"root":"/tmp/syzygy-profile-n55ttN","mode":"700","planted":129,"errors":{}}]}

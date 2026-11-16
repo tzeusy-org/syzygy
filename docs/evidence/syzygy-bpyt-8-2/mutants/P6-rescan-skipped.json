@@ -1,0 +1,11 @@
+{
+ "id": "P6-rescan-skipped",
+ "command": "TMPDIR=/tmp/la-b82/g CI=1 npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/state-directory.test.ts",
+ "edits": [
+  {
+   "file": "packages/polaris-dossier/src/state-directory.ts",
+   "old": "if (!rewritten) return { resolved: true, realPath: candidate };",
+   "new": "if (!rewritten || visited.size > 0) return { resolved: true, realPath: candidate };"
+  }
+ ]
+}

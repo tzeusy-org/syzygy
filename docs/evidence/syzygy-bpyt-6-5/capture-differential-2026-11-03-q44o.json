@@ -1,0 +1,280 @@
+{
+ "subject": "syzygy-q44o: syzygy-bpyt.6.5 blob-reader differential over a git object database (AC 3 capture half) and the E2 harness repairs",
+ "date": "2026-11-03",
+ "baseCommit": "85c54814580a09bf07e0f8d3536259e126b9ffb5",
+ "headCommit": "08f2287d5b9424c549250088690c5abe3da4c357",
+ "headCommitNote": "merge of PR #595; between base and head the only non-bpyt.6.5 change under packages/ and apps/ is one cap1-core test (barrel-guard.test.ts), so the source diff is the bead's.",
+ "subjectDigestsBeforeRun": {
+  "path": "docs/evidence/syzygy-bpyt-6-5/subjects-pre-run-2026-11-03-q44o.json",
+  "sha256": "sha256:875787aabd81f595311385c7f139284b8807e0d90116f553f5b356c391d2b4fe",
+  "script": "docs/evidence/syzygy-bpyt-6-5/subject_digests.py",
+  "note": "Written before any run (rule 11): per checkout, the commit, tracked-file cleanliness and the sha256 of every source and test file under both src trees and of the three harness files, test files apart from source."
+ },
+ "capture": {
+  "used": "a real Git object database built per scenario by the harness (11 scenarios, one sized as the retained Butlers capture: 185 baseline specs, 13 roster butlers; the scale scenario reads 226 sources, 205 items), read through the production gitRunnerFor so git ls-tree -z and git cat-file run as real processes.",
+  "whyNotARetainedButlersCapture": "[Observed] no retained capture in the repository holds the Git objects a blob reader reads: docs/evidence/smooth-example-live-run-2026-10-03.json and its siblings retain the model output, not the repository. A differential over Butlers needs the registered checkout behind the real P1 authority gate, which is the owner's to point the harness at.",
+  "liveMode": "NOT RUN. capture-harness.test.ts.txt carries an operator mode (BPYT65_LIVE_REPO, BPYT65_LIVE_REVISION, BPYT65_LIVE_INSTANT) that evaluates the real P1 gate; no Butlers repository body was read in this work and no daemon was contacted. AC 3's \"capture\" remains met by the object-database stand-in only; the owner may run the live mode and compare with compare_capture.py."
+ },
+ "harness": {
+  "differential": {
+   "path": "docs/evidence/syzygy-bpyt-6-5/differential-harness.test.ts.txt",
+   "sha256": "sha256:1f62f5ea0486eceb113f5c4a75f4fafac6e46b81ba3947206b89c13cd3018666",
+   "comparator": "docs/evidence/syzygy-bpyt-6-5/compare_differential.py",
+   "comparatorSha256": "sha256:d506f285570366207715f273382c9bbddf40c58ee5016a294de5cbd8777e45d7"
+  },
+  "capture": {
+   "path": "docs/evidence/syzygy-bpyt-6-5/capture-harness.test.ts.txt",
+   "sha256": "sha256:31619b1b99ae4cef6875cacfd07d4c3ecd2002ff89832ae271e20755f9f65480",
+   "comparator": "docs/evidence/syzygy-bpyt-6-5/compare_capture.py",
+   "comparatorSha256": "sha256:9fa7b974b57b51480dd36e461a2ab6c8c5f75b177b16d6ed97e0c3c9535a5f9b",
+   "editedAfterRun": {
+    "what": "one header comment sentence (pointed at a README.md that does not exist; now names vitest.differential.config.ts); no code line changed",
+    "shaAsRun": "sha256:86079f35e247271e37dc3f23e4808e7b41a0bc440259bb346f8dd9ef45c749f3",
+    "shaRetained": "sha256:31619b1b99ae4cef6875cacfd07d4c3ecd2002ff89832ae271e20755f9f65480"
+   }
+  },
+  "config": {
+   "path": "docs/evidence/syzygy-bpyt-6-5/vitest.differential.config.ts.txt",
+   "sha256": "sha256:bb417956a09cd0c35df4b0b287cedfba2289499af40361b8e4642300f7be6790"
+  },
+  "run": "copy the two harness files to apps/three-surface-poc/src/zz-bpyt65-{differential,capture}.test.ts and the config to vitest.differential.config.ts at the root of a checkout (base and head); in each: TMPDIR=<any> BPYT65_OUT=<d.json> BPYT65_CAPTURE_OUT=<c.json> npx vitest run --config vitest.differential.config.ts; then compare_differential.py base head and compare_capture.py base head."
+ },
+ "e2Repairs": {
+  "headerRunCommand": "the old header named --project three-surface-poc (no such project filter: the suite is tiered, CONTRIBUTING.md; the unit tier refuses a test that spawns git and the base has no tiers). The header now gives the --config form above, which ran at both commits.",
+  "outputDigests": "[Observed] the model rows hash pages whose evaluation-inputs digest names the repository root; the harness put that root under TMPDIR, so every TMPDIR gave a different output sha256 (explains the reviewer's mismatch with the recorded 2026-11-03 digests, which are TMPDIR=/tmp/b65 ones). The root is now BPYT65_FIXTURE_ROOT (default /tmp/bpyt65-fixture-root). With it, two runs per side under different TMPDIRs gave one sha256 each (below). The older record's digests are unchanged and reproduce only under its own TMPDIR.",
+  "subjectDigests": "the pre-run file above; the older record's test-file digests postdated its run, and its non-test source digests remain its valid anchor."
+ },
+ "outputs": {
+  "diff-base": {
+   "sha256": "sha256:22388765b3c40a8e85a9163ca7cc187ff529627ec2a3bbd3e0aa10205e244457",
+   "secondRunUnderOtherTMPDIRSha256": "sha256:22388765b3c40a8e85a9163ca7cc187ff529627ec2a3bbd3e0aa10205e244457",
+   "bytes": 30859987
+  },
+  "diff-head": {
+   "sha256": "sha256:e6f87c7532d534cbaa9d6527a34313e2ee4e19246db200deb324c798c8130eaa",
+   "secondRunUnderOtherTMPDIRSha256": "sha256:e6f87c7532d534cbaa9d6527a34313e2ee4e19246db200deb324c798c8130eaa",
+   "bytes": 31299219
+  },
+  "cap-base": {
+   "sha256": "sha256:a91d300f4b5841698ebc60fdba8f963937f36e9761fdb7e93ac5829f597ef2c0",
+   "secondRunUnderOtherTMPDIRSha256": "sha256:a91d300f4b5841698ebc60fdba8f963937f36e9761fdb7e93ac5829f597ef2c0",
+   "bytes": 234259
+  },
+  "cap-head": {
+   "sha256": "sha256:9ab9afcd996ba7ab19b6d6fcb99320554ee25c429c9133547204cc179e405112",
+   "secondRunUnderOtherTMPDIRSha256": "sha256:9ab9afcd996ba7ab19b6d6fcb99320554ee25c429c9133547204cc179e405112",
+   "bytes": 233555
+  }
+ },
+ "outputsRetained": false,
+ "comparison": {
+  "differential": {
+   "exit": 0,
+   "unexpectedDifferences": [],
+   "gitCalls": {
+    "scenarios": 2671,
+    "identical": 121,
+    "secondListingDropped": 2550
+   },
+   "sections": {
+    "shapes": {
+     "scenarios": 2671,
+     "identical": 2611,
+     "differ": 60
+    },
+    "phaseA": {
+     "scenarios": 2670,
+     "identical": 2670,
+     "differ": 0
+    },
+    "reader": {
+     "scenarios": 80,
+     "identical": 80,
+     "differ": 0
+    },
+    "models": {
+     "scenarios": 19,
+     "identical": 19,
+     "differ": 0
+    }
+   },
+   "expectedDifferenceCount": 60,
+   "expectedDifference": "60 shapes where the fault fires on the second ls-tree: base observation-failed, head observed (one listing)"
+  },
+  "capture": {
+   "exit": 0,
+   "unexpectedDifferences": [],
+   "scenarios": [
+    {
+     "scenario": "base",
+     "kind": "observed",
+     "shapeIdentical": true,
+     "lsTree": {
+      "base": 2,
+      "head": 1
+     },
+     "calls": "second-ls-tree-dropped",
+     "catFile": {
+      "base": 14,
+      "head": 14
+     }
+    },
+    {
+     "scenario": "scale",
+     "kind": "observed",
+     "shapeIdentical": true,
+     "lsTree": {
+      "base": 2,
+      "head": 1
+     },
+     "calls": "second-ls-tree-dropped",
+     "catFile": {
+      "base": 40,
+      "head": 40
+     }
+    },
+    {
+     "scenario": "root-secret-key",
+     "kind": "observed",
+     "shapeIdentical": true,
+     "lsTree": {
+      "base": 2,
+      "head": 1
+     },
+     "calls": "second-ls-tree-dropped",
+     "catFile": {
+      "base": 4,
+      "head": 4
+     }
+    },
+    {
+     "scenario": "hs-readme-active-svg",
+     "kind": "observed",
+     "shapeIdentical": true,
+     "lsTree": {
+      "base": 2,
+      "head": 1
+     },
+     "calls": "second-ls-tree-dropped",
+     "catFile": {
+      "base": 12,
+      "head": 12
+     }
+    },
+    {
+     "scenario": "vision-active-link",
+     "kind": "observed",
+     "shapeIdentical": true,
+     "lsTree": {
+      "base": 2,
+      "head": 1
+     },
+     "calls": "second-ls-tree-dropped",
+     "catFile": {
+      "base": 14,
+      "head": 14
+     }
+    },
+    {
+     "scenario": "vision-invalid-utf8",
+     "kind": "observed",
+     "shapeIdentical": true,
+     "lsTree": {
+      "base": 2,
+      "head": 1
+     },
+     "calls": "second-ls-tree-dropped",
+     "catFile": {
+      "base": 14,
+      "head": 14
+     }
+    },
+    {
+     "scenario": "vision-nul",
+     "kind": "observed",
+     "shapeIdentical": true,
+     "lsTree": {
+      "base": 2,
+      "head": 1
+     },
+     "calls": "second-ls-tree-dropped",
+     "catFile": {
+      "base": 14,
+      "head": 14
+     }
+    },
+    {
+     "scenario": "vision-altered-prose",
+     "kind": "observed",
+     "shapeIdentical": true,
+     "lsTree": {
+      "base": 2,
+      "head": 1
+     },
+     "calls": "second-ls-tree-dropped",
+     "catFile": {
+      "base": 14,
+      "head": 14
+     }
+    },
+    {
+     "scenario": "vision-symlink",
+     "kind": "observed",
+     "shapeIdentical": true,
+     "lsTree": {
+      "base": 2,
+      "head": 1
+     },
+     "calls": "second-ls-tree-dropped",
+     "catFile": {
+      "base": 13,
+      "head": 13
+     }
+    },
+    {
+     "scenario": "denied-basenames",
+     "kind": "observed",
+     "shapeIdentical": true,
+     "lsTree": {
+      "base": 2,
+      "head": 1
+     },
+     "calls": "second-ls-tree-dropped",
+     "catFile": {
+      "base": 14,
+      "head": 14
+     }
+    },
+    {
+     "scenario": "vision-removed",
+     "kind": "observed",
+     "shapeIdentical": true,
+     "lsTree": {
+      "base": 2,
+      "head": 1
+     },
+     "calls": "second-ls-tree-dropped",
+     "catFile": {
+      "base": 13,
+      "head": 13
+     }
+    }
+   ]
+  }
+ },
+ "rule6": {
+  "comparator": "compare_capture.py",
+  "mutantsInputsFrom": "cap-head-1.json",
+  "results": {
+   "shape-field": 1,
+   "extra-call": 1,
+   "extra-ls-tree": 1,
+   "revision": 1,
+   "scenario-missing": 1,
+   "mode": 1,
+   "second-ls-tree-kept": 1
+  },
+  "note": "each mutation of the head output (shape field, extra cat-file, extra ls-tree, revision, missing scenario, mode, second ls-tree kept) made the comparator exit 1; compare_differential.py was mutation-tested by the parent record."
+ },
+ "verdict": "No unexpected difference. On a real object database, 11 of 11 scenarios give a byte-identical shape record at base and head, the same cat-file count, and the head lists the tree once where base listed it twice. The v1 fixture differential re-ran at the same two commits with the same result (0 unexpected; 60 expected second-listing differences). Live Butlers capture not run (owner)."
+}

@@ -1,9 +1,9 @@
 import * as fs from 'node:fs';
-import { tmpdir } from 'node:os';
 import * as path from 'node:path';
-import { afterEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { withoutReviewStatusRegion } from '@syzygy/polaris-generation-core';
 import { buildDesignPacket, outsideRegion, readLatestSite } from './design-review.js';
+import { tempDir } from '@syzygy/test-kit';
 
 // syzygy-qkea.10 (S9b): the design packet's pure parts. Pages are literals written here; the end-to-end scenario runs in render.test.ts.
 
@@ -11,9 +11,6 @@ const OPEN = '<aside class="review-status" data-review-status-region="review-sta
 const page = (body: string, region = `${OPEN}<h2>Review status</h2><ul><li>Fidelity review: none counts.</li></ul></aside>`): string =>
   `<!doctype html><html><body><main>${body}${region}</main></body></html>`;
 const machine = (reviewStatus: unknown): string => `${JSON.stringify({ format: 'polaris-dossier-local-machine-view/1', title: 'Kestrel', reviewStatus, pages: ['index.html'] }, null, 2)}\n`;
-
-const cleanups: (() => void)[] = [];
-afterEach(() => { for (const cleanup of cleanups.splice(0).reverse()) cleanup(); });
 
 describe('the review-status region', () => {
   it('is removed whole, and only when the page holds exactly one', () => {
@@ -75,8 +72,7 @@ describe('outsideRegion and buildDesignPacket', () => {
 
 describe('readLatestSite', () => {
   const run = (): string => {
-    const dir = fs.realpathSync(fs.mkdtempSync(path.join(tmpdir(), 'dossier-design-site-')));
-    cleanups.push(() => fs.rmSync(dir, { recursive: true, force: true }));
+    const dir = tempDir('dossier-design-site-');
     return dir;
   };
   const write = (file: string, text: string | Uint8Array): void => { fs.mkdirSync(path.dirname(file), { recursive: true }); fs.writeFileSync(file, text); };

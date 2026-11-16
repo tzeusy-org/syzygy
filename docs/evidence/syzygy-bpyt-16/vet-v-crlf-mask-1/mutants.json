@@ -1,0 +1,88 @@
+[
+ {
+  "id": "TODAY",
+  "old": "(whole file: 8ff50172 markdown-code-context.ts)",
+  "new": null,
+  "total": 7,
+  "failed": [
+   "P1",
+   "P2",
+   "P3",
+   "P4",
+   "P5",
+   "P6",
+   "P7"
+  ],
+  "outcome": "killed"
+ },
+ {
+  "id": "MU1-lf-only",
+  "old": "const LINE_END = /\\r\\n|\\r|\\n/g;",
+  "new": "const LINE_END = /\\n/g;",
+  "total": 7,
+  "failed": [
+   "P1",
+   "P2",
+   "P3",
+   "P4",
+   "P5",
+   "P6",
+   "P7"
+  ],
+  "outcome": "killed"
+ },
+ {
+  "id": "MU2-crlf-only",
+  "old": "const LINE_END = /\\r\\n|\\r|\\n/g;",
+  "new": "const LINE_END = /\\r?\\n/g;",
+  "total": 7,
+  "failed": [
+   "P4",
+   "P6",
+   "P7"
+  ],
+  "outcome": "killed"
+ },
+ {
+  "id": "MU3-crlf-as-two",
+  "old": "const LINE_END = /\\r\\n|\\r|\\n/g;",
+  "new": "const LINE_END = /\\r|\\n/g;",
+  "total": 7,
+  "failed": [
+   "P1"
+  ],
+  "outcome": "killed"
+ },
+ {
+  "id": "MU4-no-bare-cr",
+  "old": "const LINE_END = /\\r\\n|\\r|\\n/g;",
+  "new": "const LINE_END = /\\r\\n|\\n/g;",
+  "total": 7,
+  "failed": [
+   "P4",
+   "P6",
+   "P7"
+  ],
+  "outcome": "killed"
+ },
+ {
+  "id": "MU5-join-lf",
+  "old": "out.map((line, i) => line + (terms[i] ?? '')).join('')",
+  "new": "out.join('\\n')",
+  "total": 7,
+  "failed": [
+   "P6"
+  ],
+  "outcome": "killed"
+ },
+ {
+  "id": "MU6-cr-to-lf",
+  "old": "out.map((line, i) => line + (terms[i] ?? '')).join('')",
+  "new": "out.map((line, i) => line + (terms[i] === '\\r' ? '\\n' : (terms[i] ?? ''))).join('')",
+  "total": 7,
+  "failed": [
+   "P6"
+  ],
+  "outcome": "killed"
+ }
+]

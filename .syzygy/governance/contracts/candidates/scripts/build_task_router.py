@@ -33,6 +33,11 @@ SYZ = CAND.parent.parent.parent         # .../.syzygy
 REPO = SYZ.parent
 OUT = CAND / "TASK-ROUTER.md"
 
+# GP-Q0 part 2: agent Load selection only; dependency/authority sweeps keep
+# their original inputs. Implementation lives outside the governed bundle.
+sys.path.insert(0, str(REPO / "scripts"))
+from spent_round_routing import agent_load_paths, declared_rounds  # noqa: E402
+
 D = ".syzygy/governance/doctrine"
 CR = ".syzygy/governance/policies/craft-and-care"
 DEC = ".syzygy/governance/decisions"
@@ -577,6 +582,7 @@ def validate(tasks):
 
 
 def render(tasks):
+    rounds = declared_rounds(REPO)
     lines = [
         "# Task router — the one current route per task class",
         "",
@@ -610,7 +616,8 @@ def render(tasks):
             lines.append("**Directly governing clauses:** " + "; ".join(
                 f"`{cid}` (`{rel}`)" for cid, rel in t["clauses"].items()))
         lines.append("**Load:** " + " · ".join(
-            f"`{m}`" for m in t["modules"]))
+            f"`{m}`" for m in agent_load_paths(
+                t["modules"], rounds, explicit_history=t.get("explicit_history", False))))
         deps = module_deps(t["modules"])
         if deps:
             lines.append("**Declared contract dependencies (from module "
@@ -734,7 +741,13 @@ def main():
         n = len(seen)
         print(f"{n} fixtures, {len(fails)} failing — a check that cannot "
               "fail is not a check")
-        sys.exit(1 if fails else 0)
+        # Run the routing-only behavior fixtures through the same canonical
+        # selftest entry point; the original eleven fixtures stay intact.
+        import unittest
+        from test_spent_round_routing import RoutingTests
+        result = unittest.TextTestRunner(verbosity=2).run(
+            unittest.defaultTestLoader.loadTestsFromTestCase(RoutingTests))
+        sys.exit(1 if fails or not result.wasSuccessful() else 0)
 
     errs = validate(TASKS)
     if errs:

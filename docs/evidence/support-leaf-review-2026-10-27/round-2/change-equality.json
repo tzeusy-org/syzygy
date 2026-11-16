@@ -1,0 +1,65 @@
+{
+ "first": [
+  "c104771f",
+  "fe3855a1"
+ ],
+ "second": [
+  "546f1ff0",
+  "a5ab2b28"
+ ],
+ "pathsFirst": 79,
+ "pathsSecond": 81,
+ "pathsWhoseChangeDiffers": 3,
+ "rows": [
+  {
+   "path": "package.json",
+   "inFirst": true,
+   "inSecond": true,
+   "onlyFirst": [
+    "-    \"build\": \"tsc -b packages/cap1-core packages/cap1-daemon packages/cap1-conformance packages/three-surface-poc-core apps/syzygy apps/three-surface-poc packages/cap1-system packages/polaris-generation-core packages/polaris-generation-consent packages/polaris-dossier\",",
+    "-    \"build:poc\": \"tsc -b --force packages/cap1-core packages/cap1-daemon packages/three-surface-poc-core packages/polaris-generation-core apps/three-surface-poc\",",
+    "+    \"build\": \"tsc -b packages/support packages/cap1-core packages/cap1-daemon packages/cap1-conformance packages/three-surface-poc-core apps/syzygy apps/three-surface-poc packages/cap1-system packages/polaris-generation-core packages/polaris-generation-consent packages/polaris-dossier\",",
+    "+    \"build:poc\": \"tsc -b --force packages/support packages/cap1-core packages/cap1-daemon packages/three-surface-poc-core packages/polaris-generation-core apps/three-surface-poc\",",
+    "-    \"typecheck\": \"tsc -b packages/cap1-core packages/cap1-daemon packages/cap1-conformance packages/three-surface-poc-core apps/syzygy apps/three-surface-poc packages/cap1-system packages/polaris-generation-core packages/polaris-generation-consent packages/polaris-dossier\",",
+    "+    \"typecheck\": \"tsc -b packages/support packages/cap1-core packages/cap1-daemon packages/cap1-conformance packages/three-surface-poc-core apps/syzygy apps/three-surface-poc packages/cap1-system packages/polaris-generation-core packages/polaris-generation-consent packages/polaris-dossier\","
+   ],
+   "onlySecond": [
+    "-    \"build\": \"tsc -b packages/cap1-core packages/http-host packages/cap1-daemon packages/cap1-conformance packages/three-surface-poc-core apps/syzygy apps/three-surface-poc packages/cap1-system packages/polaris-generation-core packages/polaris-generation-consent packages/polaris-dossier\",",
+    "-    \"build:poc\": \"tsc -b --force packages/cap1-core packages/http-host packages/cap1-daemon packages/three-surface-poc-core packages/polaris-generation-core apps/three-surface-poc\",",
+    "+    \"build\": \"tsc -b packages/support packages/cap1-core packages/http-host packages/cap1-daemon packages/cap1-conformance packages/three-surface-poc-core apps/syzygy apps/three-surface-poc packages/cap1-system packages/polaris-generation-core packages/polaris-generation-consent packages/polaris-dossier\",",
+    "+    \"build:poc\": \"tsc -b --force packages/support packages/cap1-core packages/http-host packages/cap1-daemon packages/three-surface-poc-core packages/polaris-generation-core apps/three-surface-poc\",",
+    "-    \"typecheck\": \"tsc -b packages/cap1-core packages/http-host packages/cap1-daemon packages/cap1-conformance packages/three-surface-poc-core apps/syzygy apps/three-surface-poc packages/cap1-system packages/polaris-generation-core packages/polaris-generation-consent packages/polaris-dossier\",",
+    "+    \"typecheck\": \"tsc -b packages/support packages/cap1-core packages/http-host packages/cap1-daemon packages/cap1-conformance packages/three-surface-poc-core apps/syzygy apps/three-surface-poc packages/cap1-system packages/polaris-generation-core packages/polaris-generation-consent packages/polaris-dossier\","
+   ]
+  },
+  {
+   "path": "packages/polaris-dossier/src/no-egress.test.ts",
+   "inFirst": false,
+   "inSecond": true,
+   "onlyFirst": [],
+   "onlySecond": [
+    "+      '@syzygy/support': src('packages/support/src/index.ts'),"
+   ]
+  },
+  {
+   "path": "packages/support/src/support-purity.test.ts",
+   "inFirst": false,
+   "inSecond": true,
+   "onlyFirst": [],
+   "onlySecond": [
+    "+import { readdirSync, readFileSync } from 'node:fs';",
+    "+import { describe, expect, it } from 'vitest';",
+    "+",
+    "+// The package is a leaf that every importer inherits (the owner-act drafter's own purity test",
+    "+// stops at `@syzygy/support`), so what it may import is pinned here, not left to the closure guard,",
+    "+// which admits `node:fs` (syzygy-bpyt.6.3, review R-GP-IMPL-SUPPORT-LEAF-1 N3).",
+    "+const SRC = new URL('./', import.meta.url);",
+    "+const SOURCES = readdirSync(SRC).filter((name) => name.endsWith('.ts') && !name.endsWith('.test.ts')).sort();",
+    "+",
+    "+const ALLOWED_SPECIFIER = /^(?:node:crypto|\\.\\/[a-z0-9-]+\\.js)$/u;",
+    "+// The owner-act drafter's forbidden list (owner-act-drafter.test.ts), applied to every file of the package.",
+    "+const FORBIDDEN = [/\\brequire\\(/, /\\bimport\\(/, /\\bfetch\\(/, /\\bwriteFile/, /\\bappendFile/, /\\bmkdir/, /\\bprocess\\./, /\\bDate\\b/, /\\b(?:node:)?(?:fs|net|http|https|child_process|os)['\"`]/];"
+   ]
+  }
+ ]
+}

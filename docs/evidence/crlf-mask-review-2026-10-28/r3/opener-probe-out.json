@@ -1,0 +1,37 @@
+{
+ "x": {
+  "head": "masked fences=1 spans=0",
+  "base": "masked fences=1 spans=0",
+  "equal": true
+ },
+ "U+0085": {
+  "head": "masked fences=1 spans=0",
+  "base": "masked fences=1 spans=0",
+  "equal": true
+ },
+ "U+2028": {
+  "head": "malformed unclosed-inline-span@1",
+  "base": "malformed unclosed-inline-span@1",
+  "equal": true
+ },
+ "U+2029": {
+  "head": "malformed unclosed-inline-span@1",
+  "base": "malformed unclosed-inline-span@1",
+  "equal": true
+ },
+ "VT": {
+  "head": "masked fences=1 spans=0",
+  "base": "masked fences=1 spans=0",
+  "equal": true
+ },
+ "FF": {
+  "head": "masked fences=1 spans=0",
+  "base": "masked fences=1 spans=0",
+  "equal": true
+ },
+ "U+FEFF": {
+  "head": "masked fences=1 spans=0",
+  "base": "masked fences=1 spans=0",
+  "equal": true
+ }
+}

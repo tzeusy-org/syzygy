@@ -171,6 +171,13 @@ npm ci && npm run poc -- --repo /home/tze/GitHub/butlers
   ten-minute walkthrough, the implemented materialization/observation/evidence
   paths, and the relationships that remain deliberately absent.
 
+### Check a change
+
+After `npm ci`, `npm run check` (typecheck plus the hermetic unit tests) is the
+quick answer to "is my change green"; `npm run check:all` adds the integration
+and e2e tiers and the governance battery. [`CONTRIBUTING.md`](CONTRIBUTING.md)
+("Checking a change") defines the tiers.
+
 ### Project source map
 
 Pick a glossary by the kind of word, then read nine sources in order.

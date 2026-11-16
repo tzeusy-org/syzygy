@@ -1,0 +1,74 @@
+{
+  "tool": "mutants_r2.py",
+  "treeCommit": "490332aa7cc1cdf818ae01bd46e375f8280d8b7d",
+  "sha256AtCommit": {
+    "apps/three-surface-poc/src/cdp-browser.test.ts": "a655dd3f2c20612700096c6951778ac8910ededb84fedf215efa61dbe31e265e",
+    "apps/three-surface-poc/src/cdp-browser.ts": "c6c0ac6cc626b76155d870502c5549aa430d7cee35a058b0001d849586842033"
+  },
+  "loadSignatures": [
+    "drain did not verify",
+    "still held by",
+    "timed out",
+    "Test timed out",
+    "STACK_TRACE_ERROR"
+  ],
+  "rootRunner": [
+    "bwrap",
+    "--dev-bind",
+    "/",
+    "/",
+    "--unshare-user",
+    "--uid",
+    "0",
+    "--gid",
+    "0",
+    "--cap-add",
+    "ALL"
+  ],
+  "results": [
+    {
+      "id": "control",
+      "meaning": "no change",
+      "runner": "normal",
+      "edits": [],
+      "attempts": [
+        {
+          "attempt": 1,
+          "exit": 0,
+          "testsRun": 26,
+          "passed": 26,
+          "skipped": 0,
+          "failing": [],
+          "left": []
+        }
+      ],
+      "outcome": "CONTROL-PASS",
+      "restored": true
+    },
+    {
+      "id": "name-case-insensitive",
+      "meaning": "lane fragment, as recorded",
+      "runner": "normal",
+      "edits": [
+        {
+          "file": "apps/three-surface-poc/src/cdp-browser.ts",
+          "old": "const CHROME_SINGLETON_DIRECTORY = /^\\.?(?:com\\.google\\.Chrome|org\\.chromium\\.Chromium)\\.[A-Za-z0-9]+$/;",
+          "new": "const CHROME_SINGLETON_DIRECTORY = /^\\.?(?:com\\.google\\.Chrome|org\\.chromium\\.Chromium)\\.[A-Za-z0-9]+$/i;"
+        }
+      ],
+      "attempts": [
+        {
+          "attempt": 1,
+          "exit": 0,
+          "testsRun": 26,
+          "passed": 26,
+          "skipped": 0,
+          "failing": [],
+          "left": []
+        }
+      ],
+      "outcome": "SURVIVED",
+      "restored": true
+    }
+  ]
+}

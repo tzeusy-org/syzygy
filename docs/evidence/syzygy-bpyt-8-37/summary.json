@@ -1,0 +1,624 @@
+{
+ "bead": "syzygy-bpyt.8.37",
+ "base": "8ff50172b127cba676ff32ce62c12c91b2b0d924",
+ "head": "c90cd7327a24fee44d0e7135872a3b08277c73b0",
+ "subject": {
+  "what": "git diff 8ff50172 c90cd732",
+  "sha256": "615db956261b0a5b28d548486fc48282fa0a9ec51e0fe8c928f9f84d0e132fee",
+  "files": {
+   "packages/polaris-dossier/src/argv.test.ts": {
+    "base": "62d6a8fe80b58c3fb3f286637828dce09ac473c432618643f9ba6a2ebeacd743",
+    "head": "e854ce8380d78285807b1aa066b100870754e5005d61826ba5874f5e0db7f5db"
+   },
+   "packages/polaris-generation-core/src/workspace-reach.test.ts": {
+    "base": "e3450c2c9ad489cc7b19c616f2787f3c7435851fd0db563436b25d68c3ba8a1e",
+    "head": "8e9db68616b20552ff838de7469cce3b7dca7eb5119b4c7396720f395570e621"
+   },
+   "packages/polaris-generation-core/src/workspace-reach.testkit.ts": {
+    "base": "3c05cf32f92d20c691b735cdd5242502ec6dcdfac8c8a8a9883df1f88ccadfb7",
+    "head": "2eb284dc55d5426575eb07946a5771b187d425cca3b672b99984d4434bd2066e"
+   }
+  }
+ },
+ "productFilesChanged": [],
+ "mutRunnerSha256": "ca2b8eadc503305bb3767b7220b02775429164ef6c183ac9854acf9d8ed9b6a5",
+ "targets": {
+  "RV-P3-moduleIn-prefix-null": {
+   "base": "survives",
+   "head": "killed",
+   "headFailedRows": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a # alias whose target is a module of its own package outside dist as naming no module"
+   ]
+  },
+  "RV-P4-moduleIn-missing-file-null": {
+   "base": "survives",
+   "head": "killed",
+   "headFailedRows": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a # alias whose target names no source module as naming no module"
+   ]
+  },
+  "RV-P6-leaves-package-check-dropped": {
+   "base": "survives",
+   "head": "killed",
+   "headFailedRows": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a # alias whose target leaves its package for a module that exists as naming no module"
+   ]
+  },
+  "RV-Q1-callee-conjunct-dropped": {
+   "base": "survives",
+   "head": "killed",
+   "headFailedRows": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > the census sees a reading the lift does not in \"import { readArgv } from './argv.js';\\nvoid [[]].map(readArgv);\" (its own mutant)"
+   ]
+  },
+  "RV-Q2-declaration-anywhere": {
+   "base": "survives",
+   "head": "killed",
+   "headFailedRows": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > the census sees a reading the lift does not in \"export function readArgv(): void {}\" (its own mutant)"
+   ]
+  },
+  "RV-Q3-census-never-fed": {
+   "base": "survives",
+   "head": "killed",
+   "headFailedRows": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > adds each module's census to what it reports unlifted"
+   ]
+  },
+  "RV-T18-dependency-alias": {
+   "base": "survives",
+   "head": "killed",
+   "headFailedRows": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > resolves every workspace specifier on it, and reaches past the entry's own imports"
+   ]
+  },
+  "RV-C6-mts-caller": {
+   "base": "survives",
+   "head": "killed",
+   "headFailedRows": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > is the spec of every readArgv call, and no other module names readArgv"
+   ]
+  },
+  "RV-P8-array-guard-dropped": {
+   "base": "survives",
+   "head": "survives",
+   "headFailedRows": []
+  }
+ },
+ "own": {
+  "L1-local-check-dropped": {
+   "what": "a bare name any manifest declares locally reads as outside again",
+   "outcome": "killed",
+   "tests": [
+    "Tests  11 failed | 61 passed (72)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a FILE: dependency of a scoped name as naming no module",
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a file: dependency as naming no module",
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a file: dependency of another package as naming no module",
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a home-relative path dependency as naming no module",
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a link: dev dependency as naming no module",
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a path dependency as naming no module",
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a subpath of a file: dependency as naming no module",
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a tarball dependency as naming no module",
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a workspace: optional dependency as naming no module",
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as an absolute path dependency as naming no module",
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as an npm: alias peer dependency as naming no module"
+   ],
+   "base": null
+  },
+  "L2-whole-specifier-compared": {
+   "what": "the census compares the whole specifier, not its package name",
+   "outcome": "killed",
+   "tests": [
+    "Tests  1 failed | 71 passed (72)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a subpath of a file: dependency as naming no module"
+   ],
+   "base": null
+  },
+  "L3-scope-ignored": {
+   "what": "a scoped name's package name is taken as its scope alone",
+   "outcome": "killed",
+   "tests": [
+    "Tests  1 failed | 71 passed (72)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a FILE: dependency of a scoped name as naming no module"
+   ],
+   "base": null
+  },
+  "L4-prefix-match": {
+   "what": "a specifier counts when it starts with a local name",
+   "outcome": "killed",
+   "tests": [
+    "Tests  1 failed | 71 passed (72)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > leaves a bare name declared as a longer name than a local dependency outside the workspace"
+   ],
+   "base": null
+  },
+  "L5-first-manifest-only": {
+   "what": "only the first manifest's dependencies are read",
+   "outcome": "killed",
+   "tests": [
+    "Tests  1 failed | 71 passed (72)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a file: dependency of another package as naming no module"
+   ],
+   "base": null
+  },
+  "L6-dependencies-unread": {
+   "what": "dependencies are not read",
+   "outcome": "killed",
+   "tests": [
+    "Tests  8 failed | 64 passed (72)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a FILE: dependency of a scoped name as naming no module",
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a file: dependency as naming no module",
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a file: dependency of another package as naming no module",
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a home-relative path dependency as naming no module",
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a path dependency as naming no module",
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a subpath of a file: dependency as naming no module",
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a tarball dependency as naming no module",
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as an absolute path dependency as naming no module"
+   ],
+   "base": null
+  },
+  "L7-dev-dependencies-unread": {
+   "what": "devDependencies are not read",
+   "outcome": "killed",
+   "tests": [
+    "Tests  1 failed | 71 passed (72)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a link: dev dependency as naming no module"
+   ],
+   "base": null
+  },
+  "L8-optional-dependencies-unread": {
+   "what": "optionalDependencies are not read",
+   "outcome": "killed",
+   "tests": [
+    "Tests  1 failed | 71 passed (72)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a workspace: optional dependency as naming no module"
+   ],
+   "base": null
+  },
+  "L9-peer-dependencies-unread": {
+   "what": "peerDependencies are not read",
+   "outcome": "killed",
+   "tests": [
+    "Tests  1 failed | 71 passed (72)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as an npm: alias peer dependency as naming no module"
+   ],
+   "base": null
+  },
+  "L10-root-manifest-unread": {
+   "what": "the workspace root's manifest is not among the manifests",
+   "outcome": "killed",
+   "tests": [
+    "Tests  1 failed | 71 passed (72)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads the workspace root's manifest beside the packages'"
+   ],
+   "base": null
+  },
+  "L11-file-protocol-unread": {
+   "what": "file: is not local",
+   "outcome": "killed",
+   "tests": [
+    "Tests  4 failed | 68 passed (72)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a FILE: dependency of a scoped name as naming no module",
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a file: dependency as naming no module",
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a file: dependency of another package as naming no module",
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a subpath of a file: dependency as naming no module"
+   ],
+   "base": null
+  },
+  "L12-link-protocol-unread": {
+   "what": "link: is not local",
+   "outcome": "killed",
+   "tests": [
+    "Tests  1 failed | 71 passed (72)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a link: dev dependency as naming no module"
+   ],
+   "base": null
+  },
+  "L13-workspace-protocol-unread": {
+   "what": "workspace: is not local",
+   "outcome": "killed",
+   "tests": [
+    "Tests  1 failed | 71 passed (72)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a workspace: optional dependency as naming no module"
+   ],
+   "base": null
+  },
+  "L14-npm-alias-unread": {
+   "what": "npm: is not local",
+   "outcome": "killed",
+   "tests": [
+    "Tests  1 failed | 71 passed (72)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as an npm: alias peer dependency as naming no module"
+   ],
+   "base": null
+  },
+  "L15-relative-path-unread": {
+   "what": "a ./ or ../ path is not local",
+   "outcome": "killed",
+   "tests": [
+    "Tests  1 failed | 71 passed (72)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a path dependency as naming no module"
+   ],
+   "base": null
+  },
+  "L16-absolute-path-unread": {
+   "what": "an absolute path is not local",
+   "outcome": "killed",
+   "tests": [
+    "Tests  1 failed | 71 passed (72)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as an absolute path dependency as naming no module"
+   ],
+   "base": null
+  },
+  "L17-home-path-unread": {
+   "what": "a ~/ path is not local",
+   "outcome": "killed",
+   "tests": [
+    "Tests  1 failed | 71 passed (72)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a home-relative path dependency as naming no module"
+   ],
+   "base": null
+  },
+  "L18-tarball-unread": {
+   "what": "a tarball name is not local",
+   "outcome": "killed",
+   "tests": [
+    "Tests  1 failed | 71 passed (72)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a tarball dependency as naming no module"
+   ],
+   "base": null
+  },
+  "L19-case-sensitive": {
+   "what": "FILE: is not local",
+   "outcome": "killed",
+   "tests": [
+    "Tests  1 failed | 71 passed (72)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a FILE: dependency of a scoped name as naming no module"
+   ],
+   "base": null
+  },
+  "L20-unanchored": {
+   "what": "a version that merely contains a local form is local",
+   "outcome": "killed",
+   "tests": [
+    "Tests  1 failed | 71 passed (72)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > leaves a bare name declared as a git dependency outside the workspace"
+   ],
+   "base": null
+  },
+  "K1-given-files-ignored": {
+   "what": "readArgvCallers reads the tree whatever files it is given",
+   "outcome": "killed",
+   "tests": [
+    "Tests  2 failed | 83 passed (85)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > adds each module's census to what it reports unlifted",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > reads every module TypeScript compiles under src, .mts, .cts and .tsx among them, and no test module"
+   ],
+   "base": null
+  },
+  "K2-given-reader-ignored": {
+   "what": "readArgvCallers reads the tree whatever reader it is given",
+   "outcome": "killed",
+   "tests": [
+    "Tests  2 failed | 83 passed (85)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > adds each module's census to what it reports unlifted",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > reads every module TypeScript compiles under src, .mts, .cts and .tsx among them, and no test module"
+   ],
+   "base": null
+  },
+  "K3-mts-cts-left-out": {
+   "what": "the population leaves .mts and .cts out",
+   "outcome": "killed",
+   "tests": [
+    "Tests  1 failed | 84 passed (85)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > reads every module TypeScript compiles under src, .mts, .cts and .tsx among them, and no test module"
+   ],
+   "base": null
+  },
+  "K4-tsx-left-out": {
+   "what": "the population leaves .tsx out",
+   "outcome": "killed",
+   "tests": [
+    "Tests  1 failed | 84 passed (85)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > reads every module TypeScript compiles under src, .mts, .cts and .tsx among them, and no test module"
+   ],
+   "base": null
+  },
+  "K5-only-test-ts-excluded": {
+   "what": "only .test.ts modules are excluded",
+   "outcome": "killed",
+   "tests": [
+    "Tests  1 failed | 84 passed (85)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > reads every module TypeScript compiles under src, .mts, .cts and .tsx among them, and no test module"
+   ],
+   "base": null
+  },
+  "K6-tests-included": {
+   "what": "test modules are not excluded",
+   "outcome": "killed",
+   "tests": [
+    "Tests  3 failed | 82 passed (85)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > is the spec of every readArgv call, and no other module names readArgv",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > names readArgv only where the lift reads it: its declaration, an import or export of it, and the callee of a call",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > reads every module TypeScript compiles under src, .mts, .cts and .tsx among them, and no test module"
+   ],
+   "base": null
+  },
+  "K7-unsorted": {
+   "what": "the population is left in the order given",
+   "outcome": "killed",
+   "tests": [
+    "Tests  2 failed | 83 passed (85)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > adds each module's census to what it reports unlifted",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > reads every module TypeScript compiles under src, .mts, .cts and .tsx among them, and no test module"
+   ],
+   "base": null
+  },
+  "T18-link": {
+   "what": "a link: dependency \"dossier\" imported by main.ts",
+   "outcome": "killed",
+   "tests": [
+    "Tests  1 failed | 26 passed (27)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > resolves every workspace specifier on it, and reaches past the entry's own imports"
+   ],
+   "base": "survives"
+  },
+  "T18-workspace": {
+   "what": "a workspace: dependency \"dossier\" imported by main.ts",
+   "outcome": "killed",
+   "tests": [
+    "Tests  1 failed | 26 passed (27)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > resolves every workspace specifier on it, and reaches past the entry's own imports"
+   ],
+   "base": "survives"
+  },
+  "T18-npm": {
+   "what": "an npm: alias \"dossier\" of @syzygy/polaris-dossier imported by main.ts",
+   "outcome": "killed",
+   "tests": [
+    "Tests  1 failed | 26 passed (27)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > resolves every workspace specifier on it, and reaches past the entry's own imports"
+   ],
+   "base": "survives"
+  },
+  "T18-path": {
+   "what": "a path dependency \"dossier\" imported by main.ts",
+   "outcome": "killed",
+   "tests": [
+    "Tests  1 failed | 26 passed (27)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > resolves every workspace specifier on it, and reaches past the entry's own imports"
+   ],
+   "base": "survives"
+  },
+  "T18-subpath": {
+   "what": "a file: dependency \"dossier\", its /argv subpath imported by main.ts",
+   "outcome": "killed",
+   "tests": [
+    "Tests  1 failed | 26 passed (27)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > resolves every workspace specifier on it, and reaches past the entry's own imports"
+   ],
+   "base": "survives"
+  },
+  "T18-root": {
+   "what": "a file: dev dependency \"dossier\" of the workspace root, imported by main.ts",
+   "outcome": "killed",
+   "tests": [
+    "Tests  1 failed | 26 passed (27)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > resolves every workspace specifier on it, and reaches past the entry's own imports"
+   ],
+   "base": "survives"
+  },
+  "T18-island": {
+   "what": "a file: dependency \"consent\" of the POC app, imported by a module the CLI reaches",
+   "outcome": "killed",
+   "tests": [
+    "Tests  1 failed | 3 passed (4)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > resolves every workspace import the CLI reaches, dynamic ones included"
+   ],
+   "base": "survives"
+  },
+  "C6-cts": {
+   "what": "a new .cts module calling readArgv with its own spec",
+   "outcome": "killed",
+   "tests": [
+    "Tests  1 failed | 84 passed (85)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > is the spec of every readArgv call, and no other module names readArgv"
+   ],
+   "base": "survives"
+  },
+  "C6-tsx": {
+   "what": "a new .tsx module calling readArgv with its own spec",
+   "outcome": "killed",
+   "tests": [
+    "Tests  1 failed | 84 passed (85)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > is the spec of every readArgv call, and no other module names readArgv"
+   ],
+   "base": "survives"
+  }
+ },
+ "retained": {
+  "total": 123,
+  "base": {
+   "killed": 99,
+   "survives": 24,
+   "error": 0
+  },
+  "head": {
+   "killed": 107,
+   "survives": 16,
+   "error": 0
+  },
+  "unchanged": 114,
+  "stronger": [
+   "RV-T18-dependency-alias",
+   "RV-C6-mts-caller",
+   "RV-P2-hash-guard-null",
+   "RV-P3-moduleIn-prefix-null",
+   "RV-P4-moduleIn-missing-file-null",
+   "RV-P6-leaves-package-check-dropped",
+   "RV-Q1-callee-conjunct-dropped",
+   "RV-Q2-declaration-anywhere",
+   "RV-Q3-census-never-fed"
+  ],
+  "weaker": [],
+  "survivingAtHead": [
+   "C0-argv",
+   "C0-both-guards",
+   "C0-guard",
+   "OB3-shadowed-argv-replaces-the-polaris-branch-import",
+   "R-IF2-into-island-from-island-counted",
+   "R-X8-get-builtin-module-create-require",
+   "R-Y8-another-options-command-gains-a-valued-option",
+   "RV-C5-concatenated-name",
+   "RV-P8-array-guard-dropped",
+   "RV-T19-node-modules-relative-path",
+   "consen:R3-computed-dynamic-import-of-core-root-in-in-force",
+   "consen:R5-vitest-alias-for-live-points-at-root",
+   "island:R1-non-literal-dynamic-import-of-core-root-in-render-step",
+   "island:R5-broker-client-entry-imports-core-root",
+   "island:R6-create-require-of-core-root-in-render-step",
+   "island:R9-island-import-hidden-inside-the-exception"
+  ]
+ },
+ "islandDiff": {
+  "walks": {
+   "entries": 246,
+   "equal": 246,
+   "answersSha256": "e297b289a9f722bdfe5840064f27e1454df131795eecb5b6c1546f30a1cae777"
+  },
+  "resolves": {
+   "files": 496,
+   "specifiers": 2612,
+   "equal": 2612,
+   "byAnswer": {
+    "module": 1547,
+    "null": 1065,
+    "undefined": 0
+   },
+   "answersSha256": "0909d55ce7cbd2f43138eccc433e18f309e861eec7e2aafd2f14b9431e4c55e8"
+  },
+  "selftest": {
+   "walksEqual": 60,
+   "resolvesEqual": 1326
+  },
+  "toolSha256": "131206846b062bc60ba7efeb67bf6ecf81802a54921d94979f2bc7428b8afc04"
+ },
+ "repeats": {
+  "runs": 5,
+  "tests": [
+   "Tests  157 passed (157)",
+   "Tests  157 passed (157)",
+   "Tests  157 passed (157)",
+   "Tests  157 passed (157)",
+   "Tests  157 passed (157)"
+  ],
+  "load1": [
+   22.69,
+   25.2,
+   27.26,
+   26.28,
+   25.7
+  ]
+ },
+ "titles": {
+  "base": 5301,
+  "head": 5325,
+  "added": 24,
+  "removed": 0,
+  "addedPerFile": {
+   "packages/polaris-dossier/src/argv.test.ts": 4,
+   "packages/polaris-generation-core/src/workspace-reach.test.ts": 20
+  },
+  "line": "Tests: +24 ~0 -0"
+ },
+ "faithfulTree": {
+  "manifests": [
+   "apps/syzygy/package.json",
+   "apps/three-surface-poc/package.json",
+   "package.json",
+   "packages/cap1-conformance/package.json",
+   "packages/cap1-core/package.json",
+   "packages/cap1-daemon/package.json",
+   "packages/cap1-system/package.json",
+   "packages/polaris-dossier/package.json",
+   "packages/polaris-generation-consent/package.json",
+   "packages/polaris-generation-core/package.json",
+   "packages/three-surface-poc-core/package.json"
+  ],
+  "localDependencies": [],
+  "compiledNonTsModules": []
+ },
+ "problems": []
+}

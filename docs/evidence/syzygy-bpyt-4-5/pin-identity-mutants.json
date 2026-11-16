@@ -1,0 +1,99 @@
+{
+ "tool": "pin_identity_mutants.py",
+ "commit": "97c4af30d6d083028d7add60b1359e05d48f3e52",
+ "args": [
+  "c104771ff90f47ffd070f2339c36010458679c71",
+  "d38d7a3c",
+  "ba9d990a2b80b9aa5b3d78801b938280ee9988d7",
+  "447d9f083fb120c14ddd8da646c03675f3ce7bc7",
+  "9e00252ae134accc4a42604445a4db66f68d5100",
+  "d621bfa267f24ff68f6f83ac7bfba44b81a32a34"
+ ],
+ "allAsExpected": true,
+ "results": [
+  {
+   "id": "control",
+   "note": "no edit: EVIDENCE itself; the rebuild exits 0",
+   "file": "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts",
+   "old": null,
+   "new": null,
+   "commit": "ba9d990a2b80b9aa5b3d78801b938280ee9988d7",
+   "expect": "pass",
+   "exit": 0,
+   "outcome": "pass",
+   "refusedAtPinCheck": false,
+   "asExpected": true,
+   "lastLine": "{\"rowDelta\": \"Tests: +2 ~17 -0\", \"testFiles\": 10, \"productFilesChanged\": [], \"mutantTotals\": {\"cases\": 33, \"sides\": 65, \"asExpected\": 65}, \"ac1\": 0, \"bounds\": {\"EDGE_TRIM_CPU_MS\": [1900, 29.4, 31.6], \"HOSTILE_LINE_CPU_MS\": [140, 68.6, 109.5], \"TAG_SCAN_CPU_MS\": [1500, 22.7, 40.0], \"ATTRIBUTE_SCAN_CPU_MS\": [3000, 20.1, 20.0]}, \"pinRowAlone\": {\"defects\": [\"Y1-dossier-serve-falls-through\", \"Y2-dossie"
+  },
+  {
+   "id": "P1-title-byte",
+   "note": "one byte of the pin's `it` title",
+   "file": "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts",
+   "old": "  it('the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch', () => {\n",
+   "new": "  it('the daemon path never loads the POC app: each import is Dynamic and inside the `dossier` or `polaris` branch', () => {\n",
+   "commit": "b28d25e463c38099f7b0db768715324b3eb1838f",
+   "expect": "fail",
+   "exit": 1,
+   "outcome": "fail",
+   "refusedAtPinCheck": true,
+   "asExpected": true,
+   "lastLine": "b28d25e463c38099f7b0db768715324b3eb1838f: the test file does not hold the old pin from c104771ff90f47ffd070f2339c36010458679c71 byte for byte, exactly once"
+  },
+  {
+   "id": "P2-comment-byte",
+   "note": "one byte of the comment line above the pin",
+   "file": "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts",
+   "old": "  // The `polaris` branch (prototype, POLARIS-DOSSIER-ONE-COMMAND-RUN-2026-10-14) injects the same renderer the same way.\n",
+   "new": "  // The `polaris` branch (prototype, POLARIS-DOSSIER-ONE-COMMAND-RUN-2026-10-14) injects the same renderer the same way\n",
+   "commit": "4ee9d2047f68652dfccd77a5cf654b30673f3f71",
+   "expect": "fail",
+   "exit": 1,
+   "outcome": "fail",
+   "refusedAtPinCheck": true,
+   "asExpected": true,
+   "lastLine": "4ee9d2047f68652dfccd77a5cf654b30673f3f71: the test file does not hold the old pin from c104771ff90f47ffd070f2339c36010458679c71 byte for byte, exactly once"
+  },
+  {
+   "id": "P3-body-byte",
+   "note": "one byte of the pin's body",
+   "file": "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts",
+   "old": "    expect(mentions).toEqual([line, line]);\n",
+   "new": "    expect(mentions).toEqual([line,line]);\n",
+   "commit": "8d8b0e8fea214b0d095baa0fbb0beec94e81c3e3",
+   "expect": "fail",
+   "exit": 1,
+   "outcome": "fail",
+   "refusedAtPinCheck": true,
+   "asExpected": true,
+   "lastLine": "8d8b0e8fea214b0d095baa0fbb0beec94e81c3e3: the test file does not hold the old pin from c104771ff90f47ffd070f2339c36010458679c71 byte for byte, exactly once"
+  },
+  {
+   "id": "P4-pin-twice",
+   "note": "the pin block, with its comment line, held twice",
+   "file": "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts",
+   "old": "  // The `polaris` branch (prototype, POLARIS-DOSSIER-ONE-COMMAND-RUN-2026-10-14) injects the same renderer the same way.\n  it('the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch', () => {\n    const main = readFileSync(path.join(REPO_ROOT, 'apps/syzygy/src/main.ts'), 'utf8');\n    const line = \"    const { renderLocalDossier } = await import('@syzygy/three-surface-poc-app/dossier-site');\";\n    const mentions = main.split('\\n').filter((text) => text.includes('three-surface-poc-app'));\n    expect(mentions).toEqual([line, line]);\n    const daemon = main.indexOf('let parsed = parseCli(');\n    const first = main.indexOf(line), second = main.indexOf(line, first + 1);\n    const dossier = main.indexOf(\"if (argv[0] === 'dossier') {\"), polaris = main.indexOf(\"if (argv[0] === 'polaris') {\");\n    expect(dossier).toBeGreaterThan(-1);\n    expect(polaris).toBeGreaterThan(dossier);\n    expect(first).toBeGreaterThan(dossier);\n    expect(first).toBeLessThan(polaris);\n    expect(second).toBeGreaterThan(polaris);\n    expect(second).toBeLessThan(daemon);\n  });\n",
+   "new": "  // The `polaris` branch (prototype, POLARIS-DOSSIER-ONE-COMMAND-RUN-2026-10-14) injects the same renderer the same way.\n  it('the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch', () => {\n    const main = readFileSync(path.join(REPO_ROOT, 'apps/syzygy/src/main.ts'), 'utf8');\n    const line = \"    const { renderLocalDossier } = await import('@syzygy/three-surface-poc-app/dossier-site');\";\n    const mentions = main.split('\\n').filter((text) => text.includes('three-surface-poc-app'));\n    expect(mentions).toEqual([line, line]);\n    const daemon = main.indexOf('let parsed = parseCli(');\n    const first = main.indexOf(line), second = main.indexOf(line, first + 1);\n    const dossier = main.indexOf(\"if (argv[0] === 'dossier') {\"), polaris = main.indexOf(\"if (argv[0] === 'polaris') {\");\n    expect(dossier).toBeGreaterThan(-1);\n    expect(polaris).toBeGreaterThan(dossier);\n    expect(first).toBeGreaterThan(dossier);\n    expect(first).toBeLessThan(polaris);\n    expect(second).toBeGreaterThan(polaris);\n    expect(second).toBeLessThan(daemon);\n  });\n\n  // The `polaris` branch (prototype, POLARIS-DOSSIER-ONE-COMMAND-RUN-2026-10-14) injects the same renderer the same way.\n  it('the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch', () => {\n    const main = readFileSync(path.join(REPO_ROOT, 'apps/syzygy/src/main.ts'), 'utf8');\n    const line = \"    const { renderLocalDossier } = await import('@syzygy/three-surface-poc-app/dossier-site');\";\n    const mentions = main.split('\\n').filter((text) => text.includes('three-surface-poc-app'));\n    expect(mentions).toEqual([line, line]);\n    const daemon = main.indexOf('let parsed = parseCli(');\n    const first = main.indexOf(line), second = main.indexOf(line, first + 1);\n    const dossier = main.indexOf(\"if (argv[0] === 'dossier') {\"), polaris = main.indexOf(\"if (argv[0] === 'polaris') {\");\n    expect(dossier).toBeGreaterThan(-1);\n    expect(polaris).toBeGreaterThan(dossier);\n    expect(first).toBeGreaterThan(dossier);\n    expect(first).toBeLessThan(polaris);\n    expect(second).toBeGreaterThan(polaris);\n    expect(second).toBeLessThan(daemon);\n  });\n",
+   "commit": "e10eabcb0e250aa4064cbd7ffb0d1dddaa4d74df",
+   "expect": "fail",
+   "exit": 1,
+   "outcome": "fail",
+   "refusedAtPinCheck": true,
+   "asExpected": true,
+   "lastLine": "e10eabcb0e250aa4064cbd7ffb0d1dddaa4d74df: the test file does not hold the old pin from c104771ff90f47ffd070f2339c36010458679c71 byte for byte, exactly once"
+  },
+  {
+   "id": "P5-pin-removed",
+   "note": "the pin block and its comment line removed (the comment block this lane wrote above them stays)",
+   "file": "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts",
+   "old": "  // The `polaris` branch (prototype, POLARIS-DOSSIER-ONE-COMMAND-RUN-2026-10-14) injects the same renderer the same way.\n  it('the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch', () => {\n    const main = readFileSync(path.join(REPO_ROOT, 'apps/syzygy/src/main.ts'), 'utf8');\n    const line = \"    const { renderLocalDossier } = await import('@syzygy/three-surface-poc-app/dossier-site');\";\n    const mentions = main.split('\\n').filter((text) => text.includes('three-surface-poc-app'));\n    expect(mentions).toEqual([line, line]);\n    const daemon = main.indexOf('let parsed = parseCli(');\n    const first = main.indexOf(line), second = main.indexOf(line, first + 1);\n    const dossier = main.indexOf(\"if (argv[0] === 'dossier') {\"), polaris = main.indexOf(\"if (argv[0] === 'polaris') {\");\n    expect(dossier).toBeGreaterThan(-1);\n    expect(polaris).toBeGreaterThan(dossier);\n    expect(first).toBeGreaterThan(dossier);\n    expect(first).toBeLessThan(polaris);\n    expect(second).toBeGreaterThan(polaris);\n    expect(second).toBeLessThan(daemon);\n  });\n",
+   "new": "",
+   "commit": "662ccbbcdacef84a7ebeacc4c94ab7973f38d8e6",
+   "expect": "fail",
+   "exit": 1,
+   "outcome": "fail",
+   "refusedAtPinCheck": true,
+   "asExpected": true,
+   "lastLine": "662ccbbcdacef84a7ebeacc4c94ab7973f38d8e6: the test file does not hold the old pin from c104771ff90f47ffd070f2339c36010458679c71 byte for byte, exactly once"
+  }
+ ]
+}

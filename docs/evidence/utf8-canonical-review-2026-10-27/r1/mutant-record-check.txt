@@ -1,0 +1,20 @@
+utf8-canonical-mutants-2ea14d94.json D1-decoder-not-fatal old x 1 newPresent False reachable False consistent True killed by test, probe 
+utf8-canonical-mutants-2ea14d94.json D2-decoder-keeps-bom old x 1 newPresent False reachable False consistent True killed by test, probe 
+utf8-canonical-mutants-2ea14d94.json D3-refusal-returns-empty-text old x 1 newPresent False reachable False consistent True killed by test, probe 
+utf8-canonical-mutants-2ea14d94.json D4-decoder-streams old x 1 newPresent False reachable False consistent True killed by test, probe 
+utf8-canonical-mutants-2ea14d94.json G1-object-reader-decodes-leniently old x 1 newPresent False reachable False consistent True killed by existing, probe 
+utf8-canonical-mutants-2ea14d94.json O1-seed-reader-decodes-leniently old x 1 newPresent False reachable False consistent True killed by existing, probe 
+utf8-canonical-mutants-2ea14d94.json O2-git-text-decodes-leniently old x 1 newPresent False reachable False consistent True killed by probe 
+utf8-canonical-mutants-2ea14d94.json A1-consent-decodes-leniently old x 1 newPresent False reachable False consistent True killed by test, probe 
+utf8-canonical-mutants-2ea14d94.json A2-json-artifact-decodes-leniently old x 1 newPresent False reachable False consistent True killed by test, probe 
+utf8-canonical-mutants-2ea14d94.json C1-code-structure-lets-bad-path-through old x 1 newPresent False reachable False consistent True killed by existing, probe 
+utf8-canonical-mutants-2ea14d94.json K1-lenient-keys-unsorted old x 1 newPresent True reachable False consistent True killed by test, existing 
+utf8-canonical-mutants-2ea14d94.json K2-lenient-arrays-as-objects old x 1 newPresent False reachable False consistent True killed by test 
+utf8-canonical-mutants-2ea14d94.json K3-strict-keys-unsorted old x 1 newPresent False reachable False consistent True killed by test, existing 
+utf8-canonical-mutants-2ea14d94.json K4-strict-accepts-non-finite old x 1 newPresent False reachable False consistent True killed by test, existing 
+utf8-canonical-mutants-2ea14d94.json K5-strict-accepts-non-plain-objects old x 1 newPresent False reachable False consistent True killed by test, existing 
+utf8-canonical-mutants-2ea14d94.json K6-strict-accepts-proto-key old x 1 newPresent False reachable False consistent True killed by test, existing 
+utf8-canonical-mutants-2ea14d94.json K7-strict-accepts-accessors old x 1 newPresent False reachable False consistent True killed by test, existing 
+utf8-canonical-mutants-2ea14d94.json K8-lenient-reads-dates old x 1 newPresent False reachable False consistent True killed by test 
+utf8-canonical-mutants-o2-rerun-e16126c7 O2-git-text-decodes-leniently old x 1 newPresent False reachable False consistent True killed by test, probe 
+rows 19 oldExactlyOnce 19 consistent 19

@@ -1,0 +1,187 @@
+{
+ "commit": "ecea355ba96b0082ad8aad11e9799518f87c2e19",
+ "node": "v24.6.0",
+ "statusAfter": "",
+ "rows": [
+  {
+   "id": "V0-unmutated",
+   "edits": [],
+   "tscExit": 0,
+   "tsErrors": [],
+   "tscFirstLines": [],
+   "emittedJs": [
+    "decode-utf8.js",
+    "deep-freeze.js",
+    "index.js",
+    "purity.testkit.js",
+    "sha256.js"
+   ],
+   "indexJs": "// Internal helpers that more than one workspace package needs and that have\n// one meaning everywhere (syzygy-bpyt.6.3). The package depends on nothing in\n// the workspace: the import graph has two leaves that cannot import each other\n// (`@syzygy/cap1-core` and `@syzygy/polaris-generation-core`), and the helpers\n// are needed on both sides of the Polaris generation kit's boundary, so they\n// sit below both. Pure: no file, process or clock.\nexport { sha256 } from './sha256.js';\nexport { deepFreeze } from './deep-freeze.js';\nexport { decodeUtf8 } from './decode-utf8.js';\n//# sourceMappingURL=index.js.map",
+   "probe": "Object.keys(m).sort()",
+   "loaded": {
+    "exit": 0,
+    "stdout": "[\"decodeUtf8\",\"deepFreeze\",\"sha256\"]",
+    "stderr": ""
+   }
+  },
+  {
+   "id": "V6-export-star-inside-a-nested-declare-module-block",
+   "edits": [
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { decodeUtf8 } from './decode-utf8.js';\n",
+     "new": "export { decodeUtf8 } from './decode-utf8.js';\ndeclare module './sha256.js' {\n  export * from 'node:crypto';\n}\n"
+    }
+   ],
+   "tscExit": 2,
+   "tsErrors": [
+    "TS2666"
+   ],
+   "tscFirstLines": [
+    "packages/support/src/index.ts(11,3): error TS2666: Exports and export assignments are not permitted in module augmentations."
+   ],
+   "emittedJs": [
+    "decode-utf8.js",
+    "deep-freeze.js",
+    "index.js",
+    "purity.testkit.js",
+    "sha256.js"
+   ],
+   "indexJs": "// Internal helpers that more than one workspace package needs and that have\n// one meaning everywhere (syzygy-bpyt.6.3). The package depends on nothing in\n// the workspace: the import graph has two leaves that cannot import each other\n// (`@syzygy/cap1-core` and `@syzygy/polaris-generation-core`), and the helpers\n// are needed on both sides of the Polaris generation kit's boundary, so they\n// sit below both. Pure: no file, process or clock.\nexport { sha256 } from './sha256.js';\nexport { deepFreeze } from './deep-freeze.js';\nexport { decodeUtf8 } from './decode-utf8.js';\n//# sourceMappingURL=index.js.map",
+   "probe": "Object.keys(m).sort()",
+   "loaded": {
+    "exit": 0,
+    "stdout": "[\"decodeUtf8\",\"deepFreeze\",\"sha256\"]",
+    "stderr": ""
+   }
+  },
+  {
+   "id": "V7-import-equals-require-with-a-space",
+   "edits": [
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { decodeUtf8 } from './decode-utf8.js';\n",
+     "new": "export { decodeUtf8 } from './decode-utf8.js';\nimport value = require ('node:crypto');\nexport { value };\n"
+    }
+   ],
+   "tscExit": 0,
+   "tsErrors": [],
+   "tscFirstLines": [],
+   "emittedJs": [
+    "decode-utf8.js",
+    "deep-freeze.js",
+    "index.js",
+    "purity.testkit.js",
+    "sha256.js"
+   ],
+   "indexJs": "import { createRequire as _createRequire } from \"module\";\nconst __require = _createRequire(import.meta.url);\n// Internal helpers that more than one workspace package needs and that have\n// one meaning everywhere (syzygy-bpyt.6.3). The package depends on nothing in\n// the workspace: the import graph has two leaves that cannot import each other\n// (`@syzygy/cap1-core` and `@syzygy/polaris-generation-core`), and the helpers\n// are needed on both sides of the Polaris generation kit's boundary, so they\n// sit below both. Pure: no file, process or clock.\nexport { sha256 } from './sha256.js';\nexport { deepFreeze } from './deep-freeze.js';\nexport { decodeUtf8 } from './decode-utf8.js';\nconst value = __require(\"node:crypto\");\nexport { value };\n//# sourceMappingURL=index.js.map",
+   "probe": "Object.keys(m).sort()",
+   "loaded": {
+    "exit": 0,
+    "stdout": "[\"decodeUtf8\",\"deepFreeze\",\"sha256\",\"value\"]",
+    "stderr": ""
+   }
+  },
+  {
+   "id": "V8-local-re-export-of-createHash",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "  return createHash('sha256').update(value).digest('hex');\n}\n",
+     "new": "  return createHash('sha256').update(value).digest('hex');\n}\nexport { createHash };\n"
+    },
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { sha256 } from './sha256.js';\n",
+     "new": "export { sha256, createHash } from './sha256.js';\n"
+    }
+   ],
+   "tscExit": 0,
+   "tsErrors": [],
+   "tscFirstLines": [],
+   "emittedJs": [
+    "decode-utf8.js",
+    "deep-freeze.js",
+    "index.js",
+    "purity.testkit.js",
+    "sha256.js"
+   ],
+   "indexJs": "// Internal helpers that more than one workspace package needs and that have\n// one meaning everywhere (syzygy-bpyt.6.3). The package depends on nothing in\n// the workspace: the import graph has two leaves that cannot import each other\n// (`@syzygy/cap1-core` and `@syzygy/polaris-generation-core`), and the helpers\n// are needed on both sides of the Polaris generation kit's boundary, so they\n// sit below both. Pure: no file, process or clock.\nexport { sha256, createHash } from './sha256.js';\nexport { deepFreeze } from './deep-freeze.js';\nexport { decodeUtf8 } from './decode-utf8.js';\n//# sourceMappingURL=index.js.map",
+   "probe": "[Object.keys(m).sort(), typeof m.createHash, m.createHash && m.createHash('sha256').update('a').digest('hex').slice(0, 8)]",
+   "loaded": {
+    "exit": 0,
+    "stdout": "[[\"createHash\",\"decodeUtf8\",\"deepFreeze\",\"sha256\"],\"function\",\"ca978112\"]",
+    "stderr": ""
+   }
+  },
+  {
+   "id": "V9-literal-dynamic-import-of-node-crypto-with-a-space",
+   "edits": [
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { decodeUtf8 } from './decode-utf8.js';\n",
+     "new": "export { decodeUtf8 } from './decode-utf8.js';\nexport const value = () => import ('node:crypto');\n"
+    }
+   ],
+   "tscExit": 0,
+   "tsErrors": [],
+   "tscFirstLines": [],
+   "emittedJs": [
+    "decode-utf8.js",
+    "deep-freeze.js",
+    "index.js",
+    "purity.testkit.js",
+    "sha256.js"
+   ],
+   "indexJs": "// Internal helpers that more than one workspace package needs and that have\n// one meaning everywhere (syzygy-bpyt.6.3). The package depends on nothing in\n// the workspace: the import graph has two leaves that cannot import each other\n// (`@syzygy/cap1-core` and `@syzygy/polaris-generation-core`), and the helpers\n// are needed on both sides of the Polaris generation kit's boundary, so they\n// sit below both. Pure: no file, process or clock.\nexport { sha256 } from './sha256.js';\nexport { deepFreeze } from './deep-freeze.js';\nexport { decodeUtf8 } from './decode-utf8.js';\nexport const value = () => import('node:crypto');\n//# sourceMappingURL=index.js.map",
+   "probe": "[Object.keys(m).sort(), typeof (await m.value()).randomUUID, (await m.value()).randomUUID() !== (await m.value()).randomUUID()]",
+   "loaded": {
+    "exit": 0,
+    "stdout": "[[\"decodeUtf8\",\"deepFreeze\",\"sha256\",\"value\"],\"function\",true]",
+    "stderr": ""
+   }
+  },
+  {
+   "id": "W5V12-x-forms-dropped-plus-a-tsx-export-star",
+   "edits": [
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "/\\.[cm]?[jt]sx?$/u.test(name)",
+     "new": "/\\.[cm]?[jt]s$/u.test(name)"
+    },
+    {
+     "path": "packages/support/src/value.tsx",
+     "old": null,
+     "new": "export * from 'node:crypto';\n"
+    },
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { decodeUtf8 } from './decode-utf8.js';\n",
+     "new": "export { decodeUtf8 } from './decode-utf8.js';\nexport * from './value.js';\n"
+    }
+   ],
+   "tscExit": 2,
+   "tsErrors": [
+    "TS6142"
+   ],
+   "tscFirstLines": [
+    "packages/support/src/index.ts(10,15): error TS6142: Module './value.js' was resolved to '/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/packages/support/src/value.tsx', but '--jsx' is not set."
+   ],
+   "emittedJs": [
+    "decode-utf8.js",
+    "deep-freeze.js",
+    "index.js",
+    "purity.testkit.js",
+    "sha256.js",
+    "value.js"
+   ],
+   "indexJs": "// Internal helpers that more than one workspace package needs and that have\n// one meaning everywhere (syzygy-bpyt.6.3). The package depends on nothing in\n// the workspace: the import graph has two leaves that cannot import each other\n// (`@syzygy/cap1-core` and `@syzygy/polaris-generation-core`), and the helpers\n// are needed on both sides of the Polaris generation kit's boundary, so they\n// sit below both. Pure: no file, process or clock.\nexport { sha256 } from './sha256.js';\nexport { deepFreeze } from './deep-freeze.js';\nexport { decodeUtf8 } from './decode-utf8.js';\nexport * from './value.js';\n//# sourceMappingURL=index.js.map",
+   "probe": "[Object.keys(m).sort().length, typeof m.randomUUID]",
+   "loaded": {
+    "exit": 0,
+    "stdout": "[68,\"function\"]",
+    "stderr": ""
+   }
+  }
+ ]
+}

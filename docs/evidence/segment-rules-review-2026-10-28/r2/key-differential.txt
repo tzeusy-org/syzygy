@@ -1,0 +1,49 @@
+key a/../b	refuses -> refuses
+  base: throws @syzygy/lib: its entry has a /../ segment, which Node refuses
+  head: throws @syzygy/lib: its condition key "a/../b" has a /../ segment, and no condition Node matches by default has one
+key /../	refuses -> refuses
+  base: throws @syzygy/lib: its entry has a /../ segment, which Node refuses
+  head: throws @syzygy/lib: its condition key "/../" has a /../ segment, and no condition Node matches by default has one
+key ..	accepts -> accepts
+  base: ok packages/lib/src/index.ts
+  head: ok packages/lib/src/index.ts
+key a/.. then /b	refuses -> refuses
+  base: throws @syzygy/lib: its entry is not a ./dist/X.js whose src/X.ts exists
+  head: throws @syzygy/lib: its entry is not a ./dist/X.js whose src/X.ts exists
+nested key	refuses -> refuses
+  base: throws @syzygy/lib: its entry has a /../ segment, which Node refuses
+  head: throws @syzygy/lib: its node > condition key "x/../import" has a /../ segment, and no condition Node matches by default has one
+key in array object	refuses -> refuses
+  base: throws @syzygy/lib: its entry has a /../ segment, which Node refuses
+  head: throws @syzygy/lib: its condition key "a/../b" has a /../ segment, and no condition Node matches by default has one
+key after default	refuses -> refuses
+  base: throws @syzygy/lib: its entry has a /../ segment, which Node refuses
+  head: throws @syzygy/lib: its condition key "a/../b" has a /../ segment, and no condition Node matches by default has one
+key with backslashes	accepts -> accepts
+  base: ok packages/lib/src/index.ts
+  head: ok packages/lib/src/index.ts
+key a/..b	accepts -> accepts
+  base: ok packages/lib/src/index.ts
+  head: ok packages/lib/src/index.ts
+key ./../x	refuses -> refuses
+  base: throws @syzygy/lib: its entry has a /../ segment, which Node refuses
+  head: throws @syzygy/lib: its condition key "./../x" has a /../ segment, and no condition Node matches by default has one
+leaf under unknown condition	refuses -> refuses
+  base: throws @syzygy/lib: its entry has a /../ segment, which Node refuses
+  head: throws @syzygy/lib: its foo condition target "x/../y" has an empty, '.', '..' or 'node_modules' segment, which Node does not read
+leaf null	refuses -> refuses
+  base: throws @syzygy/lib: its entry is not a ./dist/X.js whose src/X.ts exists
+  head: throws @syzygy/lib: its entry is not a ./dist/X.js whose src/X.ts exists
+leaf number	refuses -> refuses
+  base: throws @syzygy/lib: its entry is not a ./dist/X.js whose src/X.ts exists
+  head: throws @syzygy/lib: its entry is not a ./dist/X.js whose src/X.ts exists
+array leaf	refuses -> refuses
+  base: throws @syzygy/lib: its entry has a /../ segment, which Node refuses
+  head: throws @syzygy/lib: its entry target "x/../y" has an empty, '.', '..' or 'node_modules' segment, which Node refuses (ERR_INVALID_PACKAGE_TARGET)
+deep key	refuses -> refuses
+  base: throws @syzygy/lib: its entry has a /../ segment, which Node refuses
+  head: throws @syzygy/lib: its node > import > condition key "p/../q" has a /../ segment, and no condition Node matches by default has one
+plain	accepts -> accepts
+  base: ok packages/lib/src/index.ts
+  head: ok packages/lib/src/index.ts
+rows 16 {"refuses -> refuses":12,"accepts -> accepts":4}

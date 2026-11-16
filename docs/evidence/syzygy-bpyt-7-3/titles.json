@@ -1,0 +1,205 @@
+{
+ "what": "every test title Vitest lists at each commit (npx vitest list --json in a clean clone), keyed by file and full name",
+ "base": "9b539e5f64241ed4ccb119753e9f4786a15be2f7",
+ "head": "9d55188734e5d7d315591a55daf3a7bb5970c5aa",
+ "titles": {
+  "base": 5273,
+  "head": 5283
+ },
+ "duplicateKeys": {
+  "base": 9,
+  "head": 9
+ },
+ "added": 36,
+ "removed": 26,
+ "moved": 26,
+ "new": [
+  [
+   "apps/three-surface-poc/src/git-observation.test.ts",
+   "read-only Git observation > protects the HTTP host package the POC serves through"
+  ],
+  [
+   "packages/cap1-daemon/src/package.test.ts",
+   "cap1-daemon package > exports the values it exported before the host moved out"
+  ],
+  [
+   "packages/http-host/src/package.test.ts",
+   "http-host package > exports the host and nothing of the Capability 1 app"
+  ],
+  [
+   "packages/http-host/src/package.test.ts",
+   "http-host package > is importable with built runtime and declaration entries"
+  ],
+  [
+   "packages/http-host/src/shutdown.test.ts",
+   "closeOnSignal > announces SIGINT, closes the daemon once and resolves"
+  ],
+  [
+   "packages/http-host/src/shutdown.test.ts",
+   "closeOnSignal > announces SIGTERM, closes the daemon once and resolves"
+  ],
+  [
+   "packages/http-host/src/shutdown.test.ts",
+   "closeOnSignal > does nothing on a signal after the first"
+  ],
+  [
+   "packages/http-host/src/shutdown.test.ts",
+   "closeOnSignal > resolves quietly on a failed close when nothing listens for one"
+  ],
+  [
+   "packages/http-host/src/shutdown.test.ts",
+   "closeOnSignal > stays pending until a signal arrives"
+  ],
+  [
+   "packages/http-host/src/shutdown.test.ts",
+   "closeOnSignal > tells a failed close to closeFailed and still resolves"
+  ]
+ ],
+ "movedTitles": [
+  [
+   "packages/cap1-daemon/src/credentials.test.ts -> packages/http-host/src/credentials.test.ts",
+   "RT3 \u2014 credential provisioning > an existing empty credential file is a named failure, never a silent re-mint"
+  ],
+  [
+   "packages/cap1-daemon/src/credentials.test.ts -> packages/http-host/src/credentials.test.ts",
+   "RT3 \u2014 credential provisioning > first start mints a random token, persisted with mode 0600"
+  ],
+  [
+   "packages/cap1-daemon/src/credentials.test.ts -> packages/http-host/src/credentials.test.ts",
+   "RT3 \u2014 credential provisioning > restart reuses the persisted token unchanged"
+  ],
+  [
+   "packages/cap1-daemon/src/credentials.test.ts -> packages/http-host/src/credentials.test.ts",
+   "RT3 \u2014 credential provisioning > two distinct state dirs mint distinct tokens"
+  ],
+  [
+   "packages/cap1-daemon/src/credentials.test.ts -> packages/http-host/src/credentials.test.ts",
+   "RT3 \u2014 credential reuse inspection > accepts an 0600 file in an 0700 directory"
+  ],
+  [
+   "packages/cap1-daemon/src/credentials.test.ts -> packages/http-host/src/credentials.test.ts",
+   "RT3 \u2014 credential reuse inspection > accepts an 0600 file in an 0755 directory: others may list it, not read the token"
+  ],
+  [
+   "packages/cap1-daemon/src/credentials.test.ts -> packages/http-host/src/credentials.test.ts",
+   "RT3 \u2014 credential reuse inspection > refuses a dangling symlink rather than minting through it"
+  ],
+  [
+   "packages/cap1-daemon/src/credentials.test.ts -> packages/http-host/src/credentials.test.ts",
+   "RT3 \u2014 credential reuse inspection > refuses a file owned by another uid (injected stat)"
+  ],
+  [
+   "packages/cap1-daemon/src/credentials.test.ts -> packages/http-host/src/credentials.test.ts",
+   "RT3 \u2014 credential reuse inspection > refuses a group-readable 0640 file"
+  ],
+  [
+   "packages/cap1-daemon/src/credentials.test.ts -> packages/http-host/src/credentials.test.ts",
+   "RT3 \u2014 credential reuse inspection > refuses a group-writable 0775 directory"
+  ],
+  [
+   "packages/cap1-daemon/src/credentials.test.ts -> packages/http-host/src/credentials.test.ts",
+   "RT3 \u2014 credential reuse inspection > refuses a state directory owned by another uid (injected stat)"
+  ],
+  [
+   "packages/cap1-daemon/src/credentials.test.ts -> packages/http-host/src/credentials.test.ts",
+   "RT3 \u2014 credential reuse inspection > refuses a state directory that is not a directory (injected stat)"
+  ],
+  [
+   "packages/cap1-daemon/src/credentials.test.ts -> packages/http-host/src/credentials.test.ts",
+   "RT3 \u2014 credential reuse inspection > refuses a symlinked credential file without following it"
+  ],
+  [
+   "packages/cap1-daemon/src/credentials.test.ts -> packages/http-host/src/credentials.test.ts",
+   "RT3 \u2014 credential reuse inspection > refuses a symlinked state directory"
+  ],
+  [
+   "packages/cap1-daemon/src/credentials.test.ts -> packages/http-host/src/credentials.test.ts",
+   "RT3 \u2014 credential reuse inspection > refuses a world-writable 0777 directory"
+  ],
+  [
+   "packages/cap1-daemon/src/credentials.test.ts -> packages/http-host/src/credentials.test.ts",
+   "RT3 \u2014 credential reuse inspection > refuses an other-readable 0644 file"
+  ],
+  [
+   "packages/cap1-daemon/src/credentials.test.ts -> packages/http-host/src/credentials.test.ts",
+   "RT3 \u2014 credential reuse inspection > refuses every reuse when the platform reports no process uid"
+  ],
+  [
+   "packages/cap1-daemon/src/credentials.test.ts -> packages/http-host/src/credentials.test.ts",
+   "RT3 \u2014 credential reuse inspection > the six refusals carry six distinct details"
+  ],
+  [
+   "packages/cap1-daemon/src/credentials.test.ts -> packages/http-host/src/credentials.test.ts",
+   "RT3 \u2014 credential verification through core admission > a correct bearer header is admitted as a machine client"
+  ],
+  [
+   "packages/cap1-daemon/src/credentials.test.ts -> packages/http-host/src/credentials.test.ts",
+   "RT3 \u2014 credential verification through core admission > a missing header is a non-presented credential and refuses, named"
+  ],
+  [
+   "packages/cap1-daemon/src/credentials.test.ts -> packages/http-host/src/credentials.test.ts",
+   "RT3 \u2014 credential verification through core admission > a wrong token refuses with the named vocabulary, never a bare string"
+  ],
+  [
+   "packages/cap1-daemon/src/credentials.test.ts -> packages/http-host/src/credentials.test.ts",
+   "RT3 \u2014 credential verification through core admission > non-Bearer and empty-token headers refuse, named"
+  ],
+  [
+   "packages/cap1-daemon/src/credentials.test.ts -> packages/http-host/src/credentials.test.ts",
+   "RT3 \u2014 state-write boundary > authorizes a plain file name inside the state dir"
+  ],
+  [
+   "packages/cap1-daemon/src/credentials.test.ts -> packages/http-host/src/credentials.test.ts",
+   "RT3 \u2014 state-write boundary > refuses a symlink escape, named"
+  ],
+  [
+   "packages/cap1-daemon/src/credentials.test.ts -> packages/http-host/src/credentials.test.ts",
+   "RT3 \u2014 state-write boundary > refuses empty and self-naming candidates, named"
+  ],
+  [
+   "packages/cap1-daemon/src/credentials.test.ts -> packages/http-host/src/credentials.test.ts",
+   "RT3 \u2014 state-write boundary > refuses traversal out of the state dir, named"
+  ]
+ ],
+ "listSha256": {
+  "base": "b0d177a2aca779669c604f67d224b4ef6188c46076e6e605afa52aa20d129041",
+  "head": "8649f868cc7d7a4612e1784159d47100e3d2796edf6fdbe52931a43c87e0e273"
+ },
+ "duplicates": {
+  "what": "keys (file, full name) listed more than once: parametrized rows sharing one title",
+  "base": [
+   [
+    "packages/polaris-generation-core/src/canonical-json.test.ts",
+    "canonical JSON record bytes > rejects non-JSON primitives without silent omission",
+    7
+   ],
+   [
+    "packages/polaris-generation-core/src/provider-draft.test.ts",
+    "provider-local intermediate validation > preserves inert text for escaped rendering",
+    3
+   ],
+   [
+    "packages/three-surface-poc-core/src/project-shape-extraction.test.ts",
+    "PWB-REQ-002 \u2014 two independent extractors agree on every fixture > preserves multiline catalog-entry declarations without minting a second item",
+    2
+   ]
+  ],
+  "head": [
+   [
+    "packages/polaris-generation-core/src/canonical-json.test.ts",
+    "canonical JSON record bytes > rejects non-JSON primitives without silent omission",
+    7
+   ],
+   [
+    "packages/polaris-generation-core/src/provider-draft.test.ts",
+    "provider-local intermediate validation > preserves inert text for escaped rendering",
+    3
+   ],
+   [
+    "packages/three-surface-poc-core/src/project-shape-extraction.test.ts",
+    "PWB-REQ-002 \u2014 two independent extractors agree on every fixture > preserves multiline catalog-entry declarations without minting a second item",
+    2
+   ]
+  ]
+ }
+}

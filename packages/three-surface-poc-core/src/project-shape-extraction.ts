@@ -11,10 +11,16 @@
 // label whitespace is collapsed to one semantic space. There is no case
 // folding, stemming or punctuation rewriting.
 //
-// Any grammar failure — a missing heading, a malformed row/list/TOML, a
-// duplicate key within the source, an ambiguous leading label — makes the
-// whole source's item denominator Unknown. A source never yields a partial
-// item set.
+// Each class a source is assigned is read on its own (PWB-REQ-002 as amended
+// by `pwb-class-granular-extraction-amendment-v1.0`). A grammar failure — a
+// missing heading, a malformed row/list/TOML, a duplicate key within the
+// source, an ambiguous leading label — fails that one class in that source:
+// its item denominator there is Unknown and it yields none of its items, never
+// a partial set. Every other class the source is assigned keeps its items. A
+// list or table row that declares two or more headings at one level encloses
+// that level; a heading at that level the grammar does not declare is an
+// unenumerated heading: surfaced and counted, never skipped, and it mints
+// nothing and fails nothing.
 //
 // The root index (PWB-REQ-004 as amended by the 2026-09-05
 // truth-and-readiness amendment; registry `observationGrammar.rootSummary`
@@ -23,9 +29,10 @@
 // seven-row layer precedence table, or nothing.
 
 import { posixBasename } from './git-tree.js';
+import { isFencedAt, recognizeCodeContexts } from './markdown-code-context.js';
 import { EXTRACTION_CLASSES, type ExtractionClass, type ManifestSource, type SourceRule } from './project-shape-manifest.js';
-import type { ResourceLimitBreach } from './project-shape-observation.js';
-import { ParsePassBudgetExceeded, type ParsePassCharge, type ParsePassIdentity } from './resource-ledger.js';
+import type { ResourceLimitBreach } from './pwb-types.js';
+import type { ParsePassCharge, ParsePassIdentity } from './resource-ledger.js';
 
 // ---------------------------------------------------------------------
 // Vocabulary.
@@ -92,14 +99,36 @@ export interface ExtractionFailureRecord {
 
 // One literal V1 catalog heading and the line it sits on: the anchor of the
 // derived `catalog-count:<catalog-key>` declaration.
-export interface CatalogHeading {
+interface CatalogHeading {
   readonly key: (typeof CATALOG_HEADINGS)[number];
   readonly line: number;
 }
 
+// A heading inside an enclosing section that no row of the source's grammar
+// declares: text, level and the exact (1-based) source line. It mints no item.
+export interface UnenumeratedHeading {
+  readonly class: ExtractionClass;
+  readonly level: number;
+  readonly text: string;
+  readonly line: number;
+}
+
 export type ClassExtraction =
-  | { readonly kind: 'items'; readonly class: ExtractionClass; readonly items: readonly ExtractedItem[]; readonly catalogHeadings?: readonly CatalogHeading[] }
-  | { readonly kind: 'failed'; readonly failure: ExtractionFailureRecord };
+  | {
+      readonly kind: 'items';
+      readonly class: ExtractionClass;
+      readonly items: readonly ExtractedItem[];
+      readonly catalogHeadings?: readonly CatalogHeading[];
+      readonly unenumeratedHeadings?: readonly UnenumeratedHeading[];
+    }
+  | {
+      readonly kind: 'failed';
+      readonly failure: ExtractionFailureRecord;
+      // Headings the row encloses that no row declares, surfaced even when the
+      // class fails on an entry: present only once the row's own headings
+      // were all found.
+      readonly unenumeratedHeadings?: readonly UnenumeratedHeading[];
+    };
 
 export type SourceExtraction =
   | {
@@ -112,15 +141,36 @@ export type SourceExtraction =
       // Present only when `catalog-entry` was extracted: the nine literal
       // catalog headings, each the anchor of one derived catalog count.
       readonly catalogHeadings?: readonly CatalogHeading[];
+      // Present only when a class read but left a heading undeclared: the
+      // class's item denominator in this source is Unknown, and so is the
+      // source's own.
+      readonly unenumeratedHeadings?: readonly UnenumeratedHeading[];
       // Present only for the root index: its stated counts and precedence
       // table under the registry grammar.
       readonly rootIndex?: RootIndexExtraction;
     }
   | {
+      // Some classes failed and others read. `items` and `denominators` hold
+      // only the classes that read; `failures` has one record per failed
+      // class, in class order.
+      readonly kind: 'partial';
+      readonly path: string;
+      readonly classes: readonly ExtractionClass[];
+      readonly items: readonly ExtractedItem[];
+      readonly denominators: Readonly<Partial<Record<ExtractionClass, number>>>;
+      readonly failures: readonly ExtractionFailureRecord[];
+      readonly catalogHeadings?: readonly CatalogHeading[];
+      readonly unenumeratedHeadings?: readonly UnenumeratedHeading[];
+    }
+  | {
+      // No class the source is assigned reads: `failure` is the first failed
+      // class's, `failures` has one record per assigned class.
       readonly kind: 'unknown';
       readonly path: string;
       readonly classes: readonly ExtractionClass[];
       readonly failure: ExtractionFailureRecord;
+      readonly failures: readonly ExtractionFailureRecord[];
+      readonly unenumeratedHeadings?: readonly UnenumeratedHeading[];
     }
   | {
       // The source's parse-pass budget ran out before `pass` ran: not a
@@ -154,29 +204,26 @@ interface Heading {
 }
 
 const ATX = /^(#{1,6})[ \t]+(.*?)[ \t]*(?:[ \t]#+[ \t]*)?$/;
-const FENCE = /^(`{3,}|~{3,})/;
-
+// Which lines sit inside a fence is the PWB-REQ-006 profile's rule (`recognizeCodeContexts`), not a rule of this module (syzygy-bpyt.55).
+// The line model stays this module's: the text splits at LF and one trailing CR is dropped, and a line is fenced when the profile
+// marks its first character fenced. In a text with bare CRs a fence that opens inside an LF line therefore reaches the lines after it.
 function parseDoc(text: string): Doc {
-  const lines = text.split('\n').map((l) => (l.endsWith('\r') ? l.slice(0, -1) : l));
+  const recognition = recognizeCodeContexts(text);
+  const lines: string[] = [];
   const fenced: boolean[] = [];
   const headings: Heading[] = [];
-  let fence: string | undefined;
-  lines.forEach((line, index) => {
-    const opener = FENCE.exec(line);
-    if (fence === undefined && opener !== undefined && opener !== null) {
-      fence = opener[1] as string;
-      fenced.push(true);
-      return;
-    }
-    if (fence !== undefined) {
-      fenced.push(true);
-      if (line.trimEnd() === fence || (line.startsWith(fence) && line.trim().replace(/[`~]/g, '') === '')) fence = undefined;
-      return;
-    }
-    fenced.push(false);
+  let offset = 0;
+  for (const raw of text.split('\n')) {
+    const line = raw.endsWith('\r') ? raw.slice(0, -1) : raw;
+    const index = lines.length;
+    lines.push(line);
+    const inside = isFencedAt(recognition, offset);
+    offset += raw.length + 1;
+    fenced.push(inside);
+    if (inside) continue;
     const h = ATX.exec(line);
     if (h) headings.push({ level: (h[1] as string).length, text: nfc((h[2] as string).trim()), index });
-  });
+  }
   return { lines, fenced, headings };
 }
 
@@ -435,28 +482,81 @@ export function extractSuccessCriteria(path: string, doc: Doc): ClassExtraction 
   );
 }
 
+// Every heading the Butlers grammar declares in v1.md, with its level: the
+// three level-2 sections of `project-account-section` and
+// `success-criterion`, and the nine level-3 catalog headings.
+const V1_DECLARED_HEADINGS: readonly { readonly level: number; readonly text: string }[] = [
+  { level: 2, text: V1_HEADINGS.ships },
+  { level: 2, text: V1_HEADINGS.defers },
+  { level: 2, text: V1_HEADINGS.success },
+  ...CATALOG_HEADINGS.map((text) => ({ level: 3, text })),
+];
+
+// The headings at `level` that a row declaring `rowHeadings` (two or more, at
+// that level) encloses and that no row declares. The enclosed area is the
+// section of each heading one level higher that holds one of the row's
+// headings, or the whole file when the level is 1 or no such heading holds
+// one. `declared` is every heading any row of the source's grammar declares.
+function unenumeratedHeadingsOf(
+  doc: Doc,
+  cls: ExtractionClass,
+  level: number,
+  rowHeadings: readonly Heading[],
+  declared: readonly { readonly level: number; readonly text: string }[],
+): readonly UnenumeratedHeading[] {
+  const holders = new Map<number, Range>();
+  if (level > 1) {
+    for (const row of rowHeadings) {
+      const parent = [...doc.headings].reverse().find((h) => h.index < row.index && h.level === level - 1);
+      if (parent === undefined) continue;
+      const range = sectionOf(doc, parent);
+      if (range.end > row.index) holders.set(parent.index, range);
+    }
+  }
+  const areas: readonly Range[] = holders.size === 0 ? [{ start: 0, end: doc.lines.length }] : [...holders.values()];
+  const found: UnenumeratedHeading[] = [];
+  for (const h of doc.headings) {
+    if (h.level !== level) continue;
+    if (!areas.some((area) => h.index >= area.start && h.index < area.end)) continue;
+    if (declared.some((d) => d.level === level && nfc(d.text) === h.text)) continue;
+    found.push({ class: cls, level, text: h.text, line: h.index + 1 });
+  }
+  return found;
+}
+
 export function extractCatalogEntries(path: string, doc: Doc): ClassExtraction {
   const cls: ExtractionClass = 'catalog-entry';
   if (posixBasename(path) !== 'v1.md') return failed('unsupported-source', cls, undefined, posixBasename(path));
   const out: ExtractedItem[] = [];
   const catalogHeadings: CatalogHeading[] = [];
-  for (const headingText of CATALOG_HEADINGS) {
-    const h = oneHeading(doc, 3, headingText, cls);
-    if (isFailure(h)) return h;
+  const found = CATALOG_HEADINGS.map((headingText) => oneHeading(doc, 3, headingText, cls));
+  const rowHeadings = found.filter((h): h is Heading => !isFailure(h));
+  // The row declares nine headings at level 3, so it encloses that level; the
+  // headings no row declares there are surfaced whether or not an entry
+  // below, or another declared heading's absence, then fails the class. With
+  // none of the nine found, no heading holds them and the enclosed area is
+  // the whole file (PWB-REQ-002 as amended, Hunk 2).
+  const unenumeratedHeadings = unenumeratedHeadingsOf(doc, cls, 3, rowHeadings, V1_DECLARED_HEADINGS);
+  const surfaced = unenumeratedHeadings.length === 0 ? {} : { unenumeratedHeadings };
+  const fail = (reason: ExtractionFailure, line: number, detail?: string): ClassExtraction => ({ ...(failed(reason, cls, line, detail) as { kind: 'failed'; failure: ExtractionFailureRecord }), ...surfaced });
+  for (const [i, h] of found.entries()) {
+    if (isFailure(h)) return { ...h, ...surfaced };
+    const headingText = CATALOG_HEADINGS[i] as (typeof CATALOG_HEADINGS)[number];
     catalogHeadings.push({ key: headingText, line: h.index + 1 });
     for (const item of topLevelListItems(doc, sectionOf(doc, h))) {
-      if (item.ordered) return failed('malformed-list', cls, item.line, 'not an unordered-list item');
+      if (item.ordered) return fail('malformed-list', item.line, 'not an unordered-list item');
       const bold = LEADING_BOLD.exec(item.text);
       const code = LEADING_CODE.exec(item.text);
       const match = bold ?? code;
       const label = bold ? (bold[1] ?? bold[2]) : code?.[1];
-      if (match === null || match === undefined || label === undefined || label.trim().length === 0) return failed('ambiguous-leading-label', cls, item.line);
-      if (!DASH_AFTER_LABEL.test(item.text.slice(match[0].length))) return failed('ambiguous-leading-label', cls, item.line);
+      if (match === null || match === undefined || label === undefined || label.trim().length === 0) return fail('ambiguous-leading-label', item.line);
+      if (!DASH_AFTER_LABEL.test(item.text.slice(match[0].length))) return fail('ambiguous-leading-label', item.line);
       out.push({ class: cls, key: declarationKey(label), path, line: item.line, statement: item.text, context: headingText });
     }
   }
   const result = items(cls, out);
-  return result.kind === 'items' ? { ...result, catalogHeadings } : result;
+  if (result.kind !== 'items') return { ...result, ...surfaced };
+  return { ...result, catalogHeadings, ...surfaced };
 }
 
 function headedTable(doc: Doc, headingText: string, cls: ExtractionClass): Table | ClassExtraction {
@@ -604,13 +704,16 @@ export function extractClass(cls: ExtractionClass, path: string, text: string): 
   }
 }
 
-// Extracts every class the manifest assigned to one classified source. Any
-// class failing makes the whole source Unknown: no partial item set.
+// Extracts every class the manifest assigned to one classified source, each
+// on its own: a failing class yields none of its items and leaves every other
+// class's items in place. The source is `extracted` when every class reads,
+// `partial` when some fail and some read, and `unknown` when none reads.
 //
 // With a ledger charge in force each class is one registry pass over the
 // decoded source (its parse is the helper traversal charged to that named
 // pass); a spent budget makes the whole source over-limit before the
-// extractor that would have exceeded it runs.
+// extractor that would have exceeded it runs: a breach leaves no class that
+// reads.
 export const EXTRACTION_PASSES: Readonly<Record<ExtractionClass, ParsePassIdentity>> = {
   'project-account-section': 'project-account-extraction',
   principle: 'declared-item-extraction',
@@ -635,29 +738,34 @@ export function extractSource(
   const all: ExtractedItem[] = [];
   const denominators: Partial<Record<ExtractionClass, number>> = {};
   let catalogHeadings: readonly CatalogHeading[] | undefined;
+  const failures: ExtractionFailureRecord[] = [];
+  const unenumerated: UnenumeratedHeading[] = [];
   for (const cls of classes) {
-    try {
-      charge?.(EXTRACTION_PASSES[cls]);
-    } catch (error) {
-      if (error instanceof ParsePassBudgetExceeded) return { kind: 'over-limit', path, classes, pass: EXTRACTION_PASSES[cls], class: cls, breach: error.breach };
-      throw error;
-    }
+    const breach = charge?.(EXTRACTION_PASSES[cls]);
+    if (breach !== undefined) return { kind: 'over-limit', path, classes, pass: EXTRACTION_PASSES[cls], class: cls, breach };
     const result = extractClass(cls, path, text);
-    if (result.kind === 'failed') return { kind: 'unknown', path, classes, failure: result.failure };
-    all.push(...result.items);
+    if (result.kind === 'failed') {
+      failures.push(result.failure);
+      for (const heading of result.unenumeratedHeadings ?? []) unenumerated.push(heading);
+      continue;
+    }
+    // One item at a time: a spread argument list is bounded by the stack, and a class may hold any number of items.
+    for (const item of result.items) all.push(item);
     denominators[cls] = result.items.length;
     if (result.catalogHeadings !== undefined) catalogHeadings = result.catalogHeadings;
+    for (const heading of result.unenumeratedHeadings ?? []) unenumerated.push(heading);
   }
-  const extracted: SourceExtraction = { kind: 'extracted', path, classes, items: all, denominators, ...(catalogHeadings === undefined ? {} : { catalogHeadings }) };
+  const surfaced = unenumerated.length === 0 ? {} : { unenumeratedHeadings: unenumerated };
+  if (failures.length > 0 && failures.length === classes.length) return { kind: 'unknown', path, classes, failure: failures[0] as ExtractionFailureRecord, failures, ...surfaced };
+  if (failures.length > 0) {
+    return { kind: 'partial', path, classes, items: all, denominators, failures, ...(catalogHeadings === undefined ? {} : { catalogHeadings }), ...surfaced };
+  }
+  const extracted: SourceExtraction = { kind: 'extracted', path, classes, items: all, denominators, ...(catalogHeadings === undefined ? {} : { catalogHeadings }), ...surfaced };
   if ((source.rule as SourceRule | undefined) !== 'root-index') return extracted;
   // The root index's own pass: one traversal for the stated counts and the
   // precedence table together, charged under the registry identity.
-  try {
-    charge?.(ROOT_INDEX_PASS);
-  } catch (error) {
-    if (error instanceof ParsePassBudgetExceeded) return { kind: 'over-limit', path, classes, pass: ROOT_INDEX_PASS, breach: error.breach };
-    throw error;
-  }
+  const breach = charge?.(ROOT_INDEX_PASS);
+  if (breach !== undefined) return { kind: 'over-limit', path, classes, pass: ROOT_INDEX_PASS, breach };
   return { ...extracted, rootIndex: extractRootIndex(text) };
 }
 
@@ -673,10 +781,10 @@ export function extractSource(
 // `Precedence Order When Layers Disagree` is admitted only as the exact
 // seven-row registry vocabulary. Nothing else in the root mints anything.
 
-export const ROOT_SUMMARY_HEADING = 'Key Architectural Facts';
-export const PRECEDENCE_HEADING = 'Precedence Order When Layers Disagree';
-export const PRECEDENCE_COLUMNS = ['#', 'Layer', 'Owns', 'Home'] as const;
-export const LAYER_ORDINALS = [1, 2, 3, 4, 5, 6, 7] as const;
+const ROOT_SUMMARY_HEADING = 'Key Architectural Facts';
+const PRECEDENCE_HEADING = 'Precedence Order When Layers Disagree';
+const PRECEDENCE_COLUMNS = ['#', 'Layer', 'Owns', 'Home'] as const;
+const LAYER_ORDINALS = [1, 2, 3, 4, 5, 6, 7] as const;
 export type LayerOrdinal = (typeof LAYER_ORDINALS)[number];
 
 export interface LayerRow {
@@ -699,8 +807,8 @@ export const LAYER_ROWS: readonly LayerRow[] = [
 export const ROSTER_HOME_TEMPLATE = 'roster/{butler}/';
 export const INERT_HOME = 'src/, alembic/, tests/';
 
-export const STATED_COUNT_FACTS = ['catalog-count:Staffers', 'catalog-count:Butlers'] as const;
-export type StatedCountFact = (typeof STATED_COUNT_FACTS)[number];
+const STATED_COUNT_FACTS = ['catalog-count:Staffers', 'catalog-count:Butlers'] as const;
+type StatedCountFact = (typeof STATED_COUNT_FACTS)[number];
 
 export interface StatedCount {
   readonly fact: StatedCountFact;
@@ -709,16 +817,16 @@ export interface StatedCount {
   readonly line: number;
 }
 
-export type RootSummaryExtraction =
+type RootSummaryExtraction =
   | { readonly kind: 'emitted'; readonly line: number; readonly declarations: readonly StatedCount[] }
   | { readonly kind: 'absent'; readonly reason: ExtractionFailure; readonly line?: number; readonly detail?: string };
 
-export interface AdmittedLayerRule extends LayerRow {
+interface AdmittedLayerRule extends LayerRow {
   // The table row's line.
   readonly line: number;
 }
 
-export type PrecedenceExtraction =
+type PrecedenceExtraction =
   | { readonly kind: 'admitted'; readonly line: number; readonly rules: readonly AdmittedLayerRule[] }
   | { readonly kind: 'absent'; readonly reason: ExtractionFailure; readonly line?: number; readonly detail?: string };
 
@@ -736,7 +844,7 @@ function absentSummary(reason: ExtractionFailure, line?: number, detail?: string
   return { kind: 'absent', reason, ...(line === undefined ? {} : { line }), ...(detail === undefined ? {} : { detail }) };
 }
 
-export function extractRootSummary(doc: Doc): RootSummaryExtraction {
+function extractRootSummary(doc: Doc): RootSummaryExtraction {
   const found = headingsOf(doc, 2, ROOT_SUMMARY_HEADING);
   if (found.length === 0) return absentSummary('missing-heading', undefined, ROOT_SUMMARY_HEADING);
   if (found.length > 1) return absentSummary('duplicate-key', (found[1] as Heading).index + 1, ROOT_SUMMARY_HEADING);
@@ -778,7 +886,7 @@ function absentPrecedence(reason: ExtractionFailure, line?: number, detail?: str
   return { kind: 'absent', reason, ...(line === undefined ? {} : { line }), ...(detail === undefined ? {} : { detail }) };
 }
 
-export function extractPrecedenceTable(doc: Doc): PrecedenceExtraction {
+function extractPrecedenceTable(doc: Doc): PrecedenceExtraction {
   const found = headingsOf(doc, 3, PRECEDENCE_HEADING);
   if (found.length === 0) return absentPrecedence('missing-heading', undefined, PRECEDENCE_HEADING);
   if (found.length > 1) return absentPrecedence('duplicate-key', (found[1] as Heading).index + 1, PRECEDENCE_HEADING);

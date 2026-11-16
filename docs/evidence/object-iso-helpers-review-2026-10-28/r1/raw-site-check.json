@@ -1,0 +1,273 @@
+{
+ "base": "81862261ddbc2b3c8e8481851f3c27129217d477",
+ "head": "22142d9f8731f1494258bfaa6b58ab0c24a2e607",
+ "files": 20,
+ "ok": 19,
+ "otherResiduals": 1,
+ "rows": [
+  {
+   "path": "packages/polaris-dossier/src/brief.ts",
+   "baseLines": 274,
+   "headLines": 273,
+   "definitionLinesDeleted": 1,
+   "renamedOccurrences": 0,
+   "residuals": [
+    {
+     "tag": "delete",
+     "class": "blank-beside-definition",
+     "base": [
+      [
+       50,
+       ""
+      ]
+     ],
+     "head": []
+    }
+   ],
+   "ok": true
+  },
+  {
+   "path": "packages/polaris-dossier/src/check.ts",
+   "baseLines": 786,
+   "headLines": 785,
+   "definitionLinesDeleted": 2,
+   "renamedOccurrences": 28,
+   "residuals": [],
+   "ok": true
+  },
+  {
+   "path": "packages/polaris-dossier/src/close.ts",
+   "baseLines": 254,
+   "headLines": 253,
+   "definitionLinesDeleted": 2,
+   "renamedOccurrences": 7,
+   "residuals": [],
+   "ok": true
+  },
+  {
+   "path": "packages/polaris-dossier/src/design-review.ts",
+   "baseLines": 183,
+   "headLines": 182,
+   "definitionLinesDeleted": 1,
+   "renamedOccurrences": 5,
+   "residuals": [],
+   "ok": true
+  },
+  {
+   "path": "packages/polaris-dossier/src/execution-flags.ts",
+   "baseLines": 76,
+   "headLines": 76,
+   "definitionLinesDeleted": 1,
+   "renamedOccurrences": 1,
+   "residuals": [],
+   "ok": true
+  },
+  {
+   "path": "packages/polaris-dossier/src/inventory.ts",
+   "baseLines": 451,
+   "headLines": 450,
+   "definitionLinesDeleted": 2,
+   "renamedOccurrences": 6,
+   "residuals": [],
+   "ok": true
+  },
+  {
+   "path": "packages/polaris-dossier/src/render.ts",
+   "baseLines": 610,
+   "headLines": 609,
+   "definitionLinesDeleted": 1,
+   "renamedOccurrences": 21,
+   "residuals": [],
+   "ok": true
+  },
+  {
+   "path": "packages/polaris-dossier/src/review.ts",
+   "baseLines": 742,
+   "headLines": 741,
+   "definitionLinesDeleted": 2,
+   "renamedOccurrences": 16,
+   "residuals": [],
+   "ok": true
+  },
+  {
+   "path": "packages/polaris-dossier/src/run-record.ts",
+   "baseLines": 172,
+   "headLines": 172,
+   "definitionLinesDeleted": 1,
+   "renamedOccurrences": 7,
+   "residuals": [],
+   "ok": true
+  },
+  {
+   "path": "packages/polaris-dossier/src/screen.ts",
+   "baseLines": 155,
+   "headLines": 154,
+   "definitionLinesDeleted": 1,
+   "renamedOccurrences": 7,
+   "residuals": [],
+   "ok": true
+  },
+  {
+   "path": "packages/polaris-dossier/src/session-handover.ts",
+   "baseLines": 590,
+   "headLines": 589,
+   "definitionLinesDeleted": 1,
+   "renamedOccurrences": 0,
+   "residuals": [
+    {
+     "tag": "delete",
+     "class": "blank-beside-definition",
+     "base": [
+      [
+       43,
+       ""
+      ]
+     ],
+     "head": []
+    }
+   ],
+   "ok": true
+  },
+  {
+   "path": "packages/polaris-dossier/src/session-statement.ts",
+   "baseLines": 83,
+   "headLines": 82,
+   "definitionLinesDeleted": 1,
+   "renamedOccurrences": 2,
+   "residuals": [
+    {
+     "tag": "delete",
+     "class": "blank-beside-definition",
+     "base": [
+      [
+       30,
+       ""
+      ]
+     ],
+     "head": []
+    }
+   ],
+   "ok": true
+  },
+  {
+   "path": "packages/polaris-dossier/src/waiting-sessions.ts",
+   "baseLines": 553,
+   "headLines": 551,
+   "definitionLinesDeleted": 2,
+   "renamedOccurrences": 3,
+   "residuals": [
+    {
+     "tag": "delete",
+     "class": "blank-beside-definition",
+     "base": [
+      [
+       69,
+       ""
+      ]
+     ],
+     "head": []
+    }
+   ],
+   "ok": true
+  },
+  {
+   "path": "packages/polaris-generation-core/src/discovery.ts",
+   "baseLines": 454,
+   "headLines": 454,
+   "definitionLinesDeleted": 1,
+   "renamedOccurrences": 3,
+   "residuals": [],
+   "ok": true
+  },
+  {
+   "path": "packages/polaris-generation-core/src/dossier-evaluation.ts",
+   "baseLines": 558,
+   "headLines": 557,
+   "definitionLinesDeleted": 1,
+   "renamedOccurrences": 0,
+   "residuals": [],
+   "ok": true
+  },
+  {
+   "path": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "baseLines": 275,
+   "headLines": 274,
+   "definitionLinesDeleted": 1,
+   "renamedOccurrences": 6,
+   "residuals": [],
+   "ok": true
+  },
+  {
+   "path": "packages/polaris-generation-core/src/reader-questions.ts",
+   "baseLines": 39,
+   "headLines": 39,
+   "definitionLinesDeleted": 1,
+   "renamedOccurrences": 0,
+   "residuals": [],
+   "ok": true
+  },
+  {
+   "path": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "baseLines": 284,
+   "headLines": 282,
+   "definitionLinesDeleted": 1,
+   "renamedOccurrences": 2,
+   "residuals": [
+    {
+     "tag": "delete",
+     "class": "blank-beside-definition",
+     "base": [
+      [
+       34,
+       ""
+      ]
+     ],
+     "head": []
+    }
+   ],
+   "ok": true
+  },
+  {
+   "path": "packages/support/src/index.ts",
+   "baseLines": 10,
+   "headLines": 11,
+   "definitionLinesDeleted": 0,
+   "renamedOccurrences": 0,
+   "residuals": [
+    {
+     "tag": "insert",
+     "class": "other",
+     "base": [],
+     "head": [
+      [
+       10,
+       "export { isRecord } from './is-record.js';"
+      ]
+     ]
+    }
+   ],
+   "ok": false
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "baseLines": 154,
+   "headLines": 150,
+   "definitionLinesDeleted": 3,
+   "renamedOccurrences": 0,
+   "residuals": [
+    {
+     "tag": "delete",
+     "class": "blank-beside-definition",
+     "base": [
+      [
+       88,
+       ""
+      ]
+     ],
+     "head": []
+    }
+   ],
+   "ok": true
+  }
+ ]
+}

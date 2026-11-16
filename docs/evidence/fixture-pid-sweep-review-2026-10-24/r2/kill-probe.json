@@ -1,0 +1,62 @@
+{
+ "tool": "kill_probe.py",
+ "treeCommit": "564ec47c79e855fed1a4807ebef6f9c82567dc6b",
+ "sha256AtCommit": {
+  "apps/three-surface-poc/src/fixture-directories.ts": "329b3fc400b7b8f6d43d8ce8f86d344095bbb02797012be0e6f9b7252aac959c",
+  "apps/three-surface-poc/src/test-fixture-sweep.global-setup.ts": "8f68850a773daf21fde1174532826c5ded2ae372dd89db9ab3b32487e9135317",
+  "apps/three-surface-poc/src/test-model-fixture.ts": "58497e91d23c7244a76ceff055d590dd264c9c09dddbdd647604689b820d413e",
+  "vitest.config.ts": "8e8d698a90f37b1a340e4b9c6500981dda87bb56bd348980a648d1f3d89b625d"
+ },
+ "namespace": "4026531836",
+ "command": "npx vitest run --project @syzygy/three-surface-poc-app",
+ "signal": "KILL",
+ "killedAfterSeconds": 24.8,
+ "copiesAtKill": 3,
+ "fiveSecondsAfterKill": {
+  "dead": [
+   "syzygy-poc-surface-fixture-p3483863-n4026531836-OUcCWz",
+   "syzygy-poc-surface-fixture-p3483873-n4026531836-ThdJBG",
+   "syzygy-poc-surface-fixture-p3483882-n4026531836-NdNX8V",
+   "syzygy-poc-surface-fixture-template-p3483863-n4026531836-Ubu2DI",
+   "syzygy-poc-surface-fixture-template-p3483873-n4026531836-27w9XI",
+   "syzygy-poc-surface-fixture-template-p3483882-n4026531836-2CxApj"
+  ],
+  "live": [],
+  "foreign": [],
+  "legacy": []
+ },
+ "processesNamingTmpdirAfterKill": [],
+ "stoppedByPid": [],
+ "freshRun": {
+  "exit": 1,
+  "seconds": 475.3,
+  "summary": [
+   " Test Files  1 failed | 88 passed | 1 skipped (90)",
+   "      Tests  1 failed | 1110 passed | 2 skipped (1113)",
+   "   Duration  468.18s (transform 33.94s, setup 6.12s, collect 171.87s, tests 1298.43s, environment 149ms, prepare 57.48s)"
+  ],
+  "after": {
+   "dead": [],
+   "live": [],
+   "foreign": [],
+   "legacy": []
+  },
+  "readdirOfTmpdirCalls": [
+   {
+    "pid": 3486777,
+    "ppid": 3486776,
+    "argv": [
+     "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-509b/mut/node_modules/.bin/vitest",
+     "run",
+     "--project"
+    ],
+    "at": "2026-10-22T09:01:12.834Z"
+   }
+  ],
+  "callingPids": [
+   3486777
+  ]
+ },
+ "processesNamingTmpdirAfterFresh": [],
+ "stoppedByPidAfterFresh": []
+}

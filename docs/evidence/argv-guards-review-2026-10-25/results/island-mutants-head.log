@@ -1,0 +1,43 @@
+island:R1-non-literal-dynamic-import-of-core-root-in-render-step survives 0 ['Tests  4 passed (4)'] 4.2 clean
+island:R2-template-literal-dynamic-import-of-core-root-in-render-step killed 1 ['Tests  1 failed | 3 passed (4)'] 4.7 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > reaches no island module from the CLI entry
+island:R3-export-star-of-core-root-in-class-gate killed 1 ['Tests  1 failed | 3 passed (4)'] 4.2 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > reaches no island module from the CLI entry
+island:R4-live-subpath-node-condition-resolves-to-core-root survives 0 ['Tests  4 passed (4)'] 4.7 clean
+island:R5-broker-client-entry-imports-core-root survives 0 ['Tests  4 passed (4)'] 4.3 clean
+island:R6-create-require-of-core-root-in-render-step survives 0 ['Tests  4 passed (4)'] 4.2 clean
+island:R7-import-type-node-of-core-root-in-class-gate killed 1 ['Tests  1 failed | 3 passed (4)'] 4.9 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > reaches no island module from the CLI entry
+island:R8-relative-cross-package-island-import-in-screen killed 1 ['Tests  1 failed | 3 passed (4)'] 5.0 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > reaches no island module from the CLI entry
+island:R9-island-import-hidden-inside-the-exception survives 0 ['Tests  4 passed (4)'] 4.8 clean
+island:B1-type-import-of-core-root-in-dossier-site killed 1 ['Tests  1 failed | 3 passed (4)'] 3.8 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > reaches no island module from the CLI entry
+island:B2-relative-island-import-in-live killed 1 ['Tests  1 failed | 3 passed (4)'] 4.5 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > reaches no island module from the CLI entry
+island:B3-dynamic-core-root-import-in-dossier-render-step killed 1 ['Tests  1 failed | 3 passed (4)'] 4.9 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > reaches no island module from the CLI entry
+island:B4-cli-subpath-resolves-to-provider-adapter killed 1 ['Tests  1 failed | 3 passed (4)'] 4.2 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > reaches no island module from the CLI entry
+island:B5-cli-imports-the-kept-provider-renderer-subpath killed 1 ['Tests  1 failed | 3 passed (4)'] 4.4 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > reaches no island module from the CLI entry
+island:B5b-cli-imports-a-subpath-the-app-does-not-export killed 1 ['Tests  1 failed | 3 passed (4)'] 5.4 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > resolves every workspace import the CLI reaches, dynamic ones included
+island:B7-exception-outlives-its-reason killed 1 ['Tests  1 failed | 3 passed (4)'] 4.3 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > reaches the island from the consent package root, which the CLI does not import
+island:B8-island-entry-names-no-file killed 1 ['Tests  1 failed | 3 passed (4)'] 5.0 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > lists twenty island modules, each a file in the tree
+island:B9-island-entry-dropped killed 1 ['Tests  1 failed | 3 passed (4)'] 4.0 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > lists twenty island modules, each a file in the tree
+consen:B1-core-root-import-in-in-force killed 1 ['Tests  1 failed | 3 passed (4)'] 3.8 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > reaches no island module from the CLI entry
+consen:B4-consent-ports-reexport-in-live killed 1 ['Tests  1 failed | 3 passed (4)'] 4.7 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > reaches no island module from the CLI entry
+consen:R1-literal-dynamic-import-of-core-root-in-in-force killed 1 ['Tests  1 failed | 3 passed (4)'] 5.9 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > reaches no island module from the CLI entry
+consen:R2-export-star-consent-ports-in-live killed 1 ['Tests  1 failed | 3 passed (4)'] 5.3 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > reaches no island module from the CLI entry
+consen:R3-computed-dynamic-import-of-core-root-in-in-force survives 0 ['Tests  4 passed (4)'] 4.8 clean
+consen:R4-node-condition-ahead-of-import-in-live-subpath survives 0 ['Tests  4 passed (4)'] 5.1 clean
+consen:R5-vitest-alias-for-live-points-at-root survives 0 ['Tests  4 passed (4)'] 5.1 clean
+wrote /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-524/island-mutants-head.json 25

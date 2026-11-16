@@ -1,0 +1,4 @@
+G3-exact-input-package-lock-dropped@base: survived exit=0 failed=0/11 files=0 timeouts=0 8.5s clean=True
+G4-exact-input-tsconfig-base-dropped@base: survived exit=0 failed=0/11 files=0 timeouts=0 11.6s clean=True
+G6-http-host-prefix-without-trailing-slash@base: survived exit=0 failed=0/11 files=0 timeouts=0 10.6s clean=True
+killed 0 survived 3 error 0 of 3

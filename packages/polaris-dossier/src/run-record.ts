@@ -1,6 +1,7 @@
 import * as path from 'node:path';
 import { BoundedJsonError, parseBoundedJson } from '@syzygy/polaris-generation-core/live';
-import { dossierRepositoryUrl } from './github-url.js';
+import { isRecord } from '@syzygy/support';
+import { dossierLocator, isNormalisedLocator } from './launch-identity.js';
 import type { GovernedKind } from './governed.js';
 import { validateRunConfig, type RunConfig, type RunConfigRefusal } from './run-config.js';
 
@@ -83,10 +84,13 @@ function declaredInput(config: RunConfig): Record<string, unknown> {
   if (config.modelVersion !== null) input['modelVersion'] = config.modelVersion;
   if (config.agentTokenBudget !== null) input['agentTokenBudget'] = config.agentTokenBudget;
   if (config.agentTurnBudget !== null) input['agentTurnBudget'] = config.agentTurnBudget;
+  if (config.poleLimit !== null) input['poleLimit'] = config.poleLimit;
   return input;
 }
 
 export function encodeRunRecord(config: RunConfig, subject: RunSubject): string {
+  // Written only in the normalised form (046, line 17); the legacy form is read, never written.
+  if (!isNormalisedLocator(subject.repository.url)) throw new Error('a run record carries the normalised URL only');
   const record = recordRunConfig(config, subject);
   return `${JSON.stringify({ ...record, declared: declaredInput(config) }, null, 2)}\n`;
 }
@@ -133,34 +137,50 @@ export function readRunRecord(text: string): ReadRunRecordResult {
 }
 
 type Fields = Readonly<Record<string, unknown>>;
-const isObject = (value: unknown): value is Fields => value !== null && typeof value === 'object' && !Array.isArray(value);
 const hasKeys = (value: Fields, keys: readonly string[]): boolean => Object.keys(value).sort().join(',') === [...keys].sort().join(',');
 const isText = (value: unknown): value is string => typeof value === 'string' && value.trim() !== '' && value.length <= 512;
 const INSTANT = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?Z$/;
 const GOVERNED_KINDS: readonly GovernedKind[] = ['governed', 'non-governed', 'unstated'];
 
+/** The form the retired GitHub-only rule (github-url.ts, removed in slice C) wrote into a run record's `repository.url`, exactly. */
+const LEGACY_RECORDED_URL = /^https:\/\/github\.com\/[A-Za-z0-9][A-Za-z0-9-]{0,38}\/[A-Za-z0-9._-]{1,100}$/u;
+
+/** A recorded repository URL, normalised: a normalised locator as written, or a URL in the exact form the retired rule wrote, normalised
+ * by the rule (046, line 15); null for anything else. */
+export function readRecordedUrl(text: string): string | null {
+  if (isNormalisedLocator(text)) return text;
+  if (!LEGACY_RECORDED_URL.test(text) || text.endsWith('.git') || /\/\.\.?$/u.test(text)) return null;
+  const read = dossierLocator(text);
+  return read.ok ? read.url : null;
+}
+
 /** The subject block, validated in full; a description of the first fault otherwise. */
 function readSubject(value: unknown): RunSubject | string {
-  if (!isObject(value) || !hasKeys(value, ['repository', 'clone', 'pinnedRevision', 'startGates', 'governed', 'providerStatement', 'workItem'])) return 'it must carry exactly repository, clone, pinnedRevision, startGates, governed, providerStatement and workItem';
+  if (!isRecord(value) || !hasKeys(value, ['repository', 'clone', 'pinnedRevision', 'startGates', 'governed', 'providerStatement', 'workItem'])) return 'it must carry exactly repository, clone, pinnedRevision, startGates, governed, providerStatement and workItem';
   const { repository, clone, pinnedRevision, startGates, governed, providerStatement, workItem } = value;
-  if (!isObject(repository) || !hasKeys(repository, ['url', 'repositoryId']) || !isText(repository['url']) || !isText(repository['repositoryId'])) return 'repository must carry a url and a repositoryId';
-  const url = dossierRepositoryUrl(repository['url']);
-  if (!url.ok || url.url !== repository['url'] || !/^[a-z0-9][a-z0-9-]*$/.test(repository['repositoryId'])) return 'repository url or repositoryId is malformed';
-  if (!isObject(clone) || !hasKeys(clone, ['path', 'declaredBy', 'label', 'use']) || clone['declaredBy'] !== 'operator' || clone['label'] !== 'Inferred' || clone['use'] !== 'read') return 'clone must carry its path, declared by the operator, labelled Inferred, for reading only';
+  if (!isRecord(repository) || !hasKeys(repository, ['url', 'repositoryId']) || !isText(repository['url']) || !isText(repository['repositoryId'])) return 'repository must carry a url and a repositoryId';
+  // The normalised URL, for every host (046, line 17: "The normalised URL is the locator every launch consent record, the run record and
+  // every page carry, for every host"). A record written before that rule carries the canonical https://github.com/<owner>/<repo> URL
+  // the retired GitHub-only rule wrote; it is read, and normalised on reading, so an existing run is neither refused nor rewritten.
+  const url = readRecordedUrl(repository['url']);
+  // The identity after `repository:`, by REQ-polaris-generation-046's grammar (line 15: a-z, 0-9, '.', '_', '-'), compared exactly wherever
+  // it is used (the owner's ruling of 2026-11-14, "Widen all readers now").
+  if (url === null || !/^[a-z0-9._-]+$/.test(repository['repositoryId'])) return 'repository url or repositoryId is malformed';
+  if (!isRecord(clone) || !hasKeys(clone, ['path', 'declaredBy', 'label', 'use']) || clone['declaredBy'] !== 'operator' || clone['label'] !== 'Inferred' || clone['use'] !== 'read') return 'clone must carry its path, declared by the operator, labelled Inferred, for reading only';
   if (typeof clone['path'] !== 'string' || clone['path'].length > 4096 || path.resolve(clone['path']) !== clone['path'] || clone['path'].includes('\0')) return 'the clone path is not an absolute, normalised path';
-  if (!isObject(pinnedRevision) || !hasKeys(pinnedRevision, ['commit', 'label', 'consentRecord', 'pinnedAt'])) return 'pinnedRevision must carry commit, label, consentRecord and pinnedAt';
+  if (!isRecord(pinnedRevision) || !hasKeys(pinnedRevision, ['commit', 'label', 'consentRecord', 'pinnedAt'])) return 'pinnedRevision must carry commit, label, consentRecord and pinnedAt';
   if (typeof pinnedRevision['commit'] !== 'string' || !/^(?:[0-9a-f]{40}|[0-9a-f]{64})$/.test(pinnedRevision['commit'])) return 'the pinned commit is not a full commit identifier';
   if (!isText(pinnedRevision['label']) || !isText(pinnedRevision['consentRecord'])) return 'the pinned revision must name its label and consent record';
   if (typeof pinnedRevision['pinnedAt'] !== 'string' || !INSTANT.test(pinnedRevision['pinnedAt']) || Number.isNaN(Date.parse(pinnedRevision['pinnedAt']))) return 'pinnedAt is not a UTC instant';
-  if (!isObject(startGates) || !hasKeys(startGates, ['registryEntry', 'screeningPolicy']) || !isText(startGates['registryEntry']) || !isText(startGates['screeningPolicy'])) return 'startGates must cite the registry entry and screening policy records';
-  if (!isObject(governed) || !hasKeys(governed, ['kind', 'because']) || !GOVERNED_KINDS.includes(governed['kind'] as GovernedKind)
+  if (!isRecord(startGates) || !hasKeys(startGates, ['registryEntry', 'screeningPolicy']) || !isText(startGates['registryEntry']) || !isText(startGates['screeningPolicy'])) return 'startGates must cite the registry entry and screening policy records';
+  if (!isRecord(governed) || !hasKeys(governed, ['kind', 'because']) || !GOVERNED_KINDS.includes(governed['kind'] as GovernedKind)
     || !Array.isArray(governed['because']) || governed['because'].length === 0 || !governed['because'].every(isText)) return 'governed must carry a kind and its reasons';
   const kind = governed['kind'] as GovernedKind;
   if (providerStatement !== null && !isText(providerStatement)) return 'providerStatement must be a record citation or null';
   if (kind !== 'non-governed' && providerStatement === null) return `${kind === 'unstated' ? 'an unstated' : 'a governed'} subject must cite the per-project statement it relies on`;
-  if (!isObject(workItem) || !hasKeys(workItem, ['identity', 'reason']) || workItem['identity'] !== null || workItem['reason'] !== NO_WORK_ITEM_REASON) return 'workItem must record an absent identity with its reason';
+  if (!isRecord(workItem) || !hasKeys(workItem, ['identity', 'reason']) || workItem['identity'] !== null || workItem['reason'] !== NO_WORK_ITEM_REASON) return 'workItem must record an absent identity with its reason';
   return {
-    repository: { url: repository['url'], repositoryId: repository['repositoryId'] },
+    repository: { url, repositoryId: repository['repositoryId'] },
     clone: { path: clone['path'], declaredBy: 'operator', label: 'Inferred', use: 'read' },
     pinnedRevision: { commit: pinnedRevision['commit'], label: pinnedRevision['label'], consentRecord: pinnedRevision['consentRecord'], pinnedAt: pinnedRevision['pinnedAt'] },
     startGates: { registryEntry: startGates['registryEntry'], screeningPolicy: startGates['screeningPolicy'] },

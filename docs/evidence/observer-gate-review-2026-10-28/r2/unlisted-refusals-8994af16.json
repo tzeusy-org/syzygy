@@ -1,0 +1,73 @@
+{
+ "subject": "git-observation.test.ts at this commit under two tree forms",
+ "commit": "8994af16e5ae735aa3d6f26a925c93e4a0ad7f45",
+ "testSha256": "6809f8e24908964523d475af4ca6d15b3a4f260ad0c9d6eab7b6b1ed856d9a63",
+ "cleanBefore": true,
+ "tool_sha256": "6e18333cafc105597e89f4fd36c8012fcda60442697c0d10e6c620ae2d95a2d9",
+ "load": [
+  [
+   "22.54",
+   "30.10",
+   "32.59"
+  ],
+  [
+   "23.59",
+   "30.08",
+   "32.56"
+  ],
+  [
+   "25.35",
+   "30.23",
+   "32.58"
+  ]
+ ],
+ "unmutated": {
+  "exit": 0,
+  "failed": 0,
+  "passed": 16,
+  "failing": []
+ },
+ "mutants": [
+  {
+   "id": "J",
+   "file": "apps/three-surface-poc/src/main.ts",
+   "old": "",
+   "new": "import '../../../package.json';\n",
+   "fileSha256": "cfb0a4e6d55a6b74e8da99612cf33b25c955877b09155ae89e4f875638137e3d",
+   "exit": 1,
+   "failed": 2,
+   "passed": 14,
+   "failing": [
+    {
+     "test": "read-only Git observation refuses exactly the projects the POC start compiles or loads, and the files that define its build",
+     "message": "Error: package.json: in no workspace"
+    },
+    {
+     "test": "read-only Git observation reads every protected project from tsconfig.base.json through its own extends chain",
+     "message": "Error: package.json: in no workspace"
+    }
+   ]
+  },
+  {
+   "id": "F",
+   "file": "apps/three-surface-poc/tsconfig.json",
+   "old": "\"path\": \"../../packages/http-host\"",
+   "new": "\"path\": \"../../packages/http-host/tsconfig.json\"",
+   "fileSha256": "271f2a277342cd68945dfcf13b890c1ba18e15b473f0f8ad0bbc50fea06f01e0",
+   "exit": 1,
+   "failed": 2,
+   "passed": 14,
+   "failing": [
+    {
+     "test": "read-only Git observation refuses exactly the projects the POC start compiles or loads, and the files that define its build",
+     "message": "Error: ENOTDIR: not a directory, open '/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone2/packages/http-host/tsconfig.json/tsconfig.json'"
+    },
+    {
+     "test": "read-only Git observation reads every protected project from tsconfig.base.json through its own extends chain",
+     "message": "Error: ENOTDIR: not a directory, open '/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone2/packages/http-host/tsconfig.json/tsconfig.json'"
+    }
+   ]
+  }
+ ],
+ "cleanAfter": true
+}

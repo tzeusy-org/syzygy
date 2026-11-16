@@ -1,0 +1,42 @@
+RV-T1-hash-pattern-alias survives 0 ['Tests  27 passed (27)'] 4.9 clean
+RV-T2-hash-pattern-alias-island survives 0 ['Tests  4 passed (4)'] 4.5 clean
+RV-T3-node-object-ahead-of-import survives 0 ['Tests  27 passed (27)'] 5.2 clean
+RV-T4-node-nested-inside-import killed 1 ['Tests  3 failed | 24 passed (27)'] 5.3 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > reaches this package through argv.ts and state-directory.ts alone
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > resolves every workspace specifier on it, and reaches past the entry's own imports
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the subpaths the daemon entry imports > ./argv is packages/polaris-dossier/src/argv.ts, which imports exactly ["node:util"]
+RV-T5-require-ahead-of-import survives 0 ['Tests  27 passed (27)'] 6.3 clean
+RV-T6-exports-fallback-array killed 1 ['Tests  3 failed | 24 passed (27)'] 8.0 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > reaches this package through argv.ts and state-directory.ts alone
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > resolves every workspace specifier on it, and reaches past the entry's own imports
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the subpaths the daemon entry imports > ./argv is packages/polaris-dossier/src/argv.ts, which imports exactly ["node:util"]
+RV-T7-imports-fallback-array-alias survives 0 ['Tests  27 passed (27)'] 8.4 clean
+RV-T8-mts-bridge killed 1 ['Tests  1 failed | 26 passed (27)'] 5.2 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > resolves every workspace specifier on it, and reaches past the entry's own imports
+RV-T9-cts-bridge killed 1 ['Tests  1 failed | 26 passed (27)'] 5.2 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > resolves every workspace specifier on it, and reaches past the entry's own imports
+RV-T10-directory-index killed 1 ['Tests  1 failed | 26 passed (27)'] 7.9 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > reaches this package through argv.ts and state-directory.ts alone
+RV-T11-template-literal-dynamic-alias survives 0 ['Tests  27 passed (27)'] 7.4 clean
+RV-T12-computed-alias killed 1 ['Tests  1 failed | 26 passed (27)'] 8.6 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > has no node:module edge, and no import() or require of a computed name
+RV-T13-template-literal-dynamic-alias-island survives 0 ['Tests  4 passed (4)'] 6.4 clean
+RV-T14-absolute-path killed 1 ['Tests  1 failed | 26 passed (27)'] 6.5 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the subpaths the daemon entry imports > are /argv and /state-directory, imported statically, and the barrel only dynamically inside the dossier and polaris branches
+RV-T15-file-url-mixed-case killed 1 ['Tests  1 failed | 26 passed (27)'] 9.0 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the subpaths the daemon entry imports > are /argv and /state-directory, imported statically, and the barrel only dynamically inside the dossier and polaris branches
+RV-T16-alias-declared-by-another-package survives 0 ['Tests  27 passed (27)'] 6.0 clean
+RV-T17-alias-to-own-dist-module survives 0 ['Tests  27 passed (27)'] 6.1 clean
+RV-T18-dependency-alias survives 0 ['Tests  27 passed (27)'] 5.7 clean
+RV-T19-node-modules-relative-path survives 0 ['Tests  27 passed (27)'] 8.4 clean
+RV-C1-destructured-alias survives 0 ['Tests  74 passed (74)'] 5.1 clean
+RV-C2-reexport-renamed-in-cli survives 0 ['Tests  74 passed (74)'] 9.3 clean
+RV-C3-reflect-get survives 0 ['Tests  74 passed (74)'] 7.4 clean
+RV-C4-element-access survives 0 ['Tests  74 passed (74)'] 7.7 clean
+RV-C5-concatenated-name survives 0 ['Tests  74 passed (74)'] 4.1 clean
+RV-C6-mts-caller survives 0 ['Tests  74 passed (74)'] 3.6 clean
+RV-C7-callback-argument survives 0 ['Tests  74 passed (74)'] 4.3 clean
+RV-C8-optional-call killed 1 ['Tests  1 failed | 73 passed (74)'] 3.6 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > is the spec of every readArgv call, and no other module names readArgv
+RV-C9-apply survives 0 ['Tests  74 passed (74)'] 3.9 clean
+wrote own-base.json 28

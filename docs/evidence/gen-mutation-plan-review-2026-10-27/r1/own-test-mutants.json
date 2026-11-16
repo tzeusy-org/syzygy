@@ -1,0 +1,207 @@
+{
+  "subject": "generation-mutation.test.ts, reviewer mutants",
+  "commit": "e40af0ea2129cad9337082774fb7569f3b40fcad",
+  "control": {
+    "exit": 0,
+    "total": 1,
+    "failed": 0,
+    "failureMessages": [],
+    "fileErrors": []
+  },
+  "controlPassed": true,
+  "mutants": [
+    {
+      "id": "R1",
+      "models": "guard rewritten in source, its old text kept once in a comment (fragment occurs once, in a comment only)",
+      "edits": {
+        "packages/polaris-generation-core/src/pipeline.ts": [
+          {
+            "old": "      if (calls >= budget.maxCalls) stop('budget-exhausted');",
+            "new": "      if (budget.maxCalls <= calls) stop('budget-exhausted'); // was: if (calls >= budget.maxCalls) stop('budget-exhausted');"
+          }
+        ]
+      },
+      "expectation": "survives: the test counts text occurrences and cannot tell a comment from code",
+      "observed": {
+        "exit": 0,
+        "total": 1,
+        "failed": 0,
+        "failureMessages": [],
+        "fileErrors": []
+      },
+      "killed": false,
+      "restored": true
+    },
+    {
+      "id": "R2",
+      "models": "wrong `file` whose text contains the fragment once (the plan file itself)",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "    file: DRAFT_MODEL_SOURCE,",
+            "new": "    file: 'apps/three-surface-poc/src/polaris-generation/generation-mutation.ts',"
+          }
+        ]
+      },
+      "expectation": "survives: nothing pins `file` to packages/polaris-generation-core/src/**",
+      "observed": {
+        "exit": 0,
+        "total": 1,
+        "failed": 0,
+        "failureMessages": [],
+        "fileErrors": []
+      },
+      "killed": false,
+      "restored": true
+    },
+    {
+      "id": "R3",
+      "models": "the test skips one mutant (loop over the first 7 only), with the cap mutant's pre-5955f8c0 fragment planted",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.test.ts": [
+          {
+            "old": "for (const mutation of GENERATION_LITERAL_MUTATIONS) {",
+            "new": "for (const mutation of GENERATION_LITERAL_MUTATIONS.slice(0, 7)) {"
+          }
+        ],
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "from: \"if (repairs >= budget.maxRepairCycles) {\\n        if (verdict.reviewerBlocking) stop('repair-exhausted');\",",
+            "new": "from: \"if (repairs >= budget.maxRepairCycles) stop('repair-exhausted');\","
+          }
+        ]
+      },
+      "expectation": "survives: a check-side mutation; the length assertion pins the plan, not the loop",
+      "observed": {
+        "exit": 0,
+        "total": 1,
+        "failed": 0,
+        "failureMessages": [],
+        "fileErrors": []
+      },
+      "killed": false,
+      "restored": true
+    },
+    {
+      "id": "R4",
+      "models": "a mustFail name that matches no test title",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "mustFail: ['rejects pollution keys'],",
+            "new": "mustFail: ['rejects pollution keyz'],"
+          }
+        ]
+      },
+      "expectation": "survives: mustFail is only checked non-empty",
+      "observed": {
+        "exit": 0,
+        "total": 1,
+        "failed": 0,
+        "failureMessages": [],
+        "fileErrors": []
+      },
+      "killed": false,
+      "restored": true
+    },
+    {
+      "id": "R5",
+      "models": "`to` textually different from `from` but semantically equal",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "to: \"if (false) stop('budget-exhausted');\",",
+            "new": "to: \"if (calls >=  budget.maxCalls) stop('budget-exhausted');\","
+          }
+        ]
+      },
+      "expectation": "survives: the test checks only that the source changes",
+      "observed": {
+        "exit": 0,
+        "total": 1,
+        "failed": 0,
+        "failureMessages": [],
+        "fileErrors": []
+      },
+      "killed": false,
+      "restored": true
+    },
+    {
+      "id": "R6",
+      "models": "`file` names a path that does not exist",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "    file: DRAFT_MODEL_SOURCE,",
+            "new": "    file: 'packages/polaris-generation-core/src/draft-modle.ts',"
+          }
+        ]
+      },
+      "expectation": "killed: readFileSync throws ENOENT",
+      "observed": {
+        "exit": 1,
+        "total": 1,
+        "failed": 1,
+        "failureMessages": [
+          "Error: ENOENT: no such file or directory, open '/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-543/clone/packages/polaris-generation-core/src/draft-modle.ts'"
+        ],
+        "fileErrors": []
+      },
+      "killed": true,
+      "restored": true
+    },
+    {
+      "id": "R7",
+      "models": "empty `from` fragment",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "from: 'const sorted = (keys as string[]).sort();',",
+            "new": "from: '',"
+          }
+        ]
+      },
+      "expectation": "killed: an empty fragment splits into every character",
+      "observed": {
+        "exit": 1,
+        "total": 1,
+        "failed": 1,
+        "failureMessages": [
+          "AssertionError: canonical-json-sorted-keys-disabled: expected 4828 to be 1 // Object.is equality"
+        ],
+        "fileErrors": []
+      },
+      "killed": true,
+      "restored": true
+    },
+    {
+      "id": "R8",
+      "models": "the two-occurrence fragment planted in draft-model.ts (the newly mutated file)",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "from: \"if (set.size !== values.length) throw new Error('duplicate-handle');\",",
+            "new": "from: \"unique(\","
+          }
+        ]
+      },
+      "expectation": "killed: draft-model.ts calls unique( more than once",
+      "observed": {
+        "exit": 1,
+        "total": 1,
+        "failed": 1,
+        "failureMessages": [
+          "AssertionError: provider-draft-duplicate-handle-check-disabled: expected 4 to be 1 // Object.is equality"
+        ],
+        "fileErrors": []
+      },
+      "killed": true,
+      "restored": true
+    }
+  ],
+  "summary": {
+    "mutants": 8,
+    "killed": 3,
+    "restored": 8
+  }
+}

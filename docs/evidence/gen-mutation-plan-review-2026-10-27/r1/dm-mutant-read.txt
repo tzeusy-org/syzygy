@@ -1,0 +1,32 @@
+mutant provider-draft-duplicate-handle-check-disabled file packages/polaris-generation-core/src/draft-model.ts occurrences 1 sha256-before 0c64dd7330a52676f2ae46e520cc97ee021cfdb1ab50ccf91e39902596c5b42a
+sha256-after 0c64dd7330a52676f2ae46e520cc97ee021cfdb1ab50ccf91e39902596c5b42a restored True
+total 107 passed 103 failed 4
+FAILED source to editorial draft pipeline rejects duplicate or malformed trusted asset requests before provider dispatch
+  duration 34.00002500000005
+  AssertionError: expected { …(7) } to match object { status: 'stopped', …(1) }
+(9 matching properties omitted from actual)
+    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-543/clone/node_modules/@vitest/expect/dist/index.js:1155:10)
+    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-543/clone/node_modules/@vitest/expect/dist/index.js:1029:14)
+    at Proxy.methodWrapper (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-543/clone/node_modules/chai/index.js:1686:25)
+    at /tmp/claude-1000/-home-
+FAILED provider-local intermediate validation refuses missing admitted sources, unknown support and duplicate local identities
+  duration 12.790825999999925
+  AssertionError: expected [Function] to throw an error
+    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-543/clone/node_modules/@vitest/expect/dist/index.js:1420:16)
+    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-543/clone/node_modules/@vitest/expect/dist/index.js:1029:14)
+    at Proxy.methodWrapper (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-543/clone/node_modules/chai/index.js:1686:25)
+    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/re
+FAILED provider-local intermediate validation refuses dangling diagram endpoints, deep-dive parents and duplicate draft handles
+  duration 5.9498060000000805
+  AssertionError: expected [Function] to throw error including 'duplicate-handle' but got 'unknown-asset'
+    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-543/clone/node_modules/@vitest/expect/dist/index.js:1420:16)
+    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-543/clone/node_modules/@vitest/expect/dist/index.js:1029:14)
+    at Proxy.methodWrapper (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-543/clone/node_modules/chai/index.js:1686:25)
+    at /tmp/claude-1000/-home-tze-GitHub-syzygy/
+FAILED provider-local intermediate validation counts child blocks as blocks in handles, produced assets and fidelity coverage
+  duration 17.559062999999924
+  AssertionError: expected [Function] to throw error including 'duplicate-handle' but got 'unknown-asset'
+    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-543/clone/node_modules/@vitest/expect/dist/index.js:1420:16)
+    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-543/clone/node_modules/@vitest/expect/dist/index.js:1029:14)
+    at Proxy.methodWrapper (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-543/clone/node_modules/chai/index.js:1686:25)
+    at /tmp/claude-1000/-home-tze-GitHub-syzygy/

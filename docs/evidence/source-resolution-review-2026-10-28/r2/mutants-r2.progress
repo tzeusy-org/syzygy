@@ -1,0 +1,32 @@
+M1 killed AssertionError: expected undefined to be 'packages/polaris-dossier/src/argv.ts' // Object.is equality
+M2 killed AssertionError: expected 'packages/lib/src/argv.ts' to be undefined
+M3 killed AssertionError: expected [ '@syzygy/support .' ] to deeply equal []
+M4 killed AssertionError: expected [ '@syzygy/http-host .' ] to deeply equal []
+M5 killed AssertionError: packages/support: expected [ undefined, [ 'src' ], undefined ] to deeply equal [ undefined, [ 'src' ], [
+M6 killed AssertionError: expected [ …(4) ] to deeply equal [ …(2) ]
+M7 killed AssertionError: expected [ 'apps/syzygy', …(8) ] to deeply equal [ 'apps/syzygy', …(9) ]
+M8 killed AssertionError: expected 'throw new Error("poisoned output");\n' to be 'export const b = \'b\';\n' // Object.is equality
+M9 killed AssertionError: expected 'throw new Error("poisoned output");\n' to be 'export const b = \'b\';\n' // Object.is equality
+M10 killed Error: promise resolved "{ stdout: '', stderr: '' }" instead of rejecting
+M11 killed AssertionError: expected [ 'build:poc', 'typecheck' ] to deeply equal [ 'typecheck' ]
+M12 killed AssertionError: expected [ 'poc:restart', 'poc:keyboard-sweep' ] to deeply equal [ 'poc:restart' ]
+M13 killed AssertionError: expected [Function] to throw an error
+M14 killed AssertionError: expected [Function] to throw an error
+M15 killed Error: vitest.config.ts: workspace packages do not load by their source condition alone
+M16 killed AssertionError: expected [ 'apps/x/src/a.test.ts', …(1) ] to deeply equal [ 'apps/x/src/a.test.ts', …(3) ]
+M17 killed AssertionError: expected { composite: false, …(4) } to match object { noEmit: true, …(1) }
+X3b killed AssertionError: expected true to be false // Object.is equality
+X4 killed AssertionError: packages/support: expected [ [ 'src/sha256.test.ts' ], …(2) ] to deeply equal [ undefined, [ 'src' ], [ 
+X8 killed Error: promise resolved "{ stdout: '', stderr: '' }" instead of rejecting
+X2b killed AssertionError: @syzygy/support: expected { sha256: [Function sha256], …(2), …(1) } to be { sha256: [Function sha256], …
+R1 killed AssertionError: packages/three-surface-poc-core: expected [ undefined, [ 'src' ], [ …(2) ] ] to deeply equal [ undefined
+R2 killed AssertionError: expected [ …(3) ] to deeply equal [ …(2) ]
+R3 killed AssertionError: expected [ …(2) ] to deeply equal [ Array(1) ]
+R4 killed AssertionError: packages/polaris-dossier: expected [ undefined, [ 'src' ], [ …(2) ] ] to deeply equal [ undefined, [ 'sr
+R5 killed AssertionError: expected true to be false // Object.is equality
+R6 killed AssertionError: expected Error: Command failed: /home/tze/.nvm/ver… { …(6) } to match object { stderr: StringContaining{
+R7 killed Error: promise resolved "{ stdout: '', stderr: '' }" instead of rejecting
+R8 killed AssertionError: expected Error: Command failed: /home/tze/.nvm/ver… { …(6) } to match object { stderr: StringContaining{
+R9 killed Error: promise resolved "{ stdout: '', stderr: '' }" instead of rejecting
+R10 killed AssertionError: expected Error: Command failed: /home/tze/.nvm/ver… { …(6) } to match object { stderr: StringContaining{
+R11 killed AssertionError: @syzygy/cap1-core/testing: expected { …(9), …(1) } to be { …(9), …(1) } // Object.is equality

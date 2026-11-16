@@ -1,0 +1,87 @@
+## Outcome
+
+`syzygy-bpyt.6.15` (P1) repairs a regression from #530 that the PR #535 review found (`docs/reviews/R-GP-IMPL-HOST-PINS-1-RAW.md`, N9, probe `docs/evidence/host-pins-review-2026-10-27/merge-gate-probe.txt`), and closes that review's N6.
+
+**The regression.** #530 moved the POC's hashing from inline `node:crypto` calls in protected POC files into `packages/support`, but no observer-input prefix covered `packages/support/`. So `pocObserverInputsAreClean` accepted a dirty `packages/support/src/sha256.ts` or `packages/support/package.json`, and POC startup reported a clean observer while the worktree-metadata digest it records came from changed bytes.
+
+- **The prefix** (`apps/three-surface-poc/src/git-observation.ts`): `'packages/support/'` is added, with a one-line comment pointing to the guard. Nothing else in the gate changes.
+- **N6, one table row** (`git-observation.test.ts`): for each of the six prefixes, `<prefix>src/x.ts`, `<prefix>package.json` and `<prefix>tsconfig.json` must each read as dirty. This kills the reviewer's V12, V14 and V15, which survive at BASE.
+- **The drift guard** (same file): it derives the packages the daemon runs from instead of listing them. It walks every import edge from the daemon entry, `apps/three-surface-poc/src/main.ts`, using the shared `workspace-reach.testkit.ts`, the same method as `island-boundary.test.ts`. The walk follows static, type-only, re-export and literal dynamic imports, and an unresolvable workspace specifier fails it. The guard then asserts that the gate refuses every reached module, plus each reached package's `package.json` and `tsconfig.json`.
+  - It is a subset check: the gate may protect more than the walk reaches, so `packages/cap1-daemon/` stays protected (mutant O6 shows this).
+
+**The derivation, for the reviewer to rule on.** The bead names two possible sources for the drift guard's package set: build:poc's package list, or the POC's workspace dependency closure from the manifests. I used neither. Both include `packages/polaris-generation-core`, and the manifest closure also includes `packages/polaris-generation-consent`. Neither package has ever had a prefix:
+- the gate list dates from `f0de29bd` (2026-08-29);
+- the POC took the polaris-generation-core dependency at `cb0614af` (2026-09-13).
+
+Either source would therefore have required adding prefixes for those two packages. That is a gate tightening outside the coordinator's ruling, so it would hit the stop clause. The daemon entry's import graph does not reach either package, by two independent methods (`closure-*.json`): the testkit walk, and a TypeScript program using Node module resolution. Both find exactly `apps/three-surface-poc`, `cap1-core`, `http-host`, `support` and `three-surface-poc-core`. [Inferred] The two polaris-generation packages are loaded only by separate operator commands (`poc:dossier`, `poc:generator-demo` and the like), which never call this gate.
+
+## Classes
+
+- **Declared:** 1, 3 and 4. The change is to the observer-input gate: it decides whether the POC's recorded observer revision honestly names the code it runs.
+
+GP-Q0's further checks:
+- **Differential** (`gate-diff.json`): the gate at BASE and at HEAD, each side from its own build, using the syzygy-bpyt.7.3 `gate-diff.mjs` unchanged. It covers 5,598 paths: every path tracked at either commit, plus nine probes. Exactly 9 decisions differ, all under `packages/support/`, all from accepted to refused, and refusals go from 319 to 328. The boundary probes `packages/support`, `packages/supportive/x.ts` and `packages/support-x/src/a.ts` stay accepted at both commits.
+- **A rule-6 mutant per predicate:** see Evidence.
+- **Owner notice naming the restored refusal:** for the coordinator to post at landing.
+
+## Authority
+
+- GP-Q0 part 1 (`.syzygy/governance/decisions/OWNER-DIRECTION-GREENFIELD-PARITY-ANSWERS-2026-10-21.md`), under the coordinator's ruling in the bead: this "restores the gate's pre-#530 refusal set" and is "the move followed through" (the PR #529 review's ruling, `docs/reviews/R-GP-IMPL-HTTP-HOST-1-RAW.md:127`, as carried in `docs/evidence/http-host-round-1-dispositions-2026-10-27.md:63-70`), so no new owner ruling is needed.
+- The stop clause ("Any change not listed here to what a gate accepts or refuses stops and returns to the owner"): the differential shows that only the ruled paths change. No prefix is added for the polaris-generation packages (see Outcome).
+
+## Every changed output
+
+- **The gate:** it now refuses the 9 `packages/support/` paths listed in `gate-diff.json`, and nothing else changes.
+- **POC startup:** a dirty `packages/support/` now fails the observer-clean check that `poc-main.ts:136` runs, as other protected inputs already do. No served byte changes.
+- **The POC walkthrough surface version:** it moves from `polaris@e4fd613eed56` at BASE to `polaris@3f91047d44cf` at HEAD, because both subject files sit in `apps/three-surface-poc/src`. The core tree is unchanged, and no bound record carries the version.
+
+## Evidence
+
+The evidence is in `docs/evidence/syzygy-bpyt-6-15/`.
+- `record.py <tree> --check` reports 0 problems, and `--selftest` gives 29/29.
+- BASE: `bb05df7ea409039c5a6465e7179f9d0c66931ad3` (main after #536).
+- Code commit: `f207d758eb11830eda2831caa911011e84a966b7`.
+- Evidence commit: `6ef18990d3704a4f16588966a6620fb47cd0f3f9`.
+
+Subjects:
+- `git diff bb05df7e f207d758`: sha256 `a527579c89d53a6c38af519261fd4f6d918dbb1a27fdb9420db61dba3dd082fa`, 2 files, +36/−0;
+- `git diff bb05df7e 6ef18990`: sha256 `c6cd844feec49fb585f2235de362b18728020276ab690e5c432b6c55ffa6b393`, 27 files;
+- `summary.json`: sha256 `087df118f7e38266b3b8a35d974b72dddcb6bdd1635d50333411e7da01edec4b`.
+
+**The regression and its repair, by the guard's own population** (`closure.mjs`, run on each side's build). The walk reaches 106 modules, which with the five packages' manifests and tsconfigs makes 116 inputs:
+- at BASE, the gate accepts 5 of them: `support`'s `index.ts`, `sha256.ts`, `deep-freeze.ts`, `package.json` and `tsconfig.json`;
+- at HEAD, it accepts none.
+
+**The PR #535 reviewer's mutants**, run unchanged with its runner (`docs/evidence/host-pins-review-2026-10-27/tools/rev535_mut.py`) and its spec files:
+- V12, V14 and V15 all survive at BASE;
+- at HEAD they are all killed:
+  - V12 and V15 by both new rows;
+  - V14 by the table row alone, because cap1-daemon is not in the daemon's closure.
+
+**This PR's mutants** (`own-specs.json`), run at HEAD with the same runner over `git-observation.test.ts`; each is killed by exactly the rows named:
+- O1, the support prefix dropped: table and guard;
+- O2, the support prefix narrowed to `src/`: table and guard;
+- O3, `import '@syzygy/polaris-generation-core'` added to `poc-main.ts`: guard only;
+- O4, a dynamic import of `@syzygy/polaris-generation-consent/live` added to the core barrel: guard only;
+- O5, `import '@syzygy/no-such-package'` added: guard only, through its unresolved arm;
+- O6, the cap1-daemon prefix dropped: the table and the existing cap1-daemon row, but not the guard. This is the subset property.
+
+**Tests:**
+- `titles.py` over the POC project: 1,134 titles at BASE and 1,136 at HEAD. The 2 added are the two new rows, and 0 are removed.
+- `suite_run.py` at HEAD: 1,138 total, 1,136 passed, 0 failed, 2 skipped, exit 0. The two-test gap from the list is the `BUTLERS_REPO`-gated live test plus one skipped browser test, the same as in #539.
+- `dist_absent.py`: with every `apps/*/dist` and `packages/*/dist` removed, `git-observation.test.ts` and `main.test.ts` pass 37/37. So the guard reads source, never a build.
+- A trial merge with current main (`d38d7a3c`, after #487) is clean. At that merge, `check_governance` and `record.py --check` both pass, and `git-observation`, `main` and `polaris-authority-sweep` pass 42/42.
+
+## Residuals
+
+- `packages/polaris-generation-core` and `packages/polaris-generation-consent` are POC manifest dependencies with no prefix. The daemon does not import them, so the guard does not require them. Adding them would be a gate change for the owner, if the gate is meant to cover operator commands as well as the daemon.
+- `packages/cap1-daemon/` stays a prefix that the daemon no longer imports. This is the fail-closed residual named in #539.
+
+Tests: +2 ~0 -0
+
+Battery: `battery_clone.py 6ef18990d3704a4f16588966a6620fb47cd0f3f9 b615-1`: `commands=110 nonzero=0`.
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+https://claude.ai/code/session_01APhWyj6JKsAs6kzgYByHeD
+

@@ -1,0 +1,1679 @@
+{
+  "schema": "consent-differential-rule6/1",
+  "subjectCommit": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+  "M0Sha256": "bf3ca1cc16a7a2d0975c0c569b7a6ea3f1e1f403aad830512c17fcd6cf258205",
+  "mutations": [
+    {
+      "id": "selection-filter",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "generated.filter(w => kinds.includes(w.kind))",
+      "new": "generated.filter(w => true)",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "b763ce41925c3e477ae9e776c08d67b848119a50ff4383deb76fc6e343ed4721",
+      "subjectCommit": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+      "startedAt": "2026-11-06T06:50:27.951769+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/selection-filter.mjs",
+        "--selftest"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-selection-filter\", \"startedAt\": \"2026-11-06T06:50:27.982182+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/selection-filter.mjs\", \"--selftest\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T06:50:28.270075+00:00\", \"elapsedSeconds\": 0.28404468996450305, \"streams\": {\"rule6-selection-filter.stdout\": {\"bytes\": 3824, \"sha256\": \"a0f2059cd0b75e905f9a2a5031ee84aaa9bded552cec9143354fff7e027caebd\"}, \"rule6-selection-filter.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/logs/rule6-selection-filter.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 5,
+      "failedCases": [
+        "selection includes requested worlds",
+        "count uses selected population"
+      ],
+      "finishedAt": "2026-11-06T06:50:28.277686+00:00"
+    },
+    {
+      "id": "population-count",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "return { worlds: worlds.length, byKind };",
+      "new": "return { worlds: worlds.length + 1, byKind };",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "669602ced49a241683492780565af566bd01fe1e38142d06f2b9389c41ba4ba1",
+      "subjectCommit": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+      "startedAt": "2026-11-06T06:50:28.277846+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/population-count.mjs",
+        "--selftest"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-population-count\", \"startedAt\": \"2026-11-06T06:50:28.305336+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/population-count.mjs\", \"--selftest\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T06:50:28.586362+00:00\", \"elapsedSeconds\": 0.27853362495079637, \"streams\": {\"rule6-population-count.stdout\": {\"bytes\": 3698, \"sha256\": \"53d5cac0842a85951c36c5dd843be557f5397323f476dc8bf5c73541aad7f56a\"}, \"rule6-population-count.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/logs/rule6-population-count.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 5,
+      "failedCases": [
+        "count uses selected population",
+        "generated count remains separate",
+        "three steps and two instants are six answers in one world",
+        "count output binds subjects source compiled tool fixture and finite resources without execution"
+      ],
+      "finishedAt": "2026-11-06T06:50:28.592979+00:00"
+    },
+    {
+      "id": "identity-positional",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "const a = old.get(identity.key), b = next.get(identity.key);",
+      "new": "const a = old.get(identity.key), b = [...next.values()][0];",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "b7c14f79c9292ba587849ad922cda934076e91d13c9737307bede0c52665858d",
+      "subjectCommit": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+      "startedAt": "2026-11-06T06:50:28.593137+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/identity-positional.mjs",
+        "--selftest"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-identity-positional\", \"startedAt\": \"2026-11-06T06:50:28.620883+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/identity-positional.mjs\", \"--selftest\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T06:50:28.878182+00:00\", \"elapsedSeconds\": 0.2546861830051057, \"streams\": {\"rule6-identity-positional.stdout\": {\"bytes\": 3294, \"sha256\": \"7ea0f6f3ee9fd8a0aea8f6f01bf14a95b3ed9d47ab6cef0a10437b2a0e2ad8cd\"}, \"rule6-identity-positional.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/logs/rule6-identity-positional.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 3,
+      "failedCases": [
+        "order-independent key pairing"
+      ],
+      "finishedAt": "2026-11-06T06:50:28.884448+00:00"
+    },
+    {
+      "id": "new-keyset",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "if (map.size !== expected.length || expected.some(e => !map.has(e.key)))",
+      "new": "if (map.size !== expected.length)",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "cabbd05e99c856d98066243afbd0de8160049e7ea056282f9077fb42c6d2090d",
+      "subjectCommit": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+      "startedAt": "2026-11-06T06:50:28.884568+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/new-keyset.mjs",
+        "--selftest"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-new-keyset\", \"startedAt\": \"2026-11-06T06:50:28.912536+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/new-keyset.mjs\", \"--selftest\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T06:50:29.165310+00:00\", \"elapsedSeconds\": 0.25002567598130554, \"streams\": {\"rule6-new-keyset.stdout\": {\"bytes\": 3404, \"sha256\": \"d1683df68f544dc1b09e9f3a33e3f30983704e73460a377e0667e5257d23715e\"}, \"rule6-new-keyset.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/logs/rule6-new-keyset.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 5,
+      "failedCases": [
+        "same-length wrong key rejected"
+      ],
+      "finishedAt": "2026-11-06T06:50:29.171506+00:00"
+    },
+    {
+      "id": "metadata-identity",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "if (JSON.stringify(row[4]) !== JSON.stringify({ reader: identity.reader, step: identity.step, instant: identity.instant }))",
+      "new": "if (false)",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "7bbdfcc53e8393bff35e031ff434ee9b52e1cab711320e791bc31c133bdb5450",
+      "subjectCommit": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+      "startedAt": "2026-11-06T06:50:29.171596+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/metadata-identity.mjs",
+        "--selftest"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-metadata-identity\", \"startedAt\": \"2026-11-06T06:50:29.197533+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/metadata-identity.mjs\", \"--selftest\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T06:50:29.451602+00:00\", \"elapsedSeconds\": 0.25122028397163376, \"streams\": {\"rule6-metadata-identity.stdout\": {\"bytes\": 3297, \"sha256\": \"70a4d7d9a7709340d1ed05631c6f2b995ca82bd309f3facfdb38c39af4101577\"}, \"rule6-metadata-identity.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/logs/rule6-metadata-identity.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 6,
+      "failedCases": [
+        "metadata identity rejected"
+      ],
+      "finishedAt": "2026-11-06T06:50:29.460245+00:00"
+    },
+    {
+      "id": "complete-value-binding",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "if (typeof row[3] !== 'string' || sha256(row[3]) !== row[1])",
+      "new": "if (false)",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "9c8ae2a8866baea719363296a816b04f4b3a52165a6621eee5d8b0c423707f17",
+      "subjectCommit": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+      "startedAt": "2026-11-06T06:50:29.460370+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/complete-value-binding.mjs",
+        "--selftest"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-complete-value-binding\", \"startedAt\": \"2026-11-06T06:50:29.490338+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/complete-value-binding.mjs\", \"--selftest\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T06:50:29.768294+00:00\", \"elapsedSeconds\": 0.2753714010468684, \"streams\": {\"rule6-complete-value-binding.stdout\": {\"bytes\": 3297, \"sha256\": \"e9d8ccb109e8fb56c52893aae38c6e73cd5fdf11d28f94f3eeeacdb960f6ea56\"}, \"rule6-complete-value-binding.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/logs/rule6-complete-value-binding.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 6,
+      "failedCases": [
+        "digest/value mismatch rejected"
+      ],
+      "finishedAt": "2026-11-06T06:50:29.775425+00:00"
+    },
+    {
+      "id": "unrelated-reader-total",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "return expected.filter(reader => !(perReader[reader]?.answers > 0 && perReader[reader]?.mismatches > 0));",
+      "new": "return Object.values(perReader).some(r => r.mismatches > 0) ? [] : expected;",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "a3a2b40f2976b9555b0b755e70e6c7abcdeb7dfaefba19685c448ef13924d514",
+      "subjectCommit": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+      "startedAt": "2026-11-06T06:50:29.775549+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/unrelated-reader-total.mjs",
+        "--selftest"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-unrelated-reader-total\", \"startedAt\": \"2026-11-06T06:50:29.804886+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/unrelated-reader-total.mjs\", \"--selftest\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T06:50:30.078935+00:00\", \"elapsedSeconds\": 0.2712793580139987, \"streams\": {\"rule6-unrelated-reader-total.stdout\": {\"bytes\": 3648, \"sha256\": \"fba44fd8d808fe6340220268e737cc6dfdd7ec954bcd0fe1bca6d97746fa92a8\"}, \"rule6-unrelated-reader-total.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/logs/rule6-unrelated-reader-total.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 5,
+      "failedCases": [
+        "unrelated mismatch cannot satisfy port",
+        "positive mismatches need positive denominator",
+        "each demanded reader must differ"
+      ],
+      "finishedAt": "2026-11-06T06:50:30.085802+00:00"
+    },
+    {
+      "id": "positive-reader-denominator",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "perReader[reader]?.answers > 0 && perReader[reader]?.mismatches > 0",
+      "new": "perReader[reader]?.mismatches > 0",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "22f1db176115b05eb6a48db04aaea1f7c98523491711b48e25a8319605bd9fa5",
+      "subjectCommit": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+      "startedAt": "2026-11-06T06:50:30.085917+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/positive-reader-denominator.mjs",
+        "--selftest"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-positive-reader-denominator\", \"startedAt\": \"2026-11-06T06:50:30.112139+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/positive-reader-denominator.mjs\", \"--selftest\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T06:50:30.368084+00:00\", \"elapsedSeconds\": 0.25362959696212783, \"streams\": {\"rule6-positive-reader-denominator.stdout\": {\"bytes\": 3365, \"sha256\": \"f8f70c856b0ae1d97636aeb5d953c914c5308131406f1292ea0bb08a4f37ea61\"}, \"rule6-positive-reader-denominator.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/logs/rule6-positive-reader-denominator.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 5,
+      "failedCases": [
+        "positive mismatches need positive denominator"
+      ],
+      "finishedAt": "2026-11-06T06:50:30.373854+00:00"
+    },
+    {
+      "id": "known-unique-expectations",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "if (names === undefined || names.length === 0 || names.some(n => n === '') || new Set(names).size !== names.length || names.some(n => !known.has(n)))",
+      "new": "if (false)",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "f2e172006479c9b9fc1d1619044cebd2b9e5d93a06b4b58f9632e47cb792f9aa",
+      "subjectCommit": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+      "startedAt": "2026-11-06T06:50:30.373946+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/known-unique-expectations.mjs",
+        "--selftest"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-known-unique-expectations\", \"startedAt\": \"2026-11-06T06:50:30.402304+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/known-unique-expectations.mjs\", \"--selftest\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T06:50:30.668454+00:00\", \"elapsedSeconds\": 0.26387548801722005, \"streams\": {\"rule6-known-unique-expectations.stdout\": {\"bytes\": 3581, \"sha256\": \"49d0174ee49cd3e08c42468e41c369cb4b8ea00c9800ea813f78928f5bcfdc67\"}, \"rule6-known-unique-expectations.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/logs/rule6-known-unique-expectations.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 5,
+      "failedCases": [
+        "absent control expectation rejected",
+        "empty control expectation rejected",
+        "empty name control expectation rejected",
+        "duplicate control expectation rejected",
+        "unknown control expectation rejected"
+      ],
+      "finishedAt": "2026-11-06T06:50:30.674446+00:00"
+    },
+    {
+      "id": "empty-answer-population",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "if (rows.length === 0) throw new Error('zero executed answer population');",
+      "new": "if (false) throw new Error('zero executed answer population');",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "ac210c19b86253926d2a30f7285f38393dbb6a28d175e6fb8a65b55e5b1b6bd6",
+      "subjectCommit": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+      "startedAt": "2026-11-06T06:50:30.674545+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/empty-answer-population.mjs",
+        "--selftest"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-empty-answer-population\", \"startedAt\": \"2026-11-06T06:50:30.700103+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/empty-answer-population.mjs\", \"--selftest\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T06:50:30.960990+00:00\", \"elapsedSeconds\": 0.2579419349785894, \"streams\": {\"rule6-empty-answer-population.stdout\": {\"bytes\": 3297, \"sha256\": \"d88bc35d046daf65c58b16db01b4b5d07affd613ee703a2d185cb2b83f0653c9\"}, \"rule6-empty-answer-population.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/logs/rule6-empty-answer-population.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 5,
+      "failedCases": [
+        "zero answers rejected"
+      ],
+      "finishedAt": "2026-11-06T06:50:30.966961+00:00"
+    },
+    {
+      "id": "empty-selected-population",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "if (selected.length === 0) throw new Error('empty selected world population');",
+      "new": "if (false) throw new Error('empty selected world population');",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "0ea6298a43d27b4d56370ef02341d920d7e9b08c0e0a4f1eca8f4c04d697281c",
+      "subjectCommit": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+      "startedAt": "2026-11-06T06:50:30.967050+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/empty-selected-population.mjs",
+        "--selftest"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-empty-selected-population\", \"startedAt\": \"2026-11-06T06:50:30.994381+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/empty-selected-population.mjs\", \"--selftest\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T06:50:31.265016+00:00\", \"elapsedSeconds\": 0.26808465202338994, \"streams\": {\"rule6-empty-selected-population.stdout\": {\"bytes\": 3297, \"sha256\": \"f265b7186296e5acb45a2c4fccdf585614503790565261fb10b14f5d1c0b808f\"}, \"rule6-empty-selected-population.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/logs/rule6-empty-selected-population.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 5,
+      "failedCases": [
+        "empty selection rejected"
+      ],
+      "finishedAt": "2026-11-06T06:50:31.272077+00:00"
+    },
+    {
+      "id": "absent-method",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "if (typeof port.consentAbsenceFor !== 'function')",
+      "new": "if (false)",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "8e2b32f8950123390b7c54472a1a546a4e8ada340bb7ba123c8be9cede45d1d4",
+      "subjectCommit": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+      "startedAt": "2026-11-06T06:50:31.272179+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/absent-method.mjs",
+        "--selftest"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-absent-method\", \"startedAt\": \"2026-11-06T06:50:31.299933+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/absent-method.mjs\", \"--selftest\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T06:50:31.611437+00:00\", \"elapsedSeconds\": 0.30798495799535885, \"streams\": {\"rule6-absent-method.stdout\": {\"bytes\": 3297, \"sha256\": \"cf285d120e1b9fe41cd02bb7264a80a6c5ba0e1a7369b4bbdca629db51c42a75\"}, \"rule6-absent-method.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/logs/rule6-absent-method.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 5,
+      "failedCases": [
+        "missing optional-method implementation is fatal"
+      ],
+      "finishedAt": "2026-11-06T06:50:31.620302+00:00"
+    },
+    {
+      "id": "cleanup-leftover",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "control.materializedLeftOver === 0 && control.differing === 0 && control.pairs === control.expectedPairs && control.created === control.removed",
+      "new": "control.differing === 0 && control.pairs === control.expectedPairs && control.created === control.removed",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "7192e27821160bcc46c99209f4a1adfb2cf107efb708ecfb59d5cf35c1e0094d",
+      "subjectCommit": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+      "startedAt": "2026-11-06T06:50:31.620416+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/cleanup-leftover.mjs",
+        "--selftest"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-cleanup-leftover\", \"startedAt\": \"2026-11-06T06:50:31.649603+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/cleanup-leftover.mjs\", \"--selftest\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T06:50:31.922226+00:00\", \"elapsedSeconds\": 0.2692937360261567, \"streams\": {\"rule6-cleanup-leftover.stdout\": {\"bytes\": 3297, \"sha256\": \"d1e660b4d3971bfbb2abd8fae1a249c22ffe1e3e8d91dd7ef5a7a72ee8168d43\"}, \"rule6-cleanup-leftover.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/logs/rule6-cleanup-leftover.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 5,
+      "failedCases": [
+        "leftovers fails cleanup"
+      ],
+      "finishedAt": "2026-11-06T06:50:31.928940+00:00"
+    },
+    {
+      "id": "cleanup-pair-denominator",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "control.materializedLeftOver === 0 && control.differing === 0 && control.pairs === control.expectedPairs && control.created === control.removed",
+      "new": "control.materializedLeftOver === 0 && control.differing === 0 && control.created === control.removed",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "b3311c646a2a45c41046f18a0cafa22ced23773ce79991bd7deb67871c3e5fb7",
+      "subjectCommit": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+      "startedAt": "2026-11-06T06:50:31.929044+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/cleanup-pair-denominator.mjs",
+        "--selftest"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-cleanup-pair-denominator\", \"startedAt\": \"2026-11-06T06:50:31.956962+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/cleanup-pair-denominator.mjs\", \"--selftest\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T06:50:32.239881+00:00\", \"elapsedSeconds\": 0.2804763579624705, \"streams\": {\"rule6-cleanup-pair-denominator.stdout\": {\"bytes\": 3297, \"sha256\": \"f912f13eac20802c402f91ce555cf2c0d04a756d75a8c3e5587d11566dcf37a1\"}, \"rule6-cleanup-pair-denominator.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/logs/rule6-cleanup-pair-denominator.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 5,
+      "failedCases": [
+        "missing disk pair fails cleanup"
+      ],
+      "finishedAt": "2026-11-06T06:50:32.247217+00:00"
+    },
+    {
+      "id": "cleanup-removal-denominator",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "control.materializedLeftOver === 0 && control.differing === 0 && control.pairs === control.expectedPairs && control.created === control.removed",
+      "new": "control.materializedLeftOver === 0 && control.differing === 0 && control.pairs === control.expectedPairs",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "5ddcaa7a489303224fed1098d95aa33ac6fea8253f33eb89b7d1084356cb2cfd",
+      "subjectCommit": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+      "startedAt": "2026-11-06T06:50:32.247346+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/cleanup-removal-denominator.mjs",
+        "--selftest"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-cleanup-removal-denominator\", \"startedAt\": \"2026-11-06T06:50:32.277789+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/cleanup-removal-denominator.mjs\", \"--selftest\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T06:50:32.550059+00:00\", \"elapsedSeconds\": 0.269947892986238, \"streams\": {\"rule6-cleanup-removal-denominator.stdout\": {\"bytes\": 3297, \"sha256\": \"88abad45d81c90684274206e1e17545f4ff1c9eed3f11339b72a575c1988d95f\"}, \"rule6-cleanup-removal-denominator.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/logs/rule6-cleanup-removal-denominator.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 5,
+      "failedCases": [
+        "missing removal fails cleanup"
+      ],
+      "finishedAt": "2026-11-06T06:50:32.556347+00:00"
+    },
+    {
+      "id": "successor-exact-instant",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "const before = at === SUCCESSOR_INSTANTS[0];",
+      "new": "const before = at !== SUCCESSOR_INSTANTS[2];",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "2244329c85720d44afc6fbcfc5c1be6cb93700c020087a3f0ff5e8aa1ac37bb6",
+      "subjectCommit": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+      "startedAt": "2026-11-06T06:50:32.556453+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/successor-exact-instant.mjs",
+        "--selftest"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-successor-exact-instant\", \"startedAt\": \"2026-11-06T06:50:32.583624+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/successor-exact-instant.mjs\", \"--selftest\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T06:50:32.825940+00:00\", \"elapsedSeconds\": 0.2398830719757825, \"streams\": {\"rule6-successor-exact-instant.stdout\": {\"bytes\": 3327, \"sha256\": \"fb857bab7472d30ec6383277d7c456e44483d8a56bc02a9752baef9e40f73e72\"}, \"rule6-successor-exact-instant.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/logs/rule6-successor-exact-instant.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 5,
+      "failedCases": [
+        "successor expected outcomes change at exact effective instant"
+      ],
+      "finishedAt": "2026-11-06T06:50:32.833104+00:00"
+    },
+    {
+      "id": "file-world-port-omission",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": ".filter(name => !FIXTURE_READERS.includes(name));",
+      "new": ".filter(name => !FIXTURE_READERS.includes(name) && name !== 'port');",
+      "mode": "probe",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "65a5ee2f61b643d3ec20528ce83cc2af40dc9219efc3975da6960f55532ed40b",
+      "subjectCommit": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+      "startedAt": "2026-11-06T06:50:32.833213+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/file-world-port-omission.mjs",
+        "--old",
+        "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old",
+        "--new",
+        "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+        "--out",
+        "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/file-world-port-omission.json",
+        "--bead",
+        "syzygy-bpyt.8.26",
+        "--kinds",
+        "probe",
+        "--sample-per-kind",
+        "1",
+        "--workers",
+        "1",
+        "--time-limit-ms",
+        "600000"
+      ],
+      "execution": {
+        "wrapperExit": 0,
+        "wrapperStdout": "{\"name\": \"rule6-file-world-port-omission\", \"startedAt\": \"2026-11-06T06:50:32.859551+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/file-world-port-omission.mjs\", \"--old\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old\", \"--new\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"--out\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/file-world-port-omission.json\", \"--bead\", \"syzygy-bpyt.8.26\", \"--kinds\", \"probe\", \"--sample-per-kind\", \"1\", \"--workers\", \"1\", \"--time-limit-ms\", \"600000\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 0, \"finishedAt\": \"2026-11-06T06:50:36.926267+00:00\", \"elapsedSeconds\": 4.064175195002463, \"streams\": {\"rule6-file-world-port-omission.stdout\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}, \"rule6-file-world-port-omission.stderr\": {\"bytes\": 95, \"sha256\": \"44367714c25aa91539459f0b46147145d44b0cf3de9089bc66e792ffca1b77b7\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/logs/rule6-file-world-port-omission.json"
+      },
+      "recountExecution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-file-world-port-omission-recount\", \"startedAt\": \"2026-11-06T06:50:37.033419+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"python3\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/recount.py\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/file-world-port-omission.json\", \"--tree\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old\", \"--out\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/rule6-file-world-port-omission-recount.json\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T06:50:37.575315+00:00\", \"elapsedSeconds\": 0.5394115950330161, \"streams\": {\"rule6-file-world-port-omission-recount.stdout\": {\"bytes\": 178934, \"sha256\": \"79cbed6b2d3c08e9d7b3982dfc700ed805bee17639bcf6cf342c7f6932eb8dbe\"}, \"rule6-file-world-port-omission-recount.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/logs/rule6-file-world-port-omission-recount.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 23,
+      "failedCases": null,
+      "finishedAt": "2026-11-06T06:50:37.583521+00:00"
+    },
+    {
+      "id": "generated-selected-alias",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "const counts = { generated: population(built.worlds), selected: population(worlds) };",
+      "new": "const counts = { generated: population(built.worlds), selected: population(built.worlds) };",
+      "mode": "probe",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "d5228962d786abd8796f8023f1f69e4bfaf458f872a6e03d736a386d2c5d5733",
+      "subjectCommit": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+      "startedAt": "2026-11-06T06:50:37.583690+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/generated-selected-alias.mjs",
+        "--old",
+        "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old",
+        "--new",
+        "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+        "--out",
+        "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/generated-selected-alias.json",
+        "--bead",
+        "syzygy-bpyt.8.26",
+        "--kinds",
+        "probe",
+        "--sample-per-kind",
+        "1",
+        "--workers",
+        "1",
+        "--time-limit-ms",
+        "600000"
+      ],
+      "execution": {
+        "wrapperExit": 0,
+        "wrapperStdout": "{\"name\": \"rule6-generated-selected-alias\", \"startedAt\": \"2026-11-06T06:50:37.611672+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/generated-selected-alias.mjs\", \"--old\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old\", \"--new\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"--out\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/generated-selected-alias.json\", \"--bead\", \"syzygy-bpyt.8.26\", \"--kinds\", \"probe\", \"--sample-per-kind\", \"1\", \"--workers\", \"1\", \"--time-limit-ms\", \"600000\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 0, \"finishedAt\": \"2026-11-06T06:50:41.889288+00:00\", \"elapsedSeconds\": 4.274638805014547, \"streams\": {\"rule6-generated-selected-alias.stdout\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}, \"rule6-generated-selected-alias.stderr\": {\"bytes\": 95, \"sha256\": \"4b2bbb304f3fbb56498dc52b22778589e7ada7ce3ee7de78f19920b16121c260\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/logs/rule6-generated-selected-alias.json"
+      },
+      "recountExecution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-generated-selected-alias-recount\", \"startedAt\": \"2026-11-06T06:50:42.057531+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"python3\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/recount.py\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/generated-selected-alias.json\", \"--tree\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old\", \"--out\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/rule6-generated-selected-alias-recount.json\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T06:50:42.645251+00:00\", \"elapsedSeconds\": 0.5847220899886452, \"streams\": {\"rule6-generated-selected-alias-recount.stdout\": {\"bytes\": 570, \"sha256\": \"526b64b41eb819767e4915d5a9cc87bca11c919f76fb0330d7168865f0c1cf77\"}, \"rule6-generated-selected-alias-recount.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/logs/rule6-generated-selected-alias-recount.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 24,
+      "failedCases": null,
+      "finishedAt": "2026-11-06T06:50:42.654698+00:00"
+    },
+    {
+      "id": "successor-record-branch",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "supersedes: 'FIXTURE-OBSERVATION@1'",
+      "new": "supersedes: 'FIXTURE-MISSING@1'",
+      "mode": "observation-successor",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "46dbef440ceac504971ea8c682870093257cca53fd0c953a57ab7e05c838ed47",
+      "subjectCommit": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+      "startedAt": "2026-11-06T06:50:42.654972+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/successor-record-branch.mjs",
+        "--old",
+        "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old",
+        "--new",
+        "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+        "--out",
+        "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/successor-record-branch.json",
+        "--bead",
+        "syzygy-bpyt.8.26",
+        "--kinds",
+        "observation-successor",
+        "--sample-per-kind",
+        "1",
+        "--workers",
+        "1",
+        "--time-limit-ms",
+        "600000"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-successor-record-branch\", \"startedAt\": \"2026-11-06T06:50:42.687668+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/successor-record-branch.mjs\", \"--old\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old\", \"--new\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"--out\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/successor-record-branch.json\", \"--bead\", \"syzygy-bpyt.8.26\", \"--kinds\", \"observation-successor\", \"--sample-per-kind\", \"1\", \"--workers\", \"1\", \"--time-limit-ms\", \"600000\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T06:50:45.273065+00:00\", \"elapsedSeconds\": 2.581427450000774, \"streams\": {\"rule6-successor-record-branch.stdout\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}, \"rule6-successor-record-branch.stderr\": {\"bytes\": 131, \"sha256\": \"3fb4fea5c8d93f7c9e38f2178fdf5e474a63f468be9ce1e0141b097bbf94865a\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/logs/rule6-successor-record-branch.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 6,
+      "failedCases": null,
+      "finishedAt": "2026-11-06T06:50:45.356962+00:00"
+    },
+    {
+      "id": "materialization-executed-denominator",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "materialization.expectedPairs += 1;",
+      "new": "materialization.expectedPairs += 0;",
+      "mode": "base",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "4c86a539c8436e9770bbdf40eaa91a140ceaeef127789c408f6980b3d6aad268",
+      "subjectCommit": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+      "startedAt": "2026-11-06T06:50:45.357209+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/materialization-executed-denominator.mjs",
+        "--old",
+        "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old",
+        "--new",
+        "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+        "--out",
+        "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/materialization-executed-denominator.json",
+        "--bead",
+        "syzygy-bpyt.8.26",
+        "--kinds",
+        "base",
+        "--sample-per-kind",
+        "1",
+        "--workers",
+        "1",
+        "--time-limit-ms",
+        "600000"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-materialization-executed-denominator\", \"startedAt\": \"2026-11-06T06:50:45.391388+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/materialization-executed-denominator.mjs\", \"--old\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old\", \"--new\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"--out\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/materialization-executed-denominator.json\", \"--bead\", \"syzygy-bpyt.8.26\", \"--kinds\", \"base\", \"--sample-per-kind\", \"1\", \"--workers\", \"1\", \"--time-limit-ms\", \"600000\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T06:51:23.388330+00:00\", \"elapsedSeconds\": 37.99417334300233, \"streams\": {\"rule6-materialization-executed-denominator.stdout\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}, \"rule6-materialization-executed-denominator.stderr\": {\"bytes\": 141, \"sha256\": \"5d3c3e39a09fb1d127e02d7dea3cfa0258e992a6ceed9b28f759813e1dc53068\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/logs/rule6-materialization-executed-denominator.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 46,
+      "failedCases": null,
+      "finishedAt": "2026-11-06T06:51:23.507362+00:00"
+    },
+    {
+      "id": "actual-owned-removal",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "for (const disk of disks) fs.rmSync(disk, { recursive: true, force: true });",
+      "new": "for (const disk of disks) void disk;",
+      "mode": "base",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "c3777847a8a9fae43c4a8a51f69147e6285248dcc700cde01ed5d7ad9586f6bd",
+      "subjectCommit": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+      "startedAt": "2026-11-06T06:51:23.507607+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/actual-owned-removal.mjs",
+        "--old",
+        "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old",
+        "--new",
+        "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+        "--out",
+        "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/actual-owned-removal.json",
+        "--bead",
+        "syzygy-bpyt.8.26",
+        "--kinds",
+        "base",
+        "--sample-per-kind",
+        "1",
+        "--workers",
+        "1",
+        "--time-limit-ms",
+        "600000"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-actual-owned-removal\", \"startedAt\": \"2026-11-06T06:51:23.538742+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/actual-owned-removal.mjs\", \"--old\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old\", \"--new\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"--out\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/actual-owned-removal.json\", \"--bead\", \"syzygy-bpyt.8.26\", \"--kinds\", \"base\", \"--sample-per-kind\", \"1\", \"--workers\", \"1\", \"--time-limit-ms\", \"600000\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T06:51:54.633618+00:00\", \"elapsedSeconds\": 31.09174622001592, \"streams\": {\"rule6-actual-owned-removal.stdout\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}, \"rule6-actual-owned-removal.stderr\": {\"bytes\": 141, \"sha256\": \"5d3c3e39a09fb1d127e02d7dea3cfa0258e992a6ceed9b28f759813e1dc53068\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/logs/rule6-actual-owned-removal.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 46,
+      "failedCases": null,
+      "finishedAt": "2026-11-06T06:51:54.734388+00:00"
+    },
+    {
+      "id": "materialization-difference",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "control.materializedLeftOver === 0 && control.differing === 0 && control.pairs === control.expectedPairs && control.created === control.removed",
+      "new": "control.materializedLeftOver === 0 && control.pairs === control.expectedPairs && control.created === control.removed",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "6434c9d5e93ff79fb714853e728d496520ec71862f59b32489dd55825a114bd4",
+      "subjectCommit": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+      "startedAt": "2026-11-06T06:51:54.734659+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/materialization-difference.mjs",
+        "--selftest"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-materialization-difference\", \"startedAt\": \"2026-11-06T06:51:54.763871+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/materialization-difference.mjs\", \"--selftest\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T06:51:55.070630+00:00\", \"elapsedSeconds\": 0.3037739350111224, \"streams\": {\"rule6-materialization-difference.stdout\": {\"bytes\": 3297, \"sha256\": \"9caae84d993091dd6ff9908ef58c13fd53d7e732efaa4ce463044251bee6466e\"}, \"rule6-materialization-difference.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/logs/rule6-materialization-difference.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 5,
+      "failedCases": [
+        "changed disk answer fails cleanup"
+      ],
+      "finishedAt": "2026-11-06T06:51:55.093268+00:00"
+    },
+    {
+      "id": "selected-execution-population",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "if (world.readers.length === 0 || new Set(world.readers).size !== world.readers.length || world.instants.length === 0 || (world.steps !== undefined && world.steps.length === 0))",
+      "new": "if (false)",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "699989658e67bfce451dffa6e4ba9a29ad0a97ed7b70a76cf9e70e8aea808e61",
+      "subjectCommit": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+      "startedAt": "2026-11-06T06:51:55.093619+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/selected-execution-population.mjs",
+        "--selftest"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-selected-execution-population\", \"startedAt\": \"2026-11-06T06:51:55.119414+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/selected-execution-population.mjs\", \"--selftest\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T06:51:55.386929+00:00\", \"elapsedSeconds\": 0.2641008730279282, \"streams\": {\"rule6-selected-execution-population.stdout\": {\"bytes\": 3510, \"sha256\": \"a9a72fea7ab4638ac38009f7a4ee0aead6ec735d1e7ffadadf92ee29c259dda9\"}, \"rule6-selected-execution-population.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/logs/rule6-selected-execution-population.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 5,
+      "failedCases": [
+        "empty readers rejected",
+        "duplicate world readers rejected",
+        "empty instants rejected",
+        "empty steps rejected"
+      ],
+      "finishedAt": "2026-11-06T06:51:55.395128+00:00"
+    },
+    {
+      "id": "duplicate-comparison-key",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "if (map.has(row[0])) throw new Error(`duplicate ${role} answer key: ${row[0]}`);",
+      "new": "if (false) throw new Error(`duplicate ${role} answer key: ${row[0]}`);",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "17116a6f8515143e4fc966e6f8c9d5e346e4ee2968992c4d9399a1c7c082b0a8",
+      "subjectCommit": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+      "startedAt": "2026-11-06T06:51:55.395266+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/duplicate-comparison-key.mjs",
+        "--selftest"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-duplicate-comparison-key\", \"startedAt\": \"2026-11-06T06:51:55.426106+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/duplicate-comparison-key.mjs\", \"--selftest\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T06:51:55.703295+00:00\", \"elapsedSeconds\": 0.27453441999386996, \"streams\": {\"rule6-duplicate-comparison-key.stdout\": {\"bytes\": 3297, \"sha256\": \"842c5272236aae73e05191a7eac9304dc7a821a1cd3d84f79911292020afd1ae\"}, \"rule6-duplicate-comparison-key.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/logs/rule6-duplicate-comparison-key.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 6,
+      "failedCases": [
+        "duplicate key rejected"
+      ],
+      "finishedAt": "2026-11-06T06:51:55.710096+00:00"
+    },
+    {
+      "id": "complete-value-versus-label",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "same: a[3] === b[3]",
+      "new": "same: a[2] === b[2]",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "0d3bdabcc17873b6fbe5abc41aa01e99054c237a25e4d508e03bc8775723077b",
+      "subjectCommit": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+      "startedAt": "2026-11-06T06:51:55.710199+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/complete-value-versus-label.mjs",
+        "--selftest"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-complete-value-versus-label\", \"startedAt\": \"2026-11-06T06:51:55.737681+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/complete-value-versus-label.mjs\", \"--selftest\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T06:51:56.001932+00:00\", \"elapsedSeconds\": 0.261725143995136, \"streams\": {\"rule6-complete-value-versus-label.stdout\": {\"bytes\": 3327, \"sha256\": \"a861ce830d64b6269308ee3f746ab690f564719bf19b690c65e7c9036ab9b588\"}, \"rule6-complete-value-versus-label.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/logs/rule6-complete-value-versus-label.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 5,
+      "failedCases": [
+        "identical labels cannot hide changed complete values"
+      ],
+      "finishedAt": "2026-11-06T06:51:56.009027+00:00"
+    },
+    {
+      "id": "duplicate-world-reader",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "new Set(world.readers).size !== world.readers.length",
+      "new": "false",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "c751427200053f247c5b4eb57a7803d63e1156cf2d6fff0294aff33b4a433889",
+      "subjectCommit": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+      "startedAt": "2026-11-06T06:51:56.009125+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/duplicate-world-reader.mjs",
+        "--selftest"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-duplicate-world-reader\", \"startedAt\": \"2026-11-06T06:51:56.036648+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/duplicate-world-reader.mjs\", \"--selftest\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T06:51:56.325347+00:00\", \"elapsedSeconds\": 0.2861462230212055, \"streams\": {\"rule6-duplicate-world-reader.stdout\": {\"bytes\": 3297, \"sha256\": \"fc33c41efa91d1258c74f7db5a745e44d316eafe73b1c99ea626a18b8840423b\"}, \"rule6-duplicate-world-reader.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/logs/rule6-duplicate-world-reader.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 5,
+      "failedCases": [
+        "duplicate world readers rejected"
+      ],
+      "finishedAt": "2026-11-06T06:51:56.333079+00:00"
+    },
+    {
+      "id": "runtime-resource-validation",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "if (!Number.isSafeInteger(workers) || workers < 1 || workers > 32 || !Number.isSafeInteger(timeLimitMs) || timeLimitMs < 1)",
+      "new": "if (false)",
+      "mode": "probe",
+      "workers": "1.5",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "821579db1c601d81c64868e392a97453cf97a48df6ac7ac58438647a5ac77a04",
+      "subjectCommit": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+      "startedAt": "2026-11-06T06:51:56.333211+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/runtime-resource-validation.mjs",
+        "--old",
+        "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old",
+        "--new",
+        "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+        "--out",
+        "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/runtime-resource-validation.json",
+        "--bead",
+        "syzygy-bpyt.8.26",
+        "--kinds",
+        "probe",
+        "--sample-per-kind",
+        "1",
+        "--workers",
+        "1.5",
+        "--time-limit-ms",
+        "600000"
+      ],
+      "execution": {
+        "wrapperExit": 0,
+        "wrapperStdout": "{\"name\": \"rule6-runtime-resource-validation\", \"startedAt\": \"2026-11-06T06:51:56.362874+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/runtime-resource-validation.mjs\", \"--old\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old\", \"--new\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"--out\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/runtime-resource-validation.json\", \"--bead\", \"syzygy-bpyt.8.26\", \"--kinds\", \"probe\", \"--sample-per-kind\", \"1\", \"--workers\", \"1.5\", \"--time-limit-ms\", \"600000\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 0, \"finishedAt\": \"2026-11-06T06:52:00.514699+00:00\", \"elapsedSeconds\": 4.149005025974475, \"streams\": {\"rule6-runtime-resource-validation.stdout\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}, \"rule6-runtime-resource-validation.stderr\": {\"bytes\": 95, \"sha256\": \"4b2bbb304f3fbb56498dc52b22778589e7ada7ce3ee7de78f19920b16121c260\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/logs/rule6-runtime-resource-validation.json"
+      },
+      "recountExecution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-runtime-resource-validation-recount\", \"startedAt\": \"2026-11-06T06:52:00.630208+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"python3\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/recount.py\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/runtime-resource-validation.json\", \"--tree\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old\", \"--out\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/rule6-runtime-resource-validation-recount.json\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T06:52:01.149744+00:00\", \"elapsedSeconds\": 0.5169909639516845, \"streams\": {\"rule6-runtime-resource-validation-recount.stdout\": {\"bytes\": 578, \"sha256\": \"0591391ed61efcb57ade7cfdeaa4931a8a9debfebb07c7c175d5cd1488ed6cfd\"}, \"rule6-runtime-resource-validation-recount.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/logs/rule6-runtime-resource-validation-recount.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 24,
+      "failedCases": null,
+      "finishedAt": "2026-11-06T06:52:01.157719+00:00"
+    },
+    {
+      "id": "bounded-sample-validation",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "if (!Number.isSafeInteger(samplePerKind) || samplePerKind < 1)",
+      "new": "if (false)",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "d9978c046227ebda58e0a0a9c80bc5167862f4d740c3eb96228f3c51dca1bbfd",
+      "subjectCommit": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+      "startedAt": "2026-11-06T06:52:01.157889+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/bounded-sample-validation.mjs",
+        "--selftest"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-bounded-sample-validation\", \"startedAt\": \"2026-11-06T06:52:01.185417+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/bounded-sample-validation.mjs\", \"--selftest\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T06:52:01.469210+00:00\", \"elapsedSeconds\": 0.2808604669990018, \"streams\": {\"rule6-bounded-sample-validation.stdout\": {\"bytes\": 3380, \"sha256\": \"fed9e8eb01958566ef07e0c736c16bd889589181a5c6505f29a620e973174afe\"}, \"rule6-bounded-sample-validation.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/logs/rule6-bounded-sample-validation.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 5,
+      "failedCases": [
+        "zero bounded fixture sample rejected"
+      ],
+      "finishedAt": "2026-11-06T06:52:01.489720+00:00"
+    },
+    {
+      "id": "unknown-reader-validation",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "if (!specs.has(name)) throw new Error(`unknown selected reader: ${name}`);",
+      "new": "if (false) throw new Error(`unknown selected reader: ${name}`);",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "1ae7477e19b50cb6e64dfa8be9039030b80170447477fc01fbcc01bcf7cd2bc1",
+      "subjectCommit": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+      "startedAt": "2026-11-06T06:52:01.490011+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/unknown-reader-validation.mjs",
+        "--selftest"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-unknown-reader-validation\", \"startedAt\": \"2026-11-06T06:52:01.518744+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/unknown-reader-validation.mjs\", \"--selftest\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T06:52:01.794327+00:00\", \"elapsedSeconds\": 0.27270678797503933, \"streams\": {\"rule6-unknown-reader-validation.stdout\": {\"bytes\": 3297, \"sha256\": \"5bbd93ba174ca94f42f9df329d42df0c42c9e0e1b18092343ff6a8abb0fcf883\"}, \"rule6-unknown-reader-validation.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/logs/rule6-unknown-reader-validation.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 5,
+      "failedCases": [
+        "unknown reader rejected"
+      ],
+      "finishedAt": "2026-11-06T06:52:01.802187+00:00"
+    },
+    {
+      "id": "expectations-without-control",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "if (names !== undefined) throw new Error('reader mismatch expectations require negative-control mode');",
+      "new": "if (false) throw new Error('reader mismatch expectations require negative-control mode');",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "e4ee3c629b0cebc92c3cbe97f125ddf805e758c5c6eb814d18cd750d33625657",
+      "subjectCommit": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+      "startedAt": "2026-11-06T06:52:01.802330+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/expectations-without-control.mjs",
+        "--selftest"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-expectations-without-control\", \"startedAt\": \"2026-11-06T06:52:01.829676+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/expectations-without-control.mjs\", \"--selftest\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T06:52:02.102888+00:00\", \"elapsedSeconds\": 0.2702068839571439, \"streams\": {\"rule6-expectations-without-control.stdout\": {\"bytes\": 3297, \"sha256\": \"ccc50d9bdad8af13fa5ee25e204eda8a598493f17665c9879da36fe724d1c4c8\"}, \"rule6-expectations-without-control.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/logs/rule6-expectations-without-control.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 5,
+      "failedCases": [
+        "expectation without control rejected"
+      ],
+      "finishedAt": "2026-11-06T06:52:02.109263+00:00"
+    },
+    {
+      "id": "requests-ids-query",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "idsRequests: await s.repositoryIdsFor(probe.requestsUrl)",
+      "new": "idsRequests: []",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "b0304d382856e395888e74a16d4df01330d0f7bb20124dcdbc216e8382dfd179",
+      "subjectCommit": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+      "startedAt": "2026-11-06T06:52:02.109377+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/requests-ids-query.mjs",
+        "--selftest"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-requests-ids-query\", \"startedAt\": \"2026-11-06T06:52:02.135587+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/requests-ids-query.mjs\", \"--selftest\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T06:52:02.404716+00:00\", \"elapsedSeconds\": 0.2668037539697252, \"streams\": {\"rule6-requests-ids-query.stdout\": {\"bytes\": 3738, \"sha256\": \"dd8b4bd161d92528167622257e31cc3f8a85dc650833b2c2ed6cd1eac49f9407\"}, \"rule6-requests-ids-query.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/logs/rule6-requests-ids-query.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 5,
+      "failedCases": [
+        "both repositories reach every required gate method",
+        "Requests-only repositoryIdsFor failure propagates"
+      ],
+      "finishedAt": "2026-11-06T06:52:02.412212+00:00"
+    },
+    {
+      "id": "requests-absence-query",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "absenceRequests: await s.consentAbsenceFor(probe.requestsUrl)",
+      "new": "absenceRequests: ''",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "2d8c6c0424ba5ede865d33436e540efc8c706a6aeb150b8d61eb18bde07acd29",
+      "subjectCommit": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+      "startedAt": "2026-11-06T06:52:02.412335+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/requests-absence-query.mjs",
+        "--selftest"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-requests-absence-query\", \"startedAt\": \"2026-11-06T06:52:02.445388+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/requests-absence-query.mjs\", \"--selftest\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T06:52:02.738976+00:00\", \"elapsedSeconds\": 0.2903552000061609, \"streams\": {\"rule6-requests-absence-query.stdout\": {\"bytes\": 3722, \"sha256\": \"e47786e9818518f3d3ba0338638bb2ea39f5c3646f9d75fc8d74e65c2fc21ec6\"}, \"rule6-requests-absence-query.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/logs/rule6-requests-absence-query.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 5,
+      "failedCases": [
+        "both repositories reach every required gate method",
+        "Requests-only consentAbsenceFor failure propagates"
+      ],
+      "finishedAt": "2026-11-06T06:52:02.746450+00:00"
+    },
+    {
+      "id": "requests-revisions-query",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "revisionsRequests: await s.consentedRevisionsFor(probe.requestsId)",
+      "new": "revisionsRequests: []",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "2435ea1a8ba0e8180654c1ad50c665934343345292b1f40c63474f577fd09120",
+      "subjectCommit": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+      "startedAt": "2026-11-06T06:52:02.746595+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/requests-revisions-query.mjs",
+        "--selftest"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-requests-revisions-query\", \"startedAt\": \"2026-11-06T06:52:02.774441+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/requests-revisions-query.mjs\", \"--selftest\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T06:52:03.079559+00:00\", \"elapsedSeconds\": 0.3026970929931849, \"streams\": {\"rule6-requests-revisions-query.stdout\": {\"bytes\": 3690, \"sha256\": \"2e9929d0188886990f4369a8f92ebe3da810a0c1d921e646379a4c1792cf576c\"}, \"rule6-requests-revisions-query.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/logs/rule6-requests-revisions-query.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 5,
+      "failedCases": [
+        "both repositories reach every required gate method",
+        "Requests-only consentedRevisionsFor failure propagates"
+      ],
+      "finishedAt": "2026-11-06T06:52:03.087794+00:00"
+    },
+    {
+      "id": "count-subject-binding",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "sha256: sha256(fs.readFileSync(SCRIPT, 'utf8')) }, trees: binding, corpusRoot: 'old',\n    successorFixture:",
+      "new": "sha256: sha256(fs.readFileSync(SCRIPT, 'utf8')) }, trees: [], corpusRoot: 'old',\n    successorFixture:",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "0bc7b65ae7b0f9dffd5b7695c7b93e80f2a3bdf9077e06ffd1a1fc3bdd731520",
+      "subjectCommit": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+      "startedAt": "2026-11-06T06:52:03.087930+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/count-subject-binding.mjs",
+        "--selftest"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-count-subject-binding\", \"startedAt\": \"2026-11-06T06:52:03.118312+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/count-subject-binding.mjs\", \"--selftest\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T06:52:03.409065+00:00\", \"elapsedSeconds\": 0.2876864969730377, \"streams\": {\"rule6-count-subject-binding.stdout\": {\"bytes\": 3902, \"sha256\": \"f4a1bd3147d6dac0a0a2dde6b5a03706aca1f1cf08662eb20d5d3b29dc427560\"}, \"rule6-count-subject-binding.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/logs/rule6-count-subject-binding.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 5,
+      "failedCases": [
+        "count output binds subjects source compiled tool fixture and finite resources without execution"
+      ],
+      "finishedAt": "2026-11-06T06:52:03.416920+00:00"
+    },
+    {
+      "id": "count-tool-binding",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "script: { path: SCRIPT_REL, sha256: sha256(fs.readFileSync(SCRIPT, 'utf8')) }, trees: binding, corpusRoot: 'old',\n    successorFixture:",
+      "new": "script: { path: SCRIPT_REL, sha256: null }, trees: binding, corpusRoot: 'old',\n    successorFixture:",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "8f1adb6629dcef81e719de0bbd884a59aa04fda08fc393c7f4aff1dd74b38555",
+      "subjectCommit": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+      "startedAt": "2026-11-06T06:52:03.417035+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/count-tool-binding.mjs",
+        "--selftest"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-count-tool-binding\", \"startedAt\": \"2026-11-06T06:52:03.450413+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/count-tool-binding.mjs\", \"--selftest\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T06:52:03.734473+00:00\", \"elapsedSeconds\": 0.28110691299661994, \"streams\": {\"rule6-count-tool-binding.stdout\": {\"bytes\": 3505, \"sha256\": \"48b0c65215ff529d21429ee842db5cbcd1467499fb15f23e469206c680f7c258\"}, \"rule6-count-tool-binding.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/logs/rule6-count-tool-binding.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 5,
+      "failedCases": [
+        "count output binds subjects source compiled tool fixture and finite resources without execution"
+      ],
+      "finishedAt": "2026-11-06T06:52:03.741506+00:00"
+    },
+    {
+      "id": "count-fixture-record-binding",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "records: SUCCESSOR_RECORDS, recordsSha256: sha256(JSON.stringify(SUCCESSOR_RECORDS)),",
+      "new": "records: [], recordsSha256: sha256(JSON.stringify(SUCCESSOR_RECORDS)),",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "2bcfdbfc1dca97f7f07ce69ea71eacb579bc09130b0c6f9ec36b2a7fbb0167cc",
+      "subjectCommit": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+      "startedAt": "2026-11-06T06:52:03.741643+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/count-fixture-record-binding.mjs",
+        "--selftest"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-count-fixture-record-binding\", \"startedAt\": \"2026-11-06T06:52:03.769298+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/count-fixture-record-binding.mjs\", \"--selftest\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T06:52:04.035309+00:00\", \"elapsedSeconds\": 0.26323988899821416, \"streams\": {\"rule6-count-fixture-record-binding.stdout\": {\"bytes\": 4726, \"sha256\": \"e534f6b82e9c3e75fa24e5390f5d3c04362122f1d44d6a6c969dd32ed302ddb7\"}, \"rule6-count-fixture-record-binding.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/logs/rule6-count-fixture-record-binding.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 5,
+      "failedCases": [
+        "count output binds subjects source compiled tool fixture and finite resources without execution"
+      ],
+      "finishedAt": "2026-11-06T06:52:04.042801+00:00"
+    },
+    {
+      "id": "count-fixture-adapter-binding",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "instants: SUCCESSOR_INSTANTS, adapterRecipeSha256: sha256(prepareSuccessorAdapter.toString()), adapters: null, literalOutcomes: null",
+      "new": "instants: SUCCESSOR_INSTANTS, adapterRecipeSha256: null, adapters: null, literalOutcomes: null",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "ebd6abb2719308b632451924568f232ecdd2810539445e3c40e439ea91e96920",
+      "subjectCommit": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+      "startedAt": "2026-11-06T06:52:04.042937+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/count-fixture-adapter-binding.mjs",
+        "--selftest"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-count-fixture-adapter-binding\", \"startedAt\": \"2026-11-06T06:52:04.075659+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/count-fixture-adapter-binding.mjs\", \"--selftest\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T06:52:04.375826+00:00\", \"elapsedSeconds\": 0.2971666330122389, \"streams\": {\"rule6-count-fixture-adapter-binding.stdout\": {\"bytes\": 3410, \"sha256\": \"7686707b379c8969247fcb97a5042180f5b0244a52d436bf87b3379ac463c907\"}, \"rule6-count-fixture-adapter-binding.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/logs/rule6-count-fixture-adapter-binding.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 5,
+      "failedCases": [
+        "count output binds subjects source compiled tool fixture and finite resources without execution"
+      ],
+      "finishedAt": "2026-11-06T06:52:04.383392+00:00"
+    },
+    {
+      "id": "count-execution-null",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "materialization: null, execution: null, executed: null };",
+      "new": "materialization: null, execution: null, executed: 0 };",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "e8d3b5fc6b5d893034e561d142eaeef1b2a7f86f4b41c983c7fa852287e73c5d",
+      "subjectCommit": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+      "startedAt": "2026-11-06T06:52:04.383554+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/count-execution-null.mjs",
+        "--selftest"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-count-execution-null\", \"startedAt\": \"2026-11-06T06:52:04.414336+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/count-execution-null.mjs\", \"--selftest\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T06:52:04.710755+00:00\", \"elapsedSeconds\": 0.292052828008309, \"streams\": {\"rule6-count-execution-null.stdout\": {\"bytes\": 3323, \"sha256\": \"37f417042978ff520a2498d65363171208c6ce9e15f0c3cb915b459c7923d38a\"}, \"rule6-count-execution-null.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/logs/rule6-count-execution-null.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 5,
+      "failedCases": [
+        "count output binds subjects source compiled tool fixture and finite resources without execution"
+      ],
+      "finishedAt": "2026-11-06T06:52:04.717597+00:00"
+    },
+    {
+      "id": "count-resource-binding",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "pool: { ...resources, node: process.version, wallSeconds: (Date.now() - started) / 1000 }, materialization: null",
+      "new": "pool: { ...resources, workers: 0, node: process.version, wallSeconds: (Date.now() - started) / 1000 }, materialization: null",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "be6013e67291ed02cfaf0ba4131d7ddb10e0c66e5d4bedb097d953b3b51cc388",
+      "subjectCommit": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+      "startedAt": "2026-11-06T06:52:04.717738+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/count-resource-binding.mjs",
+        "--selftest"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-count-resource-binding\", \"startedAt\": \"2026-11-06T06:52:04.746767+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/tool-mutants/count-resource-binding.mjs\", \"--selftest\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T06:52:05.036600+00:00\", \"elapsedSeconds\": 0.2871306269662455, \"streams\": {\"rule6-count-resource-binding.stdout\": {\"bytes\": 3320, \"sha256\": \"95b3f88e13df6d0740ef1cb552da3d695bef1d2882ad2d993276e28c6bd437bc\"}, \"rule6-count-resource-binding.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/logs/rule6-count-resource-binding.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 5,
+      "failedCases": [
+        "count output binds subjects source compiled tool fixture and finite resources without execution"
+      ],
+      "finishedAt": "2026-11-06T06:52:05.043334+00:00"
+    },
+    {
+      "id": "adapter-byte-binding",
+      "inputPointer": [
+        "successorFixture",
+        "adapters",
+        0,
+        "transformedSha256"
+      ],
+      "old": "50284020e3aea42ab9aed48be31d69dd2d1f5bb65e22a8bce85876b6a19ea7e8",
+      "new": "0000000000000000000000000000000000000000000000000000000000000000",
+      "originalRecordSha256": "eb3847bd3b78bbc1085effc0bc6da2fe94661a7398d02cc5d34aeed535d37187",
+      "mutatedRecordSha256": "670ac83cc30c874e6c36fe77e053b28398d3c89836a5d966e83665f8a0947bee",
+      "subjectCommit": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-adapter-byte-binding\", \"startedAt\": \"2026-11-06T06:52:05.516733+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"python3\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/recount.py\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/adapter-byte-binding.json\", \"--tree\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old\", \"--out\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/adapter-byte-binding-recount.json\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T06:52:06.169418+00:00\", \"elapsedSeconds\": 0.6479655080474913, \"streams\": {\"rule6-adapter-byte-binding.stdout\": {\"bytes\": 789, \"sha256\": \"2154cc7c1c4de75a7535dd8605f1caf1061b60aac3ff317bd4afc59986bee6ee\"}, \"rule6-adapter-byte-binding.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/logs/rule6-adapter-byte-binding.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 274
+    },
+    {
+      "id": "captured-cleanup-denominator",
+      "inputPointer": [
+        "materialization",
+        "materializedLeftOver"
+      ],
+      "old": 0,
+      "new": 1,
+      "originalRecordSha256": "eb3847bd3b78bbc1085effc0bc6da2fe94661a7398d02cc5d34aeed535d37187",
+      "mutatedRecordSha256": "2404aea615673c34e082148b8064b8ed4e036ce21e4f7d01e325be9c5e75fc03",
+      "subjectCommit": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-captured-cleanup-denominator\", \"startedAt\": \"2026-11-06T06:52:06.387612+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"python3\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/recount.py\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/captured-cleanup-denominator.json\", \"--tree\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old\", \"--out\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/captured-cleanup-denominator-recount.json\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T06:52:07.011486+00:00\", \"elapsedSeconds\": 0.618230735999532, \"streams\": {\"rule6-captured-cleanup-denominator.stdout\": {\"bytes\": 756, \"sha256\": \"0b60164972768ea23a7839e7d11e106535bf35d44985425c9156ed29c6d0e889\"}, \"rule6-captured-cleanup-denominator.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/logs/rule6-captured-cleanup-denominator.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 274
+    },
+    {
+      "id": "captured-worker-limit",
+      "inputPointer": [
+        "pool",
+        "workers"
+      ],
+      "old": 1,
+      "new": 0,
+      "originalRecordSha256": "eb3847bd3b78bbc1085effc0bc6da2fe94661a7398d02cc5d34aeed535d37187",
+      "mutatedRecordSha256": "47a1513a19df37ebe32bef25693ca97693f68dce4ba0a84f55fb8aa107de36c7",
+      "subjectCommit": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-captured-worker-limit\", \"startedAt\": \"2026-11-06T06:52:07.222839+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"python3\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/recount.py\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/captured-worker-limit.json\", \"--tree\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old\", \"--out\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/captured-worker-limit-recount.json\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T06:52:07.758539+00:00\", \"elapsedSeconds\": 0.5327642060001381, \"streams\": {\"rule6-captured-worker-limit.stdout\": {\"bytes\": 762, \"sha256\": \"cbfd2011e5d4dceb993ce02011b64646e42d318697bff721a0f92a535604bcc0\"}, \"rule6-captured-worker-limit.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/logs/rule6-captured-worker-limit.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 274
+    },
+    {
+      "id": "captured-time-limit",
+      "inputPointer": [
+        "pool",
+        "timeLimitMs"
+      ],
+      "old": 7200000,
+      "new": 0,
+      "originalRecordSha256": "eb3847bd3b78bbc1085effc0bc6da2fe94661a7398d02cc5d34aeed535d37187",
+      "mutatedRecordSha256": "b4580131474606bd74ac737e6480deb7bc0d373369e557fd1b10b470e8a72685",
+      "subjectCommit": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-captured-time-limit\", \"startedAt\": \"2026-11-06T06:52:07.999736+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"python3\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/recount.py\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/captured-time-limit.json\", \"--tree\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old\", \"--out\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/captured-time-limit-recount.json\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T06:52:08.513107+00:00\", \"elapsedSeconds\": 0.5106251800316386, \"streams\": {\"rule6-captured-time-limit.stdout\": {\"bytes\": 758, \"sha256\": \"6770ecba1283e6d2dd705437298bcc1a5617b24f3b2564d8e22cf2e19a615306\"}, \"rule6-captured-time-limit.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/logs/rule6-captured-time-limit.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 274
+    },
+    {
+      "id": "captured-successor-literal",
+      "inputPointer": [
+        "successorFixture",
+        "literalOutcomes",
+        0,
+        "expected",
+        "ids"
+      ],
+      "old": [
+        "fixture-repository"
+      ],
+      "new": [
+        "invented-repository"
+      ],
+      "originalRecordSha256": "eb3847bd3b78bbc1085effc0bc6da2fe94661a7398d02cc5d34aeed535d37187",
+      "mutatedRecordSha256": "cb876f465e46af7e201cbaba10fe4791fa118e3c66c2162a1fc0f7c31fb91372",
+      "subjectCommit": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-captured-successor-literal\", \"startedAt\": \"2026-11-06T06:52:08.715589+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"python3\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/recount.py\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/captured-successor-literal.json\", \"--tree\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old\", \"--out\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/captured-successor-literal-recount.json\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T06:52:09.202985+00:00\", \"elapsedSeconds\": 0.4851129269809462, \"streams\": {\"rule6-captured-successor-literal.stdout\": {\"bytes\": 821, \"sha256\": \"3e3f416cb4e11a75d39a6e9f4d2372565b604051710817c032da5b2dc630ec59\"}, \"rule6-captured-successor-literal.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/logs/rule6-captured-successor-literal.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 274
+    }
+  ],
+  "classifierControls": [
+    {
+      "id": "zero-comparisons",
+      "input": {
+        "exit": 1,
+        "document": {
+          "schema": "consent-act-family-differential/3",
+          "totals": {
+            "answersCompared": 0
+          },
+          "worlds": [
+            {}
+          ],
+          "result": {
+            "success": false
+          }
+        },
+        "mode": "probe"
+      },
+      "expected": "errored",
+      "actual": "errored",
+      "same": true
+    },
+    {
+      "id": "reporter-empty",
+      "input": {
+        "exit": 1,
+        "document": {},
+        "mode": "selftest"
+      },
+      "expected": "errored",
+      "actual": "errored",
+      "same": true
+    },
+    {
+      "id": "surviving-valid-control",
+      "input": {
+        "exit": 0,
+        "document": {
+          "schema": "consent-differential-selftest/1",
+          "scriptSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+          "cases": [
+            {
+              "name": "selection includes requested worlds",
+              "passed": true
+            },
+            {
+              "name": "count uses selected population",
+              "passed": true
+            },
+            {
+              "name": "generated count remains separate",
+              "passed": true
+            },
+            {
+              "name": "bounded fixture sampling uses one shared selected population",
+              "passed": true
+            },
+            {
+              "name": "zero bounded fixture sample rejected",
+              "passed": true
+            },
+            {
+              "name": "empty selection rejected",
+              "passed": true
+            },
+            {
+              "name": "unknown selected kind rejected",
+              "passed": true
+            },
+            {
+              "name": "duplicate kind rejected",
+              "passed": true
+            },
+            {
+              "name": "empty readers rejected",
+              "passed": true
+            },
+            {
+              "name": "duplicate world readers rejected",
+              "passed": true
+            },
+            {
+              "name": "empty instants rejected",
+              "passed": true
+            },
+            {
+              "name": "empty steps rejected",
+              "passed": true
+            },
+            {
+              "name": "unknown reader rejected",
+              "passed": true
+            },
+            {
+              "name": "zero answers rejected",
+              "passed": true
+            },
+            {
+              "name": "three steps and two instants are six answers in one world",
+              "passed": true
+            },
+            {
+              "name": "complete serialized equal answers pair",
+              "passed": true
+            },
+            {
+              "name": "changed complete value differs",
+              "passed": true
+            },
+            {
+              "name": "identical labels cannot hide changed complete values",
+              "passed": true
+            },
+            {
+              "name": "unequal old key set rejected",
+              "passed": true
+            },
+            {
+              "name": "unequal new key set rejected",
+              "passed": true
+            },
+            {
+              "name": "same-length wrong key rejected",
+              "passed": true
+            },
+            {
+              "name": "duplicate key rejected",
+              "passed": true
+            },
+            {
+              "name": "metadata identity rejected",
+              "passed": true
+            },
+            {
+              "name": "digest/value mismatch rejected",
+              "passed": true
+            },
+            {
+              "name": "order-independent key pairing",
+              "passed": true
+            },
+            {
+              "name": "absent control expectation rejected",
+              "passed": true
+            },
+            {
+              "name": "empty control expectation rejected",
+              "passed": true
+            },
+            {
+              "name": "empty name control expectation rejected",
+              "passed": true
+            },
+            {
+              "name": "duplicate control expectation rejected",
+              "passed": true
+            },
+            {
+              "name": "unknown control expectation rejected",
+              "passed": true
+            },
+            {
+              "name": "positive expected reader accepted",
+              "passed": true
+            },
+            {
+              "name": "expectation without control rejected",
+              "passed": true
+            },
+            {
+              "name": "unrelated mismatch cannot satisfy port",
+              "passed": true
+            },
+            {
+              "name": "missing demanded reader fails",
+              "passed": true
+            },
+            {
+              "name": "positive mismatches need positive denominator",
+              "passed": true
+            },
+            {
+              "name": "each demanded reader must differ",
+              "passed": true
+            },
+            {
+              "name": "positive per-reader control passes",
+              "passed": true
+            },
+            {
+              "name": "clean materialization accepted",
+              "passed": true
+            },
+            {
+              "name": "leftovers fails cleanup",
+              "passed": true
+            },
+            {
+              "name": "changed disk answer fails cleanup",
+              "passed": true
+            },
+            {
+              "name": "missing disk pair fails cleanup",
+              "passed": true
+            },
+            {
+              "name": "missing removal fails cleanup",
+              "passed": true
+            },
+            {
+              "name": "successor expected outcomes change at exact effective instant",
+              "passed": true
+            },
+            {
+              "name": "missing optional-method implementation is fatal",
+              "passed": true
+            },
+            {
+              "name": "both repositories reach every required gate method",
+              "passed": true
+            },
+            {
+              "name": "Requests-only repositoryIdsFor failure propagates",
+              "passed": true
+            },
+            {
+              "name": "Requests-only consentAbsenceFor failure propagates",
+              "passed": true
+            },
+            {
+              "name": "Requests-only consentedRevisionsFor failure propagates",
+              "passed": true
+            },
+            {
+              "name": "count output binds subjects source compiled tool fixture and finite resources without execution",
+              "passed": true
+            }
+          ],
+          "total": 49,
+          "failed": 0,
+          "exercisedAnswerComparisons": 5
+        },
+        "mode": "selftest"
+      },
+      "expected": "survived",
+      "actual": "survived",
+      "same": true
+    },
+    {
+      "id": "import-error",
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"classifier-import-error\", \"startedAt\": \"2026-11-06T06:52:09.270482+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"node\", \"--input-type=module\", \"-e\", \"await import('file:///home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/missing-evidence-module.mjs')\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T06:52:09.535429+00:00\", \"elapsedSeconds\": 0.26191104896133766, \"streams\": {\"classifier-import-error.stdout\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}, \"classifier-import-error.stderr\": {\"bytes\": 1202, \"sha256\": \"84a683ec352b31ab60fb56b0e7a4f2baa8554570d89d85e37de5b135a2eee86c\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/logs/classifier-import-error.json"
+      },
+      "expected": "errored",
+      "actual": "errored",
+      "same": true
+    },
+    {
+      "id": "timeout",
+      "execution": {
+        "wrapperExit": 124,
+        "wrapperStdout": "{\"name\": \"classifier-timeout\", \"startedAt\": \"2026-11-06T06:52:09.578933+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"timeout\", \"1\", \"node\", \"-e\", \"setTimeout(() => {}, 10000)\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 124, \"finishedAt\": \"2026-11-06T06:52:10.847449+00:00\", \"elapsedSeconds\": 1.2655532849603333, \"streams\": {\"classifier-timeout.stdout\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}, \"classifier-timeout.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/logs/classifier-timeout.json"
+      },
+      "expected": "errored",
+      "actual": "errored",
+      "same": true
+    }
+  ],
+  "totals": {
+    "killed": 44,
+    "survived": 0,
+    "errored": 0
+  },
+  "allClassifierControlsAsExpected": true
+}

@@ -1,0 +1,10 @@
+{
+ "calls": 300000,
+ "refusedByFresh": 191776,
+ "bomLed": 8014,
+ "freshVsShared": 0,
+ "freshVsDecodeUtf8": 0,
+ "examples": [],
+ "freshOutputsSha256": "4863437fb91dc50c2ef15cc4c84ea51af068839fff382e3fd63dc2c30c576534",
+ "node": "v24.6.0"
+}

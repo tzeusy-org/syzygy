@@ -1,0 +1,54 @@
+== f7477f52: population 249 (test-support class 8), name rule 241, reach rule 245
+   test-support files reached: ['apps/three-surface-poc/src/test-model-fixture.ts', 'apps/three-surface-poc/src/test-project-shape-fixture.ts', 'apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts', 'packages/three-surface-poc-core/src/test-artifact-verification.ts']
+   name rule: files=241 sites=6 sha256Defs=1 deepFreezeDefs=1
+     sites in ['apps/three-surface-poc/src/polaris-generation/redis-shaped-measure.ts', 'packages/cap1-system/src/harness.ts', 'packages/http-host/src/credentials.ts', 'packages/polaris-dossier/src/render.ts', 'packages/support/src/sha256.ts']
+     defs [('packages/support/src/deep-freeze.ts', 'deepFreeze'), ('packages/support/src/sha256.ts', 'sha256')]
+   reach rule: files=245 sites=8 sha256Defs=2 deepFreezeDefs=1
+     sites in ['apps/three-surface-poc/src/polaris-generation/redis-shaped-measure.ts', 'apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts', 'packages/cap1-system/src/harness.ts', 'packages/http-host/src/credentials.ts', 'packages/polaris-dossier/src/render.ts', 'packages/support/src/sha256.ts', 'packages/three-surface-poc-core/src/test-artifact-verification.ts']
+     defs [('apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts', 'sha256'), ('packages/support/src/deep-freeze.ts', 'deepFreeze'), ('packages/support/src/sha256.ts', 'sha256')]
+   second method git grep -c -F over the reach rule: files=7 sites=8
+== b214ef10: population 250 (test-support class 9), name rule 241, reach rule 245
+   test-support files reached: ['apps/three-surface-poc/src/test-model-fixture.ts', 'apps/three-surface-poc/src/test-project-shape-fixture.ts', 'apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts', 'packages/three-surface-poc-core/src/test-artifact-verification.ts']
+   name rule: files=241 sites=6 sha256Defs=1 deepFreezeDefs=1
+     sites in ['apps/three-surface-poc/src/polaris-generation/redis-shaped-measure.ts', 'packages/cap1-system/src/harness.ts', 'packages/http-host/src/credentials.ts', 'packages/polaris-dossier/src/render.ts', 'packages/support/src/sha256.ts']
+     defs [('packages/support/src/deep-freeze.ts', 'deepFreeze'), ('packages/support/src/sha256.ts', 'sha256')]
+   reach rule: files=245 sites=6 sha256Defs=1 deepFreezeDefs=1
+     sites in ['apps/three-surface-poc/src/polaris-generation/redis-shaped-measure.ts', 'packages/cap1-system/src/harness.ts', 'packages/http-host/src/credentials.ts', 'packages/polaris-dossier/src/render.ts', 'packages/support/src/sha256.ts']
+     defs [('packages/support/src/deep-freeze.ts', 'deepFreeze'), ('packages/support/src/sha256.ts', 'sha256')]
+   second method git grep -c -F over the reach rule: files=5 sites=6
+== 4b9a4be0: population 250 (test-support class 9), name rule 241, reach rule 245
+   test-support files reached: ['apps/three-surface-poc/src/test-model-fixture.ts', 'apps/three-surface-poc/src/test-project-shape-fixture.ts', 'apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts', 'packages/three-surface-poc-core/src/test-artifact-verification.ts']
+   name rule: files=241 sites=6 sha256Defs=1 deepFreezeDefs=1
+     sites in ['apps/three-surface-poc/src/polaris-generation/redis-shaped-measure.ts', 'packages/cap1-system/src/harness.ts', 'packages/http-host/src/credentials.ts', 'packages/polaris-dossier/src/render.ts', 'packages/support/src/sha256.ts']
+     defs [('packages/support/src/deep-freeze.ts', 'deepFreeze'), ('packages/support/src/sha256.ts', 'sha256')]
+   reach rule: files=245 sites=6 sha256Defs=1 deepFreezeDefs=1
+     sites in ['apps/three-surface-poc/src/polaris-generation/redis-shaped-measure.ts', 'packages/cap1-system/src/harness.ts', 'packages/http-host/src/credentials.ts', 'packages/polaris-dossier/src/render.ts', 'packages/support/src/sha256.ts']
+     defs [('packages/support/src/deep-freeze.ts', 'deepFreeze'), ('packages/support/src/sha256.ts', 'sha256')]
+   second method git grep -c -F over the reach rule: files=5 sites=6
+== c7ed9ef2: population 250 (test-support class 9), name rule 241, reach rule 245
+   test-support files reached: ['apps/three-surface-poc/src/test-model-fixture.ts', 'apps/three-surface-poc/src/test-project-shape-fixture.ts', 'apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts', 'packages/three-surface-poc-core/src/test-artifact-verification.ts']
+   name rule: files=241 sites=6 sha256Defs=1 deepFreezeDefs=1
+     sites in ['apps/three-surface-poc/src/polaris-generation/redis-shaped-measure.ts', 'packages/cap1-system/src/harness.ts', 'packages/http-host/src/credentials.ts', 'packages/polaris-dossier/src/render.ts', 'packages/support/src/sha256.ts']
+     defs [('packages/support/src/deep-freeze.ts', 'deepFreeze'), ('packages/support/src/sha256.ts', 'sha256')]
+   reach rule: files=245 sites=7 sha256Defs=1 deepFreezeDefs=1
+     sites in ['apps/three-surface-poc/src/polaris-generation/redis-shaped-measure.ts', 'packages/cap1-system/src/harness.ts', 'packages/http-host/src/credentials.ts', 'packages/polaris-dossier/src/render.ts', 'packages/support/src/sha256.ts', 'packages/three-surface-poc-core/src/test-artifact-verification.ts']
+     defs [('packages/support/src/deep-freeze.ts', 'deepFreeze'), ('packages/support/src/sha256.ts', 'sha256')]
+   second method git grep -c -F over the reach rule: files=6 sites=7
+== 7d408fd9: population 250 (test-support class 9), name rule 241, reach rule 245
+   test-support files reached: ['apps/three-surface-poc/src/test-model-fixture.ts', 'apps/three-surface-poc/src/test-project-shape-fixture.ts', 'apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts', 'packages/three-surface-poc-core/src/test-artifact-verification.ts']
+   name rule: files=241 sites=6 sha256Defs=1 deepFreezeDefs=1
+     sites in ['apps/three-surface-poc/src/polaris-generation/redis-shaped-measure.ts', 'packages/cap1-system/src/harness.ts', 'packages/http-host/src/credentials.ts', 'packages/polaris-dossier/src/render.ts', 'packages/support/src/sha256.ts']
+     defs [('packages/support/src/deep-freeze.ts', 'deepFreeze'), ('packages/support/src/sha256.ts', 'sha256')]
+   reach rule: files=245 sites=7 sha256Defs=1 deepFreezeDefs=1
+     sites in ['apps/three-surface-poc/src/polaris-generation/redis-shaped-measure.ts', 'packages/cap1-system/src/harness.ts', 'packages/http-host/src/credentials.ts', 'packages/polaris-dossier/src/render.ts', 'packages/support/src/sha256.ts', 'packages/three-surface-poc-core/src/test-artifact-verification.ts']
+     defs [('packages/support/src/deep-freeze.ts', 'deepFreeze'), ('packages/support/src/sha256.ts', 'sha256')]
+   second method git grep -c -F over the reach rule: files=6 sites=7
+== gh/main: population 249 (test-support class 8), name rule 241, reach rule 245
+   test-support files reached: ['apps/three-surface-poc/src/test-model-fixture.ts', 'apps/three-surface-poc/src/test-project-shape-fixture.ts', 'apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts', 'packages/three-surface-poc-core/src/test-artifact-verification.ts']
+   name rule: files=241 sites=6 sha256Defs=1 deepFreezeDefs=1
+     sites in ['apps/three-surface-poc/src/polaris-generation/redis-shaped-measure.ts', 'packages/cap1-system/src/harness.ts', 'packages/http-host/src/credentials.ts', 'packages/polaris-dossier/src/render.ts', 'packages/support/src/sha256.ts']
+     defs [('packages/support/src/deep-freeze.ts', 'deepFreeze'), ('packages/support/src/sha256.ts', 'sha256')]
+   reach rule: files=245 sites=8 sha256Defs=2 deepFreezeDefs=1
+     sites in ['apps/three-surface-poc/src/polaris-generation/redis-shaped-measure.ts', 'apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts', 'packages/cap1-system/src/harness.ts', 'packages/http-host/src/credentials.ts', 'packages/polaris-dossier/src/render.ts', 'packages/support/src/sha256.ts', 'packages/three-surface-poc-core/src/test-artifact-verification.ts']
+     defs [('apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts', 'sha256'), ('packages/support/src/deep-freeze.ts', 'deepFreeze'), ('packages/support/src/sha256.ts', 'sha256')]
+   second method git grep -c -F over the reach rule: files=7 sites=8

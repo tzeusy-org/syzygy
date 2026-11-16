@@ -1,0 +1,16 @@
+{
+  "at": "2026-11-06T15:03:05.333609+00:00",
+  "source": "syzygy-bpyt.73",
+  "head": "36ddc6bad5b4b984cb41a3ee8ebe5bd0fe8cfce7",
+  "exact_path": "docs/review-campaigns/greenfield-parity-implementation.md",
+  "patch_sha256": "8aceeb08cf311d0107696ba85449d22ca0cca9a3cb1c92b9ceaacde07ad0418b",
+  "insertions": "Exactpattern afteroriginal6 andseparatePASSparagraph afteroriginal13; alloriginal14lines preservedbyteforbyte, historicline14 unchanged. PR717/642 historicline14hunks untouched.",
+  "allowed": "Applyexactpatch; logicalmetadata-onlycommit with alreadyallowed verbatimraw/newNOTES/POSTREVIEWdisposition. Keep exactreviewedproduction/test/archive/bindinginputs immutable. OWNcleanclone/offlineci/runtimecontrols/finalprelaunch allowed.",
+  "remaining": "Oneoriginalcheckall onlyafterNEWROOTcaptureREADY+HOSTlock; no push/PR/merge, no semanticfix/repeatedreview/newDAG/narrowing; BOTH22+25 appmergeholds retained.",
+  "verification": {
+    "actual_source_hash": "4318262c34002a3506b0f1bb4fc1dfd3c05beb7e9381239f3cc3cb024d12ef50",
+    "independent_new_bytes_hash": "1deee83fdd6dbc5e22558d69522c6edcd9afe5ce89774858187de22879af7741",
+    "all_old_lines_preserved": true,
+    "git_apply_check": 0
+  }
+}

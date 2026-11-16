@@ -1,0 +1,1679 @@
+{
+ "old": "ecea355b",
+ "new": "12d70cf0",
+ "files": {
+  "docs/evidence/syzygy-bpyt-6-14/bundle-differential.json": {
+   "changedLeafPatterns": {
+    ".runs[*].clone": {
+     "count": 2,
+     "examples": [
+      [
+       ".runs[0].clone",
+       "/tmp/la-545r/c0",
+       "/tmp/la-545s/c0"
+      ],
+      [
+       ".runs[1].clone",
+       "/tmp/la-545r/c1",
+       "/tmp/la-545s/c1"
+      ]
+     ]
+    },
+    ".runs[*].copy": {
+     "count": 2,
+     "examples": [
+      [
+       ".runs[0].copy",
+       "/tmp/la-545r/t5/bundle-0.mjs",
+       "/tmp/la-545s/t5/bundle-0.mjs"
+      ],
+      [
+       ".runs[1].copy",
+       "/tmp/la-545r/t5/bundle-1.mjs",
+       "/tmp/la-545s/t5/bundle-1.mjs"
+      ]
+     ]
+    },
+    ".runs[*].commit": {
+     "count": 1,
+     "examples": [
+      [
+       ".runs[1].commit",
+       "6249951432d6d0c0608f8dfb93e525f706159c5a",
+       "191d82779ea07f45be612b00ff3cafc9aa7446b8"
+      ]
+     ]
+    }
+   }
+  },
+  "docs/evidence/syzygy-bpyt-6-14/bundle-test-durations.json": {
+   "changedLeafPatterns": {
+    ".runs[*].load1.end": {
+     "count": 5,
+     "examples": [
+      [
+       ".runs[0].load1.end",
+       "32.82",
+       "27.01"
+      ],
+      [
+       ".runs[1].load1.end",
+       "32.16",
+       "26.66"
+      ],
+      [
+       ".runs[2].load1.end",
+       "31.56",
+       "28.39"
+      ]
+     ]
+    },
+    ".runs[*].load1.max": {
+     "count": 5,
+     "examples": [
+      [
+       ".runs[0].load1.max",
+       "32.82",
+       "27.53"
+      ],
+      [
+       ".runs[1].load1.max",
+       "32.82",
+       "27.33"
+      ],
+      [
+       ".runs[2].load1.max",
+       "32.16",
+       "28.77"
+      ]
+     ]
+    },
+    ".runs[*].load1.min": {
+     "count": 5,
+     "examples": [
+      [
+       ".runs[0].load1.min",
+       "30.9",
+       "26.88"
+      ],
+      [
+       ".runs[1].load1.min",
+       "32.16",
+       "26.66"
+      ],
+      [
+       ".runs[2].load1.min",
+       "31.34",
+       "26.66"
+      ]
+     ]
+    },
+    ".runs[*].load1.samples": {
+     "count": 2,
+     "examples": [
+      [
+       ".runs[0].load1.samples",
+       "3",
+       "2"
+      ],
+      [
+       ".runs[3].load1.samples",
+       "3",
+       "2"
+      ]
+     ]
+    },
+    ".runs[*].load1.start": {
+     "count": 5,
+     "examples": [
+      [
+       ".runs[0].load1.start",
+       "30.9",
+       "26.88"
+      ],
+      [
+       ".runs[1].load1.start",
+       "32.82",
+       "27.01"
+      ],
+      [
+       ".runs[2].load1.start",
+       "32.16",
+       "26.66"
+      ]
+     ]
+    },
+    ".runs[*].startedAt": {
+     "count": 5,
+     "examples": [
+      [
+       ".runs[0].startedAt",
+       "2026-10-27T19:02:05+00:00",
+       "2026-10-27T21:05:05+00:00"
+      ],
+      [
+       ".runs[1].startedAt",
+       "2026-10-27T19:02:18+00:00",
+       "2026-10-27T21:05:14+00:00"
+      ],
+      [
+       ".runs[2].startedAt",
+       "2026-10-27T19:02:28+00:00",
+       "2026-10-27T21:05:25+00:00"
+      ]
+     ]
+    },
+    ".runs[*].tests[*].durationMs": {
+     "count": 30,
+     "examples": [
+      [
+       ".runs[0].tests[0].durationMs",
+       "1491",
+       "1137"
+      ],
+      [
+       ".runs[0].tests[1].durationMs",
+       "1479",
+       "1188"
+      ],
+      [
+       ".runs[0].tests[2].durationMs",
+       "1",
+       "6"
+      ]
+     ]
+    },
+    ".runs[*].wallSeconds": {
+     "count": 5,
+     "examples": [
+      [
+       ".runs[0].wallSeconds",
+       "13.0",
+       "9.1"
+      ],
+      [
+       ".runs[1].wallSeconds",
+       "10.5",
+       "10.7"
+      ],
+      [
+       ".runs[2].wallSeconds",
+       "9.9",
+       "9.8"
+      ]
+     ]
+    },
+    ".subject.commit": {
+     "count": 1,
+     "examples": [
+      [
+       ".subject.commit",
+       "6249951432d6d0c0608f8dfb93e525f706159c5a",
+       "191d82779ea07f45be612b00ff3cafc9aa7446b8"
+      ]
+     ]
+    }
+   }
+  },
+  "docs/evidence/syzygy-bpyt-6-14/mutants-head-absent.json": {
+   "changedLeafPatterns": {
+    ".commit": {
+     "count": 1,
+     "examples": [
+      [
+       ".commit",
+       "6249951432d6d0c0608f8dfb93e525f706159c5a",
+       "191d82779ea07f45be612b00ff3cafc9aa7446b8"
+      ]
+     ]
+    },
+    ".rows[*].failedTests[*].message": {
+     "count": 76,
+     "examples": [
+      [
+       ".rows[10].failedTests[0].message",
+       "AssertionError: expected [ { file: 'index.ts', \u2026(1) }, \u2026(1) ] to deeply equal []\n    at /tmp/la-545r/c1/packages/support",
+       "AssertionError: expected [ { file: 'index.ts', \u2026(1) }, \u2026(1) ] to deeply equal []\n    at /tmp/la-545s/c1/packages/support"
+      ],
+      [
+       ".rows[10].failedTests[1].message",
+       "AssertionError: expected [ 'io/read.ts: p', \u2026(2) ] to deeply equal []\n    at /tmp/la-545r/c1/packages/support/src/suppor",
+       "AssertionError: expected [ 'io/read.ts: p', \u2026(2) ] to deeply equal []\n    at /tmp/la-545s/c1/packages/support/src/suppor"
+      ],
+      [
+       ".rows[10].failedTests[2].message",
+       "AssertionError: expected [ \u2026(2) ] to deeply equal [ Array(1) ]\n    at /tmp/la-545r/c1/packages/support/src/support-purit",
+       "AssertionError: expected [ \u2026(2) ] to deeply equal [ Array(1) ]\n    at /tmp/la-545s/c1/packages/support/src/support-purit"
+      ]
+     ]
+    },
+    ".rows[*].edits[*].new": {
+     "count": 28,
+     "examples": [
+      [
+       ".rows[37].edits[0].new",
+       "<absent>",
+       "/\\.[cm]?[jt]s$/u.test(name)"
+      ],
+      [
+       ".rows[38].edits[0].new",
+       "// Owner-act drafter \u2014 claims sharing one reason \u2192 a drafted act packet as\nexport const HOME = (globalThis as Record<str",
+       "!name.includes('test')"
+      ],
+      [
+       ".rows[39].edits[0].new",
+       "// Owner-act drafter \u2014 claims sharing one reason \u2192 a drafted act packet as\nexport const open = (url: string): WebSocket ",
+       "!name.endsWith('purity.testkit.ts')"
+      ]
+     ]
+    },
+    ".rows[*].edits[*].old": {
+     "count": 26,
+     "examples": [
+      [
+       ".rows[37].edits[0].old",
+       "<absent>",
+       "/\\.[cm]?[jt]sx?$/u.test(name)"
+      ],
+      [
+       ".rows[38].edits[0].old",
+       "// Owner-act drafter \u2014 claims sharing one reason \u2192 a drafted act packet as\n",
+       "!name.endsWith('.test.ts')"
+      ],
+      [
+       ".rows[39].edits[0].old",
+       "// Owner-act drafter \u2014 claims sharing one reason \u2192 a drafted act packet as\n",
+       "name !== 'purity.testkit.ts'"
+      ]
+     ]
+    },
+    ".rows[*].edits[*].path": {
+     "count": 29,
+     "examples": [
+      [
+       ".rows[37].edits[0].path",
+       "<absent>",
+       "packages/support/src/support-purity.test.ts"
+      ],
+      [
+       ".rows[38].edits[0].path",
+       "packages/three-surface-poc-core/src/owner-act-drafter.ts",
+       "packages/support/src/support-purity.test.ts"
+      ],
+      [
+       ".rows[39].edits[0].path",
+       "packages/three-surface-poc-core/src/owner-act-drafter.ts",
+       "packages/support/src/support-purity.test.ts"
+      ]
+     ]
+    },
+    ".rows[*].exit": {
+     "count": 9,
+     "examples": [
+      [
+       ".rows[37].exit",
+       "0",
+       "1"
+      ],
+      [
+       ".rows[38].exit",
+       "0",
+       "1"
+      ],
+      [
+       ".rows[39].exit",
+       "0",
+       "1"
+      ]
+     ]
+    },
+    ".rows[*].expected": {
+     "count": 10,
+     "examples": [
+      [
+       ".rows[37].expected",
+       "pass",
+       "killed"
+      ],
+      [
+       ".rows[38].expected",
+       "survives",
+       "killed"
+      ],
+      [
+       ".rows[39].expected",
+       "survives",
+       "killed"
+      ]
+     ]
+    },
+    ".rows[*].failed": {
+     "count": 13,
+     "examples": [
+      [
+       ".rows[37].failed",
+       "0",
+       "1"
+      ],
+      [
+       ".rows[38].failed",
+       "0",
+       "1"
+      ],
+      [
+       ".rows[39].failed",
+       "0",
+       "1"
+      ]
+     ]
+    },
+    ".rows[*].failedFiles[*]": {
+     "count": 11,
+     "examples": [
+      [
+       ".rows[37].failedFiles[0]",
+       "<absent>",
+       "packages/support/src/support-purity.test.ts"
+      ],
+      [
+       ".rows[38].failedFiles[0]",
+       "<absent>",
+       "packages/support/src/support-purity.test.ts"
+      ],
+      [
+       ".rows[39].failedFiles[0]",
+       "<absent>",
+       "packages/support/src/support-purity.test.ts"
+      ]
+     ]
+    },
+    ".rows[*].failedTests[*].name": {
+     "count": 14,
+     "examples": [
+      [
+       ".rows[37].failedTests[0].name",
+       "<absent>",
+       "@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the t"
+      ],
+      [
+       ".rows[38].failedTests[0].name",
+       "<absent>",
+       "@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the t"
+      ],
+      [
+       ".rows[39].failedTests[0].name",
+       "<absent>",
+       "@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the t"
+      ]
+     ]
+    },
+    ".rows[*].id": {
+     "count": 15,
+     "examples": [
+      [
+       ".rows[37].id",
+       "D0-drafter-unmutated",
+       "W5-filter-drops-the-x-forms"
+      ],
+      [
+       ".rows[38].id",
+       "D2-drafter-globalThis-bracket-read",
+       "W6-test-exclusion-broadened-to-any-test-substring"
+      ],
+      [
+       ".rows[39].id",
+       "D5-drafter-WebSocket",
+       "W7-testkit-exclusion-broadened-to-any-depth"
+      ]
+     ]
+    },
+    ".rows[*].observed": {
+     "count": 10,
+     "examples": [
+      [
+       ".rows[37].observed",
+       "pass",
+       "killed"
+      ],
+      [
+       ".rows[38].observed",
+       "survives",
+       "killed"
+      ],
+      [
+       ".rows[39].observed",
+       "survives",
+       "killed"
+      ]
+     ]
+    },
+    ".rows[*].passed": {
+     "count": 15,
+     "examples": [
+      [
+       ".rows[37].passed",
+       "3",
+       "32"
+      ],
+      [
+       ".rows[38].passed",
+       "3",
+       "32"
+      ],
+      [
+       ".rows[39].passed",
+       "3",
+       "32"
+      ]
+     ]
+    },
+    ".rows[*].test": {
+     "count": 9,
+     "examples": [
+      [
+       ".rows[37].test",
+       "packages/three-surface-poc-core/src/owner-act-drafter.test.ts",
+       "packages/support/src/support-purity.test.ts"
+      ],
+      [
+       ".rows[38].test",
+       "packages/three-surface-poc-core/src/owner-act-drafter.test.ts",
+       "packages/support/src/support-purity.test.ts"
+      ],
+      [
+       ".rows[39].test",
+       "packages/three-surface-poc-core/src/owner-act-drafter.test.ts",
+       "packages/support/src/support-purity.test.ts"
+      ]
+     ]
+    },
+    ".rows[*].total": {
+     "count": 9,
+     "examples": [
+      [
+       ".rows[37].total",
+       "3",
+       "33"
+      ],
+      [
+       ".rows[38].total",
+       "3",
+       "33"
+      ],
+      [
+       ".rows[39].total",
+       "3",
+       "33"
+      ]
+     ]
+    },
+    ".rows[*].pending": {
+     "count": 10,
+     "examples": [
+      [
+       ".rows[42].pending",
+       "1",
+       "0"
+      ],
+      [
+       ".rows[43].pending",
+       "1",
+       "0"
+      ],
+      [
+       ".rows[44].pending",
+       "7",
+       "0"
+      ]
+     ]
+    },
+    ".rows[*].edits[*].link": {
+     "count": 4,
+     "examples": [
+      [
+       ".rows[44].edits[2].link",
+       "../../packages/leak",
+       "<absent>"
+      ],
+      [
+       ".rows[47].edits[2].link",
+       "<absent>",
+       "../../packages/leak"
+      ],
+      [
+       ".rows[47].edits[3].link",
+       "../../packages/leak",
+       "<absent>"
+      ]
+     ]
+    },
+    ".rows[*].fileMessages[*]": {
+     "count": 6,
+     "examples": [
+      [
+       ".rows[44].fileMessages[0]",
+       "Build failed with 1 error:\napps/three-surface-poc/src/polaris-generation/dossier-site.ts:1:7: ERROR: [plugin: workspace-",
+       "<absent>"
+      ],
+      [
+       ".rows[45].fileMessages[0]",
+       "@syzygy/support: its entry is not a ./dist/X.js whose src/X.ts exists",
+       "<absent>"
+      ],
+      [
+       ".rows[46].fileMessages[0]",
+       "Build failed with 34 errors:\napps/three-surface-poc/src/polaris-generation/dossier-site.ts:9:23: ERROR: [plugin: workspa",
+       "<absent>"
+      ]
+     ]
+    },
+    ".summary.asExpected": {
+     "count": 1,
+     "examples": [
+      [
+       ".summary.asExpected",
+       "49",
+       "52"
+      ]
+     ]
+    },
+    ".summary.rows": {
+     "count": 1,
+     "examples": [
+      [
+       ".summary.rows",
+       "49",
+       "52"
+      ]
+     ]
+    }
+   }
+  },
+  "docs/evidence/syzygy-bpyt-6-14/mutants-head-absent.log": {
+   "plus": 4,
+   "minus": 1,
+   "plusLines": [
+    "W5-filter-drops-the-x-forms expected killed observed killed 32 1 ['@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit']",
+    "W6-test-exclusion-broadened-to-any-test-substring expected killed observed killed 32 1 ['@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit']",
+    "W7-testkit-exclusion-broadened-to-any-depth expected killed observed killed 32 1 ['@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit']",
+    "summary {'rows': 52, 'asExpected': 52, 'unexpected': []} status after '' leftovers []"
+   ],
+   "minusLines": [
+    "summary {'rows': 49, 'asExpected': 49, 'unexpected': []} status after '' leftovers []"
+   ],
+   "setDiff": {
+    "onlyNew": 4,
+    "onlyOld": 1
+   }
+  },
+  "docs/evidence/syzygy-bpyt-6-14/mutants-head-present.json": {
+   "changedLeafPatterns": {
+    ".commit": {
+     "count": 1,
+     "examples": [
+      [
+       ".commit",
+       "6249951432d6d0c0608f8dfb93e525f706159c5a",
+       "191d82779ea07f45be612b00ff3cafc9aa7446b8"
+      ]
+     ]
+    },
+    ".rows[*].failedTests[*].message": {
+     "count": 76,
+     "examples": [
+      [
+       ".rows[10].failedTests[0].message",
+       "AssertionError: expected [ { file: 'index.ts', \u2026(1) }, \u2026(1) ] to deeply equal []\n    at /tmp/la-545r/c1/packages/support",
+       "AssertionError: expected [ { file: 'index.ts', \u2026(1) }, \u2026(1) ] to deeply equal []\n    at /tmp/la-545s/c1/packages/support"
+      ],
+      [
+       ".rows[10].failedTests[1].message",
+       "AssertionError: expected [ 'io/read.ts: p', \u2026(2) ] to deeply equal []\n    at /tmp/la-545r/c1/packages/support/src/suppor",
+       "AssertionError: expected [ 'io/read.ts: p', \u2026(2) ] to deeply equal []\n    at /tmp/la-545s/c1/packages/support/src/suppor"
+      ],
+      [
+       ".rows[10].failedTests[2].message",
+       "AssertionError: expected [ \u2026(2) ] to deeply equal [ Array(1) ]\n    at /tmp/la-545r/c1/packages/support/src/support-purit",
+       "AssertionError: expected [ \u2026(2) ] to deeply equal [ Array(1) ]\n    at /tmp/la-545s/c1/packages/support/src/support-purit"
+      ]
+     ]
+    },
+    ".rows[*].edits[*].new": {
+     "count": 28,
+     "examples": [
+      [
+       ".rows[37].edits[0].new",
+       "<absent>",
+       "/\\.[cm]?[jt]s$/u.test(name)"
+      ],
+      [
+       ".rows[38].edits[0].new",
+       "// Owner-act drafter \u2014 claims sharing one reason \u2192 a drafted act packet as\nexport const HOME = (globalThis as Record<str",
+       "!name.includes('test')"
+      ],
+      [
+       ".rows[39].edits[0].new",
+       "// Owner-act drafter \u2014 claims sharing one reason \u2192 a drafted act packet as\nexport const open = (url: string): WebSocket ",
+       "!name.endsWith('purity.testkit.ts')"
+      ]
+     ]
+    },
+    ".rows[*].edits[*].old": {
+     "count": 26,
+     "examples": [
+      [
+       ".rows[37].edits[0].old",
+       "<absent>",
+       "/\\.[cm]?[jt]sx?$/u.test(name)"
+      ],
+      [
+       ".rows[38].edits[0].old",
+       "// Owner-act drafter \u2014 claims sharing one reason \u2192 a drafted act packet as\n",
+       "!name.endsWith('.test.ts')"
+      ],
+      [
+       ".rows[39].edits[0].old",
+       "// Owner-act drafter \u2014 claims sharing one reason \u2192 a drafted act packet as\n",
+       "name !== 'purity.testkit.ts'"
+      ]
+     ]
+    },
+    ".rows[*].edits[*].path": {
+     "count": 29,
+     "examples": [
+      [
+       ".rows[37].edits[0].path",
+       "<absent>",
+       "packages/support/src/support-purity.test.ts"
+      ],
+      [
+       ".rows[38].edits[0].path",
+       "packages/three-surface-poc-core/src/owner-act-drafter.ts",
+       "packages/support/src/support-purity.test.ts"
+      ],
+      [
+       ".rows[39].edits[0].path",
+       "packages/three-surface-poc-core/src/owner-act-drafter.ts",
+       "packages/support/src/support-purity.test.ts"
+      ]
+     ]
+    },
+    ".rows[*].exit": {
+     "count": 9,
+     "examples": [
+      [
+       ".rows[37].exit",
+       "0",
+       "1"
+      ],
+      [
+       ".rows[38].exit",
+       "0",
+       "1"
+      ],
+      [
+       ".rows[39].exit",
+       "0",
+       "1"
+      ]
+     ]
+    },
+    ".rows[*].expected": {
+     "count": 10,
+     "examples": [
+      [
+       ".rows[37].expected",
+       "pass",
+       "killed"
+      ],
+      [
+       ".rows[38].expected",
+       "survives",
+       "killed"
+      ],
+      [
+       ".rows[39].expected",
+       "survives",
+       "killed"
+      ]
+     ]
+    },
+    ".rows[*].failed": {
+     "count": 13,
+     "examples": [
+      [
+       ".rows[37].failed",
+       "0",
+       "1"
+      ],
+      [
+       ".rows[38].failed",
+       "0",
+       "1"
+      ],
+      [
+       ".rows[39].failed",
+       "0",
+       "1"
+      ]
+     ]
+    },
+    ".rows[*].failedFiles[*]": {
+     "count": 11,
+     "examples": [
+      [
+       ".rows[37].failedFiles[0]",
+       "<absent>",
+       "packages/support/src/support-purity.test.ts"
+      ],
+      [
+       ".rows[38].failedFiles[0]",
+       "<absent>",
+       "packages/support/src/support-purity.test.ts"
+      ],
+      [
+       ".rows[39].failedFiles[0]",
+       "<absent>",
+       "packages/support/src/support-purity.test.ts"
+      ]
+     ]
+    },
+    ".rows[*].failedTests[*].name": {
+     "count": 14,
+     "examples": [
+      [
+       ".rows[37].failedTests[0].name",
+       "<absent>",
+       "@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the t"
+      ],
+      [
+       ".rows[38].failedTests[0].name",
+       "<absent>",
+       "@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the t"
+      ],
+      [
+       ".rows[39].failedTests[0].name",
+       "<absent>",
+       "@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the t"
+      ]
+     ]
+    },
+    ".rows[*].id": {
+     "count": 15,
+     "examples": [
+      [
+       ".rows[37].id",
+       "D0-drafter-unmutated",
+       "W5-filter-drops-the-x-forms"
+      ],
+      [
+       ".rows[38].id",
+       "D2-drafter-globalThis-bracket-read",
+       "W6-test-exclusion-broadened-to-any-test-substring"
+      ],
+      [
+       ".rows[39].id",
+       "D5-drafter-WebSocket",
+       "W7-testkit-exclusion-broadened-to-any-depth"
+      ]
+     ]
+    },
+    ".rows[*].observed": {
+     "count": 10,
+     "examples": [
+      [
+       ".rows[37].observed",
+       "pass",
+       "killed"
+      ],
+      [
+       ".rows[38].observed",
+       "survives",
+       "killed"
+      ],
+      [
+       ".rows[39].observed",
+       "survives",
+       "killed"
+      ]
+     ]
+    },
+    ".rows[*].passed": {
+     "count": 15,
+     "examples": [
+      [
+       ".rows[37].passed",
+       "3",
+       "32"
+      ],
+      [
+       ".rows[38].passed",
+       "3",
+       "32"
+      ],
+      [
+       ".rows[39].passed",
+       "3",
+       "32"
+      ]
+     ]
+    },
+    ".rows[*].test": {
+     "count": 9,
+     "examples": [
+      [
+       ".rows[37].test",
+       "packages/three-surface-poc-core/src/owner-act-drafter.test.ts",
+       "packages/support/src/support-purity.test.ts"
+      ],
+      [
+       ".rows[38].test",
+       "packages/three-surface-poc-core/src/owner-act-drafter.test.ts",
+       "packages/support/src/support-purity.test.ts"
+      ],
+      [
+       ".rows[39].test",
+       "packages/three-surface-poc-core/src/owner-act-drafter.test.ts",
+       "packages/support/src/support-purity.test.ts"
+      ]
+     ]
+    },
+    ".rows[*].total": {
+     "count": 9,
+     "examples": [
+      [
+       ".rows[37].total",
+       "3",
+       "33"
+      ],
+      [
+       ".rows[38].total",
+       "3",
+       "33"
+      ],
+      [
+       ".rows[39].total",
+       "3",
+       "33"
+      ]
+     ]
+    },
+    ".rows[*].pending": {
+     "count": 10,
+     "examples": [
+      [
+       ".rows[42].pending",
+       "1",
+       "0"
+      ],
+      [
+       ".rows[43].pending",
+       "1",
+       "0"
+      ],
+      [
+       ".rows[44].pending",
+       "7",
+       "0"
+      ]
+     ]
+    },
+    ".rows[*].edits[*].link": {
+     "count": 4,
+     "examples": [
+      [
+       ".rows[44].edits[2].link",
+       "../../packages/leak",
+       "<absent>"
+      ],
+      [
+       ".rows[47].edits[2].link",
+       "<absent>",
+       "../../packages/leak"
+      ],
+      [
+       ".rows[47].edits[3].link",
+       "../../packages/leak",
+       "<absent>"
+      ]
+     ]
+    },
+    ".rows[*].fileMessages[*]": {
+     "count": 6,
+     "examples": [
+      [
+       ".rows[44].fileMessages[0]",
+       "Build failed with 1 error:\napps/three-surface-poc/src/polaris-generation/dossier-site.ts:1:7: ERROR: [plugin: workspace-",
+       "<absent>"
+      ],
+      [
+       ".rows[45].fileMessages[0]",
+       "@syzygy/support: its entry is not a ./dist/X.js whose src/X.ts exists",
+       "<absent>"
+      ],
+      [
+       ".rows[46].fileMessages[0]",
+       "Build failed with 34 errors:\napps/three-surface-poc/src/polaris-generation/dossier-site.ts:9:23: ERROR: [plugin: workspa",
+       "<absent>"
+      ]
+     ]
+    },
+    ".summary.asExpected": {
+     "count": 1,
+     "examples": [
+      [
+       ".summary.asExpected",
+       "49",
+       "52"
+      ]
+     ]
+    },
+    ".summary.rows": {
+     "count": 1,
+     "examples": [
+      [
+       ".summary.rows",
+       "49",
+       "52"
+      ]
+     ]
+    }
+   }
+  },
+  "docs/evidence/syzygy-bpyt-6-14/mutants-head-present.log": {
+   "plus": 4,
+   "minus": 1,
+   "plusLines": [
+    "W5-filter-drops-the-x-forms expected killed observed killed 32 1 ['@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit']",
+    "W6-test-exclusion-broadened-to-any-test-substring expected killed observed killed 32 1 ['@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit']",
+    "W7-testkit-exclusion-broadened-to-any-depth expected killed observed killed 32 1 ['@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit']",
+    "summary {'rows': 52, 'asExpected': 52, 'unexpected': []} status after '' leftovers []"
+   ],
+   "minusLines": [
+    "summary {'rows': 49, 'asExpected': 49, 'unexpected': []} status after '' leftovers []"
+   ],
+   "setDiff": {
+    "onlyNew": 4,
+    "onlyOld": 1
+   }
+  },
+  "docs/evidence/syzygy-bpyt-6-14/no-egress-hook-durations.json": {
+   "changedLeafPatterns": {
+    ".runs[*].load1.end": {
+     "count": 5,
+     "examples": [
+      [
+       ".runs[0].load1.end",
+       "29.9",
+       "27.67"
+      ],
+      [
+       ".runs[1].load1.end",
+       "32.89",
+       "26.43"
+      ],
+      [
+       ".runs[2].load1.end",
+       "34.71",
+       "26.13"
+      ]
+     ]
+    },
+    ".runs[*].load1.max": {
+     "count": 5,
+     "examples": [
+      [
+       ".runs[0].load1.max",
+       "31.6",
+       "27.67"
+      ],
+      [
+       ".runs[1].load1.max",
+       "32.89",
+       "27.67"
+      ],
+      [
+       ".runs[2].load1.max",
+       "34.42",
+       "26.43"
+      ]
+     ]
+    },
+    ".runs[*].load1.min": {
+     "count": 5,
+     "examples": [
+      [
+       ".runs[0].load1.min",
+       "30.67",
+       "27.03"
+      ],
+      [
+       ".runs[1].load1.min",
+       "29.9",
+       "26.73"
+      ],
+      [
+       ".runs[2].load1.min",
+       "32.89",
+       "26.4"
+      ]
+     ]
+    },
+    ".runs[*].load1.start": {
+     "count": 5,
+     "examples": [
+      [
+       ".runs[0].load1.start",
+       "31.6",
+       "27.03"
+      ],
+      [
+       ".runs[1].load1.start",
+       "29.9",
+       "27.67"
+      ],
+      [
+       ".runs[2].load1.start",
+       "32.89",
+       "26.43"
+      ]
+     ]
+    },
+    ".runs[*].startedAt": {
+     "count": 5,
+     "examples": [
+      [
+       ".runs[0].startedAt",
+       "2026-10-27T19:03:05+00:00",
+       "2026-10-27T21:05:51+00:00"
+      ],
+      [
+       ".runs[1].startedAt",
+       "2026-10-27T19:03:15+00:00",
+       "2026-10-27T21:06:00+00:00"
+      ],
+      [
+       ".runs[2].startedAt",
+       "2026-10-27T19:03:27+00:00",
+       "2026-10-27T21:06:09+00:00"
+      ]
+     ]
+    },
+    ".runs[*].suites[*].beforeAllMs": {
+     "count": 8,
+     "examples": [
+      [
+       ".runs[0].suites[0].beforeAllMs",
+       "886",
+       "576"
+      ],
+      [
+       ".runs[0].suites[1].beforeAllMs",
+       "0",
+       "1"
+      ],
+      [
+       ".runs[1].suites[0].beforeAllMs",
+       "607",
+       "825"
+      ]
+     ]
+    },
+    ".runs[*].suites[*].suiteMs": {
+     "count": 15,
+     "examples": [
+      [
+       ".runs[0].suites[0].suiteMs",
+       "4134",
+       "4250"
+      ],
+      [
+       ".runs[0].suites[1].suiteMs",
+       "2634",
+       "2942"
+      ],
+      [
+       ".runs[0].suites[2].suiteMs",
+       "610",
+       "728"
+      ]
+     ]
+    },
+    ".runs[*].suites[*].afterAllMs": {
+     "count": 9,
+     "examples": [
+      [
+       ".runs[0].suites[2].afterAllMs",
+       "1",
+       "0"
+      ],
+      [
+       ".runs[1].suites[0].afterAllMs",
+       "13",
+       "4"
+      ],
+      [
+       ".runs[1].suites[1].afterAllMs",
+       "3",
+       "0"
+      ]
+     ]
+    },
+    ".runs[*].tests[*].durationMs": {
+     "count": 29,
+     "examples": [
+      [
+       ".runs[0].tests[0].durationMs",
+       "1406",
+       "1629"
+      ],
+      [
+       ".runs[0].tests[1].durationMs",
+       "1227",
+       "1311"
+      ],
+      [
+       ".runs[0].tests[3].durationMs",
+       "297",
+       "329"
+      ]
+     ]
+    },
+    ".runs[*].wallSeconds": {
+     "count": 4,
+     "examples": [
+      [
+       ".runs[0].wallSeconds",
+       "9.9",
+       "8.9"
+      ],
+      [
+       ".runs[1].wallSeconds",
+       "12.4",
+       "8.7"
+      ],
+      [
+       ".runs[2].wallSeconds",
+       "12.4",
+       "9.8"
+      ]
+     ]
+    },
+    ".runs[*].load1.samples": {
+     "count": 3,
+     "examples": [
+      [
+       ".runs[1].load1.samples",
+       "3",
+       "2"
+      ],
+      [
+       ".runs[2].load1.samples",
+       "3",
+       "2"
+      ],
+      [
+       ".runs[3].load1.samples",
+       "3",
+       "2"
+      ]
+     ]
+    },
+    ".subject.commit": {
+     "count": 1,
+     "examples": [
+      [
+       ".subject.commit",
+       "6249951432d6d0c0608f8dfb93e525f706159c5a",
+       "191d82779ea07f45be612b00ff3cafc9aa7446b8"
+      ]
+     ]
+    }
+   }
+  },
+  "docs/evidence/syzygy-bpyt-6-14/residuals-head.json": {
+   "changedLeafPatterns": {
+    ".commit": {
+     "count": 1,
+     "examples": [
+      [
+       ".commit",
+       "6249951432d6d0c0608f8dfb93e525f706159c5a",
+       "191d82779ea07f45be612b00ff3cafc9aa7446b8"
+      ]
+     ]
+    }
+   }
+  },
+  "docs/evidence/syzygy-bpyt-6-14/shared-reader-identity.json": {
+   "changedLeafPatterns": {
+    ".copies.testkit-head.commit": {
+     "count": 1,
+     "examples": [
+      [
+       ".copies.testkit-head.commit",
+       "6249951432d6d0c0608f8dfb93e525f706159c5a",
+       "191d82779ea07f45be612b00ff3cafc9aa7446b8"
+      ]
+     ]
+    },
+    ".head": {
+     "count": 1,
+     "examples": [
+      [
+       ".head",
+       "6249951432d6d0c0608f8dfb93e525f706159c5a",
+       "191d82779ea07f45be612b00ff3cafc9aa7446b8"
+      ]
+     ]
+    }
+   }
+  },
+  "docs/evidence/syzygy-bpyt-6-14/suite-head.json": {
+   "changedLeafPatterns": {
+    ".commit": {
+     "count": 1,
+     "examples": [
+      [
+       ".commit",
+       "6249951432d6d0c0608f8dfb93e525f706159c5a",
+       "191d82779ea07f45be612b00ff3cafc9aa7446b8"
+      ]
+     ]
+    },
+    ".load1": {
+     "count": 1,
+     "examples": [
+      [
+       ".load1",
+       "33.7",
+       "29.0"
+      ]
+     ]
+    },
+    ".wallSeconds": {
+     "count": 1,
+     "examples": [
+      [
+       ".wallSeconds",
+       "238.3",
+       "243.4"
+      ]
+     ]
+    }
+   }
+  },
+  "docs/evidence/syzygy-bpyt-6-14/suite-head.log": {
+   "plus": 793,
+   "minus": 744,
+   "plusLines": [
+    "\u001b[1m\u001b[46m RUN \u001b[49m\u001b[22m \u001b[36mv3.2.7 \u001b[39m\u001b[90m/tmp/la-545s/c1\u001b[39m",
+    " \u001b[32m\u2713\u001b[39m \u001b[30m\u001b[46m @syzygy/polaris-generation-consent \u001b[49m\u001b[39m packages/polaris-generation-consent/src/package-reader.test.ts \u001b[2m(\u001b[22m\u001b[2m303 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 13957\u001b[2mms\u001b[22m\u001b[39m",
+    "   \u001b[33m\u001b[2m\u2713\u001b[22m\u001b[39m package admission reader\u001b[2m > \u001b[22mreturns a record only for an instance that an act record names by path and digest \u001b[33m 1014\u001b[2mms\u001b[22m\u001b[39m",
+    "   \u001b[33m\u001b[2m\u2713\u001b[22m\u001b[39m egress version 2 record\u001b[2m > \u001b[22mis read from the recorder's act: version 2 supersedes version 1 once in force \u001b[33m 805\u001b[2mms\u001b[22m\u001b[39m",
+    "   \u001b[33m\u001b[2m\u2713\u001b[22m\u001b[39m egress version 2 record\u001b[2m > \u001b[22mrefuses when version 2 did not take effect strictly after version 1: the same instant, or earlier \u001b[33m 657\u001b[2mms\u001b[22m\u001b[39m",
+    "   \u001b[33m\u001b[2m\u2713\u001b[22m\u001b[39m egress version 2 record\u001b[2m > \u001b[22mthe RFC5-14 class amendment version 2 depends on\u001b[2m > \u001b[22mis required: no record, an edited module, a wrong form, or an amendment later than version 2 all refuse \u001b[33m 899\u001b[2mms\u001b[22m\u001b[39m",
+    "   \u001b[33m\u001b[2m\u2713\u001b[22m\u001b[39m egress version 2 record\u001b[2m > \u001b[22mwithdrawal and forgery forms the reader does not define\u001b[2m > \u001b[22mdoes not refuse the recorders' other act records or the aggregate acceptance record they append to \u001b[33m 521\u001b[2mms\u001b[22m\u001b[39m",
+    "   \u001b[33m\u001b[2m\u2713\u001b[22m\u001b[39m screening scope version 2 policy act\u001b[2m > \u001b[22mcounts the version 2 act when the policy carries the version 2 bytes, and the version 1 act goes quiet \u001b[33m 427\u001b[2mms\u001b[22m\u001b[39m",
+    "   \u001b[33m\u001b[2m\u2713\u001b[22m\u001b[39m screening scope version 2 policy act\u001b[2m > \u001b[22mrefuses an unlisted record that names the policy: another file, a subdirectory, a loose field spelling, a Unicode-hyphen identity \u001b[33m 422\u001b[2mms\u001b[22m\u001b[39m",
+    "   \u001b[33m\u001b[2m\u2713\u001b[22m\u001b[39m strict act reads\u001b[2m > \u001b[22mpolicy chain: absent without acts; refused for a missing version 1, equal or earlier instants, equal arguments, a supersession that does not name version 1, or other policy bytes \u001b[33m 662\u001b[2mms\u001b[22m\u001b[39m",
+    "   \u001b[33m\u001b[2m\u2713\u001b[22m\u001b[39m round-3 review notes\u001b[2m > \u001b[22mtakes a time: a strict read of an act recorded after now is absent (N-4) \u001b[33m 423\u001b[2mms\u001b[22m\u001b[39m",
+    "   \u001b[33m\u001b[2m\u2713\u001b[22m\u001b[39m the policy port and the strict policy chain agree\u001b[2m > \u001b[22mon every world in the fixture set, at every instant \u001b[33m 4277\u001b[2mms\u001b[22m\u001b[39m"
+   ],
+   "minusLines": [
+    "\u001b[1m\u001b[46m RUN \u001b[49m\u001b[22m \u001b[36mv3.2.7 \u001b[39m\u001b[90m/tmp/la-545r/c1\u001b[39m",
+    " \u001b[32m\u2713\u001b[39m \u001b[30m\u001b[46m @syzygy/polaris-generation-consent \u001b[49m\u001b[39m packages/polaris-generation-consent/src/package-reader.test.ts \u001b[2m(\u001b[22m\u001b[2m303 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 13554\u001b[2mms\u001b[22m\u001b[39m",
+    "   \u001b[33m\u001b[2m\u2713\u001b[22m\u001b[39m package admission reader\u001b[2m > \u001b[22mreturns a record only for an instance that an act record names by path and digest \u001b[33m 401\u001b[2mms\u001b[22m\u001b[39m",
+    "   \u001b[33m\u001b[2m\u2713\u001b[22m\u001b[39m public-source policy act\u001b[2m > \u001b[22mrecognises the recorder's record by its exact path and format, in force from its instant \u001b[33m 357\u001b[2mms\u001b[22m\u001b[39m",
+    "   \u001b[33m\u001b[2m\u2713\u001b[22m\u001b[39m egress version 2 record\u001b[2m > \u001b[22mis read from the recorder's act: version 2 supersedes version 1 once in force \u001b[33m 861\u001b[2mms\u001b[22m\u001b[39m",
+    "   \u001b[33m\u001b[2m\u2713\u001b[22m\u001b[39m egress version 2 record\u001b[2m > \u001b[22mleaves version 1 standing before the version 2 act takes effect, and with no version 1 act at all \u001b[33m 337\u001b[2mms\u001b[22m\u001b[39m",
+    "   \u001b[33m\u001b[2m\u2713\u001b[22m\u001b[39m egress version 2 record\u001b[2m > \u001b[22mrefuses when version 2 did not take effect strictly after version 1: the same instant, or earlier \u001b[33m 618\u001b[2mms\u001b[22m\u001b[39m",
+    "   \u001b[33m\u001b[2m\u2713\u001b[22m\u001b[39m egress version 2 record\u001b[2m > \u001b[22mthe RFC5-14 class amendment version 2 depends on\u001b[2m > \u001b[22mis required: no record, an edited module, a wrong form, or an amendment later than version 2 all refuse \u001b[33m 886\u001b[2mms\u001b[22m\u001b[39m",
+    "   \u001b[33m\u001b[2m\u2713\u001b[22m\u001b[39m egress version 2 record\u001b[2m > \u001b[22mwithdrawal and forgery forms the reader does not define\u001b[2m > \u001b[22mdoes not refuse the recorders' other act records or the aggregate acceptance record they append to \u001b[33m 409\u001b[2mms\u001b[22m\u001b[39m",
+    "   \u001b[33m\u001b[2m\u2713\u001b[22m\u001b[39m screening scope version 2 policy act\u001b[2m > \u001b[22mcounts the version 2 act when the policy carries the version 2 bytes, and the version 1 act goes quiet \u001b[33m 469\u001b[2mms\u001b[22m\u001b[39m",
+    "   \u001b[33m\u001b[2m\u2713\u001b[22m\u001b[39m screening scope version 2 policy act\u001b[2m > \u001b[22mrefuses an unlisted record that names the policy: another file, a subdirectory, a loose field spelling, a Unicode-hyphen identity \u001b[33m 376\u001b[2mms\u001b[22m\u001b[39m",
+    "   \u001b[33m\u001b[2m\u2713\u001b[22m\u001b[39m strict act reads\u001b[2m > \u001b[22mpolicy chain: absent without acts; refused for a missing version 1, equal or earlier instants, equal arguments, a supersession that does not name version 1, or other policy bytes \u001b[33m 811\u001b[2mms\u001b[22m\u001b[39m"
+   ],
+   "setDiff": {
+    "onlyNew": 793,
+    "onlyOld": 744
+   }
+  },
+  "docs/evidence/syzygy-bpyt-6-14/summary.json": {
+   "changedLeafPatterns": {
+    ".beforeAllMs.load1Max": {
+     "count": 1,
+     "examples": [
+      [
+       ".beforeAllMs.load1Max",
+       "36.33",
+       "28.32"
+      ]
+     ]
+    },
+    ".beforeAllMs.runs[*]": {
+     "count": 5,
+     "examples": [
+      [
+       ".beforeAllMs.runs[0]",
+       "886",
+       "576"
+      ],
+      [
+       ".beforeAllMs.runs[1]",
+       "607",
+       "825"
+      ],
+      [
+       ".beforeAllMs.runs[2]",
+       "775",
+       "614"
+      ]
+     ]
+    },
+    ".bundleTestMs.load1Max": {
+     "count": 1,
+     "examples": [
+      [
+       ".bundleTestMs.load1Max",
+       "34.56",
+       "28.77"
+      ]
+     ]
+    },
+    ".bundleTestMs.runs[*]": {
+     "count": 5,
+     "examples": [
+      [
+       ".bundleTestMs.runs[0]",
+       "535",
+       "456"
+      ],
+      [
+       ".bundleTestMs.runs[1]",
+       "893",
+       "696"
+      ],
+      [
+       ".bundleTestMs.runs[2]",
+       "678",
+       "368"
+      ]
+     ]
+    },
+    ".bundle[*].commit": {
+     "count": 1,
+     "examples": [
+      [
+       ".bundle[1].commit",
+       "6249951432d6d0c0608f8dfb93e525f706159c5a",
+       "191d82779ea07f45be612b00ff3cafc9aa7446b8"
+      ]
+     ]
+    },
+    ".counts.head-absent.killed": {
+     "count": 1,
+     "examples": [
+      [
+       ".counts.head-absent.killed",
+       "44",
+       "47"
+      ]
+     ]
+    },
+    ".counts.head-absent.rows": {
+     "count": 1,
+     "examples": [
+      [
+       ".counts.head-absent.rows",
+       "49",
+       "52"
+      ]
+     ]
+    },
+    ".counts.head-present.killed": {
+     "count": 1,
+     "examples": [
+      [
+       ".counts.head-present.killed",
+       "44",
+       "47"
+      ]
+     ]
+    },
+    ".counts.head-present.rows": {
+     "count": 1,
+     "examples": [
+      [
+       ".counts.head-present.rows",
+       "49",
+       "52"
+      ]
+     ]
+    },
+    ".guardRowMs[*]": {
+     "count": 5,
+     "examples": [
+      [
+       ".guardRowMs[0]",
+       "790",
+       "364"
+      ],
+      [
+       ".guardRowMs[1]",
+       "426",
+       "499"
+      ],
+      [
+       ".guardRowMs[2]",
+       "357",
+       "265"
+      ]
+     ]
+    },
+    ".head": {
+     "count": 1,
+     "examples": [
+      [
+       ".head",
+       "6249951432d6d0c0608f8dfb93e525f706159c5a",
+       "191d82779ea07f45be612b00ff3cafc9aa7446b8"
+      ]
+     ]
+    },
+    ".mutants.W5-filter-drops-the-x-forms.head-absent": {
+     "count": 1,
+     "examples": [
+      [
+       ".mutants.W5-filter-drops-the-x-forms.head-absent",
+       "<absent>",
+       "killed"
+      ]
+     ]
+    },
+    ".mutants.W5-filter-drops-the-x-forms.head-present": {
+     "count": 1,
+     "examples": [
+      [
+       ".mutants.W5-filter-drops-the-x-forms.head-present",
+       "<absent>",
+       "killed"
+      ]
+     ]
+    },
+    ".mutants.W5-filter-drops-the-x-forms.killedAtHeadBy[*]": {
+     "count": 1,
+     "examples": [
+      [
+       ".mutants.W5-filter-drops-the-x-forms.killedAtHeadBy[0]",
+       "<absent>",
+       "@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the t"
+      ]
+     ]
+    },
+    ".mutants.W6-test-exclusion-broadened-to-any-test-substring.head-absent": {
+     "count": 1,
+     "examples": [
+      [
+       ".mutants.W6-test-exclusion-broadened-to-any-test-substring.head-absent",
+       "<absent>",
+       "killed"
+      ]
+     ]
+    },
+    ".mutants.W6-test-exclusion-broadened-to-any-test-substring.head-present": {
+     "count": 1,
+     "examples": [
+      [
+       ".mutants.W6-test-exclusion-broadened-to-any-test-substring.head-present",
+       "<absent>",
+       "killed"
+      ]
+     ]
+    },
+    ".mutants.W6-test-exclusion-broadened-to-any-test-substring.killedAtHeadBy[*]": {
+     "count": 1,
+     "examples": [
+      [
+       ".mutants.W6-test-exclusion-broadened-to-any-test-substring.killedAtHeadBy[0]",
+       "<absent>",
+       "@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the t"
+      ]
+     ]
+    },
+    ".mutants.W7-testkit-exclusion-broadened-to-any-depth.head-absent": {
+     "count": 1,
+     "examples": [
+      [
+       ".mutants.W7-testkit-exclusion-broadened-to-any-depth.head-absent",
+       "<absent>",
+       "killed"
+      ]
+     ]
+    },
+    ".mutants.W7-testkit-exclusion-broadened-to-any-depth.head-present": {
+     "count": 1,
+     "examples": [
+      [
+       ".mutants.W7-testkit-exclusion-broadened-to-any-depth.head-present",
+       "<absent>",
+       "killed"
+      ]
+     ]
+    },
+    ".mutants.W7-testkit-exclusion-broadened-to-any-depth.killedAtHeadBy[*]": {
+     "count": 1,
+     "examples": [
+      [
+       ".mutants.W7-testkit-exclusion-broadened-to-any-depth.killedAtHeadBy[0]",
+       "<absent>",
+       "@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the t"
+      ]
+     ]
+    },
+    ".round1KilledBy.W5[*]": {
+     "count": 1,
+     "examples": [
+      [
+       ".round1KilledBy.W5[0]",
+       "<absent>",
+       "@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the t"
+      ]
+     ]
+    },
+    ".round1KilledBy.W6[*]": {
+     "count": 1,
+     "examples": [
+      [
+       ".round1KilledBy.W6[0]",
+       "<absent>",
+       "@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the t"
+      ]
+     ]
+    },
+    ".round1KilledBy.W7[*]": {
+     "count": 1,
+     "examples": [
+      [
+       ".round1KilledBy.W7[0]",
+       "<absent>",
+       "@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the t"
+      ]
+     ]
+    },
+    ".subjectSha256.packages/support/src/support-purity.test.ts": {
+     "count": 1,
+     "examples": [
+      [
+       ".subjectSha256.packages/support/src/support-purity.test.ts",
+       "1f18118b991bb148699bc8495ed5ce6902347d636873ba1a02a0c791f858945f",
+       "5a923028b13c1496d0917084e08d3748d186cd83a18269980aa3061783bec51a"
+      ]
+     ]
+    },
+    ".suite.commit": {
+     "count": 1,
+     "examples": [
+      [
+       ".suite.commit",
+       "6249951432d6d0c0608f8dfb93e525f706159c5a",
+       "191d82779ea07f45be612b00ff3cafc9aa7446b8"
+      ]
+     ]
+    }
+   }
+  },
+  "docs/evidence/syzygy-bpyt-6-14/titles.json": {
+   "changedLeafPatterns": {
+    ".headCommit": {
+     "count": 1,
+     "examples": [
+      [
+       ".headCommit",
+       "6249951432d6d0c0608f8dfb93e525f706159c5a",
+       "191d82779ea07f45be612b00ff3cafc9aa7446b8"
+      ]
+     ]
+    }
+   }
+  },
+  "docs/evidence/syzygy-bpyt-6-14/tools/mutants.py": {
+   "plus": 5,
+   "minus": 0,
+   "plusLines": [
+    "    # Round 2's F2: the scan's fixture row weakened three more ways, each alone; each must fail that row alone. Fragments copied",
+    "    # by script from the round-2 review's tools/r2_mutants.py (sha256 3b954d84e97771016b6dcccf2d3e826a9225e46d02330d9c94b23831fb0a5a4f).",
+    "    ('W5-filter-drops-the-x-forms', PURITY, [edit(PURITY, '/\\\\.[cm]?[jt]sx?$/u.test(name)', '/\\\\.[cm]?[jt]s$/u.test(name)')], None, 'killed', None),",
+    "    ('W6-test-exclusion-broadened-to-any-test-substring', PURITY, [edit(PURITY, \"!name.endsWith('.test.ts')\", \"!name.includes('test')\")], None, 'killed', None),",
+    "    ('W7-testkit-exclusion-broadened-to-any-depth', PURITY, [edit(PURITY, \"name !== 'purity.testkit.ts'\", \"!name.endsWith('purity.testkit.ts')\")], None, 'killed', None),"
+   ],
+   "minusLines": [],
+   "setDiff": {
+    "onlyNew": 5,
+    "onlyOld": 0
+   }
+  },
+  "docs/evidence/syzygy-bpyt-6-14/tools/summary.py": {
+   "plus": 6,
+   "minus": 4,
+   "plusLines": [
+    "verbatim) and the round-2 review's F2 (R-GP-IMPL-SUPPORT-LEAF-GUARDS-2). HEAD was 3b04b1cd before round 1's repairs and 62499514",
+    "before round 2's; every head record was re-run at the repair commit. Inputs (all in",
+    "HEAD = '191d82779ea07f45be612b00ff3cafc9aa7446b8'",
+    "# each of its mutants (and round 2's W5-W7) must fail at HEAD, in both dist/ states, and no other (each row is the fix the review",
+    "# proposed for it).",
+    "             'M5': [N4_ROW], 'G0': [N4_ROW], **{p: [N1_ROW] for p in ['W5', 'W6', 'W7']}}"
+   ],
+   "minusLines": [
+    "verbatim). HEAD was 3b04b1cd before those repairs; every head record was re-run at the repair commit. Inputs (all in",
+    "HEAD = '6249951432d6d0c0608f8dfb93e525f706159c5a'",
+    "# each of its mutants must fail at HEAD, in both dist/ states, and no other (each row is the fix that review proposed for it).",
+    "             'M5': [N4_ROW], 'G0': [N4_ROW]}"
+   ],
+   "setDiff": {
+    "onlyNew": 6,
+    "onlyOld": 4
+   }
+  }
+ }
+}

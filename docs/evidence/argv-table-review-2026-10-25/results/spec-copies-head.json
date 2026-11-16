@@ -1,0 +1,84 @@
+{
+ "callers": {
+  "main": [
+   71
+  ],
+  "polaris": [
+   128
+  ],
+  "cli": [
+   451,
+   464
+  ]
+ },
+ "copies": [
+  "DAEMON",
+  "DOSSIER_ONE",
+  "DOSSIER_OPTIONS",
+  "POLARIS"
+ ],
+ "daemonCopyEqual": true,
+ "polarisCopyEqual": true,
+ "dossierOneCopyEqual": true,
+ "dossierOptionsPolicyEqual": true,
+ "dossierOptionsCallerValued": "<expr shape.options>",
+ "dossierOptionsCopyValued": [
+  "--revision",
+  "--declare"
+ ],
+ "optionsCommands": {
+  "init": [
+   "--url",
+   "--config",
+   "--state-root"
+  ],
+  "'allow-execution'": [
+   "--revision",
+   "--declare"
+  ],
+  "check": [
+   "--draft"
+  ],
+  "'session-prompt'": [
+   "--kind",
+   "--tool",
+   "--tool-version",
+   "--model"
+  ],
+  "await": [
+   "--round",
+   "--submit",
+   "--wait-minutes"
+  ],
+  "'launch-form'": [
+   "--kind"
+  ],
+  "'inventory-check'": [
+   "--inventory"
+  ],
+  "'review-packet'": [
+   "--kind"
+  ],
+  "'review-check'": [
+   "--verdict",
+   "--kind"
+  ],
+  "close": [
+   "--usage-tokens",
+   "--usage-turns"
+  ]
+ },
+ "oneCommands": [
+  "preflight",
+  "brief",
+  "'inventory-brief'",
+  "render",
+  "status"
+ ],
+ "commandCount": 15,
+ "dossierOptionsValuedIsACommand": [
+  "'allow-execution'"
+ ],
+ "realSpecs": 13,
+ "throws": []
+}

@@ -31,6 +31,7 @@ import {
 } from './harness.js';
 
 const cleanups: (() => Promise<void> | void)[] = [];
+const isRoot = process.getuid?.() === 0;
 
 afterEach(async () => {
   for (const cleanup of cleanups.splice(0).reverse()) {
@@ -353,7 +354,8 @@ describe('RTF-1 — state-dir governed-plane check resolves symlink reality', ()
     expectTreeUnchanged(before, snapshotTree(base));
   });
 
-  it('rejects an unreadable state-dir path as named invalid before writes or a listener', async () => {
+  // Root may search a mode-000 directory, so under root no EACCES arises and this refusal cannot occur (syzygy-bpyt.4.25).
+  it.skipIf(isRoot)('rejects an unreadable state-dir path as named invalid before writes or a listener', async () => {
     const base = tempBase('syz-sys-sd-unreadable-');
     cleanups.push(() => rmSync(base, { recursive: true, force: true }));
     const fixtureRoot = join(base, 'fixture');

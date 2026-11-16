@@ -1,0 +1,64 @@
+{
+ "lifted": {
+  "before": [
+   "ReviewPacketResult"
+  ],
+  "was": [
+   "ReviewPacketResult"
+  ],
+  "head": [
+   "ReviewPacketRefusal",
+   "ReviewPacketResult"
+  ]
+ },
+ "checks": [
+  {
+   "assign": "Before -> Head",
+   "exit": 0,
+   "errors": []
+  },
+  {
+   "assign": "Head -> Before",
+   "exit": 0,
+   "errors": []
+  },
+  {
+   "assign": "Before -> Was",
+   "exit": 0,
+   "errors": []
+  },
+  {
+   "assign": "Was -> Before",
+   "exit": 2,
+   "errors": [
+    "error TS2322: Type 'Was' is not assignable to type 'Before'."
+   ]
+  },
+  {
+   "assign": "Was -> Head",
+   "exit": 2,
+   "errors": [
+    "error TS2322: Type 'Was' is not assignable to type 'Head'."
+   ]
+  },
+  {
+   "assign": "Head -> Was",
+   "exit": 0,
+   "errors": []
+  },
+  {
+   "assign": "Neg -> Head",
+   "exit": 2,
+   "errors": [
+    "error TS2322: Type 'Neg' is not assignable to type 'Head'."
+   ]
+  },
+  {
+   "assign": "Head -> Neg",
+   "exit": 2,
+   "errors": [
+    "error TS2322: Type 'Head' is not assignable to type 'Neg'."
+   ]
+  }
+ ]
+}

@@ -1,0 +1,24 @@
+{
+ "what": "the fence probe run again after the merge: at main f7477f52 (the base of the whole PR) and at the tested commit, compared case by case with compare-fence-probe.py",
+ "baseCommit": "f7477f52c49ee347f96b92703887c31f6be49e07",
+ "testedCommit": "ba7fce369ebfbd605be4a8da76dbdb4351ab9f25",
+ "baseOutput": "docs/evidence/syzygy-bpyt-6-3/fence-probe-output-base.json",
+ "baseOutputSha256": "08cb10741da79a033248c04e49e1582d414e135a7e6b3054d3d8c1afbd52821c",
+ "headOutput": "docs/evidence/syzygy-bpyt-6-3/fence-probe-output.json",
+ "headOutputSha256": "95ed7f664f202d723b151842acbb9906ed4978e20c1f70971a8bf07ac5c30902",
+ "rerunOutputsEqualTheTrackedOnes": true,
+ "rerunBaseSha256": "08cb10741da79a033248c04e49e1582d414e135a7e6b3054d3d8c1afbd52821c",
+ "rerunHeadSha256": "95ed7f664f202d723b151842acbb9906ed4978e20c1f70971a8bf07ac5c30902",
+ "probeToolSha256": "10b6d88b528a6f967959842bb350d21700f097f1ea0e420f174f347cf8afb680",
+ "compareToolSha256": "eb498c1a5c23a542f4b31a6d4fa32515523ec352135332514b545334a66e4d51",
+ "compareExitStatus": 0,
+ "compare": {
+  "casesCompared": 66,
+  "casesThatDiffer": 0,
+  "differing": [],
+  "casesOnlyInActual": [],
+  "inlineCasesThatDiffer": [],
+  "consentFunctionTextDiffers": false
+ },
+ "reading": "the tracked outputs were first produced at fe3855a1 and 7e58cd1f; both re-runs, built at f7477f52 and ba7fce36, are byte-equal to them, so the merge of main moved no reader"
+}

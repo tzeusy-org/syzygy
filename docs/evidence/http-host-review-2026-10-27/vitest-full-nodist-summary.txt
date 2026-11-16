@@ -1,0 +1,10 @@
+88 set: 88 system: 7 non-system: 81 in run: 80 passed: 80
+missing from run: ['docs/evidence/launch-form-ctime-review-2026-10-24/work/variant-target-ctime.test.ts']
+tests in those files 2215 passed 2214
+packages/http-host/src/credentials.test.ts passed 26 26
+packages/http-host/src/shutdown.test.ts passed 6 6
+packages/http-host/src/package.test.ts passed 2 2
+packages/cap1-daemon/src/package.test.ts passed 2 2
+apps/three-surface-poc/src/git-observation.test.ts passed 11 11
+packages/polaris-dossier/src/no-egress.test.ts passed 3 2
+packages/cap1-daemon/src/server.test.ts passed 20 20

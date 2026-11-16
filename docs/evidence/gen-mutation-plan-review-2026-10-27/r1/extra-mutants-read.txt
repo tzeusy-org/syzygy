@@ -1,0 +1,15 @@
+mutant x-reviewer-blocking-always file packages/polaris-generation-core/src/pipeline.ts occurrences 1 sha256-before 89df81566b51fdcc24376f6b1282fea7d2110132dd7caa7c198bb03b00b45164
+sha256-after 89df81566b51fdcc24376f6b1282fea7d2110132dd7caa7c198bb03b00b45164 restored True
+total 33 passed 32 failed 1
+FAILED source to editorial draft pipeline deterministic quote fidelity joins the reviewer verdict does not stop the run when a misquote survives the last repair: it returns the finding for that block, and keeps the reviewer's own findings first in the repair input
+  duration 33.05110599999989
+  AssertionError: expected { status: 'stopped', …(3) } to match object { …(2) }
+mutant x-reviewer-blocking-never file packages/polaris-generation-core/src/pipeline.ts occurrences 1 sha256-before 89df81566b51fdcc24376f6b1282fea7d2110132dd7caa7c198bb03b00b45164
+sha256-after 89df81566b51fdcc24376f6b1282fea7d2110132dd7caa7c198bb03b00b45164 restored True
+total 33 passed 31 failed 2
+FAILED source to editorial draft pipeline stops when calls or repairs are exhausted and when usage is unknown
+  duration 27.64274599999999
+  AssertionError: expected { …(7) } to match object { reason: 'repair-exhausted' }
+FAILED source to editorial draft pipeline deterministic quote fidelity joins the reviewer verdict still stops as repair-exhausted when the reviewer's own verdict blocks after the last repair
+  duration 5.210657000000083
+  AssertionError: expected { …(7) } to match object { status: 'stopped', …(1) }

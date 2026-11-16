@@ -1,0 +1,6 @@
+ Test Files  237 passed | 3 skipped (240)
+      Tests  5301 passed | 5 skipped (5306)
+   Start at  15:37:46
+   Duration  206.25s (transform 22.95s, setup 3.88s, collect 101.74s, tests 1006.14s, environment 77ms, prepare 33.42s)
+
+JSON report written to /tmp/r532b-16/full-9e00252a-3.json

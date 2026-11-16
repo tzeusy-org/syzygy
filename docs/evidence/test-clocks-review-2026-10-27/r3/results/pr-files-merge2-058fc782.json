@@ -1,0 +1,43 @@
+{
+ "tool": "suite_r3.py",
+ "commit": "058fc782803d6c3a1dc395be712346b54e4a84ec",
+ "args": [
+  "apps/three-surface-poc/src/capture-test-artifact-main.test.ts",
+  "apps/three-surface-poc/src/main.test.ts",
+  "apps/three-surface-poc/src/polaris-generation/redis-shaped-discovery.test.ts",
+  "apps/three-surface-poc/src/polaris-generation/self-corpus.test.ts",
+  "packages/polaris-dossier/src/git-object-reader.test.ts",
+  "packages/polaris-generation-core/src/dossier-evaluation.test.ts",
+  "packages/polaris-generation-core/src/dossier-profile.test.ts",
+  "packages/polaris-generation-core/src/excerpt.test.ts",
+  "packages/three-surface-poc-core/src/test-artifact-verification.test.ts"
+ ],
+ "exit": 0,
+ "seconds": 36,
+ "load": [
+  [
+   "37.88",
+   "33.71",
+   "36.21"
+  ],
+  [
+   "36.84",
+   "34.07",
+   "36.24"
+  ]
+ ],
+ "summary": {
+  "numTotalTests": 281,
+  "numPassedTests": 281,
+  "numFailedTests": 0,
+  "numPendingTests": 0,
+  "numTodoTests": 0,
+  "numTotalTestSuites": 54,
+  "numFailedTestSuites": 0,
+  "success": true
+ },
+ "failed": [],
+ "brokenFiles": [],
+ "stdoutTail": "JSON report written to /tmp/r532c-11/suite.json\n",
+ "stderrTail": "fatal: git cat-file: could not get object info\nUsage: poc:redis-shaped-discovery [--out <file>]\n"
+}

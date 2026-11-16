@@ -1,0 +1,258 @@
+{
+ "offsetWindowSeconds": -0.003,
+ "tracedNames": 2443,
+ "sampled": 895,
+ "perLongGap": [
+  {
+   "from": 0.5,
+   "to": 1.51,
+   "seconds": 1.01,
+   "namesCreatedInside": 0,
+   "ofThemEverSampled": 0,
+   "topClasses": []
+  },
+  {
+   "from": 2.01,
+   "to": 3.01,
+   "seconds": 1.0,
+   "namesCreatedInside": 2,
+   "ofThemEverSampled": 1,
+   "topClasses": [
+    [
+     "dossier-gate-acts-",
+     1
+    ],
+    [
+     "syzygy-generator-onramp-",
+     1
+    ]
+   ]
+  },
+  {
+   "from": 3.01,
+   "to": 5.55,
+   "seconds": 2.54,
+   "namesCreatedInside": 2,
+   "ofThemEverSampled": 2,
+   "topClasses": [
+    [
+     "syzygy-poc-browser-",
+     1
+    ],
+    [
+     "dossier-origin-",
+     1
+    ]
+   ]
+  },
+  {
+   "from": 92.92,
+   "to": 93.94,
+   "seconds": 1.02,
+   "namesCreatedInside": 1,
+   "ofThemEverSampled": 1,
+   "topClasses": [
+    [
+     "dossier-screen-",
+     1
+    ]
+   ]
+  },
+  {
+   "from": 122.2,
+   "to": 123.21,
+   "seconds": 1.01,
+   "namesCreatedInside": 7,
+   "ofThemEverSampled": 1,
+   "topClasses": [
+    [
+     "syzygy-fixture-sweep-",
+     3
+    ],
+    [
+     "syzygy-poc-source-route-",
+     2
+    ],
+    [
+     "syzygy-pwb-governance-",
+     1
+    ],
+    [
+     "syzygy-poc-surface-fixture-p<pid>-n<ns>-",
+     1
+    ]
+   ]
+  },
+  {
+   "from": 127.75,
+   "to": 128.75,
+   "seconds": 1.0,
+   "namesCreatedInside": 5,
+   "ofThemEverSampled": 5,
+   "topClasses": [
+    [
+     "syzygy-poc-surface-fixture-p<pid>-n<ns>-",
+     3
+    ],
+    [
+     "syzygy-poc-surface-fixture-template-p<pid>-n<ns>-",
+     2
+    ]
+   ]
+  },
+  {
+   "from": 129.26,
+   "to": 130.78,
+   "seconds": 1.52,
+   "namesCreatedInside": 5,
+   "ofThemEverSampled": 2,
+   "topClasses": [
+    [
+     "syzygy-poc-surface-fixture-p<pid>-n<ns>-",
+     4
+    ],
+    [
+     "syzygy-poc-surface-fixture-template-p<pid>-n<ns>-",
+     1
+    ]
+   ]
+  },
+  {
+   "from": 131.79,
+   "to": 132.8,
+   "seconds": 1.01,
+   "namesCreatedInside": 33,
+   "ofThemEverSampled": 2,
+   "topClasses": [
+    [
+     "rt4-mach-state-",
+     10
+    ],
+    [
+     "rt4-mach-root-",
+     8
+    ],
+    [
+     "rt4-mach-observed-",
+     8
+    ],
+    [
+     "syzygy-poc-surface-fixture-p<pid>-n<ns>-",
+     2
+    ],
+    [
+     "rt4-mach-empty-",
+     1
+    ]
+   ]
+  },
+  {
+   "from": 133.3,
+   "to": 136.82,
+   "seconds": 3.52,
+   "namesCreatedInside": 120,
+   "ofThemEverSampled": 1,
+   "topClasses": [
+    [
+     "dossier-brief-",
+     26
+    ],
+    [
+     "rt3-srv-",
+     17
+    ],
+    [
+     "rt5-human-state-",
+     15
+    ],
+    [
+     "rt5-human-root-",
+     13
+    ],
+    [
+     "rt5-human-observed-",
+     13
+    ]
+   ]
+  },
+  {
+   "from": 136.82,
+   "to": 138.85,
+   "seconds": 2.03,
+   "namesCreatedInside": 61,
+   "ofThemEverSampled": 0,
+   "topClasses": [
+    [
+     "dossier-choice-",
+     31
+    ],
+    [
+     "syzygy-rt1-",
+     22
+    ],
+    [
+     "syzygy-dossier-eval-",
+     5
+    ],
+    [
+     "syzygy-generator-lifecycle-",
+     2
+    ],
+    [
+     "dossier-records-",
+     1
+    ]
+   ]
+  },
+  {
+   "from": 138.85,
+   "to": 150.97,
+   "seconds": 12.12,
+   "namesCreatedInside": 209,
+   "ofThemEverSampled": 0,
+   "topClasses": [
+    [
+     "dossier-cli-",
+     57
+    ],
+    [
+     "dossier-status-",
+     30
+    ],
+    [
+     "rt3-cred-",
+     29
+    ],
+    [
+     "dossier-cred-",
+     18
+    ],
+    [
+     "syzygy-lifecycle-generate-",
+     16
+    ]
+   ]
+  },
+  {
+   "from": 150.97,
+   "to": 157.01,
+   "seconds": 6.04,
+   "namesCreatedInside": 0,
+   "ofThemEverSampled": 0,
+   "topClasses": []
+  }
+ ],
+ "shortGaps": {
+  "gaps": 243,
+  "seconds": 123.19,
+  "namesCreatedInside": 1998,
+  "ofThemEverSampled": 880,
+  "catchRate": 0.44
+ },
+ "longGapTotals": {
+  "gaps": 12,
+  "seconds": 33.82,
+  "namesCreatedInside": 445,
+  "ofThemEverSampled": 15
+ }
+}

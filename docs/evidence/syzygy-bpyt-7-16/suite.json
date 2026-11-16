@@ -1,0 +1,70 @@
+{
+ "tree": "a clone at HEAD",
+ "commit": "0d7eaf08a19dd64bdeb294d3995861fbfbaad759",
+ "cleanAfter": true,
+ "runs": [
+  {
+   "label": "full-1",
+   "command": "npx vitest run --project @syzygy/http-host --project @syzygy/cap1-daemon --project @syzygy/three-surface-poc-app --reporter=json",
+   "load1Before": 61.66,
+   "load1After": 49.59,
+   "success": false,
+   "files": 101,
+   "total": 1266,
+   "passed": 1263,
+   "failed": 1,
+   "skipped": 2,
+   "notPassed": [
+    {
+     "file": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+     "name": "Zero downstream citations of Polaris as authority (PWB-REQ-014) no source/authority/provenance field in the governance, spec, code or docs trees names the Polaris surface",
+     "status": "failed",
+     "ms": 7656,
+     "error": "Error: STACK_TRACE_ERROR"
+    },
+    {
+     "file": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+     "name": "opening index in a real browser (PWB-REQ-010, P-98) a captured /polaris page meets the oracle at both viewports",
+     "status": "skipped",
+     "ms": null,
+     "error": ""
+    },
+    {
+     "file": "apps/three-surface-poc/src/project-shape-discovery.live.test.ts",
+     "name": "live Butlers project-shape discovery at the reviewed revision matches the independent five-root, seven-Heart, baseline and total populations",
+     "status": "skipped",
+     "ms": null,
+     "error": ""
+    }
+   ]
+  },
+  {
+   "label": "full-2",
+   "command": "npx vitest run --project @syzygy/http-host --project @syzygy/cap1-daemon --project @syzygy/three-surface-poc-app --reporter=json",
+   "load1Before": 44.54,
+   "load1After": 47.51,
+   "success": true,
+   "files": 101,
+   "total": 1266,
+   "passed": 1264,
+   "failed": 0,
+   "skipped": 2,
+   "notPassed": [
+    {
+     "file": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+     "name": "opening index in a real browser (PWB-REQ-010, P-98) a captured /polaris page meets the oracle at both viewports",
+     "status": "skipped",
+     "ms": null,
+     "error": ""
+    },
+    {
+     "file": "apps/three-surface-poc/src/project-shape-discovery.live.test.ts",
+     "name": "live Butlers project-shape discovery at the reviewed revision matches the independent five-root, seven-Heart, baseline and total populations",
+     "status": "skipped",
+     "ms": null,
+     "error": ""
+    }
+   ]
+  }
+ ]
+}

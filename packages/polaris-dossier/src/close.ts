@@ -1,12 +1,14 @@
-import { createHash } from 'node:crypto';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { parseBoundedJson } from '@syzygy/polaris-generation-core/live';
+import { isRecord, sha256 } from '@syzygy/support';
 import { CREDENTIAL_CHECK_DISCLOSURE, credentialStepCheck, storedBriefArm, type CredentialStepResult } from './credential-probe.js';
 import { executionFlags } from './execution-flags.js';
 import type { CredentialProbe } from './execution-rule.js';
 import { RECORDS_WITHIN_REACH } from './gate-sources.js';
 import { errno, logStep, openRun, readRecord } from './inventory.js';
+import { isoOf } from './iso-of.js';
+import type { Outcome } from './outcome.js';
 import { latestPassedDraft, type ReviewDeps } from './review.js';
 import type { ReverifyRefusal } from './reverify.js';
 import { loadDossierScreen } from './screen.js';
@@ -74,7 +76,7 @@ export interface CloseReport {
   readonly disclosures: readonly string[];
 }
 
-export type CloseResult = { readonly ok: true; readonly report: CloseReport } | { readonly ok: false; readonly refusal: CloseRefusal };
+export type CloseResult = Outcome<CloseReport, CloseRefusal>;
 
 const DISCLOSURES = [
   RECORDS_WITHIN_REACH,
@@ -82,10 +84,7 @@ const DISCLOSURES = [
   'Agent usage is the figure the operator declares, Inferred and attributed to the operator; it is never a provider receipt, never Observed and never zero.',
 ];
 
-const isObj = (value: unknown): value is Readonly<Record<string, unknown>> => value !== null && typeof value === 'object' && !Array.isArray(value);
 const text = (value: unknown): string | undefined => (typeof value === 'string' ? value : undefined);
-const isoOf = (instant: number): string => new Date(instant).toISOString();
-const sha256 = (bytes: string | Uint8Array): string => createHash('sha256').update(bytes).digest('hex');
 
 /** A declared usage figure: a positive integer, written in decimal without sign or leading zero; a description of the fault otherwise. */
 export function parseUsageFigure(name: string, value: string | undefined): number | null | string {
@@ -138,10 +137,10 @@ export async function closeRun(runDir: string, request: CloseRequest, deps: Clos
     pinnedRevisionAtClose: { commit: subject.pinnedRevision.commit, consentRecord: revision.consentRecord, revisionLabel: revision.label, label: 'Observed', basis: 'verified again at close against the in-force observation consent' },
     configuration: { declared: { ...declared, deadline: declared.deadline.declared }, declaredBy: 'operator', label: 'Inferred' },
     principal: { name: declared.operator, declaredBy: 'operator', credentialIdentity: 'Unknown' },
-    brief: isObj(brief)
+    brief: isRecord(brief)
       ? { issuedAt: text(brief['issuedAt']) ?? null, files: brief['files'] ?? null, label: 'Inferred' }
       : { issuedAt: null, why: `${RUN_LAYOUT.briefRecord} cannot be read`, label: 'Unknown' },
-    executionRule: isObj(brief) && isObj(brief['executionRule']) ? { ...brief['executionRule'], label: 'Inferred' } : { why: `${RUN_LAYOUT.briefRecord} names no execution rule`, label: 'Unknown' },
+    executionRule: isRecord(brief) && isRecord(brief['executionRule']) ? { ...brief['executionRule'], label: 'Inferred' } : { why: `${RUN_LAYOUT.briefRecord} names no execution rule`, label: 'Unknown' },
     reportedCommands: reportedCommands(run, subject.clone.path, secret),
     agentUsage: usage,
     steps: stepInstants(run),
@@ -184,8 +183,8 @@ function reportedCommands(run: string, clone: string, secret: (value: string) =>
   if (!latest.ok) return { label: 'Unknown', why: `the agent's reported commands are not recorded: ${latest.reason}` };
   let doc: unknown;
   try { doc = parseBoundedJson(new TextDecoder('utf-8', { fatal: true }).decode(latest.bytes), { maxBytes: 4 * 1024 * 1024, maxNodes: 500_000, maxDepth: 16 }); } catch { doc = undefined; }
-  if (!isObj(doc)) return { label: 'Unknown', why: `draft revision ${latest.revision} is not one bounded JSON object` };
-  const entries = (Array.isArray(doc['executions']) ? doc['executions'] : []).filter(isObj);
+  if (!isRecord(doc)) return { label: 'Unknown', why: `draft revision ${latest.revision} is not one bounded JSON object` };
+  const entries = (Array.isArray(doc['executions']) ? doc['executions'] : []).filter(isRecord);
   const flags = executionFlags(entries, clone, storedBriefArm(run));
   // A flag's detail is fixed text and a scope one of two words, so both are kept beside a withheld command without carrying its bytes.
   const flagsOf = (index: number): Readonly<Record<string, unknown>> => (flags.applies ? { scope: flags.commands[index]!.scope, flags: flags.commands[index]!.flags } : {});
@@ -216,7 +215,7 @@ function stepInstants(run: string): Readonly<Record<string, unknown>> {
   for (const line of lines.slice(0, STEP_LINES_MAX)) {
     let entry: unknown;
     try { entry = JSON.parse(line); } catch { entry = undefined; }
-    if (!isObj(entry) || text(entry['step']) === undefined || text(entry['at']) === undefined) { unreadable++; continue; }
+    if (!isRecord(entry) || text(entry['step']) === undefined || text(entry['at']) === undefined) { unreadable++; continue; }
     entries.push({ step: text(entry['step'])!, at: text(entry['at'])!, outcome: text(entry['outcome']) ?? null });
   }
   return { label: 'Inferred', basis: 'the run\'s step log, which the agent sessions can write', entries, unreadable: unreadable + Math.max(0, lines.length - STEP_LINES_MAX) };
@@ -227,7 +226,7 @@ function breachLog(run: string): readonly unknown[] {
   let lines: string[];
   try { lines = fs.readFileSync(path.join(run, RUN_LAYOUT.credentialBreaches), 'utf8').split('\n').filter((line) => line !== ''); } catch { return []; }
   return lines.slice(0, STEP_LINES_MAX).map((line) => {
-    try { const entry: unknown = JSON.parse(line); return isObj(entry) ? { ...entry, label: 'Inferred' } : { unreadable: true }; } catch { return { unreadable: true }; }
+    try { const entry: unknown = JSON.parse(line); return isRecord(entry) ? { ...entry, label: 'Inferred' } : { unreadable: true }; } catch { return { unreadable: true }; }
   });
 }
 

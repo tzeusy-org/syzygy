@@ -10,6 +10,9 @@ import * as path from 'node:path';
  * here too, so nothing Observed rests on a stored file (owner direction
  * `POLARIS-DOSSIER-LOCAL-AGENT-RECORDS-2026-10-05`); every value read back from it is Inferred. */
 
+/** Where `init` has a copy-class run's copy made (REQ-polaris-generation-047): beside the run directories, outside every run's own. */
+export const COPY_DIRECTORY = 'copies';
+
 /** The names the run directory holds. `drafts/`, `checks/` and `reviews/` hold numbered or
  * digest-named files whose forms are fixed here so every later step and `status` agree. */
 export const RUN_LAYOUT = Object.freeze({
@@ -27,6 +30,7 @@ export const RUN_LAYOUT = Object.freeze({
   site: 'site',
   record: 'record.json',
   launched: 'launched.json',
+  launchDisclosure: 'launch.json',
 });
 export const REVISION_FILE = /^rev-(0|[1-9][0-9]*)\.json$/;
 export const REVIEW_PACKET_DIR = /^(fidelity|design)-packet-([0-9a-f]{64})$/;
@@ -35,10 +39,11 @@ export const RUN_ID = /^run-[0-9a-f]{32}$/;
 
 type PathIntent =
   | { readonly resolved: true; readonly realPath: string }
-  | { readonly resolved: false; readonly detail: string };
+  | { readonly resolved: false; readonly reason: 'symlink-loop' | 'path-unreadable'; readonly detail: string };
 
 /** Resolve symbolic links component by component without requiring the target to exist, so a
- * dangling link is judged by where it would land. Loops and unreadable components are refusals. */
+ * dangling link is judged by where it would land. Loops and unreadable components are refusals.
+ * The one copy: the daemon judges its state directory with it too (RTF-1). */
 export function resolvePathIntent(absolutePath: string): PathIntent {
   let candidate = path.resolve(absolutePath);
   const visited = new Set<string>();
@@ -55,16 +60,16 @@ export function resolvePathIntent(absolutePath: string): PathIntent {
       } catch (cause) {
         const code = (cause as NodeJS.ErrnoException).code ?? 'unknown-error';
         if (code === 'ENOENT') return { resolved: true, realPath: candidate };
-        return { resolved: false, detail: `filesystem inspection failed at ${current} (${code})` };
+        return { resolved: false, reason: 'path-unreadable', detail: `filesystem inspection failed at ${current} (${code})` };
       }
       if (!stats.isSymbolicLink()) continue;
-      if (visited.has(current)) return { resolved: false, detail: `symbolic link cycle revisits ${current}` };
+      if (visited.has(current)) return { resolved: false, reason: 'symlink-loop', detail: `symbolic link cycle revisits ${current}` };
       visited.add(current);
       let target: string;
       try {
         target = fs.readlinkSync(current);
       } catch (cause) {
-        return { resolved: false, detail: `symbolic link target could not be read at ${current} (${(cause as NodeJS.ErrnoException).code ?? 'unknown-error'})` };
+        return { resolved: false, reason: 'path-unreadable', detail: `symbolic link target could not be read at ${current} (${(cause as NodeJS.ErrnoException).code ?? 'unknown-error'})` };
       }
       candidate = path.resolve(path.isAbsolute(target) ? target : path.resolve(path.dirname(current), target),
         ...components.slice(index + 1));
@@ -103,10 +108,13 @@ export type CreateRunResult =
   | { readonly created: true; readonly runId: string; readonly runDir: string }
   | { readonly created: false; readonly detail: string };
 
-/** Make a new, empty run directory under the state root and write its configuration document.
+/** Make a new, empty run directory under the state root and write its configuration document and, where given, the run record's launch
+ * disclosure (`launch-disclosure.ts`).
  * The directory is the operator's alone (mode 0700) and the configuration file 0600. An existing run
  * directory is never reused. Nothing is written anywhere else. */
-export function createRunDirectory(stateRoot: string, clone: string, configJson: string, ports: RunPorts = {}): CreateRunResult {
+export function createRunDirectory(
+  stateRoot: string, clone: string, configJson: string, ports: RunPorts = {}, files: { readonly launchDisclosure?: string } = {},
+): CreateRunResult {
   const violation = stateRootViolation(stateRoot, clone);
   if (violation !== null) return { created: false, detail: violation };
   const runId = (ports.runId ?? (() => `run-${randomBytes(16).toString('hex')}`))();
@@ -119,5 +127,8 @@ export function createRunDirectory(stateRoot: string, clone: string, configJson:
     return { created: false, detail: `run directory ${runDir} could not be created (${(cause as NodeJS.ErrnoException).code ?? 'unknown-error'})` };
   }
   fs.writeFileSync(path.join(runDir, RUN_LAYOUT.config), configJson, { mode: 0o600, flag: 'wx' });
+  if (files.launchDisclosure !== undefined) {
+    fs.writeFileSync(path.join(runDir, RUN_LAYOUT.launchDisclosure), files.launchDisclosure, { mode: 0o600, flag: 'wx' });
+  }
   return { created: true, runId, runDir };
 }

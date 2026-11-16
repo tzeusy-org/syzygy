@@ -1,0 +1,7 @@
+RV531-S2-tree-not-recursive survives 0 ['Tests  133 passed (133)'] 10.7 clean
+RV531-T1-root-dot-slash-alias survives 0 ['Tests  133 passed (133)'] 11.6 clean
+RV531-T2-remote-tarball-faithful survives 0 ['Tests  133 passed (133)'] 12.9 clean
+RV531-T3-root-bare-path-alias survives 0 ['Tests  133 passed (133)'] 17.8 clean
+RV531-T4-npm-alias-registry-faithful survives 0 ['Tests  133 passed (133)'] 14.5 clean
+wrote rev-base.json 5
+exit=0

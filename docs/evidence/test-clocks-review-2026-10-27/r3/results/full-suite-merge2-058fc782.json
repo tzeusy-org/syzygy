@@ -1,0 +1,33 @@
+{
+ "tool": "suite_r3.py",
+ "commit": "058fc782803d6c3a1dc395be712346b54e4a84ec",
+ "args": [],
+ "exit": 0,
+ "seconds": 346,
+ "load": [
+  [
+   "34.53",
+   "33.84",
+   "35.99"
+  ],
+  [
+   "48.66",
+   "46.00",
+   "40.77"
+  ]
+ ],
+ "summary": {
+  "numTotalTests": 5442,
+  "numPassedTests": 5437,
+  "numFailedTests": 0,
+  "numPendingTests": 5,
+  "numTodoTests": 0,
+  "numTotalTestSuites": 874,
+  "numFailedTestSuites": 0,
+  "success": true
+ },
+ "failed": [],
+ "brokenFiles": [],
+ "stdoutTail": "tterInsideClosedDetails\":false,\"line\":\"4 / 11 words\",\"violations\":[]}},{\"page\":\"none\",\"report\":{\"viewport\":{\"width\":1280,\"height\":900},\"total\":6,\"rows\":[{\"identity\":\"why\",\"rendered\":false},{\"identity\":\"promises\",\"rendered\":false},{\"identity\":\"refusals-and-rule\",\"rendered\":false},{\"identity\":\"capabilities-and-fit\",\"rendered\":false},{\"identity\":\"exact-requirement\",\"rendered\":false},{\"identity\":\"unknown-or-contradiction\",\"rendered\":false},{\"identity\":\"claim-strength\",\"rendered\":false},{\"identity\":\"architecture-and-groups\",\"rendered\":false},{\"identity\":\"v1-success\",\"rendered\":false}],\"setter\":null,\"setterInsideClosedDetails\":false,\"line\":\"6 words\",\"violations\":[]}}]\n[M4 unknown sweep] {\"model\":\"plain\",\"polaris\":21,\"trajectory\":17,\"orrery\":9}\n[M4 unknown sweep] {\"model\":\"observed-shape\",\"polaris\":13,\"trajectory\":17,\"orrery\":9}\n[M4 unknown sweep] {\"model\":\"unreachable\",\"polaris\":24,\"trajectory\":1,\"orrery\":10}\n[M4 unknown sweep] {\"model\":\"no-seeds\",\"polaris\":8,\"trajectory\":2,\"orrery\":1}\n[M4 unknown sweep] {\"model\":\"worker-change\",\"polaris\":19,\"trajectory\":6,\"orrery\":7}\n[M4 route parity] {\"model\":\"plain\",\"tuples\":35,\"ids\":21,\"machine\":21}\n[M4 route parity] {\"model\":\"observed-shape\",\"tuples\":35,\"ids\":21,\"machine\":21}\n[M4 route parity] {\"model\":\"unreachable\",\"tuples\":23,\"ids\":12,\"machine\":12}\n[M4 route parity] {\"model\":\"no-seeds\",\"tuples\":4,\"ids\":3,\"machine\":3}\n[M4 route parity] {\"model\":\"worker-change\",\"tuples\":20,\"ids\":12,\"machine\":12}\nJSON report written to /tmp/r532c-11/suite.json\n",
+ "stderrTail": "2,\"status\":404,\"reason\":\"unknown-route\",\"contentType\":\"application/json\"}\n{\"kind\":\"daemon-http-outcome\",\"at\":\"2026-10-27T11:29:18.055Z\",\"method\":\"UNKNOWN\",\"pathLength\":12,\"status\":404,\"reason\":\"unknown-route\",\"contentType\":\"application/json\"}\nUsage: poc:redis-shaped-discovery [--out <file>]\n{\"kind\":\"daemon-http-outcome\",\"at\":\"2026-10-27T11:29:23.503Z\",\"method\":\"UNKNOWN\",\"pathLength\":12,\"status\":404,\"reason\":\"unknown-route\",\"contentType\":\"application/json\"}\n{\"kind\":\"daemon-http-outcome\",\"at\":\"2026-10-27T11:29:24.507Z\",\"method\":\"UNKNOWN\",\"pathLength\":12,\"status\":404,\"reason\":\"unknown-route\",\"contentType\":\"application/json\"}\n{\"kind\":\"daemon-http-outcome\",\"at\":\"2026-10-27T11:29:27.165Z\",\"method\":\"UNKNOWN\",\"pathLength\":12,\"status\":404,\"reason\":\"unknown-route\",\"contentType\":\"application/json\"}\n{\"kind\":\"daemon-http-outcome\",\"at\":\"2026-10-27T11:30:08.304Z\",\"method\":\"GET\",\"route\":\"/api/poc/polaris\",\"status\":401,\"reason\":\"credential-refused\",\"contentType\":\"application/json\"}\n{\"kind\":\"daemon-http-outcome\",\"at\":\"2026-10-27T11:30:08.867Z\",\"method\":\"GET\",\"route\":\"/api/poc/polaris\",\"status\":503,\"reason\":\"response-limit-breached\",\"contentType\":\"application/json\",\"evaluation\":{\"inputsDigest\":\"3713dff62adc960b1d30af52cf04c64b1d7e81d6ca0f75038267e3270a603b0e\",\"asOf\":\"2026-08-30T12:00:00Z\"},\"limit\":\"maxMachineResponseBytes\",\"declared\":64,\"observed\":48810,\"population\":{\"kind\":\"counted\",\"sources\":15,\"items\":20,\"facts\":44,\"exclusions\":0},\"sequence\":1}\nfatal: git cat-file: could not get object info\n"
+}

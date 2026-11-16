@@ -1,0 +1,11 @@
+comment block lines at head: 7
+closers turned back: 16
+reversed head == ce322e1a bytes: True
+testkit sha256 at ce322e1a / head, equal: ('3576a99d', '3576a99d', True)
+measure script at 3e563ec4: 0ef82cd0563f4e09646a51234a33a835ec3f676150456d35a84835b08c128290
+  before-alone.json names the 3e563ec4 script: (True, 'ce322e1a', 3)
+  before-full-1.json names the 3e563ec4 script: (True, 'ce322e1a', 2)
+  before-full-2.json names the 3e563ec4 script: (True, 'ce322e1a', 2)
+  before-profile.json names the 3e563ec4 script: (True, 'ce322e1a', 1)
+  after-alone.json names the 3e563ec4 script: (True, '9e748e68', 3)
+  after-full.json names the 3e563ec4 script: (True, '9e748e68', 2)

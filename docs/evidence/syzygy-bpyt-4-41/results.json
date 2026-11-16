@@ -1,0 +1,1705 @@
+{
+  "schema": "timeout-followup-evidence/1",
+  "subject": {
+    "commit": "829525003da054787a905bacf1e4b7d3176c68ef",
+    "files": {
+      "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts": "a7647a7744a832343431dab520aeec4d41e8cb58d90317096244add9815cbead",
+      "apps/three-surface-poc/src/trajectory-narrowing.browser.test.ts": "ead041766abf8b554f29da88df00b5adfb0926aacf744cfa96d2f430d956bca9",
+      "apps/three-surface-poc/src/orrery.browser.test.ts": "540b48574c2f36e1f8b600db5b94727395b85fad560e8e4a283cfc4c5f330f72",
+      "package-lock.json": "49c65f0bd66a5a94c64be879bdb4c94062236bdca2d0eb5990b35c41894167cd",
+      "vitest.config.ts": "3b677756d41400ea04e50816c4b834d07a96593bef097b67c7d1934d5ca9de22",
+      "vitest.setup.ts": "038306b28cc5eb1212f8a44e4c2e347c31f46720be464e642143c38d945f3732",
+      "vitest.tiers.ts": "6a765ae94c98c412ee78ec08cc4aee39da22313c4cb3b120cd81e99fd9b92a85",
+      "apps/three-surface-poc/src/cdp-browser.ts": "c10d550b496820b5f35f105048c745b5262258f899f509395d0c7dd5acce1937",
+      "scripts/check_unit_tmpdir_child.py": "c5d7bd872ae9ce6d0c1ed4bad7b9c0820d6a41ad22f3e38f99d82bf1cb6ae50d"
+    }
+  },
+  "claimLabels": {
+    "records": "Observed emitter records, native stdout reconciliation and separately attributed root capture/disposition",
+    "decisions": "Inferred arithmetic over identified valid observations; no owner verdict",
+    "coverage": "Unknown for exact skipped/unavailable remainders"
+  },
+  "N2": {
+    "outcome": "all five explicitly excluded, not supported or proved absent",
+    "knownExclusions": [
+      {
+        "id": "shorthand-timeout",
+        "form": "{ timeout }",
+        "disposition": "excluded"
+      },
+      {
+        "id": "conditional-describe-alias",
+        "form": "c ? describe : describe.skip",
+        "disposition": "excluded"
+      },
+      {
+        "id": "conditional-it-alias",
+        "form": "c ? it : it.skip",
+        "disposition": "excluded"
+      },
+      {
+        "id": "let-alias",
+        "form": "let alias = it",
+        "disposition": "excluded"
+      },
+      {
+        "id": "element-skip",
+        "form": "it['skip']",
+        "disposition": "excluded"
+      }
+    ],
+    "population": {
+      "files": 577,
+      "parsed": 577,
+      "testFiles": 286
+    },
+    "summary": {
+      "sites": 97,
+      "files": 41,
+      "withoutReason": 21,
+      "filesWithoutReason": 9,
+      "withoutCitation": 36,
+      "filesWithoutCitation": 10,
+      "byKind": {
+        "test": {
+          "sites": 79,
+          "files": 33,
+          "withReason": 61,
+          "cited": 46
+        },
+        "hook": {
+          "sites": 15,
+          "files": 14,
+          "withReason": 12,
+          "cited": 12
+        },
+        "suite": {
+          "sites": 1,
+          "files": 1,
+          "withReason": 1,
+          "cited": 1
+        },
+        "config": {
+          "sites": 2,
+          "files": 1,
+          "withReason": 2,
+          "cited": 2
+        }
+      }
+    },
+    "excludedCandidates": [
+      {
+        "path": "apps/three-surface-poc/src/project-shape-discovery.live.test.ts",
+        "line": 34,
+        "exclusion": "conditional-describe-alias",
+        "text": "describeLive('live Butlers project-shape discovery at the reviewed revision', () => {\n  it('matches the independent five-root, seven-Heart, baseline and total populations', () => {\n    const authority = evaluateBodyReadAuthority(loadBodyReadAuthorityInputs({\n      repoRoot: SYZYGY_ROOT,\n      governanceRevision: syzygyRevision(),\n      evaluationId: 'evaluation:pwb-discovery-live-ec8b1f6',\n      evaluationInstant: CAPTURED_AT,\n    }));\n    expect(authority.admits).toBe(true);\n    const runGit = gitRunnerFor(BUTLERS_REPO as string);\n    const detectors = compileDetectors(PWB_SECRET_POLICY);\n    const observation = observeProjectShapeSources({\n      repositoryId: PWB_REPOSITORY_ID,\n      revision: BUTLERS_REVISION,\n      capturedAt: CAPTURED_AT,\n      runGit,\n      authority,\n      classifyPhaseA: (text) => classifyPhaseASeed(detectors, text),\n    });\n    expect(observation.kind).toBe('observed');\n    if (observation.kind !== 'observed') return;\n    expect(observation.revision).toBe(BUTLERS_REVISION);\n    expect(observation.manifest.pillars.find((pillar) => pillar.key === 'spec-and-spine')).toMatchObject({ reason: 'index-missing-at-revision', indexPath: 'openspec/README.md' });\n    expect(observation.manifest.pillars.map((pillar) => [pillar.key, pillar.state, pillar.root])).toEqual([\n      ['heart-and-soul', 'discovered', 'about/heart-and-soul'],\n      ['legends-and-lore', 'discovered', 'about/legends-and-lore'],\n      // `openspec/` carries no README index at this revision (index-missing-at-revision).\n      ['spec-and-spine', 'unknown', 'openspec'],\n      // Discovered again at this head: the index no longer carries the active\n      // content that excluded it at a3dd1fe.\n      ['lay-and-land', 'discovered', 'about/lay-and-land'],\n      ['craft-and-care', 'discovered', 'about/craft-and-care'],\n    ]);\n    expect({\n      total: observation.sources.length,\n      about: observation.sources.filter((source) => source.path.startsWith('about/')).length,\n      baseline: observation.sources.filter((source) => /^openspec\\/specs\\/[^/]+\\/spec\\.md$/.test(source.path)).length,\n      roster: observation.sources.filter((source) => /^roster\\/[^/]+\\/(?:butler\\.toml|MANIFESTO\\.md)$/.test(source.path)).length,\n    }).toEqual({ total: 270, about: 59, baseline: 185, roster: 26 });\n    expect(observation.sources.filter((source) => source.path.startsWith('about/heart-and-soul/')).map((source) => source.path)).toEqual([\n      'about/heart-and-soul/README.md',\n      'about/heart-and-soul/architecture.md',\n      'about/heart-and-soul/design-language.md',\n      'about/heart-and-soul/development.md',\n      'about/heart-and-soul/security.md',\n      'about/heart-and-soul/v1.md',\n      'about/heart-and-soul/vision.md',\n    ]);\n\n    const shape = buildProjectShape({ authority, revision: BUTLERS_REVISION, capturedAt: CAPTURED_AT, runGit });\n    expect(shape.kind).toBe('observed');\n    if (shape.kind !== 'observed') return;\n    expect(shape.counts.sources).toBe(270);\n    expect(shape.counts.classification.classifiedByBasis).toEqual({ body: 74, 'path-only': 185 });\n    expect(shape.counts.sourcesWithKnownItemDenominator).toBe(259);\n    expect(shape.items.filter((item) => item.class === 'baseline-spec')).toHaveLength(185);\n    expect(shape.classes['baseline-spec'].denominator).toEqual({ kind: 'known', value: 185 });\n    expect(shape.sources.find((source) => source.path === 'about/heart-and-soul/vision.md')?.itemDenominator).toEqual({ kind: 'known', value: 15 });\n    expect(shape.sources.find((source) => source.path === 'about/heart-and-soul/architecture.md')?.itemDenominator).toEqual({ kind: 'known', value: 1 });\n    expect(shape.sources.find((source) => source.path === 'about/heart-and-soul/v1.md')?.itemDenominator).toMatchObject({\n      kind: 'unknown',\n      grammarFailure: { reason: 'ambiguous-leading-label', class: 'catalog-entry', line: 95 },\n    });\n    expect(shape.projectAccount.filter((entry) => entry.claim.epistemic.label === 'Observed')).toHaveLength(4);\n    expect(shape.projectAccount.filter((entry) => entry.claim.epistemic.label === 'Unknown').map((entry) => entry.key)).toEqual(['v1-scope', 'v1-success']);\n  });\n})"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/test-artifact-verification.live.test.ts",
+        "line": 46,
+        "exclusion": "conditional-describe-alias",
+        "text": "describeLive('live real focused-pytest verification (SYZYGY_POC_BUTLERS_REPO gated)', () => {\n  const repoRoot = BUTLERS_REPO as string;\n\n  it('ingests one real, passing operator-reported focused-pytest artifact and resolves it to report-fact, never Verified, through the full model (AC1/AC3, RFC5-19)', () => {\n    if (JUNIT === undefined || JUNIT_COMMIT === undefined || JUNIT_EXIT === undefined) {\n      throw new Error(liveTestOperatorInstructions(repoRoot, PYTHON, SCOPE));\n    }\n    expect(JUNIT_EXIT, 'the operator-reported exit status (SYZYGY_POC_BUTLERS_JUNIT_EXIT)').toBe('0');\n\n    const repositoryCommit = execFileSync('git', ['-C', repoRoot, 'rev-parse', 'HEAD'], {\n      encoding: 'utf8',\n    }).trim();\n    // A run reported at one commit is never ingested against another.\n    expect(repositoryCommit, 'HEAD at ingest against the operator-reported commit (SYZYGY_POC_BUTLERS_JUNIT_COMMIT)').toBe(JUNIT_COMMIT);\n\n    const rawJUnit = readBoundedRegularFile(JUNIT);\n    {\n      // Refuses a status 0 beside failing, erroring or zero tests, and any\n      // count that is not a non-negative integer.\n      const built = buildOperatorReportedTestArtifactRecord({\n        rawJUnit,\n        command: [PYTHON, '-m', 'pytest', SCOPE, '-q'],\n        reportedExitCode: Number(JUNIT_EXIT),\n        ingestedAt: new Date().toISOString(),\n        repositoryCommit,\n        scope: SCOPE,\n      });\n      expect(built.kind, 'the operator-reported result file').toBe('built');\n      if (built.kind !== 'built') throw new Error('unreachable');\n      expect(built.record.provenance).toBe('operator-reported');\n      expect(built.record.summary).toMatch(/passed/);\n      expect(built.record.summary).not.toContain('Traceback');\n\n      // Compose through the full shared model, with the git-based\n      // worker-change observer's `runGit` seam pointed at this same real\n      // commit \u2014 the observer's own commit-discovery logic is covered by\n      // worker-change-observation.test.ts; this proves the *composition*\n      // with a genuinely captured artifact end-to-end.\n      const model = buildPocModel({\n        seeds: BUTLERS_POC_SEEDS,\n        repoRoot,\n        repositoryRevision: repositoryCommit,\n        observerRevision: repositoryCommit,\n        evaluation: {\n          snapshot: 'butlers@live-capture',\n          asOf: new Date(Date.now() + 60 * 60 * 1000).toISOString(),\n        },\n        materializationRecord: {\n          beadId: 'bu-live-capture-1',\n          externalRef: 'syzygy-poc:live-capture-test',\n          targetRepoRoot: repoRoot,\n          createdAt: new Date().toISOString(),\n          doltRevisionAtCreation: null,\n          attribution: 'live-test',\n        },\n        runWorkItemQuery: () =>\n          JSON.stringify([\n            {\n              revision: 'dolt-live',\n              id: 'bu-live-capture-1',\n              title: 'live capture',\n              status: 'in_progress',\n              issue_type: 'task',\n              priority: 1,\n              created_at: new Date().toISOString(),\n              updated_at: new Date().toISOString(),\n              closed_at: null,\n            },\n          ]),\n        runGit: (root, args) => {\n          if (args[0] === 'symbolic-ref') return 'refs/remotes/origin/main';\n          if (args[0] === 'rev-parse') return repositoryCommit;\n          if (args[0] === 'log') {\n            const format = `${repositoryCommit}\\x1f${built.record.ingestedAt}\\x1flive capture [bu-live-capture-1]`;\n            return `${format}\\n`;\n          }\n          if (args[0] === 'merge-base') return '';\n          if (args[0] === 'for-each-ref') return 'main\\n';\n          return new TextDecoder('utf-8', { fatal: true }).decode(execFileSync('git', ['--no-optional-locks', '-C', root, ...args]));\n        },\n        testArtifactRecord: built.record,\n      });\n\n      expect(model.workerChange.kind).toBe('observed');\n      if (model.workerChange.kind !== 'observed') throw new Error('unreachable');\n      expect(model.workerChange.state).toBe('changed-or-merged');\n      expect(model.testArtifactVerification).toEqual({\n        kind: 'reported',\n        tier: 'report-fact',\n        record: built.record,\n        disclosure: OPERATOR_REPORTED_DISCLOSURE,\n      });\n    }\n  }, 120_000); // unmeasured: it runs only against an operator's real Butlers checkout (SYZYGY_POC_BUTLERS_REPO, 2c1f8d5a), which no hosted or local run sets; the commit holds no measurement, so this is an unmeasured residual of syzygy-bpyt.4.31\n})"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/work-items.live.test.ts",
+        "line": 15,
+        "exclusion": "conditional-describe-alias",
+        "text": "describeLive('live Butlers observation (SYZYGY_POC_BUTLERS_REPO gated)', () => {\n  const repoRoot = BUTLERS_REPO as string;\n\n  it('matches `git rev-parse HEAD` and a direct Dolt read (POC-REQ-001, POC-REQ-010 oracles)', () => {\n    const expectedGitRevision = execFileSync('git', ['-C', repoRoot, 'rev-parse', 'HEAD'], {\n      encoding: 'utf8',\n    }).trim();\n    const structure = observeCodeStructure({\n      repoRoot,\n      revision: expectedGitRevision,\n      capturedAt: new Date().toISOString(),\n    });\n    expect(structure.kind).toBe('observed');\n    if (structure.kind !== 'observed') throw new Error('unreachable');\n    expect(structure.provenance.revision).toBe(expectedGitRevision);\n    expect(structure.files.length).toBeGreaterThan(0);\n\n    const workItems = observeWorkItems({\n      repoRoot,\n      beadPrefix: 'bu',\n      capturedAt: new Date().toISOString(),\n    });\n    expect(workItems.kind).toBe('observed');\n    if (workItems.kind !== 'observed') throw new Error('unreachable');\n\n    const expectedRevision = execFileSync(\n      'bd',\n      ['--readonly', '--json', '-C', repoRoot, 'sql', \"SELECT dolt_hashof('HEAD') AS revision\"],\n      { encoding: 'utf8' },\n    );\n    const expected = (JSON.parse(expectedRevision) as readonly { revision: string }[])[0];\n    expect(workItems.provenance.revision).toBe(expected?.revision);\n    expect(workItems.items.every((item) => item.id.startsWith('bu-'))).toBe(true);\n\n    const sampled = workItems.items[0];\n    expect(sampled).toBeDefined();\n    const direct = execFileSync(\n      'bd',\n      [\n        '--readonly',\n        '--json',\n        '-C',\n        repoRoot,\n        'sql',\n        `SELECT status, created_at, updated_at FROM issues WHERE id = '${sampled?.id}'`,\n      ],\n      { encoding: 'utf8' },\n    );\n    const directRow = (\n      JSON.parse(direct) as readonly { status: string; created_at: string; updated_at: string }[]\n    )[0];\n    expect(directRow?.status).toBe(sampled?.status);\n    expect(directRow?.created_at).toBe(sampled?.createdAt);\n  });\n})"
+      }
+    ],
+    "independentMethod": "proofs archive literal-form-method2.json; lexical overapproximation independently reconciles 577 source hashes and three conditional-describe call identities",
+    "differential": {
+      "originalReviewerFixtureSha256": "aed96f813be1838f7a25af0424fef62bbfb48c4ee02b429b0695fefd490c2ff4",
+      "subject": "829525003da054787a905bacf1e4b7d3176c68ef",
+      "corpus": [
+        {
+          "variant": "baseline",
+          "commit": "504b4940d9dfe40ec1963afa99a24386e8ac609b",
+          "fileSha256": "fa4c672558fe6add63caca473febb7c7dad16e502daefe77ebc8cfd35a163b5a",
+          "sourceText": "import { afterAll, beforeAll, beforeEach, bench, describe, it, test, vi } from 'vitest';\nconst T = 1000;\nconst live = process.env.X ? describe : describe.skip;\nconst liveIt = process.env.X ? it : it.skip;\nlet letAlias = it;\nconst each = it.each([1, 2]);\nbeforeAll(() => {}, 1001);\nbeforeEach(async () => {}, { timeout: 1002 } as never);\nafterAll(() => {}, T);\nit('third arg', () => {}, 1003); // measured literal; source commit 37b3316e; docs/evidence/kept.json\nit('options first', { timeout: 1004 }, () => {});\nit('options last', () => {}, { timeout: 1005 });\nit('shorthand options', { timeout: T }, () => {});\nconst timeout = 1006;\nit('shorthand property', { timeout }, () => {});\nit.concurrent('modifier', () => {}, 1007);\nit.skipIf(false)('curried', () => {}, 1008);\nit.each([1])('each %s', () => {}, 1009);\nit.for([1])('for %s', () => {}, 1010);\ntest('test root', () => {}, 1011);\ndescribe('suite', () => {}, 1012);\nlive('cond alias suite', () => {}, 1013);\nliveIt('cond alias test', () => {}, 1014);\nletAlias('let alias', () => {}, 1015);\neach('const curried alias %s', () => {}, 1016);\nit['skip']('element access', () => {}, 1017);\nbench('bench', () => {}, { time: 1 });\nvi.setConfig({ testTimeout: 1018 });\ntest.extend({})('extend', () => {}, 1019);\nit('function third arg is not a timeout', () => {}, () => {});\n",
+          "outputs": {
+            "predecessor": {
+              "path": "differential-baseline-predecessor.json",
+              "sha256": "78b3c1feb72c5dd64b21e4c8ac3b7ec0bb7c342fbe6bf02925b052b25ce69da7",
+              "command": [
+                "node",
+                "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/subject/docs/evidence/syzygy-bpyt-4-31/tools/timeout_census.mjs",
+                "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/census-differential-fixture",
+                "504b4940d9dfe40ec1963afa99a24386e8ac609b",
+                "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/differential-baseline-predecessor.json"
+              ],
+              "exit": 0,
+              "toolSha256": "6e503285dfe1d3faf64d317f95faf17841991db0901bc1b55822870f96cbbc3a"
+            },
+            "maintained": {
+              "path": "differential-baseline-maintained.json",
+              "sha256": "2521d2dc1efb07d365b8d178aef2f2975af2cbef66640e444dd36aa65386c243",
+              "command": [
+                "node",
+                "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/subject/scripts/timeout_census.mjs",
+                "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/census-differential-fixture",
+                "504b4940d9dfe40ec1963afa99a24386e8ac609b",
+                "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/differential-baseline-maintained.json"
+              ],
+              "exit": 0,
+              "toolSha256": "7057da9605f2390ebc37c6eb5df378e33d71cf1222423927e98aedeccdf83271"
+            }
+          },
+          "legacyProjectionIdentical": true,
+          "supportedSites": 18,
+          "newExactExclusionKinds": [
+            "conditional-describe-alias",
+            "conditional-it-alias",
+            "element-skip",
+            "let-alias",
+            "shorthand-timeout"
+          ]
+        },
+        {
+          "variant": "altered-prose",
+          "commit": "f3d2784e9ef948e97a80610139b1ac447ecc1b17",
+          "fileSha256": "28346157d741a3ca6104e51e683fc173602dae93586bee2e1d2365aeea8450d1",
+          "sourceText": "import { afterAll, beforeAll, beforeEach, bench, describe, it, test, vi } from 'vitest';\nconst T = 1000;\nconst live = process.env.X ? describe : describe.skip;\nconst liveIt = process.env.X ? it : it.skip;\nlet letAlias = it;\nconst each = it.each([1, 2]);\nbeforeAll(() => {}, 1001);\nbeforeEach(async () => {}, { timeout: 1002 } as never);\nafterAll(() => {}, T);\nit('third arg', () => {}, 1003); // Unknown per changed prose; not an owner ruling; source commit 37b3316e; docs/evidence/kept.json\nit('options first', { timeout: 1004 }, () => {});\nit('options last', () => {}, { timeout: 1005 });\nit('shorthand options', { timeout: T }, () => {});\nconst timeout = 1006;\nit('shorthand property', { timeout }, () => {});\nit.concurrent('modifier', () => {}, 1007);\nit.skipIf(false)('curried', () => {}, 1008);\nit.each([1])('each %s', () => {}, 1009);\nit.for([1])('for %s', () => {}, 1010);\ntest('test root', () => {}, 1011);\ndescribe('suite', () => {}, 1012);\nlive('cond alias suite', () => {}, 1013);\nliveIt('cond alias test', () => {}, 1014);\nletAlias('let alias', () => {}, 1015);\neach('const curried alias %s', () => {}, 1016);\nit['skip']('element access', () => {}, 1017);\nbench('bench', () => {}, { time: 1 });\nvi.setConfig({ testTimeout: 1018 });\ntest.extend({})('extend', () => {}, 1019);\nit('function third arg is not a timeout', () => {}, () => {});\n",
+          "outputs": {
+            "predecessor": {
+              "path": "differential-altered-prose-predecessor.json",
+              "sha256": "cb313e40a666a345514329bb199f0b0d0ef6bfa5ba98ec6c1cb3d4f6aea3ca9c",
+              "command": [
+                "node",
+                "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/subject/docs/evidence/syzygy-bpyt-4-31/tools/timeout_census.mjs",
+                "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/census-differential-fixture",
+                "f3d2784e9ef948e97a80610139b1ac447ecc1b17",
+                "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/differential-altered-prose-predecessor.json"
+              ],
+              "exit": 0,
+              "toolSha256": "6e503285dfe1d3faf64d317f95faf17841991db0901bc1b55822870f96cbbc3a"
+            },
+            "maintained": {
+              "path": "differential-altered-prose-maintained.json",
+              "sha256": "56fe8d1f51de7d2347caa12ee41775e6ec39e97bdd9616afd5162356286b4363",
+              "command": [
+                "node",
+                "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/subject/scripts/timeout_census.mjs",
+                "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/census-differential-fixture",
+                "f3d2784e9ef948e97a80610139b1ac447ecc1b17",
+                "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/differential-altered-prose-maintained.json"
+              ],
+              "exit": 0,
+              "toolSha256": "7057da9605f2390ebc37c6eb5df378e33d71cf1222423927e98aedeccdf83271"
+            }
+          },
+          "legacyProjectionIdentical": true,
+          "supportedSites": 18,
+          "newExactExclusionKinds": [
+            "conditional-describe-alias",
+            "conditional-it-alias",
+            "element-skip",
+            "let-alias",
+            "shorthand-timeout"
+          ]
+        }
+      ],
+      "intentionalDelta": "New known-exclusion and syntactic-residual metadata only; legacy site/value/reason/citation/summary/regex projection unchanged for both variants, including changed prose."
+    },
+    "fixture": {
+      "path": "docs/evidence/test-timeouts-review-2026-10-27/r1/tools/fixture/forms.test.ts.txt",
+      "sha256": "aed96f813be1838f7a25af0424fef62bbfb48c4ee02b429b0695fefd490c2ff4",
+      "preserved": true
+    }
+  },
+  "N7": {
+    "hooks": {
+      "subject": "1396de2df4254094a432e2a8148f5d5ca4349e7e",
+      "hooks": [
+        {
+          "path": "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+          "suite": "PWB-REQ-016 names and headings in a real browser",
+          "kind": "beforeAll",
+          "historicalReviewLine": 187,
+          "currentLine": 170,
+          "currentHookText": "  beforeAll(async () => {\n    browser = await launchBrowser(executable as string);\n    pages = tempDir('syzygy-poc-names-');\n  });",
+          "hookSha256": "3ed5a0bdeaabbba69d422402bf6534db05b92d71521782b9e4dcf7de165bc0df",
+          "fileSha256": "a7647a7744a832343431dab520aeec4d41e8cb58d90317096244add9815cbead",
+          "predecessor": {
+            "commit": "f7477f52c49ee347f96b92703887c31f6be49e07",
+            "hookText": "  beforeAll(async () => {\n    browser = await launchBrowser(executable as string);\n    pages = mkdtempSync(join(tmpdir(), 'syzygy-poc-names-'));\n  }, 60_000);",
+            "hookSha256": "53e115db1453d5d3fee5a506047db6a895b1ec98eb94b385b6e11ef47854404f",
+            "argumentLiteral": "60_000"
+          },
+          "predecessorDiff": [
+            "--- predecessor\n",
+            "+++ current\n",
+            "@@ -1,4 +1,4 @@\n",
+            "   beforeAll(async () => {",
+            "     browser = await launchBrowser(executable as string);",
+            "-    pages = mkdtempSync(join(tmpdir(), 'syzygy-poc-names-'));",
+            "-  }, 60_000);",
+            "+    pages = tempDir('syzygy-poc-names-');",
+            "+  });"
+          ],
+          "runtimeState": "Measured: five complete-file diagnostic alone and five ordinary configured contexts; see observations and root scope disposition"
+        },
+        {
+          "path": "apps/three-surface-poc/src/trajectory-narrowing.browser.test.ts",
+          "suite": "Trajectory narrowing to the governing-intent Unknown (POC-REQ-014)",
+          "kind": "beforeAll",
+          "historicalReviewLine": 32,
+          "currentLine": 31,
+          "currentHookText": "  beforeAll(async () => {\n    browser = await launchBrowser(executable as string);\n  });",
+          "hookSha256": "d94a2ffa5640a56831f701d3f16b8ceea72d7ec5fbc057c543a3fae42a58995d",
+          "fileSha256": "ead041766abf8b554f29da88df00b5adfb0926aacf744cfa96d2f430d956bca9",
+          "predecessor": {
+            "commit": "f7477f52c49ee347f96b92703887c31f6be49e07",
+            "hookText": "  beforeAll(async () => {\n    browser = await launchBrowser(executable as string);\n  }, 60_000);",
+            "hookSha256": "a2fb7bd8406ecc184053a8b5eca2df63b6494ea2ce94c2122a44883f160bbdb1",
+            "argumentLiteral": "60_000"
+          },
+          "predecessorDiff": [
+            "--- predecessor\n",
+            "+++ current\n",
+            "@@ -1,3 +1,3 @@\n",
+            "   beforeAll(async () => {",
+            "     browser = await launchBrowser(executable as string);",
+            "-  }, 60_000);",
+            "+  });"
+          ],
+          "runtimeState": "Measured: five complete-file diagnostic alone and five ordinary configured contexts; see observations and root scope disposition"
+        },
+        {
+          "path": "apps/three-surface-poc/src/orrery.browser.test.ts",
+          "suite": "Orrery rendered geometry",
+          "kind": "beforeAll",
+          "historicalReviewLine": 24,
+          "currentLine": 23,
+          "currentHookText": "  beforeAll(async () => {\n    browser = await launchBrowser(executable as string);\n  });",
+          "hookSha256": "d94a2ffa5640a56831f701d3f16b8ceea72d7ec5fbc057c543a3fae42a58995d",
+          "fileSha256": "540b48574c2f36e1f8b600db5b94727395b85fad560e8e4a283cfc4c5f330f72",
+          "predecessor": {
+            "commit": "f7477f52c49ee347f96b92703887c31f6be49e07",
+            "hookText": "  beforeAll(async () => {\n    browser = await launchBrowser(executable as string);\n  }, 60_000);",
+            "hookSha256": "a2fb7bd8406ecc184053a8b5eca2df63b6494ea2ce94c2122a44883f160bbdb1",
+            "argumentLiteral": "60_000"
+          },
+          "predecessorDiff": [
+            "--- predecessor\n",
+            "+++ current\n",
+            "@@ -1,3 +1,3 @@\n",
+            "   beforeAll(async () => {",
+            "     browser = await launchBrowser(executable as string);",
+            "-  }, 60_000);",
+            "+  });"
+          ],
+          "runtimeState": "Measured: five complete-file diagnostic alone and five ordinary configured contexts; see observations and root scope disposition"
+        }
+      ]
+    },
+    "configuredContexts": 5,
+    "alonePerHook": 5,
+    "ordinaryPopulation": {
+      "files": 283,
+      "tests": 6649,
+      "passed": 6643,
+      "skipped": 6,
+      "liveFilesExcluded": 3
+    },
+    "decisions": [
+      {
+        "site": "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+        "validAlone": 5,
+        "validFull": 5,
+        "worstMs": 1274,
+        "headroom": 7.849293563579278,
+        "restorationRequired": false,
+        "originalArgument": null,
+        "outcome": "retain-removal",
+        "adverseObservations": [],
+        "suite": "PWB-REQ-016 names and headings in a real browser",
+        "observations": [
+          {
+            "site": "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+            "suite": "PWB-REQ-016 names and headings in a real browser",
+            "state": "pass",
+            "testsExecuted": 26,
+            "completeContext": true,
+            "unhandledErrors": 0,
+            "beforeAllMs": 1274,
+            "mode": "alone",
+            "attemptIdentity": "names-alone-5/1",
+            "report": "names-alone-5/run-01/command-01/reports/report-32.json",
+            "reportSha256": "0b7271215f76a72c813f2924bf8cddf0d9d8e14f6659c267214d135a265242fd",
+            "load1": {
+              "start": 4.5673828125,
+              "end": 5.09521484375,
+              "min": 4.5673828125,
+              "max": 5.09521484375,
+              "samples": [
+                4.5673828125,
+                4.84228515625,
+                5.09521484375
+              ]
+            },
+            "resolvedHookBudget": 600000
+          },
+          {
+            "site": "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+            "suite": "PWB-REQ-016 names and headings in a real browser",
+            "state": "pass",
+            "testsExecuted": 26,
+            "completeContext": true,
+            "unhandledErrors": 0,
+            "beforeAllMs": 233,
+            "mode": "alone",
+            "attemptIdentity": "names-alone-5/2",
+            "report": "names-alone-5/run-02/command-01/reports/report-721.json",
+            "reportSha256": "d130d883e2c8715cd0e14d7d2beae48294e6978c2f92b942cb8edd228afd3c50",
+            "load1": {
+              "start": 5.09521484375,
+              "end": 5.408203125,
+              "min": 5.09521484375,
+              "max": 5.408203125,
+              "samples": [
+                5.09521484375,
+                5.408203125,
+                5.408203125
+              ]
+            },
+            "resolvedHookBudget": 600000
+          },
+          {
+            "site": "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+            "suite": "PWB-REQ-016 names and headings in a real browser",
+            "state": "pass",
+            "testsExecuted": 26,
+            "completeContext": true,
+            "unhandledErrors": 0,
+            "beforeAllMs": 182,
+            "mode": "alone",
+            "attemptIdentity": "names-alone-5/3",
+            "report": "names-alone-5/run-03/command-01/reports/report-1413.json",
+            "reportSha256": "b0b2bf6e83d8424c4b1e2a2e04b41fd7b962c8ac8888d6c6ada3bc988aa41ae5",
+            "load1": {
+              "start": 5.408203125,
+              "end": 5.57373046875,
+              "min": 5.408203125,
+              "max": 5.57373046875,
+              "samples": [
+                5.408203125,
+                5.5361328125,
+                5.57373046875
+              ]
+            },
+            "resolvedHookBudget": 600000
+          },
+          {
+            "site": "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+            "suite": "PWB-REQ-016 names and headings in a real browser",
+            "state": "pass",
+            "testsExecuted": 26,
+            "completeContext": true,
+            "unhandledErrors": 0,
+            "beforeAllMs": 195,
+            "mode": "alone",
+            "attemptIdentity": "names-alone-5/4",
+            "report": "names-alone-5/run-04/command-01/reports/report-2103.json",
+            "reportSha256": "ed6b811ff4c16e9972397c86b024be1086a37ae3d628969eef9a87b80e3095bf",
+            "load1": {
+              "start": 5.57373046875,
+              "end": 5.77978515625,
+              "min": 5.57373046875,
+              "max": 5.84814453125,
+              "samples": [
+                5.57373046875,
+                5.84814453125,
+                5.77978515625
+              ]
+            },
+            "resolvedHookBudget": 600000
+          },
+          {
+            "site": "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+            "suite": "PWB-REQ-016 names and headings in a real browser",
+            "state": "pass",
+            "testsExecuted": 26,
+            "completeContext": true,
+            "unhandledErrors": 0,
+            "beforeAllMs": 185,
+            "mode": "alone",
+            "attemptIdentity": "names-alone-5/5",
+            "report": "names-alone-5/run-05/command-01/reports/report-2793.json",
+            "reportSha256": "eacd1f23fe88d1eb62ea512fcbc507f75eaf16858a954192580ae4dd317580de",
+            "load1": {
+              "start": 5.77978515625,
+              "end": 5.71728515625,
+              "min": 5.71728515625,
+              "max": 5.77978515625,
+              "samples": [
+                5.77978515625,
+                5.71728515625,
+                5.71728515625
+              ]
+            },
+            "resolvedHookBudget": 600000
+          },
+          {
+            "site": "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+            "suite": "PWB-REQ-016 names and headings in a real browser",
+            "state": "pass",
+            "testsExecuted": 26,
+            "completeContext": true,
+            "unhandledErrors": 0,
+            "beforeAllMs": 390,
+            "mode": "full",
+            "attemptIdentity": "full-1",
+            "report": "full-contexts-5/run-01/command-03/reports/report-25630.json",
+            "reportSha256": "2ba8df4576bf2fe5b4934db1dc5fff12a1281c643efdd53a049f9458436f62d3",
+            "load1": {
+              "start": 9.81591796875,
+              "end": 11.73583984375,
+              "min": 9.81591796875,
+              "max": 13.13623046875,
+              "samples": [
+                9.81591796875,
+                10.6318359375,
+                12.10302734375,
+                13.13623046875,
+                12.404296875,
+                12.5322265625,
+                11.8486328125,
+                11.4599609375,
+                11.1025390625,
+                10.77392578125,
+                10.5517578125,
+                10.66796875,
+                11.73583984375
+              ]
+            },
+            "resolvedHookBudget": 10000
+          },
+          {
+            "site": "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+            "suite": "PWB-REQ-016 names and headings in a real browser",
+            "state": "pass",
+            "testsExecuted": 26,
+            "completeContext": true,
+            "unhandledErrors": 0,
+            "beforeAllMs": 259,
+            "mode": "full",
+            "attemptIdentity": "full-2",
+            "report": "full-contexts-5/run-02/command-03/reports/report-57533.json",
+            "reportSha256": "e38397d570a98d1157eddebe6eba381a3c2da76376a3088d12aae70f6b951bf5",
+            "load1": {
+              "start": 11.28271484375,
+              "end": 9.48974609375,
+              "min": 9.48974609375,
+              "max": 13.3681640625,
+              "samples": [
+                11.28271484375,
+                11.98095703125,
+                12.70361328125,
+                13.3681640625,
+                12.77783203125,
+                12.8759765625,
+                12.4853515625,
+                12.0458984375,
+                11.8017578125,
+                11.3369140625,
+                10.6689453125,
+                10.0546875,
+                9.48974609375
+              ]
+            },
+            "resolvedHookBudget": 10000
+          },
+          {
+            "site": "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+            "suite": "PWB-REQ-016 names and headings in a real browser",
+            "state": "pass",
+            "testsExecuted": 26,
+            "completeContext": true,
+            "unhandledErrors": 0,
+            "beforeAllMs": 314,
+            "mode": "full",
+            "attemptIdentity": "full-3",
+            "report": "full-contexts-5/run-03/command-03/reports/report-89423.json",
+            "reportSha256": "e6958ef057150d98edf3b58fd9e9756f3aaceedca24c97475f8f0262800cde9a",
+            "load1": {
+              "start": 10.4052734375,
+              "end": 9.8876953125,
+              "min": 9.8876953125,
+              "max": 12.685546875,
+              "samples": [
+                10.4052734375,
+                10.21240234375,
+                10.67626953125,
+                11.02294921875,
+                12.22265625,
+                12.685546875,
+                12.39013671875,
+                11.95849609375,
+                11.48095703125,
+                11.0419921875,
+                10.63818359375,
+                10.5869140625,
+                10.13916015625,
+                9.8876953125
+              ]
+            },
+            "resolvedHookBudget": 10000
+          },
+          {
+            "site": "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+            "suite": "PWB-REQ-016 names and headings in a real browser",
+            "state": "pass",
+            "testsExecuted": 26,
+            "completeContext": true,
+            "unhandledErrors": 0,
+            "beforeAllMs": 246,
+            "mode": "full",
+            "attemptIdentity": "full-4",
+            "report": "full-contexts-5/run-04/command-03/reports/report-121315.json",
+            "reportSha256": "4d07ff13a68f7b021e28c3a7ebeac67985c09c58dfbd14057a95d9702268f331",
+            "load1": {
+              "start": 13.9638671875,
+              "end": 13.5625,
+              "min": 13.52392578125,
+              "max": 15.85205078125,
+              "samples": [
+                13.9638671875,
+                15.16796875,
+                15.63525390625,
+                15.66455078125,
+                15.85205078125,
+                15.46337890625,
+                14.70556640625,
+                14.40869140625,
+                13.97509765625,
+                13.65673828125,
+                13.52392578125,
+                13.5625,
+                13.5625
+              ]
+            },
+            "resolvedHookBudget": 10000
+          },
+          {
+            "site": "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+            "suite": "PWB-REQ-016 names and headings in a real browser",
+            "state": "pass",
+            "testsExecuted": 26,
+            "completeContext": true,
+            "unhandledErrors": 0,
+            "beforeAllMs": 289,
+            "mode": "full",
+            "attemptIdentity": "full-5",
+            "report": "full-contexts-5/run-05/command-03/reports/report-153224.json",
+            "reportSha256": "d131042dcf1fd2480f2c1ff87ac63bb2063325c0eae24e8c50816f095989b66a",
+            "load1": {
+              "start": 13.65087890625,
+              "end": 13.43505859375,
+              "min": 12.8779296875,
+              "max": 16.07470703125,
+              "samples": [
+                13.65087890625,
+                12.8779296875,
+                14.56982421875,
+                15.6455078125,
+                16.07470703125,
+                15.587890625,
+                14.81982421875,
+                14.83447265625,
+                14.287109375,
+                13.783203125,
+                13.31982421875,
+                14.41552734375,
+                13.8212890625,
+                13.43505859375
+              ]
+            },
+            "resolvedHookBudget": 10000
+          }
+        ]
+      },
+      {
+        "site": "apps/three-surface-poc/src/trajectory-narrowing.browser.test.ts",
+        "validAlone": 5,
+        "validFull": 5,
+        "worstMs": 399,
+        "headroom": 25.06265664160401,
+        "restorationRequired": false,
+        "originalArgument": null,
+        "outcome": "retain-removal",
+        "adverseObservations": [],
+        "suite": "Trajectory narrowing to the governing-intent Unknown (POC-REQ-014)",
+        "observations": [
+          {
+            "site": "apps/three-surface-poc/src/trajectory-narrowing.browser.test.ts",
+            "suite": "Trajectory narrowing to the governing-intent Unknown (POC-REQ-014)",
+            "state": "pass",
+            "testsExecuted": 2,
+            "completeContext": true,
+            "unhandledErrors": 0,
+            "beforeAllMs": 183,
+            "mode": "alone",
+            "attemptIdentity": "trajectory-alone-5/1",
+            "report": "trajectory-alone-5/run-01/command-01/reports/report-32.json",
+            "reportSha256": "4de1198c64f9d1c5d659566f6dda5b85d6bf3a07303f77306fe65d93a19a013b",
+            "load1": {
+              "start": 4.71484375,
+              "end": 4.97802734375,
+              "min": 4.71484375,
+              "max": 4.97802734375,
+              "samples": [
+                4.71484375,
+                4.97802734375
+              ]
+            },
+            "resolvedHookBudget": 600000
+          },
+          {
+            "site": "apps/three-surface-poc/src/trajectory-narrowing.browser.test.ts",
+            "suite": "Trajectory narrowing to the governing-intent Unknown (POC-REQ-014)",
+            "state": "pass",
+            "testsExecuted": 2,
+            "completeContext": true,
+            "unhandledErrors": 0,
+            "beforeAllMs": 176,
+            "mode": "alone",
+            "attemptIdentity": "trajectory-alone-5/2",
+            "report": "trajectory-alone-5/run-02/command-01/reports/report-575.json",
+            "reportSha256": "ff196f4c2e3fedffd2568c130c7302e55b3be0895645970f740f54f82d7e81bb",
+            "load1": {
+              "start": 4.97802734375,
+              "end": 4.97802734375,
+              "min": 4.97802734375,
+              "max": 4.97802734375,
+              "samples": [
+                4.97802734375,
+                4.97802734375
+              ]
+            },
+            "resolvedHookBudget": 600000
+          },
+          {
+            "site": "apps/three-surface-poc/src/trajectory-narrowing.browser.test.ts",
+            "suite": "Trajectory narrowing to the governing-intent Unknown (POC-REQ-014)",
+            "state": "pass",
+            "testsExecuted": 2,
+            "completeContext": true,
+            "unhandledErrors": 0,
+            "beforeAllMs": 192,
+            "mode": "alone",
+            "attemptIdentity": "trajectory-alone-5/3",
+            "report": "trajectory-alone-5/run-03/command-01/reports/report-1118.json",
+            "reportSha256": "f44962795853b9657c3f1f375b846b471394008a38d142c6b1e3eb344ca89ce0",
+            "load1": {
+              "start": 4.97802734375,
+              "end": 4.97802734375,
+              "min": 4.97802734375,
+              "max": 4.97802734375,
+              "samples": [
+                4.97802734375,
+                4.97802734375
+              ]
+            },
+            "resolvedHookBudget": 600000
+          },
+          {
+            "site": "apps/three-surface-poc/src/trajectory-narrowing.browser.test.ts",
+            "suite": "Trajectory narrowing to the governing-intent Unknown (POC-REQ-014)",
+            "state": "pass",
+            "testsExecuted": 2,
+            "completeContext": true,
+            "unhandledErrors": 0,
+            "beforeAllMs": 209,
+            "mode": "alone",
+            "attemptIdentity": "trajectory-alone-5/4",
+            "report": "trajectory-alone-5/run-04/command-01/reports/report-1662.json",
+            "reportSha256": "3c98aec6bd97ea3e9e6bbc923d165235d0e52162385626a71eb66564e4fb0a98",
+            "load1": {
+              "start": 4.97802734375,
+              "end": 4.7392578125,
+              "min": 4.7392578125,
+              "max": 4.97802734375,
+              "samples": [
+                4.97802734375,
+                4.7392578125
+              ]
+            },
+            "resolvedHookBudget": 600000
+          },
+          {
+            "site": "apps/three-surface-poc/src/trajectory-narrowing.browser.test.ts",
+            "suite": "Trajectory narrowing to the governing-intent Unknown (POC-REQ-014)",
+            "state": "pass",
+            "testsExecuted": 2,
+            "completeContext": true,
+            "unhandledErrors": 0,
+            "beforeAllMs": 196,
+            "mode": "alone",
+            "attemptIdentity": "trajectory-alone-5/5",
+            "report": "trajectory-alone-5/run-05/command-01/reports/report-2207.json",
+            "reportSha256": "42481581d3c1a5eb06b050ad5f71cba7ce278a283e57c7c624e7baf3056e3b68",
+            "load1": {
+              "start": 4.7392578125,
+              "end": 4.7392578125,
+              "min": 4.7392578125,
+              "max": 4.7392578125,
+              "samples": [
+                4.7392578125,
+                4.7392578125
+              ]
+            },
+            "resolvedHookBudget": 600000
+          },
+          {
+            "site": "apps/three-surface-poc/src/trajectory-narrowing.browser.test.ts",
+            "suite": "Trajectory narrowing to the governing-intent Unknown (POC-REQ-014)",
+            "state": "pass",
+            "testsExecuted": 2,
+            "completeContext": true,
+            "unhandledErrors": 0,
+            "beforeAllMs": 265,
+            "mode": "full",
+            "attemptIdentity": "full-1",
+            "report": "full-contexts-5/run-01/command-03/reports/report-25630.json",
+            "reportSha256": "2ba8df4576bf2fe5b4934db1dc5fff12a1281c643efdd53a049f9458436f62d3",
+            "load1": {
+              "start": 9.81591796875,
+              "end": 11.73583984375,
+              "min": 9.81591796875,
+              "max": 13.13623046875,
+              "samples": [
+                9.81591796875,
+                10.6318359375,
+                12.10302734375,
+                13.13623046875,
+                12.404296875,
+                12.5322265625,
+                11.8486328125,
+                11.4599609375,
+                11.1025390625,
+                10.77392578125,
+                10.5517578125,
+                10.66796875,
+                11.73583984375
+              ]
+            },
+            "resolvedHookBudget": 10000
+          },
+          {
+            "site": "apps/three-surface-poc/src/trajectory-narrowing.browser.test.ts",
+            "suite": "Trajectory narrowing to the governing-intent Unknown (POC-REQ-014)",
+            "state": "pass",
+            "testsExecuted": 2,
+            "completeContext": true,
+            "unhandledErrors": 0,
+            "beforeAllMs": 302,
+            "mode": "full",
+            "attemptIdentity": "full-2",
+            "report": "full-contexts-5/run-02/command-03/reports/report-57533.json",
+            "reportSha256": "e38397d570a98d1157eddebe6eba381a3c2da76376a3088d12aae70f6b951bf5",
+            "load1": {
+              "start": 11.28271484375,
+              "end": 9.48974609375,
+              "min": 9.48974609375,
+              "max": 13.3681640625,
+              "samples": [
+                11.28271484375,
+                11.98095703125,
+                12.70361328125,
+                13.3681640625,
+                12.77783203125,
+                12.8759765625,
+                12.4853515625,
+                12.0458984375,
+                11.8017578125,
+                11.3369140625,
+                10.6689453125,
+                10.0546875,
+                9.48974609375
+              ]
+            },
+            "resolvedHookBudget": 10000
+          },
+          {
+            "site": "apps/three-surface-poc/src/trajectory-narrowing.browser.test.ts",
+            "suite": "Trajectory narrowing to the governing-intent Unknown (POC-REQ-014)",
+            "state": "pass",
+            "testsExecuted": 2,
+            "completeContext": true,
+            "unhandledErrors": 0,
+            "beforeAllMs": 399,
+            "mode": "full",
+            "attemptIdentity": "full-3",
+            "report": "full-contexts-5/run-03/command-03/reports/report-89423.json",
+            "reportSha256": "e6958ef057150d98edf3b58fd9e9756f3aaceedca24c97475f8f0262800cde9a",
+            "load1": {
+              "start": 10.4052734375,
+              "end": 9.8876953125,
+              "min": 9.8876953125,
+              "max": 12.685546875,
+              "samples": [
+                10.4052734375,
+                10.21240234375,
+                10.67626953125,
+                11.02294921875,
+                12.22265625,
+                12.685546875,
+                12.39013671875,
+                11.95849609375,
+                11.48095703125,
+                11.0419921875,
+                10.63818359375,
+                10.5869140625,
+                10.13916015625,
+                9.8876953125
+              ]
+            },
+            "resolvedHookBudget": 10000
+          },
+          {
+            "site": "apps/three-surface-poc/src/trajectory-narrowing.browser.test.ts",
+            "suite": "Trajectory narrowing to the governing-intent Unknown (POC-REQ-014)",
+            "state": "pass",
+            "testsExecuted": 2,
+            "completeContext": true,
+            "unhandledErrors": 0,
+            "beforeAllMs": 274,
+            "mode": "full",
+            "attemptIdentity": "full-4",
+            "report": "full-contexts-5/run-04/command-03/reports/report-121315.json",
+            "reportSha256": "4d07ff13a68f7b021e28c3a7ebeac67985c09c58dfbd14057a95d9702268f331",
+            "load1": {
+              "start": 13.9638671875,
+              "end": 13.5625,
+              "min": 13.52392578125,
+              "max": 15.85205078125,
+              "samples": [
+                13.9638671875,
+                15.16796875,
+                15.63525390625,
+                15.66455078125,
+                15.85205078125,
+                15.46337890625,
+                14.70556640625,
+                14.40869140625,
+                13.97509765625,
+                13.65673828125,
+                13.52392578125,
+                13.5625,
+                13.5625
+              ]
+            },
+            "resolvedHookBudget": 10000
+          },
+          {
+            "site": "apps/three-surface-poc/src/trajectory-narrowing.browser.test.ts",
+            "suite": "Trajectory narrowing to the governing-intent Unknown (POC-REQ-014)",
+            "state": "pass",
+            "testsExecuted": 2,
+            "completeContext": true,
+            "unhandledErrors": 0,
+            "beforeAllMs": 265,
+            "mode": "full",
+            "attemptIdentity": "full-5",
+            "report": "full-contexts-5/run-05/command-03/reports/report-153224.json",
+            "reportSha256": "d131042dcf1fd2480f2c1ff87ac63bb2063325c0eae24e8c50816f095989b66a",
+            "load1": {
+              "start": 13.65087890625,
+              "end": 13.43505859375,
+              "min": 12.8779296875,
+              "max": 16.07470703125,
+              "samples": [
+                13.65087890625,
+                12.8779296875,
+                14.56982421875,
+                15.6455078125,
+                16.07470703125,
+                15.587890625,
+                14.81982421875,
+                14.83447265625,
+                14.287109375,
+                13.783203125,
+                13.31982421875,
+                14.41552734375,
+                13.8212890625,
+                13.43505859375
+              ]
+            },
+            "resolvedHookBudget": 10000
+          }
+        ]
+      },
+      {
+        "site": "apps/three-surface-poc/src/orrery.browser.test.ts",
+        "validAlone": 5,
+        "validFull": 5,
+        "worstMs": 702,
+        "headroom": 14.245014245014245,
+        "restorationRequired": false,
+        "originalArgument": null,
+        "outcome": "retain-removal",
+        "adverseObservations": [],
+        "suite": "Orrery rendered geometry",
+        "observations": [
+          {
+            "site": "apps/three-surface-poc/src/orrery.browser.test.ts",
+            "suite": "Orrery rendered geometry",
+            "state": "pass",
+            "testsExecuted": 1,
+            "completeContext": true,
+            "unhandledErrors": 0,
+            "beforeAllMs": 179,
+            "mode": "alone",
+            "attemptIdentity": "orrery-alone-5/1",
+            "report": "orrery-alone-5/run-01/command-01/reports/report-32.json",
+            "reportSha256": "fe5ecd556d1d1be5cf4b6239e2675cd39face522425628e2315045b184ecdb52",
+            "load1": {
+              "start": 4.7392578125,
+              "end": 4.51953125,
+              "min": 4.51953125,
+              "max": 4.7392578125,
+              "samples": [
+                4.7392578125,
+                4.51953125
+              ]
+            },
+            "resolvedHookBudget": 600000
+          },
+          {
+            "site": "apps/three-surface-poc/src/orrery.browser.test.ts",
+            "suite": "Orrery rendered geometry",
+            "state": "pass",
+            "testsExecuted": 1,
+            "completeContext": true,
+            "unhandledErrors": 0,
+            "beforeAllMs": 169,
+            "mode": "alone",
+            "attemptIdentity": "orrery-alone-5/2",
+            "report": "orrery-alone-5/run-02/command-01/reports/report-564.json",
+            "reportSha256": "a8dba0ac307c338cf46917f7db33f01c6b41180ba221a2de42ce307de64c9f59",
+            "load1": {
+              "start": 4.51953125,
+              "end": 4.51953125,
+              "min": 4.51953125,
+              "max": 4.51953125,
+              "samples": [
+                4.51953125,
+                4.51953125
+              ]
+            },
+            "resolvedHookBudget": 600000
+          },
+          {
+            "site": "apps/three-surface-poc/src/orrery.browser.test.ts",
+            "suite": "Orrery rendered geometry",
+            "state": "pass",
+            "testsExecuted": 1,
+            "completeContext": true,
+            "unhandledErrors": 0,
+            "beforeAllMs": 180,
+            "mode": "alone",
+            "attemptIdentity": "orrery-alone-5/3",
+            "report": "orrery-alone-5/run-03/command-01/reports/report-1095.json",
+            "reportSha256": "7b10b3378e8f7ff0efaf21cd6d45dd72745b481f01698dc12bef9ecb6878c659",
+            "load1": {
+              "start": 4.51953125,
+              "end": 4.55810546875,
+              "min": 4.51953125,
+              "max": 4.55810546875,
+              "samples": [
+                4.51953125,
+                4.55810546875
+              ]
+            },
+            "resolvedHookBudget": 600000
+          },
+          {
+            "site": "apps/three-surface-poc/src/orrery.browser.test.ts",
+            "suite": "Orrery rendered geometry",
+            "state": "pass",
+            "testsExecuted": 1,
+            "completeContext": true,
+            "unhandledErrors": 0,
+            "beforeAllMs": 223,
+            "mode": "alone",
+            "attemptIdentity": "orrery-alone-5/4",
+            "report": "orrery-alone-5/run-04/command-01/reports/report-1627.json",
+            "reportSha256": "47aebd69968056aaa11a6a846b87d96db0c1e4f80e5b7dece10e7321f1ab1913",
+            "load1": {
+              "start": 4.55810546875,
+              "end": 4.55810546875,
+              "min": 4.55810546875,
+              "max": 4.55810546875,
+              "samples": [
+                4.55810546875,
+                4.55810546875
+              ]
+            },
+            "resolvedHookBudget": 600000
+          },
+          {
+            "site": "apps/three-surface-poc/src/orrery.browser.test.ts",
+            "suite": "Orrery rendered geometry",
+            "state": "pass",
+            "testsExecuted": 1,
+            "completeContext": true,
+            "unhandledErrors": 0,
+            "beforeAllMs": 173,
+            "mode": "alone",
+            "attemptIdentity": "orrery-alone-5/5",
+            "report": "orrery-alone-5/run-05/command-01/reports/report-2158.json",
+            "reportSha256": "bde2837174eddbb97eda0bfb3b353112cd66293811e9241ee2a8f7f507a480e7",
+            "load1": {
+              "start": 4.55810546875,
+              "end": 4.35302734375,
+              "min": 4.35302734375,
+              "max": 4.55810546875,
+              "samples": [
+                4.55810546875,
+                4.35302734375
+              ]
+            },
+            "resolvedHookBudget": 600000
+          },
+          {
+            "site": "apps/three-surface-poc/src/orrery.browser.test.ts",
+            "suite": "Orrery rendered geometry",
+            "state": "pass",
+            "testsExecuted": 1,
+            "completeContext": true,
+            "unhandledErrors": 0,
+            "beforeAllMs": 702,
+            "mode": "full",
+            "attemptIdentity": "full-1",
+            "report": "full-contexts-5/run-01/command-03/reports/report-25630.json",
+            "reportSha256": "2ba8df4576bf2fe5b4934db1dc5fff12a1281c643efdd53a049f9458436f62d3",
+            "load1": {
+              "start": 9.81591796875,
+              "end": 11.73583984375,
+              "min": 9.81591796875,
+              "max": 13.13623046875,
+              "samples": [
+                9.81591796875,
+                10.6318359375,
+                12.10302734375,
+                13.13623046875,
+                12.404296875,
+                12.5322265625,
+                11.8486328125,
+                11.4599609375,
+                11.1025390625,
+                10.77392578125,
+                10.5517578125,
+                10.66796875,
+                11.73583984375
+              ]
+            },
+            "resolvedHookBudget": 10000
+          },
+          {
+            "site": "apps/three-surface-poc/src/orrery.browser.test.ts",
+            "suite": "Orrery rendered geometry",
+            "state": "pass",
+            "testsExecuted": 1,
+            "completeContext": true,
+            "unhandledErrors": 0,
+            "beforeAllMs": 394,
+            "mode": "full",
+            "attemptIdentity": "full-2",
+            "report": "full-contexts-5/run-02/command-03/reports/report-57533.json",
+            "reportSha256": "e38397d570a98d1157eddebe6eba381a3c2da76376a3088d12aae70f6b951bf5",
+            "load1": {
+              "start": 11.28271484375,
+              "end": 9.48974609375,
+              "min": 9.48974609375,
+              "max": 13.3681640625,
+              "samples": [
+                11.28271484375,
+                11.98095703125,
+                12.70361328125,
+                13.3681640625,
+                12.77783203125,
+                12.8759765625,
+                12.4853515625,
+                12.0458984375,
+                11.8017578125,
+                11.3369140625,
+                10.6689453125,
+                10.0546875,
+                9.48974609375
+              ]
+            },
+            "resolvedHookBudget": 10000
+          },
+          {
+            "site": "apps/three-surface-poc/src/orrery.browser.test.ts",
+            "suite": "Orrery rendered geometry",
+            "state": "pass",
+            "testsExecuted": 1,
+            "completeContext": true,
+            "unhandledErrors": 0,
+            "beforeAllMs": 441,
+            "mode": "full",
+            "attemptIdentity": "full-3",
+            "report": "full-contexts-5/run-03/command-03/reports/report-89423.json",
+            "reportSha256": "e6958ef057150d98edf3b58fd9e9756f3aaceedca24c97475f8f0262800cde9a",
+            "load1": {
+              "start": 10.4052734375,
+              "end": 9.8876953125,
+              "min": 9.8876953125,
+              "max": 12.685546875,
+              "samples": [
+                10.4052734375,
+                10.21240234375,
+                10.67626953125,
+                11.02294921875,
+                12.22265625,
+                12.685546875,
+                12.39013671875,
+                11.95849609375,
+                11.48095703125,
+                11.0419921875,
+                10.63818359375,
+                10.5869140625,
+                10.13916015625,
+                9.8876953125
+              ]
+            },
+            "resolvedHookBudget": 10000
+          },
+          {
+            "site": "apps/three-surface-poc/src/orrery.browser.test.ts",
+            "suite": "Orrery rendered geometry",
+            "state": "pass",
+            "testsExecuted": 1,
+            "completeContext": true,
+            "unhandledErrors": 0,
+            "beforeAllMs": 295,
+            "mode": "full",
+            "attemptIdentity": "full-4",
+            "report": "full-contexts-5/run-04/command-03/reports/report-121315.json",
+            "reportSha256": "4d07ff13a68f7b021e28c3a7ebeac67985c09c58dfbd14057a95d9702268f331",
+            "load1": {
+              "start": 13.9638671875,
+              "end": 13.5625,
+              "min": 13.52392578125,
+              "max": 15.85205078125,
+              "samples": [
+                13.9638671875,
+                15.16796875,
+                15.63525390625,
+                15.66455078125,
+                15.85205078125,
+                15.46337890625,
+                14.70556640625,
+                14.40869140625,
+                13.97509765625,
+                13.65673828125,
+                13.52392578125,
+                13.5625,
+                13.5625
+              ]
+            },
+            "resolvedHookBudget": 10000
+          },
+          {
+            "site": "apps/three-surface-poc/src/orrery.browser.test.ts",
+            "suite": "Orrery rendered geometry",
+            "state": "pass",
+            "testsExecuted": 1,
+            "completeContext": true,
+            "unhandledErrors": 0,
+            "beforeAllMs": 314,
+            "mode": "full",
+            "attemptIdentity": "full-5",
+            "report": "full-contexts-5/run-05/command-03/reports/report-153224.json",
+            "reportSha256": "d131042dcf1fd2480f2c1ff87ac63bb2063325c0eae24e8c50816f095989b66a",
+            "load1": {
+              "start": 13.65087890625,
+              "end": 13.43505859375,
+              "min": 12.8779296875,
+              "max": 16.07470703125,
+              "samples": [
+                13.65087890625,
+                12.8779296875,
+                14.56982421875,
+                15.6455078125,
+                16.07470703125,
+                15.587890625,
+                14.81982421875,
+                14.83447265625,
+                14.287109375,
+                13.783203125,
+                13.31982421875,
+                14.41552734375,
+                13.8212890625,
+                13.43505859375
+              ]
+            },
+            "resolvedHookBudget": 10000
+          }
+        ]
+      }
+    ],
+    "scopeDisposition": {
+      "at": "2026-11-06T01:29:32.880072+00:00",
+      "subject": {
+        "commit": "829525003da054787a905bacf1e4b7d3176c68ef",
+        "files": {
+          "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts": "a7647a7744a832343431dab520aeec4d41e8cb58d90317096244add9815cbead",
+          "apps/three-surface-poc/src/trajectory-narrowing.browser.test.ts": "ead041766abf8b554f29da88df00b5adfb0926aacf744cfa96d2f430d956bca9",
+          "apps/three-surface-poc/src/orrery.browser.test.ts": "540b48574c2f36e1f8b600db5b94727395b85fad560e8e4a283cfc4c5f330f72",
+          "package-lock.json": "49c65f0bd66a5a94c64be879bdb4c94062236bdca2d0eb5990b35c41894167cd",
+          "vitest.config.ts": "3b677756d41400ea04e50816c4b834d07a96593bef097b67c7d1934d5ca9de22",
+          "vitest.setup.ts": "038306b28cc5eb1212f8a44e4c2e347c31f46720be464e642143c38d945f3732",
+          "vitest.tiers.ts": "6a765ae94c98c412ee78ec08cc4aee39da22313c4cb3b120cd81e99fd9b92a85",
+          "apps/three-surface-poc/src/cdp-browser.ts": "c10d550b496820b5f35f105048c745b5262258f899f509395d0c7dd5acce1937",
+          "scripts/check_unit_tmpdir_child.py": "c5d7bd872ae9ce6d0c1ed4bad7b9c0820d6a41ad22f3e38f99d82bf1cb6ae50d"
+        }
+      },
+      "map_sha256": "13e8f9d4617d2168f454f02649e65d229f55e43878053a67f7e80944435c750d",
+      "original_scope_quotes": [
+        "Keep current tier guards",
+        "with each target actually executed and measured in each full context",
+        "All three hooks must actually execute in each full context"
+      ],
+      "report_bindings": {
+        "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/full-contexts-5/run-01/command-01/reports/report-150.json": "8b563f9db37db51a9fd4bef3d085e3dab64954755542cb8dd5c46a6c08378004",
+        "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/full-contexts-5/run-01/command-02/reports/report-8841.json": "2abda7b5e455f9c81a12e50b00646249a6cf6f235bdf5ae92ef27aedab2894b2",
+        "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/full-contexts-5/run-01/command-03/reports/report-25630.json": "2ba8df4576bf2fe5b4934db1dc5fff12a1281c643efdd53a049f9458436f62d3",
+        "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/full-contexts-5/run-01/command-03/reports/report-29410.json": "b7daa12296324549d91e870a6c7805a07d78c54c9e6a5fbfdb51e5d87d9b6da0",
+        "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/full-contexts-5/run-02/command-01/reports/report-32056.json": "67f17558f8238090b4003c3f0edc2bae42133e6fa2deb95cdfa51eb8a0766700",
+        "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/full-contexts-5/run-02/command-02/reports/report-40747.json": "2a13415bfa3f558c113ebda47631445f0e301010cff736a27f9ebf1f059c5835",
+        "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/full-contexts-5/run-02/command-03/reports/report-57533.json": "e38397d570a98d1157eddebe6eba381a3c2da76376a3088d12aae70f6b951bf5",
+        "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/full-contexts-5/run-02/command-03/reports/report-61300.json": "642d8c7719c4673d510b4ee2d20bf42e192092d54fc0c53a91ace764ff611552",
+        "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/full-contexts-5/run-03/command-01/reports/report-63947.json": "36856f86ef16084dd97b795a86ae9ee07bb0ba42462d0cbc49511f33603d94d6",
+        "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/full-contexts-5/run-03/command-02/reports/report-72639.json": "31773798c74ad8b0723595e69cf326feb4c34809f938974b05dd04bdf25d5ff6",
+        "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/full-contexts-5/run-03/command-03/reports/report-89423.json": "e6958ef057150d98edf3b58fd9e9756f3aaceedca24c97475f8f0262800cde9a",
+        "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/full-contexts-5/run-03/command-03/reports/report-93187.json": "14b6f7562ff94cda862cc87c5d0105105862522732d4b38a6512825802ce4ce4",
+        "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/full-contexts-5/run-04/command-01/reports/report-95835.json": "f1d9fb73557b88ad61bcf9bfe9bc0b1abd1cd4e0d38bc84b8e4620e48b7b9e30",
+        "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/full-contexts-5/run-04/command-02/reports/report-104525.json": "48bb206df4cd45bc261647f4efb4b261032d6b580e5edb60aedb0f2b11d33b26",
+        "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/full-contexts-5/run-04/command-03/reports/report-121315.json": "4d07ff13a68f7b021e28c3a7ebeac67985c09c58dfbd14057a95d9702268f331",
+        "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/full-contexts-5/run-04/command-03/reports/report-125098.json": "4864c1015223c14f49a02a52644b7c20bfacfde64c1dcb1e0111a27148db0bf5",
+        "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/full-contexts-5/run-05/command-01/reports/report-127746.json": "90df40b9487f960a6ad7575123aadc7dc21620bb75d4c5f5513f0e80127cbf27",
+        "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/full-contexts-5/run-05/command-02/reports/report-136437.json": "0c06acc8b46d3ee3619dff4668b8ce92c456d42a66d3f1433975a9c06e1ae1f5",
+        "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/full-contexts-5/run-05/command-03/reports/report-153224.json": "d131042dcf1fd2480f2c1ff87ac63bb2063325c0eae24e8c50816f095989b66a",
+        "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/full-contexts-5/run-05/command-03/reports/report-157014.json": "556b6530a337ca437aea51efe1653024eaaf4a888928d65d1e2a3c9136aa53e7",
+        "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/names-alone-5/run-01/command-01/reports/report-32.json": "0b7271215f76a72c813f2924bf8cddf0d9d8e14f6659c267214d135a265242fd",
+        "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/names-alone-5/run-02/command-01/reports/report-721.json": "d130d883e2c8715cd0e14d7d2beae48294e6978c2f92b942cb8edd228afd3c50",
+        "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/names-alone-5/run-03/command-01/reports/report-1413.json": "b0b2bf6e83d8424c4b1e2a2e04b41fd7b962c8ac8888d6c6ada3bc988aa41ae5",
+        "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/names-alone-5/run-04/command-01/reports/report-2103.json": "ed6b811ff4c16e9972397c86b024be1086a37ae3d628969eef9a87b80e3095bf",
+        "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/names-alone-5/run-05/command-01/reports/report-2793.json": "eacd1f23fe88d1eb62ea512fcbc507f75eaf16858a954192580ae4dd317580de",
+        "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/trajectory-alone-5/run-01/command-01/reports/report-32.json": "4de1198c64f9d1c5d659566f6dda5b85d6bf3a07303f77306fe65d93a19a013b",
+        "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/trajectory-alone-5/run-02/command-01/reports/report-575.json": "ff196f4c2e3fedffd2568c130c7302e55b3be0895645970f740f54f82d7e81bb",
+        "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/trajectory-alone-5/run-03/command-01/reports/report-1118.json": "f44962795853b9657c3f1f375b846b471394008a38d142c6b1e3eb344ca89ce0",
+        "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/trajectory-alone-5/run-04/command-01/reports/report-1662.json": "3c98aec6bd97ea3e9e6bbc923d165235d0e52162385626a71eb66564e4fb0a98",
+        "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/trajectory-alone-5/run-05/command-01/reports/report-2207.json": "42481581d3c1a5eb06b050ad5f71cba7ce278a283e57c7c624e7baf3056e3b68",
+        "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/orrery-alone-5/run-01/command-01/reports/report-32.json": "fe5ecd556d1d1be5cf4b6239e2675cd39face522425628e2315045b184ecdb52",
+        "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/orrery-alone-5/run-02/command-01/reports/report-564.json": "a8dba0ac307c338cf46917f7db33f01c6b41180ba221a2de42ce307de64c9f59",
+        "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/orrery-alone-5/run-03/command-01/reports/report-1095.json": "7b10b3378e8f7ff0efaf21cd6d45dd72745b481f01698dc12bef9ecb6878c659",
+        "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/orrery-alone-5/run-04/command-01/reports/report-1627.json": "47aebd69968056aaa11a6a846b87d96db0c1e4f80e5b7dece10e7321f1ab1913",
+        "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/orrery-alone-5/run-05/command-01/reports/report-2158.json": "bde2837174eddbb97eda0bfb3b353112cd66293811e9241ee2a8f7f507a480e7"
+      },
+      "contexts": [
+        {
+          "index": 1,
+          "commands": [
+            [
+              "npm",
+              "run",
+              "check"
+            ],
+            [
+              "npm",
+              "run",
+              "test:integration"
+            ],
+            [
+              "npm",
+              "run",
+              "test:e2e"
+            ]
+          ],
+          "all_exit_zero": true,
+          "denominators": [
+            {
+              "tier": "unit",
+              "files": 169,
+              "tests": 3793,
+              "testStates": {
+                "pass": 3793,
+                "fail": 0,
+                "skip": 0,
+                "todo": 0
+              },
+              "unrun": 0
+            },
+            {
+              "tier": "integration",
+              "files": 90,
+              "tests": 2676,
+              "testStates": {
+                "pass": 2673,
+                "fail": 0,
+                "skip": 3,
+                "todo": 0
+              },
+              "unrun": 3
+            },
+            {
+              "tier": "e2e",
+              "files": 13,
+              "tests": 127,
+              "testStates": {
+                "pass": 125,
+                "fail": 0,
+                "skip": 2,
+                "todo": 0
+              },
+              "unrun": 2
+            },
+            {
+              "tier": "system",
+              "files": 11,
+              "tests": 53,
+              "testStates": {
+                "pass": 52,
+                "fail": 0,
+                "skip": 1,
+                "todo": 0
+              },
+              "unrun": 1
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "commands": [
+            [
+              "npm",
+              "run",
+              "check"
+            ],
+            [
+              "npm",
+              "run",
+              "test:integration"
+            ],
+            [
+              "npm",
+              "run",
+              "test:e2e"
+            ]
+          ],
+          "all_exit_zero": true,
+          "denominators": [
+            {
+              "tier": "unit",
+              "files": 169,
+              "tests": 3793,
+              "testStates": {
+                "pass": 3793,
+                "fail": 0,
+                "skip": 0,
+                "todo": 0
+              },
+              "unrun": 0
+            },
+            {
+              "tier": "integration",
+              "files": 90,
+              "tests": 2676,
+              "testStates": {
+                "pass": 2673,
+                "fail": 0,
+                "skip": 3,
+                "todo": 0
+              },
+              "unrun": 3
+            },
+            {
+              "tier": "e2e",
+              "files": 13,
+              "tests": 127,
+              "testStates": {
+                "pass": 125,
+                "fail": 0,
+                "skip": 2,
+                "todo": 0
+              },
+              "unrun": 2
+            },
+            {
+              "tier": "system",
+              "files": 11,
+              "tests": 53,
+              "testStates": {
+                "pass": 52,
+                "fail": 0,
+                "skip": 1,
+                "todo": 0
+              },
+              "unrun": 1
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "commands": [
+            [
+              "npm",
+              "run",
+              "check"
+            ],
+            [
+              "npm",
+              "run",
+              "test:integration"
+            ],
+            [
+              "npm",
+              "run",
+              "test:e2e"
+            ]
+          ],
+          "all_exit_zero": true,
+          "denominators": [
+            {
+              "tier": "unit",
+              "files": 169,
+              "tests": 3793,
+              "testStates": {
+                "pass": 3793,
+                "fail": 0,
+                "skip": 0,
+                "todo": 0
+              },
+              "unrun": 0
+            },
+            {
+              "tier": "integration",
+              "files": 90,
+              "tests": 2676,
+              "testStates": {
+                "pass": 2673,
+                "fail": 0,
+                "skip": 3,
+                "todo": 0
+              },
+              "unrun": 3
+            },
+            {
+              "tier": "e2e",
+              "files": 13,
+              "tests": 127,
+              "testStates": {
+                "pass": 125,
+                "fail": 0,
+                "skip": 2,
+                "todo": 0
+              },
+              "unrun": 2
+            },
+            {
+              "tier": "system",
+              "files": 11,
+              "tests": 53,
+              "testStates": {
+                "pass": 52,
+                "fail": 0,
+                "skip": 1,
+                "todo": 0
+              },
+              "unrun": 1
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "commands": [
+            [
+              "npm",
+              "run",
+              "check"
+            ],
+            [
+              "npm",
+              "run",
+              "test:integration"
+            ],
+            [
+              "npm",
+              "run",
+              "test:e2e"
+            ]
+          ],
+          "all_exit_zero": true,
+          "denominators": [
+            {
+              "tier": "unit",
+              "files": 169,
+              "tests": 3793,
+              "testStates": {
+                "pass": 3793,
+                "fail": 0,
+                "skip": 0,
+                "todo": 0
+              },
+              "unrun": 0
+            },
+            {
+              "tier": "integration",
+              "files": 90,
+              "tests": 2676,
+              "testStates": {
+                "pass": 2673,
+                "fail": 0,
+                "skip": 3,
+                "todo": 0
+              },
+              "unrun": 3
+            },
+            {
+              "tier": "e2e",
+              "files": 13,
+              "tests": 127,
+              "testStates": {
+                "pass": 125,
+                "fail": 0,
+                "skip": 2,
+                "todo": 0
+              },
+              "unrun": 2
+            },
+            {
+              "tier": "system",
+              "files": 11,
+              "tests": 53,
+              "testStates": {
+                "pass": 52,
+                "fail": 0,
+                "skip": 1,
+                "todo": 0
+              },
+              "unrun": 1
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "commands": [
+            [
+              "npm",
+              "run",
+              "check"
+            ],
+            [
+              "npm",
+              "run",
+              "test:integration"
+            ],
+            [
+              "npm",
+              "run",
+              "test:e2e"
+            ]
+          ],
+          "all_exit_zero": true,
+          "denominators": [
+            {
+              "tier": "unit",
+              "files": 169,
+              "tests": 3793,
+              "testStates": {
+                "pass": 3793,
+                "fail": 0,
+                "skip": 0,
+                "todo": 0
+              },
+              "unrun": 0
+            },
+            {
+              "tier": "integration",
+              "files": 90,
+              "tests": 2676,
+              "testStates": {
+                "pass": 2673,
+                "fail": 0,
+                "skip": 3,
+                "todo": 0
+              },
+              "unrun": 3
+            },
+            {
+              "tier": "e2e",
+              "files": 13,
+              "tests": 127,
+              "testStates": {
+                "pass": 125,
+                "fail": 0,
+                "skip": 2,
+                "todo": 0
+              },
+              "unrun": 2
+            },
+            {
+              "tier": "system",
+              "files": 11,
+              "tests": 53,
+              "testStates": {
+                "pass": 52,
+                "fail": 0,
+                "skip": 1,
+                "todo": 0
+              },
+              "unrun": 1
+            }
+          ]
+        }
+      ],
+      "target_hook_observation_counts": [
+        {
+          "site": "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+          "alone": 5,
+          "full": 5,
+          "worst": 1274
+        },
+        {
+          "site": "apps/three-surface-poc/src/trajectory-narrowing.browser.test.ts",
+          "alone": 5,
+          "full": 5,
+          "worst": 399
+        },
+        {
+          "site": "apps/three-surface-poc/src/orrery.browser.test.ts",
+          "alone": 5,
+          "full": 5,
+          "worst": 702
+        }
+      ],
+      "guard_source_sha256": "a92553c37ae7414407fb8ac3d0672bf4d51226b045106c260c0d46e4901d98cb",
+      "disposition": "[Inferred] The five configured ordinary complete command contexts are valid N7 measurement contexts with all three targets executed; existing unrelated guarded integration3 skips do not turn them into targeted-only or target-skipped campaigns. D5 explicitly preserves current guards and requires actual skip denominators. No complete-coverage or skipped-case-pass claim is permitted. The unavailable namespace fixtures remain Unknown/unexecuted. No namespace weakening, new fixture authority, invented full-run quota or product failure waiver.",
+      "remaining": "All original predicate controls/ordinary sourcecheck/ONEcommittedclone currentcheckall/freshreview/actualroutinghandoff/hosted/protectedlanding remain. Diagnostic hook budget is not ordinary correctness evidence. No source/AC change or taskclosure.",
+      "authorization": "Proceed original final proof and ONE required sourcecheck/cleanclone checkall; retain all guard/skip/fixture/capture qualifications and independent fresh review. No rerun of five passing measurement contexts."
+    },
+    "validity": "Five ordinary configured contexts satisfy the three-target measurement obligation with guards preserved; they are not complete coverage. Six skips each context remain disclosed, including three unavailable nested-bwrap session-view tests.",
+    "bounds": "Conservative suite-start to earliest timed direct child, includes runner bookkeeping; not raw hook clocks. Alone uses per-project diagnostic600000; full uses ordinary10000.",
+    "unchangedHooks": true,
+    "restorationLiteralIfTriggered": "60_000"
+  },
+  "testsDelta": {
+    "added": 0,
+    "extended": 0,
+    "removed": 0,
+    "inlineSelftestAddedResidualPositives": 6,
+    "inlineSelftestAddedAdjacentNegatives": 5,
+    "legacySupportedTuplesPreserved": 16,
+    "permanentVitestFilesAdded": 0,
+    "hookEdits": 0,
+    "disposableDecisionCases": 17,
+    "disposableReporterCounterexamples": 4
+  },
+  "verificationState": "Functional measurement/proofs complete. Final source/check:all, independent exact-head review, hosted integration, actual campaign routing handoff and lawful landing are separate pending gates. Whole issue remains OPEN.",
+  "mergeHoldApplicability": "No app/core path is changed; named-root restoration merge hold is not triggered by this path set. No merge/queue/closure/adoption authorized."
+}

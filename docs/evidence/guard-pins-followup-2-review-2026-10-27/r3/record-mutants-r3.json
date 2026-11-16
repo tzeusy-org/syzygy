@@ -1,0 +1,207 @@
+{
+ "source": [
+  {
+   "id": "S1",
+   "what": "F1_CLAUSE's pinned text, one word changed ('absent' to 'present')",
+   "checkExit": 1,
+   "checkOut": [
+    "summary.json DIFFERS ; problems: 1"
+   ],
+   "selftestExit": 1,
+   "selftestTail": [
+    "selftest: the unmutated inputs already fail"
+   ],
+   "survivors": []
+  },
+  {
+   "id": "S2",
+   "what": "F1_CLAUSE_SHA256 changed in one hex digit",
+   "checkExit": 1,
+   "checkOut": [
+    "summary.json DIFFERS ; problems: 1"
+   ],
+   "selftestExit": 1,
+   "selftestTail": [
+    "selftest: the unmutated inputs already fail"
+   ],
+   "survivors": []
+  },
+  {
+   "id": "S3",
+   "what": "the LOCAL_VERSION-line selftest mutation moved back to line 78 (round 2's line)",
+   "checkExit": 0,
+   "checkOut": [
+    "summary.json matches ; problems: 0"
+   ],
+   "selftestExit": 1,
+   "selftestTail": [
+    "selftest: 69/70 mutations make a check fail"
+   ],
+   "survivors": [
+    "SURVIVED | a changed line on the LOCAL_VERSION line itself | []"
+   ]
+  },
+  {
+   "id": "S4",
+   "what": "the new late check: its ` * ` prefix test dropped",
+   "checkExit": 0,
+   "checkOut": [
+    "summary.json matches ; problems: 0"
+   ],
+   "selftestExit": 0,
+   "selftestTail": [
+    "selftest: 70/70 mutations make a check fail"
+   ],
+   "survivors": []
+  },
+  {
+   "id": "S5",
+   "what": "the new late check: its path test dropped (any file may differ)",
+   "checkExit": 0,
+   "checkOut": [
+    "summary.json matches ; problems: 0"
+   ],
+   "selftestExit": 0,
+   "selftestTail": [
+    "selftest: 70/70 mutations make a check fail"
+   ],
+   "survivors": []
+  },
+  {
+   "id": "S6",
+   "what": "the F1 retired-phrase test dropped",
+   "checkExit": 0,
+   "checkOut": [
+    "summary.json matches ; problems: 0"
+   ],
+   "selftestExit": 1,
+   "selftestTail": [
+    "selftest: 68/70 mutations make a check fail"
+   ],
+   "survivors": [
+    "SURVIVED | a testkit that keeps round 1's rule | []",
+    "SURVIVED | a testkit that keeps the false sentence | []"
+   ]
+  }
+ ],
+ "selftestAdded": [
+  {
+   "id": "T1",
+   "what": "a testkit whose clause is true but for one word ('the root's manifest refuses it')",
+   "selftestExit": 0,
+   "line": "killed | rev541c T1 | [\"testkit comment: the `npm:` clause is not the round-2 reviewer's text, or a retired phrase remains\"]",
+   "tail": [
+    "selftest: 71/71 mutations make a check fail"
+   ]
+  },
+  {
+   "id": "T2",
+   "what": "a testkit that keeps round 1's rule in other words (no retired phrase)",
+   "selftestExit": 1,
+   "line": "SURVIVED | rev541c T2 | []",
+   "tail": [
+    "selftest: 70/71 mutations make a check fail"
+   ]
+  },
+  {
+   "id": "T3",
+   "what": "a REPAIR1-to-HEAD comment line on the line after LOCAL_VERSION (80)",
+   "selftestExit": 0,
+   "line": "killed | rev541c T3 | [\"suite: HEAD differs from REPAIR1 beyond testkit comment lines: ['packages/polaris-generation-core/src/workspace-reach.testkit.ts']\"]",
+   "tail": [
+    "selftest: 71/71 mutations make a check fail"
+   ]
+  },
+  {
+   "id": "T4",
+   "what": "a REPAIR1-to-HEAD ` * ` line inside the span that closes the comment and adds a token (simulated through the hook)",
+   "selftestExit": 1,
+   "line": "SURVIVED | rev541c T4 | []",
+   "tail": [
+    "selftest: 70/71 mutations make a check fail"
+   ]
+  }
+ ],
+ "gitObject": [
+  {
+   "id": "G1",
+   "what": "a ` * ` line inside the span that closes the comment early and adds a token",
+   "commit": "dac369dcdeaa23e003e99eaac4c235da920e1259",
+   "exit": 0,
+   "lateCheckProblems": [
+    "suite: HEAD differs from REPAIR1 beyond testkit comment lines: ['packages/polaris-generation-core/src/workspace-reach.testkit.ts']"
+   ],
+   "lateCheckFails": true,
+   "expected": true,
+   "asExpected": true,
+   "otherProblems": 7
+  },
+  {
+   "id": "G2",
+   "what": "a ` * ` line in another doc comment (targetOf, line 43)",
+   "commit": "ac86b54417bb9cb7104d9fb575d097fda155e77c",
+   "exit": 0,
+   "lateCheckProblems": [
+    "suite: HEAD differs from REPAIR1 beyond testkit comment lines: ['packages/polaris-generation-core/src/workspace-reach.testkit.ts']"
+   ],
+   "lateCheckFails": true,
+   "expected": true,
+   "asExpected": true,
+   "otherProblems": 6
+  },
+  {
+   "id": "G3",
+   "what": "the LOCAL_VERSION line itself, a code token changed",
+   "commit": "0e6cf82342966f1f05e262b3c9aafcff15702b5e",
+   "exit": 0,
+   "lateCheckProblems": [
+    "suite: HEAD differs from REPAIR1 beyond testkit comment lines: ['packages/polaris-generation-core/src/workspace-reach.testkit.ts']"
+   ],
+   "lateCheckFails": true,
+   "expected": true,
+   "asExpected": true,
+   "otherProblems": 17
+  },
+  {
+   "id": "G4",
+   "what": "a file outside the evidence directory changed beside a comment-only testkit",
+   "commit": "21ddd31a8afb27723b599b1745e67a0ba1d23c36",
+   "exit": 0,
+   "lateCheckProblems": [
+    "suite: HEAD differs from REPAIR1 beyond testkit comment lines: ['README.md', 'packages/polaris-generation-core/src/workspace-reach.testkit.ts']"
+   ],
+   "lateCheckFails": true,
+   "expected": true,
+   "asExpected": true,
+   "otherProblems": 6
+  },
+  {
+   "id": "G5",
+   "what": "negative control: one ` * ` line inside the span reworded",
+   "commit": "a1f866d67303af6e2591b13ccb8c5b907ef640ed",
+   "exit": 0,
+   "lateCheckProblems": [],
+   "lateCheckFails": false,
+   "expected": false,
+   "asExpected": true,
+   "otherProblems": 6
+  },
+  {
+   "id": "G6",
+   "what": "negative control: HEAD itself (no edit)",
+   "commit": "00b7dcf70b764b13017784581bc80a5a3502532f",
+   "exit": 0,
+   "lateCheckProblems": [],
+   "lateCheckFails": false,
+   "expected": false,
+   "asExpected": true,
+   "otherProblems": 0
+  }
+ ],
+ "unmutated": {
+  "checkExit": 0,
+  "checkOut": [
+   "summary.json matches ; problems: 0"
+  ]
+ }
+}

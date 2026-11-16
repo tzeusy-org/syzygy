@@ -1,0 +1,9 @@
+{"browser":"./dist/./index.js"}
+  base: ok packages/lib/src/index.ts
+  head: throws @syzygy/lib: its browser condition target "./dist/./index.js" has an empty, '.', '..' or 'node_modules' segment, which Node does not read
+{"browser":"./dist/./index.js","types":"./dist/index.d.ts"}
+  base: ok packages/lib/src/index.ts
+  head: throws @syzygy/lib: its browser condition target "./dist/./index.js" has an empty, '.', '..' or 'node_modules' segment, which Node does not read
+{"worker":"./dist/node_modules/index.js"}
+  base: throws @syzygy/lib: its entry is not a ./dist/X.js whose src/X.ts exists
+  head: throws @syzygy/lib: its worker condition target "./dist/node_modules/index.js" has an empty, '.', '..' or 'node_modules' segment, which Node does not read

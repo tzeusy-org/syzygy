@@ -1,0 +1,40 @@
+{
+ "tree": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-528/clone",
+ "head": "aa3312691d815d09239958c2dec4116cfb1d9cbe",
+ "file": "-",
+ "runs": [
+  {
+   "run": 1,
+   "exit": 0,
+   "tests": [
+    "Tests  2132 passed | 1 skipped (2133)"
+   ],
+   "failed": [],
+   "errors": [],
+   "seconds": 48.3,
+   "load1": 21.7
+  },
+  {
+   "run": 2,
+   "exit": 0,
+   "tests": [
+    "Tests  2132 passed | 1 skipped (2133)"
+   ],
+   "failed": [],
+   "errors": [],
+   "seconds": 49.5,
+   "load1": 25.1
+  },
+  {
+   "run": 3,
+   "exit": 0,
+   "tests": [
+    "Tests  2132 passed | 1 skipped (2133)"
+   ],
+   "failed": [],
+   "errors": [],
+   "seconds": 48.7,
+   "load1": 28.8
+  }
+ ]
+}

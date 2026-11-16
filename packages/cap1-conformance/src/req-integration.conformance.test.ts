@@ -29,7 +29,7 @@ import {
   type Proposal,
 } from '@syzygy/cap1-core';
 import { authorizeWrite, compareRenderings, disclosureOf } from '@syzygy/cap1-core/testing';
-import { evaluation, projectYaml } from './fixtures/index.js';
+import { decisionsFor, evaluation, projectYaml } from './fixtures/index.js';
 
 // CAP1-REQ-integration — End-to-end integration test.
 //
@@ -99,7 +99,11 @@ describe('CAP1-REQ-integration — end-to-end pipeline', () => {
 
   it('coverage computed with consent and no-consent repositories', () => {
     if (!read.ok) throw new Error('expected valid declaration');
-    const coverage = computeCoverage(read.declaration, CONSENT_RECORDS, OBSERVATIONS);
+    const coverage = computeCoverage(
+      read.declaration,
+      decisionsFor(read.declaration, CONSENT_RECORDS),
+      OBSERVATIONS,
+    );
     expect(coverage.projectId).toBe(PROJECT_ID);
     expect(coverage.repositories).toHaveLength(3);
 
@@ -115,7 +119,11 @@ describe('CAP1-REQ-integration — end-to-end pipeline', () => {
 
   it('shape answers: all seven produced, stamped with the evaluation', () => {
     if (!read.ok) throw new Error('expected valid declaration');
-    const coverage = computeCoverage(read.declaration, CONSENT_RECORDS, OBSERVATIONS);
+    const coverage = computeCoverage(
+      read.declaration,
+      decisionsFor(read.declaration, CONSENT_RECORDS),
+      OBSERVATIONS,
+    );
     const answers = computeShapeAnswers(PROJECT_ID, EVALUATION, {
       registration,
       coverage,
@@ -138,7 +146,11 @@ describe('CAP1-REQ-integration — end-to-end pipeline', () => {
 
   it('every Unknown answer carries its reason', () => {
     if (!read.ok) throw new Error('expected valid declaration');
-    const coverage = computeCoverage(read.declaration, CONSENT_RECORDS, OBSERVATIONS);
+    const coverage = computeCoverage(
+      read.declaration,
+      decisionsFor(read.declaration, CONSENT_RECORDS),
+      OBSERVATIONS,
+    );
     const answers = computeShapeAnswers(PROJECT_ID, EVALUATION, {
       registration,
       coverage,
@@ -152,7 +164,11 @@ describe('CAP1-REQ-integration — end-to-end pipeline', () => {
 
   it('parity holds: machine and human renderings agree on every facet', () => {
     if (!read.ok) throw new Error('expected valid declaration');
-    const coverage = computeCoverage(read.declaration, CONSENT_RECORDS, OBSERVATIONS);
+    const coverage = computeCoverage(
+      read.declaration,
+      decisionsFor(read.declaration, CONSENT_RECORDS),
+      OBSERVATIONS,
+    );
     const answers = computeShapeAnswers(PROJECT_ID, EVALUATION, {
       registration,
       coverage,

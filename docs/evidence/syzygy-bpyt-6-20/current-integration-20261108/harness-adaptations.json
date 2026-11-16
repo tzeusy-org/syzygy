@@ -1,0 +1,38 @@
+[
+  {
+    "source": "docs/evidence/syzygy-bpyt-6-20/differential.mjs",
+    "sourceSha256": "d73db28de2cbd3d300d88e34dbc59b08abef13b4110842e9a0632e44d2059940",
+    "offering": "differential-current.mjs",
+    "offeringSha256": "e5275167fe23f77caf91e516454520d1ecacd5e2c194e0a56bbc21cd9dd3a718",
+    "literalChanges": [
+      {
+        "old": "import { build } from 'esbuild';",
+        "new": "import { createRequire } from 'node:module';\nconst { build } = createRequire(process.cwd() + '/package.json')('esbuild');"
+      },
+      {
+        "old": "const base = 'f5487c186626513724e1eff28a2789a4d78c154c';",
+        "new": "const base = 'fd08ea62f8b55fb60d7c79628688bc014b40875b';"
+      },
+      {
+        "old": "const observedAt = '2026-11-03T06:58:26Z';",
+        "new": "const observedAt = '2026-11-06T14:11:19Z';"
+      }
+    ]
+  },
+  {
+    "source": "docs/evidence/syzygy-bpyt-6-20/served-route-supplement.mjs",
+    "sourceSha256": "384996b4ba55fd2b0ef67647834c4b0e6de773233c045bfca39ab5148cfdde9e",
+    "offering": "served-current.mjs",
+    "offeringSha256": "ddd2e62d849791b75265266233e5e859207ae4a200ed1c2e88fe272a373b7837",
+    "literalChanges": [
+      {
+        "old": "const baseline='f5487c186626513724e1eff28a2789a4d78c154c';",
+        "new": "const baseline='fd08ea62f8b55fb60d7c79628688bc014b40875b';"
+      },
+      {
+        "old": "const observedAt='2026-11-03T06:58:26Z';",
+        "new": "const observedAt='2026-11-06T14:11:19Z';"
+      }
+    ]
+  }
+]

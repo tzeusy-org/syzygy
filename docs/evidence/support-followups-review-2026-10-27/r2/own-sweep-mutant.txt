@@ -1,0 +1,5 @@
+own-sweep.py rule-6 run: W4 (an equivalent local sha256 copy in the fixture) as a scratch commit on 7d408fd9 (never pushed; clone deleted)
+== 1ac74e19259928a907a1c87e03ec4e4a2af8dd37: population 250 (test-support class 9), name rule 241, reach rule 245
+   name rule: files=241 sites=6 sha256Defs=1 deepFreezeDefs=1
+   reach rule: files=245 sites=8 sha256Defs=2 deepFreezeDefs=1
+   second method git grep -c -F over the reach rule: files=7 sites=8

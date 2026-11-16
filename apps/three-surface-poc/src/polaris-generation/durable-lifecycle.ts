@@ -1,8 +1,9 @@
-import { createHash, randomUUID } from 'node:crypto';
+import { randomUUID } from 'node:crypto';
 import { closeSync, existsSync, fsyncSync, mkdirSync, openSync, readFileSync, readdirSync, renameSync, unlinkSync, writeSync } from 'node:fs';
 import { join } from 'node:path';
 
 import type { AdmissionDecision, AttemptInput, AttemptOutcome, DispatchPermit, PipelinePorts, ProviderReply } from '@syzygy/polaris-generation-core';
+import { sha256 } from '@syzygy/support';
 
 // Test seam: exported type the tests name; production code uses it only inside this file.
 /** A private durable lifecycle adapter. Files are outside a governed tree; this
@@ -49,8 +50,7 @@ interface JournalEntry {
   readonly late?: { readonly model: string | null; readonly usageUnits: number | null };
 }
 
-const digest = (value: string): string => createHash('sha256').update(value).digest('hex');
-const attemptId = (input: AttemptInput): string => `attempt-${digest(`${input.requestId}\0${input.stage}\0${input.ordinal}`)}`;
+const attemptId = (input: AttemptInput): string => `attempt-${sha256(`${input.requestId}\0${input.stage}\0${input.ordinal}`)}`;
 
 function writeExclusive(path: string, value: unknown): void {
   const fd = openSync(path, 'wx', 0o600);
@@ -85,7 +85,7 @@ export function createDurableLifecycle(options: DurableLifecycleOptions): Pipeli
     verifySources: options.verifySources,
     permissionIdentity: async () => options.permissionIdentity(),
     admit: async (input): Promise<AdmissionDecision> => {
-      const lock = join(options.stateDir, `request-${digest(input.requestId)}.lock`);
+      const lock = join(options.stateDir, `request-${sha256(input.requestId)}.lock`);
       let fd: number;
       try { fd = openSync(lock, 'wx', 0o600); }
       catch { return { kind: 'refused', reason: 'uncertain' }; }

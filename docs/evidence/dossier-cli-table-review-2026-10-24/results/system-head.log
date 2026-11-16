@@ -1,0 +1,41 @@
+
+[1m[46m RUN [49m[22m [36mv3.2.7 [39m[90m/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-518/clone/packages/cap1-system[39m
+
+ [2m[90m↓[39m[22m src/fresh-clone.system.test.ts [2m([22m[2m1 test[22m[2m | [22m[33m1 skipped[39m[2m)[22m
+ [32m✓[39m src/effect-observer.system.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 30[2mms[22m[39m
+ [32m✓[39m src/process.system.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 441[2mms[22m[39m
+   [33m[2m✓[22m[39m RT6 — process reality[2m > [22mSIGINT exits 0 and the port then refuses connections [33m 440[2mms[22m[39m
+ [32m✓[39m src/write-boundary.system.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 449[2mms[22m[39m
+   [33m[2m✓[22m[39m RT6 — write boundary by harness-external filesystem observation[2m > [22mafter requests to all routes, the only filesystem additions live under the state dir and the governed tree is untouched [33m 448[2mms[22m[39m
+ [32m✓[39m src/full-facts.system.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 1080[2mms[22m[39m
+   [33m[2m✓[22m[39m RT6 — full-facts demonstration over the spawned daemon[2m > [22mserves the human page with verbatim facts, labels, and the Why-this-answer drawer [33m 372[2mms[22m[39m
+   [33m[2m✓[22m[39m RT6 — full-facts demonstration over the spawned daemon[2m > [22mserves the fixture overview at /entry [33m 334[2mms[22m[39m
+   [33m[2m✓[22m[39m RT6 — full-facts demonstration over the spawned daemon[2m > [22mserves the JSON facts to an authenticated machine request, and every served JSON fact appears in the HTML (sweep with denominator) [33m 370[2mms[22m[39m
+ [32m✓[39m src/degradation.system.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 1456[2mms[22m[39m
+   [33m[2m✓[22m[39m RT6 — honest degradation over real disk state[2m > [22man empty fixture root serves the named missing-declaration arm on both channels [33m 330[2mms[22m[39m
+   [33m[2m✓[22m[39m RT6 — honest degradation over real disk state[2m > [22mbreaking the declaration between runs changes the served facts to the named invalid arms [33m 1125[2mms[22m[39m
+ [32m✓[39m src/state-dir.system.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 2934[2mms[22m[39m
+   [33m[2m✓[22m[39m RTF-1 — state-dir governed-plane check resolves symlink reality[2m > [22mrefuses (nonzero exit, named refusal) a --state-dir symlink whose REAL target lies inside .syzygy/, and writes nothing there [33m 422[2mms[22m[39m
+   [33m[2m✓[22m[39m RTF-1 — state-dir governed-plane check resolves symlink reality[2m > [22mrefuses a dangling --state-dir symlink whose intended target lies inside .syzygy/, before writes or a listener [33m 475[2mms[22m[39m
+   [33m[2m✓[22m[39m RTF-1 — state-dir governed-plane check resolves symlink reality[2m > [22mstill starts and serves through a --state-dir symlink whose real target is OUTSIDE the governed plane [33m 630[2mms[22m[39m
+   [33m[2m✓[22m[39m RTF-1 — state-dir governed-plane check resolves symlink reality[2m > [22mkeeps a dangling benign outside target credential-unprovisionable, with no listener or writes [33m 489[2mms[22m[39m
+   [33m[2m✓[22m[39m RTF-1 — state-dir governed-plane check resolves symlink reality[2m > [22mrejects a state-dir symlink loop as named invalid before writes or a listener [33m 449[2mms[22m[39m
+   [33m[2m✓[22m[39m RTF-1 — state-dir governed-plane check resolves symlink reality[2m > [22mrejects an unreadable state-dir path as named invalid before writes or a listener [33m 457[2mms[22m[39m
+ [32m✓[39m src/credentials.system.test.ts [2m([22m[2m11 tests[22m[2m)[22m[33m 3669[2mms[22m[39m
+   [33m[2m✓[22m[39m RT6 — credential enforcement from outside the process[2m > [22mrefuses scheme without separator credentials with no facts served [33m 358[2mms[22m[39m
+   [33m[2m✓[22m[39m RT6 — credential enforcement from outside the process[2m > [22mrefuses empty bearer token credentials with no facts served [33m 837[2mms[22m[39m
+   [33m[2m✓[22m[39m RT6 — credential enforcement from outside the process[2m > [22mrefuses wrong scheme credentials with no facts served [33m 412[2mms[22m[39m
+   [33m[2m✓[22m[39m RT6 — credential enforcement from outside the process[2m > [22mrefuses whitespace-only bearer token credentials with no facts served [33m 356[2mms[22m[39m
+   [33m[2m✓[22m[39m RT6 — credential enforcement from outside the process[2m > [22mrefuses malformed scheme casing credentials with no facts served [33m 420[2mms[22m[39m
+ [32m✓[39m src/daemon-entry-unchanged.system.test.ts [2m([22m[2m15 tests[22m[2m)[22m[33m 4053[2mms[22m[39m
+   [33m[2m✓[22m[39m daemon entry: every invocation but `dossier` is unchanged[2m > [22m["--bogus"] is refused with exit 1 and the same message [33m 367[2mms[22m[39m
+   [33m[2m✓[22m[39m daemon entry: every invocation but `dossier` is unchanged[2m > [22m["--port"] is refused with exit 1 and the same message [33m 508[2mms[22m[39m
+   [33m[2m✓[22m[39m daemon entry: every invocation but `dossier` is unchanged[2m > [22ma state directory inside the governed plane is refused with the same message [33m 334[2mms[22m[39m
+   [33m[2m✓[22m[39m daemon entry: the one changed input, `dossier` as the first argument[2m > [22m`dossier render <missing>` reaches the run with the renderer injected, and starts no daemon [33m 342[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m8 passed[39m[22m[2m | [22m[33m1 skipped[39m[90m (9)[39m
+[2m      Tests [22m [1m[32m47 passed[39m[22m[2m | [22m[33m1 skipped[39m[90m (48)[39m
+[2m   Start at [22m 00:03:55
+[2m   Duration [22m 4.77s[2m (transform 557ms, setup 0ms, collect 1.35s, tests 14.11s, environment 2ms, prepare 1.11s)[22m
+
+exit=0

@@ -1,0 +1,112 @@
+{
+ "subject": "effective tsconfig options of every workspace project",
+ "commit": "9bec80d51487f67ff569c8b94310d910f55938db",
+ "tool": {
+  "path": "docs/evidence/syzygy-bpyt-65/tools/effective_options.mjs",
+  "sha256": "54d43d4935ef31253f264b3bb4dde79da1eb4c6a63230d731c7f7d089f79c704"
+ },
+ "projects": 10,
+ "refused": [],
+ "rows": [
+  {
+   "project": "apps/syzygy",
+   "extends": "../../tsconfig.base.json",
+   "outDir": "apps/syzygy/dist",
+   "tsBuildInfoFile": "apps/syzygy/dist/.tsbuildinfo",
+   "composite": true,
+   "parseErrors": 0,
+   "outputsUnderDist": true,
+   "referenced": false
+  },
+  {
+   "project": "apps/three-surface-poc",
+   "extends": "../../tsconfig.base.json",
+   "outDir": "apps/three-surface-poc/dist",
+   "tsBuildInfoFile": "apps/three-surface-poc/dist/.tsbuildinfo",
+   "composite": true,
+   "parseErrors": 0,
+   "outputsUnderDist": true,
+   "referenced": true
+  },
+  {
+   "project": "packages/cap1-core",
+   "extends": "../../tsconfig.base.json",
+   "outDir": "packages/cap1-core/dist",
+   "tsBuildInfoFile": "packages/cap1-core/dist/.tsbuildinfo",
+   "composite": true,
+   "parseErrors": 0,
+   "outputsUnderDist": true,
+   "referenced": true
+  },
+  {
+   "project": "packages/cap1-daemon",
+   "extends": "../../tsconfig.base.json",
+   "outDir": "packages/cap1-daemon/dist",
+   "tsBuildInfoFile": "packages/cap1-daemon/dist/.tsbuildinfo",
+   "composite": true,
+   "parseErrors": 0,
+   "outputsUnderDist": true,
+   "referenced": true
+  },
+  {
+   "project": "packages/http-host",
+   "extends": "../../tsconfig.base.json",
+   "outDir": "packages/http-host/dist",
+   "tsBuildInfoFile": "packages/http-host/dist/.tsbuildinfo",
+   "composite": true,
+   "parseErrors": 0,
+   "outputsUnderDist": true,
+   "referenced": true
+  },
+  {
+   "project": "packages/polaris-dossier",
+   "extends": "../../tsconfig.base.json",
+   "outDir": "packages/polaris-dossier/dist",
+   "tsBuildInfoFile": "packages/polaris-dossier/dist/.tsbuildinfo",
+   "composite": true,
+   "parseErrors": 0,
+   "outputsUnderDist": true,
+   "referenced": true
+  },
+  {
+   "project": "packages/polaris-generation-consent",
+   "extends": "../../tsconfig.base.json",
+   "outDir": "packages/polaris-generation-consent/dist",
+   "tsBuildInfoFile": "packages/polaris-generation-consent/dist/.tsbuildinfo",
+   "composite": true,
+   "parseErrors": 0,
+   "outputsUnderDist": true,
+   "referenced": true
+  },
+  {
+   "project": "packages/polaris-generation-core",
+   "extends": "../../tsconfig.base.json",
+   "outDir": "packages/polaris-generation-core/dist",
+   "tsBuildInfoFile": "packages/polaris-generation-core/dist/.tsbuildinfo",
+   "composite": true,
+   "parseErrors": 0,
+   "outputsUnderDist": true,
+   "referenced": true
+  },
+  {
+   "project": "packages/support",
+   "extends": "../../tsconfig.base.json",
+   "outDir": "packages/support/dist",
+   "tsBuildInfoFile": "packages/support/dist/.tsbuildinfo",
+   "composite": true,
+   "parseErrors": 0,
+   "outputsUnderDist": true,
+   "referenced": true
+  },
+  {
+   "project": "packages/three-surface-poc-core",
+   "extends": "../../tsconfig.base.json",
+   "outDir": "packages/three-surface-poc-core/dist",
+   "tsBuildInfoFile": "packages/three-surface-poc-core/dist/.tsbuildinfo",
+   "composite": true,
+   "parseErrors": 0,
+   "outputsUnderDist": true,
+   "referenced": true
+  }
+ ]
+}

@@ -1,0 +1,123 @@
+{
+ "root": "/tmp/r526-fp",
+ "roundsPerArm": 300,
+ "arms": {
+  "none": {
+   "rounds": 300,
+   "roundsDifferingByField": {},
+   "roundsWithASoleWitness": {},
+   "roundsWithNothingDiffering": 300,
+   "notUnreadable": 0,
+   "writeErrors": 0
+  },
+  "X3c-rename-over-same-mode": {
+   "rounds": 300,
+   "roundsDifferingByField": {
+    "targetCtimeNs": 300,
+    "targetIno": 300
+   },
+   "roundsWithASoleWitness": {},
+   "roundsWithNothingDiffering": 0,
+   "notUnreadable": 0,
+   "writeErrors": 0
+  },
+  "X3d-rename-over-0644": {
+   "rounds": 300,
+   "roundsDifferingByField": {
+    "targetCtimeNs": 300,
+    "targetIno": 300,
+    "targetMode": 300
+   },
+   "roundsWithASoleWitness": {},
+   "roundsWithNothingDiffering": 0,
+   "notUnreadable": 0,
+   "writeErrors": 0
+  },
+  "X5-unlink-rewrite-same-mode": {
+   "rounds": 300,
+   "roundsDifferingByField": {
+    "targetCtimeNs": 300,
+    "targetIno": 300
+   },
+   "roundsWithASoleWitness": {},
+   "roundsWithNothingDiffering": 0,
+   "notUnreadable": 0,
+   "writeErrors": 0
+  },
+  "Y1-copyfile-rename-over": {
+   "rounds": 300,
+   "roundsDifferingByField": {
+    "targetCtimeNs": 300,
+    "targetIno": 300
+   },
+   "roundsWithASoleWitness": {},
+   "roundsWithNothingDiffering": 0,
+   "notUnreadable": 0,
+   "writeErrors": 0
+  },
+  "Y2-chmod-current-mode": {
+   "rounds": 300,
+   "roundsDifferingByField": {
+    "targetCtimeNs": 300
+   },
+   "roundsWithASoleWitness": {
+    "targetCtimeNs": 300
+   },
+   "roundsWithNothingDiffering": 0,
+   "notUnreadable": 0,
+   "writeErrors": 0
+  },
+  "Y3-unlink-rewrite-0644": {
+   "rounds": 300,
+   "roundsDifferingByField": {
+    "targetCtimeNs": 300,
+    "targetIno": 300,
+    "targetMode": 300
+   },
+   "roundsWithASoleWitness": {},
+   "roundsWithNothingDiffering": 0,
+   "notUnreadable": 0,
+   "writeErrors": 0
+  },
+  "Y4-hard-link-left": {
+   "rounds": 300,
+   "roundsDifferingByField": {
+    "targetCtimeNs": 300
+   },
+   "roundsWithASoleWitness": {
+    "targetCtimeNs": 300
+   },
+   "roundsWithNothingDiffering": 0,
+   "notUnreadable": 0,
+   "writeErrors": 0
+  },
+  "Y5-link-rename-unlink": {
+   "rounds": 300,
+   "roundsDifferingByField": {
+    "targetCtimeNs": 300
+   },
+   "roundsWithASoleWitness": {
+    "targetCtimeNs": 300
+   },
+   "roundsWithNothingDiffering": 0,
+   "notUnreadable": 0,
+   "writeErrors": 0
+  },
+  "N3-zero-byte-write": {
+   "rounds": 300,
+   "roundsDifferingByField": {},
+   "roundsWithASoleWitness": {},
+   "roundsWithNothingDiffering": 300,
+   "notUnreadable": 0,
+   "writeErrors": 0
+  },
+  "N3-self-rename": {
+   "rounds": 300,
+   "roundsDifferingByField": {},
+   "roundsWithASoleWitness": {},
+   "roundsWithNothingDiffering": 300,
+   "notUnreadable": 0,
+   "writeErrors": 0
+  }
+ }
+}

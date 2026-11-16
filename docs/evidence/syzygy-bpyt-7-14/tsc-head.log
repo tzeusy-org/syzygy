@@ -1,0 +1,72 @@
+T-drop-CredentialInspection killed 2 1 14.3 clean
+    packages/cap1-daemon/src/package.test.ts(68,25): error TS2694: Namespace '"/var/tmp/la-b714/head/packages/cap1-daemon/src/index"' has no exported member 'CredentialInspection'.
+T-drop-CredentialProvision killed 2 1 15.4 clean
+    packages/cap1-daemon/src/package.test.ts(69,25): error TS2694: Namespace '"/var/tmp/la-b714/head/packages/cap1-daemon/src/index"' has no exported member 'CredentialProvision'.
+T-drop-CredentialStat killed 2 1 14.2 clean
+    packages/cap1-daemon/src/package.test.ts(70,25): error TS2694: Namespace '"/var/tmp/la-b714/head/packages/cap1-daemon/src/index"' has no exported member 'CredentialStat'.
+T-drop-StateWriteAuthorization killed 2 1 12.4 clean
+    packages/cap1-daemon/src/package.test.ts(71,25): error TS2694: Namespace '"/var/tmp/la-b714/head/packages/cap1-daemon/src/index"' has no exported member 'StateWriteAuthorization'.
+T-drop-StateWriteRefusalName killed 2 1 13.8 clean
+    packages/cap1-daemon/src/package.test.ts(72,25): error TS2724: '"/var/tmp/la-b714/head/packages/cap1-daemon/src/index"' has no exported member named 'StateWriteRefusalName'. Did you mean 'STATE_WRITE_REFUSALS'?
+T-drop-CredentialClass killed 2 1 7.3 clean
+    packages/cap1-daemon/src/package.test.ts(73,25): error TS2694: Namespace '"/var/tmp/la-b714/head/packages/cap1-daemon/src/index"' has no exported member 'CredentialClass'.
+T-drop-DaemonOptions killed 2 4 10.6 clean
+    apps/three-surface-poc/src/main.test.ts(198,57): error TS7006: Parameter 'candidate' implicitly has an 'any' type.
+    apps/three-surface-poc/src/main.test.ts(345,59): error TS7006: Parameter 'route' implicitly has an 'any' type.
+    apps/three-surface-poc/src/main.test.ts(9,15): error TS2305: Module '"@syzygy/cap1-daemon"' has no exported member 'DaemonOptions'.
+    packages/cap1-daemon/src/package.test.ts(74,25): error TS2694: Namespace '"/var/tmp/la-b714/head/packages/cap1-daemon/src/index"' has no exported member 'DaemonOptions'.
+T-drop-DaemonStart killed 2 2 15.8 clean
+    apps/three-surface-poc/src/main.test.ts(9,30): error TS2305: Module '"@syzygy/cap1-daemon"' has no exported member 'DaemonStart'.
+    packages/cap1-daemon/src/package.test.ts(75,25): error TS2694: Namespace '"/var/tmp/la-b714/head/packages/cap1-daemon/src/index"' has no exported member 'DaemonStart'.
+T-drop-Route killed 2 6 10.1 clean
+    apps/three-surface-poc/src/main.test.ts(9,43): error TS2305: Module '"@syzygy/cap1-daemon"' has no exported member 'Route'.
+    apps/three-surface-poc/src/routes.test.ts(8,29): error TS2305: Module '"@syzygy/cap1-daemon"' has no exported member 'Route'.
+    apps/three-surface-poc/src/verbatim-route.test.ts(10,15): error TS2305: Module '"@syzygy/cap1-daemon"' has no exported member 'Route'.
+    packages/cap1-daemon/src/package.test.ts(76,25): error TS2694: Namespace '"/var/tmp/la-b714/head/packages/cap1-daemon/src/index"' has no exported member 'Route'.
+    packages/cap1-daemon/src/routes-human.test.ts(20,29): error TS2459: Module '"./server.js"' declares 'Route' locally, but it is not exported.
+    packages/cap1-daemon/src/server.test.ts(12,8): error TS2459: Module '"./server.js"' declares 'Route' locally, but it is not exported.
+T-drop-RouteContext killed 2 4 9.0 clean
+    apps/three-surface-poc/src/reobserve-action.test.ts(2,15): error TS2305: Module '"@syzygy/cap1-daemon"' has no exported member 'RouteContext'.
+    apps/three-surface-poc/src/response-limits.test.ts(11,29): error TS2305: Module '"@syzygy/cap1-daemon"' has no exported member 'RouteContext'.
+    apps/three-surface-poc/src/verbatim-route.test.ts(10,22): error TS2305: Module '"@syzygy/cap1-daemon"' has no exported member 'RouteContext'.
+    packages/cap1-daemon/src/package.test.ts(77,25): error TS2694: Namespace '"/var/tmp/la-b714/head/packages/cap1-daemon/src/index"' has no exported member 'RouteContext'.
+T-drop-RouteRequest killed 2 1 12.6 clean
+    packages/cap1-daemon/src/package.test.ts(78,25): error TS2694: Namespace '"/var/tmp/la-b714/head/packages/cap1-daemon/src/index"' has no exported member 'RouteRequest'.
+T-drop-RouteResponse killed 2 3 19.3 clean
+    apps/three-surface-poc/src/response-limits.test.ts(11,48): error TS2305: Module '"@syzygy/cap1-daemon"' has no exported member 'RouteResponse'.
+    apps/three-surface-poc/src/verbatim-route.test.ts(10,36): error TS2305: Module '"@syzygy/cap1-daemon"' has no exported member 'RouteResponse'.
+    packages/cap1-daemon/src/package.test.ts(79,25): error TS2694: Namespace '"/var/tmp/la-b714/head/packages/cap1-daemon/src/index"' has no exported member 'RouteResponse'.
+T-drop-RunningDaemon killed 2 11 16.6 clean
+    apps/three-surface-poc/src/materialize-action.test.ts(6,29): error TS2305: Module '"@syzygy/cap1-daemon"' has no exported member 'RunningDaemon'.
+    apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts(19,29): error TS2305: Module '"@syzygy/cap1-daemon"' has no exported member 'RunningDaemon'.
+    apps/three-surface-poc/src/polaris-presentation-route.test.ts(14,29): error TS2305: Module '"@syzygy/cap1-daemon"' has no exported member 'RunningDaemon'.
+    apps/three-surface-poc/src/polaris-source-route.test.ts(17,41): error TS2305: Module '"@syzygy/cap1-daemon"' has no exported member 'RunningDaemon'.
+    apps/three-surface-poc/src/routes.test.ts(8,41): error TS2305: Module '"@syzygy/cap1-daemon"' has no exported member 'RunningDaemon'.
+    apps/three-surface-poc/src/surface-routes.test.ts(8,29): error TS2305: Module '"@syzygy/cap1-daemon"' has no exported member 'RunningDaemon'.
+    apps/three-surface-poc/src/tuple-encoding.test.ts(7,29): error TS2305: Module '"@syzygy/cap1-daemon"' has no exported member 'RunningDaemon'.
+    packages/cap1-daemon/src/package.test.ts(80,25): error TS2694: Namespace '"/var/tmp/la-b714/head/packages/cap1-daemon/src/index"' has no exported member 'RunningDaemon'.
+    packages/cap1-daemon/src/routes-human.test.ts(20,41): error TS2305: Module '"./server.js"' has no exported member 'RunningDaemon'.
+    packages/cap1-daemon/src/routes-machine.test.ts(18,29): error TS2305: Module '"./server.js"' has no exported member 'RunningDaemon'.
+    packages/cap1-daemon/src/server.test.ts(13,8): error TS2305: Module '"./server.js"' has no exported member 'RunningDaemon'.
+T-swap-RouteContext killed 2 18 14.4 clean
+    apps/three-surface-poc/src/reobserve-action.test.ts(28,12): error TS2353: Object literal may only specify known properties, and 'request' does not exist in type 'RouteRequest'.
+    apps/three-surface-poc/src/reobserve-action.test.ts(38,36): error TS2345: Argument of type 'RouteRequest' is not assignable to parameter of type 'RouteContext'.
+    apps/three-surface-poc/src/reobserve-action.test.ts(39,37): error TS2345: Argument of type 'RouteRequest' is not assignable to parameter of type 'RouteContext'.
+    apps/three-surface-poc/src/reobserve-action.test.ts(51,44): error TS2345: Argument of type 'RouteRequest' is not assignable to parameter of type 'RouteContext'.
+    apps/three-surface-poc/src/reobserve-action.test.ts(54,44): error TS2345: Argument of type 'RouteRequest' is not assignable to parameter of type 'RouteContext'.
+    apps/three-surface-poc/src/reobserve-action.test.ts(59,41): error TS2345: Argument of type 'RouteRequest' is not assignable to parameter of type 'RouteContext'.
+    apps/three-surface-poc/src/reobserve-action.test.ts(78,44): error TS2345: Argument of type 'RouteRequest' is not assignable to parameter of type 'RouteContext'.
+    apps/three-surface-poc/src/response-limits.test.ts(183,32): error TS2345: Argument of type 'RouteRequest' is not assignable to parameter of type 'RouteContext'.
+    apps/three-surface-poc/src/response-limits.test.ts(216,34): error TS2345: Argument of type 'RouteRequest' is not assignable to parameter of type 'RouteContext'.
+    apps/three-surface-poc/src/response-limits.test.ts(273,37): error TS2345: Argument of type 'RouteRequest' is not assignable to parameter of type 'RouteContext'.
+    apps/three-surface-poc/src/response-limits.test.ts(36,12): error TS2353: Object literal may only specify known properties, and 'request' does not exist in type 'RouteRequest'.
+    apps/three-surface-poc/src/response-limits.test.ts(44,37): error TS2345: Argument of type 'RouteRequest' is not assignable to parameter of type 'RouteContext'.
+    apps/three-surface-poc/src/verbatim-route.test.ts(208,54): error TS2353: Object literal may only specify known properties, and 'request' does not exist in type 'RouteRequest'.
+    apps/three-surface-poc/src/verbatim-route.test.ts(223,60): error TS2345: Argument of type 'RouteRequest' is not assignable to parameter of type 'RouteContext'.
+    apps/three-surface-poc/src/verbatim-route.test.ts(229,73): error TS2345: Argument of type 'RouteRequest' is not assignable to parameter of type 'RouteContext'.
+    apps/three-surface-poc/src/verbatim-route.test.ts(234,47): error TS2345: Argument of type 'RouteRequest' is not assignable to parameter of type 'RouteContext'.
+    apps/three-surface-poc/src/verbatim-route.test.ts(237,76): error TS2345: Argument of type 'RouteRequest' is not assignable to parameter of type 'RouteContext'.
+    packages/cap1-daemon/src/package.test.ts(77,55): error TS2344: Type 'RouteContext' does not satisfy the constraint '{ method: "Expected: never, Actual: string"; path: "Expected: never, Actual: string"; query: { [iterator]?: "Expected: never, Actual: function" 
+T-swap-CredentialStat killed 2 1 10.1 clean
+    packages/cap1-daemon/src/package.test.ts(70,57): error TS2344: Type 'CredentialStat' does not satisfy the constraint '{ mode: "Expected: number, Actual: never"; uid: "Expected: number, Actual: undefined"; isFile: "Expected: function, Actual: never"; isDirector
+controls [0, 0] killed 15 survived 0 error 0 of 15

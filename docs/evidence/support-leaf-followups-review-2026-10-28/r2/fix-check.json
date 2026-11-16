@@ -1,0 +1,115 @@
+{
+ "commit": "330dd89458801e7a150134efa15f3d4af8215304",
+ "dists": [],
+ "rows": [
+  {
+   "id": "FX0-unmutated",
+   "edits": [
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "    ['let a = 1; a += 1; [a] = [2];', []],\n",
+     "new": "    ['({ ...Object.freeze } = {});', ['{ ...Object.freeze } = {}']],\n    ['let a = 1; a += 1; [a] = [2];', []],\n"
+    }
+   ],
+   "load1": "21.50",
+   "failing": [],
+   "messages": [],
+   "exit": 0,
+   "passed": 51,
+   "failed": 0,
+   "total": 51,
+   "fileMessages": [],
+   "error": null
+  },
+  {
+   "id": "FX-M5-object-rest-arm-dropped",
+   "edits": [
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "    ['let a = 1; a += 1; [a] = [2];', []],\n",
+     "new": "    ['({ ...Object.freeze } = {});', ['{ ...Object.freeze } = {}']],\n    ['let a = 1; a += 1; [a] = [2];', []],\n"
+    },
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": " : ts.isSpreadAssignment(property) ? targets(property.expression) : []",
+     "new": " : []"
+    }
+   ],
+   "load1": "22.58",
+   "failing": [
+    "the property-write reader the no-write row stands on reads \"({ ...Object.freeze } = {});\""
+   ],
+   "messages": [
+    "AssertionError: expected [] to deeply equal [ '{ ...Object.freeze } = {}' ]"
+   ],
+   "exit": 1,
+   "passed": 50,
+   "failed": 1,
+   "total": 51,
+   "fileMessages": [],
+   "error": null
+  },
+  {
+   "id": "FX-M5b-arm-dropped-plus-write",
+   "edits": [
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "    ['let a = 1; a += 1; [a] = [2];', []],\n",
+     "new": "    ['({ ...Object.freeze } = {});', ['{ ...Object.freeze } = {}']],\n    ['let a = 1; a += 1; [a] = [2];', []],\n"
+    },
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": " : ts.isSpreadAssignment(property) ? targets(property.expression) : []",
+     "new": " : []"
+    },
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\n\n({ ...Object.freeze } = {});\n"
+    }
+   ],
+   "load1": "22.58",
+   "failing": [
+    "the property-write reader the no-write row stands on reads \"({ ...Object.freeze } = {});\""
+   ],
+   "messages": [
+    "AssertionError: expected [] to deeply equal [ '{ ...Object.freeze } = {}' ]"
+   ],
+   "exit": 1,
+   "passed": 50,
+   "failed": 1,
+   "total": 51,
+   "fileMessages": [],
+   "error": null
+  },
+  {
+   "id": "FX-M5c-write-control",
+   "edits": [
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "    ['let a = 1; a += 1; [a] = [2];', []],\n",
+     "new": "    ['({ ...Object.freeze } = {});', ['{ ...Object.freeze } = {}']],\n    ['let a = 1; a += 1; [a] = [2];', []],\n"
+    },
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\n\n({ ...Object.freeze } = {});\n"
+    }
+   ],
+   "load1": "22.29",
+   "failing": [
+    "@syzygy/support stays a pure leaf assigns to no property in any source, so no allowed global is rewritten"
+   ],
+   "messages": [
+    "AssertionError: expected [ Array(1) ] to deeply equal []"
+   ],
+   "exit": 1,
+   "passed": 50,
+   "failed": 1,
+   "total": 51,
+   "fileMessages": [],
+   "error": null
+  }
+ ],
+ "statusAfter": ""
+}

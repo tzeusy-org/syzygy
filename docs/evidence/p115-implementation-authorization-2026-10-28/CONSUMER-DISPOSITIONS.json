@@ -1,0 +1,1962 @@
+{
+  "head": "973965a82f82d9b90af05e4b96524aae0d9dbec4",
+  "scope": "tracked code files under apps/packages/scripts only; not external clients, deployment state, runtime captures or dynamically constructed interfaces",
+  "examined": 649,
+  "candidateDenominator": 59,
+  "operatorConsumerDenominator": 4,
+  "countsByClassification": {
+    "docs-partition-index": 1,
+    "historical-record-test": 1,
+    "human-renderer": 3,
+    "identity-algorithm": 1,
+    "identity-regression": 1,
+    "logical-model": 2,
+    "logical-mutant-clone": 2,
+    "logical-regression": 4,
+    "machine-parity-or-transport-test": 17,
+    "negative-literal-fixture": 1,
+    "operator-consumer": 4,
+    "other-amendment-tooling": 1,
+    "other-protocol": 7,
+    "other-record-parser": 1,
+    "presentation-producer": 1,
+    "producer": 1,
+    "related-mutation-tool": 1,
+    "route-advertisement": 1,
+    "route-exclusion-test": 1,
+    "signed-package-tooling": 1,
+    "signed-preparation-oracle": 1,
+    "signoff-recovery-tooling": 1,
+    "signoff-tooling": 1,
+    "unaffected-route-test": 2,
+    "unaffected-shared-slice": 2
+  },
+  "countsByAction": {
+    "change": 1,
+    "comment-only": 1,
+    "exclude": 7,
+    "extend-existing": 17,
+    "migrate": 4,
+    "preserve": 22,
+    "preserve-and-run": 6,
+    "preserve-and-run-when-affected": 1
+  },
+  "externalConsumers": {
+    "state": "Unknown",
+    "reason": "No authenticated external deployment/client inventory or runtime body reads are included in this preparation."
+  },
+  "candidates": [
+    {
+      "path": "apps/three-surface-poc/src/block-provenance-sweep.test.ts",
+      "sha256": "16f1b58c30df9daa9431ceb6b735b738b1702de6d23e356a75f68062daacd3db",
+      "bytes": 15348,
+      "matches": {
+        "governing_value": [
+          {
+            "line": 204,
+            "text": "expect(Object.keys(block(answer, 'workItems')).sort()).toEqual(['beadPrefix', 'capturedAt', 'governedByUnknownCount', 'items', 'kind', 'provenance', 'titles']);"
+          },
+          {
+            "line": 221,
+            "text": "governedBy: {"
+          }
+        ],
+        "endpoint": [
+          {
+            "line": 4,
+            "text": "// The machine answer is `GET /api/poc`'s body, `JSON.stringify(model)`"
+          }
+        ],
+        "logical_as_wire": [
+          {
+            "line": 4,
+            "text": "// The machine answer is `GET /api/poc`'s body, `JSON.stringify(model)`"
+          },
+          {
+            "line": 116,
+            "text": "const answer = JSON.parse(JSON.stringify(model)) as Obj;"
+          }
+        ]
+      },
+      "classification": "machine-parity-or-transport-test",
+      "action": "extend-existing",
+      "rationale": "Use the real route body; add the observation shared field and literal item reference without altering provenance expectations."
+    },
+    {
+      "path": "apps/three-surface-poc/src/fresh-checkout-demo-main.ts",
+      "sha256": "b59ed25c6faddc6753e6f5708b1243896f475b3105b0e7aeb9daab2b53b1a501",
+      "bytes": 34988,
+      "matches": {
+        "endpoint": [
+          {
+            "line": 402,
+            "text": "const refused = await fetchRoute(daemon.baseUrl, '/api/poc');"
+          },
+          {
+            "line": 403,
+            "text": "expectedDaemonDiagnostics.push({ method: 'GET', route: '/api/poc', status: 401 });"
+          },
+          {
+            "line": 404,
+            "text": "routes.push({ path: '/api/poc', authenticated: false, status: refused.status, bytes: refused.body.byteLength });"
+          },
+          {
+            "line": 405,
+            "text": "const machine = await fetchRoute(daemon.baseUrl, '/api/poc', token);"
+          },
+          {
+            "line": 406,
+            "text": "routes.push({ path: '/api/poc', authenticated: true, status: machine.status, contentType: machine.contentType, bytes: machine.body.byteLength, sha256: retain('api-poc.json', machine.body), retainedAs: 'api-poc.json' });"
+          }
+        ],
+        "body_consumer": [
+          {
+            "line": 406,
+            "text": "routes.push({ path: '/api/poc', authenticated: true, status: machine.status, contentType: machine.contentType, bytes: machine.body.byteLength, sha256: retain('api-poc.json', machine.body), retainedAs: 'api-poc.json' });"
+          },
+          {
+            "line": 407,
+            "text": "const model = JSON.parse(new TextDecoder().decode(machine.body)) as PocModel;"
+          }
+        ]
+      },
+      "classification": "operator-consumer",
+      "action": "migrate",
+      "rationale": "Validate the current wire body before any parity/readiness/claim derivation; retain and hash original response bytes."
+    },
+    {
+      "path": "apps/three-surface-poc/src/fresh-checkout-verdict.test.ts",
+      "sha256": "3b923f044881a145da1976476b7542c65046d983ab9790c964e9477c74714505",
+      "bytes": 12322,
+      "matches": {
+        "endpoint": [
+          {
+            "line": 15,
+            "text": "const LINE_API_POC = '{\"kind\":\"daemon-http-outcome\",\"at\":\"2026-10-02T18:50:02.188Z\",\"method\":\"GET\",\"route\":\"/api/poc\",\"status\":401,\"reason\":\"credential-refused\",\"contentType\":\"application/json\"}';"
+          },
+          {
+            "line": 16,
+            "text": "const LINE_PRESENTATION = '{\"kind\":\"daemon-http-outcome\",\"at\":\"2026-10-02T18:50:02.506Z\",\"method\":\"GET\",\"route\":\"/api/poc/polaris\",\"status\":401,\"reason\":\"credential-refused\",\"contentType\":\"application/json\"}';"
+          },
+          {
+            "line": 50,
+            "text": "{ method: 'GET', route: '/api/poc', status: 401 },"
+          },
+          {
+            "line": 51,
+            "text": "{ method: 'GET', route: '/api/poc/polaris', status: 401 },"
+          }
+        ]
+      },
+      "classification": "historical-record-test",
+      "action": "preserve-and-run",
+      "rationale": "Asserts diagnostic/run-record shape, not successful work-item wire semantics; historical record fixtures stay untouched."
+    },
+    {
+      "path": "apps/three-surface-poc/src/governing-intent-sweep.test.ts",
+      "sha256": "7e653fa37d6b5e4163fce6a055d6c9fa9d5acb1851fdd84b1d4e7604e6e264ec",
+      "bytes": 19558,
+      "matches": {
+        "governing_value": [
+          {
+            "line": 22,
+            "text": "import { BUTLERS_POC_SEEDS, buildPocModel, countGoverningIntentUnknown, governingIntentUnknown, type PocModel, type WorkItemFact } from '@syzygy/three-surface-poc-core';"
+          },
+          {
+            "line": 53,
+            "text": "interface Card { readonly id: string; readonly governedBy: string | undefined; readonly body: string }"
+          },
+          {
+            "line": 64,
+            "text": "out.push({ id, governedBy: /\\sdata-governed-by=\"([^\"]*)\"/.exec(attrs)?.[1], body: html.slice(start, end) });"
+          },
+          {
+            "line": 71,
+            "text": "return cards(html).filter((card) => card.governedBy === 'Unknown').map((card) => card.id);"
+          },
+          {
+            "line": 91,
+            "text": "const governedBy = item.governedBy;"
+          },
+          {
+            "line": 93,
+            "text": "if (!isObj(governedBy)) { found.push(`${id}: no governedBy`); continue; }"
+          },
+          {
+            "line": 94,
+            "text": "const routes = Array.isArray(governedBy.resolutionRoutes) ? governedBy.resolutionRoutes.filter(isObj) : [];"
+          },
+          {
+            "line": 95,
+            "text": "const isUnknown = governedBy.label === 'Unknown' && governedBy.closedReason === REASON;"
+          },
+          {
+            "line": 96,
+            "text": "if (governedBy.label !== 'Unknown') found.push(`${id}: governedBy is ${String(governedBy.label)}, not Unknown`);"
+          },
+          {
+            "line": 97,
+            "text": "if (governedBy.closedReason !== REASON) found.push(`${id}: reason ${String(governedBy.closedReason)}`);"
+          },
+          {
+            "line": 103,
+            "text": "if (JSON.stringify(governedBy).includes(identifier)) found.push(`${id}: governedBy names ${identifier} from its title`);"
+          },
+          {
+            "line": 108,
+            "text": "if (work.governedByUnknownCount !== unknowns) found.push(`machine count ${String(work.governedByUnknownCount)} differs from the enumerated ${unknowns}`);"
+          },
+          {
+            "line": 122,
+            "text": "if (count !== work.governedByUnknownCount) found.push(`the channels serve different counts: ${String(count)} and ${String(work.governedByUnknownCount)}`);"
+          },
+          {
+            "line": 198,
+            "text": "it('each served governedBy is the Unknown with RFC2-24\\'s reason and route', () => {"
+          },
+          {
+            "line": 200,
+            "text": "expect(item.governedBy).toEqual({"
+          },
+          {
+            "line": 215,
+            "text": "expect(titled?.governedBy).toEqual(items(answer).find((item) => item.id === 'bu-open2')?.governedBy);"
+          },
+          {
+            "line": 237,
+            "text": "expect(countGoverningIntentUnknown(facts)).toBe(3);"
+          },
+          {
+            "line": 238,
+            "text": "const observed: WorkItemFact = { ...facts[0]!, governedBy: { ...governingIntentUnknown(), label: 'Observed' } as unknown as WorkItemFact['governedBy'] };"
+          },
+          {
+            "line": 239,
+            "text": "expect(countGoverningIntentUnknown([observed, facts[1]!, facts[2]!])).toBe(2);"
+          },
+          {
+            "line": 240,
+            "text": "const otherReason: WorkItemFact = { ...facts[0]!, governedBy: { ...governingIntentUnknown(), closedReason: 'missing-evidence' } };"
+          },
+          {
+            "line": 241,
+            "text": "expect(countGoverningIntentUnknown([otherReason, facts[1]!])).toBe(1);"
+          },
+          {
+            "line": 258,
+            "text": "expect.soft(leaves(served).filter(([path]) => /governedBy/.test(path))).toEqual([]);"
+          },
+          {
+            "line": 268,
+            "text": "['a served item with no governedBy', (t) => { delete items(t)[0]!.governedBy; return t; }, /: no governedBy$/],"
+          },
+          {
+            "line": 269,
+            "text": "['a governedBy that is not Unknown (green)', (t) => { (items(t)[0]!.governedBy as Obj).label = 'Observed'; return t; }, /governedBy is Observed, not Unknown/],"
+          },
+          {
+            "line": 270,
+            "text": "['an identifier from the title', (t) => { const g = items(t).find((item) => item.id === TITLED_ITEM)!.governedBy as Obj; g.reason = 'Governed by POC-REQ-010'; return t; }, /governedBy names POC-REQ-010 from its title/],"
+          },
+          {
+            "line": 271,
+            "text": "['another reason', (t) => { (items(t)[1]!.governedBy as Obj).closedReason = 'missing-declaration'; return t; }, /reason missing-declaration/],"
+          },
+          {
+            "line": 272,
+            "text": "['another route', (t) => { (((items(t)[1]!.governedBy as Obj).resolutionRoutes as Obj[])[0]!).route = 'Repair the observer or source; new snapshot'; return t; }, /route is not RFC2-24's/],"
+          },
+          {
+            "line": 273,
+            "text": "['a machine miscount', (t) => { (t.workItems as Obj).governedByUnknownCount = 53; return t; }, /machine count 53 differs/],"
+          }
+        ],
+        "endpoint": [
+          {
+            "line": 4,
+            "text": "// The machine answer is `GET /api/poc`'s body, `JSON.stringify(model)`"
+          }
+        ],
+        "logical_as_wire": [
+          {
+            "line": 4,
+            "text": "// The machine answer is `GET /api/poc`'s body, `JSON.stringify(model)`"
+          },
+          {
+            "line": 166,
+            "text": "answer = JSON.parse(JSON.stringify(model)) as Obj;"
+          }
+        ]
+      },
+      "classification": "machine-parity-or-transport-test",
+      "action": "extend-existing",
+      "rationale": "Own independent literal one-hop expansion, carrier/identity populations and all POC-REQ-014 malformed-form counterexamples."
+    },
+    {
+      "path": "apps/three-surface-poc/src/main.test.ts",
+      "sha256": "5d13c69fbb02eccce102ec3399edba1fab4d021e246b1c36e21ec38259ffb6de",
+      "bytes": 27234,
+      "matches": {
+        "endpoint": [
+          {
+            "line": 338,
+            "text": "'Machine endpoint: http://127.0.0.1:7478/api/poc',"
+          },
+          {
+            "line": 346,
+            "text": "for (const expected of ['GET /polaris', 'GET /trajectory', 'GET /orrery', 'GET /api/poc', 'POST /trajectory/materialize', 'POST /polaris/reobserve']) {"
+          },
+          {
+            "line": 491,
+            "text": "const response = await get(routeOf(h, 'GET', '/api/poc/polaris'));"
+          }
+        ]
+      },
+      "classification": "unaffected-route-test",
+      "action": "preserve-and-run",
+      "rationale": "Endpoint advertisement and separate presentation route; not an inline governedBy consumer."
+    },
+    {
+      "path": "apps/three-surface-poc/src/materialize-action.test.ts",
+      "sha256": "36ef63dc39278257a5e08c679d6e19f4a0b6c93167d38021449641161e376c6b",
+      "bytes": 21342,
+      "matches": {
+        "endpoint": [
+          {
+            "line": 22,
+            "text": "import { POC_MACHINE_PATH, pocRoutes } from './routes.js';"
+          },
+          {
+            "line": 165,
+            "text": "const machineResponse = await fetch(`${baseUrl}${POC_MACHINE_PATH}`, {"
+          }
+        ]
+      },
+      "classification": "unaffected-route-test",
+      "action": "preserve-and-run",
+      "rationale": "Uses an actual response for materialization evidence; work-item representation is not its oracle."
+    },
+    {
+      "path": "apps/three-surface-poc/src/orrery.ts",
+      "sha256": "8cdba628c980a1b9b020ca77ba8c60b0f75299aed6cefc36406df488ce13dc9a",
+      "bytes": 11207,
+      "matches": {
+        "endpoint": [
+          {
+            "line": 71,
+            "text": "* itself the same `model.orrery` object served at `GET /api/poc` — no"
+          }
+        ]
+      },
+      "classification": "human-renderer",
+      "action": "preserve",
+      "rationale": "The documented model.orrery slice is unchanged; no direct machine-wire decoder."
+    },
+    {
+      "path": "apps/three-surface-poc/src/poc-main.ts",
+      "sha256": "419794a51c798bbaed681b42a5c976ac16b0fbc4f1c52db096d2995de264f6ec",
+      "bytes": 10270,
+      "matches": {
+        "endpoint": [
+          {
+            "line": 218,
+            "text": "`Machine endpoint: http://${daemon.host}:${daemon.port}/api/poc`,"
+          }
+        ]
+      },
+      "classification": "route-advertisement",
+      "action": "preserve",
+      "rationale": "Prints endpoint URL; does not parse or derive from the body."
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-accessible-names-main.ts",
+      "sha256": "6312f9c9864221ca1d9bdb400d23832c27452a6a372fbf89dc6dbafb770c858c",
+      "bytes": 6898,
+      "matches": {
+        "endpoint": [
+          {
+            "line": 6,
+            "text": "// It reads the machine answer (`GET /api/poc`, bearer credential) of a"
+          },
+          {
+            "line": 27,
+            "text": "import { POC_MACHINE_PATH } from './routes.js';"
+          },
+          {
+            "line": 64,
+            "text": "pageListSource: `machine answer ${POC_MACHINE_PATH}: entry page plus one ${POLARIS_SOURCE_PATH} response per projectShape.sources entry`,"
+          },
+          {
+            "line": 101,
+            "text": "const response = await fetch(new URL(POC_MACHINE_PATH, baseUrl), { headers: { authorization: `Bearer ${token}` } });"
+          },
+          {
+            "line": 103,
+            "text": "process.stderr.write(`${POC_MACHINE_PATH} answered ${response.status}; nothing swept.\\n`);"
+          }
+        ],
+        "body_consumer": [
+          {
+            "line": 106,
+            "text": "const answer = await response.json() as MachineAnswer;"
+          }
+        ]
+      },
+      "classification": "operator-consumer",
+      "action": "migrate",
+      "rationale": "Admit the complete received body before deriving source-page populations; keep its narrow source/evaluation view."
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+      "sha256": "32a68c632a1404b4aeb6e9a4fdee2069861abf2e204aaf90a413c2e4f2ee78df",
+      "bytes": 21546,
+      "matches": {
+        "endpoint": [
+          {
+            "line": 8,
+            "text": "// the machine answer (`GET /api/poc`), never from the rendered links."
+          },
+          {
+            "line": 40,
+            "text": "import { POC_MACHINE_PATH, pocRoutes } from './routes.js';"
+          },
+          {
+            "line": 213,
+            "text": "const answer = await fetch(`${baseUrl}${POC_MACHINE_PATH}`, { headers: { authorization: `Bearer ${token}` } }).then(async (response) => response.json() as Promise<PocModel>);"
+          },
+          {
+            "line": 320,
+            "text": "const answer = await fetch(`${baseUrl}${POC_MACHINE_PATH}`, { headers: { authorization: `Bearer ${token}` } }).then(async (response) => response.json() as Promise<PocModel>);"
+          }
+        ],
+        "body_consumer": [
+          {
+            "line": 213,
+            "text": "const answer = await fetch(`${baseUrl}${POC_MACHINE_PATH}`, { headers: { authorization: `Bearer ${token}` } }).then(async (response) => response.json() as Promise<PocModel>);"
+          },
+          {
+            "line": 320,
+            "text": "const answer = await fetch(`${baseUrl}${POC_MACHINE_PATH}`, { headers: { authorization: `Bearer ${token}` } }).then(async (response) => response.json() as Promise<PocModel>);"
+          }
+        ]
+      },
+      "classification": "machine-parity-or-transport-test",
+      "action": "extend-existing",
+      "rationale": "Use the migrated reader admission/type in existing synthetic browser fixtures; no live daemon or private body read."
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+      "sha256": "e971879fcdb0b4af3236514d45ed2b9bf55312470412cf70b35dd0546f2e8b2a",
+      "bytes": 12676,
+      "matches": {
+        "endpoint": [
+          {
+            "line": 179,
+            "text": "for (const value of ['polaris', '/polaris', '/api/poc', 'polaris.ts', 'REQ-polaris-generation-1', 'REQ-polaris-generation-001/preview']) {"
+          }
+        ]
+      },
+      "classification": "negative-literal-fixture",
+      "action": "preserve",
+      "rationale": "The endpoint string occurs among deliberately invalid authority-citation literals."
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-capability-detail.test.ts",
+      "sha256": "8d969f077a9d384809a3c155120c83c089cb7f99fa0289ea78aa57ca851e41f8",
+      "bytes": 27635,
+      "matches": {
+        "logical_as_wire": [
+          {
+            "line": 205,
+            "text": "const before = JSON.stringify(model);"
+          },
+          {
+            "line": 271,
+            "text": "expect(JSON.stringify(model)).toBe(before);"
+          },
+          {
+            "line": 319,
+            "text": "const machine = JSON.parse(JSON.stringify(model)) as PocModel;"
+          }
+        ]
+      },
+      "classification": "machine-parity-or-transport-test",
+      "action": "extend-existing",
+      "rationale": "Replace the declared machine-answer surrogate at line 319 with an actual route answer; preserve unrelated logical immutability snapshots."
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-copy.test.ts",
+      "sha256": "8fb2282a9c3e876a0d5e78f8c116c8ffbb19d89d33152f54f3878ac346068dd2",
+      "bytes": 26137,
+      "matches": {
+        "logical_as_wire": [
+          {
+            "line": 270,
+            "text": "const clone = JSON.parse(JSON.stringify(model)) as unknown;"
+          }
+        ]
+      },
+      "classification": "logical-mutant-clone",
+      "action": "preserve",
+      "rationale": "Logical clone used to mutate renderer inputs; no claim that clone is an endpoint answer."
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-epistemic-tuples.test.ts",
+      "sha256": "1ae7743427a0dc769c8b8b11b9572c0d21e344193a0d9048fbf40c1227869ab7",
+      "bytes": 21282,
+      "matches": {
+        "logical_as_wire": [
+          {
+            "line": 174,
+            "text": "const machine = JSON.parse(JSON.stringify(model)) as PocModel;"
+          },
+          {
+            "line": 237,
+            "text": "const machine = JSON.parse(JSON.stringify(model)) as PocModel;"
+          }
+        ]
+      },
+      "classification": "machine-parity-or-transport-test",
+      "action": "extend-existing",
+      "rationale": "Use actual machine answers for both tuple comparisons; retain full per-claim identity, reason and route values."
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-narrative.test.ts",
+      "sha256": "14e5043c917a23b43b9ffc958cd1f2077d9d6e1041c186c8d5e5362ed8250508",
+      "bytes": 19878,
+      "matches": {
+        "logical_as_wire": [
+          {
+            "line": 194,
+            "text": "const machine = JSON.parse(JSON.stringify(model)) as PocModel;"
+          },
+          {
+            "line": 302,
+            "text": "const truthBefore = JSON.stringify(model);"
+          },
+          {
+            "line": 307,
+            "text": "expect(JSON.stringify(model)).toBe(truthBefore);"
+          }
+        ]
+      },
+      "classification": "machine-parity-or-transport-test",
+      "action": "extend-existing",
+      "rationale": "Use the real route body for the machine comparison; keep logical no-mutation snapshots unchanged."
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-narrative.ts",
+      "sha256": "daced3d4e4390b309f434ea3a959a9b9923029ce51d88e6f4e8bec51a17ecd0b",
+      "bytes": 7710,
+      "matches": {
+        "endpoint": [
+          {
+            "line": 9,
+            "text": "* structure is a presentation artifact: deleting it leaves `/api/poc`"
+          },
+          {
+            "line": 187,
+            "text": "// `/api/poc/polaris` serves it. It is not `/api/poc` and never becomes part"
+          }
+        ]
+      },
+      "classification": "presentation-producer",
+      "action": "preserve",
+      "rationale": "Separate /api/poc/polaris artifact contains no workItems and gains no reference language."
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-parity-sweep.test.ts",
+      "sha256": "bc2bb22653b985dcadcfb4577bb104c7110263c4ee3fe7176543ff8f84c1cdd0",
+      "bytes": 48920,
+      "matches": {
+        "endpoint": [
+          {
+            "line": 5,
+            "text": "// and hand-written projections over the machine answer (`/api/poc` is"
+          },
+          {
+            "line": 22,
+            "text": "import { POC_MACHINE_PATH, POLARIS_PRESENTATION_PATH, pocRoutes } from './routes.js';"
+          },
+          {
+            "line": 301,
+            "text": "const machine = served(POC_MACHINE_PATH) as unknown as PocModel;"
+          },
+          {
+            "line": 644,
+            "text": "const machine = JSON.parse(serve(POC_MACHINE_PATH, {})) as { resourceHeadroom: { entries: { id: string; declared: number; observed: { state: string; value?: number }; remaining: { state: string; value?: number } }[]; cost: { id: string; state: string; bodiesRead?: number; bytes?: number; parsePasses"
+          }
+        ],
+        "logical_as_wire": [
+          {
+            "line": 6,
+            "text": "// `JSON.stringify(model)` verbatim, so the machine channel here is that"
+          },
+          {
+            "line": 679,
+            "text": "const machineBody = JSON.stringify(model);"
+          }
+        ],
+        "identity": [
+          {
+            "line": 19,
+            "text": "import { responseIdentityPreimage } from '@syzygy/three-surface-poc-core';"
+          },
+          {
+            "line": 712,
+            "text": "const preimage = responseIdentityPreimage(model);"
+          }
+        ],
+        "body_consumer": [
+          {
+            "line": 644,
+            "text": "const machine = JSON.parse(serve(POC_MACHINE_PATH, {})) as { resourceHeadroom: { entries: { id: string; declared: number; observed: { state: string; value?: number }; remaining: { state: string; value?: number } }[]; cost: { id: string; state: string; bodiesRead?: number; bytes?: number; parsePasses"
+          }
+        ]
+      },
+      "classification": "machine-parity-or-transport-test",
+      "action": "extend-existing",
+      "rationale": "Use actual route bytes for every advertised machine denominator, including the re-observe empty machine family; preserve all other parity families."
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+      "sha256": "f8a237020b0e2c8e5e887fd805dd96983a128aceef948440d120d9bbb8274eeb",
+      "bytes": 7748,
+      "matches": {
+        "endpoint": [
+          {
+            "line": 2,
+            "text": "// RFC7-3): `/api/poc/polaris` serves the narrative registry the human page"
+          },
+          {
+            "line": 5,
+            "text": "// the machine response ceiling. `/api/poc` is unchanged by it."
+          },
+          {
+            "line": 19,
+            "text": "import { POC_MACHINE_PATH, POLARIS_PRESENTATION_KIND, POLARIS_PRESENTATION_PATH, pocRoutes, type PolarisPresentationEnvelope } from './routes.js';"
+          },
+          {
+            "line": 103,
+            "text": "const truth = (await (await fetch(`${baseUrl}${POC_MACHINE_PATH}`, { headers: { authorization: `Bearer ${token}` } })).json()) as PocModel & { narrative?: unknown };"
+          }
+        ],
+        "logical_as_wire": [
+          {
+            "line": 104,
+            "text": "expect({ ...truth, links: undefined, responseIdentity: model.responseIdentity }).toEqual({ ...JSON.parse(JSON.stringify(model)), links: undefined });"
+          }
+        ],
+        "body_consumer": [
+          {
+            "line": 114,
+            "text": "expect(JSON.parse(body)).toMatchObject({ served: 'nothing', failure: 'response-limit-breached', limit: 'maxMachineResponseBytes', declared: 64 });"
+          }
+        ]
+      },
+      "classification": "machine-parity-or-transport-test",
+      "action": "extend-existing",
+      "rationale": "Replace raw whole-object equality to the logical model with independent semantic comparison plus explicit wire-shape checks."
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-project-shape.test.ts",
+      "sha256": "912b0eab847f1d75c6723b8e98b8de9b7a01db9dcb04a1146f4b6ddb6b60cf82",
+      "bytes": 34268,
+      "matches": {
+        "logical_as_wire": [
+          {
+            "line": 224,
+            "text": "const machine = JSON.parse(JSON.stringify(model)) as PocModel;"
+          },
+          {
+            "line": 536,
+            "text": "const copy = JSON.parse(JSON.stringify(model)) as PocModel;"
+          }
+        ]
+      },
+      "classification": "machine-parity-or-transport-test",
+      "action": "extend-existing",
+      "rationale": "Replace its asserted machine-channel surrogate only; preserve the later logical mutant clone."
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-proposed-work.test.ts",
+      "sha256": "5b7e16cf450919f10353adef1b009f962480608234b3fae29d2445daa5ee8005",
+      "bytes": 9614,
+      "matches": {
+        "logical_as_wire": [
+          {
+            "line": 136,
+            "text": "const machine = JSON.parse(JSON.stringify(model)) as PocModel;"
+          },
+          {
+            "line": 153,
+            "text": "const machine = JSON.parse(JSON.stringify(model)) as PocModel;"
+          }
+        ]
+      },
+      "classification": "machine-parity-or-transport-test",
+      "action": "extend-existing",
+      "rationale": "Replace both machine-answer surrogates with real route answers; preserve proposed-work semantics."
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-reachability.test.ts",
+      "sha256": "09a0d613ec9690e44040f2577f771083874499728023cfccc2d0ad945a24bc93",
+      "bytes": 28138,
+      "matches": {
+        "logical_as_wire": [
+          {
+            "line": 84,
+            "text": "const shape = (JSON.parse(JSON.stringify(model)) as PocModel).projectShape;"
+          },
+          {
+            "line": 343,
+            "text": "const machine = (JSON.parse(JSON.stringify(model)) as PocModel).projectShape;"
+          }
+        ]
+      },
+      "classification": "machine-parity-or-transport-test",
+      "action": "extend-existing",
+      "rationale": "Use real served projectShape data in declared machine reachability comparisons, preserving the existing source-route population."
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-walkthrough-readiness.test.ts",
+      "sha256": "5b23bac425cf357fff2b132e8470891f58c0eb8c5a1b4243aee9b25885a17e78",
+      "bytes": 18372,
+      "matches": {
+        "endpoint": [
+          {
+            "line": 86,
+            "text": "for (const other of ['/', '/trajectory', '/orrery', '/trajectory/materialize', '/polaris/', '/api/poc']) {"
+          }
+        ],
+        "logical_as_wire": [
+          {
+            "line": 7,
+            "text": "// served HTML and compared with the machine answer (`JSON.stringify(model)`"
+          },
+          {
+            "line": 71,
+            "text": "const machine = (JSON.parse(JSON.stringify(model)) as PocModel).walkthroughReadiness;"
+          }
+        ]
+      },
+      "classification": "machine-parity-or-transport-test",
+      "action": "extend-existing",
+      "rationale": "Read the unchanged readiness slice from an actual route answer; distinguish wire-fault readiness:false from persisted readiness arms."
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris.ts",
+      "sha256": "1377f15ddda36ff0a92f658395b36438b11b1f7fe4bf6ddf81f2b5edac5c5b3d",
+      "bytes": 134690,
+      "matches": {
+        "endpoint": [
+          {
+            "line": 1725,
+            "text": "* human page and the envelope `/api/poc/polaris` serves derive from the"
+          }
+        ]
+      },
+      "classification": "human-renderer",
+      "action": "preserve",
+      "rationale": "Presentation envelope/narrative and human logical model remain unchanged."
+    },
+    {
+      "path": "apps/three-surface-poc/src/response-limits.test.ts",
+      "sha256": "b2a87ca689c84becb83dc7d436132a5bef65265c36e4fed9ffe56c6d14805cdb",
+      "bytes": 19653,
+      "matches": {
+        "endpoint": [
+          {
+            "line": 17,
+            "text": "import { boundedResponse, POC_HUMAN_PATH, POC_MACHINE_PATH, pocRoutes, type ResponseLimitFailure } from './routes.js';"
+          },
+          {
+            "line": 75,
+            "text": "const machine = await fetch(`${base}${POC_MACHINE_PATH}`, { headers: { authorization: `Bearer ${token}` } });"
+          },
+          {
+            "line": 90,
+            "text": "expect(records.map(record => record.route)).toEqual(['/', POC_MACHINE_PATH]);"
+          },
+          {
+            "line": 264,
+            "text": "const full = route(POC_MACHINE_PATH).handle(context(POC_MACHINE_PATH));"
+          },
+          {
+            "line": 271,
+            "text": ".find((entry) => entry.path === POC_MACHINE_PATH);"
+          },
+          {
+            "line": 273,
+            "text": "const result = candidate.handle(context(POC_MACHINE_PATH, { 'if-none-match': etag as string }));"
+          },
+          {
+            "line": 280,
+            "text": "it.each([POC_MACHINE_PATH, `${TAILNET_MOUNT_PREFIX}${POC_MACHINE_PATH}`])('%s: limit − 1 fails closed, limit and limit + 1 serve the model', (path) => {"
+          },
+          {
+            "line": 295,
+            "text": "expect(route(POC_MACHINE_PATH, humanOnly).handle(context(POC_MACHINE_PATH, {})).status).toBe(200);"
+          },
+          {
+            "line": 304,
+            "text": "expect(route(POC_MACHINE_PATH).handle(context(POC_MACHINE_PATH, {})).status).toBe(200);"
+          }
+        ]
+      },
+      "classification": "machine-parity-or-transport-test",
+      "action": "extend-existing",
+      "rationale": "Measure final reference-encoded UTF-8 bytes at limit−1/limit/limit+1, including conditional requests and both mounts."
+    },
+    {
+      "path": "apps/three-surface-poc/src/routes.test.ts",
+      "sha256": "c6b387e33a4ec15dc7ada5381cea6cdd000fb4b08e660025324d453b00972dc3",
+      "bytes": 29098,
+      "matches": {
+        "endpoint": [
+          {
+            "line": 11,
+            "text": "import { POC_MACHINE_PATH, POLARIS_PRESENTATION_PATH, pocRoutes, renderPocPage } from './routes.js';"
+          },
+          {
+            "line": 287,
+            "text": "{ path: POC_MACHINE_PATH, host: undefined, self: POC_MACHINE_PATH },"
+          },
+          {
+            "line": 288,
+            "text": "{ path: POC_MACHINE_PATH, host: 'tzeusy.parrot-hen.ts.net', self: `${TAILNET_MOUNT_PREFIX}${POC_MACHINE_PATH}` },"
+          },
+          {
+            "line": 289,
+            "text": "{ path: `${TAILNET_MOUNT_PREFIX}${POC_MACHINE_PATH}`, host: undefined, self: `${TAILNET_MOUNT_PREFIX}${POC_MACHINE_PATH}` },"
+          },
+          {
+            "line": 310,
+            "text": "if (form.path.endsWith(POC_MACHINE_PATH)) truthKeys.push((JSON.parse(served.body) as PocModel).responseIdentity.contentKey);"
+          },
+          {
+            "line": 327,
+            "text": "const response = await fetch(`http://${start.daemon.host}:${start.daemon.port}${POC_MACHINE_PATH}`, { headers: { authorization: `Bearer ${token}` } });"
+          },
+          {
+            "line": 338,
+            "text": "it('revalidates only the complete bounded /api/poc representation, after credential admission', async () => {"
+          },
+          {
+            "line": 348,
+            "text": "const url = `${base}${POC_MACHINE_PATH}`;"
+          },
+          {
+            "line": 404,
+            "text": "const url = `http://${started.daemon.host}:${started.daemon.port}${POC_MACHINE_PATH}`;"
+          },
+          {
+            "line": 457,
+            "text": "const refused = await fetch(`${baseUrl}${POC_MACHINE_PATH}`);"
+          },
+          {
+            "line": 461,
+            "text": "const machineResponse = await fetch(`${baseUrl}${POC_MACHINE_PATH}`, {"
+          },
+          {
+            "line": 475,
+            "text": "const response = await fetch(`http://${daemon.host}:${daemon.port}${POC_MACHINE_PATH}`, {"
+          },
+          {
+            "line": 493,
+            "text": "const url = `http://${daemon.host}:${daemon.port}${POC_MACHINE_PATH}`;"
+          },
+          {
+            "line": 532,
+            "text": "const machine = JSON.parse(await (await fetch(`http://${daemon.host}:${daemon.port}${POC_MACHINE_PATH}`, { headers: { authorization: `Bearer ${token}` } })).text()) as PocModel;"
+          },
+          {
+            "line": 579,
+            "text": "const machineResponse = await fetch(`${baseUrl}${POC_MACHINE_PATH}`, { headers: { authorization: `Bearer ${token}` } });"
+          }
+        ],
+        "logical_as_wire": [
+          {
+            "line": 467,
+            "text": "expect({ ...wireModel, links: undefined, responseIdentity: model.responseIdentity }).toEqual({ ...JSON.parse(JSON.stringify(model)), links: undefined });"
+          },
+          {
+            "line": 511,
+            "text": "const dispatched = JSON.parse(JSON.stringify(model)) as any;"
+          },
+          {
+            "line": 521,
+            "text": "const constrained = JSON.parse(JSON.stringify(model)) as any;"
+          }
+        ],
+        "identity": [
+          {
+            "line": 9,
+            "text": "import { BUTLERS_POC_SEEDS, buildPocModel, buildResponseIdentity, type PocModel } from '@syzygy/three-surface-poc-core';"
+          },
+          {
+            "line": 519,
+            "text": "expect(buildResponseIdentity(dispatched).contentKey).not.toBe(model.responseIdentity.contentKey);"
+          },
+          {
+            "line": 525,
+            "text": "expect(buildResponseIdentity(constrained).contentKey).not.toBe(model.responseIdentity.contentKey);"
+          }
+        ],
+        "body_consumer": [
+          {
+            "line": 307,
+            "text": "const body = JSON.parse(served.body) as { links: NonNullable<PocModel['links']> };"
+          },
+          {
+            "line": 310,
+            "text": "if (form.path.endsWith(POC_MACHINE_PATH)) truthKeys.push((JSON.parse(served.body) as PocModel).responseIdentity.contentKey);"
+          },
+          {
+            "line": 329,
+            "text": "const served = JSON.parse(await response.text()) as PocModel & { links: NonNullable<PocModel['links']> };"
+          },
+          {
+            "line": 335,
+            "text": "expect(independentResponseKey(JSON.parse(JSON.stringify(served)) as Record<string, unknown>)).toBe(served.responseIdentity.contentKey);"
+          },
+          {
+            "line": 354,
+            "text": "expect(etag).toBe(`W/\"${(JSON.parse(firstBody) as PocModel).responseIdentity.contentKey}\"`);"
+          },
+          {
+            "line": 365,
+            "text": "for (const condition of [etag as string, `\"other\", \"${(JSON.parse(firstBody) as PocModel).responseIdentity.contentKey}\"`, '*']) {"
+          },
+          {
+            "line": 479,
+            "text": "const served = JSON.parse(await response.text()) as Record<string, unknown>;"
+          },
+          {
+            "line": 501,
+            "text": "const etag = `W/\"${(JSON.parse(sequential[0] as string) as PocModel).responseIdentity.contentKey}\"`;"
+          }
+        ]
+      },
+      "classification": "machine-parity-or-transport-test",
+      "action": "extend-existing",
+      "rationale": "Check the reference representation, independently expanded semantic parity, raw-wire content key, authentication and cache refusal order."
+    },
+    {
+      "path": "apps/three-surface-poc/src/routes.ts",
+      "sha256": "648a556a49f18a9f0f8345f916cbb7f2a73bdbfc8b700aba5de7a27029ab25e0",
+      "bytes": 18558,
+      "matches": {
+        "endpoint": [
+          {
+            "line": 18,
+            "text": "export const POC_MACHINE_PATH = '/api/poc' as const;"
+          },
+          {
+            "line": 22,
+            "text": "* It is a presentation artifact, never citable, and never part of `/api/poc`. */"
+          },
+          {
+            "line": 23,
+            "text": "export const POLARIS_PRESENTATION_PATH = '/api/poc/polaris' as const;"
+          },
+          {
+            "line": 124,
+            "text": "footer: `Evaluation <code>${escapeHtml(model.evaluation.snapshot)}</code> as of <code>${escapeHtml(model.evaluation.asOf)}</code>. Machine facts: authenticated <code>GET ${POC_MACHINE_PATH}</code>.`,"
+          },
+          {
+            "line": 313,
+            "text": "path: POC_MACHINE_PATH,"
+          },
+          {
+            "line": 319,
+            "text": "path: `${TAILNET_MOUNT_PREFIX}${POC_MACHINE_PATH}`,"
+          }
+        ],
+        "logical_as_wire": [
+          {
+            "line": 239,
+            "text": "const full = boundedResponse(model, limits, 'maxMachineResponseBytes', 'application/json', JSON.stringify(model), recorder);"
+          }
+        ],
+        "identity": [
+          {
+            "line": 2,
+            "text": "import { PWB_RESOURCE_LIMITS, buildResponseIdentity, withServedResourceBreaches, type PocEntity, type PocModel, type PocSurface, type PwbResourceLimits, type Reevaluation } from '@syzygy/three-surface-poc-core';"
+          },
+          {
+            "line": 196,
+            "text": "return { ...projected, responseIdentity: buildResponseIdentity(projected) };"
+          },
+          {
+            "line": 238,
+            "text": "const model: PocModel = { ...projected, responseIdentity: buildResponseIdentity(projected) };"
+          }
+        ]
+      },
+      "classification": "producer",
+      "action": "change",
+      "rationale": "Project and validate before raw-wire response identity, final serialization/ceiling and conditional success."
+    },
+    {
+      "path": "apps/three-surface-poc/src/surface-render-fractions.test.ts",
+      "sha256": "70188c9a730063e71009c5b35877813b95734fc82e4d36989010100905b9ddc9",
+      "bytes": 5861,
+      "matches": {
+        "endpoint": [
+          {
+            "line": 5,
+            "text": "// The machine side is `GET /api/poc`'s body, which is `JSON.stringify(model)`"
+          }
+        ],
+        "logical_as_wire": [
+          {
+            "line": 5,
+            "text": "// The machine side is `GET /api/poc`'s body, which is `JSON.stringify(model)`"
+          },
+          {
+            "line": 34,
+            "text": "return JSON.parse(JSON.stringify(model)) as MachineAnswer;"
+          }
+        ]
+      },
+      "classification": "machine-parity-or-transport-test",
+      "action": "extend-existing",
+      "rationale": "Replace the central surrogate with a real route answer; preserve complete versus rendered denominators."
+    },
+    {
+      "path": "apps/three-surface-poc/src/test-artifact-verification-consumers.test.ts",
+      "sha256": "a66754b0c16bc0ee00693ada0c4ac9fd8830ec2308f2d0707ca27c08595c75c4",
+      "bytes": 5342,
+      "matches": {
+        "endpoint": [
+          {
+            "line": 20,
+            "text": "//   channel at `/api/poc`, which carries the verification verbatim."
+          },
+          {
+            "line": 65,
+            "text": "'serves the model verbatim at /api/poc; the value names its own kind, tier and disclosure, and no `verified` kind exists to serve',"
+          }
+        ],
+        "logical_as_wire": [
+          {
+            "line": 19,
+            "text": "// - a whole-model serializer written `JSON.stringify(model)`, the machine"
+          }
+        ]
+      },
+      "classification": "machine-parity-or-transport-test",
+      "action": "extend-existing",
+      "rationale": "Update its whole-model serializer census to the actual new projection/serialization seam; preserve reported versus verified interpretation."
+    },
+    {
+      "path": "apps/three-surface-poc/src/trajectory.test.ts",
+      "sha256": "419673bd72be4c00bc79eed4a7d05aff1a05adf0b6287a45d0a51b7e73ebc274",
+      "bytes": 27611,
+      "matches": {
+        "endpoint": [
+          {
+            "line": 72,
+            "text": "const machineRoute = pocRoutes(() => model).find((route) => route.path === '/api/poc')!;"
+          },
+          {
+            "line": 73,
+            "text": "const response = await machineRoute.handle({ request: { method: 'GET', path: '/api/poc', query: new URLSearchParams(), headers: {} } });"
+          }
+        ],
+        "body_consumer": [
+          {
+            "line": 75,
+            "text": "const served = JSON.parse(response.body) as PocModel;"
+          }
+        ]
+      },
+      "classification": "machine-parity-or-transport-test",
+      "action": "extend-existing",
+      "rationale": "Replace the raw PocModel cast of a route answer with its wire type or independent effective view; keep local count/rendering assertions."
+    },
+    {
+      "path": "apps/three-surface-poc/src/trajectory.ts",
+      "sha256": "7795040f124888a123887b915490ef5e1df1dab48211b6b4c762ebabfb9907f1",
+      "bytes": 17625,
+      "matches": {
+        "governing_value": [
+          {
+            "line": 148,
+            "text": "const count = model.workItems.governedByUnknownCount;"
+          },
+          {
+            "line": 151,
+            "text": "const governedBy = subjects.get(workItemGoverningIntentId(item.id));"
+          },
+          {
+            "line": 152,
+            "text": "return governedBy?.label === 'Unknown' && governedBy.closedReason === 'source-uncaptured-or-unreachable';"
+          },
+          {
+            "line": 191,
+            "text": "const governedBy = unknownSubject(model, workItemGoverningIntentId(item.id));"
+          },
+          {
+            "line": 192,
+            "text": "return `<li class=\"wi-card${demonstrated ? ' wi-card-demonstrated' : ''}\" id=\"workitem-${escapeHtml(item.id)}\" data-governed-by=\"${escapeHtml(governedBy.label)}\" data-work-item-id=\"${escapeHtml(item.id)}\">"
+          },
+          {
+            "line": 197,
+            "text": "${itemGoverningIntent(item.id, governedBy)}"
+          }
+        ]
+      },
+      "classification": "human-renderer",
+      "action": "preserve",
+      "rationale": "Consumes the logical model; per-card epistemic disclosures and count region remain unchanged."
+    },
+    {
+      "path": "apps/three-surface-poc/src/verbatim-route.test.ts",
+      "sha256": "6b25a9ce49865bdff4b8e849c9a46ad839f646739e7c843543e1878debc218d3",
+      "bytes": 14530,
+      "matches": {
+        "endpoint": [
+          {
+            "line": 15,
+            "text": "import { POC_MACHINE_PATH, pocRoutes } from './routes.js';"
+          },
+          {
+            "line": 229,
+            "text": "const machineBody = bodyOf(routeAt(routes, POC_MACHINE_PATH).handle(context(POC_MACHINE_PATH)));"
+          }
+        ],
+        "logical_as_wire": [
+          {
+            "line": 183,
+            "text": "const excluded: PocModel = JSON.parse(JSON.stringify(model)) as PocModel;"
+          },
+          {
+            "line": 244,
+            "text": "const before = JSON.stringify(model);"
+          },
+          {
+            "line": 248,
+            "text": "expect(JSON.stringify(model)).toBe(before);"
+          }
+        ]
+      },
+      "classification": "logical-mutant-clone",
+      "action": "preserve",
+      "rationale": "Logical model clones and no-mutation snapshots protect exact-source rendering, not wire decoding."
+    },
+    {
+      "path": "apps/three-surface-poc/src/walkthrough-inputs.test.ts",
+      "sha256": "70e703d56030b7de6d52ec08e08b929482e37b0253f247765ca272a21c605983",
+      "bytes": 21041,
+      "matches": {
+        "endpoint": [
+          {
+            "line": 212,
+            "text": "for (const other of ['/', '/trajectory', '/orrery', '/trajectory/materialize', '/api/poc']) {"
+          }
+        ]
+      },
+      "classification": "route-exclusion-test",
+      "action": "preserve",
+      "rationale": "Asserts the walkthrough source does not attach to other routes; body form is irrelevant."
+    },
+    {
+      "path": "packages/cap1-daemon/src/routes-machine.test.ts",
+      "sha256": "fe57a2862707c9fefb0dd7152f8891a37cb3c7951590d0e31b979db1ecd1038a",
+      "bytes": 21677,
+      "matches": {
+        "body_consumer": [
+          {
+            "line": 173,
+            "text": "return response.json();"
+          }
+        ]
+      },
+      "classification": "other-protocol",
+      "action": "exclude",
+      "rationale": "Capability 1 machine protocol, not the POC model."
+    },
+    {
+      "path": "packages/cap1-daemon/src/server.test.ts",
+      "sha256": "d7164b734808687db6a8b5e061648da2cb4b7588f224265b938a3a1c141cd4ec",
+      "bytes": 17083,
+      "matches": {
+        "body_consumer": [
+          {
+            "line": 203,
+            "text": "expect(await response.json()).toEqual({ served: 'machine-facts' });"
+          },
+          {
+            "line": 225,
+            "text": "expect(await response.json()).toEqual({"
+          }
+        ]
+      },
+      "classification": "other-protocol",
+      "action": "exclude",
+      "rationale": "Generic daemon/server response fixtures, not POC workItems."
+    },
+    {
+      "path": "packages/cap1-system/src/credentials.system.test.ts",
+      "sha256": "e9e4f84a41e95a8461363abbd7a4105f88fecdaca8d65b2e2976a8c83e113ebe",
+      "bytes": 3152,
+      "matches": {
+        "body_consumer": [
+          {
+            "line": 67,
+            "text": "const body = (await response.json()) as { kind: string };"
+          }
+        ]
+      },
+      "classification": "other-protocol",
+      "action": "exclude",
+      "rationale": "Capability 1 credential protocol, not POC workItems."
+    },
+    {
+      "path": "packages/polaris-dossier/src/close.test.ts",
+      "sha256": "4fab536f900ed66fbdb399ca2a9706ba20991876eaeb2e7e06028f3d5db78ca7",
+      "bytes": 14927,
+      "matches": {
+        "body_consumer": [
+          {
+            "line": 53,
+            "text": "expect(JSON.parse(status.stdout).limitsSpent.agentUsage).toBe('48213 tokens and 37 turns, as the operator declared at close; not observed by Syzygy and not a provider receipt');"
+          }
+        ]
+      },
+      "classification": "other-protocol",
+      "action": "exclude",
+      "rationale": "Dossier close/status record JSON."
+    },
+    {
+      "path": "packages/polaris-dossier/src/design-review.test.ts",
+      "sha256": "ed41faa00f79f70e7c73f66a7fb7fd594de466a3103b0f5bb2d965d488027379",
+      "bytes": 7315,
+      "matches": {
+        "body_consumer": [
+          {
+            "line": 67,
+            "text": "compact.set('machine.json', `${JSON.stringify(JSON.parse(machine([])))}\\n`);"
+          }
+        ]
+      },
+      "classification": "other-protocol",
+      "action": "exclude",
+      "rationale": "Dossier machine.json artifact protocol."
+    },
+    {
+      "path": "packages/polaris-dossier/src/render.test.ts",
+      "sha256": "ff3b6991df5fb008aad4e0b12f753a15f2f866112e5b312a42fdc63e2722ff5c",
+      "bytes": 69956,
+      "matches": {
+        "body_consumer": [
+          {
+            "line": 298,
+            "text": "const machine = JSON.parse(files.get('machine.json')!);"
+          },
+          {
+            "line": 326,
+            "text": "const machine = JSON.parse(files.get('machine.json')!);"
+          },
+          {
+            "line": 359,
+            "text": "expect(JSON.parse(files.get('machine.json')!).draftLayer.state).toBe('unknown');"
+          },
+          {
+            "line": 510,
+            "text": "const machine = JSON.parse(readSite(result.report.site).get('machine.json')!);"
+          },
+          {
+            "line": 662,
+            "text": "expect(JSON.parse(after.get('machine.json')!).reviewStatus[1]).toMatchObject({ id: 'review-status/design', label: 'Inferred' });"
+          },
+          {
+            "line": 843,
+            "text": "expect(JSON.parse(c.out.stdout).designReview).toEqual({ counts: true, packetSha256, label: 'Observed' });"
+          }
+        ]
+      },
+      "classification": "other-protocol",
+      "action": "exclude",
+      "rationale": "Dossier machine.json artifact protocol."
+    },
+    {
+      "path": "packages/polaris-generation-core/src/pipeline.ts",
+      "sha256": "89df81566b51fdcc24376f6b1282fea7d2110132dd7caa7c198bb03b00b45164",
+      "bytes": 30849,
+      "matches": {
+        "body_consumer": [
+          {
+            "line": 380,
+            "text": "return ports.generate({ permit: permit, stage: name, system: prompt.system, input: encoded, responseSchema: JSON.parse(encoded).responseSchema, signal: controller.signal });"
+          }
+        ]
+      },
+      "classification": "other-protocol",
+      "action": "exclude",
+      "rationale": "Provider request envelope responseSchema, not a POC endpoint body."
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/authority-disclosure.ts",
+      "sha256": "14be239ef75d8a54ee6fc8f2a05fc397b85c0be446b56d0b473bd2d49c801be9",
+      "bytes": 6150,
+      "matches": {
+        "endpoint": [
+          {
+            "line": 7,
+            "text": "// Polaris, the home page and `/api/poc` all carry these strings from"
+          }
+        ]
+      },
+      "classification": "unaffected-shared-slice",
+      "action": "preserve",
+      "rationale": "Comment refers to disclosure strings carried by multiple channels; no work-item wire decoding."
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/evidence-population.ts",
+      "sha256": "3b16e65f147ea1f164c7f1cb9f3d5bcf49e23c15dd3cf59c0473ecb4d2a00f8a",
+      "bytes": 4128,
+      "matches": {
+        "endpoint": [
+          {
+            "line": 47,
+            "text": "// The `projectShape` field of the parsed JSON body of GET /api/poc (or"
+          }
+        ]
+      },
+      "classification": "unaffected-shared-slice",
+      "action": "preserve",
+      "rationale": "Operates only on the unchanged projectShape slice after the caller admits a current answer."
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/model-observations.test.ts",
+      "sha256": "1cd715b1b7df320f4959b38efcb2c0537ede6d55ea186f158eed1fff3a54c0aa",
+      "bytes": 10373,
+      "matches": {
+        "logical_as_wire": [
+          {
+            "line": 225,
+            "text": "expect(JSON.parse(JSON.stringify(model))).toEqual(model);"
+          }
+        ]
+      },
+      "classification": "logical-regression",
+      "action": "preserve",
+      "rationale": "JSON roundtrip at line 225 is a logical-model serialization property, not a claimed endpoint answer."
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/model.test.ts",
+      "sha256": "b9a5d094a19d2a947675f232d0a41e3f25f83837e90db0953e23d7b8811d56d7",
+      "bytes": 44763,
+      "matches": {
+        "body_consumer": [
+          {
+            "line": 417,
+            "text": "const wire = JSON.parse(JSON.stringify(observed)) as { projectShape: { kind: string } };"
+          }
+        ]
+      },
+      "classification": "logical-regression",
+      "action": "preserve",
+      "rationale": "JSON roundtrip of a model fixture tests projectShape, not endpoint representation."
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/model.ts",
+      "sha256": "9ab58377379c17fa0a09f84fd45441a1eb0f44d1edf82b07c496f9d49a87ce2f",
+      "bytes": 52451,
+      "matches": {
+        "governing_value": [
+          {
+            "line": 573,
+            "text": "// item's own `governedBy` with its basis sentence, and the count"
+          },
+          {
+            "line": 575,
+            "text": "const served = new Map(input.workItems.items.map((item) => [item.id, item.governedBy]));"
+          },
+          {
+            "line": 577,
+            "text": "const governedBy = served.get(item.id);"
+          },
+          {
+            "line": 578,
+            "text": "if (governedBy !== undefined) subjects.push({ id: workItemGoverningIntentId(item.id), epistemic: governingIntentDisclosure(governedBy) });"
+          }
+        ],
+        "identity": [
+          {
+            "line": 43,
+            "text": "buildResponseIdentity,"
+          },
+          {
+            "line": 1307,
+            "text": "const responseIdentity = buildResponseIdentity(modelWithoutResponseIdentity);"
+          }
+        ]
+      },
+      "classification": "logical-model",
+      "action": "preserve",
+      "rationale": "Retain per-item unknownSubjects derivation and evaluation/observation/item identities."
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/response-identity.test.ts",
+      "sha256": "2651263c50ccd75aa1d1893e2df1d3399641792968dc98e7155379b0484d5b3d",
+      "bytes": 5630,
+      "matches": {
+        "identity": [
+          {
+            "line": 7,
+            "text": "buildResponseIdentity,"
+          },
+          {
+            "line": 9,
+            "text": "responseIdentityPreimage,"
+          },
+          {
+            "line": 29,
+            "text": "const identity = buildResponseIdentity(model());"
+          },
+          {
+            "line": 40,
+            "text": "const first = buildResponseIdentity(model());"
+          },
+          {
+            "line": 41,
+            "text": "const restarted = buildResponseIdentity(model({ evaluation: { asOf: '2026-09-24T00:00:00.000Z', label: 'same-evaluation' } }));"
+          },
+          {
+            "line": 44,
+            "text": "const undeclared = buildResponseIdentity(model({ runtime: { capturedAt: '2026-09-24T00:00:00.000Z' } }));"
+          },
+          {
+            "line": 45,
+            "text": "const changed = buildResponseIdentity(model({ runtime: { capturedAt: '2026-09-25T00:00:00.000Z' } }));"
+          },
+          {
+            "line": 53,
+            "text": "expect(buildResponseIdentity(first).contentKey).not.toBe(buildResponseIdentity(changed).contentKey);"
+          },
+          {
+            "line": 59,
+            "text": "expect(buildResponseIdentity(first).contentKey).toBe(buildResponseIdentity(reordered).contentKey);"
+          },
+          {
+            "line": 62,
+            "text": "expect(buildResponseIdentity(first).contentKey).not.toBe(buildResponseIdentity(arrayReordered).contentKey);"
+          },
+          {
+            "line": 64,
+            "text": "const withKey = { ...first, responseIdentity: buildResponseIdentity(first) };"
+          },
+          {
+            "line": 65,
+            "text": "expect(buildResponseIdentity(withKey).contentKey).toBe(buildResponseIdentity(first).contentKey);"
+          },
+          {
+            "line": 70,
+            "text": "const identity = buildResponseIdentity(original);"
+          },
+          {
+            "line": 75,
+            "text": "expect(buildResponseIdentity(tampered).contentKey).not.toBe(identity.contentKey);"
+          },
+          {
+            "line": 80,
+            "text": "const first = buildResponseIdentity(input);"
+          },
+          {
+            "line": 82,
+            "text": "const second = buildResponseIdentity(model());"
+          },
+          {
+            "line": 88,
+            "text": "const identity = buildResponseIdentity(value);"
+          },
+          {
+            "line": 89,
+            "text": "const preimage = responseIdentityPreimage(value).value;"
+          },
+          {
+            "line": 95,
+            "text": "const absent = buildResponseIdentity("
+          },
+          {
+            "line": 101,
+            "text": "expect(() => buildResponseIdentity(model(), declaration(['rows[].id', 'rows[].id']))).toThrow(/duplicated/);"
+          },
+          {
+            "line": 102,
+            "text": "expect(() => buildResponseIdentity(model(), declaration(['rows[].id', 'evaluation.asOf']))).toThrow(/lexical/);"
+          },
+          {
+            "line": 103,
+            "text": "expect(() => buildResponseIdentity(model(), declaration(['rows[0].id']))).toThrow(/malformed/);"
+          },
+          {
+            "line": 104,
+            "text": "expect(() => buildResponseIdentity(model({ rows: { id: 'not-an-array' } }), declaration(['rows[].id']))).toThrow(/array/);"
+          },
+          {
+            "line": 105,
+            "text": "expect(() => buildResponseIdentity({ ...model(), responseIdentity: undefined })).toThrow(/metadata/);"
+          },
+          {
+            "line": 109,
+            "text": "expect(() => buildResponseIdentity(model({ impossible: BigInt(1) }))).toThrow(/canonicalization failed/);"
+          }
+        ]
+      },
+      "classification": "identity-regression",
+      "action": "preserve-and-run",
+      "rationale": "Existing canonical identity/exclusion regressions remain the algorithm gate; no new exclusion or encoder is proposed."
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/response-identity.ts",
+      "sha256": "0347e2e9c614efcd386e8636025e4bcf04a2f2bbc748c4e36493be8c8530b506",
+      "bytes": 9438,
+      "matches": {
+        "identity": [
+          {
+            "line": 204,
+            "text": "export function responseIdentityPreimage("
+          },
+          {
+            "line": 219,
+            "text": "export function buildResponseIdentity("
+          },
+          {
+            "line": 224,
+            "text": "const preimage = responseIdentityPreimage(model, activeDeclaration);"
+          }
+        ]
+      },
+      "classification": "identity-algorithm",
+      "action": "preserve",
+      "rationale": "Generic identity builder already accepts the complete object; pass the actual wire object at the route, retain all 25 exclusions."
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/trajectory-projection.test.ts",
+      "sha256": "5cd754141c30eb410aa5ce5d67c9b7b5ad792572c1bc7bcee21a65a62b34249e",
+      "bytes": 7579,
+      "matches": {
+        "governing_value": [
+          {
+            "line": 13,
+            "text": "{ id: 'bu-1', status: 'open', issueType: 'task', priority: 1, createdAt: '2026-08-01T00:00:00Z', updatedAt: '2026-08-02T00:00:00Z', closedAt: null, governedBy: governingIntentUnknown() },"
+          },
+          {
+            "line": 14,
+            "text": "{ id: 'bu-2', status: 'in_progress', issueType: 'task', priority: 1, createdAt: '2026-08-03T00:00:00Z', updatedAt: '2026-08-04T00:00:00Z', closedAt: null, governedBy: governingIntentUnknown() },"
+          },
+          {
+            "line": 15,
+            "text": "{ id: 'bu-3', status: 'closed', issueType: 'task', priority: 1, createdAt: '2026-08-05T00:00:00Z', updatedAt: '2026-08-06T00:00:00Z', closedAt: '2026-08-06T00:00:00Z', governedBy: governingIntentUnknown() },"
+          },
+          {
+            "line": 16,
+            "text": "{ id: 'bu-4', status: 'closed', issueType: 'task', priority: 1, createdAt: '2026-07-01T00:00:00Z', updatedAt: '2026-07-02T00:00:00Z', closedAt: '2026-07-02T00:00:00Z', governedBy: governingIntentUnknown() },"
+          },
+          {
+            "line": 18,
+            "text": "governedByUnknownCount: 4,"
+          }
+        ]
+      },
+      "classification": "logical-regression",
+      "action": "preserve-and-run",
+      "rationale": "Fixtures concern the unchanged logical per-item value, not received machine-wire bodies."
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/work-items.test.ts",
+      "sha256": "632caa16f97ec7472fd07b95720f5fed792f1ab6110e6cf16c51eba0f800300a",
+      "bytes": 8360,
+      "matches": {
+        "governing_value": [
+          {
+            "line": 203,
+            "text": "expect(Object.keys(titled.items[0] ?? {}).sort()).toEqual(['closedAt', 'createdAt', 'governedBy', 'id', 'issueType', 'priority', 'status', 'updatedAt']);"
+          }
+        ]
+      },
+      "classification": "logical-regression",
+      "action": "preserve-and-run",
+      "rationale": "Preserve observer projection, withheld-title and item-field tests; do not turn their logical values into references."
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/work-items.ts",
+      "sha256": "5c995c5e8a6705b10af97eed86d19151439b0871f15788b0eebba8c212207347",
+      "bytes": 10967,
+      "matches": {
+        "governing_value": [
+          {
+            "line": 34,
+            "text": "readonly governedBy: GoverningIntentUnknown;"
+          },
+          {
+            "line": 43,
+            "text": "export interface GoverningIntentUnknown {"
+          },
+          {
+            "line": 55,
+            "text": "export function governingIntentUnknown(): GoverningIntentUnknown {"
+          },
+          {
+            "line": 65,
+            "text": "export function governingIntentDisclosure(governedBy: GoverningIntentUnknown): PocUnknown {"
+          },
+          {
+            "line": 66,
+            "text": "return { label: governedBy.label, reason: GOVERNING_INTENT_UNKNOWN_BASIS, closedReason: governedBy.closedReason, resolutionRoutes: governedBy.resolutionRoutes };"
+          },
+          {
+            "line": 99,
+            "text": "export function countGoverningIntentUnknown(items: readonly WorkItemFact[]): number {"
+          },
+          {
+            "line": 101,
+            "text": "(item) => item.governedBy.label === 'Unknown' && item.governedBy.closedReason === 'source-uncaptured-or-unreachable',"
+          },
+          {
+            "line": 118,
+            "text": "/** POC-REQ-014: the served items whose `governedBy` is the Unknown. */"
+          },
+          {
+            "line": 119,
+            "text": "readonly governedByUnknownCount: number;"
+          },
+          {
+            "line": 230,
+            "text": "governedByUnknownCount: 0,"
+          },
+          {
+            "line": 264,
+            "text": "governedBy: governingIntentUnknown(),"
+          },
+          {
+            "line": 274,
+            "text": "governedByUnknownCount: countGoverningIntentUnknown(items),"
+          }
+        ]
+      },
+      "classification": "logical-model",
+      "action": "comment-only",
+      "rationale": "Retain WorkItemFact/WorkItemsResult, observer SQL and factories; correct the old comment that equates the per-item logical value with the wire representation."
+    },
+    {
+      "path": "scripts/build_three_surface_poc_governedby_reference_amendment.py",
+      "sha256": "f6f275fb13f50549fb0a4a38efe37b374f4965ffce848b40938cebdf4c43337c",
+      "bytes": 51460,
+      "matches": {
+        "governing_value": [
+          {
+            "line": 42,
+            "text": "CITER_PATTERN = r\"POC-REQ-014|governedBy|GoverningIntentUnknown|governing.intent.amendment\""
+          },
+          {
+            "line": 150,
+            "text": "additions = [s for s in remaining if \"Amendment row (observation-local governedBy wire value)\" in s]"
+          },
+          {
+            "line": 226,
+            "text": "or any(k in work for k in (\"items\", \"governedBy\", \"governedByUnknownCount\"))):"
+          },
+          {
+            "line": 238,
+            "text": "if work.get(\"kind\") != \"observed\" or work.get(\"governedBy\") != CLOSED_VALUE:"
+          },
+          {
+            "line": 241,
+            "text": "if not isinstance(items, list) or any(not isinstance(i, dict) or i.get(\"governedBy\") != {\"ref\": \"observation\"} for i in items):"
+          },
+          {
+            "line": 246,
+            "text": "if type(work.get(\"governedByUnknownCount\")) is not int or work[\"governedByUnknownCount\"] != len(items):"
+          },
+          {
+            "line": 250,
+            "text": "if complete_value_carriers(body) != [[\"workItems\", \"governedBy\"]]:"
+          },
+          {
+            "line": 254,
+            "text": "\"itemId\": item_id, \"field\": \"governedBy\"} for item_id in ids]"
+          },
+          {
+            "line": 473,
+            "text": "r\"POC-REQ-014|governedBy|machine answer|machine response|wire|work.item|epistemic|provenance\","
+          }
+        ]
+      },
+      "classification": "signed-package-tooling",
+      "action": "preserve",
+      "rationale": "No regeneration or repair of the bound P115 package; existing tooling findings stay in syzygy-gmk0."
+    },
+    {
+      "path": "scripts/check_docs_review_campaign_partition.py",
+      "sha256": "64b51345cd68634ce3c06cbaa1a1700b65ab83673240449c2deecca8bf735ff5",
+      "bytes": 37137,
+      "matches": {
+        "governing_value": [
+          {
+            "line": 470,
+            "text": "\"P-115 governedBy reference amendment\","
+          }
+        ]
+      },
+      "classification": "docs-partition-index",
+      "action": "preserve",
+      "rationale": "Mentions the P115 review row as a routing label, not a consumer."
+    },
+    {
+      "path": "scripts/check_p115_compatibility_examples.py",
+      "sha256": "d6cceac03fd6db1f27d784c2e0344641ab65300d2687655f7b9a612eeaf20eb3",
+      "bytes": 24446,
+      "matches": {
+        "governing_value": [
+          {
+            "line": 94,
+            "text": "wi.get(\"governedBy\") == expected_tuple(),"
+          },
+          {
+            "line": 105,
+            "text": "item.get(\"governedBy\") == {\"ref\": \"observation\"},"
+          },
+          {
+            "line": 110,
+            "text": "shared = resolved[\"workItems\"].pop(\"governedBy\")"
+          },
+          {
+            "line": 113,
+            "text": "item[\"governedBy\"] = copy.deepcopy(shared)"
+          },
+          {
+            "line": 216,
+            "text": "\"one per-item governedBy marker\","
+          },
+          {
+            "line": 307,
+            "text": "v = item[\"governedBy\"]"
+          },
+          {
+            "line": 335,
+            "text": "i[\"governedBy\"][\"label\"] == \"Unknown\""
+          },
+          {
+            "line": 336,
+            "text": "and i[\"governedBy\"][\"closedReason\"] == \"source-uncaptured-or-unreachable\""
+          },
+          {
+            "line": 340,
+            "text": "wi[\"governedByUnknownCount\"] == measured,"
+          },
+          {
+            "line": 344,
+            "text": "out[\"count/unknown\"] = wi[\"governedByUnknownCount\"]"
+          },
+          {
+            "line": 347,
+            "text": "out[\"count/outside\"] = wi[\"governedByUnknownCount\"] - inside"
+          },
+          {
+            "line": 365,
+            "text": "[{k: v for k, v in item.items() if k != \"governedBy\"} for item in a[\"items\"]]"
+          },
+          {
+            "line": 367,
+            "text": "{k: v for k, v in item.items() if k != \"governedBy\"} for item in b[\"items\"]"
+          },
+          {
+            "line": 446,
+            "text": "reference[\"workItems\"][\"items\"][0][\"governedBy\"].get(\"label\") is None,"
+          },
+          {
+            "line": 452,
+            "text": "\"governedBy\""
+          },
+          {
+            "line": 454,
+            "text": "\"referenceInlineLabel\": reference[\"workItems\"][\"items\"][0][\"governedBy\"].get("
+          },
+          {
+            "line": 473,
+            "text": "and empty_x[\"workItems\"][\"governedByUnknownCount\"] == 0"
+          },
+          {
+            "line": 484,
+            "text": "and \"governedByUnknownCount\" not in unknown_x[\"workItems\"],"
+          },
+          {
+            "line": 542,
+            "text": "missing_b[\"workItems\"].pop(\"governedBy\")"
+          },
+          {
+            "line": 559,
+            "text": "\"old\": b[\"workItems\"][\"governedBy\"],"
+          },
+          {
+            "line": 570,
+            "text": "for key in [\"governedBy\", \"ref\"]:"
+          },
+          {
+            "line": 572,
+            "text": "'{\"workItems\":{\"governedBy\":{},\"governedBy\":{}}}'"
+          },
+          {
+            "line": 573,
+            "text": "if key == \"governedBy\""
+          },
+          {
+            "line": 574,
+            "text": "else '{\"governedBy\":{\"ref\":\"observation\",\"ref\":\"other\"}}'"
+          }
+        ]
+      },
+      "classification": "signed-preparation-oracle",
+      "action": "preserve",
+      "rationale": "Its independently written literal oracle verifies frozen preparation examples only; never import it into production or count it as runtime proof."
+    },
+    {
+      "path": "scripts/compare_unknown_denominator_withheld.py",
+      "sha256": "0df8e72f28869e0f843a69e9d2607ce50949e855ef74ebaff3eac80c4c088532",
+      "bytes": 1709,
+      "matches": {
+        "endpoint": [
+          {
+            "line": 4,
+            "text": "Reads one retained /api/poc capture (never a repository body). Identity is"
+          },
+          {
+            "line": 31,
+            "text": "\"measuredOn\": {\"capture\": \"api-poc.json\", \"sha256\": hashlib.sha256(raw).hexdigest()},"
+          }
+        ],
+        "body_consumer": [
+          {
+            "line": 20,
+            "text": "shape = json.loads(raw)[\"projectShape\"]"
+          }
+        ]
+      },
+      "classification": "operator-consumer",
+      "action": "migrate",
+      "rationale": "Admit the complete wire form before deriving project-shape denominators from the retained capture."
+    },
+    {
+      "path": "scripts/measure_machine_channel_provenance.py",
+      "sha256": "84c5047d73ad5386ace516ae331cad79dd61656a14da930b3271866a42480bd4",
+      "bytes": 8726,
+      "matches": {
+        "endpoint": [
+          {
+            "line": 4,
+            "text": "Read-only. Takes a captured ``GET /api/poc`` body and a captured"
+          },
+          {
+            "line": 5,
+            "text": "``GET /api/poc/polaris`` body from the same evaluation and prints the figures"
+          },
+          {
+            "line": 14,
+            "text": "- every population in the ``/api/poc`` body where a record in a list repeats,"
+          },
+          {
+            "line": 24,
+            "text": "occurs as a whole string value anywhere in the ``/api/poc`` body;"
+          },
+          {
+            "line": 169,
+            "text": "\"predicate\": \"exactly one object in the /api/poc body with a string `identity` field whose whole value equals the anchor's targetId\","
+          },
+          {
+            "line": 176,
+            "text": "\"predicate\": \"the unresolved anchor's targetId occurs as a whole string value anywhere in the /api/poc body\","
+          }
+        ]
+      },
+      "classification": "operator-consumer",
+      "action": "migrate",
+      "rationale": "Admit the current complete wire form before outputting measurements; measure original bytes/representation, not expanded objects."
+    },
+    {
+      "path": "scripts/prepare_three_surface_poc_governedby_reference_recording.py",
+      "sha256": "59431850ddabb28f4b03941c0ea55e607f430a1f9cde20c2a8b8575a49165881",
+      "bytes": 180586,
+      "matches": {
+        "governing_value": [
+          {
+            "line": 2366,
+            "text": "expected_record = \"\"\"# Three-Surface POC governedBy reference amendment — version-tagged sign-off v1.0"
+          }
+        ]
+      },
+      "classification": "signoff-recovery-tooling",
+      "action": "preserve",
+      "rationale": "No recorder adaptation, rerun or signed successor is needed for product implementation."
+    },
+    {
+      "path": "scripts/record_pwb_behavior_amendment_acts.py",
+      "sha256": "5e205631696a8d6a6aa8b129ce7e7e91dd2834ac35c6a827d1318abd5530c0c9",
+      "bytes": 95722,
+      "matches": {
+        "endpoint": [
+          {
+            "line": 476,
+            "text": "`GET /api/poc/polaris` and the prospective `GET /api/poc/briefing`, and the"
+          }
+        ]
+      },
+      "classification": "other-amendment-tooling",
+      "action": "preserve",
+      "rationale": "Endpoint mention belongs to a different amendment and does not parse P115 answers."
+    },
+    {
+      "path": "scripts/record_versioned_signoff.py",
+      "sha256": "c4eded23e7f3a104bcd364e3a3cc4722b249dfc88f9a3fe0b0494b7fdd0d8310",
+      "bytes": 185787,
+      "matches": {
+        "governing_value": [
+          {
+            "line": 1380,
+            "text": "\"Three-Surface POC governedBy reference amendment\","
+          }
+        ]
+      },
+      "classification": "signoff-tooling",
+      "action": "preserve",
+      "rationale": "Lists the package, not a machine-answer consumer; no recording act requested."
+    },
+    {
+      "path": "scripts/rerun_rule6_mutants_selected_tests.py",
+      "sha256": "700452c86f756f0df955cad24cdfe36a222b0138b2af23fc36e797487b3fdc2c",
+      "bytes": 5196,
+      "matches": {
+        "body_consumer": [
+          {
+            "line": 46,
+            "text": "record = json.loads(raw)"
+          }
+        ]
+      },
+      "classification": "other-record-parser",
+      "action": "preserve",
+      "rationale": "json.loads(raw) parses mutation records, not GET /api/poc."
+    },
+    {
+      "path": "scripts/run_m10_conditional_mutations.mjs",
+      "sha256": "bff84256c1608b6d9cd49f54fed49fd3ea8e3ffbac7afe6804b7cf20d6cbc490",
+      "bytes": 5108,
+      "matches": {
+        "endpoint": [
+          {
+            "line": 15,
+            "text": "replacement: \"const links = routes.filter((route) => route.path !== '/butlers-syzygy/api/poc').map(({ path, method, credentialClass }) =>\","
+          }
+        ]
+      },
+      "classification": "related-mutation-tool",
+      "action": "preserve-and-run-when-affected",
+      "rationale": "The literal route-link mutant is adjacent but unaffected; rebind fragments only if the implementation actually moves its target."
+    }
+  ]
+}

@@ -1,0 +1,171 @@
+{
+ "node": "v24.6.0",
+ "npaVersion": "12.0.2",
+ "rows": [
+  {
+   "spec": "file:../x",
+   "npa": "directory",
+   "prLocal": true
+  },
+  {
+   "spec": "FILE:../x",
+   "npa": "directory",
+   "prLocal": true
+  },
+  {
+   "spec": "link:../x",
+   "npa": "throws EUNSUPPORTEDPROTOCOL",
+   "prLocal": true
+  },
+  {
+   "spec": "workspace:*",
+   "npa": "throws EUNSUPPORTEDPROTOCOL",
+   "prLocal": true
+  },
+  {
+   "spec": "npm:@syzygy/lib@*",
+   "npa": "alias",
+   "prLocal": true
+  },
+  {
+   "spec": "npm:typescript@5.9.2",
+   "npa": "alias",
+   "prLocal": true
+  },
+  {
+   "spec": "../x",
+   "npa": "directory",
+   "prLocal": true
+  },
+  {
+   "spec": "./x",
+   "npa": "directory",
+   "prLocal": true
+  },
+  {
+   "spec": ".",
+   "npa": "directory",
+   "prLocal": true
+  },
+  {
+   "spec": "..",
+   "npa": "directory",
+   "prLocal": true
+  },
+  {
+   "spec": "/x",
+   "npa": "directory",
+   "prLocal": true
+  },
+  {
+   "spec": "~/x",
+   "npa": "directory",
+   "prLocal": true
+  },
+  {
+   "spec": "x.tgz",
+   "npa": "file",
+   "prLocal": true
+  },
+  {
+   "spec": "x.tar",
+   "npa": "file",
+   "prLocal": true
+  },
+  {
+   "spec": "x.tar.gz",
+   "npa": "file",
+   "prLocal": true
+  },
+  {
+   "spec": "X.TGZ",
+   "npa": "file",
+   "prLocal": true
+  },
+  {
+   "spec": "https://example.com/x.tgz",
+   "npa": "remote",
+   "prLocal": true
+  },
+  {
+   "spec": "http://example.com/x.tar.gz",
+   "npa": "remote",
+   "prLocal": true
+  },
+  {
+   "spec": "git+https://example.com/x.git",
+   "npa": "git",
+   "prLocal": false
+  },
+  {
+   "spec": "github:someone/dossier",
+   "npa": "git",
+   "prLocal": false
+  },
+  {
+   "spec": "someone/dossier",
+   "npa": "git",
+   "prLocal": false
+  },
+  {
+   "spec": "git+file:///srv/x",
+   "npa": "git",
+   "prLocal": false
+  },
+  {
+   "spec": ".hidden",
+   "npa": "directory",
+   "prLocal": false
+  },
+  {
+   "spec": ".hidden/x",
+   "npa": "directory",
+   "prLocal": false
+  },
+  {
+   "spec": "C:/x",
+   "npa": "directory",
+   "prLocal": false
+  },
+  {
+   "spec": "c:\\x",
+   "npa": "directory",
+   "prLocal": false
+  },
+  {
+   "spec": "a/b/c",
+   "npa": "directory",
+   "prLocal": false
+  },
+  {
+   "spec": "2.9.0",
+   "npa": "version",
+   "prLocal": false
+  },
+  {
+   "spec": "^1.0.0",
+   "npa": "range",
+   "prLocal": false
+  },
+  {
+   "spec": "latest",
+   "npa": "tag",
+   "prLocal": false
+  },
+  {
+   "spec": "*",
+   "npa": "range",
+   "prLocal": false
+  },
+  {
+   "spec": "",
+   "npa": "range",
+   "prLocal": false
+  },
+  {
+   "spec": "~1.2.3",
+   "npa": "range",
+   "prLocal": false
+  }
+ ]
+}

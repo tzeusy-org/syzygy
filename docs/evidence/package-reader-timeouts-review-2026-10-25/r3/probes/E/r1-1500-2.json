@@ -1,0 +1,102 @@
+{
+ "batch": "E",
+ "version": "r1",
+ "param": 1500,
+ "n": 2,
+ "scriptSha256": "920c5f120209904b37cfe14320ea00edfa18eafbda12fd7dcb02ec8fcf4f1e97",
+ "command": "python3 -I <tools>/r1_measure_vitest_test_durations.py . --file packages/polaris-generation-consent/src/package-reader.test.ts --project @syzygy/polaris-generation-consent --mode alone --runs 1 --out <tmp>/measure-out.json --profile",
+ "sent": [
+  {
+   "t": 0.1594,
+   "signal": "SIGTERM",
+   "to": "pid"
+  }
+ ],
+ "events": [],
+ "scriptExitedAtSeconds": 0.328,
+ "exitCode": 143,
+ "claimedExit": 143,
+ "exitAsClaimed": true,
+ "descendantsSeen": 10,
+ "seenOnlyByCwd": 10,
+ "vitestSeen": true,
+ "npxSeen": true,
+ "treeAfterExit": "",
+ "survivors": {
+  "3836570": {
+   "cmdline": "npm exec vitest run --project @syzygy/polaris-generation-consent packages/polaris-generation-consent/src/package-reader.test.ts --reporter=json --outputFile=/tm",
+   "state": "S",
+   "pgid": 3836570,
+   "sid": 3836570
+  },
+  "3836613": {
+   "cmdline": "sh -c \"vitest\" run --project @syzygy/polaris-generation-consent packages/polaris-generation-consent/src/package-reader.test.ts --reporter=json --outputFile=/tmp",
+   "state": "S",
+   "pgid": 3836570,
+   "sid": 3836570
+  },
+  "3836614": {
+   "cmdline": "node (vitest)",
+   "state": "S",
+   "pgid": 3836570,
+   "sid": 3836570
+  },
+  "3836908": {
+   "cmdline": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520c/clone/node_modules/@esbuild/linux-x64/bin/esbuild --service=0.",
+   "state": "S",
+   "pgid": 3836570,
+   "sid": 3836570
+  },
+  "3837088": {
+   "cmdline": "node (vitest 1)",
+   "state": "S",
+   "pgid": 3836570,
+   "sid": 3836570
+  },
+  "3837092": {
+   "cmdline": "node (vitest 2)",
+   "state": "S",
+   "pgid": 3836570,
+   "sid": 3836570
+  },
+  "3837093": {
+   "cmdline": "node (vitest 3)",
+   "state": "S",
+   "pgid": 3836570,
+   "sid": 3836570
+  },
+  "3837100": {
+   "cmdline": "node (vitest 4)",
+   "state": "S",
+   "pgid": 3836570,
+   "sid": 3836570
+  },
+  "3837105": {
+   "cmdline": "node (vitest 5)",
+   "state": "S",
+   "pgid": 3836570,
+   "sid": 3836570
+  },
+  "3837112": {
+   "cmdline": "node (vitest 6)",
+   "state": "S",
+   "pgid": 3836570,
+   "sid": 3836570
+  }
+ },
+ "recordWritten": false,
+ "recordRuns": null,
+ "recordTests": null,
+ "recordProfileRows": null,
+ "recordExitCode": null,
+ "marks": [],
+ "tmpdirLeft": [
+  "dOfSrJyK-L019lgZNvqdz",
+  "node-compile-cache",
+  "script.log"
+ ],
+ "trace": [],
+ "outputTail": "",
+ "exercised": true,
+ "passes": false
+}

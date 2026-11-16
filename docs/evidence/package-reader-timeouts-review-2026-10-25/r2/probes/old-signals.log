@@ -1,0 +1,14 @@
+{"mode": "term", "version": "old", "param": null, "inject": null, "exitCode": -15, "scriptExitAt": 3.443, "clean": false, "noSurvivor": false, "descendantsSeen": 14, "recordTests": null, "recordProfileRows": null}
+  DIRTY: M packages/polaris-generation-consent/src/package-reader.test.ts |  M packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts
+  SURVIVORS: {2756758: 'node (vitest 1)'}
+  events: [(0.2417, 'vitest worker seen', True), (3.294, "tree at signal: ' M packages/polaris-generation-consent/src/", True), (3.2942, 'sent SIGTERM to pid', True)]
+{"mode": "hup", "version": "old", "param": null, "inject": null, "exitCode": -1, "scriptExitAt": 3.725, "clean": false, "noSurvivor": false, "descendantsSeen": 15, "recordTests": null, "recordProfileRows": null}
+  DIRTY: M packages/polaris-generation-consent/src/package-reader.test.ts |  M packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts
+  SURVIVORS: {2757734: 'node (vitest 1)'}
+  events: [(0.2299, 'vitest worker seen', True), (3.5064, "tree at signal: ' M packages/polaris-generation-consent/src/", True), (3.5067, 'sent SIGHUP to pid', True)]
+{"mode": "int-group", "version": "old", "param": null, "inject": null, "exitCode": -2, "scriptExitAt": 3.449, "clean": true, "noSurvivor": true, "descendantsSeen": 13, "recordTests": null, "recordProfileRows": null}
+  events: [(0.2344, 'vitest worker seen', True), (3.3144, "tree at signal: ' M packages/polaris-generation-consent/src/", True), (3.3147, 'sent SIGINT to group', True)]
+{"mode": "term-twice", "version": "old", "param": null, "inject": null, "exitCode": -15, "scriptExitAt": 3.435, "clean": false, "noSurvivor": false, "descendantsSeen": 12, "recordTests": null, "recordProfileRows": null}
+  DIRTY: M packages/polaris-generation-consent/src/package-reader.test.ts |  M packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts
+  SURVIVORS: {2760452: 'node (vitest 1)'}
+  events: [(0.2095, 'vitest worker seen', True), (3.2491, "tree at signal: ' M packages/polaris-generation-consent/src/", True), (3.2494, 'sent SIGTERM to pid', True), (3.4345, 'sent SIGTERM to pid', True)]

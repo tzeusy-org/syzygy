@@ -60,11 +60,14 @@ describe('RT6 — honest degradation over real disk state', () => {
     expect(body.declarationObservation.label).toBe('Unknown');
     expect(body.declarationObservation.reason).toBe('missing-declaration');
 
-    // The entry document is also absent — served as the named absent
-    // state, never a fabricated page.
+    // The entry document is not read at all: with no declaration there is
+    // no consented governance root (CAP1-REQ-016; syzygy-u2a.2). It is
+    // served as Unknown with that reason, never a fabricated page.
     const entryResponse = await fetch(`${daemon.baseUrl}/entry`);
     expect(entryResponse.status).toBe(200);
-    expect(await entryResponse.text()).toContain('data-entry-state="absent"');
+    const entryHtml = await entryResponse.text();
+    expect(entryHtml).toContain('data-entry-state="unreadable"');
+    expect(entryHtml).toContain('Unknown — reason: unconsented-source-or-provider');
   });
 
   it('breaking the declaration between runs changes the served facts to the named invalid arms', async () => {

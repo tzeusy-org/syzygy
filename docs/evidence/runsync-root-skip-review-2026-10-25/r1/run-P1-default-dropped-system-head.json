@@ -1,0 +1,367 @@
+{
+ "tool": "rev-525/tools/probe.py",
+ "toolSha256": "0d82288a92a49bfe8af739ee1f15a61ed3b208b672b07e4c85cb2d18b076cfa6",
+ "case": "P1-default-dropped-system-head",
+ "commit": "f7bbb93a005b45c2866d8a9993afbca44cd1a34f",
+ "files": {},
+ "edits": [
+  {
+   "file": "apps/syzygy/src/main.ts",
+   "old": "const portText = flags.get('--port') ?? env['SYZYGY_PORT'] ?? String(DEFAULT_PORT);",
+   "new": "const portText = flags.get('--port') ?? env['SYZYGY_PORT'];"
+  }
+ ],
+ "env": {},
+ "filters": [],
+ "t": null,
+ "editChecks": [
+  {
+   "file": "apps/syzygy/src/main.ts",
+   "old": "const portText = flags.get('--port') ?? env['SYZYGY_PORT'] ?? String(DEFAULT_PORT);",
+   "new": "const portText = flags.get('--port') ?? env['SYZYGY_PORT'];",
+   "occurrences": 1
+  }
+ ],
+ "build": {
+  "exitCode": 0,
+  "typeErrors": []
+ },
+ "distCarries": [
+  {
+   "dist": "apps/syzygy/dist/main.js",
+   "carries": true
+  }
+ ],
+ "run": {
+  "command": "npx vitest run --config packages/cap1-system/vitest.config.ts --reporter=json --outputFile=<tmp>/report.json",
+  "exitCode": 0,
+  "wallSeconds": 5.8,
+  "deadlineHit": false,
+  "samples": 10,
+  "port7477Before": [],
+  "port7477Seen": [],
+  "killedOn7477": [],
+  "unstuck": [],
+  "ownListeningPorts": [],
+  "processesSeen": 36,
+  "survivors": {},
+  "tmpLeftoversBeforeRemoval": [
+   "node-compile-cache",
+   "report.json",
+   "vitest.log"
+  ],
+  "logTail": "JSON report written to <tmp>/report.json\n",
+  "tests": [
+   {
+    "name": "RT6 \u2014 credential enforcement from outside the process refuses missing credentials with no facts served",
+    "status": "passed",
+    "durationMs": 288,
+    "failure": null
+   },
+   {
+    "name": "RT6 \u2014 credential enforcement from outside the process refuses scheme without separator credentials with no facts served",
+    "status": "passed",
+    "durationMs": 641,
+    "failure": null
+   },
+   {
+    "name": "RT6 \u2014 credential enforcement from outside the process refuses empty bearer token credentials with no facts served",
+    "status": "passed",
+    "durationMs": 464,
+    "failure": null
+   },
+   {
+    "name": "RT6 \u2014 credential enforcement from outside the process refuses wrong scheme credentials with no facts served",
+    "status": "passed",
+    "durationMs": 274,
+    "failure": null
+   },
+   {
+    "name": "RT6 \u2014 credential enforcement from outside the process refuses whitespace-only bearer token credentials with no facts served",
+    "status": "passed",
+    "durationMs": 270,
+    "failure": null
+   },
+   {
+    "name": "RT6 \u2014 credential enforcement from outside the process refuses malformed scheme casing credentials with no facts served",
+    "status": "passed",
+    "durationMs": 450,
+    "failure": null
+   },
+   {
+    "name": "RT6 \u2014 credential enforcement from outside the process refuses wrong-length bearer token credentials with no facts served",
+    "status": "passed",
+    "durationMs": 423,
+    "failure": null
+   },
+   {
+    "name": "RT6 \u2014 credential enforcement from outside the process refuses wrong bearer token credentials with no facts served",
+    "status": "passed",
+    "durationMs": 286,
+    "failure": null
+   },
+   {
+    "name": "RT6 \u2014 credential enforcement from outside the process the correct token from the state-dir file admits: 200 with the evaluated body",
+    "status": "passed",
+    "durationMs": 151,
+    "failure": null
+   },
+   {
+    "name": "RT6 \u2014 credential enforcement from outside the process the token file is owner-only (mode 0600)",
+    "status": "passed",
+    "durationMs": 170,
+    "failure": null
+   },
+   {
+    "name": "RT6 \u2014 credential enforcement from outside the process the credential value is never printed to stdout",
+    "status": "passed",
+    "durationMs": 197,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged [\"--help\"] prints the usage and exits 0",
+    "status": "passed",
+    "durationMs": 483,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged [\"-h\"] prints the usage and exits 0",
+    "status": "passed",
+    "durationMs": 176,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged [\"--help\",\"dossier\"] prints the usage and exits 0",
+    "status": "passed",
+    "durationMs": 549,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged [\"--bogus\"] is refused with exit 1 and the same message",
+    "status": "passed",
+    "durationMs": 259,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged [\"--port\",\"0\",\"dossier\"] is refused with exit 1 and the same message",
+    "status": "passed",
+    "durationMs": 258,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged [\"Dossier\"] is refused with exit 1 and the same message",
+    "status": "passed",
+    "durationMs": 175,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged [\"--port\"] is refused with exit 1 and the same message",
+    "status": "passed",
+    "durationMs": 195,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged [\"--port\",\"70000\"] is refused with exit 1 and the same message",
+    "status": "passed",
+    "durationMs": 153,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged a state directory inside the governed plane is refused with the same message",
+    "status": "passed",
+    "durationMs": 166,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged with no arguments it serves from the working directory, writes the same state and shuts down the same way",
+    "status": "passed",
+    "durationMs": 499,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged with explicit flags it serves, writes the same state and shuts down the same way",
+    "status": "passed",
+    "durationMs": 238,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: the one changed input, `dossier` as the first argument `dossier` alone is a dossier usage error (exit 2), not the daemon's refusal",
+    "status": "passed",
+    "durationMs": 259,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: the one changed input, `dossier` as the first argument `dossier status <missing>` is a dossier refusal (exit 1) and starts no daemon",
+    "status": "passed",
+    "durationMs": 255,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: the one changed input, `dossier` as the first argument `dossier render <missing>` reaches the run with the renderer injected, and starts no daemon",
+    "status": "passed",
+    "durationMs": 260,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch",
+    "status": "passed",
+    "durationMs": 1,
+    "failure": null
+   },
+   {
+    "name": "RT6 \u2014 honest degradation over real disk state an empty fixture root serves the named missing-declaration arm on both channels",
+    "status": "passed",
+    "durationMs": 552,
+    "failure": null
+   },
+   {
+    "name": "RT6 \u2014 honest degradation over real disk state breaking the declaration between runs changes the served facts to the named invalid arms",
+    "status": "passed",
+    "durationMs": 729,
+    "failure": null
+   },
+   {
+    "name": "system effect-observer lifecycle fails closed with one named diagnostic before allocating when strace is unavailable",
+    "status": "passed",
+    "durationMs": 21,
+    "failure": null
+   },
+   {
+    "name": "system effect-observer lifecycle settles once and cleans once when spawn emits ENOENT followed by exit and close",
+    "status": "passed",
+    "durationMs": 2,
+    "failure": null
+   },
+   {
+    "name": "system effect-observer lifecycle cleans after a synchronous observer spawn failure",
+    "status": "passed",
+    "durationMs": 1,
+    "failure": null
+   },
+   {
+    "name": "system effect-observer lifecycle waits for close to include data emitted after nonzero exit and settles duplicate events once",
+    "status": "passed",
+    "durationMs": 2,
+    "failure": null
+   },
+   {
+    "name": "system effect-observer lifecycle cleans before rejecting an unreadable trace",
+    "status": "passed",
+    "durationMs": 1,
+    "failure": null
+   },
+   {
+    "name": "system effect-observer lifecycle cleans before rejecting a trace parser failure",
+    "status": "passed",
+    "durationMs": 1,
+    "failure": null
+   },
+   {
+    "name": "system effect-observer lifecycle kills a non-settling observer and cleans its trace directory on timeout",
+    "status": "passed",
+    "durationMs": 8,
+    "failure": null
+   },
+   {
+    "name": "system effect-observer lifecycle removes the trace directory before exposing a successful result to caller assertions",
+    "status": "passed",
+    "durationMs": 3,
+    "failure": null
+   },
+   {
+    "name": "RT6 \u2014 fresh-clone demonstration a fresh clone installs, builds, starts the daemon, and serves the same facts on both channels",
+    "status": "skipped",
+    "durationMs": null,
+    "failure": null
+   },
+   {
+    "name": "RT6 \u2014 full-facts demonstration over the spawned daemon serves the human page with verbatim facts, labels, and the Why-this-answer drawer",
+    "status": "passed",
+    "durationMs": 592,
+    "failure": null
+   },
+   {
+    "name": "RT6 \u2014 full-facts demonstration over the spawned daemon serves the fixture overview at /entry",
+    "status": "passed",
+    "durationMs": 635,
+    "failure": null
+   },
+   {
+    "name": "RT6 \u2014 full-facts demonstration over the spawned daemon serves the JSON facts to an authenticated machine request, and every served JSON fact appears in the HTML (sweep with denominator)",
+    "status": "passed",
+    "durationMs": 520,
+    "failure": null
+   },
+   {
+    "name": "RT6 \u2014 process reality SIGINT exits 0 and the port then refuses connections",
+    "status": "passed",
+    "durationMs": 396,
+    "failure": null
+   },
+   {
+    "name": "RTF-1 \u2014 state-dir governed-plane check resolves symlink reality refuses (nonzero exit, named refusal) a --state-dir symlink whose REAL target lies inside .syzygy/, and writes nothing there",
+    "status": "passed",
+    "durationMs": 506,
+    "failure": null
+   },
+   {
+    "name": "RTF-1 \u2014 state-dir governed-plane check resolves symlink reality refuses a dangling --state-dir symlink whose intended target lies inside .syzygy/, before writes or a listener",
+    "status": "passed",
+    "durationMs": 444,
+    "failure": null
+   },
+   {
+    "name": "RTF-1 \u2014 state-dir governed-plane check resolves symlink reality still starts and serves through a --state-dir symlink whose real target is OUTSIDE the governed plane",
+    "status": "passed",
+    "durationMs": 526,
+    "failure": null
+   },
+   {
+    "name": "RTF-1 \u2014 state-dir governed-plane check resolves symlink reality keeps a dangling benign outside target credential-unprovisionable, with no listener or writes",
+    "status": "passed",
+    "durationMs": 409,
+    "failure": null
+   },
+   {
+    "name": "RTF-1 \u2014 state-dir governed-plane check resolves symlink reality rejects a state-dir symlink loop as named invalid before writes or a listener",
+    "status": "passed",
+    "durationMs": 287,
+    "failure": null
+   },
+   {
+    "name": "RTF-1 \u2014 state-dir governed-plane check resolves symlink reality rejects an unreadable state-dir path as named invalid before writes or a listener",
+    "status": "passed",
+    "durationMs": 404,
+    "failure": null
+   },
+   {
+    "name": "RT6 \u2014 write boundary by harness-external filesystem observation after requests to all routes, the only filesystem additions live under the state dir and the governed tree is untouched",
+    "status": "passed",
+    "durationMs": 634,
+    "failure": null
+   }
+  ]
+ },
+ "rebuild": {
+  "exitCode": 0,
+  "typeErrors": []
+ },
+ "treeCleanAfter": true,
+ "summary": {
+  "exitCode": 0,
+  "wallSeconds": 5.8,
+  "deadlineHit": false,
+  "statuses": {
+   "passed": 47,
+   "skipped": 1
+  },
+  "failed": [],
+  "port7477Seen": 0,
+  "samples": 10,
+  "killedOn7477": 0,
+  "unstuck": 0,
+  "ownListeningPorts": [],
+  "survivors": 0,
+  "slowestMs": 729
+ }
+}

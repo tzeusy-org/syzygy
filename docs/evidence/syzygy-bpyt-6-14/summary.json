@@ -1,0 +1,769 @@
+{
+ "bead": "syzygy-bpyt.6.14",
+ "base": "f7ea858480b30ffc4407154a84d1d03f3fe4a549",
+ "head": "191d82779ea07f45be612b00ff3cafc9aa7446b8",
+ "subject": [
+  "packages/polaris-dossier/src/no-egress.test.ts",
+  "packages/support/src/purity.testkit.ts",
+  "packages/support/src/support-purity.test.ts",
+  "packages/three-surface-poc-core/src/owner-act-drafter.test.ts"
+ ],
+ "subjectSha256": {
+  "packages/polaris-dossier/src/no-egress.test.ts": "ba0be19f571e3179f1b1a998560fb3e9013f64411c0b5cc358b3b17203a32e91",
+  "packages/support/src/purity.testkit.ts": "0af24d0b46f9718b07b5e580da33b97b914ff59e35e43e08d68ade0df51c1439",
+  "packages/support/src/support-purity.test.ts": "5a923028b13c1496d0917084e08d3748d186cd83a18269980aa3061783bec51a",
+  "packages/three-surface-poc-core/src/owner-act-drafter.test.ts": "a4ac19c5de9dc7a107320bcaaed5547e37058a82761aa3c8f50a7fd7e8024120"
+ },
+ "required": [
+  "RP2",
+  "RP3",
+  "RP4",
+  "RP5",
+  "RP6",
+  "RP7",
+  "RP8",
+  "RP9",
+  "RP10",
+  "RP11",
+  "RP12",
+  "RP13",
+  "RP14",
+  "RP15",
+  "RP16",
+  "E6",
+  "E7",
+  "E8",
+  "E9",
+  "M1",
+  "M2"
+ ],
+ "round1KilledBy": {
+  "Y7": [
+   "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it"
+  ],
+  "Y9": [
+   "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it"
+  ],
+  "Y10": [
+   "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it"
+  ],
+  "Y11": [
+   "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it"
+  ],
+  "Y12": [
+   "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it"
+  ],
+  "Y14": [
+   "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it"
+  ],
+  "K4": [
+   "the forbidden-token list both guards stand on is the literal list, so a narrowed token fails here"
+  ],
+  "Y6": [
+   "@syzygy/support stays a pure leaf assigns to no property in any source, so no allowed global is rewritten"
+  ],
+  "T1": [
+   "@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit"
+  ],
+  "M5": [
+   "the S10 bundle takes each workspace package from the source its entry names (syzygy-bpyt.6.14) bundles the driver only under the guard: an alias that leaves the sources fails it"
+  ],
+  "G0": [
+   "the S10 bundle takes each workspace package from the source its entry names (syzygy-bpyt.6.14) bundles the driver only under the guard: an alias that leaves the sources fails it"
+  ],
+  "W5": [
+   "@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit"
+  ],
+  "W6": [
+   "@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit"
+  ],
+  "W7": [
+   "@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit"
+  ]
+ },
+ "round1Records": {
+  "rev-mutants-head-present.json": "04961acfcac6cfae905f979c8d13e7096fef4e0651eb36d5ebf32211df53014d",
+  "rev-mutants-head-absent.json": "b6623dc44fedade48769bae346bd0ce7e5dfc2cf27d6f41f6931ef7ffccee7af",
+  "rev-mutants-head-present-z7.json": "c8270cea6cfc6cb57a9c61ac2eca7d5162066726b11db8859e1d98f46c9950ce",
+  "fix-check2.json": "5e6c29928004d8f9a1719ffffa7622772c70924f69c94090802599f334440e1e"
+ },
+ "mutants": {
+  "C0-purity-unmutated": {
+   "head-absent": "pass",
+   "head-present": "pass",
+   "base-absent": "pass",
+   "base-present": "pass"
+  },
+  "RP1-re-export-from-node-fs": {
+   "head-absent": "killed",
+   "killedAtHeadBy": [
+    "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source",
+    "@syzygy/support stays a pure leaf names no module but node:crypto and a module beside it in any literal specifier of any source",
+    "@syzygy/support stays a pure leaf names none of the forbidden tokens it shares with the owner-act drafter in any source",
+    "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it"
+   ],
+   "head-present": "killed",
+   "base-absent": "killed",
+   "base-present": "killed"
+  },
+  "RP2-globalThis-bracket-read-of-process-env": {
+   "head-absent": "killed",
+   "killedAtHeadBy": [
+    "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source"
+   ],
+   "head-present": "killed",
+   "base-absent": "survives",
+   "base-present": "survives"
+  },
+  "RP3-top-level-side-effect-console-write": {
+   "head-absent": "killed",
+   "killedAtHeadBy": [
+    "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source"
+   ],
+   "head-present": "killed",
+   "base-absent": "survives",
+   "base-present": "survives"
+  },
+  "RP4-createRequire-of-node-fs": {
+   "head-absent": "killed",
+   "killedAtHeadBy": [
+    "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source",
+    "@syzygy/support stays a pure leaf names no module but node:crypto and a module beside it in any literal specifier of any source",
+    "@syzygy/support stays a pure leaf names none of the forbidden tokens it shares with the owner-act drafter in any source",
+    "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it"
+   ],
+   "head-present": "killed",
+   "base-absent": "killed",
+   "base-present": "killed"
+  },
+  "RP5-network-through-an-unnamed-global-WebSocket": {
+   "head-absent": "killed",
+   "killedAtHeadBy": [
+    "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source"
+   ],
+   "head-present": "killed",
+   "base-absent": "survives",
+   "base-present": "survives"
+  },
+  "RP6-file-read-via-globalThis-process-getBuiltinModule": {
+   "head-absent": "killed",
+   "killedAtHeadBy": [
+    "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source"
+   ],
+   "head-present": "killed",
+   "base-absent": "survives",
+   "base-present": "survives"
+  },
+  "RP7-clock-via-performance-now": {
+   "head-absent": "killed",
+   "killedAtHeadBy": [
+    "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source"
+   ],
+   "head-present": "killed",
+   "base-absent": "survives",
+   "base-present": "survives"
+  },
+  "RP8-randomness-from-the-allowed-node-crypto": {
+   "head-absent": "killed",
+   "killedAtHeadBy": [
+    "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source",
+    "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it"
+   ],
+   "head-present": "killed",
+   "base-absent": "survives",
+   "base-present": "survives"
+  },
+  "RP9-ts-import-equals-require": {
+   "head-absent": "killed",
+   "killedAtHeadBy": [
+    "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source",
+    "@syzygy/support stays a pure leaf names no module but node:crypto and a module beside it in any literal specifier of any source",
+    "@syzygy/support stays a pure leaf names none of the forbidden tokens it shares with the owner-act drafter in any source"
+   ],
+   "head-present": "killed",
+   "base-absent": "killed",
+   "base-present": "killed"
+  },
+  "RP10-subdirectory-module-re-exported": {
+   "head-absent": "killed",
+   "killedAtHeadBy": [
+    "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source",
+    "@syzygy/support stays a pure leaf names no module but node:crypto and a module beside it in any literal specifier of any source",
+    "@syzygy/support stays a pure leaf names none of the forbidden tokens it shares with the owner-act drafter in any source",
+    "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it"
+   ],
+   "head-present": "killed",
+   "base-absent": "killed",
+   "base-present": "killed"
+  },
+  "RP11-mts-module-re-exported": {
+   "head-absent": "killed",
+   "killedAtHeadBy": [
+    "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source",
+    "@syzygy/support stays a pure leaf names no module but node:crypto and a module beside it in any literal specifier of any source",
+    "@syzygy/support stays a pure leaf names none of the forbidden tokens it shares with the owner-act drafter in any source",
+    "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it"
+   ],
+   "head-present": "killed",
+   "base-absent": "killed",
+   "base-present": "killed"
+  },
+  "RP12-computed-dynamic-import-with-a-space": {
+   "head-absent": "killed",
+   "killedAtHeadBy": [
+    "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source"
+   ],
+   "head-present": "killed",
+   "base-absent": "survives",
+   "base-present": "survives"
+  },
+  "RP13-fetch-by-reference-not-call": {
+   "head-absent": "killed",
+   "killedAtHeadBy": [
+    "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source"
+   ],
+   "head-present": "killed",
+   "base-absent": "survives",
+   "base-present": "survives"
+  },
+  "RP14-subpath-export-of-an-unscanned-subdirectory-module": {
+   "head-absent": "killed",
+   "killedAtHeadBy": [
+    "@syzygy/support stays a pure leaf exports exactly the \".\" entry, index.js, so no other module is an entry",
+    "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source",
+    "@syzygy/support stays a pure leaf names no module but node:crypto and a module beside it in any literal specifier of any source",
+    "@syzygy/support stays a pure leaf names none of the forbidden tokens it shares with the owner-act drafter in any source",
+    "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it"
+   ],
+   "head-present": "killed",
+   "base-absent": "survives",
+   "base-present": "survives"
+  },
+  "RP15-optional-call-fetch-at-import": {
+   "head-absent": "killed",
+   "killedAtHeadBy": [
+    "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source"
+   ],
+   "head-present": "killed",
+   "base-absent": "survives",
+   "base-present": "survives"
+  },
+  "RP16-optional-chained-process-env-read": {
+   "head-absent": "killed",
+   "killedAtHeadBy": [
+    "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source"
+   ],
+   "head-present": "killed",
+   "base-absent": "survives",
+   "base-present": "survives"
+  },
+  "E4b-global-fetch-at-first-call-port-65530": {
+   "head-absent": "killed",
+   "killedAtHeadBy": [
+    "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source",
+    "@syzygy/support stays a pure leaf names none of the forbidden tokens it shares with the owner-act drafter in any source"
+   ],
+   "head-present": "killed",
+   "base-absent": "killed",
+   "base-present": "killed"
+  },
+  "E6-console-write-at-import": {
+   "head-absent": "killed",
+   "killedAtHeadBy": [
+    "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source"
+   ],
+   "head-present": "killed",
+   "base-absent": "survives",
+   "base-present": "survives"
+  },
+  "E7-optional-call-fetch-at-import": {
+   "head-absent": "killed",
+   "killedAtHeadBy": [
+    "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source"
+   ],
+   "head-present": "killed",
+   "base-absent": "survives",
+   "base-present": "survives"
+  },
+  "E8-websocket-at-import": {
+   "head-absent": "killed",
+   "killedAtHeadBy": [
+    "@syzygy/support stays a pure leaf assigns to no property in any source, so no allowed global is rewritten",
+    "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source"
+   ],
+   "head-present": "killed",
+   "base-absent": "survives",
+   "base-present": "survives"
+  },
+  "E9-obfuscated-file-read-at-import (RP6 form)": {
+   "head-absent": "killed",
+   "killedAtHeadBy": [
+    "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source"
+   ],
+   "head-present": "killed",
+   "base-absent": "survives",
+   "base-present": "survives"
+  },
+  "L1-unreached-subdirectory-module": {
+   "head-absent": "killed",
+   "killedAtHeadBy": [
+    "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source",
+    "@syzygy/support stays a pure leaf names no module but node:crypto and a module beside it in any literal specifier of any source",
+    "@syzygy/support stays a pure leaf names none of the forbidden tokens it shares with the owner-act drafter in any source",
+    "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it"
+   ],
+   "head-present": "killed",
+   "base-absent": "survives",
+   "base-present": "survives"
+  },
+  "X1-dot-entry-redirected-to-deep-freeze": {
+   "head-absent": "killed",
+   "killedAtHeadBy": [
+    "@syzygy/support stays a pure leaf exports exactly the \".\" entry, index.js, so no other module is an entry"
+   ],
+   "head-present": "killed",
+   "base-absent": "survives",
+   "base-present": "survives"
+  },
+  "X2-package-json-subpath-added": {
+   "head-absent": "killed",
+   "killedAtHeadBy": [
+    "@syzygy/support stays a pure leaf exports exactly the \".\" entry, index.js, so no other module is an entry"
+   ],
+   "head-present": "killed",
+   "base-absent": "survives",
+   "base-present": "survives"
+  },
+  "K1-specifier-reader-drops-import-and-require-calls": {
+   "head-absent": "killed",
+   "killedAtHeadBy": [
+    "the specifier reader this guard stands on reads \"const fs = await import('node:fs');\"",
+    "the specifier reader this guard stands on reads \"const fs = require('node:fs');\""
+   ],
+   "head-present": "killed"
+  },
+  "K2-forbidden-list-drops-mkdir": {
+   "head-absent": "killed",
+   "killedAtHeadBy": [
+    "the forbidden-token list both guards stand on is the literal list, so a narrowed token fails here",
+    "the forbidden-token list both guards stand on refuses \"mkdirSync(p);\""
+   ],
+   "head-present": "killed"
+  },
+  "K3-identifier-reader-skips-private-names": {
+   "head-absent": "killed",
+   "killedAtHeadBy": [
+    "the identifier reader the allowlist stands on reads \"class K { #p = 1; m<T>(v: T): T { return v; } }\""
+   ],
+   "head-present": "killed"
+  },
+  "T1-scan-without-recursion-plus-L1": {
+   "head-absent": "killed",
+   "killedAtHeadBy": [
+    "@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit"
+   ],
+   "head-present": "killed"
+  },
+  "Y7-export-star-from-node-crypto": {
+   "head-absent": "killed",
+   "killedAtHeadBy": [
+    "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it"
+   ],
+   "head-present": "killed"
+  },
+  "Y9-export-star-as-allowed-name": {
+   "head-absent": "killed",
+   "killedAtHeadBy": [
+    "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it"
+   ],
+   "head-present": "killed"
+  },
+  "Y10-string-named-re-export": {
+   "head-absent": "killed",
+   "killedAtHeadBy": [
+    "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it"
+   ],
+   "head-present": "killed"
+  },
+  "Y11-string-named-import-called-at-import": {
+   "head-absent": "killed",
+   "killedAtHeadBy": [
+    "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it"
+   ],
+   "head-present": "killed"
+  },
+  "Y12-namespace-import-re-exported": {
+   "head-absent": "killed",
+   "killedAtHeadBy": [
+    "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it"
+   ],
+   "head-present": "killed"
+  },
+  "Y14-drafter-takes-randomness-through-support": {
+   "head-absent": "killed",
+   "killedAtHeadBy": [
+    "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it"
+   ],
+   "head-present": "killed"
+  },
+  "K4-shared-Date-token-weakened-plus-DK1": {
+   "head-absent": "killed",
+   "killedAtHeadBy": [
+    "the forbidden-token list both guards stand on is the literal list, so a narrowed token fails here"
+   ],
+   "head-present": "killed"
+  },
+  "Y6-allowed-global-member-replaced": {
+   "head-absent": "killed",
+   "killedAtHeadBy": [
+    "@syzygy/support stays a pure leaf assigns to no property in any source, so no allowed global is rewritten"
+   ],
+   "head-present": "killed"
+  },
+  "W5-filter-drops-the-x-forms": {
+   "head-absent": "killed",
+   "killedAtHeadBy": [
+    "@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit"
+   ],
+   "head-present": "killed"
+  },
+  "W6-test-exclusion-broadened-to-any-test-substring": {
+   "head-absent": "killed",
+   "killedAtHeadBy": [
+    "@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit"
+   ],
+   "head-present": "killed"
+  },
+  "W7-testkit-exclusion-broadened-to-any-depth": {
+   "head-absent": "killed",
+   "killedAtHeadBy": [
+    "@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit"
+   ],
+   "head-present": "killed"
+  },
+  "D0-drafter-unmutated": {
+   "head-absent": "pass",
+   "head-present": "pass",
+   "base-absent": "pass",
+   "base-present": "pass"
+  },
+  "D2-drafter-globalThis-bracket-read": {
+   "head-absent": "survives",
+   "head-present": "survives",
+   "base-absent": "survives",
+   "base-present": "survives"
+  },
+  "D5-drafter-WebSocket": {
+   "head-absent": "survives",
+   "head-present": "survives",
+   "base-absent": "survives",
+   "base-present": "survives"
+  },
+  "DK1-drafter-clock-read": {
+   "head-absent": "killed",
+   "killedAtHeadBy": [
+    "owner-act drafter (M4 slice 7) is pure: it imports no filesystem, network or process module and names no write"
+   ],
+   "head-present": "killed",
+   "base-absent": "killed",
+   "base-present": "killed"
+  },
+  "DK2-drafter-re-export-from-node-fs": {
+   "head-absent": "killed",
+   "killedAtHeadBy": [
+    "owner-act drafter (M4 slice 7) is pure: it imports no filesystem, network or process module and names no write"
+   ],
+   "head-present": "killed",
+   "base-absent": "killed",
+   "base-present": "killed"
+  },
+  "N0-no-egress-unmutated": {
+   "head-absent": "pass",
+   "head-present": "pass",
+   "base-absent": "pass",
+   "base-present": "pass"
+  },
+  "M1-dot-entry-redirected-to-an-egressing-src-main": {
+   "head-absent": "killed",
+   "killedAtHeadBy": [
+    "no provider call and no transmission (S10): an operating-system capture of a full fixture run creates no Internet-family socket over the whole run, from preflight to close",
+    "the S10 bundle takes each workspace package from the source its entry names (syzygy-bpyt.6.14) aliases every workspace package entry to the src module its exports, or its main, names"
+   ],
+   "head-present": "killed",
+   "base-absent": "survives",
+   "base-present": "survives"
+  },
+  "M2-new-package-with-no-entry-imported-by-the-closure": {
+   "head-absent": "killed",
+   "killedAtHeadBy": [
+    "file: Build failed with 1 error:"
+   ],
+   "head-present": "killed",
+   "base-absent": "survives",
+   "base-present": "survives"
+  },
+  "M3-dot-entry-outside-dist": {
+   "head-absent": "killed",
+   "killedAtHeadBy": [
+    "file: @syzygy/support: its entry is not a ./dist/X.js whose src/X.ts exists"
+   ],
+   "head-present": "killed",
+   "base-absent": "survives",
+   "base-present": "survives"
+  },
+  "M4-alias-for-support-dropped": {
+   "head-absent": "killed",
+   "killedAtHeadBy": [
+    "file: Build failed with 34 errors:"
+   ],
+   "head-present": "killed",
+   "base-absent": "killed",
+   "base-present": "survives"
+  },
+  "M5-guard-removed-plus-M2": {
+   "head-absent": "killed",
+   "killedAtHeadBy": [
+    "the S10 bundle takes each workspace package from the source its entry names (syzygy-bpyt.6.14) bundles the driver only under the guard: an alias that leaves the sources fails it"
+   ],
+   "head-present": "killed"
+  },
+  "G0-guard-removed-alone": {
+   "head-absent": "killed",
+   "killedAtHeadBy": [
+    "the S10 bundle takes each workspace package from the source its entry names (syzygy-bpyt.6.14) bundles the driver only under the guard: an alias that leaves the sources fails it"
+   ],
+   "head-present": "killed"
+  }
+ },
+ "counts": {
+  "head-absent": {
+   "rows": 52,
+   "killed": 47,
+   "survives": 2,
+   "pass": 3
+  },
+  "head-present": {
+   "rows": 52,
+   "killed": 47,
+   "survives": 2,
+   "pass": 3
+  },
+  "base-absent": {
+   "rows": 35,
+   "killed": 9,
+   "survives": 23,
+   "pass": 3
+  },
+  "base-present": {
+   "rows": 35,
+   "killed": 8,
+   "survives": 24,
+   "pass": 3
+  }
+ },
+ "sharedReaderSha256": {
+  "support-base": "658e42166798af806fa1820df3dfa82add4e0058abd4b678f760c210a1d170b9",
+  "drafter-base": "658e42166798af806fa1820df3dfa82add4e0058abd4b678f760c210a1d170b9",
+  "testkit-head": "658e42166798af806fa1820df3dfa82add4e0058abd4b678f760c210a1d170b9"
+ },
+ "bundle": [
+  {
+   "commit": "f7ea858480b30ffc4407154a84d1d03f3fe4a549",
+   "distDirs": 12,
+   "bytes": 935757,
+   "sha256": "18172eb2e96de6bb703c3c7110d61d5896853d2c865c2a609e9703dca79b3340"
+  },
+  {
+   "commit": "191d82779ea07f45be612b00ff3cafc9aa7446b8",
+   "distDirs": 12,
+   "bytes": 935757,
+   "sha256": "18172eb2e96de6bb703c3c7110d61d5896853d2c865c2a609e9703dca79b3340"
+  }
+ ],
+ "titles": {
+  "base": 18,
+  "head": 42,
+  "added": [
+   [
+    "packages/polaris-dossier/src/no-egress.test.ts",
+    "the S10 bundle takes each workspace package from the source its entry names (syzygy-bpyt.6.14) > aliases every workspace package entry to the src module its exports, or its main, names"
+   ],
+   [
+    "packages/polaris-dossier/src/no-egress.test.ts",
+    "the S10 bundle takes each workspace package from the source its entry names (syzygy-bpyt.6.14) > bundles the driver only under the guard: an alias that leaves the sources fails it"
+   ],
+   [
+    "packages/polaris-dossier/src/no-egress.test.ts",
+    "the S10 bundle takes each workspace package from the source its entry names (syzygy-bpyt.6.14) > bundles the driver with every @syzygy specifier inside packages/*/src or apps/*/src"
+   ],
+   [
+    "packages/polaris-dossier/src/no-egress.test.ts",
+    "the S10 bundle takes each workspace package from the source its entry names (syzygy-bpyt.6.14) > fails the bundle when an @syzygy specifier resolves outside them"
+   ],
+   [
+    "packages/support/src/support-purity.test.ts",
+    "@syzygy/support stays a pure leaf > assigns to no property in any source, so no allowed global is rewritten"
+   ],
+   [
+    "packages/support/src/support-purity.test.ts",
+    "@syzygy/support stays a pure leaf > exports exactly the \".\" entry, index.js, so no other module is an entry"
+   ],
+   [
+    "packages/support/src/support-purity.test.ts",
+    "@syzygy/support stays a pure leaf > lists a module at any depth and with any extension, and skips only the tests and the testkit"
+   ],
+   [
+    "packages/support/src/support-purity.test.ts",
+    "@syzygy/support stays a pure leaf > names no identifier outside its literal list in any source"
+   ],
+   [
+    "packages/support/src/support-purity.test.ts",
+    "@syzygy/support stays a pure leaf > names no module but node:crypto and a module beside it in any literal specifier of any source"
+   ],
+   [
+    "packages/support/src/support-purity.test.ts",
+    "@syzygy/support stays a pure leaf > names none of the forbidden tokens it shares with the owner-act drafter in any source"
+   ],
+   [
+    "packages/support/src/support-purity.test.ts",
+    "@syzygy/support stays a pure leaf > scans every source module under src, at any depth, not an empty list"
+   ],
+   [
+    "packages/support/src/support-purity.test.ts",
+    "@syzygy/support stays a pure leaf > takes only createHash from node:crypto, by its own name, and re-exports nothing from it"
+   ],
+   [
+    "packages/support/src/support-purity.test.ts",
+    "the forbidden-token list both guards stand on > is the literal list, so a narrowed token fails here"
+   ],
+   [
+    "packages/support/src/support-purity.test.ts",
+    "the forbidden-token list both guards stand on > refuses \"appendFileSync(p, d);\""
+   ],
+   [
+    "packages/support/src/support-purity.test.ts",
+    "the forbidden-token list both guards stand on > refuses \"await fetch(url);\""
+   ],
+   [
+    "packages/support/src/support-purity.test.ts",
+    "the forbidden-token list both guards stand on > refuses \"const h = process.env.HOME;\""
+   ],
+   [
+    "packages/support/src/support-purity.test.ts",
+    "the forbidden-token list both guards stand on > refuses \"const m = await import(name);\""
+   ],
+   [
+    "packages/support/src/support-purity.test.ts",
+    "the forbidden-token list both guards stand on > refuses \"const m = require(name);\""
+   ],
+   [
+    "packages/support/src/support-purity.test.ts",
+    "the forbidden-token list both guards stand on > refuses \"const t = new Date();\""
+   ],
+   [
+    "packages/support/src/support-purity.test.ts",
+    "the forbidden-token list both guards stand on > refuses \"import { readFileSync } from 'node:fs';\""
+   ],
+   [
+    "packages/support/src/support-purity.test.ts",
+    "the forbidden-token list both guards stand on > refuses \"mkdirSync(p);\""
+   ],
+   [
+    "packages/support/src/support-purity.test.ts",
+    "the forbidden-token list both guards stand on > refuses \"writeFileSync(p, d);\""
+   ],
+   [
+    "packages/support/src/support-purity.test.ts",
+    "the identifier reader the allowlist stands on > reads \"/** fetch(url) */\\nexport const a = b.c?.(`${d}e`);\""
+   ],
+   [
+    "packages/support/src/support-purity.test.ts",
+    "the identifier reader the allowlist stands on > reads \"class K { #p = 1; m<T>(v: T): T { return v; } }\""
+   ],
+   [
+    "packages/support/src/support-purity.test.ts",
+    "the identifier reader the allowlist stands on > reads \"const \\\\u0070rocess = 1;\""
+   ],
+   [
+    "packages/support/src/support-purity.test.ts",
+    "the identifier reader the allowlist stands on > reads \"const h = globalThis['process']; // console.log(h)\""
+   ],
+   [
+    "packages/support/src/support-purity.test.ts",
+    "the identifier reader the allowlist stands on > reads \"import { randomBytes as r } from \\\"node:crypto\\\";\""
+   ]
+  ],
+  "removed": [
+   [
+    "packages/support/src/support-purity.test.ts",
+    "@syzygy/support stays a pure leaf > imports only node:crypto and its own modules, so no file read, no workspace package and no network"
+   ],
+   [
+    "packages/support/src/support-purity.test.ts",
+    "@syzygy/support stays a pure leaf > names no write, process, clock, network or file-system token in any source"
+   ],
+   [
+    "packages/support/src/support-purity.test.ts",
+    "@syzygy/support stays a pure leaf > scans the package sources, not an empty list"
+   ]
+  ]
+ },
+ "suite": {
+  "commit": "191d82779ea07f45be612b00ff3cafc9aa7446b8",
+  "distDirs": [
+   "apps/syzygy/dist",
+   "apps/three-surface-poc/dist",
+   "packages/cap1-conformance/dist",
+   "packages/cap1-core/dist",
+   "packages/cap1-daemon/dist",
+   "packages/cap1-system/dist",
+   "packages/http-host/dist",
+   "packages/polaris-dossier/dist",
+   "packages/polaris-generation-consent/dist",
+   "packages/polaris-generation-core/dist",
+   "packages/support/dist",
+   "packages/three-surface-poc-core/dist"
+  ],
+  "files": 253,
+  "total": 5528,
+  "passed": 5523,
+  "failed": 0,
+  "skipped": 5
+ },
+ "residualsSurviving": [
+  "R1-function-constructor-through-object-brackets",
+  "R2-dynamic-import-with-a-space-of-an-allowed-name",
+  "Y3-R1-escalated-to-the-environment",
+  "Y5b-computed-import-newline",
+  "Y5c-computed-import-comment",
+  "Z7-unscoped-workspace-with-no-entry"
+ ],
+ "bundleTestMs": {
+  "runs": [
+   456,
+   696,
+   368,
+   381,
+   345
+  ],
+  "load1Max": 28.77
+ },
+ "guardRowMs": [
+  364,
+  499,
+  265,
+  430,
+  290
+ ],
+ "beforeAllMs": {
+  "runs": [
+   576,
+   825,
+   614,
+   992,
+   951
+  ],
+  "load1Max": 28.32
+ },
+ "checksFailed": []
+}

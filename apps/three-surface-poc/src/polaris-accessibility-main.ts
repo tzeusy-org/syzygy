@@ -12,6 +12,7 @@ import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 import { findBrowserExecutable, launchBrowser } from './cdp-browser.js';
+import { removeFixturesOfDeadProcesses } from './fixture-directories.js';
 import { checkPolarisAccessibility, type AccessibilityReport } from './polaris-accessibility.js';
 import { ACCESSIBILITY_VARIANTS, renderVariant } from './polaris-accessibility-variants.js';
 
@@ -21,6 +22,9 @@ function argument(name: string): string | undefined {
 }
 
 async function main(): Promise<number> {
+  // The fixture helper this CLI builds its models with leaves a directory behind when a run is killed;
+  // Vitest's global setup sweeps those for test runs and never runs here (syzygy-bpyt.4.10).
+  removeFixturesOfDeadProcesses();
   const executable = findBrowserExecutable();
   if (executable === undefined) {
     process.stderr.write('No Chrome/Chromium found on PATH and SYZYGY_POC_BROWSER is unset; nothing measured.\n');

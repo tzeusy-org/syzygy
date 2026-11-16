@@ -1,0 +1,75 @@
+OK   record commit resolves — fbd6fb356bf3477444251d94df97309b50ef13da
+OK   record commit is an ancestor of the reviewed commit
+OK   baseCommit is the merge base
+OK   rootSkipCommit resolves — 7459cc7585205e270f90173737c6d59786af650a
+OK   tool sha256 equals the tool at the record commit
+OK   tool sha256 equals the tool at the reviewed commit
+OK   files[packages/cap1-system/src/skipped-population.system.test.ts].head equals the blob at the record commit
+OK   files[packages/cap1-system/src/skipped-population.system.test.ts] unchanged record commit -> reviewed commit
+OK   files[packages/cap1-system/src/credentials.system.test.ts].head equals the blob at the record commit
+OK   files[packages/cap1-system/src/credentials.system.test.ts] unchanged record commit -> reviewed commit
+OK   files[packages/cap1-system/src/degradation.system.test.ts].head equals the blob at the record commit
+OK   files[packages/cap1-system/src/degradation.system.test.ts] unchanged record commit -> reviewed commit
+OK   files[packages/cap1-system/src/fresh-clone.system.test.ts].head equals the blob at the record commit
+OK   files[packages/cap1-system/src/fresh-clone.system.test.ts] unchanged record commit -> reviewed commit
+OK   files[packages/cap1-system/src/state-dir.system.test.ts].head equals the blob at the record commit
+OK   files[packages/cap1-system/src/state-dir.system.test.ts] unchanged record commit -> reviewed commit
+OK   files[packages/cap1-system/src/write-boundary.system.test.ts].head equals the blob at the record commit
+OK   files[packages/cap1-system/src/write-boundary.system.test.ts] unchanged record commit -> reviewed commit
+OK   control: exactly one check row in tests
+OK   control: tests holds only the check row (a filtered run) — 1
+OK   control: recorded passes=True agrees with exit 0, row passed, needle, survivors 0
+OK   control-fresh-clone: exactly one check row in tests
+OK   control-fresh-clone: tests holds only the check row (a filtered run) — 1
+OK   control-fresh-clone: recorded passes=True agrees with exit 0, row passed, needle, survivors 0
+OK   S1: old occurs exactly once in packages/cap1-system/src/state-dir.system.test.ts at the record commit — count 1
+OK   S1: new differs from old
+OK   S1: exactly one check row in tests
+OK   S1: tests holds only the check row (a filtered run) — 1
+OK   S1: recorded passes=True agrees with exit 1, row failed, needle, survivors 0
+      S1 failure head: 'AssertionError: skipped but not expected: ["src/state-dir.system.test.ts > RTF-1 — state-dir governed-plane check resolves symlink reality > rejects an unreadable state-dir path as named invalid before writes or a listener"]; expected but not skipped: []: expected [ …(2) ] to deeply equal [ Array(1)'
+OK   skip-added: old occurs exactly once in packages/cap1-system/src/credentials.system.test.ts at the record commit — count 1
+OK   skip-added: new differs from old
+OK   skip-added: exactly one check row in tests
+OK   skip-added: tests holds only the check row (a filtered run) — 1
+OK   skip-added: recorded passes=True agrees with exit 1, row failed, needle, survivors 0
+      skip-added failure head: 'AssertionError: skipped but not expected: ["src/credentials.system.test.ts > RT6 — credential enforcement from outside the process > the token file is owner-only (mode 0600)"]; expected but not skipped: []: expected [ …(2) ] to deeply equal [ Array(1) ]\n    at /home/tze/GitHub/syzygy/.worktrees/para'
+OK   describe-skipped: old occurs exactly once in packages/cap1-system/src/write-boundary.system.test.ts at the record commit — count 1
+OK   describe-skipped: new differs from old
+OK   describe-skipped: exactly one check row in tests
+OK   describe-skipped: tests holds only the check row (a filtered run) — 1
+OK   describe-skipped: recorded passes=True agrees with exit 1, row failed, needle, survivors 0
+      describe-skipped failure head: 'AssertionError: skipped but not expected: ["src/write-boundary.system.test.ts > RT6 — write boundary by harness-external filesystem observation > after requests to all routes, the only filesystem additions live under the state dir and the governed tree is untouched"]; expected but not skipped: []: e'
+OK   guard-narrowed: old occurs exactly once in packages/cap1-system/src/fresh-clone.system.test.ts at the record commit — count 1
+OK   guard-narrowed: new differs from old
+OK   guard-narrowed: exactly one check row in tests
+OK   guard-narrowed: tests holds only the check row (a filtered run) — 1
+OK   guard-narrowed: recorded passes=True agrees with exit 1, row failed, needle, survivors 0
+      guard-narrowed failure head: 'AssertionError: skipped but not expected: []; expected but not skipped: ["src/fresh-clone.system.test.ts > RT6 — fresh-clone demonstration > a fresh clone installs, builds, starts the daemon, and serves the same facts on both channels"]: expected [] to deeply equal [ Array(1) ]\n    at /home/tze/GitH'
+OK   import-fails: old occurs exactly once in packages/cap1-system/src/degradation.system.test.ts at the record commit — count 1
+OK   import-fails: new differs from old
+OK   import-fails: exactly one check row in tests
+OK   import-fails: tests holds only the check row (a filtered run) — 1
+OK   import-fails: recorded passes=True agrees with exit 1, row failed, needle, survivors 0
+      import-fails failure head: 'AssertionError: collection errors: ["census mutant: this file fails to load"]: expected [ Array(1) ] to deeply equal []\n    at /home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.4.30/packages/cap1-system/src/skipped-population.system.test.ts:83:82\n    at processTicksAndRejections (node:i'
+OK   collection-hangs: old occurs exactly once in packages/cap1-system/src/skipped-population.system.test.ts at the record commit — count 1
+OK   collection-hangs: new differs from old
+OK   collection-hangs: exactly one check row in tests
+OK   collection-hangs: tests holds only the check row (a filtered run) — 1
+OK   collection-hangs: recorded passes=True agrees with exit 1, row failed, needle, survivors 0
+      collection-hangs failure head: 'Error: tier collection ended (SIGKILL) with no census; it is killed at 45000 ms\nstdout:\n\nstderr:\n\n    at ChildProcess.<anonymous> (/home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.4.30/packages/cap1-system/src/skipped-population.system.test.ts:71:16)\n    at Object.onceWrapper (node:eve'
+OK   root-shim: exactly one check row in tests
+OK   root-shim: tests holds only the check row (a filtered run) — 1
+OK   root-shim: recorded passes=True agrees with exit 1, row failed, needle, survivors 0
+      root-shim failure head: 'AssertionError: skipped but not expected: []; expected but not skipped: ["src/state-dir.system.test.ts > RTF-1 — state-dir governed-plane check resolves symlink reality > rejects an unreadable state-dir path as named invalid before writes or a listener"]: expected [ Array(1) ] to deeply equal [ …(2)'
+OK   root-shim-with-skip: filesFrom[packages/cap1-system/src/state-dir.system.test.ts] sha256 equals the blob at its commit
+OK   root-shim-with-skip: exactly one check row in tests
+OK   root-shim-with-skip: tests holds only the check row (a filtered run) — 1
+OK   root-shim-with-skip: recorded passes=True agrees with exit 0, row passed, needle, survivors 0
+OK   with-skip: filesFrom[packages/cap1-system/src/state-dir.system.test.ts] sha256 equals the blob at its commit
+OK   with-skip: exactly one check row in tests
+OK   with-skip: tests holds only the check row (a filtered run) — 1
+OK   with-skip: recorded passes=True agrees with exit 0, row passed, needle, survivors 0
+OK   allPass recorded true and equals the conjunction
+OK   11 cases — 11
+67 OK / 67 checks; 0 FAIL

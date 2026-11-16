@@ -1,0 +1,519 @@
+{
+ "commit": "5d73176ac26637e4e0597e66d235903df05156b2",
+ "cleanBefore": true,
+ "tool_sha256": "e70034eab755e03648827889436af28f6a67cf2fa37f85a36dd06758c8071a00",
+ "load": [
+  [
+   "25.36",
+   "28.65",
+   "26.63"
+  ],
+  [
+   "25.87",
+   "28.64",
+   "26.65"
+  ],
+  [
+   "25.24",
+   "28.47",
+   "26.60"
+  ],
+  [
+   "24.18",
+   "28.19",
+   "26.52"
+  ],
+  [
+   "23.28",
+   "27.94",
+   "26.45"
+  ],
+  [
+   "23.28",
+   "27.94",
+   "26.45"
+  ],
+  [
+   "23.50",
+   "27.91",
+   "26.45"
+  ],
+  [
+   "22.98",
+   "27.73",
+   "26.40"
+  ],
+  [
+   "23.94",
+   "27.85",
+   "26.44"
+  ],
+  [
+   "23.70",
+   "27.74",
+   "26.41"
+  ],
+  [
+   "23.81",
+   "27.69",
+   "26.41"
+  ],
+  [
+   "23.81",
+   "27.69",
+   "26.41"
+  ],
+  [
+   "22.78",
+   "27.41",
+   "26.32"
+  ],
+  [
+   "22.08",
+   "27.19",
+   "26.26"
+  ],
+  [
+   "21.27",
+   "26.94",
+   "26.18"
+  ]
+ ],
+ "unmutated": {
+  "exit": 0,
+  "failed": 0,
+  "passed": 16,
+  "total": 16,
+  "failing": [],
+  "suiteErrors": [],
+  "durations": {
+   "refuses exactly the projects the POC start compiles or loads, and the files that define its build": 174.557679,
+   "reads every protected project from tsconfig.base.json through its own extends chain": 60.50165300000003,
+   "refuses a tree that builds packages/polaris-generation-core into another package's dist": 250.75856,
+   "refuses a tree that builds packages/cap1-daemon into another package's dist": 238.1922790000001
+  }
+ },
+ "mutants": [
+  {
+   "id": "B0",
+   "what": "the base gate (29db2b11) under the head test file",
+   "edits": [
+    {
+     "path": "apps/three-surface-poc/src/git-observation.ts",
+     "old": "<whole file>",
+     "new": "<29db2b11 bytes>"
+    }
+   ],
+   "exit": 1,
+   "failed": 2,
+   "passed": 14,
+   "total": 16,
+   "failing": [
+    {
+     "test": "read-only Git observation refuses exactly the projects the POC start compiles or loads, and the files that define its build",
+     "message": "AssertionError: expected [ \u2026(74) ] to deeply equal []",
+     "ms": 265.663671
+    },
+    {
+     "test": "read-only Git observation refuses a tree that builds packages/polaris-generation-core into another package's dist",
+     "message": "AssertionError: own outDir: expected true to be false // Object.is equality",
+     "ms": 152.820154
+    }
+   ],
+   "suiteErrors": [],
+   "durations": {
+    "refuses exactly the projects the POC start compiles or loads, and the files that define its build": 265.663671,
+    "reads every protected project from tsconfig.base.json through its own extends chain": 73.94532099999992,
+    "refuses a tree that builds packages/polaris-generation-core into another package's dist": 152.820154,
+    "refuses a tree that builds packages/cap1-daemon into another package's dist": 310.373024
+   },
+   "killed": true
+  },
+  {
+   "id": "R1",
+   "what": "gate prefixes compared without their trailing slash",
+   "edits": [
+    {
+     "path": "apps/three-surface-poc/src/git-observation.ts",
+     "old": "inputPrefixes.every((prefix) => !changedPath.startsWith(prefix))",
+     "new": "inputPrefixes.every((prefix) => !changedPath.startsWith(prefix.slice(0, -1)))"
+    }
+   ],
+   "exit": 1,
+   "failed": 1,
+   "passed": 15,
+   "total": 16,
+   "failing": [
+    {
+     "test": "read-only Git observation refuses exactly the projects the POC start compiles or loads, and the files that define its build",
+     "message": "AssertionError: expected [ Array(8) ] to deeply equal []",
+     "ms": 202.68175799999995
+    }
+   ],
+   "suiteErrors": [],
+   "durations": {
+    "refuses exactly the projects the POC start compiles or loads, and the files that define its build": 202.68175799999995,
+    "reads every protected project from tsconfig.base.json through its own extends chain": 76.46087299999999,
+    "refuses a tree that builds packages/polaris-generation-core into another package's dist": 277.1375250000001,
+    "refuses a tree that builds packages/cap1-daemon into another package's dist": 282.04216900000006
+   },
+   "killed": true
+  },
+  {
+   "id": "R2",
+   "what": "gate matches a prefix anywhere in the path",
+   "edits": [
+    {
+     "path": "apps/three-surface-poc/src/git-observation.ts",
+     "old": "inputPrefixes.every((prefix) => !changedPath.startsWith(prefix))",
+     "new": "inputPrefixes.every((prefix) => !changedPath.includes(prefix))"
+    }
+   ],
+   "exit": 0,
+   "failed": 0,
+   "passed": 16,
+   "total": 16,
+   "failing": [],
+   "suiteErrors": [],
+   "durations": {
+    "refuses exactly the projects the POC start compiles or loads, and the files that define its build": 163.21246500000007,
+    "reads every protected project from tsconfig.base.json through its own extends chain": 58.57372600000008,
+    "refuses a tree that builds packages/polaris-generation-core into another package's dist": 247.65114700000004,
+    "refuses a tree that builds packages/cap1-daemon into another package's dist": 230.67915600000015
+   },
+   "killed": false
+  },
+  {
+   "id": "R3",
+   "what": "one new prefix written without its slash",
+   "edits": [
+    {
+     "path": "apps/three-surface-poc/src/git-observation.ts",
+     "old": "    'packages/polaris-generation-consent/',\n",
+     "new": "    'packages/polaris-generation-consent',\n"
+    }
+   ],
+   "exit": 1,
+   "failed": 1,
+   "passed": 15,
+   "total": 16,
+   "failing": [
+    {
+     "test": "read-only Git observation refuses exactly the projects the POC start compiles or loads, and the files that define its build",
+     "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+     "ms": 170.83412199999998
+    }
+   ],
+   "suiteErrors": [],
+   "durations": {
+    "refuses exactly the projects the POC start compiles or loads, and the files that define its build": 170.83412199999998,
+    "reads every protected project from tsconfig.base.json through its own extends chain": 85.58039900000017,
+    "refuses a tree that builds packages/polaris-generation-core into another package's dist": 427.520207,
+    "refuses a tree that builds packages/cap1-daemon into another package's dist": 315.90824799999973
+   },
+   "killed": true
+  },
+  {
+   "id": "R4",
+   "what": "gate refuses only when every changed path is an input (every -> some)",
+   "edits": [
+    {
+     "path": "apps/three-surface-poc/src/git-observation.ts",
+     "old": "observation.changedPaths.every(",
+     "new": "observation.changedPaths.some("
+    }
+   ],
+   "exit": 1,
+   "failed": 1,
+   "passed": 15,
+   "total": 16,
+   "failing": [
+    {
+     "test": "read-only Git observation retains a protected source path when it is renamed out",
+     "message": "AssertionError: expected true to be false // Object.is equality",
+     "ms": 149.49303299999997
+    }
+   ],
+   "suiteErrors": [],
+   "durations": {
+    "refuses exactly the projects the POC start compiles or loads, and the files that define its build": 135.38267399999995,
+    "reads every protected project from tsconfig.base.json through its own extends chain": 52.193639000000076,
+    "refuses a tree that builds packages/polaris-generation-core into another package's dist": 252.79104300000017,
+    "refuses a tree that builds packages/cap1-daemon into another package's dist": 234.77889699999992
+   },
+   "killed": true
+  },
+  {
+   "id": "D1",
+   "what": "derivation: tsconfig reference walk stops at depth 1 (today's tree)",
+   "edits": [
+    {
+     "path": "apps/three-surface-poc/src/git-observation.test.ts",
+     "old": "for (const reference of config.references ?? []) visit(posix.normalize(posix.join(project, reference.path)));",
+     "new": "for (const reference of config.references ?? []) projects.add(posix.normalize(posix.join(project, reference.path)));"
+    }
+   ],
+   "exit": 0,
+   "failed": 0,
+   "passed": 16,
+   "total": 16,
+   "failing": [],
+   "suiteErrors": [],
+   "durations": {
+    "refuses exactly the projects the POC start compiles or loads, and the files that define its build": 245.78347400000007,
+    "reads every protected project from tsconfig.base.json through its own extends chain": 56.80034999999998,
+    "refuses a tree that builds packages/polaris-generation-core into another package's dist": 303.731442,
+    "refuses a tree that builds packages/cap1-daemon into another package's dist": 364.35627699999986
+   },
+   "killed": false
+  },
+  {
+   "id": "D1t",
+   "what": "derivation unmutated; tree: polaris-generation-consent references polaris-dossier (depth 2 from the app)",
+   "edits": [
+    {
+     "path": "packages/polaris-generation-consent/tsconfig.json",
+     "old": "      \"path\": \"../support\"\n",
+     "new": "      \"path\": \"../support\"\n    },\n    {\n      \"path\": \"../polaris-dossier\"\n"
+    }
+   ],
+   "exit": 1,
+   "failed": 1,
+   "passed": 15,
+   "total": 16,
+   "failing": [
+    {
+     "test": "read-only Git observation refuses exactly the projects the POC start compiles or loads, and the files that define its build",
+     "message": "AssertionError: expected [ 'apps/three-surface-poc', \u2026(8) ] to deeply equal [ 'apps/three-surface-poc', \u2026(7) ]",
+     "ms": 156.18734099999983
+    }
+   ],
+   "suiteErrors": [],
+   "durations": {
+    "refuses exactly the projects the POC start compiles or loads, and the files that define its build": 156.18734099999983,
+    "reads every protected project from tsconfig.base.json through its own extends chain": 71.57338099999993,
+    "refuses a tree that builds packages/polaris-generation-core into another package's dist": 317.5425919999998,
+    "refuses a tree that builds packages/cap1-daemon into another package's dist": 366.80513799999994
+   },
+   "killed": true
+  },
+  {
+   "id": "D1x",
+   "what": "D1 plus the D1t tree",
+   "edits": [
+    {
+     "path": "apps/three-surface-poc/src/git-observation.test.ts",
+     "old": "for (const reference of config.references ?? []) visit(posix.normalize(posix.join(project, reference.path)));",
+     "new": "for (const reference of config.references ?? []) projects.add(posix.normalize(posix.join(project, reference.path)));"
+    },
+    {
+     "path": "packages/polaris-generation-consent/tsconfig.json",
+     "old": "      \"path\": \"../support\"\n",
+     "new": "      \"path\": \"../support\"\n    },\n    {\n      \"path\": \"../polaris-dossier\"\n"
+    }
+   ],
+   "exit": 0,
+   "failed": 0,
+   "passed": 16,
+   "total": 16,
+   "failing": [],
+   "suiteErrors": [],
+   "durations": {
+    "refuses exactly the projects the POC start compiles or loads, and the files that define its build": 159.908181,
+    "reads every protected project from tsconfig.base.json through its own extends chain": 56.61128499999995,
+    "refuses a tree that builds packages/polaris-generation-core into another package's dist": 253.16870300000005,
+    "refuses a tree that builds packages/cap1-daemon into another package's dist": 246.18752700000005
+   },
+   "killed": false
+  },
+  {
+   "id": "D2",
+   "what": "derivation: the import walk drops every re-export edge (today's tree)",
+   "edits": [
+    {
+     "path": "apps/three-surface-poc/src/git-observation.test.ts",
+     "old": "ts.preProcessFile(readModule(file), true, true)",
+     "new": "ts.preProcessFile(readModule(file).replace(/^export [^;]*? from [^;]*;$/gmu, ''), true, true)"
+    }
+   ],
+   "exit": 1,
+   "failed": 2,
+   "passed": 14,
+   "total": 16,
+   "failing": [
+    {
+     "test": "read-only Git observation refuses exactly the projects the POC start compiles or loads, and the files that define its build",
+     "message": "Error: the import walk does not reach packages/support/src/sha256.ts",
+     "ms": 120.87453500000015
+    },
+    {
+     "test": "read-only Git observation reads every protected project from tsconfig.base.json through its own extends chain",
+     "message": "Error: the import walk does not reach packages/support/src/sha256.ts",
+     "ms": 25.968875000000025
+    }
+   ],
+   "suiteErrors": [],
+   "durations": {
+    "refuses exactly the projects the POC start compiles or loads, and the files that define its build": 120.87453500000015,
+    "reads every protected project from tsconfig.base.json through its own extends chain": 25.968875000000025,
+    "refuses a tree that builds packages/polaris-generation-core into another package's dist": 270.06441599999994,
+    "refuses a tree that builds packages/cap1-daemon into another package's dist": 223.32845999999995
+   },
+   "killed": true
+  },
+  {
+   "id": "D2x",
+   "what": "D2 plus the lane's M9 tree (main.ts re-exports a type from polaris-dossier)",
+   "edits": [
+    {
+     "path": "apps/three-surface-poc/src/git-observation.test.ts",
+     "old": "ts.preProcessFile(readModule(file), true, true)",
+     "new": "ts.preProcessFile(readModule(file).replace(/^export [^;]*? from [^;]*;$/gmu, ''), true, true)"
+    },
+    {
+     "path": "apps/three-surface-poc/src/main.ts",
+     "old": "",
+     "new": "export type {} from '@syzygy/polaris-dossier';\n"
+    }
+   ],
+   "exit": 1,
+   "failed": 2,
+   "passed": 14,
+   "total": 16,
+   "failing": [
+    {
+     "test": "read-only Git observation refuses exactly the projects the POC start compiles or loads, and the files that define its build",
+     "message": "Error: the import walk does not reach packages/support/src/sha256.ts",
+     "ms": 68.55460400000015
+    },
+    {
+     "test": "read-only Git observation reads every protected project from tsconfig.base.json through its own extends chain",
+     "message": "Error: the import walk does not reach packages/support/src/sha256.ts",
+     "ms": 34.80448300000012
+    }
+   ],
+   "suiteErrors": [],
+   "durations": {
+    "refuses exactly the projects the POC start compiles or loads, and the files that define its build": 68.55460400000015,
+    "reads every protected project from tsconfig.base.json through its own extends chain": 34.80448300000012,
+    "refuses a tree that builds packages/polaris-generation-core into another package's dist": 239.1764549999998,
+    "refuses a tree that builds packages/cap1-daemon into another package's dist": 266.35522600000013
+   },
+   "killed": true
+  },
+  {
+   "id": "D3",
+   "what": "derivation: the build-step parser takes only the first project",
+   "edits": [
+    {
+     "path": "apps/three-surface-poc/src/git-observation.test.ts",
+     "old": "build.forEach(visit);",
+     "new": "build.slice(0, 1).forEach(visit);"
+    }
+   ],
+   "exit": 1,
+   "failed": 1,
+   "passed": 15,
+   "total": 16,
+   "failing": [
+    {
+     "test": "read-only Git observation refuses exactly the projects the POC start compiles or loads, and the files that define its build",
+     "message": "AssertionError: expected [ 'apps/three-surface-poc', \u2026(4) ] to deeply equal [ 'apps/three-surface-poc', \u2026(7) ]",
+     "ms": 114.36254099999996
+    }
+   ],
+   "suiteErrors": [],
+   "durations": {
+    "refuses exactly the projects the POC start compiles or loads, and the files that define its build": 114.36254099999996,
+    "reads every protected project from tsconfig.base.json through its own extends chain": 55.516901999999845,
+    "refuses a tree that builds packages/polaris-generation-core into another package's dist": 222.86338,
+    "refuses a tree that builds packages/cap1-daemon into another package's dist": 255.47952999999984
+   },
+   "killed": true
+  },
+  {
+   "id": "D4",
+   "what": "derivation: the import walk contributes no project (today's tree)",
+   "edits": [
+    {
+     "path": "apps/three-surface-poc/src/git-observation.test.ts",
+     "old": "projects.add(owner);",
+     "new": "void owner;"
+    }
+   ],
+   "exit": 0,
+   "failed": 0,
+   "passed": 16,
+   "total": 16,
+   "failing": [],
+   "suiteErrors": [],
+   "durations": {
+    "refuses exactly the projects the POC start compiles or loads, and the files that define its build": 144.98576000000003,
+    "reads every protected project from tsconfig.base.json through its own extends chain": 49.750290999999834,
+    "refuses a tree that builds packages/polaris-generation-core into another package's dist": 256.84266,
+    "refuses a tree that builds packages/cap1-daemon into another package's dist": 254.0061830000002
+   },
+   "killed": false
+  },
+  {
+   "id": "D4x",
+   "what": "D4 plus the lane's M9 tree",
+   "edits": [
+    {
+     "path": "apps/three-surface-poc/src/git-observation.test.ts",
+     "old": "projects.add(owner);",
+     "new": "void owner;"
+    },
+    {
+     "path": "apps/three-surface-poc/src/main.ts",
+     "old": "",
+     "new": "export type {} from '@syzygy/polaris-dossier';\n"
+    }
+   ],
+   "exit": 0,
+   "failed": 0,
+   "passed": 16,
+   "total": 16,
+   "failing": [],
+   "suiteErrors": [],
+   "durations": {
+    "refuses exactly the projects the POC start compiles or loads, and the files that define its build": 303.2956680000002,
+    "reads every protected project from tsconfig.base.json through its own extends chain": 79.26311299999998,
+    "refuses a tree that builds packages/polaris-generation-core into another package's dist": 268.91617799999995,
+    "refuses a tree that builds packages/cap1-daemon into another package's dist": 265.501479
+   },
+   "killed": false
+  },
+  {
+   "id": "D5",
+   "what": "derivation: reference walk dropped entirely (build list plus imports only)",
+   "edits": [
+    {
+     "path": "apps/three-surface-poc/src/git-observation.test.ts",
+     "old": "for (const reference of config.references ?? []) visit(posix.normalize(posix.join(project, reference.path)));",
+     "new": "void config;"
+    }
+   ],
+   "exit": 1,
+   "failed": 1,
+   "passed": 15,
+   "total": 16,
+   "failing": [
+    {
+     "test": "read-only Git observation refuses exactly the projects the POC start compiles or loads, and the files that define its build",
+     "message": "AssertionError: expected [ 'apps/three-surface-poc', \u2026(6) ] to deeply equal [ 'apps/three-surface-poc', \u2026(7) ]",
+     "ms": 103.08779200000004
+    }
+   ],
+   "suiteErrors": [],
+   "durations": {
+    "refuses exactly the projects the POC start compiles or loads, and the files that define its build": 103.08779200000004,
+    "reads every protected project from tsconfig.base.json through its own extends chain": 45.34468200000015,
+    "refuses a tree that builds packages/polaris-generation-core into another package's dist": 216.89927799999987,
+    "refuses a tree that builds packages/cap1-daemon into another package's dist": 271.8155690000001
+   },
+   "killed": true
+  }
+ ],
+ "cleanAfter": true
+}

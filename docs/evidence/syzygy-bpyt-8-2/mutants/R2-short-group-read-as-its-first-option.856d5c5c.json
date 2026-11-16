@@ -1,0 +1,11 @@
+{
+ "id": "R2-short-group-read-as-its-first-option",
+ "command": "cp $EVIDENCE/dossier-golden-harness.ts packages/polaris-dossier/src/zz-golden.test.ts && GOLDEN_CORPUS=$EVIDENCE/dossier-corpus.json GOLDEN_OUT=$EVIDENCE/mutants/R2-short-group-read-as-its-first-option-dossier.json GOLDEN_CWD=/tmp/la-b82/gcwd TMPDIR=/tmp/la-b82/g CI=1 npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/zz-golden.test.ts; e=$?; rm packages/polaris-dossier/src/zz-golden.test.ts; node $EVIDENCE/parse-golden.mjs $OUT/oracle $EVIDENCE $EVIDENCE/mutants/R2-short-group-read-as-its-first-option-parse.json; exit $e",
+ "edits": [
+  {
+   "file": "packages/polaris-dossier/src/argv.ts",
+   "old": "} else if (token.kind === 'option-terminator' || arg !== token.rawName || token.inlineValue === true) {",
+   "new": "} else if (token.kind === 'option-terminator' || !arg.startsWith(token.rawName) || token.inlineValue === true) {"
+  }
+ ]
+}

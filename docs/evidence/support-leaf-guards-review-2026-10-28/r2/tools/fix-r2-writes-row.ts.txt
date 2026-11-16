@@ -1,0 +1,4 @@
+  it('assigns to no property in any source, so no allowed global is rewritten', () => {
+    expect(SOURCES.flatMap((file) => propertyWritesOf(file, read(file)).map((write) => `${file}: ${write}`))).toEqual([]);
+  });
+

@@ -1,0 +1,434 @@
+[
+ {
+  "id": "R3-equal-length-reordered-question-digest",
+  "edits": [
+   {
+    "file": "packages/polaris-generation-core/src/dossier-profile.ts",
+    "old": "JSON.stringify([q.id, q.question, q.scope, q.reason])",
+    "new": "JSON.stringify([q.id, q.scope, q.question, q.reason])"
+   }
+  ],
+  "ranAt": "fe3855a1b4f2164da3274e02d868399236c45c9c",
+  "mutantCommit": "d9a4b7568bb8617c4058ab56062b83da8f970311",
+  "static": {
+   "killed": true,
+   "exit": 0,
+   "hashDiffer": [
+    "packages/polaris-generation-core/src/dossier-profile.ts"
+   ],
+   "freezeDiffer": [],
+   "noncanonical": []
+  },
+  "tests": {
+   "killed": false,
+   "exit": 0,
+   "args": [
+    "--project",
+    "@syzygy/polaris-generation-core",
+    "--project",
+    "@syzygy/polaris-dossier"
+   ],
+   "summary": [
+    "Test Files  54 passed (54)",
+    "Tests  2104 passed | 1 skipped (2105)"
+   ],
+   "failed": []
+  }
+ },
+ {
+  "id": "R8-support-reads-a-file",
+  "edits": [
+   {
+    "file": "packages/support/src/sha256.ts",
+    "old": "import { createHash } from 'node:crypto';\n",
+    "new": "import { createHash } from 'node:crypto';\nimport { readFileSync } from 'node:fs';\nexport const probeRead = (): string => readFileSync('/etc/hostname', 'utf8');\n"
+   }
+  ],
+  "ranAt": "fe3855a1b4f2164da3274e02d868399236c45c9c",
+  "mutantCommit": "ea3c16f2f5971fa4e5c32b58d0ef35b90466ef0e",
+  "static": {
+   "killed": false,
+   "exit": 0,
+   "hashDiffer": [],
+   "freezeDiffer": [],
+   "noncanonical": []
+  },
+  "tests": {
+   "killed": false,
+   "exit": 0,
+   "args": [
+    "packages/three-surface-poc-core/src/test-artifact-verification-live-source.test.ts",
+    "packages/three-surface-poc-core/src/owner-act-drafter.test.ts"
+   ],
+   "summary": [
+    "Test Files  2 passed (2)",
+    "Tests  61 passed (61)"
+   ],
+   "failed": []
+  }
+ },
+ {
+  "id": "R9-equal-length-reordered-attempt-id",
+  "edits": [
+   {
+    "file": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.ts",
+    "old": "`${input.requestId}\\0${input.stage}\\0${input.ordinal}`",
+    "new": "`${input.stage}\\0${input.requestId}\\0${input.ordinal}`"
+   }
+  ],
+  "ranAt": "fe3855a1b4f2164da3274e02d868399236c45c9c",
+  "mutantCommit": "2c7827d1265d112f5166b17685fa81fe73fb4ab7",
+  "static": {
+   "killed": true,
+   "exit": 0,
+   "hashDiffer": [
+    "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.ts"
+   ],
+   "freezeDiffer": [],
+   "noncanonical": []
+  },
+  "tests": {
+   "killed": false,
+   "exit": 0,
+   "args": [
+    "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts",
+    "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts",
+    "apps/three-surface-poc/src/polaris-generation/dossier-trigger.test.ts"
+   ],
+   "summary": [
+    "Test Files  3 passed (3)",
+    "Tests  40 passed (40)"
+   ],
+   "failed": []
+  }
+ },
+ {
+  "id": "R1-hash-whole-backing-buffer",
+  "edits": [
+   {
+    "file": "packages/support/src/sha256.ts",
+    "old": ".update(value)",
+    "new": ".update(typeof value === 'string' ? value : Buffer.from(value.buffer))"
+   }
+  ],
+  "ranAt": "fe3855a1b4f2164da3274e02d868399236c45c9c",
+  "mutantCommit": "69121ef303c6f8ef740fbe65cdd93fe3ddc8a96f",
+  "static": {
+   "killed": false,
+   "exit": 0,
+   "hashDiffer": [],
+   "freezeDiffer": [],
+   "noncanonical": []
+  },
+  "tests": {
+   "killed": true,
+   "exit": 1,
+   "args": [
+    "--project",
+    "@syzygy/support",
+    "--project",
+    "@syzygy/three-surface-poc-core",
+    "--project",
+    "@syzygy/polaris-generation-core"
+   ],
+   "summary": [
+    "Test Files  2 failed | 55 passed | 2 skipped (59)",
+    "Tests  5 failed | 1893 passed | 2 skipped (1900)"
+   ],
+   "failed": [
+    "\u00d7 three-surface Butlers POC model > reads a directory with no Beads project through the spawned default runner exactly as through the in-process one 314ms",
+    "\u00d7 three-surface Butlers POC model > builds one deterministic provenance-backed graph with honest Unknowns 137ms",
+    "\u00d7 three-surface Butlers POC model > carries the project shape on the one model: not-evaluated without an authority evaluation, observed with an admitting one (PWB 2.7) 201ms",
+    "\u00d7 sha256 > hashes bytes as given, a Uint8Array and a Buffer alike 22ms",
+    "\u00d7 sha256 > hashes only the view, not the buffer behind it 8ms",
+    "FAIL  |@syzygy/support| packages/support/src/sha256.test.ts > sha256 > hashes bytes as given, a Uint8Array and a Buffer alike",
+    "FAIL  |@syzygy/support| packages/support/src/sha256.test.ts > sha256 > hashes only the view, not the buffer behind it",
+    "FAIL  |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/model.test.ts > three-surface Butlers POC model > reads a directory with no Beads project through the spawned default runner exactly as through the in-process one",
+    "- Expected",
+    "+ Received",
+    "-           \"digest\": \"sha256:0c52e4554ab0e48cb1f605a9f7ba004141fbb25d137459e9db376c4803ac4e0f\",",
+    "+           \"digest\": \"sha256:fa2e0ed7b9e56059ceb498d4cd8b3c6476dd18704a1dfe0f305d5c134de2ac47\",",
+    "-           \"digest\": \"sha256:08873126c3a8224377141e2f4a955dff2fe82bc20d28ec2a0d9348d18c443f4f\",",
+    "+           \"digest\": \"sha256:eef5de288d72b7533230f190a9fd43476980ea5897ab659a009e4ab1f108bc53\",",
+    "-           \"digest\": \"sha256:0c52e4554ab0e48cb1f605a9f7ba004141fbb25d137459e9db376c4803ac4e0f\",",
+    "+           \"digest\": \"sha256:fa2e0ed7b9e56059ceb498d4cd8b3c6476dd18704a1dfe0f305d5c134de2ac47\",",
+    "-           \"digest\": \"sha256:a31eda1a76fab23d8c9d7de96f33ded246b4712d80fa13462c90e9d1d436aced\",",
+    "+           \"digest\": \"sha256:14e2278dd98399f443253dabcac228e3387861a70182b73b3b07b1cee602c5c4\",",
+    "-           \"digest\": \"sha256:08873126c3a8224377141e2f4a955dff2fe82bc20d28ec2a0d9348d18c443f4f\",",
+    "+           \"digest\": \"sha256:eef5de288d72b7533230f190a9fd43476980ea5897ab659a009e4ab1f108bc53\",",
+    "-           \"digest\": \"sha256:fdccf4223a933736a09bc1a936431af6ee81330729bd3fec37cac10a6798cff3\",",
+    "+           \"digest\": \"sha256:d86fecf0014bb021f648d821c6aa5f04cec83732e8667971226e517d39be64d3\",",
+    "-           \"digest\": \"sha256:3f85bc0d634dfe71d0af9c113fd349e9ec58c9194f1552592ee7d7c1c7066250\",",
+    "+           \"digest\": \"sha256:5ca77e4e638275dd4c474d71f593d97a9de19cb35c2726d9c5982516dee7a647\","
+   ]
+  }
+ },
+ {
+  "id": "R2-freeze-skips-arrays",
+  "edits": [
+   {
+    "file": "packages/support/src/deep-freeze.ts",
+    "old": "typeof value === 'object' && !Object.isFrozen(value)",
+    "new": "typeof value === 'object' && !Array.isArray(value) && !Object.isFrozen(value)"
+   }
+  ],
+  "ranAt": "fe3855a1b4f2164da3274e02d868399236c45c9c",
+  "mutantCommit": "c6b05cb2c757091ce59bb4c8511243472dfff81f",
+  "static": {
+   "killed": false,
+   "exit": 0,
+   "hashDiffer": [],
+   "freezeDiffer": [],
+   "noncanonical": []
+  },
+  "tests": {
+   "killed": true,
+   "exit": 1,
+   "args": [
+    "--project",
+    "@syzygy/support",
+    "--project",
+    "@syzygy/three-surface-poc-core",
+    "--project",
+    "@syzygy/polaris-generation-core"
+   ],
+   "summary": [
+    "Test Files  6 failed | 51 passed | 2 skipped (59)",
+    "Tests  12 failed | 1886 passed | 2 skipped (1900)"
+   ],
+   "failed": [
+    "\u00d7 three-surface Butlers POC model > owns returned surface membership arrays and keeps the exported seed graph isolated 21ms",
+    "\u2713 dossier stage prompts > states the fidelity guidance clause: that no trade-off half is presented as stated unless a cited source states it, and that an Inferred: half cites the sources it reasons from and agrees with every one of them; 0ms",
+    "\u00d7 the embedded illustrations are fixed at module load > deep-freezes every exported illustration and source 15ms",
+    "\u00d7 the embedded illustrations are fixed at module load > refuses every mutation an importer could attempt, and the prompts stay byte-identical 1ms",
+    "\u00d7 dossier illustrations obey their own rules > spells every backticked identifier as a cited source spells it 3ms",
+    "\u00d7 dossier illustrations obey their own rules > gives an unstated mechanism-level cost its own Inferred: block, citing the mechanism and never quoting 1ms",
+    "\u00d7 dossier illustrations obey their own rules > uses double quotes only for the quotation after the lead, and never elides 2ms",
+    "\u00d7 dossier illustrations obey their own rules > keeps thin evidence unresolved in the inventory, the draft and the review 4ms",
+    "\u00d7 observeProjectShapeSources \u2014 determinism > the observation is deeply frozen 36ms",
+    "\u00d7 PWB-REQ-022 \u2014 valid judgment states carry the owner verdict with the exact state > the evaluation object is deeply frozen 17ms",
+    "\u2713 deriveProjectShapeManifest \u2014 the population never shrinks on failure > an unreadable pillar index is Unknown with the reader\u2019s reason, and the index itself stays a counted source 1ms",
+    "\u00d7 deriveProjectShapeManifest \u2014 determinism and identity > the manifest is deeply frozen 14ms",
+    "\u00d7 deepFreeze > returns the value it was given and freezes every object it reaches 15ms",
+    "\u00d7 deepFreeze > makes a later write fail 1ms",
+    "FAIL  |@syzygy/support| packages/support/src/deep-freeze.test.ts > deepFreeze > returns the value it was given and freezes every object it reaches",
+    "- Expected",
+    "+ Received",
+    "- true",
+    "+ false",
+    "FAIL  |@syzygy/support| packages/support/src/deep-freeze.test.ts > deepFreeze > makes a later write fail",
+    "FAIL  |@syzygy/polaris-generation-core| packages/polaris-generation-core/src/dossier-prompts.test.ts > the embedded illustrations are fixed at module load > deep-freezes every exported illustration and source",
+    "- Expected",
+    "+ Received",
+    "- true"
+   ]
+  }
+ },
+ {
+  "id": "R4-post-order-unguarded-freeze",
+  "edits": [
+   {
+    "file": "packages/support/src/deep-freeze.ts",
+    "old": "  if (value !== null && typeof value === 'object' && !Object.isFrozen(value)) {\n    Object.freeze(value);\n    for (const member of Object.values(value)) deepFreeze(member);\n  }",
+    "new": "  if (value !== null && typeof value === 'object') {\n    for (const member of Object.values(value)) deepFreeze(member);\n    Object.freeze(value);\n  }"
+   }
+  ],
+  "ranAt": "fe3855a1b4f2164da3274e02d868399236c45c9c",
+  "mutantCommit": "a69a6b83978b52cfabf1646d04bc5937756c8667",
+  "static": {
+   "killed": false,
+   "exit": 0,
+   "hashDiffer": [],
+   "freezeDiffer": [],
+   "noncanonical": []
+  },
+  "tests": {
+   "killed": true,
+   "exit": 1,
+   "args": [
+    "--project",
+    "@syzygy/support",
+    "--project",
+    "@syzygy/three-surface-poc-core",
+    "--project",
+    "@syzygy/polaris-generation-core"
+   ],
+   "summary": [
+    "Test Files  1 failed | 56 passed | 2 skipped (59)",
+    "Tests  2 failed | 1896 passed | 2 skipped (1900)"
+   ],
+   "failed": [
+    "\u00d7 deepFreeze > ends the walk at an object that is already frozen 17ms",
+    "\u00d7 deepFreeze > terminates on a cycle 9ms",
+    "FAIL  |@syzygy/support| packages/support/src/deep-freeze.test.ts > deepFreeze > ends the walk at an object that is already frozen",
+    "- Expected",
+    "+ Received",
+    "- false",
+    "+ true",
+    "FAIL  |@syzygy/support| packages/support/src/deep-freeze.test.ts > deepFreeze > terminates on a cycle"
+   ]
+  }
+ },
+ {
+  "id": "R5-stale-local-latin1-copy",
+  "edits": [
+   {
+    "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+    "old": "import { sha256 } from '@syzygy/support';\n",
+    "new": "import { createHash } from 'node:crypto';\nconst sha256 = (text: string): string => createHash('sha256').update(text, 'latin1').digest('hex');\n"
+   }
+  ],
+  "ranAt": "fe3855a1b4f2164da3274e02d868399236c45c9c",
+  "mutantCommit": "a541cf37b04182b27614f71cc8632087a0395001",
+  "static": {
+   "killed": false,
+   "exit": 0,
+   "hashDiffer": [],
+   "freezeDiffer": [],
+   "noncanonical": []
+  },
+  "tests": {
+   "killed": true,
+   "exit": 1,
+   "args": [
+    "--project",
+    "@syzygy/polaris-generation-core",
+    "--project",
+    "@syzygy/polaris-dossier"
+   ],
+   "summary": [
+    "Test Files  1 failed | 53 passed (54)",
+    "Tests  1 failed | 2103 passed | 1 skipped (2105)"
+   ],
+   "failed": [
+    "\u2713 rendered-design review (S9b) > records and refuses a design verdict with a quotation in a reason, which never counts  774ms",
+    "\u00d7 redacted Git source fidelity and safe transport > retains the original object and mixed-ending coordinates, with marker text outside evidence spans 52ms",
+    "FAIL  |@syzygy/polaris-generation-core| packages/polaris-generation-core/src/redacted-generation-source.test.ts > redacted Git source fidelity and safe transport > retains the original object and mixed-ending coordinates, with marker text outside evidence spans"
+   ]
+  }
+ },
+ {
+  "id": "R6-closure-imports-node-http",
+  "edits": [
+   {
+    "file": "packages/support/src/sha256.ts",
+    "old": "import { createHash } from 'node:crypto';\n",
+    "new": "import { createHash } from 'node:crypto';\nimport { request } from 'node:http';\nexport const probeRequest = request;\n"
+   }
+  ],
+  "ranAt": "fe3855a1b4f2164da3274e02d868399236c45c9c",
+  "mutantCommit": "84fadce483fa494c5137407233e05e11b0673e58",
+  "static": {
+   "killed": false,
+   "exit": 0,
+   "hashDiffer": [],
+   "freezeDiffer": [],
+   "noncanonical": []
+  },
+  "tests": {
+   "killed": true,
+   "exit": 1,
+   "args": [
+    "packages/three-surface-poc-core/src/test-artifact-verification-live-source.test.ts"
+   ],
+   "summary": [
+    "Test Files  1 failed (1)",
+    "Tests  1 failed | 57 passed (58)"
+   ],
+   "failed": [
+    "\u00d7 the live verification test, and every module it imports, runs no observed code > reaches the model, its observers and the verification module, and no file in that closure can start anything but git or bd 1441ms",
+    "FAIL  |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/test-artifact-verification-live-source.test.ts > the live verification test, and every module it imports, runs no observed code > reaches the model, its observers and the verification module, and no file in that closure can start anything but git or bd",
+    "- Expected",
+    "+ Received",
+    "- []",
+    "+ [",
+    "+   {",
+    "+     \"file\": \"../../support/src/sha256.ts\",",
+    "+     \"reason\": \"imports node:http\",",
+    "+   },",
+    "+ ]"
+   ]
+  }
+ },
+ {
+  "id": "R7-closure-starts-node",
+  "edits": [
+   {
+    "file": "packages/support/src/sha256.ts",
+    "old": "import { createHash } from 'node:crypto';\n",
+    "new": "import { createHash } from 'node:crypto';\nimport { execFileSync } from 'node:child_process';\nexport const probeStart = (): string => execFileSync('node', ['-v'], { encoding: 'utf8' });\n"
+   }
+  ],
+  "ranAt": "fe3855a1b4f2164da3274e02d868399236c45c9c",
+  "mutantCommit": "8a66eb69d382bcf68c1f2da06b30ffc088ddcc97",
+  "static": {
+   "killed": false,
+   "exit": 0,
+   "hashDiffer": [],
+   "freezeDiffer": [],
+   "noncanonical": []
+  },
+  "tests": {
+   "killed": true,
+   "exit": 1,
+   "args": [
+    "packages/three-surface-poc-core/src/test-artifact-verification-live-source.test.ts"
+   ],
+   "summary": [
+    "Test Files  1 failed (1)",
+    "Tests  1 failed | 57 passed (58)"
+   ],
+   "failed": [
+    "\u00d7 the live verification test, and every module it imports, runs no observed code > reaches the model, its observers and the verification module, and no file in that closure can start anything but git or bd 977ms",
+    "FAIL  |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/test-artifact-verification-live-source.test.ts > the live verification test, and every module it imports, runs no observed code > reaches the model, its observers and the verification module, and no file in that closure can start anything but git or bd",
+    "- Expected",
+    "+ Received",
+    "- []",
+    "+ [",
+    "+   {",
+    "+     \"file\": \"../../support/src/sha256.ts\",",
+    "+     \"reason\": \"starts 'node', not a literal git or bd\",",
+    "+   },",
+    "+ ]"
+   ]
+  }
+ },
+ {
+  "id": "R10-upstream-same-length-surface-trees",
+  "edits": [
+   {
+    "file": "apps/three-surface-poc/src/walkthrough-inputs.ts",
+    "old": "    trees.push(tree);\n",
+    "new": "    trees.unshift(tree);\n"
+   }
+  ],
+  "ranAt": "fe3855a1b4f2164da3274e02d868399236c45c9c",
+  "mutantCommit": "25d3274a63e2db2472749566e405e156bb1f44ea",
+  "static": {
+   "killed": false,
+   "exit": 0,
+   "hashDiffer": [],
+   "freezeDiffer": [],
+   "noncanonical": []
+  },
+  "tests": {
+   "killed": true,
+   "exit": 1,
+   "args": [
+    "apps/three-surface-poc/src/walkthrough-inputs.test.ts"
+   ],
+   "summary": [
+    "Test Files  1 failed (1)",
+    "Tests  3 failed | 15 passed (18)"
+   ],
+   "failed": [
+    "\u00d7 pwbSurfaceVersion > is a digest over the Polaris surface tree and the core package tree at the observer revision, and nothing else moves it 12ms",
+    "\u00d7 pwbSurfaceVersion > the real trees resolve to the digest over both at HEAD, and the record grammar accepts it 37ms",
+    "\u00d7 walkthroughJudgmentInputsFor > binds the loaded pair to the builder-supplied evaluation identity and the tree-derived surface version 4ms",
+    "FAIL  |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/walkthrough-inputs.test.ts > pwbSurfaceVersion > is a digest over the Polaris surface tree and the core package tree at the observer revision, and nothing else moves it",
+    "FAIL  |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/walkthrough-inputs.test.ts > pwbSurfaceVersion > the real trees resolve to the digest over both at HEAD, and the record grammar accepts it",
+    "FAIL  |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/walkthrough-inputs.test.ts > walkthroughJudgmentInputsFor > binds the loaded pair to the builder-supplied evaluation identity and the tree-derived surface version"
+   ]
+  }
+ }
+]

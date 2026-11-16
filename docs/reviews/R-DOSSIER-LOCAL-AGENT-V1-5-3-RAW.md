@@ -1,0 +1,200 @@
+Polaris dossier local-agent mode v1.5, fresh review, round 3
+Reviewed commit: 61a53cc0993c0d4e2983a2c18abfa92e6455af24
+Spec SHA-256: f8c739f2f42ff4a512b7d12971e46862e3f7489ede093af52d90736319f5fb35
+Verdict: REVISE
+
+- REVISE: three small blocking findings; two come from round 2 repairs
+  - The judgement rule, Poles, script rule and delta integrity all hold
+  - B1: the named `innerText` test contradicts the visually hidden text rule
+  - B2: a mixed block quoting an excluded file has no lawful verdict
+  - B3: the packet's list of rulings omits the RFC5-17 reading
+  - Each repair is about one sentence; nine notes remain
+  - Round 2 findings: 11 hold, 3 hold partly, N2 does not hold
+- Subject and scope
+  - Digests computed by script, then re-computed with `sha256sum`
+    - spec.md: f8c739f2f42ff4a512b7d12971e46862e3f7489ede093af52d90736319f5fb35
+    - design.md: 44cc9e99353434496cfa9f66c2d8c71118443d78ae3d5c5f9c887679124b3e52
+    - proposal.md: 38b77894bed3a8c95a1abaff38f9e7a1276f28acd98eeeb965eac386b19a44bb
+    - [Observed] These, the three v1.4 intermediate digests and the three patch digests match `PROPOSED-SUBJECTS.json`
+  - [Observed] Base commit `59768e6f` is not an ancestor of the subject commit, which is expected for a rebase-merged package; it still resolves
+  - "L<n>" means a line of the proposed spec.md unless another file is named
+  - Read no observed repository body and no run output; made no provider call; edited nothing in the subject
+    - One comment header in `packages/polaris-dossier/src/census.ts`, plus a `classif` grep over that directory, was read to learn what populations exist
+    - The Chrome probes below used a synthetic page only
+- Blocking findings
+  - B1. The named visible-text test fails the mechanism the same sentence requires (criteria 3, 6; severity blocking; introduced by the N2 repair)
+    - Anchors: L247, L320, the L432 falsifier, design.md:478
+    - The text
+      - [Observed] L247: visible text "means the text a browser renders visibly (`innerText`)"
+      - [Observed] L247: the values stay "in DOM text (`textContent`), visually hidden in the reading view, that plain-text extraction and an assistive technology read"
+      - [Observed] L432 falsifier: "a reading view's `innerText` for a block holds a label token or aside Syzygy wrote, or its `textContent` lacks a distinction"
+      - [Observed] design.md:478: "A test reads visible text by `innerText` and recoverable text by `textContent`"
+    - The experiment, Chrome 120 headless on a synthetic page, computed accessibility tree via CDP
+      - [Observed] Clipped text (`position:absolute`, `clip-path:inset(50%)`), the usual visually hidden technique: `innerText` is "Prose A\nTOKEN-sr", and the accessibility tree has the token as static text
+      - [Observed] Text under `hidden`: `innerText` is clean, `textContent` holds it, and the accessibility tree does not have it
+      - [Observed] `display:none` and `visibility:hidden` give the same `innerText` result as `hidden`; `opacity:0` and `font-size:0` leave the token in `innerText`
+      - [Observed] Only `hidden` plus `aria-describedby` passes both: clean `innerText`, and the paragraph's accessible description holds the token
+    - Why this is blocking
+      - [Inferred] An implementer who follows "visually hidden" with the usual technique fails the falsifier on every block
+      - [Inferred] The one passing construction is not named, and it exposes the value only as an ARIA description, not as readable text
+      - [Inferred] It also leaves the value out of a browser-side plain-text extraction, which RFC7-33's "preserved in plain-text or exported renderings" and "a copy-paste into an agent prompt" reach
+      - So the parenthetical "(`innerText`)" is false as a definition of what renders visibly
+    - Repair: name the test's boundary and the mechanism
+      - Keep the clipped technique, and define visible text as `innerText` with a Syzygy-marked hidden class removed from a clone, or by a computed-style walk
+      - Change the L432 falsifier and design.md:478 to match
+  - B2. A mixed block that quotes an excluded file has no lawful verdict (criteria 3, 5; severity blocking; introduced by the B1 repair)
+    - Anchors: L245, L295-299, L449, L533; `IMPACT-LEDGER.md`:62; `SEMANTIC-DELTA.md` "What does not change"
+    - The text
+      - [Observed] L245: the quotation is unverifiable and "the block that relies on it SHALL render as a withheld item below"
+      - [Observed] L245: a withheld item cites at least one span, "all of its cited spans being withheld"
+      - [Observed] L245: "A block with both admitted and withheld spans keeps every other rule"
+      - [Observed] L245: a withheld item "SHALL NOT be counted as verified or as supported"
+      - [Observed] L449: every claim block has an entry; validation "SHALL refuse `withheld` for an entry with an admitted span"
+    - The case: a block cites admitted file A and excluded file B, and quotes B
+      - [Inferred] It renders as a withheld item, so `supported` and `accurate` are barred
+      - [Inferred] It has an admitted span, so `withheld` is refused
+      - [Inferred] If the first sentence only describes how it looks, a verdict may call supported a text no reader sees, whose quoted span no reviewer holds
+      - [Inferred] Any other verdict is a support finding, and if blocking it stops the run the rule was written to release
+    - What the signer is told
+      - [Observed] Ledger line 62 says such a block "stands on its admitted span unless a review finds otherwise"
+      - [Inferred] That is untrue of this case under L245's first sentence
+      - [Observed] Neither ledger nor delta says what the verdict or the appendix count does here
+    - Repair: pick one outcome and state it in L245, L449, the scenario and the ledger
+      - Either the quotation alone drops and the block stands on its admitted span, with the withheld count
+      - Or the block is a withheld item and `withheld` is lawful for it
+      - The second is closer to RFC2-23; the first is closer to the ledger; the choice is the author's
+  - B3. The packet's list of rulings omits one reading the delta says signing confirms (criteria 1, 2; severity blocking; small)
+    - Anchors: `OWNER-DECISION-PACKET.md`:23; `SEMANTIC-DELTA.md` "Contract readings", RFC5-17 bullet; L245
+    - [Observed] Delta: "visually hiding that count in the reading view is a reading the owner confirms by signing"
+    - [Observed] RFC5-17: the redaction count is "disclosed on the claim"
+    - [Observed] Packet: "Signing also makes three rulings", then Poles, the one sentence, and the sentence and legend
+    - [Observed] Sweep: "RFC5-17" and "redact" occur 0 times in the packet (31 lines) and 0 times in the ledger (67 lines); `grep -F` and Python agree
+    - [Inferred] The reading is lawful only because the owner confirms it, and the owner's page says there are three
+    - Repair: add it as a fourth ruling in the packet, and a line under the ledger's costs
+- Answers to criteria
+  - Criterion 1, contract readings: all hold apart from B3 and subject to B1
+    - RFC7-2 and RFC7-9
+      - [Observed] "a span of narrative content asserting a fact about the project" and "Every load-bearing claim" are quoted accurately
+      - [Inferred] A block that asserts no such fact is not load-bearing, so the reading holds
+    - trust-and-evidence.md
+      - [Observed] "Missing evidence never makes a claim Inferred." and "Inferred — the output of a declared inference process, carrying its inference provenance"
+      - [Inferred] L236 respects both: "A fact with no evidence is never a judgement: it is cited or it is Unknown"
+    - RFC7-13 and REQ-004
+      - [Observed] "unless the owner rules otherwise" appears in both, and L259 and the packet state the ruling
+    - RFC5-17
+      - [Observed] Both limbs are quoted accurately, and the round 2 wrong-limb error is gone
+    - RFC2-23
+      - [Observed] Quote accurate; residual stated in delta, ledger and packet
+    - RFC7-20
+      - [Observed] "visually distinct" and the ruling's condition (`POLARIS-DOSSIER-LOCAL-AGENT-RULINGS-DIRECTION.md`: "the run record and page disclose how the draft was computed") are accurate and put to the owner
+    - REQ-003
+      - [Observed] Both quoted sentences are verbatim
+  - Criterion 2, weakening without an act: none beyond B3
+    - [Inferred] No doctrine clause needs amendment; the readings are disclosed for the owner
+  - Criterion 3, requirements against scenarios: B1 and B2, otherwise holds
+    - [Observed] Scenario census: 033 has 29, 034 has 26 (17 at v1.4), 035 has 11, 036 has 6; REQ-036 is byte-identical to v1.4
+    - [Inferred] Human-judged items are correctly marked as review questions: voice rules, Pole substance, the rendered-design questions, whether a judgement asserts a fact
+  - Criterion 4, design and proposal: agree and overstate nothing material; see N7
+  - Criterion 5, delta and owner bounds
+    - Delta against patches, by script, on exact lines
+      - [Observed] 22 sections, 44 blocks; the only quoted line in neither file is the sentinel "(nothing; this is new text)"
+      - [Observed] Added lines absent from Proposed blocks: spec 0 of 69, design 0 of 71, proposal 0 of 15
+      - [Observed] Removed lines absent from Current blocks: spec 0 of 26, design 0 of 10, proposal 0 of 5
+    - Owner bounds, from `OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-06` item 4
+      - Disclosed count: enforceable at L27, L245, L311, L313, L432
+      - Resolving citation: enforceable at L245, L314
+      - Never verified: enforceable at L245, L313, L449, L533, except the mixed case in B2
+  - Criterion 6, recoverability: holds on the text once B1 is repaired
+    - [Inferred] Every marking reaches a reader without pointer, colour or scripts, through the evidence view's control and DOM text
+    - [Inferred] Only the test boundary is broken, not the design intent
+- Contradiction sweep over the new terms
+  - Denominator: spec.md 611 lines (412 nonblank), design.md 683 (629), proposal.md 222 (207)
+  - Method: Python substring count, case-folded, then `grep -Fic` per line; line counts agree for the seven terms re-counted
+  - Lines holding each term, spec / design / proposal
+    - withheld: 11 / 7 / 1 (30 occurrences in spec)
+    - "Withheld item": 4 / 1 / 0
+    - judgement: 18 / 7 / 1
+    - advisory: 2 / 0 / 0
+    - redact: 2 / 1 / 0
+    - innerText: 2 / 1 / 0
+    - textContent: 2 / 1 / 0
+  - Further terms by Python only
+    - "evidence view" 7 occurrences in spec, "reading view" 7, `repeatsDiagram` 3, `whySection` 1, "secret detector" 2, "agent-supplied" 8, "finding text" 1, "kernel label" 1, "one line" 0
+    - "one line" in design at lines 23 and 25 means the operator's typed command, not the disclosure
+  - Contradictions found: B1, B2, and N1 to N5 below
+  - Sweep limit: substring match over these three files only; a term wrapped across a line break would be missed, though spec paragraphs are single lines
+- Round 2 findings
+  - B1 holds partly
+    - [Observed] Population named; packet carve-out and residual stated
+    - The repair for a quoting mixed block creates B2 here; short-label population in N2
+  - B2 holds
+    - [Observed] Definition by class and by overlap; class gate out; neutral words; L245, L310 and L449 share "withheld"
+    - Consumers still missing a stated outcome: N1
+  - B3 holds
+    - [Observed] L245, L312 and the L432 falsifier; the mixed block's citation mark is in N3
+  - B4 holds partly
+    - [Observed] Count on the item, both limbs quoted correctly
+    - The owner-facing part is B3 here
+  - N1 holds: reading in delta and packet
+  - N2 does not hold as repaired: it names the test, and the test contradicts the rule, see B1 here
+  - N3 holds: "one sentence" at L449
+  - N4 holds: L347-351 confine the check and name the review judgements
+  - N5 holds: fields named, a scenario added, a bad limit refused
+    - [Observed] The refusal of a bad Pole limit has no scenario, no Case item and only the general falsifier "a Pole rule passes when broken"; this is a note
+  - N6 holds: `advisory` named, validation refuses a supported judgement, displacement covers both kinds; residue in N6 below
+  - N7 holds: "among them"
+  - N8 holds: design and L241 agree, and the range is marked unverified
+  - N9 holds: inputs stated, premise rule stated, cited mark stated, "at least one span" stated
+  - N10 holds: ledger states the residual
+  - N11 holds partly
+    - [Observed] Kernel-label sentence, packet's RFC7-13 ruling, excerpt count and machine manifest are all present
+    - Residue in N4 below
+- Notes
+  - N1. A redacted range has no outcome for an excerpt or a mixed block's quotation (L245, L253)
+    - [Observed] L245 makes a span withheld when a line of its range is redacted, but the quotation and excerpt rules name only a blob that is excluded or invalid UTF-8
+    - [Observed] L253 speaks of "a withheld excerpt" and L27 counts withheld excerpts, while L245's withheld item does not include an excerpt
+    - [Inferred] SEC-5 still binds, and "admitted lines" points the right way, so no secret is licensed
+    - [Inferred] An implementer must guess between Unknown and a marked gap; one sentence fixes it
+  - N2. The short-label list is narrower than the labels that exist (L245 against L251)
+    - [Observed] L245's parenthetical omits a table caption and a column heading, which L251 lists; it also omits a deep dive's title and a diagram's title
+    - [Observed] "all withheld items" is false for a section that also holds a withheld excerpt, since an excerpt is not a withheld item
+    - [Inferred] Delta item 4 reads as all short labels, and the ledger's residual does not mention these
+    - Repair: say "any short label"
+  - N3. A mixed block's citation mark can name a secret-matching path (L245, L247)
+    - [Observed] L247: a citation mark "shows its file and line"; the never-named sentence sits inside the withheld item's words
+    - [Inferred] The L432 falsifier "a secret-matching path is named" is general enough to catch it; the requirement should say so too
+  - N4. Kernel-label residue (L247, L320, L432; REQ-012 and parent scenario "Minimal status retains its epistemic strength at rest")
+    - [Observed] The scenario text at L319 and the L432 falsifier have no carve-out for "A block carrying a kernel label"
+    - [Observed] The parent scenario requires "those values", label, tier, freshness and evaluation, and "cannot ... hide its tier in deeper disclosure"; L247 keeps only the label visible
+    - [Inferred] 034's labelling rules give drafts no kernel label, so the population looks empty today
+  - N5. The withheld scenario treats an inventory entry as rendering (L310-311)
+    - [Observed] WHEN lists "inventory entry"; THEN says "the item renders Unknown"; L245 says it "renders nowhere"
+    - [Observed] The same WHEN lists "diagram node" without edge; the Case at L428 names only claim blocks and inventory entries; no falsifier fails a rendered inventory entry
+    - [Inferred] A reader resolves it from L245, so this is a note
+  - N6. Smaller review-rule residues
+    - `advisory` is validated one way (L449)
+      - [Observed] Validation refuses `supported` for an uncited judgement, but nothing refuses `advisory` on a cited block, as it does for `withheld`
+      - [Inferred] A closed verdict rule would close the bypass of draft-to-source support
+    - "a verdict's finding text SHALL NOT render" (L245) is global and unscenarioed
+      - [Observed] It is not in the delta's plain-words list, has no scenario or falsifier, and sits beside REQ-006's "failed review remains recorded and visible"
+      - [Inferred] Compatible if the review page shows state rather than text, but it is broader than the withheld rule it sits in
+    - The later REQ-006 paragraph (L455) still says the omission rule "is unchanged" without a cross-reference to L449's named displacement
+      - [Inferred] "Every other" makes it consistent; a reader may stumble
+  - N7. Design residues (design.md)
+    - [Observed] Line 522: "a draft with no Poles renders as schema v3 does"; L259 narrows that to page division
+    - [Observed] Line 290: "Every page says that neither its classes nor SEC-5"; L27 discharges this through machine form and the sentence
+  - N8. Pole and why section (L259, L335)
+    - [Observed] A section in no Pole is a finding, so the why section must sit in a Pole, and the landing page also holds it; "no claim is lost or repeated"
+    - [Inferred] So the Pole page must omit it, and a Pole holding only the why section renders an empty page; no text says so
+  - N9. Two reader-facing claims
+    - "reviewed by no human" (L27)
+      - [Inferred] Syzygy cannot observe this; "no human review recorded" would be what it knows
+    - "a set-off quotation is verified" (L247)
+      - [Observed] "set-off" occurs once in the spec, in the legend, and no rule requires every rendered quotation to be set off
+      - [Inferred] An inline quotation would read as the agent's prose in the reading view; add the rule
+- What holds
+  - Judgement rule, against doctrine, RFC7-2, RFC7-9, REQ-003 and the owner's direction
+  - Withheld rule for a block whose spans are all withheld: machine form, evidence view, reading view, verdict, count
+  - Script rule, both ways, with no act needed until screening v7 exists
+  - Poles' findings, default and RFC7-13 ruling
+  - Delta integrity against the patches, by script

@@ -1,0 +1,58 @@
+{
+ "format": "differential-evidence/1",
+ "bead": "syzygy-bpyt.6.9",
+ "answers": "R-GP-IMPL-CODE-STRUCTURE-3 notes R3-N2 and R3-N3 (sections 3b, 3c, 5)",
+ "subject": "packages/three-surface-poc-core/src/code-structure.ts",
+ "old": {
+  "commit": "5f0ab21f6bbfd00395f5e4f4b3f3149dadba1f95",
+  "sha256": "e72b00ee273372ed52fa638275534bc3fab15c2a907be7187ede51357d2ee85c"
+ },
+ "new": {
+  "commit": "53ec82a053250f240900134d89dfc65774ffafb7",
+  "sha256": "a3778c1ea3fad6b1fd4544be870a1236c0b8708939bfbe7c37c949135b5bfd47"
+ },
+ "method": "The r3 harness (stored in docs/evidence/code-structure-ls-tree-z-differential-2026-10-21-r3.json, sha256 below, copied unchanged) was re-run with the origin/main module as the old copy (zz-code-structure-old.ts) and the head module as new, temporarily listed in vitest.tiers.ts; then an injected-seam harness ran the reviewer cases I1, I2, I10 and a well-formed gitlink through both modules. Part A of the r3 harness feeds the old module a newline listing, which origin/main no longer asks for, so only the new-side outcome is compared with r3.",
+ "r3HarnessSha256": "4ad6cfcba5e5b03537cc0348002c1c785734c8c1bfb0496c77b669b49f1a68c6",
+ "realGitRows": {
+  "partB": {
+   "total": 13,
+   "headEqualsOriginMain": 13,
+   "headEqualsR3Recorded": 13
+  },
+  "partA": {
+   "total": 28,
+   "headEqualsR3Recorded": 28
+  }
+ },
+ "injectedSeam": [
+  {
+   "case": "I1",
+   "old": "Observed a.ts",
+   "new": "Unknown (code-structure observation produced a malformed inventory entry)",
+   "changed": true
+  },
+  {
+   "case": "I2",
+   "old": "Observed 0",
+   "new": "Observed a.ts",
+   "changed": true
+  },
+  {
+   "case": "I10",
+   "old": "Observed a.ts",
+   "new": "Unknown (code-structure observation produced a malformed inventory entry)",
+   "changed": true
+  },
+  {
+   "case": "well-formed gitlink",
+   "old": "Observed a.ts",
+   "new": "Observed a.ts",
+   "changed": false
+  }
+ ],
+ "movedOutcomes": [
+  "I1",
+  "I2",
+  "I10"
+ ]
+}

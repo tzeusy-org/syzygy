@@ -14,9 +14,8 @@
 // arm (b) nothing persists it: no file under `.syzygy/` is written, no
 // phrase is registered, and no claim changes state because a draft exists.
 
-import { createHash } from 'node:crypto';
-
 import type { EpistemicState, UnknownReason } from '@syzygy/cap1-core';
+import { sha256 } from '@syzygy/support';
 
 /** The act types a draft can name, each with the ceremony verb the owner
  * would write and the reasons it can discharge. Only owner-actor reasons
@@ -90,7 +89,7 @@ export function draftOwnerAct(input: DraftInput): DraftResult {
   const ids = input.claims.map((claim) => claim.claimId);
   if (new Set(ids).size !== ids.length) return { kind: 'refused', refusal: 'a claim is named twice' };
   if (!relativePath(input.artifact.path)) return { kind: 'refused', refusal: `not a repository-relative path: ${input.artifact.path}` };
-  const frozenDigest = createHash('sha256').update(input.artifact.bytes, 'utf8').digest('hex');
+  const frozenDigest = sha256(input.artifact.bytes);
   return {
     kind: 'drafted',
     draft: {

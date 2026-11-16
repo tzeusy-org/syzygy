@@ -1,0 +1,30 @@
+C0 [["@syzygy/three-surface-poc-core"], []] 0 0 failed of 1122
+C0 [["@syzygy/polaris-generation-core", "@syzygy/polaris-dossier"], []] 0 0 failed of 2159
+C0 [[], ["apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts", "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts", "apps/three-surface-poc/src/polaris-generation/dossier-trigger.test.ts"]] 0 0 failed of 41
+C0 [["@syzygy/support"], []] 0 0 failed of 23
+C0 [[], ["packages/three-surface-poc-core/src/test-frozen.test.ts"]] 0 0 failed of 4
+C0 [[], ["apps/three-surface-poc/src/polaris-generation/generator-install-check.test.ts"]] 0 0 failed of 6
+ok  C1-manifest-digest before: (0, 0) after: (1, 2)
+ok  C2-observation-digest before: (0, 0) after: (1, 1)
+ok  C3-model-artifact-digest before: (0, 0) after: (1, 1)
+ok  C11-dossier-evaluation-questions before: (0, 0) after: (1, 1)
+ok  F1-headroom-not-frozen before: (0, 0) after: (1, 1)
+ok  F3-body-authority-not-frozen before: (0, 0) after: (1, 1)
+ok  R3-equal-length-reordered-question-digest before: (0, 0) after: (1, 1)
+ok  R9-equal-length-reordered-attempt-id before: (0, 0) after: (1, 1)
+ok  D1-freeze-after-the-walk before: (1, 1) after: (1, 2)
+ok  D3-members-read-before-the-owner-is-frozen before: (0, 0) after: (1, 1)
+ok  H1-census-never-reports before: None after: (1, 2)
+ok  H2-census-stops-at-a-frozen-shell before: None after: (1, 2)
+ok  H3-census-counts-nothing before: None after: (1, 3)
+ok  I1-support-not-required before: None after: (1, 1)
+ok  I2-generation-core-not-required before: None after: (1, 1)
+ok  I3-tsc-not-required before: None after: (1, 1)
+ok  I4-refusal-exits-zero before: None after: (1, 4)
+ok  I5-wrong-entry-name-for-support before: None after: (1, 2)
+ok  I6-refusal-says-nothing before: None after: (1, 4)
+ok  N1-support-checked-first before: None after: (0, 0)
+ok  N2-freeze-comment-only before: (0, 0) after: (0, 0)
+ok  N3-census-comment-only before: None after: (0, 0)
+{'mutants': 19, 'killedAfterAndSurvivedBefore': 19, 'negativeControls': 3, 'negativeControlsPassing': 3, 'controlProjectsPassing': 6, 'controlProjects': 6, 'rowsNotOk': []}
+exit=0

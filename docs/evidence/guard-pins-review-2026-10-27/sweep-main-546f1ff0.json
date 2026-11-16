@@ -1,0 +1,49 @@
+{
+ "commit": "546f1ff066e2ffef749c757cdb4621336039113b",
+ "trackedPaths": 5076,
+ "manifests": [
+  "apps/syzygy/package.json",
+  "apps/three-surface-poc/package.json",
+  "package.json",
+  "packages/cap1-conformance/package.json",
+  "packages/cap1-core/package.json",
+  "packages/cap1-daemon/package.json",
+  "packages/cap1-system/package.json",
+  "packages/http-host/package.json",
+  "packages/polaris-dossier/package.json",
+  "packages/polaris-generation-consent/package.json",
+  "packages/polaris-generation-core/package.json",
+  "packages/three-surface-poc-core/package.json"
+ ],
+ "manifestCount": 12,
+ "dependencyCount": 24,
+ "perField": {
+  "dependencies": 21,
+  "devDependencies": 3
+ },
+ "localMatches": [],
+ "tildeVersions": [],
+ "nonNumericVersions": [],
+ "srcFileCount": 505,
+ "srcExtensions": {
+  ".ts": 503,
+  ".json": 1,
+  ".mjs": 1
+ },
+ "srcMtsCtsTsx": [],
+ "mtsCtsTsxAnywhereTracked": [],
+ "bareNames": [
+  "@syzygy/cap1-core",
+  "@syzygy/cap1-daemon",
+  "@syzygy/http-host",
+  "@syzygy/polaris-dossier",
+  "@syzygy/polaris-generation-consent",
+  "@syzygy/polaris-generation-core",
+  "@syzygy/three-surface-poc-app",
+  "@syzygy/three-surface-poc-core",
+  "@types/node",
+  "typescript",
+  "vitest",
+  "yaml"
+ ]
+}

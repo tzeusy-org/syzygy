@@ -1,0 +1,27 @@
+{
+ "base": {
+  "path": "scripts/measure_vitest_test_durations.py",
+  "commit": "d6b04c5f03978b2a8fbc87afc61c725d91eca0f4",
+  "sha256": "7799aa73bae9a4790b75b85a597c57bf07aab4bb4dab6c67570e69af7535128e"
+ },
+ "mutants": [
+  {
+   "id": "mk2",
+   "old": "    if signal.getsignal(_signal) is not signal.SIG_IGN: signal.signal(_signal, lambda number, _frame: stopped_by.append(number))",
+   "new": "    signal.signal(_signal, lambda number, _frame: stopped_by.append(number))",
+   "sha256": "886448b30f89c84f7ba85ccfef540d1e8340e94403494d58e5829eec77796d39"
+  },
+  {
+   "id": "mk3",
+   "old": "        try: os.killpg(proc.pid, number)\n        except ProcessLookupError: pass",
+   "new": "        os.killpg(proc.pid, number)",
+   "sha256": "5c27d1383bf6e98aec4c9cb9eb8b77e67de7660d9c76fbb521423437087960df"
+  },
+  {
+   "id": "mk6",
+   "old": "signal.signal(_signal, lambda number, _frame: stopped_by.append(number))",
+   "new": "signal.signal(_signal, lambda number, _frame: (stopped_by.append(number), sys.exit(128 + number)))",
+   "sha256": "fab589c0df6051d3e95ac545cc6fc93a36aa278bc6f4072d8dca350cdffc2143"
+  }
+ ]
+}

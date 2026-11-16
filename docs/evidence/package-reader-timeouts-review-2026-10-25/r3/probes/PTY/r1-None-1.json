@@ -1,0 +1,51 @@
+{
+ "batch": "PTY",
+ "version": "r1",
+ "param": null,
+ "n": 1,
+ "scriptSha256": "920c5f120209904b37cfe14320ea00edfa18eafbda12fd7dcb02ec8fcf4f1e97",
+ "command": "python3 -I <tools>/r1_measure_vitest_test_durations.py . --file packages/polaris-generation-consent/src/package-reader.test.ts --project @syzygy/polaris-generation-consent --mode alone --runs 1 --out <tmp>/measure-out.json --profile",
+ "sent": [
+  {
+   "t": 4.3506,
+   "signal": "SIGHUP",
+   "to": "pty hangup"
+  }
+ ],
+ "events": [
+  {
+   "t": 1.2585,
+   "what": "vitest worker seen"
+  },
+  {
+   "t": 4.3506,
+   "what": "pty master closed"
+  }
+ ],
+ "scriptExitedAtSeconds": 5.082,
+ "exitCode": 129,
+ "claimedExit": 129,
+ "exitAsClaimed": true,
+ "descendantsSeen": 11,
+ "seenOnlyByCwd": 1,
+ "vitestSeen": true,
+ "npxSeen": false,
+ "treeAfterExit": "",
+ "survivors": {},
+ "recordWritten": false,
+ "recordRuns": null,
+ "recordTests": null,
+ "recordProfileRows": null,
+ "recordExitCode": null,
+ "marks": [],
+ "scriptWrites": null,
+ "tmpdirLeft": [
+  "4JuFwsPjeNkxBsNs-4UVA",
+  "node-compile-cache",
+  "script.log"
+ ],
+ "trace": [],
+ "outputTail": "",
+ "exercised": true,
+ "passes": true
+}

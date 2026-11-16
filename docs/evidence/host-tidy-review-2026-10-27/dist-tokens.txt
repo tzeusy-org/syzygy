@@ -1,0 +1,17 @@
+{"file":"packages/http-host/dist/server.js","tokens":[273,273],"differingTokens":0,"diffs":[]}
+{"file":"packages/http-host/dist/shutdown.js","tokens":[115,115],"differingTokens":0,"diffs":[]}
+{"file":"packages/http-host/dist/server.d.ts","tokens":[461,461],"differingTokens":0,"diffs":[]}
+{"file":"packages/http-host/dist/shutdown.d.ts","tokens":[86,86],"differingTokens":0,"diffs":[]}
+{"file":"apps/three-surface-poc/dist/evaluation-footer.test.js","tokens":[158,158],"differingTokens":1,"diffs":[[25,"'@syzygy/cap1-daemon'","'@syzygy/http-host'"]]}
+{"file":"apps/three-surface-poc/dist/main.test.js","tokens":[965,965],"differingTokens":0,"diffs":[]}
+{"file":"apps/three-surface-poc/dist/materialize-action.test.js","tokens":[782,782],"differingTokens":1,"diffs":[[45,"'@syzygy/cap1-daemon'","'@syzygy/http-host'"]]}
+{"file":"apps/three-surface-poc/dist/page-size-delta.test.js","tokens":[296,296],"differingTokens":1,"diffs":[[25,"'@syzygy/cap1-daemon'","'@syzygy/http-host'"]]}
+{"file":"apps/three-surface-poc/dist/polaris-accessible-names.browser.test.js","tokens":[1595,1595],"differingTokens":1,"diffs":[[61,"'@syzygy/cap1-daemon'","'@syzygy/http-host'"]]}
+{"file":"apps/three-surface-poc/dist/polaris-presentation-route.test.js","tokens":[462,462],"differingTokens":1,"diffs":[[43,"'@syzygy/cap1-daemon'","'@syzygy/http-host'"]]}
+{"file":"apps/three-surface-poc/dist/polaris-source-route.test.js","tokens":[1184,1184],"differingTokens":1,"diffs":[[52,"'@syzygy/cap1-daemon'","'@syzygy/http-host'"]]}
+{"file":"apps/three-surface-poc/dist/reobserve-action.test.js","tokens":[877,877],"differingTokens":0,"diffs":[]}
+{"file":"apps/three-surface-poc/dist/response-limits.test.js","tokens":[376,376],"differingTokens":1,"diffs":[[47,"'@syzygy/cap1-daemon'","'@syzygy/http-host'"]]}
+{"file":"apps/three-surface-poc/dist/routes.test.js","tokens":[1551,1551],"differingTokens":1,"diffs":[[71,"'@syzygy/cap1-daemon'","'@syzygy/http-host'"]]}
+{"file":"apps/three-surface-poc/dist/surface-routes.test.js","tokens":[2691,2691],"differingTokens":1,"diffs":[[59,"'@syzygy/cap1-daemon'","'@syzygy/http-host'"]]}
+{"file":"apps/three-surface-poc/dist/tuple-encoding.test.js","tokens":[2056,2056],"differingTokens":1,"diffs":[[54,"'@syzygy/cap1-daemon'","'@syzygy/http-host'"]]}
+{"file":"apps/three-surface-poc/dist/verbatim-route.test.js","tokens":[468,468],"differingTokens":0,"diffs":[]}

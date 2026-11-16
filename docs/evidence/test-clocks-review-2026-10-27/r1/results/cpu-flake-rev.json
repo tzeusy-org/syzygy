@@ -1,0 +1,3948 @@
+{
+ "tool": "cpu_flake_rev.py",
+ "tree": "447d9f083fb120c14ddd8da646c03675f3ce7bc7",
+ "runsPerFile": 50,
+ "parallel": 4,
+ "nonzeroExits": 0,
+ "failedRows": [],
+ "load1Range": [
+  38.09,
+  89.88
+ ],
+ "summary": {
+  "EDGE_TRIM_CPU_MS": {
+   "n": 50,
+   "max": 65.883,
+   "values": [
+    57.391,
+    54.936,
+    54.937,
+    59.998,
+    64.827,
+    56.781,
+    56.83,
+    57.557,
+    57.963,
+    59.256,
+    57.907,
+    59.823,
+    52.165,
+    55.355,
+    58.402,
+    61.086,
+    59.583,
+    57.936,
+    60.021,
+    58.101,
+    55.447,
+    59.783,
+    55.658,
+    59.636,
+    60.973,
+    57.997,
+    58.886,
+    61.553,
+    55.89,
+    61.899,
+    60.683,
+    58.306,
+    62.594,
+    61.751,
+    60.463,
+    56.472,
+    64.171,
+    60.805,
+    60.07,
+    61.871,
+    60.888,
+    60.493,
+    55.829,
+    65.883,
+    57.325,
+    58.64,
+    61.153,
+    57.238,
+    56.203,
+    58.188
+   ],
+   "p50": 58.886,
+   "p99": 65.883
+  },
+  "HOSTILE_LINE_CPU_MS": {
+   "n": 100,
+   "max": 1.029,
+   "values": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0.254,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1.005,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0.45,
+    0,
+    0,
+    0,
+    0,
+    0.155,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0.302,
+    0.511,
+    0,
+    0,
+    0,
+    0.2,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1.029,
+    0,
+    0.838,
+    0,
+    0.122,
+    0,
+    0,
+    0,
+    0,
+    0.268,
+    0,
+    0.059,
+    0.372,
+    0.177,
+    0,
+    0,
+    0,
+    0.148,
+    0,
+    0,
+    0.213,
+    0,
+    0,
+    0,
+    0.378,
+    0,
+    0,
+    0,
+    0.363,
+    0.147,
+    0,
+    1.006,
+    0,
+    0.148,
+    0,
+    0.252,
+    0,
+    1.001,
+    0.349,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0.276
+   ],
+   "p50": 0,
+   "p99": 1.029
+  },
+  "TAG_SCAN_CPU_MS": {
+   "n": 150,
+   "max": 54.748,
+   "values": [
+    10.175,
+    34.15,
+    33.792,
+    10.099,
+    34.056,
+    35.181,
+    10.874,
+    39.388,
+    36.581,
+    10.358,
+    33.193,
+    35.535,
+    10.342,
+    44.578,
+    36.015,
+    10.656,
+    38.321,
+    35.115,
+    9.319,
+    33.431,
+    36.02,
+    9.527,
+    33.536,
+    34.267,
+    10.17,
+    37.086,
+    37.329,
+    9.563,
+    34.879,
+    35.308,
+    10.324,
+    36.811,
+    37.336,
+    9.934,
+    35.408,
+    36.031,
+    10.411,
+    35.048,
+    35.585,
+    9.654,
+    34.786,
+    35.866,
+    10.276,
+    36.369,
+    34.945,
+    10.742,
+    38.124,
+    32.987,
+    9.834,
+    33.963,
+    34.551,
+    9.713,
+    32.493,
+    36.362,
+    10.444,
+    36.598,
+    30.587,
+    9.756,
+    32.249,
+    34.74,
+    10.543,
+    34.465,
+    35.63,
+    9.325,
+    35.3,
+    32.814,
+    9.968,
+    44.755,
+    36.472,
+    10.061,
+    37.499,
+    38.447,
+    9.85,
+    36.03,
+    35.704,
+    10.188,
+    37.381,
+    39.304,
+    10.652,
+    44.069,
+    30.857,
+    10.969,
+    37.624,
+    36.949,
+    12.676,
+    38.624,
+    36.994,
+    10.893,
+    39.27,
+    34.692,
+    10.853,
+    38.048,
+    36.887,
+    9.719,
+    40.22,
+    39.875,
+    10.48,
+    40.672,
+    33.007,
+    10.588,
+    35.778,
+    36.259,
+    10.791,
+    44.373,
+    30.423,
+    10.65,
+    42.319,
+    36.343,
+    11.065,
+    52.243,
+    32.901,
+    9.682,
+    54.748,
+    35.254,
+    10.671,
+    46.494,
+    32.331,
+    9.706,
+    45.369,
+    33.777,
+    10.22,
+    38.244,
+    36.193,
+    10.156,
+    37.63,
+    33.76,
+    9.96,
+    34.71,
+    35.118,
+    10.444,
+    33.517,
+    33.613,
+    9.842,
+    40.377,
+    34.372,
+    9.657,
+    35.78,
+    35.757,
+    10.509,
+    45.162,
+    38.362,
+    10.08,
+    34.969,
+    34.301,
+    10.632,
+    42.602,
+    34.777,
+    9.708,
+    34.622,
+    37.96
+   ],
+   "p50": 34.551,
+   "p99": 52.243
+  },
+  "ATTRIBUTE_SCAN_CPU_MS": {
+   "n": 50,
+   "max": 188.404,
+   "values": [
+    145.398,
+    156.641,
+    150.116,
+    146.426,
+    145.731,
+    146.515,
+    153.462,
+    141.816,
+    147.307,
+    163.122,
+    148.574,
+    158.264,
+    152.987,
+    146.713,
+    145.75,
+    153.787,
+    149.113,
+    165.995,
+    147.345,
+    159.371,
+    153.777,
+    170.27,
+    149.322,
+    149.386,
+    146.161,
+    155.423,
+    188.404,
+    149.574,
+    157.035,
+    158.489,
+    154.389,
+    153.374,
+    145.061,
+    146.816,
+    161.169,
+    148.28,
+    152.49,
+    146.985,
+    147.412,
+    163.126,
+    146.96,
+    152.85,
+    147.229,
+    154.18,
+    159.551,
+    150.345,
+    173.231,
+    150.375,
+    151.151,
+    155.608
+   ],
+   "p50": 151.151,
+   "p99": 188.404
+  }
+ },
+ "runs": [
+  {
+   "file": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "run": 0,
+   "exit": 0,
+   "seconds": 4.8,
+   "load1Start": 38.18,
+   "load1End": 38.97,
+   "rows": 19,
+   "failed": [],
+   "regions": [
+    {
+     "line": 176,
+     "bound": "EDGE_TRIM_CPU_MS",
+     "cpuMs": 57.391
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "run": 0,
+   "exit": 0,
+   "seconds": 4.5,
+   "load1Start": 38.18,
+   "load1End": 38.97,
+   "rows": 38,
+   "failed": [],
+   "regions": [
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    },
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    }
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "run": 0,
+   "exit": 0,
+   "seconds": 4.8,
+   "load1Start": 38.18,
+   "load1End": 38.97,
+   "rows": 37,
+   "failed": [],
+   "regions": [
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 10.175
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 34.15
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 33.792
+    },
+    {
+     "line": 110,
+     "bound": "ATTRIBUTE_SCAN_CPU_MS",
+     "cpuMs": 145.398
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "run": 1,
+   "exit": 0,
+   "seconds": 5.7,
+   "load1Start": 38.18,
+   "load1End": 38.09,
+   "rows": 19,
+   "failed": [],
+   "regions": [
+    {
+     "line": 176,
+     "bound": "EDGE_TRIM_CPU_MS",
+     "cpuMs": 54.936
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "run": 1,
+   "exit": 0,
+   "seconds": 3.5,
+   "load1Start": 38.97,
+   "load1End": 38.09,
+   "rows": 38,
+   "failed": [],
+   "regions": [
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    },
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    }
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "run": 1,
+   "exit": 0,
+   "seconds": 5.4,
+   "load1Start": 38.97,
+   "load1End": 38.09,
+   "rows": 37,
+   "failed": [],
+   "regions": [
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 10.099
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 34.056
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 35.181
+    },
+    {
+     "line": 110,
+     "bound": "ATTRIBUTE_SCAN_CPU_MS",
+     "cpuMs": 156.641
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "run": 2,
+   "exit": 0,
+   "seconds": 5.1,
+   "load1Start": 38.97,
+   "load1End": 38.09,
+   "rows": 19,
+   "failed": [],
+   "regions": [
+    {
+     "line": 176,
+     "bound": "EDGE_TRIM_CPU_MS",
+     "cpuMs": 54.937
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "run": 2,
+   "exit": 0,
+   "seconds": 5.8,
+   "load1Start": 38.09,
+   "load1End": 39.21,
+   "rows": 38,
+   "failed": [],
+   "regions": [
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    },
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    }
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "run": 2,
+   "exit": 0,
+   "seconds": 5.3,
+   "load1Start": 38.09,
+   "load1End": 39.21,
+   "rows": 37,
+   "failed": [],
+   "regions": [
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 10.874
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 39.388
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 36.581
+    },
+    {
+     "line": 110,
+     "bound": "ATTRIBUTE_SCAN_CPU_MS",
+     "cpuMs": 150.116
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "run": 3,
+   "exit": 0,
+   "seconds": 5.1,
+   "load1Start": 38.09,
+   "load1End": 39.21,
+   "rows": 19,
+   "failed": [],
+   "regions": [
+    {
+     "line": 176,
+     "bound": "EDGE_TRIM_CPU_MS",
+     "cpuMs": 59.998
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "run": 3,
+   "exit": 0,
+   "seconds": 4.2,
+   "load1Start": 38.09,
+   "load1End": 39.21,
+   "rows": 38,
+   "failed": [],
+   "regions": [
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0.254
+    },
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    }
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "run": 3,
+   "exit": 0,
+   "seconds": 3.7,
+   "load1Start": 39.21,
+   "load1End": 39.21,
+   "rows": 37,
+   "failed": [],
+   "regions": [
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 10.358
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 33.193
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 35.535
+    },
+    {
+     "line": 110,
+     "bound": "ATTRIBUTE_SCAN_CPU_MS",
+     "cpuMs": 146.426
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "run": 4,
+   "exit": 0,
+   "seconds": 4.1,
+   "load1Start": 39.21,
+   "load1End": 38.63,
+   "rows": 19,
+   "failed": [],
+   "regions": [
+    {
+     "line": 176,
+     "bound": "EDGE_TRIM_CPU_MS",
+     "cpuMs": 64.827
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "run": 4,
+   "exit": 0,
+   "seconds": 4.0,
+   "load1Start": 39.21,
+   "load1End": 38.63,
+   "rows": 38,
+   "failed": [],
+   "regions": [
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    },
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    }
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "run": 4,
+   "exit": 0,
+   "seconds": 5.1,
+   "load1Start": 39.21,
+   "load1End": 38.63,
+   "rows": 37,
+   "failed": [],
+   "regions": [
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 10.342
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 44.578
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 36.015
+    },
+    {
+     "line": 110,
+     "bound": "ATTRIBUTE_SCAN_CPU_MS",
+     "cpuMs": 145.731
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "run": 5,
+   "exit": 0,
+   "seconds": 4.4,
+   "load1Start": 39.21,
+   "load1End": 38.63,
+   "rows": 19,
+   "failed": [],
+   "regions": [
+    {
+     "line": 176,
+     "bound": "EDGE_TRIM_CPU_MS",
+     "cpuMs": 56.781
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "run": 5,
+   "exit": 0,
+   "seconds": 5.4,
+   "load1Start": 38.63,
+   "load1End": 40.42,
+   "rows": 38,
+   "failed": [],
+   "regions": [
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    },
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    }
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "run": 5,
+   "exit": 0,
+   "seconds": 5.9,
+   "load1Start": 38.63,
+   "load1End": 40.42,
+   "rows": 37,
+   "failed": [],
+   "regions": [
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 10.656
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 38.321
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 35.115
+    },
+    {
+     "line": 110,
+     "bound": "ATTRIBUTE_SCAN_CPU_MS",
+     "cpuMs": 146.515
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "run": 6,
+   "exit": 0,
+   "seconds": 7.5,
+   "load1Start": 38.63,
+   "load1End": 42.87,
+   "rows": 19,
+   "failed": [],
+   "regions": [
+    {
+     "line": 176,
+     "bound": "EDGE_TRIM_CPU_MS",
+     "cpuMs": 56.83
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "run": 6,
+   "exit": 0,
+   "seconds": 7.7,
+   "load1Start": 38.63,
+   "load1End": 42.87,
+   "rows": 38,
+   "failed": [],
+   "regions": [
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    },
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    }
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "run": 6,
+   "exit": 0,
+   "seconds": 7.2,
+   "load1Start": 40.42,
+   "load1End": 42.87,
+   "rows": 37,
+   "failed": [],
+   "regions": [
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 9.319
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 33.431
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 36.02
+    },
+    {
+     "line": 110,
+     "bound": "ATTRIBUTE_SCAN_CPU_MS",
+     "cpuMs": 153.462
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "run": 7,
+   "exit": 0,
+   "seconds": 6.5,
+   "load1Start": 40.42,
+   "load1End": 43.36,
+   "rows": 19,
+   "failed": [],
+   "regions": [
+    {
+     "line": 176,
+     "bound": "EDGE_TRIM_CPU_MS",
+     "cpuMs": 57.557
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "run": 7,
+   "exit": 0,
+   "seconds": 6.0,
+   "load1Start": 42.87,
+   "load1End": 43.36,
+   "rows": 38,
+   "failed": [],
+   "regions": [
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    },
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    }
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "run": 7,
+   "exit": 0,
+   "seconds": 8.6,
+   "load1Start": 42.87,
+   "load1End": 47.42,
+   "rows": 37,
+   "failed": [],
+   "regions": [
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 9.527
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 33.536
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 34.267
+    },
+    {
+     "line": 110,
+     "bound": "ATTRIBUTE_SCAN_CPU_MS",
+     "cpuMs": 141.816
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "run": 8,
+   "exit": 0,
+   "seconds": 11.7,
+   "load1Start": 42.87,
+   "load1End": 47.46,
+   "rows": 19,
+   "failed": [],
+   "regions": [
+    {
+     "line": 176,
+     "bound": "EDGE_TRIM_CPU_MS",
+     "cpuMs": 57.963
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "run": 8,
+   "exit": 0,
+   "seconds": 9.4,
+   "load1Start": 43.36,
+   "load1End": 47.42,
+   "rows": 38,
+   "failed": [],
+   "regions": [
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    },
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    }
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "run": 8,
+   "exit": 0,
+   "seconds": 8.3,
+   "load1Start": 43.36,
+   "load1End": 47.46,
+   "rows": 37,
+   "failed": [],
+   "regions": [
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 10.17
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 37.086
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 37.329
+    },
+    {
+     "line": 110,
+     "bound": "ATTRIBUTE_SCAN_CPU_MS",
+     "cpuMs": 147.307
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "run": 9,
+   "exit": 0,
+   "seconds": 8.6,
+   "load1Start": 47.42,
+   "load1End": 47.46,
+   "rows": 19,
+   "failed": [],
+   "regions": [
+    {
+     "line": 176,
+     "bound": "EDGE_TRIM_CPU_MS",
+     "cpuMs": 59.256
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "run": 9,
+   "exit": 0,
+   "seconds": 4.9,
+   "load1Start": 47.42,
+   "load1End": 47.46,
+   "rows": 38,
+   "failed": [],
+   "regions": [
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    },
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 1.005
+    }
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "run": 9,
+   "exit": 0,
+   "seconds": 7.4,
+   "load1Start": 47.46,
+   "load1End": 55.11,
+   "rows": 37,
+   "failed": [],
+   "regions": [
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 9.563
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 34.879
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 35.308
+    },
+    {
+     "line": 110,
+     "bound": "ATTRIBUTE_SCAN_CPU_MS",
+     "cpuMs": 163.122
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "run": 10,
+   "exit": 0,
+   "seconds": 12.8,
+   "load1Start": 47.46,
+   "load1End": 55.18,
+   "rows": 19,
+   "failed": [],
+   "regions": [
+    {
+     "line": 176,
+     "bound": "EDGE_TRIM_CPU_MS",
+     "cpuMs": 57.907
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "run": 10,
+   "exit": 0,
+   "seconds": 11.8,
+   "load1Start": 47.46,
+   "load1End": 58.37,
+   "rows": 38,
+   "failed": [],
+   "regions": [
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    },
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    }
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "run": 10,
+   "exit": 0,
+   "seconds": 12.0,
+   "load1Start": 47.46,
+   "load1End": 58.37,
+   "rows": 37,
+   "failed": [],
+   "regions": [
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 10.324
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 36.811
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 37.336
+    },
+    {
+     "line": 110,
+     "bound": "ATTRIBUTE_SCAN_CPU_MS",
+     "cpuMs": 148.574
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "run": 11,
+   "exit": 0,
+   "seconds": 18.9,
+   "load1Start": 55.11,
+   "load1End": 63.49,
+   "rows": 19,
+   "failed": [],
+   "regions": [
+    {
+     "line": 176,
+     "bound": "EDGE_TRIM_CPU_MS",
+     "cpuMs": 59.823
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "run": 11,
+   "exit": 0,
+   "seconds": 11.1,
+   "load1Start": 55.18,
+   "load1End": 60.75,
+   "rows": 38,
+   "failed": [],
+   "regions": [
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    },
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    }
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "run": 11,
+   "exit": 0,
+   "seconds": 12.4,
+   "load1Start": 58.37,
+   "load1End": 63.49,
+   "rows": 37,
+   "failed": [],
+   "regions": [
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 9.934
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 35.408
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 36.031
+    },
+    {
+     "line": 110,
+     "bound": "ATTRIBUTE_SCAN_CPU_MS",
+     "cpuMs": 158.264
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "run": 12,
+   "exit": 0,
+   "seconds": 10.1,
+   "load1Start": 58.37,
+   "load1End": 63.49,
+   "rows": 19,
+   "failed": [],
+   "regions": [
+    {
+     "line": 176,
+     "bound": "EDGE_TRIM_CPU_MS",
+     "cpuMs": 52.165
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "run": 12,
+   "exit": 0,
+   "seconds": 5.8,
+   "load1Start": 60.75,
+   "load1End": 64.17,
+   "rows": 38,
+   "failed": [],
+   "regions": [
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    },
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    }
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "run": 12,
+   "exit": 0,
+   "seconds": 7.1,
+   "load1Start": 63.49,
+   "load1End": 64.17,
+   "rows": 37,
+   "failed": [],
+   "regions": [
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 10.411
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 35.048
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 35.585
+    },
+    {
+     "line": 110,
+     "bound": "ATTRIBUTE_SCAN_CPU_MS",
+     "cpuMs": 152.987
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "run": 13,
+   "exit": 0,
+   "seconds": 8.7,
+   "load1Start": 63.49,
+   "load1End": 65.36,
+   "rows": 19,
+   "failed": [],
+   "regions": [
+    {
+     "line": 176,
+     "bound": "EDGE_TRIM_CPU_MS",
+     "cpuMs": 55.355
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "run": 13,
+   "exit": 0,
+   "seconds": 7.8,
+   "load1Start": 63.49,
+   "load1End": 65.36,
+   "rows": 38,
+   "failed": [],
+   "regions": [
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    },
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    }
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "run": 13,
+   "exit": 0,
+   "seconds": 8.8,
+   "load1Start": 64.17,
+   "load1End": 65.36,
+   "rows": 37,
+   "failed": [],
+   "regions": [
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 9.654
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 34.786
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 35.866
+    },
+    {
+     "line": 110,
+     "bound": "ATTRIBUTE_SCAN_CPU_MS",
+     "cpuMs": 146.713
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "run": 14,
+   "exit": 0,
+   "seconds": 9.8,
+   "load1Start": 64.17,
+   "load1End": 66.85,
+   "rows": 19,
+   "failed": [],
+   "regions": [
+    {
+     "line": 176,
+     "bound": "EDGE_TRIM_CPU_MS",
+     "cpuMs": 58.402
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "run": 14,
+   "exit": 0,
+   "seconds": 7.6,
+   "load1Start": 65.36,
+   "load1End": 66.85,
+   "rows": 38,
+   "failed": [],
+   "regions": [
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0.45
+    },
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    }
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "run": 14,
+   "exit": 0,
+   "seconds": 8.9,
+   "load1Start": 65.36,
+   "load1End": 65.26,
+   "rows": 37,
+   "failed": [],
+   "regions": [
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 10.276
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 36.369
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 34.945
+    },
+    {
+     "line": 110,
+     "bound": "ATTRIBUTE_SCAN_CPU_MS",
+     "cpuMs": 145.75
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "run": 15,
+   "exit": 0,
+   "seconds": 12.7,
+   "load1Start": 65.36,
+   "load1End": 70.61,
+   "rows": 19,
+   "failed": [],
+   "regions": [
+    {
+     "line": 176,
+     "bound": "EDGE_TRIM_CPU_MS",
+     "cpuMs": 61.086
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "run": 15,
+   "exit": 0,
+   "seconds": 13.3,
+   "load1Start": 66.85,
+   "load1End": 70.72,
+   "rows": 38,
+   "failed": [],
+   "regions": [
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    },
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    }
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "run": 15,
+   "exit": 0,
+   "seconds": 13.5,
+   "load1Start": 66.85,
+   "load1End": 70.72,
+   "rows": 37,
+   "failed": [],
+   "regions": [
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 10.742
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 38.124
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 32.987
+    },
+    {
+     "line": 110,
+     "bound": "ATTRIBUTE_SCAN_CPU_MS",
+     "cpuMs": 153.787
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "run": 16,
+   "exit": 0,
+   "seconds": 16.7,
+   "load1Start": 65.26,
+   "load1End": 71.14,
+   "rows": 19,
+   "failed": [],
+   "regions": [
+    {
+     "line": 176,
+     "bound": "EDGE_TRIM_CPU_MS",
+     "cpuMs": 59.583
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "run": 16,
+   "exit": 0,
+   "seconds": 10.7,
+   "load1Start": 70.61,
+   "load1End": 71.14,
+   "rows": 38,
+   "failed": [],
+   "regions": [
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    },
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0.155
+    }
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "run": 16,
+   "exit": 0,
+   "seconds": 8.4,
+   "load1Start": 70.72,
+   "load1End": 69.93,
+   "rows": 37,
+   "failed": [],
+   "regions": [
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 9.834
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 33.963
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 34.551
+    },
+    {
+     "line": 110,
+     "bound": "ATTRIBUTE_SCAN_CPU_MS",
+     "cpuMs": 149.113
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "run": 17,
+   "exit": 0,
+   "seconds": 8.4,
+   "load1Start": 70.72,
+   "load1End": 69.93,
+   "rows": 19,
+   "failed": [],
+   "regions": [
+    {
+     "line": 176,
+     "bound": "EDGE_TRIM_CPU_MS",
+     "cpuMs": 57.936
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "run": 17,
+   "exit": 0,
+   "seconds": 6.2,
+   "load1Start": 71.14,
+   "load1End": 69.93,
+   "rows": 38,
+   "failed": [],
+   "regions": [
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    },
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    }
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "run": 17,
+   "exit": 0,
+   "seconds": 6.7,
+   "load1Start": 71.14,
+   "load1End": 69.93,
+   "rows": 37,
+   "failed": [],
+   "regions": [
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 9.713
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 32.493
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 36.362
+    },
+    {
+     "line": 110,
+     "bound": "ATTRIBUTE_SCAN_CPU_MS",
+     "cpuMs": 165.995
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "run": 18,
+   "exit": 0,
+   "seconds": 7.1,
+   "load1Start": 69.93,
+   "load1End": 67.77,
+   "rows": 19,
+   "failed": [],
+   "regions": [
+    {
+     "line": 176,
+     "bound": "EDGE_TRIM_CPU_MS",
+     "cpuMs": 60.021
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "run": 18,
+   "exit": 0,
+   "seconds": 5.8,
+   "load1Start": 69.93,
+   "load1End": 67.77,
+   "rows": 38,
+   "failed": [],
+   "regions": [
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    },
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    }
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "run": 18,
+   "exit": 0,
+   "seconds": 5.3,
+   "load1Start": 69.93,
+   "load1End": 67.77,
+   "rows": 37,
+   "failed": [],
+   "regions": [
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 10.444
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 36.598
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 30.587
+    },
+    {
+     "line": 110,
+     "bound": "ATTRIBUTE_SCAN_CPU_MS",
+     "cpuMs": 147.345
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "run": 19,
+   "exit": 0,
+   "seconds": 7.8,
+   "load1Start": 69.93,
+   "load1End": 68.51,
+   "rows": 19,
+   "failed": [],
+   "regions": [
+    {
+     "line": 176,
+     "bound": "EDGE_TRIM_CPU_MS",
+     "cpuMs": 58.101
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "run": 19,
+   "exit": 0,
+   "seconds": 5.4,
+   "load1Start": 67.77,
+   "load1End": 68.51,
+   "rows": 38,
+   "failed": [],
+   "regions": [
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    },
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    }
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "run": 19,
+   "exit": 0,
+   "seconds": 6.2,
+   "load1Start": 67.77,
+   "load1End": 68.51,
+   "rows": 37,
+   "failed": [],
+   "regions": [
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 9.756
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 32.249
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 34.74
+    },
+    {
+     "line": 110,
+     "bound": "ATTRIBUTE_SCAN_CPU_MS",
+     "cpuMs": 159.371
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "run": 20,
+   "exit": 0,
+   "seconds": 6.3,
+   "load1Start": 67.77,
+   "load1End": 68.51,
+   "rows": 19,
+   "failed": [],
+   "regions": [
+    {
+     "line": 176,
+     "bound": "EDGE_TRIM_CPU_MS",
+     "cpuMs": 55.447
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "run": 20,
+   "exit": 0,
+   "seconds": 5.4,
+   "load1Start": 68.51,
+   "load1End": 67.59,
+   "rows": 38,
+   "failed": [],
+   "regions": [
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    },
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    }
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "run": 20,
+   "exit": 0,
+   "seconds": 7.3,
+   "load1Start": 68.51,
+   "load1End": 67.59,
+   "rows": 37,
+   "failed": [],
+   "regions": [
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 10.543
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 34.465
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 35.63
+    },
+    {
+     "line": 110,
+     "bound": "ATTRIBUTE_SCAN_CPU_MS",
+     "cpuMs": 153.777
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "run": 21,
+   "exit": 0,
+   "seconds": 5.8,
+   "load1Start": 68.51,
+   "load1End": 67.59,
+   "rows": 19,
+   "failed": [],
+   "regions": [
+    {
+     "line": 176,
+     "bound": "EDGE_TRIM_CPU_MS",
+     "cpuMs": 59.783
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "run": 21,
+   "exit": 0,
+   "seconds": 6.1,
+   "load1Start": 68.51,
+   "load1End": 66.58,
+   "rows": 38,
+   "failed": [],
+   "regions": [
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0.302
+    },
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0.511
+    }
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "run": 21,
+   "exit": 0,
+   "seconds": 5.7,
+   "load1Start": 67.59,
+   "load1End": 66.58,
+   "rows": 37,
+   "failed": [],
+   "regions": [
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 9.325
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 35.3
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 32.814
+    },
+    {
+     "line": 110,
+     "bound": "ATTRIBUTE_SCAN_CPU_MS",
+     "cpuMs": 170.27
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "run": 22,
+   "exit": 0,
+   "seconds": 7.0,
+   "load1Start": 67.59,
+   "load1End": 67.02,
+   "rows": 19,
+   "failed": [],
+   "regions": [
+    {
+     "line": 176,
+     "bound": "EDGE_TRIM_CPU_MS",
+     "cpuMs": 55.658
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "run": 22,
+   "exit": 0,
+   "seconds": 6.0,
+   "load1Start": 67.59,
+   "load1End": 67.02,
+   "rows": 38,
+   "failed": [],
+   "regions": [
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    },
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    }
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "run": 22,
+   "exit": 0,
+   "seconds": 6.7,
+   "load1Start": 66.58,
+   "load1End": 67.02,
+   "rows": 37,
+   "failed": [],
+   "regions": [
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 9.968
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 44.755
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 36.472
+    },
+    {
+     "line": 110,
+     "bound": "ATTRIBUTE_SCAN_CPU_MS",
+     "cpuMs": 149.322
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "run": 23,
+   "exit": 0,
+   "seconds": 5.9,
+   "load1Start": 66.58,
+   "load1End": 67.02,
+   "rows": 19,
+   "failed": [],
+   "regions": [
+    {
+     "line": 176,
+     "bound": "EDGE_TRIM_CPU_MS",
+     "cpuMs": 59.636
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "run": 23,
+   "exit": 0,
+   "seconds": 6.3,
+   "load1Start": 67.02,
+   "load1End": 68.14,
+   "rows": 38,
+   "failed": [],
+   "regions": [
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    },
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0.2
+    }
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "run": 23,
+   "exit": 0,
+   "seconds": 7.9,
+   "load1Start": 67.02,
+   "load1End": 68.14,
+   "rows": 37,
+   "failed": [],
+   "regions": [
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 10.061
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 37.499
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 38.447
+    },
+    {
+     "line": 110,
+     "bound": "ATTRIBUTE_SCAN_CPU_MS",
+     "cpuMs": 149.386
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "run": 24,
+   "exit": 0,
+   "seconds": 8.7,
+   "load1Start": 67.02,
+   "load1End": 70.05,
+   "rows": 19,
+   "failed": [],
+   "regions": [
+    {
+     "line": 176,
+     "bound": "EDGE_TRIM_CPU_MS",
+     "cpuMs": 60.973
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "run": 24,
+   "exit": 0,
+   "seconds": 7.7,
+   "load1Start": 67.02,
+   "load1End": 70.05,
+   "rows": 38,
+   "failed": [],
+   "regions": [
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    },
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    }
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "run": 24,
+   "exit": 0,
+   "seconds": 10.0,
+   "load1Start": 68.14,
+   "load1End": 72.29,
+   "rows": 37,
+   "failed": [],
+   "regions": [
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 9.85
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 36.03
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 35.704
+    },
+    {
+     "line": 110,
+     "bound": "ATTRIBUTE_SCAN_CPU_MS",
+     "cpuMs": 146.161
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "run": 25,
+   "exit": 0,
+   "seconds": 10.6,
+   "load1Start": 68.14,
+   "load1End": 72.29,
+   "rows": 19,
+   "failed": [],
+   "regions": [
+    {
+     "line": 176,
+     "bound": "EDGE_TRIM_CPU_MS",
+     "cpuMs": 57.997
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "run": 25,
+   "exit": 0,
+   "seconds": 9.8,
+   "load1Start": 70.05,
+   "load1End": 71.94,
+   "rows": 38,
+   "failed": [],
+   "regions": [
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    },
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    }
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "run": 25,
+   "exit": 0,
+   "seconds": 10.3,
+   "load1Start": 70.05,
+   "load1End": 71.94,
+   "rows": 37,
+   "failed": [],
+   "regions": [
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 10.188
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 37.381
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 39.304
+    },
+    {
+     "line": 110,
+     "bound": "ATTRIBUTE_SCAN_CPU_MS",
+     "cpuMs": 155.423
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "run": 26,
+   "exit": 0,
+   "seconds": 9.1,
+   "load1Start": 72.29,
+   "load1End": 68.82,
+   "rows": 19,
+   "failed": [],
+   "regions": [
+    {
+     "line": 176,
+     "bound": "EDGE_TRIM_CPU_MS",
+     "cpuMs": 58.886
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "run": 26,
+   "exit": 0,
+   "seconds": 6.6,
+   "load1Start": 72.29,
+   "load1End": 68.82,
+   "rows": 38,
+   "failed": [],
+   "regions": [
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    },
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    }
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "run": 26,
+   "exit": 0,
+   "seconds": 9.8,
+   "load1Start": 71.94,
+   "load1End": 74.28,
+   "rows": 37,
+   "failed": [],
+   "regions": [
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 10.652
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 44.069
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 30.857
+    },
+    {
+     "line": 110,
+     "bound": "ATTRIBUTE_SCAN_CPU_MS",
+     "cpuMs": 188.404
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "run": 27,
+   "exit": 0,
+   "seconds": 10.3,
+   "load1Start": 71.94,
+   "load1End": 74.28,
+   "rows": 19,
+   "failed": [],
+   "regions": [
+    {
+     "line": 176,
+     "bound": "EDGE_TRIM_CPU_MS",
+     "cpuMs": 61.553
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "run": 27,
+   "exit": 0,
+   "seconds": 11.5,
+   "load1Start": 68.82,
+   "load1End": 71.62,
+   "rows": 38,
+   "failed": [],
+   "regions": [
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 1.029
+    },
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    }
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "run": 27,
+   "exit": 0,
+   "seconds": 11.7,
+   "load1Start": 68.82,
+   "load1End": 71.62,
+   "rows": 37,
+   "failed": [],
+   "regions": [
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 10.969
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 37.624
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 36.949
+    },
+    {
+     "line": 110,
+     "bound": "ATTRIBUTE_SCAN_CPU_MS",
+     "cpuMs": 149.574
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "run": 28,
+   "exit": 0,
+   "seconds": 8.0,
+   "load1Start": 74.28,
+   "load1End": 71.62,
+   "rows": 19,
+   "failed": [],
+   "regions": [
+    {
+     "line": 176,
+     "bound": "EDGE_TRIM_CPU_MS",
+     "cpuMs": 55.89
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "run": 28,
+   "exit": 0,
+   "seconds": 7.0,
+   "load1Start": 74.28,
+   "load1End": 71.62,
+   "rows": 38,
+   "failed": [],
+   "regions": [
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0.838
+    },
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    }
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "run": 28,
+   "exit": 0,
+   "seconds": 9.0,
+   "load1Start": 71.62,
+   "load1End": 75.9,
+   "rows": 37,
+   "failed": [],
+   "regions": [
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 12.676
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 38.624
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 36.994
+    },
+    {
+     "line": 110,
+     "bound": "ATTRIBUTE_SCAN_CPU_MS",
+     "cpuMs": 157.035
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "run": 29,
+   "exit": 0,
+   "seconds": 12.0,
+   "load1Start": 71.62,
+   "load1End": 75.67,
+   "rows": 19,
+   "failed": [],
+   "regions": [
+    {
+     "line": 176,
+     "bound": "EDGE_TRIM_CPU_MS",
+     "cpuMs": 61.899
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "run": 29,
+   "exit": 0,
+   "seconds": 9.8,
+   "load1Start": 71.62,
+   "load1End": 75.9,
+   "rows": 38,
+   "failed": [],
+   "regions": [
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0.122
+    },
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    }
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "run": 29,
+   "exit": 0,
+   "seconds": 11.4,
+   "load1Start": 71.62,
+   "load1End": 75.67,
+   "rows": 37,
+   "failed": [],
+   "regions": [
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 10.893
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 39.27
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 34.692
+    },
+    {
+     "line": 110,
+     "bound": "ATTRIBUTE_SCAN_CPU_MS",
+     "cpuMs": 158.489
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "run": 30,
+   "exit": 0,
+   "seconds": 15.3,
+   "load1Start": 75.9,
+   "load1End": 78.26,
+   "rows": 19,
+   "failed": [],
+   "regions": [
+    {
+     "line": 176,
+     "bound": "EDGE_TRIM_CPU_MS",
+     "cpuMs": 60.683
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "run": 30,
+   "exit": 0,
+   "seconds": 10.5,
+   "load1Start": 75.9,
+   "load1End": 76.98,
+   "rows": 38,
+   "failed": [],
+   "regions": [
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    },
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    }
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "run": 30,
+   "exit": 0,
+   "seconds": 13.5,
+   "load1Start": 75.67,
+   "load1End": 78.26,
+   "rows": 37,
+   "failed": [],
+   "regions": [
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 10.853
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 38.048
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 36.887
+    },
+    {
+     "line": 110,
+     "bound": "ATTRIBUTE_SCAN_CPU_MS",
+     "cpuMs": 154.389
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "run": 31,
+   "exit": 0,
+   "seconds": 13.8,
+   "load1Start": 75.67,
+   "load1End": 78.26,
+   "rows": 19,
+   "failed": [],
+   "regions": [
+    {
+     "line": 176,
+     "bound": "EDGE_TRIM_CPU_MS",
+     "cpuMs": 58.306
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "run": 31,
+   "exit": 0,
+   "seconds": 10.4,
+   "load1Start": 76.98,
+   "load1End": 78.08,
+   "rows": 38,
+   "failed": [],
+   "regions": [
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    },
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0.268
+    }
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "run": 31,
+   "exit": 0,
+   "seconds": 9.8,
+   "load1Start": 78.26,
+   "load1End": 77.51,
+   "rows": 37,
+   "failed": [],
+   "regions": [
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 9.719
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 40.22
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 39.875
+    },
+    {
+     "line": 110,
+     "bound": "ATTRIBUTE_SCAN_CPU_MS",
+     "cpuMs": 153.374
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "run": 32,
+   "exit": 0,
+   "seconds": 9.9,
+   "load1Start": 78.26,
+   "load1End": 77.51,
+   "rows": 19,
+   "failed": [],
+   "regions": [
+    {
+     "line": 176,
+     "bound": "EDGE_TRIM_CPU_MS",
+     "cpuMs": 62.594
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "run": 32,
+   "exit": 0,
+   "seconds": 8.6,
+   "load1Start": 78.26,
+   "load1End": 77.51,
+   "rows": 38,
+   "failed": [],
+   "regions": [
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    },
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0.059
+    }
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "run": 32,
+   "exit": 0,
+   "seconds": 11.2,
+   "load1Start": 78.08,
+   "load1End": 78.69,
+   "rows": 37,
+   "failed": [],
+   "regions": [
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 10.48
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 40.672
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 33.007
+    },
+    {
+     "line": 110,
+     "bound": "ATTRIBUTE_SCAN_CPU_MS",
+     "cpuMs": 145.061
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "run": 33,
+   "exit": 0,
+   "seconds": 13.7,
+   "load1Start": 77.51,
+   "load1End": 78.64,
+   "rows": 19,
+   "failed": [],
+   "regions": [
+    {
+     "line": 176,
+     "bound": "EDGE_TRIM_CPU_MS",
+     "cpuMs": 61.751
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "run": 33,
+   "exit": 0,
+   "seconds": 7.8,
+   "load1Start": 77.51,
+   "load1End": 78.69,
+   "rows": 38,
+   "failed": [],
+   "regions": [
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0.372
+    },
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0.177
+    }
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "run": 33,
+   "exit": 0,
+   "seconds": 9.2,
+   "load1Start": 77.51,
+   "load1End": 78.69,
+   "rows": 37,
+   "failed": [],
+   "regions": [
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 10.588
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 35.778
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 36.259
+    },
+    {
+     "line": 110,
+     "bound": "ATTRIBUTE_SCAN_CPU_MS",
+     "cpuMs": 146.816
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "run": 34,
+   "exit": 0,
+   "seconds": 14.9,
+   "load1Start": 78.69,
+   "load1End": 80.64,
+   "rows": 19,
+   "failed": [],
+   "regions": [
+    {
+     "line": 176,
+     "bound": "EDGE_TRIM_CPU_MS",
+     "cpuMs": 60.463
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "run": 34,
+   "exit": 0,
+   "seconds": 12.2,
+   "load1Start": 78.69,
+   "load1End": 79.39,
+   "rows": 38,
+   "failed": [],
+   "regions": [
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    },
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    }
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "run": 34,
+   "exit": 0,
+   "seconds": 14.8,
+   "load1Start": 78.69,
+   "load1End": 80.64,
+   "rows": 37,
+   "failed": [],
+   "regions": [
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 10.791
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 44.373
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 30.423
+    },
+    {
+     "line": 110,
+     "bound": "ATTRIBUTE_SCAN_CPU_MS",
+     "cpuMs": 161.169
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "run": 35,
+   "exit": 0,
+   "seconds": 17.6,
+   "load1Start": 78.64,
+   "load1End": 81.71,
+   "rows": 19,
+   "failed": [],
+   "regions": [
+    {
+     "line": 176,
+     "bound": "EDGE_TRIM_CPU_MS",
+     "cpuMs": 56.472
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "run": 35,
+   "exit": 0,
+   "seconds": 10.7,
+   "load1Start": 79.39,
+   "load1End": 81.71,
+   "rows": 38,
+   "failed": [],
+   "regions": [
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    },
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0.148
+    }
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "run": 35,
+   "exit": 0,
+   "seconds": 13.0,
+   "load1Start": 80.64,
+   "load1End": 81.73,
+   "rows": 37,
+   "failed": [],
+   "regions": [
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 10.65
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 42.319
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 36.343
+    },
+    {
+     "line": 110,
+     "bound": "ATTRIBUTE_SCAN_CPU_MS",
+     "cpuMs": 148.28
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "run": 36,
+   "exit": 0,
+   "seconds": 15.4,
+   "load1Start": 80.64,
+   "load1End": 82.15,
+   "rows": 19,
+   "failed": [],
+   "regions": [
+    {
+     "line": 176,
+     "bound": "EDGE_TRIM_CPU_MS",
+     "cpuMs": 64.171
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "run": 36,
+   "exit": 0,
+   "seconds": 12.4,
+   "load1Start": 81.71,
+   "load1End": 80.86,
+   "rows": 38,
+   "failed": [],
+   "regions": [
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    },
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    }
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "run": 36,
+   "exit": 0,
+   "seconds": 13.0,
+   "load1Start": 81.71,
+   "load1End": 80.86,
+   "rows": 37,
+   "failed": [],
+   "regions": [
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 11.065
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 52.243
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 32.901
+    },
+    {
+     "line": 110,
+     "bound": "ATTRIBUTE_SCAN_CPU_MS",
+     "cpuMs": 152.49
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "run": 37,
+   "exit": 0,
+   "seconds": 14.5,
+   "load1Start": 81.73,
+   "load1End": 86.16,
+   "rows": 19,
+   "failed": [],
+   "regions": [
+    {
+     "line": 176,
+     "bound": "EDGE_TRIM_CPU_MS",
+     "cpuMs": 60.805
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "run": 37,
+   "exit": 0,
+   "seconds": 13.0,
+   "load1Start": 82.15,
+   "load1End": 85.34,
+   "rows": 38,
+   "failed": [],
+   "regions": [
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0.213
+    },
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    }
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "run": 37,
+   "exit": 0,
+   "seconds": 12.8,
+   "load1Start": 80.86,
+   "load1End": 85.34,
+   "rows": 37,
+   "failed": [],
+   "regions": [
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 9.682
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 54.748
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 35.254
+    },
+    {
+     "line": 110,
+     "bound": "ATTRIBUTE_SCAN_CPU_MS",
+     "cpuMs": 146.985
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "run": 38,
+   "exit": 0,
+   "seconds": 15.8,
+   "load1Start": 80.86,
+   "load1End": 87.0,
+   "rows": 19,
+   "failed": [],
+   "regions": [
+    {
+     "line": 176,
+     "bound": "EDGE_TRIM_CPU_MS",
+     "cpuMs": 60.07
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "run": 38,
+   "exit": 0,
+   "seconds": 15.2,
+   "load1Start": 86.16,
+   "load1End": 89.88,
+   "rows": 38,
+   "failed": [],
+   "regions": [
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    },
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    }
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "run": 38,
+   "exit": 0,
+   "seconds": 14.0,
+   "load1Start": 85.34,
+   "load1End": 89.88,
+   "rows": 37,
+   "failed": [],
+   "regions": [
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 10.671
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 46.494
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 32.331
+    },
+    {
+     "line": 110,
+     "bound": "ATTRIBUTE_SCAN_CPU_MS",
+     "cpuMs": 147.412
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "run": 39,
+   "exit": 0,
+   "seconds": 13.7,
+   "load1Start": 85.34,
+   "load1End": 87.81,
+   "rows": 19,
+   "failed": [],
+   "regions": [
+    {
+     "line": 176,
+     "bound": "EDGE_TRIM_CPU_MS",
+     "cpuMs": 61.871
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "run": 39,
+   "exit": 0,
+   "seconds": 11.0,
+   "load1Start": 87.0,
+   "load1End": 87.81,
+   "rows": 38,
+   "failed": [],
+   "regions": [
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0.378
+    },
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    }
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "run": 39,
+   "exit": 0,
+   "seconds": 12.4,
+   "load1Start": 89.88,
+   "load1End": 84.26,
+   "rows": 37,
+   "failed": [],
+   "regions": [
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 9.706
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 45.369
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 33.777
+    },
+    {
+     "line": 110,
+     "bound": "ATTRIBUTE_SCAN_CPU_MS",
+     "cpuMs": 163.126
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "run": 40,
+   "exit": 0,
+   "seconds": 9.8,
+   "load1Start": 89.88,
+   "load1End": 86.54,
+   "rows": 19,
+   "failed": [],
+   "regions": [
+    {
+     "line": 176,
+     "bound": "EDGE_TRIM_CPU_MS",
+     "cpuMs": 60.888
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "run": 40,
+   "exit": 0,
+   "seconds": 7.5,
+   "load1Start": 87.81,
+   "load1End": 86.54,
+   "rows": 38,
+   "failed": [],
+   "regions": [
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    },
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    }
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "run": 40,
+   "exit": 0,
+   "seconds": 6.7,
+   "load1Start": 87.81,
+   "load1End": 84.26,
+   "rows": 37,
+   "failed": [],
+   "regions": [
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 10.22
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 38.244
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 36.193
+    },
+    {
+     "line": 110,
+     "bound": "ATTRIBUTE_SCAN_CPU_MS",
+     "cpuMs": 146.96
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "run": 41,
+   "exit": 0,
+   "seconds": 12.4,
+   "load1Start": 86.54,
+   "load1End": 84.27,
+   "rows": 19,
+   "failed": [],
+   "regions": [
+    {
+     "line": 176,
+     "bound": "EDGE_TRIM_CPU_MS",
+     "cpuMs": 60.493
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "run": 41,
+   "exit": 0,
+   "seconds": 8.0,
+   "load1Start": 86.54,
+   "load1End": 83.59,
+   "rows": 38,
+   "failed": [],
+   "regions": [
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0.363
+    },
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0.147
+    }
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "run": 41,
+   "exit": 0,
+   "seconds": 11.4,
+   "load1Start": 84.26,
+   "load1End": 84.27,
+   "rows": 37,
+   "failed": [],
+   "regions": [
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 10.156
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 37.63
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 33.76
+    },
+    {
+     "line": 110,
+     "bound": "ATTRIBUTE_SCAN_CPU_MS",
+     "cpuMs": 152.85
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "run": 42,
+   "exit": 0,
+   "seconds": 12.1,
+   "load1Start": 84.26,
+   "load1End": 84.27,
+   "rows": 19,
+   "failed": [],
+   "regions": [
+    {
+     "line": 176,
+     "bound": "EDGE_TRIM_CPU_MS",
+     "cpuMs": 55.829
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "run": 42,
+   "exit": 0,
+   "seconds": 7.9,
+   "load1Start": 83.59,
+   "load1End": 82.72,
+   "rows": 38,
+   "failed": [],
+   "regions": [
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    },
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 1.006
+    }
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "run": 42,
+   "exit": 0,
+   "seconds": 11.0,
+   "load1Start": 84.27,
+   "load1End": 80.1,
+   "rows": 37,
+   "failed": [],
+   "regions": [
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 9.96
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 34.71
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 35.118
+    },
+    {
+     "line": 110,
+     "bound": "ATTRIBUTE_SCAN_CPU_MS",
+     "cpuMs": 147.229
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "run": 43,
+   "exit": 0,
+   "seconds": 9.7,
+   "load1Start": 84.27,
+   "load1End": 80.1,
+   "rows": 19,
+   "failed": [],
+   "regions": [
+    {
+     "line": 176,
+     "bound": "EDGE_TRIM_CPU_MS",
+     "cpuMs": 65.883
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "run": 43,
+   "exit": 0,
+   "seconds": 9.7,
+   "load1Start": 84.27,
+   "load1End": 80.1,
+   "rows": 38,
+   "failed": [],
+   "regions": [
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    },
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0.148
+    }
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "run": 43,
+   "exit": 0,
+   "seconds": 7.8,
+   "load1Start": 82.72,
+   "load1End": 80.1,
+   "rows": 37,
+   "failed": [],
+   "regions": [
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 10.444
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 33.517
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 33.613
+    },
+    {
+     "line": 110,
+     "bound": "ATTRIBUTE_SCAN_CPU_MS",
+     "cpuMs": 154.18
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "run": 44,
+   "exit": 0,
+   "seconds": 7.1,
+   "load1Start": 80.1,
+   "load1End": 79.78,
+   "rows": 19,
+   "failed": [],
+   "regions": [
+    {
+     "line": 176,
+     "bound": "EDGE_TRIM_CPU_MS",
+     "cpuMs": 57.325
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "run": 44,
+   "exit": 0,
+   "seconds": 6.7,
+   "load1Start": 80.1,
+   "load1End": 79.78,
+   "rows": 38,
+   "failed": [],
+   "regions": [
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    },
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0.252
+    }
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "run": 44,
+   "exit": 0,
+   "seconds": 6.1,
+   "load1Start": 80.1,
+   "load1End": 79.78,
+   "rows": 37,
+   "failed": [],
+   "regions": [
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 9.842
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 40.377
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 34.372
+    },
+    {
+     "line": 110,
+     "bound": "ATTRIBUTE_SCAN_CPU_MS",
+     "cpuMs": 159.551
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "run": 45,
+   "exit": 0,
+   "seconds": 5.9,
+   "load1Start": 80.1,
+   "load1End": 79.78,
+   "rows": 19,
+   "failed": [],
+   "regions": [
+    {
+     "line": 176,
+     "bound": "EDGE_TRIM_CPU_MS",
+     "cpuMs": 58.64
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "run": 45,
+   "exit": 0,
+   "seconds": 5.8,
+   "load1Start": 79.78,
+   "load1End": 79.87,
+   "rows": 38,
+   "failed": [],
+   "regions": [
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    },
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 1.001
+    }
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "run": 45,
+   "exit": 0,
+   "seconds": 7.5,
+   "load1Start": 79.78,
+   "load1End": 77.96,
+   "rows": 37,
+   "failed": [],
+   "regions": [
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 9.657
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 35.78
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 35.757
+    },
+    {
+     "line": 110,
+     "bound": "ATTRIBUTE_SCAN_CPU_MS",
+     "cpuMs": 150.345
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "run": 46,
+   "exit": 0,
+   "seconds": 7.6,
+   "load1Start": 79.78,
+   "load1End": 77.96,
+   "rows": 19,
+   "failed": [],
+   "regions": [
+    {
+     "line": 176,
+     "bound": "EDGE_TRIM_CPU_MS",
+     "cpuMs": 61.153
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "run": 46,
+   "exit": 0,
+   "seconds": 6.1,
+   "load1Start": 79.78,
+   "load1End": 77.96,
+   "rows": 38,
+   "failed": [],
+   "regions": [
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0.349
+    },
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    }
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "run": 46,
+   "exit": 0,
+   "seconds": 4.9,
+   "load1Start": 79.87,
+   "load1End": 77.96,
+   "rows": 37,
+   "failed": [],
+   "regions": [
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 10.509
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 45.162
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 38.362
+    },
+    {
+     "line": 110,
+     "bound": "ATTRIBUTE_SCAN_CPU_MS",
+     "cpuMs": 173.231
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "run": 47,
+   "exit": 0,
+   "seconds": 6.6,
+   "load1Start": 77.96,
+   "load1End": 76.68,
+   "rows": 19,
+   "failed": [],
+   "regions": [
+    {
+     "line": 176,
+     "bound": "EDGE_TRIM_CPU_MS",
+     "cpuMs": 57.238
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "run": 47,
+   "exit": 0,
+   "seconds": 7.8,
+   "load1Start": 77.96,
+   "load1End": 76.68,
+   "rows": 38,
+   "failed": [],
+   "regions": [
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    },
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    }
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "run": 47,
+   "exit": 0,
+   "seconds": 6.4,
+   "load1Start": 77.96,
+   "load1End": 76.68,
+   "rows": 37,
+   "failed": [],
+   "regions": [
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 10.08
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 34.969
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 34.301
+    },
+    {
+     "line": 110,
+     "bound": "ATTRIBUTE_SCAN_CPU_MS",
+     "cpuMs": 150.375
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "run": 48,
+   "exit": 0,
+   "seconds": 8.8,
+   "load1Start": 77.96,
+   "load1End": 76.07,
+   "rows": 19,
+   "failed": [],
+   "regions": [
+    {
+     "line": 176,
+     "bound": "EDGE_TRIM_CPU_MS",
+     "cpuMs": 56.203
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "run": 48,
+   "exit": 0,
+   "seconds": 5.4,
+   "load1Start": 76.68,
+   "load1End": 76.07,
+   "rows": 38,
+   "failed": [],
+   "regions": [
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    },
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    }
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "run": 48,
+   "exit": 0,
+   "seconds": 6.0,
+   "load1Start": 76.68,
+   "load1End": 76.07,
+   "rows": 37,
+   "failed": [],
+   "regions": [
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 10.632
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 42.602
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 34.777
+    },
+    {
+     "line": 110,
+     "bound": "ATTRIBUTE_SCAN_CPU_MS",
+     "cpuMs": 151.151
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "run": 49,
+   "exit": 0,
+   "seconds": 7.7,
+   "load1Start": 76.68,
+   "load1End": 74.7,
+   "rows": 19,
+   "failed": [],
+   "regions": [
+    {
+     "line": 176,
+     "bound": "EDGE_TRIM_CPU_MS",
+     "cpuMs": 58.188
+    }
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "run": 49,
+   "exit": 0,
+   "seconds": 6.1,
+   "load1Start": 76.07,
+   "load1End": 74.7,
+   "rows": 38,
+   "failed": [],
+   "regions": [
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0
+    },
+    {
+     "line": 267,
+     "bound": "HOSTILE_LINE_CPU_MS",
+     "cpuMs": 0.276
+    }
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "run": 49,
+   "exit": 0,
+   "seconds": 7.0,
+   "load1Start": 76.07,
+   "load1End": 71.92,
+   "rows": 37,
+   "failed": [],
+   "regions": [
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 9.708
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 34.622
+    },
+    {
+     "line": 103,
+     "bound": "TAG_SCAN_CPU_MS",
+     "cpuMs": 37.96
+    },
+    {
+     "line": 110,
+     "bound": "ATTRIBUTE_SCAN_CPU_MS",
+     "cpuMs": 155.608
+    }
+   ]
+  }
+ ]
+}

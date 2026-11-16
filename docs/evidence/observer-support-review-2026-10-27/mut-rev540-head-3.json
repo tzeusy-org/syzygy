@@ -1,0 +1,184 @@
+{
+ "tree": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-540/code",
+ "commit": "f207d758eb11830eda2831caa911011e84a966b7",
+ "results": [
+  {
+   "id": "T9-guard-skips-type-only-edges-alone",
+   "commit": "f207d758eb11830eda2831caa911011e84a966b7",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.test.ts",
+     "old": ".importedFiles.map((imported) => imported.fileName)",
+     "new": ".importedFiles.filter((imported) => !/^\\s*(?:import|export)\\s+type\\b/u.test(readModule(file).slice(0, imported.pos).split('\\n').pop() ?? '')).map((imported) => imported.fileName)"
+    }
+   ],
+   "counts": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.test.ts",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "exit": 0,
+   "failedTests": 0,
+   "failedFiles": 0,
+   "totalTests": 13,
+   "outcome": "survived",
+   "seconds": 27.3,
+   "cleanAfter": true,
+   "failed": [],
+   "reportError": null
+  },
+  {
+   "id": "T9b-guard-skips-type-only-edges-with-E1",
+   "commit": "f207d758eb11830eda2831caa911011e84a966b7",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.test.ts",
+     "old": ".importedFiles.map((imported) => imported.fileName)",
+     "new": ".importedFiles.filter((imported) => !/^\\s*(?:import|export)\\s+type\\b/u.test(readModule(file).slice(0, imported.pos).split('\\n').pop() ?? '')).map((imported) => imported.fileName)"
+    },
+    {
+     "file": "apps/three-surface-poc/src/poc-main.ts",
+     "old": "import { sha256 } from '@syzygy/support';\n",
+     "new": "import { sha256 } from '@syzygy/support';\nimport type { GenerationSource } from '@syzygy/polaris-generation-core';\n"
+    }
+   ],
+   "counts": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "apps/three-surface-poc/src/poc-main.ts",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "exit": 0,
+   "failedTests": 0,
+   "failedFiles": 0,
+   "totalTests": 13,
+   "outcome": "survived",
+   "seconds": 31.7,
+   "cleanAfter": true,
+   "failed": [],
+   "reportError": null
+  },
+  {
+   "id": "T10-guard-skips-dynamic-edges-alone",
+   "commit": "f207d758eb11830eda2831caa911011e84a966b7",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.test.ts",
+     "old": ".importedFiles.map((imported) => imported.fileName)",
+     "new": ".importedFiles.filter((imported) => !/import\\(\\s*$/u.test(readModule(file).slice(0, imported.pos))).map((imported) => imported.fileName)"
+    }
+   ],
+   "counts": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.test.ts",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "exit": 0,
+   "failedTests": 0,
+   "failedFiles": 0,
+   "totalTests": 13,
+   "outcome": "survived",
+   "seconds": 27.2,
+   "cleanAfter": true,
+   "failed": [],
+   "reportError": null
+  },
+  {
+   "id": "T10b-guard-skips-dynamic-edges-with-O4",
+   "commit": "f207d758eb11830eda2831caa911011e84a966b7",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.test.ts",
+     "old": ".importedFiles.map((imported) => imported.fileName)",
+     "new": ".importedFiles.filter((imported) => !/import\\(\\s*$/u.test(readModule(file).slice(0, imported.pos))).map((imported) => imported.fileName)"
+    },
+    {
+     "file": "packages/three-surface-poc-core/src/index.ts",
+     "old": "export * from './evidence-population.js';\n",
+     "new": "export * from './evidence-population.js';\nexport const loadLive = () => import('@syzygy/polaris-generation-consent/live');\n"
+    }
+   ],
+   "counts": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/three-surface-poc-core/src/index.ts",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "exit": 0,
+   "failedTests": 0,
+   "failedFiles": 0,
+   "totalTests": 13,
+   "outcome": "survived",
+   "seconds": 27.0,
+   "cleanAfter": true,
+   "failed": [],
+   "reportError": null
+  },
+  {
+   "id": "T10c-guard-skips-dynamic-edges-with-E1",
+   "commit": "f207d758eb11830eda2831caa911011e84a966b7",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.test.ts",
+     "old": ".importedFiles.map((imported) => imported.fileName)",
+     "new": ".importedFiles.filter((imported) => !/import\\(\\s*$/u.test(readModule(file).slice(0, imported.pos))).map((imported) => imported.fileName)"
+    },
+    {
+     "file": "apps/three-surface-poc/src/poc-main.ts",
+     "old": "import { sha256 } from '@syzygy/support';\n",
+     "new": "import { sha256 } from '@syzygy/support';\nimport type { GenerationSource } from '@syzygy/polaris-generation-core';\n"
+    }
+   ],
+   "counts": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "apps/three-surface-poc/src/poc-main.ts",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "exit": 1,
+   "failedTests": 1,
+   "failedFiles": 1,
+   "totalTests": 13,
+   "outcome": "killed",
+   "seconds": 24.6,
+   "cleanAfter": true,
+   "failed": [
+    {
+     "title": "apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every module and package the POC daemon imports",
+     "timedOut": false,
+     "message": "AssertionError: expected [ …(27) ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-540/code/apps/three-surface-poc/src/git-observation.test.ts:152:90\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-"
+    }
+   ],
+   "reportError": null
+  }
+ ]
+}

@@ -1,0 +1,28 @@
+{
+ "files": [
+  "apps/three-surface-poc/src/git-observation.test.ts",
+  "apps/three-surface-poc/src/main.test.ts"
+ ],
+ "mutants": [
+  {
+   "id": "V14-gate-cap1-daemon-prefix-narrowed-to-src",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "old": "    'packages/cap1-daemon/',\n",
+     "new": "    'packages/cap1-daemon/src/',\n"
+    }
+   ]
+  },
+  {
+   "id": "V15-gate-three-surface-core-prefix-narrowed-to-src",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "old": "    'packages/three-surface-poc-core/',\n",
+     "new": "    'packages/three-surface-poc-core/src/',\n"
+    }
+   ]
+  }
+ ]
+}

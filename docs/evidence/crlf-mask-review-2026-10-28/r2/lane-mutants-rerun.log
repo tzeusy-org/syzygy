@@ -1,0 +1,26 @@
+start 21:53:57 loadavg 39.59 36.64 33.50 40/10135 2768526
+CONTROL {'unit': (42, 0), 'fenceRules': (69, 0), 'callSites': (277, 0)}
+BASE-whole-file-of-the-base-commit killed {'unit': 17, 'fenceRules': 10, 'callSites': 13}
+MU1-lf-only killed {'unit': 17, 'fenceRules': 10, 'callSites': 13}
+MU2-crlf-only killed {'unit': 10, 'fenceRules': 6, 'callSites': 7}
+MU3-crlf-as-two-line-ends killed {'unit': 3, 'fenceRules': 0, 'callSites': 1}
+MU4-no-bare-cr killed {'unit': 10, 'fenceRules': 6, 'callSites': 7}
+MU5-rejoin-with-lf killed {'unit': 9, 'fenceRules': 7, 'callSites': 1}
+MU6-cr-re-emitted-as-lf killed {'unit': 5, 'fenceRules': 3, 'callSites': 1}
+MU7-lf-split-closer-tolerates-cr killed {'unit': 17, 'fenceRules': 10, 'callSites': 13}
+MU8-lf-split-opener-and-closer-tolerate-cr killed {'unit': 13, 'fenceRules': 9, 'callSites': 7}
+MU9-terminator-dropped killed {'unit': 21, 'fenceRules': 36, 'callSites': 3}
+MU10-terminator-index-shifted killed {'unit': 21, 'fenceRules': 36, 'callSites': 3}
+MU11-start-ignores-terminator-length killed {'unit': 9, 'fenceRules': 7, 'callSites': 7}
+MU12-phantom-final-terminator killed {'unit': 25, 'fenceRules': 36, 'callSites': 0}
+MU13-last-line-dropped killed {'unit': 20, 'fenceRules': 4, 'callSites': 8}
+MU14-line-keeps-its-terminator killed {'unit': 36, 'fenceRules': 46, 'callSites': 23}
+MU15-alternation-order killed {'unit': 3, 'fenceRules': 0, 'callSites': 1}
+MU16-blank-keeps-nothing-but-lf survived-equivalent {'unit': 0, 'fenceRules': 0, 'callSites': 0}
+MU17-u2028-is-a-line-end killed {'unit': 1, 'fenceRules': 0, 'callSites': 0}
+MU18-nel-is-a-line-end killed {'unit': 1, 'fenceRules': 0, 'callSites': 0}
+MU19-js-line-terminators killed {'unit': 1, 'fenceRules': 0, 'callSites': 0}
+MU20-positionOf-counts-bare-cr killed {'unit': 0, 'fenceRules': 0, 'callSites': 1}
+MU21-positionOf-counts-every-cr killed {'unit': 0, 'fenceRules': 0, 'callSites': 1}
+{"codeCommit": "224e8faaaf60e2809fd167ce934d2dda3d63f131", "baseCommit": "d621bfa2", "mutants": 21, "killed": 20, "survivedEquivalent": 1, "survived": [], "killedByExpectedKillerOnly": 5, "expectedKillerNotAlone": []}
+exit 0 22:01:06 loadavg 35.41 36.45 34.97 21/9690 2941488

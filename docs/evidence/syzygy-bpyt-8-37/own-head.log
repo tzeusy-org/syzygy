@@ -1,0 +1,98 @@
+L1-local-check-dropped killed 1 ['Tests  11 failed | 61 passed (72)'] 6.6 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a FILE: dependency of a scoped name as naming no module
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a file: dependency as naming no module
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a file: dependency of another package as naming no module
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a home-relative path dependency as naming no module
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a link: dev dependency as naming no module
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a path dependency as naming no module
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a subpath of a file: dependency as naming no module
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a tarball dependency as naming no module
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a workspace: optional dependency as naming no module
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as an absolute path dependency as naming no module
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as an npm: alias peer dependency as naming no module
+L2-whole-specifier-compared killed 1 ['Tests  1 failed | 71 passed (72)'] 4.7 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a subpath of a file: dependency as naming no module
+L3-scope-ignored killed 1 ['Tests  1 failed | 71 passed (72)'] 6.5 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a FILE: dependency of a scoped name as naming no module
+L4-prefix-match killed 1 ['Tests  1 failed | 71 passed (72)'] 5.6 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > leaves a bare name declared as a longer name than a local dependency outside the workspace
+L5-first-manifest-only killed 1 ['Tests  1 failed | 71 passed (72)'] 7.1 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a file: dependency of another package as naming no module
+L6-dependencies-unread killed 1 ['Tests  8 failed | 64 passed (72)'] 5.8 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a FILE: dependency of a scoped name as naming no module
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a file: dependency as naming no module
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a file: dependency of another package as naming no module
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a home-relative path dependency as naming no module
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a path dependency as naming no module
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a subpath of a file: dependency as naming no module
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a tarball dependency as naming no module
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as an absolute path dependency as naming no module
+L7-dev-dependencies-unread killed 1 ['Tests  1 failed | 71 passed (72)'] 5.7 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a link: dev dependency as naming no module
+L8-optional-dependencies-unread killed 1 ['Tests  1 failed | 71 passed (72)'] 4.1 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a workspace: optional dependency as naming no module
+L9-peer-dependencies-unread killed 1 ['Tests  1 failed | 71 passed (72)'] 3.7 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as an npm: alias peer dependency as naming no module
+L10-root-manifest-unread killed 1 ['Tests  1 failed | 71 passed (72)'] 4.2 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads the workspace root's manifest beside the packages'
+L11-file-protocol-unread killed 1 ['Tests  4 failed | 68 passed (72)'] 3.7 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a FILE: dependency of a scoped name as naming no module
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a file: dependency as naming no module
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a file: dependency of another package as naming no module
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a subpath of a file: dependency as naming no module
+L12-link-protocol-unread killed 1 ['Tests  1 failed | 71 passed (72)'] 3.0 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a link: dev dependency as naming no module
+L13-workspace-protocol-unread killed 1 ['Tests  1 failed | 71 passed (72)'] 2.9 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a workspace: optional dependency as naming no module
+L14-npm-alias-unread killed 1 ['Tests  1 failed | 71 passed (72)'] 2.8 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as an npm: alias peer dependency as naming no module
+L15-relative-path-unread killed 1 ['Tests  1 failed | 71 passed (72)'] 2.7 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a path dependency as naming no module
+L16-absolute-path-unread killed 1 ['Tests  1 failed | 71 passed (72)'] 2.8 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as an absolute path dependency as naming no module
+L17-home-path-unread killed 1 ['Tests  1 failed | 71 passed (72)'] 2.6 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a home-relative path dependency as naming no module
+L18-tarball-unread killed 1 ['Tests  1 failed | 71 passed (72)'] 4.1 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a tarball dependency as naming no module
+L19-case-sensitive killed 1 ['Tests  1 failed | 71 passed (72)'] 3.6 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a FILE: dependency of a scoped name as naming no module
+L20-unanchored killed 1 ['Tests  1 failed | 71 passed (72)'] 3.2 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > leaves a bare name declared as a git dependency outside the workspace
+K1-given-files-ignored killed 1 ['Tests  2 failed | 83 passed (85)'] 2.7 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > adds each module's census to what it reports unlifted
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > reads every module TypeScript compiles under src, .mts, .cts and .tsx among them, and no test module
+K2-given-reader-ignored killed 1 ['Tests  2 failed | 83 passed (85)'] 3.5 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > adds each module's census to what it reports unlifted
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > reads every module TypeScript compiles under src, .mts, .cts and .tsx among them, and no test module
+K3-mts-cts-left-out killed 1 ['Tests  1 failed | 84 passed (85)'] 2.5 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > reads every module TypeScript compiles under src, .mts, .cts and .tsx among them, and no test module
+K4-tsx-left-out killed 1 ['Tests  1 failed | 84 passed (85)'] 3.0 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > reads every module TypeScript compiles under src, .mts, .cts and .tsx among them, and no test module
+K5-only-test-ts-excluded killed 1 ['Tests  1 failed | 84 passed (85)'] 3.9 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > reads every module TypeScript compiles under src, .mts, .cts and .tsx among them, and no test module
+K6-tests-included killed 1 ['Tests  3 failed | 82 passed (85)'] 3.2 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > is the spec of every readArgv call, and no other module names readArgv
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > names readArgv only where the lift reads it: its declaration, an import or export of it, and the callee of a call
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > reads every module TypeScript compiles under src, .mts, .cts and .tsx among them, and no test module
+K7-unsorted killed 1 ['Tests  2 failed | 83 passed (85)'] 3.3 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > adds each module's census to what it reports unlifted
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > reads every module TypeScript compiles under src, .mts, .cts and .tsx among them, and no test module
+T18-link killed 1 ['Tests  1 failed | 26 passed (27)'] 3.9 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > resolves every workspace specifier on it, and reaches past the entry's own imports
+T18-workspace killed 1 ['Tests  1 failed | 26 passed (27)'] 3.6 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > resolves every workspace specifier on it, and reaches past the entry's own imports
+T18-npm killed 1 ['Tests  1 failed | 26 passed (27)'] 2.6 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > resolves every workspace specifier on it, and reaches past the entry's own imports
+T18-path killed 1 ['Tests  1 failed | 26 passed (27)'] 2.3 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > resolves every workspace specifier on it, and reaches past the entry's own imports
+T18-subpath killed 1 ['Tests  1 failed | 26 passed (27)'] 3.0 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > resolves every workspace specifier on it, and reaches past the entry's own imports
+T18-root killed 1 ['Tests  1 failed | 26 passed (27)'] 2.8 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > resolves every workspace specifier on it, and reaches past the entry's own imports
+T18-island killed 1 ['Tests  1 failed | 3 passed (4)'] 2.5 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > resolves every workspace import the CLI reaches, dynamic ones included
+C6-cts killed 1 ['Tests  1 failed | 84 passed (85)'] 2.5 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > is the spec of every readArgv call, and no other module names readArgv
+C6-tsx killed 1 ['Tests  1 failed | 84 passed (85)'] 2.1 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > is the spec of every readArgv call, and no other module names readArgv
+wrote /tmp/la-b837/own-head.json 36

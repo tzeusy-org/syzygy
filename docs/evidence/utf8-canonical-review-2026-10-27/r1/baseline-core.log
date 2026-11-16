@@ -1,0 +1,128 @@
+
+ RUN  v3.2.7 /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-534/clone
+
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/content-classification.test.ts (26 tests) 129ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/project-shape-extraction.test.ts (87 tests) 322ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/project-shape-observation.test.ts (39 tests) 237ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/body-read-authority.test.ts (322 tests) 461ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/project-shape-model.test.ts (29 tests) 620ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/git-object-reader.test.ts (72 tests) 178ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/project-shape-manifest.test.ts (24 tests) 89ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/project-shape-coverage.test.ts (32 tests) 144ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/walkthrough-judgment.test.ts (141 tests) 167ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/resource-ledger.test.ts (35 tests) 54ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/materialization.test.ts (14 tests) 14ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/walkthrough-readiness.test.ts (33 tests) 41ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/test-artifact-verification.test.ts (37 tests) 574ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/model.test.ts (17 tests) 2363ms
+   ✓ three-surface Butlers POC model > reads a directory with no Beads project through the spawned default runner exactly as through the in-process one  760ms
+   ✓ three-surface Butlers POC model > caps an ingested, binding operator-reported artifact at report-fact and never shows Verified (AC3/AC4, syzygy-0r9, syzygy-4mbu)  652ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/synthetic-corpus-coverage.test.ts (11 tests) 105ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/code-structure.test.ts (10 tests) 1943ms
+   ✓ code-structure observer > records a path with a space, a tab, a double quote or a non-ASCII UTF-8 name exactly as committed (syzygy-bpyt.6.1)  404ms
+   ✓ code-structure observer > makes the inventory Unknown for a committed path that is not valid UTF-8, never a lossy or colliding path  307ms
+   ✓ code-structure observer > skips every submodule gitlink, whatever its path, and keeps the files beside it (R-GP-IMPL-CODE-STRUCTURE-2 N2)  368ms
+   ✓ code-structure observer > produces identical facts across two observations of one revision, excluding capture instant (POC-REQ-004)  356ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/owner-act-record.test.ts (19 tests) 1700ms
+   ✓ parseOwnerActRecord over the version-4 screening-scope recorder's template > reads the rendered record's provenance as an explicit state-(1) selection, and its digest and act type  1668ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/work-items.test.ts (10 tests) 537ms
+   ✓ work-items observer > exercises the real subprocess path against a repository with no Beads database  426ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/trajectory-projection.test.ts (14 tests) 64ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/evidence-population.test.ts (9 tests) 7ms
+ ↓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/test-artifact-verification.live.test.ts (1 test | 1 skipped)
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/model-observations.test.ts (3 tests) 2775ms
+   ✓ shared model observation wiring > folds the worker-change lifecycle observation into the one shared model, scoped to the materialized Bead (AC3)  1728ms
+   ✓ shared model observation wiring > folds code-structure and work-item observations into the one shared model  353ms
+   ✓ shared model observation wiring > renders code-structure and work-item regions Unknown when their sources fail while the required intent artifacts remain present  689ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/response-identity.test.ts (9 tests) 23ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/markdown-code-context.test.ts (17 tests) 13ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/worker-change-observation.test.ts (10 tests) 4597ms
+   ✓ worker-change observer > renders planned when the Bead exists but no matching git activity is observed  388ms
+   ✓ worker-change observer > renders active for a matching commit reachable only from a fetched worker branch, not yet merged (AC3)  830ms
+   ✓ worker-change observer > states none-found distinctly when an active commit is on no fetched origin ref (C3-6)  586ms
+   ✓ worker-change observer > renders changed-or-merged for a matching commit reachable from the default branch, and never claims verification (AC4)  569ms
+   ✓ worker-change observer > scopes activity to the exact bead marker, ignoring unrelated seam history (AC3)  648ms
+   ✓ worker-change observer > renders Unknown with a named reason when the repository is unreadable during commit lookup  771ms
+   ✓ worker-change observer > never executes any observed Butlers code or test (AC6): only git plumbing subcommands are ever invoked  324ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/owner-act-drafter.test.ts (3 tests) 23ms
+ ✓ |@syzygy/support| packages/support/src/support-purity.test.ts (13 tests) 89ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/reevaluation.test.ts (3 tests) 44ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/git-tree.test.ts (7 tests) 55ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/resource-headroom.test.ts (3 tests) 18ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/proposed-work.test.ts (4 tests) 62ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/project-shape-git-text.test.ts (3 tests) 35ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/orrery-projection.test.ts (4 tests) 10ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/authority-artifact-fields.test.ts (5 tests) 24ms
+ ✓ |@syzygy/support| packages/support/src/decode-utf8.test.ts (6 tests) 24ms
+ ↓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/work-items.live.test.ts (1 test | 1 skipped)
+ ✓ |@syzygy/support| packages/support/src/sha256.test.ts (4 tests) 18ms
+ ✓ |@syzygy/support| packages/support/src/deep-freeze.test.ts (5 tests) 43ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/effect-authority.test.ts (6 tests) 67ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/test-cleanup.test.ts (3 tests) 40ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/test-artifact-verification-live-source.test.ts (58 tests) 65319ms
+   ✓ the live verification test, and every module it imports, runs no observed code > reaches the model, its observers and the verification module, and no file in that closure can start anything but git or bd  1783ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses (process as unknown as { getBuiltinModule(n: string): unknown }).getBuiltinModule('x');  2008ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses const p = process; void p;  1088ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses process['getBuilt' + 'inModule'];  1083ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses globalThis.process.env.X;  1252ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses new Function('return 1')();  864ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses eval('1');  1572ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses process.dlopen({}, 'x');  1078ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses void import('node:fs');  1461ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses execFileSync('python3', ['-m', 'pytest']);  1072ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses const cmd = 'git'; execFileSync(cmd, []);  521ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses import { Worker } from 'node:worker_threads';  1535ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses const g = (process.stdout.constructor as unknown as { constructor: (s: string) => () => Record<string, unknown> }).constructor('return this.process')();  1309ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses const g: Record<string, unknown> = {}; g[['get', 'Builtin', 'Module'].join('')];  906ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses const k = 'x'; const o: Record<string, unknown> = {}; o[k];  902ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses process.stdout['constructor'];  980ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses const { constructor: c } = process.stdout;  1093ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses const k = 'x'; const { [k]: c } = process.stdout as unknown as Record<string, unknown>;  630ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses Object.getPrototypeOf(process.stdout);  625ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses Object.getOwnPropertyDescriptor(process.stdout, 'x');  425ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses ({}).__proto__;  406ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses (() => 0).prototype;  756ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses execFileSync.call(null, 'sh', []);  845ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses execFileSync.apply(null, ['sh', []]);  706ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses const r = execFileSync; r('sh');  1007ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses import m = require('node:module');
+(m.createRequire(import.meta.url)(['node:child', 'process'].join('_')) as { spawnSync: (c: string, a: string[]) => unknown }).spawnSync('sh', ['-c', 'touch x']);  812ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses import cp = require('node:child_process');  638ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses export { spawn } from 'node:child_process';  2134ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses export * from 'node:child_process';  774ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses execFileSync('git', ['-c', 'alias.probe=!touch x', 'probe']);  1544ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses execFileSync('git', ['--config-env=core.pager=P', 'log']);  1602ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses execFileSync('git', ['--exec-path=/tmp', 'status']);  1152ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses const key = `alias.${'p'}`;  1137ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses process.env.GIT_CONFIG_COUNT = '1';  1581ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses process.env.PATH += ':/tmp';  660ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses delete process.env.GIT_DIR;  987ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses ({ x: process.env.PATH } = { x: '/tmp' });  1603ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses Object.assign(process.env, { PATH: '/tmp' });  1097ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses const { PATH } = process.env;  2187ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses execFileSync('git', ['probe'], { env: { GIT_CONFIG_GLOBAL: '/tmp/cfg' }, encoding: 'utf8' });  2182ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses execFileSync('bd', ['list'], { 'env': {} });  751ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses const env = {}; execFileSync('git', ['status'], { env });  1977ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses execFileSync('git', ['--version;', 'touch', '/tmp/x'], { shell: true, encoding: 'utf8' });  3464ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses execFileSync('git', ['status'], { shell: '/bin/x' });  1166ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses execFileSync('git', ['status'], { cwd: '/tmp' });  676ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses const globbed = import.meta.glob('/node_modules/tinyexec/dist/main.js', { eager: true });
+void globbed;  764ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses void import.meta.globEager('/x.js');  2759ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses void import.meta.url;  411ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses const o = {}; execFileSync('git', ['status'], o);  1206ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses const o = {}; execFileSync('git', ['status'], { ...o });  711ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses execFileSync('git', ['status'], {}, {});  1223ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses import { vi } from 'vitest';
+const cp = await vi.importActual<{ spawnSync: (c: string, a: string[]) => unknown }>(['node:child', 'process'].join('_'));
+cp.spawnSync('touch', ['x']);  539ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses import { it as test, vi as v } from 'vitest';  832ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses import * as vt from 'vitest';  938ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses import vt from 'vitest';  1047ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses export { vi } from 'vitest';  809ms
+
+ Test Files  39 passed | 2 skipped (41)
+      Tests  1147 passed | 2 skipped (1149)
+   Start at  11:17:02
+   Duration  71.97s (transform 6.01s, setup 1.35s, collect 21.59s, tests 83.03s, environment 29ms, prepare 11.72s)
+

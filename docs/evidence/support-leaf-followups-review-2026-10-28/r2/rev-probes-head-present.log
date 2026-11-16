@@ -1,0 +1,37 @@
+H-E4-lane 1 126 4 ['file: @syzygy/polaris-dossier/state-directory: its entry has a /../ segment, which Node refuses', 'the daemon path, every module the entry reaches outside its dossier and polaris branches reaches this package through argv.ts and state-directory.ts alone', "the daemon path, every module the entry reaches outside its dossier and polaris branches resolves every workspace specifier on it, and reaches past the entry's own imports", 'the syzygy CLI and the parked provider island resolves every workspace import the CLI reaches, dynamic ones included', "the tree's own exports put a source condition first in every entry, naming the module the built target is read as"]
+    the syzygy CLI and the parked provider island resolves every workspace import the CLI reaches, dynamic ones included :: AssertionError: expected [ Array(1) ] to deeply equal []
+    the tree's own exports put a source condition first in every entry, naming the module the built target is read as :: AssertionError: expected [ Array(1) ] to deeply equal []
+    the daemon path, every module the entry reaches outside its dossier and polaris branches resolves every workspace specif :: AssertionError: expected [ Array(1) ] to deeply equal []
+    the daemon path, every module the entry reaches outside its dossier and polaris branches reaches this package through ar :: AssertionError: expected [ Array(1) ] to deeply equal [ …(2) ]
+H-E4S-all-but-types 1 130 0 ['file: @syzygy/polaris-dossier/state-directory: its entry has a /../ segment, which Node refuses']
+H-types-only 1 130 0 ['file: @syzygy/polaris-dossier/state-directory: its entry has a /../ segment, which Node refuses']
+H-main 1 130 0 ['file: @syzygy/app: its entry has a /../ segment, which Node refuses']
+M1-E1-plus-lane-E4 1 0 0 ['file: @syzygy/polaris-dossier/state-directory: its entry is not a ./dist/X.js whose src/X.ts exists']
+M2-E1-plus-E4S 1 135 1 ['the workspace entry modules throws on a /../ segment that the resolver would join away, since Node refuses the entry']
+    the workspace entry modules throws on a /../ segment that the resolver would join away, since Node refuses the entry :: AssertionError: expected [Function] to throw an error
+M3-check-reads-only-the-first-condition 1 63 1 ['the workspace entry modules throws on a /../ segment that the resolver would join away, since Node refuses the entry']
+    the workspace entry modules throws on a /../ segment that the resolver would join away, since Node refuses the entry :: AssertionError: expected [Function] to throw an error
+M4-check-skips-types 0 70 0 []
+M4b-check-skips-types-plus-types-only 0 70 0 []
+M5-write-reader-object-rest-arm-dropped 0 50 0 []
+M5b-object-rest-arm-dropped-plus-object-rest-write 0 50 0 []
+M5c-object-rest-write-control 1 49 1 ['@syzygy/support stays a pure leaf assigns to no property in any source, so no allowed global is rewritten']
+    @syzygy/support stays a pure leaf assigns to no property in any source, so no allowed global is rewritten :: AssertionError: expected [ Array(1) ] to deeply equal []
+M6-import-reader-reads-only-a-top-level-statement 1 47 3 ['the import() reader the import() row stands on reads "const value = \'node:f\' + \'s\';\\nvoid import (value);"', 'the import() reader the import() row stands on reads "export const value = () => import (\'node:crypto\');"', 'the import() reader the import() row stands on reads "void import/**/(\'node:fs\');"']
+    the import() reader the import() row stands on reads "export const value = () => import ('node:crypto');" :: TypeError: Cannot read properties of undefined (reading 'kind')
+    the import() reader the import() row stands on reads "const value = 'node:f' + 's';\nvoid import (value);" :: TypeError: Cannot read properties of undefined (reading 'kind')
+    the import() reader the import() row stands on reads "void import/**/('node:fs');" :: TypeError: Cannot read properties of undefined (reading 'kind')
+M6b-import-reader-skips-function-bodies 1 49 1 ['the import() reader the import() row stands on reads "export const value = () => import (\'node:crypto\');"']
+    the import() reader the import() row stands on reads "export const value = () => import ('node:crypto');" :: AssertionError: expected [] to deeply equal [ 'import (\'node:crypto\')' ]
+M7-write-reader-default-arm-only-for-identifiers 0 50 0 []
+S1-alias-key-wrong-target 1 68 2 ['suite child processes and the vitest worker RPC runs only short local tools synchronously in a suite test file or any module it imports', "the tree's own exports load, under the suite, each entry from its source module"]
+    the tree's own exports load, under the suite, each entry from its source module :: AssertionError: @syzygy/polaris-dossier/argv: expected { …(182), …(1) } to be { …(2), …(1) } // Object.is equality
+    suite child processes and the vitest worker RPC runs only short local tools synchronously in a suite test file or any mo :: Error: vitest.config.ts: workspace packages do not load by their source condition alone
+S2-shorthand-alias-wrong-target 1 69 1 ["the tree's own exports load, under the suite, each entry from its source module"]
+    the tree's own exports load, under the suite, each entry from its source module :: AssertionError: @syzygy/polaris-dossier/argv: expected { …(182), …(1) } to be { …(2), …(1) } // Object.is equality
+S3-shorthand-alias-right-target 0 70 0 []
+S4-source-condition-dropped 1 68 2 ['suite child processes and the vitest worker RPC runs only short local tools synchronously in a suite test file or any module it imports', "the tree's own exports load, under the suite, each entry from its source module"]
+    the tree's own exports load, under the suite, each entry from its source module :: AssertionError: @syzygy/three-surface-poc-app/dossier-render: expected { …(3), …(1) } to be { …(3), …(1) } // Object.is equality
+    suite child processes and the vitest worker RPC runs only short local tools synchronously in a suite test file or any mo :: Error: vitest.config.ts: workspace packages do not load by their source condition alone
+status after ''
+exit 0

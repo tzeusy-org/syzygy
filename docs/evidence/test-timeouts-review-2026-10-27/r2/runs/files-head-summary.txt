@@ -1,0 +1,10 @@
+head r1 dossier-cap-measure.test.ts exit 0 load1 19.39->20.96 unhandled 0 | file-level hookMs 771 fileMs 775
+head r1 production-reobserve.test.ts exit 0 load1 20.96->20.8 unhandled 0 | :160 test pass 1224 ms; slowest other 977 ms
+head r2 dossier-cap-measure.test.ts exit 0 load1 20.8->20.8 unhandled 0 | file-level hookMs 593 fileMs 597
+head r2 production-reobserve.test.ts exit 0 load1 20.8->19.98 unhandled 0 | :160 test pass 1132 ms; slowest other 867 ms
+head r3 dossier-cap-measure.test.ts exit 0 load1 19.98->19.98 unhandled 0 | file-level hookMs 784 fileMs 788
+head r3 production-reobserve.test.ts exit 0 load1 19.98->19.95 unhandled 0 | :160 test pass 1012 ms; slowest other 681 ms
+head r4 dossier-cap-measure.test.ts exit 0 load1 19.95->19.95 unhandled 0 | file-level hookMs 587 fileMs 590
+head r4 production-reobserve.test.ts exit 0 load1 19.95->19.41 unhandled 0 | :160 test pass 1294 ms; slowest other 846 ms
+head r5 dossier-cap-measure.test.ts exit 0 load1 19.41->19.41 unhandled 0 | file-level hookMs 658 fileMs 662
+head r5 production-reobserve.test.ts exit 0 load1 19.41->21.37 unhandled 0 | :160 test pass 986 ms; slowest other 690 ms

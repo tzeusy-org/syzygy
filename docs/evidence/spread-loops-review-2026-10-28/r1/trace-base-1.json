@@ -1,0 +1,147 @@
+{
+ "node": "v24.6.0",
+ "maskThreshold": {
+  "LF": {
+   "largestSurviving": 125284,
+   "firstThrowing": 125285,
+   "bytesAtFirstThrow": 250578
+  },
+  "CRLF": {
+   "largestSurviving": 125284,
+   "firstThrowing": 125285,
+   "bytesAtFirstThrow": 375865
+  },
+  "CR": {
+   "largestSurviving": 125284,
+   "firstThrowing": 125285,
+   "bytesAtFirstThrow": 250578
+  }
+ },
+ "direct": {
+  "LF-100000": {
+   "bytes": 200008,
+   "mask": "ok:masked",
+   "scanActiveContent": "ok:object"
+  },
+  "CRLF-100000": {
+   "bytes": 300010,
+   "mask": "ok:masked",
+   "scanActiveContent": "ok:object"
+  },
+  "CR-100000": {
+   "bytes": 200008,
+   "mask": "ok:masked",
+   "scanActiveContent": "ok:object"
+  },
+  "LF-150000": {
+   "bytes": 300008,
+   "mask": "throw:RangeError:Maximum call stack size exceeded",
+   "scanActiveContent": "throw:RangeError:Maximum call stack size exceeded"
+  },
+  "CRLF-150000": {
+   "bytes": 450010,
+   "mask": "throw:RangeError:Maximum call stack size exceeded",
+   "scanActiveContent": "throw:RangeError:Maximum call stack size exceeded"
+  },
+  "CR-150000": {
+   "bytes": 300008,
+   "mask": "throw:RangeError:Maximum call stack size exceeded",
+   "scanActiveContent": "throw:RangeError:Maximum call stack size exceeded"
+  },
+  "LF-200000": {
+   "bytes": 400008,
+   "mask": "throw:RangeError:Maximum call stack size exceeded",
+   "scanActiveContent": "throw:RangeError:Maximum call stack size exceeded"
+  },
+  "CRLF-200000": {
+   "bytes": 600010,
+   "mask": "throw:RangeError:Maximum call stack size exceeded",
+   "scanActiveContent": "throw:RangeError:Maximum call stack size exceeded"
+  },
+  "CR-200000": {
+   "bytes": 400008,
+   "mask": "throw:RangeError:Maximum call stack size exceeded",
+   "scanActiveContent": "throw:RangeError:Maximum call stack size exceeded"
+  }
+ },
+ "buildProjectShape": {
+  "phase-B vision.md LF 100000 lines (200337 bytes)": {
+   "result": "returned:observed",
+   "detail": {
+    "sourceRecord": "classified"
+   },
+   "gitCatFileCalls": 14
+  },
+  "phase-B vision.md CRLF 100000 lines (300339 bytes)": {
+   "result": "returned:observed",
+   "detail": {
+    "sourceRecord": "classified"
+   },
+   "gitCatFileCalls": 14
+  },
+  "phase-B vision.md CR 100000 lines (200337 bytes)": {
+   "result": "returned:observed",
+   "detail": {
+    "sourceRecord": "classified"
+   },
+   "gitCatFileCalls": 14
+  },
+  "phase-B vision.md LF 200000 lines (400337 bytes)": {
+   "result": "threw:RangeError:Maximum call stack size exceeded",
+   "gitCatFileCalls": 10
+  },
+  "phase-B vision.md CRLF 200000 lines (600339 bytes)": {
+   "result": "threw:RangeError:Maximum call stack size exceeded",
+   "gitCatFileCalls": 10
+  },
+  "phase-B vision.md CR 200000 lines (400337 bytes)": {
+   "result": "threw:RangeError:Maximum call stack size exceeded",
+   "gitCatFileCalls": 10
+  },
+  "phase-A root index LF 100000 lines (200198 bytes)": {
+   "result": "returned:observed",
+   "detail": {
+    "sourceRecord": "classified"
+   },
+   "gitCatFileCalls": 14
+  },
+  "phase-A root index CRLF 100000 lines (300200 bytes)": {
+   "result": "returned:observed",
+   "detail": {
+    "sourceRecord": "classified"
+   },
+   "gitCatFileCalls": 14
+  },
+  "phase-A root index CR 100000 lines (200198 bytes)": {
+   "result": "returned:observed",
+   "detail": {
+    "sourceRecord": "classified"
+   },
+   "gitCatFileCalls": 14
+  },
+  "phase-A root index LF 200000 lines (400198 bytes)": {
+   "result": "threw:RangeError:Maximum call stack size exceeded",
+   "gitCatFileCalls": 1
+  },
+  "phase-A root index CRLF 200000 lines (600200 bytes)": {
+   "result": "threw:RangeError:Maximum call stack size exceeded",
+   "gitCatFileCalls": 1
+  },
+  "phase-A root index CR 200000 lines (400198 bytes)": {
+   "result": "threw:RangeError:Maximum call stack size exceeded",
+   "gitCatFileCalls": 1
+  }
+ },
+ "reobserveState": {
+  "result": "failed",
+  "reason": "Maximum call stack size exceeded",
+  "priorModelStillServed": true,
+  "captureStillC0": true
+ },
+ "reobserveRouteCount": 2,
+ "reobserveRouteHuman": {
+  "path": "/polaris/reobserve",
+  "credentialClass": "human-open"
+ },
+ "startupStderrLine": "syzygy POC: observation failed (unexpected observation failure (RangeError))"
+}

@@ -1,0 +1,6 @@
+{
+ "id": "M2-enotdir-read-as-missing",
+ "file": "packages/polaris-dossier/dist/state-directory.js (copy)",
+ "old": "if (code === 'ENOENT')",
+ "new": "if (code === 'ENOENT' || code === 'ENOTDIR')"
+}

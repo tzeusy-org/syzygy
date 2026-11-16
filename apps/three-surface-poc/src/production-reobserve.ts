@@ -4,6 +4,7 @@ import {
   evaluateBodyReadAuthority,
   readMaterializationRecordFile,
   readTestArtifactRecordFile,
+  walkthroughAcceptance,
   type PocEvaluationEvidence,
   type PocModel,
   type ProjectShapeModelInput,
@@ -135,8 +136,8 @@ export function buildProductionPocModel({ capture, repoRoot, stateDir, observerR
     testArtifactRecord,
     projectShape,
     ...(projectShapeDetail === undefined ? {} : { projectShapeDetail }),
-    walkthroughJudgment,
+    // The acceptance slice, composed here at the app edge: the pair, and
     // PWB-REQ-021 readiness against this evaluation's own Polaris routes.
-    walkthroughReadiness: { traversal: pwbReadinessTraversal() },
+    acceptance: walkthroughAcceptance({ judgment: walkthroughJudgment, traversal: pwbReadinessTraversal() }),
   });
 }

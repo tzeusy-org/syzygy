@@ -1,0 +1,56 @@
+{
+ "tree": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-539/clone-mut",
+ "commit": "561c80b38d447a56e4c1542e0a8fbbdb2dd1d845",
+ "mutants": [
+  {
+   "mutant": "S4-host-request-type-member-added",
+   "file": "packages/http-host/src/server.ts",
+   "old": "  readonly query: URLSearchParams;\n",
+   "new": "  readonly query: URLSearchParams;\n  readonly remoteAddress?: string;\n",
+   "commit": "561c80b38d447a56e4c1542e0a8fbbdb2dd1d845",
+   "oldCount": 1,
+   "checks": {
+    "surface": {
+     "command": "surface.mjs base vs mutant, 7.15 key",
+     "surfaceEqual": true,
+     "changedRows": {},
+     "survives": true
+    },
+    "typecheck": {
+     "command": "npx tsc -b <root typecheck list>",
+     "exit": 0,
+     "seconds": 10.1,
+     "errors": [],
+     "survives": true
+    },
+    "vitest": {
+     "command": "npx vitest run <13 files>",
+     "files": [
+      "apps/three-surface-poc/src/evaluation-footer.test.ts",
+      "apps/three-surface-poc/src/main.test.ts",
+      "apps/three-surface-poc/src/materialize-action.test.ts",
+      "apps/three-surface-poc/src/page-size-delta.test.ts",
+      "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+      "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+      "apps/three-surface-poc/src/polaris-source-route.test.ts",
+      "apps/three-surface-poc/src/reobserve-action.test.ts",
+      "apps/three-surface-poc/src/response-limits.test.ts",
+      "apps/three-surface-poc/src/routes.test.ts",
+      "apps/three-surface-poc/src/surface-routes.test.ts",
+      "apps/three-surface-poc/src/tuple-encoding.test.ts",
+      "apps/three-surface-poc/src/verbatim-route.test.ts"
+     ],
+     "exit": 0,
+     "seconds": 29.1,
+     "total": 152,
+     "passed": 152,
+     "failed": 0,
+     "firstFailures": [],
+     "survives": true
+    }
+   },
+   "killedBy": [],
+   "cleanAfter": true
+  }
+ ]
+}

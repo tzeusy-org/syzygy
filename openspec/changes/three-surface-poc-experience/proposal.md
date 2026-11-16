@@ -133,3 +133,23 @@ desired, execution and observed states, are not specified here.
 - `GOVERNING-DEPENDENCIES.md` is generated from every requirement's warrants.
 - The behavioral specification contains the falsifiable requirements and
   scenarios. These supporting views do not replace it.
+
+
+## Amendment — observation-local governing-intent value (P-115)
+
+The machine answer serves POC-REQ-014's identical complete Unknown once per
+identified work-item observation and a closed local reference on each item.
+This changes the physical wire representation, preserving every logical
+claim, item identity, complete served population, count, reason, route,
+warrant-remediation statement, rendered selection and human Unknown encoding.
+Invalid references refuse the answer explicitly; they never borrow a prior
+value or turn absence into zero. The reference is lexical to its enclosing
+observation, not an inferred relationship or a new source input.
+
+Out of scope: warrant capture/linking or title interpretation; any new read,
+provider, work-item column, input or consent; entity/relationship record
+pooling or identity changes; POC-REQ-060 record-shape expansion; new reason,
+tier, edge or orphaned-work detection; smaller machine populations; human
+layout, copy, controls or filtering changes; response-ceiling/policy changes;
+release, deployment and implementation authorization. Earlier open questions
+and disclosures remain exactly as their signed predecessors record them.

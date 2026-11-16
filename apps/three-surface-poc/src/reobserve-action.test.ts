@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import type { RouteContext } from '@syzygy/cap1-daemon';
+import type { RouteContext } from '@syzygy/http-host';
 import { describeReevaluation, type Reevaluation } from '@syzygy/three-surface-poc-core';
 
 import { reobserveRoutes, REOBSERVE_HUMAN_PATH, type ReobserveResult } from './reobserve-action.js';

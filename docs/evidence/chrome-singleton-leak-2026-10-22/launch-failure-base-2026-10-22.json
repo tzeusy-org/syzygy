@@ -1,0 +1,41 @@
+{
+ "tool": "launch_failure_probe.py",
+ "treeCommit": "dccd484f4749b55f981f2e5211de4112ab7951de",
+ "mode": "base",
+ "file": "apps/three-surface-poc/src/polaris-generation/draft-preview.browser.test.ts",
+ "sha256AtCommit": "70102033956c5597667ab3fca4bc145fcb2f7787227b1cb82849878c8a73856f",
+ "command": "SYZYGY_POC_BROWSER=/bin/false TMPDIR=<private> npx vitest run apps/three-surface-poc/src/polaris-generation/draft-preview.browser.test.ts --project --project ...",
+ "mutant": {
+  "id": "draft-preview-launch-outside-try",
+  "file": "apps/three-surface-poc/src/polaris-generation/draft-preview.browser.test.ts",
+  "edits": [
+   {
+    "old": "import { findBrowserExecutable, launchBrowser, type Browser } from '../cdp-browser.js';",
+    "new": "import { findBrowserExecutable, launchBrowser } from '../cdp-browser.js';"
+   },
+   {
+    "old": "  // The launch is inside the try: a launch that fails still removes the directory (syzygy-bpyt.4.11).\n  let browser: Browser | undefined;\n  try {\n    browser = await launchBrowser(executable);\n",
+    "new": "  const browser = await launchBrowser(executable);\n  try {\n"
+   },
+   {
+    "old": "  } finally {\n    try { await browser?.close(); }\n    finally { await rm(directory, { recursive: true, force: true }); }\n  }\n",
+    "new": "  } finally { await browser.close(); await rm(directory, { recursive: true, force: true }); }\n"
+   }
+  ]
+ },
+ "exit": 1,
+ "testsRun": 1,
+ "failing": [
+  {
+   "test": "renders the pipeline draft with working diagram, source and keyboard deep-dive paths at both widths",
+   "firstErrorLine": "Error: browser exited with 1 before announcing a DevTools endpoint:"
+  }
+ ],
+ "left": [
+  "polaris-draft-browser-PqUGIM"
+ ],
+ "draftPreviewDirectoriesLeft": 1,
+ "retainedProfilesLeft": 0,
+ "launchFailedAsExpected": true,
+ "holds": true
+}

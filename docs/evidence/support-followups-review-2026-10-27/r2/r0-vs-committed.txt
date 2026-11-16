@@ -1,0 +1,2 @@
+R0 equals committed output, scratch commit ids aside: True
+scratch commits differ (expected, timestamps): ['4a94f9bffb06', '1c3e35160a79'] ['4dc89e9ebd73', '42f7e80a6aa9']

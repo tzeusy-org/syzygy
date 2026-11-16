@@ -1,0 +1,354 @@
+{
+ "subject": "syzygy-bpyt.4.19: cdp-browser.test.ts repeated runs",
+ "commit": "729b04963191305c30988b122b0b9f4f75534352",
+ "tool": {
+  "path": "docs/evidence/syzygy-bpyt-4-19/tools/repeat.py",
+  "sha256": "b4f55beac54c823710b325d800b86d0bacec20a5b4760a60b7ef27c0610ebbab"
+ },
+ "testFileSha256": "1dd72c42697b889a7b3a05518259bb2a1ad81e173f893b03f14480a1e0b6bc16",
+ "worktreeClean": true,
+ "runs": [
+  {
+   "run": 1,
+   "exit": 0,
+   "passed": 29,
+   "failed": 0,
+   "total": 29,
+   "loadavgBefore": [
+    "18.72",
+    "16.19",
+    "14.83"
+   ],
+   "loadavgAfter": [
+    "18.72",
+    "16.19",
+    "14.83"
+   ]
+  },
+  {
+   "run": 2,
+   "exit": 0,
+   "passed": 29,
+   "failed": 0,
+   "total": 29,
+   "loadavgBefore": [
+    "18.72",
+    "16.19",
+    "14.83"
+   ],
+   "loadavgAfter": [
+    "18.72",
+    "16.19",
+    "14.83"
+   ]
+  },
+  {
+   "run": 3,
+   "exit": 0,
+   "passed": 29,
+   "failed": 0,
+   "total": 29,
+   "loadavgBefore": [
+    "18.72",
+    "16.19",
+    "14.83"
+   ],
+   "loadavgAfter": [
+    "18.34",
+    "16.16",
+    "14.82"
+   ]
+  },
+  {
+   "run": 4,
+   "exit": 0,
+   "passed": 29,
+   "failed": 0,
+   "total": 29,
+   "loadavgBefore": [
+    "18.34",
+    "16.16",
+    "14.82"
+   ],
+   "loadavgAfter": [
+    "18.34",
+    "16.16",
+    "14.82"
+   ]
+  },
+  {
+   "run": 5,
+   "exit": 0,
+   "passed": 29,
+   "failed": 0,
+   "total": 29,
+   "loadavgBefore": [
+    "18.34",
+    "16.16",
+    "14.82"
+   ],
+   "loadavgAfter": [
+    "18.34",
+    "16.16",
+    "14.82"
+   ]
+  },
+  {
+   "run": 6,
+   "exit": 0,
+   "passed": 29,
+   "failed": 0,
+   "total": 29,
+   "loadavgBefore": [
+    "18.34",
+    "16.16",
+    "14.82"
+   ],
+   "loadavgAfter": [
+    "18.34",
+    "16.16",
+    "14.82"
+   ]
+  },
+  {
+   "run": 7,
+   "exit": 0,
+   "passed": 29,
+   "failed": 0,
+   "total": 29,
+   "loadavgBefore": [
+    "18.34",
+    "16.16",
+    "14.82"
+   ],
+   "loadavgAfter": [
+    "18.47",
+    "16.22",
+    "14.85"
+   ]
+  },
+  {
+   "run": 8,
+   "exit": 0,
+   "passed": 29,
+   "failed": 0,
+   "total": 29,
+   "loadavgBefore": [
+    "18.47",
+    "16.22",
+    "14.85"
+   ],
+   "loadavgAfter": [
+    "18.47",
+    "16.22",
+    "14.85"
+   ]
+  },
+  {
+   "run": 9,
+   "exit": 0,
+   "passed": 29,
+   "failed": 0,
+   "total": 29,
+   "loadavgBefore": [
+    "18.47",
+    "16.22",
+    "14.85"
+   ],
+   "loadavgAfter": [
+    "18.47",
+    "16.22",
+    "14.85"
+   ]
+  },
+  {
+   "run": 10,
+   "exit": 0,
+   "passed": 29,
+   "failed": 0,
+   "total": 29,
+   "loadavgBefore": [
+    "18.47",
+    "16.22",
+    "14.85"
+   ],
+   "loadavgAfter": [
+    "18.43",
+    "16.25",
+    "14.87"
+   ]
+  },
+  {
+   "run": 11,
+   "exit": 0,
+   "passed": 29,
+   "failed": 0,
+   "total": 29,
+   "loadavgBefore": [
+    "18.43",
+    "16.25",
+    "14.87"
+   ],
+   "loadavgAfter": [
+    "18.43",
+    "16.25",
+    "14.87"
+   ]
+  },
+  {
+   "run": 12,
+   "exit": 0,
+   "passed": 29,
+   "failed": 0,
+   "total": 29,
+   "loadavgBefore": [
+    "18.43",
+    "16.25",
+    "14.87"
+   ],
+   "loadavgAfter": [
+    "18.43",
+    "16.25",
+    "14.87"
+   ]
+  },
+  {
+   "run": 13,
+   "exit": 0,
+   "passed": 29,
+   "failed": 0,
+   "total": 29,
+   "loadavgBefore": [
+    "18.43",
+    "16.25",
+    "14.87"
+   ],
+   "loadavgAfter": [
+    "17.76",
+    "16.15",
+    "14.84"
+   ]
+  },
+  {
+   "run": 14,
+   "exit": 0,
+   "passed": 29,
+   "failed": 0,
+   "total": 29,
+   "loadavgBefore": [
+    "17.76",
+    "16.15",
+    "14.84"
+   ],
+   "loadavgAfter": [
+    "17.76",
+    "16.15",
+    "14.84"
+   ]
+  },
+  {
+   "run": 15,
+   "exit": 0,
+   "passed": 29,
+   "failed": 0,
+   "total": 29,
+   "loadavgBefore": [
+    "17.76",
+    "16.15",
+    "14.84"
+   ],
+   "loadavgAfter": [
+    "17.76",
+    "16.15",
+    "14.84"
+   ]
+  },
+  {
+   "run": 16,
+   "exit": 0,
+   "passed": 29,
+   "failed": 0,
+   "total": 29,
+   "loadavgBefore": [
+    "17.76",
+    "16.15",
+    "14.84"
+   ],
+   "loadavgAfter": [
+    "18.42",
+    "16.31",
+    "14.90"
+   ]
+  },
+  {
+   "run": 17,
+   "exit": 0,
+   "passed": 29,
+   "failed": 0,
+   "total": 29,
+   "loadavgBefore": [
+    "18.42",
+    "16.31",
+    "14.90"
+   ],
+   "loadavgAfter": [
+    "18.42",
+    "16.31",
+    "14.90"
+   ]
+  },
+  {
+   "run": 18,
+   "exit": 0,
+   "passed": 29,
+   "failed": 0,
+   "total": 29,
+   "loadavgBefore": [
+    "18.42",
+    "16.31",
+    "14.90"
+   ],
+   "loadavgAfter": [
+    "18.42",
+    "16.31",
+    "14.90"
+   ]
+  },
+  {
+   "run": 19,
+   "exit": 0,
+   "passed": 29,
+   "failed": 0,
+   "total": 29,
+   "loadavgBefore": [
+    "18.42",
+    "16.31",
+    "14.90"
+   ],
+   "loadavgAfter": [
+    "19.35",
+    "16.54",
+    "14.98"
+   ]
+  },
+  {
+   "run": 20,
+   "exit": 0,
+   "passed": 29,
+   "failed": 0,
+   "total": 29,
+   "loadavgBefore": [
+    "19.35",
+    "16.54",
+    "14.98"
+   ],
+   "loadavgAfter": [
+    "19.35",
+    "16.54",
+    "14.98"
+   ]
+  }
+ ],
+ "runsPassing": 20,
+ "of": 20
+}

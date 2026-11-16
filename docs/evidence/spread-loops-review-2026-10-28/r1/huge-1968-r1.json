@@ -1,0 +1,216 @@
+{
+ "node": "v24.6.0",
+ "execArgv": [
+  "--stack-size=1968"
+ ],
+ "mask": {
+  "LF": {
+   "threshold": {
+    "largestSurviving": 251408,
+    "firstThrowing": 251409,
+    "bytesAtFirstThrow": 502826
+   },
+   "survivors": [
+    {
+     "inner": 1,
+     "baseEqualsHead": true
+    },
+    {
+     "inner": 10,
+     "baseEqualsHead": true
+    },
+    {
+     "inner": 1000,
+     "baseEqualsHead": true
+    },
+    {
+     "inner": 125704,
+     "baseEqualsHead": true
+    },
+    {
+     "inner": 201126,
+     "baseEqualsHead": true
+    }
+   ],
+   "beyond": [
+    {
+     "inner": 251409,
+     "bytes": 502826,
+     "base": "masked",
+     "head": "masked",
+     "headEqualsOracle": true
+    },
+    {
+     "inner": 200000,
+     "bytes": 400008,
+     "base": "masked",
+     "head": "masked",
+     "headEqualsOracle": true
+    },
+    {
+     "inner": 400000,
+     "bytes": 800008,
+     "base": "RangeError: Maximum call stack size exceeded",
+     "head": "masked",
+     "headEqualsOracle": true
+    }
+   ]
+  },
+  "CRLF": {
+   "threshold": {
+    "largestSurviving": 251408,
+    "firstThrowing": 251409,
+    "bytesAtFirstThrow": 754237
+   },
+   "survivors": [
+    {
+     "inner": 1,
+     "baseEqualsHead": true
+    },
+    {
+     "inner": 10,
+     "baseEqualsHead": true
+    },
+    {
+     "inner": 1000,
+     "baseEqualsHead": true
+    },
+    {
+     "inner": 125704,
+     "baseEqualsHead": true
+    },
+    {
+     "inner": 201126,
+     "baseEqualsHead": true
+    }
+   ],
+   "beyond": [
+    {
+     "inner": 251409,
+     "bytes": 754237,
+     "base": "masked",
+     "head": "masked",
+     "headEqualsOracle": true
+    },
+    {
+     "inner": 200000,
+     "bytes": 600010,
+     "base": "masked",
+     "head": "masked",
+     "headEqualsOracle": true
+    },
+    {
+     "inner": 400000,
+     "bytes": 1200010,
+     "base": "RangeError: Maximum call stack size exceeded",
+     "head": "masked",
+     "headEqualsOracle": true
+    }
+   ]
+  },
+  "CR": {
+   "threshold": {
+    "largestSurviving": 251414,
+    "firstThrowing": 251415,
+    "bytesAtFirstThrow": 502838
+   },
+   "survivors": [
+    {
+     "inner": 1,
+     "baseEqualsHead": true
+    },
+    {
+     "inner": 10,
+     "baseEqualsHead": true
+    },
+    {
+     "inner": 1000,
+     "baseEqualsHead": true
+    },
+    {
+     "inner": 125707,
+     "baseEqualsHead": true
+    },
+    {
+     "inner": 201131,
+     "baseEqualsHead": true
+    }
+   ],
+   "beyond": [
+    {
+     "inner": 251415,
+     "bytes": 502838,
+     "base": "masked",
+     "head": "masked",
+     "headEqualsOracle": true
+    },
+    {
+     "inner": 200000,
+     "bytes": 400008,
+     "base": "masked",
+     "head": "masked",
+     "headEqualsOracle": true
+    },
+    {
+     "inner": 400000,
+     "bytes": 800008,
+     "base": "RangeError: Maximum call stack size exceeded",
+     "head": "masked",
+     "headEqualsOracle": true
+    }
+   ]
+  }
+ },
+ "extractor": {
+  "threshold": {
+   "largestSurviving": 251410,
+   "firstThrowing": 251411
+  },
+  "survivors": [
+   {
+    "inner": 1,
+    "baseEqualsHead": true
+   },
+   {
+    "inner": 10,
+    "baseEqualsHead": true
+   },
+   {
+    "inner": 1000,
+    "baseEqualsHead": true
+   },
+   {
+    "inner": 125705,
+    "baseEqualsHead": true
+   },
+   {
+    "inner": 201128,
+    "baseEqualsHead": true
+   }
+  ],
+  "beyond": [
+   {
+    "bullets": 251411,
+    "bytes": 1005719,
+    "base": "extracted",
+    "head": "extracted, 251411 items, denominator 251411",
+    "headKeepsEveryItem": true
+   },
+   {
+    "bullets": 200000,
+    "bytes": 800075,
+    "base": "extracted",
+    "head": "extracted, 200000 items, denominator 200000",
+    "headKeepsEveryItem": true
+   },
+   {
+    "bullets": 400000,
+    "bytes": 1600075,
+    "base": "RangeError: Maximum call stack size exceeded",
+    "head": "extracted, 400000 items, denominator 400000",
+    "headKeepsEveryItem": true
+   }
+  ]
+ },
+ "failures": []
+}

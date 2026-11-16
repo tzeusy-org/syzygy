@@ -1,0 +1,10 @@
+shared paths: 9
+AGENTS.md: A [(183, 183)] | B [(275, 276)] | disjoint
+apps/three-surface-poc/package.json: A [(16, 16)] | B [(13, 13)] | disjoint
+apps/three-surface-poc/src/git-observation.ts: A [(1, 1), (4, 4), (83, 83)] | B [(183, 183)] | disjoint
+apps/three-surface-poc/src/poc-main.ts: A [(1, 1), (11, 11), (163, 163)] | B [(7, 7), (226, 235)] | disjoint
+apps/three-surface-poc/src/polaris.ts: A [(1, 2), (35, 35), (731, 731)] | B [(5, 5)] | disjoint
+apps/three-surface-poc/tsconfig.json: A [(22, 22)] | B [(14, 14)] | disjoint
+package-lock.json: A [(36, 36), (887, 887), (1746, 1746), (1754, 1754), (1758, 1758), (1765, 1765)] | B [(25, 25), (34, 34), (875, 875), (1733, 1733), (1739, 1739)] | disjoint
+package.json: A [(14, 15), (27, 27)] | B [(14, 15), (27, 27)] | SAME/ADJACENT LINES [((14, 15), (14, 15)), ((27, 27), (27, 27))]
+vitest.config.ts: A [(6, 6), (33, 33)] | B [(21, 21), (68, 68)] | disjoint

@@ -1,0 +1,179 @@
+{
+ "tool": "my_mutants_r3.py",
+ "assembler": "docs/evidence/scratch-prefix-census-2026-10-23/assemble_census.py at 367dbb7b",
+ "mutants": {
+  "r3-long-gap-strict-threshold": {
+   "old": "is_long = lambda earlier, later: round(later - earlier, 2) >= 2 * interval",
+   "new": "is_long = lambda earlier, later: round(later - earlier, 2) > 2 * interval",
+   "killedByTheFixture": false,
+   "fixtureExit": 0,
+   "diverges": [],
+   "effectOnTheRecord": {
+    "paths": 88,
+    "firstPaths": [
+     "/exposureRanking/longGapsInTheTrace/gapsOfTwoIntervalsOrMore/gaps",
+     "/exposureRanking/longGapsInTheTrace/gapsOfTwoIntervalsOrMore/namesCreatedInside",
+     "/exposureRanking/longGapsInTheTrace/gapsOfTwoIntervalsOrMore/ofThemEverSampled",
+     "/exposureRanking/longGapsInTheTrace/gapsOfTwoIntervalsOrMore/perGap[10]/from",
+     "/exposureRanking/longGapsInTheTrace/gapsOfTwoIntervalsOrMore/perGap[10]/namesCreatedInside",
+     "/exposureRanking/longGapsInTheTrace/gapsOfTwoIntervalsOrMore/perGap[10]/ofThemEverSampled",
+     "/exposureRanking/longGapsInTheTrace/gapsOfTwoIntervalsOrMore/perGap[10]/seconds",
+     "/exposureRanking/longGapsInTheTrace/gapsOfTwoIntervalsOrMore/perGap[10]/to",
+     "/exposureRanking/longGapsInTheTrace/gapsOfTwoIntervalsOrMore/perGap[11]/from",
+     "/exposureRanking/longGapsInTheTrace/gapsOfTwoIntervalsOrMore/perGap[11]/namesCreatedInside",
+     "/exposureRanking/longGapsInTheTrace/gapsOfTwoIntervalsOrMore/perGap[11]/ofThemEverSampled",
+     "/exposureRanking/longGapsInTheTrace/gapsOfTwoIntervalsOrMore/perGap[11]/seconds"
+    ]
+   }
+  },
+  "r3-trace-offset-wrong-sign": {
+   "old": "created = {name: row['t'] / 1000 - offset for name, row in first_row.items()}",
+   "new": "created = {name: row['t'] / 1000 + offset for name, row in first_row.items()}",
+   "killedByTheFixture": true,
+   "fixtureExit": 0,
+   "diverges": [
+    "aggregate: longGaps"
+   ],
+   "effectOnTheRecord": {
+    "paths": 58,
+    "firstPaths": [
+     "/exposureRanking/longGapsInTheTrace/gapsOfTwoIntervalsOrMore/namesCreatedInside",
+     "/exposureRanking/longGapsInTheTrace/gapsOfTwoIntervalsOrMore/ofThemEverSampled",
+     "/exposureRanking/longGapsInTheTrace/gapsOfTwoIntervalsOrMore/perGap[10]/namesCreatedInside",
+     "/exposureRanking/longGapsInTheTrace/gapsOfTwoIntervalsOrMore/perGap[1]/namesCreatedInside",
+     "/exposureRanking/longGapsInTheTrace/gapsOfTwoIntervalsOrMore/perGap[1]/ofThemEverSampled",
+     "/exposureRanking/longGapsInTheTrace/gapsOfTwoIntervalsOrMore/perGap[2]/namesCreatedInside",
+     "/exposureRanking/longGapsInTheTrace/gapsOfTwoIntervalsOrMore/perGap[2]/ofThemEverSampled",
+     "/exposureRanking/longGapsInTheTrace/gapsOfTwoIntervalsOrMore/perGap[3]/namesCreatedInside",
+     "/exposureRanking/longGapsInTheTrace/gapsOfTwoIntervalsOrMore/perGap[3]/ofThemEverSampled",
+     "/exposureRanking/longGapsInTheTrace/gapsOfTwoIntervalsOrMore/perGap[4]/namesCreatedInside",
+     "/exposureRanking/longGapsInTheTrace/gapsOfTwoIntervalsOrMore/perGap[4]/ofThemEverSampled",
+     "/exposureRanking/longGapsInTheTrace/gapsOfTwoIntervalsOrMore/perGap[5]/namesCreatedInside"
+    ]
+   }
+  },
+  "r3-offset-is-the-upper-bound": {
+   "old": "offset = (lower + upper) / 2",
+   "new": "offset = upper",
+   "killedByTheFixture": true,
+   "fixtureExit": 0,
+   "diverges": [
+    "aggregate: longGaps"
+   ],
+   "effectOnTheRecord": {
+    "paths": 5,
+    "firstPaths": [
+     "/exposureRanking/longGapsInTheTrace/clockOffsetSeconds",
+     "/exposureRanking/longGapsInTheTrace/gapsOfTwoIntervalsOrMore/namesCreatedInside",
+     "/exposureRanking/longGapsInTheTrace/gapsOfTwoIntervalsOrMore/perGap[8]/namesCreatedInside",
+     "/exposureRanking/longGapsInTheTrace/shorterGaps/namesCreatedInside",
+     "/exposureRanking/meaning"
+    ]
+   }
+  },
+  "r3-start-instant-dropped": {
+   "old": "known = sorted({seen[edge] for seen in entries.values() for edge in ('first', 'last')} | {0.0})",
+   "new": "known = sorted({seen[edge] for seen in entries.values() for edge in ('first', 'last')})",
+   "killedByTheFixture": true,
+   "fixtureExit": 0,
+   "diverges": [
+    "aggregate: longGaps"
+   ],
+   "effectOnTheRecord": {
+    "paths": 3,
+    "firstPaths": [
+     "/exposureRanking/longGapsInTheTrace/shorterGaps/gaps",
+     "/exposureRanking/longGapsInTheTrace/shorterGaps/seconds",
+     "/exposureRanking/meaning"
+    ]
+   }
+  },
+  "r3-gap-membership-closed-at-the-start": {
+   "old": "inside = [name for name, made in created.items() if earlier < made <= later]",
+   "new": "inside = [name for name, made in created.items() if earlier <= made < later]",
+   "killedByTheFixture": false,
+   "fixtureExit": 0,
+   "diverges": [],
+   "effectOnTheRecord": {
+    "paths": 0,
+    "firstPaths": []
+   }
+  },
+  "r3-gap-before-the-first-sighting-is-the-sighting-itself": {
+   "old": "        before = known[max(bisect.bisect_left(known, first) - 1, 0)]\n        after = bisect.bisect_right(known, last)",
+   "new": "        before = known[max(bisect.bisect_right(known, first) - 1, 0)]\n        after = bisect.bisect_right(known, last)",
+   "killedByTheFixture": true,
+   "fixtureExit": 0,
+   "diverges": [
+    "aggregate: longGaps"
+   ],
+   "effectOnTheRecord": {
+    "paths": 32,
+    "firstPaths": [
+     "/exposureRanking/longGapsInTheTrace/publishedClassesThatDependOnThem/dossier-origin-/names",
+     "/exposureRanking/longGapsInTheTrace/publishedClassesThatDependOnThem/dossier-origin-/neverSampledCreatedInALongGap",
+     "/exposureRanking/longGapsInTheTrace/publishedClassesThatDependOnThem/dossier-origin-/sampledWithALongGapBesideItsSightings",
+     "/exposureRanking/longGapsInTheTrace/publishedClassesThatDependOnThem/syzygy-poc-browser-/names",
+     "/exposureRanking/longGapsInTheTrace/publishedClassesThatDependOnThem/syzygy-poc-browser-/neverSampledCreatedInALongGap",
+     "/exposureRanking/longGapsInTheTrace/publishedClassesThatDependOnThem/syzygy-poc-browser-/sampledWithALongGapBesideItsSightings",
+     "/exposureRanking/longGapsInTheTrace/publishedClassesThatDependOnThem/syzygy-poc-surface-fixture-p<pid>-n<ns>-/sampledWithALongGapBesideItsSightings",
+     "/exposureRanking/longGapsInTheTrace/publishedClassesThatDependOnThem/syzygy-poc-surface-fixture-template-p<pid>-n<ns>-/sampledWithALongGapBesideItsSightings",
+     "/exposureRanking/longGapsInTheTrace/publishedClassesThatDoNot[10]",
+     "/exposureRanking/longGapsInTheTrace/publishedClassesThatDoNot[11]",
+     "/exposureRanking/longGapsInTheTrace/publishedClassesThatDoNot[12]",
+     "/exposureRanking/longGapsInTheTrace/publishedClassesThatDoNot[13]"
+    ]
+   }
+  },
+  "r3-dependent-needs-both-reasons": {
+   "old": "if slot['neverSampledCreatedInALongGap'] or slot['sampledWithALongGapBesideItsSightings']}",
+   "new": "if slot['neverSampledCreatedInALongGap'] and slot['sampledWithALongGapBesideItsSightings']}",
+   "killedByTheFixture": true,
+   "fixtureExit": 0,
+   "diverges": [
+    "aggregate: longGaps"
+   ],
+   "effectOnTheRecord": {
+    "paths": 50,
+    "firstPaths": [
+     "/exposureRanking/longGapsInTheTrace/publishedClassesThatDependOnThem/dossier-gate-acts-/names",
+     "/exposureRanking/longGapsInTheTrace/publishedClassesThatDependOnThem/dossier-gate-acts-/neverSampledCreatedInALongGap",
+     "/exposureRanking/longGapsInTheTrace/publishedClassesThatDependOnThem/dossier-gate-acts-/sampledWithALongGapBesideItsSightings",
+     "/exposureRanking/longGapsInTheTrace/publishedClassesThatDependOnThem/dossier-origin-/names",
+     "/exposureRanking/longGapsInTheTrace/publishedClassesThatDependOnThem/dossier-origin-/neverSampledCreatedInALongGap",
+     "/exposureRanking/longGapsInTheTrace/publishedClassesThatDependOnThem/dossier-origin-/sampledWithALongGapBesideItsSightings",
+     "/exposureRanking/longGapsInTheTrace/publishedClassesThatDependOnThem/dossier-records-/names",
+     "/exposureRanking/longGapsInTheTrace/publishedClassesThatDependOnThem/dossier-records-/neverSampledCreatedInALongGap",
+     "/exposureRanking/longGapsInTheTrace/publishedClassesThatDependOnThem/dossier-records-/sampledWithALongGapBesideItsSightings",
+     "/exposureRanking/longGapsInTheTrace/publishedClassesThatDependOnThem/dossier-state-/names",
+     "/exposureRanking/longGapsInTheTrace/publishedClassesThatDependOnThem/dossier-state-/neverSampledCreatedInALongGap",
+     "/exposureRanking/longGapsInTheTrace/publishedClassesThatDependOnThem/dossier-state-/sampledWithALongGapBesideItsSightings"
+    ]
+   }
+  },
+  "r3-published-filter-dropped": {
+   "old": "        if cls not in published:\n            continue\n        slot = by_class",
+   "new": "        slot = by_class",
+   "killedByTheFixture": false,
+   "fixtureExit": 0,
+   "diverges": [],
+   "effectOnTheRecord": {
+    "paths": 157,
+    "firstPaths": [
+     "/exposureRanking/longGapsInTheTrace/publishedClassesThatDependOnThem/dossier-brief-/names",
+     "/exposureRanking/longGapsInTheTrace/publishedClassesThatDependOnThem/dossier-brief-/neverSampledCreatedInALongGap",
+     "/exposureRanking/longGapsInTheTrace/publishedClassesThatDependOnThem/dossier-brief-/sampledWithALongGapBesideItsSightings",
+     "/exposureRanking/longGapsInTheTrace/publishedClassesThatDependOnThem/dossier-choice-/names",
+     "/exposureRanking/longGapsInTheTrace/publishedClassesThatDependOnThem/dossier-choice-/neverSampledCreatedInALongGap",
+     "/exposureRanking/longGapsInTheTrace/publishedClassesThatDependOnThem/dossier-choice-/sampledWithALongGapBesideItsSightings",
+     "/exposureRanking/longGapsInTheTrace/publishedClassesThatDependOnThem/dossier-cli-/names",
+     "/exposureRanking/longGapsInTheTrace/publishedClassesThatDependOnThem/dossier-cli-/neverSampledCreatedInALongGap",
+     "/exposureRanking/longGapsInTheTrace/publishedClassesThatDependOnThem/dossier-cli-/sampledWithALongGapBesideItsSightings",
+     "/exposureRanking/longGapsInTheTrace/publishedClassesThatDependOnThem/dossier-cred-/names",
+     "/exposureRanking/longGapsInTheTrace/publishedClassesThatDependOnThem/dossier-cred-/neverSampledCreatedInALongGap",
+     "/exposureRanking/longGapsInTheTrace/publishedClassesThatDependOnThem/dossier-cred-/sampledWithALongGapBesideItsSightings"
+    ]
+   }
+  }
+ }
+}

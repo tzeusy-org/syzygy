@@ -1,0 +1,5 @@
+S1-object-reader-keeps-bom killed by probe ["Test Files  246 passed | 3 skipped (249)", "Tests  5368 passed | 5 skipped (5373)"] {"object-reader": 176}
+S2-seed-reader-keeps-bom killed by probe ["Test Files  246 passed | 3 skipped (249)", "Tests  5368 passed | 5 skipped (5373)"] {"seed-reader": 176}
+S4-seed-reader-refusal-reason killed by probe ["Test Files  246 passed | 3 skipped (249)", "Tests  5368 passed | 5 skipped (5373)"] {"seed-reader": 761}
+S9-git-text-keeps-bom killed by probe ["Test Files  246 passed | 3 skipped (249)", "Tests  5368 passed | 5 skipped (5373)"] {"observe-ls-tree": 192}
+done 4

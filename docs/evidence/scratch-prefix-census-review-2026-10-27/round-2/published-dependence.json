@@ -1,0 +1,143 @@
+{
+ "publishedClasses": 34,
+ "mkdtempPublished": 30,
+ "dependOnTheLongGaps": 7,
+ "dependent": {
+  "dossier-gate-acts-": {
+   "where": [
+    "exposureRanking.top",
+    "leftBySIGKILL"
+   ],
+   "names": 143,
+   "neverSampledCreatedInALongGap": 1,
+   "sampledWithAnEdgeOnALongGap": 0
+  },
+  "dossier-origin-": {
+   "where": [
+    "leftBySIGKILL"
+   ],
+   "names": 1,
+   "neverSampledCreatedInALongGap": 0,
+   "sampledWithAnEdgeOnALongGap": 1
+  },
+  "dossier-records-": {
+   "where": [
+    "exposureRanking.top",
+    "leftBySIGKILL"
+   ],
+   "names": 164,
+   "neverSampledCreatedInALongGap": 2,
+   "sampledWithAnEdgeOnALongGap": 0
+  },
+  "dossier-state-": {
+   "where": [
+    "exposureRanking.top",
+    "leftBySIGKILL"
+   ],
+   "names": 157,
+   "neverSampledCreatedInALongGap": 13,
+   "sampledWithAnEdgeOnALongGap": 0
+  },
+  "syzygy-poc-browser-": {
+   "where": [
+    "exposureRanking.top",
+    "leftBySIGKILL",
+    "namedInTheBeadObservation"
+   ],
+   "names": 12,
+   "neverSampledCreatedInALongGap": 0,
+   "sampledWithAnEdgeOnALongGap": 1
+  },
+  "syzygy-poc-surface-fixture-p<pid>-n<ns>-": {
+   "where": [
+    "exposureRanking.top",
+    "leftBySIGKILL",
+    "namedInTheBeadObservation"
+   ],
+   "names": 398,
+   "neverSampledCreatedInALongGap": 5,
+   "sampledWithAnEdgeOnALongGap": 23
+  },
+  "syzygy-poc-surface-fixture-template-p<pid>-n<ns>-": {
+   "where": [
+    "exposureRanking.top",
+    "leftBySIGKILL"
+   ],
+   "names": 44,
+   "neverSampledCreatedInALongGap": 0,
+   "sampledWithAnEdgeOnALongGap": 12
+  }
+ },
+ "theFive": {
+  "syzygy-public-screen-": {
+   "where": [
+    "namedInTheBeadObservation"
+   ],
+   "names": 12,
+   "neverSampledCreatedInALongGap": 0,
+   "sampledWithAnEdgeOnALongGap": 0
+  },
+  "syzygy-trigger-": {
+   "where": [
+    "namedInTheBeadObservation"
+   ],
+   "names": 35,
+   "neverSampledCreatedInALongGap": 0,
+   "sampledWithAnEdgeOnALongGap": 0
+  },
+  "syzygy-dossier-src-": {
+   "where": [
+    "namedInTheBeadObservation"
+   ],
+   "names": 33,
+   "neverSampledCreatedInALongGap": 0,
+   "sampledWithAnEdgeOnALongGap": 0
+  },
+  "syzygy-trigger-repo-": {
+   "where": [
+    "namedInTheBeadObservation"
+   ],
+   "names": 1,
+   "neverSampledCreatedInALongGap": 0,
+   "sampledWithAnEdgeOnALongGap": 0
+  },
+  "syzygy-poc-surface-state-": {
+   "where": [
+    "namedInTheBeadObservation"
+   ],
+   "names": 4,
+   "neverSampledCreatedInALongGap": 0,
+   "sampledWithAnEdgeOnALongGap": 0
+  }
+ },
+ "shapeClasses": {
+  "chrome-singleton-directory": {
+   "where": [
+    "exposureRanking.top",
+    "leftBySIGKILL",
+    "namedInTheBeadObservation"
+   ],
+   "note": "not a mkdtemp class (classed by shape); its names have no trace time"
+  },
+  "nanoid-21": {
+   "where": [
+    "exposureRanking.top",
+    "leftBySIGKILL"
+   ],
+   "note": "not a mkdtemp class (classed by shape); its names have no trace time"
+  },
+  "node-compile-cache": {
+   "where": [
+    "exposureRanking.top",
+    "leftBySIGKILL"
+   ],
+   "note": "not a mkdtemp class (classed by shape); its names have no trace time"
+  },
+  "syzygy-poc-restart-<n>-<n>.lock": {
+   "where": [
+    "leftBySIGKILL"
+   ],
+   "note": "not a mkdtemp class (classed by shape); its names have no trace time"
+  }
+ }
+}

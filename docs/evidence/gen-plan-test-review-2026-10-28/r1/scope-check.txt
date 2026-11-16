@@ -1,0 +1,16 @@
+changed paths 81862261..02eb444f: 4
+  M	apps/three-surface-poc/src/polaris-generation/generation-mutation.test.ts
+  M	apps/three-surface-poc/src/polaris-generation/generation-mutation.ts
+  A	docs/evidence/syzygy-vsqr/test-mutants.json
+  A	docs/evidence/syzygy-vsqr/test_mutants.py
+runner changed: False
+gate workflow changed: False
+paths under packages/polaris-generation-core/src/: 0 []
+second method (git diff -- <those paths>): 0 []
+plan raw bytes equal: False
+plan emit (removeComments) equal: True 6c72c0beac9c65dfcf768e246991a46bc8def60c79f2cb365a51c1ced81d5374 6c72c0beac9c65dfcf768e246991a46bc8def60c79f2cb365a51c1ced81d5374
+plan changed lines: 4
+  -// Hand-listed semantic mutations, three per subject file, each disabling one
+  -// fail-closed guard the existing test suites already exercise.
+  +// Hand-listed semantic mutations, grouped by the file they target, each
+  +// disabling one fail-closed guard the existing test suites already exercise.

@@ -1,0 +1,58 @@
+{
+  "schema": "workspace-precondition-review-retention/1",
+  "recordedAt": "2026-11-06T05:48:15.615922+00:00",
+  "reviewedSubject": "28974159be145348f5bf36cc75db3b92f84cee3f",
+  "sourceIssue": "syzygy-bpyt.58",
+  "reviewIssue": "syzygy-3o0y",
+  "PR": 771,
+  "raw": {
+    "path": "docs/reviews/R-GP-IMPL-WORKSPACE-PRECONDITIONS-1-RAW.md",
+    "bytes": 23380,
+    "sha256": "13dcb15df5362fa28bda6c12713ca5571f9850d7d7b9046d15af36214f100752",
+    "verdict": "CONFIRM WITH EXCEPTIONS"
+  },
+  "frozenPackets": [
+    {
+      "root": "/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106",
+      "manifestSha256": "38a5f3c53ba978f2ef7283390ec067e81d0ab88a1c96a459c8ea134613beb523",
+      "files": 752,
+      "bytes": 50337384,
+      "pythonLengthSha256": "pass",
+      "nativeWcSha256sum": "pass"
+    },
+    {
+      "root": "/home/orca/.tmp/syzygy-pr771-full-independent-review-20261106",
+      "manifestSha256": "80c1a097d6432ae1c17357027c607c5f57e70fce4e412ae5acf44b05fcd454d5",
+      "files": 126,
+      "bytes": 10429175,
+      "pythonLengthSha256": "pass",
+      "nativeWcSha256sum": "pass"
+    }
+  ],
+  "scope": "Whole original 17 obligations and 14 acceptance criteria. Class 4 retained; all seven classes and floors assessed in the retained review. Retention only, with no semantic source changes.",
+  "rootNotesDisposition": {
+    "subject": "28974159be145348f5bf36cc75db3b92f84cee3f",
+    "verdict": "CONFIRM WITH EXCEPTIONS",
+    "class": 4,
+    "whole": "17originalobligations/14AC",
+    "notes": {
+      "N1": "Retain original120summary vs separate120completechildoutputs; supplemental adequate under independentAC11 ruling, never recovered original or runtimeauthentication.",
+      "N2": "Original optional117/118FAILED and separate1PASS/8filtered diagnostic remain; actualloadcauseUnknown; no sourcefix/timeoutwidening/newquestion.",
+      "N3": "Sixsuite skips/21WARN, command88 appliedfixture set unexecuted and missing pins-after-tree-framing-repin-acts branch unexecuted, current102mutants killed; preserve scoped nonexecution.",
+      "N4": "Standalone S10/reach guards keep residual behavior; whole passing suite prerequisite is the newmanifest invariant; no standalone/runtimegate claim."
+    },
+    "no_source_finding": true,
+    "no_owner_waiver": true
+  },
+  "testDelta": {
+    "original": "Tests: +1 ~0 -0",
+    "retention": "Tests: +0 ~0 -0"
+  },
+  "remaining": [
+    "Fresh independent review of resulting changed head under canonical review issue syzygy-3o0y",
+    "ROOT final notes disposition and actual nonblocking GP-Q0 cycle notice",
+    "Current required hosted integration and protected landing",
+    "ROOT whole issue closure"
+  ],
+  "assuranceBoundary": "Standalone reach/S10 guard residuals are unchanged; the new invariant is a prerequisite to a complete passing suite. Later full checks and byte captures are separately identified executions, never recovery or authentication of earlier suppressed streams."
+}

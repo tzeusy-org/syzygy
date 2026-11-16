@@ -1,0 +1,69 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject
+
+ ❯ |unit| packages/polaris-generation-core/src/island-boundary.test.ts (9 tests | 2 failed) 3402ms
+   ✓ the live Node entries and the parked provider island > lists twenty-four island modules, each a file in the tree 4ms
+   × the live Node entries and the parked provider island > admits transitive island ingress only from the island and exact parked remainder 1835ms
+     → 280 production sources: unsupported loaders: expected [ Array(1) ] to deeply equal []
+   × the live Node entries and the parked provider island > resolves every workspace import both entries reach, dynamic ones included 728ms
+     → apps/syzygy/src/main.ts: unsupported loader forms
+apps/syzygy/src/main.ts: apps/syzygy/src/main.ts:271:80 require/createRequire call: auditMake(import.meta.url): expected [ Array(1) ] to deeply equal []
+   ✓ the live Node entries and the parked provider island > reaches no island module from either live entry  667ms
+   ✓ the live Node entries and the parked provider island > reaches the island from the consent package root, which neither live entry imports 160ms
+   ✓ the live Node entries and the parked provider island > refuses computed import arguments, including template expressions 2ms
+   ✓ the live Node entries and the parked provider island > refuses require calls and import-equals loaders 1ms
+   ✓ the live Node entries and the parked provider island > refuses createRequire calls, including imported aliases and module properties 3ms
+   ✓ the live Node entries and the parked provider island > follows a no-substitution template and the existing static, type and literal dynamic forms 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |unit| packages/polaris-generation-core/src/island-boundary.test.ts > the live Node entries and the parked provider island > admits transitive island ingress only from the island and exact parked remainder
+AssertionError: 280 production sources: unsupported loaders: expected [ Array(1) ] to deeply equal []
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- [][39m
+[31m+ [[39m
+[31m+   "apps/syzygy/src/main.ts: apps/syzygy/src/main.ts:271:80 require/createRequire call: auditMake(import.meta.url)",[39m
+[31m+ ][39m
+
+ ❯ packages/polaris-generation-core/src/island-boundary.test.ts:188:103
+    186|     }
+    187|     expect(population.length, 'production-source enumeration must not …
+    188|     expect([...new Set(unsupported)], `${population.length} production…
+       |                                                                                                       ^
+    189|     expect([...new Set(unresolved)], `${population.length} production …
+    190|     expect(violations, `${population.length} production sources: unlis…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  |unit| packages/polaris-generation-core/src/island-boundary.test.ts > the live Node entries and the parked provider island > resolves every workspace import both entries reach, dynamic ones included
+AssertionError: apps/syzygy/src/main.ts: unsupported loader forms
+apps/syzygy/src/main.ts: apps/syzygy/src/main.ts:271:80 require/createRequire call: auditMake(import.meta.url): expected [ Array(1) ] to deeply equal []
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- [][39m
+[31m+ [[39m
+[31m+   "apps/syzygy/src/main.ts: apps/syzygy/src/main.ts:271:80 require/createRequire call: auditMake(import.meta.url)",[39m
+[31m+ ][39m
+
+ ❯ packages/polaris-generation-core/src/island-boundary.test.ts:196:92
+    194|     for (const entry of ENTRIES) {
+    195|       const { reachable, unresolved, unsupported } = reach(entry);
+    196|       expect(unsupported, `${entry}: unsupported loader forms\n${unsup…
+       |                                                                                            ^
+    197|       expect(unresolved, `${entry}: unresolved workspace imports\n${un…
+    198|       if (entry === ENTRIES[0]) {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 7 passed (9)
+   Start at  16:12:35
+   Duration  4.29s (transform 87ms, setup 27ms, collect 455ms, tests 3.40s, environment 0ms, prepare 64ms)
+
+JSON report written to /home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-dynamic-module-entry-0-new.vitest.json

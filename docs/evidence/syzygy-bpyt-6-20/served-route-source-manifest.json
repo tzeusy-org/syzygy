@@ -1,0 +1,1015 @@
+{
+  "sourceSubjectCommit": "cb25772f98b763c81714da46580ff8921bed989e",
+  "baselineCommit": "f5487c186626513724e1eff28a2789a4d78c154c",
+  "observedAt": "2026-11-03T06:58:26Z",
+  "sourceRowDenominator": 239,
+  "sources": {
+    "old": [
+      {
+        "path": "packages/three-surface-poc-core/src/code-structure.ts",
+        "sha256": "ed623b7076f232447c7073e0595bc080a66c4ed7fda38313b552f75b3233a43c"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/worker-change-observation.ts",
+        "sha256": "547d1d52e59a3c2150f9c2e45c45404096509be700e8210fc899989dbe62f8e7"
+      },
+      {
+        "path": "apps/three-surface-poc/src/test-model-fixture.ts",
+        "sha256": "e93ef0771505f9efca9a155c5fccb27f06b02b5535ec75011956203892940626"
+      },
+      {
+        "path": "apps/three-surface-poc/src/polaris-parity-sweep.test.ts",
+        "sha256": "bc2bb22653b985dcadcfb4577bb104c7110263c4ee3fe7176543ff8f84c1cdd0",
+        "role": "virtual parity oracle prelude"
+      },
+      {
+        "path": "apps/three-surface-poc/src/git-observation.ts",
+        "sha256": "dfe1e173deb17ac96c9cf2420c676f6e81a615271efec2f58bbd2bed5872ea52"
+      },
+      {
+        "path": "apps/three-surface-poc/src/governance-inputs.ts",
+        "sha256": "f8c860d7a5a96de953f3d633911b98f065d6b182ea77b59358b657e8a36a2fbf"
+      },
+      {
+        "path": "apps/three-surface-poc/src/test-project-shape-fixture.ts",
+        "sha256": "c46145749d9f03747f230cf6882e58e9baf04b77a6566ab73adb1626c7fe7e76"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/index.ts",
+        "sha256": "34601bba8c9702370f632d6f5cc5e1871490d53bef4c0ed5d87c78a8014a430b"
+      },
+      {
+        "path": "apps/three-surface-poc/src/routes.ts",
+        "sha256": "648a556a49f18a9f0f8345f916cbb7f2a73bdbfc8b700aba5de7a27029ab25e0"
+      },
+      {
+        "path": "apps/three-surface-poc/src/verbatim-route.ts",
+        "sha256": "5f007660acee4dfe17a99dc6517330a63f65dde110d3e30eb1bbdbb17a9bde94"
+      },
+      {
+        "path": "apps/three-surface-poc/src/polaris.ts",
+        "sha256": "a831144b75ec4d01b83e78280979bec76f9307ecdc2157c6082e066836064a18"
+      },
+      {
+        "path": "apps/three-surface-poc/src/governance-inputs.test.ts",
+        "sha256": "ce49556931fe0884c1f669b97aad181592c26b290aa08f6b01346dd276bf1f8e",
+        "role": "virtual authority corpus prelude"
+      },
+      {
+        "path": "apps/three-surface-poc/src/walkthrough-inputs.ts",
+        "sha256": "596361b7ef66c9126079a80bc9dfb2628c9d3b0a8c0b41e3f385b88dc39823ad"
+      },
+      {
+        "path": "apps/three-surface-poc/src/fixture-directories.ts",
+        "sha256": "df5a319e02b9bbc3294bf0b0b90a987ecea86bfd219a41d0341855a3e9dc5ada"
+      },
+      {
+        "path": "packages/support/src/index.ts",
+        "sha256": "d6a036d587831989bc650646ff0222828ebbcd947f667a2d616980fd40fdd853"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+        "sha256": "f5d700fd2d427ed123c3045525a70559926a654d82a972e783afc2452140fb4e"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/git-tree.ts",
+        "sha256": "731166b4899542fbb290574d84ba8bf169417a4e6fbb068031772394635713f5"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/model.ts",
+        "sha256": "f4791a12179830194c3f958b04dfa6945fb7713f85bd58fe88f0984727eafc72"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/trajectory-projection.ts",
+        "sha256": "b70f7461ab247679550fc6c30ea8b70ae03459c1cc2dacf877baa6b7cf5de034"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/poc-seeds.ts",
+        "sha256": "0e7ad1f10a7989f7d1db0a48db6e5d73218c09639a71b9d4f51126205e14fcd3"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/orrery-projection.ts",
+        "sha256": "a127aa14e793eb1791c542b00ca59ae623adb6a55eb6d59eb6ef5c9165eb90a3"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/work-items.ts",
+        "sha256": "3af93a152568d67b0cfe0f84db74e3bd86407c6b028c1ffb1caa62b2ec1d7a77"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/git-object-reader.ts",
+        "sha256": "ddd0fd1f976adc5779b40b8f14f072fc429ac9ddf321fe0b1bb7ecb791119dee"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/effect-authority.ts",
+        "sha256": "bea910d84ba236ac2b28c6423d07b6f9a3976f297734ca79c01708e8638476a1"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/materialization.ts",
+        "sha256": "3e88cf99a2b9ad29c5a43c4a9dc96586f5ca30509b02342106432c5e0afcb8e3"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/test-artifact-verification.ts",
+        "sha256": "5d5cf4fd8601178882613cf69b8e2903ecb910ab3a5855c6ad480bb03adb9700"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/owner-act-record.ts",
+        "sha256": "c03fb6a01f770b3853ba52fd1517586bc7153147e0b2fd56b58e717f5f43834e"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+        "sha256": "d67701458e70fa54133d99e72a3cc0cfb356900f278da2d5acc6dc0529fa5762"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/evidence-population.ts",
+        "sha256": "d71cdd3a7a9a36d5416885c8f9e6925066b8baaa755e8bda8cba768e34007361"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/content-classification.ts",
+        "sha256": "9a2d3fc55714e6c6bffcaf16cdbda2761810211f06d72dae883e7dcd0971919e"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/owner-act-drafter.ts",
+        "sha256": "d29e5183e763ad087a8c6ce597a8dfe9633c9b1d11b7361121507a2cd7855570"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+        "sha256": "eb2bea76eec75516210d19c1a91ab28ba952523d0a3add97fdebe6cd4a0b6ffe"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+        "sha256": "31a4d436bff9e1934fb2783a852f836ecf1079a3d8e411a05d6ab4f7a365e61a"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/resource-ledger.ts",
+        "sha256": "66944f8c7712610d4c4f46a367d3e35f541dd9c36e4e644e975044bdda10391d"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/transient-bodies.ts",
+        "sha256": "ca1b2734edfd91b60c834bf6bb31f090f13ef626025ee1c2a0192c33f9d93bfb"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/project-shape-coverage.ts",
+        "sha256": "365cd2067c6d77a144f107403fb794aa61bf4b568a9794def5edf6112ed4e7a0"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/resource-headroom.ts",
+        "sha256": "3a4f327de80d16296d84c2b7e5708124207ae5153901c1817d75861022daccc3"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/body-read-authority.ts",
+        "sha256": "7c6311023e696f74a94ff1b05c45981be9ce274e93372f1eed5103d422840153"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/walkthrough-readiness.ts",
+        "sha256": "4442d565502c604c61014055a0eabb71e7a2134dc48b1011d781c8732b6eeeb3"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/project-shape-model.ts",
+        "sha256": "0f6129a3dd59f6d59cc8f4e188a70f5f13554a7e1e5261fa5d6006cbd8c3a2e2"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/authority-disclosure.ts",
+        "sha256": "47a6ff721b2ff24221a7a10131e7694505d32ba838ed5fba468b3ad23854c877"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/walkthrough-judgment.ts",
+        "sha256": "b6f6bf29b1d8aeb7657c65cdb80a8b14e22955fd78a983a6ed058cd5f95c2c38"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/proposed-work.ts",
+        "sha256": "b0cadae00a651be032136f01281e97bc02a5d446bad03aefa834668dcae0bff4"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/response-identity.ts",
+        "sha256": "9767e250af7a8aaa5007d44ad0ebab850efe9be54bbebbf995c150b42b737c7e"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/reevaluation.ts",
+        "sha256": "af29e8680b4bf43ff0146af99bb9f21e85a143dcdc8d4a5d69804170cc0254e5"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/project-shape-observer.ts",
+        "sha256": "be9c4475c58c98c1fad62058d133f5944f01590d99ef3f82be3f97831cccc2ff"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+        "sha256": "c37a75add8ddb02350282f0e5b67641fbb6aba1da267ff90846f50463c477c24"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/fixtures/synthetic-corpora.ts",
+        "sha256": "a5bff51c0d50fb1dc508107792c6e4c4249c779e0bf8cadf54fd7ea26f9a95c4"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/pwb-types.ts",
+        "sha256": "21029d959cdfd603daa9db5a9b9ada58994adf409df73ea616118fb5aceb5290"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/synthetic-corpus-coverage.ts",
+        "sha256": "54377a398c4774aeadac187693fdae0cc42988db1af6dea039a59fd4ebdbd041"
+      },
+      {
+        "path": "apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts",
+        "sha256": "732b1094f904263af7d0449eed38f0d9ea0718cb9afda47fa6a799dc83c11a5a"
+      },
+      {
+        "path": "packages/support/src/deep-freeze.ts",
+        "sha256": "ea3f83d840561f130ec91080d8066359a52d61dad2b089f1fe82677f37d85149"
+      },
+      {
+        "path": "packages/support/src/sha256.ts",
+        "sha256": "9fb34e4cf7b60fa9ba45ac06bab0a95fbb3a0c1c629a38ad24e1ec05e3c765f1"
+      },
+      {
+        "path": "packages/support/src/is-record.ts",
+        "sha256": "c0474de8efc9374f8707a40dcc62af68ddddf7d10e6bd94fedb6c7c7134d1e97"
+      },
+      {
+        "path": "packages/support/src/decode-utf8.ts",
+        "sha256": "f57863901787c528672976af4efd285d6daf8d3895df9d332c28724ac435ca27"
+      },
+      {
+        "path": "packages/test-kit/src/index.ts",
+        "sha256": "8c1809437f1fb897a726850690c940e04b6e5813d4b78aed53408c2c6558e0e4"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/epistemic.ts",
+        "sha256": "184a800e758d2db0194a9f42fcfe18d2c77a007a62f1c3bbc680dd15ac3df062"
+      },
+      {
+        "path": "apps/three-surface-poc/src/git-blob-batch.ts",
+        "sha256": "74240e99c66ec0ce082bf83ebb5cfbba74e23e7605a65104cb0f1d9d90e23ed2"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/acceptance/walkthrough-acceptance.ts",
+        "sha256": "c6960c019b9fe94124e87bb09cbe26d52990f034656b3f2486a52b1da7854883"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/model-slices.ts",
+        "sha256": "6ac7ff97af8578eec9861a66be70ed5d36a0eef1927cf640b5e00cc5236d477e"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/seed-graph.ts",
+        "sha256": "2b5ec3d4995b571b64c5cebb0f53d36c726444623fa651356a2f4bfaa54b285a"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/poc-observation-error.ts",
+        "sha256": "be32556d6dab0d2dd756223bf18dacce2cb118072be0495f00dac07faddec5c4"
+      },
+      {
+        "path": "packages/test-kit/src/html-query.ts",
+        "sha256": "c28830b1e78438c5e9d00c4e27d7364fc69a8e44b5a0b8c381a80307c9c2df30"
+      },
+      {
+        "path": "packages/test-kit/src/git-repo.ts",
+        "sha256": "fd573fa688b04192ab3d6fe331c9e32ecfd8ded257f42b0ade54651b402adf49"
+      },
+      {
+        "path": "packages/test-kit/src/temp-dir.ts",
+        "sha256": "5d221d33706a41be85d3adcdde3fcdabb7decb46c29ce6d79b7c6a76f0ee541d"
+      },
+      {
+        "path": "packages/test-kit/src/blob-id.ts",
+        "sha256": "7153d7637b53ec234def0fdd329bce35077dbc1c80bed8f59d465f9dce90f7bb"
+      },
+      {
+        "path": "apps/three-surface-poc/src/polaris-generation/isolated-git.ts",
+        "sha256": "70c0eed161b449d47bcb6a5c1583366f748176f94a8aa9f626ee949da94bcb6d"
+      },
+      {
+        "path": "packages/cap1-core/src/index.ts",
+        "sha256": "01ff8cfd437ef2eeb13841e8209e4879c990ffc3a7c54a6b3f8a04b815783742"
+      },
+      {
+        "path": "apps/three-surface-poc/src/served-response-recorder.ts",
+        "sha256": "a4893f9cf6bb6eacb85d1c5237dabc9fabd56ff0ff0ee15ce658e97ec45c00f0"
+      },
+      {
+        "path": "apps/three-surface-poc/src/orrery.ts",
+        "sha256": "7d93c5113112faea2a74e52ff60e69126ccf3c9842b2976f1ac8bd90ef5671e6"
+      },
+      {
+        "path": "packages/http-host/src/index.ts",
+        "sha256": "d105369f33404d21e61a97164b545bf0ab36e8762b9a21939f2c6dbbec6b8ba6"
+      },
+      {
+        "path": "apps/three-surface-poc/src/browser-origin.ts",
+        "sha256": "5b1d5e238e86382e5858e8b9041efed0e19f753ef99bd9b5dd0e84d3871718d8"
+      },
+      {
+        "path": "apps/three-surface-poc/src/page-shell.ts",
+        "sha256": "7f1753da8f88c0788bc00f5865644c177713742504bd7a7c24cfef8703342b87"
+      },
+      {
+        "path": "apps/three-surface-poc/src/exact-tables.ts",
+        "sha256": "e79c6f7425366541082af1b3bcc778461bd5a07cb50e1e6f8608c99cc30ff4b5"
+      },
+      {
+        "path": "apps/three-surface-poc/src/polaris-source.ts",
+        "sha256": "d18cba090e871dacd6b8468f6298ca673a453b50cf91c5f012a1fe4ae5675491"
+      },
+      {
+        "path": "apps/three-surface-poc/src/tailnet.ts",
+        "sha256": "1faa833eaf0442da54c0617df12c1e9a2a75e0b078d58777417bcd7671474bd5"
+      },
+      {
+        "path": "apps/three-surface-poc/src/trajectory.ts",
+        "sha256": "afe9f0351ce3265e44024b06c7c752a59eb569c725781d49ad758f342de9d0ee"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/act-fields.ts",
+        "sha256": "dcc451e83fc1ad97ef3cc5b1cf97dd979d1fba9de4588fc841958c03e8243fef"
+      },
+      {
+        "path": "apps/three-surface-poc/src/polaris-markdown.ts",
+        "sha256": "7e70894ee6e3717ada76026004754c521858427abb14a103f591b31cd3727a21"
+      },
+      {
+        "path": "apps/three-surface-poc/src/design-tokens.ts",
+        "sha256": "97d9b3bcc30f937bc3570cc5c02fb671af1ebf68d7ccc190b10c5681453fbbec"
+      },
+      {
+        "path": "apps/three-surface-poc/src/polaris-reading.ts",
+        "sha256": "4fecd9cdb78ce3d3a9449207b1bc0b27bcc91180a322822762cb333dd5125b7f"
+      },
+      {
+        "path": "apps/three-surface-poc/src/unknown-marker.ts",
+        "sha256": "d3afe03f56f4f7716dc4dd013c62974497f9c264a12846c747e88486e64b14ce"
+      },
+      {
+        "path": "apps/three-surface-poc/src/polaris-narrative.ts",
+        "sha256": "9c7707c662bf7e42d961f0ecd0885ba4926d97b683b17a6cc6702f5e040d8b94"
+      },
+      {
+        "path": "apps/three-surface-poc/src/capability-detail.ts",
+        "sha256": "51a4453a577acd0ddc5b7a8b719aca41712f044aafeb0dca2b2c39e9cd869ffa"
+      },
+      {
+        "path": "apps/three-surface-poc/src/surface-links.ts",
+        "sha256": "2ddea40a4ff34ac8a71fa46128befc73487acfbd55197c971967df9c9f6a1de1"
+      },
+      {
+        "path": "apps/three-surface-poc/src/polaris-copy.ts",
+        "sha256": "87f2fda0b9f1e3538d50c93abb0d4b27841661060cb4fa63ec5ea267f4f055e1"
+      },
+      {
+        "path": "apps/three-surface-poc/src/polaris-opening-index.ts",
+        "sha256": "156da5627fda509452048f5d49d40e9098dd0fc540220fbc3999a5dd2960010c"
+      },
+      {
+        "path": "apps/three-surface-poc/src/polaris-reconciliation.ts",
+        "sha256": "310063203b953a45fab4105e9d02e83d4822c07d1dae8d654c4f40b9369bfa17"
+      },
+      {
+        "path": "packages/cap1-core/src/vocabulary.ts",
+        "sha256": "88f56e68c301c77bfaad78d4082ed4ebc96a19443299ff2bf6e74e985ea84e1c"
+      },
+      {
+        "path": "packages/cap1-core/src/identity.ts",
+        "sha256": "33912949ae028c29070016860fbd2468fb346275ec8e50dee11af1b37025734a"
+      },
+      {
+        "path": "packages/cap1-core/src/consent.ts",
+        "sha256": "91db8cd0be0390007a3fbac1ec4c269fd38949f535701743d13b70ddc40e9b9d"
+      },
+      {
+        "path": "packages/cap1-core/src/yaml-dialect.ts",
+        "sha256": "ce2d0eece0eb6169aec036b36e9f2275c0fac0e76793f70b7ad5a59ca5dd68cc"
+      },
+      {
+        "path": "packages/cap1-core/src/declaration.ts",
+        "sha256": "8e6d757d5c523cce80eec0ef32876d22099a7085ae2fb450646e3198f4c1238e"
+      },
+      {
+        "path": "packages/cap1-core/src/staleness.ts",
+        "sha256": "520305502eed72a3ac0c0bf3c2e05ca4ae81a031ac41b60e8f02739e7ad2b31d"
+      },
+      {
+        "path": "packages/cap1-core/src/snapshot.ts",
+        "sha256": "9cd52997ce918ede15dd50dcc7266baa9271ddd4860a55340f0a5cfa8a4c6329"
+      },
+      {
+        "path": "packages/cap1-core/src/epistemic.ts",
+        "sha256": "d8d6417fa4675ac2a927dd5e300f5f1e164ff0c7bc3eb69757e6dea4ef07f99c"
+      },
+      {
+        "path": "packages/cap1-core/src/admission.ts",
+        "sha256": "d0ef0989a524cde9d94430f3c1469a192d0a0cc9f56104c1248906a39d7495b6"
+      },
+      {
+        "path": "packages/cap1-core/src/evaluation.ts",
+        "sha256": "4628e23d38bb365aa79ed4217e38a9301eca984a9c15d24d2f79f6554a113bf0"
+      },
+      {
+        "path": "packages/cap1-core/src/coverage.ts",
+        "sha256": "c328c85f12466b1a0ec854906d2b969bfabed83023acbedf66a7ca575191789e"
+      },
+      {
+        "path": "packages/cap1-core/src/proposal.ts",
+        "sha256": "821060a306dc6f3257ff25dda8f3785b00956430524447ff105450bfa0a396df"
+      },
+      {
+        "path": "packages/cap1-core/src/parity.ts",
+        "sha256": "5ee3e595ac79e0b8284dbbf3c62fb883462e7553724ceb705158e08dbe772646"
+      },
+      {
+        "path": "packages/cap1-core/src/consent-decision.ts",
+        "sha256": "53103e7d90f12a06c7106150b6cccbad7ddd96ce70d23c8593ae16f5b1cb66b8"
+      },
+      {
+        "path": "packages/cap1-core/src/distinction.ts",
+        "sha256": "f8226c8871fb556c90154078332b34bf3e22081fd27855c72fc5de576d30a05e"
+      },
+      {
+        "path": "packages/cap1-core/src/authority.ts",
+        "sha256": "c0ffa70ac1bf32049bec408d614b3a4c8771ce826621d58524d492ba1e69608c"
+      },
+      {
+        "path": "packages/cap1-core/src/facets.ts",
+        "sha256": "ef4437388079de96ae76fa3451d21ef04006a2866469460323a477a3592f02dd"
+      },
+      {
+        "path": "packages/cap1-core/src/drawer.ts",
+        "sha256": "5e281ca094deb4f4f9507bae9d938455600d0820a21a010cf5a4d0f87e1ccac2"
+      },
+      {
+        "path": "packages/cap1-core/src/stable-identity.ts",
+        "sha256": "04b1942f8bf4aa544f093b3c24aab90b499cc071b85e11878f6b6a778abdab75"
+      },
+      {
+        "path": "packages/cap1-core/src/entry.ts",
+        "sha256": "287f28e9c5d778a24a935e55b8abf70ce793ec5c0306e20d406610ff78dfe56a"
+      },
+      {
+        "path": "packages/cap1-core/src/discoverability.ts",
+        "sha256": "cf36dd2753eacd59626d879a15d957d050f7f3b41b6887581b43b7614f295611"
+      },
+      {
+        "path": "packages/http-host/src/escape-html.ts",
+        "sha256": "51694be58420478e434bf67aa5d0d459669e35b864229d32fd2f143df57c8924"
+      },
+      {
+        "path": "packages/http-host/src/shutdown.ts",
+        "sha256": "88969cdbd489e03018a76ec90187ea7ac58db08962f4b89c2d49795ac13641dd"
+      },
+      {
+        "path": "packages/http-host/src/credentials.ts",
+        "sha256": "5311cf12b007b0f092e8ff53bae6aecdc96d0bf0a60cb75e6ba6b9ab66314f5f"
+      },
+      {
+        "path": "packages/http-host/src/server.ts",
+        "sha256": "7934ff7274ca26e33c3c277bd7c4e8985694609459052f01108154ad7c1c0632"
+      },
+      {
+        "path": "apps/three-surface-poc/src/reevaluation-copy.ts",
+        "sha256": "6cfe32d50e18d5cb3bdd74501e2933230214560b7b3a84488a711ffcee74d6fa"
+      },
+      {
+        "path": "apps/three-surface-poc/src/resource-headroom-line.ts",
+        "sha256": "a887185e0e2a44e9d2f7110e01071bd139f3bc37e88b2b86c372004858698473"
+      },
+      {
+        "path": "apps/three-surface-poc/src/evaluation-footer.ts",
+        "sha256": "f595cffe0cba72e7bd92e6aae767f34b7e940653d3232b147bb7785915861ae6"
+      },
+      {
+        "path": "apps/three-surface-poc/src/polaris-reading-plan.ts",
+        "sha256": "732e410c9d364181b89bcc4191e8a59aa29d7130e1292beb46703af535d6acd9"
+      },
+      {
+        "path": "apps/three-surface-poc/src/polaris-anchor-resolution.ts",
+        "sha256": "f1d0aeaf7a198cefe212b66a85670ff3138a0fd8f6a8a28e42ff7417876432cc"
+      },
+      {
+        "path": "apps/three-surface-poc/src/materialize-action.ts",
+        "sha256": "cc1e518af864d50d82638fc66878369d0e8dd12a945436808c18a055ca8e403a"
+      }
+    ],
+    "new": [
+      {
+        "path": "apps/three-surface-poc/src/polaris-parity-sweep.test.ts",
+        "sha256": "bc2bb22653b985dcadcfb4577bb104c7110263c4ee3fe7176543ff8f84c1cdd0",
+        "role": "virtual parity oracle prelude"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/index.ts",
+        "sha256": "cf9ded8e3b621d4f011410a403422efa3a9d3c5bc6f4f7bd7d26a5e209efcbf1"
+      },
+      {
+        "path": "apps/three-surface-poc/src/routes.ts",
+        "sha256": "648a556a49f18a9f0f8345f916cbb7f2a73bdbfc8b700aba5de7a27029ab25e0"
+      },
+      {
+        "path": "apps/three-surface-poc/src/test-project-shape-fixture.ts",
+        "sha256": "c46145749d9f03747f230cf6882e58e9baf04b77a6566ab73adb1626c7fe7e76"
+      },
+      {
+        "path": "apps/three-surface-poc/src/git-observation.ts",
+        "sha256": "57ee838fccf606f686fd2be589d65f2d91ac5330a3cce3ec6d330281aacd51ed"
+      },
+      {
+        "path": "apps/three-surface-poc/src/test-model-fixture.ts",
+        "sha256": "e93ef0771505f9efca9a155c5fccb27f06b02b5535ec75011956203892940626"
+      },
+      {
+        "path": "apps/three-surface-poc/src/polaris.ts",
+        "sha256": "a831144b75ec4d01b83e78280979bec76f9307ecdc2157c6082e066836064a18"
+      },
+      {
+        "path": "apps/three-surface-poc/src/verbatim-route.ts",
+        "sha256": "cd83655b9f1196dec61def09f278f189733fdbdc30cc75e75644b9129ff4939d"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/worker-change-observation.ts",
+        "sha256": "707eeacd65c9b86a987cfa4519e03e64716b08f7fe9f9b4d7930cd1ec374b53d"
+      },
+      {
+        "path": "apps/three-surface-poc/src/governance-inputs.test.ts",
+        "sha256": "a95d8a2fcbe0bb095795aa195ac3df7784b9fd9f08428fd6e6aa95e30473fd77",
+        "role": "virtual authority corpus prelude"
+      },
+      {
+        "path": "apps/three-surface-poc/src/governance-inputs.ts",
+        "sha256": "492965ca0af3477062bf5bd6780bc259e1036a7e98991d73f4651d778c7c19a0"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/code-structure.ts",
+        "sha256": "d91d5b4fda54cfdc79b2fb90261e96bdcb56bc4acd39dcd22cd7c506e6aabe97"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/test-artifact-verification.ts",
+        "sha256": "5d5cf4fd8601178882613cf69b8e2903ecb910ab3a5855c6ad480bb03adb9700"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/model.ts",
+        "sha256": "f4791a12179830194c3f958b04dfa6945fb7713f85bd58fe88f0984727eafc72"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/poc-seeds.ts",
+        "sha256": "0e7ad1f10a7989f7d1db0a48db6e5d73218c09639a71b9d4f51126205e14fcd3"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/work-items.ts",
+        "sha256": "3af93a152568d67b0cfe0f84db74e3bd86407c6b028c1ffb1caa62b2ec1d7a77"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/evidence-population.ts",
+        "sha256": "d71cdd3a7a9a36d5416885c8f9e6925066b8baaa755e8bda8cba768e34007361"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/orrery-projection.ts",
+        "sha256": "a127aa14e793eb1791c542b00ca59ae623adb6a55eb6d59eb6ef5c9165eb90a3"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/trajectory-projection.ts",
+        "sha256": "b70f7461ab247679550fc6c30ea8b70ae03459c1cc2dacf877baa6b7cf5de034"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/owner-act-record.ts",
+        "sha256": "c03fb6a01f770b3853ba52fd1517586bc7153147e0b2fd56b58e717f5f43834e"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/effect-authority.ts",
+        "sha256": "bea910d84ba236ac2b28c6423d07b6f9a3976f297734ca79c01708e8638476a1"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/owner-act-drafter.ts",
+        "sha256": "d29e5183e763ad087a8c6ce597a8dfe9633c9b1d11b7361121507a2cd7855570"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/materialization.ts",
+        "sha256": "3e88cf99a2b9ad29c5a43c4a9dc96586f5ca30509b02342106432c5e0afcb8e3"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+        "sha256": "eb2bea76eec75516210d19c1a91ab28ba952523d0a3add97fdebe6cd4a0b6ffe"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/project-shape-coverage.ts",
+        "sha256": "365cd2067c6d77a144f107403fb794aa61bf4b568a9794def5edf6112ed4e7a0"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+        "sha256": "31a4d436bff9e1934fb2783a852f836ecf1079a3d8e411a05d6ab4f7a365e61a"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/project-shape-model.ts",
+        "sha256": "0f6129a3dd59f6d59cc8f4e188a70f5f13554a7e1e5261fa5d6006cbd8c3a2e2"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/body-read-authority.ts",
+        "sha256": "7c6311023e696f74a94ff1b05c45981be9ce274e93372f1eed5103d422840153"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/proposed-work.ts",
+        "sha256": "b0cadae00a651be032136f01281e97bc02a5d446bad03aefa834668dcae0bff4"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/authority-disclosure.ts",
+        "sha256": "47a6ff721b2ff24221a7a10131e7694505d32ba838ed5fba468b3ad23854c877"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/reevaluation.ts",
+        "sha256": "af29e8680b4bf43ff0146af99bb9f21e85a143dcdc8d4a5d69804170cc0254e5"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/project-shape-observer.ts",
+        "sha256": "be9c4475c58c98c1fad62058d133f5944f01590d99ef3f82be3f97831cccc2ff"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/walkthrough-judgment.ts",
+        "sha256": "b6f6bf29b1d8aeb7657c65cdb80a8b14e22955fd78a983a6ed058cd5f95c2c38"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/git-tree.ts",
+        "sha256": "731166b4899542fbb290574d84ba8bf169417a4e6fbb068031772394635713f5"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/resource-ledger.ts",
+        "sha256": "66944f8c7712610d4c4f46a367d3e35f541dd9c36e4e644e975044bdda10391d"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/git-runner.ts",
+        "sha256": "61736e64d293e2431b9baf2fda70904fe101c17db00b42f1a514ac6cf40176ea"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+        "sha256": "c37a75add8ddb02350282f0e5b67641fbb6aba1da267ff90846f50463c477c24"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/walkthrough-readiness.ts",
+        "sha256": "4442d565502c604c61014055a0eabb71e7a2134dc48b1011d781c8732b6eeeb3"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/response-identity.ts",
+        "sha256": "9767e250af7a8aaa5007d44ad0ebab850efe9be54bbebbf995c150b42b737c7e"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/pwb-types.ts",
+        "sha256": "21029d959cdfd603daa9db5a9b9ada58994adf409df73ea616118fb5aceb5290"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/transient-bodies.ts",
+        "sha256": "ca1b2734edfd91b60c834bf6bb31f090f13ef626025ee1c2a0192c33f9d93bfb"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+        "sha256": "fe9f87dd5374b5c5ad7b9cc92a52a8722665de017fd72bf13c2a308797fdf8e4"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/resource-headroom.ts",
+        "sha256": "3a4f327de80d16296d84c2b7e5708124207ae5153901c1817d75861022daccc3"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/fixtures/synthetic-corpora.ts",
+        "sha256": "a5bff51c0d50fb1dc508107792c6e4c4249c779e0bf8cadf54fd7ea26f9a95c4"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/git-object-reader.ts",
+        "sha256": "ddd0fd1f976adc5779b40b8f14f072fc429ac9ddf321fe0b1bb7ecb791119dee"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+        "sha256": "d67701458e70fa54133d99e72a3cc0cfb356900f278da2d5acc6dc0529fa5762"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/content-classification.ts",
+        "sha256": "9a2d3fc55714e6c6bffcaf16cdbda2761810211f06d72dae883e7dcd0971919e"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/synthetic-corpus-coverage.ts",
+        "sha256": "54377a398c4774aeadac187693fdae0cc42988db1af6dea039a59fd4ebdbd041"
+      },
+      {
+        "path": "apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts",
+        "sha256": "732b1094f904263af7d0449eed38f0d9ea0718cb9afda47fa6a799dc83c11a5a"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/epistemic.ts",
+        "sha256": "184a800e758d2db0194a9f42fcfe18d2c77a007a62f1c3bbc680dd15ac3df062"
+      },
+      {
+        "path": "apps/three-surface-poc/src/walkthrough-inputs.ts",
+        "sha256": "596361b7ef66c9126079a80bc9dfb2628c9d3b0a8c0b41e3f385b88dc39823ad"
+      },
+      {
+        "path": "packages/support/src/index.ts",
+        "sha256": "d6a036d587831989bc650646ff0222828ebbcd947f667a2d616980fd40fdd853"
+      },
+      {
+        "path": "apps/three-surface-poc/src/fixture-directories.ts",
+        "sha256": "df5a319e02b9bbc3294bf0b0b90a987ecea86bfd219a41d0341855a3e9dc5ada"
+      },
+      {
+        "path": "apps/three-surface-poc/src/git-blob-batch.ts",
+        "sha256": "74240e99c66ec0ce082bf83ebb5cfbba74e23e7605a65104cb0f1d9d90e23ed2"
+      },
+      {
+        "path": "packages/test-kit/src/index.ts",
+        "sha256": "8c1809437f1fb897a726850690c940e04b6e5813d4b78aed53408c2c6558e0e4"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/act-fields.ts",
+        "sha256": "dcc451e83fc1ad97ef3cc5b1cf97dd979d1fba9de4588fc841958c03e8243fef"
+      },
+      {
+        "path": "apps/three-surface-poc/src/served-response-recorder.ts",
+        "sha256": "a4893f9cf6bb6eacb85d1c5237dabc9fabd56ff0ff0ee15ce658e97ec45c00f0"
+      },
+      {
+        "path": "apps/three-surface-poc/src/page-shell.ts",
+        "sha256": "7f1753da8f88c0788bc00f5865644c177713742504bd7a7c24cfef8703342b87"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/acceptance/walkthrough-acceptance.ts",
+        "sha256": "c6960c019b9fe94124e87bb09cbe26d52990f034656b3f2486a52b1da7854883"
+      },
+      {
+        "path": "apps/three-surface-poc/src/browser-origin.ts",
+        "sha256": "5b1d5e238e86382e5858e8b9041efed0e19f753ef99bd9b5dd0e84d3871718d8"
+      },
+      {
+        "path": "packages/http-host/src/index.ts",
+        "sha256": "d105369f33404d21e61a97164b545bf0ab36e8762b9a21939f2c6dbbec6b8ba6"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/model-slices.ts",
+        "sha256": "6ac7ff97af8578eec9861a66be70ed5d36a0eef1927cf640b5e00cc5236d477e"
+      },
+      {
+        "path": "apps/three-surface-poc/src/trajectory.ts",
+        "sha256": "afe9f0351ce3265e44024b06c7c752a59eb569c725781d49ad758f342de9d0ee"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/poc-observation-error.ts",
+        "sha256": "be32556d6dab0d2dd756223bf18dacce2cb118072be0495f00dac07faddec5c4"
+      },
+      {
+        "path": "apps/three-surface-poc/src/orrery.ts",
+        "sha256": "7d93c5113112faea2a74e52ff60e69126ccf3c9842b2976f1ac8bd90ef5671e6"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/seed-graph.ts",
+        "sha256": "2b5ec3d4995b571b64c5cebb0f53d36c726444623fa651356a2f4bfaa54b285a"
+      },
+      {
+        "path": "apps/three-surface-poc/src/exact-tables.ts",
+        "sha256": "e79c6f7425366541082af1b3bcc778461bd5a07cb50e1e6f8608c99cc30ff4b5"
+      },
+      {
+        "path": "apps/three-surface-poc/src/polaris-source.ts",
+        "sha256": "d18cba090e871dacd6b8468f6298ca673a453b50cf91c5f012a1fe4ae5675491"
+      },
+      {
+        "path": "apps/three-surface-poc/src/tailnet.ts",
+        "sha256": "1faa833eaf0442da54c0617df12c1e9a2a75e0b078d58777417bcd7671474bd5"
+      },
+      {
+        "path": "packages/support/src/sha256.ts",
+        "sha256": "9fb34e4cf7b60fa9ba45ac06bab0a95fbb3a0c1c629a38ad24e1ec05e3c765f1"
+      },
+      {
+        "path": "packages/support/src/deep-freeze.ts",
+        "sha256": "ea3f83d840561f130ec91080d8066359a52d61dad2b089f1fe82677f37d85149"
+      },
+      {
+        "path": "packages/support/src/decode-utf8.ts",
+        "sha256": "f57863901787c528672976af4efd285d6daf8d3895df9d332c28724ac435ca27"
+      },
+      {
+        "path": "packages/support/src/is-record.ts",
+        "sha256": "c0474de8efc9374f8707a40dcc62af68ddddf7d10e6bd94fedb6c7c7134d1e97"
+      },
+      {
+        "path": "packages/cap1-core/src/index.ts",
+        "sha256": "01ff8cfd437ef2eeb13841e8209e4879c990ffc3a7c54a6b3f8a04b815783742"
+      },
+      {
+        "path": "apps/three-surface-poc/src/polaris-generation/isolated-git.ts",
+        "sha256": "70c0eed161b449d47bcb6a5c1583366f748176f94a8aa9f626ee949da94bcb6d"
+      },
+      {
+        "path": "packages/test-kit/src/html-query.ts",
+        "sha256": "c28830b1e78438c5e9d00c4e27d7364fc69a8e44b5a0b8c381a80307c9c2df30"
+      },
+      {
+        "path": "packages/test-kit/src/temp-dir.ts",
+        "sha256": "5d221d33706a41be85d3adcdde3fcdabb7decb46c29ce6d79b7c6a76f0ee541d"
+      },
+      {
+        "path": "packages/test-kit/src/git-repo.ts",
+        "sha256": "fd573fa688b04192ab3d6fe331c9e32ecfd8ded257f42b0ade54651b402adf49"
+      },
+      {
+        "path": "packages/test-kit/src/blob-id.ts",
+        "sha256": "7153d7637b53ec234def0fdd329bce35077dbc1c80bed8f59d465f9dce90f7bb"
+      },
+      {
+        "path": "apps/three-surface-poc/src/unknown-marker.ts",
+        "sha256": "d3afe03f56f4f7716dc4dd013c62974497f9c264a12846c747e88486e64b14ce"
+      },
+      {
+        "path": "apps/three-surface-poc/src/evaluation-footer.ts",
+        "sha256": "f595cffe0cba72e7bd92e6aae767f34b7e940653d3232b147bb7785915861ae6"
+      },
+      {
+        "path": "apps/three-surface-poc/src/surface-links.ts",
+        "sha256": "2ddea40a4ff34ac8a71fa46128befc73487acfbd55197c971967df9c9f6a1de1"
+      },
+      {
+        "path": "apps/three-surface-poc/src/design-tokens.ts",
+        "sha256": "97d9b3bcc30f937bc3570cc5c02fb671af1ebf68d7ccc190b10c5681453fbbec"
+      },
+      {
+        "path": "apps/three-surface-poc/src/materialize-action.ts",
+        "sha256": "cc1e518af864d50d82638fc66878369d0e8dd12a945436808c18a055ca8e403a"
+      },
+      {
+        "path": "apps/three-surface-poc/src/capability-detail.ts",
+        "sha256": "51a4453a577acd0ddc5b7a8b719aca41712f044aafeb0dca2b2c39e9cd869ffa"
+      },
+      {
+        "path": "apps/three-surface-poc/src/polaris-copy.ts",
+        "sha256": "87f2fda0b9f1e3538d50c93abb0d4b27841661060cb4fa63ec5ea267f4f055e1"
+      },
+      {
+        "path": "apps/three-surface-poc/src/polaris-reconciliation.ts",
+        "sha256": "310063203b953a45fab4105e9d02e83d4822c07d1dae8d654c4f40b9369bfa17"
+      },
+      {
+        "path": "apps/three-surface-poc/src/polaris-narrative.ts",
+        "sha256": "9c7707c662bf7e42d961f0ecd0885ba4926d97b683b17a6cc6702f5e040d8b94"
+      },
+      {
+        "path": "apps/three-surface-poc/src/polaris-markdown.ts",
+        "sha256": "7e70894ee6e3717ada76026004754c521858427abb14a103f591b31cd3727a21"
+      },
+      {
+        "path": "apps/three-surface-poc/src/polaris-reading.ts",
+        "sha256": "4fecd9cdb78ce3d3a9449207b1bc0b27bcc91180a322822762cb333dd5125b7f"
+      },
+      {
+        "path": "apps/three-surface-poc/src/polaris-opening-index.ts",
+        "sha256": "156da5627fda509452048f5d49d40e9098dd0fc540220fbc3999a5dd2960010c"
+      },
+      {
+        "path": "apps/three-surface-poc/src/resource-headroom-line.ts",
+        "sha256": "a887185e0e2a44e9d2f7110e01071bd139f3bc37e88b2b86c372004858698473"
+      },
+      {
+        "path": "apps/three-surface-poc/src/reevaluation-copy.ts",
+        "sha256": "6cfe32d50e18d5cb3bdd74501e2933230214560b7b3a84488a711ffcee74d6fa"
+      },
+      {
+        "path": "packages/http-host/src/shutdown.ts",
+        "sha256": "88969cdbd489e03018a76ec90187ea7ac58db08962f4b89c2d49795ac13641dd"
+      },
+      {
+        "path": "packages/http-host/src/escape-html.ts",
+        "sha256": "51694be58420478e434bf67aa5d0d459669e35b864229d32fd2f143df57c8924"
+      },
+      {
+        "path": "packages/http-host/src/credentials.ts",
+        "sha256": "5311cf12b007b0f092e8ff53bae6aecdc96d0bf0a60cb75e6ba6b9ab66314f5f"
+      },
+      {
+        "path": "packages/http-host/src/server.ts",
+        "sha256": "7934ff7274ca26e33c3c277bd7c4e8985694609459052f01108154ad7c1c0632"
+      },
+      {
+        "path": "packages/cap1-core/src/vocabulary.ts",
+        "sha256": "88f56e68c301c77bfaad78d4082ed4ebc96a19443299ff2bf6e74e985ea84e1c"
+      },
+      {
+        "path": "packages/cap1-core/src/identity.ts",
+        "sha256": "33912949ae028c29070016860fbd2468fb346275ec8e50dee11af1b37025734a"
+      },
+      {
+        "path": "packages/cap1-core/src/yaml-dialect.ts",
+        "sha256": "ce2d0eece0eb6169aec036b36e9f2275c0fac0e76793f70b7ad5a59ca5dd68cc"
+      },
+      {
+        "path": "packages/cap1-core/src/consent.ts",
+        "sha256": "91db8cd0be0390007a3fbac1ec4c269fd38949f535701743d13b70ddc40e9b9d"
+      },
+      {
+        "path": "packages/cap1-core/src/consent-decision.ts",
+        "sha256": "53103e7d90f12a06c7106150b6cccbad7ddd96ce70d23c8593ae16f5b1cb66b8"
+      },
+      {
+        "path": "packages/cap1-core/src/declaration.ts",
+        "sha256": "8e6d757d5c523cce80eec0ef32876d22099a7085ae2fb450646e3198f4c1238e"
+      },
+      {
+        "path": "packages/cap1-core/src/snapshot.ts",
+        "sha256": "9cd52997ce918ede15dd50dcc7266baa9271ddd4860a55340f0a5cfa8a4c6329"
+      },
+      {
+        "path": "packages/cap1-core/src/evaluation.ts",
+        "sha256": "4628e23d38bb365aa79ed4217e38a9301eca984a9c15d24d2f79f6554a113bf0"
+      },
+      {
+        "path": "packages/cap1-core/src/admission.ts",
+        "sha256": "d0ef0989a524cde9d94430f3c1469a192d0a0cc9f56104c1248906a39d7495b6"
+      },
+      {
+        "path": "packages/cap1-core/src/coverage.ts",
+        "sha256": "c328c85f12466b1a0ec854906d2b969bfabed83023acbedf66a7ca575191789e"
+      },
+      {
+        "path": "packages/cap1-core/src/proposal.ts",
+        "sha256": "821060a306dc6f3257ff25dda8f3785b00956430524447ff105450bfa0a396df"
+      },
+      {
+        "path": "packages/cap1-core/src/facets.ts",
+        "sha256": "ef4437388079de96ae76fa3451d21ef04006a2866469460323a477a3592f02dd"
+      },
+      {
+        "path": "packages/cap1-core/src/staleness.ts",
+        "sha256": "520305502eed72a3ac0c0bf3c2e05ca4ae81a031ac41b60e8f02739e7ad2b31d"
+      },
+      {
+        "path": "packages/cap1-core/src/drawer.ts",
+        "sha256": "5e281ca094deb4f4f9507bae9d938455600d0820a21a010cf5a4d0f87e1ccac2"
+      },
+      {
+        "path": "packages/cap1-core/src/distinction.ts",
+        "sha256": "f8226c8871fb556c90154078332b34bf3e22081fd27855c72fc5de576d30a05e"
+      },
+      {
+        "path": "packages/cap1-core/src/entry.ts",
+        "sha256": "287f28e9c5d778a24a935e55b8abf70ce793ec5c0306e20d406610ff78dfe56a"
+      },
+      {
+        "path": "packages/cap1-core/src/discoverability.ts",
+        "sha256": "cf36dd2753eacd59626d879a15d957d050f7f3b41b6887581b43b7614f295611"
+      },
+      {
+        "path": "packages/cap1-core/src/stable-identity.ts",
+        "sha256": "04b1942f8bf4aa544f093b3c24aab90b499cc071b85e11878f6b6a778abdab75"
+      },
+      {
+        "path": "packages/cap1-core/src/parity.ts",
+        "sha256": "5ee3e595ac79e0b8284dbbf3c62fb883462e7553724ceb705158e08dbe772646"
+      },
+      {
+        "path": "packages/cap1-core/src/epistemic.ts",
+        "sha256": "d8d6417fa4675ac2a927dd5e300f5f1e164ff0c7bc3eb69757e6dea4ef07f99c"
+      },
+      {
+        "path": "packages/cap1-core/src/authority.ts",
+        "sha256": "c0ffa70ac1bf32049bec408d614b3a4c8771ce826621d58524d492ba1e69608c"
+      },
+      {
+        "path": "apps/three-surface-poc/src/polaris-anchor-resolution.ts",
+        "sha256": "f1d0aeaf7a198cefe212b66a85670ff3138a0fd8f6a8a28e42ff7417876432cc"
+      },
+      {
+        "path": "apps/three-surface-poc/src/polaris-reading-plan.ts",
+        "sha256": "732e410c9d364181b89bcc4191e8a59aa29d7130e1292beb46703af535d6acd9"
+      }
+    ]
+  },
+  "frozenBundleManifestSha256": "fce9b7e251547b37f34260464c07b6aeed14923b1d5be3072cda9b7e2fa457d1",
+  "bundles": {
+    "old": "c0045b76961c302b4c94bf42e7dbf3bcff02767a014be8f8ba272163049f4601",
+    "new": "c30bf10e2686a3b9998cab00d51fccec86fe9734b13b8a13228e3857124f6923"
+  },
+  "corpusInputs": {
+    "observedAt": "2026-11-03T06:58:26Z",
+    "authorityFixtures": [
+      "ADMITTING_AUTHORITY",
+      "REJECTING_AUTHORITY"
+    ],
+    "corpusFixtures": [
+      "PROJECT_SHAPE_FIXTURE_TEXTS",
+      "PROJECT_SHAPE_FIXTURE_TEXTS_WITH_SECRET",
+      "PROJECT_SHAPE_FIXTURE_TEXTS_WITH_BASELINE_SPEC"
+    ],
+    "fixtureRepo": "fixtureRepoWithGit([])"
+  },
+  "requestProfiles": [
+    {
+      "name": "loopback-host",
+      "headers": {
+        "host": "127.0.0.1:7478"
+      }
+    },
+    {
+      "name": "loopback-origin",
+      "headers": {
+        "host": "localhost:7478",
+        "origin": "http://localhost:7478"
+      }
+    },
+    {
+      "name": "tailnet-origin",
+      "headers": {
+        "host": "tzeusy.parrot-hen.ts.net",
+        "origin": "https://tzeusy.parrot-hen.ts.net"
+      }
+    }
+  ],
+  "rawBodyReceiptDirectory": "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/served-route-portable",
+  "rawBodyFilesCommitted": false,
+  "reproduction": "Run differential.mjs to produce frozen bundles, then node served-route-supplement.mjs <bundle-dir> <output-dir> <exact-head> from a clean checkout."
+}

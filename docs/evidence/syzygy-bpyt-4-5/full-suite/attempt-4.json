@@ -1,0 +1,55 @@
+{
+ "tool": "suite_summary.py",
+ "attempt": "attempt 4: the head merged with origin/main, run twice in sequence",
+ "cpus": 12,
+ "changedFilesBetween": [
+  "8ff50172",
+  "a624b6ca422c14d1730f35aa8bf201d2f3383e90"
+ ],
+ "runs": [
+  {
+   "name": "first",
+   "commit": "a624b6ca422c14d1730f35aa8bf201d2f3383e90",
+   "start": "2026-10-25T07:03:48+08:00",
+   "load1Start": 48.11,
+   "exit": 0,
+   "end": "2026-10-25T07:06:49+08:00",
+   "load1End": 29.91,
+   "success": true,
+   "totals": {
+    "numTotalTestSuites": 856,
+    "numFailedTestSuites": 0,
+    "numTotalTests": 5306,
+    "numPassedTests": 5301,
+    "numFailedTests": 0,
+    "numPendingTests": 5,
+    "numTodoTests": 0
+   },
+   "failedTests": [],
+   "failedFilesWithoutFailedTest": [],
+   "failuresInChangedFiles": 0
+  },
+  {
+   "name": "second",
+   "commit": "a624b6ca422c14d1730f35aa8bf201d2f3383e90",
+   "start": "2026-10-25T07:06:49+08:00",
+   "load1Start": 29.91,
+   "exit": 0,
+   "end": "2026-10-25T07:09:08+08:00",
+   "load1End": 27.59,
+   "success": true,
+   "totals": {
+    "numTotalTestSuites": 856,
+    "numFailedTestSuites": 0,
+    "numTotalTests": 5306,
+    "numPassedTests": 5301,
+    "numFailedTests": 0,
+    "numPendingTests": 5,
+    "numTodoTests": 0
+   },
+   "failedTests": [],
+   "failedFilesWithoutFailedTest": [],
+   "failuresInChangedFiles": 0
+  }
+ ]
+}

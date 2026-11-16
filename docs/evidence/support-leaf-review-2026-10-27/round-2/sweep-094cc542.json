@@ -1,0 +1,78 @@
+{
+ "commit": "094cc542",
+ "population": {
+  "files": 236,
+  "lines": 52347,
+  "namesSha256": "3e3fc211b0f8b1ca1e5dbc0c2bba00f3faf0a6c1522d5d923377f57faf500b6d"
+ },
+ "sha256Sites": {
+  "total": 6,
+  "byForm": {
+   "digest is not hex": 3,
+   "no .update( directly after the constructor": 1,
+   "replaceable": 2
+  },
+  "rows": [
+   {
+    "file": "apps/three-surface-poc/src/polaris-generation/redis-shaped-measure.ts",
+    "line": 91,
+    "form": "no .update( directly after the constructor"
+   },
+   {
+    "file": "packages/cap1-daemon/src/credentials.ts",
+    "line": 379,
+    "form": "digest is not hex"
+   },
+   {
+    "file": "packages/cap1-daemon/src/credentials.ts",
+    "line": 380,
+    "form": "digest is not hex"
+   },
+   {
+    "file": "packages/cap1-system/src/harness.ts",
+    "line": 246,
+    "form": "replaceable"
+   },
+   {
+    "file": "packages/polaris-dossier/src/render.ts",
+    "line": 310,
+    "form": "digest is not hex"
+   },
+   {
+    "file": "packages/support/src/sha256.ts",
+    "line": 5,
+    "form": "replaceable"
+   }
+  ]
+ },
+ "localCopies": {
+  "total": 2,
+  "byName": {
+   "sha256": 1,
+   "deepFreeze": 1
+  },
+  "rows": [
+   {
+    "file": "packages/support/src/deep-freeze.ts",
+    "line": 7,
+    "name": "deepFreeze"
+   },
+   {
+    "file": "packages/support/src/sha256.ts",
+    "line": 4,
+    "name": "sha256"
+   }
+  ]
+ },
+ "supportImporters": {
+  "apps/three-surface-poc": 21,
+  "packages/polaris-dossier": 14,
+  "packages/polaris-generation-consent": 2,
+  "packages/polaris-generation-core": 8,
+  "packages/three-surface-poc-core": 10
+ },
+ "secondMethod": {
+  "sha256-single-quoted": 6,
+  "deepFreeze-definitions": 1
+ }
+}

@@ -1,0 +1,383 @@
+{
+ "tool": "browser_files_run.py",
+ "treeCommit": "dccd484f4749b55f981f2e5211de4112ab7951de",
+ "sha256AtCommit": {
+  "apps/three-surface-poc/src/cdp-browser.ts": "c6c0ac6cc626b76155d870502c5549aa430d7cee35a058b0001d849586842033",
+  "apps/three-surface-poc/src/cdp-browser.test.ts": "a655dd3f2c20612700096c6951778ac8910ededb84fedf215efa61dbe31e265e",
+  "apps/three-surface-poc/src/cdp-browser.browser.test.ts": "2f659ee95d45b3b834cff94b893bd7f17eab8a1292316c89345b63a2de699a1e",
+  "apps/three-surface-poc/src/polaris-generation/draft-preview.browser.test.ts": "70102033956c5597667ab3fca4bc145fcb2f7787227b1cb82849878c8a73856f"
+ },
+ "label": "head-chrome154",
+ "browserExecutable": "/home/tze/.cache/puppeteer/chrome/linux-154.0.8037.57/chrome-linux64/chrome",
+ "browserVersion": "Google Chrome for Testing 154.0.8037.57",
+ "project": "@syzygy/three-surface-poc-app",
+ "attemptsPerFile": 3,
+ "listA": [
+  "apps/three-surface-poc/src/cdp-browser.browser.test.ts",
+  "apps/three-surface-poc/src/cdp-browser.test.ts",
+  "apps/three-surface-poc/src/orrery.browser.test.ts",
+  "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts",
+  "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+  "apps/three-surface-poc/src/polaris-generation/draft-preview.browser.test.ts",
+  "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+  "apps/three-surface-poc/src/proposal-disclosure.test.ts",
+  "apps/three-surface-poc/src/surface-routes.test.ts",
+  "apps/three-surface-poc/src/trajectory-narrowing.browser.test.ts",
+  "apps/three-surface-poc/src/tuple-encoding.test.ts"
+ ],
+ "listB": [
+  "apps/three-surface-poc/src/cdp-browser.browser.test.ts",
+  "apps/three-surface-poc/src/orrery.browser.test.ts",
+  "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts",
+  "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+  "apps/three-surface-poc/src/polaris-generation/draft-preview.browser.test.ts",
+  "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+  "apps/three-surface-poc/src/trajectory-narrowing.browser.test.ts"
+ ],
+ "perFile": [
+  {
+   "file": "apps/three-surface-poc/src/cdp-browser.browser.test.ts",
+   "attempts": [
+    {
+     "exit": 0,
+     "tests": 2,
+     "passed": 2,
+     "skipped": 0,
+     "failing": [],
+     "suiteFailures": [],
+     "left": {
+      "entries": [],
+      "chromeSingletonDirectories": 0,
+      "draftPreviewDirectories": 0,
+      "browserProfiles": 0,
+      "other": []
+     },
+     "attempt": 1
+    }
+   ],
+   "passed": true,
+   "testsOnPassingAttempt": 2,
+   "skippedOnPassingAttempt": 0
+  },
+  {
+   "file": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "attempts": [
+    {
+     "exit": 0,
+     "tests": 24,
+     "passed": 24,
+     "skipped": 0,
+     "failing": [],
+     "suiteFailures": [],
+     "left": {
+      "entries": [],
+      "chromeSingletonDirectories": 0,
+      "draftPreviewDirectories": 0,
+      "browserProfiles": 0,
+      "other": []
+     },
+     "attempt": 1
+    }
+   ],
+   "passed": true,
+   "testsOnPassingAttempt": 24,
+   "skippedOnPassingAttempt": 0
+  },
+  {
+   "file": "apps/three-surface-poc/src/orrery.browser.test.ts",
+   "attempts": [
+    {
+     "exit": 0,
+     "tests": 1,
+     "passed": 1,
+     "skipped": 0,
+     "failing": [],
+     "suiteFailures": [],
+     "left": {
+      "entries": [],
+      "chromeSingletonDirectories": 0,
+      "draftPreviewDirectories": 0,
+      "browserProfiles": 0,
+      "other": []
+     },
+     "attempt": 1
+    }
+   ],
+   "passed": true,
+   "testsOnPassingAttempt": 1,
+   "skippedOnPassingAttempt": 0
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts",
+   "attempts": [
+    {
+     "exit": 1,
+     "tests": 15,
+     "passed": 14,
+     "skipped": 0,
+     "failing": [
+      {
+       "test": "Polaris keyboard, non-visual and contrast checks in a real browser keeps a separate desktop section rail and an in-flow mobile drawer",
+       "firstErrorLine": "Error: STACK_TRACE_ERROR"
+      }
+     ],
+     "suiteFailures": [],
+     "left": {
+      "entries": [],
+      "chromeSingletonDirectories": 0,
+      "draftPreviewDirectories": 0,
+      "browserProfiles": 0,
+      "other": []
+     },
+     "attempt": 1
+    },
+    {
+     "exit": 1,
+     "tests": 15,
+     "passed": 14,
+     "skipped": 0,
+     "failing": [
+      {
+       "test": "Polaris keyboard, non-visual and contrast checks in a real browser keeps complete source columns visible while citation targets remain keyboard-reachable",
+       "firstErrorLine": "Error: STACK_TRACE_ERROR"
+      }
+     ],
+     "suiteFailures": [],
+     "left": {
+      "entries": [],
+      "chromeSingletonDirectories": 0,
+      "draftPreviewDirectories": 0,
+      "browserProfiles": 0,
+      "other": []
+     },
+     "attempt": 2
+    },
+    {
+     "exit": 0,
+     "tests": 15,
+     "passed": 15,
+     "skipped": 0,
+     "failing": [],
+     "suiteFailures": [],
+     "left": {
+      "entries": [],
+      "chromeSingletonDirectories": 0,
+      "draftPreviewDirectories": 0,
+      "browserProfiles": 0,
+      "other": []
+     },
+     "attempt": 3
+    }
+   ],
+   "passed": true,
+   "testsOnPassingAttempt": 15,
+   "skippedOnPassingAttempt": 0
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+   "attempts": [
+    {
+     "exit": 0,
+     "tests": 26,
+     "passed": 26,
+     "skipped": 0,
+     "failing": [],
+     "suiteFailures": [],
+     "left": {
+      "entries": [],
+      "chromeSingletonDirectories": 0,
+      "draftPreviewDirectories": 0,
+      "browserProfiles": 0,
+      "other": []
+     },
+     "attempt": 1
+    }
+   ],
+   "passed": true,
+   "testsOnPassingAttempt": 26,
+   "skippedOnPassingAttempt": 0
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-generation/draft-preview.browser.test.ts",
+   "attempts": [
+    {
+     "exit": 0,
+     "tests": 1,
+     "passed": 1,
+     "skipped": 0,
+     "failing": [],
+     "suiteFailures": [],
+     "left": {
+      "entries": [],
+      "chromeSingletonDirectories": 0,
+      "draftPreviewDirectories": 0,
+      "browserProfiles": 0,
+      "other": []
+     },
+     "attempt": 1
+    }
+   ],
+   "passed": true,
+   "testsOnPassingAttempt": 1,
+   "skippedOnPassingAttempt": 0
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+   "attempts": [
+    {
+     "exit": 0,
+     "tests": 14,
+     "passed": 13,
+     "skipped": 1,
+     "failing": [],
+     "suiteFailures": [],
+     "left": {
+      "entries": [],
+      "chromeSingletonDirectories": 0,
+      "draftPreviewDirectories": 0,
+      "browserProfiles": 0,
+      "other": []
+     },
+     "attempt": 1
+    }
+   ],
+   "passed": true,
+   "testsOnPassingAttempt": 14,
+   "skippedOnPassingAttempt": 1
+  },
+  {
+   "file": "apps/three-surface-poc/src/proposal-disclosure.test.ts",
+   "attempts": [
+    {
+     "exit": 0,
+     "tests": 5,
+     "passed": 5,
+     "skipped": 0,
+     "failing": [],
+     "suiteFailures": [],
+     "left": {
+      "entries": [],
+      "chromeSingletonDirectories": 0,
+      "draftPreviewDirectories": 0,
+      "browserProfiles": 0,
+      "other": []
+     },
+     "attempt": 1
+    }
+   ],
+   "passed": true,
+   "testsOnPassingAttempt": 5,
+   "skippedOnPassingAttempt": 0
+  },
+  {
+   "file": "apps/three-surface-poc/src/surface-routes.test.ts",
+   "attempts": [
+    {
+     "exit": 0,
+     "tests": 18,
+     "passed": 18,
+     "skipped": 0,
+     "failing": [],
+     "suiteFailures": [],
+     "left": {
+      "entries": [],
+      "chromeSingletonDirectories": 0,
+      "draftPreviewDirectories": 0,
+      "browserProfiles": 0,
+      "other": []
+     },
+     "attempt": 1
+    }
+   ],
+   "passed": true,
+   "testsOnPassingAttempt": 18,
+   "skippedOnPassingAttempt": 0
+  },
+  {
+   "file": "apps/three-surface-poc/src/trajectory-narrowing.browser.test.ts",
+   "attempts": [
+    {
+     "exit": 0,
+     "tests": 2,
+     "passed": 2,
+     "skipped": 0,
+     "failing": [],
+     "suiteFailures": [],
+     "left": {
+      "entries": [],
+      "chromeSingletonDirectories": 0,
+      "draftPreviewDirectories": 0,
+      "browserProfiles": 0,
+      "other": []
+     },
+     "attempt": 1
+    }
+   ],
+   "passed": true,
+   "testsOnPassingAttempt": 2,
+   "skippedOnPassingAttempt": 0
+  },
+  {
+   "file": "apps/three-surface-poc/src/tuple-encoding.test.ts",
+   "attempts": [
+    {
+     "exit": 0,
+     "tests": 6,
+     "passed": 6,
+     "skipped": 0,
+     "failing": [],
+     "suiteFailures": [],
+     "left": {
+      "entries": [],
+      "chromeSingletonDirectories": 0,
+      "draftPreviewDirectories": 0,
+      "browserProfiles": 0,
+      "other": []
+     },
+     "attempt": 1
+    }
+   ],
+   "passed": true,
+   "testsOnPassingAttempt": 6,
+   "skippedOnPassingAttempt": 0
+  }
+ ],
+ "combinedRun": {
+  "exit": 1,
+  "tests": 114,
+  "passed": 112,
+  "skipped": 1,
+  "failing": [
+   {
+    "test": "Polaris keyboard, non-visual and contrast checks in a real browser keeps a separate desktop section rail and an in-flow mobile drawer",
+    "firstErrorLine": "Error: STACK_TRACE_ERROR"
+   }
+  ],
+  "suiteFailures": [],
+  "left": {
+   "entries": [],
+   "chromeSingletonDirectories": 0,
+   "draftPreviewDirectories": 0,
+   "browserProfiles": 0,
+   "other": []
+  }
+ },
+ "summary": {
+  "filesInListA": 11,
+  "filesInListB": 7,
+  "inAButNotB": [
+   "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "apps/three-surface-poc/src/proposal-disclosure.test.ts",
+   "apps/three-surface-poc/src/surface-routes.test.ts",
+   "apps/three-surface-poc/src/tuple-encoding.test.ts"
+  ],
+  "inBButNotA": [],
+  "filesWithAPassingAttempt": 11,
+  "chromeSingletonDirectoriesLeftOnPassingAttempts": 0,
+  "draftPreviewDirectoriesLeftOnPassingAttempts": 0,
+  "combinedRunExit": 1,
+  "combinedRunChromeSingletonDirectoriesLeft": 0,
+  "combinedRunDraftPreviewDirectoriesLeft": 0,
+  "everyFilePassedAloneAndLeftNone": true
+ }
+}

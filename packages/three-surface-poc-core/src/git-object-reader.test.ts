@@ -16,6 +16,9 @@ import { describe, expect, it } from 'vitest';
 
 import {
   ACTIVE_CONTENT_FORMS,
+  BLOB_READ_REFUSAL_REASONS,
+  PHASE_A_REFUSAL_REASONS,
+  PHASE_B_READ_POLICY,
   PWB_DENIED_PATH_RULES,
   PWB_POLICY_IDENTITY,
   READ_REFUSAL_REASONS,
@@ -26,13 +29,17 @@ import {
   evaluateLimit,
   readManifestSources,
   scanActiveContent,
+  scanActiveContentCharged,
   type ExactObjectReader,
   type ObjectReadRecord,
 } from './git-object-reader.js';
 import { indexGitTree, type GitTreeEntry } from './git-tree.js';
+import { recognizeCodeContexts } from './markdown-code-context.js';
 import type { ManifestSource } from './project-shape-manifest.js';
-import { PWB_RESOURCE_LIMITS, type PwbResourceLimits } from './project-shape-observation.js';
+import { PWB_RESOURCE_LIMITS } from './project-shape-observation.js';
+import type { PwbResourceLimits } from './pwb-types.js';
 import { createResourceLedger } from './resource-ledger.js';
+import { createTransientBodies } from './transient-bodies.js';
 
 // ---------------------------------------------------------------------
 // Fixture repository: bodies, real Git object ids, a tree with every
@@ -218,6 +225,17 @@ describe('read guard — paths that must never reach Git', () => {
     for (const reason of READ_REFUSAL_REASONS) expect(exercised.has(reason), reason).toBe(true);
   });
 
+  it('both phase vocabularies are subsets of the one refusal set, sharing exactly the three tree checks (syzygy-bpyt.6.5)', () => {
+    expect([...PHASE_A_REFUSAL_REASONS]).toEqual(['not-in-tree', 'not-a-regular-blob', 'object-id-differs-from-tree', 'not-a-phase-a-seed-path']);
+    const union = new Set<string>([...READ_REFUSAL_REASONS, ...PHASE_A_REFUSAL_REASONS]);
+    expect([...union].sort()).toEqual([...BLOB_READ_REFUSAL_REASONS].sort());
+    expect(READ_REFUSAL_REASONS.filter((reason) => (PHASE_A_REFUSAL_REASONS as readonly string[]).includes(reason)).sort()).toEqual(
+      ['not-a-regular-blob', 'not-in-tree', 'object-id-differs-from-tree'],
+    );
+    expect(PHASE_B_READ_POLICY.refusals).toBe(READ_REFUSAL_REASONS);
+    expect(PHASE_B_READ_POLICY.trailingPasses).toEqual([]);
+  });
+
   it('admits a regular blob by exact tree identity, executable mode included', () => {
     const tree = indexGitTree(TREE);
     expect(admitExactObjectRead(tree, 'about/README.md')).toEqual({ kind: 'admitted', entry: blob('about/README.md') });
@@ -279,6 +297,17 @@ describe('exact object reads', () => {
     const { reader: r } = reader();
     expect(r.read('binary/nul.md').record.outcome).toBe('contains-nul');
     expect(r.read('binary/latin1.md').record.outcome).toBe('not-utf-8');
+  });
+
+  it('drops one leading byte-order mark from the decoded text and keeps a second', () => {
+    // Typed here from the Unicode rule the decoder follows (UTF-8 BOM EF BB BF), not read back from the module.
+    const readBytes = (bytes: Uint8Array) => {
+      const path = 'notes/bom.md';
+      const tree = indexGitTree([{ mode: '100644', type: 'blob', objectId: sha1Blob(bytes), sizeBytes: bytes.byteLength, path }]);
+      return createExactObjectReader({ runGit: () => bytes, tree, resourceLimits: PWB_RESOURCE_LIMITS }).read(path);
+    };
+    expect(readBytes(Uint8Array.from([0xef, 0xbb, 0xbf, 0x61, 0x0a]))).toMatchObject({ kind: 'text', text: 'a\n', record: { outcome: 'read' } });
+    expect(readBytes(Uint8Array.from([0xef, 0xbb, 0xbf, 0xef, 0xbb, 0xbf, 0x61]))).toMatchObject({ kind: 'text', text: '\uFEFFa', record: { outcome: 'read' } });
   });
 
   it('a Git failure is recorded, not thrown', () => {
@@ -380,6 +409,8 @@ describe('active content is rejected and never reaches a sink', () => {
   it('the same sentinel outside the context still excludes, at its raw position', () => {
     const text = '```\n<div>\n```\nafter `<br>` and <SCRIPT>';
     expect(scanActiveContent(text)).toEqual([{ form: 'script-element', line: 4, column: 18 }]);
+    expect(scanActiveContent('~~~\r<div>\r\n~~~\né\u{1f600} <script>')).toEqual([{ form: 'script-element', line: 4, column: 5 }]);
+    expect(scanActiveContent('é\u{1f600} `<br>` <SCRIPT>')).toEqual([{ form: 'script-element', line: 1, column: 12 }]);
   });
 
   it('indented code and HTML code elements are not inert contexts', () => {
@@ -404,6 +435,182 @@ describe('active content is rejected and never reaches a sink', () => {
     const produced = new Set<string>();
     for (const text of [...Object.values(SENTINELS), SENTINELS.unclosedFence]) for (const f of scanActiveContent(text)) produced.add(f.form);
     for (const form of ACTIVE_CONTENT_FORMS) expect(produced.has(form), form).toBe(true);
+  });
+});
+
+const ENDS: readonly (readonly [string, string])[] = [['LF', '\n'], ['CRLF', '\r\n'], ['CR', '\r']];
+
+function readOne(text: string): ReturnType<ExactObjectReader['read']> {
+  const bytes = enc.encode(text);
+  const oid = sha1Blob(bytes);
+  const entry: GitTreeEntry = { mode: '100644', type: 'blob', objectId: oid, sizeBytes: bytes.byteLength, path: 'notes/line-ends.md' };
+  const runGit = (args: readonly string[]): Uint8Array => {
+    if (args.length !== 3 || args[0] !== 'cat-file' || args[1] !== 'blob' || args[2] !== oid) throw new Error(`spy: request escaped the object reader: git ${args.join(' ')}`);
+    return bytes;
+  };
+  return createExactObjectReader({ runGit, tree: indexGitTree([entry]), resourceLimits: PWB_RESOURCE_LIMITS }).read('notes/line-ends.md');
+}
+
+// syzygy-bpyt.6.5: the validation pass is charged before the NUL and UTF-8 checks run, so a source with no budget left is over-limit
+// whatever its bytes are; a reader that validated first would call this body contains-nul.
+describe('the validation pass is charged before validation runs', () => {
+  it('maxParsePassesPerSource 0 leaves a NUL-bearing body over-limit, not contains-nul, with the bytes it took counted', () => {
+    const bytes = enc.encode('a\u0000b');
+    const oid = sha1Blob(bytes);
+    const entry: GitTreeEntry = { mode: '100644', type: 'blob', objectId: oid, sizeBytes: bytes.byteLength, path: 'notes/nul.md' };
+    const r = createExactObjectReader({ runGit: () => bytes, tree: indexGitTree([entry]), resourceLimits: { ...PWB_RESOURCE_LIMITS, maxParsePassesPerSource: 0 } });
+    expect(r.read('notes/nul.md').record).toEqual({ path: 'notes/nul.md', objectId: oid, bytes: 3, contentDigest: contentDigestOf(bytes), outcome: 'over-limit', detail: 'maxParsePassesPerSource' });
+    expect(r.breaches).toEqual([{ limit: 'maxParsePassesPerSource', declared: 0, observed: 1, path: 'notes/nul.md' }]);
+  });
+});
+
+// syzygy-bpyt.16 (ruled on syzygy-bpyt.1.14): the reader hands a blob's decoded text to the scan with its line ends as they are, and the
+// code-context mask ends a line at CRLF, CR and LF alike, so a CRLF or CR blob gets the outcome its LF form gets. The first text was
+// admitted under CRLF and CR before the fix (a backtick opener whose info text holds a backtick, hiding a script element as an inline
+// span); the second was excluded (a tilde fence that the mask did not recognize, leaving the script element it holds in the open).
+describe('a CRLF or CR blob gets the outcome its LF form gets', () => {
+  const FAIL_OPEN = ['# Doc', '', '```a`b', '<script>alert(1)</script>', '```', ''];
+  const BENIGN = ['# Doc', '', '~~~', '<script>alert(1)</script>', '~~~', 'after', ''];
+
+  it.each(ENDS)('%s: a backtick opener whose info text holds a backtick is excluded as a malformed code context, with a body-free record', (_name, end) => {
+    const text = FAIL_OPEN.join(end);
+    const result = readOne(text);
+    expect(result.kind).toBe('unavailable');
+    expect(result.record.outcome).toBe('active-content');
+    expect(result.record.activeContent).toEqual([{ form: 'malformed-code-context', line: 3, column: 1, context: 'backtick-fence-with-backtick-in-info-string' }]);
+    expect(result.record.bytes).toBe(enc.encode(text).byteLength);
+    expect(JSON.stringify(result)).not.toContain('alert(1)');
+  });
+
+  it.each(ENDS)('%s: a script element inside a closed tilde fence reads as text, byte for byte', (_name, end) => {
+    const text = BENIGN.join(end);
+    const result = readOne(text);
+    expect(result.kind).toBe('text');
+    expect(result.record.outcome).toBe('read');
+    expect(result.record.activeContent).toBeUndefined();
+    if (result.kind === 'text') expect(result.text).toBe(text);
+  });
+});
+
+describe('a 200,000-line closed fence under the read limit (GP-B2 Q1)', () => {
+  // GP-B2 Q1 (syzygy-bpyt.1.18): a blob under the per-source read limit whose closed fence runs 200,000 lines used to throw a RangeError out
+  // of the reader (it rethrows everything but a parse-pass breach); it now reads, and the active-content scan decides it.
+  const LONG_LINES = 200_000;
+
+  // A larger stack (a worker-thread pool runs at 4 MB) lets the old line pass the size tests below; this canary fails first, by name.
+  it('one spread call over 200,002 arguments still overflows the stack in this test process', () => {
+    const sink: unknown[] = [];
+    expect(() => sink.push(...new Array<unknown>(LONG_LINES + 2))).toThrow(RangeError);
+  });
+
+  it.each(ENDS)('%s: a 200,000-line closed fence holding a script element reads as text, under the read limit', (_name, end) => {
+    const text = `~~~${end}<script>${end}${`x${end}`.repeat(LONG_LINES)}~~~${end}after${end}`;
+    expect(enc.encode(text).byteLength).toBeLessThan(PWB_RESOURCE_LIMITS.maxBytesPerSource);
+    const result = readOne(text);
+    expect(result.kind).toBe('text');
+    expect(result.record.outcome).toBe('read');
+    expect(result.record.activeContent).toBeUndefined();
+    if (result.kind === 'text') expect(result.text === text, 'the text read differs from the blob').toBe(true);
+  });
+
+  it.each(ENDS)('%s: a script element after a 200,000-line closed fence is found, with a body-free record', (_name, end) => {
+    const text = `~~~${end}${`x${end}`.repeat(LONG_LINES)}~~~${end}<script>alert(1)</script>${end}`;
+    expect(enc.encode(text).byteLength).toBeLessThan(PWB_RESOURCE_LIMITS.maxBytesPerSource);
+    const result = readOne(text);
+    expect(result.kind).toBe('unavailable');
+    expect(result.record.outcome).toBe('active-content');
+    expect(result.record.activeContent).toEqual([
+      { form: 'script-element', line: 200003, column: 1 },
+      { form: 'script-element', line: 200003, column: 17 },
+    ]);
+    expect(JSON.stringify(result)).not.toContain('alert(1)');
+  });
+
+  it.each(ENDS)('%s: scanActiveContent over a 200,000-line closed fence finds nothing inside it', (_name, end) => {
+    expect(scanActiveContent(`~~~${end}<script>${end}${`x${end}`.repeat(LONG_LINES)}~~~${end}`)).toEqual([]);
+  });
+});
+
+// syzygy-bpyt.55 (D1): the recognizer is total, so a malformed text still has ranges (an unclosed fence runs to the end, an opener with a
+// backtick in its info string still opens, a span open at a fence opener is dropped). The gate never acts on them: the profile's decision
+// is to exclude the whole artifact, so the scan reports the one malformed finding and reads nothing else of the text, and the reader hands
+// no text on. Each text holds a script element inside the recovered range and one outside it; neither is reported.
+describe('a malformed code context is excluded whole, and the recognizer\'s recovery is never acted on', () => {
+  const CASES = [
+    ['unclosed-fence', ['<script>out</script>', '```', '<script>in</script>'].join('\n'), 2],
+    ['backtick-fence-with-backtick-in-info-string', ['```a`b', '<script>in</script>', '```', '<script>out</script>'].join('\n'), 1],
+    ['unclosed-inline-span', ['`open', '```', '<script>in</script>', '```', '<script>out</script>'].join('\n'), 1],
+  ] as const;
+
+  it.each(CASES)('%s: the scan reports the one finding and nothing from the recovered ranges', (reason, text, line) => {
+    const recognition = recognizeCodeContexts(text);
+    expect(recognition.malformed).toEqual({ reason, line });
+    expect(recognition.fenceRanges.length).toBeGreaterThan(0);
+    expect(scanActiveContent(text)).toEqual([{ form: 'malformed-code-context', line, column: 1, context: reason }]);
+  });
+
+  it.each(CASES)('%s: the reader refuses the blob and hands on no text', (reason, text, line) => {
+    const result = readOne(text);
+    expect(result.kind).toBe('unavailable');
+    expect('text' in result).toBe(false);
+    expect(result.record.outcome).toBe('active-content');
+    expect(result.record.activeContent).toEqual([{ form: 'malformed-code-context', line, column: 1, context: reason }]);
+  });
+});
+
+// GP-B2 former Q8 (agent work, syzygy-bpyt.1.20): every finding follows the mask's CRLF/CR/LF line rule; columns retain raw UTF-16 units.
+describe('reported positions in CRLF and bare-CR texts', () => {
+  it('CRLF, CR and LF positions, charges and repeated calls follow the mask line rule', () => {
+    expect(scanActiveContent('a\r\n<script>x</script>')).toEqual([{ form: 'script-element', line: 2, column: 1 }, { form: 'script-element', line: 2, column: 10 }]);
+    expect(scanActiveContent('a\r<script>x</script>')).toEqual([{ form: 'script-element', line: 2, column: 1 }, { form: 'script-element', line: 2, column: 10 }]);
+    expect(scanActiveContent('a\rb\r`x')).toEqual([{ form: 'malformed-code-context', line: 3, column: 1, context: 'unclosed-inline-span' }]);
+    // Literal per-input oracles; A/B/A and reverse order use independent callbacks.
+    const rows = [
+      ['', []], ['benign\r\nwords\r\n', []],
+      ['a\n<script>x</script>', [{ form: 'script-element', line: 2, column: 1 }, { form: 'script-element', line: 2, column: 10 }]],
+      ['\r\n\r\n<div>', [{ form: 'html-tag', line: 3, column: 1 }]],
+      ['\n\r<div>', [{ form: 'html-tag', line: 3, column: 1 }]],
+      ['\r\r\n<div>', [{ form: 'html-tag', line: 3, column: 1 }]],
+      ['x\r\n\ry\n  <svg>\r', [{ form: 'svg-element', line: 4, column: 3 }]],
+      ['x\r<!-- example -->', [{ form: 'html-comment-or-declaration', line: 2, column: 1 }]],
+      ['x\r <img onclick="example">', [{ form: 'event-handler-attribute', line: 2, column: 2 }, { form: 'html-tag', line: 2, column: 2 }]],
+      ['x\r[x](javascript:example)', [{ form: 'unsafe-url-scheme', line: 2, column: 3 }]],
+      ['x\r[x](&#106;avascript:example)', [{ form: 'obfuscated-link-destination', line: 2, column: 3 }]],
+      ['a\rb\r`x', [{ form: 'malformed-code-context', line: 3, column: 1, context: 'unclosed-inline-span' }]],
+      ['<div>\r<svg>\r<script>x</script>', [
+        { form: 'html-tag', line: 1, column: 1 }, { form: 'svg-element', line: 2, column: 1 },
+        { form: 'script-element', line: 3, column: 1 }, { form: 'script-element', line: 3, column: 10 },
+      ]],
+      ...['\n', '\r\n', '\r'].flatMap((end) => [
+        ['x' + end + '<div>', [{ form: 'html-tag', line: 2, column: 1 }]],
+        ['x' + end + '<svg>', [{ form: 'svg-element', line: 2, column: 1 }]],
+        ['x' + end + '<!-- example -->', [{ form: 'html-comment-or-declaration', line: 2, column: 1 }]],
+        ['x' + end + '<img onclick="example">', [{ form: 'event-handler-attribute', line: 2, column: 1 }, { form: 'html-tag', line: 2, column: 1 }]],
+        ['x' + end + '[x](javascript:example)', [{ form: 'unsafe-url-scheme', line: 2, column: 3 }]],
+        ['x' + end + '[x](&#106;avascript:example)', [{ form: 'obfuscated-link-destination', line: 2, column: 3 }]],
+      ] as const),
+    ] as const;
+    for (const [raw, findings] of [...rows, ...[...rows].reverse(), ...rows]) {
+      const charged: string[] = [];
+      expect(scanActiveContent(raw), JSON.stringify(raw)).toEqual(findings);
+      expect(scanActiveContentCharged(raw, (pass) => { charged.push(pass); return undefined; })).toEqual({ kind: 'scanned', findings });
+      expect(charged).toEqual(raw === 'a\rb\r`x'
+        ? ['markdown-code-context-mask']
+        : ['markdown-code-context-mask', 'active-html-svg-script-handler', 'unsafe-url-positions']);
+    }
+  });
+
+  it('U+2028 is line content: an LF text reports its finding on line 1', () => {
+    for (const separator of ['\u2028', '\u2029', '\u0085', '\v', '\f']) {
+      expect(scanActiveContent(`a${separator}<script>x</script>`)).toEqual([{ form: 'script-element', line: 1, column: 3 }, { form: 'script-element', line: 1, column: 12 }]);
+    }
+    // The three PR #544 N3 probes, for each Q7 separator (the control has none).
+    for (const separator of ['\u2028', '\u2029']) {
+      expect(scanActiveContent('```' + separator + '<script>x</script>```')).toEqual([{ form: 'malformed-code-context', line: 1, column: 1, context: 'backtick-fence-with-backtick-in-info-string' }]);
+      expect(scanActiveContent('```<script>x</script>```')).toEqual([{ form: 'malformed-code-context', line: 1, column: 1, context: 'backtick-fence-with-backtick-in-info-string' }]);
+      expect(scanActiveContent('~~~' + separator + '\n<script>x</script>\n~~~')).toEqual([]);
+      expect(scanActiveContent('```' + separator + '\n<script>x</script>\n```')).toEqual([]);
+    }
   });
 });
 
@@ -598,9 +805,10 @@ describe('the reader charges one shared resource ledger', () => {
     // Phase A took the body, counted it and validated it (nine passes).
     expect(ledger.chargeBody(PATH, oidOf(PATH), size)).toBeUndefined();
     for (let i = 0; i < 9; i += 1) ledger.chargePass(PATH, 'utf8-and-nul-validation');
-    ledger.remember(PATH, oidOf(PATH), { bytes: BYTES[PATH] as Uint8Array, text: TEXTS[PATH] as string });
+    const bodies = createTransientBodies();
+    bodies.remember(PATH, oidOf(PATH), { bytes: BYTES[PATH] as Uint8Array, text: TEXTS[PATH] as string });
     const spy = gitSpy();
-    const r = createExactObjectReader({ runGit: spy.runGit, tree: indexGitTree(TREE), ledger });
+    const r = createExactObjectReader({ runGit: spy.runGit, tree: indexGitTree(TREE), ledger, bodies });
     const result = r.read(PATH);
     expect(result.kind).toBe('text');
     if (result.kind !== 'text') throw new Error('unreachable');

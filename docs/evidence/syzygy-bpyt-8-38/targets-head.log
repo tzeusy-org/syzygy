@@ -1,0 +1,43 @@
+RV531-R1-dot-slash-dropped killed 1 ['Tests  2 failed | 163 passed (165)'] 14.1 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a ./ path dependency as naming no module
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a dependency on its own directory as naming no module
+RV531-R2-bare-dot-dropped killed 1 ['Tests  1 failed | 164 passed (165)'] 17.0 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a dependency on its own directory as naming no module
+RV531-R3-tar-forms-dropped killed 1 ['Tests  2 failed | 163 passed (165)'] 13.7 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a .tar dependency as naming no module
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a .tar.gz dependency as naming no module
+RV531-R4-tilde-loosened killed 1 ['Tests  1 failed | 164 passed (165)'] 11.0 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > leaves a bare name declared as a registry tilde range outside the workspace
+RV531-R5-tarball-end-anchor-dropped killed 1 ['Tests  1 failed | 164 passed (165)'] 8.4 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > leaves a bare name declared as a git dependency whose path holds .tgz outside the workspace
+RV531-R6-root-dependencies-dropped killed 1 ['Tests  1 failed | 164 passed (165)'] 11.6 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads the workspace root's manifest beside the packages'
+RV531-R7-own-package-only killed 1 ['Tests  1 failed | 164 passed (165)'] 8.6 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a file: dependency of another package as naming no module
+RV531-R8-git-reads-local killed 1 ['Tests  2 failed | 163 passed (165)'] 8.8 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > leaves a bare name declared as a git dependency outside the workspace
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > leaves a bare name declared as a git dependency whose path holds .tgz outside the workspace
+RV531-C1-extension-end-anchor-dropped killed 1 ['Tests  1 failed | 164 passed (165)'] 8.5 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > reads every module TypeScript compiles under src, .mts, .cts and .tsx among them, and no test module
+RV531-C2-cts-dropped killed 1 ['Tests  1 failed | 164 passed (165)'] 7.3 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > reads every module TypeScript compiles under src, .mts, .cts and .tsx among them, and no test module
+RV531-C3-tsx-tests-kept killed 1 ['Tests  1 failed | 164 passed (165)'] 9.3 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > reads every module TypeScript compiles under src, .mts, .cts and .tsx among them, and no test module
+RV531-C4-test-dot-dropped killed 1 ['Tests  1 failed | 164 passed (165)'] 8.9 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > reads every module TypeScript compiles under src, .mts, .cts and .tsx among them, and no test module
+RV531-S1-parse-rereads-tree killed 1 ['Tests  2 failed | 163 passed (165)'] 7.3 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > adds each module's census to what it reports unlifted
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > reads every module TypeScript compiles under src, .mts, .cts and .tsx among them, and no test module
+RV531-S2-tree-not-recursive killed 1 ['Tests  1 failed | 164 passed (165)'] 12.1 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > reads every src directory to its depth
+RV531-T1-root-dot-slash-alias killed 1 ['Tests  2 failed | 163 passed (165)'] 7.7 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > resolves every workspace specifier on it, and reaches past the entry's own imports
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > resolves every workspace import the CLI reaches, dynamic ones included
+RV531-T2-remote-tarball-faithful killed 1 ['Tests  2 failed | 163 passed (165)'] 6.7 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > resolves every workspace specifier on it, and reaches past the entry's own imports
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > resolves every workspace import the CLI reaches, dynamic ones included
+RV531-T3-root-bare-path-alias survives 0 ['Tests  165 passed (165)'] 6.7 clean
+RV531-T4-npm-alias-registry-faithful killed 1 ['Tests  2 failed | 163 passed (165)'] 10.5 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > resolves every workspace specifier on it, and reaches past the entry's own imports
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > resolves every workspace import the CLI reaches, dynamic ones included
+wrote /tmp/la-b838/rev-head.json 18

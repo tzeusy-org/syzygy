@@ -1,0 +1,329 @@
+OK   commit subject.base=c104771f is an ancestor of HEAD
+OK   commit subject.main=8ff50172 is an ancestor of HEAD
+OK   commit subject.evidenceCommit=3fc3709f is an ancestor of HEAD
+OK   commit resultsRanAt.mutants=3fc3709f is an ancestor of HEAD
+OK   commit resultsRanAt.censusHead=3fc3709f is an ancestor of HEAD
+OK   commit resultsRanAt.daemonEntryHead=8aaef446 is an ancestor of HEAD
+OK   commit resultsRanAt.daemonEntryOldTest=8aaef446 is an ancestor of HEAD
+OK   commit resultsRanAt.cpuSeparation=ab70ef7b is an ancestor of HEAD
+OK   subject.main is the PR base :: 8ff50172b127cba676ff32ce62c12c91b2b0d924
+OK   testDiffSha256 recomputed over git diff main..evidenceCommit
+OK   test files unchanged from evidenceCommit to HEAD
+OK   test file digest capture-test-artifact-main.test.ts
+OK   test file digest main.test.ts
+OK   test file digest redis-shaped-discovery.test.ts
+OK   test file digest daemon-entry-unchanged.system.test.ts
+OK   test file digest git-object-reader.test.ts
+OK   test file digest dossier-evaluation.test.ts
+OK   test file digest dossier-profile.test.ts
+OK   test file digest excerpt.test.ts
+OK   test file digest test-artifact-verification.test.ts
+OK   no product file changed base..HEAD :: []
+OK   changed test files equal the record subject
+OK   file digest bound-and-pin-mutants.json
+OK   file digest census-base.json
+OK   file digest census-head.json
+OK   file digest cpu-separation.json
+OK   file digest daemon-entry-base-test.json
+OK   file digest daemon-entry-head.json
+OK   file digest durations/dossier-profile.json
+OK   file digest durations/excerpt.json
+OK   file digest durations/test-artifact-verification.json
+OK   file digest full-suite/attempt-1.json
+OK   file digest full-suite/attempt-2.json
+OK   file digest full-suite/attempt-3.json
+OK   file digest full-suite/attempt-4.json
+OK   file digest full-suite/attempt-5.json
+OK   file digest tools/bound_and_pin_mutants.py
+OK   file digest tools/build_record.py
+OK   file digest tools/cpu_separation.py
+OK   file digest tools/daemon_entry_probe.py
+OK   file digest tools/mutant-cases.json
+OK   file digest tools/row_delta.py
+OK   file digest tools/suite_summary.py
+OK   file digest tools/timing_census.py
+OK   record.files covers every tracked evidence file :: []
+OK   bound-and-pin-mutants.json: tool bound_and_pin_mutants.py digest at 3fc3709f
+OK   bound-and-pin-mutants.json: tool bound_and_pin_mutants.py digest at 447d9f08
+OK   bound-and-pin-mutants.json: cases digest at HEAD
+OK   cpu-separation.json: tool cpu_separation.py digest at 3fc3709f
+OK   cpu-separation.json: tool cpu_separation.py digest at 447d9f08
+FAIL cpu-separation.json: cases digest at HEAD
+OK   daemon-entry-head.json: tool daemon_entry_probe.py digest at 3fc3709f
+OK   daemon-entry-head.json: tool daemon_entry_probe.py digest at 447d9f08
+OK   daemon-entry-base-test.json: tool daemon_entry_probe.py digest at 3fc3709f
+OK   daemon-entry-base-test.json: tool daemon_entry_probe.py digest at 447d9f08
+OK   census-head.json: tool timing_census.py digest at 3fc3709f
+OK   census-head.json: tool timing_census.py digest at 447d9f08
+OK   census-base.json: tool timing_census.py digest at 3fc3709f
+OK   census-base.json: tool timing_census.py digest at 447d9f08
+OK   mutants ran at evidenceCommit
+OK   mutant base side is subject.base
+OK   mutant result ids equal mutant-cases ids
+OK   control-capture: fragments in the result equal mutant-cases.json
+OK   control-capture/base: outcome pass agrees with exit 0 and rows; expected pass
+OK   control-capture/head: outcome pass agrees with exit 0 and rows; expected pass
+OK   fifo-no-lstat: fragments in the result equal mutant-cases.json
+OK   fifo-no-lstat/base: old occurs once in test-artifact-verification.ts :: 1
+OK   fifo-no-lstat/base: outcome fail agrees with exit 1 and rows; expected fail
+OK   fifo-no-lstat/base: a failed row names the title
+OK   fifo-no-lstat/head: old occurs once in test-artifact-verification.ts :: 1
+OK   fifo-no-lstat/head: outcome fail agrees with exit 1 and rows; expected fail
+OK   fifo-no-lstat/head: a failed row names the title
+OK   fifo-blocking-open: fragments in the result equal mutant-cases.json
+OK   fifo-blocking-open/base: old occurs once in test-artifact-verification.ts :: 1
+OK   fifo-blocking-open/base: old occurs once in test-artifact-verification.ts :: 1
+OK   fifo-blocking-open/base: outcome killed agrees with exit -9 and rows; expected killed
+OK   fifo-blocking-open/head: old occurs once in test-artifact-verification.ts :: 1
+OK   fifo-blocking-open/head: old occurs once in test-artifact-verification.ts :: 1
+OK   fifo-blocking-open/head: outcome killed agrees with exit -9 and rows; expected killed
+OK   control-main: fragments in the result equal mutant-cases.json
+OK   control-main/base: outcome pass agrees with exit 0 and rows; expected pass
+OK   control-main/head: outcome pass agrees with exit 0 and rows; expected pass
+OK   started-waits-for-bound: fragments in the result equal mutant-cases.json
+OK   started-waits-for-bound/base: old occurs once in main.test.ts :: 1
+OK   started-waits-for-bound/base: outcome fail agrees with exit 1 and rows; expected fail
+OK   started-waits-for-bound/base: a failed row names the title
+OK   started-waits-for-bound/head: old occurs once in main.test.ts :: 1
+OK   started-waits-for-bound/head: outcome fail agrees with exit 1 and rows; expected fail
+OK   started-waits-for-bound/head: a failed row names the title
+OK   control-reader-amp: fragments in the result equal mutant-cases.json
+OK   control-reader-amp/base: outcome pass agrees with exit 0 and rows; expected pass
+OK   control-reader-amp/head: outcome pass agrees with exit 0 and rows; expected pass
+OK   reader-no-call-budget: fragments in the result equal mutant-cases.json
+OK   reader-no-call-budget/base: old occurs once in git-object-reader.ts :: 1
+OK   reader-no-call-budget/base: outcome fail agrees with exit 1 and rows; expected fail-or-killed
+OK   reader-no-call-budget/base: a failed row names the title
+OK   reader-no-call-budget/head: old occurs once in git-object-reader.ts :: 1
+OK   reader-no-call-budget/head: outcome fail agrees with exit 1 and rows; expected fail-or-killed
+OK   reader-no-call-budget/head: a failed row names the title
+OK   control-reader-cycle: fragments in the result equal mutant-cases.json
+OK   control-reader-cycle/base: outcome pass agrees with exit 0 and rows; expected pass
+OK   control-reader-cycle/head: outcome pass agrees with exit 0 and rows; expected pass
+OK   reader-no-depth-cap: fragments in the result equal mutant-cases.json
+OK   reader-no-depth-cap/base: old occurs once in git-object-reader.ts :: 1
+OK   reader-no-depth-cap/base: outcome fail agrees with exit 1 and rows; expected fail-or-killed
+OK   reader-no-depth-cap/base: a failed row names the title
+OK   reader-no-depth-cap/head: old occurs once in git-object-reader.ts :: 1
+OK   reader-no-depth-cap/head: outcome fail agrees with exit 1 and rows; expected fail-or-killed
+OK   reader-no-depth-cap/head: a failed row names the title
+OK   control-reader-special: fragments in the result equal mutant-cases.json
+OK   control-reader-special/base: outcome pass agrees with exit 0 and rows; expected pass
+OK   control-reader-special/head: outcome pass agrees with exit 0 and rows; expected pass
+OK   reader-blocking-open: fragments in the result equal mutant-cases.json
+OK   reader-blocking-open/base: old occurs once in git-object-reader.ts :: 1
+OK   reader-blocking-open/base: outcome fail agrees with exit 1 and rows; expected fail-or-killed
+OK   reader-blocking-open/base: a failed row names the title
+OK   reader-blocking-open/head: old occurs once in git-object-reader.ts :: 1
+OK   reader-blocking-open/head: outcome fail agrees with exit 1 and rows; expected fail-or-killed
+OK   reader-blocking-open/head: a failed row names the title
+OK   control-reader-pad: fragments in the result equal mutant-cases.json
+OK   control-reader-pad/base: outcome pass agrees with exit 0 and rows; expected pass
+OK   control-reader-pad/head: outcome pass agrees with exit 0 and rows; expected pass
+OK   reader-no-stored-bound: fragments in the result equal mutant-cases.json
+OK   reader-no-stored-bound/base: old occurs once in git-object-reader.ts :: 1
+OK   reader-no-stored-bound/base: outcome fail agrees with exit 1 and rows; expected fail-or-killed
+OK   reader-no-stored-bound/base: a failed row names the title
+OK   reader-no-stored-bound/head: old occurs once in git-object-reader.ts :: 1
+OK   reader-no-stored-bound/head: outcome fail agrees with exit 1 and rows; expected fail-or-killed
+OK   reader-no-stored-bound/head: a failed row names the title
+OK   control-dossier-scan: fragments in the result equal mutant-cases.json
+OK   control-dossier-scan/base: outcome pass agrees with exit 0 and rows; expected pass
+OK   control-dossier-scan/head: outcome pass agrees with exit 0 and rows; expected pass
+OK   dossier-page-bytes-plus-one: fragments in the result equal mutant-cases.json
+OK   dossier-page-bytes-plus-one/base: old occurs once in dossier-evaluation.ts :: 1
+OK   dossier-page-bytes-plus-one/base: outcome fail agrees with exit 1 and rows; expected fail
+OK   dossier-page-bytes-plus-one/base: a failed row names the title
+OK   dossier-page-bytes-plus-one/head: old occurs once in dossier-evaluation.ts :: 1
+OK   dossier-page-bytes-plus-one/head: outcome fail agrees with exit 1 and rows; expected fail
+OK   dossier-page-bytes-plus-one/head: a failed row names the title
+OK   dossier-first-level-short: fragments in the result equal mutant-cases.json
+OK   dossier-first-level-short/base: old occurs once in dossier-evaluation.ts :: 1
+OK   dossier-first-level-short/base: outcome fail agrees with exit 1 and rows; expected fail
+OK   dossier-first-level-short/base: a failed row names the title
+OK   dossier-first-level-short/head: old occurs once in dossier-evaluation.ts :: 1
+OK   dossier-first-level-short/head: outcome fail agrees with exit 1 and rows; expected fail
+OK   dossier-first-level-short/head: a failed row names the title
+OK   dossier-total-first-page: fragments in the result equal mutant-cases.json
+OK   dossier-total-first-page/base: old occurs once in dossier-evaluation.ts :: 1
+OK   dossier-total-first-page/base: outcome fail agrees with exit 1 and rows; expected fail
+OK   dossier-total-first-page/base: a failed row names the title
+OK   dossier-total-first-page/head: old occurs once in dossier-evaluation.ts :: 1
+OK   dossier-total-first-page/head: outcome fail agrees with exit 1 and rows; expected fail
+OK   dossier-total-first-page/head: a failed row names the title
+OK   control-dossier-budget: fragments in the result equal mutant-cases.json
+OK   control-dossier-budget/base: outcome pass agrees with exit 0 and rows; expected pass
+OK   control-dossier-budget/head: outcome pass agrees with exit 0 and rows; expected pass
+OK   dossier-budget-first-level-short: fragments in the result equal mutant-cases.json
+OK   dossier-budget-first-level-short/base: old occurs once in dossier-evaluation.ts :: 1
+OK   dossier-budget-first-level-short/base: outcome fail agrees with exit 1 and rows; expected fail
+OK   dossier-budget-first-level-short/base: a failed row names the title
+OK   dossier-budget-first-level-short/head: old occurs once in dossier-evaluation.ts :: 1
+OK   dossier-budget-first-level-short/head: outcome fail agrees with exit 1 and rows; expected fail
+OK   dossier-budget-first-level-short/head: a failed row names the title
+OK   dossier-budget-total-first-page: fragments in the result equal mutant-cases.json
+OK   dossier-budget-total-first-page/base: old occurs once in dossier-evaluation.ts :: 1
+OK   dossier-budget-total-first-page/base: outcome fail agrees with exit 1 and rows; expected fail
+OK   dossier-budget-total-first-page/base: a failed row names the title
+OK   dossier-budget-total-first-page/head: old occurs once in dossier-evaluation.ts :: 1
+OK   dossier-budget-total-first-page/head: outcome fail agrees with exit 1 and rows; expected fail
+OK   dossier-budget-total-first-page/head: a failed row names the title
+OK   control-redis: fragments in the result equal mutant-cases.json
+OK   control-redis/base: outcome pass agrees with exit 0 and rows; expected pass
+OK   control-redis/head: outcome pass agrees with exit 0 and rows; expected pass
+OK   redis-stop-at-first-misfit: fragments in the result equal mutant-cases.json
+OK   redis-stop-at-first-misfit/base: old occurs once in discovery.ts :: 1
+OK   redis-stop-at-first-misfit/base: outcome fail agrees with exit 1 and rows; expected fail
+OK   redis-stop-at-first-misfit/base: a failed row names the title
+OK   redis-stop-at-first-misfit/head: old occurs once in discovery.ts :: 1
+OK   redis-stop-at-first-misfit/head: outcome fail agrees with exit 1 and rows; expected fail
+OK   redis-stop-at-first-misfit/head: a failed row names the title
+OK   control-dossier-profile: fragments in the result equal mutant-cases.json
+OK   control-dossier-profile/base: outcome pass agrees with exit 0 and rows; expected pass
+OK   control-dossier-profile/head: outcome pass agrees with exit 0 and rows; expected pass
+OK   edge-backtracking-regex: fragments in the result equal mutant-cases.json
+OK   edge-backtracking-regex/base: old occurs once in dossier-profile.ts :: 1
+OK   edge-backtracking-regex/base: outcome pass agrees with exit 0 and rows; expected pass
+OK   edge-backtracking-regex/head: old occurs once in dossier-profile.ts :: 1
+OK   edge-backtracking-regex/head: outcome killed agrees with exit -9 and rows; expected fail-or-killed
+OK   control-excerpt: fragments in the result equal mutant-cases.json
+OK   control-excerpt/base: outcome pass agrees with exit 0 and rows; expected pass
+OK   control-excerpt/head: outcome pass agrees with exit 0 and rows; expected pass
+OK   excerpt-quadratic-pattern-only: fragments in the result equal mutant-cases.json
+OK   excerpt-quadratic-pattern-only/base: old occurs once in excerpt.ts :: 1
+OK   excerpt-quadratic-pattern-only/base: outcome pass agrees with exit 0 and rows; expected pass
+OK   excerpt-quadratic-pattern-only/head: old occurs once in excerpt.ts :: 1
+OK   excerpt-quadratic-pattern-only/head: outcome pass agrees with exit 0 and rows; expected pass
+OK   excerpt-no-prefix-cap: fragments in the result equal mutant-cases.json
+OK   excerpt-no-prefix-cap/base: old occurs once in excerpt.ts :: 1
+OK   excerpt-no-prefix-cap/base: outcome fail agrees with exit 1 and rows; expected fail
+OK   excerpt-no-prefix-cap/base: a failed row names the title
+OK   excerpt-no-prefix-cap/head: old occurs once in excerpt.ts :: 1
+OK   excerpt-no-prefix-cap/head: outcome fail agrees with exit 1 and rows; expected fail
+OK   excerpt-no-prefix-cap/head: a failed row names the title
+OK   excerpt-no-cap-quadratic-pattern: fragments in the result equal mutant-cases.json
+OK   excerpt-no-cap-quadratic-pattern/base: old occurs once in excerpt.ts :: 1
+OK   excerpt-no-cap-quadratic-pattern/base: old occurs once in excerpt.ts :: 1
+OK   excerpt-no-cap-quadratic-pattern/base: outcome fail agrees with exit 1 and rows; expected fail-or-killed
+OK   excerpt-no-cap-quadratic-pattern/base: a failed row names the title
+OK   excerpt-no-cap-quadratic-pattern/head: old occurs once in excerpt.ts :: 1
+OK   excerpt-no-cap-quadratic-pattern/head: old occurs once in excerpt.ts :: 1
+OK   excerpt-no-cap-quadratic-pattern/head: outcome fail agrees with exit 1 and rows; expected fail-or-killed
+OK   excerpt-no-cap-quadratic-pattern/head: a failed row names the title
+OK   excerpt-time-only: fragments in the result equal mutant-cases.json
+OK   excerpt-time-only/head: old occurs once in excerpt.ts :: 1
+OK   excerpt-time-only/head: old occurs once in excerpt.ts :: 1
+OK   excerpt-time-only/head: old occurs once in excerpt.test.ts :: 1
+OK   excerpt-time-only/head: outcome pass agrees with exit 0 and rows; expected pass
+OK   control-junit-tags: fragments in the result equal mutant-cases.json
+OK   control-junit-tags/base: outcome pass agrees with exit 0 and rows; expected pass
+OK   control-junit-tags/head: outcome pass agrees with exit 0 and rows; expected pass
+OK   junit-tag-regex: fragments in the result equal mutant-cases.json
+OK   junit-tag-regex/base: old occurs once in test-artifact-verification.ts :: 1
+OK   junit-tag-regex/base: outcome killed agrees with exit -9 and rows; expected fail-or-killed
+OK   junit-tag-regex/head: old occurs once in test-artifact-verification.ts :: 1
+OK   junit-tag-regex/head: outcome killed agrees with exit -9 and rows; expected fail-or-killed
+OK   control-junit-word-run: fragments in the result equal mutant-cases.json
+OK   control-junit-word-run/base: outcome pass agrees with exit 0 and rows; expected pass
+OK   control-junit-word-run/head: outcome pass agrees with exit 0 and rows; expected pass
+OK   junit-attr-regex: fragments in the result equal mutant-cases.json
+OK   junit-attr-regex/base: old occurs once in test-artifact-verification.ts :: 1
+OK   junit-attr-regex/base: outcome killed agrees with exit -9 and rows; expected fail-or-killed
+OK   junit-attr-regex/head: old occurs once in test-artifact-verification.ts :: 1
+OK   junit-attr-regex/head: outcome killed agrees with exit -9 and rows; expected fail-or-killed
+OK   mutant totals cases=33 sides=65 asExpected=65
+OK   daemon-entry-head.json: main.ts, state-directory.ts and the test identical at 8aaef446 and HEAD
+OK   daemon-entry-head.json: testFileSha256 :: the tree
+OK   daemon-entry-head.json: P-static old occurs once :: 1
+OK   daemon-entry-head.json: P-static exit agrees with failed rows :: exit 1, 2 failed
+OK   daemon-entry-head.json: P-before-branches old occurs once :: 1
+OK   daemon-entry-head.json: P-before-branches exit agrees with failed rows :: exit 1, 2 failed
+OK   daemon-entry-head.json: P-daemon-dynamic old occurs once :: 1
+OK   daemon-entry-head.json: P-daemon-dynamic exit agrees with failed rows :: exit 1, 1 failed
+OK   daemon-entry-head.json: P-help-branch old occurs once :: 1
+OK   daemon-entry-head.json: P-help-branch exit agrees with failed rows :: exit 1, 2 failed
+OK   daemon-entry-head.json: P-invalid-branch old occurs once :: 1
+OK   daemon-entry-head.json: P-invalid-branch exit agrees with failed rows :: exit 1, 2 failed
+OK   daemon-entry-head.json: P-start-failure old occurs once :: 1
+OK   daemon-entry-head.json: P-start-failure exit agrees with failed rows :: exit 1, 1 failed
+OK   daemon-entry-head.json: P-entry-read old occurs once :: 1
+OK   daemon-entry-head.json: P-entry-read exit agrees with failed rows :: exit 1, 1 failed
+OK   daemon-entry-head.json: P-shutdown old occurs once :: 1
+OK   daemon-entry-head.json: P-shutdown exit agrees with failed rows :: exit 1, 2 failed
+OK   daemon-entry-head.json: P-close-failure old occurs once :: 1
+OK   daemon-entry-head.json: P-close-failure exit agrees with failed rows :: exit 1, 1 failed
+OK   daemon-entry-head.json: P-transitive old occurs once :: 1
+OK   daemon-entry-head.json: P-transitive exit agrees with failed rows :: exit 1, 1 failed
+OK   daemon-entry-head.json: E-type-only-import old occurs once :: 1
+OK   daemon-entry-head.json: E-type-only-import exit agrees with failed rows :: exit 1, 1 failed
+OK   daemon-entry-head.json: E-comment-in-branch old occurs once :: 1
+OK   daemon-entry-head.json: E-comment-in-branch exit agrees with failed rows :: exit 0, 0 failed
+OK   daemon-entry-head.json: E-renamed-binding old occurs once :: 1
+OK   daemon-entry-head.json: E-renamed-binding exit agrees with failed rows :: exit 0, 0 failed
+OK   daemon-entry-head.json: E-branch-swap old occurs once :: 1
+OK   daemon-entry-head.json: E-branch-swap exit agrees with failed rows :: exit 0, 0 failed
+OK   daemon-entry-head.json: H-hook-blind old occurs once :: 1
+OK   daemon-entry-head.json: H-hook-blind exit agrees with failed rows :: exit 1, 1 failed
+OK   daemon-entry-head.json: H-no-preload old occurs once :: 1
+OK   daemon-entry-head.json: H-no-preload exit agrees with failed rows :: exit 1, 1 failed
+OK   daemon-entry-base-test.json: main.ts, state-directory.ts and the test identical at 8aaef446 and HEAD
+OK   daemon-entry-base-test.json: testFileSha256 :: c104771ff90f47ffd070f2339c36010458679c71
+OK   daemon-entry-base-test.json: P-static old occurs once :: 1
+OK   daemon-entry-base-test.json: P-static exit agrees with failed rows :: exit 1, 1 failed
+OK   daemon-entry-base-test.json: P-before-branches old occurs once :: 1
+OK   daemon-entry-base-test.json: P-before-branches exit agrees with failed rows :: exit 1, 1 failed
+OK   daemon-entry-base-test.json: P-daemon-dynamic old occurs once :: 1
+OK   daemon-entry-base-test.json: P-daemon-dynamic exit agrees with failed rows :: exit 1, 1 failed
+OK   daemon-entry-base-test.json: P-help-branch old occurs once :: 1
+OK   daemon-entry-base-test.json: P-help-branch exit agrees with failed rows :: exit 1, 1 failed
+OK   daemon-entry-base-test.json: P-invalid-branch old occurs once :: 1
+OK   daemon-entry-base-test.json: P-invalid-branch exit agrees with failed rows :: exit 1, 1 failed
+OK   daemon-entry-base-test.json: P-start-failure old occurs once :: 1
+OK   daemon-entry-base-test.json: P-start-failure exit agrees with failed rows :: exit 1, 1 failed
+OK   daemon-entry-base-test.json: P-entry-read old occurs once :: 1
+OK   daemon-entry-base-test.json: P-entry-read exit agrees with failed rows :: exit 1, 1 failed
+OK   daemon-entry-base-test.json: P-shutdown old occurs once :: 1
+OK   daemon-entry-base-test.json: P-shutdown exit agrees with failed rows :: exit 1, 1 failed
+OK   daemon-entry-base-test.json: P-close-failure old occurs once :: 1
+OK   daemon-entry-base-test.json: P-close-failure exit agrees with failed rows :: exit 1, 1 failed
+OK   daemon-entry-base-test.json: P-transitive old occurs once :: 1
+OK   daemon-entry-base-test.json: P-transitive exit agrees with failed rows :: exit 0, 0 failed
+OK   daemon-entry-base-test.json: E-type-only-import old occurs once :: 1
+OK   daemon-entry-base-test.json: E-type-only-import exit agrees with failed rows :: exit 1, 1 failed
+OK   daemon-entry-base-test.json: E-comment-in-branch old occurs once :: 1
+OK   daemon-entry-base-test.json: E-comment-in-branch exit agrees with failed rows :: exit 1, 1 failed
+OK   daemon-entry-base-test.json: E-renamed-binding old occurs once :: 1
+OK   daemon-entry-base-test.json: E-renamed-binding exit agrees with failed rows :: exit 1, 1 failed
+OK   daemon-entry-base-test.json: E-branch-swap old occurs once :: 1
+OK   daemon-entry-base-test.json: E-branch-swap exit agrees with failed rows :: exit 1, 1 failed
+OK   daemon-entry-base-test.json: H-hook-blind old occurs not once (skipped) :: 0
+OK   daemon-entry-base-test.json: H-no-preload old occurs not once (skipped) :: 0
+OK   cpu-separation tree differs from evidenceCommit only in bound constants :: 8
+OK   EDGE_TRIM_CPU_MS: headRuns=10 >= 10 and headMax recomputed :: 64.094
+OK   EDGE_TRIM_CPU_MS/run of spaces in linear time: mutant min recomputed over 3 runs (3 capped)
+OK   EDGE_TRIM_CPU_MS: proposed bound = floor-2sf(geomean) = 1900
+OK   EDGE_TRIM_CPU_MS: committed 1900 at HEAD equals proposed; 29.6x head, 31.6x mutant
+FAIL EDGE_TRIM_CPU_MS: mutant runs per row [3] (brief asks >= 10)
+OK   HOSTILE_LINE_CPU_MS: headRuns=10 >= 10 and headMax recomputed :: 1.883
+OK   HOSTILE_LINE_CPU_MS/f spaces after an identifier: mutant min recomputed over 10 runs (0 capped)
+OK   HOSTILE_LINE_CPU_MS: proposed bound = floor-2sf(geomean) = 140
+OK   HOSTILE_LINE_CPU_MS: committed 140 at HEAD equals proposed; 74.3x head, 74.6x mutant
+OK   HOSTILE_LINE_CPU_MS: mutant runs per row [10] (brief asks >= 10)
+OK   TAG_SCAN_CPU_MS: headRuns=10 >= 10 and headMax recomputed :: 38.784
+OK   TAG_SCAN_CPU_MS/ opening tags at the ceiling: mutant min recomputed over 3 runs (3 capped)
+OK   TAG_SCAN_CPU_MS/d plural tags at the ceiling: mutant min recomputed over 3 runs (3 capped)
+OK   TAG_SCAN_CPU_MS/iss tag names at the ceiling: mutant min recomputed over 10 runs (0 capped)
+OK   TAG_SCAN_CPU_MS: proposed bound = floor-2sf(geomean) = 1500
+OK   TAG_SCAN_CPU_MS: committed 1500 at HEAD equals proposed; 38.7x head, 40.0x mutant
+FAIL TAG_SCAN_CPU_MS: mutant runs per row [3, 3, 10] (brief asks >= 10)
+OK   ATTRIBUTE_SCAN_CPU_MS: headRuns=10 >= 10 and headMax recomputed :: 154.665
+OK   ATTRIBUTE_SCAN_CPU_MS/ngle word run at the ceiling: mutant min recomputed over 3 runs (3 capped)
+OK   ATTRIBUTE_SCAN_CPU_MS: proposed bound = floor-2sf(geomean) = 3000
+OK   ATTRIBUTE_SCAN_CPU_MS: committed 3000 at HEAD equals proposed; 19.4x head, 20.0x mutant
+FAIL ATTRIBUTE_SCAN_CPU_MS: mutant runs per row [3] (brief asks >= 10)
+INFO full-suite attempt-1: {"tool": "suite_summary.py", "attempt": "attempt 1: two concurrent runs of the head", "cpus": 12}
+INFO full-suite attempt-2: {"tool": "suite_summary.py", "attempt": "attempt 2: two concurrent runs of the head", "cpus": 12}
+INFO full-suite attempt-3: {"tool": "suite_summary.py", "attempt": "attempt 3: the head beside the base, concurrently", "cpus": 12}
+INFO full-suite attempt-4: {"tool": "suite_summary.py", "attempt": "attempt 4: the head merged with origin/main, run twice in sequence", "cpus": 12}
+INFO full-suite attempt-5: {"tool": "suite_summary.py", "attempt": "attempt 5: the reworked head (threadCpuUsage bounds, load-hook and kept text rows), run twice in sequence", "cpus": 12}
+TOTAL FAIL 4

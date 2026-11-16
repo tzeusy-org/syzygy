@@ -1,0 +1,1677 @@
+{
+ "summary": {
+  "codeCommit": "497515ae38829439aa4faa01196d9e361bce8bd8",
+  "baseCommit": "d621bfa2",
+  "mutants": 24,
+  "killed": 23,
+  "survivedEquivalent": 1,
+  "survived": [],
+  "killedByExpectedKillerOnly": 8,
+  "expectedKillerNotAlone": []
+ },
+ "rows": [
+  {
+   "id": "CONTROL-code-commit",
+   "ranAt": "497515ae38829439aa4faa01196d9e361bce8bd8",
+   "fileSha256": "93b95f6d4eabc440344404d01040ba1f10bdceb65e69ab74c4ea59c1fa5831f7",
+   "detectors": {
+    "unit": {
+     "tests": 44,
+     "failed": 0,
+     "firstFailed": []
+    },
+    "fenceRules": {
+     "tests": 69,
+     "failed": 0,
+     "firstFailed": []
+    },
+    "callSites": {
+     "tests": 278,
+     "failed": 0,
+     "firstFailed": []
+    }
+   }
+  },
+  {
+   "id": "BASE-whole-file-of-the-base-commit",
+   "ranAt": "497515ae38829439aa4faa01196d9e361bce8bd8",
+   "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+   "replacements": "the whole file of d621bfa2",
+   "fileSha256": "a02c105a483d11a9e90d27aade01ef5ddee6b60b9e165a9a7193c5baaa21f8fe",
+   "note": "the new tests pin the fix: they fail on the base mask",
+   "outcome": "killed",
+   "detectors": {
+    "unit": {
+     "tests": 44,
+     "failed": 17,
+     "firstFailed": [
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CRLF: a backtick opener whose info string holds a backtick is malformed at its own line",
+       "error": "AssertionError: expected { Object (reason, line) } to deeply equal { \u2026(2) }"
+      },
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CR: a backtick opener whose info string holds a backtick is malformed at its own line",
+       "error": "Error: expected a malformed context"
+      },
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CRLF: the reported line counts each line end once",
+       "error": "AssertionError: expected { Object (reason, line) } to deeply equal { reason: 'unclosed-fence', line: 3 }"
+      },
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CR: the reported line counts each line end once",
+       "error": "AssertionError: expected { Object (reason, line) } to deeply equal { reason: 'unclosed-fence', line: 3 }"
+      }
+     ]
+    },
+    "fenceRules": {
+     "tests": 69,
+     "failed": 10,
+     "firstFailed": [
+      {
+       "test": "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read crlf",
+       "error": "AssertionError: the mask keeps the length and every terminator at its offset: expected '......................\\r\\n....\\n..\\n.\u2026' to be '......................\\r\\"
+      },
+      {
+       "test": "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read cr",
+       "error": "AssertionError: the mask keeps the length and every terminator at its offset: expected '......................\\r.........\\r' to be '......................\\r...\\"
+      },
+      {
+       "test": "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read firstCrlf",
+       "error": "AssertionError: backtick-col0 profile: expected 'VMMM' to be 'VHHV' // Object.is equality"
+      },
+      {
+       "test": "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read lastCrlf",
+       "error": "AssertionError: backtick-col0 profile: expected 'MMMV' to be 'VHHV' // Object.is equality"
+      }
+     ]
+    },
+    "callSites": {
+     "tests": 278,
+     "failed": 13,
+     "firstFailed": [
+      {
+       "test": "the project-documentation class (syzygy-2coz) CRLF: a documentation body is withheld as active content or admitted as its LF form is",
+       "error": "AssertionError: expected undefined to be 'active-content' // Object.is equality"
+      },
+      {
+       "test": "the project-documentation class (syzygy-2coz) CR: a documentation body is withheld as active content or admitted as its LF form is",
+       "error": "AssertionError: expected undefined to be 'active-content' // Object.is equality"
+      },
+      {
+       "test": "PWB-REQ-006 (amended) \u2014 phase-A seeds use the same context-aware guard CRLF: a seed is excluded or kept safe as its LF form is",
+       "error": "AssertionError: expected { kind: 'safe' } to deeply equal { kind: 'excluded', \u2026(2) }"
+      },
+      {
+       "test": "PWB-REQ-006 (amended) \u2014 phase-A seeds use the same context-aware guard CR: a seed is excluded or kept safe as its LF form is",
+       "error": "AssertionError: expected { kind: 'safe' } to deeply equal { kind: 'excluded', \u2026(2) }"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "MU1-lf-only",
+   "ranAt": "497515ae38829439aa4faa01196d9e361bce8bd8",
+   "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+   "replacements": [
+    {
+     "old": "const LINE_END = /\\r\\n|\\r|\\n/g;",
+     "new": "const LINE_END = /\\n/g;"
+    }
+   ],
+   "fileSha256": "cb5d76e1a249fe46fc3e62916009b85eb6bd2b9c62522f750c349a956b32dd7a",
+   "note": "the line model of the base",
+   "outcome": "killed",
+   "detectors": {
+    "unit": {
+     "tests": 44,
+     "failed": 17,
+     "firstFailed": [
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CRLF: a backtick opener whose info string holds a backtick is malformed at its own line",
+       "error": "AssertionError: expected { Object (reason, line) } to deeply equal { \u2026(2) }"
+      },
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CR: a backtick opener whose info string holds a backtick is malformed at its own line",
+       "error": "Error: expected a malformed context"
+      },
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CRLF: the reported line counts each line end once",
+       "error": "AssertionError: expected { Object (reason, line) } to deeply equal { reason: 'unclosed-fence', line: 3 }"
+      },
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CR: the reported line counts each line end once",
+       "error": "AssertionError: expected { Object (reason, line) } to deeply equal { reason: 'unclosed-fence', line: 3 }"
+      }
+     ]
+    },
+    "fenceRules": {
+     "tests": 69,
+     "failed": 10,
+     "firstFailed": [
+      {
+       "test": "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read crlf",
+       "error": "AssertionError: the mask keeps the length and every terminator at its offset: expected '......................\\r\\n....\\n..\\n.\u2026' to be '......................\\r\\"
+      },
+      {
+       "test": "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read cr",
+       "error": "AssertionError: the mask keeps the length and every terminator at its offset: expected '......................\\r.........\\r' to be '......................\\r...\\"
+      },
+      {
+       "test": "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read firstCrlf",
+       "error": "AssertionError: backtick-col0 profile: expected 'VMMM' to be 'VHHV' // Object.is equality"
+      },
+      {
+       "test": "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read lastCrlf",
+       "error": "AssertionError: backtick-col0 profile: expected 'MMMV' to be 'VHHV' // Object.is equality"
+      }
+     ]
+    },
+    "callSites": {
+     "tests": 278,
+     "failed": 13,
+     "firstFailed": [
+      {
+       "test": "the project-documentation class (syzygy-2coz) CRLF: a documentation body is withheld as active content or admitted as its LF form is",
+       "error": "AssertionError: expected undefined to be 'active-content' // Object.is equality"
+      },
+      {
+       "test": "the project-documentation class (syzygy-2coz) CR: a documentation body is withheld as active content or admitted as its LF form is",
+       "error": "AssertionError: expected undefined to be 'active-content' // Object.is equality"
+      },
+      {
+       "test": "PWB-REQ-006 (amended) \u2014 phase-A seeds use the same context-aware guard CRLF: a seed is excluded or kept safe as its LF form is",
+       "error": "AssertionError: expected { kind: 'safe' } to deeply equal { kind: 'excluded', \u2026(2) }"
+      },
+      {
+       "test": "PWB-REQ-006 (amended) \u2014 phase-A seeds use the same context-aware guard CR: a seed is excluded or kept safe as its LF form is",
+       "error": "AssertionError: expected { kind: 'safe' } to deeply equal { kind: 'excluded', \u2026(2) }"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "MU2-crlf-only",
+   "ranAt": "497515ae38829439aa4faa01196d9e361bce8bd8",
+   "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+   "replacements": [
+    {
+     "old": "const LINE_END = /\\r\\n|\\r|\\n/g;",
+     "new": "const LINE_END = /\\r?\\n/g;"
+    }
+   ],
+   "fileSha256": "5c88f459c904ffb17db7d8f7df5b416af51c9fbf30364207edf17cd95896665b",
+   "note": "a bare CR is line content",
+   "outcome": "killed",
+   "detectors": {
+    "unit": {
+     "tests": 44,
+     "failed": 10,
+     "firstFailed": [
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CR: a backtick opener whose info string holds a backtick is malformed at its own line",
+       "error": "Error: expected a malformed context"
+      },
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CR: the reported line counts each line end once",
+       "error": "AssertionError: expected { Object (reason, line) } to deeply equal { reason: 'unclosed-fence', line: 3 }"
+      },
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line mixed terminators: each one ends one line, whichever kind it is",
+       "error": "AssertionError: expected { Object (reason, line) } to deeply equal { reason: 'unclosed-fence', line: 3 }"
+      },
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line the mask keeps the length and every CR and LF at its offset (a CR is never blanked, joined to LF or dropped)",
+       "error": "AssertionError: expected { kind: 'malformed', \u2026(2) } to deeply equal { kind: 'masked', \u2026(3) }"
+      }
+     ]
+    },
+    "fenceRules": {
+     "tests": 69,
+     "failed": 6,
+     "firstFailed": [
+      {
+       "test": "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read cr",
+       "error": "AssertionError: the mask keeps the length and every terminator at its offset: expected '......................\\r.........\\r' to be '......................\\r...\\"
+      },
+      {
+       "test": "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read firstCr",
+       "error": "AssertionError: backtick-col0 profile: expected 'MMMM' to be 'VHHV' // Object.is equality"
+      },
+      {
+       "test": "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read cycle",
+       "error": "AssertionError: backtick-col0 profile: expected 'MMMM' to be 'VHHV' // Object.is equality"
+      },
+      {
+       "test": "Markdown fence recognizers: what each reader treats as inside a fence G1, fixed: a CRLF or CR source is excluded as a malformed code context, as the same LF source is",
+       "error": "AssertionError: \"\\r\": expected [] to deeply equal [ { \u2026(4) } ]"
+      }
+     ]
+    },
+    "callSites": {
+     "tests": 278,
+     "failed": 7,
+     "firstFailed": [
+      {
+       "test": "the project-documentation class (syzygy-2coz) CR: a documentation body is withheld as active content or admitted as its LF form is",
+       "error": "AssertionError: expected undefined to be 'active-content' // Object.is equality"
+      },
+      {
+       "test": "PWB-REQ-006 (amended) \u2014 phase-A seeds use the same context-aware guard CR: a seed is excluded or kept safe as its LF form is",
+       "error": "AssertionError: expected { kind: 'safe' } to deeply equal { kind: 'excluded', \u2026(2) }"
+      },
+      {
+       "test": "a CRLF or CR blob gets the outcome its LF form gets CR: a backtick opener whose info text holds a backtick is excluded as a malformed code context, with a body-free record",
+       "error": "AssertionError: expected 'text' to be 'unavailable' // Object.is equality"
+      },
+      {
+       "test": "a CRLF or CR blob gets the outcome its LF form gets CR: a script element inside a closed tilde fence reads as text, byte for byte",
+       "error": "AssertionError: expected 'unavailable' to be 'text' // Object.is equality"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "MU3-crlf-as-two-line-ends",
+   "ranAt": "497515ae38829439aa4faa01196d9e361bce8bd8",
+   "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+   "replacements": [
+    {
+     "old": "const LINE_END = /\\r\\n|\\r|\\n/g;",
+     "new": "const LINE_END = /\\r|\\n/g;"
+    }
+   ],
+   "fileSha256": "ca67335c9c3bf3cde5ee1424ed6cd969559b2e508378ba9954f3a6a3f8a05b74",
+   "note": "CRLF counts two lines: only a line-number pin kills it",
+   "outcome": "killed",
+   "detectors": {
+    "unit": {
+     "tests": 44,
+     "failed": 3,
+     "firstFailed": [
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CRLF: a backtick opener whose info string holds a backtick is malformed at its own line",
+       "error": "AssertionError: expected { \u2026(2) } to deeply equal { \u2026(2) }"
+      },
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CRLF: the reported line counts each line end once",
+       "error": "AssertionError: expected { reason: 'unclosed-fence', line: 5 } to deeply equal { reason: 'unclosed-fence', line: 3 }"
+      },
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line mixed terminators: each one ends one line, whichever kind it is",
+       "error": "AssertionError: expected { reason: 'unclosed-fence', line: 4 } to deeply equal { reason: 'unclosed-fence', line: 3 }"
+      }
+     ]
+    },
+    "fenceRules": {
+     "tests": 69,
+     "failed": 0,
+     "firstFailed": []
+    },
+    "callSites": {
+     "tests": 278,
+     "failed": 1,
+     "firstFailed": [
+      {
+       "test": "a CRLF or CR blob gets the outcome its LF form gets CRLF: a backtick opener whose info text holds a backtick is excluded as a malformed code context, with a body-free record",
+       "error": "AssertionError: expected [ { \u2026(4) } ] to deeply equal [ { \u2026(4) } ]"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "MU4-no-bare-cr",
+   "ranAt": "497515ae38829439aa4faa01196d9e361bce8bd8",
+   "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+   "replacements": [
+    {
+     "old": "const LINE_END = /\\r\\n|\\r|\\n/g;",
+     "new": "const LINE_END = /\\r\\n|\\n/g;"
+    }
+   ],
+   "fileSha256": "e79fe4e5674a7d320ec82bb03d5a012cd30f52820b393e536da7da3aaaed2c13",
+   "note": "CRLF yes, bare CR no",
+   "outcome": "killed",
+   "detectors": {
+    "unit": {
+     "tests": 44,
+     "failed": 10,
+     "firstFailed": [
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CR: a backtick opener whose info string holds a backtick is malformed at its own line",
+       "error": "Error: expected a malformed context"
+      },
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CR: the reported line counts each line end once",
+       "error": "AssertionError: expected { Object (reason, line) } to deeply equal { reason: 'unclosed-fence', line: 3 }"
+      },
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line mixed terminators: each one ends one line, whichever kind it is",
+       "error": "AssertionError: expected { Object (reason, line) } to deeply equal { reason: 'unclosed-fence', line: 3 }"
+      },
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line the mask keeps the length and every CR and LF at its offset (a CR is never blanked, joined to LF or dropped)",
+       "error": "AssertionError: expected { kind: 'malformed', \u2026(2) } to deeply equal { kind: 'masked', \u2026(3) }"
+      }
+     ]
+    },
+    "fenceRules": {
+     "tests": 69,
+     "failed": 6,
+     "firstFailed": [
+      {
+       "test": "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read cr",
+       "error": "AssertionError: the mask keeps the length and every terminator at its offset: expected '......................\\r.........\\r' to be '......................\\r...\\"
+      },
+      {
+       "test": "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read firstCr",
+       "error": "AssertionError: backtick-col0 profile: expected 'MMMM' to be 'VHHV' // Object.is equality"
+      },
+      {
+       "test": "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read cycle",
+       "error": "AssertionError: backtick-col0 profile: expected 'MMMM' to be 'VHHV' // Object.is equality"
+      },
+      {
+       "test": "Markdown fence recognizers: what each reader treats as inside a fence G1, fixed: a CRLF or CR source is excluded as a malformed code context, as the same LF source is",
+       "error": "AssertionError: \"\\r\": expected [] to deeply equal [ { \u2026(4) } ]"
+      }
+     ]
+    },
+    "callSites": {
+     "tests": 278,
+     "failed": 7,
+     "firstFailed": [
+      {
+       "test": "the project-documentation class (syzygy-2coz) CR: a documentation body is withheld as active content or admitted as its LF form is",
+       "error": "AssertionError: expected undefined to be 'active-content' // Object.is equality"
+      },
+      {
+       "test": "PWB-REQ-006 (amended) \u2014 phase-A seeds use the same context-aware guard CR: a seed is excluded or kept safe as its LF form is",
+       "error": "AssertionError: expected { kind: 'safe' } to deeply equal { kind: 'excluded', \u2026(2) }"
+      },
+      {
+       "test": "a CRLF or CR blob gets the outcome its LF form gets CR: a backtick opener whose info text holds a backtick is excluded as a malformed code context, with a body-free record",
+       "error": "AssertionError: expected 'text' to be 'unavailable' // Object.is equality"
+      },
+      {
+       "test": "a CRLF or CR blob gets the outcome its LF form gets CR: a script element inside a closed tilde fence reads as text, byte for byte",
+       "error": "AssertionError: expected 'unavailable' to be 'text' // Object.is equality"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "MU5-rejoin-with-lf",
+   "ranAt": "497515ae38829439aa4faa01196d9e361bce8bd8",
+   "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+   "replacements": [
+    {
+     "old": "out.map((line, index) => line + (terminators[index] ?? '')).join('')",
+     "new": "out.join('\\n')"
+    }
+   ],
+   "fileSha256": "7274e7e2406cba311fa1dc5e863bf9f2aef8661f3485324aaf063d2124e559b5",
+   "note": "terminators replaced by LF",
+   "outcome": "killed",
+   "detectors": {
+    "unit": {
+     "tests": 44,
+     "failed": 9,
+     "firstFailed": [
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line mixed terminators: each one ends one line, whichever kind it is",
+       "error": "AssertionError: expected '   \\n   \\n   \\nafter' to be '   \\n   \\r\\n   \\r\\nafter' // Object.is equality"
+      },
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line the mask keeps the length and every CR and LF at its offset (a CR is never blanked, joined to LF or dropped)",
+       "error": "AssertionError: expected { kind: 'masked', \u2026(3) } to deeply equal { kind: 'masked', \u2026(3) }"
+      },
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CRLF: a fence closed on the last line, with no final line end, is closed",
+       "error": "AssertionError: expected '   \\n   \\n   ' to be '   \\r\\n   \\r\\n   ' // Object.is equality"
+      },
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CR: a fence closed on the last line, with no final line end, is closed",
+       "error": "AssertionError: expected '   \\n   \\n   ' to be '   \\r   \\r   ' // Object.is equality"
+      }
+     ]
+    },
+    "fenceRules": {
+     "tests": 69,
+     "failed": 7,
+     "firstFailed": [
+      {
+       "test": "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read crlf",
+       "error": "AssertionError: the mask keeps the length and every terminator at its offset: expected '......................\\n...\\n.\\n...\\n' to be '......................\\r\\n"
+      },
+      {
+       "test": "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read cr",
+       "error": "AssertionError: the mask keeps the length and every terminator at its offset: expected '......................\\n...\\n.\\n...\\n' to be '......................\\r.."
+      },
+      {
+       "test": "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read firstCrlf",
+       "error": "AssertionError: the mask keeps the length and every terminator at its offset: expected '......................\\n...\\n.\\n...\\n' to be '......................\\r\\n"
+      },
+      {
+       "test": "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read lastCrlf",
+       "error": "AssertionError: the mask keeps the length and every terminator at its offset: expected '......................\\n...\\n.\\n...\\n' to be '......................\\n.."
+      }
+     ]
+    },
+    "callSites": {
+     "tests": 278,
+     "failed": 1,
+     "firstFailed": [
+      {
+       "test": "reported positions in CRLF and bare-CR texts CRLF as LF; a bare CR counted by the malformed line only",
+       "error": "AssertionError: expected [ \u2026(2) ] to deeply equal [ \u2026(2) ]"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "MU6-cr-re-emitted-as-lf",
+   "ranAt": "497515ae38829439aa4faa01196d9e361bce8bd8",
+   "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+   "replacements": [
+    {
+     "old": "out.map((line, index) => line + (terminators[index] ?? '')).join('')",
+     "new": "out.map((line, index) => line + (terminators[index] === '\\r' ? '\\n' : (terminators[index] ?? ''))).join('')"
+    }
+   ],
+   "fileSha256": "7ea5e77e8e91acd11cdc84e6c153e74f59937be6952ab1b1a9e8ecb83d2678e6",
+   "note": "bare CR becomes LF in the mask",
+   "outcome": "killed",
+   "detectors": {
+    "unit": {
+     "tests": 44,
+     "failed": 5,
+     "firstFailed": [
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line the mask keeps the length and every CR and LF at its offset (a CR is never blanked, joined to LF or dropped)",
+       "error": "AssertionError: expected { kind: 'masked', \u2026(3) } to deeply equal { kind: 'masked', \u2026(3) }"
+      },
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CR: a fence closed on the last line, with no final line end, is closed",
+       "error": "AssertionError: expected '   \\n   \\n   ' to be '   \\r   \\r   ' // Object.is equality"
+      },
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CR: a tilde fence, a closer with trailing spaces and a span across lines",
+       "error": "AssertionError: expected '   \\n   \\n   \\nafter\\n' to be '   \\r   \\r   \\rafter\\r' // Object.is equality"
+      },
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CR: a script element between two tilde fences that each show a backtick-fence line is outside every context",
+       "error": "AssertionError: expected { kind: 'masked', \u2026(3) } to deeply equal { kind: 'masked', \u2026(3) }"
+      }
+     ]
+    },
+    "fenceRules": {
+     "tests": 69,
+     "failed": 3,
+     "firstFailed": [
+      {
+       "test": "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read cr",
+       "error": "AssertionError: the mask keeps the length and every terminator at its offset: expected '......................\\n...\\n.\\n...\\n' to be '......................\\r.."
+      },
+      {
+       "test": "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read firstCr",
+       "error": "AssertionError: the mask keeps the length and every terminator at its offset: expected '......................\\n...\\n.\\n...\\n' to be '......................\\r.."
+      },
+      {
+       "test": "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read cycle",
+       "error": "AssertionError: the mask keeps the length and every terminator at its offset: expected '......................\\n...\\r\\n.\\n...\u2026' to be '......................\\n."
+      }
+     ]
+    },
+    "callSites": {
+     "tests": 278,
+     "failed": 1,
+     "firstFailed": [
+      {
+       "test": "reported positions in CRLF and bare-CR texts CRLF as LF; a bare CR counted by the malformed line only",
+       "error": "AssertionError: expected [ \u2026(2) ] to deeply equal [ \u2026(2) ]"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "MU7-lf-split-closer-tolerates-cr",
+   "ranAt": "497515ae38829439aa4faa01196d9e361bce8bd8",
+   "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+   "replacements": [
+    {
+     "old": "const LINE_END = /\\r\\n|\\r|\\n/g;",
+     "new": "const LINE_END = /\\n/g;"
+    },
+    {
+     "old": "/^ {0,3}(`{3,}|~{3,}) *$/",
+     "new": "/^ {0,3}(`{3,}|~{3,}) *\\r?$/"
+    }
+   ],
+   "fileSha256": "180dd0e740c342aa96ff02bd7fa53dab77fafd459907fbb5f322690b37b7aa18",
+   "note": "RV10 analogue: regex-only tolerance of a trailing CR, LF-only split",
+   "outcome": "killed",
+   "detectors": {
+    "unit": {
+     "tests": 44,
+     "failed": 17,
+     "firstFailed": [
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CRLF: a backtick opener whose info string holds a backtick is malformed at its own line",
+       "error": "AssertionError: expected { Object (reason, line) } to deeply equal { \u2026(2) }"
+      },
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CR: a backtick opener whose info string holds a backtick is malformed at its own line",
+       "error": "Error: expected a malformed context"
+      },
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CRLF: the reported line counts each line end once",
+       "error": "AssertionError: expected { Object (reason, line) } to deeply equal { reason: 'unclosed-fence', line: 3 }"
+      },
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CR: the reported line counts each line end once",
+       "error": "AssertionError: expected { Object (reason, line) } to deeply equal { reason: 'unclosed-fence', line: 3 }"
+      }
+     ]
+    },
+    "fenceRules": {
+     "tests": 69,
+     "failed": 10,
+     "firstFailed": [
+      {
+       "test": "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read crlf",
+       "error": "AssertionError: the mask keeps the length and every terminator at its offset: expected '......................\\r\\n....\\n..\\n.\u2026' to be '......................\\r\\"
+      },
+      {
+       "test": "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read cr",
+       "error": "AssertionError: the mask keeps the length and every terminator at its offset: expected '......................\\r.........\\r' to be '......................\\r...\\"
+      },
+      {
+       "test": "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read firstCrlf",
+       "error": "AssertionError: backtick-col0 profile: expected 'VMMM' to be 'VHHV' // Object.is equality"
+      },
+      {
+       "test": "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read lastCrlf",
+       "error": "AssertionError: the mask keeps the length and every terminator at its offset: expected '......................\\n...\\n.\\n....\\n' to be '......................\\n."
+      }
+     ]
+    },
+    "callSites": {
+     "tests": 278,
+     "failed": 13,
+     "firstFailed": [
+      {
+       "test": "the project-documentation class (syzygy-2coz) CRLF: a documentation body is withheld as active content or admitted as its LF form is",
+       "error": "AssertionError: expected undefined to be 'active-content' // Object.is equality"
+      },
+      {
+       "test": "the project-documentation class (syzygy-2coz) CR: a documentation body is withheld as active content or admitted as its LF form is",
+       "error": "AssertionError: expected undefined to be 'active-content' // Object.is equality"
+      },
+      {
+       "test": "PWB-REQ-006 (amended) \u2014 phase-A seeds use the same context-aware guard CRLF: a seed is excluded or kept safe as its LF form is",
+       "error": "AssertionError: expected { kind: 'safe' } to deeply equal { kind: 'excluded', \u2026(2) }"
+      },
+      {
+       "test": "PWB-REQ-006 (amended) \u2014 phase-A seeds use the same context-aware guard CR: a seed is excluded or kept safe as its LF form is",
+       "error": "AssertionError: expected { kind: 'safe' } to deeply equal { kind: 'excluded', \u2026(2) }"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "MU8-lf-split-opener-and-closer-tolerate-cr",
+   "ranAt": "497515ae38829439aa4faa01196d9e361bce8bd8",
+   "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+   "replacements": [
+    {
+     "old": "const LINE_END = /\\r\\n|\\r|\\n/g;",
+     "new": "const LINE_END = /\\n/g;"
+    },
+    {
+     "old": "/^ {0,3}(`{3,}|~{3,}) *$/",
+     "new": "/^ {0,3}(`{3,}|~{3,}) *\\r?$/"
+    },
+    {
+     "old": "const FENCE_OPENER = /^ {0,3}(`{3,}|~{3,})(.*)$/;",
+     "new": "const FENCE_OPENER = /^ {0,3}(`{3,}|~{3,})([^\\n]*?)\\r?$/;"
+    }
+   ],
+   "fileSha256": "7885d63fbd777112a88b21b79a6d9988342343ce769a6110342dac63493e9544",
+   "note": "regex-only tolerance at both fence rules, LF-only split",
+   "outcome": "killed",
+   "detectors": {
+    "unit": {
+     "tests": 44,
+     "failed": 13,
+     "firstFailed": [
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CR: a backtick opener whose info string holds a backtick is malformed at its own line",
+       "error": "Error: expected a malformed context"
+      },
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CR: the reported line counts each line end once",
+       "error": "AssertionError: expected { Object (reason, line) } to deeply equal { reason: 'unclosed-fence', line: 3 }"
+      },
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line mixed terminators: each one ends one line, whichever kind it is",
+       "error": "AssertionError: expected { Object (reason, line) } to deeply equal { Object (reason, line) }"
+      },
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line the mask keeps the length and every CR and LF at its offset (a CR is never blanked, joined to LF or dropped)",
+       "error": "AssertionError: expected { kind: 'malformed', \u2026(2) } to deeply equal { kind: 'masked', \u2026(3) }"
+      }
+     ]
+    },
+    "fenceRules": {
+     "tests": 69,
+     "failed": 9,
+     "firstFailed": [
+      {
+       "test": "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read crlf",
+       "error": "AssertionError: the mask keeps the length and every terminator at its offset: expected '......................\\r\\n....\\n..\\n.\u2026' to be '......................\\r\\"
+      },
+      {
+       "test": "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read cr",
+       "error": "AssertionError: the mask keeps the length and every terminator at its offset: expected '......................\\r.........\\r' to be '......................\\r...\\"
+      },
+      {
+       "test": "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read firstCrlf",
+       "error": "AssertionError: the mask keeps the length and every terminator at its offset: expected '....\\n......................\\n.\\n...\\n' to be '...\\r\\n.................."
+      },
+      {
+       "test": "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read lastCrlf",
+       "error": "AssertionError: the mask keeps the length and every terminator at its offset: expected '......................\\n...\\n.\\n....\\n' to be '......................\\n."
+      }
+     ]
+    },
+    "callSites": {
+     "tests": 278,
+     "failed": 7,
+     "firstFailed": [
+      {
+       "test": "the project-documentation class (syzygy-2coz) CR: a documentation body is withheld as active content or admitted as its LF form is",
+       "error": "AssertionError: expected undefined to be 'active-content' // Object.is equality"
+      },
+      {
+       "test": "PWB-REQ-006 (amended) \u2014 phase-A seeds use the same context-aware guard CR: a seed is excluded or kept safe as its LF form is",
+       "error": "AssertionError: expected { kind: 'safe' } to deeply equal { kind: 'excluded', \u2026(2) }"
+      },
+      {
+       "test": "a CRLF or CR blob gets the outcome its LF form gets CR: a backtick opener whose info text holds a backtick is excluded as a malformed code context, with a body-free record",
+       "error": "AssertionError: expected 'text' to be 'unavailable' // Object.is equality"
+      },
+      {
+       "test": "a CRLF or CR blob gets the outcome its LF form gets CR: a script element inside a closed tilde fence reads as text, byte for byte",
+       "error": "AssertionError: expected 'unavailable' to be 'text' // Object.is equality"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "MU9-terminator-dropped",
+   "ranAt": "497515ae38829439aa4faa01196d9e361bce8bd8",
+   "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+   "replacements": [
+    {
+     "old": "out.map((line, index) => line + (terminators[index] ?? '')).join('')",
+     "new": "out.map((line) => line).join('')"
+    }
+   ],
+   "fileSha256": "ab4d8262ab41737e766aeb98d4c3a33c194d9f1fbeeaf8d6760e44656aac2a6a",
+   "note": "the mask loses every terminator",
+   "outcome": "killed",
+   "detectors": {
+    "unit": {
+     "tests": 44,
+     "failed": 21,
+     "firstFailed": [
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 fenced code blocks a closed backtick fence is blanked, delimiters included, keeping every newline and length",
+       "error": "AssertionError: expected 'before               after' to be 'before\\n       \\n     \\n   \\nafter' // Object.is equality"
+      },
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 fenced code blocks an opener may be indented zero to three spaces; at four the backticks are inline runs, not a fence",
+       "error": "AssertionError: expected '               ' to be '      \\n   \\n      ' // Object.is equality"
+      },
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 fenced code blocks tildes fence too, and a tilde opener info string may contain a backtick",
+       "error": "AssertionError: expected '             ' to be '       \\n   \\n   ' // Object.is equality"
+      },
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 fenced code blocks a closer must repeat the opener character at least the opener length, then spaces only",
+       "error": "AssertionError: expected '                 ' to be '    \\n   \\n   \\n       ' // Object.is equality"
+      }
+     ]
+    },
+    "fenceRules": {
+     "tests": 69,
+     "failed": 36,
+     "firstFailed": [
+      {
+       "test": "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-col0'",
+       "error": "AssertionError: the mask keeps the length and every terminator at its offset: expected '.............................' to be '......................\\n...\\n.\\n.."
+      },
+      {
+       "test": "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-indent1'",
+       "error": "AssertionError: the mask keeps the length and every terminator at its offset: expected '...............................' to be '......................\\n....\\n.\\"
+      },
+      {
+       "test": "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-indent2'",
+       "error": "AssertionError: the mask keeps the length and every terminator at its offset: expected '.................................' to be '......................\\n.....\\"
+      },
+      {
+       "test": "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-indent3'",
+       "error": "AssertionError: the mask keeps the length and every terminator at its offset: expected '...................................' to be '......................\\n...."
+      }
+     ]
+    },
+    "callSites": {
+     "tests": 278,
+     "failed": 3,
+     "firstFailed": [
+      {
+       "test": "active content is rejected and never reaches a sink scanActiveContent: forms, positions, obfuscation and case",
+       "error": "AssertionError: expected [ { form: 'script-element', \u2026(2) } ] to deeply equal [ { form: 'script-element', \u2026(2) } ]"
+      },
+      {
+       "test": "active content is rejected and never reaches a sink the same sentinel outside the context still excludes, at its raw position",
+       "error": "AssertionError: expected [ { form: 'script-element', \u2026(2) } ] to deeply equal [ { form: 'script-element', \u2026(2) } ]"
+      },
+      {
+       "test": "reported positions in CRLF and bare-CR texts CRLF as LF; a bare CR counted by the malformed line only",
+       "error": "AssertionError: expected [ \u2026(2) ] to deeply equal [ \u2026(2) ]"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "MU10-terminator-index-shifted",
+   "ranAt": "497515ae38829439aa4faa01196d9e361bce8bd8",
+   "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+   "replacements": [
+    {
+     "old": "out.map((line, index) => line + (terminators[index] ?? '')).join('')",
+     "new": "out.map((line, index) => line + (terminators[index + 1] ?? '')).join('')"
+    }
+   ],
+   "fileSha256": "cc607c94821353379a34313d08321a82f306a09154e5b62f9763b5c8fb5807e2",
+   "note": "each line takes the next terminator",
+   "outcome": "killed",
+   "detectors": {
+    "unit": {
+     "tests": 44,
+     "failed": 21,
+     "firstFailed": [
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 fenced code blocks a closed backtick fence is blanked, delimiters included, keeping every newline and length",
+       "error": "AssertionError: expected 'before\\n       \\n     \\n   after' to be 'before\\n       \\n     \\n   \\nafter' // Object.is equality"
+      },
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 fenced code blocks an opener may be indented zero to three spaces; at four the backticks are inline runs, not a fence",
+       "error": "AssertionError: expected '      \\n         ' to be '      \\n   \\n      ' // Object.is equality"
+      },
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 fenced code blocks tildes fence too, and a tilde opener info string may contain a backtick",
+       "error": "AssertionError: expected '       \\n      ' to be '       \\n   \\n   ' // Object.is equality"
+      },
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 fenced code blocks a closer must repeat the opener character at least the opener length, then spaces only",
+       "error": "AssertionError: expected '    \\n   \\n          ' to be '    \\n   \\n   \\n       ' // Object.is equality"
+      }
+     ]
+    },
+    "fenceRules": {
+     "tests": 69,
+     "failed": 36,
+     "firstFailed": [
+      {
+       "test": "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-col0'",
+       "error": "AssertionError: the mask keeps the length and every terminator at its offset: expected '......................\\n...\\n.\\n...' to be '......................\\n...\\"
+      },
+      {
+       "test": "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-indent1'",
+       "error": "AssertionError: the mask keeps the length and every terminator at its offset: expected '......................\\n....\\n.\\n....' to be '......................\\n.."
+      },
+      {
+       "test": "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-indent2'",
+       "error": "AssertionError: the mask keeps the length and every terminator at its offset: expected '......................\\n.....\\n.\\n...\u2026' to be '......................\\n."
+      },
+      {
+       "test": "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-indent3'",
+       "error": "AssertionError: the mask keeps the length and every terminator at its offset: expected '......................\\n......\\n.\\n..\u2026' to be '......................\\n."
+      }
+     ]
+    },
+    "callSites": {
+     "tests": 278,
+     "failed": 3,
+     "firstFailed": [
+      {
+       "test": "active content is rejected and never reaches a sink scanActiveContent: forms, positions, obfuscation and case",
+       "error": "AssertionError: expected [ { form: 'script-element', \u2026(2) } ] to deeply equal [ { form: 'script-element', \u2026(2) } ]"
+      },
+      {
+       "test": "active content is rejected and never reaches a sink the same sentinel outside the context still excludes, at its raw position",
+       "error": "AssertionError: expected [ { form: 'script-element', \u2026(2) } ] to deeply equal [ { form: 'script-element', \u2026(2) } ]"
+      },
+      {
+       "test": "reported positions in CRLF and bare-CR texts CRLF as LF; a bare CR counted by the malformed line only",
+       "error": "AssertionError: expected [ \u2026(2) ] to deeply equal [ \u2026(2) ]"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "MU11-start-ignores-terminator-length",
+   "ranAt": "497515ae38829439aa4faa01196d9e361bce8bd8",
+   "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+   "replacements": [
+    {
+     "old": "start = end.index + end[0].length;",
+     "new": "start = end.index + 1;"
+    }
+   ],
+   "fileSha256": "9c0e3ba0dbd5b8bfa5be079f12938ac55610819e1777d945c10748e9dd322735",
+   "note": "a CRLF leaves its LF as the first byte of the next line",
+   "outcome": "killed",
+   "detectors": {
+    "unit": {
+     "tests": 44,
+     "failed": 9,
+     "firstFailed": [
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CRLF: a backtick opener whose info string holds a backtick is malformed at its own line",
+       "error": "Error: expected a malformed context"
+      },
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CRLF: the reported line counts each line end once",
+       "error": "AssertionError: expected { Object (reason, line) } to deeply equal { reason: 'unclosed-fence', line: 3 }"
+      },
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line mixed terminators: each one ends one line, whichever kind it is",
+       "error": "AssertionError: expected { Object (reason, line) } to deeply equal { reason: 'unclosed-fence', line: 4 }"
+      },
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line the mask keeps the length and every CR and LF at its offset (a CR is never blanked, joined to LF or dropped)",
+       "error": "AssertionError: expected { kind: 'malformed', \u2026(2) } to deeply equal { kind: 'masked', \u2026(3) }"
+      }
+     ]
+    },
+    "fenceRules": {
+     "tests": 69,
+     "failed": 7,
+     "firstFailed": [
+      {
+       "test": "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read crlf",
+       "error": "AssertionError: the mask keeps the length and every terminator at its offset: expected '......................\\r\\n\\n...\\r\\n..\u2026' to be '......................\\r\\"
+      },
+      {
+       "test": "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read firstCrlf",
+       "error": "AssertionError: the mask keeps the length and every terminator at its offset: expected '...\\r\\n.......................\\n.\\n..\u2026' to be '...\\r\\n.................."
+      },
+      {
+       "test": "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read lastCrlf",
+       "error": "AssertionError: the mask keeps the length and every terminator at its offset: expected '......................\\n...\\n.\\n...\\r\u2026' to be '......................\\n."
+      },
+      {
+       "test": "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read cycle",
+       "error": "AssertionError: the mask keeps the length and every terminator at its offset: expected '......................\\n...\\r\\n..\\r..\u2026' to be '......................\\n."
+      }
+     ]
+    },
+    "callSites": {
+     "tests": 278,
+     "failed": 7,
+     "firstFailed": [
+      {
+       "test": "the project-documentation class (syzygy-2coz) CRLF: a documentation body is withheld as active content or admitted as its LF form is",
+       "error": "AssertionError: expected undefined to be 'active-content' // Object.is equality"
+      },
+      {
+       "test": "PWB-REQ-006 (amended) \u2014 phase-A seeds use the same context-aware guard CRLF: a seed is excluded or kept safe as its LF form is",
+       "error": "AssertionError: expected { kind: 'safe' } to deeply equal { kind: 'excluded', \u2026(2) }"
+      },
+      {
+       "test": "a CRLF or CR blob gets the outcome its LF form gets CRLF: a backtick opener whose info text holds a backtick is excluded as a malformed code context, with a body-free record",
+       "error": "AssertionError: expected 'text' to be 'unavailable' // Object.is equality"
+      },
+      {
+       "test": "a CRLF or CR blob gets the outcome its LF form gets CRLF: a script element inside a closed tilde fence reads as text, byte for byte",
+       "error": "AssertionError: expected 'unavailable' to be 'text' // Object.is equality"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "MU12-phantom-final-terminator",
+   "ranAt": "497515ae38829439aa4faa01196d9e361bce8bd8",
+   "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+   "replacements": [
+    {
+     "old": "terminators.push('');",
+     "new": "terminators.push('\\n');"
+    }
+   ],
+   "fileSha256": "473b6779d6ce52c4bfa7e4224733220a5036b846399377ee17fff6f2cdc9cc03",
+   "note": "the last line gains a terminator",
+   "outcome": "killed",
+   "detectors": {
+    "unit": {
+     "tests": 44,
+     "failed": 26,
+     "firstFailed": [
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 fenced code blocks a closed backtick fence is blanked, delimiters included, keeping every newline and length",
+       "error": "AssertionError: expected 'before\\n       \\n     \\n   \\nafter\\n' to be 'before\\n       \\n     \\n   \\nafter' // Object.is equality"
+      },
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 fenced code blocks an opener may be indented zero to three spaces; at four the backticks are inline runs, not a fence",
+       "error": "AssertionError: expected '      \\n   \\n      \\n' to be '      \\n   \\n      ' // Object.is equality"
+      },
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 fenced code blocks tildes fence too, and a tilde opener info string may contain a backtick",
+       "error": "AssertionError: expected '       \\n   \\n   \\n' to be '       \\n   \\n   ' // Object.is equality"
+      },
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 fenced code blocks a closer must repeat the opener character at least the opener length, then spaces only",
+       "error": "AssertionError: expected '    \\n   \\n   \\n       \\n' to be '    \\n   \\n   \\n       ' // Object.is equality"
+      }
+     ]
+    },
+    "fenceRules": {
+     "tests": 69,
+     "failed": 36,
+     "firstFailed": [
+      {
+       "test": "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-col0'",
+       "error": "AssertionError: the mask keeps the length and every terminator at its offset: expected '......................\\n...\\n.\\n...\\n\u2026' to be '......................\\n."
+      },
+      {
+       "test": "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-indent1'",
+       "error": "AssertionError: the mask keeps the length and every terminator at its offset: expected '......................\\n....\\n.\\n....\u2026' to be '......................\\n."
+      },
+      {
+       "test": "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-indent2'",
+       "error": "AssertionError: the mask keeps the length and every terminator at its offset: expected '......................\\n.....\\n.\\n...\u2026' to be '......................\\n."
+      },
+      {
+       "test": "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-indent3'",
+       "error": "AssertionError: the mask keeps the length and every terminator at its offset: expected '......................\\n......\\n.\\n..\u2026' to be '......................\\n."
+      }
+     ]
+    },
+    "callSites": {
+     "tests": 278,
+     "failed": 0,
+     "firstFailed": []
+    }
+   }
+  },
+  {
+   "id": "MU13-last-line-dropped",
+   "ranAt": "497515ae38829439aa4faa01196d9e361bce8bd8",
+   "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+   "replacements": [
+    {
+     "old": "lines.push(text.slice(start));\n  terminators.push('');\n",
+     "new": ""
+    }
+   ],
+   "fileSha256": "0a1cc305424bcbc7c705c1b56b5b6dae31c7ce10137e62398a44810a598ee581",
+   "note": "the text after the last terminator is lost",
+   "outcome": "killed",
+   "detectors": {
+    "unit": {
+     "tests": 44,
+     "failed": 21,
+     "firstFailed": [
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 fenced code blocks a closed backtick fence is blanked, delimiters included, keeping every newline and length",
+       "error": "AssertionError: expected 'before\\n       \\n     \\n   \\n' to be 'before\\n       \\n     \\n   \\nafter' // Object.is equality"
+      },
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 fenced code blocks an opener may be indented zero to three spaces; at four the backticks are inline runs, not a fence",
+       "error": "Error: malformed: unclosed-fence"
+      },
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 fenced code blocks tildes fence too, and a tilde opener info string may contain a backtick",
+       "error": "Error: malformed: unclosed-fence"
+      },
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 fenced code blocks a closer must repeat the opener character at least the opener length, then spaces only",
+       "error": "Error: malformed: unclosed-fence"
+      }
+     ]
+    },
+    "fenceRules": {
+     "tests": 69,
+     "failed": 4,
+     "firstFailed": [
+      {
+       "test": "Markdown fence recognizers: what each reader treats as inside a fence inline span: 'no-span'",
+       "error": "AssertionError: expected { profile: 'H', links: 'V' } to deeply equal { profile: 'V', links: 'V' }"
+      },
+      {
+       "test": "Markdown fence recognizers: what each reader treats as inside a fence inline span: 'unclosed-span'",
+       "error": "AssertionError: expected { profile: 'H', links: 'V' } to deeply equal { profile: 'M', links: 'V' }"
+      },
+      {
+       "test": "Markdown fence recognizers: what each reader treats as inside a fence inline span: 'link-between-spans'",
+       "error": "AssertionError: expected { profile: 'H', links: 'V' } to deeply equal { profile: 'V', links: 'V' }"
+      },
+      {
+       "test": "Markdown fence recognizers: what each reader treats as inside a fence inline span: 'double-span-with-inner-backtick-befor\u2026'",
+       "error": "AssertionError: expected { profile: 'H', links: 'V' } to deeply equal { profile: 'V', links: 'V' }"
+      }
+     ]
+    },
+    "callSites": {
+     "tests": 278,
+     "failed": 9,
+     "firstFailed": [
+      {
+       "test": "active content is rejected and never reaches a sink the handler sentinels also name the event-handler form",
+       "error": "AssertionError: expected [] to deeply equal ArrayContaining{\u2026}"
+      },
+      {
+       "test": "active content is rejected and never reaches a sink scanActiveContent: forms, positions, obfuscation and case",
+       "error": "AssertionError: expected [] to deeply equal [ { form: 'script-element', \u2026(2) } ]"
+      },
+      {
+       "test": "active content is rejected and never reaches a sink every sentinel inside a closed code fence or inline span is inert",
+       "error": "AssertionError: <script>alert(\"pwb-sentinel-1\")</script>: expected [ { \u2026(4) } ] to deeply equal []"
+      },
+      {
+       "test": "active content is rejected and never reaches a sink the same sentinel outside the context still excludes, at its raw position",
+       "error": "AssertionError: expected [] to deeply equal [ { form: 'script-element', \u2026(2) } ]"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "MU14-line-keeps-its-terminator",
+   "ranAt": "497515ae38829439aa4faa01196d9e361bce8bd8",
+   "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+   "replacements": [
+    {
+     "old": "lines.push(text.slice(start, end.index));",
+     "new": "lines.push(text.slice(start, end.index + end[0].length));"
+    }
+   ],
+   "fileSha256": "b15bf8a04120267a73e3f20b7456e25c0f5323b84c1adc286a62115d8fed6a5b",
+   "note": "rules see CRLF at the end of a line",
+   "outcome": "killed",
+   "detectors": {
+    "unit": {
+     "tests": 44,
+     "failed": 37,
+     "firstFailed": [
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 fenced code blocks a closed backtick fence is blanked, delimiters included, keeping every newline and length",
+       "error": "AssertionError: expected 'before\\n\\n        \\n      \\n   \\n\\naf\u2026' to be 'before\\n       \\n     \\n   \\nafter' // Object.is equality"
+      },
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 fenced code blocks an opener may be indented zero to three spaces; at four the backticks are inline runs, not a fence",
+       "error": "Error: malformed: unclosed-inline-span"
+      },
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 fenced code blocks tildes fence too, and a tilde opener info string may contain a backtick",
+       "error": "Error: malformed: unclosed-inline-span"
+      },
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 fenced code blocks a backtick opener info string with a backtick is malformed",
+       "error": "AssertionError: expected { Object (reason, line) } to deeply equal { \u2026(2) }"
+      }
+     ]
+    },
+    "fenceRules": {
+     "tests": 69,
+     "failed": 46,
+     "firstFailed": [
+      {
+       "test": "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-col0'",
+       "error": "AssertionError: the mask keeps the length and every terminator at its offset: expected '......................\\n\\n....\\n..\\n.\u2026' to be '......................\\n."
+      },
+      {
+       "test": "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-indent1'",
+       "error": "AssertionError: the mask keeps the length and every terminator at its offset: expected '......................\\n\\n.....\\n..\\n\u2026' to be '......................\\n."
+      },
+      {
+       "test": "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-indent2'",
+       "error": "AssertionError: the mask keeps the length and every terminator at its offset: expected '......................\\n\\n......\\n..\\\u2026' to be '......................\\n."
+      },
+      {
+       "test": "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-indent3'",
+       "error": "AssertionError: the mask keeps the length and every terminator at its offset: expected '......................\\n\\n.......\\n..\u2026' to be '......................\\n."
+      }
+     ]
+    },
+    "callSites": {
+     "tests": 278,
+     "failed": 23,
+     "firstFailed": [
+      {
+       "test": "the project-documentation class (syzygy-2coz) LF: a documentation body is withheld as active content or admitted as its LF form is",
+       "error": "AssertionError: expected undefined to be 'active-content' // Object.is equality"
+      },
+      {
+       "test": "the project-documentation class (syzygy-2coz) CRLF: a documentation body is withheld as active content or admitted as its LF form is",
+       "error": "AssertionError: expected undefined to be 'active-content' // Object.is equality"
+      },
+      {
+       "test": "the project-documentation class (syzygy-2coz) CR: a documentation body is withheld as active content or admitted as its LF form is",
+       "error": "AssertionError: expected undefined to be 'active-content' // Object.is equality"
+      },
+      {
+       "test": "PWB-REQ-006 (amended) \u2014 phase-A seeds use the same context-aware guard LF: a seed is excluded or kept safe as its LF form is",
+       "error": "AssertionError: expected { kind: 'safe' } to deeply equal { kind: 'excluded', \u2026(2) }"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "MU15-alternation-order",
+   "ranAt": "497515ae38829439aa4faa01196d9e361bce8bd8",
+   "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+   "replacements": [
+    {
+     "old": "const LINE_END = /\\r\\n|\\r|\\n/g;",
+     "new": "const LINE_END = /\\r|\\r\\n|\\n/g;"
+    }
+   ],
+   "fileSha256": "21cd87194c24fd90b8f1c349c2a865d21ca2cdb07224c1022255dcaf75c3a085",
+   "note": "CR before CRLF: CRLF splits as CR then LF",
+   "outcome": "killed",
+   "detectors": {
+    "unit": {
+     "tests": 44,
+     "failed": 3,
+     "firstFailed": [
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CRLF: a backtick opener whose info string holds a backtick is malformed at its own line",
+       "error": "AssertionError: expected { \u2026(2) } to deeply equal { \u2026(2) }"
+      },
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CRLF: the reported line counts each line end once",
+       "error": "AssertionError: expected { reason: 'unclosed-fence', line: 5 } to deeply equal { reason: 'unclosed-fence', line: 3 }"
+      },
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line mixed terminators: each one ends one line, whichever kind it is",
+       "error": "AssertionError: expected { reason: 'unclosed-fence', line: 4 } to deeply equal { reason: 'unclosed-fence', line: 3 }"
+      }
+     ]
+    },
+    "fenceRules": {
+     "tests": 69,
+     "failed": 0,
+     "firstFailed": []
+    },
+    "callSites": {
+     "tests": 278,
+     "failed": 1,
+     "firstFailed": [
+      {
+       "test": "a CRLF or CR blob gets the outcome its LF form gets CRLF: a backtick opener whose info text holds a backtick is excluded as a malformed code context, with a body-free record",
+       "error": "AssertionError: expected [ { \u2026(4) } ] to deeply equal [ { \u2026(4) } ]"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "MU16-blank-keeps-nothing-but-lf",
+   "ranAt": "497515ae38829439aa4faa01196d9e361bce8bd8",
+   "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+   "replacements": [
+    {
+     "old": "return ' '.repeat(segment.length);",
+     "new": "return segment.replace(/[^\\n]/g, ' ');"
+    }
+   ],
+   "fileSha256": "5ab10a4e80df5b5780206c18535270728e20332aea7c5af64d389bcee08e518f",
+   "note": "EQUIVALENT: a line holds no CR or LF now (both are split points), so the old blanking and the new one agree",
+   "outcome": "survived-equivalent",
+   "detectors": {
+    "unit": {
+     "tests": 44,
+     "failed": 0,
+     "firstFailed": []
+    },
+    "fenceRules": {
+     "tests": 69,
+     "failed": 0,
+     "firstFailed": []
+    },
+    "callSites": {
+     "tests": 278,
+     "failed": 0,
+     "firstFailed": []
+    }
+   }
+  },
+  {
+   "id": "MU17-u2028-is-a-line-end",
+   "ranAt": "497515ae38829439aa4faa01196d9e361bce8bd8",
+   "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+   "replacements": [
+    {
+     "old": "const LINE_END = /\\r\\n|\\r|\\n/g;",
+     "new": "const LINE_END = /\\r\\n|\\r|\\n|\\u2028/g;"
+    }
+   ],
+   "fileSha256": "fc83a936f843db1e27e203a7b0b0fecf05611f0ab29bce8ad519c7a366e7301e",
+   "note": "U+2028 ends a line: changes LF texts that hold one",
+   "outcome": "killed",
+   "detectors": {
+    "unit": {
+     "tests": 44,
+     "failed": 3,
+     "firstFailed": [
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line U+2028, U+2029 and U+0085 are line content, not line ends",
+       "error": "AssertionError: \"\u2028\": expected 'a   \\u2028   d' to be 'a       d' // Object.is equality"
+      },
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line U+2028, U+2029 and U+0085 after a closing fence are line content: the fence stays unclosed",
+       "error": "Error: expected a malformed context"
+      },
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line no code unit but CR and LF ends a line",
+       "error": "AssertionError: expected [ '2028' ] to deeply equal []"
+      }
+     ]
+    },
+    "fenceRules": {
+     "tests": 69,
+     "failed": 0,
+     "firstFailed": []
+    },
+    "callSites": {
+     "tests": 278,
+     "failed": 0,
+     "firstFailed": []
+    }
+   },
+   "expectedKillers": [
+    "U+2028, U+2029 and U+0085 are line content, not line ends",
+    "no code unit but CR and LF ends a line",
+    "U+2028, U+2029 and U+0085 after a closing fence are line content: the fence stays unclosed"
+   ],
+   "failingTests": [
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line U+2028, U+2029 and U+0085 are line content, not line ends",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line U+2028, U+2029 and U+0085 after a closing fence are line content: the fence stays unclosed",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line no code unit but CR and LF ends a line"
+   ],
+   "killedByExpectedKillerOnly": true,
+   "failingPins": [
+    "U+2028, U+2029 and U+0085 are line content, not line ends",
+    "no code unit but CR and LF ends a line",
+    "U+2028, U+2029 and U+0085 after a closing fence are line content: the fence stays unclosed"
+   ]
+  },
+  {
+   "id": "MU18-nel-is-a-line-end",
+   "ranAt": "497515ae38829439aa4faa01196d9e361bce8bd8",
+   "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+   "replacements": [
+    {
+     "old": "const LINE_END = /\\r\\n|\\r|\\n/g;",
+     "new": "const LINE_END = /\\r\\n|\\r|\\n|\\x85/g;"
+    }
+   ],
+   "fileSha256": "0964030efb3dbc43102b8a12e79a582b44e6db8cdce9693837f105ec2d3c5dc3",
+   "note": "U+0085 ends a line: changes LF texts that hold one",
+   "outcome": "killed",
+   "detectors": {
+    "unit": {
+     "tests": 44,
+     "failed": 3,
+     "firstFailed": [
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line U+2028, U+2029 and U+0085 are line content, not line ends",
+       "error": "AssertionError: \"\u0085\": expected 'a   \\u0085   d' to be 'a       d' // Object.is equality"
+      },
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line U+2028, U+2029 and U+0085 after a closing fence are line content: the fence stays unclosed",
+       "error": "Error: expected a malformed context"
+      },
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line no code unit but CR and LF ends a line",
+       "error": "AssertionError: expected [ '85' ] to deeply equal []"
+      }
+     ]
+    },
+    "fenceRules": {
+     "tests": 69,
+     "failed": 0,
+     "firstFailed": []
+    },
+    "callSites": {
+     "tests": 278,
+     "failed": 0,
+     "firstFailed": []
+    }
+   },
+   "expectedKillers": [
+    "U+2028, U+2029 and U+0085 are line content, not line ends",
+    "no code unit but CR and LF ends a line",
+    "U+2028, U+2029 and U+0085 after a closing fence are line content: the fence stays unclosed"
+   ],
+   "failingTests": [
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line U+2028, U+2029 and U+0085 are line content, not line ends",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line U+2028, U+2029 and U+0085 after a closing fence are line content: the fence stays unclosed",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line no code unit but CR and LF ends a line"
+   ],
+   "killedByExpectedKillerOnly": true,
+   "failingPins": [
+    "U+2028, U+2029 and U+0085 are line content, not line ends",
+    "no code unit but CR and LF ends a line",
+    "U+2028, U+2029 and U+0085 after a closing fence are line content: the fence stays unclosed"
+   ]
+  },
+  {
+   "id": "MU19-js-line-terminators",
+   "ranAt": "497515ae38829439aa4faa01196d9e361bce8bd8",
+   "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+   "replacements": [
+    {
+     "old": "const LINE_END = /\\r\\n|\\r|\\n/g;",
+     "new": "const LINE_END = /\\r\\n|[\\r\\n\\u2028\\u2029]/g;"
+    }
+   ],
+   "fileSha256": "143f6ff5c7c129b73a5dfd552ecd0846171a55e1bb1feb0c1032d3be66564f98",
+   "note": "the JavaScript line-terminator set",
+   "outcome": "killed",
+   "detectors": {
+    "unit": {
+     "tests": 44,
+     "failed": 3,
+     "firstFailed": [
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line U+2028, U+2029 and U+0085 are line content, not line ends",
+       "error": "AssertionError: \"\u2028\": expected 'a   \\u2028   d' to be 'a       d' // Object.is equality"
+      },
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line U+2028, U+2029 and U+0085 after a closing fence are line content: the fence stays unclosed",
+       "error": "Error: expected a malformed context"
+      },
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line no code unit but CR and LF ends a line",
+       "error": "AssertionError: expected [ '2028', '2029' ] to deeply equal []"
+      }
+     ]
+    },
+    "fenceRules": {
+     "tests": 69,
+     "failed": 0,
+     "firstFailed": []
+    },
+    "callSites": {
+     "tests": 278,
+     "failed": 0,
+     "firstFailed": []
+    }
+   },
+   "expectedKillers": [
+    "U+2028, U+2029 and U+0085 are line content, not line ends",
+    "no code unit but CR and LF ends a line",
+    "U+2028, U+2029 and U+0085 after a closing fence are line content: the fence stays unclosed"
+   ],
+   "failingTests": [
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line U+2028, U+2029 and U+0085 are line content, not line ends",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line U+2028, U+2029 and U+0085 after a closing fence are line content: the fence stays unclosed",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line no code unit but CR and LF ends a line"
+   ],
+   "killedByExpectedKillerOnly": true,
+   "failingPins": [
+    "U+2028, U+2029 and U+0085 are line content, not line ends",
+    "no code unit but CR and LF ends a line",
+    "U+2028, U+2029 and U+0085 after a closing fence are line content: the fence stays unclosed"
+   ]
+  },
+  {
+   "id": "MU22-vt-ff-are-line-ends",
+   "ranAt": "497515ae38829439aa4faa01196d9e361bce8bd8",
+   "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+   "replacements": [
+    {
+     "old": "const LINE_END = /\\r\\n|\\r|\\n/g;",
+     "new": "const LINE_END = /\\r\\n|[\\r\\n\\v\\f]/g;"
+    }
+   ],
+   "fileSha256": "d69b31fd6a48025dbb79c68bbd337f9775a4d817e80612b964fb0e8e764af7bd",
+   "note": "RW3 of R-GP-IMPL-CRLF-MASK-2: VT and FF end a line, a widening to \"the other vertical whitespace\": changes LF texts that hold one",
+   "outcome": "killed",
+   "detectors": {
+    "unit": {
+     "tests": 44,
+     "failed": 1,
+     "firstFailed": [
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line no code unit but CR and LF ends a line",
+       "error": "AssertionError: expected [ 'b', 'c' ] to deeply equal []"
+      }
+     ]
+    },
+    "fenceRules": {
+     "tests": 69,
+     "failed": 0,
+     "firstFailed": []
+    },
+    "callSites": {
+     "tests": 278,
+     "failed": 0,
+     "firstFailed": []
+    }
+   },
+   "expectedKillers": [
+    "no code unit but CR and LF ends a line"
+   ],
+   "failingTests": [
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line no code unit but CR and LF ends a line"
+   ],
+   "killedByExpectedKillerOnly": true,
+   "failingPins": [
+    "no code unit but CR and LF ends a line"
+   ]
+  },
+  {
+   "id": "MU23-closer-tolerates-separators",
+   "ranAt": "497515ae38829439aa4faa01196d9e361bce8bd8",
+   "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+   "replacements": [
+    {
+     "old": "/^ {0,3}(`{3,}|~{3,}) *$/",
+     "new": "/^ {0,3}(`{3,}|~{3,})[ \\u2028\\u2029\\u0085]*$/"
+    }
+   ],
+   "fileSha256": "1bab121b04fdc7178472a617521b0ca690d48b98cead424534a2d9e04d372353",
+   "note": "RW5 of R-GP-IMPL-CRLF-MASK-2: a closer that tolerates a trailing U+2028, U+2029 or U+0085 (a separator read as a line end at fence positions only): changes LF texts that hold one",
+   "outcome": "killed",
+   "detectors": {
+    "unit": {
+     "tests": 44,
+     "failed": 1,
+     "firstFailed": [
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line U+2028, U+2029 and U+0085 after a closing fence are line content: the fence stays unclosed",
+       "error": "Error: expected a malformed context"
+      }
+     ]
+    },
+    "fenceRules": {
+     "tests": 69,
+     "failed": 0,
+     "firstFailed": []
+    },
+    "callSites": {
+     "tests": 278,
+     "failed": 0,
+     "firstFailed": []
+    }
+   },
+   "expectedKillers": [
+    "U+2028, U+2029 and U+0085 after a closing fence are line content: the fence stays unclosed"
+   ],
+   "failingTests": [
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line U+2028, U+2029 and U+0085 after a closing fence are line content: the fence stays unclosed"
+   ],
+   "killedByExpectedKillerOnly": true,
+   "failingPins": [
+    "U+2028, U+2029 and U+0085 after a closing fence are line content: the fence stays unclosed"
+   ]
+  },
+  {
+   "id": "MU24-positionOf-counts-u2028",
+   "ranAt": "497515ae38829439aa4faa01196d9e361bce8bd8",
+   "file": "packages/three-surface-poc-core/src/git-object-reader.ts",
+   "replacements": [
+    {
+     "old": "if (text.charCodeAt(i) === 10) {",
+     "new": "if (text.charCodeAt(i) === 10 || text.charCodeAt(i) === 0x2028) {"
+    }
+   ],
+   "fileSha256": "7fda7628637eb39993435ee3fc84573022064d451d86ff38e435de773119bb0c",
+   "note": "RW10 of R-GP-IMPL-CRLF-MASK-2: positionOf counts U+2028 as a line end: moves an LF finding position",
+   "outcome": "killed",
+   "detectors": {
+    "unit": {
+     "tests": 44,
+     "failed": 0,
+     "firstFailed": []
+    },
+    "fenceRules": {
+     "tests": 69,
+     "failed": 0,
+     "firstFailed": []
+    },
+    "callSites": {
+     "tests": 278,
+     "failed": 1,
+     "firstFailed": [
+      {
+       "test": "reported positions in CRLF and bare-CR texts U+2028 is line content: an LF text reports its finding on line 1",
+       "error": "AssertionError: expected [ \u2026(2) ] to deeply equal [ \u2026(2) ]"
+      }
+     ]
+    }
+   },
+   "expectedKillers": [
+    "U+2028 is line content: an LF text reports its finding on line 1"
+   ],
+   "failingTests": [
+    "reported positions in CRLF and bare-CR texts U+2028 is line content: an LF text reports its finding on line 1"
+   ],
+   "killedByExpectedKillerOnly": true,
+   "failingPins": [
+    "U+2028 is line content: an LF text reports its finding on line 1"
+   ]
+  },
+  {
+   "id": "MU20-positionOf-counts-bare-cr",
+   "ranAt": "497515ae38829439aa4faa01196d9e361bce8bd8",
+   "file": "packages/three-surface-poc-core/src/git-object-reader.ts",
+   "replacements": [
+    {
+     "old": "if (text.charCodeAt(i) === 10) {",
+     "new": "if (text.charCodeAt(i) === 10 || (text.charCodeAt(i) === 13 && text.charCodeAt(i + 1) !== 10)) {"
+    }
+   ],
+   "fileSha256": "744cd75333a20167bbede34fec3900863f5da30f9827709eafea75fda114f0ae",
+   "note": "positionOf counts a bare CR as a line end: renumbers non-malformed findings in bare-CR texts (reviewer RM8)",
+   "outcome": "killed",
+   "detectors": {
+    "unit": {
+     "tests": 44,
+     "failed": 0,
+     "firstFailed": []
+    },
+    "fenceRules": {
+     "tests": 69,
+     "failed": 0,
+     "firstFailed": []
+    },
+    "callSites": {
+     "tests": 278,
+     "failed": 1,
+     "firstFailed": [
+      {
+       "test": "reported positions in CRLF and bare-CR texts CRLF as LF; a bare CR counted by the malformed line only",
+       "error": "AssertionError: expected [ \u2026(2) ] to deeply equal [ \u2026(2) ]"
+      }
+     ]
+    }
+   },
+   "expectedKillers": [
+    "CRLF as LF; a bare CR counted by the malformed line only"
+   ],
+   "failingTests": [
+    "reported positions in CRLF and bare-CR texts CRLF as LF; a bare CR counted by the malformed line only"
+   ],
+   "killedByExpectedKillerOnly": true,
+   "failingPins": [
+    "CRLF as LF; a bare CR counted by the malformed line only"
+   ]
+  },
+  {
+   "id": "MU21-positionOf-counts-every-cr",
+   "ranAt": "497515ae38829439aa4faa01196d9e361bce8bd8",
+   "file": "packages/three-surface-poc-core/src/git-object-reader.ts",
+   "replacements": [
+    {
+     "old": "if (text.charCodeAt(i) === 10) {",
+     "new": "if (text.charCodeAt(i) === 10 || text.charCodeAt(i) === 13) {"
+    }
+   ],
+   "fileSha256": "056f6f546026ddae2ef8d1de36185b43d32a699f7783bfa572fa86eba6c2e3e4",
+   "note": "positionOf counts every CR as a line end: renumbers CRLF and CR findings (reviewer RM10)",
+   "outcome": "killed",
+   "detectors": {
+    "unit": {
+     "tests": 44,
+     "failed": 0,
+     "firstFailed": []
+    },
+    "fenceRules": {
+     "tests": 69,
+     "failed": 0,
+     "firstFailed": []
+    },
+    "callSites": {
+     "tests": 278,
+     "failed": 1,
+     "firstFailed": [
+      {
+       "test": "reported positions in CRLF and bare-CR texts CRLF as LF; a bare CR counted by the malformed line only",
+       "error": "AssertionError: expected [ \u2026(2) ] to deeply equal [ \u2026(2) ]"
+      }
+     ]
+    }
+   },
+   "expectedKillers": [
+    "CRLF as LF; a bare CR counted by the malformed line only"
+   ],
+   "failingTests": [
+    "reported positions in CRLF and bare-CR texts CRLF as LF; a bare CR counted by the malformed line only"
+   ],
+   "killedByExpectedKillerOnly": true,
+   "failingPins": [
+    "CRLF as LF; a bare CR counted by the malformed line only"
+   ]
+  }
+ ]
+}

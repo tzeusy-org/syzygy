@@ -1,0 +1,53 @@
+{
+  "sourceSubjectCommit": "1675b3967b36812ee05775a6f2bb31627f247f04",
+  "evaluationInstant": "2026-11-03T06:58:26Z",
+  "files": [
+    {
+      "path": ".syzygy/governance/decisions/BUTLERS-PROJECT-SHAPE-OBSERVATION-CONSENT.md",
+      "sha256": "5d705d75f993059d5ae5561b1a6f99d143462d9d2e5bcea8ecc9b0c258777841",
+      "bytes": 3000
+    },
+    {
+      "path": ".syzygy/governance/decisions/PWB-BUTLERS-OBSERVATION-CONSENT-ACT.md",
+      "sha256": "e69056a662deca11cba55de74bea92b8d7e91ab999893cc5ff2d7db204bc391a",
+      "bytes": 3477
+    },
+    {
+      "path": ".syzygy/governance/decisions/PWB-OBSERVER-REGISTRY-BEHAVIOR-CONTRACT-REPIN-ACT.md",
+      "sha256": "f8ffc7a7c1b2d9266fce1bed40538d12e1f0561a1f8b334615070503a7d8f3ce",
+      "bytes": 5729
+    },
+    {
+      "path": ".syzygy/governance/decisions/PWB-OBSERVER-REGISTRY-MACHINE-CEILING-ACT.md",
+      "sha256": "04662cdfa2c06b6aa3c1dedaa158c37def936fa66afbe283606ae8576c6d6905",
+      "bytes": 3722
+    },
+    {
+      "path": ".syzygy/governance/decisions/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V4-ACT.md",
+      "sha256": "bd7e386c733f2c25f3cf611db277af14cdf28a7dbb576c1c5145233ac9e9ebd3",
+      "bytes": 5529
+    },
+    {
+      "path": ".syzygy/governance/decisions/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V5-ACT.md",
+      "sha256": "4f755d0a1e9311a746b4d0853e76fb58c99662e0e44cf786852420f0d1a78447",
+      "bytes": 8206
+    },
+    {
+      "path": ".syzygy/governance/declarations/adapter-registry/POLARIS-BUTLERS-PROJECT-SHAPE-OBSERVER-CANDIDATE.json",
+      "sha256": "f2b3573cfe35169f449a9eed36b4c3330ef037d6668bab0548dd5d5939293556",
+      "bytes": 19234
+    },
+    {
+      "path": ".syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json",
+      "sha256": "e8a2f4f375fcf3ce1db753a5a30f77dbf961fab2115185946e8067f64ae5fe2b",
+      "bytes": 42410
+    }
+  ],
+  "fixtureModules": [
+    "apps/three-surface-poc/src/test-project-shape-fixture.ts",
+    "apps/three-surface-poc/src/test-model-fixture.ts",
+    "apps/three-surface-poc/src/governance-inputs.test.ts",
+    "apps/three-surface-poc/src/polaris-parity-sweep.test.ts"
+  ],
+  "casesBoundBy": "differential.mjs and bundle-source-manifest-repaired.json"
+}

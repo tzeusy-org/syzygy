@@ -1,0 +1,501 @@
+{
+  "tool": "mutants_r2.py",
+  "treeCommit": "6dcf94906b2989345f5b03dfeaa2d64c56632886",
+  "sha256AtCommit": {
+    "apps/three-surface-poc/src/cdp-browser.test.ts": "aea55cef2293f51a7340ce6bea67b2623698b711d0770a05a0fc6aeb151dd03d",
+    "apps/three-surface-poc/src/cdp-browser.ts": "60a3990726bc196703d66719b8c50c9c87c62c91b601fa51f7edcca23f71d68d"
+  },
+  "loadSignatures": [
+    "drain did not verify",
+    "still held by",
+    "timed out",
+    "Test timed out",
+    "STACK_TRACE_ERROR"
+  ],
+  "rootRunner": [
+    "bwrap",
+    "--dev-bind",
+    "/",
+    "/",
+    "--unshare-user",
+    "--uid",
+    "0",
+    "--gid",
+    "0",
+    "--cap-add",
+    "ALL"
+  ],
+  "results": [
+    {
+      "id": "control",
+      "meaning": "no change",
+      "runner": "normal",
+      "edits": [],
+      "attempts": [
+        {
+          "attempt": 1,
+          "exit": 0,
+          "testsRun": 31,
+          "passed": 31,
+          "skipped": 0,
+          "failing": [],
+          "left": []
+        }
+      ],
+      "outcome": "CONTROL-PASS",
+      "restored": true
+    },
+    {
+      "id": "control-root",
+      "meaning": "no change, unit file as uid 0",
+      "runner": "root",
+      "edits": [],
+      "attempts": [
+        {
+          "attempt": 1,
+          "exit": 0,
+          "testsRun": 29,
+          "passed": 28,
+          "skipped": 1,
+          "failing": [],
+          "left": []
+        }
+      ],
+      "outcome": "CONTROL-PASS",
+      "restored": true
+    },
+    {
+      "id": "profile-owner-not-checked",
+      "meaning": "lane fragment, as recorded",
+      "runner": "normal",
+      "edits": [
+        {
+          "file": "apps/three-surface-poc/src/cdp-browser.ts",
+          "old": "    if (!ownedByRunningUser(lstat(profile)) || !ownedByRunningUser(lstat(link))) return undefined;\n",
+          "new": "    if (!ownedByRunningUser(lstat(link))) return undefined;\n"
+        }
+      ],
+      "attempts": [
+        {
+          "attempt": 1,
+          "exit": 1,
+          "testsRun": 31,
+          "passed": 30,
+          "skipped": 0,
+          "failing": [
+            {
+              "test": "Chrome singleton directory (syzygy-bpyt.4.11) keeps the directory a link names when the profile is not the running user's, as in a shared temp directory where another user made it first",
+              "firstErrorLine": "AssertionError: expected false to be true // Object.is equality"
+            }
+          ],
+          "left": []
+        }
+      ],
+      "outcome": "killed",
+      "restored": true
+    },
+    {
+      "id": "link-owner-not-checked",
+      "meaning": "lane fragment, as recorded",
+      "runner": "normal",
+      "edits": [
+        {
+          "file": "apps/three-surface-poc/src/cdp-browser.ts",
+          "old": "    if (!ownedByRunningUser(lstat(profile)) || !ownedByRunningUser(lstat(link))) return undefined;\n",
+          "new": "    if (!ownedByRunningUser(lstat(profile))) return undefined;\n"
+        }
+      ],
+      "attempts": [
+        {
+          "attempt": 1,
+          "exit": 1,
+          "testsRun": 31,
+          "passed": 30,
+          "skipped": 0,
+          "failing": [
+            {
+              "test": "Chrome singleton directory (syzygy-bpyt.4.11) keeps the directory a link names when the link is not the running user's",
+              "firstErrorLine": "AssertionError: expected false to be true // Object.is equality"
+            }
+          ],
+          "left": []
+        }
+      ],
+      "outcome": "killed",
+      "restored": true
+    },
+    {
+      "id": "link-trusted-whoever-made-it",
+      "meaning": "lane fragment, as recorded",
+      "runner": "normal",
+      "edits": [
+        {
+          "file": "apps/three-surface-poc/src/cdp-browser.ts",
+          "old": "    if (!ownedByRunningUser(lstat(profile)) || !ownedByRunningUser(lstat(link))) return undefined;\n",
+          "new": ""
+        }
+      ],
+      "attempts": [
+        {
+          "attempt": 1,
+          "exit": 1,
+          "testsRun": 31,
+          "passed": 29,
+          "skipped": 0,
+          "failing": [
+            {
+              "test": "Chrome singleton directory (syzygy-bpyt.4.11) keeps the directory a link names when the profile is not the running user's, as in a shared temp directory where another user made it first",
+              "firstErrorLine": "AssertionError: expected false to be true // Object.is equality"
+            },
+            {
+              "test": "Chrome singleton directory (syzygy-bpyt.4.11) keeps the directory a link names when the link is not the running user's",
+              "firstErrorLine": "AssertionError: expected false to be true // Object.is equality"
+            }
+          ],
+          "left": []
+        }
+      ],
+      "outcome": "killed",
+      "restored": true
+    },
+    {
+      "id": "identity-inode-not-compared",
+      "meaning": "lane fragment, as recorded",
+      "runner": "normal",
+      "edits": [
+        {
+          "file": "apps/three-surface-poc/src/cdp-browser.ts",
+          "old": "if (entry.isDirectory() && ownedByRunningUser(entry) && entry.dev === recorded.dev && entry.ino === recorded.ino) rmSync(",
+          "new": "if (entry.isDirectory() && ownedByRunningUser(entry) && entry.dev === recorded.dev) rmSync("
+        }
+      ],
+      "attempts": [
+        {
+          "attempt": 1,
+          "exit": 1,
+          "testsRun": 31,
+          "passed": 30,
+          "skipped": 0,
+          "failing": [
+            {
+              "test": "Chrome singleton directory (syzygy-bpyt.4.11) keeps a directory made under the same name after the one that was read, as when Chrome exits cleanly and another Chrome follows",
+              "firstErrorLine": "AssertionError: expected false to be true // Object.is equality"
+            }
+          ],
+          "left": []
+        }
+      ],
+      "outcome": "killed",
+      "restored": true
+    },
+    {
+      "id": "identity-device-not-compared",
+      "meaning": "lane fragment, as recorded",
+      "runner": "normal",
+      "edits": [
+        {
+          "file": "apps/three-surface-poc/src/cdp-browser.ts",
+          "old": "if (entry.isDirectory() && ownedByRunningUser(entry) && entry.dev === recorded.dev && entry.ino === recorded.ino) rmSync(",
+          "new": "if (entry.isDirectory() && ownedByRunningUser(entry) && entry.ino === recorded.ino) rmSync("
+        }
+      ],
+      "attempts": [
+        {
+          "attempt": 1,
+          "exit": 1,
+          "testsRun": 31,
+          "passed": 30,
+          "skipped": 0,
+          "failing": [
+            {
+              "test": "Chrome singleton directory (syzygy-bpyt.4.11) keeps a directory with the recorded inode number on another device",
+              "firstErrorLine": "AssertionError: expected false to be true // Object.is equality"
+            }
+          ],
+          "left": []
+        }
+      ],
+      "outcome": "killed",
+      "restored": true
+    },
+    {
+      "id": "identity-not-compared",
+      "meaning": "lane fragment, as recorded",
+      "runner": "normal",
+      "edits": [
+        {
+          "file": "apps/three-surface-poc/src/cdp-browser.ts",
+          "old": "if (entry.isDirectory() && ownedByRunningUser(entry) && entry.dev === recorded.dev && entry.ino === recorded.ino) rmSync(",
+          "new": "if (entry.isDirectory() && ownedByRunningUser(entry)) rmSync("
+        }
+      ],
+      "attempts": [
+        {
+          "attempt": 1,
+          "exit": 1,
+          "testsRun": 31,
+          "passed": 29,
+          "skipped": 0,
+          "failing": [
+            {
+              "test": "Chrome singleton directory (syzygy-bpyt.4.11) keeps a directory made under the same name after the one that was read, as when Chrome exits cleanly and another Chrome follows",
+              "firstErrorLine": "AssertionError: expected false to be true // Object.is equality"
+            },
+            {
+              "test": "Chrome singleton directory (syzygy-bpyt.4.11) keeps a directory with the recorded inode number on another device",
+              "firstErrorLine": "AssertionError: expected false to be true // Object.is equality"
+            }
+          ],
+          "left": []
+        }
+      ],
+      "outcome": "killed",
+      "restored": true
+    },
+    {
+      "id": "name-case-insensitive",
+      "meaning": "lane fragment, as recorded",
+      "runner": "normal",
+      "edits": [
+        {
+          "file": "apps/three-surface-poc/src/cdp-browser.ts",
+          "old": "const CHROME_SINGLETON_DIRECTORY = /^\\.?(?:com\\.google\\.Chrome|org\\.chromium\\.Chromium)\\.[A-Za-z0-9]+$/;",
+          "new": "const CHROME_SINGLETON_DIRECTORY = /^\\.?(?:com\\.google\\.Chrome|org\\.chromium\\.Chromium)\\.[A-Za-z0-9]+$/i;"
+        }
+      ],
+      "attempts": [
+        {
+          "attempt": 1,
+          "exit": 1,
+          "testsRun": 31,
+          "passed": 30,
+          "skipped": 0,
+          "failing": [
+            {
+              "test": "Chrome singleton directory (syzygy-bpyt.4.11) keeps a directory whose name is not exactly Chrome's: another prefix, no suffix, a longer name, a symbol in the suffix",
+              "firstErrorLine": "AssertionError: expected [ '..com.google.Chrome.AbCdEf', \u2026(16) ] to deeply equal [ '..com.google.Chrome.AbCdEf', \u2026(19) ]"
+            }
+          ],
+          "left": []
+        }
+      ],
+      "outcome": "killed",
+      "restored": true
+    },
+    {
+      "id": "own-profile-check-follows-profile",
+      "meaning": "the profile check reads where the profile leads (its resolved path), not the profile entry itself, so a profile path that is another user's link to a directory of ours is trusted",
+      "runner": "normal",
+      "edits": [
+        {
+          "file": "apps/three-surface-poc/src/cdp-browser.ts",
+          "old": "import { existsSync, lstatSync, mkdtempSync, readFileSync, readdirSync, readlinkSync, rmSync, statSync, type BigIntStats } from 'node:fs';",
+          "new": "import { existsSync, lstatSync, mkdtempSync, readFileSync, readdirSync, readlinkSync, realpathSync, rmSync, statSync, type BigIntStats } from 'node:fs';"
+        },
+        {
+          "file": "apps/three-surface-poc/src/cdp-browser.ts",
+          "old": "    if (!ownedByRunningUser(lstat(profile)) || !ownedByRunningUser(lstat(link))) return undefined;\n",
+          "new": "    if (!ownedByRunningUser(lstat(realpathSync(profile))) || !ownedByRunningUser(lstat(link))) return undefined;\n"
+        }
+      ],
+      "attempts": [
+        {
+          "attempt": 1,
+          "exit": 0,
+          "testsRun": 31,
+          "passed": 31,
+          "skipped": 0,
+          "failing": [],
+          "left": []
+        }
+      ],
+      "outcome": "SURVIVED",
+      "restored": true
+    },
+    {
+      "id": "own-profile-check-reads-parent",
+      "meaning": "the profile check reads the directory that holds the profile, not the profile",
+      "runner": "normal",
+      "edits": [
+        {
+          "file": "apps/three-surface-poc/src/cdp-browser.ts",
+          "old": "    if (!ownedByRunningUser(lstat(profile)) || !ownedByRunningUser(lstat(link))) return undefined;\n",
+          "new": "    if (!ownedByRunningUser(lstat(dirname(profile))) || !ownedByRunningUser(lstat(link))) return undefined;\n"
+        }
+      ],
+      "attempts": [
+        {
+          "attempt": 1,
+          "exit": 1,
+          "testsRun": 31,
+          "passed": 30,
+          "skipped": 0,
+          "failing": [
+            {
+              "test": "Chrome singleton directory (syzygy-bpyt.4.11) keeps the directory a link names when the profile is not the running user's, as in a shared temp directory where another user made it first",
+              "firstErrorLine": "AssertionError: expected false to be true // Object.is equality"
+            }
+          ],
+          "left": []
+        }
+      ],
+      "outcome": "killed",
+      "restored": true
+    },
+    {
+      "id": "own-link-check-reads-target",
+      "meaning": "the link check reads the socket the link names, not the link",
+      "runner": "normal",
+      "edits": [
+        {
+          "file": "apps/three-surface-poc/src/cdp-browser.ts",
+          "old": "    if (!ownedByRunningUser(lstat(profile)) || !ownedByRunningUser(lstat(link))) return undefined;\n",
+          "new": "    if (!ownedByRunningUser(lstat(profile)) || !ownedByRunningUser(lstat(readlinkSync(link)))) return undefined;\n"
+        }
+      ],
+      "attempts": [
+        {
+          "attempt": 1,
+          "exit": 1,
+          "testsRun": 31,
+          "passed": 30,
+          "skipped": 0,
+          "failing": [
+            {
+              "test": "Chrome singleton directory (syzygy-bpyt.4.11) keeps the directory a link names when the link is not the running user's",
+              "firstErrorLine": "AssertionError: expected false to be true // Object.is equality"
+            }
+          ],
+          "left": []
+        }
+      ],
+      "outcome": "killed",
+      "restored": true
+    },
+    {
+      "id": "own-identity-of-socket-file",
+      "meaning": "the identity recorded at the read is the socket file's, not the directory's",
+      "runner": "normal",
+      "edits": [
+        {
+          "file": "apps/three-surface-poc/src/cdp-browser.ts",
+          "old": "    const { dev, ino } = lstat(path);\n",
+          "new": "    const { dev, ino } = lstat(join(path, 'SingletonSocket'));\n"
+        }
+      ],
+      "attempts": [
+        {
+          "attempt": 1,
+          "exit": 1,
+          "testsRun": 31,
+          "passed": 27,
+          "skipped": 0,
+          "failing": [
+            {
+              "test": "disposable Chrome teardown in a real browser leaves no Chrome singleton directory behind when the leader is killed",
+              "firstErrorLine": "AssertionError: expected true to be false // Object.is equality"
+            },
+            {
+              "test": "Chrome singleton directory (syzygy-bpyt.4.11) reads the directory from the profile's link when none was read while Chrome ran",
+              "firstErrorLine": "AssertionError: expected [ '.com.google.Chrome.Another', \u2026(1) ] to deeply equal [ '.com.google.Chrome.Another' ]"
+            },
+            {
+              "test": "Chrome singleton directory (syzygy-bpyt.4.11) removes the name without a leading dot too, which Chrome 147 to 155 make, whether given or read from the link",
+              "firstErrorLine": "AssertionError: expected [ 'com.google.Chrome.Another', \u2026(1) ] to deeply equal [ 'com.google.Chrome.Another' ]"
+            },
+            {
+              "test": "Chrome singleton directory (syzygy-bpyt.4.11) removes the directory a profile's link names when the profile and the link are the running user's, whatever removes the profile",
+              "firstErrorLine": "AssertionError: expected true to be false // Object.is equality"
+            }
+          ],
+          "left": [
+            ".com.google.Chrome.QMFaAg",
+            ".com.google.Chrome.vXYLxs"
+          ]
+        }
+      ],
+      "outcome": "killed",
+      "restored": true
+    },
+    {
+      "id": "own-removal-ignores-injected-lstat",
+      "meaning": "the removal reads the directory with the default lstat whatever the caller injected",
+      "runner": "normal",
+      "edits": [
+        {
+          "file": "apps/three-surface-poc/src/cdp-browser.ts",
+          "old": "  if (singleton !== undefined) removeChromeSingletonDirectory(singleton, options.lstat);\n",
+          "new": "  if (singleton !== undefined) removeChromeSingletonDirectory(singleton);\n"
+        }
+      ],
+      "attempts": [
+        {
+          "attempt": 1,
+          "exit": 1,
+          "testsRun": 31,
+          "passed": 30,
+          "skipped": 0,
+          "failing": [
+            {
+              "test": "Chrome singleton directory (syzygy-bpyt.4.11) keeps a directory with the recorded inode number on another device",
+              "firstErrorLine": "AssertionError: expected false to be true // Object.is equality"
+            }
+          ],
+          "left": []
+        }
+      ],
+      "outcome": "killed",
+      "restored": true
+    },
+    {
+      "id": "own-n5-skip-dropped-as-root",
+      "meaning": "N5: the root skip is dropped, and the unit file runs as uid 0 with its namespace's capabilities",
+      "runner": "root",
+      "edits": [
+        {
+          "file": "apps/three-surface-poc/src/cdp-browser.test.ts",
+          "old": "    skip(process.getuid?.() === 0, 'running as root');\n",
+          "new": ""
+        }
+      ],
+      "attempts": [
+        {
+          "attempt": 1,
+          "exit": 0,
+          "testsRun": 29,
+          "passed": 29,
+          "skipped": 0,
+          "failing": [],
+          "left": []
+        }
+      ],
+      "outcome": "SURVIVED",
+      "restored": true
+    },
+    {
+      "id": "own-n5-skip-dropped-as-user",
+      "meaning": "the same edit as the running user: an equivalent mutant there, which shows the skip changes nothing off root",
+      "runner": "unit",
+      "edits": [
+        {
+          "file": "apps/three-surface-poc/src/cdp-browser.test.ts",
+          "old": "    skip(process.getuid?.() === 0, 'running as root');\n",
+          "new": ""
+        }
+      ],
+      "attempts": [
+        {
+          "attempt": 1,
+          "exit": 0,
+          "testsRun": 29,
+          "passed": 29,
+          "skipped": 0,
+          "failing": [],
+          "left": []
+        }
+      ],
+      "outcome": "SURVIVED",
+      "restored": true
+    }
+  ]
+}

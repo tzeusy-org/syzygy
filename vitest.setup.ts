@@ -9,6 +9,8 @@ import { afterAll, beforeEach } from 'vitest';
 // each test lets pending replies land, so only a single test that blocks for
 // 60 s can still starve the RPC; sync-child-process-guard.test.ts keeps long
 // child processes out of that position.
+// Every tier keeps the yield (syzygy-bpyt.4.3): the unit tier runs no child process, but one of its files runs 58 synchronous
+// tests for 32 s on a loaded host, over half the bound.
 beforeEach(() => new Promise<void>((resolve) => setImmediate(resolve)));
 
 // Teardown for state a helper module builds once per test file (syzygy-jsyi).

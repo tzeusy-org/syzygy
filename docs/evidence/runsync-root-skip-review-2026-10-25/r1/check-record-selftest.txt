@@ -1,0 +1,14 @@
+control: 0 FAIL
+killed   tool: FAIL tool sha256 at be2b2dc6: 00097a29bcf4
+killed   file: FAIL daemon-entry-unchanged.system.test.ts head sha256 at record commit
+killed   base: FAIL daemon-entry-unchanged.system.test.ts base sha256
+killed   old: FAIL R5 stored edits equal the 8.2 record edits
+killed   failed: FAIL R5 failedRows recomputed: 3 vs 2
+killed   port: FAIL R9 no 7477 listener seen, none before: samples 56
+killed   surv: FAIL R5 no survivors
+killed   slow: FAIL R9 every failed row under timeout + 5 s: 26000
+killed   pop: FAIL populations recomputed: {'baseTests': 21, 'headTests': 21, 'sameTitlesAndStatuses': True}
+killed   shim: FAIL root-shim: row passed, others ['skipped'], exit 0
+killed   commit: FAIL files changed between the record commit and the reviewed commit: docs/evidence/syzygy-bpyt-4-22/runsync-and-root-probe.json docs/evidence/syzygy-bpyt-4-22/tools/runsync_and_root_probe.py
+killed   mrec: FAIL R9 mutant record sha256: docs/evidence/syzygy-bpyt-8-2/mutants/R9-missing-value-unchecked.json
+12 of 12 mutants killed; control clean: True

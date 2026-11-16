@@ -1,8 +1,8 @@
-import { createHash } from 'node:crypto';
 import { readFile as nodeReadFile, readdir as nodeReaddir } from 'node:fs/promises';
 import path from 'node:path';
+import { sha256 } from '@syzygy/support';
 import { AdmissionRecordError, COMMIT_OBJECT_ID, type AdmissionRecord, type AdmissionRecordReader } from './admission-record.js';
-import { inForceRecords, notInForceRecords, type NotInForce } from './consent-ports.js';
+import { inForceRecords, notInForceRecords, type NotInForce } from './in-force.js';
 import { CITATION_ALLOWLIST } from './citation-allowlist.js';
 import { SLOT, recorderTemplate, templateFields, type RecorderTemplate } from './recorder-template.js';
 
@@ -54,12 +54,11 @@ export interface PackageReaderFs {
 const nodeFs: PackageReaderFs = { readdir: dir => nodeReaddir(dir), readFile: file => nodeReadFile(file, 'utf8') };
 
 const refuse = (): never => { throw new AdmissionRecordError('invalid-records'); };
-const sha256 = (text: string): string => createHash('sha256').update(text, 'utf8').digest('hex');
 
 /** The text with every fenced code block and every HTML comment blanked. Fences follow CommonMark: one opens on a line of three or
  * more backticks or tildes, up to three spaces in (a backtick opener's info string holds no backtick), and closes only on a run of
  * the same character at least as long, with nothing but whitespace after it; an unclosed fence or comment runs to the end. Line
- * count is kept. */
+ * count is kept. (One of five fence readers, each with its own rule: docs/evidence/syzygy-bpyt-6-3/dc3-fence-rules-2026-10-25.json.) */
 function outsideFences(text: string): string {
   let open: string | null = null;
   const unfenced = text.split('\n').map(line => {
@@ -183,7 +182,9 @@ function parseInstance(text: string, act: Act, inForceAt: number | null): Admiss
   // Supersession follows the act's instant, not the bytes: a successor whose bytes later drift still replaced its predecessor.
   const base = { recordId, version, digest: act.digest, inForceAt, withdrawnAt: null, supersedes: act.version === 2 ? V2_SUPERSEDES : null, supersessionAt: act.version === 2 ? act.inForce : null, project: 'project:syzygy' } as const;
   if (act.type === 'observation') {
-    const m = /^\(project:syzygy, repository:([a-z0-9][a-z0-9-]*)\)$/.exec(subject) ?? refuse();
+    // The repository identity's grammar is REQ-polaris-generation-046's (line 15): one or more of a-z, 0-9, '.', '_' and '-', with no case
+    // folding; ids compare exactly, so 'a.b' and 'a-b' stay two repositories (the owner's ruling of 2026-11-14, "Widen all readers now").
+    const m = /^\(project:syzygy, repository:([a-z0-9._-]+)\)$/.exec(subject) ?? refuse();
     // Only the rows of the admitted-revisions table count: the one header, its separator, then consecutive rows.
     one(text, /^(\| Label \| Commit object id \|)$/gm);
     const lines = outsideFences(text).split('\n'), head = lines.indexOf('| Label | Commit object id |');
@@ -200,7 +201,7 @@ function parseInstance(text: string, act: Act, inForceAt: number | null): Admiss
   }
   const m = /^\(project:syzygy, provider:([a-z0-9][a-z0-9-]*)\)$/.exec(subject) ?? refuse();
   // Only the Scope section lists admitted repositories: a bullet naming one elsewhere ("not admitted", an example) is not a grant.
-  const repositories = sectionList(text, '## Scope').map(line => /^- `\(project:syzygy, repository:([a-z0-9][a-z0-9-]*)\)`$/.exec(line)?.[1]).filter((id): id is string => id !== undefined);
+  const repositories = sectionList(text, '## Scope').map(line => /^- `\(project:syzygy, repository:([a-z0-9._-]+)\)`$/.exec(line)?.[1]).filter((id): id is string => id !== undefined);
   const classes = bullets(text, /^Permitted content classes/m).map(line => /^`([a-z-]+)`$/.exec(line)?.[1] ?? refuse());
   if (repositories.length === 0 || classes.length === 0 || new Set(repositories).size !== repositories.length) refuse();
   return Object.freeze({ ...base, class: 'egress', repositoryId: null, providerId: m![1]!, upstream: null, admittedRevisions: Object.freeze([]), revisionLabels: Object.freeze([]), admittedRepositories: Object.freeze(repositories), contentClasses: Object.freeze(classes) });
@@ -329,7 +330,7 @@ export interface PolicyActReader { readonly read: () => Promise<readonly PolicyA
 
 /** A recorder's act form for the screening-scope policy: the one file it writes, the title and the identity it renders
  * (`scripts/record_public_source_screening_scope_act.py`), over the policy file as an `approve-policy` act. The list is closed and
- * ordered; a later recorder (scope v2, v3, v4) is registered here by a reviewed change, never discovered. */
+ * ordered; a later recorder (scope v2 to v7) is registered here by a reviewed change, never discovered. */
 export interface PolicyActForm { readonly file: string; readonly title: string; readonly type: 'approve-policy'; readonly identity: (date: string) => string; readonly artifact: string }
 const APPROVE_POLICY = { type: 'approve-policy', artifact: POLICY_PATH } as const;
 export const POLICY_ACT_FORMS: readonly PolicyActForm[] = Object.freeze([Object.freeze({
@@ -355,6 +356,31 @@ export const POLICY_ACT_FORMS: readonly PolicyActForm[] = Object.freeze([Object.
   file: 'PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V4-ACT.md',
   title: '# Owner act — Polaris Butlers secret-classification policy approval (public-source screening scope, version 4)',
   identity: (date: string) => `PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V4-APPROVAL-${date}`,
+  ...APPROVE_POLICY,
+}), Object.freeze({
+  // scripts/record_public_source_screening_scope_v5_act.py (2026-11-03, `syzygy-mea.4`): it supersedes version 4 the same way.
+  file: 'PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V5-ACT.md',
+  title: '# Owner act — Polaris Butlers secret-classification policy approval (public-source screening scope, version 5)',
+  identity: (date: string) => `PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V5-APPROVAL-${date}`,
+  ...APPROVE_POLICY,
+}), Object.freeze({
+  // scripts/record_public_source_screening_scope_v6_act.py (2026-11-05, `syzygy-n5jm`): it supersedes version 5 the same way.
+  file: 'PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V6-ACT.md',
+  title: '# Owner act — Polaris Butlers secret-classification policy approval (public-source screening scope, version 6)',
+  identity: (date: string) => `PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V6-APPROVAL-${date}`,
+  ...APPROVE_POLICY,
+}), Object.freeze({
+  // scripts/record_public_source_screening_scope_v7_act.py (2026-11-06, `syzygy-pdja.5`): it supersedes version 6 the same way.
+  file: 'PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V7-ACT.md',
+  title: '# Owner act — Polaris Butlers secret-classification policy approval (public-source screening scope, version 7)',
+  identity: (date: string) => `PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V7-APPROVAL-${date}`,
+  ...APPROVE_POLICY,
+}), Object.freeze({
+  // scripts/record_public_source_screening_scope_v8_act.py (`syzygy-pdja.21`, variant pv, private sources): it supersedes version 7 the
+  // same way, from its own instant, once recorded. Until then no record of this form exists and the chain ends at version 7.
+  file: 'PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V8-ACT.md',
+  title: '# Owner act — Polaris Butlers secret-classification policy approval (public-source screening scope, version 8)',
+  identity: (date: string) => `PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V8-APPROVAL-${date}`,
   ...APPROVE_POLICY,
 })]);
 export const POLICY_ACT_FILE = POLICY_ACT_FORMS[0]!.file;
@@ -384,7 +410,7 @@ const POLICY_FAMILY: ParsedActFamily<PolicyActForm> = {
   dialect: { typeValue: '[a-z-]+', fixedLines: 'provenance', instant: 'Recorded at (UTC)', supersession: true },
 };
 
-/** The policy, its declared scope, and the recorder acts over it in chain order (version 1, 2, 3, 4), every decisions file swept. The
+/** The policy, its declared scope, and the recorder acts over it in chain order (version 1 to 7), every decisions file swept. The
  * chain is strict: each later version needs the one before it, took effect strictly later, binds other bytes, and its supersession
  * text names the earlier version's record path and argument. */
 async function readPolicyActs(fs: PackageReaderFs, root: string): Promise<{ readonly policy: string; readonly scope: unknown; readonly acts: readonly ParsedAct[] }> {
@@ -446,9 +472,9 @@ async function strict<T>(read: () => Promise<ActState<T>>): Promise<ActState<T>>
 /** The screening-scope policy act chain at `now`. `final` is the act the chain puts in force then (the latest version whose instant
  * has passed); `ok` only when it binds exactly the on-disk policy bytes and that policy declares a `publicSourceScope` object, which is
  * exactly when the port's public-source-policy check is satisfied. `absent` before the first act's instant. `acts` is every recorded
- * version in chain order; `v1` to `v4` name them by version. */
+ * version in chain order; `v1` to `v8` name them by version. */
 export type PolicyActChain = {
-  readonly v1: ParsedAct | null; readonly v2: ParsedAct | null; readonly v3: ParsedAct | null; readonly v4: ParsedAct | null; readonly acts: readonly ParsedAct[];
+  readonly v1: ParsedAct | null; readonly v2: ParsedAct | null; readonly v3: ParsedAct | null; readonly v4: ParsedAct | null; readonly v5: ParsedAct | null; readonly v6: ParsedAct | null; readonly v7: ParsedAct | null; readonly v8: ParsedAct | null; readonly acts: readonly ParsedAct[];
   readonly final: ParsedAct; readonly policyDigest: string;
 };
 export function readPolicyActChain(options: StrictReadOptions): Promise<ActState<PolicyActChain>> {
@@ -458,7 +484,7 @@ export function readPolicyActChain(options: StrictReadOptions): Promise<ActState
     const final = policyActAt(acts, options.now);
     if (final === null) return { state: 'absent', why: 'no screening-scope policy act is in force yet' };
     const why = policyMismatch(final, policy, scope);
-    return why === null ? { state: 'ok', v1: acts[0] ?? null, v2: acts[1] ?? null, v3: acts[2] ?? null, v4: acts[3] ?? null, acts, final, policyDigest: sha256(policy) } : { state: 'refused', why };
+    return why === null ? { state: 'ok', v1: acts[0] ?? null, v2: acts[1] ?? null, v3: acts[2] ?? null, v4: acts[3] ?? null, v5: acts[4] ?? null, v6: acts[5] ?? null, v7: acts[6] ?? null, v8: acts[7] ?? null, acts, final, policyDigest: sha256(policy) } : { state: 'refused', why };
   });
 }
 
@@ -670,7 +696,18 @@ async function findActRecords<F extends { readonly file: string }>(fs: PackageRe
     if (form !== undefined) { records.push({ form, text }); continue; }
     const pinned = family.pins?.get(rel);
     if (pinned !== undefined) { if (sha256(text) !== pinned) refuse(); continue; }
-    if ((family.exempt ?? []).some(exempt => exempt.file === rel && templateFields(exempt.template, text) !== null)) continue;
+    const exempt = (family.exempt ?? []).find(each => each.file === rel);
+    const fields = exempt === undefined ? null : templateFields(exempt.template, text);
+    if (fields !== null) {
+      // Read past only as its recorder writes it (R-PDJA-29-GATE-1 finding 1): the template fixes every literal line, but its slots are
+      // free text, so an owner-selection slot carrying a 64-hex token refuses as `fromTemplate` refuses it, and a slot value naming the
+      // act (a withdrawal written into a slot) names it here as it would anywhere else in the file.
+      if (OWNER_SELECTION_SLOTS.some(slot => /[0-9a-fA-F]{64}/.test(fields[slot] ?? ''))) return refuse();
+      if (namesAct(family.sweep, '', textForms(Object.values(fields).join('\n')))) {
+        return { why: `${DECISIONS_DIR}/${rel} names the act without being its record: a withdrawal or a form this reader does not define`, namedBy: `${DECISIONS_DIR}/${rel}` };
+      }
+      continue;
+    }
     if (namesAct(family.sweep, rel, textForms(await swept(rel, text)))) {
       return { why: `${DECISIONS_DIR}/${rel} names the act without being its record: a withdrawal or a form this reader does not define`, namedBy: `${DECISIONS_DIR}/${rel}` };
     }
@@ -680,9 +717,10 @@ async function findActRecords<F extends { readonly file: string }>(fs: PackageRe
 
 /** The record's slots when it is exactly what `template` renders from them; refuses otherwise, and when an owner-selection slot
  * (`opening`, `label`, `description`, `quote`) carries a 64-hex token, which the recorders never write there. */
+const OWNER_SELECTION_SLOTS = Object.freeze(['opening', 'label', 'description', 'quote']);
 function fromTemplate(template: RecorderTemplate, text: string): Readonly<Record<string, string>> {
   const fields = templateFields(template, text);
-  if (fields === null || ['opening', 'label', 'description', 'quote'].some(slot => /[0-9a-fA-F]{64}/.test(fields[slot] ?? ''))) return refuse();
+  if (fields === null || OWNER_SELECTION_SLOTS.some(slot => /[0-9a-fA-F]{64}/.test(fields[slot] ?? ''))) return refuse();
   return fields;
 }
 
@@ -764,11 +802,31 @@ export interface VersionedSignoffForm {
   /** The record as the recorder renders it (`render_record` with `installed_lines`) for this package, version and installed entry,
    * slots `date`, `quote`, `review`, `commit`, `verdict`, `disposition`, `instant` and `sha`. */
   readonly template: RecorderTemplate;
+  /** Decisions files the sweep reads past only at these exact bytes (file name to SHA-256): the records of this package's earlier
+   * versions, which carry its stems and which a later version supersedes without retiring. The recorder never edits them (`--check`
+   * regenerates each exactly), so one byte sequence is admitted per file; any other bytes there refuse. */
+  readonly pinnedRecords?: ReadonlyMap<string, string>;
 }
 
+/** The fixed text a package's record carries in place of the recorder's defaults (`Package.record_scope`, `record_supersession` and
+ * `record_does_not` in scripts/record_versioned_signoff.py); each is rendered verbatim, its line breaks included. */
+interface RegistrySignoffText { readonly scope: string; readonly supersession: string; readonly doesNot: string }
+const REGISTRY_SIGNOFF_DEFAULT_TEXT: RegistrySignoffText = Object.freeze({
+  scope: "the entry's own subject and read authority, nothing wider",
+  supersession: `supersedes nothing; revoked only by a later
+exact owner act naming it`,
+  doesNot: `It approves the registry entry named above at exactly the SHA-256 above and
+no other byte: a later edit at that path is unsigned. It is one of the
+separate acts a read needs; it gives no observation consent, adopts no
+classification or screening policy, widens no egress, write or execution,
+and authorizes no implementation. Every exclusion of the acts in force
+stands.
+`,
+});
+
 /** scripts/record_versioned_signoff.py `render_record` for a package that installs a registry entry and declares no options. */
-function registrySignoffTemplate(o: { readonly title: string; readonly packageKey: string; readonly version: string; readonly installed: string; readonly candidate: string }): RecorderTemplate {
-  const tag = `${o.packageKey}-v${o.version}`;
+function registrySignoffTemplate(o: { readonly title: string; readonly packageKey: string; readonly version: string; readonly installed: string; readonly candidate: string; readonly text?: RegistrySignoffText }): RecorderTemplate {
+  const tag = `${o.packageKey}-v${o.version}`, text = o.text ?? REGISTRY_SIGNOFF_DEFAULT_TEXT;
   return recorderTemplate(`# ${o.title} — version-tagged sign-off v${o.version}
 
 Date: {date}
@@ -803,12 +861,11 @@ Installed entry: ${o.installed}
 
 Installed entry SHA-256: {sha}
 
-Scope: the entry's own subject and read authority, nothing wider
+Scope: ${text.scope}
 
 Scope A extension: the owner's selection quoted above names it ("Extend Scope A"); the extension is a plain owner direction and this record is its only record
 
-Supersession / revocation: supersedes nothing; revoked only by a later
-exact owner act naming it
+Supersession / revocation: ${text.supersession}
 
 Provenance state: \`owner-adopted (bootstrap, uncorrelated)\` — state (1),
 the owner's option selection quoted above
@@ -832,38 +889,81 @@ new version signed separately; it does not retire this one.
 
 ## What this does not do
 
-It approves the registry entry named above at exactly the SHA-256 above and
-no other byte: a later edit at that path is unsigned. It is one of the
-separate acts a read needs; it gives no observation consent, adopts no
-classification or screening policy, widens no egress, write or execution,
-and authorizes no implementation. Every exclusion of the acts in force
-stands.
-`, { date: SLOT.date, quote: SLOT.line, review: SLOT.line, commit: SLOT.commit, verdict: SLOT.verdict, disposition: SLOT.line, instant: SLOT.instant, sha: SLOT.sha256 });
+${text.doesNot}`, { date: SLOT.date, quote: SLOT.line, review: SLOT.line, commit: SLOT.commit, verdict: SLOT.verdict, disposition: SLOT.line, instant: SLOT.instant, sha: SLOT.sha256 });
 }
 
-/** The local-agent public Git source-acquisition entry, version 1.0 of its package (row 2 of the local-agent Redis sitting).
- *
- * Hard-wired to v1.0: a later sign-off of this package (`…-SIGNOFF-v1.1.md`) carries the `…-signoff` stem, so this reader takes it
- * for a withdrawal of v1.0 and refuses, though the recorder says a new version never retires an earlier one. The commit that records a
- * later version must change this form in the same commit (R-POLARIS-DOSSIER-GATE-SOURCES-2 note 6).
- *
- * The sweep reads the package key (and so the tag, the act's identity, the record's file name and the installed entry's basename), the
- * record's title and the installed entry's path. No decisions file is read past: a line that cites the sign-off before the record exists
- * refuses the gate. */
-export const LOCAL_AGENT_GIT_SOURCE_SIGNOFF_FORM: VersionedSignoffForm = (() => {
-  const entry = {
-    title: 'Public Git source acquisition, local-agent version', packageKey: 'public-git-source-acquisition-local-agent', version: '1.0',
-    installed: '.syzygy/governance/declarations/adapter-registry/POLARIS-PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-CANDIDATE.json',
-    candidate: '.syzygy/governance/contracts/candidates/public-git-source-acquisition-local-agent',
-  } as const;
+const LOCAL_AGENT_GIT_SOURCE_ENTRY = {
+  title: 'Public Git source acquisition, local-agent version', packageKey: 'public-git-source-acquisition-local-agent',
+  installed: '.syzygy/governance/declarations/adapter-registry/POLARIS-PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-CANDIDATE.json',
+} as const;
+// The bare package key carries the tag, both sign-off spellings, the record's file name and the installed entry's basename.
+const LOCAL_AGENT_GIT_SOURCE_STEMS = Object.freeze([LOCAL_AGENT_GIT_SOURCE_ENTRY.packageKey, `${LOCAL_AGENT_GIT_SOURCE_ENTRY.title.toLowerCase()} — version-tagged sign-off`]);
+
+/** The local-agent public Git source-acquisition entry, version 1.0 of its package (row 2 of the local-agent Redis sitting). No longer
+ * the gate's form: version 1.1 superseded it. Kept as the template the v1.1 form reads the v1.0 record past by, and for the tests that
+ * read the v1.0 record as it was signed. */
+export const LOCAL_AGENT_GIT_SOURCE_SIGNOFF_FORM_V1_0: VersionedSignoffForm = (() => {
+  const entry = { ...LOCAL_AGENT_GIT_SOURCE_ENTRY, version: '1.0', candidate: '.syzygy/governance/contracts/candidates/public-git-source-acquisition-local-agent' } as const;
   return Object.freeze({
     file: 'PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-SIGNOFF-v1.0.md',
     packageKey: entry.packageKey,
     version: entry.version,
     installed: entry.installed,
-    // The bare package key carries the tag, both sign-off spellings, the record's file name and the installed entry's basename.
-    stems: Object.freeze([entry.packageKey, `${entry.title.toLowerCase()} — version-tagged sign-off`]),
+    stems: LOCAL_AGENT_GIT_SOURCE_STEMS,
     template: registrySignoffTemplate(entry),
+  });
+})();
+
+/** The SHA-256 of the v1.0 sign-off record's bytes as the recorder wrote them (`--check … --version 1.0` regenerates them exactly). */
+export const LOCAL_AGENT_GIT_SOURCE_SIGNOFF_V1_0_RECORD_SHA256 = 'f211248d1175087e9e4961caee2c52de249196a412f8f6f0dcd3de54c130ac45';
+
+/** The local-agent public Git source-acquisition entry, version 1.1 of its package (the copy step of launch-consent v1.2; package
+ * `public-git-source-acquisition-local-agent-v1-1`), the gate's form.
+ *
+ * Its record carries the text the recorder's v1.1 package declares (`GIT_SOURCE_V11_SCOPE`, `GIT_SOURCE_V11_SUPERSESSION`,
+ * `GIT_SOURCE_V11_DOES_NOT` in scripts/record_versioned_signoff.py). The v1.0 record stays beside it and carries the same stems, so
+ * the sweep reads it past only at its recorded bytes (`pinnedRecords`); any other bytes there refuse. A later version's record
+ * (`…-SIGNOFF-v1.2.md`) still carries the stems, so this reader takes it for a withdrawal and refuses: the commit that records a later
+ * version must change this form in the same commit (R-POLARIS-DOSSIER-GATE-SOURCES-2 note 6).
+ *
+ * The sweep reads the package key (and so the tag, the act's identity, the record's file name and the installed entry's basename), the
+ * record's title and the installed entry's path. No other decisions file is read past: a line that cites the sign-off before the record
+ * exists refuses the gate. */
+export const LOCAL_AGENT_GIT_SOURCE_SIGNOFF_FORM: VersionedSignoffForm = (() => {
+  const entry = { ...LOCAL_AGENT_GIT_SOURCE_ENTRY, version: '1.1', candidate: '.syzygy/governance/contracts/candidates/public-git-source-acquisition-local-agent-v1-1' } as const;
+  return Object.freeze({
+    file: 'PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-SIGNOFF-v1.1.md',
+    packageKey: entry.packageKey,
+    version: entry.version,
+    installed: entry.installed,
+    stems: LOCAL_AGENT_GIT_SOURCE_STEMS,
+    template: registrySignoffTemplate({
+      ...entry,
+      text: {
+        scope: `the entry's own subject, read authority, fetch, tags and state-directory
+writes, which for a copy-class run admit the one local copy its fetch
+declaration names; nothing wider`,
+        supersession: `supersedes version 1.0 of this entry, whose record
+(PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-SIGNOFF-v1.0.md) stays the record of
+that version and its bytes; revoked only by a later exact owner act naming it`,
+        doesNot: `It approves the registry entry named above at exactly the SHA-256 above and
+no other byte: a later edit at that path is unsigned. It is one of the
+separate acts a read needs; it gives no observation consent, adopts no
+classification or screening policy, widens no network egress and no write to
+an observed or external system, and authorizes no implementation. Against
+version 1.0 it widens, in a copy-class run alone, local execution and a local
+write: the Git processes the entry's fetch declaration names and the copy's
+directory its stateDirectoryWrites declaration names; and in that run it reads
+that copy in place of the operator's clone. For every launch-consented run it
+closes in words the reads Syzygy makes of the operator's clone. Every exclusion
+of the acts in force stands.
+`,
+      },
+    }),
+    // The v1.0 record as recorded on 2026-10-07 (3409ef5a). The pin admits those bytes alone, so the v1.0 form's own checks (the
+    // template, the 64-hex refusal in the selection, the verdict and disposition pairing) are moot here: the pinned bytes pass all three
+    // under LOCAL_AGENT_GIT_SOURCE_SIGNOFF_FORM_V1_0, which gate-acts.test.ts asserts, and no other bytes are read past.
+    pinnedRecords: new Map([[LOCAL_AGENT_GIT_SOURCE_SIGNOFF_FORM_V1_0.file, LOCAL_AGENT_GIT_SOURCE_SIGNOFF_V1_0_RECORD_SHA256]]),
   });
 })();
 
@@ -873,7 +973,7 @@ export const LOCAL_AGENT_GIT_SOURCE_SIGNOFF_FORM: VersionedSignoffForm = (() => 
 export function readVersionedSignoffState(options: StrictReadOptions & { readonly form: VersionedSignoffForm }): Promise<ActState<DigestBoundAct>> {
   return strict<DigestBoundAct>(async () => {
     const fs = options.fs ?? nodeFs, form = options.form;
-    const found = await findActRecords(fs, options.root, { forms: [form], sweep: digestBoundSweep(form, form.installed) });
+    const found = await findActRecords(fs, options.root, { forms: [form], sweep: digestBoundSweep(form, form.installed), ...(form.pinnedRecords === undefined ? {} : { pins: form.pinnedRecords }) });
     if ('why' in found) return { state: 'refused', why: found.why, namedBy: found.namedBy };
     const record = found.records.at(-1);
     if (record === undefined) return { state: 'absent', why: `no owner-act record ${DECISIONS_DIR}/${form.file} exists` };
@@ -912,6 +1012,22 @@ export interface AdmissionRecordsPortLike {
    * it, or each that does is withdrawn, superseded, not yet in force, bound by no act, or voided by a byte-different twin. Reporting only;
    * it grants nothing (R-POLARIS-DOSSIER-S3-GATES-1 finding 4). */
   readonly consentAbsenceFor?: (url: string) => Promise<string>;
+  /** An observation record in force now whose admitted revisions include `revision`, for any repository id (REQ-polaris-generation-047's
+   * class rule); from the same records `check` reads, and nothing else. */
+  readonly observationConsentNaming?: (revision: string) => Promise<AdmissionAnswerLike>;
+  /** Every observation record, in any state, with its subject, `Upstream:` URL as written, admitted revisions and state, for
+   * REQ-polaris-generation-046's matching of records made by other acts; from the same records `check` reads. Refused, never empty,
+   * when the records cannot be read. Reporting only: it grants nothing. */
+  readonly observationRecords?: () => Promise<{ readonly ok: true; readonly records: readonly ObservationRecordSummary[] } | { readonly ok: false; readonly why: string }>;
+}
+
+/** An observation record as REQ-polaris-generation-046's matching reads it. `state` is `in force`, or the reason it is not. */
+export interface ObservationRecordSummary {
+  readonly record: string;
+  readonly repositoryId: string;
+  readonly upstream: string | null;
+  readonly admittedRevisions: readonly string[];
+  readonly state: string;
 }
 
 const NOT_IN_FORCE_TEXT: Readonly<Record<NotInForce, string>> = {
@@ -965,6 +1081,23 @@ export function createAdmissionRecordsPort(options: { readonly reader: Admission
         }
       }
       return Object.freeze([...byLabel.values()].map(pair => Object.freeze({ ...pair })));
+    },
+    observationRecords: async () => {
+      let records: readonly AdmissionRecord[];
+      try { records = await options.reader.read(); } catch (cause) {
+        return { ok: false, why: `the admission act records could not be read (${cause instanceof Error ? cause.message : 'unknown error'})` };
+      }
+      const why = notInForceRecords(records, options.now());
+      return { ok: true, records: Object.freeze(records.filter(r => r.class === 'observation' && r.repositoryId !== null).map(r => Object.freeze({
+        record: `${r.recordId}@${r.version}`, repositoryId: r.repositoryId!, upstream: r.upstream, admittedRevisions: Object.freeze([...r.admittedRevisions]),
+        state: why.has(r) ? NOT_IN_FORCE_TEXT[why.get(r)!] : 'in force',
+      }))) };
+    },
+    observationConsentNaming: async revision => {
+      let live: readonly AdmissionRecord[];
+      try { live = inForceRecords(await options.reader.read(), options.now()); } catch { return { satisfied: false, why: 'no record found: the admission act records could not be read' }; }
+      const hit = live.find(r => r.class === 'observation' && r.admittedRevisions.includes(revision));
+      return hit === undefined ? { satisfied: false, why: `no record found: no owner act puts an observation consent naming ${revision} in force` } : { satisfied: true, record: `${hit.recordId}@${hit.version}` };
     },
     check: async requirement => {
       if (requirement.kind === 'public-source-policy') {

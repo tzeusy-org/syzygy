@@ -1,0 +1,409 @@
+{
+ "commit": "HEAD",
+ "population": 3,
+ "sites": 28,
+ "files": 3,
+ "byKind": {
+  "hook": 3,
+  "test": 17,
+  "suite": 2,
+  "setConfig": 1,
+  "config": 5
+ },
+ "cliFlags": [],
+ "sitesList": [
+  {
+   "path": "apps/x/src/forms.test.ts",
+   "line": 7,
+   "callLine": 7,
+   "kind": "hook",
+   "api": "beforeAll",
+   "root": "beforeAll",
+   "chain": "beforeAll",
+   "timeout": "1001",
+   "title": null,
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/x/src/forms.test.ts",
+   "line": 8,
+   "callLine": 8,
+   "kind": "hook",
+   "api": "beforeEach",
+   "root": "beforeEach",
+   "chain": "beforeEach",
+   "timeout": "{ timeout: 1002 } as never",
+   "title": null,
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/x/src/forms.test.ts",
+   "line": 9,
+   "callLine": 9,
+   "kind": "hook",
+   "api": "afterAll",
+   "root": "afterAll",
+   "chain": "afterAll",
+   "timeout": "T",
+   "title": null,
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/x/src/forms.test.ts",
+   "line": 10,
+   "callLine": 10,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "1003",
+   "title": "'third arg'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/x/src/forms.test.ts",
+   "line": 11,
+   "callLine": 11,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "timeout: 1004",
+   "title": "'options first'",
+   "predicates": [
+    "S2",
+    "S3"
+   ]
+  },
+  {
+   "path": "apps/x/src/forms.test.ts",
+   "line": 12,
+   "callLine": 12,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "timeout: 1005",
+   "title": "'options last'",
+   "predicates": [
+    "S1",
+    "S2",
+    "S3"
+   ]
+  },
+  {
+   "path": "apps/x/src/forms.test.ts",
+   "line": 13,
+   "callLine": 13,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "timeout: T",
+   "title": "'shorthand options'",
+   "predicates": [
+    "S2",
+    "S3"
+   ]
+  },
+  {
+   "path": "apps/x/src/forms.test.ts",
+   "line": 15,
+   "callLine": 15,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "timeout",
+   "title": "'shorthand property'",
+   "predicates": [
+    "S2",
+    "S3"
+   ]
+  },
+  {
+   "path": "apps/x/src/forms.test.ts",
+   "line": 16,
+   "callLine": 16,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it.concurrent",
+   "timeout": "1007",
+   "title": "'modifier'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/x/src/forms.test.ts",
+   "line": 17,
+   "callLine": 17,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it.skipIf()",
+   "timeout": "1008",
+   "title": "'curried'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/x/src/forms.test.ts",
+   "line": 18,
+   "callLine": 18,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it.each()",
+   "timeout": "1009",
+   "title": "'each %s'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/x/src/forms.test.ts",
+   "line": 19,
+   "callLine": 19,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it.for()",
+   "timeout": "1010",
+   "title": "'for %s'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/x/src/forms.test.ts",
+   "line": 20,
+   "callLine": 20,
+   "kind": "test",
+   "api": "test",
+   "root": "test",
+   "chain": "test",
+   "timeout": "1011",
+   "title": "'test root'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/x/src/forms.test.ts",
+   "line": 21,
+   "callLine": 21,
+   "kind": "suite",
+   "api": "describe",
+   "root": "describe",
+   "chain": "describe",
+   "timeout": "1012",
+   "title": "'suite'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/x/src/forms.test.ts",
+   "line": 22,
+   "callLine": 22,
+   "kind": "suite",
+   "api": "describe",
+   "root": "live",
+   "chain": "live",
+   "timeout": "1013",
+   "title": "'cond alias suite'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/x/src/forms.test.ts",
+   "line": 23,
+   "callLine": 23,
+   "kind": "test",
+   "api": "it",
+   "root": "liveIt",
+   "chain": "liveIt",
+   "timeout": "1014",
+   "title": "'cond alias test'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/x/src/forms.test.ts",
+   "line": 24,
+   "callLine": 24,
+   "kind": "test",
+   "api": "it",
+   "root": "letAlias",
+   "chain": "letAlias",
+   "timeout": "1015",
+   "title": "'let alias'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/x/src/forms.test.ts",
+   "line": 25,
+   "callLine": 25,
+   "kind": "test",
+   "api": "it",
+   "root": "each",
+   "chain": "each",
+   "timeout": "1016",
+   "title": "'const curried alias %s'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/x/src/forms.test.ts",
+   "line": 26,
+   "callLine": 26,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it[]",
+   "timeout": "1017",
+   "title": "'element access'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/x/src/forms.test.ts",
+   "line": 27,
+   "callLine": 27,
+   "kind": "test",
+   "api": "bench",
+   "root": "bench",
+   "chain": "bench",
+   "timeout": "{ time: 1 }",
+   "title": "'bench'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/x/src/forms.test.ts",
+   "line": 28,
+   "kind": "setConfig",
+   "chain": "vi.setConfig",
+   "expr": "vi.setConfig({ testTimeout: 1018 })",
+   "predicates": [
+    "setConfig"
+   ]
+  },
+  {
+   "path": "apps/x/src/forms.test.ts",
+   "line": 28,
+   "kind": "config",
+   "name": "testTimeout",
+   "timeout": "1018",
+   "predicates": [
+    "config-property"
+   ]
+  },
+  {
+   "path": "apps/x/src/forms.test.ts",
+   "line": 29,
+   "callLine": 29,
+   "kind": "test",
+   "api": "test",
+   "root": "test",
+   "chain": "test.extend()",
+   "timeout": "1019",
+   "title": "'extend'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/x/src/forms.test.ts",
+   "line": 30,
+   "callLine": 30,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "() => {}",
+   "title": "'function third arg is not a timeout'",
+   "predicates": [
+    "S2"
+   ]
+  },
+  {
+   "path": "packages/y/src/helper.ts",
+   "line": 2,
+   "kind": "config",
+   "name": "testTimeout",
+   "timeout": "3001",
+   "predicates": [
+    "config-property"
+   ]
+  },
+  {
+   "path": "packages/y/vitest.config.ts",
+   "line": 1,
+   "kind": "config",
+   "name": "testTimeout",
+   "timeout": "2001",
+   "predicates": [
+    "config-property"
+   ]
+  },
+  {
+   "path": "packages/y/vitest.config.ts",
+   "line": 1,
+   "kind": "config",
+   "name": "hookTimeout",
+   "timeout": "2002",
+   "predicates": [
+    "config-property"
+   ]
+  },
+  {
+   "path": "packages/y/vitest.config.ts",
+   "line": 1,
+   "kind": "config",
+   "name": "teardownTimeout",
+   "timeout": "2003",
+   "predicates": [
+    "config-property"
+   ]
+  }
+ ],
+ "excludedCount": 0,
+ "excludedChains": {},
+ "excluded": []
+}

@@ -1,0 +1,28 @@
+
+ RUN  v3.2.7 /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520c/clone2
+
+ ✓ |@syzygy/polaris-generation-consent| packages/polaris-generation-consent/src/package-reader.test.ts (299 tests) 45897ms
+   ✓ package admission reader > returns a record only for an instance that an act record names by path and digest  2437ms
+   ✓ package admission reader > refuses the whole read on unknown shapes instead of guessing  1161ms
+   ✓ public-source policy act > recognises the recorder's record by its exact path and format, in force from its instant  1587ms
+   ✓ public-source policy act > refuses the recorder's file when its act type, identity, title or provenance is not the recorder's form  1643ms
+   ✓ egress version 2 record > is read from the recorder's act: version 2 supersedes version 1 once in force  3344ms
+   ✓ egress version 2 record > leaves version 1 standing before the version 2 act takes effect, and with no version 1 act at all  1408ms
+   ✓ egress version 2 record > refuses when version 2 did not take effect strictly after version 1: the same instant, or earlier  4101ms
+   ✓ egress version 2 record > the RFC5-14 class amendment version 2 depends on > is required: no record, an edited module, a wrong form, or an amendment later than version 2 all refuse  4986ms
+   ✓ egress version 2 record > withdrawal and forgery forms the reader does not define > does not refuse the recorders' other act records or the aggregate acceptance record they append to  3089ms
+   ✓ screening scope version 2 policy act > counts the version 2 act when the policy carries the version 2 bytes, and the version 1 act goes quiet  2220ms
+   ✓ screening scope version 2 policy act > a version 2 act not yet in force leaves version 1 in force, in both views  843ms
+   ✓ screening scope version 2 policy act > refuses an unlisted record that names the policy: another file, a subdirectory, a loose field spelling, a Unicode-hyphen identity  1669ms
+   ✓ strict act reads > policy chain: absent without acts; refused for a missing version 1, equal or earlier instants, equal arguments, a supersession that does not name version 1, or other policy bytes  3535ms
+   ✓ round-3 review notes > folds soft hyphens, zero-width spaces, underscores and spaces before matching a withdrawal stem (N-2)  1142ms
+   ✓ round-3 review notes > takes a time: a strict read of an act recorded after now is absent (N-4)  1614ms
+   ✓ every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) > a file at its allowlisted path with its allowlisted bytes has its exact tooling citations set aside, and only those  436ms
+   ✓ the policy port and the strict policy chain agree > on every world in the fixture set, at every instant  7003ms
+
+ Test Files  1 passed (1)
+      Tests  299 passed (299)
+   Start at  02:05:08
+   Duration  62.13s (transform 1.87s, setup 110ms, collect 14.79s, tests 45.90s, environment 0ms, prepare 158ms)
+
+JSON report written to /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520c/file-run-head.report.json

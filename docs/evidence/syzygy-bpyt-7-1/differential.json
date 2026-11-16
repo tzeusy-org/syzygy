@@ -1,0 +1,351 @@
+{
+ "bead": "syzygy-bpyt.7.1",
+ "tool": "docs/evidence/syzygy-bpyt-7-1/diff-probe.mjs",
+ "toolSha256": "598a640a07becdc35782e6dbb61077e42019e6e26b7fc072ec49c259de31f36a",
+ "tmpdir": "/tmp/b71",
+ "base": {
+  "commit": "6e4974aa95fa79b8d20f0bbbb13a067b4656dcc2",
+  "outputSha256": "4eb2d9b5f64cd2127901b1061196571ab639f0da17743d82eba6e6d5a58df376",
+  "output": "docs/evidence/syzygy-bpyt-7-1/probe-base.json",
+  "rerunIdentical": true,
+  "subjects": [
+   {
+    "path": "packages/three-surface-poc-core/src/model.ts",
+    "sha256": "6697eead669c071b47460e583a1cac1b26cffe9d8d66d3f76f60e811156ba1d0"
+   }
+  ]
+ },
+ "head": {
+  "commit": "e6e46c1e (refactor commit; model.ts, model-slices.ts, seed-graph.ts and acceptance/ are unchanged by the later test-only commit)",
+  "commitFull": "e6e46c1e0c549ab20f6dbedecca313ffb2fbba7f",
+  "outputSha256": "91d2efe6e1ce1146e898a5447f21e3c36bb18af82e5160ecd9da007d8da412bc",
+  "subjects": [
+   {
+    "path": "packages/three-surface-poc-core/src/model.ts",
+    "sha256": "f4791a12179830194c3f958b04dfa6945fb7713f85bd58fe88f0984727eafc72"
+   },
+   {
+    "path": "packages/three-surface-poc-core/src/model-slices.ts",
+    "sha256": "6ac7ff97af8578eec9861a66be70ed5d36a0eef1927cf640b5e00cc5236d477e"
+   },
+   {
+    "path": "packages/three-surface-poc-core/src/seed-graph.ts",
+    "sha256": "ef49e0c8f94cf526e949b5b6b6822a581fa45796221f421ffaa651069b704088"
+   },
+   {
+    "path": "packages/three-surface-poc-core/src/poc-observation-error.ts",
+    "sha256": "be32556d6dab0d2dd756223bf18dacce2cb118072be0495f00dac07faddec5c4"
+   },
+   {
+    "path": "packages/three-surface-poc-core/src/acceptance/walkthrough-acceptance.ts",
+    "sha256": "c6960c019b9fe94124e87bb09cbe26d52990f034656b3f2486a52b1da7854883"
+   },
+   {
+    "path": "apps/three-surface-poc/src/production-reobserve.ts",
+    "sha256": "5218c5d71654e8176cc3ba5ef8e6f33efa998eb143da2ee6edcabee5002f918d"
+   },
+   {
+    "path": "apps/three-surface-poc/src/test-model-fixture.ts",
+    "sha256": "6e1e649aad02706f23875b787833327ec1a1b4cd495b3a232e8c4df344d44ca2"
+   }
+  ]
+ },
+ "rowDigest": "sha256 of json.dumps(row, sort_keys=True) per model row",
+ "models": 41,
+ "identical": 40,
+ "differ": [
+  "variant:no-seeds"
+ ],
+ "routeRowsBase": 2210,
+ "expectedDifference": "variant:no-seeds is the seedless build this bead deletes: at head buildPocModel requires seeds and the row errors; it has no surviving behaviour to compare.",
+ "rows": [
+  {
+   "label": "variant:unevaluated",
+   "base": "7ed807c28b6fa397de213ceb67673ee8393d3da0f0c127842b2a08dfe9e404eb",
+   "head": "7ed807c28b6fa397de213ceb67673ee8393d3da0f0c127842b2a08dfe9e404eb",
+   "identical": true,
+   "routes": 30
+  },
+  {
+   "label": "variant:rejected",
+   "base": "6465115a31e4270bb90700a9c711ef66aedb7e708cc4afedad5e0fbdbf091573",
+   "head": "6465115a31e4270bb90700a9c711ef66aedb7e708cc4afedad5e0fbdbf091573",
+   "identical": true,
+   "routes": 30
+  },
+  {
+   "label": "variant:observed",
+   "base": "eab5da75488686a6481b1243f74d8d95b958e79981a0ff3016c0743caa75ee34",
+   "head": "eab5da75488686a6481b1243f74d8d95b958e79981a0ff3016c0743caa75ee34",
+   "identical": true,
+   "routes": 90
+  },
+  {
+   "label": "variant:observed-without-precedence",
+   "base": "a26fc186a0053445176a6435603998da64c0a9d647de8689d2bc974e0d0a0c4e",
+   "head": "a26fc186a0053445176a6435603998da64c0a9d647de8689d2bc974e0d0a0c4e",
+   "identical": true,
+   "routes": 90
+  },
+  {
+   "label": "variant:observed-bare-root",
+   "base": "8047e28033560ef6c2e2355f86b093ffad979efb7590be888fa553a6fca6636e",
+   "head": "8047e28033560ef6c2e2355f86b093ffad979efb7590be888fa553a6fca6636e",
+   "identical": true,
+   "routes": 90
+  },
+  {
+   "label": "variant:observed-with-secret",
+   "base": "9dd3bafc47acabd1cefcfb21682ef4e93534acf932f88db95f763c85db009935",
+   "head": "9dd3bafc47acabd1cefcfb21682ef4e93534acf932f88db95f763c85db009935",
+   "identical": true,
+   "routes": 86
+  },
+  {
+   "label": "variant:observed-with-baseline-spec",
+   "base": "63e2e3d218d670be76719d423cc0ca59b76a41df5fe88b55132545830ecb2430",
+   "head": "63e2e3d218d670be76719d423cc0ca59b76a41df5fe88b55132545830ecb2430",
+   "identical": true,
+   "routes": 94
+  },
+  {
+   "label": "variant:observation-failed-ls-tree",
+   "base": "a04fdd177ba5c93b5b3e9cd285732f79ad3c90629e2aedc209db735a6cd4b4f4",
+   "head": "a04fdd177ba5c93b5b3e9cd285732f79ad3c90629e2aedc209db735a6cd4b4f4",
+   "identical": true,
+   "routes": 30
+  },
+  {
+   "label": "variant:observation-failed-cat-file",
+   "base": "ed9c9176c7b026892bed81b664280767de6f04738b90b9af687745f815a3b87e",
+   "head": "ed9c9176c7b026892bed81b664280767de6f04738b90b9af687745f815a3b87e",
+   "identical": true,
+   "routes": 46
+  },
+  {
+   "label": "variant:observation-failed-show",
+   "base": "1e7f1962e384aa706427ec2cacd2d3d8e39692d440f3ee9c1f07384aa7fcb836",
+   "head": "1e7f1962e384aa706427ec2cacd2d3d8e39692d440f3ee9c1f07384aa7fcb836",
+   "identical": true,
+   "routes": 30
+  },
+  {
+   "label": "variant:item-unknown",
+   "base": "f2e6377ec87040db6f7a151ad4e82cc53321e5c7849e415195e1e8396e1d6248",
+   "head": "f2e6377ec87040db6f7a151ad4e82cc53321e5c7849e415195e1e8396e1d6248",
+   "identical": true,
+   "routes": 90
+  },
+  {
+   "label": "variant:item-contradicted",
+   "base": "c352d1dc410581560e446f491b4c8b37baeaf0b246dac7e31bc71467297a0481",
+   "head": "c352d1dc410581560e446f491b4c8b37baeaf0b246dac7e31bc71467297a0481",
+   "identical": true,
+   "routes": 90
+  },
+  {
+   "label": "variant:judgment-absent",
+   "base": "aba460e17e8643339f3d8005267fc82df4887c3fb293cce2da356d5f709b3c5a",
+   "head": "aba460e17e8643339f3d8005267fc82df4887c3fb293cce2da356d5f709b3c5a",
+   "identical": true,
+   "routes": 30
+  },
+  {
+   "label": "variant:judgment-unlawful",
+   "base": "c2864a809a20f8d04febda679dbeec401bf4269e20f084c46565d50aac9f7fcb",
+   "head": "c2864a809a20f8d04febda679dbeec401bf4269e20f084c46565d50aac9f7fcb",
+   "identical": true,
+   "routes": 30
+  },
+  {
+   "label": "variant:judgment-ready",
+   "base": "9304c2bc810ff34553453192009f5dd54e910713c51a0325486c947f08e7d042",
+   "head": "9304c2bc810ff34553453192009f5dd54e910713c51a0325486c947f08e7d042",
+   "identical": true,
+   "routes": 90
+  },
+  {
+   "label": "variant:unreachable",
+   "base": "561bfe021364b7eefd93422264ced4705cc7243f634cc909abf5e357b45cdd4c",
+   "head": "561bfe021364b7eefd93422264ced4705cc7243f634cc909abf5e357b45cdd4c",
+   "identical": true,
+   "routes": 30
+  },
+  {
+   "label": "variant:work-items-non-json",
+   "base": "f8ada5fd6cdcb764727edcd2f573e816838081869350b3908d5c7e74501e4f4c",
+   "head": "f8ada5fd6cdcb764727edcd2f573e816838081869350b3908d5c7e74501e4f4c",
+   "identical": true,
+   "routes": 30
+  },
+  {
+   "label": "variant:work-items-bad-shape",
+   "base": "86e037593caa4217ffd1fc17c42390a163db1e99d25b086ab5cfa4ae055c3c5d",
+   "head": "86e037593caa4217ffd1fc17c42390a163db1e99d25b086ab5cfa4ae055c3c5d",
+   "identical": true,
+   "routes": 30
+  },
+  {
+   "label": "variant:work-items-two-revisions",
+   "base": "1b986b7ee11aa86a47f2d9eae033bbdaf6a5f5420b8acf739b6757a1ac060154",
+   "head": "1b986b7ee11aa86a47f2d9eae033bbdaf6a5f5420b8acf739b6757a1ac060154",
+   "identical": true,
+   "routes": 30
+  },
+  {
+   "label": "variant:lifecycle-contradicted",
+   "base": "2dbc5df2959033ad1c2482fd4d636b2e6288703d1a0480e2755728716f43bdb4",
+   "head": "2dbc5df2959033ad1c2482fd4d636b2e6288703d1a0480e2755728716f43bdb4",
+   "identical": true,
+   "routes": 30
+  },
+  {
+   "label": "variant:no-seeds",
+   "base": "645de30486e688a69ae7b0d7c4ca65ee45bcc7e4ab16846667b15df1a5bd41f3",
+   "head": "2625c83255c3cdad933aad16dfe378dfa5a31e4bb2f4d159e02b32a482f336df",
+   "identical": false,
+   "routes": 30,
+   "headError": "Cannot read properties of undefined (reading 'entities')"
+  },
+  {
+   "label": "variant:worker-change",
+   "base": "c18eaa89eb276c9a9364be4f74357097fa4927cfcf6bea453b83bcf93237b068",
+   "head": "c18eaa89eb276c9a9364be4f74357097fa4927cfcf6bea453b83bcf93237b068",
+   "identical": true,
+   "routes": 30
+  },
+  {
+   "label": "variant:worker-change-reported",
+   "base": "f28885b7b97c1775f4f77e6afe36b64515aa1aa0f0520458ca4d1e81068a3dcf",
+   "head": "f28885b7b97c1775f4f77e6afe36b64515aa1aa0f0520458ca4d1e81068a3dcf",
+   "identical": true,
+   "routes": 30
+  },
+  {
+   "label": "variant:worker-change-mismatched",
+   "base": "491c44fb43a1281495b0af6f6b3635026d239169ddea471caa57c648910f4bc1",
+   "head": "491c44fb43a1281495b0af6f6b3635026d239169ddea471caa57c648910f4bc1",
+   "identical": true,
+   "routes": 30
+  },
+  {
+   "label": "variant:worker-change-failed",
+   "base": "9fd9dda8cbb61844e983856db4e2b4b85027c4ca0aedacd28764e999669f9f02",
+   "head": "9fd9dda8cbb61844e983856db4e2b4b85027c4ca0aedacd28764e999669f9f02",
+   "identical": true,
+   "routes": 30
+  },
+  {
+   "label": "variant:wt-detail-only",
+   "base": "8f838db7e6a45c6f561d3940a26409b2d6aa8e4fd8332c5b76fc882d011a2d44",
+   "head": "8f838db7e6a45c6f561d3940a26409b2d6aa8e4fd8332c5b76fc882d011a2d44",
+   "identical": true,
+   "routes": 30
+  },
+  {
+   "label": "variant:wt-judgment-no-traversal",
+   "base": "26eec904ff121c322b71b6032f28deca0ad4154b0bc42ea4166d9356c60f32b3",
+   "head": "26eec904ff121c322b71b6032f28deca0ad4154b0bc42ea4166d9356c60f32b3",
+   "identical": true,
+   "routes": 30
+  },
+  {
+   "label": "variant:wt-function-binding",
+   "base": "d8e5956c222ae8fcb2b7651628487ff77d6dd94c00700486e8cec7444c46dd30",
+   "head": "d8e5956c222ae8fcb2b7651628487ff77d6dd94c00700486e8cec7444c46dd30",
+   "identical": true,
+   "routes": 90
+  },
+  {
+   "label": "variant:wt-function-throws",
+   "base": "609be4044fa82834f0c577bd6d520eed89444fff0d462aaaa76f31dd9d02b14f",
+   "head": "609be4044fa82834f0c577bd6d520eed89444fff0d462aaaa76f31dd9d02b14f",
+   "identical": true,
+   "routes": 30
+  },
+  {
+   "label": "variant:wt-traversal-only",
+   "base": "7e99cdf68073a8570172ac9d7585b7badc2d6539f6c9154f1fc8e0f6400e1ecd",
+   "head": "7e99cdf68073a8570172ac9d7585b7badc2d6539f6c9154f1fc8e0f6400e1ecd",
+   "identical": true,
+   "routes": 30
+  },
+  {
+   "label": "variant:worker-change-no-intent",
+   "base": "8a27f1b0dd3a35f083b903b388dc223dfecd9779a45a7c1bd5ac43becdf81f31",
+   "head": "8a27f1b0dd3a35f083b903b388dc223dfecd9779a45a7c1bd5ac43becdf81f31",
+   "identical": true,
+   "routes": 30
+  },
+  {
+   "label": "mutation:crlf",
+   "base": "7a2f68f99ee11e877b53e7d5567a790a9a4a7591bd35deead1e69851361f21dd",
+   "head": "7a2f68f99ee11e877b53e7d5567a790a9a4a7591bd35deead1e69851361f21dd",
+   "identical": true,
+   "routes": 90
+  },
+  {
+   "label": "mutation:appended-prose",
+   "base": "3bec4a089e3f6d5c79709830c83b0285faa0c4971a87fa5f43203d75c7eabf72",
+   "head": "3bec4a089e3f6d5c79709830c83b0285faa0c4971a87fa5f43203d75c7eabf72",
+   "identical": true,
+   "routes": 90
+  },
+  {
+   "label": "mutation:agent-claim",
+   "base": "1a0d930bdc854c69e317bb76ce8506db875ccebfcbf2f14d6edd8d995f3c3b70",
+   "head": "1a0d930bdc854c69e317bb76ce8506db875ccebfcbf2f14d6edd8d995f3c3b70",
+   "identical": true,
+   "routes": 90
+  },
+  {
+   "label": "mutation:fence-line",
+   "base": "ce59c4b9dd1f294e8d95ceff0fcded1b53853aa95f0a7dbfe16b1230de74ae57",
+   "head": "ce59c4b9dd1f294e8d95ceff0fcded1b53853aa95f0a7dbfe16b1230de74ae57",
+   "identical": true,
+   "routes": 46
+  },
+  {
+   "label": "mutation:emptied-file",
+   "base": "5f62d02e3cd2f92477bfdac5eda4e2c1fbb6fee76e81bf95ded9f959e9bd0011",
+   "head": "5f62d02e3cd2f92477bfdac5eda4e2c1fbb6fee76e81bf95ded9f959e9bd0011",
+   "identical": true,
+   "routes": 46
+  },
+  {
+   "label": "mutation:unicode",
+   "base": "947b62911bf0c52229a9aaa127de32aa6070364a73fe5dbd19bb573ef0af708a",
+   "head": "947b62911bf0c52229a9aaa127de32aa6070364a73fe5dbd19bb573ef0af708a",
+   "identical": true,
+   "routes": 90
+  },
+  {
+   "label": "mutation:secret-token",
+   "base": "4c93846bff2c29b5cda1786ff927e025f8b4d522e7be1afce134df38c96c70e1",
+   "head": "4c93846bff2c29b5cda1786ff927e025f8b4d522e7be1afce134df38c96c70e1",
+   "identical": true,
+   "routes": 46
+  },
+  {
+   "label": "mutation:duplicated-row",
+   "base": "1809b6ed41f921ddd86a2ea349a025d524049f819e10fc6a64d1a76eefad7731",
+   "head": "1809b6ed41f921ddd86a2ea349a025d524049f819e10fc6a64d1a76eefad7731",
+   "identical": true,
+   "routes": 90
+  },
+  {
+   "label": "mutation:uppercase",
+   "base": "ca32f53641092e9b9700a8525bbb47533a3b0ac8dc76f631f6b79c641b3b751a",
+   "head": "ca32f53641092e9b9700a8525bbb47533a3b0ac8dc76f631f6b79c641b3b751a",
+   "identical": true,
+   "routes": 46
+  },
+  {
+   "label": "mutation:retitled",
+   "base": "d4c8a8d3a505777f92a78e39ed7fef3508eb78b202311ee316b091b44e4d5e48",
+   "head": "d4c8a8d3a505777f92a78e39ed7fef3508eb78b202311ee316b091b44e4d5e48",
+   "identical": true,
+   "routes": 90
+  }
+ ]
+}

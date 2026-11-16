@@ -1,0 +1,2 @@
+    expect(() => entryModulesIn(workspace({}, { types: './dist/index.d.ts', import: './dist/x/../index.js', default: './dist/x/../index.js' })))
+      .toThrow('@syzygy/lib: its entry has a /../ segment, which Node refuses');

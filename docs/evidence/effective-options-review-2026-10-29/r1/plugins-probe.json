@@ -1,0 +1,26 @@
+{
+ "pattern": "\\bplugins\\b['\"]?\\s*:",
+ "refused": {
+  "bare": true,
+  "single-quoted": true,
+  "double-quoted": true,
+  "space before colon": true,
+  "newline before colon": true,
+  "shorthand": false,
+  "shorthand with others": false,
+  "computed single": false,
+  "computed double": false,
+  "computed template": false,
+  "comment between key and colon": false,
+  "unicode escape in identifier": false,
+  "spread of an imported object": false,
+  "mergeConfig with an imported config": false,
+  "project extends a file path": false,
+  "key with a template literal not possible; a string key with escape": false,
+  "false positive: comment": true,
+  "false positive: identifier pluginsX": false,
+  "false positive: myplugins": false,
+  "matches in vitest.config.ts": 0,
+  "matches in /tmp/r558-4/main-vitest.config.ts": 0
+ }
+}

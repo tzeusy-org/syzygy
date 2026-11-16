@@ -1,0 +1,188 @@
+{
+ "mutants": [
+  {
+   "id": "RV-T18-dependency-alias",
+   "what": "a dependency alias \"dossier\": \"file:../../packages/polaris-dossier\", imported by main.ts",
+   "expect": {
+    "base": "survives",
+    "head": "survives"
+   },
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/subpath-imports.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "apps/syzygy/package.json",
+     "old": "  \"dependencies\": {\n",
+     "new": "  \"dependencies\": {\n    \"dossier\": \"file:../../packages/polaris-dossier\",\n"
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nimport 'dossier';\n"
+    }
+   ]
+  },
+  {
+   "id": "RV-C6-mts-caller",
+   "what": "a new .mts module calling readArgv with its own spec",
+   "expect": {
+    "base": "survives",
+    "head": "survives"
+   },
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/argv.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/extra-reader.mts",
+     "create": "import { readArgv } from './argv.js';\nexport const readDrift = (args: string[]) => readArgv(args, { valued: ['--drift'], dashValue: 'take', repeat: 'last', positionals: true });\n"
+    }
+   ]
+  },
+  {
+   "id": "RV-P3-moduleIn-prefix-null",
+   "what": "moduleIn returns null for a target outside ./dist/",
+   "expect": "unknown",
+   "projects": [
+    "@syzygy/polaris-generation-core",
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "packages/polaris-generation-core/src/island-boundary.test.ts",
+    "packages/polaris-dossier/src/subpath-imports.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "  if (!target.startsWith('./dist/')) return undefined;\n",
+     "new": "  if (!target.startsWith('./dist/')) return null as never;\n"
+    }
+   ]
+  },
+  {
+   "id": "RV-P4-moduleIn-missing-file-null",
+   "what": "moduleIn returns null when the src module is no file",
+   "expect": "unknown",
+   "projects": [
+    "@syzygy/polaris-generation-core",
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "packages/polaris-generation-core/src/island-boundary.test.ts",
+    "packages/polaris-dossier/src/subpath-imports.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "  return workspace.isFile(module) ? module : undefined;\n",
+     "new": "  return workspace.isFile(module) ? module : (null as never);\n"
+    }
+   ]
+  },
+  {
+   "id": "RV-P6-leaves-package-check-dropped",
+   "what": "the # branch no longer refuses a ../ target",
+   "expect": "unknown",
+   "projects": [
+    "@syzygy/polaris-generation-core",
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "packages/polaris-generation-core/src/island-boundary.test.ts",
+    "packages/polaris-dossier/src/subpath-imports.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "target.startsWith('#') || target.startsWith('../')) return undefined;",
+     "new": "target.startsWith('#')) return undefined;"
+    }
+   ]
+  },
+  {
+   "id": "RV-P8-array-guard-dropped",
+   "what": "targetOf no longer refuses an array outright",
+   "expect": "unknown",
+   "projects": [
+    "@syzygy/polaris-generation-core",
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "packages/polaris-generation-core/src/island-boundary.test.ts",
+    "packages/polaris-dossier/src/subpath-imports.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": " || Array.isArray(entry)) return undefined;",
+     "new": ") return undefined;"
+    }
+   ]
+  },
+  {
+   "id": "RV-Q1-callee-conjunct-dropped",
+   "what": "the census allows readArgv anywhere inside a call, not only as its callee",
+   "expect": "unknown",
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/argv.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": "        || (ts.isCallExpression(parent) && parent.expression === node);\n",
+     "new": "        || ts.isCallExpression(parent);\n"
+    }
+   ]
+  },
+  {
+   "id": "RV-Q2-declaration-anywhere",
+   "what": "the census allows a readArgv function declaration in any module",
+   "expect": "unknown",
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/argv.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": " && module === 'packages/polaris-dossier/src/argv.ts')",
+     "new": ")"
+    }
+   ]
+  },
+  {
+   "id": "RV-Q3-census-never-fed",
+   "what": "readArgvCallers never adds the census of each module to unlifted",
+   "expect": "unknown",
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/argv.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": "    unlifted.push(...unliftedOf(module, source));\n",
+     "new": ""
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,189 @@
+{
+ "tool": "rev-525b/tools/probe.py",
+ "toolSha256": "aa58085d9eb7dbdbfb93b394ab806c9c14d42da14e1102a155fc82f05d98ea67",
+ "case": "head",
+ "commit": "7459cc7585205e270f90173737c6d59786af650a",
+ "files": {},
+ "edits": [],
+ "env": {},
+ "filters": [
+  "daemon-entry-unchanged",
+  "state-dir.system"
+ ],
+ "expect": "pass",
+ "run": {
+  "command": "npx vitest run --config packages/cap1-system/vitest.config.ts daemon-entry-unchanged state-dir.system --reporter=json --outputFile=<tmp>/report.json",
+  "exitCode": 0,
+  "wallSeconds": 13.2,
+  "load1": {
+   "start": 25.42,
+   "end": 30.23
+  },
+  "deadlineHit": false,
+  "samples": 16,
+  "meanSampleIntervalSeconds": 0.82,
+  "port7477Before": [],
+  "port7477Seen": [],
+  "killedOn7477": [],
+  "ownListeningPorts": [],
+  "processesSeen": 26,
+  "survivors": {},
+  "tmpLeftoversBeforeRemoval": [
+   "node-compile-cache",
+   "report.json",
+   "vitest.log"
+  ],
+  "logTail": "JSON report written to <tmp>/report.json\n",
+  "tests": [
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged [\"--help\"] prints the usage and exits 0",
+    "status": "passed",
+    "durationMs": 610,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged [\"-h\"] prints the usage and exits 0",
+    "status": "passed",
+    "durationMs": 1198,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged [\"--help\",\"dossier\"] prints the usage and exits 0",
+    "status": "passed",
+    "durationMs": 1038,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged [\"--bogus\"] is refused with exit 1 and the same message",
+    "status": "passed",
+    "durationMs": 288,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged [\"--port\",\"0\",\"dossier\"] is refused with exit 1 and the same message",
+    "status": "passed",
+    "durationMs": 343,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged [\"Dossier\"] is refused with exit 1 and the same message",
+    "status": "passed",
+    "durationMs": 675,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged [\"--port\"] is refused with exit 1 and the same message",
+    "status": "passed",
+    "durationMs": 330,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged [\"--port\",\"70000\"] is refused with exit 1 and the same message",
+    "status": "passed",
+    "durationMs": 346,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged a state directory inside the governed plane is refused with the same message",
+    "status": "passed",
+    "durationMs": 1106,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged with no arguments it serves from the working directory, writes the same state and shuts down the same way",
+    "status": "passed",
+    "durationMs": 453,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged with explicit flags it serves, writes the same state and shuts down the same way",
+    "status": "passed",
+    "durationMs": 1041,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: the one changed input, `dossier` as the first argument `dossier` alone is a dossier usage error (exit 2), not the daemon's refusal",
+    "status": "passed",
+    "durationMs": 908,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: the one changed input, `dossier` as the first argument `dossier status <missing>` is a dossier refusal (exit 1) and starts no daemon",
+    "status": "passed",
+    "durationMs": 844,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: the one changed input, `dossier` as the first argument `dossier render <missing>` reaches the run with the renderer injected, and starts no daemon",
+    "status": "passed",
+    "durationMs": 600,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch",
+    "status": "passed",
+    "durationMs": 7,
+    "failure": null
+   },
+   {
+    "name": "RTF-1 \u2014 state-dir governed-plane check resolves symlink reality refuses (nonzero exit, named refusal) a --state-dir symlink whose REAL target lies inside .syzygy/, and writes nothing there",
+    "status": "passed",
+    "durationMs": 487,
+    "failure": null
+   },
+   {
+    "name": "RTF-1 \u2014 state-dir governed-plane check resolves symlink reality refuses a dangling --state-dir symlink whose intended target lies inside .syzygy/, before writes or a listener",
+    "status": "passed",
+    "durationMs": 842,
+    "failure": null
+   },
+   {
+    "name": "RTF-1 \u2014 state-dir governed-plane check resolves symlink reality still starts and serves through a --state-dir symlink whose real target is OUTSIDE the governed plane",
+    "status": "passed",
+    "durationMs": 1084,
+    "failure": null
+   },
+   {
+    "name": "RTF-1 \u2014 state-dir governed-plane check resolves symlink reality keeps a dangling benign outside target credential-unprovisionable, with no listener or writes",
+    "status": "passed",
+    "durationMs": 797,
+    "failure": null
+   },
+   {
+    "name": "RTF-1 \u2014 state-dir governed-plane check resolves symlink reality rejects a state-dir symlink loop as named invalid before writes or a listener",
+    "status": "passed",
+    "durationMs": 1139,
+    "failure": null
+   },
+   {
+    "name": "RTF-1 \u2014 state-dir governed-plane check resolves symlink reality rejects an unreadable state-dir path as named invalid before writes or a listener",
+    "status": "passed",
+    "durationMs": 669,
+    "failure": null
+   }
+  ]
+ },
+ "treeCleanAfter": true,
+ "passesExpectation": true,
+ "summary": {
+  "exitCode": 0,
+  "wallSeconds": 13.2,
+  "deadlineHit": false,
+  "statuses": {
+   "passed": 21
+  },
+  "failed": [],
+  "port7477Seen": 0,
+  "samples": 16,
+  "meanInterval": 0.82,
+  "load1": {
+   "start": 25.42,
+   "end": 30.23
+  },
+  "killedOn7477": 0,
+  "ownListeningPorts": [],
+  "survivors": 0,
+  "slowestMs": 1198,
+  "passesExpectation": true
+ }
+}

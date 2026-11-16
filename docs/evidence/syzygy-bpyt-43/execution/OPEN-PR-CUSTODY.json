@@ -1,0 +1,987 @@
+{
+  "at": "2026-11-06T03:28:26.513800+00:00",
+  "prs": [
+    {
+      "baseRefName": "main",
+      "headRefName": "agent/syzygy-bpyt.33",
+      "headRefOid": "600432fc378e0fb7c8454846fb7ff83188f54140",
+      "number": 769,
+      "updatedAt": "2026-11-06T02:24:01Z",
+      "url": "https://github.com/tzeusy-org/syzygy/pull/769",
+      "files": [
+        "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+        "docs/evidence/syzygy-bpyt-33/README.md",
+        "docs/evidence/syzygy-bpyt-33/timeout-measurement.json"
+      ],
+      "second_method_files": [
+        "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+        "docs/evidence/syzygy-bpyt-33/README.md",
+        "docs/evidence/syzygy-bpyt-33/timeout-measurement.json"
+      ],
+      "methods_agree": true
+    },
+    {
+      "baseRefName": "main",
+      "headRefName": "agent/syzygy-bpyt.32",
+      "headRefOid": "e6b30a3faec141bf3fb6b56e358b6e49e3a7427c",
+      "number": 767,
+      "updatedAt": "2026-11-06T00:58:58Z",
+      "url": "https://github.com/tzeusy-org/syzygy/pull/767",
+      "files": [
+        "apps/three-surface-poc/src/browser-origin.test.ts",
+        "packages/cap1-daemon/src/server.test.ts",
+        "packages/http-host/src/credentials.test.ts"
+      ],
+      "second_method_files": [
+        "apps/three-surface-poc/src/browser-origin.test.ts",
+        "packages/cap1-daemon/src/server.test.ts",
+        "packages/http-host/src/credentials.test.ts"
+      ],
+      "methods_agree": true
+    },
+    {
+      "baseRefName": "main",
+      "headRefName": "agent/syzygy-bpyt.4.36",
+      "headRefOid": "bfb8b00480c4c3f5fec04a6cd13470bf40c6eeb7",
+      "number": 766,
+      "updatedAt": "2026-11-06T00:49:57Z",
+      "url": "https://github.com/tzeusy-org/syzygy/pull/766",
+      "files": [
+        "packages/three-surface-poc-core/src/body-read-authority.ts"
+      ],
+      "second_method_files": [
+        "packages/three-surface-poc-core/src/body-read-authority.ts"
+      ],
+      "methods_agree": true
+    },
+    {
+      "baseRefName": "main",
+      "headRefName": "agent/syzygy-bpyt.4.14",
+      "headRefOid": "88b502e7060a4013b7932f0cb3771cb2e2dbe06b",
+      "number": 763,
+      "updatedAt": "2026-11-05T20:38:13Z",
+      "url": "https://github.com/tzeusy-org/syzygy/pull/763",
+      "files": [
+        "apps/three-surface-poc/src/cdp-browser.browser.test.ts",
+        "apps/three-surface-poc/src/cdp-browser.test.ts",
+        "apps/three-surface-poc/src/cdp-browser.ts",
+        "apps/three-surface-poc/src/test-fixtures/browser-parent-death.py",
+        "docs/evidence/syzygy-bpyt-4-14/README.md",
+        "docs/evidence/syzygy-bpyt-4-14/namespace-lineage-correction-2026-11-06.json",
+        "docs/evidence/syzygy-bpyt-4-14/process-outcome-2026-11-05.json",
+        "docs/evidence/syzygy-bpyt-4-14/process-outcome-final-2026-11-06.json",
+        "scripts/poc_browser_lifetime.py"
+      ],
+      "second_method_files": [
+        "apps/three-surface-poc/src/cdp-browser.browser.test.ts",
+        "apps/three-surface-poc/src/cdp-browser.test.ts",
+        "apps/three-surface-poc/src/cdp-browser.ts",
+        "apps/three-surface-poc/src/test-fixtures/browser-parent-death.py",
+        "docs/evidence/syzygy-bpyt-4-14/README.md",
+        "docs/evidence/syzygy-bpyt-4-14/namespace-lineage-correction-2026-11-06.json",
+        "docs/evidence/syzygy-bpyt-4-14/process-outcome-2026-11-05.json",
+        "docs/evidence/syzygy-bpyt-4-14/process-outcome-final-2026-11-06.json",
+        "scripts/poc_browser_lifetime.py"
+      ],
+      "methods_agree": true
+    },
+    {
+      "baseRefName": "main",
+      "headRefName": "agent/syzygy-bpyt.1.20",
+      "headRefOid": "348e51676a8c74b28962eed0f420bf53806e4370",
+      "number": 761,
+      "updatedAt": "2026-11-05T17:21:41Z",
+      "url": "https://github.com/tzeusy-org/syzygy/pull/761",
+      "files": [
+        "docs/evidence/syzygy-bpyt-6-3/dc3-fence-position-addendum-2026-11-05.json",
+        "packages/three-surface-poc-core/src/git-object-reader.test.ts",
+        "packages/three-surface-poc-core/src/git-object-reader.ts",
+        "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+        "packages/three-surface-poc-core/src/markdown-code-context.ts",
+        "packages/three-surface-poc-core/src/project-shape-extraction.test.ts",
+        "packages/three-surface-poc-core/src/project-shape-manifest.test.ts"
+      ],
+      "second_method_files": [
+        "docs/evidence/syzygy-bpyt-6-3/dc3-fence-position-addendum-2026-11-05.json",
+        "packages/three-surface-poc-core/src/git-object-reader.test.ts",
+        "packages/three-surface-poc-core/src/git-object-reader.ts",
+        "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+        "packages/three-surface-poc-core/src/markdown-code-context.ts",
+        "packages/three-surface-poc-core/src/project-shape-extraction.test.ts",
+        "packages/three-surface-poc-core/src/project-shape-manifest.test.ts"
+      ],
+      "methods_agree": true
+    },
+    {
+      "baseRefName": "main",
+      "headRefName": "agent/syzygy-mea.10.8",
+      "headRefOid": "36bcc375b24e6ebc9537506893b26bf8d45e82b7",
+      "number": 754,
+      "updatedAt": "2026-11-05T06:31:56Z",
+      "url": "https://github.com/tzeusy-org/syzygy/pull/754",
+      "files": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+        "docs/evidence/syzygy-mea-10-8/README.md",
+        "docs/evidence/syzygy-mea-10-8/review-note-verification-2026-11-05.json",
+        "docs/review-campaigns/mea10-dossier-readability.md",
+        "packages/polaris-dossier/src/render.test.ts",
+        "packages/polaris-dossier/src/render.ts",
+        "packages/polaris-dossier/src/review.test.ts",
+        "packages/polaris-generation-core/src/closed-schema.test.ts",
+        "packages/polaris-generation-core/src/local-render.ts"
+      ],
+      "second_method_files": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+        "docs/evidence/syzygy-mea-10-8/README.md",
+        "docs/evidence/syzygy-mea-10-8/review-note-verification-2026-11-05.json",
+        "docs/review-campaigns/mea10-dossier-readability.md",
+        "packages/polaris-dossier/src/render.test.ts",
+        "packages/polaris-dossier/src/render.ts",
+        "packages/polaris-dossier/src/review.test.ts",
+        "packages/polaris-generation-core/src/closed-schema.test.ts",
+        "packages/polaris-generation-core/src/local-render.ts"
+      ],
+      "methods_agree": true
+    },
+    {
+      "baseRefName": "main",
+      "headRefName": "agent/syzygy-mea.10.6",
+      "headRefOid": "59768e6f28356723b39482f314cf211f245873b5",
+      "number": 745,
+      "updatedAt": "2026-11-04T22:27:16Z",
+      "url": "https://github.com/tzeusy-org/syzygy/pull/745",
+      "files": [
+        ".github/workflows/governance-docs.yml",
+        ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/DEPENDENCY-SWEEP.json",
+        ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/IMPACT-LEDGER.md",
+        ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/OWNER-DECISION-PACKET.md",
+        ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/PATCH-VALIDATION.json",
+        ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/REVIEW-BRIEF.md",
+        ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/SEMANTIC-DELTA.md",
+        ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/SOURCE-RECEIPTS.json",
+        ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/TOOLING-MUTANTS.json",
+        ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/TOOLING-VALIDATION.json",
+        ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/V1-3-NOTE-DISPOSITIONS.md",
+        ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/proposed/design.md.patch",
+        ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/proposed/proposal.md.patch",
+        ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/proposed/spec.md.patch",
+        "PROJECT-STATUS.md",
+        "docs/review-campaigns/mea10-dossier-readability.md",
+        "docs/reviews/R-MEA10-10-V14-5cdc02c3-1-NOTES.md",
+        "docs/reviews/R-MEA10-10-V14-5cdc02c3-1-RAW.md",
+        "scripts/build_polaris_dossier_local_agent_mode_v1_1.py",
+        "scripts/build_polaris_dossier_local_agent_mode_v1_2.py",
+        "scripts/build_polaris_dossier_local_agent_mode_v1_3.py",
+        "scripts/build_polaris_dossier_local_agent_mode_v1_4.py",
+        "scripts/prepare_three_surface_poc_governedby_reference_recording.py",
+        "scripts/record_versioned_signoff.py"
+      ],
+      "second_method_files": [
+        ".github/workflows/governance-docs.yml",
+        ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/DEPENDENCY-SWEEP.json",
+        ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/IMPACT-LEDGER.md",
+        ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/OWNER-DECISION-PACKET.md",
+        ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/PATCH-VALIDATION.json",
+        ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/REVIEW-BRIEF.md",
+        ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/SEMANTIC-DELTA.md",
+        ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/SOURCE-RECEIPTS.json",
+        ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/TOOLING-MUTANTS.json",
+        ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/TOOLING-VALIDATION.json",
+        ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/V1-3-NOTE-DISPOSITIONS.md",
+        ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/proposed/design.md.patch",
+        ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/proposed/proposal.md.patch",
+        ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/proposed/spec.md.patch",
+        "PROJECT-STATUS.md",
+        "docs/review-campaigns/mea10-dossier-readability.md",
+        "docs/reviews/R-MEA10-10-V14-5cdc02c3-1-NOTES.md",
+        "docs/reviews/R-MEA10-10-V14-5cdc02c3-1-RAW.md",
+        "scripts/build_polaris_dossier_local_agent_mode_v1_1.py",
+        "scripts/build_polaris_dossier_local_agent_mode_v1_2.py",
+        "scripts/build_polaris_dossier_local_agent_mode_v1_3.py",
+        "scripts/build_polaris_dossier_local_agent_mode_v1_4.py",
+        "scripts/prepare_three_surface_poc_governedby_reference_recording.py",
+        "scripts/record_versioned_signoff.py"
+      ],
+      "methods_agree": true
+    },
+    {
+      "baseRefName": "main",
+      "headRefName": "agent/syzygy-bpyt.6.20",
+      "headRefOid": "aca61f97b283908740c0d31caa4d758e54e6089f",
+      "number": 743,
+      "updatedAt": "2026-11-04T19:16:32Z",
+      "url": "https://github.com/tzeusy-org/syzygy/pull/743",
+      "files": [
+        "apps/three-surface-poc/src/git-observation.test.ts",
+        "apps/three-surface-poc/src/git-observation.ts",
+        "apps/three-surface-poc/src/governance-inputs.test.ts",
+        "apps/three-surface-poc/src/governance-inputs.ts",
+        "apps/three-surface-poc/src/verbatim-route.ts",
+        "docs/evidence/syzygy-bpyt-6-20/README.md",
+        "docs/evidence/syzygy-bpyt-6-20/baseline-manifest.json",
+        "docs/evidence/syzygy-bpyt-6-20/bundle-source-manifest-repaired.json",
+        "docs/evidence/syzygy-bpyt-6-20/bundle-source-manifest.json",
+        "docs/evidence/syzygy-bpyt-6-20/caller-differential-repaired.json",
+        "docs/evidence/syzygy-bpyt-6-20/caller-differential.json",
+        "docs/evidence/syzygy-bpyt-6-20/census-repaired.json",
+        "docs/evidence/syzygy-bpyt-6-20/census.json",
+        "docs/evidence/syzygy-bpyt-6-20/corpus-manifest-repaired.json",
+        "docs/evidence/syzygy-bpyt-6-20/cycle-notice.md",
+        "docs/evidence/syzygy-bpyt-6-20/differential.mjs",
+        "docs/evidence/syzygy-bpyt-6-20/evidence-index-repaired.json",
+        "docs/evidence/syzygy-bpyt-6-20/evidence-index.json",
+        "docs/evidence/syzygy-bpyt-6-20/first-attempt-interruption.json",
+        "docs/evidence/syzygy-bpyt-6-20/first-attempt.json",
+        "docs/evidence/syzygy-bpyt-6-20/mutants-repaired.json",
+        "docs/evidence/syzygy-bpyt-6-20/mutants.json",
+        "docs/evidence/syzygy-bpyt-6-20/mutate.py",
+        "docs/evidence/syzygy-bpyt-6-20/predecessor-cb257-gates.json",
+        "docs/evidence/syzygy-bpyt-6-20/served-route-evidence-index.json",
+        "docs/evidence/syzygy-bpyt-6-20/served-route-source-manifest.json",
+        "docs/evidence/syzygy-bpyt-6-20/served-route-supplement.json",
+        "docs/evidence/syzygy-bpyt-6-20/served-route-supplement.mjs",
+        "docs/evidence/syzygy-bpyt-6-20/transport-differential-repaired.json",
+        "docs/evidence/syzygy-bpyt-6-20/transport-differential.json",
+        "packages/three-surface-poc-core/src/code-structure.ts",
+        "packages/three-surface-poc-core/src/git-runner.test.ts",
+        "packages/three-surface-poc-core/src/git-runner.ts",
+        "packages/three-surface-poc-core/src/index.ts",
+        "packages/three-surface-poc-core/src/project-shape-observation.ts",
+        "packages/three-surface-poc-core/src/worker-change-observation.test.ts",
+        "packages/three-surface-poc-core/src/worker-change-observation.ts"
+      ],
+      "second_method_files": [
+        "apps/three-surface-poc/src/git-observation.test.ts",
+        "apps/three-surface-poc/src/git-observation.ts",
+        "apps/three-surface-poc/src/governance-inputs.test.ts",
+        "apps/three-surface-poc/src/governance-inputs.ts",
+        "apps/three-surface-poc/src/verbatim-route.ts",
+        "docs/evidence/syzygy-bpyt-6-20/README.md",
+        "docs/evidence/syzygy-bpyt-6-20/baseline-manifest.json",
+        "docs/evidence/syzygy-bpyt-6-20/bundle-source-manifest-repaired.json",
+        "docs/evidence/syzygy-bpyt-6-20/bundle-source-manifest.json",
+        "docs/evidence/syzygy-bpyt-6-20/caller-differential-repaired.json",
+        "docs/evidence/syzygy-bpyt-6-20/caller-differential.json",
+        "docs/evidence/syzygy-bpyt-6-20/census-repaired.json",
+        "docs/evidence/syzygy-bpyt-6-20/census.json",
+        "docs/evidence/syzygy-bpyt-6-20/corpus-manifest-repaired.json",
+        "docs/evidence/syzygy-bpyt-6-20/cycle-notice.md",
+        "docs/evidence/syzygy-bpyt-6-20/differential.mjs",
+        "docs/evidence/syzygy-bpyt-6-20/evidence-index-repaired.json",
+        "docs/evidence/syzygy-bpyt-6-20/evidence-index.json",
+        "docs/evidence/syzygy-bpyt-6-20/first-attempt-interruption.json",
+        "docs/evidence/syzygy-bpyt-6-20/first-attempt.json",
+        "docs/evidence/syzygy-bpyt-6-20/mutants-repaired.json",
+        "docs/evidence/syzygy-bpyt-6-20/mutants.json",
+        "docs/evidence/syzygy-bpyt-6-20/mutate.py",
+        "docs/evidence/syzygy-bpyt-6-20/predecessor-cb257-gates.json",
+        "docs/evidence/syzygy-bpyt-6-20/served-route-evidence-index.json",
+        "docs/evidence/syzygy-bpyt-6-20/served-route-source-manifest.json",
+        "docs/evidence/syzygy-bpyt-6-20/served-route-supplement.json",
+        "docs/evidence/syzygy-bpyt-6-20/served-route-supplement.mjs",
+        "docs/evidence/syzygy-bpyt-6-20/transport-differential-repaired.json",
+        "docs/evidence/syzygy-bpyt-6-20/transport-differential.json",
+        "packages/three-surface-poc-core/src/code-structure.ts",
+        "packages/three-surface-poc-core/src/git-runner.test.ts",
+        "packages/three-surface-poc-core/src/git-runner.ts",
+        "packages/three-surface-poc-core/src/index.ts",
+        "packages/three-surface-poc-core/src/project-shape-observation.ts",
+        "packages/three-surface-poc-core/src/worker-change-observation.test.ts",
+        "packages/three-surface-poc-core/src/worker-change-observation.ts"
+      ],
+      "methods_agree": true
+    },
+    {
+      "baseRefName": "main",
+      "headRefName": "agent/syzygy-bpyt.6.19",
+      "headRefOid": "a79a052ba46a08a84f7bd91a426d737714a5f435",
+      "number": 741,
+      "updatedAt": "2026-11-04T16:16:28Z",
+      "url": "https://github.com/tzeusy-org/syzygy/pull/741",
+      "files": [
+        "packages/support/src/support-regrowth.test.ts"
+      ],
+      "second_method_files": [
+        "packages/support/src/support-regrowth.test.ts"
+      ],
+      "methods_agree": true
+    },
+    {
+      "baseRefName": "main",
+      "headRefName": "agent/syzygy-gidd",
+      "headRefOid": "4dd3fa9205a00aaefc8df37f79f9b6d9dd3a46ec",
+      "number": 717,
+      "updatedAt": "2026-11-04T11:40:55Z",
+      "url": "https://github.com/tzeusy-org/syzygy/pull/717",
+      "files": [
+        "docs/review-campaigns/greenfield-parity-implementation.md",
+        "docs/reviews/R-GP-IMPL-RECONCILIATION-NONREGULAR-2-RAW.md",
+        "docs/reviews/R-GP-IMPL-RECONCILIATION-NONREGULAR-3-RAW.md",
+        "docs/reviews/R-GP-IMPL-RECONCILIATION-NONREGULAR-RAW.md"
+      ],
+      "second_method_files": [
+        "docs/review-campaigns/greenfield-parity-implementation.md",
+        "docs/reviews/R-GP-IMPL-RECONCILIATION-NONREGULAR-2-RAW.md",
+        "docs/reviews/R-GP-IMPL-RECONCILIATION-NONREGULAR-3-RAW.md",
+        "docs/reviews/R-GP-IMPL-RECONCILIATION-NONREGULAR-RAW.md"
+      ],
+      "methods_agree": true
+    },
+    {
+      "baseRefName": "main",
+      "headRefName": "agent/syzygy-j5dg",
+      "headRefOid": "cba689c2515c5b7f2fa51ab0747c1ca878fbffd9",
+      "number": 714,
+      "updatedAt": "2026-11-04T11:36:23Z",
+      "url": "https://github.com/tzeusy-org/syzygy/pull/714",
+      "files": [
+        "scripts/check_spec_reconciliation.py"
+      ],
+      "second_method_files": [
+        "scripts/check_spec_reconciliation.py"
+      ],
+      "methods_agree": true
+    },
+    {
+      "baseRefName": "main",
+      "headRefName": "agent/syzygy-bpyt.8.11",
+      "headRefOid": "5a1240805ce7e4a2a4aca89a1ce8559d13e70a4c",
+      "number": 652,
+      "updatedAt": "2026-11-03T21:24:36Z",
+      "url": "https://github.com/tzeusy-org/syzygy/pull/652",
+      "files": [
+        "docs/evidence/syzygy-bpyt-8-11/mutants-2026-11-04.json",
+        "docs/evidence/syzygy-bpyt-8-11/run_mutants.py",
+        "packages/polaris-dossier/src/cli.ts",
+        "packages/polaris-dossier/src/execution-choice.test.ts",
+        "packages/polaris-dossier/src/execution-choice.ts"
+      ],
+      "second_method_files": [
+        "docs/evidence/syzygy-bpyt-8-11/mutants-2026-11-04.json",
+        "docs/evidence/syzygy-bpyt-8-11/run_mutants.py",
+        "packages/polaris-dossier/src/cli.ts",
+        "packages/polaris-dossier/src/execution-choice.test.ts",
+        "packages/polaris-dossier/src/execution-choice.ts"
+      ],
+      "methods_agree": true
+    },
+    {
+      "baseRefName": "main",
+      "headRefName": "agent/syzygy-pkym",
+      "headRefOid": "101ca3f057060df713a81b6e8406b718a036b6fa",
+      "number": 642,
+      "updatedAt": "2026-11-03T20:57:52Z",
+      "url": "https://github.com/tzeusy-org/syzygy/pull/642",
+      "files": [
+        "docs/review-campaigns/greenfield-parity-implementation.md",
+        "docs/reviews/R-GP-IMPL-CONSENT-KNOBS-REFUSAL-1-RAW.md",
+        "docs/reviews/R-GP-IMPL-CONSENT-KNOBS-REFUSAL-2-RAW.md"
+      ],
+      "second_method_files": [
+        "docs/review-campaigns/greenfield-parity-implementation.md",
+        "docs/reviews/R-GP-IMPL-CONSENT-KNOBS-REFUSAL-1-RAW.md",
+        "docs/reviews/R-GP-IMPL-CONSENT-KNOBS-REFUSAL-2-RAW.md"
+      ],
+      "methods_agree": true
+    },
+    {
+      "baseRefName": "main",
+      "headRefName": "agent/syzygy-bpyt.1.24",
+      "headRefOid": "6d2970c1b304a9effd8296ac97b6a440528eb818",
+      "number": 640,
+      "updatedAt": "2026-11-05T17:37:21Z",
+      "url": "https://github.com/tzeusy-org/syzygy/pull/640",
+      "files": [
+        "docs/evidence/syzygy-bpyt-1-24/act-family-differential-2026-11-04.json",
+        "docs/evidence/syzygy-bpyt-1-24/direction_check.py",
+        "docs/evidence/syzygy-bpyt-1-24/knob-mutants-2026-11-04.json",
+        "docs/evidence/syzygy-bpyt-1-24/verdicts-over-tree-2026-11-04.json",
+        "docs/evidence/syzygy-bpyt-1-24/verdicts_over_tree.mjs",
+        "packages/polaris-generation-consent/README.md",
+        "packages/polaris-generation-consent/src/act-families.test.ts",
+        "packages/polaris-generation-consent/src/citation-allowlist.ts",
+        "packages/polaris-generation-consent/src/package-reader.test.ts",
+        "packages/polaris-generation-consent/src/package-reader.ts",
+        "packages/polaris-generation-consent/src/real-tree.test.ts"
+      ],
+      "second_method_files": [
+        "docs/evidence/syzygy-bpyt-1-24/act-family-differential-2026-11-04.json",
+        "docs/evidence/syzygy-bpyt-1-24/direction_check.py",
+        "docs/evidence/syzygy-bpyt-1-24/knob-mutants-2026-11-04.json",
+        "docs/evidence/syzygy-bpyt-1-24/verdicts-over-tree-2026-11-04.json",
+        "docs/evidence/syzygy-bpyt-1-24/verdicts_over_tree.mjs",
+        "packages/polaris-generation-consent/README.md",
+        "packages/polaris-generation-consent/src/act-families.test.ts",
+        "packages/polaris-generation-consent/src/citation-allowlist.ts",
+        "packages/polaris-generation-consent/src/package-reader.test.ts",
+        "packages/polaris-generation-consent/src/package-reader.ts",
+        "packages/polaris-generation-consent/src/real-tree.test.ts"
+      ],
+      "methods_agree": true
+    },
+    {
+      "baseRefName": "main",
+      "headRefName": "agent/syzygy-u2a.7",
+      "headRefOid": "3c30b2e24d3e27a81492dd9d874dc1c348a57b61",
+      "number": 585,
+      "updatedAt": "2026-11-02T23:31:10Z",
+      "url": "https://github.com/tzeusy-org/syzygy/pull/585",
+      "files": [
+        "docs/evidence/syzygy-u2a-7/mutations-2026-11-03.json",
+        "docs/evidence/syzygy-u2a-7/mutations-round1-2026-11-03.json",
+        "package-lock.json",
+        "packages/cap1-conformance/src/req-040.conformance.test.ts",
+        "packages/cap1-conformance/src/req-041.conformance.test.ts",
+        "packages/cap1-conformance/src/req-050.conformance.test.ts",
+        "packages/cap1-conformance/src/req-051.conformance.test.ts",
+        "packages/cap1-conformance/src/req-052.conformance.test.ts",
+        "packages/cap1-conformance/src/req-053.conformance.test.ts",
+        "packages/cap1-conformance/src/req-064.conformance.test.ts",
+        "packages/cap1-conformance/src/req-integration.conformance.test.ts",
+        "packages/cap1-core/src/discoverability.ts",
+        "packages/cap1-core/src/snapshot.ts",
+        "packages/cap1-daemon/package.json",
+        "packages/cap1-daemon/src/index.ts",
+        "packages/cap1-daemon/src/observation.test.ts",
+        "packages/cap1-daemon/src/observation.ts",
+        "packages/cap1-daemon/src/package.test.ts",
+        "packages/cap1-daemon/src/pipeline.test.ts",
+        "packages/cap1-daemon/src/pipeline.ts",
+        "packages/cap1-daemon/src/readme-links.test.ts",
+        "packages/cap1-daemon/src/readme-links.ts",
+        "packages/cap1-daemon/src/routes-human.test.ts",
+        "packages/cap1-daemon/src/routes-human.ts",
+        "packages/cap1-daemon/src/routes-machine.test.ts",
+        "packages/cap1-daemon/src/routes-machine.ts",
+        "packages/cap1-daemon/src/source-snapshot.test.ts",
+        "packages/cap1-daemon/src/source-snapshot.ts",
+        "packages/cap1-system/src/degradation.system.test.ts",
+        "packages/cap1-system/src/discoverability.system.test.ts"
+      ],
+      "second_method_files": [
+        "docs/evidence/syzygy-u2a-7/mutations-2026-11-03.json",
+        "docs/evidence/syzygy-u2a-7/mutations-round1-2026-11-03.json",
+        "package-lock.json",
+        "packages/cap1-conformance/src/req-040.conformance.test.ts",
+        "packages/cap1-conformance/src/req-041.conformance.test.ts",
+        "packages/cap1-conformance/src/req-050.conformance.test.ts",
+        "packages/cap1-conformance/src/req-051.conformance.test.ts",
+        "packages/cap1-conformance/src/req-052.conformance.test.ts",
+        "packages/cap1-conformance/src/req-053.conformance.test.ts",
+        "packages/cap1-conformance/src/req-064.conformance.test.ts",
+        "packages/cap1-conformance/src/req-integration.conformance.test.ts",
+        "packages/cap1-core/src/discoverability.ts",
+        "packages/cap1-core/src/snapshot.ts",
+        "packages/cap1-daemon/package.json",
+        "packages/cap1-daemon/src/index.ts",
+        "packages/cap1-daemon/src/observation.test.ts",
+        "packages/cap1-daemon/src/observation.ts",
+        "packages/cap1-daemon/src/package.test.ts",
+        "packages/cap1-daemon/src/pipeline.test.ts",
+        "packages/cap1-daemon/src/pipeline.ts",
+        "packages/cap1-daemon/src/readme-links.test.ts",
+        "packages/cap1-daemon/src/readme-links.ts",
+        "packages/cap1-daemon/src/routes-human.test.ts",
+        "packages/cap1-daemon/src/routes-human.ts",
+        "packages/cap1-daemon/src/routes-machine.test.ts",
+        "packages/cap1-daemon/src/routes-machine.ts",
+        "packages/cap1-daemon/src/source-snapshot.test.ts",
+        "packages/cap1-daemon/src/source-snapshot.ts",
+        "packages/cap1-system/src/degradation.system.test.ts",
+        "packages/cap1-system/src/discoverability.system.test.ts"
+      ],
+      "methods_agree": true
+    },
+    {
+      "baseRefName": "main",
+      "headRefName": "agent/syzygy-bpyt.8.21",
+      "headRefOid": "937a7e934c1d64b37d79a23db6f4bbe6f24bd164",
+      "number": 514,
+      "updatedAt": "2026-11-05T00:27:42Z",
+      "url": "https://github.com/tzeusy-org/syzygy/pull/514",
+      "files": [
+        "docs/evidence/recorder-label-row-2026-10-22.md",
+        "docs/evidence/recorder-label-row-differential-2026-10-22.json",
+        "docs/evidence/recorder-label-row-mutants-consent-2026-10-22.json",
+        "docs/evidence/recorder-label-row-mutants-dossier-2026-10-22.json",
+        "docs/evidence/recorder-label-row-negative-control-M4-2026-10-22.json",
+        "docs/evidence/recorder-label-row-negative-control-M5-2026-10-22.json",
+        "docs/evidence/recorder-label-row-timing-2026-10-22.json",
+        "docs/evidence/recorder-label-row-timing-run-2-2026-10-22.json",
+        "packages/polaris-dossier/src/gate-label-row.test.ts",
+        "packages/polaris-generation-consent/src/recorder-template.test.ts",
+        "packages/polaris-generation-consent/src/recorder-template.ts",
+        "scripts/differential_line_slot.mjs",
+        "scripts/measure_label_row_reads.mjs"
+      ],
+      "second_method_files": [
+        "docs/evidence/recorder-label-row-2026-10-22.md",
+        "docs/evidence/recorder-label-row-differential-2026-10-22.json",
+        "docs/evidence/recorder-label-row-mutants-consent-2026-10-22.json",
+        "docs/evidence/recorder-label-row-mutants-dossier-2026-10-22.json",
+        "docs/evidence/recorder-label-row-negative-control-M4-2026-10-22.json",
+        "docs/evidence/recorder-label-row-negative-control-M5-2026-10-22.json",
+        "docs/evidence/recorder-label-row-timing-2026-10-22.json",
+        "docs/evidence/recorder-label-row-timing-run-2-2026-10-22.json",
+        "packages/polaris-dossier/src/gate-label-row.test.ts",
+        "packages/polaris-generation-consent/src/recorder-template.test.ts",
+        "packages/polaris-generation-consent/src/recorder-template.ts",
+        "scripts/differential_line_slot.mjs",
+        "scripts/measure_label_row_reads.mjs"
+      ],
+      "methods_agree": true
+    }
+  ],
+  "receipts": [
+    {
+      "argv": [
+        "gh",
+        "pr",
+        "list",
+        "--repo",
+        "tzeusy-org/syzygy",
+        "--state",
+        "open",
+        "--limit",
+        "100",
+        "--json",
+        "number,url,headRefName,headRefOid,baseRefName,updatedAt"
+      ],
+      "exit": 0,
+      "stdout": "[{\"baseRefName\":\"main\",\"headRefName\":\"agent/syzygy-bpyt.33\",\"headRefOid\":\"600432fc378e0fb7c8454846fb7ff83188f54140\",\"number\":769,\"updatedAt\":\"2026-11-06T02:24:01Z\",\"url\":\"https://github.com/tzeusy-org/syzygy/pull/769\"},{\"baseRefName\":\"main\",\"headRefName\":\"agent/syzygy-bpyt.32\",\"headRefOid\":\"e6b30a3faec141bf3fb6b56e358b6e49e3a7427c\",\"number\":767,\"updatedAt\":\"2026-11-06T00:58:58Z\",\"url\":\"https://github.com/tzeusy-org/syzygy/pull/767\"},{\"baseRefName\":\"main\",\"headRefName\":\"agent/syzygy-bpyt.4.36\",\"headRefOid\":\"bfb8b00480c4c3f5fec04a6cd13470bf40c6eeb7\",\"number\":766,\"updatedAt\":\"2026-11-06T00:49:57Z\",\"url\":\"https://github.com/tzeusy-org/syzygy/pull/766\"},{\"baseRefName\":\"main\",\"headRefName\":\"agent/syzygy-bpyt.4.14\",\"headRefOid\":\"88b502e7060a4013b7932f0cb3771cb2e2dbe06b\",\"number\":763,\"updatedAt\":\"2026-11-05T20:38:13Z\",\"url\":\"https://github.com/tzeusy-org/syzygy/pull/763\"},{\"baseRefName\":\"main\",\"headRefName\":\"agent/syzygy-bpyt.1.20\",\"headRefOid\":\"348e51676a8c74b28962eed0f420bf53806e4370\",\"number\":761,\"updatedAt\":\"2026-11-05T17:21:41Z\",\"url\":\"https://github.com/tzeusy-org/syzygy/pull/761\"},{\"baseRefName\":\"main\",\"headRefName\":\"agent/syzygy-mea.10.8\",\"headRefOid\":\"36bcc375b24e6ebc9537506893b26bf8d45e82b7\",\"number\":754,\"updatedAt\":\"2026-11-05T06:31:56Z\",\"url\":\"https://github.com/tzeusy-org/syzygy/pull/754\"},{\"baseRefName\":\"main\",\"headRefName\":\"agent/syzygy-mea.10.6\",\"headRefOid\":\"59768e6f28356723b39482f314cf211f245873b5\",\"number\":745,\"updatedAt\":\"2026-11-04T22:27:16Z\",\"url\":\"https://github.com/tzeusy-org/syzygy/pull/745\"},{\"baseRefName\":\"main\",\"headRefName\":\"agent/syzygy-bpyt.6.20\",\"headRefOid\":\"aca61f97b283908740c0d31caa4d758e54e6089f\",\"number\":743,\"updatedAt\":\"2026-11-04T19:16:32Z\",\"url\":\"https://github.com/tzeusy-org/syzygy/pull/743\"},{\"baseRefName\":\"main\",\"headRefName\":\"agent/syzygy-bpyt.6.19\",\"headRefOid\":\"a79a052ba46a08a84f7bd91a426d737714a5f435\",\"number\":741,\"updatedAt\":\"2026-11-04T16:16:28Z\",\"url\":\"https://github.com/tzeusy-org/syzygy/pull/741\"},{\"baseRefName\":\"main\",\"headRefName\":\"agent/syzygy-gidd\",\"headRefOid\":\"4dd3fa9205a00aaefc8df37f79f9b6d9dd3a46ec\",\"number\":717,\"updatedAt\":\"2026-11-04T11:40:55Z\",\"url\":\"https://github.com/tzeusy-org/syzygy/pull/717\"},{\"baseRefName\":\"main\",\"headRefName\":\"agent/syzygy-j5dg\",\"headRefOid\":\"cba689c2515c5b7f2fa51ab0747c1ca878fbffd9\",\"number\":714,\"updatedAt\":\"2026-11-04T11:36:23Z\",\"url\":\"https://github.com/tzeusy-org/syzygy/pull/714\"},{\"baseRefName\":\"main\",\"headRefName\":\"agent/syzygy-bpyt.8.11\",\"headRefOid\":\"5a1240805ce7e4a2a4aca89a1ce8559d13e70a4c\",\"number\":652,\"updatedAt\":\"2026-11-03T21:24:36Z\",\"url\":\"https://github.com/tzeusy-org/syzygy/pull/652\"},{\"baseRefName\":\"main\",\"headRefName\":\"agent/syzygy-pkym\",\"headRefOid\":\"101ca3f057060df713a81b6e8406b718a036b6fa\",\"number\":642,\"updatedAt\":\"2026-11-03T20:57:52Z\",\"url\":\"https://github.com/tzeusy-org/syzygy/pull/642\"},{\"baseRefName\":\"main\",\"headRefName\":\"agent/syzygy-bpyt.1.24\",\"headRefOid\":\"6d2970c1b304a9effd8296ac97b6a440528eb818\",\"number\":640,\"updatedAt\":\"2026-11-05T17:37:21Z\",\"url\":\"https://github.com/tzeusy-org/syzygy/pull/640\"},{\"baseRefName\":\"main\",\"headRefName\":\"agent/syzygy-u2a.7\",\"headRefOid\":\"3c30b2e24d3e27a81492dd9d874dc1c348a57b61\",\"number\":585,\"updatedAt\":\"2026-11-02T23:31:10Z\",\"url\":\"https://github.com/tzeusy-org/syzygy/pull/585\"},{\"baseRefName\":\"main\",\"headRefName\":\"agent/syzygy-bpyt.8.21\",\"headRefOid\":\"937a7e934c1d64b37d79a23db6f4bbe6f24bd164\",\"number\":514,\"updatedAt\":\"2026-11-05T00:27:42Z\",\"url\":\"https://github.com/tzeusy-org/syzygy/pull/514\"}]\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gh",
+        "api",
+        "repos/tzeusy-org/syzygy/pulls/769/files",
+        "--paginate",
+        "--jq",
+        ".[].filename"
+      ],
+      "exit": 0,
+      "stdout": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts\ndocs/evidence/syzygy-bpyt-33/README.md\ndocs/evidence/syzygy-bpyt-33/timeout-measurement.json\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gh",
+        "pr",
+        "diff",
+        "769",
+        "--repo",
+        "tzeusy-org/syzygy",
+        "--name-only"
+      ],
+      "exit": 0,
+      "stdout": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts\ndocs/evidence/syzygy-bpyt-33/README.md\ndocs/evidence/syzygy-bpyt-33/timeout-measurement.json\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gh",
+        "api",
+        "repos/tzeusy-org/syzygy/pulls/767/files",
+        "--paginate",
+        "--jq",
+        ".[].filename"
+      ],
+      "exit": 0,
+      "stdout": "apps/three-surface-poc/src/browser-origin.test.ts\npackages/cap1-daemon/src/server.test.ts\npackages/http-host/src/credentials.test.ts\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gh",
+        "pr",
+        "diff",
+        "767",
+        "--repo",
+        "tzeusy-org/syzygy",
+        "--name-only"
+      ],
+      "exit": 0,
+      "stdout": "apps/three-surface-poc/src/browser-origin.test.ts\npackages/cap1-daemon/src/server.test.ts\npackages/http-host/src/credentials.test.ts\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gh",
+        "api",
+        "repos/tzeusy-org/syzygy/pulls/766/files",
+        "--paginate",
+        "--jq",
+        ".[].filename"
+      ],
+      "exit": 0,
+      "stdout": "packages/three-surface-poc-core/src/body-read-authority.ts\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gh",
+        "pr",
+        "diff",
+        "766",
+        "--repo",
+        "tzeusy-org/syzygy",
+        "--name-only"
+      ],
+      "exit": 0,
+      "stdout": "packages/three-surface-poc-core/src/body-read-authority.ts\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gh",
+        "api",
+        "repos/tzeusy-org/syzygy/pulls/763/files",
+        "--paginate",
+        "--jq",
+        ".[].filename"
+      ],
+      "exit": 0,
+      "stdout": "apps/three-surface-poc/src/cdp-browser.browser.test.ts\napps/three-surface-poc/src/cdp-browser.test.ts\napps/three-surface-poc/src/cdp-browser.ts\napps/three-surface-poc/src/test-fixtures/browser-parent-death.py\ndocs/evidence/syzygy-bpyt-4-14/README.md\ndocs/evidence/syzygy-bpyt-4-14/namespace-lineage-correction-2026-11-06.json\ndocs/evidence/syzygy-bpyt-4-14/process-outcome-2026-11-05.json\ndocs/evidence/syzygy-bpyt-4-14/process-outcome-final-2026-11-06.json\nscripts/poc_browser_lifetime.py\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gh",
+        "pr",
+        "diff",
+        "763",
+        "--repo",
+        "tzeusy-org/syzygy",
+        "--name-only"
+      ],
+      "exit": 0,
+      "stdout": "apps/three-surface-poc/src/cdp-browser.browser.test.ts\napps/three-surface-poc/src/cdp-browser.test.ts\napps/three-surface-poc/src/cdp-browser.ts\napps/three-surface-poc/src/test-fixtures/browser-parent-death.py\ndocs/evidence/syzygy-bpyt-4-14/README.md\ndocs/evidence/syzygy-bpyt-4-14/namespace-lineage-correction-2026-11-06.json\ndocs/evidence/syzygy-bpyt-4-14/process-outcome-2026-11-05.json\ndocs/evidence/syzygy-bpyt-4-14/process-outcome-final-2026-11-06.json\nscripts/poc_browser_lifetime.py\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gh",
+        "api",
+        "repos/tzeusy-org/syzygy/pulls/761/files",
+        "--paginate",
+        "--jq",
+        ".[].filename"
+      ],
+      "exit": 0,
+      "stdout": "docs/evidence/syzygy-bpyt-6-3/dc3-fence-position-addendum-2026-11-05.json\npackages/three-surface-poc-core/src/git-object-reader.test.ts\npackages/three-surface-poc-core/src/git-object-reader.ts\npackages/three-surface-poc-core/src/markdown-code-context.test.ts\npackages/three-surface-poc-core/src/markdown-code-context.ts\npackages/three-surface-poc-core/src/project-shape-extraction.test.ts\npackages/three-surface-poc-core/src/project-shape-manifest.test.ts\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gh",
+        "pr",
+        "diff",
+        "761",
+        "--repo",
+        "tzeusy-org/syzygy",
+        "--name-only"
+      ],
+      "exit": 0,
+      "stdout": "docs/evidence/syzygy-bpyt-6-3/dc3-fence-position-addendum-2026-11-05.json\npackages/three-surface-poc-core/src/git-object-reader.test.ts\npackages/three-surface-poc-core/src/git-object-reader.ts\npackages/three-surface-poc-core/src/markdown-code-context.test.ts\npackages/three-surface-poc-core/src/markdown-code-context.ts\npackages/three-surface-poc-core/src/project-shape-extraction.test.ts\npackages/three-surface-poc-core/src/project-shape-manifest.test.ts\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gh",
+        "api",
+        "repos/tzeusy-org/syzygy/pulls/754/files",
+        "--paginate",
+        "--jq",
+        ".[].filename"
+      ],
+      "exit": 0,
+      "stdout": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts\ndocs/evidence/syzygy-mea-10-8/README.md\ndocs/evidence/syzygy-mea-10-8/review-note-verification-2026-11-05.json\ndocs/review-campaigns/mea10-dossier-readability.md\npackages/polaris-dossier/src/render.test.ts\npackages/polaris-dossier/src/render.ts\npackages/polaris-dossier/src/review.test.ts\npackages/polaris-generation-core/src/closed-schema.test.ts\npackages/polaris-generation-core/src/local-render.ts\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gh",
+        "pr",
+        "diff",
+        "754",
+        "--repo",
+        "tzeusy-org/syzygy",
+        "--name-only"
+      ],
+      "exit": 0,
+      "stdout": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts\ndocs/evidence/syzygy-mea-10-8/README.md\ndocs/evidence/syzygy-mea-10-8/review-note-verification-2026-11-05.json\ndocs/review-campaigns/mea10-dossier-readability.md\npackages/polaris-dossier/src/render.test.ts\npackages/polaris-dossier/src/render.ts\npackages/polaris-dossier/src/review.test.ts\npackages/polaris-generation-core/src/closed-schema.test.ts\npackages/polaris-generation-core/src/local-render.ts\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gh",
+        "api",
+        "repos/tzeusy-org/syzygy/pulls/745/files",
+        "--paginate",
+        "--jq",
+        ".[].filename"
+      ],
+      "exit": 0,
+      "stdout": ".github/workflows/governance-docs.yml\n.syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/DEPENDENCY-SWEEP.json\n.syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/IMPACT-LEDGER.md\n.syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/OWNER-DECISION-PACKET.md\n.syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/PATCH-VALIDATION.json\n.syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/REVIEW-BRIEF.md\n.syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/SEMANTIC-DELTA.md\n.syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/SOURCE-RECEIPTS.json\n.syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/TOOLING-MUTANTS.json\n.syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/TOOLING-VALIDATION.json\n.syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/V1-3-NOTE-DISPOSITIONS.md\n.syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/proposed/design.md.patch\n.syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/proposed/proposal.md.patch\n.syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/proposed/spec.md.patch\nPROJECT-STATUS.md\ndocs/review-campaigns/mea10-dossier-readability.md\ndocs/reviews/R-MEA10-10-V14-5cdc02c3-1-NOTES.md\ndocs/reviews/R-MEA10-10-V14-5cdc02c3-1-RAW.md\nscripts/build_polaris_dossier_local_agent_mode_v1_1.py\nscripts/build_polaris_dossier_local_agent_mode_v1_2.py\nscripts/build_polaris_dossier_local_agent_mode_v1_3.py\nscripts/build_polaris_dossier_local_agent_mode_v1_4.py\nscripts/prepare_three_surface_poc_governedby_reference_recording.py\nscripts/record_versioned_signoff.py\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gh",
+        "pr",
+        "diff",
+        "745",
+        "--repo",
+        "tzeusy-org/syzygy",
+        "--name-only"
+      ],
+      "exit": 0,
+      "stdout": ".github/workflows/governance-docs.yml\n.syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/DEPENDENCY-SWEEP.json\n.syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/IMPACT-LEDGER.md\n.syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/OWNER-DECISION-PACKET.md\n.syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/PATCH-VALIDATION.json\n.syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/REVIEW-BRIEF.md\n.syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/SEMANTIC-DELTA.md\n.syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/SOURCE-RECEIPTS.json\n.syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/TOOLING-MUTANTS.json\n.syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/TOOLING-VALIDATION.json\n.syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/V1-3-NOTE-DISPOSITIONS.md\n.syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/proposed/design.md.patch\n.syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/proposed/proposal.md.patch\n.syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/proposed/spec.md.patch\nPROJECT-STATUS.md\ndocs/review-campaigns/mea10-dossier-readability.md\ndocs/reviews/R-MEA10-10-V14-5cdc02c3-1-NOTES.md\ndocs/reviews/R-MEA10-10-V14-5cdc02c3-1-RAW.md\nscripts/build_polaris_dossier_local_agent_mode_v1_1.py\nscripts/build_polaris_dossier_local_agent_mode_v1_2.py\nscripts/build_polaris_dossier_local_agent_mode_v1_3.py\nscripts/build_polaris_dossier_local_agent_mode_v1_4.py\nscripts/prepare_three_surface_poc_governedby_reference_recording.py\nscripts/record_versioned_signoff.py\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gh",
+        "api",
+        "repos/tzeusy-org/syzygy/pulls/743/files",
+        "--paginate",
+        "--jq",
+        ".[].filename"
+      ],
+      "exit": 0,
+      "stdout": "apps/three-surface-poc/src/git-observation.test.ts\napps/three-surface-poc/src/git-observation.ts\napps/three-surface-poc/src/governance-inputs.test.ts\napps/three-surface-poc/src/governance-inputs.ts\napps/three-surface-poc/src/verbatim-route.ts\ndocs/evidence/syzygy-bpyt-6-20/README.md\ndocs/evidence/syzygy-bpyt-6-20/baseline-manifest.json\ndocs/evidence/syzygy-bpyt-6-20/bundle-source-manifest-repaired.json\ndocs/evidence/syzygy-bpyt-6-20/bundle-source-manifest.json\ndocs/evidence/syzygy-bpyt-6-20/caller-differential-repaired.json\ndocs/evidence/syzygy-bpyt-6-20/caller-differential.json\ndocs/evidence/syzygy-bpyt-6-20/census-repaired.json\ndocs/evidence/syzygy-bpyt-6-20/census.json\ndocs/evidence/syzygy-bpyt-6-20/corpus-manifest-repaired.json\ndocs/evidence/syzygy-bpyt-6-20/cycle-notice.md\ndocs/evidence/syzygy-bpyt-6-20/differential.mjs\ndocs/evidence/syzygy-bpyt-6-20/evidence-index-repaired.json\ndocs/evidence/syzygy-bpyt-6-20/evidence-index.json\ndocs/evidence/syzygy-bpyt-6-20/first-attempt-interruption.json\ndocs/evidence/syzygy-bpyt-6-20/first-attempt.json\ndocs/evidence/syzygy-bpyt-6-20/mutants-repaired.json\ndocs/evidence/syzygy-bpyt-6-20/mutants.json\ndocs/evidence/syzygy-bpyt-6-20/mutate.py\ndocs/evidence/syzygy-bpyt-6-20/predecessor-cb257-gates.json\ndocs/evidence/syzygy-bpyt-6-20/served-route-evidence-index.json\ndocs/evidence/syzygy-bpyt-6-20/served-route-source-manifest.json\ndocs/evidence/syzygy-bpyt-6-20/served-route-supplement.json\ndocs/evidence/syzygy-bpyt-6-20/served-route-supplement.mjs\ndocs/evidence/syzygy-bpyt-6-20/transport-differential-repaired.json\ndocs/evidence/syzygy-bpyt-6-20/transport-differential.json\npackages/three-surface-poc-core/src/code-structure.ts\npackages/three-surface-poc-core/src/git-runner.test.ts\npackages/three-surface-poc-core/src/git-runner.ts\npackages/three-surface-poc-core/src/index.ts\npackages/three-surface-poc-core/src/project-shape-observation.ts\npackages/three-surface-poc-core/src/worker-change-observation.test.ts\npackages/three-surface-poc-core/src/worker-change-observation.ts\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gh",
+        "pr",
+        "diff",
+        "743",
+        "--repo",
+        "tzeusy-org/syzygy",
+        "--name-only"
+      ],
+      "exit": 0,
+      "stdout": "apps/three-surface-poc/src/git-observation.test.ts\napps/three-surface-poc/src/git-observation.ts\napps/three-surface-poc/src/governance-inputs.test.ts\napps/three-surface-poc/src/governance-inputs.ts\napps/three-surface-poc/src/verbatim-route.ts\ndocs/evidence/syzygy-bpyt-6-20/README.md\ndocs/evidence/syzygy-bpyt-6-20/baseline-manifest.json\ndocs/evidence/syzygy-bpyt-6-20/bundle-source-manifest-repaired.json\ndocs/evidence/syzygy-bpyt-6-20/bundle-source-manifest.json\ndocs/evidence/syzygy-bpyt-6-20/caller-differential-repaired.json\ndocs/evidence/syzygy-bpyt-6-20/caller-differential.json\ndocs/evidence/syzygy-bpyt-6-20/census-repaired.json\ndocs/evidence/syzygy-bpyt-6-20/census.json\ndocs/evidence/syzygy-bpyt-6-20/corpus-manifest-repaired.json\ndocs/evidence/syzygy-bpyt-6-20/cycle-notice.md\ndocs/evidence/syzygy-bpyt-6-20/differential.mjs\ndocs/evidence/syzygy-bpyt-6-20/evidence-index-repaired.json\ndocs/evidence/syzygy-bpyt-6-20/evidence-index.json\ndocs/evidence/syzygy-bpyt-6-20/first-attempt-interruption.json\ndocs/evidence/syzygy-bpyt-6-20/first-attempt.json\ndocs/evidence/syzygy-bpyt-6-20/mutants-repaired.json\ndocs/evidence/syzygy-bpyt-6-20/mutants.json\ndocs/evidence/syzygy-bpyt-6-20/mutate.py\ndocs/evidence/syzygy-bpyt-6-20/predecessor-cb257-gates.json\ndocs/evidence/syzygy-bpyt-6-20/served-route-evidence-index.json\ndocs/evidence/syzygy-bpyt-6-20/served-route-source-manifest.json\ndocs/evidence/syzygy-bpyt-6-20/served-route-supplement.json\ndocs/evidence/syzygy-bpyt-6-20/served-route-supplement.mjs\ndocs/evidence/syzygy-bpyt-6-20/transport-differential-repaired.json\ndocs/evidence/syzygy-bpyt-6-20/transport-differential.json\npackages/three-surface-poc-core/src/code-structure.ts\npackages/three-surface-poc-core/src/git-runner.test.ts\npackages/three-surface-poc-core/src/git-runner.ts\npackages/three-surface-poc-core/src/index.ts\npackages/three-surface-poc-core/src/project-shape-observation.ts\npackages/three-surface-poc-core/src/worker-change-observation.test.ts\npackages/three-surface-poc-core/src/worker-change-observation.ts\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gh",
+        "api",
+        "repos/tzeusy-org/syzygy/pulls/741/files",
+        "--paginate",
+        "--jq",
+        ".[].filename"
+      ],
+      "exit": 0,
+      "stdout": "packages/support/src/support-regrowth.test.ts\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gh",
+        "pr",
+        "diff",
+        "741",
+        "--repo",
+        "tzeusy-org/syzygy",
+        "--name-only"
+      ],
+      "exit": 0,
+      "stdout": "packages/support/src/support-regrowth.test.ts\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gh",
+        "api",
+        "repos/tzeusy-org/syzygy/pulls/717/files",
+        "--paginate",
+        "--jq",
+        ".[].filename"
+      ],
+      "exit": 0,
+      "stdout": "docs/review-campaigns/greenfield-parity-implementation.md\ndocs/reviews/R-GP-IMPL-RECONCILIATION-NONREGULAR-2-RAW.md\ndocs/reviews/R-GP-IMPL-RECONCILIATION-NONREGULAR-3-RAW.md\ndocs/reviews/R-GP-IMPL-RECONCILIATION-NONREGULAR-RAW.md\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gh",
+        "pr",
+        "diff",
+        "717",
+        "--repo",
+        "tzeusy-org/syzygy",
+        "--name-only"
+      ],
+      "exit": 0,
+      "stdout": "docs/review-campaigns/greenfield-parity-implementation.md\ndocs/reviews/R-GP-IMPL-RECONCILIATION-NONREGULAR-2-RAW.md\ndocs/reviews/R-GP-IMPL-RECONCILIATION-NONREGULAR-3-RAW.md\ndocs/reviews/R-GP-IMPL-RECONCILIATION-NONREGULAR-RAW.md\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gh",
+        "api",
+        "repos/tzeusy-org/syzygy/pulls/714/files",
+        "--paginate",
+        "--jq",
+        ".[].filename"
+      ],
+      "exit": 0,
+      "stdout": "scripts/check_spec_reconciliation.py\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gh",
+        "pr",
+        "diff",
+        "714",
+        "--repo",
+        "tzeusy-org/syzygy",
+        "--name-only"
+      ],
+      "exit": 0,
+      "stdout": "scripts/check_spec_reconciliation.py\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gh",
+        "api",
+        "repos/tzeusy-org/syzygy/pulls/652/files",
+        "--paginate",
+        "--jq",
+        ".[].filename"
+      ],
+      "exit": 0,
+      "stdout": "docs/evidence/syzygy-bpyt-8-11/mutants-2026-11-04.json\ndocs/evidence/syzygy-bpyt-8-11/run_mutants.py\npackages/polaris-dossier/src/cli.ts\npackages/polaris-dossier/src/execution-choice.test.ts\npackages/polaris-dossier/src/execution-choice.ts\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gh",
+        "pr",
+        "diff",
+        "652",
+        "--repo",
+        "tzeusy-org/syzygy",
+        "--name-only"
+      ],
+      "exit": 0,
+      "stdout": "docs/evidence/syzygy-bpyt-8-11/mutants-2026-11-04.json\ndocs/evidence/syzygy-bpyt-8-11/run_mutants.py\npackages/polaris-dossier/src/cli.ts\npackages/polaris-dossier/src/execution-choice.test.ts\npackages/polaris-dossier/src/execution-choice.ts\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gh",
+        "api",
+        "repos/tzeusy-org/syzygy/pulls/642/files",
+        "--paginate",
+        "--jq",
+        ".[].filename"
+      ],
+      "exit": 0,
+      "stdout": "docs/review-campaigns/greenfield-parity-implementation.md\ndocs/reviews/R-GP-IMPL-CONSENT-KNOBS-REFUSAL-1-RAW.md\ndocs/reviews/R-GP-IMPL-CONSENT-KNOBS-REFUSAL-2-RAW.md\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gh",
+        "pr",
+        "diff",
+        "642",
+        "--repo",
+        "tzeusy-org/syzygy",
+        "--name-only"
+      ],
+      "exit": 0,
+      "stdout": "docs/review-campaigns/greenfield-parity-implementation.md\ndocs/reviews/R-GP-IMPL-CONSENT-KNOBS-REFUSAL-1-RAW.md\ndocs/reviews/R-GP-IMPL-CONSENT-KNOBS-REFUSAL-2-RAW.md\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gh",
+        "api",
+        "repos/tzeusy-org/syzygy/pulls/640/files",
+        "--paginate",
+        "--jq",
+        ".[].filename"
+      ],
+      "exit": 0,
+      "stdout": "docs/evidence/syzygy-bpyt-1-24/act-family-differential-2026-11-04.json\ndocs/evidence/syzygy-bpyt-1-24/direction_check.py\ndocs/evidence/syzygy-bpyt-1-24/knob-mutants-2026-11-04.json\ndocs/evidence/syzygy-bpyt-1-24/verdicts-over-tree-2026-11-04.json\ndocs/evidence/syzygy-bpyt-1-24/verdicts_over_tree.mjs\npackages/polaris-generation-consent/README.md\npackages/polaris-generation-consent/src/act-families.test.ts\npackages/polaris-generation-consent/src/citation-allowlist.ts\npackages/polaris-generation-consent/src/package-reader.test.ts\npackages/polaris-generation-consent/src/package-reader.ts\npackages/polaris-generation-consent/src/real-tree.test.ts\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gh",
+        "pr",
+        "diff",
+        "640",
+        "--repo",
+        "tzeusy-org/syzygy",
+        "--name-only"
+      ],
+      "exit": 0,
+      "stdout": "docs/evidence/syzygy-bpyt-1-24/act-family-differential-2026-11-04.json\ndocs/evidence/syzygy-bpyt-1-24/direction_check.py\ndocs/evidence/syzygy-bpyt-1-24/knob-mutants-2026-11-04.json\ndocs/evidence/syzygy-bpyt-1-24/verdicts-over-tree-2026-11-04.json\ndocs/evidence/syzygy-bpyt-1-24/verdicts_over_tree.mjs\npackages/polaris-generation-consent/README.md\npackages/polaris-generation-consent/src/act-families.test.ts\npackages/polaris-generation-consent/src/citation-allowlist.ts\npackages/polaris-generation-consent/src/package-reader.test.ts\npackages/polaris-generation-consent/src/package-reader.ts\npackages/polaris-generation-consent/src/real-tree.test.ts\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gh",
+        "api",
+        "repos/tzeusy-org/syzygy/pulls/585/files",
+        "--paginate",
+        "--jq",
+        ".[].filename"
+      ],
+      "exit": 0,
+      "stdout": "docs/evidence/syzygy-u2a-7/mutations-2026-11-03.json\ndocs/evidence/syzygy-u2a-7/mutations-round1-2026-11-03.json\npackage-lock.json\npackages/cap1-conformance/src/req-040.conformance.test.ts\npackages/cap1-conformance/src/req-041.conformance.test.ts\npackages/cap1-conformance/src/req-050.conformance.test.ts\npackages/cap1-conformance/src/req-051.conformance.test.ts\npackages/cap1-conformance/src/req-052.conformance.test.ts\npackages/cap1-conformance/src/req-053.conformance.test.ts\npackages/cap1-conformance/src/req-064.conformance.test.ts\npackages/cap1-conformance/src/req-integration.conformance.test.ts\npackages/cap1-core/src/discoverability.ts\npackages/cap1-core/src/snapshot.ts\npackages/cap1-daemon/package.json\npackages/cap1-daemon/src/index.ts\npackages/cap1-daemon/src/observation.test.ts\npackages/cap1-daemon/src/observation.ts\npackages/cap1-daemon/src/package.test.ts\npackages/cap1-daemon/src/pipeline.test.ts\npackages/cap1-daemon/src/pipeline.ts\npackages/cap1-daemon/src/readme-links.test.ts\npackages/cap1-daemon/src/readme-links.ts\npackages/cap1-daemon/src/routes-human.test.ts\npackages/cap1-daemon/src/routes-human.ts\npackages/cap1-daemon/src/routes-machine.test.ts\npackages/cap1-daemon/src/routes-machine.ts\npackages/cap1-daemon/src/source-snapshot.test.ts\npackages/cap1-daemon/src/source-snapshot.ts\npackages/cap1-system/src/degradation.system.test.ts\npackages/cap1-system/src/discoverability.system.test.ts\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gh",
+        "pr",
+        "diff",
+        "585",
+        "--repo",
+        "tzeusy-org/syzygy",
+        "--name-only"
+      ],
+      "exit": 0,
+      "stdout": "docs/evidence/syzygy-u2a-7/mutations-2026-11-03.json\ndocs/evidence/syzygy-u2a-7/mutations-round1-2026-11-03.json\npackage-lock.json\npackages/cap1-conformance/src/req-040.conformance.test.ts\npackages/cap1-conformance/src/req-041.conformance.test.ts\npackages/cap1-conformance/src/req-050.conformance.test.ts\npackages/cap1-conformance/src/req-051.conformance.test.ts\npackages/cap1-conformance/src/req-052.conformance.test.ts\npackages/cap1-conformance/src/req-053.conformance.test.ts\npackages/cap1-conformance/src/req-064.conformance.test.ts\npackages/cap1-conformance/src/req-integration.conformance.test.ts\npackages/cap1-core/src/discoverability.ts\npackages/cap1-core/src/snapshot.ts\npackages/cap1-daemon/package.json\npackages/cap1-daemon/src/index.ts\npackages/cap1-daemon/src/observation.test.ts\npackages/cap1-daemon/src/observation.ts\npackages/cap1-daemon/src/package.test.ts\npackages/cap1-daemon/src/pipeline.test.ts\npackages/cap1-daemon/src/pipeline.ts\npackages/cap1-daemon/src/readme-links.test.ts\npackages/cap1-daemon/src/readme-links.ts\npackages/cap1-daemon/src/routes-human.test.ts\npackages/cap1-daemon/src/routes-human.ts\npackages/cap1-daemon/src/routes-machine.test.ts\npackages/cap1-daemon/src/routes-machine.ts\npackages/cap1-daemon/src/source-snapshot.test.ts\npackages/cap1-daemon/src/source-snapshot.ts\npackages/cap1-system/src/degradation.system.test.ts\npackages/cap1-system/src/discoverability.system.test.ts\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gh",
+        "api",
+        "repos/tzeusy-org/syzygy/pulls/514/files",
+        "--paginate",
+        "--jq",
+        ".[].filename"
+      ],
+      "exit": 0,
+      "stdout": "docs/evidence/recorder-label-row-2026-10-22.md\ndocs/evidence/recorder-label-row-differential-2026-10-22.json\ndocs/evidence/recorder-label-row-mutants-consent-2026-10-22.json\ndocs/evidence/recorder-label-row-mutants-dossier-2026-10-22.json\ndocs/evidence/recorder-label-row-negative-control-M4-2026-10-22.json\ndocs/evidence/recorder-label-row-negative-control-M5-2026-10-22.json\ndocs/evidence/recorder-label-row-timing-2026-10-22.json\ndocs/evidence/recorder-label-row-timing-run-2-2026-10-22.json\npackages/polaris-dossier/src/gate-label-row.test.ts\npackages/polaris-generation-consent/src/recorder-template.test.ts\npackages/polaris-generation-consent/src/recorder-template.ts\nscripts/differential_line_slot.mjs\nscripts/measure_label_row_reads.mjs\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gh",
+        "pr",
+        "diff",
+        "514",
+        "--repo",
+        "tzeusy-org/syzygy",
+        "--name-only"
+      ],
+      "exit": 0,
+      "stdout": "docs/evidence/recorder-label-row-2026-10-22.md\ndocs/evidence/recorder-label-row-differential-2026-10-22.json\ndocs/evidence/recorder-label-row-mutants-consent-2026-10-22.json\ndocs/evidence/recorder-label-row-mutants-dossier-2026-10-22.json\ndocs/evidence/recorder-label-row-negative-control-M4-2026-10-22.json\ndocs/evidence/recorder-label-row-negative-control-M5-2026-10-22.json\ndocs/evidence/recorder-label-row-timing-2026-10-22.json\ndocs/evidence/recorder-label-row-timing-run-2-2026-10-22.json\npackages/polaris-dossier/src/gate-label-row.test.ts\npackages/polaris-generation-consent/src/recorder-template.test.ts\npackages/polaris-generation-consent/src/recorder-template.ts\nscripts/differential_line_slot.mjs\nscripts/measure_label_row_reads.mjs\n",
+      "stderr": ""
+    }
+  ]
+}

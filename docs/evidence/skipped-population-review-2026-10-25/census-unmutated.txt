@@ -1,0 +1,5 @@
+census lines 1
+errors []
+Counter({'pending': 48, 'skipped': 1}) 49 distinct 49
+[('credentials.system.test.ts', 11), ('daemon-entry-unchanged.system.test.ts', 15), ('degradation.system.test.ts', 2), ('effect-observer.system.test.ts', 8), ('fresh-clone.system.test.ts', 1), ('full-facts.system.test.ts', 3), ('process.system.test.ts', 1), ('skipped-population.system.test.ts', 1), ('state-dir.system.test.ts', 6), ('write-boundary.system.test.ts', 1)]
+['RT6 — fresh-clone demonstration > a fresh clone installs, builds, starts the daemon, and serves the same facts on both channels']

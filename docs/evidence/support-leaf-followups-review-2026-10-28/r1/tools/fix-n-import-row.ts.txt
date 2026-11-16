@@ -1,0 +1,3 @@
+  it('calls no import() in any source, however it is spaced or commented', () => {
+    expect(SOURCES.flatMap((file) => importCallsOf(file, read(file)).map((call) => `${file}: ${call}`))).toEqual([]);
+  });

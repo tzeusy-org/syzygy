@@ -1,0 +1,21 @@
+{
+ "tree": "code",
+ "head": "831f40c1ab98e4c9b40d98322109506b15ac8b97",
+ "cleanAfter": true,
+ "results": [
+  {
+   "run": 1,
+   "exit": 0,
+   "tests": [
+    "Tests  165 passed (165)"
+   ],
+   "testFiles": [
+    "Test Files  4 passed (4)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "load1": 31.2,
+   "seconds": 10.1
+  }
+ ]
+}

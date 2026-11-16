@@ -1,0 +1,12 @@
+
+ RUN  v3.2.7 /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone
+
+ ✓ |@syzygy/polaris-generation-core| packages/polaris-generation-core/src/excerpt.test.ts (38 tests) 99ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/test-artifact-verification.test.ts (37 tests) 590ms
+ ✓ |@syzygy/polaris-generation-core| packages/polaris-generation-core/src/dossier-profile.test.ts (19 tests) 86ms
+
+ Test Files  3 passed (3)
+      Tests  94 passed (94)
+   Start at  08:57:23
+   Duration  2.25s (transform 1.49s, setup 494ms, collect 1.99s, tests 775ms, environment 4ms, prepare 607ms)
+

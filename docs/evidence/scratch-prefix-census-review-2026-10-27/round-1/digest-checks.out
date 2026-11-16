@@ -1,0 +1,14 @@
+1. files on disk 37 listed 37 onDiskNotListed [] listedNotOnDisk [] mismatched []
+2/3/5. run records 7
+  c0-clean commit ok True tools (atRunCommit, atHead) {'census_run.py': (True, True), 'scratch_trace.cjs': (True, True), 'tmp_sampler.py': (True, True)} trace sha ok True lines ok True
+  f1-fresh-after-k1 commit ok True tools (atRunCommit, atHead) {'census_run.py': (True, True), 'scratch_trace.cjs': (True, True), 'tmp_sampler.py': (True, True)} trace sha ok True lines ok True
+  f2-fresh-after-k2 commit ok True tools (atRunCommit, atHead) {'census_run.py': (True, True), 'scratch_trace.cjs': (True, True), 'tmp_sampler.py': (True, True)} trace sha ok True lines ok True
+  f3-fresh-after-k3 commit ok True tools (atRunCommit, atHead) {'census_run.py': (True, True), 'scratch_trace.cjs': (True, True), 'tmp_sampler.py': (True, True)} trace sha ok True lines ok True
+  k1-kill-40s commit ok True tools (atRunCommit, atHead) {'census_run.py': (True, True), 'scratch_trace.cjs': (True, True), 'tmp_sampler.py': (True, True)} trace sha ok True lines ok True
+  k2-kill-75s commit ok True tools (atRunCommit, atHead) {'census_run.py': (True, True), 'scratch_trace.cjs': (True, True), 'tmp_sampler.py': (True, True)} trace sha ok True lines ok True
+  k3-kill-115s commit ok True tools (atRunCommit, atHead) {'census_run.py': (True, True), 'scratch_trace.cjs': (True, True), 'tmp_sampler.py': (True, True)} trace sha ok True lines ok True
+5. static treeCommit ok True
+4. census toolSha256 vs HEAD {'assemble_census.py': True, 'census_run.py': True, 'collect_runs.py': True, 'scratch_trace.cjs': True, 'static_sites.py': True, 'tmp_sampler.py': True} staticSitesSha256 ok True
+4b. census toolSha256 vs run commit {'assemble_census.py': 'not at run commit', 'census_run.py': True, 'collect_runs.py': False, 'scratch_trace.cjs': True, 'static_sites.py': False, 'tmp_sampler.py': True}
+6. kill entries [16, 34, 15] MB [192.3, 141.7, 65.4] marker [10, 26, 8] leaders [1, 3, 1]
+   finding[0]: [Observed] A SIGKILL of the full run leaves 16 / 34 / 15 entries in the private temp directory (192.3 / 141.7 / 65.4 MB) at 40.0 / 75.0 / 115.0 s into the run, in 27 classes in all; 10 / 26 / 8 Chrome processes survive the kill of the process group, found by the --user-data-dir marker and stopped by pid.

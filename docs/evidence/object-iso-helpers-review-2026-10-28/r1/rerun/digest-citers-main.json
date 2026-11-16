@@ -1,0 +1,719 @@
+{
+ "baseCommit": "81862261",
+ "codeHeadCommit": "22142d9f",
+ "populationCommit": "gh/main",
+ "population": "7053 tracked files at the population commit, excluding docs/evidence/syzygy-bpyt-6-3-iso/",
+ "editedFiles": [
+  "packages/polaris-dossier/src/brief.ts",
+  "packages/polaris-dossier/src/check.ts",
+  "packages/polaris-dossier/src/cli.test.ts",
+  "packages/polaris-dossier/src/close.ts",
+  "packages/polaris-dossier/src/design-review.ts",
+  "packages/polaris-dossier/src/execution-flags.ts",
+  "packages/polaris-dossier/src/inventory.ts",
+  "packages/polaris-dossier/src/iso-of.test.ts",
+  "packages/polaris-dossier/src/iso-of.ts",
+  "packages/polaris-dossier/src/render.ts",
+  "packages/polaris-dossier/src/review.ts",
+  "packages/polaris-dossier/src/run-record.ts",
+  "packages/polaris-dossier/src/screen.test.ts",
+  "packages/polaris-dossier/src/screen.ts",
+  "packages/polaris-dossier/src/session-handover.ts",
+  "packages/polaris-dossier/src/session-statement.ts",
+  "packages/polaris-dossier/src/waiting-sessions.ts",
+  "packages/polaris-generation-core/src/discovery.ts",
+  "packages/polaris-generation-core/src/dossier-evaluation.ts",
+  "packages/polaris-generation-core/src/public-source-classification.test.ts",
+  "packages/polaris-generation-core/src/public-source-classification.ts",
+  "packages/polaris-generation-core/src/public-source-exemption.test.ts",
+  "packages/polaris-generation-core/src/reader-questions.ts",
+  "packages/polaris-generation-core/src/secret-redaction.test.ts",
+  "packages/polaris-generation-core/src/secret-redaction.ts",
+  "packages/support/src/index.ts",
+  "packages/support/src/is-record.test.ts",
+  "packages/support/src/is-record.ts",
+  "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts",
+  "packages/three-surface-poc-core/src/authority-artifact-fields.ts"
+ ],
+ "digests": [
+  {
+   "path": "packages/polaris-dossier/src/brief.ts",
+   "at": "base",
+   "sha256": "24b67a414a4ee5d6952225447b18f10cc67deb9feb7236bae856b4d5d277858e",
+   "gitBlob": "bddce1af808c58d7b66c92806e8d540c91570c19"
+  },
+  {
+   "path": "packages/polaris-dossier/src/brief.ts",
+   "at": "head",
+   "sha256": "b8ca294e1e04469fedd683d27fcf59b9f9159d32d15ec9f2e975ce6eb267f3ed",
+   "gitBlob": "5c6b75727c8326451c1d813870db19b8f2a2a4dd"
+  },
+  {
+   "path": "packages/polaris-dossier/src/check.ts",
+   "at": "base",
+   "sha256": "503bf61de7d4b383db688fe48b6672820e46c2d25d402b434c26ec8a3194f469",
+   "gitBlob": "f2a0372577d7f5dfef37fe4673ef38dcb830634a"
+  },
+  {
+   "path": "packages/polaris-dossier/src/check.ts",
+   "at": "head",
+   "sha256": "4698e177a20c443c46156165b4c1e04b8c99f9f8e8f5c639a5177bead1c1e7e7",
+   "gitBlob": "f1b0b06da8b2371eadb54968515a0bbae8e6af5e"
+  },
+  {
+   "path": "packages/polaris-dossier/src/cli.test.ts",
+   "at": "base",
+   "sha256": "11051cc17d08322feb7fb0dcc5153f2d7850c79b071a44129ed8b6d6283e7eb3",
+   "gitBlob": "af842eb7a5623db8754759c331e1951a78fea4df"
+  },
+  {
+   "path": "packages/polaris-dossier/src/cli.test.ts",
+   "at": "head",
+   "sha256": "b7741c91588a5e1a3dbcbb98d309f1393ba5b6ef88b5ae52a78c2aa54974a9c7",
+   "gitBlob": "16d33269fee424e0b3b447d4c75d2197190e723d"
+  },
+  {
+   "path": "packages/polaris-dossier/src/close.ts",
+   "at": "base",
+   "sha256": "bbf74cba11722a4e45417ab7f368180c7be7b56a0f8c191add07e2f21a5ec771",
+   "gitBlob": "ae89ab80eca10864035e70ca7fbe1193629c6e7a"
+  },
+  {
+   "path": "packages/polaris-dossier/src/close.ts",
+   "at": "head",
+   "sha256": "9857d608328faba4db19cbe874324bfe21ca1bde080190aa4c03de0c6de814d3",
+   "gitBlob": "883c837950cfc5e1cde857066afb2d5a4d244427"
+  },
+  {
+   "path": "packages/polaris-dossier/src/design-review.ts",
+   "at": "base",
+   "sha256": "adbfdac8cead133f9806e51a53fca9f1e551d8630f66548b307a39d51b422d2d",
+   "gitBlob": "6c9bbc640373b15e5a993a5e7d61d7b7bd1b7e5a"
+  },
+  {
+   "path": "packages/polaris-dossier/src/design-review.ts",
+   "at": "head",
+   "sha256": "7c80f3b8ad215108b284d1e32853c85d821a46467462188b5e8d8f9d13bac957",
+   "gitBlob": "e2e89f8faf88069801bc873a0657a066f8865720"
+  },
+  {
+   "path": "packages/polaris-dossier/src/execution-flags.ts",
+   "at": "base",
+   "sha256": "f70e08e098e3f21954ccbdfab9d095a89b4f91c1820324837f1a3501c83ad2af",
+   "gitBlob": "eb662d7e4518406f8a140459140c98b723778029"
+  },
+  {
+   "path": "packages/polaris-dossier/src/execution-flags.ts",
+   "at": "head",
+   "sha256": "6a94913dddefacabe8e063d54b951756132d33450cc55d65aaca61b679ab1f24",
+   "gitBlob": "66eecb3c6886d117d55c53044b1cf3591c765893"
+  },
+  {
+   "path": "packages/polaris-dossier/src/inventory.ts",
+   "at": "base",
+   "sha256": "8e1fd6a5514d13db14a35f1afa2dce44e294c67246d32c7259f25004450b1272",
+   "gitBlob": "22f24a02a3ee67bfe3d447bb0f2bf7cf4c52592c"
+  },
+  {
+   "path": "packages/polaris-dossier/src/inventory.ts",
+   "at": "head",
+   "sha256": "1ef7b5ea8badd4c9f490665a79cb1854d40c08e186505ca69253a783e5198f2c",
+   "gitBlob": "55b1b5ef3b90756618ffbe837fe20654eab925e6"
+  },
+  {
+   "path": "packages/polaris-dossier/src/iso-of.test.ts",
+   "at": "head",
+   "sha256": "ee00b78fbb10644f2627f95b321d3b7368c97b54422bc82771caff02994709f6",
+   "gitBlob": "03dd2bebf3e64addfa9de7fe3a5ec12a2ea21356"
+  },
+  {
+   "path": "packages/polaris-dossier/src/iso-of.ts",
+   "at": "head",
+   "sha256": "5e5d57e4846518b7ca84f0b337fdb7d2cebbfd4b3c2b9784155f766a57b849a0",
+   "gitBlob": "3aed9cb00552b161174098cb3f53e7ba2f423fef"
+  },
+  {
+   "path": "packages/polaris-dossier/src/render.ts",
+   "at": "base",
+   "sha256": "75dc0910b51d47155e130be53b642c00443eace47e351791963e6e9699e11521",
+   "gitBlob": "29964a5fcce36e19bd559bce4fa6a6f744296370"
+  },
+  {
+   "path": "packages/polaris-dossier/src/render.ts",
+   "at": "head",
+   "sha256": "86fadc6230c8583d85d37ed0c20bd9d2f29fb19699406ab8db3c2038ce9f7da4",
+   "gitBlob": "81fc735978db498a5714c4826ac2d131c694f333"
+  },
+  {
+   "path": "packages/polaris-dossier/src/review.ts",
+   "at": "base",
+   "sha256": "8f770a0e0aff0311765c698583c3eb107d4d471916c2305311826ff64af4980e",
+   "gitBlob": "5c225318b7b03d4b9e0b05ed4653a6f966078c1b"
+  },
+  {
+   "path": "packages/polaris-dossier/src/review.ts",
+   "at": "head",
+   "sha256": "a27904b22609585a06f17f29ac6571d9d333305871600240688a57067f1e120e",
+   "gitBlob": "57f346c0efdede4be7f2a101ea9717e17573aba2"
+  },
+  {
+   "path": "packages/polaris-dossier/src/run-record.ts",
+   "at": "base",
+   "sha256": "20cda92756495f74581812bd679300b0c370fc6b71928e08f1c217445cd35064",
+   "gitBlob": "3ce2a2fd30ee09cc0f5dbf1453f143090971fcf8"
+  },
+  {
+   "path": "packages/polaris-dossier/src/run-record.ts",
+   "at": "head",
+   "sha256": "8a6319ccbb6424c12826dabf1a90626f7fd5d20ccb6782afa45cb869a7878b11",
+   "gitBlob": "635576325d3443eb4659f1ef9796d7c2157d395d"
+  },
+  {
+   "path": "packages/polaris-dossier/src/screen.test.ts",
+   "at": "base",
+   "sha256": "30fbbab8f3e1f741a00bf02f0242538a83ff7f62acbb8158059c3fadb898dacc",
+   "gitBlob": "f6a35e04d9b66c1ca703f94ce2c0e00c1fc381d2"
+  },
+  {
+   "path": "packages/polaris-dossier/src/screen.test.ts",
+   "at": "head",
+   "sha256": "90d0b63a8b245f72364d72d9d6e57eac8b6a49ffa364afed03518a5f46778aa7",
+   "gitBlob": "86858a528536fad960474722dbb7496b616e26fe"
+  },
+  {
+   "path": "packages/polaris-dossier/src/screen.ts",
+   "at": "base",
+   "sha256": "1bf4ec6c347e028a0ca75fbb1efb3ce237748e4010962e1b68592446c8b2b8d3",
+   "gitBlob": "683e7ca2625f5745465bbb134e67001e65b26663"
+  },
+  {
+   "path": "packages/polaris-dossier/src/screen.ts",
+   "at": "head",
+   "sha256": "8c0c91aa0b2425a7545434000e3024eac603f29b3d2c2fa636f46d0439d0d8c6",
+   "gitBlob": "989558797d01391024d0d4b73fcd0f7438de47c0"
+  },
+  {
+   "path": "packages/polaris-dossier/src/session-handover.ts",
+   "at": "base",
+   "sha256": "1728d9223bda30c28b597ac81039edb448e3e64f430cbc38720d520fa836d18b",
+   "gitBlob": "7e25a8426961bd9236c137ad4b6cb514f4b795e7"
+  },
+  {
+   "path": "packages/polaris-dossier/src/session-handover.ts",
+   "at": "head",
+   "sha256": "642ee29a193e0e924964aa2aa305d841059b38dbefd334e30c5312248c048a51",
+   "gitBlob": "e72c07c8eee083fa7ad9e6a17f1ebd4c65eab01d"
+  },
+  {
+   "path": "packages/polaris-dossier/src/session-statement.ts",
+   "at": "base",
+   "sha256": "7273d0899caba37086df2f5b0a77be49414b73f42320427bb5b873c8def6ff2a",
+   "gitBlob": "c7705ec6324b6296a5bb06a4c4a2a1277cf2ce53"
+  },
+  {
+   "path": "packages/polaris-dossier/src/session-statement.ts",
+   "at": "head",
+   "sha256": "04101d9ebbd6387f503f7635951a7fb8e81d98a745ecfaff1974eabdbbff0a1d",
+   "gitBlob": "7f0f7985b8ce62595f10b68f36601e83543bc82d"
+  },
+  {
+   "path": "packages/polaris-dossier/src/waiting-sessions.ts",
+   "at": "base",
+   "sha256": "f06ec3c3bb0351adbe3e29d425f36e796730d1525e93e49617dfbe1708fc36e2",
+   "gitBlob": "f97e640796406080f57057c034bc4541a555ff1b"
+  },
+  {
+   "path": "packages/polaris-dossier/src/waiting-sessions.ts",
+   "at": "head",
+   "sha256": "ae30ef43d95d66641fef6a6b7b5211dbf4207bffd8d4da205c367e4c1e4ed8f8",
+   "gitBlob": "b04b8c1e8d238bb7965f217426a61c3a0761b355"
+  },
+  {
+   "path": "packages/polaris-generation-core/src/discovery.ts",
+   "at": "base",
+   "sha256": "71d84d85bd92141d576e8e207ad67af61637cff5effc81911c7fb236556f21e3",
+   "gitBlob": "bc63fb17eeccdd95d6d5ae084181a858e51bf914"
+  },
+  {
+   "path": "packages/polaris-generation-core/src/discovery.ts",
+   "at": "head",
+   "sha256": "117afe27b01fbc90c4e265338b36e088cef5a46565b1d0be168e82a4420c1f4c",
+   "gitBlob": "656a6d1a1cd63ed01b73c7c9381da116554f96e1"
+  },
+  {
+   "path": "packages/polaris-generation-core/src/dossier-evaluation.ts",
+   "at": "base",
+   "sha256": "5beea0c6b36a4032f11c87e8ef27fd9c3a036dad2824a311e53bbfcb32d316f2",
+   "gitBlob": "3e853304b8c2c351304b06c3ebb9b8dcf0c5286a"
+  },
+  {
+   "path": "packages/polaris-generation-core/src/dossier-evaluation.ts",
+   "at": "head",
+   "sha256": "08cea6269863db32c30b6c55b9b88d0cc621cc2204d8ab32022c0c8070f254e4",
+   "gitBlob": "be15d988ca4ba3fbd5f101d66c4d24d7cc1408ef"
+  },
+  {
+   "path": "packages/polaris-generation-core/src/public-source-classification.test.ts",
+   "at": "base",
+   "sha256": "b93fcb8435869308b865c204bbdbd7d5cd3231144e51b8f14c669d89e2affc65",
+   "gitBlob": "f36720dc9e4b265a97371e43d91dc28f48dbd6c1"
+  },
+  {
+   "path": "packages/polaris-generation-core/src/public-source-classification.test.ts",
+   "at": "head",
+   "sha256": "7c48de7f99241709de598644af77a6310f210ca8d722594a2e1fdcb65bb561c4",
+   "gitBlob": "4c22c1dd28d889cb38ca66d8432e867ccbe0fc41"
+  },
+  {
+   "path": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "at": "base",
+   "sha256": "9c2e4ff264c4799a50236e1c2ebff73c80d1ad3ed4fd5a1520a9e607d8b62ee0",
+   "gitBlob": "1a2334b113644d49165bef23e8b7f5a92c1a0bd4"
+  },
+  {
+   "path": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "at": "head",
+   "sha256": "e2617ceb3f926caab7f66df932853213c570a37d2a198b5a6e34ab9d7441f009",
+   "gitBlob": "d05e803762b504ed90818d3c403c2bd9d688568d"
+  },
+  {
+   "path": "packages/polaris-generation-core/src/public-source-exemption.test.ts",
+   "at": "base",
+   "sha256": "282a17b86b5e2fac6f48fada7ee92ade3441e3a48e0f2de7219eca49ee4e1c91",
+   "gitBlob": "7bf13bc37915daecd97ba67714353ff1cb0a3047"
+  },
+  {
+   "path": "packages/polaris-generation-core/src/public-source-exemption.test.ts",
+   "at": "head",
+   "sha256": "c5bebb3c09caf8fb39211cc29fdcb1215aabcf52ad30ecfb6bab7867ee0c13a9",
+   "gitBlob": "2fb2cf26ebfd61813da19686e5c26fc820509c8f"
+  },
+  {
+   "path": "packages/polaris-generation-core/src/reader-questions.ts",
+   "at": "base",
+   "sha256": "1c6cab067225d99243d5fff63a16c1f2c0f1af37ca52f6e5f932ee8021ecb1ca",
+   "gitBlob": "24b75e8be808cb4c2d4dd2a900d9f4c621aa91a5"
+  },
+  {
+   "path": "packages/polaris-generation-core/src/reader-questions.ts",
+   "at": "head",
+   "sha256": "1902a050c22ec0747ecc59e797802a7a4505753d67d8fa7e38dfe40bbe11a8e4",
+   "gitBlob": "1f192434789deaaa917704187d2bedc990c69438"
+  },
+  {
+   "path": "packages/polaris-generation-core/src/secret-redaction.test.ts",
+   "at": "base",
+   "sha256": "23d59222d12d01f31e0bbf3a51f1e43e7d5419db1af29cdd4f58fadbea0a7d4d",
+   "gitBlob": "2467e7dcb3bdb1abb0040b2c840860fe8bdccb8b"
+  },
+  {
+   "path": "packages/polaris-generation-core/src/secret-redaction.test.ts",
+   "at": "head",
+   "sha256": "b3c282fa41965b19294db5058f24fec1882cd9e440fed742e4a4ac0c1918e353",
+   "gitBlob": "38a5d90765148bdcbd9e2bd692c21256029258da"
+  },
+  {
+   "path": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "at": "base",
+   "sha256": "cb04ededc98c4557644306a6b60c89507e8850a89403df34b7cb62f865164ed1",
+   "gitBlob": "5d1a58277efd1b32552ef7b93f965c94a3f46973"
+  },
+  {
+   "path": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "at": "head",
+   "sha256": "77057c953f8c0b172131cbb20ccb9636e9fbfbdfe4f92b32322a169ee644734c",
+   "gitBlob": "0a58e4499c196008b6842748e787118dae083f34"
+  },
+  {
+   "path": "packages/support/src/index.ts",
+   "at": "base",
+   "sha256": "a4b3aa184877c9851ee46623e00c33a5ebbf25029d7ca16ff7324a6e7d31ea56",
+   "gitBlob": "41a9a88a9a2b771a4709f5d8dc450f296fb4815d"
+  },
+  {
+   "path": "packages/support/src/index.ts",
+   "at": "head",
+   "sha256": "d6a036d587831989bc650646ff0222828ebbcd947f667a2d616980fd40fdd853",
+   "gitBlob": "a956d2b5d6c75f0632ded0198f0b63c94125466d"
+  },
+  {
+   "path": "packages/support/src/is-record.test.ts",
+   "at": "head",
+   "sha256": "e95dad3836cb74fe41ff219b36e0a38bb326fcf0fa062dc792c3ca301bf128ab",
+   "gitBlob": "d58234f260358cd240931617afc0c83dc752dd37"
+  },
+  {
+   "path": "packages/support/src/is-record.ts",
+   "at": "head",
+   "sha256": "6df2d49aaf52ffc7890004bda4307b241c926c457605704d53676c1e12a3d8d1",
+   "gitBlob": "6119ce78592ce569456ab56b351d67b58ea7f147"
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts",
+   "at": "base",
+   "sha256": "0aebcf1b94a9b5a27c48152c9a664052d1135f505b54e1886e5dc8eccd0a048d",
+   "gitBlob": "8ee25153fbff5f636e932dcdb2d0e00bf6f23fcb"
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts",
+   "at": "head",
+   "sha256": "69b4aab4c21d19778dbaca7818b54f04c11e7b7a3a50807d547fca738ce76455",
+   "gitBlob": "dc2bbd8a5487ad68fabfa8d58e1940c6313f747d"
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "at": "base",
+   "sha256": "6098ed3fdd6d5055cf7952e836c25c9474239f6b2e2ac60d8e03af836be4d8dc",
+   "gitBlob": "82494cbd10999a1825e703aefe51daaf0337c1ef"
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "at": "head",
+   "sha256": "040a1510fcc68c1fc91d9fa5083e17423a6953c629815d3da58aa03ff209f998",
+   "gitBlob": "4f491322b6879c8184e18a28a931b9158ff8567b"
+  }
+ ],
+ "needles": 224,
+ "methods": "one: Python bytes.find over every blob; two: git grep -F -l per needle",
+ "methodsAgree": true,
+ "needlesCited": {
+  "11051cc17d08": [
+   "docs/evidence/syzygy-bpyt-8-2/path-intent.json"
+  ],
+  "11051cc17d08322feb7fb0dcc5153f2d7850c79b071a44129ed8b6d6283e7eb3": [
+   "docs/evidence/syzygy-bpyt-8-2/path-intent.json"
+  ],
+  "1728d9223bda": [
+   "docs/evidence/fence-rules-review-2026-10-27/r1/negctl.json",
+   "docs/evidence/fence-rules-review-2026-10-27/r2/out/neg-pr1-ll.json",
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-negative-control.json",
+   "docs/evidence/syzygy-bpyt-6-3/repair1-neg-pr1-line-level.json"
+  ],
+  "1728d9223bda30c28b597ac81039edb448e3e64f430cbc38720d520fa836d18b": [
+   "docs/evidence/fence-rules-review-2026-10-27/r1/negctl.json",
+   "docs/evidence/fence-rules-review-2026-10-27/r2/out/neg-pr1-ll.json",
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-negative-control.json",
+   "docs/evidence/syzygy-bpyt-6-3/repair1-neg-pr1-line-level.json"
+  ],
+  "1bf4ec6c347e": [
+   "docs/evidence/fence-rules-review-2026-10-27/r1/negctl.json",
+   "docs/evidence/fence-rules-review-2026-10-27/r2/out/neg-pr1-ll.json",
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-negative-control.json",
+   "docs/evidence/syzygy-bpyt-6-3/repair1-neg-pr1-line-level.json"
+  ],
+  "1bf4ec6c347e028a0ca75fbb1efb3ce237748e4010962e1b68592446c8b2b8d3": [
+   "docs/evidence/fence-rules-review-2026-10-27/r1/negctl.json",
+   "docs/evidence/fence-rules-review-2026-10-27/r2/out/neg-pr1-ll.json",
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-negative-control.json",
+   "docs/evidence/syzygy-bpyt-6-3/repair1-neg-pr1-line-level.json"
+  ],
+  "1c6cab067225": [
+   "docs/evidence/syzygy-bpyt-8-1/evidence.json"
+  ],
+  "1c6cab067225d99243d5fff63a16c1f2c0f1af37ca52f6e5f932ee8021ecb1ca": [
+   "docs/evidence/syzygy-bpyt-8-1/evidence.json"
+  ],
+  "20cda9275649": [
+   "docs/evidence/syzygy-bpyt-8-1/evidence.json"
+  ],
+  "20cda92756495f74581812bd679300b0c370fc6b71928e08f1c217445cd35064": [
+   "docs/evidence/syzygy-bpyt-8-1/evidence.json"
+  ],
+  "23d59222d12d": [
+   ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/STATIC-TRACE.json"
+  ],
+  "23d59222d12d01f31e0bbf3a51f1e43e7d5419db1af29cdd4f58fadbea0a7d4d": [
+   ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/STATIC-TRACE.json"
+  ],
+  "2467e7dcb3bd": [
+   ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/STATIC-TRACE.json"
+  ],
+  "2467e7dcb3bdb1abb0040b2c840860fe8bdccb8b": [
+   ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/STATIC-TRACE.json"
+  ],
+  "24b67a414a4e": [
+   "docs/evidence/fence-rules-review-2026-10-27/r1/negctl.json",
+   "docs/evidence/fence-rules-review-2026-10-27/r2/out/neg-pr1-ll.json",
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-negative-control.json",
+   "docs/evidence/syzygy-bpyt-6-3/repair1-neg-pr1-line-level.json"
+  ],
+  "24b67a414a4ee5d6952225447b18f10cc67deb9feb7236bae856b4d5d277858e": [
+   "docs/evidence/fence-rules-review-2026-10-27/r1/negctl.json",
+   "docs/evidence/fence-rules-review-2026-10-27/r2/out/neg-pr1-ll.json",
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-negative-control.json",
+   "docs/evidence/syzygy-bpyt-6-3/repair1-neg-pr1-line-level.json"
+  ],
+  "282a17b86b5e": [
+   ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/STATIC-TRACE.json"
+  ],
+  "282a17b86b5e2fac6f48fada7ee92ade3441e3a48e0f2de7219eca49ee4e1c91": [
+   ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/STATIC-TRACE.json"
+  ],
+  "41a9a88a9a2b": [
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json",
+   "docs/evidence/test-clocks-review-2026-10-27/r4/results/main-moved-r4-81862261.json",
+   "docs/evidence/test-clocks-review-2026-10-27/r4/results/main-moved-r4-a403b902.json",
+   "docs/evidence/test-clocks-review-2026-10-27/r4/results/main-moved-r4-f7ea8584.json",
+   "docs/evidence/utf8-canonical-review-2026-10-27/r1/digest-sweep.json",
+   "docs/evidence/utf8-canonical-review-2026-10-27/r2/digest-sweep-abc40c9a.json",
+   "docs/evidence/utf8-canonical-review-2026-10-27/r2/digest-sweep-b81010c8.json",
+   "docs/evidence/utf8-canonical-review-2026-10-27/r2/r2-review.diff"
+  ],
+  "41a9a88a9a2b771a4709f5d8dc450f296fb4815d": [
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json",
+   "docs/evidence/test-clocks-review-2026-10-27/r4/results/main-moved-r4-81862261.json",
+   "docs/evidence/test-clocks-review-2026-10-27/r4/results/main-moved-r4-a403b902.json",
+   "docs/evidence/test-clocks-review-2026-10-27/r4/results/main-moved-r4-f7ea8584.json",
+   "docs/evidence/utf8-canonical-review-2026-10-27/r1/digest-sweep.json",
+   "docs/evidence/utf8-canonical-review-2026-10-27/r2/digest-sweep-abc40c9a.json",
+   "docs/evidence/utf8-canonical-review-2026-10-27/r2/digest-sweep-b81010c8.json",
+   "docs/evidence/utf8-canonical-review-2026-10-27/r2/r2-review.diff"
+  ],
+  "503bf61de7d4": [
+   "docs/evidence/fence-rules-review-2026-10-27/r1/negctl.json",
+   "docs/evidence/fence-rules-review-2026-10-27/r2/out/neg-pr1-ll.json",
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-negative-control.json",
+   "docs/evidence/syzygy-bpyt-6-3/repair1-neg-pr1-line-level.json"
+  ],
+  "503bf61de7d4b383db688fe48b6672820e46c2d25d402b434c26ec8a3194f469": [
+   "docs/evidence/fence-rules-review-2026-10-27/r1/negctl.json",
+   "docs/evidence/fence-rules-review-2026-10-27/r2/out/neg-pr1-ll.json",
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-negative-control.json",
+   "docs/evidence/syzygy-bpyt-6-3/repair1-neg-pr1-line-level.json"
+  ],
+  "5beea0c6b36a": [
+   "docs/evidence/fence-rules-review-2026-10-27/r1/negctl.json",
+   "docs/evidence/fence-rules-review-2026-10-27/r2/out/neg-pr1-ll.json",
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-negative-control.json",
+   "docs/evidence/syzygy-bpyt-6-3/repair1-neg-pr1-line-level.json"
+  ],
+  "5beea0c6b36a4032f11c87e8ef27fd9c3a036dad2824a311e53bbfcb32d316f2": [
+   "docs/evidence/fence-rules-review-2026-10-27/r1/negctl.json",
+   "docs/evidence/fence-rules-review-2026-10-27/r2/out/neg-pr1-ll.json",
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-negative-control.json",
+   "docs/evidence/syzygy-bpyt-6-3/repair1-neg-pr1-line-level.json"
+  ],
+  "6098ed3fdd6d": [
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-merged-a5ab2b28-a5b1d532.json",
+   "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json",
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json",
+   "docs/evidence/utf8-canonical-review-2026-10-27/r1/comment-only-a5ab-2d3f.json",
+   "docs/evidence/utf8-canonical-review-2026-10-27/r1/digest-sweep.json",
+   "docs/evidence/utf8-canonical-review-2026-10-27/r2/comment-only-41932c3b-a5b1d532.json",
+   "docs/evidence/utf8-canonical-review-2026-10-27/r2/comment-only-a5ab2b28-a5b1d532.json",
+   "docs/evidence/utf8-canonical-review-2026-10-27/r2/digest-sweep-abc40c9a.json",
+   "docs/evidence/utf8-canonical-review-2026-10-27/r2/digest-sweep-b81010c8.json",
+   "docs/evidence/utf8-canonical-review-2026-10-27/r2/r2-review.diff"
+  ],
+  "6098ed3fdd6d5055cf7952e836c25c9474239f6b2e2ac60d8e03af836be4d8dc": [
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-merged-a5ab2b28-a5b1d532.json",
+   "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json",
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json",
+   "docs/evidence/utf8-canonical-review-2026-10-27/r1/comment-only-a5ab-2d3f.json",
+   "docs/evidence/utf8-canonical-review-2026-10-27/r1/digest-sweep.json",
+   "docs/evidence/utf8-canonical-review-2026-10-27/r2/comment-only-41932c3b-a5b1d532.json",
+   "docs/evidence/utf8-canonical-review-2026-10-27/r2/comment-only-a5ab2b28-a5b1d532.json",
+   "docs/evidence/utf8-canonical-review-2026-10-27/r2/digest-sweep-abc40c9a.json",
+   "docs/evidence/utf8-canonical-review-2026-10-27/r2/digest-sweep-b81010c8.json",
+   "docs/evidence/utf8-canonical-review-2026-10-27/r2/r2-review.diff"
+  ],
+  "71d84d85bd92": [
+   ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/STATIC-TRACE.json",
+   "docs/evidence/discovery-role-prior-2026-10-04.json"
+  ],
+  "71d84d85bd92141d576e8e207ad67af61637cff5effc81911c7fb236556f21e3": [
+   ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/STATIC-TRACE.json",
+   "docs/evidence/discovery-role-prior-2026-10-04.json"
+  ],
+  "7273d0899cab": [
+   ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/STATIC-TRACE.json"
+  ],
+  "7273d0899caba37086df2f5b0a77be49414b73f42320427bb5b873c8def6ff2a": [
+   ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/STATIC-TRACE.json"
+  ],
+  "75dc0910b51d": [
+   "docs/evidence/fence-rules-review-2026-10-27/r1/negctl.json",
+   "docs/evidence/fence-rules-review-2026-10-27/r2/out/neg-pr1-ll.json",
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-negative-control.json",
+   "docs/evidence/syzygy-bpyt-6-3/repair1-neg-pr1-line-level.json"
+  ],
+  "75dc0910b51d47155e130be53b642c00443eace47e351791963e6e9699e11521": [
+   "docs/evidence/fence-rules-review-2026-10-27/r1/negctl.json",
+   "docs/evidence/fence-rules-review-2026-10-27/r2/out/neg-pr1-ll.json",
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-negative-control.json",
+   "docs/evidence/syzygy-bpyt-6-3/repair1-neg-pr1-line-level.json"
+  ],
+  "7bf13bc37915": [
+   ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/STATIC-TRACE.json"
+  ],
+  "7bf13bc37915daecd97ba67714353ff1cb0a3047": [
+   ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/STATIC-TRACE.json"
+  ],
+  "82494cbd1099": [
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json",
+   "docs/evidence/utf8-canonical-review-2026-10-27/r1/digest-sweep.json",
+   "docs/evidence/utf8-canonical-review-2026-10-27/r2/digest-sweep-abc40c9a.json",
+   "docs/evidence/utf8-canonical-review-2026-10-27/r2/digest-sweep-b81010c8.json",
+   "docs/evidence/utf8-canonical-review-2026-10-27/r2/r2-review.diff"
+  ],
+  "82494cbd10999a1825e703aefe51daaf0337c1ef": [
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json",
+   "docs/evidence/utf8-canonical-review-2026-10-27/r1/digest-sweep.json",
+   "docs/evidence/utf8-canonical-review-2026-10-27/r2/digest-sweep-abc40c9a.json",
+   "docs/evidence/utf8-canonical-review-2026-10-27/r2/digest-sweep-b81010c8.json",
+   "docs/evidence/utf8-canonical-review-2026-10-27/r2/r2-review.diff"
+  ],
+  "8e1fd6a5514d": [
+   "docs/evidence/fence-rules-review-2026-10-27/r1/negctl.json",
+   "docs/evidence/fence-rules-review-2026-10-27/r2/out/neg-pr1-ll.json",
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-negative-control.json",
+   "docs/evidence/syzygy-bpyt-6-3/repair1-neg-pr1-line-level.json"
+  ],
+  "8e1fd6a5514d13db14a35f1afa2dce44e294c67246d32c7259f25004450b1272": [
+   "docs/evidence/fence-rules-review-2026-10-27/r1/negctl.json",
+   "docs/evidence/fence-rules-review-2026-10-27/r2/out/neg-pr1-ll.json",
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-negative-control.json",
+   "docs/evidence/syzygy-bpyt-6-3/repair1-neg-pr1-line-level.json"
+  ],
+  "8f770a0e0aff": [
+   "docs/evidence/fence-rules-review-2026-10-27/r1/negctl.json",
+   "docs/evidence/fence-rules-review-2026-10-27/r2/out/neg-pr1-ll.json",
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-negative-control.json",
+   "docs/evidence/syzygy-bpyt-6-3/repair1-neg-pr1-line-level.json"
+  ],
+  "8f770a0e0aff0311765c698583c3eb107d4d471916c2305311826ff64af4980e": [
+   "docs/evidence/fence-rules-review-2026-10-27/r1/negctl.json",
+   "docs/evidence/fence-rules-review-2026-10-27/r2/out/neg-pr1-ll.json",
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-negative-control.json",
+   "docs/evidence/syzygy-bpyt-6-3/repair1-neg-pr1-line-level.json"
+  ],
+  "9c2e4ff264c4": [
+   "docs/evidence/fence-rules-review-2026-10-27/r1/negctl.json",
+   "docs/evidence/fence-rules-review-2026-10-27/r2/out/neg-pr1-ll.json",
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-negative-control.json",
+   "docs/evidence/syzygy-bpyt-6-3/repair1-neg-pr1-line-level.json"
+  ],
+  "9c2e4ff264c4799a50236e1c2ebff73c80d1ad3ed4fd5a1520a9e607d8b62ee0": [
+   "docs/evidence/fence-rules-review-2026-10-27/r1/negctl.json",
+   "docs/evidence/fence-rules-review-2026-10-27/r2/out/neg-pr1-ll.json",
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-negative-control.json",
+   "docs/evidence/syzygy-bpyt-6-3/repair1-neg-pr1-line-level.json"
+  ],
+  "a4b3aa184877": [
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-merged-a5ab2b28-a5b1d532.json",
+   "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json",
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json",
+   "docs/evidence/utf8-canonical-review-2026-10-27/r1/comment-only-a5ab-2d3f.json",
+   "docs/evidence/utf8-canonical-review-2026-10-27/r1/digest-sweep.json",
+   "docs/evidence/utf8-canonical-review-2026-10-27/r2/comment-only-41932c3b-a5b1d532.json",
+   "docs/evidence/utf8-canonical-review-2026-10-27/r2/comment-only-a5ab2b28-a5b1d532.json",
+   "docs/evidence/utf8-canonical-review-2026-10-27/r2/digest-sweep-abc40c9a.json",
+   "docs/evidence/utf8-canonical-review-2026-10-27/r2/digest-sweep-b81010c8.json",
+   "docs/evidence/utf8-canonical-review-2026-10-27/r2/r2-review.diff"
+  ],
+  "a4b3aa184877c9851ee46623e00c33a5ebbf25029d7ca16ff7324a6e7d31ea56": [
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-merged-a5ab2b28-a5b1d532.json",
+   "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json",
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json",
+   "docs/evidence/utf8-canonical-review-2026-10-27/r1/comment-only-a5ab-2d3f.json",
+   "docs/evidence/utf8-canonical-review-2026-10-27/r1/digest-sweep.json",
+   "docs/evidence/utf8-canonical-review-2026-10-27/r2/comment-only-41932c3b-a5b1d532.json",
+   "docs/evidence/utf8-canonical-review-2026-10-27/r2/comment-only-a5ab2b28-a5b1d532.json",
+   "docs/evidence/utf8-canonical-review-2026-10-27/r2/digest-sweep-abc40c9a.json",
+   "docs/evidence/utf8-canonical-review-2026-10-27/r2/digest-sweep-b81010c8.json",
+   "docs/evidence/utf8-canonical-review-2026-10-27/r2/r2-review.diff"
+  ],
+  "adbfdac8cead": [
+   "docs/evidence/fence-rules-review-2026-10-27/r1/negctl.json",
+   "docs/evidence/fence-rules-review-2026-10-27/r2/out/neg-pr1-ll.json",
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-negative-control.json",
+   "docs/evidence/syzygy-bpyt-6-3/repair1-neg-pr1-line-level.json"
+  ],
+  "adbfdac8cead133f9806e51a53fca9f1e551d8630f66548b307a39d51b422d2d": [
+   "docs/evidence/fence-rules-review-2026-10-27/r1/negctl.json",
+   "docs/evidence/fence-rules-review-2026-10-27/r2/out/neg-pr1-ll.json",
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-negative-control.json",
+   "docs/evidence/syzygy-bpyt-6-3/repair1-neg-pr1-line-level.json"
+  ],
+  "b93fcb843586": [
+   ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/STATIC-TRACE.json",
+   "docs/evidence/project-documentation-screen-mutants-2026-10-08.json"
+  ],
+  "b93fcb8435869308b865c204bbdbd7d5cd3231144e51b8f14c669d89e2affc65": [
+   ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/STATIC-TRACE.json",
+   "docs/evidence/project-documentation-screen-mutants-2026-10-08.json"
+  ],
+  "bbf74cba1172": [
+   "docs/evidence/fence-rules-review-2026-10-27/r1/negctl.json",
+   "docs/evidence/fence-rules-review-2026-10-27/r2/out/neg-pr1-ll.json",
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-negative-control.json",
+   "docs/evidence/syzygy-bpyt-6-3/repair1-neg-pr1-line-level.json"
+  ],
+  "bbf74cba11722a4e45417ab7f368180c7be7b56a0f8c191add07e2f21a5ec771": [
+   "docs/evidence/fence-rules-review-2026-10-27/r1/negctl.json",
+   "docs/evidence/fence-rules-review-2026-10-27/r2/out/neg-pr1-ll.json",
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-negative-control.json",
+   "docs/evidence/syzygy-bpyt-6-3/repair1-neg-pr1-line-level.json"
+  ],
+  "bc63fb17eecc": [
+   ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/STATIC-TRACE.json"
+  ],
+  "bc63fb17eeccdd95d6d5ae084181a858e51bf914": [
+   ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/STATIC-TRACE.json"
+  ],
+  "c7705ec6324b": [
+   ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/STATIC-TRACE.json"
+  ],
+  "c7705ec6324b6296a5bb06a4c4a2a1277cf2ce53": [
+   ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/STATIC-TRACE.json"
+  ],
+  "cb04ededc98c": [
+   "docs/evidence/fence-rules-review-2026-10-27/r1/negctl.json",
+   "docs/evidence/fence-rules-review-2026-10-27/r2/out/neg-pr1-ll.json",
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-negative-control.json",
+   "docs/evidence/syzygy-bpyt-6-3/repair1-neg-pr1-line-level.json"
+  ],
+  "cb04ededc98c4557644306a6b60c89507e8850a89403df34b7cb62f865164ed1": [
+   "docs/evidence/fence-rules-review-2026-10-27/r1/negctl.json",
+   "docs/evidence/fence-rules-review-2026-10-27/r2/out/neg-pr1-ll.json",
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-negative-control.json",
+   "docs/evidence/syzygy-bpyt-6-3/repair1-neg-pr1-line-level.json"
+  ],
+  "eb662d7e4518": [
+   ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/STATIC-TRACE.json"
+  ],
+  "eb662d7e4518406f8a140459140c98b723778029": [
+   ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/STATIC-TRACE.json"
+  ],
+  "f06ec3c3bb03": [
+   "docs/evidence/fence-rules-review-2026-10-27/r1/negctl.json",
+   "docs/evidence/fence-rules-review-2026-10-27/r2/out/neg-pr1-ll.json",
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-negative-control.json",
+   "docs/evidence/syzygy-bpyt-6-3/repair1-neg-pr1-line-level.json"
+  ],
+  "f06ec3c3bb0351adbe3e29d425f36e796730d1525e93e49617dfbe1708fc36e2": [
+   "docs/evidence/fence-rules-review-2026-10-27/r1/negctl.json",
+   "docs/evidence/fence-rules-review-2026-10-27/r2/out/neg-pr1-ll.json",
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-negative-control.json",
+   "docs/evidence/syzygy-bpyt-6-3/repair1-neg-pr1-line-level.json"
+  ],
+  "f36720dc9e4b": [
+   ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/STATIC-TRACE.json"
+  ],
+  "f36720dc9e4b265a97371e43d91dc28f48dbd6c1": [
+   ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/STATIC-TRACE.json"
+  ],
+  "f70e08e098e3": [
+   ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/STATIC-TRACE.json",
+   "docs/evidence/polaris-dossier-s10b-mutants-2026-10-07.json"
+  ],
+  "f70e08e098e3f21954ccbdfab9d095a89b4f91c1820324837f1a3501c83ad2af": [
+   ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/STATIC-TRACE.json",
+   "docs/evidence/polaris-dossier-s10b-mutants-2026-10-07.json"
+  ]
+ }
+}

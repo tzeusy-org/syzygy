@@ -1,0 +1,6 @@
+selftest FAILED:
+  missing ["packages/x/src/a.test.ts",17,"setConfig","testTimeout",6000,null,0,0]
+  second method: AST-only lines are 8,38
+exit 1
+selftest passed: 16 sites, every predicate and its negative
+unmutated exit 0

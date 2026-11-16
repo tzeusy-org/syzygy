@@ -1,0 +1,292 @@
+{
+ "tool": "rev-509c my_mutants.py",
+ "toolSha256": "85b622f710095c90569d9cd97d1f002a14b6f6f9e3ece8e1262c71dafea64131",
+ "treeCommit": "a6be88169abd9287de0fe181f83d36d61983cd34",
+ "sourceSha256AtCommit": {
+  "apps/three-surface-poc/src/fixture-directories.ts": "df5a319e02b9bbc3294bf0b0b90a987ecea86bfd219a41d0341855a3e9dc5ada"
+ },
+ "control": {
+  "exit": 0,
+  "passed": 21,
+  "failing": [],
+  "loadBound": [],
+  "tmpLeft": [
+   "node-compile-cache"
+  ],
+  "report": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-509c/tools/mutant-report-control.json"
+ },
+ "mutants": [
+  {
+   "id": "drop-early-return",
+   "file": "apps/three-surface-poc/src/fixture-directories.ts",
+   "edits": [
+    {
+     "old": "  if (namespace === undefined) return;\n",
+     "new": ""
+    }
+   ],
+   "verdict": "killed",
+   "exit": 1,
+   "passed": 19,
+   "failing": [
+    {
+     "test": "fixture directories a killed run left behind (syzygy-bpyt.4.10) removes nothing, and lists nothing, where the PID namespace cannot be read, so a sandbox without /proc never sweeps another sandbox's live directories",
+     "first": "AssertionError: expected [ Array(1) ] to deeply equal []"
+    },
+    {
+     "test": "fixture directories a killed run left behind (syzygy-bpyt.4.10) removes nothing, and lists nothing, where the PID namespace names no inode, so a sandbox without /proc never sweeps another sandbox's live directories",
+     "first": "AssertionError: expected [ Array(1) ] to deeply equal []"
+    }
+   ],
+   "loadBound": [],
+   "tmpLeft": [
+    "node-compile-cache"
+   ],
+   "report": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-509c/tools/mutant-report-drop-early-return.json"
+  },
+  {
+   "id": "unreadable-reads-as-0",
+   "file": "apps/three-surface-poc/src/fixture-directories.ts",
+   "edits": [
+    {
+     "old": "  } catch {\n    return undefined;\n  }",
+     "new": "  } catch {\n    return '0';\n  }"
+    }
+   ],
+   "verdict": "killed",
+   "exit": 1,
+   "passed": 20,
+   "failing": [
+    {
+     "test": "fixture directories a killed run left behind (syzygy-bpyt.4.10) removes nothing, and lists nothing, where the PID namespace cannot be read, so a sandbox without /proc never sweeps another sandbox's live directories",
+     "first": "AssertionError: expected [ Array(1) ] to deeply equal [ \u2026(3) ]"
+    }
+   ],
+   "loadBound": [],
+   "tmpLeft": [
+    "node-compile-cache"
+   ],
+   "report": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-509c/tools/mutant-report-unreadable-reads-as-0.json"
+  },
+  {
+   "id": "unparseable-reads-as-0",
+   "file": "apps/three-surface-poc/src/fixture-directories.ts",
+   "edits": [
+    {
+     "old": "readlinkSync('/proc/self/ns/pid'))?.[1];",
+     "new": "readlinkSync('/proc/self/ns/pid'))?.[1] ?? '0';"
+    }
+   ],
+   "verdict": "killed",
+   "exit": 1,
+   "passed": 20,
+   "failing": [
+    {
+     "test": "fixture directories a killed run left behind (syzygy-bpyt.4.10) removes nothing, and lists nothing, where the PID namespace names no inode, so a sandbox without /proc never sweeps another sandbox's live directories",
+     "first": "AssertionError: expected [ Array(1) ] to deeply equal [ \u2026(3) ]"
+    }
+   ],
+   "loadBound": [],
+   "tmpLeft": [
+    "node-compile-cache"
+   ],
+   "report": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-509c/tools/mutant-report-unparseable-reads-as-0.json"
+  },
+  {
+   "id": "empty-inode-accepted",
+   "file": "apps/three-surface-poc/src/fixture-directories.ts",
+   "edits": [
+    {
+     "old": "return /\\[(\\d+)\\]$/.exec(",
+     "new": "return /\\[(\\d*)\\]$/.exec("
+    }
+   ],
+   "verdict": "killed",
+   "exit": 1,
+   "passed": 20,
+   "failing": [
+    {
+     "test": "fixture directories a killed run left behind (syzygy-bpyt.4.10) removes nothing, and lists nothing, where the PID namespace names no inode, so a sandbox without /proc never sweeps another sandbox's live directories",
+     "first": "AssertionError: expected 'syzygy-poc-surface-fixture-p2775159-n-' to be 'syzygy-poc-surface-fixture-p2775159-n\u2026' // Object.is equality"
+    }
+   ],
+   "loadBound": [],
+   "tmpLeft": [
+    "node-compile-cache"
+   ],
+   "report": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-509c/tools/mutant-report-empty-inode-accepted.json"
+  },
+  {
+   "id": "namespace-prefix-match",
+   "file": "apps/three-surface-poc/src/fixture-directories.ts",
+   "edits": [
+    {
+     "old": "owner[2] !== namespace",
+     "new": "!namespace.startsWith(owner[2])"
+    }
+   ],
+   "verdict": "killed",
+   "exit": 1,
+   "passed": 20,
+   "failing": [
+    {
+     "test": "fixture directories a killed run left behind (syzygy-bpyt.4.10) keeps the directories of a dead pid that belong to another PID namespace, whatever the neighbouring value",
+     "first": "AssertionError: expected [ \u2026(4) ] to deeply equal [ \u2026(6) ]"
+    }
+   ],
+   "loadBound": [],
+   "tmpLeft": [
+    "node-compile-cache"
+   ],
+   "report": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-509c/tools/mutant-report-namespace-prefix-match.json"
+  },
+  {
+   "id": "namespace-extension-match",
+   "file": "apps/three-surface-poc/src/fixture-directories.ts",
+   "edits": [
+    {
+     "old": "owner[2] !== namespace",
+     "new": "!owner[2].startsWith(namespace)"
+    }
+   ],
+   "verdict": "killed",
+   "exit": 1,
+   "passed": 20,
+   "failing": [
+    {
+     "test": "fixture directories a killed run left behind (syzygy-bpyt.4.10) keeps the directories of a dead pid that belong to another PID namespace, whatever the neighbouring value",
+     "first": "AssertionError: expected [ \u2026(4) ] to deeply equal [ \u2026(6) ]"
+    }
+   ],
+   "loadBound": [],
+   "tmpLeft": [
+    "node-compile-cache"
+   ],
+   "report": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-509c/tools/mutant-report-namespace-extension-match.json"
+  },
+  {
+   "id": "uid-guard-dropped",
+   "file": "apps/three-surface-poc/src/fixture-directories.ts",
+   "edits": [
+    {
+     "old": "(user === undefined || stat.uid === user)",
+     "new": "true"
+    }
+   ],
+   "verdict": "killed",
+   "exit": 1,
+   "passed": 20,
+   "failing": [
+    {
+     "test": "fixture directories a killed run left behind (syzygy-bpyt.4.10) keeps a directory that belongs to another user, the sweep never descending into it",
+     "first": "AssertionError: expected [] to deeply equal [ Array(1) ]"
+    }
+   ],
+   "loadBound": [],
+   "tmpLeft": [
+    "node-compile-cache"
+   ],
+   "report": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-509c/tools/mutant-report-uid-guard-dropped.json"
+  },
+  {
+   "id": "uid-undefined-means-keep",
+   "file": "apps/three-surface-poc/src/fixture-directories.ts",
+   "edits": [
+    {
+     "old": "(user === undefined || stat.uid === user)",
+     "new": "(user !== undefined && stat.uid === user)"
+    }
+   ],
+   "verdict": "killed",
+   "exit": 1,
+   "passed": 20,
+   "failing": [
+    {
+     "test": "fixture directories a killed run left behind (syzygy-bpyt.4.10) checks no user where the system has no user ids, and removes the dead process's directory",
+     "first": "AssertionError: expected [ Array(1) ] to deeply equal []"
+    }
+   ],
+   "loadBound": [],
+   "tmpLeft": [
+    "node-compile-cache"
+   ],
+   "report": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-509c/tools/mutant-report-uid-undefined-means-keep.json"
+  },
+  {
+   "id": "name-anchor-dropped",
+   "file": "apps/three-surface-poc/src/fixture-directories.ts",
+   "edits": [
+    {
+     "old": "/^syzygy-poc-surface-fixture-(?:template-)?p",
+     "new": "/syzygy-poc-surface-fixture-(?:template-)?p"
+    }
+   ],
+   "verdict": "killed",
+   "exit": 1,
+   "passed": 20,
+   "failing": [
+    {
+     "test": "fixture directories a killed run left behind (syzygy-bpyt.4.10) keeps a name that carries no pid and namespace segment, whatever its suffix",
+     "first": "AssertionError: expected [ \u2026(12) ] to deeply equal [ \u2026(13) ]"
+    }
+   ],
+   "loadBound": [],
+   "tmpLeft": [
+    "node-compile-cache"
+   ],
+   "report": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-509c/tools/mutant-report-name-anchor-dropped.json"
+  },
+  {
+   "id": "eperm-counts-dead",
+   "file": "apps/three-surface-poc/src/fixture-directories.ts",
+   "edits": [
+    {
+     "old": "return (error as NodeJS.ErrnoException).code !== 'ESRCH';",
+     "new": "return false;"
+    }
+   ],
+   "verdict": "killed",
+   "exit": 1,
+   "passed": 20,
+   "failing": [
+    {
+     "test": "fixture directories a killed run left behind (syzygy-bpyt.4.10) keeps a directory whose pid fails with anything but ESRCH",
+     "first": "AssertionError: expected [] to deeply equal [ \u2026(2) ]"
+    }
+   ],
+   "loadBound": [],
+   "tmpLeft": [
+    "node-compile-cache"
+   ],
+   "report": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-509c/tools/mutant-report-eperm-counts-dead.json"
+  },
+  {
+   "id": "lstat-follows-links",
+   "file": "apps/three-surface-poc/src/fixture-directories.ts",
+   "edits": [
+    {
+     "old": "import { lstatSync, readdirSync, readlinkSync, rmSync } from 'node:fs';",
+     "new": "import { lstatSync, readdirSync, readlinkSync, rmSync, statSync } from 'node:fs';"
+    },
+    {
+     "old": "const stat = lstatSync(entry);",
+     "new": "const stat = statSync(entry);"
+    }
+   ],
+   "verdict": "killed",
+   "exit": 1,
+   "passed": 20,
+   "failing": [
+    {
+     "test": "fixture directories a killed run left behind (syzygy-bpyt.4.10) follows no symlink and removes no file: only a directory with a dead pid in its name goes",
+     "first": "AssertionError: expected [ Array(1) ] to deeply equal [ \u2026(2) ]"
+    }
+   ],
+   "loadBound": [],
+   "tmpLeft": [
+    "node-compile-cache"
+   ],
+   "report": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-509c/tools/mutant-report-lstat-follows-links.json"
+  }
+ ]
+}

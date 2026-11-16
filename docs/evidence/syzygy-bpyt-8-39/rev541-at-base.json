@@ -1,0 +1,202 @@
+{
+ "tree": "/tmp/la-r541/base",
+ "head": "d38d7a3ce632a34c2a41bdb77ad323ba0b05b777",
+ "results": [
+  {
+   "id": "R541-X1-root-reads-devDependencies-only",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  165 passed (165)"
+   ],
+   "testFiles": [
+    "Test Files  4 passed (4)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 4.0,
+   "counts": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "    for (const field of [manifest.dependencies, manifest.devDependencies, manifest.optionalDependencies, manifest.peerDependencies]) {",
+     "new": "    for (const field of manifest.dir === '.' ? [manifest.devDependencies] : [manifest.dependencies, manifest.devDependencies, manifest.optionalDependencies, manifest.peerDependencies]) {"
+    }
+   ]
+  },
+  {
+   "id": "R541-X2-root-devDependencies-unread",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  165 passed (165)"
+   ],
+   "testFiles": [
+    "Test Files  4 passed (4)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 3.6,
+   "counts": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "    for (const field of [manifest.dependencies, manifest.devDependencies, manifest.optionalDependencies, manifest.peerDependencies]) {",
+     "new": "    for (const field of manifest.dir === '.' ? [manifest.dependencies, manifest.optionalDependencies, manifest.peerDependencies] : [manifest.dependencies, manifest.devDependencies, manifest.optionalDependencies, manifest.peerDependencies]) {"
+    }
+   ]
+  },
+  {
+   "id": "R541-X3-npm-alias-needs-version",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  165 passed (165)"
+   ],
+   "testFiles": [
+    "Test Files  4 passed (4)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 3.3,
+   "counts": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:(?:@[^/@]+\\/)?[^@]+@|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    }
+   ]
+  },
+  {
+   "id": "R541-X4-npm-arm-case-sensitive",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  165 passed (165)"
+   ],
+   "testFiles": [
+    "Test Files  4 passed (4)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 3.0,
+   "counts": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|(?-i:npm:)|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    }
+   ]
+  },
+  {
+   "id": "R541-X5-tarball-arm-skips-hash",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  165 passed (165)"
+   ],
+   "testFiles": [
+    "Test Files  4 passed (4)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 3.5,
+   "counts": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|^[^#]*\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    }
+   ]
+  },
+  {
+   "id": "R541-X6-unscoped-manifests-unread",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  165 passed (165)"
+   ],
+   "testFiles": [
+    "Test Files  4 passed (4)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 3.1,
+   "counts": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "  for (const manifest of workspace.manifests.values()) {",
+     "new": "  for (const manifest of [...workspace.manifests.values()].filter((manifest) => manifest.name.startsWith('@'))) {"
+    }
+   ]
+  },
+  {
+   "id": "R541-X7-http-url-tgz-only",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  165 passed (165)"
+   ],
+   "testFiles": [
+    "Test Files  4 passed (4)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 3.9,
+   "counts": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|^(?!https?:.*\\.tar(?:\\.gz)?$).*\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    }
+   ]
+  }
+ ]
+}

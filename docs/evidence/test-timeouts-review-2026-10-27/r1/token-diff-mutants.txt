@@ -1,0 +1,7 @@
+title KILLED | ['files 31 violations 1', 'VIOLATION (\'apps/three-surface-poc/src/cdp-browser.test.ts\', \'replace\', ["\'removes the Chromium form of the name too\'"], ["\'removes the Chromiun form of the name too\'"], 346)', 'seen != expected: []']
+assertion KILLED | ['files 31 violations 1', "VIOLATION ('apps/three-surface-poc/src/fixture-directories.test.ts', 'replace', ['toEqual'], ['toStrictEqual'], 62)", 'seen != expected: []']
+extra-removal KILLED | ['files 31 violations 0', "seen != expected: [(('apps/three-surface-poc/src/tuple-encoding.test.ts', '60_000'), 1)]"]
+resize KILLED | ['files 31 violations 1', "VIOLATION ('apps/three-surface-poc/src/proposal-disclosure.test.ts', 'replace', ['45_000'], ['40_000'], 147)", 'seen != expected: []']
+const-still-used KILLED | ['files 31 violations 2', "VIOLATION ('apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts', 'insert', [], [',', 'T'], 12)", "VIOLATION ('apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts', 'deleted const still referenced at head', 'T')"]
+added-timeout KILLED | ['files 31 violations 1', "VIOLATION ('apps/three-surface-poc/src/orrery.browser.test.ts', 'insert', [], [',', '60_000'], 16)", 'seen != expected: []']
+exit 0

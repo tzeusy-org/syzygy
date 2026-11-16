@@ -1,0 +1,34 @@
+mutants-a-tmpfs.json {"reviewedCommit": "2a21f2b0e95e3731a3f975a0cbad8aaccd3a9b3b", "base": "71334012548cccd46a5a95e313a6014da87c8e3c", "kernel": "7.0.0-38-generic", "node": "v24.6.0", "tmpRoot": "/tmp/la-b835/tmpfs-a", "statF": "tmpfs", "dfT": "tmpfs", "toolSha256": "b538ba21cb9f29d4795921d862200c07c769f4c4643480982594625f3cc86c96", "trackedTreeCleanAfter": true, "recordFragmentsFrom": "2a21f2b0e95e3731a3f975a0cbad8aaccd3a9b3b:docs/evidence/launch-form-target-ctime-2026-10-25/mutants-tmpfs.json"}
+mutants-b-tmpfs.json {"reviewedCommit": "2a21f2b0e95e3731a3f975a0cbad8aaccd3a9b3b", "base": "71334012548cccd46a5a95e313a6014da87c8e3c", "kernel": "7.0.0-38-generic", "node": "v24.6.0", "tmpRoot": "/tmp/la-b835/tmpfs-b", "statF": "tmpfs", "dfT": "tmpfs", "toolSha256": "b538ba21cb9f29d4795921d862200c07c769f4c4643480982594625f3cc86c96", "trackedTreeCleanAfter": true, "recordFragmentsFrom": "2a21f2b0e95e3731a3f975a0cbad8aaccd3a9b3b:docs/evidence/launch-form-target-ctime-2026-10-25/mutants-tmpfs.json"}
+mutants-c-tmpfs.json {"reviewedCommit": "2a21f2b0e95e3731a3f975a0cbad8aaccd3a9b3b", "base": "df6046a153fe130202abdf6bd3045a79ba143879", "kernel": "7.0.0-38-generic", "node": "v24.6.0", "tmpRoot": "/tmp/la-b835/tmpfs-c", "statF": "tmpfs", "dfT": "tmpfs", "toolSha256": "b538ba21cb9f29d4795921d862200c07c769f4c4643480982594625f3cc86c96", "trackedTreeCleanAfter": true, "recordFragmentsFrom": "2a21f2b0e95e3731a3f975a0cbad8aaccd3a9b3b:docs/evidence/launch-form-target-ctime-2026-10-25/mutants-tmpfs.json"}
+mutants-a-ext4.json {"reviewedCommit": "2a21f2b0e95e3731a3f975a0cbad8aaccd3a9b3b", "base": "71334012548cccd46a5a95e313a6014da87c8e3c", "kernel": "7.0.0-38-generic", "node": "v24.6.0", "tmpRoot": "/var/tmp/la-b835/ext4-a", "statF": "ext2/ext3", "dfT": "ext4", "toolSha256": "b538ba21cb9f29d4795921d862200c07c769f4c4643480982594625f3cc86c96", "trackedTreeCleanAfter": true, "recordFragmentsFrom": "2a21f2b0e95e3731a3f975a0cbad8aaccd3a9b3b:docs/evidence/launch-form-target-ctime-2026-10-25/mutants-tmpfs.json"}
+mutants-b-ext4.json {"reviewedCommit": "2a21f2b0e95e3731a3f975a0cbad8aaccd3a9b3b", "base": "71334012548cccd46a5a95e313a6014da87c8e3c", "kernel": "7.0.0-38-generic", "node": "v24.6.0", "tmpRoot": "/var/tmp/la-b835/ext4-b", "statF": "ext2/ext3", "dfT": "ext4", "toolSha256": "b538ba21cb9f29d4795921d862200c07c769f4c4643480982594625f3cc86c96", "trackedTreeCleanAfter": true, "recordFragmentsFrom": "2a21f2b0e95e3731a3f975a0cbad8aaccd3a9b3b:docs/evidence/launch-form-target-ctime-2026-10-25/mutants-tmpfs.json"}
+mutants-c-ext4.json {"reviewedCommit": "2a21f2b0e95e3731a3f975a0cbad8aaccd3a9b3b", "base": "df6046a153fe130202abdf6bd3045a79ba143879", "kernel": "7.0.0-38-generic", "node": "v24.6.0", "tmpRoot": "/var/tmp/la-b835/ext4-c", "statF": "ext2/ext3", "dfT": "ext4", "toolSha256": "b538ba21cb9f29d4795921d862200c07c769f4c4643480982594625f3cc86c96", "trackedTreeCleanAfter": true, "recordFragmentsFrom": "2a21f2b0e95e3731a3f975a0cbad8aaccd3a9b3b:docs/evidence/launch-form-target-ctime-2026-10-25/mutants-tmpfs.json"}
+runs checked: 496
+('M-every-form-drains-then-refuses', '2a21f2b0', 'ext4') {'survived': 2, 'runs': 2}
+('M-every-form-drains-then-refuses', '2a21f2b0', 'tmpfs') {'survived': 2, 'runs': 2}
+('M-every-form-drains-then-refuses', '71334012', 'ext4') {'survived': 2, 'runs': 2}
+('M-every-form-drains-then-refuses', '71334012', 'tmpfs') {'survived': 2, 'runs': 2}
+('X3c-target-replaced-by-identical-copy-no-realpath', '2a21f2b0', 'ext4') {'killed': 20, 'runs': 20, 'linkRowOnly': 20}
+('X3c-target-replaced-by-identical-copy-no-realpath', '2a21f2b0', 'tmpfs') {'killed': 20, 'runs': 20, 'linkRowOnly': 20}
+('X3c-target-replaced-by-identical-copy-no-realpath', '71334012', 'ext4') {'survived': 2, 'runs': 10, 'killed': 8, 'linkRowOnly': 8}
+('X3c-target-replaced-by-identical-copy-no-realpath', '71334012', 'tmpfs') {'killed': 10, 'runs': 10, 'linkRowOnly': 10}
+('X3c-target-replaced-by-identical-copy-no-realpath', 'df6046a1', 'ext4') {'survived': 10, 'runs': 10}
+('X3c-target-replaced-by-identical-copy-no-realpath', 'df6046a1', 'tmpfs') {'survived': 10, 'runs': 10}
+('X3d-target-replaced-by-copy-mode-0644-no-realpath', '2a21f2b0', 'ext4') {'killed': 20, 'runs': 20, 'linkRowOnly': 20}
+('X3d-target-replaced-by-copy-mode-0644-no-realpath', '2a21f2b0', 'tmpfs') {'killed': 20, 'runs': 20, 'linkRowOnly': 20}
+('X3d-target-replaced-by-copy-mode-0644-no-realpath', '71334012', 'ext4') {'killed': 10, 'runs': 10, 'linkRowOnly': 10}
+('X3d-target-replaced-by-copy-mode-0644-no-realpath', '71334012', 'tmpfs') {'killed': 10, 'runs': 10, 'linkRowOnly': 10}
+('X3d-target-replaced-by-copy-mode-0644-no-realpath', 'df6046a1', 'ext4') {'survived': 10, 'runs': 10}
+('X3d-target-replaced-by-copy-mode-0644-no-realpath', 'df6046a1', 'tmpfs') {'survived': 10, 'runs': 10}
+('X5-target-unlinked-then-rewritten', '2a21f2b0', 'ext4') {'killed': 20, 'runs': 20, 'linkRowOnly': 20}
+('X5-target-unlinked-then-rewritten', '2a21f2b0', 'tmpfs') {'killed': 20, 'runs': 20, 'linkRowOnly': 20}
+('X5-target-unlinked-then-rewritten', '71334012', 'ext4') {'killed': 10, 'runs': 10, 'linkRowOnly': 10}
+('X5-target-unlinked-then-rewritten', '71334012', 'tmpfs') {'killed': 10, 'runs': 10, 'linkRowOnly': 10}
+('X5-target-unlinked-then-rewritten', 'df6046a1', 'ext4') {'survived': 10, 'runs': 10}
+('X5-target-unlinked-then-rewritten', 'df6046a1', 'tmpfs') {'survived': 10, 'runs': 10}
+('unmutated', '2a21f2b0', 'ext4') {'survived': 10, 'runs': 10}
+('unmutated', '2a21f2b0', 'tmpfs') {'survived': 10, 'runs': 10}
+('unmutated', '71334012', 'ext4') {'survived': 10, 'runs': 10}
+('unmutated', '71334012', 'tmpfs') {'survived': 10, 'runs': 10}
+problems: 0

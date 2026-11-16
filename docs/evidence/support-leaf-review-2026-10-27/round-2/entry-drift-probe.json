@@ -1,0 +1,51 @@
+{
+ "s10": {
+  "exit": 0,
+  "passed": 2,
+  "failed": 0,
+  "pending": 1
+ },
+ "buildSupport": {
+  "exit": 0,
+  "out": ""
+ },
+ "nodeResolution": {
+  "exit": 0,
+  "stdout": "function",
+  "internetFamilyCalls": [
+   "socket(AF_INET, SOCK_DGRAM|SOCK_CLOEXEC|SOCK_NONBLOCK, IPPROTO_IP) = 21",
+   "bind(21, {sa_family=AF_INET, sin_port=htons(0), sin_addr=inet_addr(\"127.0.0.1\")}, 16) = 0"
+  ]
+ },
+ "restore": {
+  "rebuildExit": 0,
+  "distFiles": [
+   ".tsbuildinfo",
+   "deep-freeze.d.ts",
+   "deep-freeze.d.ts.map",
+   "deep-freeze.js",
+   "deep-freeze.js.map",
+   "deep-freeze.test.d.ts",
+   "deep-freeze.test.d.ts.map",
+   "deep-freeze.test.js",
+   "deep-freeze.test.js.map",
+   "index.d.ts",
+   "index.d.ts.map",
+   "index.js",
+   "index.js.map",
+   "sha256.d.ts",
+   "sha256.d.ts.map",
+   "sha256.js",
+   "sha256.js.map",
+   "sha256.test.d.ts",
+   "sha256.test.d.ts.map",
+   "sha256.test.js",
+   "sha256.test.js.map",
+   "support-purity.test.d.ts",
+   "support-purity.test.d.ts.map",
+   "support-purity.test.js",
+   "support-purity.test.js.map"
+  ],
+  "gitStatus": ""
+ }
+}

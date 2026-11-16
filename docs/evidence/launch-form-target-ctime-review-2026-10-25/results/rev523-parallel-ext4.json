@@ -1,0 +1,113 @@
+{
+ "tool": "parallel_unmutated.py",
+ "toolSha256": "14d5e743a99fe2f66710b15341a3a9282fa5476421e15431d7bcf771cbf466f0",
+ "commit": "d17425890c0b5211714fce1be90b32a90b5f7747",
+ "testSha256": "5dd0d6c74f5c8de9998d82cf6b8989e24e09f293202eebb3fd0969cfa79bd63c",
+ "kernel": "7.0.0-38-generic",
+ "statF": "ext2/ext3",
+ "dfT": "ext4",
+ "atOnce": 10,
+ "loadBefore": [
+  22.9208984375,
+  18.63916015625,
+  17.23828125
+ ],
+ "loadAfter": [
+  29.97412109375,
+  20.1728515625,
+  17.7421875
+ ],
+ "runs": [
+  {
+   "exitCode": 0,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 43,
+    "numFailedTests": 0
+   },
+   "failed": []
+  },
+  {
+   "exitCode": 0,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 43,
+    "numFailedTests": 0
+   },
+   "failed": []
+  },
+  {
+   "exitCode": 0,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 43,
+    "numFailedTests": 0
+   },
+   "failed": []
+  },
+  {
+   "exitCode": 0,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 43,
+    "numFailedTests": 0
+   },
+   "failed": []
+  },
+  {
+   "exitCode": 0,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 43,
+    "numFailedTests": 0
+   },
+   "failed": []
+  },
+  {
+   "exitCode": 0,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 43,
+    "numFailedTests": 0
+   },
+   "failed": []
+  },
+  {
+   "exitCode": 0,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 43,
+    "numFailedTests": 0
+   },
+   "failed": []
+  },
+  {
+   "exitCode": 0,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 43,
+    "numFailedTests": 0
+   },
+   "failed": []
+  },
+  {
+   "exitCode": 0,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 43,
+    "numFailedTests": 0
+   },
+   "failed": []
+  },
+  {
+   "exitCode": 0,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 43,
+    "numFailedTests": 0
+   },
+   "failed": []
+  }
+ ],
+ "allPassed43": true
+}

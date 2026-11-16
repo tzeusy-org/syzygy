@@ -18,9 +18,9 @@ type Escape = (value: string) => string;
 const labelled = (item: LocalDisclosureItem, escape: Escape): string =>
   `<li data-disclosure-id="${escape(item.id)}"${item.label === null ? '' : ` data-label="${escape(item.label)}"`}>${escape(item.text)}${item.label === null ? '' : ` <span class="marking ${escape(item.label.toLowerCase())}">[${escape(item.label)}]</span>`}</li>`;
 
-/** The run disclosure, the same on every page: how the draft was computed and what Syzygy did and did not observe. */
-export function disclosureMarkup(items: readonly LocalDisclosureItem[], escape: Escape): string {
-  return `<aside class="run-disclosure" aria-label="How this dossier was made"><details><summary>How this dossier was made: an operator's agent session wrote the draft; Syzygy made no provider call, checked it and rendered it</summary><ul>${items.map(item => labelled(item, escape)).join('')}</ul></details></aside>`;
+/** The run disclosure as a list, for the appendix (dossier spec v1.5). */
+export function disclosureList(items: readonly LocalDisclosureItem[], escape: Escape): string {
+  return `<ul>${items.map(item => labelled(item, escape)).join('')}</ul>`;
 }
 
 /** The named review-status region. It holds no claim and no fragment target, so stripping it changes nothing else on the page. */

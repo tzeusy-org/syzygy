@@ -1,0 +1,164 @@
+{
+ "commit": "6d95c6264b7de14825fd6abfb6e3fed9b8c975f1",
+ "statusAfter": "",
+ "rows": [
+  {
+   "id": "OLD-R3-leaf-after-run-path",
+   "tmpdir": "/tmp/r559-m-qx",
+   "edits": [
+    {
+     "path": "packages/polaris-dossier/src/review.test.ts",
+     "old": "    const text = JSON.stringify(holder, (_key, value: unknown) => typeof value === 'string' ? value.split(run).join('<run>') : value);\n    expect(text).not.toContain(tmpdir());\n    expect(text).toContain(digest);\n",
+     "new": "    const text = JSON.stringify(holder);\n"
+    },
+    {
+     "path": "packages/polaris-dossier/src/review.ts",
+     "old": "    command: 'review-packet', outcome: 'built', run: opened.run, kind: 'fidelity', packetSha256: built.sha256, directory,\n",
+     "new": "    command: 'review-packet', outcome: 'built', run: `${opened.run}p1`, kind: 'fidelity', packetSha256: built.sha256, directory,\n"
+    }
+   ],
+   "mode": "record",
+   "expected": [],
+   "failing": [
+    "review-check observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf",
+    "review-check observes only the packet, its digest and that the verdict names it: the reviewer's reading, independence, completeness, identifiers and launch form stay Inferred"
+   ],
+   "messages": {
+    "review-check observes only the packet, its digest and that the verdict names it: the reviewer's reading, independence, completeness, identifiers and launch form stay Inferred": "AssertionError: expected '{\"command\":\"review-packet\",\"outcome\":\u2026' not to contain 'p1'",
+    "review-check observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf": "AssertionError: expected '{\"command\":\"review-packet\",\"outcome\":\u2026' not to contain 'p1'"
+   },
+   "exit": 1,
+   "passed": 61,
+   "failed": 2,
+   "total": 63,
+   "asExpected": true,
+   "load1": 36.52,
+   "seconds": 17.9
+  },
+  {
+   "id": "OLD-R6-sibling-of-run",
+   "tmpdir": "/tmp/r559-m-qx",
+   "edits": [
+    {
+     "path": "packages/polaris-dossier/src/review.test.ts",
+     "old": "    const text = JSON.stringify(holder, (_key, value: unknown) => typeof value === 'string' ? value.split(run).join('<run>') : value);\n    expect(text).not.toContain(tmpdir());\n    expect(text).toContain(digest);\n",
+     "new": "    const text = JSON.stringify(holder);\n"
+    },
+    {
+     "path": "packages/polaris-dossier/src/review.ts",
+     "old": "    command: 'review-packet', outcome: 'built', run: opened.run, kind: 'fidelity', packetSha256: built.sha256, directory,\n",
+     "new": "    command: 'review-packet', outcome: 'built', run: opened.run, kind: 'fidelity', packetSha256: built.sha256, directory: `${opened.run}-elsewhere`,\n"
+    }
+   ],
+   "mode": "record",
+   "expected": [],
+   "failing": [
+    "review-check observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf",
+    "review-packet --kind fidelity emits the packet byte for byte as assembled independently, with its digest beside it and in its directory name",
+    "the content-class gate on the fidelity packet admits the span with its text once the statement lists project-documentation",
+    "the content-class gate on the fidelity packet gates every class by the statement: one that lists only project-documentation withholds the code-content spans",
+    "the content-class gate on the fidelity packet withholds a project-documentation span under a non-governed run, which relies on no statement, naming the class",
+    "the content-class gate on the fidelity packet withholds a project-documentation span under a statement that lists code-content and not project-documentation, naming the class",
+    "the fidelity packet over a body retained as redacted-span carries a span that includes no withheld line, with the body's redaction count beside it",
+    "the fidelity packet over a body retained as redacted-span withholds a span that includes a withheld line whole, carrying no byte of it"
+   ],
+   "messages": {
+    "review-packet --kind fidelity emits the packet byte for byte as assembled independently, with its digest beside it and in its directory name": "AssertionError: expected '/tmp/r559-m-qx/dossier-review-state-4\u2026' to be '/tmp/r559-m-qx/dossier-review-state-4\u2026' // Object.is equality",
+    "review-check observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf": "AssertionError: expected '{\"command\":\"review-packet\",\"outcome\":\u2026' not to contain 'p1'",
+    "the content-class gate on the fidelity packet withholds a project-documentation span under a non-governed run, which relies on no statement, naming the class": "Error: ENOENT: no such file or directory, open '/tmp/r559-m-qx/dossier-review-state-BpEYMq/run-eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee-elsewhere/packet.json'",
+    "the content-class gate on the fidelity packet withholds a project-documentation span under a statement that lists code-content and not project-documentation, naming the class": "Error: ENOENT: no such file or directory, open '/tmp/r559-m-qx/dossier-review-state-7rgLrE/run-eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee-elsewhere/packet.json'",
+    "the content-class gate on the fidelity packet admits the span with its text once the statement lists project-documentation": "Error: ENOENT: no such file or directory, open '/tmp/r559-m-qx/dossier-review-state-EVd8Tt/run-eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee-elsewhere/packet.json'",
+    "the content-class gate on the fidelity packet gates every class by the statement: one that lists only project-documentation withholds the code-content spans": "Error: ENOENT: no such file or directory, open '/tmp/r559-m-qx/dossier-review-state-0ZKJGt/run-eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee-elsewhere/packet.json'",
+    "the fidelity packet over a body retained as redacted-span carries a span that includes no withheld line, with the body's redaction count beside it": "Error: ENOENT: no such file or directory, open '/tmp/r559-m-qx/dossier-review-state-2ypydB/run-eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee-elsewhere/packet.json'",
+    "the fidelity packet over a body retained as redacted-span withholds a span that includes a withheld line whole, carrying no byte of it": "Error: ENOENT: no such file or directory, open '/tmp/r559-m-qx/dossier-review-state-JeoklS/run-eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee-elsewhere/packet.json'"
+   },
+   "exit": 1,
+   "passed": 55,
+   "failed": 8,
+   "total": 63,
+   "asExpected": true,
+   "load1": 37.16,
+   "seconds": 20.4
+  },
+  {
+   "id": "OLD-R7-path-outside-tmpdir",
+   "tmpdir": "/tmp/r559-m-qx",
+   "edits": [
+    {
+     "path": "packages/polaris-dossier/src/review.test.ts",
+     "old": "    const text = JSON.stringify(holder, (_key, value: unknown) => typeof value === 'string' ? value.split(run).join('<run>') : value);\n    expect(text).not.toContain(tmpdir());\n    expect(text).toContain(digest);\n",
+     "new": "    const text = JSON.stringify(holder);\n"
+    },
+    {
+     "path": "packages/polaris-dossier/src/review.ts",
+     "old": "    command: 'review-packet', outcome: 'built', run: opened.run, kind: 'fidelity', packetSha256: built.sha256, directory,\n",
+     "new": "    command: 'review-packet', outcome: 'built', run: opened.run, kind: 'fidelity', packetSha256: built.sha256, directory: `${path.dirname(path.dirname(opened.run))}-other`,\n"
+    }
+   ],
+   "mode": "record",
+   "expected": [],
+   "failing": [
+    "review-check observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf",
+    "review-packet --kind fidelity emits the packet byte for byte as assembled independently, with its digest beside it and in its directory name",
+    "the content-class gate on the fidelity packet admits the span with its text once the statement lists project-documentation",
+    "the content-class gate on the fidelity packet gates every class by the statement: one that lists only project-documentation withholds the code-content spans",
+    "the content-class gate on the fidelity packet withholds a project-documentation span under a non-governed run, which relies on no statement, naming the class",
+    "the content-class gate on the fidelity packet withholds a project-documentation span under a statement that lists code-content and not project-documentation, naming the class",
+    "the fidelity packet over a body retained as redacted-span carries a span that includes no withheld line, with the body's redaction count beside it",
+    "the fidelity packet over a body retained as redacted-span withholds a span that includes a withheld line whole, carrying no byte of it"
+   ],
+   "messages": {
+    "review-packet --kind fidelity emits the packet byte for byte as assembled independently, with its digest beside it and in its directory name": "AssertionError: expected '/tmp/r559-m-qx-other' to be '/tmp/r559-m-qx/dossier-review-state-j\u2026' // Object.is equality",
+    "review-check observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf": "AssertionError: expected '{\"command\":\"review-packet\",\"outcome\":\u2026' not to contain 'p1'",
+    "the content-class gate on the fidelity packet withholds a project-documentation span under a non-governed run, which relies on no statement, naming the class": "Error: ENOENT: no such file or directory, open '/tmp/r559-m-qx-other/packet.json'",
+    "the content-class gate on the fidelity packet withholds a project-documentation span under a statement that lists code-content and not project-documentation, naming the class": "Error: ENOENT: no such file or directory, open '/tmp/r559-m-qx-other/packet.json'",
+    "the content-class gate on the fidelity packet admits the span with its text once the statement lists project-documentation": "Error: ENOENT: no such file or directory, open '/tmp/r559-m-qx-other/packet.json'",
+    "the content-class gate on the fidelity packet gates every class by the statement: one that lists only project-documentation withholds the code-content spans": "Error: ENOENT: no such file or directory, open '/tmp/r559-m-qx-other/packet.json'",
+    "the fidelity packet over a body retained as redacted-span carries a span that includes no withheld line, with the body's redaction count beside it": "Error: ENOENT: no such file or directory, open '/tmp/r559-m-qx-other/packet.json'",
+    "the fidelity packet over a body retained as redacted-span withholds a span that includes a withheld line whole, carrying no byte of it": "Error: ENOENT: no such file or directory, open '/tmp/r559-m-qx-other/packet.json'"
+   },
+   "exit": 1,
+   "passed": 55,
+   "failed": 8,
+   "total": 63,
+   "asExpected": true,
+   "load1": 36.69,
+   "seconds": 15.8
+  },
+  {
+   "id": "OLD-R5-digest-dropped",
+   "tmpdir": "/tmp/r559-m-qx",
+   "edits": [
+    {
+     "path": "packages/polaris-dossier/src/review.test.ts",
+     "old": "    const text = JSON.stringify(holder, (_key, value: unknown) => typeof value === 'string' ? value.split(run).join('<run>') : value);\n    expect(text).not.toContain(tmpdir());\n    expect(text).toContain(digest);\n",
+     "new": "    const text = JSON.stringify(holder);\n"
+    },
+    {
+     "path": "packages/polaris-dossier/src/review.ts",
+     "old": "    command: 'review-packet', outcome: 'built', run: opened.run, kind: 'fidelity', packetSha256: built.sha256, directory,\n",
+     "new": "    command: 'review-packet', outcome: 'built', run: opened.run, kind: 'fidelity', packetSha256: 'x', directory,\n"
+    }
+   ],
+   "mode": "record",
+   "expected": [],
+   "failing": [
+    "review-check observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf",
+    "review-packet --kind fidelity emits the packet byte for byte as assembled independently, with its digest beside it and in its directory name",
+    "the CLI builds a packet and checks a verdict through syzygy dossier, exiting 1 on a refused verdict"
+   ],
+   "messages": {
+    "review-packet --kind fidelity emits the packet byte for byte as assembled independently, with its digest beside it and in its directory name": "AssertionError: expected { command: 'review-packet', \u2026(10) } to match object { command: 'review-packet', \u2026(7) }",
+    "review-check observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf": "AssertionError: expected '{\"command\":\"review-packet\",\"outcome\":\u2026' not to contain 'p1'",
+    "the CLI builds a packet and checks a verdict through syzygy dossier, exiting 1 on a refused verdict": "AssertionError: expected 'x' to be 'ab284b18489b6296763af4a9441d8aa64d145\u2026' // Object.is equality"
+   },
+   "exit": 1,
+   "passed": 60,
+   "failed": 3,
+   "total": 63,
+   "asExpected": true,
+   "load1": 35.84,
+   "seconds": 20.7
+  }
+ ]
+}

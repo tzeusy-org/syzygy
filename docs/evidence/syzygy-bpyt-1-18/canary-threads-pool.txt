@@ -1,0 +1,11 @@
+Command (in a checkout of the merge of this branch with main c672492c, with the two production files restored to their 8d5d4bab bytes, node v24.6.0, load average about 20 to 30):
+  TMPDIR=<scratch> npx vitest run --pool=threads <the four test files of this PR>
+Result lines, verbatim:
+  × a very long closed fence > one spread call over 200,002 arguments still overflows the stack in this test process
+  × a source whose class holds 130,000 items > one spread call over 130,002 arguments still overflows the stack in this test process
+  × a 200,000-line closed fence under the read limit (GP-B2 Q1) > one spread call over 200,002 arguments still overflows the stack in this test process
+  × a very long fence or list does not abort the observation > one spread call over 200,002 arguments still overflows the stack in this test process
+  Tests  4 failed | 264 passed (268)
+Reading: a worker thread runs at 4 MB, so one spread call over the test sizes does not throw there and the old lines pass every other test in the four files (264 of 268 pass with the old lines restored);
+the four canaries, one per file, are the only failures, which names the cause. With the same old lines under the default (forks) pool, 20 tests fail (the mutant BASE-both-spreads);
+with the loops under the default pool all 268 pass.

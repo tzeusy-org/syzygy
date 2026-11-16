@@ -1,0 +1,130 @@
+{
+ "tool": "proposed_fixes.py",
+ "rows": [
+  {
+   "id": "A0 fix alone",
+   "check": {
+    "exit": 0,
+    "last": "summary.json matches ; problems: 0",
+    "survived": []
+   },
+   "selftest": {
+    "exit": 0,
+    "last": "selftest: 77/77 mutations make a check fail",
+    "survived": []
+   }
+  },
+  {
+   "id": "A1 fix + M-R1 hook moved back",
+   "selftest": {
+    "exit": 1,
+    "last": "selftest: this bead's own evidence path, added before the filter, is not filtered",
+    "survived": []
+   }
+  },
+  {
+   "id": "A2 fix + M-H3 widened filter",
+   "selftest": {
+    "exit": 1,
+    "last": "selftest: 76/77 mutations make a check fail",
+    "survived": [
+     "another bead's evidence path changed since the suite ran"
+    ]
+   }
+  },
+  {
+   "id": "B0 fix alone",
+   "check": {
+    "exit": 0,
+    "last": "summary.json matches ; problems: 0 []",
+    "survived": []
+   },
+   "selftest": {
+    "exit": 0,
+    "last": "selftest: 34/34 mutations make a check fail",
+    "survived": []
+   }
+  },
+  {
+   "id": "B fix + M-X1",
+   "old": "rerun['exit'] != 0 or ",
+   "new": "",
+   "selftest": {
+    "exit": 1,
+    "last": "selftest: 33/34 mutations make a check fail",
+    "survived": [
+     "a root-exception re-run that failed"
+    ]
+   }
+  },
+  {
+   "id": "B fix + M-X2",
+   "old": "rerun['record'] != ROOT_RECORD or ",
+   "new": "",
+   "selftest": {
+    "exit": 1,
+    "last": "selftest: 33/34 mutations make a check fail",
+    "survived": [
+     "a root-exception re-run of another path"
+    ]
+   }
+  },
+  {
+   "id": "B fix + M-X3",
+   "old": " or t['exit'] != 0",
+   "new": "",
+   "selftest": {
+    "exit": 1,
+    "last": "selftest: 33/34 mutations make a check fail",
+    "survived": [
+     "a lane trace whose run failed"
+    ]
+   }
+  },
+  {
+   "id": "B fix + M-X4",
+   "old": "t['probe'] != PROBE or ",
+   "new": "",
+   "selftest": {
+    "exit": 1,
+    "last": "selftest: 33/34 mutations make a check fail",
+    "survived": [
+     "a lane trace of another probe path"
+    ]
+   }
+  },
+  {
+   "id": "B fix + M-X5",
+   "old": "r['record'] != (R839 if r['id'].startswith('N2') else R39) or ",
+   "new": "",
+   "selftest": {
+    "exit": 1,
+    "last": "selftest: 33/34 mutations make a check fail",
+    "survived": [
+     "an unmutated row of the other record"
+    ]
+   }
+  },
+  {
+   "id": "B fix + M-D1 guard-row edit check dropped",
+   "old": "        if r['probeSha256'] != sha(source) or (r['old'] is None) != (r['id'] == 'G0-unmutated') or (r['old'] is not None and",
+   "new": "        if r['probeSha256'] != sha(source) or (r['old'] is not None and",
+   "selftest": {
+    "exit": 1,
+    "last": "selftest: 33/34 mutations make a check fail",
+    "survived": [
+     "a guard mutant row with no edit"
+    ]
+   }
+  }
+ ],
+ "A": [
+  "            print('selftest: the unmutated inputs already fail')\n            sys.exit(1)\n",
+  "            print('selftest: the unmutated inputs already fail')\n            sys.exit(1)\n        MUTATE.update({'@since': lambda names: [*names, f'{HERE_REL}/x.json']})\n        if main_summary()['problems']:\n            print(\"selftest: this bead's own evidence path, added before the filter, is not filtered\")\n            sys.exit(1)\n"
+ ],
+ "B": {
+  "old94": "        if r['probeSha256'] != sha(source) or (r['old'] is not None and",
+  "new94": "        if r['probeSha256'] != sha(source) or (r['old'] is None) != (r['id'] == 'G0-unmutated') or (r['old'] is not None and",
+  "entries": "    'a root-exception re-run that failed': {'guard.json': lambda d: (d['rootExceptionRerun'].update(exit=1), d)[1]},\n    'a root-exception re-run of another path': {'guard.json': lambda d: (d['rootExceptionRerun'].update(record=PROBE), d)[1]},\n    'a lane trace whose run failed': {'npmrc-trace-lane-probe-guarded.json': lambda d: (d.update(exit=1), d)[1]},\n    'a lane trace of another probe path': {'npmrc-trace-lane-probe-guarded.json': lambda d: (d.update(probe=ROOT_PROBE), d)[1]},\n    'an unmutated row of the other record': {'mutants.json': lambda d: (row(d, 'N2-0-unmutated').update(record=R39, recordSha256=sha(blob(R39).decode())), d)[1]},\n    'a guard mutant row with no edit': {'guard.json': lambda d: (guard_row(d, PROBE, 'G1-node-modules-not-looked-for').update(old=None, new=None), d)[1]},\n"
+ }
+}

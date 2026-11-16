@@ -1,0 +1,78 @@
+{
+ "tree": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-539/clone-headcode",
+ "commit": "f2304fd5d2bfd0e50c48d6ea356ddea3f7be162d",
+ "sources": {
+  "entries": 95,
+  "reached": 192,
+  "packagesNamed": [
+   "@syzygy/cap1-core",
+   "@syzygy/http-host",
+   "@syzygy/polaris-generation-consent",
+   "@syzygy/polaris-generation-core",
+   "@syzygy/support",
+   "@syzygy/three-surface-poc-core"
+  ],
+  "packageDirsReached": [
+   "apps/three-surface-poc",
+   "packages/cap1-core",
+   "packages/http-host",
+   "packages/polaris-generation-consent",
+   "packages/polaris-generation-core",
+   "packages/support",
+   "packages/three-surface-poc-core"
+  ],
+  "cap1DaemonFilesReached": 0,
+  "firstChainToCap1Daemon": [],
+  "unresolved": []
+ },
+ "tests": {
+  "entries": 91,
+  "reached": 269,
+  "packagesNamed": [
+   "@syzygy/cap1-core",
+   "@syzygy/http-host",
+   "@syzygy/polaris-generation-consent",
+   "@syzygy/polaris-generation-core",
+   "@syzygy/support",
+   "@syzygy/three-surface-poc-core"
+  ],
+  "packageDirsReached": [
+   "apps/three-surface-poc",
+   "packages/cap1-core",
+   "packages/http-host",
+   "packages/polaris-generation-consent",
+   "packages/polaris-generation-core",
+   "packages/support",
+   "packages/three-surface-poc-core"
+  ],
+  "cap1DaemonFilesReached": 0,
+  "firstChainToCap1Daemon": [],
+  "unresolved": []
+ },
+ "daemon": {
+  "entries": 1,
+  "reached": 106,
+  "packagesNamed": [
+   "@syzygy/cap1-core",
+   "@syzygy/http-host",
+   "@syzygy/support",
+   "@syzygy/three-surface-poc-core"
+  ],
+  "packageDirsReached": [
+   "apps/three-surface-poc",
+   "packages/cap1-core",
+   "packages/http-host",
+   "packages/support",
+   "packages/three-surface-poc-core"
+  ],
+  "cap1DaemonFilesReached": 0,
+  "firstChainToCap1Daemon": [],
+  "unresolved": []
+ },
+ "cap1DaemonMentions": [
+  "apps/three-surface-poc/src/git-observation.test.ts:109: pocObserverInputsAreClean({ changedPaths: ['packages/cap1-daemon/src/server.ts'] }),",
+  "apps/three-surface-poc/src/git-observation.test.ts:114: // syzygy-bpyt.7.3: the host the POC serves through moved out of cap1-daemon; its bytes are still a runtime input.",
+  "apps/three-surface-poc/src/git-observation.ts:183: 'packages/cap1-daemon/',",
+  "apps/three-surface-poc/src/main.test.ts:399: h.setObserver(observation('observer-rev', ['packages/cap1-daemon/src/server.ts']));"
+ ]
+}

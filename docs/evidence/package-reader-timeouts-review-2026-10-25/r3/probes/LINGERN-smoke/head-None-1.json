@@ -1,0 +1,74 @@
+{
+ "batch": "LINGERN",
+ "version": "head",
+ "param": null,
+ "n": 1,
+ "scriptSha256": "72a0fabdd0dd12f85ad35fde4b3ee032125757d5276b85802d76fdf5288f0195",
+ "command": "python3 -I scripts/measure_vitest_test_durations.py . --file packages/polaris-generation-consent/src/package-reader.test.ts --project @syzygy/polaris-generation-consent --mode alone --runs 1 --out <tmp>/measure-out.json --profile",
+ "sent": [],
+ "events": [],
+ "scriptExitedAtSeconds": 6.251,
+ "exitCode": 0,
+ "claimedExit": 0,
+ "exitAsClaimed": true,
+ "descendantsSeen": 2,
+ "seenOnlyByCwd": 2,
+ "vitestSeen": true,
+ "npxSeen": true,
+ "treeAfterExit": "",
+ "survivors": {},
+ "recordWritten": true,
+ "recordRuns": 1,
+ "recordTests": 0,
+ "recordProfileRows": 0,
+ "recordExitCode": 0,
+ "marks": [
+  {
+   "what": "start",
+   "pid": 3797489,
+   "pgid": 3797489,
+   "sid": 3797489,
+   "t": 1792864316.16078,
+   "mode": "linger"
+  },
+  {
+   "what": "parent-forked",
+   "pid": 3797489,
+   "pgid": 3797489,
+   "sid": 3797489,
+   "t": 1792864316.1615682,
+   "child": 3797491
+  },
+  {
+   "what": "parent-exit",
+   "pid": 3797489,
+   "pgid": 3797489,
+   "sid": 3797489,
+   "t": 1792864316.161767
+  },
+  {
+   "what": "child",
+   "pid": 3797491,
+   "pgid": 3797489,
+   "sid": 3797489,
+   "t": 1792864316.161717,
+   "holds": "stdout"
+  },
+  {
+   "what": "child-exit",
+   "pid": 3797491,
+   "pgid": 3797489,
+   "sid": 3797489,
+   "t": 1792864322.1679177
+  }
+ ],
+ "tmpdirLeft": [
+  "bin",
+  "mark.jsonl",
+  "measure-out.json",
+  "script.log"
+ ],
+ "trace": [],
+ "outputTail": "run 1: exit 0, 6.1 s, load1 {'start': 17.8, 'end': 17.17, 'min': 17.17, 'max': 17.8, 'samples': 2}, 0 tests of the file, 0 failed\n",
+ "passes": true
+}

@@ -1,0 +1,67 @@
+{
+ "files": [
+  "apps/three-surface-poc/src/git-observation.test.ts"
+ ],
+ "mutants": [
+  {
+   "id": "O1-support-prefix-dropped",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "old": "    'packages/support/',\n",
+     "new": ""
+    }
+   ]
+  },
+  {
+   "id": "O2-support-prefix-narrowed-to-src",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "old": "    'packages/support/',\n",
+     "new": "    'packages/support/src/',\n"
+    }
+   ]
+  },
+  {
+   "id": "O3-unprefixed-package-imported-statically",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/poc-main.ts",
+     "old": "import { sha256 } from '@syzygy/support';\n",
+     "new": "import { sha256 } from '@syzygy/support';\nimport '@syzygy/polaris-generation-core';\n"
+    }
+   ]
+  },
+  {
+   "id": "O4-unprefixed-package-imported-dynamically-from-core",
+   "edits": [
+    {
+     "file": "packages/three-surface-poc-core/src/index.ts",
+     "old": "export * from './evidence-population.js';\n",
+     "new": "export * from './evidence-population.js';\nexport const loadLive = () => import('@syzygy/polaris-generation-consent/live');\n"
+    }
+   ]
+  },
+  {
+   "id": "O5-unresolvable-workspace-specifier",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/poc-main.ts",
+     "old": "import { sha256 } from '@syzygy/support';\n",
+     "new": "import { sha256 } from '@syzygy/support';\nimport '@syzygy/no-such-package';\n"
+    }
+   ]
+  },
+  {
+   "id": "O6-cap1-daemon-prefix-dropped",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "old": "    'packages/cap1-daemon/',\n",
+     "new": ""
+    }
+   ]
+  }
+ ]
+}

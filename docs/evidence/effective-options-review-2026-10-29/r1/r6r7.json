@@ -1,0 +1,44 @@
+[
+ {
+  "commit": "7dfad65a",
+  "case": "A: packages/x\\y alone (tried for R7)",
+  "exit": 1,
+  "message": "error TS5083: Cannot read file '<tree>/packages/x/y/tsconfig.json'.",
+  "sentinelKept": false
+ },
+ {
+  "commit": "7dfad65a",
+  "case": "B: packages/x\\y beside a nested packages/x/y (tried for R6)",
+  "exit": 0,
+  "message": "",
+  "sentinelKept": false
+ },
+ {
+  "commit": "687c5e13",
+  "case": "A: packages/x\\y alone (tried for R7)",
+  "exit": 1,
+  "message": "Error: packages/x\\y/tsconfig.json: its outputs and incremental state are not both under dist",
+  "sentinelKept": true
+ },
+ {
+  "commit": "687c5e13",
+  "case": "B: packages/x\\y beside a nested packages/x/y (tried for R6)",
+  "exit": 1,
+  "message": "Error: packages/x\\y/tsconfig.json: its outputs and incremental state are not both under dist",
+  "sentinelKept": true
+ },
+ {
+  "commit": "E1:687c5e13",
+  "case": "A: packages/x\\y alone (tried for R7)",
+  "exit": 1,
+  "message": "error TS5083: Cannot read file '<tree>/packages/x/y/tsconfig.json'.",
+  "sentinelKept": false
+ },
+ {
+  "commit": "E1:687c5e13",
+  "case": "B: packages/x\\y beside a nested packages/x/y (tried for R6)",
+  "exit": 0,
+  "message": "",
+  "sentinelKept": false
+ }
+]

@@ -1,0 +1,54 @@
+{
+  "classes": {
+    "1": "Not anticipated: no authority/typed-write/adapter authorization change.",
+    "2": "Not anticipated: no graph IDs/continuity change.",
+    "3": "Not anticipated: no product snapshot/evaluation/seam change; evidence report labels exact subjects.",
+    "4": "Declared as Q4 floor: verification of two egress boundaries. Reviewer may drop only with recorded security-evidence finding.",
+    "5": "No schema/store migration.",
+    "6": "No machine endpoint/adapter/external contract change.",
+    "7": "No certificate logic.",
+    "contest": "Author classification provisional; ROOT independent fresh-context reviewer may add classes; satisfy all resulting obligations."
+  },
+  "floors": {
+    "truth": "Exact subjects, scope, denominators and residuals; no claim of product status.",
+    "evidence": "No current proof yet = Unknown; raw current output and emitter-distinct capture retained.",
+    "inference": "Design/classification inferred, never substitutes for observed evidence/adoption.",
+    "write": "Only ROOT allocated contributor test/comment/new evidence paths; product write authority unchanged.",
+    "sign_off": "Use actual Q4; no amendment/adoption or new posture decision.",
+    "security": "Preserve guards and no-egress boundary; private allowed fixtures; no observed repositories/secrets/providers.",
+    "identity": "Preserve identities and historical bytes; no migration/reminting."
+  },
+  "review_and_landing": {
+    "root_dispatches": "Fresh context independent CC-REV-1 review of frozen diff/complete14AC/primary refs under standing prompt; retain raw unchanged; findings dispositioned. Semantic fixes/later subject drift require new review.",
+    "notice": "Prepare nonblocking GP-Q0 syzygy-bpyt.10 cycle notice for ROOT only; no worker BD/GH owner message.",
+    "protected_landing": "Worker may push/open its own PR after proofs/release; never merge/change settings. ROOT owns required hosted node/checks, protected queue integration, review/notice/landing.",
+    "app_hold": "Actual Nov3 item4 applies BOTH 1z3.22 judgment and1z3.25 report only if a merge touches named app/core src; requested paths do not. No blanket freeze inferred.",
+    "full_outcome": "Remains open until implementation, all17obligation/14AC proof map, review, notice, hosted checks and lawful landing; no sibling closure/newDAG/re-FIRST."
+  },
+  "authority": {
+    "Q4": {
+      "path": ".syzygy/governance/decisions/OWNER-DIRECTION-GREENFIELD-PARITY-FOLLOWUPS-2026-10-28.md",
+      "section": "Q4",
+      "selected": "A: precondition test (Recommended)",
+      "quote": "The owner directs one precondition test that refuses such a tree up front, leaving both reviewed guards exactly as reviewed.",
+      "warrant": "Actual recorded owner answer covers the whole named outcome; no new owner answer required for listed preconditions."
+    },
+    "GP-Q0": {
+      "path": ".syzygy/governance/decisions/OWNER-DIRECTION-GREENFIELD-PARITY-ANSWERS-2026-10-21.md",
+      "quote": "Any change not listed here to what a gate accepts or refuses stops and returns to the owner.",
+      "application": "Q4 is the listed precondition change. Resolver implementation, S10, product refusal behavior and dependency admission policy stay unchanged."
+    }
+  },
+  "growth": {
+    "forecast": "Tests: +1 ~0 -0",
+    "file_count": 1,
+    "new_test_files": 0,
+    "tier": "unit",
+    "reason": "Owner directs one real-tree manifest invariant that existing fixture resolver and exports tests do not enforce; temporary mutation controls add no permanent tests.",
+    "actual_delta": "Unknown pending authorized before/after collection."
+  },
+  "epistemic_status": "Inferred classification, contested; observed artifact/report facts only.",
+  "subject": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+  "whole_original_obligations": 17,
+  "acceptance_items": 14
+}

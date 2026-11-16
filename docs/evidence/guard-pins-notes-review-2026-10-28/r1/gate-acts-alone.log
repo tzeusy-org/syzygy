@@ -1,0 +1,112 @@
+
+ RUN  v3.2.7 /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-547/clone
+
+ ✓ |@syzygy/polaris-dossier| packages/polaris-dossier/src/gate-acts.test.ts (133 tests) 87542ms
+   ✓ the sitting's acts as gate sources, with no act recorded > follow this checkout's tree: each source absent while its act record is, and established once the sitting records it  2947ms
+   ✓ the sitting's acts as gate sources, with no act recorded > follow the tree in either state: no records, every record, and each act alone  6204ms
+   ✓ version 2 of the Anthropic statement > replaces version 1 from its act's instant, one statement for the pair, the OpenAI statement untouched  843ms
+   ✓ version 2 of the Anthropic statement > leaves version 1 alone in force before version 2's instant  747ms
+   ✓ version 2 of the Anthropic statement > is what preflight lists in force, before and after its instant, agreeing with the gate  678ms
+   ✓ version 2 of the Anthropic statement > closes no other gate: D9, the reading, the drawer and the registry sign-off stay established beside it  919ms
+   ✓ version 2 of the Anthropic statement > fails closed when its act record has an appended line: version 1 reads withdrawn and version 2 unbound, so the pair has no statement  804ms
+   ✓ version 2 of the Anthropic statement > fails closed when its act record has another supersession: version 1 reads withdrawn and version 2 unbound, so the pair has no statement  652ms
+   ✓ version 2 of the Anthropic statement > fails closed when its act record has another effect: version 1 reads withdrawn and version 2 unbound, so the pair has no statement  563ms
+   ✓ version 2 of the Anthropic statement > fails closed when its act record has a digest in the packet words: version 1 reads withdrawn and version 2 unbound, so the pair has no statement  853ms
+   ✓ version 2 of the Anthropic statement > fails closed once its record changes after the act  610ms
+   ✓ version 2 of the Anthropic statement > is withdrawn by a decisions file naming it by its phrase label, and version 1 does not come back  996ms
+   ✓ version 2 of the Anthropic statement > is withdrawn by a decisions file naming it by its title, and version 1 does not come back  1013ms
+   ✓ version 2 of the Anthropic statement > is withdrawn by a decisions file naming it by its act identity, and version 1 does not come back  519ms
+   ✓ version 2 of the Anthropic statement > is withdrawn by a decisions file naming it by its record's path, and version 1 does not come back  718ms
+   ✓ version 2 of the Anthropic statement > reads version 1's act record past only at its exact render, and version 1 reads version 2's the same way  673ms
+   ✓ version 2 of the Anthropic statement > reads past version 1's exact render only at version 1's own file: a byte-identical copy elsewhere names version 2  721ms
+   ✓ version 2 of the Anthropic statement > is the form its recorder writes: the file it writes and the record byte for byte, CONFIRM and CONFIRM WITH EXCEPTIONS  782ms
+   ✓ the sitting's acts as gate sources, once recorded > establish every source when every act is recorded, none hiding another  657ms
+   ✓ the sitting's acts as gate sources, once recorded > establish nothing before the acts' instant  923ms
+   ✓ the sitting's acts fail closed > refuse an in-force record whose table binds other files than the form names, even when an act binds its bytes  2037ms
+   ✓ the sitting's acts fail closed > refuse an act another decisions file names: a withdrawal in a form the reader does not define  962ms
+   ✓ the sitting's acts fail closed > refuse the registry sign-off another decisions file names by its tag  756ms
+   ✓ the sitting's acts fail closed > refuse the registry sign-off another decisions file names by its tag, in another case  757ms
+   ✓ the sitting's acts fail closed > refuse the registry sign-off another decisions file names by the package as signed off, spelled sign-off  829ms
+   ✓ the sitting's acts fail closed > refuse the registry sign-off another decisions file names by the package as signed off, spelled signoff  1146ms
+   ✓ the sitting's acts fail closed > read the resolved P-104 register row as any other line, and refuse a row that cites the sign-off's tag  913ms
+   ✓ the sitting's acts fail closed > refuse the registry sign-off whose record has no Owner selection line  664ms
+   ✓ the sitting's acts fail closed > refuse the registry sign-off whose record has no Review line  563ms
+   ✓ the sitting's acts fail closed > refuse the registry sign-off whose record has no Reviewed commit line  660ms
+   ✓ the sitting's acts fail closed > refuse the registry sign-off whose record has no Disposition line  555ms
+   ✓ the sitting's acts fail closed > refuse the registry sign-off whose record has no Scope A extension line  597ms
+   ✓ the sitting's acts fail closed > refuse the registry sign-off whose record has no "What this does not do" section  847ms
+   ✓ the sitting's acts fail closed > refuse the registry sign-off whose record has its supersession line removed  642ms
+   ✓ the sitting's acts fail closed > refuse the registry sign-off whose record has another second provenance line  928ms
+   ✓ the sitting's acts fail closed > refuse the registry sign-off whose record has "Withdrawn by this record." appended  823ms
+   ✓ the sitting's acts fail closed > refuse the registry sign-off whose record has a selection that does not name the Scope A extension  705ms
+   ✓ the sitting's acts fail closed > refuse the registry sign-off whose record has a digest in the selection  935ms
+   ✓ the sitting's acts fail closed > refuse the registry sign-off whose record has CONFIRM WITH EXCEPTIONS and no disposition record  557ms
+   ✓ the sitting's acts fail closed > refuse the registry sign-off whose record has CONFIRM and a disposition record  707ms
+   ✓ the sitting's acts fail closed > count a CONFIRM WITH EXCEPTIONS sign-off that names its disposition record  801ms
+   ✓ the sitting's acts fail closed > withdraw what a decisions file names by the statement's governance-relative path  908ms
+   ✓ the sitting's acts fail closed > withdraw what a decisions file names by the statement's basename  862ms
+   ✓ the sitting's acts fail closed > withdraw what a decisions file names by the statement act's phrase label  620ms
+   ✓ the sitting's acts fail closed > withdraw what a decisions file names by the statement act's title  718ms
+   ✓ the sitting's acts fail closed > withdraw what a decisions file names by the Subject spaced after its colons  753ms
+   ✓ the sitting's acts fail closed > withdraw what a decisions file names by the Subject with each part quoted  795ms
+   ✓ the sitting's acts fail closed > withdraw what a decisions file names by the D9 record's relative path  1049ms
+   ✓ the sitting's acts fail closed > withdraw what a decisions file names by the D9 act's phrase label  1446ms
+   ✓ the sitting's acts fail closed > withdraw what a decisions file names by the reading record's basename  950ms
+   ✓ the sitting's acts fail closed > withdraw what a decisions file names by the drawer record's basename  710ms
+   ✓ the sitting's acts fail closed > withdraw what a decisions file names by the drawer's Subject on a field line  834ms
+   ✓ the sitting's acts fail closed > withdraw what a decisions file names by the installed entry's basename  653ms
+   ✓ the sitting's acts fail closed > withdraw what a decisions file names by the package as signed off at a version  600ms
+   ✓ the sitting's acts fail closed > withdraw what a decisions file names by the sign-off record's title  634ms
+   ✓ the sitting's acts fail closed > withdraw what a decisions file names by the D9 record's heading  766ms
+   ✓ the sitting's acts fail closed > withdraw what a decisions file names by the reading record's heading  795ms
+   ✓ the sitting's acts fail closed > withdraw what a decisions file names by the drawer record's heading  705ms
+   ✓ the sitting's acts fail closed > withdraw what a decisions file names by the statement's heading  890ms
+   ✓ the sitting's acts fail closed > withdraw D9 by a decisions file named for its act record, with a body that names nothing  758ms
+   ✓ the sitting's acts fail closed > refuse an act record, and the registry sign-off, with no owner  629ms
+   ✓ the sitting's acts fail closed > refuse an act record, and the registry sign-off, with another owner  979ms
+   ✓ the sitting's acts fail closed > refuse an act record, and the registry sign-off, with no provenance state  674ms
+   ✓ the sitting's acts fail closed > refuse an act record, and the registry sign-off, with another provenance state  666ms
+   ✓ the sitting's acts fail closed > refuse an act record, and the registry sign-off, with no A1 line  716ms
+   ✓ the sitting's acts fail closed > refuse an act record, and the registry sign-off, with an A1 identity  932ms
+   ✓ the sitting's acts fail closed > refuse an act record, and the registry sign-off, with no scope  605ms
+   ✓ the sitting's acts fail closed > refuse an act record, and the registry sign-off, with a wider scope  781ms
+   ✓ the sitting's acts fail closed > refuse an act record, and the registry sign-off, with a second scope  813ms
+   ✓ the sitting's acts fail closed > refuse D9 when its record carries a second table inside a fence  538ms
+   ✓ the sitting's acts fail closed > refuse D9 when its record carries another separator row  571ms
+   ✓ the sitting's acts fail closed > refuse D9 when its record carries a third row  606ms
+   ✓ the sitting's acts fail closed > leave the drawer unstated for a record with another subject, even under an act  520ms
+   ✓ the sitting's acts fail closed > leave the drawer unstated for a record with another statement, even under an act  727ms
+   ✓ the sitting's acts fail closed > leave the drawer unstated for a record with no record id, even under an act  803ms
+   ✓ the sitting's acts fail closed > leave the drawer unstated for a record with no record version, even under an act  847ms
+   ✓ the sitting's acts fail closed > leave the drawer unstated for a record with a second Record ID line, even under an act  1150ms
+   ✓ the sitting's acts fail closed > leave the drawer unstated for a record with a second Subject line, even under an act  980ms
+   ✓ the sitting's acts fail closed > carry no act for a statement whose record names another provider, even under an act  822ms
+   ✓ the sitting's acts fail closed > carry no act for a statement whose record names another repository, even under an act  592ms
+   ✓ the sitting's acts fail closed > carry no act for a statement whose record names another record id, even under an act  517ms
+   ✓ the sitting's acts fail closed > carry no act for a statement whose record names another agent tool, even under an act  572ms
+   ✓ the sitting's acts fail closed > carry no act for a statement whose record names a second agent tool line, even under an act  811ms
+   ✓ the sitting's acts fail closed > carry no act for a statement whose record names no record version, even under an act  625ms
+   ✓ the sitting's acts fail closed > carry no act for a statement whose record names a second Record ID line, even under an act  631ms
+   ✓ the sitting's acts fail closed > carry no act for a statement whose record names a second Subject line, even under an act  725ms
+   ✓ the registry entry's version-tagged sign-off > refuses once the installed entry changes  476ms
+   ✓ the registry entry's version-tagged sign-off > refuses a record with another title  453ms
+   ✓ the registry entry's version-tagged sign-off > refuses a record with another version  473ms
+   ✓ the registry entry's version-tagged sign-off > refuses a record with another tag  486ms
+   ✓ the registry entry's version-tagged sign-off > refuses a record with another package  612ms
+   ✓ the registry entry's version-tagged sign-off > refuses a record with another kind  626ms
+   ✓ the registry entry's version-tagged sign-off > refuses a record with another installed path  627ms
+   ✓ the registry entry's version-tagged sign-off > refuses a record with another act type  712ms
+   ✓ the registry entry's version-tagged sign-off > refuses a record with a REVISE verdict  761ms
+   ✓ the registry entry's version-tagged sign-off > refuses a record with no recording instant  487ms
+   ✓ the registry entry's version-tagged sign-off > refuses a record with an instant on another day  424ms
+   ✓ the registry entry's version-tagged sign-off > refuses a record with its SHA-256 only inside a fence  520ms
+   ✓ the gate forms against the recorders > read each record at the path its recorder writes it  706ms
+   ✓ the gate forms against the recorders > render the sign-off record byte for byte as render_record does, from the same fields: CONFIRM  1023ms
+   ✓ the gate forms against the recorders > render the sign-off record byte for byte as render_record does, from the same fields: CONFIRM WITH EXCEPTIONS  1187ms
+   ✓ altered prose in a byte-exact act record (characterization, syzygy-bpyt.8.10) > the registry sign-off: refused once its What-this-records paragraph or its limits change, a withdrawal is appended or its selection drops the Scope A words; other words that keep them count  568ms
+
+ Test Files  1 passed (1)
+      Tests  133 passed (133)
+   Start at  02:07:54
+   Duration  89.38s (transform 966ms, setup 24ms, collect 1.19s, tests 87.54s, environment 0ms, prepare 185ms)
+

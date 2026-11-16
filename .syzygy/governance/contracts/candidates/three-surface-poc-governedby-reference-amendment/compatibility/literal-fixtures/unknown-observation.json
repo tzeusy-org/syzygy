@@ -1,0 +1,41 @@
+{
+  "schema": "syzygy-three-surface-poc/v1",
+  "evaluation": {
+    "snapshot": "settlement@fixture|inputs:sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "snapshotLabel": "settlement@fixture",
+    "inputsDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "asOf": "2026-10-21T00:00:00Z",
+    "evidence": {
+      "pinnedRevision": "1111111111111111111111111111111111111111",
+      "pinnedCommitterInstant": "2026-10-20T00:00:00Z",
+      "observationInstant": "2026-10-21T00:00:00Z",
+      "probe": {
+        "claimId": "claim:currency-probe",
+        "evaluationId": "evaluation:fixture:currency",
+        "evaluationInstant": "2026-10-21T00:00:00Z",
+        "epistemic": {
+          "label": "Observed",
+          "tier": "report-fact",
+          "challenge": "unchallenged"
+        },
+        "pinnedRevision": "1111111111111111111111111111111111111111",
+        "currentRevision": "1111111111111111111111111111111111111111",
+        "changedSources": 0,
+        "addedSources": 0
+      },
+      "currencyBounds": []
+    }
+  },
+  "project": {
+    "revision": "1111111111111111111111111111111111111111"
+  },
+  "workItems": {
+    "kind": "unknown",
+    "reason": "Work-item observation was not captured"
+  },
+  "trajectory": {
+    "kind": "unknown",
+    "reason": "Work-item observation was not captured"
+  },
+  "unknownSubjects": []
+}

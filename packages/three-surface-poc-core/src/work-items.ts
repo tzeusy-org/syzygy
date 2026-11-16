@@ -2,10 +2,11 @@ import { execFileSync } from 'node:child_process';
 
 import type { UnknownReason } from '@syzygy/cap1-core';
 
-import type { PocProvenance, PocUnknown } from './model.js';
+import { unknown, type PocUnknown } from './epistemic.js';
+import type { PocProvenance } from './model.js';
 import { resolutionRoute, type ResolutionRoutes } from './project-shape-model.js';
 
-export const WORK_ITEM_STATUSES = [
+const WORK_ITEM_STATUSES = [
   'open',
   'in_progress',
   'blocked',
@@ -63,7 +64,7 @@ export function governingIntentUnknown(): GoverningIntentUnknown {
 /** The disclosure twin of an item's governing intent: the served value
  * with its basis sentence, as every rendered Unknown carries one. */
 export function governingIntentDisclosure(governedBy: GoverningIntentUnknown): PocUnknown {
-  return { label: governedBy.label, reason: GOVERNING_INTENT_UNKNOWN_BASIS, closedReason: governedBy.closedReason, resolutionRoutes: governedBy.resolutionRoutes };
+  return unknown(governedBy.closedReason, GOVERNING_INTENT_UNKNOWN_BASIS);
 }
 
 /** Every served item's title, stated once on the observation rather than on
@@ -71,14 +72,14 @@ export function governingIntentDisclosure(governedBy: GoverningIntentUnknown): P
  * RFC2-24 route. SEC-5 excludes anything not classifiable under the declared
  * secret policy, and the only declared policy covers
  * `declared-project-shape-text`, so the title column is never selected. */
-export interface WorkItemTitlesWithheld {
+interface WorkItemTitlesWithheld {
   readonly label: 'Unknown';
   readonly closedReason: 'excluded-content';
   readonly resolutionRoutes: ResolutionRoutes;
 }
 
 /** The basis sentence of the withheld-title Unknown. */
-export const WORK_ITEM_TITLES_WITHHELD_BASIS =
+const WORK_ITEM_TITLES_WITHHELD_BASIS =
   'Work-item titles are withheld under SEC-5: a title is free text, the only declared secret-classification policy covers declared-project-shape-text and none covers work-item titles, so the observation never reads them. Each item is named by its identifier.';
 
 export function workItemTitlesWithheld(): WorkItemTitlesWithheld {
@@ -91,7 +92,7 @@ export function workItemTitlesWithheld(): WorkItemTitlesWithheld {
 
 /** The disclosure twin of the observation's `titles`, with its basis. */
 export function workItemTitlesDisclosure(titles: WorkItemTitlesWithheld): PocUnknown {
-  return { label: titles.label, reason: WORK_ITEM_TITLES_WITHHELD_BASIS, closedReason: titles.closedReason, resolutionRoutes: titles.resolutionRoutes };
+  return unknown(titles.closedReason, WORK_ITEM_TITLES_WITHHELD_BASIS);
 }
 
 /** How many items carry the governing-intent Unknown, counted over the
@@ -121,14 +122,14 @@ export interface WorkItemsObserved {
   readonly titles: WorkItemTitlesWithheld;
 }
 
-export interface WorkItemsUnknown {
+interface WorkItemsUnknown {
   readonly kind: 'unknown';
   readonly reason: string;
 }
 
 export type WorkItemsResult = WorkItemsObserved | WorkItemsUnknown;
 
-export interface ObserveWorkItemsInput {
+interface ObserveWorkItemsInput {
   readonly repoRoot: string;
   readonly beadPrefix: string;
   readonly capturedAt: string;

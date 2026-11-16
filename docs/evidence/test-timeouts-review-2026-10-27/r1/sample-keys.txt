@@ -1,0 +1,91 @@
+apps/three-surface-poc/src/build-output.test.ts:62 test re-emits ignored JavaScript before the launcher executes it {'commits': [], 'measurements': ['docs/evidence/load-timeouts-gb4l-2026-10-03.json']}
+apps/three-surface-poc/src/cdp-browser.browser.test.ts:82 test closes and drains even when a helper cannot exit on its own {'commits': [], 'measurements': ['docs/evidence/syzygy-bpyt-4-31/durations/cdp-browser.browser.test.tests.json']}
+apps/three-surface-poc/src/cdp-browser.browser.test.ts:112 test leaves no Chrome singleton directory behind when the leader  {'commits': [], 'measurements': ['docs/evidence/syzygy-bpyt-4-31/durations/cdp-browser.browser.test.tests.json']}
+apps/three-surface-poc/src/fixture-directories.test.ts:294 test is registered as a global setup of the app project and of no {'commits': ['3f08143c'], 'measurements': []}
+apps/three-surface-poc/src/git-blob-batch.test.ts:242 test reads the same objects and returns the same inputs and evalu {'commits': [], 'measurements': ['docs/evidence/syzygy-bpyt-4-31/durations/git-blob-batch.test.tests.json']}
+apps/three-surface-poc/src/git-blob-batch.test.ts:254 test reads the same blobs with the same bytes for the self-corpus {'commits': [], 'measurements': ['docs/evidence/syzygy-bpyt-4-31/durations/git-blob-batch.test.tests.json']}
+apps/three-surface-poc/src/git-blob-batch.test.ts:287 test fails the self-corpus read on a missing, unread or altered b {'commits': [], 'measurements': ['docs/evidence/syzygy-bpyt-4-31/durations/git-blob-batch.test.tests.json']}
+apps/three-surface-poc/src/governance-inputs.test.ts:504 test evaluates the three real current PWB acts without reading an {'commits': [], 'measurements': ['docs/evidence/governance-inputs-timeout-2026-10-03.json']}
+apps/three-surface-poc/src/keyboard-sweep-record.test.ts:59 test reads the Butlers revision and evaluation identity a served  {'commits': [], 'measurements': ['docs/evidence/syzygy-bpyt-4-31/durations/keyboard-sweep-record.test.tests.json']}
+apps/three-surface-poc/src/main.test.ts:366 test prints the banner, registers the three route groups, and clo {'commits': [], 'measurements': []}
+apps/three-surface-poc/src/main.test.ts:378 test prints no walkthrough binding while readiness is not evaluat {'commits': [], 'measurements': []}
+apps/three-surface-poc/src/main.test.ts:389 test defaults the state directory to a per-repository directory u {'commits': [], 'measurements': []}
+apps/three-surface-poc/src/main.test.ts:406 test attaches the Enter console to io only with --watch, and a di {'commits': [], 'measurements': []}
+apps/three-surface-poc/src/main.test.ts:424 test prints no console prompt and ignores Enter without --watch {'commits': [], 'measurements': []}
+apps/three-surface-poc/src/main.test.ts:478 test observes, builds, names, materializes and re-evaluates again {'commits': [], 'measurements': []}
+apps/three-surface-poc/src/main.test.ts:498 test reads the exact requirement text from the bound repository {'commits': [], 'measurements': []}
+apps/three-surface-poc/src/main.test.ts:513 test resolves a relative --state-dir for the daemon and for the m {'commits': [], 'measurements': []}
+apps/three-surface-poc/src/main.test.ts:538 test names the credential provision and the latest named re-evalu {'commits': [], 'measurements': []}
+apps/three-surface-poc/src/main.test.ts:548 test reports a run that finished first, at once and by name {'commits': [], 'measurements': []}
+apps/three-surface-poc/src/main.test.ts:555 test gives up after its bound on a run that neither serves nor fi {'commits': [], 'measurements': []}
+apps/three-surface-poc/src/polaris-accessibility.browser.test.ts:91 hook  {'commits': [], 'measurements': ['docs/evidence/syzygy-bpyt-4-31/full-runs.json']}
+apps/three-surface-poc/src/polaris-accessibility.browser.test.ts:310 test activates more fragment links than Chrome's navigation budge {'commits': [], 'measurements': ['docs/evidence/syzygy-bpyt-4-31/durations/polaris-accessibility.browser.test.tests.json']}
+apps/three-surface-poc/src/polaris-accessibility.browser.test.ts:332 test `${variant.id}: every distinction is keyboard-operable, name {'commits': [], 'measurements': ['docs/evidence/syzygy-bpyt-4-31/durations/polaris-accessibility.browser.test.tests.json']}
+apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts:315 test passes every Polaris page one whole-project evaluation serve {'commits': [], 'measurements': ['docs/evidence/syzygy-bpyt-4-31/durations/polaris-accessible-names.browser.test.tests.json']}
+apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts:329 test fails a listed page the daemon does not serve, never skippin {'commits': [], 'measurements': ['docs/evidence/syzygy-bpyt-4-31/durations/polaris-accessible-names.browser.test.tests.json']}
+apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts:343 test `${variant.id}: every served Polaris page passes both checks {'commits': [], 'measurements': ['docs/evidence/syzygy-bpyt-4-31/durations/polaris-accessible-names.browser.test.tests.json']}
+apps/three-surface-poc/src/polaris-copy.test.ts:226 hook  {'commits': [], 'measurements': ['docs/evidence/poc-test-timeouts-2026-10-03.json']}
+apps/three-surface-poc/src/polaris-first-reading.test.ts:52 hook  {'commits': [], 'measurements': ['docs/evidence/shared-fixture-models-k66p-2026-10-03.json']}
+apps/three-surface-poc/src/polaris-generation/draft-preview.browser.test.ts:47 test renders the pipeline draft with working diagram, source and  {'commits': [], 'measurements': ['docs/evidence/syzygy-bpyt-4-31/full-runs.json']}
+apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts:55 test reuses four verified checkpoints and sends only the missing  {'commits': [], 'measurements': ['docs/evidence/load-timeouts-gb4l-2026-10-03.json']}
+apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts:79 test refuses changed request, route or current permission and a f {'commits': [], 'measurements': ['docs/evidence/load-timeouts-gb4l-2026-10-03.json']}
+apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts:96 test keeps uncertain maximum reserved despite missing receipts an {'commits': [], 'measurements': ['docs/evidence/load-timeouts-gb4l-2026-10-03.json']}
+apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts:116 test admits at most one concurrent dispatch and keeps distinct ru {'commits': [], 'measurements': ['docs/evidence/load-timeouts-gb4l-2026-10-03.json']}
+apps/three-surface-poc/src/polaris-generation/pipeline-demo.test.ts:73 test runs the README command after a clean install and requires e {'commits': [], 'measurements': ['docs/evidence/pipeline-demo-onramp-budget-2026-10-15.json']}
+apps/three-surface-poc/src/polaris-generation/redis-shaped-discovery.test.ts:16 hook  {'commits': [], 'measurements': []}
+apps/three-surface-poc/src/polaris-generation/redis-shaped-discovery.test.ts:205 test writes the measurement through the command and refuses to ov {'commits': [], 'measurements': []}
+apps/three-surface-poc/src/polaris-generation/self-corpus.test.ts:32 test reads only tracked blobs from the pinned commit and independ {'commits': [], 'measurements': ['docs/evidence/load-timeouts-gb4l-2026-10-03.json']}
+apps/three-surface-poc/src/polaris-generation/self-corpus.test.ts:46 test refuses a 1 MB corpus budget without truncation or a scripte {'commits': [], 'measurements': ['docs/evidence/syzygy-bpyt-4-31/full-runs.json']}
+apps/three-surface-poc/src/polaris-narrative.test.ts:59 hook  {'commits': [], 'measurements': ['docs/evidence/shared-fixture-models-k66p-2026-10-03.json']}
+apps/three-surface-poc/src/polaris-opening-index.browser.test.ts:316 hook  {'commits': [], 'measurements': ['docs/evidence/syzygy-bpyt-4-31/full-runs.json']}
+apps/three-surface-poc/src/polaris-opening-index.browser.test.ts:352 test `every indexed target renders (${viewport.width}x${viewport. {'commits': [], 'measurements': ['docs/evidence/syzygy-bpyt-4-31/full-runs.json']}
+apps/three-surface-poc/src/polaris-opening-index.browser.test.ts:370 test `an unobserved shape (${viewport.width}x${viewport.height}): {'commits': [], 'measurements': ['docs/evidence/syzygy-bpyt-4-31/full-runs.json']}
+apps/three-surface-poc/src/polaris-opening-index.browser.test.ts:424 test a captured /polaris page meets the oracle at both viewports {'commits': ['da936967'], 'measurements': []}
+apps/three-surface-poc/src/production-reobserve.test.ts:99 test keeps served bytes and asOf stable when the same capture is  {'commits': [], 'measurements': ['docs/evidence/poc-test-timeouts-2026-10-03.json']}
+apps/three-surface-poc/src/production-reobserve.test.ts:132 test uses the production builder for an atomic successful swap wi {'commits': [], 'measurements': ['docs/evidence/poc-test-timeouts-2026-10-03.json']}
+apps/three-surface-poc/src/production-reobserve.test.ts:160 test re-evaluates an unchanged repository twice: two distinct nam {'commits': [], 'measurements': ['docs/evidence/poc-test-timeouts-2026-10-03.json']}
+apps/three-surface-poc/src/production-reobserve.test.ts:182 test retains the prior production model and non-zero drift when t {'commits': [], 'measurements': ['docs/evidence/poc-test-timeouts-2026-10-03.json']}
+apps/three-surface-poc/src/proposal-disclosure.test.ts:147 test renders every served proposal and the legend row in the decl {'commits': [], 'measurements': ['docs/evidence/syzygy-bpyt-4-31/durations/proposal-disclosure.test.tests.json']}
+apps/three-surface-poc/src/restart.test.ts:321 hook  {'commits': ['b48d86fa'], 'measurements': []}
+apps/three-surface-poc/src/restart.test.ts:331 suite one-listener POC restart on private fixture sockets {'commits': ['b48d86fa'], 'measurements': []}
+apps/three-surface-poc/src/surface-routes.test.ts:313 hook  {'commits': [], 'measurements': ['docs/evidence/syzygy-bpyt-4-31/ci-durations.json']}
+apps/three-surface-poc/src/surface-routes.test.ts:328 hook  {'commits': [], 'measurements': ['docs/evidence/syzygy-bpyt-4-31/ci-durations.json']}
+apps/three-surface-poc/src/surface-routes.test.ts:420 test exhausts 15 runtime cross-surface links over six classes and {'commits': [], 'measurements': ['docs/evidence/syzygy-bul-browser-ci-correction-2026-09-23.json']}
+apps/three-surface-poc/src/surface-routes.test.ts:453 test withholds the post-script Orrery capability href when that e {'commits': [], 'measurements': ['docs/evidence/syzygy-bul-browser-ci-correction-2026-09-23.json']}
+apps/three-surface-poc/src/surface-routes.test.ts:537 test counts the post-JavaScript DOM on all three served surfaces  {'commits': [], 'measurements': ['docs/evidence/syzygy-bpyt-4-31/full-runs.json', 'docs/evidence/syzygy-bpyt-4-31/head-durations/surface-routes.test.tests.json']}
+apps/three-surface-poc/src/test-model-fixture.test.ts:120 test names the template and each copy with the pid and PID namesp {'commits': [], 'measurements': ['docs/evidence/syzygy-bpyt-4-31/durations/test-model-fixture.test.tests.json']}
+apps/three-surface-poc/src/test-model-fixture.test.ts:131 test does not sweep when a file makes its template: the sweep is  {'commits': [], 'measurements': ['docs/evidence/syzygy-bpyt-4-31/durations/test-model-fixture.test.tests.json']}
+apps/three-surface-poc/src/tuple-encoding.test.ts:94 hook  {'commits': [], 'measurements': ['docs/evidence/shared-fixture-models-k66p-2026-10-03.json']}
+apps/three-surface-poc/src/tuple-encoding.test.ts:312 test sweeps the post-JavaScript DOM of the three surfaces, Home a {'commits': [], 'measurements': ['docs/evidence/syzygy-bpyt-4-31/durations/tuple-encoding.test.tests.json']}
+packages/cap1-system/src/fresh-clone.system.test.ts:117 test a fresh clone installs, builds, starts the daemon, and serve {'commits': [], 'measurements': ['docs/evidence/syzygy-bpyt-4-31/durations/cap1-system.hooks.json', 'docs/evidence/syzygy-bpyt-4-31/ci-durations.json']}
+packages/cap1-system/vitest.config.ts:18 config  {'commits': [], 'measurements': ['docs/evidence/syzygy-bpyt-4-31/durations/cap1-system.hooks.json']}
+packages/cap1-system/vitest.config.ts:19 config  {'commits': [], 'measurements': ['docs/evidence/syzygy-bpyt-4-31/durations/cap1-system.hooks.json']}
+packages/polaris-dossier/src/gate-acts.test.ts:98 test follow this checkout's tree: each source absent while its ac {'commits': ['0a08add9'], 'measurements': []}
+packages/polaris-dossier/src/gate-acts.test.ts:106 test follow the tree in either state: no records, every record, a {'commits': ['0a08add9'], 'measurements': []}
+packages/polaris-dossier/src/git-object-reader.test.ts:582 test the reviewer's amplification shape, 100 levels over a 64 MiB {'commits': [], 'measurements': []}
+packages/polaris-dossier/src/git-object-reader.test.ts:782 test a subdirectory of 200,000 entries lists: a subtree is never  {'commits': [], 'measurements': []}
+packages/polaris-dossier/src/git-object-reader.test.ts:803 test a path of 4,096 segments reads and lists; a missing path bel {'commits': [], 'measurements': []}
+packages/polaris-dossier/src/git-object-reader.test.ts:812 test a path of 4,097 segments refuses before any read, and listTr {'commits': [], 'measurements': []}
+packages/polaris-dossier/src/no-egress.test.ts:85 test creates no Internet-family socket over the whole run, from p {'commits': [], 'measurements': ['docs/evidence/syzygy-bpyt-4-31/full-runs.json']}
+packages/polaris-dossier/src/no-egress.test.ts:93 test sees the canary: one loopback datagram sent before the same  {'commits': [], 'measurements': ['docs/evidence/syzygy-bpyt-4-31/full-runs.json']}
+packages/polaris-dossier/src/start-gates.test.ts:1015 test reports D9 established on this checkout only once an act rec {'commits': ['30d2c2c9'], 'measurements': []}
+packages/polaris-generation-consent/src/package-reader.test.ts:111 test returns a record only for an instance that an act record nam {'commits': [], 'measurements': ['docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json']}
+packages/polaris-generation-consent/src/package-reader.test.ts:141 test refuses the whole read on unknown shapes instead of guessing {'commits': [], 'measurements': ['docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json']}
+packages/polaris-generation-consent/src/package-reader.test.ts:259 test recognises the recorder's record by its exact path and forma {'commits': [], 'measurements': ['docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json']}
+packages/polaris-generation-consent/src/package-reader.test.ts:327 test refuses the recorder's file when its act type, identity, tit {'commits': [], 'measurements': ['docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json']}
+packages/polaris-generation-consent/src/package-reader.test.ts:368 test is read from the recorder's act: version 2 supersedes versio {'commits': [], 'measurements': ['docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json']}
+packages/polaris-generation-consent/src/package-reader.test.ts:375 test leaves version 1 standing before the version 2 act takes eff {'commits': [], 'measurements': ['docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json']}
+packages/polaris-generation-consent/src/package-reader.test.ts:381 test refuses when version 2 did not take effect strictly after ve {'commits': [], 'measurements': ['docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json']}
+packages/polaris-generation-consent/src/package-reader.test.ts:443 test is required: no record, an edited module, a wrong form, or a {'commits': [], 'measurements': ['docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json']}
+packages/polaris-generation-consent/src/package-reader.test.ts:498 test does not refuse the recorders' other act records or the aggr {'commits': [], 'measurements': ['docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json']}
+packages/polaris-generation-consent/src/package-reader.test.ts:541 test counts the version 2 act when the policy carries the version {'commits': [], 'measurements': ['docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json']}
+packages/polaris-generation-consent/src/package-reader.test.ts:563 test a version 2 act not yet in force leaves version 1 in force,  {'commits': [], 'measurements': ['docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json']}
+packages/polaris-generation-consent/src/package-reader.test.ts:581 test refuses an unlisted record that names the policy: another fi {'commits': [], 'measurements': ['docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json']}
+packages/polaris-generation-consent/src/package-reader.test.ts:710 test policy chain: absent without acts; refused for a missing ver {'commits': [], 'measurements': ['docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json']}
+packages/polaris-generation-consent/src/package-reader.test.ts:779 test folds soft hyphens, zero-width spaces, underscores and space {'commits': [], 'measurements': ['docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json']}
+packages/polaris-generation-consent/src/package-reader.test.ts:804 test takes a time: a strict read of an act recorded after now is  {'commits': [], 'measurements': ['docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json']}
+packages/polaris-generation-consent/src/package-reader.test.ts:947 hook  {'commits': ['6c91e65a'], 'measurements': []}
+packages/polaris-generation-consent/src/package-reader.test.ts:1061 test on every world in the fixture set, at every instant {'commits': [], 'measurements': ['docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json']}
+packages/polaris-generation-consent/src/real-tree.test.ts:50 test refuse nothing: no file in decisions/ trips a sweep or break {'commits': [], 'measurements': ['docs/evidence/syzygy-bpyt-4-31/durations/real-tree.test.tests.json']}
+packages/polaris-generation-consent/src/real-tree.test.ts:58 test do reach that directory: one added file naming a record or t {'commits': [], 'measurements': ['docs/evidence/syzygy-bpyt-4-31/durations/real-tree.test.tests.json']}
+packages/three-surface-poc-core/src/test-artifact-verification.live.test.ts:139 test ingests one real, passing operator-reported focused-pytest a {'commits': ['2c1f8d5a'], 'measurements': []}

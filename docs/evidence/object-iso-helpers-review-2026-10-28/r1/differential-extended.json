@@ -1,0 +1,334 @@
+{
+ "corpus": {
+  "original": 62,
+  "reviewer": 32,
+  "total": 94,
+  "reviewerLabels": [
+   "arguments object",
+   "strict arguments object",
+   "other realm arguments object",
+   "Float64Array",
+   "BigInt64Array",
+   "Buffer",
+   "other realm Uint8Array",
+   "Proxy(Proxy([]))",
+   "other realm Proxy([])",
+   "Proxy([]) with throwing handler",
+   "Proxy({}) whose getPrototypeOf says Array.prototype",
+   "Proxy(revoked Proxy([]))",
+   "revoked Proxy(function)",
+   "Array.prototype",
+   "other realm Array.prototype",
+   "Object.create(other realm Array.prototype)",
+   "array with prototype set to Object.prototype",
+   "array with null prototype",
+   "{constructor: Array}",
+   "toStringTag getter that throws",
+   "frozen array",
+   "structuredClone([])",
+   "other realm SubArray",
+   "array iterator",
+   "generator object",
+   "WeakRef",
+   "globalThis",
+   "AggregateError",
+   "bound function",
+   "other realm function",
+   "class with static isArray",
+   "V8 undetectable (document.all-like)"
+  ]
+ },
+ "members": 31,
+ "mergedCount": 17,
+ "groups": [
+  {
+   "signature": "ea96ab59bca5",
+   "size": 27,
+   "members": [
+    "base apps/three-surface-poc/src/block-provenance-sweep.test.ts:40 isObj",
+    "base apps/three-surface-poc/src/governing-intent-sweep.test.ts:39 isObj",
+    "base packages/cap1-core/src/declaration.ts:72 isPlainObject",
+    "base packages/cap1-daemon/src/consent-loading.ts:124 isPlainObject",
+    "base packages/polaris-dossier/src/check.ts:194 isObj",
+    "base packages/polaris-dossier/src/close.ts:86 isObj",
+    "base packages/polaris-dossier/src/design-review.ts:28 isObj",
+    "base packages/polaris-dossier/src/execution-flags.ts:43 isObj",
+    "base packages/polaris-dossier/src/inventory.ts:77 isObj",
+    "base packages/polaris-dossier/src/render.ts:121 isObj",
+    "base packages/polaris-dossier/src/review.ts:61 isObj",
+    "base packages/polaris-dossier/src/run-record.ts:136 isObject",
+    "base packages/polaris-dossier/src/screen.ts:73 isObject",
+    "base packages/polaris-dossier/src/session-statement.ts:31 isObj",
+    "base packages/polaris-dossier/src/waiting-sessions.ts:71 isObj",
+    "base packages/polaris-generation-core/src/discovery.ts:219 isObject",
+    "base packages/polaris-generation-core/src/dossier-evaluation.ts:50 isRecord",
+    "base packages/polaris-generation-core/src/public-source-classification.ts:56 isObject",
+    "base packages/polaris-generation-core/src/reader-questions.ts:22 isRecord",
+    "base packages/polaris-generation-core/src/secret-redaction.ts:35 isObject",
+    "base packages/three-surface-poc-core/src/authority-artifact-fields.ts:85 isRecord",
+    "base packages/three-surface-poc-core/src/body-read-authority.test.ts:189 isPlainObject",
+    "base packages/three-surface-poc-core/src/response-identity.ts:131 isObject",
+    "base scripts/redis_screening_remeasure.mjs:326 isObj",
+    "head packages/support/src/is-record.ts exact text",
+    "head is-record.ts loaded by node (type stripping)",
+    "head @syzygy/support dist/index.js isRecord"
+   ]
+  },
+  {
+   "signature": "bbeb3cb57df7",
+   "size": 1,
+   "members": [
+    "base apps/three-surface-poc/src/polaris-generation/public-source-screening.ts:167 (anonymous)"
+   ]
+  },
+  {
+   "signature": "1fd0ce3f15f1",
+   "size": 1,
+   "members": [
+    "base packages/polaris-dossier/src/draft-schema.test.ts:94 refs"
+   ]
+  },
+  {
+   "signature": "08eb664acc3a",
+   "size": 1,
+   "members": [
+    "base packages/polaris-generation-core/src/discovery-provider.ts:66 isRecord"
+   ]
+  },
+  {
+   "signature": "b482ecd1833c",
+   "size": 1,
+   "members": [
+    "base scripts/differential_line_slot.mjs:73 isTemplate"
+   ]
+  }
+ ],
+ "headGroupHoldsAllHeadForms": true,
+ "mergedOutsideHeadGroup": [],
+ "extraTable": [
+  {
+   "label": "arguments object",
+   "head": "T",
+   "mergedOutcomes": [
+    "T"
+   ]
+  },
+  {
+   "label": "strict arguments object",
+   "head": "T",
+   "mergedOutcomes": [
+    "T"
+   ]
+  },
+  {
+   "label": "other realm arguments object",
+   "head": "T",
+   "mergedOutcomes": [
+    "T"
+   ]
+  },
+  {
+   "label": "Float64Array",
+   "head": "T",
+   "mergedOutcomes": [
+    "T"
+   ]
+  },
+  {
+   "label": "BigInt64Array",
+   "head": "T",
+   "mergedOutcomes": [
+    "T"
+   ]
+  },
+  {
+   "label": "Buffer",
+   "head": "T",
+   "mergedOutcomes": [
+    "T"
+   ]
+  },
+  {
+   "label": "other realm Uint8Array",
+   "head": "T",
+   "mergedOutcomes": [
+    "T"
+   ]
+  },
+  {
+   "label": "Proxy(Proxy([]))",
+   "head": "F",
+   "mergedOutcomes": [
+    "F"
+   ]
+  },
+  {
+   "label": "other realm Proxy([])",
+   "head": "F",
+   "mergedOutcomes": [
+    "F"
+   ]
+  },
+  {
+   "label": "Proxy([]) with throwing handler",
+   "head": "F",
+   "mergedOutcomes": [
+    "F"
+   ]
+  },
+  {
+   "label": "Proxy({}) whose getPrototypeOf says Array.prototype",
+   "head": "T",
+   "mergedOutcomes": [
+    "T"
+   ]
+  },
+  {
+   "label": "Proxy(revoked Proxy([]))",
+   "head": "E:TypeError",
+   "mergedOutcomes": [
+    "E:TypeError"
+   ]
+  },
+  {
+   "label": "revoked Proxy(function)",
+   "head": "F",
+   "mergedOutcomes": [
+    "F"
+   ]
+  },
+  {
+   "label": "Array.prototype",
+   "head": "F",
+   "mergedOutcomes": [
+    "F"
+   ]
+  },
+  {
+   "label": "other realm Array.prototype",
+   "head": "F",
+   "mergedOutcomes": [
+    "F"
+   ]
+  },
+  {
+   "label": "Object.create(other realm Array.prototype)",
+   "head": "T",
+   "mergedOutcomes": [
+    "T"
+   ]
+  },
+  {
+   "label": "array with prototype set to Object.prototype",
+   "head": "F",
+   "mergedOutcomes": [
+    "F"
+   ]
+  },
+  {
+   "label": "array with null prototype",
+   "head": "F",
+   "mergedOutcomes": [
+    "F"
+   ]
+  },
+  {
+   "label": "{constructor: Array}",
+   "head": "T",
+   "mergedOutcomes": [
+    "T"
+   ]
+  },
+  {
+   "label": "toStringTag getter that throws",
+   "head": "T",
+   "mergedOutcomes": [
+    "T"
+   ]
+  },
+  {
+   "label": "frozen array",
+   "head": "F",
+   "mergedOutcomes": [
+    "F"
+   ]
+  },
+  {
+   "label": "structuredClone([])",
+   "head": "F",
+   "mergedOutcomes": [
+    "F"
+   ]
+  },
+  {
+   "label": "other realm SubArray",
+   "head": "F",
+   "mergedOutcomes": [
+    "F"
+   ]
+  },
+  {
+   "label": "array iterator",
+   "head": "T",
+   "mergedOutcomes": [
+    "T"
+   ]
+  },
+  {
+   "label": "generator object",
+   "head": "T",
+   "mergedOutcomes": [
+    "T"
+   ]
+  },
+  {
+   "label": "WeakRef",
+   "head": "T",
+   "mergedOutcomes": [
+    "T"
+   ]
+  },
+  {
+   "label": "globalThis",
+   "head": "T",
+   "mergedOutcomes": [
+    "T"
+   ]
+  },
+  {
+   "label": "AggregateError",
+   "head": "T",
+   "mergedOutcomes": [
+    "T"
+   ]
+  },
+  {
+   "label": "bound function",
+   "head": "F",
+   "mergedOutcomes": [
+    "F"
+   ]
+  },
+  {
+   "label": "other realm function",
+   "head": "F",
+   "mergedOutcomes": [
+    "F"
+   ]
+  },
+  {
+   "label": "class with static isArray",
+   "head": "T",
+   "mergedOutcomes": [
+    "T"
+   ]
+  },
+  {
+   "label": "V8 undetectable (document.all-like)",
+   "head": "F",
+   "mergedOutcomes": [
+    "F"
+   ]
+  }
+ ]
+}

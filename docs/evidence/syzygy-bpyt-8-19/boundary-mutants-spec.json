@@ -1,0 +1,114 @@
+{
+  "mutants": [
+    {
+      "id": "B1-core-root-import-in-in-force",
+      "file": "packages/polaris-generation-consent/src/in-force.ts",
+      "old": "import type { AdmissionRecord } from './admission-record.js';\n",
+      "new": "import type { AdmissionRecord } from './admission-record.js';\nimport { digestCanonicalJson } from '@syzygy/polaris-generation-core';\n",
+      "note": "the live consent module imports a value from the core root, which re-exports the island",
+      "tests": [
+        "packages/polaris-generation-core/src/island-boundary.test.ts"
+      ],
+      "project": "@syzygy/polaris-generation-core"
+    },
+    {
+      "id": "B2-core-root-type-import-in-in-force",
+      "file": "packages/polaris-generation-consent/src/in-force.ts",
+      "old": "import type { AdmissionRecord } from './admission-record.js';\n",
+      "new": "import type { AdmissionRecord } from './admission-record.js';\nimport type { PipelinePorts } from '@syzygy/polaris-generation-core';\n",
+      "note": "a type-only edge from the live consent module to the core root",
+      "tests": [
+        "packages/polaris-generation-core/src/island-boundary.test.ts"
+      ],
+      "project": "@syzygy/polaris-generation-core"
+    },
+    {
+      "id": "B3-consent-ports-import-in-in-force",
+      "file": "packages/polaris-generation-consent/src/in-force.ts",
+      "old": "import type { AdmissionRecord } from './admission-record.js';\n",
+      "new": "import type { AdmissionRecord } from './admission-record.js';\nimport './consent-ports.js';\n",
+      "note": "the live consent module imports consent-ports.ts",
+      "tests": [
+        "packages/polaris-generation-core/src/island-boundary.test.ts"
+      ],
+      "project": "@syzygy/polaris-generation-core"
+    },
+    {
+      "id": "B4-consent-ports-reexport-in-live",
+      "file": "packages/polaris-generation-consent/src/live.ts",
+      "old": "export { inForceRecords, notInForceRecords, type NotInForce } from './in-force.js';\n",
+      "new": "export { inForceRecords, notInForceRecords, type NotInForce } from './in-force.js';\nexport { UNCONSENTED } from './consent-ports.js';\n",
+      "note": "the ./live subpath re-exports a consent-ports value",
+      "tests": [
+        "packages/polaris-generation-core/src/island-boundary.test.ts"
+      ],
+      "project": "@syzygy/polaris-generation-core"
+    },
+    {
+      "id": "B5-consent-ports-type-reexport-in-live",
+      "file": "packages/polaris-generation-consent/src/live.ts",
+      "old": "export { inForceRecords, notInForceRecords, type NotInForce } from './in-force.js';\n",
+      "new": "export { inForceRecords, notInForceRecords, type NotInForce } from './in-force.js';\nexport type { ConsentPorts } from './consent-ports.js';\n",
+      "note": "the ./live subpath re-exports a consent-ports type",
+      "tests": [
+        "packages/polaris-generation-core/src/island-boundary.test.ts"
+      ],
+      "project": "@syzygy/polaris-generation-core"
+    },
+    {
+      "id": "B6-screen-imports-consent-root",
+      "file": "packages/polaris-dossier/src/screen.ts",
+      "old": "from '@syzygy/polaris-generation-consent/live';",
+      "new": "from '@syzygy/polaris-generation-consent';",
+      "note": "the screen goes back to the consent root",
+      "tests": [
+        "packages/polaris-generation-core/src/island-boundary.test.ts"
+      ],
+      "project": "@syzygy/polaris-generation-core"
+    },
+    {
+      "id": "B7-gate-sources-import-consent-root",
+      "file": "packages/polaris-dossier/src/gate-sources.ts",
+      "old": "} from '@syzygy/polaris-generation-consent/live';",
+      "new": "} from '@syzygy/polaris-generation-consent';",
+      "note": "the gate sources go back to the consent root",
+      "tests": [
+        "packages/polaris-generation-core/src/island-boundary.test.ts"
+      ],
+      "project": "@syzygy/polaris-generation-core"
+    },
+    {
+      "id": "B8-package-reader-imports-consent-ports",
+      "file": "packages/polaris-generation-consent/src/package-reader.ts",
+      "old": "import { inForceRecords, notInForceRecords, type NotInForce } from './in-force.js';",
+      "new": "import { inForceRecords, notInForceRecords, type NotInForce } from './consent-ports.js';",
+      "note": "the package reader takes the in-force rules from consent-ports.ts again, as before this bead",
+      "tests": [
+        "packages/polaris-generation-core/src/island-boundary.test.ts"
+      ],
+      "project": "@syzygy/polaris-generation-core"
+    },
+    {
+      "id": "B9-live-subpath-resolves-to-root",
+      "file": "packages/polaris-generation-consent/package.json",
+      "old": "\"import\": \"./dist/live.js\",",
+      "new": "\"import\": \"./dist/index.js\",",
+      "note": "the ./live subpath resolves to the root barrel",
+      "tests": [
+        "packages/polaris-generation-core/src/island-boundary.test.ts"
+      ],
+      "project": "@syzygy/polaris-generation-core"
+    },
+    {
+      "id": "B10-root-without-consent-ports",
+      "file": "packages/polaris-generation-consent/src/index.ts",
+      "old": "export { UNCONSENTED, createConsentPorts, inForceRecords, notInForceRecords, withConsent, type NotInForce, type WithConsentOptions, type ConsentAudit, type ConsentPorts, type ConsentPortsOptions, type ConsentReason, type ReliedRecord } from './consent-ports.js';\n",
+      "new": "export { inForceRecords, notInForceRecords, type NotInForce } from './in-force.js';\n",
+      "note": "the root stops re-exporting consent-ports.ts: the positive control (the walk from the consent root finds the island) must fail",
+      "tests": [
+        "packages/polaris-generation-core/src/island-boundary.test.ts"
+      ],
+      "project": "@syzygy/polaris-generation-core"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+/** Every write to a property, as written: an assignment by `=` or any compound operator whose target, or a target its
+ * destructuring pattern names, is a property or element access. */
+function propertyWritesOf(name: string, source: string): string[] {
+  const file = ts.createSourceFile(name, source, ts.ScriptTarget.Latest, false);
+  const writes: string[] = [];
+  const targets = (node: ts.Expression): ts.Expression[] =>
+    ts.isArrayLiteralExpression(node) ? node.elements.flatMap((element) => targets(ts.isSpreadElement(element) ? element.expression : element))
+      : ts.isObjectLiteralExpression(node) ? node.properties.flatMap((property) =>
+        ts.isPropertyAssignment(property) ? targets(property.initializer) : ts.isSpreadAssignment(property) ? targets(property.expression) : [])
+      : ts.isBinaryExpression(node) && node.operatorToken.kind === ts.SyntaxKind.EqualsToken ? targets(node.left)
+      : ts.isParenthesizedExpression(node) ? targets(node.expression)
+      : [node];
+  const visit = (node: ts.Node): void => {
+    if (ts.isBinaryExpression(node) && node.operatorToken.kind >= ts.SyntaxKind.FirstAssignment && node.operatorToken.kind <= ts.SyntaxKind.LastAssignment
+      && targets(node.left).some((target) => ts.isPropertyAccessExpression(target) || ts.isElementAccessExpression(target))) writes.push(node.getText(file));
+    ts.forEachChild(node, visit);
+  };
+  visit(file);
+  return writes;
+}

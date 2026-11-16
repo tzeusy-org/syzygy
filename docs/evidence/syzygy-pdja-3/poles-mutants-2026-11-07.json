@@ -1,0 +1,442 @@
+{
+  "format": "mutation-record",
+  "bead": "syzygy-pdja.4",
+  "subject": {
+    "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": "e9ddc52912cdea3c829362e47debae1beb8007e6cff9d64e3fb707f0a8b2e6b7",
+    "packages/polaris-dossier/src/brief.ts": "f8e80e367b89ad5f7bae553cf66b8516b912a1ede8ee3bda9219a423ce9e7d62",
+    "packages/polaris-dossier/src/check-derive.ts": "6b05281984af1ab11f35b8ddddd828d21cb7d9a5042ec858a007672d3d2f439d",
+    "packages/polaris-dossier/src/draft-schema.ts": "c3a8c13f47502abec9b2fa85b7384d6a7ec9297177bc92490f8ad5caea11df73",
+    "packages/polaris-dossier/src/render.ts": "9189adb4e6dbf8a9a82205acb7eced6bc732b471c28a0153223b4567959512dc",
+    "packages/polaris-dossier/src/run-config.ts": "4f0091d4e5a152d3395dbf50df9e45785d33ceb5565313d90779f3e218d101cd",
+    "packages/polaris-dossier/src/run-record.ts": "cd8ddd74db9b401c5d001c885ba7184f14c2500cd4e161484477096b615e9ad2"
+  },
+  "ranAt": "534615cf7ade2a1b1503aa0c431ff71f12f32c59",
+  "note": "Poles (dossier spec v1.5). Each mutant replaces old with new once in the committed tree at ranAt, runs the five testFiles with vitest, then restores the file. The first run's pole-not-narrative mutant left an unbalanced parenthesis, so it failed to load rather than failing a test (0 failed with a nonzero exit, kept under discarded); the corrected mutant was re-run at the same commit and killed.",
+  "denominator": 27,
+  "killed": 27,
+  "mutants": [
+    {
+      "id": "default-limit",
+      "file": "packages/polaris-dossier/src/run-config.ts",
+      "old": "export const DEFAULT_POLE_LIMIT = 5;",
+      "new": "export const DEFAULT_POLE_LIMIT = 6;",
+      "killed": true,
+      "tests": "4 failed | 327 passed (331)",
+      "testFiles": [
+        "packages/polaris-dossier/src/run-config.test.ts",
+        "packages/polaris-dossier/src/check.test.ts",
+        "packages/polaris-dossier/src/brief.test.ts",
+        "packages/polaris-dossier/src/render.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+      ]
+    },
+    {
+      "id": "zero-limit-ok",
+      "file": "packages/polaris-dossier/src/run-config.ts",
+      "old": "const poleLimit = limit(fields, 'poleLimit', { optional: true, zeroAllowed: false }, refuse);",
+      "new": "const poleLimit = limit(fields, 'poleLimit', { optional: true, zeroAllowed: true }, refuse);",
+      "killed": true,
+      "tests": "1 failed | 330 passed (331)",
+      "testFiles": [
+        "packages/polaris-dossier/src/run-config.test.ts",
+        "packages/polaris-dossier/src/check.test.ts",
+        "packages/polaris-dossier/src/brief.test.ts",
+        "packages/polaris-dossier/src/render.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+      ]
+    },
+    {
+      "id": "limit-ignored",
+      "file": "packages/polaris-dossier/src/run-config.ts",
+      "old": "export const poleLimitOf = (config: Pick<RunConfig, 'poleLimit'>): number => config.poleLimit ?? DEFAULT_POLE_LIMIT;",
+      "new": "export const poleLimitOf = (_config: Pick<RunConfig, 'poleLimit'>): number => DEFAULT_POLE_LIMIT;",
+      "killed": true,
+      "tests": "3 failed | 328 passed (331)",
+      "testFiles": [
+        "packages/polaris-dossier/src/run-config.test.ts",
+        "packages/polaris-dossier/src/check.test.ts",
+        "packages/polaris-dossier/src/brief.test.ts",
+        "packages/polaris-dossier/src/render.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+      ]
+    },
+    {
+      "id": "record-default-written",
+      "file": "packages/polaris-dossier/src/run-record.ts",
+      "old": "  if (config.poleLimit !== null) input['poleLimit'] = config.poleLimit;\n",
+      "new": "  input['poleLimit'] = config.poleLimit ?? 5;\n",
+      "killed": true,
+      "tests": "1 failed | 330 passed (331)",
+      "testFiles": [
+        "packages/polaris-dossier/src/run-config.test.ts",
+        "packages/polaris-dossier/src/check.test.ts",
+        "packages/polaris-dossier/src/brief.test.ts",
+        "packages/polaris-dossier/src/render.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+      ]
+    },
+    {
+      "id": "v4-fields-short",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "old": "export const V4_FIELDS = Object.freeze(['judgement', 'repeatsDiagram', 'poles', 'whySection'] as const);",
+      "new": "export const V4_FIELDS = Object.freeze(['judgement', 'repeatsDiagram'] as const);",
+      "killed": true,
+      "tests": "1 failed | 330 passed (331)",
+      "testFiles": [
+        "packages/polaris-dossier/src/run-config.test.ts",
+        "packages/polaris-dossier/src/check.test.ts",
+        "packages/polaris-dossier/src/brief.test.ts",
+        "packages/polaris-dossier/src/render.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+      ]
+    },
+    {
+      "id": "over-limit-off",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "if (poles.length > poleLimit) add(",
+      "new": "if (false) add(",
+      "killed": true,
+      "tests": "3 failed | 328 passed (331)",
+      "testFiles": [
+        "packages/polaris-dossier/src/run-config.test.ts",
+        "packages/polaris-dossier/src/check.test.ts",
+        "packages/polaris-dossier/src/brief.test.ts",
+        "packages/polaris-dossier/src/render.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+      ]
+    },
+    {
+      "id": "over-limit-off-by-one",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "if (poles.length > poleLimit) add(",
+      "new": "if (poles.length > poleLimit + 1) add(",
+      "killed": true,
+      "tests": "3 failed | 328 passed (331)",
+      "testFiles": [
+        "packages/polaris-dossier/src/run-config.test.ts",
+        "packages/polaris-dossier/src/check.test.ts",
+        "packages/polaris-dossier/src/brief.test.ts",
+        "packages/polaris-dossier/src/render.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+      ]
+    },
+    {
+      "id": "empty-pole-off",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "if (sections.length === 0) add({ kind: 'pole',",
+      "new": "if (false) add({ kind: 'pole',",
+      "killed": true,
+      "tests": "1 failed | 330 passed (331)",
+      "testFiles": [
+        "packages/polaris-dossier/src/run-config.test.ts",
+        "packages/polaris-dossier/src/check.test.ts",
+        "packages/polaris-dossier/src/brief.test.ts",
+        "packages/polaris-dossier/src/render.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+      ]
+    },
+    {
+      "id": "no-pole-off",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "if (home.length === 0) add({ kind: 'pole',",
+      "new": "if (false) add({ kind: 'pole',",
+      "killed": true,
+      "tests": "1 failed | 330 passed (331)",
+      "testFiles": [
+        "packages/polaris-dossier/src/run-config.test.ts",
+        "packages/polaris-dossier/src/check.test.ts",
+        "packages/polaris-dossier/src/brief.test.ts",
+        "packages/polaris-dossier/src/render.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+      ]
+    },
+    {
+      "id": "two-poles-off",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "else if (home.length > 1) add({ kind: 'pole',",
+      "new": "else if (false) add({ kind: 'pole',",
+      "killed": true,
+      "tests": "1 failed | 330 passed (331)",
+      "testFiles": [
+        "packages/polaris-dossier/src/run-config.test.ts",
+        "packages/polaris-dossier/src/check.test.ts",
+        "packages/polaris-dossier/src/brief.test.ts",
+        "packages/polaris-dossier/src/render.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+      ]
+    },
+    {
+      "id": "why-missing-off",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "if (why === undefined) add({ kind: 'pole', at: '$.whySection',",
+      "new": "if (false) add({ kind: 'pole', at: '$.whySection',",
+      "killed": true,
+      "tests": "1 failed | 330 passed (331)",
+      "testFiles": [
+        "packages/polaris-dossier/src/run-config.test.ts",
+        "packages/polaris-dossier/src/check.test.ts",
+        "packages/polaris-dossier/src/brief.test.ts",
+        "packages/polaris-dossier/src/render.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+      ]
+    },
+    {
+      "id": "why-unknown-off",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "else if (!sectionIds.has(why)) add({ kind: 'pole',",
+      "new": "else if (false) add({ kind: 'pole',",
+      "killed": true,
+      "tests": "1 failed | 330 passed (331)",
+      "testFiles": [
+        "packages/polaris-dossier/src/run-config.test.ts",
+        "packages/polaris-dossier/src/check.test.ts",
+        "packages/polaris-dossier/src/brief.test.ts",
+        "packages/polaris-dossier/src/render.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+      ]
+    },
+    {
+      "id": "pole-label-unchecked",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "  list(doc['poles']).forEach((pole, i) => { if (isRecord(pole) && typeof pole['label'] === 'string') out.push(",
+      "new": "  list([]).forEach((pole, i) => { if (isRecord(pole) && typeof pole['label'] === 'string') out.push(",
+      "killed": true,
+      "tests": "1 failed | 330 passed (331)",
+      "testFiles": [
+        "packages/polaris-dossier/src/run-config.test.ts",
+        "packages/polaris-dossier/src/check.test.ts",
+        "packages/polaris-dossier/src/brief.test.ts",
+        "packages/polaris-dossier/src/render.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+      ]
+    },
+    {
+      "id": "pole-section-ref-off",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "if (!sectionIds.has(id)) add({ kind: 'unresolved-reference', at: `$.poles[${i}].sections[${k}]`",
+      "new": "if (false) add({ kind: 'unresolved-reference', at: `$.poles[${i}].sections[${k}]`",
+      "killed": true,
+      "tests": "1 failed | 330 passed (331)",
+      "testFiles": [
+        "packages/polaris-dossier/src/run-config.test.ts",
+        "packages/polaris-dossier/src/check.test.ts",
+        "packages/polaris-dossier/src/brief.test.ts",
+        "packages/polaris-dossier/src/render.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+      ]
+    },
+    {
+      "id": "brief-poles-off",
+      "file": "packages/polaris-dossier/src/brief.ts",
+      "old": "    '## Poles',\n",
+      "new": "    '## Parts',\n",
+      "killed": true,
+      "tests": "1 failed | 330 passed (331)",
+      "testFiles": [
+        "packages/polaris-dossier/src/run-config.test.ts",
+        "packages/polaris-dossier/src/check.test.ts",
+        "packages/polaris-dossier/src/brief.test.ts",
+        "packages/polaris-dossier/src/render.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+      ]
+    },
+    {
+      "id": "brief-limit-fixed",
+      "file": "packages/polaris-dossier/src/brief.ts",
+      "old": "at most ${poleLimitOf(declared)}, this run's Pole limit",
+      "new": "at most 5, this run's Pole limit",
+      "killed": true,
+      "tests": "1 failed | 330 passed (331)",
+      "testFiles": [
+        "packages/polaris-dossier/src/run-config.test.ts",
+        "packages/polaris-dossier/src/check.test.ts",
+        "packages/polaris-dossier/src/brief.test.ts",
+        "packages/polaris-dossier/src/render.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+      ]
+    },
+    {
+      "id": "adapter-poles-off",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "...(Array.isArray(doc['poles']) && typeof doc['whySection'] === 'string' ? { poles: {",
+      "new": "...(false ? { poles: {",
+      "killed": true,
+      "tests": "1 failed | 330 passed (331)",
+      "testFiles": [
+        "packages/polaris-dossier/src/run-config.test.ts",
+        "packages/polaris-dossier/src/check.test.ts",
+        "packages/polaris-dossier/src/brief.test.ts",
+        "packages/polaris-dossier/src/render.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+      ]
+    },
+    {
+      "id": "site-poles-off",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "const poleSpec = withheld ? undefined : local?.poles;",
+      "new": "const poleSpec = undefined as LocalRenderInput['poles'];",
+      "killed": true,
+      "tests": "8 failed | 323 passed (331)",
+      "testFiles": [
+        "packages/polaris-dossier/src/run-config.test.ts",
+        "packages/polaris-dossier/src/check.test.ts",
+        "packages/polaris-dossier/src/brief.test.ts",
+        "packages/polaris-dossier/src/render.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+      ]
+    },
+    {
+      "id": "why-only-page",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "path: pole.sections.every(id => id === poleSpec.whySection) ? null : `poles/${index + 1}.html`,",
+      "new": "path: `poles/${index + 1}.html`,",
+      "killed": true,
+      "tests": "2 failed | 329 passed (331)",
+      "testFiles": [
+        "packages/polaris-dossier/src/run-config.test.ts",
+        "packages/polaris-dossier/src/check.test.ts",
+        "packages/polaris-dossier/src/brief.test.ts",
+        "packages/polaris-dossier/src/render.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+      ]
+    },
+    {
+      "id": "landing-all-sections",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "const onLanding = poleSpec === undefined ? draft.sections : draft.sections.filter(section => section.id === poleSpec.whySection);",
+      "new": "const onLanding = draft.sections;",
+      "killed": true,
+      "tests": "4 failed | 327 passed (331)",
+      "testFiles": [
+        "packages/polaris-dossier/src/run-config.test.ts",
+        "packages/polaris-dossier/src/check.test.ts",
+        "packages/polaris-dossier/src/brief.test.ts",
+        "packages/polaris-dossier/src/render.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+      ]
+    },
+    {
+      "id": "why-repeated",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "      return id === poleSpec!.whySection\n",
+      "new": "      return false\n",
+      "killed": true,
+      "tests": "1 failed | 330 passed (331)",
+      "testFiles": [
+        "packages/polaris-dossier/src/run-config.test.ts",
+        "packages/polaris-dossier/src/check.test.ts",
+        "packages/polaris-dossier/src/brief.test.ts",
+        "packages/polaris-dossier/src/render.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+      ]
+    },
+    {
+      "id": "map-off",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "${sections}${poleMap}${missingList}",
+      "new": "${sections}${missingList}",
+      "killed": true,
+      "tests": "3 failed | 328 passed (331)",
+      "testFiles": [
+        "packages/polaris-dossier/src/run-config.test.ts",
+        "packages/polaris-dossier/src/check.test.ts",
+        "packages/polaris-dossier/src/brief.test.ts",
+        "packages/polaris-dossier/src/render.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+      ]
+    },
+    {
+      "id": "nav-poles-off",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "${poles.map(pole => pole.path === null ? '' : `<li><a href=\"${escape(href(from, pole.path))}\">${escape(pole.label)}</a></li>`).join('')}",
+      "new": "",
+      "killed": true,
+      "tests": "1 failed | 330 passed (331)",
+      "testFiles": [
+        "packages/polaris-dossier/src/run-config.test.ts",
+        "packages/polaris-dossier/src/check.test.ts",
+        "packages/polaris-dossier/src/brief.test.ts",
+        "packages/polaris-dossier/src/render.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+      ]
+    },
+    {
+      "id": "contents-to-index",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "`<li><a href=\"${escape(sectionHref('contents.html', section.id))}\">",
+      "new": "`<li><a href=\"${escape(href('contents.html', 'index.html', `section-${section.id}`))}\">",
+      "killed": true,
+      "tests": "1 failed | 330 passed (331)",
+      "testFiles": [
+        "packages/polaris-dossier/src/run-config.test.ts",
+        "packages/polaris-dossier/src/check.test.ts",
+        "packages/polaris-dossier/src/brief.test.ts",
+        "packages/polaris-dossier/src/render.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+      ]
+    },
+    {
+      "id": "validate-off",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "      || !draft.sections.some(section => section.id === poleSpec.whySection)) throw new DossierRenderError('invalid-poles');",
+      "new": "      || false) throw new DossierRenderError('invalid-poles');",
+      "killed": true,
+      "tests": "1 failed | 330 passed (331)",
+      "testFiles": [
+        "packages/polaris-dossier/src/run-config.test.ts",
+        "packages/polaris-dossier/src/check.test.ts",
+        "packages/polaris-dossier/src/brief.test.ts",
+        "packages/polaris-dossier/src/render.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+      ]
+    },
+    {
+      "id": "two-homes-ok",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "homes.some(count => count !== 1)",
+      "new": "homes.some(count => count === 0)",
+      "killed": true,
+      "tests": "1 failed | 330 passed (331)",
+      "testFiles": [
+        "packages/polaris-dossier/src/run-config.test.ts",
+        "packages/polaris-dossier/src/check.test.ts",
+        "packages/polaris-dossier/src/brief.test.ts",
+        "packages/polaris-dossier/src/render.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+      ]
+    },
+    {
+      "id": "pole-not-narrative",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": " || from.startsWith('poles/'));",
+      "new": ");",
+      "killed": true,
+      "tests": "1 failed | 330 passed (331)",
+      "testFiles": [
+        "packages/polaris-dossier/src/run-config.test.ts",
+        "packages/polaris-dossier/src/check.test.ts",
+        "packages/polaris-dossier/src/brief.test.ts",
+        "packages/polaris-dossier/src/render.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+      ]
+    }
+  ],
+  "discarded": [
+    {
+      "id": "pole-not-narrative",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": " || from.startsWith('poles/'));",
+      "new": "));",
+      "killed": true,
+      "tests": "232 passed | 74 skipped (306)",
+      "testFiles": [
+        "packages/polaris-dossier/src/run-config.test.ts",
+        "packages/polaris-dossier/src/check.test.ts",
+        "packages/polaris-dossier/src/brief.test.ts",
+        "packages/polaris-dossier/src/render.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+      ],
+      "why": "syntax error in the mutant: the suite did not load, so its nonzero exit is no kill"
+    }
+  ]
+}

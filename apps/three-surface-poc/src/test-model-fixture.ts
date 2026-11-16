@@ -5,8 +5,9 @@ import { cpSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 
-import { BUTLERS_POC_SEEDS, buildPocModel, type PocEvaluationEvidence, type PocModel, type ProjectShapeModelInput, type WalkthroughJudgmentInputs } from '@syzygy/three-surface-poc-core';
+import { BUTLERS_POC_SEEDS, buildPocModel, walkthroughAcceptance, type PocEvaluationEvidence, type PocModel, type ProjectShapeModelInput, type WalkthroughJudgmentInputs } from '@syzygy/three-surface-poc-core';
 
+import { ownedCopyPrefix, ownedTemplatePrefix } from './fixture-directories.js';
 import { pwbReadinessTraversal } from './walkthrough-inputs.js';
 
 function git(root: string, args: readonly string[]): string {
@@ -42,7 +43,7 @@ interface FixtureRepo {
  */
 export function fixtureRepoWithGit(cleanups: string[]): FixtureRepo {
   template ??= committedFixtureRepo();
-  const root = mkdtempSync(join(tmpdir(), 'syzygy-poc-surface-fixture-'));
+  const root = mkdtempSync(join(tmpdir(), ownedCopyPrefix()));
   cleanups.push(root);
   cpSync(template.repoRoot, root, { recursive: true });
   return { repoRoot: root, revision: template.revision };
@@ -64,10 +65,10 @@ function removeAtEndOfFile(root: string): void {
 }
 
 function committedFixtureRepo(): FixtureRepo {
-  const root = mkdtempSync(join(tmpdir(), 'syzygy-poc-surface-fixture-template-'));
+  const root = mkdtempSync(join(tmpdir(), ownedTemplatePrefix()));
   removeAtEndOfFile(root);
   const files: Readonly<Record<string, string>> = {
-    'docs/superpowers/specs/2026-08-24-whatsapp-identity-reconciliation-design.md':
+    'docs/plans/2026-08-24-whatsapp-identity-reconciliation-design.md':
       '# design\nStatus: Approved for implementation\n',
     'openspec/changes/repair-whatsapp-identity-reconciliation/proposal.md':
       '# proposal\n- Sign-off: owner approved the design and end-to-end implementation on 2026-08-24.\n',
@@ -194,10 +195,9 @@ export function buildFixtureModel(cleanups: string[], options: FixtureModelOptio
     runWorkItemQuery: (_repoRoot, sql) =>
       sql.includes('WHERE id LIKE') ? JSON.stringify(rows) : JSON.stringify([{ revision: doltRevision }]),
     ...(options.projectShape === undefined ? {} : { projectShape: options.projectShape }),
-    ...(options.walkthroughJudgment === undefined ? {} : { walkthroughJudgment: options.walkthroughJudgment }),
     // The production traversal predicate: readiness is assessed whenever a
     // pair is supplied, exactly as the daemon does.
-    walkthroughReadiness: { traversal: pwbReadinessTraversal() },
+    acceptance: walkthroughAcceptance({ judgment: options.walkthroughJudgment, traversal: pwbReadinessTraversal() }),
   });
 }
 

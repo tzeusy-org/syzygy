@@ -61,9 +61,28 @@ profiles: []
 export const FIXTURE_CONSENT_RECORD = `id: consent-gov-root
 project: ${FIXTURE_PROJECT_ID}
 repository: repo-governance-root
-scope: full
+scope: observe
 attribution: owner
 grant_state: in-force
+`;
+
+// The synthetic cap1-owner-act/v1 record beside it: an explicit state-(1)
+// bootstrap act bound to the consent record's exact bytes. A FIXTURE, never
+// an owner act (syzygy-u2a.2); without it the consent admits nothing.
+export const FIXTURE_OWNER_ACT = `schema: "cap1-owner-act/v1"
+act: "act-consent-gov-root"
+project: "${FIXTURE_PROJECT_ID}"
+artifact: "consent-gov-root"
+artifact_digest: "sha256:${createHash('sha256').update(FIXTURE_CONSENT_RECORD).digest('hex')}"
+act_type: "consent"
+owner: "fixture-owner (synthetic, not an owner act)"
+instant: "2026-08-01T00:00:00Z"
+scope: "observe"
+supersedes: null
+expires: null
+actor: "human"
+provenance: "owner-adopted-bootstrap"
+a1_audit_record: null
 `;
 
 /** Write the complete fixture repository into `rootDir` (created). */
@@ -80,6 +99,7 @@ export function writeCompleteFixture(rootDir: string): void {
     FIXTURE_CONSENT_RECORD,
     'utf8',
   );
+  writeFileSync(path.join(decisionsDir, 'consent-gov-root.act.yaml'), FIXTURE_OWNER_ACT, 'utf8');
   writeFileSync(path.join(intentDir, 'OVERVIEW.md'), FIXTURE_ENTRY_TEXT, 'utf8');
   // Governed-plane content beyond .syzygy/**, so the write-boundary
   // sweep's governed denominator covers BOTH namespaces.

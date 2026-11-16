@@ -1,0 +1,472 @@
+== head (probe exit 0, 17 s)
+{
+ "case": "head",
+ "treeCleanAfter": true,
+ "exitCode": 0,
+ "wallSeconds": 13.2,
+ "deadlineHit": false,
+ "statuses": {
+  "passed": 21
+ },
+ "failed": [],
+ "port7477Seen": 0,
+ "samples": 16,
+ "meanInterval": 0.82,
+ "load1": {
+  "start": 25.42,
+  "end": 30.23
+ },
+ "killedOn7477": 0,
+ "ownListeningPorts": [],
+ "survivors": 0,
+ "slowestMs": 1198,
+ "passesExpectation": true
+}
+
+== head-runner-env (probe exit 0, 15 s)
+{
+ "case": "head-runner-env",
+ "treeCleanAfter": true,
+ "exitCode": 0,
+ "wallSeconds": 11.4,
+ "deadlineHit": false,
+ "statuses": {
+  "passed": 15
+ },
+ "failed": [],
+ "port7477Seen": 0,
+ "samples": 17,
+ "meanInterval": 0.67,
+ "load1": {
+  "start": 31.09,
+  "end": 36.39
+ },
+ "killedOn7477": 0,
+ "ownListeningPorts": [],
+ "survivors": 0,
+ "slowestMs": 620,
+ "passesExpectation": true
+}
+
+== P1-head (probe exit 0, 23 s)
+{
+ "case": "P1-head",
+ "treeCleanAfter": true,
+ "exitCode": 1,
+ "wallSeconds": 9.9,
+ "deadlineHit": false,
+ "statuses": {
+  "failed": 1,
+  "passed": 14
+ },
+ "failed": [
+  {
+   "name": " is unchanged a state directory inside the governed plane is refused with the same message",
+   "ms": 288,
+   "etimedout": false,
+   "head": "AssertionError: expected { status: 1, stdout: '', \u2026(1) } to deeply equal { status: 1, stdout: '', \u2026(1) }\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad"
+  }
+ ],
+ "port7477Seen": 0,
+ "samples": 14,
+ "meanInterval": 0.71,
+ "load1": {
+  "start": 37.16,
+  "end": 36.52
+ },
+ "killedOn7477": 0,
+ "ownListeningPorts": [],
+ "survivors": 0,
+ "slowestMs": 1008,
+ "passesExpectation": true
+}
+
+== P1-head-runner-env (probe exit 0, 23 s)
+{
+ "case": "P1-head-runner-env",
+ "treeCleanAfter": true,
+ "exitCode": 1,
+ "wallSeconds": 11.1,
+ "deadlineHit": false,
+ "statuses": {
+  "failed": 1,
+  "passed": 14
+ },
+ "failed": [
+  {
+   "name": " is unchanged a state directory inside the governed plane is refused with the same message",
+   "ms": 553,
+   "etimedout": false,
+   "head": "AssertionError: expected { status: 1, stdout: '', \u2026(1) } to deeply equal { status: 1, stdout: '', \u2026(1) }\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad"
+  }
+ ],
+ "port7477Seen": 0,
+ "samples": 15,
+ "meanInterval": 0.74,
+ "load1": {
+  "start": 38.09,
+  "end": 39.6
+ },
+ "killedOn7477": 0,
+ "ownListeningPorts": [],
+ "survivors": 0,
+ "slowestMs": 824,
+ "passesExpectation": true
+}
+
+== P2-head (probe exit 0, 38 s)
+{
+ "case": "P2-head",
+ "treeCleanAfter": true,
+ "exitCode": 1,
+ "wallSeconds": 29.5,
+ "deadlineHit": false,
+ "statuses": {
+  "failed": 1,
+  "passed": 14
+ },
+ "failed": [
+  {
+   "name": " but `dossier` is unchanged [\"--port\",\"70000\"] is refused with exit 1 and the same message",
+   "ms": 20040,
+   "etimedout": true,
+   "head": "Error: [\"--port\",\"70000\"]: spawnSync /home/tze/.nvm/versions/node/v24.6.0/bin/node ETIMEDOUT (timeout 20000 ms)\n    at runSync (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea080"
+  }
+ ],
+ "port7477Seen": 0,
+ "samples": 48,
+ "meanInterval": 0.61,
+ "load1": {
+  "start": 42.22,
+  "end": 41.32
+ },
+ "killedOn7477": 0,
+ "ownListeningPorts": [
+  "34633"
+ ],
+ "survivors": 0,
+ "slowestMs": 20040,
+ "passesExpectation": true
+}
+
+== P1-prior (probe exit 0, 17 s)
+{
+ "case": "P1-prior",
+ "treeCleanAfter": true,
+ "exitCode": 0,
+ "wallSeconds": 7.8,
+ "deadlineHit": false,
+ "statuses": {
+  "passed": 15
+ },
+ "failed": [],
+ "port7477Seen": 0,
+ "samples": 12,
+ "meanInterval": 0.65,
+ "load1": {
+  "start": 38.53,
+  "end": 37.53
+ },
+ "killedOn7477": 0,
+ "ownListeningPorts": [],
+ "survivors": 0,
+ "slowestMs": 627,
+ "passesExpectation": true
+}
+
+== P2-prior (probe exit 0, 40 s)
+{
+ "case": "P2-prior",
+ "treeCleanAfter": true,
+ "exitCode": 1,
+ "wallSeconds": 29.6,
+ "deadlineHit": false,
+ "statuses": {
+  "failed": 1,
+  "passed": 14
+ },
+ "failed": [
+  {
+   "name": " but `dossier` is unchanged [\"--port\",\"70000\"] is refused with exit 1 and the same message",
+   "ms": 20274,
+   "etimedout": true,
+   "head": "Error: [\"--port\",\"70000\"]: spawnSync /home/tze/.nvm/versions/node/v24.6.0/bin/node ETIMEDOUT (timeout 20000 ms)\n    at runSync (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea080"
+  }
+ ],
+ "port7477Seen": 0,
+ "samples": 43,
+ "meanInterval": 0.69,
+ "load1": {
+  "start": 36.7,
+  "end": 43.9
+ },
+ "killedOn7477": 0,
+ "ownListeningPorts": [
+  "42385"
+ ],
+ "survivors": 0,
+ "slowestMs": 20274,
+ "passesExpectation": true
+}
+
+== P1-base (probe exit 0, 27 s)
+{
+ "case": "P1-base",
+ "treeCleanAfter": true,
+ "exitCode": 1,
+ "wallSeconds": 12.5,
+ "deadlineHit": false,
+ "statuses": {
+  "failed": 1,
+  "passed": 14
+ },
+ "failed": [
+  {
+   "name": " is unchanged a state directory inside the governed plane is refused with the same message",
+   "ms": 209,
+   "etimedout": false,
+   "head": "AssertionError: expected { status: 1, stdout: '', \u2026(1) } to deeply equal { status: 1, stdout: '', \u2026(1) }\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad"
+  }
+ ],
+ "port7477Seen": 0,
+ "samples": 16,
+ "meanInterval": 0.78,
+ "load1": {
+  "start": 46.09,
+  "end": 46.9
+ },
+ "killedOn7477": 0,
+ "ownListeningPorts": [],
+ "survivors": 0,
+ "slowestMs": 739,
+ "passesExpectation": true
+}
+
+== P2-base (probe exit 0, 24 s)
+{
+ "case": "P2-base",
+ "treeCleanAfter": true,
+ "exitCode": 0,
+ "wallSeconds": 10.3,
+ "deadlineHit": false,
+ "statuses": {
+  "passed": 15
+ },
+ "failed": [],
+ "port7477Seen": 0,
+ "samples": 13,
+ "meanInterval": 0.79,
+ "load1": {
+  "start": 44.23,
+  "end": 46.07
+ },
+ "killedOn7477": 0,
+ "ownListeningPorts": [],
+ "survivors": 0,
+ "slowestMs": 1163,
+ "passesExpectation": true
+}
+
+== ARG-dropped-P1-head (probe exit 0, 24 s)
+{
+ "case": "ARG-dropped-P1-head",
+ "treeCleanAfter": true,
+ "exitCode": 0,
+ "wallSeconds": 11.7,
+ "deadlineHit": false,
+ "statuses": {
+  "passed": 15
+ },
+ "failed": [],
+ "port7477Seen": 0,
+ "samples": 14,
+ "meanInterval": 0.84,
+ "load1": {
+  "start": 49.49,
+  "end": 52.61
+ },
+ "killedOn7477": 0,
+ "ownListeningPorts": [],
+ "survivors": 0,
+ "slowestMs": 1111,
+ "passesExpectation": true
+}
+
+== READS-PORT-default-rows (probe exit 0, 14 s)
+{
+ "case": "READS-PORT-default-rows",
+ "treeCleanAfter": true,
+ "exitCode": 0,
+ "wallSeconds": 10.4,
+ "deadlineHit": false,
+ "statuses": {
+  "passed": 15
+ },
+ "failed": [],
+ "port7477Seen": 0,
+ "samples": 15,
+ "meanInterval": 0.69,
+ "load1": {
+  "start": 51.76,
+  "end": 54.92
+ },
+ "killedOn7477": 0,
+ "ownListeningPorts": [],
+ "survivors": 0,
+ "slowestMs": 821,
+ "passesExpectation": true
+}
+
+== READS-PORT-governed-row (probe exit 0, 15 s)
+{
+ "case": "READS-PORT-governed-row",
+ "treeCleanAfter": true,
+ "exitCode": 1,
+ "wallSeconds": 11.4,
+ "deadlineHit": false,
+ "statuses": {
+  "failed": 1,
+  "passed": 14
+ },
+ "failed": [
+  {
+   "name": " is unchanged a state directory inside the governed plane is refused with the same message",
+   "ms": 347,
+   "etimedout": false,
+   "head": "AssertionError: expected { status: 1, stdout: '', \u2026(1) } to deeply equal { status: 1, stdout: '', \u2026(1) }\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad"
+  }
+ ],
+ "port7477Seen": 0,
+ "samples": 14,
+ "meanInterval": 0.81,
+ "load1": {
+  "start": 55.25,
+  "end": 55.92
+ },
+ "killedOn7477": 0,
+ "ownListeningPorts": [],
+ "survivors": 0,
+ "slowestMs": 887,
+ "passesExpectation": true
+}
+
+== R5-head (probe exit 0, 67 s)
+{
+ "case": "R5-head",
+ "treeCleanAfter": true,
+ "exitCode": 1,
+ "wallSeconds": 51.9,
+ "deadlineHit": false,
+ "statuses": {
+  "failed": 2,
+  "passed": 13
+ },
+ "failed": [
+  {
+   "name": "dossier` is unchanged [\"--port\",\"0\",\"dossier\"] is refused with exit 1 and the same message",
+   "ms": 20124,
+   "etimedout": true,
+   "head": "Error: [\"--port\",\"0\",\"dossier\"]: spawnSync /home/tze/.nvm/versions/node/v24.6.0/bin/node ETIMEDOUT (timeout 20000 ms)\n    at runSync (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-0"
+  },
+  {
+   "name": "ocation but `dossier` is unchanged [\"Dossier\"] is refused with exit 1 and the same message",
+   "ms": 20034,
+   "etimedout": true,
+   "head": "Error: [\"Dossier\"]: spawnSync /home/tze/.nvm/versions/node/v24.6.0/bin/node ETIMEDOUT (timeout 20000 ms)\n    at runSync (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/s"
+  }
+ ],
+ "port7477Seen": 0,
+ "samples": 63,
+ "meanInterval": 0.82,
+ "load1": {
+  "start": 58.3,
+  "end": 53.71
+ },
+ "killedOn7477": 0,
+ "ownListeningPorts": [
+  "45265",
+  "45491"
+ ],
+ "survivors": 0,
+ "slowestMs": 20124,
+ "passesExpectation": true
+}
+
+== R9-head (probe exit 0, 44 s)
+{
+ "case": "R9-head",
+ "treeCleanAfter": true,
+ "exitCode": 1,
+ "wallSeconds": 31.4,
+ "deadlineHit": false,
+ "statuses": {
+  "failed": 1,
+  "passed": 14
+ },
+ "failed": [
+  {
+   "name": "vocation but `dossier` is unchanged [\"--port\"] is refused with exit 1 and the same message",
+   "ms": 20060,
+   "etimedout": true,
+   "head": "Error: [\"--port\"]: spawnSync /home/tze/.nvm/versions/node/v24.6.0/bin/node ETIMEDOUT (timeout 20000 ms)\n    at runSync (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/sc"
+  }
+ ],
+ "port7477Seen": 0,
+ "samples": 41,
+ "meanInterval": 0.77,
+ "load1": {
+  "start": 55.6,
+  "end": 50.3
+ },
+ "killedOn7477": 0,
+ "ownListeningPorts": [
+  "36667"
+ ],
+ "survivors": 0,
+ "slowestMs": 20060,
+ "passesExpectation": true
+}
+
+== T1-head-R5 (probe exit 0, 49 s)
+{
+ "case": "T1-head-R5",
+ "treeCleanAfter": true,
+ "exitCode": 1,
+ "wallSeconds": 33.1,
+ "deadlineHit": false,
+ "statuses": {
+  "failed": 2,
+  "passed": 13
+ },
+ "failed": [
+  {
+   "name": "dossier` is unchanged [\"--port\",\"0\",\"dossier\"] is refused with exit 1 and the same message",
+   "ms": 20065,
+   "etimedout": true,
+   "head": "Error: [\"--port\",\"0\",\"dossier\"]: spawnSync /home/tze/.nvm/versions/node/v24.6.0/bin/node ETIMEDOUT (timeout 20000 ms)\n    at runSync (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-0"
+  },
+  {
+   "name": "ocation but `dossier` is unchanged [\"Dossier\"] is refused with exit 1 and the same message",
+   "ms": 1052,
+   "etimedout": false,
+   "head": "AssertionError: expected { status: null, \u2026(2) } to deeply equal { status: 1, stdout: '', \u2026(1) }\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-525b"
+  }
+ ],
+ "port7477Seen": 1,
+ "samples": 41,
+ "meanInterval": 0.81,
+ "load1": {
+  "start": 54.79,
+  "end": 55.49
+ },
+ "killedOn7477": 1,
+ "ownListeningPorts": [
+  "7477",
+  "39749"
+ ],
+ "survivors": 0,
+ "slowestMs": 20065,
+ "passesExpectation": true
+}
+
+== all cases done

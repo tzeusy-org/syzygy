@@ -1,0 +1,5 @@
+{"shape":"link to a directory","base":{"targetCtimeNs":"absent","bytes":null},"fix":{"targetCtimeNs":"null","bytes":null}}
+{"shape":"link to a FIFO holding 5 bytes","base":{"targetCtimeNs":"absent","bytes":null},"baseFifoBytesLeftAfterSnapshot":"bytes","fix":{"targetCtimeNs":"null","bytes":null},"fixFifoBytesLeftAfterSnapshot":"bytes"}
+{"shape":"link to a link to a regular file","base":{"targetCtimeNs":"absent","bytes":"e30="},"fix":{"targetCtimeNs":"1792861919966650881","bytes":"e30="}}
+{"shape":"link loop (to itself)","base":{"threw":"ELOOP"},"fix":{"threw":"ELOOP"}}
+{"shape":"link into a directory the process may not search","base":{"threw":"EACCES"},"fix":{"threw":"EACCES"}}

@@ -1,0 +1,15 @@
+diff --git a/packages/three-surface-poc-core/src/project-shape-extraction.test.ts b/packages/three-surface-poc-core/src/project-shape-extraction.test.ts
+index 8d5ed582..e459d784 100644
+--- a/packages/three-surface-poc-core/src/project-shape-extraction.test.ts
++++ b/packages/three-surface-poc-core/src/project-shape-extraction.test.ts
+@@ -1149,6 +1149,10 @@ describe('a source whose class holds 130,000 items', () => {
+     expect(r.kind).toBe('extracted');
+     if (r.kind !== 'extracted') return;
+     expect(r.denominators['success-criterion']).toBe(BULLETS);
++    // Class order with the text as the oracle, not the module: the bullets sit on consecutive lines, so their items must too.
++    const success = r.items.filter((item) => item.class === 'success-criterion');
++    const first = success[0]?.line ?? 0;
++    expect(success.every((item, at) => item.line === first + at), 'the success-criterion items are not in line order').toBe(true);
+     expect(r.items).toHaveLength(Object.values(r.denominators).reduce((sum, n) => sum + n, 0));
+     // One class alone gives the same items as its slice of the three-class result.
+     let offset = 0;

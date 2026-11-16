@@ -1,0 +1,16 @@
+exit 0 
+node v24.6.0 traceLines 2
+traced   bs-append.txt
+UNTRACED bs-copy.txt
+UNTRACED bs-cp-dir
+UNTRACED bs-disposable-LUnapT
+UNTRACED bs-hardlink.txt
+traced   bs-named-mkdtemp-03lPvj
+UNTRACED bs-open-promise.txt
+UNTRACED bs-open.txt
+UNTRACED bs-python-fn7pdmdd
+UNTRACED bs-recursive-parent
+UNTRACED bs-renamed.txt
+UNTRACED bs-shell-RIzKmx
+UNTRACED bs-stream.txt
+removed /tmp/r522-b True

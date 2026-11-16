@@ -1,0 +1,60 @@
+{
+ "subject": "git-observation.test.ts at this commit under two tree forms",
+ "commit": "29db2b11153990f465c0b86fb3341865ae6459ac",
+ "testSha256": "d1f84a49d2dafcde9cba8e036f9f37d34b78cff512c0aed295018a3b04698d28",
+ "cleanBefore": true,
+ "tool_sha256": "6e18333cafc105597e89f4fd36c8012fcda60442697c0d10e6c620ae2d95a2d9",
+ "load": [
+  [
+   "25.35",
+   "30.23",
+   "32.58"
+  ],
+  [
+   "27.57",
+   "30.47",
+   "32.62"
+  ],
+  [
+   "27.68",
+   "30.44",
+   "32.60"
+  ]
+ ],
+ "unmutated": {
+  "exit": 0,
+  "failed": 0,
+  "passed": 14,
+  "failing": []
+ },
+ "mutants": [
+  {
+   "id": "J",
+   "file": "apps/three-surface-poc/src/main.ts",
+   "old": "",
+   "new": "import '../../../package.json';\n",
+   "fileSha256": "cfb0a4e6d55a6b74e8da99612cf33b25c955877b09155ae89e4f875638137e3d",
+   "exit": 1,
+   "failed": 1,
+   "passed": 13,
+   "failing": [
+    {
+     "test": "read-only Git observation protects every module and package the POC daemon imports",
+     "message": "AssertionError: expected [ 'package.json/package.json', \u2026(1) ] to deeply equal []"
+    }
+   ]
+  },
+  {
+   "id": "F",
+   "file": "apps/three-surface-poc/tsconfig.json",
+   "old": "\"path\": \"../../packages/http-host\"",
+   "new": "\"path\": \"../../packages/http-host/tsconfig.json\"",
+   "fileSha256": "271f2a277342cd68945dfcf13b890c1ba18e15b473f0f8ad0bbc50fea06f01e0",
+   "exit": 0,
+   "failed": 0,
+   "passed": 14,
+   "failing": []
+  }
+ ],
+ "cleanAfter": true
+}

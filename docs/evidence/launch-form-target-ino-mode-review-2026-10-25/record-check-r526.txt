@@ -1,0 +1,16 @@
+summary.json matches ; problems: 0
+exit=0
+killed | an X3c fix run that survives | ['X3c-target-replaced-by-identical-copy-no-realpath not killed in every fix run on ext4']
+killed | an X3c fix run outcome that disagrees with its exit code | ['a-tmpfs X3c-target-replaced-by-identical-copy-no-realpath fix 0: outcome survived disagrees with exit 1']
+killed | a D4 fix run that fails one test fewer | ['tmpfs D4-truncate: weaker than the 8.33 record']
+killed | a test digest that is not the side's | ['b-ext4 O1-same-bytes-rewrite fix 0: test digest is not the fix test file']
+killed | an unmutated fix run that fails | ["unmutated fix 0 ext4: {'numTotalTests': 43, 'numPassedTests': 42, 'numFailedTests': 1}"]
+killed | a faithful ask that moves targetIno | ["faithful-probe-ext4.json: a faithful ask changed {'targetIno': 1}"]
+killed | a selftest arm that changes nothing | ['faithful-probe-selftest-rename-tmpfs.json: the selftest changed nothing']
+killed | a probe helper that drops targetMode | ['faithful_probe.mjs: snapshot helper differs from the test file at the fix']
+killed | a third row skipped under root | ['root-skip-root: not exactly the two mode-000 rows skipped']
+killed | a row that fails as the user and skips under root | ['root-skip-user: not 43 passed']
+killed | a shim that reaches every node process | ['as-root-worker.mjs: not the worker-only shim']
+killed | a title list out of order | ['lists differ']
+selftest: 12/12 mutations make a check fail
+exit=0

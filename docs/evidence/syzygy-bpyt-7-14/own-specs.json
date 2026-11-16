@@ -1,0 +1,570 @@
+{
+ "mutants": [
+  {
+   "id": "O1-bearer-separator-space-run",
+   "row": "R3",
+   "edits": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "old": "  const match = /^Bearer (.+)$/.exec(header);",
+     "new": "  const match = /^Bearer +(.+)$/.exec(header);"
+    }
+   ],
+   "projects": [],
+   "files": [
+    "packages/http-host/src/credentials.test.ts",
+    "packages/http-host/src/shutdown.test.ts",
+    "packages/http-host/src/package.test.ts",
+    "packages/cap1-daemon/src/",
+    "packages/cap1-conformance/src/",
+    "apps/three-surface-poc/src/routes.test.ts",
+    "apps/three-surface-poc/src/response-limits.test.ts",
+    "apps/three-surface-poc/src/main.test.ts",
+    "apps/three-surface-poc/src/surface-routes.test.ts",
+    "apps/three-surface-poc/src/reobserve-action.test.ts",
+    "apps/three-surface-poc/src/materialize-action.test.ts",
+    "apps/three-surface-poc/src/browser-origin.test.ts",
+    "apps/three-surface-poc/src/git-observation.test.ts",
+    "apps/three-surface-poc/src/verbatim-route.test.ts",
+    "apps/three-surface-poc/src/polaris-source-route.test.ts",
+    "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+    "apps/three-surface-poc/src/evaluation-footer.test.ts",
+    "apps/three-surface-poc/src/page-size-delta.test.ts",
+    "apps/three-surface-poc/src/tuple-encoding.test.ts"
+   ]
+  },
+  {
+   "id": "O2-bearer-separator-any-whitespace",
+   "row": "R3",
+   "edits": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "old": "  const match = /^Bearer (.+)$/.exec(header);",
+     "new": "  const match = /^Bearer\\s(.+)$/.exec(header);"
+    }
+   ],
+   "projects": [],
+   "files": [
+    "packages/http-host/src/credentials.test.ts",
+    "packages/http-host/src/shutdown.test.ts",
+    "packages/http-host/src/package.test.ts",
+    "packages/cap1-daemon/src/",
+    "packages/cap1-conformance/src/",
+    "apps/three-surface-poc/src/routes.test.ts",
+    "apps/three-surface-poc/src/response-limits.test.ts",
+    "apps/three-surface-poc/src/main.test.ts",
+    "apps/three-surface-poc/src/surface-routes.test.ts",
+    "apps/three-surface-poc/src/reobserve-action.test.ts",
+    "apps/three-surface-poc/src/materialize-action.test.ts",
+    "apps/three-surface-poc/src/browser-origin.test.ts",
+    "apps/three-surface-poc/src/git-observation.test.ts",
+    "apps/three-surface-poc/src/verbatim-route.test.ts",
+    "apps/three-surface-poc/src/polaris-source-route.test.ts",
+    "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+    "apps/three-surface-poc/src/evaluation-footer.test.ts",
+    "apps/three-surface-poc/src/page-size-delta.test.ts",
+    "apps/three-surface-poc/src/tuple-encoding.test.ts"
+   ]
+  },
+  {
+   "id": "O3-bearer-trailing-whitespace-trimmed",
+   "row": "R3",
+   "edits": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "old": "  const match = /^Bearer (.+)$/.exec(header);",
+     "new": "  const match = /^Bearer (.+?)\\s*$/.exec(header);"
+    }
+   ],
+   "projects": [],
+   "files": [
+    "packages/http-host/src/credentials.test.ts",
+    "packages/http-host/src/shutdown.test.ts",
+    "packages/http-host/src/package.test.ts",
+    "packages/cap1-daemon/src/",
+    "packages/cap1-conformance/src/",
+    "apps/three-surface-poc/src/routes.test.ts",
+    "apps/three-surface-poc/src/response-limits.test.ts",
+    "apps/three-surface-poc/src/main.test.ts",
+    "apps/three-surface-poc/src/surface-routes.test.ts",
+    "apps/three-surface-poc/src/reobserve-action.test.ts",
+    "apps/three-surface-poc/src/materialize-action.test.ts",
+    "apps/three-surface-poc/src/browser-origin.test.ts",
+    "apps/three-surface-poc/src/git-observation.test.ts",
+    "apps/three-surface-poc/src/verbatim-route.test.ts",
+    "apps/three-surface-poc/src/polaris-source-route.test.ts",
+    "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+    "apps/three-surface-poc/src/evaluation-footer.test.ts",
+    "apps/three-surface-poc/src/page-size-delta.test.ts",
+    "apps/three-surface-poc/src/tuple-encoding.test.ts"
+   ]
+  },
+  {
+   "id": "O4-bearer-end-matches-before-newline",
+   "row": "R3",
+   "edits": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "old": "  const match = /^Bearer (.+)$/.exec(header);",
+     "new": "  const match = /^Bearer (.+)$/m.exec(header);"
+    }
+   ],
+   "projects": [],
+   "files": [
+    "packages/http-host/src/credentials.test.ts",
+    "packages/http-host/src/shutdown.test.ts",
+    "packages/http-host/src/package.test.ts",
+    "packages/cap1-daemon/src/",
+    "packages/cap1-conformance/src/",
+    "apps/three-surface-poc/src/routes.test.ts",
+    "apps/three-surface-poc/src/response-limits.test.ts",
+    "apps/three-surface-poc/src/main.test.ts",
+    "apps/three-surface-poc/src/surface-routes.test.ts",
+    "apps/three-surface-poc/src/reobserve-action.test.ts",
+    "apps/three-surface-poc/src/materialize-action.test.ts",
+    "apps/three-surface-poc/src/browser-origin.test.ts",
+    "apps/three-surface-poc/src/git-observation.test.ts",
+    "apps/three-surface-poc/src/verbatim-route.test.ts",
+    "apps/three-surface-poc/src/polaris-source-route.test.ts",
+    "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+    "apps/three-surface-poc/src/evaluation-footer.test.ts",
+    "apps/three-surface-poc/src/page-size-delta.test.ts",
+    "apps/three-surface-poc/src/tuple-encoding.test.ts"
+   ]
+  },
+  {
+   "id": "O5-presented-token-trimmed-before-compare",
+   "row": "R3",
+   "edits": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "old": "  const a = createHash('sha256').update(presented, 'utf8').digest();",
+     "new": "  const a = createHash('sha256').update(presented.trim(), 'utf8').digest();"
+    }
+   ],
+   "projects": [],
+   "files": [
+    "packages/http-host/src/credentials.test.ts",
+    "packages/http-host/src/shutdown.test.ts",
+    "packages/http-host/src/package.test.ts",
+    "packages/cap1-daemon/src/",
+    "packages/cap1-conformance/src/",
+    "apps/three-surface-poc/src/routes.test.ts",
+    "apps/three-surface-poc/src/response-limits.test.ts",
+    "apps/three-surface-poc/src/main.test.ts",
+    "apps/three-surface-poc/src/surface-routes.test.ts",
+    "apps/three-surface-poc/src/reobserve-action.test.ts",
+    "apps/three-surface-poc/src/materialize-action.test.ts",
+    "apps/three-surface-poc/src/browser-origin.test.ts",
+    "apps/three-surface-poc/src/git-observation.test.ts",
+    "apps/three-surface-poc/src/verbatim-route.test.ts",
+    "apps/three-surface-poc/src/polaris-source-route.test.ts",
+    "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+    "apps/three-surface-poc/src/evaluation-footer.test.ts",
+    "apps/three-surface-poc/src/page-size-delta.test.ts",
+    "apps/three-surface-poc/src/tuple-encoding.test.ts"
+   ]
+  },
+  {
+   "id": "O6-lexical-containment-without-separator",
+   "row": "R19",
+   "edits": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "old": "  if (!isWithin(root, resolved)) {",
+     "new": "  if (!resolved.startsWith(root)) {"
+    }
+   ],
+   "projects": [],
+   "files": [
+    "packages/http-host/src/credentials.test.ts",
+    "packages/http-host/src/shutdown.test.ts",
+    "packages/http-host/src/package.test.ts",
+    "packages/cap1-daemon/src/",
+    "packages/cap1-conformance/src/",
+    "apps/three-surface-poc/src/routes.test.ts",
+    "apps/three-surface-poc/src/response-limits.test.ts",
+    "apps/three-surface-poc/src/main.test.ts",
+    "apps/three-surface-poc/src/surface-routes.test.ts",
+    "apps/three-surface-poc/src/reobserve-action.test.ts",
+    "apps/three-surface-poc/src/materialize-action.test.ts",
+    "apps/three-surface-poc/src/browser-origin.test.ts",
+    "apps/three-surface-poc/src/git-observation.test.ts",
+    "apps/three-surface-poc/src/verbatim-route.test.ts",
+    "apps/three-surface-poc/src/polaris-source-route.test.ts",
+    "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+    "apps/three-surface-poc/src/evaluation-footer.test.ts",
+    "apps/three-surface-poc/src/page-size-delta.test.ts",
+    "apps/three-surface-poc/src/tuple-encoding.test.ts"
+   ]
+  },
+  {
+   "id": "O7-real-containment-without-separator",
+   "row": "R19",
+   "edits": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "old": "  if (!isWithin(realRoot, realTarget) || realTarget === realRoot) {",
+     "new": "  if (!realTarget.startsWith(realRoot) || realTarget === realRoot) {"
+    }
+   ],
+   "projects": [],
+   "files": [
+    "packages/http-host/src/credentials.test.ts",
+    "packages/http-host/src/shutdown.test.ts",
+    "packages/http-host/src/package.test.ts",
+    "packages/cap1-daemon/src/",
+    "packages/cap1-conformance/src/",
+    "apps/three-surface-poc/src/routes.test.ts",
+    "apps/three-surface-poc/src/response-limits.test.ts",
+    "apps/three-surface-poc/src/main.test.ts",
+    "apps/three-surface-poc/src/surface-routes.test.ts",
+    "apps/three-surface-poc/src/reobserve-action.test.ts",
+    "apps/three-surface-poc/src/materialize-action.test.ts",
+    "apps/three-surface-poc/src/browser-origin.test.ts",
+    "apps/three-surface-poc/src/git-observation.test.ts",
+    "apps/three-surface-poc/src/verbatim-route.test.ts",
+    "apps/three-surface-poc/src/polaris-source-route.test.ts",
+    "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+    "apps/three-surface-poc/src/evaluation-footer.test.ts",
+    "apps/three-surface-poc/src/page-size-delta.test.ts",
+    "apps/three-surface-poc/src/tuple-encoding.test.ts"
+   ]
+  },
+  {
+   "id": "O8-not-evaluated-population-dropped",
+   "row": "R8",
+   "edits": [
+    {
+     "file": "packages/http-host/src/server.ts",
+     "old": "['project shape not-evaluated', 'project shape not-admitted', 'project shape observation-failed']",
+     "new": "['project shape not-admitted', 'project shape observation-failed']"
+    }
+   ],
+   "projects": [],
+   "files": [
+    "packages/http-host/src/credentials.test.ts",
+    "packages/http-host/src/shutdown.test.ts",
+    "packages/http-host/src/package.test.ts",
+    "packages/cap1-daemon/src/",
+    "packages/cap1-conformance/src/",
+    "apps/three-surface-poc/src/routes.test.ts",
+    "apps/three-surface-poc/src/response-limits.test.ts",
+    "apps/three-surface-poc/src/main.test.ts",
+    "apps/three-surface-poc/src/surface-routes.test.ts",
+    "apps/three-surface-poc/src/reobserve-action.test.ts",
+    "apps/three-surface-poc/src/materialize-action.test.ts",
+    "apps/three-surface-poc/src/browser-origin.test.ts",
+    "apps/three-surface-poc/src/git-observation.test.ts",
+    "apps/three-surface-poc/src/verbatim-route.test.ts",
+    "apps/three-surface-poc/src/polaris-source-route.test.ts",
+    "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+    "apps/three-surface-poc/src/evaluation-footer.test.ts",
+    "apps/three-surface-poc/src/page-size-delta.test.ts",
+    "apps/three-surface-poc/src/tuple-encoding.test.ts"
+   ]
+  },
+  {
+   "id": "O9-observation-failed-population-dropped",
+   "row": "R8",
+   "edits": [
+    {
+     "file": "packages/http-host/src/server.ts",
+     "old": "['project shape not-evaluated', 'project shape not-admitted', 'project shape observation-failed']",
+     "new": "['project shape not-evaluated', 'project shape not-admitted']"
+    }
+   ],
+   "projects": [],
+   "files": [
+    "packages/http-host/src/credentials.test.ts",
+    "packages/http-host/src/shutdown.test.ts",
+    "packages/http-host/src/package.test.ts",
+    "packages/cap1-daemon/src/",
+    "packages/cap1-conformance/src/",
+    "apps/three-surface-poc/src/routes.test.ts",
+    "apps/three-surface-poc/src/response-limits.test.ts",
+    "apps/three-surface-poc/src/main.test.ts",
+    "apps/three-surface-poc/src/surface-routes.test.ts",
+    "apps/three-surface-poc/src/reobserve-action.test.ts",
+    "apps/three-surface-poc/src/materialize-action.test.ts",
+    "apps/three-surface-poc/src/browser-origin.test.ts",
+    "apps/three-surface-poc/src/git-observation.test.ts",
+    "apps/three-surface-poc/src/verbatim-route.test.ts",
+    "apps/three-surface-poc/src/polaris-source-route.test.ts",
+    "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+    "apps/three-surface-poc/src/evaluation-footer.test.ts",
+    "apps/three-surface-poc/src/page-size-delta.test.ts",
+    "apps/three-surface-poc/src/tuple-encoding.test.ts"
+   ]
+  },
+  {
+   "id": "O10-any-project-shape-reason-logged",
+   "row": "R8",
+   "edits": [
+    {
+     "file": "packages/http-host/src/server.ts",
+     "old": "population.kind === 'unknown' && ['project shape not-evaluated', 'project shape not-admitted', 'project shape observation-failed'].includes(population.reason)",
+     "new": "population.kind === 'unknown' && population.reason.startsWith('project shape ')"
+    }
+   ],
+   "projects": [],
+   "files": [
+    "packages/http-host/src/credentials.test.ts",
+    "packages/http-host/src/shutdown.test.ts",
+    "packages/http-host/src/package.test.ts",
+    "packages/cap1-daemon/src/",
+    "packages/cap1-conformance/src/",
+    "apps/three-surface-poc/src/routes.test.ts",
+    "apps/three-surface-poc/src/response-limits.test.ts",
+    "apps/three-surface-poc/src/main.test.ts",
+    "apps/three-surface-poc/src/surface-routes.test.ts",
+    "apps/three-surface-poc/src/reobserve-action.test.ts",
+    "apps/three-surface-poc/src/materialize-action.test.ts",
+    "apps/three-surface-poc/src/browser-origin.test.ts",
+    "apps/three-surface-poc/src/git-observation.test.ts",
+    "apps/three-surface-poc/src/verbatim-route.test.ts",
+    "apps/three-surface-poc/src/polaris-source-route.test.ts",
+    "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+    "apps/three-surface-poc/src/evaluation-footer.test.ts",
+    "apps/three-surface-poc/src/page-size-delta.test.ts",
+    "apps/three-surface-poc/src/tuple-encoding.test.ts"
+   ]
+  },
+  {
+   "id": "O11-breach-reason-keyed-by-status",
+   "row": "R8",
+   "edits": [
+    {
+     "file": "packages/http-host/src/server.ts",
+     "old": "    reason: diagnostic === undefined ? input.reason : 'response-limit-breached',",
+     "new": "    reason: input.response.status === 503 ? 'response-limit-breached' : input.reason,"
+    }
+   ],
+   "projects": [],
+   "files": [
+    "packages/http-host/src/credentials.test.ts",
+    "packages/http-host/src/shutdown.test.ts",
+    "packages/http-host/src/package.test.ts",
+    "packages/cap1-daemon/src/",
+    "packages/cap1-conformance/src/",
+    "apps/three-surface-poc/src/routes.test.ts",
+    "apps/three-surface-poc/src/response-limits.test.ts",
+    "apps/three-surface-poc/src/main.test.ts",
+    "apps/three-surface-poc/src/surface-routes.test.ts",
+    "apps/three-surface-poc/src/reobserve-action.test.ts",
+    "apps/three-surface-poc/src/materialize-action.test.ts",
+    "apps/three-surface-poc/src/browser-origin.test.ts",
+    "apps/three-surface-poc/src/git-observation.test.ts",
+    "apps/three-surface-poc/src/verbatim-route.test.ts",
+    "apps/three-surface-poc/src/polaris-source-route.test.ts",
+    "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+    "apps/three-surface-poc/src/evaluation-footer.test.ts",
+    "apps/three-surface-poc/src/page-size-delta.test.ts",
+    "apps/three-surface-poc/src/tuple-encoding.test.ts"
+   ]
+  },
+  {
+   "id": "O12-origin-reversed-prefix",
+   "row": "R18",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/browser-origin.ts",
+     "old": "  return origin === undefined || origin === expectedOrigin(host);",
+     "new": "  return origin === undefined || expectedOrigin(host).startsWith(origin);"
+    }
+   ],
+   "projects": [],
+   "files": [
+    "packages/http-host/src/credentials.test.ts",
+    "packages/http-host/src/shutdown.test.ts",
+    "packages/http-host/src/package.test.ts",
+    "packages/cap1-daemon/src/",
+    "packages/cap1-conformance/src/",
+    "apps/three-surface-poc/src/routes.test.ts",
+    "apps/three-surface-poc/src/response-limits.test.ts",
+    "apps/three-surface-poc/src/main.test.ts",
+    "apps/three-surface-poc/src/surface-routes.test.ts",
+    "apps/three-surface-poc/src/reobserve-action.test.ts",
+    "apps/three-surface-poc/src/materialize-action.test.ts",
+    "apps/three-surface-poc/src/browser-origin.test.ts",
+    "apps/three-surface-poc/src/git-observation.test.ts",
+    "apps/three-surface-poc/src/verbatim-route.test.ts",
+    "apps/three-surface-poc/src/polaris-source-route.test.ts",
+    "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+    "apps/three-surface-poc/src/evaluation-footer.test.ts",
+    "apps/three-surface-poc/src/page-size-delta.test.ts",
+    "apps/three-surface-poc/src/tuple-encoding.test.ts"
+   ]
+  },
+  {
+   "id": "O13-origin-required",
+   "row": "R18",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/browser-origin.ts",
+     "old": "  return origin === undefined || origin === expectedOrigin(host);",
+     "new": "  return origin === expectedOrigin(host);"
+    }
+   ],
+   "projects": [],
+   "files": [
+    "packages/http-host/src/credentials.test.ts",
+    "packages/http-host/src/shutdown.test.ts",
+    "packages/http-host/src/package.test.ts",
+    "packages/cap1-daemon/src/",
+    "packages/cap1-conformance/src/",
+    "apps/three-surface-poc/src/routes.test.ts",
+    "apps/three-surface-poc/src/response-limits.test.ts",
+    "apps/three-surface-poc/src/main.test.ts",
+    "apps/three-surface-poc/src/surface-routes.test.ts",
+    "apps/three-surface-poc/src/reobserve-action.test.ts",
+    "apps/three-surface-poc/src/materialize-action.test.ts",
+    "apps/three-surface-poc/src/browser-origin.test.ts",
+    "apps/three-surface-poc/src/git-observation.test.ts",
+    "apps/three-surface-poc/src/verbatim-route.test.ts",
+    "apps/three-surface-poc/src/polaris-source-route.test.ts",
+    "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+    "apps/three-surface-poc/src/evaluation-footer.test.ts",
+    "apps/three-surface-poc/src/page-size-delta.test.ts",
+    "apps/three-surface-poc/src/tuple-encoding.test.ts"
+   ]
+  },
+  {
+   "id": "O14-tailnet-origin-over-http",
+   "row": "R18",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/browser-origin.ts",
+     "old": "  return host === TAILNET_HOST ? `https://${host}` : `http://${host}`;",
+     "new": "  return `http://${host}`;"
+    }
+   ],
+   "projects": [],
+   "files": [
+    "packages/http-host/src/credentials.test.ts",
+    "packages/http-host/src/shutdown.test.ts",
+    "packages/http-host/src/package.test.ts",
+    "packages/cap1-daemon/src/",
+    "packages/cap1-conformance/src/",
+    "apps/three-surface-poc/src/routes.test.ts",
+    "apps/three-surface-poc/src/response-limits.test.ts",
+    "apps/three-surface-poc/src/main.test.ts",
+    "apps/three-surface-poc/src/surface-routes.test.ts",
+    "apps/three-surface-poc/src/reobserve-action.test.ts",
+    "apps/three-surface-poc/src/materialize-action.test.ts",
+    "apps/three-surface-poc/src/browser-origin.test.ts",
+    "apps/three-surface-poc/src/git-observation.test.ts",
+    "apps/three-surface-poc/src/verbatim-route.test.ts",
+    "apps/three-surface-poc/src/polaris-source-route.test.ts",
+    "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+    "apps/three-surface-poc/src/evaluation-footer.test.ts",
+    "apps/three-surface-poc/src/page-size-delta.test.ts",
+    "apps/three-surface-poc/src/tuple-encoding.test.ts"
+   ]
+  },
+  {
+   "id": "O15-shim-function-aliased",
+   "row": "R13",
+   "edits": [
+    {
+     "file": "packages/cap1-daemon/src/credentials.ts",
+     "old": "  authorizeStateWrite,\n",
+     "new": "  ensureCredential as authorizeStateWrite,\n"
+    }
+   ],
+   "projects": [],
+   "files": [
+    "packages/http-host/src/credentials.test.ts",
+    "packages/http-host/src/shutdown.test.ts",
+    "packages/http-host/src/package.test.ts",
+    "packages/cap1-daemon/src/",
+    "packages/cap1-conformance/src/",
+    "apps/three-surface-poc/src/routes.test.ts",
+    "apps/three-surface-poc/src/response-limits.test.ts",
+    "apps/three-surface-poc/src/main.test.ts",
+    "apps/three-surface-poc/src/surface-routes.test.ts",
+    "apps/three-surface-poc/src/reobserve-action.test.ts",
+    "apps/three-surface-poc/src/materialize-action.test.ts",
+    "apps/three-surface-poc/src/browser-origin.test.ts",
+    "apps/three-surface-poc/src/git-observation.test.ts",
+    "apps/three-surface-poc/src/verbatim-route.test.ts",
+    "apps/three-surface-poc/src/polaris-source-route.test.ts",
+    "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+    "apps/three-surface-poc/src/evaluation-footer.test.ts",
+    "apps/three-surface-poc/src/page-size-delta.test.ts",
+    "apps/three-surface-poc/src/tuple-encoding.test.ts"
+   ]
+  },
+  {
+   "id": "O16-shim-constant-aliased",
+   "row": "R13",
+   "edits": [
+    {
+     "file": "packages/cap1-daemon/src/credentials.ts",
+     "old": "  STATE_DIR_MODE,\n",
+     "new": "  CREDENTIAL_FILE_MODE as STATE_DIR_MODE,\n"
+    }
+   ],
+   "projects": [],
+   "files": [
+    "packages/http-host/src/credentials.test.ts",
+    "packages/http-host/src/shutdown.test.ts",
+    "packages/http-host/src/package.test.ts",
+    "packages/cap1-daemon/src/",
+    "packages/cap1-conformance/src/",
+    "apps/three-surface-poc/src/routes.test.ts",
+    "apps/three-surface-poc/src/response-limits.test.ts",
+    "apps/three-surface-poc/src/main.test.ts",
+    "apps/three-surface-poc/src/surface-routes.test.ts",
+    "apps/three-surface-poc/src/reobserve-action.test.ts",
+    "apps/three-surface-poc/src/materialize-action.test.ts",
+    "apps/three-surface-poc/src/browser-origin.test.ts",
+    "apps/three-surface-poc/src/git-observation.test.ts",
+    "apps/three-surface-poc/src/verbatim-route.test.ts",
+    "apps/three-surface-poc/src/polaris-source-route.test.ts",
+    "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+    "apps/three-surface-poc/src/evaluation-footer.test.ts",
+    "apps/three-surface-poc/src/page-size-delta.test.ts",
+    "apps/three-surface-poc/src/tuple-encoding.test.ts"
+   ]
+  },
+  {
+   "id": "O17-shim-equal-local-constant",
+   "row": "residual",
+   "edits": [
+    {
+     "file": "packages/cap1-daemon/src/server.ts",
+     "old": "  DAEMON_HOST,\n",
+     "new": ""
+    },
+    {
+     "file": "packages/cap1-daemon/src/server.ts",
+     "old": "// --- This wave's minimal root route",
+     "new": "export const DAEMON_HOST = '127.0.0.1' as const;\n\n// --- This wave's minimal root route"
+    }
+   ],
+   "projects": [],
+   "files": [
+    "packages/http-host/src/credentials.test.ts",
+    "packages/http-host/src/shutdown.test.ts",
+    "packages/http-host/src/package.test.ts",
+    "packages/cap1-daemon/src/",
+    "packages/cap1-conformance/src/",
+    "apps/three-surface-poc/src/routes.test.ts",
+    "apps/three-surface-poc/src/response-limits.test.ts",
+    "apps/three-surface-poc/src/main.test.ts",
+    "apps/three-surface-poc/src/surface-routes.test.ts",
+    "apps/three-surface-poc/src/reobserve-action.test.ts",
+    "apps/three-surface-poc/src/materialize-action.test.ts",
+    "apps/three-surface-poc/src/browser-origin.test.ts",
+    "apps/three-surface-poc/src/git-observation.test.ts",
+    "apps/three-surface-poc/src/verbatim-route.test.ts",
+    "apps/three-surface-poc/src/polaris-source-route.test.ts",
+    "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+    "apps/three-surface-poc/src/evaluation-footer.test.ts",
+    "apps/three-surface-poc/src/page-size-delta.test.ts",
+    "apps/three-surface-poc/src/tuple-encoding.test.ts"
+   ]
+  }
+ ]
+}

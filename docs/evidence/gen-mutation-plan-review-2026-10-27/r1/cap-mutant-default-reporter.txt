@@ -1,0 +1,121 @@
+
+ RUN  v3.2.7 /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-543/clone
+
+ ❯ |@syzygy/polaris-generation-core| packages/polaris-generation-core/src/pipeline.test.ts (33 tests | 3 failed) 333ms
+   ✓ source to editorial draft pipeline > binds each stage route and model to its own receipt, including a repair, while equal routes remain valid 38ms
+   ✓ source to editorial draft pipeline > rejects a missing stage route before dispatch 11ms
+   ✓ source to editorial draft pipeline > keeps the author plan out of the canonically encoded fidelity and repair envelopes 5ms
+   ✓ source to editorial draft pipeline > sends full corpus once and downstream only the spans cited by their inputs 4ms
+   ✓ source to editorial draft pipeline > counts a path-only source in inventory but never offers its body or support handle to the provider 4ms
+   ✓ source to editorial draft pipeline > stops on malformed reader questions before any dispatch 2ms
+   ✓ source to editorial draft pipeline > refuses a 201st quotable source instead of silently truncating the corpus 49ms
+   ✓ source to editorial draft pipeline > refuses a population that segmentation tips over the 200 cap 87ms
+   ✓ source to editorial draft pipeline > executes independent inventory, planning, authoring, editing and source review with bound recipes 7ms
+   ✓ source to editorial draft pipeline > repairs named findings then independently re-reviews, without treating source review as rendered readiness 9ms
+   ✓ source to editorial draft pipeline > refuses source failure, duplicate admissions and absent effect permission without sending 8ms
+   ✓ source to editorial draft pipeline > rejects duplicate or malformed trusted asset requests before provider dispatch 2ms
+   ✓ source to editorial draft pipeline > rejects duplicate-key output before schema validation and never records its body 2ms
+   ✓ source to editorial draft pipeline > carries the schema-rejection reason and message out of the bare catch, typed 2ms
+   ✓ source to editorial draft pipeline > carries the canonical-encode rejection reason and message out of the bare catch, typed 1ms
+   × source to editorial draft pipeline > stops when calls or repairs are exhausted and when usage is unknown 20ms
+     → expected { status: 'stopped', …(3) } to match object { reason: 'repair-exhausted' }
+(3 matching properties omitted from actual)
+   ✓ source to editorial draft pipeline > cancellation during permission evaluation prevents dispatch 2ms
+   ✓ source to editorial draft pipeline > deadline bounds a stalled verifySources adapter 3ms
+   ✓ source to editorial draft pipeline > deadline bounds a stalled admit adapter 1ms
+   ✓ source to editorial draft pipeline > deadline bounds a stalled permitted adapter 1ms
+   ✓ source to editorial draft pipeline > deadline bounds a stalled record adapter 1ms
+   ✓ source to editorial draft pipeline > dispatches the exact schema bound before asynchronous admission 2ms
+   ✓ source to editorial draft pipeline > retains late usage capture even when recording the interruption fails 3ms
+   ✓ source to editorial draft pipeline > deterministic quote fidelity joins the reviewer verdict > lets a verbatim quotation through without a repair 10ms
+   ✓ source to editorial draft pipeline > deterministic quote fidelity joins the reviewer verdict > blocks a quotation absent from the cited source even when the reviewer finds nothing, and hands the repair stage the finding 6ms
+   × source to editorial draft pipeline > deterministic quote fidelity joins the reviewer verdict > does not stop the run when a misquote survives the last repair: it returns the finding for that block, and keeps the reviewer's own findings first in the repair input 11ms
+     → expected { status: 'stopped', …(3) } to match object { …(2) }
+(3 matching properties omitted from actual)
+   ✓ source to editorial draft pipeline > deterministic quote fidelity joins the reviewer verdict > returns no quote findings for a clean draft 4ms
+   × source to editorial draft pipeline > deterministic quote fidelity joins the reviewer verdict > still stops as repair-exhausted when the reviewer's own verdict blocks after the last repair 7ms
+     → expected { status: 'stopped', …(3) } to match object { status: 'stopped', …(1) }
+(2 matching properties omitted from actual)
+   ✓ source to editorial draft pipeline > deterministic quote fidelity joins the reviewer verdict > keeps a blocking reviewer verdict blocking, and a non-array reviewer finding is carried 6ms
+   ✓ source to editorial draft pipeline > prompt profile > sends the dossier prompts for a dossier request, and records the profile, version and digest of each stage 6ms
+   ✓ source to editorial draft pipeline > prompt profile > sends the dossier prompts on repair and on the second fidelity review too 9ms
+   ✓ source to editorial draft pipeline > prompt profile > sends the manifesto prompts when no profile is named 3ms
+   ✓ source to editorial draft pipeline > prompt profile > refuses an unknown profile before any call 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |@syzygy/polaris-generation-core| packages/polaris-generation-core/src/pipeline.test.ts > source to editorial draft pipeline > stops when calls or repairs are exhausted and when usage is unknown
+AssertionError: expected { status: 'stopped', …(3) } to match object { reason: 'repair-exhausted' }
+(3 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "reason": "repair-exhausted",
++   "reason": "budget-exhausted",
+  }
+
+ ❯ packages/polaris-generation-core/src/pipeline.test.ts:257:175
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  |@syzygy/polaris-generation-core| packages/polaris-generation-core/src/pipeline.test.ts > source to editorial draft pipeline > deterministic quote fidelity joins the reviewer verdict > does not stop the run when a misquote survives the last repair: it returns the finding for that block, and keeps the reviewer's own findings first in the repair input
+AssertionError: expected { status: 'stopped', …(3) } to match object { …(2) }
+(3 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "quoteFindings": [
+-     {
+-       "blockId": "intro",
+-       "kind": "quote-not-in-cited-sources",
+-       "quote": "Remove recurring mental labor.",
+-     },
+-   ],
+-   "status": "awaiting-rendered-review",
++   "status": "stopped",
+  }
+
+ ❯ packages/polaris-generation-core/src/pipeline.test.ts:338:22
+    336|       const { h, ports } = quoting(() => 'Remove recurring mental labo…
+    337|       const result = await runGenerationPipeline(request(), { ...ports…
+    338|       expect(result).toMatchObject({ status: 'awaiting-rendered-review…
+       |                      ^
+    339|       const repair = JSON.parse(h.sends.find(x => x.stage === 'repair'…
+    340|       expect(repair.findings[0]).toBe('reviewer note');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  |@syzygy/polaris-generation-core| packages/polaris-generation-core/src/pipeline.test.ts > source to editorial draft pipeline > deterministic quote fidelity joins the reviewer verdict > still stops as repair-exhausted when the reviewer's own verdict blocks after the last repair
+AssertionError: expected { status: 'stopped', …(3) } to match object { status: 'stopped', …(1) }
+(2 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "reason": "repair-exhausted",
++   "reason": "budget-exhausted",
+    "status": "stopped",
+  }
+
+ ❯ packages/polaris-generation-core/src/pipeline.test.ts:352:23
+    350|       const { ports } = quoting(() => 'Remove recurring mental labor.'…
+    351|       const stopped = await runGenerationPipeline(request(), { ...port…
+    352|       expect(stopped).toMatchObject({ status: 'stopped', reason: 'repa…
+       |                       ^
+    353|     });
+    354| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 30 passed (33)
+   Start at  21:30:57
+   Duration  1.87s (transform 652ms, setup 80ms, collect 686ms, tests 333ms, environment 0ms, prepare 149ms)
+

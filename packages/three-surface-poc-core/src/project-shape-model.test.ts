@@ -14,7 +14,13 @@ import { FRESHNESS_STATES, RENDERING_TIERS, UNKNOWN_REASONS } from '@syzygy/cap1
 
 import type { BodyReadAuthorityEvaluation } from './body-read-authority.js';
 import type { GitTreeEntry } from './git-tree.js';
-import { PWB_RESOURCE_LIMITS, type PwbResourceLimits } from './project-shape-observation.js';
+import type { FixedUnknown } from './content-classification.js';
+import { PRODUCER_UNKNOWN_REASONS, unknown as unknownEpistemic } from './epistemic.js';
+import type { ClassDenominator, ItemCoverage, ReconciledFact } from './project-shape-coverage.js';
+import { PWB_FAILURE_STATES, type ObservationDegradation } from './project-shape-observation.js';
+import { PWB_RESOURCE_LIMITS } from './project-shape-observation.js';
+import type { PwbResourceLimits } from './pwb-types.js';
+import type { ProposedWorkCurrentAuthority } from './proposed-work.js';
 import {
   CHALLENGE_STATES,
   PWB_REPOSITORY_ID,
@@ -186,7 +192,7 @@ function sha256(text: string): string {
 interface Fixture {
   readonly texts: Readonly<Record<string, string>>;
   readonly failRevParse?: boolean;
-  readonly failPhaseBLsTree?: boolean;
+  readonly failLsTree?: boolean;
   readonly dropFromTree?: readonly string[];
 }
 
@@ -198,7 +204,6 @@ function fixture(input: Fixture) {
   const byOid = new Map(entries.map((entry) => [entry.objectId, bytes.get(entry.path) as Uint8Array]));
   const listing = entries.map((e) => `${e.mode} ${e.type} ${e.objectId} ${String(e.sizeBytes).padStart(7)}\t${e.path}\x00`).join('');
   const calls: string[][] = [];
-  let lsTreeCalls = 0;
   const runGit = (args: readonly string[]): Uint8Array => {
     calls.push([...args]);
     switch (args[0]) {
@@ -208,9 +213,8 @@ function fixture(input: Fixture) {
       case 'show':
         return encoder.encode(`${COMMITTED_AT}\n`);
       case 'ls-tree':
-        lsTreeCalls += 1;
         if (args[4] !== COMMIT) throw new Error(`fixture lists trees only at the resolved commit, not ${args[4] ?? ''}`);
-        if (input.failPhaseBLsTree === true && lsTreeCalls === 2) throw new Error('fatal: not a tree object');
+        if (input.failLsTree === true) throw new Error('fatal: not a tree object');
         return encoder.encode(listing);
       case 'cat-file': {
         const body = byOid.get(args[2] ?? '');
@@ -351,6 +355,37 @@ describe('vocabularies are cap1-core verbatim', () => {
     expect([...CHALLENGE_STATES]).toEqual(['unchallenged']);
     expect(PWB_REPOSITORY_ID).toBe('repository:butlers-configured-poc');
   });
+
+  // syzygy-bpyt.6.4: a producer cannot hand the model an untyped Unknown.
+  // The type half is checked by `npm run typecheck` (tests are in its
+  // program): each directive fails as unused the moment its field widens back
+  // to `string`. The closure is never called; the runtime half pins the
+  // closed words the producers state and the one constructor's output.
+  it('a producer cannot emit an untyped Unknown reason', () => {
+    const minted = 'a minted reason' as string;
+    const typeOnly = (): unknown => [
+      // @ts-expect-error the constructor takes an RFC2-24 reason, never a string
+      unknownEpistemic(minted, 'basis'),
+      // @ts-expect-error a classification record's fixed Unknown is closed
+      { failureState: 'gitCaptureFailed', degradationState: 'Observer failed', unknownReason: minted } satisfies FixedUnknown,
+      // @ts-expect-error an observation degradation is closed
+      { failureState: 'gitCaptureFailed', degradationState: 'Observer failed', unknownReason: minted, detail: '' } satisfies ObservationDegradation,
+      // @ts-expect-error a class denominator's Unknown is closed
+      { kind: 'unknown', reason: 'source-withheld', unknownReason: minted } satisfies ClassDenominator,
+      // @ts-expect-error a reconciled fact's Unknown is closed
+      { fact: 'f', state: 'unknown', declarations: [], unknownReason: minted, rulesConsidered: [] } satisfies ReconciledFact,
+      // @ts-expect-error an item's Unknown is closed
+      { class: 'principle', key: 'k', state: 'unknown', anchors: [], unknownReason: minted } satisfies ItemCoverage,
+      // @ts-expect-error a current-authority Unknown is closed, bar its one named placeholder
+      { kind: 'unknown', reason: minted, route: '', detail: '' } satisfies ProposedWorkCurrentAuthority,
+    ];
+    expect(typeof typeOnly).toBe('function');
+    const stated = [...Object.values(PWB_FAILURE_STATES).map((state) => state.unknownReason), ...Object.values(PRODUCER_UNKNOWN_REASONS)];
+    expect(stated.filter((reason) => !(REASONS as readonly string[]).includes(reason))).toEqual([]);
+    expect(JSON.stringify(unknownEpistemic('missing-evidence', 'No evidence.'))).toBe(
+      '{"label":"Unknown","reason":"No evidence.","closedReason":"missing-evidence","resolutionRoutes":[{"reason":"missing-evidence","route":"Produce or capture evidence","actor":"operator","verb":"capture","target":"evaluation"}]}',
+    );
+  });
 });
 
 describe('the gate comes first', () => {
@@ -402,12 +437,22 @@ describe('observation failures stay Unknown with the registry reason', () => {
     isValidClaim(shape.claim);
   });
 
-  it('phase B tree listing failure is gitCaptureFailed too', () => {
-    const { shape } = build({ texts: BASE_TEXTS, failPhaseBLsTree: true });
+  it('the one tree listing failing is gitCaptureFailed, before any body is read', () => {
+    const { shape, calls } = build({ texts: BASE_TEXTS, failLsTree: true });
     expect(shape.kind).toBe('observation-failed');
     if (shape.kind !== 'observation-failed') return;
     expect(shape.failure.failureState).toBe('gitCaptureFailed');
-    expect(shape.failure.detail).toContain('ls-tree');
+    expect(shape.failure.detail).toBe('git ls-tree failed: fatal: not a tree object');
+    expect(calls.filter((args) => args[0] === 'cat-file')).toEqual([]);
+  });
+
+  it('one evaluation lists the tree once, with -z, and phase B reads against that listing (syzygy-bpyt.6.5)', () => {
+    const { shape, calls } = build({ texts: BASE_TEXTS });
+    expect(shape.kind).toBe('observed');
+    expect(calls.filter((args) => args[0] === 'ls-tree')).toEqual([['ls-tree', '-r', '-z', '-l', COMMIT]]);
+    // The listing precedes every body read, and nothing but metadata comes before it.
+    expect(calls.slice(0, 3).map((args) => args[0])).toEqual(['rev-parse', 'show', 'ls-tree']);
+    expect(calls.slice(3).every((args) => args[0] === 'cat-file')).toBe(true);
   });
 
   it('an option-shaped revision is refused before any Git command', () => {
@@ -432,7 +477,7 @@ describe('an admitted, fully readable fixture', () => {
     expect(shape.identity.sourceClaimedInstant.instant).not.toBe(shape.identity.capturedAt);
     expect(shape.identity.scope).toEqual({ repositoryId: 'repository:butlers-configured-poc', contentClass: 'declared-project-shape-text', phase: 'A' });
     expect(shape.identity.observer.observerId).toBe('polaris-butlers-project-shape');
-    expect(shape.identity.policy).toEqual({ policyId: 'polaris-butlers-project-shape-secrets', policyVersion: '1.5.0-public-source-candidate.1.none.code-all.redact-span' });
+    expect(shape.identity.policy).toEqual({ policyId: 'polaris-butlers-project-shape-secrets', policyVersion: '1.9.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd.v6-p.v7-s.v8-pv' });
     expect(shape.identity.manifestDigest).toMatch(/^sha256:[0-9a-f]{64}$/);
     expect(shape.identity.observationDigest).toMatch(/^sha256:[0-9a-f]{64}$/);
     expect(shape.identity.deterministicInputs.authority).toEqual({
@@ -589,7 +634,7 @@ describe('faults never shrink the population (PWB-REQ-003)', () => {
         redactionClass: 'excluded-artifact',
         repositoryRelativePath: 'about/craft-and-care/README.md',
         policyId: 'polaris-butlers-project-shape-secrets',
-        policyVersion: '1.5.0-public-source-candidate.1.none.code-all.redact-span',
+        policyVersion: '1.9.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd.v6-p.v7-s.v8-pv',
         contentDigest: sha256(CRAFT_SECRET),
         detectorId: 'known-token-formats',
       },
@@ -1006,4 +1051,38 @@ describe('one resource envelope across both phases (PWB-REQ-006, amended)', () =
     expect(shape.counts.sources).toBe(15);
     for (const entry of allClaims(shape)) isValidClaim(entry);
   });
+});
+
+// GP-B2 Q1 (syzygy-bpyt.1.18): a closed fence of about 125,000 lines or more, or a class of 130,000 items or more, made the mask and the extractor
+// throw a RangeError (node 24, default stack) that nothing between the reader and the daemon caught: a re-observation
+// failed and kept the prior model, and startup would exit 1 (read from poc-main.ts, not run). Both now return a decision; the limits that bound a source (bytes, parse passes) are unchanged.
+describe('a very long fence or list does not abort the observation', () => {
+  const VISION_PATH = 'about/heart-and-soul/vision.md';
+  const ENDS: readonly (readonly [string, string])[] = [['LF', '\n'], ['CRLF', '\r\n'], ['CR', '\r']];
+  const fenced = (lines: number, end: string): string => `${VISION}\n~~~${end}${`x${end}`.repeat(lines)}~~~${end}`;
+  const vision = (shape: ReturnType<typeof observed>) => shape.sources.find((source) => source.path === VISION_PATH);
+
+  // A larger stack (a worker-thread pool runs at 4 MB) lets the old line pass the size tests below; this canary fails first, by name.
+  it('one spread call over 200,002 arguments still overflows the stack in this test process', () => {
+    const sink: unknown[] = [];
+    expect(() => sink.push(...new Array<unknown>(200_002))).toThrow(RangeError);
+  });
+
+  it.each(ENDS)('%s: a 200,000-line closed fence at the end of vision.md is classified as a 10-line one is', (_name, end) => {
+    const short = observed({ texts: { ...BASE_TEXTS, [VISION_PATH]: fenced(10, end) } });
+    const long = observed({ texts: { ...BASE_TEXTS, [VISION_PATH]: fenced(200_000, end) } });
+    expect(vision(long)?.record.outcome).toBe(vision(short)?.record.outcome);
+    expect(vision(long)?.itemDenominator).toEqual(vision(short)?.itemDenominator);
+    expect(long.limitBreaches).toEqual(short.limitBreaches);
+    expect(long.exclusions).toEqual(short.exclusions);
+    expect(long.claim.epistemic.label).toBe(short.claim.epistemic.label);
+  });
+
+  it('a 130,000-item success list is extracted whole', () => {
+    const section = ['## What Success Looks Like', '', ...Array.from({ length: 130_000 }, () => '- x'), ''].join('\n');
+    const text = VISION.replace(/## What Success Looks Like[\s\S]*?(?=## What Butlers Is Not)/, `${section}\n`);
+    const shape = observed({ texts: { ...BASE_TEXTS, [VISION_PATH]: text } });
+    expect(shape.items.filter((item) => item.class === 'success-criterion' && item.anchors.some((anchor) => anchor.path === VISION_PATH))).toHaveLength(130_000);
+    expect(vision(shape)?.record.outcome).toBe('classified');
+  }, 30_000);
 });

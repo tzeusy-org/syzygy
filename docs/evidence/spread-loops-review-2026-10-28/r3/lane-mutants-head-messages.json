@@ -1,0 +1,302 @@
+{
+ "summary": {
+  "codeCommit": "bca6482fc956f51f5df014f971c7dde803f32847",
+  "baseCommit": "8d5d4bab",
+  "controlFailing": 0,
+  "mutants": 8,
+  "killed": 8,
+  "survived": [],
+  "baseFailingTests": 20
+ },
+ "rows": [
+  {
+   "id": "CONTROL-code-commit",
+   "outcome": null,
+   "failing": 0,
+   "equalsLane": {
+    "detectors": true,
+    "replacements": true,
+    "mutatedFileSha256": true,
+    "failingTests": true
+   },
+   "laneRanAt": "674e443ce17921565d9eb709d4ce7621f9f6795e",
+   "timeouts": 0,
+   "allFailingAreNewTests": true,
+   "notNew": [],
+   "messages": {}
+  },
+  {
+   "id": "MU1-mask-spread",
+   "outcome": "killed",
+   "failing": 18,
+   "equalsLane": {
+    "detectors": true,
+    "replacements": true,
+    "mutatedFileSha256": true,
+    "failingTests": true
+   },
+   "laneRanAt": "674e443ce17921565d9eb709d4ce7621f9f6795e",
+   "timeouts": 0,
+   "allFailingAreNewTests": true,
+   "notNew": [],
+   "messages": {
+    "distinct": [
+     "RangeError: Maximum call stack size exceeded"
+    ],
+    "count": 18
+   }
+  },
+  {
+   "id": "MU2-extractor-spread",
+   "outcome": "killed",
+   "failing": 2,
+   "equalsLane": {
+    "detectors": true,
+    "replacements": true,
+    "mutatedFileSha256": true,
+    "failingTests": true
+   },
+   "laneRanAt": "674e443ce17921565d9eb709d4ce7621f9f6795e",
+   "timeouts": 0,
+   "allFailingAreNewTests": true,
+   "notNew": [],
+   "messages": {
+    "a source whose class holds 130,000 items is extracted, every item kept in class order": "RangeError: Maximum call stack size exceeded",
+    "a very long fence or list does not abort the observation a 130,000-item success list is extracted whole": "RangeError: Maximum call stack size exceeded"
+   }
+  },
+  {
+   "id": "MU3-mask-loop-drops-closer",
+   "outcome": "killed",
+   "failing": 25,
+   "equalsLane": {
+    "detectors": true,
+    "replacements": true,
+    "mutatedFileSha256": true,
+    "failingTests": true
+   },
+   "laneRanAt": "674e443ce17921565d9eb709d4ce7621f9f6795e",
+   "timeouts": 0,
+   "allFailingAreNewTests": false,
+   "notNew": [
+    "git-object-reader.test.ts::active content is rejected and never reaches a sink the same sentinel outside the context still excludes, at its raw position",
+    "markdown-code-context.test.ts::closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CR: a fence closed on the last line, with no final line end, is closed",
+    "markdown-code-context.test.ts::closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CR: a script element between two tilde fences that each show a backtick-fence line is outside every context",
+    "markdown-code-context.test.ts::closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CR: a tilde fence, a closer with trailing spaces and a span across lines",
+    "markdown-code-context.test.ts::closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CRLF: a fence closed on the last line, with no final line end, is closed",
+    "markdown-code-context.test.ts::closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CRLF: a script element between two tilde fences that each show a backtick-fence line is outside every context",
+    "markdown-code-context.test.ts::closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CRLF: a tilde fence, a closer with trailing spaces and a span across lines",
+    "markdown-code-context.test.ts::closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line LF: a fence closed on the last line, with no final line end, is closed",
+    "markdown-code-context.test.ts::closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line LF: a script element between two tilde fences that each show a backtick-fence line is outside every context",
+    "markdown-code-context.test.ts::closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line LF: a tilde fence, a closer with trailing spaces and a span across lines",
+    "markdown-code-context.test.ts::closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line a CRLF or CR text gets the structure its LF form gets, for every case here",
+    "markdown-code-context.test.ts::closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line mixed terminators: each one ends one line, whichever kind it is",
+    "markdown-code-context.test.ts::closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line the mask keeps the length and every CR and LF at its offset (a CR is never blanked, joined to LF or dropped)",
+    "markdown-code-context.test.ts::closed-pwb-code-context-v1 \u2014 fenced code blocks a closed backtick fence is blanked, delimiters included, keeping every newline and length",
+    "markdown-code-context.test.ts::closed-pwb-code-context-v1 \u2014 fenced code blocks a closer must repeat the opener character at least the opener length, then spaces only",
+    "markdown-code-context.test.ts::closed-pwb-code-context-v1 \u2014 fenced code blocks a fence opener line inside a fence is content, never a nested opener",
+    "markdown-code-context.test.ts::closed-pwb-code-context-v1 \u2014 fenced code blocks an opener may be indented zero to three spaces; at four the backticks are inline runs, not a fence",
+    "markdown-code-context.test.ts::closed-pwb-code-context-v1 \u2014 fenced code blocks the first qualifying closer ends the fence; text after it is scanned again",
+    "markdown-code-context.test.ts::closed-pwb-code-context-v1 \u2014 fenced code blocks tildes fence too, and a tilde opener info string may contain a backtick"
+   ],
+   "messages": {
+    "distinct": [
+     "AssertionError: expected '       \\n   \\n' to be '       \\n   \\n   ' // Object.is equality",
+     "AssertionError: expected '      \\n   \\n' to be '      \\n   \\n      ' // Object.is equality",
+     "AssertionError: expected '    \\n   \\n   \\n' to be '    \\n   \\n   \\n       ' // Object.is equality",
+     "AssertionError: expected '   \\n   \\n   \\n' to be '   \\n   \\n   \\n   ' // Object.is equality",
+     "AssertionError: expected '   \\n   \\n' to be '   \\n   \\n   ' // Object.is equality",
+     "AssertionError: expected '   \\n   \\n<b>\\n   \\n   \\n' to be '   \\n   \\n   \\n<b>\\n   \\n   \\n   ' // Object.is equality",
+     "AssertionError: expected '   \\n   \\nafter\\n\\n' to be '   \\n   \\n   \\nafter\\n' // Object.is equality",
+     "AssertionError: expected '   \\n   \\r\\nafter\\r\\n' to be '   \\n   \\r\\n   \\r\\nafter' // Object.is equality",
+     "AssertionError: expected '   \\r   \\r' to be '   \\r   \\r   ' // Object.is equality",
+     "AssertionError: expected '   \\r   \\rafter\\r\\r' to be '   \\r   \\r   \\rafter\\r' // Object.is equality",
+     "AssertionError: expected '   \\r\\n   \\r\\n' to be '   \\r\\n   \\r\\n   ' // Object.is equality",
+     "AssertionError: expected '   \\r\\n   \\r\\nafter\\r\\n\\r\\n' to be '   \\r\\n   \\r\\n   \\r\\nafter\\r\\n' // Object.is equality"
+    ],
+    "count": 25
+   }
+  },
+  {
+   "id": "MU4-extractor-loop-drops-last-item",
+   "outcome": "killed",
+   "failing": 24,
+   "equalsLane": {
+    "detectors": true,
+    "replacements": true,
+    "mutatedFileSha256": true,
+    "failingTests": true
+   },
+   "laneRanAt": "674e443ce17921565d9eb709d4ce7621f9f6795e",
+   "timeouts": 0,
+   "allFailingAreNewTests": false,
+   "notNew": [
+    "project-shape-extraction.test.ts::PWB-REQ-002 \u2014 the grammar is literal keys are NFC-normalized and nothing else",
+    "project-shape-extraction.test.ts::PWB-REQ-002 \u2014 two independent extractors agree on every fixture craft-and-care/README.md mints the oracle's identities and denominators",
+    "project-shape-extraction.test.ts::PWB-REQ-002 \u2014 two independent extractors agree on every fixture hand-typed expectations pin the grammar on the v1, lore, components, craft and roster fixtures",
+    "project-shape-extraction.test.ts::PWB-REQ-002 \u2014 two independent extractors agree on every fixture hand-typed expectations pin the grammar on the vision fixture",
+    "project-shape-extraction.test.ts::PWB-REQ-002 \u2014 two independent extractors agree on every fixture heart-and-soul/architecture.md mints the oracle's identities and denominators",
+    "project-shape-extraction.test.ts::PWB-REQ-002 \u2014 two independent extractors agree on every fixture heart-and-soul/v1.md mints the oracle's identities and denominators",
+    "project-shape-extraction.test.ts::PWB-REQ-002 \u2014 two independent extractors agree on every fixture heart-and-soul/vision.md mints the oracle's identities and denominators",
+    "project-shape-extraction.test.ts::PWB-REQ-002 \u2014 two independent extractors agree on every fixture lay-and-land/components.md mints the oracle's identities and denominators",
+    "project-shape-extraction.test.ts::PWB-REQ-002 \u2014 two independent extractors agree on every fixture legends-and-lore/README.md mints the oracle's identities and denominators",
+    "project-shape-extraction.test.ts::PWB-REQ-002 \u2014 two independent extractors agree on every fixture openspec/specs/identity/spec.md mints the oracle's identities and denominators",
+    "project-shape-extraction.test.ts::PWB-REQ-002 \u2014 two independent extractors agree on every fixture roster/alfred/butler.toml mints the oracle's identities and denominators",
+    "project-shape-extraction.test.ts::PWB-REQ-002 \u2014 two independent extractors agree on every fixture the six project-account keys are minted exactly once across the three account files",
+    "project-shape-model.test.ts::an admitted, fully readable fixture accounts for every declared identity, all modeled",
+    "project-shape-model.test.ts::an admitted, fully readable fixture aggregates per class with known denominators, Observed claims and zero reason counts",
+    "project-shape-model.test.ts::an admitted, fully readable fixture carries the complete source population with stamps, identities and Observed claims",
+    "project-shape-model.test.ts::an admitted, fully readable fixture every claim is a complete tuple from the closed vocabularies",
+    "project-shape-model.test.ts::an admitted, fully readable fixture renders the six project-account statements with their sections and claims",
+    "project-shape-model.test.ts::contradictions are disclosed, resolved only by a root-declared layer rule (PWB-REQ-004) a stated summary disagreeing with the derived count is contradicted, both anchors kept, tier suspended",
+    "project-shape-model.test.ts::contradictions are disclosed, resolved only by a root-declared layer rule (PWB-REQ-004) with the root precedence table, row 1 makes the derived count effective and the citation travels",
+    "project-shape-model.test.ts::faults never shrink the population (PWB-REQ-003) a named-but-absent source stays counted as Unknown and its account statement is Unknown with the same reason",
+    "project-shape-model.test.ts::faults never shrink the population (PWB-REQ-003) a secret-bearing index is excluded hash-not-body before child derivation; its class denominator and the project shape go Unknown",
+    "project-shape-model.test.ts::one resource envelope across both phases (PWB-REQ-006, amended) maxParsePassesPerSource counts phase B against a seed already validated in phase A"
+   ],
+   "messages": {
+    "distinct": [
+     "AssertionError: expected '1' to be '2' // Object.is equality",
+     "AssertionError: expected 3 to be 5 // Object.is equality",
+     "AssertionError: expected 68 to be 95 // Object.is equality",
+     "AssertionError: expected 8 to be 19 // Object.is equality",
+     "AssertionError: expected [ '1:Daemon', '1:Store', '2a:Daemon' ] to deeply equal [ '1:Daemon', '1:Store', \u2026(2) ]",
+     "AssertionError: expected [ 'Bus', 'scheduler', \u2026(4) ] to deeply equal [ 'Bus', 'scheduler', \u2026(5) ]",
+     "AssertionError: expected [ 'Fail closed', 'Cite or stay quiet' ] to deeply equal [ 'Fail closed', \u2026(2) ]",
+     "AssertionError: expected [ 'RFC 0001' ] to deeply equal [ 'RFC 0001', 'RFC 0002' ]",
+     "AssertionError: expected [ 'cc-spec.md' ] to deeply equal [ 'cc-spec.md', 'cc-impact.md' ]",
+     "AssertionError: expected [ 'promises', 'purpose', 'v1-scope' ] to deeply equal [ 'architecture', 'promises', \u2026(4) ]",
+     "AssertionError: expected [ 'purpose', 'promises' ] to deeply equal [ 'purpose', 'promises', 'refusals' ]",
+     "AssertionError: expected [ 'v1-scope' ] to deeply equal [ 'v1-scope', 'v1-success' ]"
+    ],
+    "count": 24
+   }
+  },
+  {
+   "id": "MU5-mask-loop-reversed",
+   "outcome": "killed",
+   "failing": 7,
+   "equalsLane": {
+    "detectors": true,
+    "replacements": true,
+    "mutatedFileSha256": true,
+    "failingTests": true
+   },
+   "laneRanAt": "674e443ce17921565d9eb709d4ce7621f9f6795e",
+   "timeouts": 0,
+   "allFailingAreNewTests": false,
+   "notNew": [
+    "markdown-code-context.test.ts::closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CR: a tilde fence, a closer with trailing spaces and a span across lines",
+    "markdown-code-context.test.ts::closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CRLF: a tilde fence, a closer with trailing spaces and a span across lines",
+    "markdown-code-context.test.ts::closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line LF: a tilde fence, a closer with trailing spaces and a span across lines",
+    "markdown-code-context.test.ts::closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line a CRLF or CR text gets the structure its LF form gets, for every case here",
+    "markdown-code-context.test.ts::closed-pwb-code-context-v1 \u2014 fenced code blocks a closed backtick fence is blanked, delimiters included, keeping every newline and length",
+    "markdown-code-context.test.ts::closed-pwb-code-context-v1 \u2014 fenced code blocks a closer must repeat the opener character at least the opener length, then spaces only",
+    "markdown-code-context.test.ts::closed-pwb-code-context-v1 \u2014 fenced code blocks tildes fence too, and a tilde opener info string may contain a backtick"
+   ],
+   "messages": {
+    "closed-pwb-code-context-v1 \u2014 fenced code blocks a closed backtick fence is blanked, delimiters included, keeping every newline and length": "AssertionError: expected 'before\\n   \\n     \\n       \\nafter' to be 'before\\n       \\n     \\n   \\nafter' // Object.is equality",
+    "closed-pwb-code-context-v1 \u2014 fenced code blocks tildes fence too, and a tilde opener info string may contain a backtick": "AssertionError: expected '   \\n   \\n       ' to be '       \\n   \\n   ' // Object.is equality",
+    "closed-pwb-code-context-v1 \u2014 fenced code blocks a closer must repeat the opener character at least the opener length, then spaces only": "AssertionError: expected '       \\n   \\n   \\n    ' to be '    \\n   \\n   \\n       ' // Object.is equality",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line LF: a tilde fence, a closer with trailing spaces and a span across lines": "AssertionError: expected '      \\n   \\n   \\nafter\\n' to be '   \\n   \\n      \\nafter\\n' // Object.is equality",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CRLF: a tilde fence, a closer with trailing spaces and a span across lines": "AssertionError: expected '      \\r\\n   \\r\\n   \\r\\nafter\\r\\n' to be '   \\r\\n   \\r\\n      \\r\\nafter\\r\\n' // Object.is equality",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CR: a tilde fence, a closer with trailing spaces and a span across lines": "AssertionError: expected '      \\r   \\r   \\rafter\\r' to be '   \\r   \\r      \\rafter\\r' // Object.is equality",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line a CRLF or CR text gets the structure its LF form gets, for every case here": "AssertionError: expected '...\\n..................\\n.......\\n' to be '.......\\n..................\\n...\\n' // Object.is equality"
+   }
+  },
+  {
+   "id": "MU6-extractor-loop-reversed",
+   "outcome": "killed",
+   "failing": 10,
+   "equalsLane": {
+    "detectors": true,
+    "replacements": true,
+    "mutatedFileSha256": true,
+    "failingTests": true
+   },
+   "laneRanAt": "674e443ce17921565d9eb709d4ce7621f9f6795e",
+   "timeouts": 0,
+   "allFailingAreNewTests": false,
+   "notNew": [
+    "project-shape-extraction.test.ts::PWB-REQ-002 \u2014 the grammar is literal keys are NFC-normalized and nothing else",
+    "project-shape-extraction.test.ts::PWB-REQ-002 \u2014 two independent extractors agree on every fixture craft-and-care/README.md mints the oracle's identities and denominators",
+    "project-shape-extraction.test.ts::PWB-REQ-002 \u2014 two independent extractors agree on every fixture hand-typed expectations pin the grammar on the v1, lore, components, craft and roster fixtures",
+    "project-shape-extraction.test.ts::PWB-REQ-002 \u2014 two independent extractors agree on every fixture hand-typed expectations pin the grammar on the vision fixture",
+    "project-shape-extraction.test.ts::PWB-REQ-002 \u2014 two independent extractors agree on every fixture heart-and-soul/v1.md mints the oracle's identities and denominators",
+    "project-shape-extraction.test.ts::PWB-REQ-002 \u2014 two independent extractors agree on every fixture heart-and-soul/vision.md mints the oracle's identities and denominators",
+    "project-shape-extraction.test.ts::PWB-REQ-002 \u2014 two independent extractors agree on every fixture lay-and-land/components.md mints the oracle's identities and denominators",
+    "project-shape-extraction.test.ts::PWB-REQ-002 \u2014 two independent extractors agree on every fixture legends-and-lore/README.md mints the oracle's identities and denominators",
+    "project-shape-model.test.ts::an admitted, fully readable fixture accounts for every declared identity, all modeled"
+   ],
+   "messages": {
+    "PWB-REQ-002 \u2014 two independent extractors agree on every fixture heart-and-soul/vision.md mints the oracle's identities and denominators": "AssertionError: expected [ 'refusals', 'promises', 'purpose' ] to deeply equal [ 'purpose', 'promises', 'refusals' ]",
+    "PWB-REQ-002 \u2014 two independent extractors agree on every fixture heart-and-soul/v1.md mints the oracle's identities and denominators": "AssertionError: expected [ 'v1-success', 'v1-scope' ] to deeply equal [ 'v1-scope', 'v1-success' ]",
+    "PWB-REQ-002 \u2014 two independent extractors agree on every fixture legends-and-lore/README.md mints the oracle's identities and denominators": "AssertionError: expected [ 'RFC 0002', 'RFC 0001' ] to deeply equal [ 'RFC 0001', 'RFC 0002' ]",
+    "PWB-REQ-002 \u2014 two independent extractors agree on every fixture lay-and-land/components.md mints the oracle's identities and denominators": "AssertionError: expected [ '12:cli', '2a:Daemon', \u2026(2) ] to deeply equal [ '1:Daemon', '1:Store', \u2026(2) ]",
+    "PWB-REQ-002 \u2014 two independent extractors agree on every fixture craft-and-care/README.md mints the oracle's identities and denominators": "AssertionError: expected [ 'cc-impact.md', 'cc-spec.md' ] to deeply equal [ 'cc-spec.md', 'cc-impact.md' ]",
+    "PWB-REQ-002 \u2014 two independent extractors agree on every fixture hand-typed expectations pin the grammar on the vision fixture": "AssertionError: expected [ 'Caf\u00e9 rule', \u2026(2) ] to deeply equal [ 'Fail closed', \u2026(2) ]",
+    "PWB-REQ-002 \u2014 two independent extractors agree on every fixture hand-typed expectations pin the grammar on the v1, lore, components, craft and roster fixtures": "AssertionError: expected [ 'Tracing', 'Identity', \u2026(5) ] to deeply equal [ 'Bus', 'scheduler', \u2026(5) ]",
+    "PWB-REQ-002 \u2014 the grammar is literal keys are NFC-normalized and nothing else": "AssertionError: expected 'Fail closed' to be 'Caf\u00e9 rule' // Object.is equality",
+    "a source whose class holds 130,000 items is extracted, every item kept in class order": "AssertionError: the success-criterion items are not in line order: expected false to be true // Object.is equality",
+    "an admitted, fully readable fixture accounts for every declared identity, all modeled": "AssertionError: expected [ \u2026(20) ] to deeply equal [ \u2026(20) ]"
+   }
+  },
+  {
+   "id": "R10-extractor-size-gated-reversal",
+   "outcome": "killed",
+   "failing": 1,
+   "equalsLane": {
+    "detectors": true,
+    "replacements": true,
+    "mutatedFileSha256": true,
+    "failingTests": true
+   },
+   "laneRanAt": "674e443ce17921565d9eb709d4ce7621f9f6795e",
+   "timeouts": 0,
+   "allFailingAreNewTests": true,
+   "notNew": [],
+   "messages": {
+    "a source whose class holds 130,000 items is extracted, every item kept in class order": "AssertionError: the success-criterion items are not in line order: expected false to be true // Object.is equality"
+   }
+  },
+  {
+   "id": "R11-extractor-chunks-last-first",
+   "outcome": "killed",
+   "failing": 1,
+   "equalsLane": {
+    "detectors": true,
+    "replacements": true,
+    "mutatedFileSha256": true,
+    "failingTests": true
+   },
+   "laneRanAt": "674e443ce17921565d9eb709d4ce7621f9f6795e",
+   "timeouts": 0,
+   "allFailingAreNewTests": true,
+   "notNew": [],
+   "messages": {
+    "a source whose class holds 130,000 items is extracted, every item kept in class order": "AssertionError: the success-criterion items are not in line order: expected false to be true // Object.is equality"
+   }
+  },
+  {
+   "id": "BASE-both-spreads",
+   "outcome": "killed",
+   "failing": 20,
+   "equalsLane": {
+    "detectors": true,
+    "replacements": true,
+    "mutatedFileSha256": true,
+    "failingTests": true
+   },
+   "laneRanAt": "674e443ce17921565d9eb709d4ce7621f9f6795e",
+   "timeouts": 0,
+   "allFailingAreNewTests": true,
+   "notNew": [],
+   "messages": {
+    "distinct": [
+     "RangeError: Maximum call stack size exceeded"
+    ],
+    "count": 20
+   }
+  }
+ ]
+}

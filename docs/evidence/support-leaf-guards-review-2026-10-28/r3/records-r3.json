@@ -1,0 +1,86 @@
+{
+  "absent": {
+    "newCommit": "191d82779ea07f45be612b00ff3cafc9aa7446b8",
+    "oldCommit": "6249951432d6d0c0608f8dfb93e525f706159c5a",
+    "newSummary": {
+      "rows": 52,
+      "asExpected": 52,
+      "unexpected": []
+    },
+    "oldSummary": {
+      "rows": 49,
+      "asExpected": 49,
+      "unexpected": []
+    },
+    "newStatusAfter": "",
+    "newLeftovers": [],
+    "added": [
+      "W5-filter-drops-the-x-forms",
+      "W6-test-exclusion-broadened-to-any-test-substring",
+      "W7-testkit-exclusion-broadened-to-any-depth"
+    ],
+    "removed": [],
+    "expectedNotObserved": [],
+    "changedVsOld": [],
+    "timedOutMessages": 0,
+    "killedRows": 47
+  },
+  "present": {
+    "newCommit": "191d82779ea07f45be612b00ff3cafc9aa7446b8",
+    "oldCommit": "6249951432d6d0c0608f8dfb93e525f706159c5a",
+    "newSummary": {
+      "rows": 52,
+      "asExpected": 52,
+      "unexpected": []
+    },
+    "oldSummary": {
+      "rows": 49,
+      "asExpected": 49,
+      "unexpected": []
+    },
+    "newStatusAfter": "",
+    "newLeftovers": [],
+    "added": [
+      "W5-filter-drops-the-x-forms",
+      "W6-test-exclusion-broadened-to-any-test-substring",
+      "W7-testkit-exclusion-broadened-to-any-depth"
+    ],
+    "removed": [],
+    "expectedNotObserved": [],
+    "changedVsOld": [],
+    "timedOutMessages": 0,
+    "killedRows": 47
+  },
+  "absentVsPresentDiffer": [],
+  "W": {
+    "W5-filter-drops-the-x-forms": [
+      "@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit"
+    ],
+    "W6-test-exclusion-broadened-to-any-test-substring": [
+      "@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit"
+    ],
+    "W7-testkit-exclusion-broadened-to-any-depth": [
+      "@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit"
+    ]
+  },
+  "baseUnchanged:mutants-base-absent.json": true,
+  "baseUnchanged:mutants-base-absent.log": true,
+  "base-absent": {
+    "commit": "f7ea858480b30ffc4407154a84d1d03f3fe4a549",
+    "summary": {
+      "rows": 35,
+      "asExpected": 35,
+      "unexpected": []
+    }
+  },
+  "baseUnchanged:mutants-base-present.json": true,
+  "baseUnchanged:mutants-base-present.log": true,
+  "base-present": {
+    "commit": "f7ea858480b30ffc4407154a84d1d03f3fe4a549",
+    "summary": {
+      "rows": 35,
+      "asExpected": 35,
+      "unexpected": []
+    }
+  }
+}

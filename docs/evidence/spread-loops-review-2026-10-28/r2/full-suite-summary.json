@@ -1,0 +1,160 @@
+{
+ "numTotalTests": 5790,
+ "numPassedTests": 5785,
+ "numFailedTests": 0,
+ "numPendingTests": 5,
+ "files": 256,
+ "success": true,
+ "newTestDurationsMs": [
+  [
+   "git-object-reader.test.ts",
+   "a 200,000-line closed fence under the read limit (GP-B2 Q1) LF: a 200,000-line closed fenc",
+   "passed",
+   210
+  ],
+  [
+   "git-object-reader.test.ts",
+   "a 200,000-line closed fence under the read limit (GP-B2 Q1) CRLF: a 200,000-line closed fe",
+   "passed",
+   162
+  ],
+  [
+   "git-object-reader.test.ts",
+   "a 200,000-line closed fence under the read limit (GP-B2 Q1) CR: a 200,000-line closed fenc",
+   "passed",
+   157
+  ],
+  [
+   "git-object-reader.test.ts",
+   "a 200,000-line closed fence under the read limit (GP-B2 Q1) LF: a script element after a 2",
+   "passed",
+   137
+  ],
+  [
+   "git-object-reader.test.ts",
+   "a 200,000-line closed fence under the read limit (GP-B2 Q1) CRLF: a script element after a",
+   "passed",
+   235
+  ],
+  [
+   "git-object-reader.test.ts",
+   "a 200,000-line closed fence under the read limit (GP-B2 Q1) CR: a script element after a 2",
+   "passed",
+   117
+  ],
+  [
+   "git-object-reader.test.ts",
+   "a 200,000-line closed fence under the read limit (GP-B2 Q1) LF: scanActiveContent over a 2",
+   "passed",
+   129
+  ],
+  [
+   "git-object-reader.test.ts",
+   "a 200,000-line closed fence under the read limit (GP-B2 Q1) CRLF: scanActiveContent over a",
+   "passed",
+   196
+  ],
+  [
+   "git-object-reader.test.ts",
+   "a 200,000-line closed fence under the read limit (GP-B2 Q1) CR: scanActiveContent over a 2",
+   "passed",
+   102
+  ],
+  [
+   "markdown-code-context.test.ts",
+   "a very long closed fence one spread call over 200,002 arguments still overflows the stack ",
+   "passed",
+   2
+  ],
+  [
+   "markdown-code-context.test.ts",
+   "a very long closed fence LF: 200,000 lines are blanked, every line end and the text after ",
+   "passed",
+   108
+  ],
+  [
+   "markdown-code-context.test.ts",
+   "a very long closed fence CRLF: 200,000 lines are blanked, every line end and the text afte",
+   "passed",
+   150
+  ],
+  [
+   "markdown-code-context.test.ts",
+   "a very long closed fence CR: 200,000 lines are blanked, every line end and the text after ",
+   "passed",
+   151
+  ],
+  [
+   "markdown-code-context.test.ts",
+   "a very long closed fence LF: a script element inside the fence is blanked, and the line af",
+   "passed",
+   109
+  ],
+  [
+   "markdown-code-context.test.ts",
+   "a very long closed fence CRLF: a script element inside the fence is blanked, and the line ",
+   "passed",
+   135
+  ],
+  [
+   "markdown-code-context.test.ts",
+   "a very long closed fence CR: a script element inside the fence is blanked, and the line af",
+   "passed",
+   111
+  ],
+  [
+   "markdown-code-context.test.ts",
+   "a very long closed fence LF: the same lines left unclosed are still malformed at the opene",
+   "passed",
+   102
+  ],
+  [
+   "markdown-code-context.test.ts",
+   "a very long closed fence CRLF: the same lines left unclosed are still malformed at the ope",
+   "passed",
+   172
+  ],
+  [
+   "markdown-code-context.test.ts",
+   "a very long closed fence CR: the same lines left unclosed are still malformed at the opene",
+   "passed",
+   77
+  ],
+  [
+   "project-shape-extraction.test.ts",
+   "a source whose class holds 130,000 items one spread call over 130,002 arguments still over",
+   "passed",
+   1
+  ],
+  [
+   "project-shape-extraction.test.ts",
+   "a source whose class holds 130,000 items is extracted, every item kept in class order",
+   "passed",
+   1064
+  ],
+  [
+   "project-shape-model.test.ts",
+   "a very long fence or list does not abort the observation LF: a 200,000-line closed fence a",
+   "passed",
+   248
+  ],
+  [
+   "project-shape-model.test.ts",
+   "a very long fence or list does not abort the observation CRLF: a 200,000-line closed fence",
+   "passed",
+   330
+  ],
+  [
+   "project-shape-model.test.ts",
+   "a very long fence or list does not abort the observation CR: a 200,000-line closed fence a",
+   "passed",
+   124
+  ],
+  [
+   "project-shape-model.test.ts",
+   "a very long fence or list does not abort the observation a 130,000-item success list is ex",
+   "passed",
+   1976
+  ]
+ ]
+}

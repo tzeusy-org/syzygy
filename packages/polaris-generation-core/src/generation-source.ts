@@ -1,4 +1,5 @@
 import { createHash, createHmac, randomBytes } from 'node:crypto';
+import { sha256 } from '@syzygy/support';
 
 import { SOURCE_ID_MAX_LENGTH, SOURCE_ID_PATTERN, SOURCE_TEXT_MAX_LENGTH } from './source-model.js';
 import { bodyLines, redactionMarker } from './secret-redaction.js';
@@ -160,7 +161,8 @@ function validateSources(value: readonly GenerationSource[], requireVerified: bo
       || Object.keys(source.exclusion).some(key => !['excluded', 'reason'].includes(key))
       || (source.exclusion.excluded === false && Object.hasOwn(source.exclusion, 'reason'))) fail('invalid-source');
     if (!handle.test(source.sourceId) || source.sourceId.length > SOURCE_ID_MAX_LENGTH
-      || !/^[A-Za-z0-9:_-]+$/u.test(source.repositoryId) || !source.evaluationId || !/^(?:[0-9a-f]{40}|[0-9a-f]{64})$/u.test(source.revision)
+      // Every 046 identity ('.' included) and the github:<owner>:<repo> form, compared exactly (R-PDJA-33-RULINGS-2 finding 1).
+      || !/^[A-Za-z0-9:._-]+$/u.test(source.repositoryId) || !source.evaluationId || !/^(?:[0-9a-f]{40}|[0-9a-f]{64})$/u.test(source.revision)
       || (source.objectId !== null && !hexObjectId.test(source.objectId)) || source.path.startsWith('/')
       || source.path.split('/').some(part => part === '' || part === '.' || part === '..') || source.path.includes('\0')
       || source.path.includes('\\') || !['body', 'path-only'].includes(source.classificationBasis)
@@ -213,7 +215,7 @@ function validateSources(value: readonly GenerationSource[], requireVerified: bo
     // reader (and verifySources) bind the whole blob.
     if (segment !== undefined) { if (bytes.length !== segment.end - segment.start) fail('body-mismatch'); }
     else if (redaction !== undefined) {
-      if (createHash('sha256').update(body).digest('hex') !== redaction.retainedSha256) fail('body-mismatch');
+      if (sha256(body) !== redaction.retainedSha256) fail('body-mismatch');
     } else if (gitBlobObjectId(body, objectId.length === 40 ? 'sha1' : 'sha256') !== objectId) fail('object-mismatch');
     if (redaction !== undefined) blob.bodies.push({ index: segment?.index ?? 0, body });
     const anchorBase = segment?.start ?? 0;
@@ -250,7 +252,7 @@ function validateSources(value: readonly GenerationSource[], requireVerified: bo
     if (blob.whole || pieces.some((piece, i) => piece.index !== i || piece.count !== pieces[0]!.count || piece.blobBytes !== pieces[0]!.blobBytes
       || piece.start !== (i === 0 ? 0 : pieces[i - 1]!.end)) || (complete ? blob.deferred : !blob.deferred || pieces.length >= pieces[0]!.count)) fail('invalid-segments');
     if (complete && blob.redaction !== undefined
-      && createHash('sha256').update(blob.bodies.sort((a, b) => a.index - b.index).map(piece => piece.body).join('')).digest('hex') !== blob.redaction.retainedSha256) fail('body-mismatch');
+      && sha256(blob.bodies.sort((a, b) => a.index - b.index).map(piece => piece.body).join('')) !== blob.redaction.retainedSha256) fail('body-mismatch');
   }
   return value;
 }
@@ -332,7 +334,7 @@ export function verifiedRedactedBody(body: string, objectId: string, repositoryP
   if (screened.kind !== 'redacted' || !('retainedLines' in screened)) fail('unquotable-source');
   const lines = bodyLines(body), held = new Set(screened.withheld);
   let byte = 0;
-  if (screened.originalBytes !== Buffer.byteLength(body) || screened.contentSha256 !== createHash('sha256').update(body).digest('hex')
+  if (screened.originalBytes !== Buffer.byteLength(body) || screened.contentSha256 !== sha256(body)
     || screened.retainedLines.length !== lines.length || screened.lineByteOffsets.length !== lines.length
     || lines.some((line, index) => {
       const offset = byte; byte += Buffer.byteLength(line);
@@ -396,7 +398,7 @@ export function generationSourcesForRedactedBody(input: RedactedBodySourceInput)
   flush();
   const safe = pieces.map(piece => piece.body).join(''), blobBytes = Buffer.byteLength(safe);
   const redaction: SourceRedaction = { redactionClass: 'redacted-span', withheldLines: withheld.length, withheld: [...withheld], originalLines: retainedLines.length,
-    originalBytes, contentSha256, retainedSha256: createHash('sha256').update(safe).digest('hex'), policySha256 };
+    originalBytes, contentSha256, retainedSha256: sha256(safe), policySha256 };
   Object.freeze(redaction.withheld); Object.freeze(redaction);
   const trust = (source: GenerationSource): GenerationSource => {
     for (const span of source.spans) { if (span.original !== undefined) Object.freeze(span.original); Object.freeze(span); }

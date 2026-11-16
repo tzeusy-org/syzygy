@@ -1,0 +1,8 @@
+B1-core-root-import-in-in-force killed 1
+B4-consent-ports-reexport-in-live killed 1
+R1-literal-dynamic-import-of-core-root-in-in-force killed 1
+R2-export-star-consent-ports-in-live killed 1
+R3-computed-dynamic-import-of-core-root-in-in-force survived 0
+R4-node-condition-ahead-of-import-in-live-subpath survived 0
+R5-vitest-alias-for-live-points-at-root survived 0
+exit=0

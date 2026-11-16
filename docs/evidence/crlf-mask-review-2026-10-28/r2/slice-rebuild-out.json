@@ -1,0 +1,40 @@
+{
+ "cases": {
+  "vet": 36,
+  "fence": 33,
+  "n2": 6
+ },
+ "texts": 6079,
+ "withCr": 0,
+ "sortedDigest": "50916c032ebe049dcc68fdd220a6b1ca265599da7673a4605e124fba91b782a8",
+ "differentialSlice": {
+  "texts": 6079,
+  "sortedDigest": "50916c032ebe049dcc68fdd220a6b1ca265599da7673a4605e124fba91b782a8",
+  "equalSets": true
+ },
+ "excludedByHead": 4864,
+ "perSeparator": {
+  "U+2028": {
+   "texts": 2026,
+   "fence": 370,
+   "span": 198,
+   "outside": 457,
+   "malformedAtHead": 1075
+  },
+  "U+2029": {
+   "texts": 2026,
+   "fence": 370,
+   "span": 198,
+   "outside": 457,
+   "malformedAtHead": 1075
+  },
+  "U+0085": {
+   "texts": 2026,
+   "fence": 572,
+   "span": 123,
+   "outside": 368,
+   "malformedAtHead": 982
+  }
+ },
+ "note": "fence / span / outside count texts holding at least one occurrence of that separator at such a position (a text can count in more than one); malformedAtHead counts texts with no mask"
+}

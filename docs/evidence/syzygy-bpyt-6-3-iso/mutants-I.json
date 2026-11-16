@@ -1,0 +1,138 @@
+{
+ "commit": "28024ade30ac30ffeac3bb09fe0833fe63a43981",
+ "controls": [
+  {
+   "id": "C0-iso",
+   "file": "packages/polaris-dossier/src/iso-of.ts",
+   "tests": [
+    "packages/polaris-dossier/src/iso-of.test.ts"
+   ],
+   "exit": 0,
+   "passed": 18,
+   "failed": 0,
+   "total": 18,
+   "failedTests": [],
+   "passed_clean": true
+  },
+  {
+   "id": "N0-iso-comment",
+   "file": "packages/polaris-dossier/src/iso-of.ts",
+   "tests": [
+    "packages/polaris-dossier/src/iso-of.test.ts"
+   ],
+   "exit": 0,
+   "passed": 18,
+   "failed": 0,
+   "total": 18,
+   "failedTests": [],
+   "passed_clean": true
+  }
+ ],
+ "mutants": [
+  {
+   "id": "I1-http-date-form",
+   "group": "I",
+   "file": "packages/polaris-dossier/src/iso-of.ts",
+   "line": 9,
+   "old": "new Date(instant).toISOString();",
+   "new": "new Date(instant).toUTCString();",
+   "tests": [
+    "packages/polaris-dossier/src/iso-of.test.ts"
+   ],
+   "exit": 1,
+   "passed": 0,
+   "failed": 18,
+   "total": 18,
+   "failedTests": [
+    "isoOf writes the epoch",
+    "isoOf writes one millisecond after the epoch",
+    "isoOf writes one millisecond before the epoch"
+   ],
+   "killed": true
+  },
+  {
+   "id": "I2-drops-the-milliseconds",
+   "group": "I",
+   "file": "packages/polaris-dossier/src/iso-of.ts",
+   "line": 9,
+   "old": "new Date(instant).toISOString();",
+   "new": "new Date(instant).toISOString().slice(0, 19) + 'Z';",
+   "tests": [
+    "packages/polaris-dossier/src/iso-of.test.ts"
+   ],
+   "exit": 1,
+   "passed": 5,
+   "failed": 13,
+   "total": 18,
+   "failedTests": [
+    "isoOf writes the epoch",
+    "isoOf writes one millisecond after the epoch",
+    "isoOf writes one millisecond before the epoch"
+   ],
+   "killed": true
+  },
+  {
+   "id": "I3-absolute-value",
+   "group": "I",
+   "file": "packages/polaris-dossier/src/iso-of.ts",
+   "line": 9,
+   "old": "new Date(instant).toISOString();",
+   "new": "new Date(Math.abs(instant)).toISOString();",
+   "tests": [
+    "packages/polaris-dossier/src/iso-of.test.ts"
+   ],
+   "exit": 1,
+   "passed": 14,
+   "failed": 4,
+   "total": 18,
+   "failedTests": [
+    "isoOf writes one millisecond before the epoch",
+    "isoOf writes the first instant of year 0000",
+    "isoOf writes the last instant of year -0001, which takes a signed six-digit year"
+   ],
+   "killed": true
+  },
+  {
+   "id": "I4-swallows-the-range-error",
+   "group": "I",
+   "file": "packages/polaris-dossier/src/iso-of.ts",
+   "line": 9,
+   "old": "export const isoOf = (instant: number): string => new Date(instant).toISOString();",
+   "new": "export const isoOf = (instant: number): string => { try { return new Date(instant).toISOString(); } catch { return ''; } };",
+   "tests": [
+    "packages/polaris-dossier/src/iso-of.test.ts"
+   ],
+   "exit": 1,
+   "passed": 13,
+   "failed": 5,
+   "total": 18,
+   "failedTests": [
+    "isoOf throws a RangeError for one past the largest instant a Date holds instead of writing text",
+    "isoOf throws a RangeError for one before the smallest instant a Date holds instead of writing text",
+    "isoOf throws a RangeError for NaN instead of writing text"
+   ],
+   "killed": true
+  },
+  {
+   "id": "I5-local-time-form",
+   "group": "I",
+   "file": "packages/polaris-dossier/src/iso-of.ts",
+   "line": 9,
+   "old": "new Date(instant).toISOString();",
+   "new": "new Date(instant).toString();",
+   "tests": [
+    "packages/polaris-dossier/src/iso-of.test.ts"
+   ],
+   "exit": 1,
+   "passed": 0,
+   "failed": 18,
+   "total": 18,
+   "failedTests": [
+    "isoOf writes the epoch",
+    "isoOf writes one millisecond after the epoch",
+    "isoOf writes one millisecond before the epoch"
+   ],
+   "killed": true
+  }
+ ]
+}

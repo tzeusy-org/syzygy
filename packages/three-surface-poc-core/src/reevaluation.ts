@@ -10,7 +10,7 @@ import type { PocModel } from './model.js';
 // build). A prior evaluation is never rewritten; this result names it.
 // Pure: every reading is supplied by the caller.
 
-export interface EvaluationClocks {
+interface EvaluationClocks {
   readonly butlersHead: string;
   readonly workingTreeDigest: string;
   /** Null when this evaluation did not observe the work-item database:
@@ -45,7 +45,7 @@ export interface EvaluatedClocks {
  * side could not read). */
 export type ClockMovement = 'moved' | 'unchanged' | 'unknown';
 
-export type ObservedProjectLimb =
+type ObservedProjectLimb =
   | { readonly kind: 'no-prior' }
   | { readonly kind: 'unknown'; readonly reason: string }
   | { readonly kind: 'compared'; readonly changedSources: number; readonly addedSources: number };
@@ -73,7 +73,7 @@ export interface Reevaluation {
   };
 }
 
-export interface ReevaluationInput {
+interface ReevaluationInput {
   readonly prior: EvaluatedClocks | null;
   readonly next: EvaluatedClocks;
   /** Sources changed and added between the two evaluated revisions; null

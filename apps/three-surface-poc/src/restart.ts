@@ -1,8 +1,8 @@
 import { spawn, execFileSync } from 'node:child_process';
-import { createHash } from 'node:crypto';
 import { closeSync, constants, openSync, readFileSync, readlinkSync, realpathSync, statSync, unlinkSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { isAbsolute, join, resolve } from 'node:path';
+import { sha256 } from '@syzygy/support';
 
 // Test seam: exported type the tests name; production code uses it only inside this file.
 export interface PocListener {
@@ -89,7 +89,7 @@ function targetOf(listener: PocListener, options: RestartOptions): { readonly st
 }
 
 function credentialDigest(path: string): string {
-  try { return createHash('sha256').update(readFileSync(path)).digest('hex'); }
+  try { return sha256(readFileSync(path)); }
   catch { throw new RestartRefusal('credential-unreadable'); }
 }
 

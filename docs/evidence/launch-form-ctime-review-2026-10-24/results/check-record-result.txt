@@ -1,0 +1,84 @@
+PASS record sha256 equals the PR body digest 78778abce0cb02bfb139bf26ac89b43ac2c5e1877c317ee2c85d116556aeccfe
+PASS probe-tmpfs.json sha256 in PR body 57442690eb50fbf94a438952a19ba0110933cc7711a2e8ac5d336239f9133266
+PASS probe-ext4.json sha256 in PR body 14a42e813bb9c1c1dc8c82706e407c0fb043e9175e47ffd0fab1aa4dd79bb250
+PASS record base is the full base commit ce322e1a65b784c6304d51b05fb347351912a926
+PASS record commit is the full fix commit ab59b666dbf1e3936a004c7a4237fb0c5ff3c6e8
+PASS record names its subject ['packages/polaris-dossier/src/launched.test.ts']
+PASS testSha256.base == launched.test.ts at base e01b040a5f74f044169d46adccde476814187b5d44fa7bfcb44ef082ca2fa740
+PASS testSha256.fix == launched.test.ts at ab59b666 73fd8fe0c835e3910fbc45e2ea026b0b6ec54ac7c04657aeed9aa2311440fa5e
+PASS launched.test.ts at ab59b666 == at head 3fb73809 73fd8fe0c835e3910fbc45e2ea026b0b6ec54ac7c04657aeed9aa2311440fa5e
+PASS launched.ts identical at base, fix and head, and == readerSha256 c7a25b8b45fe12e2add7874f88d46b2bad1eef16ffa4a17e2464d5c671424921
+PASS launched.ts digest quoted in PR body 
+PASS ab59b666..head touches only docs/evidence ['docs/evidence/launch-form-snapshot-ctime-2026-10-23/ctime_probe.mjs', 'docs/evidence/launch-form-snapshot-ctime-2026-10-23/mutants.py', 'docs/evidence/launch-form-snapshot-ctime-2026-10-23/probe-ext4.json', 'docs/evidence/launch-form-snapshot-ctime-2026-10-23/probe-tmpfs.json', 'docs/evidence/launch-form-snapshot-ctime-mutants-2026-10-23.json']
+PASS harnessSource == committed mutants.py 
+PASS tracked tree clean after 
+PASS unmutated base 43/43, exit 0 {'numTotalTests': 43, 'numPassedTests': 43, 'numFailedTests': 0}
+PASS unmutated fix 43/43, exit 0 {'numTotalTests': 43, 'numPassedTests': 43, 'numFailedTests': 0}
+PASS 20 repeats, each 43/43 exit 0 runs=20 allPassed=True
+PASS D1-with-memoized-reader / base: old/new stored, old occurs once, outcome consistent killed rows=17 counts={'numTotalTests': 43, 'numPassedTests': 26, 'numFailedTests': 17}
+PASS D1-terminal-only / base: old/new stored, old occurs once, outcome consistent killed rows=17 counts={'numTotalTests': 43, 'numPassedTests': 26, 'numFailedTests': 17}
+PASS D1-bang-only / base: old/new stored, old occurs once, outcome consistent killed rows=17 counts={'numTotalTests': 43, 'numPassedTests': 26, 'numFailedTests': 17}
+PASS D1-syzygy-launched-only / base: old/new stored, old occurs once, outcome consistent killed rows=17 counts={'numTotalTests': 43, 'numPassedTests': 26, 'numFailedTests': 17}
+PASS D1-any-remover / base: old/new stored, old occurs once, outcome consistent killed rows=17 counts={'numTotalTests': 43, 'numPassedTests': 26, 'numFailedTests': 17}
+PASS D3-repair-to-launched / base: old/new stored, old occurs once, outcome consistent killed rows=17 counts={'numTotalTests': 43, 'numPassedTests': 26, 'numFailedTests': 17}
+PASS D4-truncate / base: old/new stored, old occurs once, outcome consistent killed rows=10 counts={'numTotalTests': 43, 'numPassedTests': 33, 'numFailedTests': 10}
+PASS M-every-form-drains-then-refuses / base: old/new stored, old occurs once, outcome consistent survived rows=0 counts={'numTotalTests': 43, 'numPassedTests': 43, 'numFailedTests': 0}
+PASS T-ask-of-an-unplanted-run / base: old/new stored, old occurs once, outcome consistent killed rows=17 counts={'numTotalTests': 43, 'numPassedTests': 26, 'numFailedTests': 17}
+PASS R-chmod-cycle-rewrite / base: old/new stored, old occurs once, outcome consistent survived rows=0 counts={'numTotalTests': 43, 'numPassedTests': 43, 'numFailedTests': 0}
+PASS R-same-size-rewrite / base: old/new stored, old occurs once, outcome consistent killed rows=10 counts={'numTotalTests': 43, 'numPassedTests': 33, 'numFailedTests': 10}
+PASS R-fill-dangling-target / base: old/new stored, old occurs once, outcome consistent killed rows=1 counts={'numTotalTests': 43, 'numPassedTests': 42, 'numFailedTests': 1}
+PASS R-fifo-to-empty-file / base: old/new stored, old occurs once, outcome consistent killed rows=2 counts={'numTotalTests': 43, 'numPassedTests': 41, 'numFailedTests': 2}
+PASS D1-with-memoized-reader / fix: old/new stored, old occurs once, outcome consistent killed rows=17 counts={'numTotalTests': 43, 'numPassedTests': 26, 'numFailedTests': 17}
+PASS D1-terminal-only / fix: old/new stored, old occurs once, outcome consistent killed rows=17 counts={'numTotalTests': 43, 'numPassedTests': 26, 'numFailedTests': 17}
+PASS D1-bang-only / fix: old/new stored, old occurs once, outcome consistent killed rows=17 counts={'numTotalTests': 43, 'numPassedTests': 26, 'numFailedTests': 17}
+PASS D1-syzygy-launched-only / fix: old/new stored, old occurs once, outcome consistent killed rows=17 counts={'numTotalTests': 43, 'numPassedTests': 26, 'numFailedTests': 17}
+PASS D1-any-remover / fix: old/new stored, old occurs once, outcome consistent killed rows=17 counts={'numTotalTests': 43, 'numPassedTests': 26, 'numFailedTests': 17}
+PASS D3-repair-to-launched / fix: old/new stored, old occurs once, outcome consistent killed rows=17 counts={'numTotalTests': 43, 'numPassedTests': 26, 'numFailedTests': 17}
+PASS D4-truncate / fix: old/new stored, old occurs once, outcome consistent killed rows=11 counts={'numTotalTests': 43, 'numPassedTests': 32, 'numFailedTests': 11}
+PASS M-every-form-drains-then-refuses / fix: old/new stored, old occurs once, outcome consistent survived rows=0 counts={'numTotalTests': 43, 'numPassedTests': 43, 'numFailedTests': 0}
+PASS T-ask-of-an-unplanted-run / fix: old/new stored, old occurs once, outcome consistent killed rows=17 counts={'numTotalTests': 43, 'numPassedTests': 26, 'numFailedTests': 17}
+PASS R-chmod-cycle-rewrite / fix: old/new stored, old occurs once, outcome consistent killed rows=1 counts={'numTotalTests': 43, 'numPassedTests': 42, 'numFailedTests': 1}
+PASS R-same-size-rewrite / fix: old/new stored, old occurs once, outcome consistent killed rows=10 counts={'numTotalTests': 43, 'numPassedTests': 33, 'numFailedTests': 10}
+PASS R-fill-dangling-target / fix: old/new stored, old occurs once, outcome consistent killed rows=1 counts={'numTotalTests': 43, 'numPassedTests': 42, 'numFailedTests': 1}
+PASS R-fifo-to-empty-file / fix: old/new stored, old occurs once, outcome consistent killed rows=2 counts={'numTotalTests': 43, 'numPassedTests': 41, 'numFailedTests': 2}
+PASS PR table R-chmod-cycle-rewrite / base: "**survived**, 43/43" ('survived', 0)
+PASS PR table R-chmod-cycle-rewrite / fix: "**killed**, 1 row: `a file its reader may not read`" ('killed', 1)
+PASS PR table D1-with-memoized-reader / base: "killed, 17 of 17 rows each" ('killed', 17)
+PASS PR table D1-with-memoized-reader / fix: "killed, 17 of 17 rows each" ('killed', 17)
+PASS PR table D1-terminal-only / base: "killed, 17 of 17 rows each" ('killed', 17)
+PASS PR table D1-terminal-only / fix: "killed, 17 of 17 rows each" ('killed', 17)
+PASS PR table D1-bang-only / base: "killed, 17 of 17 rows each" ('killed', 17)
+PASS PR table D1-bang-only / fix: "killed, 17 of 17 rows each" ('killed', 17)
+PASS PR table D1-syzygy-launched-only / base: "killed, 17 of 17 rows each" ('killed', 17)
+PASS PR table D1-syzygy-launched-only / fix: "killed, 17 of 17 rows each" ('killed', 17)
+PASS PR table D1-any-remover / base: "killed, 17 of 17 rows each" ('killed', 17)
+PASS PR table D1-any-remover / fix: "killed, 17 of 17 rows each" ('killed', 17)
+PASS PR table D3-repair-to-launched / base: "killed, 17 rows" ('killed', 17)
+PASS PR table D3-repair-to-launched / fix: "killed, 17 rows" ('killed', 17)
+PASS PR table D4-truncate / base: "killed, 10 rows" ('killed', 10)
+PASS PR table D4-truncate / fix: "killed, **11** rows (adds `an empty file`)" ('killed', 11)
+PASS PR table T-ask-of-an-unplanted-run / base: "killed, 17 rows" ('killed', 17)
+PASS PR table T-ask-of-an-unplanted-run / fix: "killed, 17 rows" ('killed', 17)
+PASS PR table M-every-form-drains-then-refuses / base: "survived (the stated limit)" ('survived', 0)
+PASS PR table M-every-form-drains-then-refuses / fix: "survived (the stated limit)" ('survived', 0)
+PASS PR table R-same-size-rewrite / base: "killed, 10 rows" ('killed', 10)
+PASS PR table R-same-size-rewrite / fix: "killed, 10 rows" ('killed', 10)
+PASS PR table R-fill-dangling-target / base: "killed, 1 row" ('killed', 1)
+PASS PR table R-fill-dangling-target / fix: "killed, 1 row" ('killed', 1)
+PASS PR table R-fifo-to-empty-file / base: "killed, 2 rows" ('killed', 2)
+PASS PR table R-fifo-to-empty-file / fix: "killed, 2 rows" ('killed', 2)
+PASS every record mutant appears in the PR table []
+PASS R-chmod-cycle-rewrite fix kills exactly the mode-000 row ['a file its reader may not read']
+   R-chmod-cycle-rewrite fix first error lines: ['AssertionError: expected { mode: 32768n, ino: 153632253n, …(4) } to deeply equal { mode: 32768n, ino: 153632253n, …(4) }']
+PASS D4-truncate fix adds exactly "an empty file" ['an empty file']
+PASS #516 record fix test == this base test {'base': '1243441dfdc7216015d48b1431327d1338d9d54ea71f25439cf69fe6158c1141', 'fix': 'e01b040a5f74f044169d46adccde476814187b5d44fa7bfcb44ef082ca2fa740'}
+   #516 fix D1-with-memoized-reader: killed 17 -> this fix killed 17 unchanged-or-stronger
+   #516 fix D1-terminal-only: killed 17 -> this fix killed 17 unchanged-or-stronger
+   #516 fix D1-bang-only: killed 17 -> this fix killed 17 unchanged-or-stronger
+   #516 fix D1-syzygy-launched-only: killed 17 -> this fix killed 17 unchanged-or-stronger
+   #516 fix D1-any-remover: killed 17 -> this fix killed 17 unchanged-or-stronger
+   #516 fix D3-repair-to-launched: killed 17 -> this fix killed 17 unchanged-or-stronger
+   #516 fix D4-truncate: killed 10 -> this fix killed 11 unchanged-or-stronger
+   #516 fix M-every-form-drains-then-refuses: survived 0 -> this fix survived 0 unchanged-or-stronger
+   #516 fix T-ask-of-an-unplanted-run: killed 17 -> this fix killed 17 unchanged-or-stronger
+82 of 82 checks pass

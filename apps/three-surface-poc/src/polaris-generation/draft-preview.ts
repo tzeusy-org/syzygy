@@ -1,11 +1,10 @@
-import { createHash } from 'node:crypto';
-
 import { DESIGN_TOKENS_CSS } from '../design-tokens.js';
 
 import {
   diagramToMermaid, validateGenerationSources,
   type EpistemicMarking, type GenerationSource, type DossierDraft, type DraftBlock, type DraftDiagram, type DraftParagraph,
 } from '@syzygy/polaris-generation-core/live';
+import { sha256 } from '@syzygy/support';
 import { renderDiagramSvg } from './diagram-layout.js';
 import { assertInertSvg } from './svg-inert.js';
 
@@ -35,7 +34,7 @@ export function renderDraftPreview(draft: DossierDraft, sources: readonly Genera
   validateGenerationSources(sources);
   const sourceIndex = new Map(sources.map(source => [source.sourceId, source]));
   if (sourceIndex.size !== sources.length) throw new Error('duplicate-source');
-  const localAnchor = (anchorId: string): string => `source-${createHash('sha256').update(anchorId).digest('hex').slice(0, 24)}`;
+  const localAnchor = (anchorId: string): string => `source-${sha256(anchorId).slice(0, 24)}`;
   const sourceAnchor = (source: GenerationSource): string => {
     if (source.exclusion.excluded || source.classificationBasis !== 'body' || source.spans.length === 0) throw new Error('unquotable-source');
     if (source.spans.length !== 1) throw new Error('ambiguous-source-anchor');
@@ -117,7 +116,7 @@ export function renderDraftPreview(draft: DossierDraft, sources: readonly Genera
   const unresolved = draft.unresolved.map(item => `<aside class="unresolved-asset" data-asset-disposition="unresolved"><strong>${escape(item.question)}</strong>: ${escape(item.reason)} <span class="asset-references">(${escape(item.references.join(', '))})</span></aside>`).join('');
   const sourceList = sources.map(source => {
     const quotable = !source.exclusion.excluded && source.classificationBasis === 'body' && source.spans.length === 1;
-    const id = quotable ? localAnchor(source.spans[0]!.anchorId) : `source-unavailable-${createHash('sha256').update(source.sourceId).digest('hex').slice(0, 24)}`;
+    const id = quotable ? localAnchor(source.spans[0]!.anchorId) : `source-unavailable-${sha256(source.sourceId).slice(0, 24)}`;
     const reason = source.exclusion.excluded ? source.exclusion.reason : source.classificationBasis === 'path-only' ? 'path-only; body not read' : 'body unavailable for citation';
     return `<article class="source-item" id="${id}"><h3>${escape(source.path)}</h3>${quotable ? `<div class="exact-source">${escape(source.spans[0]!.text)}</div>` : `<p>Source counted; exact text unavailable: ${escape(reason)}.</p>`}</article>`;
   }).join('');

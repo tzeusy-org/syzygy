@@ -1,0 +1,39 @@
+{
+ "probe": "zz-rev542-write-probe.test.ts",
+ "dest": "packages/http-host/src/zz-rev542-write-probe.test.ts",
+ "commit": "fb481b4d3b815e20ceeb245a22f6e8c6e6e32788",
+ "results": [
+  {
+   "id": "NONE",
+   "commit": "fb481b4d3b815e20ceeb245a22f6e8c6e6e32788",
+   "edits": [],
+   "exit": 0,
+   "recorded": {
+    "authorized": false,
+    "refusedBy": "symlink-escape",
+    "realLinkTarget": "/STATE"
+   },
+   "cleanAfter": true,
+   "load": "58.43"
+  },
+  {
+   "id": "R6-real-location-containment-case-folded-only",
+   "commit": "fb481b4d3b815e20ceeb245a22f6e8c6e6e32788",
+   "edits": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "old": "  if (!isWithin(realRoot, realTarget) || realTarget === realRoot) {",
+     "new": "  if (!isWithin(realRoot.toLowerCase(), realTarget.toLowerCase()) || realTarget === realRoot) {"
+    }
+   ],
+   "exit": 0,
+   "recorded": {
+    "authorized": true,
+    "refusedBy": null,
+    "realLinkTarget": "/STATE"
+   },
+   "cleanAfter": true,
+   "load": "59.76"
+  }
+ ]
+}

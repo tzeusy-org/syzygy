@@ -1,0 +1,111 @@
+{
+ "tool": "kill_then_fresh_run.py",
+ "treeCommit": "3f08143c5e0c78ca42288d16589f36673c9ba854",
+ "mode": "sweep",
+ "signal": "SIGTERM",
+ "command": "npx vitest run --project @syzygy/three-surface-poc-app (TMPDIR=<emptied private directory>)",
+ "sha256AtCommit": {
+  "vitest.config.ts": "8e8d698a90f37b1a340e4b9c6500981dda87bb56bd348980a648d1f3d89b625d"
+ },
+ "minCopiesBeforeSignal": 3,
+ "killedRun": {
+  "signal": "SIGTERM",
+  "sentToTheProcessGroupOfTheRunItStarted": true,
+  "runFinishedBeforeTheSignal": false,
+  "atSignal": {
+   "secondsIntoTheRun": 34.5,
+   "fixtureDirectories": 5,
+   "ofDeadProcesses": {
+    "count": 0,
+    "copies": 0,
+    "templates": 0,
+    "ownerPids": []
+   },
+   "ofLiveProcesses": {
+    "count": 5,
+    "copies": 3,
+    "templates": 2
+   },
+   "withoutAnOwnerPid": {
+    "count": 0
+   },
+   "otherEntries": 13
+  },
+  "fiveSecondsAfterSignal": {
+   "fixtureDirectories": 5,
+   "ofDeadProcesses": {
+    "count": 5,
+    "copies": 3,
+    "templates": 2,
+    "ownerPids": [
+     1936315,
+     1936335
+    ]
+   },
+   "ofLiveProcesses": {
+    "count": 0,
+    "copies": 0,
+    "templates": 0
+   },
+   "withoutAnOwnerPid": {
+    "count": 0
+   },
+   "otherEntries": 13
+  }
+ },
+ "freshRun": {
+  "exit": 1,
+  "seconds": 489.1,
+  "numTotalTestSuites": 263,
+  "numPassedTests": 1108,
+  "numFailedTests": 3,
+  "numPendingTests": 2,
+  "numTotalTests": 1113,
+  "success": false,
+  "testFiles": 90,
+  "testFilesFailed": 3,
+  "failing": [
+   {
+    "file": "three-surface-poc/src/build-output.test.ts",
+    "test": "POC build output integrity re-emits ignored JavaScript before the launcher executes it",
+    "firstErrorLine": "Error: STACK_TRACE_ERROR"
+   },
+   {
+    "file": "three-surface-poc/src/polaris-capability-detail.test.ts",
+    "test": "Polaris capability deep dive bands (PWB-REQ-015; RFC7-17) renders exactly the three bands in order, every block under exactly one band and class, in Base mode with observed reality, over every shape state",
+    "firstErrorLine": "Error: STACK_TRACE_ERROR"
+   },
+   {
+    "file": "three-surface-poc/src/polaris-opening-index.browser.test.ts",
+    "test": "opening index (server side) lists the nine signed names, in order, on every variant, and routes nowhere for an unrendered target",
+    "firstErrorLine": "Error: STACK_TRACE_ERROR"
+   }
+  ],
+  "left": {
+   "fixtureDirectories": 0,
+   "ofDeadProcesses": {
+    "count": 0,
+    "copies": 0,
+    "templates": 0,
+    "ownerPids": []
+   },
+   "ofLiveProcesses": {
+    "count": 0,
+    "copies": 0,
+    "templates": 0
+   },
+   "withoutAnOwnerPid": {
+    "count": 0
+   },
+   "otherEntries": 17
+  }
+ },
+ "processesStillNamingThisTmpdir": [
+  1938665,
+  1938697,
+  1938699,
+  1938757,
+  1938763,
+  1938765
+ ]
+}

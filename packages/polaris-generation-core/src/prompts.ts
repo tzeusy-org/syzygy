@@ -1,3 +1,5 @@
+import { deepFreeze } from '@syzygy/support';
+
 export type GenerationStage = 'inventory' | 'plan' | 'author' | 'edit' | 'fidelity' | 'repair';
 /** Hierarchical discovery's two provider calls (REQ-polaris-generation-030). */
 export type DiscoveryStage = 'discovery-map' | 'discovery-reduce';
@@ -146,15 +148,6 @@ const reviewIllustration = {
   ],
   findings: [],
 };
-
-/** Freezes a value and everything it holds, so no importer can change it. */
-function deepFreeze<T>(value: T): T {
-  if (value !== null && typeof value === 'object' && !Object.isFrozen(value)) {
-    Object.freeze(value);
-    for (const child of Object.values(value)) deepFreeze(child);
-  }
-  return value;
-}
 
 /** One illustration per stage; edit and repair return the author's shape. Frozen; the prompts
  * embed the JSON serialized once at load (below), never these objects at call time. */

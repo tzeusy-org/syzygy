@@ -1,0 +1,2 @@
+{"text":"```\r[a](a.md)\r```\r","profile":"H","links":[],"linksLf":[]}
+failed {"reason":"missing-heading","class":"principle","detail":"Non-Negotiable Rules"}

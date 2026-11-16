@@ -1,0 +1,241 @@
+{
+ "tree": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-541/base",
+ "head": "d38d7a3ce632a34c2a41bdb77ad323ba0b05b777",
+ "results": [
+  {
+   "id": "RV536-M1-https-url-reads-outside",
+   "outcome": "killed",
+   "exit": 1,
+   "total": 165,
+   "passed": 164,
+   "failed": [
+    "the shared workspace resolver reads a bare name declared as a remote tarball URL dependency as naming no module"
+   ],
+   "timeouts": 0,
+   "files": 14,
+   "seconds": 4.9,
+   "loadBefore": [
+    "62.19",
+    "53.37",
+    "48.58"
+   ],
+   "loadAfter": [
+    "63.70",
+    "53.83",
+    "48.75"
+   ],
+   "oldCounts": [
+    1
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|^(?!https:).*\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    }
+   ]
+  },
+  {
+   "id": "RV536-M3-tarball-needs-dot-slash",
+   "outcome": "killed",
+   "exit": 1,
+   "total": 165,
+   "passed": 161,
+   "failed": [
+    "the shared workspace resolver reads a bare name declared as a .tar dependency as naming no module",
+    "the shared workspace resolver reads a bare name declared as a .tar.gz dependency as naming no module",
+    "the shared workspace resolver reads a bare name declared as a remote tarball URL dependency as naming no module",
+    "the shared workspace resolver reads a bare name declared as a tarball dependency as naming no module"
+   ],
+   "timeouts": 0,
+   "files": 14,
+   "seconds": 5.0,
+   "loadBefore": [
+    "63.70",
+    "53.83",
+    "48.75"
+   ],
+   "loadAfter": [
+    "62.36",
+    "53.72",
+    "48.75"
+   ],
+   "oldCounts": [
+    1
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|^\\.\\/.*\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    }
+   ]
+  },
+  {
+   "id": "RV536-M4-census-takes-ts-md",
+   "outcome": "killed",
+   "exit": 1,
+   "total": 165,
+   "passed": 164,
+   "failed": [
+    "each policy copy above, against the spec its caller passes reads every module TypeScript compiles under src, .mts, .cts and .tsx among them, and no test module"
+   ],
+   "timeouts": 0,
+   "files": 14,
+   "seconds": 4.3,
+   "loadBefore": [
+    "62.36",
+    "53.72",
+    "48.75"
+   ],
+   "loadAfter": [
+    "63.21",
+    "54.04",
+    "48.88"
+   ],
+   "oldCounts": [
+    1
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": "files.filter((module) => /\\.[cm]?tsx?$/u.test(module)",
+     "new": "files.filter((module) => /\\.[cm]?tsx?(?:\\.md)?$/u.test(module)"
+    }
+   ]
+  },
+  {
+   "id": "RV536-M5-tree-depth-two",
+   "outcome": "survives",
+   "exit": 0,
+   "total": 165,
+   "passed": 165,
+   "failed": [],
+   "timeouts": 0,
+   "files": 14,
+   "seconds": 4.8,
+   "loadBefore": [
+    "63.21",
+    "54.04",
+    "48.88"
+   ],
+   "loadAfter": [
+    "62.55",
+    "54.05",
+    "48.91"
+   ],
+   "oldCounts": [
+    1
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": "fs.readdirSync(path.join(ROOT, dir), { recursive: true, encoding: 'utf8' }).map(",
+     "new": "fs.readdirSync(path.join(ROOT, dir), { recursive: true, encoding: 'utf8' }).filter((file) => file.split('/').length <= 2).map("
+    }
+   ]
+  },
+  {
+   "id": "RV536-M6-root-keeps-only-dependencies",
+   "outcome": "killed",
+   "exit": 1,
+   "total": 165,
+   "passed": 164,
+   "failed": [
+    "the shared workspace resolver reads the workspace root's manifest beside the packages'"
+   ],
+   "timeouts": 0,
+   "files": 14,
+   "seconds": 5.5,
+   "loadBefore": [
+    "62.55",
+    "54.05",
+    "48.91"
+   ],
+   "loadAfter": [
+    "63.47",
+    "54.38",
+    "49.04"
+   ],
+   "oldCounts": [
+    1
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "manifests.set(root.name, { dir: '.', ...root });",
+     "new": "manifests.set(root.name, { dir: '.', name: root.name, dependencies: root.dependencies });"
+    }
+   ]
+  },
+  {
+   "id": "RV536-M10-test-exclusion-end-anchor-dropped",
+   "outcome": "survives",
+   "exit": 0,
+   "total": 165,
+   "passed": 165,
+   "failed": [],
+   "timeouts": 0,
+   "files": 14,
+   "seconds": 5.2,
+   "loadBefore": [
+    "63.47",
+    "54.38",
+    "49.04"
+   ],
+   "loadAfter": [
+    "61.27",
+    "54.08",
+    "48.97"
+   ],
+   "oldCounts": [
+    1
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": "!/\\.test\\.[cm]?tsx?$/u.test(module)",
+     "new": "!/\\.test\\.[cm]?tsx?/u.test(module)"
+    }
+   ]
+  },
+  {
+   "id": "RV536-M11-residual-widened",
+   "outcome": "survives",
+   "exit": 0,
+   "total": 165,
+   "passed": 165,
+   "failed": [],
+   "timeouts": 0,
+   "files": 14,
+   "seconds": 4.8,
+   "loadBefore": [
+    "61.27",
+    "54.08",
+    "48.97"
+   ],
+   "loadAfter": [
+    "64.77",
+    "54.92",
+    "49.27"
+   ],
+   "oldCounts": [
+    1
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/|\\.|[^:]*\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    }
+   ]
+  }
+ ]
+}

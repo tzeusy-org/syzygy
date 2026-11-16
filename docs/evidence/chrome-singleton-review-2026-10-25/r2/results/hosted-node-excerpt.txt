@@ -1,0 +1,6 @@
+node	unit + conformance tests (npm test)	2026-10-24T17:40:34.3427574Z  ✓  @syzygy/three-surface-poc-app  apps/three-surface-poc/src/cdp-browser.test.ts (29 tests) 378ms
+node	unit + conformance tests (npm test)	2026-10-24T17:41:51.6570186Z  ✓  @syzygy/three-surface-poc-app  apps/three-surface-poc/src/cdp-browser.browser.test.ts (2 tests) 3230ms
+node	unit + conformance tests (npm test)	2026-10-24T17:42:21.6827805Z  Test Files  236 passed | 3 skipped (239)
+node	unit + conformance tests (npm test)	2026-10-24T17:42:21.6847077Z       Tests  5254 passed | 5 skipped (5259)
+node	system tests (npm run test:system)	2026-10-24T17:42:37.4296983Z  Test Files  9 passed (9)
+node	system tests (npm run test:system)	2026-10-24T17:42:37.4302788Z       Tests  48 passed (48)

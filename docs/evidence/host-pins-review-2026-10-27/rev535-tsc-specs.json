@@ -1,0 +1,34 @@
+{
+ "mutants": [
+  {
+   "id": "TT1-local-equal-type",
+   "edits": [
+    {
+     "file": "packages/cap1-daemon/src/server.ts",
+     "old": "  type CredentialClass,\n",
+     "new": ""
+    },
+    {
+     "file": "packages/cap1-daemon/src/server.ts",
+     "old": "// --- This wave's minimal root route",
+     "new": "export type CredentialClass = 'human-open' | 'machine-credentialed';\n\n// --- This wave's minimal root route"
+    }
+   ]
+  },
+  {
+   "id": "TT2-local-wider-type",
+   "edits": [
+    {
+     "file": "packages/cap1-daemon/src/server.ts",
+     "old": "  type CredentialClass,\n",
+     "new": ""
+    },
+    {
+     "file": "packages/cap1-daemon/src/server.ts",
+     "old": "// --- This wave's minimal root route",
+     "new": "export type CredentialClass = string;\n\n// --- This wave's minimal root route"
+    }
+   ]
+  }
+ ]
+}

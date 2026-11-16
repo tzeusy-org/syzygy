@@ -1,0 +1,26 @@
+describe('the module-declaration reader the createHash row stands on', () => {
+  // A reader that misses a declaration form passes over the module binding it was written for.
+  const CASES: readonly (readonly [string, readonly string[]])[] = [
+    ["import { createHash } from 'node:crypto';", ["import { createHash } from 'node:crypto';"]],
+    ["export * from 'node:crypto';", ["export * from 'node:crypto';"]],
+    ["import 'node:crypto';", ["import 'node:crypto';"]],
+    ["import value = require ('node:crypto');", ["import value = require ('node:crypto');"]],
+    ["export { sha256 } from './sha256.js';\nexport { value };", ["export { sha256 } from './sha256.js';"]],
+  ];
+  it.each(CASES)('reads %j', (source, expected) => {
+    expect(moduleDeclarationsOf('case.ts', source).map(({ text }) => text)).toEqual(expected);
+  });
+});
+
+describe('the property-write reader the no-write row stands on', () => {
+  const CASES: readonly (readonly [string, readonly string[]])[] = [
+    ['Object.freeze = (value) => value;', ['Object.freeze = (value) => value']],
+    ["Object['freeze'] ??= (value) => value;", ["Object['freeze'] ??= (value) => value"]],
+    ['[Object.freeze] = [(value) => value];', ['[Object.freeze] = [(value) => value]']],
+    ['let a = 1; a += 1; [a] = [2];', []],
+  ];
+  it.each(CASES)('reads %j', (source, expected) => {
+    expect(propertyWritesOf('case.ts', source)).toEqual(expected);
+  });
+});
+

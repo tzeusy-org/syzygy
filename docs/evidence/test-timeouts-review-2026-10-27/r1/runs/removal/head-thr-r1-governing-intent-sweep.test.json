@@ -1,0 +1,299 @@
+{
+ "files": [
+  {
+   "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-537/clone/apps/three-surface-poc/src/governing-intent-sweep.test.ts",
+   "project": "@syzygy/three-surface-poc-app",
+   "type": "suite",
+   "name": "apps/three-surface-poc/src/governing-intent-sweep.test.ts",
+   "line": null,
+   "mode": "run",
+   "state": "pass",
+   "durationMs": 260.76311699999997,
+   "errors": [],
+   "tasks": [
+    {
+     "type": "suite",
+     "name": "POC-REQ-014: every work item's governing intent renders as a counted Unknown",
+     "line": 182,
+     "mode": "run",
+     "state": "pass",
+     "durationMs": 156.68707800000038,
+     "errors": [],
+     "tasks": [
+      {
+       "type": "test",
+       "name": "the encoding the oracle expects is the POC-REQ-060 table's Unknown row",
+       "line": 183,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 2.178835000000163,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "serves 54 of 54 with the Unknown on both channels; Trajectory shows 52 inside and 2 outside",
+       "line": 188,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 10.035387000000355,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "each served governedBy is the Unknown with RFC2-24's reason and route",
+       "line": 198,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 6.348372000000381,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "a read row titled \"Implement POC-REQ-010\" yields the same Unknown, and nothing served names POC-REQ-010",
+       "line": 211,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 1.829276000000391,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "the count region reads, as text alone, the reason, the route and the warrant statement",
+       "line": 222,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 0.30882400000018606,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "the narrowed board lists exactly the 52 rendered cards",
+       "line": 229,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 1.0728460000000268,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "counts the Unknown over the served set, never assuming every item carries it",
+       "line": 235,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 0.27941799999962313,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "an Unknown board never sits beside a served item set, so neither channel counts one",
+       "line": 248,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 26.40759399999979,
+       "errors": []
+      },
+      {
+       "type": "suite",
+       "name": "falsifier: the oracle names each limb",
+       "line": 266,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 107.10503900000003,
+       "errors": [],
+       "tasks": [
+        {
+         "type": "test",
+         "name": "a served item with no governedBy",
+         "line": 278,
+         "mode": "run",
+         "state": "pass",
+         "durationMs": 6.955569000000196,
+         "errors": []
+        },
+        {
+         "type": "test",
+         "name": "a governedBy that is not Unknown (green)",
+         "line": 278,
+         "mode": "run",
+         "state": "pass",
+         "durationMs": 6.887751000000208,
+         "errors": []
+        },
+        {
+         "type": "test",
+         "name": "an identifier from the title",
+         "line": 278,
+         "mode": "run",
+         "state": "pass",
+         "durationMs": 17.56836599999997,
+         "errors": []
+        },
+        {
+         "type": "test",
+         "name": "another reason",
+         "line": 278,
+         "mode": "run",
+         "state": "pass",
+         "durationMs": 7.921414000000368,
+         "errors": []
+        },
+        {
+         "type": "test",
+         "name": "another route",
+         "line": 278,
+         "mode": "run",
+         "state": "pass",
+         "durationMs": 2.6230850000001737,
+         "errors": []
+        },
+        {
+         "type": "test",
+         "name": "a machine miscount",
+         "line": 278,
+         "mode": "run",
+         "state": "pass",
+         "durationMs": 3.673468999999841,
+         "errors": []
+        },
+        {
+         "type": "test",
+         "name": "a served identifier from the title",
+         "line": 278,
+         "mode": "run",
+         "state": "pass",
+         "durationMs": 3.3100829999998496,
+         "errors": []
+        },
+        {
+         "type": "test",
+         "name": "a served title",
+         "line": 278,
+         "mode": "run",
+         "state": "pass",
+         "durationMs": 2.824855999999727,
+         "errors": []
+        },
+        {
+         "type": "test",
+         "name": "a Trajectory miscount",
+         "line": 298,
+         "mode": "run",
+         "state": "pass",
+         "durationMs": 3.790230000000065,
+         "errors": []
+        },
+        {
+         "type": "test",
+         "name": "channels that disagree",
+         "line": 298,
+         "mode": "run",
+         "state": "pass",
+         "durationMs": 3.373913999999786,
+         "errors": []
+        },
+        {
+         "type": "test",
+         "name": "an inside figure that is not the rendered selection",
+         "line": 298,
+         "mode": "run",
+         "state": "pass",
+         "durationMs": 3.5156510000001617,
+         "errors": []
+        },
+        {
+         "type": "test",
+         "name": "inside plus outside that misses the count",
+         "line": 298,
+         "mode": "run",
+         "state": "pass",
+         "durationMs": 6.456536000000142,
+         "errors": []
+        },
+        {
+         "type": "test",
+         "name": "a region missing the reason",
+         "line": 298,
+         "mode": "run",
+         "state": "pass",
+         "durationMs": 3.6635909999999967,
+         "errors": []
+        },
+        {
+         "type": "test",
+         "name": "a region missing the route",
+         "line": 298,
+         "mode": "run",
+         "state": "pass",
+         "durationMs": 5.07840299999998,
+         "errors": []
+        },
+        {
+         "type": "test",
+         "name": "a region missing the resolution statement",
+         "line": 298,
+         "mode": "run",
+         "state": "pass",
+         "durationMs": 3.784498999999869,
+         "errors": []
+        },
+        {
+         "type": "test",
+         "name": "no count region",
+         "line": 298,
+         "mode": "run",
+         "state": "pass",
+         "durationMs": 3.187250000000404,
+         "errors": []
+        },
+        {
+         "type": "test",
+         "name": "a rendered item without the Unknown encoding",
+         "line": 298,
+         "mode": "run",
+         "state": "pass",
+         "durationMs": 3.6918030000001636,
+         "errors": []
+        },
+        {
+         "type": "test",
+         "name": "a rendered item with an encoding for another state",
+         "line": 298,
+         "mode": "run",
+         "state": "pass",
+         "durationMs": 3.2570520000003853,
+         "errors": []
+        },
+        {
+         "type": "test",
+         "name": "a rendered item with no mark",
+         "line": 298,
+         "mode": "run",
+         "state": "pass",
+         "durationMs": 3.3161039999999957,
+         "errors": []
+        },
+        {
+         "type": "test",
+         "name": "a narrowed board that drops an item",
+         "line": 298,
+         "mode": "run",
+         "state": "pass",
+         "durationMs": 10.814978999999767,
+         "errors": []
+        }
+       ],
+       "hookMs": 1
+      }
+     ],
+     "hookMs": 1
+    }
+   ],
+   "hookMs": 104,
+   "collectMs": 1607.9888959999998,
+   "setupMs": 19.480106999999975,
+   "prepareMs": 112.97806299999996,
+   "environmentMs": 0.24096500000001697
+  }
+ ],
+ "unhandled": []
+}

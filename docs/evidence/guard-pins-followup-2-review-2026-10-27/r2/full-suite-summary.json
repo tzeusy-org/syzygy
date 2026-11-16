@@ -1,0 +1,43 @@
+{
+ "commit": "58e8f60456e9de8d06cd4f8db5defe23e69b7112",
+ "command": "npx vitest run --reporter=default --reporter=json",
+ "reportSha256": "ce4966e489ce2fad8c9e8a1868f2f1f5552df12d9d9c54e407d9db9d1351c43d",
+ "reportBytes": 2077242,
+ "success": true,
+ "files": 246,
+ "fileStatus": {
+  "passed": 246
+ },
+ "total": 5385,
+ "passed": 5380,
+ "failed": 0,
+ "pending": 5,
+ "todo": 0,
+ "notPassed": [
+  {
+   "file": "packages/polaris-dossier/src/no-egress.test.ts",
+   "name": "no provider call and no transmission (S10), without strace is not proved on this host: strace is unavailable, so the capture is skipped, never reported as passed",
+   "status": "skipped"
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.live.test.ts",
+   "name": "live real focused-pytest verification (SYZYGY_POC_BUTLERS_REPO gated) ingests one real, passing operator-reported focused-pytest artifact and resolves it to report-fact, never Verified, through the full model (AC1/AC3, RFC5-19)",
+   "status": "skipped"
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/work-items.live.test.ts",
+   "name": "live Butlers observation (SYZYGY_POC_BUTLERS_REPO gated) matches `git rev-parse HEAD` and a direct Dolt read (POC-REQ-001, POC-REQ-010 oracles)",
+   "status": "skipped"
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+   "name": "opening index in a real browser (PWB-REQ-010, P-98) a captured /polaris page meets the oracle at both viewports",
+   "status": "skipped"
+  },
+  {
+   "file": "apps/three-surface-poc/src/project-shape-discovery.live.test.ts",
+   "name": "live Butlers project-shape discovery at the reviewed revision matches the independent five-root, seven-Heart, baseline and total populations",
+   "status": "skipped"
+  }
+ ]
+}

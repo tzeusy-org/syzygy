@@ -1,0 +1,4499 @@
+{
+  "commit": "d621bfa267f24ff68f6f83ac7bfba44b81a32a34",
+  "tracked_blob_paths": 6103,
+  "utf8_non_nul_text_paths": 6091,
+  "literal_seed_predicate": [
+    "rule6_mutation_runner",
+    "poc:pwb-mutation-run",
+    "poc:pwb-mutation-sweep",
+    "poc:generation-mutation-run",
+    "pwb-mutation-run-main",
+    "pwb-mutation-sweep-main",
+    "generation-mutation-run-main",
+    "run_m7_literal_mutations",
+    "run_m9_literal_mutations",
+    "run_m10_conditional_mutations",
+    "run_m13_literal_mutations",
+    "polaris_prompt_mutants",
+    "rerun_rule6_mutants_selected_tests",
+    "rule6_timeout_rerun"
+  ],
+  "case_sensitive": true,
+  "matching_files": 164,
+  "independent_git_grep_path_set_equal": true,
+  "hits": [
+    {
+      "path": ".github/workflows/generation-mutation-gate.yml",
+      "sha256": "6162f7be1b05ad6937fc51e2f78a01f8ce23abe12e59c8eeb5d160b80d1a39d2",
+      "matches": [
+        {
+          "line": 5,
+          "seeds": [
+            "poc:generation-mutation-run"
+          ]
+        },
+        {
+          "line": 48,
+          "seeds": [
+            "poc:generation-mutation-run"
+          ]
+        }
+      ]
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/pwb-class-granular-extraction-amendment/IMPACT-LEDGER.md",
+      "sha256": "d403035dbdf74ae51eccc7940c6f62a4d2cd1ec49f25991825c4d609e7e9add1",
+      "matches": [
+        {
+          "line": 31,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/pwb-container-shape-profile-amendment/IMPACT-LEDGER.md",
+      "sha256": "8fbd6a006aa900027cd0a2b23b9f4f03c648c4e9488d9c2e4f211f1a128c16cb",
+      "matches": [
+        {
+          "line": 59,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 123,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/pwb-machine-view-amendment/IMPACT-LEDGER.md",
+      "sha256": "8b88a1d3773f0b48b3883e5e782d9c31d1ec720337441aa257e303ede95733bf",
+      "matches": [
+        {
+          "line": 33,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 192,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/pwb-machine-view-amendment/SEMANTIC-DELTA.md",
+      "sha256": "4383abaf3b378397326c3b1e02b598520c94dcd8b5dadb703d7c8b0ba69a7a32",
+      "matches": [
+        {
+          "line": 482,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/pwb-opening-band-scenario/IMPACT-LEDGER.md",
+      "sha256": "9d50faa8ed4e240ddaf545b4338309fad4f22599807028233f4489ed3ee4f1f6",
+      "matches": [
+        {
+          "line": 105,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 214,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/pwb-opening-index-amendment/IMPACT-LEDGER.md",
+      "sha256": "d44f08dab3e6ce3566a3f8c3d3fa46fb9fdc85b0ef8a3a6dcd6ab2b03e2f45cd",
+      "matches": [
+        {
+          "line": 32,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/STATIC-TRACE.json",
+      "sha256": "b8a4053a41493a02a364a4c134b12a49e78415eb7cdf8940a97bc97ae7922f77",
+      "matches": [
+        {
+          "line": 2382,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 2700,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 2706,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 4788,
+          "seeds": [
+            "run_m10_conditional_mutations"
+          ]
+        },
+        {
+          "line": 4794,
+          "seeds": [
+            "run_m13_literal_mutations"
+          ]
+        },
+        {
+          "line": 4800,
+          "seeds": [
+            "run_m7_literal_mutations"
+          ]
+        },
+        {
+          "line": 4806,
+          "seeds": [
+            "run_m9_literal_mutations"
+          ]
+        }
+      ]
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/evidence/encoded-byte/BOUNDARY-MAP.json",
+      "sha256": "cb1fd91ad124b3eef9d8599c51b749c4516d9f905e68d42e2b93837b76b2df52",
+      "matches": [
+        {
+          "line": 315,
+          "seeds": [
+            "run_m10_conditional_mutations"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "SECURITY.md",
+      "sha256": "d3a7f8e4d96ba31c98f6485accecf5c35077e6b88b35e086d9f7fe96b07d5193",
+      "matches": [
+        {
+          "line": 29,
+          "seeds": [
+            "poc:pwb-mutation-run",
+            "poc:pwb-mutation-sweep"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/generation-mutation-run-main.ts",
+      "sha256": "658d9e95feae0ce9342161e1d4c4055573c7558c05bd3af74e8e18bdc547b8a8",
+      "matches": [
+        {
+          "line": 17,
+          "seeds": [
+            "poc:generation-mutation-run"
+          ]
+        },
+        {
+          "line": 18,
+          "seeds": [
+            "poc:generation-mutation-run"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts",
+      "sha256": "81b18f4fb331be89f1ad6ce7c28a8f2615400b219e0b507e0d6efe12284da381",
+      "matches": [
+        {
+          "line": 12,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "apps/three-surface-poc/src/pwb-mutation-run-main.ts",
+      "sha256": "34001c55048e7bf945e6353eba798ff22b5517c454170e60be439fa03aaf4f7e",
+      "matches": [
+        {
+          "line": 14,
+          "seeds": [
+            "poc:pwb-mutation-run"
+          ]
+        },
+        {
+          "line": 15,
+          "seeds": [
+            "poc:pwb-mutation-run"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "apps/three-surface-poc/src/pwb-mutation-sweep-main.ts",
+      "sha256": "b6af20150245e93df86a1856b66eac0cd64b8273f0d4ff3a620b1930d93fe1ea",
+      "matches": [
+        {
+          "line": 14,
+          "seeds": [
+            "poc:pwb-mutation-sweep"
+          ]
+        },
+        {
+          "line": 15,
+          "seeds": [
+            "poc:pwb-mutation-sweep"
+          ]
+        },
+        {
+          "line": 16,
+          "seeds": [
+            "poc:pwb-mutation-sweep"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "apps/three-surface-poc/src/pwb-mutation-sweep.ts",
+      "sha256": "f5a9a44b6fc439893e8f6eb5c04431af936cdec9d49d4b6a22d8da3e24dd74aa",
+      "matches": [
+        {
+          "line": 19,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "apps/three-surface-poc/src/pwb-mutation.ts",
+      "sha256": "160ec17e282b71d10c9f5feef93b2c3c55caa3945f679e3ee80d11c92b6c4aea",
+      "matches": [
+        {
+          "line": 14,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/PWB-IMPLEMENTATION-PLAN.md",
+      "sha256": "1dfa685d932529dda27acabb986a10c18c88b5086de618b9c3795a3070df2ea2",
+      "matches": [
+        {
+          "line": 116,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 1047,
+          "seeds": [
+            "poc:pwb-mutation-sweep",
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 1444,
+          "seeds": [
+            "poc:pwb-mutation-run",
+            "pwb-mutation-run-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/design/POLARIS-M11-OPERABILITY-FUNNEL.md",
+      "sha256": "c7caab02cab998a43e75f798f758feed52efb77d077b3538d0973400daecbb6c",
+      "matches": [
+        {
+          "line": 491,
+          "seeds": [
+            "pwb-mutation-run-main",
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 1769,
+          "seeds": [
+            "pwb-mutation-run-main",
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/design/POLARIS-M12-RETAINED-EVALUATIONS-FUNNEL.md",
+      "sha256": "b8db6200ebcdc06e575f56f167de9d8d6137901826fca8f67ffbd5bd475017be",
+      "matches": [
+        {
+          "line": 265,
+          "seeds": [
+            "pwb-mutation-run-main",
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/design/POLARIS-M6-GENERATOR-HONESTY-FUNNEL.md",
+      "sha256": "f2ffc748af416958f9935530a3832ad58643caae9dce79a83558ea4a9fdc877b",
+      "matches": [
+        {
+          "line": 1403,
+          "seeds": [
+            "poc:pwb-mutation-sweep"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/argv-fail-closed-review-2026-10-25/selftest-island_diff_v-types.json",
+      "sha256": "b5680d0dad98d321db08d0bcfab2bf7d9009f78a36fc9dc57840a58a7a7fb02f",
+      "matches": [
+        {
+          "line": 57,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 58,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 251,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 252,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/argv-fail-closed-review-2026-10-25/selftest-lane_island_diff.json",
+      "sha256": "30c9871d9c80ea43f8155d969b43cf53a58e1e43b719c5c42caf0e780edeb9a6",
+      "matches": [
+        {
+          "line": 44,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 64,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 65,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 411,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 555,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 556,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 557,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/argv-fail-closed-review-2026-10-25/spec-sweep-head.json",
+      "sha256": "14ae15dcb6f12d55a9d8b87b6eabc44761965f5710955d6b7dd6ea4040b17e40",
+      "matches": [
+        {
+          "line": 22,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/argv-fail-closed-review-2026-10-25/spec-sweep-merge-ef467d4a.json",
+      "sha256": "178810022ed151ad524531bb7b936a8e312607179c310e21199391f2fe170242",
+      "matches": [
+        {
+          "line": 22,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/argv-fail-closed-review-2026-10-25/spec-sweep-merge.json",
+      "sha256": "68be2b807288823448675e88d053742adf018f2897b7d72b5c4e72bc7558a52b",
+      "matches": [
+        {
+          "line": 22,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/consent-act-families-review-2026-10-22/dossier-rerun.json",
+      "sha256": "c19237880e1af74b28f854a0af80076007c7ec914f464c7c9bcc01ad6d6b4dc4",
+      "matches": [
+        {
+          "line": 12,
+          "seeds": [
+            "rule6_mutation_runner"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/consent-act-families-review-2026-10-22/row-mutants.json",
+      "sha256": "e5aea3946c8a5e8d2ca826a9a6c6546bbce9fa4d795e46a8bbd5f7df53cbae93",
+      "matches": [
+        {
+          "line": 14,
+          "seeds": [
+            "rule6_mutation_runner"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/consent-act-families-round-1-dispositions-2026-10-22.md",
+      "sha256": "5c2b0d6ce6e63caf4edc76404c8dcacf3482fd8de18319e108cb41f5ae47b9bb",
+      "matches": [
+        {
+          "line": 136,
+          "seeds": [
+            "rule6_mutation_runner"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/consent-act-family-mutants-2026-10-22.json",
+      "sha256": "213a7d315aaceddb028d22532c2dae535dff66fce63b1605e253682ebc512796",
+      "matches": [
+        {
+          "line": 15,
+          "seeds": [
+            "rule6_mutation_runner"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/consent-gate-recognition-models-2026-10-21.md",
+      "sha256": "0d3702d3cd08e7b0852e433fca10d70374eb49ef38321e04c7476bf31cfb7b26",
+      "matches": [
+        {
+          "line": 299,
+          "seeds": [
+            "rule6_mutation_runner"
+          ]
+        },
+        {
+          "line": 332,
+          "seeds": [
+            "rerun_rule6_mutants_selected_tests"
+          ]
+        },
+        {
+          "line": 476,
+          "seeds": [
+            "rerun_rule6_mutants_selected_tests"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/consent-gate-recognition-models-mutants-consent-2026-10-21.json",
+      "sha256": "dda74bd19c9838afe355cb4747fbe58581c5b60a8a1a7fdf78ae68ab5438f7ba",
+      "matches": [
+        {
+          "line": 17,
+          "seeds": [
+            "rule6_mutation_runner"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/consent-gate-recognition-models-mutants-dossier-2026-10-21.json",
+      "sha256": "40e1ae4a4497d58bc089b42ccfa60bf816df5e82e76c189db028aac827bd62af",
+      "matches": [
+        {
+          "line": 17,
+          "seeds": [
+            "rule6_mutation_runner"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/consent-gate-recognition-models-mutants-selected-2026-10-22.json",
+      "sha256": "f87e515ef9c5a13796eb2f69730e3a66a62363ccbc56a96d05549584f84719ff",
+      "matches": [
+        {
+          "line": 6,
+          "seeds": [
+            "rerun_rule6_mutants_selected_tests"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/decisions-sweep-memo-2026-10-22.md",
+      "sha256": "cc2cefa06232ddf70ef6dc499abfc0717287467d6fe2041b2477769d7f3a143f",
+      "matches": [
+        {
+          "line": 23,
+          "seeds": [
+            "rule6_timeout_rerun"
+          ]
+        },
+        {
+          "line": 174,
+          "seeds": [
+            "rule6_mutation_runner"
+          ]
+        },
+        {
+          "line": 211,
+          "seeds": [
+            "rule6_timeout_rerun"
+          ]
+        },
+        {
+          "line": 521,
+          "seeds": [
+            "rule6_mutation_runner"
+          ]
+        },
+        {
+          "line": 522,
+          "seeds": [
+            "rule6_timeout_rerun"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/decisions-sweep-mutants-2026-10-22.json",
+      "sha256": "8ab221d63d0b0634dfea0d19f9465365a384d300cb9b5b551ec0b8d4822fe3a1",
+      "matches": [
+        {
+          "line": 17,
+          "seeds": [
+            "rule6_mutation_runner"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/decisions-sweep-mutants-timeout-2026-10-22.json",
+      "sha256": "22f041639d02483fdaf4c835722ec6884f4fd77707550548838a6a00e2b6f895",
+      "matches": [
+        {
+          "line": 6,
+          "seeds": [
+            "rule6_timeout_rerun"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/decisions-sweep-mutants-void-high-load-2026-10-22.json",
+      "sha256": "5c9e185d78a3c761a2aca835d2f55f95fddf95e887e1c7d508ed22d1cb024004",
+      "matches": [
+        {
+          "line": 17,
+          "seeds": [
+            "rule6_mutation_runner"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/decisions-sweep-review-2026-10-22/results-rule6-review.json",
+      "sha256": "94766e772e8cc240d24213d898ccd95a54489ec3e7388eb66b6d56af6f925f27",
+      "matches": [
+        {
+          "line": 6,
+          "seeds": [
+            "rule6_timeout_rerun"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/discovery-byte-cap-mutants-2026-10-04.json",
+      "sha256": "258f0d38fc31510342535f4bef03cf92c3951d42b1e70ba3d656777b02909bf1",
+      "matches": [
+        {
+          "line": 14,
+          "seeds": [
+            "rule6_mutation_runner"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/discovery-prefix-pieces-mutants-2026-10-04.json",
+      "sha256": "5ffbf0f16340e8cf009e982b7436ff7c1901c5c001f883ac88d8feaf57f5feb7",
+      "matches": [
+        {
+          "line": 16,
+          "seeds": [
+            "rule6_mutation_runner"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/discovery-role-prior-2026-10-04.json",
+      "sha256": "a0fd0a74e6566d3494f48b97f259e50336030d6b36a8d13b299fa4c9da7352f8",
+      "matches": [
+        {
+          "line": 51,
+          "seeds": [
+            "rule6_mutation_runner"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/dossier-blockers-install-mutants-ts-2026-10-08.json",
+      "sha256": "1352ae822164660ca4f2515c8ba9240a59a7547d4c69b66c61ac61c07e057252",
+      "matches": [
+        {
+          "line": 24,
+          "seeds": [
+            "rule6_mutation_runner"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/dossier-blockers-install-n4-mutants-ts-2026-10-08.json",
+      "sha256": "24ac66dc6e4b1fa158af98bb7c91e188b649cba444a98b7e3d83df0b32764381",
+      "matches": [
+        {
+          "line": 12,
+          "seeds": [
+            "rule6_mutation_runner"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/fence-rules-review-2026-10-27/r1/negctl.json",
+      "sha256": "8d32e7c72f4357fb6c2edb9e79e6ec40fb8e9a829492f5675ae2ba49e9d8103b",
+      "matches": [
+        {
+          "line": 18,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 27,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 28,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 144,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 225,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 234,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/fence-rules-review-2026-10-27/r2/out/neg-pr1-ll.json",
+      "sha256": "e24575523ce4756533e6c223dbefd4b880bff07a2c3d8c0a2ad62efa9ee9749b",
+      "matches": [
+        {
+          "line": 18,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 27,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 28,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 417,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 767,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 813,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/guard-pins-followup-review-2026-10-27/island-diff-code-selftest.json",
+      "sha256": "b02348943aee145a53f3826c6927942f5d444aad24d2bdecc3a38a5bdfe9986b",
+      "matches": [
+        {
+          "line": 44,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 64,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 65,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 415,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 559,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 560,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 561,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/guard-pins-followup-review-2026-10-27/island-diff-merge-selftest.json",
+      "sha256": "cbb6f588c7a262435320b692ebf292c0790ef3732218a0e6d95d3427a917265d",
+      "matches": [
+        {
+          "line": 45,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 65,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 66,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 423,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 567,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 568,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 569,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/guard-pins-followup-review-2026-10-27/main-changed-paths.txt",
+      "sha256": "455c1880659300cf0166acba23034557437ba776466b12179b068ee8e7b3269b",
+      "matches": [
+        {
+          "line": 11,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 20,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 21,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/guard-pins-review-2026-10-27/island-diff-selftest-v_local.json",
+      "sha256": "f7dd080209da688825102a15689e1f2ccb7ccc995c63ee35b73f1a513d4e20e0",
+      "matches": [
+        {
+          "line": 46,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 47,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/guard-pins-review-2026-10-27/island-diff-selftest-v_local.log",
+      "sha256": "0414e0bee2385980e96460b737921042d3ae371753b82e459753b941b318157e",
+      "matches": [
+        {
+          "line": 46,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 47,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/guard-pins-review-2026-10-27/island-diff-selftest.json",
+      "sha256": "f24e2235dfefccc0402c88fc83c3c7b38bd928f23d431dcead134b126299f1e1",
+      "matches": [
+        {
+          "line": 44,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 64,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 65,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 411,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 555,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 556,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 557,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/guard-pins-review-2026-10-27/island-diff-selftest.log",
+      "sha256": "c2e2ffdb3e5aea732775e96f817c68bef0972042574a7572ff49eee09c5c8c5d",
+      "matches": [
+        {
+          "line": 44,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 64,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 65,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 411,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 555,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 556,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 557,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/guard-pins-review-2026-10-27/main-moved.json",
+      "sha256": "85814d72a50ca31ffb7b0d563471b83fee53ace0c85b8e8ec3fd08e50bc71637",
+      "matches": [
+        {
+          "line": 1,
+          "seeds": [
+            "run_m10_conditional_mutations"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/host-pins-review-2026-10-27/identity.txt",
+      "sha256": "dfdf23e1c325ad26c47334c8406034ddcb8eab0abc4028b8a62e616fe7b6bd52",
+      "matches": [
+        {
+          "line": 11,
+          "seeds": [
+            "pwb-mutation-run-main",
+            "pwb-mutation-sweep-main",
+            "generation-mutation-run-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/host-tidy-review-2026-10-27/diff-out-r539/differential.json",
+      "sha256": "dec1683007fd3c99e14e35a7bc35b5998e4b84d54058d7bcc37a13839677bffc",
+      "matches": [
+        {
+          "line": 95,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 146,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 147,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 418,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 469,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 470,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/http-host-review-2026-10-27/diff-out/differential.json",
+      "sha256": "76b8b7ef9de4ae9cc47f10d0f2443f02971d92c15ce6903e65ddab03cbce7969",
+      "matches": [
+        {
+          "line": 94,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 145,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 146,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 406,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 457,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 458,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/island-decoupling-review-2026-10-22/tools/runtime_reach.mjs",
+      "sha256": "7be8ad7ed18e4e0daa3d52f004627be2579e92ea973890697e88ba677b49ac17",
+      "matches": [
+        {
+          "line": 28,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/island-decoupling-review-2026-10-22/tools/static_reach.mjs",
+      "sha256": "9cd8dd0dff51ed15ec685c8bef8a9cb0d2fbc495903fbf15be853d22ccbdea73",
+      "matches": [
+        {
+          "line": 26,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/poc-hygiene-2026-10-22/dist-compare-2026-10-22.json",
+      "sha256": "4679660c5df4b017fe20bfa24527b007bba9e607569c8e16c50ba55d620d2006",
+      "matches": [
+        {
+          "line": 47,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 57,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 58,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/poc-hygiene-2026-10-22/export-census-2026-10-22.json",
+      "sha256": "18643530d6d1faa71e47d0e15e6e5a72ab1e368f31792ef5dd995aec429778cc",
+      "matches": [
+        {
+          "line": 366,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 374,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 375,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 391,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 398,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 399,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/poc-m10-conditional-mutations-2026-09-23.json",
+      "sha256": "6de6e87c1487ccfb160d08ac0bb8a0bbad3545b5fad1cd78077932dfb7a91027",
+      "matches": [
+        {
+          "line": 5,
+          "seeds": [
+            "run_m10_conditional_mutations"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/polaris-admission-reader-mutants-2026-10-05-sweep-guard.json",
+      "sha256": "f48e715c4ae9420911ec187dedfd02ed8ec48198829956799a20b050c30e304f",
+      "matches": [
+        {
+          "line": 16,
+          "seeds": [
+            "rule6_mutation_runner"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/polaris-admission-reader-mutants-2026-10-05.json",
+      "sha256": "595d744466f2eaaee207c3e77f930d78d08f3eca6178ae507016cedb468c8b4a",
+      "matches": [
+        {
+          "line": 15,
+          "seeds": [
+            "rule6_mutation_runner"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/polaris-admission-reader-mutants-2026-10-06-r361-1.json",
+      "sha256": "fd40f773d25e71b11d57062e248e042ed8a4b617992f2477216bb71c018b5f91",
+      "matches": [
+        {
+          "line": 16,
+          "seeds": [
+            "rule6_mutation_runner"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/polaris-admission-reader-mutants-2026-10-06.json",
+      "sha256": "57ed4f996fb0b5a2d2c488b6608114659b24ac29c41750f026d9b326bb6dae9e",
+      "matches": [
+        {
+          "line": 16,
+          "seeds": [
+            "rule6_mutation_runner"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/polaris-consent-allowlist-table-mutants-2026-10-07.json",
+      "sha256": "faab86a306778c822196a6140587c99f9712ca92511ed875150166f5cbd4ba88",
+      "matches": [
+        {
+          "line": 12,
+          "seeds": [
+            "rule6_mutation_runner"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/polaris-dossier-gate-acts-mutants-2026-10-07.json",
+      "sha256": "f1d6daf79c150f321a79a7d7579a62236e30043d978ea588e295d0a19fac52e0",
+      "matches": [
+        {
+          "line": 21,
+          "seeds": [
+            "rule6_mutation_runner"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/polaris-dossier-gate-sources-notes-mutants-2026-10-07.json",
+      "sha256": "1c3ec56c8f27171fa1c1d51310ff8bb8b08c609adfd494d316ec56c0c3caafc5",
+      "matches": [
+        {
+          "line": 15,
+          "seeds": [
+            "rule6_mutation_runner"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/polaris-dossier-git-object-reader-mutants-2026-10-06.json",
+      "sha256": "707e3b2d8b44594e8fed54fb45bc91ce757179954f4db416e2089cc7161ad679",
+      "matches": [
+        {
+          "line": 12,
+          "seeds": [
+            "rule6_mutation_runner"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/polaris-dossier-git-object-reader-mutants-depth-2026-10-07.json",
+      "sha256": "a96d988fdfe7d7da8815ecce071fcf502e9ba876b8e523b901dd21817f348c7b",
+      "matches": [
+        {
+          "line": 12,
+          "seeds": [
+            "rule6_mutation_runner"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/polaris-dossier-git-object-reader-mutants-repair-2026-10-06.json",
+      "sha256": "454a5847267086b9dfb36e783477765455059ecc3ef227062bc6dea164025647",
+      "matches": [
+        {
+          "line": 12,
+          "seeds": [
+            "rule6_mutation_runner"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/polaris-dossier-git-object-reader-mutants-round2-2026-10-07.json",
+      "sha256": "79eba912c737c16bce49850e58438e6bfff1e72e9c80a56a208dd894cecc2d80",
+      "matches": [
+        {
+          "line": 12,
+          "seeds": [
+            "rule6_mutation_runner"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/polaris-dossier-render-sentinel-mutants-2026-10-07.json",
+      "sha256": "e045ec5f0b6661f510567fc9908291fc09d009150da7e6a6940ce2bdc8698e05",
+      "matches": [
+        {
+          "line": 12,
+          "seeds": [
+            "rule6_mutation_runner"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/polaris-dossier-s3r-reverify-mutants-2026-10-07.json",
+      "sha256": "7ab00794d5e12bd351b8aab47dc6deca9d836aecb921c1af1a6ef2675f82e1d2",
+      "matches": [
+        {
+          "line": 21,
+          "seeds": [
+            "rule6_mutation_runner"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/polaris-dossier-s3r-reverify-mutants-on-s4-2026-10-07.json",
+      "sha256": "d7c6b69c09db2d03cf5216d3258f0f86a7b92bcf8c9081939f33eba3aa4bd35c",
+      "matches": [
+        {
+          "line": 21,
+          "seeds": [
+            "rule6_mutation_runner"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/polaris-dossier-s3r-reverify-mutants-round2-2026-10-07.json",
+      "sha256": "be9c8adb96a7a2f2e75d5e04179e37d1333d79ef87de4606a25c64eaac52928f",
+      "matches": [
+        {
+          "line": 21,
+          "seeds": [
+            "rule6_mutation_runner"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/polaris-m11-operability-funnel-2026-09-15.json",
+      "sha256": "d1b43520a4a4013ad93e6fa8cac8a772d90c24eeba34ae5c519515f2a8057188",
+      "matches": [
+        {
+          "line": 110,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 111,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 126,
+          "seeds": [
+            "pwb-mutation-run-main",
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/polaris-m6-generator-honesty-funnel-2026-09-15.json",
+      "sha256": "e2042b3eabdded96a78a90560063b4f00274148732bc16237ce8eba5a032001e",
+      "matches": [
+        {
+          "line": 1051,
+          "seeds": [
+            "poc:pwb-mutation-sweep"
+          ]
+        },
+        {
+          "line": 1100,
+          "seeds": [
+            "poc:pwb-mutation-sweep"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/polaris-m8-portability-funnel-2026-09-15.json",
+      "sha256": "524dd4b0f2a43c689823e79ea761ad38d2eb71a4d1efa773cd1d9ceaf0dc5ff4",
+      "matches": [
+        {
+          "line": 114,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 115,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/polaris-prompt-mutants-2026-10-04-rev2.json",
+      "sha256": "3e4c2391a74543d3507b0053aa543c292bce01fcdbfb0c848e24be71a9a200fd",
+      "matches": [
+        {
+          "line": 6,
+          "seeds": [
+            "polaris_prompt_mutants"
+          ]
+        },
+        {
+          "line": 8,
+          "seeds": [
+            "polaris_prompt_mutants"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/polaris-prompt-mutants-2026-10-04.json",
+      "sha256": "cd3fc42bb1aa50c065d207ba338fcf034d202f010932d7b97dc55c811575fd61",
+      "matches": [
+        {
+          "line": 11,
+          "seeds": [
+            "polaris_prompt_mutants"
+          ]
+        },
+        {
+          "line": 13,
+          "seeds": [
+            "polaris_prompt_mutants"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/project-documentation-screen-mutants-2026-10-08.json",
+      "sha256": "338f183cb3c06cd661367582ed98a50f7faede7cb6da6113ff6d76e4d78f30d1",
+      "matches": [
+        {
+          "line": 39,
+          "seeds": [
+            "rule6_mutation_runner"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/quote-fidelity-mutants-2026-10-04.json",
+      "sha256": "05982ad9a95473fc8ee76b9d002891c5255e079e9b12c952c6703d2f1630b681",
+      "matches": [
+        {
+          "line": 20,
+          "seeds": [
+            "rule6_mutation_runner"
+          ]
+        },
+        {
+          "line": 1110,
+          "seeds": [
+            "polaris_prompt_mutants"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/scratch-prefix-census-2026-10-23/census-2026-10-24.json",
+      "sha256": "8bb12c8a5adb7522ba15293b9df16fc3ea4e39cbb2928661e386c974904f3002",
+      "matches": [
+        {
+          "line": 5746,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 5752,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 5755,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 6244,
+          "seeds": [
+            "rerun_rule6_mutants_selected_tests"
+          ]
+        },
+        {
+          "line": 6247,
+          "seeds": [
+            "rule6_mutation_runner"
+          ]
+        },
+        {
+          "line": 6250,
+          "seeds": [
+            "rule6_timeout_rerun"
+          ]
+        },
+        {
+          "line": 6256,
+          "seeds": [
+            "run_m13_literal_mutations"
+          ]
+        },
+        {
+          "line": 6259,
+          "seeds": [
+            "run_m7_literal_mutations"
+          ]
+        },
+        {
+          "line": 6262,
+          "seeds": [
+            "run_m9_literal_mutations"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/scratch-prefix-census-2026-10-23/static-sites-2026-10-24.json",
+      "sha256": "f5ad2571ddf5b9caab1aafb5c9de3a70d94fdf6a9992af2faa789672b24a2a69",
+      "matches": [
+        {
+          "line": 662,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 867,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 877,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 4716,
+          "seeds": [
+            "rerun_rule6_mutants_selected_tests"
+          ]
+        },
+        {
+          "line": 4725,
+          "seeds": [
+            "rule6_mutation_runner"
+          ]
+        },
+        {
+          "line": 4734,
+          "seeds": [
+            "rule6_timeout_rerun"
+          ]
+        },
+        {
+          "line": 4752,
+          "seeds": [
+            "run_m13_literal_mutations"
+          ]
+        },
+        {
+          "line": 4762,
+          "seeds": [
+            "run_m7_literal_mutations"
+          ]
+        },
+        {
+          "line": 4772,
+          "seeds": [
+            "run_m9_literal_mutations"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/scratch-prefix-census-review-2026-10-27/round-1/census-m1.json",
+      "sha256": "e2e7787c2b5b88d1a8ff39cdcb59cad5b0c16c0e8cfe5d2abc4a5f6777b3ab42",
+      "matches": [
+        {
+          "line": 5711,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 5717,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 5720,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 6177,
+          "seeds": [
+            "rerun_rule6_mutants_selected_tests"
+          ]
+        },
+        {
+          "line": 6180,
+          "seeds": [
+            "rule6_mutation_runner"
+          ]
+        },
+        {
+          "line": 6183,
+          "seeds": [
+            "rule6_timeout_rerun"
+          ]
+        },
+        {
+          "line": 6189,
+          "seeds": [
+            "run_m13_literal_mutations"
+          ]
+        },
+        {
+          "line": 6192,
+          "seeds": [
+            "run_m7_literal_mutations"
+          ]
+        },
+        {
+          "line": 6195,
+          "seeds": [
+            "run_m9_literal_mutations"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/scratch-prefix-census-review-2026-10-27/round-1/census-m3.json",
+      "sha256": "c812be7e15c4839c627603fe3d3a6a4100e01bd2bfcebfff0dce08e6a353a7f1",
+      "matches": [
+        {
+          "line": 5711,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 5717,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 5720,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 6177,
+          "seeds": [
+            "rerun_rule6_mutants_selected_tests"
+          ]
+        },
+        {
+          "line": 6180,
+          "seeds": [
+            "rule6_mutation_runner"
+          ]
+        },
+        {
+          "line": 6183,
+          "seeds": [
+            "rule6_timeout_rerun"
+          ]
+        },
+        {
+          "line": 6189,
+          "seeds": [
+            "run_m13_literal_mutations"
+          ]
+        },
+        {
+          "line": 6192,
+          "seeds": [
+            "run_m7_literal_mutations"
+          ]
+        },
+        {
+          "line": 6195,
+          "seeds": [
+            "run_m9_literal_mutations"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/scratch-prefix-census-review-2026-10-27/round-1/census-rerun.json",
+      "sha256": "ca3d308e2bdf7159ca38b94b7d2049d1918c4d75d27a2cf08042fd8fbbf67533",
+      "matches": [
+        {
+          "line": 5711,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 5717,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 5720,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 6177,
+          "seeds": [
+            "rerun_rule6_mutants_selected_tests"
+          ]
+        },
+        {
+          "line": 6180,
+          "seeds": [
+            "rule6_mutation_runner"
+          ]
+        },
+        {
+          "line": 6183,
+          "seeds": [
+            "rule6_timeout_rerun"
+          ]
+        },
+        {
+          "line": 6189,
+          "seeds": [
+            "run_m13_literal_mutations"
+          ]
+        },
+        {
+          "line": 6192,
+          "seeds": [
+            "run_m7_literal_mutations"
+          ]
+        },
+        {
+          "line": 6195,
+          "seeds": [
+            "run_m9_literal_mutations"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/scratch-prefix-census-review-2026-10-27/round-1/creator-sweep.json",
+      "sha256": "d1703bccdd14d4150406c98ac54db5cf3621c1610fbf5be6c1d5d1dd1998eaa4",
+      "matches": [
+        {
+          "line": 670,
+          "seeds": [
+            "rerun_rule6_mutants_selected_tests"
+          ]
+        },
+        {
+          "line": 692,
+          "seeds": [
+            "rule6_mutation_runner"
+          ]
+        },
+        {
+          "line": 714,
+          "seeds": [
+            "rule6_timeout_rerun"
+          ]
+        },
+        {
+          "line": 721,
+          "seeds": [
+            "rule6_timeout_rerun"
+          ]
+        },
+        {
+          "line": 1345,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 1479,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 1489,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 2293,
+          "seeds": [
+            "run_m13_literal_mutations"
+          ]
+        },
+        {
+          "line": 2299,
+          "seeds": [
+            "run_m7_literal_mutations"
+          ]
+        },
+        {
+          "line": 2305,
+          "seeds": [
+            "run_m9_literal_mutations"
+          ]
+        },
+        {
+          "line": 2597,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 2751,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 2765,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 3271,
+          "seeds": [
+            "run_m13_literal_mutations"
+          ]
+        },
+        {
+          "line": 3281,
+          "seeds": [
+            "run_m7_literal_mutations"
+          ]
+        },
+        {
+          "line": 3291,
+          "seeds": [
+            "run_m9_literal_mutations"
+          ]
+        },
+        {
+          "line": 3323,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 3329,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 3335,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 3407,
+          "seeds": [
+            "run_m13_literal_mutations"
+          ]
+        },
+        {
+          "line": 3413,
+          "seeds": [
+            "run_m7_literal_mutations"
+          ]
+        },
+        {
+          "line": 3419,
+          "seeds": [
+            "run_m9_literal_mutations"
+          ]
+        },
+        {
+          "line": 4793,
+          "seeds": [
+            "rerun_rule6_mutants_selected_tests"
+          ]
+        },
+        {
+          "line": 4799,
+          "seeds": [
+            "rule6_mutation_runner"
+          ]
+        },
+        {
+          "line": 4805,
+          "seeds": [
+            "rule6_timeout_rerun"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/scratch-prefix-census-review-2026-10-27/round-1/literal-check.out",
+      "sha256": "948ffa92989e23035a567aa7aaef4c242c861b35586155c023bf6b4f6e07a318",
+      "matches": [
+        {
+          "line": 24,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 39,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 40,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/scratch-prefix-census-review-2026-10-27/round-1/static-rerun.json",
+      "sha256": "09dfb9d602d15f149c2f8ef0acf6c8fd0c2036c0f0351d543f1f9c805b245d7a",
+      "matches": [
+        {
+          "line": 660,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 865,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 875,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 4714,
+          "seeds": [
+            "rerun_rule6_mutants_selected_tests"
+          ]
+        },
+        {
+          "line": 4723,
+          "seeds": [
+            "rule6_mutation_runner"
+          ]
+        },
+        {
+          "line": 4732,
+          "seeds": [
+            "rule6_timeout_rerun"
+          ]
+        },
+        {
+          "line": 4750,
+          "seeds": [
+            "run_m13_literal_mutations"
+          ]
+        },
+        {
+          "line": 4760,
+          "seeds": [
+            "run_m7_literal_mutations"
+          ]
+        },
+        {
+          "line": 4770,
+          "seeds": [
+            "run_m9_literal_mutations"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/scratch-prefix-census-review-2026-10-27/round-2/census-rerun.json",
+      "sha256": "b1e0099f80cbc950e7eff1a6f9c64d30c6bb128ca1efce76e849d50138d36a22",
+      "matches": [
+        {
+          "line": 5746,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 5752,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 5755,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 6244,
+          "seeds": [
+            "rerun_rule6_mutants_selected_tests"
+          ]
+        },
+        {
+          "line": 6247,
+          "seeds": [
+            "rule6_mutation_runner"
+          ]
+        },
+        {
+          "line": 6250,
+          "seeds": [
+            "rule6_timeout_rerun"
+          ]
+        },
+        {
+          "line": 6256,
+          "seeds": [
+            "run_m13_literal_mutations"
+          ]
+        },
+        {
+          "line": 6259,
+          "seeds": [
+            "run_m7_literal_mutations"
+          ]
+        },
+        {
+          "line": 6262,
+          "seeds": [
+            "run_m9_literal_mutations"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/scratch-prefix-census-review-2026-10-27/round-2/static-rerun.json",
+      "sha256": "f5ad2571ddf5b9caab1aafb5c9de3a70d94fdf6a9992af2faa789672b24a2a69",
+      "matches": [
+        {
+          "line": 662,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 867,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 877,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 4716,
+          "seeds": [
+            "rerun_rule6_mutants_selected_tests"
+          ]
+        },
+        {
+          "line": 4725,
+          "seeds": [
+            "rule6_mutation_runner"
+          ]
+        },
+        {
+          "line": 4734,
+          "seeds": [
+            "rule6_timeout_rerun"
+          ]
+        },
+        {
+          "line": 4752,
+          "seeds": [
+            "run_m13_literal_mutations"
+          ]
+        },
+        {
+          "line": 4762,
+          "seeds": [
+            "run_m7_literal_mutations"
+          ]
+        },
+        {
+          "line": 4772,
+          "seeds": [
+            "run_m9_literal_mutations"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/scratch-prefix-census-review-2026-10-27/round-3/census-rerun.json",
+      "sha256": "8bb12c8a5adb7522ba15293b9df16fc3ea4e39cbb2928661e386c974904f3002",
+      "matches": [
+        {
+          "line": 5746,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 5752,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 5755,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 6244,
+          "seeds": [
+            "rerun_rule6_mutants_selected_tests"
+          ]
+        },
+        {
+          "line": 6247,
+          "seeds": [
+            "rule6_mutation_runner"
+          ]
+        },
+        {
+          "line": 6250,
+          "seeds": [
+            "rule6_timeout_rerun"
+          ]
+        },
+        {
+          "line": 6256,
+          "seeds": [
+            "run_m13_literal_mutations"
+          ]
+        },
+        {
+          "line": 6259,
+          "seeds": [
+            "run_m7_literal_mutations"
+          ]
+        },
+        {
+          "line": 6262,
+          "seeds": [
+            "run_m9_literal_mutations"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/session-prompt-tool-statement-mutants-2026-10-08.json",
+      "sha256": "f8f66a91158a9bf1edb70cc80fe90e4e2fb4e8ccef2921e7fecee1c4a1b72398",
+      "matches": [
+        {
+          "line": 22,
+          "seeds": [
+            "rule6_mutation_runner"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/session-prompt-tool-statement-mutants-round2-2026-10-08.json",
+      "sha256": "ba807e108f3e9c90afd56e4d61bff532079c28552efd5ce04a7efe5b5b570712",
+      "matches": [
+        {
+          "line": 22,
+          "seeds": [
+            "rule6_mutation_runner"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/support-followups-review-2026-10-27/r2/import-guard-sweep-7d408fd9.txt",
+      "sha256": "fa9bdc195a145e5bc532ad71b2ed6facd8264eea6ab21f84649fe1f360813012",
+      "matches": [
+        {
+          "line": 11,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 20,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 21,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/support-leaf-review-2026-10-27/round-1/code.diff",
+      "sha256": "f65ae511b9ef558cf6ef8bbb69e8da52868fedb3ee8f03e720894c0784bfa85f",
+      "matches": [
+        {
+          "line": 266,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 268,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 269,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 271,
+          "seeds": [
+            "poc:generation-mutation-run"
+          ]
+        },
+        {
+          "line": 491,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 493,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 494,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 496,
+          "seeds": [
+            "poc:pwb-mutation-run"
+          ]
+        },
+        {
+          "line": 521,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 523,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 524,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 526,
+          "seeds": [
+            "poc:pwb-mutation-sweep"
+          ]
+        },
+        {
+          "line": 634,
+          "seeds": [
+            "poc:pwb-mutation-sweep",
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/support-leaf-review-2026-10-27/round-1/hunk-rewrite-c104-fe38.txt",
+      "sha256": "37c7b2f5abe33ba95b79f8cd9a9bfb287d89e08115fecdfe90d1d4f373834ab4",
+      "matches": [
+        {
+          "line": 22,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 26,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 27,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/support-leaf-review-2026-10-27/round-1/pr-body.txt",
+      "sha256": "71a6f72690db7525f71651cabb0edcf0d0345d711a1974be892850456dd4d1c1",
+      "matches": [
+        {
+          "line": 57,
+          "seeds": [
+            "pwb-mutation-run-main",
+            "pwb-mutation-sweep-main",
+            "generation-mutation-run-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/support-leaf-review-2026-10-27/round-1/removed-hash-sites.json",
+      "sha256": "67a91384fa5d00da2debc6a11070a274f9821e6dad08740fc68e3f50cf8bf260",
+      "matches": [
+        {
+          "line": 280,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 285,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 525,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 530,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 555,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 560,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/support-leaf-review-2026-10-27/round-1/run/record.json",
+      "sha256": "b67fdfba02de8c3f7f1fe3427788da5ef53710314a502cb7b6fe325e3aca3c68",
+      "matches": [
+        {
+          "line": 326,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 328,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 329,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/support-leaf-review-2026-10-27/round-1/site-eq-a088-9029.json",
+      "sha256": "d97835c3ac95852fb94265514ff67d84157ca5a23c146ffa463f76c08a2468fc",
+      "matches": [
+        {
+          "line": 134,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 251,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 264,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/support-leaf-review-2026-10-27/round-1/site-eq-c104-fe38.json",
+      "sha256": "bc392d7e1f5ae8e38fce25e9855e89aed13578ca8dfbc6fe02fa08350c02dbb6",
+      "matches": [
+        {
+          "line": 134,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 251,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 264,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/support-leaf-review-2026-10-27/round-1/site-eq-c104-merge.json",
+      "sha256": "210f9830397df9bdcac51b28fa94f51a15943d4873262b2a000ad5cdc483977e",
+      "matches": [
+        {
+          "line": 134,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 251,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 264,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/support-leaf-review-2026-10-27/round-1/subject-paths.txt",
+      "sha256": "7a6add7c4e204bf784b623c8b5c201b0a52e1fa8a4f8ab936e7cdf4988b00777",
+      "matches": [
+        {
+          "line": 11,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 20,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 21,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/support-leaf-review-2026-10-27/round-1/sweep-a088f1ca.json",
+      "sha256": "8d9909f99f97dbbd6f64891b568f799e17378e1f5c241be183a6f33ed1bf8bad",
+      "matches": [
+        {
+          "line": 7,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 10,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 11,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 51,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 60,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 61,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/support-leaf-review-2026-10-27/round-1/sweep-c104771f.json",
+      "sha256": "6fb142cacc53b1b7ec4ea32145c690862b5cd9271bce16e19c5cafdc2065f443",
+      "matches": [
+        {
+          "line": 7,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 10,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 11,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 51,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 60,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 61,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/support-leaf-review-2026-10-27/round-1/their-sweep-a088f1ca.json",
+      "sha256": "16e1e4570ad95f5d144eab2400f4a4ffa561dc12862cafd00071b2733878ea2c",
+      "matches": [
+        {
+          "line": 62,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 107,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 112,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 346,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 366,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 371,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/support-leaf-review-2026-10-27/round-1/their-sweep-c104771f.json",
+      "sha256": "cfbf01a24af0516fac816fd12fc1a176a971397648b5e0cd3cfa1e0a35835aa4",
+      "matches": [
+        {
+          "line": 62,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 107,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 112,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 346,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 366,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 371,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/support-leaf-review-2026-10-27/round-2/pr-body.txt",
+      "sha256": "9133788de4ff1ddde9b5f968728f77f6662dce73f12398525c5188b9db9f7951",
+      "matches": [
+        {
+          "line": 65,
+          "seeds": [
+            "pwb-mutation-run-main",
+            "pwb-mutation-sweep-main",
+            "generation-mutation-run-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/support-leaf-review-2026-10-27/round-2/site-eq-546f-a5ab.json",
+      "sha256": "1c9483b5157b3e17f8b7a152149e212a96b954ec3627455e2c2fbaa6ffb0f467",
+      "matches": [
+        {
+          "line": 134,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 251,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 264,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/support-leaf-review-2026-10-27/round-2/site-eq-a088-9029.json",
+      "sha256": "d97835c3ac95852fb94265514ff67d84157ca5a23c146ffa463f76c08a2468fc",
+      "matches": [
+        {
+          "line": 134,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 251,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 264,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/support-leaf-review-2026-10-27/round-2/site-eq-c104-fe38.json",
+      "sha256": "bc392d7e1f5ae8e38fce25e9855e89aed13578ca8dfbc6fe02fa08350c02dbb6",
+      "matches": [
+        {
+          "line": 134,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 251,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 264,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/support-leaf-review-2026-10-27/round-2/subject-paths.txt",
+      "sha256": "5cde0e7c537ccfd623fea1b41b39bc9116f29a1b9be6c44c8b0cf95dc02fc1ce",
+      "matches": [
+        {
+          "line": 11,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 20,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 21,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-6-3/comment-only-negative-control.json",
+      "sha256": "8d32e7c72f4357fb6c2edb9e79e6ec40fb8e9a829492f5675ae2ba49e9d8103b",
+      "matches": [
+        {
+          "line": 18,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 27,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 28,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 144,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 225,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 234,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-6-3/dc3-support-module-differential-2026-10-25.json",
+      "sha256": "12912c4591500bb16c0eecf0ee1bb4427d74838a59791b1886739d270a48c0a6",
+      "matches": [
+        {
+          "line": 336,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 338,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 339,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-6-3/repair1-neg-pr1-line-level.json",
+      "sha256": "aada23c8bedce9cbcdee1c4fc941bd12f42152ed43e301c5e3cb139ce4de5cf6",
+      "matches": [
+        {
+          "line": 18,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 27,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 28,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 417,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 767,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 813,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-7-15/diff-out/differential.json",
+      "sha256": "3d46782243b5cbac8ffafae03416f54909d959e1ce1e61601941ae98e44c6bc2",
+      "matches": [
+        {
+          "line": 95,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 146,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 147,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 418,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 469,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 470,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-7-3/diff/differential.json",
+      "sha256": "0802194e6fa38855fffa7f9f2706356c4bddd7ae263553311d40413e7e4f66eb",
+      "matches": [
+        {
+          "line": 94,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 145,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 146,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 406,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 457,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 458,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-7-3/m10-head.json",
+      "sha256": "8cca807de816b4c34cda23a8ffae10d6018ad7f3442d5e2bfd7c340b8134c594",
+      "matches": [
+        {
+          "line": 5,
+          "seeds": [
+            "run_m10_conditional_mutations"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-7-3/record.py",
+      "sha256": "b4dfd9659a1ea7e2c9e50d44b15b90738d62794a234e8150a7de48a44b9716fb",
+      "matches": [
+        {
+          "line": 14,
+          "seeds": [
+            "run_m10_conditional_mutations"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-7-3/summary.json",
+      "sha256": "d564386bead6367ea7a932fffa3a63e942be027c06d2d77e14192aa17cd4ddf2",
+      "matches": [
+        {
+          "line": 52,
+          "seeds": [
+            "run_m10_conditional_mutations"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-1/reach-after.json",
+      "sha256": "a5c4cdb2fe9e5f37fdc6d4911c7e698e20a4331df6dddcbb59100bffbffc8ef1",
+      "matches": [
+        {
+          "line": 18,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-1/reach-before.json",
+      "sha256": "3fc25cb6aeab737bf177c3766a176f0c58f711b206672762c41579563146a58e",
+      "matches": [
+        {
+          "line": 18,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-1/reach_sweep.mjs",
+      "sha256": "d1e6bd77135af1ecf1ccbd4e241dfc461472b31894c52bf091511bc201982e5c",
+      "matches": [
+        {
+          "line": 23,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-36/island-diff-selftest.json",
+      "sha256": "9ac46ee1ca097ffc481f1047bf393d64232c50ef6c970f7680d85d3938d5eb59",
+      "matches": [
+        {
+          "line": 44,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 64,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 65,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 411,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 555,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 556,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 557,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-37/island-diff-selftest.json",
+      "sha256": "2c00c766a87d4914faa73a2b0ec13c76a2213ad376f631bc9adc079b67e16065",
+      "matches": [
+        {
+          "line": 44,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 64,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 65,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 411,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 555,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 556,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 557,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-38/island-diff-selftest.json",
+      "sha256": "5c2ddd59f31012d071bfae810f66d802eba66f5c0c2eefaf02879e00f7287389",
+      "matches": [
+        {
+          "line": 44,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 64,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 65,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 415,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 559,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 560,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 561,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/syzygy-bul-browser-ci-correction-2026-09-23.json",
+      "sha256": "6803886e1a781e977b3095132a40cf808cce1f211012d8d085f8000cea0b2d10",
+      "matches": [
+        {
+          "line": 70,
+          "seeds": [
+            "run_m9_literal_mutations"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/syzygy-bul-browser-cleanup-2026-09-23.json",
+      "sha256": "4a53228de2f58ee58a25b31235b704a5d167eacc526bfdc7f1b8d6bcf0d6c684",
+      "matches": [
+        {
+          "line": 43,
+          "seeds": [
+            "run_m9_literal_mutations"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/plans/2026-10-21-greenfield-parity-audit.md",
+      "sha256": "ddfc405f1fc65c3f85455d3f56403ec2785a9b209f7f1bbb13eca64b1e36d439",
+      "matches": [
+        {
+          "line": 650,
+          "seeds": [
+            "polaris_prompt_mutants"
+          ]
+        },
+        {
+          "line": 658,
+          "seeds": [
+            "run_m13_literal_mutations"
+          ]
+        },
+        {
+          "line": 659,
+          "seeds": [
+            "run_m9_literal_mutations"
+          ]
+        },
+        {
+          "line": 660,
+          "seeds": [
+            "run_m10_conditional_mutations"
+          ]
+        },
+        {
+          "line": 663,
+          "seeds": [
+            "run_m7_literal_mutations"
+          ]
+        },
+        {
+          "line": 668,
+          "seeds": [
+            "rule6_mutation_runner"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/polaris-generation/REDIS-DOSSIER-GAP-ANALYSIS.md",
+      "sha256": "ae15af7bb7924bd4cc3b403e90c8252a1c7609301231be38c8dfcbba6d51250b",
+      "matches": [
+        {
+          "line": 51,
+          "seeds": [
+            "poc:generation-mutation-run"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/pursuits/2026-09-22-vision-pursuit-data.json",
+      "sha256": "16d28e385a8c365cc0d20e7569cda807b4b1aa7e8c19919eadd9adc3dcfca989",
+      "matches": [
+        {
+          "line": 278,
+          "seeds": [
+            "pwb-mutation-run-main",
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 4988,
+          "seeds": [
+            "pwb-mutation-run-main",
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 4995,
+          "seeds": [
+            "pwb-mutation-run-main",
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 5004,
+          "seeds": [
+            "poc:pwb-mutation-run",
+            "poc:pwb-mutation-sweep"
+          ]
+        },
+        {
+          "line": 5005,
+          "seeds": [
+            "pwb-mutation-run-main",
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 5066,
+          "seeds": [
+            "poc:pwb-mutation-run",
+            "poc:pwb-mutation-sweep"
+          ]
+        },
+        {
+          "line": 5081,
+          "seeds": [
+            "poc:pwb-mutation-run",
+            "poc:pwb-mutation-sweep"
+          ]
+        },
+        {
+          "line": 5086,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 5087,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 5132,
+          "seeds": [
+            "pwb-mutation-run-main",
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 5138,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/pursuits/2026-09-22-vision-pursuit-harvest.json",
+      "sha256": "79268ec6191edba38a0fc9dff3638adb8ca3a5a1d7fab7c5d89e00cbec06951d",
+      "matches": [
+        {
+          "line": 3893,
+          "seeds": [
+            "pwb-mutation-run-main",
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 3900,
+          "seeds": [
+            "pwb-mutation-run-main",
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 3909,
+          "seeds": [
+            "poc:pwb-mutation-run",
+            "poc:pwb-mutation-sweep"
+          ]
+        },
+        {
+          "line": 3910,
+          "seeds": [
+            "pwb-mutation-run-main",
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 3971,
+          "seeds": [
+            "poc:pwb-mutation-run",
+            "poc:pwb-mutation-sweep"
+          ]
+        },
+        {
+          "line": 3986,
+          "seeds": [
+            "poc:pwb-mutation-run",
+            "poc:pwb-mutation-sweep"
+          ]
+        },
+        {
+          "line": 3991,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 3992,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 4037,
+          "seeds": [
+            "pwb-mutation-run-main",
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 4043,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/reviews/R-GP-IMPL-ACT-FAMILIES-1-RAW.md",
+      "sha256": "3cbf45c4bddb8dbd101b097cdbaed9bd6a9cfbeb1cb0eb5c9adfb8103c7fc1ac",
+      "matches": [
+        {
+          "line": 162,
+          "seeds": [
+            "rule6_mutation_runner"
+          ]
+        },
+        {
+          "line": 209,
+          "seeds": [
+            "rule6_mutation_runner"
+          ]
+        },
+        {
+          "line": 297,
+          "seeds": [
+            "rule6_mutation_runner"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/reviews/R-GP-IMPL-ARGV-FAIL-CLOSED-1-RAW.md",
+      "sha256": "2ec214a5a0d4c588cc944a73ecadebb3abc57fd5a87788634ad966416d4a2b00",
+      "matches": [
+        {
+          "line": 248,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/reviews/R-GP-IMPL-CONSENT-RECOGNITION-1-RAW.md",
+      "sha256": "9cdd61c47eda71b160597e286132051b68cf553334d46200171b3d8ac758ea46",
+      "matches": [
+        {
+          "line": 85,
+          "seeds": [
+            "rule6_mutation_runner"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/reviews/R-GP-IMPL-CONSENT-RECOGNITION-2-RAW.md",
+      "sha256": "b9d8165f9a43364f238e7758308a9e7ebab87811eb7a85fecaf968a5a87d308c",
+      "matches": [
+        {
+          "line": 121,
+          "seeds": [
+            "rerun_rule6_mutants_selected_tests"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/reviews/R-GP-IMPL-DECISIONS-SWEEP-1-RAW.md",
+      "sha256": "59d535383253e55b4767f1fe18c83b64ca121369724b915936c89ca5cc0d4710",
+      "matches": [
+        {
+          "line": 154,
+          "seeds": [
+            "rule6_timeout_rerun"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/reviews/R-GP-IMPL-HTTP-HOST-1-RAW.md",
+      "sha256": "8ed933ff10a11f2cc0a6e693ca4fac4db5b0d25ffc239fda38745485b63d8a29",
+      "matches": [
+        {
+          "line": 201,
+          "seeds": [
+            "run_m10_conditional_mutations"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/reviews/R-GP-IMPL-OWNER-ACT-FIELDS-1-RAW.md",
+      "sha256": "f7c0328032565412182a88f8056eadf0b66c85b86b4c1ebc270971ba3f339274",
+      "matches": [
+        {
+          "line": 265,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 282,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 291,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/reviews/R-GP-IMPL-SCRATCH-PREFIX-CENSUS-1-RAW.md",
+      "sha256": "851f18003dd67916843ab7fc5217140922c8eeeca292314d989eee9bdc8d77d3",
+      "matches": [
+        {
+          "line": 249,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 250,
+          "seeds": [
+            "pwb-mutation-sweep-main",
+            "generation-mutation-run-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/reviews/R-N8-CONTAINER-SHAPE-PROFILE-RAW.md",
+      "sha256": "40ca3d69b6650a1e4edc4cecf0ae81cc416f6f55e0a1568fbab8dc9a3e8f62ca",
+      "matches": [
+        {
+          "line": 240,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/reviews/R-POLARIS-DOSSIER-S2-READER-2-RAW.md",
+      "sha256": "28c66ffb3fc8f1571aa131d494eead4dc911b72c47819db10ae2f416204e05e8",
+      "matches": [
+        {
+          "line": 48,
+          "seeds": [
+            "rule6_mutation_runner"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/reviews/R-POLARIS-M11-OPERABILITY-FUNNEL-2-RAW.md",
+      "sha256": "360c4fc850f645b3d6837eb57069a515bec84c5f8b6e260778dae745e60e98f6",
+      "matches": [
+        {
+          "line": 101,
+          "seeds": [
+            "pwb-mutation-run-main",
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/reviews/R-PR409-DOSSIER-BLOCKERS-INSTALL-1-RAW.md",
+      "sha256": "54efb4d0557503ef655976e6be7fcaaaba5a00ab02a11c89969a6a7ec625ace5",
+      "matches": [
+        {
+          "line": 132,
+          "seeds": [
+            "rule6_mutation_runner"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/reviews/R-PWB-CLASS-GRANULAR-EXTRACTION-AMENDMENT-1-RAW.md",
+      "sha256": "980386aaa841da6ebad9b57ec51175c0813da8aae7c6186d3fc365cfa68f6bf0",
+      "matches": [
+        {
+          "line": 33,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/reviews/R-PWB-MACHINE-VIEW-DELTA-RAW.md",
+      "sha256": "2e4752ca589d1f366ad602caf50a50cc9536b5e836e9de3465f7fb5b659b7da9",
+      "matches": [
+        {
+          "line": 119,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/reviews/R-PWB-N11-SLICE2-REVIEW-RAW.md",
+      "sha256": "d68a0908785ac2cdf415afca012d1bd17d3302b5e8431db85078adc50b13340f",
+      "matches": [
+        {
+          "line": 28,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 53,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 85,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 104,
+          "seeds": [
+            "poc:generation-mutation-run"
+          ]
+        },
+        {
+          "line": 137,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        },
+        {
+          "line": 160,
+          "seeds": [
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 236,
+          "seeds": [
+            "poc:generation-mutation-run"
+          ]
+        },
+        {
+          "line": 239,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/reviews/R-PWB-OPENING-BAND-SCENARIO-DELTA-CONFIRMATION-2-RAW.md",
+      "sha256": "df423f45667c7cc0646c784e4527419a6aaa03c13c6191ff6e1b0b8386034aa4",
+      "matches": [
+        {
+          "line": 186,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 195,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/reviews/R-PWB-OPENING-BAND-SCENARIO-DELTA-CONFIRMATION-3-RAW.md",
+      "sha256": "cb6cfa757a6d1365a151f20178a2d6c75c6186dd46ae4f2843aca264bf699121",
+      "matches": [
+        {
+          "line": 114,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/reviews/R-PWB-OPENING-BAND-SCENARIO-DELTA-CONFIRMATION-4-RAW.md",
+      "sha256": "a32440472e99fda2147bed667b864a77bebfbe7a64b382cbb19c931537cee76d",
+      "matches": [
+        {
+          "line": 169,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/reviews/R-PWB-OPENING-BAND-SCENARIO-DELTA-CONFIRMATION-5-RAW.md",
+      "sha256": "5d24fceceea48d8b2fea621d2b40223989830ee8f62637d317d59e9ed2cbd3d6",
+      "matches": [
+        {
+          "line": 182,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 312,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/reviews/R-PWB-OPENING-BAND-SCENARIO-DELTA-CONFIRMATION-6-RAW.md",
+      "sha256": "495f2657859034b631b32a8b38a4e70122d3ad1776fc8d8cd3b899cfdf6a2245",
+      "matches": [
+        {
+          "line": 347,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/reviews/R-PWB-OPENING-BAND-SCENARIO-DELTA-CONFIRMATION-7-RAW.md",
+      "sha256": "848a8100ac5878a0c62e23986eb8dc262da11466b6f0174a9e7a0a7231d6a854",
+      "matches": [
+        {
+          "line": 427,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/reviews/R-PWB-OPENING-BAND-SCENARIO-DELTA-CONFIRMATION-RAW.md",
+      "sha256": "9b2dbfb601ec881e990a1cfca6ac2e4f8f4a794df1aa1fd4f99c680173bccdaf",
+      "matches": [
+        {
+          "line": 290,
+          "seeds": [
+            "pwb-mutation-sweep-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "package.json",
+      "sha256": "5b77a43d1d5383f1d89b9843df4158c3a8dbfdef38ced074b2d2f71a1f515cc7",
+      "matches": [
+        {
+          "line": 19,
+          "seeds": [
+            "poc:pwb-mutation-run",
+            "pwb-mutation-run-main"
+          ]
+        },
+        {
+          "line": 25,
+          "seeds": [
+            "poc:pwb-mutation-sweep",
+            "pwb-mutation-sweep-main"
+          ]
+        },
+        {
+          "line": 33,
+          "seeds": [
+            "poc:generation-mutation-run",
+            "generation-mutation-run-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "packages/polaris-generation-core/src/island-boundary.test.ts",
+      "sha256": "9c29c24e82c60898e41139b4b75ffd5d5c215d97b8d9897c686f18be9ec0908a",
+      "matches": [
+        {
+          "line": 25,
+          "seeds": [
+            "generation-mutation-run-main"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "scripts/polaris_prompt_mutants.py",
+      "sha256": "bd9c33cffc779dd01cb09d200747dc6c40149e25562a9af599060c788b4dbeca",
+      "matches": [
+        {
+          "line": 2,
+          "seeds": [
+            "polaris_prompt_mutants"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "scripts/rerun_rule6_mutants_selected_tests.py",
+      "sha256": "700452c86f756f0df955cad24cdfe36a222b0138b2af23fc36e797487b3fdc2c",
+      "matches": [
+        {
+          "line": 4,
+          "seeds": [
+            "rerun_rule6_mutants_selected_tests"
+          ]
+        },
+        {
+          "line": 6,
+          "seeds": [
+            "rule6_mutation_runner"
+          ]
+        },
+        {
+          "line": 14,
+          "seeds": [
+            "rerun_rule6_mutants_selected_tests"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "scripts/rule6_mutation_runner.py",
+      "sha256": "2bc35be550f0beb6ad355e0fc89719c1ae28320d186f41929af96dd59a376b22",
+      "matches": [
+        {
+          "line": 3,
+          "seeds": [
+            "rule6_mutation_runner"
+          ]
+        },
+        {
+          "line": 29,
+          "seeds": [
+            "rule6_mutation_runner"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "scripts/rule6_timeout_rerun.py",
+      "sha256": "89ee529da96ac4bb2c31af16b060809dc7f51171678c428b88f43b8dae58144d",
+      "matches": [
+        {
+          "line": 2,
+          "seeds": [
+            "rule6_mutation_runner"
+          ]
+        },
+        {
+          "line": 5,
+          "seeds": [
+            "rule6_timeout_rerun"
+          ]
+        },
+        {
+          "line": 13,
+          "seeds": [
+            "rule6_timeout_rerun"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "scripts/run_m10_conditional_mutations.mjs",
+      "sha256": "bff84256c1608b6d9cd49f54fed49fd3ea8e3ffbac7afe6804b7cf20d6cbc490",
+      "matches": [
+        {
+          "line": 96,
+          "seeds": [
+            "run_m10_conditional_mutations"
+          ]
+        }
+      ]
+    }
+  ],
+  "shape_reader_candidates": [
+    {
+      "path": "docs/evidence/argv-fail-closed-review-2026-10-25/tools/build_named.py",
+      "sha256": "fc5384c53c9d957ab31f38f167d7ad45bb34fe9b79b624d3ffa6782d4cdca424"
+    },
+    {
+      "path": "docs/evidence/argv-fail-closed-review-2026-10-25/tools/check_record.py",
+      "sha256": "f0f888a72f9086ed1cd3d59f75340d0f5390bcffd20c1b30f1671914f9c81ad4"
+    },
+    {
+      "path": "docs/evidence/argv-fail-closed-review-2026-10-25/tools/mut.py",
+      "sha256": "ca2b8eadc503305bb3767b7220b02775429164ef6c183ac9854acf9d8ed9b6a5"
+    },
+    {
+      "path": "docs/evidence/argv-guards-review-2026-10-25/tools/check_record.py",
+      "sha256": "a5700a93ff8c83b53ba1bd59f141b14a59c5226ac07e23269fee05f4d755d6e1"
+    },
+    {
+      "path": "docs/evidence/argv-guards-review-2026-10-25/tools/from_lane.py",
+      "sha256": "02f0e0870e8ba12ce97afc1a7c3e92eff40b43af54368561175b54b0f90d2919"
+    },
+    {
+      "path": "docs/evidence/argv-guards-review-2026-10-25/tools/island_specs.py",
+      "sha256": "9406436209c4032dfa89c07d4fc9be701e73596fd19af324be29acce1caeb5a7"
+    },
+    {
+      "path": "docs/evidence/argv-guards-review-2026-10-25/tools/mut.py",
+      "sha256": "ca2b8eadc503305bb3767b7220b02775429164ef6c183ac9854acf9d8ed9b6a5"
+    },
+    {
+      "path": "docs/evidence/argv-table-review-2026-10-25/tools/build_my_mutants.py",
+      "sha256": "837d6b0fb02507969c693b70582653e65c3a7fc7c29ea24ed0b756e58898799e"
+    },
+    {
+      "path": "docs/evidence/argv-table-review-2026-10-25/tools/check_mutant_copies.py",
+      "sha256": "fc5e0ed8f979fb09d1150925b6b55fa540748b0396089f74a5d8d2cd2e15aacf"
+    },
+    {
+      "path": "docs/evidence/chrome-singleton-leak-2026-10-22/assemble_round1.py",
+      "sha256": "369d0b9c5712d5baff64dae5693cf5d9d6246e894453d75450af7301917ab197"
+    },
+    {
+      "path": "docs/evidence/chrome-singleton-leak-2026-10-22/assemble_verification.py",
+      "sha256": "c7816200678dcb0ff590652cb042d3164d4b2aa46dd0e15aae4570cb92f5c7bd"
+    },
+    {
+      "path": "docs/evidence/chrome-singleton-leak-2026-10-22/mutate_cdp.py",
+      "sha256": "220bc4db287c1fc2711e8b1a66cda455b7d9dc00e0aa3d0fb483197f7c8aeea8"
+    },
+    {
+      "path": "docs/evidence/chrome-singleton-leak-2026-10-22/mutate_cdp_r1.py",
+      "sha256": "f7da0a1af63b653ee313e98493de2ca6382b070b7ab0676391cfc9e3a2792eea"
+    },
+    {
+      "path": "docs/evidence/chrome-singleton-review-2026-10-25/r2/tools/check_records_r2.py",
+      "sha256": "5d1b5fa8151b8eb04d94e1cbbb573df897c779f6df19db09bbb57c48a5d49af4"
+    },
+    {
+      "path": "docs/evidence/consent-act-families-review-2026-10-22/tools/compare_mutants.py",
+      "sha256": "55fffd8e99da49e954b46514a5baa4a192c0e0cd8c0db56602bb1dc8d00273ac"
+    },
+    {
+      "path": "docs/evidence/consent-act-families-review-2026-10-22/tools/dossier_spec.py",
+      "sha256": "40212968d6b1da3a1c7e28918f8c9c7c2ce41b4c88fba7cbba19c04172498e80"
+    },
+    {
+      "path": "docs/evidence/consent-act-families-review-2026-10-22/tools/mutants_list.py",
+      "sha256": "3daa1509d6d7f26863bbf36ca861966ffe7ba31791f9764a288db0dbbdabc530"
+    },
+    {
+      "path": "docs/evidence/consent-act-families-review-2026-10-22/tools/mutants_summary.py",
+      "sha256": "4d1946ad8f6d8da6a76851f96f1567f714cf71c2b66263a66e6b090921f6e52e"
+    },
+    {
+      "path": "docs/evidence/decisions-sweep-review-2026-10-22/tools/apply_mutant.py",
+      "sha256": "d7785cf5ad3e4f2cbdf9c18af3bda556c3dc0ebff92d76c7249cdd4f4df40934"
+    },
+    {
+      "path": "docs/evidence/decisions-sweep-review-2026-10-22/tools/make_review_spec.py",
+      "sha256": "87254c46ea2e8994c5217a831bcdab6a34118d310739031f89a57ca7e460d94e"
+    },
+    {
+      "path": "docs/evidence/decisions-sweep-review-2026-10-22/tools/mutant_fragments.py",
+      "sha256": "f64fe8a4e84f86ad6b3e97230f3816c2e919b6ee38fd951f971e4bda2cffb2bf"
+    },
+    {
+      "path": "docs/evidence/fence-rules-review-2026-10-27/r1/tools/check_mutants.py",
+      "sha256": "bace08ebe73e89271c82b5f087888e9ec7df90920a51c7f4a5bf5c48d44b3c99"
+    },
+    {
+      "path": "docs/evidence/fence-rules-review-2026-10-27/r1/tools/check_record.py",
+      "sha256": "1ded9a9d7c2b5479e849defcd90474dbafd091355c03df17a4a621f494d56314"
+    },
+    {
+      "path": "docs/evidence/fence-rules-review-2026-10-27/r2/tools/r2_check_record.py",
+      "sha256": "6d0776247a17ead825a0c0ac45ecdd86c82beff9996fd30ca3180f83c0a97520"
+    },
+    {
+      "path": "docs/evidence/fence-rules-review-2026-10-27/r2/tools/r2_record_mutants.py",
+      "sha256": "abb9e9580c335f6190c6f747b81651e554f16a23e2cd4d390ab440360f11c932"
+    },
+    {
+      "path": "docs/evidence/fixture-pid-sweep-review-2026-10-24/r3/my_mutants.py",
+      "sha256": "85b622f710095c90569d9cd97d1f002a14b6f6f9e3ece8e1262c71dafea64131"
+    },
+    {
+      "path": "docs/evidence/guard-pins-followup-review-2026-10-27/tools/check_record.py",
+      "sha256": "e2bde1fb33cd0231ae12cbe846642b20b8c6d2e5fc402c0721d8d51ae945f6dd"
+    },
+    {
+      "path": "docs/evidence/guard-pins-followup-review-2026-10-27/tools/fix_specs.py",
+      "sha256": "c98fe72dfe45c15ef6d8be579f92e222590b8f13d70ed2640799bfc26065f1c5"
+    },
+    {
+      "path": "docs/evidence/guard-pins-followup-review-2026-10-27/tools/mut.py",
+      "sha256": "ca2b8eadc503305bb3767b7220b02775429164ef6c183ac9854acf9d8ed9b6a5"
+    },
+    {
+      "path": "docs/evidence/guard-pins-review-2026-10-27/tools/check_record.py",
+      "sha256": "835b6da721c7aad85aa2973402701c039f0db6cceac513c8f77fd9b1b5df5073"
+    },
+    {
+      "path": "docs/evidence/guard-pins-review-2026-10-27/tools/fix_specs.py",
+      "sha256": "354cb63b9fb5fc57baaf3be8263a8409bbc6bb5ad665f17e7bdc8132ba2e4e4b"
+    },
+    {
+      "path": "docs/evidence/guard-pins-review-2026-10-27/tools/mut.py",
+      "sha256": "ca2b8eadc503305bb3767b7220b02775429164ef6c183ac9854acf9d8ed9b6a5"
+    },
+    {
+      "path": "docs/evidence/host-pins-review-2026-10-27/tools/check_record.py",
+      "sha256": "a9a3df1a7fbc1b779f6e40d9c12ae508d4dcb6389240e14212bda19fe08ae176"
+    },
+    {
+      "path": "docs/evidence/host-pins-review-2026-10-27/tools/lane-tsc_mutants.py",
+      "sha256": "796dea4618415bfbfb72cc33da0db0fb2c1ba13f27de2be4dd6b01f37eeec7de"
+    },
+    {
+      "path": "docs/evidence/host-pins-review-2026-10-27/tools/rev535_mut.py",
+      "sha256": "fe8ae4e5456c957435954fa368ff075ec31c783766e95c602e1bda3410144dac"
+    },
+    {
+      "path": "docs/evidence/host-tidy-review-2026-10-27/tools/record_check.py",
+      "sha256": "71444aeb4c0065e3c557c57966c5ddbd63e6b2c62ebc7a848e3d8bacf05f91a8"
+    },
+    {
+      "path": "docs/evidence/http-host-review-2026-10-27/tools/check_record.py",
+      "sha256": "047901a52be0edbc6d7a8a43d11dcf81e8c663d63c31629e9c1fd11c49898573"
+    },
+    {
+      "path": "docs/evidence/island-decoupling-review-2026-10-22/tools/evidx.py",
+      "sha256": "d711c178d20f952e09d04c1840b029818afd49ef15dc871bd7ea73b1f201a198"
+    },
+    {
+      "path": "docs/evidence/island-decoupling-review-2026-10-22/tools/mutate.py",
+      "sha256": "01d7daa5d4f8cccec4f7e0aafd3352e982556a1c84e64444fbbff85c30379cb2"
+    },
+    {
+      "path": "docs/evidence/island-decoupling-review-2026-10-22/tools/mutcmp.py",
+      "sha256": "11cf2557239a071ff91f664bf860c188d1e0d5bcf2f04b62ef287d077db9cea1"
+    },
+    {
+      "path": "docs/evidence/island-decoupling-review-2026-10-22/tools/mutcount.py",
+      "sha256": "1805f6abbbdf426af2e08d4fe0222928de068b562165f29b5d99b8bb1c785979"
+    },
+    {
+      "path": "docs/evidence/launch-form-ctime-review-2026-10-24/tools/check_record.py",
+      "sha256": "2527dac90ad8e8328c8f8c521145d22328ce7a0457ba4eee5bcc7bc09a83a4a4"
+    },
+    {
+      "path": "docs/evidence/launch-form-ctime-review-2026-10-24/tools/one_mutant_default_reporter.py",
+      "sha256": "5c037652a2a9d6fec7a3ece43f2b0892d52ccbb7ad326e57cfaa2de4cb351488"
+    },
+    {
+      "path": "docs/evidence/launch-form-ctime-review-2026-10-24/tools/rev519_mutants.py",
+      "sha256": "00c9ea4e05a9da9a94b50dc61b2f28cea60ee8c7594cbb02f01c82e635671e6b"
+    },
+    {
+      "path": "docs/evidence/launch-form-postcondition-review-2026-10-22/tools/compare.py",
+      "sha256": "7b83e45906c5a9355a7fb0e4f5ef3e3fa900161cd5be7a14e35f247427d30737"
+    },
+    {
+      "path": "docs/evidence/launch-form-snapshot-review-2026-10-22/tools/check_record.py",
+      "sha256": "9863841a38ece3a2564fd5c163989d80bc25a5309502c917477d96b2be3803a0"
+    },
+    {
+      "path": "docs/evidence/launch-form-snapshot-review-2026-10-22/tools/record_errors.py",
+      "sha256": "90fea862e0e107c8f66973cb5a4e870f8a58df0d43a75be7cae380ad484613a8"
+    },
+    {
+      "path": "docs/evidence/launch-form-snapshot-review-2026-10-22/tools/rev516_mutants.py",
+      "sha256": "6ad034b1c176e02f28f4632559cfef16a653b66146b8a907b75450dfa67d1d09"
+    },
+    {
+      "path": "docs/evidence/launch-form-target-ctime-2026-10-25/field_diff.py",
+      "sha256": "8aa341cfad93549361ca79c41068df1c20b521f827df75b81c443afbcfb82087"
+    },
+    {
+      "path": "docs/evidence/launch-form-target-ctime-2026-10-25/mutants.py",
+      "sha256": "ea5c6fdd0068f69bf1a4e79a13cddb36372293270dffddaadda580463ebaf3ef"
+    },
+    {
+      "path": "docs/evidence/launch-form-target-ctime-review-2026-10-25/tools/check_record.py",
+      "sha256": "f22de4b13b78cc90d9cf2c98fe59c45e09c4dba8a0ddb27807d5febe0a7e8c55"
+    },
+    {
+      "path": "docs/evidence/launch-form-target-ctime-review-2026-10-25/tools/rev523_mutants.py",
+      "sha256": "b538ba21cb9f29d4795921d862200c07c769f4c4643480982594625f3cc86c96"
+    },
+    {
+      "path": "docs/evidence/launch-form-target-ino-mode-2026-10-25/record.py",
+      "sha256": "dbea9d01b8e18f579c7c0d5de67b94cb79b02aa453d5ffc5008ad43b935c8c38"
+    },
+    {
+      "path": "docs/evidence/launch-form-target-ino-mode-review-2026-10-25/tools/verify_compare.py",
+      "sha256": "d0511b7f3ebc4bebae50ada2ed5f22b49551c577f20e6e18ce3cfd3869d2d805"
+    },
+    {
+      "path": "docs/evidence/non-human-principal-pins-2026-10-22/mutate_non_human_principal.py",
+      "sha256": "b9b1e0aa7d47abe2bc2dc957d0a258b3aa50ad027250bd5ddd92e409a3e3923e"
+    },
+    {
+      "path": "docs/evidence/non-human-principal-pins-2026-10-22/regex-differential.mjs",
+      "sha256": "b748775a5bdd59d9c0b38950126d93b3641f1744a0cdd7c489eb804f29b035ef"
+    },
+    {
+      "path": "docs/evidence/observer-support-review-2026-10-27/tools/check_record.py",
+      "sha256": "0ef4134770de361a228af1be163bdf9817a31242d3b5b21a426938ee1d344b69"
+    },
+    {
+      "path": "docs/evidence/poc-core-hygiene-2026-10-22/assemble_verification.py",
+      "sha256": "e6fb130b8262abf6c609b154947faf4544ba7b5d57276c344c8471babc2dff8b"
+    },
+    {
+      "path": "docs/evidence/poc-core-hygiene-2026-10-22/mutate_census.py",
+      "sha256": "8bfac338405769c67d79ab29d14aab6f2eafd7091565a24431b9019415d20ca6"
+    },
+    {
+      "path": "docs/evidence/poc-core-hygiene-2026-10-22/mutate_comment_only.py",
+      "sha256": "a8a86a055a2dd75f0e31b5ff392002f1fd14849822794247f3798f596d0a1a1e"
+    },
+    {
+      "path": "docs/evidence/poc-core-hygiene-2026-10-22/mutate_compare_captures.py",
+      "sha256": "4e3349819303b0bff5820f35669c87166ee01ed4369b74df4343d1e3a3bb0ead"
+    },
+    {
+      "path": "docs/evidence/poc-fixture-leak-2026-10-22/assemble_records.py",
+      "sha256": "cff9510aa20e68f3b64a13b1101bfd2d74fdaa85e525a4a43f2bb15fd86e410d"
+    },
+    {
+      "path": "docs/evidence/poc-hygiene-2026-10-22/assemble_records.py",
+      "sha256": "7467121e0677ffc434a0ccb81924f5f38fc69ba9694e93f16e2a851010c3ff30"
+    },
+    {
+      "path": "docs/evidence/poc-main-wiring-2026-10-22/assemble_records.py",
+      "sha256": "a83a21c0a78aaff2798183475a107e3b3b122b24a4be6c6d6e2ba32218852ca7"
+    },
+    {
+      "path": "docs/evidence/runsync-root-skip-review-2026-10-25/r1/tools/check_record.py",
+      "sha256": "efc98aaeecf2d501bf90f629e0692c91cf9bd1050f525f7b483b7fedb87517cc"
+    },
+    {
+      "path": "docs/evidence/runsync-root-skip-review-2026-10-25/r1/tools/selftest.py",
+      "sha256": "b30248659adeece97893f50e67e166a7354fb805c5a6af06e0682f6af086231a"
+    },
+    {
+      "path": "docs/evidence/runsync-root-skip-review-2026-10-25/r2/tools/check_record.py",
+      "sha256": "22a2d4a7b5894941ff769322248d9563c41a8b95e3bf5517801f5e1f3ec23e1a"
+    },
+    {
+      "path": "docs/evidence/scratch-prefix-census-2026-10-23/assemble_census.py",
+      "sha256": "ffbc0f974967a1899e4d1b4f18b580b04e088e1cf01d6489f42a9432c2d501f8"
+    },
+    {
+      "path": "docs/evidence/scratch-prefix-census-2026-10-23/input_checks.py",
+      "sha256": "3f06ff7aa8e9de882339e7eed9ff6b29da08149d262694921e7276f5e17eb633"
+    },
+    {
+      "path": "docs/evidence/scratch-prefix-census-2026-10-23/static_sites.py",
+      "sha256": "9e03dc1e6f79180d32b709b59110160a3b202da2c05870ec79d0f1c7795b46bf"
+    },
+    {
+      "path": "docs/evidence/scratch-prefix-census-2026-10-23/trace_selftest.py",
+      "sha256": "41dd066dfb8f9c82b1f2db6a3fa18e7d9e3b77e7712c947f9846d7f96e36d70f"
+    },
+    {
+      "path": "docs/evidence/scratch-prefix-census-review-2026-10-27/round-1/tools/my_mutants.py",
+      "sha256": "74b4569dad9f5b5782011afa18c8bdfbbf060b700e023321a70c4fd067355fcf"
+    },
+    {
+      "path": "docs/evidence/scratch-prefix-census-review-2026-10-27/round-2/tools/my_mutants.py",
+      "sha256": "46b84d02ee886d0de05c5c5e0caa143d4fcf8f8ad58eb2557b2ee95b6ed7ca84"
+    },
+    {
+      "path": "docs/evidence/scratch-prefix-census-review-2026-10-27/round-3/tools/digests.py",
+      "sha256": "1f13d66767d463d0ba1c1ff1e3dbe96965c76a2ee93fa967ba94fc101c62b551"
+    },
+    {
+      "path": "docs/evidence/scratch-prefix-census-review-2026-10-27/round-3/tools/n12_fragments.py",
+      "sha256": "7abf74c739a1be90d8c290c95f531c7a239dc3f91ed10964581807cac7cbb93f"
+    },
+    {
+      "path": "docs/evidence/support-followups-review-2026-10-27/r1/tools/check-record.py",
+      "sha256": "21cf36a3aa4d69fb5a988d55513f4c4d00dc2af07e15bac1336ce4c4237a54e4"
+    },
+    {
+      "path": "docs/evidence/support-followups-review-2026-10-27/r1/tools/cross-check-sections.py",
+      "sha256": "b553e7adb2fecee0975388999e083e4830379eddee8c2f0b6451ffcf2ad46970"
+    },
+    {
+      "path": "docs/evidence/support-followups-review-2026-10-27/r2/tools/check-record-r2.py",
+      "sha256": "866c42a9a4d280410882992aa60f737dda1f88acdaaf7369749260e9fa065689"
+    },
+    {
+      "path": "docs/evidence/support-leaf-review-2026-10-27/round-1/tools/check_record.py",
+      "sha256": "38612bb1b1108d36fe131c88e9269cb8ed7d99daccfcb06443772a341476e1ad"
+    },
+    {
+      "path": "docs/evidence/support-leaf-review-2026-10-27/round-1/tools/full_suite_mutants.py",
+      "sha256": "6dee6e00170fbf7e86e240bd378366f0bd384c1f6e30bc2e726b5584a9c0ef39"
+    },
+    {
+      "path": "docs/evidence/support-leaf-review-2026-10-27/round-1/tools/isolate_rerun.py",
+      "sha256": "35eeebe1f32af28184fc3e12c3ccc68dad082092fd4a40a1ece0e8865610342a"
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-6-15/record.py",
+      "sha256": "f440214a6f0b32d6f65599071198516931ec5e2d0bf8353f845c3dc7c3018253"
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-7-14/record.py",
+      "sha256": "3b79c27969a1f9f24ebcb813e9072c9c0ef1ca4a22e9c210ea66708bb2e70d8e"
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-7-14/tools/tsc_mutants.py",
+      "sha256": "796dea4618415bfbfb72cc33da0db0fb2c1ba13f27de2be4dd6b01f37eeec7de"
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-7-15/diff-tools/differential.py",
+      "sha256": "a897e306170b2eb247355ef5a372afaab415205780edd233ed7ea718351f7ad0"
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-7-15/record.py",
+      "sha256": "8a0899a4ce4fd2a16540882e756dcad195680f17c8b1b1a11ac4bffb58181678"
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-7-3/record.py",
+      "sha256": "b4dfd9659a1ea7e2c9e50d44b15b90738d62794a234e8150a7de48a44b9716fb"
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-7-3/tools/differential.py",
+      "sha256": "427bdbb4c6a23645f1c397e7936109041018a52259374a5fb843a7be12593d2d"
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-1/assemble.py",
+      "sha256": "7b939e5d4a4f229ac9090e7e8da5a19097fe5f28122b5b149ea3ae47fcb0bd94"
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-1/consent_differential.py",
+      "sha256": "e7085109eb80e47daa26375d9be810eadd1a9acc09b9d79dd0a9478fb2164762"
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-1/mutate.py",
+      "sha256": "01d7daa5d4f8cccec4f7e0aafd3352e982556a1c84e64444fbbff85c30379cb2"
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-2/assemble_path_intent.py",
+      "sha256": "72cf18c6fb56effdc21e5bf2a8bac1d0804385e750906a56926ce63ff7771851"
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-32/run_record.py",
+      "sha256": "1ebd56f7fc24c84d90eeaee3892e61e861b8eebea7affe5ff8490966abb63785"
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-34/run_record.py",
+      "sha256": "a260e54a6834ad81487f1b7e1e1dcad316868fd3f3b8dcf7e6bb3e4fd0f32cab"
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-36/record.py",
+      "sha256": "3616a2de77927f2c803258498abea98d66baf7ac5f8ffb0d0d458d6cc1129a5d"
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-37/record.py",
+      "sha256": "6f1a80e44e4527f04ad5cf27fb033dcd22c5ab5eef084777748a812d333074b5"
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-38/record.py",
+      "sha256": "b71fde367eacb4111cf84a6e4123d35c161ed5839c39b1cf91fa7894896a5357"
+    },
+    {
+      "path": "packages/polaris-dossier/src/check.ts",
+      "sha256": "503bf61de7d4b383db688fe48b6672820e46c2d25d402b434c26ec8a3194f469"
+    },
+    {
+      "path": "packages/polaris-dossier/src/close.ts",
+      "sha256": "bbf74cba11722a4e45417ab7f368180c7be7b56a0f8c191add07e2f21a5ec771"
+    },
+    {
+      "path": "packages/polaris-dossier/src/inventory.ts",
+      "sha256": "8e1fd6a5514d13db14a35f1afa2dce44e294c67246d32c7259f25004450b1272"
+    },
+    {
+      "path": "packages/polaris-dossier/src/render.ts",
+      "sha256": "75dc0910b51d47155e130be53b642c00443eace47e351791963e6e9699e11521"
+    },
+    {
+      "path": "packages/polaris-dossier/src/review.ts",
+      "sha256": "8f770a0e0aff0311765c698583c3eb107d4d471916c2305311826ff64af4980e"
+    },
+    {
+      "path": "packages/polaris-dossier/src/waiting-sessions.ts",
+      "sha256": "f06ec3c3bb0351adbe3e29d425f36e796730d1525e93e49617dfbe1708fc36e2"
+    },
+    {
+      "path": "packages/polaris-generation-consent/src/package-reader.ts",
+      "sha256": "cb1566140cdf7d02b9991f8564d121e21d90480a791879a74e1889557930f067"
+    },
+    {
+      "path": "scripts/check_evidence_currency.py",
+      "sha256": "cb172796309c6b258ed3c315d17a8cff831eab7fa588d29e7afc6e15b41fb9d2"
+    },
+    {
+      "path": "scripts/pwb_requirement_amendment.py",
+      "sha256": "dd30e113a561ff2b506b211536959e1010bb6fa88d8deaea0d074d219d2a17dc"
+    },
+    {
+      "path": "scripts/redis_screening_remeasure.mjs",
+      "sha256": "03ba1a9c83eed6cf05f3ba49ac5e569fb44cdd6cf6f078b66963625e2f1f45ac"
+    },
+    {
+      "path": "scripts/rerun_rule6_mutants_selected_tests.py",
+      "sha256": "700452c86f756f0df955cad24cdfe36a222b0138b2af23fc36e797487b3fdc2c"
+    },
+    {
+      "path": "scripts/rule6_mutation_runner.py",
+      "sha256": "2bc35be550f0beb6ad355e0fc89719c1ae28320d186f41929af96dd59a376b22"
+    },
+    {
+      "path": "scripts/rule6_timeout_rerun.py",
+      "sha256": "89ee529da96ac4bb2c31af16b060809dc7f51171678c428b88f43b8dae58144d"
+    },
+    {
+      "path": "scripts/run_consent_census_mutants.py",
+      "sha256": "ee74876a7aed5ba35b3bd7066365416f7bf940ae4dbc1e99c6ce499e1e89ac3b"
+    },
+    {
+      "path": "scripts/run_line_slot_rule6_mutants.py",
+      "sha256": "4ce9d52cbb0bec04edb5e3b7716a9af4b9ed047706191bd2abccb1e71eba7ea5"
+    },
+    {
+      "path": "scripts/sweep_consent_act_record_readers.py",
+      "sha256": "ebe90d9ccd97447b8cc5f30e97a740c42095b7034044c8f7c0d2fa6fd1054870"
+    }
+  ],
+  "shape_predicate": "code extension excluding .test.; both JSON/file read and access-shaped mutants/mutations/records/sourceDigestsBefore tokens; lexical candidate discovery only"
+}

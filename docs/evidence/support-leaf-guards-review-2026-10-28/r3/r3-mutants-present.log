@@ -1,0 +1,18 @@
+C0-purity-unmutated expected pass observed pass 33 0 [] ok load1 26.21 wall 2.7
+W5-filter-drops-the-x-forms expected killed observed killed 32 1 ['@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit'] ok load1 26.21 wall 3.2
+W6-test-exclusion-broadened-to-any-test-substring expected killed observed killed 32 1 ['@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit'] ok load1 27.88 wall 2.4
+W7-testkit-exclusion-broadened-to-any-depth expected killed observed killed 32 1 ['@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit'] ok load1 27.25 wall 2.8
+W6b-W6-plus-latest-ts-exporting-node-crypto expected killed observed killed 32 1 ['@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit'] ok load1 27.25 wall 3.3
+W8-test-exclusion-drops-the-dot expected killed observed killed 32 1 ['@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit'] ok load1 28.99 wall 3.9
+W9-testkit-exclusion-any-testkit-substring expected killed observed killed 32 1 ['@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit'] ok load1 28.91 wall 3.6
+V7-import-equals-require-with-a-space expected survives observed survives 33 0 [] ok load1 28.91 wall 3.7
+V9-literal-dynamic-import-of-node-crypto-with-a-space expected survives observed survives 33 0 [] ok load1 29.00 wall 3.1
+V8-local-re-export-of-createHash expected survives observed survives 33 0 [] ok load1 28.60 wall 3.2
+U4-array-destructuring-write expected survives observed survives 33 0 [] ok load1 28.60 wall 4.8
+U5-object-destructuring-write expected survives observed survives 33 0 [] ok load1 29.75 wall 3.7
+U6-for-of-target expected survives observed survives 33 0 [] ok load1 29.37 wall 3.9
+U7-for-in-target expected survives observed survives 33 0 [] ok load1 29.58 wall 2.9
+U8-postfix-increment expected survives observed survives 33 0 [] ok load1 29.58 wall 3.0
+U9-postfix-decrement expected survives observed survives 33 0 [] ok load1 29.85 wall 3.6
+U10-delete expected survives observed survives 33 0 [] ok load1 29.95 wall 4.2
+summary {'rows': 17, 'asExpected': 17, 'unexpected': []} status after ''

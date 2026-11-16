@@ -1,0 +1,32 @@
+{
+ "runs": [
+  {
+   "clone": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head",
+   "commit": "ecea355ba96b0082ad8aad11e9799518f87c2e19",
+   "distDirs": 12,
+   "exit": 0,
+   "passed": 6,
+   "failed": 0,
+   "pending": 1,
+   "bytes": 935757,
+   "sha256": "18172eb2e96de6bb703c3c7110d61d5896853d2c865c2a609e9703dca79b3340",
+   "copy": "/tmp/r545b-8/bd/bundle-0.mjs",
+   "statusAfter": ""
+  },
+  {
+   "clone": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/merge",
+   "commit": "115933f2f487b33b916fe2c62d32c2a1336861c9",
+   "distDirs": 0,
+   "exit": 0,
+   "passed": 6,
+   "failed": 0,
+   "pending": 1,
+   "bytes": 935757,
+   "sha256": "18172eb2e96de6bb703c3c7110d61d5896853d2c865c2a609e9703dca79b3340",
+   "copy": "/tmp/r545b-8/bd/bundle-1.mjs",
+   "statusAfter": ""
+  }
+ ],
+ "identical": true,
+ "diffHead": []
+}

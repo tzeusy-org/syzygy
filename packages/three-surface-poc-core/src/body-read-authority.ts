@@ -22,7 +22,7 @@
 // 55 common owner-act cases decided per authority (× 3 = 165) plus 30
 // authority-specific cases. Every case is one predicate site below,
 // marked `// mutation-point: <case>` on the line before it so that the
-// mutation runner (`apps/three-surface-poc/src/pwb-mutation-runner.ts`)
+// mutation runner (`apps/three-surface-poc/src/pwb-mutation-run-main.ts`)
 // can disable exactly that predicate and prove the independent test
 // notices. The FIRST failing predicate names the case; predicates are
 // ordered so that every case is reachable by a fixture that is wrong in
@@ -34,6 +34,7 @@
 // correlator; a failed, unavailable or indeterminate correlation is
 // invalid and never falls back to state (1).
 
+import { deepFreeze, sha256 } from '@syzygy/support';
 import {
   ACT_IDENTITY,
   ISO_DATE,
@@ -43,12 +44,10 @@ import {
   SHA256,
   SLUG,
   TAG,
-  deepFreeze,
   isGovernancePath,
   isHumanName,
   isIsoDate,
   provenanceFromLabel,
-  sha256,
   type ProvenanceLabel,
 } from './act-fields.js';
 import {
@@ -136,7 +135,7 @@ export const COMMON_INVALID_CASES = [
 ] as const;
 export type CommonInvalidCase = (typeof COMMON_INVALID_CASES)[number];
 
-export const CONSENT_SPECIFIC_CASES = [
+const CONSENT_SPECIFIC_CASES = [
   'observing-project-missing',
   'observing-project-malformed',
   'observing-project-wrong',
@@ -147,7 +146,7 @@ export const CONSENT_SPECIFIC_CASES = [
   'content-class-malformed',
   'content-class-wrong',
 ] as const;
-export const POLICY_SPECIFIC_CASES = [
+const POLICY_SPECIFIC_CASES = [
   'policy-owning-project-missing',
   'policy-owning-project-malformed',
   'policy-owning-project-wrong',
@@ -155,7 +154,7 @@ export const POLICY_SPECIFIC_CASES = [
   'policy-version-malformed',
   'policy-version-wrong',
 ] as const;
-export const REGISTRY_SPECIFIC_CASES = [
+const REGISTRY_SPECIFIC_CASES = [
   'governance-home-missing',
   'governance-home-malformed',
   'governance-home-wrong',
@@ -173,7 +172,7 @@ export const REGISTRY_SPECIFIC_CASES = [
   'write-surface-wrong',
 ] as const;
 
-export type InvalidCaseId =
+type InvalidCaseId =
   | `${AuthorityKind}:${CommonInvalidCase}`
   | `consent:${(typeof CONSENT_SPECIFIC_CASES)[number]}`
   | `policy:${(typeof POLICY_SPECIFIC_CASES)[number]}`
@@ -225,7 +224,7 @@ export interface AuthorityInput {
   readonly recordingTag: RecordingTagResolution;
 }
 
-export interface AuthorityExpectation {
+interface AuthorityExpectation {
   readonly artifactPath: string;
   readonly actIdentity: string;
   readonly actType: string;
@@ -243,7 +242,7 @@ export interface AuthorityExpectation {
   readonly supersession?: SupersessionExpectation;
 }
 
-export type SupersessionExpectation =
+type SupersessionExpectation =
   | { readonly kind: 'none' }
   | { readonly kind: 'supersedes'; readonly target: string };
 
@@ -271,7 +270,7 @@ export interface BodyReadAuthorityExpectations {
 }
 
 export type CorrelationOutcome = 'succeeded' | 'failed' | 'unavailable' | 'indeterminate';
-export interface CorrelationRequest {
+interface CorrelationRequest {
   readonly authority: AuthorityKind;
   readonly actIdentity: string;
   readonly a1Identity: string;
@@ -317,7 +316,7 @@ export type AuthorityState =
       readonly artifactDigest: string | undefined;
     };
 
-export type AuthorizationMode = 'independently-verified' | 'owner-trusted-bootstrap' | 'rejected';
+type AuthorizationMode = 'independently-verified' | 'owner-trusted-bootstrap' | 'rejected';
 
 export interface Rfc316aContradiction {
   readonly clause: 'RFC3-16(a)';
@@ -343,7 +342,9 @@ export interface BodyReadAuthorityEvaluation {
 
 // The owner-act field rules both owner-act evaluators share live in
 // `act-fields.ts`; these two are this gate's own.
-const REPOSITORY_IDENTITY = /^repository:[a-z0-9][a-z0-9-]*$/;
+// REQ-polaris-generation-046's identity grammar (line 15: a-z, 0-9, '.', '_', '-'); an identity is still compared exactly with the configured
+// one, so a well-formed other identity is `wrong`, never admitted (the owner's ruling of 2026-11-14, "Widen all readers now").
+const REPOSITORY_IDENTITY = /^repository:[a-z0-9._-]+$/;
 const SEMVER = /^\d+\.\d+\.\d+(-[0-9A-Za-z.-]+)?$/;
 
 function isString(value: unknown): value is string {

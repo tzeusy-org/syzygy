@@ -1,0 +1,223 @@
+{
+ "tool": "check_removals_mutants.py",
+ "commit": "e54f65c654e59a9c52c848b8e633e9a4ef4942f0",
+ "subject": {
+  "path": "docs/evidence/syzygy-bpyt-4-31/tools/check_removals.py",
+  "sha256": "e12d1f5b274d48de4cd4d5380729aa140b4b74d7af669e9ad5e0ecf789aa84f7"
+ },
+ "inputs": {
+  "decisions-546f1ff0.json": "03f0da52c62ee79a1844b3d8a9273641dc01fd9f8912ea6426f5a973b1f6a92d",
+  "site-durations-head.json": "288c83e60402e5d5e354e95f6675abd3b999e723f4b9bfbe83e55de55632cfdb",
+  "full-runs.json": "6853affccf9ea39dffaaf7de6f76500090a978ba5ee0f09378447f994bd5c91e",
+  "later-observations.json": "0950a337ee82890f21b1bca706bae4acacedba5becd53e94f0d38dc5a386c79a"
+ },
+ "testSite": "apps/three-surface-poc/src/cdp-browser.test.ts:335",
+ "hookSite": "apps/three-surface-poc/src/governing-intent-sweep.test.ts:168",
+ "unmutatedHolding": 48,
+ "unmutatedRows": 58,
+ "killed": 10,
+ "controlsHeld": 3,
+ "rows": [
+  {
+   "id": "M1",
+   "predicate": "alone: worst at or under the threshold",
+   "site": "apps/three-surface-poc/src/cdp-browser.test.ts:335",
+   "change": {
+    "input": "HEAD-SITE-DURATIONS",
+    "path": "rows[3].worstMs",
+    "old": 2,
+    "new": 2501
+   },
+   "expectedHolds": false,
+   "holds": false,
+   "otherRowsUnchanged": true,
+   "outcome": "killed"
+  },
+  {
+   "id": "M2",
+   "predicate": "alone: at least 5 observations",
+   "site": "apps/three-surface-poc/src/cdp-browser.test.ts:335",
+   "change": {
+    "input": "HEAD-SITE-DURATIONS",
+    "path": "rows[3].observations",
+    "old": 5,
+    "new": 4
+   },
+   "expectedHolds": false,
+   "holds": false,
+   "otherRowsUnchanged": true,
+   "outcome": "killed"
+  },
+  {
+   "id": "M3",
+   "predicate": "alone: every observation passed",
+   "site": "apps/three-surface-poc/src/cdp-browser.test.ts:335",
+   "change": {
+    "input": "HEAD-SITE-DURATIONS",
+    "path": "rows[3].anyFailed",
+    "old": false,
+    "new": true
+   },
+   "expectedHolds": false,
+   "holds": false,
+   "otherRowsUnchanged": true,
+   "outcome": "killed"
+  },
+  {
+   "id": "M4",
+   "predicate": "alone: a hook is held to its own threshold",
+   "site": "apps/three-surface-poc/src/governing-intent-sweep.test.ts:168",
+   "change": {
+    "input": "HEAD-SITE-DURATIONS",
+    "path": "rows[38].worstMs",
+    "old": 230,
+    "new": 5001
+   },
+   "expectedHolds": false,
+   "holds": false,
+   "otherRowsUnchanged": true,
+   "outcome": "killed"
+  },
+  {
+   "id": "M5",
+   "predicate": "full: a test's own line at or under the threshold",
+   "site": "apps/three-surface-poc/src/cdp-browser.test.ts:335",
+   "change": {
+    "input": "FULL-RUNS",
+    "path": "runs[1].files[33].slowTests[13].ms",
+    "old": 1,
+    "new": 2501
+   },
+   "expectedHolds": false,
+   "holds": false,
+   "otherRowsUnchanged": true,
+   "outcome": "killed"
+  },
+  {
+   "id": "M6",
+   "predicate": "full: a test's own line is a pass",
+   "site": "apps/three-surface-poc/src/cdp-browser.test.ts:335",
+   "change": {
+    "input": "FULL-RUNS",
+    "path": "runs[1].files[33].slowTests[13].mark",
+    "old": "✓",
+    "new": "×"
+   },
+   "expectedHolds": false,
+   "holds": false,
+   "otherRowsUnchanged": true,
+   "outcome": "killed"
+  },
+  {
+   "id": "M7",
+   "predicate": "full: no line bounds nothing in a file with a failure",
+   "site": "apps/three-surface-poc/src/cdp-browser.test.ts:335",
+   "change": {
+    "input": "FULL-RUNS",
+    "path": "runs[0].files[7]",
+    "old": [
+     "✓",
+     0
+    ],
+    "new": [
+     "❯",
+     0
+    ]
+   },
+   "expectedHolds": false,
+   "holds": false,
+   "otherRowsUnchanged": true,
+   "outcome": "killed"
+  },
+  {
+   "id": "M8",
+   "predicate": "full: a hook's file time less its tests at or under the threshold",
+   "site": "apps/three-surface-poc/src/governing-intent-sweep.test.ts:168",
+   "change": {
+    "input": "FULL-RUNS",
+    "path": "runs[0].files[17]",
+    "old": 1025,
+    "new": 5001
+   },
+   "expectedHolds": false,
+   "holds": false,
+   "otherRowsUnchanged": true,
+   "outcome": "killed"
+  },
+  {
+   "id": "M9",
+   "predicate": "full: a file missing from a run bounds nothing",
+   "site": "apps/three-surface-poc/src/cdp-browser.test.ts:335",
+   "change": {
+    "input": "FULL-RUNS",
+    "path": "runs[0].files[7]",
+    "old": "apps/three-surface-poc/src/cdp-browser.test.ts",
+    "new": null
+   },
+   "expectedHolds": false,
+   "holds": false,
+   "otherRowsUnchanged": true,
+   "outcome": "killed"
+  },
+  {
+   "id": "C1",
+   "predicate": "control: an alone worst exactly at the threshold holds",
+   "site": "apps/three-surface-poc/src/cdp-browser.test.ts:335",
+   "change": {
+    "input": "HEAD-SITE-DURATIONS",
+    "path": "rows[3].worstMs",
+    "old": 2,
+    "new": 2500
+   },
+   "expectedHolds": true,
+   "holds": true,
+   "otherRowsUnchanged": true,
+   "outcome": "control held"
+  },
+  {
+   "id": "M10",
+   "predicate": "later: an observation past the threshold refutes the removal",
+   "site": "apps/three-surface-poc/src/governing-intent-sweep.test.ts:168",
+   "change": {
+    "input": "LATER",
+    "path": "rows[site=apps/three-surface-poc/src/governing-intent-sweep.test.ts:168].worstMs",
+    "old": null,
+    "new": 5001
+   },
+   "expectedHolds": false,
+   "holds": false,
+   "otherRowsUnchanged": true,
+   "outcome": "killed"
+  },
+  {
+   "id": "C2",
+   "predicate": "control: a hook's file time less its tests exactly at the threshold holds",
+   "site": "apps/three-surface-poc/src/governing-intent-sweep.test.ts:168",
+   "change": {
+    "input": "FULL-RUNS",
+    "path": "runs[0].files[17]",
+    "old": 1025,
+    "new": 5000
+   },
+   "expectedHolds": true,
+   "holds": true,
+   "otherRowsUnchanged": true,
+   "outcome": "control held"
+  },
+  {
+   "id": "C3",
+   "predicate": "control: a later observation exactly at the threshold holds",
+   "site": "apps/three-surface-poc/src/governing-intent-sweep.test.ts:168",
+   "change": {
+    "input": "LATER",
+    "path": "rows[site=apps/three-surface-poc/src/governing-intent-sweep.test.ts:168].worstMs",
+    "old": null,
+    "new": 5000
+   },
+   "expectedHolds": true,
+   "holds": true,
+   "otherRowsUnchanged": true,
+   "outcome": "control held"
+  }
+ ]
+}

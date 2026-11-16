@@ -1,0 +1,54 @@
+{
+ "commit": "9dba258992667f62ad503ec76d8a6b99efcc4bac",
+ "command": "npx tsc -b apps/three-surface-poc",
+ "references": [
+  "../../packages/cap1-daemon",
+  "../../packages/http-host",
+  "../../packages/three-surface-poc-core",
+  "../../packages/polaris-generation-core",
+  "../../packages/polaris-generation-consent",
+  "../../packages/support"
+ ],
+ "builds": [
+  {
+   "label": "plain",
+   "distBefore": [],
+   "exit": 0,
+   "distAfter": [
+    "apps/three-surface-poc/dist",
+    "packages/cap1-core/dist",
+    "packages/cap1-daemon/dist",
+    "packages/http-host/dist",
+    "packages/polaris-generation-consent/dist",
+    "packages/polaris-generation-core/dist",
+    "packages/support/dist",
+    "packages/three-surface-poc-core/dist"
+   ],
+   "errors": [],
+   "outputLines": 0
+  },
+  {
+   "label": "mutant",
+   "distBefore": [],
+   "exit": 0,
+   "distAfter": [
+    "apps/three-surface-poc/dist",
+    "packages/cap1-core/dist",
+    "packages/cap1-daemon/dist",
+    "packages/http-host/dist",
+    "packages/polaris-generation-consent/dist",
+    "packages/polaris-generation-core/dist",
+    "packages/support/dist",
+    "packages/three-surface-poc-core/dist"
+   ],
+   "errors": [],
+   "outputLines": 0,
+   "mutant": {
+    "file": "apps/three-surface-poc/src/routes.test.ts",
+    "old": "import { afterEach, describe, expect, it, vi } from 'vitest';\n",
+    "new": "import { afterEach, describe, expect, it, vi } from 'vitest';\nimport type { RouteContext as Cap1RouteContext } from '@syzygy/cap1-daemon';\nexport type Cap1Context = Cap1RouteContext;\n"
+   }
+  }
+ ],
+ "cleanAfter": true
+}

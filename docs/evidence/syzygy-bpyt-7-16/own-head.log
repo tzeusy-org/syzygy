@@ -1,0 +1,5 @@
+O1-bearer-no-break-space-admitted: killed exit=1 failed=1/582 files=1 timeouts=0 25.7s clean=True
+     packages/http-host/src/credentials.test.ts > RT3 — credential verification through core admission the minted token behind any other whitespace refuses, named
+O2-origin-null-allowed: killed exit=1 failed=1/582 files=1 timeouts=0 25.8s clean=True
+     apps/three-surface-poc/src/browser-origin.test.ts > browserRequestAllowed — the Origin is compared whole refuses an origin that only ends with the host origin, and the opaque origin null
+killed 2 survived 0 error 0 of 2

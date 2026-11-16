@@ -1,0 +1,113 @@
+{
+ "subject": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-522b/clone/docs/evidence/scratch-prefix-census-2026-10-23/assemble_census.py",
+ "mutants": {
+  "gap-from-first-sightings-only": {
+   "old": "for edge in ('first', 'last')})",
+   "new": "for edge in ('first',)})",
+   "killedByTheFixture": true,
+   "fixtureStopped": false,
+   "fixtureDiverges": [
+    "aggregate: exposure",
+    "aggregate: gap"
+   ]
+  },
+  "gap-takes-the-smallest-single-gap": {
+   "old": "return {'gapSeconds': max(single, default=interval),",
+   "new": "return {'gapSeconds': min(single, default=interval),",
+   "killedByTheFixture": true,
+   "fixtureStopped": false,
+   "fixtureDiverges": [
+    "aggregate: exposure",
+    "aggregate: gap"
+   ]
+  },
+  "sampler-only-names-dropped-from-exposure": {
+   "old": "for name in set(entries) | set(index.seen):",
+   "new": "for name in set(index.seen):",
+   "killedByTheFixture": true,
+   "fixtureStopped": false,
+   "fixtureDiverges": [
+    "aggregate: exposure"
+   ]
+  },
+  "sum-check-only-catches-too-many": {
+   "old": "if sum(n for _, n in parts) != len(table):",
+   "new": "if sum(n for _, n in parts) > len(table):",
+   "killedByTheFixture": true,
+   "fixtureStopped": false,
+   "fixtureDiverges": [
+    "aggregate: partitionStopsOnARuleNobodyListed"
+   ]
+  },
+  "kill-leftover-count-doubled": {
+   "old": "slot['entries'] += 1",
+   "new": "slot['entries'] += 2",
+   "killedByTheFixture": false,
+   "fixtureStopped": false,
+   "realRecordPathsChanged": 121,
+   "realRecordPathGroups": [
+    "/finding[]",
+    "/leftBySIGKILL[]/afterTheNextFreshRun/f1-fresh-after-k1/leftBySIGKILL",
+    "/leftBySIGKILL[]/afterTheNextFreshRun/f1-fresh-after-k1/stillThere",
+    "/leftBySIGKILL[]/afterTheNextFreshRun/f2-fresh-after-k2/leftBySIGKILL",
+    "/leftBySIGKILL[]/afterTheNextFreshRun/f2-fresh-after-k2/stillThere",
+    "/leftBySIGKILL[]/afterTheNextFreshRun/f3-fresh-after-k3/leftBySIGKILL",
+    "/leftBySIGKILL[]/afterTheNextFreshRun/f3-fresh-after-k3/stillThere",
+    "/leftBySIGKILL[]/leftAfterCleanRun/c0-clean/entries",
+    "/leftBySIGKILL[]/leftAfterSIGKILL/k1-kill-40s/entries",
+    "/leftBySIGKILL[]/leftAfterSIGKILL/k2-kill-75s/entries",
+    "/leftBySIGKILL[]/leftAfterSIGKILL/k3-kill-115s/entries",
+    "/leftBySIGKILL[]/leftByTheFreshRunItself/f1-fresh-after-k1/entries"
+   ]
+  },
+  "kill-leftovers-not-reported": {
+   "old": "'leftAfterSIGKILL': killed_left,",
+   "new": "'leftAfterSIGKILL': {},",
+   "killedByTheFixture": false,
+   "fixtureStopped": false,
+   "realRecordPathsChanged": 10,
+   "realRecordPathGroups": [
+    "/classCounts/leftBySomeSIGKILL",
+    "/classCounts/neverLeftInTheseKills",
+    "/finding[]",
+    "/leftBySIGKILL",
+    "/namedInTheBeadObservation/chrome-singleton-directory/leftInAnyOfTheKills",
+    "/namedInTheBeadObservation/syzygy-build-output-/leftInAnyOfTheKills",
+    "/namedInTheBeadObservation/syzygy-poc-browser-/leftInAnyOfTheKills",
+    "/namedInTheBeadObservation/syzygy-poc-surface-fixture-p<pid>-n<ns>-/leftInAnyOfTheKills",
+    "/neverLeftInTheseKills"
+   ]
+  },
+  "seed-entries-counted-as-the-runs-own": {
+   "old": "slot = item['leftFromSeed' if name in seed_names else 'leftAtEnd']",
+   "new": "slot = item['leftAtEnd']",
+   "killedByTheFixture": false,
+   "fixtureStopped": false,
+   "realRecordPathsChanged": 104,
+   "realRecordPathGroups": [
+    "/finding[]",
+    "/leftBySIGKILL[]/afterTheNextFreshRun/f1-fresh-after-k1/bytesStillThere",
+    "/leftBySIGKILL[]/afterTheNextFreshRun/f1-fresh-after-k1/stillThere",
+    "/leftBySIGKILL[]/afterTheNextFreshRun/f2-fresh-after-k2/bytesStillThere",
+    "/leftBySIGKILL[]/afterTheNextFreshRun/f2-fresh-after-k2/stillThere",
+    "/leftBySIGKILL[]/afterTheNextFreshRun/f3-fresh-after-k3/bytesStillThere",
+    "/leftBySIGKILL[]/afterTheNextFreshRun/f3-fresh-after-k3/stillThere",
+    "/leftBySIGKILL[]/leftByTheFreshRunItself/f1-fresh-after-k1",
+    "/leftBySIGKILL[]/leftByTheFreshRunItself/f1-fresh-after-k1/entries",
+    "/leftBySIGKILL[]/leftByTheFreshRunItself/f1-fresh-after-k1/oldestMtime",
+    "/leftBySIGKILL[]/leftByTheFreshRunItself/f2-fresh-after-k2",
+    "/leftBySIGKILL[]/leftByTheFreshRunItself/f2-fresh-after-k2/entries"
+   ]
+  },
+  "mkdtemp-count-includes-derived": {
+   "old": "sum(1 for r in table if r['family'] == 'mkdtemp')",
+   "new": "sum(1 for r in table if r['family'] in ('mkdtemp', 'derived'))",
+   "killedByTheFixture": false,
+   "fixtureStopped": false,
+   "realRecordPathsChanged": 1,
+   "realRecordPathGroups": [
+    "/finding[]"
+   ]
+  }
+ }
+}

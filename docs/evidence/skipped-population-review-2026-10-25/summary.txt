@@ -1,0 +1,85 @@
+S1                                 n=0 head=1e444071 exit=1 counts={'failed': 1} check=failed 1319ms survivors=0 sessions=2 load1=13.86 clean=True
+S1-fc                              n=0 head=1e444071 exit=1 counts={'failed': 1} check=failed 1420ms survivors=0 sessions=2 load1=13.23 clean=True
+S1-merged-literal                  n=0 head=1e444071 exit=1 counts={'failed': 1} check=failed 3851ms survivors=0 sessions=2 load1=27.18 clean=True
+api-renamed                        n=0 head=1e444071 exit=1 counts={'failed': 1} check=failed 396ms survivors=0 sessions=2 load1=25.33 clean=True
+conditional-registration           n=0 head=1e444071 exit=0 counts={'passed': 1} check=passed 2289ms survivors=0 sessions=2 load1=29.39 clean=True
+config-exclude                     n=0 head=1e444071 exit=0 counts={'passed': 1} check=passed 3856ms survivors=0 sessions=2 load1=29.24 clean=True
+config-include-narrowed            n=0 head=1e444071 exit=0 counts={'passed': 1} check=passed 1833ms survivors=0 sessions=2 load1=29.25 clean=True
+control                            n=0 head=1e444071 exit=0 counts={'passed': 1} check=passed 2503ms survivors=0 sessions=2 load1=28.91 clean=True
+control                            n=1 head=1e444071 exit=0 counts={'passed': 1} check=passed 2063ms survivors=0 sessions=2 load1=28.55 clean=True
+control                            n=2 head=1e444071 exit=0 counts={'passed': 1} check=passed 2303ms survivors=0 sessions=2 load1=31.63 clean=True
+control                            n=3 head=1e444071 exit=0 counts={'passed': 1} check=passed 2193ms survivors=0 sessions=2 load1=30.77 clean=True
+control                            n=4 head=1e444071 exit=0 counts={'passed': 1} check=passed 2362ms survivors=0 sessions=2 load1=32.15 clean=True
+control                            n=5 head=1e444071 exit=0 counts={'passed': 1} check=passed 4924ms survivors=0 sessions=2 load1=50.84 clean=True
+control                            n=6 head=1e444071 exit=0 counts={'passed': 1} check=passed 6038ms survivors=0 sessions=2 load1=56.87 clean=True
+control                            n=7 head=1e444071 exit=0 counts={'passed': 1} check=passed 5185ms survivors=0 sessions=2 load1=59.02 clean=True
+control-ci                         n=0 head=1e444071 exit=0 counts={'passed': 1} check=passed 1372ms survivors=0 sessions=2 load1=13.85 clean=True
+control-fc                         n=0 head=1e444071 exit=0 counts={'passed': 1} check=passed 1793ms survivors=0 sessions=2 load1=29.28 clean=True
+control-fc                         n=1 head=1e444071 exit=0 counts={'passed': 1} check=passed 2029ms survivors=0 sessions=2 load1=28.78 clean=True
+control-fc                         n=2 head=1e444071 exit=0 counts={'passed': 1} check=passed 3564ms survivors=0 sessions=2 load1=28.20 clean=True
+control-fc                         n=3 head=1e444071 exit=0 counts={'passed': 1} check=passed 3085ms survivors=0 sessions=2 load1=27.70 clean=True
+control-fc                         n=4 head=1e444071 exit=0 counts={'passed': 1} check=passed 4074ms survivors=0 sessions=2 load1=31.81 clean=True
+describe-skip                      n=0 head=1e444071 exit=1 counts={'failed': 1} check=failed 2352ms survivors=0 sessions=2 load1=16.52 clean=True
+describe-skipIf                    n=0 head=1e444071 exit=1 counts={'failed': 1} check=failed 2531ms survivors=0 sessions=2 load1=19.31 clean=True
+describe-todo                      n=0 head=1e444071 exit=0 counts={'passed': 1} check=passed 3008ms survivors=0 sessions=2 load1=27.79 clean=True
+describe-todo-existing             n=0 head=1e444071 exit=1 counts={'failed': 1} check=failed 3893ms survivors=0 sessions=2 load1=26.11 clean=True
+each-empty                         n=0 head=1e444071 exit=0 counts={'passed': 1} check=passed 3227ms survivors=0 sessions=2 load1=28.30 clean=True
+exit-nonzero                       n=0 head=1e444071 exit=1 counts={'failed': 1} check=failed 2654ms survivors=0 sessions=2 load1=31.97 clean=True
+exit-nonzero-no-code-check         n=0 head=1e444071 exit=0 counts={'passed': 1} check=passed 2767ms survivors=0 sessions=2 load1=34.61 clean=True
+expected-widened                   n=0 head=1e444071 exit=1 counts={'failed': 1} check=failed 2377ms survivors=0 sessions=2 load1=24.05 clean=True
+expected-widened-S1                n=0 head=1e444071 exit=0 counts={'passed': 1} check=passed 3012ms survivors=0 sessions=2 load1=25.08 clean=True
+fileset-config-exclude             n=0 head=1e444071 exit=1 counts={'failed': 1} check=failed 2793ms survivors=0 sessions=2 load1=33.34 clean=True
+fileset-config-include-narrowed    n=0 head=1e444071 exit=1 counts={'failed': 1} check=failed 3314ms survivors=0 sessions=2 load1=35.15 clean=True
+fileset-control                    n=0 head=1e444071 exit=0 counts={'passed': 1} check=passed 3188ms survivors=0 sessions=2 load1=33.36 clean=True
+full                               n=0 head=1e444071 exit=0 counts={'passed': 48, 'skipped': 1} check=passed 5542ms survivors=0 sessions=2 load1=20.68 clean=True
+full                               n=1 head=1e444071 exit=0 counts={'passed': 48, 'skipped': 1} check=passed 4785ms survivors=0 sessions=2 load1=24.28 clean=True
+full                               n=2 head=1e444071 exit=0 counts={'passed': 48, 'skipped': 1} check=passed 3263ms survivors=0 sessions=2 load1=26.25 clean=True
+full                               n=3 head=1e444071 exit=0 counts={'passed': 48, 'skipped': 1} check=passed 5204ms survivors=0 sessions=2 load1=26.63 clean=True
+full                               n=4 head=1e444071 exit=0 counts={'passed': 48, 'skipped': 1} check=passed 4275ms survivors=0 sessions=2 load1=29.85 clean=True
+full-conditional-registration      n=0 head=1e444071 exit=0 counts={'passed': 47, 'skipped': 1} check=passed 3676ms survivors=0 sessions=2 load1=35.56 clean=True
+full-config-exclude                n=0 head=1e444071 exit=0 counts={'passed': 47, 'skipped': 1} check=passed 4852ms survivors=0 sessions=2 load1=36.02 clean=True
+full-each-empty                    n=0 head=1e444071 exit=1 counts={'passed': 47, 'skipped': 1} check=passed 5243ms survivors=0 sessions=2 load1=37.33 clean=True
+full-fc                            n=0 head=1e444071 exit=0 counts={'passed': 49} check=passed 4966ms survivors=0 sessions=2 load1=30.37 clean=True
+full-fc                            n=1 head=1e444071 exit=0 counts={'passed': 49} check=passed 4007ms survivors=0 sessions=2 load1=29.36 clean=True
+full-fc                            n=2 head=1e444071 exit=0 counts={'passed': 49} check=passed 5289ms survivors=0 sessions=2 load1=25.41 clean=True
+full-fc                            n=3 head=1e444071 exit=0 counts={'passed': 49} check=passed 8901ms survivors=0 sessions=2 load1=26.60 clean=True
+full-fc                            n=4 head=1e444071 exit=0 counts={'passed': 49} check=passed 4590ms survivors=0 sessions=2 load1=26.19 clean=True
+full-fc-merged                     n=0 head=1e444071 exit=0 counts={'passed': 49} check=passed 4108ms survivors=0 sessions=2 load1=28.77 clean=True
+full-it-only                       n=0 head=1e444071 exit=0 counts={'passed': 48, 'skipped': 1} check=passed 4363ms survivors=0 sessions=2 load1=40.45 clean=True
+full-merged                        n=0 head=1e444071 exit=0 counts={'passed': 48, 'skipped': 1} check=passed 3725ms survivors=0 sessions=2 load1=26.31 clean=True
+full-runtime-ctx-skip              n=0 head=1e444071 exit=0 counts={'passed': 47, 'skipped': 2} check=passed 4956ms survivors=0 sessions=2 load1=41.13 clean=True
+guard-narrowed                     n=0 head=1e444071 exit=1 counts={'failed': 1} check=failed 2168ms survivors=0 sessions=2 load1=17.34 clean=True
+hang                               n=0 head=1e444071 exit=1 counts={'failed': 1} check=failed 45226ms survivors=0 sessions=2 load1=39.46 clean=True
+hang-interrupted                   n=0 head=1e444071 exit=1 counts={} check=None Nonems survivors=13 sessions=2 load1=46.95 clean=True
+import-fails                       n=0 head=1e444071 exit=1 counts={'failed': 1} check=failed 2575ms survivors=0 sessions=2 load1=27.68 clean=True
+import-fails-no-errors-check       n=0 head=1e444071 exit=1 counts={'failed': 1} check=failed 3754ms survivors=0 sessions=2 load1=25.95 clean=True
+import-fails-no-errors-check-fc    n=0 head=1e444071 exit=1 counts={'failed': 1} check=failed 3101ms survivors=0 sessions=2 load1=26.16 clean=True
+it-concurrent-skip                 n=0 head=1e444071 exit=1 counts={'failed': 1} check=failed 2584ms survivors=0 sessions=2 load1=27.07 clean=True
+it-only                            n=0 head=1e444071 exit=0 counts={'passed': 1} check=passed 4181ms survivors=0 sessions=2 load1=22.37 clean=True
+it-only-ci                         n=0 head=1e444071 exit=1 counts={'failed': 1} check=failed 3988ms survivors=0 sessions=2 load1=26.85 clean=True
+it-only-credentials                n=0 head=1e444071 exit=1 counts={'failed': 1} check=failed 2539ms survivors=0 sessions=2 load1=25.84 clean=True
+it-only-credentials-ci             n=0 head=1e444071 exit=1 counts={'failed': 1} check=failed 2458ms survivors=0 sessions=2 load1=25.68 clean=True
+it-runIf-false                     n=0 head=1e444071 exit=1 counts={'failed': 1} check=failed 3029ms survivors=0 sessions=2 load1=20.00 clean=True
+it-skip                            n=0 head=1e444071 exit=1 counts={'failed': 1} check=failed 4158ms survivors=0 sessions=2 load1=14.89 clean=True
+it-todo                            n=0 head=1e444071 exit=1 counts={'failed': 1} check=failed 3739ms survivors=0 sessions=2 load1=27.58 clean=True
+lifeline-control                   n=0 head=1e444071 exit=0 counts={'passed': 1} check=passed 3113ms survivors=0 sessions=2 load1=48.18 clean=True
+lifeline-hang                      n=0 head=1e444071 exit=1 counts={'failed': 1} check=failed 45107ms survivors=0 sessions=2 load1=39.57 clean=True
+lifeline-hang-interrupted          n=0 head=1e444071 exit=1 counts={} check=None Nonems survivors=0 sessions=2 load1=46.44 clean=True
+main-merge-fc                      n=0 head=4603311b exit=0 counts={'passed': 49} check=passed 8314ms survivors=0 sessions=2 load1=38.48 clean=True
+main-merge-full                    n=0 head=4603311b exit=0 counts={'passed': 48, 'skipped': 1} check=passed 7907ms survivors=0 sessions=2 load1=28.97 clean=True
+main-merge-shim                    n=0 head=4603311b exit=0 counts={'passed': 47, 'skipped': 2} check=passed 3728ms survivors=0 sessions=2 load1=32.32 clean=True
+noshim-merged                      n=0 head=1e444071 exit=0 counts={'passed': 48, 'skipped': 1} check=passed 2493ms survivors=0 sessions=2 load1=30.28 clean=True
+real-merge-fc                      n=0 head=1bb5a921 exit=0 counts={'passed': 49} check=passed 3157ms survivors=0 sessions=2 load1=24.45 clean=True
+real-merge-full                    n=0 head=1bb5a921 exit=0 counts={'passed': 48, 'skipped': 1} check=passed 3296ms survivors=0 sessions=2 load1=26.01 clean=True
+real-merge-shim                    n=0 head=1bb5a921 exit=0 counts={'passed': 47, 'skipped': 2} check=passed 3487ms survivors=0 sessions=2 load1=24.58 clean=True
+runtime-ctx-skip                   n=0 head=1e444071 exit=0 counts={'passed': 1} check=passed 2309ms survivors=0 sessions=2 load1=30.27 clean=True
+shim-merged                        n=0 head=1e444071 exit=0 counts={'passed': 47, 'skipped': 2} check=passed 5116ms survivors=0 sessions=2 load1=29.19 clean=True
+shim-subject                       n=0 head=1e444071 exit=1 counts={'passed': 47, 'skipped': 1, 'failed': 1} check=failed 3397ms survivors=0 sessions=2 load1=29.32 clean=True
+skipIf-process                     n=0 head=1e444071 exit=1 counts={'failed': 1} check=failed 2172ms survivors=0 sessions=2 load1=18.68 clean=True
+state-renamed-fc                   n=0 head=1e444071 exit=0 counts={'passed': 1} check=passed 2531ms survivors=0 sessions=2 load1=25.14 clean=True
+state-renamed-fc-S1                n=0 head=1e444071 exit=0 counts={'passed': 1} check=passed 3148ms survivors=0 sessions=2 load1=28.19 clean=True
+test-skip                          n=0 head=1e444071 exit=1 counts={'failed': 1} check=failed 2316ms survivors=0 sessions=2 load1=18.54 clean=True
+vacuous-census-fc                  n=0 head=1e444071 exit=1 counts={'failed': 1} check=failed 2316ms survivors=0 sessions=2 load1=25.87 clean=True
+vacuous-census-fc-no-self-check    n=0 head=1e444071 exit=0 counts={'passed': 1} check=passed 2139ms survivors=0 sessions=2 load1=25.31 clean=True
+runs: 83
+unmutated runs: 31, check passed in 31; check-row ms min 1372 max 8901 (max at full-fc#3); load1 range 13.85-59.28

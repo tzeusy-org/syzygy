@@ -1,0 +1,52 @@
+
+ RUN  v3.2.7 /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone
+
+ ✓ |@syzygy/polaris-generation-core| packages/polaris-generation-core/src/dossier-evaluation.test.ts (33 tests) 216ms
+ ✓ |@syzygy/polaris-generation-core| packages/polaris-generation-core/src/dossier-profile.test.ts (19 tests) 843ms
+   ✓ REQ-031 clarification > counts default-ignorable and zero-width-split text as blank or unknown, and trims a long run of spaces in linear time  430ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/test-artifact-verification.test.ts (37 tests) 2057ms
+   ✓ parseJUnitRootTotals > scans unterminated plural tags at the ceiling in linear time  612ms
+   ✓ parseJUnitRootTotals > scans one tag body that is a single word run at the ceiling in linear time  983ms
+ ✓ |@syzygy/polaris-generation-core| packages/polaris-generation-core/src/excerpt.test.ts (38 tests) 114ms
+ ✓ |@syzygy/polaris-dossier| packages/polaris-dossier/src/subpath-imports.test.ts (27 tests) 6797ms
+   ✓ the subpaths the daemon entry imports > are /argv and /state-directory, imported statically, and the barrel only dynamically inside the dossier and polaris branches  1606ms
+   ✓ the subpaths the daemon entry imports > ./argv is packages/polaris-dossier/src/argv.ts, which imports exactly ["node:util"]  980ms
+   ✓ the daemon path, every module the entry reaches outside its dossier and polaris branches > leaves the entry by every edge but the four dynamic imports inside those branches  3431ms
+ ✓ |@syzygy/polaris-generation-core| packages/polaris-generation-core/src/island-boundary.test.ts (4 tests) 7317ms
+   ✓ the syzygy CLI and the parked provider island > resolves every workspace import the CLI reaches, dynamic ones included  4620ms
+   ✓ the syzygy CLI and the parked provider island > reaches no island module from the CLI entry  2618ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/main.test.ts (24 tests) 2275ms
+   ✓ main(argv, io): the bound locator reaches every repository-rooted argument > reads the exact requirement text from the bound repository  1845ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/capture-test-artifact-main.test.ts (52 tests) 11522ms
+   ✓ capture-test-artifact never starts the observed project (source check) > names no other way to start a process, in the tool or the core module it calls  1998ms
+   ✓ capture-test-artifact never starts the observed project (source check) > the tree check refuses globalThis.process.stdout.write('');  783ms
+   ✓ capture-test-artifact never starts the observed project (run check) > print writes the command for the operator and runs nothing  4111ms
+   ✓ capture-test-artifact never starts the observed project (run check) > ingest reads back the handed-in file, binds the current commit, and runs nothing  357ms
+   ✓ capture-test-artifact never starts the observed project (run check) > refuses a FIFO without opening it, so a pipe nobody writes cannot hang the ingest  703ms
+   ✓ capture-test-artifact never starts the observed project (run check) > refuses a symlink, even to a well-formed result file  917ms
+   ✓ capture-test-artifact never starts the observed project (run check) > refuses a file over the ceiling before reading it  436ms
+Usage: poc:redis-shaped-discovery [--out <file>]
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/polaris-generation/redis-shaped-discovery.test.ts (14 tests) 14220ms
+   ✓ discovery on a synthetic tree shaped like a large C key-value server > writes the measurement through the command and refuses to overwrite it  4934ms
+ ✓ |@syzygy/polaris-dossier| packages/polaris-dossier/src/git-object-reader.test.ts (60 tests) 114898ms
+   ✓ reads at the pinned revision, from loose objects and packs, every object re-hashed > resolves offset deltas and reference deltas in packs to the same bytes  636ms
+   ✓ the clone's .git is untrusted: what an agent can plant there is refused or ignored > a replace ref is never honoured: the original bytes are read  452ms
+   ✓ the clone's .git is untrusted: what an agent can plant there is refused or ignored > an alternates file is never followed: an object only an alternate holds refuses  630ms
+   ✓ paths, types, and no state between calls > a path that is absent, a directory, a submodule or malformed refuses  1032ms
+   ✓ nothing under .git is read through a link or from a special file (R-POLARIS-DOSSIER-S2-READER-1 finding 2) > a loose object that is a link to a FIFO, a FIFO, a directory or a link to a device refuses at once, never blocks  914ms
+   ✓ each call is bounded: bytes inflated, delta depth, objects visited (finding 4) > the reviewer's amplification shape, 100 levels over a 64 MiB base, refuses within the default per-call budget  29215ms
+   ✓ each call is bounded: bytes inflated, delta depth, objects visited (finding 4) > a delta chain one past the depth cap refuses, by default (1,000) and as a parameter; at the cap it reads  932ms
+   ✓ pack and delta malformations, each predicate (finding 5) > a delta with a truncated header, an out-of-range copy or insert, or opcode 0 refuses  595ms
+   ✓ pack and delta malformations, each predicate (finding 5) > a pack entry with an endless size header, an endless base offset or an unknown type refuses  301ms
+   ✓ pack and delta malformations, each predicate (finding 5) > a reference delta reads over a loose base and refuses when its base is absent  394ms
+   ✓ stored bytes are bounded and charged: padding buys no work (R-POLARIS-DOSSIER-S2-READER-2 finding 1) > the reviewer's padded loose base: reference deltas over a loose base padded by 4 MiB refuse at once  650ms
+   ✓ a large valid store lists, and a reader defect is not blamed on the store (R-POLARIS-DOSSIER-S2-READER-2 finding 2, note 6) > a subdirectory of 200,000 entries lists: a subtree is never spread into call arguments  1934ms
+   ✓ a large valid store lists, and a reader defect is not blamed on the store (R-POLARIS-DOSSIER-S2-READER-2 finding 2, note 6) > an error that is not a filesystem error refuses as reader-fault, never store-unreadable  342ms
+   ✓ paths are at most git's core.maxTreeDepth (4,096) segments deep (R-POLARIS-DOSSIER-S2-READER-3 note 1) > a path of 4,096 segments reads and lists; a missing path below names its full prefix  49311ms
+   ✓ paths are at most git's core.maxTreeDepth (4,096) segments deep (R-POLARIS-DOSSIER-S2-READER-3 note 1) > a path of 4,097 segments refuses before any read, and listTree refuses the tree nested past the cap  21004ms
+
+ Test Files  10 passed (10)
+      Tests  308 passed (308)
+   Start at  09:05:23
+   Duration  122.01s (transform 47.84s, setup 4.31s, collect 100.02s, tests 160.26s, environment 7ms, prepare 7.48s)
+

@@ -1,0 +1,71 @@
+## Outcome
+
+[Observed] Follow-ups to #530 (bead `syzygy-bpyt.6.13`; notes N1, N2, N5 and N12 of review R-GP-IMPL-SUPPORT-LEAF-1/-2, kept with #530's landing). Items 1, 3, 4 and 6 of the bead; items 2, 5 and 7 apply on a tool's next reuse and are not in this PR. Behaviour-preserving only (GP-Q0).
+
+- **Item 3 (N5).** `scripts/check_generator_install.mjs` also requires `node_modules/@syzygy/support`. A checkout that has `tsc` and the generation core but never ran `npm ci` after #530 was exit 0 and failed later at the first import; it is now refused with the same message and exit 1. The script had no test (`git grep -F check_generator_install` over tracked tests returns 0 at the base); `generator-install-check.test.ts` (6 tests) runs it in fixture directories.
+- **Item 4 (N1), half done.** The walkthrough-judgment fixture (`test-walkthrough-judgment-fixture.ts`) takes `sha256` from `@syzygy/support`. `junitDigest` (`test-artifact-verification.ts`) does not. The first version of this PR converted both, and the hosted `node` check failed at `663061c4`: `capture-test-artifact-main.test.ts` pins that file's imports to `node:crypto`, `node:fs` and `node:path` (the live-verification no-spawn source check, a class-4 guard), and `@syzygy/support` is not on its list. Widening the list changes what a gate accepts, which GP-Q0's stop clause sends to the owner, so the coordinator ruled the `junitDigest` half reverted and the allowlist untouched. `test-artifact-verification.ts` is byte-equal to its `f7477f52` blob again; its local `createHash('sha256')` digest is a justified residual. Sweep, re-derived at `c7ed9ef2`: under the #530 name rule (`test-*.ts` basenames are test support) 6 sites and 1 local definition, unchanged (neither file was ever in that population); under the reachability rule (a `test-*.ts` file comes back if a non-test file imports it) the sites go 8 to 7 and the local `sha256` definitions 2 to 1, the one left being the package's own. At the first version the reachability figure was 6 and 1; the revert is the difference. Both populations are in the evidence.
+- **Item 1 (N2).** Eight predicates are pinned with a literal digest or a frozen census: C1 manifest digest, C2 observation digest, C3 model artifact digests, C11 `questionsSha256`, F1 `resourceHeadroom` frozen, F3 body-read-authority evaluation frozen, and the reviewer's R3 (dossier-profile question digests) and R9 (durable-lifecycle `attemptId`). `test-frozen.ts` is a small census helper (`{visited, unfrozen[]}`) with its own test. Literals are derived outside the module under test (Python `hashlib` over canonical JSON), not copied from a run.
+- **Item 6 (N12).** `deep-freeze.test.ts` pins the partial-freeze state after a mid-walk throw: a throwing getter beside a sibling leaves the owner frozen and the sibling not; a Proxy whose `ownKeys` throws leaves both frozen.
+
+## CC-REV-1 classes
+
+Proposed by the author, never final (CC-REV-1). A reviewer or the owner may reclassify.
+
+- **1 authority boundaries.** The F3 pin is a test on the body-read-authority evaluation; no production file of the gate changes.
+- **3 deterministic observation.** The C1, C2, C3, C11, R3 and R9 digest pins, and the walkthrough-judgment fixture's digest. `junitDigest` is no longer touched.
+- **4 security.** None edited. The live-verification no-spawn source check (`capture-test-artifact-main.test.ts`) is the guard the first version of this PR would have had to widen; it was not, and `test-artifact-verification.ts` is back to the imports it is pinned to.
+- **6 public interface.** The install preflight refuses one more input. No export or endpoint changes.
+- **2, 5, 7: none.**
+
+GP-Q0's stop clause (a gate's accept/refuse outcome changing) is not triggered: the preflight is a developer-checkout check, not an owner-act, consent or authority gate. Classified here so a reviewer can reclassify it.
+
+## Authority
+
+- GP-Q0, `.syzygy/governance/decisions/OWNER-DIRECTION-GREENFIELD-PARITY-ANSWERS-2026-10-21.md`: behaviour-preserving changes only. The scope is the bead's items 1, 3, 4 (the fixture half) and 6, as assigned after #530 landed; the stop clause is why the `junitDigest` half is out; the reviews' dispositions are `docs/evidence/support-leaf-round-2-dispositions-2026-10-27.md`.
+- Implementation plane only. Nothing under `.syzygy/**` or `openspec/**` is edited and no act is needed or taken. `AGENTS.md`, `support-purity.test.ts` and `no-egress.test.ts` are not touched (the last two belong to `syzygy-bpyt.6.14`).
+
+## Every changed output
+
+[Observed] One. The install preflight: a checkout with `tsc` and the generation core but no `@syzygy/support` link was exit 0 and is now exit 1 with the same stderr text.
+
+[Observed] The fixture is byte-equal: `junit-fixture-differential.mjs` over built clones (one build command, `npm run build:poc`, Node v24.6.0) compares 40 rows (15 junit, 25 fixture), 0 differ, 0 only on one side, at the first version (`b214ef10`) and again at the repair commit `c7ed9ef2`; the repair's head output is byte-identical to the base's and to the first version's. The noise control (the base probed twice) is 40 rows, 0 differ. The 15 `junitDigest` rows no longer test a change (the file is unchanged, so they are equal by construction) and are marked so in the record; the 25 fixture rows are the part that does (evaluator outcomes absent 10, lawful 10, unlawful 5). In `dist`, `createHash` is gone from the fixture only.
+
+The pin tests add assertions and change no output.
+
+## Evidence files
+
+`docs/evidence/syzygy-bpyt-6-13/`: `support-leaf-followups-2026-10-27.json` (the record: subject commits, own-delta digest, tool digests, every figure here), `pins-mutants-2026-10-27.json`, `item4-mutants-2026-10-27.json`, `junit-fixture-differential-{base-f7477f52,head-b214ef10,compare,noise-control}.json`, `junit-fixture-differential-{head,compare}-c7ed9ef2.json`, `population-audit-{f7477f52,b214ef10,4b9a4be0,c7ed9ef2}.json`, `sweep-{f7477f52,b214ef10,4b9a4be0,c7ed9ef2}.json`, `item4-repair-sweep-c7ed9ef2.json`, `full-suite-c7ed9ef2.log`, `derivation-inputs/`, and the tools `derive-literals.py`, `compare-rows.py`, `junit-fixture-differential.mjs`, `pins-mutants.py`, `item4-mutants.py` and `item4-repair-sweep.py`. Selftests: `derive-literals.py --selftest`, `compare-rows.py --selftest` (7 cases). The sweep tools are #530's, run read-only and unchanged.
+
+Rule-6 mutants, each with `old`/`new` fragment and the commit it ran at (Node v24.6.0, `npm run build:poc`):
+- **Pins: 19 mutants, 3 negative controls, 6 unmutated control projects.** At the base every mutant survives its owning Vitest project, except D1 (freeze after the walk), which the existing cycle test already kills; at the tested commit each is killed by exactly the new row. C1 is killed by two rows, because the manifest digest feeds the observation row too. Negative controls pass.
+- **Item 4: 9 mutants and a control, as run at `b214ef10`; the five `junitDigest` rows are no longer applicable.** J1-J5 mutate `junitDigest`, whose file is back to its base bytes (the mutated fragment is not in it), so those rows stand as run and are marked in the record. W1-W4 mutate the fixture and still apply: its blob is the same at `b214ef10` and `c7ed9ef2`. W1-W2 (digests over changed text) were killed by the probe and the tests; W3 (a stale latin1 local copy) by probe, tests and sweep; W4 (an equivalent local copy) by the sweep alone, as designed. `item4-mutants.py` decides a sweep kill by a fixed threshold (more than 6 sites or more than 1 definition) that is the `b214ef10` baseline; at the repair the unmutated tree reads 7 and 1, so that runner would call its own control killed. It is left as it was and not re-run. `item4-repair-sweep.py` re-applies W3 and W4 with the threshold taken from the repair commit itself: both read 8 sites and 2 definitions against 7 and 1, killed by the sweep. W1-W2 are not re-run.
+
+Subject: the round-1 own delta was `git diff f7477f52c49ee347f96b92703887c31f6be49e07 b214ef1015c134dbc821c4f4dec654a16314c354 -- apps packages scripts`, sha256 `7eb6c896dd4f49ce23af62319d2407e5c286b4ad10dd27b2771b1c3bf2c70688`, 14 files; over current main it is `git diff eb8fb6cb 4b9a4be0 -- apps packages scripts`, the same digest, so the merge moved none of the PR's files. At the repair it is `git diff eb8fb6cb c7ed9ef2 -- apps packages scripts`, sha256 `ef0ceb8ccaf443453cd0c43fc789e81cc127f7fe882d65d2cb7c44382f991db6`, 13 files (the 14 less `test-artifact-verification.ts`). `c7ed9ef2` is the last commit that touches `apps/`, `packages/` or `scripts/`; the commit after it adds evidence only.
+
+## Residuals
+
+- [Observed] `junitDigest` keeps its local `node:crypto` digest (see item 4). A class-4 guard pins that file's imports; widening it is the owner's, and nothing in this PR does.
+- [Observed] **Four historical evidence records now drift** under `check_evidence_currency.py --rev` (not in the battery): current 21 to 20, drift 209 to 210, actionable 202 to 203. They name digests of files this PR edits: `code-structure-ls-tree-z-mutants-2026-10-21-r2.json` and `-r3.json` (`model.test.ts`; r2 goes 1/2 to 2/2 mismatched, r3 flips from current to drift), `polaris-generator-m6-review-correction-evidence-2026-09-23.json` (`check_generator_install.mjs`, 6/7 to 7/7) and `quote-fidelity-mutants-2026-10-04.json` (`dossier-evaluation.test.ts`, 7/10 to 8/10). Re-derived at main `eb8fb6cb`, at the merge `4b9a4be0` and at the repair `c7ed9ef2`: the same four records and the same counts at the last two; the revert changes none of them (none names `test-artifact-verification.ts`). Rule 10 working as designed; the records are not edited.
+- [Observed] Survival at the base is measured over the owning Vitest project (the three durable-lifecycle files for R9), not the whole suite. The whole-suite record of C1, C2, C3, C11, F1, F3, R3 and R9 surviving is the review's `docs/evidence/support-leaf-review-2026-10-27/round-1/` (`full-mutants-a.json`, `full-mutants-b.json`, `rev-mutants.json`).
+- [Observed] The manifest and observation literals are goldens of the fixture: they move when the fixture, the observer identity, the resource limits or the record shape moves. That is the point of the pin; the comment above each gives the derivation.
+- [Unknown] Whether other digest or freeze sites outside N2's eight are pinned. This PR does not sweep them.
+- [Observed] The probe corpus has no `Uint8Array` subclass other than `Buffer` and no `SharedArrayBuffer` view. The item-4 sweep detector sees only the reachability rule's counts; a local copy under a test-class basename production does not import is outside both rules by construction.
+- [Observed] `site-equivalence.py` was not used for item 4: its population excludes `test-*` basenames, which is N1's own finding. Item 2 (its exit code), item 5 (`merge-resolution-check.py`) and item 7 (re-checkability) are not in this PR; they apply on those tools' next reuse. I applied item 7 to the new tools: each record names the Node version and build command, no row depends on `TMPDIR`, and no failed-test list is truncated in a count.
+- [Observed] `main` moved after the base (#535, #536, #487, #539, now `eb8fb6cb`). It is merged at `4b9a4be0` with no conflict; the merge moved none of the PR's files and none of the sweep figures (6 sites, 1 definition at the merge, as at the first version).
+- [Observed] The canonical battery does not run `npm test`. The first version of this PR passed it (110 commands, 0 nonzero) and failed the hosted `node` check. The full suite was run at the repair commit (below).
+
+Tests: +19 ~0 -0 (6 install check, 4 `test-frozen`, 8 pin tests, 1 `deep-freeze`; counted over the owning selections: core 1113 to 1122, generation-core and dossier 2157 to 2159, durable-lifecycle 40 to 41, support 22 to 23, install 0 to 6)
+
+## Battery
+
+[Observed] Repair head `7d408fd9ae096d10885475f24e9e8ada177c5ef3`: the merge of `origin/main` `eb8fb6cb` at `4b9a4be0` (its own commit, no conflict), the revert at `c7ed9ef2` (one file, `test-artifact-verification.ts`, back to its `f7477f52` blob), then this repair's evidence. `git diff 4b9a4be0 7d408fd9` is the repair (11 files; the code part is the one file). Hosted `checks` (27m13s) and `node` (4m18s) both pass at that head.
+
+[Observed] Full suite at the repair commit `c7ed9ef2` (`npx vitest run --testTimeout=60000 --hookTimeout=60000` in a scratch clone after `npm ci` and `npm run build:poc`): 248 files (245 passed, 3 skipped), 5,398 tests (5,393 passed, 5 skipped), 0 failed, exit 0; the log is `full-suite-c7ed9ef2.log`. `capture-test-artifact-main.test.ts` passes there (52 tests) and fails 1 of 52 at `663061c4` with the message above (reproduced in the same clone). `npm run typecheck` exit 0; `check_governance.py` 32 OK, 21 WARN, 0 FAIL (53 checks); `check_quotations.py` exit 0.
+
+Clean-clone battery (`battery_clone.py`, the `PROJECT-STATUS.md` block) at `7d408fd9`: still running when this body was written (its last commands are slow on the loaded host); the result is added below when it ends.
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+https://claude.ai/code/session_01APhWyj6JKsAs6kzgYByHeD
+
+

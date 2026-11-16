@@ -1,0 +1,86 @@
+[
+ {
+  "version": "file:../../packages/lib",
+  "answer": "undefined"
+ },
+ {
+  "version": "../../packages/lib",
+  "answer": "undefined"
+ },
+ {
+  "version": "./lib",
+  "answer": "undefined"
+ },
+ {
+  "version": ".",
+  "answer": "undefined"
+ },
+ {
+  "version": "..",
+  "answer": "undefined"
+ },
+ {
+  "version": "/srv/lib",
+  "answer": "undefined"
+ },
+ {
+  "version": "~/lib",
+  "answer": "undefined"
+ },
+ {
+  "version": "lib-0.0.0.tgz",
+  "answer": "undefined"
+ },
+ {
+  "version": "https://example.com/lib-1.0.0.tgz",
+  "answer": "undefined"
+ },
+ {
+  "version": "http://example.com/lib.tar.gz",
+  "answer": "undefined"
+ },
+ {
+  "version": "git+https://example.com/lib.git",
+  "answer": "null"
+ },
+ {
+  "version": "github:someone/lib",
+  "answer": "null"
+ },
+ {
+  "version": ".hidden-lib",
+  "answer": "null"
+ },
+ {
+  "version": "C:/lib",
+  "answer": "null"
+ },
+ {
+  "version": "a/b/c",
+  "answer": "null"
+ },
+ {
+  "version": "npm:typescript@^5.5.0",
+  "answer": "undefined"
+ },
+ {
+  "version": "~1.2.3",
+  "answer": "null"
+ },
+ {
+  "version": "2.9.0",
+  "answer": "null"
+ },
+ {
+  "specifier": "",
+  "answer": "throws TypeError: Cannot read properties of null (reading '0')"
+ },
+ {
+  "specifier": "@scope",
+  "answer": "null"
+ },
+ {
+  "specifier": "dossier/argv",
+  "answer": "null"
+ }
+]

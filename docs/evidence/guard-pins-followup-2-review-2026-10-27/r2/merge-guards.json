@@ -1,0 +1,68 @@
+{
+ "head": "092d508e04eb2dbdf8f01a8300a3eb6f6c3f36f0",
+ "specs": "rev541-specs.json",
+ "results": [
+  {
+   "id": "BASELINE",
+   "oldCounts": [],
+   "exit": 0,
+   "outcome": "survives",
+   "tests": 171,
+   "passed": 171,
+   "failing": [],
+   "timeouts": 0,
+   "filesFailedWithoutRows": [],
+   "load1": "28.33",
+   "seconds": 4.3,
+   "edits": []
+  },
+  {
+   "id": "R541-X3-npm-alias-needs-version",
+   "oldCounts": [
+    1
+   ],
+   "exit": 1,
+   "outcome": "killed",
+   "tests": 171,
+   "passed": 170,
+   "failing": [
+    "the shared workspace resolver reads a bare name declared as an npm: alias with no version as naming no module"
+   ],
+   "timeouts": 0,
+   "filesFailedWithoutRows": [],
+   "load1": "27.42",
+   "seconds": 4.4,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:(?:@[^/@]+\\/)?[^@]+@|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    }
+   ]
+  },
+  {
+   "id": "R541-X5-tarball-arm-skips-hash",
+   "oldCounts": [
+    1
+   ],
+   "exit": 1,
+   "outcome": "killed",
+   "tests": 171,
+   "passed": 170,
+   "failing": [
+    "the shared workspace resolver reads a bare name declared as a git dependency whose spec ends in a tarball extension as naming no module"
+   ],
+   "timeouts": 0,
+   "filesFailedWithoutRows": [],
+   "load1": "27.07",
+   "seconds": 4.5,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|^[^#]*\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    }
+   ]
+  }
+ ]
+}

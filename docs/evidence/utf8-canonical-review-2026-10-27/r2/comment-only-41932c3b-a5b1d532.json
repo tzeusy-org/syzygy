@@ -1,0 +1,87 @@
+{
+ "base": "41932c3b",
+ "head": "a5b1d532",
+ "method": "ts.transpileModule, target ES2022, module NodeNext, removeComments, per file, before against after",
+ "typescriptVersion": "5.9.3",
+ "changedFiles": 44,
+ "changedProductionFiles": 8,
+ "commentOnly": 2,
+ "notCommentOnly": [
+  "packages/support/src/decode-utf8.ts",
+  "packages/support/src/index.ts",
+  "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+  "packages/three-surface-poc-core/src/code-structure.ts",
+  "packages/three-surface-poc-core/src/git-object-reader.ts",
+  "packages/three-surface-poc-core/src/project-shape-observation.ts"
+ ],
+ "rows": [
+  {
+   "path": "packages/polaris-generation-core/src/canonical-json.ts",
+   "status": "M",
+   "sourceSha256Base": "4d7e745dc505c0de74666511a90ccda4673a5bc3d3e9deb73f424bce92875608",
+   "sourceSha256Head": "c51a3ca5ec1210e06fb462088c8a9fd541168de9c333b114cb8369621ebce7ed",
+   "emitSha256Base": "7be90db9325aeeb4c6a78224840b1f894593db5e5e5cc6a7ce940ea585ef6b20",
+   "emitSha256Head": "7be90db9325aeeb4c6a78224840b1f894593db5e5e5cc6a7ce940ea585ef6b20",
+   "commentOnly": true
+  },
+  {
+   "path": "packages/support/src/decode-utf8.ts",
+   "status": "A",
+   "commentOnly": false
+  },
+  {
+   "path": "packages/support/src/index.ts",
+   "status": "M",
+   "sourceSha256Base": "9b82aa1f60a468084496a62c2dc22775171c4678f663761e463e3f120a99d1bb",
+   "sourceSha256Head": "a4b3aa184877c9851ee46623e00c33a5ebbf25029d7ca16ff7324a6e7d31ea56",
+   "emitSha256Base": "dbb05f5d470f92f7daece9ce0c10c87b2eb19072e3bd243ee8f00450e8196bdf",
+   "emitSha256Head": "ca3ce9b71e0c394de798c9c7557c2e7c10928e160ddd07ff0529174d5b0d2634",
+   "commentOnly": false
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "status": "M",
+   "sourceSha256Base": "01fc903901fc09082ce4923bf7bdcf4937b492ef93e62058be5a7c04ca87395e",
+   "sourceSha256Head": "6098ed3fdd6d5055cf7952e836c25c9474239f6b2e2ac60d8e03af836be4d8dc",
+   "emitSha256Base": "b34d352b16ad88b0c8cdb8f3e3f7616bf904d97c6554fe18beb917145fdf8e8a",
+   "emitSha256Head": "531380d880632667db7c6a919a46d0165d67da86c29bf86632ec2b85359e1ba4",
+   "commentOnly": false
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/code-structure.ts",
+   "status": "M",
+   "sourceSha256Base": "ef137dafdd666104b9249d5516b0567e8daf9db7a5814c68c29e362f87ca56c1",
+   "sourceSha256Head": "bc56dca9270b397298a578f109ddfee47ccbf9b7b9830eb9f3dfef2c68e241b1",
+   "emitSha256Base": "82530d4f92eb6cab610b0c2e1e44220eb6c5cbe5d6d66541354b97fb54615520",
+   "emitSha256Head": "721199b11ca084eae045fde9eeb8ded83db1de7d391c2b11ba5e4192ffc1c29e",
+   "commentOnly": false
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/git-object-reader.ts",
+   "status": "M",
+   "sourceSha256Base": "19405187526e79585f92b65a926a07492929ea7335dd5a4994b8f204b7a0bf46",
+   "sourceSha256Head": "76ac22aab6091645ea4ed6a562efc4984e7a4e38a7fb1777aa2fe3bd738f7b65",
+   "emitSha256Base": "7fa780fae3279b2fc7bc72cae9e73222593af0fc12b32420c6a54d0cac228343",
+   "emitSha256Head": "8e43560ff172fe605ede8ddb06db80b24cb56e84798fe6e6165d231b03b93e2a",
+   "commentOnly": false
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+   "status": "M",
+   "sourceSha256Base": "47435438b5d14c944e2c53a510d07b0a3253758d2628f5332123155831494d49",
+   "sourceSha256Head": "a6401c017b2743d11d72b71532372c412a9c91287cecd3ebe60df40b4a37b852",
+   "emitSha256Base": "d4b1ba58de41ac3fa7d665f7a25ac93b77e2d640a08fedb4e42fa9b676ccff30",
+   "emitSha256Head": "d4b1ba58de41ac3fa7d665f7a25ac93b77e2d640a08fedb4e42fa9b676ccff30",
+   "commentOnly": true
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+   "status": "M",
+   "sourceSha256Base": "db2cd5cfb37f45895ca0794169339ca680918d0111c658534e6ede301a8d04a0",
+   "sourceSha256Head": "b57746bb67286dfbe3ed0deaaf844e11d8568936b94c79cc0262ea912b635bff",
+   "emitSha256Base": "830e4d325435b09075abaaab1fed37d236fa0f68c47e7b735787214766fbf015",
+   "emitSha256Head": "572d5de693875e4c3d6cff7afd185b5176326364bfb9e423ed8df88bc995b290",
+   "commentOnly": false
+  }
+ ]
+}

@@ -1,0 +1,48 @@
+[
+ {
+  "mutant": "regex-char",
+  "tokensEqual": false,
+  "expectedEqual": false,
+  "ok": true,
+  "addedOutsideComment": [
+   72
+  ]
+ },
+ {
+  "mutant": "rename-localNames",
+  "tokensEqual": false,
+  "expectedEqual": false,
+  "ok": true,
+  "addedOutsideComment": [
+   75,
+   100
+  ]
+ },
+ {
+  "mutant": "template-text",
+  "tokensEqual": false,
+  "expectedEqual": false,
+  "ok": true,
+  "addedOutsideComment": [
+   34
+  ]
+ },
+ {
+  "mutant": "string-literal",
+  "tokensEqual": false,
+  "expectedEqual": false,
+  "ok": true,
+  "addedOutsideComment": [
+   54
+  ]
+ },
+ {
+  "mutant": "add-comment",
+  "tokensEqual": true,
+  "expectedEqual": true,
+  "ok": true,
+  "addedOutsideComment": [
+   72
+  ]
+ }
+]

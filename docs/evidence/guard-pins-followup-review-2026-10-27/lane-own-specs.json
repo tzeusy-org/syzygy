@@ -1,0 +1,85 @@
+{
+ "what": "syzygy-bpyt.8.38 own mutants: the URL refusal row, the .tar and .tar.gz rows apart, and the root row beyond its dependencies",
+ "mutants": [
+  {
+   "id": "O1-tarball-url-reads-outside",
+   "what": "the tarball arm matches only a version with no colon, so a tarball URL reads as outside again",
+   "projects": [
+    "@syzygy/polaris-generation-core",
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "packages/polaris-generation-core/src/island-boundary.test.ts",
+    "packages/polaris-dossier/src/subpath-imports.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "/^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu",
+     "new": "/^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|^[^:]*\\.(?:tgz|tar|tar\\.gz)$/iu"
+    }
+   ]
+  },
+  {
+   "id": "O2-tar-unread",
+   "what": "a .tar name is not local; .tgz and .tar.gz still are",
+   "projects": [
+    "@syzygy/polaris-generation-core",
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "packages/polaris-generation-core/src/island-boundary.test.ts",
+    "packages/polaris-dossier/src/subpath-imports.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "/^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu",
+     "new": "/^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar\\.gz)$/iu"
+    }
+   ]
+  },
+  {
+   "id": "O3-tar-gz-unread",
+   "what": "a .tar.gz name is not local; .tgz and .tar still are",
+   "projects": [
+    "@syzygy/polaris-generation-core",
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "packages/polaris-generation-core/src/island-boundary.test.ts",
+    "packages/polaris-dossier/src/subpath-imports.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "/^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu",
+     "new": "/^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar)$/iu"
+    }
+   ]
+  },
+  {
+   "id": "O4-root-dev-dependencies-dropped",
+   "what": "the workspace root's entry keeps every field but its devDependencies",
+   "projects": [
+    "@syzygy/polaris-generation-core",
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "packages/polaris-generation-core/src/island-boundary.test.ts",
+    "packages/polaris-dossier/src/subpath-imports.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "manifests.set(root.name, { dir: '.', ...root });\n",
+     "new": "manifests.set(root.name, { dir: '.', ...root, devDependencies: {} });\n"
+    }
+   ]
+  }
+ ]
+}

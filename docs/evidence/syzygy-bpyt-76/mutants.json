@@ -1,0 +1,193 @@
+{
+ "commit": "ef9d41443248f606723d7c960bc67a45c52c91cc",
+ "workflow": ".github/workflows/node-ci.yml",
+ "step": "Node segment rules (scripts/check_node_segment_rules.mjs)",
+ "stepCommand": "node scripts/check_node_segment_rules.mjs",
+ "distDirs": [],
+ "importedTools": {
+  "docs/evidence/syzygy-bpyt-6-14/tools/mutants.py": "133094bce703dad13917d73b4bb1dd29cc8eb43212d2ec9e307656f530f3fe4e"
+ },
+ "node": "v24.6.0",
+ "summary": {
+  "rows": 12,
+  "asExpected": 12,
+  "unexpected": []
+ },
+ "statusAfter": "",
+ "rows": [
+  {
+   "id": "U0-unmutated",
+   "command": "node scripts/check_node_segment_rules.mjs",
+   "edits": [],
+   "preload": null,
+   "expectedExit": 0,
+   "expectedLine": "v24.6.0 regexes true true cases 15/15 mismatches 0",
+   "absentLine": null,
+   "exit": 0,
+   "asExpected": true,
+   "stdout": "v24.6.0 regexes true true cases 15/15 mismatches 0\n",
+   "stderrHead": ""
+  },
+  {
+   "id": "G1-invalid-segment-copy-drops-encoded-capital-n",
+   "command": "node scripts/check_node_segment_rules.mjs",
+   "edits": [
+    {
+     "path": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "export const INVALID_SEGMENT = /(^|\\\\|\\/)((\\.|%2e)(\\.|%2e)?|(n|%6e|%4e)(o|%6f|%4f)(d|%64|%44)(e|%65|%45)(_|%5f)(m|%6d|%4d)(o|%6f|%4f)(d|%64|%44)(u|%75|%55)(l|%6c|%4c)(e|%65|%45)(s|%73|%53))?(\\\\|\\/|$)/i;\n",
+     "new": "export const INVALID_SEGMENT = /(^|\\\\|\\/)((\\.|%2e)(\\.|%2e)?|(n|%6e)(o|%6f|%4f)(d|%64|%44)(e|%65|%45)(_|%5f)(m|%6d|%4d)(o|%6f|%4f)(d|%64|%44)(u|%75|%55)(l|%6c|%4c)(e|%65|%45)(s|%73|%53))?(\\\\|\\/|$)/i;\n"
+    }
+   ],
+   "preload": null,
+   "expectedExit": 1,
+   "expectedLine": "mismatch: invalidSegmentRegEx is ",
+   "absentLine": null,
+   "exit": 1,
+   "asExpected": true,
+   "stdout": "v24.6.0 regexes false true cases 14/15 mismatches 2\nmismatch: invalidSegmentRegEx is /(^|\\\\|\\/)((\\.|%2e)(\\.|%2e)?|(n|%6e|%4e)(o|%6f|%4f)(d|%64|%44)(e|%65|%45)(_|%5f)(m|%6d|%4d)(o|%6f|%4f)(d|%64|%44)(u|%75|%55)(l|%6c|%4c)(e|%65|%45)(s|%73|%53))?(\\\\|\\/|$)/i in Node, /(^|\\\\|\\/)((\\.|%2e)(\\.|%2e)?|(n|%6e)(o|%6f|%4f)(d|%64|%44)(e|%65|%45)(_|%5f)(m|%6d|%4d)(o|%6f|%4f)(d|%64|%44)(u|%75|%55)(l|%6c|%4c)(e|%65|%45)(s|%73|%53))?(\\\\|\\/|$)/i in packages/polaris-generation-core/src/workspace-reach.testkit.ts\nmismatch: \"./dist/%4Eode_modules/index.js\" Node refuses (then ERR_INVALID_PACKAGE_TARGET), reader loads, test refuses\n",
+   "stderrHead": ""
+  },
+  {
+   "id": "G2-refused-segment-copy-case-sensitive",
+   "command": "node scripts/check_node_segment_rules.mjs",
+   "edits": [
+    {
+     "path": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "export const REFUSED_SEGMENT = /(^|\\\\|\\/)((\\.|%2e)(\\.|%2e)?|(n|%6e|%4e)(o|%6f|%4f)(d|%64|%44)(e|%65|%45)(_|%5f)(m|%6d|%4d)(o|%6f|%4f)(d|%64|%44)(u|%75|%55)(l|%6c|%4c)(e|%65|%45)(s|%73|%53))(\\\\|\\/|$)/i;\n",
+     "new": "export const REFUSED_SEGMENT = /(^|\\\\|\\/)((\\.|%2e)(\\.|%2e)?|(n|%6e|%4e)(o|%6f|%4f)(d|%64|%44)(e|%65|%45)(_|%5f)(m|%6d|%4d)(o|%6f|%4f)(d|%64|%44)(u|%75|%55)(l|%6c|%4c)(e|%65|%45)(s|%73|%53))(\\\\|\\/|$)/;\n"
+    }
+   ],
+   "preload": null,
+   "expectedExit": 1,
+   "expectedLine": "mismatch: deprecatedInvalidSegmentRegEx is ",
+   "absentLine": null,
+   "exit": 1,
+   "asExpected": true,
+   "stdout": "v24.6.0 regexes true false cases 12/15 mismatches 4\nmismatch: deprecatedInvalidSegmentRegEx is /(^|\\\\|\\/)((\\.|%2e)(\\.|%2e)?|(n|%6e|%4e)(o|%6f|%4f)(d|%64|%44)(e|%65|%45)(_|%5f)(m|%6d|%4d)(o|%6f|%4f)(d|%64|%44)(u|%75|%55)(l|%6c|%4c)(e|%65|%45)(s|%73|%53))(\\\\|\\/|$)/i in Node, /(^|\\\\|\\/)((\\.|%2e)(\\.|%2e)?|(n|%6e|%4e)(o|%6f|%4f)(d|%64|%44)(e|%65|%45)(_|%5f)(m|%6d|%4d)(o|%6f|%4f)(d|%64|%44)(u|%75|%55)(l|%6c|%4c)(e|%65|%45)(s|%73|%53))(\\\\|\\/|$)/ in packages/polaris-generation-core/src/workspace-reach.testkit.ts\nmismatch: \"./dist/NODE_MODULES/index.js\" Node refuses (then ERR_INVALID_PACKAGE_TARGET), reader warns, test refuses\nmismatch: \"./dist/%2E/index.js\" Node refuses (then ERR_INVALID_PACKAGE_TARGET), reader warns, test refuses\nmismatch: \"./dist/%4Eode_modules/index.js\" Node refuses (then ERR_INVALID_PACKAGE_TARGET), reader warns, test refuses\n",
+   "stderrHead": ""
+  },
+  {
+   "id": "G3-case-row-outcome-flipped",
+   "command": "node scripts/check_node_segment_rules.mjs",
+   "edits": [
+    {
+     "path": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "['./dist//index.js', 'warns']",
+     "new": "['./dist//index.js', 'refuses']"
+    }
+   ],
+   "preload": null,
+   "expectedExit": 1,
+   "expectedLine": "mismatch: \"./dist//index.js\" Node warns (then loads), reader warns, test refuses",
+   "absentLine": null,
+   "exit": 1,
+   "asExpected": true,
+   "stdout": "v24.6.0 regexes true true cases 14/15 mismatches 1\nmismatch: \"./dist//index.js\" Node warns (then loads), reader warns, test refuses\n",
+   "stderrHead": ""
+  },
+  {
+   "id": "B-binding-removed",
+   "command": "node scripts/check_node_segment_rules.mjs",
+   "edits": [],
+   "preload": "delete process.binding;\n",
+   "expectedExit": 2,
+   "expectedLine": "check_node_segment_rules: cannot read the segment rules of Node ",
+   "absentLine": null,
+   "exit": 2,
+   "asExpected": true,
+   "stdout": "",
+   "stderrHead": "check_node_segment_rules: cannot read the segment rules of Node v24.6.0 (process.binding('natives') threw: process.binding is not a function), so the copies in packages/polaris-generation-core/src/workspace-reach.testkit.ts cannot be checked against this Node; find another way to read its lib/internal/modules/esm/resolve.js before this step can pass\n"
+  },
+  {
+   "id": "B-binding-throws",
+   "command": "node scripts/check_node_segment_rules.mjs",
+   "edits": [],
+   "preload": "process.binding = (name) => { throw new Error(`No such module: ${name}`); };\n",
+   "expectedExit": 2,
+   "expectedLine": "check_node_segment_rules: cannot read the segment rules of Node ",
+   "absentLine": null,
+   "exit": 2,
+   "asExpected": true,
+   "stdout": "",
+   "stderrHead": "check_node_segment_rules: cannot read the segment rules of Node v24.6.0 (process.binding('natives') threw: No such module: natives), so the copies in packages/polaris-generation-core/src/workspace-reach.testkit.ts cannot be checked against this Node; find another way to read its lib/internal/modules/esm/resolve.js before this step can pass\n"
+  },
+  {
+   "id": "B-natives-without-resolver",
+   "command": "node scripts/check_node_segment_rules.mjs",
+   "edits": [],
+   "preload": "const real = process.binding.bind(process);\nprocess.binding = (name) => {\n  const module = real(name);\n  if (name !== 'natives') return module;\n  const { ['internal/modules/esm/resolve']: _, ...rest } = module;\n  return rest;\n};\n",
+   "expectedExit": 2,
+   "expectedLine": "check_node_segment_rules: cannot read the segment rules of Node ",
+   "absentLine": null,
+   "exit": 2,
+   "asExpected": true,
+   "stdout": "",
+   "stderrHead": "check_node_segment_rules: cannot read the segment rules of Node v24.6.0 (process.binding('natives') holds no internal/modules/esm/resolve source), so the copies in packages/polaris-generation-core/src/workspace-reach.testkit.ts cannot be checked against this Node; find another way to read its lib/internal/modules/esm/resolve.js before this step can pass\n"
+  },
+  {
+   "id": "B-literal-renamed",
+   "command": "node scripts/check_node_segment_rules.mjs",
+   "edits": [],
+   "preload": "const real = process.binding.bind(process);\nprocess.binding = (name) => {\n  const module = real(name);\n  if (name !== 'natives') return module;\n  const source = module['internal/modules/esm/resolve'];\n  return { ...module, 'internal/modules/esm/resolve': source.replace('const invalidSegmentRegEx = ', 'const invalidSegmentRegExp = ') };\n};\n",
+   "expectedExit": 2,
+   "expectedLine": "check_node_segment_rules: cannot read the segment rules of Node ",
+   "absentLine": null,
+   "exit": 2,
+   "asExpected": true,
+   "stdout": "",
+   "stderrHead": "check_node_segment_rules: cannot read the segment rules of Node v24.6.0 (internal/modules/esm/resolve has no line starting \"const invalidSegmentRegEx = \"), so the copies in packages/polaris-generation-core/src/workspace-reach.testkit.ts cannot be checked against this Node; find another way to read its lib/internal/modules/esm/resolve.js before this step can pass\n"
+  },
+  {
+   "id": "O-binding-removed",
+   "command": "node docs/evidence/syzygy-bpyt-70/tools/node_segments.mjs",
+   "edits": [],
+   "preload": "delete process.binding;\n",
+   "expectedExit": "nonzero",
+   "expectedLine": null,
+   "absentLine": "check_node_segment_rules: cannot read the segment rules of Node ",
+   "exit": 1,
+   "asExpected": true,
+   "stdout": "",
+   "stderrHead": "file:///tmp/la76c/docs/evidence/syzygy-bpyt-70/tools/node_segments.mjs:30\nconst nodeSource = process.binding('natives')['internal/modules/esm/resolve'];\n                           ^\n\nTypeError: process.binding is not a function\n    at file:///tmp/la76c/docs/evidence/syzygy-bpyt-70/tools/node_segments.mjs:30:28\n\nNode.js v24.6.0\n"
+  },
+  {
+   "id": "O-binding-throws",
+   "command": "node docs/evidence/syzygy-bpyt-70/tools/node_segments.mjs",
+   "edits": [],
+   "preload": "process.binding = (name) => { throw new Error(`No such module: ${name}`); };\n",
+   "expectedExit": "nonzero",
+   "expectedLine": null,
+   "absentLine": "check_node_segment_rules: cannot read the segment rules of Node ",
+   "exit": 1,
+   "asExpected": true,
+   "stdout": "",
+   "stderrHead": "file:///tmp/la76m/t/preload-binding-throws.mjs:1\nprocess.binding = (name) => { throw new Error(`No such module: ${name}`); };\n                                    ^\n\nError: No such module: natives\n    at process.binding (file:///tmp/la76m/t/preload-binding-throws.mjs:1:37)\n    at file:///tmp/la76c/docs/evidence/syzygy-bpyt-70/tools/node_segments.mjs:30:28\n\nNode.js v24.6.0\n"
+  },
+  {
+   "id": "O-natives-without-resolver",
+   "command": "node docs/evidence/syzygy-bpyt-70/tools/node_segments.mjs",
+   "edits": [],
+   "preload": "const real = process.binding.bind(process);\nprocess.binding = (name) => {\n  const module = real(name);\n  if (name !== 'natives') return module;\n  const { ['internal/modules/esm/resolve']: _, ...rest } = module;\n  return rest;\n};\n",
+   "expectedExit": "nonzero",
+   "expectedLine": null,
+   "absentLine": "check_node_segment_rules: cannot read the segment rules of Node ",
+   "exit": 1,
+   "asExpected": true,
+   "stdout": "",
+   "stderrHead": "file:///tmp/la76c/docs/evidence/syzygy-bpyt-70/tools/node_segments.mjs:32\n  const line = nodeSource.split('\\n').find((text) => text.startsWith(`const ${name} = `));\n                          ^\n\nTypeError: Cannot read properties of undefined (reading 'split')\n    at literal (file:///tmp/la76c/docs/evidence/syzygy-bpyt-70/tools/node_segments.mjs:32:27)\n    at file:///tmp/la76c/docs/evidence/syzygy-bpyt-70/tools/node_segments.mjs:36:16\n    at Array.map (<anonymous>)\n    at file:///tmp/la76c/docs/evidence/syzygy-bpyt-70/tools/node_segments.mjs:35:120\n\nNode.js v24.6.0\n"
+  },
+  {
+   "id": "O-literal-renamed",
+   "command": "node docs/evidence/syzygy-bpyt-70/tools/node_segments.mjs",
+   "edits": [],
+   "preload": "const real = process.binding.bind(process);\nprocess.binding = (name) => {\n  const module = real(name);\n  if (name !== 'natives') return module;\n  const source = module['internal/modules/esm/resolve'];\n  return { ...module, 'internal/modules/esm/resolve': source.replace('const invalidSegmentRegEx = ', 'const invalidSegmentRegExp = ') };\n};\n",
+   "expectedExit": "nonzero",
+   "expectedLine": null,
+   "absentLine": "check_node_segment_rules: cannot read the segment rules of Node ",
+   "exit": 1,
+   "asExpected": true,
+   "stdout": "v24.6.0 regexes false true cases 15/15 mismatches 1\n",
+   "stderrHead": ""
+  }
+ ]
+}

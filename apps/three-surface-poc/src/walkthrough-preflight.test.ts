@@ -5,7 +5,6 @@
 // model, the page bytes, a route outcome or the browser check — and each
 // naming the one limb that must fail. Pure: no daemon, no Butlers.
 
-import { createHash } from 'node:crypto';
 import { rmSync } from 'node:fs';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
@@ -40,19 +39,6 @@ afterAll(() => {
  * source (a legitimate visible Unknown) in the same tree. */
 const TEXTS: Readonly<Record<string, string>> = { ...PROJECT_SHAPE_FIXTURE_TEXTS_WITH_BASELINE_SPEC, ...PROJECT_SHAPE_FIXTURE_TEXTS_WITH_SECRET };
 
-function sha1Blob(bytes: Uint8Array): string {
-  return createHash('sha1').update(`blob ${bytes.byteLength}\0`).update(bytes).digest('hex');
-}
-
-function blobReaderFor(texts: Readonly<Record<string, string>>): (objectId: string) => Uint8Array | undefined {
-  const encoder = new TextEncoder();
-  const byOid = new Map(Object.values(texts).map((text) => {
-    const body = encoder.encode(text);
-    return [sha1Blob(body), body] as const;
-  }));
-  return (objectId) => byOid.get(objectId);
-}
-
 /** The consent authority's disclosure marker as the page renders it
  * (the sentence's apostrophe is HTML-escaped there). */
 function consentDisclosureMarker(html: string): string {
@@ -69,7 +55,7 @@ function browserCheckFor(model: PocModel): BrowserCheckInput {
  * demo does against a live daemon, here through the route resolver. */
 function inputsFor(texts: Readonly<Record<string, string>>): WalkthroughPreflightInputs {
   const model = buildFixtureModel(cleanups, { projectShape: { authority: ADMITTING_AUTHORITY, runGit: projectShapeFixtureGit(texts) } });
-  const reader = verbatimRouteReader(model, blobReaderFor(texts));
+  const reader = verbatimRouteReader(model, projectShapeFixtureGit(texts));
   const polarisHtml = renderPolarisPage(model, '', {}, { verbatim: reader });
   const sourceRoutes = new Map<string, SourceRouteOutcome>();
   for (const identity of new Set(sourceRouteIdentities(polarisHtml))) {

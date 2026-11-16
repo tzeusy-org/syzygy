@@ -1,0 +1,124 @@
+{
+ "subject": "verification of the NON_HUMAN_PRINCIPAL pin harness and owner-table comment change (syzygy-bpyt.6.11)",
+ "tree": {
+  "head": "6e58892bc7e49b7a206a8665a24645ab43dc9715",
+  "base": "5f0ab21f"
+ },
+ "gateFiles": {
+  "paths": [
+   "packages/three-surface-poc-core/src/act-fields.ts",
+   "packages/three-surface-poc-core/src/body-read-authority.ts",
+   "packages/three-surface-poc-core/src/walkthrough-judgment.ts"
+  ],
+  "gitDiffStatBaseToHead": "",
+  "byteIdentical": true
+ },
+ "filesChangedBaseToHead": [
+  "docs/evidence/non-human-principal-pins-2026-11-03/assemble_verification.py",
+  "docs/evidence/non-human-principal-pins-2026-11-03/logs/authority-sweep.log",
+  "docs/evidence/non-human-principal-pins-2026-11-03/logs/governance-base.txt",
+  "docs/evidence/non-human-principal-pins-2026-11-03/logs/governance-head.txt",
+  "docs/evidence/non-human-principal-pins-2026-11-03/logs/quotations-base.txt",
+  "docs/evidence/non-human-principal-pins-2026-11-03/logs/quotations-head.txt",
+  "docs/evidence/non-human-principal-pins-2026-11-03/logs/typecheck.log",
+  "docs/evidence/non-human-principal-pins-2026-11-03/logs/vitest-full.log",
+  "docs/evidence/non-human-principal-pins-2026-11-03/mutants-2026-11-03.json",
+  "docs/evidence/non-human-principal-pins-2026-11-03/mutate_non_human_principal.py",
+  "docs/evidence/non-human-principal-pins-2026-11-03/regex-differential.mjs",
+  "docs/evidence/non-human-principal-pins-2026-11-03/selftest-2026-11-03.json",
+  "docs/evidence/non-human-principal-pins-2026-11-03/verification-2026-11-03.json",
+  "packages/three-surface-poc-core/src/body-read-authority.test.ts",
+  "packages/three-surface-poc-core/src/walkthrough-judgment.test.ts"
+ ],
+ "fullSuite": {
+  "command": "npx vitest run",
+  "ranAt": "6e58892bc7e49b7a206a8665a24645ab43dc9715",
+  "testFilesLine": "Test Files  263 passed | 3 skipped (266)",
+  "testsLine": "Tests  6110 passed | 5 skipped (6115)",
+  "exitLine": "exit=0"
+ },
+ "gates": {
+  "typecheck": {
+   "command": "npm run typecheck",
+   "exitLine": "exit=0"
+  },
+  "governance": {
+   "command": "python3 scripts/check_governance.py",
+   "baseLastLine": "32 OK, 21 WARN, 0 FAIL (53 checks) \u2014 counts derived, not asserted",
+   "headLastLine": "32 OK, 21 WARN, 0 FAIL (53 checks) \u2014 counts derived, not asserted",
+   "logsRetained": false,
+   "lineDifferenceBaseToHead": [
+    "-/home/orca/.tmp-b611/base/scripts/record_pwb_behavior_amendment_acts.py:70: SyntaxWarning: \"\\d\" is an invalid escape sequence. Such sequences will not work in the future. Did you mean \"\\\\d\"? A raw string is also an option.",
+    "-  `^(\\d+)\\.\\s` (MULTILINE) AND a bold form `^\\*\\*Finding (\\d+)\\b`",
+    "-/home/orca/.tmp-b611/base/scripts/check_governance.py:6456: DeprecationWarning: 'maxsplit' is passed as positional argument",
+    "+/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.11/scripts/check_governance.py:6456: DeprecationWarning: 'maxsplit' is passed as positional argument",
+    "-repo root: /home/orca/.tmp-b611/base",
+    "-scope:     clone \u2014 8453 file(s) examined (8453 tracked, 0 untracked-not-ignored)",
+    "+repo root: /home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.11",
+    "+scope:     clone \u2014 8464 file(s) examined (8466 tracked, 0 untracked-not-ignored, 2 listed but absent)",
+    "-WARN  CG-1f  frozen-lane path references \u2014 705 references examined, 0 findings \u2014 raw reviewer output and superseded round records \u2014 never edited, so classified and printed rather than failed",
+    "+WARN  CG-1f  frozen-lane path references \u2014 699 references examined, 0 findings \u2014 raw reviewer output and superseded round records \u2014 never edited, so classified and printed rather than failed",
+    "-        docs/reviews/R-GP-IMPL-HOST-TIDY-1-RAW.md -> node_modules/.package-lock.json",
+    "-        docs/reviews/R-GP-IMPL-OUTSIDE-RAW-CLEANUP-1-RAW.md -> node_modules/vitest/package.json",
+    "-        docs/reviews/R-POLARIS-BASE-READABILITY-SUCCESSOR-1-RAW.md -> ../../../.syzygy/governance/decisions/POLARIS-GENERATOR-APPLICABILITY-ACT.md",
+    "-        docs/reviews/R-POLARIS-BASE-READABILITY-SUCCESSOR-1-RAW.md -> ../../../.syzygy/governance/decisions/POLARIS-GENERATOR-SPECIFICATION-ADOPTION-ACT.md",
+    "-        docs/reviews/R-POLARIS-BASE-READABILITY-SUCCESSOR-2-RAW.md -> ../../../.syzygy/governance/decisions/POLARIS-GENERATOR-APPLICABILITY-ACT.md",
+    "-        docs/reviews/R-POLARIS-BASE-READABILITY-SUCCESSOR-2-RAW.md -> ../../../.syzygy/governance/decisions/POLARIS-GENERATOR-SPECIFICATION-ADOPTION-ACT.md",
+    "-OK    CG-2a  retired acceptance phrase confined \u2014 3684 files examined, 0 findings \u2014 2 retired phrase(s) declared; 0 presented as current, 0 unmarked",
+    "+OK    CG-2a  retired acceptance phrase confined \u2014 3688 files examined, 0 findings \u2014 2 retired phrase(s) declared; 0 presented as current, 0 unmarked",
+    "-OK    CG-3   stale bootstrap routing absent \u2014 2653 files examined, 0 findings",
+    "+OK    CG-3   stale bootstrap routing absent \u2014 2655 files examined, 0 findings"
+   ]
+  },
+  "quotations": {
+   "command": "python3 scripts/check_quotations.py",
+   "outputsByteIdentical": true
+  },
+  "authoritySweep": {
+   "command": "npx vitest run apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+   "testsLine": "Tests  6 passed (6)"
+  }
+ },
+ "harness": {
+  "digestsInMutantsRecord": {
+   "mutate_non_human_principal.py": "6d7ab39a9ac1ceeb74e66a2031848b3269e3194e5c7f36aed8a3868d3da20f92",
+   "regex-differential.mjs": "b748775a5bdd59d9c0b38950126d93b3641f1744a0cdd7c489eb804f29b035ef"
+  },
+  "digestsOnDisk": {
+   "mutate_non_human_principal.py": "6d7ab39a9ac1ceeb74e66a2031848b3269e3194e5c7f36aed8a3868d3da20f92",
+   "regex-differential.mjs": "b748775a5bdd59d9c0b38950126d93b3641f1744a0cdd7c489eb804f29b035ef"
+  },
+  "selftestHarnessDigest": "6d7ab39a9ac1ceeb74e66a2031848b3269e3194e5c7f36aed8a3868d3da20f92",
+  "selftestAllRefused": true,
+  "selftestCases": 9
+ },
+ "mutants": {
+  "commit": "bf5f5263a04677e90aaaa4946308651e70046767",
+  "baselineTotal": 464,
+  "baselineFailed": 0,
+  "planned": 53,
+  "killed": 45,
+  "survivors": 8,
+  "survivorsEquivalentWithArgument": [
+   "arm1-drop-agent",
+   "arm1-drop-bot",
+   "arm1-drop-service",
+   "arm1-drop-system",
+   "arm1-drop-ci",
+   "arm1-drop-pipeline",
+   "arm1-drop-model",
+   "arm3-drop-claude"
+  ],
+  "survivorsWithCorpusWitness": [],
+  "everyObservedTotalEqualsBaseline": true,
+  "section3HKilled": "8 of 8",
+  "allRestored": true
+ },
+ "logDigests": {
+  "vitest-full.log": "918f7edb7dbce0c2a31a21749c55435f53ef154f6850b3cb12f1b73999f48853",
+  "typecheck.log": "dedbcb3be10dbca462ac2344c8f3dd45ce13c35ef0c70df65ce011314a096808",
+  "authority-sweep.log": "f72eee2ad1919ab371a4f4375eca04ee7310c2d89fbd72b0611814de666f98e4",
+  "quotations-base.txt": "2f803c427eea7f248b835eda5e6c114f035fa8325a33a6791e0135dd44add1d0",
+  "quotations-head.txt": "2f803c427eea7f248b835eda5e6c114f035fa8325a33a6791e0135dd44add1d0"
+ }
+}

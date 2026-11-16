@@ -1,0 +1,393 @@
+{
+ "tool": {
+  "sha256": "e8c5e5fd4d9c87121eeaf009a777372db64ecace210d72bfb1c7d7390c4fb2d2"
+ },
+ "commit": "807024b8739608cac26024e0a964e8da92d1e4b4",
+ "cleanBefore": true,
+ "cleanAfter": true,
+ "rows": [
+  {
+   "id": "O1",
+   "mutation": "the non-composite reference check moves after the removal",
+   "edits": [
+    {
+     "file": "scripts/clean_build.mjs",
+     "old": "for (const project of referenced) if (!composite.get(project)) throw new Error(`${join(project, 'tsconfig.json')}: a referenced project is not composite`);\n\nfor (const project of built) rmSync(join(project, 'dist'), { recursive: true, force: true });\n",
+     "new": "for (const project of built) rmSync(join(project, 'dist'), { recursive: true, force: true });\nfor (const project of referenced) if (!composite.get(project)) throw new Error(`${join(project, 'tsconfig.json')}: a referenced project is not composite`);\n",
+     "fileSha256": "e86c2ee25630d45907d5e4d0929bc6362231740e157d6d10652ac24f9d7c8e3f"
+    }
+   ],
+   "tests": [
+    "apps/three-surface-poc/src/product-build.test.ts"
+   ],
+   "loadavg": [
+    "36.40",
+    "36.61",
+    "32.44"
+   ],
+   "exit": 1,
+   "failed": 3,
+   "passed": 20,
+   "failing": [
+    {
+     "test": "the clean build refuses, removing nothing, when it reaches a referenced project that is not composite",
+     "message": "Error: ENOENT: no such file or directory, open '/tmp/r558-9/syzygy-clean-build-I4RHYu/packages/a/dist/a.js'"
+    },
+    {
+     "test": "the clean build refuses, removing nothing, when it reaches a referenced project that does not set composite",
+     "message": "Error: ENOENT: no such file or directory, open '/tmp/r558-9/syzygy-clean-build-0da5xb/packages/a/dist/a.js'"
+    },
+    {
+     "test": "the clean build refuses, removing nothing, when it reaches a referenced project that inherits composite false",
+     "message": "Error: ENOENT: no such file or directory, open '/tmp/r558-9/syzygy-clean-build-LnUAFC/packages/a/dist/a.js'"
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "O2",
+   "mutation": "the effective outputs check is deferred until after the removal",
+   "edits": [
+    {
+     "file": "scripts/clean_build.mjs",
+     "old": "const visiting = [];\n",
+     "new": "const visiting = [];\nconst late = [];\n",
+     "fileSha256": "e86c2ee25630d45907d5e4d0929bc6362231740e157d6d10652ac24f9d7c8e3f"
+    },
+    {
+     "file": "scripts/clean_build.mjs",
+     "old": "    throw new Error(`${path}: its outputs and incremental state are not both under dist`);\n  }\n  composite.set",
+     "new": "    late.push(path);\n  }\n  composite.set",
+     "fileSha256": "e86c2ee25630d45907d5e4d0929bc6362231740e157d6d10652ac24f9d7c8e3f"
+    },
+    {
+     "file": "scripts/clean_build.mjs",
+     "old": "for (const project of built) rmSync(join(project, 'dist'), { recursive: true, force: true });\n",
+     "new": "for (const project of built) rmSync(join(project, 'dist'), { recursive: true, force: true });\nif (late.length) throw new Error(`${late[0]}: its outputs and incremental state are not both under dist`);\n",
+     "fileSha256": "e86c2ee25630d45907d5e4d0929bc6362231740e157d6d10652ac24f9d7c8e3f"
+    }
+   ],
+   "tests": [
+    "apps/three-surface-poc/src/product-build.test.ts"
+   ],
+   "loadavg": [
+    "36.42",
+    "36.67",
+    "32.73"
+   ],
+   "exit": 1,
+   "failed": 2,
+   "passed": 21,
+   "failing": [
+    {
+     "test": "the clean build refuses, removing nothing, when it reaches a project whose declarations leave dist through extends",
+     "message": "Error: ENOENT: no such file or directory, open '/tmp/r558-9/syzygy-clean-build-wNVGe2/packages/a/dist/a.js'"
+    },
+    {
+     "test": "the clean build refuses, removing nothing, when it reaches a project that bundles its outputs into one file through extends",
+     "message": "Error: ENOENT: no such file or directory, open '/tmp/r558-9/syzygy-clean-build-EVQ7iy/packages/a/dist/a.js'"
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "MF1",
+   "mutation": "the emitted-set model keeps only the files the tsconfig names",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/product-build.test.ts",
+     "old": ".filter((file) => file.startsWith(`${base}${project}/src/`)",
+     "new": ".filter((file) => parsed.fileNames.includes(file) && file.startsWith(`${base}${project}/src/`)",
+     "fileSha256": "d47115ac4026f730a9021e4f07e9b6254305bc4ed7453e1fbc3036c43f37c0df"
+    }
+   ],
+   "tests": [
+    "apps/three-surface-poc/src/product-build.test.ts"
+   ],
+   "loadavg": [
+    "37.85",
+    "37.16",
+    "33.15"
+   ],
+   "exit": 1,
+   "failed": 1,
+   "passed": 22,
+   "failing": [
+    {
+     "test": "the emitted-set model takes in a module a triple-slash reference names, as tsc --listFilesOnly does",
+     "message": "AssertionError: expected [ 'packages/a/src/a.ts' ] to deeply equal [ 'packages/a/src/a.ts', \u2026(1) ]"
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "MF2",
+   "mutation": "the emitted-set model keeps declaration files",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/product-build.test.ts",
+     "old": " && !file.endsWith('.d.ts')).map(",
+     "new": ").map(",
+     "fileSha256": "d47115ac4026f730a9021e4f07e9b6254305bc4ed7453e1fbc3036c43f37c0df"
+    }
+   ],
+   "tests": [
+    "apps/three-surface-poc/src/product-build.test.ts"
+   ],
+   "loadavg": [
+    "32.02",
+    "35.83",
+    "32.84"
+   ],
+   "exit": 0,
+   "failed": 0,
+   "passed": 23,
+   "failing": [],
+   "killed": false
+  },
+  {
+   "id": "MF3",
+   "mutation": "the emitted-set model widens from <project>/src/ to <project>/",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/product-build.test.ts",
+     "old": ".filter((file) => file.startsWith(`${base}${project}/src/`)",
+     "new": ".filter((file) => file.startsWith(`${base}${project}/`)",
+     "fileSha256": "d47115ac4026f730a9021e4f07e9b6254305bc4ed7453e1fbc3036c43f37c0df"
+    }
+   ],
+   "tests": [
+    "apps/three-surface-poc/src/product-build.test.ts"
+   ],
+   "loadavg": [
+    "28.06",
+    "34.37",
+    "32.46"
+   ],
+   "exit": 0,
+   "failed": 0,
+   "passed": 23,
+   "failing": [],
+   "killed": false
+  },
+  {
+   "id": "PK1",
+   "mutation": "PLUGINS_KEY no longer takes a quoted key",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/sync-child-process-guard.test.ts",
+     "old": "const PLUGINS_KEY = /\\bplugins\\b['\"]?\\s*:/;",
+     "new": "const PLUGINS_KEY = /\\bplugins\\s*:/;",
+     "fileSha256": "5c1dd9cc6d589191f1fc5b18d74712301ace051c6da6948de7d86821e64876c2"
+    }
+   ],
+   "tests": [
+    "apps/three-surface-poc/src/sync-child-process-guard.test.ts"
+   ],
+   "loadavg": [
+    "28.89",
+    "33.97",
+    "32.40"
+   ],
+   "exit": 1,
+   "failed": 1,
+   "passed": 5,
+   "failing": [
+    {
+     "test": "suite child processes and the vitest worker RPC reads every project root from the vitest config, and fails closed on a shape it does not recognize",
+     "message": "AssertionError: 'plugins': [],"
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "PK2",
+   "mutation": "the plugins check moves after the project-count check",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/sync-child-process-guard.test.ts",
+     "old": "  if (PLUGINS_KEY.test(config)) throw new Error(`${VITEST_CONFIG}: a plugin may load a workspace package by other than its source condition`);\n",
+     "new": "",
+     "fileSha256": "5c1dd9cc6d589191f1fc5b18d74712301ace051c6da6948de7d86821e64876c2"
+    },
+    {
+     "file": "apps/three-surface-poc/src/sync-child-process-guard.test.ts",
+     "old": "    throw new Error(`${VITEST_CONFIG}: ${projects} projects but ${includes.length} recognized single-glob includes`);\n  }\n",
+     "new": "    throw new Error(`${VITEST_CONFIG}: ${projects} projects but ${includes.length} recognized single-glob includes`);\n  }\n  if (PLUGINS_KEY.test(config)) throw new Error(`${VITEST_CONFIG}: a plugin may load a workspace package by other than its source condition`);\n",
+     "fileSha256": "5c1dd9cc6d589191f1fc5b18d74712301ace051c6da6948de7d86821e64876c2"
+    }
+   ],
+   "tests": [
+    "apps/three-surface-poc/src/sync-child-process-guard.test.ts"
+   ],
+   "loadavg": [
+    "28.89",
+    "33.97",
+    "32.40"
+   ],
+   "exit": 1,
+   "failed": 1,
+   "passed": 5,
+   "failing": [
+    {
+     "test": "suite child processes and the vitest worker RPC reads every project root from the vitest config, and fails closed on a shape it does not recognize",
+     "message": "AssertionError: ssr: { resolve: { conditions: ['source', 'module', 'node', 'development|production'] } },"
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "C9",
+   "mutation": "underDist drops the exact-dist arm",
+   "edits": [
+    {
+     "file": "scripts/clean_build.mjs",
+     "old": "(file === dist || file.startsWith(`${dist}/`))",
+     "new": "file.startsWith(`${dist}/`)",
+     "fileSha256": "e86c2ee25630d45907d5e4d0929bc6362231740e157d6d10652ac24f9d7c8e3f"
+    }
+   ],
+   "tests": [
+    "apps/three-surface-poc/src/product-build.test.ts"
+   ],
+   "loadavg": [
+    "28.73",
+    "33.86",
+    "32.37"
+   ],
+   "exit": 1,
+   "failed": 13,
+   "passed": 10,
+   "failing": [
+    {
+     "test": "the clean build leaves no output it did not just write in any project it builds, and leaves other projects alone",
+     "message": "Error: Command failed: /home/tze/.nvm/versions/node/v24.6.0/bin/node /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-558/clone/scripts/clean_build.mjs packages/d"
+    },
+    {
+     "test": "the clean build refuses, removing nothing, when it reaches a project whose outputs leave dist",
+     "message": "AssertionError: expected Error: Command failed: /home/tze/.nvm/ver\u2026 { \u2026(6) } to match object { stderr: StringContaining{\u2026} }"
+    },
+    {
+     "test": "the clean build refuses, removing nothing, when it reaches a project whose declarations leave dist",
+     "message": "AssertionError: expected Error: Command failed: /home/tze/.nvm/ver\u2026 { \u2026(6) } to match object { stderr: StringContaining{\u2026} }"
+    },
+    {
+     "test": "the clean build refuses, removing nothing, when it reaches a project that bundles its outputs into one file",
+     "message": "AssertionError: expected Error: Command failed: /home/tze/.nvm/ver\u2026 { \u2026(6) } to match object { stderr: StringContaining{\u2026} }"
+    },
+    {
+     "test": "the clean build refuses, removing nothing, when it reaches a reference cycle",
+     "message": "AssertionError: expected Error: Command failed: /home/tze/.nvm/ver\u2026 { \u2026(6) } to match object { stderr: StringContaining{\u2026} }"
+    },
+    {
+     "test": "the clean build refuses, removing nothing, when it reaches a tsconfig.json that is not plain JSON",
+     "message": "AssertionError: expected Error: Command failed: /home/tze/.nvm/ver\u2026 { \u2026(6) } to match object { stderr: StringContaining{\u2026} }"
+    },
+    {
+     "test": "the clean build refuses, removing nothing, when it reaches a project whose declarations leave dist through extends",
+     "message": "AssertionError: expected Error: Command failed: /home/tze/.nvm/ver\u2026 { \u2026(6) } to match object { stderr: StringContaining{\u2026} }"
+    },
+    {
+     "test": "the clean build refuses, removing nothing, when it reaches a project that bundles its outputs into one file through extends",
+     "message": "AssertionError: expected Error: Command failed: /home/tze/.nvm/ver\u2026 { \u2026(6) } to match object { stderr: StringContaining{\u2026} }"
+    },
+    {
+     "test": "the clean build refuses, removing nothing, when it reaches a referenced project that is not composite",
+     "message": "AssertionError: expected Error: Command failed: /home/tze/.nvm/ver\u2026 { \u2026(6) } to match object { stderr: StringContaining{\u2026} }"
+    },
+    {
+     "test": "the clean build refuses, removing nothing, when it reaches a referenced project that does not set composite",
+     "message": "AssertionError: expected Error: Command failed: /home/tze/.nvm/ver\u2026 { \u2026(6) } to match object { stderr: StringContaining{\u2026} }"
+    },
+    {
+     "test": "the clean build refuses, removing nothing, when it reaches a referenced project that inherits composite false",
+     "message": "AssertionError: expected Error: Command failed: /home/tze/.nvm/ver\u2026 { \u2026(6) } to match object { stderr: StringContaining{\u2026} }"
+    },
+    {
+     "test": "the clean build builds a named project that nothing references and that is not composite",
+     "message": "Error: Command failed: /home/tze/.nvm/versions/node/v24.6.0/bin/node /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-558/clone/scripts/clean_build.mjs packages/c"
+    },
+    {
+     "test": "the clean build builds a referenced project that inherits composite through extends",
+     "message": "Error: Command failed: /home/tze/.nvm/versions/node/v24.6.0/bin/node /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-558/clone/scripts/clean_build.mjs packages/d"
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "C10",
+   "mutation": "underDist drops the separator (dist-x passes)",
+   "edits": [
+    {
+     "file": "scripts/clean_build.mjs",
+     "old": "file.startsWith(`${dist}/`)",
+     "new": "file.startsWith(dist)",
+     "fileSha256": "e86c2ee25630d45907d5e4d0929bc6362231740e157d6d10652ac24f9d7c8e3f"
+    }
+   ],
+   "tests": [
+    "apps/three-surface-poc/src/product-build.test.ts"
+   ],
+   "loadavg": [
+    "34.75",
+    "34.97",
+    "32.79"
+   ],
+   "exit": 0,
+   "failed": 0,
+   "passed": 23,
+   "failing": [],
+   "killed": false
+  },
+  {
+   "id": "E1",
+   "mutation": "the lane's E1: drop the effective outDir and tsBuildInfoFile refusals",
+   "edits": [
+    {
+     "file": "scripts/clean_build.mjs",
+     "old": "!underDist(effective.outDir) || !underDist(effective.tsBuildInfoFile) || ",
+     "new": "",
+     "fileSha256": "e86c2ee25630d45907d5e4d0929bc6362231740e157d6d10652ac24f9d7c8e3f"
+    }
+   ],
+   "tests": [
+    "apps/three-surface-poc/src/product-build.test.ts"
+   ],
+   "loadavg": [
+    "33.03",
+    "34.51",
+    "32.73"
+   ],
+   "exit": 0,
+   "failed": 0,
+   "passed": 23,
+   "failing": [],
+   "killed": false
+  },
+  {
+   "id": "R7h",
+   "mutation": "the unrecoverable-diagnostic handler no longer throws",
+   "edits": [
+    {
+     "file": "scripts/clean_build.mjs",
+     "old": "onUnRecoverableConfigFileDiagnostic: () => { throw new Error(`${path}: TypeScript cannot read it`); }",
+     "new": "onUnRecoverableConfigFileDiagnostic: () => {}",
+     "fileSha256": "e86c2ee25630d45907d5e4d0929bc6362231740e157d6d10652ac24f9d7c8e3f"
+    }
+   ],
+   "tests": [
+    "apps/three-surface-poc/src/product-build.test.ts"
+   ],
+   "loadavg": [
+    "33.35",
+    "34.31",
+    "32.74"
+   ],
+   "exit": 0,
+   "failed": 0,
+   "passed": 23,
+   "failing": [],
+   "killed": false
+  }
+ ]
+}

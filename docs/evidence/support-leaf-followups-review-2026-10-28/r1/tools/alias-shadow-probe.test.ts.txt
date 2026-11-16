@@ -1,0 +1,14 @@
+import { expect, it } from 'vitest';
+
+// Reviewer probe (PR 554): what a test that imports each left-out dossier subpath, and one aliased subpath, actually loads.
+it('probe', async () => {
+  const results: Record<string, string> = {};
+  const record = async (specifier: string, load: () => Promise<Record<string, unknown>>): Promise<void> => {
+    try { results[specifier] = `loaded: ${Object.keys(await load()).sort().join(',')}`; } catch (error) { results[specifier] = `error: ${String((error as Error).message).slice(0, 900)}`; }
+  };
+  await record('@syzygy/polaris-dossier/argv', () => import('@syzygy/polaris-dossier/argv'));
+  await record('@syzygy/polaris-dossier/state-directory', () => import('@syzygy/polaris-dossier/state-directory'));
+  await record('@syzygy/polaris-generation-core/live', () => import('@syzygy/polaris-generation-core/live'));
+  console.log(`ALIAS-PROBE ${JSON.stringify(results)}`);
+  expect(Object.keys(results)).toHaveLength(3);
+});

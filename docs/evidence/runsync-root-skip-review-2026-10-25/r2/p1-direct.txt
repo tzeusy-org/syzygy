@@ -1,0 +1,5 @@
+faithful: exit 1, stdout 0 bytes, stderr line 1: syzygy daemon: state directory <BASE>/root/.syzygy/x lies inside the governed plane (<BASE>/root/.syzygy); choose a location outside openspec/ and .syzygy/
+P1 build exit 0; dist carries P1: True
+P1: exit 1, stdout 0 bytes, stderr line 1: syzygy daemon: port must be an integer in [0, 65535]; got `undefined`
+rebuild exit 0
+tree clean: True

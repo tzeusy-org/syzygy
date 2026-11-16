@@ -1,0 +1,1897 @@
+{
+ "sites": 24,
+ "cells": 210,
+ "differ": 0,
+ "rows": [
+  {
+   "site": "A1",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 102,
+   "value": "array",
+   "same": true,
+   "base": "{\"detail\":\"policy document is not an object\",\"kind\":\"undecodable\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "A1",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 102,
+   "value": "array of one object",
+   "same": true,
+   "base": "{\"detail\":\"policy document is not an object\",\"kind\":\"undecodable\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "A1",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 102,
+   "value": "null",
+   "same": true,
+   "base": "{\"detail\":\"policy document is not an object\",\"kind\":\"undecodable\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "A1",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 102,
+   "value": "string",
+   "same": true,
+   "base": "{\"detail\":\"policy document is not an object\",\"kind\":\"undecodable\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "A1",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 102,
+   "value": "number",
+   "same": true,
+   "base": "{\"detail\":\"policy document is not an object\",\"kind\":\"undecodable\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "A1",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 102,
+   "value": "true",
+   "same": true,
+   "base": "{\"detail\":\"policy document is not an object\",\"kind\":\"undecodable\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "A1",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 102,
+   "value": "empty object",
+   "same": true,
+   "base": "{\"fields\":{\"policyOwningProject\":{\"kind\":\"missing\"},\"policyVersion\":{\"kind\":\"missing\"}},\"kind\":\"parsed\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "A2",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 121,
+   "value": "array",
+   "same": true,
+   "base": "{\"detail\":\"registry document is not an object\",\"kind\":\"undecodable\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "A2",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 121,
+   "value": "array of one object",
+   "same": true,
+   "base": "{\"detail\":\"registry document is not an object\",\"kind\":\"undecodable\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "A2",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 121,
+   "value": "null",
+   "same": true,
+   "base": "{\"detail\":\"registry document is not an object\",\"kind\":\"undecodable\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "A2",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 121,
+   "value": "string",
+   "same": true,
+   "base": "{\"detail\":\"registry document is not an object\",\"kind\":\"undecodable\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "A2",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 121,
+   "value": "number",
+   "same": true,
+   "base": "{\"detail\":\"registry document is not an object\",\"kind\":\"undecodable\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "A2",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 121,
+   "value": "true",
+   "same": true,
+   "base": "{\"detail\":\"registry document is not an object\",\"kind\":\"undecodable\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "A2",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 121,
+   "value": "empty object",
+   "same": true,
+   "base": "{\"fields\":{\"governanceHome\":{\"kind\":\"missing\"},\"project\":{\"kind\":\"missing\"},\"readOnlyAuthority\":{\"kind\":\"missing\"},\"repository\":{\"kind\":\"missing\"},\"writeSurface\":{\"kind\":\"missing\"}},\"kind\":\"parsed\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "A3",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 132,
+   "value": "array",
+   "same": true,
+   "base": "{\"fields\":{\"governanceHome\":{\"kind\":\"present\",\"value\":\"g\"},\"project\":{\"kind\":\"present\",\"value\":\"p\"},\"readOnlyAuthority\":{\"kind\":\"missing\"},\"repository\":{\"kind\":\"present\",\"value\":[[]]},\"writeSurface\":{\"kind\":\"missing\"}},\"kind\":\"parsed\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "A3",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 132,
+   "value": "array of one object",
+   "same": true,
+   "base": "{\"fields\":{\"governanceHome\":{\"kind\":\"present\",\"value\":\"g\"},\"project\":{\"kind\":\"present\",\"value\":\"p\"},\"readOnlyAuthority\":{\"kind\":\"missing\"},\"repository\":{\"kind\":\"present\",\"value\":[[{}]]},\"writeSurface\":{\"kind\":\"missing\"}},\"kind\":\"parsed\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "A3",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 132,
+   "value": "null",
+   "same": true,
+   "base": "{\"fields\":{\"governanceHome\":{\"kind\":\"present\",\"value\":\"g\"},\"project\":{\"kind\":\"present\",\"value\":\"p\"},\"readOnlyAuthority\":{\"kind\":\"missing\"},\"repository\":{\"kind\":\"present\",\"value\":[null]},\"writeSurface\":{\"kind\":\"missing\"}},\"kind\":\"parsed\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "A3",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 132,
+   "value": "string",
+   "same": true,
+   "base": "{\"fields\":{\"governanceHome\":{\"kind\":\"present\",\"value\":\"g\"},\"project\":{\"kind\":\"present\",\"value\":\"p\"},\"readOnlyAuthority\":{\"kind\":\"missing\"},\"repository\":{\"kind\":\"present\",\"value\":[\"x\"]},\"writeSurface\":{\"kind\":\"missing\"}},\"kind\":\"parsed\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "A3",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 132,
+   "value": "number",
+   "same": true,
+   "base": "{\"fields\":{\"governanceHome\":{\"kind\":\"present\",\"value\":\"g\"},\"project\":{\"kind\":\"present\",\"value\":\"p\"},\"readOnlyAuthority\":{\"kind\":\"missing\"},\"repository\":{\"kind\":\"present\",\"value\":[1]},\"writeSurface\":{\"kind\":\"missing\"}},\"kind\":\"parsed\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "A3",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 132,
+   "value": "true",
+   "same": true,
+   "base": "{\"fields\":{\"governanceHome\":{\"kind\":\"present\",\"value\":\"g\"},\"project\":{\"kind\":\"present\",\"value\":\"p\"},\"readOnlyAuthority\":{\"kind\":\"missing\"},\"repository\":{\"kind\":\"present\",\"value\":[true]},\"writeSurface\":{\"kind\":\"missing\"}},\"kind\":\"parsed\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "A3",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 132,
+   "value": "empty object",
+   "same": true,
+   "base": "{\"fields\":{\"governanceHome\":{\"kind\":\"present\",\"value\":\"g\"},\"project\":{\"kind\":\"present\",\"value\":\"p\"},\"readOnlyAuthority\":{\"kind\":\"missing\"},\"repository\":{\"kind\":\"missing\"},\"writeSurface\":{\"kind\":\"missing\"}},\"kind\":\"parsed\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "A4",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 136,
+   "value": "array",
+   "same": true,
+   "base": "{\"fields\":{\"governanceHome\":{\"kind\":\"missing\"},\"project\":{\"kind\":\"missing\"},\"readOnlyAuthority\":{\"kind\":\"present\",\"value\":{\"writeSurface\":[]}},\"repository\":{\"kind\":\"present\",\"value\":[]},\"writeSurface\":{\"kind\":\"present\",\"value\":[]}},\"kind\":\"parsed\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "A4",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 136,
+   "value": "array of one object",
+   "same": true,
+   "base": "{\"fields\":{\"governanceHome\":{\"kind\":\"missing\"},\"project\":{\"kind\":\"missing\"},\"readOnlyAuthority\":{\"kind\":\"present\",\"value\":{\"writeSurface\":[]}},\"repository\":{\"kind\":\"present\",\"value\":[{}]},\"writeSurface\":{\"kind\":\"present\",\"value\":[]}},\"kind\":\"parsed\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "A4",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 136,
+   "value": "null",
+   "same": true,
+   "base": "{\"fields\":{\"governanceHome\":{\"kind\":\"missing\"},\"project\":{\"kind\":\"missing\"},\"readOnlyAuthority\":{\"kind\":\"present\",\"value\":{\"writeSurface\":[]}},\"repository\":{\"kind\":\"present\",\"value\":null},\"writeSurface\":{\"kind\":\"present\",\"value\":[]}},\"kind\":\"parsed\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "A4",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 136,
+   "value": "string",
+   "same": true,
+   "base": "{\"fields\":{\"governanceHome\":{\"kind\":\"missing\"},\"project\":{\"kind\":\"missing\"},\"readOnlyAuthority\":{\"kind\":\"present\",\"value\":{\"writeSurface\":[]}},\"repository\":{\"kind\":\"present\",\"value\":\"x\"},\"writeSurface\":{\"kind\":\"present\",\"value\":[]}},\"kind\":\"parsed\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "A4",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 136,
+   "value": "number",
+   "same": true,
+   "base": "{\"fields\":{\"governanceHome\":{\"kind\":\"missing\"},\"project\":{\"kind\":\"missing\"},\"readOnlyAuthority\":{\"kind\":\"present\",\"value\":{\"writeSurface\":[]}},\"repository\":{\"kind\":\"present\",\"value\":1},\"writeSurface\":{\"kind\":\"present\",\"value\":[]}},\"kind\":\"parsed\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "A4",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 136,
+   "value": "true",
+   "same": true,
+   "base": "{\"fields\":{\"governanceHome\":{\"kind\":\"missing\"},\"project\":{\"kind\":\"missing\"},\"readOnlyAuthority\":{\"kind\":\"present\",\"value\":{\"writeSurface\":[]}},\"repository\":{\"kind\":\"present\",\"value\":true},\"writeSurface\":{\"kind\":\"present\",\"value\":[]}},\"kind\":\"parsed\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "A4",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 136,
+   "value": "empty object",
+   "same": true,
+   "base": "{\"fields\":{\"governanceHome\":{\"kind\":\"missing\"},\"project\":{\"kind\":\"missing\"},\"readOnlyAuthority\":{\"kind\":\"present\",\"value\":{\"writeSurface\":[]}},\"repository\":{\"kind\":\"missing\"},\"writeSurface\":{\"kind\":\"present\",\"value\":[]}},\"kind\":\"parsed\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "A5",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 141,
+   "value": "array",
+   "same": true,
+   "base": "{\"fields\":{\"governanceHome\":{\"kind\":\"missing\"},\"project\":{\"kind\":\"missing\"},\"readOnlyAuthority\":{\"kind\":\"present\",\"value\":[]},\"repository\":{\"kind\":\"present\",\"value\":\"r\"},\"writeSurface\":{\"kind\":\"missing\"}},\"kind\":\"parsed\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "A5",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 141,
+   "value": "array of one object",
+   "same": true,
+   "base": "{\"fields\":{\"governanceHome\":{\"kind\":\"missing\"},\"project\":{\"kind\":\"missing\"},\"readOnlyAuthority\":{\"kind\":\"present\",\"value\":[{}]},\"repository\":{\"kind\":\"present\",\"value\":\"r\"},\"writeSurface\":{\"kind\":\"missing\"}},\"kind\":\"parsed\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "A5",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 141,
+   "value": "null",
+   "same": true,
+   "base": "{\"fields\":{\"governanceHome\":{\"kind\":\"missing\"},\"project\":{\"kind\":\"missing\"},\"readOnlyAuthority\":{\"kind\":\"present\",\"value\":null},\"repository\":{\"kind\":\"present\",\"value\":\"r\"},\"writeSurface\":{\"kind\":\"missing\"}},\"kind\":\"parsed\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "A5",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 141,
+   "value": "string",
+   "same": true,
+   "base": "{\"fields\":{\"governanceHome\":{\"kind\":\"missing\"},\"project\":{\"kind\":\"missing\"},\"readOnlyAuthority\":{\"kind\":\"present\",\"value\":\"x\"},\"repository\":{\"kind\":\"present\",\"value\":\"r\"},\"writeSurface\":{\"kind\":\"missing\"}},\"kind\":\"parsed\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "A5",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 141,
+   "value": "number",
+   "same": true,
+   "base": "{\"fields\":{\"governanceHome\":{\"kind\":\"missing\"},\"project\":{\"kind\":\"missing\"},\"readOnlyAuthority\":{\"kind\":\"present\",\"value\":1},\"repository\":{\"kind\":\"present\",\"value\":\"r\"},\"writeSurface\":{\"kind\":\"missing\"}},\"kind\":\"parsed\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "A5",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 141,
+   "value": "true",
+   "same": true,
+   "base": "{\"fields\":{\"governanceHome\":{\"kind\":\"missing\"},\"project\":{\"kind\":\"missing\"},\"readOnlyAuthority\":{\"kind\":\"present\",\"value\":true},\"repository\":{\"kind\":\"present\",\"value\":\"r\"},\"writeSurface\":{\"kind\":\"missing\"}},\"kind\":\"parsed\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "A5",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 141,
+   "value": "empty object",
+   "same": true,
+   "base": "{\"fields\":{\"governanceHome\":{\"kind\":\"missing\"},\"project\":{\"kind\":\"missing\"},\"readOnlyAuthority\":{\"kind\":\"present\",\"value\":{}},\"repository\":{\"kind\":\"present\",\"value\":\"r\"},\"writeSurface\":{\"kind\":\"missing\"}},\"kind\":\"parsed\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "B1",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "line": 71,
+   "value": "array",
+   "same": true,
+   "base": "{\"ok\":true,\"redaction\":null}",
+   "head": "(same)"
+  },
+  {
+   "site": "B1",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "line": 71,
+   "value": "array of one object",
+   "same": true,
+   "base": "{\"ok\":true,\"redaction\":null}",
+   "head": "(same)"
+  },
+  {
+   "site": "B1",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "line": 71,
+   "value": "null",
+   "same": true,
+   "base": "{\"ok\":true,\"redaction\":null}",
+   "head": "(same)"
+  },
+  {
+   "site": "B1",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "line": 71,
+   "value": "string",
+   "same": true,
+   "base": "{\"ok\":true,\"redaction\":null}",
+   "head": "(same)"
+  },
+  {
+   "site": "B1",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "line": 71,
+   "value": "number",
+   "same": true,
+   "base": "{\"ok\":true,\"redaction\":null}",
+   "head": "(same)"
+  },
+  {
+   "site": "B1",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "line": 71,
+   "value": "true",
+   "same": true,
+   "base": "{\"ok\":true,\"redaction\":null}",
+   "head": "(same)"
+  },
+  {
+   "site": "B1",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "line": 71,
+   "value": "empty object",
+   "same": true,
+   "base": "{\"ok\":true,\"redaction\":null}",
+   "head": "(same)"
+  },
+  {
+   "site": "B1",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "line": 71,
+   "value": "undefined",
+   "same": true,
+   "base": "{\"ok\":true,\"redaction\":null}",
+   "head": "(same)"
+  },
+  {
+   "site": "B1",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "line": 71,
+   "value": "function",
+   "same": true,
+   "base": "{\"ok\":true,\"redaction\":null}",
+   "head": "(same)"
+  },
+  {
+   "site": "B1",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "line": 71,
+   "value": "array carrying the fields",
+   "same": true,
+   "base": "{\"ok\":true,\"redaction\":null}",
+   "head": "(same)"
+  },
+  {
+   "site": "B1",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "line": 71,
+   "value": "function carrying the fields",
+   "same": true,
+   "base": "{\"ok\":true,\"redaction\":null}",
+   "head": "(same)"
+  },
+  {
+   "site": "B1",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "line": 71,
+   "value": "proxy of an array carrying the fields",
+   "same": true,
+   "base": "{\"ok\":true,\"redaction\":null}",
+   "head": "(same)"
+  },
+  {
+   "site": "B1",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "line": 71,
+   "value": "the valid object itself",
+   "same": true,
+   "base": "{\"ok\":true,\"redaction\":{\"guardLines\":1,\"redactedClasses\":[\"project-documentation\"],\"wholeArtifactDetectors\":[\"private-key-material\",\"known-token-formats\"],\"wholeArtifactFragments\":[\"-----BEGIN \",\"---- BEGIN \",\"LS0tLS1CRUdJT\",\"LS0tLSBCRUdJT\"],\"wholeArtifactLinePattern\":\"[regexp ^[ \\\\t]*-{4,}[ \\\\t]*BEGIN/u]\"}}",
+   "head": "(same)"
+  },
+  {
+   "site": "B2",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "line": 73,
+   "value": "array",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"its secret redaction is not an object\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "B2",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "line": 73,
+   "value": "array of one object",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"its secret redaction is not an object\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "B2",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "line": 73,
+   "value": "null",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"its secret redaction is not an object\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "B2",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "line": 73,
+   "value": "string",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"its secret redaction is not an object\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "B2",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "line": 73,
+   "value": "number",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"its secret redaction is not an object\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "B2",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "line": 73,
+   "value": "true",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"its secret redaction is not an object\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "B2",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "line": 73,
+   "value": "empty object",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"its secret redaction carries the fields , not exactly appliesTo, redactedClasses, redactionClass, wholeArtifactDetectors, wholeArtifactLinePattern, wholeArtifactFragments, guardLines, rule, withheldLines, citedSpanRule, provenance, unchanged, consequence\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "B2",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "line": 73,
+   "value": "undefined",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"its secret redaction is not an object\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "B2",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "line": 73,
+   "value": "function",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"its secret redaction is not an object\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "B2",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "line": 73,
+   "value": "array carrying the fields",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"its secret redaction is not an object\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "B2",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "line": 73,
+   "value": "function carrying the fields",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"its secret redaction is not an object\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "B2",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "line": 73,
+   "value": "proxy of an array carrying the fields",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"its secret redaction is not an object\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "B2",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "line": 73,
+   "value": "the valid object itself",
+   "same": true,
+   "base": "{\"ok\":true,\"redaction\":{\"guardLines\":1,\"redactedClasses\":[\"project-documentation\"],\"wholeArtifactDetectors\":[\"private-key-material\",\"known-token-formats\"],\"wholeArtifactFragments\":[\"-----BEGIN \",\"---- BEGIN \",\"LS0tLS1CRUdJT\",\"LS0tLSBCRUdJT\"],\"wholeArtifactLinePattern\":\"[regexp ^[ \\\\t]*-{4,}[ \\\\t]*BEGIN/u]\"}}",
+   "head": "(same)"
+  },
+  {
+   "site": "C1",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 68,
+   "value": "array",
+   "same": true,
+   "base": "{\"ok\":true,\"rule\":null}",
+   "head": "(same)"
+  },
+  {
+   "site": "C1",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 68,
+   "value": "array of one object",
+   "same": true,
+   "base": "{\"ok\":true,\"rule\":null}",
+   "head": "(same)"
+  },
+  {
+   "site": "C1",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 68,
+   "value": "null",
+   "same": true,
+   "base": "{\"ok\":true,\"rule\":null}",
+   "head": "(same)"
+  },
+  {
+   "site": "C1",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 68,
+   "value": "string",
+   "same": true,
+   "base": "{\"ok\":true,\"rule\":null}",
+   "head": "(same)"
+  },
+  {
+   "site": "C1",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 68,
+   "value": "number",
+   "same": true,
+   "base": "{\"ok\":true,\"rule\":null}",
+   "head": "(same)"
+  },
+  {
+   "site": "C1",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 68,
+   "value": "true",
+   "same": true,
+   "base": "{\"ok\":true,\"rule\":null}",
+   "head": "(same)"
+  },
+  {
+   "site": "C1",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 68,
+   "value": "empty object",
+   "same": true,
+   "base": "{\"ok\":true,\"rule\":null}",
+   "head": "(same)"
+  },
+  {
+   "site": "C1",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 68,
+   "value": "undefined",
+   "same": true,
+   "base": "{\"ok\":true,\"rule\":null}",
+   "head": "(same)"
+  },
+  {
+   "site": "C1",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 68,
+   "value": "function",
+   "same": true,
+   "base": "{\"ok\":true,\"rule\":null}",
+   "head": "(same)"
+  },
+  {
+   "site": "C1",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 68,
+   "value": "array carrying the fields",
+   "same": true,
+   "base": "{\"ok\":true,\"rule\":null}",
+   "head": "(same)"
+  },
+  {
+   "site": "C1",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 68,
+   "value": "function carrying the fields",
+   "same": true,
+   "base": "{\"ok\":true,\"rule\":null}",
+   "head": "(same)"
+  },
+  {
+   "site": "C1",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 68,
+   "value": "proxy of an array carrying the fields",
+   "same": true,
+   "base": "{\"ok\":true,\"rule\":null}",
+   "head": "(same)"
+  },
+  {
+   "site": "C1",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 68,
+   "value": "the valid object itself",
+   "same": true,
+   "base": "{\"ok\":true,\"rule\":{\"docExcludedTokens\":[\"adr\",\"adrs\",\"decision\",\"decisions\",\"rfc\",\"rfcs\",\"spec\",\"specs\",\"specification\",\"specifications\",\"design\",\"designs\",\"governance\",\"policy\",\"policies\",\"security\",\"conduct\",\"doctrine\",\"doctrines\",\"principle\",\"principles\",\"architecture\",\"architectures\",\"manifesto\",\"manifestos\"],\"docTokenSeparators\":\"-_. \",\"docTreeExtensions\":[\".md\",\".rst\",\".txt\"],\"docTreeRoots\":[\"docs\",\"doc\"],\"docTxtExcludedNames\":[\"cmakelists.txt\",\"robots.txt\"],\"docTxtExcludedPrefixes\":[\"requirements\"],\"documentSuffixes\":[\"\",\".md\",\".rst\",\".txt\"],\"licenseTreeRoots\":[\"licenses\"],\"licenseTreeSuffixes\":[\".md\",\".txt\"],\"rootStemNumericPrefix\":{\"digitCount\":2,\"digits\":\"0123456789\",\"optional\":true,\"separator\":\"-\"},\"rootStems\":[\"readme\",\"changelog\",\"changes\",\"release-notes\",\"release_notes\",\"releasenotes\",\"contributing\",\"license\",\"licence\",\"copying\",\"notice\",\"notices\",\"news\",\"history\",\"authors\",\"faq\"]}}",
+   "head": "(same)"
+  },
+  {
+   "site": "C1b",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 68,
+   "value": "array",
+   "same": true,
+   "base": "{\"ok\":true,\"rule\":{\"docExcludedTokens\":[\"adr\",\"adrs\",\"decision\",\"decisions\",\"rfc\",\"rfcs\",\"spec\",\"specs\",\"specification\",\"specifications\",\"design\",\"designs\",\"governance\",\"policy\",\"policies\",\"security\",\"conduct\",\"doctrine\",\"doctrines\",\"principle\",\"principles\",\"architecture\",\"architectures\",\"manifesto\",\"manifestos\"],\"docTokenSeparators\":\"-_. \",\"docTreeExtensions\":[\".md\",\".rst\",\".txt\"],\"docTreeRoots\":[\"docs\",\"doc\"],\"docTxtExcludedNames\":[\"cmakelists.txt\",\"robots.txt\"],\"docTxtExcludedPrefixes\":[\"requirements\"],\"documentSuffixes\":[\"\",\".md\",\".rst\",\".txt\"],\"licenseTreeRoots\":[\"licenses\"],\"licenseTreeSuffixes\":[\".md\",\".txt\"],\"rootStemNumericPrefix\":{\"digitCount\":2,\"digits\":\"0123456789\",\"optional\":true,\"separator\":\"-\"},\"rootStems\":[\"readme\",\"changelog\",\"changes\",\"release-notes\",\"release_notes\",\"releasenotes\",\"contributing\",\"license\",\"licence\",\"copying\",\"notice\",\"notices\",\"news\",\"history\",\"authors\",\"faq\"]}}",
+   "head": "(same)"
+  },
+  {
+   "site": "C1b",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 68,
+   "value": "array of one object",
+   "same": true,
+   "base": "{\"ok\":true,\"rule\":{\"docExcludedTokens\":[\"adr\",\"adrs\",\"decision\",\"decisions\",\"rfc\",\"rfcs\",\"spec\",\"specs\",\"specification\",\"specifications\",\"design\",\"designs\",\"governance\",\"policy\",\"policies\",\"security\",\"conduct\",\"doctrine\",\"doctrines\",\"principle\",\"principles\",\"architecture\",\"architectures\",\"manifesto\",\"manifestos\"],\"docTokenSeparators\":\"-_. \",\"docTreeExtensions\":[\".md\",\".rst\",\".txt\"],\"docTreeRoots\":[\"docs\",\"doc\"],\"docTxtExcludedNames\":[\"cmakelists.txt\",\"robots.txt\"],\"docTxtExcludedPrefixes\":[\"requirements\"],\"documentSuffixes\":[\"\",\".md\",\".rst\",\".txt\"],\"licenseTreeRoots\":[\"licenses\"],\"licenseTreeSuffixes\":[\".md\",\".txt\"],\"rootStemNumericPrefix\":{\"digitCount\":2,\"digits\":\"0123456789\",\"optional\":true,\"separator\":\"-\"},\"rootStems\":[\"readme\",\"changelog\",\"changes\",\"release-notes\",\"release_notes\",\"releasenotes\",\"contributing\",\"license\",\"licence\",\"copying\",\"notice\",\"notices\",\"news\",\"history\",\"authors\",\"faq\"]}}",
+   "head": "(same)"
+  },
+  {
+   "site": "C1b",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 68,
+   "value": "null",
+   "same": true,
+   "base": "{\"ok\":true,\"rule\":{\"docExcludedTokens\":[\"adr\",\"adrs\",\"decision\",\"decisions\",\"rfc\",\"rfcs\",\"spec\",\"specs\",\"specification\",\"specifications\",\"design\",\"designs\",\"governance\",\"policy\",\"policies\",\"security\",\"conduct\",\"doctrine\",\"doctrines\",\"principle\",\"principles\",\"architecture\",\"architectures\",\"manifesto\",\"manifestos\"],\"docTokenSeparators\":\"-_. \",\"docTreeExtensions\":[\".md\",\".rst\",\".txt\"],\"docTreeRoots\":[\"docs\",\"doc\"],\"docTxtExcludedNames\":[\"cmakelists.txt\",\"robots.txt\"],\"docTxtExcludedPrefixes\":[\"requirements\"],\"documentSuffixes\":[\"\",\".md\",\".rst\",\".txt\"],\"licenseTreeRoots\":[\"licenses\"],\"licenseTreeSuffixes\":[\".md\",\".txt\"],\"rootStemNumericPrefix\":{\"digitCount\":2,\"digits\":\"0123456789\",\"optional\":true,\"separator\":\"-\"},\"rootStems\":[\"readme\",\"changelog\",\"changes\",\"release-notes\",\"release_notes\",\"releasenotes\",\"contributing\",\"license\",\"licence\",\"copying\",\"notice\",\"notices\",\"news\",\"history\",\"authors\",\"faq\"]}}",
+   "head": "(same)"
+  },
+  {
+   "site": "C1b",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 68,
+   "value": "string",
+   "same": true,
+   "base": "{\"ok\":true,\"rule\":{\"docExcludedTokens\":[\"adr\",\"adrs\",\"decision\",\"decisions\",\"rfc\",\"rfcs\",\"spec\",\"specs\",\"specification\",\"specifications\",\"design\",\"designs\",\"governance\",\"policy\",\"policies\",\"security\",\"conduct\",\"doctrine\",\"doctrines\",\"principle\",\"principles\",\"architecture\",\"architectures\",\"manifesto\",\"manifestos\"],\"docTokenSeparators\":\"-_. \",\"docTreeExtensions\":[\".md\",\".rst\",\".txt\"],\"docTreeRoots\":[\"docs\",\"doc\"],\"docTxtExcludedNames\":[\"cmakelists.txt\",\"robots.txt\"],\"docTxtExcludedPrefixes\":[\"requirements\"],\"documentSuffixes\":[\"\",\".md\",\".rst\",\".txt\"],\"licenseTreeRoots\":[\"licenses\"],\"licenseTreeSuffixes\":[\".md\",\".txt\"],\"rootStemNumericPrefix\":{\"digitCount\":2,\"digits\":\"0123456789\",\"optional\":true,\"separator\":\"-\"},\"rootStems\":[\"readme\",\"changelog\",\"changes\",\"release-notes\",\"release_notes\",\"releasenotes\",\"contributing\",\"license\",\"licence\",\"copying\",\"notice\",\"notices\",\"news\",\"history\",\"authors\",\"faq\"]}}",
+   "head": "(same)"
+  },
+  {
+   "site": "C1b",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 68,
+   "value": "number",
+   "same": true,
+   "base": "{\"ok\":true,\"rule\":{\"docExcludedTokens\":[\"adr\",\"adrs\",\"decision\",\"decisions\",\"rfc\",\"rfcs\",\"spec\",\"specs\",\"specification\",\"specifications\",\"design\",\"designs\",\"governance\",\"policy\",\"policies\",\"security\",\"conduct\",\"doctrine\",\"doctrines\",\"principle\",\"principles\",\"architecture\",\"architectures\",\"manifesto\",\"manifestos\"],\"docTokenSeparators\":\"-_. \",\"docTreeExtensions\":[\".md\",\".rst\",\".txt\"],\"docTreeRoots\":[\"docs\",\"doc\"],\"docTxtExcludedNames\":[\"cmakelists.txt\",\"robots.txt\"],\"docTxtExcludedPrefixes\":[\"requirements\"],\"documentSuffixes\":[\"\",\".md\",\".rst\",\".txt\"],\"licenseTreeRoots\":[\"licenses\"],\"licenseTreeSuffixes\":[\".md\",\".txt\"],\"rootStemNumericPrefix\":{\"digitCount\":2,\"digits\":\"0123456789\",\"optional\":true,\"separator\":\"-\"},\"rootStems\":[\"readme\",\"changelog\",\"changes\",\"release-notes\",\"release_notes\",\"releasenotes\",\"contributing\",\"license\",\"licence\",\"copying\",\"notice\",\"notices\",\"news\",\"history\",\"authors\",\"faq\"]}}",
+   "head": "(same)"
+  },
+  {
+   "site": "C1b",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 68,
+   "value": "true",
+   "same": true,
+   "base": "{\"ok\":true,\"rule\":{\"docExcludedTokens\":[\"adr\",\"adrs\",\"decision\",\"decisions\",\"rfc\",\"rfcs\",\"spec\",\"specs\",\"specification\",\"specifications\",\"design\",\"designs\",\"governance\",\"policy\",\"policies\",\"security\",\"conduct\",\"doctrine\",\"doctrines\",\"principle\",\"principles\",\"architecture\",\"architectures\",\"manifesto\",\"manifestos\"],\"docTokenSeparators\":\"-_. \",\"docTreeExtensions\":[\".md\",\".rst\",\".txt\"],\"docTreeRoots\":[\"docs\",\"doc\"],\"docTxtExcludedNames\":[\"cmakelists.txt\",\"robots.txt\"],\"docTxtExcludedPrefixes\":[\"requirements\"],\"documentSuffixes\":[\"\",\".md\",\".rst\",\".txt\"],\"licenseTreeRoots\":[\"licenses\"],\"licenseTreeSuffixes\":[\".md\",\".txt\"],\"rootStemNumericPrefix\":{\"digitCount\":2,\"digits\":\"0123456789\",\"optional\":true,\"separator\":\"-\"},\"rootStems\":[\"readme\",\"changelog\",\"changes\",\"release-notes\",\"release_notes\",\"releasenotes\",\"contributing\",\"license\",\"licence\",\"copying\",\"notice\",\"notices\",\"news\",\"history\",\"authors\",\"faq\"]}}",
+   "head": "(same)"
+  },
+  {
+   "site": "C1b",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 68,
+   "value": "empty object",
+   "same": true,
+   "base": "{\"ok\":true,\"rule\":{\"docExcludedTokens\":[\"adr\",\"adrs\",\"decision\",\"decisions\",\"rfc\",\"rfcs\",\"spec\",\"specs\",\"specification\",\"specifications\",\"design\",\"designs\",\"governance\",\"policy\",\"policies\",\"security\",\"conduct\",\"doctrine\",\"doctrines\",\"principle\",\"principles\",\"architecture\",\"architectures\",\"manifesto\",\"manifestos\"],\"docTokenSeparators\":\"-_. \",\"docTreeExtensions\":[\".md\",\".rst\",\".txt\"],\"docTreeRoots\":[\"docs\",\"doc\"],\"docTxtExcludedNames\":[\"cmakelists.txt\",\"robots.txt\"],\"docTxtExcludedPrefixes\":[\"requirements\"],\"documentSuffixes\":[\"\",\".md\",\".rst\",\".txt\"],\"licenseTreeRoots\":[\"licenses\"],\"licenseTreeSuffixes\":[\".md\",\".txt\"],\"rootStemNumericPrefix\":{\"digitCount\":2,\"digits\":\"0123456789\",\"optional\":true,\"separator\":\"-\"},\"rootStems\":[\"readme\",\"changelog\",\"changes\",\"release-notes\",\"release_notes\",\"releasenotes\",\"contributing\",\"license\",\"licence\",\"copying\",\"notice\",\"notices\",\"news\",\"history\",\"authors\",\"faq\"]}}",
+   "head": "(same)"
+  },
+  {
+   "site": "C1b",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 68,
+   "value": "undefined",
+   "same": true,
+   "base": "{\"ok\":true,\"rule\":{\"docExcludedTokens\":[\"adr\",\"adrs\",\"decision\",\"decisions\",\"rfc\",\"rfcs\",\"spec\",\"specs\",\"specification\",\"specifications\",\"design\",\"designs\",\"governance\",\"policy\",\"policies\",\"security\",\"conduct\",\"doctrine\",\"doctrines\",\"principle\",\"principles\",\"architecture\",\"architectures\",\"manifesto\",\"manifestos\"],\"docTokenSeparators\":\"-_. \",\"docTreeExtensions\":[\".md\",\".rst\",\".txt\"],\"docTreeRoots\":[\"docs\",\"doc\"],\"docTxtExcludedNames\":[\"cmakelists.txt\",\"robots.txt\"],\"docTxtExcludedPrefixes\":[\"requirements\"],\"documentSuffixes\":[\"\",\".md\",\".rst\",\".txt\"],\"licenseTreeRoots\":[\"licenses\"],\"licenseTreeSuffixes\":[\".md\",\".txt\"],\"rootStemNumericPrefix\":{\"digitCount\":2,\"digits\":\"0123456789\",\"optional\":true,\"separator\":\"-\"},\"rootStems\":[\"readme\",\"changelog\",\"changes\",\"release-notes\",\"release_notes\",\"releasenotes\",\"contributing\",\"license\",\"licence\",\"copying\",\"notice\",\"notices\",\"news\",\"history\",\"authors\",\"faq\"]}}",
+   "head": "(same)"
+  },
+  {
+   "site": "C1b",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 68,
+   "value": "function",
+   "same": true,
+   "base": "{\"ok\":true,\"rule\":{\"docExcludedTokens\":[\"adr\",\"adrs\",\"decision\",\"decisions\",\"rfc\",\"rfcs\",\"spec\",\"specs\",\"specification\",\"specifications\",\"design\",\"designs\",\"governance\",\"policy\",\"policies\",\"security\",\"conduct\",\"doctrine\",\"doctrines\",\"principle\",\"principles\",\"architecture\",\"architectures\",\"manifesto\",\"manifestos\"],\"docTokenSeparators\":\"-_. \",\"docTreeExtensions\":[\".md\",\".rst\",\".txt\"],\"docTreeRoots\":[\"docs\",\"doc\"],\"docTxtExcludedNames\":[\"cmakelists.txt\",\"robots.txt\"],\"docTxtExcludedPrefixes\":[\"requirements\"],\"documentSuffixes\":[\"\",\".md\",\".rst\",\".txt\"],\"licenseTreeRoots\":[\"licenses\"],\"licenseTreeSuffixes\":[\".md\",\".txt\"],\"rootStemNumericPrefix\":{\"digitCount\":2,\"digits\":\"0123456789\",\"optional\":true,\"separator\":\"-\"},\"rootStems\":[\"readme\",\"changelog\",\"changes\",\"release-notes\",\"release_notes\",\"releasenotes\",\"contributing\",\"license\",\"licence\",\"copying\",\"notice\",\"notices\",\"news\",\"history\",\"authors\",\"faq\"]}}",
+   "head": "(same)"
+  },
+  {
+   "site": "C1b",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 68,
+   "value": "array carrying the fields",
+   "same": true,
+   "base": "{\"ok\":true,\"rule\":{\"docExcludedTokens\":[\"adr\",\"adrs\",\"decision\",\"decisions\",\"rfc\",\"rfcs\",\"spec\",\"specs\",\"specification\",\"specifications\",\"design\",\"designs\",\"governance\",\"policy\",\"policies\",\"security\",\"conduct\",\"doctrine\",\"doctrines\",\"principle\",\"principles\",\"architecture\",\"architectures\",\"manifesto\",\"manifestos\"],\"docTokenSeparators\":\"-_. \",\"docTreeExtensions\":[\".md\",\".rst\",\".txt\"],\"docTreeRoots\":[\"docs\",\"doc\"],\"docTxtExcludedNames\":[\"cmakelists.txt\",\"robots.txt\"],\"docTxtExcludedPrefixes\":[\"requirements\"],\"documentSuffixes\":[\"\",\".md\",\".rst\",\".txt\"],\"licenseTreeRoots\":[\"licenses\"],\"licenseTreeSuffixes\":[\".md\",\".txt\"],\"rootStemNumericPrefix\":{\"digitCount\":2,\"digits\":\"0123456789\",\"optional\":true,\"separator\":\"-\"},\"rootStems\":[\"readme\",\"changelog\",\"changes\",\"release-notes\",\"release_notes\",\"releasenotes\",\"contributing\",\"license\",\"licence\",\"copying\",\"notice\",\"notices\",\"news\",\"history\",\"authors\",\"faq\"]}}",
+   "head": "(same)"
+  },
+  {
+   "site": "C1b",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 68,
+   "value": "function carrying the fields",
+   "same": true,
+   "base": "{\"ok\":true,\"rule\":{\"docExcludedTokens\":[\"adr\",\"adrs\",\"decision\",\"decisions\",\"rfc\",\"rfcs\",\"spec\",\"specs\",\"specification\",\"specifications\",\"design\",\"designs\",\"governance\",\"policy\",\"policies\",\"security\",\"conduct\",\"doctrine\",\"doctrines\",\"principle\",\"principles\",\"architecture\",\"architectures\",\"manifesto\",\"manifestos\"],\"docTokenSeparators\":\"-_. \",\"docTreeExtensions\":[\".md\",\".rst\",\".txt\"],\"docTreeRoots\":[\"docs\",\"doc\"],\"docTxtExcludedNames\":[\"cmakelists.txt\",\"robots.txt\"],\"docTxtExcludedPrefixes\":[\"requirements\"],\"documentSuffixes\":[\"\",\".md\",\".rst\",\".txt\"],\"licenseTreeRoots\":[\"licenses\"],\"licenseTreeSuffixes\":[\".md\",\".txt\"],\"rootStemNumericPrefix\":{\"digitCount\":2,\"digits\":\"0123456789\",\"optional\":true,\"separator\":\"-\"},\"rootStems\":[\"readme\",\"changelog\",\"changes\",\"release-notes\",\"release_notes\",\"releasenotes\",\"contributing\",\"license\",\"licence\",\"copying\",\"notice\",\"notices\",\"news\",\"history\",\"authors\",\"faq\"]}}",
+   "head": "(same)"
+  },
+  {
+   "site": "C1b",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 68,
+   "value": "proxy of an array carrying the fields",
+   "same": true,
+   "base": "{\"ok\":true,\"rule\":{\"docExcludedTokens\":[\"adr\",\"adrs\",\"decision\",\"decisions\",\"rfc\",\"rfcs\",\"spec\",\"specs\",\"specification\",\"specifications\",\"design\",\"designs\",\"governance\",\"policy\",\"policies\",\"security\",\"conduct\",\"doctrine\",\"doctrines\",\"principle\",\"principles\",\"architecture\",\"architectures\",\"manifesto\",\"manifestos\"],\"docTokenSeparators\":\"-_. \",\"docTreeExtensions\":[\".md\",\".rst\",\".txt\"],\"docTreeRoots\":[\"docs\",\"doc\"],\"docTxtExcludedNames\":[\"cmakelists.txt\",\"robots.txt\"],\"docTxtExcludedPrefixes\":[\"requirements\"],\"documentSuffixes\":[\"\",\".md\",\".rst\",\".txt\"],\"licenseTreeRoots\":[\"licenses\"],\"licenseTreeSuffixes\":[\".md\",\".txt\"],\"rootStemNumericPrefix\":{\"digitCount\":2,\"digits\":\"0123456789\",\"optional\":true,\"separator\":\"-\"},\"rootStems\":[\"readme\",\"changelog\",\"changes\",\"release-notes\",\"release_notes\",\"releasenotes\",\"contributing\",\"license\",\"licence\",\"copying\",\"notice\",\"notices\",\"news\",\"history\",\"authors\",\"faq\"]}}",
+   "head": "(same)"
+  },
+  {
+   "site": "C1b",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 68,
+   "value": "the valid object itself",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"its project-documentation rule appears more than once\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "C2",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 78,
+   "value": "array",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"its project-documentation rule path rules are not the three this screen implements (root-document, docs-tree, licenses-tree, in that order and text)\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "C2",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 78,
+   "value": "array of one object",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"its project-documentation rule path rules are not the three this screen implements (root-document, docs-tree, licenses-tree, in that order and text)\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "C2",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 78,
+   "value": "null",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"its project-documentation rule path rules are not the three this screen implements (root-document, docs-tree, licenses-tree, in that order and text)\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "C2",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 78,
+   "value": "string",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"its project-documentation rule path rules are not the three this screen implements (root-document, docs-tree, licenses-tree, in that order and text)\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "C2",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 78,
+   "value": "number",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"its project-documentation rule path rules are not the three this screen implements (root-document, docs-tree, licenses-tree, in that order and text)\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "C2",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 78,
+   "value": "true",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"its project-documentation rule path rules are not the three this screen implements (root-document, docs-tree, licenses-tree, in that order and text)\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "C2",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 78,
+   "value": "empty object",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"its project-documentation rule path rules are not the three this screen implements (root-document, docs-tree, licenses-tree, in that order and text)\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "C2",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 78,
+   "value": "undefined",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"its project-documentation rule path rules are not the three this screen implements (root-document, docs-tree, licenses-tree, in that order and text)\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "C2",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 78,
+   "value": "function",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"its project-documentation rule path rules are not the three this screen implements (root-document, docs-tree, licenses-tree, in that order and text)\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "C2",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 78,
+   "value": "array carrying the fields",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"its project-documentation rule path rules are not the three this screen implements (root-document, docs-tree, licenses-tree, in that order and text)\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "C2",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 78,
+   "value": "function carrying the fields",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"its project-documentation rule path rules are not the three this screen implements (root-document, docs-tree, licenses-tree, in that order and text)\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "C2",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 78,
+   "value": "proxy of an array carrying the fields",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"its project-documentation rule path rules are not the three this screen implements (root-document, docs-tree, licenses-tree, in that order and text)\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "C2",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 78,
+   "value": "the valid object itself",
+   "same": true,
+   "base": "{\"ok\":true,\"rule\":{\"docExcludedTokens\":[\"adr\",\"adrs\",\"decision\",\"decisions\",\"rfc\",\"rfcs\",\"spec\",\"specs\",\"specification\",\"specifications\",\"design\",\"designs\",\"governance\",\"policy\",\"policies\",\"security\",\"conduct\",\"doctrine\",\"doctrines\",\"principle\",\"principles\",\"architecture\",\"architectures\",\"manifesto\",\"manifestos\"],\"docTokenSeparators\":\"-_. \",\"docTreeExtensions\":[\".md\",\".rst\",\".txt\"],\"docTreeRoots\":[\"docs\",\"doc\"],\"docTxtExcludedNames\":[\"cmakelists.txt\",\"robots.txt\"],\"docTxtExcludedPrefixes\":[\"requirements\"],\"documentSuffixes\":[\"\",\".md\",\".rst\",\".txt\"],\"licenseTreeRoots\":[\"licenses\"],\"licenseTreeSuffixes\":[\".md\",\".txt\"],\"rootStemNumericPrefix\":{\"digitCount\":2,\"digits\":\"0123456789\",\"optional\":true,\"separator\":\"-\"},\"rootStems\":[\"readme\",\"changelog\",\"changes\",\"release-notes\",\"release_notes\",\"releasenotes\",\"contributing\",\"license\",\"licence\",\"copying\",\"notice\",\"notices\",\"news\",\"history\",\"authors\",\"faq\"]}}",
+   "head": "(same)"
+  },
+  {
+   "site": "C3",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 83,
+   "value": "array",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"its project-documentation rule rootStemNumericPrefix is unreadable\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "C3",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 83,
+   "value": "array of one object",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"its project-documentation rule rootStemNumericPrefix is unreadable\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "C3",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 83,
+   "value": "null",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"its project-documentation rule rootStemNumericPrefix is unreadable\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "C3",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 83,
+   "value": "string",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"its project-documentation rule rootStemNumericPrefix is unreadable\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "C3",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 83,
+   "value": "number",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"its project-documentation rule rootStemNumericPrefix is unreadable\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "C3",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 83,
+   "value": "true",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"its project-documentation rule rootStemNumericPrefix is unreadable\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "C3",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 83,
+   "value": "empty object",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"its project-documentation rule rootStemNumericPrefix is unreadable\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "C3",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 83,
+   "value": "undefined",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"its project-documentation rule rootStemNumericPrefix is unreadable\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "C3",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 83,
+   "value": "function",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"its project-documentation rule rootStemNumericPrefix is unreadable\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "C3",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 83,
+   "value": "array carrying the fields",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"its project-documentation rule rootStemNumericPrefix is unreadable\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "C3",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 83,
+   "value": "function carrying the fields",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"its project-documentation rule rootStemNumericPrefix is unreadable\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "C3",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 83,
+   "value": "proxy of an array carrying the fields",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"its project-documentation rule rootStemNumericPrefix is unreadable\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "C3",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 83,
+   "value": "the valid object itself",
+   "same": true,
+   "base": "{\"ok\":true,\"rule\":{\"docExcludedTokens\":[\"adr\",\"adrs\",\"decision\",\"decisions\",\"rfc\",\"rfcs\",\"spec\",\"specs\",\"specification\",\"specifications\",\"design\",\"designs\",\"governance\",\"policy\",\"policies\",\"security\",\"conduct\",\"doctrine\",\"doctrines\",\"principle\",\"principles\",\"architecture\",\"architectures\",\"manifesto\",\"manifestos\"],\"docTokenSeparators\":\"-_. \",\"docTreeExtensions\":[\".md\",\".rst\",\".txt\"],\"docTreeRoots\":[\"docs\",\"doc\"],\"docTxtExcludedNames\":[\"cmakelists.txt\",\"robots.txt\"],\"docTxtExcludedPrefixes\":[\"requirements\"],\"documentSuffixes\":[\"\",\".md\",\".rst\",\".txt\"],\"licenseTreeRoots\":[\"licenses\"],\"licenseTreeSuffixes\":[\".md\",\".txt\"],\"rootStemNumericPrefix\":{\"digitCount\":2,\"digits\":\"0123456789\",\"optional\":true,\"separator\":\"-\"},\"rootStems\":[\"readme\",\"changelog\",\"changes\",\"release-notes\",\"release_notes\",\"releasenotes\",\"contributing\",\"license\",\"licence\",\"copying\",\"notice\",\"notices\",\"news\",\"history\",\"authors\",\"faq\"]}}",
+   "head": "(same)"
+  },
+  {
+   "site": "C4",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 204,
+   "value": "array",
+   "same": true,
+   "base": "{\"exemption\":null,\"ok\":true}",
+   "head": "(same)"
+  },
+  {
+   "site": "C4",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 204,
+   "value": "array of one object",
+   "same": true,
+   "base": "{\"exemption\":null,\"ok\":true}",
+   "head": "(same)"
+  },
+  {
+   "site": "C4",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 204,
+   "value": "null",
+   "same": true,
+   "base": "{\"exemption\":null,\"ok\":true}",
+   "head": "(same)"
+  },
+  {
+   "site": "C4",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 204,
+   "value": "string",
+   "same": true,
+   "base": "{\"exemption\":null,\"ok\":true}",
+   "head": "(same)"
+  },
+  {
+   "site": "C4",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 204,
+   "value": "number",
+   "same": true,
+   "base": "{\"exemption\":null,\"ok\":true}",
+   "head": "(same)"
+  },
+  {
+   "site": "C4",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 204,
+   "value": "true",
+   "same": true,
+   "base": "{\"exemption\":null,\"ok\":true}",
+   "head": "(same)"
+  },
+  {
+   "site": "C4",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 204,
+   "value": "empty object",
+   "same": true,
+   "base": "{\"exemption\":null,\"ok\":true}",
+   "head": "(same)"
+  },
+  {
+   "site": "C4",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 204,
+   "value": "undefined",
+   "same": true,
+   "base": "{\"exemption\":null,\"ok\":true}",
+   "head": "(same)"
+  },
+  {
+   "site": "C4",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 204,
+   "value": "function",
+   "same": true,
+   "base": "{\"exemption\":null,\"ok\":true}",
+   "head": "(same)"
+  },
+  {
+   "site": "C4",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 204,
+   "value": "array carrying the fields",
+   "same": true,
+   "base": "{\"exemption\":null,\"ok\":true}",
+   "head": "(same)"
+  },
+  {
+   "site": "C4",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 204,
+   "value": "function carrying the fields",
+   "same": true,
+   "base": "{\"exemption\":null,\"ok\":true}",
+   "head": "(same)"
+  },
+  {
+   "site": "C4",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 204,
+   "value": "proxy of an array carrying the fields",
+   "same": true,
+   "base": "{\"exemption\":null,\"ok\":true}",
+   "head": "(same)"
+  },
+  {
+   "site": "C4",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 204,
+   "value": "the valid object itself",
+   "same": true,
+   "base": "{\"exemption\":{\"exemptExtensions\":[\".c\",\".h\",\".cc\",\".cpp\",\".hpp\",\".cs\",\".go\",\".java\",\".js\",\".mjs\",\".cjs\",\".jsx\",\".kt\",\".lua\",\".php\",\".py\",\".pyi\",\".rb\",\".rs\",\".sh\",\".sql\",\".swift\",\".tcl\",\".ts\",\".tsx\"]},\"ok\":true}",
+   "head": "(same)"
+  },
+  {
+   "site": "C5",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 205,
+   "value": "array",
+   "same": true,
+   "base": "{\"exemption\":null,\"ok\":true}",
+   "head": "(same)"
+  },
+  {
+   "site": "C5",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 205,
+   "value": "array of one object",
+   "same": true,
+   "base": "{\"exemption\":null,\"ok\":true}",
+   "head": "(same)"
+  },
+  {
+   "site": "C5",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 205,
+   "value": "null",
+   "same": true,
+   "base": "{\"exemption\":null,\"ok\":true}",
+   "head": "(same)"
+  },
+  {
+   "site": "C5",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 205,
+   "value": "string",
+   "same": true,
+   "base": "{\"exemption\":null,\"ok\":true}",
+   "head": "(same)"
+  },
+  {
+   "site": "C5",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 205,
+   "value": "number",
+   "same": true,
+   "base": "{\"exemption\":null,\"ok\":true}",
+   "head": "(same)"
+  },
+  {
+   "site": "C5",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 205,
+   "value": "true",
+   "same": true,
+   "base": "{\"exemption\":null,\"ok\":true}",
+   "head": "(same)"
+  },
+  {
+   "site": "C5",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 205,
+   "value": "empty object",
+   "same": true,
+   "base": "{\"exemption\":null,\"ok\":true}",
+   "head": "(same)"
+  },
+  {
+   "site": "C5",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 205,
+   "value": "undefined",
+   "same": true,
+   "base": "{\"exemption\":null,\"ok\":true}",
+   "head": "(same)"
+  },
+  {
+   "site": "C5",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 205,
+   "value": "function",
+   "same": true,
+   "base": "{\"exemption\":null,\"ok\":true}",
+   "head": "(same)"
+  },
+  {
+   "site": "C5",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 205,
+   "value": "array carrying the fields",
+   "same": true,
+   "base": "{\"exemption\":null,\"ok\":true}",
+   "head": "(same)"
+  },
+  {
+   "site": "C5",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 205,
+   "value": "function carrying the fields",
+   "same": true,
+   "base": "{\"exemption\":null,\"ok\":true}",
+   "head": "(same)"
+  },
+  {
+   "site": "C5",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 205,
+   "value": "proxy of an array carrying the fields",
+   "same": true,
+   "base": "{\"exemption\":null,\"ok\":true}",
+   "head": "(same)"
+  },
+  {
+   "site": "C5",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 205,
+   "value": "the valid object itself",
+   "same": true,
+   "base": "{\"exemption\":{\"exemptExtensions\":[\".c\",\".h\",\".cc\",\".cpp\",\".hpp\",\".cs\",\".go\",\".java\",\".js\",\".mjs\",\".cjs\",\".jsx\",\".kt\",\".lua\",\".php\",\".py\",\".pyi\",\".rb\",\".rs\",\".sh\",\".sql\",\".swift\",\".tcl\",\".ts\",\".tsx\"]},\"ok\":true}",
+   "head": "(same)"
+  },
+  {
+   "site": "C6",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 207,
+   "value": "array",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"its code-content exemption is not an object\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "C6",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 207,
+   "value": "array of one object",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"its code-content exemption is not an object\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "C6",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 207,
+   "value": "null",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"its code-content exemption is not an object\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "C6",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 207,
+   "value": "string",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"its code-content exemption is not an object\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "C6",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 207,
+   "value": "number",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"its code-content exemption is not an object\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "C6",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 207,
+   "value": "true",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"its code-content exemption is not an object\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "C6",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 207,
+   "value": "empty object",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"its code-content exemption carries the fields , not exactly appliesTo, exemptExtensions, rule, renderCondition, egress\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "C6",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 207,
+   "value": "undefined",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"its code-content exemption is not an object\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "C6",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 207,
+   "value": "function",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"its code-content exemption is not an object\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "C6",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 207,
+   "value": "array carrying the fields",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"its code-content exemption is not an object\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "C6",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 207,
+   "value": "function carrying the fields",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"its code-content exemption is not an object\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "C6",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 207,
+   "value": "proxy of an array carrying the fields",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"its code-content exemption is not an object\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "C6",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 207,
+   "value": "the valid object itself",
+   "same": true,
+   "base": "{\"exemption\":{\"exemptExtensions\":[\".c\",\".h\",\".cc\",\".cpp\",\".hpp\",\".cs\",\".go\",\".java\",\".js\",\".mjs\",\".cjs\",\".jsx\",\".kt\",\".lua\",\".php\",\".py\",\".pyi\",\".rb\",\".rs\",\".sh\",\".sql\",\".swift\",\".tcl\",\".ts\",\".tsx\"]},\"ok\":true}",
+   "head": "(same)"
+  },
+  {
+   "site": "D0",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 0,
+   "value": "the live policy unchanged",
+   "same": true,
+   "base": "{\"codeContentExemption\":true,\"contentClass\":[\"code-content\",\"project-documentation\",\"project-documentation\",null,\"project-documentation\",null,null],\"policyId\":\"polaris-butlers-project-shape-secrets\",\"policyVersion\":\"1.5.0-public-source-candidate.1.none.code-all.redact-span\",\"projectDocumentation\":true,\"screenBody\":[null,\"active-content\"],\"screenPath\":[null,null,null,\"denied-path\",null,\"unknown-extraction-class\",\"unknown-extraction-class\"],\"secretRedaction\":true}",
+   "head": "(same)"
+  },
+  {
+   "site": "D1",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 81,
+   "value": "array",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"the screening policy cannot be applied: its identity is unreadable\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "D1",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 81,
+   "value": "array of one object",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"the screening policy cannot be applied: its identity is unreadable\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "D1",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 81,
+   "value": "null",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"the screening policy cannot be applied: its identity is unreadable\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "D1",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 81,
+   "value": "string",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"the screening policy cannot be applied: its identity is unreadable\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "D1",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 81,
+   "value": "number",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"the screening policy cannot be applied: its identity is unreadable\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "D1",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 81,
+   "value": "true",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"the screening policy cannot be applied: its identity is unreadable\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "D1",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 81,
+   "value": "empty object",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"the screening policy cannot be applied: its identity is unreadable\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "D2",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 83,
+   "value": "array",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"the screening policy cannot be applied: it carries no publicSourceScope\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "D2",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 83,
+   "value": "array of one object",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"the screening policy cannot be applied: it carries no publicSourceScope\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "D2",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 83,
+   "value": "null",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"the screening policy cannot be applied: it carries no publicSourceScope\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "D2",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 83,
+   "value": "string",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"the screening policy cannot be applied: it carries no publicSourceScope\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "D2",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 83,
+   "value": "number",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"the screening policy cannot be applied: it carries no publicSourceScope\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "D2",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 83,
+   "value": "true",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"the screening policy cannot be applied: it carries no publicSourceScope\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "D2",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 83,
+   "value": "empty object",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"the screening policy cannot be applied: its code-content sourceExtensions are unreadable\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "D3",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 84,
+   "value": "array",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"the screening policy cannot be applied: its denied-path rules are unreadable\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "D3",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 84,
+   "value": "array of one object",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"the screening policy cannot be applied: its denied-path rules are unreadable\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "D3",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 84,
+   "value": "null",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"the screening policy cannot be applied: its denied-path rules are unreadable\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "D3",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 84,
+   "value": "string",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"the screening policy cannot be applied: its denied-path rules are unreadable\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "D3",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 84,
+   "value": "number",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"the screening policy cannot be applied: its denied-path rules are unreadable\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "D3",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 84,
+   "value": "true",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"the screening policy cannot be applied: its denied-path rules are unreadable\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "D3",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 84,
+   "value": "empty object",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"the screening policy cannot be applied: its denied-path rules are unreadable\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "D4",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 88,
+   "value": "array",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"the screening policy cannot be applied: its code-content sourceExtensions are unreadable\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "D4",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 88,
+   "value": "array of one object",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"the screening policy cannot be applied: its code-content sourceExtensions are unreadable\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "D4",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 88,
+   "value": "null",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"the screening policy cannot be applied: its code-content sourceExtensions are unreadable\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "D4",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 88,
+   "value": "string",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"the screening policy cannot be applied: its code-content sourceExtensions are unreadable\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "D4",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 88,
+   "value": "number",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"the screening policy cannot be applied: its code-content sourceExtensions are unreadable\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "D4",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 88,
+   "value": "true",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"the screening policy cannot be applied: its code-content sourceExtensions are unreadable\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "D4",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 88,
+   "value": "empty object",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"the screening policy cannot be applied: its code-content sourceExtensions are unreadable\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "D5",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 89,
+   "value": "array",
+   "same": true,
+   "base": "{\"codeContentExemption\":true,\"contentClass\":[\"code-content\",\"project-documentation\",\"project-documentation\",null,\"project-documentation\",null,null],\"policyId\":\"polaris-butlers-project-shape-secrets\",\"policyVersion\":\"1.5.0-public-source-candidate.1.none.code-all.redact-span\",\"projectDocumentation\":true,\"screenBody\":[null,\"active-content\"],\"screenPath\":[null,null,null,\"denied-path\",null,\"unknown-extraction-class\",\"unknown-extraction-class\"],\"secretRedaction\":true}",
+   "head": "(same)"
+  },
+  {
+   "site": "D5",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 89,
+   "value": "array of one object",
+   "same": true,
+   "base": "{\"codeContentExemption\":true,\"contentClass\":[\"code-content\",\"project-documentation\",\"project-documentation\",null,\"project-documentation\",null,null],\"policyId\":\"polaris-butlers-project-shape-secrets\",\"policyVersion\":\"1.5.0-public-source-candidate.1.none.code-all.redact-span\",\"projectDocumentation\":true,\"screenBody\":[null,\"active-content\"],\"screenPath\":[null,null,null,\"denied-path\",null,\"unknown-extraction-class\",\"unknown-extraction-class\"],\"secretRedaction\":true}",
+   "head": "(same)"
+  },
+  {
+   "site": "D5",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 89,
+   "value": "null",
+   "same": true,
+   "base": "{\"codeContentExemption\":true,\"contentClass\":[\"code-content\",\"project-documentation\",\"project-documentation\",null,\"project-documentation\",null,null],\"policyId\":\"polaris-butlers-project-shape-secrets\",\"policyVersion\":\"1.5.0-public-source-candidate.1.none.code-all.redact-span\",\"projectDocumentation\":true,\"screenBody\":[null,\"active-content\"],\"screenPath\":[null,null,null,\"denied-path\",null,\"unknown-extraction-class\",\"unknown-extraction-class\"],\"secretRedaction\":true}",
+   "head": "(same)"
+  },
+  {
+   "site": "D5",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 89,
+   "value": "string",
+   "same": true,
+   "base": "{\"codeContentExemption\":true,\"contentClass\":[\"code-content\",\"project-documentation\",\"project-documentation\",null,\"project-documentation\",null,null],\"policyId\":\"polaris-butlers-project-shape-secrets\",\"policyVersion\":\"1.5.0-public-source-candidate.1.none.code-all.redact-span\",\"projectDocumentation\":true,\"screenBody\":[null,\"active-content\"],\"screenPath\":[null,null,null,\"denied-path\",null,\"unknown-extraction-class\",\"unknown-extraction-class\"],\"secretRedaction\":true}",
+   "head": "(same)"
+  },
+  {
+   "site": "D5",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 89,
+   "value": "number",
+   "same": true,
+   "base": "{\"codeContentExemption\":true,\"contentClass\":[\"code-content\",\"project-documentation\",\"project-documentation\",null,\"project-documentation\",null,null],\"policyId\":\"polaris-butlers-project-shape-secrets\",\"policyVersion\":\"1.5.0-public-source-candidate.1.none.code-all.redact-span\",\"projectDocumentation\":true,\"screenBody\":[null,\"active-content\"],\"screenPath\":[null,null,null,\"denied-path\",null,\"unknown-extraction-class\",\"unknown-extraction-class\"],\"secretRedaction\":true}",
+   "head": "(same)"
+  },
+  {
+   "site": "D5",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 89,
+   "value": "true",
+   "same": true,
+   "base": "{\"codeContentExemption\":true,\"contentClass\":[\"code-content\",\"project-documentation\",\"project-documentation\",null,\"project-documentation\",null,null],\"policyId\":\"polaris-butlers-project-shape-secrets\",\"policyVersion\":\"1.5.0-public-source-candidate.1.none.code-all.redact-span\",\"projectDocumentation\":true,\"screenBody\":[null,\"active-content\"],\"screenPath\":[null,null,null,\"denied-path\",null,\"unknown-extraction-class\",\"unknown-extraction-class\"],\"secretRedaction\":true}",
+   "head": "(same)"
+  },
+  {
+   "site": "D5",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 89,
+   "value": "empty object",
+   "same": true,
+   "base": "{\"codeContentExemption\":true,\"contentClass\":[\"code-content\",\"project-documentation\",\"project-documentation\",null,\"project-documentation\",null,null],\"policyId\":\"polaris-butlers-project-shape-secrets\",\"policyVersion\":\"1.5.0-public-source-candidate.1.none.code-all.redact-span\",\"projectDocumentation\":true,\"screenBody\":[null,\"active-content\"],\"screenPath\":[null,null,null,\"denied-path\",null,\"unknown-extraction-class\",\"unknown-extraction-class\"],\"secretRedaction\":true}",
+   "head": "(same)"
+  },
+  {
+   "site": "D5b",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 89,
+   "value": "array",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"the screening policy cannot be applied: its code-content sourceExtensions are unreadable\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "D5b",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 89,
+   "value": "array of one object",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"the screening policy cannot be applied: its code-content sourceExtensions are unreadable\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "D5b",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 89,
+   "value": "null",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"the screening policy cannot be applied: its code-content sourceExtensions are unreadable\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "D5b",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 89,
+   "value": "string",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"the screening policy cannot be applied: its code-content sourceExtensions are unreadable\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "D5b",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 89,
+   "value": "number",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"the screening policy cannot be applied: its code-content sourceExtensions are unreadable\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "D5b",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 89,
+   "value": "true",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"the screening policy cannot be applied: its code-content sourceExtensions are unreadable\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "D5b",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 89,
+   "value": "empty object",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"the screening policy cannot be applied: its code-content sourceExtensions are unreadable\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "D6",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 90,
+   "value": "(the position holds only a filtered record or undefined; see D5b)",
+   "same": true,
+   "base": "{\"codeContentExemption\":true,\"contentClass\":[\"code-content\",\"project-documentation\",\"project-documentation\",null,\"project-documentation\",null,null],\"policyId\":\"polaris-butlers-project-shape-secrets\",\"policyVersion\":\"1.5.0-public-source-candidate.1.none.code-all.redact-span\",\"projectDocumentation\":true,\"screenBody\":[null,\"active-content\"],\"screenPath\":[null,null,null,\"denied-path\",null,\"unknown-extraction-class\",\"unknown-extraction-class\"],\"secretRedaction\":true}",
+   "head": "(same)"
+  },
+  {
+   "site": "D7",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 100,
+   "value": "array",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"the screening policy cannot be applied: its detectors do not compile (secret policy detector without an id)\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "D7",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 100,
+   "value": "array of one object",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"the screening policy cannot be applied: its detectors do not compile (secret policy detector without an id)\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "D7",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 100,
+   "value": "null",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"the screening policy cannot be applied: its detectors do not compile (Cannot read properties of null (reading 'id'))\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "D7",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 100,
+   "value": "string",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"the screening policy cannot be applied: its detectors do not compile (secret policy detector without an id)\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "D7",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 100,
+   "value": "number",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"the screening policy cannot be applied: its detectors do not compile (secret policy detector without an id)\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "D7",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 100,
+   "value": "true",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"the screening policy cannot be applied: its detectors do not compile (secret policy detector without an id)\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "D7",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 100,
+   "value": "empty object",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"the screening policy cannot be applied: its detectors do not compile (secret policy detector without an id)\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "D7b",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 100,
+   "value": "array",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"the screening policy cannot be applied: its secret redaction wholeArtifactDetectors is not a non-empty list of distinct detector ids of this policy\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "D7b",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 100,
+   "value": "array of one object",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"the screening policy cannot be applied: its secret redaction wholeArtifactDetectors is not a non-empty list of distinct detector ids of this policy\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "D7b",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 100,
+   "value": "null",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"the screening policy cannot be applied: its secret redaction wholeArtifactDetectors is not a non-empty list of distinct detector ids of this policy\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "D7b",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 100,
+   "value": "string",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"the screening policy cannot be applied: its secret redaction wholeArtifactDetectors is not a non-empty list of distinct detector ids of this policy\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "D7b",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 100,
+   "value": "number",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"the screening policy cannot be applied: its secret redaction wholeArtifactDetectors is not a non-empty list of distinct detector ids of this policy\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "D7b",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 100,
+   "value": "true",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"the screening policy cannot be applied: its secret redaction wholeArtifactDetectors is not a non-empty list of distinct detector ids of this policy\"}",
+   "head": "(same)"
+  },
+  {
+   "site": "D7b",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 100,
+   "value": "empty object",
+   "same": true,
+   "base": "{\"ok\":false,\"why\":\"the screening policy cannot be applied: its secret redaction wholeArtifactDetectors is not a non-empty list of distinct detector ids of this policy\"}",
+   "head": "(same)"
+  }
+ ]
+}

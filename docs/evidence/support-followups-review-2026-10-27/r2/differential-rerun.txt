@@ -1,0 +1,18 @@
+Reviewer re-run of the lane's junit-fixture-differential.mjs over the reviewer's built clone at 7d408fd9 (npm run build after npm ci;
+the two probed sources are byte-equal at 7d408fd9 and at the local merge 844dd777 whose build produced the dist), TMPDIR /tmp/r538b-m.
+
+$ node junit-fixture-differential.mjs <clone> /tmp/r538b-m/diff-7d408fd9.json
+wrote /tmp/r538b-m/diff-7d408fd9.json: 40 rows            (exit 0)
+8f58818c4a978473e4a8463f56701248f0d8c3ad8b6d13dc8b852f71074750bb  diff-7d408fd9.json
+8f58818c4a978473e4a8463f56701248f0d8c3ad8b6d13dc8b852f71074750bb  junit-fixture-differential-head-c7ed9ef2.json (committed)
+8f58818c4a978473e4a8463f56701248f0d8c3ad8b6d13dc8b852f71074750bb  junit-fixture-differential-base-f7477f52.json (committed)
+$ compare-rows.py base-f7477f52.json diff-7d408fd9.json
+{"rowsOld": 40, "rowsNew": 40, "rowsCompared": 40, "rowsThatDiffer": 0, "rowsOnlyInOld": 0, "rowsOnlyInNew": 0, ...}   (exit 0)
+
+Rule 6, the built fixture mutated: apps/three-surface-poc/dist/test-walkthrough-judgment-fixture.js line 7
+  old: import { sha256 } from '@syzygy/support';
+  new: import { createHash } from 'node:crypto';
+       const sha256 = (text) => createHash('sha256').update(text, 'latin1').digest('hex');
+$ compare-rows.py base-f7477f52.json diff-mut.json
+{'rowsCompared': 40, 'rowsThatDiffer': 25}  every differing row is family B   (exit 1)
+Restored from a byte copy; the probe output is 8f58818c4a978473e4a8463f56701248f0d8c3ad8b6d13dc8b852f71074750bb again.

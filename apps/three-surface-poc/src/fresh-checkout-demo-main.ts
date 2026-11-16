@@ -29,12 +29,12 @@
 // The daemon (`main.ts`) never imports this file.
 import { execFileSync, spawn } from 'node:child_process';
 import * as http from 'node:http';
-import { createHash } from 'node:crypto';
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { homedir, tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 
 import type { PocModel, ProjectShape } from '@syzygy/three-surface-poc-core';
+import { sha256 } from '@syzygy/support';
 
 import { TAILNET_HOST } from './browser-origin.js';
 import { FRESH_CHECKOUT_INVARIANTS, freshCheckoutVerdict, parseDaemonStderr, type ExpectedDaemonDiagnostic, type FreshCheckoutParity } from './fresh-checkout-verdict.js';
@@ -47,10 +47,6 @@ import { evaluateWalkthroughPreflight, presentedShapeClaims, type BrowserCheckIn
 function argument(name: string): string | undefined {
   const index = process.argv.indexOf(name);
   return index === -1 ? undefined : process.argv[index + 1];
-}
-
-function sha256(bytes: Uint8Array | string): string {
-  return createHash('sha256').update(bytes).digest('hex');
 }
 
 function git(cwd: string, args: readonly string[]): string {

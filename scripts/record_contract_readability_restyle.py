@@ -160,7 +160,12 @@ def verify_package(root, allow_applied):
 def body(sha, instant, pins):
     if not INSTANT.fullmatch(instant):
         raise ValueError("invalid act instant")
-    datetime.strptime(instant, "%Y-%m-%dT%H:%M:%SZ")
+    try:
+        datetime.strptime(instant, "%Y-%m-%dT%H:%M:%SZ")
+    except ValueError:
+        # strptime's own wording differs between Python versions, so the
+        # refusal says it itself rather than passing the library's text on.
+        raise ValueError("invalid act instant: not a calendar date") from None
     return f"""# Contract readability restyle adoption
 
 Owner: Tzeusy
@@ -367,7 +372,7 @@ def selftest():
                         validate_pins(root, with_exceptions) == sha))
         refuses("invalid instant",
                 lambda: record(root, phrase, "2026-02-30T00:00:00Z", False, pins),
-                "day is out of range")
+                "not a calendar date")
         manifest_file = root / MANIFEST
         manifest_file.rename(root / "moved")
         refuses("absent manifest", lambda: record(root, phrase, instant, False, pins),

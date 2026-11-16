@@ -1,0 +1,31 @@
+{
+ "model": [
+  "packages/k/src/c.cts",
+  "packages/k/src/data.json",
+  "packages/k/src/index.ts",
+  "packages/k/src/j.js",
+  "packages/k/src/m.mjs",
+  "packages/k/src/only-in-files.ts",
+  "packages/k/src/ref.ts"
+ ],
+ "listed": [
+  "packages/k/src/c.cts",
+  "packages/k/src/data.json",
+  "packages/k/src/index.ts",
+  "packages/k/src/j.js",
+  "packages/k/src/m.mjs",
+  "packages/k/src/only-in-files.ts",
+  "packages/k/src/ref.ts"
+ ],
+ "modelEqualsListed": true,
+ "buildExit": 1,
+ "written": [
+  "packages/k/dist/c.cjs",
+  "packages/k/dist/data.json",
+  "packages/k/dist/index.js",
+  "packages/k/dist/j.js",
+  "packages/k/dist/m.mjs",
+  "packages/k/dist/only-in-files.js",
+  "packages/k/dist/ref.js"
+ ]
+}

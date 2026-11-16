@@ -1,0 +1,555 @@
+{
+ "controls": {
+  "2d3f9375:core": {
+   "exit": 0,
+   "command": "npx vitest run --project @syzygy/support --project @syzygy/three-surface-poc-core --testTimeout=60000 --hookTimeout=60000 --reporter=json --outputFile=/tmp/r534b-3/vitest-control-2d3f9375-core.json",
+   "loadavgBefore": "16.94 17.72 22.34 10/9528 3020514",
+   "loadavgAfter": "20.78 18.60 22.46 13/9577 3035347",
+   "numTotalTests": 1149,
+   "numPassedTests": 1147,
+   "numFailedTests": 0,
+   "numPendingTests": 2,
+   "numTotalTestSuites": 165,
+   "numFailedTestSuites": 0,
+   "failed": []
+  },
+  "2d3f9375:four": {
+   "exit": 0,
+   "command": "npx vitest run packages/three-surface-poc-core/src/git-object-reader.test.ts packages/three-surface-poc-core/src/project-shape-observation.test.ts packages/three-surface-poc-core/src/project-shape-git-text.test.ts packages/three-surface-poc-core/src/code-structure.test.ts --testTimeout=60000 --hookTimeout=60000 --reporter=json --outputFile=/tmp/r534b-3/vitest-control-2d3f9375-four.json",
+   "loadavgBefore": "22.52 19.76 22.62 12/9521 3062771",
+   "loadavgAfter": "22.52 19.76 22.62 27/9527 3064197",
+   "numTotalTests": 124,
+   "numPassedTests": 124,
+   "numFailedTests": 0,
+   "numPendingTests": 0,
+   "numTotalTestSuites": 23,
+   "numFailedTestSuites": 0,
+   "failed": []
+  },
+  "b81010c8:four": {
+   "exit": 0,
+   "command": "npx vitest run packages/three-surface-poc-core/src/git-object-reader.test.ts packages/three-surface-poc-core/src/project-shape-observation.test.ts packages/three-surface-poc-core/src/project-shape-git-text.test.ts packages/three-surface-poc-core/src/code-structure.test.ts --testTimeout=60000 --hookTimeout=60000 --reporter=json --outputFile=/tmp/r534b-3/vitest-control-b81010c8-four.json",
+   "loadavgBefore": "24.71 20.31 22.77 24/9606 3068142",
+   "loadavgAfter": "24.71 20.31 22.77 15/9604 3069806",
+   "numTotalTests": 130,
+   "numPassedTests": 130,
+   "numFailedTests": 0,
+   "numPendingTests": 0,
+   "numTotalTestSuites": 23,
+   "numFailedTestSuites": 0,
+   "failed": []
+  },
+  "b81010c8:core": {
+   "exit": 0,
+   "command": "npx vitest run --project @syzygy/support --project @syzygy/three-surface-poc-core --testTimeout=60000 --hookTimeout=60000 --reporter=json --outputFile=/tmp/r534b-3/vitest-control-b81010c8-core.json",
+   "loadavgBefore": "21.01 20.29 22.55 14/9582 3108154",
+   "loadavgAfter": "20.81 20.37 22.50 12/9587 3121413",
+   "numTotalTests": 1155,
+   "numPassedTests": 1153,
+   "numFailedTests": 0,
+   "numPendingTests": 2,
+   "numTotalTestSuites": 165,
+   "numFailedTestSuites": 0,
+   "failed": []
+  }
+ },
+ "mutants": [
+  {
+   "id": "S1",
+   "commit": "2d3f93759a28d35e7b04facb5aaebbcc29697d09",
+   "file": "packages/three-surface-poc-core/src/git-object-reader.ts",
+   "old": "const text = decodeUtf8(bytes);\n      if (text === undefined) return unavailable({ ...taken, outcome: 'not-utf-8' });",
+   "new": "const text = ((): string | undefined => { try { return new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(bytes); } catch { return undefined; } })();\n      if (text === undefined) return unavailable({ ...taken, outcome: 'not-utf-8' });",
+   "detector": "core",
+   "oldCount": 1,
+   "newCountBefore": 0,
+   "run": {
+    "exit": 0,
+    "command": "npx vitest run --project @syzygy/support --project @syzygy/three-surface-poc-core --testTimeout=60000 --hookTimeout=60000 --reporter=json --outputFile=/tmp/r534b-3/vitest-S1-2d3f9375.json",
+    "loadavgBefore": "20.78 18.60 22.46 12/9578 3035353",
+    "loadavgAfter": "22.68 19.45 22.61 21/9555 3050657",
+    "numTotalTests": 1149,
+    "numPassedTests": 1147,
+    "numFailedTests": 0,
+    "numPendingTests": 2,
+    "numTotalTestSuites": 165,
+    "numFailedTestSuites": 0,
+    "failed": []
+   },
+   "restored": true
+  },
+  {
+   "id": "S2",
+   "commit": "2d3f93759a28d35e7b04facb5aaebbcc29697d09",
+   "file": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+   "old": "const text = decodeUtf8(bytes);\n    if (text === undefined) {\n      reads.push(",
+   "new": "const text = ((): string | undefined => { try { return new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(bytes); } catch { return undefined; } })();\n    if (text === undefined) {\n      reads.push(",
+   "detector": "core",
+   "oldCount": 1,
+   "newCountBefore": 0,
+   "run": {
+    "exit": 0,
+    "command": "npx vitest run --project @syzygy/support --project @syzygy/three-surface-poc-core --testTimeout=60000 --hookTimeout=60000 --reporter=json --outputFile=/tmp/r534b-3/vitest-S2-2d3f9375.json",
+    "loadavgBefore": "22.68 19.45 22.61 13/9556 3050707",
+    "loadavgAfter": "22.52 19.76 22.62 22/9522 3062717",
+    "numTotalTests": 1149,
+    "numPassedTests": 1147,
+    "numFailedTests": 0,
+    "numPendingTests": 2,
+    "numTotalTestSuites": 165,
+    "numFailedTestSuites": 0,
+    "failed": []
+   },
+   "restored": true
+  },
+  {
+   "id": "S1",
+   "commit": "2d3f93759a28d35e7b04facb5aaebbcc29697d09",
+   "file": "packages/three-surface-poc-core/src/git-object-reader.ts",
+   "old": "const text = decodeUtf8(bytes);\n      if (text === undefined) return unavailable({ ...taken, outcome: 'not-utf-8' });",
+   "new": "const text = ((): string | undefined => { try { return new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(bytes); } catch { return undefined; } })();\n      if (text === undefined) return unavailable({ ...taken, outcome: 'not-utf-8' });",
+   "detector": "four",
+   "oldCount": 1,
+   "newCountBefore": 0,
+   "run": {
+    "exit": 0,
+    "command": "npx vitest run packages/three-surface-poc-core/src/git-object-reader.test.ts packages/three-surface-poc-core/src/project-shape-observation.test.ts packages/three-surface-poc-core/src/project-shape-git-text.test.ts packages/three-surface-poc-core/src/code-structure.test.ts --testTimeout=60000 --hookTimeout=60000 --reporter=json --outputFile=/tmp/r534b-3/vitest-S1-2d3f9375.json",
+    "loadavgBefore": "22.52 19.76 22.62 18/9527 3064197",
+    "loadavgAfter": "23.12 19.93 22.66 29/9557 3066090",
+    "numTotalTests": 124,
+    "numPassedTests": 124,
+    "numFailedTests": 0,
+    "numPendingTests": 0,
+    "numTotalTestSuites": 23,
+    "numFailedTestSuites": 0,
+    "failed": []
+   },
+   "restored": true
+  },
+  {
+   "id": "S2",
+   "commit": "2d3f93759a28d35e7b04facb5aaebbcc29697d09",
+   "file": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+   "old": "const text = decodeUtf8(bytes);\n    if (text === undefined) {\n      reads.push(",
+   "new": "const text = ((): string | undefined => { try { return new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(bytes); } catch { return undefined; } })();\n    if (text === undefined) {\n      reads.push(",
+   "detector": "four",
+   "oldCount": 1,
+   "newCountBefore": 0,
+   "run": {
+    "exit": 0,
+    "command": "npx vitest run packages/three-surface-poc-core/src/git-object-reader.test.ts packages/three-surface-poc-core/src/project-shape-observation.test.ts packages/three-surface-poc-core/src/project-shape-git-text.test.ts packages/three-surface-poc-core/src/code-structure.test.ts --testTimeout=60000 --hookTimeout=60000 --reporter=json --outputFile=/tmp/r534b-3/vitest-S2-2d3f9375.json",
+    "loadavgBefore": "23.12 19.93 22.66 30/9559 3066141",
+    "loadavgAfter": "24.71 20.31 22.77 15/9605 3068090",
+    "numTotalTests": 124,
+    "numPassedTests": 124,
+    "numFailedTests": 0,
+    "numPendingTests": 0,
+    "numTotalTestSuites": 23,
+    "numFailedTestSuites": 0,
+    "failed": []
+   },
+   "restored": true
+  },
+  {
+   "id": "S1",
+   "commit": "b81010c8c5a375ef9fd446ac9ddc0da407ac1c58",
+   "file": "packages/three-surface-poc-core/src/git-object-reader.ts",
+   "old": "const text = decodeUtf8(bytes);\n      if (text === undefined) return unavailable({ ...taken, outcome: 'not-utf-8' });",
+   "new": "const text = ((): string | undefined => { try { return new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(bytes); } catch { return undefined; } })();\n      if (text === undefined) return unavailable({ ...taken, outcome: 'not-utf-8' });",
+   "detector": "four",
+   "oldCount": 1,
+   "newCountBefore": 0,
+   "run": {
+    "exit": 1,
+    "command": "npx vitest run packages/three-surface-poc-core/src/git-object-reader.test.ts packages/three-surface-poc-core/src/project-shape-observation.test.ts packages/three-surface-poc-core/src/project-shape-git-text.test.ts packages/three-surface-poc-core/src/code-structure.test.ts --testTimeout=60000 --hookTimeout=60000 --reporter=json --outputFile=/tmp/r534b-3/vitest-S1-b81010c8.json",
+    "loadavgBefore": "24.71 20.31 22.77 13/9604 3069806",
+    "loadavgAfter": "24.17 20.28 22.74 30/9591 3071430",
+    "numTotalTests": 130,
+    "numPassedTests": 129,
+    "numFailedTests": 1,
+    "numPendingTests": 0,
+    "numTotalTestSuites": 23,
+    "numFailedTestSuites": 2,
+    "failed": [
+     {
+      "file": "packages/three-surface-poc-core/src/git-object-reader.test.ts",
+      "test": "exact object reads drops one leading byte-order mark from the decoded text and keeps a second",
+      "firstLine": "AssertionError: expected { kind: 'text', \u2026(2) } to match object { kind: 'text', text: 'a\\n', \u2026(1) }"
+     }
+    ]
+   },
+   "restored": true
+  },
+  {
+   "id": "S2",
+   "commit": "b81010c8c5a375ef9fd446ac9ddc0da407ac1c58",
+   "file": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+   "old": "const text = decodeUtf8(bytes);\n    if (text === undefined) {\n      reads.push(",
+   "new": "const text = ((): string | undefined => { try { return new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(bytes); } catch { return undefined; } })();\n    if (text === undefined) {\n      reads.push(",
+   "detector": "four",
+   "oldCount": 1,
+   "newCountBefore": 0,
+   "run": {
+    "exit": 1,
+    "command": "npx vitest run packages/three-surface-poc-core/src/git-object-reader.test.ts packages/three-surface-poc-core/src/project-shape-observation.test.ts packages/three-surface-poc-core/src/project-shape-git-text.test.ts packages/three-surface-poc-core/src/code-structure.test.ts --testTimeout=60000 --hookTimeout=60000 --reporter=json --outputFile=/tmp/r534b-3/vitest-S2-b81010c8.json",
+    "loadavgBefore": "24.17 20.28 22.74 14/9580 3071480",
+    "loadavgAfter": "24.40 20.39 22.76 15/9549 3072972",
+    "numTotalTests": 130,
+    "numPassedTests": 129,
+    "numFailedTests": 1,
+    "numPendingTests": 0,
+    "numTotalTestSuites": 23,
+    "numFailedTestSuites": 2,
+    "failed": [
+     {
+      "file": "packages/three-surface-poc-core/src/project-shape-observation.test.ts",
+      "test": "the seed reader widens phase A only after a validated root index (syzygy-1z3.29 review) a seed with a leading byte-order mark is read without it",
+      "firstLine": "AssertionError: expected { kind: 'text', \u2026(2) } to match object { kind: 'text', text: 'a\\n' }"
+     }
+    ]
+   },
+   "restored": true
+  },
+  {
+   "id": "F2",
+   "commit": "b81010c8c5a375ef9fd446ac9ddc0da407ac1c58",
+   "file": "packages/three-surface-poc-core/src/code-structure.ts",
+   "old": "  try {\n    const text = decodeUtf8(withoutGitlinkRecords(bytes));\n    if (text !== undefined) return text;\n  } catch {\n    // falls through to the refusal below\n  }\n  throw new NonUtf8GitOutput();\n}",
+   "new": "  const text = decodeUtf8(withoutGitlinkRecords(bytes));\n  if (text === undefined) throw new NonUtf8GitOutput();\n  return text;\n}",
+   "detector": "four",
+   "oldCount": 1,
+   "newCountBefore": 0,
+   "run": {
+    "exit": 1,
+    "command": "npx vitest run packages/three-surface-poc-core/src/git-object-reader.test.ts packages/three-surface-poc-core/src/project-shape-observation.test.ts packages/three-surface-poc-core/src/project-shape-git-text.test.ts packages/three-surface-poc-core/src/code-structure.test.ts --testTimeout=60000 --hookTimeout=60000 --reporter=json --outputFile=/tmp/r534b-3/vitest-F2-b81010c8.json",
+    "loadavgBefore": "24.40 20.39 22.76 12/9547 3073020",
+    "loadavgAfter": "24.40 20.39 22.76 29/9550 3074485",
+    "numTotalTests": 130,
+    "numPassedTests": 129,
+    "numFailedTests": 1,
+    "numPendingTests": 0,
+    "numTotalTestSuites": 23,
+    "numFailedTestSuites": 2,
+    "failed": [
+     {
+      "file": "packages/three-surface-poc-core/src/code-structure.test.ts",
+      "test": "code-structure observer reports a gitlink filter that cannot allocate its copy as it reports bytes it cannot decode",
+      "firstLine": "AssertionError: expected { kind: 'unknown', \u2026(1) } to deeply equal { kind: 'unknown', \u2026(1) }"
+     }
+    ]
+   },
+   "restored": true
+  },
+  {
+   "id": "X1",
+   "commit": "b81010c8c5a375ef9fd446ac9ddc0da407ac1c58",
+   "file": "packages/three-surface-poc-core/src/git-object-reader.ts",
+   "old": "const text = decodeUtf8(bytes);\n      if (text === undefined) return unavailable",
+   "new": "const text = decodeUtf8(bytes)?.replace(/^\\uFEFF/, '');\n      if (text === undefined) return unavailable",
+   "detector": "four",
+   "oldCount": 1,
+   "newCountBefore": 0,
+   "run": {
+    "exit": 1,
+    "command": "npx vitest run packages/three-surface-poc-core/src/git-object-reader.test.ts packages/three-surface-poc-core/src/project-shape-observation.test.ts packages/three-surface-poc-core/src/project-shape-git-text.test.ts packages/three-surface-poc-core/src/code-structure.test.ts --testTimeout=60000 --hookTimeout=60000 --reporter=json --outputFile=/tmp/r534b-3/vitest-X1-b81010c8.json",
+    "loadavgBefore": "24.40 20.39 22.76 33/9549 3074532",
+    "loadavgAfter": "24.21 20.41 22.76 17/9535 3075992",
+    "numTotalTests": 130,
+    "numPassedTests": 129,
+    "numFailedTests": 1,
+    "numPendingTests": 0,
+    "numTotalTestSuites": 23,
+    "numFailedTestSuites": 2,
+    "failed": [
+     {
+      "file": "packages/three-surface-poc-core/src/git-object-reader.test.ts",
+      "test": "exact object reads drops one leading byte-order mark from the decoded text and keeps a second",
+      "firstLine": "AssertionError: expected { kind: 'text', text: 'a', \u2026(1) } to match object { kind: 'text', text: '\\ufeffa', \u2026(1) }"
+     }
+    ]
+   },
+   "restored": true
+  },
+  {
+   "id": "X2",
+   "commit": "b81010c8c5a375ef9fd446ac9ddc0da407ac1c58",
+   "file": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+   "old": "const text = decodeUtf8(bytes);\n    if (text === undefined) {\n      reads.push(",
+   "new": "const text = decodeUtf8(bytes)?.replace(/^\\uFEFF/, '');\n    if (text === undefined) {\n      reads.push(",
+   "detector": "four",
+   "oldCount": 1,
+   "newCountBefore": 0,
+   "run": {
+    "exit": 0,
+    "command": "npx vitest run packages/three-surface-poc-core/src/git-object-reader.test.ts packages/three-surface-poc-core/src/project-shape-observation.test.ts packages/three-surface-poc-core/src/project-shape-git-text.test.ts packages/three-surface-poc-core/src/code-structure.test.ts --testTimeout=60000 --hookTimeout=60000 --reporter=json --outputFile=/tmp/r534b-3/vitest-X2-b81010c8.json",
+    "loadavgBefore": "24.21 20.41 22.76 16/9535 3076045",
+    "loadavgAfter": "23.71 20.37 22.73 12/9546 3077417",
+    "numTotalTests": 130,
+    "numPassedTests": 130,
+    "numFailedTests": 0,
+    "numPendingTests": 0,
+    "numTotalTestSuites": 23,
+    "numFailedTestSuites": 0,
+    "failed": []
+   },
+   "restored": true
+  },
+  {
+   "id": "X3",
+   "commit": "b81010c8c5a375ef9fd446ac9ddc0da407ac1c58",
+   "file": "packages/three-surface-poc-core/src/code-structure.ts",
+   "old": "  } catch {\n    // falls through to the refusal below\n  }\n  throw new NonUtf8GitOutput();",
+   "new": "  } catch (error) {\n    throw error;\n  }\n  throw new NonUtf8GitOutput();",
+   "detector": "four",
+   "oldCount": 1,
+   "newCountBefore": 0,
+   "run": {
+    "exit": 1,
+    "command": "npx vitest run packages/three-surface-poc-core/src/git-object-reader.test.ts packages/three-surface-poc-core/src/project-shape-observation.test.ts packages/three-surface-poc-core/src/project-shape-git-text.test.ts packages/three-surface-poc-core/src/code-structure.test.ts --testTimeout=60000 --hookTimeout=60000 --reporter=json --outputFile=/tmp/r534b-3/vitest-X3-b81010c8.json",
+    "loadavgBefore": "23.71 20.37 22.73 16/9547 3077466",
+    "loadavgAfter": "23.71 20.37 22.73 11/9532 3078874",
+    "numTotalTests": 130,
+    "numPassedTests": 129,
+    "numFailedTests": 1,
+    "numPendingTests": 0,
+    "numTotalTestSuites": 23,
+    "numFailedTestSuites": 2,
+    "failed": [
+     {
+      "file": "packages/three-surface-poc-core/src/code-structure.test.ts",
+      "test": "code-structure observer reports a gitlink filter that cannot allocate its copy as it reports bytes it cannot decode",
+      "firstLine": "AssertionError: expected { kind: 'unknown', \u2026(1) } to deeply equal { kind: 'unknown', \u2026(1) }"
+     }
+    ]
+   },
+   "restored": true
+  },
+  {
+   "id": "X4",
+   "commit": "b81010c8c5a375ef9fd446ac9ddc0da407ac1c58",
+   "file": "packages/three-surface-poc-core/src/code-structure.ts",
+   "old": "  } catch {\n    // falls through to the refusal below\n  }",
+   "new": "  } catch {\n    return '';\n  }",
+   "detector": "four",
+   "oldCount": 1,
+   "newCountBefore": 0,
+   "run": {
+    "exit": 1,
+    "command": "npx vitest run packages/three-surface-poc-core/src/git-object-reader.test.ts packages/three-surface-poc-core/src/project-shape-observation.test.ts packages/three-surface-poc-core/src/project-shape-git-text.test.ts packages/three-surface-poc-core/src/code-structure.test.ts --testTimeout=60000 --hookTimeout=60000 --reporter=json --outputFile=/tmp/r534b-3/vitest-X4-b81010c8.json",
+    "loadavgBefore": "23.71 20.37 22.73 13/9532 3078918",
+    "loadavgAfter": "23.49 20.38 22.72 17/9538 3080373",
+    "numTotalTests": 130,
+    "numPassedTests": 129,
+    "numFailedTests": 1,
+    "numPendingTests": 0,
+    "numTotalTestSuites": 23,
+    "numFailedTestSuites": 2,
+    "failed": [
+     {
+      "file": "packages/three-surface-poc-core/src/code-structure.test.ts",
+      "test": "code-structure observer reports a gitlink filter that cannot allocate its copy as it reports bytes it cannot decode",
+      "firstLine": "AssertionError: expected { kind: 'observed', \u2026(3) } to deeply equal { kind: 'unknown', \u2026(1) }"
+     }
+    ]
+   },
+   "restored": true
+  },
+  {
+   "id": "X5",
+   "commit": "b81010c8c5a375ef9fd446ac9ddc0da407ac1c58",
+   "file": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+   "old": "outcome: 'not-utf-8', bytes: bytes.byteLength });\n      return { kind: 'unavailable', reason: 'seed is not valid UTF-8' };",
+   "new": "outcome: 'refused', bytes: bytes.byteLength });\n      return { kind: 'unavailable', reason: 'seed is not valid UTF-8' };",
+   "detector": "four",
+   "oldCount": 1,
+   "newCountBefore": 0,
+   "run": {
+    "exit": 1,
+    "command": "npx vitest run packages/three-surface-poc-core/src/git-object-reader.test.ts packages/three-surface-poc-core/src/project-shape-observation.test.ts packages/three-surface-poc-core/src/project-shape-git-text.test.ts packages/three-surface-poc-core/src/code-structure.test.ts --testTimeout=60000 --hookTimeout=60000 --reporter=json --outputFile=/tmp/r534b-3/vitest-X5-b81010c8.json",
+    "loadavgBefore": "23.49 20.38 22.72 19/9539 3080421",
+    "loadavgAfter": "23.49 20.38 22.72 13/9542 3082182",
+    "numTotalTests": 130,
+    "numPassedTests": 128,
+    "numFailedTests": 2,
+    "numPendingTests": 0,
+    "numTotalTestSuites": 23,
+    "numFailedTestSuites": 3,
+    "failed": [
+     {
+      "file": "packages/three-surface-poc-core/src/project-shape-observation.test.ts",
+      "test": "observeProjectShapeSources \u2014 reads only the phase A allowlist rejects bytes that are not the tree-named object, NUL-bearing bytes and non-UTF-8 bytes",
+      "firstLine": "AssertionError: expected { \u2026(4) } to match object { outcome: 'not-utf-8' }"
+     },
+     {
+      "file": "packages/three-surface-poc-core/src/project-shape-observation.test.ts",
+      "test": "the seed reader widens phase A only after a validated root index (syzygy-1z3.29 review) a seed whose bytes are not UTF-8 is refused with its reason and a not-utf-8 read record",
+      "firstLine": "AssertionError: expected [ { path: 'about/README.md', \u2026(3) } ] to deeply equal [ { path: 'about/README.md', \u2026(3) } ]"
+     }
+    ]
+   },
+   "restored": true
+  },
+  {
+   "id": "S10",
+   "commit": "b81010c8c5a375ef9fd446ac9ddc0da407ac1c58",
+   "file": "packages/three-surface-poc-core/src/code-structure.ts",
+   "old": "    const text = decodeUtf8(withoutGitlinkRecords(bytes));",
+   "new": "    const text = ((b: Buffer): string | undefined => { try { return new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(b); } catch { return undefined; } })(withoutGitlinkRecords(bytes));",
+   "detector": "four",
+   "oldCount": 1,
+   "newCountBefore": 0,
+   "run": {
+    "exit": 1,
+    "command": "npx vitest run packages/three-surface-poc-core/src/git-object-reader.test.ts packages/three-surface-poc-core/src/project-shape-observation.test.ts packages/three-surface-poc-core/src/project-shape-git-text.test.ts packages/three-surface-poc-core/src/code-structure.test.ts --testTimeout=60000 --hookTimeout=60000 --reporter=json --outputFile=/tmp/r534b-3/vitest-S10-b81010c8.json",
+    "loadavgBefore": "23.49 20.38 22.72 22/9543 3082229",
+    "loadavgAfter": "23.45 20.43 22.73 17/9566 3083704",
+    "numTotalTests": 130,
+    "numPassedTests": 129,
+    "numFailedTests": 1,
+    "numPendingTests": 0,
+    "numTotalTestSuites": 23,
+    "numFailedTestSuites": 2,
+    "failed": [
+     {
+      "file": "packages/three-surface-poc-core/src/code-structure.test.ts",
+      "test": "code-structure observer drops one leading byte-order mark from git's listing before parsing it",
+      "firstLine": "AssertionError: expected { kind: 'unknown', \u2026(1) } to match object { kind: 'observed', \u2026(1) }"
+     }
+    ]
+   },
+   "restored": true
+  },
+  {
+   "id": "S9",
+   "commit": "b81010c8c5a375ef9fd446ac9ddc0da407ac1c58",
+   "file": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+   "old": "const text = decodeUtf8(bytes);\n  return text === undefined ? { kind: 'failed'",
+   "new": "const text = ((): string | undefined => { try { return new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(bytes); } catch { return undefined; } })();\n  return text === undefined ? { kind: 'failed'",
+   "detector": "four",
+   "oldCount": 1,
+   "newCountBefore": 0,
+   "run": {
+    "exit": 1,
+    "command": "npx vitest run packages/three-surface-poc-core/src/git-object-reader.test.ts packages/three-surface-poc-core/src/project-shape-observation.test.ts packages/three-surface-poc-core/src/project-shape-git-text.test.ts packages/three-surface-poc-core/src/code-structure.test.ts --testTimeout=60000 --hookTimeout=60000 --reporter=json --outputFile=/tmp/r534b-3/vitest-S9-b81010c8.json",
+    "loadavgBefore": "23.45 20.43 22.73 11/9566 3083751",
+    "loadavgAfter": "23.45 20.43 22.73 11/9584 3085304",
+    "numTotalTests": 130,
+    "numPassedTests": 129,
+    "numFailedTests": 1,
+    "numPendingTests": 0,
+    "numTotalTestSuites": 23,
+    "numFailedTestSuites": 2,
+    "failed": [
+     {
+      "file": "packages/three-surface-poc-core/src/project-shape-git-text.test.ts",
+      "test": "observeProjectShapeSources decoding of git output drops one leading byte-order mark from the tree listing before parsing it",
+      "firstLine": "AssertionError: expected 'unknown' to be 'observed' // Object.is equality"
+     }
+    ]
+   },
+   "restored": true
+  },
+  {
+   "id": "X6",
+   "commit": "b81010c8c5a375ef9fd446ac9ddc0da407ac1c58",
+   "file": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+   "old": "const text = decodeUtf8(bytes);\n  return text === undefined ? { kind: 'failed'",
+   "new": "const text = decodeUtf8(bytes)?.replace(/^\\uFEFF/, '');\n  return text === undefined ? { kind: 'failed'",
+   "detector": "four",
+   "oldCount": 1,
+   "newCountBefore": 0,
+   "run": {
+    "exit": 0,
+    "command": "npx vitest run packages/three-surface-poc-core/src/git-object-reader.test.ts packages/three-surface-poc-core/src/project-shape-observation.test.ts packages/three-surface-poc-core/src/project-shape-git-text.test.ts packages/three-surface-poc-core/src/code-structure.test.ts --testTimeout=60000 --hookTimeout=60000 --reporter=json --outputFile=/tmp/r534b-3/vitest-X6-b81010c8.json",
+    "loadavgBefore": "23.45 20.43 22.73 11/9585 3085347",
+    "loadavgAfter": "23.25 20.44 22.72 18/9581 3086780",
+    "numTotalTests": 130,
+    "numPassedTests": 130,
+    "numFailedTests": 0,
+    "numPendingTests": 0,
+    "numTotalTestSuites": 23,
+    "numFailedTestSuites": 0,
+    "failed": []
+   },
+   "restored": true
+  },
+  {
+   "id": "X7",
+   "commit": "b81010c8c5a375ef9fd446ac9ddc0da407ac1c58",
+   "file": "packages/three-surface-poc-core/src/code-structure.ts",
+   "old": "  if (start < bytes.length) kept.push(bytes.subarray(start));\n  return Buffer.concat(kept);",
+   "new": "  if (start < bytes.length) kept.push(bytes.subarray(start));\n  if (kept.length === 1 && kept[0]!.length === bytes.length) return bytes;\n  return Buffer.concat(kept);",
+   "detector": "four",
+   "oldCount": 1,
+   "newCountBefore": 0,
+   "run": {
+    "exit": 1,
+    "command": "npx vitest run packages/three-surface-poc-core/src/git-object-reader.test.ts packages/three-surface-poc-core/src/project-shape-observation.test.ts packages/three-surface-poc-core/src/project-shape-git-text.test.ts packages/three-surface-poc-core/src/code-structure.test.ts --testTimeout=60000 --hookTimeout=60000 --reporter=json --outputFile=/tmp/r534b-3/vitest-X7-b81010c8.json",
+    "loadavgBefore": "23.25 20.44 22.72 16/9583 3086829",
+    "loadavgAfter": "23.25 20.44 22.72 16/9624 3089097",
+    "numTotalTests": 130,
+    "numPassedTests": 129,
+    "numFailedTests": 1,
+    "numPendingTests": 0,
+    "numTotalTestSuites": 23,
+    "numFailedTestSuites": 2,
+    "failed": [
+     {
+      "file": "packages/three-surface-poc-core/src/code-structure.test.ts",
+      "test": "code-structure observer reports a gitlink filter that cannot allocate its copy as it reports bytes it cannot decode",
+      "firstLine": "AssertionError: expected { kind: 'observed', \u2026(3) } to deeply equal { kind: 'unknown', \u2026(1) }"
+     }
+    ]
+   },
+   "restored": true
+  },
+  {
+   "id": "X2",
+   "commit": "b81010c8c5a375ef9fd446ac9ddc0da407ac1c58",
+   "file": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+   "old": "const text = decodeUtf8(bytes);\n    if (text === undefined) {\n      reads.push(",
+   "new": "const text = decodeUtf8(bytes)?.replace(/^\\uFEFF/, '');\n    if (text === undefined) {\n      reads.push(",
+   "detector": "core",
+   "oldCount": 1,
+   "newCountBefore": 0,
+   "run": {
+    "exit": 0,
+    "command": "npx vitest run --project @syzygy/support --project @syzygy/three-surface-poc-core --testTimeout=60000 --hookTimeout=60000 --reporter=json --outputFile=/tmp/r534b-3/vitest-X2-b81010c8.json",
+    "loadavgBefore": "20.81 20.37 22.50 13/9587 3121418",
+    "loadavgAfter": "20.72 20.40 22.46 18/9529 3134616",
+    "numTotalTests": 1155,
+    "numPassedTests": 1153,
+    "numFailedTests": 0,
+    "numPendingTests": 2,
+    "numTotalTestSuites": 165,
+    "numFailedTestSuites": 0,
+    "failed": []
+   },
+   "restored": true
+  },
+  {
+   "id": "X6",
+   "commit": "b81010c8c5a375ef9fd446ac9ddc0da407ac1c58",
+   "file": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+   "old": "const text = decodeUtf8(bytes);\n  return text === undefined ? { kind: 'failed'",
+   "new": "const text = decodeUtf8(bytes)?.replace(/^\\uFEFF/, '');\n  return text === undefined ? { kind: 'failed'",
+   "detector": "core",
+   "oldCount": 1,
+   "newCountBefore": 0,
+   "run": {
+    "exit": 0,
+    "command": "npx vitest run --project @syzygy/support --project @syzygy/three-surface-poc-core --testTimeout=60000 --hookTimeout=60000 --reporter=json --outputFile=/tmp/r534b-3/vitest-X6-b81010c8.json",
+    "loadavgBefore": "20.72 20.40 22.46 11/9529 3134673",
+    "loadavgAfter": "19.82 20.19 22.32 15/9525 3149519",
+    "numTotalTests": 1155,
+    "numPassedTests": 1153,
+    "numFailedTests": 0,
+    "numPendingTests": 2,
+    "numTotalTestSuites": 165,
+    "numFailedTestSuites": 0,
+    "failed": []
+   },
+   "restored": true
+  }
+ ]
+}

@@ -10,6 +10,7 @@ import {
   designateRoots,
   registerProject,
   type ConsentRecord,
+  type PreObservationConsentDecision,
   type ProjectId,
   type RepositoryId,
 } from '@syzygy/cap1-core';
@@ -310,6 +311,38 @@ describe('observeRepositorySnapshot — coverage inputs from real directories', 
     attribution: 'owner',
     grantState: 'in-force',
   };
+  // The closed decision coverage consumes (syzygy-u2a.6): admitted for the
+  // declaration's one entry, citing CONSENT. A synthetic fixture, never an
+  // owner act.
+  const DIGEST = `sha256:${'0'.repeat(64)}` as const;
+  const ADMITTED: PreObservationConsentDecision = {
+    authorization: 'admitted',
+    repositoryId: REPO_ID,
+    reference: 'consent-record-01',
+    artifactDigest: DIGEST,
+    record: CONSENT,
+    act: {
+      binding: {
+        projectId: 'prj-obs-7c21' as ProjectId,
+        repositoryId: REPO_ID,
+        artifactId: 'consent-record-01',
+        artifactDigest: DIGEST,
+        actType: 'consent',
+        owner: 'fixture-owner (synthetic, not an owner act)',
+        instant: '2026-08-01T00:00:00Z',
+        scope: 'read-repository',
+        supersedes: null,
+        expires: null,
+        a1AuditRecord: null,
+        actId: 'act-consent-record-01',
+        actor: 'human',
+        provenance: 'owner-adopted-bootstrap',
+        actRecordDigest: DIGEST,
+      },
+      correlation: null,
+    },
+    provenance: 'owner-adopted (bootstrap, uncorrelated)',
+  };
 
   it('an observable root is a full capture with the declared scope', async () => {
     const root = makeRepo();
@@ -347,7 +380,7 @@ describe('observeRepositorySnapshot — coverage inputs from real directories', 
       throw new Error('expected a valid declaration read');
     }
     const outcome = await observeRepositorySnapshot(REPO_ID, root);
-    const coverage = computeCoverage(observation.result.declaration, [CONSENT], [outcome]);
+    const coverage = computeCoverage(observation.result.declaration, [ADMITTED], [outcome]);
     expect(coverage.projectId).toBe('prj-obs-7c21');
     expect(coverage.repositories).toHaveLength(1);
     expect(coverage.repositories[0]?.state).toBe('observed');
@@ -362,7 +395,7 @@ describe('observeRepositorySnapshot — coverage inputs from real directories', 
       throw new Error('expected a valid declaration read');
     }
     const outcome = await observeRepositorySnapshot(REPO_ID, join(root, 'vanished'));
-    const coverage = computeCoverage(observation.result.declaration, [CONSENT], [outcome]);
+    const coverage = computeCoverage(observation.result.declaration, [ADMITTED], [outcome]);
     const repo = coverage.repositories[0];
     expect(repo?.state).toBe('capture-failed');
     if (repo?.state !== 'capture-failed') return;

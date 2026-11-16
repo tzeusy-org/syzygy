@@ -1,14 +1,14 @@
-import { createHash } from 'node:crypto';
 import { realpathSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import type { Readable, Writable } from 'node:stream';
 
-import { createDaemon } from '@syzygy/cap1-daemon';
+import { closeOnSignal, createDaemon } from '@syzygy/http-host';
 import {
   PocObservationError,
   type PocModel,
 } from '@syzygy/three-surface-poc-core';
+import { sha256 } from '@syzygy/support';
 
 import { parsePocCli, type PocCliConfig } from './cli.js';
 import {
@@ -160,7 +160,7 @@ async function serveBoundRepository(repoRoot: string, config: PocCliConfig, io: 
   const stateDir = resolve(config.stateDir ?? join(
     tmpdir(),
     'syzygy-three-surface-poc',
-    createHash('sha256').update(repoRoot).digest('hex').slice(0, 16),
+    sha256(repoRoot).slice(0, 16),
   ));
   const buildModel = (currentCapture: PocRuntimeCapture): PocModel => deps.buildProductionPocModel({
     capture: currentCapture,
@@ -223,16 +223,9 @@ async function serveBoundRepository(repoRoot: string, config: PocCliConfig, io: 
     );
     void session.startConsole(config.watch, { input: io.stdin, output: io.stdout });
 
-    await new Promise<void>((resolveShutdown) => {
-      let closing = false;
-      const shutdown = (signal: 'SIGINT' | 'SIGTERM'): void => {
-        if (closing) return;
-        closing = true;
-        io.stdout.write(`syzygy POC: ${signal} received, shutting down\n`);
-        void daemon.close().then(resolveShutdown, () => resolveShutdown());
-      };
-      io.onSignal('SIGINT', () => shutdown('SIGINT'));
-      io.onSignal('SIGTERM', () => shutdown('SIGTERM'));
+    await closeOnSignal(daemon, {
+      onSignal: (signal, listener) => { io.onSignal(signal, listener); },
+      announce: (signal) => { io.stdout.write(`syzygy POC: ${signal} received, shutting down\n`); },
     });
     return 0;
   } catch (cause) {

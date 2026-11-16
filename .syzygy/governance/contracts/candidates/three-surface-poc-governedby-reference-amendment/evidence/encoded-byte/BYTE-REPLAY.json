@@ -1,0 +1,173 @@
+{
+  "status": "Bounded literal byte replay; not a product serializer/HTTP/runtime test",
+  "byte_receipt_sha256": "a06e2715881c5985700bc0482f90a878c47c2631ee0d7fb163994a41ee31fd76",
+  "encoding": "Compact JSON, ensure_ascii=False, UTF-8, no trailing newline; independent original Node JSON.stringify agreement is in the sealed receipt",
+  "pairs": [
+    {
+      "name": "empty",
+      "N": 0,
+      "scope": "Derived synthetic pair: C3 reference-empty is unchanged; inline peer differs only by deletion of workItems.governedBy.",
+      "inline_path": "evidence/encoded-byte/derived-inputs/empty-inline.json",
+      "reference_path": "evidence/encoded-byte/derived-inputs/empty-reference.json",
+      "inline_compact_bytes": 1692,
+      "reference_compact_bytes": 1950,
+      "inline_compact_sha256": "71f2cf4ae3fc6e979912f956efe5f8e82e9ad67d8fb8cf2750bd8fc3c0eb2d45",
+      "reference_compact_sha256": "cf27c5bb70d0e3f9fe90c9a189c10a06d77ce41af76ed8edd4a58a00935a302c",
+      "separating_interval_inclusive": [
+        1692,
+        1949
+      ],
+      "truth_table": [
+        {
+          "limit": 1691,
+          "inlineFits": false,
+          "referenceFits": false
+        },
+        {
+          "limit": 1692,
+          "inlineFits": true,
+          "referenceFits": false
+        },
+        {
+          "limit": 1693,
+          "inlineFits": true,
+          "referenceFits": false
+        },
+        {
+          "limit": 1949,
+          "inlineFits": true,
+          "referenceFits": false
+        },
+        {
+          "limit": 1950,
+          "inlineFits": true,
+          "referenceFits": true
+        },
+        {
+          "limit": 1951,
+          "inlineFits": true,
+          "referenceFits": true
+        }
+      ]
+    },
+    {
+      "name": "one-item",
+      "N": 1,
+      "scope": "Derived synthetic pair: Both derived from C3 reference-body-A: retain fixture-a, count=1, rendered fixture-a only, retain its governing-intent subject plus region subject. Inline peer replaces that one reference by the complete shared value and removes the shared carrier.",
+      "inline_path": "evidence/encoded-byte/derived-inputs/one-item-inline.json",
+      "reference_path": "evidence/encoded-byte/derived-inputs/one-item-reference.json",
+      "inline_compact_bytes": 2612,
+      "reference_compact_bytes": 2647,
+      "inline_compact_sha256": "6f6b2c57eb278e62328aac56242cca3b82618ec959ae9337dc3f0f91c5f97df0",
+      "reference_compact_sha256": "36d6b9a6396766f33886de54421622a18574636f4764a2bb4550ca133170e364",
+      "separating_interval_inclusive": [
+        2612,
+        2646
+      ],
+      "truth_table": [
+        {
+          "limit": 2611,
+          "inlineFits": false,
+          "referenceFits": false
+        },
+        {
+          "limit": 2612,
+          "inlineFits": true,
+          "referenceFits": false
+        },
+        {
+          "limit": 2613,
+          "inlineFits": true,
+          "referenceFits": false
+        },
+        {
+          "limit": 2646,
+          "inlineFits": true,
+          "referenceFits": false
+        },
+        {
+          "limit": 2647,
+          "inlineFits": true,
+          "referenceFits": true
+        },
+        {
+          "limit": 2648,
+          "inlineFits": true,
+          "referenceFits": true
+        }
+      ]
+    },
+    {
+      "name": "C3-body-A",
+      "N": 2,
+      "scope": "Exact frozen C3 inline/reference fixtures",
+      "inline_path": "compatibility/literal-fixtures/inline-body-A.json",
+      "reference_path": "compatibility/literal-fixtures/reference-body-A.json",
+      "inline_compact_bytes": 3553,
+      "reference_compact_bytes": 3365,
+      "inline_compact_sha256": "b04439af1711cb1d35a76332f979878b67274a8f92ff1809571ebe1bd0a97b5a",
+      "reference_compact_sha256": "06579bc5f5abb28028615f2e2f698c289a30cfa6c0efb1e13097821d44735fd9",
+      "separating_interval_inclusive": [
+        3365,
+        3552
+      ],
+      "truth_table": [
+        {
+          "limit": 3364,
+          "inlineBytes": 3553,
+          "referenceBytes": 3365,
+          "inlineFits": false,
+          "referenceFits": false,
+          "inlineDecision": "final-output-breach",
+          "referenceDecision": "final-output-breach"
+        },
+        {
+          "limit": 3365,
+          "inlineBytes": 3553,
+          "referenceBytes": 3365,
+          "inlineFits": false,
+          "referenceFits": true,
+          "inlineDecision": "final-output-breach",
+          "referenceDecision": "success-eligible"
+        },
+        {
+          "limit": 3366,
+          "inlineBytes": 3553,
+          "referenceBytes": 3365,
+          "inlineFits": false,
+          "referenceFits": true,
+          "inlineDecision": "final-output-breach",
+          "referenceDecision": "success-eligible"
+        },
+        {
+          "limit": 3552,
+          "inlineBytes": 3553,
+          "referenceBytes": 3365,
+          "inlineFits": false,
+          "referenceFits": true,
+          "inlineDecision": "final-output-breach",
+          "referenceDecision": "success-eligible"
+        },
+        {
+          "limit": 3553,
+          "inlineBytes": 3553,
+          "referenceBytes": 3365,
+          "inlineFits": true,
+          "referenceFits": true,
+          "inlineDecision": "success-eligible",
+          "referenceDecision": "success-eligible"
+        },
+        {
+          "limit": 3554,
+          "inlineBytes": 3553,
+          "referenceBytes": 3365,
+          "inlineFits": true,
+          "referenceFits": true,
+          "inlineDecision": "success-eligible",
+          "referenceDecision": "success-eligible"
+        }
+      ]
+    }
+  ],
+  "scope_limit": "No production size/headroom claim and no always-smaller premise; no new limit, inline fallback or observed-empty exception."
+}

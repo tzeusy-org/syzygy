@@ -25,20 +25,31 @@ const GENERATOR_REQUIREMENT = /^REQ-polaris-generation-\d{3}$/;
 
 /** Owner decisions of the local-agent dossier mode, the P-107 waiting-sessions direction its v1.2 cites, and the one-command-run
  * direction; each must be declared by a `Decision ID:` line under decisions/. */
-const DOSSIER_DECISION = /^POLARIS-DOSSIER-(?:LOCAL-AGENT-[A-Z0-9]+(?:-[A-Z0-9]+)*|WAITING-SESSIONS|ONE-COMMAND-RUN)-\d{4}-\d{2}-\d{2}$/;
+const DOSSIER_DECISION = /^POLARIS-DOSSIER-(?:LOCAL-AGENT-[A-Z0-9]+(?:-[A-Z0-9]+)*|WAITING-SESSIONS|ONE-COMMAND-RUN|LAUNCH-CONSENT)-\d{4}-\d{2}-\d{2}$/;
+
+/** A `Decision ID:` declaration line: the id in code ticks, then the line's end or a parenthetical (the waiting-sessions direction names
+ * the id's origin that way). Any other trailing text, such as "withdrawn", does not declare. */
+const DECISION_DECLARATION = /^Decision ID: `([A-Z0-9-]+)`(?:$| \()/gm;
 
 /** Owner directions on the dossier's local agent CLI runner (P-111); each must be declared by a `Decision ID:` line under decisions/. */
 const DOSSIER_RUNNER_DECISION = /^DOSSIER-(?:LOCAL-CLI-SUBPROCESS|CLI-RUNNER-[A-Z0-9]+(?:-[A-Z0-9]+)*)-\d{4}-\d{2}-\d{2}$/;
+
+/** P-115's drafting direction; its owning Decision ID must also be declared. */
+const MACHINE_CEILING_DECISION = /^OWNER-DIRECTION-MACHINE-CEILING-2026-10-15$/;
 
 /** Hand-typed warrant id families (a new family must be added here). */
 const WARRANT_FAMILIES = [
   GENERATOR_REQUIREMENT,
   DOSSIER_DECISION,
   DOSSIER_RUNNER_DECISION,
+  MACHINE_CEILING_DECISION,
   /^(VIS|SEC|SDR|RFC\d+|CC-[A-Z]+|POC-REQ|PWB-REQ|CAP1-REQ)-\d+[a-z]?(\([a-z]\))?$/,
   /^(POC|POLARIS|PWB-STATE1-AMENDMENT)-DIR-\d{4}-\d{2}-\d{2}$/,
   // Redis local-agent owner directions: `Decision ID:` in decisions/REDIS-LOCAL-AGENT-SITTING-DIRECTION.md.
   /^REDIS-LOCAL-AGENT-[A-Z0-9]+(?:-[A-Z0-9]+)*-\d{4}-\d{2}-\d{2}$/,
+  // Plain owner directions whose id is their own file's stem: decisions/OWNER-DIRECTION-<topic>-<date>.md (the dossier v1.3 warrant),
+  // or a same-day sequel, <date>-<n> (OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-08-2, the launch-consent v1.1 warrant).
+  /^OWNER-DIRECTION-[A-Z0-9]+(?:-[A-Z0-9]+)*-\d{4}-\d{2}-\d{2}(?:-[2-9])?$/,
   /^P-\d+-ruling-\d{4}-\d{2}-\d{2}( \(decisions\/[A-Z0-9-]+\.md\))?$/,
   /^decisions\/[A-Z0-9-]+\.md$/,
   /^[a-z0-9-]+\/(POC|PWB|CAP1)-REQ-\d+$/,
@@ -133,9 +144,9 @@ describe('Zero downstream citations of Polaris as authority (PWB-REQ-014)', () =
     const decisionsDirectory = join(REPO_ROOT, '.syzygy/governance/decisions');
     const declaredDecisions = new Set<string>();
     for (const file of walk(decisionsDirectory, isSpec)) {
-      for (const match of readFileSync(file, 'utf8').matchAll(/^Decision ID: `([A-Z0-9-]+)`(?:$| )/gm)) declaredDecisions.add(match[1] as string);
+      for (const match of readFileSync(file, 'utf8').matchAll(DECISION_DECLARATION)) declaredDecisions.add(match[1] as string);
     }
-    for (const entry of entries.filter((candidate) => DOSSIER_RUNNER_DECISION.test(candidate.value))) {
+    for (const entry of entries.filter((candidate) => DOSSIER_RUNNER_DECISION.test(candidate.value) || MACHINE_CEILING_DECISION.test(candidate.value))) {
       expect(entry.key).toBe('decisions');
       expect(declaredDecisions.has(entry.value), `${entry.value} must have an owning Decision ID declaration`).toBe(true);
     }
@@ -155,11 +166,18 @@ describe('Zero downstream citations of Polaris as authority (PWB-REQ-014)', () =
     }
   });
 
+  it('reads a Decision ID declaration only at the line end or before a parenthetical (mutant: leave the end unanchored)', () => {
+    const declared = (text: string): string[] => [...text.matchAll(DECISION_DECLARATION)].map((match) => match[1] as string);
+    expect(declared('Decision ID: `A-1`\nDecision ID: `B-2` (named for the\ndirection)\n')).toEqual(['A-1', 'B-2']);
+    expect(declared('Decision ID: `A-1` (withdrawn; see B)\n')).toEqual(['A-1']);
+    expect(declared('Decision ID: `A-1` withdrawn\nDecision ID: `B-2`, superseded\nDecision ID: `C-3`x\n')).toEqual([]);
+  });
+
   it('recognizes dossier decision identity syntax without accepting presentation references', () => {
-    for (const value of ['POLARIS-DOSSIER-LOCAL-AGENT-MODE-2026-10-05', 'POLARIS-DOSSIER-LOCAL-AGENT-REVIEW-1-RULINGS-2026-10-05', 'POLARIS-DOSSIER-WAITING-SESSIONS-2026-10-08', 'POLARIS-DOSSIER-ONE-COMMAND-RUN-2026-10-14']) {
+    for (const value of ['POLARIS-DOSSIER-LOCAL-AGENT-MODE-2026-10-05', 'POLARIS-DOSSIER-LOCAL-AGENT-REVIEW-1-RULINGS-2026-10-05', 'POLARIS-DOSSIER-WAITING-SESSIONS-2026-10-08', 'POLARIS-DOSSIER-ONE-COMMAND-RUN-2026-10-14', 'POLARIS-DOSSIER-LAUNCH-CONSENT-2026-11-08']) {
       expect(DOSSIER_DECISION.test(value)).toBe(true);
     }
-    for (const value of ['POLARIS-DOSSIER-LOCAL-AGENT-2026-10-05', 'POLARIS-DOSSIER-LOCAL-AGENT-MODE', 'POLARIS-DOSSIER-LOCAL-AGENT-MODE-2026-10-05/polaris', 'polaris-dossier-local-agent-mode-2026-10-05', 'POLARIS-DOSSIER-LOCAL-AGENT-MODE-2026-10-05 (/polaris)', 'POLARIS-DOSSIER-WAITING-SESSIONS', 'POLARIS-DOSSIER-WAITING-SESSIONS-X-2026-10-08', 'POLARIS-DOSSIER-2026-10-08', 'POLARIS-DOSSIER-ONE-COMMAND-RUN', 'POLARIS-DOSSIER-ONE-COMMAND-RUN-X-2026-10-14']) {
+    for (const value of ['POLARIS-DOSSIER-LOCAL-AGENT-2026-10-05', 'POLARIS-DOSSIER-LOCAL-AGENT-MODE', 'POLARIS-DOSSIER-LOCAL-AGENT-MODE-2026-10-05/polaris', 'polaris-dossier-local-agent-mode-2026-10-05', 'POLARIS-DOSSIER-LOCAL-AGENT-MODE-2026-10-05 (/polaris)', 'POLARIS-DOSSIER-WAITING-SESSIONS', 'POLARIS-DOSSIER-WAITING-SESSIONS-X-2026-10-08', 'POLARIS-DOSSIER-2026-10-08', 'POLARIS-DOSSIER-ONE-COMMAND-RUN', 'POLARIS-DOSSIER-ONE-COMMAND-RUN-X-2026-10-14', 'POLARIS-DOSSIER-LAUNCH-CONSENT', 'POLARIS-DOSSIER-LAUNCH-CONSENT-X-2026-11-08']) {
       expect(DOSSIER_DECISION.test(value)).toBe(false);
     }
     for (const value of ['DOSSIER-LOCAL-CLI-SUBPROCESS-2026-10-15', 'DOSSIER-CLI-RUNNER-REPAIR-AND-DISCLOSE-2026-10-15']) {
@@ -177,6 +195,9 @@ describe('Zero downstream citations of Polaris as authority (PWB-REQ-014)', () =
     }
   });
 
+  // Reads every swept file in five trees (5,848 files, 139 MB at 92eafd01): 0.56 s alone, up to 8.0 s over 30 runs under 36 CPU
+  // hogs at load 44-63 (docs/evidence/syzygy-exj7/flaky-under-load-2026-11-04.json). Reading is half the cost and the population is
+  // the sweep's subject, so the 5 s default gives way, sized by scripts/size_vitest_test_timeouts.py's rule (8,029 ms x 3, to 5 s).
   it('no source/authority/provenance field in the governance, spec, code or docs trees names the Polaris surface', () => {
     const roots = ['.syzygy/governance', 'openspec', 'packages', 'apps', 'docs'];
     const isSwept = (path: string): boolean => /\.(md|json|ya?ml|ts)$/.test(path);
@@ -200,5 +221,5 @@ describe('Zero downstream citations of Polaris as authority (PWB-REQ-014)', () =
       });
     }
     expect(hits).toEqual([]);
-  });
+  }, 25_000);
 });

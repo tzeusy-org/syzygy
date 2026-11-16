@@ -1,0 +1,51 @@
+{"row":"an empty file","form":"terminal","fields":["mode","ino","size","link","bytes"],"mode":33188,"bytes":0,"link":null}
+{"row":"an empty file","form":"bang","fields":["mode","ino","size","link","bytes"],"mode":33188,"bytes":0,"link":null}
+{"row":"an empty file","form":"syzygy-launched","fields":["mode","ino","size","link","bytes"],"mode":33188,"bytes":0,"link":null}
+{"row":"invalid JSON","form":"terminal","fields":["mode","ino","size","link","bytes"],"mode":33188,"bytes":39,"link":null}
+{"row":"invalid JSON","form":"bang","fields":["mode","ino","size","link","bytes"],"mode":33188,"bytes":39,"link":null}
+{"row":"invalid JSON","form":"syzygy-launched","fields":["mode","ino","size","link","bytes"],"mode":33188,"bytes":39,"link":null}
+{"row":"JSON null","form":"terminal","fields":["mode","ino","size","link","bytes"],"mode":33188,"bytes":4,"link":null}
+{"row":"JSON null","form":"bang","fields":["mode","ino","size","link","bytes"],"mode":33188,"bytes":4,"link":null}
+{"row":"JSON null","form":"syzygy-launched","fields":["mode","ino","size","link","bytes"],"mode":33188,"bytes":4,"link":null}
+{"row":"a JSON array","form":"terminal","fields":["mode","ino","size","link","bytes"],"mode":33188,"bytes":2,"link":null}
+{"row":"a JSON array","form":"bang","fields":["mode","ino","size","link","bytes"],"mode":33188,"bytes":2,"link":null}
+{"row":"a JSON array","form":"syzygy-launched","fields":["mode","ino","size","link","bytes"],"mode":33188,"bytes":2,"link":null}
+{"row":"a JSON string","form":"terminal","fields":["mode","ino","size","link","bytes"],"mode":33188,"bytes":28,"link":null}
+{"row":"a JSON string","form":"bang","fields":["mode","ino","size","link","bytes"],"mode":33188,"bytes":28,"link":null}
+{"row":"a JSON string","form":"syzygy-launched","fields":["mode","ino","size","link","bytes"],"mode":33188,"bytes":28,"link":null}
+{"row":"another format","form":"terminal","fields":["mode","ino","size","link","bytes"],"mode":33188,"bytes":40,"link":null}
+{"row":"another format","form":"bang","fields":["mode","ino","size","link","bytes"],"mode":33188,"bytes":40,"link":null}
+{"row":"another format","form":"syzygy-launched","fields":["mode","ino","size","link","bytes"],"mode":33188,"bytes":40,"link":null}
+{"row":"no format","form":"terminal","fields":["mode","ino","size","link","bytes"],"mode":33188,"bytes":18,"link":null}
+{"row":"no format","form":"bang","fields":["mode","ino","size","link","bytes"],"mode":33188,"bytes":18,"link":null}
+{"row":"no format","form":"syzygy-launched","fields":["mode","ino","size","link","bytes"],"mode":33188,"bytes":18,"link":null}
+{"row":"a format that is not a string","form":"terminal","fields":["mode","ino","size","link","bytes"],"mode":33188,"bytes":13,"link":null}
+{"row":"a format that is not a string","form":"bang","fields":["mode","ino","size","link","bytes"],"mode":33188,"bytes":13,"link":null}
+{"row":"a format that is not a string","form":"syzygy-launched","fields":["mode","ino","size","link","bytes"],"mode":33188,"bytes":13,"link":null}
+{"row":"a byte-order mark before the marker","form":"terminal","fields":["mode","ino","size","link","bytes"],"mode":33188,"bytes":43,"link":null}
+{"row":"a byte-order mark before the marker","form":"bang","fields":["mode","ino","size","link","bytes"],"mode":33188,"bytes":43,"link":null}
+{"row":"a byte-order mark before the marker","form":"syzygy-launched","fields":["mode","ino","size","link","bytes"],"mode":33188,"bytes":43,"link":null}
+{"row":"a directory","form":"terminal","fields":["mode","ino","size","link","bytes"],"mode":16877,"bytes":null,"link":null}
+{"row":"a directory","form":"bang","fields":["mode","ino","size","link","bytes"],"mode":16877,"bytes":null,"link":null}
+{"row":"a directory","form":"syzygy-launched","fields":["mode","ino","size","link","bytes"],"mode":16877,"bytes":null,"link":null}
+{"row":"a dangling symbolic link","form":"terminal","fields":["mode","ino","size","link","bytes"],"mode":41471,"bytes":null,"link":"/tmp/r516-7/polaris-marker-rcNVIi/nowhere.json"}
+{"row":"a dangling symbolic link","form":"bang","fields":["mode","ino","size","link","bytes"],"mode":41471,"bytes":null,"link":"/tmp/r516-7/polaris-marker-QEZ5OL/nowhere.json"}
+{"row":"a dangling symbolic link","form":"syzygy-launched","fields":["mode","ino","size","link","bytes"],"mode":41471,"bytes":null,"link":"/tmp/r516-7/polaris-marker-ksbLfw/nowhere.json"}
+{"row":"a symbolic link to the marker Syzygy writes","form":"terminal","fields":["mode","ino","size","link","bytes"],"mode":41471,"bytes":231,"link":"/tmp/r516-7/polaris-marker-fiy2w8/elsewhere/launched.json"}
+{"row":"a symbolic link to the marker Syzygy writes","form":"bang","fields":["mode","ino","size","link","bytes"],"mode":41471,"bytes":231,"link":"/tmp/r516-7/polaris-marker-WKSyj9/elsewhere/launched.json"}
+{"row":"a symbolic link to the marker Syzygy writes","form":"syzygy-launched","fields":["mode","ino","size","link","bytes"],"mode":41471,"bytes":231,"link":"/tmp/r516-7/polaris-marker-ClX9pA/elsewhere/launched.json"}
+{"row":"a symbolic link to a character device","form":"terminal","fields":["mode","ino","size","link","bytes"],"mode":41471,"bytes":null,"link":"/dev/zero"}
+{"row":"a symbolic link to a character device","form":"bang","fields":["mode","ino","size","link","bytes"],"mode":41471,"bytes":null,"link":"/dev/zero"}
+{"row":"a symbolic link to a character device","form":"syzygy-launched","fields":["mode","ino","size","link","bytes"],"mode":41471,"bytes":null,"link":"/dev/zero"}
+{"row":"a FIFO","form":"terminal","fields":["mode","ino","size","link","bytes"],"mode":4516,"bytes":null,"link":null}
+{"row":"a FIFO","form":"bang","fields":["mode","ino","size","link","bytes"],"mode":4516,"bytes":null,"link":null}
+{"row":"a FIFO","form":"syzygy-launched","fields":["mode","ino","size","link","bytes"],"mode":4516,"bytes":null,"link":null}
+{"row":"a FIFO holding the marker's bytes","form":"terminal","fields":["mode","ino","size","link","bytes"],"mode":4516,"bytes":null,"link":null}
+{"row":"a FIFO holding the marker's bytes","form":"bang","fields":["mode","ino","size","link","bytes"],"mode":4516,"bytes":null,"link":null}
+{"row":"a FIFO holding the marker's bytes","form":"syzygy-launched","fields":["mode","ino","size","link","bytes"],"mode":4516,"bytes":null,"link":null}
+{"row":"a marker of 4097 bytes, one past the bound","form":"terminal","fields":["mode","ino","size","link","bytes"],"mode":33188,"bytes":4097,"link":null}
+{"row":"a marker of 4097 bytes, one past the bound","form":"bang","fields":["mode","ino","size","link","bytes"],"mode":33188,"bytes":4097,"link":null}
+{"row":"a marker of 4097 bytes, one past the bound","form":"syzygy-launched","fields":["mode","ino","size","link","bytes"],"mode":33188,"bytes":4097,"link":null}
+{"row":"a file its reader may not read","form":"terminal","fields":["mode","ino","size","link","bytes"],"mode":32768,"bytes":null,"link":null}
+{"row":"a file its reader may not read","form":"bang","fields":["mode","ino","size","link","bytes"],"mode":32768,"bytes":null,"link":null}
+{"row":"a file its reader may not read","form":"syzygy-launched","fields":["mode","ino","size","link","bytes"],"mode":32768,"bytes":null,"link":null}

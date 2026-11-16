@@ -219,8 +219,16 @@ exhausted — a reviewer who finds an unlisted limb has found a real gap.
 | RFC9-48 | Full keyboard navigation, textual epistemic labels, reduced motion honored, text contrast maintained | covered — Direct match | POC-REQ-061 |
 | RFC9-48 | A tabular/non-3D equivalent serves as the screen-reader-accessible surface | covered — Every Orrery entity links to its exact-table route; parity keeps that route truthful | POC-REQ-053, POC-REQ-020 |
 
+| RFC6-14 | Every served work item's effective governing-intent state remains explicit after one local expansion; sharing a value never merges subjects or pools entity/relationship records | covered — Amendment row (observation-local governedBy wire value); only POC-REQ-014's exact three-field value, not full RFC6-14 record/freshness limbs | POC-REQ-014 |
+| RFC6-15 | A reference resolves only within its identified observation and evaluation; repeated identical inputs preserve effective facts and ordered membership | covered — Amendment row (observation-local governedBy wire value); existing evaluation/revision identity, not new query filters | POC-REQ-014 |
+| RFC6-18 | Human facts and the expanded machine facts consume one logical work-item fact set, with distinct per-item claims and unchanged complete served set | covered — Amendment row (observation-local governedBy wire value); no evidence-drawer or new surface | POC-REQ-014 |
+| RFC6-22 | Wire sharing preserves effective state, observation/evaluation, identities and rendered/served populations | covered — Amendment row (observation-local governedBy wire value); other excluded tuple limbs remain as recorded above | POC-REQ-014 |
+| RFC6-23 | Expanded machine counts, reasons and per-item states equal human counts and states for the same evaluation and selection | covered — Amendment row (observation-local governedBy wire value); complete served and rendered denominators independently enumerated | POC-REQ-014 |
+| RFC8-22 | An invalid local representation is an explicit bounded failure, never a silently skipped join, guessed value or smaller successful answer | covered — Amendment row (observation-local governedBy wire value); no governing-intent link or source-to-claim join is admitted | POC-REQ-014 |
+| RFC8-23 | Equal Unknown values stay separate countable/filterable work-item claims; sharing neither clears Unknown nor invents warrants | covered — Amendment row (observation-local governedBy wire value); existing unresolved orphaned-work and other limbs remain Unknown | POC-REQ-014 |
+
 Part A totals `[Observed, computed by the sweep in "Verifying this
-table"]`: **147 consequence rows over 78 clauses — 105 covered,
+table"]`: **154 consequence rows over 78 clauses — 112 covered,
 42 Unknown.**
 
 **Amendment disclosure — the RFC1-26 closure row (ruling P-75 Q3).**
@@ -257,6 +265,14 @@ signed row records them.
 
 Every row marked "Amendment row (vocabulary and record shape)" was added by
 the amendment that minted POC-REQ-055 and amended POC-REQ-060 in place.
+
+**Amendment disclosure — observation-local governedBy wire value.** The
+seven rows marked with that name observe only POC-REQ-014's lossless wire
+representation. Existing P-100 rows reading each item's value now read its
+effective value after the specified local expansion. Those rows and all
+previous Unknown rows are preserved. In particular the broader RFC6-14
+claim/other-value record, freshness and secondary-annotation limbs remain
+Unknown; a shared three-field value is not the full POC-REQ-060 record shape.
 
 ## Part B1 — applicable clauses no requirement covers
 

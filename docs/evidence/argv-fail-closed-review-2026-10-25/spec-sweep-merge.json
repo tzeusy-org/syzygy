@@ -1,0 +1,37 @@
+{
+ "commit": "60d362d40938174caab323443e08e56851dcc081",
+ "files": 603,
+ "srcModules": 495,
+ "preprocessorSpecifiers": 2974,
+ "srcPreprocessorSpecifiers": 2608,
+ "regexSpecifiers": 3129,
+ "schemes": {
+  "node": 1136
+ },
+ "oddByPreprocessor": [
+  "docs/evidence/argv-table-review-2026-10-25/type-probe/Before-Head.ts: /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-521/clone/packages/polaris-dossier/dist/reverify.js",
+  "docs/evidence/argv-table-review-2026-10-25/type-probe/Before-Was.ts: /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-521/clone/packages/polaris-dossier/dist/reverify.js",
+  "docs/evidence/argv-table-review-2026-10-25/type-probe/Head-Before.ts: /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-521/clone/packages/polaris-dossier/dist/reverify.js",
+  "docs/evidence/argv-table-review-2026-10-25/type-probe/Head-Neg.ts: /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-521/clone/packages/polaris-dossier/dist/reverify.js",
+  "docs/evidence/argv-table-review-2026-10-25/type-probe/Head-Was.ts: /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-521/clone/packages/polaris-dossier/dist/reverify.js",
+  "docs/evidence/argv-table-review-2026-10-25/type-probe/Neg-Head.ts: /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-521/clone/packages/polaris-dossier/dist/reverify.js",
+  "docs/evidence/argv-table-review-2026-10-25/type-probe/Was-Before.ts: /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-521/clone/packages/polaris-dossier/dist/reverify.js",
+  "docs/evidence/argv-table-review-2026-10-25/type-probe/Was-Head.ts: /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-521/clone/packages/polaris-dossier/dist/reverify.js"
+ ],
+ "oddByRegex": [
+  "apps/three-surface-poc/src/polaris-generation/generation-mutation-run-main.ts: /",
+  "apps/three-surface-poc/src/pwb-mutation-sweep.ts: // mutation-point:",
+  "docs/evidence/argv-table-review-2026-10-25/type-probe/Before-Head.ts: /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-521/clone/packages/polaris-dossier/dist/reverify.js",
+  "docs/evidence/argv-table-review-2026-10-25/type-probe/Before-Was.ts: /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-521/clone/packages/polaris-dossier/dist/reverify.js",
+  "docs/evidence/argv-table-review-2026-10-25/type-probe/Head-Before.ts: /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-521/clone/packages/polaris-dossier/dist/reverify.js",
+  "docs/evidence/argv-table-review-2026-10-25/type-probe/Head-Neg.ts: /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-521/clone/packages/polaris-dossier/dist/reverify.js",
+  "docs/evidence/argv-table-review-2026-10-25/type-probe/Head-Was.ts: /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-521/clone/packages/polaris-dossier/dist/reverify.js",
+  "docs/evidence/argv-table-review-2026-10-25/type-probe/Neg-Head.ts: /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-521/clone/packages/polaris-dossier/dist/reverify.js",
+  "docs/evidence/argv-table-review-2026-10-25/type-probe/Was-Before.ts: /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-521/clone/packages/polaris-dossier/dist/reverify.js",
+  "docs/evidence/argv-table-review-2026-10-25/type-probe/Was-Head.ts: /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-521/clone/packages/polaris-dossier/dist/reverify.js"
+ ],
+ "byExtension": {
+  ".ts": 517,
+  ".mjs": 86
+ }
+}

@@ -1,0 +1,44 @@
+
+[1m[46m RUN [49m[22m [36mv3.2.7 [39m[90m/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-518/clone[39m
+
+ [31m❯[39m [30m[45m @syzygy/polaris-dossier [49m[39m packages/polaris-dossier/src/subpath-imports.test.ts [2m([22m[2m8 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[32m 69[2mms[22m[39m
+[31m   [31m×[31m the subpaths the daemon entry imports[2m > [22mare /argv and /state-directory, imported statically, and the barrel is not[39m[32m 52[2mms[22m[39m
+[31m     → expected [ Array(3) ] to deeply equal [ Array(2) ][39m
+   [32m✓[39m the subpaths the daemon entry imports[2m > [22m./argv is packages/polaris-dossier/src/argv.ts, which imports node: built-ins alone[32m 10[2mms[22m[39m
+   [32m✓[39m the subpaths the daemon entry imports[2m > [22m./state-directory is packages/polaris-dossier/src/state-directory.ts, which imports node: built-ins alone[32m 4[2mms[22m[39m
+   [32m✓[39m the subpaths the daemon entry imports[2m > [22mthe check sees a forbidden import in import { DOSSIER_USAGE } from './cli.js'; (its own mutant)[32m 0[2mms[22m[39m
+   [32m✓[39m the subpaths the daemon entry imports[2m > [22mthe check sees a forbidden import in import type { CliPorts } from './index.js'; (its own mutant)[32m 0[2mms[22m[39m
+   [32m✓[39m the subpaths the daemon entry imports[2m > [22mthe check sees a forbidden import in export * from '@syzygy/cap1-core'; (its own mutant)[32m 0[2mms[22m[39m
+   [32m✓[39m the subpaths the daemon entry imports[2m > [22mthe check sees a forbidden import in const lazy = await import('typescript'); (its own mutant)[32m 0[2mms[22m[39m
+   [32m✓[39m the subpaths the daemon entry imports[2m > [22mthe check sees a forbidden import in const fs = require('fs'); (its own mutant)[32m 0[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m [30m[45m @syzygy/polaris-dossier [49m[39m packages/polaris-dossier/src/subpath-imports.test.ts[2m > [22mthe subpaths the daemon entry imports[2m > [22mare /argv and /state-directory, imported statically, and the barrel is not
+[31m[1mAssertionError[22m: expected [ Array(3) ] to deeply equal [ Array(2) ][39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[2m  [[22m
+[2m    "@syzygy/polaris-dossier/argv",[22m
+[2m    "@syzygy/polaris-dossier/state-directory",[22m
+[31m+   "@syzygy/polaris-dossier",[39m
+[2m  ][22m
+
+[36m [2m❯[22m packages/polaris-dossier/src/subpath-imports.test.ts:[2m34:21[22m[39m
+    [90m 32| [39m      .map((statement) => (statement.moduleSpecifier as ts.StringLiter…
+    [90m 33| [39m      .filter((specifier) => specifier.startsWith('@syzygy/polaris-dos…
+    [90m 34| [39m    expect(statics).toEqual(['@syzygy/polaris-dossier/argv', '@syzygy/…
+    [90m   | [39m                    [31m^[39m
+    [90m 35| [39m  })[33m;[39m
+    [90m 36| [39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m7 passed[39m[22m[90m (8)[39m
+[2m   Start at [22m 22:23:20
+[2m   Duration [22m 1.63s[2m (transform 51ms, setup 24ms, collect 935ms, tests 69ms, environment 0ms, prepare 84ms)[22m
+

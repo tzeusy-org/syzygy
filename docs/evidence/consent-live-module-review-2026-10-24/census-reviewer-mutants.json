@@ -1,0 +1,50 @@
+{
+ "commit": "59f0409701b9a9291907d8acbd0d6559df7db1a4",
+ "mutants": [
+  {
+   "id": "R-C1-consent-ports-wraps-inForceRecords",
+   "file": "packages/polaris-generation-consent/src/consent-ports.ts",
+   "old": "export { inForceRecords, notInForceRecords, type NotInForce } from './in-force.js';",
+   "new": "import { inForceRecords as inForceRecordsImpl } from './in-force.js';\nexport { notInForceRecords, type NotInForce } from './in-force.js';\nexport const inForceRecords: typeof inForceRecordsImpl = (records, now) => inForceRecordsImpl(records, now);",
+   "expected": "killed",
+   "outcome": "killed",
+   "buildExit": 0,
+   "note": "consent-ports.ts (so the root) exports a wrapper instead of re-exporting; ./live keeps the in-force object",
+   "subpathsAdded": [
+    {
+     "subpath": "./live",
+     "module": "packages/polaris-generation-consent/src/live.ts",
+     "names": 48,
+     "notRootNames": [],
+     "notRootOrigins": [
+      "inForceRecords"
+     ],
+     "valuesNotRootObjects": [
+      "inForceRecords"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "R-C2-NotInForce-shape-widened",
+   "file": "packages/polaris-generation-consent/src/in-force.ts",
+   "old": "export type NotInForce = Dead | 'superseded';",
+   "new": "export type NotInForce = Dead | 'superseded' | 'reviewer-extra';",
+   "expected": "survived",
+   "outcome": "survived",
+   "buildExit": 1,
+   "note": "the type keeps its name and origin but changes shape: the census compares names and origins, not shapes",
+   "subpathsAdded": [
+    {
+     "subpath": "./live",
+     "module": "packages/polaris-generation-consent/src/live.ts",
+     "names": 48,
+     "notRootNames": [],
+     "notRootOrigins": [],
+     "valuesNotRootObjects": []
+    }
+   ]
+  }
+ ],
+ "restoredBuildExit": 0
+}

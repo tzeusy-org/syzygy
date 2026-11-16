@@ -1,0 +1,30 @@
+{
+ "base": "a15b6a04",
+ "head": "330dd894",
+ "baseCount": 103,
+ "headCount": 124,
+ "added": [
+  "@syzygy/support stays a pure leaf > calls no import() in any source, however it is spaced or commented",
+  "owner-act drafter (M4 slice 7) > names no identifier outside its literal list, so it reads no global it does not use",
+  "the import() reader the import() row stands on > reads \"const meta = import.meta.url;\"",
+  "the import() reader the import() row stands on > reads \"const value = 'node:f' + 's';\\nvoid import (value);\"",
+  "the import() reader the import() row stands on > reads \"export const value = () => import ('node:crypto');\"",
+  "the import() reader the import() row stands on > reads \"void import/**/('node:fs');\"",
+  "the module-declaration reader the createHash row stands on > reads \"export * from 'node:crypto';\"",
+  "the module-declaration reader the createHash row stands on > reads \"export { sha256 } from './sha256.js';\\nexport { value };\"",
+  "the module-declaration reader the createHash row stands on > reads \"import 'node:crypto';\"",
+  "the module-declaration reader the createHash row stands on > reads \"import value = require ('node:crypto');\"",
+  "the module-declaration reader the createHash row stands on > reads \"import { createHash } from 'node:crypto';\"",
+  "the property-write reader the no-write row stands on > reads \"(Object.freeze) = (value) => value;\"",
+  "the property-write reader the no-write row stands on > reads \"({ value: Object.freeze } = { value: (bytes) => bytes });\"",
+  "the property-write reader the no-write row stands on > reads \"Object.freeze = (value) => value;\"",
+  "the property-write reader the no-write row stands on > reads \"Object['freeze'] ??= (value) => value;\"",
+  "the property-write reader the no-write row stands on > reads \"[...Object.freeze] = [];\"",
+  "the property-write reader the no-write row stands on > reads \"[Object.freeze] = [(value) => value];\"",
+  "the property-write reader the no-write row stands on > reads \"let a = 1; a += 1; [a] = [2];\"",
+  "the workspace entry modules > reads each entry of each package, its main where it has no exports, as the src module it names",
+  "the workspace entry modules > throws on a /../ segment that the resolver would join away, since Node refuses the entry",
+  "the workspace entry modules > throws on an entry the resolver cannot read"
+ ],
+ "removed": []
+}

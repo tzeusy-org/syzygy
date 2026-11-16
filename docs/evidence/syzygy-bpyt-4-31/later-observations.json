@@ -1,0 +1,33 @@
+{
+ "subject": "observations of removed timeout sites made after removal-check.json's runs, each with the source that retains it (syzygy-bpyt.4.31, repair of review round 1)",
+ "text": "Evidence record, not authority. Each row's figures are read from its source by a script that asserts every literal it copies is there; the source retains the runs.",
+ "rows": [
+  {
+   "site": "apps/three-surface-poc/src/polaris-generation/dossier-cap-measure.test.ts:12",
+   "siteLinesAt": "546f1ff066e2ffef749c757cdb4621336039113b",
+   "kind": "hook",
+   "worstMs": 5107,
+   "worst": {
+    "commit": "f44cd65dfacd12c58776cca65cc40766fdfca6b1",
+    "file": "apps/three-surface-poc/src/polaris-generation/dossier-cap-measure.test.ts",
+    "fileSha256": "486588619eb13d55d4ec645ddc47d2f90aa8dd3cfcaed792db6e89b8bb764c2b",
+    "run": "round 3 of 5",
+    "load1": {
+     "start": 46.4,
+     "end": 54.89
+    },
+    "error": "Hook timed out in 5000ms.",
+    "budget": "hookTimeout 5000, ruling 1's hook threshold, through the reviewer's config tools/threshold.vitest.config.mjs"
+   },
+   "observations": 33,
+   "observationsOverThreshold": 1,
+   "otherObservationsAtMostMs": 1873,
+   "observationsAre": "the 5 threshold-config rounds at the head, and 28 runs at each checkout's own config (6 + 8 at the base, 6 + 8 at the head)",
+   "source": {
+    "path": "docs/reviews/R-GP-IMPL-TEST-TIMEOUTS-1-RAW.md",
+    "section": "3.4 The removal sample",
+    "sha256": "0ca96c9a5c8b8701f7c21605f21b113976aebab61ec0548280be419a7dbb55cf"
+   }
+  }
+ ]
+}

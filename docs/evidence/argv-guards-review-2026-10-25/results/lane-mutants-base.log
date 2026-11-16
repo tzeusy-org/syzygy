@@ -1,0 +1,32 @@
+C0-argv survives 0 ['Tests  65 passed (65)'] 2.5 clean
+C0-guard survives 0 ['Tests  17 passed (17)'] 3.8 clean
+C0-both-guards survives 0 ['Tests  21 passed (21)'] 3.8 clean
+OR1-missing-value-judged-before-repeat survives 0 ['Tests  65 passed (65)'] 3.1 clean
+OR2-empty-value-read-as-missing survives 0 ['Tests  65 passed (65)'] 2.4 clean
+D1-polaris-repeat-refused survives 0 ['Tests  65 passed (65)'] 2.9 clean
+D2-daemon-repeat-refused survives 0 ['Tests  65 passed (65)'] 2.8 clean
+D3-dossier-dash-value-taken survives 0 ['Tests  65 passed (65)'] 3.1 clean
+OE1-agreement-one-way survives 0 ['Tests  17 passed (17)'] 4.0 clean
+OE3-main-computed-dynamic-import survives 0 ['Tests  17 passed (17)'] 4.3 clean
+OE4-main-create-require-alias survives 0 ['Tests  17 passed (17)'] 4.4 clean
+OE5-main-intermediate-local-module survives 0 ['Tests  17 passed (17)'] 4.2 clean
+OS1-guard-after-the-read survives 0 ['Tests  65 passed (65)'] 2.9 clean
+OS2-long-form-allows-a-trailing-equals survives 0 ['Tests  65 passed (65)'] 3.0 clean
+OB1-condition-counts-as-inside survives 0 ['Tests  17 passed (17)'] 4.3 clean
+OB2-outermost-if-not-nearest survives 0 ['Tests  17 passed (17)'] 4.0 clean
+OB3-shadowed-argv-replaces-the-polaris-branch-import survives 0 ['Tests  17 passed (17)'] 3.6 clean
+GM1-entry-re-exports-the-barrel killed 1 ['Tests  1 failed | 16 passed (17)'] 4.3 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the subpaths the daemon entry imports > are /argv and /state-directory, imported statically, and the barrel only dynamically inside the dossier and polaris branches
+GM3-argv-loads-the-cli-through-node-module killed 1 ['Tests  1 failed | 16 passed (17)'] 4.2 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the subpaths the daemon entry imports > ./argv is packages/polaris-dossier/src/argv.ts, which imports exactly ["node:util"]
+D4-a-new-readArgv-caller survives 0 ['Tests  65 passed (65)'] 3.1 clean
+D5-readArgv-under-another-name-in-a-new-module survives 0 ['Tests  65 passed (65)'] 2.8 clean
+D6-allow-execution-options-change survives 0 ['Tests  65 passed (65)'] 3.0 clean
+OE6-main-imports-a-subpath-no-package-exports killed 1 ['Tests  1 failed | 20 passed (21)'] 5.1 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > resolves every workspace import the CLI reaches, dynamic ones included
+CE1-computed-edge-dropped SPEC-ERROR CE1-computed-edge-dropped: old occurs 0 times in packages/polaris-dossier/src/subpath-imports.test.ts
+SK1-every-entry-dynamic-import-skipped SPEC-ERROR SK1-every-entry-dynamic-import-skipped: old occurs 0 times in packages/polaris-dossier/src/subpath-imports.test.ts
+SK2-branch-edges-followed SPEC-ERROR SK2-branch-edges-followed: old occurs 0 times in packages/polaris-dossier/src/subpath-imports.test.ts
+RW1-reach-stops-at-the-entry SPEC-ERROR RW1-reach-stops-at-the-entry: packages/polaris-generation-core/src/workspace-reach.testkit.ts does not exist in this tree
+RW2-workspace-packages-not-followed SPEC-ERROR RW2-workspace-packages-not-followed: packages/polaris-generation-core/src/workspace-reach.testkit.ts does not exist in this tree
+wrote /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-524/lane-mutants-base.json 28

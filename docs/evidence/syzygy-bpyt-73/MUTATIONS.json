@@ -1,0 +1,888 @@
+{
+  "schema": "syzygy-bpyt.73/mutations/v1",
+  "subject": {
+    "baseCommit": "0bf6b9c1bf92705a69c1d3b823f26714b3d29237",
+    "headCommit": "f174c1df215ab5a96e0d564563eea65c6f9015b6",
+    "baseScriptSha256": "e59b490ae2a4352d5c80c25f662606f7c2363547bed0c50340a4a5d74401060a",
+    "headScriptSha256": "c8e9f7f655599be93f56ece05d24330e25c2e8ff8c6aead315321d8998665cdf",
+    "testSha256": "340a9f62bce93147b5b3c5b673a9cc1deda8484116fcd869ca913213bb8aa39c",
+    "lockSha256": "49c65f0bd66a5a94c64be879bdb4c94062236bdca2d0eb5990b35c41894167cd"
+  },
+  "records": [
+    {
+      "subject": {
+        "baseCommit": "0bf6b9c1bf92705a69c1d3b823f26714b3d29237",
+        "headCommit": "f174c1df215ab5a96e0d564563eea65c6f9015b6",
+        "baseScriptSha256": "e59b490ae2a4352d5c80c25f662606f7c2363547bed0c50340a4a5d74401060a",
+        "headScriptSha256": "c8e9f7f655599be93f56ece05d24330e25c2e8ff8c6aead315321d8998665cdf",
+        "testSha256": "340a9f62bce93147b5b3c5b673a9cc1deda8484116fcd869ca913213bb8aa39c",
+        "lockSha256": "49c65f0bd66a5a94c64be879bdb4c94062236bdca2d0eb5990b35c41894167cd"
+      },
+      "tool": {
+        "path": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.73/docs/evidence/syzygy-bpyt-73/tools/verify.py",
+        "sha256": "b8e8c3d59109d0b1e0a6d5b8e43ccba491b1f03e58743c2aec362e90a6681125",
+        "diagnosticProbeSha256": "6d40a71bb70bd1da8d57c4afb0f7a9a8c5617c1bfb243fc7494eec27f9c7f1a7",
+        "corpusSha256": "6f9634b15533a2a67ca2daeb678a590b89045d2c3bf74e80cd8b4ec56075c276"
+      },
+      "runtime": {
+        "node": "v24.6.0",
+        "npm": "11.5.1",
+        "typescript": "5.9.3",
+        "vitest": "3.2.7",
+        "git": "git version 2.53.0",
+        "strace": "strace -- version 6.19\nCopyright (c) 1991-2026 The strace developers <https://strace.io>.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\nOptional features enabled: stack-trace=libunwind stack-demangle m32-mpers mx32-mpers"
+      },
+      "mode": "mutants",
+      "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.73",
+      "argv": [
+        "docs/evidence/syzygy-bpyt-73/tools/verify.py",
+        "mutants",
+        "--case",
+        "CONTROL",
+        "--base",
+        "0bf6b9c1bf92705a69c1d3b823f26714b3d29237",
+        "--head",
+        "f174c1df215ab5a96e0d564563eea65c6f9015b6",
+        "--runtime-root",
+        "/home/orca/.tmp/s73r-20261106/mutants-r2",
+        "--output",
+        "/home/orca/.tmp/s73r-20261106/mutants-r2/results/CONTROL"
+      ],
+      "stableSerialFixturesOnly": true,
+      "concurrentEditOrBuildProtection": false,
+      "postValidationRollback": false,
+      "rows": [
+        {
+          "id": "CONTROL",
+          "edits": [],
+          "mutatedScriptSha256": "c8e9f7f655599be93f56ece05d24330e25c2e8ff8c6aead315321d8998665cdf",
+          "restoredSha256": "c8e9f7f655599be93f56ece05d24330e25c2e8ff8c6aead315321d8998665cdf",
+          "attempt": {
+            "argv": [
+              "npx",
+              "--no-install",
+              "vitest",
+              "run",
+              "--project",
+              "e2e",
+              "apps/three-surface-poc/src/product-build.test.ts",
+              "-t",
+              "missing extends|circular extends",
+              "--reporter=default",
+              "--reporter=json",
+              "--outputFile=/home/orca/.tmp/s73r-20261106/mutants-r2/results/CONTROL/CONTROL/vitest.json"
+            ],
+            "cwd": "/home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject",
+            "startedAt": "2026-11-06T14:12:59.234890+00:00",
+            "elapsedSeconds": 2.0179686670308,
+            "exit": 0,
+            "timedOut": false,
+            "stdoutSha256": "728f6d69468ffd02cee8c99ed180255ce48a429aa20738d1c9c37390b6edc617",
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "collectedTotal": 27,
+          "executed": 2,
+          "passed": 2,
+          "failed": 0,
+          "failures": [],
+          "killedByIntendedAssertion": false
+        }
+      ]
+    },
+    {
+      "subject": {
+        "baseCommit": "0bf6b9c1bf92705a69c1d3b823f26714b3d29237",
+        "headCommit": "f174c1df215ab5a96e0d564563eea65c6f9015b6",
+        "baseScriptSha256": "e59b490ae2a4352d5c80c25f662606f7c2363547bed0c50340a4a5d74401060a",
+        "headScriptSha256": "c8e9f7f655599be93f56ece05d24330e25c2e8ff8c6aead315321d8998665cdf",
+        "testSha256": "340a9f62bce93147b5b3c5b673a9cc1deda8484116fcd869ca913213bb8aa39c",
+        "lockSha256": "49c65f0bd66a5a94c64be879bdb4c94062236bdca2d0eb5990b35c41894167cd"
+      },
+      "tool": {
+        "path": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.73/docs/evidence/syzygy-bpyt-73/tools/verify.py",
+        "sha256": "b8e8c3d59109d0b1e0a6d5b8e43ccba491b1f03e58743c2aec362e90a6681125",
+        "diagnosticProbeSha256": "6d40a71bb70bd1da8d57c4afb0f7a9a8c5617c1bfb243fc7494eec27f9c7f1a7",
+        "corpusSha256": "6f9634b15533a2a67ca2daeb678a590b89045d2c3bf74e80cd8b4ec56075c276"
+      },
+      "runtime": {
+        "node": "v24.6.0",
+        "npm": "11.5.1",
+        "typescript": "5.9.3",
+        "vitest": "3.2.7",
+        "git": "git version 2.53.0",
+        "strace": "strace -- version 6.19\nCopyright (c) 1991-2026 The strace developers <https://strace.io>.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\nOptional features enabled: stack-trace=libunwind stack-demangle m32-mpers mx32-mpers"
+      },
+      "mode": "mutants",
+      "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.73",
+      "argv": [
+        "docs/evidence/syzygy-bpyt-73/tools/verify.py",
+        "mutants",
+        "--case",
+        "M0",
+        "--base",
+        "0bf6b9c1bf92705a69c1d3b823f26714b3d29237",
+        "--head",
+        "f174c1df215ab5a96e0d564563eea65c6f9015b6",
+        "--runtime-root",
+        "/home/orca/.tmp/s73r-20261106/mutants-r2",
+        "--output",
+        "/home/orca/.tmp/s73r-20261106/mutants-r2/results/M0"
+      ],
+      "stableSerialFixturesOnly": true,
+      "concurrentEditOrBuildProtection": false,
+      "postValidationRollback": false,
+      "rows": [
+        {
+          "id": "M0",
+          "edits": [
+            {
+              "old": "  if (parsed.errors.length > 0) throw new Error(`${path}: ${ts.flattenDiagnosticMessageText(parsed.errors[0].messageText, '\\n')}`);\n",
+              "new": ""
+            }
+          ],
+          "mutatedScriptSha256": "2aa0c7224df144bd0bd61c94305e973d5069112cc8b9ba5573c3d58b43a9e04b",
+          "restoredSha256": "c8e9f7f655599be93f56ece05d24330e25c2e8ff8c6aead315321d8998665cdf",
+          "attempt": {
+            "argv": [
+              "npx",
+              "--no-install",
+              "vitest",
+              "run",
+              "--project",
+              "e2e",
+              "apps/three-surface-poc/src/product-build.test.ts",
+              "-t",
+              "missing extends|circular extends",
+              "--reporter=default",
+              "--reporter=json",
+              "--outputFile=/home/orca/.tmp/s73r-20261106/mutants-r2/results/M0/M0/vitest.json"
+            ],
+            "cwd": "/home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject",
+            "startedAt": "2026-11-06T14:13:01.888280+00:00",
+            "elapsedSeconds": 5.376707655959763,
+            "exit": 1,
+            "timedOut": false,
+            "stdoutSha256": "07210f235c064f292f156295823391eb15cb2781bbe2065cc2a0284399c9d09f",
+            "stderrSha256": "da5e29edb9564658b5fd414f9d4f2f127c7258b0f0f36268f1ddf413ebf1b01e"
+          },
+          "collectedTotal": 27,
+          "executed": 2,
+          "passed": 0,
+          "failed": 2,
+          "failures": [
+            {
+              "ancestorTitles": [
+                "the clean build"
+              ],
+              "fullName": "the clean build refuses, removing nothing, when it reaches a project with missing extends targets",
+              "status": "failed",
+              "title": "refuses, removing nothing, when it reaches a project with missing extends targets",
+              "duration": 1975.426814,
+              "failureMessages": [
+                "AssertionError: expected Error: Command failed: /home/orca/.nvm/ve\u2026 { \u2026(6) } to match object { stderr: StringContaining{\u2026} }\n(5 matching properties omitted from actual)\n    at _Assertion.<anonymous> (file:///home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject/node_modules/@vitest/expect/dist/index.js:1155:10)\n    at _Assertion.<anonymous> (file:///home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject/node_modules/@vitest/expect/dist/index.js:1029:14)\n    at _Assertion.methodWrapper (file:///home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject/node_modules/chai/index.js:1686:25)\n    at file:///home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject/node_modules/@vitest/expect/dist/index.js:1639:20\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at /home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject/apps/three-surface-poc/src/product-build.test.ts:215:5\n    at file:///home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20"
+              ],
+              "meta": {}
+            },
+            {
+              "ancestorTitles": [
+                "the clean build"
+              ],
+              "fullName": "the clean build refuses, removing nothing, when it reaches a project with circular extends",
+              "status": "failed",
+              "title": "refuses, removing nothing, when it reaches a project with circular extends",
+              "duration": 1877.538375,
+              "failureMessages": [
+                "AssertionError: expected Error: Command failed: /home/orca/.nvm/ve\u2026 { \u2026(6) } to match object { stderr: StringContaining{\u2026} }\n(5 matching properties omitted from actual)\n    at _Assertion.<anonymous> (file:///home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject/node_modules/@vitest/expect/dist/index.js:1155:10)\n    at _Assertion.<anonymous> (file:///home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject/node_modules/@vitest/expect/dist/index.js:1029:14)\n    at _Assertion.methodWrapper (file:///home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject/node_modules/chai/index.js:1686:25)\n    at file:///home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject/node_modules/@vitest/expect/dist/index.js:1639:20\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at /home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject/apps/three-surface-poc/src/product-build.test.ts:215:5\n    at file:///home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20"
+              ],
+              "meta": {}
+            }
+          ],
+          "killedByIntendedAssertion": true
+        }
+      ]
+    },
+    {
+      "subject": {
+        "baseCommit": "0bf6b9c1bf92705a69c1d3b823f26714b3d29237",
+        "headCommit": "f174c1df215ab5a96e0d564563eea65c6f9015b6",
+        "baseScriptSha256": "e59b490ae2a4352d5c80c25f662606f7c2363547bed0c50340a4a5d74401060a",
+        "headScriptSha256": "c8e9f7f655599be93f56ece05d24330e25c2e8ff8c6aead315321d8998665cdf",
+        "testSha256": "340a9f62bce93147b5b3c5b673a9cc1deda8484116fcd869ca913213bb8aa39c",
+        "lockSha256": "49c65f0bd66a5a94c64be879bdb4c94062236bdca2d0eb5990b35c41894167cd"
+      },
+      "tool": {
+        "path": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.73/docs/evidence/syzygy-bpyt-73/tools/verify.py",
+        "sha256": "b8e8c3d59109d0b1e0a6d5b8e43ccba491b1f03e58743c2aec362e90a6681125",
+        "diagnosticProbeSha256": "6d40a71bb70bd1da8d57c4afb0f7a9a8c5617c1bfb243fc7494eec27f9c7f1a7",
+        "corpusSha256": "6f9634b15533a2a67ca2daeb678a590b89045d2c3bf74e80cd8b4ec56075c276"
+      },
+      "runtime": {
+        "node": "v24.6.0",
+        "npm": "11.5.1",
+        "typescript": "5.9.3",
+        "vitest": "3.2.7",
+        "git": "git version 2.53.0",
+        "strace": "strace -- version 6.19\nCopyright (c) 1991-2026 The strace developers <https://strace.io>.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\nOptional features enabled: stack-trace=libunwind stack-demangle m32-mpers mx32-mpers"
+      },
+      "mode": "mutants",
+      "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.73",
+      "argv": [
+        "docs/evidence/syzygy-bpyt-73/tools/verify.py",
+        "mutants",
+        "--case",
+        "M1",
+        "--base",
+        "0bf6b9c1bf92705a69c1d3b823f26714b3d29237",
+        "--head",
+        "f174c1df215ab5a96e0d564563eea65c6f9015b6",
+        "--runtime-root",
+        "/home/orca/.tmp/s73r-20261106/mutants-r2",
+        "--output",
+        "/home/orca/.tmp/s73r-20261106/mutants-r2/results/M1"
+      ],
+      "stableSerialFixturesOnly": true,
+      "concurrentEditOrBuildProtection": false,
+      "postValidationRollback": false,
+      "rows": [
+        {
+          "id": "M1",
+          "edits": [
+            {
+              "old": "const referenced = new Set();",
+              "new": "const referenced = new Set();\nconst refuseParsed = [];"
+            },
+            {
+              "old": "  if (parsed.errors.length > 0) throw new Error(`${path}: ${ts.flattenDiagnosticMessageText(parsed.errors[0].messageText, '\\n')}`);\n",
+              "new": "  if (parsed.errors.length > 0) refuseParsed.push(() => { throw new Error(`${path}: ${ts.flattenDiagnosticMessageText(parsed.errors[0].messageText, '\\n')}`); });\n"
+            },
+            {
+              "old": "const tsc =",
+              "new": "for (const refuse of refuseParsed) refuse();\nconst tsc ="
+            }
+          ],
+          "mutatedScriptSha256": "11ff11e6b1d388348ae9c8252fd077545fe7085774cdf07860604ff84f62d6d2",
+          "restoredSha256": "c8e9f7f655599be93f56ece05d24330e25c2e8ff8c6aead315321d8998665cdf",
+          "attempt": {
+            "argv": [
+              "npx",
+              "--no-install",
+              "vitest",
+              "run",
+              "--project",
+              "e2e",
+              "apps/three-surface-poc/src/product-build.test.ts",
+              "-t",
+              "missing extends|circular extends",
+              "--reporter=default",
+              "--reporter=json",
+              "--outputFile=/home/orca/.tmp/s73r-20261106/mutants-r2/results/M1/M1/vitest.json"
+            ],
+            "cwd": "/home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject",
+            "startedAt": "2026-11-06T14:13:07.897937+00:00",
+            "elapsedSeconds": 2.1211776029667817,
+            "exit": 1,
+            "timedOut": false,
+            "stdoutSha256": "b3b4db80ecaeecc7a2fe8c295ded04ef43de640d01f4a7a62e52ac3a090b0280",
+            "stderrSha256": "4269e0aa32979bd614efb6e77384d626105abc5ce420ea560a53ced53f53c50d"
+          },
+          "collectedTotal": 27,
+          "executed": 2,
+          "passed": 0,
+          "failed": 2,
+          "failures": [
+            {
+              "ancestorTitles": [
+                "the clean build"
+              ],
+              "fullName": "the clean build refuses, removing nothing, when it reaches a project with missing extends targets",
+              "status": "failed",
+              "title": "refuses, removing nothing, when it reaches a project with missing extends targets",
+              "duration": 254.25447100000008,
+              "failureMessages": [
+                "AssertionError: /tmp/syzygy-clean-build-HBfbGu/packages/a/dist/a.js: refusal preserves the output: expected false to be true // Object.is equality\n    at /home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject/apps/three-surface-poc/src/product-build.test.ts:217:73\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at file:///home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20"
+              ],
+              "meta": {}
+            },
+            {
+              "ancestorTitles": [
+                "the clean build"
+              ],
+              "fullName": "the clean build refuses, removing nothing, when it reaches a project with circular extends",
+              "status": "failed",
+              "title": "refuses, removing nothing, when it reaches a project with circular extends",
+              "duration": 222.71151299999997,
+              "failureMessages": [
+                "AssertionError: /tmp/syzygy-clean-build-8r7YnX/packages/a/dist/a.js: refusal preserves the output: expected false to be true // Object.is equality\n    at /home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject/apps/three-surface-poc/src/product-build.test.ts:217:73\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at file:///home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20"
+              ],
+              "meta": {}
+            }
+          ],
+          "killedByIntendedAssertion": true
+        }
+      ]
+    },
+    {
+      "subject": {
+        "baseCommit": "0bf6b9c1bf92705a69c1d3b823f26714b3d29237",
+        "headCommit": "f174c1df215ab5a96e0d564563eea65c6f9015b6",
+        "baseScriptSha256": "e59b490ae2a4352d5c80c25f662606f7c2363547bed0c50340a4a5d74401060a",
+        "headScriptSha256": "c8e9f7f655599be93f56ece05d24330e25c2e8ff8c6aead315321d8998665cdf",
+        "testSha256": "340a9f62bce93147b5b3c5b673a9cc1deda8484116fcd869ca913213bb8aa39c",
+        "lockSha256": "49c65f0bd66a5a94c64be879bdb4c94062236bdca2d0eb5990b35c41894167cd"
+      },
+      "tool": {
+        "path": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.73/docs/evidence/syzygy-bpyt-73/tools/verify.py",
+        "sha256": "b8e8c3d59109d0b1e0a6d5b8e43ccba491b1f03e58743c2aec362e90a6681125",
+        "diagnosticProbeSha256": "6d40a71bb70bd1da8d57c4afb0f7a9a8c5617c1bfb243fc7494eec27f9c7f1a7",
+        "corpusSha256": "6f9634b15533a2a67ca2daeb678a590b89045d2c3bf74e80cd8b4ec56075c276"
+      },
+      "runtime": {
+        "node": "v24.6.0",
+        "npm": "11.5.1",
+        "typescript": "5.9.3",
+        "vitest": "3.2.7",
+        "git": "git version 2.53.0",
+        "strace": "strace -- version 6.19\nCopyright (c) 1991-2026 The strace developers <https://strace.io>.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\nOptional features enabled: stack-trace=libunwind stack-demangle m32-mpers mx32-mpers"
+      },
+      "mode": "mutants",
+      "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.73",
+      "argv": [
+        "docs/evidence/syzygy-bpyt-73/tools/verify.py",
+        "mutants",
+        "--case",
+        "M2",
+        "--base",
+        "0bf6b9c1bf92705a69c1d3b823f26714b3d29237",
+        "--head",
+        "f174c1df215ab5a96e0d564563eea65c6f9015b6",
+        "--runtime-root",
+        "/home/orca/.tmp/s73r-20261106/mutants-r2",
+        "--output",
+        "/home/orca/.tmp/s73r-20261106/mutants-r2/results/M2"
+      ],
+      "stableSerialFixturesOnly": true,
+      "concurrentEditOrBuildProtection": false,
+      "postValidationRollback": false,
+      "rows": [
+        {
+          "id": "M2",
+          "edits": [
+            {
+              "old": "parsed.errors.length > 0",
+              "new": "parsed.errors.length > 1"
+            }
+          ],
+          "mutatedScriptSha256": "ac7bbd3a629f2542fbc578228a858479233ae87ab40abc27f50c09baa02ca45c",
+          "restoredSha256": "c8e9f7f655599be93f56ece05d24330e25c2e8ff8c6aead315321d8998665cdf",
+          "attempt": {
+            "argv": [
+              "npx",
+              "--no-install",
+              "vitest",
+              "run",
+              "--project",
+              "e2e",
+              "apps/three-surface-poc/src/product-build.test.ts",
+              "-t",
+              "missing extends|circular extends",
+              "--reporter=default",
+              "--reporter=json",
+              "--outputFile=/home/orca/.tmp/s73r-20261106/mutants-r2/results/M2/M2/vitest.json"
+            ],
+            "cwd": "/home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject",
+            "startedAt": "2026-11-06T14:13:10.647527+00:00",
+            "elapsedSeconds": 3.8300561230280437,
+            "exit": 1,
+            "timedOut": false,
+            "stdoutSha256": "370f694d5ee3ae0fb77724cdb08fccebf73459a3c2c98b5559b394ee98012782",
+            "stderrSha256": "22c2e4d5740a562fc9fbd24b1e5f13343f73b10ea02bada090474e5695d929fb"
+          },
+          "collectedTotal": 27,
+          "executed": 2,
+          "passed": 1,
+          "failed": 1,
+          "failures": [
+            {
+              "ancestorTitles": [
+                "the clean build"
+              ],
+              "fullName": "the clean build refuses, removing nothing, when it reaches a project with circular extends",
+              "status": "failed",
+              "title": "refuses, removing nothing, when it reaches a project with circular extends",
+              "duration": 2025.5332270000001,
+              "failureMessages": [
+                "AssertionError: expected Error: Command failed: /home/orca/.nvm/ve\u2026 { \u2026(6) } to match object { stderr: StringContaining{\u2026} }\n(5 matching properties omitted from actual)\n    at _Assertion.<anonymous> (file:///home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject/node_modules/@vitest/expect/dist/index.js:1155:10)\n    at _Assertion.<anonymous> (file:///home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject/node_modules/@vitest/expect/dist/index.js:1029:14)\n    at _Assertion.methodWrapper (file:///home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject/node_modules/chai/index.js:1686:25)\n    at file:///home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject/node_modules/@vitest/expect/dist/index.js:1639:20\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at /home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject/apps/three-surface-poc/src/product-build.test.ts:215:5\n    at file:///home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20"
+              ],
+              "meta": {}
+            }
+          ],
+          "killedByIntendedAssertion": true
+        }
+      ]
+    },
+    {
+      "subject": {
+        "baseCommit": "0bf6b9c1bf92705a69c1d3b823f26714b3d29237",
+        "headCommit": "f174c1df215ab5a96e0d564563eea65c6f9015b6",
+        "baseScriptSha256": "e59b490ae2a4352d5c80c25f662606f7c2363547bed0c50340a4a5d74401060a",
+        "headScriptSha256": "c8e9f7f655599be93f56ece05d24330e25c2e8ff8c6aead315321d8998665cdf",
+        "testSha256": "340a9f62bce93147b5b3c5b673a9cc1deda8484116fcd869ca913213bb8aa39c",
+        "lockSha256": "49c65f0bd66a5a94c64be879bdb4c94062236bdca2d0eb5990b35c41894167cd"
+      },
+      "tool": {
+        "path": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.73/docs/evidence/syzygy-bpyt-73/tools/verify.py",
+        "sha256": "b8e8c3d59109d0b1e0a6d5b8e43ccba491b1f03e58743c2aec362e90a6681125",
+        "diagnosticProbeSha256": "6d40a71bb70bd1da8d57c4afb0f7a9a8c5617c1bfb243fc7494eec27f9c7f1a7",
+        "corpusSha256": "6f9634b15533a2a67ca2daeb678a590b89045d2c3bf74e80cd8b4ec56075c276"
+      },
+      "runtime": {
+        "node": "v24.6.0",
+        "npm": "11.5.1",
+        "typescript": "5.9.3",
+        "vitest": "3.2.7",
+        "git": "git version 2.53.0",
+        "strace": "strace -- version 6.19\nCopyright (c) 1991-2026 The strace developers <https://strace.io>.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\nOptional features enabled: stack-trace=libunwind stack-demangle m32-mpers mx32-mpers"
+      },
+      "mode": "mutants",
+      "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.73",
+      "argv": [
+        "docs/evidence/syzygy-bpyt-73/tools/verify.py",
+        "mutants",
+        "--case",
+        "M3",
+        "--base",
+        "0bf6b9c1bf92705a69c1d3b823f26714b3d29237",
+        "--head",
+        "f174c1df215ab5a96e0d564563eea65c6f9015b6",
+        "--runtime-root",
+        "/home/orca/.tmp/s73r-20261106/mutants-r2",
+        "--output",
+        "/home/orca/.tmp/s73r-20261106/mutants-r2/results/M3"
+      ],
+      "stableSerialFixturesOnly": true,
+      "concurrentEditOrBuildProtection": false,
+      "postValidationRollback": false,
+      "rows": [
+        {
+          "id": "M3",
+          "edits": [
+            {
+              "old": "parsed.errors[0].messageText",
+              "new": "parsed.errors[parsed.errors.length - 1].messageText"
+            }
+          ],
+          "mutatedScriptSha256": "11a42f3a1b0b211eb36e80a55b0f99993f8de77d5bc5fe21744c3fcd933862d1",
+          "restoredSha256": "c8e9f7f655599be93f56ece05d24330e25c2e8ff8c6aead315321d8998665cdf",
+          "attempt": {
+            "argv": [
+              "npx",
+              "--no-install",
+              "vitest",
+              "run",
+              "--project",
+              "e2e",
+              "apps/three-surface-poc/src/product-build.test.ts",
+              "-t",
+              "missing extends|circular extends",
+              "--reporter=default",
+              "--reporter=json",
+              "--outputFile=/home/orca/.tmp/s73r-20261106/mutants-r2/results/M3/M3/vitest.json"
+            ],
+            "cwd": "/home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject",
+            "startedAt": "2026-11-06T14:13:15.188551+00:00",
+            "elapsedSeconds": 2.018071373051498,
+            "exit": 1,
+            "timedOut": false,
+            "stdoutSha256": "9594495ebe71e759b6c867d58d2df6d3dae14a41d31d4ac277f34234f24b13c1",
+            "stderrSha256": "c064970455e94d7f25525af9b12f74bd46d25d1a2674666d69a3e6e1c6f1770f"
+          },
+          "collectedTotal": 27,
+          "executed": 2,
+          "passed": 1,
+          "failed": 1,
+          "failures": [
+            {
+              "ancestorTitles": [
+                "the clean build"
+              ],
+              "fullName": "the clean build refuses, removing nothing, when it reaches a project with missing extends targets",
+              "status": "failed",
+              "title": "refuses, removing nothing, when it reaches a project with missing extends targets",
+              "duration": 243.48196899999994,
+              "failureMessages": [
+                "AssertionError: expected Error: Command failed: /home/orca/.nvm/ve\u2026 { \u2026(6) } to match object { stderr: StringContaining{\u2026} }\n(5 matching properties omitted from actual)\n    at _Assertion.<anonymous> (file:///home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject/node_modules/@vitest/expect/dist/index.js:1155:10)\n    at _Assertion.<anonymous> (file:///home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject/node_modules/@vitest/expect/dist/index.js:1029:14)\n    at _Assertion.methodWrapper (file:///home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject/node_modules/chai/index.js:1686:25)\n    at file:///home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject/node_modules/@vitest/expect/dist/index.js:1639:20\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at /home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject/apps/three-surface-poc/src/product-build.test.ts:215:5\n    at file:///home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20"
+              ],
+              "meta": {}
+            }
+          ],
+          "killedByIntendedAssertion": true
+        }
+      ]
+    },
+    {
+      "subject": {
+        "baseCommit": "0bf6b9c1bf92705a69c1d3b823f26714b3d29237",
+        "headCommit": "f174c1df215ab5a96e0d564563eea65c6f9015b6",
+        "baseScriptSha256": "e59b490ae2a4352d5c80c25f662606f7c2363547bed0c50340a4a5d74401060a",
+        "headScriptSha256": "c8e9f7f655599be93f56ece05d24330e25c2e8ff8c6aead315321d8998665cdf",
+        "testSha256": "340a9f62bce93147b5b3c5b673a9cc1deda8484116fcd869ca913213bb8aa39c",
+        "lockSha256": "49c65f0bd66a5a94c64be879bdb4c94062236bdca2d0eb5990b35c41894167cd"
+      },
+      "tool": {
+        "path": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.73/docs/evidence/syzygy-bpyt-73/tools/verify.py",
+        "sha256": "b8e8c3d59109d0b1e0a6d5b8e43ccba491b1f03e58743c2aec362e90a6681125",
+        "diagnosticProbeSha256": "6d40a71bb70bd1da8d57c4afb0f7a9a8c5617c1bfb243fc7494eec27f9c7f1a7",
+        "corpusSha256": "6f9634b15533a2a67ca2daeb678a590b89045d2c3bf74e80cd8b4ec56075c276"
+      },
+      "runtime": {
+        "node": "v24.6.0",
+        "npm": "11.5.1",
+        "typescript": "5.9.3",
+        "vitest": "3.2.7",
+        "git": "git version 2.53.0",
+        "strace": "strace -- version 6.19\nCopyright (c) 1991-2026 The strace developers <https://strace.io>.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\nOptional features enabled: stack-trace=libunwind stack-demangle m32-mpers mx32-mpers"
+      },
+      "mode": "mutants",
+      "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.73",
+      "argv": [
+        "docs/evidence/syzygy-bpyt-73/tools/verify.py",
+        "mutants",
+        "--case",
+        "M4",
+        "--base",
+        "0bf6b9c1bf92705a69c1d3b823f26714b3d29237",
+        "--head",
+        "f174c1df215ab5a96e0d564563eea65c6f9015b6",
+        "--runtime-root",
+        "/home/orca/.tmp/s73r-20261106/mutants-r2",
+        "--output",
+        "/home/orca/.tmp/s73r-20261106/mutants-r2/results/M4"
+      ],
+      "stableSerialFixturesOnly": true,
+      "concurrentEditOrBuildProtection": false,
+      "postValidationRollback": false,
+      "rows": [
+        {
+          "id": "M4",
+          "edits": [
+            {
+              "old": "`${path}: ${ts.flattenDiagnosticMessageText",
+              "new": "`${ts.flattenDiagnosticMessageText"
+            }
+          ],
+          "mutatedScriptSha256": "6338d37c4ff19ded93c65444ba9bf1b33b711edcf544e90dfc9eb81657776eba",
+          "restoredSha256": "c8e9f7f655599be93f56ece05d24330e25c2e8ff8c6aead315321d8998665cdf",
+          "attempt": {
+            "argv": [
+              "npx",
+              "--no-install",
+              "vitest",
+              "run",
+              "--project",
+              "e2e",
+              "apps/three-surface-poc/src/product-build.test.ts",
+              "-t",
+              "missing extends|circular extends",
+              "--reporter=default",
+              "--reporter=json",
+              "--outputFile=/home/orca/.tmp/s73r-20261106/mutants-r2/results/M4/M4/vitest.json"
+            ],
+            "cwd": "/home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject",
+            "startedAt": "2026-11-06T14:13:17.877818+00:00",
+            "elapsedSeconds": 2.0681617279769853,
+            "exit": 1,
+            "timedOut": false,
+            "stdoutSha256": "c87998ec8a8efc41eb59986e4e2fbc58aaf70a5f2b4cd461eee09bc6a1f44370",
+            "stderrSha256": "9e28de403c24544392cc0d81205c3086179a3a18a8c6e1aa81dc0fb4940df432"
+          },
+          "collectedTotal": 27,
+          "executed": 2,
+          "passed": 0,
+          "failed": 2,
+          "failures": [
+            {
+              "ancestorTitles": [
+                "the clean build"
+              ],
+              "fullName": "the clean build refuses, removing nothing, when it reaches a project with missing extends targets",
+              "status": "failed",
+              "title": "refuses, removing nothing, when it reaches a project with missing extends targets",
+              "duration": 256.614372,
+              "failureMessages": [
+                "AssertionError: expected Error: Command failed: /home/orca/.nvm/ve\u2026 { \u2026(6) } to match object { stderr: StringContaining{\u2026} }\n(5 matching properties omitted from actual)\n    at _Assertion.<anonymous> (file:///home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject/node_modules/@vitest/expect/dist/index.js:1155:10)\n    at _Assertion.<anonymous> (file:///home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject/node_modules/@vitest/expect/dist/index.js:1029:14)\n    at _Assertion.methodWrapper (file:///home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject/node_modules/chai/index.js:1686:25)\n    at file:///home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject/node_modules/@vitest/expect/dist/index.js:1639:20\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at /home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject/apps/three-surface-poc/src/product-build.test.ts:215:5\n    at file:///home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20"
+              ],
+              "meta": {}
+            },
+            {
+              "ancestorTitles": [
+                "the clean build"
+              ],
+              "fullName": "the clean build refuses, removing nothing, when it reaches a project with circular extends",
+              "status": "failed",
+              "title": "refuses, removing nothing, when it reaches a project with circular extends",
+              "duration": 229.8006489999999,
+              "failureMessages": [
+                "AssertionError: expected Error: Command failed: /home/orca/.nvm/ve\u2026 { \u2026(6) } to match object { stderr: StringContaining{\u2026} }\n(5 matching properties omitted from actual)\n    at _Assertion.<anonymous> (file:///home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject/node_modules/@vitest/expect/dist/index.js:1155:10)\n    at _Assertion.<anonymous> (file:///home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject/node_modules/@vitest/expect/dist/index.js:1029:14)\n    at _Assertion.methodWrapper (file:///home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject/node_modules/chai/index.js:1686:25)\n    at file:///home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject/node_modules/@vitest/expect/dist/index.js:1639:20\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at /home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject/apps/three-surface-poc/src/product-build.test.ts:215:5\n    at file:///home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20"
+              ],
+              "meta": {}
+            }
+          ],
+          "killedByIntendedAssertion": true
+        }
+      ]
+    },
+    {
+      "subject": {
+        "baseCommit": "0bf6b9c1bf92705a69c1d3b823f26714b3d29237",
+        "headCommit": "f174c1df215ab5a96e0d564563eea65c6f9015b6",
+        "baseScriptSha256": "e59b490ae2a4352d5c80c25f662606f7c2363547bed0c50340a4a5d74401060a",
+        "headScriptSha256": "c8e9f7f655599be93f56ece05d24330e25c2e8ff8c6aead315321d8998665cdf",
+        "testSha256": "340a9f62bce93147b5b3c5b673a9cc1deda8484116fcd869ca913213bb8aa39c",
+        "lockSha256": "49c65f0bd66a5a94c64be879bdb4c94062236bdca2d0eb5990b35c41894167cd"
+      },
+      "tool": {
+        "path": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.73/docs/evidence/syzygy-bpyt-73/tools/verify.py",
+        "sha256": "b8e8c3d59109d0b1e0a6d5b8e43ccba491b1f03e58743c2aec362e90a6681125",
+        "diagnosticProbeSha256": "6d40a71bb70bd1da8d57c4afb0f7a9a8c5617c1bfb243fc7494eec27f9c7f1a7",
+        "corpusSha256": "6f9634b15533a2a67ca2daeb678a590b89045d2c3bf74e80cd8b4ec56075c276"
+      },
+      "runtime": {
+        "node": "v24.6.0",
+        "npm": "11.5.1",
+        "typescript": "5.9.3",
+        "vitest": "3.2.7",
+        "git": "git version 2.53.0",
+        "strace": "strace -- version 6.19\nCopyright (c) 1991-2026 The strace developers <https://strace.io>.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\nOptional features enabled: stack-trace=libunwind stack-demangle m32-mpers mx32-mpers"
+      },
+      "mode": "mutants",
+      "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.73",
+      "argv": [
+        "docs/evidence/syzygy-bpyt-73/tools/verify.py",
+        "mutants",
+        "--case",
+        "M5",
+        "--base",
+        "0bf6b9c1bf92705a69c1d3b823f26714b3d29237",
+        "--head",
+        "f174c1df215ab5a96e0d564563eea65c6f9015b6",
+        "--runtime-root",
+        "/home/orca/.tmp/s73r-20261106/mutants-r2",
+        "--output",
+        "/home/orca/.tmp/s73r-20261106/mutants-r2/results/M5"
+      ],
+      "stableSerialFixturesOnly": true,
+      "concurrentEditOrBuildProtection": false,
+      "postValidationRollback": false,
+      "rows": [
+        {
+          "id": "M5",
+          "edits": [
+            {
+              "old": "ts.flattenDiagnosticMessageText(parsed.errors[0].messageText, '\\n')",
+              "new": "'TypeScript config has errors'"
+            }
+          ],
+          "mutatedScriptSha256": "b81d175d9f606cd1a3c3c336d52498d7f89f24620690e220e2d636a955b42cbe",
+          "restoredSha256": "c8e9f7f655599be93f56ece05d24330e25c2e8ff8c6aead315321d8998665cdf",
+          "attempt": {
+            "argv": [
+              "npx",
+              "--no-install",
+              "vitest",
+              "run",
+              "--project",
+              "e2e",
+              "apps/three-surface-poc/src/product-build.test.ts",
+              "-t",
+              "missing extends|circular extends",
+              "--reporter=default",
+              "--reporter=json",
+              "--outputFile=/home/orca/.tmp/s73r-20261106/mutants-r2/results/M5/M5/vitest.json"
+            ],
+            "cwd": "/home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject",
+            "startedAt": "2026-11-06T14:13:20.575869+00:00",
+            "elapsedSeconds": 2.1213398369727656,
+            "exit": 1,
+            "timedOut": false,
+            "stdoutSha256": "2ba13d254a72ccb3c2777ce5fe81c7d8638750c697e45c3c9399834d714d40b4",
+            "stderrSha256": "3274739d01314b479048b69a560a20a02117013d774b51023cd54b4edb722361"
+          },
+          "collectedTotal": 27,
+          "executed": 2,
+          "passed": 0,
+          "failed": 2,
+          "failures": [
+            {
+              "ancestorTitles": [
+                "the clean build"
+              ],
+              "fullName": "the clean build refuses, removing nothing, when it reaches a project with missing extends targets",
+              "status": "failed",
+              "title": "refuses, removing nothing, when it reaches a project with missing extends targets",
+              "duration": 263.6299680000001,
+              "failureMessages": [
+                "AssertionError: expected Error: Command failed: /home/orca/.nvm/ve\u2026 { \u2026(6) } to match object { stderr: StringContaining{\u2026} }\n(5 matching properties omitted from actual)\n    at _Assertion.<anonymous> (file:///home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject/node_modules/@vitest/expect/dist/index.js:1155:10)\n    at _Assertion.<anonymous> (file:///home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject/node_modules/@vitest/expect/dist/index.js:1029:14)\n    at _Assertion.methodWrapper (file:///home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject/node_modules/chai/index.js:1686:25)\n    at file:///home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject/node_modules/@vitest/expect/dist/index.js:1639:20\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at /home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject/apps/three-surface-poc/src/product-build.test.ts:215:5\n    at file:///home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20"
+              ],
+              "meta": {}
+            },
+            {
+              "ancestorTitles": [
+                "the clean build"
+              ],
+              "fullName": "the clean build refuses, removing nothing, when it reaches a project with circular extends",
+              "status": "failed",
+              "title": "refuses, removing nothing, when it reaches a project with circular extends",
+              "duration": 234.82655599999998,
+              "failureMessages": [
+                "AssertionError: expected Error: Command failed: /home/orca/.nvm/ve\u2026 { \u2026(6) } to match object { stderr: StringContaining{\u2026} }\n(5 matching properties omitted from actual)\n    at _Assertion.<anonymous> (file:///home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject/node_modules/@vitest/expect/dist/index.js:1155:10)\n    at _Assertion.<anonymous> (file:///home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject/node_modules/@vitest/expect/dist/index.js:1029:14)\n    at _Assertion.methodWrapper (file:///home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject/node_modules/chai/index.js:1686:25)\n    at file:///home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject/node_modules/@vitest/expect/dist/index.js:1639:20\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at /home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject/apps/three-surface-poc/src/product-build.test.ts:215:5\n    at file:///home/orca/.tmp/s73r-20261106/mutants-r2/mutant-subject/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20"
+              ],
+              "meta": {}
+            }
+          ],
+          "killedByIntendedAssertion": true
+        }
+      ]
+    }
+  ],
+  "analysis": [
+    {
+      "id": "CONTROL",
+      "executed": 2,
+      "passed": 2,
+      "failed": 0,
+      "killedByIntendedAssertion": false,
+      "restoredSha256": "c8e9f7f655599be93f56ece05d24330e25c2e8ff8c6aead315321d8998665cdf",
+      "failedNames": [],
+      "firstMessages": []
+    },
+    {
+      "id": "M0",
+      "executed": 2,
+      "passed": 0,
+      "failed": 2,
+      "killedByIntendedAssertion": true,
+      "restoredSha256": "c8e9f7f655599be93f56ece05d24330e25c2e8ff8c6aead315321d8998665cdf",
+      "failedNames": [
+        "the clean build refuses, removing nothing, when it reaches a project with missing extends targets",
+        "the clean build refuses, removing nothing, when it reaches a project with circular extends"
+      ],
+      "firstMessages": [
+        "AssertionError: expected Error: Command failed: /home/orca/.nvm/ve\u2026 { \u2026(6) } to match object { stderr: StringContaining{\u2026} }",
+        "AssertionError: expected Error: Command failed: /home/orca/.nvm/ve\u2026 { \u2026(6) } to match object { stderr: StringContaining{\u2026} }"
+      ]
+    },
+    {
+      "id": "M1",
+      "executed": 2,
+      "passed": 0,
+      "failed": 2,
+      "killedByIntendedAssertion": true,
+      "restoredSha256": "c8e9f7f655599be93f56ece05d24330e25c2e8ff8c6aead315321d8998665cdf",
+      "failedNames": [
+        "the clean build refuses, removing nothing, when it reaches a project with missing extends targets",
+        "the clean build refuses, removing nothing, when it reaches a project with circular extends"
+      ],
+      "firstMessages": [
+        "AssertionError: /tmp/syzygy-clean-build-HBfbGu/packages/a/dist/a.js: refusal preserves the output: expected false to be true // Object.is equality",
+        "AssertionError: /tmp/syzygy-clean-build-8r7YnX/packages/a/dist/a.js: refusal preserves the output: expected false to be true // Object.is equality"
+      ]
+    },
+    {
+      "id": "M2",
+      "executed": 2,
+      "passed": 1,
+      "failed": 1,
+      "killedByIntendedAssertion": true,
+      "restoredSha256": "c8e9f7f655599be93f56ece05d24330e25c2e8ff8c6aead315321d8998665cdf",
+      "failedNames": [
+        "the clean build refuses, removing nothing, when it reaches a project with circular extends"
+      ],
+      "firstMessages": [
+        "AssertionError: expected Error: Command failed: /home/orca/.nvm/ve\u2026 { \u2026(6) } to match object { stderr: StringContaining{\u2026} }"
+      ]
+    },
+    {
+      "id": "M3",
+      "executed": 2,
+      "passed": 1,
+      "failed": 1,
+      "killedByIntendedAssertion": true,
+      "restoredSha256": "c8e9f7f655599be93f56ece05d24330e25c2e8ff8c6aead315321d8998665cdf",
+      "failedNames": [
+        "the clean build refuses, removing nothing, when it reaches a project with missing extends targets"
+      ],
+      "firstMessages": [
+        "AssertionError: expected Error: Command failed: /home/orca/.nvm/ve\u2026 { \u2026(6) } to match object { stderr: StringContaining{\u2026} }"
+      ]
+    },
+    {
+      "id": "M4",
+      "executed": 2,
+      "passed": 0,
+      "failed": 2,
+      "killedByIntendedAssertion": true,
+      "restoredSha256": "c8e9f7f655599be93f56ece05d24330e25c2e8ff8c6aead315321d8998665cdf",
+      "failedNames": [
+        "the clean build refuses, removing nothing, when it reaches a project with missing extends targets",
+        "the clean build refuses, removing nothing, when it reaches a project with circular extends"
+      ],
+      "firstMessages": [
+        "AssertionError: expected Error: Command failed: /home/orca/.nvm/ve\u2026 { \u2026(6) } to match object { stderr: StringContaining{\u2026} }",
+        "AssertionError: expected Error: Command failed: /home/orca/.nvm/ve\u2026 { \u2026(6) } to match object { stderr: StringContaining{\u2026} }"
+      ]
+    },
+    {
+      "id": "M5",
+      "executed": 2,
+      "passed": 0,
+      "failed": 2,
+      "killedByIntendedAssertion": true,
+      "restoredSha256": "c8e9f7f655599be93f56ece05d24330e25c2e8ff8c6aead315321d8998665cdf",
+      "failedNames": [
+        "the clean build refuses, removing nothing, when it reaches a project with missing extends targets",
+        "the clean build refuses, removing nothing, when it reaches a project with circular extends"
+      ],
+      "firstMessages": [
+        "AssertionError: expected Error: Command failed: /home/orca/.nvm/ve\u2026 { \u2026(6) } to match object { stderr: StringContaining{\u2026} }",
+        "AssertionError: expected Error: Command failed: /home/orca/.nvm/ve\u2026 { \u2026(6) } to match object { stderr: StringContaining{\u2026} }"
+      ]
+    }
+  ],
+  "firstAttempt": {
+    "hostAttempt": {
+      "label": "mutants-CONTROL",
+      "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.73",
+      "command": [
+        "python3",
+        "docs/evidence/syzygy-bpyt-73/tools/verify.py",
+        "mutants",
+        "--case",
+        "CONTROL",
+        "--base",
+        "0bf6b9c1bf92705a69c1d3b823f26714b3d29237",
+        "--head",
+        "3fc04e4cfd23c4e5e12bdc8abebd8badb6d3c16c",
+        "--runtime-root",
+        "/home/orca/.tmp/s73r-20261106",
+        "--output",
+        "/home/orca/.tmp/s73r-20261106/mutants/CONTROL"
+      ],
+      "queuedAt": "2026-11-06T14:10:40.569554+00:00",
+      "adapterSha256": "11586950052f79a7ea94088bc23bad83b4c4e2f0b3595e5868e6bf0f3258121e",
+      "hostDriverSha256": "3f25268f44ffc9f549d5b3917dff6892e4ba31bd28581c8f17542959761d5bfd",
+      "startedAt": "2026-11-06T14:10:40.569862+00:00",
+      "exit": 1,
+      "elapsedSeconds": 6.054248631990049,
+      "endedAt": "2026-11-06T14:10:46.624269+00:00",
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "39a71abfb7d41142c208e34be3514e49423490efc5550eaddd9ae279e9020a20"
+    },
+    "actualVitestCounts": {
+      "numTotalTests": 27,
+      "numPassedTests": 2,
+      "numFailedTests": 0,
+      "numPendingTests": 25
+    },
+    "disposition": "No mutant executed or credited. Report parser counted skipped cases as executed, refused its denominator, then was corrected to passed/failed only. First attempt/logs retained."
+  }
+}

@@ -1,0 +1,323 @@
+{
+ "clone": "a5ab2b287266e9be6b8e96b381d014cb8e73d9d4",
+ "statusAfter": "",
+ "rows": [
+  {
+   "id": "C0-unmutated",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [],
+   "expected": "pass",
+   "observed": "pass",
+   "exit": 0,
+   "passed": 13,
+   "failed": 0,
+   "total": 13,
+   "failedTests": []
+  },
+  {
+   "id": "RP1-re-export-from-node-fs",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { sha256 } from './sha256.js';\n",
+     "new": "export { sha256 } from './sha256.js';\nexport { readFileSync } from 'node:fs';\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "exit": 1,
+   "passed": 11,
+   "failed": 2,
+   "total": 13,
+   "failedTests": [
+    "@syzygy/support stays a pure leaf imports only node:crypto and its own modules, so no file read, no workspace package and no network",
+    "@syzygy/support stays a pure leaf names no write, process, clock, network or file-system token in any source"
+   ]
+  },
+  {
+   "id": "RP2-globalThis-bracket-read-of-process-env",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nexport const HOME = (globalThis as Record<string, any>)['process']['env']['HOME'];\n"
+    }
+   ],
+   "expected": "survives",
+   "observed": "survives",
+   "exit": 0,
+   "passed": 13,
+   "failed": 0,
+   "total": 13,
+   "failedTests": []
+  },
+  {
+   "id": "RP3-top-level-side-effect-console-write",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/deep-freeze.ts",
+     "old": "export function deepFreeze",
+     "new": "console.log('support loaded');\nexport function deepFreeze"
+    }
+   ],
+   "expected": "survives",
+   "observed": "survives",
+   "exit": 0,
+   "passed": 13,
+   "failed": 0,
+   "total": 13,
+   "failedTests": []
+  },
+  {
+   "id": "RP4-createRequire-of-node-fs",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nimport { createRequire } from 'node:module';\nconst load = createRequire(import.meta.url);\nexport const fsModule = load('node:fs');\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "exit": 1,
+   "passed": 11,
+   "failed": 2,
+   "total": 13,
+   "failedTests": [
+    "@syzygy/support stays a pure leaf imports only node:crypto and its own modules, so no file read, no workspace package and no network",
+    "@syzygy/support stays a pure leaf names no write, process, clock, network or file-system token in any source"
+   ]
+  },
+  {
+   "id": "RP5-network-through-an-unnamed-global-WebSocket",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nexport const open = (url: string): WebSocket => new WebSocket(url);\n"
+    }
+   ],
+   "expected": "survives",
+   "observed": "survives",
+   "exit": 0,
+   "passed": 13,
+   "failed": 0,
+   "total": 13,
+   "failedTests": []
+  },
+  {
+   "id": "RP6-file-read-via-globalThis-process-getBuiltinModule",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nconst p = (globalThis as Record<string, any>)['process'];\nexport const HOST: string = p.getBuiltinModule('node:f' + 's').readFileSync('/etc/hostname', 'utf8');\n"
+    }
+   ],
+   "expected": "survives",
+   "observed": "survives",
+   "exit": 0,
+   "passed": 13,
+   "failed": 0,
+   "total": 13,
+   "failedTests": []
+  },
+  {
+   "id": "RP7-clock-via-performance-now",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nexport const started = performance.now();\n"
+    }
+   ],
+   "expected": "survives",
+   "observed": "survives",
+   "exit": 0,
+   "passed": 13,
+   "failed": 0,
+   "total": 13,
+   "failedTests": []
+  },
+  {
+   "id": "RP8-randomness-from-the-allowed-node-crypto",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash, randomBytes } from 'node:crypto';\nexport const SALT = randomBytes(8).toString('hex');\n"
+    }
+   ],
+   "expected": "survives",
+   "observed": "survives",
+   "exit": 0,
+   "passed": 13,
+   "failed": 0,
+   "total": 13,
+   "failedTests": []
+  },
+  {
+   "id": "RP9-ts-import-equals-require",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nimport fs = require('node:fs');\nexport const F = fs;\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "exit": 1,
+   "passed": 11,
+   "failed": 2,
+   "total": 13,
+   "failedTests": [
+    "@syzygy/support stays a pure leaf imports only node:crypto and its own modules, so no file read, no workspace package and no network",
+    "@syzygy/support stays a pure leaf names no write, process, clock, network or file-system token in any source"
+   ]
+  },
+  {
+   "id": "RP10-subdirectory-module-re-exported",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/io/read.ts",
+     "old": null,
+     "new": "import { readFileSync } from 'node:fs';\nexport const read = (p: string): string => readFileSync(p, 'utf8');\n"
+    },
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { sha256 } from './sha256.js';\n",
+     "new": "export { sha256 } from './sha256.js';\nexport * from './io/read.js';\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "exit": 1,
+   "passed": 12,
+   "failed": 1,
+   "total": 13,
+   "failedTests": [
+    "@syzygy/support stays a pure leaf imports only node:crypto and its own modules, so no file read, no workspace package and no network"
+   ]
+  },
+  {
+   "id": "RP11-mts-module-re-exported",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/net.mts",
+     "old": null,
+     "new": "import 'node:http';\nexport const N = 1;\n"
+    },
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { sha256 } from './sha256.js';\n",
+     "new": "export { sha256 } from './sha256.js';\nexport * from './net.mjs';\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "exit": 1,
+   "passed": 12,
+   "failed": 1,
+   "total": 13,
+   "failedTests": [
+    "@syzygy/support stays a pure leaf imports only node:crypto and its own modules, so no file read, no workspace package and no network"
+   ]
+  },
+  {
+   "id": "RP12-computed-dynamic-import-with-a-space",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nexport const lazy = (): Promise<unknown> => import (['node', 'ne' + 't'].join(':'));\n"
+    }
+   ],
+   "expected": "survives",
+   "observed": "survives",
+   "exit": 0,
+   "passed": 13,
+   "failed": 0,
+   "total": 13,
+   "failedTests": []
+  },
+  {
+   "id": "RP13-fetch-by-reference-not-call",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/deep-freeze.ts",
+     "old": "export function deepFreeze",
+     "new": "const send = globalThis.fetch;\nexport const ping = (u: string): Promise<Response> => send(u);\nexport function deepFreeze"
+    }
+   ],
+   "expected": "survives",
+   "observed": "survives",
+   "exit": 0,
+   "passed": 13,
+   "failed": 0,
+   "total": 13,
+   "failedTests": []
+  },
+  {
+   "id": "D0-drafter-unmutated",
+   "test": "packages/three-surface-poc-core/src/owner-act-drafter.test.ts",
+   "edits": [],
+   "expected": "pass",
+   "observed": "pass",
+   "exit": 0,
+   "passed": 3,
+   "failed": 0,
+   "total": 3,
+   "failedTests": []
+  },
+  {
+   "id": "D2-drafter-globalThis-bracket-read",
+   "test": "packages/three-surface-poc-core/src/owner-act-drafter.test.ts",
+   "edits": [
+    {
+     "path": "packages/three-surface-poc-core/src/owner-act-drafter.ts",
+     "old": "// Owner-act drafter \u2014 claims sharing one reason \u2192 a drafted act packet as\n",
+     "new": "// Owner-act drafter \u2014 claims sharing one reason \u2192 a drafted act packet as\nexport const HOME = (globalThis as Record<string, any>)['process']['env']['HOME'];\n"
+    }
+   ],
+   "expected": "survives",
+   "observed": "survives",
+   "exit": 0,
+   "passed": 3,
+   "failed": 0,
+   "total": 3,
+   "failedTests": []
+  },
+  {
+   "id": "D5-drafter-WebSocket",
+   "test": "packages/three-surface-poc-core/src/owner-act-drafter.test.ts",
+   "edits": [
+    {
+     "path": "packages/three-surface-poc-core/src/owner-act-drafter.ts",
+     "old": "// Owner-act drafter \u2014 claims sharing one reason \u2192 a drafted act packet as\n",
+     "new": "// Owner-act drafter \u2014 claims sharing one reason \u2192 a drafted act packet as\nexport const open = (url: string): WebSocket => new WebSocket(url);\n"
+    }
+   ],
+   "expected": "survives",
+   "observed": "survives",
+   "exit": 0,
+   "passed": 3,
+   "failed": 0,
+   "total": 3,
+   "failedTests": []
+  }
+ ]
+}

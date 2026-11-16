@@ -1,0 +1,72 @@
+{
+ "files": [
+  "apps/three-surface-poc/src/git-observation.test.ts"
+ ],
+ "mutants": [
+  {
+   "id": "T9-guard-skips-type-only-edges-alone",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.test.ts",
+     "old": ".importedFiles.map((imported) => imported.fileName)",
+     "new": ".importedFiles.filter((imported) => !/^\\s*(?:import|export)\\s+type\\b/u.test(readModule(file).slice(0, imported.pos).split('\\n').pop() ?? '')).map((imported) => imported.fileName)"
+    }
+   ]
+  },
+  {
+   "id": "T9b-guard-skips-type-only-edges-with-E1",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.test.ts",
+     "old": ".importedFiles.map((imported) => imported.fileName)",
+     "new": ".importedFiles.filter((imported) => !/^\\s*(?:import|export)\\s+type\\b/u.test(readModule(file).slice(0, imported.pos).split('\\n').pop() ?? '')).map((imported) => imported.fileName)"
+    },
+    {
+     "file": "apps/three-surface-poc/src/poc-main.ts",
+     "old": "import { sha256 } from '@syzygy/support';\n",
+     "new": "import { sha256 } from '@syzygy/support';\nimport type { GenerationSource } from '@syzygy/polaris-generation-core';\n"
+    }
+   ]
+  },
+  {
+   "id": "T10-guard-skips-dynamic-edges-alone",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.test.ts",
+     "old": ".importedFiles.map((imported) => imported.fileName)",
+     "new": ".importedFiles.filter((imported) => !/import\\(\\s*$/u.test(readModule(file).slice(0, imported.pos))).map((imported) => imported.fileName)"
+    }
+   ]
+  },
+  {
+   "id": "T10b-guard-skips-dynamic-edges-with-O4",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.test.ts",
+     "old": ".importedFiles.map((imported) => imported.fileName)",
+     "new": ".importedFiles.filter((imported) => !/import\\(\\s*$/u.test(readModule(file).slice(0, imported.pos))).map((imported) => imported.fileName)"
+    },
+    {
+     "file": "packages/three-surface-poc-core/src/index.ts",
+     "old": "export * from './evidence-population.js';\n",
+     "new": "export * from './evidence-population.js';\nexport const loadLive = () => import('@syzygy/polaris-generation-consent/live');\n"
+    }
+   ]
+  },
+  {
+   "id": "T10c-guard-skips-dynamic-edges-with-E1",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.test.ts",
+     "old": ".importedFiles.map((imported) => imported.fileName)",
+     "new": ".importedFiles.filter((imported) => !/import\\(\\s*$/u.test(readModule(file).slice(0, imported.pos))).map((imported) => imported.fileName)"
+    },
+    {
+     "file": "apps/three-surface-poc/src/poc-main.ts",
+     "old": "import { sha256 } from '@syzygy/support';\n",
+     "new": "import { sha256 } from '@syzygy/support';\nimport type { GenerationSource } from '@syzygy/polaris-generation-core';\n"
+    }
+   ]
+  }
+ ]
+}

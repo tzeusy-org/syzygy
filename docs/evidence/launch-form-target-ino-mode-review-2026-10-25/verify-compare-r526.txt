@@ -1,0 +1,59 @@
+tmpfs prior fix rows: 21 ids in b fix runs: 27
+  D1-any-remover                                          prior=killed   n=17 now={'killed': 2} sizes=[17, 17] sameSet=True
+  D1-bang-only                                            prior=killed   n=17 now={'killed': 2} sizes=[17, 17] sameSet=True
+  D1-syzygy-launched-only                                 prior=killed   n=17 now={'killed': 2} sizes=[17, 17] sameSet=True
+  D1-terminal-only                                        prior=killed   n=17 now={'killed': 2} sizes=[17, 17] sameSet=True
+  D1-with-memoized-reader                                 prior=killed   n=17 now={'killed': 2} sizes=[17, 17] sameSet=True
+  D3-repair-to-launched                                   prior=killed   n=17 now={'killed': 2} sizes=[17, 17] sameSet=True
+  D4-truncate                                             prior=killed   n=11 now={'killed': 2} sizes=[11, 11] sameSet=True
+  M-every-form-drains-then-refuses                        prior=survived n= 0 now={'survived': 2} sizes=[0, 0] sameSet=True
+  O1-same-bytes-rewrite                                   prior=killed   n=11 now={'killed': 2} sizes=[11, 11] sameSet=True
+  O2-same-bytes-rewrite-utimes-restored                   prior=killed   n=11 now={'killed': 2} sizes=[11, 11] sameSet=True
+  O3-truncate-then-refill                                 prior=killed   n=11 now={'killed': 2} sizes=[11, 11] sameSet=True
+  O4-replace-with-new-inode                               prior=killed   n=12 now={'killed': 2} sizes=[12, 12] sameSet=True
+  O5-fifo-drain-and-refill                                prior=killed   n= 1 now={'killed': 2} sizes=[1, 1] sameSet=True
+  O6-chmod-to-the-same-mode                               prior=killed   n=14 now={'killed': 2} sizes=[14, 14] sameSet=True
+  O7-rename-away-and-back                                 prior=killed   n=17 now={'killed': 2} sizes=[17, 17] sameSet=True
+  O8-link-target-chmod-cycle-rewrite                      prior=killed   n= 1 now={'killed': 2} sizes=[1, 1] sameSet=True
+  R-chmod-cycle-rewrite                                   prior=killed   n= 1 now={'killed': 2} sizes=[1, 1] sameSet=True
+  R-fifo-to-empty-file                                    prior=killed   n= 2 now={'killed': 2} sizes=[2, 2] sameSet=True
+  R-fill-dangling-target                                  prior=killed   n= 1 now={'killed': 2} sizes=[1, 1] sameSet=True
+  R-same-size-rewrite                                     prior=killed   n=10 now={'killed': 2} sizes=[10, 10] sameSet=True
+  T-ask-of-an-unplanted-run                               prior=killed   n=17 now={'killed': 2} sizes=[17, 17] sameSet=True
+  ids only in b: ['X1-target-chmod-cycle-utimes-restored', 'X2-target-rename-away-and-back', 'X3-target-replaced-by-identical-copy', 'X3b-target-replaced-by-copy-mode-0644', 'X4-link-retargeted-to-identical-copy', 'X4b-link-recreated-same-string']
+    X1-target-chmod-cycle-utimes-restored: {'killed': 2} sizes=[1, 1]
+    X2-target-rename-away-and-back: {'killed': 2} sizes=[1, 1]
+    X3-target-replaced-by-identical-copy: {'killed': 2} sizes=[1, 1]
+    X3b-target-replaced-by-copy-mode-0644: {'killed': 2} sizes=[1, 1]
+    X4-link-retargeted-to-identical-copy: {'killed': 2} sizes=[1, 1]
+    X4b-link-recreated-same-string: {'killed': 2} sizes=[3, 3]
+ext4 prior fix rows: 21 ids in b fix runs: 27
+  D1-any-remover                                          prior=killed   n=17 now={'killed': 2} sizes=[17, 17] sameSet=True
+  D1-bang-only                                            prior=killed   n=17 now={'killed': 2} sizes=[17, 17] sameSet=True
+  D1-syzygy-launched-only                                 prior=killed   n=17 now={'killed': 2} sizes=[17, 17] sameSet=True
+  D1-terminal-only                                        prior=killed   n=17 now={'killed': 2} sizes=[17, 17] sameSet=True
+  D1-with-memoized-reader                                 prior=killed   n=17 now={'killed': 2} sizes=[17, 17] sameSet=True
+  D3-repair-to-launched                                   prior=killed   n=17 now={'killed': 2} sizes=[17, 17] sameSet=True
+  D4-truncate                                             prior=killed   n=11 now={'killed': 2} sizes=[11, 11] sameSet=True
+  M-every-form-drains-then-refuses                        prior=survived n= 0 now={'survived': 2} sizes=[0, 0] sameSet=True
+  O1-same-bytes-rewrite                                   prior=killed   n=11 now={'killed': 2} sizes=[11, 11] sameSet=True
+  O2-same-bytes-rewrite-utimes-restored                   prior=killed   n=11 now={'killed': 2} sizes=[11, 11] sameSet=True
+  O3-truncate-then-refill                                 prior=killed   n=11 now={'killed': 2} sizes=[11, 11] sameSet=True
+  O4-replace-with-new-inode                               prior=killed   n=12 now={'killed': 2} sizes=[12, 12] sameSet=True
+  O5-fifo-drain-and-refill                                prior=killed   n= 1 now={'killed': 2} sizes=[1, 1] sameSet=True
+  O6-chmod-to-the-same-mode                               prior=killed   n=14 now={'killed': 2} sizes=[14, 14] sameSet=True
+  O7-rename-away-and-back                                 prior=killed   n=17 now={'killed': 2} sizes=[17, 17] sameSet=True
+  O8-link-target-chmod-cycle-rewrite                      prior=killed   n= 1 now={'killed': 2} sizes=[1, 1] sameSet=True
+  R-chmod-cycle-rewrite                                   prior=killed   n= 1 now={'killed': 2} sizes=[1, 1] sameSet=True
+  R-fifo-to-empty-file                                    prior=killed   n= 2 now={'killed': 2} sizes=[2, 2] sameSet=True
+  R-fill-dangling-target                                  prior=killed   n= 1 now={'killed': 2} sizes=[1, 1] sameSet=True
+  R-same-size-rewrite                                     prior=killed   n=10 now={'killed': 2} sizes=[10, 10] sameSet=True
+  T-ask-of-an-unplanted-run                               prior=killed   n=17 now={'killed': 2} sizes=[17, 17] sameSet=True
+  ids only in b: ['X1-target-chmod-cycle-utimes-restored', 'X2-target-rename-away-and-back', 'X3-target-replaced-by-identical-copy', 'X3b-target-replaced-by-copy-mode-0644', 'X4-link-retargeted-to-identical-copy', 'X4b-link-recreated-same-string']
+    X1-target-chmod-cycle-utimes-restored: {'killed': 2} sizes=[1, 1]
+    X2-target-rename-away-and-back: {'killed': 2} sizes=[1, 1]
+    X3-target-replaced-by-identical-copy: {'killed': 2} sizes=[1, 1]
+    X3b-target-replaced-by-copy-mode-0644: {'killed': 2} sizes=[1, 1]
+    X4-link-retargeted-to-identical-copy: {'killed': 2} sizes=[1, 1]
+    X4b-link-recreated-same-string: {'killed': 2} sizes=[3, 3]
+mismatches: 0

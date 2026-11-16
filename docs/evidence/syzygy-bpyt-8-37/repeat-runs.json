@@ -1,0 +1,57 @@
+{
+ "what": "the four guard files (workspace-reach, island-boundary, subpath-imports, argv) run five times in the worktree at the code commit",
+ "commit": "c90cd7327a24fee44d0e7135872a3b08277c73b0",
+ "command": "TMPDIR=<private> npx vitest run packages/polaris-generation-core/src/workspace-reach.test.ts packages/polaris-generation-core/src/island-boundary.test.ts packages/polaris-dossier/src/subpath-imports.test.ts packages/polaris-dossier/src/argv.test.ts",
+ "runs": [
+  {
+   "run": 1,
+   "testFiles": "Test Files  4 passed (4)",
+   "tests": "Tests  157 passed (157)",
+   "passed": 157,
+   "total": 157,
+   "failed": false,
+   "logSha256": "f82df6fc6793e7296807fbc66ad524040735c53a501a0cc0a62154d018d45317",
+   "load1": 22.69
+  },
+  {
+   "run": 2,
+   "testFiles": "Test Files  4 passed (4)",
+   "tests": "Tests  157 passed (157)",
+   "passed": 157,
+   "total": 157,
+   "failed": false,
+   "logSha256": "b6d0492ca3159b50e4e361bbfb952339ba4fa29d0f938bfbb933cbbe621ecdbc",
+   "load1": 25.2
+  },
+  {
+   "run": 3,
+   "testFiles": "Test Files  4 passed (4)",
+   "tests": "Tests  157 passed (157)",
+   "passed": 157,
+   "total": 157,
+   "failed": false,
+   "logSha256": "f2eb2593ed1f76b94421dcc99a417a795aba7353e465284668c9098f87a2c78e",
+   "load1": 27.26
+  },
+  {
+   "run": 4,
+   "testFiles": "Test Files  4 passed (4)",
+   "tests": "Tests  157 passed (157)",
+   "passed": 157,
+   "total": 157,
+   "failed": false,
+   "logSha256": "b4067e2a6d0779144fc7cc017a2cca2cf7285592bc6c244b15d5952e3ac720b6",
+   "load1": 26.28
+  },
+  {
+   "run": 5,
+   "testFiles": "Test Files  4 passed (4)",
+   "tests": "Tests  157 passed (157)",
+   "passed": 157,
+   "total": 157,
+   "failed": false,
+   "logSha256": "355744dc041971d2ddcd99ca5071a2c31578fc094678e397574144dec72fbddb",
+   "load1": 25.7
+  }
+ ]
+}

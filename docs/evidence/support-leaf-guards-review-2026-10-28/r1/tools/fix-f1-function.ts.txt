@@ -1,0 +1,9 @@
+
+/** Every import and re-export declaration of a module, by its specifier and as written. */
+function moduleDeclarationsOf(name: string, source: string): { specifier: string; text: string }[] {
+  const file = ts.createSourceFile(name, source, ts.ScriptTarget.Latest, false);
+  return file.statements.flatMap((statement) =>
+    (ts.isImportDeclaration(statement) || ts.isExportDeclaration(statement)) && statement.moduleSpecifier !== undefined && ts.isStringLiteral(statement.moduleSpecifier)
+      ? [{ specifier: statement.moduleSpecifier.text, text: statement.getText(file) }]
+      : []);
+}

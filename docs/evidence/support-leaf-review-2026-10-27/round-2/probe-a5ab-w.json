@@ -1,0 +1,1880 @@
+{
+ "models": [
+  {
+   "label": "variant:unevaluated",
+   "modelSha256": "c8d2fc6c5a5262df2864d4f3de95d833da6ef37a85ce0ed63358d8fe58c9d596",
+   "modelBytes": 32340,
+   "responseIdentity": {
+    "contentKey": "sha256:80f13ea1f4736a59e7d8fe37f8ecdd9ede13f2a0528a4380ac5cf8ab0dfde5d4",
+    "excludes": [
+     "codeStructure.capturedAt",
+     "evaluation.asOf",
+     "projectShape.authority.evaluationId",
+     "projectShape.authority.evaluationInstant",
+     "projectShape.claim.evaluationId",
+     "projectShape.classes.baseline-spec.claim.evaluationId",
+     "projectShape.classes.catalog-entry.claim.evaluationId",
+     "projectShape.classes.craft-policy.claim.evaluationId",
+     "projectShape.classes.design-contract.claim.evaluationId",
+     "projectShape.classes.principle.claim.evaluationId",
+     "projectShape.classes.project-account-section.claim.evaluationId",
+     "projectShape.classes.roster-identity.claim.evaluationId",
+     "projectShape.classes.success-criterion.claim.evaluationId",
+     "projectShape.classes.topology-component.claim.evaluationId",
+     "projectShape.facts[].claim.evaluationId",
+     "projectShape.identity.capturedAt",
+     "projectShape.identity.deterministicInputs.authority.evaluationId",
+     "projectShape.items[].claim.evaluationId",
+     "projectShape.projectAccount[].claim.evaluationId",
+     "projectShape.sources[].claim.evaluationId",
+     "projectShape.sources[].stamp.capturedAt",
+     "proposedWork.currentAuthority.claim.evaluationId",
+     "walkthroughJudgment.evaluation.evaluationId",
+     "walkthroughJudgment.evaluation.evaluationInstant",
+     "workItems.capturedAt"
+    ],
+    "stableAcross": [
+     "daemon restart at one evaluation input set"
+    ],
+    "varyingWith": [
+     "butlers revision",
+     "observer revision",
+     "project shape"
+    ]
+   },
+   "freeze": {
+    "objects": 239,
+    "frozen": 78,
+    "unfrozen": [
+     "",
+     "/evaluation",
+     "/evaluation/evidence",
+     "/evaluation/evidence/probe",
+     "/evaluation/evidence/probe/epistemic",
+     "/evaluation/evidence/currencyBounds",
+     "/project",
+     "/entities",
+     "/entities/0",
+     "/entities/0/epistemic"
+    ]
+   },
+   "pages": {
+    "polaris": "ce57e81da123d086028a7f3a2b0d7b6d237b925d0104ef82112852e3cfd73dba",
+    "trajectory": "fad733c6c310d49c445a995d00566ca6b032604a6623355b15ff2d06328131dd",
+    "orrery": "b49072ed1b1094d024ef1bfe25596bc3971728de68d611655027ca181751f376",
+    "polaris/m": "55b40b011bb4956ef076a1e9d72586f4c30f4b438f02f903170702b747dc15fd",
+    "trajectory/m": "198f9704c011b68b7971fb57f41a811c7d844e810c732ec9d86fa06e162a42d1",
+    "orrery/m": "90b1b1225e05974001e69a6e2a28a9f1cefd505c4789410ff2e9b800d4f2c871"
+   }
+  },
+  {
+   "label": "variant:rejected",
+   "modelSha256": "8c5a213aa186a6d6398f746658c6c1c230b915dc758c97bfc2b71ab8cf9b09dd",
+   "modelBytes": 36155,
+   "responseIdentity": {
+    "contentKey": "sha256:1b2669571601c2a15acaed7412080ae9a4046ec6a9e414c6d49500da084fa5a2",
+    "excludes": [
+     "codeStructure.capturedAt",
+     "evaluation.asOf",
+     "projectShape.authority.evaluationId",
+     "projectShape.authority.evaluationInstant",
+     "projectShape.claim.evaluationId",
+     "projectShape.classes.baseline-spec.claim.evaluationId",
+     "projectShape.classes.catalog-entry.claim.evaluationId",
+     "projectShape.classes.craft-policy.claim.evaluationId",
+     "projectShape.classes.design-contract.claim.evaluationId",
+     "projectShape.classes.principle.claim.evaluationId",
+     "projectShape.classes.project-account-section.claim.evaluationId",
+     "projectShape.classes.roster-identity.claim.evaluationId",
+     "projectShape.classes.success-criterion.claim.evaluationId",
+     "projectShape.classes.topology-component.claim.evaluationId",
+     "projectShape.facts[].claim.evaluationId",
+     "projectShape.identity.capturedAt",
+     "projectShape.identity.deterministicInputs.authority.evaluationId",
+     "projectShape.items[].claim.evaluationId",
+     "projectShape.projectAccount[].claim.evaluationId",
+     "projectShape.sources[].claim.evaluationId",
+     "projectShape.sources[].stamp.capturedAt",
+     "proposedWork.currentAuthority.claim.evaluationId",
+     "walkthroughJudgment.evaluation.evaluationId",
+     "walkthroughJudgment.evaluation.evaluationInstant",
+     "workItems.capturedAt"
+    ],
+    "stableAcross": [
+     "daemon restart at one evaluation input set"
+    ],
+    "varyingWith": [
+     "butlers revision",
+     "observer revision",
+     "project shape"
+    ]
+   },
+   "freeze": {
+    "objects": 258,
+    "frozen": 79,
+    "unfrozen": [
+     "",
+     "/evaluation",
+     "/evaluation/evidence",
+     "/evaluation/evidence/probe",
+     "/evaluation/evidence/probe/epistemic",
+     "/evaluation/evidence/currencyBounds",
+     "/project",
+     "/entities",
+     "/entities/0",
+     "/entities/0/epistemic"
+    ]
+   },
+   "pages": {
+    "polaris": "03088ddc97c4a40b92d0a86c2d5879756a386ddd84c2519ca34ffb0ff4a7ef1b",
+    "trajectory": "fad733c6c310d49c445a995d00566ca6b032604a6623355b15ff2d06328131dd",
+    "orrery": "b49072ed1b1094d024ef1bfe25596bc3971728de68d611655027ca181751f376",
+    "polaris/m": "f57aef05cec6986b66e2be8a99360fc5262fe88e0bc69232c05ff9942c20b564",
+    "trajectory/m": "198f9704c011b68b7971fb57f41a811c7d844e810c732ec9d86fa06e162a42d1",
+    "orrery/m": "90b1b1225e05974001e69a6e2a28a9f1cefd505c4789410ff2e9b800d4f2c871"
+   }
+  },
+  {
+   "label": "variant:observed",
+   "modelSha256": "62d0f500acb6134248c7274259ca66dfe2cfa9b7ab1675a47cbb240f04b667cf",
+   "modelBytes": 148693,
+   "responseIdentity": {
+    "contentKey": "sha256:872e4e2eb975cc6ab017853a0a4149f7b231baaa70f3f172d448c587d5bff23a",
+    "excludes": [
+     "codeStructure.capturedAt",
+     "evaluation.asOf",
+     "projectShape.authority.evaluationId",
+     "projectShape.authority.evaluationInstant",
+     "projectShape.claim.evaluationId",
+     "projectShape.classes.baseline-spec.claim.evaluationId",
+     "projectShape.classes.catalog-entry.claim.evaluationId",
+     "projectShape.classes.craft-policy.claim.evaluationId",
+     "projectShape.classes.design-contract.claim.evaluationId",
+     "projectShape.classes.principle.claim.evaluationId",
+     "projectShape.classes.project-account-section.claim.evaluationId",
+     "projectShape.classes.roster-identity.claim.evaluationId",
+     "projectShape.classes.success-criterion.claim.evaluationId",
+     "projectShape.classes.topology-component.claim.evaluationId",
+     "projectShape.facts[].claim.evaluationId",
+     "projectShape.identity.capturedAt",
+     "projectShape.identity.deterministicInputs.authority.evaluationId",
+     "projectShape.items[].claim.evaluationId",
+     "projectShape.projectAccount[].claim.evaluationId",
+     "projectShape.sources[].claim.evaluationId",
+     "projectShape.sources[].stamp.capturedAt",
+     "proposedWork.currentAuthority.claim.evaluationId",
+     "walkthroughJudgment.evaluation.evaluationId",
+     "walkthroughJudgment.evaluation.evaluationInstant",
+     "workItems.capturedAt"
+    ],
+    "stableAcross": [
+     "daemon restart at one evaluation input set"
+    ],
+    "varyingWith": [
+     "butlers revision",
+     "observer revision",
+     "project shape"
+    ]
+   },
+   "freeze": {
+    "objects": 1275,
+    "frozen": 156,
+    "unfrozen": [
+     "",
+     "/evaluation",
+     "/evaluation/evidence",
+     "/evaluation/evidence/probe",
+     "/evaluation/evidence/probe/epistemic",
+     "/evaluation/evidence/currencyBounds",
+     "/project",
+     "/entities",
+     "/entities/0",
+     "/entities/0/epistemic"
+    ]
+   },
+   "pages": {
+    "polaris": "a1002f2a6cb645e2511a2a51a3a51581094d7dbcabe8f33024ef6b50158df26c",
+    "trajectory": "fad733c6c310d49c445a995d00566ca6b032604a6623355b15ff2d06328131dd",
+    "orrery": "b49072ed1b1094d024ef1bfe25596bc3971728de68d611655027ca181751f376",
+    "polaris/m": "d136d22ff25457b415a056c9e3e1d0e899211c7cec25cf14d5a0533180444416",
+    "trajectory/m": "198f9704c011b68b7971fb57f41a811c7d844e810c732ec9d86fa06e162a42d1",
+    "orrery/m": "90b1b1225e05974001e69a6e2a28a9f1cefd505c4789410ff2e9b800d4f2c871"
+   }
+  },
+  {
+   "label": "variant:observed-without-precedence",
+   "modelSha256": "0b88967fa5a6a2ab96e6d14de356a14e9a1ba0af2a2fd9b226febd68cc86bb0a",
+   "modelBytes": 147528,
+   "responseIdentity": {
+    "contentKey": "sha256:e7302409130ce372a077099d107633743ccfd8242e49cf8493da009b55ab7a08",
+    "excludes": [
+     "codeStructure.capturedAt",
+     "evaluation.asOf",
+     "projectShape.authority.evaluationId",
+     "projectShape.authority.evaluationInstant",
+     "projectShape.claim.evaluationId",
+     "projectShape.classes.baseline-spec.claim.evaluationId",
+     "projectShape.classes.catalog-entry.claim.evaluationId",
+     "projectShape.classes.craft-policy.claim.evaluationId",
+     "projectShape.classes.design-contract.claim.evaluationId",
+     "projectShape.classes.principle.claim.evaluationId",
+     "projectShape.classes.project-account-section.claim.evaluationId",
+     "projectShape.classes.roster-identity.claim.evaluationId",
+     "projectShape.classes.success-criterion.claim.evaluationId",
+     "projectShape.classes.topology-component.claim.evaluationId",
+     "projectShape.facts[].claim.evaluationId",
+     "projectShape.identity.capturedAt",
+     "projectShape.identity.deterministicInputs.authority.evaluationId",
+     "projectShape.items[].claim.evaluationId",
+     "projectShape.projectAccount[].claim.evaluationId",
+     "projectShape.sources[].claim.evaluationId",
+     "projectShape.sources[].stamp.capturedAt",
+     "proposedWork.currentAuthority.claim.evaluationId",
+     "walkthroughJudgment.evaluation.evaluationId",
+     "walkthroughJudgment.evaluation.evaluationInstant",
+     "workItems.capturedAt"
+    ],
+    "stableAcross": [
+     "daemon restart at one evaluation input set"
+    ],
+    "varyingWith": [
+     "butlers revision",
+     "observer revision",
+     "project shape"
+    ]
+   },
+   "freeze": {
+    "objects": 1256,
+    "frozen": 156,
+    "unfrozen": [
+     "",
+     "/evaluation",
+     "/evaluation/evidence",
+     "/evaluation/evidence/probe",
+     "/evaluation/evidence/probe/epistemic",
+     "/evaluation/evidence/currencyBounds",
+     "/project",
+     "/entities",
+     "/entities/0",
+     "/entities/0/epistemic"
+    ]
+   },
+   "pages": {
+    "polaris": "80d65a25001d44090474810b0f961f5cb5cc92a08c23c8d25436ae3e48787882",
+    "trajectory": "fad733c6c310d49c445a995d00566ca6b032604a6623355b15ff2d06328131dd",
+    "orrery": "b49072ed1b1094d024ef1bfe25596bc3971728de68d611655027ca181751f376",
+    "polaris/m": "b00d36bcd45456ac9b13070dc06d53e9c4e143d293652bd830ae7c3b9d625ae3",
+    "trajectory/m": "198f9704c011b68b7971fb57f41a811c7d844e810c732ec9d86fa06e162a42d1",
+    "orrery/m": "90b1b1225e05974001e69a6e2a28a9f1cefd505c4789410ff2e9b800d4f2c871"
+   }
+  },
+  {
+   "label": "variant:observed-bare-root",
+   "modelSha256": "d2a9c188317a3eb052d2dfeab6d0a3f2732e464891c28b88c605a195c01effd1",
+   "modelBytes": 144175,
+   "responseIdentity": {
+    "contentKey": "sha256:b75a7a9d0d6628e39dc684c42a5950eeaf6ef5529058cb620267173977e8d381",
+    "excludes": [
+     "codeStructure.capturedAt",
+     "evaluation.asOf",
+     "projectShape.authority.evaluationId",
+     "projectShape.authority.evaluationInstant",
+     "projectShape.claim.evaluationId",
+     "projectShape.classes.baseline-spec.claim.evaluationId",
+     "projectShape.classes.catalog-entry.claim.evaluationId",
+     "projectShape.classes.craft-policy.claim.evaluationId",
+     "projectShape.classes.design-contract.claim.evaluationId",
+     "projectShape.classes.principle.claim.evaluationId",
+     "projectShape.classes.project-account-section.claim.evaluationId",
+     "projectShape.classes.roster-identity.claim.evaluationId",
+     "projectShape.classes.success-criterion.claim.evaluationId",
+     "projectShape.classes.topology-component.claim.evaluationId",
+     "projectShape.facts[].claim.evaluationId",
+     "projectShape.identity.capturedAt",
+     "projectShape.identity.deterministicInputs.authority.evaluationId",
+     "projectShape.items[].claim.evaluationId",
+     "projectShape.projectAccount[].claim.evaluationId",
+     "projectShape.sources[].claim.evaluationId",
+     "projectShape.sources[].stamp.capturedAt",
+     "proposedWork.currentAuthority.claim.evaluationId",
+     "walkthroughJudgment.evaluation.evaluationId",
+     "walkthroughJudgment.evaluation.evaluationInstant",
+     "workItems.capturedAt"
+    ],
+    "stableAcross": [
+     "daemon restart at one evaluation input set"
+    ],
+    "varyingWith": [
+     "butlers revision",
+     "observer revision",
+     "project shape"
+    ]
+   },
+   "freeze": {
+    "objects": 1241,
+    "frozen": 156,
+    "unfrozen": [
+     "",
+     "/evaluation",
+     "/evaluation/evidence",
+     "/evaluation/evidence/probe",
+     "/evaluation/evidence/probe/epistemic",
+     "/evaluation/evidence/currencyBounds",
+     "/project",
+     "/entities",
+     "/entities/0",
+     "/entities/0/epistemic"
+    ]
+   },
+   "pages": {
+    "polaris": "b233008eea044d35eb4d0204b1289e56eb49544885632e414ec1fd31505e54ea",
+    "trajectory": "fad733c6c310d49c445a995d00566ca6b032604a6623355b15ff2d06328131dd",
+    "orrery": "b49072ed1b1094d024ef1bfe25596bc3971728de68d611655027ca181751f376",
+    "polaris/m": "0a1ab0f588cdfb3a95dc44ff97a884a5e880ad354db2e8aff129e5f160c23a36",
+    "trajectory/m": "198f9704c011b68b7971fb57f41a811c7d844e810c732ec9d86fa06e162a42d1",
+    "orrery/m": "90b1b1225e05974001e69a6e2a28a9f1cefd505c4789410ff2e9b800d4f2c871"
+   }
+  },
+  {
+   "label": "variant:observed-with-secret",
+   "modelSha256": "115b942f21b598be88db3be1ca9ab24bad70ff091907f33d5b8fd1217c460574",
+   "modelBytes": 146139,
+   "responseIdentity": {
+    "contentKey": "sha256:d72036b69e2e8c32815330cc395b51e340ee2f75789a503b36338123fa26339d",
+    "excludes": [
+     "codeStructure.capturedAt",
+     "evaluation.asOf",
+     "projectShape.authority.evaluationId",
+     "projectShape.authority.evaluationInstant",
+     "projectShape.claim.evaluationId",
+     "projectShape.classes.baseline-spec.claim.evaluationId",
+     "projectShape.classes.catalog-entry.claim.evaluationId",
+     "projectShape.classes.craft-policy.claim.evaluationId",
+     "projectShape.classes.design-contract.claim.evaluationId",
+     "projectShape.classes.principle.claim.evaluationId",
+     "projectShape.classes.project-account-section.claim.evaluationId",
+     "projectShape.classes.roster-identity.claim.evaluationId",
+     "projectShape.classes.success-criterion.claim.evaluationId",
+     "projectShape.classes.topology-component.claim.evaluationId",
+     "projectShape.facts[].claim.evaluationId",
+     "projectShape.identity.capturedAt",
+     "projectShape.identity.deterministicInputs.authority.evaluationId",
+     "projectShape.items[].claim.evaluationId",
+     "projectShape.projectAccount[].claim.evaluationId",
+     "projectShape.sources[].claim.evaluationId",
+     "projectShape.sources[].stamp.capturedAt",
+     "proposedWork.currentAuthority.claim.evaluationId",
+     "walkthroughJudgment.evaluation.evaluationId",
+     "walkthroughJudgment.evaluation.evaluationInstant",
+     "workItems.capturedAt"
+    ],
+    "stableAcross": [
+     "daemon restart at one evaluation input set"
+    ],
+    "varyingWith": [
+     "butlers revision",
+     "observer revision",
+     "project shape"
+    ]
+   },
+   "freeze": {
+    "objects": 1259,
+    "frozen": 154,
+    "unfrozen": [
+     "",
+     "/evaluation",
+     "/evaluation/evidence",
+     "/evaluation/evidence/probe",
+     "/evaluation/evidence/probe/epistemic",
+     "/evaluation/evidence/currencyBounds",
+     "/project",
+     "/entities",
+     "/entities/0",
+     "/entities/0/epistemic"
+    ]
+   },
+   "pages": {
+    "polaris": "259a100a959a273a559946b9ce291583ece0f1e5be740038acef0d99331fc4e9",
+    "trajectory": "fad733c6c310d49c445a995d00566ca6b032604a6623355b15ff2d06328131dd",
+    "orrery": "b49072ed1b1094d024ef1bfe25596bc3971728de68d611655027ca181751f376",
+    "polaris/m": "a2b3299dc60d5b5c153cbf524e9548a59087814dc0c8a148d2ab90be94b7b875",
+    "trajectory/m": "198f9704c011b68b7971fb57f41a811c7d844e810c732ec9d86fa06e162a42d1",
+    "orrery/m": "90b1b1225e05974001e69a6e2a28a9f1cefd505c4789410ff2e9b800d4f2c871"
+   }
+  },
+  {
+   "label": "variant:observed-with-baseline-spec",
+   "modelSha256": "201d513ddbfbe9b5432a18e2be4512b2768fe76dfe642f851aa42c5897af697e",
+   "modelBytes": 152935,
+   "responseIdentity": {
+    "contentKey": "sha256:f64ec8375d0d976a290f8c53ab39564e6417f73ef794587d46354bb438bd1060",
+    "excludes": [
+     "codeStructure.capturedAt",
+     "evaluation.asOf",
+     "projectShape.authority.evaluationId",
+     "projectShape.authority.evaluationInstant",
+     "projectShape.claim.evaluationId",
+     "projectShape.classes.baseline-spec.claim.evaluationId",
+     "projectShape.classes.catalog-entry.claim.evaluationId",
+     "projectShape.classes.craft-policy.claim.evaluationId",
+     "projectShape.classes.design-contract.claim.evaluationId",
+     "projectShape.classes.principle.claim.evaluationId",
+     "projectShape.classes.project-account-section.claim.evaluationId",
+     "projectShape.classes.roster-identity.claim.evaluationId",
+     "projectShape.classes.success-criterion.claim.evaluationId",
+     "projectShape.classes.topology-component.claim.evaluationId",
+     "projectShape.facts[].claim.evaluationId",
+     "projectShape.identity.capturedAt",
+     "projectShape.identity.deterministicInputs.authority.evaluationId",
+     "projectShape.items[].claim.evaluationId",
+     "projectShape.projectAccount[].claim.evaluationId",
+     "projectShape.sources[].claim.evaluationId",
+     "projectShape.sources[].stamp.capturedAt",
+     "proposedWork.currentAuthority.claim.evaluationId",
+     "walkthroughJudgment.evaluation.evaluationId",
+     "walkthroughJudgment.evaluation.evaluationInstant",
+     "workItems.capturedAt"
+    ],
+    "stableAcross": [
+     "daemon restart at one evaluation input set"
+    ],
+    "varyingWith": [
+     "butlers revision",
+     "observer revision",
+     "project shape"
+    ]
+   },
+   "freeze": {
+    "objects": 1307,
+    "frozen": 159,
+    "unfrozen": [
+     "",
+     "/evaluation",
+     "/evaluation/evidence",
+     "/evaluation/evidence/probe",
+     "/evaluation/evidence/probe/epistemic",
+     "/evaluation/evidence/currencyBounds",
+     "/project",
+     "/entities",
+     "/entities/0",
+     "/entities/0/epistemic"
+    ]
+   },
+   "pages": {
+    "polaris": "11d337c368bede13004efeca154fbb2b68dd1d5f5692908786d5245d67e4fcb4",
+    "trajectory": "fad733c6c310d49c445a995d00566ca6b032604a6623355b15ff2d06328131dd",
+    "orrery": "b49072ed1b1094d024ef1bfe25596bc3971728de68d611655027ca181751f376",
+    "polaris/m": "d9ef838ed6c0b2d7d82007eacda3c910d0fd09e3de94834e7c027032871c048b",
+    "trajectory/m": "198f9704c011b68b7971fb57f41a811c7d844e810c732ec9d86fa06e162a42d1",
+    "orrery/m": "90b1b1225e05974001e69a6e2a28a9f1cefd505c4789410ff2e9b800d4f2c871"
+   }
+  },
+  {
+   "label": "variant:observation-failed",
+   "modelSha256": "4b9a0b2e8168b6a8840da7a177dbcb4e4d9a3c88176e92afe878e043f6e2f28b",
+   "modelBytes": 36533,
+   "responseIdentity": {
+    "contentKey": "sha256:6de5f49e0fa3d231c1f99aafa257c234f1fffc6416e903afd1f9c5c253199b83",
+    "excludes": [
+     "codeStructure.capturedAt",
+     "evaluation.asOf",
+     "projectShape.authority.evaluationId",
+     "projectShape.authority.evaluationInstant",
+     "projectShape.claim.evaluationId",
+     "projectShape.classes.baseline-spec.claim.evaluationId",
+     "projectShape.classes.catalog-entry.claim.evaluationId",
+     "projectShape.classes.craft-policy.claim.evaluationId",
+     "projectShape.classes.design-contract.claim.evaluationId",
+     "projectShape.classes.principle.claim.evaluationId",
+     "projectShape.classes.project-account-section.claim.evaluationId",
+     "projectShape.classes.roster-identity.claim.evaluationId",
+     "projectShape.classes.success-criterion.claim.evaluationId",
+     "projectShape.classes.topology-component.claim.evaluationId",
+     "projectShape.facts[].claim.evaluationId",
+     "projectShape.identity.capturedAt",
+     "projectShape.identity.deterministicInputs.authority.evaluationId",
+     "projectShape.items[].claim.evaluationId",
+     "projectShape.projectAccount[].claim.evaluationId",
+     "projectShape.sources[].claim.evaluationId",
+     "projectShape.sources[].stamp.capturedAt",
+     "proposedWork.currentAuthority.claim.evaluationId",
+     "walkthroughJudgment.evaluation.evaluationId",
+     "walkthroughJudgment.evaluation.evaluationInstant",
+     "workItems.capturedAt"
+    ],
+    "stableAcross": [
+     "daemon restart at one evaluation input set"
+    ],
+    "varyingWith": [
+     "butlers revision",
+     "observer revision",
+     "project shape"
+    ]
+   },
+   "freeze": {
+    "objects": 255,
+    "frozen": 79,
+    "unfrozen": [
+     "",
+     "/evaluation",
+     "/evaluation/evidence",
+     "/evaluation/evidence/probe",
+     "/evaluation/evidence/probe/epistemic",
+     "/evaluation/evidence/currencyBounds",
+     "/project",
+     "/entities",
+     "/entities/0",
+     "/entities/0/epistemic"
+    ]
+   },
+   "pages": {
+    "polaris": "f3abda7e0f022fc0a5bb3e7f985c9c34b9d8b7aa848301220039ba13f553b05e",
+    "trajectory": "fad733c6c310d49c445a995d00566ca6b032604a6623355b15ff2d06328131dd",
+    "orrery": "b49072ed1b1094d024ef1bfe25596bc3971728de68d611655027ca181751f376",
+    "polaris/m": "8b090a2ea7184c3a05dbe227c6870a11c58364b77b96180aa49f96c580fbbabf",
+    "trajectory/m": "198f9704c011b68b7971fb57f41a811c7d844e810c732ec9d86fa06e162a42d1",
+    "orrery/m": "90b1b1225e05974001e69a6e2a28a9f1cefd505c4789410ff2e9b800d4f2c871"
+   }
+  },
+  {
+   "label": "variant:judgment-absent",
+   "modelSha256": "4f79952319b1b6348c10cad782774ff53ecc02c7b3402683d8d6d348d5df3e65",
+   "modelBytes": 32595,
+   "responseIdentity": {
+    "contentKey": "sha256:7a2fbb63aa3b768d5bb0aaa699227de3e433f7159224fc881e314aecc6ea5783",
+    "excludes": [
+     "codeStructure.capturedAt",
+     "evaluation.asOf",
+     "projectShape.authority.evaluationId",
+     "projectShape.authority.evaluationInstant",
+     "projectShape.claim.evaluationId",
+     "projectShape.classes.baseline-spec.claim.evaluationId",
+     "projectShape.classes.catalog-entry.claim.evaluationId",
+     "projectShape.classes.craft-policy.claim.evaluationId",
+     "projectShape.classes.design-contract.claim.evaluationId",
+     "projectShape.classes.principle.claim.evaluationId",
+     "projectShape.classes.project-account-section.claim.evaluationId",
+     "projectShape.classes.roster-identity.claim.evaluationId",
+     "projectShape.classes.success-criterion.claim.evaluationId",
+     "projectShape.classes.topology-component.claim.evaluationId",
+     "projectShape.facts[].claim.evaluationId",
+     "projectShape.identity.capturedAt",
+     "projectShape.identity.deterministicInputs.authority.evaluationId",
+     "projectShape.items[].claim.evaluationId",
+     "projectShape.projectAccount[].claim.evaluationId",
+     "projectShape.sources[].claim.evaluationId",
+     "projectShape.sources[].stamp.capturedAt",
+     "proposedWork.currentAuthority.claim.evaluationId",
+     "walkthroughJudgment.evaluation.evaluationId",
+     "walkthroughJudgment.evaluation.evaluationInstant",
+     "workItems.capturedAt"
+    ],
+    "stableAcross": [
+     "daemon restart at one evaluation input set"
+    ],
+    "varyingWith": [
+     "butlers revision",
+     "observer revision",
+     "project shape"
+    ]
+   },
+   "freeze": {
+    "objects": 243,
+    "frozen": 80,
+    "unfrozen": [
+     "",
+     "/evaluation",
+     "/evaluation/evidence",
+     "/evaluation/evidence/probe",
+     "/evaluation/evidence/probe/epistemic",
+     "/evaluation/evidence/currencyBounds",
+     "/project",
+     "/entities",
+     "/entities/0",
+     "/entities/0/epistemic"
+    ]
+   },
+   "pages": {
+    "polaris": "0f6a9b9ba397c95cc5b9deb65c5fce829297252d755da51478ce0ba0b5a7141f",
+    "trajectory": "fad733c6c310d49c445a995d00566ca6b032604a6623355b15ff2d06328131dd",
+    "orrery": "b49072ed1b1094d024ef1bfe25596bc3971728de68d611655027ca181751f376",
+    "polaris/m": "12a5316fe3fbdb763d5e04e1c388ee967cf0f2037ef0a1bfed5b1dc925bb6a14",
+    "trajectory/m": "198f9704c011b68b7971fb57f41a811c7d844e810c732ec9d86fa06e162a42d1",
+    "orrery/m": "90b1b1225e05974001e69a6e2a28a9f1cefd505c4789410ff2e9b800d4f2c871"
+   }
+  },
+  {
+   "label": "variant:judgment-unlawful",
+   "modelSha256": "c52348825bc26b840004037b4d00056a0b69a08b29fe2014b67eeea56962d910",
+   "modelBytes": 36702,
+   "responseIdentity": {
+    "contentKey": "sha256:a786422fcba1250f7789edfd53a276994abc68adfe67f75cc2c707179026f5c3",
+    "excludes": [
+     "codeStructure.capturedAt",
+     "evaluation.asOf",
+     "projectShape.authority.evaluationId",
+     "projectShape.authority.evaluationInstant",
+     "projectShape.claim.evaluationId",
+     "projectShape.classes.baseline-spec.claim.evaluationId",
+     "projectShape.classes.catalog-entry.claim.evaluationId",
+     "projectShape.classes.craft-policy.claim.evaluationId",
+     "projectShape.classes.design-contract.claim.evaluationId",
+     "projectShape.classes.principle.claim.evaluationId",
+     "projectShape.classes.project-account-section.claim.evaluationId",
+     "projectShape.classes.roster-identity.claim.evaluationId",
+     "projectShape.classes.success-criterion.claim.evaluationId",
+     "projectShape.classes.topology-component.claim.evaluationId",
+     "projectShape.facts[].claim.evaluationId",
+     "projectShape.identity.capturedAt",
+     "projectShape.identity.deterministicInputs.authority.evaluationId",
+     "projectShape.items[].claim.evaluationId",
+     "projectShape.projectAccount[].claim.evaluationId",
+     "projectShape.sources[].claim.evaluationId",
+     "projectShape.sources[].stamp.capturedAt",
+     "proposedWork.currentAuthority.claim.evaluationId",
+     "walkthroughJudgment.evaluation.evaluationId",
+     "walkthroughJudgment.evaluation.evaluationInstant",
+     "workItems.capturedAt"
+    ],
+    "stableAcross": [
+     "daemon restart at one evaluation input set"
+    ],
+    "varyingWith": [
+     "butlers revision",
+     "observer revision",
+     "project shape"
+    ]
+   },
+   "freeze": {
+    "objects": 288,
+    "frozen": 83,
+    "unfrozen": [
+     "",
+     "/evaluation",
+     "/evaluation/evidence",
+     "/evaluation/evidence/probe",
+     "/evaluation/evidence/probe/epistemic",
+     "/evaluation/evidence/currencyBounds",
+     "/project",
+     "/entities",
+     "/entities/0",
+     "/entities/0/epistemic"
+    ]
+   },
+   "pages": {
+    "polaris": "1359497972122dfad3871df1b81b381a9352a3b7c7fa6c2872b37bb5b54e7af4",
+    "trajectory": "fad733c6c310d49c445a995d00566ca6b032604a6623355b15ff2d06328131dd",
+    "orrery": "b49072ed1b1094d024ef1bfe25596bc3971728de68d611655027ca181751f376",
+    "polaris/m": "8fe5c536b30f8f6151ea4c7f87347e3fa0efcf2c808636484b46769810eabd92",
+    "trajectory/m": "198f9704c011b68b7971fb57f41a811c7d844e810c732ec9d86fa06e162a42d1",
+    "orrery/m": "90b1b1225e05974001e69a6e2a28a9f1cefd505c4789410ff2e9b800d4f2c871"
+   }
+  },
+  {
+   "label": "variant:judgment-lawful",
+   "modelSha256": "86bf3bdea649825f6c32e4b35d295bd1deb7204905dc23cd36b129dc79135fac",
+   "modelBytes": 36706,
+   "responseIdentity": {
+    "contentKey": "sha256:81e981c03e36f131172c4e86aed4e0a962410bcb24a6aaa1be3b6850d5bad771",
+    "excludes": [
+     "codeStructure.capturedAt",
+     "evaluation.asOf",
+     "projectShape.authority.evaluationId",
+     "projectShape.authority.evaluationInstant",
+     "projectShape.claim.evaluationId",
+     "projectShape.classes.baseline-spec.claim.evaluationId",
+     "projectShape.classes.catalog-entry.claim.evaluationId",
+     "projectShape.classes.craft-policy.claim.evaluationId",
+     "projectShape.classes.design-contract.claim.evaluationId",
+     "projectShape.classes.principle.claim.evaluationId",
+     "projectShape.classes.project-account-section.claim.evaluationId",
+     "projectShape.classes.roster-identity.claim.evaluationId",
+     "projectShape.classes.success-criterion.claim.evaluationId",
+     "projectShape.classes.topology-component.claim.evaluationId",
+     "projectShape.facts[].claim.evaluationId",
+     "projectShape.identity.capturedAt",
+     "projectShape.identity.deterministicInputs.authority.evaluationId",
+     "projectShape.items[].claim.evaluationId",
+     "projectShape.projectAccount[].claim.evaluationId",
+     "projectShape.sources[].claim.evaluationId",
+     "projectShape.sources[].stamp.capturedAt",
+     "proposedWork.currentAuthority.claim.evaluationId",
+     "walkthroughJudgment.evaluation.evaluationId",
+     "walkthroughJudgment.evaluation.evaluationInstant",
+     "workItems.capturedAt"
+    ],
+    "stableAcross": [
+     "daemon restart at one evaluation input set"
+    ],
+    "varyingWith": [
+     "butlers revision",
+     "observer revision",
+     "project shape"
+    ]
+   },
+   "freeze": {
+    "objects": 288,
+    "frozen": 83,
+    "unfrozen": [
+     "",
+     "/evaluation",
+     "/evaluation/evidence",
+     "/evaluation/evidence/probe",
+     "/evaluation/evidence/probe/epistemic",
+     "/evaluation/evidence/currencyBounds",
+     "/project",
+     "/entities",
+     "/entities/0",
+     "/entities/0/epistemic"
+    ]
+   },
+   "pages": {
+    "polaris": "02c9ab3c9db3e39fb047bdac84b85b16e8a971ac2de402997101326196130857",
+    "trajectory": "fad733c6c310d49c445a995d00566ca6b032604a6623355b15ff2d06328131dd",
+    "orrery": "b49072ed1b1094d024ef1bfe25596bc3971728de68d611655027ca181751f376",
+    "polaris/m": "1c5d6147622093e79b386a51e13d91944310843431116447596653c48e77b8c6",
+    "trajectory/m": "198f9704c011b68b7971fb57f41a811c7d844e810c732ec9d86fa06e162a42d1",
+    "orrery/m": "90b1b1225e05974001e69a6e2a28a9f1cefd505c4789410ff2e9b800d4f2c871"
+   }
+  },
+  {
+   "label": "variant:judgment-ready",
+   "modelSha256": "dd5b314e46ff2d659623468abf9fe40b605689002aab29fb88fc819d627633f1",
+   "modelBytes": 151279,
+   "responseIdentity": {
+    "contentKey": "sha256:8d6c73ba6f06e103edcfb843e8e6e7e1cce085de887efddb9bc6b4f0a0793412",
+    "excludes": [
+     "codeStructure.capturedAt",
+     "evaluation.asOf",
+     "projectShape.authority.evaluationId",
+     "projectShape.authority.evaluationInstant",
+     "projectShape.claim.evaluationId",
+     "projectShape.classes.baseline-spec.claim.evaluationId",
+     "projectShape.classes.catalog-entry.claim.evaluationId",
+     "projectShape.classes.craft-policy.claim.evaluationId",
+     "projectShape.classes.design-contract.claim.evaluationId",
+     "projectShape.classes.principle.claim.evaluationId",
+     "projectShape.classes.project-account-section.claim.evaluationId",
+     "projectShape.classes.roster-identity.claim.evaluationId",
+     "projectShape.classes.success-criterion.claim.evaluationId",
+     "projectShape.classes.topology-component.claim.evaluationId",
+     "projectShape.facts[].claim.evaluationId",
+     "projectShape.identity.capturedAt",
+     "projectShape.identity.deterministicInputs.authority.evaluationId",
+     "projectShape.items[].claim.evaluationId",
+     "projectShape.projectAccount[].claim.evaluationId",
+     "projectShape.sources[].claim.evaluationId",
+     "projectShape.sources[].stamp.capturedAt",
+     "proposedWork.currentAuthority.claim.evaluationId",
+     "walkthroughJudgment.evaluation.evaluationId",
+     "walkthroughJudgment.evaluation.evaluationInstant",
+     "workItems.capturedAt"
+    ],
+    "stableAcross": [
+     "daemon restart at one evaluation input set"
+    ],
+    "varyingWith": [
+     "butlers revision",
+     "observer revision",
+     "project shape"
+    ]
+   },
+   "freeze": {
+    "objects": 1313,
+    "frozen": 161,
+    "unfrozen": [
+     "",
+     "/evaluation",
+     "/evaluation/evidence",
+     "/evaluation/evidence/probe",
+     "/evaluation/evidence/probe/epistemic",
+     "/evaluation/evidence/currencyBounds",
+     "/project",
+     "/entities",
+     "/entities/0",
+     "/entities/0/epistemic"
+    ]
+   },
+   "pages": {
+    "polaris": "098add084884f70275e98d88f594125a4d547340c1439c0f724e4ae97aff33f3",
+    "trajectory": "fad733c6c310d49c445a995d00566ca6b032604a6623355b15ff2d06328131dd",
+    "orrery": "b49072ed1b1094d024ef1bfe25596bc3971728de68d611655027ca181751f376",
+    "polaris/m": "dc5e6d733b0afa6d2af9164e5205117558859af9180cddfce5138be3e0dc2c9b",
+    "trajectory/m": "198f9704c011b68b7971fb57f41a811c7d844e810c732ec9d86fa06e162a42d1",
+    "orrery/m": "90b1b1225e05974001e69a6e2a28a9f1cefd505c4789410ff2e9b800d4f2c871"
+   }
+  },
+  {
+   "label": "mutation:crlf",
+   "modelSha256": "1431f2f454fbebbfb11d999e3435ef6b126d971d43ad32d515cb2fbda947f49b",
+   "modelBytes": 148693,
+   "responseIdentity": {
+    "contentKey": "sha256:48702a05055ef5de908c237f109e3b132983521346a415905ae96513e9fecdf1",
+    "excludes": [
+     "codeStructure.capturedAt",
+     "evaluation.asOf",
+     "projectShape.authority.evaluationId",
+     "projectShape.authority.evaluationInstant",
+     "projectShape.claim.evaluationId",
+     "projectShape.classes.baseline-spec.claim.evaluationId",
+     "projectShape.classes.catalog-entry.claim.evaluationId",
+     "projectShape.classes.craft-policy.claim.evaluationId",
+     "projectShape.classes.design-contract.claim.evaluationId",
+     "projectShape.classes.principle.claim.evaluationId",
+     "projectShape.classes.project-account-section.claim.evaluationId",
+     "projectShape.classes.roster-identity.claim.evaluationId",
+     "projectShape.classes.success-criterion.claim.evaluationId",
+     "projectShape.classes.topology-component.claim.evaluationId",
+     "projectShape.facts[].claim.evaluationId",
+     "projectShape.identity.capturedAt",
+     "projectShape.identity.deterministicInputs.authority.evaluationId",
+     "projectShape.items[].claim.evaluationId",
+     "projectShape.projectAccount[].claim.evaluationId",
+     "projectShape.sources[].claim.evaluationId",
+     "projectShape.sources[].stamp.capturedAt",
+     "proposedWork.currentAuthority.claim.evaluationId",
+     "walkthroughJudgment.evaluation.evaluationId",
+     "walkthroughJudgment.evaluation.evaluationInstant",
+     "workItems.capturedAt"
+    ],
+    "stableAcross": [
+     "daemon restart at one evaluation input set"
+    ],
+    "varyingWith": [
+     "butlers revision",
+     "observer revision",
+     "project shape"
+    ]
+   },
+   "freeze": {
+    "objects": 1275,
+    "frozen": 156,
+    "unfrozen": [
+     "",
+     "/evaluation",
+     "/evaluation/evidence",
+     "/evaluation/evidence/probe",
+     "/evaluation/evidence/probe/epistemic",
+     "/evaluation/evidence/currencyBounds",
+     "/project",
+     "/entities",
+     "/entities/0",
+     "/entities/0/epistemic"
+    ]
+   },
+   "pages": {
+    "polaris": "5571d0150878c77bef4c5886928b07725c01705e956167fd4ff57da6a1ef6b58",
+    "trajectory": "fad733c6c310d49c445a995d00566ca6b032604a6623355b15ff2d06328131dd",
+    "orrery": "b49072ed1b1094d024ef1bfe25596bc3971728de68d611655027ca181751f376",
+    "polaris/m": "0740288745bdae0410c00cf2a9dab601dfcc4f42bda830b1f013a8f2d33590e2",
+    "trajectory/m": "198f9704c011b68b7971fb57f41a811c7d844e810c732ec9d86fa06e162a42d1",
+    "orrery/m": "90b1b1225e05974001e69a6e2a28a9f1cefd505c4789410ff2e9b800d4f2c871"
+   }
+  },
+  {
+   "label": "mutation:appended-prose",
+   "modelSha256": "316d01c20951036104b7d424aee927dfb28c9b288555d3efca863831c06f049c",
+   "modelBytes": 149221,
+   "responseIdentity": {
+    "contentKey": "sha256:47cc625be2845db73868179c33fb1a4c838e2310f01ee010ec60801357d4f1a1",
+    "excludes": [
+     "codeStructure.capturedAt",
+     "evaluation.asOf",
+     "projectShape.authority.evaluationId",
+     "projectShape.authority.evaluationInstant",
+     "projectShape.claim.evaluationId",
+     "projectShape.classes.baseline-spec.claim.evaluationId",
+     "projectShape.classes.catalog-entry.claim.evaluationId",
+     "projectShape.classes.craft-policy.claim.evaluationId",
+     "projectShape.classes.design-contract.claim.evaluationId",
+     "projectShape.classes.principle.claim.evaluationId",
+     "projectShape.classes.project-account-section.claim.evaluationId",
+     "projectShape.classes.roster-identity.claim.evaluationId",
+     "projectShape.classes.success-criterion.claim.evaluationId",
+     "projectShape.classes.topology-component.claim.evaluationId",
+     "projectShape.facts[].claim.evaluationId",
+     "projectShape.identity.capturedAt",
+     "projectShape.identity.deterministicInputs.authority.evaluationId",
+     "projectShape.items[].claim.evaluationId",
+     "projectShape.projectAccount[].claim.evaluationId",
+     "projectShape.sources[].claim.evaluationId",
+     "projectShape.sources[].stamp.capturedAt",
+     "proposedWork.currentAuthority.claim.evaluationId",
+     "walkthroughJudgment.evaluation.evaluationId",
+     "walkthroughJudgment.evaluation.evaluationInstant",
+     "workItems.capturedAt"
+    ],
+    "stableAcross": [
+     "daemon restart at one evaluation input set"
+    ],
+    "varyingWith": [
+     "butlers revision",
+     "observer revision",
+     "project shape"
+    ]
+   },
+   "freeze": {
+    "objects": 1275,
+    "frozen": 156,
+    "unfrozen": [
+     "",
+     "/evaluation",
+     "/evaluation/evidence",
+     "/evaluation/evidence/probe",
+     "/evaluation/evidence/probe/epistemic",
+     "/evaluation/evidence/currencyBounds",
+     "/project",
+     "/entities",
+     "/entities/0",
+     "/entities/0/epistemic"
+    ]
+   },
+   "pages": {
+    "polaris": "a3fe0c04936ccb2462b8b002ea299ce096777a2cb9d7dd41acbe858f3e76d209",
+    "trajectory": "fad733c6c310d49c445a995d00566ca6b032604a6623355b15ff2d06328131dd",
+    "orrery": "b49072ed1b1094d024ef1bfe25596bc3971728de68d611655027ca181751f376",
+    "polaris/m": "4d41b4046802947483e46fed155821ff6bec205811fd4639c7757d51bf01a22e",
+    "trajectory/m": "198f9704c011b68b7971fb57f41a811c7d844e810c732ec9d86fa06e162a42d1",
+    "orrery/m": "90b1b1225e05974001e69a6e2a28a9f1cefd505c4789410ff2e9b800d4f2c871"
+   }
+  },
+  {
+   "label": "mutation:agent-claim",
+   "modelSha256": "98f463b35a6d6b4442cc1fb19489ff6fe96c8b7f0e41db1a75cdd165f1ad8627",
+   "modelBytes": 149509,
+   "responseIdentity": {
+    "contentKey": "sha256:7cc68456c7a07318153f6fff1dbd89d4277b652158e6b9bb1c20f9aca29654cc",
+    "excludes": [
+     "codeStructure.capturedAt",
+     "evaluation.asOf",
+     "projectShape.authority.evaluationId",
+     "projectShape.authority.evaluationInstant",
+     "projectShape.claim.evaluationId",
+     "projectShape.classes.baseline-spec.claim.evaluationId",
+     "projectShape.classes.catalog-entry.claim.evaluationId",
+     "projectShape.classes.craft-policy.claim.evaluationId",
+     "projectShape.classes.design-contract.claim.evaluationId",
+     "projectShape.classes.principle.claim.evaluationId",
+     "projectShape.classes.project-account-section.claim.evaluationId",
+     "projectShape.classes.roster-identity.claim.evaluationId",
+     "projectShape.classes.success-criterion.claim.evaluationId",
+     "projectShape.classes.topology-component.claim.evaluationId",
+     "projectShape.facts[].claim.evaluationId",
+     "projectShape.identity.capturedAt",
+     "projectShape.identity.deterministicInputs.authority.evaluationId",
+     "projectShape.items[].claim.evaluationId",
+     "projectShape.projectAccount[].claim.evaluationId",
+     "projectShape.sources[].claim.evaluationId",
+     "projectShape.sources[].stamp.capturedAt",
+     "proposedWork.currentAuthority.claim.evaluationId",
+     "walkthroughJudgment.evaluation.evaluationId",
+     "walkthroughJudgment.evaluation.evaluationInstant",
+     "workItems.capturedAt"
+    ],
+    "stableAcross": [
+     "daemon restart at one evaluation input set"
+    ],
+    "varyingWith": [
+     "butlers revision",
+     "observer revision",
+     "project shape"
+    ]
+   },
+   "freeze": {
+    "objects": 1275,
+    "frozen": 156,
+    "unfrozen": [
+     "",
+     "/evaluation",
+     "/evaluation/evidence",
+     "/evaluation/evidence/probe",
+     "/evaluation/evidence/probe/epistemic",
+     "/evaluation/evidence/currencyBounds",
+     "/project",
+     "/entities",
+     "/entities/0",
+     "/entities/0/epistemic"
+    ]
+   },
+   "pages": {
+    "polaris": "1f0f6ee959ba19983c87945fa55cc369ec91b816ce9b5a94cda29da0bfcecfcd",
+    "trajectory": "fad733c6c310d49c445a995d00566ca6b032604a6623355b15ff2d06328131dd",
+    "orrery": "b49072ed1b1094d024ef1bfe25596bc3971728de68d611655027ca181751f376",
+    "polaris/m": "49e21c6c70098eacead2138525585b851a20d841f2cbf11d309398fc140004b8",
+    "trajectory/m": "198f9704c011b68b7971fb57f41a811c7d844e810c732ec9d86fa06e162a42d1",
+    "orrery/m": "90b1b1225e05974001e69a6e2a28a9f1cefd505c4789410ff2e9b800d4f2c871"
+   }
+  },
+  {
+   "label": "mutation:fence-line",
+   "modelSha256": "1a988ebcfb9855f7d816822f2f44833106c51aa023d29455ff16a440a609d1a2",
+   "modelBytes": 76726,
+   "responseIdentity": {
+    "contentKey": "sha256:e3df5520e0890dfe92f88ee252c1f84b56235f0ef0c91a0546c8c2eeeccbf689",
+    "excludes": [
+     "codeStructure.capturedAt",
+     "evaluation.asOf",
+     "projectShape.authority.evaluationId",
+     "projectShape.authority.evaluationInstant",
+     "projectShape.claim.evaluationId",
+     "projectShape.classes.baseline-spec.claim.evaluationId",
+     "projectShape.classes.catalog-entry.claim.evaluationId",
+     "projectShape.classes.craft-policy.claim.evaluationId",
+     "projectShape.classes.design-contract.claim.evaluationId",
+     "projectShape.classes.principle.claim.evaluationId",
+     "projectShape.classes.project-account-section.claim.evaluationId",
+     "projectShape.classes.roster-identity.claim.evaluationId",
+     "projectShape.classes.success-criterion.claim.evaluationId",
+     "projectShape.classes.topology-component.claim.evaluationId",
+     "projectShape.facts[].claim.evaluationId",
+     "projectShape.identity.capturedAt",
+     "projectShape.identity.deterministicInputs.authority.evaluationId",
+     "projectShape.items[].claim.evaluationId",
+     "projectShape.projectAccount[].claim.evaluationId",
+     "projectShape.sources[].claim.evaluationId",
+     "projectShape.sources[].stamp.capturedAt",
+     "proposedWork.currentAuthority.claim.evaluationId",
+     "walkthroughJudgment.evaluation.evaluationId",
+     "walkthroughJudgment.evaluation.evaluationInstant",
+     "workItems.capturedAt"
+    ],
+    "stableAcross": [
+     "daemon restart at one evaluation input set"
+    ],
+    "varyingWith": [
+     "butlers revision",
+     "observer revision",
+     "project shape"
+    ]
+   },
+   "freeze": {
+    "objects": 801,
+    "frozen": 124,
+    "unfrozen": [
+     "",
+     "/evaluation",
+     "/evaluation/evidence",
+     "/evaluation/evidence/probe",
+     "/evaluation/evidence/probe/epistemic",
+     "/evaluation/evidence/currencyBounds",
+     "/project",
+     "/entities",
+     "/entities/0",
+     "/entities/0/epistemic"
+    ]
+   },
+   "pages": {
+    "polaris": "8953063f1074e243bf750a30666eb1b93cb12e6ced768c874f057c6d2e0c1c8a",
+    "trajectory": "fad733c6c310d49c445a995d00566ca6b032604a6623355b15ff2d06328131dd",
+    "orrery": "b49072ed1b1094d024ef1bfe25596bc3971728de68d611655027ca181751f376",
+    "polaris/m": "6827c05908651570417ac2bfac2ec65107efe872325a90ec50b1ab895a6255fd",
+    "trajectory/m": "198f9704c011b68b7971fb57f41a811c7d844e810c732ec9d86fa06e162a42d1",
+    "orrery/m": "90b1b1225e05974001e69a6e2a28a9f1cefd505c4789410ff2e9b800d4f2c871"
+   }
+  },
+  {
+   "label": "mutation:emptied-file",
+   "modelSha256": "f8c97c6f057dfcfade0b8457eaa71c777e2545e01d26ca47c4fc29088fef1f82",
+   "modelBytes": 76180,
+   "responseIdentity": {
+    "contentKey": "sha256:c27ea2a20a18e818540549ac916004971c22d29d385f6f016af7e436665333e8",
+    "excludes": [
+     "codeStructure.capturedAt",
+     "evaluation.asOf",
+     "projectShape.authority.evaluationId",
+     "projectShape.authority.evaluationInstant",
+     "projectShape.claim.evaluationId",
+     "projectShape.classes.baseline-spec.claim.evaluationId",
+     "projectShape.classes.catalog-entry.claim.evaluationId",
+     "projectShape.classes.craft-policy.claim.evaluationId",
+     "projectShape.classes.design-contract.claim.evaluationId",
+     "projectShape.classes.principle.claim.evaluationId",
+     "projectShape.classes.project-account-section.claim.evaluationId",
+     "projectShape.classes.roster-identity.claim.evaluationId",
+     "projectShape.classes.success-criterion.claim.evaluationId",
+     "projectShape.classes.topology-component.claim.evaluationId",
+     "projectShape.facts[].claim.evaluationId",
+     "projectShape.identity.capturedAt",
+     "projectShape.identity.deterministicInputs.authority.evaluationId",
+     "projectShape.items[].claim.evaluationId",
+     "projectShape.projectAccount[].claim.evaluationId",
+     "projectShape.sources[].claim.evaluationId",
+     "projectShape.sources[].stamp.capturedAt",
+     "proposedWork.currentAuthority.claim.evaluationId",
+     "walkthroughJudgment.evaluation.evaluationId",
+     "walkthroughJudgment.evaluation.evaluationInstant",
+     "workItems.capturedAt"
+    ],
+    "stableAcross": [
+     "daemon restart at one evaluation input set"
+    ],
+    "varyingWith": [
+     "butlers revision",
+     "observer revision",
+     "project shape"
+    ]
+   },
+   "freeze": {
+    "objects": 797,
+    "frozen": 124,
+    "unfrozen": [
+     "",
+     "/evaluation",
+     "/evaluation/evidence",
+     "/evaluation/evidence/probe",
+     "/evaluation/evidence/probe/epistemic",
+     "/evaluation/evidence/currencyBounds",
+     "/project",
+     "/entities",
+     "/entities/0",
+     "/entities/0/epistemic"
+    ]
+   },
+   "pages": {
+    "polaris": "6d64b619e5f1f6beddd47482178c7b4dd1495602e802f34855f2c5dd7465e210",
+    "trajectory": "fad733c6c310d49c445a995d00566ca6b032604a6623355b15ff2d06328131dd",
+    "orrery": "b49072ed1b1094d024ef1bfe25596bc3971728de68d611655027ca181751f376",
+    "polaris/m": "c3f5d35335bd23597a6b37c889baad597a64c05845386bac907176af11c530c2",
+    "trajectory/m": "198f9704c011b68b7971fb57f41a811c7d844e810c732ec9d86fa06e162a42d1",
+    "orrery/m": "90b1b1225e05974001e69a6e2a28a9f1cefd505c4789410ff2e9b800d4f2c871"
+   }
+  },
+  {
+   "label": "mutation:unicode",
+   "modelSha256": "bbdeaa5ae2e37bd34a67bed6b97a71478e104bf1043b1b987c82c927a0f6e17b",
+   "modelBytes": 114488,
+   "responseIdentity": {
+    "contentKey": "sha256:2a9484638269cc50114c93f7e3b8e2969149ad1f42548fb5de32430b3125729e",
+    "excludes": [
+     "codeStructure.capturedAt",
+     "evaluation.asOf",
+     "projectShape.authority.evaluationId",
+     "projectShape.authority.evaluationInstant",
+     "projectShape.claim.evaluationId",
+     "projectShape.classes.baseline-spec.claim.evaluationId",
+     "projectShape.classes.catalog-entry.claim.evaluationId",
+     "projectShape.classes.craft-policy.claim.evaluationId",
+     "projectShape.classes.design-contract.claim.evaluationId",
+     "projectShape.classes.principle.claim.evaluationId",
+     "projectShape.classes.project-account-section.claim.evaluationId",
+     "projectShape.classes.roster-identity.claim.evaluationId",
+     "projectShape.classes.success-criterion.claim.evaluationId",
+     "projectShape.classes.topology-component.claim.evaluationId",
+     "projectShape.facts[].claim.evaluationId",
+     "projectShape.identity.capturedAt",
+     "projectShape.identity.deterministicInputs.authority.evaluationId",
+     "projectShape.items[].claim.evaluationId",
+     "projectShape.projectAccount[].claim.evaluationId",
+     "projectShape.sources[].claim.evaluationId",
+     "projectShape.sources[].stamp.capturedAt",
+     "proposedWork.currentAuthority.claim.evaluationId",
+     "walkthroughJudgment.evaluation.evaluationId",
+     "walkthroughJudgment.evaluation.evaluationInstant",
+     "workItems.capturedAt"
+    ],
+    "stableAcross": [
+     "daemon restart at one evaluation input set"
+    ],
+    "varyingWith": [
+     "butlers revision",
+     "observer revision",
+     "project shape"
+    ]
+   },
+   "freeze": {
+    "objects": 977,
+    "frozen": 156,
+    "unfrozen": [
+     "",
+     "/evaluation",
+     "/evaluation/evidence",
+     "/evaluation/evidence/probe",
+     "/evaluation/evidence/probe/epistemic",
+     "/evaluation/evidence/currencyBounds",
+     "/project",
+     "/entities",
+     "/entities/0",
+     "/entities/0/epistemic"
+    ]
+   },
+   "pages": {
+    "polaris": "d7907a41a23f565fbd1898278f1cf1811745be83d4d23d32af1fa75a2bc1a466",
+    "trajectory": "fad733c6c310d49c445a995d00566ca6b032604a6623355b15ff2d06328131dd",
+    "orrery": "b49072ed1b1094d024ef1bfe25596bc3971728de68d611655027ca181751f376",
+    "polaris/m": "3f03d007e4dfdb123910c876a93ba9ccb601dd94f4c252861e19b9b4ae31645f",
+    "trajectory/m": "198f9704c011b68b7971fb57f41a811c7d844e810c732ec9d86fa06e162a42d1",
+    "orrery/m": "90b1b1225e05974001e69a6e2a28a9f1cefd505c4789410ff2e9b800d4f2c871"
+   }
+  },
+  {
+   "label": "mutation:secret-token",
+   "modelSha256": "19cb1030314bfc665c1dbe1e8b56be7103db923ce903add2e3d4c5a596d18d77",
+   "modelBytes": 74686,
+   "responseIdentity": {
+    "contentKey": "sha256:e49716ef12fae94f1b4ff51ffc654768103a2ae790dd9dc581e42edab9be33c2",
+    "excludes": [
+     "codeStructure.capturedAt",
+     "evaluation.asOf",
+     "projectShape.authority.evaluationId",
+     "projectShape.authority.evaluationInstant",
+     "projectShape.claim.evaluationId",
+     "projectShape.classes.baseline-spec.claim.evaluationId",
+     "projectShape.classes.catalog-entry.claim.evaluationId",
+     "projectShape.classes.craft-policy.claim.evaluationId",
+     "projectShape.classes.design-contract.claim.evaluationId",
+     "projectShape.classes.principle.claim.evaluationId",
+     "projectShape.classes.project-account-section.claim.evaluationId",
+     "projectShape.classes.roster-identity.claim.evaluationId",
+     "projectShape.classes.success-criterion.claim.evaluationId",
+     "projectShape.classes.topology-component.claim.evaluationId",
+     "projectShape.facts[].claim.evaluationId",
+     "projectShape.identity.capturedAt",
+     "projectShape.identity.deterministicInputs.authority.evaluationId",
+     "projectShape.items[].claim.evaluationId",
+     "projectShape.projectAccount[].claim.evaluationId",
+     "projectShape.sources[].claim.evaluationId",
+     "projectShape.sources[].stamp.capturedAt",
+     "proposedWork.currentAuthority.claim.evaluationId",
+     "walkthroughJudgment.evaluation.evaluationId",
+     "walkthroughJudgment.evaluation.evaluationInstant",
+     "workItems.capturedAt"
+    ],
+    "stableAcross": [
+     "daemon restart at one evaluation input set"
+    ],
+    "varyingWith": [
+     "butlers revision",
+     "observer revision",
+     "project shape"
+    ]
+   },
+   "freeze": {
+    "objects": 774,
+    "frozen": 124,
+    "unfrozen": [
+     "",
+     "/evaluation",
+     "/evaluation/evidence",
+     "/evaluation/evidence/probe",
+     "/evaluation/evidence/probe/epistemic",
+     "/evaluation/evidence/currencyBounds",
+     "/project",
+     "/entities",
+     "/entities/0",
+     "/entities/0/epistemic"
+    ]
+   },
+   "pages": {
+    "polaris": "ae89deb71387a5f4c3ca21bfacb4cd0bbb7681af0dc9a8730920dd0f9207c005",
+    "trajectory": "fad733c6c310d49c445a995d00566ca6b032604a6623355b15ff2d06328131dd",
+    "orrery": "b49072ed1b1094d024ef1bfe25596bc3971728de68d611655027ca181751f376",
+    "polaris/m": "2170659559d461de549d3f6e0569ee05a70deba75094ed7beba4c9b7981c524d",
+    "trajectory/m": "198f9704c011b68b7971fb57f41a811c7d844e810c732ec9d86fa06e162a42d1",
+    "orrery/m": "90b1b1225e05974001e69a6e2a28a9f1cefd505c4789410ff2e9b800d4f2c871"
+   }
+  },
+  {
+   "label": "mutation:duplicated-row",
+   "modelSha256": "15ce8cd9b9daa44b44ff350a558b5c31ffae8a97a89cf043199be6b57b7ba804",
+   "modelBytes": 133599,
+   "responseIdentity": {
+    "contentKey": "sha256:d3e05a93a36193b14c62bc86432af9d8254eafd0bddfe1688f9ef13c73183c4d",
+    "excludes": [
+     "codeStructure.capturedAt",
+     "evaluation.asOf",
+     "projectShape.authority.evaluationId",
+     "projectShape.authority.evaluationInstant",
+     "projectShape.claim.evaluationId",
+     "projectShape.classes.baseline-spec.claim.evaluationId",
+     "projectShape.classes.catalog-entry.claim.evaluationId",
+     "projectShape.classes.craft-policy.claim.evaluationId",
+     "projectShape.classes.design-contract.claim.evaluationId",
+     "projectShape.classes.principle.claim.evaluationId",
+     "projectShape.classes.project-account-section.claim.evaluationId",
+     "projectShape.classes.roster-identity.claim.evaluationId",
+     "projectShape.classes.success-criterion.claim.evaluationId",
+     "projectShape.classes.topology-component.claim.evaluationId",
+     "projectShape.facts[].claim.evaluationId",
+     "projectShape.identity.capturedAt",
+     "projectShape.identity.deterministicInputs.authority.evaluationId",
+     "projectShape.items[].claim.evaluationId",
+     "projectShape.projectAccount[].claim.evaluationId",
+     "projectShape.sources[].claim.evaluationId",
+     "projectShape.sources[].stamp.capturedAt",
+     "proposedWork.currentAuthority.claim.evaluationId",
+     "walkthroughJudgment.evaluation.evaluationId",
+     "walkthroughJudgment.evaluation.evaluationInstant",
+     "workItems.capturedAt"
+    ],
+    "stableAcross": [
+     "daemon restart at one evaluation input set"
+    ],
+    "varyingWith": [
+     "butlers revision",
+     "observer revision",
+     "project shape"
+    ]
+   },
+   "freeze": {
+    "objects": 1168,
+    "frozen": 156,
+    "unfrozen": [
+     "",
+     "/evaluation",
+     "/evaluation/evidence",
+     "/evaluation/evidence/probe",
+     "/evaluation/evidence/probe/epistemic",
+     "/evaluation/evidence/currencyBounds",
+     "/project",
+     "/entities",
+     "/entities/0",
+     "/entities/0/epistemic"
+    ]
+   },
+   "pages": {
+    "polaris": "b400c73c53020c2edb780131e46a1466080f4c6a0ac469edabc2d644c5479f2f",
+    "trajectory": "fad733c6c310d49c445a995d00566ca6b032604a6623355b15ff2d06328131dd",
+    "orrery": "b49072ed1b1094d024ef1bfe25596bc3971728de68d611655027ca181751f376",
+    "polaris/m": "4d2dcc61bab6074a5ada5df306bffe830fe880c0a6e7883baa2263059098b6fc",
+    "trajectory/m": "198f9704c011b68b7971fb57f41a811c7d844e810c732ec9d86fa06e162a42d1",
+    "orrery/m": "90b1b1225e05974001e69a6e2a28a9f1cefd505c4789410ff2e9b800d4f2c871"
+   }
+  },
+  {
+   "label": "mutation:uppercase",
+   "modelSha256": "4d342ab372471e0c9a70839526f6f76ca68df384b88aabbb7bcf7584858d67f2",
+   "modelBytes": 74566,
+   "responseIdentity": {
+    "contentKey": "sha256:1ae803db37ac41bf3193e34566dad25914fd643ee1c51d36b1f042f3beca6faf",
+    "excludes": [
+     "codeStructure.capturedAt",
+     "evaluation.asOf",
+     "projectShape.authority.evaluationId",
+     "projectShape.authority.evaluationInstant",
+     "projectShape.claim.evaluationId",
+     "projectShape.classes.baseline-spec.claim.evaluationId",
+     "projectShape.classes.catalog-entry.claim.evaluationId",
+     "projectShape.classes.craft-policy.claim.evaluationId",
+     "projectShape.classes.design-contract.claim.evaluationId",
+     "projectShape.classes.principle.claim.evaluationId",
+     "projectShape.classes.project-account-section.claim.evaluationId",
+     "projectShape.classes.roster-identity.claim.evaluationId",
+     "projectShape.classes.success-criterion.claim.evaluationId",
+     "projectShape.classes.topology-component.claim.evaluationId",
+     "projectShape.facts[].claim.evaluationId",
+     "projectShape.identity.capturedAt",
+     "projectShape.identity.deterministicInputs.authority.evaluationId",
+     "projectShape.items[].claim.evaluationId",
+     "projectShape.projectAccount[].claim.evaluationId",
+     "projectShape.sources[].claim.evaluationId",
+     "projectShape.sources[].stamp.capturedAt",
+     "proposedWork.currentAuthority.claim.evaluationId",
+     "walkthroughJudgment.evaluation.evaluationId",
+     "walkthroughJudgment.evaluation.evaluationInstant",
+     "workItems.capturedAt"
+    ],
+    "stableAcross": [
+     "daemon restart at one evaluation input set"
+    ],
+    "varyingWith": [
+     "butlers revision",
+     "observer revision",
+     "project shape"
+    ]
+   },
+   "freeze": {
+    "objects": 774,
+    "frozen": 124,
+    "unfrozen": [
+     "",
+     "/evaluation",
+     "/evaluation/evidence",
+     "/evaluation/evidence/probe",
+     "/evaluation/evidence/probe/epistemic",
+     "/evaluation/evidence/currencyBounds",
+     "/project",
+     "/entities",
+     "/entities/0",
+     "/entities/0/epistemic"
+    ]
+   },
+   "pages": {
+    "polaris": "a108ec434d982dd033a1f302f0a22c6fafc533185316f2294e7988a862faf1f9",
+    "trajectory": "fad733c6c310d49c445a995d00566ca6b032604a6623355b15ff2d06328131dd",
+    "orrery": "b49072ed1b1094d024ef1bfe25596bc3971728de68d611655027ca181751f376",
+    "polaris/m": "97f86a8581c2d31e2dbc45ba9f65ddcc1ff1457d58b45e0d0d91fea19676b92d",
+    "trajectory/m": "198f9704c011b68b7971fb57f41a811c7d844e810c732ec9d86fa06e162a42d1",
+    "orrery/m": "90b1b1225e05974001e69a6e2a28a9f1cefd505c4789410ff2e9b800d4f2c871"
+   }
+  },
+  {
+   "label": "mutation:retitled",
+   "modelSha256": "d9f05313428a2179953f068d24fafc92e362852ff4eab31332d8cacaa5ce101e",
+   "modelBytes": 148693,
+   "responseIdentity": {
+    "contentKey": "sha256:d110f2c6ee43b15ecee5a812e6c7ecda0063e7cc22e8cf169afef894b276a69a",
+    "excludes": [
+     "codeStructure.capturedAt",
+     "evaluation.asOf",
+     "projectShape.authority.evaluationId",
+     "projectShape.authority.evaluationInstant",
+     "projectShape.claim.evaluationId",
+     "projectShape.classes.baseline-spec.claim.evaluationId",
+     "projectShape.classes.catalog-entry.claim.evaluationId",
+     "projectShape.classes.craft-policy.claim.evaluationId",
+     "projectShape.classes.design-contract.claim.evaluationId",
+     "projectShape.classes.principle.claim.evaluationId",
+     "projectShape.classes.project-account-section.claim.evaluationId",
+     "projectShape.classes.roster-identity.claim.evaluationId",
+     "projectShape.classes.success-criterion.claim.evaluationId",
+     "projectShape.classes.topology-component.claim.evaluationId",
+     "projectShape.facts[].claim.evaluationId",
+     "projectShape.identity.capturedAt",
+     "projectShape.identity.deterministicInputs.authority.evaluationId",
+     "projectShape.items[].claim.evaluationId",
+     "projectShape.projectAccount[].claim.evaluationId",
+     "projectShape.sources[].claim.evaluationId",
+     "projectShape.sources[].stamp.capturedAt",
+     "proposedWork.currentAuthority.claim.evaluationId",
+     "walkthroughJudgment.evaluation.evaluationId",
+     "walkthroughJudgment.evaluation.evaluationInstant",
+     "workItems.capturedAt"
+    ],
+    "stableAcross": [
+     "daemon restart at one evaluation input set"
+    ],
+    "varyingWith": [
+     "butlers revision",
+     "observer revision",
+     "project shape"
+    ]
+   },
+   "freeze": {
+    "objects": 1275,
+    "frozen": 156,
+    "unfrozen": [
+     "",
+     "/evaluation",
+     "/evaluation/evidence",
+     "/evaluation/evidence/probe",
+     "/evaluation/evidence/probe/epistemic",
+     "/evaluation/evidence/currencyBounds",
+     "/project",
+     "/entities",
+     "/entities/0",
+     "/entities/0/epistemic"
+    ]
+   },
+   "pages": {
+    "polaris": "5b059e3b7aee3102834b88e829062940ad021943f0eba8299fb39142da5b11ae",
+    "trajectory": "fad733c6c310d49c445a995d00566ca6b032604a6623355b15ff2d06328131dd",
+    "orrery": "b49072ed1b1094d024ef1bfe25596bc3971728de68d611655027ca181751f376",
+    "polaris/m": "b7b98a638a39e33d70cafc739f01b609b6b857e8e6ae68c9981cfe8bdccfaca9",
+    "trajectory/m": "198f9704c011b68b7971fb57f41a811c7d844e810c732ec9d86fa06e162a42d1",
+    "orrery/m": "90b1b1225e05974001e69a6e2a28a9f1cefd505c4789410ff2e9b800d4f2c871"
+   }
+  },
+  {
+   "label": "mutation+judgment:agent-claim",
+   "modelSha256": "93e81864a11343ccafc54d8370f0921681858249896375623bef5b7df1ab29da",
+   "modelBytes": 152095,
+   "responseIdentity": {
+    "contentKey": "sha256:b80b4fdaee134bd8c83d94b00f34626a321515be475848d0f464d6ebff6d794e",
+    "excludes": [
+     "codeStructure.capturedAt",
+     "evaluation.asOf",
+     "projectShape.authority.evaluationId",
+     "projectShape.authority.evaluationInstant",
+     "projectShape.claim.evaluationId",
+     "projectShape.classes.baseline-spec.claim.evaluationId",
+     "projectShape.classes.catalog-entry.claim.evaluationId",
+     "projectShape.classes.craft-policy.claim.evaluationId",
+     "projectShape.classes.design-contract.claim.evaluationId",
+     "projectShape.classes.principle.claim.evaluationId",
+     "projectShape.classes.project-account-section.claim.evaluationId",
+     "projectShape.classes.roster-identity.claim.evaluationId",
+     "projectShape.classes.success-criterion.claim.evaluationId",
+     "projectShape.classes.topology-component.claim.evaluationId",
+     "projectShape.facts[].claim.evaluationId",
+     "projectShape.identity.capturedAt",
+     "projectShape.identity.deterministicInputs.authority.evaluationId",
+     "projectShape.items[].claim.evaluationId",
+     "projectShape.projectAccount[].claim.evaluationId",
+     "projectShape.sources[].claim.evaluationId",
+     "projectShape.sources[].stamp.capturedAt",
+     "proposedWork.currentAuthority.claim.evaluationId",
+     "walkthroughJudgment.evaluation.evaluationId",
+     "walkthroughJudgment.evaluation.evaluationInstant",
+     "workItems.capturedAt"
+    ],
+    "stableAcross": [
+     "daemon restart at one evaluation input set"
+    ],
+    "varyingWith": [
+     "butlers revision",
+     "observer revision",
+     "project shape"
+    ]
+   },
+   "freeze": {
+    "objects": 1313,
+    "frozen": 161,
+    "unfrozen": [
+     "",
+     "/evaluation",
+     "/evaluation/evidence",
+     "/evaluation/evidence/probe",
+     "/evaluation/evidence/probe/epistemic",
+     "/evaluation/evidence/currencyBounds",
+     "/project",
+     "/entities",
+     "/entities/0",
+     "/entities/0/epistemic"
+    ]
+   },
+   "pages": {
+    "polaris": "26b76c9fe89ee0cf31651fdc68f95f64aade46e11f51c51a507a1fa48ceec6a7",
+    "trajectory": "fad733c6c310d49c445a995d00566ca6b032604a6623355b15ff2d06328131dd",
+    "orrery": "b49072ed1b1094d024ef1bfe25596bc3971728de68d611655027ca181751f376",
+    "polaris/m": "fa2bf117c742f22ae1b3841f19114ca590bf164c7ebd26fc03f045f3ce586936",
+    "trajectory/m": "198f9704c011b68b7971fb57f41a811c7d844e810c732ec9d86fa06e162a42d1",
+    "orrery/m": "90b1b1225e05974001e69a6e2a28a9f1cefd505c4789410ff2e9b800d4f2c871"
+   }
+  },
+  {
+   "label": "mutation+judgment:crlf",
+   "modelSha256": "006e0dac1ac0298895976d17c8caadab97632f1a158cc05b22e53a206b8558c5",
+   "modelBytes": 151279,
+   "responseIdentity": {
+    "contentKey": "sha256:8e965db64d6362b9b2a9286718a73f2b277219a44f54597941b64b4d25107a22",
+    "excludes": [
+     "codeStructure.capturedAt",
+     "evaluation.asOf",
+     "projectShape.authority.evaluationId",
+     "projectShape.authority.evaluationInstant",
+     "projectShape.claim.evaluationId",
+     "projectShape.classes.baseline-spec.claim.evaluationId",
+     "projectShape.classes.catalog-entry.claim.evaluationId",
+     "projectShape.classes.craft-policy.claim.evaluationId",
+     "projectShape.classes.design-contract.claim.evaluationId",
+     "projectShape.classes.principle.claim.evaluationId",
+     "projectShape.classes.project-account-section.claim.evaluationId",
+     "projectShape.classes.roster-identity.claim.evaluationId",
+     "projectShape.classes.success-criterion.claim.evaluationId",
+     "projectShape.classes.topology-component.claim.evaluationId",
+     "projectShape.facts[].claim.evaluationId",
+     "projectShape.identity.capturedAt",
+     "projectShape.identity.deterministicInputs.authority.evaluationId",
+     "projectShape.items[].claim.evaluationId",
+     "projectShape.projectAccount[].claim.evaluationId",
+     "projectShape.sources[].claim.evaluationId",
+     "projectShape.sources[].stamp.capturedAt",
+     "proposedWork.currentAuthority.claim.evaluationId",
+     "walkthroughJudgment.evaluation.evaluationId",
+     "walkthroughJudgment.evaluation.evaluationInstant",
+     "workItems.capturedAt"
+    ],
+    "stableAcross": [
+     "daemon restart at one evaluation input set"
+    ],
+    "varyingWith": [
+     "butlers revision",
+     "observer revision",
+     "project shape"
+    ]
+   },
+   "freeze": {
+    "objects": 1313,
+    "frozen": 161,
+    "unfrozen": [
+     "",
+     "/evaluation",
+     "/evaluation/evidence",
+     "/evaluation/evidence/probe",
+     "/evaluation/evidence/probe/epistemic",
+     "/evaluation/evidence/currencyBounds",
+     "/project",
+     "/entities",
+     "/entities/0",
+     "/entities/0/epistemic"
+    ]
+   },
+   "pages": {
+    "polaris": "9945d9ba5d5a7bf760c462d7b8d0d6936287d5eaf7753e2036c6963f60961db4",
+    "trajectory": "fad733c6c310d49c445a995d00566ca6b032604a6623355b15ff2d06328131dd",
+    "orrery": "b49072ed1b1094d024ef1bfe25596bc3971728de68d611655027ca181751f376",
+    "polaris/m": "a4b611ecffb88b1004915bb8f758f5f3291ba40d40df7cd7db16013e39288796",
+    "trajectory/m": "198f9704c011b68b7971fb57f41a811c7d844e810c732ec9d86fa06e162a42d1",
+    "orrery/m": "90b1b1225e05974001e69a6e2a28a9f1cefd505c4789410ff2e9b800d4f2c871"
+   }
+  }
+ ],
+ "helpers": {
+  "gates": [
+   {
+    "label": "body-read-authority",
+    "sha256": "a3c4b63a2dc6bb5faa7700faaaadb0673e86ab8ce9ba9cd9511bc7e10828e467",
+    "freeze": {
+     "objects": 4,
+     "frozen": 4,
+     "unfrozen": []
+    }
+   },
+   {
+    "label": "walkthrough-judgment",
+    "sha256": "4f94464d6324710e168d8ee595e0a491a05ba87226713673882168c42a0e14cf",
+    "freeze": {
+     "objects": 2,
+     "frozen": 2,
+     "unfrozen": []
+    }
+   }
+  ],
+  "contentDigests": [
+   "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "sha256:6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+   "sha256:1951c7860e968e742658b3af34e60741eb4aaf2a8d2ecc3993727016b12e81e8",
+   "sha256:40aff2e9d2d8922e47afd4648e6967497158785fbd1da870e7110266bf944880",
+   "sha256:c28fd01d14b4be3a3047f5fd75e76dd5d06a864d5e47db0aa3017f5a8c346024",
+   "sha256:66915c0872933db504e7578828dd85b7e74a4e0a061f9756793b89c4151bd4b5",
+   "sha256:eddf68639913a3cb8331cdfe7f87559e0beccf2c289c0d90ac4d89b3204004f8"
+  ],
+  "drafts": [
+   {
+    "kind": "drafted",
+    "draft": {
+     "status": "draft-binds-nothing",
+     "actType": "policy",
+     "reason": "no-currency-bound-declared",
+     "subject": "Adopt policy for .syzygy/policies/q.yaml",
+     "ceremonyPhrase": "ADOPT POLICY .syzygy/policies/q.yaml: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "artifactPath": ".syzygy/policies/q.yaml",
+     "frozenDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "claims": [
+      {
+       "claimId": "claim:a",
+       "from": "no-currency-bound-declared",
+       "to": "reason-discharged-pending-new-evaluation"
+      }
+     ]
+    }
+   },
+   {
+    "kind": "drafted",
+    "draft": {
+     "status": "draft-binds-nothing",
+     "actType": "policy",
+     "reason": "no-currency-bound-declared",
+     "subject": "Adopt policy for .syzygy/policies/q.yaml",
+     "ceremonyPhrase": "ADOPT POLICY .syzygy/policies/q.yaml: ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb",
+     "artifactPath": ".syzygy/policies/q.yaml",
+     "frozenDigest": "ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb",
+     "claims": [
+      {
+       "claimId": "claim:a",
+       "from": "no-currency-bound-declared",
+       "to": "reason-discharged-pending-new-evaluation"
+      }
+     ]
+    }
+   },
+   {
+    "kind": "drafted",
+    "draft": {
+     "status": "draft-binds-nothing",
+     "actType": "policy",
+     "reason": "no-currency-bound-declared",
+     "subject": "Adopt policy for .syzygy/policies/q.yaml",
+     "ceremonyPhrase": "ADOPT POLICY .syzygy/policies/q.yaml: 9ce17e548abcb5775b7d90d550badde852e75c04b72e1b0129e2f8b3bf4433dd",
+     "artifactPath": ".syzygy/policies/q.yaml",
+     "frozenDigest": "9ce17e548abcb5775b7d90d550badde852e75c04b72e1b0129e2f8b3bf4433dd",
+     "claims": [
+      {
+       "claimId": "claim:a",
+       "from": "no-currency-bound-declared",
+       "to": "reason-discharged-pending-new-evaluation"
+      }
+     ]
+    }
+   },
+   {
+    "kind": "drafted",
+    "draft": {
+     "status": "draft-binds-nothing",
+     "actType": "policy",
+     "reason": "no-currency-bound-declared",
+     "subject": "Adopt policy for .syzygy/policies/q.yaml",
+     "ceremonyPhrase": "ADOPT POLICY .syzygy/policies/q.yaml: 1184d1f608158eea09d297565575892231550c403aaa913008d867a97cfd5c76",
+     "artifactPath": ".syzygy/policies/q.yaml",
+     "frozenDigest": "1184d1f608158eea09d297565575892231550c403aaa913008d867a97cfd5c76",
+     "claims": [
+      {
+       "claimId": "claim:a",
+       "from": "no-currency-bound-declared",
+       "to": "reason-discharged-pending-new-evaluation"
+      }
+     ]
+    }
+   },
+   {
+    "kind": "drafted",
+    "draft": {
+     "status": "draft-binds-nothing",
+     "actType": "policy",
+     "reason": "no-currency-bound-declared",
+     "subject": "Adopt policy for .syzygy/policies/q.yaml",
+     "ceremonyPhrase": "ADOPT POLICY .syzygy/policies/q.yaml: d69e68988157833272305aaf21f453c800346e8a3640db6578e260215542e5d4",
+     "artifactPath": ".syzygy/policies/q.yaml",
+     "frozenDigest": "d69e68988157833272305aaf21f453c800346e8a3640db6578e260215542e5d4",
+     "claims": [
+      {
+       "claimId": "claim:a",
+       "from": "no-currency-bound-declared",
+       "to": "reason-discharged-pending-new-evaluation"
+      }
+     ]
+    }
+   },
+   {
+    "kind": "drafted",
+    "draft": {
+     "status": "draft-binds-nothing",
+     "actType": "policy",
+     "reason": "no-currency-bound-declared",
+     "subject": "Adopt policy for .syzygy/policies/q.yaml",
+     "ceremonyPhrase": "ADOPT POLICY .syzygy/policies/q.yaml: 59b271ae1bbcb1d31d41929817f4b16fb439eb4f31520b5ad1d5ce98920a7138",
+     "artifactPath": ".syzygy/policies/q.yaml",
+     "frozenDigest": "59b271ae1bbcb1d31d41929817f4b16fb439eb4f31520b5ad1d5ce98920a7138",
+     "claims": [
+      {
+       "claimId": "claim:a",
+       "from": "no-currency-bound-declared",
+       "to": "reason-discharged-pending-new-evaluation"
+      }
+     ]
+    }
+   },
+   {
+    "kind": "drafted",
+    "draft": {
+     "status": "draft-binds-nothing",
+     "actType": "policy",
+     "reason": "no-currency-bound-declared",
+     "subject": "Adopt policy for .syzygy/policies/q.yaml",
+     "ceremonyPhrase": "ADOPT POLICY .syzygy/policies/q.yaml: 83d544ccc223c057d2bf80d3f2a32982c32c3c0db8e2674820da5064783fb097",
+     "artifactPath": ".syzygy/policies/q.yaml",
+     "frozenDigest": "83d544ccc223c057d2bf80d3f2a32982c32c3c0db8e2674820da5064783fb097",
+     "claims": [
+      {
+       "claimId": "claim:a",
+       "from": "no-currency-bound-declared",
+       "to": "reason-discharged-pending-new-evaluation"
+      }
+     ]
+    }
+   }
+  ],
+  "digests": [
+   {
+    "encoding": "polaris-json-v1",
+    "algorithm": "sha256",
+    "digest": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b"
+   },
+   {
+    "encoding": "polaris-json-v1",
+    "algorithm": "sha256",
+    "digest": "b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b"
+   },
+   {
+    "encoding": "polaris-json-v1",
+    "algorithm": "sha256",
+    "digest": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9"
+   },
+   {
+    "encoding": "polaris-json-v1",
+    "algorithm": "sha256",
+    "digest": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9"
+   },
+   {
+    "encoding": "polaris-json-v1",
+    "algorithm": "sha256",
+    "digest": "9f29a130438b81170b92a42650f9a94291ecad60bd47af2a3886e75f7f728725"
+   },
+   {
+    "encoding": "polaris-json-v1",
+    "algorithm": "sha256",
+    "digest": "ac8d8342bbb2362d13f0a559a3621bb407011368895164b628a54f7fc33fc43c"
+   },
+   {
+    "encoding": "polaris-json-v1",
+    "algorithm": "sha256",
+    "digest": "5120b0dbdd5539f03b48389a6740c87aa497758ca96b3d69165453c9e01f3235"
+   },
+   {
+    "encoding": "polaris-json-v1",
+    "algorithm": "sha256",
+    "digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+   },
+   {
+    "encoding": "polaris-json-v1",
+    "algorithm": "sha256",
+    "digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+   },
+   {
+    "encoding": "polaris-json-v1",
+    "algorithm": "sha256",
+    "digest": "515b8578d7e3f9401f4013b481191a4df6373a4b37fc3e565abd5085344c927f"
+   },
+   {
+    "encoding": "polaris-json-v1",
+    "algorithm": "sha256",
+    "digest": "9e4e37de53ac3009c5e14c6f9d22d9372b8cccaf91d593339565e759e09a861f"
+   },
+   {
+    "encoding": "polaris-json-v1",
+    "algorithm": "sha256",
+    "digest": "e90f4a4d679216444143e6203fac7c216e983659cadd53d21de29d59d55acbb3"
+   },
+   {
+    "encoding": "polaris-json-v1",
+    "algorithm": "sha256",
+    "digest": "a5e1fc9667c7355efe213621cecd02c9b9c06fab167c725348c90ab30c06e242"
+   }
+  ],
+  "refused": [
+   {
+    "refused": "unsupported-value"
+   },
+   {
+    "refused": "unsupported-value"
+   },
+   {
+    "refused": "unsupported-value"
+   },
+   {
+    "refused": "unsupported-value"
+   },
+   {
+    "encoding": "polaris-json-v1",
+    "algorithm": "sha256",
+    "digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+   },
+   {
+    "refused": "unsupported-object"
+   },
+   {
+    "refused": "unsupported-property"
+   }
+  ],
+  "limitsDigests": [
+   "sha256:2826b03cf94b1de4e868fb88042d49f6e11f182f513c2bf8dfbe764b4581b5ad",
+   "sha256:098894b9ecac065eb9b19f2eb29de8d77623ce21d54b60d8ec32623973ae27d0",
+   "sha256:af54fdfdc7b945d14b28492225ddec0f6211ab05da831cf6a85655d0777acba2",
+   "sha256:20e32050d35956fa7f1f940cb42fb5892badba64680e9af5f61cf329f9f1f3ce",
+   "sha256:2b638d3303380c1b7246fefdc8a7df564de94cdaabb1fca1482a87c7d8832118",
+   "sha256:2a8814bda517b4e363c27941a79c01477eeba241252197792d2cd6c85c90d1a6",
+   "sha256:5458c3d84e11ec61553722d90a34757f722bc499bf0912496662fe100dded48c",
+   "sha256:644acb34cf38e14355ca3ed734bf8cac248867f78d0cca82e4da5bdd9ec409dd"
+  ]
+ }
+}

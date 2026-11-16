@@ -1,0 +1,573 @@
+{
+ "subject": "export_gate.py",
+ "subjectSha256": "304ee0aada125b20f9493ff115488a782b2ac31e1e82b07639e72f886287ce60",
+ "ranAtCommit": "695bf136da35dc9d94bf4abf80c709f3d4244adb",
+ "unmutatedSelftestLast": "selftest: 13 of 13 cases hold",
+ "treeMutants": {
+  "sampledFiles": 34,
+  "sampledNames": 35,
+  "declarationKindsInList": [
+   "const",
+   "function",
+   "interface",
+   "type"
+  ],
+  "placed": 35,
+  "killed": 35,
+  "kindsCovered": [
+   "const",
+   "function",
+   "interface",
+   "type"
+  ],
+  "survivors": [],
+  "unplaced": [],
+  "records": [
+   {
+    "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+    "name": "ArtifactParse",
+    "kind": "type",
+    "old": "type ArtifactParse",
+    "new": "export type ArtifactParse",
+    "placed": true,
+    "gateHolds": false,
+    "violationsNamingIt": 1,
+    "killed": true
+   },
+   {
+    "file": "packages/three-surface-poc-core/src/authority-disclosure.ts",
+    "name": "AuthorityMayNot",
+    "kind": "interface",
+    "old": "interface AuthorityMayNot",
+    "new": "export interface AuthorityMayNot",
+    "placed": true,
+    "gateHolds": false,
+    "violationsNamingIt": 1,
+    "killed": true
+   },
+   {
+    "file": "packages/three-surface-poc-core/src/authority-disclosure.ts",
+    "name": "discloseAuthorityState",
+    "kind": "function",
+    "old": "function discloseAuthorityState",
+    "new": "export function discloseAuthorityState",
+    "placed": true,
+    "gateHolds": false,
+    "violationsNamingIt": 1,
+    "killed": true
+   },
+   {
+    "file": "packages/three-surface-poc-core/src/body-read-authority.ts",
+    "name": "AuthorityExpectation",
+    "kind": "interface",
+    "old": "interface AuthorityExpectation",
+    "new": "export interface AuthorityExpectation",
+    "placed": true,
+    "gateHolds": false,
+    "violationsNamingIt": 1,
+    "killed": true
+   },
+   {
+    "file": "packages/three-surface-poc-core/src/code-structure.ts",
+    "name": "CODE_LANGUAGE_CLASSIFICATIONS",
+    "kind": "const",
+    "old": "const CODE_LANGUAGE_CLASSIFICATIONS",
+    "new": "export const CODE_LANGUAGE_CLASSIFICATIONS",
+    "placed": true,
+    "gateHolds": false,
+    "violationsNamingIt": 1,
+    "killed": true
+   },
+   {
+    "file": "packages/three-surface-poc-core/src/content-classification.ts",
+    "name": "ClassifiedPopulation",
+    "kind": "interface",
+    "old": "interface ClassifiedPopulation",
+    "new": "export interface ClassifiedPopulation",
+    "placed": true,
+    "gateHolds": false,
+    "violationsNamingIt": 1,
+    "killed": true
+   },
+   {
+    "file": "packages/three-surface-poc-core/src/effect-authority.ts",
+    "name": "FORECLOSED_EFFECTS",
+    "kind": "const",
+    "old": "const FORECLOSED_EFFECTS",
+    "new": "export const FORECLOSED_EFFECTS",
+    "placed": true,
+    "gateHolds": false,
+    "violationsNamingIt": 1,
+    "killed": true
+   },
+   {
+    "file": "packages/three-surface-poc-core/src/evidence-population.ts",
+    "name": "PopulationBlock",
+    "kind": "interface",
+    "old": "interface PopulationBlock",
+    "new": "export interface PopulationBlock",
+    "placed": true,
+    "gateHolds": false,
+    "violationsNamingIt": 1,
+    "killed": true
+   },
+   {
+    "file": "packages/three-surface-poc-core/src/git-object-reader.ts",
+    "name": "ActiveContentFinding",
+    "kind": "interface",
+    "old": "interface ActiveContentFinding",
+    "new": "export interface ActiveContentFinding",
+    "placed": true,
+    "gateHolds": false,
+    "violationsNamingIt": 1,
+    "killed": true
+   },
+   {
+    "file": "packages/three-surface-poc-core/src/git-tree.ts",
+    "name": "GIT_TREE_OBJECT_TYPES",
+    "kind": "const",
+    "old": "const GIT_TREE_OBJECT_TYPES",
+    "new": "export const GIT_TREE_OBJECT_TYPES",
+    "placed": true,
+    "gateHolds": false,
+    "violationsNamingIt": 1,
+    "killed": true
+   },
+   {
+    "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+    "name": "CodeContextRecognition",
+    "kind": "interface",
+    "old": "interface CodeContextRecognition",
+    "new": "export interface CodeContextRecognition",
+    "placed": true,
+    "gateHolds": false,
+    "violationsNamingIt": 1,
+    "killed": true
+   },
+   {
+    "file": "packages/three-surface-poc-core/src/materialization.ts",
+    "name": "BuildDispatchDisclosureInput",
+    "kind": "interface",
+    "old": "interface BuildDispatchDisclosureInput",
+    "new": "export interface BuildDispatchDisclosureInput",
+    "placed": true,
+    "gateHolds": false,
+    "violationsNamingIt": 1,
+    "killed": true
+   },
+   {
+    "file": "packages/three-surface-poc-core/src/model.ts",
+    "name": "CurrencyProbe",
+    "kind": "interface",
+    "old": "interface CurrencyProbe",
+    "new": "export interface CurrencyProbe",
+    "placed": true,
+    "gateHolds": false,
+    "violationsNamingIt": 1,
+    "killed": true
+   },
+   {
+    "file": "packages/three-surface-poc-core/src/orrery-projection.ts",
+    "name": "OrreryDistrict",
+    "kind": "interface",
+    "old": "interface OrreryDistrict",
+    "new": "export interface OrreryDistrict",
+    "placed": true,
+    "gateHolds": false,
+    "violationsNamingIt": 1,
+    "killed": true
+   },
+   {
+    "file": "packages/three-surface-poc-core/src/owner-act-record.ts",
+    "name": "A1Field",
+    "kind": "type",
+    "old": "type A1Field",
+    "new": "export type A1Field",
+    "placed": true,
+    "gateHolds": false,
+    "violationsNamingIt": 1,
+    "killed": true
+   },
+   {
+    "file": "packages/three-surface-poc-core/src/poc-seeds.ts",
+    "name": "PocSeedArtifacts",
+    "kind": "interface",
+    "old": "interface PocSeedArtifacts",
+    "new": "export interface PocSeedArtifacts",
+    "placed": true,
+    "gateHolds": false,
+    "violationsNamingIt": 1,
+    "killed": true
+   },
+   {
+    "file": "packages/three-surface-poc-core/src/project-shape-coverage.ts",
+    "name": "ConsideredRule",
+    "kind": "interface",
+    "old": "interface ConsideredRule",
+    "new": "export interface ConsideredRule",
+    "placed": true,
+    "gateHolds": false,
+    "violationsNamingIt": 1,
+    "killed": true
+   },
+   {
+    "file": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+    "name": "AdmittedLayerRule",
+    "kind": "interface",
+    "old": "interface AdmittedLayerRule",
+    "new": "export interface AdmittedLayerRule",
+    "placed": true,
+    "gateHolds": false,
+    "violationsNamingIt": 1,
+    "killed": true
+   },
+   {
+    "file": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+    "name": "DeclaredPillarRoots",
+    "kind": "type",
+    "old": "type DeclaredPillarRoots",
+    "new": "export type DeclaredPillarRoots",
+    "placed": true,
+    "gateHolds": false,
+    "violationsNamingIt": 1,
+    "killed": true
+   },
+   {
+    "file": "packages/three-surface-poc-core/src/project-shape-model.ts",
+    "name": "ProjectShapeBuildInput",
+    "kind": "interface",
+    "old": "interface ProjectShapeBuildInput",
+    "new": "export interface ProjectShapeBuildInput",
+    "placed": true,
+    "gateHolds": false,
+    "violationsNamingIt": 1,
+    "killed": true
+   },
+   {
+    "file": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+    "name": "AuthorityInputIdentity",
+    "kind": "type",
+    "old": "type AuthorityInputIdentity",
+    "new": "export type AuthorityInputIdentity",
+    "placed": true,
+    "gateHolds": false,
+    "violationsNamingIt": 1,
+    "killed": true
+   },
+   {
+    "file": "packages/three-surface-poc-core/src/project-shape-observer.ts",
+    "name": "ProjectShapeObservation",
+    "kind": "type",
+    "old": "type ProjectShapeObservation",
+    "new": "export type ProjectShapeObservation",
+    "placed": true,
+    "gateHolds": false,
+    "violationsNamingIt": 1,
+    "killed": true
+   },
+   {
+    "file": "packages/three-surface-poc-core/src/proposed-work.ts",
+    "name": "DeriveProposedWorkInput",
+    "kind": "interface",
+    "old": "interface DeriveProposedWorkInput",
+    "new": "export interface DeriveProposedWorkInput",
+    "placed": true,
+    "gateHolds": false,
+    "violationsNamingIt": 1,
+    "killed": true
+   },
+   {
+    "file": "packages/three-surface-poc-core/src/reevaluation.ts",
+    "name": "EvaluationClocks",
+    "kind": "interface",
+    "old": "interface EvaluationClocks",
+    "new": "export interface EvaluationClocks",
+    "placed": true,
+    "gateHolds": false,
+    "violationsNamingIt": 1,
+    "killed": true
+   },
+   {
+    "file": "packages/three-surface-poc-core/src/resource-headroom.ts",
+    "name": "RESOURCE_COST_ID",
+    "kind": "const",
+    "old": "const RESOURCE_COST_ID",
+    "new": "export const RESOURCE_COST_ID",
+    "placed": true,
+    "gateHolds": false,
+    "violationsNamingIt": 1,
+    "killed": true
+   },
+   {
+    "file": "packages/three-surface-poc-core/src/resource-ledger.ts",
+    "name": "TransientBody",
+    "kind": "interface",
+    "old": "interface TransientBody",
+    "new": "export interface TransientBody",
+    "placed": true,
+    "gateHolds": false,
+    "violationsNamingIt": 1,
+    "killed": true
+   },
+   {
+    "file": "packages/three-surface-poc-core/src/response-identity.ts",
+    "name": "RESPONSE_IDENTITY_EXCLUDES",
+    "kind": "const",
+    "old": "const RESPONSE_IDENTITY_EXCLUDES",
+    "new": "export const RESPONSE_IDENTITY_EXCLUDES",
+    "placed": true,
+    "gateHolds": false,
+    "violationsNamingIt": 1,
+    "killed": true
+   },
+   {
+    "file": "packages/three-surface-poc-core/src/synthetic-corpus-coverage.ts",
+    "name": "ClassCellResult",
+    "kind": "interface",
+    "old": "interface ClassCellResult",
+    "new": "export interface ClassCellResult",
+    "placed": true,
+    "gateHolds": false,
+    "violationsNamingIt": 1,
+    "killed": true
+   },
+   {
+    "file": "packages/three-surface-poc-core/src/test-artifact-verification.ts",
+    "name": "BuildOperatorReportedRecordInput",
+    "kind": "interface",
+    "old": "interface BuildOperatorReportedRecordInput",
+    "new": "export interface BuildOperatorReportedRecordInput",
+    "placed": true,
+    "gateHolds": false,
+    "violationsNamingIt": 1,
+    "killed": true
+   },
+   {
+    "file": "packages/three-surface-poc-core/src/test-cleanup.ts",
+    "name": "CleanupRemoveOptions",
+    "kind": "interface",
+    "old": "interface CleanupRemoveOptions",
+    "new": "export interface CleanupRemoveOptions",
+    "placed": true,
+    "gateHolds": false,
+    "violationsNamingIt": 1,
+    "killed": true
+   },
+   {
+    "file": "packages/three-surface-poc-core/src/trajectory-projection.ts",
+    "name": "ProjectTrajectoryOptions",
+    "kind": "interface",
+    "old": "interface ProjectTrajectoryOptions",
+    "new": "export interface ProjectTrajectoryOptions",
+    "placed": true,
+    "gateHolds": false,
+    "violationsNamingIt": 1,
+    "killed": true
+   },
+   {
+    "file": "packages/three-surface-poc-core/src/walkthrough-judgment.ts",
+    "name": "GOVERNANCE_HOME_INVALID_CASES",
+    "kind": "const",
+    "old": "const GOVERNANCE_HOME_INVALID_CASES",
+    "new": "export const GOVERNANCE_HOME_INVALID_CASES",
+    "placed": true,
+    "gateHolds": false,
+    "violationsNamingIt": 1,
+    "killed": true
+   },
+   {
+    "file": "packages/three-surface-poc-core/src/walkthrough-readiness.ts",
+    "name": "ANSWERS_SECTION",
+    "kind": "const",
+    "old": "const ANSWERS_SECTION",
+    "new": "export const ANSWERS_SECTION",
+    "placed": true,
+    "gateHolds": false,
+    "violationsNamingIt": 1,
+    "killed": true
+   },
+   {
+    "file": "packages/three-surface-poc-core/src/work-items.ts",
+    "name": "ObserveWorkItemsInput",
+    "kind": "interface",
+    "old": "interface ObserveWorkItemsInput",
+    "new": "export interface ObserveWorkItemsInput",
+    "placed": true,
+    "gateHolds": false,
+    "violationsNamingIt": 1,
+    "killed": true
+   },
+   {
+    "file": "packages/three-surface-poc-core/src/worker-change-observation.ts",
+    "name": "ObserveWorkerChangeInput",
+    "kind": "interface",
+    "old": "interface ObserveWorkerChangeInput",
+    "new": "export interface ObserveWorkerChangeInput",
+    "placed": true,
+    "gateHolds": false,
+    "violationsNamingIt": 1,
+    "killed": true
+   }
+  ]
+ },
+ "toolMutants": {
+  "mutants": 13,
+  "killed": 13,
+  "survivors": [],
+  "records": [
+   {
+    "id": "dead-exports-not-held",
+    "old": "HOLDS = ('self-only', 'dead')",
+    "new": "HOLDS = ('self-only',)",
+    "exitCode": 1,
+    "killed": true,
+    "failedCases": [
+     "FAIL  uncited, machine-record-only and unused names are violations: {'keptByMachineRecordOnly', 'keptByNothing'}"
+    ],
+    "crash": null
+   },
+   {
+    "id": "no-citer-counts-as-exception",
+    "old": "(exceptions if counted else violations).append(entry)",
+    "new": "(exceptions if True else violations).append(entry)",
+    "exitCode": 1,
+    "killed": true,
+    "failedCases": [
+     "FAIL  a name cited by a doc is an exception: {'keptByNothing', 'useAll', 'sharedA', 'keptByDoc', 'keptByMachineRecordOnly'}",
+     "FAIL  uncited, machine-record-only and unused names are violations: set()"
+    ],
+    "crash": null
+   },
+   {
+    "id": "every-citer-counts-as-exception-inverted",
+    "old": "(exceptions if counted else violations).append(entry)",
+    "new": "(violations if counted else exceptions).append(entry)",
+    "exitCode": 1,
+    "killed": true,
+    "failedCases": [
+     "FAIL  a name cited by a doc is an exception: {'sharedA', 'keptByMachineRecordOnly', 'keptByNothing', 'useAll'}",
+     "FAIL  uncited, machine-record-only and unused names are violations: {'keptByDoc'}"
+    ],
+    "crash": null
+   },
+   {
+    "id": "machine-records-never-recognised",
+    "old": "return any(rx.search(path) for rx, _ in MACHINE_RECORDS)",
+    "new": "return False",
+    "exitCode": 1,
+    "killed": true,
+    "failedCases": [
+     "FAIL  a name cited by a doc is an exception: {'keptByDoc', 'keptByNothing', 'keptByMachineRecordOnly'}",
+     "FAIL  uncited, machine-record-only and unused names are violations: {'sharedA', 'useAll'}"
+    ],
+    "crash": null
+   },
+   {
+    "id": "every-path-is-a-machine-record",
+    "old": "return any(rx.search(path) for rx, _ in MACHINE_RECORDS)",
+    "new": "return True",
+    "exitCode": 1,
+    "killed": true,
+    "failedCases": [
+     "FAIL  a name cited by a doc is an exception: set()",
+     "FAIL  uncited, machine-record-only and unused names are violations: {'keptByDoc', 'keptByMachineRecordOnly', 'sharedA', 'keptByNothing', 'useAll'}",
+     "FAIL  a tree whose only held name is cited by a doc passes: [{'file': 'pkg/src/a.ts', 'name': 'held', 'class': 'self-only', 'citers': [], 'machineRecordCitersOnly': True, 'machineRecordCiters': 1}]"
+    ],
+    "crash": null
+   },
+   {
+    "id": "evidence-rule-narrowed-to-json-only",
+    "old": "re.compile(r'^docs/evidence/.*\\.(json|jsonl|diff|patch|txt|log|py)$')",
+    "new": "re.compile(r'^docs/evidence/.*\\.jsonl$')",
+    "exitCode": 1,
+    "killed": true,
+    "failedCases": [
+     "FAIL  a name cited by a doc is an exception: {'keptByNothing', 'keptByDoc', 'keptByMachineRecordOnly'}",
+     "FAIL  uncited, machine-record-only and unused names are violations: {'sharedA', 'useAll'}"
+    ],
+    "crash": null
+   },
+   {
+    "id": "parse-tree-population-replaced-by-census",
+    "old": "only_census, only_parsed = sorted(census_set - parsed_set), sorted(parsed_set - census_set)",
+    "new": "only_census, only_parsed = [], []",
+    "exitCode": 1,
+    "killed": true,
+    "failedCases": [
+     "FAIL  a statement declaring several names is a cross-check mismatch: []"
+    ],
+    "crash": null
+   },
+   {
+    "id": "citer-methods-agreement-ignored",
+    "old": "return methods_agree and not violations and not only_census and not only_parsed",
+    "new": "return not violations and not only_census and not only_parsed",
+    "exitCode": 1,
+    "killed": true,
+    "failedCases": [
+     "FAIL  verdict fails when the citer methods disagree"
+    ],
+    "crash": null
+   },
+   {
+    "id": "violations-ignored",
+    "old": "return methods_agree and not violations and not only_census and not only_parsed",
+    "new": "return methods_agree and not only_census and not only_parsed",
+    "exitCode": 1,
+    "killed": true,
+    "failedCases": [
+     "FAIL  verdict fails on a violation"
+    ],
+    "crash": null
+   },
+   {
+    "id": "census-only-names-ignored",
+    "old": "return methods_agree and not violations and not only_census and not only_parsed",
+    "new": "return methods_agree and not violations and not only_parsed",
+    "exitCode": 1,
+    "killed": true,
+    "failedCases": [
+     "FAIL  verdict fails on a name only the census has"
+    ],
+    "crash": null
+   },
+   {
+    "id": "parse-tree-only-names-ignored",
+    "old": "return methods_agree and not violations and not only_census and not only_parsed",
+    "new": "return methods_agree and not violations and not only_census",
+    "exitCode": 1,
+    "killed": true,
+    "failedCases": [
+     "FAIL  verdict fails on a name only the parse tree has"
+    ],
+    "crash": null
+   },
+   {
+    "id": "git-grep-citers-dropped",
+    "old": "if sep and match in by_grep:\n            by_grep[match].add(path)",
+    "new": "if False:\n            by_grep[match].add(path)",
+    "exitCode": 1,
+    "killed": true,
+    "failedCases": [
+     "FAIL  the two citer methods agree on the fixture",
+     "FAIL  a tree whose only held name is cited by a doc passes: []"
+    ],
+    "crash": null
+   },
+   {
+    "id": "python-scan-skips-markdown",
+    "old": "        if b'\\0' in data:\n            skipped += 1\n            continue",
+    "new": "        if b'\\0' in data or p.endswith('.md'):\n            skipped += 1\n            continue",
+    "exitCode": 1,
+    "killed": true,
+    "failedCases": [
+     "FAIL  a name cited by a doc is an exception: set()",
+     "FAIL  uncited, machine-record-only and unused names are violations: {'useAll', 'keptByMachineRecordOnly', 'sharedA', 'keptByNothing', 'keptByDoc'}",
+     "FAIL  the two citer methods agree on the fixture",
+     "FAIL  a tree whose only held name is cited by a doc passes: [{'file': 'pkg/src/a.ts', 'name': 'held', 'class': 'self-only', 'citers': [], 'machineRecordCitersOnly': False, 'machineRecordCiters': 0}]"
+    ],
+    "crash": null
+   }
+  ]
+ }
+}

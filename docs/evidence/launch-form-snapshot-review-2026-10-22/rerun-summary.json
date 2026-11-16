@@ -1,0 +1,119 @@
+[
+ {
+  "file": "close.test.ts",
+  "exitCode": 1,
+  "seconds": 63.5,
+  "timeouts5000": 1,
+  "counts": {
+   "numTotalTests": 9,
+   "numPassedTests": 8,
+   "numFailedTests": 1,
+   "numPendingTests": 0
+  },
+  "loadAfter": "99.29"
+ },
+ {
+  "file": "execution-flags.test.ts",
+  "exitCode": 1,
+  "seconds": 62.4,
+  "timeouts5000": 2,
+  "counts": {
+   "numTotalTests": 10,
+   "numPassedTests": 8,
+   "numFailedTests": 2,
+   "numPendingTests": 0
+  },
+  "loadAfter": "101.65"
+ },
+ {
+  "file": "gate-acts.test.ts",
+  "exitCode": 0,
+  "seconds": 251.9,
+  "timeouts5000": 0,
+  "counts": {
+   "numTotalTests": 133,
+   "numPassedTests": 133,
+   "numFailedTests": 0,
+   "numPendingTests": 0
+  },
+  "loadAfter": "123.73"
+ },
+ {
+  "file": "git-object-reader.test.ts",
+  "exitCode": 1,
+  "seconds": 166.2,
+  "timeouts5000": 3,
+  "counts": {
+   "numTotalTests": 60,
+   "numPassedTests": 56,
+   "numFailedTests": 4,
+   "numPendingTests": 0
+  },
+  "loadAfter": "115.15"
+ },
+ {
+  "file": "render.test.ts",
+  "exitCode": 0,
+  "seconds": 86.1,
+  "timeouts5000": 0,
+  "counts": {
+   "numTotalTests": 42,
+   "numPassedTests": 42,
+   "numFailedTests": 0,
+   "numPendingTests": 0
+  },
+  "loadAfter": "100.05"
+ },
+ {
+  "file": "run-evidence.test.ts",
+  "exitCode": 1,
+  "seconds": 43.6,
+  "timeouts5000": 1,
+  "counts": {
+   "numTotalTests": 4,
+   "numPassedTests": 3,
+   "numFailedTests": 1,
+   "numPendingTests": 0
+  },
+  "loadAfter": "98.03"
+ },
+ {
+  "file": "screen.test.ts",
+  "exitCode": 0,
+  "seconds": 51.4,
+  "timeouts5000": 0,
+  "counts": {
+   "numTotalTests": 110,
+   "numPassedTests": 110,
+   "numFailedTests": 0,
+   "numPendingTests": 0
+  },
+  "loadAfter": "91.31"
+ },
+ {
+  "file": "start-gates.test.ts",
+  "exitCode": 1,
+  "seconds": 191.5,
+  "timeouts5000": 3,
+  "counts": {
+   "numTotalTests": 104,
+   "numPassedTests": 101,
+   "numFailedTests": 3,
+   "numPendingTests": 0
+  },
+  "loadAfter": "107.42"
+ },
+ {
+  "file": "waiting-sessions.test.ts",
+  "exitCode": 0,
+  "seconds": 172.5,
+  "timeouts5000": 0,
+  "counts": {
+   "numTotalTests": 116,
+   "numPassedTests": 116,
+   "numFailedTests": 0,
+   "numPendingTests": 0
+  },
+  "loadAfter": "98.16"
+ }
+]

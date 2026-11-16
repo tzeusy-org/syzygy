@@ -1,6 +1,6 @@
-import { createHash } from 'node:crypto';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
+import { sha256 } from '@syzygy/support';
 
 /** SEC-3's text as adopted, read live from the doctrine file each time a brief is issued (REQ-polaris-generation-033, 034).
  *
@@ -48,7 +48,7 @@ export function readSec3(recordsRoot: string): Sec3Read {
   if (Buffer.from(text, 'utf8').compare(bytes) !== 0) return { ok: false, reason: `${SECURITY_DOCTRINE_PATH} is not valid UTF-8` };
   const cut = cutSec3(text);
   if (typeof cut === 'string') return { ok: false, reason: cut };
-  return { ok: true, sec3: { path: SECURITY_DOCTRINE_PATH, sha256: createHash('sha256').update(bytes).digest('hex'), ...cut } };
+  return { ok: true, sec3: { path: SECURITY_DOCTRINE_PATH, sha256: sha256(bytes), ...cut } };
 }
 
 /** The cut itself, over the decoded file text; a reason string when the text does not have the shape described above. */

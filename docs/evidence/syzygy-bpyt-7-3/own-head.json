@@ -1,0 +1,540 @@
+{
+ "tree": "/var/tmp/la-b73/head",
+ "head": "9d55188734e5d7d315591a55daf3a7bb5970c5aa",
+ "results": [
+  {
+   "id": "S1-second-signal-closes-again",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 5 passed (6)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/http-host  packages/http-host/src/shutdown.test.ts > closeOnSignal > does nothing on a signal after the first"
+   ],
+   "timeouts": 0,
+   "seconds": 1.9,
+   "counts": [
+    {
+     "file": "packages/http-host/src/shutdown.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/http-host/src/shutdown.ts",
+     "old": "      if (closing) return;\n",
+     "new": ""
+    }
+   ]
+  },
+  {
+   "id": "S2-announce-after-close-starts",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  5 failed | 1 passed (6)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/http-host  packages/http-host/src/shutdown.test.ts > closeOnSignal > announces SIGINT, closes the daemon once and resolves",
+    "FAIL   @syzygy/http-host  packages/http-host/src/shutdown.test.ts > closeOnSignal > announces SIGTERM, closes the daemon once and resolves",
+    "FAIL   @syzygy/http-host  packages/http-host/src/shutdown.test.ts > closeOnSignal > does nothing on a signal after the first",
+    "FAIL   @syzygy/http-host  packages/http-host/src/shutdown.test.ts > closeOnSignal > resolves quietly on a failed close when nothing listens for one",
+    "FAIL   @syzygy/http-host  packages/http-host/src/shutdown.test.ts > closeOnSignal > tells a failed close to closeFailed and still resolves"
+   ],
+   "timeouts": 0,
+   "seconds": 1.7,
+   "counts": [
+    {
+     "file": "packages/http-host/src/shutdown.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/http-host/src/shutdown.ts",
+     "old": "      io.announce(signal);\n      void daemon.close()",
+     "new": "      void Promise.resolve().then(() => io.announce(signal));\n      void daemon.close()"
+    }
+   ]
+  },
+  {
+   "id": "S3-close-failure-unreported",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 5 passed (6)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/http-host  packages/http-host/src/shutdown.test.ts > closeOnSignal > tells a failed close to closeFailed and still resolves"
+   ],
+   "timeouts": 0,
+   "seconds": 1.4,
+   "counts": [
+    {
+     "file": "packages/http-host/src/shutdown.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/http-host/src/shutdown.ts",
+     "old": "        io.closeFailed?.(cause);\n",
+     "new": ""
+    }
+   ]
+  },
+  {
+   "id": "S4-close-failure-never-resolves",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  2 failed | 4 passed (6)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/http-host  packages/http-host/src/shutdown.test.ts > closeOnSignal > resolves quietly on a failed close when nothing listens for one",
+    "FAIL   @syzygy/http-host  packages/http-host/src/shutdown.test.ts > closeOnSignal > tells a failed close to closeFailed and still resolves"
+   ],
+   "timeouts": 4,
+   "seconds": 11.7,
+   "counts": [
+    {
+     "file": "packages/http-host/src/shutdown.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/http-host/src/shutdown.ts",
+     "old": "        io.closeFailed?.(cause);\n        resolve();\n",
+     "new": "        io.closeFailed?.(cause);\n"
+    }
+   ]
+  },
+  {
+   "id": "S5-sigterm-not-handled",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  6 failed (6)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/http-host  packages/http-host/src/shutdown.test.ts > closeOnSignal > announces SIGINT, closes the daemon once and resolves",
+    "FAIL   @syzygy/http-host  packages/http-host/src/shutdown.test.ts > closeOnSignal > announces SIGTERM, closes the daemon once and resolves",
+    "FAIL   @syzygy/http-host  packages/http-host/src/shutdown.test.ts > closeOnSignal > does nothing on a signal after the first",
+    "FAIL   @syzygy/http-host  packages/http-host/src/shutdown.test.ts > closeOnSignal > resolves quietly on a failed close when nothing listens for one",
+    "FAIL   @syzygy/http-host  packages/http-host/src/shutdown.test.ts > closeOnSignal > stays pending until a signal arrives",
+    "FAIL   @syzygy/http-host  packages/http-host/src/shutdown.test.ts > closeOnSignal > tells a failed close to closeFailed and still resolves"
+   ],
+   "timeouts": 2,
+   "seconds": 7.3,
+   "counts": [
+    {
+     "file": "packages/http-host/src/shutdown.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/http-host/src/shutdown.ts",
+     "old": "    io.onSignal('SIGTERM', () => shutdown('SIGTERM'));\n",
+     "new": ""
+    }
+   ]
+  },
+  {
+   "id": "S6-sigterm-announced-as-sigint",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  2 failed | 4 passed (6)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/http-host  packages/http-host/src/shutdown.test.ts > closeOnSignal > announces SIGTERM, closes the daemon once and resolves",
+    "FAIL   @syzygy/http-host  packages/http-host/src/shutdown.test.ts > closeOnSignal > does nothing on a signal after the first"
+   ],
+   "timeouts": 0,
+   "seconds": 1.5,
+   "counts": [
+    {
+     "file": "packages/http-host/src/shutdown.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/http-host/src/shutdown.ts",
+     "old": "    io.onSignal('SIGTERM', () => shutdown('SIGTERM'));",
+     "new": "    io.onSignal('SIGTERM', () => shutdown('SIGINT'));"
+    }
+   ]
+  },
+  {
+   "id": "G1-observer-gate-leaves-out-the-host",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 10 passed (11)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation > protects the HTTP host package the POC serves through"
+   ],
+   "timeouts": 0,
+   "seconds": 2.8,
+   "counts": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "old": "    'packages/http-host/',\n",
+     "new": ""
+    }
+   ]
+  },
+  {
+   "id": "B1-cap1-barrel-loses-escapeHtml",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 1 passed (2)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/cap1-daemon  packages/cap1-daemon/src/package.test.ts > cap1-daemon package > exports the values it exported before the host moved out"
+   ],
+   "timeouts": 0,
+   "seconds": 2.2,
+   "counts": [
+    {
+     "file": "packages/cap1-daemon/src/routes-human.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/cap1-daemon/src/routes-human.ts",
+     "old": "\nexport { escapeHtml };\n",
+     "new": "\n"
+    }
+   ]
+  },
+  {
+   "id": "B2-credentials-shim-loses-verifyCredential",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 1 passed (2)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/cap1-daemon  packages/cap1-daemon/src/package.test.ts > cap1-daemon package > exports the values it exported before the host moved out"
+   ],
+   "timeouts": 0,
+   "seconds": 2.0,
+   "counts": [
+    {
+     "file": "packages/cap1-daemon/src/credentials.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/cap1-daemon/src/credentials.ts",
+     "old": "  verifyCredential,\n",
+     "new": ""
+    }
+   ]
+  },
+  {
+   "id": "B3-server-shim-loses-createDaemon",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 1 passed (2)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/cap1-daemon  packages/cap1-daemon/src/package.test.ts > cap1-daemon package > exports the values it exported before the host moved out"
+   ],
+   "timeouts": 0,
+   "seconds": 2.2,
+   "counts": [
+    {
+     "file": "packages/cap1-daemon/src/server.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/cap1-daemon/src/server.ts",
+     "old": "  createDaemon,\n  DAEMON_HOST,",
+     "new": "  DAEMON_HOST,"
+    }
+   ]
+  },
+  {
+   "id": "B4-server-shim-gains-closeOnSignal",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 1 passed (2)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/cap1-daemon  packages/cap1-daemon/src/package.test.ts > cap1-daemon package > exports the values it exported before the host moved out"
+   ],
+   "timeouts": 0,
+   "seconds": 2.0,
+   "counts": [
+    {
+     "file": "packages/cap1-daemon/src/server.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/cap1-daemon/src/server.ts",
+     "old": "  createDaemon,\n  DAEMON_HOST,",
+     "new": "  closeOnSignal,\n  createDaemon,\n  DAEMON_HOST,"
+    }
+   ]
+  },
+  {
+   "id": "B5-host-barrel-drops-escape-html",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 1 passed (2)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/http-host  packages/http-host/src/package.test.ts > http-host package > exports the host and nothing of the Capability 1 app"
+   ],
+   "timeouts": 0,
+   "seconds": 2.0,
+   "counts": [
+    {
+     "file": "packages/http-host/src/index.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/http-host/src/index.ts",
+     "old": "export * from './escape-html.js';\n",
+     "new": ""
+    }
+   ]
+  },
+  {
+   "id": "B6-host-barrel-gains-a-cap1-name",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 1 passed (2)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/http-host  packages/http-host/src/package.test.ts > http-host package > exports the host and nothing of the Capability 1 app"
+   ],
+   "timeouts": 0,
+   "seconds": 2.1,
+   "counts": [
+    {
+     "file": "packages/http-host/src/index.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/http-host/src/index.ts",
+     "old": "export * from './shutdown.js';\n",
+     "new": "export * from './shutdown.js';\nexport { evaluationId } from '@syzygy/cap1-core';\n"
+    }
+   ]
+  },
+  {
+   "id": "C1-any-presented-token-admitted",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 25 passed (26)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/http-host  packages/http-host/src/credentials.test.ts > RT3 — credential verification through core admission > a wrong token refuses with the named vocabulary, never a bare string"
+   ],
+   "timeouts": 0,
+   "seconds": 2.1,
+   "counts": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "old": "  if (!credential.presented || !tokensEqual(credential.token, expectedToken)) {",
+     "new": "  if (!credential.presented) {"
+    }
+   ]
+  },
+  {
+   "id": "C2-group-readable-file-reused",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  2 failed | 24 passed (26)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/http-host  packages/http-host/src/credentials.test.ts > RT3 — credential reuse inspection > refuses a group-readable 0640 file",
+    "FAIL   @syzygy/http-host  packages/http-host/src/credentials.test.ts > RT3 — credential reuse inspection > the six refusals carry six distinct details"
+   ],
+   "timeouts": 0,
+   "seconds": 2.2,
+   "counts": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "old": "  if ((fileStat.mode & 0o077) !== 0) {",
+     "new": "  if ((fileStat.mode & 0o007) !== 0) {"
+    }
+   ]
+  },
+  {
+   "id": "C3-auth-order-bypass",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  9 failed | 11 passed (20)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/cap1-daemon  packages/cap1-daemon/src/server.test.ts > RT3 — credential-classed admission at the transport > refuses empty bearer token credentials before invoking the handler",
+    "FAIL   @syzygy/cap1-daemon  packages/cap1-daemon/src/server.test.ts > RT3 — credential-classed admission at the transport > refuses malformed scheme casing credentials before invoking the handler",
+    "FAIL   @syzygy/cap1-daemon  packages/cap1-daemon/src/server.test.ts > RT3 — credential-classed admission at the transport > refuses missing credentials before invoking the handler",
+    "FAIL   @syzygy/cap1-daemon  packages/cap1-daemon/src/server.test.ts > RT3 — credential-classed admission at the transport > refuses scheme without separator credentials before invoking the handler",
+    "FAIL   @syzygy/cap1-daemon  packages/cap1-daemon/src/server.test.ts > RT3 — credential-classed admission at the transport > refuses whitespace-only bearer token credentials before invoking the handler",
+    "FAIL   @syzygy/cap1-daemon  packages/cap1-daemon/src/server.test.ts > RT3 — credential-classed admission at the transport > refuses wrong bearer token credentials before invoking the handler",
+    "FAIL   @syzygy/cap1-daemon  packages/cap1-daemon/src/server.test.ts > RT3 — credential-classed admission at the transport > refuses wrong scheme credentials before invoking the handler",
+    "FAIL   @syzygy/cap1-daemon  packages/cap1-daemon/src/server.test.ts > RT3 — credential-classed admission at the transport > refuses wrong-length bearer token credentials before invoking the handler",
+    "FAIL   @syzygy/cap1-daemon  packages/cap1-daemon/src/server.test.ts > RT3 — credential-classed admission at the transport > writes one content-blind JSONL diagnostic per non-2xx socket outcome and none for success"
+   ],
+   "timeouts": 0,
+   "seconds": 2.0,
+   "counts": [
+    {
+     "file": "packages/http-host/src/server.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/http-host/src/server.ts",
+     "old": "if (route.credentialClass === 'machine-credentialed') {",
+     "new": "if (false) {"
+    }
+   ]
+  },
+  {
+   "id": "E1-apostrophe-left-unescaped",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  5 failed | 21 passed (26)"
+   ],
+   "testFiles": [
+    "Test Files  2 failed (2)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/orrery.test.ts > Orrery > footer: composite evaluation identity and substrate revision (N4) > renders an explicit Skew line when the code-structure capture instant answers at a different evaluation (mutation check)",
+    "FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/orrery.test.ts > Orrery > footer: composite evaluation identity and substrate revision (N4) > renders an explicit Skew line when this surface's code-structure revision differs from the composite project revision (mutation check)",
+    "FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/trajectory.test.ts > Trajectory > footer: composite evaluation identity and substrate revision (N4) > renders an explicit Skew line when the work-item capture instant answers at a different evaluation (mutation check)",
+    "FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/trajectory.test.ts > Trajectory > renders a matching operator-reported run as report-fact and an unmarked record as Not verified, never Verified, for governing intent REQ-alternate-governing-intent-007 (AC3/AC4, syzygy-0r9, syzygy-4mbu)",
+    "FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/trajectory.test.ts > Trajectory > renders a matching operator-reported run as report-fact and an unmarked record as Not verified, never Verified, for governing intent REQ-alternate-governing-intent-008 (AC3/AC4, syzygy-0r9, syzygy-4mbu)"
+   ],
+   "timeouts": 0,
+   "seconds": 3.7,
+   "counts": [
+    {
+     "file": "packages/http-host/src/escape-html.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/http-host/src/escape-html.ts",
+     "old": "    .replace(/'/g, '&#39;');",
+     "new": "    ;"
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,849 @@
+{
+ "base": "f7477f52c49ee347f96b92703887c31f6be49e07",
+ "head": "b214ef1015c134dbc821c4f4dec654a16314c354",
+ "node": "v24.6.0",
+ "vitestFlags": [
+  "--testTimeout=120000",
+  "--hookTimeout=120000"
+ ],
+ "summary": {
+  "mutants": 19,
+  "killedAfterAndSurvivedBefore": 19,
+  "negativeControls": 3,
+  "negativeControlsPassing": 3,
+  "controlProjectsPassing": 6,
+  "controlProjects": 6,
+  "rowsNotOk": []
+ },
+ "rows": [
+  {
+   "id": "C1-manifest-digest",
+   "expect": "killed",
+   "file": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+   "old": "sha256(canonicalManifestJson(manifest))",
+   "new": "sha256(canonicalManifestJson(manifest) + ' ')",
+   "selection": {
+    "projects": [
+     "@syzygy/three-surface-poc-core"
+    ],
+    "files": []
+   },
+   "beforeExpected": "pass",
+   "before": {
+    "commit": "f7477f52c49ee347f96b92703887c31f6be49e07",
+    "exit": 0,
+    "total": 1113,
+    "passed": 1111,
+    "failed": 0,
+    "failedTestCount": 0,
+    "failedTests": [],
+    "filesFailedToLoad": [],
+    "durationSeconds": 26
+   },
+   "after": {
+    "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+    "exit": 1,
+    "total": 1122,
+    "passed": 1118,
+    "failed": 2,
+    "failedTestCount": 2,
+    "failedTests": [
+     "project-shape-manifest.test.ts > deriveProjectShapeManifest \u2014 determinism and identity digests the canonical manifest JSON: the fixture manifest has this digest",
+     "project-shape-observation.test.ts > observeProjectShapeSources \u2014 determinism digests the observation without its capture instants: the fixture observation has this digest"
+    ],
+    "filesFailedToLoad": [],
+    "durationSeconds": 27
+   },
+   "ok": true
+  },
+  {
+   "id": "C2-observation-digest",
+   "expect": "killed",
+   "file": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+   "old": "sha256(canonicalJson(stripCaptureInstant(stable)))",
+   "new": "sha256(canonicalJson(stripCaptureInstant(stable)) + ' ')",
+   "selection": {
+    "projects": [
+     "@syzygy/three-surface-poc-core"
+    ],
+    "files": []
+   },
+   "beforeExpected": "pass",
+   "before": {
+    "commit": "f7477f52c49ee347f96b92703887c31f6be49e07",
+    "exit": 0,
+    "total": 1113,
+    "passed": 1111,
+    "failed": 0,
+    "failedTestCount": 0,
+    "failedTests": [],
+    "filesFailedToLoad": [],
+    "durationSeconds": 31
+   },
+   "after": {
+    "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+    "exit": 1,
+    "total": 1122,
+    "passed": 1119,
+    "failed": 1,
+    "failedTestCount": 1,
+    "failedTests": [
+     "project-shape-observation.test.ts > observeProjectShapeSources \u2014 determinism digests the observation without its capture instants: the fixture observation has this digest"
+    ],
+    "filesFailedToLoad": [],
+    "durationSeconds": 43
+   },
+   "ok": true
+  },
+  {
+   "id": "C3-model-artifact-digest",
+   "expect": "killed",
+   "file": "packages/three-surface-poc-core/src/model.ts",
+   "old": "return { path: artifactPath, digest: sha256(bytes) };",
+   "new": "return { path: artifactPath, digest: sha256(bytes.slice(1)) };",
+   "selection": {
+    "projects": [
+     "@syzygy/three-surface-poc-core"
+    ],
+    "files": []
+   },
+   "beforeExpected": "pass",
+   "before": {
+    "commit": "f7477f52c49ee347f96b92703887c31f6be49e07",
+    "exit": 0,
+    "total": 1113,
+    "passed": 1111,
+    "failed": 0,
+    "failedTestCount": 0,
+    "failedTests": [],
+    "filesFailedToLoad": [],
+    "durationSeconds": 34
+   },
+   "after": {
+    "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+    "exit": 1,
+    "total": 1122,
+    "passed": 1119,
+    "failed": 1,
+    "failedTestCount": 1,
+    "failedTests": [
+     "model.test.ts > three-surface Butlers POC model records each required artifact under the SHA-256 of its own bytes"
+    ],
+    "filesFailedToLoad": [],
+    "durationSeconds": 34
+   },
+   "ok": true
+  },
+  {
+   "id": "C11-dossier-evaluation-questions",
+   "expect": "killed",
+   "file": "packages/polaris-generation-core/src/dossier-evaluation.ts",
+   "old": "const questionsSha256 = sha256(input.questionsText);",
+   "new": "const questionsSha256 = sha256(input.questionsText + ' ');",
+   "selection": {
+    "projects": [
+     "@syzygy/polaris-generation-core",
+     "@syzygy/polaris-dossier"
+    ],
+    "files": []
+   },
+   "beforeExpected": "pass",
+   "before": {
+    "commit": "f7477f52c49ee347f96b92703887c31f6be49e07",
+    "exit": 0,
+    "total": 2157,
+    "passed": 2156,
+    "failed": 0,
+    "failedTestCount": 0,
+    "failedTests": [],
+    "filesFailedToLoad": [],
+    "durationSeconds": 66
+   },
+   "after": {
+    "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+    "exit": 1,
+    "total": 2159,
+    "passed": 2157,
+    "failed": 1,
+    "failedTestCount": 1,
+    "failedTests": [
+     "dossier-evaluation.test.ts > report subject (rule 11) binds the questions file by the SHA-256 of its own text, and takes that digest as the freeze"
+    ],
+    "filesFailedToLoad": [],
+    "durationSeconds": 62
+   },
+   "ok": true
+  },
+  {
+   "id": "F1-headroom-not-frozen",
+   "expect": "killed",
+   "file": "packages/three-surface-poc-core/src/model.ts",
+   "old": "resourceHeadroom: deepFreeze(deriveResourceHeadroom(projectShape, input.projectShape?.resourceLimits)),",
+   "new": "resourceHeadroom: (deriveResourceHeadroom(projectShape, input.projectShape?.resourceLimits)),",
+   "selection": {
+    "projects": [
+     "@syzygy/three-surface-poc-core"
+    ],
+    "files": []
+   },
+   "beforeExpected": "pass",
+   "before": {
+    "commit": "f7477f52c49ee347f96b92703887c31f6be49e07",
+    "exit": 0,
+    "total": 1113,
+    "passed": 1111,
+    "failed": 0,
+    "failedTestCount": 0,
+    "failedTests": [],
+    "filesFailedToLoad": [],
+    "durationSeconds": 40
+   },
+   "after": {
+    "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+    "exit": 1,
+    "total": 1122,
+    "passed": 1119,
+    "failed": 1,
+    "failedTestCount": 1,
+    "failedTests": [
+     "model.test.ts > three-surface Butlers POC model hands out the resource headroom block frozen all the way down"
+    ],
+    "filesFailedToLoad": [],
+    "durationSeconds": 32
+   },
+   "ok": true
+  },
+  {
+   "id": "F3-body-authority-not-frozen",
+   "expect": "killed",
+   "file": "packages/three-surface-poc-core/src/body-read-authority.ts",
+   "old": "  return deepFreeze({\n    evaluationId: inputs.evaluationId,",
+   "new": "  return ({\n    evaluationId: inputs.evaluationId,",
+   "selection": {
+    "projects": [
+     "@syzygy/three-surface-poc-core"
+    ],
+    "files": []
+   },
+   "beforeExpected": "pass",
+   "before": {
+    "commit": "f7477f52c49ee347f96b92703887c31f6be49e07",
+    "exit": 0,
+    "total": 1113,
+    "passed": 1111,
+    "failed": 0,
+    "failedTestCount": 0,
+    "failedTests": [],
+    "filesFailedToLoad": [],
+    "durationSeconds": 41
+   },
+   "after": {
+    "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+    "exit": 1,
+    "total": 1122,
+    "passed": 1119,
+    "failed": 1,
+    "failedTestCount": 1,
+    "failedTests": [
+     "body-read-authority.test.ts > PWB-REQ-005 absence and mechanics hands out an evaluation frozen all the way down, admitting or rejecting, before any history appends it"
+    ],
+    "filesFailedToLoad": [],
+    "durationSeconds": 50
+   },
+   "ok": true
+  },
+  {
+   "id": "R3-equal-length-reordered-question-digest",
+   "expect": "killed",
+   "file": "packages/polaris-generation-core/src/dossier-profile.ts",
+   "old": "sha256(JSON.stringify([q.id, q.question, q.scope, q.reason]))",
+   "new": "sha256(JSON.stringify([q.id, q.scope, q.question, q.reason]))",
+   "selection": {
+    "projects": [
+     "@syzygy/polaris-generation-core",
+     "@syzygy/polaris-dossier"
+    ],
+    "files": []
+   },
+   "beforeExpected": "pass",
+   "before": {
+    "commit": "f7477f52c49ee347f96b92703887c31f6be49e07",
+    "exit": 0,
+    "total": 2157,
+    "passed": 2156,
+    "failed": 0,
+    "failedTestCount": 0,
+    "failedTests": [],
+    "filesFailedToLoad": [],
+    "durationSeconds": 85
+   },
+   "after": {
+    "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+    "exit": 1,
+    "total": 2159,
+    "passed": 2157,
+    "failed": 1,
+    "failedTestCount": 1,
+    "failedTests": [
+     "dossier-profile.test.ts > REQ-031 clarification digests each question by the exact tuple of its id, text, scope and reason"
+    ],
+    "filesFailedToLoad": [],
+    "durationSeconds": 80
+   },
+   "ok": true
+  },
+  {
+   "id": "R9-equal-length-reordered-attempt-id",
+   "expect": "killed",
+   "file": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.ts",
+   "old": "`${input.requestId}\\0${input.stage}\\0${input.ordinal}`",
+   "new": "`${input.stage}\\0${input.requestId}\\0${input.ordinal}`",
+   "selection": {
+    "projects": [],
+    "files": [
+     "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts",
+     "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts",
+     "apps/three-surface-poc/src/polaris-generation/dossier-trigger.test.ts"
+    ]
+   },
+   "beforeExpected": "pass",
+   "before": {
+    "commit": "f7477f52c49ee347f96b92703887c31f6be49e07",
+    "exit": 0,
+    "total": 40,
+    "passed": 40,
+    "failed": 0,
+    "failedTestCount": 0,
+    "failedTests": [],
+    "filesFailedToLoad": [],
+    "durationSeconds": 8
+   },
+   "after": {
+    "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+    "exit": 1,
+    "total": 41,
+    "passed": 40,
+    "failed": 1,
+    "failedTestCount": 1,
+    "failedTests": [
+     "durable-lifecycle.test.ts > durable scripted lifecycle port names each dispatch claim by the SHA-256 of its request, stage and ordinal"
+    ],
+    "filesFailedToLoad": [],
+    "durationSeconds": 11
+   },
+   "ok": true
+  },
+  {
+   "id": "D1-freeze-after-the-walk",
+   "expect": "killed",
+   "file": "packages/support/src/deep-freeze.ts",
+   "old": "  if (value !== null && typeof value === 'object' && !Object.isFrozen(value)) {\n    Object.freeze(value);\n    for (const member of Object.values(value)) deepFreeze(member);\n  }",
+   "new": "  if (value !== null && typeof value === 'object' && !Object.isFrozen(value)) {\n    for (const member of Object.values(value)) deepFreeze(member);\n    Object.freeze(value);\n  }",
+   "selection": {
+    "projects": [
+     "@syzygy/support"
+    ],
+    "files": []
+   },
+   "beforeExpected": "fail",
+   "before": {
+    "commit": "f7477f52c49ee347f96b92703887c31f6be49e07",
+    "exit": 1,
+    "total": 22,
+    "passed": 21,
+    "failed": 1,
+    "failedTestCount": 1,
+    "failedTests": [
+     "deep-freeze.test.ts > deepFreeze terminates on a cycle"
+    ],
+    "filesFailedToLoad": [],
+    "durationSeconds": 4
+   },
+   "after": {
+    "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+    "exit": 1,
+    "total": 23,
+    "passed": 21,
+    "failed": 2,
+    "failedTestCount": 2,
+    "failedTests": [
+     "deep-freeze.test.ts > deepFreeze terminates on a cycle",
+     "deep-freeze.test.ts > deepFreeze leaves the owner frozen, and the members reached so far, when a member throws mid-walk"
+    ],
+    "filesFailedToLoad": [],
+    "durationSeconds": 4
+   },
+   "ok": true
+  },
+  {
+   "id": "D3-members-read-before-the-owner-is-frozen",
+   "expect": "killed",
+   "file": "packages/support/src/deep-freeze.ts",
+   "old": "  if (value !== null && typeof value === 'object' && !Object.isFrozen(value)) {\n    Object.freeze(value);\n    for (const member of Object.values(value)) deepFreeze(member);\n  }",
+   "new": "  if (value !== null && typeof value === 'object' && !Object.isFrozen(value)) {\n    const members = Object.values(value);\n    Object.freeze(value);\n    for (const member of members) deepFreeze(member);\n  }",
+   "selection": {
+    "projects": [
+     "@syzygy/support"
+    ],
+    "files": []
+   },
+   "beforeExpected": "pass",
+   "before": {
+    "commit": "f7477f52c49ee347f96b92703887c31f6be49e07",
+    "exit": 0,
+    "total": 22,
+    "passed": 22,
+    "failed": 0,
+    "failedTestCount": 0,
+    "failedTests": [],
+    "filesFailedToLoad": [],
+    "durationSeconds": 4
+   },
+   "after": {
+    "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+    "exit": 1,
+    "total": 23,
+    "passed": 22,
+    "failed": 1,
+    "failedTestCount": 1,
+    "failedTests": [
+     "deep-freeze.test.ts > deepFreeze leaves the owner frozen, and the members reached so far, when a member throws mid-walk"
+    ],
+    "filesFailedToLoad": [],
+    "durationSeconds": 4
+   },
+   "ok": true
+  },
+  {
+   "id": "H1-census-never-reports",
+   "expect": "killed",
+   "file": "packages/three-surface-poc-core/src/test-frozen.ts",
+   "old": "    if (!Object.isFrozen(node)) unfrozen.push(path);\n",
+   "new": "",
+   "selection": {
+    "projects": [],
+    "files": [
+     "packages/three-surface-poc-core/src/test-frozen.test.ts"
+    ]
+   },
+   "beforeExpected": null,
+   "before": null,
+   "after": {
+    "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+    "exit": 1,
+    "total": 4,
+    "passed": 2,
+    "failed": 2,
+    "failedTestCount": 2,
+    "failedTests": [
+     "test-frozen.test.ts > frozenCensus names the path of an unfrozen root, an unfrozen array and an unfrozen leaf below a frozen shell",
+     "test-frozen.test.ts > frozenCensus terminates on a cycle and counts each object once"
+    ],
+    "filesFailedToLoad": [],
+    "durationSeconds": 3
+   },
+   "ok": true
+  },
+  {
+   "id": "H2-census-stops-at-a-frozen-shell",
+   "expect": "killed",
+   "file": "packages/three-surface-poc-core/src/test-frozen.ts",
+   "old": "    for (const [key, member] of Object.entries(node)) walk(member, `${path}.${key}`);\n",
+   "new": "    if (Object.isFrozen(node)) return;\n    for (const [key, member] of Object.entries(node)) walk(member, `${path}.${key}`);\n",
+   "selection": {
+    "projects": [],
+    "files": [
+     "packages/three-surface-poc-core/src/test-frozen.test.ts"
+    ]
+   },
+   "beforeExpected": null,
+   "before": null,
+   "after": {
+    "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+    "exit": 1,
+    "total": 4,
+    "passed": 2,
+    "failed": 2,
+    "failedTestCount": 2,
+    "failedTests": [
+     "test-frozen.test.ts > frozenCensus reports nothing unfrozen for a value frozen all the way down, and counts the objects it walked",
+     "test-frozen.test.ts > frozenCensus names the path of an unfrozen root, an unfrozen array and an unfrozen leaf below a frozen shell"
+    ],
+    "filesFailedToLoad": [],
+    "durationSeconds": 3
+   },
+   "ok": true
+  },
+  {
+   "id": "H3-census-counts-nothing",
+   "expect": "killed",
+   "file": "packages/three-surface-poc-core/src/test-frozen.ts",
+   "old": "  return { visited: seen.size, unfrozen };",
+   "new": "  return { visited: 0, unfrozen };",
+   "selection": {
+    "projects": [],
+    "files": [
+     "packages/three-surface-poc-core/src/test-frozen.test.ts"
+    ]
+   },
+   "beforeExpected": null,
+   "before": null,
+   "after": {
+    "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+    "exit": 1,
+    "total": 4,
+    "passed": 1,
+    "failed": 3,
+    "failedTestCount": 3,
+    "failedTests": [
+     "test-frozen.test.ts > frozenCensus reports nothing unfrozen for a value frozen all the way down, and counts the objects it walked",
+     "test-frozen.test.ts > frozenCensus terminates on a cycle and counts each object once",
+     "test-frozen.test.ts > frozenCensus walks nothing for a primitive, null or undefined, and skips typed-array views"
+    ],
+    "filesFailedToLoad": [],
+    "durationSeconds": 2
+   },
+   "ok": true
+  },
+  {
+   "id": "I1-support-not-required",
+   "expect": "killed",
+   "file": "scripts/check_generator_install.mjs",
+   "old": "\n  || !existsSync(join(process.cwd(), 'node_modules', '@syzygy', 'support'))",
+   "new": "",
+   "selection": {
+    "projects": [],
+    "files": [
+     "apps/three-surface-poc/src/polaris-generation/generator-install-check.test.ts"
+    ]
+   },
+   "beforeExpected": null,
+   "before": null,
+   "after": {
+    "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+    "exit": 1,
+    "total": 6,
+    "passed": 5,
+    "failed": 1,
+    "failedTestCount": 1,
+    "failedTests": [
+     "generator-install-check.test.ts > the generator install check refuses a checkout without support, with the instruction to run npm ci"
+    ],
+    "filesFailedToLoad": [],
+    "durationSeconds": 3
+   },
+   "ok": true
+  },
+  {
+   "id": "I2-generation-core-not-required",
+   "expect": "killed",
+   "file": "scripts/check_generator_install.mjs",
+   "old": "\n  || !existsSync(join(process.cwd(), 'node_modules', '@syzygy', 'polaris-generation-core'))",
+   "new": "",
+   "selection": {
+    "projects": [],
+    "files": [
+     "apps/three-surface-poc/src/polaris-generation/generator-install-check.test.ts"
+    ]
+   },
+   "beforeExpected": null,
+   "before": null,
+   "after": {
+    "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+    "exit": 1,
+    "total": 6,
+    "passed": 5,
+    "failed": 1,
+    "failedTestCount": 1,
+    "failedTests": [
+     "generator-install-check.test.ts > the generator install check refuses a checkout without polaris-generation-core, with the instruction to run npm ci"
+    ],
+    "filesFailedToLoad": [],
+    "durationSeconds": 3
+   },
+   "ok": true
+  },
+  {
+   "id": "I3-tsc-not-required",
+   "expect": "killed",
+   "file": "scripts/check_generator_install.mjs",
+   "old": "if (!existsSync(join(process.cwd(), 'node_modules', '.bin', 'tsc'))\n  || !existsSync(join(process.cwd(), 'node_modules', '@syzygy', 'polaris-generation-core'))",
+   "new": "if (!existsSync(join(process.cwd(), 'node_modules', '@syzygy', 'polaris-generation-core'))",
+   "selection": {
+    "projects": [],
+    "files": [
+     "apps/three-surface-poc/src/polaris-generation/generator-install-check.test.ts"
+    ]
+   },
+   "beforeExpected": null,
+   "before": null,
+   "after": {
+    "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+    "exit": 1,
+    "total": 6,
+    "passed": 5,
+    "failed": 1,
+    "failedTestCount": 1,
+    "failedTests": [
+     "generator-install-check.test.ts > the generator install check refuses a checkout without tsc, with the instruction to run npm ci"
+    ],
+    "filesFailedToLoad": [],
+    "durationSeconds": 3
+   },
+   "ok": true
+  },
+  {
+   "id": "I4-refusal-exits-zero",
+   "expect": "killed",
+   "file": "scripts/check_generator_install.mjs",
+   "old": "process.exitCode = 1;",
+   "new": "process.exitCode = 0;",
+   "selection": {
+    "projects": [],
+    "files": [
+     "apps/three-surface-poc/src/polaris-generation/generator-install-check.test.ts"
+    ]
+   },
+   "beforeExpected": null,
+   "before": null,
+   "after": {
+    "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+    "exit": 1,
+    "total": 6,
+    "passed": 2,
+    "failed": 4,
+    "failedTestCount": 4,
+    "failedTests": [
+     "generator-install-check.test.ts > the generator install check refuses a checkout without support, with the instruction to run npm ci",
+     "generator-install-check.test.ts > the generator install check refuses a checkout without polaris-generation-core, with the instruction to run npm ci",
+     "generator-install-check.test.ts > the generator install check refuses a checkout without tsc, with the instruction to run npm ci",
+     "generator-install-check.test.ts > the generator install check refuses a checkout without every entry, with the instruction to run npm ci"
+    ],
+    "filesFailedToLoad": [],
+    "durationSeconds": 4
+   },
+   "ok": true
+  },
+  {
+   "id": "I5-wrong-entry-name-for-support",
+   "expect": "killed",
+   "file": "scripts/check_generator_install.mjs",
+   "old": "'@syzygy', 'support'))",
+   "new": "'@syzygy', 'supports'))",
+   "selection": {
+    "projects": [],
+    "files": [
+     "apps/three-surface-poc/src/polaris-generation/generator-install-check.test.ts"
+    ]
+   },
+   "beforeExpected": null,
+   "before": null,
+   "after": {
+    "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+    "exit": 1,
+    "total": 6,
+    "passed": 4,
+    "failed": 2,
+    "failedTestCount": 2,
+    "failedTests": [
+     "generator-install-check.test.ts > the generator install check passes a checkout holding tsc, the generation core and the support package",
+     "generator-install-check.test.ts > the generator install check passes this checkout, so the fixture entries are the ones a real install has"
+    ],
+    "filesFailedToLoad": [],
+    "durationSeconds": 3
+   },
+   "ok": true
+  },
+  {
+   "id": "I6-refusal-says-nothing",
+   "expect": "killed",
+   "file": "scripts/check_generator_install.mjs",
+   "old": "process.stderr.write('Generator dependencies are missing. Run npm ci from the repository root, then retry.\\n');",
+   "new": "process.stderr.write('');",
+   "selection": {
+    "projects": [],
+    "files": [
+     "apps/three-surface-poc/src/polaris-generation/generator-install-check.test.ts"
+    ]
+   },
+   "beforeExpected": null,
+   "before": null,
+   "after": {
+    "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+    "exit": 1,
+    "total": 6,
+    "passed": 2,
+    "failed": 4,
+    "failedTestCount": 4,
+    "failedTests": [
+     "generator-install-check.test.ts > the generator install check refuses a checkout without support, with the instruction to run npm ci",
+     "generator-install-check.test.ts > the generator install check refuses a checkout without polaris-generation-core, with the instruction to run npm ci",
+     "generator-install-check.test.ts > the generator install check refuses a checkout without tsc, with the instruction to run npm ci",
+     "generator-install-check.test.ts > the generator install check refuses a checkout without every entry, with the instruction to run npm ci"
+    ],
+    "filesFailedToLoad": [],
+    "durationSeconds": 3
+   },
+   "ok": true
+  },
+  {
+   "id": "N1-support-checked-first",
+   "expect": "pass",
+   "file": "scripts/check_generator_install.mjs",
+   "old": "if (!existsSync(join(process.cwd(), 'node_modules', '.bin', 'tsc'))\n  || !existsSync(join(process.cwd(), 'node_modules', '@syzygy', 'polaris-generation-core'))\n  || !existsSync(join(process.cwd(), 'node_modules', '@syzygy', 'support'))) {",
+   "new": "if (!existsSync(join(process.cwd(), 'node_modules', '@syzygy', 'support'))\n  || !existsSync(join(process.cwd(), 'node_modules', '.bin', 'tsc'))\n  || !existsSync(join(process.cwd(), 'node_modules', '@syzygy', 'polaris-generation-core'))) {",
+   "selection": {
+    "projects": [],
+    "files": [
+     "apps/three-surface-poc/src/polaris-generation/generator-install-check.test.ts"
+    ]
+   },
+   "beforeExpected": null,
+   "before": null,
+   "after": {
+    "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+    "exit": 0,
+    "total": 6,
+    "passed": 6,
+    "failed": 0,
+    "failedTestCount": 0,
+    "failedTests": [],
+    "filesFailedToLoad": [],
+    "durationSeconds": 3
+   },
+   "ok": true
+  },
+  {
+   "id": "N2-freeze-comment-only",
+   "expect": "pass",
+   "file": "packages/support/src/deep-freeze.ts",
+   "old": "  if (value !== null && typeof value === 'object' && !Object.isFrozen(value)) {\n    Object.freeze(value);\n    for (const member of Object.values(value)) deepFreeze(member);\n  }",
+   "new": "  // walk\n  if (value !== null && typeof value === 'object' && !Object.isFrozen(value)) {\n    Object.freeze(value);\n    for (const member of Object.values(value)) deepFreeze(member);\n  }",
+   "selection": {
+    "projects": [
+     "@syzygy/support"
+    ],
+    "files": []
+   },
+   "beforeExpected": "pass",
+   "before": {
+    "commit": "f7477f52c49ee347f96b92703887c31f6be49e07",
+    "exit": 0,
+    "total": 22,
+    "passed": 22,
+    "failed": 0,
+    "failedTestCount": 0,
+    "failedTests": [],
+    "filesFailedToLoad": [],
+    "durationSeconds": 4
+   },
+   "after": {
+    "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+    "exit": 0,
+    "total": 23,
+    "passed": 23,
+    "failed": 0,
+    "failedTestCount": 0,
+    "failedTests": [],
+    "filesFailedToLoad": [],
+    "durationSeconds": 4
+   },
+   "ok": true
+  },
+  {
+   "id": "N3-census-comment-only",
+   "expect": "pass",
+   "file": "packages/three-surface-poc-core/src/test-frozen.ts",
+   "old": "    seen.add(node);\n",
+   "new": "    seen.add(node); // visited\n",
+   "selection": {
+    "projects": [],
+    "files": [
+     "packages/three-surface-poc-core/src/test-frozen.test.ts"
+    ]
+   },
+   "beforeExpected": null,
+   "before": null,
+   "after": {
+    "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+    "exit": 0,
+    "total": 4,
+    "passed": 4,
+    "failed": 0,
+    "failedTestCount": 0,
+    "failedTests": [],
+    "filesFailedToLoad": [],
+    "durationSeconds": 3
+   },
+   "ok": true
+  }
+ ],
+ "controls": {
+  "[[\"@syzygy/three-surface-poc-core\"], []]": {
+   "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+   "exit": 0,
+   "total": 1122,
+   "passed": 1120,
+   "failed": 0,
+   "failedTestCount": 0,
+   "failedTests": [],
+   "filesFailedToLoad": [],
+   "durationSeconds": 34
+  },
+  "[[\"@syzygy/polaris-generation-core\", \"@syzygy/polaris-dossier\"], []]": {
+   "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+   "exit": 0,
+   "total": 2159,
+   "passed": 2158,
+   "failed": 0,
+   "failedTestCount": 0,
+   "failedTests": [],
+   "filesFailedToLoad": [],
+   "durationSeconds": 68
+  },
+  "[[], [\"apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts\", \"apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts\", \"apps/three-surface-poc/src/polaris-generation/dossier-trigger.test.ts\"]]": {
+   "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+   "exit": 0,
+   "total": 41,
+   "passed": 41,
+   "failed": 0,
+   "failedTestCount": 0,
+   "failedTests": [],
+   "filesFailedToLoad": [],
+   "durationSeconds": 5
+  },
+  "[[\"@syzygy/support\"], []]": {
+   "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+   "exit": 0,
+   "total": 23,
+   "passed": 23,
+   "failed": 0,
+   "failedTestCount": 0,
+   "failedTests": [],
+   "filesFailedToLoad": [],
+   "durationSeconds": 2
+  },
+  "[[], [\"packages/three-surface-poc-core/src/test-frozen.test.ts\"]]": {
+   "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+   "exit": 0,
+   "total": 4,
+   "passed": 4,
+   "failed": 0,
+   "failedTestCount": 0,
+   "failedTests": [],
+   "filesFailedToLoad": [],
+   "durationSeconds": 2
+  },
+  "[[], [\"apps/three-surface-poc/src/polaris-generation/generator-install-check.test.ts\"]]": {
+   "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+   "exit": 0,
+   "total": 6,
+   "passed": 6,
+   "failed": 0,
+   "failedTestCount": 0,
+   "failedTests": [],
+   "filesFailedToLoad": [],
+   "durationSeconds": 2
+  }
+ }
+}

@@ -1,0 +1,51 @@
+batch         version  att pass dirty surv asClaimed  exit codes / stop runs recorded
+BADUTF8       head       1    1     0    0         1  {0: 1} / 0
+BADUTF8       r1         1    1     0    0         0  {1: 1} / 0
+DETACH        head       1    0     0    1         1  {143: 1} / 0
+DETACHX       head       1    1     0    0         1  {0: 1} / 0
+E             head      24   24     0    0        24  {143: 24} / 0
+E             r1        24   11     0   13        24  {143: 24} / 0
+EARLYS        head      16   16     0    0         5  {-15: 11, 143: 5} / 0
+EARLYS        r1        16   16     0    0         7  {-15: 9, 143: 7} / 0
+EARLYS-np     head       8    8     0    0         5  {-15: 3, 143: 5} / 0
+EARLYW        head      10   10     0    0        10  {143: 10} / 0
+EARLYW        r1        10    3     0    7        10  {143: 10} / 0
+ET            head      18   18     0    0        18  {143: 18} / 0
+ET            r1        18    5     0   13        18  {143: 18} / 0
+G             head      36   36     0    0        36  {143: 36} / 0
+G             r1        36   32     4    4        36  {143: 36} / 0
+G-np          head      18   18     0    0        18  {143: 18} / 0
+G-wave1       head      27   27     0    0        27  {143: 27} / 0
+G-wave1       r1        27   27     0    0        27  {143: 27} / 0
+H             head       2    2     0    0         0  {0: 2} / 2
+H             r1         2    0     0    0         2  {129: 2} / 0
+H-np          head       1    1     0    0         0  {0: 1} / 1
+K             head       2    2     0    0         2  {0: 2} / 0
+K             r1         2    0     2    0         0  {1: 2} / 0
+LINGER        head       2    2     0    0         2  {143: 2} / 0
+LINGERN       head       1    1     0    0         1  {0: 1} / 0
+LINGERN-smoke head       1    1     0    0         1  {0: 1} / 0
+LOCK          head       1    0     1    0         0  {1: 1} / 0
+LOCK          r1         1    0     1    0         0  {1: 1} / 0
+LOCKN         head       1    0     1    0         0  {1: 1} / 0
+MIX           head       9    9     0    0         4  {-15: 1, -2: 1, 129: 3, 130: 3, 143: 1} / 0
+MIX           r1         9    3     6    4         3  {-15: 1, 143: 8} / 0
+MIX-np        head       3    2     0    0         3  {0: 1, 130: 1, 143: 1} / 0
+NOTERM        head       1    1     0    0         1  {143: 1} / 0
+P0            head       1    1     0    0         1  {0: 1} / 0
+P0-np         head       1    1     0    0         1  {0: 1} / 0
+PIPE          head       2    2     0    0         2  {143: 2} / 0
+PIPEX         head       1    1     0    0         1  {0: 1} / 0
+PTY           head       2    2     0    0         0  {120: 2} / 0
+PTY           r1         2    2     0    0         2  {129: 2} / 0
+RSTOP         head       2    2     0    0         2  {143: 2} / 0
+RSTOP         m1         2    0     2    0         0  {1: 2} / 0
+RSTOP-wave2   head       2    2     0    0         2  {143: 2} / 0
+RSTOP-wave2   r1         2    2     0    0         2  {143: 2} / 0
+totals {('head', 'attempts'): 195, ('head', 'passed'): 191, ('head', 'dirty'): 2, ('head', 'withSurvivors'): 1, ('r1', 'attempts'): 150, ('r1', 'passed'): 102, ('r1', 'dirty'): 13, ('r1', 'withSurvivors'): 41, ('m1', 'attempts'): 2, ('m1', 'passed'): 0, ('m1', 'dirty'): 2, ('m1', 'withSurvivors'): 0}
+head attempts 195 dirty 2 with survivors 1
+head dirty batches ['LOCK', 'LOCKN']
+head survivor batches ['DETACH']
+head stop attempts with a record written 0
+head stop attempts whose exit is not 128 + first signal sent 22 Counter({('EARLYS', -15): 11, ('EARLYS-np', -15): 3, ('MIX', 129): 3, ('PTY', 120): 2, ('LOCK', 1): 1, ('MIX', -15): 1, ('MIX', -2): 1})
+P0 wave 2 record under the corrected predicate: P0-wave2-head-None-1.json writes 9 fd-relative ['unlinkat(4, "report.json", 0)           = 0'] outside [] exit 0 tests 299 profile rows 299

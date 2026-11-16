@@ -55,7 +55,17 @@ Predicates, each printed with its denominator:
   regular expressions; Polaris composes by ID line in one and by requirement
   name in the other). Both must agree, identifiers must be unique, and the
   result must equal the hard-coded literal census below and the committed
-  `census.json`. A Polaris addition is any other change whose
+  `census.json`. CAP1 is the effective composition (`syzygy-5oqc`): the
+  bound file with the adopted `cap1-trusted-bootstrap-consent` overlay's
+  blocks for exactly CAP1-REQ-011 and 046 in place of its own, composed only
+  while its declared v1.0 sign-off record terminates it. Method A parses
+  both files by regular expression and replaces by identifier; method B
+  splices the overlay's blocks into the bound text by lines, parses that
+  with the state machine, and requires the spliced bytes to hash to the
+  `composed_spec_sha256` the adoption builder recorded. Both refuse any
+  other replaced set, a name the bound file lacks, any level-2 heading but
+  `## MODIFIED Requirements` or other delta heading, U+FEFF, a carriage
+  return, and a non-canonical or fenced requirement header. A Polaris addition is any other change whose
   `specs/polaris-generation/spec.md` is installed (by a version-tagged
   sign-off's builder, or by the install step after an adoption record); it
   is signed when R1 finds its terminal record. It may only ADD requirements
@@ -75,13 +85,17 @@ Predicates, each printed with its denominator:
 - R4 generated rows: each generated dependency file's source digest and
   requirement count match the spec; every full or continuation-form
   identifier mention in the five change directories, each signed addition's
-  directory and the default route pages resolves to the population; the CAP1
+  directory, the CAP1 overlay's directory and the default route pages
+  resolves to the population; the CAP1 overlay's generated
+  `GOVERNING-DEPENDENCIES.json` (requirement count, source digests) and its
+  `ADOPTION.md` figure agree with the composed census; the CAP1
   and PWB capability coverage tables carry the whole population; and each
   signed addition's generated union equals its spec's warrants (a FAIL,
   since that union is generated and never signed).
 - R5 default routes: `openspec/README.md` has one row per tracked change
   directory naming its terminal record; `PROJECT-STATUS.md` cites every
-  terminal record (a signed addition's sign-off record included) and states
+  terminal record (a signed addition's and the CAP1 overlay's sign-off
+  records included; the overlay's row must name its record) and states
   the Polaris composition the census computes.
 - R6 behaviour-contract pins (report only, never green): the observer
   registry entry and the secret-classification policy pin a PWB `spec.md`
@@ -106,8 +120,12 @@ Since the 2026-10-03 tree-framing sign-off moved `spec.md` past the pinned
 row, the case also replays `spec.md` as the pinned bytes (the re-pin
 builder's `spec_at_pin`, every later signed patch reversed): R6 must read
 zero over that tree, and R2, R3 and R4, which then see bytes no act binds,
-must fail exactly. On the tree itself R6 reports both pins until their own
-re-pin act. The strict case `pins-after-tree-framing-repin-acts` does the
+must fail exactly. After the P115 sign-off, replaying its governing PWB
+input must additionally produce exactly the P115 R1 refusal. The fixture
+requires the complete signed transaction to validate when only PWB is
+restored, so the early input refusal cannot hide another record defect.
+The unsigned fixture retains the exact R2/R3/R4 expectation. On the tree
+itself R6 reports both pins until their own re-pin act. The strict case `pins-after-tree-framing-repin-acts` does the
 same for the `syzygy-2g0d` package, which re-pins both to the tree-framing
 `spec.md` row: with its proposed bytes in place of both subjects, R6 must
 examine both pins and report zero, and no other predicate may fail.
@@ -152,6 +170,8 @@ Usage:
   python3 scripts/check_spec_reconciliation.py --selftest [--witnesses FILE]
 """
 import argparse
+import multiprocessing
+import os
 import hashlib
 import json
 from pathlib import Path
@@ -305,6 +325,19 @@ FAMILY_SPECS = {
     "POC": spec_path(POC_CHANGE),
     "PWB": spec_path(PWB_CHANGE),
 }
+#: The adopted CAP1 overlay (P-109, signed v1.0 by version tag 2026-10-15):
+#: its `spec.md` fully replaces the requirement blocks named below in the
+#: bound CAP1 file, and the census reads the composition (syzygy-5oqc).
+#: Declared here, never inferred; the replaced identities are literals.
+CAP1_OVERLAY_CHANGE = "cap1-trusted-bootstrap-consent"
+CAP1_OVERLAY_SPEC = spec_path(CAP1_OVERLAY_CHANGE, CAP1_CHANGE)
+CAP1_OVERLAY_RECORD = (f"{DECISIONS}/"
+                       "CAP1-TRUSTED-BOOTSTRAP-CONSENT-SIGNOFF-v1.0.md")
+CAP1_OVERLAY_VERSION = "1.0"
+CAP1_OVERLAY_DEPS = f"{CHANGES}/{CAP1_OVERLAY_CHANGE}/GOVERNING-DEPENDENCIES.json"
+CAP1_OVERLAY_ADOPTION = f"{CHANGES}/{CAP1_OVERLAY_CHANGE}/ADOPTION.md"
+CAP1_OVERLAY_REPLACES = ("CAP1-REQ-011", "CAP1-REQ-046")
+CAP1_OVERLAY_SECTION = "## MODIFIED Requirements"
 POLARIS_BASE_SPEC = spec_path(BASE_CHANGE, "polaris-generation")
 POLARIS_OVERLAY_SPEC = spec_path(UNDERSTANDING_CHANGE, "polaris-generation")
 POLARIS_ID = "REQ-polaris-generation-"
@@ -402,7 +435,11 @@ EXPECTED = {
         (1, 10, 1, 3, 5, 3, 5, 7, 5, 1, 1, 9, 1, 3, 1, 2, 5))),
     "POLARIS": None,  # totals only below; per-requirement counts in census.json
 }
-EXPECTED_TOTALS = {"CAP1": (42, 47), "POC": (26, 28), "PWB": (17, 63),
+# CAP1 re-derived 2026-11-04 (syzygy-5oqc): the census composes the adopted
+# consent overlay, whose CAP1-REQ-011 carries 8 scenarios and CAP1-REQ-046
+# 4 (each 1 in the bound file alone, 42 / 47). Literals, never parsed.
+EXPECTED["CAP1"] = {**EXPECTED["CAP1"], "011": 8, "046": 4}
+EXPECTED_TOTALS = {"CAP1": (42, 57), "POC": (26, 28), "PWB": (17, 63),
                    "POLARIS": (31, 182)}
 
 ROW = re.compile(r"^([0-9a-f]{64})  (\S[^\n]*)$", re.M)
@@ -491,6 +528,23 @@ def check_digest_act(act, tag, aggregate, record, manifest_bytes, r1, r2):
     return table
 
 
+def poc_reference():
+    import prepare_three_surface_poc_governedby_reference_recording as reference
+    return reference
+
+
+def successors_for(root, child):
+    successors = child.get("successors", ())
+    reference = poc_reference()
+    if child["key"] == "poc" and reference.transaction_present(root):
+        return successors + ({
+            "kind": "versioned", "package": reference.KEY, "version": reference.VERSION,
+            "record": reference.RECORD.as_posix(), "manifest": reference.MANIFEST.as_posix(),
+            "proposed": (reference.CANDIDATE / "proposed").as_posix(),
+        },)
+    return successors
+
+
 DATE_LINE = re.compile(r"^Date: (\d{4}-\d{2}-\d{2})$", re.M)
 DIFF_TARGET = re.compile(r"^\+\+\+ b/(\S[^\n]*)$", re.M)
 
@@ -538,14 +592,15 @@ def package_patches(root, proposed):
     return out
 
 
-def reverse_apply(root, patch_rel, target_rel, body):
+def reverse_apply(root, patch_rel, target_rel, body, *, zero_context=False):
     """`body` with the patch reversed, or None when it does not reverse."""
     with tempfile.TemporaryDirectory() as tmp:
         dest = Path(tmp) / target_rel
         dest.parent.mkdir(parents=True, exist_ok=True)
         dest.write_bytes(body)
+        options = ["--unidiff-zero"] if zero_context else []
         done = subprocess.run(
-            ["git", "apply", "-R", "--whitespace=nowarn",
+            ["git", "apply", "-R", "--whitespace=nowarn", *options,
              str((root / patch_rel).resolve())],
             cwd=tmp, capture_output=True)
         return dest.read_bytes() if done.returncode == 0 else None
@@ -559,7 +614,10 @@ def bytes_at(root, path, after):
     for later in reversed(after):
         found = package_patches(root, later["proposed"]).get(path, [])
         if body is not None and len(found) == 1:
-            body = reverse_apply(root, found[0], path, body)
+            reference = later.get("package") == poc_reference().KEY
+            if reference and not reference_signed(root):
+                return None
+            body = reverse_apply(root, found[0], path, body, zero_context=reference)
     return body
 
 
@@ -587,7 +645,8 @@ def compose_versioned(root, later, ltag, rows, r2, after=()):
                       f"`{path}`")
         elif found:
             current = bytes_at(root, path, after)
-            prior = (reverse_apply(root, found[0], path, current)
+            prior = (reverse_apply(root, found[0], path, current,
+                                   zero_context=later.get("package") == poc_reference().KEY)
                      if current is not None and sha(current) == succ else None)
             if prior is None or sha(prior) != rows[path]:
                 r2.append(f"{ltag}: broken chain — reversing `{found[0]}` "
@@ -604,7 +663,7 @@ def check_outcomes(root, report):
     r1, r2, subjects_seen, records = [], [], 0, 0
     for child in CHILDREN:
         tag = f"{child['key']} ({child['bead']})"
-        records += 1 + len(child.get("successors", ()))
+        records += 1 + len(successors_for(root, child))
         record = read_text(root, child["record"])
         manifest_bytes = read_bytes(root, child["manifest"])
         if record is None:
@@ -628,7 +687,7 @@ def check_outcomes(root, report):
         # A digest act carries an act instant and no `Date:` line; its date
         # is the instant's, so a versioned successor can follow it.
         dates = DATE_LINE.findall(record) or [i[:10] for i in reached]
-        successors = child.get("successors", ())
+        successors = successors_for(root, child)
         for index, later in enumerate(successors):
             name = Path(later["record"]).name
             ltag = f"{tag} successor {name}"
@@ -642,6 +701,13 @@ def check_outcomes(root, report):
                 r1.append(f"{ltag}: package manifest `{later['manifest']}` "
                           "missing")
                 continue
+            if later.get("package") == poc_reference().KEY:
+                expected = [p.as_posix() for p in poc_reference().SUBJECTS]
+                if [p for _sha, p in ROW.findall(lmanifest.decode())] != expected:
+                    r2.append(f"{ltag}: manifest is not exactly the six P115 subjects")
+                if not reference_signed(root):
+                    r1.append(f"{ltag}: incomplete or invalid exact P115 sign-off transaction")
+                    continue
             if later.get("kind", "digest") == "versioned":
                 # No act instant: order is the append-only aggregate record
                 # (strictly after the act before it) and a date on or after.
@@ -1019,6 +1085,162 @@ def compose_polaris_by_name(base, overlay, *additions):
     return by_id, problems
 
 
+def _cap1_overlay_guard_regex(text):
+    """Method A: refusals for the CAP1 overlay, independent of its blocks.
+
+    Its only level-2 heading is exactly `## MODIFIED Requirements`; no other
+    heading of any level names a delta section; it carries no U+FEFF or
+    carriage return; and every requirement header is canonical and unfenced.
+    """
+    out = []
+    level2 = re.findall(r"^[ \t]*##(?!#)[^\n]*$", text, re.M)
+    if level2 != [CAP1_OVERLAY_SECTION]:
+        out.append(f"level-2 headings {level2}, expected exactly "
+                   f"[{CAP1_OVERLAY_SECTION!r}]")
+    out += [f"heading `{h.strip()}`; the overlay is MODIFIED-only"
+            for h in _foreign_headings_regex(text)
+            if h != CAP1_OVERLAY_SECTION and h not in level2]
+    out += [f"carries {what}; refused, never normalised"
+            for what, pattern in (("U+FEFF", "\ufeff"),
+                                  ("a carriage return", "\r"))
+            if re.search(pattern, text)]
+    return out + [p for p in _header_problems_regex(text)]
+
+
+def _cap1_overlay_guard_manual(text):
+    """Method B: the same refusals, by a line scan with no regular expressions."""
+    out = []
+    level2 = [line for line in text.split("\n")
+              if line.lstrip(" \t").startswith("##")
+              and not line.lstrip(" \t").startswith("###")]
+    if level2 != [CAP1_OVERLAY_SECTION]:
+        out.append(f"level-2 headings {level2}, expected exactly "
+                   f"[{CAP1_OVERLAY_SECTION!r}]")
+    out += [f"heading `{h.strip()}`; the overlay is MODIFIED-only"
+            for h in _foreign_headings_manual(text)
+            if h != CAP1_OVERLAY_SECTION and h not in level2]
+    if "\ufeff" in text:
+        out.append("carries U+FEFF; refused, never normalised")
+    if "\r" in text:
+        out.append("carries a carriage return; refused, never normalised")
+    return out + [p for p in _header_problems_manual(text)]
+
+
+def compose_cap1_by_id(base, overlay):
+    """Method A: parse both files by regex, then replace by identifier.
+
+    The overlay must carry exactly `CAP1_OVERLAY_REPLACES`, in that order,
+    and each must already be a base requirement (a full replacement, never
+    an addition).
+    """
+    comp, pb = parse_regex(base, "CAP1")
+    over, po = parse_regex(overlay, "CAP1")
+    problems = [f"base: duplicate or orphan {p}" for p in pb]
+    problems += [f"overlay: duplicate or orphan {p}" for p in po]
+    problems += [f"overlay: {p}" for p in _cap1_overlay_guard_regex(overlay)]
+    if tuple(over) != CAP1_OVERLAY_REPLACES:
+        problems.append(f"overlay replaces {list(over)}, expected exactly "
+                        f"{list(CAP1_OVERLAY_REPLACES)}")
+    for ident, req in over.items():
+        if ident not in comp:
+            problems.append(f"overlay: {ident} is dangling (not in the base)")
+        comp[ident] = req
+    return comp, problems
+
+
+def _lines_keep(text):
+    """Split at LF, keeping each terminator (no regular expression)."""
+    out, start = [], 0
+    while start < len(text):
+        stop = text.find("\n", start)
+        stop = len(text) if stop < 0 else stop + 1
+        out.append(text[start:stop])
+        start = stop
+    return out
+
+
+def _cap1_spans_manual(lines):
+    """{identifier: [(first, end)]}: each block runs to the next header."""
+    head = "### Requirement: "
+    heads = [i for i, line in enumerate(lines) if line.startswith(head)]
+    spans = {}
+    for n, i in enumerate(heads):
+        ident = lines[i][len(head):].partition(" — ")[0]
+        end = heads[n + 1] if n + 1 < len(heads) else len(lines)
+        spans.setdefault(ident, []).append((i, end))
+    return spans
+
+
+def compose_cap1_by_text(base, overlay):
+    """Method B: splice the overlay's blocks into the base text, then parse.
+
+    No regular expression: the composed bytes come from a line splice, are
+    then read by the line state machine, and are returned for the digest
+    comparison with the adoption's generated record.
+    """
+    problems = [f"overlay: {p}" for p in _cap1_overlay_guard_manual(overlay)]
+    b_lines, o_lines = _lines_keep(base), _lines_keep(overlay)
+    b_spans, o_spans = _cap1_spans_manual(b_lines), _cap1_spans_manual(o_lines)
+    if tuple(o_spans) != CAP1_OVERLAY_REPLACES:
+        problems.append(f"overlay replaces {list(o_spans)}, expected exactly "
+                        f"{list(CAP1_OVERLAY_REPLACES)}")
+    composed = b_lines
+    for ident in o_spans:
+        if len(o_spans[ident]) != 1:
+            problems.append(f"overlay: {ident} has {len(o_spans[ident])} blocks")
+            continue
+        have = _cap1_spans_manual(composed).get(ident, [])
+        if len(have) != 1:
+            problems.append(f"overlay: {ident} is dangling or repeated in the "
+                            f"base ({len(have)} blocks)")
+            continue
+        (first, end), (ofirst, oend) = have[0], o_spans[ident][0]
+        composed = composed[:first] + o_lines[ofirst:oend] + composed[end:]
+    text = "".join(composed)
+    comp, pc = parse_manual(text, "CAP1")
+    problems += [f"composed: duplicate or orphan {p}" for p in pc]
+    return comp, problems, text
+
+
+def cap1_overlay_signed(root):
+    """Findings unless the declared sign-off record terminates the overlay."""
+    records = addition_records(root, CAP1_OVERLAY_CHANGE)
+    want = [(CAP1_OVERLAY_RECORD, CAP1_OVERLAY_VERSION)]
+    got = [(rel, version) for rel, _text, version in records]
+    tag = f"Tag: {CAP1_OVERLAY_CHANGE}-v{CAP1_OVERLAY_VERSION}"
+    if got != want or tag not in records[0][1].splitlines():
+        return [f"CAP1: overlay `{CAP1_OVERLAY_CHANGE}` sign-off records "
+                f"{got}, expected exactly {want} carrying `{tag}`; the bound "
+                "file alone is counted"]
+    return []
+
+
+def compose_cap1(root, text):
+    """(population, findings): the bound CAP1 file with the overlay applied."""
+    overlay = read_text(root, CAP1_OVERLAY_SPEC)
+    unsigned = cap1_overlay_signed(root)
+    if overlay is None or unsigned:
+        a, pa = parse_regex(text, "CAP1")
+        return a, unsigned or [f"CAP1: overlay `{CAP1_OVERLAY_SPEC}` missing; "
+                               "the bound file alone is counted"]
+    a, pa = compose_cap1_by_id(text, overlay)
+    b, pb, composed = compose_cap1_by_text(text, overlay)
+    findings = [f"CAP1 method A: {p}" for p in pa]
+    findings += [f"CAP1 method B: {p}" for p in pb]
+    if a != b:
+        findings.append(f"CAP1: the two overlay compositions disagree "
+                        f"({len(a)} vs {len(b)} requirements)")
+    try:
+        recorded = json.loads(read_text(root, CAP1_OVERLAY_DEPS) or "null")
+        recorded = recorded["composed_spec_sha256"]
+    except (ValueError, TypeError, KeyError):
+        recorded = None
+    if sha(composed.encode("utf-8")) != recorded:
+        findings.append(f"CAP1 method B: composed bytes do not hash to "
+                        f"`{CAP1_OVERLAY_DEPS}` composed_spec_sha256")
+    return a, findings
+
+
 def census(root):
     """Return ({family: {id: {name, scenarios}}}, findings)."""
     out, findings = {}, []
@@ -1026,6 +1248,10 @@ def census(root):
         text = read_text(root, rel)
         if text is None:
             findings.append(f"{family}: `{rel}` missing")
+            continue
+        if family == "CAP1":
+            out[family], cap1 = compose_cap1(root, text)
+            findings += cap1
             continue
         a, pa = parse_regex(text, family)
         b, pb = parse_manual(text, family)
@@ -1108,7 +1334,10 @@ def check_census(root, report):
     pop, findings = census(root)
     examined = 0
     p_req, p_scen, p_ids = polaris_expected(root, findings)
+    signed_reference = reference_signed(root)
     totals = dict(EXPECTED_TOTALS, POLARIS=(p_req, p_scen))
+    if signed_reference:
+        totals["POC"] = (26, 34)
     for family, (n_req, n_scen) in totals.items():
         reqs = pop.get(family, {})
         got = (len(reqs), sum(len(r["scenarios"]) for r in reqs.values()))
@@ -1117,6 +1346,8 @@ def check_census(root, report):
             findings.append(f"{family}: {got[0]} requirements / {got[1]} "
                             f"scenarios, expected {n_req} / {n_scen}")
         literal = EXPECTED.get(family)
+        if family == "POC" and signed_reference:
+            literal = {**literal, "014": 8}
         if literal is not None:
             prefix = f"{family}-REQ-"
             have = {k[len(prefix):]: len(v["scenarios"]) for k, v in reqs.items()}
@@ -1183,10 +1414,33 @@ def check_generated(root, pop, report):
         if cited != set(pop.get(family, {})):
             findings.append(f"`{rel}`: covers {len(cited)} of "
                             f"{len(pop.get(family, {}))} requirements")
+    # The CAP1 overlay's adoption-time generated record and figure, written
+    # by its own builder: both must agree with the composed census.
+    examined += 2
+    cap1 = pop.get("CAP1", {})
+    cap1_scen = sum(len(r["scenarios"]) for r in cap1.values())
+    try:
+        deps = json.loads(read_text(root, CAP1_OVERLAY_DEPS) or "null")
+        count, sources = deps["requirement_count"], deps["source_files"]
+    except (ValueError, TypeError, KeyError):
+        count, sources = None, {}
+    want_sources = {rel: sha(read_bytes(root, rel) or b"")
+                    for rel in (CAP1_OVERLAY_SPEC, FAMILY_SPECS["CAP1"])}
+    if count != len(cap1) or sources != want_sources:
+        findings.append(f"`{CAP1_OVERLAY_DEPS}`: requirement_count {count} or "
+                        "its source digests disagree with the composed census "
+                        f"({len(cap1)} requirements) and the bytes on disk")
+    adoption = " ".join((read_text(root, CAP1_OVERLAY_ADOPTION) or "").split())
+    stated = re.findall(r"It has (\d+) requirements and (\d+) scenarios",
+                        adoption)
+    if stated != [(str(len(cap1)), str(cap1_scen))]:
+        findings.append(f"`{CAP1_OVERLAY_ADOPTION}`: states {stated}, census "
+                        f"composes {len(cap1)} / {cap1_scen}")
     numbers = {fam: {k[-3:] for k in reqs} for fam, reqs in pop.items()}
     files = []
     for child in CHILDREN:
         files += tracked(root, f"{CHANGES}/{child['change']}")
+    files += tracked(root, f"{CHANGES}/{CAP1_OVERLAY_CHANGE}")
     addition_dirs = tuple(f"{CHANGES}/{change}/"
                           for change, _rel in polaris_additions(root))
     for prefix in addition_dirs:
@@ -1266,7 +1520,7 @@ def check_routes(root, pop, report):
         findings.append(f"`{OPENSPEC_README}`: row for untracked `{extra}`")
     for child in CHILDREN:
         for record in (child["record"], *(later["record"] for later in
-                                          child.get("successors", ()))):
+                                          successors_for(root, child))):
             examined += 2
             name = Path(record).name
             if not any(name in line for line in rows.get(child["change"], [])):
@@ -1284,6 +1538,13 @@ def check_routes(root, pop, report):
                                 f"not name its terminal record `{name}`")
             if record not in status and name not in status:
                 findings.append(f"`{STATUS}` cites no terminal record `{name}`")
+    examined += 2
+    name = Path(CAP1_OVERLAY_RECORD).name
+    if not any(name in line for line in rows.get(CAP1_OVERLAY_CHANGE, [])):
+        findings.append(f"`{OPENSPEC_README}`: the `{CAP1_OVERLAY_CHANGE}` row "
+                        f"does not name its terminal record `{name}`")
+    if CAP1_OVERLAY_RECORD not in status and name not in status:
+        findings.append(f"`{STATUS}` cites no terminal record `{name}`")
     figures = STATUS_FIGURE.findall(status)
     examined += 1
     reqs = pop.get("POLARIS", {})
@@ -1407,14 +1668,35 @@ def check_unions(root, report):
                 "a change to a signed union needs a signed successor")
 
 
+# Within one run() the tree is only read, so whether its P115 transaction is
+# signed cannot change between the predicates that ask; it was asked twelve
+# times per run (~4,200 git calls, syzygy-b6dp). The memo lives for one run()
+# call only: a later run, or a caller between runs, asks afresh.
+_SIGNED_MEMO = None
+
+
+def reference_signed(root):
+    if _SIGNED_MEMO is None:
+        return poc_reference().is_signed(root)
+    key = str(Path(root).resolve())
+    if key not in _SIGNED_MEMO:
+        _SIGNED_MEMO[key] = poc_reference().is_signed(root)
+    return _SIGNED_MEMO[key]
+
+
 def run(root):
+    global _SIGNED_MEMO
     report = Report()
-    check_outcomes(root, report)
-    pop = check_census(root, report)
-    check_generated(root, pop, report)
-    check_routes(root, pop, report)
-    check_pins(root, report)
-    check_unions(root, report)
+    _SIGNED_MEMO = {}
+    try:
+        check_outcomes(root, report)
+        pop = check_census(root, report)
+        check_generated(root, pop, report)
+        check_routes(root, pop, report)
+        check_pins(root, report)
+        check_unions(root, report)
+    finally:
+        _SIGNED_MEMO = None
     return report
 
 
@@ -1426,19 +1708,20 @@ def inputs(root):
     paths = {AGGREGATE, CENSUS, STATUS, REGISTRY, POLICY, *ROUTE_PAGES}
     for child in CHILDREN:
         paths |= {child["record"], child["manifest"]}
-        for later in child.get("successors", ()):
+        for later in successors_for(root, child):
             paths |= {later["record"], later["manifest"]}
             if "proposed" in later:
                 paths |= set(tracked(root, later["proposed"]))
         manifest = read_text(root, child["manifest"]) or ""
         paths |= {p for _d, p in ROW.findall(manifest)}
         paths |= set(tracked(root, f"{CHANGES}/{child['change']}"))
-    paths |= set(tracked(root, CHANGES))
+    paths |= set(tracked(root, CHANGES)) | {CAP1_OVERLAY_RECORD}
     for change, rel in polaris_additions(root):
         paths |= {rel} | {r for r, _t, _v in addition_records(root, change)}
         paths |= {r for r, _t, _v in addition_terminals(root, change)}
         if change in ADOPTED_ADDITIONS:
             paths.add(adopted_binding(ADOPTED_ADDITIONS[change][1])[1])
+    paths |= poc_reference().validation_inputs(root)
     return sorted(paths)
 
 
@@ -1697,6 +1980,66 @@ def mutants(root):
          _replace("## decisions\n\nSDR-3\n", "## decisions\n\nSDR-3, SDR-99\n"),
          "R7~"),
         ("status-figure", STATUS, _status_figure_moved, "R5"),
+    )
+
+
+def cap1_overlay_mutants():
+    """Rule-6 mutants of the CAP1 overlay composition (syzygy-5oqc).
+
+    Each guard is pinned in both methods where both carry it; `&` requires
+    both findings. The prose-only mutant leaves the census unchanged, so only
+    method B's composed digest (R3) and the record's source digests (R4) see
+    it.
+    """
+    spec, record = CAP1_OVERLAY_SPEC, CAP1_OVERLAY_RECORD
+    name = Path(record).name
+
+    def both(text):
+        return f"R3:CAP1 method A: overlay: {text}&CAP1 method B: overlay: {text}"
+    return (
+        ("cap1-overlay-scenario-removed", spec,
+         _replace("#### Scenario: Correlated consent",
+                  "#### Scenery: Correlated consent"), "R3"),
+        ("cap1-overlay-unsigned", record, None, "R3:sign-off records"),
+        ("cap1-overlay-wrong-tag", record,
+         _replace(f"Tag: {CAP1_OVERLAY_CHANGE}-v1.0",
+                  f"Tag: {CAP1_OVERLAY_CHANGE}-v0.9"), "R3:sign-off records"),
+        ("cap1-overlay-missing", spec, None, "R3:overlay `"),
+        ("cap1-overlay-replaces-other", spec,
+         _replace("### Requirement: CAP1-REQ-046 — ",
+                  "### Requirement: CAP1-REQ-045 — "),
+         "R3:CAP1 method A: overlay replaces&CAP1 method B: overlay replaces"),
+        ("cap1-overlay-dangling", FAMILY_SPECS["CAP1"],
+         _replace("### Requirement: CAP1-REQ-046 — ",
+                  "### Requirement: CAP1-REQ-049 — "),
+         "R3:CAP1 method A: overlay: CAP1-REQ-046 is dangling"
+         "&CAP1 method B: overlay: CAP1-REQ-046 is dangling"),
+        ("cap1-overlay-added-section", spec,
+         _replace(CAP1_OVERLAY_SECTION, ADDED_HEADING), both("level-2 headings")),
+        ("cap1-overlay-delta-heading", spec,
+         lambda t: t + "\n### REMOVED Requirements\n", both("heading `###")),
+        ("cap1-overlay-carriage-return", spec, _replace("\n", "\r\n"),
+         both("carries a carriage return")),
+        ("cap1-overlay-bom", spec, lambda t: "\ufeff" + t, both("carries U+FEFF")),
+        ("cap1-overlay-fenced-header", spec,
+         lambda t: t + "\n```\n### Requirement: CAP1-REQ-099 — x\n```\n",
+         both("a requirement header inside a fence")),
+        ("cap1-overlay-prose-only", spec, _replace(" SHALL ", "  SHALL "),
+         "R3:composed bytes do not hash"),
+        ("cap1-overlay-composed-digest", CAP1_OVERLAY_DEPS,
+         lambda t: re.sub(r'("composed_spec_sha256": ")([0-9a-f])',
+                          lambda m: m.group(1) + ("0" if m.group(2) != "0"
+                                                  else "1"), t, 1),
+         "R3:composed bytes do not hash"),
+        ("cap1-overlay-deps-count", CAP1_OVERLAY_DEPS,
+         _replace('"requirement_count": 42', '"requirement_count": 43'),
+         "R4:requirement_count"),
+        ("cap1-overlay-adoption-figure", CAP1_OVERLAY_ADOPTION,
+         _replace("and 57 scenarios", "and 47 scenarios"), "R4:states"),
+        ("cap1-overlay-route-row", OPENSPEC_README, _replace(name, "X.md", -1),
+         f"R5:`{CAP1_OVERLAY_CHANGE}` row"),
+        ("cap1-overlay-status-citation", STATUS, _replace(name, "X.md", -1),
+         f"R5:cites no terminal record `{name}`"),
     )
 
 
@@ -2032,71 +2375,25 @@ def selftest(witness_path=None):
 def _selftest_cases(tmp, commit, witnesses, failures, witness_path, base, clean,
                     added, with_addition, adopted, with_adopted):
     cases = ([(base, clean, m) for m in mutants(ROOT)]
+             + [(base, clean, m) for m in cap1_overlay_mutants()]
              + [(added, with_addition, m)
                 for m in addition_mutants()]
              + [(adopted, with_adopted, m) for m in adopted_mutants()])
-    for start, clean, (name, rel, mutate, expect) in cases:
-        tree = Path(tmp) / name
-        shutil.copytree(start, tree)
-        rels = rel if isinstance(rel, tuple) else (rel,)
-        unchanged, applied = False, False
-        for one in rels:
-            target = tree / one
-            before = target.read_text(encoding="utf-8")
-            if mutate is None:
-                target.unlink()
-                old, new = "<file present>", "<file deleted>"
-                continue
-            after = mutate(before)
-            if after == before and "=0" in expect:
-                old, new = "<already applied>", "<already applied>"
-                continue
-            applied = True
-            if after == before:
-                unchanged = True
-                break
-            target.write_text(after, encoding="utf-8")
-            old, new = _fragment(before, after)
-        if unchanged:
-            failures.append(f"{name}: mutation changed nothing")
-            continue
-        rel = " + ".join(rels)
-        got = run(tree)
-        if ":" in expect:
-            # The predicate must fail with this finding, not another.
-            # `&` joins needles that must each be found (both methods).
-            rid, _sep, needles = expect.partition(":")
-            caught = all(any(n in f for f in got.findings.get(rid, []))
-                         for n in needles.split("&"))
-        elif expect.endswith("~"):
-            rid = expect[:-1]
-            caught = got.findings.get(rid) != clean.findings.get(rid)
-        elif "=0" in expect:
-            # Strict: the report-only predicate examined its population
-            # and reports exactly zero findings. Nothing else fails, except
-            # the predicates named after `|`, which must fail exactly when
-            # the mutant applied new bytes (a later act over a signed
-            # subject fails R2 by design until the reconciliation is
-            # re-derived); once the tree already carries the bytes they
-            # may only be a subset.
-            head, _sep, tail = expect.partition("|")
-            rid = head[:-2]
-            allowed = set(filter(None, tail.split(",")))
-            failed_ok = (got.failed == allowed if applied
-                         else got.failed <= allowed)
-            caught = (got.findings.get(rid) == [] and failed_ok
-                      and any(int(m.group(1)) > 0 for m in (
-                          re.match(rf"OK +{rid}  .* — (\d+) examined", line)
-                          for line in got.lines) if m))
-        else:
-            caught = expect in got.failed
-        witnesses.append({"mutant": name, "path": rel, "old": old,
-                          "new": new, "expected": expect,
-                          "failed": sorted(got.failed),
-                          "outcome": "killed" if caught else "SURVIVED"})
-        if not caught:
-            failures.append(f"{name}: expected {expect} to fail, got "
-                            f"{sorted(got.failed) or 'nothing'}")
+    # Each case copies its own tree, so the cases are independent: they run
+    # in forked workers (which inherit the selftest's patched globals and the
+    # unpicklable mutation closures) and report in case order, so the
+    # witness record is the same as a serial run's (syzygy-j5m0).
+    global _CASE_STATE
+    _CASE_STATE = (tmp, cases)
+    try:
+        results = _map_cases(len(cases))
+    finally:
+        _CASE_STATE = None
+    for witness, failure in results:
+        if witness is not None:
+            witnesses.append(witness)
+        if failure is not None:
+            failures.append(failure)
     # Two cases a one-file mutation cannot express. A second record of the
     # same version fails R1 by its own finding; --regenerate refuses an
     # unsigned addition and writes nothing.
@@ -2149,6 +2446,123 @@ def _selftest_cases(tmp, commit, witnesses, failures, witness_path, base, clean,
           f"{len(witnesses)} mutants killed by their expected predicate "
           f"(commit {commit[:12]})")
     return 0
+
+
+_CASE_STATE = None
+
+
+def _selftest_workers():
+    raw = os.environ.get("SELFTEST_WORKERS", "")
+    if raw.isdigit() and int(raw) > 0:
+        return int(raw)
+    return max(1, min(os.cpu_count() or 1, 8))
+
+
+def _map_cases(count):
+    """Run every case, in parallel under fork, returning results in order."""
+    workers = _selftest_workers()
+    if workers == 1 or "fork" not in multiprocessing.get_all_start_methods():
+        return [_run_case(i) for i in range(count)]
+    with multiprocessing.get_context("fork").Pool(workers) as pool:
+        return pool.map(_run_case, range(count), chunksize=1)
+
+
+def _run_case(index):
+    tmp, cases = _CASE_STATE
+    start, clean, (name, rel, mutate, expect) = cases[index]
+    tree = Path(tmp) / name
+    shutil.copytree(start, tree)
+    rels = rel if isinstance(rel, tuple) else (rel,)
+    unchanged, applied = False, False
+    for one in rels:
+        target = tree / one
+        before = target.read_text(encoding="utf-8")
+        if mutate is None:
+            target.unlink()
+            old, new = "<file present>", "<file deleted>"
+            continue
+        after = mutate(before)
+        if after == before and "=0" in expect:
+            old, new = "<already applied>", "<already applied>"
+            continue
+        applied = True
+        if after == before:
+            unchanged = True
+            break
+        target.write_text(after, encoding="utf-8")
+        old, new = _fragment(before, after)
+    if unchanged:
+        return None, f"{name}: mutation changed nothing"
+    rel = " + ".join(rels)
+    got = run(tree)
+    if ":" in expect:
+        # The predicate must fail with this finding, not another.
+        # `&` joins needles that must each be found (both methods).
+        rid, _sep, needles = expect.partition(":")
+        caught = all(any(n in f for f in got.findings.get(rid, []))
+                     for n in needles.split("&"))
+    elif expect.endswith("~"):
+        rid = expect[:-1]
+        caught = got.findings.get(rid) != clean.findings.get(rid)
+    elif "=0" in expect:
+        # Strict: the report-only predicate examined its population
+        # and reports exactly zero findings. Nothing else fails, except
+        # the predicates named after `|`, which must fail exactly when
+        # the mutant applied new bytes (a later act over a signed
+        # subject fails R2 by design until the reconciliation is
+        # re-derived); once the tree already carries the bytes they
+        # may only be a subset.
+        head, _sep, tail = expect.partition("|")
+        rid = head[:-2]
+        allowed = set(filter(None, tail.split(",")))
+        failed_ok = (got.failed == allowed if applied
+                     else got.failed <= allowed)
+        if name == "pins-after-repin-acts" and applied:
+            reference = poc_reference()
+            if reference.transaction_present(start):
+                original_pwb = (start / FAMILY_SPECS["PWB"]).read_bytes()
+                replayed_pwb = (tree / FAMILY_SPECS["PWB"]).read_bytes()
+                if not reference.is_signed(start):
+                    failed_ok = False
+                elif replayed_pwb != original_pwb:
+                    # Rewinding this governing input must invalidate
+                    # P115, with exactly this refusal and no other R1.
+                    required = allowed | {"R1"}
+                    expect = f"{rid}=0|" + ",".join(sorted(required))
+                    expected_r1 = [
+                        "poc (syzygy-73e.5.2) successor "
+                        "THREE-SURFACE-POC-GOVERNEDBY-REFERENCE-"
+                        "AMENDMENT-SIGNOFF-v1.0.md: incomplete or "
+                        "invalid exact P115 sign-off transaction"]
+                    failed_ok = (
+                        got.failed == required
+                        and got.findings.get("R1") == expected_r1
+                        and reference.binding_findings(tree) == [
+                            "current P115 governing input differs: "
+                            + FAMILY_SPECS["PWB"]])
+                    if failed_ok:
+                        # The early input refusal can hide a second
+                        # record defect. Restoring only PWB must make
+                        # the complete signed transaction valid again.
+                        target = tree / FAMILY_SPECS["PWB"]
+                        try:
+                            target.write_bytes(original_pwb)
+                            failed_ok = reference.is_signed(tree)
+                        finally:
+                            target.write_bytes(replayed_pwb)
+        caught = (got.findings.get(rid) == [] and failed_ok
+                  and any(int(m.group(1)) > 0 for m in (
+                      re.match(rf"OK +{rid}  .* — (\d+) examined", line)
+                      for line in got.lines) if m))
+    else:
+        caught = expect in got.failed
+    witness = {"mutant": name, "path": rel, "old": old, "new": new,
+               "expected": expect, "failed": sorted(got.failed),
+               "outcome": "killed" if caught else "SURVIVED"}
+    if not caught:
+        return witness, (f"{name}: expected {expect} to fail, got "
+                         f"{sorted(got.failed) or 'nothing'}")
+    return witness, None
 
 
 def _fragment(before, after):

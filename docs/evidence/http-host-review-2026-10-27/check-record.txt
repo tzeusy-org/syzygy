@@ -1,0 +1,38 @@
+own-head ran at 9d55188734e5d7d315591a55daf3a7bb5970c5aa tree /var/tmp/la-b73/head
+specs 17 results 17 ids equal True
+S1-second-signal-closes-again                 killed   exit=1 failedRows=1 tests=['Tests  1 failed | 5 passed (6)']
+S2-announce-after-close-starts                killed   exit=1 failedRows=5 tests=['Tests  5 failed | 1 passed (6)']
+S3-close-failure-unreported                   killed   exit=1 failedRows=1 tests=['Tests  1 failed | 5 passed (6)']
+S4-close-failure-never-resolves               killed   exit=1 failedRows=2 tests=['Tests  2 failed | 4 passed (6)']
+S5-sigterm-not-handled                        killed   exit=1 failedRows=6 tests=['Tests  6 failed (6)']
+S6-sigterm-announced-as-sigint                killed   exit=1 failedRows=2 tests=['Tests  2 failed | 4 passed (6)']
+G1-observer-gate-leaves-out-the-host          killed   exit=1 failedRows=1 tests=['Tests  1 failed | 10 passed (11)']
+B1-cap1-barrel-loses-escapeHtml               killed   exit=1 failedRows=1 tests=['Tests  1 failed | 1 passed (2)']
+B2-credentials-shim-loses-verifyCredential    killed   exit=1 failedRows=1 tests=['Tests  1 failed | 1 passed (2)']
+B3-server-shim-loses-createDaemon             killed   exit=1 failedRows=1 tests=['Tests  1 failed | 1 passed (2)']
+B4-server-shim-gains-closeOnSignal            killed   exit=1 failedRows=1 tests=['Tests  1 failed | 1 passed (2)']
+B5-host-barrel-drops-escape-html              killed   exit=1 failedRows=1 tests=['Tests  1 failed | 1 passed (2)']
+B6-host-barrel-gains-a-cap1-name              killed   exit=1 failedRows=1 tests=['Tests  1 failed | 1 passed (2)']
+C1-any-presented-token-admitted               killed   exit=1 failedRows=1 tests=['Tests  1 failed | 25 passed (26)']
+C2-group-readable-file-reused                 killed   exit=1 failedRows=2 tests=['Tests  2 failed | 24 passed (26)']
+C3-auth-order-bypass                          killed   exit=1 failedRows=9 tests=['Tests  9 failed | 11 passed (20)']
+E1-apostrophe-left-unescaped                  killed   exit=1 failedRows=5 tests=['Tests  5 failed | 21 passed (26)']
+m10 keys ['capturedAt', 'task', 'testedCommit', 'command', 'tests', 'baseline', 'results', 'scope']
+m10 tested commit 9d55188734e5d7d315591a55daf3a7bb5970c5aa
+  m10 omitted-route apps/three-surface-poc/src/routes.ts None
+  m10 wrong-self apps/three-surface-poc/src/routes.ts None
+  m10 inputs-digest-validator apps/three-surface-poc/src/routes.ts None
+  m10 strong-validator apps/three-surface-poc/src/routes.ts None
+  m10 ceiling-bypass apps/three-surface-poc/src/routes.ts None
+  m10 false-presentation-304 apps/three-surface-poc/src/routes.ts None
+  m10 auth-order-bypass packages/http-host/src/server.ts None
+summary keys ['bead', 'base', 'head', 'subject', 'moved', 'keptTests', 'governed', 'differential', 'mutants', 'titles', 'system', 'problems']
+sha256 record.py = b4dfd9659a1ea7e2c9e50d44b15b90738d62794a234e8150a7de48a44b9716fb
+sha256 summary.json = d564386bead6367ea7a932fffa3a63e942be027c06d2d77e14192aa17cd4ddf2
+sha256 tools/differential.py = 427bdbb4c6a23645f1c397e7936109041018a52259374a5fb843a7be12593d2d
+sha256 tools/host-diff.mjs = 8df4a0a50e5803e10076ab921e034aeb5e3ad00eba52b1cd71882dcac35b2a92
+sha256 tools/e2e-diff.mjs = 76d81afa79e3cd9d7e1e3cdf20d9c53240b198726db82b621ee6141c32b06d3b
+sha256 tools/gate-diff.mjs = f27ab213f847ca84bea71d0a9c3d37c9eb267204acfe4ec83d4e68e2e9959e17
+sha256 tools/surface.mjs = b4735f1a73227e8af7c22c0cbe2d6e9407faf5269d7f0bd757d1115f5483e907
+sha256 mut.py = ca2b8eadc503305bb3767b7220b02775429164ef6c183ac9854acf9d8ed9b6a5
+problems 0

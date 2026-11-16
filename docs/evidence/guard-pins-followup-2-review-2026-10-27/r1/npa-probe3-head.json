@@ -1,0 +1,177 @@
+{
+ "node": "v24.6.0",
+ "npaVersion": "12.0.2",
+ "pattern": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+ "n3": [
+  {
+   "spec": "github:someone/dossier#v1.tgz",
+   "local": true,
+   "npa": "git",
+   "name": "dossier"
+  },
+  {
+   "spec": "github:someone/dossier#v1.tar.gz",
+   "local": true,
+   "npa": "git",
+   "name": "dossier"
+  },
+  {
+   "spec": "gitlab:someone/dossier#release.tar",
+   "local": true,
+   "npa": "git",
+   "name": "dossier"
+  },
+  {
+   "spec": "bitbucket:someone/dossier.tgz",
+   "local": true,
+   "npa": "git",
+   "name": "dossier"
+  },
+  {
+   "spec": "git://example.com/lib.tar.gz",
+   "local": true,
+   "npa": "git",
+   "name": "dossier"
+  },
+  {
+   "spec": "git+ssh://git@example.com/lib.git#v1.tgz",
+   "local": true,
+   "npa": "git",
+   "name": "dossier"
+  },
+  {
+   "spec": "https://github.com/someone/dossier.git#v1.tgz",
+   "local": true,
+   "npa": "git",
+   "name": "dossier"
+  },
+  {
+   "spec": "someone/dossier#V1.TAR",
+   "local": true,
+   "npa": "git",
+   "name": "dossier"
+  },
+  {
+   "spec": "git+file:../../packages/lib.tgz",
+   "local": true,
+   "npa": "git",
+   "name": "dossier"
+  }
+ ],
+ "remote": [
+  {
+   "spec": "https://example.com/lib.TGZ",
+   "local": true,
+   "npa": "remote",
+   "name": "dossier"
+  },
+  {
+   "spec": "http://example.com/a/b/lib-1.0.0.tar",
+   "local": true,
+   "npa": "remote",
+   "name": "dossier"
+  },
+  {
+   "spec": "HTTPS://example.com/lib.tgz",
+   "local": true,
+   "npa": "remote",
+   "name": "dossier"
+  }
+ ],
+ "n4": [
+  {
+   "spec": "npm:@scope/lib@^1.0.0",
+   "local": true,
+   "npa": "alias",
+   "name": "dossier",
+   "subType": "range",
+   "subName": "@scope/lib",
+   "subRegistry": true
+  },
+  {
+   "spec": "npm:@syzygy/polaris-dossier",
+   "local": true,
+   "npa": "alias",
+   "name": "dossier",
+   "subType": "range",
+   "subName": "@syzygy/polaris-dossier",
+   "subRegistry": true
+  },
+  {
+   "spec": "npm:lodash",
+   "local": true,
+   "npa": "alias",
+   "name": "dossier",
+   "subType": "range",
+   "subName": "lodash",
+   "subRegistry": true
+  },
+  {
+   "spec": "npm:lodash@1.2.3",
+   "local": true,
+   "npa": "alias",
+   "name": "dossier",
+   "subType": "version",
+   "subName": "lodash",
+   "subRegistry": true
+  },
+  {
+   "spec": "npm:lodash@next",
+   "local": true,
+   "npa": "alias",
+   "name": "dossier",
+   "subType": "tag",
+   "subName": "lodash",
+   "subRegistry": true
+  },
+  {
+   "spec": "npm:github:someone/dossier",
+   "local": true,
+   "npa": "throws aliases only work for registry deps"
+  },
+  {
+   "spec": "npm:git+https://example.com/lib.git",
+   "local": true,
+   "npa": "throws aliases only work for registry deps"
+  },
+  {
+   "spec": "npm:https://example.com/lib.tgz",
+   "local": true,
+   "npa": "throws aliases only work for registry deps"
+  },
+  {
+   "spec": "npm:/srv/lib",
+   "local": true,
+   "npa": "throws aliases only work for registry deps"
+  },
+  {
+   "spec": "npm:lib@workspace:*",
+   "local": true,
+   "npa": "throws EUNSUPPORTEDPROTOCOL"
+  },
+  {
+   "spec": "npm:lib@file:../x",
+   "local": true,
+   "npa": "throws aliases only work for registry deps"
+  },
+  {
+   "spec": "npm:npm:lodash@1",
+   "local": true,
+   "npa": "throws nested aliases not supported"
+  },
+  {
+   "spec": "NPM:lodash@1",
+   "local": true,
+   "npa": "alias",
+   "name": "dossier",
+   "subType": "range",
+   "subName": "lodash",
+   "subRegistry": true
+  },
+  {
+   "spec": "npm:lib.tgz",
+   "local": true,
+   "npa": "throws aliases only work for registry deps"
+  }
+ ]
+}

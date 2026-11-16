@@ -1,4 +1,4 @@
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
@@ -11,18 +11,18 @@ import {
   renderHuman,
   serveMachine,
   HUMAN_ENTRY_PATH,
-  type EvaluationIdentity,
   type RepositoryId,
 } from '@syzygy/cap1-core';
 import { fullDisclosure } from '@syzygy/cap1-core/testing';
 
+import { writeConsent } from '../test-support/consent-acts.js';
 import { evaluateProject, type ProjectEvaluation } from './pipeline.js';
+import { DAEMON_CAPTURE_VERSIONS } from './source-snapshot.js';
 import { createDaemon, type Route, type RunningDaemon } from './server.js';
 import {
   humanRoutes,
   HUMAN_ENTRY_ROUTE_PATH,
   HUMAN_PAGE_PATH,
-  type EntrySourceRead,
   type HumanRouteDependencies,
 } from './routes-human.js';
 
@@ -37,10 +37,8 @@ import {
 // modules. (Core functions are used to BUILD inputs and to enumerate
 // the sweep denominator, never to phrase an expectation.)
 
-const EVALUATION: EvaluationIdentity = {
-  snapshot: 'snap-rt5-001',
-  asOf: '2026-08-22T12:00:00Z',
-};
+// The capture's explicit as-of; the snapshot is the capture's own digest.
+const CAPTURE = { asOf: '2026-08-22T12:00:00Z', versions: DAEMON_CAPTURE_VERSIONS } as const;
 
 const cleanups: string[] = [];
 const running: RunningDaemon[] = [];
@@ -92,19 +90,7 @@ const ENTRY_TEXT =
   '# RT5 fixture overview\n\nAn XSS probe from an observed file: <script>alert("xss")</script>\n';
 
 function writeConsentRecord(decisionsDir: string, id: string, repository: string): void {
-  writeFileSync(
-    join(decisionsDir, `${id}.yaml`),
-    [
-      `id: ${id}`,
-      'project: prj-rt5-human',
-      `repository: ${repository}`,
-      'scope: full',
-      'attribution: test-owner',
-      'grant_state: in-force',
-      '',
-    ].join('\n'),
-    'utf8',
-  );
+  writeConsent(decisionsDir, { id, project: 'prj-rt5-human', repository });
 }
 
 function fixtureRepo(options?: { readonly withEntry?: boolean }): {
@@ -117,6 +103,13 @@ function fixtureRepo(options?: { readonly withEntry?: boolean }): {
   writeFileSync(join(root, '.syzygy', 'project.yaml'), DECLARATION_SOURCE, 'utf8');
   writeConsentRecord(decisionsDir, 'consent-gov-root', 'repo-governance-root');
   writeConsentRecord(decisionsDir, 'consent-observed', 'repo-observed-source');
+  // A legacy record with no owner act admits nothing; an unloadable
+  // reference would instead refuse every pair (§5 rule 4).
+  writeConsent(
+    decisionsDir,
+    { id: 'consent-unconsented', project: 'prj-rt5-human', repository: 'repo-unconsented' },
+    false,
+  );
   if (options?.withEntry !== false) {
     mkdirSync(join(root, '.syzygy', 'intent'), { recursive: true });
     writeFileSync(join(root, '.syzygy', 'intent', 'OVERVIEW.md'), ENTRY_TEXT, 'utf8');
@@ -124,24 +117,6 @@ function fixtureRepo(options?: { readonly withEntry?: boolean }): {
   const observedSourceDir = tempDir('rt5-human-observed-');
   writeFileSync(join(observedSourceDir, 'README.md'), '# observed source\n', 'utf8');
   return { root, observedSourceDir };
-}
-
-// A real-filesystem entry reader over the fixture root — the injected
-// dep the composition root will supply in main.ts. Named results,
-// fail-honest: missing file → absent; any other read failure →
-// unreadable with its reason.
-function fsEntryReader(root: string): (entryPath: typeof HUMAN_ENTRY_PATH) => EntrySourceRead {
-  return (entryPath) => {
-    try {
-      return { state: 'present', text: readFileSync(join(root, entryPath), 'utf8') };
-    } catch (cause) {
-      const code = (cause as NodeJS.ErrnoException).code;
-      if (code === 'ENOENT') {
-        return { state: 'absent' };
-      }
-      return { state: 'unreadable', reason: code ?? 'read-failure' };
-    }
-  };
 }
 
 async function startDaemon(routes: readonly Route[]): Promise<RunningDaemon> {
@@ -173,7 +148,7 @@ async function evaluatedFixture(): Promise<{
 }> {
   const { root, observedSourceDir } = fixtureRepo();
   const evaluation = await evaluateProject(root, {
-    evaluation: EVALUATION,
+    ...CAPTURE,
     repositoryRoots: {
       'repo-governance-root': root,
       'repo-observed-source': observedSourceDir,
@@ -181,7 +156,6 @@ async function evaluatedFixture(): Promise<{
   });
   const deps: HumanRouteDependencies = {
     getEvaluation: () => evaluation,
-    readEntrySource: fsEntryReader(root),
     entryAuthorities: [{ identifier: 'VIS-2', kind: 'doctrine' }],
   };
   return { root, evaluation, deps };
@@ -266,7 +240,8 @@ describe('RT5 — GET / project page over a real daemon', () => {
   });
 
   it("serves one verbatim 'Why this answer?' drawer per answer, with citations", async () => {
-    const { deps } = await evaluatedFixture();
+    const { deps, evaluation } = await evaluatedFixture();
+    if (evaluation.kind !== 'project-evaluated') throw new Error('fixture must evaluate');
     const daemon = await startDaemon(humanRoutes(deps));
     const { body: html } = await fetchText(daemon, HUMAN_PAGE_PATH);
 
@@ -280,7 +255,8 @@ describe('RT5 — GET / project page over a real daemon', () => {
     // Drawer citations: the evaluation identity, the coverage-and-consent
     // boundary, constituent facts, and a followed-references sweep with
     // its denominator disclosed.
-    expect(html).toContain('data-evaluation-snapshot="snap-rt5-001"');
+    expect(html).toMatch(/data-evaluation-snapshot="sha256:[0-9a-f]{64}"/);
+    expect(html).toContain(`data-evaluation-snapshot="${evaluation.model.evaluation.snapshot}"`);
     expect(html).toContain('data-evaluation-as-of="2026-08-22T12:00:00Z"');
     expect(html).toContain('Coverage and consent boundary');
     expect(html).toContain('data-constituent-fact="declaration"');
@@ -341,12 +317,9 @@ describe('RT5 — GET / project page over a real daemon', () => {
 
   it('a no-declaration fixture renders the named degraded state, never a fake page', async () => {
     const emptyRoot = tempDir('rt5-human-empty-');
-    const evaluation = await evaluateProject(emptyRoot, { evaluation: EVALUATION });
+    const evaluation = await evaluateProject(emptyRoot, CAPTURE);
     const daemon = await startDaemon(
-      humanRoutes({
-        getEvaluation: () => evaluation,
-        readEntrySource: fsEntryReader(emptyRoot),
-      }),
+      humanRoutes({ getEvaluation: () => evaluation }),
     );
     const { status, body: html } = await fetchText(daemon, HUMAN_PAGE_PATH);
 
@@ -364,9 +337,9 @@ describe('RT5 — GET / project page over a real daemon', () => {
     const root = tempDir('rt5-human-invalid-');
     mkdirSync(join(root, '.syzygy'), { recursive: true });
     writeFileSync(join(root, '.syzygy', 'project.yaml'), 'schema_version: "1"\n', 'utf8');
-    const evaluation = await evaluateProject(root, { evaluation: EVALUATION });
+    const evaluation = await evaluateProject(root, CAPTURE);
     const daemon = await startDaemon(
-      humanRoutes({ getEvaluation: () => evaluation, readEntrySource: fsEntryReader(root) }),
+      humanRoutes({ getEvaluation: () => evaluation }),
     );
     const { body: html } = await fetchText(daemon, HUMAN_PAGE_PATH);
 
@@ -471,14 +444,14 @@ describe('RT5 — GET /entry human entry document', () => {
   it('an absent entry renders as a finding, never a fake page', async () => {
     const { root, observedSourceDir } = fixtureRepo({ withEntry: false });
     const evaluation = await evaluateProject(root, {
-      evaluation: EVALUATION,
+      ...CAPTURE,
       repositoryRoots: {
         'repo-governance-root': root,
         'repo-observed-source': observedSourceDir,
       },
     });
     const daemon = await startDaemon(
-      humanRoutes({ getEvaluation: () => evaluation, readEntrySource: fsEntryReader(root) }),
+      humanRoutes({ getEvaluation: () => evaluation }),
     );
     const { status, body: html } = await fetchText(daemon, HUMAN_ENTRY_ROUTE_PATH);
 
@@ -491,18 +464,18 @@ describe('RT5 — GET /entry human entry document', () => {
 
   it('an unreadable entry renders Unknown with its reason', async () => {
     const { root, observedSourceDir } = fixtureRepo({ withEntry: false });
-    // Make the entry path a DIRECTORY: readFileSync fails with a
+    // Make the entry path a DIRECTORY: the capture's read fails with a
     // non-ENOENT error — a real unreadable front door.
     mkdirSync(join(root, '.syzygy', 'intent', 'OVERVIEW.md'), { recursive: true });
     const evaluation = await evaluateProject(root, {
-      evaluation: EVALUATION,
+      ...CAPTURE,
       repositoryRoots: {
         'repo-governance-root': root,
         'repo-observed-source': observedSourceDir,
       },
     });
     const daemon = await startDaemon(
-      humanRoutes({ getEvaluation: () => evaluation, readEntrySource: fsEntryReader(root) }),
+      humanRoutes({ getEvaluation: () => evaluation }),
     );
     const { body: html } = await fetchText(daemon, HUMAN_ENTRY_ROUTE_PATH);
 

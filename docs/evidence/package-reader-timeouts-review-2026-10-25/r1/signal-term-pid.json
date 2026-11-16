@@ -1,0 +1,35 @@
+{
+ "mode": "term-pid",
+ "instrumentedAfterSeconds": 0.2,
+ "signalSentAtSeconds": 4.5,
+ "treeBeforeSignal": " M packages/polaris-generation-consent/src/package-reader.test.ts\n M packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts\n",
+ "descendantsAtSignal": {
+  "1919752": "npm exec vitest run --project @syzygy/polaris-generation-consent packages/polaris-generation-consent/src/package-reader.test.ts --reporter=json --outputFile=/tm",
+  "1920191": "sh -c \"vitest\" run --project @syzygy/polaris-generation-consent packages/polaris-generation-consent/src/package-reader.test.ts --reporter=json --outputFile=/tmp",
+  "1920198": "node (vitest)                                                                                                                                                   ",
+  "1920516": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520/clone-mut/node_modules/@esbuild/linux-x64/bin/esbuild --service",
+  "1920691": "node (vitest 1)                                                                                                                                                 ",
+  "1920700": "node (vitest 2)                                                                                                                                                 ",
+  "1920712": "node (vitest 3)                                                                                                                                                 ",
+  "1920723": "node (vitest 4)                                                                                                                                                 ",
+  "1920731": "node (vitest 5)                                                                                                                                                 ",
+  "1920743": "node (vitest 6)                                                                                                                                                 "
+ },
+ "scriptExitCode": -15,
+ "scriptOutputTail": "",
+ "treeAfterExit": " M packages/polaris-generation-consent/src/package-reader.test.ts\n M packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts\n",
+ "diffStatAfterExit": " packages/polaris-generation-consent/src/package-reader.test.ts       | 4 ++++\n packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts | 4 +++-\n 2 files changed, 7 insertions(+), 1 deletion(-)\n",
+ "survivingDescendants3sAfterExit": {
+  "1919752": "npm exec vitest run --project @syzygy/polaris-generation-consent packages/polaris-generation-consent/src/package-reader.test.ts --reporter=json --outputFile=/tm",
+  "1920191": "sh -c \"vitest\" run --project @syzygy/polaris-generation-consent packages/polaris-generation-consent/src/package-reader.test.ts --reporter=json --outputFile=/tmp",
+  "1920198": "node (vitest)                                                                                                                                                   ",
+  "1920516": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520/clone-mut/node_modules/@esbuild/linux-x64/bin/esbuild --service",
+  "1920691": "node (vitest 1)                                                                                                                                                 ",
+  "1920700": "node (vitest 2)                                                                                                                                                 ",
+  "1920712": "node (vitest 3)                                                                                                                                                 ",
+  "1920723": "node (vitest 4)                                                                                                                                                 ",
+  "1920731": "node (vitest 5)                                                                                                                                                 ",
+  "1920743": "node (vitest 6)                                                                                                                                                 "
+ },
+ "treeCleanAfterReviewerRestore": true
+}

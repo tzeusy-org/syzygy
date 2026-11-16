@@ -1,0 +1,42 @@
+"""Verify all successor run artifacts and mutation-test this one-off verifier."""
+import json,hashlib,pathlib,copy,subprocess,sys
+OWN=pathlib.Path(__file__).resolve().parent
+ORIGIN='b629e399a2c4b72e00c3a764181f1b938985d6a992c44ffcb320af3bebebec69'
+def verify(record):
+ rows=record['results'];assert len(rows)==3 and [r['phase'] for r in rows]==['before','mutant','restored'],'phase population'
+ paths=[a['path'] for r in rows for a in r['artifacts']];assert len(paths)==9 and len(set(paths))==9,'distinct retained paths'
+ for r in rows:
+  assert r['buildExit']==0 and not r['timeout'] and len(r['rows'])==17,'executed population'
+  assert r['selectedTestSha256']==ORIGIN,'selected test identity'
+  for a in r['artifacts']:
+   p=pathlib.Path(a['path']);assert p.is_file() and p.stat().st_size==a['bytes'] and hashlib.sha256(p.read_bytes()).hexdigest()==a['sha256'],'artifact identity'
+  assert any(a['path']==r['raw']['path'] and a['sha256']==r['raw']['sha256'] for a in r['artifacts']),'raw binding'
+  raw=json.loads(pathlib.Path(r['raw']['path']).read_text());actual=[{'title':a['fullName'],'status':a['status'],'failureMessages':a.get('failureMessages',[])} for s in raw['testResults'] for a in s['assertionResults']]
+  assert actual==r['rows'],'native row binding'
+ for r in [rows[0],rows[2]]:
+  assert r['mutant'] is None and r['executedTestSha256']==ORIGIN and r['passed']==17 and not r['failed'] and r['exit']==0 and all(x['status']=='passed' for x in r['rows']),'passing controls'
+ m=rows[1];assert m['mutant']['old']=='ISLAND_URLS: JSON.stringify(core)' and m['mutant']['new']=='ISLAND_URLS: JSON.stringify([])','exact mutant'
+ assert m['exit']==1 and m['passed']==16 and len(m['failed'])==1,'mutant result'
+ failures=[x for x in m['rows'] if x['status']=='failed'];assert len(failures)==1 and any('the hook observes every declared core-island URL' in s for s in failures[0]['failureMessages']),'intended predicate'
+ assert m['executedTestSha256']!=ORIGIN,'mutant test identity'
+ return True
+if __name__=='__main__':
+ record=json.loads((OWN/'hook-core-positive-control-v2.json').read_text());assert verify(record)
+ mutations=[('phase population',lambda r:r['results'].pop(0)),('distinct retained paths',lambda r:r['results'][0]['artifacts'].__setitem__(0,r['results'][2]['artifacts'][0])),('executed population',lambda r:r['results'][0]['rows'].clear()),('selected test identity',lambda r:r['results'][0].__setitem__('selectedTestSha256','0'*64)),('artifact identity',lambda r:r['results'][0]['artifacts'][0].__setitem__('sha256','0'*64)),('raw binding',lambda r:r['results'][0]['raw'].__setitem__('sha256','0'*64)),('native row binding',lambda r:r['results'][1]['rows'][0].__setitem__('title','changed')),('passing controls',lambda r:r['results'][0].__setitem__('passed',16)),('exact mutant',lambda r:r['results'][1]['mutant'].__setitem__('new','unrelated')),('mutant result',lambda r:r['results'][1].__setitem__('exit',0)),('mutant test identity',lambda r:r['results'][1].__setitem__('executedTestSha256',ORIGIN))]
+ results=[]
+ for predicate,change in mutations:
+  test=copy.deepcopy(record);before=json.dumps(test,sort_keys=True);change(test)
+  try:verify(test)
+  except AssertionError as e:
+   assert str(e)==predicate,(predicate,str(e));results.append({'predicate':predicate,'oldRecordSha256':hashlib.sha256(before.encode()).hexdigest(),'newRecord':test,'actualRejection':str(e),'restoredPass':verify(record)})
+  else:raise AssertionError('survived '+predicate)
+ # The intended failure is inside the native raw binding; test its matcher separately without forging a raw report.
+ intended=any('the hook observes every declared core-island URL' in s for x in record['results'][1]['rows'] if x['status']=='failed' for s in x['failureMessages'])
+ assert intended and not any('the hook observes every declared core-island URL' in s for s in ['unrelated failure'])
+ (OWN/'WITNESS-VERIFICATION.json').write_text(json.dumps({'controlPass':True,'predicateMutants':results,'intendedMatcherPositive':intended,'intendedMatcherUnrelatedNegative':True,'nativeDenominator':{'runs':3,'rowsEach':17,'artifacts':9}},indent=2)+'\n')
+ artifacts=[a for r in record['results'] for a in r['artifacts']]+[{'path':record['restorationBuild']['path'],'sha256':record['restorationBuild']['sha256']}]
+ native=subprocess.run(['sha256sum',*[a['path'] for a in artifacts]],capture_output=True,text=True,check=True)
+ (OWN/'WITNESS-NATIVE-SHA256SUM.txt').write_text(native.stdout)
+ assert [line[:64] for line in native.stdout.splitlines()]==[a['sha256'] for a in artifacts]
+ (OWN/'WITNESS-RECOUNT.json').write_text(json.dumps({'pythonCount':len(artifacts),'nativeLines':len(native.stdout.splitlines()),'distinctPaths':len(set(a['path'] for a in artifacts)),'rawReports':3,'vitestStreams':3,'buildStreams':4,'nativeAndPythonAgree':True},indent=2)+'\n')
+ print('verified three runs / 51 rows / 10 distinct artifacts; 11 verifier record mutants and intended matcher controls')

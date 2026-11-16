@@ -1,0 +1,85 @@
+{
+ "what": "rev-528 own mutants, extra, tree /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-528/clone",
+ "mutants": [
+  {
+   "id": "RV-T14b-absolute-path-via-bridge",
+   "what": "bridge.ts re-exports the barrel by its absolute path; main.ts imports bridge.ts",
+   "expect": {
+    "base": "survives",
+    "head": "killed"
+   },
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/subpath-imports.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "apps/syzygy/src/bridge.ts",
+     "create": "export * from '/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-528/clone/packages/polaris-dossier/src/index.js';\n"
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nimport './bridge.js';\n"
+    }
+   ]
+  },
+  {
+   "id": "RV-T15b-file-url-via-bridge",
+   "what": "bridge.ts re-exports the barrel by a File:// URL; main.ts imports bridge.ts",
+   "expect": {
+    "base": "survives",
+    "head": "killed"
+   },
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/subpath-imports.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "apps/syzygy/src/bridge.ts",
+     "create": "export * from 'File:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-528/clone/packages/polaris-dossier/src/index.js';\n"
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nimport './bridge.js';\n"
+    }
+   ]
+  },
+  {
+   "id": "RV-T1b-hash-pattern-alias-via-bridge",
+   "what": "a #d/* pattern alias to the barrel, used by bridge.ts; main.ts imports bridge.ts",
+   "expect": {
+    "base": "survives",
+    "head": "killed"
+   },
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/subpath-imports.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "apps/syzygy/package.json",
+     "old": "  \"main\": \"./dist/main.js\",\n",
+     "new": "  \"main\": \"./dist/main.js\",\n  \"imports\": {\"#d/*\": \"@syzygy/polaris-dossier\"},\n"
+    },
+    {
+     "file": "apps/syzygy/src/bridge.ts",
+     "create": "export * from '#d/barrel';\n"
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nimport './bridge.js';\n"
+    }
+   ]
+  }
+ ]
+}

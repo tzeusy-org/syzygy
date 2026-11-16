@@ -1,0 +1,357 @@
+{
+ "tool": "de_rev_mutants.py",
+ "tree": "b2368df318df8ee3503579dd3a589348382b57a2",
+ "oldTestFrom": "8ff50172b127cba676ff32ce62c12c91b2b0d924",
+ "results": [
+  {
+   "mutant": null,
+   "id": "control",
+   "buildError": null,
+   "new": {
+    "exit": 0,
+    "seconds": 30.5,
+    "rows": 16,
+    "passed": 16,
+    "failed": []
+   },
+   "old": {
+    "exit": 0,
+    "seconds": 17.5,
+    "rows": 15,
+    "passed": 15,
+    "failed": []
+   },
+   "static": {
+    "exit": 0,
+    "seconds": 20.4,
+    "rows": 133,
+    "passed": 133,
+    "failed": []
+   }
+  },
+  {
+   "mutant": {
+    "id": "R0-first-import",
+    "file": "apps/syzygy/src/main.ts",
+    "old": "import * as path from 'node:path';\n",
+    "new": "import '@syzygy/three-surface-poc-app/dossier-site';\nimport * as path from 'node:path';\n",
+    "note": "a static side-effect import of the POC app as main.ts's first import: is the hook in place before it?"
+   },
+   "id": "R0-first-import",
+   "buildError": null,
+   "new": {
+    "exit": 1,
+    "seconds": 29.3,
+    "rows": 16,
+    "passed": 14,
+    "failed": [
+     {
+      "title": "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app, and the `dossier render` branch does",
+      "failure": "AssertionError: expected 'file:///tmp/claude-1000/-home-tze-Git\u2026' to be '' // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone5/packages/cap1-system/src/daemon-entry-unchanged.system.test.ts:235:39\n    at processTicksAnd"
+     },
+     {
+      "title": "daemon entry: the one changed input, `dossier` as the first argument every line of main.ts naming the POC app sits inside the `dossier` or the `polaris` branch",
+      "failure": "AssertionError: expected [ Array(1) ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone5/packages/cap1-system/src/daemon-entry-unchanged.system.test.ts:251:127\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eb"
+     }
+    ]
+   },
+   "old": {
+    "exit": 1,
+    "seconds": 20.9,
+    "rows": 15,
+    "passed": 14,
+    "failed": [
+     {
+      "title": "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch",
+      "failure": "AssertionError: expected [ \u2026(3) ] to deeply equal [ \u2026(2) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone5/packages/cap1-system/src/daemon-entry-unchanged.system.test.ts:217:22\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297e"
+     }
+    ]
+   },
+   "static": {
+    "exit": 0,
+    "seconds": 15.2,
+    "rows": 133,
+    "passed": 133,
+    "failed": []
+   }
+  },
+  {
+   "mutant": {
+    "id": "R1-flag-between-branches",
+    "file": "apps/syzygy/src/main.ts",
+    "old": "  // `syzygy polaris <url>` is the one-command launched run",
+    "new": "  if (process.env.SYZYGY_PRELOAD_RENDERER === '1') await import('@syzygy/three-surface-poc-app/dossier-site');\n\n  // `syzygy polaris <url>` is the one-command launched run",
+    "note": "a dynamic import behind an environment flag, between the dossier and polaris branches; runs on the daemon path when the flag is set"
+   },
+   "id": "R1-flag-between-branches",
+   "buildError": null,
+   "new": {
+    "exit": 1,
+    "seconds": 18.1,
+    "rows": 16,
+    "passed": 15,
+    "failed": [
+     {
+      "title": "daemon entry: the one changed input, `dossier` as the first argument every line of main.ts naming the POC app sits inside the `dossier` or the `polaris` branch",
+      "failure": "AssertionError: expected [ Array(1) ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone5/packages/cap1-system/src/daemon-entry-unchanged.system.test.ts:251:127\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eb"
+     }
+    ]
+   },
+   "old": {
+    "exit": 1,
+    "seconds": 15.1,
+    "rows": 15,
+    "passed": 14,
+    "failed": [
+     {
+      "title": "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch",
+      "failure": "AssertionError: expected [ \u2026(3) ] to deeply equal [ \u2026(2) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone5/packages/cap1-system/src/daemon-entry-unchanged.system.test.ts:217:22\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297e"
+     }
+    ]
+   },
+   "static": {
+    "exit": 0,
+    "seconds": 17.3,
+    "rows": 133,
+    "passed": 133,
+    "failed": []
+   }
+  },
+  {
+   "mutant": {
+    "id": "R2-flag-createRequire-before-daemon",
+    "file": "apps/syzygy/src/main.ts",
+    "old": "  let parsed = parseCli(process.argv.slice(2), process.env);\n",
+    "new": "  if (process.env.SYZYGY_PRELOAD_RENDERER === '1') process.getBuiltinModule('node:module').createRequire(import.meta.url)('@syzygy/three-surface-poc-app/dossier-site');\n  let parsed = parseCli(process.argv.slice(2), process.env);\n",
+    "note": "a require through createRequire (taken by process.getBuiltinModule, no import edge), behind a flag, just before the daemon path"
+   },
+   "id": "R2-flag-createRequire-before-daemon",
+   "buildError": null,
+   "new": {
+    "exit": 1,
+    "seconds": 30.3,
+    "rows": 16,
+    "passed": 15,
+    "failed": [
+     {
+      "title": "daemon entry: the one changed input, `dossier` as the first argument every line of main.ts naming the POC app sits inside the `dossier` or the `polaris` branch",
+      "failure": "AssertionError: expected [ Array(1) ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone5/packages/cap1-system/src/daemon-entry-unchanged.system.test.ts:251:127\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eb"
+     }
+    ]
+   },
+   "old": {
+    "exit": 1,
+    "seconds": 15.9,
+    "rows": 15,
+    "passed": 14,
+    "failed": [
+     {
+      "title": "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch",
+      "failure": "AssertionError: expected [ \u2026(3) ] to deeply equal [ \u2026(2) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone5/packages/cap1-system/src/daemon-entry-unchanged.system.test.ts:217:22\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297e"
+     }
+    ]
+   },
+   "static": {
+    "exit": 0,
+    "seconds": 14.9,
+    "rows": 133,
+    "passed": 133,
+    "failed": []
+   }
+  },
+  {
+   "mutant": {
+    "id": "R3-runtime-hook",
+    "file": "apps/syzygy/src/main.ts",
+    "old": "  let parsed = parseCli(process.argv.slice(2), process.env);\n",
+    "new": "  {\n    const { registerHooks } = process.getBuiltinModule('node:module');\n    const { readFileSync } = process.getBuiltinModule('node:fs');\n    registerHooks({ load: (url, context, nextLoad) => (url.includes('/apps/three-surface-poc/')\n      ? { format: 'module', source: readFileSync(new URL(url), 'utf8'), shortCircuit: true } : nextLoad(url, context)) });\n    await import('@syzygy/three-surface-poc-app/dossier-site');\n  }\n  let parsed = parseCli(process.argv.slice(2), process.env);\n",
+    "note": "a load hook registered at runtime that short-circuits every POC-app URL, then an unconditional import of the POC app, just before the daemon path"
+   },
+   "id": "R3-runtime-hook",
+   "buildError": null,
+   "new": {
+    "exit": 1,
+    "seconds": 11.3,
+    "rows": 16,
+    "passed": 15,
+    "failed": [
+     {
+      "title": "daemon entry: the one changed input, `dossier` as the first argument every line of main.ts naming the POC app sits inside the `dossier` or the `polaris` branch",
+      "failure": "AssertionError: expected [ Array(1) ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone5/packages/cap1-system/src/daemon-entry-unchanged.system.test.ts:251:127\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eb"
+     }
+    ]
+   },
+   "old": {
+    "exit": 1,
+    "seconds": 9.0,
+    "rows": 15,
+    "passed": 14,
+    "failed": [
+     {
+      "title": "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch",
+      "failure": "AssertionError: expected [ \u2026(3) ] to deeply equal [ \u2026(2) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone5/packages/cap1-system/src/daemon-entry-unchanged.system.test.ts:217:22\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297e"
+     }
+    ]
+   },
+   "static": {
+    "exit": 0,
+    "seconds": 5.9,
+    "rows": 133,
+    "passed": 133,
+    "failed": []
+   }
+  },
+  {
+   "mutant": {
+    "id": "R4-createRequire-transitive",
+    "file": "packages/polaris-dossier/src/state-directory.ts",
+    "old": "import * as path from 'node:path';\n",
+    "new": "import * as path from 'node:path';\nprocess.getBuiltinModule('node:module').createRequire(import.meta.url)('@syzygy/three-surface-poc-app/dossier-site');\n",
+    "note": "state-directory.ts (imported statically by main.ts) requires the POC app at module top through createRequire; main.ts unchanged"
+   },
+   "id": "R4-createRequire-transitive",
+   "buildError": null,
+   "new": {
+    "exit": 1,
+    "seconds": 5.7,
+    "rows": 16,
+    "passed": 15,
+    "failed": [
+     {
+      "title": "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app, and the `dossier render` branch does",
+      "failure": "AssertionError: expected 'file:///tmp/claude-1000/-home-tze-Git\u2026' to be '' // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone5/packages/cap1-system/src/daemon-entry-unchanged.system.test.ts:235:39\n    at processTicksAnd"
+     }
+    ]
+   },
+   "old": {
+    "exit": 0,
+    "seconds": 5.2,
+    "rows": 15,
+    "passed": 15,
+    "failed": []
+   },
+   "static": {
+    "exit": 0,
+    "seconds": 3.7,
+    "rows": 133,
+    "passed": 133,
+    "failed": []
+   }
+  },
+  {
+   "mutant": {
+    "id": "R5-worker-thread",
+    "file": "apps/syzygy/src/main.ts",
+    "old": "  let parsed = parseCli(process.argv.slice(2), process.env);\n",
+    "new": "  new (process.getBuiltinModule('node:worker_threads').Worker)(new URL(import.meta.resolve('@syzygy/three-surface-poc-app/dossier-site')));\n  let parsed = parseCli(process.argv.slice(2), process.env);\n",
+    "note": "a worker thread of the daemon process evaluates the POC app, started unconditionally just before the daemon path"
+   },
+   "id": "R5-worker-thread",
+   "buildError": null,
+   "new": {
+    "exit": 1,
+    "seconds": 9.6,
+    "rows": 16,
+    "passed": 14,
+    "failed": [
+     {
+      "title": "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app, and the `dossier render` branch does",
+      "failure": "AssertionError: expected 'file:///tmp/claude-1000/-home-tze-Git\u2026' to be '' // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone5/packages/cap1-system/src/daemon-entry-unchanged.system.test.ts:235:39\n    at processTicksAnd"
+     },
+     {
+      "title": "daemon entry: the one changed input, `dossier` as the first argument every line of main.ts naming the POC app sits inside the `dossier` or the `polaris` branch",
+      "failure": "AssertionError: expected [ Array(1) ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone5/packages/cap1-system/src/daemon-entry-unchanged.system.test.ts:251:127\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eb"
+     }
+    ]
+   },
+   "old": {
+    "exit": 1,
+    "seconds": 7.5,
+    "rows": 15,
+    "passed": 14,
+    "failed": [
+     {
+      "title": "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch",
+      "failure": "AssertionError: expected [ \u2026(3) ] to deeply equal [ \u2026(2) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone5/packages/cap1-system/src/daemon-entry-unchanged.system.test.ts:217:22\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297e"
+     }
+    ]
+   },
+   "static": {
+    "exit": 0,
+    "seconds": 5.2,
+    "rows": 133,
+    "passed": 133,
+    "failed": []
+   }
+  },
+  {
+   "mutant": {
+    "id": "R6-island-barrel",
+    "file": "apps/syzygy/src/main.ts",
+    "old": "  let parsed = parseCli(process.argv.slice(2), process.env);\n",
+    "new": "  await import('@syzygy/polaris-generation-core');\n  let parsed = parseCli(process.argv.slice(2), process.env);\n",
+    "note": "the provider island (polaris-generation-core root barrel) imported unconditionally just before the daemon path; no POC-app text"
+   },
+   "id": "R6-island-barrel",
+   "buildError": null,
+   "new": {
+    "exit": 0,
+    "seconds": 8.6,
+    "rows": 16,
+    "passed": 16,
+    "failed": []
+   },
+   "old": {
+    "exit": 0,
+    "seconds": 5.5,
+    "rows": 15,
+    "passed": 15,
+    "failed": []
+   },
+   "static": {
+    "exit": 1,
+    "seconds": 4.2,
+    "rows": 133,
+    "passed": 132,
+    "failed": [
+     {
+      "title": "the syzygy CLI and the parked provider island reaches no island module from the CLI entry",
+      "failure": "AssertionError: expected [ \u2026(11) ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone5/packages/polaris-generation-core/src/island-boundary.test.ts:59:91\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b"
+     }
+    ]
+   }
+  },
+  {
+   "mutant": {
+    "id": "R7-island-computed-flag",
+    "file": "apps/syzygy/src/main.ts",
+    "old": "  let parsed = parseCli(process.argv.slice(2), process.env);\n",
+    "new": "  if (process.env.SYZYGY_PRELOAD_RENDERER === '1') process.getBuiltinModule('node:module').createRequire(import.meta.url)(['@syzygy', 'polaris-generation-core'].join('/'));\n  let parsed = parseCli(process.argv.slice(2), process.env);\n",
+    "note": "the provider island required by a computed name behind a flag; no POC-app text, no import edge"
+   },
+   "id": "R7-island-computed-flag",
+   "buildError": null,
+   "new": {
+    "exit": 0,
+    "seconds": 6.6,
+    "rows": 16,
+    "passed": 16,
+    "failed": []
+   },
+   "old": {
+    "exit": 0,
+    "seconds": 4.8,
+    "rows": 15,
+    "passed": 15,
+    "failed": []
+   },
+   "static": {
+    "exit": 0,
+    "seconds": 5.4,
+    "rows": 133,
+    "passed": 133,
+    "failed": []
+   }
+  }
+ ]
+}

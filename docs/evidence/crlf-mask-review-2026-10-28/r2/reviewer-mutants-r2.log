@@ -1,0 +1,15 @@
+start 22:01:53 loadavg 36.50 36.51 35.06 17/9677 2955310
+CONTROL 388 0
+RW1-u2029-is-a-line-end killed 1 timeouts 0
+RW2-unicode-newline-set killed 1 timeouts 0
+RW3-vt-ff-are-line-ends SURVIVED 0 timeouts 0
+RW4-python-splitlines-set killed 1 timeouts 0
+RW5-closer-tolerates-trailing-separators SURVIVED 0 timeouts 0
+RW6-u2028-kept-in-a-span killed 1 timeouts 0
+RW7-span-reset-at-u2028 killed 1 timeouts 0
+RW8-final-bare-cr-not-a-line-end killed 5 timeouts 0
+RW9-lfcr-is-one-line-end SURVIVED 0 timeouts 0
+RW10-positionOf-counts-u2028 SURVIVED 0 timeouts 0
+RW11-positionOf-skips-lf-of-crlf killed 1 timeouts 0
+RW12-positionOf-column-resets-at-bare-cr killed 1 timeouts 0
+exit 0 22:06:19 loadavg 39.99 38.21 36.06 32/9693 3051552

@@ -1,0 +1,52 @@
+{
+ "base": "8ff50172b127cba676ff32ce62c12c91b2b0d924",
+ "head": "c90cd7327a24fee44d0e7135872a3b08277c73b0",
+ "method": "npx vitest list --json in a clean clone of each commit, keyed by (path relative to the clone, name), multiset difference",
+ "listSha256": {
+  "base": "84d6b51089f186ec2480bc767ca2b27c47b7eca62f6b9f0d11c69a19f11e560d",
+  "head": "63f407fd1f35502b0ddea7610cfd2ee4683d95c9ec0390f772740795a1650aee"
+ },
+ "titles": {
+  "base": 5301,
+  "head": 5325
+ },
+ "added": [
+  "packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > adds each module's census to what it reports unlifted",
+  "packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > reads every module TypeScript compiles under src, .mts, .cts and .tsx among them, and no test module",
+  "packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > the census sees a reading the lift does not in \"export function readArgv(): void {}\" (its own mutant)",
+  "packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > the census sees a reading the lift does not in \"import { readArgv } from './argv.js';\\nvoid [[]].map(readArgv);\" (its own mutant)",
+  "packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > leaves a bare name declared as a git dependency outside the workspace",
+  "packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > leaves a bare name declared as a longer name than a local dependency outside the workspace",
+  "packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > leaves a bare name declared as a name no local dependency declares outside the workspace",
+  "packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > leaves a bare name declared as a registry range outside the workspace",
+  "packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > leaves a bare name declared as a registry version outside the workspace",
+  "packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a # alias whose target is a module of its own package outside dist as naming no module",
+  "packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a # alias whose target leaves its package for a module that exists as naming no module",
+  "packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a # alias whose target names no source module as naming no module",
+  "packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a FILE: dependency of a scoped name as naming no module",
+  "packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a file: dependency as naming no module",
+  "packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a file: dependency of another package as naming no module",
+  "packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a home-relative path dependency as naming no module",
+  "packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a link: dev dependency as naming no module",
+  "packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a path dependency as naming no module",
+  "packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a subpath of a file: dependency as naming no module",
+  "packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a tarball dependency as naming no module",
+  "packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a workspace: optional dependency as naming no module",
+  "packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as an absolute path dependency as naming no module",
+  "packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as an npm: alias peer dependency as naming no module",
+  "packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads the workspace root's manifest beside the packages'"
+ ],
+ "removed": [],
+ "duplicateKeys": {
+  "base": [
+   "packages/polaris-generation-core/src/canonical-json.test.ts > canonical JSON record bytes > rejects non-JSON primitives without silent omission",
+   "packages/polaris-generation-core/src/provider-draft.test.ts > provider-local intermediate validation > preserves inert text for escaped rendering",
+   "packages/three-surface-poc-core/src/project-shape-extraction.test.ts > PWB-REQ-002 \u2014 two independent extractors agree on every fixture > preserves multiline catalog-entry declarations without minting a second item"
+  ],
+  "head": [
+   "packages/polaris-generation-core/src/canonical-json.test.ts > canonical JSON record bytes > rejects non-JSON primitives without silent omission",
+   "packages/polaris-generation-core/src/provider-draft.test.ts > provider-local intermediate validation > preserves inert text for escaped rendering",
+   "packages/three-surface-poc-core/src/project-shape-extraction.test.ts > PWB-REQ-002 \u2014 two independent extractors agree on every fixture > preserves multiline catalog-entry declarations without minting a second item"
+  ]
+ }
+}

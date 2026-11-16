@@ -1,0 +1,11 @@
+{
+ "id": "U5-noun-differs",
+ "command": "TMPDIR=/tmp/la-b82/g CI=1 npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/cli-table.test.ts",
+ "edits": [
+  {
+   "file": "packages/polaris-dossier/src/cli.ts",
+   "old": "flag: '--stdin', noun: 'the session directory' },",
+   "new": "flag: '--stdin', noun: RUN },"
+  }
+ ]
+}

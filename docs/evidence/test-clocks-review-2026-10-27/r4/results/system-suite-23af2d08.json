@@ -1,0 +1,25 @@
+{
+ "tool": "suite_r4.py",
+ "commit": "23af2d080108aabf878845dfe41007fbb77f2c52",
+ "command": [
+  "npx",
+  "vitest",
+  "run",
+  "--config",
+  "packages/cap1-system/vitest.config.ts",
+  "--reporter=json"
+ ],
+ "loadavgStart": "22.43 27.94 29.66 14/9803 4013790",
+ "loadavgEnd": "24.82 28.30 29.75 9/9769 4018532",
+ "seconds": 9.0,
+ "exit": 0,
+ "files": 21,
+ "testFiles": 10,
+ "total": 51,
+ "passed": 50,
+ "failed": 0,
+ "pending": 1,
+ "todo": 0,
+ "failedRows": [],
+ "suiteErrors": []
+}

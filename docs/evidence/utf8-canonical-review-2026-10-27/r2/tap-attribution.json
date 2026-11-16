@@ -1,0 +1,118 @@
+{
+ "files": [
+  "packages/three-surface-poc-core/src/project-shape-git-text.test.ts",
+  "packages/three-surface-poc-core/src/project-shape-observation.test.ts"
+ ],
+ "runs": [
+  {
+   "commit": "2d3f9375",
+   "file": "packages/three-surface-poc-core/src/project-shape-git-text.test.ts",
+   "vitestExit": 0,
+   "summary": [
+    "Test Files  1 passed (1)",
+    "Tests  3 passed (3)"
+   ],
+   "aggregateExit": 0,
+   "linesRead": 0,
+   "productionLenient": [],
+   "loadavg": "21.77 27.07 26.06 21/9529 3520671"
+  },
+  {
+   "commit": "2d3f9375",
+   "file": "packages/three-surface-poc-core/src/project-shape-observation.test.ts",
+   "vitestExit": 0,
+   "summary": [
+    "Test Files  1 passed (1)",
+    "Tests  39 passed (39)"
+   ],
+   "aggregateExit": 0,
+   "linesRead": 97,
+   "productionLenient": [
+    {
+     "caller": "packages/three-surface-poc-core/src/project-shape-manifest.ts:canonicalManifestJson",
+     "calls": 32,
+     "same": 32,
+     "different": 0
+    },
+    {
+     "caller": "packages/three-surface-poc-core/src/project-shape-observation.ts:observeProjectShapeSources",
+     "calls": 32,
+     "same": 31,
+     "different": 1
+    },
+    {
+     "caller": "packages/three-surface-poc-core/src/project-shape-observation.ts:resourceLimitsDigest",
+     "calls": 33,
+     "same": 33,
+     "different": 0
+    }
+   ],
+   "loadavg": "21.77 27.07 26.06 13/9547 3521845"
+  },
+  {
+   "commit": "b81010c8",
+   "file": "packages/three-surface-poc-core/src/project-shape-git-text.test.ts",
+   "vitestExit": 0,
+   "summary": [
+    "Test Files  1 passed (1)",
+    "Tests  4 passed (4)"
+   ],
+   "aggregateExit": 0,
+   "linesRead": 6,
+   "productionLenient": [
+    {
+     "caller": "packages/three-surface-poc-core/src/project-shape-manifest.ts:canonicalManifestJson",
+     "calls": 2,
+     "same": 2,
+     "different": 0
+    },
+    {
+     "caller": "packages/three-surface-poc-core/src/project-shape-observation.ts:observeProjectShapeSources",
+     "calls": 2,
+     "same": 2,
+     "different": 0
+    },
+    {
+     "caller": "packages/three-surface-poc-core/src/project-shape-observation.ts:resourceLimitsDigest",
+     "calls": 2,
+     "same": 2,
+     "different": 0
+    }
+   ],
+   "loadavg": "21.55 26.94 26.02 14/9536 3523178"
+  },
+  {
+   "commit": "b81010c8",
+   "file": "packages/three-surface-poc-core/src/project-shape-observation.test.ts",
+   "vitestExit": 0,
+   "summary": [
+    "Test Files  1 passed (1)",
+    "Tests  41 passed (41)"
+   ],
+   "aggregateExit": 0,
+   "linesRead": 97,
+   "productionLenient": [
+    {
+     "caller": "packages/three-surface-poc-core/src/project-shape-manifest.ts:canonicalManifestJson",
+     "calls": 32,
+     "same": 32,
+     "different": 0
+    },
+    {
+     "caller": "packages/three-surface-poc-core/src/project-shape-observation.ts:observeProjectShapeSources",
+     "calls": 32,
+     "same": 31,
+     "different": 1
+    },
+    {
+     "caller": "packages/three-surface-poc-core/src/project-shape-observation.ts:resourceLimitsDigest",
+     "calls": 33,
+     "same": 33,
+     "different": 0
+    }
+   ],
+   "loadavg": "21.55 26.94 26.02 14/9541 3524036"
+  }
+ ],
+ "restoredClean": true
+}

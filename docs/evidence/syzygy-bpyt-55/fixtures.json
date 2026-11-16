@@ -1,0 +1,65 @@
+{
+ "fixtures": [
+  {
+   "path": "heart-and-soul/vision.md",
+   "classes": [
+    "project-account-section",
+    "principle",
+    "success-criterion"
+   ],
+   "text": "# Butlers\n\nIntro paragraph mentioning ## What Butlers Is inline, which is not a heading.\n\n## What Butlers Is\n\nA household of agents that keep promises.\n\n### Detail\n\nNested detail belongs to the purpose section.\n\n## What Success Looks Like\n\n- Every promise is visible.\n- Nothing is inferred silently.\n  - a nested bullet mints nothing\n\n  continuation text\n* Cafe\u0301 keeps its accent.\n\n## What Butlers Is Not\n\nNot a chat toy.\n\n## Non-Negotiable Rules\n\n1. **Fail closed** \u2014 silence is Unknown.\n2. **Cite or stay quiet** \u2014 every claim carries a source.\n\n```\n## Not A Heading\n3. **Fenced rule** \u2014 never counted.\n```\n\n3. **Cafe\u0301 rule** \u2014 composed key.\n\n## Appendix\n\n1. **Not a principle** \u2014 outside the rules section.\n"
+  },
+  {
+   "path": "heart-and-soul/architecture.md",
+   "classes": [
+    "project-account-section"
+   ],
+   "text": "# Architecture\n\nPreamble.\n\n## Runtime\n\nOne process.\n\n## Storage\n\nOne database.\n"
+  },
+  {
+   "path": "heart-and-soul/v1.md",
+   "classes": [
+    "project-account-section",
+    "success-criterion",
+    "catalog-entry"
+   ],
+   "text": "# v1\n\n## What v1 Ships\n\nShips text.\n\n### Core Infrastructure\n\n- **Bus** - the message bus\n- `scheduler` \u2014 the clock\n\n### Staffers\n\n- **Butler Prime** \u2013 the first staffer\n\n### Butlers\n\n### Modules\n\n- **Mail** - mail module\n\n### Connectors\n\n- `whatsapp` - connector\n\n### Dashboard\n\n### Identity System\n\n- **Identity** - resolution\n\n### Situational Awareness\n\n### Observability\n\n- **Tracing** - spans\n\n## What v1 Defers\n\nDefers text.\n\n## Success Criteria\n\n1. Ships on time.\n2. Stays honest.\n"
+  },
+  {
+   "path": "legends-and-lore/README.md",
+   "classes": [
+    "design-contract"
+   ],
+   "text": "# Legends and Lore\n\n## Index\n\n| Contract | Status |\n| --- | --- |\n| [RFC 0001](0001.md) | accepted |\n| [RFC 0002](0002.md) | candidate |\n\n## Other\n\n| Contract | Status |\n|---|---|\n| [RFC 0099](0099.md) | not indexed |\n"
+  },
+  {
+   "path": "lay-and-land/components.md",
+   "classes": [
+    "topology-component"
+   ],
+   "text": "# Components\n\n## Overview\n\n| Name | Role |\n|---|---|\n| **Ignored** | no ordinal |\n\n## 1 Runtime\n\n| Component | Role |\n|---|---|\n| **Daemon** | serves |\n| **Store** | keeps |\n\n## 2a Adapters\n\nProse.\n\n| Component | Role |\n|---|---|\n| **Daemon** | same label, other ordinal |\n\n## 12. Tools\n\n| Component | Role |\n|---|---|\n| **cli** | drives |\n\n## 3ab Not an ordinal\n\n| Component | Role |\n|---|---|\n| **Ghost** | never minted |\n"
+  },
+  {
+   "path": "craft-and-care/README.md",
+   "classes": [
+    "craft-policy"
+   ],
+   "text": "# Craft and Care\n\n### Reading Order\n\n| Order | File | Why |\n|---|---|---|\n| 1 | [Spec policy](policies/cc-spec.md) | first |\n| 2 | [Impact](./cc-impact.md#top) | second |\n"
+  },
+  {
+   "path": "roster/alfred/butler.toml",
+   "classes": [
+    "roster-identity"
+   ],
+   "text": "# comment\n\n[meta]\nname = \"not this one\"\n\n[butler]\nkind = \"x\"\nname = \"Alfred\"  # trailing\n"
+  },
+  {
+   "path": "openspec/specs/identity/spec.md",
+   "classes": [
+    "baseline-spec"
+   ],
+   "text": "# spec\n"
+  }
+ ],
+ "rootIndex": "# Butlers\n\n### Precedence Order When Layers Disagree\n\n| # | Layer | Owns | Home |\n|---|-------|------|------|\n| 1 | **Heart and Soul** | Principles, scope boundaries, the 7 non-negotiable rules | `about/heart-and-soul/` |\n| 2 | **Legends and Lore** | Wire contracts, state machines, data models, sanctioned rule exceptions | `about/legends-and-lore/rfcs/` |\n| 3 | **Spec and Spine** | Feature behaviour, acceptance scenarios (WHEN/THEN), per-butler contracts | `openspec/specs/` |\n| 4 | **Craft and Care** | Execution-quality standards, test scope, review gates, observability bar | `about/craft-and-care/` |\n| 5 | **Lay and Land** | Topology snapshot \u2014 where components live, how they connect, stability levels | `about/lay-and-land/` |\n| 6 | **Roster config** | Live butler identity: `butler.toml`, `MANIFESTO.md`, `CLAUDE.md`, skills, API routes | `roster/{butler}/` |\n| 7 | **Code** | Runtime behaviour \u2014 executed source, migrations, tests | `src/`, `alembic/`, `tests/` |\n\n## Key Architectural Facts\n\n- **11 daemons** \u2014 3 staffers (Switchboard, Messenger, QA) + 8 domain\n  butlers, each a FastMCP server on its own port.\n- **One database** \u2014 shared Postgres.\n"
+}

@@ -1,0 +1,760 @@
+{
+  "subject": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+  "fixtureOnly": true,
+  "productionFlag": false,
+  "rows": [
+    {
+      "id": "marker:absent",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": "{\"format\":\"polaris-dossier-launched/1\"}",
+      "new": null,
+      "result": "absent",
+      "expected": "absent"
+    },
+    {
+      "id": "marker:valid-format",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": "{\"format\":\"polaris-dossier-launched/1\"}",
+      "new": "{\"format\":\"polaris-dossier-launched/1\"}",
+      "result": "launched",
+      "expected": "launched"
+    },
+    {
+      "id": "marker:invalid-json",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": "{\"format\":\"polaris-dossier-launched/1\"}",
+      "new": "{",
+      "result": "unreadable",
+      "expected": "unreadable"
+    },
+    {
+      "id": "launch-form:invalid-json",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": "absent marker + operator terminal",
+      "new": "{",
+      "result": true,
+      "expected": true
+    },
+    {
+      "id": "marker:null",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": "{\"format\":\"polaris-dossier-launched/1\"}",
+      "new": "null",
+      "result": "unreadable",
+      "expected": "unreadable"
+    },
+    {
+      "id": "launch-form:null",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": "absent marker + operator terminal",
+      "new": "null",
+      "result": true,
+      "expected": true
+    },
+    {
+      "id": "marker:array",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": "{\"format\":\"polaris-dossier-launched/1\"}",
+      "new": "[]",
+      "result": "unreadable",
+      "expected": "unreadable"
+    },
+    {
+      "id": "launch-form:array",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": "absent marker + operator terminal",
+      "new": "[]",
+      "result": true,
+      "expected": true
+    },
+    {
+      "id": "marker:wrong-format",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": "{\"format\":\"polaris-dossier-launched/1\"}",
+      "new": "{\"format\":\"other\"}",
+      "result": "unreadable",
+      "expected": "unreadable"
+    },
+    {
+      "id": "launch-form:wrong-format",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": "absent marker + operator terminal",
+      "new": "{\"format\":\"other\"}",
+      "result": true,
+      "expected": true
+    },
+    {
+      "id": "marker:too-long",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": "{\"format\":\"polaris-dossier-launched/1\"}",
+      "new": "{\"format\":\"polaris-dossier-launched/1\"}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ",
+      "result": "unreadable",
+      "expected": "unreadable"
+    },
+    {
+      "id": "launch-form:too-long",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": "absent marker + operator terminal",
+      "new": "{\"format\":\"polaris-dossier-launched/1\"}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ",
+      "result": true,
+      "expected": true
+    },
+    {
+      "id": "marker:directory",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": "{\"format\":\"polaris-dossier-launched/1\"}",
+      "new": "directory",
+      "result": "unreadable",
+      "expected": "unreadable"
+    },
+    {
+      "id": "marker:symlink",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": "{\"format\":\"polaris-dossier-launched/1\"}",
+      "new": "symlink",
+      "result": "unreadable",
+      "expected": "unreadable"
+    },
+    {
+      "id": "marker:fifo",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": "{\"format\":\"polaris-dossier-launched/1\"}",
+      "new": "fifo",
+      "result": "unreadable",
+      "expected": "unreadable"
+    },
+    {
+      "id": "marker:unreadable-file",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": "{\"format\":\"polaris-dossier-launched/1\"}",
+      "new": "unreadable-file",
+      "result": "unreadable",
+      "expected": "unreadable"
+    },
+    {
+      "id": "execution:positive-control",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": "fixture ports only",
+      "new": "every condition true",
+      "result": "permitting",
+      "expected": "permitting"
+    },
+    {
+      "id": "execution:production-flag",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": false,
+      "new": "actual exported production flag",
+      "result": false,
+      "expected": false
+    },
+    {
+      "id": "execution:inventory-role",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": "every condition true",
+      "new": "inventory-role",
+      "result": "sec-3",
+      "expected": "sec-3"
+    },
+    {
+      "id": "execution:review-role",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": "every condition true",
+      "new": "review-role",
+      "result": "sec-3",
+      "expected": "sec-3"
+    },
+    {
+      "id": "execution:flag-disabled",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": "every condition true",
+      "new": "flag-disabled",
+      "result": "sec-3",
+      "expected": "sec-3"
+    },
+    {
+      "id": "execution:missing-ports",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": "every condition true",
+      "new": "missing-ports",
+      "result": "sec-3",
+      "expected": "sec-3"
+    },
+    {
+      "id": "execution:launched",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": "every condition true",
+      "new": "launched",
+      "result": "sec-3",
+      "expected": "sec-3"
+    },
+    {
+      "id": "execution:unreadable-marker",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": "every condition true",
+      "new": "unreadable-marker",
+      "result": "sec-3",
+      "expected": "sec-3"
+    },
+    {
+      "id": "execution:d9-absent",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": "every condition true",
+      "new": "d9-absent",
+      "result": "sec-3",
+      "expected": "sec-3"
+    },
+    {
+      "id": "execution:no-cost",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": "every condition true",
+      "new": "no-cost",
+      "result": "sec-3",
+      "expected": "sec-3"
+    },
+    {
+      "id": "execution:not-owner",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": "every condition true",
+      "new": "not-owner",
+      "result": "sec-3",
+      "expected": "sec-3"
+    },
+    {
+      "id": "execution:wrong-command",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": {
+        "recordId": "audit-fixture",
+        "command": "allow-execution",
+        "runId": "fixture-run",
+        "revision": "ffffffffffffffffffffffffffffffffffffffff",
+        "recordedAt": "2026-11-04T00:00:00.000Z",
+        "declarations": {
+          "ownerStartedSession": true,
+          "ownersOwnHost": true,
+          "ownerAttends": true
+        }
+      },
+      "new": {
+        "recordId": "audit-fixture",
+        "command": "other",
+        "runId": "fixture-run",
+        "revision": "ffffffffffffffffffffffffffffffffffffffff",
+        "recordedAt": "2026-11-04T00:00:00.000Z",
+        "declarations": {
+          "ownerStartedSession": true,
+          "ownersOwnHost": true,
+          "ownerAttends": true
+        }
+      },
+      "result": "sec-3",
+      "expected": "sec-3"
+    },
+    {
+      "id": "execution:wrong-run",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": {
+        "recordId": "audit-fixture",
+        "command": "allow-execution",
+        "runId": "fixture-run",
+        "revision": "ffffffffffffffffffffffffffffffffffffffff",
+        "recordedAt": "2026-11-04T00:00:00.000Z",
+        "declarations": {
+          "ownerStartedSession": true,
+          "ownersOwnHost": true,
+          "ownerAttends": true
+        }
+      },
+      "new": {
+        "recordId": "audit-fixture",
+        "command": "allow-execution",
+        "runId": "other",
+        "revision": "ffffffffffffffffffffffffffffffffffffffff",
+        "recordedAt": "2026-11-04T00:00:00.000Z",
+        "declarations": {
+          "ownerStartedSession": true,
+          "ownersOwnHost": true,
+          "ownerAttends": true
+        }
+      },
+      "result": "sec-3",
+      "expected": "sec-3"
+    },
+    {
+      "id": "execution:wrong-revision",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": {
+        "recordId": "audit-fixture",
+        "command": "allow-execution",
+        "runId": "fixture-run",
+        "revision": "ffffffffffffffffffffffffffffffffffffffff",
+        "recordedAt": "2026-11-04T00:00:00.000Z",
+        "declarations": {
+          "ownerStartedSession": true,
+          "ownersOwnHost": true,
+          "ownerAttends": true
+        }
+      },
+      "new": {
+        "recordId": "audit-fixture",
+        "command": "allow-execution",
+        "runId": "fixture-run",
+        "revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "recordedAt": "2026-11-04T00:00:00.000Z",
+        "declarations": {
+          "ownerStartedSession": true,
+          "ownersOwnHost": true,
+          "ownerAttends": true
+        }
+      },
+      "result": "sec-3",
+      "expected": "sec-3"
+    },
+    {
+      "id": "execution:bad-instant",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": {
+        "recordId": "audit-fixture",
+        "command": "allow-execution",
+        "runId": "fixture-run",
+        "revision": "ffffffffffffffffffffffffffffffffffffffff",
+        "recordedAt": "2026-11-04T00:00:00.000Z",
+        "declarations": {
+          "ownerStartedSession": true,
+          "ownersOwnHost": true,
+          "ownerAttends": true
+        }
+      },
+      "new": {
+        "recordId": "audit-fixture",
+        "command": "allow-execution",
+        "runId": "fixture-run",
+        "revision": "ffffffffffffffffffffffffffffffffffffffff",
+        "recordedAt": "yesterday",
+        "declarations": {
+          "ownerStartedSession": true,
+          "ownersOwnHost": true,
+          "ownerAttends": true
+        }
+      },
+      "result": "sec-3",
+      "expected": "sec-3"
+    },
+    {
+      "id": "execution:future-instant",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": {
+        "recordId": "audit-fixture",
+        "command": "allow-execution",
+        "runId": "fixture-run",
+        "revision": "ffffffffffffffffffffffffffffffffffffffff",
+        "recordedAt": "2026-11-04T00:00:00.000Z",
+        "declarations": {
+          "ownerStartedSession": true,
+          "ownersOwnHost": true,
+          "ownerAttends": true
+        }
+      },
+      "new": {
+        "recordId": "audit-fixture",
+        "command": "allow-execution",
+        "runId": "fixture-run",
+        "revision": "ffffffffffffffffffffffffffffffffffffffff",
+        "recordedAt": "2099-01-01T00:00:00Z",
+        "declarations": {
+          "ownerStartedSession": true,
+          "ownersOwnHost": true,
+          "ownerAttends": true
+        }
+      },
+      "result": "sec-3",
+      "expected": "sec-3"
+    },
+    {
+      "id": "execution:no-ownerStartedSession",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": {
+        "recordId": "audit-fixture",
+        "command": "allow-execution",
+        "runId": "fixture-run",
+        "revision": "ffffffffffffffffffffffffffffffffffffffff",
+        "recordedAt": "2026-11-04T00:00:00.000Z",
+        "declarations": {
+          "ownerStartedSession": true,
+          "ownersOwnHost": true,
+          "ownerAttends": true
+        }
+      },
+      "new": {
+        "recordId": "audit-fixture",
+        "command": "allow-execution",
+        "runId": "fixture-run",
+        "revision": "ffffffffffffffffffffffffffffffffffffffff",
+        "recordedAt": "2026-11-04T00:00:00.000Z",
+        "declarations": {
+          "ownerStartedSession": false,
+          "ownersOwnHost": true,
+          "ownerAttends": true
+        }
+      },
+      "result": "sec-3",
+      "expected": "sec-3"
+    },
+    {
+      "id": "execution:no-ownersOwnHost",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": {
+        "recordId": "audit-fixture",
+        "command": "allow-execution",
+        "runId": "fixture-run",
+        "revision": "ffffffffffffffffffffffffffffffffffffffff",
+        "recordedAt": "2026-11-04T00:00:00.000Z",
+        "declarations": {
+          "ownerStartedSession": true,
+          "ownersOwnHost": true,
+          "ownerAttends": true
+        }
+      },
+      "new": {
+        "recordId": "audit-fixture",
+        "command": "allow-execution",
+        "runId": "fixture-run",
+        "revision": "ffffffffffffffffffffffffffffffffffffffff",
+        "recordedAt": "2026-11-04T00:00:00.000Z",
+        "declarations": {
+          "ownerStartedSession": true,
+          "ownersOwnHost": false,
+          "ownerAttends": true
+        }
+      },
+      "result": "sec-3",
+      "expected": "sec-3"
+    },
+    {
+      "id": "execution:no-ownerAttends",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": {
+        "recordId": "audit-fixture",
+        "command": "allow-execution",
+        "runId": "fixture-run",
+        "revision": "ffffffffffffffffffffffffffffffffffffffff",
+        "recordedAt": "2026-11-04T00:00:00.000Z",
+        "declarations": {
+          "ownerStartedSession": true,
+          "ownersOwnHost": true,
+          "ownerAttends": true
+        }
+      },
+      "new": {
+        "recordId": "audit-fixture",
+        "command": "allow-execution",
+        "runId": "fixture-run",
+        "revision": "ffffffffffffffffffffffffffffffffffffffff",
+        "recordedAt": "2026-11-04T00:00:00.000Z",
+        "declarations": {
+          "ownerStartedSession": true,
+          "ownersOwnHost": true,
+          "ownerAttends": false
+        }
+      },
+      "result": "sec-3",
+      "expected": "sec-3"
+    },
+    {
+      "id": "credential:absent-list",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": "valid empty list",
+      "new": {
+        "ok": false,
+        "why": "fixture list absent"
+      },
+      "result": false,
+      "expected": false
+    },
+    {
+      "id": "credential:absent-list:reads",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": "base configured read set",
+      "new": [],
+      "result": 0,
+      "expected": 0
+    },
+    {
+      "id": "credential:declared-unlisted",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": "valid empty list",
+      "new": {
+        "ok": true,
+        "paths": []
+      },
+      "result": false,
+      "expected": false
+    },
+    {
+      "id": "credential:declared-unlisted:reads",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": "base configured read set",
+      "new": [],
+      "result": 0,
+      "expected": 0
+    },
+    {
+      "id": "credential:readable",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": "EACCES",
+      "new": {
+        "opened": true,
+        "regularFile": true
+      },
+      "result": false,
+      "expected": false
+    },
+    {
+      "id": "credential:readable:dedupe",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": "duplicate synthetic paths",
+      "new": [
+        "/fixture/only",
+        "/fixture/only"
+      ],
+      "result": 1,
+      "expected": 1
+    },
+    {
+      "id": "credential:nonregular",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": "EACCES",
+      "new": {
+        "opened": true,
+        "regularFile": false
+      },
+      "result": false,
+      "expected": false
+    },
+    {
+      "id": "credential:nonregular:dedupe",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": "duplicate synthetic paths",
+      "new": [
+        "/fixture/only",
+        "/fixture/only"
+      ],
+      "result": 1,
+      "expected": 1
+    },
+    {
+      "id": "credential:denied",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": "EACCES",
+      "new": {
+        "opened": false,
+        "code": "EACCES"
+      },
+      "result": true,
+      "expected": true
+    },
+    {
+      "id": "credential:denied:dedupe",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": "duplicate synthetic paths",
+      "new": [
+        "/fixture/only",
+        "/fixture/only"
+      ],
+      "result": 1,
+      "expected": 1
+    },
+    {
+      "id": "credential:absent",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": "EACCES",
+      "new": {
+        "opened": false,
+        "code": "ENOENT"
+      },
+      "result": true,
+      "expected": true
+    },
+    {
+      "id": "credential:absent:dedupe",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": "duplicate synthetic paths",
+      "new": [
+        "/fixture/only",
+        "/fixture/only"
+      ],
+      "result": 1,
+      "expected": 1
+    },
+    {
+      "id": "credential:unknown",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": "EACCES",
+      "new": {
+        "opened": false,
+        "code": "EIO"
+      },
+      "result": false,
+      "expected": false
+    },
+    {
+      "id": "credential:unknown:dedupe",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": "duplicate synthetic paths",
+      "new": [
+        "/fixture/only",
+        "/fixture/only"
+      ],
+      "result": 1,
+      "expected": 1
+    },
+    {
+      "id": "known-gap:8.15:skipped-base-read",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": [
+        "/fixture/base"
+      ],
+      "new": "list source refuses",
+      "result": [],
+      "expected": []
+    },
+    {
+      "id": "wait-mode:unchanged",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": [],
+      "new": [],
+      "result": "signed",
+      "expected": "signed"
+    },
+    {
+      "id": "wait-mode:future-date",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": [
+        "Date: 2026-11-04"
+      ],
+      "new": [
+        "Date: 2099-01-01"
+      ],
+      "result": "signed",
+      "expected": "signed"
+    },
+    {
+      "id": "wait-mode:wrong-version",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": [
+        "Version: 1.3"
+      ],
+      "new": [
+        "Version: 1.4"
+      ],
+      "result": "unsigned",
+      "expected": "unsigned"
+    },
+    {
+      "id": "wait-mode:withdrawal-append",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": [
+        "",
+        ""
+      ],
+      "new": [
+        "Withdrawn: fixture only.",
+        ""
+      ],
+      "result": "signed",
+      "expected": "signed"
+    },
+    {
+      "id": "known-gap:59:2026-02-29",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": "2026-02-28",
+      "new": "2026-02-29",
+      "result": true,
+      "expected": true
+    },
+    {
+      "id": "known-gap:59:2026-02-30",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": "2026-02-28",
+      "new": "2026-02-30",
+      "result": true,
+      "expected": true
+    },
+    {
+      "id": "known-gap:59:2026-02-31",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": "2026-02-28",
+      "new": "2026-02-31",
+      "result": true,
+      "expected": true
+    },
+    {
+      "id": "known-gap:59:2026-04-31",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": "2026-02-28",
+      "new": "2026-04-31",
+      "result": true,
+      "expected": true
+    },
+    {
+      "id": "known-gap:60:LF malformed",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": "```x`<script>x</script>```",
+      "new": "```x`<script>x</script>```",
+      "result": [
+        {
+          "form": "malformed-code-context",
+          "line": 1,
+          "column": 1,
+          "context": "backtick-fence-with-backtick-in-info-string"
+        }
+      ]
+    },
+    {
+      "id": "known-gap:60:U2028 bypass",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": "```x`<script>x</script>```",
+      "new": "```x <script>x</script>```",
+      "result": []
+    },
+    {
+      "id": "known-gap:1.27:check-curly",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": "The project states: \"a\"",
+      "new": "The project states: “a”",
+      "result": {
+        "quotes": 1,
+        "findings": []
+      },
+      "expected": {
+        "quotes": 1,
+        "findings": []
+      }
+    },
+    {
+      "id": "known-gap:1.27:render-curly",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": "The project states: \"a\"",
+      "new": "The project states: “a”",
+      "result": [
+        {
+          "terminated": false,
+          "kind": "lead-in-without-quote"
+        }
+      ],
+      "expected": [
+        {
+          "terminated": false,
+          "kind": "lead-in-without-quote"
+        }
+      ]
+    },
+    {
+      "id": "known-gap:1.27:render-spans",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "old": "The project states: \"a\"",
+      "new": "The project states: “a”",
+      "result": [],
+      "expected": []
+    }
+  ]
+}

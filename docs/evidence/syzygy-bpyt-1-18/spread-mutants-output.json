@@ -1,0 +1,463 @@
+{
+ "summary": {
+  "codeCommit": "674e443ce17921565d9eb709d4ce7621f9f6795e",
+  "baseCommit": "8d5d4bab",
+  "controlFailing": 0,
+  "mutants": 8,
+  "killed": 8,
+  "survived": [],
+  "baseFailingTests": 20
+ },
+ "rows": [
+  {
+   "id": "CONTROL-code-commit",
+   "ranAt": "674e443ce17921565d9eb709d4ce7621f9f6795e",
+   "detectors": {
+    "mask": {
+     "tests": 54,
+     "failed": 0
+    },
+    "extractor": {
+     "tests": 89,
+     "failed": 0
+    },
+    "reader": {
+     "tests": 91,
+     "failed": 0
+    },
+    "model": {
+     "tests": 34,
+     "failed": 0
+    }
+   },
+   "failingTests": []
+  },
+  {
+   "id": "MU1-mask-spread",
+   "ranAt": "674e443ce17921565d9eb709d4ce7621f9f6795e",
+   "replacements": [
+    {
+     "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+     "old": "        for (const pendingLine of pending) out.push(blank(pendingLine));\n",
+     "new": "        out.push(...pending.map(blank));\n"
+    }
+   ],
+   "mutatedFileSha256": {
+    "packages/three-surface-poc-core/src/markdown-code-context.ts": "bfdb22340acbcf35c530c96fe151eb74b39176109c4d664be1de491e80ee2767"
+   },
+   "note": "the base line: one spread call over the fence",
+   "outcome": "killed",
+   "detectors": {
+    "mask": {
+     "tests": 54,
+     "failed": 6
+    },
+    "extractor": {
+     "tests": 89,
+     "failed": 0
+    },
+    "reader": {
+     "tests": 91,
+     "failed": 9
+    },
+    "model": {
+     "tests": 34,
+     "failed": 3
+    }
+   },
+   "failingTests": [
+    "a very long closed fence LF: 200,000 lines are blanked, every line end and the text after the fence kept",
+    "a very long closed fence CRLF: 200,000 lines are blanked, every line end and the text after the fence kept",
+    "a very long closed fence CR: 200,000 lines are blanked, every line end and the text after the fence kept",
+    "a very long closed fence LF: a script element inside the fence is blanked, and the line after the fence keeps its own",
+    "a very long closed fence CRLF: a script element inside the fence is blanked, and the line after the fence keeps its own",
+    "a very long closed fence CR: a script element inside the fence is blanked, and the line after the fence keeps its own",
+    "a 200,000-line closed fence under the read limit (GP-B2 Q1) LF: a 200,000-line closed fence holding a script element reads as text, under the read limit",
+    "a 200,000-line closed fence under the read limit (GP-B2 Q1) CRLF: a 200,000-line closed fence holding a script element reads as text, under the read limit",
+    "a 200,000-line closed fence under the read limit (GP-B2 Q1) CR: a 200,000-line closed fence holding a script element reads as text, under the read limit",
+    "a 200,000-line closed fence under the read limit (GP-B2 Q1) LF: a script element after a 200,000-line closed fence is found, with a body-free record",
+    "a 200,000-line closed fence under the read limit (GP-B2 Q1) CRLF: a script element after a 200,000-line closed fence is found, with a body-free record",
+    "a 200,000-line closed fence under the read limit (GP-B2 Q1) CR: a script element after a 200,000-line closed fence is found, with a body-free record",
+    "a 200,000-line closed fence under the read limit (GP-B2 Q1) LF: scanActiveContent over a 200,000-line closed fence finds nothing inside it",
+    "a 200,000-line closed fence under the read limit (GP-B2 Q1) CRLF: scanActiveContent over a 200,000-line closed fence finds nothing inside it",
+    "a 200,000-line closed fence under the read limit (GP-B2 Q1) CR: scanActiveContent over a 200,000-line closed fence finds nothing inside it",
+    "a very long fence or list does not abort the observation LF: a 200,000-line closed fence at the end of vision.md is classified as a 10-line one is",
+    "a very long fence or list does not abort the observation CRLF: a 200,000-line closed fence at the end of vision.md is classified as a 10-line one is",
+    "a very long fence or list does not abort the observation CR: a 200,000-line closed fence at the end of vision.md is classified as a 10-line one is"
+   ]
+  },
+  {
+   "id": "MU2-extractor-spread",
+   "ranAt": "674e443ce17921565d9eb709d4ce7621f9f6795e",
+   "replacements": [
+    {
+     "file": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+     "old": "    for (const item of result.items) all.push(item);\n",
+     "new": "    all.push(...result.items);\n"
+    }
+   ],
+   "mutatedFileSha256": {
+    "packages/three-surface-poc-core/src/project-shape-extraction.ts": "61f253a1a41011cabcc680843abe4eed95c16349e3f8336fd0d10dc36e8d71c4"
+   },
+   "note": "the base line: one spread call over the class",
+   "outcome": "killed",
+   "detectors": {
+    "mask": {
+     "tests": 54,
+     "failed": 0
+    },
+    "extractor": {
+     "tests": 89,
+     "failed": 1
+    },
+    "reader": {
+     "tests": 91,
+     "failed": 0
+    },
+    "model": {
+     "tests": 34,
+     "failed": 1
+    }
+   },
+   "failingTests": [
+    "a source whose class holds 130,000 items is extracted, every item kept in class order",
+    "a very long fence or list does not abort the observation a 130,000-item success list is extracted whole"
+   ]
+  },
+  {
+   "id": "MU3-mask-loop-drops-closer",
+   "ranAt": "674e443ce17921565d9eb709d4ce7621f9f6795e",
+   "replacements": [
+    {
+     "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+     "old": "        for (const pendingLine of pending) out.push(blank(pendingLine));\n",
+     "new": "        for (const pendingLine of pending.slice(0, -1)) out.push(blank(pendingLine));\n"
+    }
+   ],
+   "mutatedFileSha256": {
+    "packages/three-surface-poc-core/src/markdown-code-context.ts": "387f571ad7146196f71ba48bb4dc2ef679610e5c4485059e919de77e6b6e215f"
+   },
+   "note": "the closing line is not blanked or kept: the masked text loses a line",
+   "outcome": "killed",
+   "detectors": {
+    "mask": {
+     "tests": 54,
+     "failed": 24
+    },
+    "extractor": {
+     "tests": 89,
+     "failed": 0
+    },
+    "reader": {
+     "tests": 91,
+     "failed": 1
+    },
+    "model": {
+     "tests": 34,
+     "failed": 0
+    }
+   },
+   "failingTests": [
+    "closed-pwb-code-context-v1 \u2014 fenced code blocks a closed backtick fence is blanked, delimiters included, keeping every newline and length",
+    "closed-pwb-code-context-v1 \u2014 fenced code blocks an opener may be indented zero to three spaces; at four the backticks are inline runs, not a fence",
+    "closed-pwb-code-context-v1 \u2014 fenced code blocks tildes fence too, and a tilde opener info string may contain a backtick",
+    "closed-pwb-code-context-v1 \u2014 fenced code blocks a closer must repeat the opener character at least the opener length, then spaces only",
+    "closed-pwb-code-context-v1 \u2014 fenced code blocks the first qualifying closer ends the fence; text after it is scanned again",
+    "closed-pwb-code-context-v1 \u2014 fenced code blocks a fence opener line inside a fence is content, never a nested opener",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line mixed terminators: each one ends one line, whichever kind it is",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line the mask keeps the length and every CR and LF at its offset (a CR is never blanked, joined to LF or dropped)",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line LF: a fence closed on the last line, with no final line end, is closed",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CRLF: a fence closed on the last line, with no final line end, is closed",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CR: a fence closed on the last line, with no final line end, is closed",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line LF: a tilde fence, a closer with trailing spaces and a span across lines",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CRLF: a tilde fence, a closer with trailing spaces and a span across lines",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CR: a tilde fence, a closer with trailing spaces and a span across lines",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line LF: a script element between two tilde fences that each show a backtick-fence line is outside every context",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CRLF: a script element between two tilde fences that each show a backtick-fence line is outside every context",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CR: a script element between two tilde fences that each show a backtick-fence line is outside every context",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line a CRLF or CR text gets the structure its LF form gets, for every case here",
+    "a very long closed fence LF: 200,000 lines are blanked, every line end and the text after the fence kept",
+    "a very long closed fence CRLF: 200,000 lines are blanked, every line end and the text after the fence kept",
+    "a very long closed fence CR: 200,000 lines are blanked, every line end and the text after the fence kept",
+    "a very long closed fence LF: a script element inside the fence is blanked, and the line after the fence keeps its own",
+    "a very long closed fence CRLF: a script element inside the fence is blanked, and the line after the fence keeps its own",
+    "a very long closed fence CR: a script element inside the fence is blanked, and the line after the fence keeps its own",
+    "active content is rejected and never reaches a sink the same sentinel outside the context still excludes, at its raw position"
+   ]
+  },
+  {
+   "id": "MU4-extractor-loop-drops-last-item",
+   "ranAt": "674e443ce17921565d9eb709d4ce7621f9f6795e",
+   "replacements": [
+    {
+     "file": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+     "old": "    for (const item of result.items) all.push(item);\n",
+     "new": "    for (const item of result.items.slice(0, -1)) all.push(item);\n"
+    }
+   ],
+   "mutatedFileSha256": {
+    "packages/three-surface-poc-core/src/project-shape-extraction.ts": "99d8e1b851d3b6087cfb03d8c51925b09bf3303db110e42f2482254c41212dfa"
+   },
+   "note": "the last item of each class is lost; the denominator still counts it",
+   "outcome": "killed",
+   "detectors": {
+    "mask": {
+     "tests": 54,
+     "failed": 0
+    },
+    "extractor": {
+     "tests": 89,
+     "failed": 13
+    },
+    "reader": {
+     "tests": 91,
+     "failed": 0
+    },
+    "model": {
+     "tests": 34,
+     "failed": 11
+    }
+   },
+   "failingTests": [
+    "PWB-REQ-002 \u2014 two independent extractors agree on every fixture heart-and-soul/vision.md mints the oracle's identities and denominators",
+    "PWB-REQ-002 \u2014 two independent extractors agree on every fixture heart-and-soul/architecture.md mints the oracle's identities and denominators",
+    "PWB-REQ-002 \u2014 two independent extractors agree on every fixture heart-and-soul/v1.md mints the oracle's identities and denominators",
+    "PWB-REQ-002 \u2014 two independent extractors agree on every fixture legends-and-lore/README.md mints the oracle's identities and denominators",
+    "PWB-REQ-002 \u2014 two independent extractors agree on every fixture lay-and-land/components.md mints the oracle's identities and denominators",
+    "PWB-REQ-002 \u2014 two independent extractors agree on every fixture craft-and-care/README.md mints the oracle's identities and denominators",
+    "PWB-REQ-002 \u2014 two independent extractors agree on every fixture roster/alfred/butler.toml mints the oracle's identities and denominators",
+    "PWB-REQ-002 \u2014 two independent extractors agree on every fixture openspec/specs/identity/spec.md mints the oracle's identities and denominators",
+    "PWB-REQ-002 \u2014 two independent extractors agree on every fixture the six project-account keys are minted exactly once across the three account files",
+    "PWB-REQ-002 \u2014 two independent extractors agree on every fixture hand-typed expectations pin the grammar on the vision fixture",
+    "PWB-REQ-002 \u2014 two independent extractors agree on every fixture hand-typed expectations pin the grammar on the v1, lore, components, craft and roster fixtures",
+    "PWB-REQ-002 \u2014 the grammar is literal keys are NFC-normalized and nothing else",
+    "a source whose class holds 130,000 items is extracted, every item kept in class order",
+    "an admitted, fully readable fixture carries the complete source population with stamps, identities and Observed claims",
+    "an admitted, fully readable fixture accounts for every declared identity, all modeled",
+    "an admitted, fully readable fixture renders the six project-account statements with their sections and claims",
+    "an admitted, fully readable fixture aggregates per class with known denominators, Observed claims and zero reason counts",
+    "an admitted, fully readable fixture every claim is a complete tuple from the closed vocabularies",
+    "faults never shrink the population (PWB-REQ-003) a secret-bearing index is excluded hash-not-body before child derivation; its class denominator and the project shape go Unknown",
+    "faults never shrink the population (PWB-REQ-003) a named-but-absent source stays counted as Unknown and its account statement is Unknown with the same reason",
+    "contradictions are disclosed, resolved only by a root-declared layer rule (PWB-REQ-004) a stated summary disagreeing with the derived count is contradicted, both anchors kept, tier suspended",
+    "contradictions are disclosed, resolved only by a root-declared layer rule (PWB-REQ-004) with the root precedence table, row 1 makes the derived count effective and the citation travels",
+    "one resource envelope across both phases (PWB-REQ-006, amended) maxParsePassesPerSource counts phase B against a seed already validated in phase A",
+    "a very long fence or list does not abort the observation a 130,000-item success list is extracted whole"
+   ]
+  },
+  {
+   "id": "MU5-mask-loop-reversed",
+   "ranAt": "674e443ce17921565d9eb709d4ce7621f9f6795e",
+   "replacements": [
+    {
+     "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+     "old": "        for (const pendingLine of pending) out.push(blank(pendingLine));\n",
+     "new": "        for (let at = pending.length - 1; at >= 0; at -= 1) out.push(blank(pending[at] ?? ''));\n"
+    }
+   ],
+   "mutatedFileSha256": {
+    "packages/three-surface-poc-core/src/markdown-code-context.ts": "55cb76a7427e78eac53b9b1f1b786a7ee01d27e25e94499c09d5a70294971641"
+   },
+   "note": "the fence lines are blanked in reverse order",
+   "outcome": "killed",
+   "detectors": {
+    "mask": {
+     "tests": 54,
+     "failed": 7
+    },
+    "extractor": {
+     "tests": 89,
+     "failed": 0
+    },
+    "reader": {
+     "tests": 91,
+     "failed": 0
+    },
+    "model": {
+     "tests": 34,
+     "failed": 0
+    }
+   },
+   "failingTests": [
+    "closed-pwb-code-context-v1 \u2014 fenced code blocks a closed backtick fence is blanked, delimiters included, keeping every newline and length",
+    "closed-pwb-code-context-v1 \u2014 fenced code blocks tildes fence too, and a tilde opener info string may contain a backtick",
+    "closed-pwb-code-context-v1 \u2014 fenced code blocks a closer must repeat the opener character at least the opener length, then spaces only",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line LF: a tilde fence, a closer with trailing spaces and a span across lines",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CRLF: a tilde fence, a closer with trailing spaces and a span across lines",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CR: a tilde fence, a closer with trailing spaces and a span across lines",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line a CRLF or CR text gets the structure its LF form gets, for every case here"
+   ]
+  },
+  {
+   "id": "MU6-extractor-loop-reversed",
+   "ranAt": "674e443ce17921565d9eb709d4ce7621f9f6795e",
+   "replacements": [
+    {
+     "file": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+     "old": "    for (const item of result.items) all.push(item);\n",
+     "new": "    for (let at = result.items.length - 1; at >= 0; at -= 1) all.push(result.items[at] as ExtractedItem);\n"
+    }
+   ],
+   "mutatedFileSha256": {
+    "packages/three-surface-poc-core/src/project-shape-extraction.ts": "52aecf9f8fa7caa45810fd3c4c6e389c79c8146708ed130e2cd2a81be6a6b119"
+   },
+   "note": "the items of each class are appended in reverse order",
+   "outcome": "killed",
+   "detectors": {
+    "mask": {
+     "tests": 54,
+     "failed": 0
+    },
+    "extractor": {
+     "tests": 89,
+     "failed": 9
+    },
+    "reader": {
+     "tests": 91,
+     "failed": 0
+    },
+    "model": {
+     "tests": 34,
+     "failed": 1
+    }
+   },
+   "failingTests": [
+    "PWB-REQ-002 \u2014 two independent extractors agree on every fixture heart-and-soul/vision.md mints the oracle's identities and denominators",
+    "PWB-REQ-002 \u2014 two independent extractors agree on every fixture heart-and-soul/v1.md mints the oracle's identities and denominators",
+    "PWB-REQ-002 \u2014 two independent extractors agree on every fixture legends-and-lore/README.md mints the oracle's identities and denominators",
+    "PWB-REQ-002 \u2014 two independent extractors agree on every fixture lay-and-land/components.md mints the oracle's identities and denominators",
+    "PWB-REQ-002 \u2014 two independent extractors agree on every fixture craft-and-care/README.md mints the oracle's identities and denominators",
+    "PWB-REQ-002 \u2014 two independent extractors agree on every fixture hand-typed expectations pin the grammar on the vision fixture",
+    "PWB-REQ-002 \u2014 two independent extractors agree on every fixture hand-typed expectations pin the grammar on the v1, lore, components, craft and roster fixtures",
+    "PWB-REQ-002 \u2014 the grammar is literal keys are NFC-normalized and nothing else",
+    "a source whose class holds 130,000 items is extracted, every item kept in class order",
+    "an admitted, fully readable fixture accounts for every declared identity, all modeled"
+   ]
+  },
+  {
+   "id": "R10-extractor-size-gated-reversal",
+   "ranAt": "674e443ce17921565d9eb709d4ce7621f9f6795e",
+   "replacements": [
+    {
+     "file": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+     "old": "    for (const item of result.items) all.push(item);\n",
+     "new": "    for (let at = 0; at < result.items.length; at += 1) all.push(result.items[result.items.length > 100_000 ? result.items.length - 1 - at : at] as ExtractedItem);\n"
+    }
+   ],
+   "mutatedFileSha256": {
+    "packages/three-surface-poc-core/src/project-shape-extraction.ts": "3f9ee7fad03f13c9e743eeeae3048397917a3c89c21af32febd34241ec85137e"
+   },
+   "note": "review round 2: a class past 100,000 items is appended in reverse order (a size-gated fault no small fixture reaches)",
+   "outcome": "killed",
+   "detectors": {
+    "mask": {
+     "tests": 54,
+     "failed": 0
+    },
+    "extractor": {
+     "tests": 89,
+     "failed": 1
+    },
+    "reader": {
+     "tests": 91,
+     "failed": 0
+    },
+    "model": {
+     "tests": 34,
+     "failed": 0
+    }
+   },
+   "failingTests": [
+    "a source whose class holds 130,000 items is extracted, every item kept in class order"
+   ]
+  },
+  {
+   "id": "R11-extractor-chunks-last-first",
+   "ranAt": "674e443ce17921565d9eb709d4ce7621f9f6795e",
+   "replacements": [
+    {
+     "file": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+     "old": "    for (const item of result.items) all.push(item);\n",
+     "new": "    for (let at = Math.floor((result.items.length - 1) / 50_000) * 50_000; at >= 0; at -= 50_000) all.push(...result.items.slice(at, at + 50_000));\n"
+    }
+   ],
+   "mutatedFileSha256": {
+    "packages/three-surface-poc-core/src/project-shape-extraction.ts": "832cd6cbe6e4cc0a2bdbd0af6cfb6eeaee0617cb49f9263ec890877ef239ac4c"
+   },
+   "note": "review round 2: a chunked spread whose 50,000-item chunks are appended last-first (identical to the loop for a class of 50,000 items or fewer)",
+   "outcome": "killed",
+   "detectors": {
+    "mask": {
+     "tests": 54,
+     "failed": 0
+    },
+    "extractor": {
+     "tests": 89,
+     "failed": 1
+    },
+    "reader": {
+     "tests": 91,
+     "failed": 0
+    },
+    "model": {
+     "tests": 34,
+     "failed": 0
+    }
+   },
+   "failingTests": [
+    "a source whose class holds 130,000 items is extracted, every item kept in class order"
+   ]
+  },
+  {
+   "id": "BASE-both-spreads",
+   "ranAt": "674e443ce17921565d9eb709d4ce7621f9f6795e",
+   "replacements": "the whole of both files at 8d5d4bab",
+   "mutatedFileSha256": {
+    "packages/three-surface-poc-core/src/markdown-code-context.ts": "93b95f6d4eabc440344404d01040ba1f10bdceb65e69ab74c4ea59c1fa5831f7",
+    "packages/three-surface-poc-core/src/project-shape-extraction.ts": "642cf156ed37bfc0ced7cb338e640268fc0e02648913dd71be5dc4efe6ed0dbd"
+   },
+   "note": "the new tests fail on the base behaviour",
+   "outcome": "killed",
+   "detectors": {
+    "mask": {
+     "tests": 54,
+     "failed": 6
+    },
+    "extractor": {
+     "tests": 89,
+     "failed": 1
+    },
+    "reader": {
+     "tests": 91,
+     "failed": 9
+    },
+    "model": {
+     "tests": 34,
+     "failed": 4
+    }
+   },
+   "failingTests": [
+    "a very long closed fence LF: 200,000 lines are blanked, every line end and the text after the fence kept",
+    "a very long closed fence CRLF: 200,000 lines are blanked, every line end and the text after the fence kept",
+    "a very long closed fence CR: 200,000 lines are blanked, every line end and the text after the fence kept",
+    "a very long closed fence LF: a script element inside the fence is blanked, and the line after the fence keeps its own",
+    "a very long closed fence CRLF: a script element inside the fence is blanked, and the line after the fence keeps its own",
+    "a very long closed fence CR: a script element inside the fence is blanked, and the line after the fence keeps its own",
+    "a source whose class holds 130,000 items is extracted, every item kept in class order",
+    "a 200,000-line closed fence under the read limit (GP-B2 Q1) LF: a 200,000-line closed fence holding a script element reads as text, under the read limit",
+    "a 200,000-line closed fence under the read limit (GP-B2 Q1) CRLF: a 200,000-line closed fence holding a script element reads as text, under the read limit",
+    "a 200,000-line closed fence under the read limit (GP-B2 Q1) CR: a 200,000-line closed fence holding a script element reads as text, under the read limit",
+    "a 200,000-line closed fence under the read limit (GP-B2 Q1) LF: a script element after a 200,000-line closed fence is found, with a body-free record",
+    "a 200,000-line closed fence under the read limit (GP-B2 Q1) CRLF: a script element after a 200,000-line closed fence is found, with a body-free record",
+    "a 200,000-line closed fence under the read limit (GP-B2 Q1) CR: a script element after a 200,000-line closed fence is found, with a body-free record",
+    "a 200,000-line closed fence under the read limit (GP-B2 Q1) LF: scanActiveContent over a 200,000-line closed fence finds nothing inside it",
+    "a 200,000-line closed fence under the read limit (GP-B2 Q1) CRLF: scanActiveContent over a 200,000-line closed fence finds nothing inside it",
+    "a 200,000-line closed fence under the read limit (GP-B2 Q1) CR: scanActiveContent over a 200,000-line closed fence finds nothing inside it",
+    "a very long fence or list does not abort the observation LF: a 200,000-line closed fence at the end of vision.md is classified as a 10-line one is",
+    "a very long fence or list does not abort the observation CRLF: a 200,000-line closed fence at the end of vision.md is classified as a 10-line one is",
+    "a very long fence or list does not abort the observation CR: a 200,000-line closed fence at the end of vision.md is classified as a 10-line one is",
+    "a very long fence or list does not abort the observation a 130,000-item success list is extracted whole"
+   ]
+  }
+ ]
+}

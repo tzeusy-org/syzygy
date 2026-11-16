@@ -1,0 +1,23 @@
+{
+ "node": "v24.6.0",
+ "rows": [
+  {
+   "id": "M12-at-base",
+   "commit": "f7477f52c49ee347f96b92703887c31f6be49e07",
+   "file": "packages/polaris-generation-core/src/dossier-evaluation.ts",
+   "old": "input.expectedQuestionsSha256 !== questionsSha256)",
+   "new": "input.expectedQuestionsSha256 !== sha256(input.questionsText + '\\n'))",
+   "files": [
+    "packages/polaris-generation-core/src/dossier-evaluation.test.ts"
+   ],
+   "expect": "report",
+   "outcome": "survives",
+   "agrees": true,
+   "exit": 0,
+   "total": 33,
+   "failed": 0,
+   "failedTests": [],
+   "filesFailedToLoad": []
+  }
+ ]
+}

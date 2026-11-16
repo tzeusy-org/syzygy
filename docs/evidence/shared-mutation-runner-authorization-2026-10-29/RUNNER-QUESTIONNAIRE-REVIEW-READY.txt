@@ -1,0 +1,76 @@
+# Shared mutation test runner authorization
+
+**Evidence snapshot:** repository `Syzygy` at `95c87a52b5a03ef4b1842e82b1c1b961cb51daa3` on 2026-10-28; canonical tracker, source and PR evidence refreshed. No runner or live product was executed.
+**Artifact boundary:** Proposed bounded owner direction, not an approval or implementation result.
+
+| # | Decision ID | Priority | Decision state | Recommended direction |
+|---:|---|---:|---|---|
+| 1 | `SHARED-MUTATION-RUNNER-20261028-R1` | P1 | Review-ready | Authorize the bounded runner evidence, replay and failure changes |
+
+### `SHARED-MUTATION-RUNNER-20261028-R1` — Authorize the shared mutation test runner
+
+**Decision state:** Review-ready
+**Adversarial review:** Passed — reviewer `/root/runner_authorization_review` on 2026-10-28
+
+#### Decision needed
+
+Authorize the exact shared mutation runner direction in `runner-authorization-r2/DRAFT-DIRECTION.md`, composed with the reviewed `runner-next-refresh-r2/ADDENDUM.md`. A permits the named implementation and consumer migration, recording this bounded direction and updating the existing Beads handoff. Fresh ownership and required review/verification gates remain. This is the test-mutation runner work in syzygy-bpyt.4.6, distinct from the P111 dossier CLI runner.
+
+#### Background and freshness
+
+- **[Observed]** The current generic runner can lose a selected test-project override when recording evidence and lacks an automatic unmutated baseline. Generic and prompt runners can exit successfully after recording survivors. Existing stronger per-mutant/per-group checks in other runners must be preserved.
+- **[Observed]** The generation-plan prerequisite PR543 is merged and kpbq closed. The newly added legacy plan guard is preserved; it cannot prove the new engine's selected commands. PR550 and PR549 still need current ownership reconciliation before their surfaces are changed.
+- **[Inferred]** The new runner should record the actual selected project/command, reject invalid controls and fail on unexpected survivors or incomplete execution. This closes the reviewed evidence gap without changing historical records.
+- **[Unknown]** Implementation, migration parity and actual run results remain unestablished. The separate vsqr historical restoration and extra-mutant findings are not automatically included or closed.
+
+#### Options
+
+| Option | Pros | Cons |
+|---|---|---|
+| A. Authorize the exact bounded change (Recommended) | Enables faithful replay, explicit refusal/incomplete evidence and meaningful failed exits in the existing planned migration | Additional all-groups preflight costs runtime; an invalid selected group prevents any initial mutation; new consumer wiring needs verification |
+| B. Keep the current behavior | Preserves current outputs and leaves historical tools untouched | Output-changing shared-runner migration stays blocked |
+
+#### Recommendation
+
+Choose **A**. Mutation evidence should distinguish a detected regression from a broken test run and replay the project actually selected. Preserve all stronger existing control timing, historical tools and records. An initial failed group blocks the selected run; a later required baseline failure preserves genuine earlier results as incomplete evidence. The new engine stays serial in owned scratch copies.
+
+#### Authorization boundary
+
+Only sections 1–7 of the exact R2 direction plus the additive source/consumer disposition are authorized. The named plans and consumers may move to versioned, non-overwriting evidence, faithful project/command replay, all-groups initial controls, preserved per-mutant/per-group controls, and explicit nonzero exits for survivors, refusal, baseline or execution/integrity errors. Existing npm selections and workflow schedule/permissions remain. Legacy tools, source/evidence bodies and the new legacy plan guard remain preserved. The new engine must independently verify effective command mapping.
+
+A also authorizes recording the direction and updating the existing syzygy-bpyt.4.6 handoff. It does not clear active ownership, complete the migration, authorize changed product/specification/consent behavior, add parallel jobs or JSON-field oracles, retire old runners, execute observed-project code, call providers, deploy or release. Further live consumers need reviewed disposition; scope changes return for their owning authorization.
+
+#### Adversarial review record
+
+- Reviewer: `/root/runner_authorization_review`
+- Scope verdict: Pass
+- Recommendation verdict: Pass
+- Material corrections: Prior additive refresh clarification preserves the prompt runner already included in R2; four other scripts remain outside migration.
+- Evidence freshness: main 95c87a52, tracker 916 records and exact source/PR snapshots; dynamic/external consumers remain Unknown.
+
+#### Owner decision record
+
+- Status: Pending owner response
+- Actor/channel: Pending owner response
+- Recorded at: Pending owner response
+- Choice: Pending owner response
+- Owner edits: None
+- Post-answer review: Pending owner response
+- Final authorization boundary: Pending owner response
+- Canonical destination: .syzygy/governance/decisions/OWNER-DIRECTION-SHARED-MUTATION-RUNNER-[actual approval date].md
+- Routing evidence: Not routed
+
+#### Evidence
+
+- /home/tze/.cache/syzygy-v1-drive-20261027/runner-authorization-r2/OFFERING.md
+- /home/tze/.cache/syzygy-v1-drive-20261027/runner-authorization-r2/DRAFT-DIRECTION.md
+- /home/tze/.cache/syzygy-v1-drive-20261027/runner-authorization-r2/BEHAVIOR-AND-CONSUMERS.md
+- /home/tze/.cache/syzygy-v1-drive-20261027/runner-authorization-r2/FREEZE-r2.json
+- /home/tze/.cache/syzygy-v1-drive-20261027/runner-authorization-review-r2/RAW.md
+- /home/tze/.cache/syzygy-p115-authorization-20261028/runner-next-refresh-r2/ADDENDUM.md and MANIFEST.json
+
+#### Proposed chat question
+
+Authorize the reviewed shared mutation test-runner change: faithful test-project replay, preserved baseline checks, explicit failed/incomplete evidence, nonzero failure exits and scratch-copy execution? A also authorizes recording the direction and updating its existing Beads handoff; current ownership and verification gates remain. I recommend A; the extra preflight costs runtime and refuses the selected run if any initial test group is invalid.
+
+Options: A — Authorize the bounded runner change (Recommended); B — Keep current behavior.

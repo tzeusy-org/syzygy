@@ -1,0 +1,1878 @@
+{
+ "tool": {
+  "name": "timing_census.py",
+  "sha256": "79aad9c52e1a11f8887d8fe5475a86e93bd742ac8aec436089a69cb098840f48"
+ },
+ "commit": "c104771ff90f47ffd070f2339c36010458679c71",
+ "population": 249,
+ "summary": {
+  "clock": {
+   "lines": 36,
+   "files": 20,
+   "withReason": 0
+  },
+  "elapsed": {
+   "lines": 7,
+   "files": 6,
+   "withReason": 0
+  },
+  "timeout-arg": {
+   "lines": 134,
+   "files": 38,
+   "withReason": 26
+  },
+  "race": {
+   "lines": 2,
+   "files": 2,
+   "withReason": 0
+  },
+  "timeout-option": {
+   "lines": 8,
+   "files": 5,
+   "withReason": 6
+  }
+ },
+ "timeoutFiles": 39,
+ "unreasonedTimeoutFiles": [
+  "apps/three-surface-poc/src/cdp-browser.browser.test.ts",
+  "apps/three-surface-poc/src/cdp-browser.test.ts",
+  "apps/three-surface-poc/src/fixture-directories.test.ts",
+  "apps/three-surface-poc/src/governing-intent-sweep.test.ts",
+  "apps/three-surface-poc/src/main.test.ts",
+  "apps/three-surface-poc/src/orrery.browser.test.ts",
+  "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts",
+  "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+  "apps/three-surface-poc/src/polaris-copy.test.ts",
+  "apps/three-surface-poc/src/polaris-generation/dossier-cap-measure.test.ts",
+  "apps/three-surface-poc/src/polaris-generation/draft-preview.browser.test.ts",
+  "apps/three-surface-poc/src/polaris-generation/pipeline-demo.test.ts",
+  "apps/three-surface-poc/src/polaris-generation/public-source-screening.test.ts",
+  "apps/three-surface-poc/src/polaris-generation/redis-shaped-discovery.test.ts",
+  "apps/three-surface-poc/src/polaris-generation/self-corpus.test.ts",
+  "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+  "apps/three-surface-poc/src/polaris-reconciliation.test.ts",
+  "apps/three-surface-poc/src/proposal-disclosure.test.ts",
+  "apps/three-surface-poc/src/restart.test.ts",
+  "apps/three-surface-poc/src/surface-routes.test.ts",
+  "apps/three-surface-poc/src/test-model-fixture.test.ts",
+  "apps/three-surface-poc/src/trajectory-narrowing.browser.test.ts",
+  "apps/three-surface-poc/src/tuple-encoding.test.ts",
+  "apps/three-surface-poc/src/unknown-route-sweep.test.ts",
+  "packages/cap1-system/src/skipped-population.system.test.ts",
+  "packages/polaris-dossier/src/git-object-reader.test.ts",
+  "packages/polaris-dossier/src/no-egress.test.ts",
+  "packages/polaris-generation-consent/src/package-reader.test.ts",
+  "packages/three-surface-poc-core/src/test-artifact-verification.live.test.ts"
+ ],
+ "rows": [
+  {
+   "path": "apps/three-surface-poc/src/capture-test-artifact-main.test.ts",
+   "line": 379,
+   "kind": "clock",
+   "class": "now-input",
+   "text": "const started = Date.now();"
+  },
+  {
+   "path": "apps/three-surface-poc/src/capture-test-artifact-main.test.ts",
+   "line": 381,
+   "kind": "elapsed",
+   "class": null,
+   "text": "expect(Date.now() - started).toBeLessThan(5_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.browser.test.ts",
+   "line": 82,
+   "kind": "timeout-arg",
+   "arg": "60_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 60_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.browser.test.ts",
+   "line": 112,
+   "kind": "timeout-arg",
+   "arg": "60_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 60_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 22,
+   "kind": "race",
+   "text": "return new Promise<never>((_resolve, reject) => setTimeout(() => reject(new Error('no acknowledgement')), timeoutMs ?? 0));"
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 335,
+   "kind": "timeout-arg",
+   "arg": "30_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 30_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 344,
+   "kind": "timeout-arg",
+   "arg": "30_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 30_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 351,
+   "kind": "timeout-arg",
+   "arg": "30_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 30_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 364,
+   "kind": "timeout-arg",
+   "arg": "30_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 30_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 371,
+   "kind": "timeout-arg",
+   "arg": "30_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 30_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 383,
+   "kind": "timeout-arg",
+   "arg": "30_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 30_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 401,
+   "kind": "timeout-arg",
+   "arg": "30_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 30_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 417,
+   "kind": "timeout-arg",
+   "arg": "30_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 30_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 426,
+   "kind": "timeout-arg",
+   "arg": "30_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 30_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 439,
+   "kind": "timeout-arg",
+   "arg": "30_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 30_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 445,
+   "kind": "timeout-arg",
+   "arg": "30_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 30_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 451,
+   "kind": "timeout-arg",
+   "arg": "30_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 30_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 458,
+   "kind": "timeout-arg",
+   "arg": "30_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 30_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 470,
+   "kind": "timeout-arg",
+   "arg": "30_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 30_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 478,
+   "kind": "timeout-arg",
+   "arg": "30_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 30_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 489,
+   "kind": "timeout-arg",
+   "arg": "30_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 30_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 63,
+   "kind": "timeout-arg",
+   "arg": "30_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 30_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 71,
+   "kind": "timeout-arg",
+   "arg": "30_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 30_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 94,
+   "kind": "timeout-arg",
+   "arg": "30_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 30_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 109,
+   "kind": "timeout-arg",
+   "arg": "30_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 30_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 128,
+   "kind": "timeout-arg",
+   "arg": "30_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 30_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 142,
+   "kind": "timeout-arg",
+   "arg": "30_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 30_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 186,
+   "kind": "timeout-arg",
+   "arg": "30_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 30_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 198,
+   "kind": "timeout-arg",
+   "arg": "30_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 30_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 212,
+   "kind": "timeout-arg",
+   "arg": "30_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 30_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 227,
+   "kind": "timeout-arg",
+   "arg": "30_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 30_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 241,
+   "kind": "timeout-arg",
+   "arg": "30_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 30_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 256,
+   "kind": "timeout-arg",
+   "arg": "30_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 30_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 266,
+   "kind": "timeout-arg",
+   "arg": "30_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 30_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 284,
+   "kind": "timeout-arg",
+   "arg": "30_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 30_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 296,
+   "kind": "timeout-arg",
+   "arg": "30_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 30_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/git-blob-batch.test.ts",
+   "line": 241,
+   "kind": "timeout-arg",
+   "arg": "REAL_TREE_TIMEOUT_MS",
+   "const": {
+    "line": 27,
+    "value": "120_000",
+    "reason": true
+   },
+   "reason": true,
+   "text": "}, REAL_TREE_TIMEOUT_MS);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/git-blob-batch.test.ts",
+   "line": 253,
+   "kind": "timeout-arg",
+   "arg": "REAL_TREE_TIMEOUT_MS",
+   "const": {
+    "line": 27,
+    "value": "120_000",
+    "reason": true
+   },
+   "reason": true,
+   "text": "}, REAL_TREE_TIMEOUT_MS);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/git-blob-batch.test.ts",
+   "line": 286,
+   "kind": "timeout-arg",
+   "arg": "REAL_TREE_TIMEOUT_MS",
+   "const": {
+    "line": 27,
+    "value": "120_000",
+    "reason": true
+   },
+   "reason": true,
+   "text": "}, REAL_TREE_TIMEOUT_MS);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/governance-inputs.test.ts",
+   "line": 504,
+   "kind": "timeout-arg",
+   "arg": "REAL_TREE_TIMEOUT_MS",
+   "const": {
+    "line": 436,
+    "value": "60_000",
+    "reason": true
+   },
+   "reason": true,
+   "text": "}, REAL_TREE_TIMEOUT_MS);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/governing-intent-sweep.test.ts",
+   "line": 168,
+   "kind": "timeout-arg",
+   "arg": "60_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 60_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/keyboard-sweep-record.test.ts",
+   "line": 59,
+   "kind": "timeout-arg",
+   "arg": "30_000",
+   "const": null,
+   "reason": true,
+   "text": "}, 30_000); // two fixture model builds, ~1.5 s each unloaded; the 5 s default failed such tests under suite load (syzygy-k66p)"
+  },
+  {
+   "path": "apps/three-surface-poc/src/main.test.ts",
+   "line": 189,
+   "kind": "clock",
+   "class": "deadline",
+   "text": "const deadline = Date.now() + boundMs;"
+  },
+  {
+   "path": "apps/three-surface-poc/src/main.test.ts",
+   "line": 190,
+   "kind": "clock",
+   "class": "deadline",
+   "text": "while (fake.registered() < 2 && exitCode === undefined && Date.now() < deadline) await new Promise((resolve) => setTimeout(resolve, 5));"
+  },
+  {
+   "path": "apps/three-surface-poc/src/main.test.ts",
+   "line": 366,
+   "kind": "timeout-arg",
+   "arg": "TEST_TIMEOUT_MS",
+   "const": {
+    "line": 48,
+    "value": "30_000",
+    "reason": false
+   },
+   "reason": false,
+   "text": "}, TEST_TIMEOUT_MS);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/main.test.ts",
+   "line": 378,
+   "kind": "timeout-arg",
+   "arg": "TEST_TIMEOUT_MS",
+   "const": {
+    "line": 48,
+    "value": "30_000",
+    "reason": false
+   },
+   "reason": false,
+   "text": "}, TEST_TIMEOUT_MS);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/main.test.ts",
+   "line": 389,
+   "kind": "timeout-arg",
+   "arg": "TEST_TIMEOUT_MS",
+   "const": {
+    "line": 48,
+    "value": "30_000",
+    "reason": false
+   },
+   "reason": false,
+   "text": "}, TEST_TIMEOUT_MS);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/main.test.ts",
+   "line": 402,
+   "kind": "timeout-option",
+   "arg": "WAIT_MS",
+   "const": {
+    "line": 47,
+    "value": "10_000",
+    "reason": true
+   },
+   "reason": true,
+   "text": "await vi.waitFor(() => expect(fake.out().slice(before)).toContain(refusal), { timeout: WAIT_MS });"
+  },
+  {
+   "path": "apps/three-surface-poc/src/main.test.ts",
+   "line": 406,
+   "kind": "timeout-arg",
+   "arg": "TEST_TIMEOUT_MS",
+   "const": {
+    "line": 48,
+    "value": "30_000",
+    "reason": false
+   },
+   "reason": false,
+   "text": "}, TEST_TIMEOUT_MS);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/main.test.ts",
+   "line": 424,
+   "kind": "timeout-arg",
+   "arg": "TEST_TIMEOUT_MS",
+   "const": {
+    "line": 48,
+    "value": "30_000",
+    "reason": false
+   },
+   "reason": false,
+   "text": "}, TEST_TIMEOUT_MS);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/main.test.ts",
+   "line": 478,
+   "kind": "timeout-arg",
+   "arg": "TEST_TIMEOUT_MS",
+   "const": {
+    "line": 48,
+    "value": "30_000",
+    "reason": false
+   },
+   "reason": false,
+   "text": "}, TEST_TIMEOUT_MS);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/main.test.ts",
+   "line": 498,
+   "kind": "timeout-arg",
+   "arg": "TEST_TIMEOUT_MS",
+   "const": {
+    "line": 48,
+    "value": "30_000",
+    "reason": false
+   },
+   "reason": false,
+   "text": "}, TEST_TIMEOUT_MS);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/main.test.ts",
+   "line": 513,
+   "kind": "timeout-arg",
+   "arg": "TEST_TIMEOUT_MS",
+   "const": {
+    "line": 48,
+    "value": "30_000",
+    "reason": false
+   },
+   "reason": false,
+   "text": "}, TEST_TIMEOUT_MS);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/main.test.ts",
+   "line": 538,
+   "kind": "timeout-arg",
+   "arg": "TEST_TIMEOUT_MS",
+   "const": {
+    "line": 48,
+    "value": "30_000",
+    "reason": false
+   },
+   "reason": false,
+   "text": "}, TEST_TIMEOUT_MS);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/main.test.ts",
+   "line": 545,
+   "kind": "clock",
+   "class": "now-input",
+   "text": "const began = Date.now();"
+  },
+  {
+   "path": "apps/three-surface-poc/src/main.test.ts",
+   "line": 547,
+   "kind": "elapsed",
+   "class": null,
+   "text": "expect(Date.now() - began).toBeLessThan(WAIT_MS / 2);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/main.test.ts",
+   "line": 548,
+   "kind": "timeout-arg",
+   "arg": "TEST_TIMEOUT_MS",
+   "const": {
+    "line": 48,
+    "value": "30_000",
+    "reason": false
+   },
+   "reason": false,
+   "text": "}, TEST_TIMEOUT_MS);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/main.test.ts",
+   "line": 555,
+   "kind": "timeout-arg",
+   "arg": "2_000",
+   "const": null,
+   "reason": true,
+   "text": "}, 2_000); // its own bound is 50 ms"
+  },
+  {
+   "path": "apps/three-surface-poc/src/orrery.browser.test.ts",
+   "line": 24,
+   "kind": "timeout-arg",
+   "arg": "60_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 60_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts",
+   "line": 91,
+   "kind": "timeout-arg",
+   "arg": "60_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 60_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts",
+   "line": 310,
+   "kind": "timeout-arg",
+   "arg": "240_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 240_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts",
+   "line": 332,
+   "kind": "timeout-arg",
+   "arg": "240_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 240_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+   "line": 187,
+   "kind": "timeout-arg",
+   "arg": "60_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 60_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+   "line": 315,
+   "kind": "timeout-arg",
+   "arg": "240_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 240_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+   "line": 329,
+   "kind": "timeout-arg",
+   "arg": "240_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 240_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+   "line": 343,
+   "kind": "timeout-arg",
+   "arg": "240_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 240_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-copy.test.ts",
+   "line": 226,
+   "kind": "timeout-arg",
+   "arg": "60_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 60_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/dossier-cap-measure.test.ts",
+   "line": 12,
+   "kind": "timeout-arg",
+   "arg": "120_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 120_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/draft-preview.browser.test.ts",
+   "line": 47,
+   "kind": "timeout-arg",
+   "arg": "30_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 30_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts",
+   "line": 15,
+   "kind": "clock",
+   "class": "now-input",
+   "text": "requestId: 'live-run', projectId: 'project-one', snapshotId: 'snapshot-one', startedAt: Date.now(),"
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts",
+   "line": 45,
+   "kind": "timeout-arg",
+   "arg": "T",
+   "const": {
+    "line": 35,
+    "value": "30_000",
+    "reason": true
+   },
+   "reason": true,
+   "text": "}, T);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts",
+   "line": 54,
+   "kind": "timeout-arg",
+   "arg": "T",
+   "const": {
+    "line": 35,
+    "value": "30_000",
+    "reason": true
+   },
+   "reason": true,
+   "text": "}, T);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts",
+   "line": 85,
+   "kind": "timeout-arg",
+   "arg": "T",
+   "const": {
+    "line": 35,
+    "value": "30_000",
+    "reason": true
+   },
+   "reason": true,
+   "text": "}, T);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts",
+   "line": 103,
+   "kind": "timeout-arg",
+   "arg": "T",
+   "const": {
+    "line": 35,
+    "value": "30_000",
+    "reason": true
+   },
+   "reason": true,
+   "text": "}, T);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts",
+   "line": 115,
+   "kind": "timeout-arg",
+   "arg": "T",
+   "const": {
+    "line": 35,
+    "value": "30_000",
+    "reason": true
+   },
+   "reason": true,
+   "text": "}, T);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts",
+   "line": 127,
+   "kind": "timeout-arg",
+   "arg": "T",
+   "const": {
+    "line": 35,
+    "value": "30_000",
+    "reason": true
+   },
+   "reason": true,
+   "text": "}, T);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts",
+   "line": 15,
+   "kind": "clock",
+   "class": "now-input",
+   "text": "requestId: 'run-one', projectId: 'project-one', snapshotId: 'snapshot-one', startedAt: Date.now(),"
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts",
+   "line": 55,
+   "kind": "timeout-arg",
+   "arg": "JOURNAL_TIMEOUT_MS",
+   "const": {
+    "line": 39,
+    "value": "30_000",
+    "reason": true
+   },
+   "reason": true,
+   "text": "}, JOURNAL_TIMEOUT_MS);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts",
+   "line": 79,
+   "kind": "timeout-arg",
+   "arg": "JOURNAL_TIMEOUT_MS",
+   "const": {
+    "line": 39,
+    "value": "30_000",
+    "reason": true
+   },
+   "reason": true,
+   "text": "}, JOURNAL_TIMEOUT_MS);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts",
+   "line": 96,
+   "kind": "timeout-arg",
+   "arg": "JOURNAL_TIMEOUT_MS",
+   "const": {
+    "line": 39,
+    "value": "30_000",
+    "reason": true
+   },
+   "reason": true,
+   "text": "}, JOURNAL_TIMEOUT_MS);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts",
+   "line": 116,
+   "kind": "timeout-arg",
+   "arg": "JOURNAL_TIMEOUT_MS",
+   "const": {
+    "line": 39,
+    "value": "30_000",
+    "reason": true
+   },
+   "reason": true,
+   "text": "}, JOURNAL_TIMEOUT_MS);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/pipeline-demo.test.ts",
+   "line": 59,
+   "kind": "timeout-option",
+   "arg": "ONRAMP_STEP_TIMEOUT_MS",
+   "const": {
+    "line": 18,
+    "value": "{ clone: 30_000, refusedRun: 30_000, install: 120_000, documented: 270_000 }",
+    "reason": true
+   },
+   "reason": true,
+   "text": "await run('git', ['clone', '--quiet', '--local', '--no-hardlinks', process.cwd(), checkout], { timeout: ONRAMP_STEP_TIMEOUT_MS.clone });"
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/pipeline-demo.test.ts",
+   "line": 64,
+   "kind": "timeout-option",
+   "arg": "ONRAMP_STEP_TIMEOUT_MS",
+   "const": {
+    "line": 18,
+    "value": "{ clone: 30_000, refusedRun: 30_000, install: 120_000, documented: 270_000 }",
+    "reason": true
+   },
+   "reason": true,
+   "text": "await run(documented[0]!, documented.slice(1), { cwd: checkout, timeout: ONRAMP_STEP_TIMEOUT_MS.refusedRun });"
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/pipeline-demo.test.ts",
+   "line": 70,
+   "kind": "timeout-option",
+   "arg": "ONRAMP_STEP_TIMEOUT_MS",
+   "const": {
+    "line": 18,
+    "value": "{ clone: 30_000, refusedRun: 30_000, install: 120_000, documented: 270_000 }",
+    "reason": true
+   },
+   "reason": true,
+   "text": "await run('npm', commands[1].split(' ').slice(1), { cwd: checkout, timeout: ONRAMP_STEP_TIMEOUT_MS.install });"
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/pipeline-demo.test.ts",
+   "line": 71,
+   "kind": "timeout-option",
+   "arg": "ONRAMP_STEP_TIMEOUT_MS",
+   "const": {
+    "line": 18,
+    "value": "{ clone: 30_000, refusedRun: 30_000, install: 120_000, documented: 270_000 }",
+    "reason": true
+   },
+   "reason": true,
+   "text": "await run(documented[0]!, documented.slice(1), { cwd: checkout, timeout: ONRAMP_STEP_TIMEOUT_MS.documented });"
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/pipeline-demo.test.ts",
+   "line": 73,
+   "kind": "timeout-arg",
+   "arg": "ONRAMP_TEST_BUDGET_MS",
+   "const": {
+    "line": 19,
+    "value": "Object.values(ONRAMP_STEP_TIMEOUT_MS).reduce((a, b) => a + b, 0)",
+    "reason": false
+   },
+   "reason": false,
+   "text": "}, ONRAMP_TEST_BUDGET_MS);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/public-source-screening.test.ts",
+   "line": 339,
+   "kind": "timeout-arg",
+   "arg": "1_000",
+   "const": null,
+   "reason": false,
+   "text": "const request = buildPipelineRequest(corpus, { ...cfg(only.commit), readerQuestions: [{ id: 'core-ideas', topics: ['core-ideas'], text: 'What is it?' }], requestedAssets: [{ id: 'overview', kind: 'sec"
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/public-source-screening.test.ts",
+   "line": 504,
+   "kind": "clock",
+   "class": "now-input",
+   "text": "const request = buildPipelineRequest(corpus, { ...cfg(only.commit), budget, readerQuestions: [{ id: 'why', topics: [], text: 'Why?' }], requestedAssets: [] }, Date.now());"
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/public-source-screening.test.ts",
+   "line": 515,
+   "kind": "clock",
+   "class": "now-input",
+   "text": "expect(await screenedRepoCorpusVerifier(only.root, cfg(only.commit), ports)(buildPipelineRequest(corpus, { ...cfg(only.commit), budget, readerQuestions: [{ id: 'why', topics: [], text: 'Why?' }], requ"
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/public-source-screening.test.ts",
+   "line": 521,
+   "kind": "clock",
+   "class": "now-input",
+   "text": "const now = Date.now(), sent: string[] = [];"
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/redis-shaped-discovery.test.ts",
+   "line": 16,
+   "kind": "timeout-arg",
+   "arg": "120_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 120_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/redis-shaped-discovery.test.ts",
+   "line": 205,
+   "kind": "timeout-arg",
+   "arg": "120_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 120_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/self-corpus.test.ts",
+   "line": 32,
+   "kind": "timeout-arg",
+   "arg": "PINNED_READ_TIMEOUT_MS",
+   "const": {
+    "line": 17,
+    "value": "60_000",
+    "reason": true
+   },
+   "reason": true,
+   "text": "}, PINNED_READ_TIMEOUT_MS);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/self-corpus.test.ts",
+   "line": 46,
+   "kind": "timeout-arg",
+   "arg": "30_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 30_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+   "line": 316,
+   "kind": "timeout-arg",
+   "arg": "60_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 60_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+   "line": 352,
+   "kind": "timeout-arg",
+   "arg": "60_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 60_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+   "line": 364,
+   "kind": "timeout-arg",
+   "arg": "60_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 60_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+   "line": 370,
+   "kind": "timeout-arg",
+   "arg": "60_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 60_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+   "line": 408,
+   "kind": "timeout-arg",
+   "arg": "60_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 60_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+   "line": 413,
+   "kind": "timeout-arg",
+   "arg": "60_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 60_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+   "line": 424,
+   "kind": "timeout-arg",
+   "arg": "60_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 60_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+   "line": 443,
+   "kind": "timeout-arg",
+   "arg": "60_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 60_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+   "line": 452,
+   "kind": "timeout-arg",
+   "arg": "60_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 60_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-reconciliation.test.ts",
+   "line": 81,
+   "kind": "timeout-arg",
+   "arg": "120_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 120_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/production-reobserve.test.ts",
+   "line": 99,
+   "kind": "timeout-arg",
+   "arg": "PRODUCTION_BUILD_TIMEOUT_MS",
+   "const": {
+    "line": 71,
+    "value": "60_000",
+    "reason": true
+   },
+   "reason": true,
+   "text": "}, PRODUCTION_BUILD_TIMEOUT_MS);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/production-reobserve.test.ts",
+   "line": 132,
+   "kind": "timeout-arg",
+   "arg": "PRODUCTION_BUILD_TIMEOUT_MS",
+   "const": {
+    "line": 71,
+    "value": "60_000",
+    "reason": true
+   },
+   "reason": true,
+   "text": "}, PRODUCTION_BUILD_TIMEOUT_MS);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/production-reobserve.test.ts",
+   "line": 160,
+   "kind": "timeout-arg",
+   "arg": "PRODUCTION_BUILD_TIMEOUT_MS",
+   "const": {
+    "line": 71,
+    "value": "60_000",
+    "reason": true
+   },
+   "reason": true,
+   "text": "}, PRODUCTION_BUILD_TIMEOUT_MS);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/production-reobserve.test.ts",
+   "line": 182,
+   "kind": "timeout-arg",
+   "arg": "PRODUCTION_BUILD_TIMEOUT_MS",
+   "const": {
+    "line": 71,
+    "value": "60_000",
+    "reason": true
+   },
+   "reason": true,
+   "text": "}, PRODUCTION_BUILD_TIMEOUT_MS);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/proposal-disclosure.test.ts",
+   "line": 147,
+   "kind": "timeout-arg",
+   "arg": "45_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 45_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/restart.test.ts",
+   "line": 93,
+   "kind": "clock",
+   "class": "deadline",
+   "text": "const deadline = Date.now() + timeoutMs;"
+  },
+  {
+   "path": "apps/three-surface-poc/src/restart.test.ts",
+   "line": 94,
+   "kind": "clock",
+   "class": "deadline",
+   "text": "while (Date.now() < deadline) {"
+  },
+  {
+   "path": "apps/three-surface-poc/src/restart.test.ts",
+   "line": 105,
+   "kind": "clock",
+   "class": "deadline",
+   "text": "const deadline = Date.now() + timeoutMs;"
+  },
+  {
+   "path": "apps/three-surface-poc/src/restart.test.ts",
+   "line": 107,
+   "kind": "clock",
+   "class": "deadline",
+   "text": "if (Date.now() >= deadline) throw new Error(`private fixture did not write ${marker}`);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/restart.test.ts",
+   "line": 113,
+   "kind": "clock",
+   "class": "deadline",
+   "text": "const deadline = Date.now() + timeoutMs;"
+  },
+  {
+   "path": "apps/three-surface-poc/src/restart.test.ts",
+   "line": 115,
+   "kind": "clock",
+   "class": "deadline",
+   "text": "if (Date.now() >= deadline) throw new Error(`private fixture process ${pid} did not exit`);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/restart.test.ts",
+   "line": 266,
+   "kind": "clock",
+   "class": "deadline",
+   "text": "const deadline = Date.now() + (options.timeoutMs ?? LIVENESS_MS);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/restart.test.ts",
+   "line": 290,
+   "kind": "clock",
+   "class": "deadline",
+   "text": "if (Date.now() >= deadline) throw error;"
+  },
+  {
+   "path": "apps/three-surface-poc/src/restart.test.ts",
+   "line": 294,
+   "kind": "clock",
+   "class": "deadline",
+   "text": "if (Date.now() >= deadline) throw new Error('private fixture processes did not drain');"
+  },
+  {
+   "path": "apps/three-surface-poc/src/restart.test.ts",
+   "line": 321,
+   "kind": "timeout-arg",
+   "arg": "TEST_MS",
+   "const": {
+    "line": 37,
+    "value": "180_000",
+    "reason": false
+   },
+   "reason": false,
+   "text": "}, TEST_MS);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/restart.test.ts",
+   "line": 331,
+   "kind": "timeout-option",
+   "arg": "TEST_MS",
+   "const": {
+    "line": 37,
+    "value": "180_000",
+    "reason": false
+   },
+   "reason": false,
+   "text": "describe('one-listener POC restart on private fixture sockets', { timeout: TEST_MS }, () => {"
+  },
+  {
+   "path": "apps/three-surface-poc/src/surface-routes.test.ts",
+   "line": 313,
+   "kind": "timeout-arg",
+   "arg": "60_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 60_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/surface-routes.test.ts",
+   "line": 328,
+   "kind": "timeout-arg",
+   "arg": "60_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 60_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/surface-routes.test.ts",
+   "line": 420,
+   "kind": "timeout-arg",
+   "arg": "15_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 15_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/surface-routes.test.ts",
+   "line": 453,
+   "kind": "timeout-arg",
+   "arg": "10_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 10_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/surface-routes.test.ts",
+   "line": 537,
+   "kind": "timeout-arg",
+   "arg": "45_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 45_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/test-model-fixture.test.ts",
+   "line": 120,
+   "kind": "timeout-arg",
+   "arg": "30_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 30_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/test-model-fixture.test.ts",
+   "line": 131,
+   "kind": "timeout-arg",
+   "arg": "30_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 30_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/trajectory-narrowing.browser.test.ts",
+   "line": 32,
+   "kind": "timeout-arg",
+   "arg": "60_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 60_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/tuple-encoding.test.ts",
+   "line": 312,
+   "kind": "timeout-arg",
+   "arg": "60_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 60_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/unknown-route-sweep.test.ts",
+   "line": 173,
+   "kind": "timeout-arg",
+   "arg": "60_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 60_000);"
+  },
+  {
+   "path": "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts",
+   "line": 84,
+   "kind": "timeout-option",
+   "arg": "RUN_SYNC_TIMEOUT_MS",
+   "const": {
+    "line": 80,
+    "value": "20_000",
+    "reason": true
+   },
+   "reason": true,
+   "text": "cwd, env: { ...ENV, ...portEnv }, encoding: 'utf8', timeout: RUN_SYNC_TIMEOUT_MS, killSignal: 'SIGKILL',"
+  },
+  {
+   "path": "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts",
+   "line": 100,
+   "kind": "clock",
+   "class": "deadline",
+   "text": "const deadline = Date.now() + 30_000;"
+  },
+  {
+   "path": "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts",
+   "line": 103,
+   "kind": "clock",
+   "class": "deadline",
+   "text": "if (Date.now() > deadline) {"
+  },
+  {
+   "path": "packages/cap1-system/src/skipped-population.system.test.ts",
+   "line": 65,
+   "kind": "timeout-arg",
+   "arg": "COLLECT_TIMEOUT_MS",
+   "const": {
+    "line": 30,
+    "value": "45_000",
+    "reason": false
+   },
+   "reason": false,
+   "text": "}, COLLECT_TIMEOUT_MS);"
+  },
+  {
+   "path": "packages/polaris-dossier/src/gate-acts.test.ts",
+   "line": 97,
+   "kind": "clock",
+   "class": "now-input",
+   "text": "await expectFollowsTree(REAL_ROOT, Date.now());"
+  },
+  {
+   "path": "packages/polaris-dossier/src/gate-acts.test.ts",
+   "line": 98,
+   "kind": "timeout-arg",
+   "arg": "TREE_TIMEOUT",
+   "const": {
+    "line": 84,
+    "value": "60_000",
+    "reason": true
+   },
+   "reason": true,
+   "text": "}, TREE_TIMEOUT);"
+  },
+  {
+   "path": "packages/polaris-dossier/src/gate-acts.test.ts",
+   "line": 106,
+   "kind": "timeout-arg",
+   "arg": "TREE_TIMEOUT",
+   "const": {
+    "line": 84,
+    "value": "60_000",
+    "reason": true
+   },
+   "reason": true,
+   "text": "}, TREE_TIMEOUT);"
+  },
+  {
+   "path": "packages/polaris-dossier/src/git-object-reader.test.ts",
+   "line": 391,
+   "kind": "race",
+   "text": "const late = new Promise<never>((_, reject) => { timer = setTimeout(() => reject(new Error(`no refusal within ${ms} ms`)), ms); });"
+  },
+  {
+   "path": "packages/polaris-dossier/src/git-object-reader.test.ts",
+   "line": 579,
+   "kind": "clock",
+   "class": "now-input",
+   "text": "const { repo, commit } = chainRepo('amp-default', 100, 64 * 2 ** 20), started = Date.now();"
+  },
+  {
+   "path": "packages/polaris-dossier/src/git-object-reader.test.ts",
+   "line": 581,
+   "kind": "elapsed",
+   "class": null,
+   "text": "expect(Date.now() - started).toBeLessThan(30_000);"
+  },
+  {
+   "path": "packages/polaris-dossier/src/git-object-reader.test.ts",
+   "line": 582,
+   "kind": "timeout-arg",
+   "arg": "60_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 60_000);"
+  },
+  {
+   "path": "packages/polaris-dossier/src/git-object-reader.test.ts",
+   "line": 782,
+   "kind": "timeout-arg",
+   "arg": "60_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 60_000);"
+  },
+  {
+   "path": "packages/polaris-dossier/src/git-object-reader.test.ts",
+   "line": 803,
+   "kind": "timeout-arg",
+   "arg": "240_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 240_000);"
+  },
+  {
+   "path": "packages/polaris-dossier/src/git-object-reader.test.ts",
+   "line": 812,
+   "kind": "timeout-arg",
+   "arg": "240_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 240_000);"
+  },
+  {
+   "path": "packages/polaris-dossier/src/no-egress.test.ts",
+   "line": 46,
+   "kind": "timeout-arg",
+   "arg": "120_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 120_000);"
+  },
+  {
+   "path": "packages/polaris-dossier/src/no-egress.test.ts",
+   "line": 56,
+   "kind": "timeout-option",
+   "arg": "240_000",
+   "const": null,
+   "reason": false,
+   "text": "env: { PATH: process.env['PATH'] ?? '/usr/bin:/bin', HOME: dir, [FULL_RUN_ROOT_ENV]: REAL_ROOT }, timeout: 240_000,"
+  },
+  {
+   "path": "packages/polaris-dossier/src/no-egress.test.ts",
+   "line": 83,
+   "kind": "timeout-arg",
+   "arg": "240_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 240_000);"
+  },
+  {
+   "path": "packages/polaris-dossier/src/no-egress.test.ts",
+   "line": 91,
+   "kind": "timeout-arg",
+   "arg": "240_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 240_000);"
+  },
+  {
+   "path": "packages/polaris-dossier/src/screen.test.ts",
+   "line": 449,
+   "kind": "clock",
+   "class": "now-input",
+   "text": "const load = await loadDossierScreen(REAL_ROOT, Date.now());"
+  },
+  {
+   "path": "packages/polaris-dossier/src/screen.test.ts",
+   "line": 457,
+   "kind": "clock",
+   "class": "now-input",
+   "text": "const load = await loadDossierScreen(REAL_ROOT, Date.now());"
+  },
+  {
+   "path": "packages/polaris-dossier/src/session-view.test.ts",
+   "line": 109,
+   "kind": "clock",
+   "class": "now-input",
+   "text": "writeLaunchedMarker(run, 'run-x', Date.now());"
+  },
+  {
+   "path": "packages/polaris-dossier/src/start-gates.test.ts",
+   "line": 1011,
+   "kind": "clock",
+   "class": "now-input",
+   "text": "const result = await preflight(URL_, createPackageGateSources({ root: REAL_ROOT, now: () => Date.now() }), Date.now());"
+  },
+  {
+   "path": "packages/polaris-dossier/src/start-gates.test.ts",
+   "line": 1015,
+   "kind": "timeout-arg",
+   "arg": "TREE_TIMEOUT",
+   "const": {
+    "line": 28,
+    "value": "60_000",
+    "reason": true
+   },
+   "reason": true,
+   "text": "}, TREE_TIMEOUT);"
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/digest-bound-act.test.ts",
+   "line": 200,
+   "kind": "clock",
+   "class": "now-input",
+   "text": "const state = await readDigestBoundActState({ root: ROOT, now: Date.now(), form: REGISTRY_GIT_SOURCE_ACT_FORM });"
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "line": 111,
+   "kind": "timeout-arg",
+   "arg": "45_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 45_000);"
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "line": 141,
+   "kind": "timeout-arg",
+   "arg": "10_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 10_000);"
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "line": 259,
+   "kind": "timeout-arg",
+   "arg": "15_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 15_000);"
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "line": 327,
+   "kind": "timeout-arg",
+   "arg": "15_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 15_000);"
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "line": 368,
+   "kind": "timeout-arg",
+   "arg": "40_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 40_000);"
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "line": 375,
+   "kind": "timeout-arg",
+   "arg": "20_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 20_000);"
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "line": 381,
+   "kind": "timeout-arg",
+   "arg": "45_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 45_000);"
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "line": 443,
+   "kind": "timeout-arg",
+   "arg": "40_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 40_000);"
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "line": 498,
+   "kind": "timeout-arg",
+   "arg": "25_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 25_000);"
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "line": 541,
+   "kind": "timeout-arg",
+   "arg": "45_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 45_000);"
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "line": 563,
+   "kind": "timeout-arg",
+   "arg": "20_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 20_000);"
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "line": 581,
+   "kind": "timeout-arg",
+   "arg": "15_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 15_000);"
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "line": 710,
+   "kind": "timeout-arg",
+   "arg": "40_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 40_000);"
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "line": 779,
+   "kind": "timeout-arg",
+   "arg": "15_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 15_000);"
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "line": 804,
+   "kind": "timeout-arg",
+   "arg": "15_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 15_000);"
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "line": 947,
+   "kind": "timeout-arg",
+   "arg": "60_000",
+   "const": null,
+   "reason": false,
+   "text": "beforeAll(() => { full({}); }, 60_000);"
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "line": 1061,
+   "kind": "timeout-arg",
+   "arg": "50_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 50_000);"
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/real-tree.test.ts",
+   "line": 20,
+   "kind": "clock",
+   "class": "now-input",
+   "text": "const reads = (fs: PackageReaderFs, now = Date.now()) => ({"
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/real-tree.test.ts",
+   "line": 50,
+   "kind": "timeout-arg",
+   "arg": "TIMEOUT",
+   "const": {
+    "line": 31,
+    "value": "120_000",
+    "reason": true
+   },
+   "reason": true,
+   "text": "}, TIMEOUT);"
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/real-tree.test.ts",
+   "line": 58,
+   "kind": "timeout-arg",
+   "arg": "TIMEOUT",
+   "const": {
+    "line": 31,
+    "value": "120_000",
+    "reason": true
+   },
+   "reason": true,
+   "text": "}, TIMEOUT);"
+  },
+  {
+   "path": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "line": 162,
+   "kind": "clock",
+   "class": "now-input",
+   "text": "const started = performance.now();"
+  },
+  {
+   "path": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "line": 167,
+   "kind": "elapsed",
+   "class": null,
+   "text": "expect(performance.now() - started).toBeLessThan(2000);"
+  },
+  {
+   "path": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "line": 260,
+   "kind": "clock",
+   "class": "now-input",
+   "text": "const started = Date.now();"
+  },
+  {
+   "path": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "line": 262,
+   "kind": "elapsed",
+   "class": null,
+   "text": "expect(Date.now() - started).toBeLessThan(500);"
+  },
+  {
+   "path": "packages/polaris-generation-core/src/pipeline.test.ts",
+   "line": 17,
+   "kind": "clock",
+   "class": "now-input",
+   "text": "routes: { inventory: 'synthetic', plan: 'synthetic', author: 'synthetic', edit: 'synthetic', fidelity: 'synthetic', repair: 'synthetic' }, startedAt: Date.now(),"
+  },
+  {
+   "path": "packages/polaris-generation-core/src/pipeline.test.ts",
+   "line": 30,
+   "kind": "clock",
+   "class": "now-input",
+   "text": "now: () => Date.now(), verifySources: async () => true,"
+  },
+  {
+   "path": "packages/polaris-generation-core/src/redacted-generation-source.test.ts",
+   "line": 91,
+   "kind": "clock",
+   "class": "now-input",
+   "text": "const request = (sources: readonly GenerationSource[]): PipelineRequest => ({ requestId: 'redacted-run', projectId: 'fixture', snapshotId: 'snapshot', startedAt: Date.now(),"
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/test-artifact-verification.live.test.ts",
+   "line": 91,
+   "kind": "clock",
+   "class": "now-input",
+   "text": "asOf: new Date(Date.now() + 60 * 60 * 1000).toISOString(),"
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/test-artifact-verification.live.test.ts",
+   "line": 139,
+   "kind": "timeout-arg",
+   "arg": "120_000",
+   "const": null,
+   "reason": false,
+   "text": "}, 120_000);"
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "line": 94,
+   "kind": "clock",
+   "class": "now-input",
+   "text": "const started = performance.now();"
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "line": 96,
+   "kind": "elapsed",
+   "class": null,
+   "text": "expect(performance.now() - started).toBeLessThan(2_000);"
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "line": 101,
+   "kind": "clock",
+   "class": "now-input",
+   "text": "const started = performance.now();"
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "line": 103,
+   "kind": "elapsed",
+   "class": null,
+   "text": "expect(performance.now() - started).toBeLessThan(2_000);"
+  }
+ ],
+ "secondMethod": [
+  {
+   "path": "apps/three-surface-poc/src/capture-test-artifact-main.test.ts",
+   "line": 381,
+   "text": "expect(Date.now() - started).toBeLessThan(5_000);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/main.test.ts",
+   "line": 547,
+   "text": "expect(Date.now() - began).toBeLessThan(WAIT_MS / 2);"
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/public-source-screening.test.ts",
+   "line": 525,
+   "text": "const recordBase = { project: 'project:fixture', version: '1', digest: 'a'.repeat(64), inForceAt: now - 1, withdrawnAt: null,"
+  },
+  {
+   "path": "packages/polaris-dossier/src/git-object-reader.test.ts",
+   "line": 581,
+   "text": "expect(Date.now() - started).toBeLessThan(30_000);"
+  },
+  {
+   "path": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "line": 167,
+   "text": "expect(performance.now() - started).toBeLessThan(2000);"
+  },
+  {
+   "path": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "line": 262,
+   "text": "expect(Date.now() - started).toBeLessThan(500);"
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "line": 96,
+   "text": "expect(performance.now() - started).toBeLessThan(2_000);"
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "line": 103,
+   "text": "expect(performance.now() - started).toBeLessThan(2_000);"
+  }
+ ]
+}

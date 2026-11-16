@@ -1,0 +1,19 @@
+RV536-M1-https-url-reads-outside killed 1 ['Tests  1 failed | 164 passed (165)'] 9.4 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a remote tarball URL dependency as naming no module
+RV536-M2-http-url-reads-outside survives 0 ['Tests  165 passed (165)'] 14.4 clean
+RV536-M3-tarball-needs-dot-slash killed 1 ['Tests  4 failed | 161 passed (165)'] 10.4 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a .tar dependency as naming no module
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a .tar.gz dependency as naming no module
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a remote tarball URL dependency as naming no module
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a tarball dependency as naming no module
+RV536-M4-census-takes-ts-md killed 1 ['Tests  1 failed | 164 passed (165)'] 12.2 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > reads every module TypeScript compiles under src, .mts, .cts and .tsx among them, and no test module
+RV536-M5-tree-depth-two survives 0 ['Tests  165 passed (165)'] 11.4 clean
+RV536-M6-root-keeps-only-dependencies killed 1 ['Tests  1 failed | 164 passed (165)'] 11.7 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads the workspace root's manifest beside the packages'
+RV536-M7-npm-alias-workspace-scope-only survives 0 ['Tests  165 passed (165)'] 9.8 clean
+RV536-M8-root-declarations-unread survives 0 ['Tests  165 passed (165)'] 10.2 clean
+RV536-M9-dotdot-alone-outside survives 0 ['Tests  165 passed (165)'] 9.9 clean
+RV536-M10-test-exclusion-end-anchor-dropped survives 0 ['Tests  165 passed (165)'] 10.7 clean
+RV536-M11-residual-widened survives 0 ['Tests  165 passed (165)'] 11.3 clean
+wrote /var/tmp/la-b839/rev536-at-base.json 11

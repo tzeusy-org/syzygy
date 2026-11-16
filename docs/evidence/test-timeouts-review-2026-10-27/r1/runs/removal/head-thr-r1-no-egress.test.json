@@ -1,0 +1,74 @@
+{
+ "files": [
+  {
+   "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-537/clone/packages/polaris-dossier/src/no-egress.test.ts",
+   "project": "@syzygy/polaris-dossier",
+   "type": "suite",
+   "name": "packages/polaris-dossier/src/no-egress.test.ts",
+   "line": null,
+   "mode": "run",
+   "state": "pass",
+   "durationMs": 4124.827928000001,
+   "errors": [],
+   "tasks": [
+    {
+     "type": "suite",
+     "name": "no provider call and no transmission (S10): an operating-system capture of a full fixture run",
+     "line": 66,
+     "mode": "run",
+     "state": "pass",
+     "durationMs": 3354.5632160000005,
+     "errors": [],
+     "tasks": [
+      {
+       "type": "test",
+       "name": "creates no Internet-family socket over the whole run, from preflight to close",
+       "line": 67,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 1553.369401,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "sees the canary: one loopback datagram sent before the same run is in the capture",
+       "line": 87,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 1799.8827200000005,
+       "errors": []
+      }
+     ],
+     "hookMs": 1
+    },
+    {
+     "type": "suite",
+     "name": "no provider call and no transmission (S10), without strace",
+     "line": 98,
+     "mode": "skip",
+     "state": "skip",
+     "durationMs": null,
+     "errors": [],
+     "tasks": [
+      {
+       "type": "test",
+       "name": "is not proved on this host: strace is unavailable, so the capture is skipped, never reported as passed",
+       "line": 100,
+       "mode": "skip",
+       "state": null,
+       "durationMs": null,
+       "errors": []
+      }
+     ],
+     "hookMs": null
+    }
+   ],
+   "hookMs": 770,
+   "collectMs": 4658.635869,
+   "setupMs": 52.098715000000084,
+   "prepareMs": 266.16844500000013,
+   "environmentMs": 0.21605799999997544
+  }
+ ],
+ "unhandled": []
+}

@@ -1,0 +1,109 @@
+`R-S2` … `R-S7`	4	2026-08-21 → 2026-08-22
+`R-RT-*`	2	2026-08-23
+`R-POC-*`	13	2026-08-30 → 2026-09-29
+Trajectory bounded selection	3	2026-10-20
+Project-wide Polaris specification and observation gate	15	2026-08-31
+`R-GENERAL-TRUSTED-*`	24	2026-08-31 → 2026-09-01
+`R-PWB-STATE1-*`	14	2026-09-02
+`R-PWB-EFFECT-*`	3	2026-09-02
+`R-PWB-TRUTH-*`	11	2026-09-05
+PWB live exact-head	5	2026-09-05 → 2026-09-06
+PWB recovery reconciliation	5	2026-09-06
+`R-PWB-P63-*`	1	2026-09-07
+Orrery height finding	1	2026-09-09
+Polaris editorial repair	6	2026-09-10
+Polaris manifesto design and code	8	2026-09-10
+Polaris reading assets and navigation	6	2026-09-10
+PWB declared-home repair	3	2026-09-10
+PWB owner-walkthrough capture	3	2026-09-10
+Polaris visible diagrams	5	2026-09-10
+Polaris generation kit	2	2026-09-12
+Polaris generator product and scope	3	2026-09-12
+Polaris generator authority and recorder	7	2026-09-12
+Polaris understanding amendment	5	2026-09-13 → 2026-10-20
+PWB M1 lane A	1	2026-09-13
+Surface-routes CI budget	2	2026-09-27
+Recorder notes-only verdict	4	2026-09-26 → 2026-10-01
+CG-7e bare digest headings	3	2026-09-27
+Tree-style restyle (CC-REV-8)	32	2026-09-28
+Readability successors	8	2026-09-29 → 2026-10-02
+P-68 scoped-attributes package	4	2026-09-14
+RFC-0007 scoped-values successor	3	2026-10-02
+Polaris M2 funnel	6	2026-09-14
+Polaris M3 funnel	7	2026-09-14 → 2026-09-15
+Polaris M4 funnel	7	2026-09-14 → 2026-09-15
+Polaris M5 funnel	4	2026-09-14 → 2026-09-15
+Polaris M6 funnel	2	2026-09-15
+Polaris M7 funnel	2	2026-09-15
+Polaris M8 funnel	2	2026-09-15
+Polaris M9 funnel	2	2026-09-15
+Polaris M10 funnel	2	2026-09-15
+Polaris M11 funnel	2	2026-09-15
+Polaris M12 funnel	2	2026-09-15
+Polaris M13 funnel	2	2026-09-15 → 2026-09-16
+Polaris M14 funnel	1	2026-09-17
+Polaris M15 funnel	1	2026-09-17
+Polaris M16 funnel	1	2026-09-17
+Polaris SVG graph feature candidate	4	2026-09-23
+P-79 retention-posture gate	2	2026-09-22
+P-81 exact-source gate	4	2026-09-22 → 2026-10-01
+P-81 item-depth gate	6	2026-10-02
+P-72 machine-view gate	7	2026-09-22 → 2026-10-02
+P-71 opening-band gate	12	2026-09-22 → 2026-09-27
+P-69/P-72 registry gate	6	2026-09-22 → 2026-10-03
+P-69 Q7a missing-currency gate	5	2026-09-23 → 2026-10-02
+N8 generality measurement	5	2026-09-23
+N4 page honesty	2	2026-09-23
+N11 drift sweep	3	2026-09-23
+N3 resource ledger	6	2026-09-23
+Polaris generation admission validation	1	2026-09-23
+P-73 edit/repair deletion gate	5	2026-09-23 → 2026-09-26
+P-77 Q2 response-ceiling reading gate	3	2026-09-30
+P-79 Q5 dismissal-expiry gate	7	2026-10-02
+N8 container-shape profile gate	8	2026-10-02
+PWB tree-framing gate	2	2026-10-03
+M9 POC identity amendment gate	6	2026-10-03 → 2026-10-14
+M9 POC vocabulary and epistemic-record amendment gate	2	2026-10-15
+PWB release-label gate	8	2026-10-03 → 2026-10-20
+PWB class-granular extraction gate	4	2026-10-03 → 2026-10-14
+N9 machine-channel amendments gate	2	2026-10-03 → 2026-10-14
+N10 POC governing-intent gate	3	2026-10-03 → 2026-10-14
+PWB opening-index and accessible-name gate	9	2026-10-03 → 2026-10-15
+D7 doctrine amendment gate	4	2026-10-03 → 2026-10-15
+D8 doctrine amendment gate	4	2026-10-03 → 2026-10-15
+D9 doctrine amendment gate	3	2026-10-06
+Polaris dossier local-agent amendment gate	5	2026-10-06 → 2026-10-07
+Polaris dossier S2 object reader	3	2026-10-07
+Polaris dossier S3 start gates	2	2026-10-07
+Polaris dossier clone shape	2	2026-10-08
+Redis local-agent sitting brief	3	2026-10-07
+Capture test-artifact no-spawn	3	2026-10-07
+Polaris dossier gate sources	3	2026-10-07
+Live test no-spawn	3	2026-10-07
+Redis sitting installer pins	1	2026-10-07
+Arbitrary public-repository dossier spec	3	2026-10-08
+Project-documentation screening	2	2026-10-08
+Session-prompt tool statement	1	2026-10-08
+Redis dossier blockers packet	2	2026-10-08
+Screening scope version 3	2	2026-10-08
+Agent-provider statement version 2	2	2026-10-08
+P-105/P-106 record and install	1	2026-10-09
+Pre-started waiting sessions	8	2026-10-14
+CAP1 trusted-bootstrap consent amendment	6	2026-10-15
+Local agent CLI subprocess runner	5	2026-10-15
+One-command Polaris dossier run	3	2026-10-20
+P-74 loaded-profile registry gate	8	2026-10-15
+Screening v4 span installation	14	2026-10-21
+Screening scope version 4	4	2026-10-15
+Signed-amendment implementation chain	4	2026-10-15 → 2026-10-21
+PWB accessible-name implementation	1	2026-10-15
+PWB opening-index implementation	2	2026-10-15
+P-114 machine-ceiling registry gate	7	2026-10-20 → 2026-10-21
+Greenfield-parity owner packet	4	2026-10-21
+Greenfield-parity implementation	70	2026-10-21 → 2026-10-27
+Redis v4 re-measure refusal record	3	2026-10-21
+M2 slice 5 continuation packet	3	2026-10-21
+Signed-amendment implementation direction (PR #489)	5	2026-10-21
+Bead-title withholding	1	2026-10-21
+P-115 governedBy reference amendment	4	2026-10-21 → 2026-10-22
+total=572 assigned=572 raw=538 other=34 unmatched=0 overlaps=0 observed=2026-10-28

@@ -1,0 +1,19 @@
+full-report.json sha256 d30e6a67991ff7a7023611118caa06762b7cb819d2b11b278ccf3c7d7383fdec bytes 1469648
+files 245 tests 5362 Counter({'pass': 5357, 'skip': 5}) unhandled []
+production-reobserve 6 pass  he production probe identity bound to the captured observation instant
+production-reobserve 2416 pass  sOf stable when the same capture is rebuilt across wall-clock instants
+production-reobserve 2883 pass  uccessful swap with identity advancement and one in-flight observation
+production-reobserve 4429 pass <-- :160 o distinct named identities, the first result unchanged (syzygy-u05.2)
+production-reobserve 2816 pass  or production model and non-zero drift when the production build fails
+dossier-cap-measure fileMs 2119 (file) hookMs [2115]
+removal-file no-egress.test.ts state pass worst test 3263 file-level hookMs [929] suite hookMs max 1
+removal-file cdp-browser.test.ts state pass worst test 163 file-level hookMs [1] suite hookMs max 1
+removal-file fixture-directories.test.ts state pass worst test 389 file-level hookMs [1] suite hookMs max 5
+removal-file governing-intent-sweep.test.ts state pass worst test 56 file-level hookMs [315] suite hookMs max 2
+removal-file orrery.browser.test.ts state pass worst test 802 file-level hookMs [3] suite hookMs max 2302
+removal-file polaris-accessible-names.browser.test.ts state pass worst test 4920 file-level hookMs [3] suite hookMs max 2594
+removal-file polaris-opening-index.browser.test.ts state pass worst test 913 file-level hookMs [9] suite hookMs max 1573
+removal-file polaris-reconciliation.test.ts state pass worst test 19 file-level hookMs [762] suite hookMs max 1
+removal-file trajectory-narrowing.browser.test.ts state pass worst test 835 file-level hookMs [10] suite hookMs max 1802
+removal-file unknown-route-sweep.test.ts state pass worst test 106 file-level hookMs [982] suite hookMs max 2
+removal-file durable-lifecycle-generate.test.ts state pass worst test 31 file-level hookMs [1] suite hookMs max 1

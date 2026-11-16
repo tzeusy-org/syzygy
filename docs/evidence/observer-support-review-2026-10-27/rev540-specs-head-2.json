@@ -1,0 +1,17 @@
+{
+ "files": [
+  "apps/three-surface-poc/src/git-observation.test.ts"
+ ],
+ "mutants": [
+  {
+   "id": "T8-guard-walk-follows-no-edge",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.test.ts",
+     "old": "ts.preProcessFile(readModule(file), true, true).importedFiles.map((imported) => imported.fileName)",
+     "new": "([] as string[])"
+    }
+   ]
+  }
+ ]
+}

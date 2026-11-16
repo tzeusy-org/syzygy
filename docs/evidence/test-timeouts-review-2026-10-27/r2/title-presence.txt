@@ -1,0 +1,12 @@
+kept titled test sites with a cited record carrying the title: 52
+carried by a commit citation only: 6
+   ('apps/three-surface-poc/src/fixture-directories.test.ts:294', ['3f08143c'])
+   ('apps/three-surface-poc/src/polaris-opening-index.browser.test.ts:424', ['da936967'])
+   ('packages/polaris-dossier/src/gate-acts.test.ts:98', ['0a08add9'])
+   ('packages/polaris-dossier/src/gate-acts.test.ts:106', ['0a08add9'])
+   ('packages/polaris-dossier/src/start-gates.test.ts:1015', ['30d2c2c9'])
+   ('packages/three-surface-poc-core/src/test-artifact-verification.live.test.ts:139', ['2c1f8d5a'])
+no record carries the title and no commit cited: 3
+   ('apps/three-surface-poc/src/polaris-generation/pipeline-demo.test.ts:73', ['docs/evidence/pipeline-demo-onramp-budget-2026-10-15.json'])
+   ('apps/three-surface-poc/src/surface-routes.test.ts:420', ['docs/evidence/syzygy-bul-browser-ci-correction-2026-09-23.json'])
+   ('apps/three-surface-poc/src/surface-routes.test.ts:453', ['docs/evidence/syzygy-bul-browser-ci-correction-2026-09-23.json'])

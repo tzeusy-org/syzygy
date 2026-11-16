@@ -1,0 +1,152 @@
+"./dist/index.js"	import/import	loads	accepts
+"./dist/index.js"	require/require	loads	accepts
+"./dist/index.js"	default/import	loads	accepts
+"./dist/index.js"	default/require	loads	accepts
+"./dist/./index.js"	import/import	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/./index.js"	require/require	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/./index.js"	default/import	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/./index.js"	default/require	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/."	import/import	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/."	require/require	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/."	default/import	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/."	default/require	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/x/../index.js"	import/import	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/x/../index.js"	require/require	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/x/../index.js"	default/import	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/x/../index.js"	default/require	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/x/.."	import/import	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/x/.."	require/require	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/x/.."	default/import	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/x/.."	default/require	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/node_modules/index.js"	import/import	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/node_modules/index.js"	require/require	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/node_modules/index.js"	default/import	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/node_modules/index.js"	default/require	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/NODE_MODULES/index.js"	import/import	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/NODE_MODULES/index.js"	require/require	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/NODE_MODULES/index.js"	default/import	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/NODE_MODULES/index.js"	default/require	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/Node_Modules/index.js"	import/import	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/Node_Modules/index.js"	require/require	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/Node_Modules/index.js"	default/import	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/Node_Modules/index.js"	default/require	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/nOdE_mOdUlEs/index.js"	import/import	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/nOdE_mOdUlEs/index.js"	require/require	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/nOdE_mOdUlEs/index.js"	default/import	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/nOdE_mOdUlEs/index.js"	default/require	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/%2e/index.js"	import/import	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/%2e/index.js"	require/require	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/%2e/index.js"	default/import	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/%2e/index.js"	default/require	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/%2E/index.js"	import/import	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/%2E/index.js"	require/require	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/%2E/index.js"	default/import	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/%2E/index.js"	default/require	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/%2e%2e/index.js"	import/import	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/%2e%2e/index.js"	require/require	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/%2e%2e/index.js"	default/import	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/%2e%2e/index.js"	default/require	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/%2E%2e/index.js"	import/import	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/%2E%2e/index.js"	require/require	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/%2E%2e/index.js"	default/import	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/%2E%2e/index.js"	default/require	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/.%2e/index.js"	import/import	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/.%2e/index.js"	require/require	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/.%2e/index.js"	default/import	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/.%2e/index.js"	default/require	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/%6eode_modules/index.js"	import/import	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/%6eode_modules/index.js"	require/require	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/%6eode_modules/index.js"	default/import	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/%6eode_modules/index.js"	default/require	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/%4Eode_modules/index.js"	import/import	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/%4Eode_modules/index.js"	require/require	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/%4Eode_modules/index.js"	default/import	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/%4Eode_modules/index.js"	default/require	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/node%5Fmodules/index.js"	import/import	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/node%5Fmodules/index.js"	require/require	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/node%5Fmodules/index.js"	default/import	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/node%5Fmodules/index.js"	default/require	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/%6E%6F%64%65%5F%6D%6F%64%75%6C%65%73/index.js"	import/import	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/%6E%6F%64%65%5F%6D%6F%64%75%6C%65%73/index.js"	require/require	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/%6E%6F%64%65%5F%6D%6F%64%75%6C%65%73/index.js"	default/import	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/%6E%6F%64%65%5F%6D%6F%64%75%6C%65%73/index.js"	default/require	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/x\\..\\index.js"	import/import	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/x\\..\\index.js"	require/require	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/x\\..\\index.js"	default/import	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist/x\\..\\index.js"	default/require	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist\\.\\index.js"	import/import	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist\\.\\index.js"	require/require	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist\\.\\index.js"	default/import	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist\\.\\index.js"	default/require	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist\\node_modules\\index.js"	import/import	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist\\node_modules\\index.js"	require/require	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist\\node_modules\\index.js"	default/import	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist\\node_modules\\index.js"	default/require	throws ERR_INVALID_PACKAGE_TARGET	refuses: says Node refuses
+"./dist\\index.js"	import/import	throws ERR_MODULE_NOT_FOUND	accepts
+"./dist\\index.js"	require/require	throws MODULE_NOT_FOUND	accepts
+"./dist\\index.js"	default/import	throws ERR_MODULE_NOT_FOUND	accepts
+"./dist\\index.js"	default/require	throws MODULE_NOT_FOUND	accepts
+"./dist//index.js"	import/import	warns	refuses: says Node warns
+"./dist//index.js"	require/require	warns	refuses: says Node warns
+"./dist//index.js"	default/import	warns	refuses: says Node warns
+"./dist//index.js"	default/require	warns	refuses: says Node warns
+"./dist/"	import/import	throws ERR_MODULE_NOT_FOUND	refuses: says Node warns
+"./dist/"	require/require	throws MODULE_NOT_FOUND	refuses: says Node warns
+"./dist/"	default/import	throws ERR_MODULE_NOT_FOUND	refuses: says Node warns
+"./dist/"	default/require	throws MODULE_NOT_FOUND	refuses: says Node warns
+"./dist/x//"	import/import	throws ERR_MODULE_NOT_FOUND	refuses: says Node warns
+"./dist/x//"	require/require	throws MODULE_NOT_FOUND	refuses: says Node warns
+"./dist/x//"	default/import	throws ERR_MODULE_NOT_FOUND	refuses: says Node warns
+"./dist/x//"	default/require	throws MODULE_NOT_FOUND	refuses: says Node warns
+".//dist/index.js"	import/import	warns	refuses: says Node warns
+".//dist/index.js"	require/require	warns	refuses: says Node warns
+".//dist/index.js"	default/import	warns	refuses: says Node warns
+".//dist/index.js"	default/require	warns	refuses: says Node warns
+"./dist/.hidden/index.js"	import/import	loads	accepts
+"./dist/.hidden/index.js"	require/require	loads	accepts
+"./dist/.hidden/index.js"	default/import	loads	accepts
+"./dist/.hidden/index.js"	default/require	loads	accepts
+"./dist/..x/index.js"	import/import	loads	accepts
+"./dist/..x/index.js"	require/require	loads	accepts
+"./dist/..x/index.js"	default/import	loads	accepts
+"./dist/..x/index.js"	default/require	loads	accepts
+"./dist/node_modules_x/index.js"	import/import	loads	accepts
+"./dist/node_modules_x/index.js"	require/require	loads	accepts
+"./dist/node_modules_x/index.js"	default/import	loads	accepts
+"./dist/node_modules_x/index.js"	default/require	loads	accepts
+"./dist/...x/index.js"	import/import	loads	accepts
+"./dist/...x/index.js"	require/require	loads	accepts
+"./dist/...x/index.js"	default/import	loads	accepts
+"./dist/...x/index.js"	default/require	loads	accepts
+"./dist/%2e%2e%2findex.js"	import/import	throws ERR_INVALID_MODULE_SPECIFIER	accepts
+"./dist/%2e%2e%2findex.js"	require/require	throws ERR_INVALID_MODULE_SPECIFIER	accepts
+"./dist/%2e%2e%2findex.js"	default/import	throws ERR_INVALID_MODULE_SPECIFIER	accepts
+"./dist/%2e%2e%2findex.js"	default/require	throws ERR_INVALID_MODULE_SPECIFIER	accepts
+"./dist/%252e/index.js"	import/import	loads	accepts
+"./dist/%252e/index.js"	require/require	loads	accepts
+"./dist/%252e/index.js"	default/import	loads	accepts
+"./dist/%252e/index.js"	default/require	loads	accepts
+"./"	import/import	throws ERR_UNSUPPORTED_DIR_IMPORT	refuses: says Node warns
+"./"	require/require	throws MODULE_NOT_FOUND	refuses: says Node warns
+"./"	default/import	throws ERR_UNSUPPORTED_DIR_IMPORT	refuses: says Node warns
+"./"	default/require	throws MODULE_NOT_FOUND	refuses: says Node warns
+".//"	import/import	throws ERR_UNSUPPORTED_DIR_IMPORT	refuses: says Node warns
+".//"	require/require	throws MODULE_NOT_FOUND	refuses: says Node warns
+".//"	default/import	throws ERR_UNSUPPORTED_DIR_IMPORT	refuses: says Node warns
+".//"	default/require	throws MODULE_NOT_FOUND	refuses: says Node warns
+"./dist\\\\index.js"	import/import	throws ERR_MODULE_NOT_FOUND	refuses: says Node warns
+"./dist\\\\index.js"	require/require	throws MODULE_NOT_FOUND	refuses: says Node warns
+"./dist\\\\index.js"	default/import	throws ERR_MODULE_NOT_FOUND	refuses: says Node warns
+"./dist\\\\index.js"	default/require	throws MODULE_NOT_FOUND	refuses: says Node warns
+"./dist/\\index.js"	import/import	throws ERR_MODULE_NOT_FOUND	refuses: says Node warns
+"./dist/\\index.js"	require/require	throws MODULE_NOT_FOUND	refuses: says Node warns
+"./dist/\\index.js"	default/import	throws ERR_MODULE_NOT_FOUND	refuses: says Node warns
+"./dist/\\index.js"	default/require	throws MODULE_NOT_FOUND	refuses: says Node warns
+"./dist\\"	import/import	throws ERR_MODULE_NOT_FOUND	refuses: says Node warns
+"./dist\\"	require/require	throws MODULE_NOT_FOUND	refuses: says Node warns
+"./dist\\"	default/import	throws ERR_MODULE_NOT_FOUND	refuses: says Node warns
+"./dist\\"	default/require	throws MODULE_NOT_FOUND	refuses: says Node warns
+"./dist/x/"	import/import	throws ERR_MODULE_NOT_FOUND	refuses: says Node warns
+"./dist/x/"	require/require	throws MODULE_NOT_FOUND	refuses: says Node warns
+"./dist/x/"	default/import	throws ERR_MODULE_NOT_FOUND	refuses: says Node warns
+"./dist/x/"	default/require	throws MODULE_NOT_FOUND	refuses: says Node warns

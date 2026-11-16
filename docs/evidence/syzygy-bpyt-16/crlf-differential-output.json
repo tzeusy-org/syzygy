@@ -1,0 +1,3234 @@
+{
+ "tool": "docs/evidence/syzygy-bpyt-16/crlf-differential.mjs",
+ "baseDistModule": "27975814d7f8310f68c6937eebf6c4db60c8cbf2fe2d0f1e6db72f62f31df00c",
+ "headDistModule": "6e22d480bcbf855ecc174c1a8fe4c1701806ab7adfa0aee97b01ddf61af8a38a",
+ "corpusFiles": {
+  "vetCorpus": {
+   "path": "docs/evidence/syzygy-bpyt-16/vet-v-crlf-mask-1/tools/corpus.mjs",
+   "sha256": "6a3f990fc85006ba3387d68f31e8160987343f58855c6b318eba2648f180af62"
+  },
+  "fenceProbe": {
+   "path": "docs/evidence/syzygy-bpyt-6-3/fence-probe.mjs",
+   "sha256": "10b6d88b528a6f967959842bb350d21700f097f1ea0e420f174f347cf8afb680"
+  }
+ },
+ "population": {
+  "texts": 11054,
+  "distinctTexts": 10159,
+  "distinctLfForms": 1825,
+  "vet": {
+   "cases": 36,
+   "variants": 15,
+   "rows": 904
+  },
+  "fence": {
+   "cases": 33
+  },
+  "n2": {
+   "cases": 6
+  },
+  "renderings": [
+   "lf",
+   "crlf",
+   "cr",
+   "firstCrlf",
+   "lastCrlf",
+   "firstCr",
+   "cycle"
+  ],
+  "separatorSlice": {
+   "separators": [
+    "U+2028",
+    "U+2029",
+    "U+0085",
+    "U+000B",
+    "U+000C"
+   ],
+   "texts": 10131,
+   "holdingEach": {
+    "U+2028": 2026,
+    "U+2029": 2026,
+    "U+0085": 2026,
+    "U+000B": 2026,
+    "U+000C": 2026
+   },
+   "holdingNone": 1,
+   "excludedByHead": 8044
+  }
+ },
+ "checks": {
+  "C1_lfUnchanged": {
+   "texts": 1825,
+   "separatorSliceTexts": 10131,
+   "failures": 0
+  },
+  "C2_renderingEqualsLf": {
+   "texts": 11054,
+   "failures": 0
+  },
+  "C3_maskInvariants": {
+   "maskedTexts": 8345,
+   "failures": 0
+  },
+  "C4_crlfFindingsEqualLfIncludingPositions": {
+   "texts": 1822,
+   "failures": 0
+  }
+ },
+ "positionOf": {
+  "note": "positionOf counts LF only (unchanged by the fix): rows whose non-malformed findings sit at another line or column than the LF form, mixed and bare-CR renderings",
+  "rows": 532
+ },
+ "vetSelection": {
+  "CRLF": {
+   "payload": {
+    "rows": 336,
+    "refuses": 32,
+    "accepts": 48,
+    "sameDecisionOtherFindings": 0,
+    "unchanged": 256
+   },
+   "control": {
+    "rows": 36,
+    "refuses": 7,
+    "accepts": 5,
+    "sameDecisionOtherFindings": 0,
+    "unchanged": 24
+   }
+  },
+  "CR": {
+   "payload": {
+    "rows": 336,
+    "refuses": 32,
+    "accepts": 44,
+    "sameDecisionOtherFindings": 0,
+    "unchanged": 260
+   },
+   "control": {
+    "rows": 36,
+    "refuses": 7,
+    "accepts": 3,
+    "sameDecisionOtherFindings": 0,
+    "unchanged": 26
+   }
+  },
+  "variants": {
+   "payload": {
+    "rows": 145,
+    "refuses": 4,
+    "accepts": 44,
+    "sameDecisionOtherFindings": 0,
+    "unchanged": 97
+   },
+   "control": {
+    "rows": 15,
+    "refuses": 1,
+    "accepts": 9,
+    "sameDecisionOtherFindings": 0,
+    "unchanged": 5
+   }
+  }
+ },
+ "delta": {
+  "fence/all": {
+   "rows": 8050,
+   "refuses": 202,
+   "accepts": 2705,
+   "sameDecisionOtherFindings": 945,
+   "unchanged": 4198
+  },
+  "fence/cr-nofinal/control": {
+   "rows": 33,
+   "refuses": 3,
+   "accepts": 7,
+   "sameDecisionOtherFindings": 1,
+   "unchanged": 22
+  },
+  "fence/cr-nofinal/placed": {
+   "rows": 542,
+   "refuses": 51,
+   "accepts": 130,
+   "sameDecisionOtherFindings": 65,
+   "unchanged": 296
+  },
+  "fence/cr/control": {
+   "rows": 33,
+   "refuses": 3,
+   "accepts": 7,
+   "sameDecisionOtherFindings": 1,
+   "unchanged": 22
+  },
+  "fence/cr/placed": {
+   "rows": 542,
+   "refuses": 51,
+   "accepts": 130,
+   "sameDecisionOtherFindings": 65,
+   "unchanged": 296
+  },
+  "fence/crlf-nofinal/control": {
+   "rows": 33,
+   "refuses": 0,
+   "accepts": 22,
+   "sameDecisionOtherFindings": 3,
+   "unchanged": 8
+  },
+  "fence/crlf-nofinal/placed": {
+   "rows": 542,
+   "refuses": 5,
+   "accepts": 278,
+   "sameDecisionOtherFindings": 115,
+   "unchanged": 144
+  },
+  "fence/crlf/control": {
+   "rows": 33,
+   "refuses": 3,
+   "accepts": 7,
+   "sameDecisionOtherFindings": 1,
+   "unchanged": 22
+  },
+  "fence/crlf/placed": {
+   "rows": 542,
+   "refuses": 51,
+   "accepts": 130,
+   "sameDecisionOtherFindings": 65,
+   "unchanged": 296
+  },
+  "fence/cycle-nofinal/control": {
+   "rows": 33,
+   "refuses": 0,
+   "accepts": 4,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 29
+  },
+  "fence/cycle-nofinal/placed": {
+   "rows": 542,
+   "refuses": 8,
+   "accepts": 123,
+   "sameDecisionOtherFindings": 49,
+   "unchanged": 362
+  },
+  "fence/cycle/control": {
+   "rows": 33,
+   "refuses": 1,
+   "accepts": 24,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 8
+  },
+  "fence/cycle/placed": {
+   "rows": 542,
+   "refuses": 13,
+   "accepts": 300,
+   "sameDecisionOtherFindings": 45,
+   "unchanged": 184
+  },
+  "fence/firstCr-nofinal/control": {
+   "rows": 33,
+   "refuses": 0,
+   "accepts": 22,
+   "sameDecisionOtherFindings": 3,
+   "unchanged": 8
+  },
+  "fence/firstCr-nofinal/placed": {
+   "rows": 542,
+   "refuses": 1,
+   "accepts": 300,
+   "sameDecisionOtherFindings": 139,
+   "unchanged": 102
+  },
+  "fence/firstCr/control": {
+   "rows": 33,
+   "refuses": 0,
+   "accepts": 22,
+   "sameDecisionOtherFindings": 3,
+   "unchanged": 8
+  },
+  "fence/firstCr/placed": {
+   "rows": 542,
+   "refuses": 1,
+   "accepts": 300,
+   "sameDecisionOtherFindings": 139,
+   "unchanged": 102
+  },
+  "fence/firstCrlf-nofinal/control": {
+   "rows": 33,
+   "refuses": 0,
+   "accepts": 23,
+   "sameDecisionOtherFindings": 3,
+   "unchanged": 7
+  },
+  "fence/firstCrlf-nofinal/placed": {
+   "rows": 542,
+   "refuses": 0,
+   "accepts": 280,
+   "sameDecisionOtherFindings": 110,
+   "unchanged": 152
+  },
+  "fence/firstCrlf/control": {
+   "rows": 33,
+   "refuses": 0,
+   "accepts": 23,
+   "sameDecisionOtherFindings": 3,
+   "unchanged": 7
+  },
+  "fence/firstCrlf/placed": {
+   "rows": 542,
+   "refuses": 0,
+   "accepts": 280,
+   "sameDecisionOtherFindings": 110,
+   "unchanged": 152
+  },
+  "fence/lastCrlf-nofinal/control": {
+   "rows": 33,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 33
+  },
+  "fence/lastCrlf-nofinal/placed": {
+   "rows": 542,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 542
+  },
+  "fence/lastCrlf/control": {
+   "rows": 33,
+   "refuses": 1,
+   "accepts": 22,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 10
+  },
+  "fence/lastCrlf/placed": {
+   "rows": 542,
+   "refuses": 10,
+   "accepts": 271,
+   "sameDecisionOtherFindings": 25,
+   "unchanged": 236
+  },
+  "fence/lf-nofinal/control": {
+   "rows": 33,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 33
+  },
+  "fence/lf-nofinal/placed": {
+   "rows": 542,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 542
+  },
+  "fence/lf/control": {
+   "rows": 33,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 33
+  },
+  "fence/lf/placed": {
+   "rows": 542,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 542
+  },
+  "n2/all": {
+   "rows": 2100,
+   "refuses": 142,
+   "accepts": 449,
+   "sameDecisionOtherFindings": 867,
+   "unchanged": 642
+  },
+  "n2/cr-nofinal/control": {
+   "rows": 6,
+   "refuses": 2,
+   "accepts": 2,
+   "sameDecisionOtherFindings": 2,
+   "unchanged": 0
+  },
+  "n2/cr-nofinal/placed": {
+   "rows": 144,
+   "refuses": 34,
+   "accepts": 43,
+   "sameDecisionOtherFindings": 60,
+   "unchanged": 7
+  },
+  "n2/cr/control": {
+   "rows": 6,
+   "refuses": 2,
+   "accepts": 2,
+   "sameDecisionOtherFindings": 2,
+   "unchanged": 0
+  },
+  "n2/cr/placed": {
+   "rows": 144,
+   "refuses": 34,
+   "accepts": 43,
+   "sameDecisionOtherFindings": 60,
+   "unchanged": 7
+  },
+  "n2/crlf-nofinal/control": {
+   "rows": 6,
+   "refuses": 0,
+   "accepts": 2,
+   "sameDecisionOtherFindings": 4,
+   "unchanged": 0
+  },
+  "n2/crlf-nofinal/placed": {
+   "rows": 144,
+   "refuses": 2,
+   "accepts": 43,
+   "sameDecisionOtherFindings": 99,
+   "unchanged": 0
+  },
+  "n2/crlf/control": {
+   "rows": 6,
+   "refuses": 2,
+   "accepts": 2,
+   "sameDecisionOtherFindings": 2,
+   "unchanged": 0
+  },
+  "n2/crlf/placed": {
+   "rows": 144,
+   "refuses": 34,
+   "accepts": 43,
+   "sameDecisionOtherFindings": 60,
+   "unchanged": 7
+  },
+  "n2/cycle-nofinal/control": {
+   "rows": 6,
+   "refuses": 0,
+   "accepts": 1,
+   "sameDecisionOtherFindings": 2,
+   "unchanged": 3
+  },
+  "n2/cycle-nofinal/placed": {
+   "rows": 144,
+   "refuses": 30,
+   "accepts": 20,
+   "sameDecisionOtherFindings": 45,
+   "unchanged": 49
+  },
+  "n2/cycle/control": {
+   "rows": 6,
+   "refuses": 0,
+   "accepts": 2,
+   "sameDecisionOtherFindings": 2,
+   "unchanged": 2
+  },
+  "n2/cycle/placed": {
+   "rows": 144,
+   "refuses": 2,
+   "accepts": 43,
+   "sameDecisionOtherFindings": 73,
+   "unchanged": 26
+  },
+  "n2/firstCr-nofinal/control": {
+   "rows": 6,
+   "refuses": 0,
+   "accepts": 2,
+   "sameDecisionOtherFindings": 4,
+   "unchanged": 0
+  },
+  "n2/firstCr-nofinal/placed": {
+   "rows": 144,
+   "refuses": 0,
+   "accepts": 43,
+   "sameDecisionOtherFindings": 101,
+   "unchanged": 0
+  },
+  "n2/firstCr/control": {
+   "rows": 6,
+   "refuses": 0,
+   "accepts": 2,
+   "sameDecisionOtherFindings": 4,
+   "unchanged": 0
+  },
+  "n2/firstCr/placed": {
+   "rows": 144,
+   "refuses": 0,
+   "accepts": 43,
+   "sameDecisionOtherFindings": 101,
+   "unchanged": 0
+  },
+  "n2/firstCrlf-nofinal/control": {
+   "rows": 6,
+   "refuses": 0,
+   "accepts": 2,
+   "sameDecisionOtherFindings": 4,
+   "unchanged": 0
+  },
+  "n2/firstCrlf-nofinal/placed": {
+   "rows": 144,
+   "refuses": 0,
+   "accepts": 41,
+   "sameDecisionOtherFindings": 91,
+   "unchanged": 12
+  },
+  "n2/firstCrlf/control": {
+   "rows": 6,
+   "refuses": 0,
+   "accepts": 2,
+   "sameDecisionOtherFindings": 4,
+   "unchanged": 0
+  },
+  "n2/firstCrlf/placed": {
+   "rows": 144,
+   "refuses": 0,
+   "accepts": 41,
+   "sameDecisionOtherFindings": 91,
+   "unchanged": 12
+  },
+  "n2/lastCrlf-nofinal/control": {
+   "rows": 6,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 6
+  },
+  "n2/lastCrlf-nofinal/placed": {
+   "rows": 144,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 144
+  },
+  "n2/lastCrlf/control": {
+   "rows": 6,
+   "refuses": 0,
+   "accepts": 1,
+   "sameDecisionOtherFindings": 2,
+   "unchanged": 3
+  },
+  "n2/lastCrlf/placed": {
+   "rows": 144,
+   "refuses": 0,
+   "accepts": 26,
+   "sameDecisionOtherFindings": 54,
+   "unchanged": 64
+  },
+  "n2/lf-nofinal/control": {
+   "rows": 6,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 6
+  },
+  "n2/lf-nofinal/placed": {
+   "rows": 144,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 144
+  },
+  "n2/lf/control": {
+   "rows": 6,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 6
+  },
+  "n2/lf/placed": {
+   "rows": 144,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 144
+  },
+  "vet/CR/control": {
+   "rows": 36,
+   "refuses": 7,
+   "accepts": 3,
+   "sameDecisionOtherFindings": 2,
+   "unchanged": 24
+  },
+  "vet/CR/placed": {
+   "rows": 336,
+   "refuses": 32,
+   "accepts": 44,
+   "sameDecisionOtherFindings": 85,
+   "unchanged": 175
+  },
+  "vet/CRLF/control": {
+   "rows": 36,
+   "refuses": 7,
+   "accepts": 5,
+   "sameDecisionOtherFindings": 2,
+   "unchanged": 22
+  },
+  "vet/CRLF/placed": {
+   "rows": 336,
+   "refuses": 32,
+   "accepts": 48,
+   "sameDecisionOtherFindings": 87,
+   "unchanged": 169
+  },
+  "vet/M1/control": {
+   "rows": 1,
+   "refuses": 0,
+   "accepts": 1,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 0
+  },
+  "vet/M1/placed": {
+   "rows": 11,
+   "refuses": 0,
+   "accepts": 4,
+   "sameDecisionOtherFindings": 6,
+   "unchanged": 1
+  },
+  "vet/M2/control": {
+   "rows": 1,
+   "refuses": 0,
+   "accepts": 1,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 0
+  },
+  "vet/M2/placed": {
+   "rows": 11,
+   "refuses": 0,
+   "accepts": 4,
+   "sameDecisionOtherFindings": 7,
+   "unchanged": 0
+  },
+  "vet/M3/control": {
+   "rows": 1,
+   "refuses": 0,
+   "accepts": 1,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 0
+  },
+  "vet/M3/placed": {
+   "rows": 9,
+   "refuses": 0,
+   "accepts": 4,
+   "sameDecisionOtherFindings": 4,
+   "unchanged": 1
+  },
+  "vet/M4/control": {
+   "rows": 1,
+   "refuses": 0,
+   "accepts": 1,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 0
+  },
+  "vet/M4/placed": {
+   "rows": 9,
+   "refuses": 0,
+   "accepts": 4,
+   "sameDecisionOtherFindings": 5,
+   "unchanged": 0
+  },
+  "vet/M5/control": {
+   "rows": 1,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 1
+  },
+  "vet/M5/placed": {
+   "rows": 11,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 11
+  },
+  "vet/M6/control": {
+   "rows": 1,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 1,
+   "unchanged": 0
+  },
+  "vet/M6/placed": {
+   "rows": 11,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 11,
+   "unchanged": 0
+  },
+  "vet/M7/control": {
+   "rows": 1,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 1
+  },
+  "vet/M7/placed": {
+   "rows": 13,
+   "refuses": 0,
+   "accepts": 4,
+   "sameDecisionOtherFindings": 1,
+   "unchanged": 8
+  },
+  "vet/R1/control": {
+   "rows": 1,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 1
+  },
+  "vet/R1/placed": {
+   "rows": 11,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 1,
+   "unchanged": 10
+  },
+  "vet/R2/control": {
+   "rows": 1,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 1
+  },
+  "vet/R2/placed": {
+   "rows": 9,
+   "refuses": 0,
+   "accepts": 4,
+   "sameDecisionOtherFindings": 1,
+   "unchanged": 4
+  },
+  "vet/R3/control": {
+   "rows": 1,
+   "refuses": 1,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 0
+  },
+  "vet/R3/placed": {
+   "rows": 11,
+   "refuses": 4,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 7,
+   "unchanged": 0
+  },
+  "vet/R4/control": {
+   "rows": 1,
+   "refuses": 0,
+   "accepts": 1,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 0
+  },
+  "vet/R4/placed": {
+   "rows": 11,
+   "refuses": 0,
+   "accepts": 4,
+   "sameDecisionOtherFindings": 6,
+   "unchanged": 1
+  },
+  "vet/T1/control": {
+   "rows": 1,
+   "refuses": 0,
+   "accepts": 1,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 0
+  },
+  "vet/T1/placed": {
+   "rows": 7,
+   "refuses": 0,
+   "accepts": 4,
+   "sameDecisionOtherFindings": 2,
+   "unchanged": 1
+  },
+  "vet/T2/control": {
+   "rows": 1,
+   "refuses": 0,
+   "accepts": 1,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 0
+  },
+  "vet/T2/placed": {
+   "rows": 7,
+   "refuses": 0,
+   "accepts": 4,
+   "sameDecisionOtherFindings": 2,
+   "unchanged": 1
+  },
+  "vet/T3/control": {
+   "rows": 1,
+   "refuses": 0,
+   "accepts": 1,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 0
+  },
+  "vet/T3/placed": {
+   "rows": 7,
+   "refuses": 0,
+   "accepts": 4,
+   "sameDecisionOtherFindings": 2,
+   "unchanged": 1
+  },
+  "vet/T4/control": {
+   "rows": 1,
+   "refuses": 0,
+   "accepts": 1,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 0
+  },
+  "vet/T4/placed": {
+   "rows": 7,
+   "refuses": 0,
+   "accepts": 4,
+   "sameDecisionOtherFindings": 2,
+   "unchanged": 1
+  },
+  "vet/all": {
+   "rows": 904,
+   "refuses": 83,
+   "accepts": 153,
+   "sameDecisionOtherFindings": 234,
+   "unchanged": 434
+  }
+ },
+ "deltaByCase": {
+  "fence/backtick-col0": {
+   "rows": 210,
+   "refuses": 3,
+   "accepts": 77,
+   "sameDecisionOtherFindings": 23,
+   "unchanged": 107
+  },
+  "fence/backtick-indent1": {
+   "rows": 210,
+   "refuses": 3,
+   "accepts": 77,
+   "sameDecisionOtherFindings": 23,
+   "unchanged": 107
+  },
+  "fence/backtick-indent2": {
+   "rows": 210,
+   "refuses": 3,
+   "accepts": 77,
+   "sameDecisionOtherFindings": 23,
+   "unchanged": 107
+  },
+  "fence/backtick-indent3": {
+   "rows": 210,
+   "refuses": 3,
+   "accepts": 77,
+   "sameDecisionOtherFindings": 23,
+   "unchanged": 107
+  },
+  "fence/backtick-indent4": {
+   "rows": 210,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 210
+  },
+  "fence/backtick-info-with-backtick": {
+   "rows": 210,
+   "refuses": 39,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 81,
+   "unchanged": 90
+  },
+  "fence/backtick-tab": {
+   "rows": 210,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 210
+  },
+  "fence/blockquote": {
+   "rows": 210,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 210
+  },
+  "fence/closer-indent1": {
+   "rows": 266,
+   "refuses": 4,
+   "accepts": 74,
+   "sameDecisionOtherFindings": 32,
+   "unchanged": 156
+  },
+  "fence/closer-indent3": {
+   "rows": 266,
+   "refuses": 4,
+   "accepts": 74,
+   "sameDecisionOtherFindings": 32,
+   "unchanged": 156
+  },
+  "fence/closer-indent4": {
+   "rows": 322,
+   "refuses": 0,
+   "accepts": 189,
+   "sameDecisionOtherFindings": 35,
+   "unchanged": 98
+  },
+  "fence/closer-longer": {
+   "rows": 210,
+   "refuses": 0,
+   "accepts": 113,
+   "sameDecisionOtherFindings": 35,
+   "unchanged": 62
+  },
+  "fence/closer-longer-with-info": {
+   "rows": 266,
+   "refuses": 3,
+   "accepts": 109,
+   "sameDecisionOtherFindings": 24,
+   "unchanged": 130
+  },
+  "fence/closer-other-char": {
+   "rows": 322,
+   "refuses": 3,
+   "accepts": 130,
+   "sameDecisionOtherFindings": 24,
+   "unchanged": 165
+  },
+  "fence/closer-trailing-space": {
+   "rows": 210,
+   "refuses": 3,
+   "accepts": 77,
+   "sameDecisionOtherFindings": 23,
+   "unchanged": 107
+  },
+  "fence/closer-trailing-tab": {
+   "rows": 210,
+   "refuses": 39,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 81,
+   "unchanged": 90
+  },
+  "fence/closer-trailing-tab-then-closer": {
+   "rows": 322,
+   "refuses": 0,
+   "accepts": 189,
+   "sameDecisionOtherFindings": 35,
+   "unchanged": 98
+  },
+  "fence/closer-with-info": {
+   "rows": 322,
+   "refuses": 0,
+   "accepts": 189,
+   "sameDecisionOtherFindings": 35,
+   "unchanged": 98
+  },
+  "fence/closer-with-text": {
+   "rows": 322,
+   "refuses": 0,
+   "accepts": 189,
+   "sameDecisionOtherFindings": 35,
+   "unchanged": 98
+  },
+  "fence/empty-fence": {
+   "rows": 154,
+   "refuses": 5,
+   "accepts": 38,
+   "sameDecisionOtherFindings": 20,
+   "unchanged": 91
+  },
+  "fence/info-string": {
+   "rows": 210,
+   "refuses": 3,
+   "accepts": 77,
+   "sameDecisionOtherFindings": 23,
+   "unchanged": 107
+  },
+  "fence/info-string-space": {
+   "rows": 210,
+   "refuses": 3,
+   "accepts": 77,
+   "sameDecisionOtherFindings": 23,
+   "unchanged": 107
+  },
+  "fence/list-item": {
+   "rows": 210,
+   "refuses": 66,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 21,
+   "unchanged": 123
+  },
+  "fence/opener-four-closer-three": {
+   "rows": 322,
+   "refuses": 3,
+   "accepts": 130,
+   "sameDecisionOtherFindings": 24,
+   "unchanged": 165
+  },
+  "fence/tilde-col0": {
+   "rows": 210,
+   "refuses": 3,
+   "accepts": 89,
+   "sameDecisionOtherFindings": 23,
+   "unchanged": 95
+  },
+  "fence/tilde-fence-backtick-line": {
+   "rows": 322,
+   "refuses": 0,
+   "accepts": 189,
+   "sameDecisionOtherFindings": 35,
+   "unchanged": 98
+  },
+  "fence/tilde-indent3": {
+   "rows": 210,
+   "refuses": 3,
+   "accepts": 89,
+   "sameDecisionOtherFindings": 23,
+   "unchanged": 95
+  },
+  "fence/tilde-indent4": {
+   "rows": 210,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 210
+  },
+  "fence/tilde-info-with-backtick": {
+   "rows": 210,
+   "refuses": 0,
+   "accepts": 113,
+   "sameDecisionOtherFindings": 35,
+   "unchanged": 62
+  },
+  "fence/tilde-opener-four-closer-three": {
+   "rows": 322,
+   "refuses": 3,
+   "accepts": 96,
+   "sameDecisionOtherFindings": 18,
+   "unchanged": 205
+  },
+  "fence/two-backticks": {
+   "rows": 210,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 210
+  },
+  "fence/two-fences": {
+   "rows": 378,
+   "refuses": 6,
+   "accepts": 166,
+   "sameDecisionOtherFindings": 48,
+   "unchanged": 158
+  },
+  "fence/unclosed": {
+   "rows": 154,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 88,
+   "unchanged": 66
+  },
+  "n2/n2-backtick-script-closer-with-text": {
+   "rows": 210,
+   "refuses": 39,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 81,
+   "unchanged": 90
+  },
+  "n2/n2-closer-trailing-tab-script": {
+   "rows": 434,
+   "refuses": 12,
+   "accepts": 22,
+   "sameDecisionOtherFindings": 301,
+   "unchanged": 99
+  },
+  "n2/n2-closer-with-text-then-closer": {
+   "rows": 322,
+   "refuses": 0,
+   "accepts": 168,
+   "sameDecisionOtherFindings": 54,
+   "unchanged": 100
+  },
+  "n2/n2-tilde-backtick-tilde-script-tilde-backtick-tilde": {
+   "rows": 434,
+   "refuses": 86,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 233,
+   "unchanged": 115
+  },
+  "n2/n2-tilde-script-closer-with-text": {
+   "rows": 210,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 120,
+   "unchanged": 90
+  },
+  "n2/n2-two-tilde-fences-one-backtick-line-each": {
+   "rows": 490,
+   "refuses": 5,
+   "accepts": 259,
+   "sameDecisionOtherFindings": 78,
+   "unchanged": 148
+  },
+  "vet/K01": {
+   "rows": 84,
+   "refuses": 0,
+   "accepts": 15,
+   "sameDecisionOtherFindings": 22,
+   "unchanged": 47
+  },
+  "vet/K02": {
+   "rows": 20,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 2,
+   "unchanged": 18
+  },
+  "vet/K03": {
+   "rows": 48,
+   "refuses": 15,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 33,
+   "unchanged": 0
+  },
+  "vet/K04": {
+   "rows": 20,
+   "refuses": 10,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 10,
+   "unchanged": 0
+  },
+  "vet/K05": {
+   "rows": 24,
+   "refuses": 10,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 14,
+   "unchanged": 0
+  },
+  "vet/K06": {
+   "rows": 50,
+   "refuses": 0,
+   "accepts": 22,
+   "sameDecisionOtherFindings": 12,
+   "unchanged": 16
+  },
+  "vet/K07": {
+   "rows": 20,
+   "refuses": 0,
+   "accepts": 8,
+   "sameDecisionOtherFindings": 2,
+   "unchanged": 10
+  },
+  "vet/K08": {
+   "rows": 20,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 2,
+   "unchanged": 18
+  },
+  "vet/K09": {
+   "rows": 20,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 20
+  },
+  "vet/K10": {
+   "rows": 20,
+   "refuses": 10,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 10,
+   "unchanged": 0
+  },
+  "vet/K11": {
+   "rows": 20,
+   "refuses": 10,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 10,
+   "unchanged": 0
+  },
+  "vet/K12": {
+   "rows": 20,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 2,
+   "unchanged": 18
+  },
+  "vet/K13": {
+   "rows": 20,
+   "refuses": 0,
+   "accepts": 10,
+   "sameDecisionOtherFindings": 10,
+   "unchanged": 0
+  },
+  "vet/K14": {
+   "rows": 28,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 2,
+   "unchanged": 26
+  },
+  "vet/K15": {
+   "rows": 42,
+   "refuses": 0,
+   "accepts": 12,
+   "sameDecisionOtherFindings": 3,
+   "unchanged": 27
+  },
+  "vet/K16": {
+   "rows": 32,
+   "refuses": 8,
+   "accepts": 8,
+   "sameDecisionOtherFindings": 2,
+   "unchanged": 14
+  },
+  "vet/K17": {
+   "rows": 24,
+   "refuses": 18,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 6,
+   "unchanged": 0
+  },
+  "vet/K18": {
+   "rows": 12,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 12,
+   "unchanged": 0
+  },
+  "vet/K19": {
+   "rows": 12,
+   "refuses": 2,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 10,
+   "unchanged": 0
+  },
+  "vet/K20": {
+   "rows": 12,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 12
+  },
+  "vet/K21": {
+   "rows": 12,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 12
+  },
+  "vet/K22": {
+   "rows": 8,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 8
+  },
+  "vet/K23": {
+   "rows": 12,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 12
+  },
+  "vet/K24": {
+   "rows": 20,
+   "refuses": 0,
+   "accepts": 10,
+   "sameDecisionOtherFindings": 10,
+   "unchanged": 0
+  },
+  "vet/K25": {
+   "rows": 24,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 2,
+   "unchanged": 22
+  },
+  "vet/K26": {
+   "rows": 32,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 4,
+   "unchanged": 28
+  },
+  "vet/K27": {
+   "rows": 20,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 2,
+   "unchanged": 18
+  },
+  "vet/K28": {
+   "rows": 20,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 20
+  },
+  "vet/K29": {
+   "rows": 20,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 20
+  },
+  "vet/K30": {
+   "rows": 20,
+   "refuses": 0,
+   "accepts": 10,
+   "sameDecisionOtherFindings": 10,
+   "unchanged": 0
+  },
+  "vet/K31": {
+   "rows": 28,
+   "refuses": 0,
+   "accepts": 16,
+   "sameDecisionOtherFindings": 2,
+   "unchanged": 10
+  },
+  "vet/K32": {
+   "rows": 20,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 2,
+   "unchanged": 18
+  },
+  "vet/K33": {
+   "rows": 20,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 20,
+   "unchanged": 0
+  },
+  "vet/K34": {
+   "rows": 32,
+   "refuses": 0,
+   "accepts": 15,
+   "sameDecisionOtherFindings": 7,
+   "unchanged": 10
+  },
+  "vet/K35": {
+   "rows": 32,
+   "refuses": 0,
+   "accepts": 19,
+   "sameDecisionOtherFindings": 7,
+   "unchanged": 6
+  },
+  "vet/K36": {
+   "rows": 36,
+   "refuses": 0,
+   "accepts": 8,
+   "sameDecisionOtherFindings": 4,
+   "unchanged": 24
+  }
+ },
+ "transitions": {
+  "accepts: exclude[malformed-code-context:unclosed-fence] -> admit": 1303,
+  "accepts: exclude[malformed-code-context:unclosed-inline-span] -> admit": 1775,
+  "accepts: exclude[script-element] -> admit": 229,
+  "refuses: admit -> exclude[malformed-code-context:backtick-fence-with-backtick-in-info-string]": 54,
+  "refuses: admit -> exclude[malformed-code-context:unclosed-fence]": 193,
+  "refuses: admit -> exclude[malformed-code-context:unclosed-inline-span]": 94,
+  "refuses: admit -> exclude[script-element]": 86,
+  "sameDecisionOtherFindings: exclude[malformed-code-context:unclosed-fence] -> exclude[malformed-code-context:unclosed-fence]": 214,
+  "sameDecisionOtherFindings: exclude[malformed-code-context:unclosed-fence] -> exclude[script-element]": 323,
+  "sameDecisionOtherFindings: exclude[malformed-code-context:unclosed-inline-span] -> exclude[malformed-code-context:backtick-fence-with-backtick-in-info-string]": 81,
+  "sameDecisionOtherFindings: exclude[malformed-code-context:unclosed-inline-span] -> exclude[malformed-code-context:unclosed-fence]": 693,
+  "sameDecisionOtherFindings: exclude[malformed-code-context:unclosed-inline-span] -> exclude[malformed-code-context:unclosed-inline-span]": 4,
+  "sameDecisionOtherFindings: exclude[malformed-code-context:unclosed-inline-span] -> exclude[script-element]": 327,
+  "sameDecisionOtherFindings: exclude[script-element] -> exclude[malformed-code-context:backtick-fence-with-backtick-in-info-string]": 33,
+  "sameDecisionOtherFindings: exclude[script-element] -> exclude[malformed-code-context:unclosed-fence]": 318,
+  "sameDecisionOtherFindings: exclude[script-element] -> exclude[malformed-code-context:unclosed-inline-span]": 37,
+  "sameDecisionOtherFindings: exclude[script-element] -> exclude[script-element]": 16
+ },
+ "vetChangedDecisions": {
+  "fields": [
+   "case",
+   "variant",
+   "slot",
+   "change",
+   "base",
+   "head"
+  ],
+  "rows": [
+   [
+    "K03",
+    "CRLF",
+    "control",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:backtick-fence-with-backtick-in-info-string]"
+   ],
+   [
+    "K03",
+    "CRLF",
+    "line-before-3",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:backtick-fence-with-backtick-in-info-string]"
+   ],
+   [
+    "K03",
+    "CRLF",
+    "line-before-4",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:backtick-fence-with-backtick-in-info-string]"
+   ],
+   [
+    "K03",
+    "CRLF",
+    "appended-to-2",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:backtick-fence-with-backtick-in-info-string]"
+   ],
+   [
+    "K03",
+    "CRLF",
+    "appended-to-3",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:backtick-fence-with-backtick-in-info-string]"
+   ],
+   [
+    "K03",
+    "CR",
+    "control",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:backtick-fence-with-backtick-in-info-string]"
+   ],
+   [
+    "K03",
+    "CR",
+    "line-before-3",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:backtick-fence-with-backtick-in-info-string]"
+   ],
+   [
+    "K03",
+    "CR",
+    "line-before-4",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:backtick-fence-with-backtick-in-info-string]"
+   ],
+   [
+    "K03",
+    "CR",
+    "appended-to-2",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:backtick-fence-with-backtick-in-info-string]"
+   ],
+   [
+    "K03",
+    "CR",
+    "appended-to-3",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:backtick-fence-with-backtick-in-info-string]"
+   ],
+   [
+    "K04",
+    "CRLF",
+    "control",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-fence]"
+   ],
+   [
+    "K04",
+    "CRLF",
+    "line-before-2",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-fence]"
+   ],
+   [
+    "K04",
+    "CRLF",
+    "line-before-3",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-fence]"
+   ],
+   [
+    "K04",
+    "CRLF",
+    "appended-to-1",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-fence]"
+   ],
+   [
+    "K04",
+    "CRLF",
+    "appended-to-2",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-fence]"
+   ],
+   [
+    "K04",
+    "CR",
+    "control",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-fence]"
+   ],
+   [
+    "K04",
+    "CR",
+    "line-before-2",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-fence]"
+   ],
+   [
+    "K04",
+    "CR",
+    "line-before-3",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-fence]"
+   ],
+   [
+    "K04",
+    "CR",
+    "appended-to-1",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-fence]"
+   ],
+   [
+    "K04",
+    "CR",
+    "appended-to-2",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-fence]"
+   ],
+   [
+    "K05",
+    "CRLF",
+    "control",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-inline-span]"
+   ],
+   [
+    "K05",
+    "CRLF",
+    "line-before-3",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-inline-span]"
+   ],
+   [
+    "K05",
+    "CRLF",
+    "line-before-4",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-inline-span]"
+   ],
+   [
+    "K05",
+    "CRLF",
+    "appended-to-2",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-inline-span]"
+   ],
+   [
+    "K05",
+    "CRLF",
+    "appended-to-3",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-inline-span]"
+   ],
+   [
+    "K05",
+    "CR",
+    "control",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-inline-span]"
+   ],
+   [
+    "K05",
+    "CR",
+    "line-before-3",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-inline-span]"
+   ],
+   [
+    "K05",
+    "CR",
+    "line-before-4",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-inline-span]"
+   ],
+   [
+    "K05",
+    "CR",
+    "appended-to-2",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-inline-span]"
+   ],
+   [
+    "K05",
+    "CR",
+    "appended-to-3",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-inline-span]"
+   ],
+   [
+    "K06",
+    "CRLF",
+    "line-before-2",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K06",
+    "CRLF",
+    "line-before-3",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K06",
+    "CRLF",
+    "appended-to-1",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K06",
+    "CRLF",
+    "appended-to-2",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K06",
+    "CR",
+    "line-before-2",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K06",
+    "CR",
+    "line-before-3",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K06",
+    "CR",
+    "appended-to-1",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K06",
+    "CR",
+    "appended-to-2",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K07",
+    "CRLF",
+    "line-before-2",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K07",
+    "CRLF",
+    "line-before-3",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K07",
+    "CRLF",
+    "appended-to-1",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K07",
+    "CRLF",
+    "appended-to-2",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K07",
+    "CR",
+    "line-before-2",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K07",
+    "CR",
+    "line-before-3",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K07",
+    "CR",
+    "appended-to-1",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K07",
+    "CR",
+    "appended-to-2",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K10",
+    "CRLF",
+    "control",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-fence]"
+   ],
+   [
+    "K10",
+    "CRLF",
+    "line-before-2",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-fence]"
+   ],
+   [
+    "K10",
+    "CRLF",
+    "line-before-3",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-fence]"
+   ],
+   [
+    "K10",
+    "CRLF",
+    "appended-to-1",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-fence]"
+   ],
+   [
+    "K10",
+    "CRLF",
+    "appended-to-2",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-fence]"
+   ],
+   [
+    "K10",
+    "CR",
+    "control",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-fence]"
+   ],
+   [
+    "K10",
+    "CR",
+    "line-before-2",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-fence]"
+   ],
+   [
+    "K10",
+    "CR",
+    "line-before-3",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-fence]"
+   ],
+   [
+    "K10",
+    "CR",
+    "appended-to-1",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-fence]"
+   ],
+   [
+    "K10",
+    "CR",
+    "appended-to-2",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-fence]"
+   ],
+   [
+    "K11",
+    "CRLF",
+    "control",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-fence]"
+   ],
+   [
+    "K11",
+    "CRLF",
+    "line-before-2",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-fence]"
+   ],
+   [
+    "K11",
+    "CRLF",
+    "line-before-3",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-fence]"
+   ],
+   [
+    "K11",
+    "CRLF",
+    "appended-to-1",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-fence]"
+   ],
+   [
+    "K11",
+    "CRLF",
+    "appended-to-2",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-fence]"
+   ],
+   [
+    "K11",
+    "CR",
+    "control",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-fence]"
+   ],
+   [
+    "K11",
+    "CR",
+    "line-before-2",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-fence]"
+   ],
+   [
+    "K11",
+    "CR",
+    "line-before-3",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-fence]"
+   ],
+   [
+    "K11",
+    "CR",
+    "appended-to-1",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-fence]"
+   ],
+   [
+    "K11",
+    "CR",
+    "appended-to-2",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-fence]"
+   ],
+   [
+    "K13",
+    "CRLF",
+    "control",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-inline-span]",
+    "admit"
+   ],
+   [
+    "K13",
+    "CRLF",
+    "line-before-2",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-inline-span]",
+    "admit"
+   ],
+   [
+    "K13",
+    "CRLF",
+    "line-before-3",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-inline-span]",
+    "admit"
+   ],
+   [
+    "K13",
+    "CRLF",
+    "appended-to-1",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-inline-span]",
+    "admit"
+   ],
+   [
+    "K13",
+    "CRLF",
+    "appended-to-2",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-inline-span]",
+    "admit"
+   ],
+   [
+    "K13",
+    "CR",
+    "control",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-inline-span]",
+    "admit"
+   ],
+   [
+    "K13",
+    "CR",
+    "line-before-2",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-inline-span]",
+    "admit"
+   ],
+   [
+    "K13",
+    "CR",
+    "line-before-3",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-inline-span]",
+    "admit"
+   ],
+   [
+    "K13",
+    "CR",
+    "appended-to-1",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-inline-span]",
+    "admit"
+   ],
+   [
+    "K13",
+    "CR",
+    "appended-to-2",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-inline-span]",
+    "admit"
+   ],
+   [
+    "K15",
+    "CRLF",
+    "line-before-2",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K15",
+    "CRLF",
+    "line-before-5",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K15",
+    "CRLF",
+    "appended-to-1",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K15",
+    "CRLF",
+    "appended-to-4",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K15",
+    "CR",
+    "line-before-2",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K15",
+    "CR",
+    "line-before-5",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K15",
+    "CR",
+    "appended-to-1",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K15",
+    "CR",
+    "appended-to-4",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K16",
+    "CRLF",
+    "line-before-2",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K16",
+    "CRLF",
+    "line-before-4",
+    "refuses",
+    "admit",
+    "exclude[script-element]"
+   ],
+   [
+    "K16",
+    "CRLF",
+    "line-before-5",
+    "refuses",
+    "admit",
+    "exclude[script-element]"
+   ],
+   [
+    "K16",
+    "CRLF",
+    "line-before-7",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K16",
+    "CRLF",
+    "appended-to-1",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K16",
+    "CRLF",
+    "appended-to-3",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-fence]"
+   ],
+   [
+    "K16",
+    "CRLF",
+    "appended-to-4",
+    "refuses",
+    "admit",
+    "exclude[script-element]"
+   ],
+   [
+    "K16",
+    "CRLF",
+    "appended-to-6",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K16",
+    "CR",
+    "line-before-2",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K16",
+    "CR",
+    "line-before-4",
+    "refuses",
+    "admit",
+    "exclude[script-element]"
+   ],
+   [
+    "K16",
+    "CR",
+    "line-before-5",
+    "refuses",
+    "admit",
+    "exclude[script-element]"
+   ],
+   [
+    "K16",
+    "CR",
+    "line-before-7",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K16",
+    "CR",
+    "appended-to-1",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K16",
+    "CR",
+    "appended-to-3",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-fence]"
+   ],
+   [
+    "K16",
+    "CR",
+    "appended-to-4",
+    "refuses",
+    "admit",
+    "exclude[script-element]"
+   ],
+   [
+    "K16",
+    "CR",
+    "appended-to-6",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K17",
+    "CRLF",
+    "control",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-inline-span]"
+   ],
+   [
+    "K17",
+    "CRLF",
+    "line-before-2",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-inline-span]"
+   ],
+   [
+    "K17",
+    "CRLF",
+    "line-before-3",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-inline-span]"
+   ],
+   [
+    "K17",
+    "CRLF",
+    "line-before-4",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-inline-span]"
+   ],
+   [
+    "K17",
+    "CRLF",
+    "line-before-5",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-inline-span]"
+   ],
+   [
+    "K17",
+    "CRLF",
+    "appended-to-1",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-inline-span]"
+   ],
+   [
+    "K17",
+    "CRLF",
+    "appended-to-2",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-inline-span]"
+   ],
+   [
+    "K17",
+    "CRLF",
+    "appended-to-3",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-inline-span]"
+   ],
+   [
+    "K17",
+    "CRLF",
+    "appended-to-4",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-inline-span]"
+   ],
+   [
+    "K17",
+    "CR",
+    "control",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-inline-span]"
+   ],
+   [
+    "K17",
+    "CR",
+    "line-before-2",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-inline-span]"
+   ],
+   [
+    "K17",
+    "CR",
+    "line-before-3",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-inline-span]"
+   ],
+   [
+    "K17",
+    "CR",
+    "line-before-4",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-inline-span]"
+   ],
+   [
+    "K17",
+    "CR",
+    "line-before-5",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-inline-span]"
+   ],
+   [
+    "K17",
+    "CR",
+    "appended-to-1",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-inline-span]"
+   ],
+   [
+    "K17",
+    "CR",
+    "appended-to-2",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-inline-span]"
+   ],
+   [
+    "K17",
+    "CR",
+    "appended-to-3",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-inline-span]"
+   ],
+   [
+    "K17",
+    "CR",
+    "appended-to-4",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-inline-span]"
+   ],
+   [
+    "K19",
+    "CRLF",
+    "control",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-fence]"
+   ],
+   [
+    "K19",
+    "CR",
+    "control",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:unclosed-fence]"
+   ],
+   [
+    "K24",
+    "CRLF",
+    "control",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-inline-span]",
+    "admit"
+   ],
+   [
+    "K24",
+    "CRLF",
+    "line-before-2",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-inline-span]",
+    "admit"
+   ],
+   [
+    "K24",
+    "CRLF",
+    "line-before-3",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-inline-span]",
+    "admit"
+   ],
+   [
+    "K24",
+    "CRLF",
+    "appended-to-1",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-inline-span]",
+    "admit"
+   ],
+   [
+    "K24",
+    "CRLF",
+    "appended-to-2",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-inline-span]",
+    "admit"
+   ],
+   [
+    "K24",
+    "CR",
+    "control",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-inline-span]",
+    "admit"
+   ],
+   [
+    "K24",
+    "CR",
+    "line-before-2",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-inline-span]",
+    "admit"
+   ],
+   [
+    "K24",
+    "CR",
+    "line-before-3",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-inline-span]",
+    "admit"
+   ],
+   [
+    "K24",
+    "CR",
+    "appended-to-1",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-inline-span]",
+    "admit"
+   ],
+   [
+    "K24",
+    "CR",
+    "appended-to-2",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-inline-span]",
+    "admit"
+   ],
+   [
+    "K30",
+    "CRLF",
+    "control",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-inline-span]",
+    "admit"
+   ],
+   [
+    "K30",
+    "CRLF",
+    "line-before-2",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-inline-span]",
+    "admit"
+   ],
+   [
+    "K30",
+    "CRLF",
+    "line-before-3",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-inline-span]",
+    "admit"
+   ],
+   [
+    "K30",
+    "CRLF",
+    "appended-to-1",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-inline-span]",
+    "admit"
+   ],
+   [
+    "K30",
+    "CRLF",
+    "appended-to-2",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-inline-span]",
+    "admit"
+   ],
+   [
+    "K30",
+    "CR",
+    "control",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-inline-span]",
+    "admit"
+   ],
+   [
+    "K30",
+    "CR",
+    "line-before-2",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-inline-span]",
+    "admit"
+   ],
+   [
+    "K30",
+    "CR",
+    "line-before-3",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-inline-span]",
+    "admit"
+   ],
+   [
+    "K30",
+    "CR",
+    "appended-to-1",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-inline-span]",
+    "admit"
+   ],
+   [
+    "K30",
+    "CR",
+    "appended-to-2",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-inline-span]",
+    "admit"
+   ],
+   [
+    "K31",
+    "CRLF",
+    "line-before-2",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K31",
+    "CRLF",
+    "line-before-3",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K31",
+    "CRLF",
+    "line-before-4",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K31",
+    "CRLF",
+    "line-before-5",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K31",
+    "CRLF",
+    "appended-to-1",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K31",
+    "CRLF",
+    "appended-to-2",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K31",
+    "CRLF",
+    "appended-to-3",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K31",
+    "CRLF",
+    "appended-to-4",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K31",
+    "CR",
+    "line-before-2",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K31",
+    "CR",
+    "line-before-3",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K31",
+    "CR",
+    "line-before-4",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K31",
+    "CR",
+    "line-before-5",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K31",
+    "CR",
+    "appended-to-1",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K31",
+    "CR",
+    "appended-to-2",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K31",
+    "CR",
+    "appended-to-3",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K31",
+    "CR",
+    "appended-to-4",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K34",
+    "CRLF",
+    "control",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-inline-span]",
+    "admit"
+   ],
+   [
+    "K34",
+    "CRLF",
+    "line-before-2",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-inline-span]",
+    "admit"
+   ],
+   [
+    "K34",
+    "CRLF",
+    "line-before-3",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-inline-span]",
+    "admit"
+   ],
+   [
+    "K34",
+    "CRLF",
+    "appended-to-1",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-inline-span]",
+    "admit"
+   ],
+   [
+    "K34",
+    "CRLF",
+    "appended-to-2",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-inline-span]",
+    "admit"
+   ],
+   [
+    "K35",
+    "CRLF",
+    "control",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-fence]",
+    "admit"
+   ],
+   [
+    "K35",
+    "CRLF",
+    "line-before-2",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-fence]",
+    "admit"
+   ],
+   [
+    "K35",
+    "CRLF",
+    "line-before-3",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-fence]",
+    "admit"
+   ],
+   [
+    "K35",
+    "CRLF",
+    "appended-to-1",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-fence]",
+    "admit"
+   ],
+   [
+    "K35",
+    "CRLF",
+    "appended-to-2",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-fence]",
+    "admit"
+   ],
+   [
+    "K35",
+    "CR",
+    "line-before-2",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K35",
+    "CR",
+    "line-before-3",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K35",
+    "CR",
+    "appended-to-1",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K35",
+    "CR",
+    "appended-to-2",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K36",
+    "CRLF",
+    "line-before-6",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K36",
+    "CRLF",
+    "line-before-7",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K36",
+    "CRLF",
+    "appended-to-5",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K36",
+    "CRLF",
+    "appended-to-6",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K36",
+    "CR",
+    "line-before-6",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K36",
+    "CR",
+    "line-before-7",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K36",
+    "CR",
+    "appended-to-5",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K36",
+    "CR",
+    "appended-to-6",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K01",
+    "M1",
+    "control",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-fence]",
+    "admit"
+   ],
+   [
+    "K01",
+    "M1",
+    "line-before-3",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-fence]",
+    "admit"
+   ],
+   [
+    "K01",
+    "M1",
+    "line-before-4",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-fence]",
+    "admit"
+   ],
+   [
+    "K01",
+    "M1",
+    "appended-to-2",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-fence]",
+    "admit"
+   ],
+   [
+    "K01",
+    "M1",
+    "appended-to-3",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-fence]",
+    "admit"
+   ],
+   [
+    "K01",
+    "M2",
+    "control",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-inline-span]",
+    "admit"
+   ],
+   [
+    "K01",
+    "M2",
+    "line-before-3",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-inline-span]",
+    "admit"
+   ],
+   [
+    "K01",
+    "M2",
+    "line-before-4",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-inline-span]",
+    "admit"
+   ],
+   [
+    "K01",
+    "M2",
+    "appended-to-2",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-inline-span]",
+    "admit"
+   ],
+   [
+    "K01",
+    "M2",
+    "appended-to-3",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-inline-span]",
+    "admit"
+   ],
+   [
+    "K06",
+    "M3",
+    "control",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-fence]",
+    "admit"
+   ],
+   [
+    "K06",
+    "M3",
+    "line-before-2",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-fence]",
+    "admit"
+   ],
+   [
+    "K06",
+    "M3",
+    "line-before-3",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-fence]",
+    "admit"
+   ],
+   [
+    "K06",
+    "M3",
+    "appended-to-1",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-fence]",
+    "admit"
+   ],
+   [
+    "K06",
+    "M3",
+    "appended-to-2",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-fence]",
+    "admit"
+   ],
+   [
+    "K06",
+    "M4",
+    "control",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-fence]",
+    "admit"
+   ],
+   [
+    "K06",
+    "M4",
+    "line-before-2",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-fence]",
+    "admit"
+   ],
+   [
+    "K06",
+    "M4",
+    "line-before-3",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-fence]",
+    "admit"
+   ],
+   [
+    "K06",
+    "M4",
+    "appended-to-1",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-fence]",
+    "admit"
+   ],
+   [
+    "K06",
+    "M4",
+    "appended-to-2",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-fence]",
+    "admit"
+   ],
+   [
+    "K15",
+    "M7",
+    "line-before-2",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K15",
+    "M7",
+    "line-before-5",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K15",
+    "M7",
+    "appended-to-1",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K15",
+    "M7",
+    "appended-to-4",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-fence]",
+    "admit"
+   ],
+   [
+    "K06",
+    "R2",
+    "line-before-2",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K06",
+    "R2",
+    "line-before-3",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K06",
+    "R2",
+    "appended-to-1",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K06",
+    "R2",
+    "appended-to-2",
+    "accepts",
+    "exclude[script-element]",
+    "admit"
+   ],
+   [
+    "K03",
+    "R3",
+    "control",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:backtick-fence-with-backtick-in-info-string]"
+   ],
+   [
+    "K03",
+    "R3",
+    "line-before-3",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:backtick-fence-with-backtick-in-info-string]"
+   ],
+   [
+    "K03",
+    "R3",
+    "line-before-4",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:backtick-fence-with-backtick-in-info-string]"
+   ],
+   [
+    "K03",
+    "R3",
+    "appended-to-2",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:backtick-fence-with-backtick-in-info-string]"
+   ],
+   [
+    "K03",
+    "R3",
+    "appended-to-3",
+    "refuses",
+    "admit",
+    "exclude[malformed-code-context:backtick-fence-with-backtick-in-info-string]"
+   ],
+   [
+    "K01",
+    "R4",
+    "control",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-fence]",
+    "admit"
+   ],
+   [
+    "K01",
+    "R4",
+    "line-before-3",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-fence]",
+    "admit"
+   ],
+   [
+    "K01",
+    "R4",
+    "line-before-4",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-fence]",
+    "admit"
+   ],
+   [
+    "K01",
+    "R4",
+    "appended-to-2",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-fence]",
+    "admit"
+   ],
+   [
+    "K01",
+    "R4",
+    "appended-to-3",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-fence]",
+    "admit"
+   ],
+   [
+    "K34",
+    "T1",
+    "control",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-fence]",
+    "admit"
+   ],
+   [
+    "K34",
+    "T1",
+    "line-before-2",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-fence]",
+    "admit"
+   ],
+   [
+    "K34",
+    "T1",
+    "line-before-3",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-fence]",
+    "admit"
+   ],
+   [
+    "K34",
+    "T1",
+    "appended-to-1",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-fence]",
+    "admit"
+   ],
+   [
+    "K34",
+    "T1",
+    "appended-to-2",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-fence]",
+    "admit"
+   ],
+   [
+    "K35",
+    "T2",
+    "control",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-fence]",
+    "admit"
+   ],
+   [
+    "K35",
+    "T2",
+    "line-before-2",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-fence]",
+    "admit"
+   ],
+   [
+    "K35",
+    "T2",
+    "line-before-3",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-fence]",
+    "admit"
+   ],
+   [
+    "K35",
+    "T2",
+    "appended-to-1",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-fence]",
+    "admit"
+   ],
+   [
+    "K35",
+    "T2",
+    "appended-to-2",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-fence]",
+    "admit"
+   ],
+   [
+    "K34",
+    "T3",
+    "control",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-inline-span]",
+    "admit"
+   ],
+   [
+    "K34",
+    "T3",
+    "line-before-2",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-inline-span]",
+    "admit"
+   ],
+   [
+    "K34",
+    "T3",
+    "line-before-3",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-inline-span]",
+    "admit"
+   ],
+   [
+    "K34",
+    "T3",
+    "appended-to-1",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-inline-span]",
+    "admit"
+   ],
+   [
+    "K34",
+    "T3",
+    "appended-to-2",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-inline-span]",
+    "admit"
+   ],
+   [
+    "K35",
+    "T4",
+    "control",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-fence]",
+    "admit"
+   ],
+   [
+    "K35",
+    "T4",
+    "line-before-2",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-fence]",
+    "admit"
+   ],
+   [
+    "K35",
+    "T4",
+    "line-before-3",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-fence]",
+    "admit"
+   ],
+   [
+    "K35",
+    "T4",
+    "appended-to-1",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-fence]",
+    "admit"
+   ],
+   [
+    "K35",
+    "T4",
+    "appended-to-2",
+    "accepts",
+    "exclude[malformed-code-context:unclosed-fence]",
+    "admit"
+   ]
+  ]
+ },
+ "failingChecks": [],
+ "failureCount": 0,
+ "failures": []
+}

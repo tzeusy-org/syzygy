@@ -1,0 +1,222 @@
+{
+  "schemaVersion": 1,
+  "registryVersion": "2.0.0-candidate.1",
+  "status": "candidate-entry-no-effect-until-owner-act",
+  "governanceHome": ".syzygy/governance/declarations/adapter-registry",
+  "project": "project:syzygy",
+  "entries": [
+    {
+      "observerId": "polaris-public-git-source-acquisition",
+      "observerVersion": "2.0.0-candidate.1",
+      "role": "adapter",
+      "implementationId": "polaris-dossier/git-object-reader",
+      "implementationVersion": "1.0.0",
+      "implementationStatus": "partly implemented. The file named by implementation (syzygy-qkea.3, S2, openPinnedObjectReader) implements the read authority, maxObjectBytes and the refusals listed under implementationCoverage.reader; implementationVersion 1.0.0 names that file as merged, and any change to it is a new implementation version and a new version of this entry. The declarations listed under implementationCoverage.awaitingGate are the dossier gate's, which composes the reader and is not yet implemented; until it is, no read happens, because every read goes through it. The entry is installable only on a tree that holds the reader file; the builder's install refuses otherwise. It serves the operator-agent mode of REQ-polaris-generation-033 only; the provider mode's acquisition (the parked 1.0.0-candidate.1 version, which fetched into a run directory) is neither this entry nor replaced by it, and the two may not both be installed",
+      "implementationCoverage": {
+        "reader": [
+          "typedAuthority.readAuthority",
+          "typedAuthority.fetch",
+          "typedAuthority.networkAccess",
+          "typedAuthority.writeSurface",
+          "typedAuthority.workingTreeRead",
+          "typedAuthority.executeObservedCode",
+          "typedAuthority.submodules",
+          "typedAuthority.tags",
+          "resourceLimits.maxObjectBytes"
+        ],
+        "awaitingGate": [
+          "resourceLimits.maxSources",
+          "resourceLimits.maxBytesPerSource",
+          "resourceLimits.maxTotalBytes",
+          "resourceLimits.maxTreeEntries",
+          "screening",
+          "outputFactClasses.source-reference",
+          "outputFactClasses.pinned-object-read-record",
+          "outputFactClasses.source-span",
+          "outputFactClasses.content-exclusion",
+          "outputFactClasses.unknown",
+          "failureStates.objectRefused",
+          "failureStates.someSourcesOverLimit",
+          "failureStates.secretMatchedOrUnclassifiable",
+          "failureStates.consentWithdrawn",
+          "failureStates.revisionNotAdmitted",
+          "admissionFailureMapping",
+          "typedAuthority.stateDirectoryWrites"
+        ],
+        "status": "[Observed] from the reader file on the branch of PR #367: the reader returns object bytes, tree listings and refusals; the fact records, limits, screening and failure-state mapping are the dossier gate's, which composes the reader and is not yet written; the reader throws a typed refusal (GitObjectReadRefusal) and the gate maps it to failureStates.objectRefused",
+        "copyStep": "[Observed] at this version's drafting no file implements the copy step, its Git environment or the copy's directory, which typedAuthority.fetch, readAuthority, tags and stateDirectoryWrites declare for a copy-class run; the reader implements those declarations only as they concern the clone it reads objects from. The copy step is the launch step's (REQ-polaris-generation-047), which no implementation authorization covers yet. [Inferred] Until it is implemented and authorized, no run makes a copy"
+      },
+      "contractId": "RFC-0004/general-contract",
+      "contractVersion": "sha256:b21fc950103964c34e2f9b2d78c97ac8e03720f311738e0e6323afb29b8d6f0e",
+      "contractVersionSource": "the value the adopted Butlers observer entry declares for the same contract; re-derive by script before the offering",
+      "governingBehaviorContract": {
+        "id": "polaris-manifesto-generation",
+        "version": "the generation specification bytes in force at the signing commit: base REQ-polaris-generation-017 and 025, the understanding and tree-form amendments, and REQ-polaris-generation-033 to 036 of the version-tagged sign-off polaris-dossier-local-agent-mode-v1.0",
+        "signedBy": "pending the owner's version-tagged sign-off of this package"
+      },
+      "subject": {
+        "observingProject": "project:syzygy",
+        "observedRepositories": "each (project:syzygy, repository) pair that has its own in-force observation consent naming the pinned revision; the entry names no repository, and a repository or revision no effective consent covers is not read"
+      },
+      "authorizationModes": [
+        "owner-trusted-bootstrap"
+      ],
+      "authorizationModeDerivation": "every read needs this entry in force, the pair's effective observation consent naming the pinned revision, and the effective classification and public-source screening policy acts; owner-trusted-bootstrap while those acts are state (1); every other combination refuses before any object is read",
+      "provenanceDisclosure": "Reads are admitted on owner-trusted records; independent audit is not configured. The operator's clone, its .git directory and every record the gates read lie within the operator's agent sessions' write reach; only object bytes that re-hash to the identifier they were reached by are used",
+      "inputClasses": [
+        {
+          "class": "observation-consent",
+          "identityScheme": "record-id-plus-version-plus-provenance-state"
+        },
+        {
+          "class": "admitted-revision",
+          "identityScheme": "repository-id-plus-git-commit-object-id"
+        },
+        {
+          "class": "classification-policy",
+          "identityScheme": "policy-id-plus-version-plus-content-digest-plus-provenance-state"
+        },
+        {
+          "class": "public-source-screening-scope",
+          "identityScheme": "policy-id-plus-version-plus-content-digest-plus-provenance-state"
+        },
+        {
+          "class": "source-acquisition-registry-entry",
+          "identityScheme": "observer-id-plus-version-plus-content-digest-plus-provenance-state"
+        },
+        {
+          "class": "git-object-database",
+          "identityScheme": "repository-id-plus-operator-declared-clone-git-dir"
+        },
+        {
+          "class": "git-tree-entry",
+          "identityScheme": "repository-id-plus-revision-plus-repository-relative-path-plus-object-id"
+        },
+        {
+          "class": "git-blob",
+          "identityScheme": "repository-id-plus-blob-object-id"
+        },
+        {
+          "class": "resource-limits",
+          "identityScheme": "canonical-json-sha256"
+        }
+      ],
+      "outputFactClasses": [
+        {
+          "class": "pinned-object-read-record",
+          "identityScheme": "repository-id-plus-pinned-commit-object-id-plus-step-instant"
+        },
+        {
+          "class": "source-reference",
+          "identityScheme": "repository-id-plus-revision-plus-repository-relative-path-plus-object-id"
+        },
+        {
+          "class": "source-span",
+          "identityScheme": "source-reference-plus-byte-range"
+        },
+        {
+          "class": "content-exclusion",
+          "identityScheme": "content-digest-plus-policy-version-plus-redaction-class"
+        },
+        {
+          "class": "unknown",
+          "identityScheme": "claim-identity-plus-closed-reason"
+        }
+      ],
+      "determinismClass": "derivation-deterministic",
+      "determinismByOutputClass": {
+        "pinned-object-read-record": "capture",
+        "source-reference": "derivation-deterministic",
+        "source-span": "derivation-deterministic",
+        "content-exclusion": "derivation-deterministic",
+        "unknown": "derivation-deterministic"
+      },
+      "determinismClassNote": "the scalar is the class of every output derived from object bytes, each of which re-hashes to the identifier it was reached by; the read record alone is capture, because it carries the instant of the step",
+      "typedAuthority": {
+        "authorityType": "version-control",
+        "questions": [
+          "What does this exact commit contain?"
+        ],
+        "readAuthority": "Git object reads by object identifier at the run's pinned revision only: the pinned commit, its root tree and the trees and blobs reachable from it, walked down from the commit and never to a parent. Objects are read in process from the loose objects and version-2 packs of the .git directory of the operator's clone, or, in a copy-class run (fetch), of the copy; no ref, staging index (`.git/index`; the pack indexes under `objects/pack/` are read), working tree, repository-local configuration, hook, alternates file, grafts file, shallow file, replace ref or commit-graph is read, and no process is started, save, in a copy-class run, the Git processes fetch names. The hash algorithm is the one the consented identifier is written in (40 hex digits SHA-1, 64 SHA-256). Every commit, tree and blob on the path to each blob used is re-hashed from the bytes read, at every step that uses it; a mismatch, a missing object (one only an alternate or a replacement could supply included), an undecodable object or a wrong type refuses that step. Those words bound the object reads. The reads of the pinning, identity and clone-form rules are launch reads, made as data and never honoured, and not object reads. In a launch-consented run (REQ-polaris-generation-046 and 047), besides the object reads, Syzygy reads of the operator's clone and the copy only the following: in the operator's clone these five things alone, and of what they list only what the launch-consent requirements in force name: (1) the .git file or directory and the files that locate the Git directory and the common Git directory, and the files of its common Git directory that locate its linked worktrees; (2) the names of its references, and the values of HEAD and the reference it names, of the references REQ-polaris-generation-047's trunk rule names, of the local branch of the remote default's name and of the reference --revision names, each from the loose reference files and packed-refs, where reading packed-refs also reads other references' values, which are used for nothing; (3) its configuration file, as text, for its remotes' names and URLs, its object format (extensions.objectFormat) and, to locate its repository's working trees, core.bare and core.worktree alone; (4) whether objects/info/alternates exists; (5) for an abbreviated --revision alone, the object identifiers its loose object file names and pack indexes give. In a copy-class run (fetch) it reads no object of the operator's clone, tells whether the named identifier is a commit only from where the copy's detached checkout leaves the copy's HEAD, never by reading that object or from reference data, and reads the files of the copy's .git directory that the form check of fetch reads. In every no-copy run (fetch), launch-consented or not, it reads the files of the operator's clone's .git directory that the form check binding that run reads, the form another act's consent states or, in a run only a launch observation consent covers, the form one commit fetched alone into an empty repository and checked out detached leaves, the whole configuration file and the pack indexes included, to which (3) yields. A run that is not launch-consented has no closed list of reads here beyond the object reads, as under version 1.0; besides its form-check reads above, REQ-polaris-generation-033's check of its HEAD reads HEAD and the reference HEAD names, from the loose reference files and packed-refs",
+        "fetch": "none, save in a copy-class run: Syzygy fetches nothing. The operator prepares the clone with their own tools; to stay within the observation consent's stated fetch form the operator fetches the one consented commit alone (git fetch --depth=1 <upstream> <commit>) and checks it out. A copy-class run is a run that a version in force of REQ-polaris-generation-047 requires to run on a copy of the operator's clone; every other run is a no-copy run, and while no version in force requires a copy every run is a no-copy run. In a copy-class run, one local fetch and nothing else, made before the question, or before the brief where no question is asked: Syzygy creates an empty directory of its own for the copy, outside the operator's clone and never at a location derived from its path, and never inside any working tree of the governance home's repository, its linked worktrees included, nor inside its Git directory or common Git directory, and never inside the operator's clone's working tree, Git directory or common Git directory, or any working tree of its repository, its linked worktrees included, a run for which it would create it in any of these being refused before its copy step starts; and in it an empty repository with an empty template (git init --template=) and with the object format the operator's clone's configuration records, SHA-1 where it records none, so that a SHA-1 clone and a SHA-256 clone are each copied; a clone is never refused for its object format, except that an object format Git does not support fails the copy's init, which refuses as every failure of a Git process for the copy does; it fetches into that repository, from the operator's clone over Git's local file transport (a file:// URL) and from nowhere else, the object the run's named identifier names alone, by its full object identifier, at a depth of one, with no tags and no submodules, and checks that object out detached. Every Git process it starts for the copy runs with the system and global Git configuration disabled, with no other Git variable of the operator's environment, with every transport but the file transport refused, with lazy fetching of missing objects disabled and with no hook path, and no other process is started; these processes execute nothing of the observed repository. A clone whose references are stored in the reftable backend is refused before any Git process starts, and a clone with an alternates file before the copy step starts. The copy holds the pinned commit and the trees and blobs reachable from its root tree alone, in the form one commit fetched alone into an empty repository of the same object format and checked out detached leaves, the repository format version and object-format setting that format needs included, and Syzygy checks that form before the question. Every failure of a Git process for the copy refuses, naming that process and its failure as Git reported it; a named identifier not shown to be a commit refuses (tags); a copy that departs from that form refuses; and nothing is then fetched from anywhere else. To serve the copy Git reads the operator's clone's configuration, references and object store, the stored bytes of delta bases outside the named object's objects included; Syzygy uses nothing Git read but the copy. That Git starts no program the operator's clone's own configuration or hooks name while it serves the copy, for every Git process the copy step started, is Inferred, not checked. The file URL of the operator's clone is not a locator and is never recorded or rendered as one",
+        "writeSurface": [],
+        "databaseAccess": [],
+        "networkAccess": [],
+        "executeObservedCode": false,
+        "workingTreeRead": false,
+        "submodules": "a gitlink entry is never followed; reading one refuses as not-a-blob",
+        "tags": "never read; the pinned identifier must name a commit object, and any other type refuses; in a copy-class run (fetch), a named identifier that names an annotated tag or another object that is not a commit may bring that object into the copy through the Git processes fetch names: Syzygy reads none of it, tells that it is not a commit only from where the copy's detached checkout leaves the copy's HEAD, never follows it to any object it names, uses it for nothing beyond the copy step and that refusal, and refuses",
+        "stateDirectoryWrites": "Syzygy's own state directory for the run, outside the clone and never at a location derived from the clone's path; in a copy-class run (fetch), also the copy's directory, outside the run's state directory and outside the operator's clone and never at a location derived from the operator's clone's path, and never inside any working tree of the governance home's repository, its linked worktrees included, nor inside its Git directory or common Git directory, and never inside the operator's clone's working tree, Git directory or common Git directory, or any working tree of its repository, its linked worktrees included: Syzygy itself creates it, which starts the copy step, removes it with its contents where the run ends before its brief, or, where that removal fails, keeps it, the launch output naming its location and the removal's failure, and otherwise keeps it after the run, until the operator removes it, at a location the launch output names, and writes its contents only through the Git processes fetch names. That directory is Syzygy's own local write, as the state directory is, and not a write to an observed or external system, so writeSurface stays empty; nothing is written to the operator's clone, the observed repository, its forks or its tracker"
+      },
+      "screening": "every blob Syzygy reads passes the effective public-source screening scope and classification policy of project:syzygy before its content is used in a check or rendered (REQ-polaris-generation-025, RFC5-16, RFC3-30); an observed repository's own policy files supply no policy; excluded or unclassifiable content yields a hash-not-body exclusion record. The operator's agent sessions' own reads of the clone are the operator's act and are not this entry's reads",
+      "resourceLimits": {
+        "status": "[Inferred] proposed values for the owner to confirm or change; none is measured, because no target body has been read by this reader",
+        "maxSources": 4096,
+        "maxBytesPerSource": 1048576,
+        "maxTotalBytes": 134217728,
+        "maxTreeEntries": 65536,
+        "maxObjectBytes": 1073741824
+      },
+      "resourceLimitSemantics": {
+        "maxSources": "the complete tree-known source population; an excess preserves every tree-known identity but admits no body beyond the limit and makes dependent claims Unknown, recorded as deferred-by-budget",
+        "maxBytesPerSource": "the exact blob size before classification; a larger blob is excluded with a recorded reason (content-exclusion, hash-not-body) and never chunked into spans or admitted in part; the run does not fail",
+        "maxTotalBytes": "one cumulative counter across the run; each path plus object id body counted once",
+        "breachResult": "input breaches retain the complete population and make dependent facts Unknown; nothing success-shaped is emitted",
+        "maxTreeEntries": "the number of tree entries listed across the admitted commit's trees; an excess keeps the entries already listed, lists no more, and makes dependent claims Unknown, recorded as deferred-by-budget",
+        "maxObjectBytes": "the largest single inflated object the reader holds; a larger object refuses the step that needed it as corrupt-object"
+      },
+      "failureStates": {
+        "objectRefused": {
+          "degradationState": "Observer failed",
+          "unknownReason": "source-uncaptured-or-unreachable",
+          "note": "an identifier mismatch, missing object, undecodable object, wrong type, ambiguous tree entry, symbolic link or special file under objects/, unreadable store or exceeded per-call bound refuses the step; none of the object's content is used"
+        },
+        "someSourcesOverLimit": {
+          "degradationState": "Partial snapshot",
+          "unknownReason": "source-uncaptured-or-unreachable"
+        },
+        "secretMatchedOrUnclassifiable": {
+          "degradationState": "Excluded content",
+          "unknownReason": "excluded-content"
+        },
+        "consentWithdrawn": {
+          "degradationState": "Consent withdrawn",
+          "unknownReason": "unconsented-source-or-provider",
+          "note": "applies to a consent that existed and was withdrawn; an absent consent is the missingConsent admission refusal below"
+        },
+        "revisionNotAdmitted": {
+          "executionFact": "refused before any object is read",
+          "unknownReason": "unconsented-source-or-provider",
+          "note": "a pinned revision the observation consent does not name is outside the grant; the remedy is a consent version (RFC2-24 reason 6)"
+        }
+      },
+      "admissionFailureMapping": {
+        "missingConsent": "unconsented-source-or-provider",
+        "mismatchedStaleRevokedOrUnattributedConsent": "unconsented-source-or-provider",
+        "missingClassificationPolicy": "missing-declaration",
+        "mismatchedStaleRevokedOrUnattributedClassificationPolicy": "source-uncaptured-or-unreachable",
+        "missingScreeningScope": "missing-declaration",
+        "mismatchedStaleRevokedOrUnattributedScreeningScope": "source-uncaptured-or-unreachable",
+        "missingRegistryEntry": "source-uncaptured-or-unreachable",
+        "mismatchedStaleRevokedOrUnattributedRegistryEntry": "source-uncaptured-or-unreachable"
+      },
+      "adoptionStatus": "candidate-entry-unadopted",
+      "supersession": "signed by version tag under the owner direction OWNER-DIRECTION-VERSIONED-SIGNOFF-SCOPE-A-2026-10-02 if the owner extends it to this entry; a later edit is a new version signed separately. It does not supersede, edit or retire the parked 1.0.0-candidate.1 version in public-admission-registry-entries/, which stays a candidate for the provider mode",
+      "snapshotInputMapping": {
+        "label": "[Inferred] RFC2-1 items; the installed Butlers entry carries no mapping, so the gap is inherited and this mapping is the drafter's",
+        "observation-consent": "item 11 (owner-act record establishing effective status)",
+        "admitted-revision": "item 1 (observed repository and its state; working-tree state is declared absent)",
+        "classification-policy": "items 7 and 11",
+        "public-source-screening-scope": "items 7 and 11",
+        "source-acquisition-registry-entry": "items 7 and 11",
+        "git-object-database": "item 1",
+        "git-tree-entry": "item 1",
+        "git-blob": "item 1",
+        "resource-limits": "item 8",
+        "outputs": "pinned-object-read-record, source-reference, source-span and content-exclusion derive from item 1; unknown is a render fact"
+      },
+      "determinism": "reads are content-addressed: every object used re-hashes to the identifier it was reached by, so every output is derivation-deterministic over the pinned revision",
+      "implementation": "packages/polaris-dossier/src/git-object-reader.ts"
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+ "tool": "suite_r3.py",
+ "commit": "d0467aeb44a1a980572118f20d322be519b72bbe",
+ "args": [
+  "packages/polaris-dossier/src/run-evidence.test.ts"
+ ],
+ "exit": 0,
+ "seconds": 21,
+ "load": [
+  [
+   "48.10",
+   "44.92",
+   "37.65"
+  ],
+  [
+   "46.01",
+   "44.63",
+   "37.71"
+  ]
+ ],
+ "summary": {
+  "numTotalTests": 4,
+  "numPassedTests": 4,
+  "numFailedTests": 0,
+  "numPendingTests": 0,
+  "numTodoTests": 0,
+  "numTotalTestSuites": 2,
+  "numFailedTestSuites": 0,
+  "success": true
+ },
+ "failed": [],
+ "brokenFiles": [],
+ "stdoutTail": "JSON report written to /tmp/r532c-6/suite.json\n",
+ "stderrTail": ""
+}

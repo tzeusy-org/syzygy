@@ -1,0 +1,51 @@
+{
+ "batch": "BADUTF8",
+ "version": "r1",
+ "param": null,
+ "n": 1,
+ "scriptSha256": "920c5f120209904b37cfe14320ea00edfa18eafbda12fd7dcb02ec8fcf4f1e97",
+ "command": "python3 -I <tools>/r1_measure_vitest_test_durations.py . --file packages/polaris-generation-consent/src/package-reader.test.ts --project @syzygy/polaris-generation-consent --mode alone --runs 1 --out <tmp>/measure-out.json --profile",
+ "sent": [],
+ "events": [],
+ "scriptExitedAtSeconds": 0.623,
+ "exitCode": 1,
+ "claimedExit": 0,
+ "exitAsClaimed": false,
+ "descendantsSeen": 1,
+ "seenOnlyByCwd": 1,
+ "vitestSeen": false,
+ "npxSeen": false,
+ "treeAfterExit": "",
+ "survivors": {},
+ "recordWritten": false,
+ "recordRuns": null,
+ "recordTests": null,
+ "recordProfileRows": null,
+ "recordExitCode": null,
+ "marks": [
+  {
+   "what": "start",
+   "pid": 199545,
+   "pgid": 199545,
+   "sid": 199545,
+   "t": 1792865781.0099058,
+   "mode": "badutf8"
+  },
+  {
+   "what": "badutf8-done",
+   "pid": 199545,
+   "pgid": 199545,
+   "sid": 199545,
+   "t": 1792865781.0100002
+  }
+ ],
+ "scriptWrites": null,
+ "tmpdirLeft": [
+  "bin",
+  "mark.jsonl",
+  "script.log"
+ ],
+ "trace": [],
+ "outputTail": "Traceback (most recent call last):\n  File \"/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520c/tools/r1_measure_vitest_test_durations.py\", line 133, in <module>\n    out['runs'].append(one_run(i))\n  File \"/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520c/tools/r1_measure_vitest_test_durations.py\", line 98, in one_run\n    stdout, _ = proc.communicate()\n  File \"/home/tze/.pyenv/versions/3.10.12/lib/python3.10/subprocess.py\", line 1154, in communicate\n    stdout, stderr = self._communicate(input, endtime, timeout)\n  File \"/home/tze/.pyenv/versions/3.10.12/lib/python3.10/subprocess.py\", line 2059, in _communicate\n    stdout = self._translate_newlines(stdout,\n  File \"/home/tze/.pyenv/versions/3.10.12/lib/python3.10/subprocess.py\", line 1031, in _translate_newlines\n    data = data.decode(encoding, errors)\nUnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 23: invalid start byte\n",
+ "passes": true
+}

@@ -1,0 +1,61 @@
+{
+ "node": "v24.6.0",
+ "kernel": "7.0.0-38-generic",
+ "dir": "/var/tmp/la-b830-probe",
+ "filesystem": "ext2/ext3",
+ "rounds": 2000,
+ "faithful": {
+  "a readable file": {
+   "asks": 4000,
+   "roundsWithAMove": 0
+  },
+  "an empty file": {
+   "asks": 4000,
+   "roundsWithAMove": 0
+  },
+  "a mode-000 file": {
+   "asks": 4000,
+   "roundsWithAMove": 0
+  },
+  "a directory": {
+   "asks": 4000,
+   "roundsWithAMove": 0
+  },
+  "a dangling link": {
+   "asks": 4000,
+   "roundsWithAMove": 0
+  },
+  "a link to a readable file": {
+   "asks": 4000,
+   "roundsWithAMove": 0
+  },
+  "a link to a character device": {
+   "asks": 4000,
+   "roundsWithAMove": 0
+  },
+  "a FIFO": {
+   "asks": 4000,
+   "roundsWithAMove": 0
+  },
+  "a FIFO holding bytes": {
+   "asks": 4000,
+   "roundsWithAMove": 0
+  }
+ },
+ "rewrite": {
+  "rounds": 2000,
+  "ctimeUnchanged": 0,
+  "modeInodeOrSizeMoved": 0,
+  "deltaNs": {
+   "min": "88788",
+   "median": "123093",
+   "max": "768804"
+  }
+ },
+ "ctimeTrailingDecimalZeros": {
+  "0": 3589,
+  "1": 361,
+  "2": 44,
+  "3": 6
+ }
+}

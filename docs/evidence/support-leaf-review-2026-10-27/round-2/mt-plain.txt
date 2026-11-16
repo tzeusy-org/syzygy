@@ -1,0 +1,16 @@
+5c37d35e23d0206c3527183506510623322841be
+100644 2659a7e1154f8428908c4fe07da29f3c54fb4ce0 1	package.json
+100644 ae6779fd8b5bc362e0384a92c2ca1b9455d31abc 2	package.json
+100644 cd59f2b8dea5b5efed8634608aa4e98f15468020 3	package.json
+
+Auto-merging AGENTS.md
+Auto-merging apps/three-surface-poc/package.json
+Auto-merging apps/three-surface-poc/src/git-observation.ts
+Auto-merging apps/three-surface-poc/src/poc-main.ts
+Auto-merging apps/three-surface-poc/src/polaris.ts
+Auto-merging apps/three-surface-poc/tsconfig.json
+Auto-merging package-lock.json
+Auto-merging package.json
+CONFLICT (content): Merge conflict in package.json
+Auto-merging packages/polaris-dossier/src/no-egress.test.ts
+Auto-merging vitest.config.ts

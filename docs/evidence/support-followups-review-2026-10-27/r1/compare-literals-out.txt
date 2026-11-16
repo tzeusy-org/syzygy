@@ -1,0 +1,15 @@
+ok  C3 docs/superpowers/specs/2026-08-24-whatsapp-identity-reconciliation-design.md occurrences-as-quoted-literal= 1
+ok  C3 openspec/changes/repair-whatsapp-identity-reconciliation/proposal.md occurrences-as-quoted-literal= 1
+ok  C3 openspec/changes/repair-whatsapp-identity-reconciliation/specs/switchboard-identity/spec.md occurrences-as-quoted-literal= 1
+ok  C3 src/butlers/identity.py occurrences-as-quoted-literal= 1
+ok  C3 tests/core/test_identity.py occurrences-as-quoted-literal= 1
+ok  C11 questionsSha256 occurrences-as-quoted-literal= 1
+ok  R3 purpose occurrences-as-quoted-literal= 1
+ok  R3 audience occurrences-as-quoted-literal= 1
+ok  R3 scope occurrences-as-quoted-literal= 1
+ok  R9 inventory occurrences-as-quoted-literal= 1
+ok  R9 plan occurrences-as-quoted-literal= 1
+ok  R9 author occurrences-as-quoted-literal= 1
+ok  R9 edit occurrences-as-quoted-literal= 1
+ok  R9 fidelity occurrences-as-quoted-literal= 1
+literals=14 matched-exactly-once=14 mismatched=0

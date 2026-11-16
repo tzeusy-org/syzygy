@@ -1,0 +1,14 @@
+markdown-code-context.test.ts U+00A0 0 raw CR 0 non-ASCII 0
+git-object-reader.test.ts U+00A0 0 raw CR 0 non-ASCII 0
+head: tests 122 failed 0 (loadavg 26.17)
+RM7: tests 122 failed 1 (loadavg 26.15)
+    FAIL RLF, CR and LF each end one line U+2028, U+2029 and U+0085 are line content, not line ends | AssertionError: " ": expected 'a   \u2028   d' to be 'a       d' // Object.is equality
+RM11: tests 122 failed 1 (loadavg 27.42)
+    FAIL RLF, CR and LF each end one line U+2028, U+2029 and U+0085 are line content, not line ends | AssertionError: "": expected 'a   \u0085   d' to be 'a       d' // Object.is equality
+RM12: tests 122 failed 1 (loadavg 27.42)
+    FAIL RLF, CR and LF each end one line U+2028, U+2029 and U+0085 are line content, not line ends | AssertionError: " ": expected 'a   \u2028   d' to be 'a       d' // Object.is equality
+RM8: tests 122 failed 1 (loadavg 28.99)
+    FAIL sitions in CRLF and bare-CR texts CRLF as LF; a bare CR counted by the malformed line only | AssertionError: expected [ …(2) ] to deeply equal [ …(2) ]
+RM10: tests 122 failed 1 (loadavg 30.67)
+    FAIL sitions in CRLF and bare-CR texts CRLF as LF; a bare CR counted by the malformed line only | AssertionError: expected [ …(2) ] to deeply equal [ …(2) ]
+restored; git status: clean

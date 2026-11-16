@@ -1,0 +1,48 @@
+{
+ "tool": "my_mutants.py",
+ "subjectSha256": "6c651b650fef0baea1768dc862410d8998bfc1e3d4bce0cb21c417baf538fdfb",
+ "mutants": {
+  "r9-all-test-files-to-any": {
+   "old": "and all(TEST_FILE.search(f) for f in files),",
+   "new": "and any(TEST_FILE.search(f) for f in files),",
+   "killed": false,
+   "exit": 0,
+   "diverges": [],
+   "copy": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-522/mutants/mutant_r9_all_test_files_to_any.py"
+  },
+  "r6-tree-clause-dropped": {
+   "old": "\n     and all(f.startswith('apps/') or f.startswith('packages/') or f.startswith('scripts/') for f in files),",
+   "new": ",",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "thirdparty-FFFFFF"
+   ],
+   "copy": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-522/mutants/mutant_r6_tree_clause_dropped.py"
+  },
+  "testkit-suffix-not-a-test-file": {
+   "old": "|\\.testkit\\.ts$')",
+   "new": "')",
+   "killed": false,
+   "exit": 0,
+   "diverges": [],
+   "copy": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-522/mutants/mutant_testkit_suffix_not_a_test_file.py"
+  },
+  "creating-file-from-last-row": {
+   "old": "return {innermost_file(rows[:1])} if rows else set()",
+   "new": "return {innermost_file(rows[-1:])} if rows else set()",
+   "killed": false,
+   "exit": 0,
+   "diverges": [],
+   "copy": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-522/mutants/mutant_creating_file_from_last_row.py"
+  },
+  "exposure-upper-adds-no-gap": {
+   "old": "slot['upper'] += seen['last'] - seen['first'] + exposure_interval",
+   "new": "slot['upper'] += seen['last'] - seen['first']",
+   "killed": false,
+   "exit": 0,
+   "diverges": [],
+   "copy": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-522/mutants/mutant_exposure_upper_adds_no_gap.py"
+  }
+ }
+}

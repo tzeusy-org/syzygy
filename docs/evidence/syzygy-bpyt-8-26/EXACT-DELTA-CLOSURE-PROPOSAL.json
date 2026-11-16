@@ -1,0 +1,52 @@
+{
+  "schema": "exact-delta-closure-proposal/1",
+  "oldCommit": "134a8c5ba16dda1f3e3935aa1b565166f3b3583f",
+  "newCommit": "2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5",
+  "oldToolSha256": "13b079994f3f01324f7feb0e754af3bd564408f6aad4c1fa9bc75be2d847a6c7",
+  "newToolSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+  "changedCommittedPaths": [
+    "scripts/differential_consent_act_families.mjs"
+  ],
+  "exactDelta": "--- 134a8c5b\n+++ 2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5\n@@ -29,8 +29,8 @@\n // pair differs, or a materialized world is left behind, exits 1.\n //\n // A world is the files of `--old` (read through the readers' own file-system port, rooted there for both trees) with in-memory\n-// overrides: an act record altered, added or deleted, an artifact altered or deleted, or a decisions file added. Nothing on disk is\n-// written; no observed repository is read. The corpus:\n+// overrides: an act record altered, added or deleted, an artifact altered or deleted, or a decisions file added. Only owned screen\n+// materializations and the separately labelled fixture import copies are written and cleaned; no observed repository is read. The corpus:\n // - three base worlds: the checkout as it is; with the three admission acts this checkout lacks (requests observation, egress\n //   version 1 and version 2), rendered by their recorders over the checkout's own instance records; and with the registry\n //   git-source act, rendered the same way;\n@@ -704,6 +704,7 @@\n   run('unknown selected kind rejected', () => assert.throws(() => selectWorlds(generated, ['missing']), /unknown/));\n   run('duplicate kind rejected', () => assert.throws(() => selectWorlds(generated, ['probe', 'probe']), /duplicate/));\n   run('empty readers rejected', () => assert.throws(() => selectWorlds([{ ...world, readers: [] }]), /empty/));\n+  run('duplicate world readers rejected', () => assert.throws(() => selectWorlds([{ ...world, readers: ['port', 'port'] }]), /duplicate/));\n   run('empty instants rejected', () => assert.throws(() => selectWorlds([{ ...world, instants: [] }]), /empty/));\n   run('empty steps rejected', () => assert.throws(() => selectWorlds([{ ...world, steps: [] }]), /empty/));\n   run('unknown reader rejected', () => assert.throws(() => expectedComparisons({ ...world, readers: ['missing'] }, specs), /unknown/));\n@@ -711,6 +712,7 @@\n   run('three steps and two instants are six answers in one world', () => { const w = { ...world, steps: [{}, {}, {}], instants: ['a', 'b'] }; assert.equal(population([w]).worlds, 1); assert.equal(expectedComparisons(w, specs).length, 6); });\n   run('complete serialized equal answers pair', () => assert.equal(compare(rows, answerRows, answerRows)[0].same, true));\n   run('changed complete value differs', () => { const changed = [[rows[0].key, sha256('2'), '2', '2', answerRows[0][4]]]; assert.equal(compare(rows, answerRows, changed)[0].same, false); });\n+  run('identical labels cannot hide changed complete values', () => { const changed = [[rows[0].key, sha256('2'), answerRows[0][2], '2', answerRows[0][4]]]; assert.equal(compare(rows, answerRows, changed)[0].same, false); });\n   run('unequal old key set rejected', () => assert.throws(() => compare(rows, [], answerRows), /unequal old/));\n   run('unequal new key set rejected', () => assert.throws(() => compare(rows, answerRows, []), /unequal new/));\n   run('same-length wrong key rejected', () => assert.throws(() => compare(rows, answerRows, [['other', ...answerRows[0].slice(1)]]), /key set/));\n@@ -731,7 +733,7 @@\n   for (const [name, patch] of [['leftovers', { materializedLeftOver: 1 }], ['changed disk answer', { differing: 1 }], ['missing disk pair', { pairs: 0 }], ['missing removal', { removed: 0 }]]) run(`${name} fails cleanup`, () => assert.throws(() => requireCleanup({ ...clean, ...patch }), /cleanup/));\n   run('successor expected outcomes change at exact effective instant', () => { assert.equal(successorExpected(SUCCESSOR_INSTANTS[0]).observationOld.satisfied, true); assert.equal(successorExpected(SUCCESSOR_INSTANTS[1]).observationOld.satisfied, false); assert.deepEqual(successorExpected(SUCCESSOR_INSTANTS[1]), successorExpected(SUCCESSOR_INSTANTS[2])); assert.equal(SUCCESSOR_RECORDS[1].supersessionAt, Date.parse(SUCCESSOR_AT)); });\n   run('missing optional-method implementation is fatal', () => assert.throws(() => requiredAbsence({}), /missing/));\n-  const result = { schema: 'consent-differential-selftest/1', cases, total: cases.length, failed: cases.filter(c => !c.passed).length, exercisedAnswerComparisons };\n+  const result = { schema: 'consent-differential-selftest/1', scriptSha256: sha256(fs.readFileSync(SCRIPT, 'utf8')), cases, total: cases.length, failed: cases.filter(c => !c.passed).length, exercisedAnswerComparisons };\n   process.stdout.write(`${JSON.stringify(result)}\\n`);\n   return result.failed === 0 ? 0 : 1;\n }\n@@ -741,7 +743,7 @@\n   const arg = flag => (argv.includes(flag) ? argv[argv.indexOf(flag) + 1] : undefined);\n   const oldTree = arg('--old'), newTree = arg('--new'), out = arg('--out'), bead = arg('--bead'), control = argv.includes('--expect-mismatches');\n   if (oldTree === undefined || newTree === undefined || ((out === undefined || bead === undefined) && !argv.includes('--count')) || (control && !arg('--control-note')?.trim())) {\n-    process.stderr.write('usage: node scripts/differential_consent_act_families.mjs --old <tree> --new <tree> --out <file.json> --bead <id> [--workers <n>] [--kinds <k,...>] [--count] [--expect-mismatches --control-note <text>]\\n');\n+    process.stderr.write('usage: node scripts/differential_consent_act_families.mjs --old <tree> --new <tree> --out <file.json> --bead <id> [--workers <n>] [--kinds <k,...>] [--count] [--sample-per-kind <n>] [--time-limit-ms <n>] [--expect-mismatches --expect-reader-mismatches <reader,...> --control-note <text>] (or --selftest)\\n');\n     return 2;\n   }\n   const trees = [path.resolve(oldTree), path.resolve(newTree)], root = trees[0];\n",
+  "twoByteProofs": {
+    "runtimePrefixAfterOneDocumentationSubstitutionIdentical": true,
+    "mainAndEntrypointAfterOneUsageStringSubstitutionIdentical": true,
+    "oldRuntimePrefixSha256": "144a780e3cc97000b7fa533459a6cb3a58f1959ba631355083d8f83e90d20e53",
+    "newRuntimePrefixSha256": "79a36cfc7b323113208ca0ba0bb94da1c7403cdaaff0fb79188361b9b37ea678",
+    "oldMainSha256": "e3799329d0cb7031993d03e2655720c14680cd197eb9c7ee78b10020fe2aa424",
+    "newMainSha256": "1fd6ed1ee04dcfbc185cd6188aa023da8e2a72c74fb675756a0ac117e431c1bf"
+  },
+  "changedExecutionBranches": [
+    {
+      "branch": "--selftest only",
+      "change": "Two new cases (duplicate world readers and distinct full values with identical labels); selftest output adds scripted tool digest. New selftest44cases passed in draft; committed re-run proposed. This branch returns before main corpus/subjects/builds/readers."
+    },
+    {
+      "branch": "missing required arguments / blank control note only",
+      "change": "Usage string lists new control/sample/time/selftest options; predicate and exit2 unchanged. Valid complete M0 arguments do not enter this branch."
+    },
+    {
+      "branch": "comments",
+      "change": "Correct old nothing-written claim to owned materialization/fixture writes; no token/execution change."
+    }
+  ],
+  "unchangedNormalExecution": [
+    "all readers and actual factories",
+    "typed successor literals and actual compiled import adapter",
+    "every corpus world/selection/operator/pin/altered-prose path",
+    "expected-key generation/pairing/full values",
+    "count/control expectation/cleanup predicates",
+    "worker pool/scheduling",
+    "ordinary final result/exit",
+    "source/compiled binding calculation"
+  ],
+  "intentionalMetadataDifference": "New tool digest and new subject commit in records will differ; no assertion of byte-identical JSON. Normal corpus identities/populations/complete answers must match exact targeted qualification.",
+  "targetedClosurePlan": [
+    "Separate clean OWN/subject installed offline before NodeNext, build unchanged products;44case committed selftest with digest.",
+    "Normal targeted --sample-per-kind1 includes all12kinds and274comparisons; independent recount and exact identity/fullvalue parity with134a8c5b bounded qualification.",
+    "Actual argument-error invocation retains updated usage and exit2; selftest-only changes validated by same executable cases, including per-predicate controls after fullM0 and root disposition.",
+    "Compare committed and built product digests in final subject with134full subjects. Retain live complete5403world M0 unchanged and all captures; no mutant scoring until successful full M0 plus ROOT disposition.",
+    "Final npmcheckall in committed clean final exact subject under shared broadlock; fresh default-model exacthead review and actual hosted checks remain."
+  ],
+  "requestedRootDisposition": "Adjudicate whether successful full134M0 plus byte-closed targeted final-script proof is reusable for unchanged normal execution, or name remaining concrete evidence needing another full run. No waiver presumed; independent reviewer must verify closure and full13AC. No second whole run launched."
+}

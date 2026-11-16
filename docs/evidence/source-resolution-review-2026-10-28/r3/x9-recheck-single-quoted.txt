@@ -1,0 +1,16 @@
+mutated: True
+exit 1
+  × suite child processes and the vitest worker RPC > runs only short local tools synchronously in a suite test file or any module it imports 175ms
+  → vitest.config.ts: 10 projects but 9 recognized single-glob includes
+  ✓ suite child processes and the vitest worker RPC > flags an install, a build or a computed command and leaves async and short tools alone 8ms
+  ✓ suite child processes and the vitest worker RPC > follows every way of binding the synchronous calls, and fails closed on a binding it does not recognize 3ms
+  ✓ suite child processes and the vitest worker RPC > fails closed when a sync function is re-bound to a name the scan does not follow (syzygy-ty1x) 6ms
+  ✓ suite child processes and the vitest worker RPC > reads every project root from the vitest config, and fails closed on a shape it does not recognize 7ms
+  ✓ suite child processes and the vitest worker RPC > scans a helper module a test imports, through relative and workspace imports 2ms
+  ✓ |@syzygy/polaris-generation-core| packages/polaris-generation-core/src/workspace-reach.test.ts (61 tests) 4850ms
+  ✓ the tree's own exports > load, under the suite, each entry from its source module  4787ms
+  Test Files  1 failed | 1 passed (2)
+  Tests  1 failed | 66 passed (67)
+  FAIL  |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/sync-child-process-guard.test.ts > suite child processes and the vitest worker RPC > runs only short local tools synchronously in a suite test file or any module it imports
+  Error: vitest.config.ts: 10 projects but 9 recognized single-glob includes
+config restored: True

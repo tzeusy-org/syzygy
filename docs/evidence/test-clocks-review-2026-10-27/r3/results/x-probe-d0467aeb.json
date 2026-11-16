@@ -1,0 +1,50 @@
+{
+ "tool": "x_probe_r3.py",
+ "commit": "d0467aeb44a1a980572118f20d322be519b72bbe",
+ "results": [
+  {
+   "id": "control",
+   "file": null,
+   "old": null,
+   "new": null,
+   "exit": 0,
+   "load1": "43.07",
+   "passed": 16,
+   "failed": []
+  },
+  {
+   "id": "X1-close-failed-callback-in-main",
+   "file": "apps/syzygy/src/main.ts",
+   "old": "    closeFailed: (cause) => {\n",
+   "new": "    closeFailed: (cause) => {\n      void import('@syzygy/three-surface-poc-app/dossier-site');\n",
+   "exit": 1,
+   "load1": "40.89",
+   "passed": 15,
+   "failed": [
+    "daemon entry: the one changed input, `dossier` as the first argument every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, whose only else is the other, before the daemon path"
+   ]
+  },
+  {
+   "id": "X2-close-failure-in-http-host",
+   "file": "packages/http-host/src/shutdown.ts",
+   "old": "      void daemon.close().then(resolve, (cause: unknown) => {\n",
+   "new": "      void daemon.close().then(resolve, (cause: unknown) => {\n        void import('@syzygy/three-surface-poc-app/dossier-site');\n",
+   "exit": 0,
+   "load1": "42.78",
+   "passed": 16,
+   "failed": []
+  },
+  {
+   "id": "X3-shutdown-in-http-host",
+   "file": "packages/http-host/src/shutdown.ts",
+   "old": "      if (closing) return;\n",
+   "new": "      if (closing) return;\n      void import('@syzygy/three-surface-poc-app/dossier-site');\n",
+   "exit": 1,
+   "load1": "42.92",
+   "passed": 15,
+   "failed": [
+    "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app, and the `dossier render` branch does"
+   ]
+  }
+ ]
+}

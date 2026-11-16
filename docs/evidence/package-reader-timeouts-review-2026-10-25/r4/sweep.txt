@@ -1,0 +1,106 @@
+HEAD d6b04c5f03978b2a8fbc87afc61c725d91eca0f4; tracked files (ls-files) 3699; blobs in HEAD tree 3699; equal sets True
+symlink entries in tree: 0
+
+== '--profile': method1 3 files, method2 (git grep -F -l -a HEAD) 3 files, equal True; in PR-relevant paths 0
+   files: ['.syzygy/governance/contracts/candidates/dossier-local-cli-subprocess-runner/SEMANTIC-DELTA.md', 'docs/reviews/R-DOSSIER-CLI-SUBPROCESS-1-RAW.md', 'docs/reviews/R-DOSSIER-CLI-SUBPROCESS-4-RAW.md']
+
+== 'instrument': method1 233 files, method2 (git grep -F -l -a HEAD) 233 files, equal True; in PR-relevant paths 6
+   docs/evidence/syzygy-bpyt-4-13/after-alone.json:23: "instrumentation": null,
+   docs/evidence/syzygy-bpyt-4-13/after-full.json:23: "instrumentation": null,
+   docs/evidence/syzygy-bpyt-4-13/before-alone.json:23: "instrumentation": null,
+   docs/evidence/syzygy-bpyt-4-13/before-full-1.json:23: "instrumentation": null,
+   docs/evidence/syzygy-bpyt-4-13/before-full-2.json:23: "instrumentation": null,
+   docs/evidence/syzygy-bpyt-4-13/before-profile.json:23: "instrumentation": [
+
+== 'measure-restore-probes': method1 0 files, method2 (git grep -F -l -a HEAD) 0 files, equal True; in PR-relevant paths 0
+   files: []
+
+== 'probe_measure_restore': method1 0 files, method2 (git grep -F -l -a HEAD) 0 files, equal True; in PR-relevant paths 0
+   files: []
+
+== 'KIT_': method1 0 files, method2 (git grep -F -l -a HEAD) 0 files, equal True; in PR-relevant paths 0
+   files: []
+
+== 'FILE_': method1 46 files, method2 (git grep -F -l -a HEAD) 46 files, equal True; in PR-relevant paths 1
+   docs/evidence/syzygy-bpyt-4-13/tools/sizing_check_mutants.py:18: FILE_MUTANTS = [
+   docs/evidence/syzygy-bpyt-4-13/tools/sizing_check_mutants.py:40: for mid, what, path, old, new in FILE_MUTANTS:
+
+== 'PROF': method1 79 files, method2 (git grep -F -l -a HEAD) 79 files, equal True; in PR-relevant paths 1
+   docs/evidence/syzygy-bpyt-4-13/before-profile.json:32: "new": "import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';\nimport { afterEach as profAfter, beforeEach as profBefore } from 'vitest';\nlet profSpawn = 0, profSpawns = 0, profT = 0;\nprofBefore(() =
+
+files naming 'measure_vitest_test_durations': 8
+    docs/evidence/syzygy-bpyt-4-13/after-alone.json
+    docs/evidence/syzygy-bpyt-4-13/after-full.json
+    docs/evidence/syzygy-bpyt-4-13/before-alone.json
+    docs/evidence/syzygy-bpyt-4-13/before-full-1.json
+    docs/evidence/syzygy-bpyt-4-13/before-full-2.json
+    docs/evidence/syzygy-bpyt-4-13/before-profile.json
+    scripts/measure_vitest_test_durations.py
+    scripts/size_vitest_test_timeouts.py
+
+files naming 'bpyt-4-13': 4
+    docs/evidence/syzygy-bpyt-4-13/sizing-check-mutants.json
+    docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json
+    docs/evidence/syzygy-bpyt-4-13/tools/sizing_check_mutants.py
+    packages/polaris-generation-consent/src/package-reader.test.ts
+
+files naming 'bpyt.4.13': 23
+    docs/README.md
+    docs/evidence/decisions-sweep-round-1-dispositions-2026-10-22.md
+    docs/evidence/island-decoupling-round-1-dispositions-2026-10-22.md
+    docs/evidence/launch-form-snapshot-round-1-dispositions-2026-10-22.md
+    docs/evidence/syzygy-bpyt-4-13/after-alone.json
+    docs/evidence/syzygy-bpyt-4-13/after-full.json
+    docs/evidence/syzygy-bpyt-4-13/before-alone.json
+    docs/evidence/syzygy-bpyt-4-13/before-full-1.json
+    docs/evidence/syzygy-bpyt-4-13/before-full-2.json
+    docs/evidence/syzygy-bpyt-4-13/before-profile.json
+    docs/evidence/syzygy-bpyt-4-13/sizing-check-mutants.json
+    docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json
+    docs/evidence/syzygy-bpyt-4-13/tools/sizing_check_mutants.py
+    docs/reviews/R-GP-IMPL-CONSENT-LIVE-MODULE-1-RAW.md
+    docs/reviews/R-GP-IMPL-DECISIONS-SWEEP-1-RAW.md
+    docs/reviews/R-GP-IMPL-DOSSIER-CLI-TABLE-1-RAW.md
+    docs/reviews/R-GP-IMPL-FIXTURE-PID-SWEEP-3-RAW.md
+    docs/reviews/R-GP-IMPL-LAUNCH-FORM-CTIME-1-RAW.md
+    docs/reviews/R-GP-IMPL-LAUNCH-FORM-SNAPSHOT-1-RAW.md
+    docs/reviews/R-GP-IMPL-OUTSIDE-RAW-CLEANUP-1-RAW.md
+    packages/polaris-generation-consent/src/package-reader.test.ts
+    scripts/measure_vitest_test_durations.py
+    scripts/size_vitest_test_timeouts.py
+
+== PR body (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520d/pr-body.md, 181 lines)
+  '--profile': 8 lines
+     13: - **F1.** `scripts/measure_vitest_test_durations.py --profile` could leave tracked files instrumented. Since round 3 the script has no `--profile` mode (see "Round 3: stopping rule applied" below), so it writes no tracked file. vitest starts in a session of it
+     31: - **Stopping rule**, set by the coordinator before round 3: if round 3 still finds a blocking defect in the script's stop handling, `--profile` comes out of this PR and moves to a follow-up bead. The committed profile record stays, named by the script digest t
+     35: Round 3 (REVISE) found F4 in the restore under `--profile`: the `git checkout` that restores the two instrumented files fails while `.git/index.lock` is held, for example by a `git status` in the same worktree, and both files stay instrumented. F4 is reachable
+     38: - the usage's ` [--profile]` and the `--profile` docstring paragraph;
+     44: - Not taken: the optional removal of the stdout reader thread. N9 goes with `--profile` to syzygy-bpyt.4.27, and round 3's probes covered the thread as it is.
+     45: - Deleted: `measure-restore-probes.json` and `tools/probe_measure_restore.py` under `docs/evidence/syzygy-bpyt-4-13/`. Every attempt in them ran `--profile`, and their `fix` is no longer the head's script. They remain at `e7f3c71e`. [Observed] Before deleting,
+     140: - **`--profile` and its restore** move to syzygy-bpyt.4.27, with round 3's F4, N8 and N9.
+     152: - MIX-np 2/2 exercised: `run` 143, `cleanup` 130. `write` has no trigger without `--profile`, so its attempt sent nothing.
+  'instrument': 6 lines
+     13: - **F1.** `scripts/measure_vitest_test_durations.py --profile` could leave tracked files instrumented. Since round 3 the script has no `--profile` mode (see "Round 3: stopping rule applied" below), so it writes no tracked file. vitest starts in a session of it
+     23: The reviewer's shared fix for F2 and F3, steps 1, 2, 3, 5 and 6. Step 4, instrumenting a throwaway worktree, is not taken.
+     35: Round 3 (REVISE) found F4 in the restore under `--profile`: the `git checkout` that restores the two instrumented files fails while `.git/index.lock` is held, for example by a `git status` in the same worktree, and both files stay instrumented. F4 is reachable
+     39: - the instrumentation: the four anchors, `instrument()` and `written`;
+     41: - the `PROF` parse, `run['profile']`, and OUT.json's `profile` and `instrumentation` keys.
+     69: - [Observed, scratch instrumentation not retained] It reads 118 collected worlds (88 distinct) × 8 instants, through both the port and the strict chain. The port took 2,718 ms of that and the chain 2,662 ms.
+  'measure-restore-probes': 1 lines
+     45: - Deleted: `measure-restore-probes.json` and `tools/probe_measure_restore.py` under `docs/evidence/syzygy-bpyt-4-13/`. Every attempt in them ran `--profile`, and their `fix` is no longer the head's script. They remain at `e7f3c71e`. [Observed] Before deleting,
+  'probe_measure_restore': 1 lines
+     45: - Deleted: `measure-restore-probes.json` and `tools/probe_measure_restore.py` under `docs/evidence/syzygy-bpyt-4-13/`. Every attempt in them ran `--profile`, and their `fix` is no longer the head's script. They remain at `e7f3c71e`. [Observed] Before deleting,
+  'KIT_': 0 lines
+  'FILE_': 0 lines
+  'PROF': 1 lines
+     41: - the `PROF` parse, `run['profile']`, and OUT.json's `profile` and `instrumentation` keys.
+
+== bead 4.24 (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520d/bead-4.24.json, 75 lines)
+  '--profile': 1 lines
+     5: "description": "From the round-1 review of PR #520 (syzygy-bpyt.4.13), docs/reviews/R-GP-IMPL-PACKAGE-READER-TIMEOUTS-1-RAW.md N6 (retained at landing). The coordinator ruled PR #520 to package-reader.test.ts alone, but five coordinator comments on 4.13 (2026-
+  'instrument': 0 lines
+  'measure-restore-probes': 0 lines
+  'probe_measure_restore': 0 lines
+  'KIT_': 0 lines
+  'FILE_': 0 lines
+  'PROF': 0 lines

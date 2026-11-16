@@ -1,0 +1,46 @@
+{
+ "subject": "wall time of `npm run build:poc`, the build every poc:* tool launch runs first",
+ "base": {
+  "commit": "b10e4da9a57a472cb6820ef7dea0a05a5dddc0ce",
+  "buildPoc": "tsc -b --force packages/support packages/cap1-core packages/http-host packages/cap1-daemon packages/three-surface-poc-core packages/polaris-generation-core apps/three-surface-poc",
+  "runs": [
+   {
+    "seconds": 18.34,
+    "load1AtStart": 26.27,
+    "exit": 0
+   },
+   {
+    "seconds": 19.36,
+    "load1AtStart": 25.81,
+    "exit": 0
+   },
+   {
+    "seconds": 20.96,
+    "load1AtStart": 27.15,
+    "exit": 0
+   }
+  ]
+ },
+ "head": {
+  "commit": "a1f794c06115c377e841f6ae8ad42816ab8c10ca",
+  "buildPoc": "node scripts/clean_build.mjs packages/support packages/cap1-core packages/http-host packages/cap1-daemon packages/three-surface-poc-core packages/polaris-generation-core apps/three-surface-poc",
+  "runs": [
+   {
+    "seconds": 8.71,
+    "load1AtStart": 26.2,
+    "exit": 0
+   },
+   {
+    "seconds": 10.19,
+    "load1AtStart": 27.73,
+    "exit": 0
+   },
+   {
+    "seconds": 8.59,
+    "load1AtStart": 28.37,
+    "exit": 0
+   }
+  ]
+ },
+ "cpus": 12
+}

@@ -1,0 +1,19 @@
+{
+ "a": "00b7dcf7:packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+ "b": "file:/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-541c/tools/testkit-with-f1-r3.ts",
+ "aSha256": "e07c486b52889129547d5edbc4c2cf89250c8c016085501dbc59747e38f5dc73",
+ "bSha256": "ca95245c8fd80b511d9b15c5fce3ab72eb2b5e5ef4bbd6fe9f7614721096bf79",
+ "bytesDiffer": true,
+ "tokens": [
+  1287,
+  1287
+ ],
+ "tokensEqual": true,
+ "emitEqual": true,
+ "emitSha256": [
+  "822c6f7935d1f121c9b6651e9a00f5ef9f47d7bd1ef3bed857da464a4c1a910e",
+  "822c6f7935d1f121c9b6651e9a00f5ef9f47d7bd1ef3bed857da464a4c1a910e"
+ ],
+ "typescript": "5.9.3",
+ "esbuild": "0.28.2"
+}

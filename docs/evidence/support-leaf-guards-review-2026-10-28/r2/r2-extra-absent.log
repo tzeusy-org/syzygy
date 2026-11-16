@@ -1,0 +1,8 @@
+r1:Y1-reflect-get-globalThis-env expected killed observed killed failingOk True 32 1 ["AssertionError: expected [ 'sha256.ts: HOME', …(4) ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scr"]
+r1:Y8-export-star-from-node-fs expected killed observed killed failingOk True 30 3 ["AssertionError: expected [ { file: 'index.ts', …(1) } ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/", 'AssertionError: expected [ …(2) ] to deeply equal [ Array(1) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/r', 'AssertionError: index.ts /\\b(?:node:)?(?:fs|net|http|https|child_process|os)[\'"`]/: expected \'// Internal helpers that more than on…\' not to match /\\b(?:node:)?']
+r1:Y3-R1-escalated-to-the-environment expected survives observed survives failingOk True 33 0 []
+r1:Y5b-computed-import-newline expected survives observed survives failingOk True 33 0 []
+r1:Y5c-computed-import-comment expected survives observed survives failingOk True 33 0 []
+V7n-import-equals-require-without-the-space expected killed observed killed failingOk True 32 1 ["AssertionError: index.ts /\\brequire\\(/: expected '// Internal helpers that more than on…' not to match /\\brequire\\(/\n    at /tmp/claude-1000/-home-tze-GitHub-sy"]
+V9n-literal-dynamic-import-without-the-space expected killed observed killed failingOk True 32 1 ["AssertionError: index.ts /\\bimport\\(/: expected '// Internal helpers that more than on…' not to match /\\bimport\\(/\n    at /tmp/claude-1000/-home-tze-GitHub-syzy"]
+summary {'rows': 7, 'asExpected': 7, 'unexpected': []} status after '' leftovers []

@@ -1,0 +1,6 @@
+six base 1 exit 0 wall 101.9 load1 22.12 26.52
+six head 1 exit 0 wall 100.6 load1 26.52 27.73
+six head 2 exit 0 wall 105.4 load1 27.73 25.99
+six base 2 exit 0 wall 181.4 load1 25.99 51.52
+six base 3 exit 1 wall 180.1 load1 51.52 53.33
+six head 3 exit 0 wall 161.2 load1 53.33 52.00

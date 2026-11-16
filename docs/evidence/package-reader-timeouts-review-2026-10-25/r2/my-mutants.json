@@ -1,0 +1,106 @@
+{
+ "tool": {
+  "path": "tools/my_mutants.py",
+  "sha256": "6dc1108aa381d4851141f92b47caa07e0370370a1af4be0c1755a98371d174d4"
+ },
+ "commit": "dc60c5bcb6ae6f1f31beee3aa0f6117adff5d6cf",
+ "scripts": {
+  "head": "40bf70b5fec3f4349754c0e1f736fb438237bcfa51d5a464db7e81015dfb5629",
+  "old-3e563ec4": "c8a439a23a01d7c5cfdc7463dfa6aef2417b351d1357e57c052f8bea4414e7d2"
+ },
+ "results": [
+  {
+   "id": "control",
+   "script": "head",
+   "exitCode": 0,
+   "output": [
+    "299 collected, 16 sized (10 from a lower bound), 0 problems"
+   ],
+   "stderr": ""
+  },
+  {
+   "id": "control",
+   "script": "old-3e563ec4",
+   "exitCode": 0,
+   "output": [
+    "299 collected, 16 sized (10 from a lower bound), 0 problems"
+   ],
+   "stderr": ""
+  },
+  {
+   "id": "R5",
+   "script": "head",
+   "file": "vitest.config.ts",
+   "old": "          name: '@syzygy/polaris-generation-consent',\n          include: ['packages/polaris-generation-consent/src/**/*.test.ts'],\n",
+   "new": "          name: '@syzygy/polaris-generation-consent',\n          include: ['packages/polaris-generation-consent/src/**/*.test.ts'],\n          testTimeout: 60_000,\n",
+   "exitCode": 1,
+   "output": [
+    "299 collected, 16 sized (10 from a lower bound), 1 problems",
+    "problem: the default the tests carry is 60000 ms, not 5000 ms: the threshold assumes a 5000 ms default"
+   ],
+   "stderr": ""
+  },
+  {
+   "id": "R5",
+   "script": "old-3e563ec4",
+   "file": "vitest.config.ts",
+   "old": "          name: '@syzygy/polaris-generation-consent',\n          include: ['packages/polaris-generation-consent/src/**/*.test.ts'],\n",
+   "new": "          name: '@syzygy/polaris-generation-consent',\n          include: ['packages/polaris-generation-consent/src/**/*.test.ts'],\n          testTimeout: 60_000,\n",
+   "exitCode": 0,
+   "output": [
+    "299 collected, 16 sized (10 from a lower bound), 0 problems"
+   ],
+   "stderr": ""
+  },
+  {
+   "id": "R6",
+   "script": "head",
+   "file": "vitest.config.ts",
+   "old": "          name: '@syzygy/polaris-generation-consent',\n          include: ['packages/polaris-generation-consent/src/**/*.test.ts'],\n",
+   "new": "          name: '@syzygy/polaris-generation-consent',\n          include: ['packages/polaris-generation-consent/src/**/*.test.ts'],\n          testTimeout: 2_000,\n",
+   "exitCode": 1,
+   "output": [
+    "299 collected, 16 sized (10 from a lower bound), 1 problems",
+    "problem: the default the tests carry is 2000 ms, not 5000 ms: the threshold assumes a 5000 ms default"
+   ],
+   "stderr": ""
+  },
+  {
+   "id": "R6",
+   "script": "old-3e563ec4",
+   "file": "vitest.config.ts",
+   "old": "          name: '@syzygy/polaris-generation-consent',\n          include: ['packages/polaris-generation-consent/src/**/*.test.ts'],\n",
+   "new": "          name: '@syzygy/polaris-generation-consent',\n          include: ['packages/polaris-generation-consent/src/**/*.test.ts'],\n          testTimeout: 2_000,\n",
+   "exitCode": 0,
+   "output": [
+    "299 collected, 16 sized (10 from a lower bound), 0 problems"
+   ],
+   "stderr": ""
+  },
+  {
+   "id": "R7",
+   "script": "head",
+   "file": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "old": "import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';\n",
+   "new": "import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';\nvi.setConfig({ testTimeout: 60_000 });\n",
+   "exitCode": 1,
+   "output": [
+    "299 collected, 16 sized (10 from a lower bound), 1 problems",
+    "problem: the default the tests carry is 60000 ms, not 5000 ms: the threshold assumes a 5000 ms default"
+   ],
+   "stderr": ""
+  },
+  {
+   "id": "R7",
+   "script": "old-3e563ec4",
+   "file": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "old": "import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';\n",
+   "new": "import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';\nvi.setConfig({ testTimeout: 60_000 });\n",
+   "exitCode": 0,
+   "output": [
+    "299 collected, 16 sized (10 from a lower bound), 0 problems"
+   ],
+   "stderr": ""
+  }
+ ]
+}

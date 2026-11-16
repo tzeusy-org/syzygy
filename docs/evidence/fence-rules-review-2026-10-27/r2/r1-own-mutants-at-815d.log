@@ -1,0 +1,12 @@
+RV1-profile-closer-trailing-text killed by newTest, existing
+RV2-links-opener-indent4 killed by newTest
+RV3-profile-tilde-closed-by-backticks killed by newTest, existing
+RV4-profile-cr-stripped-before-read killed by newTest
+RV5-profile-span-closed-by-shorter-run killed by newTest, existing
+RV6-extraction-backtick-fences-only killed by newTest
+RV7-renderer-tab-indented-fence-ends-paragraph killed by newTest
+RV8-consent-closer-any-fence-char killed by existing
+RV9-links-inline-span-pairs-runs killed by newTest
+RV10-profile-closer-tolerates-cr SURVIVED
+RV11-profile-fence-opener-drops-open-span killed by newTest, existing
+exit=0

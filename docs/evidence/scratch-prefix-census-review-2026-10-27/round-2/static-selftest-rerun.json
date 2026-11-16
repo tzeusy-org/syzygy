@@ -1,0 +1,278 @@
+{
+ "tool": "static_sites.py --selftest",
+ "sha256": "9e03dc1e6f79180d32b709b59110160a3b202da2c05870ec79d0f1c7795b46bf",
+ "fixture": [
+  {
+   "line": "const d = mkdtempSync(join(tmpdir(), 'dossier-records-'));",
+   "expected": {
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "dossier-records-"
+   }
+  },
+  {
+   "line": "const p = await mkdtemp(join(tmpdir(), 'syzygy-poc-browser-'));",
+   "expected": {
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-poc-browser-"
+   }
+  },
+  {
+   "line": "const q = join(tmpdir(), `polaris-view-probe-${id}`);",
+   "expected": {
+    "kinds": [
+     "js-tmpdir"
+    ],
+    "literal": "polaris-view-probe-"
+   }
+  },
+  {
+   "line": "const r = mkdtempSync(join(tmpdir(), \"run_\"));",
+   "expected": {
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "run_"
+   }
+  },
+  {
+   "line": "const s = join(tmpdir(), 'a.b-c_d-');",
+   "expected": {
+    "kinds": [
+     "js-tmpdir"
+    ],
+    "literal": "a.b-c_d-"
+   }
+  },
+  {
+   "line": "const t = join(tmpdir(), '.hidden-');",
+   "expected": {
+    "kinds": [
+     "js-tmpdir"
+    ],
+    "literal": ".hidden-"
+   }
+  },
+  {
+   "line": "const u = mkdtempSync(join(tmpdir(), prefix));",
+   "expected": {
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": null
+   }
+  },
+  {
+   "line": "const v = join(tmpdir(), 'syzygy');",
+   "expected": {
+    "kinds": [
+     "js-tmpdir"
+    ],
+    "literal": null
+   }
+  },
+  {
+   "line": "d = tempfile.mkdtemp(prefix='py-scratch-')",
+   "expected": {
+    "kinds": [
+     "js-mkdtemp",
+     "py-tempfile"
+    ],
+    "literal": "py-scratch-"
+   }
+  },
+  {
+   "line": "using w = mkdtempDisposableSync(join(tmpdir(), 'disposable-'));",
+   "expected": {
+    "kinds": [
+     "js-mkdtemp-disposable",
+     "js-tmpdir"
+    ],
+    "literal": "disposable-"
+   }
+  },
+  {
+   "line": "dir=$(mktemp -d)",
+   "expected": {
+    "kinds": [
+     "sh-mktemp"
+    ],
+    "literal": null
+   }
+  },
+  {
+   "line": "const x = '/tmp/fixed-name-';",
+   "expected": {
+    "kinds": [
+     "literal-tmp-path"
+    ],
+    "literal": null
+   }
+  },
+  {
+   "line": "const y = join(root, 'dossier-records-');",
+   "expected": null
+  }
+ ],
+ "unmutated": {
+  "got": [
+   {
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "dossier-records-"
+   },
+   {
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-poc-browser-"
+   },
+   {
+    "kinds": [
+     "js-tmpdir"
+    ],
+    "literal": "polaris-view-probe-"
+   },
+   {
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "run_"
+   },
+   {
+    "kinds": [
+     "js-tmpdir"
+    ],
+    "literal": "a.b-c_d-"
+   },
+   {
+    "kinds": [
+     "js-tmpdir"
+    ],
+    "literal": ".hidden-"
+   },
+   {
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": null
+   },
+   {
+    "kinds": [
+     "js-tmpdir"
+    ],
+    "literal": null
+   },
+   {
+    "kinds": [
+     "js-mkdtemp",
+     "py-tempfile"
+    ],
+    "literal": "py-scratch-"
+   },
+   {
+    "kinds": [
+     "js-mkdtemp-disposable",
+     "js-tmpdir"
+    ],
+    "literal": "disposable-"
+   },
+   {
+    "kinds": [
+     "sh-mktemp"
+    ],
+    "literal": null
+   },
+   {
+    "kinds": [
+     "literal-tmp-path"
+    ],
+    "literal": null
+   },
+   null
+  ],
+  "meets": true
+ },
+ "mutants": {
+  "literal-rule-without-hyphen-inside-the-literal": {
+   "old": "([A-Za-z0-9._][A-Za-z0-9._-]*[-_])(?=",
+   "new": "([A-Za-z0-9._]+[-_])(?=",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "const d = mkdtempSync(join(tmpdir(), 'dossier-records-'));",
+    "const p = await mkdtemp(join(tmpdir(), 'syzygy-poc-browser-'));",
+    "const q = join(tmpdir(), `polaris-view-probe-${id}`);",
+    "const s = join(tmpdir(), 'a.b-c_d-');",
+    "d = tempfile.mkdtemp(prefix='py-scratch-')"
+   ]
+  },
+  "literal-rule-without-underscore-ending": {
+   "old": "*[-_])(?=",
+   "new": "*[-])(?=",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "const r = mkdtempSync(join(tmpdir(), \"run_\"));"
+   ]
+  },
+  "literal-rule-without-template-form": {
+   "old": "(?=['\"`]|\\$\\{)'''",
+   "new": "(?=['\"`])'''",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "const q = join(tmpdir(), `polaris-view-probe-${id}`);"
+   ]
+  },
+  "literal-rule-without-leading-dot": {
+   "old": "([A-Za-z0-9._][A-Za-z0-9._-]*",
+   "new": "([A-Za-z0-9_][A-Za-z0-9._-]*",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "const t = join(tmpdir(), '.hidden-');"
+   ]
+  },
+  "disposable-pattern-dropped": {
+   "old": "    'js-mkdtemp-disposable': r'\\bmkdtempDisposable(?:Sync)?\\(',\n",
+   "new": "",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "using w = mkdtempDisposableSync(join(tmpdir(), 'disposable-'));"
+   ]
+  },
+  "tmp-path-pattern-dropped": {
+   "old": "    'literal-tmp-path': r'''['\"`]/tmp/''',\n",
+   "new": "",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "const x = '/tmp/fixed-name-';"
+   ]
+  },
+  "a-line-matching-no-pattern-reports-a-site": {
+   "old": "    if not kinds:\n        return None\n",
+   "new": "    if not kinds:\n        return {'kinds': kinds, 'literal': None}\n",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "const y = join(root, 'dossier-records-');"
+   ]
+  }
+ },
+ "holds": true
+}

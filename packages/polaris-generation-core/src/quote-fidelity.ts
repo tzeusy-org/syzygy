@@ -48,6 +48,9 @@ export interface QuoteBlock { readonly id: string; readonly text: string; readon
 
 const NAMED_ENTITIES: Readonly<Record<string, string>> = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: '\u00a0' };
 
+/** Kept apart from dossier-page-scan.ts `decodeHtmlText` on purpose (syzygy-bpyt.8.41, GP-Q0): it normalises source and quotation text for
+ * quote location, so no digit cap (leading zeros still decode) and `&#0;` stays literal, keeping NUL out of a located quote.
+ * `entity-decoder-divergence.test.ts` pins where they differ. */
 function decodeEntity(whole: string, body: string): string {
   if (body[0] !== '#') return NAMED_ENTITIES[body] ?? whole;
   const code = body[1] === 'x' || body[1] === 'X' ? Number.parseInt(body.slice(2), 16) : Number.parseInt(body.slice(1), 10);
@@ -171,7 +174,10 @@ function curlySpan(text: string, open: number): { inner: string; end: number } |
   return undefined;
 }
 
-/** Every quoted span of `text`: a lead-in quotation runs to the last straight quote before the next lead-in, any other span takes the reading that verifies when one exists. */
+/** Every quoted span of `text`: a lead-in quotation runs to the last straight quote before the next lead-in, any other span takes the
+ * reading that verifies when one exists. This broader checker walks left-to-right: an earlier ordinary quotation can consume a
+ * literal lead-in. It is not the local-agent citation-ordinal reader in quote-locate.ts. The local checker and renderer use that
+ * reader together; they do not use this one interchangeably (README.md "Quotation reader domains"). */
 function quotedSpans(text: string, leadIn: string, verifies: (inner: string) => boolean): { inner: string; ok: boolean; terminated: boolean; end: number }[] {
   const out: { inner: string; ok: boolean; terminated: boolean; end: number }[] = [];
   for (let i = 0; i < text.length; i++) {

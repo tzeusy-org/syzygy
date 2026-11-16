@@ -1,0 +1,142 @@
+{
+ "batch": "RSTOP",
+ "profile": true,
+ "version": "m1",
+ "param": null,
+ "n": 1,
+ "scriptSha256": "e8b6c205f6bc64a43f443cd9ad7e07d919783cf368eaec416e51bfa252d43edd",
+ "command": "python3 -I <tools>/inject.py trace <tools>/m1_measure_vitest_test_durations.py . --file packages/polaris-generation-consent/src/package-reader.test.ts --project @syzygy/polaris-generation-consent --mode alone --runs 1 --out <tmp>/measure-out.json --profile",
+ "sent": [
+  {
+   "t": 1.6503,
+   "signal": "SIGTERM",
+   "to": "pid"
+  },
+  {
+   "t": 1.9722,
+   "signal": "SIGINT",
+   "to": "group"
+  },
+  {
+   "t": 2.0724,
+   "signal": "SIGTERM",
+   "to": "pid"
+  },
+  {
+   "t": 2.1726,
+   "signal": "SIGHUP",
+   "to": "pid"
+  },
+  {
+   "t": 2.2728,
+   "signal": "SIGINT",
+   "to": "pid"
+  },
+  {
+   "t": 2.373,
+   "signal": "SIGINT",
+   "to": "group"
+  },
+  {
+   "t": 2.4731,
+   "signal": "SIGTERM",
+   "to": "pid"
+  },
+  {
+   "t": 2.5733,
+   "signal": "SIGHUP",
+   "to": "pid"
+  },
+  {
+   "t": 2.6735,
+   "signal": "SIGINT",
+   "to": "pid"
+  },
+  {
+   "t": 2.7737,
+   "signal": "SIGINT",
+   "to": "group"
+  },
+  {
+   "t": 2.8739,
+   "signal": "SIGTERM",
+   "to": "pid"
+  },
+  {
+   "t": 2.9741,
+   "signal": "SIGHUP",
+   "to": "pid"
+  },
+  {
+   "t": 3.0743,
+   "signal": "SIGINT",
+   "to": "pid"
+  }
+ ],
+ "events": [
+  {
+   "t": 1.019,
+   "what": "vitest worker seen"
+  },
+  {
+   "t": 1.9722,
+   "what": "checkout entered"
+  }
+ ],
+ "scriptExitedAtSeconds": 3.194,
+ "exitCode": 1,
+ "claimedExit": 143,
+ "exitAsClaimed": false,
+ "descendantsSeen": 11,
+ "seenOnlyByCwd": 1,
+ "vitestSeen": true,
+ "npxSeen": false,
+ "treeAfterExit": " M packages/polaris-generation-consent/src/package-reader.test.ts\n M packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts\n",
+ "survivors": {},
+ "recordWritten": false,
+ "recordRuns": null,
+ "recordTests": null,
+ "recordProfileRows": null,
+ "recordExitCode": null,
+ "marks": [
+  {
+   "what": "checkout-enter",
+   "pid": 345257,
+   "pgid": 344721,
+   "sid": 344721,
+   "t": 1792866428.8995118,
+   "args": [
+    "checkout",
+    "--",
+    "packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts",
+    "packages/polaris-generation-consent/src/package-reader.test.ts"
+   ]
+  }
+ ],
+ "scriptWrites": null,
+ "tmpdirLeft": [
+  "bin",
+  "mark.jsonl",
+  "node-compile-cache",
+  "script.log"
+ ],
+ "trace": [
+  "TRACE 0.0205 popen-enter ['git', 'status', '--porcelain'] stopped []",
+  "TRACE 0.0215 popen-return 344731 stopped []",
+  "TRACE 0.0573 popen-enter ['git', 'rev-parse', 'HEAD'] stopped []",
+  "TRACE 0.0581 popen-return 344741 stopped []",
+  "TRACE 0.0850 popen-enter ['git', 'show', 'HEAD:packages/polaris-generation-consent/src/package-reader.test.ts'] stopped []",
+  "TRACE 0.0859 popen-return 344748 stopped []",
+  "TRACE 0.1140 popen-enter ['git', 'show', 'HEAD:packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts'] stopped []",
+  "TRACE 0.1147 popen-return 344752 stopped []",
+  "TRACE 0.1559 popen-enter ['node', '--version'] stopped []",
+  "TRACE 0.1578 popen-return 344753 stopped []",
+  "TRACE 0.1667 popen-enter ['npx', 'vitest', 'run'] stopped []",
+  "TRACE 0.1688 popen-return 344755 stopped []",
+  "TRACE 1.8693 popen-enter ['git', 'checkout', '--'] stopped [15]",
+  "TRACE 1.8702 popen-return 345257 stopped [15]"
+ ],
+ "outputTail": "yboardInterrupt\nTraceback (most recent call last):\n  File \"/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520c/tools/inject.py\", line 64, in <module>\n    runpy.run_path(script, run_name='__main__')\n  File \"/home/tze/.pyenv/versions/3.10.12/lib/python3.10/runpy.py\", line 289, in run_path\n    return _run_module_code(code, init_globals, run_name,\n  File \"/home/tze/.pyenv/versions/3.10.12/lib/python3.10/runpy.py\", line 96, in _run_module_code\n    _run_code(code, mod_globals, init_globals,\n  File \"/home/tze/.pyenv/versions/3.10.12/lib/python3.10/runpy.py\", line 86, in _run_code\n    exec(code, run_globals)\n  File \"/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520c/tools/m1_measure_vitest_test_durations.py\", line 152, in <module>\n    out['runs'].append(one_run(i))\n  File \"/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520c/tools/m1_measure_vitest_test_durations.py\", line 123, in one_run\n    if written: subprocess.run(['git', 'checkout', '--', *written], cwd=tree, check=True)\n  File \"/home/tze/.pyenv/versions/3.10.12/lib/python3.10/subprocess.py\", line 526, in run\n    raise CalledProcessError(retcode, process.args,\nsubprocess.CalledProcessError: Command '['git', 'checkout', '--', 'packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts', 'packages/polaris-generation-consent/src/package-reader.test.ts']' died with <Signals.SIGINT: 2>.\n",
+ "exercised": true,
+ "passes": false
+}

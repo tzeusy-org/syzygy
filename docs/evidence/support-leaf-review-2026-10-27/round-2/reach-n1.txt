@@ -1,0 +1,16 @@
+packages/three-surface-poc-core/src/body-read-authority.ts does not reach packages/three-surface-poc-core/src/test-artifact-verification.ts (7 files reached)
+packages/three-surface-poc-core/src/body-read-authority.ts does not reach apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts (7 files reached)
+packages/three-surface-poc-core/src/walkthrough-judgment.ts does not reach packages/three-surface-poc-core/src/test-artifact-verification.ts (9 files reached)
+packages/three-surface-poc-core/src/walkthrough-judgment.ts does not reach apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts (9 files reached)
+packages/three-surface-poc-core/src/act-fields.ts does not reach packages/three-surface-poc-core/src/test-artifact-verification.ts (1 files reached)
+packages/three-surface-poc-core/src/act-fields.ts does not reach apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts (1 files reached)
+packages/three-surface-poc-core/src/owner-act-drafter.ts does not reach packages/three-surface-poc-core/src/test-artifact-verification.ts (24 files reached)
+packages/three-surface-poc-core/src/owner-act-drafter.ts does not reach apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts (24 files reached)
+packages/three-surface-poc-core/src/response-identity.ts does not reach packages/three-surface-poc-core/src/test-artifact-verification.ts (6 files reached)
+packages/three-surface-poc-core/src/response-identity.ts does not reach apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts (6 files reached)
+apps/three-surface-poc/src/poc-main.ts REACHES packages/three-surface-poc-core/src/test-artifact-verification.ts via packages/three-surface-poc-core/src/test-artifact-verification.ts <- packages/three-surface-poc-core/src/index.ts <- apps/three-surface-poc/src/poc-main.ts
+apps/three-surface-poc/src/poc-main.ts does not reach apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts (105 files reached)
+apps/three-surface-poc/src/polaris-accessibility-main.ts REACHES packages/three-surface-poc-core/src/test-artifact-verification.ts via packages/three-surface-poc-core/src/test-artifact-verification.ts <- packages/three-surface-poc-core/src/index.ts <- apps/three-surface-poc/src/polaris-accessibility-variants.ts <- apps/three-surface-poc/src/polaris-accessibility-main.ts
+apps/three-surface-poc/src/polaris-accessibility-main.ts REACHES apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts via apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts <- apps/three-surface-poc/src/polaris-accessibility-variants.ts <- apps/three-surface-poc/src/polaris-accessibility-main.ts
+packages/polaris-dossier/test-support/no-egress-driver.ts REACHES packages/three-surface-poc-core/src/test-artifact-verification.ts via packages/three-surface-poc-core/src/test-artifact-verification.ts <- packages/three-surface-poc-core/src/index.ts <- packages/polaris-dossier/src/screen.ts <- packages/polaris-dossier/src/full-run.testkit.ts <- packages/polaris-dossier/test-support/no-egress-driver.ts
+packages/polaris-dossier/test-support/no-egress-driver.ts does not reach apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts (129 files reached)

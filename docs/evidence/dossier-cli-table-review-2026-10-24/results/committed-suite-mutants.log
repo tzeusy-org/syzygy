@@ -1,0 +1,13 @@
+R0-unmutated SURVIVED 591 passed (591) | 15 passed (15)
+R1-terminator-skipped SURVIVED 591 passed (591) | 15 passed (15)
+R10-first-value-kept SURVIVED 591 passed (591) | 15 passed (15)
+R2b-group-read-by-its-first-option SURVIVED 591 passed (591) | 15 passed (15)
+R3-dash-value-taken-when-refused SURVIVED 591 passed (591) | 15 passed (15)
+R4-repeat-taken-when-refused killed 2 failed | 589 passed (591) | 15 passed (15)
+R5-positional-taken-when-refused killed 591 passed (591) | 2 failed | 13 passed (15)
+R6-stop-option-ignored killed 591 passed (591) | 3 failed | 12 passed (15)
+R7-dash-positional-taken SURVIVED 591 passed (591) | 15 passed (15)
+R8-boolean-option-ignored SURVIVED 591 passed (591) | 15 passed (15)
+R9-missing-value-unchecked killed 2 failed | 589 passed (591) | 2 failed | 13 passed (15)
+final build 0
+exit=0

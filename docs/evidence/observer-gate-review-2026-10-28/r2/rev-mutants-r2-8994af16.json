@@ -1,0 +1,464 @@
+{
+ "subject": "reviewer rule-6 mutants of PR #556's gate and git-observation.test.ts",
+ "commit": "8994af16e5ae735aa3d6f26a925c93e4a0ad7f45",
+ "gateSha256": "dfe1e173deb17ac96c9cf2420c676f6e81a615271efec2f58bbd2bed5872ea52",
+ "testSha256": "6809f8e24908964523d475af4ca6d15b3a4f260ad0c9d6eab7b6b1ed856d9a63",
+ "cleanBefore": true,
+ "tool_sha256": "dfdc185def5a6486a72ec003f8dc8b1aa7f2149741f36d7ee2e8f4e7f1f18ca8",
+ "load": [
+  [
+   "34.72",
+   "29.94",
+   "27.54"
+  ],
+  [
+   "35.29",
+   "30.21",
+   "27.65"
+  ],
+  [
+   "35.82",
+   "30.40",
+   "27.73"
+  ],
+  [
+   "36.80",
+   "30.70",
+   "27.84"
+  ],
+  [
+   "37.51",
+   "31.05",
+   "27.98"
+  ],
+  [
+   "36.75",
+   "31.00",
+   "27.98"
+  ],
+  [
+   "37.09",
+   "31.17",
+   "28.05"
+  ],
+  [
+   "36.20",
+   "31.08",
+   "28.04"
+  ],
+  [
+   "39.82",
+   "32.03",
+   "28.39"
+  ],
+  [
+   "40.16",
+   "32.23",
+   "28.47"
+  ],
+  [
+   "39.42",
+   "32.21",
+   "28.48"
+  ],
+  [
+   "40.97",
+   "32.79",
+   "28.71"
+  ],
+  [
+   "42.89",
+   "33.33",
+   "28.91"
+  ],
+  [
+   "42.90",
+   "33.49",
+   "28.98"
+  ],
+  [
+   "43.30",
+   "33.88",
+   "29.16"
+  ],
+  [
+   "43.82",
+   "34.31",
+   "29.35"
+  ]
+ ],
+ "unmutated": {
+  "exit": 0,
+  "failed": 0,
+  "passed": 16,
+  "total": 16,
+  "failing": [],
+  "suiteErrors": []
+ },
+ "mutants": [
+  {
+   "id": "B0",
+   "what": "the base gate (29db2b11 bytes) under the head test file",
+   "edits": [
+    {
+     "path": "apps/three-surface-poc/src/git-observation.ts",
+     "old": "<whole file>",
+     "new": "<29db2b11 bytes>"
+    }
+   ],
+   "exit": 1,
+   "failed": 2,
+   "passed": 14,
+   "total": 16,
+   "failing": [
+    {
+     "test": "read-only Git observation refuses exactly the projects the POC start compiles or loads, and the files that define its build",
+     "message": "AssertionError: expected [ \u2026(74) ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/apps/three-surface-poc/src/git-observation.test.ts:208:77\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)\n    at runSuite (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runSuite (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runFiles (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1787:3)"
+    },
+    {
+     "test": "read-only Git observation refuses a tree that builds packages/polaris-generation-core into another package's dist",
+     "message": "AssertionError: own outDir: expected true to be false // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/apps/three-surface-poc/src/git-observation.test.ts:247:60\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:863:59\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)\n    at runSuite (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runSuite (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)"
+    }
+   ],
+   "suiteErrors": [],
+   "killed": true
+  },
+  {
+   "id": "R1",
+   "what": "gate prefixes compared without their trailing slash",
+   "edits": [
+    {
+     "path": "apps/three-surface-poc/src/git-observation.ts",
+     "old": "inputPrefixes.every((prefix) => !changedPath.startsWith(prefix))",
+     "new": "inputPrefixes.every((prefix) => !changedPath.startsWith(prefix.slice(0, -1)))"
+    }
+   ],
+   "exit": 1,
+   "failed": 1,
+   "passed": 15,
+   "total": 16,
+   "failing": [
+    {
+     "test": "read-only Git observation refuses exactly the projects the POC start compiles or loads, and the files that define its build",
+     "message": "AssertionError: expected [ \u2026(8) ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/apps/three-surface-poc/src/git-observation.test.ts:208:77\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)\n    at runSuite (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runSuite (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runFiles (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1787:3)"
+    }
+   ],
+   "suiteErrors": [],
+   "killed": true
+  },
+  {
+   "id": "R2",
+   "what": "gate matches a prefix anywhere in the path (full message)",
+   "edits": [
+    {
+     "path": "apps/three-surface-poc/src/git-observation.ts",
+     "old": "inputPrefixes.every((prefix) => !changedPath.startsWith(prefix))",
+     "new": "inputPrefixes.every((prefix) => !changedPath.includes(prefix))"
+    }
+   ],
+   "exit": 1,
+   "failed": 1,
+   "passed": 15,
+   "total": 16,
+   "failing": [
+    {
+     "test": "read-only Git observation refuses exactly the projects the POC start compiles or loads, and the files that define its build",
+     "message": "AssertionError: expected [ \u2026(8) ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/apps/three-surface-poc/src/git-observation.test.ts:208:77\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)\n    at runSuite (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runSuite (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runFiles (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1787:3)"
+    }
+   ],
+   "suiteErrors": [],
+   "killed": true
+  },
+  {
+   "id": "R2-N3",
+   "what": "R2 with the docs/<dir>/a.ts probe removed and the pin put back to 49 (does the N3 probe carry the kill?)",
+   "edits": [
+    {
+     "path": "apps/three-surface-poc/src/git-observation.ts",
+     "old": "inputPrefixes.every((prefix) => !changedPath.startsWith(prefix))",
+     "new": "inputPrefixes.every((prefix) => !changedPath.includes(prefix))"
+    },
+    {
+     "path": "apps/three-surface-poc/src/git-observation.test.ts",
+     "old": ", `docs/${dir}/a.ts`]",
+     "new": "]"
+    },
+    {
+     "path": "apps/three-surface-poc/src/git-observation.test.ts",
+     "old": "toHaveLength(61)",
+     "new": "toHaveLength(49)"
+    }
+   ],
+   "exit": 0,
+   "failed": 0,
+   "passed": 16,
+   "total": 16,
+   "failing": [],
+   "suiteErrors": [],
+   "killed": false
+  },
+  {
+   "id": "R3",
+   "what": "one new prefix written without its slash",
+   "edits": [
+    {
+     "path": "apps/three-surface-poc/src/git-observation.ts",
+     "old": "    'packages/polaris-generation-consent/',\n",
+     "new": "    'packages/polaris-generation-consent',\n"
+    }
+   ],
+   "exit": 1,
+   "failed": 1,
+   "passed": 15,
+   "total": 16,
+   "failing": [
+    {
+     "test": "read-only Git observation refuses exactly the projects the POC start compiles or loads, and the files that define its build",
+     "message": "AssertionError: expected [ Array(1) ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/apps/three-surface-poc/src/git-observation.test.ts:208:77\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)\n    at runSuite (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runSuite (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runFiles (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1787:3)"
+    }
+   ],
+   "suiteErrors": [],
+   "killed": true
+  },
+  {
+   "id": "R4",
+   "what": "gate refuses only when every changed path is an input (every -> some)",
+   "edits": [
+    {
+     "path": "apps/three-surface-poc/src/git-observation.ts",
+     "old": "observation.changedPaths.every(",
+     "new": "observation.changedPaths.some("
+    }
+   ],
+   "exit": 1,
+   "failed": 1,
+   "passed": 15,
+   "total": 16,
+   "failing": [
+    {
+     "test": "read-only Git observation retains a protected source path when it is renamed out",
+     "message": "AssertionError: expected true to be false // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/apps/three-surface-poc/src/git-observation.test.ts:286:54\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)\n    at runSuite (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runSuite (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runFiles (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1787:3)"
+    }
+   ],
+   "suiteErrors": [],
+   "killed": true
+  },
+  {
+   "id": "M4dir",
+   "what": "the lane's M4 (an extra polaris-dossier prefix), for the mismatch direction",
+   "edits": [
+    {
+     "path": "apps/three-surface-poc/src/git-observation.ts",
+     "old": "    'packages/polaris-generation-consent/',\n",
+     "new": "    'packages/polaris-generation-consent/',\n    'packages/polaris-dossier/',\n"
+    }
+   ],
+   "exit": 1,
+   "failed": 1,
+   "passed": 15,
+   "total": 16,
+   "failing": [
+    {
+     "test": "read-only Git observation refuses exactly the projects the POC start compiles or loads, and the files that define its build",
+     "message": "AssertionError: expected [ \u2026(81) ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/apps/three-surface-poc/src/git-observation.test.ts:208:77\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)\n    at runSuite (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runSuite (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runFiles (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1787:3)"
+    }
+   ],
+   "suiteErrors": [],
+   "killed": true
+  },
+  {
+   "id": "M5dir",
+   "what": "the lane's M5 (scripts/clean_build.mjs dropped), for the mismatch direction",
+   "edits": [
+    {
+     "path": "apps/three-surface-poc/src/git-observation.ts",
+     "old": ", 'scripts/clean_build.mjs']);",
+     "new": "]);"
+    }
+   ],
+   "exit": 1,
+   "failed": 2,
+   "passed": 14,
+   "total": 16,
+   "failing": [
+    {
+     "test": "read-only Git observation protects the clean-build script that build:poc runs",
+     "message": "AssertionError: expected true to be false // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/apps/three-surface-poc/src/git-observation.test.ts:176:86\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)\n    at runSuite (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runSuite (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runFiles (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1787:3)"
+    },
+    {
+     "test": "read-only Git observation refuses exactly the projects the POC start compiles or loads, and the files that define its build",
+     "message": "AssertionError: expected [ 'scripts/clean_build.mjs: accepted' ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/apps/three-surface-poc/src/git-observation.test.ts:208:77\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)\n    at runSuite (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runSuite (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runFiles (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1787:3)"
+    }
+   ],
+   "suiteErrors": [],
+   "killed": true
+  },
+  {
+   "id": "R5-N2",
+   "what": "the lane's R5 tree with the N2 assertion removed (does the N2 assertion carry the kill?)",
+   "edits": [
+    {
+     "path": "packages/support/tsconfig.json",
+     "old": "\"extends\": \"../../tsconfig.base.json\"",
+     "new": "\"extends\": \"../../configs/mid.json\""
+    },
+    {
+     "path": "configs/mid.json",
+     "old": null,
+     "new": "{ \"extends\": \"../tsconfig.base.json\" }\n"
+    },
+    {
+     "path": "apps/three-surface-poc/src/git-observation.test.ts",
+     "old": "      expect(chain.filter((link) => link !== 'tsconfig.base.json' && !projects.some((dir) => link.startsWith(`${dir}/`))), project).toEqual([]);\n",
+     "new": ""
+    }
+   ],
+   "exit": 0,
+   "failed": 0,
+   "passed": 16,
+   "total": 16,
+   "failing": [],
+   "suiteErrors": [],
+   "killed": false
+  },
+  {
+   "id": "N2ok",
+   "what": "an intermediate link under a protected project (support extends cap1-core/mid.json, which extends the base): must pass",
+   "edits": [
+    {
+     "path": "packages/support/tsconfig.json",
+     "old": "\"extends\": \"../../tsconfig.base.json\"",
+     "new": "\"extends\": \"../cap1-core/mid.json\""
+    },
+    {
+     "path": "packages/cap1-core/mid.json",
+     "old": null,
+     "new": "{ \"extends\": \"../../tsconfig.base.json\" }\n"
+    }
+   ],
+   "exit": 0,
+   "failed": 0,
+   "passed": 16,
+   "total": 16,
+   "failing": [],
+   "suiteErrors": [],
+   "killed": false
+  },
+  {
+   "id": "N2dossier",
+   "what": "an intermediate link in an unprotected workspace (support extends polaris-dossier/mid.json)",
+   "edits": [
+    {
+     "path": "packages/support/tsconfig.json",
+     "old": "\"extends\": \"../../tsconfig.base.json\"",
+     "new": "\"extends\": \"../polaris-dossier/mid.json\""
+    },
+    {
+     "path": "packages/polaris-dossier/mid.json",
+     "old": null,
+     "new": "{ \"extends\": \"../../tsconfig.base.json\" }\n"
+    }
+   ],
+   "exit": 1,
+   "failed": 1,
+   "passed": 15,
+   "total": 16,
+   "failing": [
+    {
+     "test": "read-only Git observation reads every protected project from tsconfig.base.json through its own extends chain",
+     "message": "AssertionError: packages/support: expected [ 'packages/polaris-dossier/mid.json' ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/apps/three-surface-poc/src/git-observation.test.ts:224:133\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)\n    at runSuite (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runSuite (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runFiles (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1787:3)"
+    }
+   ],
+   "suiteErrors": [],
+   "killed": true
+  },
+  {
+   "id": "D1",
+   "what": "derivation: tsconfig reference walk stops at depth 1 (today's tree)",
+   "edits": [
+    {
+     "path": "apps/three-surface-poc/src/git-observation.test.ts",
+     "old": "for (const reference of config.references ?? []) visit(posix.normalize(posix.join(project, reference.path)));",
+     "new": "for (const reference of config.references ?? []) projects.add(posix.normalize(posix.join(project, reference.path)));"
+    }
+   ],
+   "exit": 0,
+   "failed": 0,
+   "passed": 16,
+   "total": 16,
+   "failing": [],
+   "suiteErrors": [],
+   "killed": false
+  },
+  {
+   "id": "D1x",
+   "what": "D1 plus the lane's D1t tree (does the D1t row report a depth-1 rewrite?)",
+   "edits": [
+    {
+     "path": "apps/three-surface-poc/src/git-observation.test.ts",
+     "old": "for (const reference of config.references ?? []) visit(posix.normalize(posix.join(project, reference.path)));",
+     "new": "for (const reference of config.references ?? []) projects.add(posix.normalize(posix.join(project, reference.path)));"
+    },
+    {
+     "path": "packages/polaris-generation-consent/tsconfig.json",
+     "old": "      \"path\": \"../support\"\n",
+     "new": "      \"path\": \"../support\"\n    },\n    {\n      \"path\": \"../polaris-dossier\"\n"
+    }
+   ],
+   "exit": 0,
+   "failed": 0,
+   "passed": 16,
+   "total": 16,
+   "failing": [],
+   "suiteErrors": [],
+   "killed": false
+  },
+  {
+   "id": "D4x",
+   "what": "derivation: the import walk adds no project, plus the lane's M9 tree",
+   "edits": [
+    {
+     "path": "apps/three-surface-poc/src/git-observation.test.ts",
+     "old": "projects.add(owner);",
+     "new": "void owner;"
+    },
+    {
+     "path": "apps/three-surface-poc/src/main.ts",
+     "old": "",
+     "new": "export type {} from '@syzygy/polaris-dossier';\n"
+    }
+   ],
+   "exit": 0,
+   "failed": 0,
+   "passed": 16,
+   "total": 16,
+   "failing": [],
+   "suiteErrors": [],
+   "killed": false
+  },
+  {
+   "id": "P1",
+   "what": "the probe list gains a sixth per-workspace probe (the length-pin message)",
+   "edits": [
+    {
+     "path": "apps/three-surface-poc/src/git-observation.test.ts",
+     "old": ", `docs/${dir}/a.ts`]",
+     "new": ", `docs/${dir}/a.ts`, `${dir}/b.ts`]"
+    }
+   ],
+   "exit": 1,
+   "failed": 1,
+   "passed": 15,
+   "total": 16,
+   "failing": [
+    {
+     "test": "read-only Git observation refuses exactly the projects the POC start compiles or loads, and the files that define its build",
+     "message": "AssertionError: five probes per workspace and the program's near-miss; a changed count means the probe list changed: expected [ 'apps/syzygy/package.json', \u2026(72) ] to have a length of 61 but got 73\n    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/expect/dist/index.js:1257:20)\n    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/expect/dist/index.js:1029:14)\n    at Proxy.methodWrapper (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/chai/index.js:1686:25)\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/apps/three-surface-poc/src/git-observation.test.ts:204:124\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)"
+    }
+   ],
+   "suiteErrors": [],
+   "killed": true
+  }
+ ],
+ "cleanAfter": true
+}

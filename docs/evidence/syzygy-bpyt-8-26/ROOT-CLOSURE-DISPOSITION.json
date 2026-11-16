@@ -1,0 +1,15 @@
+{
+  "at": "2026-11-06T04:28:10.866049+00:00",
+  "epistemic_status": "Inferred ROOT engineering disposition based on independently checked committed bytes; not independent runtime authentication or gate waiver",
+  "bead": "syzygy-bpyt.8.26",
+  "old_commit": "134a8c5ba16dda1f3e3935aa1b565166f3b3583f",
+  "new_commit": "2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5",
+  "old_tool_sha256": "13b079994f3f01324f7feb0e754af3bd564408f6aad4c1fa9bc75be2d847a6c7",
+  "new_tool_sha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+  "normal_prefix_equal_after_exact_documentation_substitution": true,
+  "main_and_entrypoint_equal_after_exact_usage_string_substitution": true,
+  "remaining_changes_confined_to_selftest": true,
+  "conditional_reuse": "Normal complete population/answer outcomes from successfully completed original134 fullM0 may be reused with the explicit closure bridge. Do not relabel that run as final2a4695 runtime or byte-identical output: digest/subject metadata differ. Full comparison remains unproved until actual successful complete5403-world M0 with exact denominator/cleanup; current final-tool all-kind selection/full-key+completevalue parity/literal successor proof, actual changed selftests and real argument-error usage/exit2 controls and compiled product identity binding must also succeed. Independent fresh reviewer must verify this closure and full13AC before readiness/landing; findings retire reuse until resolved. Final exact integrated committed clean-clone checkall/hosted gates remain required. Any changed normal corpus/reader/adapter/control/cleanup/population/answers invalidates closure and requires proportionate new complete proof.",
+  "second_full_normal_corpus_not_required_for_this_exact_delta_alone": true,
+  "no_mutant_scoring_before_baseline_and_targeted_proof": true
+}

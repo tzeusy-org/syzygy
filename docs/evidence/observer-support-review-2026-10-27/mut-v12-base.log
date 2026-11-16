@@ -1,0 +1,2 @@
+V12-gate-prefix-src-and-manifest-only: survived exit=0 failed=0/580 files=0 timeouts=0 34.5s clean=True
+killed 0 survived 1 error 0 of 1

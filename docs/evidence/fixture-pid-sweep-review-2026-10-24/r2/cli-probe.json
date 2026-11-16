@@ -1,0 +1,28 @@
+{
+ "probe": "cli_probe.py",
+ "namespace": "4026531836",
+ "deadPid": 3575567,
+ "distSha256": "f514899a7e7530fb56c0fbf4b32144799fdb3dbcb87e1dfc889039d281b8fde9",
+ "distFixtureDirectoriesSha256": "3a3067a618ffba95bf9cf8915fe401a4fcbb2b4b313e50022b9e0f8dfa8db231",
+ "exit": 2,
+ "stdout": "",
+ "stderr": "No Chrome/Chromium found on PATH and SYZYGY_POC_BROWSER is unset; nothing measured.\n",
+ "removed": [
+  "syzygy-poc-surface-fixture-p3575567-n4026531836-DEAD01",
+  "syzygy-poc-surface-fixture-template-p3575567-n4026531836-DEAD02"
+ ],
+ "kept": {
+  "deadCopy": false,
+  "deadTemplate": false,
+  "liveCopy": true,
+  "foreignNamespace": true,
+  "noNamespace": true,
+  "legacy": true,
+  "legacyTemplate": true,
+  "zeroNamespace": true,
+  "regularFile": true,
+  "symlink": true,
+  "symlinkTargetIntact": true
+ },
+ "evidenceWritten": []
+}

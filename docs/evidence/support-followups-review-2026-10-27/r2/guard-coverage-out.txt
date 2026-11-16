@@ -1,0 +1,32 @@
+== 7d408fd9: PR code paths 13
+   G1 declared CORE_SOURCE list: 'node:crypto', 'node:fs', 'node:path'
+   G1 apps/three-surface-poc/src/capture-test-artifact-main.ts: specifiers outside the allowlist []
+   G1 apps/three-surface-poc/src/capture-test-artifact.ts: specifiers outside the allowlist []
+   G1 packages/three-surface-poc-core/src/test-artifact-verification.ts: specifiers outside the allowlist []
+   G2 packages/three-surface-poc-core/src/owner-act-drafter.ts: specifiers ['@syzygy/cap1-core', '@syzygy/support'] (pinned ['@syzygy/cap1-core', '@syzygy/support'])
+   G1: covers 3 files; PR code paths covered 0 []
+   G2: covers 1 files; PR code paths covered 0 []
+   G3: covers 3 files; PR code paths covered 0 []
+   G4: covers 3 files; PR code paths covered 0 []
+   G5: covers 54 files; PR code paths covered 0 []
+   G6: covers 43 files; PR code paths covered 0 []
+   G7: covers 1 files; PR code paths covered 0 []
+   G8: covers 1 files; PR code paths covered 0 []
+   G9: covers 12 files; PR code paths covered 0 []
+   G10: covers 495 files; PR code paths covered 12 ['apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts', 'apps/three-surface-poc/src/polaris-generation/generator-install-check.test.ts', 'apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts', 'packages/polaris-generation-core/src/dossier-evaluation.test.ts', 'packages/polaris-generation-core/src/dossier-profile.test.ts', 'packages/support/src/deep-freeze.test.ts', 'packages/three-surface-poc-core/src/body-read-authority.test.ts', 'packages/three-surface-poc-core/src/model.test.ts', 'packages/three-surface-poc-core/src/project-shape-manifest.test.ts', 'packages/three-surface-poc-core/src/project-shape-observation.test.ts', 'packages/three-surface-poc-core/src/test-frozen.test.ts', 'packages/three-surface-poc-core/src/test-frozen.ts']
+== 663061c4: PR code paths 51
+   G1 declared CORE_SOURCE list: 'node:crypto', 'node:fs', 'node:path'
+   G1 apps/three-surface-poc/src/capture-test-artifact-main.ts: specifiers outside the allowlist []
+   G1 apps/three-surface-poc/src/capture-test-artifact.ts: specifiers outside the allowlist []
+   G1 packages/three-surface-poc-core/src/test-artifact-verification.ts: specifiers outside the allowlist ['@syzygy/support']
+   G2 packages/three-surface-poc-core/src/owner-act-drafter.ts: specifiers ['@syzygy/cap1-core', '@syzygy/support'] (pinned ['@syzygy/cap1-core', '@syzygy/support'])
+   G1: covers 3 files; PR code paths covered 1 ['packages/three-surface-poc-core/src/test-artifact-verification.ts']
+   G2: covers 1 files; PR code paths covered 0 []
+   G3: covers 3 files; PR code paths covered 0 []
+   G4: covers 3 files; PR code paths covered 0 []
+   G5: covers 54 files; PR code paths covered 1 ['packages/three-surface-poc-core/src/test-artifact-verification.ts']
+   G6: covers 43 files; PR code paths covered 0 []
+   G7: covers 1 files; PR code paths covered 0 []
+   G8: covers 1 files; PR code paths covered 0 []
+   G9: covers 12 files; PR code paths covered 0 []
+   G10: covers 494 files; PR code paths covered 36 ['apps/three-surface-poc/src/evaluation-footer.test.ts', 'apps/three-surface-poc/src/git-observation.test.ts', 'apps/three-surface-poc/src/main.test.ts', 'apps/three-surface-poc/src/materialize-action.test.ts', 'apps/three-surface-poc/src/page-size-delta.test.ts', 'apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts', 'apps/three-surface-poc/src/polaris-authority-sweep.test.ts', 'apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts', 'apps/three-surface-poc/src/polaris-generation/generator-install-check.test.ts', 'apps/three-surface-poc/src/polaris-presentation-route.test.ts', 'apps/three-surface-poc/src/polaris-source-route.test.ts', 'apps/three-surface-poc/src/reobserve-action.test.ts', 'apps/three-surface-poc/src/response-limits.test.ts', 'apps/three-surface-poc/src/routes.test.ts', 'apps/three-surface-poc/src/surface-routes.test.ts', 'apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts', 'apps/three-surface-poc/src/tuple-encoding.test.ts', 'apps/three-surface-poc/src/verbatim-route.test.ts', 'packages/cap1-daemon/src/package.test.ts', 'packages/cap1-daemon/src/server.test.ts', 'packages/http-host/src/credentials.test.ts', 'packages/http-host/src/server.ts', 'packages/http-host/src/shutdown.ts', 'packages/polaris-dossier/src/argv.test.ts', 'packages/polaris-generation-core/src/dossier-evaluation.test.ts', 'packages/polaris-generation-core/src/dossier-profile.test.ts', 'packages/polaris-generation-core/src/workspace-reach.test.ts', 'packages/polaris-generation-core/src/workspace-reach.testkit.ts', 'packages/support/src/deep-freeze.test.ts', 'packages/three-surface-poc-core/src/body-read-authority.test.ts', 'packages/three-surface-poc-core/src/model.test.ts', 'packages/three-surface-poc-core/src/project-shape-manifest.test.ts', 'packages/three-surface-poc-core/src/project-shape-observation.test.ts', 'packages/three-surface-poc-core/src/test-artifact-verification.ts', 'packages/three-surface-poc-core/src/test-frozen.test.ts', 'packages/three-surface-poc-core/src/test-frozen.ts']

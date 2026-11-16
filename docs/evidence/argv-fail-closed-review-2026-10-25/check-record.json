@@ -1,0 +1,71 @@
+{
+ "commit": "aa3312691d815d09239958c2dec4116cfb1d9cbe",
+ "digests": {
+  "code diff": "6ccd0b36eec5bdee9765102902da4361645b5f463b59e3742e6d9d5be5e1f19e",
+  "evidence diff": "6f5b19924040907b6d6efb2415aab535d0e252d1c9565586e8f260ad1957e626",
+  "mut.py": "ca2b8eadc503305bb3767b7220b02775429164ef6c183ac9854acf9d8ed9b6a5",
+  "island_diff.py": "131206846b062bc60ba7efeb67bf6ecf81802a54921d94979f2bc7428b8afc04",
+  "record.py": "3616a2de77927f2c803258498abea98d66baf7ac5f8ffb0d0d458d6cc1129a5d",
+  "summary.json": "2e969055d2d0f460bafd97b6e4c3b4e07b738d4b5b1e2a42c052ed8281f0e63f"
+ },
+ "counts": {
+  "reviewer specs equal to retained rows": 79,
+  "reviewer-base.json: old fragments occurring once at a088f1ca": 81,
+  "reviewer-base.json: old fragments checked": 81,
+  "reviewer-base.json: create paths checked": 7,
+  "reviewer-base.json: results": 79,
+  "reviewer-head.json: old fragments occurring once at 1447b6bb": 81,
+  "reviewer-head.json: old fragments checked": 81,
+  "reviewer-head.json: create paths checked": 7,
+  "reviewer-head.json: results": 79,
+  "own-head.json: old fragments occurring once at 1447b6bb": 14,
+  "own-head.json: old fragments checked": 14,
+  "own-head.json: results": 14,
+  "base tally": {
+   "killed": 58,
+   "survives": 21,
+   "error": 0
+  },
+  "head tally": {
+   "killed": 66,
+   "survives": 13,
+   "error": 0
+  },
+  "own tally": {
+   "killed": 14,
+   "survives": 0,
+   "error": 0
+  },
+  "weaker": [],
+  "stronger": [
+   "D5-readArgv-under-another-name-in-a-new-module",
+   "R-X6-package-imports-alias-to-the-barrel",
+   "R-X6b-package-imports-alias-in-an-intermediate-module",
+   "R-X6i-island-package-imports-alias-to-consent-root",
+   "R-X9-node-condition-ahead-of-import-in-the-argv-export",
+   "R-Y6-extra-namespace-call-in-cli",
+   "R-Y7-extra-aliased-call-in-cli",
+   "consen:R4-node-condition-ahead-of-import-in-live-subpath",
+   "island:R4-live-subpath-node-condition-resolves-to-core-root"
+  ],
+  "unchanged": 70,
+  "head survivors": [
+   "C0-argv",
+   "C0-both-guards",
+   "C0-guard",
+   "OB3-shadowed-argv-replaces-the-polaris-branch-import",
+   "R-IF2-into-island-from-island-counted",
+   "R-X8-get-builtin-module-create-require",
+   "R-Y8-another-options-command-gains-a-valued-option",
+   "consen:R3-computed-dynamic-import-of-core-root-in-in-force",
+   "consen:R5-vitest-alias-for-live-points-at-root",
+   "island:R1-non-literal-dynamic-import-of-core-root-in-render-step",
+   "island:R5-broker-client-entry-imports-core-root",
+   "island:R6-create-require-of-core-root-in-render-step",
+   "island:R9-island-import-hidden-inside-the-exception"
+  ],
+  "targets agreeing with rev-528 at base": 6,
+  "targets agreeing with rev-528 at head": 6
+ },
+ "problems": []
+}

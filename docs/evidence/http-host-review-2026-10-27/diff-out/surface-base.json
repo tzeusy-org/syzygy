@@ -1,0 +1,656 @@
+{
+ "tree": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-529/base",
+ "entries": {
+  "packages/cap1-daemon/src/index.ts": [
+   {
+    "name": "authorizeStateWrite",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/credentials.ts"
+   },
+   {
+    "name": "CONSENT_DECISIONS_RELATIVE_PATH",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/pipeline.ts"
+   },
+   {
+    "name": "CONSENT_RECORD_EXTENSION",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/consent-loading.ts"
+   },
+   {
+    "name": "CONSENT_RECORD_FIELDS",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/consent-loading.ts"
+   },
+   {
+    "name": "ConsentLoadFailure",
+    "value": false,
+    "type": true,
+    "declaredIn": "packages/cap1-daemon/src/consent-loading.ts"
+   },
+   {
+    "name": "ConsentLoadReport",
+    "value": false,
+    "type": true,
+    "declaredIn": "packages/cap1-daemon/src/consent-loading.ts"
+   },
+   {
+    "name": "ConsentReferenceLoad",
+    "value": false,
+    "type": true,
+    "declaredIn": "packages/cap1-daemon/src/consent-loading.ts"
+   },
+   {
+    "name": "ConsentReferencePathResolution",
+    "value": false,
+    "type": true,
+    "declaredIn": "packages/cap1-daemon/src/consent-loading.ts"
+   },
+   {
+    "name": "createDaemon",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/server.ts"
+   },
+   {
+    "name": "CREDENTIAL_FILE_MODE",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/credentials.ts"
+   },
+   {
+    "name": "CREDENTIAL_FILE_NAME",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/credentials.ts"
+   },
+   {
+    "name": "CREDENTIAL_TOKEN_BYTES",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/credentials.ts"
+   },
+   {
+    "name": "CredentialClass",
+    "value": false,
+    "type": true,
+    "declaredIn": "packages/cap1-daemon/src/server.ts"
+   },
+   {
+    "name": "credentialFromAuthorizationHeader",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/credentials.ts"
+   },
+   {
+    "name": "CredentialInspection",
+    "value": false,
+    "type": true,
+    "declaredIn": "packages/cap1-daemon/src/credentials.ts"
+   },
+   {
+    "name": "CredentialProvision",
+    "value": false,
+    "type": true,
+    "declaredIn": "packages/cap1-daemon/src/credentials.ts"
+   },
+   {
+    "name": "CredentialStat",
+    "value": false,
+    "type": true,
+    "declaredIn": "packages/cap1-daemon/src/credentials.ts"
+   },
+   {
+    "name": "DAEMON_HOST",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/server.ts"
+   },
+   {
+    "name": "DAEMON_SCENARIO_CONTEXT",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/pipeline.ts"
+   },
+   {
+    "name": "DaemonOptions",
+    "value": false,
+    "type": true,
+    "declaredIn": "packages/cap1-daemon/src/server.ts"
+   },
+   {
+    "name": "DaemonStart",
+    "value": false,
+    "type": true,
+    "declaredIn": "packages/cap1-daemon/src/server.ts"
+   },
+   {
+    "name": "DECLARATION_RELATIVE_PATH",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/observation.ts"
+   },
+   {
+    "name": "DeclarationObservation",
+    "value": false,
+    "type": true,
+    "declaredIn": "packages/cap1-daemon/src/observation.ts"
+   },
+   {
+    "name": "ensureCredential",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/credentials.ts"
+   },
+   {
+    "name": "EntrySourceRead",
+    "value": false,
+    "type": true,
+    "declaredIn": "packages/cap1-daemon/src/routes-human.ts"
+   },
+   {
+    "name": "escapeHtml",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/routes-human.ts"
+   },
+   {
+    "name": "evaluateProject",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/pipeline.ts"
+   },
+   {
+    "name": "FactDistinctions",
+    "value": false,
+    "type": true,
+    "declaredIn": "packages/cap1-daemon/src/routes-machine.ts"
+   },
+   {
+    "name": "factsFromAnswers",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/pipeline.ts"
+   },
+   {
+    "name": "HANDLER_FAILURE_REASON",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/server.ts"
+   },
+   {
+    "name": "HANDLER_FAILURE_STATUS",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/server.ts"
+   },
+   {
+    "name": "HUMAN_ENTRY_ROUTE_PATH",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/routes-human.ts"
+   },
+   {
+    "name": "HUMAN_PAGE_PATH",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/routes-human.ts"
+   },
+   {
+    "name": "HumanRouteDependencies",
+    "value": false,
+    "type": true,
+    "declaredIn": "packages/cap1-daemon/src/routes-human.ts"
+   },
+   {
+    "name": "humanRoutes",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/routes-human.ts"
+   },
+   {
+    "name": "loadConsentReference",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/consent-loading.ts"
+   },
+   {
+    "name": "loadConsentReferences",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/consent-loading.ts"
+   },
+   {
+    "name": "MACHINE_CONTENT_TYPE",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/routes-machine.ts"
+   },
+   {
+    "name": "MACHINE_PROJECT_PATH",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/routes-machine.ts"
+   },
+   {
+    "name": "machineProjectBody",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/routes-machine.ts"
+   },
+   {
+    "name": "MachineProjectBody",
+    "value": false,
+    "type": true,
+    "declaredIn": "packages/cap1-daemon/src/routes-machine.ts"
+   },
+   {
+    "name": "MachineProjectEvaluatedBody",
+    "value": false,
+    "type": true,
+    "declaredIn": "packages/cap1-daemon/src/routes-machine.ts"
+   },
+   {
+    "name": "MachineRouteDependencies",
+    "value": false,
+    "type": true,
+    "declaredIn": "packages/cap1-daemon/src/routes-machine.ts"
+   },
+   {
+    "name": "machineRoutes",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/routes-machine.ts"
+   },
+   {
+    "name": "minimalRootRoute",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/server.ts"
+   },
+   {
+    "name": "observeDeclaration",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/observation.ts"
+   },
+   {
+    "name": "observeReadmeEvidence",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/observation.ts"
+   },
+   {
+    "name": "observeRepositorySnapshot",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/observation.ts"
+   },
+   {
+    "name": "observeRootCandidate",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/observation.ts"
+   },
+   {
+    "name": "PipelineDependencies",
+    "value": false,
+    "type": true,
+    "declaredIn": "packages/cap1-daemon/src/pipeline.ts"
+   },
+   {
+    "name": "ProjectEvaluation",
+    "value": false,
+    "type": true,
+    "declaredIn": "packages/cap1-daemon/src/pipeline.ts"
+   },
+   {
+    "name": "README_RELATIVE_PATH",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/observation.ts"
+   },
+   {
+    "name": "REFUSAL_BODY",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/server.ts"
+   },
+   {
+    "name": "REFUSAL_STATUS",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/server.ts"
+   },
+   {
+    "name": "REPOSITORY_ROOT_SCOPE",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/observation.ts"
+   },
+   {
+    "name": "RepositoryConsentDistinction",
+    "value": false,
+    "type": true,
+    "declaredIn": "packages/cap1-daemon/src/routes-machine.ts"
+   },
+   {
+    "name": "resolveConsentReferencePath",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/consent-loading.ts"
+   },
+   {
+    "name": "RootCandidateObservation",
+    "value": false,
+    "type": true,
+    "declaredIn": "packages/cap1-daemon/src/observation.ts"
+   },
+   {
+    "name": "Route",
+    "value": false,
+    "type": true,
+    "declaredIn": "packages/cap1-daemon/src/server.ts"
+   },
+   {
+    "name": "RouteContext",
+    "value": false,
+    "type": true,
+    "declaredIn": "packages/cap1-daemon/src/server.ts"
+   },
+   {
+    "name": "RouteRequest",
+    "value": false,
+    "type": true,
+    "declaredIn": "packages/cap1-daemon/src/server.ts"
+   },
+   {
+    "name": "RouteResponse",
+    "value": false,
+    "type": true,
+    "declaredIn": "packages/cap1-daemon/src/server.ts"
+   },
+   {
+    "name": "RunningDaemon",
+    "value": false,
+    "type": true,
+    "declaredIn": "packages/cap1-daemon/src/server.ts"
+   },
+   {
+    "name": "STATE_DIR_MODE",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/credentials.ts"
+   },
+   {
+    "name": "STATE_WRITE_REFUSALS",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/credentials.ts"
+   },
+   {
+    "name": "StateWriteAuthorization",
+    "value": false,
+    "type": true,
+    "declaredIn": "packages/cap1-daemon/src/credentials.ts"
+   },
+   {
+    "name": "StateWriteRefusalName",
+    "value": false,
+    "type": true,
+    "declaredIn": "packages/cap1-daemon/src/credentials.ts"
+   },
+   {
+    "name": "UNKNOWN_ROUTE_REASON",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/server.ts"
+   },
+   {
+    "name": "UNKNOWN_ROUTE_STATUS",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/server.ts"
+   },
+   {
+    "name": "verifyCredential",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/credentials.ts"
+   }
+  ],
+  "packages/cap1-daemon/src/server.ts": [
+   {
+    "name": "createDaemon",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/server.ts"
+   },
+   {
+    "name": "CredentialClass",
+    "value": false,
+    "type": true,
+    "declaredIn": "packages/cap1-daemon/src/server.ts"
+   },
+   {
+    "name": "DAEMON_HOST",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/server.ts"
+   },
+   {
+    "name": "DaemonOptions",
+    "value": false,
+    "type": true,
+    "declaredIn": "packages/cap1-daemon/src/server.ts"
+   },
+   {
+    "name": "DaemonStart",
+    "value": false,
+    "type": true,
+    "declaredIn": "packages/cap1-daemon/src/server.ts"
+   },
+   {
+    "name": "HANDLER_FAILURE_REASON",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/server.ts"
+   },
+   {
+    "name": "HANDLER_FAILURE_STATUS",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/server.ts"
+   },
+   {
+    "name": "minimalRootRoute",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/server.ts"
+   },
+   {
+    "name": "REFUSAL_BODY",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/server.ts"
+   },
+   {
+    "name": "REFUSAL_STATUS",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/server.ts"
+   },
+   {
+    "name": "Route",
+    "value": false,
+    "type": true,
+    "declaredIn": "packages/cap1-daemon/src/server.ts"
+   },
+   {
+    "name": "RouteContext",
+    "value": false,
+    "type": true,
+    "declaredIn": "packages/cap1-daemon/src/server.ts"
+   },
+   {
+    "name": "RouteRequest",
+    "value": false,
+    "type": true,
+    "declaredIn": "packages/cap1-daemon/src/server.ts"
+   },
+   {
+    "name": "RouteResponse",
+    "value": false,
+    "type": true,
+    "declaredIn": "packages/cap1-daemon/src/server.ts"
+   },
+   {
+    "name": "RunningDaemon",
+    "value": false,
+    "type": true,
+    "declaredIn": "packages/cap1-daemon/src/server.ts"
+   },
+   {
+    "name": "UNKNOWN_ROUTE_REASON",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/server.ts"
+   },
+   {
+    "name": "UNKNOWN_ROUTE_STATUS",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/server.ts"
+   }
+  ],
+  "packages/cap1-daemon/src/credentials.ts": [
+   {
+    "name": "authorizeStateWrite",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/credentials.ts"
+   },
+   {
+    "name": "CREDENTIAL_FILE_MODE",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/credentials.ts"
+   },
+   {
+    "name": "CREDENTIAL_FILE_NAME",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/credentials.ts"
+   },
+   {
+    "name": "CREDENTIAL_TOKEN_BYTES",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/credentials.ts"
+   },
+   {
+    "name": "credentialFromAuthorizationHeader",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/credentials.ts"
+   },
+   {
+    "name": "CredentialInspection",
+    "value": false,
+    "type": true,
+    "declaredIn": "packages/cap1-daemon/src/credentials.ts"
+   },
+   {
+    "name": "CredentialProvision",
+    "value": false,
+    "type": true,
+    "declaredIn": "packages/cap1-daemon/src/credentials.ts"
+   },
+   {
+    "name": "CredentialStat",
+    "value": false,
+    "type": true,
+    "declaredIn": "packages/cap1-daemon/src/credentials.ts"
+   },
+   {
+    "name": "ensureCredential",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/credentials.ts"
+   },
+   {
+    "name": "STATE_DIR_MODE",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/credentials.ts"
+   },
+   {
+    "name": "STATE_WRITE_REFUSALS",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/credentials.ts"
+   },
+   {
+    "name": "StateWriteAuthorization",
+    "value": false,
+    "type": true,
+    "declaredIn": "packages/cap1-daemon/src/credentials.ts"
+   },
+   {
+    "name": "StateWriteRefusalName",
+    "value": false,
+    "type": true,
+    "declaredIn": "packages/cap1-daemon/src/credentials.ts"
+   },
+   {
+    "name": "verifyCredential",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/credentials.ts"
+   }
+  ],
+  "packages/cap1-daemon/src/routes-human.ts": [
+   {
+    "name": "EntrySourceRead",
+    "value": false,
+    "type": true,
+    "declaredIn": "packages/cap1-daemon/src/routes-human.ts"
+   },
+   {
+    "name": "escapeHtml",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/routes-human.ts"
+   },
+   {
+    "name": "HUMAN_ENTRY_ROUTE_PATH",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/routes-human.ts"
+   },
+   {
+    "name": "HUMAN_PAGE_PATH",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/routes-human.ts"
+   },
+   {
+    "name": "HumanRouteDependencies",
+    "value": false,
+    "type": true,
+    "declaredIn": "packages/cap1-daemon/src/routes-human.ts"
+   },
+   {
+    "name": "humanRoutes",
+    "value": true,
+    "type": false,
+    "declaredIn": "packages/cap1-daemon/src/routes-human.ts"
+   }
+  ]
+ },
+ "errors": 0
+}

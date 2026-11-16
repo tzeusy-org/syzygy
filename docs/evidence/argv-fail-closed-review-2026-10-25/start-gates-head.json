@@ -1,0 +1,62 @@
+{
+ "tree": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-528/clone",
+ "head": "aa3312691d815d09239958c2dec4116cfb1d9cbe",
+ "file": "packages/polaris-dossier/src/start-gates.test.ts",
+ "runs": [
+  {
+   "run": 1,
+   "exit": 0,
+   "tests": [
+    "Tests  104 passed (104)"
+   ],
+   "failed": [],
+   "errors": [],
+   "seconds": 39.4,
+   "load1": 34.4
+  },
+  {
+   "run": 2,
+   "exit": 0,
+   "tests": [
+    "Tests  104 passed (104)"
+   ],
+   "failed": [],
+   "errors": [],
+   "seconds": 40.4,
+   "load1": 33.0
+  },
+  {
+   "run": 3,
+   "exit": 0,
+   "tests": [
+    "Tests  104 passed (104)"
+   ],
+   "failed": [],
+   "errors": [],
+   "seconds": 35.2,
+   "load1": 32.0
+  },
+  {
+   "run": 4,
+   "exit": 0,
+   "tests": [
+    "Tests  104 passed (104)"
+   ],
+   "failed": [],
+   "errors": [],
+   "seconds": 20.4,
+   "load1": 30.2
+  },
+  {
+   "run": 5,
+   "exit": 0,
+   "tests": [
+    "Tests  104 passed (104)"
+   ],
+   "failed": [],
+   "errors": [],
+   "seconds": 18.3,
+   "load1": 26.2
+  }
+ ]
+}

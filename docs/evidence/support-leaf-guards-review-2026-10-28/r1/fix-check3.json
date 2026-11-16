@@ -1,0 +1,61 @@
+{
+ "commit": "5995aa3c0a23f4862f7107c401a72a222b8a7998",
+ "rows": [
+  {
+   "id": "FW0-fixed-unmutated",
+   "edits": [
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "  it('names none of the forbidden tokens it shares with the owner-act drafter in any source', () => {\n",
+     "new": "  it('assigns to no property in any source, so no allowed global is rewritten', () => {\n    const writes: string[] = [];\n    for (const file of SOURCES) {\n      const source = ts.createSourceFile(file, read(file), ts.ScriptTarget.Latest, false);\n      const visit = (node: ts.Node): void => {\n        if (ts.isBinaryExpression(node) && node.operatorToken.kind >= ts.SyntaxKind.FirstAssignment && node.operatorToken.kind <= ts.SyntaxKind.LastAssignment\n          && (ts.isPropertyAccessExpression(node.left) || ts.isElementAccessExpression(node.left))) writes.push(`${file}: ${node.getText(source)}`);\n        ts.forEachChild(node, visit);\n      };\n      visit(source);\n    }\n    expect(writes).toEqual([]);\n  });\n\n  it('names none of the forbidden tokens it shares with the owner-act drafter in any source', () => {\n"
+    }
+   ],
+   "expected": "pass",
+   "observed": "pass",
+   "exit": 0,
+   "passed": 30,
+   "failed": 0,
+   "pending": 0,
+   "total": 30,
+   "failedFiles": [],
+   "fileMessages": [],
+   "failedTests": []
+  },
+  {
+   "id": "FW-Y6",
+   "edits": [
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "  it('names none of the forbidden tokens it shares with the owner-act drafter in any source', () => {\n",
+     "new": "  it('assigns to no property in any source, so no allowed global is rewritten', () => {\n    const writes: string[] = [];\n    for (const file of SOURCES) {\n      const source = ts.createSourceFile(file, read(file), ts.ScriptTarget.Latest, false);\n      const visit = (node: ts.Node): void => {\n        if (ts.isBinaryExpression(node) && node.operatorToken.kind >= ts.SyntaxKind.FirstAssignment && node.operatorToken.kind <= ts.SyntaxKind.LastAssignment\n          && (ts.isPropertyAccessExpression(node.left) || ts.isElementAccessExpression(node.left))) writes.push(`${file}: ${node.getText(source)}`);\n        ts.forEachChild(node, visit);\n      };\n      visit(source);\n    }\n    expect(writes).toEqual([]);\n  });\n\n  it('names none of the forbidden tokens it shares with the owner-act drafter in any source', () => {\n"
+    },
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nObject.freeze = (value) => value;\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "exit": 1,
+   "passed": 29,
+   "failed": 1,
+   "pending": 0,
+   "total": 30,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf assigns to no property in any source, so no allowed global is rewritten",
+     "message": "AssertionError: expected [ Array(1) ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545/clone/packages/support/src/support-purity.test.ts:65:20\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545/"
+    }
+   ]
+  }
+ ],
+ "buildWithFix": 0,
+ "buildOut": "",
+ "rebuildAfter": 0,
+ "statusAfter": ""
+}

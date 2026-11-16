@@ -1,0 +1,81 @@
+{
+ "merge": "56966815089d9917e624b118f933ee5235e2a159",
+ "parents": [
+  "330dd89458801e7a150134efa15f3d4af8215304",
+  "29db2b11153990f465c0b86fb3341865ae6459ac"
+ ],
+ "dist": "absent",
+ "exit": 0,
+ "load1": [
+  "23.60",
+  "27.32"
+ ],
+ "filesPassed": 10,
+ "files": 10,
+ "passed": 231,
+ "failed": 0,
+ "skipped": 1,
+ "total": 232,
+ "perFile": [
+  {
+   "name": "packages/support/src/is-record.test.ts",
+   "status": "passed",
+   "tests": 41,
+   "passed": 41
+  },
+  {
+   "name": "packages/support/src/support-purity.test.ts",
+   "status": "passed",
+   "tests": 50,
+   "passed": 50
+  },
+  {
+   "name": "packages/polaris-generation-core/src/island-boundary.test.ts",
+   "status": "passed",
+   "tests": 4,
+   "passed": 4
+  },
+  {
+   "name": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "status": "passed",
+   "tests": 64,
+   "passed": 64
+  },
+  {
+   "name": "packages/polaris-dossier/src/no-egress.test.ts",
+   "status": "passed",
+   "tests": 7,
+   "passed": 6
+  },
+  {
+   "name": "packages/polaris-dossier/src/subpath-imports.test.ts",
+   "status": "passed",
+   "tests": 27,
+   "passed": 27
+  },
+  {
+   "name": "packages/three-surface-poc-core/src/owner-act-drafter.test.ts",
+   "status": "passed",
+   "tests": 4,
+   "passed": 4
+  },
+  {
+   "name": "apps/three-surface-poc/src/git-observation.test.ts",
+   "status": "passed",
+   "tests": 14,
+   "passed": 14
+  },
+  {
+   "name": "apps/three-surface-poc/src/product-build.test.ts",
+   "status": "passed",
+   "tests": 15,
+   "passed": 15
+  },
+  {
+   "name": "apps/three-surface-poc/src/sync-child-process-guard.test.ts",
+   "status": "passed",
+   "tests": 6,
+   "passed": 6
+  }
+ ]
+}

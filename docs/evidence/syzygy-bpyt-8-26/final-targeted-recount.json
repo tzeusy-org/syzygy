@@ -1,0 +1,434 @@
+{
+  "schema": "consent-differential-independent-recount/1",
+  "measuredOn": {
+    "path": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/final-targeted-M0.json",
+    "sha256": "731005f8f074169a59584a0cd171ca343b599c33896679016b6fead3ac336731"
+  },
+  "generated": {
+    "worlds": 5403,
+    "byKind": {
+      "base": 4,
+      "base-reduced": 4,
+      "line": 3056,
+      "named": 535,
+      "record": 17,
+      "artifact": 24,
+      "pin": 8,
+      "probe": 1541,
+      "real-file": 197,
+      "edited-between-reads": 11,
+      "policy-bytes": 5,
+      "observation-successor": 1
+    }
+  },
+  "selected": {
+    "worlds": 12,
+    "byKind": {
+      "base": 1,
+      "base-reduced": 1,
+      "line": 1,
+      "named": 1,
+      "record": 1,
+      "artifact": 1,
+      "pin": 1,
+      "probe": 1,
+      "real-file": 1,
+      "edited-between-reads": 1,
+      "policy-bytes": 1,
+      "observation-successor": 1
+    }
+  },
+  "comparisonIdentities": 274,
+  "answers": 274,
+  "mismatches": 0,
+  "perLogicalReader": {
+    "admission": {
+      "worlds": 10,
+      "steps": 12,
+      "answers": 12,
+      "mismatches": 0,
+      "byInstant": {
+        "untimed": 12
+      },
+      "byStep": {
+        "1": 10,
+        "2": 1,
+        "3": 1
+      }
+    },
+    "policy-reader": {
+      "worlds": 6,
+      "steps": 8,
+      "answers": 8,
+      "mismatches": 0,
+      "byInstant": {
+        "untimed": 8
+      },
+      "byStep": {
+        "1": 6,
+        "2": 1,
+        "3": 1
+      }
+    },
+    "policy-chain": {
+      "worlds": 6,
+      "steps": 8,
+      "answers": 11,
+      "mismatches": 0,
+      "byInstant": {
+        "2026-10-08T09:30:00Z": 3,
+        "2026-10-22T12:00:00Z": 8
+      },
+      "byStep": {
+        "1": 9,
+        "2": 1,
+        "3": 1
+      }
+    },
+    "class-act": {
+      "worlds": 5,
+      "steps": 7,
+      "answers": 9,
+      "mismatches": 0,
+      "byInstant": {
+        "2026-10-08T09:30:00Z": 2,
+        "2026-10-22T12:00:00Z": 7
+      },
+      "byStep": {
+        "1": 7,
+        "2": 1,
+        "3": 1
+      }
+    },
+    "in-force-egress": {
+      "worlds": 5,
+      "steps": 7,
+      "answers": 9,
+      "mismatches": 0,
+      "byInstant": {
+        "2026-10-08T09:30:00Z": 2,
+        "2026-10-22T12:00:00Z": 7
+      },
+      "byStep": {
+        "1": 7,
+        "2": 1,
+        "3": 1
+      }
+    },
+    "registry-git-source": {
+      "worlds": 5,
+      "steps": 7,
+      "answers": 9,
+      "mismatches": 0,
+      "byInstant": {
+        "2026-10-08T09:30:00Z": 2,
+        "2026-10-22T12:00:00Z": 7
+      },
+      "byStep": {
+        "1": 7,
+        "2": 1,
+        "3": 1
+      }
+    },
+    "local-agent-signoff": {
+      "worlds": 5,
+      "steps": 7,
+      "answers": 9,
+      "mismatches": 0,
+      "byInstant": {
+        "2026-10-08T09:30:00Z": 2,
+        "2026-10-22T12:00:00Z": 7
+      },
+      "byStep": {
+        "1": 7,
+        "2": 1,
+        "3": 1
+      }
+    },
+    "dossier-d9": {
+      "worlds": 5,
+      "steps": 7,
+      "answers": 9,
+      "mismatches": 0,
+      "byInstant": {
+        "2026-10-08T09:30:00Z": 2,
+        "2026-10-22T12:00:00Z": 7
+      },
+      "byStep": {
+        "1": 7,
+        "2": 1,
+        "3": 1
+      }
+    },
+    "dossier-rfc7-20": {
+      "worlds": 5,
+      "steps": 7,
+      "answers": 9,
+      "mismatches": 0,
+      "byInstant": {
+        "2026-10-08T09:30:00Z": 2,
+        "2026-10-22T12:00:00Z": 7
+      },
+      "byStep": {
+        "1": 7,
+        "2": 1,
+        "3": 1
+      }
+    },
+    "dossier-drawer": {
+      "worlds": 5,
+      "steps": 7,
+      "answers": 9,
+      "mismatches": 0,
+      "byInstant": {
+        "2026-10-08T09:30:00Z": 2,
+        "2026-10-22T12:00:00Z": 7
+      },
+      "byStep": {
+        "1": 7,
+        "2": 1,
+        "3": 1
+      }
+    },
+    "dossier-statement-v1": {
+      "worlds": 5,
+      "steps": 7,
+      "answers": 9,
+      "mismatches": 0,
+      "byInstant": {
+        "2026-10-08T09:30:00Z": 2,
+        "2026-10-22T12:00:00Z": 7
+      },
+      "byStep": {
+        "1": 7,
+        "2": 1,
+        "3": 1
+      }
+    },
+    "dossier-provider-v2": {
+      "worlds": 5,
+      "steps": 7,
+      "answers": 9,
+      "mismatches": 0,
+      "byInstant": {
+        "2026-10-08T09:30:00Z": 2,
+        "2026-10-22T12:00:00Z": 7
+      },
+      "byStep": {
+        "1": 7,
+        "2": 1,
+        "3": 1
+      }
+    },
+    "port": {
+      "worlds": 11,
+      "steps": 13,
+      "answers": 21,
+      "mismatches": 0,
+      "byInstant": {
+        "2026-10-08T09:30:00Z": 8,
+        "2026-10-22T12:00:00Z": 13
+      },
+      "byStep": {
+        "1": 19,
+        "2": 1,
+        "3": 1
+      }
+    },
+    "gate-port": {
+      "worlds": 11,
+      "steps": 13,
+      "answers": 21,
+      "mismatches": 0,
+      "byInstant": {
+        "2026-10-08T09:30:00Z": 8,
+        "2026-10-22T12:00:00Z": 13
+      },
+      "byStep": {
+        "1": 19,
+        "2": 1,
+        "3": 1
+      }
+    },
+    "gate-d9": {
+      "worlds": 5,
+      "steps": 7,
+      "answers": 9,
+      "mismatches": 0,
+      "byInstant": {
+        "2026-10-08T09:30:00Z": 2,
+        "2026-10-22T12:00:00Z": 7
+      },
+      "byStep": {
+        "1": 7,
+        "2": 1,
+        "3": 1
+      }
+    },
+    "gate-rfc7-20": {
+      "worlds": 5,
+      "steps": 7,
+      "answers": 9,
+      "mismatches": 0,
+      "byInstant": {
+        "2026-10-08T09:30:00Z": 2,
+        "2026-10-22T12:00:00Z": 7
+      },
+      "byStep": {
+        "1": 7,
+        "2": 1,
+        "3": 1
+      }
+    },
+    "gate-registry-entry": {
+      "worlds": 5,
+      "steps": 7,
+      "answers": 9,
+      "mismatches": 0,
+      "byInstant": {
+        "2026-10-08T09:30:00Z": 2,
+        "2026-10-22T12:00:00Z": 7
+      },
+      "byStep": {
+        "1": 7,
+        "2": 1,
+        "3": 1
+      }
+    },
+    "gate-drawer:redis-redis": {
+      "worlds": 5,
+      "steps": 7,
+      "answers": 9,
+      "mismatches": 0,
+      "byInstant": {
+        "2026-10-08T09:30:00Z": 2,
+        "2026-10-22T12:00:00Z": 7
+      },
+      "byStep": {
+        "1": 7,
+        "2": 1,
+        "3": 1
+      }
+    },
+    "gate-statements:redis-redis": {
+      "worlds": 5,
+      "steps": 7,
+      "answers": 9,
+      "mismatches": 0,
+      "byInstant": {
+        "2026-10-08T09:30:00Z": 2,
+        "2026-10-22T12:00:00Z": 7
+      },
+      "byStep": {
+        "1": 7,
+        "2": 1,
+        "3": 1
+      }
+    },
+    "in-force": {
+      "worlds": 10,
+      "steps": 12,
+      "answers": 19,
+      "mismatches": 0,
+      "byInstant": {
+        "2026-10-08T09:30:00Z": 7,
+        "2026-10-22T12:00:00Z": 12
+      },
+      "byStep": {
+        "1": 17,
+        "2": 1,
+        "3": 1
+      }
+    },
+    "consent-ports": {
+      "worlds": 10,
+      "steps": 12,
+      "answers": 19,
+      "mismatches": 0,
+      "byInstant": {
+        "2026-10-08T09:30:00Z": 7,
+        "2026-10-22T12:00:00Z": 12
+      },
+      "byStep": {
+        "1": 17,
+        "2": 1,
+        "3": 1
+      }
+    },
+    "screen": {
+      "worlds": 6,
+      "steps": 8,
+      "answers": 11,
+      "mismatches": 0,
+      "byInstant": {
+        "2026-10-08T09:30:00Z": 3,
+        "2026-10-22T12:00:00Z": 8
+      },
+      "byStep": {
+        "1": 9,
+        "2": 1,
+        "3": 1
+      }
+    },
+    "policy-chain-disk": {
+      "worlds": 6,
+      "steps": 8,
+      "answers": 11,
+      "mismatches": 0,
+      "byInstant": {
+        "2026-10-08T09:30:00Z": 3,
+        "2026-10-22T12:00:00Z": 8
+      },
+      "byStep": {
+        "1": 9,
+        "2": 1,
+        "3": 1
+      }
+    },
+    "class-act-disk": {
+      "worlds": 5,
+      "steps": 7,
+      "answers": 9,
+      "mismatches": 0,
+      "byInstant": {
+        "2026-10-08T09:30:00Z": 2,
+        "2026-10-22T12:00:00Z": 7
+      },
+      "byStep": {
+        "1": 7,
+        "2": 1,
+        "3": 1
+      }
+    },
+    "successor-record-port": {
+      "worlds": 1,
+      "steps": 1,
+      "answers": 3,
+      "mismatches": 0,
+      "byInstant": {
+        "2026-10-08T09:29:59.999Z": 1,
+        "2026-10-08T09:30:00.000Z": 1,
+        "2026-10-08T09:30:00.001Z": 1
+      },
+      "byStep": {
+        "1": 3
+      }
+    },
+    "successor-gate-port": {
+      "worlds": 1,
+      "steps": 1,
+      "answers": 3,
+      "mismatches": 0,
+      "byInstant": {
+        "2026-10-08T09:29:59.999Z": 1,
+        "2026-10-08T09:30:00.000Z": 1,
+        "2026-10-08T09:30:00.001Z": 1
+      },
+      "byStep": {
+        "1": 3
+      }
+    }
+  },
+  "errors": [],
+  "success": true
+}

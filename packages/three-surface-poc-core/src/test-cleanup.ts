@@ -3,7 +3,7 @@
 // holds a near-duplicate for the app's own use.
 import { rmSync } from 'node:fs';
 
-export interface CleanupRemoveOptions {
+interface CleanupRemoveOptions {
   /** Total remove calls, including the first attempt. */
   readonly maxAttempts?: number;
   readonly remove?: (path: string) => void;

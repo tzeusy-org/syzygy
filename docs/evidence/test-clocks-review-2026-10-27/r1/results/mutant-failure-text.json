@@ -1,0 +1,46 @@
+[
+ {
+  "id": "started-waits-for-bound",
+  "exit": 1,
+  "rows": [
+   {
+    "title": "started(): the wait for main to serve reports a run that finished first, at once and by name",
+    "status": "failed",
+    "failure": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone4/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone4/node_modules/@vitest/runner/dist/chunk-hooks.js:662:16)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone4/node_modules/@vitest/runner/dist/chunk-hooks.js:458:28)"
+   }
+  ]
+ },
+ {
+  "id": "reader-no-depth-cap",
+  "exit": 1,
+  "rows": [
+   {
+    "title": "each call is bounded: bytes inflated, delta depth, objects visited (finding 4) a reference delta naming itself refuses at the depth cap, quickly",
+    "status": "failed",
+    "failure": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone4/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone4/node_modules/@vitest/runner/dist/chunk-hooks.js:662:16)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone4/node_modules/@vitest/runner/dist/chunk-hooks.js:458:28)"
+   }
+  ]
+ },
+ {
+  "id": "reader-blocking-open",
+  "exit": 1,
+  "rows": [
+   {
+    "title": "nothing under .git is read through a link or from a special file (R-POLARIS-DOSSIER-S2-READER-1 finding 2) a loose object that is a link to a FIFO, a FIFO, a directory or a link to a device refuses at once, never blocks",
+    "status": "failed",
+    "failure": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone4/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone4/node_modules/@vitest/runner/dist/chunk-hooks.js:662:16)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone4/node_modules/@vitest/runner/dist/chunk-hooks.js:458:28)"
+   }
+  ]
+ },
+ {
+  "id": "redis-stop-at-first-misfit",
+  "exit": 1,
+  "rows": [
+   {
+    "title": "discovery on a synthetic tree shaped like a large C key-value server under the dossier byte cap (400,000 bytes of quotable text) keeps the selection inside the cap, with no vendored file, and closes the denominator and the byte totals",
+    "status": "failed",
+    "failure": "AssertionError: LICENSE.txt: expected 592 to be greater than 4228\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone4/apps/three-surface-poc/src/polaris-generation/redis-shaped-discovery.test.ts:144:76\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone4/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20"
+   }
+  ]
+ }
+]

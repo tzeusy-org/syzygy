@@ -8,9 +8,17 @@
   "include": [
     "src"
   ],
+  "exclude": [
+    "src/**/*.test.ts",
+    "src/test-cleanup.ts",
+    "src/test-frozen.ts"
+  ],
   "references": [
     {
       "path": "../cap1-core"
+    },
+    {
+      "path": "../support"
     }
   ]
 }

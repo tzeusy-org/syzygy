@@ -1,0 +1,137 @@
+{
+ "method": "sum of production/lenient caller rows of each aggregate; percentage computed here",
+ "round0Totals": {
+  "calls": 1433,
+  "same": 679,
+  "different": 754,
+  "why": {
+   "undefinedValue": 753,
+   "bigint": 1
+  }
+ },
+ "repair1Totals": {
+  "calls": 1439,
+  "same": 685,
+  "different": 754,
+  "why": {
+   "undefinedValue": 753,
+   "bigint": 1
+  }
+ },
+ "repair1ByOriginAndEncoderProductionLenient": [
+  {
+   "origin": "production",
+   "encoder": "lenient",
+   "calls": 1439,
+   "same": 685,
+   "different": 754
+  }
+ ],
+ "repair1PercentDifferent": 52.4,
+ "round0PercentDifferent": 52.62,
+ "callersAlikeOnEveryCall": [
+  "packages/three-surface-poc-core/src/project-shape-manifest.ts:canonicalManifestJson",
+  "packages/three-surface-poc-core/src/project-shape-observation.ts:resourceLimitsDigest",
+  "packages/three-surface-poc-core/src/walkthrough-readiness.ts:walkthroughEvaluationIdentity"
+ ],
+ "rows": {
+  "packages/three-surface-poc-core/src/project-shape-manifest.ts:canonicalManifestJson": {
+   "round0": {
+    "calls": 297,
+    "same": 297,
+    "different": 0
+   },
+   "repair1": {
+    "calls": 299,
+    "same": 299,
+    "different": 0
+   },
+   "repair1WhyDifferent": {},
+   "repair1OutcomesWhenDifferent": {},
+   "deltaCalls": 2,
+   "deltaDifferent": 0
+  },
+  "packages/three-surface-poc-core/src/project-shape-observation.ts:observeProjectShapeSources": {
+   "round0": {
+    "calls": 269,
+    "same": 79,
+    "different": 190
+   },
+   "repair1": {
+    "calls": 271,
+    "same": 81,
+    "different": 190
+   },
+   "repair1WhyDifferent": {
+    "undefinedValue": 190
+   },
+   "repair1OutcomesWhenDifferent": {
+    "lenient=ok strict=unsupported-value": 190
+   },
+   "deltaCalls": 2,
+   "deltaDifferent": 0
+  },
+  "packages/three-surface-poc-core/src/project-shape-observation.ts:resourceLimitsDigest": {
+   "round0": {
+    "calls": 270,
+    "same": 270,
+    "different": 0
+   },
+   "repair1": {
+    "calls": 272,
+    "same": 272,
+    "different": 0
+   },
+   "repair1WhyDifferent": {},
+   "repair1OutcomesWhenDifferent": {},
+   "deltaCalls": 2,
+   "deltaDifferent": 0
+  },
+  "packages/three-surface-poc-core/src/response-identity.ts:buildResponseIdentity": {
+   "round0": {
+    "calls": 586,
+    "same": 22,
+    "different": 564
+   },
+   "repair1": {
+    "calls": 586,
+    "same": 22,
+    "different": 564
+   },
+   "repair1WhyDifferent": {
+    "undefinedValue": 563,
+    "bigint": 1
+   },
+   "repair1OutcomesWhenDifferent": {
+    "lenient=ok strict=unsupported-value": 563,
+    "lenient=TypeError strict=unsupported-value": 1
+   },
+   "deltaCalls": 0,
+   "deltaDifferent": 0
+  },
+  "packages/three-surface-poc-core/src/walkthrough-readiness.ts:walkthroughEvaluationIdentity": {
+   "round0": {
+    "calls": 11,
+    "same": 11,
+    "different": 0
+   },
+   "repair1": {
+    "calls": 11,
+    "same": 11,
+    "different": 0
+   },
+   "repair1WhyDifferent": {},
+   "repair1OutcomesWhenDifferent": {},
+   "deltaCalls": 0,
+   "deltaDifferent": 0
+  }
+ },
+ "linesRead": {
+  "round0": 5205,
+  "repair1": 5211
+ },
+ "files": {
+  "round0": 71,
+  "repair1": 72
+ }
+}

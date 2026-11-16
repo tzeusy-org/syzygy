@@ -1,0 +1,167 @@
+{
+ "mutants": [
+  {
+   "id": "S1",
+   "predicate": "mask beyond: the head must not throw",
+   "file": "markdown-code-context.js",
+   "old": "for (const pendingLine of pending)\n                    out.push(blank(pendingLine));",
+   "new": "out.push(...pending.map(blank));",
+   "exit": 1,
+   "failures": [
+    "mask LF beyond 125457: head does not equal the oracle",
+    "mask LF beyond 200000: head does not equal the oracle",
+    "mask LF beyond 400000: head does not equal the oracle",
+    "mask CRLF beyond 125458: head does not equal the oracle",
+    "mask CRLF beyond 200000: head does not equal the oracle",
+    "mask CRLF beyond 400000: head does not equal the oracle",
+    "mask CR beyond 125458: head does not equal the oracle",
+    "mask CR beyond 200000: head does not equal the oracle",
+    "mask CR beyond 400000: head does not equal the oracle"
+   ],
+   "expectedPrefixes": [
+    "mask LF beyond",
+    "mask CRLF beyond",
+    "mask CR beyond"
+   ],
+   "killed": true
+  },
+  {
+   "id": "S2",
+   "predicate": "mask beyond: the head equals the oracle",
+   "file": "markdown-code-context.js",
+   "old": "for (const pendingLine of pending)\n                    out.push(blank(pendingLine));",
+   "new": "for (const pendingLine of pending.slice(0, -1))\n                    out.push(blank(pendingLine));",
+   "exit": 1,
+   "failures": [
+    "mask LF survivor 1: base and head differ",
+    "mask LF survivor 10: base and head differ",
+    "mask LF survivor 1000: base and head differ",
+    "mask LF survivor 62728: base and head differ",
+    "mask LF survivor 100365: base and head differ",
+    "mask LF beyond 125458: head does not equal the oracle",
+    "mask LF beyond 200000: head does not equal the oracle",
+    "mask LF beyond 400000: head does not equal the oracle",
+    "mask CRLF survivor 1: base and head differ",
+    "mask CRLF survivor 10: base and head differ",
+    "mask CRLF survivor 1000: base and head differ",
+    "mask CRLF survivor 62728: base and head differ",
+    "mask CRLF survivor 100364: base and head differ",
+    "mask CRLF beyond 125457: head does not equal the oracle",
+    "mask CRLF beyond 200000: head does not equal the oracle",
+    "mask CRLF beyond 400000: head does not equal the oracle",
+    "mask CR survivor 1: base and head differ",
+    "mask CR survivor 10: base and head differ",
+    "mask CR survivor 1000: base and head differ",
+    "mask CR survivor 62728: base and head differ",
+    "mask CR survivor 100365: base and head differ",
+    "mask CR beyond 125458: head does not equal the oracle",
+    "mask CR beyond 200000: head does not equal the oracle",
+    "mask CR beyond 400000: head does not equal the oracle"
+   ],
+   "expectedPrefixes": [
+    "mask LF beyond"
+   ],
+   "killed": true
+  },
+  {
+   "id": "S3",
+   "predicate": "mask survivors: base equals head",
+   "file": "markdown-code-context.js",
+   "old": "for (const pendingLine of pending)\n                    out.push(blank(pendingLine));",
+   "new": "for (const pendingLine of pending)\n                    out.push(pendingLine);",
+   "exit": 1,
+   "failures": [
+    "mask LF survivor 1: base and head differ",
+    "mask LF survivor 10: base and head differ",
+    "mask LF survivor 1000: base and head differ",
+    "mask LF survivor 62728: base and head differ",
+    "mask LF survivor 100364: base and head differ",
+    "mask LF beyond 125457: head does not equal the oracle",
+    "mask LF beyond 200000: head does not equal the oracle",
+    "mask LF beyond 400000: head does not equal the oracle",
+    "mask CRLF survivor 1: base and head differ",
+    "mask CRLF survivor 10: base and head differ",
+    "mask CRLF survivor 1000: base and head differ",
+    "mask CRLF survivor 62732: base and head differ",
+    "mask CRLF survivor 100371: base and head differ",
+    "mask CRLF beyond 125465: head does not equal the oracle",
+    "mask CRLF beyond 200000: head does not equal the oracle",
+    "mask CRLF beyond 400000: head does not equal the oracle",
+    "mask CR survivor 1: base and head differ",
+    "mask CR survivor 10: base and head differ",
+    "mask CR survivor 1000: base and head differ",
+    "mask CR survivor 62728: base and head differ",
+    "mask CR survivor 100364: base and head differ",
+    "mask CR beyond 125457: head does not equal the oracle",
+    "mask CR beyond 200000: head does not equal the oracle",
+    "mask CR beyond 400000: head does not equal the oracle"
+   ],
+   "expectedPrefixes": [
+    "mask LF survivor"
+   ],
+   "killed": true
+  },
+  {
+   "id": "S4",
+   "predicate": "extractor beyond: the head must not throw",
+   "file": "project-shape-extraction.js",
+   "old": "for (const item of result.items)\n            all.push(item);",
+   "new": "all.push(...result.items);",
+   "exit": 1,
+   "failures": [
+    "extractor beyond 200000: head does not keep every item",
+    "extractor beyond 400000: head does not keep every item"
+   ],
+   "expectedPrefixes": [
+    "extractor beyond"
+   ],
+   "killed": true
+  },
+  {
+   "id": "S5",
+   "predicate": "extractor beyond: the head keeps every item",
+   "file": "project-shape-extraction.js",
+   "old": "for (const item of result.items)\n            all.push(item);",
+   "new": "for (const item of result.items.slice(0, -1))\n            all.push(item);",
+   "exit": 1,
+   "failures": [
+    "extractor survivor 1: base and head differ",
+    "extractor survivor 10: base and head differ",
+    "extractor survivor 1000: base and head differ",
+    "extractor survivor 62729: base and head differ",
+    "extractor survivor 100366: base and head differ",
+    "extractor beyond 125459: head does not keep every item",
+    "extractor beyond 200000: head does not keep every item",
+    "extractor beyond 400000: head does not keep every item"
+   ],
+   "expectedPrefixes": [
+    "extractor beyond"
+   ],
+   "killed": true
+  },
+  {
+   "id": "S6",
+   "predicate": "extractor survivors: base equals head",
+   "file": "project-shape-extraction.js",
+   "old": "for (const item of result.items)\n            all.push(item);",
+   "new": "for (const item of result.items.slice(1))\n            all.push(item);",
+   "exit": 1,
+   "failures": [
+    "extractor survivor 1: base and head differ",
+    "extractor survivor 10: base and head differ",
+    "extractor survivor 1000: base and head differ",
+    "extractor survivor 62729: base and head differ",
+    "extractor survivor 100366: base and head differ",
+    "extractor beyond 125459: head does not keep every item",
+    "extractor beyond 200000: head does not keep every item",
+    "extractor beyond 400000: head does not keep every item"
+   ],
+   "expectedPrefixes": [
+    "extractor survivor"
+   ],
+   "killed": true
+  }
+ ],
+ "killed": 6,
+ "total": 6
+}

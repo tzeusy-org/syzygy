@@ -1,0 +1,312 @@
+{
+ "what": "syzygy-bpyt.7.3: one mutant per new predicate (S shutdown helper, G observer gate, B both barrels and the shims), and C/E mutants of the moved bytes run by the tests that moved or stayed with them",
+ "mutants": [
+  {
+   "id": "S1-second-signal-closes-again",
+   "what": "closeOnSignal: the closing guard is gone, so a later signal announces and closes again",
+   "projects": [
+    "@syzygy/http-host"
+   ],
+   "files": [
+    "packages/http-host/src/shutdown.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/http-host/src/shutdown.ts",
+     "old": "      if (closing) return;\n",
+     "new": ""
+    }
+   ],
+   "expect": "killed"
+  },
+  {
+   "id": "S2-announce-after-close-starts",
+   "what": "closeOnSignal: the announcement comes after the close has started",
+   "projects": [
+    "@syzygy/http-host"
+   ],
+   "files": [
+    "packages/http-host/src/shutdown.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/http-host/src/shutdown.ts",
+     "old": "      io.announce(signal);\n      void daemon.close()",
+     "new": "      void Promise.resolve().then(() => io.announce(signal));\n      void daemon.close()"
+    }
+   ],
+   "expect": "killed"
+  },
+  {
+   "id": "S3-close-failure-unreported",
+   "what": "closeOnSignal: a failed close is never told to closeFailed",
+   "projects": [
+    "@syzygy/http-host"
+   ],
+   "files": [
+    "packages/http-host/src/shutdown.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/http-host/src/shutdown.ts",
+     "old": "        io.closeFailed?.(cause);\n",
+     "new": ""
+    }
+   ],
+   "expect": "killed"
+  },
+  {
+   "id": "S4-close-failure-never-resolves",
+   "what": "closeOnSignal: a failed close leaves the promise pending",
+   "projects": [
+    "@syzygy/http-host"
+   ],
+   "files": [
+    "packages/http-host/src/shutdown.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/http-host/src/shutdown.ts",
+     "old": "        io.closeFailed?.(cause);\n        resolve();\n",
+     "new": "        io.closeFailed?.(cause);\n"
+    }
+   ],
+   "expect": "killed"
+  },
+  {
+   "id": "S5-sigterm-not-handled",
+   "what": "closeOnSignal: no SIGTERM listener",
+   "projects": [
+    "@syzygy/http-host"
+   ],
+   "files": [
+    "packages/http-host/src/shutdown.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/http-host/src/shutdown.ts",
+     "old": "    io.onSignal('SIGTERM', () => shutdown('SIGTERM'));\n",
+     "new": ""
+    }
+   ],
+   "expect": "killed"
+  },
+  {
+   "id": "S6-sigterm-announced-as-sigint",
+   "what": "closeOnSignal: SIGTERM is announced as SIGINT",
+   "projects": [
+    "@syzygy/http-host"
+   ],
+   "files": [
+    "packages/http-host/src/shutdown.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/http-host/src/shutdown.ts",
+     "old": "    io.onSignal('SIGTERM', () => shutdown('SIGTERM'));",
+     "new": "    io.onSignal('SIGTERM', () => shutdown('SIGINT'));"
+    }
+   ],
+   "expect": "killed"
+  },
+  {
+   "id": "G1-observer-gate-leaves-out-the-host",
+   "what": "the POC observer-input prefixes leave out packages/http-host/",
+   "projects": [
+    "@syzygy/three-surface-poc-app"
+   ],
+   "files": [
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "old": "    'packages/http-host/',\n",
+     "new": ""
+    }
+   ],
+   "expect": "killed"
+  },
+  {
+   "id": "B1-cap1-barrel-loses-escapeHtml",
+   "what": "cap1-daemon's routes-human no longer re-exports escapeHtml",
+   "projects": [
+    "@syzygy/cap1-daemon"
+   ],
+   "files": [
+    "packages/cap1-daemon/src/package.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/cap1-daemon/src/routes-human.ts",
+     "old": "\nexport { escapeHtml };\n",
+     "new": "\n"
+    }
+   ],
+   "expect": "killed"
+  },
+  {
+   "id": "B2-credentials-shim-loses-verifyCredential",
+   "what": "cap1-daemon's credentials.ts shim drops verifyCredential",
+   "projects": [
+    "@syzygy/cap1-daemon"
+   ],
+   "files": [
+    "packages/cap1-daemon/src/package.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/cap1-daemon/src/credentials.ts",
+     "old": "  verifyCredential,\n",
+     "new": ""
+    }
+   ],
+   "expect": "killed"
+  },
+  {
+   "id": "B3-server-shim-loses-createDaemon",
+   "what": "cap1-daemon's server.ts shim drops createDaemon",
+   "projects": [
+    "@syzygy/cap1-daemon"
+   ],
+   "files": [
+    "packages/cap1-daemon/src/package.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/cap1-daemon/src/server.ts",
+     "old": "  createDaemon,\n  DAEMON_HOST,",
+     "new": "  DAEMON_HOST,"
+    }
+   ],
+   "expect": "killed"
+  },
+  {
+   "id": "B4-server-shim-gains-closeOnSignal",
+   "what": "cap1-daemon's server.ts shim also re-exports closeOnSignal",
+   "projects": [
+    "@syzygy/cap1-daemon"
+   ],
+   "files": [
+    "packages/cap1-daemon/src/package.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/cap1-daemon/src/server.ts",
+     "old": "  createDaemon,\n  DAEMON_HOST,",
+     "new": "  closeOnSignal,\n  createDaemon,\n  DAEMON_HOST,"
+    }
+   ],
+   "expect": "killed"
+  },
+  {
+   "id": "B5-host-barrel-drops-escape-html",
+   "what": "the http-host barrel no longer exports escape-html",
+   "projects": [
+    "@syzygy/http-host"
+   ],
+   "files": [
+    "packages/http-host/src/package.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/http-host/src/index.ts",
+     "old": "export * from './escape-html.js';\n",
+     "new": ""
+    }
+   ],
+   "expect": "killed"
+  },
+  {
+   "id": "B6-host-barrel-gains-a-cap1-name",
+   "what": "the http-host barrel also exports a Capability 1 name",
+   "projects": [
+    "@syzygy/http-host"
+   ],
+   "files": [
+    "packages/http-host/src/package.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/http-host/src/index.ts",
+     "old": "export * from './shutdown.js';\n",
+     "new": "export * from './shutdown.js';\nexport { evaluationId } from '@syzygy/cap1-core';\n"
+    }
+   ],
+   "expect": "killed"
+  },
+  {
+   "id": "C1-any-presented-token-admitted",
+   "what": "the moved verifyCredential admits any presented token",
+   "projects": [
+    "@syzygy/http-host"
+   ],
+   "files": [
+    "packages/http-host/src/credentials.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "old": "  if (!credential.presented || !tokensEqual(credential.token, expectedToken)) {",
+     "new": "  if (!credential.presented) {"
+    }
+   ],
+   "expect": "killed"
+  },
+  {
+   "id": "C2-group-readable-file-reused",
+   "what": "the moved reuse inspection lets a group-readable credential file pass",
+   "projects": [
+    "@syzygy/http-host"
+   ],
+   "files": [
+    "packages/http-host/src/credentials.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "old": "  if ((fileStat.mode & 0o077) !== 0) {",
+     "new": "  if ((fileStat.mode & 0o007) !== 0) {"
+    }
+   ],
+   "expect": "killed"
+  },
+  {
+   "id": "C3-auth-order-bypass",
+   "what": "the moved server runs a machine-credentialed handler without admission (run_m10's auth-order-bypass)",
+   "projects": [
+    "@syzygy/cap1-daemon"
+   ],
+   "files": [
+    "packages/cap1-daemon/src/server.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/http-host/src/server.ts",
+     "old": "if (route.credentialClass === 'machine-credentialed') {",
+     "new": "if (false) {"
+    }
+   ],
+   "expect": "killed"
+  },
+  {
+   "id": "E1-apostrophe-left-unescaped",
+   "what": "the moved escapeHtml leaves ' unescaped",
+   "projects": [
+    "@syzygy/three-surface-poc-app"
+   ],
+   "files": [
+    "apps/three-surface-poc/src/orrery.test.ts",
+    "apps/three-surface-poc/src/trajectory.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/http-host/src/escape-html.ts",
+     "old": "    .replace(/'/g, '&#39;');",
+     "new": "    ;"
+    }
+   ],
+   "expect": "killed"
+  }
+ ]
+}

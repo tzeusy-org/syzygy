@@ -1,0 +1,143 @@
+{
+  "format": "syzygy-bpyt-8-1-mutants/1",
+  "commit": "59f0409701b9a9291907d8acbd0d6559df7db1a4",
+  "runnerSha256": "01d7daa5d4f8cccec4f7e0aafd3352e982556a1c84e64444fbbff85c30379cb2",
+  "runner": "single-occurrence replacement of `old` by `new` in `file`, then `npx vitest run` over `tests` (by project, or by config); killed = at least one failed test, errored = no test result (the file failed to collect); restored from git after each run",
+  "fileSha256": {
+    "packages/polaris-generation-consent/package.json": "7302b8bc43417f4c48b141f5cb559bf3c1deb2e6bda3210f2a322e353c4ce536",
+    "packages/polaris-generation-consent/src/in-force.ts": "afcf1c2dc0a727460f3ca3a3623fd8a62ac3d739c87f2923187125422ab191dc",
+    "packages/polaris-generation-consent/src/live.ts": "2aa268d84e4ba20f851e15334da5c792621acd25090b6d36674b41b39e53289c",
+    "vitest.config.ts": "851cbb0cdf112018e61cdf1219c7dd8dc956cd5abc2e9164f3009dcfc6c05145"
+  },
+  "testFileSha256": {
+    "packages/polaris-generation-core/src/island-boundary.test.ts": "a32d3ddc8f1ef6d7fc0c199bf910ed21722b35dfe6fccb3a08df6c42d22eb3c1"
+  },
+  "ranAt": "2026-10-22T16:03:45+00:00",
+  "mutants": [
+    {
+      "id": "B1-core-root-import-in-in-force",
+      "file": "packages/polaris-generation-consent/src/in-force.ts",
+      "old": "import type { AdmissionRecord } from './admission-record.js';\n",
+      "new": "import type { AdmissionRecord } from './admission-record.js';\nimport { digestCanonicalJson } from '@syzygy/polaris-generation-core';\n",
+      "tests": [
+        "packages/polaris-generation-core/src/island-boundary.test.ts"
+      ],
+      "project": "@syzygy/polaris-generation-core",
+      "outcome": "killed",
+      "totalTests": 4,
+      "failedTests": [
+        {
+          "test": "the syzygy CLI and the parked provider island reaches no island module from the CLI entry",
+          "firstErrorLine": "AssertionError: expected [ \u2026(11) ] to deeply equal []"
+        }
+      ],
+      "erroredFiles": [],
+      "note": "the live consent module imports a value from the core root, which re-exports the island"
+    },
+    {
+      "id": "B4-consent-ports-reexport-in-live",
+      "file": "packages/polaris-generation-consent/src/live.ts",
+      "old": "export { inForceRecords, notInForceRecords, type NotInForce } from './in-force.js';\n",
+      "new": "export { inForceRecords, notInForceRecords, type NotInForce } from './in-force.js';\nexport { UNCONSENTED } from './consent-ports.js';\n",
+      "tests": [
+        "packages/polaris-generation-core/src/island-boundary.test.ts"
+      ],
+      "project": "@syzygy/polaris-generation-core",
+      "outcome": "killed",
+      "totalTests": 4,
+      "failedTests": [
+        {
+          "test": "the syzygy CLI and the parked provider island reaches no island module from the CLI entry",
+          "firstErrorLine": "AssertionError: expected [ \u2026(11) ] to deeply equal []"
+        }
+      ],
+      "erroredFiles": [],
+      "note": "the ./live subpath re-exports a consent-ports value"
+    },
+    {
+      "id": "R1-literal-dynamic-import-of-core-root-in-in-force",
+      "file": "packages/polaris-generation-consent/src/in-force.ts",
+      "old": "import type { AdmissionRecord } from './admission-record.js';\n",
+      "new": "import type { AdmissionRecord } from './admission-record.js';\nexport const loadCore = () => import('@syzygy/polaris-generation-core');\n",
+      "tests": [
+        "packages/polaris-generation-core/src/island-boundary.test.ts"
+      ],
+      "project": "@syzygy/polaris-generation-core",
+      "outcome": "killed",
+      "totalTests": 4,
+      "failedTests": [
+        {
+          "test": "the syzygy CLI and the parked provider island reaches no island module from the CLI entry",
+          "firstErrorLine": "AssertionError: expected [ \u2026(11) ] to deeply equal []"
+        }
+      ],
+      "erroredFiles": [],
+      "note": "reviewer: a dynamic import() with a literal specifier of the core root from the live module"
+    },
+    {
+      "id": "R2-export-star-consent-ports-in-live",
+      "file": "packages/polaris-generation-consent/src/live.ts",
+      "old": "export { inForceRecords, notInForceRecords, type NotInForce } from './in-force.js';\n",
+      "new": "export { inForceRecords, notInForceRecords, type NotInForce } from './in-force.js';\nexport * from './consent-ports.js';\n",
+      "tests": [
+        "packages/polaris-generation-core/src/island-boundary.test.ts"
+      ],
+      "project": "@syzygy/polaris-generation-core",
+      "outcome": "killed",
+      "totalTests": 4,
+      "failedTests": [
+        {
+          "test": "the syzygy CLI and the parked provider island reaches no island module from the CLI entry",
+          "firstErrorLine": "AssertionError: expected [ \u2026(11) ] to deeply equal []"
+        }
+      ],
+      "erroredFiles": [],
+      "note": "reviewer: ./live gains export * from consent-ports.ts"
+    },
+    {
+      "id": "R3-computed-dynamic-import-of-core-root-in-in-force",
+      "file": "packages/polaris-generation-consent/src/in-force.ts",
+      "old": "import type { AdmissionRecord } from './admission-record.js';\n",
+      "new": "import type { AdmissionRecord } from './admission-record.js';\nconst CORE = ['@syzygy', 'polaris-generation-core'].join('/');\nexport const loadCore = () => import(CORE);\n",
+      "tests": [
+        "packages/polaris-generation-core/src/island-boundary.test.ts"
+      ],
+      "project": "@syzygy/polaris-generation-core",
+      "outcome": "survived",
+      "totalTests": 4,
+      "failedTests": [],
+      "erroredFiles": [],
+      "note": "reviewer: a computed import() specifier (the 8.1 review's N2 class); expected to survive"
+    },
+    {
+      "id": "R4-node-condition-ahead-of-import-in-live-subpath",
+      "file": "packages/polaris-generation-consent/package.json",
+      "old": "      \"types\": \"./dist/live.d.ts\",\n      \"import\": \"./dist/live.js\",",
+      "new": "      \"types\": \"./dist/live.d.ts\",\n      \"node\": \"./dist/index.js\",\n      \"import\": \"./dist/live.js\",",
+      "tests": [
+        "packages/polaris-generation-core/src/island-boundary.test.ts"
+      ],
+      "project": "@syzygy/polaris-generation-core",
+      "outcome": "survived",
+      "totalTests": 4,
+      "failedTests": [],
+      "erroredFiles": [],
+      "note": "reviewer: Node takes the node condition first and loads the root; the walk takes import (the 8.1 review's N2(b) class); expected to survive"
+    },
+    {
+      "id": "R5-vitest-alias-for-live-points-at-root",
+      "file": "vitest.config.ts",
+      "old": "'@syzygy/polaris-generation-consent/live': fileURLToPath(new URL('./packages/polaris-generation-consent/src/live.ts', import.meta.url)),",
+      "new": "'@syzygy/polaris-generation-consent/live': fileURLToPath(new URL('./packages/polaris-generation-consent/src/index.ts', import.meta.url)),",
+      "tests": [
+        "packages/polaris-generation-core/src/island-boundary.test.ts"
+      ],
+      "project": "@syzygy/polaris-generation-core",
+      "outcome": "survived",
+      "totalTests": 4,
+      "failedTests": [],
+      "erroredFiles": [],
+      "note": "reviewer: the vitest alias for ./live diverges from package.json exports; expected to survive the boundary test"
+    }
+  ]
+}

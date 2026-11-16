@@ -1,0 +1,94 @@
+{
+ "what": "every test title Vitest lists at each commit (npx vitest list --json in a clean clone), keyed by file and full name",
+ "base": "546f1ff066e2ffef749c757cdb4621336039113b",
+ "head": "01df68eab9ef3f9b6f556c6aa00f28c70ba6e5f1",
+ "titles": {
+  "base": 5311,
+  "head": 5320
+ },
+ "added": [
+  [
+   "apps/three-surface-poc/src/browser-origin.test.ts",
+   "browserRequestAllowed — the Origin is compared whole > allows no Origin and the exact origin of each allowed host"
+  ],
+  [
+   "apps/three-surface-poc/src/browser-origin.test.ts",
+   "browserRequestAllowed — the Origin is compared whole > refuses an origin that only begins with the host origin"
+  ],
+  [
+   "apps/three-surface-poc/src/browser-origin.test.ts",
+   "browserRequestAllowed — the Origin is compared whole > refuses an origin that the host origin only begins with"
+  ],
+  [
+   "packages/cap1-daemon/src/package.test.ts",
+   "cap1-daemon package > re-exports each host type under the same name (checked by the compiler)"
+  ],
+  [
+   "packages/cap1-daemon/src/package.test.ts",
+   "cap1-daemon package > re-exports each host value as the host binding of the same name"
+  ],
+  [
+   "packages/cap1-daemon/src/server.test.ts",
+   "RT3 — credential-classed admission at the transport > logs a 503 breach diagnostic for each listed Unknown population and withholds an unlisted one"
+  ],
+  [
+   "packages/http-host/src/credentials.test.ts",
+   "RT3 — credential verification through core admission > the minted token behind any other whitespace refuses, named"
+  ],
+  [
+   "packages/http-host/src/credentials.test.ts",
+   "RT3 — state-write boundary > refuses a sibling directory whose name extends the state dir name, as traversal"
+  ],
+  [
+   "packages/http-host/src/credentials.test.ts",
+   "RT3 — state-write boundary > refuses a symlink into a sibling whose name extends the state dir name, named"
+  ]
+ ],
+ "removed": [],
+ "addedPerFile": {
+  "apps/three-surface-poc/src/browser-origin.test.ts": 3,
+  "packages/cap1-daemon/src/package.test.ts": 2,
+  "packages/cap1-daemon/src/server.test.ts": 1,
+  "packages/http-host/src/credentials.test.ts": 3
+ },
+ "duplicates": {
+  "base": [
+   [
+    "packages/polaris-generation-core/src/canonical-json.test.ts",
+    "canonical JSON record bytes > rejects non-JSON primitives without silent omission",
+    7
+   ],
+   [
+    "packages/polaris-generation-core/src/provider-draft.test.ts",
+    "provider-local intermediate validation > preserves inert text for escaped rendering",
+    3
+   ],
+   [
+    "packages/three-surface-poc-core/src/project-shape-extraction.test.ts",
+    "PWB-REQ-002 — two independent extractors agree on every fixture > preserves multiline catalog-entry declarations without minting a second item",
+    2
+   ]
+  ],
+  "head": [
+   [
+    "packages/polaris-generation-core/src/canonical-json.test.ts",
+    "canonical JSON record bytes > rejects non-JSON primitives without silent omission",
+    7
+   ],
+   [
+    "packages/polaris-generation-core/src/provider-draft.test.ts",
+    "provider-local intermediate validation > preserves inert text for escaped rendering",
+    3
+   ],
+   [
+    "packages/three-surface-poc-core/src/project-shape-extraction.test.ts",
+    "PWB-REQ-002 — two independent extractors agree on every fixture > preserves multiline catalog-entry declarations without minting a second item",
+    2
+   ]
+  ]
+ },
+ "listSha256": {
+  "base": "c77b6fe08a1b056611375d383f6f44db002017389f9aa5ece5bc0cff651dfa00",
+  "head": "8c0bb329408f92b4cabc0313b4937acd24b535ed62893983566000a474879ed7"
+ }
+}

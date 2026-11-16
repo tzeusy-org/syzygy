@@ -23,6 +23,7 @@
  * structurally, so a discovery port can pass its input straight through.
  */
 
+import { isRecord } from '@syzygy/support';
 import { encodeCanonicalJson, type CanonicalJsonLimits } from './canonical-json.js';
 import { parseBoundedJson } from './parse-json.js';
 import { promptForStage, type DiscoveryStage } from './prompts.js';
@@ -63,9 +64,9 @@ export class DiscoveryProviderError extends Error {
 /** Bounds for an encoded envelope and a parsed reply. */
 export const DISCOVERY_JSON_LIMITS: CanonicalJsonLimits = { maxBytes: 4_000_000, maxNodes: 100_000, maxDepth: 16 };
 
-const isRecord = (value: unknown): value is Record<string, unknown> =>
-  value !== null && typeof value === 'object' && !Array.isArray(value)
-  && [Object.prototype, null].includes(Object.getPrototypeOf(value) as object | null);
+/** `@syzygy/support`'s `isRecord`, and a plain object's prototype. */
+const isPlainRecord = (value: unknown): value is Record<string, unknown> =>
+  isRecord(value) && [Object.prototype, null].includes(Object.getPrototypeOf(value) as object | null);
 const isText = (value: unknown): value is string => typeof value === 'string' && value.length > 0;
 const isQuestions = (value: unknown): value is string[] => Array.isArray(value) && value.length > 0 && value.every(isText);
 const distinct = (values: readonly string[]): boolean => new Set(values).size === values.length;
@@ -88,11 +89,11 @@ interface ReduceSnapshot { readonly inputs: DiscoveryReduceRequest; readonly can
 
 function mapSnapshot(request: DiscoveryMapRequest): MapSnapshot {
   const fail = (): never => { throw new DiscoveryProviderError('invalid-map-request'); };
-  if (!isRecord(request)) fail();
+  if (!isPlainRecord(request)) fail();
   const subsystem: unknown = request.subsystem;
   const readerQuestions = textList(request.readerQuestions);
   const items = snapshotList(request.items, item => {
-    if (!isRecord(item)) return fail();
+    if (!isPlainRecord(item)) return fail();
     return { blobId: item.blobId as unknown, path: item.path as unknown, excerpt: item.excerpt as unknown };
   });
   if (!isText(subsystem) || !isQuestions(readerQuestions) || items === undefined || items.length === 0) return fail();
@@ -105,13 +106,13 @@ function mapSnapshot(request: DiscoveryMapRequest): MapSnapshot {
 
 function reduceSnapshot(request: DiscoveryReduceRequest): ReduceSnapshot {
   const fail = (): never => { throw new DiscoveryProviderError('invalid-reduce-request'); };
-  if (!isRecord(request)) fail();
+  if (!isPlainRecord(request)) fail();
   const readerQuestions = textList(request.readerQuestions);
   const maxSelected: unknown = request.maxSelected;
   const subsystems = snapshotList(request.subsystems, entry => {
-    if (!isRecord(entry)) return fail();
+    if (!isPlainRecord(entry)) return fail();
     const claims = snapshotList(entry.claims, claim => {
-      if (!isRecord(claim)) return fail();
+      if (!isPlainRecord(claim)) return fail();
       return { blobId: claim.blobId as unknown, path: claim.path as unknown, claim: claim.claim as unknown, relevance: claim.relevance as unknown };
     });
     return { subsystem: entry.subsystem as unknown, blobs: entry.blobs as unknown, claims };

@@ -1,0 +1,36 @@
+{
+ "text": "Sites whose support is an introducing commit or an earlier retained record, read by hand from the commit message or record named; and the files an open pull request changes. Site keys are path:line with the line numbers at linesAt.",
+ "linesAt": "546f1ff066e2ffef749c757cdb4621336039113b",
+ "sites": {
+  "apps/three-surface-poc/src/restart.test.ts:331": "b48d86fa: under a full suite at load average 60-90, two restart.test.ts tests hit the 5 s default",
+  "packages/polaris-dossier/src/gate-acts.test.ts:98": "0a08add9: the two tree-walking gate-acts tests time out under load at the 5 s default",
+  "packages/polaris-dossier/src/gate-acts.test.ts:106": "0a08add9: the two tree-walking gate-acts tests time out under load at the 5 s default",
+  "packages/polaris-dossier/src/start-gates.test.ts:1015": "30d2c2c9: the post-sitting preflight takes about 4.4 s alone, past the 5 s default under full-suite load",
+  "apps/three-surface-poc/src/surface-routes.test.ts:420": "docs/evidence/syzygy-bul-browser-ci-correction-2026-09-23.json: hosted runs timed out at the 5 s default (5033 and 5006 ms at timeout)",
+  "apps/three-surface-poc/src/surface-routes.test.ts:453": "docs/evidence/syzygy-bul-browser-ci-correction-2026-09-23.json: a hosted run timed out at the 5 s default (5006 ms at timeout)",
+  "packages/polaris-generation-consent/src/package-reader.test.ts:947": "6c91e65a: about 3 s of a cold 4.5 s run was five Python spawns rendering the recorders' acts, inside the 5 s budget under suite load",
+  "packages/polaris-generation-consent/src/package-reader.test.ts:111": "docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json: sized from its worst measured run over 2500 ms (rule of scripts/size_vitest_test_timeouts.py)",
+  "packages/polaris-generation-consent/src/package-reader.test.ts:141": "docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json: sized from its worst measured run over 2500 ms (rule of scripts/size_vitest_test_timeouts.py)",
+  "packages/polaris-generation-consent/src/package-reader.test.ts:259": "docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json: sized from its worst measured run over 2500 ms (rule of scripts/size_vitest_test_timeouts.py)",
+  "packages/polaris-generation-consent/src/package-reader.test.ts:327": "docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json: sized from its worst measured run over 2500 ms (rule of scripts/size_vitest_test_timeouts.py)",
+  "packages/polaris-generation-consent/src/package-reader.test.ts:368": "docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json: sized from its worst measured run over 2500 ms (rule of scripts/size_vitest_test_timeouts.py)",
+  "packages/polaris-generation-consent/src/package-reader.test.ts:375": "docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json: sized from its worst measured run over 2500 ms (rule of scripts/size_vitest_test_timeouts.py)",
+  "packages/polaris-generation-consent/src/package-reader.test.ts:381": "docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json: sized from its worst measured run over 2500 ms (rule of scripts/size_vitest_test_timeouts.py)",
+  "packages/polaris-generation-consent/src/package-reader.test.ts:443": "docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json: sized from its worst measured run over 2500 ms (rule of scripts/size_vitest_test_timeouts.py)",
+  "packages/polaris-generation-consent/src/package-reader.test.ts:498": "docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json: sized from its worst measured run over 2500 ms (rule of scripts/size_vitest_test_timeouts.py)",
+  "packages/polaris-generation-consent/src/package-reader.test.ts:541": "docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json: sized from its worst measured run over 2500 ms (rule of scripts/size_vitest_test_timeouts.py)",
+  "packages/polaris-generation-consent/src/package-reader.test.ts:563": "docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json: sized from its worst measured run over 2500 ms (rule of scripts/size_vitest_test_timeouts.py)",
+  "packages/polaris-generation-consent/src/package-reader.test.ts:581": "docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json: sized from its worst measured run over 2500 ms (rule of scripts/size_vitest_test_timeouts.py)",
+  "packages/polaris-generation-consent/src/package-reader.test.ts:710": "docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json: sized from its worst measured run over 2500 ms (rule of scripts/size_vitest_test_timeouts.py)",
+  "packages/polaris-generation-consent/src/package-reader.test.ts:779": "docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json: sized from its worst measured run over 2500 ms (rule of scripts/size_vitest_test_timeouts.py)",
+  "packages/polaris-generation-consent/src/package-reader.test.ts:804": "docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json: sized from its worst measured run over 2500 ms (rule of scripts/size_vitest_test_timeouts.py)",
+  "packages/polaris-generation-consent/src/package-reader.test.ts:1061": "docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json: sized from its worst measured run over 2500 ms (rule of scripts/size_vitest_test_timeouts.py)",
+  "apps/three-surface-poc/src/restart.test.ts:321": "b48d86fa: under a full suite at load average 60-90 two restart.test.ts tests hit the 5 s default; the commit gives the per-test and afterEach budget 180 s",
+  "apps/three-surface-poc/src/polaris-copy.test.ts:226": "docs/evidence/poc-test-timeouts-2026-10-03.json: before the hoist into this hook, the tests that built these variant models took up to 13.1 s each under the parallel-load protocol (worstFullRunDurationMsPerTest.before), and the heavy tests of this file and production-reobserve.test.ts timed out at the 5 s default in every before run (18 of 33 executions); the hoist gave the builds this hook and 60 s"
+ },
+ "blocked": {
+  "apps/three-surface-poc/src/main.test.ts": "changed by open PR #532 (syzygy-bpyt.4.5): left untouched until it merges",
+  "apps/three-surface-poc/src/polaris-generation/redis-shaped-discovery.test.ts": "changed by open PR #532 (syzygy-bpyt.4.5): left untouched until it merges",
+  "packages/polaris-dossier/src/git-object-reader.test.ts": "changed by open PR #532 (syzygy-bpyt.4.5): left untouched until it merges"
+ }
+}

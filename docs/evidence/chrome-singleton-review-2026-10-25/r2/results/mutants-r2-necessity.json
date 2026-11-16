@@ -1,0 +1,340 @@
+{
+  "tool": "mutants_r2.py",
+  "treeCommit": "6dcf94906b2989345f5b03dfeaa2d64c56632886",
+  "sha256AtCommit": {
+    "apps/three-surface-poc/src/cdp-browser.test.ts": "aea55cef2293f51a7340ce6bea67b2623698b711d0770a05a0fc6aeb151dd03d",
+    "apps/three-surface-poc/src/cdp-browser.ts": "60a3990726bc196703d66719b8c50c9c87c62c91b601fa51f7edcca23f71d68d"
+  },
+  "loadSignatures": [
+    "drain did not verify",
+    "still held by",
+    "timed out",
+    "Test timed out",
+    "STACK_TRACE_ERROR"
+  ],
+  "rootRunner": [
+    "bwrap",
+    "--dev-bind",
+    "/",
+    "/",
+    "--unshare-user",
+    "--uid",
+    "0",
+    "--gid",
+    "0",
+    "--cap-add",
+    "ALL"
+  ],
+  "results": [
+    {
+      "id": "control-without-round2-cases",
+      "meaning": "no change to the source; the four round-2 keep cases skipped",
+      "runner": "normal",
+      "edits": [
+        {
+          "file": "apps/three-surface-poc/src/cdp-browser.test.ts",
+          "old": "  it('keeps the directory a link names when the profile is not",
+          "new": "  it.skip('keeps the directory a link names when the profile is not"
+        },
+        {
+          "file": "apps/three-surface-poc/src/cdp-browser.test.ts",
+          "old": "  it('keeps the directory a link names when the link is not",
+          "new": "  it.skip('keeps the directory a link names when the link is not"
+        },
+        {
+          "file": "apps/three-surface-poc/src/cdp-browser.test.ts",
+          "old": "  it('keeps a directory made under the same name",
+          "new": "  it.skip('keeps a directory made under the same name"
+        },
+        {
+          "file": "apps/three-surface-poc/src/cdp-browser.test.ts",
+          "old": "  it('keeps a directory with the recorded inode number",
+          "new": "  it.skip('keeps a directory with the recorded inode number"
+        }
+      ],
+      "attempts": [
+        {
+          "attempt": 1,
+          "exit": 0,
+          "testsRun": 31,
+          "passed": 27,
+          "skipped": 4,
+          "failing": [],
+          "left": []
+        }
+      ],
+      "outcome": "SURVIVED",
+      "restored": true
+    },
+    {
+      "id": "profile-owner-not-checked--without-round2-cases",
+      "meaning": "lane fragment, as recorded, with the four round-2 keep cases skipped",
+      "runner": "normal",
+      "edits": [
+        {
+          "file": "apps/three-surface-poc/src/cdp-browser.ts",
+          "old": "    if (!ownedByRunningUser(lstat(profile)) || !ownedByRunningUser(lstat(link))) return undefined;\n",
+          "new": "    if (!ownedByRunningUser(lstat(link))) return undefined;\n"
+        },
+        {
+          "file": "apps/three-surface-poc/src/cdp-browser.test.ts",
+          "old": "  it('keeps the directory a link names when the profile is not",
+          "new": "  it.skip('keeps the directory a link names when the profile is not"
+        },
+        {
+          "file": "apps/three-surface-poc/src/cdp-browser.test.ts",
+          "old": "  it('keeps the directory a link names when the link is not",
+          "new": "  it.skip('keeps the directory a link names when the link is not"
+        },
+        {
+          "file": "apps/three-surface-poc/src/cdp-browser.test.ts",
+          "old": "  it('keeps a directory made under the same name",
+          "new": "  it.skip('keeps a directory made under the same name"
+        },
+        {
+          "file": "apps/three-surface-poc/src/cdp-browser.test.ts",
+          "old": "  it('keeps a directory with the recorded inode number",
+          "new": "  it.skip('keeps a directory with the recorded inode number"
+        }
+      ],
+      "attempts": [
+        {
+          "attempt": 1,
+          "exit": 0,
+          "testsRun": 31,
+          "passed": 27,
+          "skipped": 4,
+          "failing": [],
+          "left": []
+        }
+      ],
+      "outcome": "SURVIVED",
+      "restored": true
+    },
+    {
+      "id": "link-owner-not-checked--without-round2-cases",
+      "meaning": "lane fragment, as recorded, with the four round-2 keep cases skipped",
+      "runner": "normal",
+      "edits": [
+        {
+          "file": "apps/three-surface-poc/src/cdp-browser.ts",
+          "old": "    if (!ownedByRunningUser(lstat(profile)) || !ownedByRunningUser(lstat(link))) return undefined;\n",
+          "new": "    if (!ownedByRunningUser(lstat(profile))) return undefined;\n"
+        },
+        {
+          "file": "apps/three-surface-poc/src/cdp-browser.test.ts",
+          "old": "  it('keeps the directory a link names when the profile is not",
+          "new": "  it.skip('keeps the directory a link names when the profile is not"
+        },
+        {
+          "file": "apps/three-surface-poc/src/cdp-browser.test.ts",
+          "old": "  it('keeps the directory a link names when the link is not",
+          "new": "  it.skip('keeps the directory a link names when the link is not"
+        },
+        {
+          "file": "apps/three-surface-poc/src/cdp-browser.test.ts",
+          "old": "  it('keeps a directory made under the same name",
+          "new": "  it.skip('keeps a directory made under the same name"
+        },
+        {
+          "file": "apps/three-surface-poc/src/cdp-browser.test.ts",
+          "old": "  it('keeps a directory with the recorded inode number",
+          "new": "  it.skip('keeps a directory with the recorded inode number"
+        }
+      ],
+      "attempts": [
+        {
+          "attempt": 1,
+          "exit": 0,
+          "testsRun": 31,
+          "passed": 27,
+          "skipped": 4,
+          "failing": [],
+          "left": []
+        }
+      ],
+      "outcome": "SURVIVED",
+      "restored": true
+    },
+    {
+      "id": "link-trusted-whoever-made-it--without-round2-cases",
+      "meaning": "lane fragment, as recorded, with the four round-2 keep cases skipped",
+      "runner": "normal",
+      "edits": [
+        {
+          "file": "apps/three-surface-poc/src/cdp-browser.ts",
+          "old": "    if (!ownedByRunningUser(lstat(profile)) || !ownedByRunningUser(lstat(link))) return undefined;\n",
+          "new": ""
+        },
+        {
+          "file": "apps/three-surface-poc/src/cdp-browser.test.ts",
+          "old": "  it('keeps the directory a link names when the profile is not",
+          "new": "  it.skip('keeps the directory a link names when the profile is not"
+        },
+        {
+          "file": "apps/three-surface-poc/src/cdp-browser.test.ts",
+          "old": "  it('keeps the directory a link names when the link is not",
+          "new": "  it.skip('keeps the directory a link names when the link is not"
+        },
+        {
+          "file": "apps/three-surface-poc/src/cdp-browser.test.ts",
+          "old": "  it('keeps a directory made under the same name",
+          "new": "  it.skip('keeps a directory made under the same name"
+        },
+        {
+          "file": "apps/three-surface-poc/src/cdp-browser.test.ts",
+          "old": "  it('keeps a directory with the recorded inode number",
+          "new": "  it.skip('keeps a directory with the recorded inode number"
+        }
+      ],
+      "attempts": [
+        {
+          "attempt": 1,
+          "exit": 0,
+          "testsRun": 31,
+          "passed": 27,
+          "skipped": 4,
+          "failing": [],
+          "left": []
+        }
+      ],
+      "outcome": "SURVIVED",
+      "restored": true
+    },
+    {
+      "id": "identity-inode-not-compared--without-round2-cases",
+      "meaning": "lane fragment, as recorded, with the four round-2 keep cases skipped",
+      "runner": "normal",
+      "edits": [
+        {
+          "file": "apps/three-surface-poc/src/cdp-browser.ts",
+          "old": "if (entry.isDirectory() && ownedByRunningUser(entry) && entry.dev === recorded.dev && entry.ino === recorded.ino) rmSync(",
+          "new": "if (entry.isDirectory() && ownedByRunningUser(entry) && entry.dev === recorded.dev) rmSync("
+        },
+        {
+          "file": "apps/three-surface-poc/src/cdp-browser.test.ts",
+          "old": "  it('keeps the directory a link names when the profile is not",
+          "new": "  it.skip('keeps the directory a link names when the profile is not"
+        },
+        {
+          "file": "apps/three-surface-poc/src/cdp-browser.test.ts",
+          "old": "  it('keeps the directory a link names when the link is not",
+          "new": "  it.skip('keeps the directory a link names when the link is not"
+        },
+        {
+          "file": "apps/three-surface-poc/src/cdp-browser.test.ts",
+          "old": "  it('keeps a directory made under the same name",
+          "new": "  it.skip('keeps a directory made under the same name"
+        },
+        {
+          "file": "apps/three-surface-poc/src/cdp-browser.test.ts",
+          "old": "  it('keeps a directory with the recorded inode number",
+          "new": "  it.skip('keeps a directory with the recorded inode number"
+        }
+      ],
+      "attempts": [
+        {
+          "attempt": 1,
+          "exit": 0,
+          "testsRun": 31,
+          "passed": 27,
+          "skipped": 4,
+          "failing": [],
+          "left": []
+        }
+      ],
+      "outcome": "SURVIVED",
+      "restored": true
+    },
+    {
+      "id": "identity-device-not-compared--without-round2-cases",
+      "meaning": "lane fragment, as recorded, with the four round-2 keep cases skipped",
+      "runner": "normal",
+      "edits": [
+        {
+          "file": "apps/three-surface-poc/src/cdp-browser.ts",
+          "old": "if (entry.isDirectory() && ownedByRunningUser(entry) && entry.dev === recorded.dev && entry.ino === recorded.ino) rmSync(",
+          "new": "if (entry.isDirectory() && ownedByRunningUser(entry) && entry.ino === recorded.ino) rmSync("
+        },
+        {
+          "file": "apps/three-surface-poc/src/cdp-browser.test.ts",
+          "old": "  it('keeps the directory a link names when the profile is not",
+          "new": "  it.skip('keeps the directory a link names when the profile is not"
+        },
+        {
+          "file": "apps/three-surface-poc/src/cdp-browser.test.ts",
+          "old": "  it('keeps the directory a link names when the link is not",
+          "new": "  it.skip('keeps the directory a link names when the link is not"
+        },
+        {
+          "file": "apps/three-surface-poc/src/cdp-browser.test.ts",
+          "old": "  it('keeps a directory made under the same name",
+          "new": "  it.skip('keeps a directory made under the same name"
+        },
+        {
+          "file": "apps/three-surface-poc/src/cdp-browser.test.ts",
+          "old": "  it('keeps a directory with the recorded inode number",
+          "new": "  it.skip('keeps a directory with the recorded inode number"
+        }
+      ],
+      "attempts": [
+        {
+          "attempt": 1,
+          "exit": 0,
+          "testsRun": 31,
+          "passed": 27,
+          "skipped": 4,
+          "failing": [],
+          "left": []
+        }
+      ],
+      "outcome": "SURVIVED",
+      "restored": true
+    },
+    {
+      "id": "identity-not-compared--without-round2-cases",
+      "meaning": "lane fragment, as recorded, with the four round-2 keep cases skipped",
+      "runner": "normal",
+      "edits": [
+        {
+          "file": "apps/three-surface-poc/src/cdp-browser.ts",
+          "old": "if (entry.isDirectory() && ownedByRunningUser(entry) && entry.dev === recorded.dev && entry.ino === recorded.ino) rmSync(",
+          "new": "if (entry.isDirectory() && ownedByRunningUser(entry)) rmSync("
+        },
+        {
+          "file": "apps/three-surface-poc/src/cdp-browser.test.ts",
+          "old": "  it('keeps the directory a link names when the profile is not",
+          "new": "  it.skip('keeps the directory a link names when the profile is not"
+        },
+        {
+          "file": "apps/three-surface-poc/src/cdp-browser.test.ts",
+          "old": "  it('keeps the directory a link names when the link is not",
+          "new": "  it.skip('keeps the directory a link names when the link is not"
+        },
+        {
+          "file": "apps/three-surface-poc/src/cdp-browser.test.ts",
+          "old": "  it('keeps a directory made under the same name",
+          "new": "  it.skip('keeps a directory made under the same name"
+        },
+        {
+          "file": "apps/three-surface-poc/src/cdp-browser.test.ts",
+          "old": "  it('keeps a directory with the recorded inode number",
+          "new": "  it.skip('keeps a directory with the recorded inode number"
+        }
+      ],
+      "attempts": [
+        {
+          "attempt": 1,
+          "exit": 0,
+          "testsRun": 31,
+          "passed": 27,
+          "skipped": 4,
+          "failing": [],
+          "left": []
+        }
+      ],
+      "outcome": "SURVIVED",
+      "restored": true
+    }
+  ]
+}

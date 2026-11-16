@@ -1,0 +1,143 @@
+{
+ "tool": "decide_mutants.py",
+ "commit": "f44cd65dfacd12c58776cca65cc40766fdfca6b1",
+ "decideSha256": "aab528425848caca56ab53f64beaeda544833bd120b19546a540f80409a29169",
+ "inputs": {
+  "census": "8215f19d1d230a807fefa29e1948108c3ea1d2f35afdda50c31a5be6c4c0db97",
+  "siteDurations": "61633afde50e3a456f6fc1b7477cf142fc7b9403512513f75286dd5a166acdaf",
+  "ciDurations": "2b1912db24f67edae40d46b6f8e7dc3f3a38dea33d77b2ffac9276f33a6725a1",
+  "cited": "ea74ff8a7fce7bdeb81f91703588d77678379e3745eb2e6e5cccbf24d2ee0b43"
+ },
+ "baseline": {
+  "testSite": [
+   "apps/three-surface-poc/src/cdp-browser.test.ts:335",
+   "remove",
+   "local worst and every hosted bound at or under the threshold"
+  ],
+  "hookSite": [
+   "apps/three-surface-poc/src/governing-intent-sweep.test.ts:168",
+   "remove",
+   "local worst and every hosted bound at or under the threshold"
+  ],
+  "config": [
+   "packages/cap1-system/vitest.config.ts:18",
+   "keep",
+   "local worst over the threshold"
+  ]
+ },
+ "mutants": [
+  {
+   "id": "D1",
+   "kind": "guard",
+   "change": {
+    "input": "census",
+    "site": "apps/three-surface-poc/src/cdp-browser.test.ts:335",
+    "path": "valueMs",
+    "old": 30000,
+    "new": 4999
+   },
+   "expected": {
+    "decision": "keep",
+    "basisNames": "(ruling 3)"
+   },
+   "got": {
+    "decision": "keep",
+    "basis": "measured at or under the threshold, but below vitest's 5000 ms default: removing it would loosen the test (ruling 3)"
+   },
+   "otherRowsUnchanged": true,
+   "outcome": "killed"
+  },
+  {
+   "id": "D1c",
+   "kind": "control",
+   "change": {
+    "input": "census",
+    "site": "apps/three-surface-poc/src/cdp-browser.test.ts:335",
+    "path": "valueMs",
+    "old": 30000,
+    "new": 5000
+   },
+   "expected": {
+    "decision": "remove",
+    "basisNames": null
+   },
+   "got": {
+    "decision": "remove",
+    "basis": "local worst and every hosted bound at or under the threshold"
+   },
+   "otherRowsUnchanged": true,
+   "outcome": "holds"
+  },
+  {
+   "id": "D2",
+   "kind": "guard",
+   "change": {
+    "input": "census",
+    "site": "apps/three-surface-poc/src/governing-intent-sweep.test.ts:168",
+    "path": "valueMs",
+    "old": 60000,
+    "new": 9999
+   },
+   "expected": {
+    "decision": "keep",
+    "basisNames": "(ruling 3)"
+   },
+   "got": {
+    "decision": "keep",
+    "basis": "measured at or under the threshold, but below vitest's 10000 ms default: removing it would loosen the test (ruling 3)"
+   },
+   "otherRowsUnchanged": true,
+   "outcome": "killed"
+  },
+  {
+   "id": "D2c",
+   "kind": "control",
+   "change": {
+    "input": "census",
+    "site": "apps/three-surface-poc/src/governing-intent-sweep.test.ts:168",
+    "path": "valueMs",
+    "old": 60000,
+    "new": 10000
+   },
+   "expected": {
+    "decision": "remove",
+    "basisNames": null
+   },
+   "got": {
+    "decision": "remove",
+    "basis": "local worst and every hosted bound at or under the threshold"
+   },
+   "otherRowsUnchanged": true,
+   "outcome": "holds"
+  },
+  {
+   "id": "D3",
+   "kind": "guard",
+   "change": {
+    "input": "site-durations",
+    "site": "packages/cap1-system/vitest.config.ts:18",
+    "path": "observations, worstMs, anyFailed",
+    "old": {
+     "observations": 240,
+     "worstMs": 10692,
+     "anyFailed": false
+    },
+    "new": {
+     "observations": 240,
+     "worstMs": 100,
+     "anyFailed": false
+    }
+   },
+   "expected": {
+    "decision": "keep",
+    "basisNames": "(ruling 4)"
+   },
+   "got": {
+    "decision": "keep",
+    "basis": "measured at or under the threshold, but a vitest config timeout bounds its whole tier and stays (ruling 4)"
+   },
+   "otherRowsUnchanged": true,
+   "outcome": "killed"
+  }
+ ]
+}

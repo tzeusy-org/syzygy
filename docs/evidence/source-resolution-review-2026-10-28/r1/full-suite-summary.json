@@ -1,0 +1,124 @@
+{
+ "full-poisoned": {
+  "commit": "2f249d2c4d0fc7756c8581c78c733a305336e705",
+  "loadavgStart": "31.56 31.14 34.40 20/9721 1343248",
+  "start": "2026-10-27T20:45:34Z",
+  "exitLine": "exit 0",
+  "loadavgEnd": "35.09 35.17 35.38 27/9835 1457410",
+  "end": "2026-10-27T20:50:05Z",
+  "counts": {
+   "numTotalTestSuites": 894,
+   "numFailedTestSuites": 0,
+   "numTotalTests": 5525,
+   "numPassedTests": 5520,
+   "numFailedTests": 0,
+   "numPendingTests": 5,
+   "success": true
+  },
+  "files": 254,
+  "summaryLines": [
+   "Test Files  251 passed | 3 skipped (254)",
+   "Tests  5520 passed | 5 skipped (5525)",
+   "Start at  04:45:35",
+   "Duration  268.29s (transform 29.03s, setup 6.70s, collect 141.68s, tests 984.32s, environment 124ms, prepare 57.86s)"
+  ],
+  "failures": [],
+  "filesWithSkips": [
+   "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+   "apps/three-surface-poc/src/project-shape-discovery.live.test.ts",
+   "packages/polaris-dossier/src/no-egress.test.ts",
+   "packages/three-surface-poc-core/src/test-artifact-verification.live.test.ts",
+   "packages/three-surface-poc-core/src/work-items.live.test.ts"
+  ],
+  "distsPresentAfter": ""
+ },
+ "full-absent": {
+  "commit": "2f249d2c4d0fc7756c8581c78c733a305336e705",
+  "loadavgStart": "37.76 35.92 35.62 31/9999 1484295",
+  "start": "2026-10-27T20:51:14Z",
+  "exitLine": "exit 1",
+  "loadavgEnd": "44.70 45.45 40.28 33/9833 1611315",
+  "end": "2026-10-27T20:56:32Z",
+  "counts": {
+   "numTotalTestSuites": 894,
+   "numFailedTestSuites": 5,
+   "numTotalTests": 5525,
+   "numPassedTests": 5517,
+   "numFailedTests": 3,
+   "numPendingTests": 5,
+   "success": false
+  },
+  "files": 254,
+  "summaryLines": [
+   "Test Files  2 failed | 249 passed | 3 skipped (254)",
+   "Tests  3 failed | 5517 passed | 5 skipped (5525)",
+   "Start at  04:51:17",
+   "Duration  314.07s (transform 39.37s, setup 7.02s, collect 175.42s, tests 1477.23s, environment 107ms, prepare 53.24s)"
+  ],
+  "failures": [
+   {
+    "file": "packages/polaris-dossier/src/gate-acts.test.ts",
+    "test": "the sitting's acts fail closed refuse an in-force record whose table binds other files than the form names, even when an act binds its bytes",
+    "durationMs": 5067,
+    "timeout": false,
+    "message": "Error: STACK_TRACE_ERROR"
+   },
+   {
+    "file": "packages/polaris-dossier/src/start-gates.test.ts",
+    "test": "init: a run that passes every start gate pins the consented HEAD, records the subject and writes only run.json under the state root",
+    "durationMs": 6077,
+    "timeout": false,
+    "message": "Error: STACK_TRACE_ERROR"
+   },
+   {
+    "file": "packages/polaris-dossier/src/start-gates.test.ts",
+    "test": "init: the clone holds the consented commit alone (syzygy-qkea.24) refuses config naming a remote, a promisor, an include or a command the agent's git would run (R-POLARIS-DOSSIER-CLONE-SHAPE-2 finding 1)",
+    "durationMs": 5367,
+    "timeout": false,
+    "message": "Error: STACK_TRACE_ERROR"
+   }
+  ],
+  "filesWithSkips": [
+   "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+   "apps/three-surface-poc/src/project-shape-discovery.live.test.ts",
+   "packages/polaris-dossier/src/no-egress.test.ts",
+   "packages/three-surface-poc-core/src/test-artifact-verification.live.test.ts",
+   "packages/three-surface-poc-core/src/work-items.live.test.ts"
+  ],
+  "distsPresentAfter": "0"
+ },
+ "alone-start-gates": {
+  "counts": {
+   "numTotalTests": 104,
+   "numPassedTests": 104,
+   "numFailedTests": 0
+  },
+  "rows": [
+   {
+    "test": "init: a run that passes every start gate pins the consented HEAD, records the subject and writes only run.json under the state root",
+    "status": "passed",
+    "durationMs": 1422
+   },
+   {
+    "test": "init: the clone holds the consented commit alone (syzygy-qkea.24) refuses config naming a remote, a promisor, an include or a command the ag",
+    "status": "passed",
+    "durationMs": 1648
+   }
+  ]
+ },
+ "alone-gate-acts": {
+  "counts": {
+   "numTotalTests": 133,
+   "numPassedTests": 133,
+   "numFailedTests": 0
+  },
+  "rows": [
+   {
+    "test": "the sitting's acts fail closed refuse an in-force record whose table binds other files than the form names, even when an act binds its bytes",
+    "status": "passed",
+    "durationMs": 1784
+   }
+  ]
+ },
+ "alone-note": "each file re-run alone, every dist absent, at load1 35.12 (start-gates) and 29.05 (gate-acts)"
+}

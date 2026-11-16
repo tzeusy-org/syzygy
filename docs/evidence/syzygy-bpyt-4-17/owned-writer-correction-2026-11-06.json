@@ -1,0 +1,263 @@
+{
+  "kind": "development-verification-correction",
+  "issue": "syzygy-bpyt.4.17",
+  "PR": 764,
+  "sourceSubject": "6f8fbc0ed82cccc5621671c5916edda47b547cbf",
+  "asOf": "2026-11-05T20:36:30.402095+00:00",
+  "epistemicLabel": "Observed as captured reports; author assessment is provisional and does not replace exact-head independent confirmation",
+  "finding": "Independent full14AC review F1/P2: a writer changing group escaped the former group-and-session census; original AC3/9/11 remained unresolved.",
+  "predecessor": "7addd966285d8634d6960ad665132f0e4bf2ac30",
+  "authority": [
+    "GP-Q0 Part 1",
+    "VIS-2",
+    "VIS-4",
+    "SEC-3",
+    "CC-TEST-1",
+    "CC-TEST-2",
+    "CC-TEST-4",
+    "CC-REV-1",
+    "CC-BAR-5"
+  ],
+  "implementation": "Private Linux child subreaper; kernel adoption tracks descendants despite process group/session changes. Kernel ECHILD proves completion. Child pidfds pin signals after start/parent/UID verification. Missing proof refuses census and cleanup, retaining the child/supervisor outcomes. No ambient process list, process-group signal, unmerged guardian dependency or product execution-profile change.",
+  "files": {
+    "scripts/check_unit_tmpdir.mjs": "db158feb8d70d4848dc67c9f667f9746cdc703a32c710bdf764a810eaa10a691",
+    "scripts/check_unit_tmpdir_child.py": "c5d7bd872ae9ce6d0c1ed4bad7b9c0820d6a41ad22f3e38f99d82bf1cb6ae50d",
+    "CONTRIBUTING.md": "14bfc42a54c3b75665d8ca5125cb6965e9625a515c7429f23596556b44ca3b1f"
+  },
+  "proofs": [
+    {
+      "mode": "historical",
+      "subject": "a04069678c02881cd41a25b850e14f79d581c083",
+      "raw": "/home/orca/.tmp/syzygy-pr764-writer-lifetime-correction-20261105/logs/historical-corrected-oracle.log",
+      "rawSha256": "e3b0eafff11d07afde18e1b223f937bf5c1e2f5e5fa1dba244ff18b8e7a95d36",
+      "counts": {
+        "passed": 116,
+        "failed": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "childExit": 0,
+      "oraclePassed": false,
+      "leftovers": [
+        {
+          "path": "dossier-signoff-WzPwoD-outside-RAW.md",
+          "type": "file",
+          "exempt": false
+        }
+      ],
+      "cleanup": true,
+      "lifetimeVerified": true
+    },
+    {
+      "mode": "current-clean",
+      "subject": "8dee3e7d135a2c41476d4391eae459f812b3f245",
+      "raw": "/home/orca/.tmp/syzygy-pr764-writer-lifetime-correction-20261105/logs/current-clean-frozen-subject.log",
+      "rawSha256": "b8dcbff823fd00c9e3a4da192f643e648d935d3cdd54e3988a91fb8019190c2b",
+      "counts": {
+        "passed": 125,
+        "failed": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "childExit": 0,
+      "oraclePassed": true,
+      "leftovers": [],
+      "cleanup": true,
+      "lifetimeVerified": true
+    },
+    {
+      "mode": "current-T-drop",
+      "subject": "5e1aa96f1c4ce56cfa9bb07331cbf84c822e1398",
+      "raw": "/home/orca/.tmp/syzygy-pr764-writer-lifetime-correction-20261105/logs/current-T-drop-corrected-oracle.log",
+      "rawSha256": "02300c2bee370fe0126fed09a06ca49714c631eb489d639acf815884ee6d8dde",
+      "counts": {
+        "passed": 125,
+        "failed": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "childExit": 0,
+      "oraclePassed": false,
+      "leftovers": [
+        {
+          "path": "dossier-signoff-RKjaqC-outside-RAW.md",
+          "type": "file",
+          "exempt": false
+        }
+      ],
+      "cleanup": true,
+      "lifetimeVerified": true
+    }
+  ],
+  "correctedActualVitestCounterexample": {
+    "raw": "/home/orca/.tmp/syzygy-pr764-writer-lifetime-correction-20261105/logs/writer-corrected-final.log",
+    "rawSha256": "0526a924b50750667d1b7e9c72833476b271c05888af5f1efb9f96dca4cd462a",
+    "assertions": 1,
+    "writerAbsentBeforeCensus": true,
+    "recreatedAfterRelease": false,
+    "driverPassed": false,
+    "cleanup": true
+  },
+  "testDelta": {
+    "vitest": {
+      "+": 0,
+      "~": 0,
+      "-": 0
+    },
+    "driverCorrection": {
+      "+": 0,
+      "~": 1,
+      "-": 0
+    },
+    "driverTotal": {
+      "+": 10,
+      "~": 0,
+      "-": 0
+    },
+    "cases": 10,
+    "parameters": 34
+  },
+  "sourceBoundChangedPredicateMutants": [
+    {
+      "name": "drop-subreaper",
+      "commit": "18ab4fa09bd64322bb9b1c17eaf45be0b3fd2bfe",
+      "path": "scripts/check_unit_tmpdir_child.py",
+      "old": "        libc = ctypes.CDLL(None, use_errno=True)\n        if libc.prctl(36, 1, 0, 0, 0) != 0:  # PR_SET_CHILD_SUBREAPER\n            raise OSError(ctypes.get_errno(), 'subreaper-unavailable')\n        enabled = ctypes.c_int()\n        if libc.prctl(37, ctypes.byref(enabled), 0, 0, 0) != 0 or enabled.value != 1:\n            raise RuntimeError('subreaper-not-established')\n",
+      "new": "        # Mutant: omit subreaper establishment and verification.\n",
+      "occurrences": 1,
+      "beforeContext": "\n            owned['lastSignal'] = signame\n            if len(result['lifetime']['signals']) > 10000:\n                raise RuntimeError('writer-signal-budget-exceeded')\n\n    try:\n        libc = ctypes.CDLL(None, use_errno=True)\n        if libc.prctl(36, 1, 0, 0, 0) != 0:  # PR_SET_CHILD_SUBREAPER\n            raise OSError(ctypes.get_errno(), 'subreaper-unavailable')\n        enabled = ctypes.c_int()\n        if libc.prctl(37, ctypes.byref(enabled), 0, 0, 0) != 0 or enabled.value != 1:\n            raise RuntimeError('subreaper-not-established')\n        # Fail before launching if the host lacks either pidfd operation.\n        fd = os.pidfd_open(os.getpid())\n        signal.pidfd_send_signal(fd, 0)\n        os.close(fd)\n     ",
+      "afterContext": "\n            owned['lastSignal'] = signame\n            if len(result['lifetime']['signals']) > 10000:\n                raise RuntimeError('writer-signal-budget-exceeded')\n\n    try:\n        # Mutant: omit subreaper establishment and verification.\n        # Fail before launching if the host lacks either pidfd operation.\n        fd = os.pidfd_open(os.getpid())\n        signal.pidfd_send_signal(fd, 0)\n        os.close(fd)\n     ",
+      "beforeSha256": "c5d7bd872ae9ce6d0c1ed4bad7b9c0820d6a41ad22f3e38f99d82bf1cb6ae50d",
+      "afterSha256": "a8dfb30b08116988eef218b79cf21b718dcd97d52938f741881d34214b3de9e0",
+      "namedExecutedAssertion": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected",
+      "assertionLocation": "at file:///home/orca/.tmp/syzygy-pr764-writer-lifetime-correction-20261105/subject/scripts/check_unit_tmpdir.mjs:298:16",
+      "rawSha256": "c21fa123221680dc49477e8693693ce5e7eb7d7633e2a56712eb4244a255b4ec"
+    },
+    {
+      "name": "accept-changed-start",
+      "commit": "4b28870ebffc32a3b99aeaa20de11369ba4287bf",
+      "path": "scripts/check_unit_tmpdir_child.py",
+      "old": "before != after or",
+      "new": "False or",
+      "occurrences": 1,
+      "beforeContext": ",\n            'uid': os.stat(f'/proc/{pid}').st_uid}\n\n\ndef pin_child(pid):\n    before = identity(pid)\n    fd = os.pidfd_open(pid)\n    try:\n        after = identity(pid)\n        if before != after or after['parent'] != os.getpid() or after['uid'] != os.getuid():\n            raise RuntimeError('writer-identity-refused')\n        # The kernel independently confirms that this hand",
+      "afterContext": ",\n            'uid': os.stat(f'/proc/{pid}').st_uid}\n\n\ndef pin_child(pid):\n    before = identity(pid)\n    fd = os.pidfd_open(pid)\n    try:\n        after = identity(pid)\n        if False or after['parent'] != os.getpid() or after['uid'] != os.getuid():\n            raise RuntimeError('writer-identity-refused')\n        # The kernel independently confirms that this hand",
+      "beforeSha256": "c5d7bd872ae9ce6d0c1ed4bad7b9c0820d6a41ad22f3e38f99d82bf1cb6ae50d",
+      "afterSha256": "f45541aab718778ce783a934d7756c4eb3e060a6697cbfeb44c25b469bc87a48",
+      "namedExecutedAssertion": "AssertionError [ERR_ASSERTION]: identity refusal and stale pidfd must preserve the unrelated sibling: node:internal/errors:985\n  const err = new Error(message);\n              ^",
+      "assertionLocation": "at file:///home/orca/.tmp/syzygy-pr764-writer-lifetime-correction-20261105/subject/[eval1]:1:148 {",
+      "rawSha256": "45d9ac02461484070ecc81c84f646399199ac7069bd4967f62b46a05096c43d6"
+    },
+    {
+      "name": "accept-foreign-parent",
+      "commit": "837e9118da35e32db9f2b9da43a9b08a2216dd86",
+      "path": "scripts/check_unit_tmpdir_child.py",
+      "old": "after['parent'] != os.getpid()",
+      "new": "False",
+      "occurrences": 1,
+      "beforeContext": ": os.stat(f'/proc/{pid}').st_uid}\n\n\ndef pin_child(pid):\n    before = identity(pid)\n    fd = os.pidfd_open(pid)\n    try:\n        after = identity(pid)\n        if before != after or after['parent'] != os.getpid() or after['uid'] != os.getuid():\n            raise RuntimeError('writer-identity-refused')\n        # The kernel independently confirms that this handle names our child.\n        os.",
+      "afterContext": ": os.stat(f'/proc/{pid}').st_uid}\n\n\ndef pin_child(pid):\n    before = identity(pid)\n    fd = os.pidfd_open(pid)\n    try:\n        after = identity(pid)\n        if before != after or False or after['uid'] != os.getuid():\n            raise RuntimeError('writer-identity-refused')\n        # The kernel independently confirms that this handle names our child.\n        os.",
+      "beforeSha256": "c5d7bd872ae9ce6d0c1ed4bad7b9c0820d6a41ad22f3e38f99d82bf1cb6ae50d",
+      "afterSha256": "797f7186f5d629bf5899eefb22c7eda3bee0e03dd6c6ea55af577909a34c09f5",
+      "namedExecutedAssertion": "AssertionError [ERR_ASSERTION]: identity refusal and stale pidfd must preserve the unrelated sibling: node:internal/errors:985\n  const err = new Error(message);\n              ^",
+      "assertionLocation": "at file:///home/orca/.tmp/syzygy-pr764-writer-lifetime-correction-20261105/subject/[eval1]:1:148 {",
+      "rawSha256": "ee2d954b5351956fdb0c376ddda1275d7ec30a830db298c0f53105dc69f3e9b1"
+    },
+    {
+      "name": "accept-foreign-uid",
+      "commit": "6944472a5bf337bea0d5e6370c6f8df66e5d3207",
+      "path": "scripts/check_unit_tmpdir_child.py",
+      "old": "after['uid'] != os.getuid()",
+      "new": "False",
+      "occurrences": 1,
+      "beforeContext": "\n\ndef pin_child(pid):\n    before = identity(pid)\n    fd = os.pidfd_open(pid)\n    try:\n        after = identity(pid)\n        if before != after or after['parent'] != os.getpid() or after['uid'] != os.getuid():\n            raise RuntimeError('writer-identity-refused')\n        # The kernel independently confirms that this handle names our child.\n        os.waitid(os.P_PIDFD, fd, os.WEXIT",
+      "afterContext": "\n\ndef pin_child(pid):\n    before = identity(pid)\n    fd = os.pidfd_open(pid)\n    try:\n        after = identity(pid)\n        if before != after or after['parent'] != os.getpid() or False:\n            raise RuntimeError('writer-identity-refused')\n        # The kernel independently confirms that this handle names our child.\n        os.waitid(os.P_PIDFD, fd, os.WEXIT",
+      "beforeSha256": "c5d7bd872ae9ce6d0c1ed4bad7b9c0820d6a41ad22f3e38f99d82bf1cb6ae50d",
+      "afterSha256": "764a32363ca1c20714b3cdb55cf68d71f58f6e9dd094fa78451e1c21d3eeffb5",
+      "namedExecutedAssertion": "AssertionError [ERR_ASSERTION]: identity refusal and stale pidfd must preserve the unrelated sibling: node:internal/errors:985\n  const err = new Error(message);\n              ^",
+      "assertionLocation": "at file:///home/orca/.tmp/syzygy-pr764-writer-lifetime-correction-20261105/subject/[eval1]:1:148 {",
+      "rawSha256": "3c10bdb5b509d6dd4a75d372176e1e08f3a485c96af6d4286b78a0d3214648d5"
+    },
+    {
+      "name": "premature-descendant-completion",
+      "commit": "21896ed1abf8996b35fa5eea09db9acef099c7f9",
+      "path": "scripts/check_unit_tmpdir_child.py",
+      "old": "            if pid == 0:\n                return False",
+      "new": "            if pid == 0:\n                return launcher_done",
+      "occurrences": 1,
+      "beforeContext": " try:\n                pid, status = os.waitpid(-1, os.WNOHANG)\n            except ChildProcessError:\n                return True  # ECHILD: no live or unreaped descendants remain.\n            if pid == 0:\n                return False\n            result['lifetime']['reaped'].append(pid)\n            if pid == launcher.pid:\n                launcher_done = True\n                launcher.returncode = os.waitstatus_t",
+      "afterContext": " try:\n                pid, status = os.waitpid(-1, os.WNOHANG)\n            except ChildProcessError:\n                return True  # ECHILD: no live or unreaped descendants remain.\n            if pid == 0:\n                return launcher_done\n            result['lifetime']['reaped'].append(pid)\n            if pid == launcher.pid:\n                launcher_done = True\n                launcher.returncode = os.waitstatus_t",
+      "beforeSha256": "c5d7bd872ae9ce6d0c1ed4bad7b9c0820d6a41ad22f3e38f99d82bf1cb6ae50d",
+      "afterSha256": "41baa7337fe1844170124980c9f5354d0bd6eba01f7fad0188c87e28e4178223",
+      "namedExecutedAssertion": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected",
+      "assertionLocation": "at file:///home/orca/.tmp/syzygy-pr764-writer-lifetime-correction-20261105/subject/scripts/check_unit_tmpdir.mjs:298:16",
+      "rawSha256": "749c5371760e4dc911abe878008358ac1cc2f73d9c2a6a58ba06ea6249697bfa"
+    },
+    {
+      "name": "suppress-orphan-failure",
+      "commit": "c53162e54c11ded40ff6e5c5eb8dc26188ee9f4c",
+      "path": "scripts/check_unit_tmpdir_child.py",
+      "old": "                result['signalError'] = 'owned-writers-remained'",
+      "new": "                pass  # Mutant suppresses the orphan failure.",
+      "occurrences": 1,
+      "beforeContext": "equested and deadline is None:\n                result['interrupted'] = requested\n                deadline = time.monotonic() + 4\n            if launcher_done and deadline is None:\n                result['signalError'] = 'owned-writers-remained'\n                deadline = time.monotonic() + 4\n            if deadline is not None:\n                if time.monotonic() >= deadline:\n                    result['writers'] = [reco",
+      "afterContext": "equested and deadline is None:\n                result['interrupted'] = requested\n                deadline = time.monotonic() + 4\n            if launcher_done and deadline is None:\n                pass  # Mutant suppresses the orphan failure.\n                deadline = time.monotonic() + 4\n            if deadline is not None:\n                if time.monotonic() >= deadline:\n                    result['writers'] = [reco",
+      "beforeSha256": "c5d7bd872ae9ce6d0c1ed4bad7b9c0820d6a41ad22f3e38f99d82bf1cb6ae50d",
+      "afterSha256": "80597473933e031c47e168ce906b1ded8099f71aadba9e6fa04a7eee6cd5cb3a",
+      "namedExecutedAssertion": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected",
+      "assertionLocation": "at file:///home/orca/.tmp/syzygy-pr764-writer-lifetime-correction-20261105/subject/scripts/check_unit_tmpdir.mjs:298:16",
+      "rawSha256": "f5fc29ae8b2c4b3251773918204e55fba217933a5a809e75564e0925a04757e3"
+    },
+    {
+      "name": "cleanup-without-proof",
+      "commit": "044af072b55924dbf838e939298e183ebb7da3bc",
+      "path": "scripts/check_unit_tmpdir.mjs",
+      "old": "if (!result.child.lifetimeVerified)",
+      "new": "if (false)",
+      "occurrences": 1,
+      "beforeContext": "ity: owner.identity, child: null, census: null, cleanup: false, errors: [] };\n  let safe = true;\n  try {\n    result.child = await childRun(command, args, cwd, owner, options);\n    if (!result.child.lifetimeVerified) { safe = false; result.errors.push('owned-writer-lifetime-unknown'); }\n  } catch (e) { safe = false; result.errors.push(`child-lifetime-unknown: ${e.message}`); }\n  try {\n    if (",
+      "afterContext": "ity: owner.identity, child: null, census: null, cleanup: false, errors: [] };\n  let safe = true;\n  try {\n    result.child = await childRun(command, args, cwd, owner, options);\n    if (false) { safe = false; result.errors.push('owned-writer-lifetime-unknown'); }\n  } catch (e) { safe = false; result.errors.push(`child-lifetime-unknown: ${e.message}`); }\n  try {\n    if (",
+      "beforeSha256": "db158feb8d70d4848dc67c9f667f9746cdc703a32c710bdf764a810eaa10a691",
+      "afterSha256": "1562402112b0b2983cb0db5efeccb15e576d2724d8c2d0fb5e9bb1eec071b49a",
+      "namedExecutedAssertion": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:",
+      "assertionLocation": "at file:///home/orca/.tmp/syzygy-pr764-writer-lifetime-correction-20261105/subject/scripts/check_unit_tmpdir.mjs:312:47",
+      "rawSha256": "09e681924920ec03fd0273f91a0532e410800e26eeeeb5782db402f3849bbd33"
+    }
+  ],
+  "initialClassification": "none, provisional; fresh independent classification required",
+  "risk": "high for development process/deletion correctness; all seven floors apply",
+  "limits": [
+    "Linux /proc, python3 pidfd/waitid support; unsupported or unknown lifetime fails closed",
+    "Guarded default is whole current unit only; historical/current waiting-sessions controls are separate integration diagnostics",
+    "Driver cleanup and fixture-controller recovery stay distinct; refusal controls are deliberate failed/Unknown results",
+    "Old frozen reports/reviews remain immutable; predecessor success is not retroactively corrected"
+  ],
+  "retainedEvidence": "/home/orca/.tmp/syzygy-pr764-writer-lifetime-correction-20261105",
+  "frozenPredecessors": [
+    {
+      "source": "/home/orca/.tmp/syzygy-bpyt4-17-full-outcome-20261105",
+      "manifestSha256": "a09161ae713b4c6224f330eb5d1ea05355594320dcff5ea4c972541fdb9ff078",
+      "payloads": 122,
+      "bytes": 139575324,
+      "pythonVerified": true,
+      "nativeVerified": true,
+      "nativeRows": 122
+    },
+    {
+      "source": "/home/orca/.tmp/syzygy-pr764-full-private-tmpdir-independent-review-20261105",
+      "manifestSha256": "938940aae88e947f576becc691a8828eae9939a0fac50a271ec6a3a37c67ef58",
+      "payloads": 61,
+      "bytes": 324219,
+      "pythonVerified": true,
+      "nativeVerified": true,
+      "nativeRows": 61
+    }
+  ],
+  "preFullGateAttempts": "logs/*.json plus TARGETED-ATTEMPT-QUALIFICATION.json; current-clean initial capture superseded after clone advancement during late targeted execution, with unchanged product/source-oracle core. No full or unit gate repeated.",
+  "remainingAtCapture": [
+    "one final clean-clone npm run check:all with its nested npm run check/native battery, under the shared lock",
+    "fresh exact-head independent full14AC review/classes/floors",
+    "exact-tree hosted node/governance and later authorized merge-group/budget",
+    "coordinator cycle notice, lifecycle and landing; outcome remains OPEN"
+  ]
+}

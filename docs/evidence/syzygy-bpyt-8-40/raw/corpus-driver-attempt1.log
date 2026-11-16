@@ -1,0 +1,18 @@
+{"id": "corpus-baseline-old", "exit": 0, "executed": 8, "failed": 0}
+{"id": "corpus-baseline-new", "exit": 0, "executed": 9, "failed": 0}
+{"id": "corpus-live-to-dossier-trigger-old", "exit": 1, "executed": 8, "failed": 1}
+{"id": "corpus-live-to-dossier-trigger-new", "exit": 1, "executed": 9, "failed": 2}
+{"id": "corpus-disconnected-old-member-old", "exit": 0, "executed": 8, "failed": 0}
+{"id": "corpus-disconnected-old-member-new", "exit": 1, "executed": 9, "failed": 1}
+{"id": "corpus-disconnected-new-member-old", "exit": 0, "executed": 8, "failed": 0}
+{"id": "corpus-disconnected-new-member-new", "exit": 1, "executed": 9, "failed": 1}
+{"id": "corpus-disconnected-via-core-root-old", "exit": 0, "executed": 8, "failed": 0}
+{"id": "corpus-disconnected-via-core-root-new", "exit": 1, "executed": 9, "failed": 1}
+{"id": "corpus-disconnected-via-parked-exception-old", "exit": 0, "executed": 8, "failed": 0}
+{"id": "corpus-disconnected-via-parked-exception-new", "exit": 1, "executed": 9, "failed": 1}
+{"id": "corpus-disconnected-unresolved-old", "exit": 0, "executed": 8, "failed": 0}
+Traceback (most recent call last):
+  File "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/corpus.py", line 44, in <module>
+    if expected:assert token in messages,(name,token)
+                       ^^^^^^^^^^^^^^^^^
+AssertionError: ('corpus-disconnected-unresolved-new', 'apps/syzygy/src/bpyt-island-fixture.ts')

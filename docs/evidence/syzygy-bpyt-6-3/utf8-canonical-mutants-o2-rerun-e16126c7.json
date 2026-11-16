@@ -1,0 +1,73 @@
+{
+ "head": "e16126c7547df02e3dfdeb7144f78770d4714247",
+ "expectedProbeOutput": "/tmp/lc63u/probe-base-a.json",
+ "mutants": [
+  {
+   "id": "O2-git-text-decodes-leniently",
+   "file": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+   "old": "const text = decodeUtf8(bytes);\n  return text === undefined ? { kind: 'failed'",
+   "new": "const text: string | undefined = new TextDecoder().decode(bytes);\n  return text === undefined ? { kind: 'failed'",
+   "commit": "7e4e9f1985c406f4b9c1cb17a586adad995ddce3",
+   "detectors": {
+    "test": {
+     "killed": true,
+     "files": [
+      "packages/three-surface-poc-core/src/project-shape-git-text.test.ts"
+     ],
+     "summary": [
+      "Test Files  1 failed (1)",
+      "Tests  1 failed | 2 passed (3)"
+     ],
+     "failed": [
+      {
+       "test": "observeProjectShapeSources decoding of git output > stops at the first command whose output is not UTF-8 and names it",
+       "firstError": "\u2192 rev-parse: expected { kind: 'unknown', \u2026(8) } to match object { kind: 'unknown', \u2026(2) }"
+      }
+     ],
+     "failedCount": 1
+    },
+    "existing": {
+     "killed": false,
+     "files": [
+      "packages/three-surface-poc-core/src/project-shape-observation.test.ts"
+     ],
+     "summary": [
+      "Test Files  1 passed (1)",
+      "Tests  39 passed (39)"
+     ],
+     "failed": [],
+     "failedCount": 0
+    },
+    "probe": {
+     "killed": true,
+     "rowsCompared": 12841,
+     "rowsDiffer": 2670,
+     "differPerDriver": {
+      "observe-ls-tree": 890,
+      "observe-rev-parse": 890,
+      "observe-show": 890
+     },
+     "firstDiffering": [
+      [
+       "observe-ls-tree",
+       "bad-then-good"
+      ],
+      [
+       "observe-ls-tree",
+       "consent+bad-head"
+      ],
+      [
+       "observe-ls-tree",
+       "consent+bad-tail"
+      ],
+      [
+       "observe-ls-tree",
+       "consent+overlong-tail"
+      ]
+     ]
+    }
+   },
+   "verdict": "killed by test, probe"
+  }
+ ]
+}

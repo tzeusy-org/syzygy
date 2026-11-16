@@ -1,0 +1,57 @@
+base-tests control screen.ts: survived exit 0 0/110 failed, 11.0s, load 23.68 25.58 27.79
+base-tests control public-source-classification.ts: survived exit 0 0/214 failed, 3.3s, load 23.14 25.44 27.74
+base-tests control secret-redaction.ts: survived exit 0 0/26 failed, 2.9s, load 23.05 25.38 27.70
+base-tests control authority-artifact-fields.ts: survived exit 0 0/5 failed, 2.4s, load 23.05 25.38 27.70
+base-tests C-authority-artifact-fields-L102n0-A: survived exit 0 0/5 failed, 2.0s, load 23.05 25.34 27.68
+base-tests C-authority-artifact-fields-L102n0-B: survived exit 0 0/5 failed, 2.4s, load 23.05 25.34 27.68
+base-tests C-authority-artifact-fields-L102n0-D: survived exit 0 0/5 failed, 2.2s, load 23.05 25.34 27.68
+base-tests C-authority-artifact-fields-L121n1-A: survived exit 0 0/5 failed, 2.1s, load 22.80 25.25 27.64
+base-tests C-authority-artifact-fields-L121n1-B: survived exit 0 0/5 failed, 2.5s, load 22.80 25.25 27.64
+base-tests C-authority-artifact-fields-L121n1-D: survived exit 0 0/5 failed, 2.7s, load 23.70 25.40 27.67
+base-tests C-authority-artifact-fields-L132n2-A: survived exit 0 0/5 failed, 2.0s, load 23.70 25.40 27.67
+base-tests C-authority-artifact-fields-L132n2-B: survived exit 0 0/5 failed, 3.0s, load 23.56 25.34 27.64
+base-tests C-authority-artifact-fields-L132n2-D: survived exit 0 0/5 failed, 2.1s, load 23.56 25.34 27.64
+base-tests C-authority-artifact-fields-L136n3-A: survived exit 0 0/5 failed, 2.1s, load 23.92 25.38 27.64
+base-tests C-authority-artifact-fields-L136n3-B: survived exit 0 0/5 failed, 2.4s, load 23.92 25.38 27.64
+base-tests C-authority-artifact-fields-L136n3-D: survived exit 0 0/5 failed, 2.0s, load 24.08 25.39 27.63
+base-tests C-authority-artifact-fields-L141n4-B: survived exit 0 0/5 failed, 2.0s, load 24.08 25.39 27.63
+base-tests C-authority-artifact-fields-L141n4-D: survived exit 0 0/5 failed, 2.8s, load 25.68 25.70 27.72
+base-tests C-secret-redaction-L71n0-A: survived exit 0 0/26 failed, 3.2s, load 25.68 25.70 27.72
+base-tests C-secret-redaction-L71n0-B: survived exit 0 0/26 failed, 3.1s, load 25.14 25.59 27.67
+base-tests C-secret-redaction-L71n0-D: survived exit 0 0/26 failed, 3.1s, load 24.97 25.55 27.65
+base-tests C-secret-redaction-L73n1-A: survived exit 0 0/26 failed, 3.5s, load 24.97 25.55 27.65
+base-tests C-secret-redaction-L73n1-B: survived exit 0 0/26 failed, 2.5s, load 24.81 25.51 27.62
+base-tests C-secret-redaction-L73n1-D: survived exit 0 0/26 failed, 2.9s, load 24.81 25.51 27.62
+base-tests C-public-source-classification-L68n0-A: survived exit 0 0/214 failed, 2.5s, load 24.27 25.38 27.57
+base-tests C-public-source-classification-L68n0-B: survived exit 0 0/214 failed, 2.0s, load 24.27 25.38 27.57
+base-tests C-public-source-classification-L68n0-D: survived exit 0 0/214 failed, 2.5s, load 24.81 25.48 27.59
+base-tests C-public-source-classification-L78n1-A: survived exit 0 0/214 failed, 2.5s, load 24.81 25.48 27.59
+base-tests C-public-source-classification-L78n1-B: survived exit 0 0/214 failed, 2.2s, load 24.50 25.40 27.56
+base-tests C-public-source-classification-L78n1-D: survived exit 0 0/214 failed, 2.7s, load 24.50 25.40 27.56
+base-tests C-public-source-classification-L83n2-A: survived exit 0 0/214 failed, 2.2s, load 23.74 25.23 27.49
+base-tests C-public-source-classification-L83n2-B: KILLED exit 1 1/214 failed, 2.2s, load 23.74 25.23 27.49 | reading the rule refuses no prefix object :: TypeError: Cannot read properties of null (reading 'digitCount')
+base-tests C-public-source-classification-L83n2-D: KILLED exit 1 1/214 failed, 2.1s, load 23.74 25.23 27.49 | reading the rule refuses no prefix object :: TypeError: Cannot read properties of null (reading 'digitCount')
+base-tests C-public-source-classification-L204n3-A: survived exit 0 0/214 failed, 2.9s, load 23.92 25.24 27.48
+base-tests C-public-source-classification-L204n3-B: survived exit 0 0/214 failed, 2.5s, load 23.37 25.10 27.42
+base-tests C-public-source-classification-L204n3-D: survived exit 0 0/214 failed, 2.6s, load 23.37 25.10 27.42
+base-tests C-public-source-classification-L205n4-A: survived exit 0 0/214 failed, 2.7s, load 22.94 24.99 27.37
+base-tests C-public-source-classification-L205n4-B: survived exit 0 0/214 failed, 2.6s, load 22.94 24.99 27.37
+base-tests C-public-source-classification-L205n4-D: survived exit 0 0/214 failed, 2.0s, load 22.54 24.87 27.32
+base-tests C-public-source-classification-L207n5-A: survived exit 0 0/214 failed, 2.2s, load 22.54 24.87 27.32
+base-tests C-public-source-classification-L207n5-B: survived exit 0 0/214 failed, 2.8s, load 24.02 25.14 27.39
+base-tests C-public-source-classification-L207n5-D: survived exit 0 0/214 failed, 2.5s, load 24.02 25.14 27.39
+base-tests C-screen-L81n0-B: survived exit 0 0/110 failed, 9.7s, load 23.56 25.00 27.33
+base-tests C-screen-L81n0-D: survived exit 0 0/110 failed, 9.2s, load 22.45 24.72 27.21
+base-tests C-screen-L83n1-A: survived exit 0 0/110 failed, 8.8s, load 22.25 24.60 27.14
+base-tests C-screen-L83n1-B: KILLED exit 1 2/110 failed, 12.4s, load 21.75 24.41 27.05 | the screen is refused for a policy with no public-source scope :: TypeError: Cannot read properties of null (reading 'contentClassification')
+base-tests C-screen-L83n1-D: KILLED exit 1 2/110 failed, 15.5s, load 26.00 25.24 27.28 | the screen is refused for a policy with no public-source scope :: TypeError: Cannot read properties of null (reading 'contentClassification')
+base-tests C-screen-L84n2-B: survived exit 0 0/110 failed, 12.7s, load 25.79 25.24 27.25
+base-tests C-screen-L84n2-D: survived exit 0 0/110 failed, 10.5s, load 24.83 25.05 27.17
+base-tests C-screen-L88n3-B: survived exit 0 0/110 failed, 11.0s, load 24.86 25.05 27.14
+base-tests C-screen-L88n3-D: survived exit 0 0/110 failed, 10.3s, load 24.20 24.90 27.07
+base-tests C-screen-L89n4-B: survived exit 0 0/110 failed, 9.6s, load 24.02 24.84 27.03
+base-tests C-screen-L89n4-D: survived exit 0 0/110 failed, 9.3s, load 23.84 24.76 26.98
+base-tests C-screen-L90n5-D: survived exit 0 0/110 failed, 10.4s, load 23.31 24.62 26.91
+base-tests C-screen-L100n6-B: survived exit 0 0/110 failed, 9.4s, load 22.33 24.37 26.80
+base-tests C-screen-L100n6-D: survived exit 0 0/110 failed, 10.5s, load 23.06 24.46 26.81
+56 rows, 4 killed

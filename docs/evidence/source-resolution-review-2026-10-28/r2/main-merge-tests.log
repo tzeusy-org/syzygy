@@ -1,0 +1,39 @@
+
+ RUN  v3.2.7 /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-549-r2/head
+
+ ✓ |@syzygy/support| packages/support/src/support-purity.test.ts (33 tests) 120ms
+ ✓ |@syzygy/http-host| packages/http-host/src/package.test.ts (2 tests) 15ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/sync-child-process-guard.test.ts (6 tests) 388ms
+   ✓ suite child processes and the vitest worker RPC > runs only short local tools synchronously in a suite test file or any module it imports  365ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/git-observation.test.ts (14 tests) 3249ms
+   ✓ read-only Git observation > protects every module and package the POC daemon imports  449ms
+   ✓ read-only Git observation > identifies clean and dirty states without refreshing the index  528ms
+   ✓ read-only Git observation > retains a protected source path when it is renamed out  851ms
+   ✓ read-only Git observation > computes a metadata-only changed/added horizon between revisions  553ms
+   ✓ read-only Git observation > reads the observed-project limb between two evaluated revisions, and Unknown when the comparison fails (syzygy-u05.2)  301ms
+   ✓ read-only Git observation > counts Syzygy commits since the build revision for the observatory limb, Unknown when unreadable (syzygy-u05.2)  533ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/polaris-generation/generation-mutation.test.ts (13 tests) 2363ms
+   ✓ generation mutation plan > canonical-json-sorted-keys-disabled: names a non-test file under polaris-generation-core/src, holds its fragment once there, changes the emit and names must-fail tests the runner runs  389ms
+   ✓ generation mutation plan > canonical-json-cycle-check-disabled: names a non-test file under polaris-generation-core/src, holds its fragment once there, changes the emit and names must-fail tests the runner runs  309ms
+   ✓ generation mutation plan > pipeline-max-calls-disabled: names a non-test file under polaris-generation-core/src, holds its fragment once there, changes the emit and names must-fail tests the runner runs  356ms
+ ✓ |@syzygy/cap1-daemon| packages/cap1-daemon/src/package.test.ts (4 tests) 12ms
+ ✓ |@syzygy/polaris-generation-core| packages/polaris-generation-core/src/workspace-reach.test.ts (61 tests) 7699ms
+   ✓ the tree's own exports > load, under the suite, each entry from its source module  7644ms
+stdout | packages/polaris-dossier/src/no-egress.test.ts > no provider call and no transmission (S10): an operating-system capture of a full fixture run > creates no Internet-family socket over the whole run, from preflight to close
+no-egress proof ran under strace: 14 network-class calls, traced calls from 1 task(s), 0 Internet-family
+
+ ✓ |@syzygy/polaris-dossier| packages/polaris-dossier/src/no-egress.test.ts (7 tests | 1 skipped) 4156ms
+   ✓ no provider call and no transmission (S10): an operating-system capture of a full fixture run > creates no Internet-family socket over the whole run, from preflight to close  1444ms
+   ✓ no provider call and no transmission (S10): an operating-system capture of a full fixture run > sees the canary: one loopback datagram sent before the same run is in the capture  1275ms
+   ✓ the S10 bundle takes each workspace package from the source its entry names (syzygy-bpyt.6.14) > bundles the driver with every @syzygy specifier inside packages/*/src or apps/*/src  397ms
+   ✓ the S10 bundle takes each workspace package from the source its entry names (syzygy-bpyt.6.14) > bundles the driver only under the guard: an alias that leaves the sources fails it  336ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/product-build.test.ts (15 tests) 10491ms
+   ✓ the product build > emits no test and no test-support module, but the two kits a reader takes from dist  417ms
+   ✓ the product build > imports no test or test-support module from any module it builds, but the consent package's testing entry its kit  699ms
+   ✓ the clean build > leaves no output it did not just write in any project it builds, and leaves other projects alone  8383ms
+
+ Test Files  9 passed (9)
+      Tests  154 passed | 1 skipped (155)
+   Start at  12:42:25
+   Duration  13.70s (transform 12.60s, setup 1.35s, collect 18.27s, tests 28.49s, environment 10ms, prepare 2.08s)
+

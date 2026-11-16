@@ -1,0 +1,72 @@
+{
+ "classes": {
+  "classes": 176,
+  "leftBySomeSIGKILL": 27,
+  "neverLeftInTheseKills": 149,
+  "byRule": {
+   "R1-fixture-sweep-landed": 2,
+   "R2-chrome-singleton": 1,
+   "R3-browser-profile": 1,
+   "R4-vitest-project-directory": 1,
+   "R5-npm-compile-cache": 1,
+   "R6-non-test-module": 6,
+   "R7-stale-lock-by-design": 1,
+   "R9-test-file": 163
+  },
+  "byFamily": {
+   "chrome-singleton": 1,
+   "derived": 1,
+   "fixed": 1,
+   "mkdtemp": 170,
+   "npm-compile-cache": 1,
+   "unattributed": 1,
+   "vitest-project-directory": 1
+  }
+ },
+ "runs": {
+  "c0-clean": {
+   "entriesAtEnd": 2,
+   "pathsCreatedDirectlyInTemp": 2443
+  },
+  "f1-fresh-after-k1": {
+   "entriesAtEnd": 18,
+   "pathsCreatedDirectlyInTemp": 2437
+  },
+  "f2-fresh-after-k2": {
+   "entriesAtEnd": 25,
+   "pathsCreatedDirectlyInTemp": 2443
+  },
+  "f3-fresh-after-k3": {
+   "entriesAtEnd": 14,
+   "pathsCreatedDirectlyInTemp": 2443
+  },
+  "k1-kill-40s": {
+   "entriesAtEnd": 16,
+   "pathsCreatedDirectlyInTemp": 649
+  },
+  "k2-kill-75s": {
+   "entriesAtEnd": 34,
+   "pathsCreatedDirectlyInTemp": 1133
+  },
+  "k3-kill-115s": {
+   "entriesAtEnd": 15,
+   "pathsCreatedDirectlyInTemp": 1649
+  }
+ },
+ "coverage": {
+  "filesWithAStaticSite": 260,
+  "sitesInThem": 591,
+  "sitesWithAPrefixLiteral": 179,
+  "sitesWithoutOne": 412,
+  "filesWithASiteThatWasTheInnermostCreatingFrameInSomeRun": 80,
+  "filesWithASiteThatAppearedInSomeFrame": 81,
+  "filesWithASiteNeverSeen": 180,
+  "neverSeenByTree": {
+   ".syzygy": 5,
+   "apps": 14,
+   "docs": 60,
+   "packages": 8,
+   "scripts": 93
+  }
+ }
+}

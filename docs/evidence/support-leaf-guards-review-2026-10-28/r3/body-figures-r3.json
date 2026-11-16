@@ -1,0 +1,294 @@
+{
+  "suite": {
+    "commit": "191d82779ea07f45be612b00ff3cafc9aa7446b8",
+    "command": "npx vitest run",
+    "exit": 0,
+    "files": 253,
+    "total": 5528,
+    "passed": 5523,
+    "failed": 0,
+    "skipped": 5,
+    "load1": 29.0,
+    "wallSeconds": 243.4,
+    "cleanAfter": true,
+    "distDirs": 12,
+    "perFileSum": 5528,
+    "perFileCount": 253
+  },
+  "titles": {
+    "base": 18,
+    "head": 42,
+    "added": 27,
+    "removed": 3,
+    "headCommit": "191d82779ea07f45be612b00ff3cafc9aa7446b8",
+    "perFile": {
+      "packages/polaris-dossier/src/no-egress.test.ts": {
+        "base": 2,
+        "head": 6
+      },
+      "packages/support/src/support-purity.test.ts": {
+        "base": 13,
+        "head": 33
+      },
+      "packages/three-surface-poc-core/src/owner-act-drafter.test.ts": {
+        "base": 3,
+        "head": 3
+      }
+    }
+  },
+  "bundleTestDurations": {
+    "commit": "191d82779ea07f45be612b00ff3cafc9aa7446b8",
+    "mode": "alone",
+    "runs": 5,
+    "load1": [
+      {
+        "start": 26.88,
+        "end": 27.01,
+        "min": 26.88,
+        "max": 27.53,
+        "samples": 2
+      },
+      {
+        "start": 27.01,
+        "end": 26.66,
+        "min": 26.66,
+        "max": 27.33,
+        "samples": 3
+      },
+      {
+        "start": 26.66,
+        "end": 28.39,
+        "min": 26.66,
+        "max": 28.77,
+        "samples": 2
+      },
+      {
+        "start": 28.39,
+        "end": 27.77,
+        "min": 28.36,
+        "max": 28.39,
+        "samples": 2
+      },
+      {
+        "start": 27.77,
+        "end": 27.47,
+        "min": 27.47,
+        "max": 27.77,
+        "samples": 2
+      }
+    ],
+    "exit": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "bundleMs": [
+      345,
+      696
+    ],
+    "guardMs": [
+      265,
+      499
+    ],
+    "suiteTotals": [
+      {
+        "numTotalTests": 7,
+        "numPassedTests": 6,
+        "numFailedTests": 0,
+        "numPendingTests": 1
+      },
+      {
+        "numTotalTests": 7,
+        "numPassedTests": 6,
+        "numFailedTests": 0,
+        "numPendingTests": 1
+      },
+      {
+        "numTotalTests": 7,
+        "numPassedTests": 6,
+        "numFailedTests": 0,
+        "numPendingTests": 1
+      },
+      {
+        "numTotalTests": 7,
+        "numPassedTests": 6,
+        "numFailedTests": 0,
+        "numPendingTests": 1
+      },
+      {
+        "numTotalTests": 7,
+        "numPassedTests": 6,
+        "numFailedTests": 0,
+        "numPendingTests": 1
+      }
+    ]
+  },
+  "hookDurations": {
+    "commit": "191d82779ea07f45be612b00ff3cafc9aa7446b8",
+    "runs": 5,
+    "load1": [
+      {
+        "start": 27.03,
+        "end": 27.67,
+        "min": 27.03,
+        "max": 27.67,
+        "samples": 2
+      },
+      {
+        "start": 27.67,
+        "end": 26.43,
+        "min": 26.73,
+        "max": 27.67,
+        "samples": 2
+      },
+      {
+        "start": 26.43,
+        "end": 26.13,
+        "min": 26.4,
+        "max": 26.43,
+        "samples": 2
+      },
+      {
+        "start": 26.13,
+        "end": 26.9,
+        "min": 25.23,
+        "max": 26.13,
+        "samples": 2
+      },
+      {
+        "start": 26.9,
+        "end": 28.32,
+        "min": 26.9,
+        "max": 28.32,
+        "samples": 3
+      }
+    ],
+    "beforeAllMs": [
+      576,
+      992
+    ],
+    "exit": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "residuals": {
+    "commit": "191d82779ea07f45be612b00ff3cafc9aa7446b8",
+    "statusAfter": "",
+    "rows": {
+      "R1-function-constructor-through-object-brackets": [
+        "survives",
+        "survives",
+        33,
+        0
+      ],
+      "R2-dynamic-import-with-a-space-of-an-allowed-name": [
+        "survives",
+        "survives",
+        33,
+        0
+      ],
+      "Y3-R1-escalated-to-the-environment": [
+        "survives",
+        "survives",
+        33,
+        0
+      ],
+      "Y5b-computed-import-newline": [
+        "survives",
+        "survives",
+        33,
+        0
+      ],
+      "Y5c-computed-import-comment": [
+        "survives",
+        "survives",
+        33,
+        0
+      ],
+      "Z7-unscoped-workspace-with-no-entry": [
+        "survives",
+        "survives",
+        6,
+        0
+      ]
+    },
+    "other": {
+      "commit": "191d82779ea07f45be612b00ff3cafc9aa7446b8",
+      "reviewerR1Record": "2ff98a8d5624ffcd7c073a39857ff23b5f7c69f8b189ec8f326bc5db0159c977",
+      "statusAfter": ""
+    }
+  },
+  "bundleDifferential": {
+    "identical": true,
+    "runs": [
+      {
+        "commit": "f7ea858480b30ffc4407154a84d1d03f3fe4a549",
+        "distDirs": 12,
+        "exit": 0,
+        "passed": 2,
+        "failed": 0,
+        "pending": 1,
+        "bytes": 935757,
+        "sha256": "18172eb2e96de6bb703c3c7110d61d5896853d2c865c2a609e9703dca79b3340",
+        "statusAfter": ""
+      },
+      {
+        "commit": "191d82779ea07f45be612b00ff3cafc9aa7446b8",
+        "distDirs": 12,
+        "exit": 0,
+        "passed": 6,
+        "failed": 0,
+        "pending": 1,
+        "bytes": 935757,
+        "sha256": "18172eb2e96de6bb703c3c7110d61d5896853d2c865c2a609e9703dca79b3340",
+        "statusAfter": ""
+      }
+    ]
+  },
+  "unmutated-absent": {
+    "C0-purity-unmutated": [
+      "pass",
+      33,
+      0,
+      0
+    ],
+    "D0-drafter-unmutated": [
+      "pass",
+      3,
+      0,
+      0
+    ],
+    "N0-no-egress-unmutated": [
+      "pass",
+      6,
+      0,
+      1
+    ]
+  },
+  "unmutated-present": {
+    "C0-purity-unmutated": [
+      "pass",
+      33,
+      0,
+      0
+    ],
+    "D0-drafter-unmutated": [
+      "pass",
+      3,
+      0,
+      0
+    ],
+    "N0-no-egress-unmutated": [
+      "pass",
+      6,
+      0,
+      1
+    ]
+  }
+}

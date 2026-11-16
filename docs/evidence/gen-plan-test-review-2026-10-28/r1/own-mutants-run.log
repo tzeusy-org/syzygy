@@ -1,0 +1,28 @@
+25.43 33.26 37.20 29/9741 1069085
+Q1 survived predicted=survived restored=True 0/13 []
+Q2 survived predicted=survived restored=True 0/13 []
+Q3 killed predicted=unknown restored=True 1/13 ["AssertionError: pipeline-max-calls-disabled: the mutation changes the emitted JavaScript: expected 'import { quotableGenerationSources, v…' not to be 'import { quotableGenerationSources, v…' // Object.is equality"]
+Q3b survived predicted=survived restored=True 0/13 []
+Q4 killed predicted=killed restored=True 1/13 ["AssertionError: pipeline-max-calls-disabled: the mutation changes the emitted JavaScript: expected 'import { quotableGenerationSources, v…' not to be 'import { quotableGenerationSources, v…' // Object.is equality"]
+Q5 killed predicted=killed restored=True 1/13 ["AssertionError: canonical-json-sorted-keys-disabled: the mutation changes the emitted JavaScript: expected 'import { types } from \\'node:util\\';\\…' not to be 'import { types } from \\'node:util\\';\\…' // Object.is equality"]
+Q6 survived predicted=survived restored=True 0/13 []
+Q7 survived predicted=survived restored=True 0/13 []
+Q8 killed predicted=killed restored=True 1/13 ['AssertionError: parse-json-pollution-key-check-disabled: must-fail "bounded provider JSON parsing" is in a test title: expected false to be true // Object.is equality']
+Q9 survived predicted=survived restored=True 0/13 []
+Q10 killed predicted=killed restored=True 1/13 ['AssertionError: parse-json-pollution-key-check-disabled: must-fail "reaches no island module from the CLI entry" is in a test title: expected false to be true // Object.is equality']
+Q11 survived predicted=survived restored=True 0/13 []
+Q12 killed predicted=killed restored=True 1/13 ['AssertionError: parse-json-pollution-key-check-disabled: must-fail "rejects pollution keys: __proto__" is in a test title: expected false to be true // Object.is equality']
+Q13 killed predicted=killed restored=True 1/13 ['AssertionError: parse-json-pollution-key-check-disabled: must-fail "bounded provider JSON parsing rejects pollution keys" is in a test title: expected false to be true // Object.is equality']
+Q14 survived predicted=survived restored=True 0/13 []
+Q15 survived predicted=survived restored=True 0/13 []
+Q16 survived predicted=survived restored=True 0/13 []
+Q17 survived predicted=survived restored=True 0/13 []
+Q18 survived predicted=survived restored=True 0/13 []
+Q19 killed predicted=unknown restored=True 1/13 ['Error: Debug Failure. Output generation failed']
+Q20 killed predicted=killed restored=True 3/13 ['AssertionError: parse-json-pollution-key-check-disabled: must-fail "rejects pollution keyz" is in a test title: expected false to be true // Object.is equality', 'AssertionError: provider-draft-duplicate-handle-check-disabled: apps/three-surface-poc/src/polaris-generation/generation-mutation.ts is a non-test file under packages/polaris-generation-core/src/: expected false to be true // Object.is equality', 'AssertionError: provider-draft-unknown-source-check-disabled: occurrences of the fragment in packages/polaris-generation-core/src/provider-draft.ts: expected 2 to be 1 // Object.is equality']
+Q21 killed predicted=killed restored=True 0/0 ["Cannot find package 'typescript-missing' imported from '/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-546/clone/apps/three-surface-poc/src/polaris-generation/generation-mutation.test.ts'"]
+Q22 survived predicted=survived restored=True 0/13 []
+Q23 killed predicted=killed restored=True 2/13 ['AssertionError: parse-json-duplicate-key-check-disabled: must-fail "rejects duplicate decoded keys" is in a test title: expected false to be true // Object.is equality', 'AssertionError: parse-json-pollution-key-check-disabled: must-fail "rejects pollution keys" is in a test title: expected false to be true // Object.is equality']
+control passed; {'mutants': 24, 'killed': 11, 'survived': 13, 'matchesPrediction': 24, 'restored': 24}; tree clean True
+exit=0
+27.47 31.25 35.96 37/9831 1122847

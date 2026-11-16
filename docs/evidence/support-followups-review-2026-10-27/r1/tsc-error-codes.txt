@@ -1,0 +1,15 @@
+# TypeScript error codes with node_modules/@syzygy/support removed (fresh clone, npm ci at f7477f52; same node_modules at 663061c4)
+base f7477f52: npm run --silent poc:dossier exit=2, stderr 0 bytes; stdout error codes:
+     41 error TS2307
+      3 error TS7006
+  distinct files with an error: 42
+  first line: packages/three-surface-poc-core/src/body-read-authority.ts(37,36): error TS2307: Cannot find module '@syzygy/support' or its corresponding type declarations.
+head tree 663061c4: npm run --silent build:poc exit=2; error codes:
+     43 error TS2307
+      3 error TS7006
+  distinct files with an error: 44
+  TS7006 lines:
+    packages/polaris-generation-core/src/dossier-prompts.test.ts(35,50): error TS7006: Parameter 'source' implicitly has an 'any' type.
+    packages/polaris-generation-core/src/dossier-prompts.test.ts(39,57): error TS7006: Parameter 'source' implicitly has an 'any' type.
+    packages/polaris-generation-core/src/dossier-prompts.test.ts(153,157): error TS7006: Parameter 'source' implicitly has an 'any' type.
+head 663061c4: npm run --silent poc:dossier exit=1, stdout 0 bytes, stderr: Generator dependencies are missing. Run npm ci from the repository root, then retry.

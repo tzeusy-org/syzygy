@@ -1,0 +1,16 @@
+control 0 13 0
+O1a killed 1/13 matches ['AssertionError: provider-draft-duplicate-handle-check-disabled: packages/polaris-generation-core/src//draft-model.ts is a normalized non-test .ts file under packages/polaris-generation-core/src/: expected false to be true // Object.is equality']
+O1b survived 0/13 matches []
+O2a killed 1/13 matches ['AssertionError: parse-json-pollution-key-check-disabled: test titles holding must-fail "Rejects Pollution Keys": expected +0 to be 1 // Object.is equality']
+O2b survived 0/13 matches []
+O3 survived 0/13 matches []
+O4a killed 1/13 matches ["AssertionError: duplicate mutation ids: expected 'canonical-json-sorted-keys-disabled' to be '' // Object.is equality"]
+O4b survived 0/13 matches []
+O5a killed 1/13 matches ['AssertionError: parse-json-pollution-key-check-disabled: must-fail "rejects pollution keys %%" is a literal title fragment: expected false to be true // Object.is equality']
+O5b survived 0/13 matches []
+O6 survived 0/13 matches []
+O7 survived 0/13 matches []
+O8 survived 0/13 matches []
+O9a survived 0/13 matches []
+O9b killed 1/13 matches ["AssertionError: duplicate mutation ids: expected [ '' ] to deeply equal []"]
+{'mutants': 14, 'killed': 5, 'survived': 9, 'matchesPrediction': 14, 'restored': 14} tree clean True

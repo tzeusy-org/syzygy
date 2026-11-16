@@ -1,0 +1,210 @@
+{
+ "head": "844dd7775686fc075f15f76a36d3ba056fc5a9d4",
+ "exit": 0,
+ "files": [
+  "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts",
+  "apps/three-surface-poc/src/polaris-generation/generator-install-check.test.ts",
+  "packages/polaris-generation-core/src/dossier-evaluation.test.ts",
+  "packages/polaris-generation-core/src/dossier-profile.test.ts",
+  "packages/support/src/deep-freeze.test.ts",
+  "packages/three-surface-poc-core/src/body-read-authority.test.ts",
+  "packages/three-surface-poc-core/src/model.test.ts",
+  "packages/three-surface-poc-core/src/project-shape-manifest.test.ts",
+  "packages/three-surface-poc-core/src/project-shape-observation.test.ts",
+  "packages/three-surface-poc-core/src/test-frozen.test.ts",
+  "apps/three-surface-poc/src/capture-test-artifact-main.test.ts",
+  "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+  "packages/three-surface-poc-core/src/test-artifact-verification-live-source.test.ts",
+  "apps/three-surface-poc/src/test-artifact-verification-consumers.test.ts",
+  "apps/three-surface-poc/src/keyboard-sweep-record.test.ts",
+  "apps/three-surface-poc/src/polaris-copy.test.ts",
+  "apps/three-surface-poc/src/polaris-parity-sweep.test.ts",
+  "apps/three-surface-poc/src/polaris-walkthrough-readiness.test.ts",
+  "apps/three-surface-poc/src/response-identity-independent.test.ts",
+  "apps/three-surface-poc/src/fence-rules.test.ts",
+  "packages/polaris-generation-consent/src/package-reader.test.ts",
+  "apps/three-surface-poc/src/sync-child-process-guard.test.ts",
+  "packages/support/src/support-purity.test.ts",
+  "apps/three-surface-poc/src/polaris-authority-sweep.test.ts"
+ ],
+ "rows": {
+  "packages/support/src/deep-freeze.test.ts": {
+   "tests": 6,
+   "passed": 6,
+   "failed": 0,
+   "skipped": 0,
+   "failedTests": []
+  },
+  "packages/support/src/support-purity.test.ts": {
+   "tests": 13,
+   "passed": 13,
+   "failed": 0,
+   "skipped": 0,
+   "failedTests": []
+  },
+  "packages/polaris-generation-core/src/dossier-evaluation.test.ts": {
+   "tests": 34,
+   "passed": 34,
+   "failed": 0,
+   "skipped": 0,
+   "failedTests": []
+  },
+  "packages/polaris-generation-core/src/dossier-profile.test.ts": {
+   "tests": 20,
+   "passed": 20,
+   "failed": 0,
+   "skipped": 0,
+   "failedTests": []
+  },
+  "packages/polaris-generation-consent/src/package-reader.test.ts": {
+   "tests": 303,
+   "passed": 303,
+   "failed": 0,
+   "skipped": 0,
+   "failedTests": []
+  },
+  "packages/three-surface-poc-core/src/body-read-authority.test.ts": {
+   "tests": 323,
+   "passed": 323,
+   "failed": 0,
+   "skipped": 0,
+   "failedTests": []
+  },
+  "packages/three-surface-poc-core/src/model.test.ts": {
+   "tests": 19,
+   "passed": 19,
+   "failed": 0,
+   "skipped": 0,
+   "failedTests": []
+  },
+  "packages/three-surface-poc-core/src/project-shape-manifest.test.ts": {
+   "tests": 25,
+   "passed": 25,
+   "failed": 0,
+   "skipped": 0,
+   "failedTests": []
+  },
+  "packages/three-surface-poc-core/src/project-shape-observation.test.ts": {
+   "tests": 40,
+   "passed": 40,
+   "failed": 0,
+   "skipped": 0,
+   "failedTests": []
+  },
+  "packages/three-surface-poc-core/src/test-artifact-verification-live-source.test.ts": {
+   "tests": 58,
+   "passed": 58,
+   "failed": 0,
+   "skipped": 0,
+   "failedTests": []
+  },
+  "packages/three-surface-poc-core/src/test-artifact-verification.test.ts": {
+   "tests": 37,
+   "passed": 37,
+   "failed": 0,
+   "skipped": 0,
+   "failedTests": []
+  },
+  "packages/three-surface-poc-core/src/test-frozen.test.ts": {
+   "tests": 4,
+   "passed": 4,
+   "failed": 0,
+   "skipped": 0,
+   "failedTests": []
+  },
+  "apps/three-surface-poc/src/capture-test-artifact-main.test.ts": {
+   "tests": 52,
+   "passed": 52,
+   "failed": 0,
+   "skipped": 0,
+   "failedTests": []
+  },
+  "apps/three-surface-poc/src/fence-rules.test.ts": {
+   "tests": 57,
+   "passed": 57,
+   "failed": 0,
+   "skipped": 0,
+   "failedTests": []
+  },
+  "apps/three-surface-poc/src/keyboard-sweep-record.test.ts": {
+   "tests": 8,
+   "passed": 8,
+   "failed": 0,
+   "skipped": 0,
+   "failedTests": []
+  },
+  "apps/three-surface-poc/src/polaris-authority-sweep.test.ts": {
+   "tests": 5,
+   "passed": 5,
+   "failed": 0,
+   "skipped": 0,
+   "failedTests": []
+  },
+  "apps/three-surface-poc/src/polaris-copy.test.ts": {
+   "tests": 7,
+   "passed": 7,
+   "failed": 0,
+   "skipped": 0,
+   "failedTests": []
+  },
+  "apps/three-surface-poc/src/polaris-parity-sweep.test.ts": {
+   "tests": 56,
+   "passed": 56,
+   "failed": 0,
+   "skipped": 0,
+   "failedTests": []
+  },
+  "apps/three-surface-poc/src/polaris-walkthrough-readiness.test.ts": {
+   "tests": 12,
+   "passed": 12,
+   "failed": 0,
+   "skipped": 0,
+   "failedTests": []
+  },
+  "apps/three-surface-poc/src/response-identity-independent.test.ts": {
+   "tests": 3,
+   "passed": 3,
+   "failed": 0,
+   "skipped": 0,
+   "failedTests": []
+  },
+  "apps/three-surface-poc/src/sync-child-process-guard.test.ts": {
+   "tests": 6,
+   "passed": 6,
+   "failed": 0,
+   "skipped": 0,
+   "failedTests": []
+  },
+  "apps/three-surface-poc/src/test-artifact-verification-consumers.test.ts": {
+   "tests": 4,
+   "passed": 4,
+   "failed": 0,
+   "skipped": 0,
+   "failedTests": []
+  },
+  "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts": {
+   "tests": 5,
+   "passed": 5,
+   "failed": 0,
+   "skipped": 0,
+   "failedTests": []
+  },
+  "apps/three-surface-poc/src/polaris-generation/generator-install-check.test.ts": {
+   "tests": 6,
+   "passed": 6,
+   "failed": 0,
+   "skipped": 0,
+   "failedTests": []
+  }
+ },
+ "total": {
+  "tests": 1103,
+  "passed": 1103,
+  "failed": 0,
+  "skipped": 0
+ },
+ "loadavg": [
+  "22.56 29.68 29.51 22/9445 373117",
+  "34.53 31.85 30.27 15/9754 399262"
+ ]
+}

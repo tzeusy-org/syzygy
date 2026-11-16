@@ -1,0 +1,530 @@
+{
+ "tool": "check_host_stubs.py",
+ "toolSha256": "694e218acbcaf14218efd396601601fc32febaa9ef8a415abe2ab593541659a8",
+ "headAtRun": "e54f65c654e59a9c52c848b8e633e9a4ef4942f0",
+ "hostRecord": {
+  "path": "host.json",
+  "logicalCpus": 12,
+  "node": "v24.6.0"
+ },
+ "jsonFiles": 76,
+ "stubs": 55,
+ "agreeing": 55,
+ "disagreeing": [],
+ "otherHostShapes": [],
+ "rows": [
+  {
+   "record": "durations/cap1-system.hooks.json",
+   "sha256": "77e0f8aff340bcdaa6e7b4afbdeb0f1597908978446a063a80cd733ac6ef2f23",
+   "stub": {
+    "cores": 12,
+    "node": "v24.6.0"
+   },
+   "agrees": true
+  },
+  {
+   "record": "durations/cdp-browser.browser.test.tests.json",
+   "sha256": "5db326f84e61925f8aa9b38b0e6cf22af300cc9baa4eb14bfc718530dfa7d8a6",
+   "stub": {
+    "cores": 12,
+    "node": "v24.6.0"
+   },
+   "agrees": true
+  },
+  {
+   "record": "durations/cdp-browser.test.tests.json",
+   "sha256": "7b9e9c8855c7a7116a6641a14ce8c28ac58bfdae0d5f87fa6538d5cbcd892e4c",
+   "stub": {
+    "cores": 12,
+    "node": "v24.6.0"
+   },
+   "agrees": true
+  },
+  {
+   "record": "durations/dossier-cap-measure.test.hooks.json",
+   "sha256": "9066bd34ab0c75291d6dc1574bbbc90f6b446ca13d5c1da6ea6b23f1f650e6e4",
+   "stub": {
+    "cores": 12,
+    "node": "v24.6.0"
+   },
+   "agrees": true
+  },
+  {
+   "record": "durations/draft-preview.browser.test.tests.json",
+   "sha256": "52e1c26058632bb503ccb1ac13256bac7b362374e73822c28c6496cc04a87426",
+   "stub": {
+    "cores": 12,
+    "node": "v24.6.0"
+   },
+   "agrees": true
+  },
+  {
+   "record": "durations/durable-lifecycle-generate.test.tests.json",
+   "sha256": "9d15b24d3268fa2c5c5866690aa7b56bed6f8b091ebfe9733e9dc97c03924fb5",
+   "stub": {
+    "cores": 12,
+    "node": "v24.6.0"
+   },
+   "agrees": true
+  },
+  {
+   "record": "durations/fixture-directories.test.tests.json",
+   "sha256": "e1af2ab1e8f4f74bad921cdd4a8a4a6208ca6fb3719133c1dd28b18c7eafbb4b",
+   "stub": {
+    "cores": 12,
+    "node": "v24.6.0"
+   },
+   "agrees": true
+  },
+  {
+   "record": "durations/git-blob-batch.test.tests.json",
+   "sha256": "b5325515708402267c32a132e98725545c54cf2a39809ec8127b6bd8a7670a58",
+   "stub": {
+    "cores": 12,
+    "node": "v24.6.0"
+   },
+   "agrees": true
+  },
+  {
+   "record": "durations/governing-intent-sweep.test.hooks.json",
+   "sha256": "5394e152e5519b90548faeb4df96cd141a4fd5dc3d243c74064ad6306c55420d",
+   "stub": {
+    "cores": 12,
+    "node": "v24.6.0"
+   },
+   "agrees": true
+  },
+  {
+   "record": "durations/governing-intent-sweep.test.tests.json",
+   "sha256": "8935197b74476e25e180c74e8ddeac830c126414c9a037ea8c61e9691aa02a33",
+   "stub": {
+    "cores": 12,
+    "node": "v24.6.0"
+   },
+   "agrees": true
+  },
+  {
+   "record": "durations/keyboard-sweep-record.test.tests.json",
+   "sha256": "00b3e7ccf3c598f4bca175283e5bed2896572f82b180fd3ce9e7a9be79f08654",
+   "stub": {
+    "cores": 12,
+    "node": "v24.6.0"
+   },
+   "agrees": true
+  },
+  {
+   "record": "durations/no-egress.test.hooks.json",
+   "sha256": "f5f943d85fb7faed73bf9e51e6d9812bf9b6ac53b80b4099c544dc4a98a135e2",
+   "stub": {
+    "cores": 12,
+    "node": "v24.6.0"
+   },
+   "agrees": true
+  },
+  {
+   "record": "durations/no-egress.test.tests.json",
+   "sha256": "faba40d42eaedded238140064904a91f2d2603479588c95a33647a468591d081",
+   "stub": {
+    "cores": 12,
+    "node": "v24.6.0"
+   },
+   "agrees": true
+  },
+  {
+   "record": "durations/orrery.browser.test.hooks.json",
+   "sha256": "2e8db7131ea8156a19e160daf2735834cf8d8d5c28f2c7007e3427eb641c7638",
+   "stub": {
+    "cores": 12,
+    "node": "v24.6.0"
+   },
+   "agrees": true
+  },
+  {
+   "record": "durations/polaris-accessibility.browser.test.hooks.json",
+   "sha256": "045b5f9482361b67e11cb2c00ef8b14618851eba85ba97ca9a7b7d3cdc38a8f9",
+   "stub": {
+    "cores": 12,
+    "node": "v24.6.0"
+   },
+   "agrees": true
+  },
+  {
+   "record": "durations/polaris-accessibility.browser.test.tests.json",
+   "sha256": "ac3f74deb25f61c915ba647f2bd05a417d75bacaf831630f11ade9deb469f7f1",
+   "stub": {
+    "cores": 12,
+    "node": "v24.6.0"
+   },
+   "agrees": true
+  },
+  {
+   "record": "durations/polaris-accessible-names.browser.test.hooks.json",
+   "sha256": "bb703900e7ba4e20d7a81a46d2fcb6691dcc216c5396ad13a71627de62133267",
+   "stub": {
+    "cores": 12,
+    "node": "v24.6.0"
+   },
+   "agrees": true
+  },
+  {
+   "record": "durations/polaris-accessible-names.browser.test.tests.json",
+   "sha256": "e7234c3187330effa668e4449b9ee94bdf4a09a1eab7c2176cfe3a9b7650d352",
+   "stub": {
+    "cores": 12,
+    "node": "v24.6.0"
+   },
+   "agrees": true
+  },
+  {
+   "record": "durations/polaris-copy.test.hooks.json",
+   "sha256": "c041d65203334398464354c384fa09f07c28ef7346d65f21305bf87d9be7af37",
+   "stub": {
+    "cores": 12,
+    "node": "v24.6.0"
+   },
+   "agrees": true
+  },
+  {
+   "record": "durations/polaris-opening-index.browser.test.hooks.json",
+   "sha256": "08c19224431166fbe6e9a2d2d18976f89d535d83c6702c793467fe8d61e5f1de",
+   "stub": {
+    "cores": 12,
+    "node": "v24.6.0"
+   },
+   "agrees": true
+  },
+  {
+   "record": "durations/polaris-opening-index.browser.test.tests.json",
+   "sha256": "1df86e793d649376c6cbe00c98fdb9873977945553bb0237d2b46a0950cbbebc",
+   "stub": {
+    "cores": 12,
+    "node": "v24.6.0"
+   },
+   "agrees": true
+  },
+  {
+   "record": "durations/polaris-reconciliation.test.hooks.json",
+   "sha256": "72bc07d526ce0cf3d79e20d4c3a1f087dd54fe32b7e3875fb66b56041f6c57df",
+   "stub": {
+    "cores": 12,
+    "node": "v24.6.0"
+   },
+   "agrees": true
+  },
+  {
+   "record": "durations/proposal-disclosure.test.tests.json",
+   "sha256": "aca30366280cf4437458db35e8045176a55490c3eef53839c008de9cb891295c",
+   "stub": {
+    "cores": 12,
+    "node": "v24.6.0"
+   },
+   "agrees": true
+  },
+  {
+   "record": "durations/real-tree.test.tests.json",
+   "sha256": "92c1593dad0fb2fbe0827040982a3543b0f63bea182080648fb9f34762942f8c",
+   "stub": {
+    "cores": 12,
+    "node": "v24.6.0"
+   },
+   "agrees": true
+  },
+  {
+   "record": "durations/restart.test.hooks.json",
+   "sha256": "479243ce8b1840ba47e8fb381d41fad5ccf616c7f2041dc0ce026b6ba3e16649",
+   "stub": {
+    "cores": 12,
+    "node": "v24.6.0"
+   },
+   "agrees": true
+  },
+  {
+   "record": "durations/self-corpus.test.tests.json",
+   "sha256": "17fe164c16445c11523957d2a7f225a6623f2058767682af8cb0d48fd8213b6e",
+   "stub": {
+    "cores": 12,
+    "node": "v24.6.0"
+   },
+   "agrees": true
+  },
+  {
+   "record": "durations/surface-routes.test.hooks.json",
+   "sha256": "44e9b27150f64a1129ef92c9ba9eee9d0c5a036b5655f0fc748419d4478e0e84",
+   "stub": {
+    "cores": 12,
+    "node": "v24.6.0"
+   },
+   "agrees": true
+  },
+  {
+   "record": "durations/surface-routes.test.tests.json",
+   "sha256": "39463a7e89fe9f4d78d349303f32f6613f138a0dd4912c488926568232c896b5",
+   "stub": {
+    "cores": 12,
+    "node": "v24.6.0"
+   },
+   "agrees": true
+  },
+  {
+   "record": "durations/test-artifact-verification.live.test.tests.json",
+   "sha256": "4df314b34126c158eae044020b22a7dea1f64cb5fa492ccdd3bf35dd999da1a8",
+   "stub": {
+    "cores": 12,
+    "node": "v24.6.0"
+   },
+   "agrees": true
+  },
+  {
+   "record": "durations/test-model-fixture.test.tests.json",
+   "sha256": "72edb8ef4d0501e9180cd101540879576f4da439af9b629be2d66fe93c34b649",
+   "stub": {
+    "cores": 12,
+    "node": "v24.6.0"
+   },
+   "agrees": true
+  },
+  {
+   "record": "durations/trajectory-narrowing.browser.test.hooks.json",
+   "sha256": "a332f3b07acd44dbd2a3947bb963ed6b6b1a8e2fd2a583bec0163353cb3e142e",
+   "stub": {
+    "cores": 12,
+    "node": "v24.6.0"
+   },
+   "agrees": true
+  },
+  {
+   "record": "durations/tuple-encoding.test.tests.json",
+   "sha256": "6b3301bfc0daf05349419de6dc595fc39a35c6f8611b4b5f9938f948740c57f4",
+   "stub": {
+    "cores": 12,
+    "node": "v24.6.0"
+   },
+   "agrees": true
+  },
+  {
+   "record": "durations/unknown-route-sweep.test.hooks.json",
+   "sha256": "def591970e27dc84fa5eac98b6cd604c074bffeabc14fbedf21ee15e40c008f3",
+   "stub": {
+    "cores": 12,
+    "node": "v24.6.0"
+   },
+   "agrees": true
+  },
+  {
+   "record": "head-durations/cdp-browser.test.tests.json",
+   "sha256": "e2ad849025ad7396dd26fed302ce091d16f36669678a5027d17316eadb93dd79",
+   "stub": {
+    "cores": 12,
+    "node": "v24.6.0"
+   },
+   "agrees": true
+  },
+  {
+   "record": "head-durations/dossier-cap-measure.test.hooks.json",
+   "sha256": "5c82d02b2a5a99c096b9fd27019b5332d7a6d7e2134b6a41c4d3f842f448bf26",
+   "stub": {
+    "cores": 12,
+    "node": "v24.6.0"
+   },
+   "agrees": true
+  },
+  {
+   "record": "head-durations/draft-preview.browser.test.tests.json",
+   "sha256": "c91f81bd8b06b2974707f0dd3cef973f2b986ef102222ee413580b2eb7ecbb9f",
+   "stub": {
+    "cores": 12,
+    "node": "v24.6.0"
+   },
+   "agrees": true
+  },
+  {
+   "record": "head-durations/durable-lifecycle-generate.test.tests.json",
+   "sha256": "1711a1f049eeac7a0bb7d1f35f75c30810d0eab34a00dc4eae62e08636af1cf7",
+   "stub": {
+    "cores": 12,
+    "node": "v24.6.0"
+   },
+   "agrees": true
+  },
+  {
+   "record": "head-durations/fixture-directories.test.tests.json",
+   "sha256": "31477ce4967c4e8eb8ffb5643ed0ad311d05988b747033f297b1db70d65d2ae5",
+   "stub": {
+    "cores": 12,
+    "node": "v24.6.0"
+   },
+   "agrees": true
+  },
+  {
+   "record": "head-durations/governing-intent-sweep.test.hooks.json",
+   "sha256": "175b7980190c347c1f5639085e28f2bf5f540791dfa1c2fec3a289ec5ebea979",
+   "stub": {
+    "cores": 12,
+    "node": "v24.6.0"
+   },
+   "agrees": true
+  },
+  {
+   "record": "head-durations/no-egress.test.hooks.json",
+   "sha256": "3a81d05694420f6e16dbfe0bf255ea7a26b14ca0ddc8be1d625792beec5c54f1",
+   "stub": {
+    "cores": 12,
+    "node": "v24.6.0"
+   },
+   "agrees": true
+  },
+  {
+   "record": "head-durations/no-egress.test.tests.json",
+   "sha256": "96303fe688ed9591b6efc2aba4da3f7297651f75e41671f11ab479fb595bd5ae",
+   "stub": {
+    "cores": 12,
+    "node": "v24.6.0"
+   },
+   "agrees": true
+  },
+  {
+   "record": "head-durations/orrery.browser.test.hooks.json",
+   "sha256": "fce217ca61d920d7ff45df5308fa362a4c45979c9ce0316339e4cbef422aa745",
+   "stub": {
+    "cores": 12,
+    "node": "v24.6.0"
+   },
+   "agrees": true
+  },
+  {
+   "record": "head-durations/polaris-accessibility.browser.test.hooks.json",
+   "sha256": "142ca91a4b934b59a7c7363f16d3e7bf738911333f325780eae392cd9fed456b",
+   "stub": {
+    "cores": 12,
+    "node": "v24.6.0"
+   },
+   "agrees": true
+  },
+  {
+   "record": "head-durations/polaris-accessible-names.browser.test.hooks.json",
+   "sha256": "65f59c970b5d75b1acad48c654b8c5753bcccca51f0e0ad802b8b458774655c3",
+   "stub": {
+    "cores": 12,
+    "node": "v24.6.0"
+   },
+   "agrees": true
+  },
+  {
+   "record": "head-durations/polaris-opening-index.browser.test.hooks.json",
+   "sha256": "4bdf53c04e398d954cae55b6b1298e548a275ed20da670b7ac3f613fa3528b30",
+   "stub": {
+    "cores": 12,
+    "node": "v24.6.0"
+   },
+   "agrees": true
+  },
+  {
+   "record": "head-durations/polaris-opening-index.browser.test.tests.json",
+   "sha256": "dedfd7d276ddd666e9a9cbcbc884822dd53f29c095fccdfca4452988dd44aa6e",
+   "stub": {
+    "cores": 12,
+    "node": "v24.6.0"
+   },
+   "agrees": true
+  },
+  {
+   "record": "head-durations/polaris-reconciliation.test.hooks.json",
+   "sha256": "64308e0164e3b746b537850b40117fa80eac9629b817345d90f76e5221844ad3",
+   "stub": {
+    "cores": 12,
+    "node": "v24.6.0"
+   },
+   "agrees": true
+  },
+  {
+   "record": "head-durations/self-corpus.test.tests.json",
+   "sha256": "946cf184e0c6851f816d3a791c92b45065df306aca423dbcd0462e889e079605",
+   "stub": {
+    "cores": 12,
+    "node": "v24.6.0"
+   },
+   "agrees": true
+  },
+  {
+   "record": "head-durations/surface-routes.test.tests.json",
+   "sha256": "9e5e52c07fbfff9a69e6f1111c76084aba9ab3be94817fb621fdfa81cf7b2976",
+   "stub": {
+    "cores": 12,
+    "node": "v24.6.0"
+   },
+   "agrees": true
+  },
+  {
+   "record": "head-durations/trajectory-narrowing.browser.test.hooks.json",
+   "sha256": "5be1d20cb12c3a9bbc806a87a24a3aa8d30af7736ace076f8483a664b6e731d8",
+   "stub": {
+    "cores": 12,
+    "node": "v24.6.0"
+   },
+   "agrees": true
+  },
+  {
+   "record": "head-durations/unknown-route-sweep.test.hooks.json",
+   "sha256": "685e4d83568420df3471eec9a8691b1ddf5d0c06d2b5451a09414e3ad5d03bb2",
+   "stub": {
+    "cores": 12,
+    "node": "v24.6.0"
+   },
+   "agrees": true
+  },
+  {
+   "record": "hook-tool-validation/record.json",
+   "sha256": "1ab4adc38822159960d28fe954a801d6a008bbecf4ab41826a0c0fc5cc289251",
+   "stub": {
+    "cores": 12,
+    "node": "v24.6.0"
+   },
+   "agrees": true
+  },
+  {
+   "record": "repair-durations/cap1-system.hooks.json",
+   "sha256": "5d44240a992d9da69861b45862abb6ca674edf56cc88fb11f48b9cdedad61075",
+   "stub": {
+    "cores": 12,
+    "node": "v24.6.0"
+   },
+   "agrees": true
+  },
+  {
+   "record": "repair-durations/dossier-cap-measure.test.hooks.json",
+   "sha256": "4c3a70c5407971cad16e4b277330d671f1fdc28dfec4f5908d3a57cef1576f3d",
+   "stub": {
+    "cores": 12,
+    "node": "v24.6.0"
+   },
+   "agrees": true
+  },
+  {
+   "record": "repair-durations/production-reobserve.test.tests.json",
+   "sha256": "f7714d856d33d72b7183c6f3847c584540c611daefeda25b9e33930433d9e810",
+   "stub": {
+    "cores": 12,
+    "node": "v24.6.0"
+   },
+   "agrees": true
+  }
+ ],
+ "mutants": [
+  {
+   "id": "H1",
+   "record": "durations/cap1-system.hooks.json",
+   "path": "host.cores",
+   "old": 12,
+   "new": 11,
+   "outcome": "killed"
+  },
+  {
+   "id": "H2",
+   "record": "durations/cap1-system.hooks.json",
+   "path": "host.node",
+   "old": "v24.6.0",
+   "new": "v24.6.0-mutant",
+   "outcome": "killed"
+  }
+ ]
+}

@@ -1,0 +1,140 @@
+== boundary-baseline.json top-level keys: ['schema', 'bead', 'text', 'commit', 'test', 'testSha256', 'command', 'success', 'total', 'passed', 'failed', 'tests']
+   .commit = '8c711bbf1933e05575b50a204f1c334e1448c005'  [40-hex]
+   .testSha256 = 'a32d3ddc8f1ef6d7fc0c199bf910ed21722b35dfe6fccb3a08df6c42d22eb3c1'  [64-hex]
+== boundary-mutants-spec.json top-level keys: ['mutants']
+   .mutants[0].old = "import type { AdmissionRecord } from './admission-record.js';\n" 
+   .mutants[0].new = "import type { AdmissionRecord } from './admission-record.js';\nimport { digestCanonicalJson } from '@syzygy/polaris-ge..." 
+   .mutants[1].old = "import type { AdmissionRecord } from './admission-record.js';\n" 
+   .mutants[1].new = "import type { AdmissionRecord } from './admission-record.js';\nimport type { PipelinePorts } from '@syzygy/polaris-gen..." 
+   .mutants[2].old = "import type { AdmissionRecord } from './admission-record.js';\n" 
+   .mutants[2].new = "import type { AdmissionRecord } from './admission-record.js';\nimport './consent-ports.js';\n" 
+== boundary-mutants.json top-level keys: ['format', 'commit', 'runnerSha256', 'runner', 'fileSha256', 'testFileSha256', 'ranAt', 'mutants']
+   .commit = '8c711bbf1933e05575b50a204f1c334e1448c005'  [40-hex]
+   .runnerSha256 = '01d7daa5d4f8cccec4f7e0aafd3352e982556a1c84e64444fbbff85c30379cb2'  [64-hex]
+   .mutants[0].old = "import type { AdmissionRecord } from './admission-record.js';\n" 
+   .mutants[0].new = "import type { AdmissionRecord } from './admission-record.js';\nimport { digestCanonicalJson } from '@syzygy/polaris-ge..." 
+   .mutants[1].old = "import type { AdmissionRecord } from './admission-record.js';\n" 
+   .mutants[1].new = "import type { AdmissionRecord } from './admission-record.js';\nimport type { PipelinePorts } from '@syzygy/polaris-gen..." 
+   .mutants[2].old = "import type { AdmissionRecord } from './admission-record.js';\n" 
+   .mutants[2].new = "import type { AdmissionRecord } from './admission-record.js';\nimport './consent-ports.js';\n" 
+== census-after.json top-level keys: ['schema', 'bead', 'text', 'script', 'measuredOn', 'subpaths', 'modules', 'against', 'comparison']
+   .script.sha256 = 'd95c7eb9d2444531655915628ef6af6c4b30ef4adb01a61c13f276fd5639ad09'  [64-hex]
+   .measuredOn.commit = '8c711bbf1933e05575b50a204f1c334e1448c005'  [40-hex]
+   .measuredOn.clean = True 
+   .modules = '<dict len=4>' 
+   .against.sha256 = '914747a3324acafb73dcdc205bbccd9da9797e644b1096d481f89d1f3a6b3188'  [64-hex]
+   .against.commit = '9a30237ed700e6579f3fcc1c6292e6c759861c3f'  [40-hex]
+== census-before.json top-level keys: ['schema', 'bead', 'text', 'script', 'measuredOn', 'subpaths', 'modules']
+   .script.sha256 = 'd95c7eb9d2444531655915628ef6af6c4b30ef4adb01a61c13f276fd5639ad09'  [64-hex]
+   .measuredOn.commit = '9a30237ed700e6579f3fcc1c6292e6c759861c3f'  [40-hex]
+   .measuredOn.clean = True 
+   .modules = '<dict len=3>' 
+== census-mutants.json top-level keys: ['schema', 'bead', 'text', 'script', 'census', 'subject', 'against', 'command', 'ranAt', 'mutants', 'restoredBuildExit', 'totals']
+   .script.sha256 = 'ee74876a7aed5ba35b3bd7066365416f7bf940ae4dbc1e99c6ce499e1e89ac3b'  [64-hex]
+   .census.sha256 = 'd95c7eb9d2444531655915628ef6af6c4b30ef4adb01a61c13f276fd5639ad09'  [64-hex]
+   .subject.commit = '8c711bbf1933e05575b50a204f1c334e1448c005'  [40-hex]
+   .against.sha256 = '914747a3324acafb73dcdc205bbccd9da9797e644b1096d481f89d1f3a6b3188'  [64-hex]
+   .mutants[1].edits[0].old = "export { inForceRecords, notInForceRecords, type NotInForce } from './in-force.js';" 
+   .mutants[1].edits[0].new = "export { inForceRecords, notInForceRecords } from './in-force.js';" 
+   .mutants[1].edits[1].old = 'export { UNCONSENTED, createConsentPorts, inForceRecords, notInForceRecords, withConsent, type NotInForce, ' 
+   .mutants[1].edits[1].new = 'export { UNCONSENTED, createConsentPorts, inForceRecords, notInForceRecords, withConsent, ' 
+   .mutants[2].edits[0].old = "export { inForceRecords, notInForceRecords, type NotInForce } from './in-force.js';" 
+   .mutants[2].edits[0].new = "export { notInForceRecords, type NotInForce } from './in-force.js';" 
+   .mutants[2].edits[1].old = 'export { UNCONSENTED, createConsentPorts, inForceRecords, notInForceRecords, withConsent, type NotInForce, ' 
+   .mutants[2].edits[1].new = 'export { UNCONSENTED, createConsentPorts, notInForceRecords, withConsent, type NotInForce, ' 
+== cli-island-loads-after.json top-level keys: ['schema', 'bead', 'text', 'script', 'measuredOn', 'entry', 'specifiers', 'islandListed', 'islandLoaded', 'consentPortsLoaded', 'workspaceModulesLoaded', 'workspaceModules']
+   .script.sha256 = '921952c38848175bfb755b1852436c104ee31291210da34b793ac5702a97d4c1'  [64-hex]
+   .measuredOn.commit = '8c711bbf1933e05575b50a204f1c334e1448c005'  [40-hex]
+   .measuredOn.clean = True 
+   .workspaceModules = '<list len=131>' 
+== cli-island-loads-before.json top-level keys: ['schema', 'bead', 'text', 'script', 'measuredOn', 'entry', 'specifiers', 'islandListed', 'islandLoaded', 'consentPortsLoaded', 'workspaceModulesLoaded', 'workspaceModules']
+   .script.sha256 = '921952c38848175bfb755b1852436c104ee31291210da34b793ac5702a97d4c1'  [64-hex]
+   .measuredOn.commit = '9a30237ed700e6579f3fcc1c6292e6c759861c3f'  [40-hex]
+   .measuredOn.clean = True 
+   .workspaceModules = '<list len=139>' 
+== differential.json top-level keys: ['schema', 'bead', 'role', 'text', 'script', 'trees', 'corpusRoot', 'corpus', 'instants', 'pool', 'readers', 'materialization', 'consentPortsProbe', 'bases', 'reducedTree', 'subjects', 'needles', 'operators', 'totals', 'mismatches', 'answersPerReader', 'worlds']
+   .script.sha256 = '12cbc7b39fe224a6bf8c5c8077a54d9bdfca45909490ecbe22debd2b671c7738'  [64-hex]
+   .trees[0].commit = '9a30237ed700e6579f3fcc1c6292e6c759861c3f'  [40-hex]
+   .trees[0].clean = True 
+   .trees[0].dossierResolvesConsentInsideTree = True 
+   .trees[0].liveResolvesInsideTree = None 
+   .trees[1].commit = '8c711bbf1933e05575b50a204f1c334e1448c005'  [40-hex]
+   .trees[1].clean = True 
+   .trees[1].dossierResolvesConsentInsideTree = True 
+   .trees[1].liveResolvesInsideTree = True 
+   .corpus.sha256 = 'f889e4ca7f984279dd6c4a3c1c3e2a6de55f8fb583e820a65b362bf7a52e6588'  [64-hex]
+   .corpus.alterations.tree = 'new' 
+   .corpus.policyBytes[0].fromCommit = None 
+   .corpus.policyBytes[1].fromCommit = '3409ef5ae9f7dcbadbb248d4df1c295dc43a5b0b'  [40-hex]
+   .corpus.policyBytes[2].fromCommit = 'd3a9b753e42239e4c4704f4b5ea2ccc5a3b71c3a'  [40-hex]
+   .subjects[0].base = 'admission-acts' 
+   .subjects[1].base = 'admission-acts' 
+   .subjects[2].base = 'admission-acts' 
+   .totals.byKind.base = 4 
+   .totals.byKind.base-reduced = 4 
+   .mismatches = '<list len=0>' 
+   .answersPerReader.admission[0].sha256 = 'ee50ffa28cc0b127326cb3cbd5f84f9b07ed2c92e14cf759b32f01fce774917b'  [64-hex]
+   .answersPerReader.admission[1].sha256 = '7539369945850c4c6c5dd3147a3ed3aa10f50d3871ecd9fd8591ba1b75c14d52'  [64-hex]
+   .answersPerReader.admission[2].sha256 = '9ce1640759ffcb18a357987cc7c2194a5d7dfa5c30784ef8d909958df8c6d74a'  [64-hex]
+   .answersPerReader.policy-reader[0].sha256 = 'c2de9b7ac77cc47a8362b41836d598c0bff2369933b7637cb48026bb5dca2b7c'  [64-hex]
+   .answersPerReader.policy-reader[1].sha256 = '7539369945850c4c6c5dd3147a3ed3aa10f50d3871ecd9fd8591ba1b75c14d52'  [64-hex]
+   .answersPerReader.policy-reader[2].sha256 = '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'  [64-hex]
+   .answersPerReader.policy-chain@2026-10-08T09:30:00Z[0].sha256 = 'd9cd9d3484affb2a5e7e5e4f8b61cef84d77dfddf4ae4973b016a54d755e8d82'  [64-hex]
+   .answersPerReader.policy-chain@2026-10-08T09:30:00Z[1].sha256 = '1021a2ba427e650a5c318c6844bd62592dbb18757b3840cb6346821ae2531ca1'  [64-hex]
+   .answersPerReader.policy-chain@2026-10-08T09:30:00Z[2].sha256 = '34c80676955dd33ca2378be869ca359a7aa492b416bbe913abf9390458211f25'  [64-hex]
+   .answersPerReader.policy-chain@2026-10-22T12:00:00Z[0].sha256 = '8f49c0d32aaf8c6440ca4cd14405a09a4bb615652baa3f272722e609aa68a5df'  [64-hex]
+   .answersPerReader.policy-chain@2026-10-22T12:00:00Z[1].sha256 = '1021a2ba427e650a5c318c6844bd62592dbb18757b3840cb6346821ae2531ca1'  [64-hex]
+   .answersPerReader.policy-chain@2026-10-22T12:00:00Z[2].sha256 = 'd9cd9d3484affb2a5e7e5e4f8b61cef84d77dfddf4ae4973b016a54d755e8d82'  [64-hex]
+   .answersPerReader.class-act@2026-10-08T09:30:00Z[0].sha256 = '1021a2ba427e650a5c318c6844bd62592dbb18757b3840cb6346821ae2531ca1'  [64-hex]
+   .answersPerReader.class-act@2026-10-08T09:30:00Z[1].sha256 = 'fc26ce2ba8fe7f8547348f940a5eab2e7918ddf20954612e4af9971cfefa8de8'  [64-hex]
+   .answersPerReader.class-act@2026-10-08T09:30:00Z[2].sha256 = '56a5aadba6c67b8d010c07c5e7f1404929bf22b7a70d46328de6261a45fce48f'  [64-hex]
+   .answersPerReader.class-act@2026-10-22T12:00:00Z[0].sha256 = 'fc26ce2ba8fe7f8547348f940a5eab2e7918ddf20954612e4af9971cfefa8de8'  [64-hex]
+   .answersPerReader.class-act@2026-10-22T12:00:00Z[1].sha256 = '1021a2ba427e650a5c318c6844bd62592dbb18757b3840cb6346821ae2531ca1'  [64-hex]
+   .answersPerReader.class-act@2026-10-22T12:00:00Z[2].sha256 = '56a5aadba6c67b8d010c07c5e7f1404929bf22b7a70d46328de6261a45fce48f'  [64-hex]
+   .answersPerReader.in-force-egress@2026-10-08T09:30:00Z[0].sha256 = '46c95da658c4947f197efe3f2c1d53373c74f1b0bc56a6b514fca4e3d7eb165a'  [64-hex]
+   .answersPerReader.in-force-egress@2026-10-08T09:30:00Z[1].sha256 = '702e1a5fb90964c381ce3f95a7c4fd54d87812da9e47f8918133735108bc1e2a'  [64-hex]
+   .answersPerReader.in-force-egress@2026-10-22T12:00:00Z[0].sha256 = '23a162f275fb7101818d9ff6b0d02465a354ab712890e5410b77a74ebfd205d0'  [64-hex]
+   ...
+== negative-control.json top-level keys: ['schema', 'bead', 'role', 'controlNote', 'text', 'script', 'trees', 'corpusRoot', 'corpus', 'instants', 'pool', 'readers', 'materialization', 'consentPortsProbe', 'bases', 'reducedTree', 'subjects', 'needles', 'operators', 'totals', 'mismatches', 'answersPerReader', 'worlds']
+   .script.sha256 = '12cbc7b39fe224a6bf8c5c8077a54d9bdfca45909490ecbe22debd2b671c7738'  [64-hex]
+   .trees[0].commit = '9a30237ed700e6579f3fcc1c6292e6c759861c3f'  [40-hex]
+   .trees[0].clean = True 
+   .trees[0].dossierResolvesConsentInsideTree = True 
+   .trees[0].liveResolvesInsideTree = None 
+   .trees[1].commit = '8c711bbf1933e05575b50a204f1c334e1448c005'  [40-hex]
+   .trees[1].clean = False 
+   .trees[1].dossierResolvesConsentInsideTree = True 
+   .trees[1].liveResolvesInsideTree = True 
+   .corpus.sha256 = '50c879d56258f2a004b2b8180643f0a5ac049630cfee43ecc56b4e5e733388fb'  [64-hex]
+   .corpus.alterations.tree = 'new' 
+   .corpus.policyBytes[0].fromCommit = None 
+   .corpus.policyBytes[1].fromCommit = '3409ef5ae9f7dcbadbb248d4df1c295dc43a5b0b'  [40-hex]
+   .corpus.policyBytes[2].fromCommit = 'd3a9b753e42239e4c4704f4b5ea2ccc5a3b71c3a'  [40-hex]
+   .subjects[0].base = 'admission-acts' 
+   .subjects[1].base = 'admission-acts' 
+   .subjects[2].base = 'admission-acts' 
+   .totals.byKind.base-reduced = 4 
+   .mismatches = '<list len=151>' 
+   .answersPerReader.admission[0].sha256 = '7539369945850c4c6c5dd3147a3ed3aa10f50d3871ecd9fd8591ba1b75c14d52'  [64-hex]
+   .answersPerReader.admission[1].sha256 = 'ee50ffa28cc0b127326cb3cbd5f84f9b07ed2c92e14cf759b32f01fce774917b'  [64-hex]
+   .answersPerReader.admission[2].sha256 = '9ce1640759ffcb18a357987cc7c2194a5d7dfa5c30784ef8d909958df8c6d74a'  [64-hex]
+   .answersPerReader.policy-reader[0].sha256 = 'c2de9b7ac77cc47a8362b41836d598c0bff2369933b7637cb48026bb5dca2b7c'  [64-hex]
+   .answersPerReader.policy-reader[1].sha256 = '7539369945850c4c6c5dd3147a3ed3aa10f50d3871ecd9fd8591ba1b75c14d52'  [64-hex]
+   .answersPerReader.policy-reader[2].sha256 = '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'  [64-hex]
+   .answersPerReader.policy-chain@2026-10-08T09:30:00Z[0].sha256 = 'd9cd9d3484affb2a5e7e5e4f8b61cef84d77dfddf4ae4973b016a54d755e8d82'  [64-hex]
+   .answersPerReader.policy-chain@2026-10-08T09:30:00Z[1].sha256 = '1021a2ba427e650a5c318c6844bd62592dbb18757b3840cb6346821ae2531ca1'  [64-hex]
+   .answersPerReader.policy-chain@2026-10-08T09:30:00Z[2].sha256 = '34c80676955dd33ca2378be869ca359a7aa492b416bbe913abf9390458211f25'  [64-hex]
+   .answersPerReader.policy-chain@2026-10-22T12:00:00Z[0].sha256 = '8f49c0d32aaf8c6440ca4cd14405a09a4bb615652baa3f272722e609aa68a5df'  [64-hex]
+   .answersPerReader.policy-chain@2026-10-22T12:00:00Z[1].sha256 = '1021a2ba427e650a5c318c6844bd62592dbb18757b3840cb6346821ae2531ca1'  [64-hex]
+   .answersPerReader.policy-chain@2026-10-22T12:00:00Z[2].sha256 = 'd9cd9d3484affb2a5e7e5e4f8b61cef84d77dfddf4ae4973b016a54d755e8d82'  [64-hex]
+   .answersPerReader.class-act@2026-10-08T09:30:00Z[0].sha256 = 'fc26ce2ba8fe7f8547348f940a5eab2e7918ddf20954612e4af9971cfefa8de8'  [64-hex]
+   .answersPerReader.class-act@2026-10-08T09:30:00Z[1].sha256 = '1021a2ba427e650a5c318c6844bd62592dbb18757b3840cb6346821ae2531ca1'  [64-hex]
+   .answersPerReader.class-act@2026-10-08T09:30:00Z[2].sha256 = '8d87deedea775a806fcce3d73dfdd5822623a5d16a8154aef6b5dc9f7e1519ce'  [64-hex]
+   .answersPerReader.class-act@2026-10-22T12:00:00Z[0].sha256 = 'fc26ce2ba8fe7f8547348f940a5eab2e7918ddf20954612e4af9971cfefa8de8'  [64-hex]
+   .answersPerReader.class-act@2026-10-22T12:00:00Z[1].sha256 = '1021a2ba427e650a5c318c6844bd62592dbb18757b3840cb6346821ae2531ca1'  [64-hex]
+   .answersPerReader.class-act@2026-10-22T12:00:00Z[2].sha256 = '8d87deedea775a806fcce3d73dfdd5822623a5d16a8154aef6b5dc9f7e1519ce'  [64-hex]
+   .answersPerReader.in-force-egress@2026-10-08T09:30:00Z[0].sha256 = '46c95da658c4947f197efe3f2c1d53373c74f1b0bc56a6b514fca4e3d7eb165a'  [64-hex]
+   .answersPerReader.in-force-egress@2026-10-08T09:30:00Z[1].sha256 = '702e1a5fb90964c381ce3f95a7c4fd54d87812da9e47f8918133735108bc1e2a'  [64-hex]
+   .answersPerReader.in-force-egress@2026-10-22T12:00:00Z[0].sha256 = '46c95da658c4947f197efe3f2c1d53373c74f1b0bc56a6b514fca4e3d7eb165a'  [64-hex]
+   .answersPerReader.in-force-egress@2026-10-22T12:00:00Z[1].sha256 = '23a162f275fb7101818d9ff6b0d02465a354ab712890e5410b77a74ebfd205d0'  [64-hex]
+   ...

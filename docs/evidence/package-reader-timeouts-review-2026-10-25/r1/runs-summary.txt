@@ -1,0 +1,36 @@
+ab821x1#1 8b143272 extra=--testTimeout=600000 --hookTimeout=600000 full=False exit=0 load1 15.2-14.17 (min 14.7, max 15.2) tests=299 notPassed=0 | 2153 the policy port and the strict policy chai; 329 strict act reads policy chain: absent with; 288 egress version 2 record is read from the r
+ab821x2#1 8b143272 extra=--testTimeout=600000 --hookTimeout=600000 full=False exit=0 load1 13.3-12.95 (min 13.03, max 13.3) tests=299 notPassed=0 | 2012 the policy port and the strict policy chai; 388 strict act reads policy chain: absent with; 295 egress version 2 record the RFC5-14 class 
+ab821x3#1 8b143272 extra=--testTimeout=600000 --hookTimeout=600000 full=False exit=0 load1 12.95-12.5 (min 12.72, max 12.95) tests=299 notPassed=0 | 2167 the policy port and the strict policy chai; 336 egress version 2 record is read from the r; 324 strict act reads policy chain: absent with
+abbase1#1 ce322e1a extra=--testTimeout=600000 --hookTimeout=600000 full=False exit=0 load1 16.14-15.2 (min 15.65, max 16.14) tests=299 notPassed=0 | 1900 the policy port and the strict policy chai; 369 strict act reads policy chain: absent with; 306 egress version 2 record the RFC5-14 class 
+abbase2#1 ce322e1a extra=--testTimeout=600000 --hookTimeout=600000 full=False exit=0 load1 14.17-13.3 (min 13.67, max 14.17) tests=299 notPassed=0 | 2157 the policy port and the strict policy chai; 349 strict act reads policy chain: absent with; 303 egress version 2 record the RFC5-14 class 
+abbase3#1 ce322e1a extra=--testTimeout=600000 --hookTimeout=600000 full=False exit=0 load1 12.95-12.95 (min 12.95, max 12.95) tests=299 notPassed=0 | 2298 the policy port and the strict policy chai; 383 strict act reads policy chain: absent with; 299 egress version 2 record the RFC5-14 class 
+base#1 ce322e1a extra=- full=False exit=0 load1 17.54-16.14 (min 16.14, max 17.54) tests=299 notPassed=0 | 2620 the policy port and the strict policy chai; 331 strict act reads policy chain: absent with; 321 egress version 2 record is read from the r
+head#1 3e563ec4 extra=- full=False exit=0 load1 22.47-23.45 (min 22.47, max 23.84) tests=299 notPassed=0 | 3131 the policy port and the strict policy chai; 847 strict act reads policy chain: absent with; 543 egress version 2 record the RFC5-14 class 
+head#2 3e563ec4 extra=- full=False exit=0 load1 23.45-22.15 (min 22.68, max 23.45) tests=299 notPassed=0 | 2746 the policy port and the strict policy chai; 441 strict act reads policy chain: absent with; 345 egress version 2 record is read from the r
+head#3 3e563ec4 extra=- full=False exit=0 load1 22.15-23.07 (min 21.25, max 23.07) tests=299 notPassed=0 | 2825 the policy port and the strict policy chai; 516 strict act reads policy chain: absent with; 491 egress version 2 record the RFC5-14 class 
+head#4 3e563ec4 extra=- full=False exit=0 load1 23.07-21.67 (min 21.67, max 23.07) tests=299 notPassed=0 | 2245 the policy port and the strict policy chai; 480 egress version 2 record the RFC5-14 class ; 415 strict act reads policy chain: absent with
+head#5 3e563ec4 extra=- full=False exit=0 load1 21.67-23.23 (min 21.67, max 23.3) tests=299 notPassed=0 | 2723 the policy port and the strict policy chai; 435 strict act reads policy chain: absent with; 336 egress version 2 record is read from the r
+head#6 3e563ec4 extra=- full=False exit=0 load1 23.23-21.8 (min 22.57, max 23.23) tests=299 notPassed=0 | 2348 the policy port and the strict policy chai; 391 strict act reads policy chain: absent with; 356 egress version 2 record the RFC5-14 class 
+headfull#1 3e563ec4 extra=- full=True exit=0 load1 12.46-35.46 (min 12.46, max 35.55) tests=299 notPassed=0 | 3003 the policy port and the strict policy chai; 742 egress version 2 record the RFC5-14 class ; 646 strict act reads policy chain: absent with
+merge#1 712d8caa extra=- full=False exit=0 load1 12.5-12.79 (min 12.5, max 12.86) tests=299 notPassed=0 | 2537 the policy port and the strict policy chai; 377 strict act reads policy chain: absent with; 311 egress version 2 record is read from the r
+merge#2 712d8caa extra=- full=False exit=0 load1 12.79-12.46 (min 12.65, max 12.79) tests=299 notPassed=0 | 2613 the policy port and the strict policy chai; 507 strict act reads policy chain: absent with; 484 egress version 2 record refuses when versi
+runs: 16
+tests outside the sixteen above 2,500 ms: 0 []
+largest duration of any test outside the sixteen, over all my runs: 202
+sized tests: my worst measured duration vs its timeout
+   50000 ms  my worst  3131 ms (head#1, load1 max 23.84)  timeout/worst   16.0x  the policy port and the strict policy chain agree on every world in th
+   45000 ms  my worst   303 ms (head#1, load1 max 23.84)  timeout/worst  148.5x  package admission reader returns a record only for an instance that an
+   45000 ms  my worst   484 ms (merge#2, load1 max 12.79)  timeout/worst   93.0x  egress version 2 record refuses when version 2 did not take effect str
+   45000 ms  my worst   294 ms (head#1, load1 max 23.84)  timeout/worst  153.1x  screening scope version 2 policy act counts the version 2 act when the
+   40000 ms  my worst   501 ms (head#1, load1 max 23.84)  timeout/worst   79.8x  egress version 2 record is read from the recorder's act: version 2 sup
+   40000 ms  my worst   742 ms (headfull#1, load1 max 35.55)  timeout/worst   53.9x  egress version 2 record the RFC5-14 class amendment version 2 depends 
+   40000 ms  my worst   847 ms (head#1, load1 max 23.84)  timeout/worst   47.2x  strict act reads policy chain: absent without acts; refused for a miss
+   25000 ms  my worst   364 ms (headfull#1, load1 max 35.55)  timeout/worst   68.7x  egress version 2 record withdrawal and forgery forms the reader does n
+   20000 ms  my worst   187 ms (head#1, load1 max 23.84)  timeout/worst  107.0x  egress version 2 record leaves version 1 standing before the version 2
+   20000 ms  my worst   175 ms (headfull#1, load1 max 35.55)  timeout/worst  114.3x  screening scope version 2 policy act a version 2 act not yet in force 
+   15000 ms  my worst   185 ms (head#5, load1 max 23.3)  timeout/worst   81.1x  public-source policy act recognises the recorder's record by its exact
+   15000 ms  my worst   237 ms (head#1, load1 max 23.84)  timeout/worst   63.3x  public-source policy act refuses the recorder's file when its act type
+   15000 ms  my worst   144 ms (headfull#1, load1 max 35.55)  timeout/worst  104.2x  screening scope version 2 policy act refuses an unlisted record that n
+   15000 ms  my worst   164 ms (head#1, load1 max 23.84)  timeout/worst   91.5x  round-3 review notes folds soft hyphens, zero-width spaces, underscore
+   15000 ms  my worst   326 ms (headfull#1, load1 max 35.55)  timeout/worst   46.0x  round-3 review notes takes a time: a strict read of an act recorded af
+   10000 ms  my worst   205 ms (head#1, load1 max 23.84)  timeout/worst   48.8x  package admission reader refuses the whole read on unknown shapes inst

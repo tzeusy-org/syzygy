@@ -1,0 +1,218 @@
+{
+ "review": "R-GP-IMPL-SUPPORT-LEAF-GUARDS-1",
+ "reviewedCommit": "5995aa3c0a23f4862f7107c401a72a222b8a7998",
+ "records": {
+  "rev-mutants-head-present.json": "04961acfcac6cfae905f979c8d13e7096fef4e0651eb36d5ebf32211df53014d",
+  "rev-mutants-head-absent.json": "b6623dc44fedade48769bae346bd0ce7e5dfc2cf27d6f41f6931ef7ffccee7af",
+  "rev-mutants-head-present-z7.json": "c8270cea6cfc6cb57a9c61ac2eca7d5162066726b11db8859e1d98f46c9950ce",
+  "fix-check2.json": "5e6c29928004d8f9a1719ffffa7622772c70924f69c94090802599f334440e1e"
+ },
+ "fragments": {
+  "Y3-R1-escalated-to-the-environment": {
+   "record": "rev-mutants-head-present.json",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "observedAtReview": "survives",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nexport const value = Object['constructor']['constructor']('return globalThis')()['process']['env']['HOME'];\n"
+    }
+   ]
+  },
+  "Y5b-computed-import-newline": {
+   "record": "rev-mutants-head-present.json",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "observedAtReview": "survives",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nexport const value = (bytes) => import\n(bytes);\n"
+    }
+   ]
+  },
+  "Y5c-computed-import-comment": {
+   "record": "rev-mutants-head-present.json",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "observedAtReview": "survives",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nexport const value = (bytes) => import/**/(bytes);\n"
+    }
+   ]
+  },
+  "Y6-allowed-global-member-replaced": {
+   "record": "rev-mutants-head-present.json",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "observedAtReview": "survives",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nObject.freeze = (value) => value;\n"
+    }
+   ]
+  },
+  "Y7-export-star-from-node-crypto": {
+   "record": "rev-mutants-head-present.json",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "observedAtReview": "survives",
+   "edits": [
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { decodeUtf8 } from './decode-utf8.js';\n",
+     "new": "export { decodeUtf8 } from './decode-utf8.js';\nexport * from 'node:crypto';\n"
+    }
+   ]
+  },
+  "Y9-export-star-as-allowed-name": {
+   "record": "rev-mutants-head-present.json",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "observedAtReview": "survives",
+   "edits": [
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { decodeUtf8 } from './decode-utf8.js';\n",
+     "new": "export { decodeUtf8 } from './decode-utf8.js';\nexport * as value from 'node:crypto';\n"
+    }
+   ]
+  },
+  "Y10-string-named-re-export": {
+   "record": "rev-mutants-head-present.json",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "observedAtReview": "survives",
+   "edits": [
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { decodeUtf8 } from './decode-utf8.js';\n",
+     "new": "export { decodeUtf8 } from './decode-utf8.js';\nexport { 'randomBytes' as 'value' } from 'node:crypto';\n"
+    }
+   ]
+  },
+  "Y11-string-named-import-called-at-import": {
+   "record": "rev-mutants-head-present.json",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "observedAtReview": "survives",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash, 'randomBytes' as value } from 'node:crypto';\nexport const T = value(8);\n"
+    }
+   ]
+  },
+  "Y12-namespace-import-re-exported": {
+   "record": "rev-mutants-head-present.json",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "observedAtReview": "survives",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nimport * as value from 'node:crypto';\nexport { value };\n"
+    }
+   ]
+  },
+  "Y14-drafter-takes-randomness-through-support": {
+   "record": "rev-mutants-head-present.json",
+   "tests": [
+    "packages/support/src/support-purity.test.ts",
+    "packages/three-surface-poc-core/src/owner-act-drafter.test.ts"
+   ],
+   "observedAtReview": "survives",
+   "edits": [
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { decodeUtf8 } from './decode-utf8.js';\n",
+     "new": "export { decodeUtf8 } from './decode-utf8.js';\nexport * from 'node:crypto';\n"
+    },
+    {
+     "path": "packages/three-surface-poc-core/src/owner-act-drafter.ts",
+     "old": "import { sha256 } from '@syzygy/support';\n",
+     "new": "import { sha256, randomUUID } from '@syzygy/support';\nexport const nonce = (): string => randomUUID();\n"
+    }
+   ]
+  },
+  "K4-shared-Date-token-weakened-plus-DK1": {
+   "record": "rev-mutants-head-absent.json",
+   "tests": [
+    "packages/support/src/support-purity.test.ts",
+    "packages/three-surface-poc-core/src/owner-act-drafter.test.ts"
+   ],
+   "observedAtReview": "survives",
+   "edits": [
+    {
+     "path": "packages/support/src/purity.testkit.ts",
+     "old": " /\\bDate\\b/,",
+     "new": " /\\bDate\\(/,"
+    },
+    {
+     "path": "packages/three-surface-poc-core/src/owner-act-drafter.ts",
+     "old": "import { sha256 } from '@syzygy/support';\n",
+     "new": "import { sha256 } from '@syzygy/support';\nexport const now = (): number => Date.now();\n"
+    }
+   ]
+  },
+  "Z7-unscoped-workspace-with-no-entry": {
+   "record": "rev-mutants-head-present-z7.json",
+   "tests": [
+    "packages/polaris-dossier/src/no-egress.test.ts"
+   ],
+   "observedAtReview": "survives",
+   "edits": [
+    {
+     "path": "packages/leak/package.json",
+     "old": null,
+     "new": "{\n  \"name\": \"leak\",\n  \"version\": \"0.0.0\",\n  \"private\": true,\n  \"type\": \"module\"\n}\n"
+    },
+    {
+     "path": "packages/leak/index.js",
+     "old": null,
+     "new": "export const LEAK = 1;\n"
+    },
+    {
+     "path": "node_modules/leak",
+     "link": "../packages/leak"
+    },
+    {
+     "path": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+     "old": "import { DESIGN_TOKENS_CSS } from '../design-tokens.js';\n",
+     "new": "import 'leak';\nimport { DESIGN_TOKENS_CSS } from '../design-tokens.js';\n"
+    }
+   ]
+  },
+  "G0-guard-removed-alone": {
+   "record": "fix-check2.json",
+   "tests": null,
+   "observedAtReview": "survives",
+   "edits": [
+    {
+     "path": "packages/polaris-dossier/src/no-egress.test.ts",
+     "old": "    plugins: [sourcesOnly(SOURCE_ROOT)],\n  });\n}\n",
+     "new": "    plugins: [],\n  });\n}\n"
+    }
+   ]
+  }
+ }
+}

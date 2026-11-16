@@ -1,0 +1,1222 @@
+{
+ "commit": "2f48eefa98e1cf91379f0c22ebf73748cbb6184d",
+ "dist": [
+  "apps/syzygy/dist",
+  "apps/three-surface-poc/dist",
+  "packages/cap1-conformance/dist",
+  "packages/cap1-core/dist",
+  "packages/cap1-daemon/dist",
+  "packages/cap1-system/dist",
+  "packages/http-host/dist",
+  "packages/polaris-dossier/dist",
+  "packages/polaris-generation-consent/dist",
+  "packages/polaris-generation-core/dist",
+  "packages/support/dist",
+  "packages/three-surface-poc-core/dist"
+ ],
+ "statusAfter": "",
+ "records": {
+  "docs/evidence/support-leaf-guards-review-2026-10-28/r2/fix-check-r2.json": "839cd109d9ebd359a5357043958a135cd4e4edf35bacf4ec1d05aad906e0f4a2",
+  "docs/evidence/syzygy-bpyt-6-14/residuals-head.json": "2a16e4a4231454c124abdd6b843285aca05739b9c7f3cfcabb46a9c0df5ea517"
+ },
+ "rows": [
+  {
+   "id": "X1-drafter-allowlist-case-insensitive",
+   "tests": [
+    "packages/three-surface-poc-core/src/owner-act-drafter.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/three-surface-poc-core/src/owner-act-drafter.test.ts",
+     "old": ".filter((name) => !DRAFTER_IDENTIFIERS.has(name))",
+     "new": ".filter((name) => ![...DRAFTER_IDENTIFIERS].some((allowed) => allowed.toLowerCase() === name.toLowerCase()))"
+    }
+   ],
+   "predicted": "survives",
+   "exit": 0,
+   "load1": "23.34",
+   "passed": 4,
+   "failed": [],
+   "fileMessages": []
+  },
+  {
+   "id": "X2-dotdot-check-reads-only-string-entries",
+   "tests": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "packages/polaris-generation-core/src/root-vitest-aliases.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "if (JSON.stringify(entry).includes('/../'))",
+     "new": "if (typeof entry === 'string' && entry.includes('/../'))"
+    }
+   ],
+   "predicted": "survives",
+   "exit": 0,
+   "load1": "23.96",
+   "passed": 59,
+   "failed": [],
+   "fileMessages": []
+  },
+  {
+   "id": "X2b-X2-plus-a-uniform-dotdot-entry-in-the-workspace",
+   "tests": [
+    "packages/polaris-generation-core/src/root-vitest-aliases.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "if (JSON.stringify(entry).includes('/../'))",
+     "new": "if (typeof entry === 'string' && entry.includes('/../'))"
+    },
+    {
+     "path": "packages/polaris-dossier/package.json",
+     "old": "      \"types\": \"./dist/state-directory.d.ts\",\n      \"import\": \"./dist/state-directory.js\",\n      \"default\": \"./dist/state-directory.js\"",
+     "new": "      \"types\": \"./dist/state-directory.d.ts\",\n      \"import\": \"./dist/x/../state-directory.js\",\n      \"default\": \"./dist/x/../state-directory.js\""
+    }
+   ],
+   "predicted": "survives",
+   "exit": 0,
+   "load1": "23.64",
+   "passed": 2,
+   "failed": [],
+   "fileMessages": []
+  },
+  {
+   "id": "X2c-control-uniform-dotdot-entry-at-head",
+   "tests": [
+    "packages/polaris-generation-core/src/root-vitest-aliases.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/polaris-dossier/package.json",
+     "old": "      \"types\": \"./dist/state-directory.d.ts\",\n      \"import\": \"./dist/state-directory.js\",\n      \"default\": \"./dist/state-directory.js\"",
+     "new": "      \"types\": \"./dist/state-directory.d.ts\",\n      \"import\": \"./dist/x/../state-directory.js\",\n      \"default\": \"./dist/x/../state-directory.js\""
+    }
+   ],
+   "predicted": "killed by both root-alias rows",
+   "exit": 1,
+   "load1": "23.64",
+   "passed": 0,
+   "failed": [
+    {
+     "name": "the root vitest.config.ts aliases alias each specifier to the src module its package's entry names",
+     "message": "Error: @syzygy/polaris-dossier/state-directory: its entry has a /../ segment, which Node refuses"
+    },
+    {
+     "name": "the root vitest.config.ts aliases leave exactly these entries to their built dist",
+     "message": "Error: @syzygy/polaris-dossier/state-directory: its entry has a /../ segment, which Node refuses"
+    }
+   ],
+   "fileMessages": []
+  },
+  {
+   "id": "X2d-E1-plus-E4-the-lane-row-under-a-dropped-check",
+   "tests": [
+    "packages/polaris-generation-core/src/root-vitest-aliases.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "      if (JSON.stringify(entry).includes('/../')) throw new Error(`${specifier}: its entry has a /../ segment, which Node refuses`);\n",
+     "new": ""
+    },
+    {
+     "path": "packages/polaris-dossier/package.json",
+     "old": "\"import\": \"./dist/state-directory.js\"",
+     "new": "\"import\": \"./dist/x/../state-directory.js\""
+    }
+   ],
+   "predicted": "killed (by the unreadable-entry throw)",
+   "exit": 1,
+   "load1": "23.64",
+   "passed": 0,
+   "failed": [
+    {
+     "name": "the root vitest.config.ts aliases alias each specifier to the src module its package's entry names",
+     "message": "Error: @syzygy/polaris-dossier/state-directory: its entry is not a ./dist/X.js whose src/X.ts exists"
+    },
+    {
+     "name": "the root vitest.config.ts aliases leave exactly these entries to their built dist",
+     "message": "Error: @syzygy/polaris-dossier/state-directory: its entry is not a ./dist/X.js whose src/X.ts exists"
+    }
+   ],
+   "fileMessages": []
+  },
+  {
+   "id": "X2e-E1-plus-the-uniform-entry",
+   "tests": [
+    "packages/polaris-generation-core/src/root-vitest-aliases.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "      if (JSON.stringify(entry).includes('/../')) throw new Error(`${specifier}: its entry has a /../ segment, which Node refuses`);\n",
+     "new": ""
+    },
+    {
+     "path": "packages/polaris-dossier/package.json",
+     "old": "      \"types\": \"./dist/state-directory.d.ts\",\n      \"import\": \"./dist/state-directory.js\",\n      \"default\": \"./dist/state-directory.js\"",
+     "new": "      \"types\": \"./dist/state-directory.d.ts\",\n      \"import\": \"./dist/x/../state-directory.js\",\n      \"default\": \"./dist/x/../state-directory.js\""
+    }
+   ],
+   "predicted": "survives",
+   "exit": 0,
+   "load1": "23.83",
+   "passed": 2,
+   "failed": [],
+   "fileMessages": []
+  },
+  {
+   "id": "X2f-proposed-object-row-under-X2",
+   "tests": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "    expect(() => entryModulesIn(workspace({}, './dist/x/../index.js'))).toThrow('@syzygy/lib: its entry has a /../ segment, which Node refuses');\n",
+     "new": "    expect(() => entryModulesIn(workspace({}, './dist/x/../index.js'))).toThrow('@syzygy/lib: its entry has a /../ segment, which Node refuses');\n    expect(() => entryModulesIn(workspace({}, { types: './dist/index.d.ts', import: './dist/x/../index.js', default: './dist/x/../index.js' })))\n      .toThrow('@syzygy/lib: its entry has a /../ segment, which Node refuses');\n"
+    },
+    {
+     "path": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "if (JSON.stringify(entry).includes('/../'))",
+     "new": "if (typeof entry === 'string' && entry.includes('/../'))"
+    }
+   ],
+   "predicted": "killed by the /../ row",
+   "exit": 1,
+   "load1": "24.24",
+   "passed": 56,
+   "failed": [
+    {
+     "name": "the workspace entry modules throws on a /../ segment that the resolver would join away, since Node refuses the entry",
+     "message": "AssertionError: expected [Function] to throw an error"
+    }
+   ],
+   "fileMessages": []
+  },
+  {
+   "id": "X2g-proposed-object-row-unmutated",
+   "tests": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "    expect(() => entryModulesIn(workspace({}, './dist/x/../index.js'))).toThrow('@syzygy/lib: its entry has a /../ segment, which Node refuses');\n",
+     "new": "    expect(() => entryModulesIn(workspace({}, './dist/x/../index.js'))).toThrow('@syzygy/lib: its entry has a /../ segment, which Node refuses');\n    expect(() => entryModulesIn(workspace({}, { types: './dist/index.d.ts', import: './dist/x/../index.js', default: './dist/x/../index.js' })))\n      .toThrow('@syzygy/lib: its entry has a /../ segment, which Node refuses');\n"
+    }
+   ],
+   "predicted": "passes",
+   "exit": 0,
+   "load1": "24.24",
+   "passed": 57,
+   "failed": [],
+   "fileMessages": []
+  },
+  {
+   "id": "X2h-proposed-object-row-under-E1",
+   "tests": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "    expect(() => entryModulesIn(workspace({}, './dist/x/../index.js'))).toThrow('@syzygy/lib: its entry has a /../ segment, which Node refuses');\n",
+     "new": "    expect(() => entryModulesIn(workspace({}, './dist/x/../index.js'))).toThrow('@syzygy/lib: its entry has a /../ segment, which Node refuses');\n    expect(() => entryModulesIn(workspace({}, { types: './dist/index.d.ts', import: './dist/x/../index.js', default: './dist/x/../index.js' })))\n      .toThrow('@syzygy/lib: its entry has a /../ segment, which Node refuses');\n"
+    },
+    {
+     "path": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "      if (JSON.stringify(entry).includes('/../')) throw new Error(`${specifier}: its entry has a /../ segment, which Node refuses`);\n",
+     "new": ""
+    }
+   ],
+   "predicted": "killed by the /../ row",
+   "exit": 1,
+   "load1": "24.46",
+   "passed": 56,
+   "failed": [
+    {
+     "name": "the workspace entry modules throws on a /../ segment that the resolver would join away, since Node refuses the entry",
+     "message": "AssertionError: expected [Function] to throw an error"
+    }
+   ],
+   "fileMessages": []
+  },
+  {
+   "id": "X3-alias-pin-compares-basenames-plus-alias-to-another-index",
+   "tests": [
+    "packages/polaris-generation-core/src/root-vitest-aliases.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/polaris-generation-core/src/root-vitest-aliases.test.ts",
+     "old": "[specifier, relative(ROOT, target).split(sep).join('/')]",
+     "new": "[specifier, target.split(sep).pop()]"
+    },
+    {
+     "path": "packages/polaris-generation-core/src/root-vitest-aliases.test.ts",
+     "old": "[specifier, entries[specifier]]",
+     "new": "[specifier, entries[specifier]?.split('/').pop()]"
+    },
+    {
+     "path": "vitest.config.ts",
+     "old": "'@syzygy/support': fileURLToPath(new URL('./packages/support/src/index.ts', import.meta.url)),",
+     "new": "'@syzygy/support': fileURLToPath(new URL('./packages/cap1-core/src/index.ts', import.meta.url)),"
+    }
+   ],
+   "predicted": "survives",
+   "exit": 0,
+   "load1": "24.46",
+   "passed": 2,
+   "failed": [],
+   "fileMessages": []
+  },
+  {
+   "id": "X3c-control-alias-to-another-index-at-head",
+   "tests": [
+    "packages/polaris-generation-core/src/root-vitest-aliases.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "vitest.config.ts",
+     "old": "'@syzygy/support': fileURLToPath(new URL('./packages/support/src/index.ts', import.meta.url)),",
+     "new": "'@syzygy/support': fileURLToPath(new URL('./packages/cap1-core/src/index.ts', import.meta.url)),"
+    }
+   ],
+   "predicted": "killed by the alias row",
+   "exit": 1,
+   "load1": "24.46",
+   "passed": 1,
+   "failed": [
+    {
+     "name": "the root vitest.config.ts aliases alias each specifier to the src module its package's entry names",
+     "message": "AssertionError: expected { \u2026(12) } to deeply equal { \u2026(12) }"
+    }
+   ],
+   "fileMessages": []
+  },
+  {
+   "id": "X4-write-reader-object-pattern-arm-dropped",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "ts.isPropertyAssignment(property) ? targets(property.initializer) : ts.isSpreadAssignment(property) ? targets(property.expression) : []",
+     "new": "[]"
+    }
+   ],
+   "predicted": "survives",
+   "exit": 0,
+   "load1": "24.03",
+   "passed": 43,
+   "failed": [],
+   "fileMessages": []
+  },
+  {
+   "id": "X4b-X4-plus-U5",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "ts.isPropertyAssignment(property) ? targets(property.initializer) : ts.isSpreadAssignment(property) ? targets(property.expression) : []",
+     "new": "[]"
+    },
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "  return createHash('sha256').update(value).digest('hex');\n}\n",
+     "new": "  return createHash('sha256').update(value).digest('hex');\n}\n({ value: Object.freeze } = { value: (bytes) => bytes });\n"
+    }
+   ],
+   "predicted": "survives",
+   "exit": 0,
+   "load1": "24.27",
+   "passed": 43,
+   "failed": [],
+   "fileMessages": []
+  },
+  {
+   "id": "X4c-nested-object-array-pattern-at-head",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "  return createHash('sha256').update(value).digest('hex');\n}\n",
+     "new": "  return createHash('sha256').update(value).digest('hex');\n}\n({ value: [Object.freeze] } = { value: [(bytes) => bytes] });\n"
+    }
+   ],
+   "predicted": "killed by the no-write row",
+   "exit": 1,
+   "load1": "24.27",
+   "passed": 42,
+   "failed": [
+    {
+     "name": "@syzygy/support stays a pure leaf assigns to no property in any source, so no allowed global is rewritten",
+     "message": "AssertionError: expected [ Array(1) ] to deeply equal []"
+    }
+   ],
+   "fileMessages": []
+  },
+  {
+   "id": "X5-write-reader-default-arm-dropped-plus-default-write",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "      : ts.isBinaryExpression(node) && node.operatorToken.kind === ts.SyntaxKind.EqualsToken ? targets(node.left)\n",
+     "new": ""
+    },
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "  return createHash('sha256').update(value).digest('hex');\n}\n",
+     "new": "  return createHash('sha256').update(value).digest('hex');\n}\n[Object.freeze = (value) => value] = [];\n"
+    }
+   ],
+   "predicted": "survives",
+   "exit": 1,
+   "load1": "24.48",
+   "passed": 42,
+   "failed": [
+    {
+     "name": "@syzygy/support stays a pure leaf assigns to no property in any source, so no allowed global is rewritten",
+     "message": "AssertionError: expected [ Array(1) ] to deeply equal []"
+    }
+   ],
+   "fileMessages": []
+  },
+  {
+   "id": "X5c-control-default-write-at-head",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "  return createHash('sha256').update(value).digest('hex');\n}\n",
+     "new": "  return createHash('sha256').update(value).digest('hex');\n}\n[Object.freeze = (value) => value] = [];\n"
+    }
+   ],
+   "predicted": "killed by the no-write row",
+   "exit": 1,
+   "load1": "24.48",
+   "passed": 42,
+   "failed": [
+    {
+     "name": "@syzygy/support stays a pure leaf assigns to no property in any source, so no allowed global is rewritten",
+     "message": "AssertionError: expected [ \u2026(2) ] to deeply equal []"
+    }
+   ],
+   "fileMessages": []
+  },
+  {
+   "id": "X6-write-reader-paren-arm-dropped-plus-paren-write",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "      : ts.isParenthesizedExpression(node) ? targets(node.expression)\n",
+     "new": ""
+    },
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "  return createHash('sha256').update(value).digest('hex');\n}\n",
+     "new": "  return createHash('sha256').update(value).digest('hex');\n}\n(Object.freeze) = (value) => value;\n"
+    }
+   ],
+   "predicted": "survives",
+   "exit": 0,
+   "load1": "24.12",
+   "passed": 43,
+   "failed": [],
+   "fileMessages": []
+  },
+  {
+   "id": "X6c-control-paren-write-at-head",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "  return createHash('sha256').update(value).digest('hex');\n}\n",
+     "new": "  return createHash('sha256').update(value).digest('hex');\n}\n(Object.freeze) = (value) => value;\n"
+    }
+   ],
+   "predicted": "killed by the no-write row",
+   "exit": 1,
+   "load1": "24.12",
+   "passed": 42,
+   "failed": [
+    {
+     "name": "@syzygy/support stays a pure leaf assigns to no property in any source, so no allowed global is rewritten",
+     "message": "AssertionError: expected [ Array(1) ] to deeply equal []"
+    }
+   ],
+   "fileMessages": []
+  },
+  {
+   "id": "X7-import-row-reads-only-literal-arguments-plus-R2",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "if (ts.isCallExpression(node) && node.expression.kind === ts.SyntaxKind.ImportKeyword)",
+     "new": "if (ts.isCallExpression(node) && node.expression.kind === ts.SyntaxKind.ImportKeyword && node.arguments.length > 0 && ts.isStringLiteral(node.arguments[0]!))"
+    },
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nconst value = 'node:f' + 's';\nvoid import (value);\n"
+    }
+   ],
+   "predicted": "survives",
+   "exit": 0,
+   "load1": "24.20",
+   "passed": 43,
+   "failed": [],
+   "fileMessages": []
+  },
+  {
+   "id": "X8-import-row-without-recursion-plus-V9",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "calls.push(`${file}: ${node.getText(source)}`);\n        ts.forEachChild(node, visit);",
+     "new": "calls.push(`${file}: ${node.getText(source)}`);"
+    },
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { decodeUtf8 } from './decode-utf8.js';\n",
+     "new": "export { decodeUtf8 } from './decode-utf8.js';\nexport const value = () => import ('node:crypto');\n"
+    }
+   ],
+   "predicted": "survives",
+   "exit": 0,
+   "load1": "23.94",
+   "passed": 43,
+   "failed": [],
+   "fileMessages": []
+  },
+  {
+   "id": "X10-probe-dot-segment-accepted-and-types-dotdot-refused",
+   "tests": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "    expect(() => entryModulesIn(workspace({}, './dist/x/../index.js'))).toThrow('@syzygy/lib: its entry has a /../ segment, which Node refuses');\n",
+     "new": "    expect(() => entryModulesIn(workspace({}, './dist/x/../index.js'))).toThrow('@syzygy/lib: its entry has a /../ segment, which Node refuses');\n    expect(entryModulesIn(workspace({}, './dist/./index.js'))['@syzygy/lib']).toBe('packages/lib/src/index.ts');\n    expect(() => entryModulesIn(workspace({}, { types: './dist/x/../index.d.ts', import: './dist/index.js' }))).toThrow('@syzygy/lib: its entry has a /../ segment, which Node refuses');\n"
+    }
+   ],
+   "predicted": "passes (both expectations hold)",
+   "exit": 0,
+   "load1": "23.94",
+   "passed": 57,
+   "failed": [],
+   "fileMessages": []
+  },
+  {
+   "id": "X1d-X1-plus-Map-alone",
+   "tests": [
+    "packages/three-surface-poc-core/src/owner-act-drafter.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/three-surface-poc-core/src/owner-act-drafter.test.ts",
+     "old": ".filter((name) => !DRAFTER_IDENTIFIERS.has(name))",
+     "new": ".filter((name) => ![...DRAFTER_IDENTIFIERS].some((allowed) => allowed.toLowerCase() === name.toLowerCase()))"
+    },
+    {
+     "path": "packages/three-surface-poc-core/src/owner-act-drafter.ts",
+     "old": "import { sha256 } from '@syzygy/support';\n",
+     "new": "import { sha256 } from '@syzygy/support';\nvoid new Map();\n"
+    }
+   ],
+   "predicted": "survives",
+   "exit": 0,
+   "load1": "23.94",
+   "passed": 4,
+   "failed": [],
+   "fileMessages": []
+  },
+  {
+   "id": "X1e-control-Map-alone-at-head",
+   "tests": [
+    "packages/three-surface-poc-core/src/owner-act-drafter.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/three-surface-poc-core/src/owner-act-drafter.ts",
+     "old": "import { sha256 } from '@syzygy/support';\n",
+     "new": "import { sha256 } from '@syzygy/support';\nvoid new Map();\n"
+    }
+   ],
+   "predicted": "killed by the drafter allowlist row",
+   "exit": 1,
+   "load1": "23.86",
+   "passed": 3,
+   "failed": [
+    {
+     "name": "owner-act drafter (M4 slice 7) names no identifier outside its literal list, so it reads no global it does not use",
+     "message": "AssertionError: expected [ 'Map' ] to deeply equal []"
+    }
+   ],
+   "fileMessages": []
+  },
+  {
+   "id": "X11-control-spread-write-at-head",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "  return createHash('sha256').update(value).digest('hex');\n}\n",
+     "new": "  return createHash('sha256').update(value).digest('hex');\n}\n[...Object.freeze] = [];\n"
+    }
+   ],
+   "predicted": "killed by the no-write row",
+   "exit": 1,
+   "load1": "26.36",
+   "passed": 42,
+   "failed": [
+    {
+     "name": "@syzygy/support stays a pure leaf assigns to no property in any source, so no allowed global is rewritten",
+     "message": "AssertionError: expected [ Array(1) ] to deeply equal []"
+    }
+   ],
+   "fileMessages": []
+  },
+  {
+   "id": "X12-write-reader-spread-arm-dropped-plus-spread-write",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "targets(ts.isSpreadElement(element) ? element.expression : element)",
+     "new": "targets(element)"
+    },
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "  return createHash('sha256').update(value).digest('hex');\n}\n",
+     "new": "  return createHash('sha256').update(value).digest('hex');\n}\n[...Object.freeze] = [];\n"
+    }
+   ],
+   "predicted": "survives",
+   "exit": 0,
+   "load1": "26.36",
+   "passed": 43,
+   "failed": [],
+   "fileMessages": []
+  },
+  {
+   "id": "FX0-fix-W-and-I-unmutated",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "    ['let a = 1; a += 1; [a] = [2];', []],\n",
+     "new": "    ['({ value: Object.freeze } = { value: (bytes) => bytes });', ['{ value: Object.freeze } = { value: (bytes) => bytes }']],\n    ['(Object.freeze) = (value) => value;', ['(Object.freeze) = (value) => value']],\n    ['[...Object.freeze] = [];', ['[...Object.freeze] = []']],\n    ['let a = 1; a += 1; [a] = [2];', []],\n"
+    },
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "  visit(file);\n  return writes;\n}\n",
+     "new": "  visit(file);\n  return writes;\n}\n\n/** Every `import()` call of a module, as written, however it is spaced or commented and whatever its argument. */\nfunction importCallsOf(name: string, source: string): string[] {\n  const file = ts.createSourceFile(name, source, ts.ScriptTarget.Latest, false);\n  const calls: string[] = [];\n  const visit = (node: ts.Node): void => {\n    if (ts.isCallExpression(node) && node.expression.kind === ts.SyntaxKind.ImportKeyword) calls.push(node.getText(file));\n    ts.forEachChild(node, visit);\n  };\n  visit(file);\n  return calls;\n}\n"
+    },
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "  it('calls no import() in any source, however it is spaced or commented', () => {\n    const calls: string[] = [];\n    for (const file of SOURCES) {\n      const source = ts.createSourceFile(file, read(file), ts.ScriptTarget.Latest, false);\n      const visit = (node: ts.Node): void => {\n        if (ts.isCallExpression(node) && node.expression.kind === ts.SyntaxKind.ImportKeyword) calls.push(`${file}: ${node.getText(source)}`);\n        ts.forEachChild(node, visit);\n      };\n      visit(source);\n    }\n    expect(calls).toEqual([]);\n  });\n\n",
+     "new": "  it('calls no import() in any source, however it is spaced or commented', () => {\n    expect(SOURCES.flatMap((file) => importCallsOf(file, read(file)).map((call) => `${file}: ${call}`))).toEqual([]);\n  });\n\n"
+    },
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "    expect(propertyWritesOf('case.ts', source)).toEqual(expected);\n  });\n});\n",
+     "new": "    expect(propertyWritesOf('case.ts', source)).toEqual(expected);\n  });\n});\n\ndescribe('the import() reader the import() row stands on', () => {\n  const CASES: readonly (readonly [string, readonly string[]])[] = [\n    [\"export const value = () => import ('node:crypto');\", [\"import ('node:crypto')\"]],\n    [\"const value = 'node:f' + 's';\\nvoid import (value);\", ['import (value)']],\n    [\"void import/**/('node:fs');\", [\"import/**/('node:fs')\"]],\n    ['const meta = import.meta.url;', []],\n  ];\n  it.each(CASES)('reads %j', (source, expected) => {\n    expect(importCallsOf('case.ts', source)).toEqual(expected);\n  });\n});\n"
+    }
+   ],
+   "predicted": "passes",
+   "exit": 0,
+   "load1": "27.69",
+   "passed": 50,
+   "failed": [],
+   "fileMessages": []
+  },
+  {
+   "id": "FX-X4-fix-under-object-arm-dropped",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "    ['let a = 1; a += 1; [a] = [2];', []],\n",
+     "new": "    ['({ value: Object.freeze } = { value: (bytes) => bytes });', ['{ value: Object.freeze } = { value: (bytes) => bytes }']],\n    ['(Object.freeze) = (value) => value;', ['(Object.freeze) = (value) => value']],\n    ['[...Object.freeze] = [];', ['[...Object.freeze] = []']],\n    ['let a = 1; a += 1; [a] = [2];', []],\n"
+    },
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "  visit(file);\n  return writes;\n}\n",
+     "new": "  visit(file);\n  return writes;\n}\n\n/** Every `import()` call of a module, as written, however it is spaced or commented and whatever its argument. */\nfunction importCallsOf(name: string, source: string): string[] {\n  const file = ts.createSourceFile(name, source, ts.ScriptTarget.Latest, false);\n  const calls: string[] = [];\n  const visit = (node: ts.Node): void => {\n    if (ts.isCallExpression(node) && node.expression.kind === ts.SyntaxKind.ImportKeyword) calls.push(node.getText(file));\n    ts.forEachChild(node, visit);\n  };\n  visit(file);\n  return calls;\n}\n"
+    },
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "  it('calls no import() in any source, however it is spaced or commented', () => {\n    const calls: string[] = [];\n    for (const file of SOURCES) {\n      const source = ts.createSourceFile(file, read(file), ts.ScriptTarget.Latest, false);\n      const visit = (node: ts.Node): void => {\n        if (ts.isCallExpression(node) && node.expression.kind === ts.SyntaxKind.ImportKeyword) calls.push(`${file}: ${node.getText(source)}`);\n        ts.forEachChild(node, visit);\n      };\n      visit(source);\n    }\n    expect(calls).toEqual([]);\n  });\n\n",
+     "new": "  it('calls no import() in any source, however it is spaced or commented', () => {\n    expect(SOURCES.flatMap((file) => importCallsOf(file, read(file)).map((call) => `${file}: ${call}`))).toEqual([]);\n  });\n\n"
+    },
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "    expect(propertyWritesOf('case.ts', source)).toEqual(expected);\n  });\n});\n",
+     "new": "    expect(propertyWritesOf('case.ts', source)).toEqual(expected);\n  });\n});\n\ndescribe('the import() reader the import() row stands on', () => {\n  const CASES: readonly (readonly [string, readonly string[]])[] = [\n    [\"export const value = () => import ('node:crypto');\", [\"import ('node:crypto')\"]],\n    [\"const value = 'node:f' + 's';\\nvoid import (value);\", ['import (value)']],\n    [\"void import/**/('node:fs');\", [\"import/**/('node:fs')\"]],\n    ['const meta = import.meta.url;', []],\n  ];\n  it.each(CASES)('reads %j', (source, expected) => {\n    expect(importCallsOf('case.ts', source)).toEqual(expected);\n  });\n});\n"
+    },
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "ts.isPropertyAssignment(property) ? targets(property.initializer) : ts.isSpreadAssignment(property) ? targets(property.expression) : []",
+     "new": "[]"
+    }
+   ],
+   "predicted": "killed by the object reader row alone",
+   "exit": 1,
+   "load1": "27.88",
+   "passed": 49,
+   "failed": [
+    {
+     "name": "the property-write reader the no-write row stands on reads \"({ value: Object.freeze } = { value: (bytes) => bytes });\"",
+     "message": "AssertionError: expected [] to deeply equal [ Array(1) ]"
+    }
+   ],
+   "fileMessages": []
+  },
+  {
+   "id": "FX-X6-fix-under-paren-arm-dropped",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "    ['let a = 1; a += 1; [a] = [2];', []],\n",
+     "new": "    ['({ value: Object.freeze } = { value: (bytes) => bytes });', ['{ value: Object.freeze } = { value: (bytes) => bytes }']],\n    ['(Object.freeze) = (value) => value;', ['(Object.freeze) = (value) => value']],\n    ['[...Object.freeze] = [];', ['[...Object.freeze] = []']],\n    ['let a = 1; a += 1; [a] = [2];', []],\n"
+    },
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "  visit(file);\n  return writes;\n}\n",
+     "new": "  visit(file);\n  return writes;\n}\n\n/** Every `import()` call of a module, as written, however it is spaced or commented and whatever its argument. */\nfunction importCallsOf(name: string, source: string): string[] {\n  const file = ts.createSourceFile(name, source, ts.ScriptTarget.Latest, false);\n  const calls: string[] = [];\n  const visit = (node: ts.Node): void => {\n    if (ts.isCallExpression(node) && node.expression.kind === ts.SyntaxKind.ImportKeyword) calls.push(node.getText(file));\n    ts.forEachChild(node, visit);\n  };\n  visit(file);\n  return calls;\n}\n"
+    },
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "  it('calls no import() in any source, however it is spaced or commented', () => {\n    const calls: string[] = [];\n    for (const file of SOURCES) {\n      const source = ts.createSourceFile(file, read(file), ts.ScriptTarget.Latest, false);\n      const visit = (node: ts.Node): void => {\n        if (ts.isCallExpression(node) && node.expression.kind === ts.SyntaxKind.ImportKeyword) calls.push(`${file}: ${node.getText(source)}`);\n        ts.forEachChild(node, visit);\n      };\n      visit(source);\n    }\n    expect(calls).toEqual([]);\n  });\n\n",
+     "new": "  it('calls no import() in any source, however it is spaced or commented', () => {\n    expect(SOURCES.flatMap((file) => importCallsOf(file, read(file)).map((call) => `${file}: ${call}`))).toEqual([]);\n  });\n\n"
+    },
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "    expect(propertyWritesOf('case.ts', source)).toEqual(expected);\n  });\n});\n",
+     "new": "    expect(propertyWritesOf('case.ts', source)).toEqual(expected);\n  });\n});\n\ndescribe('the import() reader the import() row stands on', () => {\n  const CASES: readonly (readonly [string, readonly string[]])[] = [\n    [\"export const value = () => import ('node:crypto');\", [\"import ('node:crypto')\"]],\n    [\"const value = 'node:f' + 's';\\nvoid import (value);\", ['import (value)']],\n    [\"void import/**/('node:fs');\", [\"import/**/('node:fs')\"]],\n    ['const meta = import.meta.url;', []],\n  ];\n  it.each(CASES)('reads %j', (source, expected) => {\n    expect(importCallsOf('case.ts', source)).toEqual(expected);\n  });\n});\n"
+    },
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "      : ts.isParenthesizedExpression(node) ? targets(node.expression)\n",
+     "new": ""
+    }
+   ],
+   "predicted": "killed by the paren reader row alone",
+   "exit": 1,
+   "load1": "28.61",
+   "passed": 49,
+   "failed": [
+    {
+     "name": "the property-write reader the no-write row stands on reads \"(Object.freeze) = (value) => value;\"",
+     "message": "AssertionError: expected [] to deeply equal [ Array(1) ]"
+    }
+   ],
+   "fileMessages": []
+  },
+  {
+   "id": "FX-X12-fix-under-spread-arm-dropped",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "    ['let a = 1; a += 1; [a] = [2];', []],\n",
+     "new": "    ['({ value: Object.freeze } = { value: (bytes) => bytes });', ['{ value: Object.freeze } = { value: (bytes) => bytes }']],\n    ['(Object.freeze) = (value) => value;', ['(Object.freeze) = (value) => value']],\n    ['[...Object.freeze] = [];', ['[...Object.freeze] = []']],\n    ['let a = 1; a += 1; [a] = [2];', []],\n"
+    },
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "  visit(file);\n  return writes;\n}\n",
+     "new": "  visit(file);\n  return writes;\n}\n\n/** Every `import()` call of a module, as written, however it is spaced or commented and whatever its argument. */\nfunction importCallsOf(name: string, source: string): string[] {\n  const file = ts.createSourceFile(name, source, ts.ScriptTarget.Latest, false);\n  const calls: string[] = [];\n  const visit = (node: ts.Node): void => {\n    if (ts.isCallExpression(node) && node.expression.kind === ts.SyntaxKind.ImportKeyword) calls.push(node.getText(file));\n    ts.forEachChild(node, visit);\n  };\n  visit(file);\n  return calls;\n}\n"
+    },
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "  it('calls no import() in any source, however it is spaced or commented', () => {\n    const calls: string[] = [];\n    for (const file of SOURCES) {\n      const source = ts.createSourceFile(file, read(file), ts.ScriptTarget.Latest, false);\n      const visit = (node: ts.Node): void => {\n        if (ts.isCallExpression(node) && node.expression.kind === ts.SyntaxKind.ImportKeyword) calls.push(`${file}: ${node.getText(source)}`);\n        ts.forEachChild(node, visit);\n      };\n      visit(source);\n    }\n    expect(calls).toEqual([]);\n  });\n\n",
+     "new": "  it('calls no import() in any source, however it is spaced or commented', () => {\n    expect(SOURCES.flatMap((file) => importCallsOf(file, read(file)).map((call) => `${file}: ${call}`))).toEqual([]);\n  });\n\n"
+    },
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "    expect(propertyWritesOf('case.ts', source)).toEqual(expected);\n  });\n});\n",
+     "new": "    expect(propertyWritesOf('case.ts', source)).toEqual(expected);\n  });\n});\n\ndescribe('the import() reader the import() row stands on', () => {\n  const CASES: readonly (readonly [string, readonly string[]])[] = [\n    [\"export const value = () => import ('node:crypto');\", [\"import ('node:crypto')\"]],\n    [\"const value = 'node:f' + 's';\\nvoid import (value);\", ['import (value)']],\n    [\"void import/**/('node:fs');\", [\"import/**/('node:fs')\"]],\n    ['const meta = import.meta.url;', []],\n  ];\n  it.each(CASES)('reads %j', (source, expected) => {\n    expect(importCallsOf('case.ts', source)).toEqual(expected);\n  });\n});\n"
+    },
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "targets(ts.isSpreadElement(element) ? element.expression : element)",
+     "new": "targets(element)"
+    }
+   ],
+   "predicted": "killed by the spread reader row alone",
+   "exit": 1,
+   "load1": "27.92",
+   "passed": 49,
+   "failed": [
+    {
+     "name": "the property-write reader the no-write row stands on reads \"[...Object.freeze] = [];\"",
+     "message": "AssertionError: expected [] to deeply equal [ '[...Object.freeze] = []' ]"
+    }
+   ],
+   "fileMessages": []
+  },
+  {
+   "id": "FX-X7-fix-under-literal-only",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "    ['let a = 1; a += 1; [a] = [2];', []],\n",
+     "new": "    ['({ value: Object.freeze } = { value: (bytes) => bytes });', ['{ value: Object.freeze } = { value: (bytes) => bytes }']],\n    ['(Object.freeze) = (value) => value;', ['(Object.freeze) = (value) => value']],\n    ['[...Object.freeze] = [];', ['[...Object.freeze] = []']],\n    ['let a = 1; a += 1; [a] = [2];', []],\n"
+    },
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "  visit(file);\n  return writes;\n}\n",
+     "new": "  visit(file);\n  return writes;\n}\n\n/** Every `import()` call of a module, as written, however it is spaced or commented and whatever its argument. */\nfunction importCallsOf(name: string, source: string): string[] {\n  const file = ts.createSourceFile(name, source, ts.ScriptTarget.Latest, false);\n  const calls: string[] = [];\n  const visit = (node: ts.Node): void => {\n    if (ts.isCallExpression(node) && node.expression.kind === ts.SyntaxKind.ImportKeyword) calls.push(node.getText(file));\n    ts.forEachChild(node, visit);\n  };\n  visit(file);\n  return calls;\n}\n"
+    },
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "  it('calls no import() in any source, however it is spaced or commented', () => {\n    const calls: string[] = [];\n    for (const file of SOURCES) {\n      const source = ts.createSourceFile(file, read(file), ts.ScriptTarget.Latest, false);\n      const visit = (node: ts.Node): void => {\n        if (ts.isCallExpression(node) && node.expression.kind === ts.SyntaxKind.ImportKeyword) calls.push(`${file}: ${node.getText(source)}`);\n        ts.forEachChild(node, visit);\n      };\n      visit(source);\n    }\n    expect(calls).toEqual([]);\n  });\n\n",
+     "new": "  it('calls no import() in any source, however it is spaced or commented', () => {\n    expect(SOURCES.flatMap((file) => importCallsOf(file, read(file)).map((call) => `${file}: ${call}`))).toEqual([]);\n  });\n\n"
+    },
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "    expect(propertyWritesOf('case.ts', source)).toEqual(expected);\n  });\n});\n",
+     "new": "    expect(propertyWritesOf('case.ts', source)).toEqual(expected);\n  });\n});\n\ndescribe('the import() reader the import() row stands on', () => {\n  const CASES: readonly (readonly [string, readonly string[]])[] = [\n    [\"export const value = () => import ('node:crypto');\", [\"import ('node:crypto')\"]],\n    [\"const value = 'node:f' + 's';\\nvoid import (value);\", ['import (value)']],\n    [\"void import/**/('node:fs');\", [\"import/**/('node:fs')\"]],\n    ['const meta = import.meta.url;', []],\n  ];\n  it.each(CASES)('reads %j', (source, expected) => {\n    expect(importCallsOf('case.ts', source)).toEqual(expected);\n  });\n});\n"
+    },
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "if (ts.isCallExpression(node) && node.expression.kind === ts.SyntaxKind.ImportKeyword)",
+     "new": "if (ts.isCallExpression(node) && node.expression.kind === ts.SyntaxKind.ImportKeyword && node.arguments.length > 0 && ts.isStringLiteral(node.arguments[0]!))"
+    }
+   ],
+   "predicted": "killed by the computed-specifier reader row alone",
+   "exit": 1,
+   "load1": "27.92",
+   "passed": 49,
+   "failed": [
+    {
+     "name": "the import() reader the import() row stands on reads \"const value = 'node:f' + 's';\\nvoid import (value);\"",
+     "message": "AssertionError: expected [] to deeply equal [ 'import (value)' ]"
+    }
+   ],
+   "fileMessages": []
+  },
+  {
+   "id": "FX-X8-fix-under-no-recursion",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "    ['let a = 1; a += 1; [a] = [2];', []],\n",
+     "new": "    ['({ value: Object.freeze } = { value: (bytes) => bytes });', ['{ value: Object.freeze } = { value: (bytes) => bytes }']],\n    ['(Object.freeze) = (value) => value;', ['(Object.freeze) = (value) => value']],\n    ['[...Object.freeze] = [];', ['[...Object.freeze] = []']],\n    ['let a = 1; a += 1; [a] = [2];', []],\n"
+    },
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "  visit(file);\n  return writes;\n}\n",
+     "new": "  visit(file);\n  return writes;\n}\n\n/** Every `import()` call of a module, as written, however it is spaced or commented and whatever its argument. */\nfunction importCallsOf(name: string, source: string): string[] {\n  const file = ts.createSourceFile(name, source, ts.ScriptTarget.Latest, false);\n  const calls: string[] = [];\n  const visit = (node: ts.Node): void => {\n    if (ts.isCallExpression(node) && node.expression.kind === ts.SyntaxKind.ImportKeyword) calls.push(node.getText(file));\n    ts.forEachChild(node, visit);\n  };\n  visit(file);\n  return calls;\n}\n"
+    },
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "  it('calls no import() in any source, however it is spaced or commented', () => {\n    const calls: string[] = [];\n    for (const file of SOURCES) {\n      const source = ts.createSourceFile(file, read(file), ts.ScriptTarget.Latest, false);\n      const visit = (node: ts.Node): void => {\n        if (ts.isCallExpression(node) && node.expression.kind === ts.SyntaxKind.ImportKeyword) calls.push(`${file}: ${node.getText(source)}`);\n        ts.forEachChild(node, visit);\n      };\n      visit(source);\n    }\n    expect(calls).toEqual([]);\n  });\n\n",
+     "new": "  it('calls no import() in any source, however it is spaced or commented', () => {\n    expect(SOURCES.flatMap((file) => importCallsOf(file, read(file)).map((call) => `${file}: ${call}`))).toEqual([]);\n  });\n\n"
+    },
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "    expect(propertyWritesOf('case.ts', source)).toEqual(expected);\n  });\n});\n",
+     "new": "    expect(propertyWritesOf('case.ts', source)).toEqual(expected);\n  });\n});\n\ndescribe('the import() reader the import() row stands on', () => {\n  const CASES: readonly (readonly [string, readonly string[]])[] = [\n    [\"export const value = () => import ('node:crypto');\", [\"import ('node:crypto')\"]],\n    [\"const value = 'node:f' + 's';\\nvoid import (value);\", ['import (value)']],\n    [\"void import/**/('node:fs');\", [\"import/**/('node:fs')\"]],\n    ['const meta = import.meta.url;', []],\n  ];\n  it.each(CASES)('reads %j', (source, expected) => {\n    expect(importCallsOf('case.ts', source)).toEqual(expected);\n  });\n});\n"
+    },
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "calls.push(node.getText(file));\n    ts.forEachChild(node, visit);",
+     "new": "calls.push(node.getText(file));"
+    }
+   ],
+   "predicted": "killed by the three import() reader rows",
+   "exit": 1,
+   "load1": "30.25",
+   "passed": 47,
+   "failed": [
+    {
+     "name": "the import() reader the import() row stands on reads \"export const value = () => import ('node:crypto');\"",
+     "message": "AssertionError: expected [] to deeply equal [ 'import (\\'node:crypto\\')' ]"
+    },
+    {
+     "name": "the import() reader the import() row stands on reads \"const value = 'node:f' + 's';\\nvoid import (value);\"",
+     "message": "AssertionError: expected [] to deeply equal [ 'import (value)' ]"
+    },
+    {
+     "name": "the import() reader the import() row stands on reads \"void import/**/('node:fs');\"",
+     "message": "AssertionError: expected [] to deeply equal [ 'import/**/(\\'node:fs\\')' ]"
+    }
+   ],
+   "fileMessages": []
+  },
+  {
+   "id": "FX-V9-fix-still-kills-V9",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "    ['let a = 1; a += 1; [a] = [2];', []],\n",
+     "new": "    ['({ value: Object.freeze } = { value: (bytes) => bytes });', ['{ value: Object.freeze } = { value: (bytes) => bytes }']],\n    ['(Object.freeze) = (value) => value;', ['(Object.freeze) = (value) => value']],\n    ['[...Object.freeze] = [];', ['[...Object.freeze] = []']],\n    ['let a = 1; a += 1; [a] = [2];', []],\n"
+    },
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "  visit(file);\n  return writes;\n}\n",
+     "new": "  visit(file);\n  return writes;\n}\n\n/** Every `import()` call of a module, as written, however it is spaced or commented and whatever its argument. */\nfunction importCallsOf(name: string, source: string): string[] {\n  const file = ts.createSourceFile(name, source, ts.ScriptTarget.Latest, false);\n  const calls: string[] = [];\n  const visit = (node: ts.Node): void => {\n    if (ts.isCallExpression(node) && node.expression.kind === ts.SyntaxKind.ImportKeyword) calls.push(node.getText(file));\n    ts.forEachChild(node, visit);\n  };\n  visit(file);\n  return calls;\n}\n"
+    },
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "  it('calls no import() in any source, however it is spaced or commented', () => {\n    const calls: string[] = [];\n    for (const file of SOURCES) {\n      const source = ts.createSourceFile(file, read(file), ts.ScriptTarget.Latest, false);\n      const visit = (node: ts.Node): void => {\n        if (ts.isCallExpression(node) && node.expression.kind === ts.SyntaxKind.ImportKeyword) calls.push(`${file}: ${node.getText(source)}`);\n        ts.forEachChild(node, visit);\n      };\n      visit(source);\n    }\n    expect(calls).toEqual([]);\n  });\n\n",
+     "new": "  it('calls no import() in any source, however it is spaced or commented', () => {\n    expect(SOURCES.flatMap((file) => importCallsOf(file, read(file)).map((call) => `${file}: ${call}`))).toEqual([]);\n  });\n\n"
+    },
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "    expect(propertyWritesOf('case.ts', source)).toEqual(expected);\n  });\n});\n",
+     "new": "    expect(propertyWritesOf('case.ts', source)).toEqual(expected);\n  });\n});\n\ndescribe('the import() reader the import() row stands on', () => {\n  const CASES: readonly (readonly [string, readonly string[]])[] = [\n    [\"export const value = () => import ('node:crypto');\", [\"import ('node:crypto')\"]],\n    [\"const value = 'node:f' + 's';\\nvoid import (value);\", ['import (value)']],\n    [\"void import/**/('node:fs');\", [\"import/**/('node:fs')\"]],\n    ['const meta = import.meta.url;', []],\n  ];\n  it.each(CASES)('reads %j', (source, expected) => {\n    expect(importCallsOf('case.ts', source)).toEqual(expected);\n  });\n});\n"
+    },
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { decodeUtf8 } from './decode-utf8.js';\n",
+     "new": "export { decodeUtf8 } from './decode-utf8.js';\nexport const value = () => import ('node:crypto');\n"
+    }
+   ],
+   "predicted": "killed by the import() row alone",
+   "exit": 1,
+   "load1": "30.25",
+   "passed": 49,
+   "failed": [
+    {
+     "name": "@syzygy/support stays a pure leaf calls no import() in any source, however it is spaced or commented",
+     "message": "AssertionError: expected [ Array(1) ] to deeply equal []"
+    }
+   ],
+   "fileMessages": []
+  },
+  {
+   "id": "FX-U5-fix-still-kills-U5",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "    ['let a = 1; a += 1; [a] = [2];', []],\n",
+     "new": "    ['({ value: Object.freeze } = { value: (bytes) => bytes });', ['{ value: Object.freeze } = { value: (bytes) => bytes }']],\n    ['(Object.freeze) = (value) => value;', ['(Object.freeze) = (value) => value']],\n    ['[...Object.freeze] = [];', ['[...Object.freeze] = []']],\n    ['let a = 1; a += 1; [a] = [2];', []],\n"
+    },
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "  visit(file);\n  return writes;\n}\n",
+     "new": "  visit(file);\n  return writes;\n}\n\n/** Every `import()` call of a module, as written, however it is spaced or commented and whatever its argument. */\nfunction importCallsOf(name: string, source: string): string[] {\n  const file = ts.createSourceFile(name, source, ts.ScriptTarget.Latest, false);\n  const calls: string[] = [];\n  const visit = (node: ts.Node): void => {\n    if (ts.isCallExpression(node) && node.expression.kind === ts.SyntaxKind.ImportKeyword) calls.push(node.getText(file));\n    ts.forEachChild(node, visit);\n  };\n  visit(file);\n  return calls;\n}\n"
+    },
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "  it('calls no import() in any source, however it is spaced or commented', () => {\n    const calls: string[] = [];\n    for (const file of SOURCES) {\n      const source = ts.createSourceFile(file, read(file), ts.ScriptTarget.Latest, false);\n      const visit = (node: ts.Node): void => {\n        if (ts.isCallExpression(node) && node.expression.kind === ts.SyntaxKind.ImportKeyword) calls.push(`${file}: ${node.getText(source)}`);\n        ts.forEachChild(node, visit);\n      };\n      visit(source);\n    }\n    expect(calls).toEqual([]);\n  });\n\n",
+     "new": "  it('calls no import() in any source, however it is spaced or commented', () => {\n    expect(SOURCES.flatMap((file) => importCallsOf(file, read(file)).map((call) => `${file}: ${call}`))).toEqual([]);\n  });\n\n"
+    },
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "    expect(propertyWritesOf('case.ts', source)).toEqual(expected);\n  });\n});\n",
+     "new": "    expect(propertyWritesOf('case.ts', source)).toEqual(expected);\n  });\n});\n\ndescribe('the import() reader the import() row stands on', () => {\n  const CASES: readonly (readonly [string, readonly string[]])[] = [\n    [\"export const value = () => import ('node:crypto');\", [\"import ('node:crypto')\"]],\n    [\"const value = 'node:f' + 's';\\nvoid import (value);\", ['import (value)']],\n    [\"void import/**/('node:fs');\", [\"import/**/('node:fs')\"]],\n    ['const meta = import.meta.url;', []],\n  ];\n  it.each(CASES)('reads %j', (source, expected) => {\n    expect(importCallsOf('case.ts', source)).toEqual(expected);\n  });\n});\n"
+    },
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "  return createHash('sha256').update(value).digest('hex');\n}\n",
+     "new": "  return createHash('sha256').update(value).digest('hex');\n}\n({ value: Object.freeze } = { value: (bytes) => bytes });\n"
+    }
+   ],
+   "predicted": "killed by the no-write row alone",
+   "exit": 1,
+   "load1": "29.27",
+   "passed": 49,
+   "failed": [
+    {
+     "name": "@syzygy/support stays a pure leaf assigns to no property in any source, so no allowed global is rewritten",
+     "message": "AssertionError: expected [ Array(1) ] to deeply equal []"
+    }
+   ],
+   "fileMessages": []
+  },
+  {
+   "id": "X13-head-config-reordered-so-core-shadows-live",
+   "tests": [
+    "packages/polaris-generation-core/src/root-vitest-aliases.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "vitest.config.ts",
+     "old": "      '@syzygy/polaris-generation-core/live': fileURLToPath(new URL('./packages/polaris-generation-core/src/live.ts', import.meta.url)),\n      '@syzygy/polaris-generation-core': fileURLToPath(new URL('./packages/polaris-generation-core/src/index.ts', import.meta.url)),\n",
+     "new": "      '@syzygy/polaris-generation-core': fileURLToPath(new URL('./packages/polaris-generation-core/src/index.ts', import.meta.url)),\n      '@syzygy/polaris-generation-core/live': fileURLToPath(new URL('./packages/polaris-generation-core/src/live.ts', import.meta.url)),\n"
+    }
+   ],
+   "predicted": "survives (the alias rows read a map, not an order)",
+   "exit": 0,
+   "load1": "30.77",
+   "passed": 2,
+   "failed": [],
+   "fileMessages": []
+  },
+  {
+   "id": "X15-head-correct-alias-added-for-a-left-out-entry",
+   "tests": [
+    "packages/polaris-generation-core/src/root-vitest-aliases.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "vitest.config.ts",
+     "old": "      '@syzygy/polaris-dossier': fileURLToPath(",
+     "new": "      '@syzygy/polaris-dossier/argv': fileURLToPath(new URL('./packages/polaris-dossier/src/argv.ts', import.meta.url)),\n      '@syzygy/polaris-dossier': fileURLToPath("
+    }
+   ],
+   "predicted": "killed by the left-out row (an unlisted refusal)",
+   "exit": 1,
+   "load1": "30.77",
+   "passed": 1,
+   "failed": [
+    {
+     "name": "the root vitest.config.ts aliases leave exactly these entries to their built dist",
+     "message": "AssertionError: expected [ '@syzygy/app', \u2026(4) ] to deeply equal [ '@syzygy/app', \u2026(5) ]"
+    }
+   ],
+   "fileMessages": []
+  },
+  {
+   "id": "FX3-0-fix-unmutated",
+   "tests": [
+    "packages/polaris-generation-core/src/root-vitest-aliases.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/polaris-generation-core/src/root-vitest-aliases.test.ts",
+     "old": "import { join, relative, sep } from 'node:path';\nimport { pathToFileURL } from 'node:url';\nimport { describe, expect, it } from 'vitest';\nimport { ROOT, entryModules } from './workspace-reach.testkit.js';\n\n// syzygy-bpyt.46 (the PR 545 round-1 review's item 3): the root vitest.config.ts maps workspace specifiers to source modules by hand,\n// so a test that imports one runs the module the map names, not necessarily the one Node loads. Each alias is pinned here to the src\n// module its package's own entry names (`entryModules`, which the S10 no-egress bundle also aliases by), and the entries the map leaves\n// out, which a test then loads from the package's built dist through node_modules, are a literal list.\nconst CONFIG = (await import(pathToFileURL(join(ROOT, 'vitest.config.ts')).href)) as { default: { resolve: { alias: Record<string, string> } } };\nconst ALIASES = Object.fromEntries(Object.entries(CONFIG.default.resolve.alias).map(([specifier, target]) => [specifier, relative(ROOT, target).split(sep).join('/')]));\n\ndescribe('the root vitest.config.ts aliases', () => {\n  it(\"alias each specifier to the src module its package's entry names\", () => {\n    const entries = entryModules();\n    expect(Object.fromEntries(Object.keys(ALIASES).map((specifier) => [specifier, entries[specifier]]))).toEqual(ALIASES);\n  });\n\n  it('leave exactly these entries to their built dist', () => {\n    expect(Object.keys(entryModules()).filter((specifier) => !(specifier in ALIASES)).sort()).toEqual([\n      '@syzygy/app', '@syzygy/polaris-dossier/argv', '@syzygy/polaris-dossier/state-directory', '@syzygy/three-surface-poc-app',\n      '@syzygy/three-surface-poc-app/dossier-render', '@syzygy/three-surface-poc-app/dossier-site',\n    ]);\n  });\n});\n",
+     "new": "import { join, relative, sep } from 'node:path';\nimport { pathToFileURL } from 'node:url';\nimport { describe, expect, it } from 'vitest';\nimport { ROOT, entryModules } from './workspace-reach.testkit.js';\n\n// syzygy-bpyt.46 (the PR 545 round-1 review's item 3): the root vitest.config.ts maps workspace specifiers to source modules by hand,\n// so a test that imports one runs the module the map names, not necessarily the one Node loads. Each alias is pinned here to the src\n// module its package's own entry names (`entryModules`, which the S10 no-egress bundle also aliases by), and the entries the map leaves\n// unaliased are a literal list. Vite applies the first alias, in the config's order, that equals a specifier or is a prefix of it\n// followed by `/`, so an unaliased subpath of an aliased package is rewritten under that package's src entry, where no module is: the two\n// dossier subpaths are pinned as so shadowed (the PR 554 round-1 review), and each other unaliased entry loads from its package's built\n// dist through node_modules.\nconst CONFIG = (await import(pathToFileURL(join(ROOT, 'vitest.config.ts')).href)) as { default: { resolve: { alias: Record<string, string> } } };\nconst ALIASES = Object.fromEntries(Object.entries(CONFIG.default.resolve.alias).map(([specifier, target]) => [specifier, relative(ROOT, target).split(sep).join('/')]));\n/** The alias key Vite applies to a specifier (vite 7.3.6's `matches`): the first, in the config's order, equal to it or a prefix of it followed by `/`. */\nconst aliasFor = (specifier: string): string | undefined => Object.keys(ALIASES).find((key) => specifier === key || specifier.startsWith(`${key}/`));\n\ndescribe('the root vitest.config.ts aliases', () => {\n  it(\"alias each specifier to the src module its package's entry names\", () => {\n    const entries = entryModules();\n    expect(Object.fromEntries(Object.keys(ALIASES).map((specifier) => [specifier, entries[specifier]]))).toEqual(ALIASES);\n  });\n\n  it('leave exactly these entries unaliased', () => {\n    expect(Object.keys(entryModules()).filter((specifier) => !(specifier in ALIASES)).sort()).toEqual([\n      '@syzygy/app', '@syzygy/polaris-dossier/argv', '@syzygy/polaris-dossier/state-directory', '@syzygy/three-surface-poc-app',\n      '@syzygy/three-surface-poc-app/dossier-render', '@syzygy/three-surface-poc-app/dossier-site',\n    ]);\n  });\n\n  it('match each aliased specifier by its own alias first, so no shorter alias ahead of it shadows it', () => {\n    expect(Object.keys(ALIASES).filter((specifier) => aliasFor(specifier) !== specifier)).toEqual([]);\n  });\n\n  it('shadow exactly the two dossier subpaths, which the bare dossier alias rewrites to no module', () => {\n    expect(Object.keys(entryModules()).filter((specifier) => !(specifier in ALIASES) && aliasFor(specifier) !== undefined)\n      .map((specifier) => `${specifier} -> ${aliasFor(specifier)}`).sort()).toEqual([\n      '@syzygy/polaris-dossier/argv -> @syzygy/polaris-dossier', '@syzygy/polaris-dossier/state-directory -> @syzygy/polaris-dossier',\n    ]);\n  });\n});\n"
+    }
+   ],
+   "predicted": "passes",
+   "exit": 0,
+   "load1": "29.50",
+   "passed": 4,
+   "failed": [],
+   "fileMessages": []
+  },
+  {
+   "id": "FX3-reorder",
+   "tests": [
+    "packages/polaris-generation-core/src/root-vitest-aliases.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/polaris-generation-core/src/root-vitest-aliases.test.ts",
+     "old": "import { join, relative, sep } from 'node:path';\nimport { pathToFileURL } from 'node:url';\nimport { describe, expect, it } from 'vitest';\nimport { ROOT, entryModules } from './workspace-reach.testkit.js';\n\n// syzygy-bpyt.46 (the PR 545 round-1 review's item 3): the root vitest.config.ts maps workspace specifiers to source modules by hand,\n// so a test that imports one runs the module the map names, not necessarily the one Node loads. Each alias is pinned here to the src\n// module its package's own entry names (`entryModules`, which the S10 no-egress bundle also aliases by), and the entries the map leaves\n// out, which a test then loads from the package's built dist through node_modules, are a literal list.\nconst CONFIG = (await import(pathToFileURL(join(ROOT, 'vitest.config.ts')).href)) as { default: { resolve: { alias: Record<string, string> } } };\nconst ALIASES = Object.fromEntries(Object.entries(CONFIG.default.resolve.alias).map(([specifier, target]) => [specifier, relative(ROOT, target).split(sep).join('/')]));\n\ndescribe('the root vitest.config.ts aliases', () => {\n  it(\"alias each specifier to the src module its package's entry names\", () => {\n    const entries = entryModules();\n    expect(Object.fromEntries(Object.keys(ALIASES).map((specifier) => [specifier, entries[specifier]]))).toEqual(ALIASES);\n  });\n\n  it('leave exactly these entries to their built dist', () => {\n    expect(Object.keys(entryModules()).filter((specifier) => !(specifier in ALIASES)).sort()).toEqual([\n      '@syzygy/app', '@syzygy/polaris-dossier/argv', '@syzygy/polaris-dossier/state-directory', '@syzygy/three-surface-poc-app',\n      '@syzygy/three-surface-poc-app/dossier-render', '@syzygy/three-surface-poc-app/dossier-site',\n    ]);\n  });\n});\n",
+     "new": "import { join, relative, sep } from 'node:path';\nimport { pathToFileURL } from 'node:url';\nimport { describe, expect, it } from 'vitest';\nimport { ROOT, entryModules } from './workspace-reach.testkit.js';\n\n// syzygy-bpyt.46 (the PR 545 round-1 review's item 3): the root vitest.config.ts maps workspace specifiers to source modules by hand,\n// so a test that imports one runs the module the map names, not necessarily the one Node loads. Each alias is pinned here to the src\n// module its package's own entry names (`entryModules`, which the S10 no-egress bundle also aliases by), and the entries the map leaves\n// unaliased are a literal list. Vite applies the first alias, in the config's order, that equals a specifier or is a prefix of it\n// followed by `/`, so an unaliased subpath of an aliased package is rewritten under that package's src entry, where no module is: the two\n// dossier subpaths are pinned as so shadowed (the PR 554 round-1 review), and each other unaliased entry loads from its package's built\n// dist through node_modules.\nconst CONFIG = (await import(pathToFileURL(join(ROOT, 'vitest.config.ts')).href)) as { default: { resolve: { alias: Record<string, string> } } };\nconst ALIASES = Object.fromEntries(Object.entries(CONFIG.default.resolve.alias).map(([specifier, target]) => [specifier, relative(ROOT, target).split(sep).join('/')]));\n/** The alias key Vite applies to a specifier (vite 7.3.6's `matches`): the first, in the config's order, equal to it or a prefix of it followed by `/`. */\nconst aliasFor = (specifier: string): string | undefined => Object.keys(ALIASES).find((key) => specifier === key || specifier.startsWith(`${key}/`));\n\ndescribe('the root vitest.config.ts aliases', () => {\n  it(\"alias each specifier to the src module its package's entry names\", () => {\n    const entries = entryModules();\n    expect(Object.fromEntries(Object.keys(ALIASES).map((specifier) => [specifier, entries[specifier]]))).toEqual(ALIASES);\n  });\n\n  it('leave exactly these entries unaliased', () => {\n    expect(Object.keys(entryModules()).filter((specifier) => !(specifier in ALIASES)).sort()).toEqual([\n      '@syzygy/app', '@syzygy/polaris-dossier/argv', '@syzygy/polaris-dossier/state-directory', '@syzygy/three-surface-poc-app',\n      '@syzygy/three-surface-poc-app/dossier-render', '@syzygy/three-surface-poc-app/dossier-site',\n    ]);\n  });\n\n  it('match each aliased specifier by its own alias first, so no shorter alias ahead of it shadows it', () => {\n    expect(Object.keys(ALIASES).filter((specifier) => aliasFor(specifier) !== specifier)).toEqual([]);\n  });\n\n  it('shadow exactly the two dossier subpaths, which the bare dossier alias rewrites to no module', () => {\n    expect(Object.keys(entryModules()).filter((specifier) => !(specifier in ALIASES) && aliasFor(specifier) !== undefined)\n      .map((specifier) => `${specifier} -> ${aliasFor(specifier)}`).sort()).toEqual([\n      '@syzygy/polaris-dossier/argv -> @syzygy/polaris-dossier', '@syzygy/polaris-dossier/state-directory -> @syzygy/polaris-dossier',\n    ]);\n  });\n});\n"
+    },
+    {
+     "path": "vitest.config.ts",
+     "old": "      '@syzygy/polaris-generation-core/live': fileURLToPath(new URL('./packages/polaris-generation-core/src/live.ts', import.meta.url)),\n      '@syzygy/polaris-generation-core': fileURLToPath(new URL('./packages/polaris-generation-core/src/index.ts', import.meta.url)),\n",
+     "new": "      '@syzygy/polaris-generation-core': fileURLToPath(new URL('./packages/polaris-generation-core/src/index.ts', import.meta.url)),\n      '@syzygy/polaris-generation-core/live': fileURLToPath(new URL('./packages/polaris-generation-core/src/live.ts', import.meta.url)),\n"
+    }
+   ],
+   "predicted": "killed by the own-alias-first row alone",
+   "exit": 1,
+   "load1": "29.50",
+   "passed": 3,
+   "failed": [
+    {
+     "name": "the root vitest.config.ts aliases match each aliased specifier by its own alias first, so no shorter alias ahead of it shadows it",
+     "message": "AssertionError: expected [ Array(1) ] to deeply equal []"
+    }
+   ],
+   "fileMessages": []
+  },
+  {
+   "id": "FX3-unshadow",
+   "tests": [
+    "packages/polaris-generation-core/src/root-vitest-aliases.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/polaris-generation-core/src/root-vitest-aliases.test.ts",
+     "old": "import { join, relative, sep } from 'node:path';\nimport { pathToFileURL } from 'node:url';\nimport { describe, expect, it } from 'vitest';\nimport { ROOT, entryModules } from './workspace-reach.testkit.js';\n\n// syzygy-bpyt.46 (the PR 545 round-1 review's item 3): the root vitest.config.ts maps workspace specifiers to source modules by hand,\n// so a test that imports one runs the module the map names, not necessarily the one Node loads. Each alias is pinned here to the src\n// module its package's own entry names (`entryModules`, which the S10 no-egress bundle also aliases by), and the entries the map leaves\n// out, which a test then loads from the package's built dist through node_modules, are a literal list.\nconst CONFIG = (await import(pathToFileURL(join(ROOT, 'vitest.config.ts')).href)) as { default: { resolve: { alias: Record<string, string> } } };\nconst ALIASES = Object.fromEntries(Object.entries(CONFIG.default.resolve.alias).map(([specifier, target]) => [specifier, relative(ROOT, target).split(sep).join('/')]));\n\ndescribe('the root vitest.config.ts aliases', () => {\n  it(\"alias each specifier to the src module its package's entry names\", () => {\n    const entries = entryModules();\n    expect(Object.fromEntries(Object.keys(ALIASES).map((specifier) => [specifier, entries[specifier]]))).toEqual(ALIASES);\n  });\n\n  it('leave exactly these entries to their built dist', () => {\n    expect(Object.keys(entryModules()).filter((specifier) => !(specifier in ALIASES)).sort()).toEqual([\n      '@syzygy/app', '@syzygy/polaris-dossier/argv', '@syzygy/polaris-dossier/state-directory', '@syzygy/three-surface-poc-app',\n      '@syzygy/three-surface-poc-app/dossier-render', '@syzygy/three-surface-poc-app/dossier-site',\n    ]);\n  });\n});\n",
+     "new": "import { join, relative, sep } from 'node:path';\nimport { pathToFileURL } from 'node:url';\nimport { describe, expect, it } from 'vitest';\nimport { ROOT, entryModules } from './workspace-reach.testkit.js';\n\n// syzygy-bpyt.46 (the PR 545 round-1 review's item 3): the root vitest.config.ts maps workspace specifiers to source modules by hand,\n// so a test that imports one runs the module the map names, not necessarily the one Node loads. Each alias is pinned here to the src\n// module its package's own entry names (`entryModules`, which the S10 no-egress bundle also aliases by), and the entries the map leaves\n// unaliased are a literal list. Vite applies the first alias, in the config's order, that equals a specifier or is a prefix of it\n// followed by `/`, so an unaliased subpath of an aliased package is rewritten under that package's src entry, where no module is: the two\n// dossier subpaths are pinned as so shadowed (the PR 554 round-1 review), and each other unaliased entry loads from its package's built\n// dist through node_modules.\nconst CONFIG = (await import(pathToFileURL(join(ROOT, 'vitest.config.ts')).href)) as { default: { resolve: { alias: Record<string, string> } } };\nconst ALIASES = Object.fromEntries(Object.entries(CONFIG.default.resolve.alias).map(([specifier, target]) => [specifier, relative(ROOT, target).split(sep).join('/')]));\n/** The alias key Vite applies to a specifier (vite 7.3.6's `matches`): the first, in the config's order, equal to it or a prefix of it followed by `/`. */\nconst aliasFor = (specifier: string): string | undefined => Object.keys(ALIASES).find((key) => specifier === key || specifier.startsWith(`${key}/`));\n\ndescribe('the root vitest.config.ts aliases', () => {\n  it(\"alias each specifier to the src module its package's entry names\", () => {\n    const entries = entryModules();\n    expect(Object.fromEntries(Object.keys(ALIASES).map((specifier) => [specifier, entries[specifier]]))).toEqual(ALIASES);\n  });\n\n  it('leave exactly these entries unaliased', () => {\n    expect(Object.keys(entryModules()).filter((specifier) => !(specifier in ALIASES)).sort()).toEqual([\n      '@syzygy/app', '@syzygy/polaris-dossier/argv', '@syzygy/polaris-dossier/state-directory', '@syzygy/three-surface-poc-app',\n      '@syzygy/three-surface-poc-app/dossier-render', '@syzygy/three-surface-poc-app/dossier-site',\n    ]);\n  });\n\n  it('match each aliased specifier by its own alias first, so no shorter alias ahead of it shadows it', () => {\n    expect(Object.keys(ALIASES).filter((specifier) => aliasFor(specifier) !== specifier)).toEqual([]);\n  });\n\n  it('shadow exactly the two dossier subpaths, which the bare dossier alias rewrites to no module', () => {\n    expect(Object.keys(entryModules()).filter((specifier) => !(specifier in ALIASES) && aliasFor(specifier) !== undefined)\n      .map((specifier) => `${specifier} -> ${aliasFor(specifier)}`).sort()).toEqual([\n      '@syzygy/polaris-dossier/argv -> @syzygy/polaris-dossier', '@syzygy/polaris-dossier/state-directory -> @syzygy/polaris-dossier',\n    ]);\n  });\n});\n"
+    },
+    {
+     "path": "vitest.config.ts",
+     "old": "      '@syzygy/polaris-dossier': fileURLToPath(new URL('./packages/polaris-dossier/src/index.ts', import.meta.url)),\n",
+     "new": ""
+    }
+   ],
+   "predicted": "killed by the unaliased row and the shadow row",
+   "exit": 1,
+   "load1": "28.90",
+   "passed": 2,
+   "failed": [
+    {
+     "name": "the root vitest.config.ts aliases leave exactly these entries unaliased",
+     "message": "AssertionError: expected [ '@syzygy/app', \u2026(6) ] to deeply equal [ '@syzygy/app', \u2026(5) ]"
+    },
+    {
+     "name": "the root vitest.config.ts aliases shadow exactly the two dossier subpaths, which the bare dossier alias rewrites to no module",
+     "message": "AssertionError: expected [] to deeply equal [ \u2026(2) ]"
+    }
+   ],
+   "fileMessages": []
+  },
+  {
+   "id": "FX3-A3-still-killed",
+   "tests": [
+    "packages/polaris-generation-core/src/root-vitest-aliases.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/polaris-generation-core/src/root-vitest-aliases.test.ts",
+     "old": "import { join, relative, sep } from 'node:path';\nimport { pathToFileURL } from 'node:url';\nimport { describe, expect, it } from 'vitest';\nimport { ROOT, entryModules } from './workspace-reach.testkit.js';\n\n// syzygy-bpyt.46 (the PR 545 round-1 review's item 3): the root vitest.config.ts maps workspace specifiers to source modules by hand,\n// so a test that imports one runs the module the map names, not necessarily the one Node loads. Each alias is pinned here to the src\n// module its package's own entry names (`entryModules`, which the S10 no-egress bundle also aliases by), and the entries the map leaves\n// out, which a test then loads from the package's built dist through node_modules, are a literal list.\nconst CONFIG = (await import(pathToFileURL(join(ROOT, 'vitest.config.ts')).href)) as { default: { resolve: { alias: Record<string, string> } } };\nconst ALIASES = Object.fromEntries(Object.entries(CONFIG.default.resolve.alias).map(([specifier, target]) => [specifier, relative(ROOT, target).split(sep).join('/')]));\n\ndescribe('the root vitest.config.ts aliases', () => {\n  it(\"alias each specifier to the src module its package's entry names\", () => {\n    const entries = entryModules();\n    expect(Object.fromEntries(Object.keys(ALIASES).map((specifier) => [specifier, entries[specifier]]))).toEqual(ALIASES);\n  });\n\n  it('leave exactly these entries to their built dist', () => {\n    expect(Object.keys(entryModules()).filter((specifier) => !(specifier in ALIASES)).sort()).toEqual([\n      '@syzygy/app', '@syzygy/polaris-dossier/argv', '@syzygy/polaris-dossier/state-directory', '@syzygy/three-surface-poc-app',\n      '@syzygy/three-surface-poc-app/dossier-render', '@syzygy/three-surface-poc-app/dossier-site',\n    ]);\n  });\n});\n",
+     "new": "import { join, relative, sep } from 'node:path';\nimport { pathToFileURL } from 'node:url';\nimport { describe, expect, it } from 'vitest';\nimport { ROOT, entryModules } from './workspace-reach.testkit.js';\n\n// syzygy-bpyt.46 (the PR 545 round-1 review's item 3): the root vitest.config.ts maps workspace specifiers to source modules by hand,\n// so a test that imports one runs the module the map names, not necessarily the one Node loads. Each alias is pinned here to the src\n// module its package's own entry names (`entryModules`, which the S10 no-egress bundle also aliases by), and the entries the map leaves\n// unaliased are a literal list. Vite applies the first alias, in the config's order, that equals a specifier or is a prefix of it\n// followed by `/`, so an unaliased subpath of an aliased package is rewritten under that package's src entry, where no module is: the two\n// dossier subpaths are pinned as so shadowed (the PR 554 round-1 review), and each other unaliased entry loads from its package's built\n// dist through node_modules.\nconst CONFIG = (await import(pathToFileURL(join(ROOT, 'vitest.config.ts')).href)) as { default: { resolve: { alias: Record<string, string> } } };\nconst ALIASES = Object.fromEntries(Object.entries(CONFIG.default.resolve.alias).map(([specifier, target]) => [specifier, relative(ROOT, target).split(sep).join('/')]));\n/** The alias key Vite applies to a specifier (vite 7.3.6's `matches`): the first, in the config's order, equal to it or a prefix of it followed by `/`. */\nconst aliasFor = (specifier: string): string | undefined => Object.keys(ALIASES).find((key) => specifier === key || specifier.startsWith(`${key}/`));\n\ndescribe('the root vitest.config.ts aliases', () => {\n  it(\"alias each specifier to the src module its package's entry names\", () => {\n    const entries = entryModules();\n    expect(Object.fromEntries(Object.keys(ALIASES).map((specifier) => [specifier, entries[specifier]]))).toEqual(ALIASES);\n  });\n\n  it('leave exactly these entries unaliased', () => {\n    expect(Object.keys(entryModules()).filter((specifier) => !(specifier in ALIASES)).sort()).toEqual([\n      '@syzygy/app', '@syzygy/polaris-dossier/argv', '@syzygy/polaris-dossier/state-directory', '@syzygy/three-surface-poc-app',\n      '@syzygy/three-surface-poc-app/dossier-render', '@syzygy/three-surface-poc-app/dossier-site',\n    ]);\n  });\n\n  it('match each aliased specifier by its own alias first, so no shorter alias ahead of it shadows it', () => {\n    expect(Object.keys(ALIASES).filter((specifier) => aliasFor(specifier) !== specifier)).toEqual([]);\n  });\n\n  it('shadow exactly the two dossier subpaths, which the bare dossier alias rewrites to no module', () => {\n    expect(Object.keys(entryModules()).filter((specifier) => !(specifier in ALIASES) && aliasFor(specifier) !== undefined)\n      .map((specifier) => `${specifier} -> ${aliasFor(specifier)}`).sort()).toEqual([\n      '@syzygy/polaris-dossier/argv -> @syzygy/polaris-dossier', '@syzygy/polaris-dossier/state-directory -> @syzygy/polaris-dossier',\n    ]);\n  });\n});\n"
+    },
+    {
+     "path": "vitest.config.ts",
+     "old": "      '@syzygy/support': fileURLToPath(new URL('./packages/support/src/index.ts', import.meta.url)),\n",
+     "new": ""
+    }
+   ],
+   "predicted": "killed by the unaliased row",
+   "exit": 1,
+   "load1": "28.90",
+   "passed": 3,
+   "failed": [
+    {
+     "name": "the root vitest.config.ts aliases leave exactly these entries unaliased",
+     "message": "AssertionError: expected [ '@syzygy/app', \u2026(6) ] to deeply equal [ '@syzygy/app', \u2026(5) ]"
+    }
+   ],
+   "fileMessages": []
+  },
+  {
+   "id": "X16-drafter-write-to-its-input-residual",
+   "tests": [
+    "packages/three-surface-poc-core/src/owner-act-drafter.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/three-surface-poc-core/src/owner-act-drafter.ts",
+     "old": "import { sha256 } from '@syzygy/support';\n",
+     "new": "import { sha256 } from '@syzygy/support';\nvoid ((input: DraftInput) => { input.claims.length = 0; });\n"
+    }
+   ],
+   "predicted": "passes (the disclosed residual)",
+   "exit": 0,
+   "load1": "29.39",
+   "passed": 4,
+   "failed": [],
+   "fileMessages": []
+  },
+  {
+   "id": "X17-V8-local-re-export-of-createHash-residual",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "  return createHash('sha256').update(value).digest('hex');\n}\n",
+     "new": "  return createHash('sha256').update(value).digest('hex');\n}\nexport { createHash };\n"
+    },
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { sha256 } from './sha256.js';\n",
+     "new": "export { sha256, createHash } from './sha256.js';\n"
+    }
+   ],
+   "predicted": "passes (the disclosed residual)",
+   "exit": 0,
+   "load1": "28.80",
+   "passed": 43,
+   "failed": [],
+   "fileMessages": []
+  },
+  {
+   "id": "X18-probe-target-ending-in-dotdot",
+   "tests": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "    expect(() => entryModulesIn(workspace({}, './dist/x/../index.js'))).toThrow('@syzygy/lib: its entry has a /../ segment, which Node refuses');\n",
+     "new": "    expect(() => entryModulesIn(workspace({}, './dist/x/../index.js'))).toThrow('@syzygy/lib: its entry has a /../ segment, which Node refuses');\n    expect(() => entryModulesIn(workspace({}, './dist/..'))).toThrow('@syzygy/lib: its entry is not a ./dist/X.js whose src/X.ts exists');\n"
+    }
+   ],
+   "predicted": "passes (refused by the unreadable-entry throw)",
+   "exit": 0,
+   "load1": "28.80",
+   "passed": 57,
+   "failed": [],
+   "fileMessages": []
+  },
+  {
+   "id": "X9-module-reader-import-equals-arm-dropped",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "      : ts.isImportEqualsDeclaration(statement) && ts.isExternalModuleReference(statement.moduleReference) ? statement.moduleReference.expression\n",
+     "new": ""
+    }
+   ],
+   "predicted": "killed by one module-reader row",
+   "exit": 1,
+   "load1": "29.70",
+   "passed": 42,
+   "failed": [
+    {
+     "name": "the module-declaration reader the createHash row stands on reads \"import value = require ('node:crypto');\"",
+     "message": "AssertionError: expected [] to deeply equal [ Array(1) ]"
+    }
+   ],
+   "fileMessages": []
+  }
+ ]
+}

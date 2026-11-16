@@ -1,0 +1,166 @@
+{
+ "subject": "acceptance criterion 2 of syzygy-bpyt.4.2: a stale dist cannot change a POC tool's behaviour",
+ "commit": "2f249d2c4d0fc7756c8581c78c733a305336e705",
+ "worktreeClean": true,
+ "subjectSha256": {
+  "scripts/clean_build.mjs": "406df4b1b4de696541e0b53f96a486d43f667a84f165023397ada9ca5773324a",
+  "package.json": "cb4ef3e3922ae05b7af2334c3b5ed4df033d4832ec7829402737b75f8d784dd1"
+ },
+ "buildPocScript": "node scripts/clean_build.mjs packages/support packages/cap1-core packages/http-host packages/cap1-daemon packages/three-surface-poc-core packages/polaris-generation-core apps/three-surface-poc",
+ "builtProjects": [
+  "apps/three-surface-poc",
+  "packages/cap1-core",
+  "packages/cap1-daemon",
+  "packages/http-host",
+  "packages/polaris-generation-consent",
+  "packages/polaris-generation-core",
+  "packages/support",
+  "packages/three-surface-poc-core"
+ ],
+ "tsc": "Version 5.9.3",
+ "node": "v24.6.0",
+ "planted": {
+  "poisoned": [
+   "apps/three-surface-poc/dist/main.js",
+   "packages/support/dist/index.js"
+  ],
+  "poison": "throw new Error(\"poisoned stale output\");\n",
+  "orphan": "apps/three-surface-poc/dist/orphan-stale.js",
+  "deleted": "apps/three-surface-poc/dist/routes.js"
+ },
+ "arms": [
+  {
+   "build": "incremental tsc -b",
+   "command": [
+    "npx",
+    "tsc",
+    "-b",
+    "packages/support",
+    "packages/cap1-core",
+    "packages/http-host",
+    "packages/cap1-daemon",
+    "packages/three-surface-poc-core",
+    "packages/polaris-generation-core",
+    "apps/three-surface-poc"
+   ],
+   "buildExit": 0,
+   "left": {
+    "poisonedStillPoisoned": {
+     "apps/three-surface-poc/dist/main.js": true,
+     "packages/support/dist/index.js": true
+    },
+    "orphanStillPresent": true,
+    "deletedStillMissing": true
+   },
+   "cleanDist": {
+    "files": 844,
+    "sha256": "645c8b63a0991b03fce6b28c654320dd1a5c8d85a402ffa710057c3843872a47"
+   },
+   "distAfter": {
+    "files": 844,
+    "sha256": "0e5562a73e39283cae10625638e0a0faf0caf3f1e32f873b4e3461dd4ad546e5"
+   },
+   "cleanProbe": {
+    "exit": 1,
+    "stdout": "",
+    "stderr": "syzygy POC: configured repository authority rejected (locator-mismatched)\n",
+    "stateDirEntries": 0
+   },
+   "probeAfter": {
+    "exit": 1,
+    "stdout": "",
+    "stderr": "file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-549/head/apps/three-surface-poc/dist/main.js:1\nthrow new Error(\"poisoned stale output\");\n      ^\n\nError: poisoned stale output\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-549/head/apps/three-surface-poc/dist/main.js:1:7\n    at ModuleJob.run (node:internal/modules/esm/module_job:371:25)\n    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:669:26)\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)\n\nNode.js v24.6.0\n",
+    "stateDirEntries": 0
+   },
+   "probeUnchanged": false,
+   "distIdenticalToClean": false
+  },
+  {
+   "build": "tsc -b --force (build:poc before this change)",
+   "command": [
+    "npx",
+    "tsc",
+    "-b",
+    "--force",
+    "packages/support",
+    "packages/cap1-core",
+    "packages/http-host",
+    "packages/cap1-daemon",
+    "packages/three-surface-poc-core",
+    "packages/polaris-generation-core",
+    "apps/three-surface-poc"
+   ],
+   "buildExit": 0,
+   "left": {
+    "poisonedStillPoisoned": {
+     "apps/three-surface-poc/dist/main.js": false,
+     "packages/support/dist/index.js": false
+    },
+    "orphanStillPresent": true,
+    "deletedStillMissing": false
+   },
+   "cleanDist": {
+    "files": 844,
+    "sha256": "645c8b63a0991b03fce6b28c654320dd1a5c8d85a402ffa710057c3843872a47"
+   },
+   "distAfter": {
+    "files": 845,
+    "sha256": "f24b4e8ce39a861e76508a57fdab83c4c3707e15df947c671ed8cf585e392fae"
+   },
+   "cleanProbe": {
+    "exit": 1,
+    "stdout": "",
+    "stderr": "syzygy POC: configured repository authority rejected (locator-mismatched)\n",
+    "stateDirEntries": 0
+   },
+   "probeAfter": {
+    "exit": 1,
+    "stdout": "",
+    "stderr": "syzygy POC: configured repository authority rejected (locator-mismatched)\n",
+    "stateDirEntries": 0
+   },
+   "probeUnchanged": true,
+   "distIdenticalToClean": false
+  },
+  {
+   "build": "npm run build:poc (this checkout)",
+   "command": [
+    "npm",
+    "run",
+    "build:poc",
+    "--silent"
+   ],
+   "buildExit": 0,
+   "left": {
+    "poisonedStillPoisoned": {
+     "apps/three-surface-poc/dist/main.js": false,
+     "packages/support/dist/index.js": false
+    },
+    "orphanStillPresent": false,
+    "deletedStillMissing": false
+   },
+   "cleanDist": {
+    "files": 844,
+    "sha256": "645c8b63a0991b03fce6b28c654320dd1a5c8d85a402ffa710057c3843872a47"
+   },
+   "distAfter": {
+    "files": 844,
+    "sha256": "645c8b63a0991b03fce6b28c654320dd1a5c8d85a402ffa710057c3843872a47"
+   },
+   "cleanProbe": {
+    "exit": 1,
+    "stdout": "",
+    "stderr": "syzygy POC: configured repository authority rejected (locator-mismatched)\n",
+    "stateDirEntries": 0
+   },
+   "probeAfter": {
+    "exit": 1,
+    "stdout": "",
+    "stderr": "syzygy POC: configured repository authority rejected (locator-mismatched)\n",
+    "stateDirEntries": 0
+   },
+   "probeUnchanged": true,
+   "distIdenticalToClean": true
+  }
+ ]
+}

@@ -1,0 +1,11 @@
+tree 490332aa7cc1cdf818ae01bd46e375f8280d8b7d mode old
+== four-cases before: victim=present sentinel=present planted-old=129
+  vitest:  Test Files  1 passed (1)
+  vitest:       Tests  4 passed | 20 skipped (24)
+  vitest exit 0
+== four-cases after: victim=absent sentinel=absent
+== whole-file before: victim=present sentinel=present planted-old=129
+  vitest:  Test Files  1 passed (1)
+  vitest:       Tests  24 passed (24)
+  vitest exit 0
+== whole-file after: victim=absent sentinel=absent

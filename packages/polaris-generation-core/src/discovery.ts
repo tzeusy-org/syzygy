@@ -14,6 +14,7 @@
  * report says which basis ordered the selection.
  */
 
+import { isRecord } from '@syzygy/support';
 import { digestCanonicalJson } from './canonical-json.js';
 import { buildExcerpt, leadingCommentChars, type ExcerptKind, type ExcerptRange } from './excerpt.js';
 import { excludedSourceId, newGenerationRunKey, type GenerationSource } from './generation-source.js';
@@ -216,7 +217,6 @@ export function partitionSubsystems(blobs: readonly Blob[], maxGroupBlobs: numbe
 const compareBlobs = (a: Blob, b: Blob): number => b.heuristic - a.heuristic || (a.path < b.path ? -1 : a.path > b.path ? 1 : 0);
 
 const DIGEST_LIMITS = { maxBytes: 50_000_000, maxNodes: 2_000_000, maxDepth: 16 } as const;
-const isObject = (value: unknown): value is Record<string, unknown> => value !== null && typeof value === 'object' && !Array.isArray(value);
 
 export const MAP_CLAIMS_PER_ITEM = 2;
 const usage = (value: unknown): number | null => (typeof value === 'number' && Number.isSafeInteger(value) && value >= 0 ? value : null);
@@ -293,14 +293,14 @@ async function discover(
     const audit: ExcerptAudit[] = taken.map(({ blob, excerpt }) => ({ blobId: blob.blobId, kind: excerpt.kind, ranges: excerpt.ranges, licenceSkipped: excerpt.licenceSkipped }));
     // The whole reply is validated before any claim reaches the ledger.
     const outcome = await providerCall('map', group.name, input, input.items.length, ports.map, (raw: unknown) => {
-      if (!isObject(raw) || !Array.isArray(raw.claims)) throw new Error('invalid-map-reply');
+      if (!isRecord(raw) || !Array.isArray(raw.claims)) throw new Error('invalid-map-reply');
       const accepted: DiscoveryClaim[] = [];
       let discarded = replay && typeof raw.dropped === 'number' && Number.isSafeInteger(raw.dropped) && raw.dropped > 0 ? raw.dropped : 0;
       // A reply is read up to MAP_CLAIMS_PER_ITEM claims per file; a longer one is cut and the cut is counted.
       const offered = raw.claims as unknown[], cap = input.items.length * MAP_CLAIMS_PER_ITEM;
       discarded += Math.max(0, offered.length - cap);
       for (const claim of offered.slice(0, cap)) {
-        if (!isObject(claim) || typeof claim.blobId !== 'string' || !known.has(claim.blobId) || typeof claim.relevance !== 'number' || !Number.isFinite(claim.relevance)
+        if (!isRecord(claim) || typeof claim.blobId !== 'string' || !known.has(claim.blobId) || typeof claim.relevance !== 'number' || !Number.isFinite(claim.relevance)
           || claim.relevance < 0 || claim.relevance > 10 || typeof claim.claim !== 'string' || claim.claim.length === 0) { discarded++; continue; }
         accepted.push({ blobId: claim.blobId, relevance: claim.relevance, claim: [...claim.claim].slice(0, budget.maxClaimChars).join('') });
       }
@@ -325,7 +325,7 @@ async function discover(
     reduceCalls++;
     const input: ReduceInput = { readerQuestions, maxSelected: budget.maxSelected, subsystems };
     const outcome = await providerCall('reduce', undefined, input, subsystems.reduce((n, s) => n + s.claims.length, 0), ports.reduce, (raw: unknown) => {
-      if (!isObject(raw) || !Array.isArray(raw.ranked) || raw.ranked.some(id => typeof id !== 'string')) throw new Error('invalid-reduce-reply');
+      if (!isRecord(raw) || !Array.isArray(raw.ranked) || raw.ranked.some(id => typeof id !== 'string')) throw new Error('invalid-reduce-reply');
       const ranked: string[] = [], seen = new Set<string>();
       let discarded = replay && typeof raw.dropped === 'number' && Number.isSafeInteger(raw.dropped) && raw.dropped > 0 ? raw.dropped : 0;
       const offered = raw.ranked as string[];

@@ -1,0 +1,65 @@
+{
+ "tool": "interrupt_probe.py",
+ "treeCommit": "0d4d50984f6aa501217fe7109b6aec1b9679e4c9",
+ "signal": "TERM",
+ "minCopiesBeforeSignal": 3,
+ "atSignal": {
+  "secondsIntoTheRun": 35.0,
+  "fixtureCopies": 3,
+  "fixtureTemplates": 3,
+  "otherSyzygyEntries": 7,
+  "liveProcessesNamingThisTmpdir": 10
+ },
+ "runFinishedBeforeSignal": false,
+ "series": [
+  {
+   "secondsAfterSignal": 0,
+   "fixtureCopies": 3,
+   "fixtureTemplates": 3,
+   "otherSyzygyEntries": 5,
+   "liveProcessesNamingThisTmpdir": 0
+  },
+  {
+   "secondsAfterSignal": 2,
+   "fixtureCopies": 3,
+   "fixtureTemplates": 3,
+   "otherSyzygyEntries": 5,
+   "liveProcessesNamingThisTmpdir": 0
+  },
+  {
+   "secondsAfterSignal": 5,
+   "fixtureCopies": 3,
+   "fixtureTemplates": 3,
+   "otherSyzygyEntries": 5,
+   "liveProcessesNamingThisTmpdir": 0
+  },
+  {
+   "secondsAfterSignal": 10,
+   "fixtureCopies": 3,
+   "fixtureTemplates": 3,
+   "otherSyzygyEntries": 5,
+   "liveProcessesNamingThisTmpdir": 0
+  },
+  {
+   "secondsAfterSignal": 20,
+   "fixtureCopies": 3,
+   "fixtureTemplates": 3,
+   "otherSyzygyEntries": 5,
+   "liveProcessesNamingThisTmpdir": 0
+  },
+  {
+   "secondsAfterSignal": 40,
+   "fixtureCopies": 3,
+   "fixtureTemplates": 3,
+   "otherSyzygyEntries": 5,
+   "liveProcessesNamingThisTmpdir": 0
+  },
+  {
+   "secondsAfterSignal": 80,
+   "fixtureCopies": 3,
+   "fixtureTemplates": 3,
+   "otherSyzygyEntries": 5,
+   "liveProcessesNamingThisTmpdir": 0
+  }
+ ]
+}

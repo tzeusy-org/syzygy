@@ -1,0 +1,4 @@
+tool bbb945b81c87351f609b6e21d012b2d86fb9a248dc5e4ee2ee64e673b2e95d9a  ../rev-534/tools/reorder_fault_probe.mjs
+dist built at abc40c9a (clone/, npm run build:poc); loadavg 23.31 19.40 22.65 18/9645 3044913
+{"fault":true,"injected":1,"kind":"unknown","reason":"code-structure observation produced a path that is not valid UTF-8"}
+{"fault":false,"injected":0,"kind":"observed","files":["a.ts"]}

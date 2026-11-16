@@ -4,8 +4,11 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { AdmissionRecordError } from './admission-record.js';
-import { renderClassAct, renderPolicyAct, renderRecorderAct, renderRegistryAct } from './recorder-fixtures.testkit.js';
+import { loadRecorderForms, renderClassAct, renderPolicyAct, renderRecorderAct, renderRegistryAct } from './recorder-fixtures.testkit.js';
 import { REGISTRY_GIT_SOURCE_ACT_FORM, createPackageAdmissionReader, readClassActState, readDigestBoundActState, readPolicyActChain, type PackageReaderFs } from './package-reader.js';
+
+// The recorder forms render once, before the file collects its tests: some tables render at collection (syzygy-bpyt.4.8).
+await loadRecorderForms();
 
 // What each act family's reader accepts and refuses, family by family, over one world where all four read ok (syzygy-bpyt.8.4). The
 // families share one parser and one sweep, so every row below pins a per-family difference the readers had before they shared them:

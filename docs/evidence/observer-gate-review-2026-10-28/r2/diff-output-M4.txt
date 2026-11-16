@@ -1,0 +1,131 @@
+
+ RUN  v3.2.7 /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone
+
+ ❯ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/git-observation.test.ts (16 tests | 1 failed | 15 skipped) 285ms
+   ↓ read-only Git observation > binds only the approved resolved locator and its exact Git common directory
+   ↓ read-only Git observation > keeps the approved locator byte-equal to the act-bound consent mapping
+   ↓ read-only Git observation > rejects a second Butlers-shaped repository before any repository observation
+   ↓ read-only Git observation > rejects a mismatched Git common directory
+   ↓ read-only Git observation > allows unrelated dirty files while protecting POC runtime inputs
+   ↓ read-only Git observation > protects the HTTP host package the POC serves through
+   ↓ read-only Git observation > protects the clean-build script that build:poc runs
+   × read-only Git observation > refuses exactly the projects the POC start compiles or loads, and the files that define its build 283ms
+     → expected [ …(81) ] to deeply equal []
+   ↓ read-only Git observation > reads every protected project from tsconfig.base.json through its own extends chain
+   ↓ read-only Git observation > refuses a tree that builds packages/polaris-generation-core into another package's dist
+   ↓ read-only Git observation > refuses a tree that builds packages/cap1-daemon into another package's dist
+   ↓ read-only Git observation > identifies clean and dirty states without refreshing the index
+   ↓ read-only Git observation > retains a protected source path when it is renamed out
+   ↓ read-only Git observation > computes a metadata-only changed/added horizon between revisions
+   ↓ read-only Git observation > reads the observed-project limb between two evaluated revisions, and Unknown when the comparison fails (syzygy-u05.2)
+   ↓ read-only Git observation > counts Syzygy commits since the build revision for the observatory limb, Unknown when unreadable (syzygy-u05.2)
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 15 skipped (16)
+   Start at  23:15:44
+   Duration  2.92s (transform 239ms, setup 59ms, collect 1.22s, tests 285ms, environment 0ms, prepare 95ms)
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation > refuses exactly the projects the POC start compiles or loads, and the files that define its build
+AssertionError: expected [ …(81) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "packages/polaris-dossier/package.json: refused",
++   "packages/polaris-dossier/src/__untracked__.ts: refused",
++   "packages/polaris-dossier/src/agent-texts.test.ts: refused",
++   "packages/polaris-dossier/src/argv.test.ts: refused",
++   "packages/polaris-dossier/src/argv.ts: refused",
++   "packages/polaris-dossier/src/brief.test.ts: refused",
++   "packages/polaris-dossier/src/brief.ts: refused",
++   "packages/polaris-dossier/src/broker-client.ts: refused",
++   "packages/polaris-dossier/src/broker.ts: refused",
++   "packages/polaris-dossier/src/check.test.ts: refused",
++   "packages/polaris-dossier/src/check.ts: refused",
++   "packages/polaris-dossier/src/child-process.testkit.ts: refused",
++   "packages/polaris-dossier/src/class-gate.test.ts: refused",
++   "packages/polaris-dossier/src/class-gate.ts: refused",
++   "packages/polaris-dossier/src/cli-table.test.ts: refused",
++   "packages/polaris-dossier/src/cli.test.ts: refused",
++   "packages/polaris-dossier/src/cli.ts: refused",
++   "packages/polaris-dossier/src/clone-head.ts: refused",
++   "packages/polaris-dossier/src/clone-shape.ts: refused",
++   "packages/polaris-dossier/src/close.test.ts: refused",
++   "packages/polaris-dossier/src/close.ts: refused",
++   "packages/polaris-dossier/src/credential-probe.test.ts: refused",
++   "packages/polaris-dossier/src/credential-probe.ts: refused",
++   "packages/polaris-dossier/src/design-review.test.ts: refused",
++   "packages/polaris-dossier/src/design-review.ts: refused",
++   "packages/polaris-dossier/src/doctrine-quote.test.ts: refused",
++   "packages/polaris-dossier/src/doctrine-quote.ts: refused",
++   "packages/polaris-dossier/src/draft-schema.test.ts: refused",
++   "packages/polaris-dossier/src/draft-schema.ts: refused",
++   "packages/polaris-dossier/src/execution-choice.test.ts: refused",
++   "packages/polaris-dossier/src/execution-choice.ts: refused",
++   "packages/polaris-dossier/src/execution-flags.test.ts: refused",
++   "packages/polaris-dossier/src/execution-flags.ts: refused",
++   "packages/polaris-dossier/src/execution-rule.test.ts: refused",
++   "packages/polaris-dossier/src/execution-rule.ts: refused",
++   "packages/polaris-dossier/src/fs-patch.testkit.ts: refused",
++   "packages/polaris-dossier/src/full-run.testkit.ts: refused",
++   "packages/polaris-dossier/src/gate-acts.test.ts: refused",
++   "packages/polaris-dossier/src/gate-parts.test.ts: refused",
++   "packages/polaris-dossier/src/gate-sources.ts: refused",
++   "packages/polaris-dossier/src/git-object-reader.test.ts: refused",
++   "packages/polaris-dossier/src/git-object-reader.ts: refused",
++   "packages/polaris-dossier/src/github-url.ts: refused",
++   "packages/polaris-dossier/src/governed.ts: refused",
++   "packages/polaris-dossier/src/index.ts: refused",
++   "packages/polaris-dossier/src/init.ts: refused",
++   "packages/polaris-dossier/src/inventory.test.ts: refused",
++   "packages/polaris-dossier/src/inventory.ts: refused",
++   "packages/polaris-dossier/src/iso-of.test.ts: refused",
++   "packages/polaris-dossier/src/iso-of.ts: refused",
++   "packages/polaris-dossier/src/launched.test.ts: refused",
++   "packages/polaris-dossier/src/launched.ts: refused",
++   "packages/polaris-dossier/src/no-egress.test.ts: refused",
++   "packages/polaris-dossier/src/outcome.ts: refused",
++   "packages/polaris-dossier/src/polaris.ts: refused",
++   "packages/polaris-dossier/src/preflight.ts: refused",
++   "packages/polaris-dossier/src/render.test.ts: refused",
++   "packages/polaris-dossier/src/render.ts: refused",
++   "packages/polaris-dossier/src/reverify.ts: refused",
++   "packages/polaris-dossier/src/review.test.ts: refused",
++   "packages/polaris-dossier/src/review.ts: refused",
++   "packages/polaris-dossier/src/run-config.test.ts: refused",
++   "packages/polaris-dossier/src/run-config.ts: refused",
++   "packages/polaris-dossier/src/run-evidence.test.ts: refused",
++   "packages/polaris-dossier/src/run-record.ts: refused",
++   "packages/polaris-dossier/src/screen.test.ts: refused",
++   "packages/polaris-dossier/src/screen.ts: refused",
++   "packages/polaris-dossier/src/session-handover.ts: refused",
++   "packages/polaris-dossier/src/session-statement.ts: refused",
++   "packages/polaris-dossier/src/session-view.test.ts: refused",
++   "packages/polaris-dossier/src/session-view.ts: refused",
++   "packages/polaris-dossier/src/start-gates.test.ts: refused",
++   "packages/polaris-dossier/src/state-directory.test.ts: refused",
++   "packages/polaris-dossier/src/state-directory.ts: refused",
++   "packages/polaris-dossier/src/status.test.ts: refused",
++   "packages/polaris-dossier/src/status.ts: refused",
++   "packages/polaris-dossier/src/subpath-imports.test.ts: refused",
++   "packages/polaris-dossier/src/waiting-sessions.test.ts: refused",
++   "packages/polaris-dossier/src/waiting-sessions.ts: refused",
++   "packages/polaris-dossier/test-support/no-egress-driver.ts: refused",
++   "packages/polaris-dossier/tsconfig.json: refused",
++ ]
+
+ ❯ apps/three-surface-poc/src/git-observation.test.ts:208:77
+    206|     const isInput = (path: string): boolean => exact.includes(path) ||…
+    207|     expect(population.filter((path) => pocObserverInputsAreClean({ cha…
+    208|       .map((path) => `${path}: ${isInput(path) ? 'accepted' : 'refused…
+       |                                                                             ^
+    209|     expect(tracked.filter(isInput).length).toBeGreaterThan(0);
+    210|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

@@ -1,0 +1,6 @@
+base a5ab2b28 (worktree base/, built):
+{"fault":true,"injected":1,"kind":"unknown","reason":"code-structure observation produced a path that is not valid UTF-8"}
+{"fault":false,"injected":0,"kind":"observed","files":["a.ts"]}
+head 2d3f9375 (clone/, built):
+{"fault":true,"injected":1,"kind":"unknown","reason":"repository or revision was unreadable during code-structure observation"}
+{"fault":false,"injected":0,"kind":"observed","files":["a.ts"]}

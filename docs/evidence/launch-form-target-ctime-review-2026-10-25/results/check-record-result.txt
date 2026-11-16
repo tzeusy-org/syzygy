@@ -1,0 +1,213 @@
+OK   subject digest = git diff base head -- c0148ad4af5f99df67c9b5c0f86a08eb5e2c805d7179f88921d7f13a9d0ac668
+OK   reader unchanged base->head -- c7a25b8b45fe12e2add7874f88d46b2bad1eef16ffa4a17e2464d5c671424921
+OK   [tmpfs] base = full base -- df6046a153fe130202abdf6bd3045a79ba143879
+OK   [tmpfs] record commit is an ancestor of head -- fbe03e304bd9ad13afa861f0bc83e6f900e8814c
+OK   [tmpfs] test bytes at record commit = head
+OK   [tmpfs] reader bytes at record commit = head
+OK   [tmpfs] testSha256.base = sha(base test) -- 73fd8fe0c835e3910fbc45e2ea026b0b6ec54ac7c04657aeed9aa2311440fa5e
+OK   [tmpfs] testSha256.fix = sha(head test) -- 5dd0d6c74f5c8de9998d82cf6b8989e24e09f293202eebb3fd0969cfa79bd63c
+OK   [tmpfs] readerSha256 = sha(reader) -- c7a25b8b45fe12e2add7874f88d46b2bad1eef16ffa4a17e2464d5c671424921
+OK   [tmpfs] diffSha256 = git diff base commit -- packages -- 16bd82a87387fa106d5dd2cc3c44cfdca5bb0b7c8c639d0b9f892e64003d8050
+OK   [tmpfs] diffSha256 also = git diff base head -- packages
+OK   [tmpfs] harnessSha256 = sha(mutants.py at head) -- ea5c6fdd0068f69bf1a4e79a13cddb36372293270dffddaadda580463ebaf3ef
+OK   [tmpfs] harness at record commit = at head
+OK   [tmpfs] fragmentsFrom.record830 digest = git object at head -- docs/evidence/launch-form-snapshot-ctime-mutants-2026-10-23.json
+OK   [tmpfs] fragmentsFrom.reviewRun digest = git object at head -- docs/evidence/launch-form-ctime-review-2026-10-24/results/rev519-mutants-tmpfs.json
+OK   [tmpfs] kernel stored -- 7.0.0-38-generic
+OK   [tmpfs] tmpdir filesystem stored -- {"path": "/tmp/la-b833/tmpfs", "filesystem": "tmpfs"}
+OK   [tmpfs] trackedTreeCleanAfter
+OK   [tmpfs] unmutated base testSha256 / exit 0 / 43 of 43
+OK   [tmpfs] unmutated fix testSha256 / exit 0 / 43 of 43
+OK   [tmpfs] mutant population = 13 (8.30) + 8 (O1-O8) = 21, each on both sides -- 21 ids, 42 runs
+OK   [tmpfs] D1-with-memoized-reader [base] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=17 link=True
+OK   [tmpfs] D1-terminal-only [base] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=17 link=True
+OK   [tmpfs] D1-bang-only [base] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=17 link=True
+OK   [tmpfs] D1-syzygy-launched-only [base] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=17 link=True
+OK   [tmpfs] D1-any-remover [base] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=17 link=True
+OK   [tmpfs] D3-repair-to-launched [base] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=17 link=True
+OK   [tmpfs] D4-truncate [base] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=11 link=True
+OK   [tmpfs] M-every-form-drains-then-refuses [base] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=survived exit=0 n=0 link=False
+OK   [tmpfs] T-ask-of-an-unplanted-run [base] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=17 link=True
+OK   [tmpfs] R-chmod-cycle-rewrite [base] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=1 link=False
+OK   [tmpfs] R-same-size-rewrite [base] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=10 link=True
+OK   [tmpfs] R-fill-dangling-target [base] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=1 link=False
+OK   [tmpfs] R-fifo-to-empty-file [base] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=2 link=False
+OK   [tmpfs] O1-same-bytes-rewrite [base] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=10 link=False
+OK   [tmpfs] O2-same-bytes-rewrite-utimes-restored [base] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=11 link=False
+OK   [tmpfs] O3-truncate-then-refill [base] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=11 link=False
+OK   [tmpfs] O4-replace-with-new-inode [base] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=12 link=False
+OK   [tmpfs] O5-fifo-drain-and-refill [base] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=1 link=False
+OK   [tmpfs] O6-chmod-to-the-same-mode [base] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=14 link=False
+OK   [tmpfs] O7-rename-away-and-back [base] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=17 link=True
+OK   [tmpfs] O8-link-target-chmod-cycle-rewrite [base] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=survived exit=0 n=0 link=False
+OK   [tmpfs] D1-with-memoized-reader [fix] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=17 link=True
+OK   [tmpfs] D1-terminal-only [fix] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=17 link=True
+OK   [tmpfs] D1-bang-only [fix] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=17 link=True
+OK   [tmpfs] D1-syzygy-launched-only [fix] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=17 link=True
+OK   [tmpfs] D1-any-remover [fix] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=17 link=True
+OK   [tmpfs] D3-repair-to-launched [fix] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=17 link=True
+OK   [tmpfs] D4-truncate [fix] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=11 link=True
+OK   [tmpfs] M-every-form-drains-then-refuses [fix] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=survived exit=0 n=0 link=False
+OK   [tmpfs] T-ask-of-an-unplanted-run [fix] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=17 link=True
+OK   [tmpfs] R-chmod-cycle-rewrite [fix] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=1 link=False
+OK   [tmpfs] R-same-size-rewrite [fix] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=10 link=True
+OK   [tmpfs] R-fill-dangling-target [fix] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=1 link=False
+OK   [tmpfs] R-fifo-to-empty-file [fix] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=2 link=False
+OK   [tmpfs] O1-same-bytes-rewrite [fix] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=11 link=True
+OK   [tmpfs] O2-same-bytes-rewrite-utimes-restored [fix] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=11 link=False
+OK   [tmpfs] O3-truncate-then-refill [fix] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=11 link=False
+OK   [tmpfs] O4-replace-with-new-inode [fix] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=12 link=False
+OK   [tmpfs] O5-fifo-drain-and-refill [fix] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=1 link=False
+OK   [tmpfs] O6-chmod-to-the-same-mode [fix] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=14 link=False
+OK   [tmpfs] O7-rename-away-and-back [fix] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=17 link=True
+OK   [tmpfs] O8-link-target-chmod-cycle-rewrite [fix] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=1 link=True
+OK   [tmpfs] D1-with-memoized-reader: fix rows superset of 8.30 fix rows, none added -- 830=17 now=17
+OK   [tmpfs] D1-terminal-only: fix rows superset of 8.30 fix rows, none added -- 830=17 now=17
+OK   [tmpfs] D1-bang-only: fix rows superset of 8.30 fix rows, none added -- 830=17 now=17
+OK   [tmpfs] D1-syzygy-launched-only: fix rows superset of 8.30 fix rows, none added -- 830=17 now=17
+OK   [tmpfs] D1-any-remover: fix rows superset of 8.30 fix rows, none added -- 830=17 now=17
+OK   [tmpfs] D3-repair-to-launched: fix rows superset of 8.30 fix rows, none added -- 830=17 now=17
+OK   [tmpfs] D4-truncate: fix rows superset of 8.30 fix rows, none added -- 830=11 now=11
+OK   [tmpfs] M-every-form-drains-then-refuses: fix rows superset of 8.30 fix rows, none added -- 830=0 now=0
+OK   [tmpfs] T-ask-of-an-unplanted-run: fix rows superset of 8.30 fix rows, none added -- 830=17 now=17
+OK   [tmpfs] R-chmod-cycle-rewrite: fix rows superset of 8.30 fix rows, none added -- 830=1 now=1
+OK   [tmpfs] R-same-size-rewrite: fix rows superset of 8.30 fix rows, none added -- 830=10 now=10
+OK   [tmpfs] R-fill-dangling-target: fix rows superset of 8.30 fix rows, none added -- 830=1 now=1
+OK   [tmpfs] R-fifo-to-empty-file: fix rows superset of 8.30 fix rows, none added -- 830=2 now=2
+OK   [tmpfs] repeats: 20 runs, every one 43/43
+OK   [tmpfs] parallel: 12 runs, every one 43/43
+INFO [tmpfs] sequential load1 range 14.91-17.06; parallel load {"before": [14.91, 12.25, 12.54], "after": [17.4, 12.81, 12.72]}
+TABLE [tmpfs] D1-any-remover: base killed 17 link=True | fix killed 17 link=True {'numTotalTests': 43, 'numPassedTests': 26, 'numFailedTests': 17}
+TABLE [tmpfs] D1-bang-only: base killed 17 link=True | fix killed 17 link=True {'numTotalTests': 43, 'numPassedTests': 26, 'numFailedTests': 17}
+TABLE [tmpfs] D1-syzygy-launched-only: base killed 17 link=True | fix killed 17 link=True {'numTotalTests': 43, 'numPassedTests': 26, 'numFailedTests': 17}
+TABLE [tmpfs] D1-terminal-only: base killed 17 link=True | fix killed 17 link=True {'numTotalTests': 43, 'numPassedTests': 26, 'numFailedTests': 17}
+TABLE [tmpfs] D1-with-memoized-reader: base killed 17 link=True | fix killed 17 link=True {'numTotalTests': 43, 'numPassedTests': 26, 'numFailedTests': 17}
+TABLE [tmpfs] D3-repair-to-launched: base killed 17 link=True | fix killed 17 link=True {'numTotalTests': 43, 'numPassedTests': 26, 'numFailedTests': 17}
+TABLE [tmpfs] D4-truncate: base killed 11 link=True | fix killed 11 link=True {'numTotalTests': 43, 'numPassedTests': 32, 'numFailedTests': 11}
+TABLE [tmpfs] M-every-form-drains-then-refuses: base survived 0 link=False | fix survived 0 link=False {'numTotalTests': 43, 'numPassedTests': 43, 'numFailedTests': 0}
+TABLE [tmpfs] O1-same-bytes-rewrite: base killed 10 link=False | fix killed 11 link=True {'numTotalTests': 43, 'numPassedTests': 32, 'numFailedTests': 11}
+TABLE [tmpfs] O2-same-bytes-rewrite-utimes-restored: base killed 11 link=False | fix killed 11 link=False {'numTotalTests': 43, 'numPassedTests': 32, 'numFailedTests': 11}
+TABLE [tmpfs] O3-truncate-then-refill: base killed 11 link=False | fix killed 11 link=False {'numTotalTests': 43, 'numPassedTests': 32, 'numFailedTests': 11}
+TABLE [tmpfs] O4-replace-with-new-inode: base killed 12 link=False | fix killed 12 link=False {'numTotalTests': 43, 'numPassedTests': 31, 'numFailedTests': 12}
+TABLE [tmpfs] O5-fifo-drain-and-refill: base killed 1 link=False | fix killed 1 link=False {'numTotalTests': 43, 'numPassedTests': 42, 'numFailedTests': 1}
+TABLE [tmpfs] O6-chmod-to-the-same-mode: base killed 14 link=False | fix killed 14 link=False {'numTotalTests': 43, 'numPassedTests': 29, 'numFailedTests': 14}
+TABLE [tmpfs] O7-rename-away-and-back: base killed 17 link=True | fix killed 17 link=True {'numTotalTests': 43, 'numPassedTests': 26, 'numFailedTests': 17}
+TABLE [tmpfs] O8-link-target-chmod-cycle-rewrite: base survived 0 link=False | fix killed 1 link=True {'numTotalTests': 43, 'numPassedTests': 42, 'numFailedTests': 1}
+TABLE [tmpfs] R-chmod-cycle-rewrite: base killed 1 link=False | fix killed 1 link=False {'numTotalTests': 43, 'numPassedTests': 42, 'numFailedTests': 1}
+TABLE [tmpfs] R-fifo-to-empty-file: base killed 2 link=False | fix killed 2 link=False {'numTotalTests': 43, 'numPassedTests': 41, 'numFailedTests': 2}
+TABLE [tmpfs] R-fill-dangling-target: base killed 1 link=False | fix killed 1 link=False {'numTotalTests': 43, 'numPassedTests': 42, 'numFailedTests': 1}
+TABLE [tmpfs] R-same-size-rewrite: base killed 10 link=True | fix killed 10 link=True {'numTotalTests': 43, 'numPassedTests': 33, 'numFailedTests': 10}
+TABLE [tmpfs] T-ask-of-an-unplanted-run: base killed 17 link=True | fix killed 17 link=True {'numTotalTests': 43, 'numPassedTests': 26, 'numFailedTests': 17}
+OK   [ext4] base = full base -- df6046a153fe130202abdf6bd3045a79ba143879
+OK   [ext4] record commit is an ancestor of head -- fbe03e304bd9ad13afa861f0bc83e6f900e8814c
+OK   [ext4] test bytes at record commit = head
+OK   [ext4] reader bytes at record commit = head
+OK   [ext4] testSha256.base = sha(base test) -- 73fd8fe0c835e3910fbc45e2ea026b0b6ec54ac7c04657aeed9aa2311440fa5e
+OK   [ext4] testSha256.fix = sha(head test) -- 5dd0d6c74f5c8de9998d82cf6b8989e24e09f293202eebb3fd0969cfa79bd63c
+OK   [ext4] readerSha256 = sha(reader) -- c7a25b8b45fe12e2add7874f88d46b2bad1eef16ffa4a17e2464d5c671424921
+OK   [ext4] diffSha256 = git diff base commit -- packages -- 16bd82a87387fa106d5dd2cc3c44cfdca5bb0b7c8c639d0b9f892e64003d8050
+OK   [ext4] diffSha256 also = git diff base head -- packages
+OK   [ext4] harnessSha256 = sha(mutants.py at head) -- ea5c6fdd0068f69bf1a4e79a13cddb36372293270dffddaadda580463ebaf3ef
+OK   [ext4] harness at record commit = at head
+OK   [ext4] fragmentsFrom.record830 digest = git object at head -- docs/evidence/launch-form-snapshot-ctime-mutants-2026-10-23.json
+OK   [ext4] fragmentsFrom.reviewRun digest = git object at head -- docs/evidence/launch-form-ctime-review-2026-10-24/results/rev519-mutants-tmpfs.json
+OK   [ext4] kernel stored -- 7.0.0-38-generic
+OK   [ext4] tmpdir filesystem stored -- {"path": "/var/tmp/la-b833/ext4", "filesystem": "ext2/ext3"}
+OK   [ext4] trackedTreeCleanAfter
+OK   [ext4] unmutated base testSha256 / exit 0 / 43 of 43
+OK   [ext4] unmutated fix testSha256 / exit 0 / 43 of 43
+OK   [ext4] mutant population = 13 (8.30) + 8 (O1-O8) = 21, each on both sides -- 21 ids, 42 runs
+OK   [ext4] D1-with-memoized-reader [base] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=17 link=True
+OK   [ext4] D1-terminal-only [base] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=17 link=True
+OK   [ext4] D1-bang-only [base] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=17 link=True
+OK   [ext4] D1-syzygy-launched-only [base] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=17 link=True
+OK   [ext4] D1-any-remover [base] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=17 link=True
+OK   [ext4] D3-repair-to-launched [base] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=17 link=True
+OK   [ext4] D4-truncate [base] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=11 link=True
+OK   [ext4] M-every-form-drains-then-refuses [base] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=survived exit=0 n=0 link=False
+OK   [ext4] T-ask-of-an-unplanted-run [base] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=17 link=True
+OK   [ext4] R-chmod-cycle-rewrite [base] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=1 link=False
+OK   [ext4] R-same-size-rewrite [base] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=10 link=True
+OK   [ext4] R-fill-dangling-target [base] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=1 link=False
+OK   [ext4] R-fifo-to-empty-file [base] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=2 link=False
+OK   [ext4] O1-same-bytes-rewrite [base] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=10 link=False
+OK   [ext4] O2-same-bytes-rewrite-utimes-restored [base] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=11 link=False
+OK   [ext4] O3-truncate-then-refill [base] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=11 link=False
+OK   [ext4] O4-replace-with-new-inode [base] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=12 link=False
+OK   [ext4] O5-fifo-drain-and-refill [base] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=1 link=False
+OK   [ext4] O6-chmod-to-the-same-mode [base] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=14 link=False
+OK   [ext4] O7-rename-away-and-back [base] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=17 link=True
+OK   [ext4] O8-link-target-chmod-cycle-rewrite [base] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=survived exit=0 n=0 link=False
+OK   [ext4] D1-with-memoized-reader [fix] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=17 link=True
+OK   [ext4] D1-terminal-only [fix] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=17 link=True
+OK   [ext4] D1-bang-only [fix] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=17 link=True
+OK   [ext4] D1-syzygy-launched-only [fix] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=17 link=True
+OK   [ext4] D1-any-remover [fix] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=17 link=True
+OK   [ext4] D3-repair-to-launched [fix] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=17 link=True
+OK   [ext4] D4-truncate [fix] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=11 link=True
+OK   [ext4] M-every-form-drains-then-refuses [fix] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=survived exit=0 n=0 link=False
+OK   [ext4] T-ask-of-an-unplanted-run [fix] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=17 link=True
+OK   [ext4] R-chmod-cycle-rewrite [fix] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=1 link=False
+OK   [ext4] R-same-size-rewrite [fix] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=10 link=True
+OK   [ext4] R-fill-dangling-target [fix] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=1 link=False
+OK   [ext4] R-fifo-to-empty-file [fix] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=2 link=False
+OK   [ext4] O1-same-bytes-rewrite [fix] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=11 link=True
+OK   [ext4] O2-same-bytes-rewrite-utimes-restored [fix] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=11 link=False
+OK   [ext4] O3-truncate-then-refill [fix] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=11 link=False
+OK   [ext4] O4-replace-with-new-inode [fix] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=12 link=False
+OK   [ext4] O5-fifo-drain-and-refill [fix] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=1 link=False
+OK   [ext4] O6-chmod-to-the-same-mode [fix] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=14 link=False
+OK   [ext4] O7-rename-away-and-back [fix] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=17 link=True
+OK   [ext4] O8-link-target-chmod-cycle-rewrite [fix] old-once/source/rows/outcome/exit/counts/restored -- once=True src=True rows=True outcome=killed exit=1 n=1 link=True
+OK   [ext4] D1-with-memoized-reader: fix rows superset of 8.30 fix rows, none added -- 830=17 now=17
+OK   [ext4] D1-terminal-only: fix rows superset of 8.30 fix rows, none added -- 830=17 now=17
+OK   [ext4] D1-bang-only: fix rows superset of 8.30 fix rows, none added -- 830=17 now=17
+OK   [ext4] D1-syzygy-launched-only: fix rows superset of 8.30 fix rows, none added -- 830=17 now=17
+OK   [ext4] D1-any-remover: fix rows superset of 8.30 fix rows, none added -- 830=17 now=17
+OK   [ext4] D3-repair-to-launched: fix rows superset of 8.30 fix rows, none added -- 830=17 now=17
+OK   [ext4] D4-truncate: fix rows superset of 8.30 fix rows, none added -- 830=11 now=11
+OK   [ext4] M-every-form-drains-then-refuses: fix rows superset of 8.30 fix rows, none added -- 830=0 now=0
+OK   [ext4] T-ask-of-an-unplanted-run: fix rows superset of 8.30 fix rows, none added -- 830=17 now=17
+OK   [ext4] R-chmod-cycle-rewrite: fix rows superset of 8.30 fix rows, none added -- 830=1 now=1
+OK   [ext4] R-same-size-rewrite: fix rows superset of 8.30 fix rows, none added -- 830=10 now=10
+OK   [ext4] R-fill-dangling-target: fix rows superset of 8.30 fix rows, none added -- 830=1 now=1
+OK   [ext4] R-fifo-to-empty-file: fix rows superset of 8.30 fix rows, none added -- 830=2 now=2
+OK   [ext4] repeats: 20 runs, every one 43/43
+OK   [ext4] parallel: 12 runs, every one 43/43
+INFO [ext4] sequential load1 range 18.51-20.39; parallel load {"before": [18.51, 14.68, 13.41], "after": [22.98, 15.8, 13.79]}
+TABLE [ext4] D1-any-remover: base killed 17 link=True | fix killed 17 link=True {'numTotalTests': 43, 'numPassedTests': 26, 'numFailedTests': 17}
+TABLE [ext4] D1-bang-only: base killed 17 link=True | fix killed 17 link=True {'numTotalTests': 43, 'numPassedTests': 26, 'numFailedTests': 17}
+TABLE [ext4] D1-syzygy-launched-only: base killed 17 link=True | fix killed 17 link=True {'numTotalTests': 43, 'numPassedTests': 26, 'numFailedTests': 17}
+TABLE [ext4] D1-terminal-only: base killed 17 link=True | fix killed 17 link=True {'numTotalTests': 43, 'numPassedTests': 26, 'numFailedTests': 17}
+TABLE [ext4] D1-with-memoized-reader: base killed 17 link=True | fix killed 17 link=True {'numTotalTests': 43, 'numPassedTests': 26, 'numFailedTests': 17}
+TABLE [ext4] D3-repair-to-launched: base killed 17 link=True | fix killed 17 link=True {'numTotalTests': 43, 'numPassedTests': 26, 'numFailedTests': 17}
+TABLE [ext4] D4-truncate: base killed 11 link=True | fix killed 11 link=True {'numTotalTests': 43, 'numPassedTests': 32, 'numFailedTests': 11}
+TABLE [ext4] M-every-form-drains-then-refuses: base survived 0 link=False | fix survived 0 link=False {'numTotalTests': 43, 'numPassedTests': 43, 'numFailedTests': 0}
+TABLE [ext4] O1-same-bytes-rewrite: base killed 10 link=False | fix killed 11 link=True {'numTotalTests': 43, 'numPassedTests': 32, 'numFailedTests': 11}
+TABLE [ext4] O2-same-bytes-rewrite-utimes-restored: base killed 11 link=False | fix killed 11 link=False {'numTotalTests': 43, 'numPassedTests': 32, 'numFailedTests': 11}
+TABLE [ext4] O3-truncate-then-refill: base killed 11 link=False | fix killed 11 link=False {'numTotalTests': 43, 'numPassedTests': 32, 'numFailedTests': 11}
+TABLE [ext4] O4-replace-with-new-inode: base killed 12 link=False | fix killed 12 link=False {'numTotalTests': 43, 'numPassedTests': 31, 'numFailedTests': 12}
+TABLE [ext4] O5-fifo-drain-and-refill: base killed 1 link=False | fix killed 1 link=False {'numTotalTests': 43, 'numPassedTests': 42, 'numFailedTests': 1}
+TABLE [ext4] O6-chmod-to-the-same-mode: base killed 14 link=False | fix killed 14 link=False {'numTotalTests': 43, 'numPassedTests': 29, 'numFailedTests': 14}
+TABLE [ext4] O7-rename-away-and-back: base killed 17 link=True | fix killed 17 link=True {'numTotalTests': 43, 'numPassedTests': 26, 'numFailedTests': 17}
+TABLE [ext4] O8-link-target-chmod-cycle-rewrite: base survived 0 link=False | fix killed 1 link=True {'numTotalTests': 43, 'numPassedTests': 42, 'numFailedTests': 1}
+TABLE [ext4] R-chmod-cycle-rewrite: base killed 1 link=False | fix killed 1 link=False {'numTotalTests': 43, 'numPassedTests': 42, 'numFailedTests': 1}
+TABLE [ext4] R-fifo-to-empty-file: base killed 2 link=False | fix killed 2 link=False {'numTotalTests': 43, 'numPassedTests': 41, 'numFailedTests': 2}
+TABLE [ext4] R-fill-dangling-target: base killed 1 link=False | fix killed 1 link=False {'numTotalTests': 43, 'numPassedTests': 42, 'numFailedTests': 1}
+TABLE [ext4] R-same-size-rewrite: base killed 10 link=True | fix killed 10 link=True {'numTotalTests': 43, 'numPassedTests': 33, 'numFailedTests': 10}
+TABLE [ext4] T-ask-of-an-unplanted-run: base killed 17 link=True | fix killed 17 link=True {'numTotalTests': 43, 'numPassedTests': 26, 'numFailedTests': 17}
+OK   field-diff testSha256 = head test
+OK   field-diff tool digest = field_diff.py at head -- 8aa341cfad93549361ca79c41068df1c20b521f827df75b81c443afbcfb82087
+OK   field-diff field-diff-O1-tmpfs.txt digest
+OK   field-diff O1-same-bytes-rewrite tmpfs: link-row block once, only targetCtimeNs on +/- lines -- blocks=1 fields=['targetCtimeNs'] lines=2
+INFO field-diff O1-same-bytes-rewrite tmpfs failing rows named in output: 28
+OK   field-diff field-diff-O1-ext4.txt digest
+OK   field-diff O1-same-bytes-rewrite ext4: link-row block once, only targetCtimeNs on +/- lines -- blocks=1 fields=['targetCtimeNs'] lines=2
+INFO field-diff O1-same-bytes-rewrite ext4 failing rows named in output: 28
+OK   field-diff field-diff-O8-tmpfs.txt digest
+OK   field-diff O8-link-target-chmod-cycle-rewrite tmpfs: link-row block once, only targetCtimeNs on +/- lines -- blocks=1 fields=['targetCtimeNs'] lines=2
+INFO field-diff O8-link-target-chmod-cycle-rewrite tmpfs failing rows named in output: 18
+OK   field-diff field-diff-O8-ext4.txt digest
+OK   field-diff O8-link-target-chmod-cycle-rewrite ext4: link-row block once, only targetCtimeNs on +/- lines -- blocks=1 fields=['targetCtimeNs'] lines=2
+INFO field-diff O8-link-target-chmod-cycle-rewrite ext4 failing rows named in output: 18
+TALLY 164 OK, 0 FAIL, 164 checks

@@ -1,0 +1,6 @@
+  it('is the literal list, so a narrowed token fails here', () => {
+    expect(FORBIDDEN.map(String)).toEqual([
+      '/\\brequire\\(/', '/\\bimport\\(/', '/\\bfetch\\(/', '/\\bwriteFile/', '/\\bappendFile/', '/\\bmkdir/', '/\\bprocess\\./', '/\\bDate\\b/',
+      "/\\b(?:node:)?(?:fs|net|http|https|child_process|os)['\"`]/",
+    ]);
+  });

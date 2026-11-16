@@ -1,0 +1,17 @@
+exit 1 | census lines 1
+errors []
+states {'skipped': 11, 'pending': 37, 'failed': 1} tests 49
+   skipped fresh-clone.system.test.ts > RT6 — fresh-clone demonstration > a fresh clone installs, builds, starts the daemon, and serves the same facts
+   skipped credentials.system.test.ts > RT6 — credential enforcement from outside the process > refuses missing credentials with no facts served
+   skipped credentials.system.test.ts > RT6 — credential enforcement from outside the process > refuses scheme without separator credentials with no f
+   skipped credentials.system.test.ts > RT6 — credential enforcement from outside the process > refuses empty bearer token credentials with no facts s
+   skipped credentials.system.test.ts > RT6 — credential enforcement from outside the process > refuses wrong scheme credentials with no facts served
+   skipped credentials.system.test.ts > RT6 — credential enforcement from outside the process > refuses whitespace-only bearer token credentials with 
+   skipped credentials.system.test.ts > RT6 — credential enforcement from outside the process > refuses malformed scheme casing credentials with no fa
+   skipped credentials.system.test.ts > RT6 — credential enforcement from outside the process > refuses wrong-length bearer token credentials with no 
+   skipped credentials.system.test.ts > RT6 — credential enforcement from outside the process > refuses wrong bearer token credentials with no facts s
+   skipped credentials.system.test.ts > RT6 — credential enforcement from outside the process > the correct token from the state-dir file admits: 200 
+   failed credentials.system.test.ts > RT6 — credential enforcement from outside the process > the token file is owner-only (mode 0600)
+   skipped credentials.system.test.ts > RT6 — credential enforcement from outside the process > the credential value is never printed to stdout
+non-census stdout: ''
+stderr: ''

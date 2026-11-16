@@ -1,0 +1,129 @@
+{
+  "epistemic": "Inferred",
+  "purpose": "C4 authored occurrence dispositions after CC-REV-4 source return; no independent semantic confirmation, owner act or implementation.",
+  "population": 4,
+  "dispositions": [
+    {
+      "epistemic": "Inferred",
+      "status": "Authored C4 source-method disposition; independent confirmation pending",
+      "path": "openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md",
+      "identity": "POC-REQ-020",
+      "blockSha256": "bc5859385af8cd64bb01980a794d220ff49775eb5fd03f68a2d1f1e8347216b8",
+      "blockStartLine": 544,
+      "proposedClassification": "affected",
+      "consumption": "Shared-model fact set, complete machine answer after observation-local expansion and client-rendered POC facts. -> Semantic fact/label/reason/provenance equality without client-invented or lost facts.",
+      "designConclusion": "Affected-compatible under the existing semantics/fact-set rule. Keep the block unchanged; no new client truth store or lookup is permitted.",
+      "normativeBlockTextChangeRequiredByThisDelta": false,
+      "sameChangeHandling": "The POC specification is already one of the six proposed subjects. Include this consumption evidence and later acceptance obligations in the same change; no extra specification subject is introduced.",
+      "acceptanceAndLimits": "Use an independent literal expander and independent expected identity/population facts; compare each served/rendered claim and count. Keep actual wire occurrence/byte/fault checks separate and cover wrong-evaluation, missing/duplicate/value-changing markers.",
+      "companionDeltaTrigger": "If a design changes an adopted equality, scriptless availability, PWB anchor meaning, identity/state or source admission obligation, that invalidated requirement needs a reviewed companion delta in the same change under CC-IMPACT-6. This appendix grants no exception.",
+      "evidence": [
+        "COMPATIBILITY-MAP.json",
+        "LITERAL-FACTS.json",
+        "COUNTEREXAMPLES.json",
+        "../evidence/source-return/SOURCE-CRITERIA.json",
+        "../REQUIREMENT-CONSUMPTION.json"
+      ],
+      "reason": "The machine input changes from inline values to local refs; the comparison must consume effective per-item facts while retaining physical-wire checks separately.",
+      "method": "Read the complete shared-model scope/counterexample/oracle and C3 local expansion semantics. Incoming: validated carrier/ref representation. Outgoing: same distinct item Unknown facts, labels, full records, counts and evaluation for every rendered client fact. Comparing literal inline objects to markers would use the wrong semantic oracle.",
+      "evidence_quotes": [
+        "**Required behavior.** Every fact a client-rendered surface presents SHALL be\npresent, with equal value, in the machine answer for the same evaluation.\n\n- **Scope.** all facts rendered by client-side code across the three surfaces.\n\n- **Case (sweep)**: a checker loads each surface, extracts every\n  rendered fact through the surfaces' declared parity markers — the\n  denominator is the complete marker population, which the check counts\n  and reports — and compares each against the machine answer.\n- **Observable**: every marked rendered fact has an equal counterpart\n  in the machine answer.\n- **Oracle**: field-by-field equality over the exhausted marker\n  population; the independent parity comparator (not surface code)\n  decides.\n- **Oracle independence**: the comparator reads the wire outputs of\n  both channels; it imports no rendering code.\n- **Falsifier**: one rendered fact absent from, or unequal to, the\n  machine answer at the same evaluation."
+      ]
+    },
+    {
+      "epistemic": "Inferred",
+      "status": "Authored C4 source-method disposition; independent confirmation pending",
+      "path": "openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md",
+      "identity": "POC-REQ-022",
+      "blockSha256": "85f929db8aba12cadaec155a54107d82c3a0904ec96bd73049e444c5e6d0ba6a",
+      "blockStartLine": 624,
+      "proposedClassification": "affected",
+      "consumption": "The shared-model fact set, machine answer effective facts and script-disabled server-rendered POC surfaces. -> Honest script-less scope/facts, explicit Unknowns and no omitted fact due solely to client JavaScript.",
+      "designConclusion": "Affected-compatible; existing script-less semantics remain valid without a textual amendment or human redesign.",
+      "normativeBlockTextChangeRequiredByThisDelta": false,
+      "sameChangeHandling": "The POC specification is already one of the six proposed subjects. Include this consumption evidence and later acceptance obligations in the same change; no extra specification subject is introduced.",
+      "acceptanceAndLimits": "Independently compare no-script HTML markers/text to locally expanded machine facts for complete served versus rendered/outside populations and explicit reasons/routes. Actual server/browser evidence remains future implementation verification.",
+      "companionDeltaTrigger": "If a design changes an adopted equality, scriptless availability, PWB anchor meaning, identity/state or source admission obligation, that invalidated requirement needs a reviewed companion delta in the same change under CC-IMPACT-6. This appendix grants no exception.",
+      "evidence": [
+        "COMPATIBILITY-MAP.json",
+        "LITERAL-FACTS.json",
+        "COUNTEREXAMPLES.json",
+        "../evidence/source-return/SOURCE-CRITERIA.json",
+        "../REQUIREMENT-CONSUMPTION.json"
+      ],
+      "reason": "The independent script-less sampler derives expected effective facts from the changed machine representation while the unchanged logical model continues to drive the existing human renderer.",
+      "method": "Read the entire no-script sample/fact/Unknown oracle and C3 preservation of existing full per-item epistemic records/human output. Incoming: independently validated effective machine facts. Outgoing: comparison to the same server-rendered human facts, count region and Unknown treatment at the declared rendered selection. The human renderer retains its logical-model input; no client expansion, network lookup or machine-wire dependency is introduced.",
+      "evidence_quotes": [
+        "**Required behavior.** WHEN a human surface is read without script execution,\nthe POC SHALL still serve the surface's facts in exact, accessible form (the\nserver-rendered exact tables/routes), or an explicit statement that the\nenhanced rendering is unavailable — never a blank or silently degraded region\npresented as complete.\n\n- **Case**: a checker requests each surface with scripting disabled and\n  reads the served HTML.\n- **Observable**: the facts remain reachable through server-rendered\n  exact form, or the region explicitly states its unavailability.\n- **Oracle**: for a sampled fact set, presence in the no-script served\n  HTML (or presence of the explicit unavailability statement); string\n  comparison decides.\n- **Oracle independence**: the sampled expected facts come from the\n  machine answer.\n- **Falsifier**: a region that renders empty without an unavailability\n  statement when scripts are disabled."
+      ]
+    },
+    {
+      "epistemic": "Inferred",
+      "status": "Authored C4 source-method disposition; independent confirmation pending",
+      "path": "openspec/changes/polaris-manifesto-generation/specs/polaris-generation/spec.md",
+      "identity": "REQ-polaris-generation-019",
+      "blockSha256": "ae2e8f7b811b5837aef78056a9f0e8db10d7b195cade5e768d52215fbd5cb970",
+      "blockStartLine": 1013,
+      "proposedClassification": "affected",
+      "consumption": "Generator interchange record variants and the explicit preservation of PWB wire conventions through compatibility adaptation; current source adapter and PWB narrative-anchor input shapes are narrower concrete projections. -> Typed adaptation/refusal, canonical anchors, required internal references, versions/bounds and no mutation-on-read.",
+      "designConclusion": "Affected-compatible: preserve the unchanged explicit adaptation obligation, source-admission limits and typed unsupported behavior. No identified text invalidation or general schema promotion.",
+      "normativeBlockTextChangeRequiredByThisDelta": false,
+      "sameChangeHandling": "Retain exact adopted generator block, with explicit same-change PWB-convention compatibility disposition. Preserve the current narrow source/anchor inputs without using them to narrow the full normative limb. Broader runtime/canonical implementation conformance remains Unknown.",
+      "acceptanceAndLimits": "Before adoption/implementation, record an explicit same-change disposition for the new local form at supported compatibility boundaries; independently verify each supported consumer or retain its unsupported/Unknown result. Current two read sets alone do not prove all canonical adaptation.",
+      "companionDeltaTrigger": "If a design changes an adopted equality, scriptless availability, PWB anchor meaning, identity/state or source admission obligation, that invalidated requirement needs a reviewed companion delta in the same change under CC-IMPACT-6. This appendix grants no exception.",
+      "evidence": [
+        "COMPATIBILITY-MAP.json",
+        "LITERAL-FACTS.json",
+        "COUNTEREXAMPLES.json",
+        "../evidence/source-return/SOURCE-CRITERIA.json",
+        "../REQUIREMENT-CONSUMPTION.json"
+      ],
+      "reason": "The full clause expressly consumes PWB wire conventions. Re-encoding part of the PWB machine answer therefore has a compatibility-preservation edge even though two current concrete adapters do not read governedBy.",
+      "method": "Separated the complete normative paragraph and every scenario into record/version/identity/state, PWB-compatibility, graph, bound and migration limbs. Checked the actual source-adapter read set and PWB anchor fields to establish their local separation, then refused to use those two boundaries to narrow the broader PWB-convention preservation limb. The broader obligation is a positive consumption tie, not proof of runtime conformance.",
+      "evidence_quotes": [
+        "Generator records SHALL use explicit class/version and typed variants with separate ownership for requests, inventories, controls, generated assets, Execution Records and authored content. Each requested asset SHALL have its own identity, kind, requiredness and purpose, resolving to one produced, omitted or unresolved disposition; produced SHALL reference actual matching assets while unresolved SHALL NOT fabricate output identities or digests. Provider-local handles SHALL NOT mint presentation or kernel identities: a trusted recorded authoring operation SHALL issue opaque presentation identities with retained provenance, without claiming human adoption. Serialized editorial/profile flags SHALL NOT replace effective owner-act evaluation. Canonical anchors SHALL use RFC7-10's target-specific identity, fragment and state representation, distinguishing artifact revision from kernel evaluation and verbatim label/tier/reason. PWB wire conventions SHALL be preserved through explicit compatibility adaptation, never silently promoted into a generic schema or used to widen source admission. Unsupported adaptation SHALL remain explicit without invented identity/state. Required internal references SHALL resolve; definitions SHALL be unique, support references SHALL belong to their claim block, and ownership/containment and stage-input graphs SHALL be acyclic. Supported factual relationship cycles and glossary cross-reference cycles SHALL remain representable. Validation SHALL reject duplicate object keys, unknown interchange versions/kinds, undeclared effect-bearing fields and exceeded structural/content bounds without silent truncation. Shape validity SHALL NOT establish authority, fidelity, readiness or authorship. Newer unsupported plane versions SHALL forbid writes/downgrade and render uninterpretable content Unknown; older content SHALL use declared compatibility paths without mutation on read. Persistent migration SHALL require its own reviewed, attributed, atomic and reversible act, preserving the identities, meanings and citation resolution protected by RFC3-23; OpenSpec content SHALL remain outside that migration authority."
+      ]
+    },
+    {
+      "epistemic": "Inferred",
+      "status": "Authored C4 source-method disposition; independent confirmation pending",
+      "path": "openspec/changes/polaris-manifesto-understanding-amendment/specs/polaris-generation/spec.md",
+      "identity": "REQ-polaris-generation-019",
+      "blockSha256": "796464323fb006f92248198ffab7296b05ddf735df9c2c84039c1a7068ecc3e7",
+      "blockStartLine": 506,
+      "proposedClassification": "affected",
+      "consumption": "Complete amended GEN019 interchange/anchor/PWB-convention obligations plus versioned discovery/understanding/clarification dependency records. -> Typed compatibility preservation/refusal, graph/reference integrity and reviewable research projections without new authority.",
+      "designConclusion": "Affected-compatible; retain the entire amended block and its typed unsupported behavior. No added schema promotion, source right or migration is required by the proposed local form.",
+      "normativeBlockTextChangeRequiredByThisDelta": false,
+      "sameChangeHandling": "Retain exact adopted generator block, with explicit same-change PWB-convention compatibility disposition. Preserve the current narrow source/anchor inputs without using them to narrow the full normative limb. Broader runtime/canonical implementation conformance remains Unknown.",
+      "acceptanceAndLimits": "Record the same-change compatibility disposition under the overlay too; verify supported adapters and version/refusal behavior independently. Preserve input/answer dependency and authority separation while broader runtime conformance stays unproven.",
+      "companionDeltaTrigger": "If a design changes an adopted equality, scriptless availability, PWB anchor meaning, identity/state or source admission obligation, that invalidated requirement needs a reviewed companion delta in the same change under CC-IMPACT-6. This appendix grants no exception.",
+      "evidence": [
+        "COMPATIBILITY-MAP.json",
+        "LITERAL-FACTS.json",
+        "COUNTEREXAMPLES.json",
+        "../evidence/source-return/SOURCE-CRITERIA.json",
+        "../REQUIREMENT-CONSUMPTION.json"
+      ],
+      "reason": "The unchanged PWB wire-convention preservation sentence is an actual consumption edge in this full amended occurrence as well as in its predecessor.",
+      "method": "Read the complete amended block, not just its added final research-record sentences. Separated the current source-adapter and narrative-anchor closed projections from the general explicit PWB-compatibility limb; the former are untied while the latter consumes this protocol change. Checked the extra research-record scenario independently; it neither removes nor narrows that limb.",
+      "evidence_quotes": [
+        "Generator records SHALL use explicit class/version and typed variants with separate ownership for requests, inventories, controls, generated assets, Execution Records and authored content. Each requested asset SHALL have its own identity, kind, requiredness and purpose, resolving to one produced, omitted or unresolved disposition; produced SHALL reference actual matching assets while unresolved SHALL NOT fabricate output identities or digests. Provider-local handles SHALL NOT mint presentation or kernel identities: a trusted recorded authoring operation SHALL issue opaque presentation identities with retained provenance, without claiming human adoption. Serialized editorial/profile flags SHALL NOT replace effective owner-act evaluation. Canonical anchors SHALL use RFC7-10's target-specific identity, fragment and state representation, distinguishing artifact revision from kernel evaluation and verbatim label/tier/reason. PWB wire conventions SHALL be preserved through explicit compatibility adaptation, never silently promoted into a generic schema or used to widen source admission. Unsupported adaptation SHALL remain explicit without invented identity/state. Required internal references SHALL resolve; definitions SHALL be unique, support references SHALL belong to their claim block, and ownership/containment and stage-input graphs SHALL be acyclic. Supported factual relationship cycles and glossary cross-reference cycles SHALL remain representable. Validation SHALL reject duplicate object keys, unknown interchange versions/kinds, undeclared effect-bearing fields and exceeded structural/content bounds without silent truncation. Shape validity SHALL NOT establish authority, fidelity, readiness or authorship. Newer unsupported plane versions SHALL forbid writes/downgrade and render uninterpretable content Unknown; older content SHALL use declared compatibility paths without mutation on read. Persistent migration SHALL require its own reviewed, attributed, atomic and reversible act, preserving the identities, meanings and citation resolution protected by RFC3-23; OpenSpec content SHALL remain outside that migration authority. Versioned discovery-scope, project-understanding, clarification and argument records SHALL retain their owning inputs, dependencies, coverage and omission dispositions, questions and attributed answer revisions, contradiction or interpretation dispositions, and links to generated artifacts and affected reviews. They SHALL be reviewable projections, not new authority stores or automatically adopted ontologies. Existing owning identities SHALL be referenced through their contracts; temporary research handles SHALL NOT mint kernel facts. Prose, diagrams, glossary and deep dives SHALL share the same supported understanding and dependency identities. Producer understanding and internal review records SHALL NOT replace independent source/evaluation oracles. Clarification persistence and draft use SHALL require applicable input classification, content consent and retention; an answer SHALL NOT become evidence of implementation or an intent-adoption/write act by being serialized."
+      ]
+    }
+  ],
+  "classificationNote": "All four are affected by consumption; no identified text invalidation. These four are a subset of the full15 affected130-occurrence source set. Two current interface separations are not whole-block untiedness for either broad GEN019 obligation.",
+  "historicalEvidenceSubject": {
+    "sourceCommit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+    "activeCandidateCommit": "662b4b49505776c21856791abc52cda72346c5d9",
+    "retainedCoreCommit": "ddf1dc69b724df72a5e3c4f224500aa51d344ef0",
+    "manifestFileSha256": "77e53d37ac42c5db4edb4f99d76d937629df5a80d370ac47751c0e62f27270bd",
+    "proposedPocSpecSha256": "01209cce451cbab62a9f39fce1e6a78d9dcd6b56f3e32e0dc9bf0d5534534c37"
+  },
+  "sourceReturn": {
+    "exact_data": "../REQUIREMENT-CONSUMPTION.json",
+    "source_receipt": "../evidence/source-return/FINAL-RECEIPT.json",
+    "source_receipt_sha256": "2bb7f1b28b91cf0612ba6a7d96a276b46a0ead952cade4cb2b6da2e43388db38",
+    "scope": "Complete source method, all130; source and older compatibility captures are evidence, not current review verdicts. Final C4 commit/packet binding is external."
+  }
+}

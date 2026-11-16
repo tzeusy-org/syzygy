@@ -1,0 +1,114 @@
+{
+ "partA": [
+  [
+   "absolute-outside",
+   true,
+   0
+  ],
+  [
+   "dotdot-leaves-tmpdir",
+   true,
+   0
+  ],
+  [
+   "dotdot-inside-tmpdir",
+   true,
+   0
+  ],
+  [
+   "relative-target",
+   true,
+   0
+  ],
+  [
+   "nested",
+   true,
+   0
+  ],
+  [
+   "final-component-symlink",
+   true,
+   0
+  ],
+  [
+   "final-component-file",
+   true,
+   0
+  ],
+  [
+   "trailing-slash-names-tmpdir",
+   true,
+   0
+  ],
+  [
+   "names-tmpdir-itself",
+   true,
+   0
+  ],
+  [
+   "double-slash",
+   true,
+   0
+  ],
+  [
+   "newline-in-name",
+   true,
+   0
+  ],
+  [
+   "own-among-siblings",
+   true,
+   1
+  ]
+ ],
+ "partB": [
+  {
+   "holds": true,
+   "closeA": "ok",
+   "closeB": "ok",
+   "bWorks": true,
+   "dirA": [
+    ".com.google.Chrome.iRWelb"
+   ],
+   "dirB": [
+    ".com.google.Chrome.OuzjW3"
+   ],
+   "afterCloseA": [
+    ".com.google.Chrome.Ab\n",
+    ".com.google.Chrome.Dbl001",
+    ".com.google.Chrome.Decoy1",
+    ".com.google.Chrome.DotDt1",
+    ".com.google.Chrome.File01",
+    ".com.google.Chrome.LinkD1",
+    ".com.google.Chrome.Nest01",
+    ".com.google.Chrome.OuzjW3",
+    ".com.google.Chrome.Relat1",
+    ".com.google.Chrome.SymLk1",
+    ".com.google.Chrome.Trail1",
+    "com.google.Chrome.Decoy2",
+    "com.google.Chrome.Other1",
+    "org.chromium.Chromium.Decoy3",
+    "org.chromium.Chromium.Other2"
+   ],
+   "afterCloseB": [
+    ".com.google.Chrome.Ab\n",
+    ".com.google.Chrome.Dbl001",
+    ".com.google.Chrome.Decoy1",
+    ".com.google.Chrome.DotDt1",
+    ".com.google.Chrome.File01",
+    ".com.google.Chrome.LinkD1",
+    ".com.google.Chrome.Nest01",
+    ".com.google.Chrome.Relat1",
+    ".com.google.Chrome.SymLk1",
+    ".com.google.Chrome.Trail1",
+    "com.google.Chrome.Decoy2",
+    "com.google.Chrome.Other1",
+    "org.chromium.Chromium.Decoy3",
+    "org.chromium.Chromium.Other2"
+   ],
+   "frozen": 1,
+   "profilesLeft": 0
+  }
+ ],
+ "holds": true
+}

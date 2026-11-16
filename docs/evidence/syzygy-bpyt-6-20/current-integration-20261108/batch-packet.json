@@ -1,0 +1,218 @@
+{
+  "format": "syzygy-pr743-one-current-batch-v1",
+  "status": "PREPARED-NOT-EXECUTED-NOT-ADMITTED",
+  "preparedAt": "2026-11-08T05:51:03.340408+00:00",
+  "sameOutcome": {
+    "source": "syzygy-bpyt.6.20",
+    "review": "syzygy-7mea",
+    "pr": 743,
+    "fullOriginalAC": 8,
+    "originalLogicalSeams": 5,
+    "transportProfiles": 7,
+    "isolatedBatchException": true,
+    "actor": "coordinator:codex-20261104-cdcf24d2 remains sole lifecycle/runtime/publication actor"
+  },
+  "subject": {
+    "worktree": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+    "branch": "agent/syzygy-bpyt.6.20",
+    "head": "5414a20faf3d2deafc576d4eac6dcb72d8042a07",
+    "tree": "1c2f1c638ee233912b59edf74e81260e6ea2169e",
+    "currentBase": "fd08ea62f8b55fb60d7c79628688bc014b40875b",
+    "historicalReviewedHead": "aca61f97b283908740c0d31caa4d758e54e6089f"
+  },
+  "oneConcreteInvocation": {
+    "argv": [
+      "/usr/bin/env",
+      "-i",
+      "PATH=/usr/bin:/bin",
+      "/usr/bin/python3",
+      "-I",
+      "/home/orca/.tmp/syzygy-743-current-integration-wti3cdgi/BATCH-001/run-current-batch.py"
+    ],
+    "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+    "ROOTOuterStdout": "/home/orca/.tmp/syzygy-743-current-integration-wti3cdgi/ROOT-BATCH-001.stdout",
+    "ROOTOuterStderr": "/home/orca/.tmp/syzygy-743-current-integration-wti3cdgi/ROOT-BATCH-001.stderr",
+    "notExecuted": true
+  },
+  "preconditions": [
+    "ROOT explicitly admits this one complete batch and owns its native execution/capture; workers remain out of runtime/source writes",
+    "ROOT action-time checks canonical claims/WIP, PR identity, current main and inactive freeze; current local source/base/tree must match exact bindings",
+    "No runtime root reuse: /home/orca/.tmp/743ci-20261108 must be absent; established shared lock must already exist and be available",
+    "Frozen23-row checkpoint manifest and original public cache receipt/files must still match bytes; every107 current lock tuple must match before allocation",
+    "Installed reference mechanics are the actually successful Nov8 adapter flags; no --preserve-fds, no observer/shim/supervisor/kernel/oracle addition"
+  ],
+  "concreteLocations": {
+    "runtimeRoot": "/home/orca/.tmp/743ci-20261108",
+    "sourceCache": "/home/orca/.tmp/427cdn-20261107/cache",
+    "sourceCacheReceipt": "/home/orca/.tmp/427cdn-20261107/PUBLIC-CACHE-SOURCE-RECEIPT.json",
+    "privateCache": "/home/orca/.tmp/743ci-20261108/cache",
+    "privateHome": "/home/orca/.tmp/743ci-20261108/home",
+    "privateTmpHost": "/home/orca/.tmp/743ci-20261108/tmp",
+    "privateTmpNamespace": "/tmp",
+    "privateInputs": "/home/orca/.tmp/743ci-20261108/inputs",
+    "nativeStageCaptures": "/home/orca/.tmp/743ci-20261108/capture",
+    "callerAndServedArtifacts": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001",
+    "sharedLock": "/home/orca/.tmp/syzygy-full-suite-20261104.lock",
+    "commonGitReadOnly": "/home/orca/orca/projects/syzygy/.git",
+    "nodeReadOnly": "/home/orca/.nvm/versions/node/v24.6.0"
+  },
+  "batchEffectsInOrder": [
+    {
+      "step": "verify-before-allocation",
+      "effects": "Read exact subject/ref metadata, frozen23 inputs,107 public tuples and225 known cache files. No target allocation/install/product script."
+    },
+    {
+      "step": "allocate-and-copy",
+      "effects": "Exclusively create the one runtime root with private home/tmp/cache/XDG/config/input/capture directories; empty npm configs, private loopback-only hosts/files resolver; copy only225 receipt-bound cache files and three unchanged offered harness/capture files. Do not execute retained wrappers."
+    },
+    {
+      "step": "install",
+      "effects": "Run offline npm ci --ignore-scripts in assigned worktree under established bubblewrap mechanics. npm ci replaces ignored node_modules there; only source-tree ignored install state is expected to change. No package lifecycle script or network access."
+    },
+    {
+      "step": "replay-and-scoped-checks",
+      "effects": "Run the frozen copied capture followed by exact scoped commands below. Read commonGit/node/system runtimes only; only assigned worktree and new runtime root mounted writable. Individual copied input files mounted read-only. No other worktree/repository body/home mounted."
+    },
+    {
+      "step": "retain-terminal",
+      "effects": "Check exact head/base/tree and tracked cleanliness after each native command, capture independent stdout/stderr byte streams with status/hash/size, preserve all partial files and stop at first failure. Record one final author-status receipt only after natural success of five stages."
+    }
+  ],
+  "namespaceMechanics": {
+    "flags": [
+      "--unshare-pid",
+      "--unshare-net",
+      "--die-with-parent",
+      "--new-session",
+      "--clearenv"
+    ],
+    "readOnlySystemMounts": [
+      "/usr",
+      "/lib",
+      "/lib64"
+    ],
+    "omissions": "No Chrome/fonts mount because the bounded commands have no browser lane. No host /home mount, resolver, credentials, provider or public network. No unsupported preserve-fds flag.",
+    "environment": "Literal allowlist in batch: private HOME/TMP/XDG/cache/npm-config paths, Node24 PATH, C.UTF-8, Asia/Singapore, offline/audit/fund and Git optional-lock/system-config flags; no inherited environment values."
+  },
+  "exactStages": [
+    {
+      "name": "01-offline-install",
+      "insideNamespaceArgv": [
+        "npm",
+        "ci",
+        "--offline",
+        "--ignore-scripts",
+        "--no-audit",
+        "--no-fund"
+      ],
+      "stdout": "/home/orca/.tmp/743ci-20261108/capture/01-offline-install.stdout",
+      "stderr": "/home/orca/.tmp/743ci-20261108/capture/01-offline-install.stderr",
+      "receipt": "/home/orca/.tmp/743ci-20261108/capture/01-offline-install.json"
+    },
+    {
+      "name": "02-caller-and-served-capture",
+      "insideNamespaceArgv": [
+        "python3",
+        "-I",
+        "/home/orca/.tmp/743ci-20261108/inputs/capture-current.py",
+        "/home/orca/.tmp/743ci-20261108/inputs/attempt-001"
+      ],
+      "stdout": "/home/orca/.tmp/743ci-20261108/capture/02-caller-and-served-capture.stdout",
+      "stderr": "/home/orca/.tmp/743ci-20261108/capture/02-caller-and-served-capture.stderr",
+      "receipt": "/home/orca/.tmp/743ci-20261108/capture/02-caller-and-served-capture.json"
+    },
+    {
+      "name": "03-typecheck",
+      "insideNamespaceArgv": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "stdout": "/home/orca/.tmp/743ci-20261108/capture/03-typecheck.stdout",
+      "stderr": "/home/orca/.tmp/743ci-20261108/capture/03-typecheck.stderr",
+      "receipt": "/home/orca/.tmp/743ci-20261108/capture/03-typecheck.json"
+    },
+    {
+      "name": "04-scoped-unit",
+      "insideNamespaceArgv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/three-surface-poc-core/src/git-runner.test.ts",
+        "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts",
+        "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+        "packages/three-surface-poc-core/src/git-object-reader.test.ts"
+      ],
+      "stdout": "/home/orca/.tmp/743ci-20261108/capture/04-scoped-unit.stdout",
+      "stderr": "/home/orca/.tmp/743ci-20261108/capture/04-scoped-unit.stderr",
+      "receipt": "/home/orca/.tmp/743ci-20261108/capture/04-scoped-unit.json"
+    },
+    {
+      "name": "05-scoped-integration",
+      "insideNamespaceArgv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "apps/three-surface-poc/src/governance-inputs.test.ts"
+      ],
+      "stdout": "/home/orca/.tmp/743ci-20261108/capture/05-scoped-integration.stdout",
+      "stderr": "/home/orca/.tmp/743ci-20261108/capture/05-scoped-integration.stderr",
+      "receipt": "/home/orca/.tmp/743ci-20261108/capture/05-scoped-integration.json"
+    }
+  ],
+  "expectedDeclaredCorpus": {
+    "callerPairs": 93,
+    "alteredAuthorityPairs": 66,
+    "modelParityDirectAndRefusalCases": 6,
+    "servedModelHostCases": 18,
+    "successfulServedRoutePairs": 72,
+    "humanRoutePairs": 54,
+    "machineRoutePairs": 18,
+    "rawBodyFiles": 144
+  },
+  "unchangedReuse": {
+    "transport": "69 historical pairs/7 profiles;19 exact-source bindings in TRANSPORT-SOURCE-REUSE.json; no rerun claimed",
+    "sourceMutants": "27 historical kills with unchanged predicate bindings;22 mutant rows whole-file unchanged and5 in identical governance transport functions; no rerun claimed",
+    "historicalPASS": "Preserved solely on aca61f97; not a current-head verdict"
+  },
+  "failureCustody": {
+    "beforeRuntimeAllocation": "ROOT outer separate streams retain exception/native status; no later allocation or command",
+    "afterRuntimeAllocation": "FAILURE.json plus each completed native stage receipt/stream and all partial files remain under runtime root. No retries, reclone, reallocation, cleanup or automatic source repair. Actual setup/install/capture/scoped failures stay with this owner for diagnosis.",
+    "timeouts": "No timeout wrapper or forced termination introduced. ROOT observes actual native completion; observation timeout is not product failure.",
+    "counts": "Zero-status emitter flags do not replace ROOT reading denominators,93 actual caller pairs,72 successful served pairs and144 raw bodies/source bindings."
+  },
+  "remainingWholeOutcomeGates": [
+    "ROOT actual batch receipt and direct output/body/source inspection; diagnose any ordinary failure here",
+    "Additive current-subject evidence publication without editing predecessor records",
+    "ROOT restores existing source-to-review dependency; independent fresh current-subject AC8 applicability addendum on existing review record",
+    "ROOT owns push/ready/queue; actual merge_group node/checks are current landing-tree verification; no passed broad gate replay or waiver claimed",
+    "Owner judgment/cycle report remain distinct under effective Nov6 direction; no new owner question/act inferred"
+  ],
+  "existingFrozenCheckpoint": {
+    "path": "/home/orca/.tmp/syzygy-743-current-integration-wti3cdgi/OFFERING-MANIFEST.json",
+    "bytes": 5171,
+    "sha256": "df1989eebd0af0f506fe8d1122df10e9334c5392c14b4e609ead8f560580121b"
+  },
+  "script": {
+    "path": "/home/orca/.tmp/syzygy-743-current-integration-wti3cdgi/BATCH-001/run-current-batch.py",
+    "bytes": 8256,
+    "sha256": "2c663f2960adb8dd9384b10a38f09028a8b0503267bbb4fb4e3fd5affbe9a5e8"
+  },
+  "staticReferences": {
+    "path": "/home/orca/.tmp/syzygy-743-current-integration-wti3cdgi/BATCH-001/REFERENCE-BINDINGS.json",
+    "bytes": 1710,
+    "sha256": "38b63f647a8b7bf68ca813e59d9c8986a9331c570a7a2f07fc66b931921daeee"
+  },
+  "cacheSelection": {
+    "path": "/home/orca/.tmp/syzygy-743-current-integration-wti3cdgi/BATCH-001/CACHE-SELECTION.json",
+    "bytes": 833,
+    "sha256": "9c9f87b5bcd7b1bdd78b6d38c582caf760450a263ad2b21803a6d4304a2f594c"
+  },
+  "limitations": "Preparation and byte binding only. No install/test/build/normalizer/replay/bwrap/cache-copy occurred. Original historical containment,403 coverage,skips,Unknown pins and instrumentation qualifications remain as recorded."
+}

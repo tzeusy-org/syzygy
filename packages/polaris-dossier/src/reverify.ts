@@ -1,5 +1,6 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
+import { isRecord } from '@syzygy/support';
 import { parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import { RECORDS_WITHIN_REACH, providerStatementGate, statementContentClasses, type GateSources } from './gate-sources.js';
 import { GitObjectReadRefusal, openPinnedObjectReader, type PinnedObjectReader, type PinnedObjectReaderOptions } from './git-object-reader.js';
@@ -87,7 +88,7 @@ function briefDeclaredAgent(run: string): { readonly state: 'unbriefed' } | { re
   }
   let record: unknown;
   try { record = parseBoundedJson(text, BRIEF_RECORD_LIMITS); } catch { return { state: 'invalid', why: 'it is not bounded JSON' }; }
-  const agent = record !== null && typeof record === 'object' && !Array.isArray(record) ? (record as Record<string, unknown>)['agent'] : undefined;
+  const agent = isRecord(record) ? (record as Record<string, unknown>)['agent'] : undefined;
   if (agent === null || typeof agent !== 'object' || Array.isArray(agent)) return { state: 'invalid', why: 'it states no agent tool and provider' };
   const { tool, provider } = agent as Record<string, unknown>;
   if (typeof tool !== 'string' || typeof provider !== 'string') return { state: 'invalid', why: 'it states no agent tool and provider' };

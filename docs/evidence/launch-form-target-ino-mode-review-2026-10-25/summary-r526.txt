@@ -1,0 +1,65 @@
+mutants-g1-tmpfs.json kernel 7.0.0-38-generic node v24.6.0 statF tmpfs dfT tmpfs tmpRoot /tmp/r526-tmpfs/g1 tool b25d572abf6a
+mutants-g2-tmpfs.json kernel 7.0.0-38-generic node v24.6.0 statF tmpfs dfT tmpfs tmpRoot /tmp/r526-tmpfs/g2 tool b25d572abf6a
+mutants-g3-tmpfs.json kernel 7.0.0-38-generic node v24.6.0 statF tmpfs dfT tmpfs tmpRoot /tmp/r526-tmpfs/g3 tool b25d572abf6a
+mutants-g1-ext4.json kernel 7.0.0-38-generic node v24.6.0 statF ext2/ext3 dfT ext4 tmpRoot /var/tmp/r526-ext4/m/g1 tool b25d572abf6a
+mutants-g2-ext4.json kernel 7.0.0-38-generic node v24.6.0 statF ext2/ext3 dfT ext4 tmpRoot /var/tmp/r526-ext4/m/g2 tool b25d572abf6a
+mutants-g3-ext4.json kernel 7.0.0-38-generic node v24.6.0 statF ext2/ext3 dfT ext4 tmpRoot /var/tmp/r526-ext4/m/g3 tool b25d572abf6a
+runs 328 problems 0 []
+tmpfs load1 min/max 29.43 61.8
+ext4 load1 min/max 29.43 61.8
+ext4  O1-same-bytes-rewrite                      @fix        {'killed': 5, 'runs': 5, 'failed=11': 5}
+ext4  O8-link-target-chmod-cycle-rewrite         @fix        {'killed': 5, 'runs': 5, 'linkRowOnly': 5, 'failed=1': 5}
+ext4  X3c-target-replaced-by-identical-copy-no-r @base       {'killed': 9, 'runs': 10, 'linkRowOnly': 9, 'failed=1': 9, 'survived': 1, 'failed=0': 1}
+ext4  X3c-target-replaced-by-identical-copy-no-r @fix        {'killed': 10, 'runs': 10, 'linkRowOnly': 10, 'failed=1': 10}
+ext4  X3c-target-replaced-by-identical-copy-no-r @fix-noIno  {'killed': 9, 'runs': 10, 'linkRowOnly': 9, 'failed=1': 9, 'survived': 1, 'failed=0': 1}
+ext4  X3c-target-replaced-by-identical-copy-no-r @pre        {'survived': 3, 'runs': 3, 'failed=0': 3}
+ext4  X3d-target-replaced-by-copy-mode-0644-no-r @base       {'killed': 8, 'runs': 10, 'linkRowOnly': 8, 'failed=1': 8, 'survived': 2, 'failed=0': 2}
+ext4  X3d-target-replaced-by-copy-mode-0644-no-r @fix        {'killed': 10, 'runs': 10, 'linkRowOnly': 10, 'failed=1': 10}
+ext4  X3d-target-replaced-by-copy-mode-0644-no-r @fix-noIno  {'killed': 5, 'runs': 5, 'linkRowOnly': 5, 'failed=1': 5}
+ext4  X3d-target-replaced-by-copy-mode-0644-no-r @fix-noMode {'killed': 5, 'runs': 5, 'linkRowOnly': 5, 'failed=1': 5}
+ext4  X3d-target-replaced-by-copy-mode-0644-no-r @pre        {'survived': 3, 'runs': 3, 'failed=0': 3}
+ext4  X5-target-unlinked-then-rewritten          @base       {'killed': 10, 'runs': 10, 'linkRowOnly': 10, 'failed=1': 10}
+ext4  X5-target-unlinked-then-rewritten          @fix        {'killed': 10, 'runs': 10, 'linkRowOnly': 10, 'failed=1': 10}
+ext4  X5-target-unlinked-then-rewritten          @pre        {'survived': 3, 'runs': 3, 'failed=0': 3}
+ext4  Y1-target-copyfile-renamed-over            @base       {'killed': 3, 'runs': 3, 'linkRowOnly': 3, 'failed=1': 3}
+ext4  Y1-target-copyfile-renamed-over            @fix        {'killed': 5, 'runs': 5, 'linkRowOnly': 5, 'failed=1': 5}
+ext4  Y1-target-copyfile-renamed-over            @fix-noIno  {'killed': 5, 'runs': 5, 'linkRowOnly': 5, 'failed=1': 5}
+ext4  Y2-target-chmod-to-current-mode            @base       {'killed': 3, 'runs': 3, 'linkRowOnly': 3, 'failed=1': 3}
+ext4  Y2-target-chmod-to-current-mode            @fix        {'killed': 5, 'runs': 5, 'linkRowOnly': 5, 'failed=1': 5}
+ext4  Y3-target-unlinked-rewritten-0644          @base       {'killed': 3, 'runs': 3, 'linkRowOnly': 3, 'failed=1': 3}
+ext4  Y3-target-unlinked-rewritten-0644          @fix        {'killed': 5, 'runs': 5, 'linkRowOnly': 5, 'failed=1': 5}
+ext4  Y3-target-unlinked-rewritten-0644          @fix-noIno  {'killed': 5, 'runs': 5, 'linkRowOnly': 5, 'failed=1': 5}
+ext4  Y3-target-unlinked-rewritten-0644          @fix-noMode {'killed': 5, 'runs': 5, 'linkRowOnly': 5, 'failed=1': 5}
+ext4  Y4-target-hard-link-left                   @base       {'killed': 3, 'runs': 3, 'linkRowOnly': 3, 'failed=1': 3}
+ext4  Y4-target-hard-link-left                   @fix        {'killed': 5, 'runs': 5, 'linkRowOnly': 5, 'failed=1': 5}
+ext4  Y5-target-link-rename-unlink-same-inode    @base       {'killed': 3, 'runs': 3, 'linkRowOnly': 3, 'failed=1': 3}
+ext4  Y5-target-link-rename-unlink-same-inode    @fix        {'killed': 5, 'runs': 5, 'linkRowOnly': 5, 'failed=1': 5}
+ext4  unmutated                                  @fix        {'survived': 10, 'runs': 10, 'failed=0': 10}
+tmpfs O1-same-bytes-rewrite                      @fix        {'killed': 5, 'runs': 5, 'failed=11': 5}
+tmpfs O8-link-target-chmod-cycle-rewrite         @fix        {'killed': 5, 'runs': 5, 'linkRowOnly': 5, 'failed=1': 5}
+tmpfs X3c-target-replaced-by-identical-copy-no-r @base       {'killed': 10, 'runs': 10, 'linkRowOnly': 10, 'failed=1': 10}
+tmpfs X3c-target-replaced-by-identical-copy-no-r @fix        {'killed': 10, 'runs': 10, 'linkRowOnly': 10, 'failed=1': 10}
+tmpfs X3c-target-replaced-by-identical-copy-no-r @fix-noIno  {'killed': 10, 'runs': 10, 'linkRowOnly': 10, 'failed=1': 10}
+tmpfs X3c-target-replaced-by-identical-copy-no-r @pre        {'survived': 3, 'runs': 3, 'failed=0': 3}
+tmpfs X3d-target-replaced-by-copy-mode-0644-no-r @base       {'killed': 10, 'runs': 10, 'linkRowOnly': 10, 'failed=1': 10}
+tmpfs X3d-target-replaced-by-copy-mode-0644-no-r @fix        {'killed': 10, 'runs': 10, 'linkRowOnly': 10, 'failed=1': 10}
+tmpfs X3d-target-replaced-by-copy-mode-0644-no-r @fix-noIno  {'killed': 5, 'runs': 5, 'linkRowOnly': 5, 'failed=1': 5}
+tmpfs X3d-target-replaced-by-copy-mode-0644-no-r @fix-noMode {'killed': 5, 'runs': 5, 'linkRowOnly': 5, 'failed=1': 5}
+tmpfs X3d-target-replaced-by-copy-mode-0644-no-r @pre        {'survived': 3, 'runs': 3, 'failed=0': 3}
+tmpfs X5-target-unlinked-then-rewritten          @base       {'killed': 10, 'runs': 10, 'linkRowOnly': 10, 'failed=1': 10}
+tmpfs X5-target-unlinked-then-rewritten          @fix        {'killed': 10, 'runs': 10, 'linkRowOnly': 10, 'failed=1': 10}
+tmpfs X5-target-unlinked-then-rewritten          @pre        {'survived': 3, 'runs': 3, 'failed=0': 3}
+tmpfs Y1-target-copyfile-renamed-over            @base       {'killed': 3, 'runs': 3, 'linkRowOnly': 3, 'failed=1': 3}
+tmpfs Y1-target-copyfile-renamed-over            @fix        {'killed': 5, 'runs': 5, 'linkRowOnly': 5, 'failed=1': 5}
+tmpfs Y1-target-copyfile-renamed-over            @fix-noIno  {'killed': 5, 'runs': 5, 'linkRowOnly': 5, 'failed=1': 5}
+tmpfs Y2-target-chmod-to-current-mode            @base       {'killed': 3, 'runs': 3, 'linkRowOnly': 3, 'failed=1': 3}
+tmpfs Y2-target-chmod-to-current-mode            @fix        {'killed': 5, 'runs': 5, 'linkRowOnly': 5, 'failed=1': 5}
+tmpfs Y3-target-unlinked-rewritten-0644          @base       {'killed': 3, 'runs': 3, 'linkRowOnly': 3, 'failed=1': 3}
+tmpfs Y3-target-unlinked-rewritten-0644          @fix        {'killed': 5, 'runs': 5, 'linkRowOnly': 5, 'failed=1': 5}
+tmpfs Y3-target-unlinked-rewritten-0644          @fix-noIno  {'killed': 5, 'runs': 5, 'linkRowOnly': 5, 'failed=1': 5}
+tmpfs Y3-target-unlinked-rewritten-0644          @fix-noMode {'killed': 5, 'runs': 5, 'linkRowOnly': 5, 'failed=1': 5}
+tmpfs Y4-target-hard-link-left                   @base       {'killed': 3, 'runs': 3, 'linkRowOnly': 3, 'failed=1': 3}
+tmpfs Y4-target-hard-link-left                   @fix        {'killed': 5, 'runs': 5, 'linkRowOnly': 5, 'failed=1': 5}
+tmpfs Y5-target-link-rename-unlink-same-inode    @base       {'killed': 3, 'runs': 3, 'linkRowOnly': 3, 'failed=1': 3}
+tmpfs Y5-target-link-rename-unlink-same-inode    @fix        {'killed': 5, 'runs': 5, 'linkRowOnly': 5, 'failed=1': 5}
+tmpfs unmutated                                  @fix        {'survived': 10, 'runs': 10, 'failed=0': 10}

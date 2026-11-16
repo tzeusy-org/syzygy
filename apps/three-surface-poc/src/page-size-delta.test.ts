@@ -1,7 +1,7 @@
 import { rmSync } from 'node:fs';
 import { afterEach, describe, expect, it } from 'vitest';
 
-import { escapeHtml } from '@syzygy/cap1-daemon';
+import { escapeHtml } from '@syzygy/http-host';
 import type { PocModel } from '@syzygy/three-surface-poc-core';
 
 import { renderOrreryPage } from './orrery.js';

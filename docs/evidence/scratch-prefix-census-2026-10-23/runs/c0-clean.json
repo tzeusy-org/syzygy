@@ -1,0 +1,78 @@
+{
+ "tool": "census_run.py",
+ "treeCommit": "a864e999645a071dda40325b2235976590e02973",
+ "mode": "clean",
+ "command": [
+  "npx",
+  "vitest",
+  "run"
+ ],
+ "privateDirectory": "/tmp/lc418/c0",
+ "tmpdir": "/tmp/lc418/c0/tmp",
+ "sha256": {
+  "census_run.py": "6039545e993610ef67dff1fc60103ade0fe197ab55638c1f9cdec7504b16fe8d",
+  "scratch_trace.cjs": "c9ff0cbbd2c9162c8483082f24202e18fa52f414c9c18a648723285de2ec2688",
+  "tmp_sampler.py": "3e34f06abe672f405ae7107b9e55472e22299dddef2634b167c9373008c2125d"
+ },
+ "loadAverageAtStart": [
+  12.806640625,
+  22.26611328125,
+  28.42626953125
+ ],
+ "killAfterSeconds": null,
+ "leader": {
+  "pid": 1680615,
+  "pgid": 1680615
+ },
+ "exit": 0,
+ "seconds": 151.7,
+ "listingAtEnd": [
+  {
+   "name": ".com.google.Chrome.1ufYFj",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792853900.7,
+   "bytes": 0
+  },
+  {
+   "name": "node-compile-cache",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792853789.3,
+   "bytes": 5672960
+  }
+ ],
+ "processesCarryingTheMarker": {
+  "marker": "--user-data-dir=<private-directory>/tmp/ in the arguments",
+  "count": 0,
+  "byKind": {},
+  "pids": []
+ },
+ "groupMembersAliveAtEnd": 0,
+ "stoppedByPid": {
+  "signal": "SIGTERM",
+  "rounds": 0,
+  "remaining": 0
+ },
+ "listingAfterStopping": [
+  {
+   "name": ".com.google.Chrome.1ufYFj",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792853900.7,
+   "bytes": 0
+  },
+  {
+   "name": "node-compile-cache",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792853789.3,
+   "bytes": 5672960
+  }
+ ],
+ "samplerRecord": "/tmp/lc418/c0/samples.json",
+ "trace": {
+  "lines": 2605,
+  "sha256": "4f44bd0c8ebc93579d63eae2d982191827d23332a456eb4b74a582a432b262b3"
+ }
+}

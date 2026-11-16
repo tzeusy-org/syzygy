@@ -1,0 +1,15 @@
+{"mode": "inject", "version": "new", "param": null, "inject": "killpg-race", "exitCode": 1, "scriptExitAt": 10.539, "clean": false, "noSurvivor": true, "descendantsSeen": 23, "recordTests": null, "recordProfileRows": null}
+  DIRTY: M packages/polaris-generation-consent/src/package-reader.test.ts |  M packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts
+  events: []
+ _run_code
+    exec(code, run_globals)
+  File "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520b/clone/scripts/measure_vitest_test_durations.py", line 133, in <module>
+    out['runs'].append(one_run(i))
+  File "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520b/clone/scripts/measure_vitest_test_durations.py", line 103, in one_run
+    if proc is not None: end_group(proc)
+  File "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520b/clone/scripts/measure_vitest_test_durations.py", line 74, in end_group
+    os.killpg(proc.pid, signal.SIGTERM)
+  File "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520b/tools/inject.py", line 26, in killpg
+    real_killpg(pid, sig)
+ProcessLookupError: [Errno 3] No such process
+

@@ -1,0 +1,11 @@
+
+ RUN  v3.2.7 /home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.11
+
+ ✓ |integration| apps/three-surface-poc/src/polaris-authority-sweep.test.ts (6 tests) 723ms
+   ✓ Zero downstream citations of Polaris as authority (PWB-REQ-014) > no source/authority/provenance field in the governance, spec, code or docs trees names the Polaris surface  543ms
+
+ Test Files  1 passed (1)
+      Tests  6 passed (6)
+   Start at  23:14:42
+   Duration  1.91s (transform 635ms, setup 8ms, collect 818ms, tests 723ms, environment 0ms, prepare 54ms)
+

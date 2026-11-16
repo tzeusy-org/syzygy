@@ -1,0 +1,257 @@
+{
+ "commit": "e8cd624ecb58e24f763c35276eb7764373f5746e",
+ "rows": [
+  {
+   "probe": "docs/evidence/syzygy-bpyt-8-39/npm_alias_probe.py",
+   "probeSha256": "d0681b01b953b0dcff793cb4c6331245ee3c0c101d0977909df30cd0c6444812",
+   "id": "G0-unmutated",
+   "old": null,
+   "new": null,
+   "cases": {
+    "parent-package-json": {
+     "exit": 1,
+     "refused": true,
+     "recordWritten": false,
+     "stderrTail": "<work>/1-parent-package-json/p holds a package.json or node_modules, so npm would read its .npmrc: use a scratch directory outside any npm project"
+    },
+    "parent-node-modules": {
+     "exit": 1,
+     "refused": true,
+     "recordWritten": false,
+     "stderrTail": "<work>/1-parent-node-modules/p holds a package.json or node_modules, so npm would read its .npmrc: use a scratch directory outside any npm project"
+    },
+    "grandparent-package-json": {
+     "exit": 1,
+     "refused": true,
+     "recordWritten": false,
+     "stderrTail": "<work>/1-grandparent-package-json/g holds a package.json or node_modules, so npm would read its .npmrc: use a scratch directory outside any npm project"
+    }
+   },
+   "expectedUnrefused": [],
+   "asExpected": true
+  },
+  {
+   "probe": "docs/evidence/syzygy-bpyt-8-39/npm_alias_probe.py",
+   "probeSha256": "d0681b01b953b0dcff793cb4c6331245ee3c0c101d0977909df30cd0c6444812",
+   "id": "G1-node-modules-not-looked-for",
+   "old": "('package.json', 'node_modules')",
+   "new": "('package.json',)",
+   "cases": {
+    "parent-package-json": {
+     "exit": 1,
+     "refused": true,
+     "recordWritten": false,
+     "stderrTail": "<work>/2-parent-package-json/p holds a package.json or node_modules, so npm would read its .npmrc: use a scratch directory outside any npm project"
+    },
+    "parent-node-modules": {
+     "exit": 0,
+     "refused": false,
+     "recordWritten": true,
+     "stderrTail": ""
+    },
+    "grandparent-package-json": {
+     "exit": 1,
+     "refused": true,
+     "recordWritten": false,
+     "stderrTail": "<work>/2-grandparent-package-json/g holds a package.json or node_modules, so npm would read its .npmrc: use a scratch directory outside any npm project"
+    }
+   },
+   "expectedUnrefused": [
+    "parent-node-modules"
+   ],
+   "asExpected": true
+  },
+  {
+   "probe": "docs/evidence/syzygy-bpyt-8-39/npm_alias_probe.py",
+   "probeSha256": "d0681b01b953b0dcff793cb4c6331245ee3c0c101d0977909df30cd0c6444812",
+   "id": "G2-package-json-not-looked-for",
+   "old": "('package.json', 'node_modules')",
+   "new": "('node_modules',)",
+   "cases": {
+    "parent-package-json": {
+     "exit": 0,
+     "refused": false,
+     "recordWritten": true,
+     "stderrTail": ""
+    },
+    "parent-node-modules": {
+     "exit": 1,
+     "refused": true,
+     "recordWritten": false,
+     "stderrTail": "<work>/3-parent-node-modules/p holds a package.json or node_modules, so npm would read its .npmrc: use a scratch directory outside any npm project"
+    },
+    "grandparent-package-json": {
+     "exit": 0,
+     "refused": false,
+     "recordWritten": true,
+     "stderrTail": ""
+    }
+   },
+   "expectedUnrefused": [
+    "parent-package-json",
+    "grandparent-package-json"
+   ],
+   "asExpected": true
+  },
+  {
+   "probe": "docs/evidence/syzygy-bpyt-8-39/npm_alias_probe.py",
+   "probeSha256": "d0681b01b953b0dcff793cb4c6331245ee3c0c101d0977909df30cd0c6444812",
+   "id": "G3-only-the-parent-looked-at",
+   "old": "    up = os.path.dirname(up)\n",
+   "new": "    break\n",
+   "cases": {
+    "parent-package-json": {
+     "exit": 1,
+     "refused": true,
+     "recordWritten": false,
+     "stderrTail": "<work>/4-parent-package-json/p holds a package.json or node_modules, so npm would read its .npmrc: use a scratch directory outside any npm project"
+    },
+    "parent-node-modules": {
+     "exit": 1,
+     "refused": true,
+     "recordWritten": false,
+     "stderrTail": "<work>/4-parent-node-modules/p holds a package.json or node_modules, so npm would read its .npmrc: use a scratch directory outside any npm project"
+    },
+    "grandparent-package-json": {
+     "exit": 0,
+     "refused": false,
+     "recordWritten": true,
+     "stderrTail": ""
+    }
+   },
+   "expectedUnrefused": [
+    "grandparent-package-json"
+   ],
+   "asExpected": true
+  },
+  {
+   "probe": "docs/evidence/syzygy-bpyt-39/root_exception_probe.py",
+   "probeSha256": "d7b29a5401027f1c1da70c349872b6aca915f662b9c80811f4f9138cc55b9b17",
+   "id": "G0-unmutated",
+   "old": null,
+   "new": null,
+   "cases": {
+    "parent-package-json": {
+     "exit": 1,
+     "refused": true,
+     "recordWritten": false,
+     "stderrTail": "<work>/5-parent-package-json/p holds a package.json or node_modules, so npm would read its .npmrc: use a scratch directory outside any npm project"
+    },
+    "parent-node-modules": {
+     "exit": 1,
+     "refused": true,
+     "recordWritten": false,
+     "stderrTail": "<work>/5-parent-node-modules/p holds a package.json or node_modules, so npm would read its .npmrc: use a scratch directory outside any npm project"
+    },
+    "grandparent-package-json": {
+     "exit": 1,
+     "refused": true,
+     "recordWritten": false,
+     "stderrTail": "<work>/5-grandparent-package-json/g holds a package.json or node_modules, so npm would read its .npmrc: use a scratch directory outside any npm project"
+    }
+   },
+   "expectedUnrefused": [],
+   "asExpected": true
+  },
+  {
+   "probe": "docs/evidence/syzygy-bpyt-39/root_exception_probe.py",
+   "probeSha256": "d7b29a5401027f1c1da70c349872b6aca915f662b9c80811f4f9138cc55b9b17",
+   "id": "G1-node-modules-not-looked-for",
+   "old": "('package.json', 'node_modules')",
+   "new": "('package.json',)",
+   "cases": {
+    "parent-package-json": {
+     "exit": 1,
+     "refused": true,
+     "recordWritten": false,
+     "stderrTail": "<work>/6-parent-package-json/p holds a package.json or node_modules, so npm would read its .npmrc: use a scratch directory outside any npm project"
+    },
+    "parent-node-modules": {
+     "exit": 0,
+     "refused": false,
+     "recordWritten": true,
+     "stderrTail": ""
+    },
+    "grandparent-package-json": {
+     "exit": 1,
+     "refused": true,
+     "recordWritten": false,
+     "stderrTail": "<work>/6-grandparent-package-json/g holds a package.json or node_modules, so npm would read its .npmrc: use a scratch directory outside any npm project"
+    }
+   },
+   "expectedUnrefused": [
+    "parent-node-modules"
+   ],
+   "asExpected": true
+  },
+  {
+   "probe": "docs/evidence/syzygy-bpyt-39/root_exception_probe.py",
+   "probeSha256": "d7b29a5401027f1c1da70c349872b6aca915f662b9c80811f4f9138cc55b9b17",
+   "id": "G2-package-json-not-looked-for",
+   "old": "('package.json', 'node_modules')",
+   "new": "('node_modules',)",
+   "cases": {
+    "parent-package-json": {
+     "exit": 0,
+     "refused": false,
+     "recordWritten": true,
+     "stderrTail": ""
+    },
+    "parent-node-modules": {
+     "exit": 1,
+     "refused": true,
+     "recordWritten": false,
+     "stderrTail": "<work>/7-parent-node-modules/p holds a package.json or node_modules, so npm would read its .npmrc: use a scratch directory outside any npm project"
+    },
+    "grandparent-package-json": {
+     "exit": 0,
+     "refused": false,
+     "recordWritten": true,
+     "stderrTail": ""
+    }
+   },
+   "expectedUnrefused": [
+    "parent-package-json",
+    "grandparent-package-json"
+   ],
+   "asExpected": true
+  },
+  {
+   "probe": "docs/evidence/syzygy-bpyt-39/root_exception_probe.py",
+   "probeSha256": "d7b29a5401027f1c1da70c349872b6aca915f662b9c80811f4f9138cc55b9b17",
+   "id": "G3-only-the-parent-looked-at",
+   "old": "    up = os.path.dirname(up)\n",
+   "new": "    break\n",
+   "cases": {
+    "parent-package-json": {
+     "exit": 1,
+     "refused": true,
+     "recordWritten": false,
+     "stderrTail": "<work>/8-parent-package-json/p holds a package.json or node_modules, so npm would read its .npmrc: use a scratch directory outside any npm project"
+    },
+    "parent-node-modules": {
+     "exit": 1,
+     "refused": true,
+     "recordWritten": false,
+     "stderrTail": "<work>/8-parent-node-modules/p holds a package.json or node_modules, so npm would read its .npmrc: use a scratch directory outside any npm project"
+    },
+    "grandparent-package-json": {
+     "exit": 0,
+     "refused": false,
+     "recordWritten": true,
+     "stderrTail": ""
+    }
+   },
+   "expectedUnrefused": [
+    "grandparent-package-json"
+   ],
+   "asExpected": true
+  }
+ ],
+ "rootExceptionRerun": {
+  "exit": 0,
+  "record": "docs/evidence/syzygy-bpyt-39/root-exception-probe.json",
+  "recordSha256": "cea10b3c635d0239f6dbe0796d0b0c6bf48080bd4609586720ef454e69872ab9",
+  "equalsCommitted": true
+ }
+}

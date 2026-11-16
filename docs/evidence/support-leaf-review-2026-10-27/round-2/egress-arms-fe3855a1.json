@@ -1,0 +1,531 @@
+{
+ "clone": {
+  "commit": "fe3855a1b4f2164da3274e02d868399236c45c9c",
+  "aliasForSupportPresent": false,
+  "distDirs": 11,
+  "statusAfter": ""
+ },
+ "mutants": [
+  {
+   "id": "C0-clean",
+   "kind": "control: unmutated tree",
+   "edits": []
+  },
+  {
+   "id": "M0-lane-udp4-bind-at-import",
+   "kind": "the lane's mutant: node:dgram UDP bind to 127.0.0.1 at import (sha256.ts)",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nimport { createSocket } from 'node:dgram';\ncreateSocket('udp4').bind(0, '127.0.0.1').unref();\n"
+    }
+   ]
+  },
+  {
+   "id": "E1-dynamic-import-net-tcp-at-first-call",
+   "kind": "dynamic import('node:net'), TCP connect to 127.0.0.1:9 on the first sha256() call, not at import",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "export function sha256(value: string | Uint8Array): string {\n  return createHash('sha256').update(value).digest('hex');\n",
+     "new": "let reached = false;\nexport function sha256(value: string | Uint8Array): string {\n  if (!reached) { reached = true; void import('node:net').then((net) => { const s = net.connect(9, '127.0.0.1'); s.on('error', () => {}); s.unref(); }); }\n  return createHash('sha256').update(value).digest('hex');\n"
+    }
+   ]
+  },
+  {
+   "id": "E2-child-process-that-binds-udp4",
+   "kind": "node:child_process execFileSync of a node child that binds a UDP socket, at import (deep-freeze.ts)",
+   "edits": [
+    {
+     "path": "packages/support/src/deep-freeze.ts",
+     "old": "/**\n * Freezes the value",
+     "new": "import { execFileSync } from 'node:child_process';\nexecFileSync(process.execPath, ['-e', \"require('node:dgram').createSocket('udp4').bind(0, '127.0.0.1', () => process.exit(0))\"]);\n/**\n * Freezes the value"
+    }
+   ]
+  },
+  {
+   "id": "E3-udp6-bind-at-import",
+   "kind": "node:dgram udp6 (AF_INET6) bind to ::1 at import (deep-freeze.ts)",
+   "edits": [
+    {
+     "path": "packages/support/src/deep-freeze.ts",
+     "old": "/**\n * Freezes the value",
+     "new": "import { createSocket } from 'node:dgram';\nconst s6 = createSocket('udp6'); s6.on('error', () => {}); s6.bind(0, '::1'); s6.unref();\n/**\n * Freezes the value"
+    }
+   ]
+  },
+  {
+   "id": "E4-global-fetch-at-first-call",
+   "kind": "global fetch() of http://127.0.0.1:9/ on the first deepFreeze() call, no import at all",
+   "edits": [
+    {
+     "path": "packages/support/src/deep-freeze.ts",
+     "old": "export function deepFreeze<T>(value: T): T {\n",
+     "new": "let fetched = false;\nexport function deepFreeze<T>(value: T): T {\n  if (!fetched) { fetched = true; void fetch('http://127.0.0.1:9/').catch(() => {}); }\n"
+    }
+   ]
+  },
+  {
+   "id": "E5-fs-write-at-import",
+   "kind": "node:fs write at import (not network egress): writes <e5dir>/wrote-<pid> with process.argv[1]",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nimport { writeFileSync } from 'node:fs';\ntry { writeFileSync(`/tmp/r530b-e5f/wrote-${process.pid}`, String(process.argv[1])); } catch { /* reviewer mutant */ }\n"
+    }
+   ]
+  }
+ ],
+ "rows": [
+  {
+   "id": "C0-clean",
+   "kind": "control: unmutated tree",
+   "distAbsent": false,
+   "exit": 0,
+   "seconds": 34.7,
+   "tests": {
+    "passed": 2,
+    "failed": 0,
+    "pending": 1,
+    "total": 3
+   },
+   "perTest": [
+    {
+     "title": "creates no Internet-family socket over the whole run, from preflight to close",
+     "status": "passed",
+     "failure": ""
+    },
+    {
+     "title": "sees the canary: one loopback datagram sent before the same run is in the capture",
+     "status": "passed",
+     "failure": ""
+    },
+    {
+     "title": "is not proved on this host: strace is unavailable, so the capture is skipped, never reported as passed",
+     "status": "skipped",
+     "failure": ""
+    }
+   ],
+   "suiteFailure": []
+  },
+  {
+   "id": "C0-clean",
+   "kind": "control: unmutated tree",
+   "distAbsent": true,
+   "exit": 1,
+   "seconds": 24.3,
+   "tests": {
+    "passed": 0,
+    "failed": 0,
+    "pending": 3,
+    "total": 3
+   },
+   "perTest": [
+    {
+     "title": "creates no Internet-family socket over the whole run, from preflight to close",
+     "status": "skipped",
+     "failure": ""
+    },
+    {
+     "title": "sees the canary: one loopback datagram sent before the same run is in the capture",
+     "status": "skipped",
+     "failure": ""
+    },
+    {
+     "title": "is not proved on this host: strace is unavailable, so the capture is skipped, never reported as passed",
+     "status": "skipped",
+     "failure": ""
+    }
+   ],
+   "suiteFailure": [
+    "Build failed with 32 errors:\napps/three-surface-poc/src/polaris-generation/dossier-site.ts:9:23: ERROR: Could not resolve \"@syzygy/support\"\napps/three-surface-poc/src/polaris-generation/draft-preview.ts:7:23: ERROR: Could not resolve \"@syzygy/support\"\npackages/polaris-dossier/src/brief.ts:5:23: ERROR: Could not resolve \"@syzygy/support\"\npackages/polaris-dossier/src/check.ts:5:23: ERROR: Could not resolve \"@syzygy/support\"\npackages/polaris-dossier/src/close.ts:4:23: ERROR: Could not resolve \"@syzygy/support\"\n..."
+   ]
+  },
+  {
+   "id": "M0-lane-udp4-bind-at-import",
+   "kind": "the lane's mutant: node:dgram UDP bind to 127.0.0.1 at import (sha256.ts)",
+   "distAbsent": false,
+   "exit": 0,
+   "seconds": 26.6,
+   "tests": {
+    "passed": 2,
+    "failed": 0,
+    "pending": 1,
+    "total": 3
+   },
+   "perTest": [
+    {
+     "title": "creates no Internet-family socket over the whole run, from preflight to close",
+     "status": "passed",
+     "failure": ""
+    },
+    {
+     "title": "sees the canary: one loopback datagram sent before the same run is in the capture",
+     "status": "passed",
+     "failure": ""
+    },
+    {
+     "title": "is not proved on this host: strace is unavailable, so the capture is skipped, never reported as passed",
+     "status": "skipped",
+     "failure": ""
+    }
+   ],
+   "suiteFailure": []
+  },
+  {
+   "id": "M0-lane-udp4-bind-at-import",
+   "kind": "the lane's mutant: node:dgram UDP bind to 127.0.0.1 at import (sha256.ts)",
+   "distAbsent": true,
+   "exit": 1,
+   "seconds": 16.2,
+   "tests": {
+    "passed": 0,
+    "failed": 0,
+    "pending": 3,
+    "total": 3
+   },
+   "perTest": [
+    {
+     "title": "creates no Internet-family socket over the whole run, from preflight to close",
+     "status": "skipped",
+     "failure": ""
+    },
+    {
+     "title": "sees the canary: one loopback datagram sent before the same run is in the capture",
+     "status": "skipped",
+     "failure": ""
+    },
+    {
+     "title": "is not proved on this host: strace is unavailable, so the capture is skipped, never reported as passed",
+     "status": "skipped",
+     "failure": ""
+    }
+   ],
+   "suiteFailure": [
+    "Build failed with 32 errors:\napps/three-surface-poc/src/polaris-generation/dossier-site.ts:9:23: ERROR: Could not resolve \"@syzygy/support\"\napps/three-surface-poc/src/polaris-generation/draft-preview.ts:7:23: ERROR: Could not resolve \"@syzygy/support\"\npackages/polaris-dossier/src/brief.ts:5:23: ERROR: Could not resolve \"@syzygy/support\"\npackages/polaris-dossier/src/check.ts:5:23: ERROR: Could not resolve \"@syzygy/support\"\npackages/polaris-dossier/src/close.ts:4:23: ERROR: Could not resolve \"@syzygy/support\"\n..."
+   ]
+  },
+  {
+   "id": "E1-dynamic-import-net-tcp-at-first-call",
+   "kind": "dynamic import('node:net'), TCP connect to 127.0.0.1:9 on the first sha256() call, not at import",
+   "distAbsent": false,
+   "exit": 0,
+   "seconds": 21.4,
+   "tests": {
+    "passed": 2,
+    "failed": 0,
+    "pending": 1,
+    "total": 3
+   },
+   "perTest": [
+    {
+     "title": "creates no Internet-family socket over the whole run, from preflight to close",
+     "status": "passed",
+     "failure": ""
+    },
+    {
+     "title": "sees the canary: one loopback datagram sent before the same run is in the capture",
+     "status": "passed",
+     "failure": ""
+    },
+    {
+     "title": "is not proved on this host: strace is unavailable, so the capture is skipped, never reported as passed",
+     "status": "skipped",
+     "failure": ""
+    }
+   ],
+   "suiteFailure": []
+  },
+  {
+   "id": "E1-dynamic-import-net-tcp-at-first-call",
+   "kind": "dynamic import('node:net'), TCP connect to 127.0.0.1:9 on the first sha256() call, not at import",
+   "distAbsent": true,
+   "exit": 1,
+   "seconds": 9.6,
+   "tests": {
+    "passed": 0,
+    "failed": 0,
+    "pending": 3,
+    "total": 3
+   },
+   "perTest": [
+    {
+     "title": "creates no Internet-family socket over the whole run, from preflight to close",
+     "status": "skipped",
+     "failure": ""
+    },
+    {
+     "title": "sees the canary: one loopback datagram sent before the same run is in the capture",
+     "status": "skipped",
+     "failure": ""
+    },
+    {
+     "title": "is not proved on this host: strace is unavailable, so the capture is skipped, never reported as passed",
+     "status": "skipped",
+     "failure": ""
+    }
+   ],
+   "suiteFailure": [
+    "Build failed with 32 errors:\napps/three-surface-poc/src/polaris-generation/dossier-site.ts:9:23: ERROR: Could not resolve \"@syzygy/support\"\napps/three-surface-poc/src/polaris-generation/draft-preview.ts:7:23: ERROR: Could not resolve \"@syzygy/support\"\npackages/polaris-dossier/src/brief.ts:5:23: ERROR: Could not resolve \"@syzygy/support\"\npackages/polaris-dossier/src/check.ts:5:23: ERROR: Could not resolve \"@syzygy/support\"\npackages/polaris-dossier/src/close.ts:4:23: ERROR: Could not resolve \"@syzygy/support\"\n..."
+   ]
+  },
+  {
+   "id": "E2-child-process-that-binds-udp4",
+   "kind": "node:child_process execFileSync of a node child that binds a UDP socket, at import (deep-freeze.ts)",
+   "distAbsent": false,
+   "exit": 0,
+   "seconds": 14.2,
+   "tests": {
+    "passed": 2,
+    "failed": 0,
+    "pending": 1,
+    "total": 3
+   },
+   "perTest": [
+    {
+     "title": "creates no Internet-family socket over the whole run, from preflight to close",
+     "status": "passed",
+     "failure": ""
+    },
+    {
+     "title": "sees the canary: one loopback datagram sent before the same run is in the capture",
+     "status": "passed",
+     "failure": ""
+    },
+    {
+     "title": "is not proved on this host: strace is unavailable, so the capture is skipped, never reported as passed",
+     "status": "skipped",
+     "failure": ""
+    }
+   ],
+   "suiteFailure": []
+  },
+  {
+   "id": "E2-child-process-that-binds-udp4",
+   "kind": "node:child_process execFileSync of a node child that binds a UDP socket, at import (deep-freeze.ts)",
+   "distAbsent": true,
+   "exit": 1,
+   "seconds": 8.8,
+   "tests": {
+    "passed": 0,
+    "failed": 0,
+    "pending": 3,
+    "total": 3
+   },
+   "perTest": [
+    {
+     "title": "creates no Internet-family socket over the whole run, from preflight to close",
+     "status": "skipped",
+     "failure": ""
+    },
+    {
+     "title": "sees the canary: one loopback datagram sent before the same run is in the capture",
+     "status": "skipped",
+     "failure": ""
+    },
+    {
+     "title": "is not proved on this host: strace is unavailable, so the capture is skipped, never reported as passed",
+     "status": "skipped",
+     "failure": ""
+    }
+   ],
+   "suiteFailure": [
+    "Build failed with 32 errors:\napps/three-surface-poc/src/polaris-generation/dossier-site.ts:9:23: ERROR: Could not resolve \"@syzygy/support\"\napps/three-surface-poc/src/polaris-generation/draft-preview.ts:7:23: ERROR: Could not resolve \"@syzygy/support\"\npackages/polaris-dossier/src/brief.ts:5:23: ERROR: Could not resolve \"@syzygy/support\"\npackages/polaris-dossier/src/check.ts:5:23: ERROR: Could not resolve \"@syzygy/support\"\npackages/polaris-dossier/src/close.ts:4:23: ERROR: Could not resolve \"@syzygy/support\"\n..."
+   ]
+  },
+  {
+   "id": "E3-udp6-bind-at-import",
+   "kind": "node:dgram udp6 (AF_INET6) bind to ::1 at import (deep-freeze.ts)",
+   "distAbsent": false,
+   "exit": 0,
+   "seconds": 11.3,
+   "tests": {
+    "passed": 2,
+    "failed": 0,
+    "pending": 1,
+    "total": 3
+   },
+   "perTest": [
+    {
+     "title": "creates no Internet-family socket over the whole run, from preflight to close",
+     "status": "passed",
+     "failure": ""
+    },
+    {
+     "title": "sees the canary: one loopback datagram sent before the same run is in the capture",
+     "status": "passed",
+     "failure": ""
+    },
+    {
+     "title": "is not proved on this host: strace is unavailable, so the capture is skipped, never reported as passed",
+     "status": "skipped",
+     "failure": ""
+    }
+   ],
+   "suiteFailure": []
+  },
+  {
+   "id": "E3-udp6-bind-at-import",
+   "kind": "node:dgram udp6 (AF_INET6) bind to ::1 at import (deep-freeze.ts)",
+   "distAbsent": true,
+   "exit": 1,
+   "seconds": 8.8,
+   "tests": {
+    "passed": 0,
+    "failed": 0,
+    "pending": 3,
+    "total": 3
+   },
+   "perTest": [
+    {
+     "title": "creates no Internet-family socket over the whole run, from preflight to close",
+     "status": "skipped",
+     "failure": ""
+    },
+    {
+     "title": "sees the canary: one loopback datagram sent before the same run is in the capture",
+     "status": "skipped",
+     "failure": ""
+    },
+    {
+     "title": "is not proved on this host: strace is unavailable, so the capture is skipped, never reported as passed",
+     "status": "skipped",
+     "failure": ""
+    }
+   ],
+   "suiteFailure": [
+    "Build failed with 32 errors:\napps/three-surface-poc/src/polaris-generation/dossier-site.ts:9:23: ERROR: Could not resolve \"@syzygy/support\"\napps/three-surface-poc/src/polaris-generation/draft-preview.ts:7:23: ERROR: Could not resolve \"@syzygy/support\"\npackages/polaris-dossier/src/brief.ts:5:23: ERROR: Could not resolve \"@syzygy/support\"\npackages/polaris-dossier/src/check.ts:5:23: ERROR: Could not resolve \"@syzygy/support\"\npackages/polaris-dossier/src/close.ts:4:23: ERROR: Could not resolve \"@syzygy/support\"\n..."
+   ]
+  },
+  {
+   "id": "E4-global-fetch-at-first-call",
+   "kind": "global fetch() of http://127.0.0.1:9/ on the first deepFreeze() call, no import at all",
+   "distAbsent": false,
+   "exit": 0,
+   "seconds": 19.2,
+   "tests": {
+    "passed": 2,
+    "failed": 0,
+    "pending": 1,
+    "total": 3
+   },
+   "perTest": [
+    {
+     "title": "creates no Internet-family socket over the whole run, from preflight to close",
+     "status": "passed",
+     "failure": ""
+    },
+    {
+     "title": "sees the canary: one loopback datagram sent before the same run is in the capture",
+     "status": "passed",
+     "failure": ""
+    },
+    {
+     "title": "is not proved on this host: strace is unavailable, so the capture is skipped, never reported as passed",
+     "status": "skipped",
+     "failure": ""
+    }
+   ],
+   "suiteFailure": []
+  },
+  {
+   "id": "E4-global-fetch-at-first-call",
+   "kind": "global fetch() of http://127.0.0.1:9/ on the first deepFreeze() call, no import at all",
+   "distAbsent": true,
+   "exit": 1,
+   "seconds": 12.8,
+   "tests": {
+    "passed": 0,
+    "failed": 0,
+    "pending": 3,
+    "total": 3
+   },
+   "perTest": [
+    {
+     "title": "creates no Internet-family socket over the whole run, from preflight to close",
+     "status": "skipped",
+     "failure": ""
+    },
+    {
+     "title": "sees the canary: one loopback datagram sent before the same run is in the capture",
+     "status": "skipped",
+     "failure": ""
+    },
+    {
+     "title": "is not proved on this host: strace is unavailable, so the capture is skipped, never reported as passed",
+     "status": "skipped",
+     "failure": ""
+    }
+   ],
+   "suiteFailure": [
+    "Build failed with 32 errors:\napps/three-surface-poc/src/polaris-generation/dossier-site.ts:9:23: ERROR: Could not resolve \"@syzygy/support\"\napps/three-surface-poc/src/polaris-generation/draft-preview.ts:7:23: ERROR: Could not resolve \"@syzygy/support\"\npackages/polaris-dossier/src/brief.ts:5:23: ERROR: Could not resolve \"@syzygy/support\"\npackages/polaris-dossier/src/check.ts:5:23: ERROR: Could not resolve \"@syzygy/support\"\npackages/polaris-dossier/src/close.ts:4:23: ERROR: Could not resolve \"@syzygy/support\"\n..."
+   ]
+  },
+  {
+   "id": "E5-fs-write-at-import",
+   "kind": "node:fs write at import (not network egress): writes <e5dir>/wrote-<pid> with process.argv[1]",
+   "distAbsent": false,
+   "exit": 0,
+   "seconds": 17.2,
+   "tests": {
+    "passed": 2,
+    "failed": 0,
+    "pending": 1,
+    "total": 3
+   },
+   "perTest": [
+    {
+     "title": "creates no Internet-family socket over the whole run, from preflight to close",
+     "status": "passed",
+     "failure": ""
+    },
+    {
+     "title": "sees the canary: one loopback datagram sent before the same run is in the capture",
+     "status": "passed",
+     "failure": ""
+    },
+    {
+     "title": "is not proved on this host: strace is unavailable, so the capture is skipped, never reported as passed",
+     "status": "skipped",
+     "failure": ""
+    }
+   ],
+   "suiteFailure": []
+  },
+  {
+   "id": "E5-fs-write-at-import",
+   "kind": "node:fs write at import (not network egress): writes <e5dir>/wrote-<pid> with process.argv[1]",
+   "distAbsent": true,
+   "exit": 1,
+   "seconds": 15.7,
+   "tests": {
+    "passed": 0,
+    "failed": 0,
+    "pending": 3,
+    "total": 3
+   },
+   "perTest": [
+    {
+     "title": "creates no Internet-family socket over the whole run, from preflight to close",
+     "status": "skipped",
+     "failure": ""
+    },
+    {
+     "title": "sees the canary: one loopback datagram sent before the same run is in the capture",
+     "status": "skipped",
+     "failure": ""
+    },
+    {
+     "title": "is not proved on this host: strace is unavailable, so the capture is skipped, never reported as passed",
+     "status": "skipped",
+     "failure": ""
+    }
+   ],
+   "suiteFailure": [
+    "Build failed with 32 errors:\napps/three-surface-poc/src/polaris-generation/dossier-site.ts:9:23: ERROR: Could not resolve \"@syzygy/support\"\napps/three-surface-poc/src/polaris-generation/draft-preview.ts:7:23: ERROR: Could not resolve \"@syzygy/support\"\npackages/polaris-dossier/src/brief.ts:5:23: ERROR: Could not resolve \"@syzygy/support\"\npackages/polaris-dossier/src/check.ts:5:23: ERROR: Could not resolve \"@syzygy/support\"\npackages/polaris-dossier/src/close.ts:4:23: ERROR: Could not resolve \"@syzygy/support\"\n..."
+   ]
+  }
+ ]
+}

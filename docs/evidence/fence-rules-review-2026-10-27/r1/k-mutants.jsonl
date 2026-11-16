@@ -1,0 +1,2 @@
+{"id": "K1-consent-opener-indent4", "file": "packages/polaris-generation-consent/src/package-reader.ts", "old": "const m = /^ {0,3}(`{3,}|~{3,})(.*)$/.exec(line);", "new": "const m = /^ {0,4}(`{3,}|~{3,})(.*)$/.exec(line);"}
+{"id": "K2-consent-closer-strictly-longer", "file": "packages/polaris-generation-consent/src/package-reader.ts", "old": "m[1]!.length >= open.length", "new": "m[1]!.length > open.length"}

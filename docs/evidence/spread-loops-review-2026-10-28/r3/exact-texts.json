@@ -1,0 +1,66 @@
+{
+ "items": [
+  {
+   "id": "F1 raw block",
+   "new@head": {
+    "exact": 0,
+    "folded": 1
+   },
+   "new@r2": {
+    "exact": 0,
+    "folded": 0
+   }
+  },
+  {
+   "id": "F1 patch added lines",
+   "lines": 4,
+   "eachOnceAtHead": [
+    1,
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "id": "F2.1 build-record.py",
+   "old@head": {
+    "exact": 0,
+    "folded": 0
+   },
+   "new@head": {
+    "exact": 1,
+    "folded": 1
+   },
+   "newText": "the control run at the tests commit (the code commit's production bytes with the reviewed test files) fails none."
+  },
+  {
+   "id": "F2.2 PR body",
+   "old@body": {
+    "exact": 0,
+    "folded": 0
+   },
+   "new@body": {
+    "exact": 1,
+    "folded": 1
+   },
+   "newText": "Repaired in `b6ab0a2a` (tests, `AGENTS.md`, evidence tools and the ceiling figure; no production byte)"
+  },
+  {
+   "id": "N1 reader",
+   "count": 1,
+   "insideDescribe": true
+  },
+  {
+   "id": "N1 model",
+   "count": 1,
+   "insideDescribe": true
+  },
+  {
+   "id": "N2 countsAt",
+   "count@head": 1,
+   "text": "'countsAt': tests_commit if is_test else code"
+  }
+ ],
+ "nbspInRaw": 0,
+ "nbspInBody": 0
+}

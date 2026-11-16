@@ -297,13 +297,15 @@ def selftest():
             shutil.copyfile(ROOT / rel, base / rel)
         review = "docs/reviews/R-SELFTEST-RAW.md"
         if (base / ACT).exists():
-            # After sign-off, rebuild the candidate state the fixtures start from.
+            # Resolve later signed layers while the complete act chain exists.
+            # Removing this predecessor act first invalidates P115 recognition.
+            predecessor = builder(base).predecessor_bytes()
             (base / ACT).unlink()
             aggregate = read(base, AGGREGATE).decode()
             begin = aggregate.index(f"\n<!-- {MARKER}:BEGIN -->")
             end = aggregate.index(f"<!-- {MARKER}:END -->\n") + len(f"<!-- {MARKER}:END -->\n")
             (base / AGGREGATE).write_text(aggregate[:begin] + aggregate[end:])
-            for rel, data in builder(base).predecessor_bytes().items():
+            for rel, data in predecessor.items():
                 (base / rel).write_bytes(data)
             subprocess.run(["git", "-C", str(base), "-c", "user.email=selftest@example.invalid",
                             "-c", "user.name=selftest", "commit", "-qam", "unperform"],

@@ -1,0 +1,854 @@
+{
+ "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+ "rows": [
+  {
+   "id": "lane S1-admits-null",
+   "file": "packages/support/src/is-record.ts",
+   "line": 8,
+   "old": "return value !== null && typeof value === 'object' && !Array.isArray(value);",
+   "new": "return typeof value === 'object' && !Array.isArray(value);",
+   "tests": [
+    "packages/support/src/is-record.test.ts"
+   ],
+   "laneKilled": true,
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 1,
+   "passed": 40,
+   "failed": 1,
+   "total": 41,
+   "firstFailures": [
+    [
+     "isRecord refuses null",
+     "AssertionError: expected true to be false // Object.is equality"
+    ]
+   ],
+   "seconds": 3.0,
+   "loadavg": "24.89 25.52 28.14",
+   "killed": true
+  },
+  {
+   "id": "lane S2-admits-primitives",
+   "file": "packages/support/src/is-record.ts",
+   "line": 8,
+   "old": "return value !== null && typeof value === 'object' && !Array.isArray(value);",
+   "new": "return value !== null && !Array.isArray(value);",
+   "tests": [
+    "packages/support/src/is-record.test.ts"
+   ],
+   "laneKilled": true,
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 1,
+   "passed": 29,
+   "failed": 12,
+   "total": 41,
+   "firstFailures": [
+    [
+     "isRecord refuses undefined",
+     "AssertionError: expected true to be false // Object.is equality"
+    ],
+    [
+     "isRecord refuses true",
+     "AssertionError: expected true to be false // Object.is equality"
+    ]
+   ],
+   "seconds": 2.3,
+   "loadavg": "24.89 25.52 28.14",
+   "killed": true
+  },
+  {
+   "id": "lane S3-admits-arrays",
+   "file": "packages/support/src/is-record.ts",
+   "line": 8,
+   "old": "return value !== null && typeof value === 'object' && !Array.isArray(value);",
+   "new": "return value !== null && typeof value === 'object';",
+   "tests": [
+    "packages/support/src/is-record.test.ts"
+   ],
+   "laneKilled": true,
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 1,
+   "passed": 34,
+   "failed": 7,
+   "total": 41,
+   "firstFailures": [
+    [
+     "isRecord refuses an empty array",
+     "AssertionError: expected true to be false // Object.is equality"
+    ],
+    [
+     "isRecord refuses an array with a hole",
+     "AssertionError: expected true to be false // Object.is equality"
+    ]
+   ],
+   "seconds": 2.5,
+   "loadavg": "27.70 26.09 28.31",
+   "killed": true
+  },
+  {
+   "id": "lane S4-admits-functions",
+   "file": "packages/support/src/is-record.ts",
+   "line": 8,
+   "old": "return value !== null && typeof value === 'object' && !Array.isArray(value);",
+   "new": "return value !== null && (typeof value === 'object' || typeof value === 'function') && !Array.isArray(value);",
+   "tests": [
+    "packages/support/src/is-record.test.ts"
+   ],
+   "laneKilled": true,
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 1,
+   "passed": 38,
+   "failed": 3,
+   "total": 41,
+   "firstFailures": [
+    [
+     "isRecord refuses a function",
+     "AssertionError: expected true to be false // Object.is equality"
+    ],
+    [
+     "isRecord refuses a class",
+     "AssertionError: expected true to be false // Object.is equality"
+    ]
+   ],
+   "seconds": 4.0,
+   "loadavg": "27.70 26.09 28.31",
+   "killed": true
+  },
+  {
+   "id": "lane S5-instanceof-array-for-array-is-array",
+   "file": "packages/support/src/is-record.ts",
+   "line": 8,
+   "old": "return value !== null && typeof value === 'object' && !Array.isArray(value);",
+   "new": "return value !== null && typeof value === 'object' && !(value instanceof Array);",
+   "tests": [
+    "packages/support/src/is-record.test.ts"
+   ],
+   "laneKilled": true,
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 1,
+   "passed": 38,
+   "failed": 3,
+   "total": 41,
+   "firstFailures": [
+    [
+     "isRecord admits an object whose prototype is Array.prototype",
+     "AssertionError: expected false to be true // Object.is equality"
+    ],
+    [
+     "isRecord admits a proxy whose traps throw, which no trap is asked",
+     "Error: a trap must not run"
+    ]
+   ],
+   "seconds": 4.4,
+   "loadavg": "27.24 26.02 28.28",
+   "killed": true
+  },
+  {
+   "id": "lane S6-plain-objects-only",
+   "file": "packages/support/src/is-record.ts",
+   "line": 8,
+   "old": "return value !== null && typeof value === 'object' && !Array.isArray(value);",
+   "new": "return value !== null && typeof value === 'object' && !Array.isArray(value) && [Object.prototype, null].includes(Object.getPrototypeOf(value) as object | null);",
+   "tests": [
+    "packages/support/src/is-record.test.ts"
+   ],
+   "laneKilled": true,
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 1,
+   "passed": 30,
+   "failed": 11,
+   "total": 41,
+   "firstFailures": [
+    [
+     "isRecord admits an object whose prototype is Array.prototype",
+     "AssertionError: expected false to be true // Object.is equality"
+    ],
+    [
+     "isRecord admits a class instance",
+     "AssertionError: expected false to be true // Object.is equality"
+    ]
+   ],
+   "seconds": 3.4,
+   "loadavg": "27.79 26.16 28.31",
+   "killed": true
+  },
+  {
+   "id": "lane S7-swallows-the-revoked-proxy-throw",
+   "file": "packages/support/src/is-record.ts",
+   "line": 8,
+   "old": "return value !== null && typeof value === 'object' && !Array.isArray(value);",
+   "new": "try { return value !== null && typeof value === 'object' && !Array.isArray(value); } catch { return false; }",
+   "tests": [
+    "packages/support/src/is-record.test.ts"
+   ],
+   "laneKilled": true,
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 1,
+   "passed": 40,
+   "failed": 1,
+   "total": 41,
+   "firstFailures": [
+    [
+     "isRecord throws a TypeError on a revoked proxy, of an object or of an array, instead of answering",
+     "AssertionError: expected function to throw an error, but it didn't"
+    ]
+   ],
+   "seconds": 3.2,
+   "loadavg": "29.08 26.45 28.39",
+   "killed": true
+  },
+  {
+   "id": "lane S8-always-true",
+   "file": "packages/support/src/is-record.ts",
+   "line": 8,
+   "old": "return value !== null && typeof value === 'object' && !Array.isArray(value);",
+   "new": "return true;",
+   "tests": [
+    "packages/support/src/is-record.test.ts"
+   ],
+   "laneKilled": true,
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 1,
+   "passed": 21,
+   "failed": 20,
+   "total": 41,
+   "firstFailures": [
+    [
+     "isRecord refuses undefined",
+     "AssertionError: expected true to be false // Object.is equality"
+    ],
+    [
+     "isRecord refuses null",
+     "AssertionError: expected true to be false // Object.is equality"
+    ]
+   ],
+   "seconds": 2.5,
+   "loadavg": "29.08 26.45 28.39",
+   "killed": true
+  },
+  {
+   "id": "lane S9-always-false",
+   "file": "packages/support/src/is-record.ts",
+   "line": 8,
+   "old": "return value !== null && typeof value === 'object' && !Array.isArray(value);",
+   "new": "return false;",
+   "tests": [
+    "packages/support/src/is-record.test.ts"
+   ],
+   "laneKilled": true,
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 1,
+   "passed": 19,
+   "failed": 22,
+   "total": 41,
+   "firstFailures": [
+    [
+     "isRecord admits an empty object",
+     "AssertionError: expected false to be true // Object.is equality"
+    ],
+    [
+     "isRecord admits an object with a key",
+     "AssertionError: expected false to be true // Object.is equality"
+    ]
+   ],
+   "seconds": 3.1,
+   "loadavg": "30.44 26.78 28.49",
+   "killed": true
+  },
+  {
+   "id": "lane I1-http-date-form",
+   "file": "packages/polaris-dossier/src/iso-of.ts",
+   "line": 9,
+   "old": "new Date(instant).toISOString();",
+   "new": "new Date(instant).toUTCString();",
+   "tests": [
+    "packages/polaris-dossier/src/iso-of.test.ts"
+   ],
+   "laneKilled": true,
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 1,
+   "passed": 0,
+   "failed": 18,
+   "total": 18,
+   "firstFailures": [
+    [
+     "isoOf writes the epoch",
+     "AssertionError: expected 'Thu, 01 Jan 1970 00:00:00 GMT' to be '1970-01-01T00:00:00.000Z' // Object.is equality"
+    ],
+    [
+     "isoOf writes one millisecond after the epoch",
+     "AssertionError: expected 'Thu, 01 Jan 1970 00:00:00 GMT' to be '1970-01-01T00:00:00.001Z' // Object.is equality"
+    ]
+   ],
+   "seconds": 2.8,
+   "loadavg": "30.44 26.78 28.49",
+   "killed": true
+  },
+  {
+   "id": "lane I2-drops-the-milliseconds",
+   "file": "packages/polaris-dossier/src/iso-of.ts",
+   "line": 9,
+   "old": "new Date(instant).toISOString();",
+   "new": "new Date(instant).toISOString().slice(0, 19) + 'Z';",
+   "tests": [
+    "packages/polaris-dossier/src/iso-of.test.ts"
+   ],
+   "laneKilled": true,
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 1,
+   "passed": 5,
+   "failed": 13,
+   "total": 18,
+   "firstFailures": [
+    [
+     "isoOf writes the epoch",
+     "AssertionError: expected '1970-01-01T00:00:00Z' to be '1970-01-01T00:00:00.000Z' // Object.is equality"
+    ],
+    [
+     "isoOf writes one millisecond after the epoch",
+     "AssertionError: expected '1970-01-01T00:00:00Z' to be '1970-01-01T00:00:00.001Z' // Object.is equality"
+    ]
+   ],
+   "seconds": 2.2,
+   "loadavg": "29.68 26.68 28.45",
+   "killed": true
+  },
+  {
+   "id": "lane I3-absolute-value",
+   "file": "packages/polaris-dossier/src/iso-of.ts",
+   "line": 9,
+   "old": "new Date(instant).toISOString();",
+   "new": "new Date(Math.abs(instant)).toISOString();",
+   "tests": [
+    "packages/polaris-dossier/src/iso-of.test.ts"
+   ],
+   "laneKilled": true,
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 1,
+   "passed": 14,
+   "failed": 4,
+   "total": 18,
+   "firstFailures": [
+    [
+     "isoOf writes one millisecond before the epoch",
+     "AssertionError: expected '1970-01-01T00:00:00.001Z' to be '1969-12-31T23:59:59.999Z' // Object.is equality"
+    ],
+    [
+     "isoOf writes the first instant of year 0000",
+     "AssertionError: expected '3940-01-02T00:00:00.000Z' to be '0000-01-01T00:00:00.000Z' // Object.is equality"
+    ]
+   ],
+   "seconds": 2.7,
+   "loadavg": "29.68 26.68 28.45",
+   "killed": true
+  },
+  {
+   "id": "lane I4-swallows-the-range-error",
+   "file": "packages/polaris-dossier/src/iso-of.ts",
+   "line": 9,
+   "old": "export const isoOf = (instant: number): string => new Date(instant).toISOString();",
+   "new": "export const isoOf = (instant: number): string => { try { return new Date(instant).toISOString(); } catch { return ''; } };",
+   "tests": [
+    "packages/polaris-dossier/src/iso-of.test.ts"
+   ],
+   "laneKilled": true,
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 1,
+   "passed": 13,
+   "failed": 5,
+   "total": 18,
+   "firstFailures": [
+    [
+     "isoOf throws a RangeError for one past the largest instant a Date holds instead of writing text",
+     "AssertionError: expected function to throw an error, but it didn't"
+    ],
+    [
+     "isoOf throws a RangeError for one before the smallest instant a Date holds instead of writing text",
+     "AssertionError: expected function to throw an error, but it didn't"
+    ]
+   ],
+   "seconds": 2.2,
+   "loadavg": "28.67 26.52 28.38",
+   "killed": true
+  },
+  {
+   "id": "lane I5-local-time-form",
+   "file": "packages/polaris-dossier/src/iso-of.ts",
+   "line": 9,
+   "old": "new Date(instant).toISOString();",
+   "new": "new Date(instant).toString();",
+   "tests": [
+    "packages/polaris-dossier/src/iso-of.test.ts"
+   ],
+   "laneKilled": true,
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 1,
+   "passed": 0,
+   "failed": 18,
+   "total": 18,
+   "firstFailures": [
+    [
+     "isoOf writes the epoch",
+     "AssertionError: expected 'Thu Jan 01 1970 07:30:00 GMT+0730 (Si\u2026' to be '1970-01-01T00:00:00.000Z' // Object.is equality"
+    ],
+    [
+     "isoOf writes one millisecond after the epoch",
+     "AssertionError: expected 'Thu Jan 01 1970 07:30:00 GMT+0730 (Si\u2026' to be '1970-01-01T00:00:00.001Z' // Object.is equality"
+    ]
+   ],
+   "seconds": 2.6,
+   "loadavg": "28.67 26.52 28.38",
+   "killed": true
+  },
+  {
+   "id": "lane C-authority-artifact-fields-L132n2-A",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 132,
+   "old": "isRecord(entry)",
+   "new": "(typeof entry === 'object' && entry !== null)",
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ],
+   "laneKilled": true,
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 1,
+   "passed": 31,
+   "failed": 1,
+   "total": 32,
+   "firstFailures": [
+    [
+     "the parsers read a JSON container as an object only when it is one surface a first registry entry that is an array as the malformed entries list",
+     "AssertionError: expected { kind: 'parsed', fields: { \u2026(5) } } to deeply equal { kind: 'parsed', fields: { \u2026(5) } }"
+    ]
+   ],
+   "seconds": 2.1,
+   "loadavg": "27.97 26.41 28.34",
+   "killed": true
+  },
+  {
+   "id": "lane C-authority-artifact-fields-L136n3-B",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 136,
+   "old": "isRecord(subject)",
+   "new": "(typeof subject === 'object' && !Array.isArray(subject))",
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ],
+   "laneKilled": true,
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 1,
+   "passed": 31,
+   "failed": 1,
+   "total": 32,
+   "firstFailures": [
+    [
+     "the parsers read a JSON container as an object only when it is one surface an entry subject that is null as the repository field",
+     "TypeError: Cannot convert undefined or null to object"
+    ]
+   ],
+   "seconds": 1.9,
+   "loadavg": "27.97 26.41 28.34",
+   "killed": true
+  },
+  {
+   "id": "lane C-authority-artifact-fields-L141n4-A",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 141,
+   "old": "isRecord(authority)",
+   "new": "(typeof authority === 'object' && authority !== null)",
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ],
+   "laneKilled": false,
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 32,
+   "failed": 0,
+   "total": 32,
+   "firstFailures": [],
+   "seconds": 1.9,
+   "loadavg": "27.97 26.41 28.34",
+   "killed": false
+  },
+  {
+   "id": "lane C-authority-artifact-fields-L141n4-D",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 141,
+   "old": "isRecord(authority)",
+   "new": "true",
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ],
+   "laneKilled": true,
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 1,
+   "passed": 31,
+   "failed": 1,
+   "total": 32,
+   "firstFailures": [
+    [
+     "the parsers read a JSON container as an object only when it is one surface typed authority that is null as present, with no write surface",
+     "TypeError: Cannot convert undefined or null to object"
+    ]
+   ],
+   "seconds": 3.4,
+   "loadavg": "27.81 26.40 28.33",
+   "killed": true
+  },
+  {
+   "id": "lane C-secret-redaction-L71n0-A",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "line": 71,
+   "old": "isRecord(scope)",
+   "new": "(typeof scope === 'object' && scope !== null)",
+   "tests": [
+    "packages/polaris-generation-core/src/secret-redaction.test.ts"
+   ],
+   "laneKilled": true,
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 1,
+   "passed": 36,
+   "failed": 1,
+   "total": 37,
+   "firstFailures": [
+    [
+     "readSecretRedaction refuses what it does not implement reads null for a scope that is an array that carries the field",
+     "AssertionError: expected { ok: false, \u2026(1) } to deeply equal { ok: true, redaction: null }"
+    ]
+   ],
+   "seconds": 4.4,
+   "loadavg": "27.75 26.41 28.32",
+   "killed": true
+  },
+  {
+   "id": "lane C-secret-redaction-L73n1-B",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "line": 73,
+   "old": "isRecord(red)",
+   "new": "(typeof red === 'object' && !Array.isArray(red))",
+   "tests": [
+    "packages/polaris-generation-core/src/secret-redaction.test.ts"
+   ],
+   "laneKilled": true,
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 1,
+   "passed": 36,
+   "failed": 1,
+   "total": 37,
+   "firstFailures": [
+    [
+     "readSecretRedaction refuses what it does not implement refuses a declaration that is null",
+     "TypeError: Cannot convert undefined or null to object"
+    ]
+   ],
+   "seconds": 4.1,
+   "loadavg": "29.69 26.84 28.45",
+   "killed": true
+  },
+  {
+   "id": "lane C-public-source-classification-L68n0-A",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 68,
+   "old": "isRecord(rule)",
+   "new": "(typeof rule === 'object' && rule !== null)",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "laneKilled": true,
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 1,
+   "passed": 232,
+   "failed": 1,
+   "total": 233,
+   "firstFailures": [
+    [
+     "reading the rule passes over a rules entry that is not an object, as if it were not there",
+     "AssertionError: expected { ok: false, \u2026(1) } to deeply equal { ok: true, rule: { \u2026(11) } }"
+    ]
+   ],
+   "seconds": 4.7,
+   "loadavg": "31.56 27.27 28.58",
+   "killed": true
+  },
+  {
+   "id": "lane C-public-source-classification-L83n2-D",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 83,
+   "old": "isRecord(prefix)",
+   "new": "true",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "laneKilled": true,
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 1,
+   "passed": 231,
+   "failed": 2,
+   "total": 233,
+   "firstFailures": [
+    [
+     "reading the rule refuses no prefix object",
+     "TypeError: Cannot read properties of null (reading 'digitCount')"
+    ],
+    [
+     "reading the rule refuses a prefix that is an array carrying the fields",
+     "AssertionError: expected { ok: true, rule: { \u2026(11) } } to match object { ok: false, why: StringMatching{\u2026} }"
+    ]
+   ],
+   "seconds": 2.8,
+   "loadavg": "31.56 27.27 28.58",
+   "killed": true
+  },
+  {
+   "id": "lane C-public-source-classification-L205n4-B",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 205,
+   "old": "isRecord(active)",
+   "new": "(typeof active === 'object' && !Array.isArray(active))",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "laneKilled": true,
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 1,
+   "passed": 232,
+   "failed": 1,
+   "total": 233,
+   "firstFailures": [
+    [
+     "reading the exemption reads none from active content that is null",
+     "TypeError: Cannot convert undefined or null to object"
+    ]
+   ],
+   "seconds": 3.9,
+   "loadavg": "31.19 27.27 28.57",
+   "killed": true
+  },
+  {
+   "id": "lane C-public-source-classification-L207n5-A",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 207,
+   "old": "isRecord(exemption)",
+   "new": "(typeof exemption === 'object' && exemption !== null)",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "laneKilled": true,
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 1,
+   "passed": 231,
+   "failed": 2,
+   "total": 233,
+   "firstFailures": [
+    [
+     "reading the exemption refuses, in its own words, an exemption that is an array",
+     "AssertionError: expected { ok: false, \u2026(1) } to deeply equal { ok: false, \u2026(1) }"
+    ],
+    [
+     "reading the exemption refuses, in its own words, an exemption that is an array carrying every field",
+     "AssertionError: expected { ok: true, exemption: { \u2026(1) } } to deeply equal { ok: false, \u2026(1) }"
+    ]
+   ],
+   "seconds": 2.5,
+   "loadavg": "31.26 27.35 28.59",
+   "killed": true
+  },
+  {
+   "id": "lane C-screen-L81n0-A",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 81,
+   "old": "isRecord(doc)",
+   "new": "(typeof doc === 'object' && doc !== null)",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "laneKilled": false,
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 129,
+   "failed": 0,
+   "total": 129,
+   "firstFailures": [],
+   "seconds": 10.9,
+   "loadavg": "29.28 27.06 28.48",
+   "killed": false
+  },
+  {
+   "id": "lane C-screen-L83n1-D",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 83,
+   "old": "isRecord(scope)",
+   "new": "true",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "laneKilled": true,
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 1,
+   "passed": 123,
+   "failed": 6,
+   "total": 129,
+   "firstFailures": [
+    [
+     "the screen is refused for a policy with no public-source scope",
+     "TypeError: Cannot read properties of null (reading 'contentClassification')"
+    ],
+    [
+     "the loader reads each container as an object only when it is one refuses a public-source scope that is an array",
+     "AssertionError: expected { ok: false, \u2026(1) } to deeply equal { ok: false, \u2026(1) }"
+    ]
+   ],
+   "seconds": 9.5,
+   "loadavg": "27.94 26.84 28.39",
+   "killed": true
+  },
+  {
+   "id": "lane C-screen-L84n2-A",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 84,
+   "old": "isRecord(admission)",
+   "new": "(typeof admission === 'object' && admission !== null)",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "laneKilled": false,
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 129,
+   "failed": 0,
+   "total": 129,
+   "firstFailures": [],
+   "seconds": 9.2,
+   "loadavg": "26.24 26.51 28.27",
+   "killed": false
+  },
+  {
+   "id": "lane C-screen-L88n3-A",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 88,
+   "old": "isRecord(classification)",
+   "new": "(typeof classification === 'object' && classification !== null)",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "laneKilled": false,
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 129,
+   "failed": 0,
+   "total": 129,
+   "firstFailures": [],
+   "seconds": 9.5,
+   "loadavg": "25.82 26.42 28.23",
+   "killed": false
+  },
+  {
+   "id": "lane C-screen-L89n4-A",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 89,
+   "old": "isRecord(rule)",
+   "new": "(typeof rule === 'object' && rule !== null)",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "laneKilled": false,
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 129,
+   "failed": 0,
+   "total": 129,
+   "firstFailures": [],
+   "seconds": 8.9,
+   "loadavg": "24.85 26.19 28.14",
+   "killed": false
+  },
+  {
+   "id": "lane C-screen-L89n4-B",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 89,
+   "old": "isRecord(rule)",
+   "new": "(typeof rule === 'object' && !Array.isArray(rule))",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "laneKilled": true,
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 1,
+   "passed": 128,
+   "failed": 1,
+   "total": 129,
+   "firstFailures": [
+    [
+     "the loader reads each container as an object only when it is one passes over a rules entry that is not an object, as if it were not there",
+     "TypeError: Cannot read properties of null (reading 'class')"
+    ]
+   ],
+   "seconds": 9.2,
+   "loadavg": "24.94 26.17 28.11",
+   "killed": true
+  },
+  {
+   "id": "lane C-screen-L90n5-A",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 90,
+   "old": "isRecord(codeContent[0])",
+   "new": "(typeof codeContent[0] === 'object' && codeContent[0] !== null)",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "laneKilled": false,
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 129,
+   "failed": 0,
+   "total": 129,
+   "firstFailures": [],
+   "seconds": 9.9,
+   "loadavg": "25.37 26.22 28.10",
+   "killed": false
+  },
+  {
+   "id": "lane C-screen-L90n5-B",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 90,
+   "old": "isRecord(codeContent[0])",
+   "new": "(typeof codeContent[0] === 'object' && !Array.isArray(codeContent[0]))",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "laneKilled": false,
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 129,
+   "failed": 0,
+   "total": 129,
+   "firstFailures": [],
+   "seconds": 8.8,
+   "loadavg": "24.21 25.94 27.99",
+   "killed": false
+  },
+  {
+   "id": "lane C-screen-L100n6-A",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 100,
+   "old": "isRecord(d)",
+   "new": "(typeof d === 'object' && d !== null)",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "laneKilled": false,
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 129,
+   "failed": 0,
+   "total": 129,
+   "firstFailures": [],
+   "seconds": 9.4,
+   "loadavg": "23.34 25.70 27.89",
+   "killed": false
+  }
+ ]
+}

@@ -1,0 +1,21 @@
+[
+  {
+    "attempt": "logs/deterministic-repeat.json",
+    "outcome": "failed before evaluator import",
+    "evidence": "logs/deterministic-repeat.stderr",
+    "cause": "Native Node --conditions=source reaches support/src/index.ts whose emitted-style sibling .js imports require a TS-aware resolver. It is appropriate in Vitest, not native compiled execution.",
+    "correction": "Use built module default export conditions; logs/deterministic-repeat-built.json passes and matches captured source-condition result. No product source changed."
+  },
+  {
+    "attempt": "initial canonical metadata comparison",
+    "outcome": "assertion-failed before output",
+    "cause": "Wrongly required needs-shaping lifecycle label unchanged after authorized ROOT FIRST application",
+    "correction": "CANONICAL-PRESERVATION.json records exact fields/edges/comments/proposal preservation and explicit ROOT label removal."
+  },
+  {
+    "attempt": "check-working output observation before lock acquired",
+    "outcome": "tail/cat missing file",
+    "cause": "Driver was queued on the external full-suite lock and had not created output yet.",
+    "correction": "No runtime outcome inferred; do not kill or restart queued/live gate."
+  }
+]

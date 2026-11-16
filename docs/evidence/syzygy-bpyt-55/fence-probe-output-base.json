@@ -1,0 +1,1896 @@
+{
+ "probeSha256": "10b6d88b528a6f967959842bb350d21700f097f1ea0e420f174f347cf8afb680",
+ "cases": [
+  {
+   "id": "backtick-col0",
+   "caseId": "backtick-col0",
+   "what": "three backticks at column 0, closed by the same",
+   "eol": "LF",
+   "lines": [
+    "```",
+    "x",
+    "```"
+   ],
+   "vectors": {
+    "profile": "VHHV",
+    "links": "VHHV",
+    "extraction": "VHHV",
+    "consent": "VHHV",
+    "renderer": "VHHV"
+   },
+   "activeContent": "XAAX",
+   "profileOnTheWholeCase": "well-formed",
+   "profileFences": 1,
+   "profileInlineSpans": 0,
+   "disagreeWithProfile": {}
+  },
+  {
+   "id": "backtick-col0@crlf",
+   "caseId": "backtick-col0",
+   "what": "three backticks at column 0, closed by the same",
+   "eol": "CRLF",
+   "lines": [
+    "```",
+    "x",
+    "```"
+   ],
+   "vectors": {
+    "profile": "VHHV",
+    "links": "VHHV",
+    "extraction": "VHHV",
+    "consent": "VVVV",
+    "renderer": "VHHV"
+   },
+   "activeContent": "XAAX",
+   "profileOnTheWholeCase": "well-formed",
+   "profileFences": 1,
+   "profileInlineSpans": 0,
+   "disagreeWithProfile": {
+    "consent": "VVVV"
+   }
+  },
+  {
+   "id": "backtick-indent1",
+   "caseId": "backtick-indent1",
+   "what": "opener and closer indented one space",
+   "eol": "LF",
+   "lines": [
+    " ```",
+    "x",
+    " ```"
+   ],
+   "vectors": {
+    "profile": "VHHV",
+    "links": "VHHV",
+    "extraction": "VVVV",
+    "consent": "VHHV",
+    "renderer": "VHHV"
+   },
+   "activeContent": "XAAX",
+   "profileOnTheWholeCase": "well-formed",
+   "profileFences": 1,
+   "profileInlineSpans": 0,
+   "disagreeWithProfile": {
+    "extraction": "VVVV"
+   }
+  },
+  {
+   "id": "backtick-indent1@crlf",
+   "caseId": "backtick-indent1",
+   "what": "opener and closer indented one space",
+   "eol": "CRLF",
+   "lines": [
+    " ```",
+    "x",
+    " ```"
+   ],
+   "vectors": {
+    "profile": "VHHV",
+    "links": "VHHV",
+    "extraction": "VVVV",
+    "consent": "VVVV",
+    "renderer": "VHHV"
+   },
+   "activeContent": "XAAX",
+   "profileOnTheWholeCase": "well-formed",
+   "profileFences": 1,
+   "profileInlineSpans": 0,
+   "disagreeWithProfile": {
+    "extraction": "VVVV",
+    "consent": "VVVV"
+   }
+  },
+  {
+   "id": "backtick-indent2",
+   "caseId": "backtick-indent2",
+   "what": "opener and closer indented two spaces",
+   "eol": "LF",
+   "lines": [
+    "  ```",
+    "x",
+    "  ```"
+   ],
+   "vectors": {
+    "profile": "VHHV",
+    "links": "VHHV",
+    "extraction": "VVVV",
+    "consent": "VHHV",
+    "renderer": "VHHV"
+   },
+   "activeContent": "XAAX",
+   "profileOnTheWholeCase": "well-formed",
+   "profileFences": 1,
+   "profileInlineSpans": 0,
+   "disagreeWithProfile": {
+    "extraction": "VVVV"
+   }
+  },
+  {
+   "id": "backtick-indent2@crlf",
+   "caseId": "backtick-indent2",
+   "what": "opener and closer indented two spaces",
+   "eol": "CRLF",
+   "lines": [
+    "  ```",
+    "x",
+    "  ```"
+   ],
+   "vectors": {
+    "profile": "VHHV",
+    "links": "VHHV",
+    "extraction": "VVVV",
+    "consent": "VVVV",
+    "renderer": "VHHV"
+   },
+   "activeContent": "XAAX",
+   "profileOnTheWholeCase": "well-formed",
+   "profileFences": 1,
+   "profileInlineSpans": 0,
+   "disagreeWithProfile": {
+    "extraction": "VVVV",
+    "consent": "VVVV"
+   }
+  },
+  {
+   "id": "backtick-indent3",
+   "caseId": "backtick-indent3",
+   "what": "opener and closer indented three spaces",
+   "eol": "LF",
+   "lines": [
+    "   ```",
+    "x",
+    "   ```"
+   ],
+   "vectors": {
+    "profile": "VHHV",
+    "links": "VHHV",
+    "extraction": "VVVV",
+    "consent": "VHHV",
+    "renderer": "VHHV"
+   },
+   "activeContent": "XAAX",
+   "profileOnTheWholeCase": "well-formed",
+   "profileFences": 1,
+   "profileInlineSpans": 0,
+   "disagreeWithProfile": {
+    "extraction": "VVVV"
+   }
+  },
+  {
+   "id": "backtick-indent3@crlf",
+   "caseId": "backtick-indent3",
+   "what": "opener and closer indented three spaces",
+   "eol": "CRLF",
+   "lines": [
+    "   ```",
+    "x",
+    "   ```"
+   ],
+   "vectors": {
+    "profile": "VHHV",
+    "links": "VHHV",
+    "extraction": "VVVV",
+    "consent": "VVVV",
+    "renderer": "VHHV"
+   },
+   "activeContent": "XAAX",
+   "profileOnTheWholeCase": "well-formed",
+   "profileFences": 1,
+   "profileInlineSpans": 0,
+   "disagreeWithProfile": {
+    "extraction": "VVVV",
+    "consent": "VVVV"
+   }
+  },
+  {
+   "id": "backtick-indent4",
+   "caseId": "backtick-indent4",
+   "what": "four spaces: indented code, not a fence",
+   "eol": "LF",
+   "lines": [
+    "    ```",
+    "x",
+    "    ```"
+   ],
+   "vectors": {
+    "profile": "VHHV",
+    "links": "VVVV",
+    "extraction": "VVVV",
+    "consent": "VVVV",
+    "renderer": "VVVV"
+   },
+   "activeContent": "XAAX",
+   "profileOnTheWholeCase": "well-formed",
+   "profileFences": 0,
+   "profileInlineSpans": 1,
+   "disagreeWithProfile": {
+    "links": "VVVV",
+    "extraction": "VVVV",
+    "consent": "VVVV",
+    "renderer": "VVVV"
+   }
+  },
+  {
+   "id": "backtick-indent4@crlf",
+   "caseId": "backtick-indent4",
+   "what": "four spaces: indented code, not a fence",
+   "eol": "CRLF",
+   "lines": [
+    "    ```",
+    "x",
+    "    ```"
+   ],
+   "vectors": {
+    "profile": "VHHV",
+    "links": "VVVV",
+    "extraction": "VVVV",
+    "consent": "VVVV",
+    "renderer": "VVVV"
+   },
+   "activeContent": "XAAX",
+   "profileOnTheWholeCase": "well-formed",
+   "profileFences": 0,
+   "profileInlineSpans": 1,
+   "disagreeWithProfile": {
+    "links": "VVVV",
+    "extraction": "VVVV",
+    "consent": "VVVV",
+    "renderer": "VVVV"
+   }
+  },
+  {
+   "id": "backtick-tab",
+   "caseId": "backtick-tab",
+   "what": "a tab before the opener",
+   "eol": "LF",
+   "lines": [
+    "\t```",
+    "x",
+    "\t```"
+   ],
+   "vectors": {
+    "profile": "VHHV",
+    "links": "VHHV",
+    "extraction": "VVVV",
+    "consent": "VVVV",
+    "renderer": "VVVV"
+   },
+   "activeContent": "XAAX",
+   "profileOnTheWholeCase": "well-formed",
+   "profileFences": 0,
+   "profileInlineSpans": 1,
+   "disagreeWithProfile": {
+    "extraction": "VVVV",
+    "consent": "VVVV",
+    "renderer": "VVVV"
+   }
+  },
+  {
+   "id": "backtick-tab@crlf",
+   "caseId": "backtick-tab",
+   "what": "a tab before the opener",
+   "eol": "CRLF",
+   "lines": [
+    "\t```",
+    "x",
+    "\t```"
+   ],
+   "vectors": {
+    "profile": "VHHV",
+    "links": "VHHV",
+    "extraction": "VVVV",
+    "consent": "VVVV",
+    "renderer": "VVVV"
+   },
+   "activeContent": "XAAX",
+   "profileOnTheWholeCase": "well-formed",
+   "profileFences": 0,
+   "profileInlineSpans": 1,
+   "disagreeWithProfile": {
+    "extraction": "VVVV",
+    "consent": "VVVV",
+    "renderer": "VVVV"
+   }
+  },
+  {
+   "id": "tilde-col0",
+   "caseId": "tilde-col0",
+   "what": "three tildes at column 0",
+   "eol": "LF",
+   "lines": [
+    "~~~",
+    "x",
+    "~~~"
+   ],
+   "vectors": {
+    "profile": "VHHV",
+    "links": "VHHV",
+    "extraction": "VHHV",
+    "consent": "VHHV",
+    "renderer": "VHHV"
+   },
+   "activeContent": "XAAX",
+   "profileOnTheWholeCase": "well-formed",
+   "profileFences": 1,
+   "profileInlineSpans": 0,
+   "disagreeWithProfile": {}
+  },
+  {
+   "id": "tilde-col0@crlf",
+   "caseId": "tilde-col0",
+   "what": "three tildes at column 0",
+   "eol": "CRLF",
+   "lines": [
+    "~~~",
+    "x",
+    "~~~"
+   ],
+   "vectors": {
+    "profile": "VHHV",
+    "links": "VHHV",
+    "extraction": "VHHV",
+    "consent": "VVVV",
+    "renderer": "VHHV"
+   },
+   "activeContent": "XAAX",
+   "profileOnTheWholeCase": "well-formed",
+   "profileFences": 1,
+   "profileInlineSpans": 0,
+   "disagreeWithProfile": {
+    "consent": "VVVV"
+   }
+  },
+  {
+   "id": "tilde-indent3",
+   "caseId": "tilde-indent3",
+   "what": "tildes indented three spaces",
+   "eol": "LF",
+   "lines": [
+    "   ~~~",
+    "x",
+    "   ~~~"
+   ],
+   "vectors": {
+    "profile": "VHHV",
+    "links": "VHHV",
+    "extraction": "VVVV",
+    "consent": "VHHV",
+    "renderer": "VHHV"
+   },
+   "activeContent": "XAAX",
+   "profileOnTheWholeCase": "well-formed",
+   "profileFences": 1,
+   "profileInlineSpans": 0,
+   "disagreeWithProfile": {
+    "extraction": "VVVV"
+   }
+  },
+  {
+   "id": "tilde-indent3@crlf",
+   "caseId": "tilde-indent3",
+   "what": "tildes indented three spaces",
+   "eol": "CRLF",
+   "lines": [
+    "   ~~~",
+    "x",
+    "   ~~~"
+   ],
+   "vectors": {
+    "profile": "VHHV",
+    "links": "VHHV",
+    "extraction": "VVVV",
+    "consent": "VVVV",
+    "renderer": "VHHV"
+   },
+   "activeContent": "XAAX",
+   "profileOnTheWholeCase": "well-formed",
+   "profileFences": 1,
+   "profileInlineSpans": 0,
+   "disagreeWithProfile": {
+    "extraction": "VVVV",
+    "consent": "VVVV"
+   }
+  },
+  {
+   "id": "tilde-indent4",
+   "caseId": "tilde-indent4",
+   "what": "tildes indented four spaces",
+   "eol": "LF",
+   "lines": [
+    "    ~~~",
+    "x",
+    "    ~~~"
+   ],
+   "vectors": {
+    "profile": "VVVV",
+    "links": "VVVV",
+    "extraction": "VVVV",
+    "consent": "VVVV",
+    "renderer": "VVVV"
+   },
+   "activeContent": "XXXX",
+   "profileOnTheWholeCase": "well-formed",
+   "profileFences": 0,
+   "profileInlineSpans": 0,
+   "disagreeWithProfile": {}
+  },
+  {
+   "id": "tilde-indent4@crlf",
+   "caseId": "tilde-indent4",
+   "what": "tildes indented four spaces",
+   "eol": "CRLF",
+   "lines": [
+    "    ~~~",
+    "x",
+    "    ~~~"
+   ],
+   "vectors": {
+    "profile": "VVVV",
+    "links": "VVVV",
+    "extraction": "VVVV",
+    "consent": "VVVV",
+    "renderer": "VVVV"
+   },
+   "activeContent": "XXXX",
+   "profileOnTheWholeCase": "well-formed",
+   "profileFences": 0,
+   "profileInlineSpans": 0,
+   "disagreeWithProfile": {}
+  },
+  {
+   "id": "opener-four-closer-three",
+   "caseId": "opener-four-closer-three",
+   "what": "a three-backtick line inside a four-backtick fence",
+   "eol": "LF",
+   "lines": [
+    "````",
+    "x",
+    "```",
+    "y",
+    "````"
+   ],
+   "vectors": {
+    "profile": "VHHHHV",
+    "links": "VHHHHV",
+    "extraction": "VHHHHV",
+    "consent": "VHHHHV",
+    "renderer": "VHHHHV"
+   },
+   "activeContent": "XAAAAX",
+   "profileOnTheWholeCase": "well-formed",
+   "profileFences": 1,
+   "profileInlineSpans": 0,
+   "disagreeWithProfile": {}
+  },
+  {
+   "id": "opener-four-closer-three@crlf",
+   "caseId": "opener-four-closer-three",
+   "what": "a three-backtick line inside a four-backtick fence",
+   "eol": "CRLF",
+   "lines": [
+    "````",
+    "x",
+    "```",
+    "y",
+    "````"
+   ],
+   "vectors": {
+    "profile": "VHHHHV",
+    "links": "VHHHHV",
+    "extraction": "VHHHHV",
+    "consent": "VVVVVV",
+    "renderer": "VHHHHV"
+   },
+   "activeContent": "XAAAAX",
+   "profileOnTheWholeCase": "well-formed",
+   "profileFences": 1,
+   "profileInlineSpans": 0,
+   "disagreeWithProfile": {
+    "consent": "VVVVVV"
+   }
+  },
+  {
+   "id": "closer-longer",
+   "caseId": "closer-longer",
+   "what": "a closer longer than the opener",
+   "eol": "LF",
+   "lines": [
+    "```",
+    "x",
+    "````"
+   ],
+   "vectors": {
+    "profile": "VHHV",
+    "links": "VHHV",
+    "extraction": "VHHV",
+    "consent": "VHHV",
+    "renderer": "VHHV"
+   },
+   "activeContent": "XAAX",
+   "profileOnTheWholeCase": "well-formed",
+   "profileFences": 1,
+   "profileInlineSpans": 0,
+   "disagreeWithProfile": {}
+  },
+  {
+   "id": "closer-longer@crlf",
+   "caseId": "closer-longer",
+   "what": "a closer longer than the opener",
+   "eol": "CRLF",
+   "lines": [
+    "```",
+    "x",
+    "````"
+   ],
+   "vectors": {
+    "profile": "VHHV",
+    "links": "VHHV",
+    "extraction": "VHHV",
+    "consent": "VVVV",
+    "renderer": "VHHV"
+   },
+   "activeContent": "XAAX",
+   "profileOnTheWholeCase": "well-formed",
+   "profileFences": 1,
+   "profileInlineSpans": 0,
+   "disagreeWithProfile": {
+    "consent": "VVVV"
+   }
+  },
+  {
+   "id": "closer-indent1",
+   "caseId": "closer-indent1",
+   "what": "a closer indented one space under a column-0 opener",
+   "eol": "LF",
+   "lines": [
+    "```",
+    "x",
+    " ```",
+    "y"
+   ],
+   "vectors": {
+    "profile": "VHHVV",
+    "links": "VHHVV",
+    "extraction": "VHHHH",
+    "consent": "VHHVV",
+    "renderer": "VHHVV"
+   },
+   "activeContent": "XAAXX",
+   "profileOnTheWholeCase": "well-formed",
+   "profileFences": 1,
+   "profileInlineSpans": 0,
+   "disagreeWithProfile": {
+    "extraction": "VHHHH"
+   }
+  },
+  {
+   "id": "closer-indent1@crlf",
+   "caseId": "closer-indent1",
+   "what": "a closer indented one space under a column-0 opener",
+   "eol": "CRLF",
+   "lines": [
+    "```",
+    "x",
+    " ```",
+    "y"
+   ],
+   "vectors": {
+    "profile": "VHHVV",
+    "links": "VHHVV",
+    "extraction": "VHHHH",
+    "consent": "VVVVV",
+    "renderer": "VHHVV"
+   },
+   "activeContent": "XAAXX",
+   "profileOnTheWholeCase": "well-formed",
+   "profileFences": 1,
+   "profileInlineSpans": 0,
+   "disagreeWithProfile": {
+    "extraction": "VHHHH",
+    "consent": "VVVVV"
+   }
+  },
+  {
+   "id": "closer-indent3",
+   "caseId": "closer-indent3",
+   "what": "a closer indented three spaces under a column-0 opener",
+   "eol": "LF",
+   "lines": [
+    "```",
+    "x",
+    "   ```",
+    "y"
+   ],
+   "vectors": {
+    "profile": "VHHVV",
+    "links": "VHHVV",
+    "extraction": "VHHHH",
+    "consent": "VHHVV",
+    "renderer": "VHHVV"
+   },
+   "activeContent": "XAAXX",
+   "profileOnTheWholeCase": "well-formed",
+   "profileFences": 1,
+   "profileInlineSpans": 0,
+   "disagreeWithProfile": {
+    "extraction": "VHHHH"
+   }
+  },
+  {
+   "id": "closer-indent3@crlf",
+   "caseId": "closer-indent3",
+   "what": "a closer indented three spaces under a column-0 opener",
+   "eol": "CRLF",
+   "lines": [
+    "```",
+    "x",
+    "   ```",
+    "y"
+   ],
+   "vectors": {
+    "profile": "VHHVV",
+    "links": "VHHVV",
+    "extraction": "VHHHH",
+    "consent": "VVVVV",
+    "renderer": "VHHVV"
+   },
+   "activeContent": "XAAXX",
+   "profileOnTheWholeCase": "well-formed",
+   "profileFences": 1,
+   "profileInlineSpans": 0,
+   "disagreeWithProfile": {
+    "extraction": "VHHHH",
+    "consent": "VVVVV"
+   }
+  },
+  {
+   "id": "closer-indent4",
+   "caseId": "closer-indent4",
+   "what": "a closer indented four spaces (not a closer)",
+   "eol": "LF",
+   "lines": [
+    "```",
+    "x",
+    "    ```",
+    "y",
+    "```"
+   ],
+   "vectors": {
+    "profile": "VHHHHV",
+    "links": "VHHHHV",
+    "extraction": "VHHHHV",
+    "consent": "VHHHHV",
+    "renderer": "VHHHHV"
+   },
+   "activeContent": "XAAAAX",
+   "profileOnTheWholeCase": "well-formed",
+   "profileFences": 1,
+   "profileInlineSpans": 0,
+   "disagreeWithProfile": {}
+  },
+  {
+   "id": "closer-indent4@crlf",
+   "caseId": "closer-indent4",
+   "what": "a closer indented four spaces (not a closer)",
+   "eol": "CRLF",
+   "lines": [
+    "```",
+    "x",
+    "    ```",
+    "y",
+    "```"
+   ],
+   "vectors": {
+    "profile": "VHHHHV",
+    "links": "VHHHHV",
+    "extraction": "VHHHHV",
+    "consent": "VVVVVV",
+    "renderer": "VHHHHV"
+   },
+   "activeContent": "XAAAAX",
+   "profileOnTheWholeCase": "well-formed",
+   "profileFences": 1,
+   "profileInlineSpans": 0,
+   "disagreeWithProfile": {
+    "consent": "VVVVVV"
+   }
+  },
+  {
+   "id": "closer-trailing-space",
+   "caseId": "closer-trailing-space",
+   "what": "a closer with a trailing space",
+   "eol": "LF",
+   "lines": [
+    "```",
+    "x",
+    "``` "
+   ],
+   "vectors": {
+    "profile": "VHHV",
+    "links": "VHHV",
+    "extraction": "VHHV",
+    "consent": "VHHV",
+    "renderer": "VHHV"
+   },
+   "activeContent": "XAAX",
+   "profileOnTheWholeCase": "well-formed",
+   "profileFences": 1,
+   "profileInlineSpans": 0,
+   "disagreeWithProfile": {}
+  },
+  {
+   "id": "closer-trailing-space@crlf",
+   "caseId": "closer-trailing-space",
+   "what": "a closer with a trailing space",
+   "eol": "CRLF",
+   "lines": [
+    "```",
+    "x",
+    "``` "
+   ],
+   "vectors": {
+    "profile": "VHHV",
+    "links": "VHHV",
+    "extraction": "VHHV",
+    "consent": "VVVV",
+    "renderer": "VHHV"
+   },
+   "activeContent": "XAAX",
+   "profileOnTheWholeCase": "well-formed",
+   "profileFences": 1,
+   "profileInlineSpans": 0,
+   "disagreeWithProfile": {
+    "consent": "VVVV"
+   }
+  },
+  {
+   "id": "closer-trailing-tab",
+   "caseId": "closer-trailing-tab",
+   "what": "a closer with a trailing tab, nothing after",
+   "eol": "LF",
+   "lines": [
+    "```",
+    "x",
+    "```\t"
+   ],
+   "vectors": {
+    "profile": "MMMM",
+    "links": "VHHV",
+    "extraction": "VHHV",
+    "consent": "VHHV",
+    "renderer": "VHHV"
+   },
+   "activeContent": "XXXX",
+   "profileOnTheWholeCase": "malformed:unclosed-fence",
+   "profileFences": null,
+   "profileInlineSpans": null,
+   "disagreeWithProfile": {}
+  },
+  {
+   "id": "closer-trailing-tab@crlf",
+   "caseId": "closer-trailing-tab",
+   "what": "a closer with a trailing tab, nothing after",
+   "eol": "CRLF",
+   "lines": [
+    "```",
+    "x",
+    "```\t"
+   ],
+   "vectors": {
+    "profile": "MMMM",
+    "links": "VHHV",
+    "extraction": "VHHV",
+    "consent": "VVVV",
+    "renderer": "VHHV"
+   },
+   "activeContent": "XXXX",
+   "profileOnTheWholeCase": "malformed:unclosed-fence",
+   "profileFences": null,
+   "profileInlineSpans": null,
+   "disagreeWithProfile": {}
+  },
+  {
+   "id": "closer-trailing-tab-then-closer",
+   "caseId": "closer-trailing-tab-then-closer",
+   "what": "a closer with a trailing tab, then a plain closer",
+   "eol": "LF",
+   "lines": [
+    "```",
+    "x",
+    "```\t",
+    "y",
+    "```"
+   ],
+   "vectors": {
+    "profile": "VHHHHV",
+    "links": "VHHVVH",
+    "extraction": "VHHVVH",
+    "consent": "VHHVVH",
+    "renderer": "VHHVVH"
+   },
+   "activeContent": "XAAAAX",
+   "profileOnTheWholeCase": "well-formed",
+   "profileFences": 1,
+   "profileInlineSpans": 0,
+   "disagreeWithProfile": {
+    "links": "VHHVVH",
+    "extraction": "VHHVVH",
+    "consent": "VHHVVH",
+    "renderer": "VHHVVH"
+   }
+  },
+  {
+   "id": "closer-trailing-tab-then-closer@crlf",
+   "caseId": "closer-trailing-tab-then-closer",
+   "what": "a closer with a trailing tab, then a plain closer",
+   "eol": "CRLF",
+   "lines": [
+    "```",
+    "x",
+    "```\t",
+    "y",
+    "```"
+   ],
+   "vectors": {
+    "profile": "VHHHHV",
+    "links": "VHHVVH",
+    "extraction": "VHHVVH",
+    "consent": "VVVVVV",
+    "renderer": "VHHVVH"
+   },
+   "activeContent": "XAAAAX",
+   "profileOnTheWholeCase": "well-formed",
+   "profileFences": 1,
+   "profileInlineSpans": 0,
+   "disagreeWithProfile": {
+    "links": "VHHVVH",
+    "extraction": "VHHVVH",
+    "consent": "VVVVVV",
+    "renderer": "VHHVVH"
+   }
+  },
+  {
+   "id": "closer-with-info",
+   "caseId": "closer-with-info",
+   "what": "a closing-shaped line with an info string",
+   "eol": "LF",
+   "lines": [
+    "```",
+    "x",
+    "```js",
+    "y",
+    "```"
+   ],
+   "vectors": {
+    "profile": "VHHHHV",
+    "links": "VHHVVH",
+    "extraction": "VHHHHV",
+    "consent": "VHHHHV",
+    "renderer": "VHHHHV"
+   },
+   "activeContent": "XAAAAX",
+   "profileOnTheWholeCase": "well-formed",
+   "profileFences": 1,
+   "profileInlineSpans": 0,
+   "disagreeWithProfile": {
+    "links": "VHHVVH"
+   }
+  },
+  {
+   "id": "closer-with-info@crlf",
+   "caseId": "closer-with-info",
+   "what": "a closing-shaped line with an info string",
+   "eol": "CRLF",
+   "lines": [
+    "```",
+    "x",
+    "```js",
+    "y",
+    "```"
+   ],
+   "vectors": {
+    "profile": "VHHHHV",
+    "links": "VHHVVH",
+    "extraction": "VHHHHV",
+    "consent": "VVVVVV",
+    "renderer": "VHHHHV"
+   },
+   "activeContent": "XAAAAX",
+   "profileOnTheWholeCase": "well-formed",
+   "profileFences": 1,
+   "profileInlineSpans": 0,
+   "disagreeWithProfile": {
+    "links": "VHHVVH",
+    "consent": "VVVVVV"
+   }
+  },
+  {
+   "id": "closer-longer-with-info",
+   "caseId": "closer-longer-with-info",
+   "what": "a longer closing-shaped line with an info string",
+   "eol": "LF",
+   "lines": [
+    "```",
+    "````js",
+    "y",
+    "```"
+   ],
+   "vectors": {
+    "profile": "VHHHV",
+    "links": "VHVVH",
+    "extraction": "VHHHV",
+    "consent": "VHHHV",
+    "renderer": "VHHHV"
+   },
+   "activeContent": "XAAAX",
+   "profileOnTheWholeCase": "well-formed",
+   "profileFences": 1,
+   "profileInlineSpans": 0,
+   "disagreeWithProfile": {
+    "links": "VHVVH"
+   }
+  },
+  {
+   "id": "closer-longer-with-info@crlf",
+   "caseId": "closer-longer-with-info",
+   "what": "a longer closing-shaped line with an info string",
+   "eol": "CRLF",
+   "lines": [
+    "```",
+    "````js",
+    "y",
+    "```"
+   ],
+   "vectors": {
+    "profile": "VHHHV",
+    "links": "VHVVH",
+    "extraction": "VHHHV",
+    "consent": "VVVVV",
+    "renderer": "VHHHV"
+   },
+   "activeContent": "XAAAX",
+   "profileOnTheWholeCase": "well-formed",
+   "profileFences": 1,
+   "profileInlineSpans": 0,
+   "disagreeWithProfile": {
+    "links": "VHVVH",
+    "consent": "VVVVV"
+   }
+  },
+  {
+   "id": "closer-with-text",
+   "caseId": "closer-with-text",
+   "what": "a closing-shaped line followed by text",
+   "eol": "LF",
+   "lines": [
+    "```",
+    "x",
+    "``` text",
+    "y",
+    "```"
+   ],
+   "vectors": {
+    "profile": "VHHHHV",
+    "links": "VHHVVH",
+    "extraction": "VHHHHV",
+    "consent": "VHHHHV",
+    "renderer": "VHHHHV"
+   },
+   "activeContent": "XAAAAX",
+   "profileOnTheWholeCase": "well-formed",
+   "profileFences": 1,
+   "profileInlineSpans": 0,
+   "disagreeWithProfile": {
+    "links": "VHHVVH"
+   }
+  },
+  {
+   "id": "closer-with-text@crlf",
+   "caseId": "closer-with-text",
+   "what": "a closing-shaped line followed by text",
+   "eol": "CRLF",
+   "lines": [
+    "```",
+    "x",
+    "``` text",
+    "y",
+    "```"
+   ],
+   "vectors": {
+    "profile": "VHHHHV",
+    "links": "VHHVVH",
+    "extraction": "VHHHHV",
+    "consent": "VVVVVV",
+    "renderer": "VHHHHV"
+   },
+   "activeContent": "XAAAAX",
+   "profileOnTheWholeCase": "well-formed",
+   "profileFences": 1,
+   "profileInlineSpans": 0,
+   "disagreeWithProfile": {
+    "links": "VHHVVH",
+    "consent": "VVVVVV"
+   }
+  },
+  {
+   "id": "closer-other-char",
+   "caseId": "closer-other-char",
+   "what": "tildes inside a backtick fence",
+   "eol": "LF",
+   "lines": [
+    "```",
+    "x",
+    "~~~",
+    "y",
+    "```"
+   ],
+   "vectors": {
+    "profile": "VHHHHV",
+    "links": "VHHHHV",
+    "extraction": "VHHHHV",
+    "consent": "VHHHHV",
+    "renderer": "VHHHHV"
+   },
+   "activeContent": "XAAAAX",
+   "profileOnTheWholeCase": "well-formed",
+   "profileFences": 1,
+   "profileInlineSpans": 0,
+   "disagreeWithProfile": {}
+  },
+  {
+   "id": "closer-other-char@crlf",
+   "caseId": "closer-other-char",
+   "what": "tildes inside a backtick fence",
+   "eol": "CRLF",
+   "lines": [
+    "```",
+    "x",
+    "~~~",
+    "y",
+    "```"
+   ],
+   "vectors": {
+    "profile": "VHHHHV",
+    "links": "VHHHHV",
+    "extraction": "VHHHHV",
+    "consent": "VVVVVV",
+    "renderer": "VHHHHV"
+   },
+   "activeContent": "XAAAAX",
+   "profileOnTheWholeCase": "well-formed",
+   "profileFences": 1,
+   "profileInlineSpans": 0,
+   "disagreeWithProfile": {
+    "consent": "VVVVVV"
+   }
+  },
+  {
+   "id": "tilde-fence-backtick-line",
+   "caseId": "tilde-fence-backtick-line",
+   "what": "backticks inside a tilde fence",
+   "eol": "LF",
+   "lines": [
+    "~~~",
+    "x",
+    "```",
+    "y",
+    "~~~"
+   ],
+   "vectors": {
+    "profile": "VHHHHV",
+    "links": "VHHHHV",
+    "extraction": "VHHHHV",
+    "consent": "VHHHHV",
+    "renderer": "VHHHHV"
+   },
+   "activeContent": "XAAAAX",
+   "profileOnTheWholeCase": "well-formed",
+   "profileFences": 1,
+   "profileInlineSpans": 0,
+   "disagreeWithProfile": {}
+  },
+  {
+   "id": "tilde-fence-backtick-line@crlf",
+   "caseId": "tilde-fence-backtick-line",
+   "what": "backticks inside a tilde fence",
+   "eol": "CRLF",
+   "lines": [
+    "~~~",
+    "x",
+    "```",
+    "y",
+    "~~~"
+   ],
+   "vectors": {
+    "profile": "VHHHHV",
+    "links": "VHHHHV",
+    "extraction": "VHHHHV",
+    "consent": "VVVVVV",
+    "renderer": "VHHHHV"
+   },
+   "activeContent": "XAAAAX",
+   "profileOnTheWholeCase": "well-formed",
+   "profileFences": 1,
+   "profileInlineSpans": 0,
+   "disagreeWithProfile": {
+    "consent": "VVVVVV"
+   }
+  },
+  {
+   "id": "tilde-opener-four-closer-three",
+   "caseId": "tilde-opener-four-closer-three",
+   "what": "a three-tilde line inside a four-tilde fence",
+   "eol": "LF",
+   "lines": [
+    "~~~~",
+    "x",
+    "~~~",
+    "y",
+    "~~~~"
+   ],
+   "vectors": {
+    "profile": "VHHHHV",
+    "links": "VHHHHV",
+    "extraction": "VHHHHV",
+    "consent": "VHHHHV",
+    "renderer": "VHHHHV"
+   },
+   "activeContent": "XAAAAX",
+   "profileOnTheWholeCase": "well-formed",
+   "profileFences": 1,
+   "profileInlineSpans": 0,
+   "disagreeWithProfile": {}
+  },
+  {
+   "id": "tilde-opener-four-closer-three@crlf",
+   "caseId": "tilde-opener-four-closer-three",
+   "what": "a three-tilde line inside a four-tilde fence",
+   "eol": "CRLF",
+   "lines": [
+    "~~~~",
+    "x",
+    "~~~",
+    "y",
+    "~~~~"
+   ],
+   "vectors": {
+    "profile": "VHHHHV",
+    "links": "VHHHHV",
+    "extraction": "VHHHHV",
+    "consent": "VVVVVV",
+    "renderer": "VHHHHV"
+   },
+   "activeContent": "XAAAAX",
+   "profileOnTheWholeCase": "well-formed",
+   "profileFences": 1,
+   "profileInlineSpans": 0,
+   "disagreeWithProfile": {
+    "consent": "VVVVVV"
+   }
+  },
+  {
+   "id": "info-string",
+   "caseId": "info-string",
+   "what": "a backtick opener with an info word",
+   "eol": "LF",
+   "lines": [
+    "```js",
+    "x",
+    "```"
+   ],
+   "vectors": {
+    "profile": "VHHV",
+    "links": "VHHV",
+    "extraction": "VHHV",
+    "consent": "VHHV",
+    "renderer": "VHHV"
+   },
+   "activeContent": "XAAX",
+   "profileOnTheWholeCase": "well-formed",
+   "profileFences": 1,
+   "profileInlineSpans": 0,
+   "disagreeWithProfile": {}
+  },
+  {
+   "id": "info-string@crlf",
+   "caseId": "info-string",
+   "what": "a backtick opener with an info word",
+   "eol": "CRLF",
+   "lines": [
+    "```js",
+    "x",
+    "```"
+   ],
+   "vectors": {
+    "profile": "VHHV",
+    "links": "VHHV",
+    "extraction": "VHHV",
+    "consent": "VVVV",
+    "renderer": "VHHV"
+   },
+   "activeContent": "XAAX",
+   "profileOnTheWholeCase": "well-formed",
+   "profileFences": 1,
+   "profileInlineSpans": 0,
+   "disagreeWithProfile": {
+    "consent": "VVVV"
+   }
+  },
+  {
+   "id": "info-string-space",
+   "caseId": "info-string-space",
+   "what": "a backtick opener, a space, an info word",
+   "eol": "LF",
+   "lines": [
+    "``` js",
+    "x",
+    "```"
+   ],
+   "vectors": {
+    "profile": "VHHV",
+    "links": "VHHV",
+    "extraction": "VHHV",
+    "consent": "VHHV",
+    "renderer": "VHHV"
+   },
+   "activeContent": "XAAX",
+   "profileOnTheWholeCase": "well-formed",
+   "profileFences": 1,
+   "profileInlineSpans": 0,
+   "disagreeWithProfile": {}
+  },
+  {
+   "id": "info-string-space@crlf",
+   "caseId": "info-string-space",
+   "what": "a backtick opener, a space, an info word",
+   "eol": "CRLF",
+   "lines": [
+    "``` js",
+    "x",
+    "```"
+   ],
+   "vectors": {
+    "profile": "VHHV",
+    "links": "VHHV",
+    "extraction": "VHHV",
+    "consent": "VVVV",
+    "renderer": "VHHV"
+   },
+   "activeContent": "XAAX",
+   "profileOnTheWholeCase": "well-formed",
+   "profileFences": 1,
+   "profileInlineSpans": 0,
+   "disagreeWithProfile": {
+    "consent": "VVVV"
+   }
+  },
+  {
+   "id": "backtick-info-with-backtick",
+   "caseId": "backtick-info-with-backtick",
+   "what": "a backtick opener whose info string holds a backtick",
+   "eol": "LF",
+   "lines": [
+    "```a`b",
+    "x",
+    "```"
+   ],
+   "vectors": {
+    "profile": "MMMM",
+    "links": "VHHV",
+    "extraction": "VHHV",
+    "consent": "VVVH",
+    "renderer": "VHHV"
+   },
+   "activeContent": "XXXX",
+   "profileOnTheWholeCase": "malformed:backtick-fence-with-backtick-in-info-string",
+   "profileFences": null,
+   "profileInlineSpans": null,
+   "disagreeWithProfile": {}
+  },
+  {
+   "id": "backtick-info-with-backtick@crlf",
+   "caseId": "backtick-info-with-backtick",
+   "what": "a backtick opener whose info string holds a backtick",
+   "eol": "CRLF",
+   "lines": [
+    "```a`b",
+    "x",
+    "```"
+   ],
+   "vectors": {
+    "profile": "MMMM",
+    "links": "VHHV",
+    "extraction": "VHHV",
+    "consent": "VVVV",
+    "renderer": "VHHV"
+   },
+   "activeContent": "XXXX",
+   "profileOnTheWholeCase": "malformed:backtick-fence-with-backtick-in-info-string",
+   "profileFences": null,
+   "profileInlineSpans": null,
+   "disagreeWithProfile": {}
+  },
+  {
+   "id": "tilde-info-with-backtick",
+   "caseId": "tilde-info-with-backtick",
+   "what": "a tilde opener whose info string holds a backtick",
+   "eol": "LF",
+   "lines": [
+    "~~~a`b",
+    "x",
+    "~~~"
+   ],
+   "vectors": {
+    "profile": "VHHV",
+    "links": "VHHV",
+    "extraction": "VHHV",
+    "consent": "VHHV",
+    "renderer": "VHHV"
+   },
+   "activeContent": "XAAX",
+   "profileOnTheWholeCase": "well-formed",
+   "profileFences": 1,
+   "profileInlineSpans": 0,
+   "disagreeWithProfile": {}
+  },
+  {
+   "id": "tilde-info-with-backtick@crlf",
+   "caseId": "tilde-info-with-backtick",
+   "what": "a tilde opener whose info string holds a backtick",
+   "eol": "CRLF",
+   "lines": [
+    "~~~a`b",
+    "x",
+    "~~~"
+   ],
+   "vectors": {
+    "profile": "VHHV",
+    "links": "VHHV",
+    "extraction": "VHHV",
+    "consent": "VVVV",
+    "renderer": "VHHV"
+   },
+   "activeContent": "XAAX",
+   "profileOnTheWholeCase": "well-formed",
+   "profileFences": 1,
+   "profileInlineSpans": 0,
+   "disagreeWithProfile": {
+    "consent": "VVVV"
+   }
+  },
+  {
+   "id": "unclosed",
+   "caseId": "unclosed",
+   "what": "an opener with no closer",
+   "eol": "LF",
+   "lines": [
+    "```",
+    "x"
+   ],
+   "vectors": {
+    "profile": "MMM",
+    "links": "VHH",
+    "extraction": "VHH",
+    "consent": "VHH",
+    "renderer": "VHH"
+   },
+   "activeContent": "XXX",
+   "profileOnTheWholeCase": "malformed:unclosed-fence",
+   "profileFences": null,
+   "profileInlineSpans": null,
+   "disagreeWithProfile": {}
+  },
+  {
+   "id": "unclosed@crlf",
+   "caseId": "unclosed",
+   "what": "an opener with no closer",
+   "eol": "CRLF",
+   "lines": [
+    "```",
+    "x"
+   ],
+   "vectors": {
+    "profile": "MMM",
+    "links": "VHH",
+    "extraction": "VHH",
+    "consent": "VVV",
+    "renderer": "VHH"
+   },
+   "activeContent": "XXX",
+   "profileOnTheWholeCase": "malformed:unclosed-fence",
+   "profileFences": null,
+   "profileInlineSpans": null,
+   "disagreeWithProfile": {}
+  },
+  {
+   "id": "empty-fence",
+   "caseId": "empty-fence",
+   "what": "an opener closed by the next line",
+   "eol": "LF",
+   "lines": [
+    "```",
+    "```"
+   ],
+   "vectors": {
+    "profile": "VHV",
+    "links": "VHV",
+    "extraction": "VHV",
+    "consent": "VHV",
+    "renderer": "VHV"
+   },
+   "activeContent": "XAX",
+   "profileOnTheWholeCase": "well-formed",
+   "profileFences": 1,
+   "profileInlineSpans": 0,
+   "disagreeWithProfile": {}
+  },
+  {
+   "id": "empty-fence@crlf",
+   "caseId": "empty-fence",
+   "what": "an opener closed by the next line",
+   "eol": "CRLF",
+   "lines": [
+    "```",
+    "```"
+   ],
+   "vectors": {
+    "profile": "VHV",
+    "links": "VHV",
+    "extraction": "VHV",
+    "consent": "VVV",
+    "renderer": "VHV"
+   },
+   "activeContent": "XAX",
+   "profileOnTheWholeCase": "well-formed",
+   "profileFences": 1,
+   "profileInlineSpans": 0,
+   "disagreeWithProfile": {
+    "consent": "VVV"
+   }
+  },
+  {
+   "id": "two-backticks",
+   "caseId": "two-backticks",
+   "what": "two backticks are not a fence",
+   "eol": "LF",
+   "lines": [
+    "``",
+    "x",
+    "``"
+   ],
+   "vectors": {
+    "profile": "VHHV",
+    "links": "VVVV",
+    "extraction": "VVVV",
+    "consent": "VVVV",
+    "renderer": "VVVV"
+   },
+   "activeContent": "XAAX",
+   "profileOnTheWholeCase": "well-formed",
+   "profileFences": 0,
+   "profileInlineSpans": 1,
+   "disagreeWithProfile": {
+    "links": "VVVV",
+    "extraction": "VVVV",
+    "consent": "VVVV",
+    "renderer": "VVVV"
+   }
+  },
+  {
+   "id": "two-backticks@crlf",
+   "caseId": "two-backticks",
+   "what": "two backticks are not a fence",
+   "eol": "CRLF",
+   "lines": [
+    "``",
+    "x",
+    "``"
+   ],
+   "vectors": {
+    "profile": "VHHV",
+    "links": "VVVV",
+    "extraction": "VVVV",
+    "consent": "VVVV",
+    "renderer": "VVVV"
+   },
+   "activeContent": "XAAX",
+   "profileOnTheWholeCase": "well-formed",
+   "profileFences": 0,
+   "profileInlineSpans": 1,
+   "disagreeWithProfile": {
+    "links": "VVVV",
+    "extraction": "VVVV",
+    "consent": "VVVV",
+    "renderer": "VVVV"
+   }
+  },
+  {
+   "id": "blockquote",
+   "caseId": "blockquote",
+   "what": "a fence inside a block quote",
+   "eol": "LF",
+   "lines": [
+    "> ```",
+    "> x",
+    "> ```"
+   ],
+   "vectors": {
+    "profile": "VHHV",
+    "links": "VVVV",
+    "extraction": "VVVV",
+    "consent": "VVVV",
+    "renderer": "VVVV"
+   },
+   "activeContent": "XAAX",
+   "profileOnTheWholeCase": "well-formed",
+   "profileFences": 0,
+   "profileInlineSpans": 1,
+   "disagreeWithProfile": {
+    "links": "VVVV",
+    "extraction": "VVVV",
+    "consent": "VVVV",
+    "renderer": "VVVV"
+   }
+  },
+  {
+   "id": "blockquote@crlf",
+   "caseId": "blockquote",
+   "what": "a fence inside a block quote",
+   "eol": "CRLF",
+   "lines": [
+    "> ```",
+    "> x",
+    "> ```"
+   ],
+   "vectors": {
+    "profile": "VHHV",
+    "links": "VVVV",
+    "extraction": "VVVV",
+    "consent": "VVVV",
+    "renderer": "VVVV"
+   },
+   "activeContent": "XAAX",
+   "profileOnTheWholeCase": "well-formed",
+   "profileFences": 0,
+   "profileInlineSpans": 1,
+   "disagreeWithProfile": {
+    "links": "VVVV",
+    "extraction": "VVVV",
+    "consent": "VVVV",
+    "renderer": "VVVV"
+   }
+  },
+  {
+   "id": "list-item",
+   "caseId": "list-item",
+   "what": "a fence inside a list item",
+   "eol": "LF",
+   "lines": [
+    "- ```",
+    "  x",
+    "  ```"
+   ],
+   "vectors": {
+    "profile": "MMMM",
+    "links": "VVVH",
+    "extraction": "VVVV",
+    "consent": "VVVH",
+    "renderer": "VVVV"
+   },
+   "activeContent": "XXXX",
+   "profileOnTheWholeCase": "malformed:unclosed-inline-span",
+   "profileFences": null,
+   "profileInlineSpans": null,
+   "disagreeWithProfile": {}
+  },
+  {
+   "id": "list-item@crlf",
+   "caseId": "list-item",
+   "what": "a fence inside a list item",
+   "eol": "CRLF",
+   "lines": [
+    "- ```",
+    "  x",
+    "  ```"
+   ],
+   "vectors": {
+    "profile": "MMMM",
+    "links": "VVVH",
+    "extraction": "VVVV",
+    "consent": "VVVV",
+    "renderer": "VVVV"
+   },
+   "activeContent": "XXXX",
+   "profileOnTheWholeCase": "malformed:unclosed-inline-span",
+   "profileFences": null,
+   "profileInlineSpans": null,
+   "disagreeWithProfile": {}
+  },
+  {
+   "id": "two-fences",
+   "caseId": "two-fences",
+   "what": "two closed fences in a row",
+   "eol": "LF",
+   "lines": [
+    "```",
+    "x",
+    "```",
+    "~~~",
+    "y",
+    "~~~"
+   ],
+   "vectors": {
+    "profile": "VHHVHHV",
+    "links": "VHHVHHV",
+    "extraction": "VHHVHHV",
+    "consent": "VHHVHHV",
+    "renderer": "VHHVHHV"
+   },
+   "activeContent": "XAAXAAX",
+   "profileOnTheWholeCase": "well-formed",
+   "profileFences": 2,
+   "profileInlineSpans": 0,
+   "disagreeWithProfile": {}
+  },
+  {
+   "id": "two-fences@crlf",
+   "caseId": "two-fences",
+   "what": "two closed fences in a row",
+   "eol": "CRLF",
+   "lines": [
+    "```",
+    "x",
+    "```",
+    "~~~",
+    "y",
+    "~~~"
+   ],
+   "vectors": {
+    "profile": "VHHVHHV",
+    "links": "VHHVHHV",
+    "extraction": "VHHVHHV",
+    "consent": "VVVVVVV",
+    "renderer": "VHHVHHV"
+   },
+   "activeContent": "XAAXAAX",
+   "profileOnTheWholeCase": "well-formed",
+   "profileFences": 2,
+   "profileInlineSpans": 0,
+   "disagreeWithProfile": {
+    "consent": "VVVVVVV"
+   }
+  }
+ ],
+ "prefixesPerRecognizer": 304,
+ "consentFunction": {
+  "module": "packages/polaris-generation-consent/dist/package-reader.js",
+  "moduleSha256": "3d72cf232d446985f008da94c165710eb07bd6d5c6e8f325f89aeb4d34d99181",
+  "cutText": "function outsideFences(text) {\n    let open = null;\n    const unfenced = text.split('\\n').map(line => {\n        const m = /^ {0,3}(`{3,}|~{3,})(.*)$/.exec(line);\n        if (open === null) {\n            if (m !== null && !(m[1][0] === '`' && m[2].includes('`'))) {\n                open = m[1];\n                return '';\n            }\n            return line;\n        }\n        if (m !== null && m[1][0] === open[0] && m[1].length >= open.length && m[2].trim() === '')\n            open = null;\n        return '';\n    }).join('\\n');\n    return unfenced.replace(/<!--[\\s\\S]*?(?:-->|$)/g, comment => comment.replace(/[^\\n]/g, ''));\n}",
+  "cutSha256": "d43b89ad0ed3efae40304f469300c62b93ee02617c42f705a511d37bc9b9f47a"
+ },
+ "recognizers": [
+  "profile",
+  "links",
+  "extraction",
+  "consent",
+  "renderer"
+ ],
+ "summary": {
+  "cases": {
+   "total": 66,
+   "lf": 33,
+   "lfWellFormedUnderTheProfile": 29,
+   "ofThoseWithNoInlineSpan": 25,
+   "ofThoseWithAnInlineSpan": 4,
+   "lfMalformedUnderTheProfile": 4
+  },
+  "lfMalformedUnderTheProfile": {
+   "closer-trailing-tab": "malformed:unclosed-fence",
+   "backtick-info-with-backtick": "malformed:backtick-fence-with-backtick-in-info-string",
+   "unclosed": "malformed:unclosed-fence",
+   "list-item": "malformed:unclosed-inline-span"
+  },
+  "crlfWholeCaseUnderTheProfile": {
+   "backtick-col0": "well-formed",
+   "backtick-indent1": "well-formed",
+   "backtick-indent2": "well-formed",
+   "backtick-indent3": "well-formed",
+   "backtick-indent4": "well-formed",
+   "backtick-tab": "well-formed",
+   "tilde-col0": "well-formed",
+   "tilde-indent3": "well-formed",
+   "tilde-indent4": "well-formed",
+   "opener-four-closer-three": "well-formed",
+   "closer-longer": "well-formed",
+   "closer-indent1": "well-formed",
+   "closer-indent3": "well-formed",
+   "closer-indent4": "well-formed",
+   "closer-trailing-space": "well-formed",
+   "closer-trailing-tab": "malformed:unclosed-fence",
+   "closer-trailing-tab-then-closer": "well-formed",
+   "closer-with-info": "well-formed",
+   "closer-longer-with-info": "well-formed",
+   "closer-with-text": "well-formed",
+   "closer-other-char": "well-formed",
+   "tilde-fence-backtick-line": "well-formed",
+   "tilde-opener-four-closer-three": "well-formed",
+   "info-string": "well-formed",
+   "info-string-space": "well-formed",
+   "backtick-info-with-backtick": "malformed:backtick-fence-with-backtick-in-info-string",
+   "tilde-info-with-backtick": "well-formed",
+   "unclosed": "malformed:unclosed-fence",
+   "empty-fence": "well-formed",
+   "two-backticks": "well-formed",
+   "blockquote": "well-formed",
+   "list-item": "malformed:unclosed-inline-span",
+   "two-fences": "well-formed"
+  },
+  "fenceRuleDisagreementsWithTheProfile": {
+   "links": [
+    "closer-trailing-tab-then-closer",
+    "closer-with-info",
+    "closer-longer-with-info",
+    "closer-with-text"
+   ],
+   "extraction": [
+    "backtick-indent1",
+    "backtick-indent2",
+    "backtick-indent3",
+    "tilde-indent3",
+    "closer-indent1",
+    "closer-indent3",
+    "closer-trailing-tab-then-closer"
+   ],
+   "consent": [
+    "closer-trailing-tab-then-closer"
+   ],
+   "renderer": [
+    "closer-trailing-tab-then-closer"
+   ]
+  },
+  "inlineSpanCasesWhereTheRecognizerDisagrees": {
+   "links": [
+    "backtick-indent4",
+    "two-backticks",
+    "blockquote"
+   ],
+   "extraction": [
+    "backtick-indent4",
+    "backtick-tab",
+    "two-backticks",
+    "blockquote"
+   ],
+   "consent": [
+    "backtick-indent4",
+    "backtick-tab",
+    "two-backticks",
+    "blockquote"
+   ],
+   "renderer": [
+    "backtick-indent4",
+    "backtick-tab",
+    "two-backticks",
+    "blockquote"
+   ]
+  },
+  "activeContentGate": {
+   "positionsCompared": 152,
+   "crlfAdmitsWhatLfExcludes": [],
+   "crlfExcludesWhatLfAdmits": []
+  },
+  "crlfDiffersFromLf": {
+   "profile": [],
+   "links": [],
+   "extraction": [],
+   "consent": [
+    "backtick-col0",
+    "backtick-indent1",
+    "backtick-indent2",
+    "backtick-indent3",
+    "tilde-col0",
+    "tilde-indent3",
+    "opener-four-closer-three",
+    "closer-longer",
+    "closer-indent1",
+    "closer-indent3",
+    "closer-indent4",
+    "closer-trailing-space",
+    "closer-trailing-tab",
+    "closer-trailing-tab-then-closer",
+    "closer-with-info",
+    "closer-longer-with-info",
+    "closer-with-text",
+    "closer-other-char",
+    "tilde-fence-backtick-line",
+    "tilde-opener-four-closer-three",
+    "info-string",
+    "info-string-space",
+    "backtick-info-with-backtick",
+    "tilde-info-with-backtick",
+    "unclosed",
+    "empty-fence",
+    "list-item",
+    "two-fences"
+   ],
+   "renderer": []
+  }
+ },
+ "inlineSpanCases": [
+  {
+   "id": "no-span",
+   "line": "see [p](probe.md)",
+   "profile": "V",
+   "links": "V",
+   "agree": true
+  },
+  {
+   "id": "inside-span",
+   "line": "`[p](probe.md)`",
+   "profile": "H",
+   "links": "H",
+   "agree": true
+  },
+  {
+   "id": "inside-double-span",
+   "line": "``[p](probe.md)``",
+   "profile": "H",
+   "links": "V",
+   "agree": false
+  },
+  {
+   "id": "unclosed-span",
+   "line": "` [p](probe.md)",
+   "profile": "M",
+   "links": "V",
+   "agree": null
+  },
+  {
+   "id": "link-between-spans",
+   "line": "`a` [p](probe.md) `b`",
+   "profile": "V",
+   "links": "V",
+   "agree": true
+  },
+  {
+   "id": "double-span-with-inner-backtick-before-link",
+   "line": "`` a ` b `` [p](probe.md)",
+   "profile": "V",
+   "links": "V",
+   "agree": true
+  },
+  {
+   "id": "double-span-with-inner-backtick-around-link",
+   "line": "``[p](probe.md) ` ``",
+   "profile": "H",
+   "links": "V",
+   "agree": false
+  },
+  {
+   "id": "backslash-before-delimiters",
+   "line": "\\`[p](probe.md)\\`",
+   "profile": "H",
+   "links": "H",
+   "agree": true
+  }
+ ]
+}

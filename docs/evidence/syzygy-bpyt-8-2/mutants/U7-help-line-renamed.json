@@ -1,0 +1,11 @@
+{
+ "id": "U7-help-line-renamed",
+ "command": "TMPDIR=/tmp/la-b82/g CI=1 npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/cli-table.test.ts",
+ "edits": [
+  {
+   "file": "packages/polaris-dossier/src/cli.ts",
+   "old": "  help                print this usage and exit",
+   "new": "  usage               print this usage and exit"
+  }
+ ]
+}

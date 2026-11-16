@@ -1,0 +1,14 @@
+batch         version  att pass dirty surv asClaimed  exit codes / stop runs recorded
+BADUTF8-np    head       1    1     0    0         1  {0: 1} / 0
+EARLYS-np     head       8    8     0    0         2  {-15: 6, 143: 2} / 0
+G-np          head      18   18     0    0        18  {143: 18} / 0
+H-np          head       1    1     0    0         0  {0: 1} / 1
+K-np          head       1    1     0    0         1  {0: 1} / 0
+MIX-np        head       3    2     0    0         1  {-15: 1, 0: 1, 129: 1} / 0
+P0-np         head       1    1     0    0         1  {0: 1} / 0
+totals {('head', 'attempts'): 33, ('head', 'passed'): 32, ('head', 'dirty'): 0, ('head', 'withSurvivors'): 0}
+head attempts 33 dirty 0 with survivors 0
+head dirty batches []
+head survivor batches []
+head stop attempts with a record written 0
+head stop attempts whose exit is not 128 + first signal sent 8 Counter({('EARLYS-np', -15): 6, ('MIX-np', -15): 1, ('MIX-np', 129): 1})

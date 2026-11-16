@@ -1,0 +1,71 @@
+**Outcome.** The launch-form marker snapshot in `launched.test.ts` now also compares the marker's change time (`lstat` `ctimeNs`). An ask that rewrites the mode-000 marker in place, at the same size, and restores its mode now fails the row. Before this change it passed.
+
+This is the PR #516 review's note N1, option (a) (`docs/reviews/R-GP-IMPL-LAUNCH-FORM-SNAPSHOT-1-RAW.md`).
+- `markerSnapshot` reads one `lstat` with bigint times and returns `ctimeNs` beside `mode`, `ino` and `size`. `link` and `bytes` are unchanged.
+- The helper's comment now says which times are left out and why: "Times are left out except the change time: a read moves the access time, and nothing that leaves the marker as it was moves the change time." The `asked` comment at `:134` is kept as it was.
+- `launched.ts` is unchanged (sha256 `c7a25b8b45fe12e2add7874f88d46b2bad1eef16ffa4a17e2464d5c671424921` at base and at the fix).
+
+**CC-REV-1 classes:** none declared, because the change is test-only. The independent reviewer rules. The #506, #511 and #516 reviewers each ruled class 4 for these rows, because they are the rule-6 kill evidence for the fail-closed launched-marker reader. If the reviewer rules class 4, the GP-Q0 extras stand as follows:
+- **Differential:** degenerate, because no product byte changes.
+- **What stands in for it:** the old test against the new test over one mutant corpus, at base and at the fix (Evidence).
+- **Rule-6 mutant per predicate:** the new comparison is killed by R-chmod-cycle-rewrite.
+- **Owner notice:** a line in the cycle report.
+
+**Authority:** bead `syzygy-bpyt.8.30`, from R-GP-IMPL-LAUNCH-FORM-SNAPSHOT-1 N1, under the owner's 2026-10-20 direction as read per GP-Q0 (`OWNER-DIRECTION-GREENFIELD-PARITY-ANSWERS-2026-10-21.md`).
+
+## Every changed output
+
+None. 6 of 3,336 tracked files differ from main `ce322e1a`:
+- `packages/polaris-dossier/src/launched.test.ts`, the helper and its comment (+7/−5);
+- 5 new evidence files.
+
+`git diff --quiet ce322e1a 3fb73809 -- . ':(exclude)docs/evidence' ':(exclude)packages/polaris-dossier/src/launched.test.ts'` exits 0. No test title changes: 0 changed lines in the diff carry `it(`, `it.each(` or `describe(`.
+
+## Evidence
+
+**`docs/evidence/launch-form-snapshot-ctime-mutants-2026-10-23.json`** (sha256 `78778abce0cb02bfb139bf26ac89b43ac2c5e1877c317ee2c85d116556aeccfe`) is the new rule-6 record.
+- **Harness:** `docs/evidence/launch-form-snapshot-ctime-2026-10-23/mutants.py`. Its source is also embedded in the record. It is the syzygy-bpyt.8.24 harness with the review's mutants added.
+- **Run:** at the fix commit `ab59b666dbf1e3936a004c7a4237fb0c5ff3c6e8`, against base `ce322e1a65b784c6304d51b05fb347351912a926`.
+  - Each side's `launched.test.ts` ran alone: base sha256 `e01b040a…`, which is the #516 record's fix, and fix sha256 `73fd8fe0…`.
+  - Environment: Node v24.6.0, kernel 7.0.0-38-generic, TMPDIR on tmpfs.
+  - The tracked tree was clean after the run.
+- **Stored per mutant:** the old and new fragments, the command, each failed test and its first error line.
+
+| Mutant | Base (`ce322e1a`) | Fix (`ab59b666`) |
+|---|---|---|
+| unmutated | 43/43 pass | 43/43 pass, and 20 more runs all pass (20 × 51 asks) |
+| **R-chmod-cycle-rewrite** (acceptance; the review's raw §3 item 4) | **survived**, 43/43 | **killed**, 1 row: `a file its reader may not read` |
+| D1-with-memoized-reader, D1-terminal-only, D1-bang-only, D1-syzygy-launched-only, D1-any-remover | killed, 17 of 17 rows each | killed, 17 of 17 rows each |
+| D3-repair-to-launched | killed, 17 rows | killed, 17 rows |
+| D4-truncate | killed, 10 rows | killed, **12** rows (adds `an empty file`) |
+| T-ask-of-an-unplanted-run | killed, 17 rows | killed, 17 rows |
+| M-every-form-drains-then-refuses | survived (the stated limit) | survived (the stated limit) |
+| R-same-size-rewrite (the review's own mutant) | killed, 10 rows | killed, 10 rows |
+| R-fill-dangling-target (the review's own mutant) | killed, 1 row | killed, 1 row |
+| R-fifo-to-empty-file (the review's own mutant) | killed, 2 rows | survived |
+
+AC2 compares these mutants with the #516 record (`launch-form-snapshot-oracle-mutants-2026-10-22.json`, whose fix is this base). D1, D3 and T are unchanged at 17 rows. D4 is stronger, at 11 rows. M still survives, as stated.
+
+**Determinism: `ctime_probe.mjs`** (`probe-tmpfs.json` sha256 `57442690eb50fbf94a438952a19ba0110933cc7711a2e8ac5d336239f9133266`, `probe-ext4.json` sha256 `14a42e813bb9c1c1dc8c82706e407c0fb043e9175e47ffd0fab1aa4dd79bb250`). It ran on this host's tmpfs `/tmp` and on ext4 `/var/tmp`, 2,000 rounds each.
+- **Does any ask legitimately move ctime?** [Observed] No.
+  - Read: the only file-system calls `launchFormRefusal` reaches are in `launchedMarkerState`. They are `openSync` (`O_RDONLY | O_NOFOLLOW | O_NONBLOCK`), `fstatSync`, `readSync` and `closeSync`, with no chmod, utimes, write or truncate.
+  - Probed: over 9 marker kinds (a readable file, an empty file, a mode-000 file, a directory, a dangling link, a link to a file, a link to `/dev/zero`, a FIFO, and a FIFO holding bytes), those calls plus the snapshot's own moved `ctimeNs` in 0 of 2,000 rounds per kind, on both file systems.
+  - The 20 repeat runs of the unmutated fix also passed every one of their 51 asks.
+- **Granularity.** [Observed] Run right after an `lstat`, R-chmod-cycle-rewrite's own steps moved `ctimeNs` in 2,000 of 2,000 rounds on each file system, and moved mode, inode and size in 0.
+  - The smallest move was 30,127 ns on tmpfs and 88,788 ns on ext4.
+  - The stored change times show nanosecond digits: about 90% end in a non-zero digit.
+
+## Residuals
+
+- **Coarse timestamps.** [Inferred] On a kernel or file system with coarse timestamps, a rewrite that falls within one tick could leave `ctimeNs` unchanged. That weakens the kill. It never fails the unmutated row, because a faithful ask moves no time at all. Hosted CI's kernel and TMPDIR file system are [Unknown: not checked].
+- **Inode reuse.** [Inferred, not run] On a file system that reuses inode numbers, a same-type replacement of a row whose bytes the snapshot cannot compare now changes `ctimeNs`, so it fails too. This host's tmpfs did not reuse inodes, so no mutant exercises that case.
+- **The drained pipe.** `M-every-form-drains-then-refuses` survives, as before. A drained FIFO moves no change time, and the snapshot reads no FIFO's bytes.
+
+Tests: +0 ~0 -0. The change is to the helper alone: no test title or body changed, and the file still has 43 tests. The 17 launch-form rows assert more through the helper.
+
+Battery: the PROJECT-STATUS canonical battery in a clean clone at `3fb7380945bd8ac0374e38792a814aed070bd8c6` gave `commands=110 nonzero=0`. Typecheck exits 0; `check_governance` gives 32 OK, 21 WARN and 0 FAIL; `check_quotations` exits 0.
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+https://claude.ai/code/session_01APhWyj6JKsAs6kzgYByHeD
+

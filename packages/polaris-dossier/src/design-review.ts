@@ -1,11 +1,12 @@
-import { createHash } from 'node:crypto';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { REVIEW_STATUS_REGION, isDossierPagePath, leadInQuotations, withoutReviewStatusRegion } from '@syzygy/polaris-generation-core/live';
+import { isRecord, sha256 } from '@syzygy/support';
 import { declaredSessionId } from './check.js';
 import { DEFICIENT_SUBJECTS, checkDraftShape, designVerdictSchemaDocument, localDesignVerdictSchema } from './draft-schema.js';
 import { errno } from './inventory.js';
 import type { ReviewProblem, ReviewProblemKind } from './review.js';
+import { READER_STANDARDS, READER_STANDARDS_SHA256, READER_STANDARDS_VERSION } from './reader-standards.js';
 import { RUN_LAYOUT } from './state-directory.js';
 
 /** The rendered-design review's packet and verdict (REQ-polaris-generation-035; design decision 5). Pure of the run's records: the
@@ -25,10 +26,8 @@ export const MACHINE_VIEW_REGION_MEMBER = 'reviewStatus';
 const SITE_MAX_FILES = 20_000;
 const SITE_MAX_BYTES = 64 * 1024 * 1024;
 
-const isObj = (value: unknown): value is Readonly<Record<string, unknown>> => value !== null && typeof value === 'object' && !Array.isArray(value);
 const list = (value: unknown): readonly unknown[] => (Array.isArray(value) ? value : []);
 const text = (value: unknown): string | undefined => (typeof value === 'string' ? value : undefined);
-const sha256 = (bytes: string | Uint8Array): string => createHash('sha256').update(bytes).digest('hex');
 const byCodeUnit = (a: string, b: string): number => (a < b ? -1 : a > b ? 1 : 0);
 
 export type SiteRead =
@@ -76,7 +75,11 @@ export function readLatestSite(run: string): SiteRead {
 export function designCriteria(runDir: string): readonly string[] {
   return [
     'You are the rendered-design review session of a Polaris dossier (REQ-polaris-generation-006, read for this mode by REQ-polaris-generation-035). Judge the rendered pages only from this packet: every file of one render, each HTML page with its review-status region removed and the machine view without its reviewStatus member. You are given nothing else and must use nothing else.',
-    'Judge the dossier as a reader meets it: whether each page is navigable and legible; whether every label (Observed, Inferred, Unknown, non-normative) shows where it applies and agrees with machine.json; whether each quotation shows its anchor, each Unknown its reason and each diagram its relationship and line styles; and whether the run disclosure is on every page. The cited spans are on the source pages under sources/, as Syzygy located them at the render. Whether the prose is faithful to its sources is the fidelity review\'s question, not yours.',
+    'Judge the dossier as a reader meets it: whether each page is navigable and legible; whether every label (Observed, Inferred, Unknown, non-normative) shows where it applies and agrees with machine.json, which on a narrative page (index.html, poles/ and deep-dives/) means in its evidence view; whether each quotation shows its anchor, each Unknown its reason and each diagram its relationship and line styles; and whether every page carries the run\'s one sentence and a link to the appendix, which holds the disclosure. The cited spans are on the source pages under sources/, as Syzygy located them at the render. Whether the prose is faithful to its sources is the fidelity review\'s question, not yours.',
+    'Judge too whether a software engineer new to the project could follow each page on one reading: a section that describes components, steps or hand-offs with no diagram, an enumeration of three or more items written as one sentence, a paragraph that would read better as a diagram, table, cards or steps, a section whose prose runs well past what a reader takes in at once, a deep dive or section titled by a function, type or file name rather than by what it explains, or a passage that needs prior knowledge of the project or its domain is a finding against that page (advisory, or blocking where the page cannot be followed). An advisory finding alone does not make a page deficient.',
+    'A narrative page (index.html and the pages under poles/ and deep-dives/) has two views, and its HTML holds both: the reading view it opens to, whose labels, reason codes and evidence notes are visually hidden, and the evidence view, the same page at its #evidence-view target, where they show. Judge both. Ask of each such page: whether its opening states why the project exists; whether its lead uses the category term a software engineer knows; whether warnings sit in the one sentence and the appendix rather than in the reading text; whether the page is too long to read at one sitting; whether a list repeats a diagram instead of folding beneath it; and whether the page reads as a person explaining the project. Each failure is a finding against that page, advisory unless the page cannot be followed.',
+    `Judge every page against the reader standards that follow too (${READER_STANDARDS_VERSION}, sha256 ${READER_STANDARDS_SHA256}). For each standard a page fails, give a finding against that page whose message begins with the standard's identifier (RS-1 to RS-25), advisory unless the page cannot be followed; judge the technology-choices standards (RS-11, RS-12) on the page that holds, or should hold, that table. Where a standard and a criterion above differ, the criterion governs.`,
+    READER_STANDARDS,
     'Pages: for every HTML page of the packet, give one pageReview row saying whether its rendering is acceptable, deficient or unresolved, with your reason.',
     `Findings: give every finding its severity (blocking or advisory), its deficient subject (${DEFICIENT_SUBJECTS.join(', ')}), the packet page it concerns as \`page\`, and a message. Declare \`readiness\` ready only when no finding is blocking and every page is acceptable.`,
     'Quote nothing in a reason or message: name the page and describe what you see. No span of this packet verifies a quotation, so Syzygy refuses a design verdict that carries one in the lead-in form.',
@@ -101,7 +104,7 @@ export function outsideRegion(files: ReadonlyMap<string, string>): { readonly ok
     } else if (file === MACHINE_VIEW_FILE) {
       let view: unknown;
       try { view = JSON.parse(content); } catch { view = undefined; }
-      if (!isObj(view) || !Object.hasOwn(view, MACHINE_VIEW_REGION_MEMBER)) return { ok: false, reason: `${file} is not a machine view with a ${MACHINE_VIEW_REGION_MEMBER} member` };
+      if (!isRecord(view) || !Object.hasOwn(view, MACHINE_VIEW_REGION_MEMBER)) return { ok: false, reason: `${file} is not a machine view with a ${MACHINE_VIEW_REGION_MEMBER} member` };
       // Only the renderer's own serialization is read, so that removing the member re-serializes nothing else: a byte changed anywhere
       // outside it either changes the packet or refuses it.
       if (content !== `${JSON.stringify(view, null, 2)}\n`) return { ok: false, reason: `${file} is not in the renderer's serialization` };
@@ -139,7 +142,7 @@ export function buildDesignPacket(input: { readonly run: string; readonly runId:
 
 /** Whether the design verdict's own rows block readiness. */
 export function designBlocking(verdict: Readonly<Record<string, unknown>>): boolean {
-  const rows = (key: string): Readonly<Record<string, unknown>>[] => list(verdict[key]).filter(isObj);
+  const rows = (key: string): Readonly<Record<string, unknown>>[] => list(verdict[key]).filter(isRecord);
   return rows('findings').some((row) => row['severity'] === 'blocking') || rows('pageReview').some((row) => row['verdict'] !== 'acceptable');
 }
 
@@ -158,7 +161,7 @@ export function validateDesignVerdict(
 
   const seen = new Set<string>();
   list(verdict['pageReview']).forEach((row, i) => {
-    const page = isObj(row) ? text(row['page']) : undefined;
+    const page = isRecord(row) ? text(row['page']) : undefined;
     if (page === undefined) return;
     if (!built.pages.includes(page)) add('unresolved-reference', `$.pageReview[${i}].page`, `no HTML page of the packet has the path ${JSON.stringify(page)}`);
     else if (seen.has(page)) add('duplicate-entry', `$.pageReview[${i}].page`, `the page ${JSON.stringify(page)} has more than one row`);
@@ -166,12 +169,12 @@ export function validateDesignVerdict(
   });
   for (const page of built.pages) if (!seen.has(page)) add('page-review-incomplete', '$.pageReview', `the page ${JSON.stringify(page)} has no row`);
   list(verdict['findings']).forEach((row, i) => {
-    const page = isObj(row) ? text(row['page']) : undefined;
+    const page = isRecord(row) ? text(row['page']) : undefined;
     if (page !== undefined && !built.files.includes(page)) add('unresolved-reference', `$.findings[${i}].page`, `the packet has no file ${JSON.stringify(page)}`);
   });
   for (const [key, field] of [['pageReview', 'reason'], ['findings', 'message']] as const) {
     list(verdict[key]).forEach((row, i) => {
-      if (isObj(row) && leadInQuotations(text(row[field]) ?? '').length > 0) {
+      if (isRecord(row) && leadInQuotations(text(row[field]) ?? '').length > 0) {
         add('quotation-unverified', `$.${key}[${i}].${field}`, 'a design verdict quotes nothing: no span of the design packet verifies a quotation, so name the page and describe what you see');
       }
     });

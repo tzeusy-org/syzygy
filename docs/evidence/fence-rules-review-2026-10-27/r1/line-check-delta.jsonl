@@ -1,0 +1,5 @@
+{"path": "apps/three-surface-poc/src/polaris-markdown.ts", "commentOnly": true, "changes": [{"line": 99, "kind": "trailing-line-comment"}]}
+{"path": "packages/polaris-generation-consent/src/package-reader.ts", "commentOnly": true, "changes": [{"line": 61, "kind": "inside-block-comment"}]}
+{"path": "packages/three-surface-poc-core/src/markdown-code-context.ts", "commentOnly": true, "changes": [{"line": 60, "kind": "trailing-line-comment"}]}
+{"path": "packages/three-surface-poc-core/src/project-shape-extraction.ts", "commentOnly": true, "changes": [{"line": 157, "kind": "trailing-line-comment"}]}
+{"path": "packages/three-surface-poc-core/src/project-shape-manifest.ts", "commentOnly": true, "changes": [{"line": 175, "kind": "trailing-line-comment"}]}

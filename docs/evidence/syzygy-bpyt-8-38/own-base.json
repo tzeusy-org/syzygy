@@ -1,0 +1,118 @@
+{
+ "tree": "/var/tmp/la-b838/base",
+ "head": "e5080f4dcdcc208127ae5dc0b915acf413df9764",
+ "results": [
+  {
+   "id": "O1-tarball-url-reads-outside",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  72 passed (72)"
+   ],
+   "testFiles": [
+    "Test Files  3 passed (3)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 8.1,
+   "counts": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "/^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu",
+     "new": "/^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|^[^:]*\\.(?:tgz|tar|tar\\.gz)$/iu"
+    }
+   ]
+  },
+  {
+   "id": "O2-tar-unread",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  72 passed (72)"
+   ],
+   "testFiles": [
+    "Test Files  3 passed (3)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 9.2,
+   "counts": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "/^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu",
+     "new": "/^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar\\.gz)$/iu"
+    }
+   ]
+  },
+  {
+   "id": "O3-tar-gz-unread",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  72 passed (72)"
+   ],
+   "testFiles": [
+    "Test Files  3 passed (3)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 6.1,
+   "counts": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "/^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu",
+     "new": "/^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar)$/iu"
+    }
+   ]
+  },
+  {
+   "id": "O4-root-dev-dependencies-dropped",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  72 passed (72)"
+   ],
+   "testFiles": [
+    "Test Files  3 passed (3)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 5.3,
+   "counts": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "manifests.set(root.name, { dir: '.', ...root });\n",
+     "new": "manifests.set(root.name, { dir: '.', ...root, devDependencies: {} });\n"
+    }
+   ]
+  }
+ ]
+}

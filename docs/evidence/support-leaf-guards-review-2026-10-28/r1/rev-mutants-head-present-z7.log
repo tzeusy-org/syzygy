@@ -1,0 +1,3 @@
+N0-no-egress-unmutated expected pass observed pass 5 0 [] []
+Z7-unscoped-workspace-with-no-entry expected survives observed survives 5 0 [] []
+summary {'rows': 2, 'asExpected': 2, 'unexpected': []} status after '' leftovers []

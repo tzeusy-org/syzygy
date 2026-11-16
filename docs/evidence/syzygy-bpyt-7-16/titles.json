@@ -1,0 +1,64 @@
+{
+ "what": "every test title Vitest lists at each commit (npx vitest list --json in a clean clone), keyed by file and full name",
+ "base": "eb8fb6cb523c7d415390ac60c15f7c2c56db2398",
+ "head": "0d7eaf08a19dd64bdeb294d3995861fbfbaad759",
+ "titles": {
+  "base": 5374,
+  "head": 5376
+ },
+ "added": [
+  [
+   "apps/three-surface-poc/src/browser-origin.test.ts",
+   "browserRequestAllowed — the Origin is compared whole > refuses an origin that only ends with the host origin, and the opaque origin null"
+  ],
+  [
+   "packages/http-host/src/credentials.test.ts",
+   "RT3 — state-write boundary > refuses a sibling whose name differs from the state dir name only in case, as traversal"
+  ]
+ ],
+ "removed": [],
+ "addedPerFile": {
+  "apps/three-surface-poc/src/browser-origin.test.ts": 1,
+  "packages/http-host/src/credentials.test.ts": 1
+ },
+ "duplicates": {
+  "base": [
+   [
+    "packages/polaris-generation-core/src/canonical-json.test.ts",
+    "canonical JSON record bytes > rejects non-JSON primitives without silent omission",
+    7
+   ],
+   [
+    "packages/polaris-generation-core/src/provider-draft.test.ts",
+    "provider-local intermediate validation > preserves inert text for escaped rendering",
+    3
+   ],
+   [
+    "packages/three-surface-poc-core/src/project-shape-extraction.test.ts",
+    "PWB-REQ-002 — two independent extractors agree on every fixture > preserves multiline catalog-entry declarations without minting a second item",
+    2
+   ]
+  ],
+  "head": [
+   [
+    "packages/polaris-generation-core/src/canonical-json.test.ts",
+    "canonical JSON record bytes > rejects non-JSON primitives without silent omission",
+    7
+   ],
+   [
+    "packages/polaris-generation-core/src/provider-draft.test.ts",
+    "provider-local intermediate validation > preserves inert text for escaped rendering",
+    3
+   ],
+   [
+    "packages/three-surface-poc-core/src/project-shape-extraction.test.ts",
+    "PWB-REQ-002 — two independent extractors agree on every fixture > preserves multiline catalog-entry declarations without minting a second item",
+    2
+   ]
+  ]
+ },
+ "listSha256": {
+  "base": "4468612f59a3de87802eb65b2a612889b36f8286cd721376650db327c86ca9e8",
+  "head": "7b9fa2d2d00f7318a8ac5c6473c2d457bedcc160c0ffb84111aec789d5a3a557"
+ }
+}

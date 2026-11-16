@@ -1,0 +1,324 @@
+{
+  "format": "mutation-record",
+  "bead": "syzygy-pdja.3",
+  "subject": {
+    "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": "b3437098b2104ef7df5da1d7958b7a694fad5076e886da4ad6665d42d3b72838",
+    "packages/polaris-dossier/src/render.ts": "97b4c35a47f5a19ce0c2ba3d90b920e67efbf6ded52f63a59ec78eb1ad939c19",
+    "packages/polaris-dossier/src/review.ts": "62fec0d31c42295403e72ead830fc10cedc6b14b0e057675bae07d5534901029"
+  },
+  "ranAt": "6a8d1248fe50891a0035a5599ee26c71debeef1e",
+  "note": "PR 2 of 3, first half of the render. Each mutant replaces old with new once in the committed tree at ranAt, runs packages/polaris-dossier/src/render.test.ts with vitest (which draws through the real renderer), then restores the file. One mutant survived the first run; the test fixture gained a glossary term the withheld sentence contains, and the re-run killed it (rerunAfter).",
+  "denominator": 28,
+  "killed": 28,
+  "mutants": [
+    {
+      "id": "held-off",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "const held = label === 'non-normative' ? undefined : withheldNote(value);",
+      "new": "const held = undefined as WithheldNote | undefined;",
+      "killed": true,
+      "tests": "2 failed | 64 passed (66)",
+      "testFiles": [
+        "packages/polaris-dossier/src/render.test.ts"
+      ]
+    },
+    {
+      "id": "redacted-touch",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "if (spanTouchesWithheld(blob.withheld, startLine, endLine)) return 'withheld';",
+      "new": "",
+      "killed": true,
+      "tests": "1 failed | 65 passed (66)",
+      "testFiles": [
+        "packages/polaris-dossier/src/render.test.ts"
+      ]
+    },
+    {
+      "id": "excluded-not-withheld",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "return outcome === undefined || outcome === 'admitted' ? 'other' : packetSpanStanding(outcome);",
+      "new": "return 'other';",
+      "killed": true,
+      "tests": "2 failed | 64 passed (66)",
+      "testFiles": [
+        "packages/polaris-dossier/src/render.test.ts"
+      ]
+    },
+    {
+      "id": "secret-named",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": ".filter((file) => screen.screenPath(file) !== 'secret-detector-match').sort()",
+      "new": ".sort()",
+      "killed": true,
+      "tests": "1 failed | 65 passed (66)",
+      "testFiles": [
+        "packages/polaris-dossier/src/render.test.ts"
+      ]
+    },
+    {
+      "id": "spans-count-off",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "...(withheldSpanCount(value) === 0 ? {} : { withheldSpans: withheldSpanCount(value) })",
+      "new": "...{}",
+      "killed": true,
+      "tests": "1 failed | 65 passed (66)",
+      "testFiles": [
+        "packages/polaris-dossier/src/render.test.ts"
+      ]
+    },
+    {
+      "id": "advisory-off",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "} else if (judgement === 'uncited' && support[id] === 'advisory') {",
+      "new": "} else if (false) {",
+      "killed": true,
+      "tests": "1 failed | 65 passed (66)",
+      "testFiles": [
+        "packages/polaris-dossier/src/render.test.ts"
+      ]
+    },
+    {
+      "id": "judgement-off",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "const judgement = label === 'inferred' && value['judgement'] === true ?",
+      "new": "const judgement = false ?",
+      "killed": true,
+      "tests": "1 failed | 65 passed (66)",
+      "testFiles": [
+        "packages/polaris-dossier/src/render.test.ts"
+      ]
+    },
+    {
+      "id": "label-over-off",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "(heldOver(content) ? WITHHELD_LABEL : label(value))",
+      "new": "label(value)",
+      "killed": true,
+      "tests": "1 failed | 65 passed (66)",
+      "testFiles": [
+        "packages/polaris-dossier/src/render.test.ts"
+      ]
+    },
+    {
+      "id": "node-label",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "label: gone === undefined ? title(node['label']) : WITHHELD_LABEL",
+      "new": "label: title(node['label'])",
+      "killed": true,
+      "tests": "1 failed | 65 passed (66)",
+      "testFiles": [
+        "packages/polaris-dossier/src/render.test.ts"
+      ]
+    },
+    {
+      "id": "edge-label",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "label: gone === undefined ? title(edge['label']) : WITHHELD_LABEL",
+      "new": "label: title(edge['label'])",
+      "killed": true,
+      "tests": "1 failed | 65 passed (66)",
+      "testFiles": [
+        "packages/polaris-dossier/src/render.test.ts"
+      ]
+    },
+    {
+      "id": "diagram-title",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "title: held ? WITHHELD_LABEL : title(diagram['title'])",
+      "new": "title: title(diagram['title'])",
+      "killed": true,
+      "tests": "1 failed | 65 passed (66)",
+      "testFiles": [
+        "packages/polaris-dossier/src/render.test.ts"
+      ]
+    },
+    {
+      "id": "relationship",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "relationship: held ? WITHHELD_LABEL : title(diagram['relationship'])",
+      "new": "relationship: title(diagram['relationship'])",
+      "killed": true,
+      "tests": "1 failed | 65 passed (66)",
+      "testFiles": [
+        "packages/polaris-dossier/src/render.test.ts"
+      ]
+    },
+    {
+      "id": "section-title",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "return held ? WITHHELD_LABEL : title(container['title']);",
+      "new": "return title(container['title']);",
+      "killed": true,
+      "tests": "1 failed | 65 passed (66)",
+      "testFiles": [
+        "packages/polaris-dossier/src/render.test.ts"
+      ]
+    },
+    {
+      "id": "understanding-off",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "    if (held !== undefined) {\n      const id = `${prefix}/withheld-",
+      "new": "    if (false) {\n      const id = `${prefix}/withheld-",
+      "killed": true,
+      "tests": "1 failed | 65 passed (66)",
+      "testFiles": [
+        "packages/polaris-dossier/src/render.test.ts"
+      ]
+    },
+    {
+      "id": "glossary-filter-off",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": ".filter((value) => !isRecord(value) || withheldNote(value) === undefined).map((value) => understandingItem('glossary', value))",
+      "new": ".map((value) => understandingItem('glossary', value))",
+      "killed": true,
+      "tests": "1 failed | 65 passed (66)",
+      "testFiles": [
+        "packages/polaris-dossier/src/render.test.ts"
+      ]
+    },
+    {
+      "id": "excerpt-count-off",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "if (excerptHeld(record)) withheldExcerpts += 1;",
+      "new": "",
+      "killed": true,
+      "tests": "1 failed | 65 passed (66)",
+      "testFiles": [
+        "packages/polaris-dossier/src/render.test.ts"
+      ]
+    },
+    {
+      "id": "quote-count",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "? derived.excludedContent.filter((quotation) => quotation.blockId === id).length",
+      "new": "? 0",
+      "killed": true,
+      "tests": "2 failed | 64 passed (66)",
+      "testFiles": [
+        "packages/polaris-dossier/src/render.test.ts"
+      ]
+    },
+    {
+      "id": "elements-off",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "if (held !== undefined) withheldElements.set(`${prefix}${text(value['id'])!}`, held);",
+      "new": "",
+      "killed": true,
+      "tests": "1 failed | 65 passed (66)",
+      "testFiles": [
+        "packages/polaris-dossier/src/render.test.ts"
+      ]
+    },
+    {
+      "id": "inventory-count",
+      "file": "packages/polaris-dossier/src/review.ts",
+      "old": "withheldInventoryEntries: withheldInventoryEntries(built),",
+      "new": "withheldInventoryEntries: 0,",
+      "killed": true,
+      "tests": "1 failed | 65 passed (66)",
+      "testFiles": [
+        "packages/polaris-dossier/src/render.test.ts"
+      ]
+    },
+    {
+      "id": "site-repeated-off",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "if (diagramId === undefined) return list(attrs);",
+      "new": "return list(attrs);",
+      "killed": true,
+      "tests": "1 failed | 65 passed (66)",
+      "testFiles": [
+        "packages/polaris-dossier/src/render.test.ts"
+      ]
+    },
+    {
+      "id": "site-marks-off",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "${marks === undefined ? '' : marksAttributes(marks)}",
+      "new": "",
+      "killed": true,
+      "tests": "3 failed | 63 passed (66)",
+      "testFiles": [
+        "packages/polaris-dossier/src/render.test.ts"
+      ]
+    },
+    {
+      "id": "site-judgement-mark",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "const judged = b.judgement === undefined ? '' : ' <span class=\"judgement-mark\">judgement</span>';",
+      "new": "const judged = '';",
+      "killed": true,
+      "tests": "1 failed | 65 passed (66)",
+      "testFiles": [
+        "packages/polaris-dossier/src/render.test.ts"
+      ]
+    },
+    {
+      "id": "site-held-words",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "const heldText = (id: string): string => held(id) === undefined ? '' :",
+      "new": "const heldText = (id: string): string => true ? '' :",
+      "killed": true,
+      "tests": "1 failed | 65 passed (66)",
+      "testFiles": [
+        "packages/polaris-dossier/src/render.test.ts"
+      ]
+    },
+    {
+      "id": "site-held-reason",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "held(n.id) === undefined ? null : 'excluded-content'",
+      "new": "null",
+      "killed": true,
+      "tests": "1 failed | 65 passed (66)",
+      "testFiles": [
+        "packages/polaris-dossier/src/render.test.ts"
+      ]
+    },
+    {
+      "id": "site-held-attrs",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "const heldAttrs = (id: string): string => held(id) === undefined ? '' : ' data-unknown-reason=\"excluded-content\"';",
+      "new": "const heldAttrs = (id: string): string => '';",
+      "killed": true,
+      "tests": "1 failed | 65 passed (66)",
+      "testFiles": [
+        "packages/polaris-dossier/src/render.test.ts"
+      ]
+    },
+    {
+      "id": "site-repeated-count",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "const unknown = pending.slice(before).filter(entry => entry.epistemic === 'unknown').length;\n    const shown = draft",
+      "new": "const unknown = 0;\n    const shown = draft",
+      "killed": true,
+      "tests": "1 failed | 65 passed (66)",
+      "testFiles": [
+        "packages/polaris-dossier/src/render.test.ts"
+      ]
+    },
+    {
+      "id": "site-counts",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "...(local.counts === undefined ? {} : { counts: local.counts }),",
+      "new": "",
+      "killed": true,
+      "tests": "2 failed | 64 passed (66)",
+      "testFiles": [
+        "packages/polaris-dossier/src/render.test.ts"
+      ]
+    },
+    {
+      "id": "site-segment-escape",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "if (own?.withheld !== undefined) return escape(part.text);",
+      "new": "",
+      "killed": true,
+      "tests": "1 failed | 65 passed (66)",
+      "testFiles": [
+        "packages/polaris-dossier/src/render.test.ts"
+      ],
+      "rerunAfter": "added a glossary term (screening) that the withheld sentence contains, after the first run survived (66 passed)"
+    }
+  ]
+}

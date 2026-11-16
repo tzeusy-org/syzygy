@@ -5,8 +5,7 @@
 // app-level tests need to reach every presentation state. Never a real
 // owner act: identities, dates and digests are fixture values, and the
 // judgment evaluator is what decides lawfulness.
-import { createHash } from 'node:crypto';
-
+import { sha256 } from '@syzygy/support';
 import {
   JUDGMENT_CORRELATION_UNAVAILABLE,
   type JudgmentCorrelator,
@@ -40,9 +39,6 @@ const JUDGMENT_FIXTURE = {
 
 const F = JUDGMENT_FIXTURE;
 
-function sha256(text: string): string {
-  return createHash('sha256').update(text).digest('hex');
-}
 function bytes(text: string): Uint8Array {
   return new TextEncoder().encode(text);
 }

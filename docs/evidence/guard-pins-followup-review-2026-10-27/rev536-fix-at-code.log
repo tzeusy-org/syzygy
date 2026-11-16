@@ -1,0 +1,10 @@
+FIX-rows-only survives 0 ['Tests  169 passed (169)'] 5.4 clean
+FIX+RV536-M2-http-url-reads-outside killed 1 ['Tests  1 failed | 168 passed (169)'] 6.4 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a remote http tarball URL dependency as naming no module
+FIX+RV536-M7-npm-alias-workspace-scope-only killed 1 ['Tests  1 failed | 168 passed (169)'] 5.3 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as an npm: alias of a registry package as naming no module
+FIX+RV536-M8-root-declarations-unread killed 1 ['Tests  1 failed | 168 passed (169)'] 5.5 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name the workspace root's manifest declares as a local dependency as naming no module
+FIX+RV536-M9-dotdot-alone-outside killed 1 ['Tests  1 failed | 168 passed (169)'] 6.5 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a dependency on its parent directory as naming no module
+wrote rev536-fix-at-code.json 5

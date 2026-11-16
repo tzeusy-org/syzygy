@@ -1,0 +1,1289 @@
+
+ RUN  v3.2.7 /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-534/tap
+
+ ✓ |@syzygy/polaris-dossier| packages/polaris-dossier/src/render.test.ts (42 tests) 60419ms
+   ✓ render > refuses with no renderer wired, before it opens the run, and writes nothing  679ms
+   ✓ render > renders every quotation as the bytes Syzygy located in the blob it read now, with an RFC7-10 anchor  1937ms
+   ✓ render > labels blocks by the agent's label, the counted review and screening, and keeps the pages and machine view in parity per tuple  2195ms
+   ✓ render > carries the run disclosure on every page and in the machine view, and one review-status region per page holding no claim  1324ms
+   ✓ render > withholds the draft layer as Unknown while the RFC7-20 ruling is not in force, keeping sources, disclosure and discovery  2331ms
+   ✓ render > withholds a quotation from a file screening excludes and renders its block Unknown, with no source page for that file  582ms
+   ✓ render > screens at render with the policy in force now, not the one the check applied  1620ms
+   ✓ render > withholds a project-documentation quotation and source page under a non-governed run, which relies on no statement, naming the class  542ms
+   ✓ render > withholds a project-documentation quotation and source page under a statement that does not list project-documentation, naming the class  975ms
+   ✓ render > quotes a project-documentation body once the statement the run relies on lists the class  1382ms
+   ✓ render > renders an exempt body only through a renderer that declares the page-sink contract and pages that carry the CSP  2123ms
+   ✓ render > draws retained spans with original coordinates and markers while withholding only the removed line  902ms
+   ✓ render > refuses when the stored passed draft revision is altered, after the deadline, and when the output lacks the disclosure  998ms
+   ✓ render > writes each render into a new numbered site directory and never over an earlier one  1079ms
+   ✓ render > discloses the consent record and label the live consent gives the pinned revision at this render  682ms
+   ✓ render > refuses before it renders when the consent stops naming the pinned revision, with the step guard's codes, and writes no site (syzygy-qkea.23)  808ms
+   ✓ render > refuses before it renders when the project input now records a drawer, with the step guard's codes, and writes no site (syzygy-qkea.23)  371ms
+   ✓ render > lists the pinned tree with the object reader the CLI is given  380ms
+   ✓ render > is the `render` command of the CLI, which refuses when the composition root injects no renderer  973ms
+   ✓ rendered-design review (S9b) > builds the design packet from the latest site, outside the review-status region, byte for byte, and names its digest at render  2204ms
+   ✓ rendered-design review (S9b) > hands a design review session the packet under the sessions root with its own prompt  1993ms
+   ✓ rendered-design review (S9b) > keeps a counted design review through a render that changes only the review-status region  2429ms
+   ✓ rendered-design review (S9b) > retires a counted design review when a render changes anything outside the region  2346ms
+   ✓ rendered-design review (S9b) > refuses a render whose statement of the design review leaks outside the region, and writes no site  818ms
+   ✓ rendered-design review (S9b) > counts a validated design verdict only once its launch form is recorded  1970ms
+   ✓ rendered-design review (S9b) > states a counted review that declares the pages not ready beside its blocking finding  2127ms
+   ✓ rendered-design review (S9b) > records and refuses a design verdict with a page without a row, which never counts  1393ms
+   ✓ rendered-design review (S9b) > records and refuses a design verdict with a row for a page the packet does not hold, which never counts  2173ms
+   ✓ rendered-design review (S9b) > records and refuses a design verdict with two rows for one page, which never counts  1260ms
+   ✓ rendered-design review (S9b) > records and refuses a design verdict with a finding on a file the packet does not hold, which never counts  3291ms
+   ✓ rendered-design review (S9b) > records and refuses a design verdict with a stale packet digest, which never counts  1216ms
+   ✓ rendered-design review (S9b) > records and refuses a design verdict with the authoring session's identifier, which never counts  1919ms
+   ✓ rendered-design review (S9b) > records and refuses a design verdict with a quotation in a reason, which never counts  1336ms
+   ✓ rendered-design review (S9b) > records and refuses a design verdict with readiness beside a blocking finding, which never counts  2175ms
+   ✓ rendered-design review (S9b) > records and refuses a design verdict with readiness beside a deficient page, which never counts  2713ms
+   ✓ rendered-design review (S9b) > records and refuses a design verdict with a fidelity verdict's shape, which never counts  1533ms
+   ✓ rendered-design review (S9b) > records a validated design verdict, with what it observed and what stays Inferred, and a stored site altered since is a stale packet  1776ms
+   ✓ rendered-design review (S9b) > refuses a design packet from a site holding anything but the renderer's files, and an unknown kind  798ms
+   ✓ rendered-design review (S9b) > names an excluded cited file alike in two renders of the same subject  323ms
+   ✓ rendered-design review (S9b) > keys an excluded cited file by the run, the pinned revision and its path alone, never its body or object  361ms
+   ✓ rendered-design review (S9b) > drives the design review through the CLI  1211ms
+ ✓ |@syzygy/polaris-dossier| packages/polaris-dossier/src/review.test.ts (62 tests) 66623ms
+   ✓ review-packet --kind fidelity > emits the packet byte for byte as assembled independently, with its digest beside it and in its directory name  1131ms
+   ✓ review-packet --kind fidelity > carries no authoring exchange, read account or excluded byte  764ms
+   ✓ review-packet --kind fidelity > holds no discovery, transcript or exchange field at any depth  624ms
+   ✓ review-packet --kind fidelity > refuses the rendered-design review before any site is rendered  556ms
+   ✓ review-packet --kind fidelity > refuses before the inventory counts  1037ms
+   ✓ review-packet --kind fidelity > refuses when the latest draft revision has findings  614ms
+   ✓ review-packet --kind fidelity > refuses when the frozen draft changed after its check  854ms
+   ✓ session-prompt review --kind fidelity > copies the packet and its digest into a session directory under the sessions root, and prints the interactive command  546ms
+   ✓ session-prompt review --kind fidelity > refuses {"role":"review"}  517ms
+   ✓ session-prompt review --kind fidelity > refuses {"role":"review","kind":"other"}  829ms
+   ✓ review-check > validates a complete, consistent verdict bound to the rebuilt packet and records it; it counts once its launch form is recorded  940ms
+   ✓ review-check > records and refuses a verdict that names a stale packet digest  890ms
+   ✓ review-check > records and refuses a verdict that declares the authoring session  316ms
+   ✓ review-check > records and refuses a verdict that declares the inventory session  873ms
+   ✓ review-check > records and refuses a verdict that omits an inventory entry from coverage  784ms
+   ✓ review-check > records and refuses a verdict that omits the accuracy of an inventory entry  553ms
+   ✓ review-check > records and refuses a verdict that omits a claim block  319ms
+   ✓ review-check > records and refuses a verdict that relies on a quotation that does not verify  978ms
+   ✓ review-check > records and refuses a verdict that quotes the excluded span  1050ms
+   ✓ review-check > records and refuses a verdict that names a span the packet lacks  1752ms
+   ✓ review-check > records and refuses a verdict that declares readiness beside a blocking finding  1108ms
+   ✓ review-check > records and refuses a verdict that declares readiness beside an unsupported entry  1294ms
+   ✓ review-check > records and refuses a verdict that declares readiness beside an unsupported block  973ms
+   ✓ review-check > records and refuses a verdict that declares readiness beside an entry not accurate  1237ms
+   ✓ review-check > records and refuses a verdict that represents an entry by no block  1121ms
+   ✓ review-check > records and refuses a verdict that repeats a coverage row  1406ms
+   ✓ review-check > records and refuses a verdict that quotes in a reason without naming the span  1873ms
+   ✓ review-check > records and refuses a verdict that carries a field outside the schema  733ms
+   ✓ review-check > records an inventory omission as blocking: the verdict validates, and the draft does not become ready  1266ms
+   ✓ review-check > retires a counted verdict when the draft is revised, the stored frozen draft is altered or the frozen verdict changes  3936ms
+   ✓ review-check > validates a ready verdict with no blocking row  989ms
+   ✓ review-check > does not count a verdict whose launch record is altered to another form, role or prompt  4336ms
+   ✓ review-check > stops counting a declared launch once the run's launched marker is present but unreadable (syzygy-bpyt.8.8)  1076ms
+   ✓ review-check > refuses before any review session is handed over, and after the deadline  714ms
+   ✓ review-check > observes only the packet, its digest and that the verdict names it: the reviewer's reading, independence, completeness, identifiers and launch form stay Inferred  2054ms
+   ✓ the step guard runs before every review step (syzygy-qkea.23) > refuses review-packet, review-check and the review hand-over when the consent stops naming the pinned revision, with the guard's codes  601ms
+   ✓ the step guard runs before every review step (syzygy-qkea.23) > refuses review-packet, review-check and the review hand-over when the project input now records a drawer, with the guard's codes  1053ms
+   ✓ the step guard runs before every review step (syzygy-qkea.23) > lists the pinned tree with the object reader it is given, on review-packet and review-check  440ms
+   ✓ the content-class gate on the fidelity packet > withholds a project-documentation span under a non-governed run, which relies on no statement, naming the class  1073ms
+   ✓ the content-class gate on the fidelity packet > withholds a project-documentation span under a statement that lists code-content and not project-documentation, naming the class  1652ms
+   ✓ the content-class gate on the fidelity packet > admits the span with its text once the statement lists project-documentation  770ms
+   ✓ the content-class gate on the fidelity packet > gates every class by the statement: one that lists only project-documentation withholds the code-content spans  717ms
+   ✓ the fidelity packet over a body retained as redacted-span > carries a span that includes no withheld line, with the body's redaction count beside it  405ms
+   ✓ session-prompt --tool and the session pair's statement > refuses a fidelity, a design and an inventory session when no statement names codex, and writes nothing  983ms
+   ✓ session-prompt --tool and the session pair's statement > refuses a fidelity, a design and an inventory session when two in-force statements name codex, and writes nothing  1063ms
+   ✓ session-prompt --tool and the session pair's statement > refuses a fidelity, a design and an inventory session when the codex statement is withdrawn, and writes nothing  3162ms
+   ✓ session-prompt --tool and the session pair's statement > refuses a fidelity, a design and an inventory session when the codex statement takes effect after now, and writes nothing  2204ms
+   ✓ session-prompt --tool and the session pair's statement > refuses a fidelity, a design and an inventory session when the codex statement names another provider, and writes nothing  1469ms
+   ✓ session-prompt --tool and the session pair's statement > refuses a fidelity, a design and an inventory session when the codex statement lists only code-content, and writes nothing  2030ms
+   ✓ session-prompt --tool and the session pair's statement > hands a codex session over when an in-force codex statement lists every class the run's lists  1268ms
+   ✓ session-prompt --tool and the session pair's statement > hands a codex session over when the run is non-governed and relies on no statement  540ms
+   ✓ session-prompt --tool and the session pair's statement > hands the declared tool's session over with no codex statement at all  868ms
+   ✓ session-prompt --tool and the session pair's statement > cites the codex statement in the review prompt record, and stops counting the verdict once that statement is withdrawn  799ms
+   ✓ session-prompt --tool and the session pair's statement > does not count work whose cited statement a successor replaced or whose classes narrowed; a record from before citations counts on the re-check, its citation Unknown  975ms
+   ✓ session-prompt --tool and the session pair's statement > does not count work whose prompt record cites its statement for another agent tool  824ms
+   ✓ session-prompt --tool and the session pair's statement > does not count work whose prompt record cites its statement for another provider  698ms
+   ✓ session-prompt --tool and the session pair's statement > names the caller's consequence in every refusal kind, and leaves the counting texts as they were without one  855ms
+   ✓ the CLI > builds a packet and checks a verdict through syzygy dossier, exiting 1 on a refused verdict  680ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/project-shape-model.test.ts (29 tests) 530ms
+ ✓ |@syzygy/polaris-dossier| packages/polaris-dossier/src/git-object-reader.test.ts (60 tests) 86392ms
+   ✓ the clone's .git is untrusted: what an agent can plant there is refused or ignored > an alternates file is never followed: an object only an alternate holds refuses  504ms
+   ✓ the clone's .git is untrusted: what an agent can plant there is refused or ignored > repository-local configuration, hooks and attributes run nothing and change nothing  330ms
+   ✓ paths, types, and no state between calls > a path that is absent, a directory, a submodule or malformed refuses  363ms
+   ✓ tree entries are unambiguous: listTree emits only paths readBlobs resolves (finding 3) > names ., .., .git in any case, a repeated name and a name not UTF-8 refuse, in listTree and readBlobs  493ms
+   ✓ each call is bounded: bytes inflated, delta depth, objects visited (finding 4) > the reviewer's amplification shape, 100 levels over a 64 MiB base, refuses within the default per-call budget  14715ms
+   ✓ each call is bounded: bytes inflated, delta depth, objects visited (finding 4) > a delta chain one past the depth cap refuses, by default (1,000) and as a parameter; at the cap it reads  2601ms
+   ✓ each call is bounded: bytes inflated, delta depth, objects visited (finding 4) > a reference delta naming itself refuses at the depth cap, quickly  750ms
+   ✓ a large valid store lists, and a reader defect is not blamed on the store (R-POLARIS-DOSSIER-S2-READER-2 finding 2, note 6) > a subdirectory of 200,000 entries lists: a subtree is never spread into call arguments  2577ms
+   ✓ paths are at most git's core.maxTreeDepth (4,096) segments deep (R-POLARIS-DOSSIER-S2-READER-3 note 1) > a path of 4,096 segments reads and lists; a missing path below names its full prefix  36425ms
+   ✓ paths are at most git's core.maxTreeDepth (4,096) segments deep (R-POLARIS-DOSSIER-S2-READER-3 note 1) > a path of 4,097 segments refuses before any read, and listTree refuses the tree nested past the cap  22696ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/project-shape-observation.test.ts (39 tests) 682ms
+ ✓ |@syzygy/polaris-generation-core| packages/polaris-generation-core/src/discovery.test.ts (62 tests) 1844ms
+   ✓ REQ-030 hierarchical budgeted discovery > finds relevant material outside the conventional entry points  400ms
+   ✓ REQ-030 hierarchical budgeted discovery > scores size by doublings of 1 KiB of quotable text, capped, and breaks a path tie by size rather than path order  308ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/project-shape-extraction.test.ts (87 tests) 149ms
+ ✓ |@syzygy/polaris-generation-consent| packages/polaris-generation-consent/src/package-reader.test.ts (299 tests) 70403ms
+   ✓ package admission reader > returns a record only for an instance that an act record names by path and digest  3699ms
+   ✓ package admission reader > refuses the whole read on unknown shapes instead of guessing  2138ms
+   ✓ public-source policy act > recognises the recorder's record by its exact path and format, in force from its instant  1931ms
+   ✓ public-source policy act > refuses the recorder's file when its act type, identity, title or provenance is not the recorder's form  2056ms
+   ✓ egress version 2 record > is read from the recorder's act: version 2 supersedes version 1 once in force  7403ms
+   ✓ egress version 2 record > leaves version 1 standing before the version 2 act takes effect, and with no version 1 act at all  1817ms
+   ✓ egress version 2 record > refuses when version 2 did not take effect strictly after version 1: the same instant, or earlier  4439ms
+   ✓ egress version 2 record > the RFC5-14 class amendment version 2 depends on > is required: no record, an edited module, a wrong form, or an amendment later than version 2 all refuse  6204ms
+   ✓ egress version 2 record > withdrawal and forgery forms the reader does not define > does not refuse the recorders' other act records or the aggregate acceptance record they append to  3576ms
+   ✓ screening scope version 2 policy act > counts the version 2 act when the policy carries the version 2 bytes, and the version 1 act goes quiet  3608ms
+   ✓ screening scope version 2 policy act > a version 2 act not yet in force leaves version 1 in force, in both views  2401ms
+   ✓ screening scope version 2 policy act > refuses an unlisted record that names the policy: another file, a subdirectory, a loose field spelling, a Unicode-hyphen identity  2603ms
+   ✓ strict act reads > policy chain: absent without acts; refused for a missing version 1, equal or earlier instants, equal arguments, a supersession that does not name version 1, or other policy bytes  6368ms
+   ✓ round-3 review notes > folds soft hyphens, zero-width spaces, underscores and spaces before matching a withdrawal stem (N-2)  2218ms
+   ✓ round-3 review notes > takes a time: a strict read of an act recorded after now is absent (N-4)  4848ms
+   ✓ every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) > a file at its allowlisted path with its allowlisted bytes has its exact tooling citations set aside, and only those  571ms
+   ✓ the policy port and the strict policy chain agree > on every world in the fixture set, at every instant  7354ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/body-read-authority.test.ts (322 tests) 390ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/model.test.ts (17 tests) 4566ms
+   ✓ three-surface Butlers POC model > reads a directory with no Beads project through the spawned default runner exactly as through the in-process one  310ms
+   ✓ three-surface Butlers POC model > carries the project shape on the one model: not-evaluated without an authority evaluation, observed with an admitting one (PWB 2.7)  329ms
+   ✓ three-surface Butlers POC model > words the intent-to-work basis by the record origin: created, reused, or the honest legacy both (PRF-4)  328ms
+   ✓ three-surface Butlers POC model > caps an ingested, binding operator-reported artifact at report-fact and never shows Verified (AC3/AC4, syzygy-0r9, syzygy-4mbu)  2493ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/polaris-generation/public-source-screening.test.ts (36 tests) 13943ms
+   ✓ synthetic secrets of each detector class > a withheld row carries an opaque per-run id and no path, object id or body  771ms
+   ✓ synthetic secrets of each detector class > a denied path, a path with a detector match and an indeterminate blob are withheld without their blobs being read  476ms
+   ✓ synthetic secrets of each detector class > a secret in an unrepresentable path is counted, and the path, its digest and its object id are not carried  764ms
+   ✓ synthetic secrets of each detector class > screens the whole body before splitting: a match past the first 100,000-character piece withholds the file  513ms
+   ✓ synthetic secrets of each detector class > an oversize body excluded by configuration is a withheld row, not a path-bearing one  727ms
+   ✓ excluded bodies never leave the process > no secret, path or body reaches the provider port, its receipts, the run record or a rendered page  565ms
+   ✓ the policy act gate fails closed > the default port reads this checkout's chain: the latest recorded version loads the policy it names  1630ms
+   ✓ an empty corpus > a corpus screened down to nothing admitted makes no provider call  493ms
+   ✓ policy residuals (the detectors see literal forms only) > RESIDUAL: a base64-encoded private key and a token split across lines are admitted  599ms
+   ✓ the project-documentation class > reads admitted documentation bodies through the detectors and the active-content scan, and never reads an excluded one  1084ms
+   ✓ the code-content exemption (screening scope version 3) > reads the corpus through it: the .c body is admitted and the .js body withheld  443ms
+   ✓ the v4 redacted corpus behind the original-object verification boundary > returns only marked retained material with original identity, line coordinates and exact counts  717ms
+   ✓ the v4 redacted corpus behind the original-object verification boundary > refuses wrong original bytes before screening and fails replay closed when the fresh object read changes  544ms
+   ✓ the v4 redacted corpus behind the original-object verification boundary > binds the complete mixed population through fresh verification and consent before any provider input  1218ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/polaris-parity-sweep.test.ts (56 tests) 13922ms
+   ✓ PWB-REQ-020 exhaustive Polaris parity sweep > not-evaluated shape / not-evaluated judgment: every marker family matches the machine answer as a multiset  791ms
+   ✓ PWB-REQ-020 exhaustive Polaris parity sweep > not-evaluated shape / lawful-state-1 judgment: every marker family matches the machine answer as a multiset  444ms
+   ✓ PWB-REQ-020 exhaustive Polaris parity sweep > not-admitted shape / unlawful judgment: every marker family matches the machine answer as a multiset  364ms
+   ✓ PWB-REQ-020 exhaustive Polaris parity sweep > observed shape / not-evaluated judgment: every marker family matches the machine answer as a multiset  417ms
+   ✓ PWB-REQ-020 exhaustive Polaris parity sweep > observed shape / lawful-state-2 judgment: every marker family matches the machine answer as a multiset  458ms
+   ✓ PWB-REQ-020 exhaustive Polaris parity sweep > observed-degraded shape / not-evaluated judgment: every marker family matches the machine answer as a multiset  405ms
+   ✓ PWB-REQ-020 exhaustive Polaris parity sweep > observed-degraded shape / absent-run-record judgment: every marker family matches the machine answer as a multiset  415ms
+   ✓ PWB-REQ-020 exhaustive Polaris parity sweep > observed-degraded shape / absent-judgment judgment: every marker family matches the machine answer as a multiset  301ms
+   ✓ PWB-REQ-020 exhaustive Polaris parity sweep > observed-excluded shape / not-evaluated judgment: every marker family matches the machine answer as a multiset  537ms
+   ✓ PWB-REQ-020 exhaustive Polaris parity sweep > observed-undiscovered shape / not-evaluated judgment: every marker family matches the machine answer as a multiset  422ms
+   ✓ PWB-REQ-020 exhaustive Polaris parity sweep > observed-undiscovered shape / absent-judgment judgment: every marker family matches the machine answer as a multiset  587ms
+   ✓ PWB-REQ-020 exhaustive Polaris parity sweep > observed-undiscovered shape / unlawful judgment: every marker family matches the machine answer as a multiset  388ms
+   ✓ PWB-REQ-020 exhaustive Polaris parity sweep > observed-undiscovered shape / lawful-state-1 judgment: every marker family matches the machine answer as a multiset  381ms
+   ✓ PWB-REQ-020 exhaustive Polaris parity sweep > the observed-degraded / lawful-state-2 matrix cell carries every marker family with a non-empty denominator, and state (2) alone claims independent verification  1163ms
+   ✓ PWB-REQ-020 exhaustive Polaris parity sweep > resolves every declared exclusion on the complete observed fixture  586ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/content-classification.test.ts (26 tests) 407ms
+ ✓ |@syzygy/polaris-dossier| packages/polaris-dossier/src/inventory.test.ts (44 tests) 13599ms
+   ✓ session-prompt inventory > makes a session directory holding only the inventory brief, outside the clone, carrying nothing of the draft  412ms
+   ✓ session-prompt inventory > puts the session directory where no ancestor below the state root reaches a draft, so `..` never finds drafts/  748ms
+   ✓ session-prompt inventory > states the inventory's quotation form, its session-identifier rule, its schema and where to check it  313ms
+   ✓ session-prompt inventory > refuses a model with a control character and writes nothing  363ms
+   ✓ session-prompt inventory > refuses after the deadline  341ms
+   ✓ launch-form > records terminal once, bound to the session's prompt, operator-declared and Inferred  367ms
+   ✓ launch-form > refuses the launch form "bang ", records the refusal and writes no record  438ms
+   ✓ launch-form > refuses before any hand-over, for a review session and for an unknown role  376ms
+   ✓ launch-form > refuses a declared form in a run with the launched marker and writes no record  311ms
+   ✓ launch-form > refuses a declared form in a run with an empty marker and writes no record  392ms
+   ✓ launch-form > refuses a declared form in a run with a marker that is a directory and writes no record  445ms
+   ✓ inventory-check > checks the inventory as a draft is checked, freezes it outside the session directory and records its session  752ms
+   ✓ inventory-check > reports a quotation the cited file does not carry, a quotation in an unknown entry and an absent coverage path  573ms
+   ✓ the inventory of record > does not count without a launch form, counts once terminal is recorded, and stops counting when its frozen bytes change  428ms
+   ✓ the inventory of record > does not count an inventory with findings, or a launch record altered to another form  614ms
+   ✓ the inventory of record > stops counting a declared launch once the run's launched marker is present but unreadable (syzygy-bpyt.8.8)  461ms
+   ✓ inventory-brief > prints Syzygy's own rendering and says whether the stored copy matches it  774ms
+   ✓ inventory-brief > never opens the launched marker, at the hand-over or after it, where recording a launch form opens it once (R-GP-IMPL-LAUNCHED-MARKER-2 R2-N4)  367ms
+   ✓ the step guard runs before every inventory step (syzygy-qkea.23) > refuses each step when the consent stops naming the pinned revision, with the guard's codes, and freezes nothing  538ms
+   ✓ the commands > runs the hand-over from the command line: session-prompt, inventory-check, launch-form, inventory-brief  364ms
+ ✓ |@syzygy/polaris-dossier| packages/polaris-dossier/src/waiting-sessions.test.ts (116 tests) 112199ms
+   ✓ the v1.2 gate > refuses session-prompt all, await and a delivery while v1.2 is not signed off (mutant: drop the signed check)  1111ms
+   ✓ session-prompt <run> all > makes the three session directories, writes only the inventory brief, and records each prompt as waiting  530ms
+   ✓ session-prompt <run> all > prints each command with only its role's permission rules and SEC-3's rule, never a permission (mutant: drop a rule or widen one)  1039ms
+   ✓ session-prompt <run> all > prints no pre-approval for Codex, and says so (mutant: print the Claude rules for Codex)  769ms
+   ✓ session-prompt <run> all > refuses a sessions root a permission rule cannot carry unquoted (mutant: drop the plain-path check)  1239ms
+   ✓ session-prompt <run> all > keeps the session pair's provider-statement check from PR #406 (mutant: skip sessionStatementRefusal for all)  941ms
+   ✓ the wait-mode argument grammar (review-408 round 2, finding 6) > takes --stdin once only: given twice it is a usage error, exit 2 (mutant: allow --stdin twice)  826ms
+   ✓ the wait-mode argument grammar (review-408 round 2, finding 6) > takes --fresh once only: given twice it is a usage error, exit 2 (mutant: allow --fresh twice)  1211ms
+   ✓ launch-form for a waiting session (review-408 round 2, finding 2) > records no bang form for a session started to wait, only the terminal form printed for it (mutant: drop the waiting-mode check)  905ms
+   ✓ await > re-hashes the inventory brief and refuses a changed one (mutant: skip the brief digest)  642ms
+   ✓ await > waits a bounded slice, on the local file system, and says to run it again (mutant: no slice bound)  311ms
+   ✓ await > never waits past the run's deadline (mutant: bound the slice by its minutes alone)  690ms
+   ✓ await > ends once the run is closed (mutant: ignore the Execution Record)  1092ms
+   ✓ await > refuses a session directory given without its trailing slash (mutant: drop that directory check)  700ms
+   ✓ await > refuses a session directory given with a doubled slash (mutant: drop that directory check)  623ms
+   ✓ await > refuses a session directory given through a parent segment (mutant: drop that directory check)  440ms
+   ✓ await > refuses a session directory given relative (mutant: drop that directory check)  554ms
+   ✓ await > refuses a session directory given outside a sessions root (mutant: drop that directory check)  931ms
+   ✓ await > refuses a session directory given under a sessions root named for no run (mutant: drop that directory check)  975ms
+   ✓ await > refuses a session directory given naming no session (mutant: drop that directory check)  964ms
+   ✓ await > refuses a session handed over at once, which does not wait (mutant: drop the waiting-mode check)  989ms
+   ✓ await > checks only a file inside the session directory (mutant: drop the containment check)  905ms
+   ✓ await > checks nothing from a session a newer one replaced (mutant: drop the latest-session check)  523ms
+   ✓ await > exits 1 when a submitted file has findings, and says to repair it (mutant: exit 0 on any submission)  563ms
+   ✓ await --submit --stdin: the session writes nothing, Syzygy writes its file > writes the inventory from standard input into the session directory, byte for byte, and checks it (mutant: check without writing)  1171ms
+   ✓ await --submit --stdin: the session writes nothing, Syzygy writes its file > replaces an earlier submission when the session resubmits after a repair (mutant: create the file only once)  1826ms
+   ✓ await --submit --stdin: the session writes nothing, Syzygy writes its file > writes nothing for an inventory session, any name but inventory.json (mutant: drop the file-name rule)  2387ms
+   ✓ await --submit --stdin: the session writes nothing, Syzygy writes its file > writes nothing for an inventory session, a path out of its directory (mutant: drop the file-name rule)  1363ms
+   ✓ await --submit --stdin: the session writes nothing, Syzygy writes its file > writes nothing for a review session, a verdict outside a round (mutant: drop the file-name rule)  2359ms
+   ✓ await --submit --stdin: the session writes nothing, Syzygy writes its file > writes nothing for a review session, a round not delivered (mutant: drop the file-name rule)  1439ms
+   ✓ await --submit --stdin: the session writes nothing, Syzygy writes its file > writes nothing for a review session, another file in a delivered round (mutant: drop the file-name rule)  967ms
+   ✓ await --submit --stdin: the session writes nothing, Syzygy writes its file > writes nothing for a review session, a round whose delivery note is missing (mutant: drop the file-name rule)  1047ms
+   ✓ await --submit --stdin: the session writes nothing, Syzygy writes its file > refuses standard input that is empty, writing nothing (mutant: drop the bound)  627ms
+   ✓ await --submit --stdin: the session writes nothing, Syzygy writes its file > refuses standard input that is over the draft size bound, writing nothing (mutant: drop the bound)  699ms
+   ✓ await --submit --stdin: the session writes nothing, Syzygy writes its file > never follows a link left at the pending name (mutant: write the pending file without removing it first)  1170ms
+   ✓ await --submit --stdin: the session writes nothing, Syzygy writes its file > takes --stdin only with --submit (mutant: ignore a stray --stdin)  700ms
+   ✓ delivery to a waiting review session > delivers the packet as round 1, which await re-hashes and names (mutant: deliver into the session root)  692ms
+   ✓ delivery to a waiting review session > refuses a round whose the packet no longer matches (mutant: compare one digest only)  1369ms
+   ✓ delivery to a waiting review session > refuses a round whose the run's delivery record no longer matches (mutant: compare one digest only)  1237ms
+   ✓ delivery to a waiting review session > refuses a round whose the digest file no longer matches (mutant: compare one digest only)  1842ms
+   ✓ delivery to a waiting review session > refuses a round whose the session's delivery file no longer matches (mutant: compare one digest only)  1849ms
+   ✓ delivery to a waiting review session > takes no new tool, version or model for a waiting session (mutant: let --tool through)  2134ms
+   ✓ delivery to a waiting review session > checks the waiting session's own provider statement at delivery (mutant: check the run's pair instead)  1254ms
+   ✓ delivery to a waiting review session > refuses a delivery when a successor replaced the statement the waiting session was started under (mutant: drop the citation recheck)  741ms
+   ✓ delivery to a waiting review session > says no packet is delivered when the waiting session's record cites no statement (mutant: string-replace the counting phrase)  985ms
+   ✓ delivery to a waiting review session > with --fresh hands the packet to a new session instead (mutant: ignore --fresh)  785ms
+   ✓ a reviewer that continues across revisions > discloses a first-round reviewer as such on the review page (mutant: omit the continuity item)  2278ms
+   ✓ a reviewer that continues across revisions > delivers the repaired subject to the same session as round 2 and discloses it on the review page and in the machine view (mutant: never mark continuing)  2762ms
+   ✓ a reviewer that continues across revisions > discloses a fresh session that declares an earlier verdict's session identifier as continuing (mutant: read delivery records only)  2101ms
+   ✓ a reviewer that continues across revisions > does not mark a fresh session with a new identifier as continuing (mutant: mark every later verdict continuing)  2954ms
+   ✓ a rendered-design reviewer's continuity, disclosed in the review-status region > says a first-round design reviewer had no earlier packet (mutant: disclose a continuing design reviewer only)  1491ms
+   ✓ a rendered-design reviewer's continuity, disclosed in the review-status region > discloses a design reviewer that continued to round 2 (mutant: drop the design continuity sentence)  3193ms
+   ✓ link-safe session directories (review-408 F1) > refuses to write an inventory through a session directory replaced by a link (mutant: skip the directory check in await)  1267ms
+   ✓ link-safe session directories (review-408 F1) > refuses a session directory that is not a directory of its own (mutant: drop the lstat check)  1244ms
+   ✓ link-safe session directories (review-408 F1) > delivers nothing into a review session directory replaced by a link (mutant: skip the directory check in delivery)  940ms
+   ✓ link-safe session directories (review-408 F1) > delivers nothing to a prompt record naming a directory outside the sessions root, even one that resolves into it (mutant: drop the lexical sessions-root check)  2030ms
+   ✓ link-safe session directories (review-408 F1) > writes no verdict into a round directory that links to another session's round (mutant: drop the round containment check)  1474ms
+   ✓ a link-safe sessions root (review-408 round 2, finding 1) > writes no inventory through a sessions root replaced by a link (mutant: skip the root checks)  1092ms
+   ✓ a link-safe sessions root (review-408 round 2, finding 1) > delivers no packet through a sessions root replaced by a link (mutant: skip the root checks)  1325ms
+   ✓ the predicates review-408 F4 named > delivers nothing to a prompt record that names no directory (mutant: drop the directory-type check)  1399ms
+   ✓ the predicates review-408 F4 named > hands a packet over at once when the latest session of its kind was not started to wait (mutant: drop the waiting-mode check on delivery)  2008ms
+   ✓ the predicates review-408 F4 named > counts no delivery record with a round that disagrees with its name (mutant: drop that record check)  3400ms
+   ✓ the predicates review-408 F4 named > counts no delivery record with no packet digest (mutant: drop that record check)  1864ms
+   ✓ the predicates review-408 F4 named > refuses --round 0 (mutant: loosen that grammar or drop the cap)  1159ms
+   ✓ the predicates review-408 F4 named > refuses --round two (mutant: loosen that grammar or drop the cap)  2483ms
+   ✓ the predicates review-408 F4 named > refuses --wait-minutes 0 (mutant: loosen that grammar or drop the cap)  1059ms
+   ✓ the predicates review-408 F4 named > refuses --wait-minutes 61, past the cap (mutant: loosen that grammar or drop the cap)  880ms
+   ✓ the predicates review-408 F4 named > refuses --submit with --round (mutant: let --submit take it)  708ms
+   ✓ the predicates review-408 F4 named > refuses --submit with --wait-minutes (mutant: let --submit take it)  795ms
+   ✓ the predicates review-408 F4 named > gives an inventory session one round only (mutant: drop the inventory round check)  1128ms
+   ✓ the predicates review-408 F4 named > refuses a prompt record whose prompt no longer matches its digest (mutant: drop that part of the prompt record check)  1131ms
+   ✓ the predicates review-408 F4 named > refuses a prompt record with no prompt (mutant: drop that part of the prompt record check)  1117ms
+   ✓ the predicates review-408 F4 named > refuses a prompt record that is missing (mutant: drop that part of the prompt record check)  671ms
+   ✓ the predicates review-408 F4 named > refuses a delivery note that names another round, even with the right digest (mutant: drop that field of the note check)  985ms
+   ✓ the predicates review-408 F4 named > refuses a delivery note that names another kind, even with the right digest (mutant: drop that field of the note check)  1019ms
+   ✓ the predicates review-408 F4 named > refuses a delivery note that names another session, even with the right digest (mutant: drop that field of the note check)  922ms
+   ✓ the predicates review-408 F4 named > delivers nothing when the waiting session's record names no agent tool (mutant: drop the recorded-tool check)  1535ms
+   ✓ the predicates review-408 F4 named > delivers no design packet before a render, and no fidelity packet before the inventory counts (mutant: deliver a packet that failed to build)  2136ms
+   ✓ the predicates review-408 F4 named > refuses a prompt record that names another directory (mutant: drop the record's directory check)  617ms
+   ✓ the predicates review-408 F4 named > verifies the gates again when a packet arrives, and reads nothing past the deadline (mutant: drop the re-check)  1390ms
+   ✓ the predicates review-408 F4 named > refuses session-prompt all once the run's deadline has passed (mutant: drop that step's gate check)  653ms
+   ✓ the predicates review-408 F4 named > refuses await once the run's deadline has passed (mutant: drop that step's gate check)  1199ms
+   ✓ the predicates review-408 F4 named > refuses a delivery once the run's deadline has passed (mutant: drop that step's gate check)  1365ms
+   ✓ the predicates review-408 F4 named > refuses a sessions root that resolves into the clone (mutant: drop the sessions-root check of session-prompt all)  815ms
+   ✓ the predicates review-408 F4 named > refuses session-prompt for all with --kind (mutant: drop that refusal)  731ms
+   ✓ the predicates review-408 F4 named > refuses session-prompt for all with --fresh (mutant: drop that refusal)  908ms
+   ✓ the predicates review-408 F4 named > refuses session-prompt for an inventory with --fresh (mutant: drop that refusal)  1452ms
+   ✓ await --stdin validates before it writes (review-408 F5) > keeps the inventory that passed when the next submission is not JSON (mutant: drop that check)  963ms
+   ✓ await --stdin validates before it writes (review-408 F5) > keeps the inventory that passed when the next submission is not UTF-8 (mutant: drop that check)  962ms
+   ✓ await --stdin validates before it writes (review-408 F5) > keeps the inventory that passed when the next submission is deeper than the bound (mutant: drop that check)  2142ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/polaris-generation/dossier-render.test.ts (53 tests) 3103ms
+   ✓ run directory > ignores the caller's GIT_* variables: GIT_DIR cannot make a work tree read as outside Git  326ms
+   ✓ a stopped run still renders (syzygy-k4t2) > labels a stopped draft Inferred only where a review later than it says supported  398ms
+{"kind":"daemon-http-outcome","at":"2026-10-27T03:24:59.197Z","method":"GET","route":"/polaris","status":403,"reason":"route-non-success","contentType":"application/json"}
+{"kind":"daemon-http-outcome","at":"2026-10-27T03:24:59.285Z","method":"GET","route":"/trajectory","status":403,"reason":"route-non-success","contentType":"application/json"}
+{"kind":"daemon-http-outcome","at":"2026-10-27T03:24:59.553Z","method":"GET","route":"/orrery","status":403,"reason":"route-non-success","contentType":"application/json"}
+[M9 cross links] {"form":"direct","links":15,"classes":{"work-count":1,"code-count":1,"reality-entity":9,"governing-intent":1,"mapped-capability":1,"action-route":2},"sizes":{"/":48103,"/polaris":108010,"/trajectory":32445,"/orrery":46607}}
+[M9 cross links] {"form":"tailnet","links":15,"classes":{"work-count":1,"code-count":1,"reality-entity":9,"governing-intent":1,"mapped-capability":1,"action-route":2},"sizes":{"/":48178,"/polaris":108250,"/trajectory":32535,"/orrery":46697}}
+fatal: transport 'file' not allowed
+ ✓ |@syzygy/polaris-dossier| packages/polaris-dossier/src/start-gates.test.ts (104 tests) 126769ms
+   ✓ init: a run that passes every start gate > pins the consented HEAD, records the subject and writes only run.json under the state root  6711ms
+   ✓ init: a run that passes every start gate > records the clone by its real path, not the path typed: a symlink or a `..` segment is resolved (R-POLARIS-DOSSIER-S3-GATES-2 note 12)  483ms
+   ✓ init: a run that passes every start gate > records the clone by its real path when the operator names it through a symbolic link  481ms
+   ✓ init: a run that passes every start gate > starts from a clone of a commit with a parent, shallow at exactly that commit  624ms
+   ✓ init: a run that passes every start gate > starts from a clone of a root commit shallow at it, or with no shallow file: a root commit has no parent to cut  372ms
+   ✓ init: the clone holds the consented commit alone (syzygy-qkea.24) > starts from a clone whose objects are packed, with a reverse index  1448ms
+   ✓ init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses HEAD on a branch at the consented commit: the branch is a ref  567ms
+   ✓ init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses an extra ref, loose or packed  1028ms
+   ✓ init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses FETCH_HEAD naming another commit, and passes it naming the pinned commit alone  810ms
+   ✓ init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses every top-level name the consented form never leaves: commondir, modules, worktrees, pseudo-refs, bisect and rebase state  4082ms
+   ✓ init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses objects/info/alternates and http-alternates, as a file or a link, and whatever they name  1612ms
+   ✓ init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses in the object store anything but loose objects, an empty info/ and paired packs  4219ms
+   ✓ init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses unknown files under the allowed directories: hooks that run, grafts, other logs  1770ms
+   ✓ init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses logs/HEAD naming any commit but the pinned one or the zero identifier  687ms
+   ✓ init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses a symbolic link anywhere under .git, never following it  3195ms
+   ✓ init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses an allowed name of the wrong kind  1507ms
+   ✓ init: the clone holds the consented commit alone (syzygy-qkea.24) > reads shallow without following a link, and only as a regular file  591ms
+   ✓ init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses a file over its bound, and a .git with more entries than the walk's bound  517ms
+   ✓ init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses a two-commit shallow clone, and a clone shallow at another commit or not shallow  588ms
+   ✓ init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses an object store that names an object beyond the pinned commit and its tree  1144ms
+   ✓ init: the clone holds the consented commit alone (syzygy-qkea.24) > reads config bounded and without following a link, and admits the [core] keys git init writes on each mainstream platform  1510ms
+   ✓ init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses config naming a remote, a promisor, an include or a command the agent's git would run (R-POLARIS-DOSSIER-CLONE-SHAPE-2 finding 1)  8134ms
+   ✓ init: the clone holds the consented commit alone (syzygy-qkea.24) > starts from a clone made with an older git's template, which leaves an empty branches/, or an empty one; refuses anything in branches/  784ms
+   ✓ init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses an identifier in FETCH_HEAD or logs/HEAD in upper case or run on, even the pinned commit's  1144ms
+   ✓ init: the clone holds the consented commit alone (syzygy-qkea.24) > never reads the working tree: an uncommitted change, or a nested repository, does not change the listing or the decision  565ms
+   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses before any object read when the observation consent is ineffective: the consent bytes changed after the act, naming why  548ms
+   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses before any object read when the registry entry is present only as a status word in the entry, no act (F8)  404ms
+   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses when the signed registry entry names another implementation or no implementation version  4500ms
+   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses before any object read when the classification and screening policy is absent  663ms
+   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses before any object read when the classification and screening policy is ineffective: the policy changed after the act  466ms
+   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses a HEAD the consent does not name, before any object read, listing the consented revisions  843ms
+   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses a subject with a .syzygy/ path, not adopted and no per-project statement, after listing the pinned tree  352ms
+   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses a subject with an openspec/ path and no per-project statement, after listing the pinned tree  1105ms
+   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses a subject with a recorded kernel evidence drawer and no per-project statement, after listing the pinned tree  709ms
+   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > counts a symlink entry named .syzygy in the pinned tree as governing  1830ms
+   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > counts a gitlink entry named openspec in the pinned tree as governing  2171ms
+   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > treats the production project input as silent: with no statement every subject is refused  759ms
+   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses a governed subject whose only statement names another provider  893ms
+   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses a governed subject whose only statement names the provider for another agent tool  569ms
+   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses a governed subject whose only statement is withdrawn  825ms
+   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses a governed subject whose only statement has no act  717ms
+   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses a Codex run with Anthropic against the Claude Code statement: consent is to the declared tool and provider pair  1388ms
+   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > starts a governed or unstated run that relies on an in-force statement, and cites it  1778ms
+   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses a URL with a ref before reading anything  573ms
+   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses a URL on another host before reading anything  778ms
+   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses a relative state root before reading anything  311ms
+   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses a state root inside the clone, or one that contains it  312ms
+   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > passes while every gate stays in force, listing the pinned tree from the recorded clone and deciding the subject again  604ms
+   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > reads no object when a gate fails  481ms
+   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > shows the label and consent record the live consent gives, never the run record's (R-POLARIS-DOSSIER-S3-GATES-1 finding 2)  3161ms
+   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > refuses when the pinned tree cannot be listed from the recorded clone  1521ms
+   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > refuses when the recorded pin is changed to a commit in the clone the consent does not name  739ms
+   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > refuses when the consent stops naming the recorded revision  3367ms
+   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > refuses every later step when the observation consent is withdrawn  344ms
+   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > refuses every later step when the registry entry is withdrawn  378ms
+   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > refuses every later step when the policy changes after its act  1070ms
+   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > names why the consent is gone when a withdrawal in a form the reader does not define refuses the whole read  1793ms
+   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > names why the consent is gone when the consent bytes changed after the act  461ms
+   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > names why the consent is gone when the act record removed  594ms
+   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > refuses when the statement a governed run relies on is withdrawn mid-run  1271ms
+   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > re-checks the statement against the run's declared tool: a Codex run with OpenAI keeps its Codex statement, and no Claude Code one stands in  1190ms
+   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > before the brief, selects the statement by the provider the run record declares, and discloses that the provider is Inferred  1030ms
+   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > after the brief, refuses a provider or tool that differs from the one the brief record states, reading no object  908ms
+   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > passes when the brief record states the tool and provider the run record declares; a coordinated edit of both is the disclosed residual  1690ms
+   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > refuses when the brief record exists but states no agent  1394ms
+   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > refuses when the brief record exists but states a provider that is not a string  683ms
+   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > refuses when the brief record exists but is not JSON  501ms
+   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > refuses a pin moved from a non-governed to a governed consented revision  613ms
+   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > refuses a governed run whose record was downgraded to non-governed, before and after the statement is withdrawn  579ms
+   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > refuses when the project input in force now records a drawer the run did not start under  815ms
+   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > passes a pin moved between non-governed consented revisions, and shows the live label of the revision now pinned  3831ms
+   ✓ preflight > prints clone commands that leave the consented commit alone in the clone  1019ms
+   ✓ preflight > reports D9 established on this checkout only once an act record binds it, though the doctrine amendment log records its adoption  14106ms
+   ✓ preflight > reports D9 and the RFC7-20 reading established once the sitting's acts bind their records, and only while the bound bytes hold  7464ms
+   ✓ the CLI: preflight and init > init refuses with no state root, there being no default  582ms
+   ✓ the CLI: preflight and init > init takes the state root from the environment when no flag is given, and the flag over the environment  1095ms
+   ✓ the CLI: preflight and init > init refuses a missing configuration file and prints the refusal in both forms  499ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/polaris-generation/dossier-trigger.test.ts (28 tests) 13143ms
+   ✓ with every record satisfied > reads the pinned commit, discovers, clarifies and writes the site and a run record outside git  307ms
+   ✓ with every record satisfied > gives model-assisted discovery a receipt sink and keeps every receipt in the run record  612ms
+   ✓ with every record satisfied > records the corpus and stops honestly when no generate port exists or the pipeline stops  1054ms
+   ✓ with every record satisfied > renders the completed stages of a stopped run, keeps the run record, and falls back to the record alone when the renderer cannot  1287ms
+   ✓ with every record satisfied > records an unrendered result when no renderer is wired, and refuses a renderer that collides with the run record  927ms
+   ✓ with every record satisfied > permits a discovery call only while the egress record still holds, and drops the calls otherwise  1146ms
+   ✓ with every record satisfied > wants a receipt sink whenever model discovery is wired, and lets no discovery port override the permission check  844ms
+   ✓ with every record satisfied > admits under the id the one matching observation record carries, never under one derived from the URL  1362ms
+   ✓ with every record satisfied > treats only satisfied === true with a record as satisfied, at the gate and at every later permission check  903ms
+   ✓ with every record satisfied > fetches only the pinned commit objects into a bare, template-free repository, and refuses a non-https url by default  517ms
+   ✓ with every record satisfied > a poisoned caller environment > reads the pinned fixture through the whole trigger while GIT_DIR and object variables point at another repository  430ms
+   ✓ with every record satisfied > a poisoned caller environment > does not steer ls-remote  381ms
+   ✓ command > exits 0 and writes to --out on a complete run, 5 when generation is unavailable, 6 when the pipeline stops  990ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/git-object-reader.test.ts (72 tests) 116ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/walkthrough-judgment.test.ts (141 tests) 242ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/project-shape-coverage.test.ts (32 tests) 219ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/project-shape-manifest.test.ts (24 tests) 241ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/polaris-project-shape.test.ts (24 tests) 7331ms
+   ✓ Polaris project-level sequence (PWB-REQ-010) > renders every project-account statement and every catalog item in its group when the shape is observed  1074ms
+   ✓ Polaris progressive depth (PWB-REQ-011; RFC7-16) > reaches the exact source from every observed statement and item: anchors link to a source row carrying the digest  606ms
+   ✓ Polaris progressive depth (PWB-REQ-011; RFC7-16) > discloses an excluded source as hash-not-body and its items as Unknown with a route, never the body  336ms
+   ✓ Polaris authority disclosure and discovery (gen-2 repairs PWB-RECON-01/02) > routes an Unknown pillar whose reason is root-index-missing-at-revision to: the root index is absent at this revisio…  468ms
+   ✓ Polaris authority disclosure and discovery (gen-2 repairs PWB-RECON-01/02) > routes an Unknown pillar whose reason is named-root-ambiguous to: the root index names more than one home …  631ms
+   ✓ Polaris authority disclosure and discovery (gen-2 repairs PWB-RECON-01/02) > routes an Unknown pillar whose reason is index-unavailable to: the index about/spec-and-spine/README.md…  1208ms
+   ✓ Polaris authority disclosure and discovery (gen-2 repairs PWB-RECON-01/02) > discloses the degradation state when the observation is degraded, and says none was recorded when it is not  323ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/resource-ledger.test.ts (35 tests) 30ms
+ ✓ |@syzygy/polaris-dossier| packages/polaris-dossier/src/check.test.ts (61 tests) 37461ms
+   ✓ check: a draft that follows every rule > freezes revision 0, verifies every quotation against the committed blob and records its byte range  619ms
+   ✓ check: each rule refuses its own violation > reports an elided quotation  388ms
+   ✓ check: each rule refuses its own violation > reports a joined quotation  758ms
+   ✓ check: each rule refuses its own violation > reports a quotation outside its cited range  371ms
+   ✓ check: each rule refuses its own violation > reports a cited path absent at the pinned revision  851ms
+   ✓ check: each rule refuses its own violation > reports a directory cited as a file  749ms
+   ✓ check: each rule refuses its own violation > reports a range beyond the blob  544ms
+   ✓ check: each rule refuses its own violation > reports a range that runs backwards  377ms
+   ✓ check: each rule refuses its own violation > reports a claim the agent labels Observed  1532ms
+   ✓ check: each rule refuses its own violation > reports a claim with no label  452ms
+   ✓ check: each rule refuses its own violation > reports an understanding item labelled non-normative  1559ms
+   ✓ check: each rule refuses its own violation > reports an inferred claim with no citation  651ms
+   ✓ check: each rule refuses its own violation > reports a non-normative block with a citation  439ms
+   ✓ check: each rule refuses its own violation > reports an Unknown block with no reason from the closed list  772ms
+   ✓ check: each rule refuses its own violation > reports a claim resting on execution that names none  790ms
+   ✓ check: each rule refuses its own violation > reports more clarifications than the declared limit  740ms
+   ✓ check: each rule refuses its own violation > reports a draft naming another revision  301ms
+   ✓ check: each rule refuses its own violation > reports a disposition naming another asset  789ms
+   ✓ check: each rule refuses its own violation > reports a quotation naming a citation of another block  802ms
+   ✓ check: each rule refuses its own violation > reports a quotation in a non-normative block  1123ms
+   ✓ check: each rule refuses its own violation > reports a lead-in with no quotation  796ms
+   ✓ check: each rule refuses its own violation > reports a self-reported path absent at the pinned revision  471ms
+   ✓ check: each rule refuses its own violation > reports a self-reported selection absent at the pinned revision  340ms
+   ✓ check: each rule refuses its own violation > reports schema faults beside every other finding in one submission  709ms
+   ✓ check: a quotation from a body retained as redacted-span > verifies a quotation from a line no match or guard touches, and records the redaction count, not the lines  700ms
+   ✓ check: a quotation from a body retained as redacted-span > keeps original line and byte coordinates across a bare CR before withheld LF lines  871ms
+   ✓ check: a quotation from a body retained as redacted-span > renders a quotation from a withheld guard line Unknown (excluded-content), with no finding  762ms
+   ✓ check: a quotation from a body retained as redacted-span > excludes the body whole without the redaction rule, as before  724ms
+   ✓ check: a quotation from an excluded file > renders its block Unknown (excluded-content) for a file outside the code-content extensions, with no finding and none of its bytes  609ms
+   ✓ check: a quotation from an excluded file > renders its block Unknown (excluded-content) for a file whose body holds active content, with no finding and none of its bytes  301ms
+   ✓ check: a quotation from an excluded file > renders its block Unknown (excluded-content) for a file whose body a secret detector matches, with no finding and none of its bytes  916ms
+   ✓ check: a quotation from an excluded file > renders its block Unknown (excluded-content) for a denied path, with no finding and none of its bytes  407ms
+   ✓ check: a quotation from an excluded file > records each cited blob with its screening outcome, and reads no blob a path rule excludes  855ms
+   ✓ check: limits Syzygy enforces > counts each resubmission against the repair-cycle limit and refuses past it, writing nothing  760ms
+   ✓ check: limits Syzygy enforces > accepts a zero repair-cycle limit and refuses the first resubmission  458ms
+   ✓ check: limits Syzygy enforces > accepts a zero question limit and reports the first recorded question  375ms
+   ✓ check: limits Syzygy enforces > refuses a run that was never briefed  361ms
+   ✓ check: nothing Observed rests on a stored record > re-derives every result: an altered stored range, check result or frozen draft changes nothing the next check reports  1369ms
+   ✓ check: nothing Observed rests on a stored record > refuses the step when the recorded pinned revision is altered to another commit in the clone  694ms
+   ✓ check: nothing Observed rests on a stored record > reads objects only from the clone the run record names, and refuses a record that names none  1436ms
+   ✓ check: nothing Observed rests on a stored record > refuses the step when an object cannot be read and verified, freezing nothing  798ms
+   ✓ check: nothing Observed rests on a stored record > refuses the step when no screening policy can be applied  493ms
+   ✓ check: the command > exits 0 on a passing draft and 1 on findings, printing the same document with --json  1645ms
+   ✓ check: the command > loads the policy in force from the records root by default, and refuses at the screen while no screening act is in force there  2734ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/surface-routes.test.ts (18 tests) 31413ms
+   ✓ surface routes > serves Polaris, Trajectory, and Orrery as human-open, same-origin-guarded pages  1706ms
+   ✓ surface routes > 15-link cross-surface exhaustion > exhausts 15 runtime cross-surface links over six classes and fetches every direct target  3203ms
+   ✓ surface routes > 15-link cross-surface exhaustion > exhausts 15 runtime cross-surface links over six classes and fetches every tailnet target  2200ms
+   ✓ surface routes > withholds the post-script Orrery capability href when that exact capability is absent  4266ms
+   ✓ surface routes > counts the post-JavaScript DOM on all three served surfaces and kills an unmarked Orrery region  9426ms
+   ✓ surface routes > rejects wrong Unknown token  504ms
+   ✓ surface routes > rejects missing badge selector  348ms
+   ✓ surface routes > rejects missing local tuple selector  578ms
+   ✓ surface routes > rejects missing Unknown disclosure selector  733ms
+   ✓ surface routes > rejects ad hoc inline tuple color  1306ms
+   ✓ surface routes > rejects epistemic token outside the three families  401ms
+   ✓ surface routes > rejects a checker that drops any one family or substitutes page count for element count  832ms
+   ✓ surface routes > resolves a tuple without a local label from its nearest declaring scope  453ms
+{"kind":"daemon-http-outcome","at":"2026-10-27T03:25:29.803Z","method":"GET","route":"/api/poc","status":401,"reason":"credential-refused","contentType":"application/json"}
+{"kind":"daemon-http-outcome","at":"2026-10-27T03:25:29.818Z","method":"GET","route":"/api/poc","status":401,"reason":"credential-refused","contentType":"application/json"}
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/polaris-first-reading.test.ts (14 tests) 3985ms
+   ✓ Polaris first reading (PWB-REQ-010 as amended; PWB-LIVE-06) > opens on Butlers: the heading names the project, the compact contents precede the overview and the state explanation follows it, and no headline status appears  447ms
+   ✓ Polaris opening gloss, proof strip and gap entries (syzygy-u05.4) > glosses every value of the first claim tuple before that tuple renders  376ms
+{"kind":"daemon-http-outcome","at":"2026-10-27T03:25:32.996Z","method":"GET","route":"/","status":403,"reason":"route-non-success","contentType":"application/json"}
+{"kind":"daemon-http-outcome","at":"2026-10-27T03:25:32.998Z","method":"GET","route":"/api/poc","status":401,"reason":"credential-refused","contentType":"application/json"}
+ ✓ |@syzygy/polaris-generation-consent| packages/polaris-generation-consent/src/consent-ports.test.ts (58 tests) 668ms
+   ✓ consent-backed ports > permits when an observation record and an egress record are in force, auditing what was relied on  325ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/routes.test.ts (11 tests) 11268ms
+   ✓ three-surface POC routes > projects all 15 registered route tuples into both machine answers, with one request-form self  1253ms
+   ✓ three-surface POC routes > derives links and response identity from the live registered array, including an injected route and order  1598ms
+   ✓ three-surface POC routes > revalidates only the complete bounded /api/poc representation, after credential admission  1779ms
+   ✓ three-surface POC routes > refuses a stale validator after a project-shape fact changes while inputsDigest stays fixed  1995ms
+   ✓ three-surface POC routes > serves one model through human and authenticated machine views  659ms
+   ✓ three-surface POC routes > recomputes the authenticated served-body contentKey with an independent walker and canonicalizer  1340ms
+   ✓ three-surface POC routes > keeps GET read-only and byte-identical under five sequential and concurrent requests  1013ms
+   ✓ three-surface POC routes > recomputes response identity when dispatch or mayNot content changes  389ms
+   ✓ three-surface POC routes > projects the same mayNot tuples in human Polaris and authenticated machine JSON  304ms
+   ✓ three-surface POC routes > escapes observed text before rendering it into HTML  409ms
+   ✓ three-surface POC routes > keeps empty-seed human and machine responses in parity  505ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/polaris-reachability.test.ts (9 tests) 6853ms
+   ✓ Polaris keyboard and text reachability (PWB-REQ-011, PWB-REQ-016; RFC7-13, RFC7-31, RFC7-34) > keeps seven group shortcuts among the first ten tabs and a complete native outline without script  3115ms
+   ✓ Polaris keyboard and text reachability (PWB-REQ-011, PWB-REQ-016; RFC7-13, RFC7-31, RFC7-34) > keeps every rendered heading at most one level below its predecessor  1402ms
+   ✓ Polaris keyboard and text reachability (PWB-REQ-011, PWB-REQ-016; RFC7-13, RFC7-31, RFC7-34) > lists the four depths as native links in document order, reaching every group, catalog class, capability deep dive and evidence heading the state renders  424ms
+   ✓ Polaris keyboard and text reachability (PWB-REQ-011, PWB-REQ-016; RFC7-13, RFC7-31, RFC7-34) > carries no pointer-only or layout-only affordance: native controls, named keyboard-scrollable table regions, visible focus, no reordering or hiding rules  478ms
+   ✓ Polaris keyboard and text reachability (PWB-REQ-011, PWB-REQ-016; RFC7-13, RFC7-31, RFC7-34) > names every coloured state in text: each element of a colour-bearing class carries the words that state means  502ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/polaris-capability-detail.test.ts (7 tests) 2458ms
+   ✓ Polaris capability deep dive bands (PWB-REQ-015; RFC7-17) > renders exactly the three bands in order, every block under exactly one band and class, in Base mode with observed reality, over every shape state  951ms
+   ✓ Polaris capability deep dive bands (PWB-REQ-015; RFC7-17) > keeps a draft capability unadopted and an adopted one adopted, from the observed tree, in both channels  542ms
+   ✓ Polaris capability deep dive bands (PWB-REQ-015; RFC7-17) > renders every proposal adjacent to the current intent, visibly distinct, non-anchorable and non-status-bearing; competing proposals stay separate futures  487ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/governance-inputs.test.ts (26 tests) 3605ms
+   ✓ loadBodyReadAuthorityInputs (hermetic) > preserves production Git blob bytes for tag comparison and lifecycle decoding  1318ms
+   ✓ loadBodyReadAuthorityInputs (real Syzygy governance tree) > evaluates the three real current PWB acts without reading any body  1754ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/trajectory.test.ts (15 tests) 8858ms
+   ✓ Trajectory > places every rendered item in the column its declared status mapping assigns (POC-REQ-040)  407ms
+   ✓ Trajectory > serves the full machine population and reconciles the bounded board selection (POC-REQ-042)  376ms
+   ✓ Trajectory > renders the observed worker-change lifecycle state on the matching card, never as verified (AC3/AC4)  575ms
+   ✓ Trajectory > renders a matching operator-reported run as report-fact and an unmarked record as Not verified, never Verified, for governing intent REQ-alternate-governing-intent-007 (AC3/AC4, syzygy-0r9, syzygy-4mbu)  2244ms
+   ✓ Trajectory > renders a matching operator-reported run as report-fact and an unmarked record as Not verified, never Verified, for governing intent REQ-alternate-governing-intent-008 (AC3/AC4, syzygy-0r9, syzygy-4mbu)  2731ms
+   ✓ Trajectory > calls out and highlights the demonstrated item, and separates Bead status from worker-change state (PRF-2, PRF-3)  624ms
+   ✓ Trajectory > discloses a demonstrated open item excluded by its population limit (N-1)  718ms
+   ✓ Trajectory > footer: composite evaluation identity and substrate revision (N4) > names the substrate Unknown, never a fabricated revision, when trajectory is unobserved  446ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/main.test.ts (24 tests) 990ms
+   ✓ main(argv, io): the bound locator reaches every repository-rooted argument > reads the exact requirement text from the bound repository  692ms
+ ✓ |@syzygy/polaris-generation-core| packages/polaris-generation-core/src/pipeline.test.ts (33 tests) 863ms
+ ✓ |@syzygy/polaris-dossier| packages/polaris-dossier/src/brief.test.ts (26 tests) 541ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/restart.test.ts (16 tests) 26825ms
+   ✓ one-listener POC restart on private fixture sockets > waits through one vanished post-SIGTERM identity, then starts exactly one successor after socket absence  2862ms
+   ✓ one-listener POC restart on private fixture sockets > refuses a listener-identity-unreadable identity before SIGTERM and leaves the old listener serving  616ms
+   ✓ one-listener POC restart on private fixture sockets > refuses a listener-identity-incomplete identity before SIGTERM and leaves the old listener serving  579ms
+   ✓ one-listener POC restart on private fixture sockets > times out with no successor while post-SIGTERM identity stays listener-identity-unreadable  1180ms
+   ✓ one-listener POC restart on private fixture sockets > times out with no successor while post-SIGTERM identity stays listener-identity-incomplete  1558ms
+   ✓ one-listener POC restart on private fixture sockets > hard-refuses listener-owner-mismatch after SIGTERM without spawning a successor  1828ms
+   ✓ one-listener POC restart on private fixture sockets > hard-refuses listener-changed-after-signal after SIGTERM without spawning a successor  2507ms
+   ✓ one-listener POC restart on private fixture sockets > closes one listener, reuses credential bytes and state dir, and serves only the new fixture revision  3218ms
+   ✓ one-listener POC restart on private fixture sockets > refuses a listener generation changed between inspection and SIGTERM  326ms
+   ✓ one-listener POC restart on private fixture sockets > times out without SIGKILL or spawning a successor when SIGTERM close is slow  1463ms
+   ✓ one-listener POC restart on private fixture sockets > discovers an unreturned successor after a post-spawn identity refusal  2586ms
+   ✓ one-listener POC restart on private fixture sockets > reports a failed successor and lets a concurrent loser fail before signaling  7646ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/cdp-browser.test.ts (29 tests) 662ms
+   ✓ disposable browser shutdown > waits for private Chrome group members before removal and retains the profile on drain timeout  307ms
+ ✓ |@syzygy/polaris-generation-core| packages/polaris-generation-core/src/provider-draft.test.ts (20 tests) 891ms
+ ✓ |@syzygy/polaris-generation-core| packages/polaris-generation-core/src/dossier-evaluation.test.ts (33 tests) 853ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/polaris-copy.test.ts (7 tests) 8130ms
+   ✓ Polaris copy roles (PWB-REQ-012) > renders the seven shape states and three judgment states with every string classified once, within the word bounds, free of the prohibited vocabulary, with one POC-bound scope instruction and at most one action label per control  2091ms
+   ✓ Polaris copy roles (PWB-REQ-012) > marks exactly the zero-denominator freshness values across observed and unobserved fixture matrices  910ms
+   ✓ Polaris copy roles (PWB-REQ-012) > keeps the copy table closed and rendered: unique ids, roles and kinds from the closed sets, and every row present with its role in some rendered state  762ms
+[P-98 opening index] [{"page":"observed-degraded-unlawful","report":{"viewport":{"width":1280,"height":900},"total":3498,"rows":[{"identity":"why","offset":425},{"identity":"promises","offset":457},{"identity":"refusals-and-rule","offset":608},{"identity":"capabilities-and-fit","offset":1087},{"identity":"exact-requirement","offset":1199},{"identity":"unknown-or-contradiction","offset":904},{"identity":"claim-strength","offset":537},{"identity":"architecture-and-groups","offset":842},{"identity":"v1-success","offset":714}],"setter":"exact-requirement","setterInsideClosedDetails":true,"line":"1199 / 3498 words","violations":[]}},{"page":"observed","report":{"viewport":{"width":1280,"height":900},"total":3107,"rows":[{"identity":"why","offset":418},{"identity":"promises","offset":451},{"identity":"refusals-and-rule","offset":589},{"identity":"capabilities-and-fit","offset":978},{"identity":"exact-requirement","offset":1090},{"identity":"unknown-or-contradiction","rendered":false},{"identity":"claim-strength","offset":518},{"identity":"architecture-and-groups","offset":785},{"identity":"v1-success","offset":672}],"setter":"exact-requirement","setterInsideClosedDetails":true,"line":"1090 / 3107 words","violations":[]}},{"page":"not-admitted","report":{"viewport":{"width":1280,"height":900},"total":1840,"rows":[{"identity":"why","rendered":false},{"identity":"promises","rendered":false},{"identity":"refusals-and-rule","rendered":false},{"identity":"capabilities-and-fit","rendered":false},{"identity":"exact-requirement","rendered":false},{"identity":"unknown-or-contradiction","offset":867},{"identity":"claim-strength","offset":705},{"identity":"architecture-and-groups","rendered":false},{"identity":"v1-success","rendered":false}],"setter":"unknown-or-contradiction","setterInsideClosedDetails":false,"line":"867 / 1840 words","violations":[]}},{"page":"observed-degraded-unlawful","report":{"viewport":{"width":390,"height":844},"total":3286,"rows":[{"identity":"why","offset":213},{"identity":"promises","offset":245},{"identity":"refusals-and-rule","offset":396},{"identity":"capabilities-and-fit","offset":875},{"identity":"exact-requirement","offset":987},{"identity":"unknown-or-contradiction","offset":692},{"identity":"claim-strength","offset":325},{"identity":"architecture-and-groups","offset":630},{"identity":"v1-success","offset":502}],"setter":"exact-requirement","setterInsideClosedDetails":true,"line":"987 / 3286 words","violations":[]}},{"page":"observed","report":{"viewport":{"width":390,"height":844},"total":2902,"rows":[{"identity":"why","offset":213},{"identity":"promises","offset":246},{"identity":"refusals-and-rule","offset":384},{"identity":"capabilities-and-fit","offset":773},{"identity":"exact-requirement","offset":885},{"identity":"unknown-or-contradiction","rendered":false},{"identity":"claim-strength","offset":313},{"identity":"architecture-and-groups","offset":580},{"identity":"v1-success","offset":467}],"setter":"exact-requirement","setterInsideClosedDetails":true,"line":"885 / 2902 words","violations":[]}},{"page":"not-admitted","report":{"viewport":{"width":390,"height":844},"total":1692,"rows":[{"identity":"why","rendered":false},{"identity":"promises","rendered":false},{"identity":"refusals-and-rule","rendered":false},{"identity":"capabilities-and-fit","rendered":false},{"identity":"exact-requirement","rendered":false},{"identity":"unknown-or-contradiction","offset":719},{"identity":"claim-strength","offset":557},{"identity":"architecture-and-groups","rendered":false},{"identity":"v1-success","rendered":false}],"setter":"unknown-or-contradiction","setterInsideClosedDetails":false,"line":"719 / 1692 words","violations":[]}},{"page":"tie","report":{"viewport":{"width":1280,"height":900},"total":11,"rows":[{"identity":"why","offset":0},{"identity":"promises","rendered":false},{"identity":"refusals-and-rule","rendered":false},{"identity":"capabilities-and-fit","rendered":false},{"identity":"exact-requirement","offset":4},{"identity":"unknown-or-contradiction","rendered":false},{"identity":"claim-strength","rendered":false},{"identity":"architecture-and-groups","offset":4},{"identity":"v1-success","rendered":false}],"setter":"architecture-and-groups","setterInsideClosedDetails":false,"line":"4 / 11 words","violations":[]}},{"page":"none","report":{"viewport":{"width":1280,"height":900},"total":6,"rows":[{"identity":"why","rendered":false},{"identity":"promises","rendered":false},{"identity":"refusals-and-rule","rendered":false},{"identity":"capabilities-and-fit","rendered":false},{"identity":"exact-requirement","rendered":false},{"identity":"unknown-or-contradiction","rendered":false},{"identity":"claim-strength","rendered":false},{"identity":"architecture-and-groups","rendered":false},{"identity":"v1-success","rendered":false}],"setter":null,"setterInsideClosedDetails":false,"line":"6 words","violations":[]}}]
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/polaris-opening-index.browser.test.ts (14 tests | 1 skipped) 29579ms
+   ✓ opening index (server side) > lists the nine signed names, in order, on every variant, and routes nowhere for an unrendered target  2327ms
+   ✓ opening index in a real browser (PWB-REQ-010, P-98) > every indexed target renders (1280x900): nine routed rows, recounted offsets, one line after the last-beginning target  2839ms
+   ✓ opening index in a real browser (PWB-REQ-010, P-98) > the opening Unknown aggregate is absent (1280x900): the gaps row says so and routes nowhere; eight rows route  1046ms
+   ✓ opening index in a real browser (PWB-REQ-010, P-98) > an unobserved shape (1280x900): only the gaps and claim-strength targets render  2284ms
+   ✓ opening index in a real browser (PWB-REQ-010, P-98) > every indexed target renders (390x844): nine routed rows, recounted offsets, one line after the last-beginning target  4443ms
+   ✓ opening index in a real browser (PWB-REQ-010, P-98) > the opening Unknown aggregate is absent (390x844): the gaps row says so and routes nowhere; eight rows route  3781ms
+   ✓ opening index in a real browser (PWB-REQ-010, P-98) > an unobserved shape (390x844): only the gaps and claim-strength targets render  1392ms
+   ✓ opening index in a real browser (PWB-REQ-010, P-98) > following the exact-requirement row by keyboard lands on its target and Tab continues from it (fixture render)  2539ms
+   ✓ opening index in a real browser (PWB-REQ-010, P-98) > the same holds where a later control shares the target's disclosure (synthetic body)  674ms
+   ✓ opening index in a real browser (PWB-REQ-010, P-98) > a tie on the largest offset is broken by document order (synthetic body, hand-counted)  2393ms
+   ✓ opening index in a real browser (PWB-REQ-010, P-98) > with no indexed target rendered, the line follows the index and gives only the total (synthetic body, hand-counted)  1224ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/capture-test-artifact-main.test.ts (52 tests) 6424ms
+   ✓ capture-test-artifact never starts the observed project (run check) > print writes the command for the operator and runs nothing  896ms
+   ✓ capture-test-artifact never starts the observed project (run check) > ingest reads back the handed-in file, binds the current commit, and runs nothing  999ms
+   ✓ capture-test-artifact never starts the observed project (run check) > refuses a FIFO without opening it, so a pipe nobody writes cannot hang the ingest  866ms
+   ✓ capture-test-artifact never starts the observed project (run check) > refuses a symlink, even to a well-formed result file  1208ms
+   ✓ capture-test-artifact never starts the observed project (run check) > refuses a file over the ceiling before reading it  1152ms
+   ✓ capture-test-artifact never starts the observed project (run check) > ingest refuses, writes nothing and runs nothing when the junit file was never produced  630ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/walkthrough-preflight.test.ts (43 tests) 1632ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/walkthrough-readiness.test.ts (33 tests) 89ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/polaris-reconciliation.test.ts (13 tests) 4403ms
+   ✓ M14 slice 4: the catalog reconciliation line > places the line once, at the head of the catalog group and outside any class section or disclosure, with each state readable as text and the render deterministic  377ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/tuple-encoding.test.ts (6 tests) 12949ms
+   ✓ tuple field encoding tables (syzygy-dov.3.2; P-70 M3 slice 5) > generates the glossary rows from the declaration: every value once, in its class, with freshness reachability stated both ways  333ms
+   ✓ tuple field encoding tables (syzygy-dov.3.2; P-70 M3 slice 5) > sweeps the post-JavaScript DOM of the three surfaces, Home apart: every tuple field and glossary row renders its declared symbol and token  10778ms
+ ✓ |@syzygy/polaris-generation-core| packages/polaris-generation-core/src/quote-fidelity.test.ts (46 tests) 695ms
+   ✓ a file split into pieces > groups pieces per file: two files with identical bodies at different paths each keep their own pieces  399ms
+{"kind":"daemon-http-outcome","at":"2026-10-27T03:26:34.387Z","method":"GET","route":"/api/project","status":401,"reason":"credential-refused","contentType":"application/json"}
+{"kind":"daemon-http-outcome","at":"2026-10-27T03:26:34.457Z","method":"GET","route":"/api/project","status":401,"reason":"credential-refused","contentType":"application/json"}
+ ✓ |@syzygy/cap1-daemon| packages/cap1-daemon/src/routes-machine.test.ts (11 tests) 1073ms
+   ✓ RT4 — the authenticated JSON machine endpoint > determinism: a second fetch serves byte-identical stamps, identities, and facts  342ms
+ ✓ |@syzygy/cap1-daemon| packages/cap1-daemon/src/routes-human.test.ts (15 tests) 1069ms
+   ✓ RT5 — GET / project page over a real daemon > serves HTML on the human-open root with no credential  363ms
+ ✓ |@syzygy/polaris-generation-core| packages/polaris-generation-core/src/dossier-prompts.test.ts (75 tests) 748ms
+   ✓ the embedded illustrations are fixed at module load > keeps the illustrations out of the package entry point  521ms
+{"kind":"daemon-http-outcome","at":"2026-10-27T03:26:44.422Z","method":"UNKNOWN","pathLength":12,"status":404,"reason":"unknown-route","contentType":"application/json"}
+ ✓ |@syzygy/polaris-dossier| packages/polaris-dossier/src/screen.test.ts (110 tests) 105229ms
+   ✓ parity with the any-repo reader's screen (syzygy-qkea.17) > agrees on every path and body under the fixture scope  2912ms
+   ✓ parity with the any-repo reader's screen (syzygy-qkea.17) > agrees on every path and body under a wider scope  3309ms
+   ✓ parity with the any-repo reader's screen (syzygy-qkea.17) > agrees on every path and body under the live scope, class act in force  4131ms
+   ✓ parity with the any-repo reader's screen (syzygy-qkea.17) > decides the class prerequisite as the app does from the same records at now: in force  3366ms
+   ✓ parity with the any-repo reader's screen (syzygy-qkea.17) > decides the class prerequisite as the app does from the same records at now: dated after now  2327ms
+   ✓ parity with the any-repo reader's screen (syzygy-qkea.17) > decides the class prerequisite as the app does from the same records at now: binding other module bytes  2527ms
+   ✓ parity with the any-repo reader's screen (syzygy-qkea.17) > refuses a policy with no public-source scope, as the app does  4671ms
+   ✓ parity with the any-repo reader's screen (syzygy-qkea.17) > refuses a policy with no code-content extensions, as the app does  3938ms
+   ✓ parity with the any-repo reader's screen (syzygy-qkea.17) > refuses a policy with two code-content rules, as the app does  3122ms
+   ✓ parity with the any-repo reader's screen (syzygy-qkea.17) > refuses a policy with an extension that is a path, as the app does  3625ms
+   ✓ parity with the any-repo reader's screen (syzygy-qkea.17) > refuses a policy with an extension with a double dot, as the app does  2393ms
+   ✓ parity with the any-repo reader's screen (syzygy-qkea.17) > refuses a policy with unreadable denied-path rules, as the app does  2720ms
+   ✓ parity with the any-repo reader's screen (syzygy-qkea.17) > refuses a policy with detectors that do not compile, as the app does  2418ms
+   ✓ parity with the any-repo reader's screen (syzygy-qkea.17) > refuses a policy with no identity, as the app does  2056ms
+   ✓ parity with the any-repo reader's screen (syzygy-qkea.17) > refuses a policy with an edited project-documentation path rule, as the app does  3621ms
+   ✓ parity with the any-repo reader's screen (syzygy-qkea.17) > refuses a policy with a project-documentation suffix that is a code extension, as the app does  2757ms
+   ✓ parity with the any-repo reader's screen (syzygy-qkea.17) > refuses a policy with two project-documentation rules, as the app does  4410ms
+   ✓ the code-content exemption of screening scope version 3 > admits a C body whose comparisons read as tags, given its path, and scans it without one: both screens  4555ms
+   ✓ the code-content exemption of screening scope version 3 > scans .js and the other web extensions as before under variant non-web, and exempts C  2336ms
+   ✓ the code-content exemption of screening scope version 3 > refuses a policy whose exemption has another rule text, as the app does  5871ms
+   ✓ the code-content exemption of screening scope version 3 > refuses a policy whose exemption has an extension that is no source extension, as the app does  4041ms
+   ✓ the code-content exemption of screening scope version 3 > refuses a policy whose exemption has an extra field, as the app does  3575ms
+   ✓ the secret redaction of screening scope version 4 > declares the redaction in both screens  3603ms
+   ✓ the secret redaction of screening scope version 4 > refuses a policy whose redaction has another rule text, as the app does  2707ms
+   ✓ the secret redaction of screening scope version 4 > refuses a policy whose redaction has a line pattern anchored to the body, as the app does  2384ms
+   ✓ the secret redaction of screening scope version 4 > refuses a policy whose redaction has an extra field, as the app does  3061ms
+   ✓ the screen of the policy in force > refuses a policy whose bytes are not the act's argument  4541ms
+   ✓ the screen of the policy in force > builds the screen on this checkout exactly when a screening-scope act is recorded and the policy declares the scope  3987ms
+   ✓ the screen of the policy in force > classifies project documentation on this checkout exactly when the class act is recorded and the policy carries the rule  1685ms
+{"kind":"daemon-http-outcome","at":"2026-10-27T03:26:47.080Z","method":"POST","route":"/trajectory/materialize","status":403,"reason":"route-non-success","contentType":"application/json"}
+{"kind":"daemon-http-outcome","at":"2026-10-27T03:26:47.226Z","method":"POST","route":"/trajectory/materialize","status":403,"reason":"route-non-success","contentType":"other"}
+{"kind":"daemon-http-outcome","at":"2026-10-27T03:26:47.338Z","method":"POST","route":"/trajectory/materialize","status":403,"reason":"route-non-success","contentType":"other"}
+{"kind":"daemon-http-outcome","at":"2026-10-27T03:26:47.868Z","method":"POST","route":"/trajectory/materialize","status":502,"reason":"route-non-success","contentType":"other"}
+{"kind":"daemon-http-outcome","at":"2026-10-27T03:26:48.050Z","method":"POST","route":"/trajectory/materialize","status":502,"reason":"route-non-success","contentType":"other"}
+{"kind":"daemon-http-outcome","at":"2026-10-27T03:26:48.088Z","method":"POST","route":"/trajectory/materialize","status":502,"reason":"route-non-success","contentType":"other"}
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/materialize-action.test.ts (16 tests) 3500ms
+   ✓ renderMaterializePanel > previews the exact packet and target repository read-only, before any trigger (AC1)  1460ms
+   ✓ renderMaterializePanel > matches decoded Trajectory fields to authenticated API dispatch with exact denominators and named machine-only values  405ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/polaris-epistemic-tuples.test.ts (8 tests) 2517ms
+   ✓ Polaris complete epistemic tuples (PWB-REQ-007; RFC2-24, RFC6-14, RFC7-16) > renders every tuple with every field present, in vocabulary, and equal to the machine answer, over every shape state  821ms
+   ✓ Polaris complete epistemic tuples (PWB-REQ-007; RFC2-24, RFC6-14, RFC7-16) > keeps the same semantic claim identity across two evaluation instances while the evaluation id differs  407ms
+{"kind":"daemon-http-outcome","at":"2026-10-27T03:26:51.320Z","method":"UNKNOWN","pathLength":12,"status":404,"reason":"unknown-route","contentType":"application/json"}
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/walkthrough-inputs.test.ts (18 tests) 462ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/test-artifact-verification.test.ts (37 tests) 505ms
+{"kind":"daemon-http-outcome","at":"2026-10-27T03:27:01.121Z","method":"UNKNOWN","pathLength":12,"status":404,"reason":"unknown-route","contentType":"application/json"}
+ ❯ |@syzygy/polaris-generation-consent| packages/polaris-generation-consent/src/act-families.test.ts (65 tests | 65 skipped) 13023ms
+   ↓ the act families over one world > read every family's record in force, with the head fields each parser takes from it
+   ↓ each family holds its own record to the head lines its reader read before the families shared a parser > a second Act type line whose value has capitals and a space
+   ↓ each family holds its own record to the head lines its reader read before the families shared a parser > a second Act type line of lowercase letters and dashes
+   ↓ each family holds its own record to the head lines its reader read before the families shared a parser > a second Act type line naming an admission act type
+   ↓ each family holds its own record to the head lines its reader read before the families shared a parser > no Owner line
+   ↓ each family holds its own record to the head lines its reader read before the families shared a parser > the Owner line twice
+   ↓ each family holds its own record to the head lines its reader read before the families shared a parser > no A1 line
+   ↓ each family holds its own record to the head lines its reader read before the families shared a parser > the provenance line without its state tail
+   ↓ each family holds its own record to the head lines its reader read before the families shared a parser > the provenance line naming another state
+   ↓ each family holds its own record to the head lines its reader read before the families shared a parser > a second instant labelled Act instant
+   ↓ each family holds its own record to the head lines its reader read before the families shared a parser > a second instant labelled Recorded at (UTC)
+   ↓ each family holds its own record to the head lines its reader read before the families shared a parser > the one instant under the other label
+   ↓ each family holds its own record to the head lines its reader read before the families shared a parser > a second Supersession / revocation field
+   ↓ each family's sweep names it as its own sweep did before the families shared one > an unrelated file
+   ↓ each family's sweep names it as its own sweep did before the families shared one > a name carrying an admission stem
+   ↓ each family's sweep names it as its own sweep did before the families shared one > a name carrying the screening-scope stem
+   ↓ each family's sweep names it as its own sweep did before the families shared one > a name carrying the class stem
+   ↓ each family's sweep names it as its own sweep did before the families shared one > a name carrying the registry stem
+   ↓ each family's sweep names it as its own sweep did before the families shared one > a name carrying the registry stem split by backticks
+   ↓ each family's sweep names it as its own sweep did before the families shared one > a name carrying the policy stem and a withdrawal word
+   ↓ each family's sweep names it as its own sweep did before the families shared one > a name carrying the policy stem and a revocation word
+   ↓ each family's sweep names it as its own sweep did before the families shared one > a name carrying the policy stem alone
+   ↓ each family's sweep names it as its own sweep did before the families shared one > a name carrying a withdrawal word alone
+   ↓ each family's sweep names it as its own sweep did before the families shared one > text carrying an admission stem
+   ↓ each family's sweep names it as its own sweep did before the families shared one > text carrying the screening-scope stem
+   ↓ each family's sweep names it as its own sweep did before the families shared one > text carrying the policy path and the policy stem
+   ↓ each family's sweep names it as its own sweep did before the families shared one > text carrying the class module path
+   ↓ each family's sweep names it as its own sweep did before the families shared one > text carrying the class stem
+   ↓ each family's sweep names it as its own sweep did before the families shared one > text carrying the registry artifact path
+   ↓ each family's sweep names it as its own sweep did before the families shared one > text carrying the registry stem
+   ↓ each family's sweep names it as its own sweep did before the families shared one > every family named in the aggregate record's prose
+   ↓ each family's sweep names it as its own sweep did before the families shared one > the same prose in a file of that name elsewhere
+   ↓ each family's sweep names it as its own sweep did before the families shared one > an admission record id on a Record ID line
+   ↓ each family's sweep names it as its own sweep did before the families shared one > an admission stem on a Subject line
+   ↓ each family's sweep names it as its own sweep did before the families shared one > the class identity on an Act identity line
+   ↓ each family's sweep names it as its own sweep did before the families shared one > the class module on an Artifact identity line
+   ↓ each family's sweep names it as its own sweep did before the families shared one > the class module on an Artifact identity line spaced and cased otherwise
+   ↓ each family's sweep names it as its own sweep did before the families shared one > the class identity on a Record ID line and its stem on a Subject line
+   ↓ each family's sweep names it as its own sweep did before the families shared one > a policy act identity on an Act identity line
+   ↓ each family's sweep names it as its own sweep did before the families shared one > the policy path on an Act identity line
+   ↓ each family's sweep names it as its own sweep did before the families shared one > the policy path on an Artifact identity line
+   ↓ each family's sweep names it as its own sweep did before the families shared one > a policy act identity on an Artifact identity line
+   ↓ each family's sweep names it as its own sweep did before the families shared one > the policy path on a Record ID line and a Subject line
+   ↓ each family's sweep names it as its own sweep did before the families shared one > the registry stem on a Record ID line
+   ↓ each family's sweep names it as its own sweep did before the families shared one > the registry artifact on a Subject line
+   ↓ each family's sweep names it as its own sweep did before the families shared one > a bulleted policy field line
+   ↓ each family's sweep names it as its own sweep did before the families shared one > a quoted policy field line
+   ↓ each family's sweep names it as its own sweep did before the families shared one > a quoted admission field line
+   ↓ each family's sweep names it as its own sweep did before the families shared one > a quoted class field line
+   ↓ each family's sweep names it as its own sweep did before the families shared one > a quoted registry field line
+   ↓ each family's sweep names it as its own sweep did before the families shared one > an admission stem split by backticks in text
+   ↓ each family's sweep names it as its own sweep did before the families shared one > the screening-scope stem split by backticks in text
+   ↓ each family's sweep names it as its own sweep did before the families shared one > the class stem split by backticks in text
+   ↓ each family's sweep names it as its own sweep did before the families shared one > the registry stem split by backticks in text
+   ↓ each family's sweep names it as its own sweep did before the families shared one > an admission stem split by backticks on a field line
+   ↓ each family's sweep names it as its own sweep did before the families shared one > the policy stem split by backticks on a field line
+   ↓ each family's sweep names it as its own sweep did before the families shared one > the class stem split by backticks on a field line
+   ↓ each family's sweep names it as its own sweep did before the families shared one > the registry stem split by backticks on a field line
+   ↓ each family's pinned files and records are read by name and bytes > a pinned file with other bytes refuses its own family only, whether or not the bytes name it
+   ↓ each family's pinned files and records are read by name and bytes > a pinned file's bytes under another name are swept
+   ↓ each family's pinned files and records are read by name and bytes > a family's record copied into a subdirectory is not its record and names it
+   ↓ each family sets aside exact tooling citations in an allowlisted file only where its sweep did > Built by scripts/build_public_egress_v2.py.
+   ↓ each family sets aside exact tooling citations in an allowlisted file only where its sweep did > Recorded by scripts/record_rfc5_project_documentation_act.py.
+   ↓ each family sets aside exact tooling citations in an allowlisted file only where its sweep did > Checked by scripts/check_public_admission_registry_git_source.py.
+   ↓ each family sets aside exact tooling citations in an allowlisted file only where its sweep did > public-source- scripts/a_b.py -scope
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/response-limits.test.ts (18 tests) 1971ms
+   ✓ boundedResponse — the ceiling is measured on the final encoded body > logs a single safe response-limit outcome per real-socket human and machine 503  474ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/polaris-narrative.test.ts (6 tests) 5748ms
+   ✓ Polaris narrative claim blocks (PWB-REQ-014; RFC7-2, RFC7-3, RFC7-9) > classifies every narrative unit with exactly one role and marks it a non-citable presentation artifact  1169ms
+   ✓ Polaris narrative claim blocks (PWB-REQ-014; RFC7-2, RFC7-3, RFC7-9) > gives every anchored block a typed, revision-bound anchor set that exactly covers its claims (no uncovered claim, no surplus anchor) and captures target state  1502ms
+   ✓ Polaris narrative claim blocks (PWB-REQ-014; RFC7-2, RFC7-3, RFC7-9) > freezes captured target state: a later mutation of the model cannot rewrite an anchor  746ms
+{"kind":"daemon-http-outcome","at":"2026-10-27T03:27:09.234Z","method":"UNKNOWN","pathLength":12,"status":404,"reason":"unknown-route","contentType":"application/json"}
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/sync-child-process-guard.test.ts (6 tests) 605ms
+   ✓ suite child processes and the vitest worker RPC > runs only short local tools synchronously in a suite test file or any module it imports  592ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/governing-intent-sweep.test.ts (28 tests) 1189ms
+   ✓ POC-REQ-014: every work item's governing intent renders as a counted Unknown > an Unknown board never sits beside a served item set, so neither channel counts one  328ms
+{"kind":"daemon-http-outcome","at":"2026-10-27T03:27:17.064Z","method":"UNKNOWN","pathLength":12,"status":404,"reason":"unknown-route","contentType":"application/json"}
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/polaris-walkthrough-readiness.test.ts (12 tests) 3118ms
+   ✓ PWB-REQ-021 readiness on Polaris > projects served breaches into the existing resource-breach arm without changing input evidence or judgment  1235ms
+   ✓ PWB-REQ-021 readiness on Polaris > an unlawful judgment does not make readiness false, and a not-ready record does not make the judgment unlawful  376ms
+   ✓ PWB-REQ-021 readiness on Polaris > renders no-run-record and not-evaluated as their own states, never as not-ready  489ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/polaris-generation/repo-corpus.test.ts (22 tests) 5727ms
+   ✓ any-repo reader > keyed excluded ids (syzygy-75ds) > differs between runs and is stable within one key; admitted rows keep the unkeyed id  397ms
+   ✓ any-repo reader > keyed excluded ids (syzygy-75ds) > keys the unrepresentable path digest: not the sha256, stable per key, different across keys  1827ms
+ ✓ |@syzygy/polaris-dossier| packages/polaris-dossier/src/agent-texts.test.ts (6 tests) 73ms
+ ✓ |@syzygy/polaris-generation-core| packages/polaris-generation-core/src/dossier-profile.test.ts (19 tests) 316ms
+ ✓ |@syzygy/polaris-generation-core| packages/polaris-generation-core/src/public-source-classification.test.ts (177 tests) 557ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/test-artifact-verification-live-source.test.ts (58 tests) 70096ms
+   ✓ the live verification test, and every module it imports, runs no observed code > reaches the model, its observers and the verification module, and no file in that closure can start anything but git or bd  1877ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses (process as unknown as { getBuiltinModule(n: string): unknown }).getBuiltinModule('x');  1460ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses const p = process; void p;  797ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses process['getBuilt' + 'inModule'];  1930ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses globalThis.process.env.X;  1779ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses new Function('return 1')();  921ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses eval('1');  2243ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses process.dlopen({}, 'x');  575ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses void import('node:fs');  741ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses execFileSync('python3', ['-m', 'pytest']);  465ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses const cmd = 'git'; execFileSync(cmd, []);  653ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses import { Worker } from 'node:worker_threads';  763ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses const g = (process.stdout.constructor as unknown as { constructor: (s: string) => () => Record<string, unknown> }).constructor('return this.process')();  2126ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses const g: Record<string, unknown> = {}; g[['get', 'Builtin', 'Module'].join('')];  1362ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses const k = 'x'; const o: Record<string, unknown> = {}; o[k];  1101ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses process.stdout['constructor'];  711ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses const { constructor: c } = process.stdout;  1715ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses const k = 'x'; const { [k]: c } = process.stdout as unknown as Record<string, unknown>;  2866ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses Object.getPrototypeOf(process.stdout);  1186ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses Object.getOwnPropertyDescriptor(process.stdout, 'x');  655ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses ({}).__proto__;  450ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses (() => 0).prototype;  978ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses execFileSync.call(null, 'sh', []);  882ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses execFileSync.apply(null, ['sh', []]);  779ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses const r = execFileSync; r('sh');  1976ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses import m = require('node:module');
+(m.createRequire(import.meta.url)(['node:child', 'process'].join('_')) as { spawnSync: (c: string, a: string[]) => unknown }).spawnSync('sh', ['-c', 'touch x']);  1458ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses import cp = require('node:child_process');  1233ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses export { spawn } from 'node:child_process';  531ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses export * from 'node:child_process';  1187ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses execFileSync('git', ['-c', 'alias.probe=!touch x', 'probe']);  1560ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses execFileSync('git', ['--config-env=core.pager=P', 'log']);  1147ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses execFileSync('git', ['--exec-path=/tmp', 'status']);  854ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses const key = `alias.${'p'}`;  1107ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses process.env.GIT_CONFIG_COUNT = '1';  2442ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses process.env.PATH += ':/tmp';  1491ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses delete process.env.GIT_DIR;  1658ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses ({ x: process.env.PATH } = { x: '/tmp' });  947ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses Object.assign(process.env, { PATH: '/tmp' });  750ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses const { PATH } = process.env;  1393ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses execFileSync('git', ['probe'], { env: { GIT_CONFIG_GLOBAL: '/tmp/cfg' }, encoding: 'utf8' });  942ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses execFileSync('bd', ['list'], { 'env': {} });  883ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses const env = {}; execFileSync('git', ['status'], { env });  830ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses execFileSync('git', ['--version;', 'touch', '/tmp/x'], { shell: true, encoding: 'utf8' });  710ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses execFileSync('git', ['status'], { shell: '/bin/x' });  1813ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses execFileSync('git', ['status'], { cwd: '/tmp' });  1593ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses const globbed = import.meta.glob('/node_modules/tinyexec/dist/main.js', { eager: true });
+void globbed;  1320ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses void import.meta.globEager('/x.js');  631ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses void import.meta.url;  1775ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses const o = {}; execFileSync('git', ['status'], o);  1058ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses const o = {}; execFileSync('git', ['status'], { ...o });  937ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses execFileSync('git', ['status'], {}, {});  623ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses import { vi } from 'vitest';
+const cp = await vi.importActual<{ spawnSync: (c: string, a: string[]) => unknown }>(['node:child', 'process'].join('_'));
+cp.spawnSync('touch', ['x']);  1229ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses import { it as test, vi as v } from 'vitest';  1138ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses import * as vt from 'vitest';  2388ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses import vt from 'vitest';  2135ms
+   ✓ the live verification test, and every module it imports, runs no observed code > the tree check refuses export { vi } from 'vitest';  1293ms
+[M4 unknown sweep] {"model":"plain","polaris":21,"trajectory":17,"orrery":9}
+{"kind":"daemon-http-outcome","at":"2026-10-27T03:27:26.716Z","method":"UNKNOWN","pathLength":12,"status":404,"reason":"unknown-route","contentType":"application/json"}
+[M4 unknown sweep] {"model":"observed-shape","polaris":13,"trajectory":17,"orrery":9}
+[M4 unknown sweep] {"model":"unreachable","polaris":24,"trajectory":1,"orrery":10}
+[M4 unknown sweep] {"model":"no-seeds","polaris":8,"trajectory":2,"orrery":1}
+[M4 unknown sweep] {"model":"worker-change","polaris":19,"trajectory":6,"orrery":7}
+[M4 route parity] {"model":"plain","tuples":35,"ids":21,"machine":21}
+[M4 route parity] {"model":"observed-shape","tuples":35,"ids":21,"machine":21}
+[M4 route parity] {"model":"unreachable","tuples":23,"ids":12,"machine":12}
+[M4 route parity] {"model":"no-seeds","tuples":4,"ids":3,"machine":3}
+[M4 route parity] {"model":"worker-change","tuples":20,"ids":12,"machine":12}
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/unknown-route-sweep.test.ts (14 tests) 2915ms
+   ✓ every surface Unknown carries a closed reason and a route (M4 slice 1, POC-REQ-060) > observed-shape: per-surface denominators, zero exceptions on each  816ms
+{"kind":"daemon-http-outcome","at":"2026-10-27T03:27:27.744Z","method":"GET","route":"/polaris/source","status":403,"reason":"route-non-success","contentType":"application/json"}
+{"kind":"daemon-http-outcome","at":"2026-10-27T03:27:27.752Z","method":"GET","route":"/polaris/source","status":503,"reason":"response-limit-breached","contentType":"application/json","evaluation":{"inputsDigest":"7247c5e1838865c7a84e7515d90e7ca5b27dd9d3e4e5e848e709bcabf70a2165","asOf":"2026-08-30T12:00:00Z"},"limit":"maxHumanResponseBytes","declared":64,"observed":15420,"population":{"kind":"counted","sources":16,"items":21,"facts":45,"exclusions":0},"sequence":1}
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/polaris-source-route.test.ts (6 tests) 1630ms
+   ✓ Polaris exact-source route (PWB-REQ-011 as amended; RFC7-1, RFC7-13) > renders each requirement block byte-for-byte from the digest-verified object, escaped, with the identity, the not-authority notice and a keyboard route back to the source row; never the purpose prose  447ms
+   ✓ Polaris exact-source route (PWB-REQ-011 as amended; RFC7-1, RFC7-13) > links to the route from the page only for admitted baseline-spec identities: each source row, item row, current-authority citation and depth-list dive names the same href  402ms
+{"kind":"daemon-http-outcome","at":"2026-10-27T03:27:28.606Z","method":"UNKNOWN","pathLength":12,"status":404,"reason":"unknown-route","contentType":"application/json"}
+ ✓ |@syzygy/polaris-dossier| packages/polaris-dossier/src/execution-choice.test.ts (31 tests) 93ms
+ ✓ |@syzygy/polaris-generation-core| packages/polaris-generation-core/src/discovery-provider.test.ts (58 tests) 124ms
+{"kind":"daemon-http-outcome","at":"2026-10-27T03:27:29.888Z","method":"UNKNOWN","pathLength":12,"status":404,"reason":"unknown-route","contentType":"application/json"}
+ ✓ |@syzygy/polaris-dossier| packages/polaris-dossier/src/argv.test.ts (81 tests) 1948ms
+   ✓ each policy copy above, against the spec its caller passes > is the spec of every readArgv call, and no other module names readArgv  1221ms
+   ✓ each policy copy above, against the spec its caller passes > names readArgv only where the lift reads it: its declaration, an import or export of it, and the callee of a call  418ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts (26 tests) 59081ms
+   ✓ PWB-REQ-016 names and headings in a real browser > enumerates the signed populations: closed details included; hidden, aria-hidden and display:none excluded  813ms
+   ✓ PWB-REQ-016 names and headings in a real browser > reads a role="heading" at its aria-level and treats each summary's details as its target  472ms
+   ✓ PWB-REQ-016 names and headings in a real browser > computes the name of a link inside a closed details, as the browser would once it opens  800ms
+   ✓ PWB-REQ-016 names and headings in a real browser > reads names from the browser: aria-label and aria-labelledby beat text content  583ms
+   ✓ PWB-REQ-016 names and headings in a real browser > fails each falsifier limb in the browser  1758ms
+   ✓ PWB-REQ-016 names and headings in a real browser > passes every Polaris page one whole-project evaluation serves, the pages listed from the machine answer  8174ms
+   ✓ PWB-REQ-016 names and headings in a real browser > fails a listed page the daemon does not serve, never skipping it  8121ms
+   ✓ PWB-REQ-016 names and headings in a real browser > observed: every served Polaris page passes both checks  9498ms
+   ✓ PWB-REQ-016 names and headings in a real browser > observed-lawful-state-1: every served Polaris page passes both checks  8596ms
+   ✓ PWB-REQ-016 names and headings in a real browser > observed-degraded-unlawful: every served Polaris page passes both checks  9995ms
+   ✓ PWB-REQ-016 names and headings in a real browser > not-admitted: every served Polaris page passes both checks  1622ms
+   ✓ PWB-REQ-016 names and headings in a real browser > observation-failed: every served Polaris page passes both checks  1687ms
+   ✓ PWB-REQ-016 names and headings in a real browser > not-evaluated: every served Polaris page passes both checks  1547ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/block-provenance-sweep.test.ts (18 tests) 3266ms
+   ✓ POC-REQ-001: the code-structure observation states its provenance once > names git HEAD in one shared-shape record, and no other field holds the revision or the capture instant  710ms
+ ✓ |@syzygy/cap1-daemon| packages/cap1-daemon/src/observation.test.ts (22 tests) 796ms
+ ✓ |@syzygy/polaris-dossier| packages/polaris-dossier/src/credential-probe.test.ts (32 tests) 163ms
+ ✓ |@syzygy/polaris-dossier| packages/polaris-dossier/src/status.test.ts (30 tests) 259ms
+ ✓ |@syzygy/cap1-daemon| packages/cap1-daemon/src/consent-loading.test.ts (11 tests) 79ms
+{"kind":"daemon-http-outcome","at":"2026-10-27T03:27:48.656Z","method":"GET","route":"/machine","status":401,"reason":"credential-refused","contentType":"application/json"}
+{"kind":"daemon-http-outcome","at":"2026-10-27T03:27:48.663Z","method":"GET","route":"/machine","status":401,"reason":"credential-refused","contentType":"application/json"}
+{"kind":"daemon-http-outcome","at":"2026-10-27T03:27:48.668Z","method":"GET","route":"/machine","status":401,"reason":"credential-refused","contentType":"application/json"}
+{"kind":"daemon-http-outcome","at":"2026-10-27T03:27:48.674Z","method":"GET","route":"/machine","status":401,"reason":"credential-refused","contentType":"application/json"}
+{"kind":"daemon-http-outcome","at":"2026-10-27T03:27:48.679Z","method":"GET","route":"/machine","status":401,"reason":"credential-refused","contentType":"application/json"}
+{"kind":"daemon-http-outcome","at":"2026-10-27T03:27:48.683Z","method":"GET","route":"/machine","status":401,"reason":"credential-refused","contentType":"application/json"}
+{"kind":"daemon-http-outcome","at":"2026-10-27T03:27:48.691Z","method":"GET","route":"/machine","status":401,"reason":"credential-refused","contentType":"application/json"}
+{"kind":"daemon-http-outcome","at":"2026-10-27T03:27:48.699Z","method":"GET","route":"/machine","status":401,"reason":"credential-refused","contentType":"application/json"}
+{"kind":"daemon-http-outcome","at":"2026-10-27T03:27:48.717Z","method":"UNKNOWN","pathLength":8,"status":404,"reason":"unknown-route","contentType":"application/json"}
+ ✓ |@syzygy/cap1-daemon| packages/cap1-daemon/src/server.test.ts (20 tests) 431ms
+Usage: poc:redis-shaped-discovery [--out <file>]
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/polaris-generation/redis-shaped-discovery.test.ts (14 tests) 12098ms
+   ✓ discovery on a synthetic tree shaped like a large C key-value server > writes the measurement through the command and refuses to overwrite it  7290ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/verbatim-route.test.ts (13 tests) 4987ms
+   ✓ verbatim route gates > is no route at all when the evaluation observed no shape  956ms
+   ✓ verbatim route gates > admits the evaluation’s own admitted baseline-spec object and reads exactly that object id  958ms
+   ✓ verbatim route gates > screens the transient body itself: phase B classifies baseline specs path-only, so a secret in the spec is refused here, named by detector, never by bytes  465ms
+   ✓ verbatim route gates > refuses active content in the spec body (inert Markdown code contexts stay admitted)  403ms
+   ✓ Polaris route with the verbatim reader > serves the selected requirement blocks on the Polaris human route only; the machine channel never carries them  1104ms
+   ✓ Polaris route with the verbatim reader > renders directly with the route: the same selection, nothing stored on the model  482ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/fixture-directories.test.ts (16 tests) 9369ms
+   ✓ fixture directories a killed run left behind (syzygy-bpyt.4.10) > removes the copy and the template of a process that is gone  1928ms
+   ✓ fixture directories a killed run left behind (syzygy-bpyt.4.10) > removes nothing, and lists nothing, where the PID namespace cannot be read, so a sandbox without /proc never sweeps another sandbox's live directories  485ms
+   ✓ fixture directories a killed run left behind (syzygy-bpyt.4.10) > removes nothing, and lists nothing, where the PID namespace names no inode, so a sandbox without /proc never sweeps another sandbox's live directories  466ms
+   ✓ fixture directories a killed run left behind (syzygy-bpyt.4.10) > keeps a directory that belongs to another user, the sweep never descending into it  482ms
+   ✓ fixture directories a killed run left behind (syzygy-bpyt.4.10) > checks no user where the system has no user ids, and removes the dead process's directory  334ms
+   ✓ fixture directories a killed run left behind (syzygy-bpyt.4.10) > lists only the directory it is given: nothing beside it, nothing below a non-fixture entry  429ms
+   ✓ fixture directories a killed run left behind (syzygy-bpyt.4.10) > does not fail the run when a dead process's directory cannot be removed  623ms
+   ✓ fixture directories a killed run left behind (syzygy-bpyt.4.10) > sweeps the temp directory the process runs under when the global setup runs, and keeps the live and the legacy  788ms
+   ✓ fixture directories a killed run left behind (syzygy-bpyt.4.10) > asks the operating system for the temp directory, so it sweeps the same directory the copies are made in when TMPDIR is unset  863ms
+   ✓ fixture directories a killed run left behind (syzygy-bpyt.4.10) > is registered as a global setup of the app project and of no other project, so it runs once per run  1873ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/polaris-generation/draft-preview.test.ts (14 tests) 283ms
+ ✓ |@syzygy/polaris-generation-core| packages/polaris-generation-core/src/excerpt.test.ts (38 tests) 688ms
+   ✓ excerpt: ranges are exact UTF-8 byte ranges of the text it was handed > are capped at the range limit when a large budget quotes more separated lines  367ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/materialization.test.ts (14 tests) 110ms
+ ✓ |@syzygy/polaris-generation-core| packages/polaris-generation-core/src/generation-source.test.ts (17 tests) 711ms
+ ✓ |@syzygy/polaris-dossier| packages/polaris-dossier/src/close.test.ts (9 tests) 27955ms
+   ✓ close (S10) > records the operator-declared usage, labelled Inferred and attributed to the operator, never a receipt  1940ms
+   ✓ close (S10) > records undeclared usage as not recorded, never zero  6377ms
+   ✓ close (S10) > closes a run once, and refuses after the deadline  3762ms
+   ✓ close (S10) > runs the adapter-credential check at close after a permitting brief: a readable credential is a finding recorded in the record  2506ms
+   ✓ close (S10) > never overwrites a record that appears while it closes: a concurrent close loses, and the first record stands  3386ms
+   ✓ close (S10) > refuses when the consent no longer names the pinned revision  2364ms
+   ✓ close (S10) > carries the agent's reported commands as its report, screened, and copies no prompt, brief or transcript body  2656ms
+   ✓ close (S10) > leaves no credential in the state directory: a sweep of every file under the state root, with its denominator  4894ms
+ ✓ |@syzygy/cap1-conformance| packages/cap1-conformance/src/req-041.conformance.test.ts (9 tests) 561ms
+ ✓ |@syzygy/polaris-dossier| packages/polaris-dossier/src/gate-parts.test.ts (54 tests) 1178ms
+   ✓ the clone's HEAD > agrees with git on a real clone, detached and on a branch  922ms
+ ✓ |@syzygy/polaris-dossier| packages/polaris-dossier/src/execution-flags.test.ts (10 tests) 6953ms
+   ✓ check, render and close disclose the flags beside each command and refuse nothing (scenario "Reported command outside the named scope") > where execution was permitted: every step completes, and each flag is disclosed beside its command, labelled Inferred  1593ms
+   ✓ check, render and close disclose the flags beside each command and refuse nothing (scenario "Reported command outside the named scope") > under SEC-3's rule: the same commands are disclosed and nothing is flagged  5318ms
+ ✓ |@syzygy/polaris-generation-core| packages/polaris-generation-core/src/secret-redaction.test.ts (26 tests) 6884ms
+   ✓ secretRedaction (policy version 4): the builder fixtures through the TypeScript reading > bounds failed URL searches in the overlap scan and retained-text first search without invoking the quadratic expression  1025ms
+   ✓ secretRedaction (policy version 4): the builder fixtures through the TypeScript reading > preserves the pinned URL regex semantics on bounded native-oracle fixtures, including nested prefixes and flags  358ms
+ ✓ |@syzygy/cap1-conformance| packages/cap1-conformance/src/req-011.conformance.test.ts (11 tests) 261ms
+ ✓ |@syzygy/http-host| packages/http-host/src/credentials.test.ts (26 tests) 61ms
+ ✓ |@syzygy/polaris-generation-consent| packages/polaris-generation-consent/src/digest-bound-act.test.ts (45 tests) 15859ms
+   ✓ observation record Upstream field > is read from the one Upstream line, without its parenthesis  2919ms
+   ✓ records port: repositoryIdsFor > names every record that claims the URL, so a caller can refuse on several  5299ms
+   ✓ digest-bound act cross-check (RFC3-16(a)) > is ok when the recorder's record binds the artifact's current bytes and is in force  3153ms
+   ✓ digest-bound act cross-check (RFC3-16(a)) > is absent on this checkout: no registry-entry act is recorded  4269ms
+ ✓ |@syzygy/polaris-dossier| packages/polaris-dossier/src/subpath-imports.test.ts (27 tests) 1042ms
+   ✓ the daemon path, every module the entry reaches outside its dossier and polaris branches > leaves the entry by every edge but the four dynamic imports inside those branches  665ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/fresh-checkout-verdict.test.ts (51 tests) 35ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/polaris-authority-sweep.test.ts (5 tests) 3348ms
+   ✓ Zero downstream citations of Polaris as authority (PWB-REQ-014) > no machine reference on the model or its narrative anchors targets the Polaris surface  1474ms
+   ✓ Zero downstream citations of Polaris as authority (PWB-REQ-014) > every OpenSpec warrant entry belongs to a known id family and none targets Polaris (POLARIS-DIR-* ids are owner decisions)  671ms
+   ✓ Zero downstream citations of Polaris as authority (PWB-REQ-014) > no source/authority/provenance field in the governance, spec, code or docs trees names the Polaris surface  1194ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/keyboard-sweep-record.test.ts (8 tests) 1293ms
+   ✓ the evaluation a swept page names (rule 11; syzygy-buzg) > reads the Butlers revision and evaluation identity a served Polaris page renders, on both mounts  1242ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/code-structure.test.ts (10 tests) 6842ms
+   ✓ code-structure observer > binds every inventory entry to the exact revision observed (POC-REQ-001)  1034ms
+   ✓ code-structure observer > never carries observed file content, only metadata (POC-REQ-002)  1592ms
+   ✓ code-structure observer > records a path with a space, a tab, a double quote or a non-ASCII UTF-8 name exactly as committed (syzygy-bpyt.6.1)  1150ms
+   ✓ code-structure observer > makes the inventory Unknown for a committed path that is not valid UTF-8, never a lossy or colliding path  1129ms
+   ✓ code-structure observer > skips every submodule gitlink, whatever its path, and keeps the files beside it (R-GP-IMPL-CODE-STRUCTURE-2 N2)  726ms
+   ✓ code-structure observer > produces identical facts across two observations of one revision, excluding capture instant (POC-REQ-004)  932ms
+ ✓ |@syzygy/polaris-dossier| packages/polaris-dossier/src/execution-rule.test.ts (21 tests) 163ms
+ ✓ |@syzygy/polaris-dossier| packages/polaris-dossier/src/launched.test.ts (43 tests) 791ms
+   ✓ launch forms in a run whose marker is unreadable > count neither a declared form nor a syzygy-launched one: a FIFO holding the marker's bytes  440ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/git-blob-batch.test.ts (21 tests) 72797ms
+   ✓ batched reads over the real tree (oracle: one git cat-file blob per object) > reads the same objects and returns the same inputs and evaluation for the governance load  37021ms
+   ✓ batched reads over the real tree (oracle: one git cat-file blob per object) > reads the same blobs with the same bytes for the self-corpus at the pinned commit  17441ms
+   ✓ batched reads over the real tree (oracle: one git cat-file blob per object) > never requests a non-blob entry and refuses it as before  2344ms
+   ✓ batched reads over the real tree (oracle: one git cat-file blob per object) > fails the self-corpus read on a missing, unread or altered blob  15847ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/polaris-generation/repo-corpus-isolation.test.ts (10 tests) 9634ms
+   ✓ every git call of the reader is isolated > passes the isolation flags first and an allowlisted environment to ls-tree, cat-file -t and cat-file --batch  769ms
+   ✓ an ambient environment or a replace ref cannot steer the pinned read > ignores GIT_DIR, GIT_OBJECT_DIRECTORY and GIT_ALTERNATE_OBJECT_DIRECTORIES pointing elsewhere  1359ms
+   ✓ an ambient environment or a replace ref cannot steer the pinned read > reads the real commit and blobs when refs/replace substitutes forged ones  867ms
+   ✓ measured accounting and identity > counts raw bytes, batches blob reads by 200, and binds the identity digest to the exact population  923ms
+   ✓ measured accounting and identity > reads a sha256 repository: 64-hex object ids are hashed with sha256  714ms
+   ✓ measured accounting and identity > counts a path whose bytes are not UTF-8 as unquotable instead of reading it  1257ms
+   ✓ measured accounting and identity > counts tree entries named . and .. as unquotable, not as sources  1619ms
+   ✓ measured accounting and identity > lists sources in canonical UTF-16 code-unit order, which differs from git's byte order  803ms
+ ✓ |@syzygy/polaris-generation-core| packages/polaris-generation-core/src/rendered-design.test.ts (20 tests) 218ms
+ ✓ |@syzygy/cap1-conformance| packages/cap1-conformance/src/req-064.conformance.test.ts (18 tests) 34ms
+ ✓ |@syzygy/polaris-generation-core| packages/polaris-generation-core/src/public-source-exemption.test.ts (37 tests) 6040ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/synthetic-corpus-coverage.test.ts (11 tests) 22ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/proposal-disclosure.test.ts (5 tests) 12782ms
+   ✓ proposal disclosure row (syzygy-dov.3.2; P-70 M3 slice 6) > declares proposed-not-authority apart from every claim state, on the unchanged --proposed token  643ms
+   ✓ proposal disclosure row (syzygy-dov.3.2; P-70 M3 slice 6) > generates the proposal treatment from the declaration and spends --proposed nowhere else  920ms
+   ✓ proposal disclosure row (syzygy-dov.3.2; P-70 M3 slice 6) > agrees with the served proposal population in zero and populated fixtures, and sits outside the claim-state lists  1326ms
+   ✓ proposal disclosure row (syzygy-dov.3.2; P-70 M3 slice 6) > renders every served proposal and the legend row in the declared token and symbol after scripts  9704ms
+ ✓ |@syzygy/cap1-conformance| packages/cap1-conformance/src/req-integration.conformance.test.ts (12 tests) 114ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/response-identity-independent.test.ts (3 tests) 3022ms
+   ✓ response identity independent census and mutation proofs > maps both evaluation instants to exactly the 25 declared structural paths, with no 26th path  1019ms
+   ✓ response identity independent census and mutation proofs > removing each exercised exclusion makes the independent stability oracle fail and names that path  1821ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/owner-act-record.test.ts (19 tests) 2184ms
+   ✓ parseOwnerActRecord over the version-4 screening-scope recorder's template > reads the rendered record's provenance as an explicit state-(1) selection, and its digest and act type  2103ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts (8 tests) 273ms
+ ✓ |@syzygy/polaris-generation-core| packages/polaris-generation-core/src/redacted-generation-source.test.ts (6 tests) 387ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/polaris.test.ts (6 tests) 1990ms
+   ✓ Polaris > references every entity in at least one titled section (POC-REQ-030)  407ms
+   ✓ Polaris > moves the capability slice below the catalog with provenance and epistemic state unchanged (PWB-REQ-010, task 3.2)  344ms
+   ✓ Polaris > mutation check: removing an entity from coverage would fail the sweep  1046ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/model-observations.test.ts (3 tests) 3080ms
+   ✓ shared model observation wiring > folds the worker-change lifecycle observation into the one shared model, scoped to the materialized Bead (AC3)  1652ms
+   ✓ shared model observation wiring > folds code-structure and work-item observations into the one shared model  955ms
+   ✓ shared model observation wiring > renders code-structure and work-item regions Unknown when their sources fail while the required intent artifacts remain present  464ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/canonical-json-divergence.test.ts (21 tests) 398ms
+   ✓ where the two key-sorted JSON encoders agree > agree with each other and with an independent reference on 600 seeded plain JSON values  374ms
+ ✓ |@syzygy/cap1-conformance| packages/cap1-conformance/src/req-040.conformance.test.ts (11 tests) 32ms
+ ✓ |@syzygy/polaris-dossier| packages/polaris-dossier/src/draft-schema.test.ts (25 tests) 187ms
+ ✓ |@syzygy/cap1-conformance| packages/cap1-conformance/src/req-032.conformance.test.ts (3 tests) 123ms
+ ✓ |@syzygy/cap1-conformance| packages/cap1-conformance/src/req-043.conformance.test.ts (10 tests) 41ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/polaris-proposed-work.test.ts (4 tests) 3045ms
+   ✓ Polaris proposed work stays subordinate to current truth (PWB-REQ-013) > keeps every proposed identity out of the project-level groups and the evidence group, in every shape state  1418ms
+   ✓ Polaris proposed work stays subordinate to current truth (PWB-REQ-013) > renders the proposal exactly once, inside capability detail, labeled, with the current authority adjacent and first  899ms
+   ✓ Polaris proposed work stays subordinate to current truth (PWB-REQ-013) > shows the current authority as the shape's own baseline-spec claim when observed, and Unknown with its reason and route otherwise  602ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/polaris-generation/dossier-quote-fidelity.test.ts (9 tests) 813ms
+ ✓ |@syzygy/polaris-generation-consent| packages/polaris-generation-consent/src/recorder-template.test.ts (14 tests) 3091ms
+   ✓ the line slot (syzygy-bpyt.8.17) > accepts exactly the lines the ambiguous pattern accepts, over every string of up to four of sixteen characters  985ms
+   ✓ the line slot (syzygy-bpyt.8.17) > reads the same slots as the ambiguous pattern from records that fill several slots, repeat one, or fail  1445ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/worker-change-observation.test.ts (10 tests) 8090ms
+   ✓ worker-change observer > returns Unknown when no work item has been materialized  1147ms
+   ✓ worker-change observer > returns Unknown when the default branch cannot be resolved  672ms
+   ✓ worker-change observer > renders planned when the Bead exists but no matching git activity is observed  1120ms
+   ✓ worker-change observer > renders active for a matching commit reachable only from a fetched worker branch, not yet merged (AC3)  1207ms
+   ✓ worker-change observer > states none-found distinctly when an active commit is on no fetched origin ref (C3-6)  1699ms
+   ✓ worker-change observer > renders changed-or-merged for a matching commit reachable from the default branch, and never claims verification (AC4)  860ms
+   ✓ worker-change observer > scopes activity to the exact bead marker, ignoring unrelated seam history (AC3)  335ms
+   ✓ worker-change observer > renders Unknown with a named reason when the repository is unreadable during commit lookup  327ms
+   ✓ worker-change observer > never executes any observed Butlers code or test (AC6): only git plumbing subcommands are ever invoked  698ms
+ ✓ |@syzygy/polaris-dossier| packages/polaris-dossier/src/state-directory.test.ts (24 tests) 191ms
+ ✓ |@syzygy/cap1-daemon| packages/cap1-daemon/src/pipeline.test.ts (7 tests) 355ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/git-observation.test.ts (11 tests) 4685ms
+   ✓ read-only Git observation > identifies clean and dirty states without refreshing the index  1001ms
+   ✓ read-only Git observation > retains a protected source path when it is renamed out  1567ms
+   ✓ read-only Git observation > computes a metadata-only changed/added horizon between revisions  743ms
+   ✓ read-only Git observation > reads the observed-project limb between two evaluated revisions, and Unknown when the comparison fails (syzygy-u05.2)  690ms
+   ✓ read-only Git observation > counts Syzygy commits since the build revision for the observatory limb, Unknown when unreadable (syzygy-u05.2)  653ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/orrery.test.ts (11 tests) 2164ms
+   ✓ Orrery > reconciles declared mapped and unmapped counts against the observed total (POC-REQ-051)  555ms
+   ✓ Orrery > renders Unknown with a reason, never an empty-but-green map, when code structure fails (POC-REQ-003 rendering)  852ms
+   ✓ Orrery > footer: composite evaluation identity and substrate revision (N4) > names the substrate Unknown, never a fabricated revision, when orrery is unobserved  308ms
+ ✓ |@syzygy/polaris-dossier| packages/polaris-dossier/src/session-view.test.ts (11 tests) 2617ms
+   ✓ session views > the inventory session sees the clone read-only and its own directory, never the run or another session  609ms
+   ✓ session views > a review session sees only its own directory and the checkout read-only  526ms
+   ✓ session views > the author writes only drafts/ and sees no helper session  1419ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/work-items.test.ts (10 tests) 1264ms
+   ✓ work-items observer > exercises the real subprocess path against a repository with no Beads database  953ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/capture-test-artifact.test.ts (26 tests) 289ms
+ ✓ |@syzygy/polaris-dossier| packages/polaris-dossier/src/cli.test.ts (59 tests) 48ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/polaris-markdown.test.ts (20 tests) 105ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts (4 tests) 88ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/design-tokens.test.ts (9 tests) 40ms
+{"kind":"daemon-http-outcome","at":"2026-10-27T03:29:30.463Z","method":"GET","route":"/api/poc/polaris","status":401,"reason":"credential-refused","contentType":"application/json"}
+ ✓ |@syzygy/cap1-conformance| packages/cap1-conformance/src/req-042.conformance.test.ts (7 tests) 103ms
+{"kind":"daemon-http-outcome","at":"2026-10-27T03:29:31.321Z","method":"GET","route":"/api/poc/polaris","status":503,"reason":"response-limit-breached","contentType":"application/json","evaluation":{"inputsDigest":"dad2765f260a1d767a21e06a62970171504dc43ead537ad7331f08f5c41b246b","asOf":"2026-08-30T12:00:00Z"},"limit":"maxMachineResponseBytes","declared":64,"observed":48810,"population":{"kind":"counted","sources":15,"items":20,"facts":44,"exclusions":0},"sequence":1}
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/polaris-presentation-route.test.ts (2 tests) 1773ms
+   ✓ Polaris machine presentation envelope (PWB-REQ-014; RFC7-2, RFC7-3) > refuses without the bearer and, with it, serves the narrative of the same render the human page comes from — every anchor cited on the page, no copy of the JSON on the page — marked non-citable  1420ms
+   ✓ Polaris machine presentation envelope (PWB-REQ-014; RFC7-2, RFC7-3) > fails closed under the machine ceiling with a typed failure and no partial envelope  341ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/trajectory-projection.test.ts (14 tests) 191ms
+ ✓ |@syzygy/cap1-conformance| packages/cap1-conformance/src/req-045.conformance.test.ts (10 tests) 87ms
+ ✓ |@syzygy/polaris-dossier| packages/polaris-dossier/src/design-review.test.ts (6 tests) 22ms
+ ✓ |@syzygy/polaris-generation-consent| packages/polaris-generation-consent/src/decisions-sweep.test.ts (19 tests) 3511ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/production-reobserve.test.ts (5 tests) 23655ms
+   ✓ production-owned capture-to-model re-observation seam > keeps served bytes and asOf stable when the same capture is rebuilt across wall-clock instants  4517ms
+   ✓ production-owned capture-to-model re-observation seam > uses the production builder for an atomic successful swap with identity advancement and one in-flight observation  4161ms
+   ✓ production-owned capture-to-model re-observation seam > re-evaluates an unchanged repository twice: two distinct named identities, the first result unchanged (syzygy-u05.2)  8775ms
+   ✓ production-owned capture-to-model re-observation seam > retains the prior production model and non-zero drift when the production build fails  6170ms
+ ✓ |@syzygy/cap1-conformance| packages/cap1-conformance/src/req-034.conformance.test.ts (5 tests) 264ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/reobserve-session.test.ts (6 tests) 224ms
+ ✓ |@syzygy/cap1-conformance| packages/cap1-conformance/src/req-016.conformance.test.ts (6 tests) 128ms
+ ✓ |@syzygy/cap1-conformance| packages/cap1-conformance/src/req-062.conformance.test.ts (10 tests) 68ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/polaris-reading.test.ts (8 tests) 202ms
+ ✓ |@syzygy/cap1-conformance| packages/cap1-conformance/src/req-013.conformance.test.ts (4 tests) 94ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/test-model-fixture.test.ts (5 tests) 7408ms
+   ✓ fixture repositories (syzygy-jsyi) > gives each call its own clean copy at the revision a fresh pinned commit mints, and keeps a write in its own copy  3718ms
+   ✓ fixture directory names (syzygy-bpyt.4.10) > names the template and each copy with the pid and PID namespace of the process that made them  2453ms
+   ✓ fixture directory names (syzygy-bpyt.4.10) > does not sweep when a file makes its template: the sweep is the global setup's, once per run  1204ms
+ ✓ |@syzygy/polaris-dossier| packages/polaris-dossier/src/run-config.test.ts (67 tests) 722ms
+ ✓ |@syzygy/polaris-generation-core| packages/polaris-generation-core/src/admitted-input.test.ts (13 tests) 444ms
+ ✓ |@syzygy/cap1-conformance| packages/cap1-conformance/src/req-033.conformance.test.ts (5 tests) 145ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/polaris-generation/dossier-evaluation-main.test.ts (6 tests) 461ms
+ ✓ |@syzygy/polaris-generation-core| packages/polaris-generation-core/src/quote-locate.test.ts (26 tests) 414ms
+ ↓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/test-artifact-verification.live.test.ts (1 test | 1 skipped)
+ ✓ |@syzygy/cap1-conformance| packages/cap1-conformance/src/req-063.conformance.test.ts (6 tests) 66ms
+ ✓ |@syzygy/cap1-conformance| packages/cap1-conformance/src/req-046.conformance.test.ts (9 tests) 416ms
+stdout | packages/polaris-dossier/src/no-egress.test.ts > no provider call and no transmission (S10): an operating-system capture of a full fixture run > creates no Internet-family socket over the whole run, from preflight to close
+no-egress proof ran under strace: 14 network-class calls, traced calls from 1 task(s), 0 Internet-family
+
+ ✓ |@syzygy/cap1-conformance| packages/cap1-conformance/src/req-030.conformance.test.ts (6 tests) 264ms
+ ✓ |@syzygy/cap1-conformance| packages/cap1-conformance/src/req-031.conformance.test.ts (5 tests) 94ms
+ ✓ |@syzygy/cap1-conformance| packages/cap1-conformance/src/req-036.conformance.test.ts (6 tests) 64ms
+ ✓ |@syzygy/polaris-dossier| packages/polaris-dossier/src/no-egress.test.ts (3 tests | 1 skipped) 21532ms
+   ✓ no provider call and no transmission (S10): an operating-system capture of a full fixture run > creates no Internet-family socket over the whole run, from preflight to close  8319ms
+   ✓ no provider call and no transmission (S10): an operating-system capture of a full fixture run > sees the canary: one loopback datagram sent before the same run is in the capture  10514ms
+ ✓ |@syzygy/cap1-conformance| packages/cap1-conformance/src/consent-record-convention.conformance.test.ts (7 tests) 81ms
+ ✓ |@syzygy/cap1-conformance| packages/cap1-conformance/src/req-044.conformance.test.ts (9 tests) 97ms
+ ✓ |@syzygy/cap1-conformance| packages/cap1-conformance/src/req-060.conformance.test.ts (7 tests) 79ms
+ ✓ |@syzygy/cap1-conformance| packages/cap1-conformance/src/req-035.conformance.test.ts (6 tests) 31ms
+ ✓ |@syzygy/cap1-conformance| packages/cap1-conformance/src/req-061.conformance.test.ts (16 tests) 41ms
+ ✓ |@syzygy/polaris-dossier| packages/polaris-dossier/src/run-evidence.test.ts (4 tests) 31761ms
+   ✓ dossier run evidence record (S12) > names the subject, the Syzygy commit and the digest of every file the run and its sessions left  8305ms
+   ✓ dossier run evidence record (S12) > copies no file body: a credential-shaped token the draft carries never reaches the record  4546ms
+   ✓ dossier run evidence record (S12) > lists a symbolic link without following it  9119ms
+   ✓ dossier run evidence record (S12) > reports an open run as not closed, and refuses anything but one run directory  9719ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/cross-cutting.test.ts (6 tests) 3294ms
+   ✓ cross-cutting: no runtime fetch of external executable code (POC-REQ-021) > sweeps every served page for a script reference to a foreign origin  1549ms
+   ✓ cross-cutting: legend matches the declared encoding table on every surface (POC-REQ-060/061) > respects reduced-motion preference identically across surfaces  317ms
+   ✓ cross-cutting: the three doctrine planes stay distinct from epistemic labels > names each page plane once outside the legend and each home panel once  656ms
+   ✓ cross-cutting: the three doctrine planes stay distinct from epistemic labels > detects a misspelled legend mapping and a swapped surface plane  568ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/evidence-population.test.ts (9 tests) 14ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/polaris-generation/page-sink.test.ts (3 tests) 86ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/surface-render-fractions.test.ts (3 tests) 1599ms
+   ✓ rendered fraction of the machine answer on the human surfaces > default fixture: Trajectory renders 5 of 5 work items; Polaris and Orrery render none as rows  1281ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/response-identity.test.ts (9 tests) 157ms
+ ✓ |@syzygy/cap1-conformance| packages/cap1-conformance/src/req-015.conformance.test.ts (5 tests) 118ms
+ ↓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/project-shape-discovery.live.test.ts (1 test | 1 skipped)
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/markdown-code-context.test.ts (17 tests) 168ms
+ ✓ |@syzygy/polaris-dossier| packages/polaris-dossier/src/gate-acts.test.ts (133 tests) 403004ms
+   ✓ the sitting's acts as gate sources, with no act recorded > follow this checkout's tree: each source absent while its act record is, and established once the sitting records it  12634ms
+   ✓ the sitting's acts as gate sources, with no act recorded > follow the tree in either state: no records, every record, and each act alone  20817ms
+   ✓ version 2 of the Anthropic statement > replaces version 1 from its act's instant, one statement for the pair, the OpenAI statement untouched  2739ms
+   ✓ version 2 of the Anthropic statement > leaves version 1 alone in force before version 2's instant  1500ms
+   ✓ version 2 of the Anthropic statement > is what preflight lists in force, before and after its instant, agreeing with the gate  2820ms
+   ✓ version 2 of the Anthropic statement > closes no other gate: D9, the reading, the drawer and the registry sign-off stay established beside it  2362ms
+   ✓ version 2 of the Anthropic statement > fails closed when its act record has an appended line: version 1 reads withdrawn and version 2 unbound, so the pair has no statement  2118ms
+   ✓ version 2 of the Anthropic statement > fails closed when its act record has another supersession: version 1 reads withdrawn and version 2 unbound, so the pair has no statement  1616ms
+   ✓ version 2 of the Anthropic statement > fails closed when its act record has another effect: version 1 reads withdrawn and version 2 unbound, so the pair has no statement  1373ms
+   ✓ version 2 of the Anthropic statement > fails closed when its act record has a digest in the packet words: version 1 reads withdrawn and version 2 unbound, so the pair has no statement  2947ms
+   ✓ version 2 of the Anthropic statement > fails closed once its record changes after the act  3579ms
+   ✓ version 2 of the Anthropic statement > is withdrawn by a decisions file naming it by its phrase label, and version 1 does not come back  3264ms
+   ✓ version 2 of the Anthropic statement > is withdrawn by a decisions file naming it by its title, and version 1 does not come back  3425ms
+   ✓ version 2 of the Anthropic statement > is withdrawn by a decisions file naming it by its act identity, and version 1 does not come back  2978ms
+   ✓ version 2 of the Anthropic statement > is withdrawn by a decisions file naming it by its record's path, and version 1 does not come back  2770ms
+   ✓ version 2 of the Anthropic statement > reads version 1's act record past only at its exact render, and version 1 reads version 2's the same way  2608ms
+   ✓ version 2 of the Anthropic statement > reads past version 1's exact render only at version 1's own file: a byte-identical copy elsewhere names version 2  1753ms
+   ✓ version 2 of the Anthropic statement > is the form its recorder writes: the file it writes and the record byte for byte, CONFIRM and CONFIRM WITH EXCEPTIONS  4952ms
+   ✓ the sitting's acts as gate sources, once recorded > establish every source when every act is recorded, none hiding another  3272ms
+   ✓ the sitting's acts as gate sources, once recorded > establish nothing before the acts' instant  3038ms
+   ✓ the sitting's acts fail closed > refuse an in-force record whose table binds other files than the form names, even when an act binds its bytes  8668ms
+   ✓ the sitting's acts fail closed > refuse an act another decisions file names: a withdrawal in a form the reader does not define  3980ms
+   ✓ the sitting's acts fail closed > withdraw a statement the aggregate acceptance record names on a Record ID or Subject field line, though not in its prose  407ms
+   ✓ the sitting's acts fail closed > refuse the registry sign-off another decisions file names by its tag  3277ms
+   ✓ the sitting's acts fail closed > refuse the registry sign-off another decisions file names by its tag, in another case  2386ms
+   ✓ the sitting's acts fail closed > refuse the registry sign-off another decisions file names by the package as signed off, spelled sign-off  2744ms
+   ✓ the sitting's acts fail closed > refuse the registry sign-off another decisions file names by the package as signed off, spelled signoff  4778ms
+   ✓ the sitting's acts fail closed > read the resolved P-104 register row as any other line, and refuse a row that cites the sign-off's tag  5445ms
+   ✓ the sitting's acts fail closed > refuse every sitting act whose record has its phrase removed  532ms
+   ✓ the sitting's acts fail closed > refuse every sitting act whose record has another effect  960ms
+   ✓ the sitting's acts fail closed > refuse every sitting act whose record has "Withdrawn by this record." appended  902ms
+   ✓ the sitting's acts fail closed > refuse every sitting act whose record has a digest in the owner's selection  382ms
+   ✓ the sitting's acts fail closed > refuse every sitting act whose record has a recording tag for another date  1571ms
+   ✓ the sitting's acts fail closed > refuse every sitting act whose record has a blank selection label  465ms
+   ✓ the sitting's acts fail closed > refuse every sitting act whose record has a carriage return in the selection  374ms
+   ✓ the sitting's acts fail closed > refuse the registry sign-off whose record has no Owner selection line  4040ms
+   ✓ the sitting's acts fail closed > refuse the registry sign-off whose record has no Review line  2474ms
+   ✓ the sitting's acts fail closed > refuse the registry sign-off whose record has no Reviewed commit line  3126ms
+   ✓ the sitting's acts fail closed > refuse the registry sign-off whose record has no Disposition line  4697ms
+   ✓ the sitting's acts fail closed > refuse the registry sign-off whose record has no Scope A extension line  5042ms
+   ✓ the sitting's acts fail closed > refuse the registry sign-off whose record has no "What this does not do" section  3196ms
+   ✓ the sitting's acts fail closed > refuse the registry sign-off whose record has its supersession line removed  2600ms
+   ✓ the sitting's acts fail closed > refuse the registry sign-off whose record has another second provenance line  3119ms
+   ✓ the sitting's acts fail closed > refuse the registry sign-off whose record has "Withdrawn by this record." appended  3254ms
+   ✓ the sitting's acts fail closed > refuse the registry sign-off whose record has a selection that does not name the Scope A extension  2038ms
+   ✓ the sitting's acts fail closed > refuse the registry sign-off whose record has a digest in the selection  2103ms
+   ✓ the sitting's acts fail closed > refuse the registry sign-off whose record has CONFIRM WITH EXCEPTIONS and no disposition record  1752ms
+   ✓ the sitting's acts fail closed > refuse the registry sign-off whose record has CONFIRM and a disposition record  1815ms
+   ✓ the sitting's acts fail closed > count a CONFIRM WITH EXCEPTIONS sign-off that names its disposition record  1707ms
+   ✓ the sitting's acts fail closed > withdraw what a decisions file names by the statement's governance-relative path  2324ms
+   ✓ the sitting's acts fail closed > withdraw what a decisions file names by the statement's basename  2237ms
+   ✓ the sitting's acts fail closed > withdraw what a decisions file names by the statement act's phrase label  2838ms
+   ✓ the sitting's acts fail closed > withdraw what a decisions file names by the statement act's title  3026ms
+   ✓ the sitting's acts fail closed > withdraw what a decisions file names by the Subject spaced after its colons  3669ms
+   ✓ the sitting's acts fail closed > withdraw what a decisions file names by the Subject with each part quoted  2400ms
+   ✓ the sitting's acts fail closed > withdraw what a decisions file names by the D9 record's relative path  4480ms
+   ✓ the sitting's acts fail closed > withdraw what a decisions file names by the D9 act's phrase label  2802ms
+   ✓ the sitting's acts fail closed > withdraw what a decisions file names by the reading record's basename  2885ms
+   ✓ the sitting's acts fail closed > withdraw what a decisions file names by the drawer record's basename  2764ms
+   ✓ the sitting's acts fail closed > withdraw what a decisions file names by the drawer's Subject on a field line  4337ms
+   ✓ the sitting's acts fail closed > withdraw what a decisions file names by the installed entry's basename  3974ms
+   ✓ the sitting's acts fail closed > withdraw what a decisions file names by the package as signed off at a version  3738ms
+   ✓ the sitting's acts fail closed > withdraw what a decisions file names by the sign-off record's title  3064ms
+   ✓ the sitting's acts fail closed > withdraw what a decisions file names by the D9 record's heading  2200ms
+   ✓ the sitting's acts fail closed > withdraw what a decisions file names by the reading record's heading  3585ms
+   ✓ the sitting's acts fail closed > withdraw what a decisions file names by the drawer record's heading  3287ms
+   ✓ the sitting's acts fail closed > withdraw what a decisions file names by the statement's heading  3289ms
+   ✓ the sitting's acts fail closed > withdraw D9 by a decisions file named for its act record, with a body that names nothing  4392ms
+   ✓ the sitting's acts fail closed > refuse an act record, and the registry sign-off, with no owner  4807ms
+   ✓ the sitting's acts fail closed > refuse an act record, and the registry sign-off, with another owner  4208ms
+   ✓ the sitting's acts fail closed > refuse an act record, and the registry sign-off, with no provenance state  4557ms
+   ✓ the sitting's acts fail closed > refuse an act record, and the registry sign-off, with another provenance state  4983ms
+   ✓ the sitting's acts fail closed > refuse an act record, and the registry sign-off, with no A1 line  6734ms
+   ✓ the sitting's acts fail closed > refuse an act record, and the registry sign-off, with an A1 identity  5447ms
+   ✓ the sitting's acts fail closed > refuse an act record, and the registry sign-off, with no scope  3712ms
+   ✓ the sitting's acts fail closed > refuse an act record, and the registry sign-off, with a wider scope  4127ms
+   ✓ the sitting's acts fail closed > refuse an act record, and the registry sign-off, with a second scope  2815ms
+   ✓ the sitting's acts fail closed > refuse D9 when its record carries a second table inside a fence  4074ms
+   ✓ the sitting's acts fail closed > refuse D9 when its record carries another separator row  3712ms
+   ✓ the sitting's acts fail closed > refuse D9 when its record carries a third row  3301ms
+   ✓ the sitting's acts fail closed > leave the drawer unstated for a record with another subject, even under an act  2733ms
+   ✓ the sitting's acts fail closed > leave the drawer unstated for a record with another statement, even under an act  3054ms
+   ✓ the sitting's acts fail closed > leave the drawer unstated for a record with no record id, even under an act  2703ms
+   ✓ the sitting's acts fail closed > leave the drawer unstated for a record with no record version, even under an act  3050ms
+   ✓ the sitting's acts fail closed > leave the drawer unstated for a record with a second Record ID line, even under an act  2524ms
+   ✓ the sitting's acts fail closed > leave the drawer unstated for a record with a second Subject line, even under an act  5499ms
+   ✓ the sitting's acts fail closed > carry no act for a statement whose record names another provider, even under an act  2752ms
+   ✓ the sitting's acts fail closed > carry no act for a statement whose record names another repository, even under an act  3846ms
+   ✓ the sitting's acts fail closed > carry no act for a statement whose record names another record id, even under an act  3580ms
+   ✓ the sitting's acts fail closed > carry no act for a statement whose record names another agent tool, even under an act  2910ms
+   ✓ the sitting's acts fail closed > carry no act for a statement whose record names a second agent tool line, even under an act  2688ms
+   ✓ the sitting's acts fail closed > carry no act for a statement whose record names no record version, even under an act  1522ms
+   ✓ the sitting's acts fail closed > carry no act for a statement whose record names a second Record ID line, even under an act  3378ms
+   ✓ the sitting's acts fail closed > carry no act for a statement whose record names a second Subject line, even under an act  2762ms
+   ✓ the registry entry's version-tagged sign-off > refuses once the installed entry changes  2479ms
+   ✓ the registry entry's version-tagged sign-off > refuses a record with another title  2435ms
+   ✓ the registry entry's version-tagged sign-off > refuses a record with another version  3623ms
+   ✓ the registry entry's version-tagged sign-off > refuses a record with another tag  2525ms
+   ✓ the registry entry's version-tagged sign-off > refuses a record with another package  6654ms
+   ✓ the registry entry's version-tagged sign-off > refuses a record with another kind  7875ms
+   ✓ the registry entry's version-tagged sign-off > refuses a record with another installed path  3258ms
+   ✓ the registry entry's version-tagged sign-off > refuses a record with another act type  3628ms
+   ✓ the registry entry's version-tagged sign-off > refuses a record with a REVISE verdict  3106ms
+   ✓ the registry entry's version-tagged sign-off > refuses a record with no recording instant  5590ms
+   ✓ the registry entry's version-tagged sign-off > refuses a record with an instant on another day  5362ms
+   ✓ the registry entry's version-tagged sign-off > refuses a record with its SHA-256 only inside a fence  6158ms
+   ✓ the gate forms against the recorders > read each record at the path its recorder writes it  5029ms
+   ✓ the gate forms against the recorders > render the sign-off record byte for byte as render_record does, from the same fields: CONFIRM  9006ms
+   ✓ the gate forms against the recorders > render the sign-off record byte for byte as render_record does, from the same fields: CONFIRM WITH EXCEPTIONS  9426ms
+   ✓ altered prose in a byte-exact act record (characterization, syzygy-bpyt.8.10) > the registry sign-off: refused once its What-this-records paragraph or its limits change, a withdrawal is appended or its selection drops the Scope A words; other words that keep them count  7232ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/test-artifact-verification-consumers.test.ts (4 tests) 609ms
+   ✓ every consumer of the test-artifact verification treats `reported` as not verified > finds exactly the listed consumers, by name and by whole-model serialization  303ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/polaris-generation/svg-inert.test.ts (31 tests) 245ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/watch-mode.test.ts (15 tests) 61ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/cdp-browser.browser.test.ts (2 tests) 15540ms
+   ✓ disposable Chrome teardown in a real browser > closes and drains even when a helper cannot exit on its own  7843ms
+   ✓ disposable Chrome teardown in a real browser > leaves no Chrome singleton directory behind when the leader is killed  7680ms
+ ✓ |@syzygy/polaris-generation-core| packages/polaris-generation-core/src/workspace-reach.test.ts (21 tests) 249ms
+ ✓ |@syzygy/cap1-conformance| packages/cap1-conformance/src/req-014.conformance.test.ts (5 tests) 179ms
+ ✓ |@syzygy/cap1-conformance| packages/cap1-conformance/src/req-037.conformance.test.ts (5 tests) 216ms
+ ✓ |@syzygy/polaris-dossier| packages/polaris-dossier/src/cli-table.test.ts (16 tests) 161ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/trajectory-narrowing.browser.test.ts (2 tests) 10924ms
+   ✓ Trajectory narrowing to the governing-intent Unknown (POC-REQ-014) > the narrowed board lists exactly the cards the board renders, and hides an unmarked one  2888ms
+   ✓ Trajectory narrowing to the governing-intent Unknown (POC-REQ-014) > with items outside the selection, Space on the focused toggle keeps exactly the inside figure's cards  2575ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/reobserve-action.test.ts (4 tests) 79ms
+ ✓ |@syzygy/cap1-conformance| packages/cap1-conformance/src/req-010.conformance.test.ts (5 tests) 69ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/owner-act-drafter.test.ts (3 tests) 41ms
+ ✓ |@syzygy/cap1-conformance| packages/cap1-conformance/src/req-012.conformance.test.ts (4 tests) 34ms
+ ✓ |@syzygy/cap1-conformance| packages/cap1-conformance/src/req-004.conformance.test.ts (5 tests) 31ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/proposed-work.test.ts (4 tests) 16ms
+fatal: git cat-file: could not get object info
+ ✓ |@syzygy/polaris-dossier| packages/polaris-dossier/src/doctrine-quote.test.ts (8 tests) 12ms
+ ✓ |@syzygy/polaris-generation-consent| packages/polaris-generation-consent/src/real-tree.test.ts (3 tests) 28765ms
+   ✓ the readers over this checkout's decisions directory > refuse nothing: no file in decisions/ trips a sweep or breaks a recorder's form  20285ms
+   ✓ the readers over this checkout's decisions directory > do reach that directory: one added file naming a record or the class act refuses the reads that sweep for it  8477ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/polaris-generation/self-corpus.test.ts (4 tests) 11536ms
+   ✓ zero-egress Syzygy self-corpus proof > reads only tracked blobs from the pinned commit and independently recounts its denominator  1853ms
+   ✓ zero-egress Syzygy self-corpus proof > refuses a 1 MB corpus budget without truncation or a scripted send, then completes on sufficient budget and isolates one source perturbation  8120ms
+   ✓ zero-egress Syzygy self-corpus proof > refuses a requested pinned commit that is unavailable rather than substituting HEAD  401ms
+   ✓ zero-egress Syzygy self-corpus proof > does not read a local or untracked file even when it lies in the allowed-looking path  1161ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/resource-headroom.test.ts (3 tests) 149ms
+ ✓ |@syzygy/cap1-conformance| packages/cap1-conformance/src/req-038.conformance.test.ts (4 tests) 443ms
+ ✓ |@syzygy/polaris-generation-core| packages/polaris-generation-core/src/canonical-json.test.ts (15 tests) 52ms
+ ✓ |@syzygy/support| packages/support/src/support-purity.test.ts (13 tests) 409ms
+ ✓ |@syzygy/cap1-conformance| packages/cap1-conformance/src/req-006.conformance.test.ts (6 tests) 11ms
+ ✓ |@syzygy/polaris-generation-core| packages/polaris-generation-core/src/island-boundary.test.ts (4 tests) 2324ms
+   ✓ the syzygy CLI and the parked provider island > resolves every workspace import the CLI reaches, dynamic ones included  1807ms
+   ✓ the syzygy CLI and the parked provider island > reaches no island module from the CLI entry  405ms
+stdout | apps/three-surface-poc/src/page-size-delta.test.ts > page-size delta: N4 slice-3 evaluation-identity footer (renderer output, no daemon) > /trajectory grows by the composite-identity + substrate-naming footer, bounded and logged
+[N4 page-size delta] /trajectory: before=30593B after=30975B delta=+382B
+
+stdout | apps/three-surface-poc/src/page-size-delta.test.ts > page-size delta: N4 slice-3 evaluation-identity footer (renderer output, no daemon) > /orrery grows by the composite-identity + substrate-naming footer, bounded and logged
+[N4 page-size delta] /orrery: before=44848B after=45137B delta=+289B
+
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/page-size-delta.test.ts (2 tests) 1602ms
+   ✓ page-size delta: N4 slice-3 evaluation-identity footer (renderer output, no daemon) > /trajectory grows by the composite-identity + substrate-naming footer, bounded and logged  1439ms
+ ✓ |@syzygy/polaris-generation-core| packages/polaris-generation-core/src/parse-json.test.ts (39 tests) 114ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts (7 tests) 156ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/reevaluation.test.ts (3 tests) 73ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/pwb-mutation-sweep.test.ts (4 tests) 462ms
+   ✓ PWB mutation sweep plan (task 4.2) > every literal fragment occurs exactly once in its subject and changes it, with at least one must-fail test named  313ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/git-tree.test.ts (7 tests) 16ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/evaluation-footer.test.ts (6 tests) 1608ms
+   ✓ compositeEvaluationLine > renders exactly model.evaluation.snapshot and model.evaluation.asOf, never a recomputed identity  882ms
+ ✓ |@syzygy/cap1-conformance| packages/cap1-conformance/src/req-002.conformance.test.ts (5 tests) 20ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/pwb-mutation.test.ts (5 tests) 189ms
+ ✓ |@syzygy/cap1-conformance| packages/cap1-conformance/src/req-003.conformance.test.ts (12 tests) 637ms
+ ✓ |@syzygy/cap1-conformance| packages/cap1-conformance/src/req-005.conformance.test.ts (6 tests) 720ms
+   ✓ CAP1-REQ-005 — registration facts are deterministic per (declaration, revision) > scenario: same declaration, same revision — same facts, byte-level  337ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/authority-artifact-fields.test.ts (5 tests) 355ms
+ ✓ |@syzygy/cap1-conformance| packages/cap1-conformance/src/vocabulary.conformance.test.ts (8 tests) 80ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/project-shape-git-text.test.ts (3 tests) 83ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/orrery-projection.test.ts (4 tests) 80ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/polaris-generation/dossier-trigger-isolation.test.ts (1 test) 1579ms
+   ✓ trigger git calls > pass the isolation flags first and an allowlisted environment to ls-remote, init and fetch  876ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/orrery.browser.test.ts (1 test) 5278ms
+   ✓ Orrery rendered geometry > preserves district size differences and readable labels (C3-3, POC-REQ-050)  2471ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/polaris-generation/draft-preview.browser.test.ts (1 test) 5877ms
+   ✓ renders the pipeline draft with working diagram, source and keyboard deep-dive paths at both widths  5876ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.test.ts (1 test) 1458ms
+   ✓ provider-mode render output is unchanged by the operator-agent inputs > renders every fixture run to the captured bytes, file by file  1456ms
+ ✓ |@syzygy/cap1-conformance| packages/cap1-conformance/src/req-001.conformance.test.ts (4 tests) 109ms
+ ✓ |@syzygy/cap1-conformance| packages/cap1-conformance/src/req-051.conformance.test.ts (5 tests) 8ms
+ ✓ |@syzygy/support| packages/support/src/decode-utf8.test.ts (6 tests) 12ms
+ ↓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/work-items.live.test.ts (1 test | 1 skipped)
+ ✓ |@syzygy/http-host| packages/http-host/src/shutdown.test.ts (6 tests) 49ms
+ ✓ |@syzygy/cap1-conformance| packages/cap1-conformance/src/req-022.conformance.test.ts (5 tests) 12ms
+ ✓ |@syzygy/cap1-conformance| packages/cap1-conformance/src/req-053.conformance.test.ts (5 tests) 28ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/effect-authority.test.ts (6 tests) 18ms
+ ✓ |@syzygy/cap1-conformance| packages/cap1-conformance/src/req-021.conformance.test.ts (5 tests) 10ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/reobserve-state.test.ts (2 tests) 24ms
+ ✓ |@syzygy/cap1-conformance| packages/cap1-conformance/src/req-023.conformance.test.ts (6 tests) 6ms
+ ✓ |@syzygy/polaris-dossier| packages/polaris-dossier/src/class-gate.test.ts (9 tests) 13ms
+ ✓ |@syzygy/cap1-daemon| packages/cap1-daemon/src/package.test.ts (2 tests) 10ms
+ ✓ |@syzygy/polaris-generation-core| packages/polaris-generation-core/src/prompts.test.ts (11 tests) 136ms
+ ✓ |@syzygy/cap1-conformance| packages/cap1-conformance/src/req-052.conformance.test.ts (5 tests) 8ms
+ ✓ |@syzygy/support| packages/support/src/sha256.test.ts (4 tests) 9ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/startup-detail.test.ts (2 tests) 11ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/cli.test.ts (2 tests) 115ms
+ ✓ |@syzygy/polaris-generation-core| packages/polaris-generation-core/src/reader-questions.test.ts (3 tests) 155ms
+ ✓ |@syzygy/cap1-conformance| packages/cap1-conformance/src/req-050.conformance.test.ts (5 tests) 28ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/polaris-generation/pipeline-demo.test.ts (5 tests) 120268ms
+   ✓ concrete source-to-draft pipeline exercise > runs the same engine and schemas over two synthetic domains with prose, diagrams and component depth  1446ms
+   ✓ concrete source-to-draft pipeline exercise > runs the README command after a clean install and requires exactly seven synthetic output files  118622ms
+ ✓ |@syzygy/http-host| packages/http-host/src/package.test.ts (2 tests) 5ms
+ ✓ |@syzygy/support| packages/support/src/deep-freeze.test.ts (5 tests) 77ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/test-cleanup.test.ts (3 tests) 14ms
+ ✓ |@syzygy/cap1-conformance| packages/cap1-conformance/src/req-020.conformance.test.ts (4 tests) 38ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/launcher.test.ts (1 test) 53ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/polaris-generation/dossier-cap-measure.test.ts (1 test) 4311ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/polaris-status-boundary.test.ts (2 tests) 83ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/polaris-accessibility.browser.test.ts (15 tests) 433783ms
+   ✓ Polaris keyboard, non-visual and contrast checks in a real browser > keeps a separate desktop section rail and an in-flow mobile drawer  3780ms
+   ✓ Polaris keyboard, non-visual and contrast checks in a real browser > keeps diagram labels legible and flow order unambiguous across widths  3110ms
+   ✓ Polaris keyboard, non-visual and contrast checks in a real browser > opens a linked component guide and can reveal the complete declaration  2718ms
+   ✓ Polaris keyboard, non-visual and contrast checks in a real browser > keeps complete source columns visible while citation targets remain keyboard-reachable  2116ms
+   ✓ Polaris keyboard, non-visual and contrast checks in a real browser > gives seven early native shortcuts and a complete no-script outline with a truthful live hidden count  2389ms
+   ✓ Polaris keyboard, non-visual and contrast checks in a real browser > activates more fragment links than Chrome's navigation budget, including a second link to the current hash  69883ms
+   ✓ Polaris keyboard, non-visual and contrast checks in a real browser > observed: every distinction is keyboard-operable, named for assistive technology, and AA-contrasting  65252ms
+   ✓ Polaris keyboard, non-visual and contrast checks in a real browser > observed-lawful-state-1: every distinction is keyboard-operable, named for assistive technology, and AA-contrasting  90829ms
+   ✓ Polaris keyboard, non-visual and contrast checks in a real browser > observed-degraded-unlawful: every distinction is keyboard-operable, named for assistive technology, and AA-contrasting  110303ms
+   ✓ Polaris keyboard, non-visual and contrast checks in a real browser > not-admitted: every distinction is keyboard-operable, named for assistive technology, and AA-contrasting  27423ms
+   ✓ Polaris keyboard, non-visual and contrast checks in a real browser > observation-failed: every distinction is keyboard-operable, named for assistive technology, and AA-contrasting  24802ms
+   ✓ Polaris keyboard, non-visual and contrast checks in a real browser > not-evaluated: every distinction is keyboard-operable, named for assistive technology, and AA-contrasting  24850ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/build-output.test.ts (1 test) 151613ms
+   ✓ POC build output integrity > re-emits ignored JavaScript before the launcher executes it  151611ms
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |@syzygy/polaris-generation-consent| packages/polaris-generation-consent/src/act-families.test.ts [ packages/polaris-generation-consent/src/act-families.test.ts ]
+Error: Hook timed out in 10000ms.
+If this is a long-running hook, pass a timeout value as the last argument or configure it globally with "hookTimeout".
+ ❯ packages/polaris-generation-consent/src/act-families.test.ts:105:1
+    103| /** One record of each family in force at `NOW`, each over its artifac…
+    104| let BASE: Readonly<Record<string, string>> = {};
+    105| beforeAll(() => {
+       | ^
+    106|   const module = real(MODULE);
+    107|   BASE = Object.freeze({
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 245 passed | 3 skipped (249)
+      Tests  5303 passed | 70 skipped (5373)
+   Start at  11:22:47
+   Duration  686.47s (transform 72.79s, setup 17.05s, collect 340.21s, tests 2635.81s, environment 215ms, prepare 136.43s)
+
+EXIT 1

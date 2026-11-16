@@ -1,0 +1,16 @@
+{
+ "surfaceControlEqual": true,
+ "R14surfaceEqual": false,
+ "R14cleanAfter": true,
+ "R13hostEqualThroughCap1Daemon": false,
+ "R13differingKeys": [
+  "credentials"
+ ],
+ "R13constants": {
+  "UNKNOWN_ROUTE_STATUS": [
+   500,
+   404
+  ]
+ },
+ "R13cleanAfter": true
+}

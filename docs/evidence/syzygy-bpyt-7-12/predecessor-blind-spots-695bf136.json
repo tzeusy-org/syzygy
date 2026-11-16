@@ -1,0 +1,101 @@
+{
+ "tree": "syzygy-bpyt.7.12",
+ "ranAtCommit": "695bf136da35dc9d94bf4abf80c709f3d4244adb",
+ "predecessorCommit": "0285819d",
+ "n9": [
+  {
+   "id": "lexer-nested-template-not-entered",
+   "old": "        if c == '`':\n            out.append(c); i += 1; in_template = True; continue",
+   "new": "        if c == '`' and not tpl:\n            out.append(c); i += 1; in_template = True; continue",
+   "predecessor": {
+    "selftestExit": 0,
+    "lastLine": "selftest: 28 of 28 cases hold"
+   },
+   "repaired": {
+    "selftestExit": 1,
+    "lastLine": "selftest: 29 of 30 cases hold"
+   },
+   "survivedPredecessor": true,
+   "killedByRepaired": true
+  },
+  {
+   "id": "lexer-expression-close-stays-in-code",
+   "old": "tpl.pop(); out.append(c); i += 1; in_template = True; continue",
+   "new": "tpl.pop(); out.append(c); i += 1; in_template = False; continue",
+   "predecessor": {
+    "selftestExit": 0,
+    "lastLine": "selftest: 28 of 28 cases hold"
+   },
+   "repaired": {
+    "selftestExit": 1,
+    "lastLine": "selftest: 29 of 30 cases hold"
+   },
+   "survivedPredecessor": true,
+   "killedByRepaired": true
+  }
+ ],
+ "n8": [
+  {
+   "id": "template-literal-trailing-space-added",
+   "file": "apps/three-surface-poc/src/materialize-action.ts",
+   "old": "  .materialize-status { font-size: .85rem; }\n",
+   "new": "  .materialize-status { font-size: .85rem; } \n",
+   "predecessor": {
+    "exit": 0,
+    "allCommentOnly": true,
+    "firstLine": "changed=1 allCommentOnly=True retainedExport={'moduleExportsFunction': True, 'ba"
+   },
+   "repaired": {
+    "exit": 0,
+    "allCommentOnly": false,
+    "firstLine": "changed=1 allCommentOnly=False retainedExport={'moduleExportsFunction': True, 'b"
+   },
+   "missedByPredecessor": true,
+   "caughtByRepaired": true
+  },
+  {
+   "id": "template-literal-blank-line-added",
+   "file": "apps/three-surface-poc/src/materialize-action.ts",
+   "old": "  .materialize-panel dt { color: var(--muted); }\n",
+   "new": "  .materialize-panel dt { color: var(--muted); }\n\n",
+   "predecessor": {
+    "exit": 0,
+    "allCommentOnly": true,
+    "firstLine": "changed=1 allCommentOnly=True retainedExport={'moduleExportsFunction': True, 'ba"
+   },
+   "repaired": {
+    "exit": 0,
+    "allCommentOnly": false,
+    "firstLine": "changed=1 allCommentOnly=False retainedExport={'moduleExportsFunction': True, 'b"
+   },
+   "missedByPredecessor": true,
+   "caughtByRepaired": true
+  },
+  {
+   "id": "template-literal-indent-changed",
+   "file": "apps/three-surface-poc/src/materialize-action.ts",
+   "old": "  .materialize-panel dd { margin: 0;",
+   "new": "    .materialize-panel dd { margin: 0;",
+   "predecessor": {
+    "exit": 0,
+    "allCommentOnly": false,
+    "firstLine": "changed=1 allCommentOnly=False retainedExport={'moduleExportsFunction': True, 'b"
+   },
+   "repaired": {
+    "exit": 0,
+    "allCommentOnly": false,
+    "firstLine": "changed=1 allCommentOnly=False retainedExport={'moduleExportsFunction': True, 'b"
+   },
+   "missedByPredecessor": false,
+   "caughtByRepaired": true
+  }
+ ],
+ "summary": {
+  "n9Mutants": 2,
+  "n9SurvivedPredecessor": 2,
+  "n9KilledByRepaired": 2,
+  "n8Mutants": 3,
+  "n8MissedByPredecessor": 2,
+  "n8CaughtByRepaired": 3
+ }
+}

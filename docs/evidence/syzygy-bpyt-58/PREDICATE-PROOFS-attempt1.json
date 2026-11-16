@@ -1,0 +1,300 @@
+{
+  "subject": "718926b3",
+  "rows": [
+    {
+      "name": "control-baseline",
+      "expected": "pass",
+      "validated": true,
+      "command": [
+        "/usr/bin/python3",
+        "/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/capture.py",
+        "control-baseline",
+        "/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/fixture",
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/control-baseline-vitest.json"
+      ],
+      "receipt": {
+        "name": "control-baseline",
+        "startedAt": "2026-11-06T04:42:57.785986+00:00",
+        "cwd": "/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/fixture",
+        "argv": [
+          "npx",
+          "--no-install",
+          "vitest",
+          "run",
+          "--project",
+          "unit",
+          "packages/polaris-generation-core/src/workspace-reach.test.ts",
+          "-t",
+          "requires every npm workspace",
+          "--reporter=json",
+          "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/control-baseline-vitest.json"
+        ],
+        "head": "718926b3b91fc56e662a099537773aa133dea865",
+        "exitCode": 0,
+        "finishedAt": "2026-11-06T04:43:04.823601+00:00",
+        "elapsedSeconds": 7.024505331995897,
+        "streams": {
+          "control-baseline.stdout": {
+            "bytes": 109,
+            "sha256": "afc4773108698b7e21bea40653b25c24324857c76e327b0a475cbbfadff17019"
+          },
+          "control-baseline.stderr": {
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        }
+      },
+      "selected": 1,
+      "executed_statuses": [
+        "passed"
+      ],
+      "reported_total": 82,
+      "needles": [],
+      "intended_assertion_present": true,
+      "changes": [],
+      "test_sha256": "54ced92ab3fef7d71a7fd625832461f92c1a0a259ae32a3e7c2c9eee8c1964ad",
+      "subject_commit": "718926b3b91fc56e662a099537773aa133dea865",
+      "failure_messages": ""
+    },
+    {
+      "name": "control-altered-prose",
+      "expected": "pass",
+      "validated": true,
+      "command": [
+        "/usr/bin/python3",
+        "/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/capture.py",
+        "control-altered-prose",
+        "/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/fixture",
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/control-altered-prose-vitest.json"
+      ],
+      "receipt": {
+        "name": "control-altered-prose",
+        "startedAt": "2026-11-06T04:43:04.904954+00:00",
+        "cwd": "/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/fixture",
+        "argv": [
+          "npx",
+          "--no-install",
+          "vitest",
+          "run",
+          "--project",
+          "unit",
+          "packages/polaris-generation-core/src/workspace-reach.test.ts",
+          "-t",
+          "requires every npm workspace",
+          "--reporter=json",
+          "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/control-altered-prose-vitest.json"
+        ],
+        "head": "718926b3b91fc56e662a099537773aa133dea865",
+        "exitCode": 0,
+        "finishedAt": "2026-11-06T04:43:09.702002+00:00",
+        "elapsedSeconds": 4.780780447006691,
+        "streams": {
+          "control-altered-prose.stdout": {
+            "bytes": 114,
+            "sha256": "1209e1842f8b85d397950bd3b09f2c2a06a19b3a87f03e9170ab837cfe0a0329"
+          },
+          "control-altered-prose.stderr": {
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        }
+      },
+      "selected": 1,
+      "executed_statuses": [
+        "passed"
+      ],
+      "reported_total": 82,
+      "needles": [],
+      "intended_assertion_present": true,
+      "changes": [
+        {
+          "path": "package.json",
+          "old": "{\n  \"name\": \"syzygy-workspace\",\n  \"private\": true,\n  \"engines\": {\n    \"node\": \">=22.15\"\n  },\n  \"workspaces\": [\n    \"packages/*\",\n    \"apps/*\"\n  ],\n  \"scripts\": {\n    \"test\": \"node scripts/check_unit_tmpdir.mjs\",\n    \"test:integration\": \"node scripts/check_unit_tmpdir.mjs --selftest && vitest run --project integration\",\n    \"test:e2e\": \"vitest run --project e2e && npm run test:system\",\n    \"test:live\": \"vitest run --project live\",\n    \"test:tiers\": \"node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check_test_tiers.mjs\",\n    \"check\": \"npm run typecheck && npm test\",\n    \"check:battery\": \"python3 scripts/run_status_battery.py\",\n    \"check:all\": \"npm run check && npm run test:tiers && npm run test:integration && npm run test:e2e && npm run check:battery\",\n    \"test:system\": \"npm run build && vitest run --config packages/cap1-system/vitest.config.ts\",\n    \"build\": \"node scripts/clean_build.mjs packages/support packages/cap1-core packages/http-host packages/cap1-daemon packages/three-surface-poc-core apps/syzygy apps/three-surface-poc packages/polaris-generation-core packages/polaris-generation-consent packages/polaris-dossier\",\n    \"build:poc\": \"node scripts/clean_build.mjs packages/support packages/cap1-core packages/http-host packages/cap1-daemon packages/three-surface-poc-core packages/polaris-generation-core apps/three-surface-poc\",\n    \"poc\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/main.js\",\n    \"poc:restart\": \"node apps/three-surface-poc/dist/restart-main.js\",\n    \"poc:capture-test-artifact\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/capture-test-artifact-main.js\",\n    \"poc:pwb-mutation-run\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/pwb-mutation-run-main.js\",\n    \"poc:accessibility-check\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/polaris-accessibility-main.js\",\n    \"poc:redis-shaped-discovery\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/polaris-generation/redis-shaped-measure-main.js\",\n    \"poc:fresh-checkout-demo\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/fresh-checkout-demo-main.js\",\n    \"poc:keyboard-sweep\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/polaris-keyboard-sweep-main.js\",\n    \"poc:accessible-names-sweep\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/polaris-accessible-names-main.js\",\n    \"poc:pwb-mutation-sweep\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/pwb-mutation-sweep-main.js\",\n    \"poc:pwb-n8-coverage-matrix\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/pwb-n8-synthetic-corpus-coverage-matrix-main.js\",\n    \"typecheck\": \"tsc -p tsconfig.json\",\n    \"test:polaris-generation\": \"vitest run packages/polaris-generation-core packages/polaris-generation-consent packages/polaris-dossier\",\n    \"poc:dossier\": \"node scripts/check_generator_install.mjs && npm run build:poc --silent && node apps/three-surface-poc/dist/polaris-generation/dossier-main.js\",\n    \"poc:generator-demo\": \"node scripts/check_generator_install.mjs && npm run build:poc --silent && node apps/three-surface-poc/dist/polaris-generation/pipeline-demo-main.js\",\n    \"poc:dossier-render\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/polaris-generation/dossier-render-main.js\",\n    \"poc:dossier-evaluation\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/polaris-generation/dossier-evaluation-main.js\",\n    \"poc:generation-mutation-run\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/polaris-generation/generation-mutation-run-main.js\"\n  },\n  \"devDependencies\": {\n    \"@types/node\": \"^26.2.0\",\n    \"esbuild\": \"^0.28.2\",\n    \"typescript\": \"^5.5.0\",\n    \"vitest\": \"^3.2.0\"\n  }\n}\n",
+          "new": "{\n  \"name\": \"syzygy-workspace\",\n  \"private\": true,\n  \"engines\": {\n    \"node\": \">=22.15\"\n  },\n  \"workspaces\": [\n    \"packages/*\",\n    \"apps/*\"\n  ],\n  \"scripts\": {\n    \"test\": \"node scripts/check_unit_tmpdir.mjs\",\n    \"test:integration\": \"node scripts/check_unit_tmpdir.mjs --selftest && vitest run --project integration\",\n    \"test:e2e\": \"vitest run --project e2e && npm run test:system\",\n    \"test:live\": \"vitest run --project live\",\n    \"test:tiers\": \"node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check_test_tiers.mjs\",\n    \"check\": \"npm run typecheck && npm test\",\n    \"check:battery\": \"python3 scripts/run_status_battery.py\",\n    \"check:all\": \"npm run check && npm run test:tiers && npm run test:integration && npm run test:e2e && npm run check:battery\",\n    \"test:system\": \"npm run build && vitest run --config packages/cap1-system/vitest.config.ts\",\n    \"build\": \"node scripts/clean_build.mjs packages/support packages/cap1-core packages/http-host packages/cap1-daemon packages/three-surface-poc-core apps/syzygy apps/three-surface-poc packages/polaris-generation-core packages/polaris-generation-consent packages/polaris-dossier\",\n    \"build:poc\": \"node scripts/clean_build.mjs packages/support packages/cap1-core packages/http-host packages/cap1-daemon packages/three-surface-poc-core packages/polaris-generation-core apps/three-surface-poc\",\n    \"poc\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/main.js\",\n    \"poc:restart\": \"node apps/three-surface-poc/dist/restart-main.js\",\n    \"poc:capture-test-artifact\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/capture-test-artifact-main.js\",\n    \"poc:pwb-mutation-run\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/pwb-mutation-run-main.js\",\n    \"poc:accessibility-check\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/polaris-accessibility-main.js\",\n    \"poc:redis-shaped-discovery\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/polaris-generation/redis-shaped-measure-main.js\",\n    \"poc:fresh-checkout-demo\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/fresh-checkout-demo-main.js\",\n    \"poc:keyboard-sweep\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/polaris-keyboard-sweep-main.js\",\n    \"poc:accessible-names-sweep\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/polaris-accessible-names-main.js\",\n    \"poc:pwb-mutation-sweep\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/pwb-mutation-sweep-main.js\",\n    \"poc:pwb-n8-coverage-matrix\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/pwb-n8-synthetic-corpus-coverage-matrix-main.js\",\n    \"typecheck\": \"tsc -p tsconfig.json\",\n    \"test:polaris-generation\": \"vitest run packages/polaris-generation-core packages/polaris-generation-consent packages/polaris-dossier\",\n    \"poc:dossier\": \"node scripts/check_generator_install.mjs && npm run build:poc --silent && node apps/three-surface-poc/dist/polaris-generation/dossier-main.js\",\n    \"poc:generator-demo\": \"node scripts/check_generator_install.mjs && npm run build:poc --silent && node apps/three-surface-poc/dist/polaris-generation/pipeline-demo-main.js\",\n    \"poc:dossier-render\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/polaris-generation/dossier-render-main.js\",\n    \"poc:dossier-evaluation\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/polaris-generation/dossier-evaluation-main.js\",\n    \"poc:generation-mutation-run\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/polaris-generation/generation-mutation-run-main.js\"\n  },\n  \"devDependencies\": {\n    \"@types/node\": \"^26.2.0\",\n    \"esbuild\": \"^0.28.2\",\n    \"typescript\": \"^5.5.0\",\n    \"vitest\": \"^3.2.0\"\n  },\n  \"description\": \"Synthetic prose changed; no dependency identity.\"\n}\n",
+          "old_sha256": "0ee4a67f0749337288fe9693bc8a88ca2b69d2f132ecfc54cf093f41bf316f8f",
+          "new_sha256": "ba65762793bc05aaab9ab85c3e0f255eeb0fba4f336d374a4330f17d45aac663"
+        }
+      ],
+      "test_sha256": "54ced92ab3fef7d71a7fd625832461f92c1a0a259ae32a3e7c2c9eee8c1964ad",
+      "subject_commit": "718926b3b91fc56e662a099537773aa133dea865",
+      "failure_messages": ""
+    },
+    {
+      "name": "control-valid-shapes-and-selector",
+      "expected": "pass",
+      "validated": true,
+      "command": [
+        "/usr/bin/python3",
+        "/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/capture.py",
+        "control-valid-shapes-and-selector",
+        "/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/fixture",
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/control-valid-shapes-and-selector-vitest.json"
+      ],
+      "receipt": {
+        "name": "control-valid-shapes-and-selector",
+        "startedAt": "2026-11-06T04:43:09.939196+00:00",
+        "cwd": "/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/fixture",
+        "argv": [
+          "npx",
+          "--no-install",
+          "vitest",
+          "run",
+          "--project",
+          "unit",
+          "packages/polaris-generation-core/src/workspace-reach.test.ts",
+          "-t",
+          "requires every npm workspace",
+          "--reporter=json",
+          "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/control-valid-shapes-and-selector-vitest.json"
+        ],
+        "head": "718926b3b91fc56e662a099537773aa133dea865",
+        "exitCode": 0,
+        "finishedAt": "2026-11-06T04:43:14.785476+00:00",
+        "elapsedSeconds": 4.838274920999538,
+        "streams": {
+          "control-valid-shapes-and-selector.stdout": {
+            "bytes": 126,
+            "sha256": "7de9a98605f2ef2782b6918c59af48dd1eb4a5ef3d8b07adb7562ad5228a810e"
+          },
+          "control-valid-shapes-and-selector.stderr": {
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        }
+      },
+      "selected": 1,
+      "executed_statuses": [
+        "passed"
+      ],
+      "reported_total": 82,
+      "needles": [],
+      "intended_assertion_present": true,
+      "changes": [
+        {
+          "path": "package.json",
+          "old": "{\n  \"name\": \"syzygy-workspace\",\n  \"private\": true,\n  \"engines\": {\n    \"node\": \">=22.15\"\n  },\n  \"workspaces\": [\n    \"packages/*\",\n    \"apps/*\"\n  ],\n  \"scripts\": {\n    \"test\": \"node scripts/check_unit_tmpdir.mjs\",\n    \"test:integration\": \"node scripts/check_unit_tmpdir.mjs --selftest && vitest run --project integration\",\n    \"test:e2e\": \"vitest run --project e2e && npm run test:system\",\n    \"test:live\": \"vitest run --project live\",\n    \"test:tiers\": \"node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check_test_tiers.mjs\",\n    \"check\": \"npm run typecheck && npm test\",\n    \"check:battery\": \"python3 scripts/run_status_battery.py\",\n    \"check:all\": \"npm run check && npm run test:tiers && npm run test:integration && npm run test:e2e && npm run check:battery\",\n    \"test:system\": \"npm run build && vitest run --config packages/cap1-system/vitest.config.ts\",\n    \"build\": \"node scripts/clean_build.mjs packages/support packages/cap1-core packages/http-host packages/cap1-daemon packages/three-surface-poc-core apps/syzygy apps/three-surface-poc packages/polaris-generation-core packages/polaris-generation-consent packages/polaris-dossier\",\n    \"build:poc\": \"node scripts/clean_build.mjs packages/support packages/cap1-core packages/http-host packages/cap1-daemon packages/three-surface-poc-core packages/polaris-generation-core apps/three-surface-poc\",\n    \"poc\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/main.js\",\n    \"poc:restart\": \"node apps/three-surface-poc/dist/restart-main.js\",\n    \"poc:capture-test-artifact\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/capture-test-artifact-main.js\",\n    \"poc:pwb-mutation-run\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/pwb-mutation-run-main.js\",\n    \"poc:accessibility-check\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/polaris-accessibility-main.js\",\n    \"poc:redis-shaped-discovery\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/polaris-generation/redis-shaped-measure-main.js\",\n    \"poc:fresh-checkout-demo\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/fresh-checkout-demo-main.js\",\n    \"poc:keyboard-sweep\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/polaris-keyboard-sweep-main.js\",\n    \"poc:accessible-names-sweep\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/polaris-accessible-names-main.js\",\n    \"poc:pwb-mutation-sweep\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/pwb-mutation-sweep-main.js\",\n    \"poc:pwb-n8-coverage-matrix\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/pwb-n8-synthetic-corpus-coverage-matrix-main.js\",\n    \"typecheck\": \"tsc -p tsconfig.json\",\n    \"test:polaris-generation\": \"vitest run packages/polaris-generation-core packages/polaris-generation-consent packages/polaris-dossier\",\n    \"poc:dossier\": \"node scripts/check_generator_install.mjs && npm run build:poc --silent && node apps/three-surface-poc/dist/polaris-generation/dossier-main.js\",\n    \"poc:generator-demo\": \"node scripts/check_generator_install.mjs && npm run build:poc --silent && node apps/three-surface-poc/dist/polaris-generation/pipeline-demo-main.js\",\n    \"poc:dossier-render\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/polaris-generation/dossier-render-main.js\",\n    \"poc:dossier-evaluation\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/polaris-generation/dossier-evaluation-main.js\",\n    \"poc:generation-mutation-run\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/polaris-generation/generation-mutation-run-main.js\"\n  },\n  \"devDependencies\": {\n    \"@types/node\": \"^26.2.0\",\n    \"esbuild\": \"^0.28.2\",\n    \"typescript\": \"^5.5.0\",\n    \"vitest\": \"^3.2.0\"\n  }\n}\n",
+          "new": "{\n  \"name\": \"syzygy-workspace\",\n  \"private\": true,\n  \"engines\": {\n    \"node\": \">=22.15\"\n  },\n  \"workspaces\": [\n    \"packages/*\",\n    \"apps/*\"\n  ],\n  \"scripts\": {\n    \"test\": \"node scripts/check_unit_tmpdir.mjs\",\n    \"test:integration\": \"node scripts/check_unit_tmpdir.mjs --selftest && vitest run --project integration\",\n    \"test:e2e\": \"vitest run --project e2e && npm run test:system\",\n    \"test:live\": \"vitest run --project live\",\n    \"test:tiers\": \"node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check_test_tiers.mjs\",\n    \"check\": \"npm run typecheck && npm test\",\n    \"check:battery\": \"python3 scripts/run_status_battery.py\",\n    \"check:all\": \"npm run check && npm run test:tiers && npm run test:integration && npm run test:e2e && npm run check:battery\",\n    \"test:system\": \"npm run build && vitest run --config packages/cap1-system/vitest.config.ts\",\n    \"build\": \"node scripts/clean_build.mjs packages/support packages/cap1-core packages/http-host packages/cap1-daemon packages/three-surface-poc-core apps/syzygy apps/three-surface-poc packages/polaris-generation-core packages/polaris-generation-consent packages/polaris-dossier\",\n    \"build:poc\": \"node scripts/clean_build.mjs packages/support packages/cap1-core packages/http-host packages/cap1-daemon packages/three-surface-poc-core packages/polaris-generation-core apps/three-surface-poc\",\n    \"poc\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/main.js\",\n    \"poc:restart\": \"node apps/three-surface-poc/dist/restart-main.js\",\n    \"poc:capture-test-artifact\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/capture-test-artifact-main.js\",\n    \"poc:pwb-mutation-run\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/pwb-mutation-run-main.js\",\n    \"poc:accessibility-check\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/polaris-accessibility-main.js\",\n    \"poc:redis-shaped-discovery\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/polaris-generation/redis-shaped-measure-main.js\",\n    \"poc:fresh-checkout-demo\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/fresh-checkout-demo-main.js\",\n    \"poc:keyboard-sweep\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/polaris-keyboard-sweep-main.js\",\n    \"poc:accessible-names-sweep\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/polaris-accessible-names-main.js\",\n    \"poc:pwb-mutation-sweep\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/pwb-mutation-sweep-main.js\",\n    \"poc:pwb-n8-coverage-matrix\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/pwb-n8-synthetic-corpus-coverage-matrix-main.js\",\n    \"typecheck\": \"tsc -p tsconfig.json\",\n    \"test:polaris-generation\": \"vitest run packages/polaris-generation-core packages/polaris-generation-consent packages/polaris-dossier\",\n    \"poc:dossier\": \"node scripts/check_generator_install.mjs && npm run build:poc --silent && node apps/three-surface-poc/dist/polaris-generation/dossier-main.js\",\n    \"poc:generator-demo\": \"node scripts/check_generator_install.mjs && npm run build:poc --silent && node apps/three-surface-poc/dist/polaris-generation/pipeline-demo-main.js\",\n    \"poc:dossier-render\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/polaris-generation/dossier-render-main.js\",\n    \"poc:dossier-evaluation\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/polaris-generation/dossier-evaluation-main.js\",\n    \"poc:generation-mutation-run\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/polaris-generation/generation-mutation-run-main.js\"\n  },\n  \"devDependencies\": {\n    \"@types/node\": \"^26.2.0\",\n    \"esbuild\": \"^0.28.2\",\n    \"typescript\": \"^5.5.0\",\n    \"vitest\": \"^3.2.0\",\n    \"bpyt58-probe\": \"2.9.0\"\n  },\n  \"dependencies\": {\n    \"bpyt58-probe\": \"0.0.0\"\n  },\n  \"peerDependencies\": {\n    \"bpyt58-probe\": \"^5.5.0\"\n  },\n  \"optionalDependencies\": {\n    \"bpyt58-probe\": \"~1.2.3\"\n  },\n  \"overrides\": {\n    \"selector/path\": {\n      \"nested\": {\n        \".\": \"~1.2.3\"\n      },\n      \"other\": \"^5.5.0\"\n    }\n  }\n}\n",
+          "old_sha256": "0ee4a67f0749337288fe9693bc8a88ca2b69d2f132ecfc54cf093f41bf316f8f",
+          "new_sha256": "b7d8a29e9c2bcc26165a5ba68147437811ac586cb6ea554dc4228988a7c77293"
+        }
+      ],
+      "test_sha256": "54ced92ab3fef7d71a7fd625832461f92c1a0a259ae32a3e7c2c9eee8c1964ad",
+      "subject_commit": "718926b3b91fc56e662a099537773aa133dea865",
+      "failure_messages": ""
+    },
+    {
+      "name": "negative-unscoped-no-entry",
+      "expected": "fail",
+      "validated": false,
+      "command": [
+        "/usr/bin/python3",
+        "/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/capture.py",
+        "negative-unscoped-no-entry",
+        "/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/fixture",
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/negative-unscoped-no-entry-vitest.json"
+      ],
+      "receipt": {
+        "name": "negative-unscoped-no-entry",
+        "startedAt": "2026-11-06T04:43:14.905868+00:00",
+        "cwd": "/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/fixture",
+        "argv": [
+          "npx",
+          "--no-install",
+          "vitest",
+          "run",
+          "--project",
+          "unit",
+          "packages/polaris-generation-core/src/workspace-reach.test.ts",
+          "-t",
+          "requires every npm workspace",
+          "--reporter=json",
+          "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/negative-unscoped-no-entry-vitest.json"
+        ],
+        "head": "718926b3b91fc56e662a099537773aa133dea865",
+        "exitCode": 1,
+        "finishedAt": "2026-11-06T04:43:19.694704+00:00",
+        "elapsedSeconds": 4.742885412008036,
+        "streams": {
+          "negative-unscoped-no-entry.stdout": {
+            "bytes": 119,
+            "sha256": "5c177f9a27a0e09dd9c60d30009a8c238fe87e23bb9ae7d1d9bc7d33d8a24639"
+          },
+          "negative-unscoped-no-entry.stderr": {
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        }
+      },
+      "selected": 1,
+      "executed_statuses": [
+        "failed"
+      ],
+      "reported_total": 82,
+      "needles": [
+        "packages/leak/package.json name",
+        "leak",
+        "not @syzygy/-named"
+      ],
+      "intended_assertion_present": false,
+      "changes": [
+        {
+          "path": "packages/leak/index.js",
+          "old": "",
+          "new": "export const witness = 58;\n",
+          "old_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "new_sha256": "aebcae3d85b74a5ed69d5df246ccce0b8a42e46e5a985cf9714fa20ce2aa0192"
+        },
+        {
+          "path": "packages/leak/package.json",
+          "old": "",
+          "new": "{\"name\":\"leak\",\"version\":\"0.0.0\",\"type\":\"module\"}\n",
+          "old_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "new_sha256": "ff5b55f032491a7a4e6324b5df4ed5cda828236dd4dc6984f9ac8789aaccc9ed"
+        }
+      ],
+      "test_sha256": "54ced92ab3fef7d71a7fd625832461f92c1a0a259ae32a3e7c2c9eee8c1964ad",
+      "subject_commit": "718926b3b91fc56e662a099537773aa133dea865",
+      "failure_messages": "AssertionError: workspace/dependency precondition for the shared reach guards and S10: expected [ Array(1) ] to deeply equal []\n    at /home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/fixture/packages/polaris-generation-core/src/workspace-reach.test.ts:62:93\n    at file:///home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/fixture/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/fixture/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/fixture/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/fixture/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/fixture/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/fixture/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runFiles (file:///home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/fixture/node_modules/@vitest/runner/dist/chunk-hooks.js:1787:3)\n    at startTests (file:///home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/fixture/node_modules/@vitest/runner/dist/chunk-hooks.js:1820:3)"
+    }
+  ]
+}

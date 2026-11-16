@@ -1,0 +1,2105 @@
+{
+ "bead": "syzygy-bpyt.6.3",
+ "finding": "DC-3 (docs/plans/2026-10-21-greenfield-parity-audit.md), first stack: sha256 and deepFreeze",
+ "subject": {
+  "baseCommit": "a088f1caf061c1a2062527ce8521c9b64c3c7fd1",
+  "headCommit": "9029e1cfb7a5ca1b02dbddaa450ac61349639bd7",
+  "headIsTheCodeCommitOnly": "evidence commits after it add files under docs/evidence/syzygy-bpyt-6-3 and change no code; the one exception is the round-1 repair commit (roundOneRepair.codeCommit), which changes two test files and no production file"
+ },
+ "toolsSha256": {
+  "sweep.py": "ce1eb3e88e984e1514a3db63da13048dda8fdf906a39e7ac99600d428ce38f1c",
+  "site-equivalence.py": "5091d9fe46c81fa509cbc63b021ad9ee26e8b9bf73638c93d2d12177de7b60f3",
+  "diff-probe.mjs": "79ec6b737a002480c48d5a32a978367d1f927e21ee6d7ebb63aa7a34b0a916f1",
+  "compare-probe.py": "c59fad5bf6f3cf70324a7ce5becb6ef4514ed5dae3c0b2afc87c771ef8e8c6a9",
+  "compare-hash-trace.py": "c52f9e7d1e003f0643ed30266991d4b0bae2f03647a82c380d54f7213e4ad6a1",
+  "exports-probe.mjs": "1d66e7bafdc7e084bbe9b3db47bc75f693520c4e1a6c54fee0b191af64b0c93c",
+  "mutants.py": "bffb580bcbf1ce026efd9c869c1cd1d283ac96f10257d1f9da7169e1090dd705",
+  "hash-trace.cjs": "d783911a52fa67a97fbaceb9e4ac51075bbfd19d838e1dd4accdd03390457d2f",
+  "population-audit.py": "88d6cfe98a60cd12b05419dd355bbdf75782799ecce329666bff90583c25d299",
+  "egress-alias-check.py": "c269c00c5bcbb8490aaa1b47885060b626675156c5fb0005e586526023f1d14a",
+  "support-purity-mutants.py": "c8aa9b6f629d5906b600ff7609470caad71de2e862f06b6299f0afeddc5a5e09",
+  "narrative-freeze-probe.mjs": "53901b679882b360621442c1e29e7f6aa981d2185a6ca5fb912d27983d2fd660",
+  "merge-resolution-check.py": "e304c819a5695e2ad71a5423351904a72c8f8852aa2b178a397e8ab6ac12ae9d"
+ },
+ "tools": {
+  "sweep.py": "counts the helper copies from committed bytes; second method is git grep -F -c",
+  "site-equivalence.py": "static: the arguments of every hash and freeze call, base against head",
+  "hash-trace.cjs": "run-time interposer on node:crypto, preloaded with NODE_OPTIONS=--require while the full suite runs",
+  "compare-hash-trace.py": "compares the traces of two base runs and one head run",
+  "diff-probe.mjs": "models, rendered bytes, response identity, deep-freeze census, gate evaluations, helper digests",
+  "compare-probe.py": "byte-for-byte comparison of two probe outputs",
+  "exports-probe.mjs": "exported names of every workspace package entry point",
+  "mutants.py": "rule-6 mutants, with the old and new fragment of each",
+  "live_diff.mjs": "stored in docs/evidence/owner-act-non-human-rule-differential-2026-10-21.json under harnessText; reused unchanged, digest below",
+  "population-audit.py": "the basename rule of sweep.py audited: test-*.ts files, their importers and their sites, at two population rules (--selftest holds 8 cases)",
+  "egress-alias-check.py": "the S10 no-egress proof in four arms of one built clone: dist present or absent, support source clean or binding a loopback UDP socket",
+  "support-purity-mutants.py": "rule-6 mutants for support-purity.test.ts: 10 package mutants, 4 reader mutants, a control and two harmless additions",
+  "narrative-freeze-probe.mjs": "the variant deepFreeze of polaris-narrative.ts at the base against the package, case by case",
+  "merge-resolution-check.py": "a merge commit against git merge-tree --write-tree of its parents: every path equal except the hand-resolved conflict regions (--selftest holds 8 cases)"
+ },
+ "liveDiffHarnessSha256": "eedf318b7e44b39f0b1467b6ca95914a9b39ae7c6e223adc982fd1f9d6c4edaa",
+ "registryBound": [
+  {
+   "path": "packages/polaris-dossier/src/git-object-reader.ts",
+   "sha256AtBase": "9f33e5fbbf464b1df28b79c3fcf5016b8ad7db1910041734c5fb8e4a790998f3",
+   "sha256AtHead": "9f33e5fbbf464b1df28b79c3fcf5016b8ad7db1910041734c5fb8e4a790998f3",
+   "equal": true,
+   "changedInDiff": false
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/project-shape-observer.ts",
+   "sha256AtBase": "9ff2151735897a0f5af295669240af79cdd3b038fcb4dc0a2bab50b5ecef93c6",
+   "sha256AtHead": "9ff2151735897a0f5af295669240af79cdd3b038fcb4dc0a2bab50b5ecef93c6",
+   "equal": true,
+   "changedInDiff": false
+  }
+ ],
+ "digestCitedImplementationFiles": {
+  "population": "58 changed implementation files that exist at the base; every 64-hex token in the 1479 tracked files under .syzygy, openspec, scripts and .github at the base",
+  "tokensScanned": 767,
+  "citedBy": {}
+ },
+ "sweep": {
+  "base": {
+   "commit": "a088f1caf061c1a2062527ce8521c9b64c3c7fd1",
+   "population": {
+    "files": 233,
+    "lines": 52432,
+    "namesSha256": "9177691ec3036f60a4568216bf79d5f5737a1e7dc579e2862ccae6164cefcee6"
+   },
+   "secondMethod": {
+    "sha256-single-quoted": 62,
+    "deepFreeze-definitions": 7
+   },
+   "sha256Sites": {
+    "total": 62,
+    "byForm": {
+     "digest is not hex": 3,
+     "no .update( directly after the constructor": 1,
+     "replaceable": 58
+    }
+   },
+   "localCopies": {
+    "total": 32,
+    "byName": {
+     "sha256": 25,
+     "deepFreeze": 7
+    }
+   }
+  },
+  "head": {
+   "commit": "9029e1cfb7a5ca1b02dbddaa450ac61349639bd7",
+   "population": {
+    "files": 236,
+    "lines": 52347,
+    "namesSha256": "3e3fc211b0f8b1ca1e5dbc0c2bba00f3faf0a6c1522d5d923377f57faf500b6d"
+   },
+   "secondMethod": {
+    "sha256-single-quoted": 6,
+    "deepFreeze-definitions": 1
+   },
+   "supportImporters": {
+    "apps/three-surface-poc": 21,
+    "packages/polaris-dossier": 14,
+    "packages/polaris-generation-consent": 2,
+    "packages/polaris-generation-core": 8,
+    "packages/three-surface-poc-core": 10
+   },
+   "sha256Sites": {
+    "total": 6,
+    "byForm": {
+     "digest is not hex": 3,
+     "no .update( directly after the constructor": 1,
+     "replaceable": 2
+    },
+    "rows": [
+     {
+      "file": "apps/three-surface-poc/src/polaris-generation/redis-shaped-measure.ts",
+      "line": 91,
+      "form": "no .update( directly after the constructor"
+     },
+     {
+      "file": "packages/cap1-daemon/src/credentials.ts",
+      "line": 379,
+      "form": "digest is not hex"
+     },
+     {
+      "file": "packages/cap1-daemon/src/credentials.ts",
+      "line": 380,
+      "form": "digest is not hex"
+     },
+     {
+      "file": "packages/cap1-system/src/harness.ts",
+      "line": 246,
+      "form": "replaceable"
+     },
+     {
+      "file": "packages/polaris-dossier/src/render.ts",
+      "line": 310,
+      "form": "digest is not hex"
+     },
+     {
+      "file": "packages/support/src/sha256.ts",
+      "line": 5,
+      "form": "replaceable"
+     }
+    ]
+   },
+   "localCopies": {
+    "total": 2,
+    "byName": {
+     "sha256": 1,
+     "deepFreeze": 1
+    },
+    "rows": [
+     {
+      "file": "packages/support/src/deep-freeze.ts",
+      "line": 7,
+      "name": "deepFreeze"
+     },
+     {
+      "file": "packages/support/src/sha256.ts",
+      "line": 4,
+      "name": "sha256"
+     }
+    ]
+   }
+  }
+ },
+ "staticEquivalence": {
+  "base": "a088f1ca",
+  "head": "9029e1cf",
+  "files": 59,
+  "filesCompared": 56,
+  "filesWhoseHashArgumentsDiffer": [],
+  "filesWhoseFreezeArgumentsDiffer": [],
+  "globalHashArguments": {
+   "base": 111,
+   "head": 111,
+   "equal": true
+  },
+  "globalFreezeArguments": {
+   "base": 17,
+   "head": 17,
+   "equal": true
+  },
+  "noncanonicalLocalHelpers": [],
+  "baseFreezeBodies": {
+   "apps/three-surface-poc/src/polaris-narrative.ts": "if (value !== null && typeof value === 'object') { for (const inner of Object.values(value as Record<string, unknown>)) deepFreeze(inner); Object.freeze(value); } return value;",
+   "packages/polaris-generation-core/src/prompts.ts": "if (value !== null && typeof value === 'object' && !Object.isFrozen(value)) { Object.freeze(value); for (const child of Object.values(value)) deepFreeze(child); } return value;",
+   "packages/three-surface-poc-core/src/act-fields.ts": "if (typeof value === 'object' && value !== null && !Object.isFrozen(value)) { Object.freeze(value); for (const key of Object.keys(value as object)) { deepFreeze((value as Record<string, unknown>)[key]); } } return value;",
+   "packages/three-surface-poc-core/src/model.ts": "if (typeof value !== 'object' || value === null || Object.isFrozen(value)) return value; Object.freeze(value); for (const child of Object.values(value as Record<string, unknown>)) deepFreeze(child); return value;",
+   "packages/three-surface-poc-core/src/poc-seeds.ts": "if (typeof value !== 'object' || value === null || Object.isFrozen(value)) { return value; } Object.freeze(value); for (const child of Object.values(value as Record<string, unknown>)) { deepFreeze(child); } return value;",
+   "packages/three-surface-poc-core/src/project-shape-manifest.ts": "if (value !== null && typeof value === 'object' && !Object.isFrozen(value)) { Object.freeze(value); for (const inner of Object.values(value as Record<string, unknown>)) deepFreeze(inner); } return value;",
+   "packages/three-surface-poc-core/src/project-shape-observation.ts": "if (value !== null && typeof value === 'object' && !Object.isFrozen(value)) { Object.freeze(value); for (const member of Object.values(value as Record<string, unknown>)) deepFreeze(member); } return value;"
+  }
+ },
+ "probe": {
+  "rowsCompared": 68,
+  "rowsThatDiffer": 0,
+  "baseOutputSha256": "c491d2f34da26a5b48b994e780d2beef8b502bb6c2d64fb4fa7a5c48aeedb37f",
+  "headOutputSha256": "c491d2f34da26a5b48b994e780d2beef8b502bb6c2d64fb4fa7a5c48aeedb37f",
+  "determinismControl": "two runs on the base are byte-identical",
+  "baseRunsSha256": [
+   "c491d2f34da26a5b48b994e780d2beef8b502bb6c2d64fb4fa7a5c48aeedb37f",
+   "c491d2f34da26a5b48b994e780d2beef8b502bb6c2d64fb4fa7a5c48aeedb37f"
+  ]
+ },
+ "liveRecords": {
+  "rowsCompared": 483,
+  "rowsThatDiffer": 0,
+  "baseOutputSha256": "485d5e65eb701a39fce2816e54999d94c55812e3eac30d84c95997274dc21658",
+  "headOutputSha256": "485d5e65eb701a39fce2816e54999d94c55812e3eac30d84c95997274dc21658",
+  "governanceRevision": "a088f1caf061c1a2062527ce8521c9b64c3c7fd1",
+  "baseRunsSha256": [
+   "485d5e65eb701a39fce2816e54999d94c55812e3eac30d84c95997274dc21658",
+   "485d5e65eb701a39fce2816e54999d94c55812e3eac30d84c95997274dc21658"
+  ]
+ },
+ "publicInterface": {
+  "entriesAtBase": 12,
+  "entriesAtHead": 13,
+  "namesAtBase": 862,
+  "namesAtHead": 864,
+  "entriesWhoseNamesChanged": [],
+  "entriesAdded": [
+   "@syzygy/support ."
+  ],
+  "addedNames": {
+   "@syzygy/support .": [
+    "deepFreeze:function",
+    "sha256:function"
+   ]
+  }
+ },
+ "hashTrace": {
+  "records": {
+   "base1": 121530,
+   "base2": 121509,
+   "head": 121580,
+   "headSupportOwnTests": 11,
+   "headCompared": 121569
+  },
+  "byAlgorithm": {
+   "base1": {
+    "md5": 15,
+    "sha1": 72597,
+    "sha256": 48696,
+    "sha384": 15,
+    "sha512": 207
+   },
+   "base2": {
+    "md5": 15,
+    "sha1": 72583,
+    "sha256": 48689,
+    "sha384": 15,
+    "sha512": 207
+   },
+   "head": {
+    "md5": 15,
+    "sha1": 72597,
+    "sha256": 48735,
+    "sha384": 15,
+    "sha512": 207
+   }
+  },
+  "repositorySites": {
+   "comparedSiteAlgorithmPairs": 108,
+   "withDifferentCounts": [
+    {
+     "site": "packages/three-surface-poc-core/src/act-fields.ts",
+     "algorithm": "sha256",
+     "base1": 1512,
+     "base2": 1512,
+     "head": 0
+    },
+    {
+     "site": "packages/three-surface-poc-core/src/body-read-authority.ts",
+     "algorithm": "sha256",
+     "base1": 0,
+     "base2": 0,
+     "head": 1074
+    },
+    {
+     "site": "packages/three-surface-poc-core/src/walkthrough-judgment.ts",
+     "algorithm": "sha256",
+     "base1": 0,
+     "base2": 0,
+     "head": 438
+    }
+   ]
+  },
+  "keys": {
+   "distinctBase1": 13238,
+   "distinctBase2": 13231,
+   "distinctHead": 13246,
+   "stable": 10101,
+   "nondeterministic": 6253
+  },
+  "blobsEditedByTheChange": {
+   "baseOnly": 71,
+   "headOnly": 80
+  },
+  "stableKeysWhoseHeadCountDiffers": {
+   "total": 48,
+   "explained": {
+    "the input is the content of a file the change edited, base version": 44,
+    "the input is the surface tree-id pair of the base commit": 1
+   },
+   "leftOver": []
+  },
+  "infrastructureKeysSetAside": {
+   "stable keys whose head count differs": 3,
+   "head keys no base run has": 32
+  },
+  "infrastructureRecords": {
+   "base1": 3823,
+   "base2": 3802,
+   "head": 3862
+  },
+  "headKeysNoBaseRunHas": {
+   "distinct": 3185,
+   "recordsExplained": {
+    "the key is nondeterministic: a base run has an unstable key of the same site, algorithm and input length": 5306,
+    "the input is the surface tree-id pair of the head commit": 11,
+    "the input is the content of a file the change edited, head version": 147
+   },
+   "leftOver": []
+  },
+  "coverage": {
+   "filesWithAReplaceableSiteAtTheBase": 52,
+   "reachedAtBase": 43,
+   "reachedAtHead": 42,
+   "notReachedAtBase": [
+    "apps/three-surface-poc/src/fresh-checkout-demo-main.ts",
+    "apps/three-surface-poc/src/polaris-accessible-names-main.ts",
+    "apps/three-surface-poc/src/polaris-generation/generation-mutation-run-main.ts",
+    "apps/three-surface-poc/src/polaris-keyboard-sweep-main.ts",
+    "apps/three-surface-poc/src/pwb-mutation-run-main.ts",
+    "apps/three-surface-poc/src/pwb-mutation-sweep-main.ts",
+    "packages/cap1-system/src/harness.ts",
+    "packages/polaris-dossier/src/launched.ts",
+    "packages/polaris-dossier/src/polaris.ts"
+   ],
+   "reachedAtBaseOnlyOrHeadOnly": [
+    "packages/three-surface-poc-core/src/act-fields.ts"
+   ]
+  }
+ },
+ "mutants": {
+  "head": "9029e1cfb7a5ca1b02dbddaa450ac61349639bd7",
+  "base": "a088f1caf061c1a2062527ce8521c9b64c3c7fd1",
+  "rows": [
+   {
+    "id": "S1-algorithm-sha1",
+    "file": "packages/support/src/sha256.ts",
+    "old": "createHash('sha256')",
+    "new": "createHash('sha1')",
+    "commit": "63bbca57638a98130e1f1e853ed7b71364f2ff30",
+    "detectors": {
+     "static": {
+      "killed": false,
+      "files": []
+     },
+     "probe": {
+      "killed": true,
+      "rowsThatDiffer": 61,
+      "rowsCompared": 68
+     },
+     "tests": {
+      "killed": true,
+      "project": "@syzygy/support",
+      "summary": [
+       "Tests  4 failed | 5 passed (9)",
+       "\u23af\u23af\u23af\u23af\u23af\u23af\u23af Failed Tests 4 \u23af\u23af\u23af\u23af\u23af\u23af\u23af"
+      ]
+     }
+    },
+    "verdict": "killed by probe, tests"
+   },
+   {
+    "id": "S2-encoding-base64",
+    "file": "packages/support/src/sha256.ts",
+    "old": ".digest('hex')",
+    "new": ".digest('base64')",
+    "commit": "25deef451c189ceea07c44e5ce696ac112e22431",
+    "detectors": {
+     "static": {
+      "killed": false,
+      "files": []
+     },
+     "probe": {
+      "killed": true,
+      "rowsThatDiffer": 61,
+      "rowsCompared": 68
+     },
+     "tests": {
+      "killed": true,
+      "project": "@syzygy/support",
+      "summary": [
+       "Tests  4 failed | 5 passed (9)",
+       "\u23af\u23af\u23af\u23af\u23af\u23af\u23af Failed Tests 4 \u23af\u23af\u23af\u23af\u23af\u23af\u23af"
+      ]
+     }
+    },
+    "verdict": "killed by probe, tests"
+   },
+   {
+    "id": "S3-update-latin1",
+    "file": "packages/support/src/sha256.ts",
+    "old": ".update(value)",
+    "new": ".update(value, 'latin1')",
+    "commit": "69676535bff41d995831700f93257e7880e0a848",
+    "detectors": {
+     "static": {
+      "killed": false,
+      "files": []
+     },
+     "probe": {
+      "killed": true,
+      "rowsThatDiffer": 20,
+      "rowsCompared": 68
+     },
+     "tests": {
+      "killed": true,
+      "project": "@syzygy/support",
+      "summary": [
+       "Tests  2 failed | 7 passed (9)",
+       "\u23af\u23af\u23af\u23af\u23af\u23af\u23af Failed Tests 2 \u23af\u23af\u23af\u23af\u23af\u23af\u23af"
+      ]
+     }
+    },
+    "verdict": "killed by probe, tests"
+   },
+   {
+    "id": "S4-update-stringified",
+    "file": "packages/support/src/sha256.ts",
+    "old": ".update(value)",
+    "new": ".update(String(value))",
+    "commit": "e33426e660c6812ee396efe94165b7633f38a008",
+    "detectors": {
+     "static": {
+      "killed": false,
+      "files": []
+     },
+     "probe": {
+      "killed": true,
+      "rowsThatDiffer": 27,
+      "rowsCompared": 68
+     },
+     "tests": {
+      "killed": true,
+      "project": "@syzygy/support",
+      "summary": [
+       "Tests  2 failed | 7 passed (9)",
+       "\u23af\u23af\u23af\u23af\u23af\u23af\u23af Failed Tests 2 \u23af\u23af\u23af\u23af\u23af\u23af\u23af"
+      ]
+     }
+    },
+    "verdict": "killed by probe, tests"
+   },
+   {
+    "id": "S5-freeze-without-descent",
+    "file": "packages/support/src/deep-freeze.ts",
+    "old": "for (const member of Object.values(value)) deepFreeze(member);",
+    "new": "",
+    "commit": "8c5583d7b809cdd9491ab2f3736e5cecfbd0a1c1",
+    "detectors": {
+     "static": {
+      "killed": false,
+      "files": []
+     },
+     "probe": {
+      "killed": true,
+      "rowsThatDiffer": 26,
+      "rowsCompared": 68
+     },
+     "tests": {
+      "killed": true,
+      "project": "@syzygy/support",
+      "summary": [
+       "Tests  2 failed | 7 passed (9)",
+       "\u23af\u23af\u23af\u23af\u23af\u23af\u23af Failed Tests 2 \u23af\u23af\u23af\u23af\u23af\u23af\u23af"
+      ]
+     }
+    },
+    "verdict": "killed by probe, tests"
+   },
+   {
+    "id": "S6-freeze-nothing",
+    "file": "packages/support/src/deep-freeze.ts",
+    "old": "    Object.freeze(value);\n",
+    "new": "",
+    "commit": "a2328307f21b26c566f4bc86493d004b336516df",
+    "detectors": {
+     "static": {
+      "killed": false,
+      "files": []
+     },
+     "probe": {
+      "killed": true,
+      "rowsThatDiffer": 26,
+      "rowsCompared": 68
+     },
+     "tests": {
+      "killed": true,
+      "project": "@syzygy/support",
+      "summary": [
+       "Tests  3 failed | 6 passed (9)",
+       "\u23af\u23af\u23af\u23af\u23af\u23af\u23af Failed Tests 3 \u23af\u23af\u23af\u23af\u23af\u23af\u23af"
+      ]
+     }
+    },
+    "verdict": "killed by probe, tests"
+   },
+   {
+    "id": "S7-freeze-without-guard",
+    "file": "packages/support/src/deep-freeze.ts",
+    "old": " && !Object.isFrozen(value)",
+    "new": "",
+    "commit": "363eaa0b2402f97dc832ed12fc892745d0562ef3",
+    "detectors": {
+     "static": {
+      "killed": false,
+      "files": []
+     },
+     "probe": {
+      "killed": false,
+      "rowsThatDiffer": 0,
+      "rowsCompared": 68
+     },
+     "tests": {
+      "killed": true,
+      "project": "@syzygy/support",
+      "summary": [
+       "Tests  2 failed | 7 passed (9)",
+       "\u23af\u23af\u23af\u23af\u23af\u23af\u23af Failed Tests 2 \u23af\u23af\u23af\u23af\u23af\u23af\u23af"
+      ]
+     }
+    },
+    "verdict": "killed by tests"
+   },
+   {
+    "id": "S8-forbidden-token-in-closure",
+    "file": "packages/support/src/deep-freeze.ts",
+    "old": "export function deepFreeze",
+    "new": "const closureProbe = (value: object) => value.constructor;\nexport function deepFreeze",
+    "commit": "ad196ff4eff085cf7ae8e5c6571f83aeb9a8a4d5",
+    "detectors": {
+     "static": {
+      "killed": false,
+      "files": []
+     },
+     "probe": {
+      "killed": null,
+      "note": "outside the probe closure"
+     },
+     "tests": {
+      "killed": true,
+      "project": "@syzygy/three-surface-poc-core",
+      "summary": [
+       "Tests  1 failed | 1110 passed | 2 skipped (1113)",
+       "\u23af\u23af\u23af\u23af\u23af\u23af\u23af Failed Tests 1 \u23af\u23af\u23af\u23af\u23af\u23af\u23af"
+      ]
+     }
+    },
+    "verdict": "killed by tests"
+   },
+   {
+    "id": "C1-manifest-digest",
+    "file": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+    "old": "sha256(canonicalManifestJson(manifest))",
+    "new": "sha256(canonicalManifestJson(manifest) + ' ')",
+    "commit": "0f01c66b6846d1fa5937f08cbc8a4cbfde9409b1",
+    "detectors": {
+     "static": {
+      "killed": true,
+      "files": [
+       "packages/three-surface-poc-core/src/project-shape-manifest.ts"
+      ]
+     },
+     "probe": {
+      "killed": true,
+      "rowsThatDiffer": 18,
+      "rowsCompared": 68
+     },
+     "tests": {
+      "killed": false,
+      "project": "@syzygy/three-surface-poc-core",
+      "summary": [
+       "Test Files  33 passed | 2 skipped (35)",
+       "Tests  1111 passed | 2 skipped (1113)"
+      ]
+     }
+    },
+    "verdict": "killed by static, probe"
+   },
+   {
+    "id": "C2-observation-digest",
+    "file": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+    "old": "sha256(canonicalJson(stripCaptureInstant(stable)))",
+    "new": "sha256(canonicalJson(stripCaptureInstant(stable)) + ' ')",
+    "commit": "05ae5bc40eb361bafafc9bf174123395d60325b7",
+    "detectors": {
+     "static": {
+      "killed": true,
+      "files": [
+       "packages/three-surface-poc-core/src/project-shape-observation.ts"
+      ]
+     },
+     "probe": {
+      "killed": true,
+      "rowsThatDiffer": 18,
+      "rowsCompared": 68
+     },
+     "tests": {
+      "killed": false,
+      "project": "@syzygy/three-surface-poc-core",
+      "summary": [
+       "Test Files  33 passed | 2 skipped (35)",
+       "Tests  1111 passed | 2 skipped (1113)"
+      ]
+     }
+    },
+    "verdict": "killed by static, probe"
+   },
+   {
+    "id": "C3-model-artifact-digest",
+    "file": "packages/three-surface-poc-core/src/model.ts",
+    "old": "digest: sha256(bytes) };",
+    "new": "digest: sha256(bytes.slice(1)) };",
+    "commit": "7a402d801e73289ed349f3d3ba506efc1a6fa05d",
+    "detectors": {
+     "static": {
+      "killed": true,
+      "files": [
+       "packages/three-surface-poc-core/src/model.ts"
+      ]
+     },
+     "probe": {
+      "killed": true,
+      "rowsThatDiffer": 24,
+      "rowsCompared": 68
+     },
+     "tests": {
+      "killed": false,
+      "project": "@syzygy/three-surface-poc-core",
+      "summary": [
+       "Test Files  33 passed | 2 skipped (35)",
+       "Tests  1111 passed | 2 skipped (1113)"
+      ]
+     }
+    },
+    "verdict": "killed by static, probe"
+   },
+   {
+    "id": "C4-response-identity",
+    "file": "packages/three-surface-poc-core/src/response-identity.ts",
+    "old": "sha256(serialized)",
+    "new": "sha256(serialized + ' ')",
+    "commit": "a378a2ea68c7c57936e28b4b9f3d5a8ea15cbaea",
+    "detectors": {
+     "static": {
+      "killed": true,
+      "files": [
+       "packages/three-surface-poc-core/src/response-identity.ts"
+      ]
+     },
+     "probe": {
+      "killed": true,
+      "rowsThatDiffer": 24,
+      "rowsCompared": 68
+     },
+     "tests": {
+      "killed": true,
+      "project": "@syzygy/three-surface-poc-core",
+      "summary": [
+       "Tests  1 failed | 1110 passed | 2 skipped (1113)",
+       "\u23af\u23af\u23af\u23af\u23af\u23af\u23af Failed Tests 1 \u23af\u23af\u23af\u23af\u23af\u23af\u23af"
+      ]
+     }
+    },
+    "verdict": "killed by static, probe, tests"
+   },
+   {
+    "id": "C5-content-digest",
+    "file": "packages/three-surface-poc-core/src/git-object-reader.ts",
+    "old": "return `sha256:${sha256(bytes)}`;",
+    "new": "return `sha256:${sha256(bytes.slice(1))}`;",
+    "commit": "c5b81419651220632c7173644bc7df1b8561e240",
+    "detectors": {
+     "static": {
+      "killed": true,
+      "files": [
+       "packages/three-surface-poc-core/src/git-object-reader.ts"
+      ]
+     },
+     "probe": {
+      "killed": true,
+      "rowsThatDiffer": 24,
+      "rowsCompared": 68
+     },
+     "tests": {
+      "killed": true,
+      "project": "@syzygy/three-surface-poc-core",
+      "summary": [
+       "Tests  7 failed | 1104 passed | 2 skipped (1113)",
+       "\u23af\u23af\u23af\u23af\u23af\u23af\u23af Failed Tests 7 \u23af\u23af\u23af\u23af\u23af\u23af\u23af"
+      ]
+     }
+    },
+    "verdict": "killed by static, probe, tests"
+   },
+   {
+    "id": "C6-canonical-json-digest",
+    "file": "packages/polaris-generation-core/src/canonical-json.ts",
+    "old": "sha256(encodeCanonicalJson(value, limits))",
+    "new": "sha256(encodeCanonicalJson(value, limits) + ' ')",
+    "commit": "999978bfcf805b20b5a204e24f6ddb5f4fcc0692",
+    "detectors": {
+     "static": {
+      "killed": true,
+      "files": [
+       "packages/polaris-generation-core/src/canonical-json.ts"
+      ]
+     },
+     "probe": {
+      "killed": true,
+      "rowsThatDiffer": 14,
+      "rowsCompared": 68
+     },
+     "tests": {
+      "killed": true,
+      "project": "@syzygy/polaris-generation-core",
+      "summary": [
+       "Tests  8 failed | 770 passed (778)",
+       "\u23af\u23af\u23af\u23af\u23af\u23af\u23af Failed Tests 8 \u23af\u23af\u23af\u23af\u23af\u23af\u23af"
+      ]
+     }
+    },
+    "verdict": "killed by static, probe, tests"
+   },
+   {
+    "id": "C7-drafter-frozen-digest",
+    "file": "packages/three-surface-poc-core/src/owner-act-drafter.ts",
+    "old": "sha256(input.artifact.bytes)",
+    "new": "sha256(input.artifact.bytes + ' ')",
+    "commit": "f38aebcb5552ae744499a00cbbf3aa21e2d669c4",
+    "detectors": {
+     "static": {
+      "killed": true,
+      "files": [
+       "packages/three-surface-poc-core/src/owner-act-drafter.ts"
+      ]
+     },
+     "probe": {
+      "killed": true,
+      "rowsThatDiffer": 7,
+      "rowsCompared": 68
+     },
+     "tests": {
+      "killed": true,
+      "project": "@syzygy/three-surface-poc-core",
+      "summary": [
+       "Tests  1 failed | 1110 passed | 2 skipped (1113)",
+       "\u23af\u23af\u23af\u23af\u23af\u23af\u23af Failed Tests 1 \u23af\u23af\u23af\u23af\u23af\u23af\u23af"
+      ]
+     }
+    },
+    "verdict": "killed by static, probe, tests"
+   },
+   {
+    "id": "C8-body-read-authority-digest",
+    "file": "packages/three-surface-poc-core/src/body-read-authority.ts",
+    "old": "const digest = sha256(bytes);",
+    "new": "const digest = sha256(bytes.slice(1));",
+    "commit": "d6d1a562d4e930272db7e140ac4898f118a6a913",
+    "detectors": {
+     "static": {
+      "killed": true,
+      "files": [
+       "packages/three-surface-poc-core/src/body-read-authority.ts"
+      ]
+     },
+     "probe": {
+      "killed": true,
+      "rowsThatDiffer": 1,
+      "rowsCompared": 68
+     },
+     "tests": {
+      "killed": true,
+      "project": "@syzygy/three-surface-poc-core",
+      "summary": [
+       "Tests  316 failed | 795 passed | 2 skipped (1113)",
+       "\u23af\u23af\u23af\u23af\u23af\u23af Failed Tests 316 \u23af\u23af\u23af\u23af\u23af\u23af"
+      ]
+     }
+    },
+    "verdict": "killed by static, probe, tests"
+   },
+   {
+    "id": "C9-judgment-run-digest",
+    "file": "packages/three-surface-poc-core/src/walkthrough-judgment.ts",
+    "old": "const runDigest = sha256(runBytes);",
+    "new": "const runDigest = sha256(runBytes.slice(1));",
+    "commit": "69f5260db4a99616bbaee3d8b6e7114c81b168ff",
+    "detectors": {
+     "static": {
+      "killed": true,
+      "files": [
+       "packages/three-surface-poc-core/src/walkthrough-judgment.ts"
+      ]
+     },
+     "probe": {
+      "killed": true,
+      "rowsThatDiffer": 5,
+      "rowsCompared": 68
+     },
+     "tests": {
+      "killed": true,
+      "project": "@syzygy/three-surface-poc-core",
+      "summary": [
+       "Tests  101 failed | 1010 passed | 2 skipped (1113)",
+       "\u23af\u23af\u23af\u23af\u23af\u23af Failed Tests 101 \u23af\u23af\u23af\u23af\u23af\u23af"
+      ]
+     }
+    },
+    "verdict": "killed by static, probe, tests"
+   },
+   {
+    "id": "C10-consent-module-digest",
+    "file": "packages/polaris-generation-consent/src/package-reader.ts",
+    "old": "if (act.digest !== sha256(module)) refuse();",
+    "new": "if (act.digest !== sha256(module + ' ')) refuse();",
+    "commit": "c5df507a2af61adb1d3584a84e67f0761c207933",
+    "detectors": {
+     "static": {
+      "killed": true,
+      "files": [
+       "packages/polaris-generation-consent/src/package-reader.ts"
+      ]
+     },
+     "probe": {
+      "killed": null,
+      "note": "outside the probe closure"
+     },
+     "tests": {
+      "killed": true,
+      "project": "@syzygy/polaris-generation-consent",
+      "summary": [
+       "Tests  196 failed | 307 passed (503)",
+       "\u23af\u23af\u23af\u23af\u23af\u23af Failed Tests 196 \u23af\u23af\u23af\u23af\u23af\u23af"
+      ]
+     }
+    },
+    "verdict": "killed by static, tests"
+   },
+   {
+    "id": "C11-dossier-evaluation-questions",
+    "file": "packages/polaris-generation-core/src/dossier-evaluation.ts",
+    "old": "const questionsSha256 = sha256(input.questionsText);",
+    "new": "const questionsSha256 = sha256(input.questionsText + ' ');",
+    "commit": "81e3b24672b292fb03d10240106af0a243ff3275",
+    "detectors": {
+     "static": {
+      "killed": true,
+      "files": [
+       "packages/polaris-generation-core/src/dossier-evaluation.ts"
+      ]
+     },
+     "probe": {
+      "killed": null,
+      "note": "outside the probe closure"
+     },
+     "tests": {
+      "killed": false,
+      "project": "@syzygy/polaris-generation-core",
+      "summary": [
+       "Test Files  22 passed (22)",
+       "Tests  778 passed (778)"
+      ]
+     }
+    },
+    "verdict": "killed by static"
+   },
+   {
+    "id": "C12-handover-prompt-digest",
+    "file": "packages/polaris-dossier/src/session-handover.ts",
+    "old": "prompt, promptSha256: sha256(prompt), commands }",
+    "new": "prompt, promptSha256: sha256(prompt + ' '), commands }",
+    "commit": "8d5e90ae2789a38e89706ed30e012263abddd871",
+    "detectors": {
+     "static": {
+      "killed": true,
+      "files": [
+       "packages/polaris-dossier/src/session-handover.ts"
+      ]
+     },
+     "probe": {
+      "killed": null,
+      "note": "outside the probe closure"
+     },
+     "tests": {
+      "killed": true,
+      "project": "@syzygy/polaris-dossier",
+      "summary": [
+       "Tests  67 failed | 1259 passed | 1 skipped (1327)",
+       "\u23af\u23af\u23af\u23af\u23af\u23af Failed Tests 67 \u23af\u23af\u23af\u23af\u23af\u23af\u23af"
+      ]
+     }
+    },
+    "verdict": "killed by static, tests"
+   },
+   {
+    "id": "F1-headroom-not-frozen",
+    "file": "packages/three-surface-poc-core/src/model.ts",
+    "old": "resourceHeadroom: deepFreeze(deriveResourceHeadroom(",
+    "new": "resourceHeadroom: (deriveResourceHeadroom(",
+    "commit": "390d221b7f772bb685a033e5ca965287d628bbb8",
+    "detectors": {
+     "static": {
+      "killed": true,
+      "files": [
+       "packages/three-surface-poc-core/src/model.ts"
+      ]
+     },
+     "probe": {
+      "killed": true,
+      "rowsThatDiffer": 24,
+      "rowsCompared": 68
+     },
+     "tests": {
+      "killed": false,
+      "project": "@syzygy/three-surface-poc-core",
+      "summary": [
+       "Test Files  33 passed | 2 skipped (35)",
+       "Tests  1111 passed | 2 skipped (1113)"
+      ]
+     }
+    },
+    "verdict": "killed by static, probe"
+   },
+   {
+    "id": "F2-observation-not-frozen",
+    "file": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+    "old": "return deepFreeze({ ...body, observationDigest });",
+    "new": "return ({ ...body, observationDigest });",
+    "commit": "9709b115b50bc0779a5d3f7849108458de7e1349",
+    "detectors": {
+     "static": {
+      "killed": true,
+      "files": [
+       "packages/three-surface-poc-core/src/project-shape-observation.ts"
+      ]
+     },
+     "probe": {
+      "killed": true,
+      "rowsThatDiffer": 18,
+      "rowsCompared": 68
+     },
+     "tests": {
+      "killed": true,
+      "project": "@syzygy/three-surface-poc-core",
+      "summary": [
+       "Tests  1 failed | 1110 passed | 2 skipped (1113)",
+       "\u23af\u23af\u23af\u23af\u23af\u23af\u23af Failed Tests 1 \u23af\u23af\u23af\u23af\u23af\u23af\u23af"
+      ]
+     }
+    },
+    "verdict": "killed by static, probe, tests"
+   },
+   {
+    "id": "F3-body-authority-not-frozen",
+    "file": "packages/three-surface-poc-core/src/body-read-authority.ts",
+    "old": "return deepFreeze({",
+    "new": "return ({",
+    "commit": "306734853903e383f4686eca40f8a634b4d5e8cf",
+    "detectors": {
+     "static": {
+      "killed": true,
+      "files": [
+       "packages/three-surface-poc-core/src/body-read-authority.ts"
+      ]
+     },
+     "probe": {
+      "killed": true,
+      "rowsThatDiffer": 1,
+      "rowsCompared": 68
+     },
+     "tests": {
+      "killed": false,
+      "project": "@syzygy/three-surface-poc-core",
+      "summary": [
+       "Test Files  33 passed | 2 skipped (35)",
+       "Tests  1111 passed | 2 skipped (1113)"
+      ]
+     }
+    },
+    "verdict": "killed by static, probe"
+   },
+   {
+    "id": "F4-manifest-not-frozen",
+    "file": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+    "old": "manifest: deepFreeze({ ...body, digest: digestOf(body) })",
+    "new": "manifest: ({ ...body, digest: digestOf(body) })",
+    "commit": "17569aa59b01cb521743ad4cf9cbed2eff217f6e",
+    "detectors": {
+     "static": {
+      "killed": true,
+      "files": [
+       "packages/three-surface-poc-core/src/project-shape-manifest.ts"
+      ]
+     },
+     "probe": {
+      "killed": false,
+      "rowsThatDiffer": 0,
+      "rowsCompared": 68
+     },
+     "tests": {
+      "killed": true,
+      "project": "@syzygy/three-surface-poc-core",
+      "summary": [
+       "Tests  1 failed | 1110 passed | 2 skipped (1113)",
+       "\u23af\u23af\u23af\u23af\u23af\u23af\u23af Failed Tests 1 \u23af\u23af\u23af\u23af\u23af\u23af\u23af"
+      ]
+     }
+    },
+    "verdict": "killed by static, tests"
+   }
+  ]
+ },
+ "fullSuite": {
+  "baseRun1": {
+   "testFiles": "236 passed | 3 skipped (239)",
+   "tests": "5273 passed | 5 skipped (5278)",
+   "logSha256": "279af8dabf672f734b14c266d1888627004c3cbfe6e69fa231c5f62bd758ab3f"
+  },
+  "baseRun2": {
+   "testFiles": "236 passed | 3 skipped (239)",
+   "tests": "5273 passed | 5 skipped (5278)",
+   "logSha256": "e17f6646fcb3ced7c748d771c71a8937403551b32587089735b24512da2f6161"
+  },
+  "headRun": {
+   "testFiles": "238 passed | 3 skipped (241)",
+   "tests": "5282 passed | 5 skipped (5287)",
+   "logSha256": "26cae58ee420b8c36989217b975dbdb5d2c9811c1366641acdbcace9ad9096af"
+  },
+  "headUntraced": {
+   "testFiles": "238 passed | 3 skipped (241)",
+   "tests": "5282 passed | 5 skipped (5287)",
+   "logSha256": "4ef2b73a41872e60a497f3b219433e10d393f9e0a87a1ac4bb3e2bd4442fa85d"
+  }
+ },
+ "toolsEditedAfterTheRuns": {
+  "diff-probe.mjs": {
+   "ranAsSha256": "f7fa07aa6d30f38b3f5870564f6f7608299e7387a5d799a35fdd5fc1be57dfe8",
+   "nowSha256": "79ec6b737a002480c48d5a32a978367d1f927e21ee6d7ebb63aa7a34b0a916f1",
+   "change": "header comment lines only; the lines that are not // comments are equal text (checked by a script before the edit was committed)"
+  },
+  "hash-trace.cjs": {
+   "ranAsSha256": "b0e07e729b856d4f84e2945923c3500187009c7bf7eb8bd6cf18fef9365522c6",
+   "nowSha256": "d783911a52fa67a97fbaceb9e4ac51075bbfd19d838e1dd4accdd03390457d2f",
+   "change": "header comment lines only; the lines that are not // comments are equal text (checked by a script before the edit was committed)"
+  }
+ },
+ "roundOneRepair": {
+  "review": {
+   "id": "R-GP-IMPL-SUPPORT-LEAF-1",
+   "round": 1,
+   "verdict": "REVISE",
+   "reviewedCommit": "fe3855a1b4f2164da3274e02d868399236c45c9c"
+  },
+  "codeCommit": "8bd514d7a6f882142f58b5bd219c3fa2f7fd7714",
+  "changes": [
+   "packages/polaris-dossier/src/no-egress.test.ts: one alias line",
+   "packages/support/src/support-purity.test.ts: new, 13 tests"
+  ],
+  "notInThisRepair": "N2, N4 and N5 of the review are filed by the coordinator as syzygy-bpyt.6.13",
+  "f1": {
+   "finding": "F1 (blocking): the esbuild alias map of packages/polaris-dossier/src/no-egress.test.ts had no entry for @syzygy/support, so the S10 proof resolved the package through node_modules to its dist",
+   "fix": "one line after the three-surface-poc-core entry: '@syzygy/support': src('packages/support/src/index.ts')",
+   "tool": "egress-alias-check.py <built clone> <out.json> (needs a clone with node_modules and every dist/ built; moves every dist/ aside and back)",
+   "atTheReviewedCommit": {
+    "clone": {
+     "commit": "fe3855a1b4f2164da3274e02d868399236c45c9c",
+     "aliasForSupportPresentInTest": false,
+     "testFile": "packages/polaris-dossier/src/no-egress.test.ts",
+     "distDirectoriesMovedAside": 11,
+     "trackedChangesAfter": ""
+    },
+    "mutant": {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nimport { createSocket } from 'node:dgram';\ncreateSocket('udp4').bind(0, '127.0.0.1').unref();\n"
+    },
+    "arms": [
+     {
+      "arm": "clean-dist-present",
+      "mutantApplied": false,
+      "distAbsent": false,
+      "exit": 0,
+      "testFiles": {
+       "total": 1,
+       "failed": 0
+      },
+      "tests": {
+       "passed": 2,
+       "failed": 0,
+       "pending": 1,
+       "total": 3
+      },
+      "failedTests": [],
+      "firstFailure": ""
+     },
+     {
+      "arm": "clean-dist-absent",
+      "mutantApplied": false,
+      "distAbsent": true,
+      "exit": 1,
+      "testFiles": {
+       "total": 1,
+       "failed": 1
+      },
+      "tests": {
+       "passed": 0,
+       "failed": 0,
+       "pending": 3,
+       "total": 3
+      },
+      "failedTests": [],
+      "firstFailure": "Build failed with 32 errors:\napps/three-surface-poc/src/polaris-generation/dossier-site.ts:9:23: ERROR: Could not resolve \"@syzygy/support\"\napps/three-surface-poc/src/polaris-generation/draft-preview.ts:7:23: ERROR: Could not resolve \"@syzygy/support\"\npackages/polaris-dossier/src/brief.ts:5:23: ERROR: Could not resolve \"@syzygy/support\"\npackages/polaris-dossier/src/check.ts:5:23: ERROR: Could not resolve \"@syzygy/support\"\npackages/polaris-dossier/src/close.ts:4:23: ERROR: Could not resolve \"@syzygy/support\"\n..."
+     },
+     {
+      "arm": "mutant-dist-present",
+      "mutantApplied": true,
+      "distAbsent": false,
+      "exit": 0,
+      "testFiles": {
+       "total": 1,
+       "failed": 0
+      },
+      "tests": {
+       "passed": 2,
+       "failed": 0,
+       "pending": 1,
+       "total": 3
+      },
+      "failedTests": [],
+      "firstFailure": ""
+     },
+     {
+      "arm": "mutant-dist-absent",
+      "mutantApplied": true,
+      "distAbsent": true,
+      "exit": 1,
+      "testFiles": {
+       "total": 1,
+       "failed": 1
+      },
+      "tests": {
+       "passed": 0,
+       "failed": 0,
+       "pending": 3,
+       "total": 3
+      },
+      "failedTests": [],
+      "firstFailure": "Build failed with 32 errors:\napps/three-surface-poc/src/polaris-generation/dossier-site.ts:9:23: ERROR: Could not resolve \"@syzygy/support\"\napps/three-surface-poc/src/polaris-generation/draft-preview.ts:7:23: ERROR: Could not resolve \"@syzygy/support\"\npackages/polaris-dossier/src/brief.ts:5:23: ERROR: Could not resolve \"@syzygy/support\"\npackages/polaris-dossier/src/check.ts:5:23: ERROR: Could not resolve \"@syzygy/support\"\npackages/polaris-dossier/src/close.ts:4:23: ERROR: Could not resolve \"@syzygy/support\"\n..."
+     }
+    ]
+   },
+   "atTheRepairCommit": {
+    "clone": {
+     "commit": "8bd514d7a6f882142f58b5bd219c3fa2f7fd7714",
+     "aliasForSupportPresentInTest": true,
+     "testFile": "packages/polaris-dossier/src/no-egress.test.ts",
+     "distDirectoriesMovedAside": 11,
+     "trackedChangesAfter": ""
+    },
+    "mutant": {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nimport { createSocket } from 'node:dgram';\ncreateSocket('udp4').bind(0, '127.0.0.1').unref();\n"
+    },
+    "arms": [
+     {
+      "arm": "clean-dist-present",
+      "mutantApplied": false,
+      "distAbsent": false,
+      "exit": 0,
+      "testFiles": {
+       "total": 1,
+       "failed": 0
+      },
+      "tests": {
+       "passed": 2,
+       "failed": 0,
+       "pending": 1,
+       "total": 3
+      },
+      "failedTests": [],
+      "firstFailure": ""
+     },
+     {
+      "arm": "clean-dist-absent",
+      "mutantApplied": false,
+      "distAbsent": true,
+      "exit": 0,
+      "testFiles": {
+       "total": 1,
+       "failed": 0
+      },
+      "tests": {
+       "passed": 2,
+       "failed": 0,
+       "pending": 1,
+       "total": 3
+      },
+      "failedTests": [],
+      "firstFailure": ""
+     },
+     {
+      "arm": "mutant-dist-present",
+      "mutantApplied": true,
+      "distAbsent": false,
+      "exit": 1,
+      "testFiles": {
+       "total": 1,
+       "failed": 1
+      },
+      "tests": {
+       "passed": 1,
+       "failed": 1,
+       "pending": 1,
+       "total": 3
+      },
+      "failedTests": [
+       "no provider call and no transmission (S10): an operating-system capture of a full fixture run creates no Internet-family socket over the whole run, from preflight to close"
+      ],
+      "firstFailure": "AssertionError: expected [ \u2026(2) ] to deeply equal []\n    at /tmp/lc63e2/packages/polaris-dossier/src/no-egress.test.ts:81:68\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at file:///tmp/lc63e2/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20"
+     },
+     {
+      "arm": "mutant-dist-absent",
+      "mutantApplied": true,
+      "distAbsent": true,
+      "exit": 1,
+      "testFiles": {
+       "total": 1,
+       "failed": 1
+      },
+      "tests": {
+       "passed": 1,
+       "failed": 1,
+       "pending": 1,
+       "total": 3
+      },
+      "failedTests": [
+       "no provider call and no transmission (S10): an operating-system capture of a full fixture run creates no Internet-family socket over the whole run, from preflight to close"
+      ],
+      "firstFailure": "AssertionError: expected [ \u2026(2) ] to deeply equal []\n    at /tmp/lc63e2/packages/polaris-dossier/src/no-egress.test.ts:81:68\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at file:///tmp/lc63e2/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20"
+     }
+    ]
+   },
+   "reading": {
+    "reviewedCommit": "a support source that binds a loopback UDP socket passes the proof with every dist/ present (the dist is the clean build), and the proof cannot run at all with every dist/ absent: esbuild reports 32 unresolved @syzygy/support imports",
+    "repairCommit": "the same mutant is killed by the capture assertion that no Internet-family socket exists, with every dist/ present and with every dist/ absent; the unmutated tree passes in both"
+   },
+   "notRun": "the optional hardening the review offered (an esbuild onResolve plugin that fails the build when any @syzygy/* specifier resolves outside a src directory) is not in this repair"
+  },
+  "n3": {
+   "finding": "N3: the support package's purity was pinned by no committed test; the closure guard admits node:fs, so the reviewer's R8 (support reads a file) passed it and the drafter's purity test",
+   "fix": "packages/support/src/support-purity.test.ts (13 tests): every non-test source of the package imports only node:crypto or a module of its own, names none of the owner-act drafter's forbidden tokens, and the package declares no dependency and no tsconfig reference; the specifier reader the guard stands on has 9 cases",
+   "tool": "support-purity-mutants.py <clone with node_modules> <out.json>",
+   "atTheRepairCommit": {
+    "clone": {
+     "commit": "8bd514d7a6f882142f58b5bd219c3fa2f7fd7714",
+     "trackedAndUntrackedChangesAfter": ""
+    },
+    "test": "packages/support/src/support-purity.test.ts",
+    "summary": {
+     "rows": 17,
+     "killed": 14,
+     "mutants": 14,
+     "controlsPassing": 3,
+     "controls": 3,
+     "rowsNotOk": []
+    },
+    "rows": [
+     {
+      "id": "C0-unmutated",
+      "expect": "pass",
+      "exit": 0,
+      "passed": 13,
+      "failed": 0,
+      "total": 13,
+      "failedTests": [],
+      "ok": true
+     },
+     {
+      "id": "P1-reads-a-file-via-node-fs",
+      "path": "packages/support/src/sha256.ts",
+      "create": false,
+      "old": "import { createHash } from 'node:crypto';\n",
+      "new": "import { createHash } from 'node:crypto';\nimport { readFileSync } from 'node:fs';\nexport const HOST = readFileSync('/etc/hostname', 'utf8');\n",
+      "expect": "killed",
+      "exit": 1,
+      "passed": 11,
+      "failed": 2,
+      "total": 13,
+      "failedTests": [
+       "@syzygy/support stays a pure leaf imports only node:crypto and its own modules, so no file read, no workspace package and no network",
+       "@syzygy/support stays a pure leaf names no write, process, clock, network or file-system token in any source"
+      ],
+      "ok": true
+     },
+     {
+      "id": "P2-imports-node-http",
+      "path": "packages/support/src/sha256.ts",
+      "create": false,
+      "old": "import { createHash } from 'node:crypto';\n",
+      "new": "import { createHash } from 'node:crypto';\nimport 'node:http';\n",
+      "expect": "killed",
+      "exit": 1,
+      "passed": 11,
+      "failed": 2,
+      "total": 13,
+      "failedTests": [
+       "@syzygy/support stays a pure leaf imports only node:crypto and its own modules, so no file read, no workspace package and no network",
+       "@syzygy/support stays a pure leaf names no write, process, clock, network or file-system token in any source"
+      ],
+      "ok": true
+     },
+     {
+      "id": "P3-imports-a-workspace-package",
+      "path": "packages/support/src/index.ts",
+      "create": false,
+      "old": "export { sha256 } from './sha256.js';\n",
+      "new": "import '@syzygy/cap1-core';\nexport { sha256 } from './sha256.js';\n",
+      "expect": "killed",
+      "exit": 1,
+      "passed": 12,
+      "failed": 1,
+      "total": 13,
+      "failedTests": [
+       "@syzygy/support stays a pure leaf imports only node:crypto and its own modules, so no file read, no workspace package and no network"
+      ],
+      "ok": true
+     },
+     {
+      "id": "P4-reads-the-environment-without-an-import",
+      "path": "packages/support/src/sha256.ts",
+      "create": false,
+      "old": "import { createHash } from 'node:crypto';\n",
+      "new": "import { createHash } from 'node:crypto';\nexport const HOME = process.env['HOME'];\n",
+      "expect": "killed",
+      "exit": 1,
+      "passed": 12,
+      "failed": 1,
+      "total": 13,
+      "failedTests": [
+       "@syzygy/support stays a pure leaf names no write, process, clock, network or file-system token in any source"
+      ],
+      "ok": true
+     },
+     {
+      "id": "P5-calls-fetch",
+      "path": "packages/support/src/deep-freeze.ts",
+      "create": false,
+      "old": "export function deepFreeze<T>(value: T): T {\n",
+      "new": "void fetch('http://127.0.0.1');\nexport function deepFreeze<T>(value: T): T {\n",
+      "expect": "killed",
+      "exit": 1,
+      "passed": 12,
+      "failed": 1,
+      "total": 13,
+      "failedTests": [
+       "@syzygy/support stays a pure leaf names no write, process, clock, network or file-system token in any source"
+      ],
+      "ok": true
+     },
+     {
+      "id": "P6-new-file-reads-the-clock",
+      "path": "packages/support/src/clock.ts",
+      "create": true,
+      "old": null,
+      "new": "export const now = (): number => Date.now();\n",
+      "expect": "killed",
+      "exit": 1,
+      "passed": 12,
+      "failed": 1,
+      "total": 13,
+      "failedTests": [
+       "@syzygy/support stays a pure leaf names no write, process, clock, network or file-system token in any source"
+      ],
+      "ok": true
+     },
+     {
+      "id": "P7-dynamic-import-of-node-fs",
+      "path": "packages/support/src/sha256.ts",
+      "create": false,
+      "old": "import { createHash } from 'node:crypto';\n",
+      "new": "import { createHash } from 'node:crypto';\nexport const lazy = (): Promise<unknown> => import('node:fs');\n",
+      "expect": "killed",
+      "exit": 1,
+      "passed": 11,
+      "failed": 2,
+      "total": 13,
+      "failedTests": [
+       "@syzygy/support stays a pure leaf imports only node:crypto and its own modules, so no file read, no workspace package and no network",
+       "@syzygy/support stays a pure leaf names no write, process, clock, network or file-system token in any source"
+      ],
+      "ok": true
+     },
+     {
+      "id": "P8-declares-a-workspace-dependency",
+      "path": "packages/support/package.json",
+      "create": false,
+      "old": "  \"version\": \"0.0.0\",\n",
+      "new": "  \"version\": \"0.0.0\",\n  \"dependencies\": { \"@syzygy/cap1-core\": \"*\" },\n",
+      "expect": "killed",
+      "exit": 1,
+      "passed": 12,
+      "failed": 1,
+      "total": 13,
+      "failedTests": [
+       "@syzygy/support stays a pure leaf declares no dependency and references no project in its manifests"
+      ],
+      "ok": true
+     },
+     {
+      "id": "P9-references-another-project",
+      "path": "packages/support/tsconfig.json",
+      "create": false,
+      "old": "  \"include\": [\"src\"]\n",
+      "new": "  \"include\": [\"src\"],\n  \"references\": [{ \"path\": \"../cap1-core\" }]\n",
+      "expect": "killed",
+      "exit": 1,
+      "passed": 12,
+      "failed": 1,
+      "total": 13,
+      "failedTests": [
+       "@syzygy/support stays a pure leaf declares no dependency and references no project in its manifests"
+      ],
+      "ok": true
+     },
+     {
+      "id": "P10-imports-an-other-built-in-the-forbidden-list-does-not-name",
+      "path": "packages/support/src/sha256.ts",
+      "create": false,
+      "old": "import { createHash } from 'node:crypto';\n",
+      "new": "import { createHash } from 'node:crypto';\nimport { Buffer } from 'node:buffer';\nexport const B = Buffer;\n",
+      "expect": "killed",
+      "exit": 1,
+      "passed": 12,
+      "failed": 1,
+      "total": 13,
+      "failedTests": [
+       "@syzygy/support stays a pure leaf imports only node:crypto and its own modules, so no file read, no workspace package and no network"
+      ],
+      "ok": true
+     },
+     {
+      "id": "T1-reader-drops-dynamic-import-and-require",
+      "path": "packages/support/src/support-purity.test.ts",
+      "create": false,
+      "old": "    ...[...code.matchAll(/\\b(?:import|require)\\s*\\(\\s*['\"`]([^'\"`]+)['\"`]/g)].map((match) => match[1]!),\n",
+      "new": "",
+      "expect": "killed",
+      "exit": 1,
+      "passed": 11,
+      "failed": 2,
+      "total": 13,
+      "failedTests": [
+       "the specifier reader this guard stands on reads \"const fs = await import('node:fs');\"",
+       "the specifier reader this guard stands on reads \"const fs = require('node:fs');\""
+      ],
+      "ok": true
+     },
+     {
+      "id": "T2-reader-keeps-comment-lines",
+      "path": "packages/support/src/support-purity.test.ts",
+      "create": false,
+      "old": ".filter((line) => !line.trimStart().startsWith('//'))",
+      "new": ".filter(() => true)",
+      "expect": "killed",
+      "exit": 1,
+      "passed": 12,
+      "failed": 1,
+      "total": 13,
+      "failedTests": [
+       "the specifier reader this guard stands on reads \"// import { readFileSync } from 'node:fs';\\nexport const a = 1;\""
+      ],
+      "ok": true
+     },
+     {
+      "id": "T3-reader-drops-side-effect-imports",
+      "path": "packages/support/src/support-purity.test.ts",
+      "create": false,
+      "old": "    ...[...code.matchAll(/^\\s*import\\s*['\"`]([^'\"`]+)['\"`]/gm)].map((match) => match[1]!),\n",
+      "new": "",
+      "expect": "killed",
+      "exit": 1,
+      "passed": 12,
+      "failed": 1,
+      "total": 13,
+      "failedTests": [
+       "the specifier reader this guard stands on reads \"import 'node:http';\""
+      ],
+      "ok": true
+     },
+     {
+      "id": "T4-reader-drops-from-imports",
+      "path": "packages/support/src/support-purity.test.ts",
+      "create": false,
+      "old": "    ...[...code.matchAll(/\\b(?:import|export)\\b[^;]*?\\bfrom\\s*['\"`]([^'\"`]+)['\"`]/g)].map((match) => match[1]!),\n",
+      "new": "",
+      "expect": "killed",
+      "exit": 1,
+      "passed": 8,
+      "failed": 5,
+      "total": 13,
+      "failedTests": [
+       "@syzygy/support stays a pure leaf imports only node:crypto and its own modules, so no file read, no workspace package and no network",
+       "the specifier reader this guard stands on reads \"import { createHash } from 'node:crypto';\"",
+       "the specifier reader this guard stands on reads \"import { readFileSync } from \\\"node:fs\\\";\"",
+       "the specifier reader this guard stands on reads \"export { sha256 } from './sha256.js';\""
+      ],
+      "ok": true
+     },
+     {
+      "id": "N0a-a-harmless-constant",
+      "path": "packages/support/src/one.ts",
+      "create": true,
+      "old": null,
+      "new": "export const ONE = 1;\n",
+      "expect": "pass",
+      "exit": 0,
+      "passed": 13,
+      "failed": 0,
+      "total": 13,
+      "failedTests": [],
+      "ok": true
+     },
+     {
+      "id": "N0b-a-relative-import-of-its-own-module",
+      "path": "packages/support/src/empty-hash.ts",
+      "create": true,
+      "old": null,
+      "new": "import { sha256 } from './sha256.js';\nexport const EMPTY = sha256('');\n",
+      "expect": "pass",
+      "exit": 0,
+      "passed": 13,
+      "failed": 0,
+      "total": 13,
+      "failedTests": [],
+      "ok": true
+     }
+    ]
+   },
+   "reviewerMutants": "the review's R6 (node:http) is P2 and its R8 (node:fs read) is P1 here"
+  },
+  "n1": {
+   "finding": "N1: sweep.py sets aside every file whose basename begins test-; one of them, test-artifact-verification.ts, is production code with a createHash('sha256') site (junitDigest, line 309), so '62 to 6' counted a smaller population than it said",
+   "populationRules": {
+    "nameRule": "the sweep's own: .test.ts, .browser.test.ts, .testkit.ts and every basename test-*.ts are test support, so out",
+    "reachabilityRule": "as the name rule, except that a test-*.ts file with at least one importer that is not itself a test-class file by the name rule is in; one level of importers, found by the relative specifier from <path>/<stem>.js; never transitive"
+   },
+   "tool": "population-audit.py <repo> <commit>",
+   "atBase": {
+    "commit": "a088f1caf061c1a2062527ce8521c9b64c3c7fd1",
+    "populationAllTsUnderSrc": 494,
+    "nameRule": {
+     "files": 233,
+     "createHashSha256Sites": 62,
+     "localSha256Definitions": 25,
+     "localDeepFreezeDefinitions": 7
+    },
+    "reachabilityRule": {
+     "files": 237,
+     "createHashSha256Sites": 64,
+     "localSha256Definitions": 26,
+     "localDeepFreezeDefinitions": 7
+    },
+    "basenameOnlyFiles": [
+     {
+      "file": "apps/three-surface-poc/src/test-deep-dive-markers.ts",
+      "importers": 2,
+      "productionImporters": [],
+      "sites": [],
+      "inUnderReachability": false
+     },
+     {
+      "file": "apps/three-surface-poc/src/test-fixture-sweep.global-setup.ts",
+      "importers": 1,
+      "productionImporters": [],
+      "sites": [],
+      "inUnderReachability": false
+     },
+     {
+      "file": "apps/three-surface-poc/src/test-http-client.ts",
+      "importers": 4,
+      "productionImporters": [],
+      "sites": [],
+      "inUnderReachability": false
+     },
+     {
+      "file": "apps/three-surface-poc/src/test-model-fixture.ts",
+      "importers": 41,
+      "productionImporters": [
+       "apps/three-surface-poc/src/polaris-accessibility-variants.ts"
+      ],
+      "sites": [],
+      "inUnderReachability": true
+     },
+     {
+      "file": "apps/three-surface-poc/src/test-project-shape-fixture.ts",
+      "importers": 27,
+      "productionImporters": [
+       "apps/three-surface-poc/src/polaris-accessibility-variants.ts"
+      ],
+      "sites": [],
+      "inUnderReachability": true
+     },
+     {
+      "file": "apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts",
+      "importers": 6,
+      "productionImporters": [
+       "apps/three-surface-poc/src/polaris-accessibility-variants.ts"
+      ],
+      "sites": [
+       {
+        "kind": "createHash(sha256)",
+        "line": 44,
+        "form": "replaceable"
+       },
+       {
+        "kind": "local sha256",
+        "line": 42
+       }
+      ],
+      "inUnderReachability": true
+     },
+     {
+      "file": "packages/three-surface-poc-core/src/test-artifact-verification.ts",
+      "importers": 5,
+      "productionImporters": [
+       "packages/three-surface-poc-core/src/index.ts",
+       "packages/three-surface-poc-core/src/model.ts"
+      ],
+      "sites": [
+       {
+        "kind": "createHash(sha256)",
+        "line": 309,
+        "form": "replaceable"
+       }
+      ],
+      "inUnderReachability": true
+     },
+     {
+      "file": "packages/three-surface-poc-core/src/test-cleanup.ts",
+      "importers": 2,
+      "productionImporters": [],
+      "sites": [],
+      "inUnderReachability": false
+     }
+    ],
+    "secondMethod": {
+     "createHashSha256PerBasenameOnlyFile": {
+      "apps/three-surface-poc/src/test-deep-dive-markers.ts": 0,
+      "apps/three-surface-poc/src/test-fixture-sweep.global-setup.ts": 0,
+      "apps/three-surface-poc/src/test-http-client.ts": 0,
+      "apps/three-surface-poc/src/test-model-fixture.ts": 0,
+      "apps/three-surface-poc/src/test-project-shape-fixture.ts": 0,
+      "apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts": 1,
+      "packages/three-surface-poc-core/src/test-artifact-verification.ts": 1,
+      "packages/three-surface-poc-core/src/test-cleanup.ts": 0
+     }
+    }
+   },
+   "atRepairCommit": {
+    "commit": "8bd514d7a6f882142f58b5bd219c3fa2f7fd7714",
+    "populationAllTsUnderSrc": 501,
+    "nameRule": {
+     "files": 236,
+     "createHashSha256Sites": 6,
+     "localSha256Definitions": 1,
+     "localDeepFreezeDefinitions": 1
+    },
+    "reachabilityRule": {
+     "files": 240,
+     "createHashSha256Sites": 8,
+     "localSha256Definitions": 2,
+     "localDeepFreezeDefinitions": 1
+    },
+    "basenameOnlyFiles": [
+     {
+      "file": "apps/three-surface-poc/src/test-deep-dive-markers.ts",
+      "importers": 2,
+      "productionImporters": [],
+      "sites": [],
+      "inUnderReachability": false
+     },
+     {
+      "file": "apps/three-surface-poc/src/test-fixture-sweep.global-setup.ts",
+      "importers": 1,
+      "productionImporters": [],
+      "sites": [],
+      "inUnderReachability": false
+     },
+     {
+      "file": "apps/three-surface-poc/src/test-http-client.ts",
+      "importers": 4,
+      "productionImporters": [],
+      "sites": [],
+      "inUnderReachability": false
+     },
+     {
+      "file": "apps/three-surface-poc/src/test-model-fixture.ts",
+      "importers": 41,
+      "productionImporters": [
+       "apps/three-surface-poc/src/polaris-accessibility-variants.ts"
+      ],
+      "sites": [],
+      "inUnderReachability": true
+     },
+     {
+      "file": "apps/three-surface-poc/src/test-project-shape-fixture.ts",
+      "importers": 27,
+      "productionImporters": [
+       "apps/three-surface-poc/src/polaris-accessibility-variants.ts"
+      ],
+      "sites": [],
+      "inUnderReachability": true
+     },
+     {
+      "file": "apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts",
+      "importers": 6,
+      "productionImporters": [
+       "apps/three-surface-poc/src/polaris-accessibility-variants.ts"
+      ],
+      "sites": [
+       {
+        "kind": "createHash(sha256)",
+        "line": 44,
+        "form": "replaceable"
+       },
+       {
+        "kind": "local sha256",
+        "line": 42
+       }
+      ],
+      "inUnderReachability": true
+     },
+     {
+      "file": "packages/three-surface-poc-core/src/test-artifact-verification.ts",
+      "importers": 5,
+      "productionImporters": [
+       "packages/three-surface-poc-core/src/index.ts",
+       "packages/three-surface-poc-core/src/model.ts"
+      ],
+      "sites": [
+       {
+        "kind": "createHash(sha256)",
+        "line": 309,
+        "form": "replaceable"
+       }
+      ],
+      "inUnderReachability": true
+     },
+     {
+      "file": "packages/three-surface-poc-core/src/test-cleanup.ts",
+      "importers": 2,
+      "productionImporters": [],
+      "sites": [],
+      "inUnderReachability": false
+     }
+    ],
+    "secondMethod": {
+     "createHashSha256PerBasenameOnlyFile": {
+      "apps/three-surface-poc/src/test-deep-dive-markers.ts": 0,
+      "apps/three-surface-poc/src/test-fixture-sweep.global-setup.ts": 0,
+      "apps/three-surface-poc/src/test-http-client.ts": 0,
+      "apps/three-surface-poc/src/test-model-fixture.ts": 0,
+      "apps/three-surface-poc/src/test-project-shape-fixture.ts": 0,
+      "apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts": 1,
+      "packages/three-surface-poc-core/src/test-artifact-verification.ts": 1,
+      "packages/three-surface-poc-core/src/test-cleanup.ts": 0
+     }
+    }
+   },
+   "figures": {
+    "nameRule": {
+     "files": [
+      233,
+      236
+     ],
+     "createHashSha256Sites": [
+      62,
+      6
+     ],
+     "localSha256Definitions": [
+      25,
+      1
+     ]
+    },
+    "reachabilityRule": {
+     "files": [
+      237,
+      240
+     ],
+     "createHashSha256Sites": [
+      64,
+      8
+     ],
+     "localSha256Definitions": [
+      26,
+      2
+     ]
+    },
+    "readAs": "[base, head]"
+   },
+   "sitesTheNameRuleMissed": [
+    {
+     "file": "packages/three-surface-poc-core/src/test-artifact-verification.ts",
+     "line": 309,
+     "form": "sha256:${createHash('sha256').update(rawJUnit).digest('hex')}",
+     "importersThatAreNotTestClass": [
+      "packages/three-surface-poc-core/src/index.ts",
+      "packages/three-surface-poc-core/src/model.ts"
+     ],
+     "replaceableBy": "`sha256:${sha256(rawJUnit)}` [Inferred: both hash the bytes of a Uint8Array with no encoding]"
+    },
+    {
+     "file": "apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts",
+     "lines": "42-44",
+     "form": "a local function sha256(text) over createHash('sha256').update(text).digest('hex')",
+     "importersThatAreNotTestClass": [
+      "apps/three-surface-poc/src/polaris-accessibility-variants.ts"
+     ],
+     "replaceableBy": "the package sha256 [Inferred: the same body]"
+    }
+   ],
+   "disposition": "both sites are left in place by this repair and are not \"left on purpose by the sweep\": the sweep did not see them. Replacing them edits two more production-reachable files, which needs its own differential and a review round, and the round-1 repair is limited to the alias, the pin and text. They are named so the next audit counts them."
+  },
+  "n6": {
+   "finding": "N6: diff-probe.mjs writes its fixture repository at <TMPDIR>/probe-fixed-fixture-repo, and that path enters every model row, so the committed probe-output.json is reproducible only under the TMPDIR it was made with, which the record did not name",
+   "tmpdirOfTheCommittedOutput": "/tmp/lc63x",
+   "reproduction": {
+    "command": "mkdir -p /tmp/lc63x && TMPDIR=/tmp/lc63x node diff-probe.mjs <clone built with npm run build at the repair commit> <out.json> a088f1caf061c1a2062527ce8521c9b64c3c7fd1",
+    "clone": "8bd514d7a6f882142f58b5bd219c3fa2f7fd7714",
+    "outputSha256": "c491d2f34da26a5b48b994e780d2beef8b502bb6c2d64fb4fa7a5c48aeedb37f",
+    "equalsCommittedProbeOutput": true,
+    "reading": "byte-identical to probe-output.json (sha256 above), so the probe is unchanged at the repair commit, which differs from the measured head by two test files"
+   },
+   "otherTmpdirControl": {
+    "tmpdir": "/tmp/lc63y (same length, other name)",
+    "outputSha256": "43b7f812d680abff540f5474c8df121b4590aa4933ffdc70860b6b6bf2db6e33",
+    "bytes": 73272,
+    "rowsThatDifferFromTheCommittedOutput": 24,
+    "differingRowsByKind": {
+     "model": 24
+    },
+    "rowsByKind": {
+     "model": 24,
+     "helper": 44
+    },
+    "reading": "all 24 model rows differ and none of the 44 helper rows does: the path, not a behaviour change [Observed: counted by rows() of compare-probe.py over both files]"
+   },
+   "headersEdited": "diff-probe.mjs names the TMPDIR dependency and the TMPDIR of the committed output; hash-trace.cjs no longer says \"not committed\" (see toolsEditedAfterTheRuns)"
+  },
+  "n7": {
+   "finding": "N7: the PR said the narrative variant and the package differ only for a cyclic input and for a frozen shell around unfrozen children; a non-empty typed-array member is a third difference",
+   "tool": "node narrative-freeze-probe.mjs <repo> <built clone>",
+   "probe": {
+    "base": "a088f1caf061c1a2062527ce8521c9b64c3c7fd1",
+    "blob": "apps/three-surface-poc/src/polaris-narrative.ts",
+    "blobSha256": "b8e2f77cefcdee10e1ad16cf67140bbe66e2aa9cd1023c45faa7e0751150172f",
+    "node": "v24.6.0",
+    "rows": [
+     {
+      "case": "typed array member, non-empty, two siblings",
+      "old": {
+       "implementation": "old (polaris-narrative.ts at the base)",
+       "threw": {
+        "name": "TypeError",
+        "message": "Cannot freeze array buffer views with elements"
+       },
+       "objects": 4,
+       "frozen": 1
+      },
+      "package": {
+       "implementation": "@syzygy/support",
+       "threw": {
+        "name": "TypeError",
+        "message": "Cannot freeze array buffer views with elements"
+       },
+       "objects": 4,
+       "frozen": 2
+      }
+     },
+     {
+      "case": "typed array member, non-empty, one sibling",
+      "old": {
+       "implementation": "old (polaris-narrative.ts at the base)",
+       "threw": {
+        "name": "TypeError",
+        "message": "Cannot freeze array buffer views with elements"
+       },
+       "objects": 3,
+       "frozen": 1
+      },
+      "package": {
+       "implementation": "@syzygy/support",
+       "threw": {
+        "name": "TypeError",
+        "message": "Cannot freeze array buffer views with elements"
+       },
+       "objects": 3,
+       "frozen": 2
+      }
+     },
+     {
+      "case": "typed array member first, non-empty, one sibling",
+      "old": {
+       "implementation": "old (polaris-narrative.ts at the base)",
+       "threw": {
+        "name": "TypeError",
+        "message": "Cannot freeze array buffer views with elements"
+       },
+       "objects": 3,
+       "frozen": 0
+      },
+      "package": {
+       "implementation": "@syzygy/support",
+       "threw": {
+        "name": "TypeError",
+        "message": "Cannot freeze array buffer views with elements"
+       },
+       "objects": 3,
+       "frozen": 1
+      }
+     },
+     {
+      "case": "typed array member, empty",
+      "old": {
+       "implementation": "old (polaris-narrative.ts at the base)",
+       "threw": null,
+       "objects": 3,
+       "frozen": 3
+      },
+      "package": {
+       "implementation": "@syzygy/support",
+       "threw": null,
+       "objects": 3,
+       "frozen": 3
+      }
+     },
+     {
+      "case": "control: nested plain objects",
+      "old": {
+       "implementation": "old (polaris-narrative.ts at the base)",
+       "threw": null,
+       "objects": 7,
+       "frozen": 7
+      },
+      "package": {
+       "implementation": "@syzygy/support",
+       "threw": null,
+       "objects": 7,
+       "frozen": 7
+      }
+     },
+     {
+      "case": "stated difference 1: a cycle",
+      "old": {
+       "implementation": "old (polaris-narrative.ts at the base)",
+       "threw": {
+        "name": "RangeError",
+        "message": "Maximum call stack size exceeded"
+       },
+       "objects": 1,
+       "frozen": 0
+      },
+      "package": {
+       "implementation": "@syzygy/support",
+       "threw": null,
+       "objects": 1,
+       "frozen": 1
+      }
+     },
+     {
+      "case": "stated difference 2: a frozen shell around an unfrozen member",
+      "old": {
+       "implementation": "old (polaris-narrative.ts at the base)",
+       "threw": null,
+       "objects": 3,
+       "frozen": 3
+      },
+      "package": {
+       "implementation": "@syzygy/support",
+       "threw": null,
+       "objects": 3,
+       "frozen": 1
+      }
+     }
+    ]
+   },
+   "reading": "a non-empty typed array makes Object.freeze throw a TypeError in both, and they leave different partial states: the old one (children first) has frozen 1 of 3 objects, the package (parent first) 2 of 3; an empty typed array freezes in both and does not differ. [Inferred] unreachable at the three call sites of polaris-narrative.ts: the file names no typed-array type (git grep at the base) and its call sites freeze a structuredClone of a form, a fresh literal and the registered block; the probe does not trace those values' contents"
+  }
+ },
+ "mergeOfMain": {
+  "mergeCommit": "767588d4e1be3916839d57de5a976fe69885d6f7",
+  "parents": {
+   "branch": "094cc542c127bdf672f9b676f959f44867c222ab",
+   "main": "546f1ff066e2ffef749c757cdb4621336039113b"
+  },
+  "mergeBase": "c104771ff90f47ffd070f2339c36010458679c71",
+  "whyNow": "PR 529 (@syzygy/http-host) landed on main first and shares wiring paths with this branch",
+  "pathsChangedByBothSides": [
+   "AGENTS.md",
+   "apps/three-surface-poc/package.json",
+   "apps/three-surface-poc/src/git-observation.ts",
+   "apps/three-surface-poc/src/poc-main.ts",
+   "apps/three-surface-poc/src/polaris.ts",
+   "apps/three-surface-poc/tsconfig.json",
+   "package-lock.json",
+   "package.json",
+   "packages/polaris-dossier/src/no-egress.test.ts",
+   "vitest.config.ts"
+  ],
+  "check": {
+   "merge": "767588d4e1be3916839d57de5a976fe69885d6f7",
+   "parents": [
+    "094cc542c127bdf672f9b676f959f44867c222ab",
+    "546f1ff066e2ffef749c757cdb4621336039113b"
+   ],
+   "computedTree": "f6b5e1da2b5e6b0f5e1c6f64c365493baa610501",
+   "mergeTree": "e49bd8c1b34e3d53207acfc4c517ce7791aad11f",
+   "mergeTreeExit": 1,
+   "paths": 5098,
+   "pathsEqualToGitsMerge": 5097,
+   "conflictedPathsResolvedByHand": [
+    {
+     "path": "package.json",
+     "regions": [
+      {
+       "ours": "    \"build\": \"tsc -b packages/support packages/cap1-core packages/cap1-daemon packages/cap1-conformance packages/three-surface-poc-core apps/syzygy apps/three-surface-poc packages/cap1-system packages/polaris-generation-core packages/polaris-generation-consent packages/polaris-dossier\",\n    \"build:poc\": \"tsc -b --force packages/support packages/cap1-core packages/cap1-daemon packages/three-surface-poc-core packages/polaris-generation-core apps/three-surface-poc\",\n",
+       "base": "    \"build\": \"tsc -b packages/cap1-core packages/cap1-daemon packages/cap1-conformance packages/three-surface-poc-core apps/syzygy apps/three-surface-poc packages/cap1-system packages/polaris-generation-core packages/polaris-generation-consent packages/polaris-dossier\",\n    \"build:poc\": \"tsc -b --force packages/cap1-core packages/cap1-daemon packages/three-surface-poc-core packages/polaris-generation-core apps/three-surface-poc\",\n",
+       "theirs": "    \"build\": \"tsc -b packages/cap1-core packages/http-host packages/cap1-daemon packages/cap1-conformance packages/three-surface-poc-core apps/syzygy apps/three-surface-poc packages/cap1-system packages/polaris-generation-core packages/polaris-generation-consent packages/polaris-dossier\",\n    \"build:poc\": \"tsc -b --force packages/cap1-core packages/http-host packages/cap1-daemon packages/three-surface-poc-core packages/polaris-generation-core apps/three-surface-poc\",\n",
+       "resolution": "    \"build\": \"tsc -b packages/support packages/cap1-core packages/http-host packages/cap1-daemon packages/cap1-conformance packages/three-surface-poc-core apps/syzygy apps/three-surface-poc packages/cap1-system packages/polaris-generation-core packages/polaris-generation-consent packages/polaris-dossier\",\n    \"build:poc\": \"tsc -b --force packages/support packages/cap1-core packages/http-host packages/cap1-daemon packages/three-surface-poc-core packages/polaris-generation-core apps/three-surface-poc\",\n"
+      },
+      {
+       "ours": "    \"typecheck\": \"tsc -b packages/support packages/cap1-core packages/cap1-daemon packages/cap1-conformance packages/three-surface-poc-core apps/syzygy apps/three-surface-poc packages/cap1-system packages/polaris-generation-core packages/polaris-generation-consent packages/polaris-dossier\",\n",
+       "base": "    \"typecheck\": \"tsc -b packages/cap1-core packages/cap1-daemon packages/cap1-conformance packages/three-surface-poc-core apps/syzygy apps/three-surface-poc packages/cap1-system packages/polaris-generation-core packages/polaris-generation-consent packages/polaris-dossier\",\n",
+       "theirs": "    \"typecheck\": \"tsc -b packages/cap1-core packages/http-host packages/cap1-daemon packages/cap1-conformance packages/three-surface-poc-core apps/syzygy apps/three-surface-poc packages/cap1-system packages/polaris-generation-core packages/polaris-generation-consent packages/polaris-dossier\",\n",
+       "resolution": "    \"typecheck\": \"tsc -b packages/support packages/cap1-core packages/http-host packages/cap1-daemon packages/cap1-conformance packages/three-surface-poc-core apps/syzygy apps/three-surface-poc packages/cap1-system packages/polaris-generation-core packages/polaris-generation-consent packages/polaris-dossier\",\n"
+      }
+     ]
+    }
+   ],
+   "pathsThatDifferWithoutBeingAResolvedConflict": []
+  },
+  "checkTool": "merge-resolution-check.py <repo> <merge commit>",
+  "mutationControl": {
+   "change": "a copy of the merge whose apps/three-surface-poc/package.json lacks the line '    \"@syzygy/http-host\": \"0.0.0\",\\n'",
+   "result": {
+    "pathsEqualToGitsMerge": 5096,
+    "paths": 5098,
+    "pathsThatDiffer": [
+     "apps/three-surface-poc/package.json"
+    ]
+   },
+   "reading": "the check reports a change outside the conflict region; a hand resolution inside a region is free text by design, and is for the reader to check against the two sides listed in check.conflictedPathsResolvedByHand"
+  },
+  "sweepAtTheMerge": {
+   "tool": "sweep.py <repo> <merge commit> and population-audit.py <repo> <merge commit>",
+   "population": {
+    "files": 241,
+    "lines": 52425,
+    "namesSha256": "094b7823facd8256be46e2e343291cc0a77a9f368278900dafe7d92c16c8da47"
+   },
+   "sha256Sites": 6,
+   "localCopies": {
+    "sha256": 1,
+    "deepFreeze": 1
+   },
+   "supportImporters": {
+    "apps/three-surface-poc": 21,
+    "packages/polaris-dossier": 14,
+    "packages/polaris-generation-consent": 2,
+    "packages/polaris-generation-core": 8,
+    "packages/three-surface-poc-core": 10
+   },
+   "secondMethod": {
+    "sha256-single-quoted": 6,
+    "deepFreeze-definitions": 1
+   },
+   "reachabilityRule": {
+    "files": 245,
+    "createHashSha256Sites": 8,
+    "localSha256Definitions": 2,
+    "localDeepFreezeDefinitions": 1
+   },
+   "reading": "the figures equal those of the measured head; the population grew from 236 to 241 files because @syzygy/http-host brings five production files, none of which holds a hash or freeze site"
+  }
+ }
+}

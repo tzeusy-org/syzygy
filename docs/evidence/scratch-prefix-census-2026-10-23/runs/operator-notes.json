@@ -1,0 +1,30 @@
+{
+ "c0-clean": [
+  "vitest summary: Test Files  233 passed | 3 skipped (236) | Tests  5126 passed | 5 skipped (5131)",
+  "run.log sha256 a99a1ee1f87fa3664ba3b6ddf48fbefaea70c8fc55e0e40a65c9de9d12bed999 (the log itself is not retained)"
+ ],
+ "f1-fresh-after-k1": [
+  "vitest summary: Test Files  2 failed | 231 passed | 3 skipped (236) | Tests  2 failed | 5124 passed | 5 skipped (5131)",
+  "run.log sha256 5a665cb75b33ae3281993445a4322a4ab64b88d0c8c7d5d7b86c426cf1fb9eba (the log itself is not retained)",
+  "failing test: FAIL |@syzygy/polaris-dossier| packages/polaris-dossier/src/start-gates.test.ts > init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses config naming a remote, a promisor, an include or a command the agent's ",
+  "failing test: FAIL |@syzygy/polaris-generation-consent| packages/polaris-generation-consent/src/package-reader.test.ts > the policy port and the strict policy chain agree > on every world in the fixture set, at every instant",
+  "exit 1: both failures are 5000 ms test timeouts, not assertions about scratch directories [Inferred: host load; the other fresh runs and the clean run passed]. The run is kept: its leftovers are what it left."
+ ],
+ "f2-fresh-after-k2": [
+  "vitest summary: Test Files  233 passed | 3 skipped (236) | Tests  5126 passed | 5 skipped (5131)",
+  "run.log sha256 bbb9802dce39cf76b6646832c85fffc4372209db593c94ecd5f0b5c74d956b04 (the log itself is not retained)"
+ ],
+ "f3-fresh-after-k3": [
+  "vitest summary: Test Files  233 passed | 3 skipped (236) | Tests  5126 passed | 5 skipped (5131)",
+  "run.log sha256 fc14cf7de7dead32644a69d824aad1cb3128b5cc105c7afaadb5cdb3954b99ea (the log itself is not retained)"
+ ],
+ "k1-kill-40s": [
+  "the processes carrying the --user-data-dir marker were stopped by pid by census_run.py (SIGTERM); none remained before the next run seeded from this directory"
+ ],
+ "k2-kill-75s": [
+  "the processes carrying the --user-data-dir marker were stopped by pid by census_run.py (SIGTERM); none remained before the next run seeded from this directory"
+ ],
+ "k3-kill-115s": [
+  "the processes carrying the --user-data-dir marker were stopped by pid by census_run.py (SIGTERM); none remained before the next run seeded from this directory"
+ ]
+}

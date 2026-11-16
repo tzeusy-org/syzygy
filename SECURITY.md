@@ -21,8 +21,9 @@ a reader who runs it takes on a real local attack surface.
 - **Executable content, disclosed in full:**
   - **TypeScript under `packages/` and `apps/`**, built and run through the
     npm workspaces declared in `package.json`. Nothing starts on its own.
-    - `packages/cap1-daemon` binds an HTTP listener on loopback and serves
-      both a browser page and a credential-gated machine endpoint.
+    - `packages/http-host` binds an HTTP listener on loopback and admits
+      machine requests by credential; `packages/cap1-daemon` serves a
+      browser page and a credential-gated machine endpoint through it.
     - `apps/three-surface-poc` and `packages/three-surface-poc-core` are the
       bounded Three-Surface POC; `npm run poc` starts them.
   - **`npm run poc:pwb-mutation-run` and `poc:pwb-mutation-sweep` rewrite

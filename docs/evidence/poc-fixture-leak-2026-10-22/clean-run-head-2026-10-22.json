@@ -1,0 +1,97 @@
+{
+ "tool": "kill_then_fresh_run.py",
+ "treeCommit": "88dcdf76db2ad6a30df5856361dc3f9cef8757f5",
+ "mode": "clean",
+ "signal": null,
+ "command": "npx vitest run --project @syzygy/three-surface-poc-app (TMPDIR=<emptied private directory>)",
+ "sha256AtCommit": {
+  "apps/three-surface-poc/src/fixture-directories.ts": "df5a319e02b9bbc3294bf0b0b90a987ecea86bfd219a41d0341855a3e9dc5ada",
+  "apps/three-surface-poc/src/test-fixture-sweep.global-setup.ts": "8f68850a773daf21fde1174532826c5ded2ae372dd89db9ab3b32487e9135317",
+  "apps/three-surface-poc/src/test-model-fixture.ts": "58497e91d23c7244a76ceff055d590dd264c9c09dddbdd647604689b820d413e",
+  "vitest.config.ts": "8e8d698a90f37b1a340e4b9c6500981dda87bb56bd348980a648d1f3d89b625d"
+ },
+ "minCopiesBeforeSignal": 3,
+ "freshRun": {
+  "exit": 1,
+  "seconds": 1169.8,
+  "numTotalTestSuites": 263,
+  "numPassedTests": 1103,
+  "numFailedTests": 10,
+  "numPendingTests": 2,
+  "numTotalTests": 1115,
+  "success": false,
+  "testFiles": 90,
+  "testFilesFailed": 8,
+  "failing": [
+   {
+    "file": "three-surface-poc/src/build-output.test.ts",
+    "test": "POC build output integrity re-emits ignored JavaScript before the launcher executes it",
+    "firstErrorLine": "Error: STACK_TRACE_ERROR"
+   },
+   {
+    "file": "three-surface-poc/src/cdp-browser.browser.test.ts",
+    "test": "disposable Chrome teardown in a real browser closes and drains even when a helper cannot exit on its own",
+    "firstErrorLine": "Error: promise rejected \"Error: private browser profile drain did \u2026\" instead of resolving"
+   },
+   {
+    "file": "three-surface-poc/src/git-observation.test.ts",
+    "test": "read-only Git observation retains a protected source path when it is renamed out",
+    "firstErrorLine": "Error: STACK_TRACE_ERROR"
+   },
+   {
+    "file": "three-surface-poc/src/orrery.browser.test.ts",
+    "test": "Orrery rendered geometry preserves district size differences and readable labels (C3-3, POC-REQ-050)",
+    "firstErrorLine": "Error: STACK_TRACE_ERROR"
+   },
+   {
+    "file": "three-surface-poc/src/polaris-accessibility.browser.test.ts",
+    "test": "Polaris keyboard, non-visual and contrast checks in a real browser keeps diagram labels legible and flow order unambiguous across widths",
+    "firstErrorLine": "Error: STACK_TRACE_ERROR"
+   },
+   {
+    "file": "three-surface-poc/src/polaris-accessibility.browser.test.ts",
+    "test": "Polaris keyboard, non-visual and contrast checks in a real browser keeps complete source columns visible while citation targets remain keyboard-reachable",
+    "firstErrorLine": "Error: STACK_TRACE_ERROR"
+   },
+   {
+    "file": "three-surface-poc/src/polaris-accessibility.browser.test.ts",
+    "test": "Polaris keyboard, non-visual and contrast checks in a real browser gives seven early native shortcuts and a complete no-script outline with a truthful live hidden count",
+    "firstErrorLine": "Error: STACK_TRACE_ERROR"
+   },
+   {
+    "file": "three-surface-poc/src/polaris-authority-sweep.test.ts",
+    "test": "Zero downstream citations of Polaris as authority (PWB-REQ-014) no source/authority/provenance field in the governance, spec, code or docs trees names the Polaris surface",
+    "firstErrorLine": "Error: STACK_TRACE_ERROR"
+   },
+   {
+    "file": "three-surface-poc/src/polaris-generation/draft-preview.browser.test.ts",
+    "test": "renders the pipeline draft with working diagram, source and keyboard deep-dive paths at both widths",
+    "firstErrorLine": "Error: private browser profile drain did not verify two empty scans before deadline"
+   },
+   {
+    "file": "three-surface-poc/src/polaris-generation/public-source-screening.test.ts",
+    "test": "the policy act gate fails closed the default port reads this checkout's chain: the latest recorded version loads the policy it names",
+    "firstErrorLine": "Error: STACK_TRACE_ERROR"
+   }
+  ],
+  "left": {
+   "fixtureDirectories": 0,
+   "ofDeadProcesses": {
+    "count": 0,
+    "copies": 0,
+    "templates": 0,
+    "ownerPids": []
+   },
+   "ofLiveProcesses": {
+    "count": 0,
+    "copies": 0,
+    "templates": 0
+   },
+   "withoutAnOwnerPid": {
+    "count": 0
+   },
+   "otherEntries": 14
+  }
+ },
+ "processesStillNamingThisTmpdir": []
+}

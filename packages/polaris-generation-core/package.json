@@ -5,14 +5,20 @@
   "type": "module",
   "exports": {
     ".": {
+      "source": "./src/index.ts",
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "default": "./dist/index.js"
     },
     "./live": {
+      "source": "./src/live.ts",
       "types": "./dist/live.d.ts",
       "import": "./dist/live.js",
       "default": "./dist/live.js"
     }
+  },
+  "dependencies": {
+    "@syzygy/support": "0.0.0",
+    "parse5": "8.1.0"
   }
 }

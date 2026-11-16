@@ -1,0 +1,118 @@
+{
+ "bead": "syzygy-bpyt.70",
+ "base": "c672492c",
+ "commit": "52d8b96f6ad91c765a6b4675d5eea72ea2067732",
+ "subjects": {
+  "packages/polaris-generation-core/src/workspace-reach.testkit.ts": "3695543f4779dadaa87bb928cdd28c9499a95e3ea97fdd76462890139e0711f5",
+  "packages/polaris-generation-core/src/workspace-reach.test.ts": "42f7cef5110649cd577f7b6bd118e550763b0713b4fa4ee45ea04d6a306000b8",
+  "apps/three-surface-poc/src/sync-child-process-guard.test.ts": "e3a96353a39749088487970ad78bb2f1dae11b62265927294267c2eec6bb66db",
+  "packages/support/src/support-purity.test.ts": "d8852e281b575774d1246473428e4420c9817cd3a28101a185f8d498b779f8f0"
+ },
+ "items": {
+  "1": "moot: closed by PR 549 (the bead comment of 2026-10-28 10:12; docs/evidence/syzygy-bpyt-46/alias-shadow-probe.json)",
+  "2": "arm A: every target of every entry is read by Node 24.6.0's invalidSegmentRegEx and deprecatedInvalidSegmentRegEx, copied verbatim (node-segments.json pins both and the 15 case rows against the running Node)",
+  "3": "no row, by the coordinator's ruling: the bead marks it informational (\"add rows only if cheap\"); no test refuses anything new for it",
+  "4": "moot since PR 549 (round 2 N5)",
+  "5": "E4S and the E1E4S residual, in tools/mutants.py of this directory; the bpyt.46 tool is unedited",
+  "6": "the round-2 reviewer's row, inserted byte for byte (its file docs/evidence/support-leaf-followups-review-2026-10-28/r2/tools/fix-n2-object-rest-row.ts.txt, sha256 73fcffaec45f49fbd589c95c4512a5796235fcd56958b36dc02344cf7e0916f6); W4 pins it",
+  "7": "rows for a types-only, a source-only, a nested-condition, a require-condition and a main target, and the severity order (M4, M4b, M6, R1-R4, RX4)",
+  "8": "the guard loads vitest.config.ts and refuses an alias key at any depth (S2, S3), with a reader row for the walk (S4-S6); the row finds the globalSetup in any project (RX7)"
+ },
+ "round1Repairs": {
+  "review": "R-GP-IMPL-SEGMENT-RULES-1, REVISE over 9fd03a8e",
+  "F1": "the empty-segment message says Node accepts the target with DEP0166 (testkit, test, pin tool, mutants); a trailing-'/' case row, which the pin tool classes as warns, then ERR_UNSUPPORTED_DIR_IMPORT",
+  "F2": "the config row asserts a test.globalSetup in any project, not in test.projects.8; refusal 6 lists what the row needs",
+  "F3": "the body states its CC-REV-1 classes",
+  "N2": "a condition key with a /../ segment stays refused, as the serialized check refused it; differential.json (the review's tools/differential.mjs, retained unchanged) newly accepts 0 of its rows",
+  "N3": "the review's %4E case row and require severity row; RX3 and RX4 are killed"
+ },
+ "newRefusals": [
+  "an exports target with a '.' or 'node_modules' segment, in any case or percent-encoded (Node refuses each with ERR_INVALID_PACKAGE_TARGET); before, only the literal '/../' threw",
+  "a '..' segment written with a backslash or percent-encoded",
+  "an empty segment ('//' or a trailing '/'), which Node 24.6.0 accepts with the DEP0166 warning: it then loads a '//' target, and fails to load one ending in '/', which names a directory (ERR_UNSUPPORTED_DIR_IMPORT under import, MODULE_NOT_FOUND under require)",
+  "any of these under a condition Node does not read by default (types, source, or any other, such as browser), or in a main field (before, the '/../' form already threw there)",
+  "an alias key anywhere in the loaded vitest config, including the shorthand form the text check misses",
+  "a loaded vitest config without ssr.resolve.conditions, without a root test.setupFiles, or without a test.globalSetup in any project: the alias row checks those paths to show it reads the real config"
+ ],
+ "residuals": [
+  "E1E4S: with the segment check dropped, a uniform '/../' entry whose source condition is '/../' too passes the S10 file, since the resolver reads the source condition and joins the segment away; only the check stops it",
+  "for a target after default or in an array fallback, the message says Node refuses it, though Node never reaches it; the entry is refused as unreadable either way",
+  "the case rows record Node 24.6.0 only: the test rows do not run Node, and a later Node that changes its rules is caught only when node_segments.mjs is re-run; hosted CI runs Node 24.x (24.21.0 at 9fd03a8e), and the pin was run on 24.6.0 only",
+  "imports targets get no segment check (0 imports targets in the tree)",
+  "the alias walk reads the config object; a plugin that adds an alias through a config hook is not read (the config has no plugins today)"
+ ],
+ "mutants": {
+  "absent": {
+   "rows": 33,
+   "asExpected": 33,
+   "unexpected": []
+  },
+  "present": {
+   "rows": 33,
+   "asExpected": 33,
+   "unexpected": []
+  }
+ },
+ "suite": {
+  "commit": "52d8b96f6ad91c765a6b4675d5eea72ea2067732",
+  "distDirs": [],
+  "exit": 0,
+  "files": 256,
+  "total": 5806,
+  "passed": 5801,
+  "failed": 0,
+  "skipped": 5,
+  "load1": 33.6,
+  "wallSeconds": 193.9,
+  "cleanAfter": true
+ },
+ "titles": {
+  "base": "c672492caace634905b4f285434211436bb7fe24",
+  "head": "52d8b96f6ad91c765a6b4675d5eea72ea2067732",
+  "baseTitles": 5781,
+  "headTitles": 5801,
+  "delta": 20,
+  "addedByFile": {
+   "apps/three-surface-poc/src/sync-child-process-guard.test.ts": 2,
+   "packages/polaris-generation-core/src/workspace-reach.test.ts": 17,
+   "packages/support/src/support-purity.test.ts": 1
+  },
+  "removed": 0
+ },
+ "differential": {
+  "base": "c672492c",
+  "head": "52d8b96f6ad91c765a6b4675d5eea72ea2067732",
+  "tool": "tools/differential.mjs",
+  "testkitSha256": {
+   "base": "57b643a265a02f612269b19d3ebb7880f3bb72abe9de39c067d29efd1ee47b38",
+   "head": "3695543f4779dadaa87bb928cdd28c9499a95e3ea97fdd76462890139e0711f5"
+  },
+  "rows": 156,
+  "newlyAccepted": 0,
+  "groups": {
+   "accepts -> accepts": 15,
+   "other-refusal -> other-refusal": 10,
+   "accepts -> segment-refusal": 48,
+   "other-refusal -> segment-refusal": 65,
+   "segment-refusal -> segment-refusal": 18
+  }
+ },
+ "surfaceVersion": {
+  "base": "polaris@5e39299adacf",
+  "head": "polaris@56402efc1c19"
+ },
+ "node": "v24.6.0",
+ "files": {
+  "differential.json": "d6629b351547263fe6ea4f7029cd96b3ae5b3022cc51d5192c402a89eb19c566",
+  "mutants-absent.json": "37b0e4908f0e601aaa78100d967f4f7d513eb2b12c5d1f104f529e6b8e522bfa",
+  "mutants-present.json": "b826da7e888f1ab1ed21bf653d3d592cdd83f6972e8278b168a6e32f109c949b",
+  "node-segments.json": "7ddabd8096c665ac2382b5a15814dcf88db265d638992bd752ecf1af338fa746",
+  "suite-absent.json": "452e09e09ed770df95662ade6a3d4ea9f6196628e91feeee80659ba995d8ff4b",
+  "titles.json": "eaaa1475aea0e533bbe24f087d1fbdb05d1ddd301341bbb53feb0a514480cd04",
+  "tools/build_record.py": "d46f0b6d1a59fbc13c2cbb0e1f765cd6ec140ea1852256017409bf4a023a5e15",
+  "tools/differential.mjs": "923988a4ecae9b9ee02385804297ccb973945b42bd1e9ff4b4f8c60f28697e75",
+  "tools/mutants.py": "3f6e645a5092cd4748665dd811299291844e0577c122b6be7ff65abc5a27210b",
+  "tools/node_segments.mjs": "5757233336b365fa8c516353ee01f2897ad1b4e645239feeb37338292c455f64",
+  "tools/titles.py": "2358f71938e42cee633c877cc8aa4124a6395c6ed18804c6365684cfa9be761c"
+ }
+}

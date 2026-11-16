@@ -10,6 +10,17 @@ const file = (path: string): GenerationSource => generationSourcesForBody({ sour
   revision: 'a'.repeat(40), path, objectId: gitBlobObjectId('x\n'), evaluationId: 'e', body: 'x\n' })[0]!;
 const deferredRow = (path: string): GenerationSource => { const { body: _b, spans: _s, ...rest } = file(path); return { ...rest, exclusion: { excluded: true, reason: 'deferred-by-budget' }, spans: [] }; };
 const answer = (id: OwnerAnswer['id'], text: unknown = 'a purpose'): OwnerAnswer => ({ id, answer: text, attribution: 'owner', revision: 'r1', permittedDraftUse: true });
+/** CPU time so far: this thread's (`process.threadCpuUsage`, Node 23.9 and later) or, where `process.threadCpuUsage` is absent
+ * (Node before 23.9), the whole process's (`process.cpuUsage`), which also counts the worker's other threads; each bound keeps
+ * its 10x margins under both (docs/evidence/syzygy-bpyt-4-5/cpu-separation-node22.json). */
+const cpuUsage = (from?: NodeJS.CpuUsage): NodeJS.CpuUsage =>
+  (typeof process.threadCpuUsage === 'function' ? process.threadCpuUsage(from) : process.cpuUsage(from));
+/** CPU milliseconds spent since `from`: the work done, which neither load on the host nor the pool running the file stretches. */
+const cpuMsSince = (from: NodeJS.CpuUsage): number => { const { user, system } = cpuUsage(from); return (user + system) / 1000; };
+// A CPU-time bound sits at least 10x from the slowest head run of its region and from the fastest run of the quadratic
+// mutant it names (docs/evidence/syzygy-bpyt-4-5/cpu-separation.json, syzygy-bpyt.4.5). Each was set at the geometric
+// mean of the two at 3fc3709f and is kept, not refitted to each re-measurement, while both margins hold.
+const EDGE_TRIM_CPU_MS = 1_900; // the backtracking edge trim before d7e25daf
 
 describe('dossier profile', () => {
   it('exports the five questions as {id, topics, text} matching the owner topics and the frozen file shape', () => {
@@ -43,6 +54,18 @@ describe('REQ-031 clarification', () => {
     expect(scope.map(q => q.id)).toEqual(['scope']);
     expect(scope[0]!.contentDigest).toMatch(/^[0-9a-f]{64}$/u);
     expect(openQuestions([file('README.md'), deferredRow('src/x.c')], true)[0]!.question).toContain('1 file(s)');
+  });
+
+  // Expected values: SHA-256 of JSON.stringify([id, question, scope, reason]) for each question, typed here from the question text above
+  // and taken with hashlib (docs/evidence/syzygy-bpyt-6-13/derive-literals.py). The digest is the identity a prior disposition carries
+  // between passes, so a change to the tuple or its order moves it (class 3; review R-GP-IMPL-SUPPORT-LEAF-1 N2, mutant R3).
+  it('digests each question by the exact tuple of its id, text, scope and reason', () => {
+    expect(openQuestions(mechanicsOnly).map(q => [q.id, q.contentDigest])).toEqual([
+      ['purpose', '57dd4d0707afa807a435bea0758bd4ac0a6e95c854b636b8b562556eba6ec2c6'],
+      ['audience', 'a3e9d7308d9fb44eaabca2d484b5a9a5e58ac6bbe6435f31d9dc231510f37e5e'],
+    ]);
+    const scope = openQuestions([...mechanicsOnly, file('docs/overview.md'), deferredRow('src/x.c'), deferredRow('src/y.c')], true);
+    expect(scope.map(q => [q.id, q.contentDigest])).toEqual([['scope', '8c1a2eaa83b70cdc42cb42559da868f6737aef974fe248f3c64a11dd9335a5b2']]);
   });
 
   it('zero-interaction mode asks nothing, records what it would have asked, and accounts for every question', async () => {
@@ -159,12 +182,16 @@ describe('REQ-031 clarification', () => {
     }
     const spaced = await clarify({ sources: mechanicsOnly, mode: 'interactive', maxQuestions: 1, ask: async q => ({ ...answer(q.id), answer: `${' '.repeat(50_000)}cache${' '.repeat(50_000)}` }) });
     expect(spaced.answers[0]).toMatchObject({ disposition: 'answered' });
-    const started = performance.now();
+    // Each filler goes in as a blank attribution and as a blank run between visible characters, the shape a
+    // backtracking edge trim takes quadratic time on.
+    const cpu = cpuUsage();
     for (const filler of [' ', '\u200b', '\u3164', '\t \u2003']) {
-      const blank = await clarify({ sources: mechanicsOnly, mode: 'interactive', maxQuestions: 1, ask: async q => ({ ...answer(q.id), answer: `${filler.repeat(40_000)}x`.slice(0, 40_000), attribution: filler.repeat(40_000) }) });
-      expect(blank.aborted).toEqual({ id: 'purpose', reason: 'invalid-owner-answer' });
+      for (const attribution of [filler.repeat(40_000), `a${filler.repeat(40_000)}b`]) {
+        const blank = await clarify({ sources: mechanicsOnly, mode: 'interactive', maxQuestions: 1, ask: async q => ({ ...answer(q.id), answer: `${filler.repeat(40_000)}x`.slice(0, 40_000), attribution }) });
+        expect(blank.aborted).toEqual({ id: 'purpose', reason: 'invalid-owner-answer' });
+      }
     }
-    expect(performance.now() - started).toBeLessThan(2000);
+    expect(cpuMsSince(cpu)).toBeLessThan(EDGE_TRIM_CPU_MS);
   });
 
   it('records an owner answer with attribution without adopting it, and keeps a declined one as a limitation', async () => {

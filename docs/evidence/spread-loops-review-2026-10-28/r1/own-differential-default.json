@@ -1,0 +1,279 @@
+{
+ "node": "v24.6.0",
+ "execArgv": [],
+ "rows": {
+  "A": [
+   {
+    "end": "LF",
+    "bytes": 400043,
+    "base": "RangeError: Maximum call stack size exceeded",
+    "head": [
+     "script-element",
+     "script-element"
+    ],
+    "shortHead": [
+     "script-element",
+     "script-element"
+    ],
+    "shortBase": [
+     "script-element",
+     "script-element"
+    ],
+    "headMaskEqualsOracle": true,
+    "ok": true
+   },
+   {
+    "end": "CRLF",
+    "bytes": 600047,
+    "base": "RangeError: Maximum call stack size exceeded",
+    "head": [
+     "script-element",
+     "script-element"
+    ],
+    "shortHead": [
+     "script-element",
+     "script-element"
+    ],
+    "shortBase": [
+     "script-element",
+     "script-element"
+    ],
+    "headMaskEqualsOracle": true,
+    "ok": true
+   },
+   {
+    "end": "CR",
+    "bytes": 400043,
+    "base": "RangeError: Maximum call stack size exceeded",
+    "head": [
+     "script-element",
+     "script-element"
+    ],
+    "shortHead": [
+     "script-element",
+     "script-element"
+    ],
+    "shortBase": [
+     "script-element",
+     "script-element"
+    ],
+    "headMaskEqualsOracle": true,
+    "ok": true
+   }
+  ],
+  "B": [
+   {
+    "end": "LF",
+    "inner": 200000,
+    "base": {
+     "kind": "malformed",
+     "reason": "unclosed-fence",
+     "line": 1
+    },
+    "head": {
+     "kind": "malformed",
+     "reason": "unclosed-fence",
+     "line": 1
+    },
+    "scanHead": [
+     {
+      "form": "malformed-code-context",
+      "line": 1,
+      "column": 1,
+      "context": "unclosed-fence"
+     }
+    ],
+    "ok": true
+   },
+   {
+    "end": "LF",
+    "inner": 400000,
+    "base": {
+     "kind": "malformed",
+     "reason": "unclosed-fence",
+     "line": 1
+    },
+    "head": {
+     "kind": "malformed",
+     "reason": "unclosed-fence",
+     "line": 1
+    },
+    "scanHead": [
+     {
+      "form": "malformed-code-context",
+      "line": 1,
+      "column": 1,
+      "context": "unclosed-fence"
+     }
+    ],
+    "ok": true
+   },
+   {
+    "end": "CRLF",
+    "inner": 200000,
+    "base": {
+     "kind": "malformed",
+     "reason": "unclosed-fence",
+     "line": 1
+    },
+    "head": {
+     "kind": "malformed",
+     "reason": "unclosed-fence",
+     "line": 1
+    },
+    "scanHead": [
+     {
+      "form": "malformed-code-context",
+      "line": 1,
+      "column": 1,
+      "context": "unclosed-fence"
+     }
+    ],
+    "ok": true
+   },
+   {
+    "end": "CRLF",
+    "inner": 400000,
+    "base": {
+     "kind": "malformed",
+     "reason": "unclosed-fence",
+     "line": 1
+    },
+    "head": {
+     "kind": "malformed",
+     "reason": "unclosed-fence",
+     "line": 1
+    },
+    "scanHead": [
+     {
+      "form": "malformed-code-context",
+      "line": 1,
+      "column": 1,
+      "context": "unclosed-fence"
+     }
+    ],
+    "ok": true
+   },
+   {
+    "end": "CR",
+    "inner": 200000,
+    "base": {
+     "kind": "malformed",
+     "reason": "unclosed-fence",
+     "line": 1
+    },
+    "head": {
+     "kind": "malformed",
+     "reason": "unclosed-fence",
+     "line": 1
+    },
+    "scanHead": [
+     {
+      "form": "malformed-code-context",
+      "line": 1,
+      "column": 1,
+      "context": "unclosed-fence"
+     }
+    ],
+    "ok": true
+   },
+   {
+    "end": "CR",
+    "inner": 400000,
+    "base": {
+     "kind": "malformed",
+     "reason": "unclosed-fence",
+     "line": 1
+    },
+    "head": {
+     "kind": "malformed",
+     "reason": "unclosed-fence",
+     "line": 1
+    },
+    "scanHead": [
+     {
+      "form": "malformed-code-context",
+      "line": 1,
+      "column": 1,
+      "context": "unclosed-fence"
+     }
+    ],
+    "ok": true
+   }
+  ],
+  "C": {
+   "bytes": 1048008,
+   "base": "RangeError: Maximum call stack size exceeded",
+   "head": "masked",
+   "ok": true
+  },
+  "D": [
+   {
+    "end": "LF",
+    "bigBullets": 262000,
+    "bigBytes": 1048075,
+    "smallKind": "extracted",
+    "smallItems": 50000,
+    "base": "RangeError: Maximum call stack size exceeded",
+    "head": "extracted, 262000",
+    "prefixEqual": true,
+    "ok": true
+   },
+   {
+    "end": "CRLF",
+    "bigBullets": 209000,
+    "bigBytes": 1045083,
+    "smallKind": "extracted",
+    "smallItems": 50000,
+    "base": "RangeError: Maximum call stack size exceeded",
+    "head": "extracted, 209000",
+    "prefixEqual": true,
+    "ok": true
+   }
+  ],
+  "E": [
+   {
+    "end": "LF",
+    "bytes": 600041,
+    "base": "masked fences 3",
+    "scan": [
+     "script-element"
+    ],
+    "ok": true
+   },
+   {
+    "end": "CRLF",
+    "bytes": 900049,
+    "base": "masked fences 3",
+    "scan": [
+     "script-element"
+    ],
+    "ok": true
+   },
+   {
+    "end": "CR",
+    "bytes": 600041,
+    "base": "masked fences 3",
+    "scan": [
+     "script-element"
+    ],
+    "ok": true
+   }
+  ],
+  "F": {
+   "texts": 20000,
+   "differing": 0,
+   "examples": []
+  },
+  "G": {
+   "files": 1892,
+   "comparisons": 5676,
+   "differing": 0,
+   "baseExtractKinds": {
+    "unknown": 3784
+   },
+   "examples": []
+  }
+ },
+ "failures": []
+}

@@ -1,0 +1,525 @@
+{
+ "rows": 904,
+ "remaskChecks": 1542,
+ "oracleDisagreeLf": 0,
+ "CRLF": {
+  "payload_today_vs_lf": {
+   "denominator": 336,
+   "same": 336,
+   "todayAdmits_lfExcludes": 0,
+   "todayExcludes_lfAdmits": 0,
+   "casesAdmitsExcludes": [],
+   "casesExcludesAdmits": []
+  },
+  "control_today_vs_lf": {
+   "denominator": 36,
+   "same": 36,
+   "todayAdmits_lfExcludes": 0,
+   "todayExcludes_lfAdmits": 0,
+   "casesAdmitsExcludes": [],
+   "casesExcludesAdmits": []
+  },
+  "payload_today_vs_oTerm": {
+   "denominator": 336,
+   "same": 336,
+   "todayAdmits_oTermExcludes": 0,
+   "todayExcludes_oTermAdmits": 0,
+   "casesAdmitsExcludes": [],
+   "casesExcludesAdmits": []
+  },
+  "payload_today_vs_oContent": {
+   "denominator": 336,
+   "same": 238,
+   "todayAdmits_oContentExcludes": 98,
+   "todayExcludes_oContentAdmits": 0,
+   "casesAdmitsExcludes": [
+    "K01",
+    "K02",
+    "K06",
+    "K07",
+    "K08",
+    "K12",
+    "K13",
+    "K14",
+    "K15",
+    "K16",
+    "K24",
+    "K25",
+    "K26",
+    "K27",
+    "K30",
+    "K31",
+    "K32",
+    "K36"
+   ],
+   "casesExcludesAdmits": []
+  },
+  "control_today_vs_oContent": {
+   "denominator": 36,
+   "same": 18,
+   "todayAdmits_oContentExcludes": 18,
+   "todayExcludes_oContentAdmits": 0,
+   "casesAdmitsExcludes": [
+    "K01",
+    "K02",
+    "K06",
+    "K07",
+    "K08",
+    "K12",
+    "K13",
+    "K14",
+    "K15",
+    "K16",
+    "K24",
+    "K25",
+    "K26",
+    "K27",
+    "K30",
+    "K31",
+    "K32",
+    "K36"
+   ],
+   "casesExcludesAdmits": []
+  },
+  "payload_a_vs_oTerm": {
+   "denominator": 336,
+   "same": 336,
+   "aAdmits_oTermExcludes": 0,
+   "aExcludes_oTermAdmits": 0,
+   "casesAdmitsExcludes": [],
+   "casesExcludesAdmits": []
+  },
+  "payload_aPlus_vs_oTerm": {
+   "denominator": 336,
+   "same": 336,
+   "aPlusAdmits_oTermExcludes": 0,
+   "aPlusExcludes_oTermAdmits": 0,
+   "casesAdmitsExcludes": [],
+   "casesExcludesAdmits": []
+  },
+  "payload_b_vs_oTerm": {
+   "denominator": 336,
+   "same": 336,
+   "bAdmits_oTermExcludes": 0,
+   "bExcludes_oTermAdmits": 0,
+   "casesAdmitsExcludes": [],
+   "casesExcludesAdmits": []
+  },
+  "payload_bPlus_vs_oTerm": {
+   "denominator": 336,
+   "same": 336,
+   "bPlusAdmits_oTermExcludes": 0,
+   "bPlusExcludes_oTermAdmits": 0,
+   "casesAdmitsExcludes": [],
+   "casesExcludesAdmits": []
+  },
+  "payload_a_vs_today": {
+   "denominator": 336,
+   "same": 336,
+   "aAdmits_todayExcludes": 0,
+   "aExcludes_todayAdmits": 0,
+   "casesAdmitsExcludes": [],
+   "casesExcludesAdmits": []
+  },
+  "payload_aPlus_vs_today": {
+   "denominator": 336,
+   "same": 336,
+   "aPlusAdmits_todayExcludes": 0,
+   "aPlusExcludes_todayAdmits": 0,
+   "casesAdmitsExcludes": [],
+   "casesExcludesAdmits": []
+  },
+  "payload_b_vs_today": {
+   "denominator": 336,
+   "same": 336,
+   "bAdmits_todayExcludes": 0,
+   "bExcludes_todayAdmits": 0,
+   "casesAdmitsExcludes": [],
+   "casesExcludesAdmits": []
+  },
+  "payload_bPlus_vs_today": {
+   "denominator": 336,
+   "same": 336,
+   "bPlusAdmits_todayExcludes": 0,
+   "bPlusExcludes_todayAdmits": 0,
+   "casesAdmitsExcludes": [],
+   "casesExcludesAdmits": []
+  },
+  "control_a_vs_today": {
+   "denominator": 36,
+   "same": 36,
+   "aAdmits_todayExcludes": 0,
+   "aExcludes_todayAdmits": 0,
+   "casesAdmitsExcludes": [],
+   "casesExcludesAdmits": []
+  },
+  "control_aPlus_vs_today": {
+   "denominator": 36,
+   "same": 36,
+   "aPlusAdmits_todayExcludes": 0,
+   "aPlusExcludes_todayAdmits": 0,
+   "casesAdmitsExcludes": [],
+   "casesExcludesAdmits": []
+  },
+  "control_b_vs_today": {
+   "denominator": 36,
+   "same": 36,
+   "bAdmits_todayExcludes": 0,
+   "bExcludes_todayAdmits": 0,
+   "casesAdmitsExcludes": [],
+   "casesExcludesAdmits": []
+  },
+  "control_bPlus_vs_today": {
+   "denominator": 36,
+   "same": 36,
+   "bPlusAdmits_todayExcludes": 0,
+   "bPlusExcludes_todayAdmits": 0,
+   "casesAdmitsExcludes": [],
+   "casesExcludesAdmits": []
+  }
+ },
+ "CR": {
+  "payload_today_vs_lf": {
+   "denominator": 336,
+   "same": 336,
+   "todayAdmits_lfExcludes": 0,
+   "todayExcludes_lfAdmits": 0,
+   "casesAdmitsExcludes": [],
+   "casesExcludesAdmits": []
+  },
+  "control_today_vs_lf": {
+   "denominator": 36,
+   "same": 36,
+   "todayAdmits_lfExcludes": 0,
+   "todayExcludes_lfAdmits": 0,
+   "casesAdmitsExcludes": [],
+   "casesExcludesAdmits": []
+  },
+  "payload_today_vs_oTerm": {
+   "denominator": 336,
+   "same": 336,
+   "todayAdmits_oTermExcludes": 0,
+   "todayExcludes_oTermAdmits": 0,
+   "casesAdmitsExcludes": [],
+   "casesExcludesAdmits": []
+  },
+  "payload_today_vs_oContent": {
+   "denominator": 336,
+   "same": 218,
+   "todayAdmits_oContentExcludes": 102,
+   "todayExcludes_oContentAdmits": 16,
+   "casesAdmitsExcludes": [
+    "K02",
+    "K06",
+    "K07",
+    "K08",
+    "K12",
+    "K13",
+    "K14",
+    "K15",
+    "K16",
+    "K24",
+    "K25",
+    "K26",
+    "K27",
+    "K30",
+    "K31",
+    "K32",
+    "K34",
+    "K35",
+    "K36"
+   ],
+   "casesExcludesAdmits": [
+    "K03",
+    "K05",
+    "K17"
+   ]
+  },
+  "control_today_vs_oContent": {
+   "denominator": 36,
+   "same": 14,
+   "todayAdmits_oContentExcludes": 19,
+   "todayExcludes_oContentAdmits": 3,
+   "casesAdmitsExcludes": [
+    "K02",
+    "K06",
+    "K07",
+    "K08",
+    "K12",
+    "K13",
+    "K14",
+    "K15",
+    "K16",
+    "K24",
+    "K25",
+    "K26",
+    "K27",
+    "K30",
+    "K31",
+    "K32",
+    "K34",
+    "K35",
+    "K36"
+   ],
+   "casesExcludesAdmits": [
+    "K03",
+    "K05",
+    "K17"
+   ]
+  },
+  "payload_a_vs_oTerm": {
+   "denominator": 336,
+   "same": 336,
+   "aAdmits_oTermExcludes": 0,
+   "aExcludes_oTermAdmits": 0,
+   "casesAdmitsExcludes": [],
+   "casesExcludesAdmits": []
+  },
+  "payload_aPlus_vs_oTerm": {
+   "denominator": 336,
+   "same": 336,
+   "aPlusAdmits_oTermExcludes": 0,
+   "aPlusExcludes_oTermAdmits": 0,
+   "casesAdmitsExcludes": [],
+   "casesExcludesAdmits": []
+  },
+  "payload_b_vs_oTerm": {
+   "denominator": 336,
+   "same": 336,
+   "bAdmits_oTermExcludes": 0,
+   "bExcludes_oTermAdmits": 0,
+   "casesAdmitsExcludes": [],
+   "casesExcludesAdmits": []
+  },
+  "payload_bPlus_vs_oTerm": {
+   "denominator": 336,
+   "same": 336,
+   "bPlusAdmits_oTermExcludes": 0,
+   "bPlusExcludes_oTermAdmits": 0,
+   "casesAdmitsExcludes": [],
+   "casesExcludesAdmits": []
+  },
+  "payload_a_vs_today": {
+   "denominator": 336,
+   "same": 336,
+   "aAdmits_todayExcludes": 0,
+   "aExcludes_todayAdmits": 0,
+   "casesAdmitsExcludes": [],
+   "casesExcludesAdmits": []
+  },
+  "payload_aPlus_vs_today": {
+   "denominator": 336,
+   "same": 336,
+   "aPlusAdmits_todayExcludes": 0,
+   "aPlusExcludes_todayAdmits": 0,
+   "casesAdmitsExcludes": [],
+   "casesExcludesAdmits": []
+  },
+  "payload_b_vs_today": {
+   "denominator": 336,
+   "same": 336,
+   "bAdmits_todayExcludes": 0,
+   "bExcludes_todayAdmits": 0,
+   "casesAdmitsExcludes": [],
+   "casesExcludesAdmits": []
+  },
+  "payload_bPlus_vs_today": {
+   "denominator": 336,
+   "same": 336,
+   "bPlusAdmits_todayExcludes": 0,
+   "bPlusExcludes_todayAdmits": 0,
+   "casesAdmitsExcludes": [],
+   "casesExcludesAdmits": []
+  },
+  "control_a_vs_today": {
+   "denominator": 36,
+   "same": 36,
+   "aAdmits_todayExcludes": 0,
+   "aExcludes_todayAdmits": 0,
+   "casesAdmitsExcludes": [],
+   "casesExcludesAdmits": []
+  },
+  "control_aPlus_vs_today": {
+   "denominator": 36,
+   "same": 36,
+   "aPlusAdmits_todayExcludes": 0,
+   "aPlusExcludes_todayAdmits": 0,
+   "casesAdmitsExcludes": [],
+   "casesExcludesAdmits": []
+  },
+  "control_b_vs_today": {
+   "denominator": 36,
+   "same": 36,
+   "bAdmits_todayExcludes": 0,
+   "bExcludes_todayAdmits": 0,
+   "casesAdmitsExcludes": [],
+   "casesExcludesAdmits": []
+  },
+  "control_bPlus_vs_today": {
+   "denominator": 36,
+   "same": 36,
+   "bPlusAdmits_todayExcludes": 0,
+   "bPlusExcludes_todayAdmits": 0,
+   "casesAdmitsExcludes": [],
+   "casesExcludesAdmits": []
+  }
+ },
+ "MRT": {
+  "payload_today_vs_lf": {
+   "denominator": 145,
+   "same": 145,
+   "todayAdmits_lfExcludes": 0,
+   "todayExcludes_lfAdmits": 0,
+   "casesAdmitsExcludes": [],
+   "casesExcludesAdmits": []
+  },
+  "control_today_vs_lf": {
+   "denominator": 15,
+   "same": 15,
+   "todayAdmits_lfExcludes": 0,
+   "todayExcludes_lfAdmits": 0,
+   "casesAdmitsExcludes": [],
+   "casesExcludesAdmits": []
+  },
+  "payload_today_vs_oTerm": {
+   "denominator": 145,
+   "same": 145,
+   "todayAdmits_oTermExcludes": 0,
+   "todayExcludes_oTermAdmits": 0,
+   "casesAdmitsExcludes": [],
+   "casesExcludesAdmits": []
+  },
+  "payload_today_vs_oContent": {
+   "denominator": 145,
+   "same": 109,
+   "todayAdmits_oContentExcludes": 32,
+   "todayExcludes_oContentAdmits": 4,
+   "casesAdmitsExcludes": [
+    "K01",
+    "K06",
+    "K15",
+    "K34",
+    "K35"
+   ],
+   "casesExcludesAdmits": [
+    "K03"
+   ]
+  },
+  "control_today_vs_oContent": {
+   "denominator": 15,
+   "same": 7,
+   "todayAdmits_oContentExcludes": 7,
+   "todayExcludes_oContentAdmits": 1,
+   "casesAdmitsExcludes": [
+    "K01",
+    "K06",
+    "K15",
+    "K34",
+    "K35"
+   ],
+   "casesExcludesAdmits": [
+    "K03"
+   ]
+  },
+  "payload_a_vs_oTerm": {
+   "denominator": 145,
+   "same": 145,
+   "aAdmits_oTermExcludes": 0,
+   "aExcludes_oTermAdmits": 0,
+   "casesAdmitsExcludes": [],
+   "casesExcludesAdmits": []
+  },
+  "payload_aPlus_vs_oTerm": {
+   "denominator": 145,
+   "same": 145,
+   "aPlusAdmits_oTermExcludes": 0,
+   "aPlusExcludes_oTermAdmits": 0,
+   "casesAdmitsExcludes": [],
+   "casesExcludesAdmits": []
+  },
+  "payload_b_vs_oTerm": {
+   "denominator": 145,
+   "same": 145,
+   "bAdmits_oTermExcludes": 0,
+   "bExcludes_oTermAdmits": 0,
+   "casesAdmitsExcludes": [],
+   "casesExcludesAdmits": []
+  },
+  "payload_bPlus_vs_oTerm": {
+   "denominator": 145,
+   "same": 145,
+   "bPlusAdmits_oTermExcludes": 0,
+   "bPlusExcludes_oTermAdmits": 0,
+   "casesAdmitsExcludes": [],
+   "casesExcludesAdmits": []
+  },
+  "payload_a_vs_today": {
+   "denominator": 145,
+   "same": 145,
+   "aAdmits_todayExcludes": 0,
+   "aExcludes_todayAdmits": 0,
+   "casesAdmitsExcludes": [],
+   "casesExcludesAdmits": []
+  },
+  "payload_aPlus_vs_today": {
+   "denominator": 145,
+   "same": 145,
+   "aPlusAdmits_todayExcludes": 0,
+   "aPlusExcludes_todayAdmits": 0,
+   "casesAdmitsExcludes": [],
+   "casesExcludesAdmits": []
+  },
+  "payload_b_vs_today": {
+   "denominator": 145,
+   "same": 145,
+   "bAdmits_todayExcludes": 0,
+   "bExcludes_todayAdmits": 0,
+   "casesAdmitsExcludes": [],
+   "casesExcludesAdmits": []
+  },
+  "payload_bPlus_vs_today": {
+   "denominator": 145,
+   "same": 145,
+   "bPlusAdmits_todayExcludes": 0,
+   "bPlusExcludes_todayAdmits": 0,
+   "casesAdmitsExcludes": [],
+   "casesExcludesAdmits": []
+  },
+  "control_a_vs_today": {
+   "denominator": 15,
+   "same": 15,
+   "aAdmits_todayExcludes": 0,
+   "aExcludes_todayAdmits": 0,
+   "casesAdmitsExcludes": [],
+   "casesExcludesAdmits": []
+  },
+  "control_aPlus_vs_today": {
+   "denominator": 15,
+   "same": 15,
+   "aPlusAdmits_todayExcludes": 0,
+   "aPlusExcludes_todayAdmits": 0,
+   "casesAdmitsExcludes": [],
+   "casesExcludesAdmits": []
+  },
+  "control_b_vs_today": {
+   "denominator": 15,
+   "same": 15,
+   "bAdmits_todayExcludes": 0,
+   "bExcludes_todayAdmits": 0,
+   "casesAdmitsExcludes": [],
+   "casesExcludesAdmits": []
+  },
+  "control_bPlus_vs_today": {
+   "denominator": 15,
+   "same": 15,
+   "bPlusAdmits_todayExcludes": 0,
+   "bPlusExcludes_todayAdmits": 0,
+   "casesAdmitsExcludes": [],
+   "casesExcludesAdmits": []
+  }
+ },
+ "crEqualsCrlf": {
+  "denominator": 372,
+  "equal": 372
+ }
+}

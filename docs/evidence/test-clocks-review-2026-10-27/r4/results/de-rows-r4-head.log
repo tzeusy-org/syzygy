@@ -1,0 +1,15 @@
+{"id": "control", "exit": 0, "passed": 17, "failed": [], "load1": ["26.98", "26.54"]}
+{"id": "Y1-dossier-serve-falls-through", "exit": 1, "passed": 16, "failed": ["the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"], "load1": ["26.54", "28.09"]}
+{"id": "Y2-dossier-serve-reenters-main", "exit": 1, "passed": 16, "failed": ["the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"], "load1": ["27.76", "27.96"]}
+{"id": "Y3-flag-rewrites-argv-into-dossier", "exit": 1, "passed": 16, "failed": ["the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"], "load1": ["27.96", "27.84"]}
+{"id": "Y4-polaris-labelled-break", "exit": 1, "passed": 16, "failed": ["the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"], "load1": ["27.84", "27.03"]}
+{"id": "Y5-dossier-serve-callback-after-branch", "exit": 1, "passed": 16, "failed": ["the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"], "load1": ["27.19", "27.73"]}
+{"id": "E-comment-in-branch", "exit": 1, "passed": 16, "failed": ["the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"], "load1": ["27.68", "27.46"]}
+{"id": "E-renamed-binding", "exit": 1, "passed": 16, "failed": ["the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"], "load1": ["27.58", "28.62"]}
+{"id": "E-branch-swap", "exit": 1, "passed": 16, "failed": ["the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"], "load1": ["28.62", "30.68"]}
+{"id": "L2-nested-function-in-dossier", "exit": 1, "passed": 16, "failed": ["the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"], "load1": ["31.66", "30.73"]}
+{"id": "L3-nested-try-in-polaris", "exit": 1, "passed": 16, "failed": ["the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"], "load1": ["31.31", "31.07"]}
+{"id": "G1-allman-brace-and-wrapped-import", "exit": 1, "passed": 16, "failed": ["the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"], "load1": ["31.07", "32.64"]}
+{"id": "G2-commented-else-if-chain", "exit": 1, "passed": 16, "failed": ["the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"], "load1": ["32.34", "32.54"]}
+{"id": "G3-else-if-order-swap", "exit": 1, "passed": 16, "failed": ["the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"], "load1": ["32.54", "31.87"]}
+done 0

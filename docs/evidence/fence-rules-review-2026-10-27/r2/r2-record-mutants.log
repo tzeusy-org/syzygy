@@ -1,0 +1,27 @@
+PR1-profile-opener-indent4 fence-rules 2 package-reader None agrees True
+PR2-profile-closer-any-whitespace fence-rules 4 package-reader None agrees True
+PR3-profile-closer-strictly-longer fence-rules 29 package-reader None agrees True
+PR4-profile-backtick-info-allowed fence-rules 2 package-reader None agrees True
+PR5-profile-opener-tolerates-CR fence-rules 29 package-reader None agrees True
+L1-links-opener-spaces-only fence-rules 2 package-reader None agrees True
+L2-links-closer-any-length fence-rules 3 package-reader None agrees True
+L3-links-closer-any-fence-char fence-rules 7 package-reader None agrees True
+L4-links-inline-span-needs-content fence-rules 2 package-reader None agrees True
+E1-extraction-opener-indent3 fence-rules 6 package-reader None agrees True
+E2-extraction-closer-trim-both-sides fence-rules 6 package-reader None agrees True
+E3-extraction-closer-any-text fence-rules 4 package-reader None agrees True
+R1-renderer-opener-indent4 fence-rules 1 package-reader None agrees True
+R2-renderer-closer-longer-than-opener fence-rules 28 package-reader None agrees True
+R3-renderer-heading-depth-closer-longer fence-rules 1 package-reader None agrees True
+K1-consent-opener-indent4 fence-rules 0 package-reader 1 agrees True
+K2-consent-closer-strictly-longer fence-rules 0 package-reader 1 agrees True
+K3-consent-closer-any-text fence-rules 0 package-reader 1 agrees True
+K4-consent-backtick-info-opens fence-rules 0 package-reader 1 agrees True
+RV7-renderer-tab-indented-fence-ends-paragraph fence-rules 1 package-reader None agrees True
+RV11-profile-fence-opener-drops-open-span fence-rules 1 package-reader None agrees True
+E4-extraction-closer-is-the-profile-closer fence-rules 8 package-reader None agrees True
+L5-links-closer-is-the-profile-closer fence-rules 9 package-reader None agrees True
+L6-links-strip-spans-across-lines fence-rules 9 package-reader None agrees True
+N1a-consent-act-title-check-tolerates-crlf fence-rules 0 package-reader 1 agrees True
+N1b-consent-instance-table-check-tolerates-crlf fence-rules 0 package-reader 1 agrees True
+exit=0

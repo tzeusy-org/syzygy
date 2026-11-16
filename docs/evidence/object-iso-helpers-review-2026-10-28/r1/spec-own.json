@@ -1,0 +1,117 @@
+{
+ "rows": [
+  {
+   "id": "O1 tag-based array test",
+   "file": "packages/support/src/is-record.ts",
+   "line": 8,
+   "old": "!Array.isArray(value)",
+   "new": "Object.prototype.toString.call(value) !== '[object Array]'",
+   "tests": [
+    "packages/support/src/is-record.test.ts"
+   ]
+  },
+  {
+   "id": "O2 instanceof Object",
+   "file": "packages/support/src/is-record.ts",
+   "line": 8,
+   "old": "value !== null && typeof value === 'object' && !Array.isArray(value)",
+   "new": "value instanceof Object && !Array.isArray(value)",
+   "tests": [
+    "packages/support/src/is-record.test.ts"
+   ]
+  },
+  {
+   "id": "O3 refuses typed arrays",
+   "file": "packages/support/src/is-record.ts",
+   "line": 8,
+   "old": "!Array.isArray(value);",
+   "new": "!Array.isArray(value) && !ArrayBuffer.isView(value);",
+   "tests": [
+    "packages/support/src/is-record.test.ts"
+   ]
+  },
+  {
+   "id": "O4 rounds the instant",
+   "file": "packages/polaris-dossier/src/iso-of.ts",
+   "line": 9,
+   "old": "new Date(instant)",
+   "new": "new Date(Math.round(instant))",
+   "tests": [
+    "packages/polaris-dossier/src/iso-of.test.ts"
+   ]
+  },
+  {
+   "id": "O5 NaN becomes the epoch",
+   "file": "packages/polaris-dossier/src/iso-of.ts",
+   "line": 9,
+   "old": "new Date(instant)",
+   "new": "new Date(Number.isFinite(instant) ? instant : 0)",
+   "tests": [
+    "packages/polaris-dossier/src/iso-of.test.ts"
+   ]
+  },
+  {
+   "id": "O6 registry entry: only null refused",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 132,
+   "old": "entry === undefined || !isRecord(entry)",
+   "new": "entry === undefined || entry === null",
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ]
+  },
+  {
+   "id": "O7 screen scope: only null/undefined refused",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 83,
+   "old": "if (!isRecord(scope))",
+   "new": "if (scope === undefined || scope === null)",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ]
+  },
+  {
+   "id": "O8 redaction: a function admitted",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "line": 73,
+   "old": "if (!isRecord(red))",
+   "new": "if (!isRecord(red) && typeof red !== 'function')",
+   "tests": [
+    "packages/polaris-generation-core/src/secret-redaction.test.ts"
+   ]
+  },
+  {
+   "id": "O6 registry entry: only null refused [base tests]",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 132,
+   "old": "entry === undefined || !isRecord(entry)",
+   "new": "entry === undefined || entry === null",
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  },
+  {
+   "id": "O7 screen scope: only null/undefined refused [base tests]",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 83,
+   "old": "if (!isRecord(scope))",
+   "new": "if (scope === undefined || scope === null)",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  },
+  {
+   "id": "O8 redaction: a function admitted [base tests]",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "line": 73,
+   "old": "if (!isRecord(red))",
+   "new": "if (!isRecord(red) && typeof red !== 'function')",
+   "tests": [
+    "packages/polaris-generation-core/src/secret-redaction.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  }
+ ]
+}

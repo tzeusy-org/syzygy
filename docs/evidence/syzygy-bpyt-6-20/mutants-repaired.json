@@ -1,0 +1,803 @@
+{
+  "subjectCommit": "1675b3967b36812ee05775a6f2bb31627f247f04",
+  "harnessSha256": "b878ff035cce9d27f86bb91180cfabd421f659b2ed39517d66f8762e4f5aaede",
+  "denominator": 27,
+  "executed": 27,
+  "killed": 27,
+  "results": [
+    {
+      "id": "factory-executable",
+      "subjectCommit": "1675b3967b36812ee05775a6f2bb31627f247f04",
+      "path": "packages/three-surface-poc-core/src/git-runner.ts",
+      "subjectSha256": "61736e64d293e2431b9baf2fda70904fe101c17db00b42f1a514ac6cf40176ea",
+      "mutantSha256": "d0888359ab0d965f085d71be0e5bd20f46d39a8a5881213476f3fc4fe68c3baf",
+      "old": "execFileSync('git', argv",
+      "new": "execFileSync('wrong-git', argv",
+      "literalMatches": 4,
+      "command": [
+        "npm",
+        "exec",
+        "vitest",
+        "run",
+        "--",
+        "--project",
+        "unit",
+        "packages/three-surface-poc-core/src/git-runner.test.ts"
+      ],
+      "syntheticEnvironment": {},
+      "exitCode": 1,
+      "denominator": 5,
+      "killed": true,
+      "reason": "5 failed tests",
+      "logSha256": "51f4b14d51b0500bb6e32fe951c59ee0c203c2e369f71576cf3e74cedb3089b2"
+    },
+    {
+      "id": "factory-argv-order",
+      "subjectCommit": "1675b3967b36812ee05775a6f2bb31627f247f04",
+      "path": "packages/three-surface-poc-core/src/git-runner.ts",
+      "subjectSha256": "61736e64d293e2431b9baf2fda70904fe101c17db00b42f1a514ac6cf40176ea",
+      "mutantSha256": "7146c1de9d75ef118bd78eb195765733b7ecaaa2f0e23e2130ebfc22e3eaed86",
+      "old": "const argv = [...prefix, ...args];",
+      "new": "const argv = [...args, ...prefix];",
+      "literalMatches": 1,
+      "command": [
+        "npm",
+        "exec",
+        "vitest",
+        "run",
+        "--",
+        "--project",
+        "unit",
+        "packages/three-surface-poc-core/src/git-runner.test.ts"
+      ],
+      "syntheticEnvironment": {},
+      "exitCode": 1,
+      "denominator": 5,
+      "killed": true,
+      "reason": "5 failed tests",
+      "logSha256": "7441e983d383d843ea7ddde222911188d7aa833fc937cf33fe750f15114b8d24"
+    },
+    {
+      "id": "factory-cwd-omission",
+      "subjectCommit": "1675b3967b36812ee05775a6f2bb31627f247f04",
+      "path": "packages/three-surface-poc-core/src/git-runner.ts",
+      "subjectSha256": "61736e64d293e2431b9baf2fda70904fe101c17db00b42f1a514ac6cf40176ea",
+      "mutantSha256": "e38e46980caaa28ef3f228b51d221d4efc907a029440a1d46b0346b2506718aa",
+      "old": "{ stdio: [...stdio] }",
+      "new": "{ cwd: '/unexpected', stdio: [...stdio] }",
+      "literalMatches": 1,
+      "command": [
+        "npm",
+        "exec",
+        "vitest",
+        "run",
+        "--",
+        "--project",
+        "unit",
+        "packages/three-surface-poc-core/src/git-runner.test.ts"
+      ],
+      "syntheticEnvironment": {},
+      "exitCode": 1,
+      "denominator": 5,
+      "killed": true,
+      "reason": "5 failed tests",
+      "logSha256": "dd3ca7317e6d360528e5091e00841c4a7028cc899f98dde904ad6c9e5a7744d5"
+    },
+    {
+      "id": "factory-encoding",
+      "subjectCommit": "1675b3967b36812ee05775a6f2bb31627f247f04",
+      "path": "packages/three-surface-poc-core/src/git-runner.ts",
+      "subjectSha256": "61736e64d293e2431b9baf2fda70904fe101c17db00b42f1a514ac6cf40176ea",
+      "mutantSha256": "656fdf1e41bf24fd465e2df889b96b919e97669df3d73b3b982fa7c84bb462b1",
+      "old": "{ encoding, maxBuffer, stdio: [...stdio] }",
+      "new": "{ maxBuffer, stdio: [...stdio] }",
+      "literalMatches": 1,
+      "command": [
+        "npm",
+        "exec",
+        "vitest",
+        "run",
+        "--",
+        "--project",
+        "unit",
+        "packages/three-surface-poc-core/src/git-runner.test.ts"
+      ],
+      "syntheticEnvironment": {},
+      "exitCode": 1,
+      "denominator": 5,
+      "killed": true,
+      "reason": "1 failed tests",
+      "logSha256": "8f9a141aec7fcf05fbffb63546a6bd72eb04e990111ba1310502caf38cc54d00"
+    },
+    {
+      "id": "factory-buffer-omission",
+      "subjectCommit": "1675b3967b36812ee05775a6f2bb31627f247f04",
+      "path": "packages/three-surface-poc-core/src/git-runner.ts",
+      "subjectSha256": "61736e64d293e2431b9baf2fda70904fe101c17db00b42f1a514ac6cf40176ea",
+      "mutantSha256": "890c0b0d8987853367f9af9151ce6e4d951dcf7695c7239c1a7a87e1776d1035",
+      "old": "{ stdio: [...stdio] }",
+      "new": "{ maxBuffer: 1, stdio: [...stdio] }",
+      "literalMatches": 1,
+      "command": [
+        "npm",
+        "exec",
+        "vitest",
+        "run",
+        "--",
+        "--project",
+        "unit",
+        "packages/three-surface-poc-core/src/git-runner.test.ts"
+      ],
+      "syntheticEnvironment": {},
+      "exitCode": 1,
+      "denominator": 5,
+      "killed": true,
+      "reason": "5 failed tests",
+      "logSha256": "e847502a5c7a5a0e39383bd59970b0e2dca839ed327b83c84f08b48783a24e29"
+    },
+    {
+      "id": "factory-stderr",
+      "subjectCommit": "1675b3967b36812ee05775a6f2bb31627f247f04",
+      "path": "packages/three-surface-poc-core/src/git-runner.ts",
+      "subjectSha256": "61736e64d293e2431b9baf2fda70904fe101c17db00b42f1a514ac6cf40176ea",
+      "mutantSha256": "8182bc7aaee1c17e13cf701c17df9d04f743375950299b59bc381d8da8f9a43e",
+      "old": "stdio: [...stdio]",
+      "new": "stdio: ['ignore', 'pipe', 'ignore']",
+      "literalMatches": 4,
+      "command": [
+        "npm",
+        "exec",
+        "vitest",
+        "run",
+        "--",
+        "--project",
+        "unit",
+        "packages/three-surface-poc-core/src/git-runner.test.ts"
+      ],
+      "syntheticEnvironment": {},
+      "exitCode": 1,
+      "denominator": 5,
+      "killed": true,
+      "reason": "1 failed tests",
+      "logSha256": "340abbe29256aa024ab46eb1e6c244d0382bb4d874315c42f7f697399d93274b"
+    },
+    {
+      "id": "factory-raw-type",
+      "subjectCommit": "1675b3967b36812ee05775a6f2bb31627f247f04",
+      "path": "packages/three-surface-poc-core/src/git-runner.ts",
+      "subjectSha256": "61736e64d293e2431b9baf2fda70904fe101c17db00b42f1a514ac6cf40176ea",
+      "mutantSha256": "e1565aa100bd44934b7c8c9d9a2296ca6cb352828e9392e8c3eba678b10568a9",
+      "old": "return execFileSync('git', argv, { stdio: [...stdio] });",
+      "new": "return new Uint8Array(execFileSync('git', argv, { stdio: [...stdio] }));",
+      "literalMatches": 1,
+      "command": [
+        "npm",
+        "exec",
+        "vitest",
+        "run",
+        "--",
+        "--project",
+        "unit",
+        "packages/three-surface-poc-core/src/git-runner.test.ts"
+      ],
+      "syntheticEnvironment": {},
+      "exitCode": 1,
+      "denominator": 5,
+      "killed": true,
+      "reason": "5 failed tests",
+      "logSha256": "f44a6057e1e64f37ad6643fe54dfb49ac509088538a06c205cd5fa9e228d1bb6"
+    },
+    {
+      "id": "factory-error-identity",
+      "subjectCommit": "1675b3967b36812ee05775a6f2bb31627f247f04",
+      "path": "packages/three-surface-poc-core/src/git-runner.ts",
+      "subjectSha256": "61736e64d293e2431b9baf2fda70904fe101c17db00b42f1a514ac6cf40176ea",
+      "mutantSha256": "cb91f861b3391057633b6625d385d6ac6d631a115e9c228fc76cb2c71fd61b78",
+      "old": "return execFileSync('git', argv, { encoding, maxBuffer, stdio: [...stdio] });",
+      "new": "try { return execFileSync('git', argv, { encoding, maxBuffer, stdio: [...stdio] }); } catch (e) { throw new Error(String(e)); }",
+      "literalMatches": 1,
+      "command": [
+        "npm",
+        "exec",
+        "vitest",
+        "run",
+        "--",
+        "--project",
+        "unit",
+        "packages/three-surface-poc-core/src/git-runner.test.ts"
+      ],
+      "syntheticEnvironment": {},
+      "exitCode": 1,
+      "denominator": 5,
+      "killed": true,
+      "reason": "1 failed tests",
+      "logSha256": "0835c77a08e4b3d8b55fadc227addfbf36f3f266506ad8bd4970c9800d2f6121"
+    },
+    {
+      "id": "worker-text-mode",
+      "subjectCommit": "1675b3967b36812ee05775a6f2bb31627f247f04",
+      "path": "packages/three-surface-poc-core/src/worker-change-observation.ts",
+      "subjectSha256": "707eeacd65c9b86a987cfa4519e03e64716b08f7fe9f9b4d7930cd1ec374b53d",
+      "mutantSha256": "3462d43f1d8a6167248c5155ed6741423e4fa972c8d0e949473518d1c629e290",
+      "old": "    encoding: 'utf8',\n",
+      "new": "",
+      "literalMatches": 1,
+      "command": [
+        "node",
+        "docs/evidence/syzygy-bpyt-6-20/differential.mjs",
+        "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/mutations-repaired/worker-text-mode",
+        "1675b3967b36812ee05775a6f2bb31627f247f04"
+      ],
+      "syntheticEnvironment": {
+        "G5_PROFILES": "1",
+        "G5_CASE_FILTER": "invalid-utf8",
+        "G5_SKIP_CALLERS": "1"
+      },
+      "exitCode": 1,
+      "denominator": 1,
+      "killed": true,
+      "reason": [
+        {
+          "profile": 1,
+          "case": "invalid-utf8"
+        }
+      ],
+      "logSha256": "0d8c7ba7fbe5585b1cba2bcffdc71f392bc1d970e8c92a05fceee0ebf28bda84"
+    },
+    {
+      "id": "worker-buffer",
+      "subjectCommit": "1675b3967b36812ee05775a6f2bb31627f247f04",
+      "path": "packages/three-surface-poc-core/src/worker-change-observation.ts",
+      "subjectSha256": "707eeacd65c9b86a987cfa4519e03e64716b08f7fe9f9b4d7930cd1ec374b53d",
+      "mutantSha256": "eae5f5c36cf64d6efb5b609c5c21a05634a3e6b457efbed2a0ccac45decfd07c",
+      "old": "maxBuffer: 64 * 1024 * 1024",
+      "new": "maxBuffer: 63 * 1024 * 1024",
+      "literalMatches": 1,
+      "command": [
+        "node",
+        "docs/evidence/syzygy-bpyt-6-20/differential.mjs",
+        "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/mutations-repaired/worker-buffer",
+        "1675b3967b36812ee05775a6f2bb31627f247f04"
+      ],
+      "syntheticEnvironment": {
+        "G5_PROFILES": "1",
+        "G5_CASE_FILTER": "stdout-bound0",
+        "G5_SKIP_CALLERS": "1"
+      },
+      "exitCode": 1,
+      "denominator": 1,
+      "killed": true,
+      "reason": [
+        {
+          "profile": 1,
+          "case": "stdout-bound0"
+        }
+      ],
+      "logSha256": "0d8c7ba7fbe5585b1cba2bcffdc71f392bc1d970e8c92a05fceee0ebf28bda84"
+    },
+    {
+      "id": "worker-stderr",
+      "subjectCommit": "1675b3967b36812ee05775a6f2bb31627f247f04",
+      "path": "packages/three-surface-poc-core/src/worker-change-observation.ts",
+      "subjectSha256": "707eeacd65c9b86a987cfa4519e03e64716b08f7fe9f9b4d7930cd1ec374b53d",
+      "mutantSha256": "dfc590b4d9235b34ff834219be8759e80c8e262c65f0b273da6060b5a8f3d8ef",
+      "old": "stdio: ['ignore', 'pipe', 'pipe']",
+      "new": "stdio: ['ignore', 'pipe', 'ignore']",
+      "literalMatches": 1,
+      "command": [
+        "node",
+        "docs/evidence/syzygy-bpyt-6-20/differential.mjs",
+        "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/mutations-repaired/worker-stderr",
+        "1675b3967b36812ee05775a6f2bb31627f247f04"
+      ],
+      "syntheticEnvironment": {
+        "G5_PROFILES": "1",
+        "G5_CASE_FILTER": "nonzero-both-streams",
+        "G5_SKIP_CALLERS": "1"
+      },
+      "exitCode": 1,
+      "denominator": 1,
+      "killed": true,
+      "reason": [
+        {
+          "profile": 1,
+          "case": "nonzero-both-streams"
+        }
+      ],
+      "logSha256": "0d8c7ba7fbe5585b1cba2bcffdc71f392bc1d970e8c92a05fceee0ebf28bda84"
+    },
+    {
+      "id": "governance-fatal-decode",
+      "subjectCommit": "1675b3967b36812ee05775a6f2bb31627f247f04",
+      "path": "apps/three-surface-poc/src/governance-inputs.ts",
+      "subjectSha256": "492965ca0af3477062bf5bd6780bc259e1036a7e98991d73f4651d778c7c19a0",
+      "mutantSha256": "7608829165fd9e1a72a5359a5e97b3dcd0d8fd99d86590f971632bfcf2ca8c7e",
+      "old": "return new TextDecoder('utf-8', { fatal: true }).decode(stdout);",
+      "new": "return new TextDecoder('utf-8', { fatal: false }).decode(stdout);",
+      "literalMatches": 1,
+      "command": [
+        "node",
+        "docs/evidence/syzygy-bpyt-6-20/differential.mjs",
+        "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/mutations-repaired/governance-fatal-decode",
+        "1675b3967b36812ee05775a6f2bb31627f247f04"
+      ],
+      "syntheticEnvironment": {
+        "G5_PROFILES": "2",
+        "G5_CASE_FILTER": "invalid-utf8",
+        "G5_SKIP_CALLERS": "1"
+      },
+      "exitCode": 1,
+      "denominator": 1,
+      "killed": true,
+      "reason": [
+        {
+          "profile": 2,
+          "case": "invalid-utf8"
+        }
+      ],
+      "logSha256": "0d8c7ba7fbe5585b1cba2bcffdc71f392bc1d970e8c92a05fceee0ebf28bda84"
+    },
+    {
+      "id": "governance-text-default-buffer",
+      "subjectCommit": "1675b3967b36812ee05775a6f2bb31627f247f04",
+      "path": "apps/three-surface-poc/src/governance-inputs.ts",
+      "subjectSha256": "492965ca0af3477062bf5bd6780bc259e1036a7e98991d73f4651d778c7c19a0",
+      "mutantSha256": "8e315afa1c8c3b7bf885721aad215f890eab3775ea28f01e56709f52145cd25f",
+      "old": "    stdio: ['ignore', 'pipe', 'ignore'],\n  })(args);",
+      "new": "    maxBuffer: 2 * 1024 * 1024,\n    stdio: ['ignore', 'pipe', 'ignore'],\n  })(args);",
+      "literalMatches": 1,
+      "command": [
+        "node",
+        "docs/evidence/syzygy-bpyt-6-20/differential.mjs",
+        "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/mutations-repaired/governance-text-default-buffer",
+        "1675b3967b36812ee05775a6f2bb31627f247f04"
+      ],
+      "syntheticEnvironment": {
+        "G5_PROFILES": "2",
+        "G5_CASE_FILTER": "stdout-bound1",
+        "G5_SKIP_CALLERS": "1"
+      },
+      "exitCode": 1,
+      "denominator": 1,
+      "killed": true,
+      "reason": [
+        {
+          "profile": 2,
+          "case": "stdout-bound1"
+        }
+      ],
+      "logSha256": "0d8c7ba7fbe5585b1cba2bcffdc71f392bc1d970e8c92a05fceee0ebf28bda84"
+    },
+    {
+      "id": "governance-text-stderr",
+      "subjectCommit": "1675b3967b36812ee05775a6f2bb31627f247f04",
+      "path": "apps/three-surface-poc/src/governance-inputs.ts",
+      "subjectSha256": "492965ca0af3477062bf5bd6780bc259e1036a7e98991d73f4651d778c7c19a0",
+      "mutantSha256": "e5b617fea5e230f2805c654bcc7140159444b3d72f8b966c058650b7b57b3e2e",
+      "old": "    stdio: ['ignore', 'pipe', 'ignore'],\n  })(args);",
+      "new": "    stdio: ['ignore', 'pipe', 'pipe'],\n  })(args);",
+      "literalMatches": 1,
+      "command": [
+        "node",
+        "docs/evidence/syzygy-bpyt-6-20/differential.mjs",
+        "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/mutations-repaired/governance-text-stderr",
+        "1675b3967b36812ee05775a6f2bb31627f247f04"
+      ],
+      "syntheticEnvironment": {
+        "G5_PROFILES": "2",
+        "G5_CASE_FILTER": "nonzero-both-streams",
+        "G5_SKIP_CALLERS": "1"
+      },
+      "exitCode": 1,
+      "denominator": 1,
+      "killed": true,
+      "reason": [
+        {
+          "profile": 2,
+          "case": "nonzero-both-streams"
+        }
+      ],
+      "logSha256": "0d8c7ba7fbe5585b1cba2bcffdc71f392bc1d970e8c92a05fceee0ebf28bda84"
+    },
+    {
+      "id": "governance-raw-default-buffer",
+      "subjectCommit": "1675b3967b36812ee05775a6f2bb31627f247f04",
+      "path": "apps/three-surface-poc/src/governance-inputs.ts",
+      "subjectSha256": "492965ca0af3477062bf5bd6780bc259e1036a7e98991d73f4651d778c7c19a0",
+      "mutantSha256": "19af8792a86a93092110fed996ad0f0bbf1345a42fe8aa5ac188e270dc02da24",
+      "old": "    stdio: ['ignore', 'pipe', 'ignore'],\n  })(['cat-file', 'blob', object]));",
+      "new": "    maxBuffer: 2 * 1024 * 1024,\n    stdio: ['ignore', 'pipe', 'ignore'],\n  })(['cat-file', 'blob', object]));",
+      "literalMatches": 1,
+      "command": [
+        "node",
+        "docs/evidence/syzygy-bpyt-6-20/differential.mjs",
+        "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/mutations-repaired/governance-raw-default-buffer",
+        "1675b3967b36812ee05775a6f2bb31627f247f04"
+      ],
+      "syntheticEnvironment": {
+        "G5_PROFILES": "3",
+        "G5_CASE_FILTER": "stdout-bound1",
+        "G5_SKIP_CALLERS": "1"
+      },
+      "exitCode": 1,
+      "denominator": 1,
+      "killed": true,
+      "reason": [
+        {
+          "profile": 3,
+          "case": "stdout-bound1"
+        }
+      ],
+      "logSha256": "0d8c7ba7fbe5585b1cba2bcffdc71f392bc1d970e8c92a05fceee0ebf28bda84"
+    },
+    {
+      "id": "governance-raw-fidelity",
+      "subjectCommit": "1675b3967b36812ee05775a6f2bb31627f247f04",
+      "path": "apps/three-surface-poc/src/governance-inputs.ts",
+      "subjectSha256": "492965ca0af3477062bf5bd6780bc259e1036a7e98991d73f4651d778c7c19a0",
+      "mutantSha256": "5ae7c7a80213988274c110364c86de3cb9fdb0c3c21591c35ff3123dce897ccb",
+      "old": "})(['cat-file', 'blob', object]));",
+      "new": "})(['cat-file', 'blob', object]).subarray(1));",
+      "literalMatches": 1,
+      "command": [
+        "node",
+        "docs/evidence/syzygy-bpyt-6-20/differential.mjs",
+        "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/mutations-repaired/governance-raw-fidelity",
+        "1675b3967b36812ee05775a6f2bb31627f247f04"
+      ],
+      "syntheticEnvironment": {
+        "G5_PROFILES": "3",
+        "G5_CASE_FILTER": "valid-utf8-bom-nul",
+        "G5_SKIP_CALLERS": "1"
+      },
+      "exitCode": 1,
+      "denominator": 1,
+      "killed": true,
+      "reason": [
+        {
+          "profile": 3,
+          "case": "valid-utf8-bom-nul"
+        }
+      ],
+      "logSha256": "0d8c7ba7fbe5585b1cba2bcffdc71f392bc1d970e8c92a05fceee0ebf28bda84"
+    },
+    {
+      "id": "repository-optional-locks",
+      "subjectCommit": "1675b3967b36812ee05775a6f2bb31627f247f04",
+      "path": "apps/three-surface-poc/src/git-observation.ts",
+      "subjectSha256": "57ee838fccf606f686fd2be589d65f2d91ac5330a3cce3ec6d330281aacd51ed",
+      "mutantSha256": "2889389f7abcc6111b1727d05b1f2f6504c3963d7536b367e8a2b934f7db6aa5",
+      "old": "env: { ...process.env, GIT_OPTIONAL_LOCKS: '0' }",
+      "new": "env: { ...process.env }",
+      "literalMatches": 1,
+      "command": [
+        "node",
+        "docs/evidence/syzygy-bpyt-6-20/differential.mjs",
+        "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/mutations-repaired/repository-optional-locks",
+        "1675b3967b36812ee05775a6f2bb31627f247f04"
+      ],
+      "syntheticEnvironment": {
+        "G5_PROFILES": "4",
+        "G5_CASE_FILTER": "valid-utf8-bom-nul",
+        "G5_SKIP_CALLERS": "1"
+      },
+      "exitCode": 1,
+      "denominator": 1,
+      "killed": true,
+      "reason": [
+        {
+          "profile": 4,
+          "case": "valid-utf8-bom-nul"
+        }
+      ],
+      "logSha256": "0d8c7ba7fbe5585b1cba2bcffdc71f392bc1d970e8c92a05fceee0ebf28bda84"
+    },
+    {
+      "id": "repository-inherited-env",
+      "subjectCommit": "1675b3967b36812ee05775a6f2bb31627f247f04",
+      "path": "apps/three-surface-poc/src/git-observation.ts",
+      "subjectSha256": "57ee838fccf606f686fd2be589d65f2d91ac5330a3cce3ec6d330281aacd51ed",
+      "mutantSha256": "5899a72b64230e6f57d534f6b292c0617bf356fe360724c24d94684539148b98",
+      "old": "env: { ...process.env, GIT_OPTIONAL_LOCKS: '0' }",
+      "new": "env: { GIT_OPTIONAL_LOCKS: '0' }",
+      "literalMatches": 1,
+      "command": [
+        "node",
+        "docs/evidence/syzygy-bpyt-6-20/differential.mjs",
+        "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/mutations-repaired/repository-inherited-env",
+        "1675b3967b36812ee05775a6f2bb31627f247f04"
+      ],
+      "syntheticEnvironment": {
+        "G5_PROFILES": "4",
+        "G5_CASE_FILTER": "valid-utf8-bom-nul",
+        "G5_SKIP_CALLERS": "1"
+      },
+      "exitCode": 1,
+      "denominator": 1,
+      "killed": true,
+      "reason": [
+        {
+          "profile": 4,
+          "case": "valid-utf8-bom-nul"
+        }
+      ],
+      "logSha256": "0d8c7ba7fbe5585b1cba2bcffdc71f392bc1d970e8c92a05fceee0ebf28bda84"
+    },
+    {
+      "id": "repository-env-freshness",
+      "subjectCommit": "1675b3967b36812ee05775a6f2bb31627f247f04",
+      "path": "apps/three-surface-poc/src/git-observation.ts",
+      "subjectSha256": "57ee838fccf606f686fd2be589d65f2d91ac5330a3cce3ec6d330281aacd51ed",
+      "mutantSha256": "de4d1d4da7975a037ea94f68478952710709ca4ee3f3b664cc8ffc6255a5bee3",
+      "old": "function readGit(root: string, args: readonly string[]): string {\n  // G5 row 4 exception: its per-call env override is forbidden in the core live-observer import closure.\n  return execFileSync('git', ['--no-optional-locks', '-C', root, ...args], {\n    encoding: 'utf8',\n    env: { ...process.env, GIT_OPTIONAL_LOCKS: '0' },\n    stdio: ['ignore', 'pipe', 'ignore'],\n  });\n}\n\n",
+      "new": "const staleGitEnvironment = { ...process.env };\nfunction readGit(root: string, args: readonly string[]): string {\n  // G5 row 4 exception: its per-call env override is forbidden in the core live-observer import closure.\n  return execFileSync('git', ['--no-optional-locks', '-C', root, ...args], {\n    encoding: 'utf8',\n    env: { ...staleGitEnvironment, GIT_OPTIONAL_LOCKS: '0' },\n    stdio: ['ignore', 'pipe', 'ignore'],\n  });\n}\n\n",
+      "literalMatches": 1,
+      "command": [
+        "npm",
+        "exec",
+        "vitest",
+        "run",
+        "--",
+        "--project",
+        "integration",
+        "apps/three-surface-poc/src/git-observation.test.ts",
+        "-t",
+        "refreshes inherited"
+      ],
+      "syntheticEnvironment": {},
+      "exitCode": 1,
+      "denominator": 1,
+      "killed": true,
+      "reason": "1 failed tests",
+      "logSha256": "b21ad6e998a0ea022fb2e9a84d2937871915cac152f7f8b2a58f687dfb089aa4"
+    },
+    {
+      "id": "repository-cwd-omission",
+      "subjectCommit": "1675b3967b36812ee05775a6f2bb31627f247f04",
+      "path": "apps/three-surface-poc/src/git-observation.ts",
+      "subjectSha256": "57ee838fccf606f686fd2be589d65f2d91ac5330a3cce3ec6d330281aacd51ed",
+      "mutantSha256": "68cc1ec7a70af6567b3c042f509b790a7adc6b96b3f09793862ed42dc1d949ac",
+      "old": "    encoding: 'utf8',",
+      "new": "    cwd: root,\n    encoding: 'utf8',",
+      "literalMatches": 1,
+      "command": [
+        "node",
+        "docs/evidence/syzygy-bpyt-6-20/differential.mjs",
+        "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/mutations-repaired/repository-cwd-omission",
+        "1675b3967b36812ee05775a6f2bb31627f247f04"
+      ],
+      "syntheticEnvironment": {
+        "G5_PROFILES": "4",
+        "G5_CASE_FILTER": "valid-utf8-bom-nul",
+        "G5_SKIP_CALLERS": "1"
+      },
+      "exitCode": 1,
+      "denominator": 1,
+      "killed": true,
+      "reason": [
+        {
+          "profile": 4,
+          "case": "valid-utf8-bom-nul"
+        }
+      ],
+      "logSha256": "0d8c7ba7fbe5585b1cba2bcffdc71f392bc1d970e8c92a05fceee0ebf28bda84"
+    },
+    {
+      "id": "repository-text-mode",
+      "subjectCommit": "1675b3967b36812ee05775a6f2bb31627f247f04",
+      "path": "apps/three-surface-poc/src/git-observation.ts",
+      "subjectSha256": "57ee838fccf606f686fd2be589d65f2d91ac5330a3cce3ec6d330281aacd51ed",
+      "mutantSha256": "36ec6041f568c89b58bd79fdf8d988b868d68354b8012cf9a25c6d11f6161e65",
+      "old": "    encoding: 'utf8',\n",
+      "new": "",
+      "literalMatches": 1,
+      "command": [
+        "node",
+        "docs/evidence/syzygy-bpyt-6-20/differential.mjs",
+        "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/mutations-repaired/repository-text-mode",
+        "1675b3967b36812ee05775a6f2bb31627f247f04"
+      ],
+      "syntheticEnvironment": {
+        "G5_PROFILES": "4",
+        "G5_CASE_FILTER": "nonzero-both-streams",
+        "G5_SKIP_CALLERS": "1"
+      },
+      "exitCode": 1,
+      "denominator": 1,
+      "killed": true,
+      "reason": [
+        {
+          "profile": 4,
+          "case": "nonzero-both-streams"
+        }
+      ],
+      "logSha256": "0d8c7ba7fbe5585b1cba2bcffdc71f392bc1d970e8c92a05fceee0ebf28bda84"
+    },
+    {
+      "id": "canonical-buffer",
+      "subjectCommit": "1675b3967b36812ee05775a6f2bb31627f247f04",
+      "path": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+      "subjectSha256": "fe9f87dd5374b5c5ad7b9cc92a52a8722665de017fd72bf13c2a308797fdf8e4",
+      "mutantSha256": "2f9ca409db4db8c7c2d5fd40e834eacf1a4dbd7e345838c711e7a25fe614cb72",
+      "old": "maxBuffer: 256 * 1024 * 1024",
+      "new": "maxBuffer: 255 * 1024 * 1024",
+      "literalMatches": 1,
+      "command": [
+        "node",
+        "docs/evidence/syzygy-bpyt-6-20/differential.mjs",
+        "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/mutations-repaired/canonical-buffer",
+        "1675b3967b36812ee05775a6f2bb31627f247f04"
+      ],
+      "syntheticEnvironment": {
+        "G5_PROFILES": "6",
+        "G5_CASE_FILTER": "stdout-bound0",
+        "G5_SKIP_CALLERS": "1"
+      },
+      "exitCode": 1,
+      "denominator": 1,
+      "killed": true,
+      "reason": [
+        {
+          "profile": 6,
+          "case": "stdout-bound0"
+        }
+      ],
+      "logSha256": "0d8c7ba7fbe5585b1cba2bcffdc71f392bc1d970e8c92a05fceee0ebf28bda84"
+    },
+    {
+      "id": "canonical-argv",
+      "subjectCommit": "1675b3967b36812ee05775a6f2bb31627f247f04",
+      "path": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+      "subjectSha256": "fe9f87dd5374b5c5ad7b9cc92a52a8722665de017fd72bf13c2a308797fdf8e4",
+      "mutantSha256": "d8e3a3b7af0fc576f17c1e2851008006ecb74c493d82d01391790089b0dca807",
+      "old": "prefix: ['--no-optional-locks', '-C', repoRoot]",
+      "new": "prefix: ['-C', repoRoot]",
+      "literalMatches": 1,
+      "command": [
+        "node",
+        "docs/evidence/syzygy-bpyt-6-20/differential.mjs",
+        "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/mutations-repaired/canonical-argv",
+        "1675b3967b36812ee05775a6f2bb31627f247f04"
+      ],
+      "syntheticEnvironment": {
+        "G5_PROFILES": "6",
+        "G5_CASE_FILTER": "valid-utf8-bom-nul",
+        "G5_SKIP_CALLERS": "1"
+      },
+      "exitCode": 1,
+      "denominator": 1,
+      "killed": true,
+      "reason": [
+        {
+          "profile": 6,
+          "case": "valid-utf8-bom-nul"
+        }
+      ],
+      "logSha256": "0d8c7ba7fbe5585b1cba2bcffdc71f392bc1d970e8c92a05fceee0ebf28bda84"
+    },
+    {
+      "id": "canonical-stderr",
+      "subjectCommit": "1675b3967b36812ee05775a6f2bb31627f247f04",
+      "path": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+      "subjectSha256": "fe9f87dd5374b5c5ad7b9cc92a52a8722665de017fd72bf13c2a308797fdf8e4",
+      "mutantSha256": "3dfe1a3f1ed592e637546e1627c8f652077b24db967c69f7fee56306f4cbfe18",
+      "old": "    stdio: ['ignore', 'pipe', 'ignore'],\n  });",
+      "new": "    stdio: ['ignore', 'pipe', 'pipe'],\n  });",
+      "literalMatches": 1,
+      "command": [
+        "node",
+        "docs/evidence/syzygy-bpyt-6-20/differential.mjs",
+        "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/mutations-repaired/canonical-stderr",
+        "1675b3967b36812ee05775a6f2bb31627f247f04"
+      ],
+      "syntheticEnvironment": {
+        "G5_PROFILES": "6",
+        "G5_CASE_FILTER": "nonzero-both-streams",
+        "G5_SKIP_CALLERS": "1"
+      },
+      "exitCode": 1,
+      "denominator": 1,
+      "killed": true,
+      "reason": [
+        {
+          "profile": 6,
+          "case": "nonzero-both-streams"
+        }
+      ],
+      "logSha256": "0d8c7ba7fbe5585b1cba2bcffdc71f392bc1d970e8c92a05fceee0ebf28bda84"
+    },
+    {
+      "id": "verbatim-cwd",
+      "subjectCommit": "1675b3967b36812ee05775a6f2bb31627f247f04",
+      "path": "apps/three-surface-poc/src/verbatim-route.ts",
+      "subjectSha256": "cd83655b9f1196dec61def09f278f189733fdbdc30cc75e75644b9129ff4939d",
+      "mutantSha256": "7849db47d30b988d6c6414bb9624c59ba8988c0c9c87629ccd6de008b16f1296",
+      "old": "cwd: repoRoot, ",
+      "new": "",
+      "literalMatches": 1,
+      "command": [
+        "node",
+        "docs/evidence/syzygy-bpyt-6-20/differential.mjs",
+        "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/mutations-repaired/verbatim-cwd",
+        "1675b3967b36812ee05775a6f2bb31627f247f04"
+      ],
+      "syntheticEnvironment": {
+        "G5_PROFILES": "7",
+        "G5_CASE_FILTER": "valid-utf8-bom-nul",
+        "G5_SKIP_CALLERS": "1"
+      },
+      "exitCode": 1,
+      "denominator": 1,
+      "killed": true,
+      "reason": [
+        {
+          "profile": 7,
+          "case": "valid-utf8-bom-nul"
+        }
+      ],
+      "logSha256": "0d8c7ba7fbe5585b1cba2bcffdc71f392bc1d970e8c92a05fceee0ebf28bda84"
+    },
+    {
+      "id": "verbatim-envelope",
+      "subjectCommit": "1675b3967b36812ee05775a6f2bb31627f247f04",
+      "path": "apps/three-surface-poc/src/verbatim-route.ts",
+      "subjectSha256": "cd83655b9f1196dec61def09f278f189733fdbdc30cc75e75644b9129ff4939d",
+      "mutantSha256": "89ce7c098fba02e840451f1790e8482e8327a561f491764c891865852fba532e",
+      "old": "maxBuffer: limits.maxBytesPerSource",
+      "new": "maxBuffer: 1048576",
+      "literalMatches": 1,
+      "command": [
+        "node",
+        "docs/evidence/syzygy-bpyt-6-20/differential.mjs",
+        "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/mutations-repaired/verbatim-envelope",
+        "1675b3967b36812ee05775a6f2bb31627f247f04"
+      ],
+      "syntheticEnvironment": {
+        "G5_PROFILES": "7",
+        "G5_CASE_FILTER": "narrow-envelope1",
+        "G5_SKIP_CALLERS": "1"
+      },
+      "exitCode": 1,
+      "denominator": 1,
+      "killed": true,
+      "reason": [
+        {
+          "profile": 7,
+          "case": "narrow-envelope1"
+        }
+      ],
+      "logSha256": "0d8c7ba7fbe5585b1cba2bcffdc71f392bc1d970e8c92a05fceee0ebf28bda84"
+    },
+    {
+      "id": "verbatim-stderr",
+      "subjectCommit": "1675b3967b36812ee05775a6f2bb31627f247f04",
+      "path": "apps/three-surface-poc/src/verbatim-route.ts",
+      "subjectSha256": "cd83655b9f1196dec61def09f278f189733fdbdc30cc75e75644b9129ff4939d",
+      "mutantSha256": "cde69bdc5fec3638d57b2051fb64257899874fbed128d807d0cd24ee2652c900",
+      "old": "stdio: ['ignore', 'pipe', 'pipe']",
+      "new": "stdio: ['ignore', 'pipe', 'ignore']",
+      "literalMatches": 1,
+      "command": [
+        "node",
+        "docs/evidence/syzygy-bpyt-6-20/differential.mjs",
+        "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/mutations-repaired/verbatim-stderr",
+        "1675b3967b36812ee05775a6f2bb31627f247f04"
+      ],
+      "syntheticEnvironment": {
+        "G5_PROFILES": "7",
+        "G5_CASE_FILTER": "nonzero-both-streams",
+        "G5_SKIP_CALLERS": "1"
+      },
+      "exitCode": 1,
+      "denominator": 1,
+      "killed": true,
+      "reason": [
+        {
+          "profile": 7,
+          "case": "nonzero-both-streams"
+        }
+      ],
+      "logSha256": "0d8c7ba7fbe5585b1cba2bcffdc71f392bc1d970e8c92a05fceee0ebf28bda84"
+    }
+  ]
+}

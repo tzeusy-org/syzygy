@@ -1,0 +1,194 @@
+{
+ "tree": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-541/clone",
+ "head": "5db78a26699a07716edd303484c0f7241df02e9e",
+ "results": [
+  {
+   "id": "FIX541-rows-only",
+   "outcome": "survives",
+   "exit": 0,
+   "total": 171,
+   "passed": 171,
+   "failed": [],
+   "timeouts": 0,
+   "files": 14,
+   "seconds": 4.5,
+   "loadBefore": [
+    "62.94",
+    "58.58",
+    "57.00"
+   ],
+   "loadAfter": [
+    "61.66",
+    "58.39",
+    "56.95"
+   ],
+   "oldCounts": [
+    1
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "    ['a dependency on its parent directory', 'dossier', { dependencies: { dossier: '..' } }, {}],\n",
+     "new": "    ['a dependency on its parent directory', 'dossier', { dependencies: { dossier: '..' } }, {}],\n    ['a git dependency whose spec ends in a tarball extension', 'dossier', { dependencies: { dossier: 'github:someone/dossier#v1.tar' } }, {}],\n    ['an npm: alias with no version', 'dossier', { dependencies: { dossier: 'npm:typescript' } }, {}],\n"
+    }
+   ]
+  },
+  {
+   "id": "FIX541+R541-X5-tarball-arm-skips-hash",
+   "outcome": "killed",
+   "exit": 1,
+   "total": 171,
+   "passed": 170,
+   "failed": [
+    "the shared workspace resolver reads a bare name declared as a git dependency whose spec ends in a tarball extension as naming no module"
+   ],
+   "timeouts": 0,
+   "files": 14,
+   "seconds": 3.7,
+   "loadBefore": [
+    "61.66",
+    "58.39",
+    "56.95"
+   ],
+   "loadAfter": [
+    "61.66",
+    "58.39",
+    "56.95"
+   ],
+   "oldCounts": [
+    1,
+    1
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "    ['a dependency on its parent directory', 'dossier', { dependencies: { dossier: '..' } }, {}],\n",
+     "new": "    ['a dependency on its parent directory', 'dossier', { dependencies: { dossier: '..' } }, {}],\n    ['a git dependency whose spec ends in a tarball extension', 'dossier', { dependencies: { dossier: 'github:someone/dossier#v1.tar' } }, {}],\n    ['an npm: alias with no version', 'dossier', { dependencies: { dossier: 'npm:typescript' } }, {}],\n"
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|^[^#]*\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    }
+   ]
+  },
+  {
+   "id": "FIX541+R541-X3-npm-alias-needs-version",
+   "outcome": "killed",
+   "exit": 1,
+   "total": 171,
+   "passed": 170,
+   "failed": [
+    "the shared workspace resolver reads a bare name declared as an npm: alias with no version as naming no module"
+   ],
+   "timeouts": 0,
+   "files": 14,
+   "seconds": 4.9,
+   "loadBefore": [
+    "61.66",
+    "58.39",
+    "56.95"
+   ],
+   "loadAfter": [
+    "61.45",
+    "58.40",
+    "56.96"
+   ],
+   "oldCounts": [
+    1,
+    1
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "    ['a dependency on its parent directory', 'dossier', { dependencies: { dossier: '..' } }, {}],\n",
+     "new": "    ['a dependency on its parent directory', 'dossier', { dependencies: { dossier: '..' } }, {}],\n    ['a git dependency whose spec ends in a tarball extension', 'dossier', { dependencies: { dossier: 'github:someone/dossier#v1.tar' } }, {}],\n    ['an npm: alias with no version', 'dossier', { dependencies: { dossier: 'npm:typescript' } }, {}],\n"
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:(?:@[^/@]+\\/)?[^@]+@|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    }
+   ]
+  },
+  {
+   "id": "FIX541+R541-X4-npm-arm-case-sensitive",
+   "outcome": "survives",
+   "exit": 0,
+   "total": 171,
+   "passed": 171,
+   "failed": [],
+   "timeouts": 0,
+   "files": 14,
+   "seconds": 7.4,
+   "loadBefore": [
+    "61.45",
+    "58.40",
+    "56.96"
+   ],
+   "loadAfter": [
+    "61.50",
+    "58.49",
+    "57.01"
+   ],
+   "oldCounts": [
+    1,
+    1
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "    ['a dependency on its parent directory', 'dossier', { dependencies: { dossier: '..' } }, {}],\n",
+     "new": "    ['a dependency on its parent directory', 'dossier', { dependencies: { dossier: '..' } }, {}],\n    ['a git dependency whose spec ends in a tarball extension', 'dossier', { dependencies: { dossier: 'github:someone/dossier#v1.tar' } }, {}],\n    ['an npm: alias with no version', 'dossier', { dependencies: { dossier: 'npm:typescript' } }, {}],\n"
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|(?-i:npm:)|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    }
+   ]
+  },
+  {
+   "id": "FIX541+R541-X1-root-reads-devDependencies-only",
+   "outcome": "survives",
+   "exit": 0,
+   "total": 171,
+   "passed": 171,
+   "failed": [],
+   "timeouts": 0,
+   "files": 14,
+   "seconds": 7.5,
+   "loadBefore": [
+    "61.50",
+    "58.49",
+    "57.01"
+   ],
+   "loadAfter": [
+    "61.85",
+    "58.67",
+    "57.08"
+   ],
+   "oldCounts": [
+    1,
+    1
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "    ['a dependency on its parent directory', 'dossier', { dependencies: { dossier: '..' } }, {}],\n",
+     "new": "    ['a dependency on its parent directory', 'dossier', { dependencies: { dossier: '..' } }, {}],\n    ['a git dependency whose spec ends in a tarball extension', 'dossier', { dependencies: { dossier: 'github:someone/dossier#v1.tar' } }, {}],\n    ['an npm: alias with no version', 'dossier', { dependencies: { dossier: 'npm:typescript' } }, {}],\n"
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "    for (const field of [manifest.dependencies, manifest.devDependencies, manifest.optionalDependencies, manifest.peerDependencies]) {",
+     "new": "    for (const field of manifest.dir === '.' ? [manifest.devDependencies] : [manifest.dependencies, manifest.devDependencies, manifest.optionalDependencies, manifest.peerDependencies]) {"
+    }
+   ]
+  }
+ ]
+}

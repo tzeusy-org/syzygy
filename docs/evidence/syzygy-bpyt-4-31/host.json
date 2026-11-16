@@ -1,0 +1,14 @@
+{
+ "subject": "the host every local measurement under docs/evidence/syzygy-bpyt-4-31/ ran on (syzygy-bpyt.4.31): the alone runs in durations/, head-durations/ and repair-durations/, and the five full-suite runs in full-runs.json; hosted runs (ci-durations.json) ran on GitHub-hosted runners, not here",
+ "recordedAt": "2026-10-27",
+ "recordedAtCommit": "08e11a178c986ca002f1f1e907bf7dfb85125ccd",
+ "hostname": "Tzeusy",
+ "logicalCpus": 12,
+ "cpuModel": "AMD Ryzen 5 3600 6-Core Processor",
+ "memTotalKiB": 65723892,
+ "os": "Linux 7.0.0-38-generic",
+ "node": "v24.6.0",
+ "vitest": "3.2.7",
+ "load1": "each run records its own load1 (from /proc/loadavg): durations/*.json per run, full-runs.json per run as start and end",
+ "method": "platform.node(), os.cpu_count(), /proc/cpuinfo 'model name', /proc/meminfo MemTotal, platform.release(), `node --version`, node_modules/vitest/package.json"
+}

@@ -1,0 +1,60 @@
+{
+ "tool": "isolated_ab_r2.py",
+ "file": "packages/polaris-dossier/src/start-gates.test.ts",
+ "runs": [
+  {
+   "commit": "8ff50172b127cba676ff32ce62c12c91b2b0d924",
+   "i": 0,
+   "exit": 0,
+   "summary": "Tests  104 passed (104)",
+   "load1Start": 42.8,
+   "seconds": 48.1,
+   "timedOut": 0
+  },
+  {
+   "commit": "9e00252ae134accc4a42604445a4db66f68d5100",
+   "i": 0,
+   "exit": 0,
+   "summary": "Tests  104 passed (104)",
+   "load1Start": 64.22,
+   "seconds": 55.0,
+   "timedOut": 0
+  },
+  {
+   "commit": "8ff50172b127cba676ff32ce62c12c91b2b0d924",
+   "i": 1,
+   "exit": 0,
+   "summary": "Tests  104 passed (104)",
+   "load1Start": 63.61,
+   "seconds": 47.0,
+   "timedOut": 0
+  },
+  {
+   "commit": "9e00252ae134accc4a42604445a4db66f68d5100",
+   "i": 1,
+   "exit": 0,
+   "summary": "Tests  104 passed (104)",
+   "load1Start": 57.53,
+   "seconds": 46.4,
+   "timedOut": 0
+  },
+  {
+   "commit": "8ff50172b127cba676ff32ce62c12c91b2b0d924",
+   "i": 2,
+   "exit": 0,
+   "summary": "Tests  104 passed (104)",
+   "load1Start": 49.91,
+   "seconds": 38.4,
+   "timedOut": 0
+  },
+  {
+   "commit": "9e00252ae134accc4a42604445a4db66f68d5100",
+   "i": 2,
+   "exit": 0,
+   "summary": "Tests  104 passed (104)",
+   "load1Start": 40.41,
+   "seconds": 34.9,
+   "timedOut": 0
+  }
+ ]
+}

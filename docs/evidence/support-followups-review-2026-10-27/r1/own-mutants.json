@@ -1,0 +1,457 @@
+{
+ "node": "v24.6.0",
+ "rows": [
+  {
+   "id": "M1-preflight-checks-the-scope-dir-not-support",
+   "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+   "file": "scripts/check_generator_install.mjs",
+   "old": "join(process.cwd(), 'node_modules', '@syzygy', 'support')",
+   "new": "join(process.cwd(), 'node_modules', '@syzygy')",
+   "files": [
+    "apps/three-surface-poc/src/polaris-generation/generator-install-check.test.ts"
+   ],
+   "expect": "killed",
+   "outcome": "killed",
+   "agrees": true,
+   "exit": 1,
+   "total": 6,
+   "failed": 1,
+   "failedTests": [
+    "generator-install-check.test.ts > the generator install check refuses a checkout without support, with the instruction to run npm ci"
+   ],
+   "filesFailedToLoad": []
+  },
+  {
+   "id": "M2-preflight-support-resolved-from-the-script-not-cwd",
+   "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+   "file": "scripts/check_generator_install.mjs",
+   "old": "join(process.cwd(), 'node_modules', '@syzygy', 'support')",
+   "new": "join(new URL('..', import.meta.url).pathname, 'node_modules', '@syzygy', 'support')",
+   "files": [
+    "apps/three-surface-poc/src/polaris-generation/generator-install-check.test.ts"
+   ],
+   "expect": "killed",
+   "outcome": "killed",
+   "agrees": true,
+   "exit": 1,
+   "total": 6,
+   "failed": 1,
+   "failedTests": [
+    "generator-install-check.test.ts > the generator install check refuses a checkout without support, with the instruction to run npm ci"
+   ],
+   "filesFailedToLoad": []
+  },
+  {
+   "id": "M3-preflight-support-joined-with-and",
+   "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+   "file": "scripts/check_generator_install.mjs",
+   "old": "))\n  || !existsSync(join(process.cwd(), 'node_modules', '@syzygy', 'support')",
+   "new": "))\n  && !existsSync(join(process.cwd(), 'node_modules', '@syzygy', 'support')",
+   "files": [
+    "apps/three-surface-poc/src/polaris-generation/generator-install-check.test.ts"
+   ],
+   "expect": "killed",
+   "outcome": "killed",
+   "agrees": true,
+   "exit": 1,
+   "total": 6,
+   "failed": 2,
+   "failedTests": [
+    "generator-install-check.test.ts > the generator install check refuses a checkout without support, with the instruction to run npm ci",
+    "generator-install-check.test.ts > the generator install check refuses a checkout without polaris-generation-core, with the instruction to run npm ci"
+   ],
+   "filesFailedToLoad": []
+  },
+  {
+   "id": "M4-headroom-shallow-freeze",
+   "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+   "file": "packages/three-surface-poc-core/src/model.ts",
+   "old": "resourceHeadroom: deepFreeze(deriveResourceHeadroom(",
+   "new": "resourceHeadroom: Object.freeze(deriveResourceHeadroom(",
+   "files": [
+    "packages/three-surface-poc-core/src/model.test.ts"
+   ],
+   "expect": "killed",
+   "outcome": "killed",
+   "agrees": true,
+   "exit": 1,
+   "total": 19,
+   "failed": 1,
+   "failedTests": [
+    "model.test.ts > three-surface Butlers POC model hands out the resource headroom block frozen all the way down"
+   ],
+   "filesFailedToLoad": []
+  },
+  {
+   "id": "M5-body-authority-shallow-freeze",
+   "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+   "file": "packages/three-surface-poc-core/src/body-read-authority.ts",
+   "old": "  return deepFreeze({\n    evaluationId: inputs.evaluationId,",
+   "new": "  return Object.freeze({\n    evaluationId: inputs.evaluationId,",
+   "files": [
+    "packages/three-surface-poc-core/src/body-read-authority.test.ts"
+   ],
+   "expect": "killed",
+   "outcome": "killed",
+   "agrees": true,
+   "exit": 1,
+   "total": 323,
+   "failed": 2,
+   "failedTests": [
+    "body-read-authority.test.ts > PWB-REQ-005 absence and mechanics later correlation renders state (2) in a new evaluation and leaves the earlier evaluation recorded as state (1)",
+    "body-read-authority.test.ts > PWB-REQ-005 absence and mechanics hands out an evaluation frozen all the way down, admitting or rejecting, before any history appends it"
+   ],
+   "filesFailedToLoad": []
+  },
+  {
+   "id": "M6-junitDigest-hashes-the-backing-buffer",
+   "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.ts",
+   "old": "return `sha256:${sha256(rawJUnit)}`;",
+   "new": "return `sha256:${sha256(new Uint8Array(rawJUnit.buffer))}`;",
+   "files": [
+    "packages/three-surface-poc-core/src/test-artifact-verification.test.ts"
+   ],
+   "expect": "killed",
+   "outcome": "killed",
+   "agrees": true,
+   "exit": 1,
+   "total": 37,
+   "failed": 1,
+   "failedTests": [
+    "test-artifact-verification.test.ts > buildOperatorReportedTestArtifactRecord digests the file's own bytes, which equal sha256sum even when they are not valid UTF-8"
+   ],
+   "filesFailedToLoad": []
+  },
+  {
+   "id": "M7-deepFreeze-walks-but-freezes-nothing",
+   "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+   "file": "packages/support/src/deep-freeze.ts",
+   "old": "    Object.freeze(value);\n",
+   "new": "",
+   "files": [
+    "packages/support/src/deep-freeze.test.ts"
+   ],
+   "expect": "killed",
+   "outcome": "killed",
+   "agrees": true,
+   "exit": 1,
+   "total": 6,
+   "failed": 4,
+   "failedTests": [
+    "deep-freeze.test.ts > deepFreeze returns the value it was given and freezes every object it reaches",
+    "deep-freeze.test.ts > deepFreeze terminates on a cycle",
+    "deep-freeze.test.ts > deepFreeze leaves the owner frozen, and the members reached so far, when a member throws mid-walk",
+    "deep-freeze.test.ts > deepFreeze makes a later write fail"
+   ],
+   "filesFailedToLoad": []
+  },
+  {
+   "id": "M8-census-skips-arrays",
+   "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+   "file": "packages/three-surface-poc-core/src/test-frozen.ts",
+   "old": "    seen.add(node);\n",
+   "new": "    if (Array.isArray(node)) return;\n    seen.add(node);\n",
+   "files": [
+    "packages/three-surface-poc-core/src/test-frozen.test.ts"
+   ],
+   "expect": "killed",
+   "outcome": "killed",
+   "agrees": true,
+   "exit": 1,
+   "total": 4,
+   "failed": 2,
+   "failedTests": [
+    "test-frozen.test.ts > frozenCensus reports nothing unfrozen for a value frozen all the way down, and counts the objects it walked",
+    "test-frozen.test.ts > frozenCensus names the path of an unfrozen root, an unfrozen array and an unfrozen leaf below a frozen shell"
+   ],
+   "filesFailedToLoad": []
+  },
+  {
+   "id": "M9-attempt-ordinal-off-by-one",
+   "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+   "file": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.ts",
+   "old": "\\0${input.ordinal}`",
+   "new": "\\0${input.ordinal + 1}`",
+   "files": [
+    "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts"
+   ],
+   "expect": "killed",
+   "outcome": "killed",
+   "agrees": true,
+   "exit": 1,
+   "total": 5,
+   "failed": 1,
+   "failedTests": [
+    "durable-lifecycle.test.ts > durable scripted lifecycle port names each dispatch claim by the SHA-256 of its request, stage and ordinal"
+   ],
+   "filesFailedToLoad": []
+  },
+  {
+   "id": "M10-artifact-digest-last-hex-replaced",
+   "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+   "file": "packages/three-surface-poc-core/src/model.ts",
+   "old": "return { path: artifactPath, digest: sha256(bytes) };",
+   "new": "return { path: artifactPath, digest: sha256(bytes).slice(0, 63) + '0' };",
+   "files": [
+    "packages/three-surface-poc-core/src/model.test.ts"
+   ],
+   "expect": "killed",
+   "outcome": "killed",
+   "agrees": true,
+   "exit": 1,
+   "total": 19,
+   "failed": 1,
+   "failedTests": [
+    "model.test.ts > three-surface Butlers POC model records each required artifact under the SHA-256 of its own bytes"
+   ],
+   "filesFailedToLoad": []
+  },
+  {
+   "id": "M11-fixture-sha256-latin1",
+   "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+   "file": "apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts",
+   "old": "import { sha256 } from '@syzygy/support';",
+   "new": "import { createHash } from 'node:crypto';\nconst sha256 = (text: string): string => createHash('sha256').update(text, 'latin1').digest('hex');",
+   "files": [
+    "apps/three-surface-poc/src/polaris-walkthrough-readiness.test.ts",
+    "apps/three-surface-poc/src/polaris-copy.test.ts",
+    "apps/three-surface-poc/src/response-identity-independent.test.ts",
+    "apps/three-surface-poc/src/keyboard-sweep-record.test.ts"
+   ],
+   "expect": "report",
+   "outcome": "killed",
+   "agrees": true,
+   "exit": 1,
+   "total": 30,
+   "failed": 4,
+   "failedTests": [
+    "polaris-copy.test.ts > Polaris copy roles (PWB-REQ-012) keeps the copy table closed and rendered: unique ids, roles and kinds from the closed sets, and every row present with its role in some rendered state",
+    "polaris-walkthrough-readiness.test.ts > PWB-REQ-021 readiness on Polaris is ready and lawful together for a `/polaris`-only record",
+    "polaris-walkthrough-readiness.test.ts > PWB-REQ-021 readiness on Polaris the default fixture record (through `/entry`) is not ready for path-outside-polaris even when the judgment is lawful",
+    "polaris-walkthrough-readiness.test.ts > PWB-REQ-021 readiness on Polaris an unlawful judgment does not make readiness false, and a not-ready record does not make the judgment unlawful"
+   ],
+   "filesFailedToLoad": []
+  },
+  {
+   "id": "L-C11-at-base",
+   "commit": "f7477f52c49ee347f96b92703887c31f6be49e07",
+   "file": "packages/polaris-generation-core/src/dossier-evaluation.ts",
+   "old": "const questionsSha256 = sha256(input.questionsText);",
+   "new": "const questionsSha256 = sha256(input.questionsText + ' ');",
+   "files": [
+    "packages/polaris-generation-core/src/dossier-evaluation.test.ts"
+   ],
+   "expect": "survives",
+   "outcome": "survives",
+   "agrees": true,
+   "exit": 0,
+   "total": 33,
+   "failed": 0,
+   "failedTests": [],
+   "filesFailedToLoad": []
+  },
+  {
+   "id": "L-C11-at-head",
+   "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+   "file": "packages/polaris-generation-core/src/dossier-evaluation.ts",
+   "old": "const questionsSha256 = sha256(input.questionsText);",
+   "new": "const questionsSha256 = sha256(input.questionsText + ' ');",
+   "files": [
+    "packages/polaris-generation-core/src/dossier-evaluation.test.ts"
+   ],
+   "expect": "killed",
+   "outcome": "killed",
+   "agrees": true,
+   "exit": 1,
+   "total": 34,
+   "failed": 1,
+   "failedTests": [
+    "dossier-evaluation.test.ts > report subject (rule 11) binds the questions file by the SHA-256 of its own text, and takes that digest as the freeze"
+   ],
+   "filesFailedToLoad": []
+  },
+  {
+   "id": "L-R3-at-base",
+   "commit": "f7477f52c49ee347f96b92703887c31f6be49e07",
+   "file": "packages/polaris-generation-core/src/dossier-profile.ts",
+   "old": "sha256(JSON.stringify([q.id, q.question, q.scope, q.reason]))",
+   "new": "sha256(JSON.stringify([q.id, q.scope, q.question, q.reason]))",
+   "files": [
+    "packages/polaris-generation-core/src/dossier-profile.test.ts"
+   ],
+   "expect": "survives",
+   "outcome": "survives",
+   "agrees": true,
+   "exit": 0,
+   "total": 19,
+   "failed": 0,
+   "failedTests": [],
+   "filesFailedToLoad": []
+  },
+  {
+   "id": "L-R3-at-head",
+   "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+   "file": "packages/polaris-generation-core/src/dossier-profile.ts",
+   "old": "sha256(JSON.stringify([q.id, q.question, q.scope, q.reason]))",
+   "new": "sha256(JSON.stringify([q.id, q.scope, q.question, q.reason]))",
+   "files": [
+    "packages/polaris-generation-core/src/dossier-profile.test.ts"
+   ],
+   "expect": "killed",
+   "outcome": "killed",
+   "agrees": true,
+   "exit": 1,
+   "total": 20,
+   "failed": 1,
+   "failedTests": [
+    "dossier-profile.test.ts > REQ-031 clarification digests each question by the exact tuple of its id, text, scope and reason"
+   ],
+   "filesFailedToLoad": []
+  },
+  {
+   "id": "L-R9-at-base",
+   "commit": "f7477f52c49ee347f96b92703887c31f6be49e07",
+   "file": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.ts",
+   "old": "`${input.requestId}\\0${input.stage}\\0${input.ordinal}`",
+   "new": "`${input.stage}\\0${input.requestId}\\0${input.ordinal}`",
+   "files": [
+    "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts"
+   ],
+   "expect": "survives",
+   "outcome": "survives",
+   "agrees": true,
+   "exit": 0,
+   "total": 4,
+   "failed": 0,
+   "failedTests": [],
+   "filesFailedToLoad": []
+  },
+  {
+   "id": "L-R9-at-head",
+   "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+   "file": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.ts",
+   "old": "`${input.requestId}\\0${input.stage}\\0${input.ordinal}`",
+   "new": "`${input.stage}\\0${input.requestId}\\0${input.ordinal}`",
+   "files": [
+    "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts"
+   ],
+   "expect": "killed",
+   "outcome": "killed",
+   "agrees": true,
+   "exit": 1,
+   "total": 5,
+   "failed": 1,
+   "failedTests": [
+    "durable-lifecycle.test.ts > durable scripted lifecycle port names each dispatch claim by the SHA-256 of its request, stage and ordinal"
+   ],
+   "filesFailedToLoad": []
+  },
+  {
+   "id": "L-F3-at-base",
+   "commit": "f7477f52c49ee347f96b92703887c31f6be49e07",
+   "file": "packages/three-surface-poc-core/src/body-read-authority.ts",
+   "old": "  return deepFreeze({\n    evaluationId: inputs.evaluationId,",
+   "new": "  return ({\n    evaluationId: inputs.evaluationId,",
+   "files": [
+    "packages/three-surface-poc-core/src/body-read-authority.test.ts"
+   ],
+   "expect": "survives",
+   "outcome": "survives",
+   "agrees": true,
+   "exit": 0,
+   "total": 322,
+   "failed": 0,
+   "failedTests": [],
+   "filesFailedToLoad": []
+  },
+  {
+   "id": "L-F3-at-head",
+   "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+   "file": "packages/three-surface-poc-core/src/body-read-authority.ts",
+   "old": "  return deepFreeze({\n    evaluationId: inputs.evaluationId,",
+   "new": "  return ({\n    evaluationId: inputs.evaluationId,",
+   "files": [
+    "packages/three-surface-poc-core/src/body-read-authority.test.ts"
+   ],
+   "expect": "killed",
+   "outcome": "killed",
+   "agrees": true,
+   "exit": 1,
+   "total": 323,
+   "failed": 1,
+   "failedTests": [
+    "body-read-authority.test.ts > PWB-REQ-005 absence and mechanics hands out an evaluation frozen all the way down, admitting or rejecting, before any history appends it"
+   ],
+   "filesFailedToLoad": []
+  },
+  {
+   "id": "L-D3-at-base",
+   "commit": "f7477f52c49ee347f96b92703887c31f6be49e07",
+   "file": "packages/support/src/deep-freeze.ts",
+   "old": "    Object.freeze(value);\n    for (const member of Object.values(value)) deepFreeze(member);\n",
+   "new": "    const members = Object.values(value);\n    Object.freeze(value);\n    for (const member of members) deepFreeze(member);\n",
+   "files": [
+    "packages/support/src/deep-freeze.test.ts"
+   ],
+   "expect": "survives",
+   "outcome": "survives",
+   "agrees": true,
+   "exit": 0,
+   "total": 5,
+   "failed": 0,
+   "failedTests": [],
+   "filesFailedToLoad": []
+  },
+  {
+   "id": "L-D3-at-head",
+   "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+   "file": "packages/support/src/deep-freeze.ts",
+   "old": "    Object.freeze(value);\n    for (const member of Object.values(value)) deepFreeze(member);\n",
+   "new": "    const members = Object.values(value);\n    Object.freeze(value);\n    for (const member of members) deepFreeze(member);\n",
+   "files": [
+    "packages/support/src/deep-freeze.test.ts"
+   ],
+   "expect": "killed",
+   "outcome": "killed",
+   "agrees": true,
+   "exit": 1,
+   "total": 6,
+   "failed": 1,
+   "failedTests": [
+    "deep-freeze.test.ts > deepFreeze leaves the owner frozen, and the members reached so far, when a member throws mid-walk"
+   ],
+   "filesFailedToLoad": []
+  },
+  {
+   "id": "CTRL-head-unmutated",
+   "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+   "file": null,
+   "old": null,
+   "new": null,
+   "files": [
+    "apps/three-surface-poc/src/keyboard-sweep-record.test.ts",
+    "apps/three-surface-poc/src/polaris-copy.test.ts",
+    "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts",
+    "apps/three-surface-poc/src/polaris-generation/generator-install-check.test.ts",
+    "apps/three-surface-poc/src/polaris-walkthrough-readiness.test.ts",
+    "apps/three-surface-poc/src/response-identity-independent.test.ts",
+    "packages/polaris-generation-core/src/dossier-evaluation.test.ts",
+    "packages/polaris-generation-core/src/dossier-profile.test.ts",
+    "packages/support/src/deep-freeze.test.ts",
+    "packages/three-surface-poc-core/src/body-read-authority.test.ts",
+    "packages/three-surface-poc-core/src/model.test.ts",
+    "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+    "packages/three-surface-poc-core/src/test-frozen.test.ts"
+   ],
+   "expect": "survives",
+   "outcome": "survives",
+   "agrees": true,
+   "exit": 0,
+   "total": 484,
+   "failed": 0,
+   "failedTests": [],
+   "filesFailedToLoad": []
+  }
+ ]
+}

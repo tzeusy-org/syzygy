@@ -1,0 +1,354 @@
+{
+ "tool": "census_rev.mjs",
+ "commit": "447d9f083fb120c14ddd8da646c03675f3ce7bc7",
+ "population": 250,
+ "comparisons": [
+  {
+   "file": "apps/three-surface-poc/src/main.test.ts",
+   "line": 190,
+   "form": "binary",
+   "within": "WhileStatement",
+   "text": "fake.registered() < 2"
+  },
+  {
+   "file": "apps/three-surface-poc/src/main.test.ts",
+   "line": 190,
+   "form": "binary",
+   "within": "WhileStatement",
+   "text": "Date.now() < deadline"
+  },
+  {
+   "file": "apps/three-surface-poc/src/main.test.ts",
+   "line": 191,
+   "form": "binary",
+   "within": "IfStatement",
+   "text": "fake.registered() >= 2"
+  },
+  {
+   "file": "apps/three-surface-poc/src/restart.test.ts",
+   "line": 94,
+   "form": "binary",
+   "within": "WhileStatement",
+   "text": "Date.now() < deadline"
+  },
+  {
+   "file": "apps/three-surface-poc/src/restart.test.ts",
+   "line": 107,
+   "form": "binary",
+   "within": "IfStatement",
+   "text": "Date.now() >= deadline"
+  },
+  {
+   "file": "apps/three-surface-poc/src/restart.test.ts",
+   "line": 115,
+   "form": "binary",
+   "within": "IfStatement",
+   "text": "Date.now() >= deadline"
+  },
+  {
+   "file": "apps/three-surface-poc/src/restart.test.ts",
+   "line": 239,
+   "form": "binary",
+   "within": "ConditionalExpression",
+   "text": "repoIndex >= 0"
+  },
+  {
+   "file": "apps/three-surface-poc/src/restart.test.ts",
+   "line": 240,
+   "form": "binary",
+   "within": "ConditionalExpression",
+   "text": "stateIndex >= 0"
+  },
+  {
+   "file": "apps/three-surface-poc/src/restart.test.ts",
+   "line": 290,
+   "form": "binary",
+   "within": "IfStatement",
+   "text": "Date.now() >= deadline"
+  },
+  {
+   "file": "apps/three-surface-poc/src/restart.test.ts",
+   "line": 294,
+   "form": "binary",
+   "within": "IfStatement",
+   "text": "Date.now() >= deadline"
+  },
+  {
+   "file": "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts",
+   "line": 104,
+   "form": "binary",
+   "within": "IfStatement",
+   "text": "Date.now() > deadline"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "line": 176,
+   "form": "expect.toBeLessThan",
+   "within": "expect",
+   "text": "expect(cpuMsSince(cpu)).toBeLessThan(EDGE_TRIM_CPU_MS)"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "line": 267,
+   "form": "expect.toBeLessThan",
+   "within": "expect",
+   "text": "expect(cpuMsSince(cpu)).toBeLessThan(HOSTILE_LINE_CPU_MS)"
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "line": 103,
+   "form": "expect.toBeLessThan",
+   "within": "expect",
+   "text": "expect(cpuMsSince(cpu)).toBeLessThan(TAG_SCAN_CPU_MS)"
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "line": 110,
+   "form": "expect.toBeLessThan",
+   "within": "expect",
+   "text": "expect(cpuMsSince(cpu)).toBeLessThan(ATTRIBUTE_SCAN_CPU_MS)"
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/work-items.live.test.ts",
+   "line": 30,
+   "form": "expect.toBeGreaterThan",
+   "within": "expect",
+   "text": "expect(structure.files.length).toBeGreaterThan(0)"
+  }
+ ],
+ "raceTimers": [
+  {
+   "file": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 22,
+   "form": "setTimeout-rejects",
+   "text": "setTimeout(() => reject(new Error('no acknowledgement')), timeoutMs ?? 0)"
+  }
+ ],
+ "clockReads": [
+  {
+   "file": "apps/three-surface-poc/src/main.test.ts",
+   "line": 189,
+   "read": "Date.now()"
+  },
+  {
+   "file": "apps/three-surface-poc/src/main.test.ts",
+   "line": 190,
+   "read": "Date.now()"
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts",
+   "line": 15,
+   "read": "Date.now()"
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts",
+   "line": 15,
+   "read": "Date.now()"
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-generation/public-source-screening.test.ts",
+   "line": 504,
+   "read": "Date.now()"
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-generation/public-source-screening.test.ts",
+   "line": 515,
+   "read": "Date.now()"
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-generation/public-source-screening.test.ts",
+   "line": 521,
+   "read": "Date.now()"
+  },
+  {
+   "file": "apps/three-surface-poc/src/restart.test.ts",
+   "line": 93,
+   "read": "Date.now()"
+  },
+  {
+   "file": "apps/three-surface-poc/src/restart.test.ts",
+   "line": 94,
+   "read": "Date.now()"
+  },
+  {
+   "file": "apps/three-surface-poc/src/restart.test.ts",
+   "line": 105,
+   "read": "Date.now()"
+  },
+  {
+   "file": "apps/three-surface-poc/src/restart.test.ts",
+   "line": 107,
+   "read": "Date.now()"
+  },
+  {
+   "file": "apps/three-surface-poc/src/restart.test.ts",
+   "line": 113,
+   "read": "Date.now()"
+  },
+  {
+   "file": "apps/three-surface-poc/src/restart.test.ts",
+   "line": 115,
+   "read": "Date.now()"
+  },
+  {
+   "file": "apps/three-surface-poc/src/restart.test.ts",
+   "line": 266,
+   "read": "Date.now()"
+  },
+  {
+   "file": "apps/three-surface-poc/src/restart.test.ts",
+   "line": 290,
+   "read": "Date.now()"
+  },
+  {
+   "file": "apps/three-surface-poc/src/restart.test.ts",
+   "line": 294,
+   "read": "Date.now()"
+  },
+  {
+   "file": "apps/three-surface-poc/src/walkthrough-inputs.test.ts",
+   "line": 420,
+   "read": "new Date()"
+  },
+  {
+   "file": "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts",
+   "line": 101,
+   "read": "Date.now()"
+  },
+  {
+   "file": "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts",
+   "line": 104,
+   "read": "Date.now()"
+  },
+  {
+   "file": "packages/polaris-dossier/src/gate-acts.test.ts",
+   "line": 97,
+   "read": "Date.now()"
+  },
+  {
+   "file": "packages/polaris-dossier/src/screen.test.ts",
+   "line": 449,
+   "read": "Date.now()"
+  },
+  {
+   "file": "packages/polaris-dossier/src/screen.test.ts",
+   "line": 457,
+   "read": "Date.now()"
+  },
+  {
+   "file": "packages/polaris-dossier/src/session-view.test.ts",
+   "line": 109,
+   "read": "Date.now()"
+  },
+  {
+   "file": "packages/polaris-dossier/src/start-gates.test.ts",
+   "line": 1011,
+   "read": "Date.now()"
+  },
+  {
+   "file": "packages/polaris-dossier/src/start-gates.test.ts",
+   "line": 1011,
+   "read": "Date.now()"
+  },
+  {
+   "file": "packages/polaris-generation-consent/src/digest-bound-act.test.ts",
+   "line": 200,
+   "read": "Date.now()"
+  },
+  {
+   "file": "packages/polaris-generation-consent/src/real-tree.test.ts",
+   "line": 20,
+   "read": "Date.now()"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/canonical-json.test.ts",
+   "line": 44,
+   "read": "new Date()"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "line": 14,
+   "read": "process.threadCpuUsage(from)"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "line": 169,
+   "read": "process.threadCpuUsage()"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "line": 7,
+   "read": "process.threadCpuUsage(from)"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "line": 265,
+   "read": "process.threadCpuUsage()"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/pipeline.test.ts",
+   "line": 17,
+   "read": "Date.now()"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/pipeline.test.ts",
+   "line": 30,
+   "read": "Date.now()"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/redacted-generation-source.test.ts",
+   "line": 91,
+   "read": "Date.now()"
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.live.test.ts",
+   "line": 69,
+   "read": "new Date()"
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.live.test.ts",
+   "line": 91,
+   "read": "Date.now()"
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.live.test.ts",
+   "line": 97,
+   "read": "new Date()"
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.live.test.ts",
+   "line": 110,
+   "read": "new Date()"
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.live.test.ts",
+   "line": 111,
+   "read": "new Date()"
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "line": 24,
+   "read": "process.threadCpuUsage(from)"
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "line": 101,
+   "read": "process.threadCpuUsage()"
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "line": 108,
+   "read": "process.threadCpuUsage()"
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/work-items.live.test.ts",
+   "line": 25,
+   "read": "new Date()"
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/work-items.live.test.ts",
+   "line": 35,
+   "read": "new Date()"
+  }
+ ]
+}

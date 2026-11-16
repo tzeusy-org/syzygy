@@ -1,0 +1,39 @@
+{
+ "old": "export default defineConfig({\n",
+ "new": "export default defineConfig({\n  plugins: [{ name: \"r549-dist\", enforce: 'pre', resolveId(id: string) { return id === '@syzygy/support' ? fileURLToPath(new URL('./packages/support/dist/index.js', import.meta.url)) : null; } }],\n",
+ "loadavg": [
+  "35.99",
+  "33.17",
+  "35.41"
+ ],
+ "mutantDistsReal": {
+  "exit": 0,
+  "failed": 0,
+  "passed": 69,
+  "failedSuites": 0,
+  "total": 69,
+  "failing": []
+ },
+ "mutantDistPoisoned": {
+  "exit": 1,
+  "failed": 0,
+  "passed": 0,
+  "failedSuites": 1,
+  "total": 0,
+  "failing": [
+   {
+    "suite": "packages/three-surface-poc-core/src/owner-act-drafter.test.ts",
+    "message": "R549-POISONED-DIST support"
+   }
+  ]
+ },
+ "unmutatedDistPoisoned": {
+  "exit": 0,
+  "failed": 0,
+  "passed": 3,
+  "failedSuites": 0,
+  "total": 3,
+  "failing": []
+ },
+ "worktreeClean": true
+}

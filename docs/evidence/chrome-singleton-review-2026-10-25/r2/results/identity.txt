@@ -1,0 +1,43 @@
+subject paths: 42
+review diff sha256: 100fa4ae6502e12043020af48fea6a68d93e3f8aa6f280ca7a72ad9261959c53
+delta diff sha256: 09ed7c0f86c82f8e6c79bfb1f58f2ae46bd431d255bd34a637161e2b23350c6f
+delta shortstat: 16 files changed, 3375 insertions(+), 40 deletions(-)
+delta files: 16
+   apps/three-surface-poc/src/cdp-browser.browser.test.ts
+   apps/three-surface-poc/src/cdp-browser.test.ts
+   apps/three-surface-poc/src/cdp-browser.ts
+   docs/evidence/chrome-singleton-leak-2026-10-22/add_sha256_at_commit.py
+   docs/evidence/chrome-singleton-leak-2026-10-22/assemble_round1.py
+   docs/evidence/chrome-singleton-leak-2026-10-22/browser-files-base-2026-10-22.json
+   docs/evidence/chrome-singleton-leak-2026-10-22/browser-files-head-2026-10-22.json
+   docs/evidence/chrome-singleton-leak-2026-10-22/browser-files-head-chrome154-2026-10-22.json
+   docs/evidence/chrome-singleton-leak-2026-10-22/browser-files-head-chrome154-r1-2026-10-25.json
+   docs/evidence/chrome-singleton-leak-2026-10-22/browser-files-head-r1-2026-10-25.json
+   docs/evidence/chrome-singleton-leak-2026-10-22/browser_files_run.py
+   docs/evidence/chrome-singleton-leak-2026-10-22/chrome-matrix-head-r1-2026-10-25.json
+   docs/evidence/chrome-singleton-leak-2026-10-22/mutants-cdp-r1-2026-10-25.json
+   docs/evidence/chrome-singleton-leak-2026-10-22/mutate_cdp_r1.py
+   docs/evidence/chrome-singleton-leak-2026-10-22/test-lists-r1-2026-10-25.json
+   docs/evidence/chrome-singleton-leak-2026-10-22/verification-round1-2026-10-25.json
+merge-base(R1, HEAD): 490332aa7cc1cdf818ae01bd46e375f8280d8b7d
+R1 is ancestor of HEAD: True
+files changed 9a30237e..3ec69299: 464 overlap with subject: 0 []
+files changed 3ec69299..71334012548cccd46a5a95e313a6014da87c8e3c: 58 overlap with subject: 0 []
+commits R1..HEAD (first-parent):
+6dcf9490 Merge origin/main into agent/syzygy-bpyt.4.11 [syzygy-bpyt.4.11]
+b15f1a91 evidence: record the repair of round 1 of the PR 515 review at the repaired head [syzygy-bpyt.4.11]
+9cfa7cd0 evidence: the round-1 assembler also records the assertion lines removed and the files changed [syzygy-bpyt.4.11]
+42baf076 evidence: add sha256AtCommit to the three browser-files records of 2026-10-22 [syzygy-bpyt.4.11]
+0410e3cd evidence: record sha256AtCommit in the browser-files run, and add the round-1 assembler [syzygy-bpyt.4.11]
+3fad24d4 evidence: add the round-1 rule-6 harness for the repaired singleton removal [syzygy-bpyt.4.11]
+bcd39b4e fix: trust a profile's singleton link only when it is the user's, and remove only the directory that was read [syzygy-bpyt.4.11]
+6c0edb52 Merge origin/main into agent/syzygy-bpyt.4.11 [syzygy-bpyt.4.11]
+
+non-merge commits R1..HEAD not on BASE:
+b15f1a91 evidence: record the repair of round 1 of the PR 515 review at the repaired head [syzygy-bpyt.4.11]
+9cfa7cd0 evidence: the round-1 assembler also records the assertion lines removed and the files changed [syzygy-bpyt.4.11]
+42baf076 evidence: add sha256AtCommit to the three browser-files records of 2026-10-22 [syzygy-bpyt.4.11]
+0410e3cd evidence: record sha256AtCommit in the browser-files run, and add the round-1 assembler [syzygy-bpyt.4.11]
+3fad24d4 evidence: add the round-1 rule-6 harness for the repaired singleton removal [syzygy-bpyt.4.11]
+bcd39b4e fix: trust a profile's singleton link only when it is the user's, and remove only the directory that was read [syzygy-bpyt.4.11]
+

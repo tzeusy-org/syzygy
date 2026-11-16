@@ -1,0 +1,30 @@
+{
+ "100000 bullets (400268 bytes, under 1048576: true)": {
+  "result": "returned:observed",
+  "detail": {
+   "sourceRecord": "classified",
+   "items": 100001
+  }
+ },
+ "125000 bullets (500268 bytes, under 1048576: true)": {
+  "result": "returned:observed",
+  "detail": {
+   "sourceRecord": "classified",
+   "items": 125001
+  }
+ },
+ "130000 bullets (520268 bytes, under 1048576: true)": {
+  "result": "returned:observed",
+  "detail": {
+   "sourceRecord": "classified",
+   "items": 130001
+  }
+ },
+ "200000 bullets (800268 bytes, under 1048576: true)": {
+  "result": "returned:observed",
+  "detail": {
+   "sourceRecord": "classified",
+   "items": 200001
+  }
+ }
+}

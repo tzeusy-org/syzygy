@@ -1,0 +1,574 @@
+{
+ "baseTests": 414,
+ "headTests": 551,
+ "added": [
+  [
+   "packages/polaris-dossier/src/cli.test.ts",
+   "no route and no credential iso-of.ts imports no network module"
+  ],
+  [
+   "packages/polaris-dossier/src/iso-of.test.ts",
+   "isoOf throws a RangeError for NaN instead of writing text"
+  ],
+  [
+   "packages/polaris-dossier/src/iso-of.test.ts",
+   "isoOf throws a RangeError for negative infinity instead of writing text"
+  ],
+  [
+   "packages/polaris-dossier/src/iso-of.test.ts",
+   "isoOf throws a RangeError for one before the smallest instant a Date holds instead of writing text"
+  ],
+  [
+   "packages/polaris-dossier/src/iso-of.test.ts",
+   "isoOf throws a RangeError for one past the largest instant a Date holds instead of writing text"
+  ],
+  [
+   "packages/polaris-dossier/src/iso-of.test.ts",
+   "isoOf throws a RangeError for positive infinity instead of writing text"
+  ],
+  [
+   "packages/polaris-dossier/src/iso-of.test.ts",
+   "isoOf writes a fraction of a millisecond, which is cut"
+  ],
+  [
+   "packages/polaris-dossier/src/iso-of.test.ts",
+   "isoOf writes a leap day"
+  ],
+  [
+   "packages/polaris-dossier/src/iso-of.test.ts",
+   "isoOf writes negative zero"
+  ],
+  [
+   "packages/polaris-dossier/src/iso-of.test.ts",
+   "isoOf writes one millisecond after the epoch"
+  ],
+  [
+   "packages/polaris-dossier/src/iso-of.test.ts",
+   "isoOf writes one millisecond before the epoch"
+  ],
+  [
+   "packages/polaris-dossier/src/iso-of.test.ts",
+   "isoOf writes the epoch"
+  ],
+  [
+   "packages/polaris-dossier/src/iso-of.test.ts",
+   "isoOf writes the first instant of 2100, which is not a leap year"
+  ],
+  [
+   "packages/polaris-dossier/src/iso-of.test.ts",
+   "isoOf writes the first instant of year 0000"
+  ],
+  [
+   "packages/polaris-dossier/src/iso-of.test.ts",
+   "isoOf writes the first instant of year 10000, which takes a signed six-digit year"
+  ],
+  [
+   "packages/polaris-dossier/src/iso-of.test.ts",
+   "isoOf writes the largest instant a Date holds"
+  ],
+  [
+   "packages/polaris-dossier/src/iso-of.test.ts",
+   "isoOf writes the last instant of year -0001, which takes a signed six-digit year"
+  ],
+  [
+   "packages/polaris-dossier/src/iso-of.test.ts",
+   "isoOf writes the last instant of year 9999"
+  ],
+  [
+   "packages/polaris-dossier/src/iso-of.test.ts",
+   "isoOf writes the smallest instant a Date holds"
+  ],
+  [
+   "packages/polaris-dossier/src/screen.test.ts",
+   "the loader reads each container as an object only when it is one passes over a detector entry that is not an object when it collects the detector ids, and leaves the refusal to the compiler"
+  ],
+  [
+   "packages/polaris-dossier/src/screen.test.ts",
+   "the loader reads each container as an object only when it is one passes over a rules entry that is not an object, as if it were not there"
+  ],
+  [
+   "packages/polaris-dossier/src/screen.test.ts",
+   "the loader reads each container as an object only when it is one refuses a classification with no rules at all, which names no code-content rule"
+  ],
+  [
+   "packages/polaris-dossier/src/screen.test.ts",
+   "the loader reads each container as an object only when it is one refuses a content classification that is a number, which names no code-content rule"
+  ],
+  [
+   "packages/polaris-dossier/src/screen.test.ts",
+   "the loader reads each container as an object only when it is one refuses a content classification that is a string, which names no code-content rule"
+  ],
+  [
+   "packages/polaris-dossier/src/screen.test.ts",
+   "the loader reads each container as an object only when it is one refuses a content classification that is an array, which names no code-content rule"
+  ],
+  [
+   "packages/polaris-dossier/src/screen.test.ts",
+   "the loader reads each container as an object only when it is one refuses a content classification that is null, which names no code-content rule"
+  ],
+  [
+   "packages/polaris-dossier/src/screen.test.ts",
+   "the loader reads each container as an object only when it is one refuses a policy document that is a number"
+  ],
+  [
+   "packages/polaris-dossier/src/screen.test.ts",
+   "the loader reads each container as an object only when it is one refuses a policy document that is a string"
+  ],
+  [
+   "packages/polaris-dossier/src/screen.test.ts",
+   "the loader reads each container as an object only when it is one refuses a policy document that is an array"
+  ],
+  [
+   "packages/polaris-dossier/src/screen.test.ts",
+   "the loader reads each container as an object only when it is one refuses a policy document that is null"
+  ],
+  [
+   "packages/polaris-dossier/src/screen.test.ts",
+   "the loader reads each container as an object only when it is one refuses a public-source scope that is a number"
+  ],
+  [
+   "packages/polaris-dossier/src/screen.test.ts",
+   "the loader reads each container as an object only when it is one refuses a public-source scope that is a string"
+  ],
+  [
+   "packages/polaris-dossier/src/screen.test.ts",
+   "the loader reads each container as an object only when it is one refuses a public-source scope that is an array"
+  ],
+  [
+   "packages/polaris-dossier/src/screen.test.ts",
+   "the loader reads each container as an object only when it is one refuses a public-source scope that is null"
+  ],
+  [
+   "packages/polaris-dossier/src/screen.test.ts",
+   "the loader reads each container as an object only when it is one refuses source admission that is a number"
+  ],
+  [
+   "packages/polaris-dossier/src/screen.test.ts",
+   "the loader reads each container as an object only when it is one refuses source admission that is a string"
+  ],
+  [
+   "packages/polaris-dossier/src/screen.test.ts",
+   "the loader reads each container as an object only when it is one refuses source admission that is an array"
+  ],
+  [
+   "packages/polaris-dossier/src/screen.test.ts",
+   "the loader reads each container as an object only when it is one refuses source admission that is null"
+  ],
+  [
+   "packages/polaris-generation-core/src/public-source-classification.test.ts",
+   "reading the rule passes over a rules entry that is not an object, as if it were not there"
+  ],
+  [
+   "packages/polaris-generation-core/src/public-source-classification.test.ts",
+   "reading the rule refuses a path rule that is a string"
+  ],
+  [
+   "packages/polaris-generation-core/src/public-source-classification.test.ts",
+   "reading the rule refuses a path rule that is an array carrying the fields"
+  ],
+  [
+   "packages/polaris-generation-core/src/public-source-classification.test.ts",
+   "reading the rule refuses a path rule that is null"
+  ],
+  [
+   "packages/polaris-generation-core/src/public-source-classification.test.ts",
+   "reading the rule refuses a prefix that is a string"
+  ],
+  [
+   "packages/polaris-generation-core/src/public-source-classification.test.ts",
+   "reading the rule refuses a prefix that is an array carrying the fields"
+  ],
+  [
+   "packages/polaris-generation-core/src/public-source-exemption.test.ts",
+   "reading the exemption reads none from a scope that is a string"
+  ],
+  [
+   "packages/polaris-generation-core/src/public-source-exemption.test.ts",
+   "reading the exemption reads none from a scope that is an array"
+  ],
+  [
+   "packages/polaris-generation-core/src/public-source-exemption.test.ts",
+   "reading the exemption reads none from a scope that is an array carrying activeContent"
+  ],
+  [
+   "packages/polaris-generation-core/src/public-source-exemption.test.ts",
+   "reading the exemption reads none from a scope that is null"
+  ],
+  [
+   "packages/polaris-generation-core/src/public-source-exemption.test.ts",
+   "reading the exemption reads none from active content that is a string"
+  ],
+  [
+   "packages/polaris-generation-core/src/public-source-exemption.test.ts",
+   "reading the exemption reads none from active content that is an array"
+  ],
+  [
+   "packages/polaris-generation-core/src/public-source-exemption.test.ts",
+   "reading the exemption reads none from active content that is an array carrying the exemption"
+  ],
+  [
+   "packages/polaris-generation-core/src/public-source-exemption.test.ts",
+   "reading the exemption reads none from active content that is null"
+  ],
+  [
+   "packages/polaris-generation-core/src/public-source-exemption.test.ts",
+   "reading the exemption refuses, in its own words, an exemption that is a number"
+  ],
+  [
+   "packages/polaris-generation-core/src/public-source-exemption.test.ts",
+   "reading the exemption refuses, in its own words, an exemption that is a string"
+  ],
+  [
+   "packages/polaris-generation-core/src/public-source-exemption.test.ts",
+   "reading the exemption refuses, in its own words, an exemption that is an array"
+  ],
+  [
+   "packages/polaris-generation-core/src/public-source-exemption.test.ts",
+   "reading the exemption refuses, in its own words, an exemption that is an array carrying every field"
+  ],
+  [
+   "packages/polaris-generation-core/src/public-source-exemption.test.ts",
+   "reading the exemption refuses, in its own words, an exemption that is null"
+  ],
+  [
+   "packages/polaris-generation-core/src/secret-redaction.test.ts",
+   "readSecretRedaction refuses what it does not implement reads null for a scope that is a number"
+  ],
+  [
+   "packages/polaris-generation-core/src/secret-redaction.test.ts",
+   "readSecretRedaction refuses what it does not implement reads null for a scope that is a string"
+  ],
+  [
+   "packages/polaris-generation-core/src/secret-redaction.test.ts",
+   "readSecretRedaction refuses what it does not implement reads null for a scope that is an array"
+  ],
+  [
+   "packages/polaris-generation-core/src/secret-redaction.test.ts",
+   "readSecretRedaction refuses what it does not implement reads null for a scope that is an array that carries the field"
+  ],
+  [
+   "packages/polaris-generation-core/src/secret-redaction.test.ts",
+   "readSecretRedaction refuses what it does not implement reads null for a scope that is null"
+  ],
+  [
+   "packages/polaris-generation-core/src/secret-redaction.test.ts",
+   "readSecretRedaction refuses what it does not implement reads null for a scope that is undefined"
+  ],
+  [
+   "packages/polaris-generation-core/src/secret-redaction.test.ts",
+   "readSecretRedaction refuses what it does not implement refuses a declaration that is a function that carries every field"
+  ],
+  [
+   "packages/polaris-generation-core/src/secret-redaction.test.ts",
+   "readSecretRedaction refuses what it does not implement refuses a declaration that is a number"
+  ],
+  [
+   "packages/polaris-generation-core/src/secret-redaction.test.ts",
+   "readSecretRedaction refuses what it does not implement refuses a declaration that is a string"
+  ],
+  [
+   "packages/polaris-generation-core/src/secret-redaction.test.ts",
+   "readSecretRedaction refuses what it does not implement refuses a declaration that is an array"
+  ],
+  [
+   "packages/polaris-generation-core/src/secret-redaction.test.ts",
+   "readSecretRedaction refuses what it does not implement refuses a declaration that is an array that carries every field"
+  ],
+  [
+   "packages/polaris-generation-core/src/secret-redaction.test.ts",
+   "readSecretRedaction refuses what it does not implement refuses a declaration that is null"
+  ],
+  [
+   "packages/support/src/is-record.test.ts",
+   "isRecord admits a Map"
+  ],
+  [
+   "packages/support/src/is-record.test.ts",
+   "isRecord admits a RegExp"
+  ],
+  [
+   "packages/support/src/is-record.test.ts",
+   "isRecord admits a boxed bigint"
+  ],
+  [
+   "packages/support/src/is-record.test.ts",
+   "isRecord admits a boxed number"
+  ],
+  [
+   "packages/support/src/is-record.test.ts",
+   "isRecord admits a boxed string"
+  ],
+  [
+   "packages/support/src/is-record.test.ts",
+   "isRecord admits a class instance"
+  ],
+  [
+   "packages/support/src/is-record.test.ts",
+   "isRecord admits a frozen object"
+  ],
+  [
+   "packages/support/src/is-record.test.ts",
+   "isRecord admits a proxy of an object"
+  ],
+  [
+   "packages/support/src/is-record.test.ts",
+   "isRecord admits a proxy whose traps throw, which no trap is asked"
+  ],
+  [
+   "packages/support/src/is-record.test.ts",
+   "isRecord admits a typed array"
+  ],
+  [
+   "packages/support/src/is-record.test.ts",
+   "isRecord admits an Error"
+  ],
+  [
+   "packages/support/src/is-record.test.ts",
+   "isRecord admits an array-like object"
+  ],
+  [
+   "packages/support/src/is-record.test.ts",
+   "isRecord admits an empty object"
+  ],
+  [
+   "packages/support/src/is-record.test.ts",
+   "isRecord admits an object from another realm"
+  ],
+  [
+   "packages/support/src/is-record.test.ts",
+   "isRecord admits an object that claims to be an array by tag"
+  ],
+  [
+   "packages/support/src/is-record.test.ts",
+   "isRecord admits an object whose prototype is Array.prototype"
+  ],
+  [
+   "packages/support/src/is-record.test.ts",
+   "isRecord admits an object with a key"
+  ],
+  [
+   "packages/support/src/is-record.test.ts",
+   "isRecord admits an object with a throwing getter, which is not read"
+  ],
+  [
+   "packages/support/src/is-record.test.ts",
+   "isRecord admits an object with no prototype"
+  ],
+  [
+   "packages/support/src/is-record.test.ts",
+   "isRecord admits an object with no prototype from another realm"
+  ],
+  [
+   "packages/support/src/is-record.test.ts",
+   "isRecord narrows an unknown value to a record whose members are read as unknown"
+  ],
+  [
+   "packages/support/src/is-record.test.ts",
+   "isRecord refuses NaN"
+  ],
+  [
+   "packages/support/src/is-record.test.ts",
+   "isRecord refuses a bigint"
+  ],
+  [
+   "packages/support/src/is-record.test.ts",
+   "isRecord refuses a class"
+  ],
+  [
+   "packages/support/src/is-record.test.ts",
+   "isRecord refuses a function"
+  ],
+  [
+   "packages/support/src/is-record.test.ts",
+   "isRecord refuses a proxy of a function"
+  ],
+  [
+   "packages/support/src/is-record.test.ts",
+   "isRecord refuses a proxy of an array"
+  ],
+  [
+   "packages/support/src/is-record.test.ts",
+   "isRecord refuses a string"
+  ],
+  [
+   "packages/support/src/is-record.test.ts",
+   "isRecord refuses a symbol"
+  ],
+  [
+   "packages/support/src/is-record.test.ts",
+   "isRecord refuses an array from another realm"
+  ],
+  [
+   "packages/support/src/is-record.test.ts",
+   "isRecord refuses an array subclass instance"
+  ],
+  [
+   "packages/support/src/is-record.test.ts",
+   "isRecord refuses an array with a hole"
+  ],
+  [
+   "packages/support/src/is-record.test.ts",
+   "isRecord refuses an array with an extra key"
+  ],
+  [
+   "packages/support/src/is-record.test.ts",
+   "isRecord refuses an empty array"
+  ],
+  [
+   "packages/support/src/is-record.test.ts",
+   "isRecord refuses negative zero"
+  ],
+  [
+   "packages/support/src/is-record.test.ts",
+   "isRecord refuses null"
+  ],
+  [
+   "packages/support/src/is-record.test.ts",
+   "isRecord refuses the empty string"
+  ],
+  [
+   "packages/support/src/is-record.test.ts",
+   "isRecord refuses true"
+  ],
+  [
+   "packages/support/src/is-record.test.ts",
+   "isRecord refuses undefined"
+  ],
+  [
+   "packages/support/src/is-record.test.ts",
+   "isRecord refuses zero"
+  ],
+  [
+   "packages/support/src/is-record.test.ts",
+   "isRecord throws a TypeError on a revoked proxy, of an object or of an array, instead of answering"
+  ],
+  [
+   "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts",
+   "the parsers read a JSON container as an object only when it is one read the observed repository of an entry subject that is an object, and none from one without a subject"
+  ],
+  [
+   "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts",
+   "the parsers read a JSON container as an object only when it is one read the write surface of typed authority that is an object"
+  ],
+  [
+   "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts",
+   "the parsers read a JSON container as an object only when it is one refuse a policy document that is a number"
+  ],
+  [
+   "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts",
+   "the parsers read a JSON container as an object only when it is one refuse a policy document that is a string"
+  ],
+  [
+   "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts",
+   "the parsers read a JSON container as an object only when it is one refuse a policy document that is an array"
+  ],
+  [
+   "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts",
+   "the parsers read a JSON container as an object only when it is one refuse a policy document that is null"
+  ],
+  [
+   "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts",
+   "the parsers read a JSON container as an object only when it is one refuse a policy document that is true"
+  ],
+  [
+   "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts",
+   "the parsers read a JSON container as an object only when it is one refuse a registry document that is a number"
+  ],
+  [
+   "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts",
+   "the parsers read a JSON container as an object only when it is one refuse a registry document that is a string"
+  ],
+  [
+   "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts",
+   "the parsers read a JSON container as an object only when it is one refuse a registry document that is an array"
+  ],
+  [
+   "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts",
+   "the parsers read a JSON container as an object only when it is one refuse a registry document that is null"
+  ],
+  [
+   "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts",
+   "the parsers read a JSON container as an object only when it is one refuse a registry document that is true"
+  ],
+  [
+   "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts",
+   "the parsers read a JSON container as an object only when it is one surface a first registry entry that is a number as the malformed entries list"
+  ],
+  [
+   "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts",
+   "the parsers read a JSON container as an object only when it is one surface a first registry entry that is a string as the malformed entries list"
+  ],
+  [
+   "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts",
+   "the parsers read a JSON container as an object only when it is one surface a first registry entry that is an array as the malformed entries list"
+  ],
+  [
+   "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts",
+   "the parsers read a JSON container as an object only when it is one surface a first registry entry that is null as the malformed entries list"
+  ],
+  [
+   "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts",
+   "the parsers read a JSON container as an object only when it is one surface a first registry entry that is true as the malformed entries list"
+  ],
+  [
+   "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts",
+   "the parsers read a JSON container as an object only when it is one surface an entry subject that is a number as the repository field"
+  ],
+  [
+   "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts",
+   "the parsers read a JSON container as an object only when it is one surface an entry subject that is a string as the repository field"
+  ],
+  [
+   "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts",
+   "the parsers read a JSON container as an object only when it is one surface an entry subject that is an array as the repository field"
+  ],
+  [
+   "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts",
+   "the parsers read a JSON container as an object only when it is one surface an entry subject that is null as the repository field"
+  ],
+  [
+   "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts",
+   "the parsers read a JSON container as an object only when it is one surface an entry subject that is true as the repository field"
+  ],
+  [
+   "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts",
+   "the parsers read a JSON container as an object only when it is one surface typed authority that is a number as present, with no write surface"
+  ],
+  [
+   "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts",
+   "the parsers read a JSON container as an object only when it is one surface typed authority that is a string as present, with no write surface"
+  ],
+  [
+   "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts",
+   "the parsers read a JSON container as an object only when it is one surface typed authority that is an array as present, with no write surface"
+  ],
+  [
+   "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts",
+   "the parsers read a JSON container as an object only when it is one surface typed authority that is null as present, with no write surface"
+  ],
+  [
+   "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts",
+   "the parsers read a JSON container as an object only when it is one surface typed authority that is true as present, with no write surface"
+  ]
+ ],
+ "removed": [],
+ "changedCalls": [
+  {
+   "file": "packages/polaris-dossier/src/cli.test.ts",
+   "call": "no route and no credential > sweeps a non-empty population of source files",
+   "kind": "it"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/public-source-classification.test.ts",
+   "call": "reading the rule > refuses %s",
+   "kind": "each"
+  }
+ ],
+ "changedGeneratedTests": {
+  "no route and no credential > sweeps a non-empty population of source files": 1,
+  "reading the rule > refuses %s": 50
+ },
+ "line": "Tests: +137 ~51 -0",
+ "allBasePassed": true,
+ "allHeadPassed": true
+}

@@ -1,9 +1,9 @@
 import { execFileSync } from 'node:child_process';
-import { chmodSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { chmodSync, existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
-import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { DOSSIER_REQUESTED_ASSETS, quotableGenerationSources, runGenerationPipeline, type PipelineRequest, type PipelineResult, type ProviderDraft } from '@syzygy/polaris-generation-core';
+import { tempDir } from '@syzygy/test-kit';
 
 import { createDurableScriptedLifecycle } from './durable-lifecycle.js';
 import { main } from './dossier-main.js';
@@ -12,12 +12,12 @@ import { admissionRequirements, formatOutcome, gitLsRemote, gitMaterialize, noAd
 
 const SHA_A = 'a'.repeat(40), SHA_B = 'b'.repeat(40), SHA_C = 'c'.repeat(40);
 const LS = `${SHA_A}\tHEAD\n${SHA_A}\trefs/heads/unstable\n${SHA_B}\trefs/tags/8.0.0\n${SHA_C}\trefs/tags/8.0.0^{}\n${SHA_B}\trefs/tags/light\n`;
-const cleanups: string[] = [];
-afterEach(() => { for (const path of cleanups.splice(0)) rmSync(path, { recursive: true, force: true }); });
-const scratch = (): string => { const dir = mkdtempSync(join(tmpdir(), 'syzygy-trigger-')); cleanups.push(dir); return dir; };
+const scratch = (): string => tempDir('syzygy-trigger-');
 /** The id the observation record carries; deliberately not the spelling the trigger derives from the URL. */
 const ids = async (): Promise<readonly string[]> => ['fixture-record-id'];
 const all: AdmissionRecordsPort = { source: 'fixture store', repositoryIdsFor: ids, check: async r => ({ satisfied: true, record: `fixture/${r.kind}` }) };
+/** The pair-visibility decision of a public pair (screening scope version 8). */
+const PUBLIC_PAIR: NonNullable<TriggerPorts['visibility']> = async () => ({ ok: true, visibility: 'public' });
 
 describe('github url and revision pinning', () => {
   it('accepts public github urls and rejects everything else', () => {
@@ -85,7 +85,7 @@ describe('trigger stops at the first unmet gate', () => {
 describe('with every record satisfied', () => {
   let repo = '', commit = '';
   beforeAll(() => {
-    repo = mkdtempSync(join(tmpdir(), 'syzygy-trigger-repo-'));
+    repo = tempDir('syzygy-trigger-repo-');
     const run = (...a: string[]): string => execFileSync('git', ['-C', repo, ...a], { encoding: 'utf8' }).trim();
     run('init', '-q'); run('config', 'gc.auto', '0'); run('config', 'maintenance.auto', 'false'); run('config', 'user.email', 'f@example.invalid'); run('config', 'user.name', 'F');
     for (const [p, body] of Object.entries({ 'README.md': '# Fixture\nIt does a thing.\n', 'src/core.c': 'int core(void) { return 1; }\n', 'bin/blob': 'x' })) {
@@ -93,7 +93,6 @@ describe('with every record satisfied', () => {
     }
     run('add', '-A'); run('commit', '-qm', 'fixture'); commit = run('rev-parse', 'HEAD');
   });
-  afterAll(() => rmSync(repo, { recursive: true, force: true }));
   const ls = () => `${commit}\tHEAD\n`;
   const draftFor = (request: PipelineRequest): ProviderDraft => {
     const [first, second] = quotableGenerationSources(request.sources);
@@ -105,7 +104,7 @@ describe('with every record satisfied', () => {
   const finished = (request: PipelineRequest): PipelineResult => ({ status: 'awaiting-rendered-review', draft: draftFor(request), inventory: null, review: null, quoteFindings: [], receipts: [], artifacts: [] });
   const stoppedResult: PipelineResult = { status: 'stopped', reason: 'budget-exhausted', receipts: [], artifacts: [] };
   const render: NonNullable<TriggerPorts['render']> = ({ result, sources }) => ({ files: new Map([['index.html', `<p>${result.status} ${sources.length}</p>`], ['pages/core.html', '<p>core</p>']]) });
-  const base = (extra: TriggerPorts = {}): TriggerPorts => ({ lsRemote: ls, records: all, materialize: async () => repo, ...extra });
+  const base = (extra: TriggerPorts = {}): TriggerPorts => ({ lsRemote: ls, records: all, visibility: PUBLIC_PAIR, materialize: async () => repo, ...extra });
 
 
   it('reads the pinned commit, discovers, clarifies and writes the site and a run record outside git', async () => {
@@ -199,6 +198,31 @@ describe('with every record satisfied', () => {
     expect(allowed.mock.calls[0]![0].readerQuestions).toEqual(expect.arrayContaining([expect.stringContaining('core ideas')]));
   });
 
+  describe('the fetch is made only for a pair that reads public (screening scope version 8, edit 4)', () => {
+    const cases: readonly [string, TriggerPorts['visibility'], string][] = [
+      ['a private pair', async () => ({ ok: true, visibility: 'private' }), 'repository:fixture-record-id is private at'],
+      ['an undecidable pair', async () => ({ ok: false, why: 'a launch consent record cannot be read' }), 'cannot be decided (a launch consent record cannot be read)'],
+      ['a decision that throws', async () => { throw new Error('boom'); }, 'could not be read'],
+      ['no decision port', undefined, 'no visibility decision is wired for repository:fixture-record-id'],
+    ];
+    for (const [name, visibility, detail] of cases) {
+      it(`${name}: nothing is fetched and nothing is read`, async () => {
+        const materialize = vi.fn(async () => repo), runPipeline = vi.fn(), seen = vi.fn();
+        const ports = { ...base({ outDir: join(scratch(), 'run'), materialize, runPipeline }), visibility: visibility === undefined ? undefined : async (subject: { repository: string; commit: string }) => { seen(subject); return visibility(subject); } };
+        const outcome = await runDossierTrigger('https://github.com/fixture/repo', ports);
+        expect(outcome).toMatchObject({ state: 'generation-unavailable', detail: expect.stringContaining(detail) });
+        expect(materialize).not.toHaveBeenCalled();
+        expect(runPipeline).not.toHaveBeenCalled();
+        if (visibility !== undefined) expect(seen).toHaveBeenCalledWith({ repository: 'repository:fixture-record-id', commit: expect.stringMatching(/^[0-9a-f]{40}$/u) });
+      });
+    }
+    it('a public pair is fetched', async () => {
+      const materialize = vi.fn(async () => repo);
+      await runDossierTrigger('https://github.com/fixture/repo', base({ outDir: join(scratch(), 'run'), materialize }));
+      expect(materialize).toHaveBeenCalledTimes(1);
+    });
+  });
+
   it('removes its scratch checkout and an unused default run directory, even when the run fails', async () => {
     // A private TMPDIR: a shared prefix scan would also see other test files' directories.
     const priv = scratch(), saved = process.env.TMPDIR;
@@ -246,7 +270,11 @@ describe('with every record satisfied', () => {
     expect(first.slice(1).every(entry => entry.endsWith(':redis-redis'))).toBe(true);
     expect(seen!.projectId).toBe('redis-redis');
     expect(JSON.parse(readFileSync(join(out, 'run-record.json'), 'utf8')).target.repositoryId).toBe('redis-redis');
-    const cases: [unknown, string][] = [[[], 'no observation record names'], [['a-b', 'c-d'], 'ambiguous'], [['rid', 'rid'], 'ambiguous'], [['bad id!'], 'malformed repository id'],
+    // 046's identity grammar, '.' included, as the admission reader now answers it (R-PDJA-33-RULINGS-2 finding 1).
+    const dotted = await runDossierTrigger('https://github.com/fixture/repo.git', base({ outDir: join(tempDir('trigger-dotted-'), 'out'), records: store(['nodejs-node.js']), runPipeline: async () => stoppedResult }));
+    expect(dotted).toMatchObject({ state: 'generation-stopped', target: { repositoryId: 'nodejs-node.js' } });
+    asked.splice(0);
+    const cases: [unknown, string][] = [[[], 'no observation record names'], [['a-b', 'c-d'], 'ambiguous'], [['rid', 'rid'], 'ambiguous'], [['bad id!'], 'malformed repository id'], [['a b'], 'malformed repository id'], [['a/b'], 'malformed repository id'],
       [['rid', 42], 'ambiguous'], [['rid', ''], 'ambiguous'], [['rid', 'bad id!'], 'ambiguous'], [[42], 'malformed repository id'], [[''], 'malformed repository id'],
       ['rid', 'malformed answer'], [{ length: 1, 0: 'rid' }, 'malformed answer'], [null, 'malformed answer'], [undefined, 'malformed answer']];
     for (const [found, text] of cases) {
@@ -315,7 +343,7 @@ describe('with every record satisfied', () => {
 
   describe('a poisoned caller environment', () => {
     it('reads the pinned fixture through the whole trigger while GIT_DIR and object variables point at another repository', async () => {
-      const other = mkdtempSync(join(tmpdir(), 'syzygy-trigger-other-')); cleanups.push(other);
+      const other = tempDir('syzygy-trigger-other-');
       execFileSync('git', ['-C', other, 'init', '-q']); execFileSync('git', ['-C', other, 'config', 'gc.auto', '0']); execFileSync('git', ['-C', other, 'config', 'maintenance.auto', 'false']); writeFileSync(join(other, 'OTHER.md'), 'OTHER REPO\n');
       execFileSync('git', ['-C', other, 'add', '-A']); execFileSync('git', ['-C', other, '-c', 'user.email=o@example.invalid', '-c', 'user.name=O', 'commit', '-qm', 'o']);
       const saved = { ...process.env };
@@ -359,19 +387,18 @@ describe('with every record satisfied', () => {
 describe('command', () => {
   let repo = '', commit = '';
   beforeAll(() => {
-    repo = mkdtempSync(join(tmpdir(), 'syzygy-trigger-cmd-'));
+    repo = tempDir('syzygy-trigger-cmd-');
     const run = (...a: string[]): string => execFileSync('git', ['-C', repo, ...a], { encoding: 'utf8' }).trim();
     run('init', '-q'); run('config', 'gc.auto', '0'); run('config', 'maintenance.auto', 'false'); run('config', 'user.email', 'f@example.invalid'); run('config', 'user.name', 'F');
     writeFileSync(join(repo, 'README.md'), '# Fixture\nIt does a thing.\n'); writeFileSync(join(repo, 'a.c'), 'int a;\n');
     run('add', '-A'); run('commit', '-qm', 'fixture'); commit = run('rev-parse', 'HEAD');
   });
-  afterAll(() => rmSync(repo, { recursive: true, force: true }));
   const finishedFor = (request: PipelineRequest): PipelineResult => {
     const [first] = quotableGenerationSources(request.sources);
     const p = { id: 'intro', text: 'Claim.', sourceIds: [first!.sourceId], children: [] };
     return { status: 'awaiting-rendered-review', draft: { title: 't', introduction: p, sections: [], diagrams: [], deepDives: [], unresolved: [] }, inventory: null, review: null, quoteFindings: [], receipts: [], artifacts: [] };
   };
-  const wired = (extra: TriggerPorts = {}): TriggerPorts => ({ lsRemote: () => `${commit}\tHEAD\n`, records: all, materialize: async () => repo, ...extra });
+  const wired = (extra: TriggerPorts = {}): TriggerPorts => ({ lsRemote: () => `${commit}\tHEAD\n`, records: all, visibility: PUBLIC_PAIR, materialize: async () => repo, ...extra });
 
   it('renders a page from a pipeline that exhausts its usage budget mid-run: completed stages show, every other requested asset is Unknown deferred-by-budget, exit 7', async () => {
     const out = vi.spyOn(process.stdout, 'write').mockReturnValue(true);

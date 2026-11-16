@@ -1,0 +1,465 @@
+n3.finding: "N3: the support package's purity was pinned by no committed test; the closure guard admits node:fs, so the reviewer's R8 (support reads a file) passed it and the drafter's purity test"
+n3.fix: "packages/support/src/support-purity.test.ts (13 tests): every non-test source of the package imports only node:crypto or a module of its own, names none of the owner-act drafter's forbidden tokens, and the package declares no dependency and no tsconfig reference; the specifier reader the guard stands on has 9 cases"
+n3.tool: "support-purity-mutants.py <clone with node_modules> <out.json>"
+n3.atTheRepairCommit.clone.commit: "8bd514d7a6f882142f58b5bd219c3fa2f7fd7714"
+n3.atTheRepairCommit.clone.trackedAndUntrackedChangesAfter: ""
+n3.atTheRepairCommit.test: "packages/support/src/support-purity.test.ts"
+n3.atTheRepairCommit.summary.rows: 17
+n3.atTheRepairCommit.summary.killed: 14
+n3.atTheRepairCommit.summary.mutants: 14
+n3.atTheRepairCommit.summary.controlsPassing: 3
+n3.atTheRepairCommit.summary.controls: 3
+n3.atTheRepairCommit.summary.rowsNotOk: []
+n3.atTheRepairCommit.rows: list[17]
+n3.atTheRepairCommit.rows[0].id: "C0-unmutated"
+n3.atTheRepairCommit.rows[0].expect: "pass"
+n3.atTheRepairCommit.rows[0].exit: 0
+n3.atTheRepairCommit.rows[0].passed: 13
+n3.atTheRepairCommit.rows[0].failed: 0
+n3.atTheRepairCommit.rows[0].total: 13
+n3.atTheRepairCommit.rows[0].failedTests: []
+n3.atTheRepairCommit.rows[0].ok: true
+n3.atTheRepairCommit.rows[1].id: "P1-reads-a-file-via-node-fs"
+n3.atTheRepairCommit.rows[1].path: "packages/support/src/sha256.ts"
+n3.atTheRepairCommit.rows[1].create: false
+n3.atTheRepairCommit.rows[1].old: "import { createHash } from 'node:crypto';\n"
+n3.atTheRepairCommit.rows[1].new: "import { createHash } from 'node:crypto';\nimport { readFileSync } from 'node:fs';\nexport const HOST = readFileSync('/etc/hostname', 'utf8');\n"
+n3.atTheRepairCommit.rows[1].expect: "killed"
+n3.atTheRepairCommit.rows[1].exit: 1
+n3.atTheRepairCommit.rows[1].passed: 11
+n3.atTheRepairCommit.rows[1].failed: 2
+n3.atTheRepairCommit.rows[1].total: 13
+n3.atTheRepairCommit.rows[1].failedTests: ["@syzygy/support stays a pure leaf imports only node:crypto and its own modules, so no file read, no workspace package and no network", "@syzygy/support stays a pure leaf names no write, process, clock, network or file-system token in any source"]
+n3.atTheRepairCommit.rows[1].ok: true
+n3.atTheRepairCommit.rows[2].id: "P2-imports-node-http"
+n3.atTheRepairCommit.rows[2].path: "packages/support/src/sha256.ts"
+n3.atTheRepairCommit.rows[2].create: false
+n3.atTheRepairCommit.rows[2].old: "import { createHash } from 'node:crypto';\n"
+n3.atTheRepairCommit.rows[2].new: "import { createHash } from 'node:crypto';\nimport 'node:http';\n"
+n3.atTheRepairCommit.rows[2].expect: "killed"
+n3.atTheRepairCommit.rows[2].exit: 1
+n3.atTheRepairCommit.rows[2].passed: 11
+n3.atTheRepairCommit.rows[2].failed: 2
+n3.atTheRepairCommit.rows[2].total: 13
+n3.atTheRepairCommit.rows[2].failedTests: ["@syzygy/support stays a pure leaf imports only node:crypto and its own modules, so no file read, no workspace package and no network", "@syzygy/support stays a pure leaf names no write, process, clock, network or file-system token in any source"]
+n3.atTheRepairCommit.rows[2].ok: true
+n3.atTheRepairCommit.rows[3].id: "P3-imports-a-workspace-package"
+n3.atTheRepairCommit.rows[3].path: "packages/support/src/index.ts"
+n3.atTheRepairCommit.rows[3].create: false
+n3.atTheRepairCommit.rows[3].old: "export { sha256 } from './sha256.js';\n"
+n3.atTheRepairCommit.rows[3].new: "import '@syzygy/cap1-core';\nexport { sha256 } from './sha256.js';\n"
+n3.atTheRepairCommit.rows[3].expect: "killed"
+n3.atTheRepairCommit.rows[3].exit: 1
+n3.atTheRepairCommit.rows[3].passed: 12
+n3.atTheRepairCommit.rows[3].failed: 1
+n3.atTheRepairCommit.rows[3].total: 13
+n3.atTheRepairCommit.rows[3].failedTests: ["@syzygy/support stays a pure leaf imports only node:crypto and its own modules, so no file read, no workspace package and no network"]
+n3.atTheRepairCommit.rows[3].ok: true
+n3.atTheRepairCommit.rows[4].id: "P4-reads-the-environment-without-an-import"
+n3.atTheRepairCommit.rows[4].path: "packages/support/src/sha256.ts"
+n3.atTheRepairCommit.rows[4].create: false
+n3.atTheRepairCommit.rows[4].old: "import { createHash } from 'node:crypto';\n"
+n3.atTheRepairCommit.rows[4].new: "import { createHash } from 'node:crypto';\nexport const HOME = process.env['HOME'];\n"
+n3.atTheRepairCommit.rows[4].expect: "killed"
+n3.atTheRepairCommit.rows[4].exit: 1
+n3.atTheRepairCommit.rows[4].passed: 12
+n3.atTheRepairCommit.rows[4].failed: 1
+n3.atTheRepairCommit.rows[4].total: 13
+n3.atTheRepairCommit.rows[4].failedTests: ["@syzygy/support stays a pure leaf names no write, process, clock, network or file-system token in any source"]
+n3.atTheRepairCommit.rows[4].ok: true
+n3.atTheRepairCommit.rows[5].id: "P5-calls-fetch"
+n3.atTheRepairCommit.rows[5].path: "packages/support/src/deep-freeze.ts"
+n3.atTheRepairCommit.rows[5].create: false
+n3.atTheRepairCommit.rows[5].old: "export function deepFreeze<T>(value: T): T {\n"
+n3.atTheRepairCommit.rows[5].new: "void fetch('http://127.0.0.1');\nexport function deepFreeze<T>(value: T): T {\n"
+n3.atTheRepairCommit.rows[5].expect: "killed"
+n3.atTheRepairCommit.rows[5].exit: 1
+n3.atTheRepairCommit.rows[5].passed: 12
+n3.atTheRepairCommit.rows[5].failed: 1
+n3.atTheRepairCommit.rows[5].total: 13
+n3.atTheRepairCommit.rows[5].failedTests: ["@syzygy/support stays a pure leaf names no write, process, clock, network or file-system token in any source"]
+n3.atTheRepairCommit.rows[5].ok: true
+n3.atTheRepairCommit.rows[6].id: "P6-new-file-reads-the-clock"
+n3.atTheRepairCommit.rows[6].path: "packages/support/src/clock.ts"
+n3.atTheRepairCommit.rows[6].create: true
+n3.atTheRepairCommit.rows[6].old: null
+n3.atTheRepairCommit.rows[6].new: "export const now = (): number => Date.now();\n"
+n3.atTheRepairCommit.rows[6].expect: "killed"
+n3.atTheRepairCommit.rows[6].exit: 1
+n3.atTheRepairCommit.rows[6].passed: 12
+n3.atTheRepairCommit.rows[6].failed: 1
+n3.atTheRepairCommit.rows[6].total: 13
+n3.atTheRepairCommit.rows[6].failedTests: ["@syzygy/support stays a pure leaf names no write, process, clock, network or file-system token in any source"]
+n3.atTheRepairCommit.rows[6].ok: true
+n3.atTheRepairCommit.rows[7].id: "P7-dynamic-import-of-node-fs"
+n3.atTheRepairCommit.rows[7].path: "packages/support/src/sha256.ts"
+n3.atTheRepairCommit.rows[7].create: false
+n3.atTheRepairCommit.rows[7].old: "import { createHash } from 'node:crypto';\n"
+n3.atTheRepairCommit.rows[7].new: "import { createHash } from 'node:crypto';\nexport const lazy = (): Promise<unknown> => import('node:fs');\n"
+n3.atTheRepairCommit.rows[7].expect: "killed"
+n3.atTheRepairCommit.rows[7].exit: 1
+n3.atTheRepairCommit.rows[7].passed: 11
+n3.atTheRepairCommit.rows[7].failed: 2
+n3.atTheRepairCommit.rows[7].total: 13
+n3.atTheRepairCommit.rows[7].failedTests: ["@syzygy/support stays a pure leaf imports only node:crypto and its own modules, so no file read, no workspace package and no network", "@syzygy/support stays a pure leaf names no write, process, clock, network or file-system token in any source"]
+n3.atTheRepairCommit.rows[7].ok: true
+n3.atTheRepairCommit.rows[8].id: "P8-declares-a-workspace-dependency"
+n3.atTheRepairCommit.rows[8].path: "packages/support/package.json"
+n3.atTheRepairCommit.rows[8].create: false
+n3.atTheRepairCommit.rows[8].old: "  \"version\": \"0.0.0\",\n"
+n3.atTheRepairCommit.rows[8].new: "  \"version\": \"0.0.0\",\n  \"dependencies\": { \"@syzygy/cap1-core\": \"*\" },\n"
+n3.atTheRepairCommit.rows[8].expect: "killed"
+n3.atTheRepairCommit.rows[8].exit: 1
+n3.atTheRepairCommit.rows[8].passed: 12
+n3.atTheRepairCommit.rows[8].failed: 1
+n3.atTheRepairCommit.rows[8].total: 13
+n3.atTheRepairCommit.rows[8].failedTests: ["@syzygy/support stays a pure leaf declares no dependency and references no project in its manifests"]
+n3.atTheRepairCommit.rows[8].ok: true
+n3.atTheRepairCommit.rows[9].id: "P9-references-another-project"
+n3.atTheRepairCommit.rows[9].path: "packages/support/tsconfig.json"
+n3.atTheRepairCommit.rows[9].create: false
+n3.atTheRepairCommit.rows[9].old: "  \"include\": [\"src\"]\n"
+n3.atTheRepairCommit.rows[9].new: "  \"include\": [\"src\"],\n  \"references\": [{ \"path\": \"../cap1-core\" }]\n"
+n3.atTheRepairCommit.rows[9].expect: "killed"
+n3.atTheRepairCommit.rows[9].exit: 1
+n3.atTheRepairCommit.rows[9].passed: 12
+n3.atTheRepairCommit.rows[9].failed: 1
+n3.atTheRepairCommit.rows[9].total: 13
+n3.atTheRepairCommit.rows[9].failedTests: ["@syzygy/support stays a pure leaf declares no dependency and references no project in its manifests"]
+n3.atTheRepairCommit.rows[9].ok: true
+n3.atTheRepairCommit.rows[10].id: "P10-imports-an-other-built-in-the-forbidden-list-does-not-name"
+n3.atTheRepairCommit.rows[10].path: "packages/support/src/sha256.ts"
+n3.atTheRepairCommit.rows[10].create: false
+n3.atTheRepairCommit.rows[10].old: "import { createHash } from 'node:crypto';\n"
+n3.atTheRepairCommit.rows[10].new: "import { createHash } from 'node:crypto';\nimport { Buffer } from 'node:buffer';\nexport const B = Buffer;\n"
+n3.atTheRepairCommit.rows[10].expect: "killed"
+n3.atTheRepairCommit.rows[10].exit: 1
+n3.atTheRepairCommit.rows[10].passed: 12
+n3.atTheRepairCommit.rows[10].failed: 1
+n3.atTheRepairCommit.rows[10].total: 13
+n3.atTheRepairCommit.rows[10].failedTests: ["@syzygy/support stays a pure leaf imports only node:crypto and its own modules, so no file read, no workspace package and no network"]
+n3.atTheRepairCommit.rows[10].ok: true
+n3.atTheRepairCommit.rows[11].id: "T1-reader-drops-dynamic-import-and-require"
+n3.atTheRepairCommit.rows[11].path: "packages/support/src/support-purity.test.ts"
+n3.atTheRepairCommit.rows[11].create: false
+n3.atTheRepairCommit.rows[11].old: "    ...[...code.matchAll(/\\b(?:import|require)\\s*\\(\\s*['\"`]([^'\"`]+)['\"`]/g)].map((match) => match[1]!),\n"
+n3.atTheRepairCommit.rows[11].new: ""
+n3.atTheRepairCommit.rows[11].expect: "killed"
+n3.atTheRepairCommit.rows[11].exit: 1
+n3.atTheRepairCommit.rows[11].passed: 11
+n3.atTheRepairCommit.rows[11].failed: 2
+n3.atTheRepairCommit.rows[11].total: 13
+n3.atTheRepairCommit.rows[11].failedTests: ["the specifier reader this guard stands on reads \"const fs = await import('node:fs');\"", "the specifier reader this guard stands on reads \"const fs = require('node:fs');\""]
+n3.atTheRepairCommit.rows[11].ok: true
+n3.atTheRepairCommit.rows[12].id: "T2-reader-keeps-comment-lines"
+n3.atTheRepairCommit.rows[12].path: "packages/support/src/support-purity.test.ts"
+n3.atTheRepairCommit.rows[12].create: false
+n3.atTheRepairCommit.rows[12].old: ".filter((line) => !line.trimStart().startsWith('//'))"
+n3.atTheRepairCommit.rows[12].new: ".filter(() => true)"
+n3.atTheRepairCommit.rows[12].expect: "killed"
+n3.atTheRepairCommit.rows[12].exit: 1
+n3.atTheRepairCommit.rows[12].passed: 12
+n3.atTheRepairCommit.rows[12].failed: 1
+n3.atTheRepairCommit.rows[12].total: 13
+n3.atTheRepairCommit.rows[12].failedTests: ["the specifier reader this guard stands on reads \"// import { readFileSync } from 'node:fs';\\nexport const a = 1;\""]
+n3.atTheRepairCommit.rows[12].ok: true
+n3.atTheRepairCommit.rows[13].id: "T3-reader-drops-side-effect-imports"
+n3.atTheRepairCommit.rows[13].path: "packages/support/src/support-purity.test.ts"
+n3.atTheRepairCommit.rows[13].create: false
+n3.atTheRepairCommit.rows[13].old: "    ...[...code.matchAll(/^\\s*import\\s*['\"`]([^'\"`]+)['\"`]/gm)].map((match) => match[1]!),\n"
+n3.atTheRepairCommit.rows[13].new: ""
+n3.atTheRepairCommit.rows[13].expect: "killed"
+n3.atTheRepairCommit.rows[13].exit: 1
+n3.atTheRepairCommit.rows[13].passed: 12
+n3.atTheRepairCommit.rows[13].failed: 1
+n3.atTheRepairCommit.rows[13].total: 13
+n3.atTheRepairCommit.rows[13].failedTests: ["the specifier reader this guard stands on reads \"import 'node:http';\""]
+n3.atTheRepairCommit.rows[13].ok: true
+n3.atTheRepairCommit.rows[14].id: "T4-reader-drops-from-imports"
+n3.atTheRepairCommit.rows[14].path: "packages/support/src/support-purity.test.ts"
+n3.atTheRepairCommit.rows[14].create: false
+n3.atTheRepairCommit.rows[14].old: "    ...[...code.matchAll(/\\b(?:import|export)\\b[^;]*?\\bfrom\\s*['\"`]([^'\"`]+)['\"`]/g)].map((match) => match[1]!),\n"
+n3.atTheRepairCommit.rows[14].new: ""
+n3.atTheRepairCommit.rows[14].expect: "killed"
+n3.atTheRepairCommit.rows[14].exit: 1
+n3.atTheRepairCommit.rows[14].passed: 8
+n3.atTheRepairCommit.rows[14].failed: 5
+n3.atTheRepairCommit.rows[14].total: 13
+n3.atTheRepairCommit.rows[14].failedTests: ["@syzygy/support stays a pure leaf imports only node:crypto and its own modules, so no file read, no workspace package and no network", "the specifier reader this guard stands on reads \"import { createHash } from 'node:crypto';\"", "the specifier reader this guard stands on reads \"import { readFileSync } from \\\"node:fs\\\";\"", "the specifier reader this guard stands on reads \"export { sha25...[427]
+n3.atTheRepairCommit.rows[14].ok: true
+n3.atTheRepairCommit.rows[15].id: "N0a-a-harmless-constant"
+n3.atTheRepairCommit.rows[15].path: "packages/support/src/one.ts"
+n3.atTheRepairCommit.rows[15].create: true
+n3.atTheRepairCommit.rows[15].old: null
+n3.atTheRepairCommit.rows[15].new: "export const ONE = 1;\n"
+n3.atTheRepairCommit.rows[15].expect: "pass"
+n3.atTheRepairCommit.rows[15].exit: 0
+n3.atTheRepairCommit.rows[15].passed: 13
+n3.atTheRepairCommit.rows[15].failed: 0
+n3.atTheRepairCommit.rows[15].total: 13
+n3.atTheRepairCommit.rows[15].failedTests: []
+n3.atTheRepairCommit.rows[15].ok: true
+n3.atTheRepairCommit.rows[16].id: "N0b-a-relative-import-of-its-own-module"
+n3.atTheRepairCommit.rows[16].path: "packages/support/src/empty-hash.ts"
+n3.atTheRepairCommit.rows[16].create: true
+n3.atTheRepairCommit.rows[16].old: null
+n3.atTheRepairCommit.rows[16].new: "import { sha256 } from './sha256.js';\nexport const EMPTY = sha256('');\n"
+n3.atTheRepairCommit.rows[16].expect: "pass"
+n3.atTheRepairCommit.rows[16].exit: 0
+n3.atTheRepairCommit.rows[16].passed: 13
+n3.atTheRepairCommit.rows[16].failed: 0
+n3.atTheRepairCommit.rows[16].total: 13
+n3.atTheRepairCommit.rows[16].failedTests: []
+n3.atTheRepairCommit.rows[16].ok: true
+n3.reviewerMutants: "the review's R6 (node:http) is P2 and its R8 (node:fs read) is P1 here"
+n1.finding: "N1: sweep.py sets aside every file whose basename begins test-; one of them, test-artifact-verification.ts, is production code with a createHash('sha256') site (junitDigest, line 309), so '62 to 6' counted a smaller population than it said"
+n1.populationRules.nameRule: "the sweep's own: .test.ts, .browser.test.ts, .testkit.ts and every basename test-*.ts are test support, so out"
+n1.populationRules.reachabilityRule: "as the name rule, except that a test-*.ts file with at least one importer that is not itself a test-class file by the name rule is in; one level of importers, found by the relative specifier from <path>/<stem>.js; never transitive"
+n1.tool: "population-audit.py <repo> <commit>"
+n1.atBase.commit: "a088f1caf061c1a2062527ce8521c9b64c3c7fd1"
+n1.atBase.populationAllTsUnderSrc: 494
+n1.atBase.nameRule.files: 233
+n1.atBase.nameRule.createHashSha256Sites: 62
+n1.atBase.nameRule.localSha256Definitions: 25
+n1.atBase.nameRule.localDeepFreezeDefinitions: 7
+n1.atBase.reachabilityRule.files: 237
+n1.atBase.reachabilityRule.createHashSha256Sites: 64
+n1.atBase.reachabilityRule.localSha256Definitions: 26
+n1.atBase.reachabilityRule.localDeepFreezeDefinitions: 7
+n1.atBase.basenameOnlyFiles: list[8]
+n1.atBase.basenameOnlyFiles[0].file: "apps/three-surface-poc/src/test-deep-dive-markers.ts"
+n1.atBase.basenameOnlyFiles[0].importers: 2
+n1.atBase.basenameOnlyFiles[0].productionImporters: []
+n1.atBase.basenameOnlyFiles[0].sites: []
+n1.atBase.basenameOnlyFiles[0].inUnderReachability: false
+n1.atBase.basenameOnlyFiles[1].file: "apps/three-surface-poc/src/test-fixture-sweep.global-setup.ts"
+n1.atBase.basenameOnlyFiles[1].importers: 1
+n1.atBase.basenameOnlyFiles[1].productionImporters: []
+n1.atBase.basenameOnlyFiles[1].sites: []
+n1.atBase.basenameOnlyFiles[1].inUnderReachability: false
+n1.atBase.basenameOnlyFiles[2].file: "apps/three-surface-poc/src/test-http-client.ts"
+n1.atBase.basenameOnlyFiles[2].importers: 4
+n1.atBase.basenameOnlyFiles[2].productionImporters: []
+n1.atBase.basenameOnlyFiles[2].sites: []
+n1.atBase.basenameOnlyFiles[2].inUnderReachability: false
+n1.atBase.basenameOnlyFiles[3].file: "apps/three-surface-poc/src/test-model-fixture.ts"
+n1.atBase.basenameOnlyFiles[3].importers: 41
+n1.atBase.basenameOnlyFiles[3].productionImporters: ["apps/three-surface-poc/src/polaris-accessibility-variants.ts"]
+n1.atBase.basenameOnlyFiles[3].sites: []
+n1.atBase.basenameOnlyFiles[3].inUnderReachability: true
+n1.atBase.basenameOnlyFiles[4].file: "apps/three-surface-poc/src/test-project-shape-fixture.ts"
+n1.atBase.basenameOnlyFiles[4].importers: 27
+n1.atBase.basenameOnlyFiles[4].productionImporters: ["apps/three-surface-poc/src/polaris-accessibility-variants.ts"]
+n1.atBase.basenameOnlyFiles[4].sites: []
+n1.atBase.basenameOnlyFiles[4].inUnderReachability: true
+n1.atBase.basenameOnlyFiles[5].file: "apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts"
+n1.atBase.basenameOnlyFiles[5].importers: 6
+n1.atBase.basenameOnlyFiles[5].productionImporters: ["apps/three-surface-poc/src/polaris-accessibility-variants.ts"]
+n1.atBase.basenameOnlyFiles[5].sites: list[2]
+n1.atBase.basenameOnlyFiles[5].sites[0].kind: "createHash(sha256)"
+n1.atBase.basenameOnlyFiles[5].sites[0].line: 44
+n1.atBase.basenameOnlyFiles[5].sites[0].form: "replaceable"
+n1.atBase.basenameOnlyFiles[5].sites[1].kind: "local sha256"
+n1.atBase.basenameOnlyFiles[5].sites[1].line: 42
+n1.atBase.basenameOnlyFiles[5].inUnderReachability: true
+n1.atBase.basenameOnlyFiles[6].file: "packages/three-surface-poc-core/src/test-artifact-verification.ts"
+n1.atBase.basenameOnlyFiles[6].importers: 5
+n1.atBase.basenameOnlyFiles[6].productionImporters: ["packages/three-surface-poc-core/src/index.ts", "packages/three-surface-poc-core/src/model.ts"]
+n1.atBase.basenameOnlyFiles[6].sites: list[1]
+n1.atBase.basenameOnlyFiles[6].sites[0].kind: "createHash(sha256)"
+n1.atBase.basenameOnlyFiles[6].sites[0].line: 309
+n1.atBase.basenameOnlyFiles[6].sites[0].form: "replaceable"
+n1.atBase.basenameOnlyFiles[6].inUnderReachability: true
+n1.atBase.basenameOnlyFiles[7].file: "packages/three-surface-poc-core/src/test-cleanup.ts"
+n1.atBase.basenameOnlyFiles[7].importers: 2
+n1.atBase.basenameOnlyFiles[7].productionImporters: []
+n1.atBase.basenameOnlyFiles[7].sites: []
+n1.atBase.basenameOnlyFiles[7].inUnderReachability: false
+n1.atBase.secondMethod.createHashSha256PerBasenameOnlyFile.apps/three-surface-poc/src/test-deep-dive-markers.ts: 0
+n1.atBase.secondMethod.createHashSha256PerBasenameOnlyFile.apps/three-surface-poc/src/test-fixture-sweep.global-setup.ts: 0
+n1.atBase.secondMethod.createHashSha256PerBasenameOnlyFile.apps/three-surface-poc/src/test-http-client.ts: 0
+n1.atBase.secondMethod.createHashSha256PerBasenameOnlyFile.apps/three-surface-poc/src/test-model-fixture.ts: 0
+n1.atBase.secondMethod.createHashSha256PerBasenameOnlyFile.apps/three-surface-poc/src/test-project-shape-fixture.ts: 0
+n1.atBase.secondMethod.createHashSha256PerBasenameOnlyFile.apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts: 1
+n1.atBase.secondMethod.createHashSha256PerBasenameOnlyFile.packages/three-surface-poc-core/src/test-artifact-verification.ts: 1
+n1.atBase.secondMethod.createHashSha256PerBasenameOnlyFile.packages/three-surface-poc-core/src/test-cleanup.ts: 0
+n1.atRepairCommit.commit: "8bd514d7a6f882142f58b5bd219c3fa2f7fd7714"
+n1.atRepairCommit.populationAllTsUnderSrc: 501
+n1.atRepairCommit.nameRule.files: 236
+n1.atRepairCommit.nameRule.createHashSha256Sites: 6
+n1.atRepairCommit.nameRule.localSha256Definitions: 1
+n1.atRepairCommit.nameRule.localDeepFreezeDefinitions: 1
+n1.atRepairCommit.reachabilityRule.files: 240
+n1.atRepairCommit.reachabilityRule.createHashSha256Sites: 8
+n1.atRepairCommit.reachabilityRule.localSha256Definitions: 2
+n1.atRepairCommit.reachabilityRule.localDeepFreezeDefinitions: 1
+n1.atRepairCommit.basenameOnlyFiles: list[8]
+n1.atRepairCommit.basenameOnlyFiles[0].file: "apps/three-surface-poc/src/test-deep-dive-markers.ts"
+n1.atRepairCommit.basenameOnlyFiles[0].importers: 2
+n1.atRepairCommit.basenameOnlyFiles[0].productionImporters: []
+n1.atRepairCommit.basenameOnlyFiles[0].sites: []
+n1.atRepairCommit.basenameOnlyFiles[0].inUnderReachability: false
+n1.atRepairCommit.basenameOnlyFiles[1].file: "apps/three-surface-poc/src/test-fixture-sweep.global-setup.ts"
+n1.atRepairCommit.basenameOnlyFiles[1].importers: 1
+n1.atRepairCommit.basenameOnlyFiles[1].productionImporters: []
+n1.atRepairCommit.basenameOnlyFiles[1].sites: []
+n1.atRepairCommit.basenameOnlyFiles[1].inUnderReachability: false
+n1.atRepairCommit.basenameOnlyFiles[2].file: "apps/three-surface-poc/src/test-http-client.ts"
+n1.atRepairCommit.basenameOnlyFiles[2].importers: 4
+n1.atRepairCommit.basenameOnlyFiles[2].productionImporters: []
+n1.atRepairCommit.basenameOnlyFiles[2].sites: []
+n1.atRepairCommit.basenameOnlyFiles[2].inUnderReachability: false
+n1.atRepairCommit.basenameOnlyFiles[3].file: "apps/three-surface-poc/src/test-model-fixture.ts"
+n1.atRepairCommit.basenameOnlyFiles[3].importers: 41
+n1.atRepairCommit.basenameOnlyFiles[3].productionImporters: ["apps/three-surface-poc/src/polaris-accessibility-variants.ts"]
+n1.atRepairCommit.basenameOnlyFiles[3].sites: []
+n1.atRepairCommit.basenameOnlyFiles[3].inUnderReachability: true
+n1.atRepairCommit.basenameOnlyFiles[4].file: "apps/three-surface-poc/src/test-project-shape-fixture.ts"
+n1.atRepairCommit.basenameOnlyFiles[4].importers: 27
+n1.atRepairCommit.basenameOnlyFiles[4].productionImporters: ["apps/three-surface-poc/src/polaris-accessibility-variants.ts"]
+n1.atRepairCommit.basenameOnlyFiles[4].sites: []
+n1.atRepairCommit.basenameOnlyFiles[4].inUnderReachability: true
+n1.atRepairCommit.basenameOnlyFiles[5].file: "apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts"
+n1.atRepairCommit.basenameOnlyFiles[5].importers: 6
+n1.atRepairCommit.basenameOnlyFiles[5].productionImporters: ["apps/three-surface-poc/src/polaris-accessibility-variants.ts"]
+n1.atRepairCommit.basenameOnlyFiles[5].sites: list[2]
+n1.atRepairCommit.basenameOnlyFiles[5].sites[0].kind: "createHash(sha256)"
+n1.atRepairCommit.basenameOnlyFiles[5].sites[0].line: 44
+n1.atRepairCommit.basenameOnlyFiles[5].sites[0].form: "replaceable"
+n1.atRepairCommit.basenameOnlyFiles[5].sites[1].kind: "local sha256"
+n1.atRepairCommit.basenameOnlyFiles[5].sites[1].line: 42
+n1.atRepairCommit.basenameOnlyFiles[5].inUnderReachability: true
+n1.atRepairCommit.basenameOnlyFiles[6].file: "packages/three-surface-poc-core/src/test-artifact-verification.ts"
+n1.atRepairCommit.basenameOnlyFiles[6].importers: 5
+n1.atRepairCommit.basenameOnlyFiles[6].productionImporters: ["packages/three-surface-poc-core/src/index.ts", "packages/three-surface-poc-core/src/model.ts"]
+n1.atRepairCommit.basenameOnlyFiles[6].sites: list[1]
+n1.atRepairCommit.basenameOnlyFiles[6].sites[0].kind: "createHash(sha256)"
+n1.atRepairCommit.basenameOnlyFiles[6].sites[0].line: 309
+n1.atRepairCommit.basenameOnlyFiles[6].sites[0].form: "replaceable"
+n1.atRepairCommit.basenameOnlyFiles[6].inUnderReachability: true
+n1.atRepairCommit.basenameOnlyFiles[7].file: "packages/three-surface-poc-core/src/test-cleanup.ts"
+n1.atRepairCommit.basenameOnlyFiles[7].importers: 2
+n1.atRepairCommit.basenameOnlyFiles[7].productionImporters: []
+n1.atRepairCommit.basenameOnlyFiles[7].sites: []
+n1.atRepairCommit.basenameOnlyFiles[7].inUnderReachability: false
+n1.atRepairCommit.secondMethod.createHashSha256PerBasenameOnlyFile.apps/three-surface-poc/src/test-deep-dive-markers.ts: 0
+n1.atRepairCommit.secondMethod.createHashSha256PerBasenameOnlyFile.apps/three-surface-poc/src/test-fixture-sweep.global-setup.ts: 0
+n1.atRepairCommit.secondMethod.createHashSha256PerBasenameOnlyFile.apps/three-surface-poc/src/test-http-client.ts: 0
+n1.atRepairCommit.secondMethod.createHashSha256PerBasenameOnlyFile.apps/three-surface-poc/src/test-model-fixture.ts: 0
+n1.atRepairCommit.secondMethod.createHashSha256PerBasenameOnlyFile.apps/three-surface-poc/src/test-project-shape-fixture.ts: 0
+n1.atRepairCommit.secondMethod.createHashSha256PerBasenameOnlyFile.apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts: 1
+n1.atRepairCommit.secondMethod.createHashSha256PerBasenameOnlyFile.packages/three-surface-poc-core/src/test-artifact-verification.ts: 1
+n1.atRepairCommit.secondMethod.createHashSha256PerBasenameOnlyFile.packages/three-surface-poc-core/src/test-cleanup.ts: 0
+n1.figures.nameRule.files: [233, 236]
+n1.figures.nameRule.createHashSha256Sites: [62, 6]
+n1.figures.nameRule.localSha256Definitions: [25, 1]
+n1.figures.reachabilityRule.files: [237, 240]
+n1.figures.reachabilityRule.createHashSha256Sites: [64, 8]
+n1.figures.reachabilityRule.localSha256Definitions: [26, 2]
+n1.figures.readAs: "[base, head]"
+n1.sitesTheNameRuleMissed: list[2]
+n1.sitesTheNameRuleMissed[0].file: "packages/three-surface-poc-core/src/test-artifact-verification.ts"
+n1.sitesTheNameRuleMissed[0].line: 309
+n1.sitesTheNameRuleMissed[0].form: "sha256:${createHash('sha256').update(rawJUnit).digest('hex')}"
+n1.sitesTheNameRuleMissed[0].importersThatAreNotTestClass: ["packages/three-surface-poc-core/src/index.ts", "packages/three-surface-poc-core/src/model.ts"]
+n1.sitesTheNameRuleMissed[0].replaceableBy: "`sha256:${sha256(rawJUnit)}` [Inferred: both hash the bytes of a Uint8Array with no encoding]"
+n1.sitesTheNameRuleMissed[1].file: "apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts"
+n1.sitesTheNameRuleMissed[1].lines: "42-44"
+n1.sitesTheNameRuleMissed[1].form: "a local function sha256(text) over createHash('sha256').update(text).digest('hex')"
+n1.sitesTheNameRuleMissed[1].importersThatAreNotTestClass: ["apps/three-surface-poc/src/polaris-accessibility-variants.ts"]
+n1.sitesTheNameRuleMissed[1].replaceableBy: "the package sha256 [Inferred: the same body]"
+n1.disposition: "both sites are left in place by this repair and are not \"left on purpose by the sweep\": the sweep did not see them. Replacing them edits two more production-reachable files, which needs its own differential and a review round, and the round-1 repair is limited to the alias, the pin and text. They are named so the next audit counts them."
+n6.finding: "N6: diff-probe.mjs writes its fixture repository at <TMPDIR>/probe-fixed-fixture-repo, and that path enters every model row, so the committed probe-output.json is reproducible only under the TMPDIR it was made with, which the record did not name"
+n6.tmpdirOfTheCommittedOutput: "/tmp/lc63x"
+n6.reproduction.command: "mkdir -p /tmp/lc63x && TMPDIR=/tmp/lc63x node diff-probe.mjs <clone built with npm run build at the repair commit> <out.json> a088f1caf061c1a2062527ce8521c9b64c3c7fd1"
+n6.reproduction.clone: "8bd514d7a6f882142f58b5bd219c3fa2f7fd7714"
+n6.reproduction.outputSha256: "c491d2f34da26a5b48b994e780d2beef8b502bb6c2d64fb4fa7a5c48aeedb37f"
+n6.reproduction.equalsCommittedProbeOutput: true
+n6.reproduction.reading: "byte-identical to probe-output.json (sha256 above), so the probe is unchanged at the repair commit, which differs from the measured head by two test files"
+n6.otherTmpdirControl.tmpdir: "/tmp/lc63y (same length, other name)"
+n6.otherTmpdirControl.outputSha256: "43b7f812d680abff540f5474c8df121b4590aa4933ffdc70860b6b6bf2db6e33"
+n6.otherTmpdirControl.bytes: 73272
+n6.otherTmpdirControl.rowsThatDifferFromTheCommittedOutput: 24
+n6.otherTmpdirControl.differingRowsByKind.model: 24
+n6.otherTmpdirControl.rowsByKind.model: 24
+n6.otherTmpdirControl.rowsByKind.helper: 44
+n6.otherTmpdirControl.reading: "all 24 model rows differ and none of the 44 helper rows does: the path, not a behaviour change [Observed: counted by rows() of compare-probe.py over both files]"
+n6.headersEdited: "diff-probe.mjs names the TMPDIR dependency and the TMPDIR of the committed output; hash-trace.cjs no longer says \"not committed\" (see toolsEditedAfterTheRuns)"
+n7.finding: "N7: the PR said the narrative variant and the package differ only for a cyclic input and for a frozen shell around unfrozen children; a non-empty typed-array member is a third difference"
+n7.tool: "node narrative-freeze-probe.mjs <repo> <built clone>"
+n7.probe.base: "a088f1caf061c1a2062527ce8521c9b64c3c7fd1"
+n7.probe.blob: "apps/three-surface-poc/src/polaris-narrative.ts"
+n7.probe.blobSha256: "b8e2f77cefcdee10e1ad16cf67140bbe66e2aa9cd1023c45faa7e0751150172f"
+n7.probe.node: "v24.6.0"
+n7.probe.rows: list[7]
+n7.probe.rows[0].case: "typed array member, non-empty, two siblings"
+n7.probe.rows[0].old.implementation: "old (polaris-narrative.ts at the base)"
+n7.probe.rows[0].old.threw.name: "TypeError"
+n7.probe.rows[0].old.threw.message: "Cannot freeze array buffer views with elements"
+n7.probe.rows[0].old.objects: 4
+n7.probe.rows[0].old.frozen: 1
+n7.probe.rows[0].package.implementation: "@syzygy/support"
+n7.probe.rows[0].package.threw.name: "TypeError"
+n7.probe.rows[0].package.threw.message: "Cannot freeze array buffer views with elements"
+n7.probe.rows[0].package.objects: 4
+n7.probe.rows[0].package.frozen: 2
+n7.probe.rows[1].case: "typed array member, non-empty, one sibling"
+n7.probe.rows[1].old.implementation: "old (polaris-narrative.ts at the base)"
+n7.probe.rows[1].old.threw.name: "TypeError"
+n7.probe.rows[1].old.threw.message: "Cannot freeze array buffer views with elements"
+n7.probe.rows[1].old.objects: 3
+n7.probe.rows[1].old.frozen: 1
+n7.probe.rows[1].package.implementation: "@syzygy/support"
+n7.probe.rows[1].package.threw.name: "TypeError"
+n7.probe.rows[1].package.threw.message: "Cannot freeze array buffer views with elements"
+n7.probe.rows[1].package.objects: 3
+n7.probe.rows[1].package.frozen: 2
+n7.probe.rows[2].case: "typed array member first, non-empty, one sibling"
+n7.probe.rows[2].old.implementation: "old (polaris-narrative.ts at the base)"
+n7.probe.rows[2].old.threw.name: "TypeError"
+n7.probe.rows[2].old.threw.message: "Cannot freeze array buffer views with elements"
+n7.probe.rows[2].old.objects: 3
+n7.probe.rows[2].old.frozen: 0
+n7.probe.rows[2].package.implementation: "@syzygy/support"
+n7.probe.rows[2].package.threw.name: "TypeError"
+n7.probe.rows[2].package.threw.message: "Cannot freeze array buffer views with elements"
+n7.probe.rows[2].package.objects: 3
+n7.probe.rows[2].package.frozen: 1
+n7.probe.rows[3].case: "typed array member, empty"
+n7.probe.rows[3].old.implementation: "old (polaris-narrative.ts at the base)"
+n7.probe.rows[3].old.threw: null
+n7.probe.rows[3].old.objects: 3
+n7.probe.rows[3].old.frozen: 3
+n7.probe.rows[3].package.implementation: "@syzygy/support"
+n7.probe.rows[3].package.threw: null
+n7.probe.rows[3].package.objects: 3
+n7.probe.rows[3].package.frozen: 3
+n7.probe.rows[4].case: "control: nested plain objects"
+n7.probe.rows[4].old.implementation: "old (polaris-narrative.ts at the base)"
+n7.probe.rows[4].old.threw: null
+n7.probe.rows[4].old.objects: 7
+n7.probe.rows[4].old.frozen: 7
+n7.probe.rows[4].package.implementation: "@syzygy/support"
+n7.probe.rows[4].package.threw: null
+n7.probe.rows[4].package.objects: 7
+n7.probe.rows[4].package.frozen: 7
+n7.probe.rows[5].case: "stated difference 1: a cycle"
+n7.probe.rows[5].old.implementation: "old (polaris-narrative.ts at the base)"
+n7.probe.rows[5].old.threw.name: "RangeError"
+n7.probe.rows[5].old.threw.message: "Maximum call stack size exceeded"
+n7.probe.rows[5].old.objects: 1
+n7.probe.rows[5].old.frozen: 0
+n7.probe.rows[5].package.implementation: "@syzygy/support"
+n7.probe.rows[5].package.threw: null
+n7.probe.rows[5].package.objects: 1
+n7.probe.rows[5].package.frozen: 1
+n7.probe.rows[6].case: "stated difference 2: a frozen shell around an unfrozen member"
+n7.probe.rows[6].old.implementation: "old (polaris-narrative.ts at the base)"
+n7.probe.rows[6].old.threw: null
+n7.probe.rows[6].old.objects: 3
+n7.probe.rows[6].old.frozen: 3
+n7.probe.rows[6].package.implementation: "@syzygy/support"
+n7.probe.rows[6].package.threw: null
+n7.probe.rows[6].package.objects: 3
+n7.probe.rows[6].package.frozen: 1
+n7.reading: "a non-empty typed array makes Object.freeze throw a TypeError in both, and they leave different partial states: the old one (children first) has frozen 1 of 3 objects, the package (parent first) 2 of 3; an empty typed array freezes in both and does not differ. [Inferred] unreachable at the three call sites of polaris-narrative.ts: the file names no typed-array type (git grep at the base) and its ...[537]

@@ -1,0 +1,14 @@
+== f7477f52
+f7477f52:apps/three-surface-poc/src/test-model-fixture.ts:248:export const SHARED_FIXTURE_TIMEOUT_MS = 60_000;
+f7477f52:apps/three-surface-poc/src/polaris-generation/pipeline-demo.test.ts:19:const ONRAMP_TEST_BUDGET_MS = Object.values(ONRAMP_STEP_TIMEOUT_MS).reduce((a, b) => a + b, 0);
+f7477f52:apps/three-surface-poc/src/polaris-generation/pipeline-demo.test.ts-20-const cleanups: string[] = [];
+f7477f52:apps/three-surface-poc/src/polaris-generation/pipeline-demo.test.ts-21-afterEach(() => { for (const directory of cleanups.splice(0)) rmSync(directory, { recursive: true, force: true }); });
+f7477f52:apps/three-surface-poc/src/polaris-generation/pipeline-demo.test.ts-22-
+f7477f52:apps/three-surface-poc/src/polaris-generation/pipeline-demo.test.ts-23-describe('concrete source-to-draft pipeline exercise', () => {
+== e54f65c6
+e54f65c6:apps/three-surface-poc/src/test-model-fixture.ts:248:export const SHARED_FIXTURE_TIMEOUT_MS = 60_000;
+e54f65c6:apps/three-surface-poc/src/polaris-generation/pipeline-demo.test.ts:19:const ONRAMP_TEST_BUDGET_MS = Object.values(ONRAMP_STEP_TIMEOUT_MS).reduce((a, b) => a + b, 0);
+e54f65c6:apps/three-surface-poc/src/polaris-generation/pipeline-demo.test.ts-20-const cleanups: string[] = [];
+e54f65c6:apps/three-surface-poc/src/polaris-generation/pipeline-demo.test.ts-21-afterEach(() => { for (const directory of cleanups.splice(0)) rmSync(directory, { recursive: true, force: true }); });
+e54f65c6:apps/three-surface-poc/src/polaris-generation/pipeline-demo.test.ts-22-
+e54f65c6:apps/three-surface-poc/src/polaris-generation/pipeline-demo.test.ts-23-describe('concrete source-to-draft pipeline exercise', () => {

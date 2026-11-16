@@ -1,0 +1,99 @@
+{
+ "mode": "term-early",
+ "version": "new",
+ "param": 1000.0,
+ "inject": null,
+ "script": "scripts/measure_vitest_test_durations.py",
+ "scriptSha256": "920c5f120209904b37cfe14320ea00edfa18eafbda12fd7dcb02ec8fcf4f1e97",
+ "commit": "dc60c5bcb6ae6f1f31beee3aa0f6117adff5d6cf",
+ "command": "python3 -I /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520b/clone/scripts/measure_vitest_test_durations.py . --file packages/polaris-generation-consent/src/package-reader.test.ts --project @syzygy/polaris-generation-consent --mode alone --runs 1 --out <tmp>/measure-out.json --profile",
+ "events": [
+  {
+   "t": 0.0616,
+   "what": "test file write seen; SIGTERM 1000.0 us after",
+   "groupAlive": false
+  }
+ ],
+ "scriptExitAt": 0.218,
+ "exitCode": 143,
+ "outputTail": "",
+ "descendantsSeen": 10,
+ "descendantsByCwdOnly": 10,
+ "treeAfterExit": "",
+ "diffStatAfterExit": "",
+ "survivors3sAfterExit": {
+  "2794568": {
+   "cmdline": "npm exec vitest run --project @syzygy/polaris-generation-consent packages/polaris-generation-consent/src/package-reader.test.ts --reporter=json --outputFile=/tm",
+   "state": "S",
+   "pgid": 2794568,
+   "sid": 2794568
+  },
+  "2794612": {
+   "cmdline": "sh -c \"vitest\" run --project @syzygy/polaris-generation-consent packages/polaris-generation-consent/src/package-reader.test.ts --reporter=json --outputFile=/tmp",
+   "state": "S",
+   "pgid": 2794568,
+   "sid": 2794568
+  },
+  "2794613": {
+   "cmdline": "node (vitest)",
+   "state": "S",
+   "pgid": 2794568,
+   "sid": 2794568
+  },
+  "2794664": {
+   "cmdline": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520b/clone/node_modules/@esbuild/linux-x64/bin/esbuild --service=0.",
+   "state": "S",
+   "pgid": 2794568,
+   "sid": 2794568
+  },
+  "2794678": {
+   "cmdline": "node (vitest 1)",
+   "state": "S",
+   "pgid": 2794568,
+   "sid": 2794568
+  },
+  "2794679": {
+   "cmdline": "node (vitest 2)",
+   "state": "S",
+   "pgid": 2794568,
+   "sid": 2794568
+  },
+  "2794685": {
+   "cmdline": "node (vitest 3)",
+   "state": "S",
+   "pgid": 2794568,
+   "sid": 2794568
+  },
+  "2794686": {
+   "cmdline": "node (vitest 4)",
+   "state": "S",
+   "pgid": 2794568,
+   "sid": 2794568
+  },
+  "2794692": {
+   "cmdline": "node (vitest 5)",
+   "state": "S",
+   "pgid": 2794568,
+   "sid": 2794568
+  },
+  "2794699": {
+   "cmdline": "node (vitest 6)",
+   "state": "S",
+   "pgid": 2794568,
+   "sid": 2794568
+  },
+  "2795056": {
+   "cmdline": null,
+   "state": "R",
+   "pgid": 2794568,
+   "sid": 2794568
+  }
+ },
+ "recordWritten": false,
+ "recordTests": null,
+ "recordProfileRows": null,
+ "writtenSnapshot": null,
+ "treeCleanAfterReviewerRestore": true,
+ "clean": true,
+ "noSurvivor": false
+}

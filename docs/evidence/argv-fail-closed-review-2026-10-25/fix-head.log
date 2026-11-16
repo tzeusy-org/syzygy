@@ -1,0 +1,12 @@
+FIX-rows-alone survives 0 ['Tests  107 passed (107)'] 3.3 clean
+FIX-rows-with-RV-P6 killed 1 ['Tests  1 failed | 106 passed (107)'] 3.1 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a # alias whose target leaves its package for a module that exists as naming no module
+FIX-rows-with-RV-P3 killed 1 ['Tests  1 failed | 106 passed (107)'] 3.0 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a # alias whose target is a module of its own package outside dist as naming no module
+FIX-rows-with-RV-P4 killed 1 ['Tests  1 failed | 106 passed (107)'] 3.4 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a # alias whose target names no source module as naming no module
+FIX-rows-with-RV-Q1 killed 1 ['Tests  1 failed | 106 passed (107)'] 4.4 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > the census sees a reading the lift does not in "import { readArgv } from './argv.js';\nvoid [[]].map(readArgv);" (its own m
+FIX-rows-with-RV-Q2 killed 1 ['Tests  1 failed | 106 passed (107)'] 5.2 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > the census sees a reading the lift does not in "export function readArgv(): void {}" (its own mutant)
+wrote fix-head.json 6

@@ -1,0 +1,677 @@
+{
+ "what": "rev-528 own mutants, base side, tree /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-528/base",
+ "mutants": [
+  {
+   "id": "RV-T1-hash-pattern-alias",
+   "what": "a # subpath pattern (#d/*) to the barrel, imported by main.ts",
+   "expect": {
+    "base": "survives",
+    "head": "killed"
+   },
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/subpath-imports.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "apps/syzygy/package.json",
+     "old": "  \"main\": \"./dist/main.js\",\n",
+     "new": "  \"main\": \"./dist/main.js\",\n  \"imports\": {\"#d/*\": \"@syzygy/polaris-dossier\"},\n"
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nimport '#d/barrel';\n"
+    }
+   ]
+  },
+  {
+   "id": "RV-T2-hash-pattern-alias-island",
+   "what": "a # subpath pattern (#c/*) to the consent root, imported by dossier-site.ts",
+   "expect": {
+    "base": "survives",
+    "head": "killed"
+   },
+   "projects": [
+    "@syzygy/polaris-generation-core"
+   ],
+   "files": [
+    "packages/polaris-generation-core/src/island-boundary.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/package.json",
+     "old": "  \"main\": \"./dist/main.js\",\n",
+     "new": "  \"main\": \"./dist/main.js\",\n  \"imports\": {\"#c/*\": \"@syzygy/polaris-generation-consent\"},\n"
+    },
+    {
+     "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+     "old": "import { assertInertSvg } from './svg-inert.js';\n",
+     "new": "import { assertInertSvg } from './svg-inert.js';\nimport '#c/root';\n"
+    }
+   ]
+  },
+  {
+   "id": "RV-T3-node-object-ahead-of-import",
+   "what": "a node condition holding its own import/default object, ahead of import in ./argv",
+   "expect": {
+    "base": "survives",
+    "head": "killed"
+   },
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/subpath-imports.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/package.json",
+     "old": "      \"types\": \"./dist/argv.d.ts\",\n      \"import\": \"./dist/argv.js\",",
+     "new": "      \"types\": \"./dist/argv.d.ts\",\n      \"node\": { \"import\": \"./dist/index.js\", \"default\": \"./dist/index.js\" },\n      \"import\": \"./dist/argv.js\","
+    }
+   ]
+  },
+  {
+   "id": "RV-T4-node-nested-inside-import",
+   "what": "a node condition nested inside the import condition of ./argv",
+   "expect": {
+    "base": "killed",
+    "head": "killed"
+   },
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/subpath-imports.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/package.json",
+     "old": "      \"types\": \"./dist/argv.d.ts\",\n      \"import\": \"./dist/argv.js\",",
+     "new": "      \"types\": \"./dist/argv.d.ts\",\n      \"import\": { \"node\": \"./dist/index.js\", \"default\": \"./dist/argv.js\" },"
+    }
+   ]
+  },
+  {
+   "id": "RV-T5-require-ahead-of-import",
+   "what": "a require condition naming the barrel, ahead of import in ./argv",
+   "expect": {
+    "base": "survives",
+    "head": "killed"
+   },
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/subpath-imports.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/package.json",
+     "old": "      \"types\": \"./dist/argv.d.ts\",\n      \"import\": \"./dist/argv.js\",",
+     "new": "      \"types\": \"./dist/argv.d.ts\",\n      \"require\": \"./dist/index.js\",\n      \"import\": \"./dist/argv.js\","
+    }
+   ]
+  },
+  {
+   "id": "RV-T6-exports-fallback-array",
+   "what": "the import condition of ./argv as a fallback array led by the barrel",
+   "expect": {
+    "base": "killed",
+    "head": "killed"
+   },
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/subpath-imports.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/package.json",
+     "old": "      \"types\": \"./dist/argv.d.ts\",\n      \"import\": \"./dist/argv.js\",",
+     "new": "      \"types\": \"./dist/argv.d.ts\",\n      \"import\": [\"./dist/index.js\", \"./dist/argv.js\"],"
+    }
+   ]
+  },
+  {
+   "id": "RV-T7-imports-fallback-array-alias",
+   "what": "a # alias whose target is a fallback array naming the barrel",
+   "expect": {
+    "base": "survives",
+    "head": "killed"
+   },
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/subpath-imports.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "apps/syzygy/package.json",
+     "old": "  \"main\": \"./dist/main.js\",\n",
+     "new": "  \"main\": \"./dist/main.js\",\n  \"imports\": {\"#dossier\": [\"@syzygy/polaris-dossier\"]},\n"
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nimport '#dossier';\n"
+    }
+   ]
+  },
+  {
+   "id": "RV-T8-mts-bridge",
+   "what": "main.ts imports ./bridge.mjs, a .mts module re-exporting the barrel",
+   "expect": {
+    "base": "killed",
+    "head": "killed"
+   },
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/subpath-imports.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "apps/syzygy/src/bridge.mts",
+     "create": "export * from '@syzygy/polaris-dossier';\n"
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nimport './bridge.mjs';\n"
+    }
+   ]
+  },
+  {
+   "id": "RV-T9-cts-bridge",
+   "what": "main.ts imports ./bridge.cjs, a .cts module re-exporting the barrel",
+   "expect": {
+    "base": "killed",
+    "head": "killed"
+   },
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/subpath-imports.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "apps/syzygy/src/bridge.cts",
+     "create": "export * from '@syzygy/polaris-dossier';\n"
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nimport './bridge.cjs';\n"
+    }
+   ]
+  },
+  {
+   "id": "RV-T10-directory-index",
+   "what": "main.ts imports '.', its own directory, whose new index.ts re-exports the barrel",
+   "expect": {
+    "base": "killed",
+    "head": "killed"
+   },
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/subpath-imports.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "apps/syzygy/src/index.ts",
+     "create": "export * from '@syzygy/polaris-dossier';\n"
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nimport '.';\n"
+    }
+   ]
+  },
+  {
+   "id": "RV-T11-template-literal-dynamic-alias",
+   "what": "a declared #dossier alias loaded by import(`#dossier`) outside the branches",
+   "expect": {
+    "base": "killed",
+    "head": "killed"
+   },
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/subpath-imports.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "apps/syzygy/package.json",
+     "old": "  \"main\": \"./dist/main.js\",\n",
+     "new": "  \"main\": \"./dist/main.js\",\n  \"imports\": {\"#dossier\": \"@syzygy/polaris-dossier\"},\n"
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nvoid import(`#dossier`);\n"
+    }
+   ]
+  },
+  {
+   "id": "RV-T12-computed-alias",
+   "what": "a declared #dossier alias loaded by import(name), name = '#dossier'",
+   "expect": {
+    "base": "killed",
+    "head": "killed"
+   },
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/subpath-imports.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "apps/syzygy/package.json",
+     "old": "  \"main\": \"./dist/main.js\",\n",
+     "new": "  \"main\": \"./dist/main.js\",\n  \"imports\": {\"#dossier\": \"@syzygy/polaris-dossier\"},\n"
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nconst hashName = '#dossier';\nvoid import(hashName);\n"
+    }
+   ]
+  },
+  {
+   "id": "RV-T13-template-literal-dynamic-alias-island",
+   "what": "a declared #consent alias loaded by import(`#consent`) in dossier-site.ts",
+   "expect": {
+    "base": "survives",
+    "head": "unknown"
+   },
+   "projects": [
+    "@syzygy/polaris-generation-core"
+   ],
+   "files": [
+    "packages/polaris-generation-core/src/island-boundary.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/package.json",
+     "old": "  \"main\": \"./dist/main.js\",\n",
+     "new": "  \"main\": \"./dist/main.js\",\n  \"imports\": {\"#consent\": \"@syzygy/polaris-generation-consent\"},\n"
+    },
+    {
+     "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+     "old": "import { assertInertSvg } from './svg-inert.js';\n",
+     "new": "import { assertInertSvg } from './svg-inert.js';\nvoid import(`#consent`);\n"
+    }
+   ]
+  },
+  {
+   "id": "RV-T14-absolute-path",
+   "what": "main.ts imports the barrel by its absolute path",
+   "expect": {
+    "base": "survives",
+    "head": "killed"
+   },
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/subpath-imports.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nimport '/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-528/base/packages/polaris-dossier/src/index.js';\n"
+    }
+   ]
+  },
+  {
+   "id": "RV-T15-file-url-mixed-case",
+   "what": "main.ts imports the barrel by a File:// URL",
+   "expect": {
+    "base": "survives",
+    "head": "killed"
+   },
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/subpath-imports.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nimport 'File:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-528/base/packages/polaris-dossier/src/index.js';\n"
+    }
+   ]
+  },
+  {
+   "id": "RV-T16-alias-declared-by-another-package",
+   "what": "main.ts imports #dossier, which only apps/three-surface-poc declares",
+   "expect": {
+    "base": "survives",
+    "head": "killed"
+   },
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/subpath-imports.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/package.json",
+     "old": "  \"main\": \"./dist/main.js\",\n",
+     "new": "  \"main\": \"./dist/main.js\",\n  \"imports\": {\"#dossier\": \"@syzygy/polaris-dossier\"},\n"
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nimport '#dossier';\n"
+    }
+   ]
+  },
+  {
+   "id": "RV-T17-alias-to-own-dist-module",
+   "what": "a #bridge alias to ./dist/bridge.js, whose src/bridge.ts re-exports the barrel",
+   "expect": {
+    "base": "survives",
+    "head": "killed"
+   },
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/subpath-imports.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "apps/syzygy/package.json",
+     "old": "  \"main\": \"./dist/main.js\",\n",
+     "new": "  \"main\": \"./dist/main.js\",\n  \"imports\": {\"#bridge\": \"./dist/bridge.js\"},\n"
+    },
+    {
+     "file": "apps/syzygy/src/bridge.ts",
+     "create": "export * from '@syzygy/polaris-dossier';\n"
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nimport '#bridge';\n"
+    }
+   ]
+  },
+  {
+   "id": "RV-T18-dependency-alias",
+   "what": "a dependency alias \"dossier\": \"file:../../packages/polaris-dossier\", imported by main.ts",
+   "expect": {
+    "base": "survives",
+    "head": "survives"
+   },
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/subpath-imports.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "apps/syzygy/package.json",
+     "old": "  \"dependencies\": {\n",
+     "new": "  \"dependencies\": {\n    \"dossier\": \"file:../../packages/polaris-dossier\",\n"
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nimport 'dossier';\n"
+    }
+   ]
+  },
+  {
+   "id": "RV-T19-node-modules-relative-path",
+   "what": "an intermediate module re-exports ../../../node_modules/@syzygy/polaris-dossier/src/index.js",
+   "expect": {
+    "base": "survives",
+    "head": "survives"
+   },
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/subpath-imports.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "apps/syzygy/src/bridge.ts",
+     "create": "export * from '../../../node_modules/@syzygy/polaris-dossier/src/index.js';\n"
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nimport './bridge.js';\n"
+    }
+   ]
+  },
+  {
+   "id": "RV-C1-destructured-alias",
+   "what": "const { readArgv: readArgs } = argvNs, and a call through it",
+   "expect": {
+    "base": "survives",
+    "head": "killed"
+   },
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/argv.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/cli.ts",
+     "old": "import { isArgvFault, readArgv } from './argv.js';\n",
+     "new": "import { isArgvFault, readArgv } from './argv.js';\nimport * as argvNs from './argv.js';\nconst { readArgv: readArgs } = argvNs;\n"
+    },
+    {
+     "file": "packages/polaris-dossier/src/cli.ts",
+     "old": "    const read = readArgv(rest, { valued: [], dashValue: 'refuse', repeat: 'refuse', positionals: true });",
+     "new": "    const read = readArgv(rest, { valued: [], dashValue: 'refuse', repeat: 'refuse', positionals: true });\n    void readArgs(rest, { valued: ['--drift'], dashValue: 'take', repeat: 'last', positionals: true });"
+    }
+   ]
+  },
+  {
+   "id": "RV-C2-reexport-renamed-in-cli",
+   "what": "export { readArgv as readArgs } from './argv.js' in cli.ts",
+   "expect": {
+    "base": "survives",
+    "head": "killed"
+   },
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/argv.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/cli.ts",
+     "old": "import { isArgvFault, readArgv } from './argv.js';\n",
+     "new": "import { isArgvFault, readArgv } from './argv.js';\nexport { readArgv as readArgs } from './argv.js';\n"
+    }
+   ]
+  },
+  {
+   "id": "RV-C3-reflect-get",
+   "what": "Reflect.apply(Reflect.get(argvNs, 'readArgv'), ...) in cli.ts",
+   "expect": {
+    "base": "survives",
+    "head": "killed"
+   },
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/argv.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/cli.ts",
+     "old": "import { isArgvFault, readArgv } from './argv.js';\n",
+     "new": "import { isArgvFault, readArgv } from './argv.js';\nimport * as argvNs from './argv.js';\n"
+    },
+    {
+     "file": "packages/polaris-dossier/src/cli.ts",
+     "old": "    const read = readArgv(rest, { valued: [], dashValue: 'refuse', repeat: 'refuse', positionals: true });",
+     "new": "    const read = readArgv(rest, { valued: [], dashValue: 'refuse', repeat: 'refuse', positionals: true });\n    void Reflect.apply(Reflect.get(argvNs, 'readArgv'), undefined, [rest, { valued: ['--drift'], dashValue: 'take', repeat: 'last', positionals: true }]);"
+    }
+   ]
+  },
+  {
+   "id": "RV-C4-element-access",
+   "what": "argvNs['readArgv'](...) in cli.ts",
+   "expect": {
+    "base": "survives",
+    "head": "killed"
+   },
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/argv.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/cli.ts",
+     "old": "import { isArgvFault, readArgv } from './argv.js';\n",
+     "new": "import { isArgvFault, readArgv } from './argv.js';\nimport * as argvNs from './argv.js';\n"
+    },
+    {
+     "file": "packages/polaris-dossier/src/cli.ts",
+     "old": "    const read = readArgv(rest, { valued: [], dashValue: 'refuse', repeat: 'refuse', positionals: true });",
+     "new": "    const read = readArgv(rest, { valued: [], dashValue: 'refuse', repeat: 'refuse', positionals: true });\n    void argvNs['readArgv'](rest, { valued: ['--drift'], dashValue: 'take', repeat: 'last', positionals: true });"
+    }
+   ]
+  },
+  {
+   "id": "RV-C5-concatenated-name",
+   "what": "argvNs['read' + 'Argv'](...) in cli.ts (the named residual)",
+   "expect": {
+    "base": "survives",
+    "head": "survives"
+   },
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/argv.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/cli.ts",
+     "old": "import { isArgvFault, readArgv } from './argv.js';\n",
+     "new": "import { isArgvFault, readArgv } from './argv.js';\nimport * as argvNs from './argv.js';\n"
+    },
+    {
+     "file": "packages/polaris-dossier/src/cli.ts",
+     "old": "    const read = readArgv(rest, { valued: [], dashValue: 'refuse', repeat: 'refuse', positionals: true });",
+     "new": "    const read = readArgv(rest, { valued: [], dashValue: 'refuse', repeat: 'refuse', positionals: true });\n    void (argvNs as Record<string, Function>)['read' + 'Argv'](rest, { valued: ['--drift'], dashValue: 'take', repeat: 'last', positionals: true });"
+    }
+   ]
+  },
+  {
+   "id": "RV-C6-mts-caller",
+   "what": "a new .mts module calling readArgv with its own spec",
+   "expect": {
+    "base": "survives",
+    "head": "survives"
+   },
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/argv.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/extra-reader.mts",
+     "create": "import { readArgv } from './argv.js';\nexport const readDrift = (args: string[]) => readArgv(args, { valued: ['--drift'], dashValue: 'take', repeat: 'last', positionals: true });\n"
+    }
+   ]
+  },
+  {
+   "id": "RV-C7-callback-argument",
+   "what": "[rest].map(readArgv) in cli.ts: readArgv inside a call, not its callee",
+   "expect": {
+    "base": "survives",
+    "head": "killed"
+   },
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/argv.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/cli.ts",
+     "old": "    const read = readArgv(rest, { valued: [], dashValue: 'refuse', repeat: 'refuse', positionals: true });",
+     "new": "    const read = readArgv(rest, { valued: [], dashValue: 'refuse', repeat: 'refuse', positionals: true });\n    void [rest].map(readArgv);"
+    }
+   ]
+  },
+  {
+   "id": "RV-C8-optional-call",
+   "what": "readArgv?.(rest, drift) in cli.ts",
+   "expect": {
+    "base": "killed",
+    "head": "killed"
+   },
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/argv.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/cli.ts",
+     "old": "    const read = readArgv(rest, { valued: [], dashValue: 'refuse', repeat: 'refuse', positionals: true });",
+     "new": "    const read = readArgv(rest, { valued: [], dashValue: 'refuse', repeat: 'refuse', positionals: true });\n    void readArgv?.(rest, { valued: ['--drift'], dashValue: 'take', repeat: 'last', positionals: true });"
+    }
+   ]
+  },
+  {
+   "id": "RV-C9-apply",
+   "what": "readArgv.apply(undefined, [rest, drift]) in cli.ts",
+   "expect": {
+    "base": "survives",
+    "head": "killed"
+   },
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/argv.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/cli.ts",
+     "old": "    const read = readArgv(rest, { valued: [], dashValue: 'refuse', repeat: 'refuse', positionals: true });",
+     "new": "    const read = readArgv(rest, { valued: [], dashValue: 'refuse', repeat: 'refuse', positionals: true });\n    void readArgv.apply(undefined, [rest, { valued: ['--drift'], dashValue: 'take', repeat: 'last', positionals: true }]);"
+    }
+   ]
+  }
+ ]
+}

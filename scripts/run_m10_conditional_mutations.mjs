@@ -7,7 +7,7 @@ const tests = [
   'apps/three-surface-poc/src/response-limits.test.ts',
 ];
 const routeFile = 'apps/three-surface-poc/src/routes.ts';
-const serverFile = 'packages/cap1-daemon/src/server.ts';
+const serverFile = 'packages/http-host/src/server.ts';
 const mutations = [
   {
     id: 'omitted-route', file: routeFile,

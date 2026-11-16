@@ -1,0 +1,1400 @@
+{
+ "record": "decode-and-canonical-json",
+ "bead": "syzygy-bpyt.6.3",
+ "stack": "pull request 2 of 3 (the strict UTF-8 decoder, and the record of where the two key-sorted JSON encoders differ)",
+ "date": "2026-10-25",
+ "labels": "Every figure here is Observed from the named file or run unless it is marked Inferred or Unknown.",
+ "subject": {
+  "baseCommit": "6cbb3186b031e396a8b2cd616be313ab2daa22fd",
+  "baseIs": "the first pull request of this stack (the support package with sha256 and deepFreeze) merged with main",
+  "codeCommit": "0e2640e9eaa0b1c77f61ac335ec76cb3fb41904d",
+  "productionHeadCommit": "e16126c7547df02e3dfdeb7144f78770d4714247",
+  "productionDeltaBetweenCodeCommitAndHead": "two pointer comments (comment-only: see commentOnly)",
+  "productionFiles": [
+   {
+    "path": "packages/polaris-generation-core/src/canonical-json.ts",
+    "sha256Base": "4d7e745dc505c0de74666511a90ccda4673a5bc3d3e9deb73f424bce92875608",
+    "sha256Head": "c51a3ca5ec1210e06fb462088c8a9fd541168de9c333b114cb8369621ebce7ed"
+   },
+   {
+    "path": "packages/support/src/decode-utf8.ts",
+    "sha256Base": null,
+    "sha256Head": "f57863901787c528672976af4efd285d6daf8d3895df9d332c28724ac435ca27"
+   },
+   {
+    "path": "packages/support/src/index.ts",
+    "sha256Base": "9b82aa1f60a468084496a62c2dc22775171c4678f663761e463e3f120a99d1bb",
+    "sha256Head": "a4b3aa184877c9851ee46623e00c33a5ebbf25029d7ca16ff7324a6e7d31ea56"
+   },
+   {
+    "path": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+    "sha256Base": "01fc903901fc09082ce4923bf7bdcf4937b492ef93e62058be5a7c04ca87395e",
+    "sha256Head": "6098ed3fdd6d5055cf7952e836c25c9474239f6b2e2ac60d8e03af836be4d8dc"
+   },
+   {
+    "path": "packages/three-surface-poc-core/src/code-structure.ts",
+    "sha256Base": "ef137dafdd666104b9249d5516b0567e8daf9db7a5814c68c29e362f87ca56c1",
+    "sha256Head": "d8a4d39c34a2b149fc3f172a35cf91f398cb1c42edc21d1885be9ca34857bfa3",
+    "sha256HeadNote": "this is the digest at the production head e16126c7 and at the reviewed head; the round-1 repair changes this file (see roundOneRepairProductionDelta)",
+    "sha256AtTestedCommit": "bc56dca9270b397298a578f109ddfee47ccbf9b7b9830eb9f3dfef2c68e241b1"
+   },
+   {
+    "path": "packages/three-surface-poc-core/src/git-object-reader.ts",
+    "sha256Base": "19405187526e79585f92b65a926a07492929ea7335dd5a4994b8f204b7a0bf46",
+    "sha256Head": "76ac22aab6091645ea4ed6a562efc4984e7a4e38a7fb1777aa2fe3bd738f7b65"
+   },
+   {
+    "path": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+    "sha256Base": "c32ab4e3dbe509413a4d31afc1bb7a68c1a5a8b2b1d21945b72deb9e54617e34",
+    "sha256Head": "a70be15e9c6d1af6325c234c83e389adf7291140e9a3dccbb1847e8210b3299f"
+   },
+   {
+    "path": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+    "sha256Base": "db2cd5cfb37f45895ca0794169339ca680918d0111c658534e6ede301a8d04a0",
+    "sha256Head": "b57746bb67286dfbe3ed0deaaf844e11d8568936b94c79cc0262ea912b635bff"
+   }
+  ],
+  "registryBoundFilesChecked": [
+   "packages/polaris-dossier/src/git-object-reader.ts",
+   "packages/three-surface-poc-core/src/project-shape-observer.ts"
+  ],
+  "registryBoundFilesTouched": [],
+  "reviewedHead": "2d3f93759a28d35e7b04facb5aaebbcc29697d09",
+  "prOwnDeltaBase": "a5ab2b287266e9be6b8e96b381d014cb8e73d9d4",
+  "prOwnDeltaBaseNote": "a5ab2b28 is the head of PR 1 (#530) round-1 repair that this branch merged as 2d3f9375; git diff a5ab2b28 <head> is this PR alone",
+  "testedCommit": "b81010c8c5a375ef9fd446ac9ddc0da407ac1c58",
+  "testedCommitNote": "every repair run below ran at this commit; the evidence commit after it adds files under docs/evidence/syzygy-bpyt-6-3 and the PR body, and changes no code",
+  "roundOneRepairProductionDelta": {
+   "between": "2d3f9375 and b81010c8",
+   "productionFilesChanged": [
+    "packages/three-surface-poc-core/src/code-structure.ts"
+   ],
+   "codeStructureSha256Before": "d8a4d39c34a2b149fc3f172a35cf91f398cb1c42edc21d1885be9ca34857bfa3",
+   "codeStructureSha256After": "bc56dca9270b397298a578f109ddfee47ccbf9b7b9830eb9f3dfef2c68e241b1",
+   "otherProductionFiles": "byte-equal at both commits (git diff --name-only: only the file above among the non-test .ts files under packages and apps)"
+  }
+ },
+ "authority": "GP-Q0 (behavior-preserving only); .syzygy/governance/decisions/OWNER-DIRECTION-GREENFIELD-PARITY-ANSWERS-2026-10-21.md",
+ "ccRev1ClassesProposed": {
+  "note": "proposed by the author, never final",
+  "class3": [
+   "project-shape-observation.ts",
+   "git-object-reader.ts",
+   "code-structure.ts"
+  ],
+  "class4": [
+   "authority-artifact-fields.ts"
+  ],
+  "class1": [
+   "authority-artifact-fields.ts"
+  ],
+  "class6AdditiveOnly": [
+   "packages/support/src/decode-utf8.ts (a new decodeUtf8 export)"
+  ]
+ },
+ "decoder": {
+  "definition": "decodeUtf8(bytes: Uint8Array): string | undefined in @syzygy/support; one module-level TextDecoder('utf-8', { fatal: true }) in try/catch. A byte-order mark is dropped; a refusal returns undefined.",
+  "replacedDefinitions": [
+   {
+    "path": "packages/three-surface-poc-core/src/git-object-reader.ts",
+    "atBase": "local decodeUtf8 over a module STRICT_UTF8",
+    "line": 279
+   },
+   {
+    "path": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+    "atBase": "local decodeUtf8 over a module STRICT_UTF8",
+    "line": 116
+   },
+   {
+    "path": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+    "atBase": "local decode (fatal true, in try/catch)",
+    "line": 48
+   },
+   {
+    "path": "packages/three-surface-poc-core/src/code-structure.ts",
+    "atBase": "a STRICT_UTF8 constant whose decode threw NonUtf8GitOutput",
+    "line": null,
+    "note": "the bead counted two copies; the recount at the base is three helper copies plus this constant"
+   }
+  ],
+  "census": {
+   "base": {
+    "commit": "6cbb3186",
+    "population": "523 tracked .ts/.mjs/.cjs files under packages/, apps/ and scripts/",
+    "filesWithAConstruction": 36,
+    "constructions": 53,
+    "byShape": {
+     "const": 6,
+     "helper": 3,
+     "inline": 40,
+     "test inline": 4
+    },
+    "byOptions": {
+     "fatal=None ignoreBOM=None": 13,
+     "fatal=false ignoreBOM=None": 4,
+     "fatal=true ignoreBOM=None": 24,
+     "fatal=true ignoreBOM=true": 8,
+     "test fatal=None ignoreBOM=None": 2,
+     "test fatal=true ignoreBOM=None": 2
+    },
+    "methodsAgree": true,
+    "secondMethod": "git grep -c -F \"new TextDecoder(\" per file; file set and per-file counts equal to method one"
+   },
+   "head": {
+    "commit": "0e2640e9eaa0b1c77f61ac335ec76cb3fb41904d",
+    "population": "525 tracked .ts/.mjs/.cjs files under packages/, apps/ and scripts/",
+    "filesWithAConstruction": 33,
+    "constructions": 50,
+    "byShape": {
+     "const": 5,
+     "helper": 1,
+     "inline": 40,
+     "test inline": 4
+    },
+    "byOptions": {
+     "fatal=None ignoreBOM=None": 13,
+     "fatal=false ignoreBOM=None": 4,
+     "fatal=true ignoreBOM=None": 21,
+     "fatal=true ignoreBOM=true": 8,
+     "test fatal=None ignoreBOM=None": 2,
+     "test fatal=true ignoreBOM=None": 2
+    },
+    "methodsAgree": true,
+    "secondMethod": "git grep -c -F \"new TextDecoder(\" per file; file set and per-file counts equal to method one"
+   },
+   "predicate": "a construction is the text \"new TextDecoder(\" in a tracked .ts, .mjs or .cjs file under packages, apps or scripts; a site is equivalent to decodeUtf8 when it is fatal true with no ignoreBOM",
+   "repair1": {
+    "commit": "b81010c8c5a375ef9fd446ac9ddc0da407ac1c58",
+    "population": "536 tracked .ts/.mjs/.cjs files under packages/, apps/ and scripts/",
+    "filesWithAConstruction": 33,
+    "constructions": 50,
+    "methodsAgree": true,
+    "output": "docs/evidence/syzygy-bpyt-6-3/utf8-census-repair1.json",
+    "headCommitNote": "dec.census.head was taken at 0e2640e9, not at the reviewed head; the counts (50 in 33 files) reproduce at the reviewed head and at the tested commit"
+   }
+  },
+  "sitesLeftAsTheyAre": {
+   "productionInlineConstructions": 40,
+   "ofWhichEquivalentToDecodeUtf8": 18,
+   "productionConstantsEquivalent": 2,
+   "testInline": 4,
+   "ignoreBomOrLenientOrDefault": "the 5 fatal-with-ignoreBOM inline sites, the 3 such constants, the 4 fatal-false sites and the 13 default sites keep their own options: a different decoder is a different predicate",
+   "reason": "each handles refusal its own way (throw, typed Unknown, catch). The equivalence is of decoder options only; the failure handling at each of the 20 equivalent production sites was not audited [Unknown], so adopting decodeUtf8 there is a follow-up and not part of this change."
+  },
+  "differential": {
+   "what": "base build (6cbb3186) against the production head (e16126c7), 9 drivers: eight each take the same 1,604-item corpus (authority consent, policy and registry decoding, the object reader, the seed reader, observer rev-parse, show and ls-tree: 8 x 1,604 = 12,832 rows) and the ninth runs 9 code-structure repository cases (9 rows); 12,841 rows in all",
+   "corpus": {
+    "items": 1604,
+    "named": 41,
+    "protocolTexts": 7,
+    "protocolMutations": 56,
+    "random": 1500,
+    "decodableByTheReferenceDecoder": 714,
+    "refusedByTheReferenceDecoder": 890,
+    "referenceDecoder": "new TextDecoder('utf-8', { fatal: true }) in try/catch, the base definition, inside this probe"
+   },
+   "rowsCompared": 12841,
+   "rowsDiffer": 0,
+   "baseRunTwiceDeterministic": true,
+   "outputsByteIdentical": true,
+   "outputSha256": "be4bd04594ccd42f0b2e129a1a38c0709f342f0a416fdb803b4f3c1f28cc2667",
+   "rowsSha256": "61316b22f2387a4156b90c4dca26add8a206772b22915fa5504b09faa88f797b",
+   "tool": [
+    "utf8-probe.mjs",
+    "compare-utf8-probe.py"
+   ],
+   "repair1": {
+    "what": "the decoder probe run again at the tested commit and compared with the tracked base output",
+    "output": "docs/evidence/syzygy-bpyt-6-3/utf8-probe-compare-repair1.json",
+    "outputSha256": "bf2eb5e41b05ad38e3e99d050d94e62a702d9beb74e9a07b0dcc59ebc0a3414f",
+    "rowsCompared": 12841,
+    "rowsDiffer": 0,
+    "missing": 0,
+    "extra": 0,
+    "headOutputSha256": "be4bd04594ccd42f0b2e129a1a38c0709f342f0a416fdb803b4f3c1f28cc2667",
+    "baseOutputSha256": "be4bd04594ccd42f0b2e129a1a38c0709f342f0a416fdb803b4f3c1f28cc2667",
+    "outputsByteIdentical": true
+   }
+  },
+  "mutants": {
+   "count": 18,
+   "killed": 18,
+   "survived": 0,
+   "ranAtHead": "2ea14d941f377e92884f593f6f1dd7f6291c3e87",
+   "o2": {
+    "firstRunVerdict": "killed by probe (no test in project-shape-observation.test.ts killed it; that was the one test file the existing-tests detector ran, 39 tests, all passed: utf8-canonical-mutants-2ea14d94.json, detector existing)",
+    "closedBy": "packages/three-surface-poc-core/src/project-shape-git-text.test.ts",
+    "rerunAtHead": "e16126c7547df02e3dfdeb7144f78770d4714247",
+    "rerunVerdict": "killed by test, probe",
+    "rerunCommit": "7e4e9f1985c406f4b9c1cb17a586adad995ddce3"
+   },
+   "rows": [
+    {
+     "id": "D1-decoder-not-fatal",
+     "file": "packages/support/src/decode-utf8.ts",
+     "commit": "581ed61d7987881d7a8755abd0011118b6e3c43f",
+     "ranAtHead": "2ea14d941f377e92884f593f6f1dd7f6291c3e87",
+     "verdict": "killed by test, probe",
+     "killedBy": [
+      "test",
+      "probe"
+     ],
+     "detail": "old and new fragments, the failing tests and their first error lines are stored verbatim in the mutants file named in files"
+    },
+    {
+     "id": "D2-decoder-keeps-bom",
+     "file": "packages/support/src/decode-utf8.ts",
+     "commit": "ad8bbd6218c8d8a903b0fb4d83a28c6976afa379",
+     "ranAtHead": "2ea14d941f377e92884f593f6f1dd7f6291c3e87",
+     "verdict": "killed by test, probe",
+     "killedBy": [
+      "test",
+      "probe"
+     ],
+     "detail": "old and new fragments, the failing tests and their first error lines are stored verbatim in the mutants file named in files"
+    },
+    {
+     "id": "D3-refusal-returns-empty-text",
+     "file": "packages/support/src/decode-utf8.ts",
+     "commit": "20469fb5cfdc5072c0051d719b96e1cd8301de26",
+     "ranAtHead": "2ea14d941f377e92884f593f6f1dd7f6291c3e87",
+     "verdict": "killed by test, probe",
+     "killedBy": [
+      "test",
+      "probe"
+     ],
+     "detail": "old and new fragments, the failing tests and their first error lines are stored verbatim in the mutants file named in files"
+    },
+    {
+     "id": "D4-decoder-streams",
+     "file": "packages/support/src/decode-utf8.ts",
+     "commit": "f0fe6ce1a10402298ace99971f5d968fa07d03c4",
+     "ranAtHead": "2ea14d941f377e92884f593f6f1dd7f6291c3e87",
+     "verdict": "killed by test, probe",
+     "killedBy": [
+      "test",
+      "probe"
+     ],
+     "detail": "old and new fragments, the failing tests and their first error lines are stored verbatim in the mutants file named in files"
+    },
+    {
+     "id": "G1-object-reader-decodes-leniently",
+     "file": "packages/three-surface-poc-core/src/git-object-reader.ts",
+     "commit": "50d76ff27833c7e57b5473c0668592f179be2fed",
+     "ranAtHead": "2ea14d941f377e92884f593f6f1dd7f6291c3e87",
+     "verdict": "killed by existing, probe",
+     "killedBy": [
+      "existing",
+      "probe"
+     ],
+     "detail": "old and new fragments, the failing tests and their first error lines are stored verbatim in the mutants file named in files"
+    },
+    {
+     "id": "O1-seed-reader-decodes-leniently",
+     "file": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+     "commit": "69cc99b688d9d99fd38abca7c0b702aa06981219",
+     "ranAtHead": "2ea14d941f377e92884f593f6f1dd7f6291c3e87",
+     "verdict": "killed by existing, probe",
+     "killedBy": [
+      "existing",
+      "probe"
+     ],
+     "detail": "old and new fragments, the failing tests and their first error lines are stored verbatim in the mutants file named in files"
+    },
+    {
+     "id": "A1-consent-decodes-leniently",
+     "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+     "commit": "85b4387e1620066ecccf0188c2034c617eb7a9f2",
+     "ranAtHead": "2ea14d941f377e92884f593f6f1dd7f6291c3e87",
+     "verdict": "killed by test, probe",
+     "killedBy": [
+      "test",
+      "probe"
+     ],
+     "detail": "old and new fragments, the failing tests and their first error lines are stored verbatim in the mutants file named in files"
+    },
+    {
+     "id": "A2-json-artifact-decodes-leniently",
+     "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+     "commit": "5fa4ebc4532dd2c4688daff790a7a6c7d8799160",
+     "ranAtHead": "2ea14d941f377e92884f593f6f1dd7f6291c3e87",
+     "verdict": "killed by test, probe",
+     "killedBy": [
+      "test",
+      "probe"
+     ],
+     "detail": "old and new fragments, the failing tests and their first error lines are stored verbatim in the mutants file named in files"
+    },
+    {
+     "id": "C1-code-structure-lets-bad-path-through",
+     "file": "packages/three-surface-poc-core/src/code-structure.ts",
+     "commit": "a8a46d3b61031be6000670a79e7e38a62bae961e",
+     "ranAtHead": "2ea14d941f377e92884f593f6f1dd7f6291c3e87",
+     "verdict": "killed by existing, probe",
+     "killedBy": [
+      "existing",
+      "probe"
+     ],
+     "detail": "old and new fragments, the failing tests and their first error lines are stored verbatim in the mutants file named in files"
+    },
+    {
+     "id": "K1-lenient-keys-unsorted",
+     "file": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+     "commit": "4d38ccab4d57389658ebcbb8ad9275343ee84c96",
+     "ranAtHead": "2ea14d941f377e92884f593f6f1dd7f6291c3e87",
+     "verdict": "killed by test, existing",
+     "killedBy": [
+      "test",
+      "existing"
+     ],
+     "detail": "old and new fragments, the failing tests and their first error lines are stored verbatim in the mutants file named in files"
+    },
+    {
+     "id": "K2-lenient-arrays-as-objects",
+     "file": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+     "commit": "0d6b1175521fc6571885702923b6bb6423af924a",
+     "ranAtHead": "2ea14d941f377e92884f593f6f1dd7f6291c3e87",
+     "verdict": "killed by test",
+     "killedBy": [
+      "test"
+     ],
+     "detail": "old and new fragments, the failing tests and their first error lines are stored verbatim in the mutants file named in files"
+    },
+    {
+     "id": "K3-strict-keys-unsorted",
+     "file": "packages/polaris-generation-core/src/canonical-json.ts",
+     "commit": "497a119e18c28a7e8af058d8f8e1191abaa62e54",
+     "ranAtHead": "2ea14d941f377e92884f593f6f1dd7f6291c3e87",
+     "verdict": "killed by test, existing",
+     "killedBy": [
+      "test",
+      "existing"
+     ],
+     "detail": "old and new fragments, the failing tests and their first error lines are stored verbatim in the mutants file named in files"
+    },
+    {
+     "id": "K4-strict-accepts-non-finite",
+     "file": "packages/polaris-generation-core/src/canonical-json.ts",
+     "commit": "f56c2a473d1174ae0e4f34c7566bc8ccbf5851e2",
+     "ranAtHead": "2ea14d941f377e92884f593f6f1dd7f6291c3e87",
+     "verdict": "killed by test, existing",
+     "killedBy": [
+      "test",
+      "existing"
+     ],
+     "detail": "old and new fragments, the failing tests and their first error lines are stored verbatim in the mutants file named in files"
+    },
+    {
+     "id": "K5-strict-accepts-non-plain-objects",
+     "file": "packages/polaris-generation-core/src/canonical-json.ts",
+     "commit": "3bf451bfa78bc4c37a7b5a5fa06368065dffcaf0",
+     "ranAtHead": "2ea14d941f377e92884f593f6f1dd7f6291c3e87",
+     "verdict": "killed by test, existing",
+     "killedBy": [
+      "test",
+      "existing"
+     ],
+     "detail": "old and new fragments, the failing tests and their first error lines are stored verbatim in the mutants file named in files"
+    },
+    {
+     "id": "K6-strict-accepts-proto-key",
+     "file": "packages/polaris-generation-core/src/canonical-json.ts",
+     "commit": "3d4c273267b164262c49d610dca5227469bdd4e8",
+     "ranAtHead": "2ea14d941f377e92884f593f6f1dd7f6291c3e87",
+     "verdict": "killed by test, existing",
+     "killedBy": [
+      "test",
+      "existing"
+     ],
+     "detail": "old and new fragments, the failing tests and their first error lines are stored verbatim in the mutants file named in files"
+    },
+    {
+     "id": "K7-strict-accepts-accessors",
+     "file": "packages/polaris-generation-core/src/canonical-json.ts",
+     "commit": "039409e5efdfcf2d5a89dd312c5a4a5b700dc847",
+     "ranAtHead": "2ea14d941f377e92884f593f6f1dd7f6291c3e87",
+     "verdict": "killed by test, existing",
+     "killedBy": [
+      "test",
+      "existing"
+     ],
+     "detail": "old and new fragments, the failing tests and their first error lines are stored verbatim in the mutants file named in files"
+    },
+    {
+     "id": "K8-lenient-reads-dates",
+     "file": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+     "commit": "98762297d74ea20169d42aa7ad00e752a1b43e6e",
+     "ranAtHead": "2ea14d941f377e92884f593f6f1dd7f6291c3e87",
+     "verdict": "killed by test",
+     "killedBy": [
+      "test"
+     ],
+     "detail": "old and new fragments, the failing tests and their first error lines are stored verbatim in the mutants file named in files"
+    },
+    {
+     "id": "O2-git-text-decodes-leniently",
+     "file": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+     "commit": "7e4e9f1985c406f4b9c1cb17a586adad995ddce3",
+     "ranAtHead": "e16126c7547df02e3dfdeb7144f78770d4714247",
+     "verdict": "killed by test, probe",
+     "killedBy": [
+      "test",
+      "probe"
+     ],
+     "detail": "old and new fragments, the failing tests and their first error lines are stored verbatim in the mutants file named in files"
+    }
+   ],
+   "note": "D1-D4 and A1-A2 are new tests and the probe; G1, O1 and C1 are existing tests and the probe; K2 and K8 are killed by the new divergence test alone",
+   "expectedProbeOutputNote": "the expectedProbeOutput of utf8-canonical-mutants-2ea14d94.json and of the O2 re-run names a scratch file (/tmp/lc63u/probe-base-a.json) that is gone; the tracked docs/evidence/syzygy-bpyt-6-3/utf8-probe-output-base.json with sha256 be4bd04594ccd42f0b2e129a1a38c0709f342f0a416fdb803b4f3c1f28cc2667 is the base output (differential.outputSha256 is the same digest)",
+   "testDetectorScope": "round-1 note N5(b): each of the 18 rows names the test files its test detectors ran, one or two each (the new test files, or the nearest existing one); none of them ran the whole suite, so no survivor of those 18 was measured against it. The repair-run mutants below ran the whole suite (detector full)",
+   "repair1Run": {
+    "head": "b81010c8c5a375ef9fd446ac9ddc0da407ac1c58",
+    "reviewedHead": "2d3f93759a28d35e7b04facb5aaebbcc29697d09",
+    "node": "v24.6.0",
+    "tool": "docs/evidence/syzygy-bpyt-6-3/utf8-repair-mutants.py",
+    "toolSha256": "fe41cfce5165d88a465b878ebc9572c2090bc7d9c74e72abd3852dad88b60e68",
+    "output": "docs/evidence/syzygy-bpyt-6-3/utf8-repair-mutants-b81010c8.json",
+    "outputSha256": "c014c0f882234bbdd516badec559d516f285e8e8f50eb8af4ce68eb4c358562d",
+    "expectedProbeOutput": "docs/evidence/syzygy-bpyt-6-3/utf8-probe-output-base.json",
+    "expectedProbeOutputSha256": "be4bd04594ccd42f0b2e129a1a38c0709f342f0a416fdb803b4f3c1f28cc2667",
+    "commitNote": "each mutant commit is a scratch commit in a throwaway clone, discarded with it and reachable from no ref; re-run a row from old, new and head",
+    "detectors": {
+     "new": "the four test files that carry the repair's new tests, at the tested commit (git-object-reader, project-shape-observation, project-shape-git-text, code-structure)",
+     "prior": "the same four files as of the reviewed head 2d3f9375, installed beside them as *-r1.test.ts: a mutant they pass and `new` fails is one the repair kills",
+     "full": "the whole suite (npx vitest run --testTimeout=60000 --hookTimeout=60000); failing tests are stored with their first error line, and a kill whose failures are all timeouts is not counted",
+     "probe": "npm run build:poc, utf8-probe.mjs, compare-utf8-probe.py against the tracked utf8-probe-output-base.json"
+    },
+    "fragmentsRestated": "C1 and S5 are the PR's C1 and the reviewer's S5 restated for the repaired code-structure.ts, whose old fragment no longer exists there; S1, S2, S4, S9 and S10 are the reviewer's fragments (S10 on the repaired line)",
+    "mutants": [
+     {
+      "id": "S1-object-reader-keeps-bom",
+      "kind": "predicate",
+      "file": "packages/three-surface-poc-core/src/git-object-reader.ts",
+      "old": "const text = decodeUtf8(bytes);\n      if (text === undefined) return unavailable({ ...taken, outcome: 'not-utf-8' });",
+      "new": "const text = ((): string | undefined => { try { return new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(bytes); } catch { return undefined; } })();\n      if (text === undefined) return unavailable({ ...taken, outcome: 'not-utf-8' });",
+      "commit": "9275e13872d11958faae6b11c9d844bfaabde1fb",
+      "verdict": "killed by new, full, probe (the tests at the reviewed head pass this mutant and the new ones kill it)",
+      "new_tests_kill": true,
+      "prior_tests_kill": false,
+      "full_suite_kill": true,
+      "full_suite_summary": [
+       "Test Files  1 failed | 245 passed | 3 skipped (249)",
+       "Tests  1 failed | 5373 passed | 5 skipped (5379)"
+      ],
+      "full_suite_failed": [
+       {
+        "test": "exact object reads > drops one leading byte-order mark from the decoded text and keeps a second",
+        "firstError": "\u2192 expected { kind: 'text', \u2026(2) } to match object { kind: 'text', text: 'a\\n', \u2026(1) }"
+       }
+      ],
+      "probe_kill": true,
+      "probe_rows_differ": 176
+     },
+     {
+      "id": "S2-seed-reader-keeps-bom",
+      "kind": "predicate",
+      "file": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+      "old": "const text = decodeUtf8(bytes);\n    if (text === undefined) {\n      reads.push(",
+      "new": "const text = ((): string | undefined => { try { return new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(bytes); } catch { return undefined; } })();\n    if (text === undefined) {\n      reads.push(",
+      "commit": "70d426ea279164f9c855b657d90aee531ddb5ee5",
+      "verdict": "killed by new, full, probe (the tests at the reviewed head pass this mutant and the new ones kill it)",
+      "new_tests_kill": true,
+      "prior_tests_kill": false,
+      "full_suite_kill": true,
+      "full_suite_summary": [
+       "Test Files  1 failed | 245 passed | 3 skipped (249)",
+       "Tests  1 failed | 5373 passed | 5 skipped (5379)"
+      ],
+      "full_suite_failed": [
+       {
+        "test": "the seed reader widens phase A only after a validated root index (syzygy-1z3.29 review) > a seed with a leading byte-order mark is read without it",
+        "firstError": "\u2192 expected { kind: 'text', \u2026(2) } to match object { kind: 'text', text: 'a\\n' }"
+       }
+      ],
+      "probe_kill": true,
+      "probe_rows_differ": 176
+     },
+     {
+      "id": "S4-seed-reader-refusal-reason",
+      "kind": "refusal-string",
+      "file": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+      "old": "return { kind: 'unavailable', reason: 'seed is not valid UTF-8' };",
+      "new": "return { kind: 'unavailable', reason: 'seed is not readable' };",
+      "commit": "715992d28232a50e0956d5c50198134689c24c67",
+      "verdict": "killed by new, full, probe (the tests at the reviewed head pass this mutant and the new ones kill it)",
+      "new_tests_kill": true,
+      "prior_tests_kill": false,
+      "full_suite_kill": true,
+      "full_suite_summary": [
+       "Test Files  2 failed | 244 passed | 3 skipped (249)",
+       "Tests  2 failed | 5372 passed | 5 skipped (5379)"
+      ],
+      "full_suite_failed": [
+       {
+        "test": "the seed reader widens phase A only after a validated root index (syzygy-1z3.29 review) > a seed whose bytes are not UTF-8 is refused with its reason and a not-",
+        "firstError": "\u2192 expected { kind: 'unavailable', \u2026(1) } to deeply equal { kind: 'unavailable', \u2026(1) }"
+       },
+       {
+        "test": "surface routes > withholds the post-script Orrery capability href when that exact capability is absent",
+        "firstError": "\u2192 private browser profile drain did not verify two empty scans before deadline"
+       }
+      ],
+      "probe_kill": true,
+      "probe_rows_differ": 761
+     },
+     {
+      "id": "S9-git-text-keeps-bom",
+      "kind": "predicate",
+      "file": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+      "old": "const text = decodeUtf8(bytes);\n  return text === undefined ? { kind: 'failed'",
+      "new": "const text = ((): string | undefined => { try { return new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(bytes); } catch { return undefined; } })();\n  return text === undefined ? { kind: 'failed'",
+      "commit": "d9985bcbc29b3fd8b4fd95c9c92e3092740bb2a8",
+      "verdict": "killed by new, full, probe (the tests at the reviewed head pass this mutant and the new ones kill it)",
+      "new_tests_kill": true,
+      "prior_tests_kill": false,
+      "full_suite_kill": true,
+      "full_suite_summary": [
+       "Test Files  1 failed | 245 passed | 3 skipped (249)",
+       "Tests  1 failed | 5373 passed | 5 skipped (5379)"
+      ],
+      "full_suite_failed": [
+       {
+        "test": "observeProjectShapeSources decoding of git output > drops one leading byte-order mark from the tree listing before parsing it",
+        "firstError": "\u2192 expected 'unknown' to be 'observed' // Object.is equality"
+       }
+      ],
+      "probe_kill": true,
+      "probe_rows_differ": 192
+     },
+     {
+      "id": "S10-code-structure-keeps-bom",
+      "kind": "predicate",
+      "file": "packages/three-surface-poc-core/src/code-structure.ts",
+      "old": "    const text = decodeUtf8(withoutGitlinkRecords(bytes));",
+      "new": "    const text = ((b: Buffer): string | undefined => { try { return new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(b); } catch { return undefined; } })(withoutGitlinkRecords(bytes));",
+      "commit": "26196c16963f607ce08b5a06b5e78f1218a22487",
+      "verdict": "killed by new, full (the tests at the reviewed head pass this mutant and the new ones kill it)",
+      "new_tests_kill": true,
+      "prior_tests_kill": false,
+      "full_suite_kill": true,
+      "full_suite_summary": [
+       "Test Files  5 failed | 241 passed | 3 skipped (249)",
+       "Tests  5 failed | 5369 passed | 5 skipped (5379)"
+      ],
+      "full_suite_failed": [
+       {
+        "test": "code-structure observer > drops one leading byte-order mark from git's listing before parsing it",
+        "firstError": "\u2192 expected { kind: 'unknown', \u2026(1) } to match object { kind: 'observed', \u2026(1) }"
+       },
+       {
+        "test": "POC build output integrity > re-emits ignored JavaScript before the launcher executes it",
+        "firstError": "\u2192 Test timed out in 240000ms."
+       },
+       {
+        "test": "each call is bounded: bytes inflated, delta depth, objects visited (finding 4) > the reviewer's amplification shape, 100 levels over a 64 MiB base, refuses with",
+        "firstError": "\u2192 no refusal within 30000 ms"
+       },
+       {
+        "test": "one-listener POC restart on private fixture sockets > refuses a listener-identity-unreadable identity before SIGTERM and leaves the old listener serving",
+        "firstError": "\u2192 cannot read identity for /proc/3253898"
+       },
+       {
+        "test": "surface routes > withholds the post-script Orrery capability href when that exact capability is absent",
+        "firstError": "\u2192 Test timed out in 10000ms."
+       }
+      ],
+      "probe_kill": false,
+      "probe_rows_differ": 0
+     },
+     {
+      "id": "F2-gitlink-filter-outside-the-try",
+      "kind": "refusal-string",
+      "file": "packages/three-surface-poc-core/src/code-structure.ts",
+      "old": "  try {\n    const text = decodeUtf8(withoutGitlinkRecords(bytes));\n    if (text !== undefined) return text;\n  } catch {\n    // falls through to the refusal below\n  }\n  throw new NonUtf8GitOutput();\n}",
+      "new": "  const text = decodeUtf8(withoutGitlinkRecords(bytes));\n  if (text === undefined) throw new NonUtf8GitOutput();\n  return text;\n}",
+      "commit": "f1bbe4f6159c7996c535652aa13b70bbb1aee88d",
+      "verdict": "killed by new, full (the tests at the reviewed head pass this mutant and the new ones kill it)",
+      "new_tests_kill": true,
+      "prior_tests_kill": false,
+      "full_suite_kill": true,
+      "full_suite_summary": [
+       "Test Files  1 failed | 245 passed | 3 skipped (249)",
+       "Tests  1 failed | 5373 passed | 5 skipped (5379)"
+      ],
+      "full_suite_failed": [
+       {
+        "test": "code-structure observer > reports a gitlink filter that cannot allocate its copy as it reports bytes it cannot decode",
+        "firstError": "\u2192 expected { kind: 'unknown', \u2026(1) } to deeply equal { kind: 'unknown', \u2026(1) }"
+       }
+      ],
+      "probe_kill": false,
+      "probe_rows_differ": 0
+     },
+     {
+      "id": "C1-code-structure-lets-a-bad-path-through",
+      "kind": "refusal",
+      "file": "packages/three-surface-poc-core/src/code-structure.ts",
+      "old": "    if (text !== undefined) return text;",
+      "new": "    return text ?? '';",
+      "commit": "595607a8dc12cfd4f41ef8de1178677fc0efe305",
+      "verdict": "killed by new, prior, full, probe",
+      "new_tests_kill": true,
+      "prior_tests_kill": true,
+      "full_suite_kill": true,
+      "full_suite_summary": [
+       "Test Files  1 failed | 245 passed | 3 skipped (249)",
+       "Tests  1 failed | 5373 passed | 5 skipped (5379)"
+      ],
+      "full_suite_failed": [
+       {
+        "test": "code-structure observer > makes the inventory Unknown for a committed path that is not valid UTF-8, never a lossy or colliding path",
+        "firstError": "\u2192 expected { kind: 'observed', \u2026(3) } to deeply equal { kind: 'unknown', \u2026(1) }"
+       }
+      ],
+      "probe_kill": true,
+      "probe_rows_differ": 4
+     },
+     {
+      "id": "S5-code-structure-generic-error",
+      "kind": "refusal-string",
+      "file": "packages/three-surface-poc-core/src/code-structure.ts",
+      "old": "  throw new NonUtf8GitOutput();\n}",
+      "new": "  throw new Error('not utf-8');\n}",
+      "commit": "8caf1a750ff75bd5082e576085d7a1717e142c23",
+      "verdict": "killed by new, prior, full, probe",
+      "new_tests_kill": true,
+      "prior_tests_kill": true,
+      "full_suite_kill": true,
+      "full_suite_summary": [
+       "Test Files  1 failed | 245 passed | 3 skipped (249)",
+       "Tests  2 failed | 5372 passed | 5 skipped (5379)"
+      ],
+      "full_suite_failed": [
+       {
+        "test": "code-structure observer > makes the inventory Unknown for a committed path that is not valid UTF-8, never a lossy or colliding path",
+        "firstError": "\u2192 expected { kind: 'unknown', \u2026(1) } to deeply equal { kind: 'unknown', \u2026(1) }"
+       },
+       {
+        "test": "code-structure observer > reports a gitlink filter that cannot allocate its copy as it reports bytes it cannot decode",
+        "firstError": "\u2192 expected { kind: 'unknown', \u2026(1) } to deeply equal { kind: 'unknown', \u2026(1) }"
+       }
+      ],
+      "probe_kill": true,
+      "probe_rows_differ": 4
+     }
+    ]
+   }
+  },
+  "mutantsRepairSummary": {
+   "rows": 8,
+   "killedByANewTest": [
+    "S1-object-reader-keeps-bom",
+    "S2-seed-reader-keeps-bom",
+    "S4-seed-reader-refusal-reason",
+    "S9-git-text-keeps-bom",
+    "S10-code-structure-keeps-bom",
+    "F2-gitlink-filter-outside-the-try",
+    "C1-code-structure-lets-a-bad-path-through",
+    "S5-code-structure-generic-error"
+   ],
+   "killedByTheFullSuite": [
+    "S1-object-reader-keeps-bom",
+    "S2-seed-reader-keeps-bom",
+    "S4-seed-reader-refusal-reason",
+    "S9-git-text-keeps-bom",
+    "S10-code-structure-keeps-bom",
+    "F2-gitlink-filter-outside-the-try",
+    "C1-code-structure-lets-a-bad-path-through",
+    "S5-code-structure-generic-error"
+   ],
+   "survivedTheReviewedHeadTests": [
+    "S1-object-reader-keeps-bom",
+    "S2-seed-reader-keeps-bom",
+    "S4-seed-reader-refusal-reason",
+    "S9-git-text-keeps-bom",
+    "S10-code-structure-keeps-bom",
+    "F2-gitlink-filter-outside-the-try"
+   ],
+   "survived": []
+  },
+  "remainingStrictSites": {
+   "count": 20,
+   "predicate": "a `new TextDecoder(` construction in a non-test tracked .ts/.mjs/.cjs file under packages, apps or scripts with fatal: true and no ignoreBOM, outside packages/support/src/decode-utf8.ts (utf8-census.py output, filtered)",
+   "sites": [
+    {
+     "path": "apps/three-surface-poc/src/capability-detail.ts",
+     "line": 254,
+     "shape": "inline"
+    },
+    {
+     "path": "apps/three-surface-poc/src/git-blob-batch.ts",
+     "line": 33,
+     "shape": "const"
+    },
+    {
+     "path": "apps/three-surface-poc/src/governance-inputs.ts",
+     "line": 200,
+     "shape": "inline"
+    },
+    {
+     "path": "apps/three-surface-poc/src/governance-inputs.ts",
+     "line": 222,
+     "shape": "inline"
+    },
+    {
+     "path": "apps/three-surface-poc/src/governance-inputs.ts",
+     "line": 232,
+     "shape": "inline"
+    },
+    {
+     "path": "apps/three-surface-poc/src/polaris-generation/dossier-evaluation-main.ts",
+     "line": 41,
+     "shape": "inline"
+    },
+    {
+     "path": "apps/three-surface-poc/src/polaris-generation/public-source-screening.ts",
+     "line": 149,
+     "shape": "inline"
+    },
+    {
+     "path": "apps/three-surface-poc/src/polaris-generation/self-corpus.ts",
+     "line": 59,
+     "shape": "inline"
+    },
+    {
+     "path": "apps/three-surface-poc/src/verbatim-route.ts",
+     "line": 117,
+     "shape": "inline"
+    },
+    {
+     "path": "packages/polaris-dossier/src/check.ts",
+     "line": 335,
+     "shape": "inline"
+    },
+    {
+     "path": "packages/polaris-dossier/src/close.ts",
+     "line": 186,
+     "shape": "inline"
+    },
+    {
+     "path": "packages/polaris-dossier/src/design-review.ts",
+     "line": 48,
+     "shape": "const"
+    },
+    {
+     "path": "packages/polaris-dossier/src/render.ts",
+     "line": 151,
+     "shape": "inline"
+    },
+    {
+     "path": "packages/polaris-dossier/src/review.ts",
+     "line": 138,
+     "shape": "inline"
+    },
+    {
+     "path": "packages/polaris-dossier/src/screen.ts",
+     "line": 81,
+     "shape": "inline"
+    },
+    {
+     "path": "packages/polaris-dossier/src/waiting-sessions.ts",
+     "line": 386,
+     "shape": "inline"
+    },
+    {
+     "path": "packages/polaris-generation-core/src/dossier-evaluation.ts",
+     "line": 352,
+     "shape": "inline"
+    },
+    {
+     "path": "packages/three-surface-poc-core/src/project-shape-model.ts",
+     "line": 545,
+     "shape": "inline"
+    },
+    {
+     "path": "packages/three-surface-poc-core/src/walkthrough-readiness.ts",
+     "line": 288,
+     "shape": "inline"
+    },
+    {
+     "path": "scripts/probe_pwb_gate_on_altered_policy_act.mjs",
+     "line": 45,
+     "shape": "inline"
+    }
+   ],
+   "equalToTheReviewersList": true,
+   "review": "R-GP-IMPL-UTF8-CANONICAL-1-RAW.md section 3 lists the same 20 and marks 8 of them as on a class 1 or class 4 path ([Inferred] by the reviewer from each enclosing function, not traced end to end): governance-inputs.ts :200/:222/:232, public-source-screening.ts, polaris-dossier/src/screen.ts, verbatim-route.ts, capability-detail.ts and git-blob-batch.ts",
+   "followUp": "none of the 20 is converted here; the coordinator files the follow-up"
+  }
+ },
+ "canonicalJson": {
+  "decision": "keep the two encoders apart; pin both; do not merge",
+  "encoders": {
+   "lenient": "canonicalJson in project-shape-manifest.ts: a total function, drops undefined members, flattens any object, key order is that of Object.fromEntries (array-index keys first, numerically)",
+   "strict": "encodeCanonicalJson in polaris-generation-core canonical-json.ts: a validating encoder with limits and failure codes, key order by code unit",
+   "cap1": "deterministicLayer in cap1-core evaluation.ts (not exported from the barrel): equal to the lenient one except that it drops an own __proto__ key"
+  },
+  "threeWayProbe": {
+   "populationA_noArrayIndexKeys": {
+    "values": 600,
+    "lenientEqualsStrict": 600,
+    "lenientEqualsCap1": 600,
+    "strictEqualsCap1": 600,
+    "allThree": 600,
+    "strictRefused": 0,
+    "lenientDiffersFromStrictAndStrictAccepted": 0,
+    "valuesWithAnIndexKeyBesideAnotherKey": 0
+   },
+   "populationB_arrayIndexKeysIncluded": {
+    "values": 600,
+    "lenientEqualsStrict": 569,
+    "lenientEqualsCap1": 600,
+    "strictEqualsCap1": 569,
+    "allThree": 569,
+    "strictRefused": 0,
+    "lenientDiffersFromStrictAndStrictAccepted": 31,
+    "valuesWithAnIndexKeyBesideAnotherKey": 97
+   },
+   "rows": 22,
+   "rowsSha256": "a817f4ff3438a8c55bdabe421fcae7ad0ff1231cee69c511788f2faac082cfc8",
+   "tool": "canonical-json-probe.mjs"
+  },
+  "suiteWideTap": {
+   "what": "every call to either encoder during the full test suite, spelled by both encoders (strict with generous limits) and compared",
+   "files": 71,
+   "calls": 5205,
+   "productionLenient": {
+    "calls": 1433,
+    "same": 679,
+    "different": 754
+   },
+   "productionStrict": {
+    "calls": 2454,
+    "same": 2453,
+    "different": 1
+   },
+   "testLenient": {
+    "calls": 628,
+    "same": 610,
+    "different": 18
+   },
+   "testStrict": {
+    "calls": 690,
+    "same": 643,
+    "different": 47
+   },
+   "whyProductionLenientDiffers": {
+    "undefinedMember": 753,
+    "bigint": 1,
+    "arrayIndexKeyReorder": 0
+   },
+   "productionOriginMeans": "the first caller frame is production code; the value may still be a test fixture",
+   "instrumentationFailures": "the tapped full run had 3 failing tests, all caused by the instrumentation itself (the no-egress build, the proxy hooks in canonical-json.test.ts that the tap runs, and the live-source closure guard); none by this change",
+   "tool": [
+    "canonical-json-tap.ts",
+    "canonical-json-tap-apply.py",
+    "canonical-json-tap-aggregate.py"
+   ],
+   "repair1": {
+    "what": "the tap re-run at the tested commit on a scratch clone, full suite, aggregated; the clone path is removed from the caller labels before aggregation",
+    "commit": "b81010c8c5a375ef9fd446ac9ddc0da407ac1c58",
+    "aggregate": "docs/evidence/syzygy-bpyt-6-3/canonical-json-tap-aggregate-repair1.json",
+    "aggregateSha256": "7d7cc323f292457a7f5807b271e9c12d91c3e9a1c040653c326ef38ebe287b89",
+    "calls": 5211,
+    "files": 72,
+    "comparison": "docs/evidence/syzygy-bpyt-6-3/canonical-json-tap-compare-repair1.json",
+    "comparisonSha256": "3e6dd8522aabc84de879243ba2b1272726268b244884bb261d14651fc6860d13",
+    "productionLenient": {
+     "calls": 1439,
+     "same": 685,
+     "different": 754
+    },
+    "differsFromTheCommittedAggregateBy": "six more production lenient calls, all spelled alike (see the explanation in the comparison file); the 754 different calls and every reason are the same",
+    "committedAggregateNote": "canonical-json-tap-aggregate.json names no commit (round-1 note N5c) and embeds the scratch clone path of its run in 16 test-caller labels; it is left as it was"
+   }
+  },
+  "whyNotMerged": "Merging would change an output or a refusal, not every digest. Of the 1,439 production lenient calls the full suite made, 685 are spelled alike by the strict encoder and 754 are not: 753 carry an undefined member (lenient drops it, strict refuses with unsupported-value) and 1 a BigInt (both refuse, with different errors). Three PWB identities are spelled identically by both on every observed call (canonicalManifestJson 299 of 299, resourceLimitsDigest 272 of 272, walkthroughEvaluationIdentity 11 of 11); the two with differing calls are observeProjectShapeSources (190 of 271) and buildResponseIdentity (564 of 586). The only value class on which the two disagree without either refusing is the array-index key order (31 of 600 in population B); no production call was seen to carry one. 754 of 1,439 is 52.4 percent of the lenient calls the suite made; the value of a call may still be a test fixture. Superseded: the round-1 text said a merge would change the digests of every PWB identity and refuse about 52 percent of the calls (review note N1); the tap does not show the first.",
+  "pinnedBy": "apps/three-surface-poc/src/canonical-json-divergence.test.ts (pins the lenient and the strict encoder). cap1's deterministicLayer is compared only by canonical-json-probe.mjs (equal to the lenient encoder on 1,200 of 1,200 probe values) and by no committed test: cap1 imports nothing shared, so the divergence test leaves it out on purpose"
+ },
+ "digestCiters": {
+  "population": "5024 tracked files at the population commit, excluding docs/evidence/syzygy-bpyt-6-3/",
+  "editedFilesWhoseDigestIsCited": [
+   "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "packages/three-surface-poc-core/src/code-structure.ts"
+  ],
+  "citersByTree": {
+   "docs/evidence": [
+    "docs/evidence/code-structure-ls-tree-z-differential-2026-10-21-r3.json",
+    "docs/evidence/code-structure-ls-tree-z-mutants-2026-10-21-r3.json",
+    "docs/evidence/live-verification-test-no-spawn-mutants-2026-10-07.json",
+    "docs/evidence/live-verification-test-no-spawn-mutants-round1-repairs-2026-10-07.json",
+    "docs/evidence/live-verification-test-no-spawn-mutants-round2-repairs-2026-10-07.json",
+    "docs/evidence/live-verification-test-no-spawn-mutants-round3-repairs-2026-10-07.json"
+   ],
+   "docs/reviews": [
+    "docs/reviews/R-GP-IMPL-CODE-STRUCTURE-3-RAW.md",
+    "docs/reviews/R-LIVE-TEST-NO-SPAWN-1-RAW.md",
+    "docs/reviews/R-P110-EXPLICIT-SELECTION-PROBES-EFCBB78F-1-RAW.md"
+   ]
+  },
+  "methodsAgree": true,
+  "reading": "the citing records describe the older bytes of two edited files and bind nothing: none is under .syzygy, openspec, scripts or .github. They stay re-runnable at the commits they name. Round-1 repair: the 8-hex sweep adds one more retained raw, R-LIVE-TEST-NO-SPAWN-1-RAW.md, to the docs/reviews citers (see repair1).",
+  "removedFragmentCitedBy": "the 6.1 mutant records quote the removed STRICT_UTF8 fragment of code-structure.ts; they run at their recorded commit",
+  "repair1": {
+   "tool": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.py",
+   "toolSha256": "cfeae5b0798ebda0872011bb89e065d89588e17b19f64eab088795b19e0382a7",
+   "output": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json",
+   "outputSha256": "aa7ff311ba22c851c7ac3562f0f1563a97cdbf90f5d3e14d8f1a0f3903e51ac4",
+   "population": "5089 tracked files at the population commit, excluding docs/evidence/syzygy-bpyt-6-3/",
+   "needles": 75,
+   "forms": "sha256 full, first 12 and first 8 hex digits; git blob id full and first 8; base and head of each of the 8 edited files (the new file has a head only)",
+   "methodsAgree": true,
+   "editedFilesWhoseDigestIsCited": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+    "packages/three-surface-poc-core/src/code-structure.ts"
+   ],
+   "citersByTree": {
+    "docs/evidence": [
+     "docs/evidence/code-structure-ls-tree-z-differential-2026-10-21-r3.json",
+     "docs/evidence/code-structure-ls-tree-z-mutants-2026-10-21-r3.json",
+     "docs/evidence/live-verification-test-no-spawn-mutants-2026-10-07.json",
+     "docs/evidence/live-verification-test-no-spawn-mutants-round1-repairs-2026-10-07.json",
+     "docs/evidence/live-verification-test-no-spawn-mutants-round2-repairs-2026-10-07.json",
+     "docs/evidence/live-verification-test-no-spawn-mutants-round3-repairs-2026-10-07.json"
+    ],
+    "docs/reviews": [
+     "docs/reviews/R-GP-IMPL-CODE-STRUCTURE-3-RAW.md",
+     "docs/reviews/R-LIVE-TEST-NO-SPAWN-1-RAW.md",
+     "docs/reviews/R-P110-EXPLICIT-SELECTION-PROBES-EFCBB78F-1-RAW.md"
+    ]
+   },
+   "carries": [
+    {
+     "path": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+     "at": "base",
+     "citedBy": "docs/evidence/live-verification-test-no-spawn-mutants-2026-10-07.json",
+     "carriesHexDigits": 64
+    },
+    {
+     "path": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+     "at": "base",
+     "citedBy": "docs/evidence/live-verification-test-no-spawn-mutants-round1-repairs-2026-10-07.json",
+     "carriesHexDigits": 64
+    },
+    {
+     "path": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+     "at": "base",
+     "citedBy": "docs/evidence/live-verification-test-no-spawn-mutants-round2-repairs-2026-10-07.json",
+     "carriesHexDigits": 64
+    },
+    {
+     "path": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+     "at": "base",
+     "citedBy": "docs/evidence/live-verification-test-no-spawn-mutants-round3-repairs-2026-10-07.json",
+     "carriesHexDigits": 64
+    },
+    {
+     "path": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+     "at": "base",
+     "citedBy": "docs/reviews/R-LIVE-TEST-NO-SPAWN-1-RAW.md",
+     "carriesHexDigits": 8
+    },
+    {
+     "path": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+     "at": "base",
+     "citedBy": "docs/reviews/R-P110-EXPLICIT-SELECTION-PROBES-EFCBB78F-1-RAW.md",
+     "carriesHexDigits": 64
+    },
+    {
+     "path": "packages/three-surface-poc-core/src/code-structure.ts",
+     "at": "base",
+     "citedBy": "docs/evidence/code-structure-ls-tree-z-differential-2026-10-21-r3.json",
+     "carriesHexDigits": 64
+    },
+    {
+     "path": "packages/three-surface-poc-core/src/code-structure.ts",
+     "at": "base",
+     "citedBy": "docs/evidence/code-structure-ls-tree-z-mutants-2026-10-21-r3.json",
+     "carriesHexDigits": 64
+    },
+    {
+     "path": "packages/three-surface-poc-core/src/code-structure.ts",
+     "at": "base",
+     "citedBy": "docs/reviews/R-GP-IMPL-CODE-STRUCTURE-3-RAW.md",
+     "carriesHexDigits": 64
+    }
+   ],
+   "whatChanged": "the round-1 sweep matched the full digest and its first 12 hex digits only; docs/reviews/R-LIVE-TEST-NO-SPAWN-1-RAW.md cites the base sha256 of authority-artifact-fields.ts by its first 8 hex digits (carriesHexDigits 8) and was missed. It is a retained raw and binds nothing",
+   "toolHistory": "digest-citers-stack2.json (round 0) was produced by the earlier version of digest-citers-stack2.py, at 2d3f9375, which matched the full digest and its first 12 hex digits; it is kept as it was. The tool now also matches the first 8 hex digits and the git blob id, reports how many hex digits each citer carries, and its selftest includes a raw that carries 8",
+   "newHeadDigestOfCodeStructure": "bc56dca9270b397298a578f109ddfee47ccbf9b7b9830eb9f3dfef2c68e241b1 is cited by no tracked file (by any of the five needle forms)"
+  }
+ },
+ "commentOnly": {
+  "method": "ts.transpileModule, target ES2022, module NodeNext, removeComments, per file, before against after",
+  "typescriptVersion": "5.9.3",
+  "ranges": [
+   {
+    "base": "2ea14d941f377e92884f593f6f1dd7f6291c3e87",
+    "head": "16fe240d3932737342994985dcc988bc1def2858",
+    "productionFilesChanged": 2,
+    "commentOnly": 2
+   },
+   {
+    "base": "0e2640e9eaa0b1c77f61ac335ec76cb3fb41904d",
+    "head": "e16126c7547df02e3dfdeb7144f78770d4714247",
+    "productionFilesChanged": 2,
+    "commentOnly": 2
+   }
+  ]
+ },
+ "tests": {
+  "added": {
+   "packages/support/src/decode-utf8.test.ts": 6,
+   "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts": 5,
+   "packages/three-surface-poc-core/src/project-shape-git-text.test.ts": 4,
+   "apps/three-surface-poc/src/canonical-json-divergence.test.ts": 21
+  },
+  "addedTotal": 41,
+  "existingTestFilesModified": "the added tests are in three existing files (addedToExistingFiles); a test body or title was changed in two (repair1.modified)",
+  "removed": 0,
+  "fullSuite": {
+   "flags": "--testTimeout=60000 --hookTimeout=60000, a private TMPDIR, host load average about 18 to 19",
+   "base": {
+    "commit": "6cbb3186b031e396a8b2cd616be313ab2daa22fd",
+    "testFiles": 242,
+    "tests": 5315,
+    "passed": 5310,
+    "failed": 0,
+    "skipped": 5
+   },
+   "head": {
+    "commit": "ae6f97209437a0ca19fcb0f0fd68be4047814aff",
+    "laterCommits": "the commit that adds these full-suite figures changes only this record",
+    "testFiles": 246,
+    "tests": 5350,
+    "passed": 5345,
+    "failed": 0,
+    "skipped": 5
+   },
+   "identityComparison": "by (test file, full test name): 0 base tests missing at head, 35 tests only at head (the four new files), 0 tests whose status changed"
+  },
+  "addedToExistingFiles": {
+   "packages/three-surface-poc-core/src/git-object-reader.test.ts": 1,
+   "packages/three-surface-poc-core/src/project-shape-observation.test.ts": 2,
+   "packages/three-surface-poc-core/src/code-structure.test.ts": 2
+  },
+  "addedTotalAtReviewedHead": 35,
+  "repair1": {
+   "added": {
+    "packages/three-surface-poc-core/src/git-object-reader.test.ts": 1,
+    "packages/three-surface-poc-core/src/project-shape-observation.test.ts": 2,
+    "packages/three-surface-poc-core/src/project-shape-git-text.test.ts": 1,
+    "packages/three-surface-poc-core/src/code-structure.test.ts": 2
+   },
+   "addedTotal": 6,
+   "modified": {
+    "packages/three-surface-poc-core/src/project-shape-git-text.test.ts": "the rev-parse case, which could not fail on a byte-order mark (the answer is trimmed), now says only what it pins",
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts": "the consent byte-order-mark case, retitled to say the parser trims every line (title only)"
+   },
+   "modifiedTotal": 2,
+   "removed": 0,
+   "wholePrOverMain": "+41 ~0 -0 (36 in the four new files, which now hold 6, 5, 4 and 21 tests, and 5 added to git-object-reader, project-shape-observation and code-structure)",
+   "changedFilesFiveTimes": "docs/evidence/syzygy-bpyt-6-3/repair1-new-tests-5x.log (7 files, 162 tests, 5 runs, each all passed)",
+   "typecheck": "docs/evidence/syzygy-bpyt-6-3/utf8-repair1-typecheck.log (npm run typecheck, exit 0). Renamed from repair1-typecheck.log: pull request 533 created a file of that name, and the merge kept its bytes"
+  }
+ },
+ "everyChangedOutput": "none. The decoder returns the same text or the same refusal on all 12,841 differential rows, so nothing computed from the decoded text can differ [Inferred: from the row equality, not a separate digest run]; the existing response-identity, manifest and generation tests that pin digests and rendered bytes pass unchanged; canonicalJson and encodeCanonicalJson differ from the base only in two comment lines (comment-only emit equality). Round-1 repair: the one output the review found changed, the Unknown reason of observeCodeStructure when withoutGitlinkRecords cannot allocate its copy, is the base's again (the filter runs inside the converting try); production code differs from the reviewed head in code-structure.ts only.",
+ "residuals": [
+  "withoutGitlinkRecords in code-structure.ts runs inside the try that converts any throw to NonUtf8GitOutput, as the decode always did. It throws only when Buffer.concat cannot allocate the copy of the kept records, up to the 256 MiB maxBuffer [Inferred: from the code; it calls indexOf, subarray and equals, none of which throws on content]. The caller then reports Unknown with the reason \"code-structure observation produced a path that is not valid UTF-8\", which is the base reason; [Inferred] it is not the truer one for an allocation failure, and changing it is a refusal-string change for the owner, not made here. Both arms are pinned by an injected Buffer.concat failure (code-structure.test.ts). The reviewed head (2d3f9375) ran the filter outside the try and reported \"repository or revision was unreadable during code-structure observation\" for the same fault (review F2).",
+  "the 40 inline production constructions are left; 20 of them are strict decoders written inline or as module constants (decoder.remainingStrictSites lists them), and adopting decodeUtf8 at those 20 is a follow-up (priority 3) that reads each site's refusal handling first; none is converted here (review N4)",
+  "git-object-reader.ts and project-shape-observation.ts: line-number citers above the removed definitions are unchanged because the import line was extended in place and comments were appended to existing lines",
+  "canonicalJson stays duplicated three ways on purpose; a future merge needs an owner decision on the array-index key order and on undefined members",
+  "decode-utf8.ts constructs its TextDecoder at module load. On a Node built without ICU the constructor throws ERR_NO_ICU for the fatal option [Observed by the review in the embedded lib/internal/encoding.js of Node v24.6.0; not re-run here, this host's Node has ICU 77.1], so importing @syzygy/support throws; [Inferred, by the review] at the base the consent, policy and registry readers built their decoder inside their try and refused every artifact as \"not strict UTF-8\", and the other sites failed only at their first decode. Both fail closed; official Node builds ship ICU. Constructing the decoder lazily would change this and is not done here (review N6).",
+  "canonical-json-divergence.test.ts pins two encoders; cap1's deterministicLayer is compared by canonical-json-probe.mjs only (review N2).",
+  "rule 6, survivors named: none of the repair-run mutants survived the new tests. S9 (the tree-listing decode in project-shape-observation.ts) and S10 (the code-structure listing decode) are pinned by an injected listing that begins with a byte-order mark; [Inferred] git does not begin ls-tree -z output with one, so only an injected runner reaches that predicate, and the utf8 probe does not kill S10 (rowsDiffer 0 in the S10 row) although it kills S9 (review N3)."
+ ],
+ "files": [
+  {
+   "path": "docs/evidence/syzygy-bpyt-6-3/canonical-json-probe-output.json",
+   "bytes": 4944,
+   "sha256": "85ae9c295a599d5ef004fa9b15c97c3b7a04a6151dc7ede3faf72cf1c3c7ae51"
+  },
+  {
+   "path": "docs/evidence/syzygy-bpyt-6-3/canonical-json-probe.mjs",
+   "bytes": 6294,
+   "sha256": "8878dbd26eea65fcd417d92946568f8d6af1602d0c7dd9037f68b18537c62d38"
+  },
+  {
+   "path": "docs/evidence/syzygy-bpyt-6-3/canonical-json-tap-aggregate-repair1.json",
+   "bytes": 14171,
+   "sha256": "7d7cc323f292457a7f5807b271e9c12d91c3e9a1c040653c326ef38ebe287b89"
+  },
+  {
+   "path": "docs/evidence/syzygy-bpyt-6-3/canonical-json-tap-aggregate.json",
+   "bytes": 14347,
+   "sha256": "d54b32be51e1d4392d6e40b7df988ae04ca0748eb58b4092659bf9bf8447f6f9"
+  },
+  {
+   "path": "docs/evidence/syzygy-bpyt-6-3/canonical-json-tap-aggregate.py",
+   "bytes": 4236,
+   "sha256": "b63ce84760ba035390066f51c120fccf73f879589a9bb3cef51d3938d8aced02"
+  },
+  {
+   "path": "docs/evidence/syzygy-bpyt-6-3/canonical-json-tap-apply.py",
+   "bytes": 3020,
+   "sha256": "5afa825371de3b8221dd10d8f901c984d727835d2e5a491cc3b525393a605c23"
+  },
+  {
+   "path": "docs/evidence/syzygy-bpyt-6-3/canonical-json-tap-compare-repair1.json",
+   "bytes": 2490,
+   "sha256": "3e6dd8522aabc84de879243ba2b1272726268b244884bb261d14651fc6860d13"
+  },
+  {
+   "path": "docs/evidence/syzygy-bpyt-6-3/canonical-json-tap.ts",
+   "bytes": 7213,
+   "sha256": "54c90c545ffb1e08272765fbfce077cc24bcaf49aab4c18267b5347ab032cf07"
+  },
+  {
+   "path": "docs/evidence/syzygy-bpyt-6-3/comment-only-merged-a5ab2b28-a5b1d532.json",
+   "bytes": 7498,
+   "sha256": "4a767765d9cfa609718e79eedb9eb00eb6fd093aba460679c1b4e22db495a1c1"
+  },
+  {
+   "path": "docs/evidence/syzygy-bpyt-6-3/comment-only-stack2-a.json",
+   "bytes": 1324,
+   "sha256": "cffbedd31c8775bca1278cae6c2e6b3d9541bde6d94f2e63107077e310abb034"
+  },
+  {
+   "path": "docs/evidence/syzygy-bpyt-6-3/comment-only-stack2-b.json",
+   "bytes": 1325,
+   "sha256": "733a70bd0dcb8bad7a733a24dec56b25a222ba855d9e95a7a1969ab7e1c65902"
+  },
+  {
+   "path": "docs/evidence/syzygy-bpyt-6-3/comment-only.mjs",
+   "bytes": 2886,
+   "sha256": "39033883480c278d0d2ba0303eab2b3a4129d033197f219188ff867e3cd1586e"
+  },
+  {
+   "path": "docs/evidence/syzygy-bpyt-6-3/compare-utf8-probe.py",
+   "bytes": 1441,
+   "sha256": "21bf9750789b9eeb7b1edb023037943c08354dbffc0ee90cad095c4ef9549d3f"
+  },
+  {
+   "path": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json",
+   "bytes": 9492,
+   "sha256": "aa7ff311ba22c851c7ac3562f0f1563a97cdbf90f5d3e14d8f1a0f3903e51ac4"
+  },
+  {
+   "path": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json",
+   "bytes": 5934,
+   "sha256": "cf2b2361130aa3e1b33718a428baa7eb5562b9dd4b827bba94e3bc53bcbb63d1"
+  },
+  {
+   "path": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.py",
+   "bytes": 7663,
+   "sha256": "cfeae5b0798ebda0872011bb89e065d89588e17b19f64eab088795b19e0382a7"
+  },
+  {
+   "path": "docs/evidence/syzygy-bpyt-6-3/merge2-resolution-check-a5b1d532.json",
+   "bytes": 4521,
+   "sha256": "3aef5fa22bd22d84844f9989eaad82ad34d0e14fc18840e9bccb6977c9f2a17b"
+  },
+  {
+   "path": "docs/evidence/syzygy-bpyt-6-3/repair1-new-tests-5x.log",
+   "bytes": 280,
+   "sha256": "22e0a0eb98953d85fb5cbdb0008bc8c9bb404f4161ede4eb0858ae5f850f0eb1"
+  },
+  {
+   "path": "docs/evidence/syzygy-bpyt-6-3/utf8-canonical-mutants-2ea14d94.json",
+   "bytes": 30732,
+   "sha256": "4ee28b6e7811a320d2c3d7821c86bba1f77fa257eaf68d58576301ce7f554546"
+  },
+  {
+   "path": "docs/evidence/syzygy-bpyt-6-3/utf8-canonical-mutants-o2-rerun-e16126c7.json",
+   "bytes": 1970,
+   "sha256": "6c476382d869f9896cdf49f210b034d64c725f0c0bb0c2c18973da549167665a"
+  },
+  {
+   "path": "docs/evidence/syzygy-bpyt-6-3/utf8-canonical-mutants.py",
+   "bytes": 11440,
+   "sha256": "06c67008a57152d4ffa6145f09508099051682908255e2fac1688238767dd428"
+  },
+  {
+   "path": "docs/evidence/syzygy-bpyt-6-3/utf8-census-base.json",
+   "bytes": 16027,
+   "sha256": "7148bc9c5e25b31292ef939b22afd5fcdbfadd6cb6a6c4a4346bdd1d19fddd15"
+  },
+  {
+   "path": "docs/evidence/syzygy-bpyt-6-3/utf8-census-head.json",
+   "bytes": 14395,
+   "sha256": "68ef2721983ac754608dbf46327ad41bfc670022c2210bab5791e439f80d87f7"
+  },
+  {
+   "path": "docs/evidence/syzygy-bpyt-6-3/utf8-census-repair1.json",
+   "bytes": 14395,
+   "sha256": "b69b3cc995f47ffaa0c37ac6eb1dfba9ff6e9ba3a297eb5a76bf7ff8f91fa25e"
+  },
+  {
+   "path": "docs/evidence/syzygy-bpyt-6-3/utf8-census.py",
+   "bytes": 8662,
+   "sha256": "485ebc119ee6a4a5889f838b8476eb086eeacc8f87c37df65c6c571625a0badd"
+  },
+  {
+   "path": "docs/evidence/syzygy-bpyt-6-3/utf8-probe-compare-repair1.json",
+   "bytes": 596,
+   "sha256": "bf2eb5e41b05ad38e3e99d050d94e62a702d9beb74e9a07b0dcc59ebc0a3414f"
+  },
+  {
+   "path": "docs/evidence/syzygy-bpyt-6-3/utf8-probe-output-base.json",
+   "bytes": 1893911,
+   "sha256": "be4bd04594ccd42f0b2e129a1a38c0709f342f0a416fdb803b4f3c1f28cc2667"
+  },
+  {
+   "path": "docs/evidence/syzygy-bpyt-6-3/utf8-probe.mjs",
+   "bytes": 13524,
+   "sha256": "9067d0d9b66731bd2f118a68f76a5ed55dbb64c558d9ca9e421ba4bdf06a0439"
+  },
+  {
+   "path": "docs/evidence/syzygy-bpyt-6-3/utf8-repair-mutants-b81010c8.json",
+   "bytes": 25689,
+   "sha256": "c014c0f882234bbdd516badec559d516f285e8e8f50eb8af4ce68eb4c358562d"
+  },
+  {
+   "path": "docs/evidence/syzygy-bpyt-6-3/utf8-repair-mutants.py",
+   "bytes": 10579,
+   "sha256": "fe41cfce5165d88a465b878ebc9572c2090bc7d9c74e72abd3852dad88b60e68"
+  },
+  {
+   "path": "docs/evidence/syzygy-bpyt-6-3/utf8-repair1-typecheck.log",
+   "bytes": 307,
+   "sha256": "f21762922bb179fa5dc8c33e881c4f062ef1c33bf48c7d3dad2dd0e5cd30ee98"
+  }
+ ],
+ "roundOneRepair": {
+  "review": {
+   "raw": "R-GP-IMPL-UTF8-CANONICAL-1-RAW.md",
+   "rawSha256": "3dbab316c9203898a88adcc960d7ac8cb790a3a590fb71a4faa53bee6fb58a8a",
+   "rawNote": "sha256 of the raw file as handed to the repair, before the coordinator retains it under docs/reviews",
+   "verdict": "REVISE",
+   "reviewedCommit": "2d3f93759a28d35e7b04facb5aaebbcc29697d09",
+   "blocking": [
+    "F1",
+    "F2"
+   ]
+  },
+  "mergeOfMain": {
+   "note": "origin/main is merged into the branch after the record is committed (never rebased); the merge commits are the pull request head chain and are named in the pull request body, not here. The first merge (main d38d7a3c) was made before pull request 533 landed, so it needed no hand resolution of AGENTS.md (this entry, as first written, said whichever lands second resolves it). Pull request 533 has since landed; secondMerge records the second merge.",
+   "firstMerge": {
+    "mainCommit": "d38d7a3ce632a34c2a41bdb77ad323ba0b05b777",
+    "mainSubject": "Merge pull request #487 from Tzeusy/prep/p115-offer-2026-10-21"
+   },
+   "secondMerge": {
+    "mainCommit": "41932c3b5aba567376fea3b32a80a54f8b6b30ab",
+    "mainSubject": "Merge pull request #533 from Tzeusy/agent/syzygy-bpyt.6.3-fence",
+    "mergeCommit": "a5b1d5328a7585e1ad03e90fc5df1847d85b9a21",
+    "parents": [
+     "e6afa657d63cc9a47afce06636ef6f0c0c19491d",
+     "41932c3b5aba567376fea3b32a80a54f8b6b30ab"
+    ],
+    "conflicts": [
+     "AGENTS.md (content)",
+     "docs/evidence/syzygy-bpyt-6-3/repair1-typecheck.log (add/add: both pull requests created the name)"
+    ],
+    "resolution": {
+     "AGENTS.md": "kept both bullets: this pull request's JSON-encoders bullet, then main's Markdown-fences bullet, each byte-equal to its side",
+     "repair1-typecheck.log": "main's bytes kept at the name; this pull request's log is committed as utf8-repair1-typecheck.log with its own bytes and sha256 (files table)"
+    },
+    "mergeResolutionCheck": {
+     "file": "docs/evidence/syzygy-bpyt-6-3/merge2-resolution-check-a5b1d532.json",
+     "paths": 5927,
+     "pathsEqualToGitsOwnMerge": 5925,
+     "conflictedPathsResolvedByHand": 2,
+     "otherDifferences": 0,
+     "how": "the merged tree is recomputed from the two parents by merge-resolution-check.py (git merge-tree), and every path of the committed tree is compared with it"
+    },
+    "commentOnly": {
+     "file": "docs/evidence/syzygy-bpyt-6-3/comment-only-merged-a5ab2b28-a5b1d532.json",
+     "base": "a5ab2b28, an ancestor of the previously pushed head e6afa657 (subject: evidence: the merge of main (PR 529) is what git computes, except one hand-resolved conflict)",
+     "head": "a5b1d532 (the second merge)",
+     "changedFiles": 890,
+     "productionFilesChanged": 15,
+     "commentOnly": 8,
+     "notCommentOnly": [
+      "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+      "packages/support/src/decode-utf8.ts",
+      "packages/support/src/index.ts",
+      "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+      "packages/three-surface-poc-core/src/code-structure.ts",
+      "packages/three-surface-poc-core/src/git-object-reader.ts",
+      "packages/three-surface-poc-core/src/project-shape-observation.ts"
+     ],
+     "projectShapeManifest": "emit-equal, so comment-only: source sha256 c32ab4e3 to a6401c01, the same emitted sha256 d4b1ba58",
+     "note": "the interval holds this pull request's own changes and the changes main took in; project-shape-manifest.ts is not among the files that are not comment-only"
+    },
+    "commentOnlyMjsUnchanged": "docs/evidence/syzygy-bpyt-6-3/comment-only.mjs is byte-equal to main's copy (the files table row is unchanged)",
+    "checksOnMergedTree": {
+     "typecheck": "npm run typecheck exit 0 after npm ci",
+     "changedTestFilesFiveTimes": "7 files, 162 tests passed on each of 5 runs",
+     "check_governance": "32 OK / 21 WARN / 0 FAIL",
+     "check_quotations": "exit 0"
+    }
+   }
+  },
+  "items": [
+   {
+    "id": "F1",
+    "what": "the byte-order-mark predicate at the object reader and the seed reader is pinned by committed tests with literal expected values: EF BB BF 61 0A reads as \"a\\n\", EF BB BF EF BB BF 61 as \"\\uFEFFa\" (git-object-reader.test.ts), and a byte-order-mark-led seed reads as \"a\\n\" (project-shape-observation.test.ts)",
+    "mutants": [
+     "S1-object-reader-keeps-bom",
+     "S2-seed-reader-keeps-bom"
+    ],
+    "outcome": "both killed by the new tests and by the whole suite, and pass the reviewed head's four test files"
+   },
+   {
+    "id": "F2",
+    "what": "arm (a): withoutGitlinkRecords is back inside the converting try in code-structure.ts, so the base Unknown reason returns; both arms of the fault are pinned (code-structure.test.ts, an injected Buffer.concat failure with its no-fault control); residual 7 reworded",
+    "mutants": [
+     "F2-gitlink-filter-outside-the-try"
+    ],
+    "outcome": "the reviewed head's form, as a mutant, is killed by the new fault test"
+   },
+   {
+    "id": "N1",
+    "what": "canonicalJson.whyNotMerged, the AGENTS.md bullet and canonical-json-divergence.test.ts say what the tap shows: three PWB identities are spelled identically (299 of 299, 272 of 272 and 11 of 11 in the re-run at the tested commit; 297, 270 and 11 in the round-0 tap, before this repair's two new seed-reader tests) and the differences are strict refusals (753 undefined members, 1 BigInt), not digests of every identity"
+   },
+   {
+    "id": "N2",
+    "what": "the divergence test cites the record by its real name; the test, AGENTS.md and the record agree on three encoders, and cap1's deterministicLayer is named as unpinned by a committed test (compared by canonical-json-probe.mjs only)"
+   },
+   {
+    "id": "N3",
+    "what": "the rev-parse byte-order-mark case that could not fail is replaced by a tree-listing case that can; the seed reader's refusal reason and not-utf-8 read record are pinned (S4); S9 and S10 are pinned by injected listings",
+    "mutants": [
+     "S4-seed-reader-refusal-reason",
+     "S9-git-text-keeps-bom",
+     "S10-code-structure-keeps-bom"
+    ]
+   },
+   {
+    "id": "N4",
+    "what": "AGENTS.md no longer says \"the one strict decodeUtf8\": it names 20 remaining inline or constant strict decoders and points to this record, which lists the sites (decoder.remainingStrictSites); none is converted"
+   },
+   {
+    "id": "N5",
+    "what": "o2.firstRunVerdict reworded to the file it ran; the test-detector scope of the 18 rows stated; the tap named by commit and aggregate digest (canonicalJson.suiteWideTap.repair1); expectedProbeOutput is the tracked utf8-probe-output-base.json with its sha256; the census commit named beside the reviewed head (decoder.census.repair1)"
+   },
+   {
+    "id": "N6",
+    "what": "the import-time throw on a Node built without ICU is named here (residuals) and in the PR body; no code change"
+   },
+   {
+    "id": "N7",
+    "what": "PR body corrected: this PR shares AGENTS.md, project-shape-manifest.ts and comment-only.mjs with #533; the merge of main is recorded (mergeOfMain). #533 landed after the repair was pushed, so main was merged a second time and AGENTS.md was resolved by hand (mergeOfMain.secondMerge)"
+   },
+   {
+    "id": "N8",
+    "what": "the digest-citer sweep matches the first 8 hex digits and the git blob id as well (digestCiters.repair1); it finds R-LIVE-TEST-NO-SPAWN-1-RAW.md"
+   }
+  ]
+ }
+}

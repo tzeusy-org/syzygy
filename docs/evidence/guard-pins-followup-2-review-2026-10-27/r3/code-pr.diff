@@ -1,0 +1,59 @@
+diff --git a/packages/polaris-generation-core/src/workspace-reach.test.ts b/packages/polaris-generation-core/src/workspace-reach.test.ts
+index 9673cbe9..d3754b93 100644
+--- a/packages/polaris-generation-core/src/workspace-reach.test.ts
++++ b/packages/polaris-generation-core/src/workspace-reach.test.ts
+@@ -97,6 +97,11 @@ describe('the shared workspace resolver', () => {
+     ['a .tar dependency', 'dossier', { dependencies: { dossier: 'lib-0.0.0.tar' } }, {}],
+     ['a .tar.gz dependency', 'dossier', { dependencies: { dossier: 'lib-0.0.0.tar.gz' } }, {}],
+     ['a remote tarball URL dependency', 'dossier', { dependencies: { dossier: 'https://example.com/lib-1.0.0.tgz' } }, {}],
++    ['a remote http tarball URL dependency', 'dossier', { dependencies: { dossier: 'http://example.com/lib-1.0.0.tar.gz' } }, {}],
++    ['an npm: alias of a registry package', 'dossier', { dependencies: { dossier: 'npm:typescript@^5.5.0' } }, {}],
++    ['a dependency on its parent directory', 'dossier', { dependencies: { dossier: '..' } }, {}],
++    ['a git dependency whose spec ends in a tarball extension', 'dossier', { dependencies: { dossier: 'github:someone/dossier#v1.tar' } }, {}],
++    ['an npm: alias with no version', 'dossier', { dependencies: { dossier: 'npm:typescript' } }, {}],
+     ['a file: dependency of another package', 'dossier', {}, { dependencies: { dossier: 'file:../../apps/app' } }],
+   ])('reads a bare name declared as %s as naming no module', (_form, specifier, app, lib) => {
+     expect(resolveIn(workspace({}, undefined, app, lib), 'apps/app/src/main.ts', specifier)).toBeUndefined();
+@@ -118,6 +123,12 @@ describe('the shared workspace resolver', () => {
+     expect(WORKSPACE.manifests.get('syzygy-workspace')).toEqual({ dir: '.', ...JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8')) });
+   });
+ 
++  it("reads a bare name the workspace root's manifest declares as a local dependency as naming no module", () => {
++    const { manifests, isFile } = workspace({});
++    const root: Manifest = { name: 'root', dir: '.', devDependencies: { dossier: './packages/lib' } };
++    expect(resolveIn({ manifests: new Map([...manifests, [root.name, root]]), isFile }, 'apps/app/src/main.ts', 'dossier')).toBeUndefined();
++  });
++
+   it('resolves an export whose conditions other than types all name one target', () => {
+     expect(resolveIn(workspace({}, { types: './dist/argv.d.ts', import: './dist/argv.js', default: './dist/argv.js' }), 'apps/app/src/main.ts', '@syzygy/lib'))
+       .toBe('packages/lib/src/argv.ts');
+diff --git a/packages/polaris-generation-core/src/workspace-reach.testkit.ts b/packages/polaris-generation-core/src/workspace-reach.testkit.ts
+index af462263..bbf6be09 100644
+--- a/packages/polaris-generation-core/src/workspace-reach.testkit.ts
++++ b/packages/polaris-generation-core/src/workspace-reach.testkit.ts
+@@ -61,12 +61,21 @@ function moduleIn(workspace: Workspace, dir: string, target: string): string | u
+  *   as a directory or a file;
+  * - `link:` and `workspace:`: npm does not install them at all (npm-package-arg 12.0.2 throws EUNSUPPORTEDPROTOCOL), and other
+  *   package managers link them locally;
+- * - `npm:`: an alias of another package, which may be a workspace package's name. An alias of a registry package is refused too,
+- *   failing closed.
+- * The tarball arm also matches a tarball URL (`https://…/x.tgz`), which npm types as `remote`; it is refused too, failing closed.
++ * - `npm:`: an alias. npm-package-arg 12.0.2 accepts only a registry spec after `npm:`, and npm 11.5.1 fetches that spec from
++ *   the registry unless the alias is declared under a workspace's own name and either the root's manifest declares it or the
++ *   alias's range is `*`, absent or one that workspace's version satisfies; then npm links the workspace, as for a plain range
++ *   declared under a workspace's name (npm skips any root declaration under a workspace's name, whatever its version). Every
++ *   workspace here is `@syzygy/`-scoped, and the `@syzygy/*` branch reads such a name before this pattern. Its target may carry
++ *   a workspace package's name, which other package managers can link locally; every alias is refused, failing closed.
++ * The tarball arm also matches a tarball URL (`https://…/x.tgz`), which npm types as `remote`, and a git spec whose text ends in a
++ * tarball extension (`github:someone/dossier#v1.tar`), which npm types as `git`; both are refused too, failing closed.
+  * Residual (syzygy-bpyt.8.38): npm also reads a directory spec with no leading `./`, `../`, `/` or `~/` (`packages/polaris-dossier/`,
+  * `.hidden-lib`, `a/b/c`) as a directory. Those still read as outside the workspace; widening the pattern to them changes what the
+- * guards refuse and needs a GP-Q0 ruling first. */
++ * guards refuse and needs a GP-Q0 ruling first.
++ * Residual (the review of 8.39, N2): a workspace whose name is not `@syzygy/`-scoped is read by its bare name as outside the
++ * workspace (unless some manifest declares that name with a version this pattern matches), while npm links it under that name
++ * and Node loads it from there. At syzygy-bpyt.8.39, 0 of the 12 workspaces are unscoped; closing it changes what the guards
++ * refuse and needs a GP-Q0 ruling first. */
+ const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\.\.?(?:\/|$)|\/|~\/)|\.(?:tgz|tar|tar\.gz)$/iu;
+ 
+ /** Every name any manifest declares a local dependency under. npm installs a dependency where every workspace module resolves it. */

@@ -6,9 +6,13 @@
     "tsBuildInfoFile": "dist/.tsbuildinfo"
   },
   "include": ["src"],
+  "exclude": ["src/**/*.test.ts"],
   "references": [
     {
       "path": "../polaris-generation-core"
+    },
+    {
+      "path": "../support"
     }
   ]
 }

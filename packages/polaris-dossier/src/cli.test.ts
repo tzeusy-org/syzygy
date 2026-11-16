@@ -1,11 +1,11 @@
 import * as fs from 'node:fs';
-import { tmpdir } from 'node:os';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { renderHuman, runDossierCli } from './cli.js';
 import { parseRunConfig } from './run-config.js';
 import { NO_WORK_ITEM_REASON, encodeRunRecord, type RunSubject } from './run-record.js';
+import { tempDir } from '@syzygy/test-kit';
 
 // Design "Command surface": non-interactive; a human summary and, with --json, the same content as
 // one JSON document; exit status 0 clean, 1 refusal, 2 usage error.
@@ -16,7 +16,7 @@ const run = async (argv: readonly string[]): Promise<{ code: number; stdout: str
   return { code, stdout, stderr };
 };
 const SUBJECT: RunSubject = {
-  repository: { url: 'https://github.com/redis/redis', repositoryId: 'redis-redis' },
+  repository: { url: 'github.com/redis/redis', repositoryId: 'redis-redis' },
   clone: { path: '/srv/clones/redis', declaredBy: 'operator', label: 'Inferred', use: 'read' },
   pinnedRevision: { commit: '498ecd0d6d007db11ddb3aea9428552598a78622', label: '8.10.2', consentRecord: 'PUBLIC-OBS-REDIS-2026-10-03@0.1.0-candidate.7', pinnedAt: '2026-10-07T10:00:00.000Z' },
   startGates: { registryEntry: 'PUBLIC-ADMISSION-REGISTRY-GIT-SOURCE-2026-10-07', screeningPolicy: 'PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-APPROVAL-2026-10-04' },
@@ -27,7 +27,7 @@ const SUBJECT: RunSubject = {
 
 let runDir: string;
 beforeEach(() => {
-  runDir = fs.realpathSync(fs.mkdtempSync(path.join(tmpdir(), 'dossier-cli-')));
+  runDir = tempDir('dossier-cli-');
   const parsed = parseRunConfig(JSON.stringify({
     operator: 'Tzeusy', agentTool: 'claude-code', agentToolVersion: '2.1.0', agentProvider: 'anthropic',
     model: 'claude-opus-5-5', deadline: 'PT1H', agentTokenBudget: 100_000, maxRepairCycles: 1, maxQuestions: 2,
@@ -36,7 +36,6 @@ beforeEach(() => {
   if (!parsed.ok) throw new Error('fixture configuration refused');
   fs.writeFileSync(path.join(runDir, 'run.json'), encodeRunRecord(parsed.config, SUBJECT));
 });
-afterEach(() => fs.rmSync(runDir, { recursive: true, force: true }));
 
 /** Every leaf of a JSON document as `dotted.key: value`, computed here rather than by the module. */
 const leaves = (value: unknown, key = ''): string[] => {
@@ -107,6 +106,13 @@ describe('syzygy dossier', () => {
   it('renders an empty list or object as (none)', async () => {
     expect(renderHuman({ a: [], b: {} })).toBe('a: (none)\nb: (none)\n');
   });
+
+  it('writes a string leaf that could break its line as a JSON string, and leaves every other leaf as it was (syzygy-mea.3 round-1 note 3)', () => {
+    expect(renderHuman({ a: 'plain text: with colons', n: 3 })).toBe('a: plain text: with colons\nn: 3\n');
+    expect(renderHuman({ path: 'docs/a\nnext: forged' })).toBe('path: "docs/a\\nnext: forged"\n');
+    expect(renderHuman({ p: 'a\rb' })).toBe('p: "a\\rb"\n');
+    expect(renderHuman({ p: 'a\u2028b\u0085c\u007fd' })).toBe('p: "a\\u2028b\\u0085c\\u007fd"\n');
+  });
 });
 
 describe('no route and no credential', () => {
@@ -122,7 +128,7 @@ describe('no route and no credential', () => {
   const sources = all.filter((name) => !UNIX_SOCKET_ONLY.includes(name));
 
   it('sweeps a non-empty population of source files', async () => {
-    expect(sources).toEqual(['brief.ts', 'check.ts', 'child-process.testkit.ts', 'class-gate.ts', 'cli.ts', 'clone-head.ts', 'clone-shape.ts', 'close.ts', 'credential-probe.ts', 'design-review.ts', 'doctrine-quote.ts', 'draft-schema.ts', 'execution-choice.ts', 'execution-flags.ts', 'execution-rule.ts', 'fs-patch.testkit.ts', 'full-run.testkit.ts', 'gate-sources.ts', 'git-object-reader.ts', 'github-url.ts', 'governed.ts', 'index.ts', 'init.ts', 'inventory.ts', 'launched.ts', 'polaris.ts', 'preflight.ts', 'render.ts', 'reverify.ts', 'review.ts', 'run-config.ts', 'run-record.ts', 'screen.ts', 'session-handover.ts', 'session-statement.ts', 'session-view.ts', 'state-directory.ts', 'status.ts', 'waiting-sessions.ts']);
+    expect(sources).toEqual(['argv.ts', 'brief.ts', 'census.ts', 'check-derive.ts', 'check-model.ts', 'check.ts', 'child-process.testkit.ts', 'class-gate.ts', 'cli.ts', 'clone-head.ts', 'clone-shape.ts', 'close.ts', 'credential-probe.ts', 'design-review.ts', 'doctrine-quote.ts', 'draft-schema.ts', 'execution-choice.ts', 'execution-flags.ts', 'execution-rule.ts', 'fs-patch.testkit.ts', 'full-run.testkit.ts', 'gate-sources.ts', 'git-object-reader.ts', 'governed.ts', 'index.ts', 'init.ts', 'inventory.ts', 'iso-of.ts', 'launch-cli.ts', 'launch-clone.ts', 'launch-copy.ts', 'launch-disclosure.ts', 'launch-identity.ts', 'launch-question.ts', 'launch-record.ts', 'launch-revision.ts', 'launch-sources.ts', 'launch-statements.ts', 'launch-store.ts', 'launch-write-consent.ts', 'launch.testkit.ts', 'launch.ts', 'launched.ts', 'outcome.ts', 'polaris.ts', 'preflight.ts', 'reader-advice.ts', 'reader-standards.ts', 'render.ts', 'reverify.ts', 'review-model.ts', 'review-packet.ts', 'review-reach.ts', 'review-verdict.ts', 'review.ts', 'run-config.ts', 'run-dir.ts', 'run-record.ts', 'screen.ts', 'screening-v8.testkit.ts', 'session-handover.ts', 'session-statement.ts', 'session-view.ts', 'source-visibility-gate.ts', 'state-directory.ts', 'status.ts', 'waiting-sessions.ts', 'withheld-items.ts']);
   });
 
   it.each(sources.map((name) => [name]))('%s imports no network module', (name) => {

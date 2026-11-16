@@ -1,0 +1,65 @@
+{
+ "edits": [
+  [
+   "  const lines = text.split('\\n');\n",
+   "  const parts = text.split(/(\\r\\n|\\r|\\n)/);\n  const lines: string[] = [];\n  const terms: string[] = [];\n  for (let i = 0; i < parts.length; i += 2) { lines.push(parts[i] ?? ''); terms.push(parts[i + 1] ?? ''); }\n"
+  ],
+  [
+   "  return { kind: 'masked', masked: out.join('\\n'), fences, spans };",
+   "  return { kind: 'masked', masked: out.map((l, i) => l + (terms[i] ?? '')).join(''), fences, spans };"
+  ]
+ ],
+ "exit": 1,
+ "summary": [
+  "Test Files  1 failed | 2 passed (3)",
+  "Tests  15 failed | 120 passed (135)"
+ ],
+ "failed": [
+  "Markdown fence recognizers: what each reader treats as inside a fence > 'backtick-info-with-backtick'",
+  "Markdown fence recognizers: what each reader treats as inside a fence > 'closer-indent4'",
+  "Markdown fence recognizers: what each reader treats as inside a fence > 'closer-longer'",
+  "Markdown fence recognizers: what each reader treats as inside a fence > 'closer-trailing-tab'",
+  "Markdown fence recognizers: what each reader treats as inside a fence > 'closer-trailing-tab-then-closer'",
+  "Markdown fence recognizers: what each reader treats as inside a fence > 'closer-with-info'",
+  "Markdown fence recognizers: what each reader treats as inside a fence > 'closer-with-text'",
+  "Markdown fence recognizers: what each reader treats as inside a fence > 'list-item'",
+  "Markdown fence recognizers: what each reader treats as inside a fence > 'tilde-col0'",
+  "Markdown fence recognizers: what each reader treats as inside a fence > 'tilde-fence-backtick-line'",
+  "Markdown fence recognizers: what each reader treats as inside a fence > 'tilde-indent3'",
+  "Markdown fence recognizers: what each reader treats as inside a fence > 'tilde-info-with-backtick'",
+  "Markdown fence recognizers: what each reader treats as inside a fence > 'tilde-opener-four-closer-three'",
+  "Markdown fence recognizers: what each reader treats as inside a fence > 'two-fences'",
+  "Markdown fence recognizers: what each reader treats as inside a fence > GAP: a CRLF source is admitted where the same LF source is excluded as a malformed code context",
+  "|@syzygy/three-surface-poc-app| apps/three-surface-poc/src/fence-rules.test.ts > Markdown fence recognizers: what each reader treats as inside a fence > 'backtick-info-with-backtick'",
+  "|@syzygy/three-surface-poc-app| apps/three-surface-poc/src/fence-rules.test.ts > Markdown fence recognizers: what each reader treats as inside a fence > 'closer-indent4'",
+  "|@syzygy/three-surface-poc-app| apps/three-surface-poc/src/fence-rules.test.ts > Markdown fence recognizers: what each reader treats as inside a fence > 'closer-longer'",
+  "|@syzygy/three-surface-poc-app| apps/three-surface-poc/src/fence-rules.test.ts > Markdown fence recognizers: what each reader treats as inside a fence > 'closer-trailing-tab'",
+  "|@syzygy/three-surface-poc-app| apps/three-surface-poc/src/fence-rules.test.ts > Markdown fence recognizers: what each reader treats as inside a fence > 'closer-trailing-tab-then-closer'",
+  "|@syzygy/three-surface-poc-app| apps/three-surface-poc/src/fence-rules.test.ts > Markdown fence recognizers: what each reader treats as inside a fence > 'closer-with-info'",
+  "|@syzygy/three-surface-poc-app| apps/three-surface-poc/src/fence-rules.test.ts > Markdown fence recognizers: what each reader treats as inside a fence > 'closer-with-text'",
+  "|@syzygy/three-surface-poc-app| apps/three-surface-poc/src/fence-rules.test.ts > Markdown fence recognizers: what each reader treats as inside a fence > 'list-item'",
+  "|@syzygy/three-surface-poc-app| apps/three-surface-poc/src/fence-rules.test.ts > Markdown fence recognizers: what each reader treats as inside a fence > 'tilde-col0'",
+  "|@syzygy/three-surface-poc-app| apps/three-surface-poc/src/fence-rules.test.ts > Markdown fence recognizers: what each reader treats as inside a fence > 'tilde-fence-backtick-line'",
+  "|@syzygy/three-surface-poc-app| apps/three-surface-poc/src/fence-rules.test.ts > Markdown fence recognizers: what each reader treats as inside a fence > 'tilde-indent3'",
+  "|@syzygy/three-surface-poc-app| apps/three-surface-poc/src/fence-rules.test.ts > Markdown fence recognizers: what each reader treats as inside a fence > 'tilde-info-with-backtick'",
+  "|@syzygy/three-surface-poc-app| apps/three-surface-poc/src/fence-rules.test.ts > Markdown fence recognizers: what each reader treats as inside a fence > 'tilde-opener-four-closer-three'",
+  "|@syzygy/three-surface-poc-app| apps/three-surface-poc/src/fence-rules.test.ts > Markdown fence recognizers: what each reader treats as inside a fence > 'two-fences'",
+  "|@syzygy/three-surface-poc-app| apps/three-surface-poc/src/fence-rules.test.ts > Markdown fence recognizers: what each reader treats as inside a fence > GAP: a CRLF source is admitted where the same LF source is excluded as a malformed code context"
+ ],
+ "vectorErrors": [
+  "backtick-info-with-backtick profileCrlf: expected 'MMMM' to be 'VHHV'",
+  "closer-indent4 profileCrlf: expected 'VHHHHV' to be 'MMMMMM'",
+  "closer-longer profileCrlf: expected 'VHHV' to be 'MMMM'",
+  "closer-trailing-tab profileCrlf: expected 'MMMM' to be 'VHHV'",
+  "closer-trailing-tab-then-closer profileCrlf: expected 'VHHHHV' to be 'MMMMMM'",
+  "closer-with-info profileCrlf: expected 'VHHHHV' to be 'MMMMMM'",
+  "closer-with-text profileCrlf: expected 'VHHHHV' to be 'MMMMMM'",
+  "list-item profileCrlf: expected 'MMMM' to be 'VHHV'",
+  "tilde-col0 profileCrlf: expected 'VHHV' to be 'VVVV'",
+  "tilde-fence-backtick-line profileCrlf: expected 'VHHHHV' to be 'MMMMMM'",
+  "tilde-indent3 profileCrlf: expected 'VHHV' to be 'VVVV'",
+  "tilde-info-with-backtick profileCrlf: expected 'VHHV' to be 'MMMM'",
+  "tilde-opener-four-closer-three profileCrlf: expected 'VHHHHV' to be 'VVVVVV'",
+  "two-fences profileCrlf: expected 'VHHVHHV' to be 'VHHVVVV'"
+ ]
+}

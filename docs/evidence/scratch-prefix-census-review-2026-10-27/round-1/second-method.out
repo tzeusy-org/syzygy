@@ -1,0 +1,12 @@
+k1-kill-40s entries 16 classes 15
+k2-kill-75s entries 34 classes 16
+k3-kill-115s entries 15 classes 9
+union of classes left by the three kills 27
+f1-fresh-after-k1 seeded 16 removed 1 ['syzygy-poc-surface-fixture-template-p<pid>-n<ns>-'] still 15
+f2-fresh-after-k2 seeded 34 removed 10 ['syzygy-poc-surface-fixture-p<pid>-n<ns>-', 'syzygy-poc-surface-fixture-template-p<pid>-n<ns>-'] still 24
+f3-fresh-after-k3 seeded 15 removed 4 ['syzygy-poc-surface-fixture-p<pid>-n<ns>-', 'syzygy-poc-surface-fixture-template-p<pid>-n<ns>-'] still 11
+union of classes still there after the fresh runs 25
+repro entries 33 classes 11
+  in the record's kill union too: ['chrome-singleton-directory', 'nanoid-21', 'node-compile-cache', 'syzygy-poc-a11y-', 'syzygy-poc-a11y-budget-', 'syzygy-poc-browser-', 'syzygy-poc-names-', 'syzygy-poc-names-daemon-', 'syzygy-poc-surface-fixture-p<pid>-n<ns>-', 'syzygy-poc-surface-fixture-template-p<pid>-n<ns>-']
+  NOT in the record's kill union: ['dossier-close-']
+  rules of those not in the union: {'dossier-close-': 'R9-test-file'}

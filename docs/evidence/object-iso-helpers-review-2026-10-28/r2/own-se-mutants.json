@@ -1,0 +1,87 @@
+[
+ {
+  "id": "R2-M1-iso-import-not-removed",
+  "ranAt": "4d92ac9518dd60cdd124525c3e36c086ccd5e425",
+  "toolSha256": "121a3d57cfc8eb5375858b80ba1ec84fdf2d62ee8098979253d12fd37809ac00",
+  "old": "out = out.replace(/^import \\{ isoOf \\} from '\\.\\/iso-of\\.js';\\n/m, '');",
+  "new": "",
+  "mutatedSha256": "6e42bd555b1c72109e441fdec75ddf52eb50aa95b789fe4daa21ffcc715fdac6",
+  "selftestExit": 1,
+  "killedBySelftest": true,
+  "firstLine": "if (compareFiles(ibase, ihead, 'x.ts').equal !== true) throw new Error('selftest: the isoOf definition replaced by its import is equal');",
+  "onThePair": {
+   "modified": 20,
+   "equal": 12,
+   "notEqual": 10,
+   "exit": 1
+  }
+ },
+ {
+  "id": "R2-M2-iso-definition-not-censused",
+  "ranAt": "4d92ac9518dd60cdd124525c3e36c086ccd5e425",
+  "toolSha256": "121a3d57cfc8eb5375858b80ba1ec84fdf2d62ee8098979253d12fd37809ac00",
+  "old": "  'const isoOf = (instant: number): string => new Date(instant).toISOString();',\n",
+  "new": "",
+  "mutatedSha256": "2987cb29325a55a28e34296d94ce38862f2cc1f3b4fbb7928681628058a18473",
+  "selftestExit": 1,
+  "killedBySelftest": true,
+  "firstLine": "if (compareFiles(ibase, ihead, 'x.ts').equal !== true) throw new Error('selftest: the isoOf definition replaced by its import is equal');",
+  "onThePair": {
+   "modified": 20,
+   "equal": 12,
+   "notEqual": 10,
+   "exit": 1
+  }
+ },
+ {
+  "id": "R2-M3-iso-call-arguments-erased",
+  "ranAt": "4d92ac9518dd60cdd124525c3e36c086ccd5e425",
+  "toolSha256": "121a3d57cfc8eb5375858b80ba1ec84fdf2d62ee8098979253d12fd37809ac00",
+  "old": "  return out;\n}",
+  "new": "  out = out.replace(/isoOf\\([^)]*\\)/g, 'isoOf()');\n  return out;\n}",
+  "mutatedSha256": "f76980800a97624fa0ea667459cfeac2cea049755dc3b156bb445afe563c07ce",
+  "selftestExit": 1,
+  "killedBySelftest": true,
+  "firstLine": "if (compareFiles(ibase, ihead.replace('isoOf(n)', 'isoOf(n + 1)'), 'x.ts').equal !== false) throw new Error('selftest: a changed isoOf call is not equal');",
+  "onThePair": {
+   "modified": 20,
+   "equal": 19,
+   "notEqual": 3,
+   "exit": 1
+  }
+ },
+ {
+  "id": "R2-M4-iso-import-first-line-only",
+  "ranAt": "4d92ac9518dd60cdd124525c3e36c086ccd5e425",
+  "toolSha256": "121a3d57cfc8eb5375858b80ba1ec84fdf2d62ee8098979253d12fd37809ac00",
+  "old": "out = out.replace(/^import \\{ isoOf \\} from '\\.\\/iso-of\\.js';\\n/m, '');",
+  "new": "out = out.replace(/^import \\{ isoOf \\} from '\\.\\/iso-of\\.js';\\n/, '');",
+  "mutatedSha256": "e7998fd746d26623f2538aa2b513f2ebbc7dc78ce6393854a4fc4baba0ccaec9",
+  "selftestExit": 0,
+  "killedBySelftest": false,
+  "firstLine": "site-equivalence selftest ok",
+  "onThePair": {
+   "modified": 20,
+   "equal": 12,
+   "notEqual": 10,
+   "exit": 1
+  }
+ },
+ {
+  "id": "R2-M5-iso-import-any-source",
+  "ranAt": "4d92ac9518dd60cdd124525c3e36c086ccd5e425",
+  "toolSha256": "121a3d57cfc8eb5375858b80ba1ec84fdf2d62ee8098979253d12fd37809ac00",
+  "old": "out = out.replace(/^import \\{ isoOf \\} from '\\.\\/iso-of\\.js';\\n/m, '');",
+  "new": "out = out.replace(/^import \\{ isoOf \\} from '[^']*';\\n/m, '');",
+  "mutatedSha256": "ba9e86c0c39231a9025673b9a6b0505bf1c2024f5e3092824cbcc586687871c0",
+  "selftestExit": 0,
+  "killedBySelftest": false,
+  "firstLine": "site-equivalence selftest ok",
+  "onThePair": {
+   "modified": 20,
+   "equal": 19,
+   "notEqual": 3,
+   "exit": 1
+  }
+ }
+]

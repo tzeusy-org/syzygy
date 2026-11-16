@@ -1,0 +1,3 @@
+JSON files scanned: 496 | mentioning package-reader or a test title: 40
+duration > 2500 ms paired with a package-reader test name: 1
+   docs/evidence/recorder-testkit-sync-render-timing-2026-10-21.json summedMs 4430 SIZED strict act reads policy chain: absent without acts; refused for a missing version 1, equal

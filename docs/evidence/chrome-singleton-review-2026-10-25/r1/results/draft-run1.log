@@ -1,0 +1,12 @@
+
+ RUN  v3.2.7 /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-515/clone
+
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/polaris-generation/draft-preview.browser.test.ts (1 test) 1403ms
+   ✓ renders the pipeline draft with working diagram, source and keyboard deep-dive paths at both widths  1402ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  22:35:16
+   Duration  2.66s (transform 500ms, setup 38ms, collect 585ms, tests 1.40s, environment 0ms, prepare 113ms)
+
+exit 0

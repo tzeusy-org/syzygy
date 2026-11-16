@@ -1,0 +1,53 @@
+{
+ "commit": "5db78a26699a07716edd303484c0f7241df02e9e",
+ "reportSha256": "e16ec4aef3704a1ea7da2f4302f39d90edac0a45c02761a6b152cd1df79d8e34",
+ "command": "npx vitest run --reporter=default --reporter=json (TMPDIR=/tmp/r541-full), after npm run typecheck (tsc -b) in the clone",
+ "load": [
+  "52.18 53.72 52.61 70/9597 1488319",
+  "5db78a26699a07716edd303484c0f7241df02e9e",
+  "2026-10-27T08:39:31Z",
+  "64.48 63.89 57.75 22/9570 1618652",
+  "2026-10-27T08:45:28Z",
+  ""
+ ],
+ "numTotalTestSuites": 869,
+ "numPassedTestSuites": 867,
+ "numFailedTestSuites": 2,
+ "numTotalTests": 5383,
+ "numPassedTests": 5377,
+ "numFailedTests": 1,
+ "numPendingTests": 5,
+ "numTodoTests": 0,
+ "success": false,
+ "files": 246,
+ "failed": [
+  {
+   "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+   "test": "a rendered-design reviewer's continuity, disclosed in the review-status region discloses a design reviewer that continued to round 2 (mutant: drop the design continuity sentence)",
+   "ms": 5279.925773000003,
+   "message": "Error: STACK_TRACE_ERROR"
+  }
+ ],
+ "skipped": [
+  {
+   "file": "packages/polaris-dossier/src/no-egress.test.ts",
+   "test": "no provider call and no transmission (S10), without strace is not proved on this host: strace is unavailable, so the capture is skipped, never reported as passed"
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.live.test.ts",
+   "test": "live real focused-pytest verification (SYZYGY_POC_BUTLERS_REPO gated) ingests one real, passing operator-reported focused-pytest artifact and resolves it to report-fact, never Verified, through the full model (AC1/AC3, RFC5-19)"
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/work-items.live.test.ts",
+   "test": "live Butlers observation (SYZYGY_POC_BUTLERS_REPO gated) matches `git rev-parse HEAD` and a direct Dolt read (POC-REQ-001, POC-REQ-010 oracles)"
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+   "test": "opening index in a real browser (PWB-REQ-010, P-98) a captured /polaris page meets the oracle at both viewports"
+  },
+  {
+   "file": "apps/three-surface-poc/src/project-shape-discovery.live.test.ts",
+   "test": "live Butlers project-shape discovery at the reviewed revision matches the independent five-root, seven-Heart, baseline and total populations"
+  }
+ ]
+}

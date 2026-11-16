@@ -1,0 +1,91 @@
+{
+  "commit": "191d8277",
+  "r2Sha256": "3b954d84e97771016b6dcccf2d3e826a9225e46d02330d9c94b23831fb0a5a4f",
+  "laneMutantsSha256": "133094bce703dad13917d73b4bb1dd29cc8eb43212d2ec9e307656f530f3fe4e",
+  "rows": {
+    "W5-filter-drops-the-x-forms": {
+      "inR2": true,
+      "inLane": true,
+      "editsEqual": true,
+      "edits": [
+        {
+          "path": "packages/support/src/support-purity.test.ts",
+          "old": "/\\.[cm]?[jt]sx?$/u.test(name)",
+          "new": "/\\.[cm]?[jt]s$/u.test(name)"
+        }
+      ],
+      "oldCountInPurity": [
+        1
+      ],
+      "laneOtherFields": [
+        "PURITY",
+        "[edit(PURITY, '/\\\\.[cm]?[jt]sx?$/u.test(name)', '/\\\\.[cm]?[jt]s$/u.test(name)')]",
+        "None",
+        "'killed'",
+        "None"
+      ],
+      "r2OtherFields": [
+        "[PURITY]",
+        "[e(PURITY, FILTER, '/\\\\.[cm]?[jt]s$/u.test(name)')]",
+        "'survives'",
+        "None"
+      ]
+    },
+    "W6-test-exclusion-broadened-to-any-test-substring": {
+      "inR2": true,
+      "inLane": true,
+      "editsEqual": true,
+      "edits": [
+        {
+          "path": "packages/support/src/support-purity.test.ts",
+          "old": "!name.endsWith('.test.ts')",
+          "new": "!name.includes('test')"
+        }
+      ],
+      "oldCountInPurity": [
+        1
+      ],
+      "laneOtherFields": [
+        "PURITY",
+        "[edit(PURITY, \"!name.endsWith('.test.ts')\", \"!name.includes('test')\")]",
+        "None",
+        "'killed'",
+        "None"
+      ],
+      "r2OtherFields": [
+        "[PURITY]",
+        "[e(PURITY, \"!name.endsWith('.test.ts')\", \"!name.includes('test')\")]",
+        "'survives'",
+        "None"
+      ]
+    },
+    "W7-testkit-exclusion-broadened-to-any-depth": {
+      "inR2": true,
+      "inLane": true,
+      "editsEqual": true,
+      "edits": [
+        {
+          "path": "packages/support/src/support-purity.test.ts",
+          "old": "name !== 'purity.testkit.ts'",
+          "new": "!name.endsWith('purity.testkit.ts')"
+        }
+      ],
+      "oldCountInPurity": [
+        1
+      ],
+      "laneOtherFields": [
+        "PURITY",
+        "[edit(PURITY, \"name !== 'purity.testkit.ts'\", \"!name.endsWith('purity.testkit.ts')\")]",
+        "None",
+        "'killed'",
+        "None"
+      ],
+      "r2OtherFields": [
+        "[PURITY]",
+        "[e(PURITY, \"name !== 'purity.testkit.ts'\", \"!name.endsWith('purity.testkit.ts')\")]",
+        "'survives'",
+        "None"
+      ]
+    }
+  }
+}

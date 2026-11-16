@@ -1,0 +1,45 @@
+[
+ {
+  "id": "F1-headroom-not-frozen",
+  "ranAt": "ba5811ff77cce5c52edc671634e9854c25455720",
+  "old": "resourceHeadroom: deepFreeze(deriveResourceHeadroom(",
+  "new": "resourceHeadroom: (deriveResourceHeadroom(",
+  "files": [
+   "apps/three-surface-poc/src/surface-routes.test.ts",
+   "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts"
+  ],
+  "exit": 0,
+  "summary": [
+   "Test Files  2 passed (2)",
+   "Tests  44 passed (44)"
+  ]
+ },
+ {
+  "id": "C11-dossier-evaluation-questions",
+  "ranAt": "ba5811ff77cce5c52edc671634e9854c25455720",
+  "old": "const questionsSha256 = sha256(input.questionsText);",
+  "new": "const questionsSha256 = sha256(input.questionsText + ' ');",
+  "files": [
+   "packages/three-surface-poc-core/src/test-artifact-verification.test.ts"
+  ],
+  "exit": 0,
+  "summary": [
+   "Test Files  1 passed (1)",
+   "Tests  37 passed (37)"
+  ]
+ },
+ {
+  "id": "C1-manifest-digest",
+  "ranAt": "fe3855a1b4f2164da3274e02d868399236c45c9c",
+  "old": "sha256(canonicalManifestJson(manifest))",
+  "new": "sha256(canonicalManifestJson(manifest) + ' ')",
+  "files": [
+   "apps/three-surface-poc/src/cdp-browser.test.ts"
+  ],
+  "exit": 0,
+  "summary": [
+   "Test Files  1 passed (1)",
+   "Tests  29 passed (29)"
+  ]
+ }
+]

@@ -1,0 +1,70 @@
+{
+ "format": "rule-6-mutation-record",
+ "bead": "syzygy-pdja.13",
+ "ranAt": {
+  "base": "49512529ebeed716c85bf820a0e4dde20d049df0",
+  "note": "uncommitted working tree on agent/syzygy-pdja.13-review-report over base; subject digests below are the bytes mutated"
+ },
+ "subjectDigests": {
+  "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": "57d5c297747af297306752d649efda59c9f9e68aa13aa7e1e771162a19a5a128",
+  "packages/polaris-dossier/src/render.test.ts": "39df632c0b4a3d6b56c6ce1bce3dd678d59c0f83adac7023789e10730905b570",
+  "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts": "fd2dca57c61e9e3626904064a1756caad77f28bb4f27fbb0fd6cc84f17badc14"
+ },
+ "command": "npx vitest run packages/polaris-dossier/src/render.test.ts",
+ "mutants": [
+  {
+   "id": "open-never",
+   "old": "${reportPaths.includes(from) ? ' open' : ''}",
+   "new": "",
+   "killed": true,
+   "tests": "1 failed | 74 passed (75)"
+  },
+  {
+   "id": "open-always",
+   "old": "${reportPaths.includes(from) ? ' open' : ''}",
+   "new": " open",
+   "killed": true,
+   "tests": "1 failed | 74 passed (75)"
+  },
+  {
+   "id": "sources-folded",
+   "old": "<li><a href=\"${href(from, 'sources/index.html')}\">Sources</a></li>${reviewReport(from)}",
+   "new": "${reviewReport(from).replace('<ol>', `<ol><li><a href=\"${href(from, 'sources/index.html')}\">Sources</a></li>`)}",
+   "killed": true,
+   "tests": "1 failed | 74 passed (75)"
+  },
+  {
+   "id": "appendix-in-product",
+   "old": "<li><a href=\"${href(from, 'glossary.html')}\">Glossary</a></li>",
+   "new": "<li><a href=\"${href(from, 'glossary.html')}\">Glossary</a></li><li><a href=\"${href(from, APPENDIX)}\">Appendix</a></li>",
+   "killed": true,
+   "tests": "1 failed | 74 passed (75)"
+  },
+  {
+   "id": "no-fold",
+   "old": "`</ol><details class=\"review-report\"${reportPaths.includes(from) ? ' open' : ''}><summary>Review report</summary><ol>${reportItems(from)}</ol></details>`",
+   "new": "`${reportItems(from)}</ol>`",
+   "killed": true,
+   "tests": "1 failed | 74 passed (75)"
+  },
+  {
+   "id": "contents-flat",
+   "old": "`</ol><h2 id=\"review-report\">Review report</h2><p>How this dossier was made, apart from what it says about the project.</p><ol>${reportItems('contents.html')}</ol>`",
+   "new": "`${reportItems('contents.html')}</ol>`",
+   "killed": true,
+   "tests": "1 failed | 74 passed (75)"
+  },
+  {
+   "id": "size-report-out",
+   "old": "<li><a href=\"${href(from, 'size-report.html')}\">Size report</a></li>${local === undefined ? '' : `<li><a href=\"${href(from, APPENDIX)}\">Appendix</a></li>`}`;",
+   "new": "${local === undefined ? '' : `<li><a href=\"${href(from, APPENDIX)}\">Appendix</a></li>`}`;",
+   "killed": true,
+   "tests": "1 failed | 74 passed (75)"
+  }
+ ],
+ "killed": 7,
+ "total": 7,
+ "accepted": [],
+ "discarded": [],
+ "rerunAfter": "any edit to the subject files"
+}

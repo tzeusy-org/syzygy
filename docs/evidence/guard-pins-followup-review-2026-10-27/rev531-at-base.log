@@ -1,0 +1,31 @@
+RV531-R1-dot-slash-dropped survives 0 ['Tests  157 passed (157)'] 10.2 clean
+RV531-R2-bare-dot-dropped survives 0 ['Tests  157 passed (157)'] 15.6 clean
+RV531-R3-tar-forms-dropped survives 0 ['Tests  157 passed (157)'] 17.4 clean
+RV531-R4-tilde-loosened survives 0 ['Tests  157 passed (157)'] 18.5 clean
+RV531-R5-tarball-end-anchor-dropped survives 0 ['Tests  157 passed (157)'] 12.1 clean
+RV531-R6-root-dependencies-dropped survives 0 ['Tests  157 passed (157)'] 10.5 clean
+RV531-R7-own-package-only killed 1 ['Tests  1 failed | 156 passed (157)'] 8.4 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a file: dependency of another package as naming no module
+RV531-R8-git-reads-local killed 1 ['Tests  1 failed | 156 passed (157)'] 9.7 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > leaves a bare name declared as a git dependency outside the workspace
+RV531-C1-extension-end-anchor-dropped survives 0 ['Tests  157 passed (157)'] 11.8 clean
+RV531-C2-cts-dropped killed 1 ['Tests  1 failed | 156 passed (157)'] 13.6 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > reads every module TypeScript compiles under src, .mts, .cts and .tsx among them, and no test module
+RV531-C3-tsx-tests-kept killed 1 ['Tests  1 failed | 156 passed (157)'] 9.6 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > reads every module TypeScript compiles under src, .mts, .cts and .tsx among them, and no test module
+RV531-C4-test-dot-dropped survives 0 ['Tests  157 passed (157)'] 8.9 clean
+RV531-S1-parse-rereads-tree killed 1 ['Tests  2 failed | 155 passed (157)'] 8.3 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > adds each module's census to what it reports unlifted
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > reads every module TypeScript compiles under src, .mts, .cts and .tsx among them, and no test module
+RV531-S2-tree-not-recursive survives 0 ['Tests  157 passed (157)'] 6.5 clean
+RV531-T1-root-dot-slash-alias killed 1 ['Tests  2 failed | 155 passed (157)'] 6.6 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > resolves every workspace specifier on it, and reaches past the entry's own imports
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > resolves every workspace import the CLI reaches, dynamic ones included
+RV531-T2-remote-tarball-faithful killed 1 ['Tests  2 failed | 155 passed (157)'] 6.2 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > resolves every workspace specifier on it, and reaches past the entry's own imports
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > resolves every workspace import the CLI reaches, dynamic ones included
+RV531-T3-root-bare-path-alias survives 0 ['Tests  157 passed (157)'] 6.8 clean
+RV531-T4-npm-alias-registry-faithful killed 1 ['Tests  2 failed | 155 passed (157)'] 6.2 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > resolves every workspace specifier on it, and reaches past the entry's own imports
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > resolves every workspace import the CLI reaches, dynamic ones included
+wrote rev531-at-base.json 18

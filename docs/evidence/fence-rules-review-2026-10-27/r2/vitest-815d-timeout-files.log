@@ -1,0 +1,193 @@
+
+ RUN  v3.2.7 /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-533b/clone
+
+ ✓ |@syzygy/polaris-generation-consent| packages/polaris-generation-consent/src/act-families.test.ts (65 tests) 8482ms
+ ✓ |@syzygy/polaris-dossier| packages/polaris-dossier/src/run-evidence.test.ts (4 tests) 8525ms
+   ✓ dossier run evidence record (S12) > names the subject, the Syzygy commit and the digest of every file the run and its sessions left  2042ms
+   ✓ dossier run evidence record (S12) > copies no file body: a credential-shaped token the draft carries never reaches the record  1803ms
+   ✓ dossier run evidence record (S12) > lists a symbolic link without following it  1910ms
+   ✓ dossier run evidence record (S12) > reports an open run as not closed, and refuses anything but one run directory  2535ms
+ ✓ |@syzygy/polaris-dossier| packages/polaris-dossier/src/close.test.ts (9 tests) 11335ms
+   ✓ close (S10) > records the operator-declared usage, labelled Inferred and attributed to the operator, never a receipt  834ms
+   ✓ close (S10) > records undeclared usage as not recorded, never zero  2052ms
+   ✓ close (S10) > closes a run once, and refuses after the deadline  1860ms
+   ✓ close (S10) > runs the adapter-credential check at close after a permitting brief: a readable credential is a finding recorded in the record  1471ms
+   ✓ close (S10) > never overwrites a record that appears while it closes: a concurrent close loses, and the first record stands  1124ms
+   ✓ close (S10) > refuses when the consent no longer names the pinned revision  1089ms
+   ✓ close (S10) > carries the agent's reported commands as its report, screened, and copies no prompt, brief or transcript body  1362ms
+   ✓ close (S10) > leaves no credential in the state directory: a sweep of every file under the state root, with its denominator  1278ms
+ ✓ |@syzygy/polaris-dossier| packages/polaris-dossier/src/start-gates.test.ts (104 tests) 72445ms
+   ✓ init: a run that passes every start gate > pins the consented HEAD, records the subject and writes only run.json under the state root  4231ms
+   ✓ init: a run that passes every start gate > records the clone by its real path, not the path typed: a symlink or a `..` segment is resolved (R-POLARIS-DOSSIER-S3-GATES-2 note 12)  603ms
+   ✓ init: a run that passes every start gate > starts from a clone of a commit with a parent, shallow at exactly that commit  320ms
+   ✓ init: a run that passes every start gate > starts from a clone of a root commit shallow at it, or with no shallow file: a root commit has no parent to cut  345ms
+   ✓ init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses an extra ref, loose or packed  335ms
+   ✓ init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses every top-level name the consented form never leaves: commondir, modules, worktrees, pseudo-refs, bisect and rebase state  1675ms
+   ✓ init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses objects/info/alternates and http-alternates, as a file or a link, and whatever they name  1458ms
+   ✓ init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses in the object store anything but loose objects, an empty info/ and paired packs  1909ms
+   ✓ init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses unknown files under the allowed directories: hooks that run, grafts, other logs  601ms
+   ✓ init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses logs/HEAD naming any commit but the pinned one or the zero identifier  325ms
+   ✓ init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses a symbolic link anywhere under .git, never following it  1599ms
+   ✓ init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses an allowed name of the wrong kind  496ms
+   ✓ init: the clone holds the consented commit alone (syzygy-qkea.24) > reads shallow without following a link, and only as a regular file  514ms
+   ✓ init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses a file over its bound, and a .git with more entries than the walk's bound  473ms
+   ✓ init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses a two-commit shallow clone, and a clone shallow at another commit or not shallow  718ms
+   ✓ init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses an object store that names an object beyond the pinned commit and its tree  435ms
+   ✓ init: the clone holds the consented commit alone (syzygy-qkea.24) > reads config bounded and without following a link, and admits the [core] keys git init writes on each mainstream platform  855ms
+   ✓ init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses config naming a remote, a promisor, an include or a command the agent's git would run (R-POLARIS-DOSSIER-CLONE-SHAPE-2 finding 1)  4963ms
+   ✓ init: the clone holds the consented commit alone (syzygy-qkea.24) > starts from a clone made with an older git's template, which leaves an empty branches/, or an empty one; refuses anything in branches/  797ms
+   ✓ init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses an identifier in FETCH_HEAD or logs/HEAD in upper case or run on, even the pinned commit's  750ms
+   ✓ init: the clone holds the consented commit alone (syzygy-qkea.24) > never reads the working tree: an uncommitted change, or a nested repository, does not change the listing or the decision  424ms
+   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses before any object read when the observation consent is withdrawn: another decisions file names the record, naming why  386ms
+   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses before any object read when the registry entry is ineffective: the entry changed after the sign-off  363ms
+   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses when the signed registry entry names another implementation or no implementation version  3411ms
+   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses a HEAD the consent does not name, before any object read, listing the consented revisions  818ms
+   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses a clone whose .git is a gitdir pointer  346ms
+   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses a listing whose object no longer hashes to its identifier (scenario "Object store altered after pinning")  571ms
+   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses a subject with a .syzygy/ path, not adopted and no per-project statement, after listing the pinned tree  361ms
+   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses a subject with an openspec/ path and no per-project statement, after listing the pinned tree  671ms
+   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses a subject with a recorded kernel evidence drawer and no per-project statement, after listing the pinned tree  867ms
+   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses a subject with a project input that does not say and no per-project statement, after listing the pinned tree  331ms
+   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > counts a symlink entry named .syzygy in the pinned tree as governing  1915ms
+   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > counts a gitlink entry named openspec in the pinned tree as governing  2000ms
+   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > treats the production project input as silent: with no statement every subject is refused  675ms
+   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses a governed subject whose only statement names another provider  544ms
+   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses a governed subject whose only statement names the provider for another agent tool  532ms
+   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses a governed subject whose only statement has no act  312ms
+   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > starts a governed or unstated run that relies on an in-force statement, and cites it  740ms
+   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > passes while every gate stays in force, listing the pinned tree from the recorded clone and deciding the subject again  385ms
+   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > reads no object when a gate fails  339ms
+   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > shows the label and consent record the live consent gives, never the run record's (R-POLARIS-DOSSIER-S3-GATES-1 finding 2)  2998ms
+   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > refuses when the pinned tree cannot be listed from the recorded clone  497ms
+   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > refuses when the recorded pin is changed to a commit in the clone the consent does not name  393ms
+   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > refuses when the consent stops naming the recorded revision  1853ms
+   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > refuses every later step when the policy changes after its act  337ms
+   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > names why the consent is gone when a withdrawal in a form the reader does not define refuses the whole read  429ms
+   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > names why the consent is gone when the consent bytes changed after the act  400ms
+   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > names why the consent is gone when the act record removed  316ms
+   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > refuses when the statement a governed run relies on is withdrawn mid-run  582ms
+   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > re-checks the statement against the run's declared tool: a Codex run with OpenAI keeps its Codex statement, and no Claude Code one stands in  791ms
+   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > before the brief, selects the statement by the provider the run record declares, and discloses that the provider is Inferred  659ms
+   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > after the brief, refuses a provider or tool that differs from the one the brief record states, reading no object  531ms
+   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > passes when the brief record states the tool and provider the run record declares; a coordinated edit of both is the disclosed residual  669ms
+   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > refuses when the brief record exists but states no agent  347ms
+   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > refuses when the brief record exists but states a provider that is not a string  468ms
+   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > refuses when the brief record exists but is not JSON  389ms
+   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > refuses a run record altered into an invalid shape  313ms
+   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > refuses a pin moved from a non-governed to a governed consented revision  580ms
+   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > refuses a governed run whose record was downgraded to non-governed, before and after the statement is withdrawn  638ms
+   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > refuses when the project input in force now records a drawer the run did not start under  352ms
+   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > passes a pin moved between non-governed consented revisions, and shows the live label of the revision now pinned  3036ms
+   ✓ preflight > prints clone commands that leave the consented commit alone in the clone  683ms
+   ✓ preflight > reports D9 established on this checkout only once an act record binds it, though the doctrine amendment log records its adoption  5685ms
+   ✓ preflight > reports D9 and the RFC7-20 reading established once the sitting's acts bind their records, and only while the bound bytes hold  2536ms
+   ✓ the CLI: preflight and init > init takes the state root from the environment when no flag is given, and the flag over the environment  413ms
+ ✓ |@syzygy/polaris-dossier| packages/polaris-dossier/src/gate-acts.test.ts (133 tests) 163373ms
+   ✓ the sitting's acts as gate sources, with no act recorded > follow this checkout's tree: each source absent while its act record is, and established once the sitting records it  9322ms
+   ✓ the sitting's acts as gate sources, with no act recorded > follow the tree in either state: no records, every record, and each act alone  11960ms
+   ✓ version 2 of the Anthropic statement > replaces version 1 from its act's instant, one statement for the pair, the OpenAI statement untouched  1761ms
+   ✓ version 2 of the Anthropic statement > leaves version 1 alone in force before version 2's instant  1385ms
+   ✓ version 2 of the Anthropic statement > is what preflight lists in force, before and after its instant, agreeing with the gate  1984ms
+   ✓ version 2 of the Anthropic statement > closes no other gate: D9, the reading, the drawer and the registry sign-off stay established beside it  1483ms
+   ✓ version 2 of the Anthropic statement > fails closed when its act record has an appended line: version 1 reads withdrawn and version 2 unbound, so the pair has no statement  1380ms
+   ✓ version 2 of the Anthropic statement > fails closed when its act record has another supersession: version 1 reads withdrawn and version 2 unbound, so the pair has no statement  1547ms
+   ✓ version 2 of the Anthropic statement > fails closed when its act record has another effect: version 1 reads withdrawn and version 2 unbound, so the pair has no statement  835ms
+   ✓ version 2 of the Anthropic statement > fails closed when its act record has a digest in the packet words: version 1 reads withdrawn and version 2 unbound, so the pair has no statement  1444ms
+   ✓ version 2 of the Anthropic statement > fails closed once its record changes after the act  1643ms
+   ✓ version 2 of the Anthropic statement > is withdrawn by a decisions file naming it by its phrase label, and version 1 does not come back  1727ms
+   ✓ version 2 of the Anthropic statement > is withdrawn by a decisions file naming it by its title, and version 1 does not come back  2079ms
+   ✓ version 2 of the Anthropic statement > is withdrawn by a decisions file naming it by its act identity, and version 1 does not come back  1133ms
+   ✓ version 2 of the Anthropic statement > is withdrawn by a decisions file naming it by its record's path, and version 1 does not come back  1298ms
+   ✓ version 2 of the Anthropic statement > reads version 1's act record past only at its exact render, and version 1 reads version 2's the same way  1573ms
+   ✓ version 2 of the Anthropic statement > reads past version 1's exact render only at version 1's own file: a byte-identical copy elsewhere names version 2  1446ms
+   ✓ version 2 of the Anthropic statement > is the form its recorder writes: the file it writes and the record byte for byte, CONFIRM and CONFIRM WITH EXCEPTIONS  1364ms
+   ✓ the sitting's acts as gate sources, once recorded > establish every source when every act is recorded, none hiding another  1412ms
+   ✓ the sitting's acts as gate sources, once recorded > establish nothing before the acts' instant  1414ms
+   ✓ the sitting's acts fail closed > refuse an in-force record whose table binds other files than the form names, even when an act binds its bytes  4833ms
+   ✓ the sitting's acts fail closed > refuse an act another decisions file names: a withdrawal in a form the reader does not define  1065ms
+   ✓ the sitting's acts fail closed > refuse the registry sign-off another decisions file names by its tag  1160ms
+   ✓ the sitting's acts fail closed > refuse the registry sign-off another decisions file names by its tag, in another case  1121ms
+   ✓ the sitting's acts fail closed > refuse the registry sign-off another decisions file names by the package as signed off, spelled sign-off  970ms
+   ✓ the sitting's acts fail closed > refuse the registry sign-off another decisions file names by the package as signed off, spelled signoff  1438ms
+   ✓ the sitting's acts fail closed > read the resolved P-104 register row as any other line, and refuse a row that cites the sign-off's tag  834ms
+   ✓ the sitting's acts fail closed > refuse the registry sign-off whose record has no Owner selection line  2038ms
+   ✓ the sitting's acts fail closed > refuse the registry sign-off whose record has no Review line  1106ms
+   ✓ the sitting's acts fail closed > refuse the registry sign-off whose record has no Reviewed commit line  1242ms
+   ✓ the sitting's acts fail closed > refuse the registry sign-off whose record has no Disposition line  939ms
+   ✓ the sitting's acts fail closed > refuse the registry sign-off whose record has no Scope A extension line  1063ms
+   ✓ the sitting's acts fail closed > refuse the registry sign-off whose record has no "What this does not do" section  1104ms
+   ✓ the sitting's acts fail closed > refuse the registry sign-off whose record has its supersession line removed  1512ms
+   ✓ the sitting's acts fail closed > refuse the registry sign-off whose record has another second provenance line  1291ms
+   ✓ the sitting's acts fail closed > refuse the registry sign-off whose record has "Withdrawn by this record." appended  1251ms
+   ✓ the sitting's acts fail closed > refuse the registry sign-off whose record has a selection that does not name the Scope A extension  919ms
+   ✓ the sitting's acts fail closed > refuse the registry sign-off whose record has a digest in the selection  1344ms
+   ✓ the sitting's acts fail closed > refuse the registry sign-off whose record has CONFIRM WITH EXCEPTIONS and no disposition record  1749ms
+   ✓ the sitting's acts fail closed > refuse the registry sign-off whose record has CONFIRM and a disposition record  1246ms
+   ✓ the sitting's acts fail closed > count a CONFIRM WITH EXCEPTIONS sign-off that names its disposition record  986ms
+   ✓ the sitting's acts fail closed > withdraw what a decisions file names by the statement's governance-relative path  1433ms
+   ✓ the sitting's acts fail closed > withdraw what a decisions file names by the statement's basename  1293ms
+   ✓ the sitting's acts fail closed > withdraw what a decisions file names by the statement act's phrase label  1287ms
+   ✓ the sitting's acts fail closed > withdraw what a decisions file names by the statement act's title  1149ms
+   ✓ the sitting's acts fail closed > withdraw what a decisions file names by the Subject spaced after its colons  1086ms
+   ✓ the sitting's acts fail closed > withdraw what a decisions file names by the Subject with each part quoted  1395ms
+   ✓ the sitting's acts fail closed > withdraw what a decisions file names by the D9 record's relative path  955ms
+   ✓ the sitting's acts fail closed > withdraw what a decisions file names by the D9 act's phrase label  2327ms
+   ✓ the sitting's acts fail closed > withdraw what a decisions file names by the reading record's basename  1723ms
+   ✓ the sitting's acts fail closed > withdraw what a decisions file names by the drawer record's basename  2112ms
+   ✓ the sitting's acts fail closed > withdraw what a decisions file names by the drawer's Subject on a field line  1387ms
+   ✓ the sitting's acts fail closed > withdraw what a decisions file names by the installed entry's basename  1378ms
+   ✓ the sitting's acts fail closed > withdraw what a decisions file names by the package as signed off at a version  1444ms
+   ✓ the sitting's acts fail closed > withdraw what a decisions file names by the sign-off record's title  1220ms
+   ✓ the sitting's acts fail closed > withdraw what a decisions file names by the D9 record's heading  1956ms
+   ✓ the sitting's acts fail closed > withdraw what a decisions file names by the reading record's heading  1785ms
+   ✓ the sitting's acts fail closed > withdraw what a decisions file names by the drawer record's heading  1361ms
+   ✓ the sitting's acts fail closed > withdraw what a decisions file names by the statement's heading  1483ms
+   ✓ the sitting's acts fail closed > withdraw D9 by a decisions file named for its act record, with a body that names nothing  1372ms
+   ✓ the sitting's acts fail closed > refuse an act record, and the registry sign-off, with no owner  1492ms
+   ✓ the sitting's acts fail closed > refuse an act record, and the registry sign-off, with another owner  1341ms
+   ✓ the sitting's acts fail closed > refuse an act record, and the registry sign-off, with no provenance state  1285ms
+   ✓ the sitting's acts fail closed > refuse an act record, and the registry sign-off, with another provenance state  1200ms
+   ✓ the sitting's acts fail closed > refuse an act record, and the registry sign-off, with no A1 line  1391ms
+   ✓ the sitting's acts fail closed > refuse an act record, and the registry sign-off, with an A1 identity  2450ms
+   ✓ the sitting's acts fail closed > refuse an act record, and the registry sign-off, with no scope  1488ms
+   ✓ the sitting's acts fail closed > refuse an act record, and the registry sign-off, with a wider scope  1029ms
+   ✓ the sitting's acts fail closed > refuse an act record, and the registry sign-off, with a second scope  1215ms
+   ✓ the sitting's acts fail closed > refuse D9 when its record carries a second table inside a fence  1217ms
+   ✓ the sitting's acts fail closed > refuse D9 when its record carries another separator row  1675ms
+   ✓ the sitting's acts fail closed > refuse D9 when its record carries a third row  916ms
+   ✓ the sitting's acts fail closed > leave the drawer unstated for a record with another subject, even under an act  759ms
+   ✓ the sitting's acts fail closed > leave the drawer unstated for a record with another statement, even under an act  1135ms
+   ✓ the sitting's acts fail closed > leave the drawer unstated for a record with no record id, even under an act  764ms
+   ✓ the sitting's acts fail closed > leave the drawer unstated for a record with no record version, even under an act  723ms
+   ✓ the sitting's acts fail closed > leave the drawer unstated for a record with a second Record ID line, even under an act  1048ms
+   ✓ the sitting's acts fail closed > leave the drawer unstated for a record with a second Subject line, even under an act  1043ms
+   ✓ the sitting's acts fail closed > carry no act for a statement whose record names another provider, even under an act  1073ms
+   ✓ the sitting's acts fail closed > carry no act for a statement whose record names another repository, even under an act  1495ms
+   ✓ the sitting's acts fail closed > carry no act for a statement whose record names another record id, even under an act  983ms
+   ✓ the sitting's acts fail closed > carry no act for a statement whose record names another agent tool, even under an act  1050ms
+   ✓ the sitting's acts fail closed > carry no act for a statement whose record names a second agent tool line, even under an act  1273ms
+   ✓ the sitting's acts fail closed > carry no act for a statement whose record names no record version, even under an act  770ms
+   ✓ the sitting's acts fail closed > carry no act for a statement whose record names a second Record ID line, even under an act  1053ms
+   ✓ the sitting's acts fail closed > carry no act for a statement whose record names a second Subject line, even under an act  1224ms
+   ✓ the registry entry's version-tagged sign-off > refuses once the installed entry changes  1020ms
+   ✓ the registry entry's version-tagged sign-off > refuses a record with another title  1545ms
+   ✓ the registry entry's version-tagged sign-off > refuses a record with another version  1329ms
+   ✓ the registry entry's version-tagged sign-off > refuses a record with another tag  1050ms
+   ✓ the registry entry's version-tagged sign-off > refuses a record with another package  779ms
+   ✓ the registry entry's version-tagged sign-off > refuses a record with another kind  833ms
+   ✓ the registry entry's version-tagged sign-off > refuses a record with another installed path  1351ms
+   ✓ the registry entry's version-tagged sign-off > refuses a record with another act type  1104ms
+   ✓ the registry entry's version-tagged sign-off > refuses a record with a REVISE verdict  1504ms
+   ✓ the registry entry's version-tagged sign-off > refuses a record with no recording instant  1583ms
+   ✓ the registry entry's version-tagged sign-off > refuses a record with an instant on another day  1733ms
+   ✓ the registry entry's version-tagged sign-off > refuses a record with its SHA-256 only inside a fence  1335ms
+   ✓ the gate forms against the recorders > read each record at the path its recorder writes it  1136ms
+   ✓ the gate forms against the recorders > render the sign-off record byte for byte as render_record does, from the same fields: CONFIRM  3035ms
+   ✓ the gate forms against the recorders > render the sign-off record byte for byte as render_record does, from the same fields: CONFIRM WITH EXCEPTIONS  3052ms
+   ✓ altered prose in a byte-exact act record (characterization, syzygy-bpyt.8.10) > the registry sign-off: refused once its What-this-records paragraph or its limits change, a withdrawal is appended or its selection drops the Scope A words; other words that keep them count  1852ms
+
+ Test Files  5 passed (5)
+      Tests  315 passed (315)
+   Start at  14:21:21
+   Duration  167.44s (transform 6.15s, setup 760ms, collect 19.02s, tests 264.16s, environment 1ms, prepare 1.55s)
+

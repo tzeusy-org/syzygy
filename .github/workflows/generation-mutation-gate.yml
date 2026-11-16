@@ -4,8 +4,8 @@
 # This workflow is read-only: it installs, builds, and runs the
 # `poc:generation-mutation-run` mutation gate over
 # `packages/polaris-generation-core/src/{canonical-json,parse-json,pipeline,
-# provider-draft}.ts`, which mutates those sources in a scratch working
-# copy, runs the independent tests, and restores the originals in a
+# provider-draft,draft-model}.ts`, which mutates those sources in a scratch
+# working copy, runs the independent tests, and restores the originals in a
 # `finally` (digest-verified). It uploads the evidence JSON as a run
 # artifact for inspection; it never commits, pushes, or writes back to the
 # repository. A survived mutant or a restore failure fails the job.

@@ -1,0 +1,566 @@
+{
+ "tree": "clone",
+ "head": "c90cd7327a24fee44d0e7135872a3b08277c73b0",
+ "results": [
+  {
+   "id": "RV531-R1-dot-slash-dropped",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  157 passed (157)"
+   ],
+   "testFiles": [
+    "Test Files  4 passed (4)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 10.3,
+   "counts": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    }
+   ]
+  },
+  {
+   "id": "RV531-R2-bare-dot-dropped",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  157 passed (157)"
+   ],
+   "testFiles": [
+    "Test Files  4 passed (4)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 11.9,
+   "counts": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?\\/|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    }
+   ]
+  },
+  {
+   "id": "RV531-R3-tar-forms-dropped",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  157 passed (157)"
+   ],
+   "testFiles": [
+    "Test Files  4 passed (4)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 14.5,
+   "counts": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.tgz$/iu;"
+    }
+   ]
+  },
+  {
+   "id": "RV531-R4-tilde-loosened",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  157 passed (157)"
+   ],
+   "testFiles": [
+    "Test Files  4 passed (4)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 15.4,
+   "counts": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~)|\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    }
+   ]
+  },
+  {
+   "id": "RV531-R5-tarball-end-anchor-dropped",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  157 passed (157)"
+   ],
+   "testFiles": [
+    "Test Files  4 passed (4)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 13.0,
+   "counts": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)/iu;"
+    }
+   ]
+  },
+  {
+   "id": "RV531-R6-root-dependencies-dropped",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  157 passed (157)"
+   ],
+   "testFiles": [
+    "Test Files  4 passed (4)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 13.7,
+   "counts": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "manifests.set(root.name, { dir: '.', ...root });",
+     "new": "manifests.set(root.name, { dir: '.', name: root.name });"
+    }
+   ]
+  },
+  {
+   "id": "RV531-R7-own-package-only",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 156 passed (157)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed | 3 passed (4)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a file: dependency of another package as naming no module"
+   ],
+   "timeouts": 0,
+   "seconds": 9.7,
+   "counts": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "  if (named === null) return localNames(workspace).has(",
+     "new": "  if (named === null) return localNames({ ...workspace, manifests: new Map([...workspace.manifests].filter(([, manifest]) => from.startsWith(`${manifest.dir}/`))) }).has("
+    }
+   ]
+  },
+  {
+   "id": "RV531-R8-git-reads-local",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 156 passed (157)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed | 3 passed (4)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > leaves a bare name declared as a git dependency outside the workspace"
+   ],
+   "timeouts": 0,
+   "seconds": 11.2,
+   "counts": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|git|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    }
+   ]
+  },
+  {
+   "id": "RV531-C1-extension-end-anchor-dropped",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  157 passed (157)"
+   ],
+   "testFiles": [
+    "Test Files  4 passed (4)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 8.1,
+   "counts": [
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": "files.filter((module) => /\\.[cm]?tsx?$/u.test(module)",
+     "new": "files.filter((module) => /\\.[cm]?tsx?/u.test(module)"
+    }
+   ]
+  },
+  {
+   "id": "RV531-C2-cts-dropped",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 156 passed (157)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed | 3 passed (4)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > reads every module TypeScript compiles under src, .mts, .cts and .tsx among them, and no test module"
+   ],
+   "timeouts": 0,
+   "seconds": 10.9,
+   "counts": [
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": "files.filter((module) => /\\.[cm]?tsx?$/u.test(module)",
+     "new": "files.filter((module) => /\\.m?tsx?$/u.test(module)"
+    }
+   ]
+  },
+  {
+   "id": "RV531-C3-tsx-tests-kept",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 156 passed (157)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed | 3 passed (4)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > reads every module TypeScript compiles under src, .mts, .cts and .tsx among them, and no test module"
+   ],
+   "timeouts": 0,
+   "seconds": 12.3,
+   "counts": [
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": "!/\\.test\\.[cm]?tsx?$/u.test(module)",
+     "new": "!/\\.test\\.[cm]?ts$/u.test(module)"
+    }
+   ]
+  },
+  {
+   "id": "RV531-C4-test-dot-dropped",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  157 passed (157)"
+   ],
+   "testFiles": [
+    "Test Files  4 passed (4)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 14.3,
+   "counts": [
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": "!/\\.test\\.[cm]?tsx?$/u.test(module)",
+     "new": "!/test\\.[cm]?tsx?$/u.test(module)"
+    }
+   ]
+  },
+  {
+   "id": "RV531-S1-parse-rereads-tree",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  2 failed | 155 passed (157)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed | 3 passed (4)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > adds each module's census to what it reports unlifted",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > reads every module TypeScript compiles under src, .mts, .cts and .tsx among them, and no test module"
+   ],
+   "timeouts": 0,
+   "seconds": 13.9,
+   "counts": [
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": "    const source = ts.createSourceFile(module, text, ts.ScriptTarget.Latest, true);\n    const visit",
+     "new": "    const source = ts.createSourceFile(module, readTree(module), ts.ScriptTarget.Latest, true);\n    const visit"
+    }
+   ]
+  },
+  {
+   "id": "RV531-S2-tree-not-recursive",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  157 passed (157)"
+   ],
+   "testFiles": [
+    "Test Files  4 passed (4)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 14.9,
+   "counts": [
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": "fs.readdirSync(path.join(ROOT, dir), { recursive: true, encoding: 'utf8' })",
+     "new": "fs.readdirSync(path.join(ROOT, dir), { encoding: 'utf8' })"
+    }
+   ]
+  },
+  {
+   "id": "RV531-T1-root-dot-slash-alias",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  2 failed | 155 passed (157)"
+   ],
+   "testFiles": [
+    "Test Files  2 failed | 2 passed (4)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > resolves every workspace specifier on it, and reaches past the entry's own imports",
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > resolves every workspace import the CLI reaches, dynamic ones included"
+   ],
+   "timeouts": 0,
+   "seconds": 15.8,
+   "counts": [
+    {
+     "file": "package.json",
+     "oldCount": 1
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "package.json",
+     "old": "  \"devDependencies\": {\n",
+     "new": "  \"devDependencies\": {\n    \"dossier\": \"./packages/polaris-dossier\",\n"
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nimport 'dossier';\n"
+    }
+   ]
+  },
+  {
+   "id": "RV531-T2-remote-tarball-faithful",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  2 failed | 155 passed (157)"
+   ],
+   "testFiles": [
+    "Test Files  2 failed | 2 passed (4)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > resolves every workspace specifier on it, and reaches past the entry's own imports",
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > resolves every workspace import the CLI reaches, dynamic ones included"
+   ],
+   "timeouts": 0,
+   "seconds": 21.9,
+   "counts": [
+    {
+     "file": "apps/syzygy/package.json",
+     "oldCount": 1
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "apps/syzygy/package.json",
+     "old": "  \"dependencies\": {\n",
+     "new": "  \"dependencies\": {\n    \"remote-lib\": \"https://example.com/remote-lib-1.0.0.tgz\",\n"
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nimport 'remote-lib';\n"
+    }
+   ]
+  },
+  {
+   "id": "RV531-T3-root-bare-path-alias",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  157 passed (157)"
+   ],
+   "testFiles": [
+    "Test Files  4 passed (4)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 19.4,
+   "counts": [
+    {
+     "file": "package.json",
+     "oldCount": 1
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "package.json",
+     "old": "  \"devDependencies\": {\n",
+     "new": "  \"devDependencies\": {\n    \"dossier\": \"packages/polaris-dossier/\",\n"
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nimport 'dossier';\n"
+    }
+   ]
+  },
+  {
+   "id": "RV531-T4-npm-alias-registry-faithful",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  2 failed | 155 passed (157)"
+   ],
+   "testFiles": [
+    "Test Files  2 failed | 2 passed (4)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > resolves every workspace specifier on it, and reaches past the entry's own imports",
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > resolves every workspace import the CLI reaches, dynamic ones included"
+   ],
+   "timeouts": 0,
+   "seconds": 20.1,
+   "counts": [
+    {
+     "file": "package.json",
+     "oldCount": 1
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "package.json",
+     "old": "  \"devDependencies\": {\n",
+     "new": "  \"devDependencies\": {\n    \"ts5\": \"npm:typescript@^5.5.0\",\n"
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nimport 'ts5';\n"
+    }
+   ]
+  }
+ ]
+}

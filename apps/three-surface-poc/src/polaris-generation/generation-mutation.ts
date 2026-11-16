@@ -20,7 +20,8 @@ export interface LiteralMutation {
   readonly description: string;
   readonly from: string;
   readonly to: string;
-  // Test full names (substrings) that MUST be among the failures.
+  // Substrings of test titles (as the plan test reads them; the runner
+  // matches them against full names) that MUST be among the failures.
   readonly mustFail: readonly string[];
 }
 
@@ -28,6 +29,7 @@ const CANONICAL_JSON_SOURCE = 'packages/polaris-generation-core/src/canonical-js
 const PARSE_JSON_SOURCE = 'packages/polaris-generation-core/src/parse-json.ts';
 const PIPELINE_SOURCE = 'packages/polaris-generation-core/src/pipeline.ts';
 const PROVIDER_DRAFT_SOURCE = 'packages/polaris-generation-core/src/provider-draft.ts';
+const DRAFT_MODEL_SOURCE = 'packages/polaris-generation-core/src/draft-model.ts';
 
 export function applyLiteralMutation(source: string, mutation: LiteralMutation): string {
   const occurrences = source.split(mutation.from).length - 1;
@@ -37,8 +39,8 @@ export function applyLiteralMutation(source: string, mutation: LiteralMutation):
   return source.replace(mutation.from, mutation.to);
 }
 
-// Hand-listed semantic mutations, three per subject file, each disabling one
-// fail-closed guard the existing test suites already exercise.
+// Hand-listed semantic mutations, grouped by the file they target, each
+// disabling one fail-closed guard the existing test suites already exercise.
 export const GENERATION_LITERAL_MUTATIONS: readonly LiteralMutation[] = [
   // canonical-json.ts
   {
@@ -111,8 +113,8 @@ export const GENERATION_LITERAL_MUTATIONS: readonly LiteralMutation[] = [
     id: 'pipeline-repair-cycle-cap-disabled',
     file: PIPELINE_SOURCE,
     description: 'the repair-cycle cap is never enforced, so a persistently blocking review repairs forever instead of stopping',
-    from: "if (repairs >= budget.maxRepairCycles) stop('repair-exhausted');",
-    to: "if (false) stop('repair-exhausted');",
+    from: "if (repairs >= budget.maxRepairCycles) {\n        if (verdict.reviewerBlocking) stop('repair-exhausted');",
+    to: "if (false) {\n        if (verdict.reviewerBlocking) stop('repair-exhausted');",
     mustFail: ['stops when calls or repairs are exhausted and when usage is unknown'],
   },
   {
@@ -124,11 +126,13 @@ export const GENERATION_LITERAL_MUTATIONS: readonly LiteralMutation[] = [
     to: "if (false) void pending.then(r => ports.lateReceipt(permit, { model: r.model, usageUnits: r.usageUnits }), () => undefined).catch(() => undefined);",
     mustFail: ['retains late usage capture even when recording the interruption fails'],
   },
-  // provider-draft.ts
+  // provider-draft.ts. Its `unique()` handle check moved verbatim to
+  // draft-model.ts in 69995614 and provider-draft.ts still calls it, so the
+  // first mutant keeps its id and must-fail tests and targets the new home.
   {
     kind: 'literal',
     id: 'provider-draft-duplicate-handle-check-disabled',
-    file: PROVIDER_DRAFT_SOURCE,
+    file: DRAFT_MODEL_SOURCE,
     description: 'a duplicate local handle (inventory entry id, draft block id, …) is accepted instead of rejected',
     from: "if (set.size !== values.length) throw new Error('duplicate-handle');",
     to: "if (false) throw new Error('duplicate-handle');",

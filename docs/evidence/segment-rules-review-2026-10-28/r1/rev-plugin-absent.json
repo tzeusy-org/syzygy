@@ -1,0 +1,94 @@
+{
+ "commit": "9fd03a8ea3e8f2ff5ad5519f06a7a8843073567d",
+ "dist": "absent",
+ "distDirs": [],
+ "importedTools": {
+  "docs/evidence/syzygy-bpyt-6-14/tools/mutants.py": "133094bce703dad13917d73b4bb1dd29cc8eb43212d2ec9e307656f530f3fe4e",
+  "docs/evidence/syzygy-bpyt-46/tools/mutants.py": "b4728e27e55afbf21caeb275e0f28f0d6b77bb9d368c0d33a347cc80cad02b34"
+ },
+ "node": "v24.6.0",
+ "summary": {
+  "rows": 2,
+  "asExpected": 2,
+  "unexpected": []
+ },
+ "statusAfter": "",
+ "rows": [
+  {
+   "id": "RP3-imported-plugin-hook-right-target",
+   "test": [
+    "apps/three-surface-poc/src/sync-child-process-guard.test.ts",
+    "packages/polaris-generation-core/src/workspace-reach.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "vitest-alias-plugin.ts",
+     "old": null,
+     "new": "import { fileURLToPath } from 'node:url';\n\nconst alias = { '@syzygy/support': fileURLToPath(new URL('./packages/support/src/index.ts', import.meta.url)) };\n\nexport default { name: 'alias-by-hook', config: () => ({ resolve: { alias } }) };\n"
+    },
+    {
+     "path": "vitest.config.ts",
+     "old": "import { defineConfig } from 'vitest/config';\n",
+     "new": "import { defineConfig } from 'vitest/config';\nimport aliasPlugin from './vitest-alias-plugin.ts';\n"
+    },
+    {
+     "path": "vitest.config.ts",
+     "old": "export default defineConfig({\n",
+     "new": "export default defineConfig({\n  plugins: [aliasPlugin],\n"
+    }
+   ],
+   "expected": [],
+   "failing": [],
+   "asExpected": true,
+   "exit": 0,
+   "passed": 86,
+   "failed": 0,
+   "total": 86,
+   "failedFiles": [],
+   "fileMessages": [],
+   "error": null,
+   "stdout": null
+  },
+  {
+   "id": "RP3W-imported-plugin-hook-wrong-target",
+   "test": [
+    "apps/three-surface-poc/src/sync-child-process-guard.test.ts",
+    "packages/polaris-generation-core/src/workspace-reach.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "vitest-alias-plugin.ts",
+     "old": null,
+     "new": "import { fileURLToPath } from 'node:url';\n\nconst alias = { '@syzygy/support': '/nonexistent/support/index.ts' };\n\nexport default { name: 'alias-by-hook', config: () => ({ resolve: { alias } }) };\n"
+    },
+    {
+     "path": "vitest.config.ts",
+     "old": "import { defineConfig } from 'vitest/config';\n",
+     "new": "import { defineConfig } from 'vitest/config';\nimport aliasPlugin from './vitest-alias-plugin.ts';\n"
+    },
+    {
+     "path": "vitest.config.ts",
+     "old": "export default defineConfig({\n",
+     "new": "export default defineConfig({\n  plugins: [aliasPlugin],\n"
+    }
+   ],
+   "expected": [
+    "the tree's own exports load, under the suite, each entry from its source module"
+   ],
+   "failing": [
+    "the tree's own exports load, under the suite, each entry from its source module"
+   ],
+   "asExpected": true,
+   "exit": 1,
+   "passed": 85,
+   "failed": 1,
+   "total": 86,
+   "failedFiles": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts"
+   ],
+   "fileMessages": [],
+   "error": null,
+   "stdout": null
+  }
+ ]
+}

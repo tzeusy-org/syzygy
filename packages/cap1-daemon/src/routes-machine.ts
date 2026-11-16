@@ -1,8 +1,12 @@
 import {
+  consentDecisionTuple,
   evaluationId,
+  type ConsentDecisionTuple,
+  type CoverageBoundary,
   extractConsentDistinction,
   extractDistinctions,
   extractProposalDistinctions,
+  coverageBoundary,
   coverageIdentityFields,
   registrationIdentityFields,
   renderState,
@@ -17,9 +21,9 @@ import {
   type RepositoryCoverage,
   type StateRendering,
 } from '@syzygy/cap1-core';
+import type { Route } from '@syzygy/http-host';
 
 import type { ProjectEvaluation } from './pipeline.js';
-import type { Route } from './server.js';
 
 // RT4 — the authenticated JSON machine endpoint (CAP1-REQ-040..046,
 // 060, 062..064 at the transport). This module is TRANSPORT ONLY: every
@@ -115,10 +119,24 @@ export interface RepositoryConsentDistinction {
 // Freshness and staleness (CAP1-REQ-062) travel verbatim inside each
 // fact's epistemic state on `state.current.facts`; nothing here can
 // flip an answer by wall clock, because nothing here reads one.
+// CAP1-REQ-046 v1.0: one consent decision tuple per declared repository,
+// declaration order — the same `consentDecisionTuple` projection the human
+// fact set renders, plus the evaluation it belongs to.
+export interface MachineConsentDecision extends ConsentDecisionTuple {
+  readonly evaluationId: EvaluationId;
+}
+
 export interface MachineProjectEvaluatedBody {
   readonly kind: 'project-evaluated';
   readonly state: StateRendering<MachineAnswer>;
   readonly evaluationId: EvaluationId;
+  readonly consentDecisions: readonly MachineConsentDecision[];
+  // CAP1-REQ-010…016: the coverage boundary core computed — one row per
+  // declared repository, in declaration order, each citing the exact
+  // consent record (or typed refusal) the closed decision verified. The
+  // human page renders the same rows; only the independent wire oracle
+  // in the tests judges that they agree (CAP1-REQ-041).
+  readonly coverageBoundary: CoverageBoundary;
   readonly identities: {
     readonly registration: readonly IdentityField[];
     readonly coverage: readonly IdentityField[];
@@ -153,6 +171,11 @@ export type MachineProjectBody =
         ProjectEvaluation,
         { kind: 'no-declaration-observed' }
       >['declarationObservation'];
+    }
+  | {
+      // The capture failed; nothing was evaluated and nothing is retried.
+      readonly kind: 'capture-failed';
+      readonly failure: Extract<ProjectEvaluation, { kind: 'capture-failed' }>['failure'];
     };
 
 // The evaluation carries no proposal plane today: the pipeline's
@@ -174,10 +197,16 @@ export function machineProjectBody(evaluation: ProjectEvaluation): MachineProjec
     case 'project-evaluated': {
       const answer = serveMachine(evaluation.model);
       const state = renderState(answer, OPEN_PROPOSALS);
+      const id = evaluationId(answer.evaluation);
       return {
         kind: 'project-evaluated',
         state,
-        evaluationId: evaluationId(answer.evaluation),
+        evaluationId: id,
+        consentDecisions: evaluation.consentDecisions.map((decision) => ({
+          ...consentDecisionTuple(decision),
+          evaluationId: id,
+        })),
+        coverageBoundary: coverageBoundary(evaluation.coverage),
         identities: {
           registration: registrationIdentityFields(evaluation.registration),
           coverage: coverageIdentityFields(evaluation.coverage),
@@ -208,6 +237,8 @@ export function machineProjectBody(evaluation: ProjectEvaluation): MachineProjec
         kind: 'no-declaration-observed',
         declarationObservation: evaluation.declarationObservation,
       };
+    case 'capture-failed':
+      return { kind: 'capture-failed', failure: evaluation.failure };
   }
 }
 

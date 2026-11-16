@@ -1,0 +1,33 @@
+{
+ "numTotalTests": 5306,
+ "numPassedTests": 5299,
+ "numFailedTests": 2,
+ "numPendingTests": 5,
+ "numTodoTests": 0,
+ "numTotalTestSuites": 856,
+ "numFailedTestSuites": 3,
+ "success": false,
+ "files": 240,
+ "failed": [
+  {
+   "file": "packages/polaris-dossier/src/start-gates.test.ts",
+   "title": "init: a run that passes every start gate pins the consented HEAD, records the subject and writes only run.json under the state root",
+   "failure": "Error: STACK_TRACE_ERROR",
+   "inSubject": false
+  },
+  {
+   "file": "packages/polaris-dossier/src/start-gates.test.ts",
+   "title": "init: the clone holds the consented commit alone (syzygy-qkea.24) refuses config naming a remote, a promisor, an include or a command the agent's git would run ",
+   "failure": "Error: STACK_TRACE_ERROR",
+   "inSubject": false
+  }
+ ],
+ "skippedByFile": {
+  "packages/polaris-dossier/src/no-egress.test.ts": 1,
+  "packages/three-surface-poc-core/src/test-artifact-verification.live.test.ts": 1,
+  "packages/three-surface-poc-core/src/work-items.live.test.ts": 1,
+  "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts": 1,
+  "apps/three-surface-poc/src/project-shape-discovery.live.test.ts": 1
+ },
+ "failedInSubject": 0
+}

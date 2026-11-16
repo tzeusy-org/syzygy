@@ -1,0 +1,66 @@
+{
+ "tree": "head",
+ "commit": "9ebfa92d301de633b7c40a3f2276219330016d33",
+ "results": [
+  {
+   "id": "V14-gate-cap1-daemon-prefix-narrowed-to-src",
+   "commit": "9ebfa92d301de633b7c40a3f2276219330016d33",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "old": "    'packages/cap1-daemon/',\n",
+     "new": "    'packages/cap1-daemon/src/',\n"
+    }
+   ],
+   "counts": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "apps/three-surface-poc/src/git-observation.test.ts",
+    "apps/three-surface-poc/src/main.test.ts"
+   ],
+   "exit": 0,
+   "failedTests": 0,
+   "failedFiles": 0,
+   "totalTests": 35,
+   "outcome": "survived",
+   "seconds": 22.8,
+   "cleanAfter": true,
+   "failed": [],
+   "reportError": null
+  },
+  {
+   "id": "V15-gate-three-surface-core-prefix-narrowed-to-src",
+   "commit": "9ebfa92d301de633b7c40a3f2276219330016d33",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "old": "    'packages/three-surface-poc-core/',\n",
+     "new": "    'packages/three-surface-poc-core/src/',\n"
+    }
+   ],
+   "counts": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "apps/three-surface-poc/src/git-observation.test.ts",
+    "apps/three-surface-poc/src/main.test.ts"
+   ],
+   "exit": 0,
+   "failedTests": 0,
+   "failedFiles": 0,
+   "totalTests": 35,
+   "outcome": "survived",
+   "seconds": 14.4,
+   "cleanAfter": true,
+   "failed": [],
+   "reportError": null
+  }
+ ]
+}

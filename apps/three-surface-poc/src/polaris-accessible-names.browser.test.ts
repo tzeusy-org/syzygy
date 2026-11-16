@@ -8,16 +8,15 @@
 // the machine answer (`GET /api/poc`), never from the rendered links.
 // Expected values are hand-typed literals. Without a browser the browser
 // suites are skipped, never passed.
-import { createHash } from 'node:crypto';
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
-import { createDaemon, type RunningDaemon } from '@syzygy/cap1-daemon';
+import { createDaemon, type RunningDaemon } from '@syzygy/http-host';
 import { PWB_RESOURCE_LIMITS, type PocModel } from '@syzygy/three-surface-poc-core';
+import { tempDir } from '@syzygy/test-kit';
 
 import { findBrowserExecutable, launchBrowser, type Browser } from './cdp-browser.js';
 import {
@@ -162,19 +161,6 @@ describe('PWB-REQ-016 whole-surface page list (pure)', () => {
 
 const executable = findBrowserExecutable();
 
-function sha1Blob(bytes: Uint8Array): string {
-  return createHash('sha1').update(`blob ${bytes.byteLength}\0`).update(bytes).digest('hex');
-}
-
-function blobReaderFor(texts: Readonly<Record<string, string>>): (objectId: string) => Uint8Array | undefined {
-  const encoder = new TextEncoder();
-  const byOid = new Map(Object.values(texts).map((text) => {
-    const body = encoder.encode(text);
-    return [sha1Blob(body), body] as const;
-  }));
-  return (objectId) => byOid.get(objectId);
-}
-
 describe.skipIf(executable === undefined)('PWB-REQ-016 names and headings in a real browser', () => {
   let browser: Browser;
   let pages: string;
@@ -183,23 +169,21 @@ describe.skipIf(executable === undefined)('PWB-REQ-016 names and headings in a r
 
   beforeAll(async () => {
     browser = await launchBrowser(executable as string);
-    pages = mkdtempSync(join(tmpdir(), 'syzygy-poc-names-'));
-  }, 60_000);
+    pages = tempDir('syzygy-poc-names-');
+  });
 
   afterAll(async () => {
     await browser?.close();
     for (const daemon of daemons.splice(0)) await daemon.close().catch(() => undefined);
-    if (pages !== undefined) rmSync(pages, { recursive: true, force: true });
     for (const directory of cleanups.splice(0)) rmSync(directory, { recursive: true, force: true });
   });
 
   /** Serves `model` through the real routes on a private fixture daemon. */
   async function serve(model: PocModel, texts: Readonly<Record<string, string>>): Promise<{ readonly baseUrl: string; readonly token: string }> {
-    const stateDir = mkdtempSync(join(tmpdir(), 'syzygy-poc-names-daemon-'));
-    cleanups.push(stateDir);
+    const stateDir = tempDir('syzygy-poc-names-daemon-');
     const start = await createDaemon({
       stateDir: join(stateDir, 'state'),
-      routes: pocRoutes(() => model, PWB_RESOURCE_LIMITS, (m) => ({ verbatim: verbatimRouteReader(m, blobReaderFor(texts)) })),
+      routes: pocRoutes(() => model, PWB_RESOURCE_LIMITS, (m) => ({ verbatim: verbatimRouteReader(m, projectShapeFixtureGit(texts)) })),
       port: 0,
     });
     if (!start.started) throw new Error(`daemon failed to start: ${start.failure.kind}`);
@@ -312,7 +296,7 @@ describe.skipIf(executable === undefined)('PWB-REQ-016 names and headings in a r
     // one of them carries its source path (the rule is exercised, not vacuous).
     expect((report.pages[0] as PageNameHeadingReport).sharedLabelGroups).toBeGreaterThan(0);
     expect(report.violations).toEqual([]);
-  }, 240_000);
+  }, 240_000); // a fixture model build and a browser sweep of every served page: worst 5.6 s over 5 alone runs at load1 35-42 (docs/evidence/syzygy-bpyt-4-31/durations/polaris-accessible-names.browser.test.tests.json)
 
   it('fails a listed page the daemon does not serve, never skipping it', async () => {
     const model = buildFixtureModel(cleanups, { projectShape: { authority: ADMITTING_AUTHORITY, runGit: projectShapeFixtureGit(PROJECT_SHAPE_FIXTURE_TEXTS_WITH_BASELINE_SPEC) } });
@@ -326,7 +310,7 @@ describe.skipIf(executable === undefined)('PWB-REQ-016 names and headings in a r
       expect({ listed: report.pagesListed, swept: report.pagesSwept }).toEqual({ listed: 17, swept: 16 });
       expect(report.violations.map((violation) => violation.kind)).toEqual(['page-not-served', 'page-not-swept']);
     } finally { await tab.close(); }
-  }, 240_000);
+  }, 240_000); // a fixture model build, a daemon and a browser sweep: worst 4.1 s over 5 alone runs at load1 35-42 (docs/evidence/syzygy-bpyt-4-31/durations/polaris-accessible-names.browser.test.tests.json)
 
   // Every shape and judgment state the task-4.4 variants render, each served
   // whole: a degraded or refused shape lists fewer sources, never none silently.
@@ -340,6 +324,6 @@ describe.skipIf(executable === undefined)('PWB-REQ-016 names and headings in a r
       expect({ listed: report.pagesListed, swept: report.pagesSwept }).toEqual({ listed: EXPECTED_PAGES[variant.id], swept: EXPECTED_PAGES[variant.id] });
       for (const swept of report.pages) expect(swept.levelOneHeadings, swept.page).toBe(1);
       expect(report.violations).toEqual([]);
-    }, 240_000);
+    }, 240_000); // a browser sweep of every served page: worst 5.0 s over 30 alone runs (6 variants) at load1 35-42 (docs/evidence/syzygy-bpyt-4-31/durations/polaris-accessible-names.browser.test.tests.json)
   }
 });

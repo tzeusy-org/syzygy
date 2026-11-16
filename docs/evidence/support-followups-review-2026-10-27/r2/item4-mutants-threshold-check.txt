@@ -1,0 +1,2 @@
+b214ef10 item4-mutants.py sweep() on the unmutated tree: {'createHashSha256Sites': 6, 'localSha256Definitions': 1, 'killed': False}
+c7ed9ef2 item4-mutants.py sweep() on the unmutated tree: {'createHashSha256Sites': 7, 'localSha256Definitions': 1, 'killed': True}

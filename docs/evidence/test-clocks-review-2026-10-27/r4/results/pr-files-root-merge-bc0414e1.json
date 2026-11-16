@@ -1,0 +1,32 @@
+{
+ "tool": "suite_r4.py",
+ "commit": "bc0414e118716c5b8ee79f558a86fc75348da41d",
+ "command": [
+  "npx",
+  "vitest",
+  "run",
+  "apps/three-surface-poc/src/capture-test-artifact-main.test.ts",
+  "apps/three-surface-poc/src/main.test.ts",
+  "apps/three-surface-poc/src/polaris-generation/redis-shaped-discovery.test.ts",
+  "apps/three-surface-poc/src/polaris-generation/self-corpus.test.ts",
+  "packages/polaris-dossier/src/git-object-reader.test.ts",
+  "packages/polaris-generation-core/src/dossier-evaluation.test.ts",
+  "packages/polaris-generation-core/src/dossier-profile.test.ts",
+  "packages/polaris-generation-core/src/excerpt.test.ts",
+  "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+  "--reporter=json"
+ ],
+ "loadavgStart": "30.18 30.42 30.33 20/9818 4097825",
+ "loadavgEnd": "30.18 30.37 30.31 30/9921 4106999",
+ "seconds": 30.0,
+ "exit": 0,
+ "files": 54,
+ "testFiles": 9,
+ "total": 283,
+ "passed": 283,
+ "failed": 0,
+ "pending": 0,
+ "todo": 0,
+ "failedRows": [],
+ "suiteErrors": []
+}

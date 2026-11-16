@@ -1,0 +1,2 @@
+REV533 {"baseline":"observation:redis-redis:in-force","crlfActRecord":"refused:AdmissionRecordError","crlfInstanceBoundByDigest":"refused:AdmissionRecordError","indentedFourSpaceFenceLineInAct":"observation:redis-redis:in-force","closedExampleFenceInAct":"observation:redis-redis:in-force"}
+      Tests  1 passed (1)

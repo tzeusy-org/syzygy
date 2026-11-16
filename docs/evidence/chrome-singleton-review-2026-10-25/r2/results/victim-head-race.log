@@ -1,0 +1,15 @@
+tree 6dcf94906b2989345f5b03dfeaa2d64c56632886 mode race
+== four-cases before: victim=present sentinel=present planted-old=0
+  vitest: ⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+  vitest:  Test Files  1 failed (1)
+  vitest:       Tests  2 failed | 2 passed | 25 skipped (29)
+  vitest exit 1
+  racer: {"roots":4,"plantedTotal":386,"seen":[{"root":"/tmp/syzygy-profile-9qvlbt","mode":"700","planted":129,"errors":{}},{"root":"/tmp/syzygy-profile-bz2zFi","mode":null,"planted":0,"errors":{"stat":"ENOENT","ENOENT":129}},{"root":"/tmp/syzygy-profile-II3XkM","mode":"700","planted":128,"errors":{"ENOENT":1}},{"root":"/tmp/syzygy-profile-n55ttN","mode":"700","planted":129,"errors":{}}]}
+== four-cases after: victim=absent sentinel=absent
+== whole-file before: victim=present sentinel=present planted-old=0
+  vitest: ⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+  vitest:  Test Files  1 failed (1)
+  vitest:       Tests  1 failed | 28 passed (29)
+  vitest exit 1
+  racer: {"roots":4,"plantedTotal":129,"seen":[{"root":"/tmp/syzygy-profile-i0zs6A","mode":null,"planted":0,"errors":{"stat":"ENOENT","ENOENT":129}},{"root":"/tmp/syzygy-profile-FyQEYE","mode":null,"planted":0,"errors":{"stat":"ENOENT","ENOENT":129}},{"root":"/tmp/syzygy-profile-dPW4EB","mode":null,"planted":0,"errors":{"stat":"ENOENT","ENOENT":129}},{"root":"/tmp/syzygy-profile-WY1XcU","mode":"700","planted":129,"errors":{}}]}
+== whole-file after: victim=present sentinel=present

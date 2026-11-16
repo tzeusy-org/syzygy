@@ -1,0 +1,102 @@
+{
+ "head": "2d3f93759a28d35e7b04facb5aaebbcc29697d09",
+ "expectedProbeOutput": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-534/clone/docs/evidence/syzygy-bpyt-6-3/utf8-probe-output-base.json",
+ "mutants": [
+  {
+   "id": "S1-object-reader-keeps-bom",
+   "file": "packages/three-surface-poc-core/src/git-object-reader.ts",
+   "old": "const text = decodeUtf8(bytes);\n      if (text === undefined) return unavailable({ ...taken, outcome: 'not-utf-8' });",
+   "new": "const text = ((): string | undefined => { try { return new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(bytes); } catch { return undefined; } })();\n      if (text === undefined) return unavailable({ ...taken, outcome: 'not-utf-8' });",
+   "head": "2d3f93759a28d35e7b04facb5aaebbcc29697d09",
+   "oldCount": 1,
+   "detectors": {
+    "tests": {
+     "command": "npx vitest run --project @syzygy/support --project @syzygy/three-surface-poc-core",
+     "exit": 0,
+     "summary": [
+      "Test Files  39 passed | 2 skipped (41)",
+      "Tests  1147 passed | 2 skipped (1149)"
+     ],
+     "failing": [],
+     "failingCount": 0,
+     "killed": false
+    },
+    "probe": {
+     "exit": 1,
+     "rowsDiffer": 176,
+     "differPerDriver": {
+      "object-reader": 176
+     },
+     "firstDiffering": [
+      [
+       "object-reader",
+       "bom-bom-text"
+      ],
+      [
+       "object-reader",
+       "bom-only"
+      ],
+      [
+       "object-reader",
+       "bom-text"
+      ],
+      [
+       "object-reader",
+       "consent+bom"
+      ]
+     ],
+     "killed": true
+    }
+   },
+   "verdict": "killed by probe"
+  },
+  {
+   "id": "S2-seed-reader-keeps-bom",
+   "file": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+   "old": "const text = decodeUtf8(bytes);\n    if (text === undefined) {\n      reads.push(",
+   "new": "const text = ((): string | undefined => { try { return new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(bytes); } catch { return undefined; } })();\n    if (text === undefined) {\n      reads.push(",
+   "head": "2d3f93759a28d35e7b04facb5aaebbcc29697d09",
+   "oldCount": 1,
+   "detectors": {
+    "tests": {
+     "command": "npx vitest run --project @syzygy/support --project @syzygy/three-surface-poc-core",
+     "exit": 0,
+     "summary": [
+      "Test Files  39 passed | 2 skipped (41)",
+      "Tests  1147 passed | 2 skipped (1149)"
+     ],
+     "failing": [],
+     "failingCount": 0,
+     "killed": false
+    },
+    "probe": {
+     "exit": 1,
+     "rowsDiffer": 176,
+     "differPerDriver": {
+      "seed-reader": 176
+     },
+     "firstDiffering": [
+      [
+       "seed-reader",
+       "bom-bom-text"
+      ],
+      [
+       "seed-reader",
+       "bom-only"
+      ],
+      [
+       "seed-reader",
+       "bom-text"
+      ],
+      [
+       "seed-reader",
+       "consent+bom"
+      ]
+     ],
+     "killed": true
+    }
+   },
+   "verdict": "killed by probe"
+  }
+ ]
+}

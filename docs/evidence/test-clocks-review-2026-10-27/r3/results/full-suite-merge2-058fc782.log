@@ -1,0 +1,1 @@
+{"commit": "058fc782", "exit": 0, "summary": {"numTotalTests": 5442, "numPassedTests": 5437, "numFailedTests": 0, "numPendingTests": 5, "numTodoTests": 0, "numTotalTestSuites": 874, "numFailedTestSuites": 0, "success": true}, "failed": 0, "broken": 0, "load": [["34.53", "33.84", "35.99"], ["48.66", "46.00", "40.77"]], "seconds": 346}

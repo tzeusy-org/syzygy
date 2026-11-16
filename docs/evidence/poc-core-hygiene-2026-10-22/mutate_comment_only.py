@@ -22,10 +22,16 @@ import tempfile
 from pathlib import Path
 
 CORE = 'packages/three-surface-poc-core/'
+APP = 'apps/three-surface-poc/'
 MUTANTS = [
     # id, file, old fragment, new fragment (None deletes the file), predicate over the check record that holds when the mutant is killed
     ('source-code-token-added', CORE + 'src/evidence-population.ts', '// Keep the name, the path and the barrel export.\n', '// Keep the name, the path and the barrel export.\nexport const ZZ_MUTANT = 1;\n', 'comment-only-false'),
+    # NEGATIVE CONTROL, not a mutant: it passes by staying silent, so it is reported apart and never counted as killed.
     ('source-comment-edit-is-not-a-failure', CORE + 'src/evidence-population.ts', '// Keep the name, the path and the barrel export.\n', '// Keep the name, the path and the barrel export. (edited)\n', 'comment-only-true'),
+    # Whitespace inside a template literal is rendered text: the comparison must see it (review R-GP-IMPL-POC-CORE-HYGIENE-2, N8).
+    ('template-literal-trailing-space-added', APP + 'src/materialize-action.ts', '  .materialize-status { font-size: .85rem; }\n', '  .materialize-status { font-size: .85rem; } \n', 'comment-only-false'),
+    ('template-literal-blank-line-added', APP + 'src/materialize-action.ts', '  .materialize-panel dt { color: var(--muted); }\n', '  .materialize-panel dt { color: var(--muted); }\n\n', 'comment-only-false'),
+    ('template-literal-indent-changed', APP + 'src/materialize-action.ts', '  .materialize-panel dd { margin: 0;', '    .materialize-panel dd { margin: 0;', 'comment-only-false'),
     ('source-file-deleted', CORE + 'src/test-cleanup.ts', None, None, 'comment-only-false'),
     ('dist-module-export-removed', CORE + 'dist/evidence-population.js', 'export function derivePopulationBlock', 'function derivePopulationBlock', 'module-export-false'),
     ('dist-barrel-reexport-removed', CORE + 'dist/index.js', "export * from './evidence-population.js';", '', 'barrel-false'),
@@ -82,15 +88,19 @@ def main() -> int:
             res, rec = run_check(extra)
         finally:
             path.write_bytes(original)
-        records.append({'id': mutant_id, 'file': rel, 'old': frag_old, 'new': frag_new, 'deletesTheFile': frag_old is None, 'expectedFailure': kind, 'killed': killed(kind, rec),
+        records.append({'id': mutant_id, 'negativeControl': kind == 'comment-only-true', 'file': rel, 'old': frag_old, 'new': frag_new, 'deletesTheFile': frag_old is None, 'expectedFailure': kind, 'killed': killed(kind, rec),
                         'firstOutputLine': res.stdout.splitlines()[0] if res.stdout else res.stderr.splitlines()[-1]})
     after = subprocess.run(['git', 'status', '--porcelain', '--untracked-files=no', '--', 'packages', 'apps'], cwd=tree, capture_output=True, text=True, check=True).stdout.strip()
     if after:
         raise SystemExit(f'the tree was not restored:\n{after}')
+    real = [r for r in records if not r['negativeControl']]
+    negative = [r for r in records if r['negativeControl']]
     summary = {'subject': 'comment_only_check.py', 'ranAtCommit': commit, 'oldCommit': old, 'checkArguments': extra, 'controls': controls,
-               'mutants': len(records), 'killed': sum(r['killed'] for r in records), 'survivors': [r['id'] for r in records if not r['killed']], 'records': records}
+               'mutants': len(real), 'killed': sum(r['killed'] for r in real), 'survivors': [r['id'] for r in real if not r['killed']],
+               'negativeControls': len(negative), 'negativeControlsHolding': sum(r['killed'] for r in negative), 'records': records}
     out.write_text(json.dumps(summary, indent=1) + '\n', encoding='utf-8')
-    print(f"controls={[c['holds'] for c in controls]} mutants={summary['mutants']} killed={summary['killed']} survivors={summary['survivors']}")
+    print(f"controls={[c['holds'] for c in controls]} mutants={summary['mutants']} killed={summary['killed']} survivors={summary['survivors']} "
+          f"negativeControls={summary['negativeControls']} holding={summary['negativeControlsHolding']}")
     return 0
 
 

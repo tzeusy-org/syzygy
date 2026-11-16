@@ -1,0 +1,54 @@
+{
+ "batch": "P0",
+ "version": "head",
+ "param": null,
+ "n": 1,
+ "scriptSha256": "72a0fabdd0dd12f85ad35fde4b3ee032125757d5276b85802d76fdf5288f0195",
+ "command": "strace -o <tmp>/strace.log -e trace=open,openat,creat,rename,renameat,renameat2,unlink,unlinkat,mkdir,mkdirat,rmdir,truncate,ftruncate,link,linkat,symlink,symlinkat python3 -I scripts/measure_vitest_test_durations.py . --file packages/polaris-generation-consent/src/package-reader.test.ts --project @syzygy/polaris-generation-consent --mode alone --runs 1 --out <tmp>/measure-out.json --profile",
+ "sent": [],
+ "events": [],
+ "scriptExitedAtSeconds": 16.528,
+ "exitCode": 0,
+ "claimedExit": 0,
+ "exitAsClaimed": true,
+ "descendantsSeen": 22,
+ "seenOnlyByCwd": 1,
+ "vitestSeen": true,
+ "npxSeen": false,
+ "treeAfterExit": "",
+ "survivors": {},
+ "recordWritten": true,
+ "recordRuns": 1,
+ "recordTests": 299,
+ "recordProfileRows": 299,
+ "recordExitCode": 0,
+ "marks": [],
+ "scriptWrites": [
+  "openat(AT_FDCWD, \"<tmp>/q_p6ga44\", O_RDWR|O_CREAT|O_EXCL|O_NOFOLLOW|O_CLOEXEC, 0600) = 3",
+  "unlink(\"<tmp>/q_p6ga44\")  = 0",
+  "mkdir(\"<tmp>/tmpyvat_v1p\", 0700) = 0",
+  "openat(AT_FDCWD, \"<tree>/packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts\", O_WRONLY|O_CREAT|O_TRUNC|O_CLOEXEC, 0666) = 3",
+  "openat(AT_FDCWD, \"<tree>/packages/polaris-generation-consent/src/package-reader.test.ts\", O_WRONLY|O_CREAT|O_TRUNC|O_CLOEXEC, 0666) = 3",
+  "openat(AT_FDCWD, \"/dev/null\", O_RDWR|O_CLOEXEC) = 5",
+  "unlinkat(4, \"report.json\", 0)           = 0",
+  "rmdir(\"<tmp>/tmpyvat_v1p\") = 0",
+  "openat(AT_FDCWD, \"<tmp>/measure-out.json\", O_WRONLY|O_CREAT|O_TRUNC|O_CLOEXEC, 0666) = 3"
+ ],
+ "tmpdirLeft": [
+  "measure-out.json",
+  "node-compile-cache",
+  "script.log",
+  "strace.log"
+ ],
+ "trace": [],
+ "outputTail": "run 1: exit 0, 15.8 s, load1 {'start': 30.99, 'end': 31.42, 'min': 29.55, 'max': 31.42, 'samples': 4}, 299 tests of the file, 0 failed\n",
+ "scriptWritesFdRelative": [
+  "unlinkat(4, \"report.json\", 0)           = 0"
+ ],
+ "scriptWritesOutsideAllowed": [
+  "openat(AT_FDCWD, \"<tmp>/q_p6ga44\", O_RDWR|O_CREAT|O_EXCL|O_NOFOLLOW|O_CLOEXEC, 0600) = 3",
+  "unlink(\"<tmp>/q_p6ga44\")  = 0",
+  "openat(AT_FDCWD, \"/dev/null\", O_RDWR|O_CLOEXEC) = 5"
+ ],
+ "passes": false
+}

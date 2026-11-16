@@ -1,0 +1,2307 @@
+{
+ "base": "a088f1ca",
+ "head": "9029e1cf",
+ "method": "ts.createPrinter({removeComments: true}).printFile per file (types kept), before against after; and every changed line a trailing // comment or wholly inside a comment",
+ "typescriptVersion": "5.9.3",
+ "changedFiles": 81,
+ "changedProductionFiles": 59,
+ "commentOnly": 0,
+ "notCommentOnly": [
+  "apps/three-surface-poc/src/capability-detail.ts",
+  "apps/three-surface-poc/src/fresh-checkout-demo-main.ts",
+  "apps/three-surface-poc/src/git-observation.ts",
+  "apps/three-surface-poc/src/poc-main.ts",
+  "apps/three-surface-poc/src/polaris-accessible-names-main.ts",
+  "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+  "apps/three-surface-poc/src/polaris-generation/draft-preview.ts",
+  "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.ts",
+  "apps/three-surface-poc/src/polaris-generation/generation-mutation-run-main.ts",
+  "apps/three-surface-poc/src/polaris-generation/public-source-screening.ts",
+  "apps/three-surface-poc/src/polaris-generation/redis-shaped-measure-main.ts",
+  "apps/three-surface-poc/src/polaris-generation/repo-corpus.ts",
+  "apps/three-surface-poc/src/polaris-generation/self-corpus.ts",
+  "apps/three-surface-poc/src/polaris-keyboard-sweep-main.ts",
+  "apps/three-surface-poc/src/polaris-narrative.ts",
+  "apps/three-surface-poc/src/polaris-reading.ts",
+  "apps/three-surface-poc/src/polaris.ts",
+  "apps/three-surface-poc/src/pwb-mutation-run-main.ts",
+  "apps/three-surface-poc/src/pwb-mutation-sweep-main.ts",
+  "apps/three-surface-poc/src/restart.ts",
+  "apps/three-surface-poc/src/walkthrough-inputs.ts",
+  "packages/polaris-dossier/src/brief.ts",
+  "packages/polaris-dossier/src/check.ts",
+  "packages/polaris-dossier/src/close.ts",
+  "packages/polaris-dossier/src/design-review.ts",
+  "packages/polaris-dossier/src/doctrine-quote.ts",
+  "packages/polaris-dossier/src/inventory.ts",
+  "packages/polaris-dossier/src/launched.ts",
+  "packages/polaris-dossier/src/polaris.ts",
+  "packages/polaris-dossier/src/render.ts",
+  "packages/polaris-dossier/src/review.ts",
+  "packages/polaris-dossier/src/screen.ts",
+  "packages/polaris-dossier/src/session-handover.ts",
+  "packages/polaris-dossier/src/session-view.ts",
+  "packages/polaris-dossier/src/waiting-sessions.ts",
+  "packages/polaris-generation-consent/src/consent-ports.ts",
+  "packages/polaris-generation-consent/src/package-reader.ts",
+  "packages/polaris-generation-core/src/canonical-json.ts",
+  "packages/polaris-generation-core/src/dossier-evaluation.ts",
+  "packages/polaris-generation-core/src/dossier-profile.ts",
+  "packages/polaris-generation-core/src/generation-source.ts",
+  "packages/polaris-generation-core/src/pipeline.ts",
+  "packages/polaris-generation-core/src/prompts.ts",
+  "packages/polaris-generation-core/src/public-source-classification.ts",
+  "packages/polaris-generation-core/src/secret-redaction.ts",
+  "packages/support/src/deep-freeze.ts",
+  "packages/support/src/index.ts",
+  "packages/support/src/sha256.ts",
+  "packages/three-surface-poc-core/src/act-fields.ts",
+  "packages/three-surface-poc-core/src/body-read-authority.ts",
+  "packages/three-surface-poc-core/src/git-object-reader.ts",
+  "packages/three-surface-poc-core/src/model.ts",
+  "packages/three-surface-poc-core/src/owner-act-drafter.ts",
+  "packages/three-surface-poc-core/src/poc-seeds.ts",
+  "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+  "packages/three-surface-poc-core/src/project-shape-observation.ts",
+  "packages/three-surface-poc-core/src/response-identity.ts",
+  "packages/three-surface-poc-core/src/walkthrough-judgment.ts",
+  "packages/three-surface-poc-core/src/walkthrough-readiness.ts"
+ ],
+ "rows": [
+  {
+   "path": "apps/three-surface-poc/src/capability-detail.ts",
+   "status": "M",
+   "sourceSha256Base": "38fb8752beeceb3539029e77e62e61f2b7401c6628fbcca9e6c34b7f58531189",
+   "sourceSha256Head": "870b43ba23fda2f36840b5da4f9fbdb4967bb8e7a2c7a058751f200825d31be7",
+   "printSha256Base": "94cdcb5bd57f2a3f9b16a3a6a1f5d2bb209f65a87a11e365920d9f81ec07d44c",
+   "printSha256Head": "1e2cbe6ceeb202c1cc58653f263a0c0672726251136f4b9c93c04707471f3ef4",
+   "printEqual": false,
+   "linesOk": false,
+   "changedLines": [
+    {
+     "kind": "CODE",
+     "oldLines": [
+      22,
+      22
+     ],
+     "newLines": [
+      22,
+      21
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      33,
+      32
+     ],
+     "newLines": [
+      32,
+      32
+     ]
+    },
+    {
+     "line": 219,
+     "kind": "CODE"
+    }
+   ],
+   "commentOnly": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/fresh-checkout-demo-main.ts",
+   "status": "M",
+   "sourceSha256Base": "afcca52b645b756d4e01182a34047251d22c9e5b4bf2ceea9146a8cba450d427",
+   "sourceSha256Head": "b59ed25c6faddc6753e6f5708b1243896f475b3105b0e7aeb9daab2b53b1a501",
+   "printSha256Base": "d2790e4074ffcbc79dd0e1b942a45fd10b1f7bd14090f949158a55ef33904c44",
+   "printSha256Head": "20064c1aca86362de4104848258f0c67dcc26870e9cf7aab00e2b13501089ce4",
+   "printEqual": false,
+   "linesOk": false,
+   "changedLines": [
+    {
+     "kind": "CODE",
+     "oldLines": [
+      32,
+      32
+     ],
+     "newLines": [
+      32,
+      31
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      38,
+      37
+     ],
+     "newLines": [
+      37,
+      37
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      50,
+      53
+     ],
+     "newLines": [
+      50,
+      49
+     ]
+    }
+   ],
+   "commentOnly": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/git-observation.ts",
+   "status": "M",
+   "sourceSha256Base": "0e52e4969a8f356c3450469ad783f3cedd906d0e0c50d685cb18f9039f158cb7",
+   "sourceSha256Head": "41266a93df8b7df94563c6e1a0d3276ebac309a66b1c5a8c3a2e4221595bf92c",
+   "printSha256Base": "594a8682d026bf11248950b2724870d770c45f945ee99af0d50bab4c678c30d4",
+   "printSha256Head": "e47274a2f283c51fc88a3b60e2e1c7ce2b01f1c525b15cebcf0fea6cf91302e9",
+   "printEqual": false,
+   "linesOk": false,
+   "changedLines": [
+    {
+     "kind": "CODE",
+     "oldLines": [
+      1,
+      1
+     ],
+     "newLines": [
+      1,
+      0
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      5,
+      4
+     ],
+     "newLines": [
+      4,
+      4
+     ]
+    },
+    {
+     "line": 83,
+     "kind": "CODE"
+    }
+   ],
+   "commentOnly": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/poc-main.ts",
+   "status": "M",
+   "sourceSha256Base": "e09e8f203a186b41b2b5ba554fa2fc7f7018a02d7ca85085bff273ba7617bdc0",
+   "sourceSha256Head": "2e87695b4450a92eb8e404eaa16c108def55770d49f7158d4cd08c9e3d7ae0df",
+   "printSha256Base": "c06d95bcf3fa830056ba47e29e20b0d6f75e9e2dfa4165eb4fd05e09e5d34752",
+   "printSha256Head": "5b15b1c67816f73051d6d4418af0b03e51d4a8b92bf80f515fab16b3c0840501",
+   "printEqual": false,
+   "linesOk": false,
+   "changedLines": [
+    {
+     "kind": "CODE",
+     "oldLines": [
+      1,
+      1
+     ],
+     "newLines": [
+      1,
+      0
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      12,
+      11
+     ],
+     "newLines": [
+      11,
+      11
+     ]
+    },
+    {
+     "line": 163,
+     "kind": "CODE"
+    }
+   ],
+   "commentOnly": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-accessible-names-main.ts",
+   "status": "M",
+   "sourceSha256Base": "087b4d1c880ef272c1fb3af9fbea300dd5f232d4ef9b94d87bcdd7a69d45ae97",
+   "sourceSha256Head": "6312f9c9864221ca1d9bdb400d23832c27452a6a372fbf89dc6dbafb770c858c",
+   "printSha256Base": "f05ca5ff69e0713cabf4b3100c14a9aaea817e041bb2da69f26e4c4675bafc97",
+   "printSha256Head": "4a9791a7cdadda2b94ac0d7f4352b16b4bc7620324bf7ba366733e97aa3a921c",
+   "printEqual": false,
+   "linesOk": false,
+   "changedLines": [
+    {
+     "kind": "CODE",
+     "oldLines": [
+      19,
+      19
+     ],
+     "newLines": [
+      19,
+      18
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      22,
+      21
+     ],
+     "newLines": [
+      21,
+      21
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      34,
+      37
+     ],
+     "newLines": [
+      34,
+      33
+     ]
+    }
+   ],
+   "commentOnly": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "status": "M",
+   "sourceSha256Base": "c1f82e84a0ad7d398fcc617c19b0de9b4deff3affd2d2e3f757e0a73560bb8f9",
+   "sourceSha256Head": "3e644e9cbfb611e2e4868b6ebd02eb26671a6a32931f6a7a55f83da54477085d",
+   "printSha256Base": "1ef1ac79190f65f15ecd6b3a59e08305d1370bb1087b88c00eb00e9baab01511",
+   "printSha256Head": "7b5671c5a10420a08a37028e3f53f981919019532680d644faf0f350f84f2ec6",
+   "printEqual": false,
+   "linesOk": false,
+   "changedLines": [
+    {
+     "kind": "CODE",
+     "oldLines": [
+      1,
+      2
+     ],
+     "newLines": [
+      1,
+      0
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      11,
+      10
+     ],
+     "newLines": [
+      9,
+      9
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      86,
+      87
+     ],
+     "newLines": [
+      85,
+      84
+     ]
+    },
+    {
+     "line": 92,
+     "kind": "CODE"
+    }
+   ],
+   "commentOnly": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/draft-preview.ts",
+   "status": "M",
+   "sourceSha256Base": "2ca88887779eba1c7d503fd3358ca5e3e12283065e835800539bc080e3b64bfa",
+   "sourceSha256Head": "6209a83613a6ca2ecc5a29385c75d50cd008172701533cc747ffc69601ecf266",
+   "printSha256Base": "b1ef4abb7e2a8375df5450ac29bae369ce6cf67b06ab379ad4fe69b8bce909ca",
+   "printSha256Head": "3d22746c39efcd4882b75ce286b6b7dd70ec82addeb19cad935d1bd6f2b35939",
+   "printEqual": false,
+   "linesOk": false,
+   "changedLines": [
+    {
+     "kind": "CODE",
+     "oldLines": [
+      1,
+      2
+     ],
+     "newLines": [
+      1,
+      0
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      9,
+      8
+     ],
+     "newLines": [
+      7,
+      7
+     ]
+    },
+    {
+     "line": 38,
+     "kind": "CODE"
+    },
+    {
+     "line": 120,
+     "kind": "CODE"
+    }
+   ],
+   "commentOnly": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.ts",
+   "status": "M",
+   "sourceSha256Base": "49aa728a967d561919627987f9081b713416ea0816e5e7f30e9374e77da995d2",
+   "sourceSha256Head": "ecdc858281c3807e01d00069dca37f3e8d082b659df388fe1f17d4e5f38261d5",
+   "printSha256Base": "d1f31fa8677e5fd6b0275aec4f2b1e64db30f6c4a6895d4d0aa3cec2cfcc1562",
+   "printSha256Head": "1ec17ef597593b820b6fbc0844b8810ef9c1afe1d9a12554074cbae8184d574e",
+   "printEqual": false,
+   "linesOk": false,
+   "changedLines": [
+    {
+     "line": 1,
+     "kind": "CODE"
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      6,
+      5
+     ],
+     "newLines": [
+      6,
+      6
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      52,
+      53
+     ],
+     "newLines": [
+      53,
+      53
+     ]
+    },
+    {
+     "line": 88,
+     "kind": "CODE"
+    }
+   ],
+   "commentOnly": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/generation-mutation-run-main.ts",
+   "status": "M",
+   "sourceSha256Base": "6903b35e4e389ba310235b2b8a38420bddb1e4e81313cfa357b0165c0236d2f7",
+   "sourceSha256Head": "658d9e95feae0ce9342161e1d4c4055573c7558c05bd3af74e8e18bdc547b8a8",
+   "printSha256Base": "25a3380edd549f60ea3085f0236cb8c9716c729c12e775b367099e8047790fdb",
+   "printSha256Head": "ce8fcecd44c894a02f0c9823b92c403ff4d1aea692f96c07a93b0a5f5d07fde1",
+   "printEqual": false,
+   "linesOk": false,
+   "changedLines": [
+    {
+     "kind": "CODE",
+     "oldLines": [
+      21,
+      21
+     ],
+     "newLines": [
+      21,
+      20
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      26,
+      25
+     ],
+     "newLines": [
+      25,
+      25
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      51,
+      54
+     ],
+     "newLines": [
+      51,
+      50
+     ]
+    }
+   ],
+   "commentOnly": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/public-source-screening.ts",
+   "status": "M",
+   "sourceSha256Base": "4c6ce26946e3791774be4a9a8b21e2a734618cc7f0387587969a16f6baa8f625",
+   "sourceSha256Head": "91f4633f3f89770f13d9eb2b604d9f7c9a9d322e5e8cf409b40dca2010ba8003",
+   "printSha256Base": "82d9f23473cbea417ce7ae3e0fe3f56c3c2ce07497d5e76d22508898336a31f5",
+   "printSha256Head": "92602cdb893c24ead1a0765fbe72c12b8a398c212242db9336d9070cad3817d4",
+   "printEqual": false,
+   "linesOk": false,
+   "changedLines": [
+    {
+     "kind": "CODE",
+     "oldLines": [
+      52,
+      52
+     ],
+     "newLines": [
+      52,
+      51
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      60,
+      59
+     ],
+     "newLines": [
+      59,
+      59
+     ]
+    },
+    {
+     "line": 146,
+     "kind": "CODE"
+    }
+   ],
+   "commentOnly": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/redis-shaped-measure-main.ts",
+   "status": "M",
+   "sourceSha256Base": "5c8c53cf1f58923001c884206806cc720a527daffbb7aed9045e435af2a3fb77",
+   "sourceSha256Head": "2ce9baa8cf60f5785ae73eb13e5007ce47beb1bf9d43bb0349da9259d3caf7c4",
+   "printSha256Base": "83701ac02902394fc03e182cfccc9a7e9f2b2ee0cdb744fe3ebb6cfe9e48ac72",
+   "printSha256Head": "67eb7a067028a4880383727edf8d16db5239d6f49d9e6afd0c359102a31ca41e",
+   "printEqual": false,
+   "linesOk": false,
+   "changedLines": [
+    {
+     "kind": "CODE",
+     "oldLines": [
+      2,
+      2
+     ],
+     "newLines": [
+      2,
+      1
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      7,
+      6
+     ],
+     "newLines": [
+      6,
+      6
+     ]
+    },
+    {
+     "line": 15,
+     "kind": "CODE"
+    }
+   ],
+   "commentOnly": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/repo-corpus.ts",
+   "status": "M",
+   "sourceSha256Base": "86009ee555f3787e61d053fe8cdd4710cf34e4249f0c524fa210daf4334b938c",
+   "sourceSha256Head": "b8d0f8a0bf4f70b22c6d7517e97103c263528908f0754f5d9607b3d70d149203",
+   "printSha256Base": "b4d8a0795e6c12d47d32f9fc3f560da08195ca5c37c2cc8deb0744d9c79a1b3e",
+   "printSha256Head": "09a7b24a8b506919ea57985b53d0e00018265cd2c7cf7bfb5456c82661a982d1",
+   "printEqual": false,
+   "linesOk": false,
+   "changedLines": [
+    {
+     "kind": "CODE",
+     "oldLines": [
+      1,
+      2
+     ],
+     "newLines": [
+      1,
+      0
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      5,
+      4
+     ],
+     "newLines": [
+      3,
+      3
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      10,
+      10
+     ],
+     "newLines": [
+      9,
+      8
+     ]
+    }
+   ],
+   "commentOnly": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/self-corpus.ts",
+   "status": "M",
+   "sourceSha256Base": "f92d400199df264d88defef90a309d670ff8210a03e77703f71e82023139f68c",
+   "sourceSha256Head": "3f408302f11ff20a6e70c0e40bf09f651599e85c7a10377a92c2f0151f8e62a8",
+   "printSha256Base": "8bbea5ed1ab9f42d99ab7f97e2f5cbebaef61782933293e4bed75bd54ff8f708",
+   "printSha256Head": "36e62721a5698ec564ccd404cbb781f8371ba763a62f15ea8b839e797b0ea4a1",
+   "printEqual": false,
+   "linesOk": false,
+   "changedLines": [
+    {
+     "kind": "CODE",
+     "oldLines": [
+      2,
+      2
+     ],
+     "newLines": [
+      2,
+      1
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      9,
+      8
+     ],
+     "newLines": [
+      8,
+      8
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      16,
+      16
+     ],
+     "newLines": [
+      16,
+      15
+     ]
+    }
+   ],
+   "commentOnly": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-keyboard-sweep-main.ts",
+   "status": "M",
+   "sourceSha256Base": "9fab3c963088465ae5051bb5a0fbfc0a8de2769e84c0f0ae4558cadf8159e699",
+   "sourceSha256Head": "8a94821ad7661cd897e9c9c2145d24da622dced53467879f71c8dcbacf37ec28",
+   "printSha256Base": "4e227056a450207c92fe26b31266be9001af18628a4cf0a649aaf7d06e08e9c0",
+   "printSha256Head": "7a16914c7dd6e62a15156ad6e6ff019fc4769510d52c0594a6d0ad0d21cf0be2",
+   "printEqual": false,
+   "linesOk": false,
+   "changedLines": [
+    {
+     "kind": "CODE",
+     "oldLines": [
+      21,
+      21
+     ],
+     "newLines": [
+      21,
+      20
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      27,
+      26
+     ],
+     "newLines": [
+      26,
+      26
+     ]
+    },
+    {
+     "line": 96,
+     "kind": "CODE"
+    }
+   ],
+   "commentOnly": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-narrative.ts",
+   "status": "M",
+   "sourceSha256Base": "b8e2f77cefcdee10e1ad16cf67140bbe66e2aa9cd1023c45faa7e0751150172f",
+   "sourceSha256Head": "daced3d4e4390b309f434ea3a959a9b9923029ce51d88e6f4e8bec51a17ecd0b",
+   "printSha256Base": "c3a87681ba20e452463324a590088b3a8cf96685a33bac905cfebd4c545a476b",
+   "printSha256Head": "3136d899b21623da497d791a5c826b8cd0aedd6ecd08f80d92f6ff32d21092a3",
+   "printEqual": false,
+   "linesOk": false,
+   "changedLines": [
+    {
+     "kind": "CODE",
+     "oldLines": [
+      18,
+      17
+     ],
+     "newLines": [
+      18,
+      18
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      130,
+      137
+     ],
+     "newLines": [
+      131,
+      130
+     ]
+    }
+   ],
+   "commentOnly": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-reading.ts",
+   "status": "M",
+   "sourceSha256Base": "494b7e747a52b6038751a82b1cf4fc9d92e4ce2c8afc74e2097d7d77bccc9b31",
+   "sourceSha256Head": "4fecd9cdb78ce3d3a9449207b1bc0b27bcc91180a322822762cb333dd5125b7f",
+   "printSha256Base": "184d09985b24ce84d599e4b2c0efb5d77364b11029f72eb662422f3e44a58eef",
+   "printSha256Head": "a9ee354d9e5b66b1d73dbbf7908bbb89eda46230ac9167bb913ff15d50608332",
+   "printEqual": false,
+   "linesOk": false,
+   "changedLines": [
+    {
+     "line": 1,
+     "kind": "CODE"
+    },
+    {
+     "line": 48,
+     "kind": "CODE"
+    }
+   ],
+   "commentOnly": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris.ts",
+   "status": "M",
+   "sourceSha256Base": "029d439f1d41584b803cc84d5688b89d826e6797ac4926daa95c59b0504bd563",
+   "sourceSha256Head": "53b360b12649cd933d53045712dccd10359a27afe5db711baac46db2ba4c9ffe",
+   "printSha256Base": "8033a6b730a7b55576b2a87c466ee041b261716bd1c1823f50e976ee02fa15fd",
+   "printSha256Head": "e94ea58e3fee65f42e342901263efcb5073662f184003e7f5eb1a74bca025005",
+   "printEqual": false,
+   "linesOk": false,
+   "changedLines": [
+    {
+     "kind": "CODE",
+     "oldLines": [
+      1,
+      2
+     ],
+     "newLines": [
+      1,
+      0
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      36,
+      35
+     ],
+     "newLines": [
+      34,
+      34
+     ]
+    },
+    {
+     "line": 731,
+     "kind": "CODE"
+    }
+   ],
+   "commentOnly": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/pwb-mutation-run-main.ts",
+   "status": "M",
+   "sourceSha256Base": "5fb6f68ca834e8f4b4b024a840128d78729bc223ebb5e046a061d123a6b52475",
+   "sourceSha256Head": "34001c55048e7bf945e6353eba798ff22b5517c454170e60be439fa03aaf4f7e",
+   "printSha256Base": "4544d35e6eafd1218114b08dc8c8cd54d09b013697a668caaabd27302042d7e0",
+   "printSha256Head": "77c91185d163e758120b8a43c4d25a8dce3a33e06fd4ca2fe802c4a43cef829e",
+   "printEqual": false,
+   "linesOk": false,
+   "changedLines": [
+    {
+     "kind": "CODE",
+     "oldLines": [
+      18,
+      18
+     ],
+     "newLines": [
+      18,
+      17
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      25,
+      24
+     ],
+     "newLines": [
+      24,
+      24
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      56,
+      59
+     ],
+     "newLines": [
+      56,
+      55
+     ]
+    }
+   ],
+   "commentOnly": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/pwb-mutation-sweep-main.ts",
+   "status": "M",
+   "sourceSha256Base": "c14d30d8d797bcb65b9f8076cf4b77f95656d3e37ef108f9b637a44ac1a25443",
+   "sourceSha256Head": "b6af20150245e93df86a1856b66eac0cd64b8273f0d4ff3a620b1930d93fe1ea",
+   "printSha256Base": "6fedc431adb10f3132de26be670d0d09dfaab8388d127b9171afba3b0036bb39",
+   "printSha256Head": "5ae076a1a93d2fee8ba785a7d30b90293ff7c43b40b3f7759e0d1abcd1f5d03b",
+   "printEqual": false,
+   "linesOk": false,
+   "changedLines": [
+    {
+     "kind": "CODE",
+     "oldLines": [
+      19,
+      19
+     ],
+     "newLines": [
+      19,
+      18
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      26,
+      25
+     ],
+     "newLines": [
+      25,
+      25
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      46,
+      49
+     ],
+     "newLines": [
+      46,
+      45
+     ]
+    }
+   ],
+   "commentOnly": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/restart.ts",
+   "status": "M",
+   "sourceSha256Base": "3e0067aa2ca87eae0acffaf5ad7c6fe062dadf5fed1c1f87dc28f4d87d057c57",
+   "sourceSha256Head": "c2ec7b101a92e344dc03f15ceb7cf72d61ccdac66e8373c9e32e73f988d10841",
+   "printSha256Base": "09367fd8d664402014bb667e08256c7a774312243837dd243b751e9c64c0aad3",
+   "printSha256Head": "456345d9a3034e767ac900810aaf185e58dd82021af13c8853af8bff29ae0f1f",
+   "printEqual": false,
+   "linesOk": false,
+   "changedLines": [
+    {
+     "kind": "CODE",
+     "oldLines": [
+      2,
+      2
+     ],
+     "newLines": [
+      2,
+      1
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      6,
+      5
+     ],
+     "newLines": [
+      5,
+      5
+     ]
+    },
+    {
+     "line": 92,
+     "kind": "CODE"
+    }
+   ],
+   "commentOnly": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/walkthrough-inputs.ts",
+   "status": "M",
+   "sourceSha256Base": "281c5ed93772843430127e3137bd69c967cd30f59991928277ce2addebffdb0d",
+   "sourceSha256Head": "596361b7ef66c9126079a80bc9dfb2628c9d3b0a8c0b41e3f385b88dc39823ad",
+   "printSha256Base": "0f800ea035682e14e8427904ae2df47e16351c20754a0f17bafcd251c5d4000e",
+   "printSha256Head": "ec2c50c5983bf27f2adbdc44bc2e0bdfcd019b6ff3dcd9f8411cbdae97ca0510",
+   "printEqual": false,
+   "linesOk": false,
+   "changedLines": [
+    {
+     "kind": "CODE",
+     "oldLines": [
+      12,
+      12
+     ],
+     "newLines": [
+      12,
+      11
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      25,
+      24
+     ],
+     "newLines": [
+      24,
+      24
+     ]
+    },
+    {
+     "line": 98,
+     "kind": "CODE"
+    }
+   ],
+   "commentOnly": false
+  },
+  {
+   "path": "packages/polaris-dossier/src/brief.ts",
+   "status": "M",
+   "sourceSha256Base": "95c279b1f01a8a138b1b904b457c871315efc58281e5ee52dcf67c679ea30da2",
+   "sourceSha256Head": "24b67a414a4ee5d6952225447b18f10cc67deb9feb7236bae856b4d5d277858e",
+   "printSha256Base": "2ff9605bdab760e50f049e654e2bffbc63c8f5f6c175bea1af62cb3b2bbc86b6",
+   "printSha256Head": "4354ef8d26ffe1fc0e25958b7441f7db88e82e582356b04c37981221c91c6908",
+   "printEqual": false,
+   "linesOk": false,
+   "changedLines": [
+    {
+     "kind": "CODE",
+     "oldLines": [
+      1,
+      1
+     ],
+     "newLines": [
+      1,
+      0
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      6,
+      5
+     ],
+     "newLines": [
+      5,
+      5
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      201,
+      202
+     ],
+     "newLines": [
+      201,
+      200
+     ]
+    }
+   ],
+   "commentOnly": false
+  },
+  {
+   "path": "packages/polaris-dossier/src/check.ts",
+   "status": "M",
+   "sourceSha256Base": "5aa89525701f2fdafc69954fdf8dbc9060e54f3b803a7906152812a40d173bd7",
+   "sourceSha256Head": "503bf61de7d4b383db688fe48b6672820e46c2d25d402b434c26ec8a3194f469",
+   "printSha256Base": "ba1e8c914d68a7804af7bd8b6b778e5582e32566bfa4a396c654ec16ef261d13",
+   "printSha256Head": "7612ef4dd89eb8240d2809fcef278ce6788e2e27e2831798ec0bbc5a1d3ac838",
+   "printEqual": false,
+   "linesOk": false,
+   "changedLines": [
+    {
+     "kind": "CODE",
+     "oldLines": [
+      1,
+      1
+     ],
+     "newLines": [
+      1,
+      0
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      6,
+      5
+     ],
+     "newLines": [
+      5,
+      5
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      198,
+      198
+     ],
+     "newLines": [
+      198,
+      197
+     ]
+    }
+   ],
+   "commentOnly": false
+  },
+  {
+   "path": "packages/polaris-dossier/src/close.ts",
+   "status": "M",
+   "sourceSha256Base": "0303368eae0dc8f1c03adba31e0666d9e21f52a346eaddcaa20d7b26662f9598",
+   "sourceSha256Head": "bbf74cba11722a4e45417ab7f368180c7be7b56a0f8c191add07e2f21a5ec771",
+   "printSha256Base": "612ffc343d7738d981820e9819a7de8c0ac6a355a1fa599d3f604ab40bdf2b9b",
+   "printSha256Head": "56aa595aab748616eb0aa539b519dac9a6660874d0053614bc83743661338411",
+   "printEqual": false,
+   "linesOk": false,
+   "changedLines": [
+    {
+     "kind": "CODE",
+     "oldLines": [
+      1,
+      1
+     ],
+     "newLines": [
+      1,
+      0
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      5,
+      4
+     ],
+     "newLines": [
+      4,
+      4
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      89,
+      89
+     ],
+     "newLines": [
+      89,
+      88
+     ]
+    }
+   ],
+   "commentOnly": false
+  },
+  {
+   "path": "packages/polaris-dossier/src/design-review.ts",
+   "status": "M",
+   "sourceSha256Base": "bd6e69a1ca12830b91e125b3f9bb49e0ce67855a38c4b78d49104f0970a27f7d",
+   "sourceSha256Head": "adbfdac8cead133f9806e51a53fca9f1e551d8630f66548b307a39d51b422d2d",
+   "printSha256Base": "22cb97b17bc53ed7647d785f2f2ff128a47b3551df8d6159b7e631695525e3d4",
+   "printSha256Head": "c10f1dedfec67c0420518a0bb1e664140bd3fc2dd78add672e808874dea21624",
+   "printEqual": false,
+   "linesOk": false,
+   "changedLines": [
+    {
+     "kind": "CODE",
+     "oldLines": [
+      1,
+      1
+     ],
+     "newLines": [
+      1,
+      0
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      5,
+      4
+     ],
+     "newLines": [
+      4,
+      4
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      31,
+      31
+     ],
+     "newLines": [
+      31,
+      30
+     ]
+    }
+   ],
+   "commentOnly": false
+  },
+  {
+   "path": "packages/polaris-dossier/src/doctrine-quote.ts",
+   "status": "M",
+   "sourceSha256Base": "2568b47d6c39eb520fa184b8b48bc934d61baf242c5f6252cf571bb85f240bd5",
+   "sourceSha256Head": "37986e0c3e4a39cd75026a2155799f9198aded1a895042b940a1e9f4e3de2f3c",
+   "printSha256Base": "7f4eab78ff7549e7c7cad3e8d3d65cb2c2a0a87ea39c2ac8121a3ceda21bcc17",
+   "printSha256Head": "725fb8d98896caaef9662344dab3b2a652f097b5ea7062664d33343fefec339f",
+   "printEqual": false,
+   "linesOk": false,
+   "changedLines": [
+    {
+     "kind": "CODE",
+     "oldLines": [
+      1,
+      1
+     ],
+     "newLines": [
+      1,
+      0
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      4,
+      3
+     ],
+     "newLines": [
+      3,
+      3
+     ]
+    },
+    {
+     "line": 51,
+     "kind": "CODE"
+    }
+   ],
+   "commentOnly": false
+  },
+  {
+   "path": "packages/polaris-dossier/src/inventory.ts",
+   "status": "M",
+   "sourceSha256Base": "dc4db3325e313ca214cc047882f8bd8ba34105eda84caeeb744f3c4d73e8d019",
+   "sourceSha256Head": "8e1fd6a5514d13db14a35f1afa2dce44e294c67246d32c7259f25004450b1272",
+   "printSha256Base": "c1f3edab006b084bb98267af7ed3c488033531a616197bb191171f33f55ee5c4",
+   "printSha256Head": "edbb11effc113c4f563560ec539fe98ecad1b6602a782a6d2833c91e99c52ddc",
+   "printEqual": false,
+   "linesOk": false,
+   "changedLines": [
+    {
+     "kind": "CODE",
+     "oldLines": [
+      1,
+      1
+     ],
+     "newLines": [
+      1,
+      0
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      6,
+      5
+     ],
+     "newLines": [
+      5,
+      5
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      78,
+      78
+     ],
+     "newLines": [
+      78,
+      77
+     ]
+    }
+   ],
+   "commentOnly": false
+  },
+  {
+   "path": "packages/polaris-dossier/src/launched.ts",
+   "status": "M",
+   "sourceSha256Base": "c7a25b8b45fe12e2add7874f88d46b2bad1eef16ffa4a17e2464d5c671424921",
+   "sourceSha256Head": "51b7370501ebd411960f83bbc7523605f78347ed2f01ad6cd0f647e306b45185",
+   "printSha256Base": "a1750b4343ac8df982d078f0452a4da2ba1d331a025f7fa987e5817dc591c205",
+   "printSha256Head": "64416172f3d77aff21103371a58bbdb2e53b2870ca3ba1f205ad9f8db4b611bd",
+   "printEqual": false,
+   "linesOk": false,
+   "changedLines": [
+    {
+     "kind": "CODE",
+     "oldLines": [
+      1,
+      1
+     ],
+     "newLines": [
+      1,
+      0
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      4,
+      3
+     ],
+     "newLines": [
+      3,
+      3
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      18,
+      19
+     ],
+     "newLines": [
+      18,
+      17
+     ]
+    }
+   ],
+   "commentOnly": false
+  },
+  {
+   "path": "packages/polaris-dossier/src/polaris.ts",
+   "status": "M",
+   "sourceSha256Base": "c75c2d005437d24af820ec6e83cfcdd2572e9820930fba7f26a5dc45db402c12",
+   "sourceSha256Head": "d739f806f0e0fc7d39a1da7ae8e0dd2bbd65c58c695a21f5b95018aa08a2c7f8",
+   "printSha256Base": "766c46b138ce7db8c1ea3b681864d6240884f4b23eb17ae6431243b38cc50421",
+   "printSha256Head": "de95c9a65eca67431446545e0a3ff487644f3803d20195bd5c4e5ed2cda336ba",
+   "printEqual": false,
+   "linesOk": false,
+   "changedLines": [
+    {
+     "kind": "CODE",
+     "oldLines": [
+      1,
+      1
+     ],
+     "newLines": [
+      1,
+      0
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      7,
+      6
+     ],
+     "newLines": [
+      6,
+      6
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      56,
+      56
+     ],
+     "newLines": [
+      56,
+      55
+     ]
+    }
+   ],
+   "commentOnly": false
+  },
+  {
+   "path": "packages/polaris-dossier/src/render.ts",
+   "status": "M",
+   "sourceSha256Base": "0b070a56f15b85ec4198d42f1eef2782b07c9cef2bb7803e97b0b061bec11f73",
+   "sourceSha256Head": "75dc0910b51d47155e130be53b642c00443eace47e351791963e6e9699e11521",
+   "printSha256Base": "0874414e739902586b99cbd390b544a4ac69c99314ec5c7cbaf3f0c0e5b3c6fa",
+   "printSha256Head": "06570664a880a6c4f44c9578782d698fee8829d55ccade1490eee46b33da3369",
+   "printEqual": false,
+   "linesOk": false,
+   "changedLines": [
+    {
+     "kind": "CODE",
+     "oldLines": [
+      10,
+      9
+     ],
+     "newLines": [
+      10,
+      10
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      123,
+      123
+     ],
+     "newLines": [
+      124,
+      123
+     ]
+    }
+   ],
+   "commentOnly": false
+  },
+  {
+   "path": "packages/polaris-dossier/src/review.ts",
+   "status": "M",
+   "sourceSha256Base": "a4a4f1284231e2fa9e563b10b353f93ef7577f649fbb0ad0f4ba411f9607093b",
+   "sourceSha256Head": "8f770a0e0aff0311765c698583c3eb107d4d471916c2305311826ff64af4980e",
+   "printSha256Base": "5de95142d3931ba59f97108d7a1575533dd3b1be94a746bfb5c4a4bdbeb6e93f",
+   "printSha256Head": "abbd2951ebcef0ff3c9a9e2af770ffb2a520e00afa07880ef33d4f52c476644d",
+   "printEqual": false,
+   "linesOk": false,
+   "changedLines": [
+    {
+     "kind": "CODE",
+     "oldLines": [
+      1,
+      1
+     ],
+     "newLines": [
+      1,
+      0
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      5,
+      4
+     ],
+     "newLines": [
+      4,
+      4
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      64,
+      64
+     ],
+     "newLines": [
+      64,
+      63
+     ]
+    }
+   ],
+   "commentOnly": false
+  },
+  {
+   "path": "packages/polaris-dossier/src/screen.ts",
+   "status": "M",
+   "sourceSha256Base": "dfb0cfe774454494584f4798f4e6355f49d3a99ec26826eebb0f93caee92d4ec",
+   "sourceSha256Head": "1bf4ec6c347e028a0ca75fbb1efb3ce237748e4010962e1b68592446c8b2b8d3",
+   "printSha256Base": "5a99fa7f18fbf81497602e97fd58d05ed456fbe881f2454b80d07104abc9162b",
+   "printSha256Head": "98d49dc98ea82f17cb4aae9c074363b2ccb6a450ba2f44cf8d70132d1aa82ac6",
+   "printEqual": false,
+   "linesOk": false,
+   "changedLines": [
+    {
+     "kind": "CODE",
+     "oldLines": [
+      1,
+      1
+     ],
+     "newLines": [
+      1,
+      0
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      7,
+      6
+     ],
+     "newLines": [
+      6,
+      6
+     ]
+    },
+    {
+     "line": 126,
+     "kind": "CODE"
+    },
+    {
+     "line": 151,
+     "kind": "CODE"
+    }
+   ],
+   "commentOnly": false
+  },
+  {
+   "path": "packages/polaris-dossier/src/session-handover.ts",
+   "status": "M",
+   "sourceSha256Base": "ada0c0772d5001cdc90ac2b42cea46d7525b69ece8156d13d8b7ef51da8803b7",
+   "sourceSha256Head": "1728d9223bda30c28b597ac81039edb448e3e64f430cbc38720d520fa836d18b",
+   "printSha256Base": "873c38aa729fb1cff53349fcef043df9d47826ce0aa429e03d2c8feee992c2d6",
+   "printSha256Head": "6ccef06b0d8fc8eb9265bc381245a463cb24c2097bfecc583a943b869dfd497b",
+   "printEqual": false,
+   "linesOk": false,
+   "changedLines": [
+    {
+     "kind": "CODE",
+     "oldLines": [
+      1,
+      1
+     ],
+     "newLines": [
+      1,
+      0
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      4,
+      3
+     ],
+     "newLines": [
+      3,
+      3
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      45,
+      45
+     ],
+     "newLines": [
+      45,
+      44
+     ]
+    }
+   ],
+   "commentOnly": false
+  },
+  {
+   "path": "packages/polaris-dossier/src/session-view.ts",
+   "status": "M",
+   "sourceSha256Base": "bf224d0cd8d83b22feae3d7cf36a5459d51d1efcc96667c5e55844c1e6b40d0e",
+   "sourceSha256Head": "c9d43eb9ac245d47162054cdd9e66af982ab6576d5d4fe7a9d6f69a39136f112",
+   "printSha256Base": "f56a08bc66dcb90800e48e246e8ab714e324d0b83be8c1e8ea6cdfa056f66ff0",
+   "printSha256Head": "ddfbdb6f3a6daead4c285f50aaa4e4574f0e88d7de2415f6a32e917ce814e0c6",
+   "printEqual": false,
+   "linesOk": false,
+   "changedLines": [
+    {
+     "kind": "CODE",
+     "oldLines": [
+      1,
+      1
+     ],
+     "newLines": [
+      1,
+      0
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      6,
+      5
+     ],
+     "newLines": [
+      5,
+      5
+     ]
+    },
+    {
+     "line": 78,
+     "kind": "CODE"
+    }
+   ],
+   "commentOnly": false
+  },
+  {
+   "path": "packages/polaris-dossier/src/waiting-sessions.ts",
+   "status": "M",
+   "sourceSha256Base": "0e63ad275e9513d538851ef5c6825813d31fe198161c0b1f88fa1e19667c0420",
+   "sourceSha256Head": "f06ec3c3bb0351adbe3e29d425f36e796730d1525e93e49617dfbe1708fc36e2",
+   "printSha256Base": "6682ca16f820a6f59bd521daf61b32b0186193e815fa0fd27621c3f09d555943",
+   "printSha256Head": "52dd500f038b313d476a9f43f24ba3eec03c6e8819f95bbdbaa0a79e536d1e7e",
+   "printEqual": false,
+   "linesOk": false,
+   "changedLines": [
+    {
+     "kind": "CODE",
+     "oldLines": [
+      1,
+      1
+     ],
+     "newLines": [
+      1,
+      0
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      5,
+      4
+     ],
+     "newLines": [
+      4,
+      4
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      72,
+      72
+     ],
+     "newLines": [
+      72,
+      71
+     ]
+    }
+   ],
+   "commentOnly": false
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/consent-ports.ts",
+   "status": "M",
+   "sourceSha256Base": "24d3534a49821453ae193e5fbec09b86e60789d508f1c45b4dd999394efce9f1",
+   "sourceSha256Head": "b9713073670b9e69efcd6bc591af92d10ca928e7501ae87f2cf12efebae937ca",
+   "printSha256Base": "c6561f45dd4d7289746a1b9151eab0946c28f259e732f13f77214deb5ca33d11",
+   "printSha256Head": "2e3aef01546cd3927d9aced001effa1be16d805d86871290ec5a9b86537ad8e4",
+   "printEqual": false,
+   "linesOk": false,
+   "changedLines": [
+    {
+     "kind": "CODE",
+     "oldLines": [
+      1,
+      1
+     ],
+     "newLines": [
+      1,
+      0
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      3,
+      2
+     ],
+     "newLines": [
+      2,
+      2
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      60,
+      60
+     ],
+     "newLines": [
+      60,
+      59
+     ]
+    }
+   ],
+   "commentOnly": false
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.ts",
+   "status": "M",
+   "sourceSha256Base": "da42b88df3bc9309685b5f141144edff2d99fee843d84920f5606d934fc15176",
+   "sourceSha256Head": "4804e2e90fd7ab043be1871ec27229955978ba13df345e2fdf84668abfc054b1",
+   "printSha256Base": "88063c7d393cd704d55f9c650d26223fc2076ac38a1c2fceafa6f76ae3c25f1b",
+   "printSha256Head": "983e14b6634aaba77277430873f3e03c34d0a65ed90c69bc4727ff9793f8d30c",
+   "printEqual": false,
+   "linesOk": false,
+   "changedLines": [
+    {
+     "kind": "CODE",
+     "oldLines": [
+      1,
+      1
+     ],
+     "newLines": [
+      1,
+      0
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      4,
+      3
+     ],
+     "newLines": [
+      3,
+      3
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      57,
+      57
+     ],
+     "newLines": [
+      57,
+      56
+     ]
+    }
+   ],
+   "commentOnly": false
+  },
+  {
+   "path": "packages/polaris-generation-core/src/canonical-json.ts",
+   "status": "M",
+   "sourceSha256Base": "35128de621c8afc44ed51f911415568843b87da28b3b4322a7f97ce9f55a44e7",
+   "sourceSha256Head": "4d7e745dc505c0de74666511a90ccda4673a5bc3d3e9deb73f424bce92875608",
+   "printSha256Base": "71dde46b2b4c4a92efcb6566144dcfb2493c2ea862090bcd9134cd49a50f4df3",
+   "printSha256Head": "be7300540be6073bbb2a6e2807c0bc665753acfab195c0daf5fec4be719dee2f",
+   "printEqual": false,
+   "linesOk": false,
+   "changedLines": [
+    {
+     "kind": "CODE",
+     "oldLines": [
+      1,
+      1
+     ],
+     "newLines": [
+      1,
+      0
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      3,
+      2
+     ],
+     "newLines": [
+      2,
+      2
+     ]
+    },
+    {
+     "line": 125,
+     "kind": "CODE"
+    }
+   ],
+   "commentOnly": false
+  },
+  {
+   "path": "packages/polaris-generation-core/src/dossier-evaluation.ts",
+   "status": "M",
+   "sourceSha256Base": "39f0ad1f13eed182f31b3ccb67b7b44ec6f8e3c34553cabd0b5943f77d0ca5d8",
+   "sourceSha256Head": "5beea0c6b36a4032f11c87e8ef27fd9c3a036dad2824a311e53bbfcb32d316f2",
+   "printSha256Base": "bf862d7a64cc4d2d3aa6ccb6016124a969c112b903afaa56d7b8dcd7d32e13ca",
+   "printSha256Head": "3dc67aeeb5084ba450ce9637c147ec2fd94d660ec41d9ebd5ccfb8f9a13fc2b7",
+   "printEqual": false,
+   "linesOk": false,
+   "changedLines": [
+    {
+     "line": 1,
+     "kind": "CODE"
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      510,
+      511
+     ],
+     "newLines": [
+      510,
+      509
+     ]
+    }
+   ],
+   "commentOnly": false
+  },
+  {
+   "path": "packages/polaris-generation-core/src/dossier-profile.ts",
+   "status": "M",
+   "sourceSha256Base": "4a316ae452ab16a5cec6051810ce562af2ab988af63ff1212c237b19e5f356df",
+   "sourceSha256Head": "8550ba40643cfed9f0e72cde31d3afa7938564fc54ba162ecfbbe46c18e9224f",
+   "printSha256Base": "bcb1633f3e723f78a6aecd12b8adc17a9c2e3531bb7c3ca697a35b5fff830cb4",
+   "printSha256Head": "b2e9dfda280e13367e2fc0b9815fbe83518d86a4347221b84188256e31d785e8",
+   "printEqual": false,
+   "linesOk": false,
+   "changedLines": [
+    {
+     "line": 8,
+     "kind": "CODE"
+    },
+    {
+     "line": 111,
+     "kind": "CODE"
+    }
+   ],
+   "commentOnly": false
+  },
+  {
+   "path": "packages/polaris-generation-core/src/generation-source.ts",
+   "status": "M",
+   "sourceSha256Base": "3ff111820b63f4f198f8cef20d0cd88312881ef5c73d10a0ca7a471aea25a069",
+   "sourceSha256Head": "c3a392d23c6ab5cf4632b2ecca60cdbedbfbdeff7a0a1b305d688835481bee74",
+   "printSha256Base": "a7252d7aba9772e1979b359cb4004132603ff77aec912b3185aef4fd0309d74e",
+   "printSha256Head": "e35d0e60bf0a9c7411c462b32d1ccdd0b4060c3f48805845f05b8cb77c12d126",
+   "printEqual": false,
+   "linesOk": false,
+   "changedLines": [
+    {
+     "kind": "CODE",
+     "oldLines": [
+      2,
+      1
+     ],
+     "newLines": [
+      2,
+      2
+     ]
+    },
+    {
+     "line": 216,
+     "kind": "CODE"
+    },
+    {
+     "line": 253,
+     "kind": "CODE"
+    },
+    {
+     "line": 335,
+     "kind": "CODE"
+    },
+    {
+     "line": 399,
+     "kind": "CODE"
+    }
+   ],
+   "commentOnly": false
+  },
+  {
+   "path": "packages/polaris-generation-core/src/pipeline.ts",
+   "status": "M",
+   "sourceSha256Base": "d4fbf19f6d1fa5fa260de2f3c637ae408153a206242053299f2461802475e711",
+   "sourceSha256Head": "89df81566b51fdcc24376f6b1282fea7d2110132dd7caa7c198bb03b00b45164",
+   "printSha256Base": "ca8bd9b5332d69d60d300b562d27ed95591cd889acdc456fbdfe62dcd999b3a7",
+   "printSha256Head": "a2bcb2e91ff0b40913688e324dc79a48648be5f2592f4122454b3404d76751f4",
+   "printEqual": false,
+   "linesOk": false,
+   "changedLines": [
+    {
+     "line": 4,
+     "kind": "CODE"
+    },
+    {
+     "line": 306,
+     "kind": "CODE"
+    }
+   ],
+   "commentOnly": false
+  },
+  {
+   "path": "packages/polaris-generation-core/src/prompts.ts",
+   "status": "M",
+   "sourceSha256Base": "87eb64605fa488626d9c6a5408eb7f7b13a26a7015cc2523796ea4c9a7988ef8",
+   "sourceSha256Head": "5c3387dd012b00a4e7f82803f518a266c67ccf57fa60d7cfcfd8d45b7b7e51d7",
+   "printSha256Base": "a6aab71386f089942c45b8126a6f51603cde565f2962a3725999745355a2dfe6",
+   "printSha256Head": "b6e95194dba1b82f6334c42e51c7738da155af87b58e96e4413c3b373beb9c5d",
+   "printEqual": false,
+   "linesOk": false,
+   "changedLines": [
+    {
+     "kind": "CODE",
+     "oldLines": [
+      1,
+      0
+     ],
+     "newLines": [
+      1,
+      2
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      149,
+      157
+     ],
+     "newLines": [
+      151,
+      150
+     ]
+    }
+   ],
+   "commentOnly": false
+  },
+  {
+   "path": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "status": "M",
+   "sourceSha256Base": "5d3cb7538eec7e90b6a711eb741cb7a59d401029365c72b8c13ec2c56fcba32c",
+   "sourceSha256Head": "9c2e4ff264c4799a50236e1c2ebff73c80d1ad3ed4fd5a1520a9e607d8b62ee0",
+   "printSha256Base": "a1e9e10bbdcdeaab1cda2b6c85ce796714b5bcdba2eca20ad2b2492a8f6a6b97",
+   "printSha256Head": "888c90f9cdbafe1087cbc1cd98be4268236995e990568622b35839db66def269",
+   "printEqual": false,
+   "linesOk": false,
+   "changedLines": [
+    {
+     "line": 1,
+     "kind": "CODE"
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      57,
+      57
+     ],
+     "newLines": [
+      57,
+      56
+     ]
+    }
+   ],
+   "commentOnly": false
+  },
+  {
+   "path": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "status": "M",
+   "sourceSha256Base": "6567b00948e88e5b222d6c734061c473ff16f1a5bf17b0aa117117dfa2d4e1c2",
+   "sourceSha256Head": "cb04ededc98c4557644306a6b60c89507e8850a89403df34b7cb62f865164ed1",
+   "printSha256Base": "4010d7ed8c9e66af07ede7ae13df0885144a89a1d38a6623a2417e6275bd8499",
+   "printSha256Head": "169fc967744527a253d810f87b38cb99a5ef2dbe0aed88786741e79872c4dfdb",
+   "printEqual": false,
+   "linesOk": false,
+   "changedLines": [
+    {
+     "line": 1,
+     "kind": "CODE"
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      35,
+      35
+     ],
+     "newLines": [
+      35,
+      34
+     ]
+    }
+   ],
+   "commentOnly": false
+  },
+  {
+   "path": "packages/support/src/deep-freeze.ts",
+   "status": "A",
+   "commentOnly": false
+  },
+  {
+   "path": "packages/support/src/index.ts",
+   "status": "A",
+   "commentOnly": false
+  },
+  {
+   "path": "packages/support/src/sha256.ts",
+   "status": "A",
+   "commentOnly": false
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/act-fields.ts",
+   "status": "M",
+   "sourceSha256Base": "09a7c2e5c0514349e10b2b82a0aaf55aee9f3fac261385716ec3f70672552986",
+   "sourceSha256Head": "dcc451e83fc1ad97ef3cc5b1cf97dd979d1fba9de4588fc841958c03e8243fef",
+   "printSha256Base": "47a66d9451fd3a52a28ed85a46132c4d9a9842a832f0439a7c45e94b67e72fee",
+   "printSha256Head": "c80e6cbe94d10872d936be9c27d601fcf65d25b919d485f865c015ffb03d22a0",
+   "printEqual": false,
+   "linesOk": false,
+   "changedLines": [
+    {
+     "kind": "CODE",
+     "oldLines": [
+      15,
+      16
+     ],
+     "newLines": [
+      15,
+      14
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      47,
+      49
+     ],
+     "newLines": [
+      45,
+      44
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      54,
+      62
+     ],
+     "newLines": [
+      49,
+      48
+     ]
+    }
+   ],
+   "commentOnly": false
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/body-read-authority.ts",
+   "status": "M",
+   "sourceSha256Base": "f612651d13421c0ffcba0d8db9f5240dcb521aa2c0315b5316b92c52a7cb7b77",
+   "sourceSha256Head": "20f767ad97e2b9568c29de8b81f96e33279a737b65646af2c76e58aaeada547d",
+   "printSha256Base": "60fd9188e7795e97ba00da9ee1c6916eb7e1cbdcfb157a56d7ae03733e9a7552",
+   "printSha256Head": "71bbd4b378a41457d7beb762e6a21d0d66b97c867aba40ca5e6f2a2a54ed959e",
+   "printEqual": false,
+   "linesOk": false,
+   "changedLines": [
+    {
+     "kind": "CODE",
+     "oldLines": [
+      37,
+      36
+     ],
+     "newLines": [
+      37,
+      37
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      46,
+      46
+     ],
+     "newLines": [
+      47,
+      46
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      51,
+      51
+     ],
+     "newLines": [
+      51,
+      50
+     ]
+    }
+   ],
+   "commentOnly": false
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/git-object-reader.ts",
+   "status": "M",
+   "sourceSha256Base": "9d43268faf48b9099f4ffc626be368bd0daf04159b240fa6d7d915e0de7f1abb",
+   "sourceSha256Head": "19405187526e79585f92b65a926a07492929ea7335dd5a4994b8f204b7a0bf46",
+   "printSha256Base": "ae0390af5560559301d96b0f86f2c69fedb97ddaa98630e0797b2927c34d1079",
+   "printSha256Head": "f13e64670ab6dc2d7a534a50795bf62426a61bfbbfd1542c7a55744fc8b795e5",
+   "printEqual": false,
+   "linesOk": false,
+   "changedLines": [
+    {
+     "line": 29,
+     "kind": "CODE"
+    },
+    {
+     "line": 288,
+     "kind": "CODE"
+    }
+   ],
+   "commentOnly": false
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/model.ts",
+   "status": "M",
+   "sourceSha256Base": "7d752be94be204f917a679f05d99ea133536fdac4c0d0071688d78ef242499d4",
+   "sourceSha256Head": "9ab58377379c17fa0a09f84fd45441a1eb0f44d1edf82b07c496f9d49a87ce2f",
+   "printSha256Base": "37bf303872bd8620c6b8ef0330863d4f0941c2cd0c1499500101761061064fd2",
+   "printSha256Head": "136c0ce14283786c32d790b0297ebcf14b4731f808a599ad53b69a649ebcdb63",
+   "printEqual": false,
+   "linesOk": false,
+   "changedLines": [
+    {
+     "kind": "CODE",
+     "oldLines": [
+      1,
+      1
+     ],
+     "newLines": [
+      1,
+      0
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      14,
+      13
+     ],
+     "newLines": [
+      13,
+      13
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      382,
+      388
+     ],
+     "newLines": [
+      382,
+      381
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      471,
+      474
+     ],
+     "newLines": [
+      464,
+      463
+     ]
+    }
+   ],
+   "commentOnly": false
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/owner-act-drafter.ts",
+   "status": "M",
+   "sourceSha256Base": "1dfea09c97b4b342df776a0978ec494d834cfae7d7533e4a6419e5b92cc162e3",
+   "sourceSha256Head": "d29e5183e763ad087a8c6ce597a8dfe9633c9b1d11b7361121507a2cd7855570",
+   "printSha256Base": "61e4a6b9ab13aa7c955a3fb93b1bd717138523bf8dfd5b04d4fd73a7a47dbb7a",
+   "printSha256Head": "04944512bcfeae09331a59602d8ac2d3b1158900dc92971f0475385b1bc1019c",
+   "printEqual": false,
+   "linesOk": false,
+   "changedLines": [
+    {
+     "kind": "CODE",
+     "oldLines": [
+      17,
+      18
+     ],
+     "newLines": [
+      17,
+      16
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      20,
+      19
+     ],
+     "newLines": [
+      18,
+      18
+     ]
+    },
+    {
+     "line": 93,
+     "kind": "CODE"
+    }
+   ],
+   "commentOnly": false
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/poc-seeds.ts",
+   "status": "M",
+   "sourceSha256Base": "4aebb7ad53b19c2173349f911641f965c7f3e348d71d790f38795d973e86fb41",
+   "sourceSha256Head": "0e2ee4ab20e65ac4d24d8a81ea655529350c6b1949e98bf51317f835ad7a3152",
+   "printSha256Base": "bf36dd964c997ae2ad8e285eb197dde3c75a36c8d12b1a25cd67b344b404ac74",
+   "printSha256Head": "220ff4c2f837daa34b8bdcee918f68cf12473549e3b7ca30201d211be4671ea2",
+   "printEqual": false,
+   "linesOk": false,
+   "changedLines": [
+    {
+     "kind": "CODE",
+     "oldLines": [
+      1,
+      0
+     ],
+     "newLines": [
+      1,
+      1
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      85,
+      95
+     ],
+     "newLines": [
+      86,
+      85
+     ]
+    }
+   ],
+   "commentOnly": false
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+   "status": "M",
+   "sourceSha256Base": "df5e1122af74643a09c28a450751242fad18f47760901b137a9c8d8fdf2f6ea5",
+   "sourceSha256Head": "c32ab4e3dbe509413a4d31afc1bb7a68c1a5a8b2b1d21945b72deb9e54617e34",
+   "printSha256Base": "e079db85357b6bba420b01e1907cc87f56b7f098d7a6933b45c5b695681ae144",
+   "printSha256Head": "62f34bae1a0d61c0608a69ea8cc6832937df7cee48de8dfa5d3c843d6032322c",
+   "printEqual": false,
+   "linesOk": false,
+   "changedLines": [
+    {
+     "line": 27,
+     "kind": "CODE"
+    },
+    {
+     "line": 342,
+     "kind": "CODE"
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      519,
+      526
+     ],
+     "newLines": [
+      519,
+      518
+     ]
+    }
+   ],
+   "commentOnly": false
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+   "status": "M",
+   "sourceSha256Base": "e9bcfd87e560b5904ee186e3c54bcbf1a1f30d6419e67036a41d6e1da34c2121",
+   "sourceSha256Head": "db2cd5cfb37f45895ca0794169339ca680918d0111c658534e6ede301a8d04a0",
+   "printSha256Base": "4067fef0d11e7ccae0511d7e547523821c96b526015c4bec88ec4f5eb405439e",
+   "printSha256Head": "ef8f50d1481e9860301362be996cba70f76803f939949aa9537382d2e9b20e43",
+   "printEqual": false,
+   "linesOk": false,
+   "changedLines": [
+    {
+     "kind": "CODE",
+     "oldLines": [
+      27,
+      26
+     ],
+     "newLines": [
+      27,
+      27
+     ]
+    },
+    {
+     "line": 337,
+     "kind": "CODE"
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      357,
+      364
+     ],
+     "newLines": [
+      358,
+      357
+     ]
+    },
+    {
+     "line": 643,
+     "kind": "CODE"
+    }
+   ],
+   "commentOnly": false
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/response-identity.ts",
+   "status": "M",
+   "sourceSha256Base": "c191332d854d4de7b22bd1e5ece65d6f7994c5275805b681955a9122be8571b1",
+   "sourceSha256Head": "0347e2e9c614efcd386e8636025e4bcf04a2f2bbc748c4e36493be8c8530b506",
+   "printSha256Base": "d24f2c133454d466ebad98966eb475ce70c0a917af0c2a9b00ba4e8f9838c4aa",
+   "printSha256Head": "f485948657225352050ddd96ca483c7e900b2b06e753229bed7d0b7cf270041d",
+   "printEqual": false,
+   "linesOk": false,
+   "changedLines": [
+    {
+     "line": 1,
+     "kind": "CODE"
+    },
+    {
+     "line": 233,
+     "kind": "CODE"
+    }
+   ],
+   "commentOnly": false
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/walkthrough-judgment.ts",
+   "status": "M",
+   "sourceSha256Base": "a64ef4c0d3891a5e5e7073ef63d14b9c19d0c50bd40a1f96ed1a3341a24e808e",
+   "sourceSha256Head": "c9aca29a91547529ad56fec32f7f70c7c959824e73fdc5ac7ee92416ef97cd14",
+   "printSha256Base": "6c2ced6dd187cfe66306a054b7b769a5fbec5d5e61aba5a0d4ead4acdaed7bf1",
+   "printSha256Head": "a9a461d10aafb2d2df3fb268ae2293d5c957f9639083343ccfe6fce8a6707b7c",
+   "printEqual": false,
+   "linesOk": false,
+   "changedLines": [
+    {
+     "kind": "CODE",
+     "oldLines": [
+      35,
+      34
+     ],
+     "newLines": [
+      35,
+      35
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      46,
+      46
+     ],
+     "newLines": [
+      47,
+      46
+     ]
+    },
+    {
+     "kind": "CODE",
+     "oldLines": [
+      51,
+      51
+     ],
+     "newLines": [
+      51,
+      50
+     ]
+    }
+   ],
+   "commentOnly": false
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/walkthrough-readiness.ts",
+   "status": "M",
+   "sourceSha256Base": "a4012784b6de8994948caf01f10de669fe3689630333a59bb22a0492aabeb319",
+   "sourceSha256Head": "8e77c7c48df1395195e7dc6eb2b5e13b1f4152ddb8d8bf2d4183ca41024aeaf6",
+   "printSha256Base": "aa6ca4cb5ac34f8ce6843cad88a4f50ca601b096c0a768df94a3339db709870d",
+   "printSha256Head": "bb56c40f3629b888d326c06a7932c5d3a68dde0371041d5211145d9fad5ef5c3",
+   "printEqual": false,
+   "linesOk": false,
+   "changedLines": [
+    {
+     "line": 20,
+     "kind": "CODE"
+    },
+    {
+     "line": 126,
+     "kind": "CODE"
+    }
+   ],
+   "commentOnly": false
+  }
+ ]
+}

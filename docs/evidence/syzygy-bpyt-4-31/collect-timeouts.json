@@ -1,0 +1,234 @@
+{
+ "tool": "collect_timeouts.py",
+ "toolSha256": "bd42de96ef7a48cd48a39d246b3cfdc71aad3483f431a52497b5f2b5adc4fa67",
+ "base": {
+  "commit": "f7477f52c49ee347f96b92703887c31f6be49e07",
+  "tests": 5411,
+  "distinctKeys": 5402
+ },
+ "head": {
+  "commit": "d627a6b415b21644b9a07769b9328933ca748d1c",
+  "tests": 5411,
+  "distinctKeys": 5402
+ },
+ "changed": [
+  {
+   "test": "apps/three-surface-poc/src/cdp-browser.test.ts :: Chrome singleton directory (syzygy-bpyt.4.11) > checks no user where the system has no user ids, and removes the directory",
+   "base": 30000,
+   "head": 5000
+  },
+  {
+   "test": "apps/three-surface-poc/src/cdp-browser.test.ts :: Chrome singleton directory (syzygy-bpyt.4.11) > does not fail the run when the singleton directory cannot be removed",
+   "base": 30000,
+   "head": 5000
+  },
+  {
+   "test": "apps/three-surface-poc/src/cdp-browser.test.ts :: Chrome singleton directory (syzygy-bpyt.4.11) > follows no link and removes no file: a link to a directory and a plain file with Chrome's name both stay",
+   "base": 30000,
+   "head": 5000
+  },
+  {
+   "test": "apps/three-surface-poc/src/cdp-browser.test.ts :: Chrome singleton directory (syzygy-bpyt.4.11) > keeps a directory made under the same name after the one that was read, as when Chrome exits cleanly and another Chrome follows",
+   "base": 30000,
+   "head": 5000
+  },
+  {
+   "test": "apps/three-surface-poc/src/cdp-browser.test.ts :: Chrome singleton directory (syzygy-bpyt.4.11) > keeps a directory that belongs to another user, never entering it",
+   "base": 30000,
+   "head": 5000
+  },
+  {
+   "test": "apps/three-surface-poc/src/cdp-browser.test.ts :: Chrome singleton directory (syzygy-bpyt.4.11) > keeps a directory that is not directly under the temp directory, whether it was given or read from the link",
+   "base": 30000,
+   "head": 5000
+  },
+  {
+   "test": "apps/three-surface-poc/src/cdp-browser.test.ts :: Chrome singleton directory (syzygy-bpyt.4.11) > keeps a directory whose name is not exactly Chrome's: another prefix, no suffix, a longer name, a symbol in the suffix",
+   "base": 30000,
+   "head": 5000
+  },
+  {
+   "test": "apps/three-surface-poc/src/cdp-browser.test.ts :: Chrome singleton directory (syzygy-bpyt.4.11) > keeps a directory with the recorded inode number on another device",
+   "base": 30000,
+   "head": 5000
+  },
+  {
+   "test": "apps/three-surface-poc/src/cdp-browser.test.ts :: Chrome singleton directory (syzygy-bpyt.4.11) > keeps the directory a link names when the link is not the running user's",
+   "base": 30000,
+   "head": 5000
+  },
+  {
+   "test": "apps/three-surface-poc/src/cdp-browser.test.ts :: Chrome singleton directory (syzygy-bpyt.4.11) > keeps the directory a link names when the profile is not the running user's, as in a shared temp directory where another user made it first",
+   "base": 30000,
+   "head": 5000
+  },
+  {
+   "test": "apps/three-surface-poc/src/cdp-browser.test.ts :: Chrome singleton directory (syzygy-bpyt.4.11) > reads the directory from the profile's link when none was read while Chrome ran",
+   "base": 30000,
+   "head": 5000
+  },
+  {
+   "test": "apps/three-surface-poc/src/cdp-browser.test.ts :: Chrome singleton directory (syzygy-bpyt.4.11) > removes the Chromium form of the name too",
+   "base": 30000,
+   "head": 5000
+  },
+  {
+   "test": "apps/three-surface-poc/src/cdp-browser.test.ts :: Chrome singleton directory (syzygy-bpyt.4.11) > removes the directory a profile's link names when the profile and the link are the running user's, whatever removes the profile",
+   "base": 30000,
+   "head": 5000
+  },
+  {
+   "test": "apps/three-surface-poc/src/cdp-browser.test.ts :: Chrome singleton directory (syzygy-bpyt.4.11) > removes the name without a leading dot too, which Chrome 147 to 155 make, whether given or read from the link",
+   "base": 30000,
+   "head": 5000
+  },
+  {
+   "test": "apps/three-surface-poc/src/cdp-browser.test.ts :: Chrome singleton directory (syzygy-bpyt.4.11) > removes the profile and nothing else when Chrome left no singleton directory (a clean exit)",
+   "base": 30000,
+   "head": 5000
+  },
+  {
+   "test": "apps/three-surface-poc/src/cdp-browser.test.ts :: Chrome singleton directory (syzygy-bpyt.4.11) > removes the singleton directory read while Chrome ran, with the profile, and only that one",
+   "base": 30000,
+   "head": 5000
+  },
+  {
+   "test": "apps/three-surface-poc/src/fixture-directories.test.ts :: fixture directories a killed run left behind (syzygy-bpyt.4.10) > asks the operating system for the temp directory, so it sweeps the same directory the copies are made in when TMPDIR is unset",
+   "base": 30000,
+   "head": 5000
+  },
+  {
+   "test": "apps/three-surface-poc/src/fixture-directories.test.ts :: fixture directories a killed run left behind (syzygy-bpyt.4.10) > checks no user where the system has no user ids, and removes the dead process's directory",
+   "base": 30000,
+   "head": 5000
+  },
+  {
+   "test": "apps/three-surface-poc/src/fixture-directories.test.ts :: fixture directories a killed run left behind (syzygy-bpyt.4.10) > does not fail the run when a dead process's directory cannot be removed",
+   "base": 30000,
+   "head": 5000
+  },
+  {
+   "test": "apps/three-surface-poc/src/fixture-directories.test.ts :: fixture directories a killed run left behind (syzygy-bpyt.4.10) > does not fail the run when the temp directory cannot be listed",
+   "base": 30000,
+   "head": 5000
+  },
+  {
+   "test": "apps/three-surface-poc/src/fixture-directories.test.ts :: fixture directories a killed run left behind (syzygy-bpyt.4.10) > follows no symlink and removes no file: only a directory with a dead pid in its name goes",
+   "base": 30000,
+   "head": 5000
+  },
+  {
+   "test": "apps/three-surface-poc/src/fixture-directories.test.ts :: fixture directories a killed run left behind (syzygy-bpyt.4.10) > keeps a directory that belongs to another user, the sweep never descending into it",
+   "base": 30000,
+   "head": 5000
+  },
+  {
+   "test": "apps/three-surface-poc/src/fixture-directories.test.ts :: fixture directories a killed run left behind (syzygy-bpyt.4.10) > keeps a directory whose pid fails with anything but ESRCH",
+   "base": 30000,
+   "head": 5000
+  },
+  {
+   "test": "apps/three-surface-poc/src/fixture-directories.test.ts :: fixture directories a killed run left behind (syzygy-bpyt.4.10) > keeps a name that carries no pid and namespace segment, whatever its suffix",
+   "base": 30000,
+   "head": 5000
+  },
+  {
+   "test": "apps/three-surface-poc/src/fixture-directories.test.ts :: fixture directories a killed run left behind (syzygy-bpyt.4.10) > keeps the directories of a dead pid that belong to another PID namespace, whatever the neighbouring value",
+   "base": 30000,
+   "head": 5000
+  },
+  {
+   "test": "apps/three-surface-poc/src/fixture-directories.test.ts :: fixture directories a killed run left behind (syzygy-bpyt.4.10) > keeps the directories of a live process, the current one included",
+   "base": 30000,
+   "head": 5000
+  },
+  {
+   "test": "apps/three-surface-poc/src/fixture-directories.test.ts :: fixture directories a killed run left behind (syzygy-bpyt.4.10) > lists only the directory it is given: nothing beside it, nothing below a non-fixture entry",
+   "base": 30000,
+   "head": 5000
+  },
+  {
+   "test": "apps/three-surface-poc/src/fixture-directories.test.ts :: fixture directories a killed run left behind (syzygy-bpyt.4.10) > removes nothing, and lists nothing, where the PID namespace cannot be read, so a sandbox without /proc never sweeps another sandbox's live directories",
+   "base": 30000,
+   "head": 5000
+  },
+  {
+   "test": "apps/three-surface-poc/src/fixture-directories.test.ts :: fixture directories a killed run left behind (syzygy-bpyt.4.10) > removes nothing, and lists nothing, where the PID namespace names no inode, so a sandbox without /proc never sweeps another sandbox's live directories",
+   "base": 30000,
+   "head": 5000
+  },
+  {
+   "test": "apps/three-surface-poc/src/fixture-directories.test.ts :: fixture directories a killed run left behind (syzygy-bpyt.4.10) > removes the copy and the template of a process that is gone",
+   "base": 30000,
+   "head": 5000
+  },
+  {
+   "test": "apps/three-surface-poc/src/fixture-directories.test.ts :: fixture directories a killed run left behind (syzygy-bpyt.4.10) > sweeps the temp directory the process runs under when the global setup runs, and keeps the live and the legacy",
+   "base": 30000,
+   "head": 5000
+  },
+  {
+   "test": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts :: durable lifecycle with an injected generate port > a crash while a call is in flight leaves a claim that refuses any replay, even by a fresh lifecycle",
+   "base": 30000,
+   "head": 5000
+  },
+  {
+   "test": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts :: durable lifecycle with an injected generate port > a generate failure after the claim leaves an uncertain record that a restart never replays",
+   "base": 30000,
+   "head": 5000
+  },
+  {
+   "test": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts :: durable lifecycle with an injected generate port > releases an attempt whose per-call permission is withdrawn without calling generate, and only an exact true permits",
+   "base": 30000,
+   "head": 5000
+  },
+  {
+   "test": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts :: durable lifecycle with an injected generate port > reserves the configured per-attempt ceilings, capped by the request budget",
+   "base": 30000,
+   "head": 5000
+  },
+  {
+   "test": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts :: durable lifecycle with an injected generate port > reuses completed checkpoints after a restart and sends only the missing stage through the new port",
+   "base": 30000,
+   "head": 5000
+  },
+  {
+   "test": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts :: durable lifecycle with an injected generate port > runs the pipeline through the injected port with its permit and abort signal",
+   "base": 30000,
+   "head": 5000
+  },
+  {
+   "test": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts :: opening index in a real browser (PWB-REQ-010, P-98) > a tie on the largest offset is broken by document order (synthetic body, hand-counted)",
+   "base": 60000,
+   "head": 5000
+  },
+  {
+   "test": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts :: opening index in a real browser (PWB-REQ-010, P-98) > following the exact-requirement row by keyboard lands on its target and Tab continues from it (fixture render)",
+   "base": 60000,
+   "head": 5000
+  },
+  {
+   "test": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts :: opening index in a real browser (PWB-REQ-010, P-98) > the opening Unknown aggregate is absent (1280x900): the gaps row says so and routes nowhere; eight rows route",
+   "base": 60000,
+   "head": 5000
+  },
+  {
+   "test": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts :: opening index in a real browser (PWB-REQ-010, P-98) > the opening Unknown aggregate is absent (390x844): the gaps row says so and routes nowhere; eight rows route",
+   "base": 60000,
+   "head": 5000
+  },
+  {
+   "test": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts :: opening index in a real browser (PWB-REQ-010, P-98) > the same holds where a later control shares the target's disclosure (synthetic body)",
+   "base": 60000,
+   "head": 5000
+  },
+  {
+   "test": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts :: opening index in a real browser (PWB-REQ-010, P-98) > with no indexed target rendered, the line follows the index and gives only the total (synthetic body, hand-counted)",
+   "base": 60000,
+   "head": 5000
+  }
+ ],
+ "onlyBase": [],
+ "onlyHead": [],
+ "unchanged": 5359
+}

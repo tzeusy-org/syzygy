@@ -1,0 +1,272 @@
+{
+ "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+ "rows": [
+  {
+   "id": "O1 tag-based array test",
+   "file": "packages/support/src/is-record.ts",
+   "line": 8,
+   "old": "!Array.isArray(value)",
+   "new": "Object.prototype.toString.call(value) !== '[object Array]'",
+   "tests": [
+    "packages/support/src/is-record.test.ts"
+   ],
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 1,
+   "passed": 39,
+   "failed": 2,
+   "total": 41,
+   "firstFailures": [
+    [
+     "isRecord admits an object that claims to be an array by tag",
+     "AssertionError: expected false to be true // Object.is equality"
+    ],
+    [
+     "isRecord admits a proxy whose traps throw, which no trap is asked",
+     "Error: a trap must not run"
+    ]
+   ],
+   "seconds": 2.7,
+   "loadavg": "23.37 24.13 26.34",
+   "killed": true
+  },
+  {
+   "id": "O2 instanceof Object",
+   "file": "packages/support/src/is-record.ts",
+   "line": 8,
+   "old": "value !== null && typeof value === 'object' && !Array.isArray(value)",
+   "new": "value instanceof Object && !Array.isArray(value)",
+   "tests": [
+    "packages/support/src/is-record.test.ts"
+   ],
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 1,
+   "passed": 34,
+   "failed": 7,
+   "total": 41,
+   "firstFailures": [
+    [
+     "isRecord admits an object with no prototype",
+     "AssertionError: expected false to be true // Object.is equality"
+    ],
+    [
+     "isRecord admits a proxy whose traps throw, which no trap is asked",
+     "Error: a trap must not run"
+    ]
+   ],
+   "seconds": 3.9,
+   "loadavg": "24.54 24.36 26.41",
+   "killed": true
+  },
+  {
+   "id": "O3 refuses typed arrays",
+   "file": "packages/support/src/is-record.ts",
+   "line": 8,
+   "old": "!Array.isArray(value);",
+   "new": "!Array.isArray(value) && !ArrayBuffer.isView(value);",
+   "tests": [
+    "packages/support/src/is-record.test.ts"
+   ],
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 1,
+   "passed": 40,
+   "failed": 1,
+   "total": 41,
+   "firstFailures": [
+    [
+     "isRecord admits a typed array",
+     "AssertionError: expected false to be true // Object.is equality"
+    ]
+   ],
+   "seconds": 3.9,
+   "loadavg": "24.54 24.36 26.41",
+   "killed": true
+  },
+  {
+   "id": "O4 rounds the instant",
+   "file": "packages/polaris-dossier/src/iso-of.ts",
+   "line": 9,
+   "old": "new Date(instant)",
+   "new": "new Date(Math.round(instant))",
+   "tests": [
+    "packages/polaris-dossier/src/iso-of.test.ts"
+   ],
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 1,
+   "passed": 17,
+   "failed": 1,
+   "total": 18,
+   "firstFailures": [
+    [
+     "isoOf writes a fraction of a millisecond, which is cut",
+     "AssertionError: expected '1970-01-01T00:00:00.002Z' to be '1970-01-01T00:00:00.001Z' // Object.is equality"
+    ]
+   ],
+   "seconds": 3.9,
+   "loadavg": "24.90 24.43 26.42",
+   "killed": true
+  },
+  {
+   "id": "O5 NaN becomes the epoch",
+   "file": "packages/polaris-dossier/src/iso-of.ts",
+   "line": 9,
+   "old": "new Date(instant)",
+   "new": "new Date(Number.isFinite(instant) ? instant : 0)",
+   "tests": [
+    "packages/polaris-dossier/src/iso-of.test.ts"
+   ],
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 1,
+   "passed": 15,
+   "failed": 3,
+   "total": 18,
+   "firstFailures": [
+    [
+     "isoOf throws a RangeError for NaN instead of writing text",
+     "AssertionError: expected function to throw an error, but it didn't"
+    ],
+    [
+     "isoOf throws a RangeError for positive infinity instead of writing text",
+     "AssertionError: expected function to throw an error, but it didn't"
+    ]
+   ],
+   "seconds": 4.0,
+   "loadavg": "25.15 24.49 26.43",
+   "killed": true
+  },
+  {
+   "id": "O6 registry entry: only null refused",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 132,
+   "old": "entry === undefined || !isRecord(entry)",
+   "new": "entry === undefined || entry === null",
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ],
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 1,
+   "passed": 28,
+   "failed": 4,
+   "total": 32,
+   "firstFailures": [
+    [
+     "the parsers read a JSON container as an object only when it is one surface a first registry entry that is an array as the malformed entries list",
+     "AssertionError: expected { kind: 'parsed', fields: { \u2026(5) } } to deeply equal { kind: 'parsed', fields: { \u2026(5) } }"
+    ],
+    [
+     "the parsers read a JSON container as an object only when it is one surface a first registry entry that is a string as the malformed entries list",
+     "AssertionError: expected { kind: 'parsed', fields: { \u2026(5) } } to deeply equal { kind: 'parsed', fields: { \u2026(5) } }"
+    ]
+   ],
+   "seconds": 3.1,
+   "loadavg": "24.73 24.42 26.39",
+   "killed": true
+  },
+  {
+   "id": "O7 screen scope: only null/undefined refused",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 83,
+   "old": "if (!isRecord(scope))",
+   "new": "if (scope === undefined || scope === null)",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 1,
+   "passed": 126,
+   "failed": 3,
+   "total": 129,
+   "firstFailures": [
+    [
+     "the loader reads each container as an object only when it is one refuses a public-source scope that is an array",
+     "AssertionError: expected { ok: false, \u2026(1) } to deeply equal { ok: false, \u2026(1) }"
+    ],
+    [
+     "the loader reads each container as an object only when it is one refuses a public-source scope that is a string",
+     "AssertionError: expected { ok: false, \u2026(1) } to deeply equal { ok: false, \u2026(1) }"
+    ]
+   ],
+   "seconds": 10.3,
+   "loadavg": "23.30 24.12 26.28",
+   "killed": true
+  },
+  {
+   "id": "O8 redaction: a function admitted",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "line": 73,
+   "old": "if (!isRecord(red))",
+   "new": "if (!isRecord(red) && typeof red !== 'function')",
+   "tests": [
+    "packages/polaris-generation-core/src/secret-redaction.test.ts"
+   ],
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 37,
+   "failed": 0,
+   "total": 37,
+   "firstFailures": [],
+   "seconds": 2.9,
+   "loadavg": "23.30 24.12 26.28",
+   "killed": false
+  },
+  {
+   "id": "O6 registry entry: only null refused [base tests]",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 132,
+   "old": "entry === undefined || !isRecord(entry)",
+   "new": "entry === undefined || entry === null",
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 5,
+   "failed": 0,
+   "total": 5,
+   "firstFailures": [],
+   "seconds": 2.5,
+   "loadavg": "25.28 24.52 26.39",
+   "killed": false
+  },
+  {
+   "id": "O7 screen scope: only null/undefined refused [base tests]",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 83,
+   "old": "if (!isRecord(scope))",
+   "new": "if (scope === undefined || scope === null)",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 110,
+   "failed": 0,
+   "total": 110,
+   "firstFailures": [],
+   "seconds": 10.7,
+   "loadavg": "24.66 24.42 26.34",
+   "killed": false
+  },
+  {
+   "id": "O8 redaction: a function admitted [base tests]",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "line": 73,
+   "old": "if (!isRecord(red))",
+   "new": "if (!isRecord(red) && typeof red !== 'function')",
+   "tests": [
+    "packages/polaris-generation-core/src/secret-redaction.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 26,
+   "failed": 0,
+   "total": 26,
+   "firstFailures": [],
+   "seconds": 3.4,
+   "loadavg": "24.45 24.38 26.32",
+   "killed": false
+  }
+ ]
+}

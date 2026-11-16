@@ -1,0 +1,1570 @@
+{
+ "commit": "28024ade30ac30ffeac3bb09fe0833fe63a43981",
+ "controls": [
+  {
+   "id": "C0-authority-artifact-fields.ts",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ],
+   "exit": 0,
+   "passed": 27,
+   "failed": 0,
+   "total": 27,
+   "failedTests": [],
+   "passed_clean": true
+  },
+  {
+   "id": "N0-authority-artifact-fields.ts-comment",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ],
+   "exit": 0,
+   "passed": 27,
+   "failed": 0,
+   "total": 27,
+   "failedTests": [],
+   "passed_clean": true
+  },
+  {
+   "id": "C0-secret-redaction.ts",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "tests": [
+    "packages/polaris-generation-core/src/secret-redaction.test.ts"
+   ],
+   "exit": 0,
+   "passed": 38,
+   "failed": 0,
+   "total": 38,
+   "failedTests": [],
+   "passed_clean": true
+  },
+  {
+   "id": "N0-secret-redaction.ts-comment",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "tests": [
+    "packages/polaris-generation-core/src/secret-redaction.test.ts"
+   ],
+   "exit": 0,
+   "passed": 38,
+   "failed": 0,
+   "total": 38,
+   "failedTests": [],
+   "passed_clean": true
+  },
+  {
+   "id": "C0-public-source-classification.ts",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "exit": 0,
+   "passed": 233,
+   "failed": 0,
+   "total": 233,
+   "failedTests": [],
+   "passed_clean": true
+  },
+  {
+   "id": "N0-public-source-classification.ts-comment",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "exit": 0,
+   "passed": 233,
+   "failed": 0,
+   "total": 233,
+   "failedTests": [],
+   "passed_clean": true
+  },
+  {
+   "id": "C0-screen.ts",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "exit": 0,
+   "passed": 129,
+   "failed": 0,
+   "total": 129,
+   "failedTests": [],
+   "passed_clean": true
+  },
+  {
+   "id": "N0-screen.ts-comment",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "exit": 0,
+   "passed": 129,
+   "failed": 0,
+   "total": 129,
+   "failedTests": [],
+   "passed_clean": true
+  }
+ ],
+ "mutants": [
+  {
+   "id": "C-authority-artifact-fields-L102n0-A",
+   "group": "C",
+   "class": 1,
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 102,
+   "occurrence": 0,
+   "old": "isRecord(json.value)",
+   "new": "(typeof json.value === 'object' && json.value !== null)",
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ],
+   "exit": 1,
+   "passed": 26,
+   "failed": 1,
+   "total": 27,
+   "failedTests": [
+    "the parsers read a JSON container as an object only when it is one refuse a policy document that is an array"
+   ],
+   "killed": true,
+   "escalated": null,
+   "killedByRelated": false
+  },
+  {
+   "id": "C-authority-artifact-fields-L102n0-B",
+   "group": "C",
+   "class": 1,
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 102,
+   "occurrence": 0,
+   "old": "isRecord(json.value)",
+   "new": "(typeof json.value === 'object' && !Array.isArray(json.value))",
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ],
+   "exit": 1,
+   "passed": 26,
+   "failed": 1,
+   "total": 27,
+   "failedTests": [
+    "the parsers read a JSON container as an object only when it is one refuse a policy document that is null"
+   ],
+   "killed": true,
+   "escalated": null,
+   "killedByRelated": false
+  },
+  {
+   "id": "C-authority-artifact-fields-L102n0-D",
+   "group": "C",
+   "class": 1,
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 102,
+   "occurrence": 0,
+   "old": "isRecord(json.value)",
+   "new": "true",
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ],
+   "exit": 1,
+   "passed": 23,
+   "failed": 4,
+   "total": 27,
+   "failedTests": [
+    "the parsers read a JSON container as an object only when it is one refuse a policy document that is an array",
+    "the parsers read a JSON container as an object only when it is one refuse a policy document that is null",
+    "the parsers read a JSON container as an object only when it is one refuse a policy document that is a string"
+   ],
+   "killed": true,
+   "escalated": null,
+   "killedByRelated": false
+  },
+  {
+   "id": "C-authority-artifact-fields-L121n1-A",
+   "group": "C",
+   "class": 1,
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 121,
+   "occurrence": 1,
+   "old": "isRecord(json.value)",
+   "new": "(typeof json.value === 'object' && json.value !== null)",
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ],
+   "exit": 1,
+   "passed": 26,
+   "failed": 1,
+   "total": 27,
+   "failedTests": [
+    "the parsers read a JSON container as an object only when it is one refuse a registry document that is an array"
+   ],
+   "killed": true,
+   "escalated": null,
+   "killedByRelated": false
+  },
+  {
+   "id": "C-authority-artifact-fields-L121n1-B",
+   "group": "C",
+   "class": 1,
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 121,
+   "occurrence": 1,
+   "old": "isRecord(json.value)",
+   "new": "(typeof json.value === 'object' && !Array.isArray(json.value))",
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ],
+   "exit": 1,
+   "passed": 26,
+   "failed": 1,
+   "total": 27,
+   "failedTests": [
+    "the parsers read a JSON container as an object only when it is one refuse a registry document that is null"
+   ],
+   "killed": true,
+   "escalated": null,
+   "killedByRelated": false
+  },
+  {
+   "id": "C-authority-artifact-fields-L121n1-D",
+   "group": "C",
+   "class": 1,
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 121,
+   "occurrence": 1,
+   "old": "isRecord(json.value)",
+   "new": "true",
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ],
+   "exit": 1,
+   "passed": 23,
+   "failed": 4,
+   "total": 27,
+   "failedTests": [
+    "the parsers read a JSON container as an object only when it is one refuse a registry document that is an array",
+    "the parsers read a JSON container as an object only when it is one refuse a registry document that is null",
+    "the parsers read a JSON container as an object only when it is one refuse a registry document that is a string"
+   ],
+   "killed": true,
+   "escalated": null,
+   "killedByRelated": false
+  },
+  {
+   "id": "C-authority-artifact-fields-L132n2-A",
+   "group": "C",
+   "class": 1,
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 132,
+   "occurrence": 2,
+   "old": "isRecord(entry)",
+   "new": "(typeof entry === 'object' && entry !== null)",
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ],
+   "exit": 1,
+   "passed": 26,
+   "failed": 1,
+   "total": 27,
+   "failedTests": [
+    "the parsers read a JSON container as an object only when it is one surface a first registry entry that is an array as the malformed entries list"
+   ],
+   "killed": true,
+   "escalated": null,
+   "killedByRelated": false
+  },
+  {
+   "id": "C-authority-artifact-fields-L132n2-B",
+   "group": "C",
+   "class": 1,
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 132,
+   "occurrence": 2,
+   "old": "isRecord(entry)",
+   "new": "(typeof entry === 'object' && !Array.isArray(entry))",
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ],
+   "exit": 1,
+   "passed": 26,
+   "failed": 1,
+   "total": 27,
+   "failedTests": [
+    "the parsers read a JSON container as an object only when it is one surface a first registry entry that is null as the malformed entries list"
+   ],
+   "killed": true,
+   "escalated": null,
+   "killedByRelated": false
+  },
+  {
+   "id": "C-authority-artifact-fields-L132n2-D",
+   "group": "C",
+   "class": 1,
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 132,
+   "occurrence": 2,
+   "old": "isRecord(entry)",
+   "new": "true",
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ],
+   "exit": 1,
+   "passed": 23,
+   "failed": 4,
+   "total": 27,
+   "failedTests": [
+    "the parsers read a JSON container as an object only when it is one surface a first registry entry that is an array as the malformed entries list",
+    "the parsers read a JSON container as an object only when it is one surface a first registry entry that is null as the malformed entries list",
+    "the parsers read a JSON container as an object only when it is one surface a first registry entry that is a string as the malformed entries list"
+   ],
+   "killed": true,
+   "escalated": null,
+   "killedByRelated": false
+  },
+  {
+   "id": "C-authority-artifact-fields-L136n3-A",
+   "group": "C",
+   "class": 1,
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 136,
+   "occurrence": 3,
+   "old": "isRecord(subject)",
+   "new": "(typeof subject === 'object' && subject !== null)",
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ],
+   "exit": 1,
+   "passed": 26,
+   "failed": 1,
+   "total": 27,
+   "failedTests": [
+    "the parsers read a JSON container as an object only when it is one surface an entry subject that is an array as the repository field"
+   ],
+   "killed": true,
+   "escalated": null,
+   "killedByRelated": false
+  },
+  {
+   "id": "C-authority-artifact-fields-L136n3-B",
+   "group": "C",
+   "class": 1,
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 136,
+   "occurrence": 3,
+   "old": "isRecord(subject)",
+   "new": "(typeof subject === 'object' && !Array.isArray(subject))",
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ],
+   "exit": 1,
+   "passed": 26,
+   "failed": 1,
+   "total": 27,
+   "failedTests": [
+    "the parsers read a JSON container as an object only when it is one surface an entry subject that is null as the repository field"
+   ],
+   "killed": true,
+   "escalated": null,
+   "killedByRelated": false
+  },
+  {
+   "id": "C-authority-artifact-fields-L136n3-D",
+   "group": "C",
+   "class": 1,
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 136,
+   "occurrence": 3,
+   "old": "isRecord(subject)",
+   "new": "true",
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ],
+   "exit": 1,
+   "passed": 17,
+   "failed": 10,
+   "total": 27,
+   "failedTests": [
+    "the parsers read a JSON container as an object only when it is one surface an entry subject that is an array as the repository field",
+    "the parsers read a JSON container as an object only when it is one surface an entry subject that is null as the repository field",
+    "the parsers read a JSON container as an object only when it is one surface an entry subject that is a string as the repository field"
+   ],
+   "killed": true,
+   "escalated": null,
+   "killedByRelated": false
+  },
+  {
+   "id": "C-authority-artifact-fields-L141n4-A",
+   "group": "C",
+   "class": 1,
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 141,
+   "occurrence": 4,
+   "old": "isRecord(authority)",
+   "new": "(typeof authority === 'object' && authority !== null)",
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ],
+   "exit": 0,
+   "passed": 27,
+   "failed": 0,
+   "total": 27,
+   "failedTests": [],
+   "killed": false,
+   "escalated": {
+    "exit": 0,
+    "passed": 2223,
+    "failed": 0,
+    "total": 2228,
+    "failedTests": []
+   },
+   "killedByRelated": false
+  },
+  {
+   "id": "C-authority-artifact-fields-L141n4-B",
+   "group": "C",
+   "class": 1,
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 141,
+   "occurrence": 4,
+   "old": "isRecord(authority)",
+   "new": "(typeof authority === 'object' && !Array.isArray(authority))",
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ],
+   "exit": 1,
+   "passed": 26,
+   "failed": 1,
+   "total": 27,
+   "failedTests": [
+    "the parsers read a JSON container as an object only when it is one surface typed authority that is null as present, with no write surface"
+   ],
+   "killed": true,
+   "escalated": null,
+   "killedByRelated": false
+  },
+  {
+   "id": "C-authority-artifact-fields-L141n4-D",
+   "group": "C",
+   "class": 1,
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 141,
+   "occurrence": 4,
+   "old": "isRecord(authority)",
+   "new": "true",
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ],
+   "exit": 1,
+   "passed": 26,
+   "failed": 1,
+   "total": 27,
+   "failedTests": [
+    "the parsers read a JSON container as an object only when it is one surface typed authority that is null as present, with no write surface"
+   ],
+   "killed": true,
+   "escalated": null,
+   "killedByRelated": false
+  },
+  {
+   "id": "C-secret-redaction-L71n0-A",
+   "group": "C",
+   "class": 4,
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "line": 71,
+   "occurrence": 0,
+   "old": "isRecord(scope)",
+   "new": "(typeof scope === 'object' && scope !== null)",
+   "tests": [
+    "packages/polaris-generation-core/src/secret-redaction.test.ts"
+   ],
+   "exit": 1,
+   "passed": 37,
+   "failed": 1,
+   "total": 38,
+   "failedTests": [
+    "readSecretRedaction refuses what it does not implement reads null for a scope that is an array that carries the field"
+   ],
+   "killed": true,
+   "escalated": null,
+   "killedByRelated": false
+  },
+  {
+   "id": "C-secret-redaction-L71n0-B",
+   "group": "C",
+   "class": 4,
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "line": 71,
+   "occurrence": 0,
+   "old": "isRecord(scope)",
+   "new": "(typeof scope === 'object' && !Array.isArray(scope))",
+   "tests": [
+    "packages/polaris-generation-core/src/secret-redaction.test.ts"
+   ],
+   "exit": 1,
+   "passed": 37,
+   "failed": 1,
+   "total": 38,
+   "failedTests": [
+    "readSecretRedaction refuses what it does not implement reads null for a scope that is null"
+   ],
+   "killed": true,
+   "escalated": null,
+   "killedByRelated": false
+  },
+  {
+   "id": "C-secret-redaction-L71n0-D",
+   "group": "C",
+   "class": 4,
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "line": 71,
+   "occurrence": 0,
+   "old": "isRecord(scope)",
+   "new": "true",
+   "tests": [
+    "packages/polaris-generation-core/src/secret-redaction.test.ts"
+   ],
+   "exit": 1,
+   "passed": 35,
+   "failed": 3,
+   "total": 38,
+   "failedTests": [
+    "readSecretRedaction refuses what it does not implement reads null for a scope that is null",
+    "readSecretRedaction refuses what it does not implement reads null for a scope that is undefined",
+    "readSecretRedaction refuses what it does not implement reads null for a scope that is an array that carries the field"
+   ],
+   "killed": true,
+   "escalated": null,
+   "killedByRelated": false
+  },
+  {
+   "id": "C-secret-redaction-L73n1-A",
+   "group": "C",
+   "class": 4,
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "line": 73,
+   "occurrence": 1,
+   "old": "isRecord(red)",
+   "new": "(typeof red === 'object' && red !== null)",
+   "tests": [
+    "packages/polaris-generation-core/src/secret-redaction.test.ts"
+   ],
+   "exit": 1,
+   "passed": 36,
+   "failed": 2,
+   "total": 38,
+   "failedTests": [
+    "readSecretRedaction refuses what it does not implement refuses a declaration that is an array",
+    "readSecretRedaction refuses what it does not implement refuses a declaration that is an array that carries every field"
+   ],
+   "killed": true,
+   "escalated": null,
+   "killedByRelated": false
+  },
+  {
+   "id": "C-secret-redaction-L73n1-B",
+   "group": "C",
+   "class": 4,
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "line": 73,
+   "occurrence": 1,
+   "old": "isRecord(red)",
+   "new": "(typeof red === 'object' && !Array.isArray(red))",
+   "tests": [
+    "packages/polaris-generation-core/src/secret-redaction.test.ts"
+   ],
+   "exit": 1,
+   "passed": 37,
+   "failed": 1,
+   "total": 38,
+   "failedTests": [
+    "readSecretRedaction refuses what it does not implement refuses a declaration that is null"
+   ],
+   "killed": true,
+   "escalated": null,
+   "killedByRelated": false
+  },
+  {
+   "id": "C-secret-redaction-L73n1-D",
+   "group": "C",
+   "class": 4,
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "line": 73,
+   "occurrence": 1,
+   "old": "isRecord(red)",
+   "new": "true",
+   "tests": [
+    "packages/polaris-generation-core/src/secret-redaction.test.ts"
+   ],
+   "exit": 1,
+   "passed": 32,
+   "failed": 6,
+   "total": 38,
+   "failedTests": [
+    "readSecretRedaction refuses what it does not implement refuses a declaration that is an array",
+    "readSecretRedaction refuses what it does not implement refuses a declaration that is null",
+    "readSecretRedaction refuses what it does not implement refuses a declaration that is a string"
+   ],
+   "killed": true,
+   "escalated": null,
+   "killedByRelated": false
+  },
+  {
+   "id": "C-public-source-classification-L68n0-A",
+   "group": "C",
+   "class": 4,
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 68,
+   "occurrence": 0,
+   "old": "isRecord(rule)",
+   "new": "(typeof rule === 'object' && rule !== null)",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "exit": 1,
+   "passed": 232,
+   "failed": 1,
+   "total": 233,
+   "failedTests": [
+    "reading the rule passes over a rules entry that is not an object, as if it were not there"
+   ],
+   "killed": true,
+   "escalated": null,
+   "killedByRelated": false
+  },
+  {
+   "id": "C-public-source-classification-L68n0-B",
+   "group": "C",
+   "class": 4,
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 68,
+   "occurrence": 0,
+   "old": "isRecord(rule)",
+   "new": "(typeof rule === 'object' && !Array.isArray(rule))",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "exit": 1,
+   "passed": 232,
+   "failed": 1,
+   "total": 233,
+   "failedTests": [
+    "reading the rule passes over a rules entry that is not an object, as if it were not there"
+   ],
+   "killed": true,
+   "escalated": null,
+   "killedByRelated": false
+  },
+  {
+   "id": "C-public-source-classification-L68n0-D",
+   "group": "C",
+   "class": 4,
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 68,
+   "occurrence": 0,
+   "old": "isRecord(rule)",
+   "new": "true",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "exit": 1,
+   "passed": 232,
+   "failed": 1,
+   "total": 233,
+   "failedTests": [
+    "reading the rule passes over a rules entry that is not an object, as if it were not there"
+   ],
+   "killed": true,
+   "escalated": null,
+   "killedByRelated": false
+  },
+  {
+   "id": "C-public-source-classification-L78n1-A",
+   "group": "C",
+   "class": 4,
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 78,
+   "occurrence": 1,
+   "old": "isRecord(pathRule)",
+   "new": "(typeof pathRule === 'object' && pathRule !== null)",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "exit": 1,
+   "passed": 232,
+   "failed": 1,
+   "total": 233,
+   "failedTests": [
+    "reading the rule refuses a path rule that is an array carrying the fields"
+   ],
+   "killed": true,
+   "escalated": null,
+   "killedByRelated": false
+  },
+  {
+   "id": "C-public-source-classification-L78n1-B",
+   "group": "C",
+   "class": 4,
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 78,
+   "occurrence": 1,
+   "old": "isRecord(pathRule)",
+   "new": "(typeof pathRule === 'object' && !Array.isArray(pathRule))",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "exit": 1,
+   "passed": 232,
+   "failed": 1,
+   "total": 233,
+   "failedTests": [
+    "reading the rule refuses a path rule that is null"
+   ],
+   "killed": true,
+   "escalated": null,
+   "killedByRelated": false
+  },
+  {
+   "id": "C-public-source-classification-L78n1-D",
+   "group": "C",
+   "class": 4,
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 78,
+   "occurrence": 1,
+   "old": "isRecord(pathRule)",
+   "new": "true",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "exit": 1,
+   "passed": 231,
+   "failed": 2,
+   "total": 233,
+   "failedTests": [
+    "reading the rule refuses a path rule that is null",
+    "reading the rule refuses a path rule that is an array carrying the fields"
+   ],
+   "killed": true,
+   "escalated": null,
+   "killedByRelated": false
+  },
+  {
+   "id": "C-public-source-classification-L83n2-A",
+   "group": "C",
+   "class": 4,
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 83,
+   "occurrence": 2,
+   "old": "isRecord(prefix)",
+   "new": "(typeof prefix === 'object' && prefix !== null)",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "exit": 1,
+   "passed": 232,
+   "failed": 1,
+   "total": 233,
+   "failedTests": [
+    "reading the rule refuses a prefix that is an array carrying the fields"
+   ],
+   "killed": true,
+   "escalated": null,
+   "killedByRelated": false
+  },
+  {
+   "id": "C-public-source-classification-L83n2-B",
+   "group": "C",
+   "class": 4,
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 83,
+   "occurrence": 2,
+   "old": "isRecord(prefix)",
+   "new": "(typeof prefix === 'object' && !Array.isArray(prefix))",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "exit": 1,
+   "passed": 232,
+   "failed": 1,
+   "total": 233,
+   "failedTests": [
+    "reading the rule refuses no prefix object"
+   ],
+   "killed": true,
+   "escalated": null,
+   "killedByRelated": false
+  },
+  {
+   "id": "C-public-source-classification-L83n2-D",
+   "group": "C",
+   "class": 4,
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 83,
+   "occurrence": 2,
+   "old": "isRecord(prefix)",
+   "new": "true",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "exit": 1,
+   "passed": 231,
+   "failed": 2,
+   "total": 233,
+   "failedTests": [
+    "reading the rule refuses no prefix object",
+    "reading the rule refuses a prefix that is an array carrying the fields"
+   ],
+   "killed": true,
+   "escalated": null,
+   "killedByRelated": false
+  },
+  {
+   "id": "C-public-source-classification-L204n3-A",
+   "group": "C",
+   "class": 4,
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 204,
+   "occurrence": 3,
+   "old": "isRecord(scope)",
+   "new": "(typeof scope === 'object' && scope !== null)",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "exit": 1,
+   "passed": 232,
+   "failed": 1,
+   "total": 233,
+   "failedTests": [
+    "reading the exemption reads none from a scope that is an array carrying activeContent"
+   ],
+   "killed": true,
+   "escalated": null,
+   "killedByRelated": false
+  },
+  {
+   "id": "C-public-source-classification-L204n3-B",
+   "group": "C",
+   "class": 4,
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 204,
+   "occurrence": 3,
+   "old": "isRecord(scope)",
+   "new": "(typeof scope === 'object' && !Array.isArray(scope))",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "exit": 1,
+   "passed": 232,
+   "failed": 1,
+   "total": 233,
+   "failedTests": [
+    "reading the exemption reads none from a scope that is null"
+   ],
+   "killed": true,
+   "escalated": null,
+   "killedByRelated": false
+  },
+  {
+   "id": "C-public-source-classification-L204n3-D",
+   "group": "C",
+   "class": 4,
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 204,
+   "occurrence": 3,
+   "old": "isRecord(scope)",
+   "new": "true",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "exit": 1,
+   "passed": 231,
+   "failed": 2,
+   "total": 233,
+   "failedTests": [
+    "reading the exemption reads none from a scope that is null",
+    "reading the exemption reads none from a scope that is an array carrying activeContent"
+   ],
+   "killed": true,
+   "escalated": null,
+   "killedByRelated": false
+  },
+  {
+   "id": "C-public-source-classification-L205n4-A",
+   "group": "C",
+   "class": 4,
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 205,
+   "occurrence": 4,
+   "old": "isRecord(active)",
+   "new": "(typeof active === 'object' && active !== null)",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "exit": 1,
+   "passed": 232,
+   "failed": 1,
+   "total": 233,
+   "failedTests": [
+    "reading the exemption reads none from active content that is an array carrying the exemption"
+   ],
+   "killed": true,
+   "escalated": null,
+   "killedByRelated": false
+  },
+  {
+   "id": "C-public-source-classification-L205n4-B",
+   "group": "C",
+   "class": 4,
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 205,
+   "occurrence": 4,
+   "old": "isRecord(active)",
+   "new": "(typeof active === 'object' && !Array.isArray(active))",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "exit": 1,
+   "passed": 232,
+   "failed": 1,
+   "total": 233,
+   "failedTests": [
+    "reading the exemption reads none from active content that is null"
+   ],
+   "killed": true,
+   "escalated": null,
+   "killedByRelated": false
+  },
+  {
+   "id": "C-public-source-classification-L205n4-D",
+   "group": "C",
+   "class": 4,
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 205,
+   "occurrence": 4,
+   "old": "isRecord(active)",
+   "new": "true",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "exit": 1,
+   "passed": 227,
+   "failed": 6,
+   "total": 233,
+   "failedTests": [
+    "reading the exemption reads none from a scope that is null",
+    "reading the exemption reads none from a scope that is a string",
+    "reading the exemption reads none from a scope that is an array"
+   ],
+   "killed": true,
+   "escalated": null,
+   "killedByRelated": false
+  },
+  {
+   "id": "C-public-source-classification-L207n5-A",
+   "group": "C",
+   "class": 4,
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 207,
+   "occurrence": 5,
+   "old": "isRecord(exemption)",
+   "new": "(typeof exemption === 'object' && exemption !== null)",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "exit": 1,
+   "passed": 231,
+   "failed": 2,
+   "total": 233,
+   "failedTests": [
+    "reading the exemption refuses, in its own words, an exemption that is an array",
+    "reading the exemption refuses, in its own words, an exemption that is an array carrying every field"
+   ],
+   "killed": true,
+   "escalated": null,
+   "killedByRelated": false
+  },
+  {
+   "id": "C-public-source-classification-L207n5-B",
+   "group": "C",
+   "class": 4,
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 207,
+   "occurrence": 5,
+   "old": "isRecord(exemption)",
+   "new": "(typeof exemption === 'object' && !Array.isArray(exemption))",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "exit": 1,
+   "passed": 232,
+   "failed": 1,
+   "total": 233,
+   "failedTests": [
+    "reading the exemption refuses, in its own words, an exemption that is null"
+   ],
+   "killed": true,
+   "escalated": null,
+   "killedByRelated": false
+  },
+  {
+   "id": "C-public-source-classification-L207n5-D",
+   "group": "C",
+   "class": 4,
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 207,
+   "occurrence": 5,
+   "old": "isRecord(exemption)",
+   "new": "true",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "exit": 1,
+   "passed": 228,
+   "failed": 5,
+   "total": 233,
+   "failedTests": [
+    "reading the exemption refuses, in its own words, an exemption that is an array",
+    "reading the exemption refuses, in its own words, an exemption that is null",
+    "reading the exemption refuses, in its own words, an exemption that is a string"
+   ],
+   "killed": true,
+   "escalated": null,
+   "killedByRelated": false
+  },
+  {
+   "id": "C-screen-L81n0-A",
+   "group": "C",
+   "class": 4,
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 81,
+   "occurrence": 0,
+   "old": "isRecord(doc)",
+   "new": "(typeof doc === 'object' && doc !== null)",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "exit": 0,
+   "passed": 129,
+   "failed": 0,
+   "total": 129,
+   "failedTests": [],
+   "killed": false,
+   "escalated": {
+    "exit": 0,
+    "passed": 769,
+    "failed": 0,
+    "total": 770,
+    "failedTests": []
+   },
+   "killedByRelated": false
+  },
+  {
+   "id": "C-screen-L81n0-B",
+   "group": "C",
+   "class": 4,
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 81,
+   "occurrence": 0,
+   "old": "isRecord(doc)",
+   "new": "(typeof doc === 'object' && !Array.isArray(doc))",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "exit": 1,
+   "passed": 128,
+   "failed": 1,
+   "total": 129,
+   "failedTests": [
+    "the loader reads each container as an object only when it is one refuses a policy document that is null"
+   ],
+   "killed": true,
+   "escalated": null,
+   "killedByRelated": false
+  },
+  {
+   "id": "C-screen-L81n0-D",
+   "group": "C",
+   "class": 4,
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 81,
+   "occurrence": 0,
+   "old": "isRecord(doc)",
+   "new": "true",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "exit": 1,
+   "passed": 128,
+   "failed": 1,
+   "total": 129,
+   "failedTests": [
+    "the loader reads each container as an object only when it is one refuses a policy document that is null"
+   ],
+   "killed": true,
+   "escalated": null,
+   "killedByRelated": false
+  },
+  {
+   "id": "C-screen-L83n1-A",
+   "group": "C",
+   "class": 4,
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 83,
+   "occurrence": 1,
+   "old": "isRecord(scope)",
+   "new": "(typeof scope === 'object' && scope !== null)",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "exit": 1,
+   "passed": 128,
+   "failed": 1,
+   "total": 129,
+   "failedTests": [
+    "the loader reads each container as an object only when it is one refuses a public-source scope that is an array"
+   ],
+   "killed": true,
+   "escalated": null,
+   "killedByRelated": false
+  },
+  {
+   "id": "C-screen-L83n1-B",
+   "group": "C",
+   "class": 4,
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 83,
+   "occurrence": 1,
+   "old": "isRecord(scope)",
+   "new": "(typeof scope === 'object' && !Array.isArray(scope))",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "exit": 1,
+   "passed": 126,
+   "failed": 3,
+   "total": 129,
+   "failedTests": [
+    "the screen is refused for a policy with no public-source scope",
+    "the loader reads each container as an object only when it is one refuses a public-source scope that is null",
+    "parity with the any-repo reader's screen (syzygy-qkea.17) refuses a policy with no public-source scope, as the app does"
+   ],
+   "killed": true,
+   "escalated": null,
+   "killedByRelated": false
+  },
+  {
+   "id": "C-screen-L83n1-D",
+   "group": "C",
+   "class": 4,
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 83,
+   "occurrence": 1,
+   "old": "isRecord(scope)",
+   "new": "true",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "exit": 1,
+   "passed": 123,
+   "failed": 6,
+   "total": 129,
+   "failedTests": [
+    "the screen is refused for a policy with no public-source scope",
+    "the loader reads each container as an object only when it is one refuses a public-source scope that is an array",
+    "the loader reads each container as an object only when it is one refuses a public-source scope that is null"
+   ],
+   "killed": true,
+   "escalated": null,
+   "killedByRelated": false
+  },
+  {
+   "id": "C-screen-L84n2-A",
+   "group": "C",
+   "class": 4,
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 84,
+   "occurrence": 2,
+   "old": "isRecord(admission)",
+   "new": "(typeof admission === 'object' && admission !== null)",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "exit": 0,
+   "passed": 129,
+   "failed": 0,
+   "total": 129,
+   "failedTests": [],
+   "killed": false,
+   "escalated": {
+    "exit": 0,
+    "passed": 769,
+    "failed": 0,
+    "total": 770,
+    "failedTests": []
+   },
+   "killedByRelated": false
+  },
+  {
+   "id": "C-screen-L84n2-B",
+   "group": "C",
+   "class": 4,
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 84,
+   "occurrence": 2,
+   "old": "isRecord(admission)",
+   "new": "(typeof admission === 'object' && !Array.isArray(admission))",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "exit": 1,
+   "passed": 128,
+   "failed": 1,
+   "total": 129,
+   "failedTests": [
+    "the loader reads each container as an object only when it is one refuses source admission that is null"
+   ],
+   "killed": true,
+   "escalated": null,
+   "killedByRelated": false
+  },
+  {
+   "id": "C-screen-L84n2-D",
+   "group": "C",
+   "class": 4,
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 84,
+   "occurrence": 2,
+   "old": "isRecord(admission)",
+   "new": "true",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "exit": 1,
+   "passed": 128,
+   "failed": 1,
+   "total": 129,
+   "failedTests": [
+    "the loader reads each container as an object only when it is one refuses source admission that is null"
+   ],
+   "killed": true,
+   "escalated": null,
+   "killedByRelated": false
+  },
+  {
+   "id": "C-screen-L88n3-A",
+   "group": "C",
+   "class": 4,
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 88,
+   "occurrence": 3,
+   "old": "isRecord(classification)",
+   "new": "(typeof classification === 'object' && classification !== null)",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "exit": 0,
+   "passed": 129,
+   "failed": 0,
+   "total": 129,
+   "failedTests": [],
+   "killed": false,
+   "escalated": {
+    "exit": 0,
+    "passed": 769,
+    "failed": 0,
+    "total": 770,
+    "failedTests": []
+   },
+   "killedByRelated": false
+  },
+  {
+   "id": "C-screen-L88n3-B",
+   "group": "C",
+   "class": 4,
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 88,
+   "occurrence": 3,
+   "old": "isRecord(classification)",
+   "new": "(typeof classification === 'object' && !Array.isArray(classification))",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "exit": 1,
+   "passed": 128,
+   "failed": 1,
+   "total": 129,
+   "failedTests": [
+    "the loader reads each container as an object only when it is one refuses a content classification that is null, which names no code-content rule"
+   ],
+   "killed": true,
+   "escalated": null,
+   "killedByRelated": false
+  },
+  {
+   "id": "C-screen-L88n3-D",
+   "group": "C",
+   "class": 4,
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 88,
+   "occurrence": 3,
+   "old": "isRecord(classification)",
+   "new": "true",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "exit": 1,
+   "passed": 128,
+   "failed": 1,
+   "total": 129,
+   "failedTests": [
+    "the loader reads each container as an object only when it is one refuses a content classification that is null, which names no code-content rule"
+   ],
+   "killed": true,
+   "escalated": null,
+   "killedByRelated": false
+  },
+  {
+   "id": "C-screen-L89n4-A",
+   "group": "C",
+   "class": 4,
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 89,
+   "occurrence": 4,
+   "old": "isRecord(rule)",
+   "new": "(typeof rule === 'object' && rule !== null)",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "exit": 0,
+   "passed": 129,
+   "failed": 0,
+   "total": 129,
+   "failedTests": [],
+   "killed": false,
+   "escalated": {
+    "exit": 0,
+    "passed": 769,
+    "failed": 0,
+    "total": 770,
+    "failedTests": []
+   },
+   "killedByRelated": false
+  },
+  {
+   "id": "C-screen-L89n4-B",
+   "group": "C",
+   "class": 4,
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 89,
+   "occurrence": 4,
+   "old": "isRecord(rule)",
+   "new": "(typeof rule === 'object' && !Array.isArray(rule))",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "exit": 1,
+   "passed": 128,
+   "failed": 1,
+   "total": 129,
+   "failedTests": [
+    "the loader reads each container as an object only when it is one passes over a rules entry that is not an object, as if it were not there"
+   ],
+   "killed": true,
+   "escalated": null,
+   "killedByRelated": false
+  },
+  {
+   "id": "C-screen-L89n4-D",
+   "group": "C",
+   "class": 4,
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 89,
+   "occurrence": 4,
+   "old": "isRecord(rule)",
+   "new": "true",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "exit": 1,
+   "passed": 128,
+   "failed": 1,
+   "total": 129,
+   "failedTests": [
+    "the loader reads each container as an object only when it is one passes over a rules entry that is not an object, as if it were not there"
+   ],
+   "killed": true,
+   "escalated": null,
+   "killedByRelated": false
+  },
+  {
+   "id": "C-screen-L90n5-A",
+   "group": "C",
+   "class": 4,
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 90,
+   "occurrence": 5,
+   "old": "isRecord(codeContent[0])",
+   "new": "(typeof codeContent[0] === 'object' && codeContent[0] !== null)",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "exit": 0,
+   "passed": 129,
+   "failed": 0,
+   "total": 129,
+   "failedTests": [],
+   "killed": false,
+   "escalated": {
+    "exit": 0,
+    "passed": 769,
+    "failed": 0,
+    "total": 770,
+    "failedTests": []
+   },
+   "killedByRelated": false
+  },
+  {
+   "id": "C-screen-L90n5-B",
+   "group": "C",
+   "class": 4,
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 90,
+   "occurrence": 5,
+   "old": "isRecord(codeContent[0])",
+   "new": "(typeof codeContent[0] === 'object' && !Array.isArray(codeContent[0]))",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "exit": 0,
+   "passed": 129,
+   "failed": 0,
+   "total": 129,
+   "failedTests": [],
+   "killed": false,
+   "escalated": {
+    "exit": 0,
+    "passed": 769,
+    "failed": 0,
+    "total": 770,
+    "failedTests": []
+   },
+   "killedByRelated": false
+  },
+  {
+   "id": "C-screen-L90n5-D",
+   "group": "C",
+   "class": 4,
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 90,
+   "occurrence": 5,
+   "old": "isRecord(codeContent[0])",
+   "new": "true",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "exit": 1,
+   "passed": 124,
+   "failed": 5,
+   "total": 129,
+   "failedTests": [
+    "the loader reads each container as an object only when it is one refuses a content classification that is an array, which names no code-content rule",
+    "the loader reads each container as an object only when it is one refuses a content classification that is null, which names no code-content rule",
+    "the loader reads each container as an object only when it is one refuses a content classification that is a string, which names no code-content rule"
+   ],
+   "killed": true,
+   "escalated": null,
+   "killedByRelated": false
+  },
+  {
+   "id": "C-screen-L100n6-A",
+   "group": "C",
+   "class": 4,
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 100,
+   "occurrence": 6,
+   "old": "isRecord(d)",
+   "new": "(typeof d === 'object' && d !== null)",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "exit": 0,
+   "passed": 129,
+   "failed": 0,
+   "total": 129,
+   "failedTests": [],
+   "killed": false,
+   "escalated": {
+    "exit": 0,
+    "passed": 769,
+    "failed": 0,
+    "total": 770,
+    "failedTests": []
+   },
+   "killedByRelated": false
+  },
+  {
+   "id": "C-screen-L100n6-B",
+   "group": "C",
+   "class": 4,
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 100,
+   "occurrence": 6,
+   "old": "isRecord(d)",
+   "new": "(typeof d === 'object' && !Array.isArray(d))",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "exit": 1,
+   "passed": 128,
+   "failed": 1,
+   "total": 129,
+   "failedTests": [
+    "the loader reads each container as an object only when it is one passes over a detector entry that is not an object when it collects the detector ids, and leaves the refusal to the compiler"
+   ],
+   "killed": true,
+   "escalated": null,
+   "killedByRelated": false
+  },
+  {
+   "id": "C-screen-L100n6-D",
+   "group": "C",
+   "class": 4,
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 100,
+   "occurrence": 6,
+   "old": "isRecord(d)",
+   "new": "true",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "exit": 1,
+   "passed": 128,
+   "failed": 1,
+   "total": 129,
+   "failedTests": [
+    "the loader reads each container as an object only when it is one passes over a detector entry that is not an object when it collects the detector ids, and leaves the refusal to the compiler"
+   ],
+   "killed": true,
+   "escalated": null,
+   "killedByRelated": false
+  }
+ ]
+}

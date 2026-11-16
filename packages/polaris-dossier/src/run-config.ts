@@ -27,7 +27,16 @@ export interface RunConfig {
   readonly maxQuestions: number;
   readonly audience: string;
   readonly operatorIsOwner: boolean;
+  /** The most Poles a schema-v4 draft may declare (dossier spec v1.5), as declared; null when the operator declared none, and the
+   * limit is then `DEFAULT_POLE_LIMIT`. Kept apart from the default so an undeclared limit is never written into run.json. */
+  readonly poleLimit: number | null;
 }
+
+/** The Pole limit when the run declares none (dossier spec v1.5: "Unlike the run limits above, the Pole limit has a default, five"). */
+export const DEFAULT_POLE_LIMIT = 5;
+
+/** The Pole limit in force for a run. */
+export const poleLimitOf = (config: Pick<RunConfig, 'poleLimit'>): number => config.poleLimit ?? DEFAULT_POLE_LIMIT;
 
 export type RunConfigRefusalKind =
   | 'unreadable-json' | 'not-an-object' | 'unknown-field' | 'execution-choice-in-config'
@@ -52,7 +61,7 @@ export const RUN_CONFIG_JSON_LIMITS = Object.freeze({ maxBytes: 16_384, maxNodes
 const STRING_FIELDS = ['operator', 'agentToolVersion', 'agentProvider', 'model', 'audience'] as const;
 const KNOWN_FIELDS: ReadonlySet<string> = new Set([
   ...STRING_FIELDS, 'agentTool', 'modelVersion', 'deadline', 'agentTokenBudget', 'agentTurnBudget',
-  'maxRepairCycles', 'maxQuestions', 'operatorIsOwner',
+  'maxRepairCycles', 'maxQuestions', 'operatorIsOwner', 'poleLimit',
 ]);
 /** Words an operator might write for "no limit". Each is refused as unlimited, never read as a number. */
 const UNLIMITED_WORDS: ReadonlySet<string> = new Set(['unlimited', 'infinite', 'infinity', 'none', 'no limit', 'nolimit', 'inf', '∞']);
@@ -113,6 +122,8 @@ export function validateRunConfig(document: unknown): RunConfigResult {
   }
   const maxRepairCycles = limit(fields, 'maxRepairCycles', { optional: false, zeroAllowed: true }, refuse);
   const maxQuestions = limit(fields, 'maxQuestions', { optional: false, zeroAllowed: true }, refuse);
+  // A declared Pole limit is a positive integer; zero, a negative number and a non-integer are refused (v1.5 "Invalid Pole limit").
+  const poleLimit = limit(fields, 'poleLimit', { optional: true, zeroAllowed: false }, refuse);
 
   let operatorIsOwner: boolean | undefined;
   if (!Object.hasOwn(fields, 'operatorIsOwner')) refuse('missing', 'operatorIsOwner', 'operatorIsOwner must be declared');
@@ -127,7 +138,7 @@ export function validateRunConfig(document: unknown): RunConfigResult {
       agentProvider: strings.agentProvider!, model: strings.model!, modelVersion, deadline: deadline!,
       agentTokenBudget: agentTokenBudget ?? null, agentTurnBudget: agentTurnBudget ?? null,
       maxRepairCycles: maxRepairCycles!, maxQuestions: maxQuestions!, audience: strings.audience!,
-      operatorIsOwner: operatorIsOwner!,
+      operatorIsOwner: operatorIsOwner!, poleLimit: poleLimit ?? null,
     }),
   };
 }

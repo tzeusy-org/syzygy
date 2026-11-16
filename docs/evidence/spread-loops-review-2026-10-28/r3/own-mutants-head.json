@@ -1,0 +1,116 @@
+[
+ {
+  "id": "CONTROL",
+  "ranAt": "bca6482fc956f51f5df014f971c7dde803f32847",
+  "testFrom": null,
+  "tests": 268,
+  "loadavg1": "29.11",
+  "failing": []
+ },
+ {
+  "id": "L5-mask-reversed",
+  "ranAt": "bca6482fc956f51f5df014f971c7dde803f32847",
+  "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+  "old": "        for (const pendingLine of pending) out.push(blank(pendingLine));\n",
+  "new": "        for (let at = pending.length - 1; at >= 0; at -= 1) out.push(blank(pending[at] ?? ''));\n",
+  "mutatedFileSha256": "55cb76a7427e78eac53b9b1f1b786a7ee01d27e25e94499c09d5a70294971641",
+  "outcome": "killed",
+  "tests": 268,
+  "loadavg1": "28.46",
+  "failing": [
+   {
+    "test": "closed-pwb-code-context-v1 \u2014 fenced code blocks a closed backtick fence is blanked, delimiters included, keeping every newline and length",
+    "message": "AssertionError: expected 'before\\n   \\n     \\n       \\nafter' to be 'before\\n       \\n     \\n   \\nafter' // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-surface-poc-core/src/markdown-code-context.test.ts:24:26\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802a",
+    "timeout": false
+   },
+   {
+    "test": "closed-pwb-code-context-v1 \u2014 fenced code blocks tildes fence too, and a tilde opener info string may contain a backtick",
+    "message": "AssertionError: expected '   \\n   \\n       ' to be '       \\n   \\n   ' // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-surface-poc-core/src/markdown-code-context.test.ts:38:41\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/no",
+    "timeout": false
+   },
+   {
+    "test": "closed-pwb-code-context-v1 \u2014 fenced code blocks a closer must repeat the opener character at least the opener length, then spaces only",
+    "message": "AssertionError: expected '       \\n   \\n   \\n    ' to be '    \\n   \\n   \\n       ' // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-surface-poc-core/src/markdown-code-context.test.ts:46:47\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555",
+    "timeout": false
+   },
+   {
+    "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line LF: a tilde fence, a closer with trailing spaces and a span across lines",
+    "message": "AssertionError: expected '      \\n   \\n   \\nafter\\n' to be '   \\n   \\n      \\nafter\\n' // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-surface-poc-core/src/markdown-code-context.test.ts:147:65\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/re",
+    "timeout": false
+   },
+   {
+    "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CRLF: a tilde fence, a closer with trailing spaces and a span across lines",
+    "message": "AssertionError: expected '      \\r\\n   \\r\\n   \\r\\nafter\\r\\n' to be '   \\r\\n   \\r\\n      \\r\\nafter\\r\\n' // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-surface-poc-core/src/markdown-code-context.test.ts:147:65\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad",
+    "timeout": false
+   },
+   {
+    "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CR: a tilde fence, a closer with trailing spaces and a span across lines",
+    "message": "AssertionError: expected '      \\r   \\r   \\rafter\\r' to be '   \\r   \\r      \\rafter\\r' // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-surface-poc-core/src/markdown-code-context.test.ts:147:65\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/re",
+    "timeout": false
+   },
+   {
+    "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line a CRLF or CR text gets the structure its LF form gets, for every case here",
+    "message": "AssertionError: expected '...\\n..................\\n.......\\n' to be '.......\\n..................\\n...\\n' // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-surface-poc-core/src/markdown-code-context.test.ts:220:40\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802",
+    "timeout": false
+   }
+  ]
+ },
+ {
+  "id": "R9-extractor-swaps-at-global-index",
+  "ranAt": "bca6482fc956f51f5df014f971c7dde803f32847",
+  "file": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+  "old": "    for (const item of result.items) all.push(item);\n",
+  "new": "    for (const item of result.items) all.push(item);\n    if (all.length > 130_000) { const a = all[65_000] as ExtractedItem; all[65_000] = all[65_001] as ExtractedItem; all[65_001] = a; }\n",
+  "mutatedFileSha256": "fff5a63b63c80c2a7d860b5c1c7cd28d5aabc30fc16b9e580b4beabad270ed9e",
+  "outcome": "killed",
+  "tests": 268,
+  "loadavg1": "28.10",
+  "failing": [
+   {
+    "test": "a source whose class holds 130,000 items is extracted, every item kept in class order",
+    "message": "AssertionError: the success-criterion items are not in line order: expected false to be true // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-surface-poc-core/src/project-shape-extraction.test.ts:1155:120\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/sc",
+    "timeout": false
+   }
+  ]
+ },
+ {
+  "id": "R12-mask-chunks-last-first",
+  "ranAt": "bca6482fc956f51f5df014f971c7dde803f32847",
+  "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+  "old": "        for (const pendingLine of pending) out.push(blank(pendingLine));\n",
+  "new": "        for (let at = Math.floor((pending.length - 1) / 50_000) * 50_000; at >= 0; at -= 50_000) out.push(...pending.slice(at, at + 50_000).map(blank));\n",
+  "mutatedFileSha256": "30b6afd631d8192ffc6b7158857b405936fdc6bbeb5bac1c6f18db0105a6b3d9",
+  "outcome": "killed",
+  "tests": 268,
+  "loadavg1": "28.89",
+  "failing": [
+   {
+    "test": "a very long closed fence LF: 200,000 lines are blanked, every line end and the text after the fence kept",
+    "message": "AssertionError: the masked text differs from every non-terminator byte blanked: expected false to be true // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-surface-poc-core/src/markdown-code-context.test.ts:259:146\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea08",
+    "timeout": false
+   },
+   {
+    "test": "a very long closed fence CRLF: 200,000 lines are blanked, every line end and the text after the fence kept",
+    "message": "AssertionError: the masked text differs from every non-terminator byte blanked: expected false to be true // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-surface-poc-core/src/markdown-code-context.test.ts:259:146\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea08",
+    "timeout": false
+   },
+   {
+    "test": "a very long closed fence CR: 200,000 lines are blanked, every line end and the text after the fence kept",
+    "message": "AssertionError: the masked text differs from every non-terminator byte blanked: expected false to be true // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-surface-poc-core/src/markdown-code-context.test.ts:259:146\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea08",
+    "timeout": false
+   }
+  ]
+ },
+ {
+  "id": "R13-mask-size-gated-reversal",
+  "ranAt": "bca6482fc956f51f5df014f971c7dde803f32847",
+  "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+  "old": "        for (const pendingLine of pending) out.push(blank(pendingLine));\n",
+  "new": "        for (let at = 0; at < pending.length; at += 1) out.push(blank(pending[pending.length > 100_000 ? pending.length - 1 - at : at] ?? ''));\n",
+  "mutatedFileSha256": "ed8cd19c4882efdfe6919010aa8e28c88b9fe89a386e1ddec6d6e5fbe6872294",
+  "outcome": "SURVIVED",
+  "tests": 268,
+  "loadavg1": "28.73",
+  "failing": []
+ }
+]

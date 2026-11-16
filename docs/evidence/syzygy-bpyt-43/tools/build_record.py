@@ -1,0 +1,216 @@
+#!/usr/bin/env python3
+"""Build the syzygy-bpyt.43 successor record; historical CPU evidence stays historical.
+
+usage: python3 -I build_record.py TREE SUBJECT OUT.json CAMPAIGN-DIRECTORY
+
+The masked emit comparison proves equality only of the named TypeScript-transpiled JavaScript bytes with comments
+removed and CPU constants masked, under the identified compiler/options. It does not compare runner pragmas,
+configuration/environment, imported modules or actual CPU. Type-only edits can pass; a @vitest-/@jest- pragma or
+transitive busy loop can change execution while preserving that comparison. Equal emits do not characterize every
+source difference. Current timing remains Unknown unless separately measured or justified by exact applicability.
+"""
+import hashlib
+import json
+import os
+from pathlib import Path
+import re
+import subprocess
+import sys
+import tempfile
+
+TREE, SUBJECT, OUT, CAMPAIGNS = Path(sys.argv[1]).resolve(), sys.argv[2], Path(sys.argv[3]), Path(sys.argv[4])
+HERE = Path(__file__).resolve().parent
+PREDECESSOR = 'docs/evidence/syzygy-bpyt-4-5'
+TEST = 'packages/cap1-system/src/daemon-entry-unchanged.system.test.ts'
+INPUTS = ['apps/syzygy/src/main.ts', 'packages/polaris-dossier/src/state-directory.ts', 'packages/http-host/src/shutdown.ts', TEST]
+HOOK = 'the daemon path never loads the POC app, and the `dossier render` branch does'
+TEXT = 'every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch'
+PIN = 'each import is dynamic and inside the `dossier` or `polaris` branch'
+
+
+def refuse(message):
+    raise SystemExit(message)
+
+
+def git(*args):
+    return subprocess.check_output(['git', *args], cwd=TREE)
+
+
+def sha(data):
+    return hashlib.sha256(data).hexdigest()
+
+
+def population(commit):
+    paths = [p for p in git('ls-tree', '-r', '-z', '--name-only', commit).decode().split('\0')
+             if re.match(r'^(apps|packages)/', p) and re.search(r'\.test\.(?:ts|mts|js|mjs)$', p)]
+    rows = []
+    for path in paths:
+        for line, text in enumerate(git('show', f'{commit}:{path}').decode().split('\n'), 1):
+            if 'expect(cpuMsSince(' in text:
+                match = re.search(r'\.toBeLessThan\((\w+)\)', text)
+                if match is None:
+                    refuse(f'{path}:{line}: unsupported timed assertion')
+                rows.append({'path': path, 'line': line, 'bound': match.group(1)})
+    return {'commit': commit, 'testFiles': len(paths), 'testPathsSha256': sha('\0'.join(paths).encode()), 'rows': rows}
+
+
+SUBJECT = git('rev-parse', SUBJECT).decode().strip()
+subject_inputs = {path: sha(git('show', f'{SUBJECT}:{path}')) for path in INPUTS}
+predecessor = json.loads((TREE / PREDECESSOR / 'bounds-and-pins.json').read_text())
+old_subject = predecessor['subject']
+historical_args = [old_subject['base'], old_subject['main'], old_subject['evidenceCommit'],
+                   predecessor['daemonEntry']['priorTestFrom'], predecessor['daemonEntry']['roundOneTestFrom'], SUBJECT]
+with tempfile.TemporaryDirectory(prefix='clock-record-') as scratch:
+    historical_output = Path(scratch) / 'historical.json'
+    environment = {**os.environ, 'SYZYGY_CLOCK_HISTORICAL_OUTPUT': str(historical_output)}
+    checked = subprocess.run([sys.executable, '-I', str(HERE / 'historical_record.py'), str(TREE), *historical_args],
+                             capture_output=True, text=True, env=environment)
+    if checked.returncode:
+        refuse(checked.stderr.strip() or checked.stdout.strip())
+    historical = json.loads(historical_output.read_text())
+
+campaigns = {}
+for name in ['head', 'base-test', 'prior-test', 'round1-test']:
+    path = CAMPAIGNS / f'daemon-entry-{name}.json'
+    campaigns[name] = json.loads(path.read_text())
+    producer_path = 'docs/evidence/syzygy-bpyt-43/tools/daemon_entry_probe.py'
+    if campaigns[name]['tool']['sha256'] != sha(git('show', f'{campaigns[name]["commit"]}:{producer_path}')):
+        refuse(f'{name}: producer tool differs from its recorded committed subject')
+    if campaigns[name]['commonInputs'] != subject_inputs:
+        refuse(f'{name}: common current source/test inputs differ from the subject')
+    selected = SUBJECT if name == 'head' else {'base-test': historical_args[0], 'prior-test': historical_args[3], 'round1-test': historical_args[4]}[name]
+    expected_copy = sha(git('show', f'{selected}:{TEST}'))
+    for row in campaigns[name]['results']:
+        if row['selectedTestSha256'] != expected_copy:
+            refuse(f'{name}: selected test-copy digest differs')
+        mutant = row['mutant'] or {'id': 'control', 'kind': 'control'}
+        if row.get('skipped'):
+            if name != 'base-test' or mutant['id'] not in ['H-hook-blind', 'H-no-preload'] or mutant['kind'] != 'hook' or 'old occurs 0 times' not in row['skipped']:
+                refuse(f'{name}/{mutant["id"]}: an inadmissible skip')
+        elif row.get('timeout') or row.get('buildFailure') or not row['rows']:
+            refuse(f'{name}/{mutant["id"]}: no nonempty executed test population')
+        if not row.get('skipped'):
+            expected_rows = {'head': 17, 'base-test': 15, 'prior-test': 16, 'round1-test': 16}[name]
+            if len(row['rows']) != expected_rows or len({r['title'] for r in row['rows']}) != expected_rows:
+                refuse(f'{name}/{mutant["id"]}: selected test collection population differs')
+            if row['passed'] != sum(r['status'] == 'passed' for r in row['rows']) or sorted(row['failed']) != sorted(r['title'] for r in row['rows'] if r['status'] == 'failed'):
+                refuse(f'{name}/{mutant["id"]}: row status summaries differ from executed rows')
+        if mutant['id'] == 'control' and (row['failed'] or not row['passed']):
+            refuse(f'{name}: control failed or ran nothing')
+
+head = campaigns['head']['results']
+expected_ids = json.loads((HERE / 'daemon-case-population.json').read_text())['expectedIds']
+if sorted((row['mutant'] or {'id': 'control'})['id'] for row in head) != sorted(expected_ids):
+    refuse('daemon campaign: complete independent case population including multiplicity differs')
+identities = [(row['mutant'] or {'id': 'control', 'kind': 'control'}) for row in head]
+for name, campaign in campaigns.items():
+    if [(r['mutant'] or {'id': 'control', 'kind': 'control'}) for r in campaign['results']] != identities:
+        refuse(f'{name}: campaign mutant identities/fragments/population differ')
+by_campaign = {name: {(row['mutant'] or {'id': 'control'})['id']: row for row in campaign['results']}
+               for name, campaign in campaigns.items()}
+
+
+def passed_predecessor(name, mid):
+    row = by_campaign[name][mid]
+    if row['failed'] or not row['passed'] or row.get('skipped'):
+        refuse(f'{name}/{mid}: predecessor witness no longer passes; its claimed survivor identity is invalid')
+
+
+for mid in ['R1-flag-between-branches', 'R2-flag-createRequire-before-daemon', 'R3-runtime-hook']:
+    passed_predecessor('prior-test', mid)
+for mid in ['S1-else-if-flag-after-dossier', 'S2-same-line-if-after-dossier', 'S3-else-if-flag-after-polaris',
+            'S4-else-runtime-hook-after-dossier', 'S5-else-createRequire-flag-after-polaris', 'S6-misindented-close-after-dossier',
+            'S7-else-split-specifier-after-dossier']:
+    passed_predecessor('round1-test', mid)
+for mid in ['Y1b-dossier-serve-falls-through-no-new-mention', 'X2-close-failure-in-http-host', 'P-entry-read', 'P-machine-transitive']:
+    for name in ['base-test', 'prior-test', 'round1-test']:
+        passed_predecessor(name, mid)
+
+
+def failures(row):
+    return {kind for title in row['failed'] for kind, text in [('hook', HOOK), ('text', TEXT), ('pin', PIN)] if text in title}
+
+
+pin_false_refusals = ['E-comment-in-branch', 'E-renamed-binding', 'E-branch-swap', 'L2-nested-function-in-dossier',
+                     'L3-nested-try-in-polaris', 'G1-allman-brace-and-wrapped-import', 'G2-commented-else-if-chain',
+                     'G3-else-if-order-swap', 'G5-double-quoted-condition', 'G6-unspaced-condition', 'G7-parenthesised-condition']
+attribution = []
+for row in head:
+    mutant = row['mutant'] or {'id': 'control', 'kind': 'control'}
+    mid, kind = mutant['id'], mutant['kind']
+    failed = failures(row)
+    if kind == 'defect' and not (failed & {'hook', 'text', 'pin'}):
+        refuse(f'{mid}: repaired test passes a daemon-path defect')
+    if kind == 'hook' and 'hook' not in failed:
+        refuse(f'{mid}: broken hook passes its positive control')
+    if kind == 'static-defect':
+        intended = [r for r in row['staticRows'] if r['status'] == 'failed'
+                    and any('unsupported loader' in message for message in r['failureMessages'])]
+        if not intended:
+            refuse(f'{mid}: existing static loader predicate did not name the defect')
+    if kind == 'equivalent':
+        expected = {'pin', 'text'} if mid == 'C1-comment-outside-branches' else {'pin'} if mid in pin_false_refusals or mid in ['E-type-only-import','E-multiline-type-only-import'] else set()
+        if failed != expected or len(row['failed']) != len(expected):
+            refuse(f'{mid}: equivalent row attribution {sorted(failed)} differs from {sorted(expected)}')
+    if mid.startswith(('Y','D-')) and 'text' not in failed:
+        refuse(f'{mid}: compiler branch/control-flow predicate passes the defect')
+    if mid in ['X2-close-failure-in-http-host', 'P-machine-transitive', 'P-entry-read', 'X3-shutdown-in-http-host', 'P-transitive'] and 'hook' not in failed:
+        refuse(f"{mid}: the runtime path's intended hook assertion did not fail")
+    # Assertion failures must be identifiable; collection exceptions and timeouts cannot stand in for kills.
+    for test in row['rows']:
+        if test['status'] == 'failed' and (not test['failureMessages'] or any('timed out' in message.lower() for message in test['failureMessages'])):
+            refuse(f'{mid}: timeout or unattributed failure is not a kill')
+    attribution.append({'id': mid, 'kind': kind, 'failedRows': row['failed'], 'rowKinds': sorted(failed),
+                        'passed': row['passed'], 'staticFailed': [r['title'] for r in row['staticRows'] if r['status'] == 'failed']})
+
+current = population(SUBJECT)
+old = population(old_subject['evidenceCommit'])
+old_keys = {(r['path'], r['bound']) for r in old['rows']}
+current_remainder = [r for r in current['rows'] if (r['path'], r['bound']) not in old_keys]
+applicability_path = CAMPAIGNS / 'source-applicability.json'
+applicability = json.loads(applicability_path.read_text())
+expected_applicability = [json.loads((TREE / PREDECESSOR / name).read_text())['tree'] for name in ['cpu-separation.json', 'cpu-separation-node22.json']] + [SUBJECT]
+if [snapshot['commit'] for snapshot in applicability['snapshots']] != expected_applicability or applicability['currentTiming'] != 'Unknown':
+    refuse('source applicability: current subject or Unknown timing qualification differs')
+source_moves = [{'path': path, 'historicalSha256': sha(git('show', f'{old_subject["evidenceCommit"]}:{path}')),
+                 'currentSha256': sha(git('show', f'{SUBJECT}:{path}'))} for path in sorted({r['path'] for r in old['rows']})]
+record = {
+    'schema': 'syzygy-bpyt-43-successor/1', 'bead': 'syzygy-bpyt.43',
+    'subject': {'commit': SUBJECT, 'sourceInputs': subject_inputs,
+                'diffFromBaselineSha256': sha(git('diff', '740279435178a882f1c2d526a2a7ea0bf2b52cbc', SUBJECT, '--', TEST))},
+    'predecessor': {'path': f'{PREDECESSOR}/bounds-and-pins.json', 'sha256': sha((TREE / PREDECESSOR / 'bounds-and-pins.json').read_bytes()),
+                    'subject': old_subject, 'role': 'historical; immutable; never relabeled as this landing subject'},
+    'predecessorMap': {
+        'subject': {'from': f'{PREDECESSOR}/bounds-and-pins.json#/subject', 'to': '#/predecessor/subject', 'disposition': 'historical identity retained; current source subject is separate'},
+        'sites': [{'from': f'{PREDECESSOR}/bounds-and-pins.json#/sites/{index}', 'site': site['site'],
+                   'to': f'#/historicalCpuValidation/bounds/{site["bound"]}' if 'bound' in site else None,
+                   'disposition': 'historical two-arm figures revalidated' if 'bound' in site else 'unchanged historical test-clock disposition; no present execution claim'}
+                  for index, site in enumerate(predecessor['sites'])],
+        'daemonRows': [{'from': f'{PREDECESSOR}/daemon-entry-{name}.json#/results',
+                        'to': f'daemon-entry-{name}.json#/results', 'currentRows': len(campaigns[name]['results']),
+                        'disposition': 'new full population on common current inputs; each selected test-copy identity is separate'}
+                       for name in campaigns],
+        'oldAssertions': {'from': f'{PREDECESSOR}/bounds-and-pins.json#/daemonEntry',
+                          'to': '#/daemonEntry/attribution', 'disposition': 'actual new per-row outcomes supersede old pin-alone Y/type-only/C1/residual statements for this subject only'},
+        'emit': {'from': f'{PREDECESSOR}/bounds-and-pins.json#/files', 'to': '#/emitClaim', 'disposition': 'historical observation retained; present claim explicitly limited'},
+    },
+    'historicalCpuValidation': {'timings': 'historical', 'currentTiming': 'Unknown', 'args': historical_args,
+                              'bounds': {site['bound']: site['separation'] for site in historical['sites'] if 'bound' in site},
+                              'note': 'Stronger checks validate retained populations and margins at their recorded subjects. They do not establish present CPU behavior.'},
+    'timedPopulations': {'historical': old, 'current': current, 'additionalCurrentSites': current_remainder,
+                        'sourceMoves': source_moves, 'currentTiming': 'Unknown',
+                        'note': 'Current whole population is emitted, including later .52/rmax bounds; none is silently declared measured by the historical four-site separation.'},
+    'sourceApplicability': {'path': applicability_path.name, 'sha256': sha(applicability_path.read_bytes()),
+                            'closureMoves': applicability['moved'], 'currentTiming': 'Unknown'},
+    'daemonEntry': {'inheritedNoteQualification': 'The X2 case retains its historical residual note verbatim; its current kind and actual hook failure show the repaired coverage. R7 remains a finite static-loader refusal, not runtime execution of that flagged path.', 'campaigns': {name: {'commit': r['commit'], 'testFileFrom': r['testFileFrom'], 'rows': len(r['results']),
+                                      'sha256': sha((CAMPAIGNS / f'daemon-entry-{name}.json').read_bytes())} for name, r in campaigns.items()},
+                    'attribution': attribution, 'pinFalseRefusals': pin_false_refusals},
+    'emitClaim': {'proves': 'Equality of masked TypeScript-transpiled JavaScript for named files under the recorded compiler/options only.',
+                  'limits': ['leading runner pragmas', 'runner config/environment', 'imported modules', 'actual region CPU'],
+                  'counterexamples': ['@vitest-/@jest-environment pragma', 'transitive region-module busy loop']},
+    'tools': [{'name': p.name, 'sha256': sha(p.read_bytes())} for p in sorted(HERE.iterdir()) if p.is_file()],
+}
+OUT.write_text(json.dumps(record, indent=2, ensure_ascii=False) + '\n')
+print(json.dumps({'subject': SUBJECT, 'campaigns': len(campaigns), 'mutantsPerCampaign': len(head),
+                  'currentTimedFiles': current['testFiles'], 'currentTimedAssertions': len(current['rows']),
+                  'additionalCurrentAssertions': len(current_remainder), 'currentTiming': 'Unknown', 'sha256': sha(OUT.read_bytes())}))

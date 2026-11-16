@@ -1,0 +1,15 @@
+{
+ "edits": 1,
+ "oldCounts": [
+  1
+ ],
+ "appliedEqualsRepair": true,
+ "appliedSha256": "15c395c9e23686d605f39f2bd4ea5f9f52fe3e45cbbce244f752486282758519",
+ "repairSha256": "15c395c9e23686d605f39f2bd4ea5f9f52fe3e45cbbce244f752486282758519",
+ "opcodes": [
+  "insert"
+ ],
+ "linesAdded": 2,
+ "linesRemovedOrReplaced": 0,
+ "selftestBaseAgainstBase": false
+}

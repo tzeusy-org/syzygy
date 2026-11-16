@@ -1,0 +1,265 @@
+{
+ "npm": "11.5.1",
+ "arborist": "9.1.3",
+ "node": "v24.6.0",
+ "registry": "http://127.0.0.1:9/",
+ "offline": true,
+ "workspaces": {
+  "w": "wlib",
+  "s": "@syzygy/slib"
+ },
+ "results": [
+  {
+   "shows": "an alias under a name no workspace has, its target a registry package",
+   "declaredIn": "app",
+   "declared": {
+    "dossier": "npm:typescript@^5.5.0"
+   },
+   "lockExit": 1,
+   "errorCode": "ENOTCACHED",
+   "wouldRequest": "http://127.0.0.1:9/typescript",
+   "lockEntry": null,
+   "installExit": null,
+   "installedLink": null,
+   "appLoads": null
+  },
+  {
+   "shows": "an alias under a name no workspace has, its target a workspace's name",
+   "declaredIn": "app",
+   "declared": {
+    "dossier": "npm:wlib@*"
+   },
+   "lockExit": 1,
+   "errorCode": "ENOTCACHED",
+   "wouldRequest": "http://127.0.0.1:9/wlib",
+   "lockEntry": null,
+   "installExit": null,
+   "installedLink": null,
+   "appLoads": null
+  },
+  {
+   "shows": "an alias under a name no workspace has, no version",
+   "declaredIn": "app",
+   "declared": {
+    "dossier": "npm:typescript"
+   },
+   "lockExit": 1,
+   "errorCode": "ENOTCACHED",
+   "wouldRequest": "http://127.0.0.1:9/typescript",
+   "lockEntry": null,
+   "installExit": null,
+   "installedLink": null,
+   "appLoads": null
+  },
+  {
+   "shows": "an alias under a workspace's name, a range its version satisfies",
+   "declaredIn": "app",
+   "declared": {
+    "wlib": "npm:typescript@*"
+   },
+   "lockExit": 0,
+   "errorCode": null,
+   "wouldRequest": null,
+   "lockEntry": {
+    "resolved": "w",
+    "link": true
+   },
+   "installExit": 0,
+   "installedLink": "../w",
+   "appLoads": {
+    "packageJson": "w/package.json",
+    "name": "wlib",
+    "version": "1.0.0"
+   }
+  },
+  {
+   "shows": "an alias under a workspace's name, the target's range satisfied by the workspace's version",
+   "declaredIn": "app",
+   "declared": {
+    "wlib": "npm:typescript@^1.0.0"
+   },
+   "lockExit": 0,
+   "errorCode": null,
+   "wouldRequest": null,
+   "lockEntry": {
+    "resolved": "w",
+    "link": true
+   },
+   "installExit": 0,
+   "installedLink": "../w",
+   "appLoads": {
+    "packageJson": "w/package.json",
+    "name": "wlib",
+    "version": "1.0.0"
+   }
+  },
+  {
+   "shows": "an alias under a workspace's name, a range its version does not satisfy",
+   "declaredIn": "app",
+   "declared": {
+    "wlib": "npm:typescript@^5.5.0"
+   },
+   "lockExit": 1,
+   "errorCode": "ENOTCACHED",
+   "wouldRequest": "http://127.0.0.1:9/typescript",
+   "lockEntry": null,
+   "installExit": null,
+   "installedLink": null,
+   "appLoads": null
+  },
+  {
+   "shows": "an alias under a scoped workspace's name, a range its version satisfies",
+   "declaredIn": "app",
+   "declared": {
+    "@syzygy/slib": "npm:typescript@*"
+   },
+   "lockExit": 0,
+   "errorCode": null,
+   "wouldRequest": null,
+   "lockEntry": {
+    "resolved": "s",
+    "link": true
+   },
+   "installExit": 0,
+   "installedLink": "../../s",
+   "appLoads": {
+    "packageJson": "s/package.json",
+    "name": "@syzygy/slib",
+    "version": "1.0.0"
+   }
+  },
+  {
+   "shows": "control: a plain range under a workspace's name, satisfied",
+   "declaredIn": "app",
+   "declared": {
+    "wlib": "^1.0.0"
+   },
+   "lockExit": 0,
+   "errorCode": null,
+   "wouldRequest": null,
+   "lockEntry": {
+    "resolved": "w",
+    "link": true
+   },
+   "installExit": 0,
+   "installedLink": "../w",
+   "appLoads": {
+    "packageJson": "w/package.json",
+    "name": "wlib",
+    "version": "1.0.0"
+   }
+  },
+  {
+   "shows": "control: a plain range under a workspace's name, not satisfied",
+   "declaredIn": "app",
+   "declared": {
+    "wlib": "^5.5.0"
+   },
+   "lockExit": 1,
+   "errorCode": "ENOTCACHED",
+   "wouldRequest": "http://127.0.0.1:9/wlib",
+   "lockEntry": null,
+   "installExit": null,
+   "installedLink": null,
+   "appLoads": null
+  },
+  {
+   "shows": "an alias under a workspace's name, no version",
+   "declaredIn": "app",
+   "declared": {
+    "wlib": "npm:typescript"
+   },
+   "lockExit": 0,
+   "errorCode": null,
+   "wouldRequest": null,
+   "lockEntry": {
+    "resolved": "w",
+    "link": true
+   },
+   "installExit": 0,
+   "installedLink": "../w",
+   "appLoads": {
+    "packageJson": "w/package.json",
+    "name": "wlib",
+    "version": "1.0.0"
+   }
+  },
+  {
+   "shows": "the root's manifest: an alias under a workspace's name, a range its version does not satisfy",
+   "declaredIn": "root",
+   "declared": {
+    "wlib": "npm:typescript@^5.5.0"
+   },
+   "lockExit": 0,
+   "errorCode": null,
+   "wouldRequest": null,
+   "lockEntry": {
+    "resolved": "w",
+    "link": true
+   },
+   "installExit": 0,
+   "installedLink": "../w",
+   "appLoads": {
+    "packageJson": "w/package.json",
+    "name": "wlib",
+    "version": "1.0.0"
+   }
+  },
+  {
+   "shows": "the root's manifest: an alias under a scoped workspace's name, a range its version does not satisfy",
+   "declaredIn": "root",
+   "declared": {
+    "@syzygy/slib": "npm:typescript@^5.5.0"
+   },
+   "lockExit": 0,
+   "errorCode": null,
+   "wouldRequest": null,
+   "lockEntry": {
+    "resolved": "s",
+    "link": true
+   },
+   "installExit": 0,
+   "installedLink": "../../s",
+   "appLoads": {
+    "packageJson": "s/package.json",
+    "name": "@syzygy/slib",
+    "version": "1.0.0"
+   }
+  },
+  {
+   "shows": "the root's manifest: a plain range under a workspace's name, not satisfied",
+   "declaredIn": "root",
+   "declared": {
+    "wlib": "^5.5.0"
+   },
+   "lockExit": 0,
+   "errorCode": null,
+   "wouldRequest": null,
+   "lockEntry": {
+    "resolved": "w",
+    "link": true
+   },
+   "installExit": 0,
+   "installedLink": "../w",
+   "appLoads": {
+    "packageJson": "w/package.json",
+    "name": "wlib",
+    "version": "1.0.0"
+   }
+  },
+  {
+   "shows": "control: the root's manifest, an alias under a name no workspace has",
+   "declaredIn": "root",
+   "declared": {
+    "dossier": "npm:typescript@^5.5.0"
+   },
+   "lockExit": 1,
+   "errorCode": "ENOTCACHED",
+   "wouldRequest": "http://127.0.0.1:9/typescript",
+   "lockEntry": null,
+   "installExit": null,
+   "installedLink": null,
+   "appLoads": null
+  }
+ ]
+}

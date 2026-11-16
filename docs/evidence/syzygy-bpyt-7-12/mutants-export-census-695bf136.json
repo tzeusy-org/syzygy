@@ -1,0 +1,494 @@
+{
+ "subject": "export_census.py --selftest",
+ "subjectSha256": "e63681d9f206deafa7056fcfd036f2578be25e56cd4f5a534a9a0db2191cb931",
+ "ranAtCommit": "695bf136da35dc9d94bf4abf80c709f3d4244adb",
+ "unmutatedExit": 0,
+ "unmutatedLast": "selftest: 30 of 30 cases hold",
+ "mutants": 26,
+ "killed": 26,
+ "killedByAFailedCase": 26,
+ "killedByCrashOnly": 0,
+ "survivors": [],
+ "records": [
+  {
+   "id": "lexer-block-comment-kept",
+   "old": "if c == '/' and i + 1 < n and src[i + 1] == '*':",
+   "new": "if False and i + 1 < n and src[i + 1] == '*':",
+   "exitCode": 1,
+   "killed": true,
+   "failedCases": [
+    {
+     "case": "name only in comments",
+     "firstErrorLine": "FAIL  name only in comments: X expected 0 got 1"
+    },
+    {
+     "case": "comment inside a template expression is a comment",
+     "firstErrorLine": "FAIL  comment inside a template expression is a comment: X expected 1 got 2"
+    },
+    {
+     "case": "comment after a nested template in a template expression is a comment",
+     "firstErrorLine": "FAIL  comment after a nested template in a template expression is a comment: X expected 1 got 2"
+    },
+    {
+     "case": "comment after braces inside a template expression is a comment",
+     "firstErrorLine": "FAIL  comment after braces inside a template expression is a comment: X expected 1 got 2"
+    }
+   ],
+   "crash": null
+  },
+  {
+   "id": "lexer-line-comment-kept",
+   "old": "if c == '/' and i + 1 < n and src[i + 1] == '/':",
+   "new": "if False and i + 1 < n and src[i + 1] == '/':",
+   "exitCode": 1,
+   "killed": true,
+   "failedCases": [
+    {
+     "case": "name only in comments",
+     "firstErrorLine": "FAIL  name only in comments: X expected 0 got 1"
+    },
+    {
+     "case": "name in string kept",
+     "firstErrorLine": "FAIL  name in string kept: X expected 1 got 2"
+    },
+    {
+     "case": "division is not a regex",
+     "firstErrorLine": "FAIL  division is not a regex: X expected 1 got 2"
+    },
+    {
+     "case": "division after a parenthesis is not a regex",
+     "firstErrorLine": "FAIL  division after a parenthesis is not a regex: X expected 1 got 2"
+    },
+    {
+     "case": "class of commentOnlyThing",
+     "firstErrorLine": "FAIL  class of commentOnlyThing: expected dead got self-only"
+    }
+   ],
+   "crash": null
+  },
+  {
+   "id": "lexer-string-dropped",
+   "old": "out.append(src[i:j + 1]); i = j + 1; last_sig = c; continue",
+   "new": "i = j + 1; last_sig = c; continue",
+   "exitCode": 1,
+   "killed": true,
+   "failedCases": [
+    {
+     "case": "name in string kept",
+     "firstErrorLine": "FAIL  name in string kept: X expected 1 got 0"
+    }
+   ],
+   "crash": null
+  },
+  {
+   "id": "lexer-regex-literals-off",
+   "old": "regex_ok = last_sig == '' or last_sig in REGEX_PRECEDERS or last_word in REGEX_KEYWORDS",
+   "new": "regex_ok = False",
+   "exitCode": 1,
+   "killed": true,
+   "failedCases": [
+    {
+     "case": "regex after return",
+     "firstErrorLine": "FAIL  regex after return: X expected 1 got 0"
+    },
+    {
+     "case": "slash inside a regex character class does not end the regex",
+     "firstErrorLine": "FAIL  slash inside a regex character class does not end the regex: X expected 1 got 0"
+    }
+   ],
+   "crash": null
+  },
+  {
+   "id": "lexer-template-text-dropped",
+   "old": "            out.append(c); i += 1; continue\n        # code mode",
+   "new": "            i += 1; continue\n        # code mode",
+   "exitCode": 1,
+   "killed": true,
+   "failedCases": [
+    {
+     "case": "name in template text kept",
+     "firstErrorLine": "FAIL  name in template text kept: X expected 1 got 0"
+    },
+    {
+     "case": "nested template inside a template expression is entered",
+     "firstErrorLine": "FAIL  nested template inside a template expression is entered: X expected 2 got 1"
+    }
+   ],
+   "crash": null
+  },
+  {
+   "id": "lexer-return-not-a-regex-keyword",
+   "old": "REGEX_KEYWORDS = {'return', ",
+   "new": "REGEX_KEYWORDS = {'xreturn', ",
+   "exitCode": 1,
+   "killed": true,
+   "failedCases": [
+    {
+     "case": "regex after return",
+     "firstErrorLine": "FAIL  regex after return: X expected 1 got 0"
+    }
+   ],
+   "crash": null
+  },
+  {
+   "id": "lexer-escape-in-string-ignored",
+   "old": "j += 2 if src[j] == '\\\\' else 1",
+   "new": "j += 1",
+   "exitCode": 1,
+   "killed": true,
+   "failedCases": [
+    {
+     "case": "escaped quote does not end the string",
+     "firstErrorLine": "FAIL  escaped quote does not end the string: X expected 1 got 0"
+    }
+   ],
+   "crash": null
+  },
+  {
+   "id": "lexer-template-expression-never-entered",
+   "old": "if c == '$' and i + 1 < n and src[i + 1] == '{':",
+   "new": "if False:",
+   "exitCode": 1,
+   "killed": true,
+   "failedCases": [
+    {
+     "case": "comment inside a template expression is a comment",
+     "firstErrorLine": "FAIL  comment inside a template expression is a comment: X expected 1 got 2"
+    },
+    {
+     "case": "comment after a nested template in a template expression is a comment",
+     "firstErrorLine": "FAIL  comment after a nested template in a template expression is a comment: X expected 1 got 2"
+    },
+    {
+     "case": "comment after braces inside a template expression is a comment",
+     "firstErrorLine": "FAIL  comment after braces inside a template expression is a comment: X expected 1 got 2"
+    },
+    {
+     "case": "nested template inside a template expression is entered",
+     "firstErrorLine": "FAIL  nested template inside a template expression is entered: X expected 2 got 0"
+    }
+   ],
+   "crash": null
+  },
+  {
+   "id": "lexer-regex-class-ignored",
+   "old": "in_class = True",
+   "new": "in_class = False",
+   "exitCode": 1,
+   "killed": true,
+   "failedCases": [
+    {
+     "case": "slash inside a regex character class does not end the regex",
+     "firstErrorLine": "FAIL  slash inside a regex character class does not end the regex: X expected 1 got 0"
+    }
+   ],
+   "crash": null
+  },
+  {
+   "id": "lexer-template-brace-depth-ignored",
+   "old": "        if c == '{' and tpl:\n            tpl[-1] += 1",
+   "new": "        if c == '{' and tpl:\n            pass",
+   "exitCode": 1,
+   "killed": true,
+   "failedCases": [
+    {
+     "case": "comment after braces inside a template expression is a comment",
+     "firstErrorLine": "FAIL  comment after braces inside a template expression is a comment: X expected 1 got 2"
+    }
+   ],
+   "crash": null
+  },
+  {
+   "id": "lexer-division-after-paren-read-as-regex",
+   "old": "REGEX_PRECEDERS = set('(,=:[!&|?{};+-*%<>~^')",
+   "new": "REGEX_PRECEDERS = set('(,=:[!&|?{};+-*%<>~^)')",
+   "exitCode": 1,
+   "killed": true,
+   "failedCases": [
+    {
+     "case": "division after a parenthesis is not a regex",
+     "firstErrorLine": "FAIL  division after a parenthesis is not a regex: X expected 1 got 2"
+    }
+   ],
+   "crash": null
+  },
+  {
+   "id": "lexer-nested-template-not-entered",
+   "old": "        if c == '`':\n            out.append(c); i += 1; in_template = True; continue",
+   "new": "        if c == '`' and not tpl:\n            out.append(c); i += 1; in_template = True; continue",
+   "exitCode": 1,
+   "killed": true,
+   "failedCases": [
+    {
+     "case": "nested template inside a template expression is entered",
+     "firstErrorLine": "FAIL  nested template inside a template expression is entered: X expected 2 got 0"
+    }
+   ],
+   "crash": null
+  },
+  {
+   "id": "lexer-expression-close-stays-in-code",
+   "old": "tpl.pop(); out.append(c); i += 1; in_template = True; continue",
+   "new": "tpl.pop(); out.append(c); i += 1; in_template = False; continue",
+   "exitCode": 1,
+   "killed": true,
+   "failedCases": [
+    {
+     "case": "text after a template expression close is template text",
+     "firstErrorLine": "FAIL  text after a template expression close is template text: X expected 1 got 0"
+    }
+   ],
+   "crash": null
+  },
+  {
+   "id": "class-public-off",
+   "old": "            if prod_outside:\n                cls = 'public'",
+   "new": "            if False:\n                cls = 'public'",
+   "exitCode": 1,
+   "killed": true,
+   "failedCases": [
+    {
+     "case": "class of publicThing",
+     "firstErrorLine": "FAIL  class of publicThing: expected public got dead"
+    }
+   ],
+   "crash": null
+  },
+  {
+   "id": "class-internal-off",
+   "old": "            elif prod_inside:\n                cls = 'internal'",
+   "new": "            elif False:\n                cls = 'internal'",
+   "exitCode": 1,
+   "killed": true,
+   "failedCases": [
+    {
+     "case": "class of internalThing",
+     "firstErrorLine": "FAIL  class of internalThing: expected internal got dead"
+    }
+   ],
+   "crash": null
+  },
+  {
+   "id": "class-test-only-off",
+   "old": "            elif tests:\n                cls = 'test-only'",
+   "new": "            elif False:\n                cls = 'test-only'",
+   "exitCode": 1,
+   "killed": true,
+   "failedCases": [
+    {
+     "case": "class of testOnlyThing",
+     "firstErrorLine": "FAIL  class of testOnlyThing: expected test-only got dead"
+    }
+   ],
+   "crash": null
+  },
+  {
+   "id": "class-self-only-needs-two",
+   "old": "elif self_uses > 0:",
+   "new": "elif self_uses > 1:",
+   "exitCode": 1,
+   "killed": true,
+   "failedCases": [
+    {
+     "case": "class of selfOnlyThing",
+     "firstErrorLine": "FAIL  class of selfOnlyThing: expected self-only got dead"
+    },
+    {
+     "case": "class of listedThing",
+     "firstErrorLine": "FAIL  class of listedThing: expected self-only got dead"
+    },
+    {
+     "case": "raw class of commentOnlyThing",
+     "firstErrorLine": "FAIL  raw class of commentOnlyThing: expected self-only got dead"
+    }
+   ],
+   "crash": null
+  },
+  {
+   "id": "class-barrel-counts-as-user",
+   "old": "if g != f and g not in barrels and name in counts[g]]",
+   "new": "if g != f and name in counts[g]]",
+   "exitCode": 1,
+   "killed": true,
+   "failedCases": [
+    {
+     "case": "class of barrelOnlyThing",
+     "firstErrorLine": "FAIL  class of barrelOnlyThing: expected dead got internal"
+    }
+   ],
+   "crash": null
+  },
+  {
+   "id": "class-declaration-not-subtracted",
+   "old": "self_uses = counts[f].get(name, 0) - 1",
+   "new": "self_uses = counts[f].get(name, 0) - 0",
+   "exitCode": 1,
+   "killed": true,
+   "failedCases": [
+    {
+     "case": "class of deadThing",
+     "firstErrorLine": "FAIL  class of deadThing: expected dead got self-only"
+    },
+    {
+     "case": "class of commentOnlyThing",
+     "firstErrorLine": "FAIL  class of commentOnlyThing: expected dead got self-only"
+    },
+    {
+     "case": "class of barrelOnlyThing",
+     "firstErrorLine": "FAIL  class of barrelOnlyThing: expected dead got self-only"
+    },
+    {
+     "case": "class of aliasedThing",
+     "firstErrorLine": "FAIL  class of aliasedThing: expected dead got self-only"
+    },
+    {
+     "case": "class of useSelf",
+     "firstErrorLine": "FAIL  class of useSelf: expected dead got self-only"
+    },
+    {
+     "case": "class of useInternal",
+     "firstErrorLine": "FAIL  class of useInternal: expected dead got self-only"
+    }
+   ],
+   "crash": null
+  },
+  {
+   "id": "mode-comments-never-stripped",
+   "old": "count_tokens(text[f] if raw else strip_comments(text[f]))",
+   "new": "count_tokens(text[f])",
+   "exitCode": 1,
+   "killed": true,
+   "failedCases": [
+    {
+     "case": "class of commentOnlyThing",
+     "firstErrorLine": "FAIL  class of commentOnlyThing: expected dead got self-only"
+    }
+   ],
+   "crash": null
+  },
+  {
+   "id": "mode-raw-flag-ignored",
+   "old": "count_tokens(text[f] if raw else strip_comments(text[f]))",
+   "new": "count_tokens(strip_comments(text[f]))",
+   "exitCode": 1,
+   "killed": true,
+   "failedCases": [
+    {
+     "case": "raw class of commentOnlyThing",
+     "firstErrorLine": "FAIL  raw class of commentOnlyThing: expected self-only got dead"
+    }
+   ],
+   "crash": null
+  },
+  {
+   "id": "decl-alias-takes-source-name",
+   "old": "names.append((part.split(' as ')[-1].strip(), m.start()))",
+   "new": "names.append((part.split(' as ')[0].strip(), m.start()))",
+   "exitCode": 1,
+   "killed": true,
+   "failedCases": [
+    {
+     "case": "class of aliasedThing",
+     "firstErrorLine": "FAIL  class of aliasedThing: expected dead got None"
+    }
+   ],
+   "crash": null
+  },
+  {
+   "id": "decl-const-not-matched",
+   "old": "(?:function\\*?|const|let|var|",
+   "new": "(?:function\\*?|let|var|",
+   "exitCode": 1,
+   "killed": true,
+   "failedCases": [
+    {
+     "case": "class of deadThing",
+     "firstErrorLine": "FAIL  class of deadThing: expected dead got None"
+    },
+    {
+     "case": "class of selfOnlyThing",
+     "firstErrorLine": "FAIL  class of selfOnlyThing: expected self-only got None"
+    },
+    {
+     "case": "class of testOnlyThing",
+     "firstErrorLine": "FAIL  class of testOnlyThing: expected test-only got None"
+    },
+    {
+     "case": "class of internalThing",
+     "firstErrorLine": "FAIL  class of internalThing: expected internal got None"
+    },
+    {
+     "case": "class of publicThing",
+     "firstErrorLine": "FAIL  class of publicThing: expected public got None"
+    },
+    {
+     "case": "class of commentOnlyThing",
+     "firstErrorLine": "FAIL  class of commentOnlyThing: expected dead got None"
+    },
+    {
+     "case": "class of barrelOnlyThing",
+     "firstErrorLine": "FAIL  class of barrelOnlyThing: expected dead got None"
+    },
+    {
+     "case": "class of listedThing",
+     "firstErrorLine": "FAIL  class of listedThing: expected self-only got None"
+    },
+    {
+     "case": "class of useSelf",
+     "firstErrorLine": "FAIL  class of useSelf: expected dead got None"
+    },
+    {
+     "case": "class of useInternal",
+     "firstErrorLine": "FAIL  class of useInternal: expected dead got None"
+    },
+    {
+     "case": "raw class of commentOnlyThing",
+     "firstErrorLine": "FAIL  raw class of commentOnlyThing: expected self-only got None"
+    }
+   ],
+   "crash": null
+  },
+  {
+   "id": "test-detector-off",
+   "old": "is_test = lambda f: bool(re.search(r'\\.test\\.(ts|mjs|js)$', f))",
+   "new": "is_test = lambda f: bool(re.search(r'\\.nomatch$', f))",
+   "exitCode": 1,
+   "killed": true,
+   "failedCases": [
+    {
+     "case": "class of testOnlyThing",
+     "firstErrorLine": "FAIL  class of testOnlyThing: expected test-only got public"
+    }
+   ],
+   "crash": null
+  },
+  {
+   "id": "outside-counts-tests",
+   "old": "prod_outside = [g for g in others if not g.startswith(prefix) and not is_test(g)]",
+   "new": "prod_outside = [g for g in others if not g.startswith(prefix)]",
+   "exitCode": 1,
+   "killed": true,
+   "failedCases": [
+    {
+     "case": "class of testOnlyThing",
+     "firstErrorLine": "FAIL  class of testOnlyThing: expected test-only got public"
+    }
+   ],
+   "crash": null
+  },
+  {
+   "id": "inside-counts-tests",
+   "old": "prod_inside = [g for g in others if g.startswith(prefix) and not is_test(g)]",
+   "new": "prod_inside = [g for g in others if g.startswith(prefix)]",
+   "exitCode": 1,
+   "killed": true,
+   "failedCases": [
+    {
+     "case": "class of testOnlyThing",
+     "firstErrorLine": "FAIL  class of testOnlyThing: expected test-only got internal"
+    }
+   ],
+   "crash": null
+  }
+ ]
+}

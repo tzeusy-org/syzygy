@@ -1,0 +1,584 @@
+{
+ "tool": "census_run.py",
+ "treeCommit": "a864e999645a071dda40325b2235976590e02973",
+ "mode": "kill",
+ "command": [
+  "npx",
+  "vitest",
+  "run"
+ ],
+ "privateDirectory": "/tmp/lc418/k2",
+ "tmpdir": "/tmp/lc418/k2/tmp",
+ "sha256": {
+  "census_run.py": "6039545e993610ef67dff1fc60103ade0fe197ab55638c1f9cdec7504b16fe8d",
+  "scratch_trace.cjs": "c9ff0cbbd2c9162c8483082f24202e18fa52f414c9c18a648723285de2ec2688",
+  "tmp_sampler.py": "3e34f06abe672f405ae7107b9e55472e22299dddef2634b167c9373008c2125d"
+ },
+ "loadAverageAtStart": [
+  11.7548828125,
+  17.35009765625,
+  22.59912109375
+ ],
+ "killAfterSeconds": 75.0,
+ "leader": {
+  "pid": 2016927,
+  "pgid": 2016927
+ },
+ "runFinishedBeforeSignal": false,
+ "secondsIntoTheRun": 75.1,
+ "groupMembersAtSignal": 12,
+ "entriesAtSignal": 35,
+ "exit": -9,
+ "afterSignal": [
+  {
+   "secondsAfterSignal": 5,
+   "entries": 34,
+   "groupMembersAlive": 0
+  },
+  {
+   "secondsAfterSignal": 20,
+   "entries": 35,
+   "groupMembersAlive": 0
+  },
+  {
+   "secondsAfterSignal": 40,
+   "entries": 34,
+   "groupMembersAlive": 0
+  },
+  {
+   "secondsAfterSignal": 80,
+   "entries": 34,
+   "groupMembersAlive": 0
+  }
+ ],
+ "listingAtEnd": [
+  {
+   "name": ".com.google.Chrome.IbyHFD",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855273.7,
+   "bytes": 0
+  },
+  {
+   "name": ".com.google.Chrome.YzyaZc",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855261.6,
+   "bytes": 0
+  },
+  {
+   "name": ".com.google.Chrome.pEBsvN",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855206.2,
+   "bytes": 0
+  },
+  {
+   "name": "52A2KLoXDI9omCN0lufPS",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855200.6,
+   "bytes": 1589248
+  },
+  {
+   "name": "NcQ_z8V9ZuLX2jL4sD38P",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855200.4,
+   "bytes": 5111808
+  },
+  {
+   "name": "Pb224WDtuWdn_Y3Wnp5rf",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855200.4,
+   "bytes": 6590464
+  },
+  {
+   "name": "dossier-check-clone-N4pNQo",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855274.3,
+   "bytes": 208896
+  },
+  {
+   "name": "dossier-check-origin-99xA5e",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855264.8,
+   "bytes": 200704
+  },
+  {
+   "name": "dossier-check-state-WLJ6F2",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855274.3,
+   "bytes": 73728
+  },
+  {
+   "name": "node-compile-cache",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855199.3,
+   "bytes": 5632000
+  },
+  {
+   "name": "rDHF8JO6gsPu58DrGr7sl",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855237.3,
+   "bytes": 73728
+  },
+  {
+   "name": "syzygy-cross-links-pages-HMlTET",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855274.1,
+   "bytes": 110592
+  },
+  {
+   "name": "syzygy-cross-links-state-UDuhXq",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855273.5,
+   "bytes": 4096
+  },
+  {
+   "name": "syzygy-poc-a11y-LNXLW3",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855255.0,
+   "bytes": 1269760
+  },
+  {
+   "name": "syzygy-poc-browser-TVTOr6",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855312.6,
+   "bytes": 40378368
+  },
+  {
+   "name": "syzygy-poc-browser-a8OAGW",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855351.7,
+   "bytes": 42209280
+  },
+  {
+   "name": "syzygy-poc-browser-dFTNA9",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855344.2,
+   "bytes": 35889152
+  },
+  {
+   "name": "syzygy-poc-names-7vV4Io",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855262.8,
+   "bytes": 40960
+  },
+  {
+   "name": "syzygy-poc-names-daemon-7K4Ub4",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855269.4,
+   "bytes": 4096
+  },
+  {
+   "name": "syzygy-poc-names-daemon-8vxzlH",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855266.2,
+   "bytes": 4096
+  },
+  {
+   "name": "syzygy-poc-names-daemon-WyXmY4",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855272.0,
+   "bytes": 4096
+  },
+  {
+   "name": "syzygy-poc-names-daemon-lFvQcj",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855263.0,
+   "bytes": 4096
+  },
+  {
+   "name": "syzygy-poc-restart-1000-39331.lock",
+   "kind": "file",
+   "uid": 1000,
+   "mtime": 1792855274.1,
+   "bytes": 0
+  },
+  {
+   "name": "syzygy-poc-surface-fixture-p2017065-n4026531836-XKkqom",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855254.9,
+   "bytes": 233472
+  },
+  {
+   "name": "syzygy-poc-surface-fixture-p2030582-n4026531836-53OJIo",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855274.3,
+   "bytes": 233472
+  },
+  {
+   "name": "syzygy-poc-surface-fixture-p2030582-n4026531836-JTrfYP",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855266.1,
+   "bytes": 233472
+  },
+  {
+   "name": "syzygy-poc-surface-fixture-p2030582-n4026531836-RQKHpG",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855262.9,
+   "bytes": 233472
+  },
+  {
+   "name": "syzygy-poc-surface-fixture-p2030582-n4026531836-YUESUD",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855271.9,
+   "bytes": 233472
+  },
+  {
+   "name": "syzygy-poc-surface-fixture-p2030582-n4026531836-x6jU5E",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855269.3,
+   "bytes": 233472
+  },
+  {
+   "name": "syzygy-poc-surface-fixture-p2033117-n4026531836-IACKd4",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855273.4,
+   "bytes": 233472
+  },
+  {
+   "name": "syzygy-poc-surface-fixture-template-p2017065-n4026531836-lOaUp8",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855207.0,
+   "bytes": 233472
+  },
+  {
+   "name": "syzygy-poc-surface-fixture-template-p2030582-n4026531836-IFmEj7",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855262.9,
+   "bytes": 233472
+  },
+  {
+   "name": "syzygy-poc-surface-fixture-template-p2033117-n4026531836-8LcWmc",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855273.2,
+   "bytes": 233472
+  },
+  {
+   "name": "syzygy-private-restart-XxgeSq",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855274.0,
+   "bytes": 8192
+  }
+ ],
+ "processesCarryingTheMarker": {
+  "marker": "--user-data-dir=<private-directory>/tmp/ in the arguments",
+  "count": 26,
+  "byKind": {
+   "gpu-process": 3,
+   "leader": 3,
+   "renderer": 8,
+   "utility": 6,
+   "zygote": 6
+  },
+  "pids": [
+   2018827,
+   2018909,
+   2018911,
+   2019018,
+   2019019,
+   2019035,
+   2019098,
+   2025285,
+   2028998,
+   2030800,
+   2030833,
+   2030834,
+   2030886,
+   2030887,
+   2030889,
+   2030919,
+   2033004,
+   2033367,
+   2033396,
+   2033397,
+   2033450,
+   2033452,
+   2033458,
+   2033504,
+   2033505,
+   2033548
+  ]
+ },
+ "groupMembersAliveAtEnd": 0,
+ "stoppedByPid": {
+  "signal": "SIGTERM",
+  "rounds": 1,
+  "remaining": 0
+ },
+ "listingAfterStopping": [
+  {
+   "name": ".com.google.Chrome.IbyHFD",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855273.7,
+   "bytes": 0
+  },
+  {
+   "name": ".com.google.Chrome.YzyaZc",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855261.6,
+   "bytes": 0
+  },
+  {
+   "name": ".com.google.Chrome.pEBsvN",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855206.2,
+   "bytes": 0
+  },
+  {
+   "name": "52A2KLoXDI9omCN0lufPS",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855200.6,
+   "bytes": 1589248
+  },
+  {
+   "name": "NcQ_z8V9ZuLX2jL4sD38P",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855200.4,
+   "bytes": 5111808
+  },
+  {
+   "name": "Pb224WDtuWdn_Y3Wnp5rf",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855200.4,
+   "bytes": 6590464
+  },
+  {
+   "name": "dossier-check-clone-N4pNQo",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855274.3,
+   "bytes": 208896
+  },
+  {
+   "name": "dossier-check-origin-99xA5e",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855264.8,
+   "bytes": 200704
+  },
+  {
+   "name": "dossier-check-state-WLJ6F2",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855274.3,
+   "bytes": 73728
+  },
+  {
+   "name": "node-compile-cache",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855199.3,
+   "bytes": 5632000
+  },
+  {
+   "name": "rDHF8JO6gsPu58DrGr7sl",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855237.3,
+   "bytes": 73728
+  },
+  {
+   "name": "syzygy-cross-links-pages-HMlTET",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855274.1,
+   "bytes": 110592
+  },
+  {
+   "name": "syzygy-cross-links-state-UDuhXq",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855273.5,
+   "bytes": 4096
+  },
+  {
+   "name": "syzygy-poc-a11y-LNXLW3",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855255.0,
+   "bytes": 1269760
+  },
+  {
+   "name": "syzygy-poc-browser-TVTOr6",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855354.6,
+   "bytes": 40378368
+  },
+  {
+   "name": "syzygy-poc-browser-a8OAGW",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855354.6,
+   "bytes": 42209280
+  },
+  {
+   "name": "syzygy-poc-browser-dFTNA9",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855354.6,
+   "bytes": 35889152
+  },
+  {
+   "name": "syzygy-poc-names-7vV4Io",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855262.8,
+   "bytes": 40960
+  },
+  {
+   "name": "syzygy-poc-names-daemon-7K4Ub4",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855269.4,
+   "bytes": 4096
+  },
+  {
+   "name": "syzygy-poc-names-daemon-8vxzlH",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855266.2,
+   "bytes": 4096
+  },
+  {
+   "name": "syzygy-poc-names-daemon-WyXmY4",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855272.0,
+   "bytes": 4096
+  },
+  {
+   "name": "syzygy-poc-names-daemon-lFvQcj",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855263.0,
+   "bytes": 4096
+  },
+  {
+   "name": "syzygy-poc-restart-1000-39331.lock",
+   "kind": "file",
+   "uid": 1000,
+   "mtime": 1792855274.1,
+   "bytes": 0
+  },
+  {
+   "name": "syzygy-poc-surface-fixture-p2017065-n4026531836-XKkqom",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855254.9,
+   "bytes": 233472
+  },
+  {
+   "name": "syzygy-poc-surface-fixture-p2030582-n4026531836-53OJIo",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855274.3,
+   "bytes": 233472
+  },
+  {
+   "name": "syzygy-poc-surface-fixture-p2030582-n4026531836-JTrfYP",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855266.1,
+   "bytes": 233472
+  },
+  {
+   "name": "syzygy-poc-surface-fixture-p2030582-n4026531836-RQKHpG",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855262.9,
+   "bytes": 233472
+  },
+  {
+   "name": "syzygy-poc-surface-fixture-p2030582-n4026531836-YUESUD",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855271.9,
+   "bytes": 233472
+  },
+  {
+   "name": "syzygy-poc-surface-fixture-p2030582-n4026531836-x6jU5E",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855269.3,
+   "bytes": 233472
+  },
+  {
+   "name": "syzygy-poc-surface-fixture-p2033117-n4026531836-IACKd4",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855273.4,
+   "bytes": 233472
+  },
+  {
+   "name": "syzygy-poc-surface-fixture-template-p2017065-n4026531836-lOaUp8",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855207.0,
+   "bytes": 233472
+  },
+  {
+   "name": "syzygy-poc-surface-fixture-template-p2030582-n4026531836-IFmEj7",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855262.9,
+   "bytes": 233472
+  },
+  {
+   "name": "syzygy-poc-surface-fixture-template-p2033117-n4026531836-8LcWmc",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855273.2,
+   "bytes": 233472
+  },
+  {
+   "name": "syzygy-private-restart-XxgeSq",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792855274.0,
+   "bytes": 8192
+  }
+ ],
+ "samplerRecord": "/tmp/lc418/k2/samples.json",
+ "trace": {
+  "lines": 1162,
+  "sha256": "7d1d907e8bb26b42d517fe0b375e4416be542aafee1caf9a6bd28f2f3132001c"
+ }
+}

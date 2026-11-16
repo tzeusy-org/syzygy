@@ -19,7 +19,6 @@
 import {
   FRESHNESS_STATES,
   RENDERING_TIERS,
-  UNKNOWN_REASONS,
   type EpistemicState,
   type FreshnessState,
   type RenderingTier,
@@ -45,7 +44,6 @@ import {
   type SecretClassificationPolicy,
 } from './content-classification.js';
 import { createExactObjectReader } from './git-object-reader.js';
-import { indexGitTree, parseGitLsTree } from './git-tree.js';
 import {
   buildProjectShapeCoverage,
   type ClassCoverage,
@@ -55,24 +53,24 @@ import {
   type ReconciledFact,
   type RootSummaryDisclosure,
   type SourceCoverage,
+  type SurfacedUnenumeratedHeading,
 } from './project-shape-coverage.js';
 import { PROJECT_ACCOUNT_KEYS, extractBaselineSpec, extractSource, type ProjectAccountKey, type SourceExtraction } from './project-shape-extraction.js';
 import type { ExtractionClass, ManifestSource, PillarDiscovery, PillarKey, SourceRule } from './project-shape-manifest.js';
 import {
   PWB_FAILURE_STATES,
   PWB_RESOURCE_LIMITS,
-  observeProjectShapeSources,
+  observePhaseA,
   type DeterministicInputs,
   type EmissionStamp,
-  type GitRunner,
   type ObservationDegradation,
   type ObservationScope,
   type PWB_OBSERVER_IDENTITY,
-  type PwbResourceLimits,
-  type ResourceLimitBreach,
 } from './project-shape-observation.js';
 import { observeProjectShape, type AdmissionFailureReason } from './project-shape-observer.js';
+import type { GitRunner, PwbResourceLimits, ResourceLimitBreach } from './pwb-types.js';
 import { createResourceLedger, type ResourceLedgerSummary } from './resource-ledger.js';
+import { createTransientBodies } from './transient-bodies.js';
 
 // The one consented repository identity (the consent record's scope anchor;
 // `governance-inputs.ts` proves the expectation byte-equal).
@@ -86,6 +84,8 @@ export type ChallengeState = (typeof CHALLENGE_STATES)[number];
 // RFC2-24's resolution route per reason, one short phrase each, keyed by
 // the closed twelve. `project-shape-model.test.ts` proves the key set equals
 // cap1-core's `UNKNOWN_REASONS` exactly.
+export type { UnknownReason };
+
 export const UNKNOWN_REASON_ROUTES: Readonly<Record<UnknownReason, string>> = {
   'missing-declaration': 'First-pass drafting for owner sign-off',
   'missing-evidence': 'Produce or capture evidence',
@@ -122,14 +122,14 @@ export interface ProjectShapeSupport {
 // renders verbatim. One row per reason; the classification is this
 // implementation's reading of each `UNKNOWN_REASON_ROUTES` sentence
 // [Inferred], never a contract value.
-export const ROUTE_ACTORS = ['owner', 'operator', 'agent'] as const;
-export type RouteActor = (typeof ROUTE_ACTORS)[number];
-export const ROUTE_VERBS = ['draft', 'capture', 'declare', 'consent', 'decide', 'adjudicate', 'repair', 'run'] as const;
-export type RouteVerb = (typeof ROUTE_VERBS)[number];
-export const ROUTE_TARGETS = ['artifact', 'act', 'policy', 'evaluation', 'external-work'] as const;
-export type RouteTarget = (typeof ROUTE_TARGETS)[number];
+const ROUTE_ACTORS = ['owner', 'operator', 'agent'] as const;
+type RouteActor = (typeof ROUTE_ACTORS)[number];
+const ROUTE_VERBS = ['draft', 'capture', 'declare', 'consent', 'decide', 'adjudicate', 'repair', 'run'] as const;
+type RouteVerb = (typeof ROUTE_VERBS)[number];
+const ROUTE_TARGETS = ['artifact', 'act', 'policy', 'evaluation', 'external-work'] as const;
+type RouteTarget = (typeof ROUTE_TARGETS)[number];
 
-export const UNKNOWN_REASON_ACTIONS: Readonly<Record<UnknownReason, { readonly actor: RouteActor; readonly verb: RouteVerb; readonly target: RouteTarget }>> = {
+const UNKNOWN_REASON_ACTIONS: Readonly<Record<UnknownReason, { readonly actor: RouteActor; readonly verb: RouteVerb; readonly target: RouteTarget }>> = {
   'missing-declaration': { actor: 'agent', verb: 'draft', target: 'artifact' },
   'missing-evidence': { actor: 'operator', verb: 'capture', target: 'evaluation' },
   'no-currency-bound-declared': { actor: 'owner', verb: 'declare', target: 'policy' },
@@ -176,18 +176,6 @@ export interface ProjectShapeClaim {
 export interface ReasonCounts {
   readonly primary: Readonly<Partial<Record<UnknownReason, number>>>;
   readonly secondary: Readonly<Partial<Record<UnknownReason, number>>>;
-}
-
-function isUnknownReason(value: string): value is UnknownReason {
-  return (UNKNOWN_REASONS as readonly string[]).includes(value);
-}
-
-// The fixed reasons flow from act-bound artifacts whose values are proven
-// byte-equal to RFC2-24; anything else would be a minted reason, which
-// RFC2-24 forbids — so it is a thrown invariant, never a rendered word.
-function closedReason(value: string): UnknownReason {
-  if (!isUnknownReason(value)) throw new Error(`"${value}" is not one of the twelve RFC2-24 Unknown reasons`);
-  return value;
 }
 
 function routesFor(state: EpistemicState): readonly ResolutionRoute[] {
@@ -269,6 +257,14 @@ export interface ProjectShapeItem extends ItemCoverage {
   readonly claim: ProjectShapeClaim;
 }
 
+// An unenumerated heading surfaced as a fact (PWB-REQ-002 as amended): its
+// text, level and exact anchor, the source it routes to, and an Unknown claim
+// whose route says the grammar has no row for it. It mints no item.
+interface ProjectShapeUnenumeratedHeading extends SurfacedUnenumeratedHeading {
+  readonly sourceIdentity: string;
+  readonly claim: ProjectShapeClaim;
+}
+
 export interface ProjectShapeClassAggregate extends ClassCoverage {
   // Aggregate disclosure (PWB-REQ-007): label, tier, freshness and separate
   // primary/secondary reason counts over the members — never a headline.
@@ -296,6 +292,9 @@ export interface ProjectShapeCounts {
   readonly sources: number;
   readonly sourcesWithKnownItemDenominator: number;
   readonly sourcesWithUnknownDenominator: number;
+  // The root index was not read and the population holds a source of a rule
+  // that does not need it: the source-path population total says so.
+  readonly populationWithoutReadRootIndex: boolean;
   readonly items: number;
   readonly modeled: number;
   readonly unknown: number;
@@ -339,6 +338,10 @@ export type ProjectShape =
       readonly authority: AuthorityDisclosure;
       readonly identity: ProjectShapeIdentity;
       readonly sources: readonly ProjectShapeSource[];
+      // Every heading no grammar row declares, surfaced beside the sources.
+      readonly unenumeratedHeadings: readonly ProjectShapeUnenumeratedHeading[];
+      // The root index's body was read (admitted and within limits).
+      readonly rootIndexRead: boolean;
       readonly items: readonly ProjectShapeItem[];
       readonly classes: Readonly<Record<ExtractionClass, ProjectShapeClassAggregate>>;
       readonly facts: readonly ProjectShapeFact[];
@@ -363,7 +366,7 @@ export type ProjectShape =
       readonly claim: ProjectShapeClaim;
     };
 
-export interface ProjectShapeBuildInput {
+interface ProjectShapeBuildInput {
   readonly authority: BodyReadAuthorityEvaluation;
   readonly revision: string;
   readonly capturedAt: string;
@@ -409,7 +412,7 @@ function sourceClaim(coverage: SourceCoverage, identity: string, evaluationId: s
   const support: ProjectShapeSupport[] = [{ path: coverage.path, sourceIdentity: identity, ...(digest === undefined ? {} : { contentDigest: digest }) }];
   const input = { claimId: `claim:source:${coverage.path}`, evaluationId, support };
   if (coverage.itemDenominator.kind === 'known') return observedClaim(input);
-  return unknownClaim(input, closedReason(coverage.itemDenominator.unknown.unknownReason));
+  return unknownClaim(input, coverage.itemDenominator.unknown.unknownReason);
 }
 
 // Exported for its own test: coverage's item contract admits three states,
@@ -418,7 +421,7 @@ export function itemClaim(item: ItemCoverage, identities: ReadonlyMap<string, st
   const input = { claimId: `claim:item:${item.class}:${item.key}`, evaluationId, support: supportOf(item.anchors, identities) };
   if (item.state === 'modeled') return observedClaim(input);
   if (item.state === 'contradicted') return unknownClaim(input, 'contradicted-pending-adjudication', [], SUSPENDED);
-  return unknownClaim(input, closedReason(item.unknownReason ?? PWB_FAILURE_STATES.sourceMissingOrUnreadable.unknownReason));
+  return unknownClaim(input, item.unknownReason ?? PWB_FAILURE_STATES.sourceMissingOrUnreadable.unknownReason);
 }
 
 function factClaim(fact: ReconciledFact, identities: ReadonlyMap<string, string>, evaluationId: string): ProjectShapeClaim {
@@ -426,7 +429,7 @@ function factClaim(fact: ReconciledFact, identities: ReadonlyMap<string, string>
   const input = { claimId: `claim:fact:${fact.fact}`, evaluationId, support: supportOf(anchors, identities) };
   if (fact.state === 'modeled') return observedClaim(input);
   if (fact.state === 'contradicted') return unknownClaim(input, fact.unknownReason, [], SUSPENDED);
-  return unknownClaim(input, closedReason(fact.unknownReason));
+  return unknownClaim(input, fact.unknownReason);
 }
 
 export function countReasons(claims: readonly ProjectShapeClaim[]): ReasonCounts {
@@ -446,8 +449,8 @@ function classAggregate(coverage: ClassCoverage, members: readonly ProjectShapeI
   const input = { claimId: `claim:class:${coverage.class}`, evaluationId, support: classSources.flatMap((source) => source.claim.support) };
   let aggregate: ProjectShapeClaim;
   if (coverage.denominator.kind === 'unknown') {
-    const [primary, ...secondary] = coverage.denominator.reasons.map(closedReason);
-    aggregate = unknownClaim(input, primary ?? closedReason(PWB_FAILURE_STATES.sourceMissingOrUnreadable.unknownReason), secondary);
+    const [primary, ...secondary] = coverage.denominator.reasons;
+    aggregate = unknownClaim(input, primary ?? PWB_FAILURE_STATES.sourceMissingOrUnreadable.unknownReason, secondary);
   } else if (coverage.contradicted > 0) {
     aggregate = unknownClaim(input, 'contradicted-pending-adjudication', [], SUSPENDED);
   } else {
@@ -457,7 +460,15 @@ function classAggregate(coverage: ClassCoverage, members: readonly ProjectShapeI
   // excluded or uncaptured source declares nothing, so its reason would
   // otherwise vanish from the aggregate.
   const discoveryClaims = Array.from({ length: coverage.discoveryUnknown }, () => aggregate);
-  return { ...coverage, claim: aggregate, reasonCounts: countReasons([...members, ...classSources].map((entry) => entry.claim).concat(discoveryClaims)) };
+  // A source in which this class read adds nothing; one in which it is
+  // Unknown adds that class's own reason, not the source's.
+  const sourceClaims = classSources.flatMap((source) => {
+    const denominator = source.classOutcomes.find((outcome) => outcome.class === coverage.class)?.denominator;
+    return denominator === undefined || denominator.kind === 'known'
+      ? []
+      : [unknownClaim({ claimId: source.claim.claimId, evaluationId, support: source.claim.support }, denominator.unknownReason)];
+  });
+  return { ...coverage, claim: aggregate, reasonCounts: countReasons([...members.map((entry) => entry.claim), ...sourceClaims, ...discoveryClaims]) };
 }
 
 function projectAccountOf(items: readonly ProjectShapeItem[], sources: readonly ProjectShapeSource[], classes: Readonly<Record<ExtractionClass, ProjectShapeClassAggregate>>, evaluationId: string): readonly ProjectAccountStatement[] {
@@ -476,13 +487,15 @@ function projectAccountOf(items: readonly ProjectShapeItem[], sources: readonly 
     // No admitted source declared this section: the statement is Unknown
     // with the first Unknown source's reason, or `missing-declaration`
     // when every account source was read and simply lacks it.
-    const unknownSource = accountSources.find((source) => source.itemDenominator.kind === 'unknown');
+    const classDenominator = (source: ProjectShapeSource) => source.classOutcomes.find((outcome) => outcome.class === 'project-account-section')?.denominator;
+    const unknownSource = accountSources.find((source) => classDenominator(source)?.kind === 'unknown');
+    const unknownDenominator = unknownSource === undefined ? undefined : classDenominator(unknownSource);
     const accountDenominator = classes['project-account-section'].denominator;
     const reason: UnknownReason =
-      unknownSource !== undefined && unknownSource.itemDenominator.kind === 'unknown'
-        ? closedReason(unknownSource.itemDenominator.unknown.unknownReason)
+      unknownDenominator !== undefined && unknownDenominator.kind === 'unknown'
+        ? unknownDenominator.unknownReason
         : accountDenominator.kind === 'unknown'
-          ? closedReason(accountDenominator.reasons[0] ?? PWB_FAILURE_STATES.sourceMissingOrUnreadable.unknownReason)
+          ? accountDenominator.reasons[0] ?? PWB_FAILURE_STATES.sourceMissingOrUnreadable.unknownReason
           : 'missing-declaration';
     return {
       key,
@@ -513,8 +526,10 @@ export function buildProjectShape(input: ProjectShapeBuildInput): ProjectShape {
       // phase B share the byte counter, the parse-pass counters and the
       // breach list; nothing resets between phases.
       const ledger = createResourceLedger(input.resourceLimits ?? PWB_RESOURCE_LIMITS);
-      // Phase A: revision, source population, seeds (P2.1/P2.2).
-      const observation = observeProjectShapeSources({
+      // The validated phase-A seed bodies phase B reuses instead of reading.
+      const bodies = createTransientBodies();
+      // Phase A: revision, tree, source population, seeds (P2.1/P2.2).
+      const { result: observation, tree } = observePhaseA({
         repositoryId,
         revision: input.revision,
         capturedAt: input.capturedAt,
@@ -522,12 +537,13 @@ export function buildProjectShape(input: ProjectShapeBuildInput): ProjectShape {
         authority,
         classifyPhaseA: (text, charge) => classifyPhaseASeed(phaseADetectors, text, charge),
         ledger,
+        bodies,
       });
       if (observation.kind === 'invalid-input') {
         return observationFailed(authority, {
           failureState: undefined,
           degradationState: undefined,
-          reason: closedReason(PWB_FAILURE_STATES.gitCaptureFailed.unknownReason),
+          reason: PWB_FAILURE_STATES.gitCaptureFailed.unknownReason,
           detail: observation.reason,
         });
       }
@@ -535,32 +551,14 @@ export function buildProjectShape(input: ProjectShapeBuildInput): ProjectShape {
         return observationFailed(authority, {
           failureState: observation.failureState,
           degradationState: observation.degradationState,
-          reason: closedReason(observation.reason),
+          reason: observation.reason,
           detail: observation.detail,
         });
       }
-      // Phase B: the exact tree at the resolved commit bounds every read.
-      let listing: string;
-      try {
-        listing = new TextDecoder('utf-8', { fatal: true }).decode(input.runGit(['ls-tree', '-r', '-z', '-l', observation.revision]));
-      } catch (error) {
-        return observationFailed(authority, {
-          failureState: 'gitCaptureFailed',
-          degradationState: PWB_FAILURE_STATES.gitCaptureFailed.degradationState,
-          reason: closedReason(PWB_FAILURE_STATES.gitCaptureFailed.unknownReason),
-          detail: `git ls-tree failed: ${error instanceof Error ? error.message : String(error)}`,
-        });
-      }
-      const parsed = parseGitLsTree(listing);
-      if (parsed.kind === 'malformed') {
-        return observationFailed(authority, {
-          failureState: 'gitCaptureFailed',
-          degradationState: PWB_FAILURE_STATES.gitCaptureFailed.degradationState,
-          reason: closedReason(PWB_FAILURE_STATES.gitCaptureFailed.unknownReason),
-          detail: `ls-tree record is malformed: ${parsed.record}`,
-        });
-      }
-      const reader = createExactObjectReader({ runGit: input.runGit, tree: indexGitTree(parsed.entries), ledger });
+      // Phase B: the exact tree phase A listed at the resolved commit bounds
+      // every read; it is listed once per evaluation (syzygy-bpyt.6.5).
+      if (tree === undefined) throw new Error('an observed phase A always carries the tree it listed');
+      const reader = createExactObjectReader({ runGit: input.runGit, tree, ledger, bodies });
       // Policy before admission (P2.4), literal grammar (P2.5) on the transient body.
       const population = classifyManifestSources<SourceExtraction>(
         observation.manifest,
@@ -572,13 +570,13 @@ export function buildProjectShape(input: ProjectShapeBuildInput): ProjectShape {
           const extracted = extractBaselineSpec(source.path);
           const value: SourceExtraction = extracted.kind === 'items'
             ? { kind: 'extracted', path: source.path, classes: source.extractionClasses, items: extracted.items, denominators: { 'baseline-spec': extracted.items.length } }
-            : { kind: 'unknown', path: source.path, classes: source.extractionClasses, failure: extracted.failure };
+            : { kind: 'unknown', path: source.path, classes: source.extractionClasses, failure: extracted.failure, failures: [extracted.failure] };
           return { kind: 'derived', value };
         },
         ledger,
       );
       // Phase B has read: the phase-A bodies the ledger held are dropped.
-      ledger.release();
+      bodies.release();
       const discoveryUnknown: FixedUnknown = {
         failureState: 'sourceMissingOrUnreadable',
         degradationState: PWB_FAILURE_STATES.sourceMissingOrUnreadable.degradationState,
@@ -630,6 +628,17 @@ export function buildProjectShape(input: ProjectShapeBuildInput): ProjectShape {
           classAggregate(classCoverage, items.filter((item) => item.class === cls), sources, evaluationId),
         ]),
       ) as Record<ExtractionClass, ProjectShapeClassAggregate>;
+      const unenumeratedHeadings: ProjectShapeUnenumeratedHeading[] = coverage.unenumeratedHeadings.map((heading) => {
+        const sourceIdentity = identities.get(heading.path) as string;
+        return {
+          ...heading,
+          sourceIdentity,
+          claim: unknownClaim(
+            { claimId: `claim:unenumerated-heading:${heading.path}:${heading.line}`, evaluationId, support: supportOf([heading.anchor], identities) },
+            'missing-declaration',
+          ),
+        };
+      });
       const facts: ProjectShapeFact[] = coverage.facts.map((fact) => ({ fact, claim: factClaim(fact, identities, evaluationId) }));
       const contradictions = facts.filter((entry) => entry.fact.state === 'contradicted');
       const projectAccount = projectAccountOf(items, sources, classes, evaluationId);
@@ -645,7 +654,7 @@ export function buildProjectShape(input: ProjectShapeBuildInput): ProjectShape {
       // degradation is disclosed as data beside it; the population never
       // shrinks, so every degraded source is itself an Unknown member.
       const discoveryReasons = uncoveredDiscovery.length > 0
-        ? [closedReason(PWB_FAILURE_STATES.sourceMissingOrUnreadable.unknownReason)]
+        ? [PWB_FAILURE_STATES.sourceMissingOrUnreadable.unknownReason]
         : [];
       const memberReasons = [
         ...discoveryReasons,
@@ -673,6 +682,8 @@ export function buildProjectShape(input: ProjectShapeBuildInput): ProjectShape {
           deterministicInputs: observation.deterministicInputs,
         },
         sources,
+        unenumeratedHeadings,
+        rootIndexRead: coverage.rootIndexRead,
         items,
         classes,
         facts,

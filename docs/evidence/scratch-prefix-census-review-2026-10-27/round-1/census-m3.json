@@ -1,0 +1,6517 @@
+{
+ "subject": {
+  "what": "every entry a full vitest run creates directly in its temp directory, and which of them a SIGKILLed run, and one fresh run after it, leave behind",
+  "treeCommit": "a864e999645a071dda40325b2235976590e02973",
+  "command": "npx vitest run (the root configuration: every project, maxWorkers 50%)",
+  "notRun": "test:system (packages/cap1-system) and the Python and shell scripts under scripts/, which the root run does not start; they appear only in the static census below",
+  "toolSha256": {
+   "assemble_census.py": "35e15f7245b3c1fa6d7c297212e15b643e8e7f18d7ae05fdf3e6cb304bab0aae",
+   "census_run.py": "6039545e993610ef67dff1fc60103ade0fe197ab55638c1f9cdec7504b16fe8d",
+   "collect_runs.py": "548b7643ce57318f8b826891592c441bacf2e97c38b2e5220ea3b715b783829e",
+   "scratch_trace.cjs": "c9ff0cbbd2c9162c8483082f24202e18fa52f414c9c18a648723285de2ec2688",
+   "static_sites.py": "5f06a9f0811ddc1ec8d35d7019c0e71a435127f1ad190fb6fd60c1ae3bda14e4",
+   "tmp_sampler.py": "3e34f06abe672f405ae7107b9e55472e22299dddef2634b167c9373008c2125d"
+  },
+  "staticSitesSha256": "09dfb9d602d15f149c2f8ef0acf6c8fd0c2036c0f0351d543f1f9c805b245d7a"
+ },
+ "runs": {
+  "c0-clean": {
+   "mode": "clean",
+   "seededFrom": null,
+   "entriesMovedIn": 0,
+   "killAfterSeconds": null,
+   "secondsIntoTheRun": null,
+   "seconds": 151.7,
+   "exit": 0,
+   "loadAverageAtStart": [
+    12.806640625,
+    22.26611328125,
+    28.42626953125
+   ],
+   "groupMembersAtSignal": null,
+   "entriesAtSignal": null,
+   "afterSignal": null,
+   "traceLines": 2605,
+   "traceSha256": "4f44bd0c8ebc93579d63eae2d982191827d23332a456eb4b74a582a432b262b3",
+   "pathsCreatedDirectlyInTemp": 2443,
+   "processesCreating": 103,
+   "entriesAtEnd": 2,
+   "bytesAtEnd": 5672960,
+   "processesCarryingTheMarker": {
+    "marker": "--user-data-dir=<private-directory>/tmp/ in the arguments",
+    "count": 0,
+    "byKind": {},
+    "pids": []
+   },
+   "stoppedByPid": {
+    "signal": "SIGTERM",
+    "rounds": 0,
+    "remaining": 0
+   },
+   "operatorNotes": [
+    "vitest summary: Test Files  233 passed | 3 skipped (236) | Tests  5126 passed | 5 skipped (5131)",
+    "run.log sha256 a99a1ee1f87fa3664ba3b6ddf48fbefaea70c8fc55e0e40a65c9de9d12bed999 (the log itself is not retained)"
+   ]
+  },
+  "f1-fresh-after-k1": {
+   "mode": "clean",
+   "seededFrom": "k1-kill-40s",
+   "entriesMovedIn": 16,
+   "killAfterSeconds": null,
+   "secondsIntoTheRun": null,
+   "seconds": 182.4,
+   "exit": 1,
+   "loadAverageAtStart": [
+    34.43310546875,
+    24.580078125,
+    26.00341796875
+   ],
+   "groupMembersAtSignal": null,
+   "entriesAtSignal": null,
+   "afterSignal": null,
+   "traceLines": 2599,
+   "traceSha256": "9881cb1fb9e44affa3d7812a31ddd80769107a7d9adba303ec84f2d535f55537",
+   "pathsCreatedDirectlyInTemp": 2437,
+   "processesCreating": 103,
+   "entriesAtEnd": 18,
+   "bytesAtEnd": 194842624,
+   "processesCarryingTheMarker": {
+    "marker": "--user-data-dir=<private-directory>/tmp/ in the arguments",
+    "count": 0,
+    "byKind": {},
+    "pids": []
+   },
+   "stoppedByPid": {
+    "signal": "SIGTERM",
+    "rounds": 0,
+    "remaining": 0
+   },
+   "operatorNotes": [
+    "vitest summary: Test Files  2 failed | 231 passed | 3 skipped (236) | Tests  2 failed | 5124 passed | 5 skipped (5131)",
+    "run.log sha256 5a665cb75b33ae3281993445a4322a4ab64b88d0c8c7d5d7b86c426cf1fb9eba (the log itself is not retained)",
+    "failing test: FAIL |@syzygy/polaris-dossier| packages/polaris-dossier/src/start-gates.test.ts > init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses config naming a remote, a promisor, an include or a command the agent's ",
+    "failing test: FAIL |@syzygy/polaris-generation-consent| packages/polaris-generation-consent/src/package-reader.test.ts > the policy port and the strict policy chain agree > on every world in the fixture set, at every instant",
+    "exit 1: both failures are 5000 ms test timeouts, not assertions about scratch directories [Inferred: host load; the other fresh runs and the clean run passed]. The run is kept: its leftovers are what it left."
+   ]
+  },
+  "f2-fresh-after-k2": {
+   "mode": "clean",
+   "seededFrom": "k2-kill-75s",
+   "entriesMovedIn": 34,
+   "killAfterSeconds": null,
+   "secondsIntoTheRun": null,
+   "seconds": 139.8,
+   "exit": 0,
+   "loadAverageAtStart": [
+    12.7490234375,
+    14.09521484375,
+    18.57666015625
+   ],
+   "groupMembersAtSignal": null,
+   "entriesAtSignal": null,
+   "afterSignal": null,
+   "traceLines": 2605,
+   "traceSha256": "07a8a1ffee1ee0bcd65f065a0ae5344956c885f40a7bf6abcf68f078df12d745",
+   "pathsCreatedDirectlyInTemp": 2443,
+   "processesCreating": 103,
+   "entriesAtEnd": 25,
+   "bytesAtEnd": 142163968,
+   "processesCarryingTheMarker": {
+    "marker": "--user-data-dir=<private-directory>/tmp/ in the arguments",
+    "count": 0,
+    "byKind": {},
+    "pids": []
+   },
+   "stoppedByPid": {
+    "signal": "SIGTERM",
+    "rounds": 0,
+    "remaining": 0
+   },
+   "operatorNotes": [
+    "vitest summary: Test Files  233 passed | 3 skipped (236) | Tests  5126 passed | 5 skipped (5131)",
+    "run.log sha256 bbb9802dce39cf76b6646832c85fffc4372209db593c94ecd5f0b5c74d956b04 (the log itself is not retained)"
+   ]
+  },
+  "f3-fresh-after-k3": {
+   "mode": "clean",
+   "seededFrom": "k3-kill-115s",
+   "entriesMovedIn": 15,
+   "killAfterSeconds": null,
+   "secondsIntoTheRun": null,
+   "seconds": 137.1,
+   "exit": 0,
+   "loadAverageAtStart": [
+    11.69970703125,
+    14.7509765625,
+    17.52734375
+   ],
+   "groupMembersAtSignal": null,
+   "entriesAtSignal": null,
+   "afterSignal": null,
+   "traceLines": 2605,
+   "traceSha256": "c69b06d7409d39e73414ffe606866d11fee88a7ee0212f9568cc573aa48985de",
+   "pathsCreatedDirectlyInTemp": 2443,
+   "processesCreating": 103,
+   "entriesAtEnd": 14,
+   "bytesAtEnd": 67268608,
+   "processesCarryingTheMarker": {
+    "marker": "--user-data-dir=<private-directory>/tmp/ in the arguments",
+    "count": 0,
+    "byKind": {},
+    "pids": []
+   },
+   "stoppedByPid": {
+    "signal": "SIGTERM",
+    "rounds": 0,
+    "remaining": 0
+   },
+   "operatorNotes": [
+    "vitest summary: Test Files  233 passed | 3 skipped (236) | Tests  5126 passed | 5 skipped (5131)",
+    "run.log sha256 fc14cf7de7dead32644a69d824aad1cb3128b5cc105c7afaadb5cdb3954b99ea (the log itself is not retained)"
+   ]
+  },
+  "k1-kill-40s": {
+   "mode": "kill",
+   "seededFrom": null,
+   "entriesMovedIn": 0,
+   "killAfterSeconds": 40.0,
+   "secondsIntoTheRun": 40.4,
+   "seconds": null,
+   "exit": -9,
+   "loadAverageAtStart": [
+    22.68359375,
+    24.97314453125,
+    28.29541015625
+   ],
+   "groupMembersAtSignal": 14,
+   "entriesAtSignal": 16,
+   "afterSignal": [
+    {
+     "secondsAfterSignal": 5,
+     "entries": 16,
+     "groupMembersAlive": 0
+    },
+    {
+     "secondsAfterSignal": 20,
+     "entries": 16,
+     "groupMembersAlive": 0
+    },
+    {
+     "secondsAfterSignal": 40,
+     "entries": 16,
+     "groupMembersAlive": 0
+    },
+    {
+     "secondsAfterSignal": 80,
+     "entries": 16,
+     "groupMembersAlive": 0
+    }
+   ],
+   "traceLines": 670,
+   "traceSha256": "852717088c9f37b2bbe76e25ae9254c89ba68172c74fb95795a0419bd8d1a017",
+   "pathsCreatedDirectlyInTemp": 649,
+   "processesCreating": 7,
+   "entriesAtEnd": 16,
+   "bytesAtEnd": 192319488,
+   "processesCarryingTheMarker": {
+    "marker": "--user-data-dir=<private-directory>/tmp/ in the arguments",
+    "count": 10,
+    "byKind": {
+     "gpu-process": 1,
+     "leader": 1,
+     "renderer": 3,
+     "utility": 3,
+     "zygote": 2
+    },
+    "pids": [
+     1747511,
+     1747547,
+     1747549,
+     1747577,
+     1747581,
+     1747583,
+     1747630,
+     1748847,
+     1749036,
+     1790159
+    ]
+   },
+   "stoppedByPid": {
+    "signal": "SIGTERM",
+    "rounds": 1,
+    "remaining": 0
+   },
+   "operatorNotes": [
+    "the processes carrying the --user-data-dir marker were stopped by pid by census_run.py (SIGTERM); none remained before the next run seeded from this directory"
+   ]
+  },
+  "k2-kill-75s": {
+   "mode": "kill",
+   "seededFrom": null,
+   "entriesMovedIn": 0,
+   "killAfterSeconds": 75.0,
+   "secondsIntoTheRun": 75.1,
+   "seconds": null,
+   "exit": -9,
+   "loadAverageAtStart": [
+    11.7548828125,
+    17.35009765625,
+    22.59912109375
+   ],
+   "groupMembersAtSignal": 12,
+   "entriesAtSignal": 35,
+   "afterSignal": [
+    {
+     "secondsAfterSignal": 5,
+     "entries": 34,
+     "groupMembersAlive": 0
+    },
+    {
+     "secondsAfterSignal": 20,
+     "entries": 35,
+     "groupMembersAlive": 0
+    },
+    {
+     "secondsAfterSignal": 40,
+     "entries": 34,
+     "groupMembersAlive": 0
+    },
+    {
+     "secondsAfterSignal": 80,
+     "entries": 34,
+     "groupMembersAlive": 0
+    }
+   ],
+   "traceLines": 1162,
+   "traceSha256": "7d1d907e8bb26b42d517fe0b375e4416be542aafee1caf9a6bd28f2f3132001c",
+   "pathsCreatedDirectlyInTemp": 1133,
+   "processesCreating": 15,
+   "entriesAtEnd": 34,
+   "bytesAtEnd": 141742080,
+   "processesCarryingTheMarker": {
+    "marker": "--user-data-dir=<private-directory>/tmp/ in the arguments",
+    "count": 26,
+    "byKind": {
+     "gpu-process": 3,
+     "leader": 3,
+     "renderer": 8,
+     "utility": 6,
+     "zygote": 6
+    },
+    "pids": [
+     2018827,
+     2018909,
+     2018911,
+     2019018,
+     2019019,
+     2019035,
+     2019098,
+     2025285,
+     2028998,
+     2030800,
+     2030833,
+     2030834,
+     2030886,
+     2030887,
+     2030889,
+     2030919,
+     2033004,
+     2033367,
+     2033396,
+     2033397,
+     2033450,
+     2033452,
+     2033458,
+     2033504,
+     2033505,
+     2033548
+    ]
+   },
+   "stoppedByPid": {
+    "signal": "SIGTERM",
+    "rounds": 1,
+    "remaining": 0
+   },
+   "operatorNotes": [
+    "the processes carrying the --user-data-dir marker were stopped by pid by census_run.py (SIGTERM); none remained before the next run seeded from this directory"
+   ]
+  },
+  "k3-kill-115s": {
+   "mode": "kill",
+   "seededFrom": null,
+   "entriesMovedIn": 0,
+   "killAfterSeconds": 115.0,
+   "secondsIntoTheRun": 115.3,
+   "seconds": null,
+   "exit": -9,
+   "loadAverageAtStart": [
+    15.6845703125,
+    16.2529296875,
+    18.15283203125
+   ],
+   "groupMembersAtSignal": 10,
+   "entriesAtSignal": 15,
+   "afterSignal": [
+    {
+     "secondsAfterSignal": 5,
+     "entries": 15,
+     "groupMembersAlive": 0
+    },
+    {
+     "secondsAfterSignal": 20,
+     "entries": 15,
+     "groupMembersAlive": 0
+    },
+    {
+     "secondsAfterSignal": 40,
+     "entries": 15,
+     "groupMembersAlive": 0
+    },
+    {
+     "secondsAfterSignal": 80,
+     "entries": 15,
+     "groupMembersAlive": 0
+    }
+   ],
+   "traceLines": 1717,
+   "traceSha256": "c6caaec45a305bb20e9c980e81978211e5a9d137c37cf10fb914c7850fbe2b84",
+   "pathsCreatedDirectlyInTemp": 1649,
+   "processesCreating": 44,
+   "entriesAtEnd": 15,
+   "bytesAtEnd": 65445888,
+   "processesCarryingTheMarker": {
+    "marker": "--user-data-dir=<private-directory>/tmp/ in the arguments",
+    "count": 8,
+    "byKind": {
+     "gpu-process": 1,
+     "leader": 1,
+     "renderer": 2,
+     "utility": 2,
+     "zygote": 2
+    },
+    "pids": [
+     2180224,
+     2180247,
+     2180248,
+     2180277,
+     2180278,
+     2180281,
+     2180334,
+     2197749
+    ]
+   },
+   "stoppedByPid": {
+    "signal": "SIGTERM",
+    "rounds": 1,
+    "remaining": 0
+   },
+   "operatorNotes": [
+    "the processes carrying the --user-data-dir marker were stopped by pid by census_run.py (SIGTERM); none remained before the next run seeded from this directory"
+   ]
+  }
+ },
+ "classCounts": {
+  "classes": 176,
+  "leftBySomeSIGKILL": 27,
+  "neverLeftInTheseKills": 149,
+  "byRule": {
+   "R1-fixture-sweep-landed": 2,
+   "R2-chrome-singleton": 1,
+   "R3-browser-profile": 1,
+   "R4-vitest-project-directory": 1,
+   "R5-npm-compile-cache": 1,
+   "R6-non-test-module": 6,
+   "R7-stale-lock-by-design": 1,
+   "R9-test-file": 163
+  },
+  "byFamily": {
+   "chrome-singleton": 1,
+   "derived": 1,
+   "fixed": 1,
+   "mkdtemp": 170,
+   "npm-compile-cache": 1,
+   "unattributed": 1,
+   "vitest-project-directory": 1
+  }
+ },
+ "whatEachFreshRunRemovedOfTheKilledRunsLeftovers": {
+  "f1-fresh-after-k1": {
+   "killRun": "k1-kill-40s",
+   "seededEntries": 16,
+   "removedByTheFreshRun": 1,
+   "removedClasses": {
+    "syzygy-poc-surface-fixture-template-p<pid>-n<ns>-": 1
+   },
+   "stillThere": 15,
+   "stillThereByClass": {
+    "chrome-singleton-directory": 1,
+    "dossier-clone-": 1,
+    "dossier-gate-acts-": 1,
+    "dossier-origin-": 1,
+    "dossier-records-": 1,
+    "dossier-state-": 1,
+    "dossier-waiting-": 1,
+    "git-object-reader-": 1,
+    "nanoid-21": 2,
+    "node-compile-cache": 1,
+    "syzygy-build-output-": 1,
+    "syzygy-poc-a11y-": 1,
+    "syzygy-poc-a11y-budget-": 1,
+    "syzygy-poc-browser-": 1
+   }
+  },
+  "f2-fresh-after-k2": {
+   "killRun": "k2-kill-75s",
+   "seededEntries": 34,
+   "removedByTheFreshRun": 10,
+   "removedClasses": {
+    "syzygy-poc-surface-fixture-p<pid>-n<ns>-": 7,
+    "syzygy-poc-surface-fixture-template-p<pid>-n<ns>-": 3
+   },
+   "stillThere": 24,
+   "stillThereByClass": {
+    "chrome-singleton-directory": 3,
+    "dossier-check-clone-": 1,
+    "dossier-check-origin-": 1,
+    "dossier-check-state-": 1,
+    "nanoid-21": 4,
+    "node-compile-cache": 1,
+    "syzygy-cross-links-pages-": 1,
+    "syzygy-cross-links-state-": 1,
+    "syzygy-poc-a11y-": 1,
+    "syzygy-poc-browser-": 3,
+    "syzygy-poc-names-": 1,
+    "syzygy-poc-names-daemon-": 4,
+    "syzygy-poc-restart-<n>-<n>.lock": 1,
+    "syzygy-private-restart-": 1
+   }
+  },
+  "f3-fresh-after-k3": {
+   "killRun": "k3-kill-115s",
+   "seededEntries": 15,
+   "removedByTheFreshRun": 4,
+   "removedClasses": {
+    "syzygy-poc-surface-fixture-p<pid>-n<ns>-": 2,
+    "syzygy-poc-surface-fixture-template-p<pid>-n<ns>-": 2
+   },
+   "stillThere": 11,
+   "stillThereByClass": {
+    "chrome-singleton-directory": 2,
+    "nanoid-21": 4,
+    "node-compile-cache": 1,
+    "syzygy-poc-a11y-": 1,
+    "syzygy-poc-browser-": 1,
+    "syzygy-repo-corpus-": 1,
+    "syzygy-repo-hostile-": 1
+   }
+  }
+ },
+ "namedInTheBeadObservation": {
+  "syzygy-poc-surface-fixture-p<pid>-n<ns>-": {
+   "createdInTheCleanRun": 398,
+   "creatingFiles": [
+    "apps/three-surface-poc/src/test-model-fixture.ts"
+   ],
+   "leftInAnyOfTheKills": [
+    "k2-kill-75s",
+    "k3-kill-115s"
+   ],
+   "rule": "R1-fixture-sweep-landed",
+   "exposureInTheCleanRun": {
+    "run": "c0-clean",
+    "namesSampled": 139,
+    "namesNeverSampled": 259,
+    "expectedNamesPresentAtARandomMoment": {
+     "lowerBound": 1.313,
+     "upperBound": 2.624
+    }
+   }
+  },
+  "syzygy-public-screen-": {
+   "createdInTheCleanRun": 12,
+   "creatingFiles": [
+    "apps/three-surface-poc/src/polaris-generation/public-source-screening.test.ts"
+   ],
+   "leftInAnyOfTheKills": "none of the three",
+   "rule": "R9-test-file",
+   "exposureInTheCleanRun": {
+    "run": "c0-clean",
+    "namesSampled": 12,
+    "namesNeverSampled": 0,
+    "expectedNamesPresentAtARandomMoment": {
+     "lowerBound": 0.116,
+     "upperBound": 0.156
+    }
+   }
+  },
+  "syzygy-trigger-repo-": {
+   "createdInTheCleanRun": 1,
+   "creatingFiles": [
+    "apps/three-surface-poc/src/polaris-generation/dossier-trigger.test.ts"
+   ],
+   "leftInAnyOfTheKills": "none of the three",
+   "rule": "R9-test-file",
+   "exposureInTheCleanRun": {
+    "run": "c0-clean",
+    "namesSampled": 1,
+    "namesNeverSampled": 0,
+    "expectedNamesPresentAtARandomMoment": {
+     "lowerBound": 0.01,
+     "upperBound": 0.013
+    }
+   }
+  },
+  "syzygy-build-output-": {
+   "createdInTheCleanRun": 1,
+   "creatingFiles": [
+    "apps/three-surface-poc/src/build-output.test.ts"
+   ],
+   "leftInAnyOfTheKills": [
+    "k1-kill-40s"
+   ],
+   "rule": "R9-test-file",
+   "exposureInTheCleanRun": {
+    "run": "c0-clean",
+    "namesSampled": 1,
+    "namesNeverSampled": 0,
+    "expectedNamesPresentAtARandomMoment": {
+     "lowerBound": 0.294,
+     "upperBound": 0.297
+    }
+   }
+  },
+  "syzygy-dossier-src-": {
+   "createdInTheCleanRun": 33,
+   "creatingFiles": [
+    "apps/three-surface-poc/src/polaris-generation/dossier-trigger.ts"
+   ],
+   "leftInAnyOfTheKills": "none of the three",
+   "rule": "R6-non-test-module",
+   "exposureInTheCleanRun": {
+    "run": "c0-clean",
+    "namesSampled": 3,
+    "namesNeverSampled": 30,
+    "expectedNamesPresentAtARandomMoment": {
+     "lowerBound": 0.0,
+     "upperBound": 0.109
+    }
+   }
+  },
+  "syzygy-poc-surface-state-": {
+   "createdInTheCleanRun": 4,
+   "creatingFiles": [
+    "apps/three-surface-poc/src/surface-routes.test.ts"
+   ],
+   "leftInAnyOfTheKills": "none of the three",
+   "rule": "R9-test-file",
+   "exposureInTheCleanRun": {
+    "run": "c0-clean",
+    "namesSampled": 0,
+    "namesNeverSampled": 4,
+    "expectedNamesPresentAtARandomMoment": {
+     "lowerBound": 0.0,
+     "upperBound": 0.013
+    }
+   }
+  },
+  "syzygy-trigger-": {
+   "createdInTheCleanRun": 35,
+   "creatingFiles": [
+    "apps/three-surface-poc/src/polaris-generation/dossier-trigger.test.ts"
+   ],
+   "leftInAnyOfTheKills": "none of the three",
+   "rule": "R9-test-file",
+   "exposureInTheCleanRun": {
+    "run": "c0-clean",
+    "namesSampled": 4,
+    "namesNeverSampled": 31,
+    "expectedNamesPresentAtARandomMoment": {
+     "lowerBound": 0.0,
+     "upperBound": 0.115
+    }
+   }
+  },
+  "syzygy-poc-browser-": {
+   "createdInTheCleanRun": 12,
+   "creatingFiles": [
+    "apps/three-surface-poc/src/cdp-browser.ts"
+   ],
+   "leftInAnyOfTheKills": [
+    "k1-kill-40s",
+    "k2-kill-75s",
+    "k3-kill-115s"
+   ],
+   "rule": "R3-browser-profile",
+   "exposureInTheCleanRun": {
+    "run": "c0-clean",
+    "namesSampled": 12,
+    "namesNeverSampled": 0,
+    "expectedNamesPresentAtARandomMoment": {
+     "lowerBound": 1.12,
+     "upperBound": 1.159
+    }
+   }
+  },
+  "chrome-singleton-directory": {
+   "createdInTheCleanRun": 0,
+   "creatingFiles": [],
+   "leftInAnyOfTheKills": [
+    "k1-kill-40s",
+    "k2-kill-75s",
+    "k3-kill-115s"
+   ],
+   "rule": "R2-chrome-singleton",
+   "exposureInTheCleanRun": {
+    "run": "c0-clean",
+    "namesSampled": 20,
+    "namesNeverSampled": 0,
+    "expectedNamesPresentAtARandomMoment": {
+     "lowerBound": 1.373,
+     "upperBound": 1.438
+    }
+   }
+  }
+ },
+ "perCreatingFile": {
+  "packages/polaris-dossier/src/start-gates.test.ts": {
+   "classes": [
+    "dossier-clone-",
+    "dossier-clone-link-",
+    "dossier-config-",
+    "dossier-full-clone-",
+    "dossier-link-",
+    "dossier-origin-",
+    "dossier-pointer-",
+    "dossier-records-",
+    "dossier-signoff-",
+    "dossier-state-",
+    "dossier-template-",
+    "preflight-clone-",
+    "preflight-upstream-",
+    "s-"
+   ],
+   "pathsCreatedInTheCleanRun": 474,
+   "leftAfterSIGKILL": {
+    "k1-kill-40s": 4
+   }
+  },
+  "apps/three-surface-poc/src/test-model-fixture.ts": {
+   "classes": [
+    "syzygy-poc-surface-fixture-p<pid>-n<ns>-",
+    "syzygy-poc-surface-fixture-template-p<pid>-n<ns>-"
+   ],
+   "pathsCreatedInTheCleanRun": 442,
+   "leftAfterSIGKILL": {
+    "k1-kill-40s": 1,
+    "k2-kill-75s": 10,
+    "k3-kill-115s": 4
+   }
+  },
+  "packages/polaris-dossier/src/review.test.ts": {
+   "classes": [
+    "dossier-review-clone-",
+    "dossier-review-origin-",
+    "dossier-review-state-"
+   ],
+   "pathsCreatedInTheCleanRun": 163,
+   "leftAfterSIGKILL": {}
+  },
+  "packages/polaris-dossier/src/gate-acts.test.ts": {
+   "classes": [
+    "dossier-gate-acts-"
+   ],
+   "pathsCreatedInTheCleanRun": 143,
+   "leftAfterSIGKILL": {
+    "k1-kill-40s": 1
+   }
+  },
+  "packages/polaris-dossier/src/waiting-sessions.test.ts": {
+   "classes": [
+    "dossier-other-",
+    "dossier-parent-",
+    "dossier-root-",
+    "dossier-signoff-",
+    "dossier-signoff-<random>-outside-RAW.md",
+    "dossier-target-",
+    "dossier-waiting-"
+   ],
+   "pathsCreatedInTheCleanRun": 118,
+   "leftAfterSIGKILL": {
+    "k1-kill-40s": 1
+   }
+  },
+  "packages/polaris-dossier/src/check.test.ts": {
+   "classes": [
+    "dossier-check-clone-",
+    "dossier-check-empty-",
+    "dossier-check-origin-",
+    "dossier-check-state-"
+   ],
+   "pathsCreatedInTheCleanRun": 114,
+   "leftAfterSIGKILL": {
+    "k2-kill-75s": 3
+   }
+  },
+  "packages/polaris-dossier/src/render.test.ts": {
+   "classes": [
+    "dossier-render-clone-",
+    "dossier-render-origin-",
+    "dossier-render-state-"
+   ],
+   "pathsCreatedInTheCleanRun": 85,
+   "leftAfterSIGKILL": {}
+  },
+  "packages/polaris-dossier/src/inventory.test.ts": {
+   "classes": [
+    "dossier-inventory-clone-",
+    "dossier-inventory-origin-",
+    "dossier-inventory-state-",
+    "dossier-loose-",
+    "dossier-not-a-run-"
+   ],
+   "pathsCreatedInTheCleanRun": 83,
+   "leftAfterSIGKILL": {}
+  },
+  "packages/polaris-dossier/src/launched.test.ts": {
+   "classes": [
+    "polaris-marker-"
+   ],
+   "pathsCreatedInTheCleanRun": 76,
+   "leftAfterSIGKILL": {}
+  },
+  "packages/polaris-dossier/src/cli.test.ts": {
+   "classes": [
+    "dossier-cli-"
+   ],
+   "pathsCreatedInTheCleanRun": 57,
+   "leftAfterSIGKILL": {}
+  },
+  "packages/cap1-daemon/src/routes-human.test.ts": {
+   "classes": [
+    "rt5-human-empty-",
+    "rt5-human-invalid-",
+    "rt5-human-observed-",
+    "rt5-human-root-",
+    "rt5-human-state-"
+   ],
+   "pathsCreatedInTheCleanRun": 43,
+   "leftAfterSIGKILL": {}
+  },
+  "apps/three-surface-poc/src/polaris-generation/dossier-trigger.ts": {
+   "classes": [
+    "syzygy-dossier-",
+    "syzygy-dossier-src-",
+    "syzygy-lsremote-",
+    "syzygy-materialize-home-"
+   ],
+   "pathsCreatedInTheCleanRun": 41,
+   "leftAfterSIGKILL": {}
+  },
+  "apps/three-surface-poc/src/polaris-generation/dossier-trigger.test.ts": {
+   "classes": [
+    "syzygy-trigger-",
+    "syzygy-trigger-cmd-",
+    "syzygy-trigger-other-",
+    "syzygy-trigger-repo-"
+   ],
+   "pathsCreatedInTheCleanRun": 38,
+   "leftAfterSIGKILL": {}
+  },
+  "packages/polaris-dossier/src/execution-choice.test.ts": {
+   "classes": [
+    "dossier-choice-",
+    "dossier-records-"
+   ],
+   "pathsCreatedInTheCleanRun": 32,
+   "leftAfterSIGKILL": {}
+  },
+  "packages/cap1-daemon/src/routes-machine.test.ts": {
+   "classes": [
+    "rt4-citation-root-",
+    "rt4-citation-state-",
+    "rt4-mach-empty-",
+    "rt4-mach-invalid-",
+    "rt4-mach-observed-",
+    "rt4-mach-root-",
+    "rt4-mach-state-"
+   ],
+   "pathsCreatedInTheCleanRun": 30,
+   "leftAfterSIGKILL": {}
+  },
+  "packages/polaris-dossier/src/status.test.ts": {
+   "classes": [
+    "dossier-status-"
+   ],
+   "pathsCreatedInTheCleanRun": 30,
+   "leftAfterSIGKILL": {}
+  },
+  "packages/cap1-daemon/src/credentials.test.ts": {
+   "classes": [
+    "rt3-cred-"
+   ],
+   "pathsCreatedInTheCleanRun": 29,
+   "leftAfterSIGKILL": {}
+  },
+  "packages/polaris-dossier/src/brief.test.ts": {
+   "classes": [
+    "dossier-brief-",
+    "dossier-records-"
+   ],
+   "pathsCreatedInTheCleanRun": 27,
+   "leftAfterSIGKILL": {}
+  },
+  "packages/cap1-daemon/src/server.test.ts": {
+   "classes": [
+    "rt3-bind-first-",
+    "rt3-bind-second-",
+    "rt3-diagnostic-",
+    "rt3-srv-",
+    "rt3-srv-empty-",
+    "rt3-srv-root-",
+    "rt3-srv-writes-"
+   ],
+   "pathsCreatedInTheCleanRun": 23,
+   "leftAfterSIGKILL": {}
+  },
+  "packages/cap1-daemon/src/observation.test.ts": {
+   "classes": [
+    "syzygy-rt1-"
+   ],
+   "pathsCreatedInTheCleanRun": 22,
+   "leftAfterSIGKILL": {}
+  },
+  "apps/three-surface-poc/src/materialize-action.test.ts": {
+   "classes": [
+    "syzygy-poc-dispatch-parity-",
+    "syzygy-poc-materialize-daemon-",
+    "syzygy-poc-materialize-empty-state-",
+    "syzygy-poc-materialize-state-"
+   ],
+   "pathsCreatedInTheCleanRun": 19,
+   "leftAfterSIGKILL": {}
+  },
+  "packages/three-surface-poc-core/src/model.test.ts": {
+   "classes": [
+    "syzygy-poc-butlers-",
+    "syzygy-poc-butlers-git-",
+    "syzygy-poc-butlers-git-template-",
+    "syzygy-poc-empty-seeds-"
+   ],
+   "pathsCreatedInTheCleanRun": 19,
+   "leftAfterSIGKILL": {}
+  },
+  "packages/polaris-dossier/src/credential-probe.test.ts": {
+   "classes": [
+    "dossier-cred-"
+   ],
+   "pathsCreatedInTheCleanRun": 18,
+   "leftAfterSIGKILL": {}
+  },
+  "apps/three-surface-poc/src/routes.test.ts": {
+   "classes": [
+    "syzygy-poc-conditional-state-",
+    "syzygy-poc-fact-conditional-",
+    "syzygy-poc-route-butlers-",
+    "syzygy-poc-route-injected-",
+    "syzygy-poc-route-state-"
+   ],
+   "pathsCreatedInTheCleanRun": 17,
+   "leftAfterSIGKILL": {}
+  },
+  "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts": {
+   "classes": [
+    "syzygy-lifecycle-generate-"
+   ],
+   "pathsCreatedInTheCleanRun": 16,
+   "leftAfterSIGKILL": {}
+  },
+  "apps/three-surface-poc/src/fixture-directories.test.ts": {
+   "classes": [
+    "syzygy-fixture-sweep-"
+   ],
+   "pathsCreatedInTheCleanRun": 15,
+   "leftAfterSIGKILL": {}
+  },
+  "apps/three-surface-poc/src/restart.test.ts": {
+   "classes": [
+    "syzygy-private-restart-"
+   ],
+   "pathsCreatedInTheCleanRun": 14,
+   "leftAfterSIGKILL": {
+    "k2-kill-75s": 1
+   }
+  },
+  "packages/polaris-dossier/src/gate-parts.test.ts": {
+   "classes": [
+    "dossier-head-",
+    "dossier-head-git-"
+   ],
+   "pathsCreatedInTheCleanRun": 14,
+   "leftAfterSIGKILL": {}
+  },
+  "packages/polaris-dossier/src/screen.test.ts": {
+   "classes": [
+    "dossier-screen-"
+   ],
+   "pathsCreatedInTheCleanRun": 14,
+   "leftAfterSIGKILL": {}
+  },
+  "packages/polaris-dossier/src/state-directory.test.ts": {
+   "classes": [
+    "dossier-state-"
+   ],
+   "pathsCreatedInTheCleanRun": 13,
+   "leftAfterSIGKILL": {}
+  },
+  "packages/three-surface-poc-core/src/materialization.test.ts": {
+   "classes": [
+    "syzygy-poc-materialize-state-"
+   ],
+   "pathsCreatedInTheCleanRun": 13,
+   "leftAfterSIGKILL": {}
+  },
+  "apps/three-surface-poc/src/cdp-browser.ts": {
+   "classes": [
+    "syzygy-poc-browser-"
+   ],
+   "pathsCreatedInTheCleanRun": 12,
+   "leftAfterSIGKILL": {
+    "k1-kill-40s": 1,
+    "k2-kill-75s": 3,
+    "k3-kill-115s": 1
+   }
+  },
+  "apps/three-surface-poc/src/polaris-generation/public-source-screening.test.ts": {
+   "classes": [
+    "syzygy-public-screen-"
+   ],
+   "pathsCreatedInTheCleanRun": 12,
+   "leftAfterSIGKILL": {}
+  },
+  "packages/cap1-daemon/src/consent-loading.test.ts": {
+   "classes": [
+    "syzygy-rt2-consent-"
+   ],
+   "pathsCreatedInTheCleanRun": 11,
+   "leftAfterSIGKILL": {}
+  },
+  "packages/cap1-daemon/src/pipeline.test.ts": {
+   "classes": [
+    "rt3-pipe-empty-",
+    "rt3-pipe-gone-",
+    "rt3-pipe-invalid-",
+    "rt3-pipe-observed-",
+    "rt3-pipe-root-"
+   ],
+   "pathsCreatedInTheCleanRun": 11,
+   "leftAfterSIGKILL": {}
+  },
+  "packages/polaris-dossier/src/close.test.ts": {
+   "classes": [
+    "dossier-close-",
+    "dossier-close-credential-",
+    "dossier-close-none-"
+   ],
+   "pathsCreatedInTheCleanRun": 10,
+   "leftAfterSIGKILL": {}
+  },
+  "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts": {
+   "classes": [
+    "syzygy-poc-names-",
+    "syzygy-poc-names-daemon-"
+   ],
+   "pathsCreatedInTheCleanRun": 9,
+   "leftAfterSIGKILL": {
+    "k2-kill-75s": 5
+   }
+  },
+  "apps/three-surface-poc/src/polaris-generation/dossier-render.test.ts": {
+   "classes": [
+    "syzygy-dossier-dotgit-",
+    "syzygy-dossier-git-",
+    "syzygy-dossier-gitdir-",
+    "syzygy-dossier-link-",
+    "syzygy-dossier-nogit-",
+    "syzygy-dossier-partial-",
+    "syzygy-dossier-real-",
+    "syzygy-dossier-run-"
+   ],
+   "pathsCreatedInTheCleanRun": 9,
+   "leftAfterSIGKILL": {}
+  },
+  "apps/three-surface-poc/src/polaris-generation/repo-corpus-isolation.test.ts": {
+   "classes": [
+    "syzygy-iso-",
+    "syzygy-iso-empty-"
+   ],
+   "pathsCreatedInTheCleanRun": 9,
+   "leftAfterSIGKILL": {}
+  },
+  "apps/three-surface-poc/src/surface-routes.test.ts": {
+   "classes": [
+    "syzygy-cross-links-pages-",
+    "syzygy-cross-links-state-",
+    "syzygy-missing-capability-",
+    "syzygy-poc-runtime-pages-",
+    "syzygy-poc-runtime-state-",
+    "syzygy-poc-surface-state-"
+   ],
+   "pathsCreatedInTheCleanRun": 9,
+   "leftAfterSIGKILL": {
+    "k2-kill-75s": 2
+   }
+  },
+  "packages/three-surface-poc-core/src/worker-change-observation.test.ts": {
+   "classes": [
+    "syzygy-poc-worker-change-",
+    "syzygy-poc-worker-change-noorigin-"
+   ],
+   "pathsCreatedInTheCleanRun": 9,
+   "leftAfterSIGKILL": {}
+  },
+  "packages/cap1-conformance/src/consent-record-convention.conformance.test.ts": {
+   "classes": [
+    "syzygy-a08-consent-convention-"
+   ],
+   "pathsCreatedInTheCleanRun": 8,
+   "leftAfterSIGKILL": {}
+  },
+  "apps/three-surface-poc/src/capture-test-artifact-main.test.ts": {
+   "classes": [
+    "syzygy-capture-cli-"
+   ],
+   "pathsCreatedInTheCleanRun": 7,
+   "leftAfterSIGKILL": {}
+  },
+  "packages/three-surface-poc-core/src/code-structure.test.ts": {
+   "classes": [
+    "syzygy-poc-code-structure-",
+    "syzygy-poc-fake-git-"
+   ],
+   "pathsCreatedInTheCleanRun": 7,
+   "leftAfterSIGKILL": {}
+  },
+  "apps/three-surface-poc/src/git-observation.test.ts": {
+   "classes": [
+    "syzygy-poc-git-"
+   ],
+   "pathsCreatedInTheCleanRun": 6,
+   "leftAfterSIGKILL": {}
+  },
+  "apps/three-surface-poc/src/polaris-generation/dossier-evaluation-main.test.ts": {
+   "classes": [
+    "syzygy-dossier-eval-"
+   ],
+   "pathsCreatedInTheCleanRun": 5,
+   "leftAfterSIGKILL": {}
+  },
+  "packages/three-surface-poc-core/src/test-artifact-verification.test.ts": {
+   "classes": [
+    "syzygy-poc-test-artifact-"
+   ],
+   "pathsCreatedInTheCleanRun": 5,
+   "leftAfterSIGKILL": {}
+  },
+  "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts": {
+   "classes": [
+    "syzygy-generator-lifecycle-"
+   ],
+   "pathsCreatedInTheCleanRun": 4,
+   "leftAfterSIGKILL": {}
+  },
+  "apps/three-surface-poc/src/production-reobserve.test.ts": {
+   "classes": [
+    "syzygy-production-reobserve-state-"
+   ],
+   "pathsCreatedInTheCleanRun": 4,
+   "leftAfterSIGKILL": {}
+  },
+  "apps/three-surface-poc/src/test-model-fixture.test.ts": {
+   "classes": [
+    "syzygy-fixture-names-",
+    "syzygy-k66p-shared-",
+    "syzygy-poc-surface-fixture-p4194305-n4026531836-AbCdEf"
+   ],
+   "pathsCreatedInTheCleanRun": 4,
+   "leftAfterSIGKILL": {}
+  },
+  "packages/polaris-dossier/src/run-evidence.test.ts": {
+   "classes": [
+    "dossier-evidence-"
+   ],
+   "pathsCreatedInTheCleanRun": 4,
+   "leftAfterSIGKILL": {}
+  },
+  "apps/three-surface-poc/src/polaris-generation/repo-corpus.test.ts": {
+   "classes": [
+    "syzygy-repo-cli-",
+    "syzygy-repo-corpus-",
+    "syzygy-repo-hostile-"
+   ],
+   "pathsCreatedInTheCleanRun": 3,
+   "leftAfterSIGKILL": {
+    "k3-kill-115s": 2
+   }
+  },
+  "apps/three-surface-poc/src/polaris-generation/self-corpus.ts": {
+   "classes": [
+    "syzygy-self-corpus-run-"
+   ],
+   "pathsCreatedInTheCleanRun": 3,
+   "leftAfterSIGKILL": {}
+  },
+  "packages/polaris-dossier/src/session-view.test.ts": {
+   "classes": [
+    "polaris-launched-",
+    "polaris-view-",
+    "polaris-why-"
+   ],
+   "pathsCreatedInTheCleanRun": 3,
+   "leftAfterSIGKILL": {}
+  },
+  "packages/three-surface-poc-core/src/model-observations.test.ts": {
+   "classes": [
+    "syzygy-poc-model-obs-"
+   ],
+   "pathsCreatedInTheCleanRun": 3,
+   "leftAfterSIGKILL": {}
+  },
+  "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts": {
+   "classes": [
+    "syzygy-poc-a11y-",
+    "syzygy-poc-a11y-budget-"
+   ],
+   "pathsCreatedInTheCleanRun": 2,
+   "leftAfterSIGKILL": {
+    "k1-kill-40s": 2,
+    "k2-kill-75s": 1,
+    "k3-kill-115s": 1
+   }
+  },
+  "apps/three-surface-poc/src/polaris-generation/dossier-trigger-isolation.test.ts": {
+   "classes": [
+    "syzygy-trigger-iso-",
+    "syzygy-trigger-iso-dst-"
+   ],
+   "pathsCreatedInTheCleanRun": 2,
+   "leftAfterSIGKILL": {}
+  },
+  "apps/three-surface-poc/src/polaris-generation/redis-shaped-measure-main.ts": {
+   "classes": [
+    "syzygy-redis-shaped-"
+   ],
+   "pathsCreatedInTheCleanRun": 2,
+   "leftAfterSIGKILL": {}
+  },
+  "apps/three-surface-poc/src/polaris-presentation-route.test.ts": {
+   "classes": [
+    "syzygy-poc-presentation-"
+   ],
+   "pathsCreatedInTheCleanRun": 2,
+   "leftAfterSIGKILL": {}
+  },
+  "apps/three-surface-poc/src/polaris-source-route.test.ts": {
+   "classes": [
+    "syzygy-poc-source-route-"
+   ],
+   "pathsCreatedInTheCleanRun": 2,
+   "leftAfterSIGKILL": {}
+  },
+  "apps/three-surface-poc/src/trajectory-narrowing.browser.test.ts": {
+   "classes": [
+    "syzygy-trajectory-narrowing-"
+   ],
+   "pathsCreatedInTheCleanRun": 2,
+   "leftAfterSIGKILL": {}
+  },
+  "apps/three-surface-poc/src/tuple-encoding.test.ts": {
+   "classes": [
+    "syzygy-dov32-pages-",
+    "syzygy-dov32-state-"
+   ],
+   "pathsCreatedInTheCleanRun": 2,
+   "leftAfterSIGKILL": {}
+  },
+  "packages/polaris-dossier/src/design-review.test.ts": {
+   "classes": [
+    "dossier-design-site-"
+   ],
+   "pathsCreatedInTheCleanRun": 2,
+   "leftAfterSIGKILL": {}
+  },
+  "packages/polaris-dossier/src/execution-flags.test.ts": {
+   "classes": [
+    "dossier-flags-"
+   ],
+   "pathsCreatedInTheCleanRun": 2,
+   "leftAfterSIGKILL": {}
+  },
+  "apps/three-surface-poc/src/build-output.test.ts": {
+   "classes": [
+    "syzygy-build-output-"
+   ],
+   "pathsCreatedInTheCleanRun": 1,
+   "leftAfterSIGKILL": {
+    "k1-kill-40s": 1
+   }
+  },
+  "apps/three-surface-poc/src/git-blob-batch.test.ts": {
+   "classes": [
+    "syzygy-svoj-gitlink-"
+   ],
+   "pathsCreatedInTheCleanRun": 1,
+   "leftAfterSIGKILL": {}
+  },
+  "apps/three-surface-poc/src/governance-inputs.test.ts": {
+   "classes": [
+    "syzygy-pwb-governance-"
+   ],
+   "pathsCreatedInTheCleanRun": 1,
+   "leftAfterSIGKILL": {}
+  },
+  "apps/three-surface-poc/src/main.test.ts": {
+   "classes": [
+    "poc-main-test-"
+   ],
+   "pathsCreatedInTheCleanRun": 1,
+   "leftAfterSIGKILL": {}
+  },
+  "apps/three-surface-poc/src/orrery.browser.test.ts": {
+   "classes": [
+    "syzygy-orrery-geometry-"
+   ],
+   "pathsCreatedInTheCleanRun": 1,
+   "leftAfterSIGKILL": {}
+  },
+  "apps/three-surface-poc/src/polaris-generation/dossier-cap-measure.test.ts": {
+   "classes": [
+    "syzygy-dossier-cap-"
+   ],
+   "pathsCreatedInTheCleanRun": 1,
+   "leftAfterSIGKILL": {}
+  },
+  "apps/three-surface-poc/src/polaris-generation/draft-preview.browser.test.ts": {
+   "classes": [
+    "polaris-draft-browser-"
+   ],
+   "pathsCreatedInTheCleanRun": 1,
+   "leftAfterSIGKILL": {}
+  },
+  "apps/three-surface-poc/src/polaris-generation/pipeline-demo.test.ts": {
+   "classes": [
+    "syzygy-generator-onramp-"
+   ],
+   "pathsCreatedInTheCleanRun": 1,
+   "leftAfterSIGKILL": {}
+  },
+  "apps/three-surface-poc/src/polaris-generation/redis-shaped-discovery.test.ts": {
+   "classes": [
+    "syzygy-redis-shaped-test-"
+   ],
+   "pathsCreatedInTheCleanRun": 1,
+   "leftAfterSIGKILL": {}
+  },
+  "apps/three-surface-poc/src/polaris-generation/self-corpus.test.ts": {
+   "classes": [
+    "syzygy-self-corpus-fixture-"
+   ],
+   "pathsCreatedInTheCleanRun": 1,
+   "leftAfterSIGKILL": {}
+  },
+  "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts": {
+   "classes": [
+    "syzygy-poc-opening-index-"
+   ],
+   "pathsCreatedInTheCleanRun": 1,
+   "leftAfterSIGKILL": {}
+  },
+  "apps/three-surface-poc/src/proposal-disclosure.test.ts": {
+   "classes": [
+    "syzygy-dov32-proposal-"
+   ],
+   "pathsCreatedInTheCleanRun": 1,
+   "leftAfterSIGKILL": {}
+  },
+  "apps/three-surface-poc/src/response-limits.test.ts": {
+   "classes": [
+    "syzygy-poc-limit-socket-"
+   ],
+   "pathsCreatedInTheCleanRun": 1,
+   "leftAfterSIGKILL": {}
+  },
+  "packages/polaris-dossier/src/doctrine-quote.test.ts": {
+   "classes": [
+    "dossier-doctrine-"
+   ],
+   "pathsCreatedInTheCleanRun": 1,
+   "leftAfterSIGKILL": {}
+  },
+  "packages/polaris-dossier/src/git-object-reader.test.ts": {
+   "classes": [
+    "git-object-reader-"
+   ],
+   "pathsCreatedInTheCleanRun": 1,
+   "leftAfterSIGKILL": {
+    "k1-kill-40s": 1
+   }
+  },
+  "packages/polaris-dossier/src/no-egress.test.ts": {
+   "classes": [
+    "dossier-no-egress-"
+   ],
+   "pathsCreatedInTheCleanRun": 1,
+   "leftAfterSIGKILL": {}
+  },
+  "(no trace line)": {
+   "classes": [
+    "chrome-singleton-directory",
+    "nanoid-21",
+    "node-compile-cache",
+    "syzygy-poc-restart-<n>-<n>.lock"
+   ],
+   "pathsCreatedInTheCleanRun": 0,
+   "leftAfterSIGKILL": {
+    "k1-kill-40s": 4,
+    "k2-kill-75s": 9,
+    "k3-kill-115s": 7
+   }
+  }
+ },
+ "leftBySIGKILL": [
+  {
+   "class": "chrome-singleton-directory",
+   "family": "chrome-singleton",
+   "created": {},
+   "creatingFiles": {},
+   "testFiles": {},
+   "leftAfterSIGKILL": {
+    "k1-kill-40s": {
+     "entries": 1,
+     "bytes": 0,
+     "oldestMtime": 1792854053.5,
+     "newestMtime": 1792854053.5
+    },
+    "k2-kill-75s": {
+     "entries": 3,
+     "bytes": 0,
+     "oldestMtime": 1792855206.2,
+     "newestMtime": 1792855273.7
+    },
+    "k3-kill-115s": {
+     "entries": 2,
+     "bytes": 0,
+     "oldestMtime": 1792856352.6,
+     "newestMtime": 1792856455.3
+    }
+   },
+   "afterTheNextFreshRun": {
+    "f1-fresh-after-k1": {
+     "killRun": "k1-kill-40s",
+     "leftBySIGKILL": 1,
+     "stillThere": 1,
+     "bytesStillThere": 0
+    },
+    "f2-fresh-after-k2": {
+     "killRun": "k2-kill-75s",
+     "leftBySIGKILL": 3,
+     "stillThere": 3,
+     "bytesStillThere": 0
+    },
+    "f3-fresh-after-k3": {
+     "killRun": "k3-kill-115s",
+     "leftBySIGKILL": 2,
+     "stillThere": 2,
+     "bytesStillThere": 0
+    }
+   },
+   "leftByTheFreshRunItself": {
+    "f1-fresh-after-k1": {
+     "entries": 3,
+     "bytes": 0,
+     "oldestMtime": 1792854737.0,
+     "newestMtime": 1792854756.6
+    },
+    "f2-fresh-after-k2": {
+     "entries": 1,
+     "bytes": 0,
+     "oldestMtime": 1792855871.8,
+     "newestMtime": 1792855871.8
+    },
+    "f3-fresh-after-k3": {
+     "entries": 3,
+     "bytes": 0,
+     "oldestMtime": 1792857025.0,
+     "newestMtime": 1792857026.7
+    }
+   },
+   "leftAfterCleanRun": {
+    "c0-clean": {
+     "entries": 1,
+     "bytes": 0,
+     "oldestMtime": 1792853900.7,
+     "newestMtime": 1792853900.7
+    }
+   },
+   "staticFilesNamingTheLiteral": null,
+   "staticStem": null,
+   "creatingFilesAmongTheStaticMatches": null,
+   "staticStemIsInferred": null,
+   "exposureInTheCleanRun": {
+    "run": "c0-clean",
+    "namesSampled": 20,
+    "namesNeverSampled": 0,
+    "expectedNamesPresentAtARandomMoment": {
+     "lowerBound": 1.373,
+     "upperBound": 1.438
+    }
+   },
+   "rule": "R2-chrome-singleton",
+   "disposition": "stated residual",
+   "launchedByFilesNaming": {
+    "literals": [
+     "--user-data-dir",
+     "--remote-debugging"
+    ],
+    "files": [
+     "apps/three-surface-poc/src/cdp-browser.ts"
+    ]
+   },
+   "observedSpellings": [
+    ".com.google.Chrome.<random>"
+   ]
+  },
+  {
+   "class": "dossier-check-clone-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 56,
+    "f1-fresh-after-k1": 56,
+    "f2-fresh-after-k2": 56,
+    "f3-fresh-after-k3": 56,
+    "k2-kill-75s": 54,
+    "k3-kill-115s": 56
+   },
+   "creatingFiles": {
+    "packages/polaris-dossier/src/check.test.ts": 334
+   },
+   "testFiles": {
+    "packages/polaris-dossier/src/check.test.ts": 334
+   },
+   "leftAfterSIGKILL": {
+    "k2-kill-75s": {
+     "entries": 1,
+     "bytes": 208896,
+     "oldestMtime": 1792855274.3,
+     "newestMtime": 1792855274.3
+    }
+   },
+   "afterTheNextFreshRun": {
+    "f2-fresh-after-k2": {
+     "killRun": "k2-kill-75s",
+     "leftBySIGKILL": 1,
+     "stillThere": 1,
+     "bytesStillThere": 208896
+    }
+   },
+   "leftByTheFreshRunItself": {},
+   "leftAfterCleanRun": {},
+   "staticFilesNamingTheLiteral": [
+    "packages/polaris-dossier/src/check.test.ts"
+   ],
+   "staticStem": "dossier-check-clone-",
+   "creatingFilesAmongTheStaticMatches": true,
+   "staticStemIsInferred": false,
+   "exposureInTheCleanRun": {
+    "run": "c0-clean",
+    "namesSampled": 26,
+    "namesNeverSampled": 30,
+    "expectedNamesPresentAtARandomMoment": {
+     "lowerBound": 0.007,
+     "upperBound": 0.191
+    }
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "dossier-check-origin-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1,
+    "k2-kill-75s": 1,
+    "k3-kill-115s": 1
+   },
+   "creatingFiles": {
+    "packages/polaris-dossier/src/check.test.ts": 6
+   },
+   "testFiles": {
+    "packages/polaris-dossier/src/check.test.ts": 6
+   },
+   "leftAfterSIGKILL": {
+    "k2-kill-75s": {
+     "entries": 1,
+     "bytes": 200704,
+     "oldestMtime": 1792855264.8,
+     "newestMtime": 1792855264.8
+    }
+   },
+   "afterTheNextFreshRun": {
+    "f2-fresh-after-k2": {
+     "killRun": "k2-kill-75s",
+     "leftBySIGKILL": 1,
+     "stillThere": 1,
+     "bytesStillThere": 200704
+    }
+   },
+   "leftByTheFreshRunItself": {},
+   "leftAfterCleanRun": {},
+   "staticFilesNamingTheLiteral": [
+    "packages/polaris-dossier/src/check.test.ts"
+   ],
+   "staticStem": "dossier-check-origin-",
+   "creatingFilesAmongTheStaticMatches": true,
+   "staticStemIsInferred": false,
+   "exposureInTheCleanRun": {
+    "run": "c0-clean",
+    "namesSampled": 1,
+    "namesNeverSampled": 0,
+    "expectedNamesPresentAtARandomMoment": {
+     "lowerBound": 0.091,
+     "upperBound": 0.095
+    }
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "dossier-check-state-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 56,
+    "f1-fresh-after-k1": 56,
+    "f2-fresh-after-k2": 56,
+    "f3-fresh-after-k3": 56,
+    "k2-kill-75s": 54,
+    "k3-kill-115s": 56
+   },
+   "creatingFiles": {
+    "packages/polaris-dossier/src/check.test.ts": 334
+   },
+   "testFiles": {
+    "packages/polaris-dossier/src/check.test.ts": 334
+   },
+   "leftAfterSIGKILL": {
+    "k2-kill-75s": {
+     "entries": 1,
+     "bytes": 73728,
+     "oldestMtime": 1792855274.3,
+     "newestMtime": 1792855274.3
+    }
+   },
+   "afterTheNextFreshRun": {
+    "f2-fresh-after-k2": {
+     "killRun": "k2-kill-75s",
+     "leftBySIGKILL": 1,
+     "stillThere": 1,
+     "bytesStillThere": 73728
+    }
+   },
+   "leftByTheFreshRunItself": {},
+   "leftAfterCleanRun": {},
+   "staticFilesNamingTheLiteral": [
+    "packages/polaris-dossier/src/check.test.ts"
+   ],
+   "staticStem": "dossier-check-state-",
+   "creatingFilesAmongTheStaticMatches": true,
+   "staticStemIsInferred": false,
+   "exposureInTheCleanRun": {
+    "run": "c0-clean",
+    "namesSampled": 16,
+    "namesNeverSampled": 40,
+    "expectedNamesPresentAtARandomMoment": {
+     "lowerBound": 0.007,
+     "upperBound": 0.191
+    }
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "dossier-clone-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 144,
+    "f1-fresh-after-k1": 142,
+    "f2-fresh-after-k2": 144,
+    "f3-fresh-after-k3": 144,
+    "k1-kill-40s": 134,
+    "k2-kill-75s": 144,
+    "k3-kill-115s": 144
+   },
+   "creatingFiles": {
+    "packages/polaris-dossier/src/start-gates.test.ts": 996
+   },
+   "testFiles": {
+    "packages/polaris-dossier/src/start-gates.test.ts": 996
+   },
+   "leftAfterSIGKILL": {
+    "k1-kill-40s": {
+     "entries": 1,
+     "bytes": 118784,
+     "oldestMtime": 1792854087.9,
+     "newestMtime": 1792854087.9
+    }
+   },
+   "afterTheNextFreshRun": {
+    "f1-fresh-after-k1": {
+     "killRun": "k1-kill-40s",
+     "leftBySIGKILL": 1,
+     "stillThere": 1,
+     "bytesStillThere": 118784
+    }
+   },
+   "leftByTheFreshRunItself": {},
+   "leftAfterCleanRun": {},
+   "staticFilesNamingTheLiteral": [
+    "packages/polaris-dossier/src/start-gates.test.ts"
+   ],
+   "staticStem": "dossier-clone-",
+   "creatingFilesAmongTheStaticMatches": true,
+   "staticStemIsInferred": false,
+   "exposureInTheCleanRun": {
+    "run": "c0-clean",
+    "namesSampled": 78,
+    "namesNeverSampled": 66,
+    "expectedNamesPresentAtARandomMoment": {
+     "lowerBound": 0.203,
+     "upperBound": 0.677
+    }
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "dossier-gate-acts-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 143,
+    "f1-fresh-after-k1": 143,
+    "f2-fresh-after-k2": 143,
+    "f3-fresh-after-k3": 143,
+    "k1-kill-40s": 134,
+    "k2-kill-75s": 143,
+    "k3-kill-115s": 143
+   },
+   "creatingFiles": {
+    "packages/polaris-dossier/src/gate-acts.test.ts": 992
+   },
+   "testFiles": {
+    "packages/polaris-dossier/src/gate-acts.test.ts": 992
+   },
+   "leftAfterSIGKILL": {
+    "k1-kill-40s": {
+     "entries": 1,
+     "bytes": 69632,
+     "oldestMtime": 1792854088.1,
+     "newestMtime": 1792854088.1
+    }
+   },
+   "afterTheNextFreshRun": {
+    "f1-fresh-after-k1": {
+     "killRun": "k1-kill-40s",
+     "leftBySIGKILL": 1,
+     "stillThere": 1,
+     "bytesStillThere": 69632
+    }
+   },
+   "leftByTheFreshRunItself": {},
+   "leftAfterCleanRun": {},
+   "staticFilesNamingTheLiteral": [
+    "packages/polaris-dossier/src/gate-acts.test.ts"
+   ],
+   "staticStem": "dossier-gate-acts-",
+   "creatingFilesAmongTheStaticMatches": true,
+   "staticStemIsInferred": false,
+   "exposureInTheCleanRun": {
+    "run": "c0-clean",
+    "namesSampled": 58,
+    "namesNeverSampled": 85,
+    "expectedNamesPresentAtARandomMoment": {
+     "lowerBound": 0.053,
+     "upperBound": 0.525
+    }
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "dossier-origin-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1,
+    "k1-kill-40s": 1,
+    "k2-kill-75s": 1,
+    "k3-kill-115s": 1
+   },
+   "creatingFiles": {
+    "packages/polaris-dossier/src/start-gates.test.ts": 7
+   },
+   "testFiles": {
+    "packages/polaris-dossier/src/start-gates.test.ts": 7
+   },
+   "leftAfterSIGKILL": {
+    "k1-kill-40s": {
+     "entries": 1,
+     "bytes": 253952,
+     "oldestMtime": 1792854054.2,
+     "newestMtime": 1792854054.2
+    }
+   },
+   "afterTheNextFreshRun": {
+    "f1-fresh-after-k1": {
+     "killRun": "k1-kill-40s",
+     "leftBySIGKILL": 1,
+     "stillThere": 1,
+     "bytesStillThere": 253952
+    }
+   },
+   "leftByTheFreshRunItself": {},
+   "leftAfterCleanRun": {},
+   "staticFilesNamingTheLiteral": [
+    "packages/polaris-dossier/src/start-gates.test.ts"
+   ],
+   "staticStem": "dossier-origin-",
+   "creatingFilesAmongTheStaticMatches": true,
+   "staticStemIsInferred": false,
+   "exposureInTheCleanRun": {
+    "run": "c0-clean",
+    "namesSampled": 1,
+    "namesNeverSampled": 0,
+    "expectedNamesPresentAtARandomMoment": {
+     "lowerBound": 0.244,
+     "upperBound": 0.247
+    }
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "dossier-records-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 164,
+    "f1-fresh-after-k1": 162,
+    "f2-fresh-after-k2": 164,
+    "f3-fresh-after-k3": 164,
+    "k1-kill-40s": 136,
+    "k2-kill-75s": 162,
+    "k3-kill-115s": 162
+   },
+   "creatingFiles": {
+    "packages/polaris-dossier/src/start-gates.test.ts": 1106,
+    "packages/polaris-dossier/src/brief.test.ts": 4,
+    "packages/polaris-dossier/src/execution-choice.test.ts": 4
+   },
+   "testFiles": {
+    "packages/polaris-dossier/src/start-gates.test.ts": 1106,
+    "packages/polaris-dossier/src/brief.test.ts": 4,
+    "packages/polaris-dossier/src/execution-choice.test.ts": 4
+   },
+   "leftAfterSIGKILL": {
+    "k1-kill-40s": {
+     "entries": 1,
+     "bytes": 28672,
+     "oldestMtime": 1792854087.9,
+     "newestMtime": 1792854087.9
+    }
+   },
+   "afterTheNextFreshRun": {
+    "f1-fresh-after-k1": {
+     "killRun": "k1-kill-40s",
+     "leftBySIGKILL": 1,
+     "stillThere": 1,
+     "bytesStillThere": 28672
+    }
+   },
+   "leftByTheFreshRunItself": {},
+   "leftAfterCleanRun": {},
+   "staticFilesNamingTheLiteral": [
+    "packages/polaris-dossier/src/brief.test.ts",
+    "packages/polaris-dossier/src/execution-choice.test.ts",
+    "packages/polaris-dossier/src/start-gates.test.ts"
+   ],
+   "staticStem": "dossier-records-",
+   "creatingFilesAmongTheStaticMatches": true,
+   "staticStemIsInferred": false,
+   "exposureInTheCleanRun": {
+    "run": "c0-clean",
+    "namesSampled": 64,
+    "namesNeverSampled": 100,
+    "expectedNamesPresentAtARandomMoment": {
+     "lowerBound": 0.169,
+     "upperBound": 0.71
+    }
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "dossier-state-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 157,
+    "f1-fresh-after-k1": 155,
+    "f2-fresh-after-k2": 157,
+    "f3-fresh-after-k3": 157,
+    "k1-kill-40s": 135,
+    "k2-kill-75s": 144,
+    "k3-kill-115s": 144
+   },
+   "creatingFiles": {
+    "packages/polaris-dossier/src/start-gates.test.ts": 997,
+    "packages/polaris-dossier/src/state-directory.test.ts": 52
+   },
+   "testFiles": {
+    "packages/polaris-dossier/src/start-gates.test.ts": 997,
+    "packages/polaris-dossier/src/state-directory.test.ts": 52
+   },
+   "leftAfterSIGKILL": {
+    "k1-kill-40s": {
+     "entries": 1,
+     "bytes": 0,
+     "oldestMtime": 1792854088.1,
+     "newestMtime": 1792854088.1
+    }
+   },
+   "afterTheNextFreshRun": {
+    "f1-fresh-after-k1": {
+     "killRun": "k1-kill-40s",
+     "leftBySIGKILL": 1,
+     "stillThere": 1,
+     "bytesStillThere": 0
+    }
+   },
+   "leftByTheFreshRunItself": {},
+   "leftAfterCleanRun": {},
+   "staticFilesNamingTheLiteral": [
+    "packages/polaris-dossier/src/start-gates.test.ts",
+    "packages/polaris-dossier/src/state-directory.test.ts"
+   ],
+   "staticStem": "dossier-state-",
+   "creatingFilesAmongTheStaticMatches": true,
+   "staticStemIsInferred": false,
+   "exposureInTheCleanRun": {
+    "run": "c0-clean",
+    "namesSampled": 54,
+    "namesNeverSampled": 103,
+    "expectedNamesPresentAtARandomMoment": {
+     "lowerBound": 0.166,
+     "upperBound": 0.683
+    }
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "dossier-waiting-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 90,
+    "f1-fresh-after-k1": 90,
+    "f2-fresh-after-k2": 90,
+    "f3-fresh-after-k3": 90,
+    "k1-kill-40s": 59,
+    "k2-kill-75s": 90,
+    "k3-kill-115s": 90
+   },
+   "creatingFiles": {
+    "packages/polaris-dossier/src/waiting-sessions.test.ts": 599
+   },
+   "testFiles": {
+    "packages/polaris-dossier/src/waiting-sessions.test.ts": 599
+   },
+   "leftAfterSIGKILL": {
+    "k1-kill-40s": {
+     "entries": 1,
+     "bytes": 401408,
+     "oldestMtime": 1792854088.1,
+     "newestMtime": 1792854088.1
+    }
+   },
+   "afterTheNextFreshRun": {
+    "f1-fresh-after-k1": {
+     "killRun": "k1-kill-40s",
+     "leftBySIGKILL": 1,
+     "stillThere": 1,
+     "bytesStillThere": 401408
+    }
+   },
+   "leftByTheFreshRunItself": {},
+   "leftAfterCleanRun": {},
+   "staticFilesNamingTheLiteral": [
+    "packages/polaris-dossier/src/waiting-sessions.test.ts"
+   ],
+   "staticStem": "dossier-waiting-",
+   "creatingFilesAmongTheStaticMatches": true,
+   "staticStemIsInferred": false,
+   "exposureInTheCleanRun": {
+    "run": "c0-clean",
+    "namesSampled": 72,
+    "namesNeverSampled": 18,
+    "expectedNamesPresentAtARandomMoment": {
+     "lowerBound": 0.05,
+     "upperBound": 0.347
+    }
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "git-object-reader-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1,
+    "k1-kill-40s": 1,
+    "k2-kill-75s": 1,
+    "k3-kill-115s": 1
+   },
+   "creatingFiles": {
+    "packages/polaris-dossier/src/git-object-reader.test.ts": 7
+   },
+   "testFiles": {
+    "packages/polaris-dossier/src/git-object-reader.test.ts": 7
+   },
+   "leftAfterSIGKILL": {
+    "k1-kill-40s": {
+     "entries": 1,
+     "bytes": 46784512,
+     "oldestMtime": 1792854079.7,
+     "newestMtime": 1792854079.7
+    }
+   },
+   "afterTheNextFreshRun": {
+    "f1-fresh-after-k1": {
+     "killRun": "k1-kill-40s",
+     "leftBySIGKILL": 1,
+     "stillThere": 1,
+     "bytesStillThere": 46784512
+    }
+   },
+   "leftByTheFreshRunItself": {},
+   "leftAfterCleanRun": {},
+   "staticFilesNamingTheLiteral": [
+    "packages/polaris-dossier/src/git-object-reader.test.ts"
+   ],
+   "staticStem": "git-object-reader-",
+   "creatingFilesAmongTheStaticMatches": true,
+   "staticStemIsInferred": false,
+   "exposureInTheCleanRun": {
+    "run": "c0-clean",
+    "namesSampled": 1,
+    "namesNeverSampled": 0,
+    "expectedNamesPresentAtARandomMoment": {
+     "lowerBound": 0.244,
+     "upperBound": 0.248
+    }
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-build-output-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1,
+    "k1-kill-40s": 1,
+    "k2-kill-75s": 1,
+    "k3-kill-115s": 1
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/build-output.test.ts": 7
+   },
+   "testFiles": {
+    "apps/three-surface-poc/src/build-output.test.ts": 7
+   },
+   "leftAfterSIGKILL": {
+    "k1-kill-40s": {
+     "entries": 1,
+     "bytes": 89554944,
+     "oldestMtime": 1792854050.9,
+     "newestMtime": 1792854050.9
+    }
+   },
+   "afterTheNextFreshRun": {
+    "f1-fresh-after-k1": {
+     "killRun": "k1-kill-40s",
+     "leftBySIGKILL": 1,
+     "stillThere": 1,
+     "bytesStillThere": 89554944
+    }
+   },
+   "leftByTheFreshRunItself": {},
+   "leftAfterCleanRun": {},
+   "staticFilesNamingTheLiteral": [
+    "apps/three-surface-poc/src/build-output.test.ts"
+   ],
+   "staticStem": "syzygy-build-output-",
+   "creatingFilesAmongTheStaticMatches": true,
+   "staticStemIsInferred": false,
+   "exposureInTheCleanRun": {
+    "run": "c0-clean",
+    "namesSampled": 1,
+    "namesNeverSampled": 0,
+    "expectedNamesPresentAtARandomMoment": {
+     "lowerBound": 0.294,
+     "upperBound": 0.297
+    }
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-cross-links-pages-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1,
+    "k2-kill-75s": 1,
+    "k3-kill-115s": 1
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/surface-routes.test.ts": 6
+   },
+   "testFiles": {
+    "apps/three-surface-poc/src/surface-routes.test.ts": 6
+   },
+   "leftAfterSIGKILL": {
+    "k2-kill-75s": {
+     "entries": 1,
+     "bytes": 110592,
+     "oldestMtime": 1792855274.1,
+     "newestMtime": 1792855274.1
+    }
+   },
+   "afterTheNextFreshRun": {
+    "f2-fresh-after-k2": {
+     "killRun": "k2-kill-75s",
+     "leftBySIGKILL": 1,
+     "stillThere": 1,
+     "bytesStillThere": 110592
+    }
+   },
+   "leftByTheFreshRunItself": {},
+   "leftAfterCleanRun": {},
+   "staticFilesNamingTheLiteral": [
+    "apps/three-surface-poc/src/surface-routes.test.ts"
+   ],
+   "staticStem": "syzygy-cross-links-pages-",
+   "creatingFilesAmongTheStaticMatches": true,
+   "staticStemIsInferred": false,
+   "exposureInTheCleanRun": {
+    "run": "c0-clean",
+    "namesSampled": 1,
+    "namesNeverSampled": 0,
+    "expectedNamesPresentAtARandomMoment": {
+     "lowerBound": 0.017,
+     "upperBound": 0.02
+    }
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-cross-links-state-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1,
+    "k2-kill-75s": 1,
+    "k3-kill-115s": 1
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/surface-routes.test.ts": 6
+   },
+   "testFiles": {
+    "apps/three-surface-poc/src/surface-routes.test.ts": 6
+   },
+   "leftAfterSIGKILL": {
+    "k2-kill-75s": {
+     "entries": 1,
+     "bytes": 4096,
+     "oldestMtime": 1792855273.5,
+     "newestMtime": 1792855273.5
+    }
+   },
+   "afterTheNextFreshRun": {
+    "f2-fresh-after-k2": {
+     "killRun": "k2-kill-75s",
+     "leftBySIGKILL": 1,
+     "stillThere": 1,
+     "bytesStillThere": 4096
+    }
+   },
+   "leftByTheFreshRunItself": {},
+   "leftAfterCleanRun": {},
+   "staticFilesNamingTheLiteral": [
+    "apps/three-surface-poc/src/surface-routes.test.ts"
+   ],
+   "staticStem": "syzygy-cross-links-state-",
+   "creatingFilesAmongTheStaticMatches": true,
+   "staticStemIsInferred": false,
+   "exposureInTheCleanRun": {
+    "run": "c0-clean",
+    "namesSampled": 1,
+    "namesNeverSampled": 0,
+    "expectedNamesPresentAtARandomMoment": {
+     "lowerBound": 0.017,
+     "upperBound": 0.02
+    }
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-poc-a11y-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1,
+    "k1-kill-40s": 1,
+    "k2-kill-75s": 1,
+    "k3-kill-115s": 1
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts": 7
+   },
+   "testFiles": {
+    "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts": 7
+   },
+   "leftAfterSIGKILL": {
+    "k1-kill-40s": {
+     "entries": 1,
+     "bytes": 1052672,
+     "oldestMtime": 1792854059.0,
+     "newestMtime": 1792854059.0
+    },
+    "k2-kill-75s": {
+     "entries": 1,
+     "bytes": 1269760,
+     "oldestMtime": 1792855255.0,
+     "newestMtime": 1792855255.0
+    },
+    "k3-kill-115s": {
+     "entries": 1,
+     "bytes": 1486848,
+     "oldestMtime": 1792856426.6,
+     "newestMtime": 1792856426.6
+    }
+   },
+   "afterTheNextFreshRun": {
+    "f1-fresh-after-k1": {
+     "killRun": "k1-kill-40s",
+     "leftBySIGKILL": 1,
+     "stillThere": 1,
+     "bytesStillThere": 1052672
+    },
+    "f2-fresh-after-k2": {
+     "killRun": "k2-kill-75s",
+     "leftBySIGKILL": 1,
+     "stillThere": 1,
+     "bytesStillThere": 1269760
+    },
+    "f3-fresh-after-k3": {
+     "killRun": "k3-kill-115s",
+     "leftBySIGKILL": 1,
+     "stillThere": 1,
+     "bytesStillThere": 1486848
+    }
+   },
+   "leftByTheFreshRunItself": {},
+   "leftAfterCleanRun": {},
+   "staticFilesNamingTheLiteral": [
+    "apps/three-surface-poc/src/polaris-accessibility-main.ts",
+    "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts"
+   ],
+   "staticStem": "syzygy-poc-a11y-",
+   "creatingFilesAmongTheStaticMatches": true,
+   "staticStemIsInferred": false,
+   "exposureInTheCleanRun": {
+    "run": "c0-clean",
+    "namesSampled": 1,
+    "namesNeverSampled": 0,
+    "expectedNamesPresentAtARandomMoment": {
+     "lowerBound": 0.836,
+     "upperBound": 0.839
+    }
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-poc-a11y-budget-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1,
+    "k1-kill-40s": 1,
+    "k2-kill-75s": 1,
+    "k3-kill-115s": 1
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts": 7
+   },
+   "testFiles": {
+    "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts": 7
+   },
+   "leftAfterSIGKILL": {
+    "k1-kill-40s": {
+     "entries": 1,
+     "bytes": 16384,
+     "oldestMtime": 1792854059.1,
+     "newestMtime": 1792854059.1
+    }
+   },
+   "afterTheNextFreshRun": {
+    "f1-fresh-after-k1": {
+     "killRun": "k1-kill-40s",
+     "leftBySIGKILL": 1,
+     "stillThere": 1,
+     "bytesStillThere": 16384
+    }
+   },
+   "leftByTheFreshRunItself": {},
+   "leftAfterCleanRun": {},
+   "staticFilesNamingTheLiteral": [
+    "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts"
+   ],
+   "staticStem": "syzygy-poc-a11y-budget-",
+   "creatingFilesAmongTheStaticMatches": true,
+   "staticStemIsInferred": false,
+   "exposureInTheCleanRun": {
+    "run": "c0-clean",
+    "namesSampled": 1,
+    "namesNeverSampled": 0,
+    "expectedNamesPresentAtARandomMoment": {
+     "lowerBound": 0.154,
+     "upperBound": 0.157
+    }
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-poc-browser-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 12,
+    "f1-fresh-after-k1": 12,
+    "f2-fresh-after-k2": 12,
+    "f3-fresh-after-k3": 12,
+    "k1-kill-40s": 1,
+    "k2-kill-75s": 3,
+    "k3-kill-115s": 11
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/cdp-browser.ts": 63
+   },
+   "testFiles": {
+    "apps/three-surface-poc/src/surface-routes.test.ts": 16,
+    "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts": 7,
+    "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts": 6,
+    "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts": 5,
+    "apps/three-surface-poc/src/tuple-encoding.test.ts": 5,
+    "apps/three-surface-poc/src/trajectory-narrowing.browser.test.ts": 5,
+    "apps/three-surface-poc/src/cdp-browser.browser.test.ts": 5,
+    "apps/three-surface-poc/src/orrery.browser.test.ts": 5,
+    "apps/three-surface-poc/src/proposal-disclosure.test.ts": 5,
+    "apps/three-surface-poc/src/polaris-generation/draft-preview.browser.test.ts": 4
+   },
+   "leftAfterSIGKILL": {
+    "k1-kill-40s": {
+     "entries": 1,
+     "bytes": 40222720,
+     "oldestMtime": 1792854143.6,
+     "newestMtime": 1792854143.6
+    },
+    "k2-kill-75s": {
+     "entries": 3,
+     "bytes": 118476800,
+     "oldestMtime": 1792855312.6,
+     "newestMtime": 1792855351.7
+    },
+    "k3-kill-115s": {
+     "entries": 1,
+     "bytes": 40460288,
+     "oldestMtime": 1792856474.3,
+     "newestMtime": 1792856474.3
+    }
+   },
+   "afterTheNextFreshRun": {
+    "f1-fresh-after-k1": {
+     "killRun": "k1-kill-40s",
+     "leftBySIGKILL": 1,
+     "stillThere": 1,
+     "bytesStillThere": 40222720
+    },
+    "f2-fresh-after-k2": {
+     "killRun": "k2-kill-75s",
+     "leftBySIGKILL": 3,
+     "stillThere": 3,
+     "bytesStillThere": 118476800
+    },
+    "f3-fresh-after-k3": {
+     "killRun": "k3-kill-115s",
+     "leftBySIGKILL": 1,
+     "stillThere": 1,
+     "bytesStillThere": 40460288
+    }
+   },
+   "leftByTheFreshRunItself": {},
+   "leftAfterCleanRun": {},
+   "staticFilesNamingTheLiteral": [
+    "apps/three-surface-poc/src/cdp-browser.ts"
+   ],
+   "staticStem": "syzygy-poc-browser-",
+   "creatingFilesAmongTheStaticMatches": true,
+   "staticStemIsInferred": false,
+   "exposureInTheCleanRun": {
+    "run": "c0-clean",
+    "namesSampled": 12,
+    "namesNeverSampled": 0,
+    "expectedNamesPresentAtARandomMoment": {
+     "lowerBound": 1.12,
+     "upperBound": 1.159
+    }
+   },
+   "rule": "R3-browser-profile",
+   "disposition": "owner-pid name and sweep"
+  },
+  {
+   "class": "syzygy-poc-names-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1,
+    "k2-kill-75s": 1,
+    "k3-kill-115s": 1
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts": 6
+   },
+   "testFiles": {
+    "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts": 6
+   },
+   "leftAfterSIGKILL": {
+    "k2-kill-75s": {
+     "entries": 1,
+     "bytes": 40960,
+     "oldestMtime": 1792855262.8,
+     "newestMtime": 1792855262.8
+    }
+   },
+   "afterTheNextFreshRun": {
+    "f2-fresh-after-k2": {
+     "killRun": "k2-kill-75s",
+     "leftBySIGKILL": 1,
+     "stillThere": 1,
+     "bytesStillThere": 40960
+    }
+   },
+   "leftByTheFreshRunItself": {},
+   "leftAfterCleanRun": {},
+   "staticFilesNamingTheLiteral": [
+    "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts"
+   ],
+   "staticStem": "syzygy-poc-names-",
+   "creatingFilesAmongTheStaticMatches": true,
+   "staticStemIsInferred": false,
+   "exposureInTheCleanRun": {
+    "run": "c0-clean",
+    "namesSampled": 1,
+    "namesNeverSampled": 0,
+    "expectedNamesPresentAtARandomMoment": {
+     "lowerBound": 0.131,
+     "upperBound": 0.134
+    }
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-poc-names-daemon-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 8,
+    "f1-fresh-after-k1": 8,
+    "f2-fresh-after-k2": 8,
+    "f3-fresh-after-k3": 8,
+    "k2-kill-75s": 4,
+    "k3-kill-115s": 8
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts": 44
+   },
+   "testFiles": {
+    "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts": 44
+   },
+   "leftAfterSIGKILL": {
+    "k2-kill-75s": {
+     "entries": 4,
+     "bytes": 16384,
+     "oldestMtime": 1792855263.0,
+     "newestMtime": 1792855272.0
+    }
+   },
+   "afterTheNextFreshRun": {
+    "f2-fresh-after-k2": {
+     "killRun": "k2-kill-75s",
+     "leftBySIGKILL": 4,
+     "stillThere": 4,
+     "bytesStillThere": 16384
+    }
+   },
+   "leftByTheFreshRunItself": {},
+   "leftAfterCleanRun": {},
+   "staticFilesNamingTheLiteral": [
+    "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts"
+   ],
+   "staticStem": "syzygy-poc-names-daemon-",
+   "creatingFilesAmongTheStaticMatches": true,
+   "staticStemIsInferred": false,
+   "exposureInTheCleanRun": {
+    "run": "c0-clean",
+    "namesSampled": 8,
+    "namesNeverSampled": 0,
+    "expectedNamesPresentAtARandomMoment": {
+     "lowerBound": 0.402,
+     "upperBound": 0.428
+    }
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-poc-surface-fixture-p<pid>-n<ns>-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 398,
+    "f1-fresh-after-k1": 398,
+    "f2-fresh-after-k2": 398,
+    "f3-fresh-after-k3": 398,
+    "k1-kill-40s": 4,
+    "k2-kill-75s": 12,
+    "k3-kill-115s": 209
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/test-model-fixture.ts": 1817
+   },
+   "testFiles": {
+    "apps/three-surface-poc/src/polaris-parity-sweep.test.ts": 295,
+    "apps/three-surface-poc/src/polaris-reachability.test.ts": 150,
+    "apps/three-surface-poc/src/polaris-project-shape.test.ts": 109,
+    "apps/three-surface-poc/src/surface-routes.test.ts": 87,
+    "apps/three-surface-poc/src/trajectory.test.ts": 75,
+    "apps/three-surface-poc/src/block-provenance-sweep.test.ts": 72,
+    "apps/three-surface-poc/src/polaris-copy.test.ts": 70,
+    "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts": 65,
+    "apps/three-surface-poc/src/materialize-action.test.ts": 64,
+    "apps/three-surface-poc/src/polaris-walkthrough-readiness.test.ts": 56,
+    "apps/three-surface-poc/src/verbatim-route.test.ts": 56,
+    "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts": 52,
+    "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts": 45,
+    "apps/three-surface-poc/src/proposal-disclosure.test.ts": 45,
+    "apps/three-surface-poc/src/polaris-capability-detail.test.ts": 44,
+    "apps/three-surface-poc/src/orrery.test.ts": 44,
+    "apps/three-surface-poc/src/polaris-narrative.test.ts": 40,
+    "apps/three-surface-poc/src/polaris-epistemic-tuples.test.ts": 40,
+    "apps/three-surface-poc/src/polaris-proposed-work.test.ts": 40,
+    "apps/three-surface-poc/src/polaris-first-reading.test.ts": 32,
+    "apps/three-surface-poc/src/polaris-source-route.test.ts": 32,
+    "apps/three-surface-poc/src/polaris-reconciliation.test.ts": 28,
+    "apps/three-surface-poc/src/test-model-fixture.test.ts": 28,
+    "apps/three-surface-poc/src/polaris.test.ts": 28,
+    "apps/three-surface-poc/src/tuple-encoding.test.ts": 25,
+    "apps/three-surface-poc/src/cross-cutting.test.ts": 24,
+    "apps/three-surface-poc/src/evaluation-footer.test.ts": 24,
+    "apps/three-surface-poc/src/production-reobserve.test.ts": 20,
+    "apps/three-surface-poc/src/unknown-route-sweep.test.ts": 16,
+    "apps/three-surface-poc/src/routes.test.ts": 15,
+    "apps/three-surface-poc/src/response-identity-independent.test.ts": 12,
+    "apps/three-surface-poc/src/surface-render-fractions.test.ts": 12,
+    "apps/three-surface-poc/src/trajectory-narrowing.browser.test.ts": 10,
+    "apps/three-surface-poc/src/main.test.ts": 8,
+    "apps/three-surface-poc/src/walkthrough-preflight.test.ts": 8,
+    "apps/three-surface-poc/src/governing-intent-sweep.test.ts": 8,
+    "apps/three-surface-poc/src/keyboard-sweep-record.test.ts": 8,
+    "apps/three-surface-poc/src/polaris-presentation-route.test.ts": 8,
+    "apps/three-surface-poc/src/page-size-delta.test.ts": 8,
+    "apps/three-surface-poc/src/orrery.browser.test.ts": 5,
+    "apps/three-surface-poc/src/polaris-authority-sweep.test.ts": 5,
+    "apps/three-surface-poc/src/response-limits.test.ts": 4
+   },
+   "leftAfterSIGKILL": {
+    "k2-kill-75s": {
+     "entries": 7,
+     "bytes": 1634304,
+     "oldestMtime": 1792855254.9,
+     "newestMtime": 1792855274.3
+    },
+    "k3-kill-115s": {
+     "entries": 2,
+     "bytes": 466944,
+     "oldestMtime": 1792856464.3,
+     "newestMtime": 1792856464.3
+    }
+   },
+   "afterTheNextFreshRun": {
+    "f2-fresh-after-k2": {
+     "killRun": "k2-kill-75s",
+     "leftBySIGKILL": 7,
+     "stillThere": 0,
+     "bytesStillThere": 0
+    },
+    "f3-fresh-after-k3": {
+     "killRun": "k3-kill-115s",
+     "leftBySIGKILL": 2,
+     "stillThere": 0,
+     "bytesStillThere": 0
+    }
+   },
+   "leftByTheFreshRunItself": {},
+   "leftAfterCleanRun": {},
+   "staticFilesNamingTheLiteral": [
+    "apps/three-surface-poc/src/fixture-directories.ts"
+   ],
+   "staticStem": "syzygy-poc-surface-fixture-",
+   "creatingFilesAmongTheStaticMatches": false,
+   "staticStemIsInferred": false,
+   "exposureInTheCleanRun": {
+    "run": "c0-clean",
+    "namesSampled": 139,
+    "namesNeverSampled": 259,
+    "expectedNamesPresentAtARandomMoment": {
+     "lowerBound": 1.313,
+     "upperBound": 2.624
+    }
+   },
+   "rule": "R1-fixture-sweep-landed",
+   "disposition": "owner-pid name and sweep"
+  },
+  {
+   "class": "syzygy-poc-surface-fixture-template-p<pid>-n<ns>-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 44,
+    "f1-fresh-after-k1": 44,
+    "f2-fresh-after-k2": 44,
+    "f3-fresh-after-k3": 44,
+    "k1-kill-40s": 1,
+    "k2-kill-75s": 3,
+    "k3-kill-115s": 17
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/test-model-fixture.ts": 197
+   },
+   "testFiles": {
+    "apps/three-surface-poc/src/test-model-fixture.test.ts": 12,
+    "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts": 7,
+    "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts": 6,
+    "apps/three-surface-poc/src/surface-routes.test.ts": 6,
+    "apps/three-surface-poc/src/polaris-parity-sweep.test.ts": 5,
+    "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts": 5,
+    "apps/three-surface-poc/src/production-reobserve.test.ts": 5,
+    "apps/three-surface-poc/src/tuple-encoding.test.ts": 5,
+    "apps/three-surface-poc/src/routes.test.ts": 5,
+    "apps/three-surface-poc/src/trajectory-narrowing.browser.test.ts": 5,
+    "apps/three-surface-poc/src/polaris-project-shape.test.ts": 5,
+    "apps/three-surface-poc/src/polaris-narrative.test.ts": 5,
+    "apps/three-surface-poc/src/orrery.browser.test.ts": 5,
+    "apps/three-surface-poc/src/proposal-disclosure.test.ts": 5,
+    "apps/three-surface-poc/src/polaris-reachability.test.ts": 5,
+    "apps/three-surface-poc/src/polaris-copy.test.ts": 5,
+    "apps/three-surface-poc/src/trajectory.test.ts": 5,
+    "apps/three-surface-poc/src/polaris-authority-sweep.test.ts": 5,
+    "apps/three-surface-poc/src/polaris-epistemic-tuples.test.ts": 4,
+    "apps/three-surface-poc/src/polaris-walkthrough-readiness.test.ts": 4,
+    "apps/three-surface-poc/src/materialize-action.test.ts": 4,
+    "apps/three-surface-poc/src/block-provenance-sweep.test.ts": 4,
+    "apps/three-surface-poc/src/polaris-capability-detail.test.ts": 4,
+    "apps/three-surface-poc/src/response-identity-independent.test.ts": 4,
+    "apps/three-surface-poc/src/polaris-first-reading.test.ts": 4,
+    "apps/three-surface-poc/src/verbatim-route.test.ts": 4,
+    "apps/three-surface-poc/src/polaris-source-route.test.ts": 4,
+    "apps/three-surface-poc/src/unknown-route-sweep.test.ts": 4,
+    "apps/three-surface-poc/src/polaris-reconciliation.test.ts": 4,
+    "apps/three-surface-poc/src/orrery.test.ts": 4,
+    "apps/three-surface-poc/src/cross-cutting.test.ts": 4,
+    "apps/three-surface-poc/src/main.test.ts": 4,
+    "apps/three-surface-poc/src/polaris-proposed-work.test.ts": 4,
+    "apps/three-surface-poc/src/walkthrough-preflight.test.ts": 4,
+    "apps/three-surface-poc/src/surface-render-fractions.test.ts": 4,
+    "apps/three-surface-poc/src/evaluation-footer.test.ts": 4,
+    "apps/three-surface-poc/src/polaris.test.ts": 4,
+    "apps/three-surface-poc/src/governing-intent-sweep.test.ts": 4,
+    "apps/three-surface-poc/src/keyboard-sweep-record.test.ts": 4,
+    "apps/three-surface-poc/src/polaris-presentation-route.test.ts": 4,
+    "apps/three-surface-poc/src/response-limits.test.ts": 4,
+    "apps/three-surface-poc/src/page-size-delta.test.ts": 4
+   },
+   "leftAfterSIGKILL": {
+    "k1-kill-40s": {
+     "entries": 1,
+     "bytes": 233472,
+     "oldestMtime": 1792854054.0,
+     "newestMtime": 1792854054.0
+    },
+    "k2-kill-75s": {
+     "entries": 3,
+     "bytes": 700416,
+     "oldestMtime": 1792855207.0,
+     "newestMtime": 1792855273.2
+    },
+    "k3-kill-115s": {
+     "entries": 2,
+     "bytes": 466944,
+     "oldestMtime": 1792856353.0,
+     "newestMtime": 1792856462.9
+    }
+   },
+   "afterTheNextFreshRun": {
+    "f1-fresh-after-k1": {
+     "killRun": "k1-kill-40s",
+     "leftBySIGKILL": 1,
+     "stillThere": 0,
+     "bytesStillThere": 0
+    },
+    "f2-fresh-after-k2": {
+     "killRun": "k2-kill-75s",
+     "leftBySIGKILL": 3,
+     "stillThere": 0,
+     "bytesStillThere": 0
+    },
+    "f3-fresh-after-k3": {
+     "killRun": "k3-kill-115s",
+     "leftBySIGKILL": 2,
+     "stillThere": 0,
+     "bytesStillThere": 0
+    }
+   },
+   "leftByTheFreshRunItself": {},
+   "leftAfterCleanRun": {},
+   "staticFilesNamingTheLiteral": [],
+   "staticStem": "syzygy-poc-surface-fixture-template-",
+   "creatingFilesAmongTheStaticMatches": false,
+   "staticStemIsInferred": false,
+   "exposureInTheCleanRun": {
+    "run": "c0-clean",
+    "namesSampled": 39,
+    "namesNeverSampled": 5,
+    "expectedNamesPresentAtARandomMoment": {
+     "lowerBound": 1.273,
+     "upperBound": 1.418
+    }
+   },
+   "rule": "R1-fixture-sweep-landed",
+   "disposition": "owner-pid name and sweep"
+  },
+  {
+   "class": "syzygy-private-restart-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 14,
+    "f1-fresh-after-k1": 14,
+    "f2-fresh-after-k2": 14,
+    "f3-fresh-after-k3": 14,
+    "k2-kill-75s": 8,
+    "k3-kill-115s": 14
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/restart.test.ts": 78
+   },
+   "testFiles": {
+    "apps/three-surface-poc/src/restart.test.ts": 78
+   },
+   "leftAfterSIGKILL": {
+    "k2-kill-75s": {
+     "entries": 1,
+     "bytes": 8192,
+     "oldestMtime": 1792855274.0,
+     "newestMtime": 1792855274.0
+    }
+   },
+   "afterTheNextFreshRun": {
+    "f2-fresh-after-k2": {
+     "killRun": "k2-kill-75s",
+     "leftBySIGKILL": 1,
+     "stillThere": 1,
+     "bytesStillThere": 8192
+    }
+   },
+   "leftByTheFreshRunItself": {},
+   "leftAfterCleanRun": {},
+   "staticFilesNamingTheLiteral": [
+    "apps/three-surface-poc/src/restart.test.ts"
+   ],
+   "staticStem": "syzygy-private-restart-",
+   "creatingFilesAmongTheStaticMatches": true,
+   "staticStemIsInferred": false,
+   "exposureInTheCleanRun": {
+    "run": "c0-clean",
+    "namesSampled": 13,
+    "namesNeverSampled": 1,
+    "expectedNamesPresentAtARandomMoment": {
+     "lowerBound": 0.045,
+     "upperBound": 0.091
+    }
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-repo-corpus-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1,
+    "k3-kill-115s": 1
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/polaris-generation/repo-corpus.test.ts": 5
+   },
+   "testFiles": {
+    "apps/three-surface-poc/src/polaris-generation/repo-corpus.test.ts": 5
+   },
+   "leftAfterSIGKILL": {
+    "k3-kill-115s": {
+     "entries": 1,
+     "bytes": 299008,
+     "oldestMtime": 1792856463.8,
+     "newestMtime": 1792856463.8
+    }
+   },
+   "afterTheNextFreshRun": {
+    "f3-fresh-after-k3": {
+     "killRun": "k3-kill-115s",
+     "leftBySIGKILL": 1,
+     "stillThere": 1,
+     "bytesStillThere": 299008
+    }
+   },
+   "leftByTheFreshRunItself": {},
+   "leftAfterCleanRun": {},
+   "staticFilesNamingTheLiteral": [
+    "apps/three-surface-poc/src/polaris-generation/repo-corpus.test.ts"
+   ],
+   "staticStem": "syzygy-repo-corpus-",
+   "creatingFilesAmongTheStaticMatches": true,
+   "staticStemIsInferred": false,
+   "exposureInTheCleanRun": {
+    "run": "c0-clean",
+    "namesSampled": 1,
+    "namesNeverSampled": 0,
+    "expectedNamesPresentAtARandomMoment": {
+     "lowerBound": 0.007,
+     "upperBound": 0.01
+    }
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-repo-hostile-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1,
+    "k3-kill-115s": 1
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/polaris-generation/repo-corpus.test.ts": 5
+   },
+   "testFiles": {
+    "apps/three-surface-poc/src/polaris-generation/repo-corpus.test.ts": 5
+   },
+   "leftAfterSIGKILL": {
+    "k3-kill-115s": {
+     "entries": 1,
+     "bytes": 159744,
+     "oldestMtime": 1792856464.0,
+     "newestMtime": 1792856464.0
+    }
+   },
+   "afterTheNextFreshRun": {
+    "f3-fresh-after-k3": {
+     "killRun": "k3-kill-115s",
+     "leftBySIGKILL": 1,
+     "stillThere": 1,
+     "bytesStillThere": 159744
+    }
+   },
+   "leftByTheFreshRunItself": {},
+   "leftAfterCleanRun": {},
+   "staticFilesNamingTheLiteral": [
+    "apps/three-surface-poc/src/polaris-generation/repo-corpus.test.ts"
+   ],
+   "staticStem": "syzygy-repo-hostile-",
+   "creatingFilesAmongTheStaticMatches": true,
+   "staticStemIsInferred": false,
+   "exposureInTheCleanRun": {
+    "run": "c0-clean",
+    "namesSampled": 1,
+    "namesNeverSampled": 0,
+    "expectedNamesPresentAtARandomMoment": {
+     "lowerBound": 0.007,
+     "upperBound": 0.01
+    }
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "node-compile-cache",
+   "family": "npm-compile-cache",
+   "created": {},
+   "creatingFiles": {},
+   "testFiles": {},
+   "leftAfterSIGKILL": {
+    "k1-kill-40s": {
+     "entries": 1,
+     "bytes": 4276224,
+     "oldestMtime": 1792854047.8,
+     "newestMtime": 1792854047.8
+    },
+    "k2-kill-75s": {
+     "entries": 1,
+     "bytes": 5632000,
+     "oldestMtime": 1792855199.3,
+     "newestMtime": 1792855199.3
+    },
+    "k3-kill-115s": {
+     "entries": 1,
+     "bytes": 5636096,
+     "oldestMtime": 1792856349.0,
+     "newestMtime": 1792856349.0
+    }
+   },
+   "afterTheNextFreshRun": {
+    "f1-fresh-after-k1": {
+     "killRun": "k1-kill-40s",
+     "leftBySIGKILL": 1,
+     "stillThere": 1,
+     "bytesStillThere": 7032832
+    },
+    "f2-fresh-after-k2": {
+     "killRun": "k2-kill-75s",
+     "leftBySIGKILL": 1,
+     "stillThere": 1,
+     "bytesStillThere": 8388608
+    },
+    "f3-fresh-after-k3": {
+     "killRun": "k3-kill-115s",
+     "leftBySIGKILL": 1,
+     "stillThere": 1,
+     "bytesStillThere": 8392704
+    }
+   },
+   "leftByTheFreshRunItself": {},
+   "leftAfterCleanRun": {
+    "c0-clean": {
+     "entries": 1,
+     "bytes": 5672960,
+     "oldestMtime": 1792853789.3,
+     "newestMtime": 1792853789.3
+    }
+   },
+   "staticFilesNamingTheLiteral": null,
+   "staticStem": null,
+   "creatingFilesAmongTheStaticMatches": null,
+   "staticStemIsInferred": null,
+   "exposureInTheCleanRun": {
+    "run": "c0-clean",
+    "namesSampled": 1,
+    "namesNeverSampled": 0,
+    "expectedNamesPresentAtARandomMoment": {
+     "lowerBound": 1.032,
+     "upperBound": 1.035
+    }
+   },
+   "rule": "R5-npm-compile-cache",
+   "disposition": "stated residual"
+  },
+  {
+   "class": "syzygy-poc-restart-<n>-<n>.lock",
+   "family": "unattributed",
+   "created": {},
+   "creatingFiles": {},
+   "testFiles": {},
+   "leftAfterSIGKILL": {
+    "k2-kill-75s": {
+     "entries": 1,
+     "bytes": 0,
+     "oldestMtime": 1792855274.1,
+     "newestMtime": 1792855274.1
+    }
+   },
+   "afterTheNextFreshRun": {
+    "f2-fresh-after-k2": {
+     "killRun": "k2-kill-75s",
+     "leftBySIGKILL": 1,
+     "stillThere": 1,
+     "bytesStillThere": 0
+    }
+   },
+   "leftByTheFreshRunItself": {},
+   "leftAfterCleanRun": {},
+   "staticFilesNamingTheLiteral": [
+    "apps/three-surface-poc/src/restart.ts"
+   ],
+   "staticStem": "syzygy-poc-restart-",
+   "creatingFilesAmongTheStaticMatches": null,
+   "staticStemIsInferred": true,
+   "exposureInTheCleanRun": {
+    "run": "c0-clean",
+    "namesSampled": 10,
+    "namesNeverSampled": 0,
+    "expectedNamesPresentAtARandomMoment": {
+     "lowerBound": 0.021,
+     "upperBound": 0.054
+    }
+   },
+   "rule": "R7-stale-lock-by-design",
+   "disposition": "stated residual"
+  },
+  {
+   "class": "nanoid-21",
+   "family": "vitest-project-directory",
+   "created": {},
+   "creatingFiles": {},
+   "testFiles": {},
+   "leftAfterSIGKILL": {
+    "k1-kill-40s": {
+     "entries": 2,
+     "bytes": 9306112,
+     "oldestMtime": 1792854049.1,
+     "newestMtime": 1792854049.2
+    },
+    "k2-kill-75s": {
+     "entries": 4,
+     "bytes": 13365248,
+     "oldestMtime": 1792855200.4,
+     "newestMtime": 1792855237.3
+    },
+    "k3-kill-115s": {
+     "entries": 4,
+     "bytes": 16470016,
+     "oldestMtime": 1792856350.0,
+     "newestMtime": 1792856414.0
+    }
+   },
+   "afterTheNextFreshRun": {
+    "f1-fresh-after-k1": {
+     "killRun": "k1-kill-40s",
+     "leftBySIGKILL": 2,
+     "stillThere": 2,
+     "bytesStillThere": 9306112
+    },
+    "f2-fresh-after-k2": {
+     "killRun": "k2-kill-75s",
+     "leftBySIGKILL": 4,
+     "stillThere": 4,
+     "bytesStillThere": 13365248
+    },
+    "f3-fresh-after-k3": {
+     "killRun": "k3-kill-115s",
+     "leftBySIGKILL": 4,
+     "stillThere": 4,
+     "bytesStillThere": 16470016
+    }
+   },
+   "leftByTheFreshRunItself": {},
+   "leftAfterCleanRun": {},
+   "staticFilesNamingTheLiteral": null,
+   "staticStem": null,
+   "creatingFilesAmongTheStaticMatches": null,
+   "staticStemIsInferred": null,
+   "exposureInTheCleanRun": {
+    "run": "c0-clean",
+    "namesSampled": 7,
+    "namesNeverSampled": 0,
+    "expectedNamesPresentAtARandomMoment": {
+     "lowerBound": 3.589,
+     "upperBound": 3.612
+    }
+   },
+   "rule": "R4-vitest-project-directory",
+   "disposition": "stated residual",
+   "observedSpellings": [
+    "<21 characters>"
+   ]
+  }
+ ],
+ "neverLeftInTheseKills": [
+  {
+   "class": "dossier-signoff-<random>-outside-RAW.md",
+   "family": "derived",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1,
+    "k1-kill-40s": 1,
+    "k2-kill-75s": 1,
+    "k3-kill-115s": 1
+   },
+   "creatingFiles": {
+    "packages/polaris-dossier/src/waiting-sessions.test.ts": 7
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-poc-surface-fixture-p4194305-n4026531836-AbCdEf",
+   "family": "fixed",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/test-model-fixture.test.ts": 4
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "dossier-brief-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 26,
+    "f1-fresh-after-k1": 26,
+    "f2-fresh-after-k2": 26,
+    "f3-fresh-after-k3": 26
+   },
+   "creatingFiles": {
+    "packages/polaris-dossier/src/brief.test.ts": 104
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "dossier-check-empty-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1,
+    "k2-kill-75s": 1,
+    "k3-kill-115s": 1
+   },
+   "creatingFiles": {
+    "packages/polaris-dossier/src/check.test.ts": 6
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "dossier-choice-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 31,
+    "f1-fresh-after-k1": 31,
+    "f2-fresh-after-k2": 31,
+    "f3-fresh-after-k3": 31
+   },
+   "creatingFiles": {
+    "packages/polaris-dossier/src/execution-choice.test.ts": 124
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "dossier-cli-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 57,
+    "f1-fresh-after-k1": 57,
+    "f2-fresh-after-k2": 57,
+    "f3-fresh-after-k3": 57
+   },
+   "creatingFiles": {
+    "packages/polaris-dossier/src/cli.test.ts": 228
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "dossier-clone-link-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1,
+    "k1-kill-40s": 1,
+    "k2-kill-75s": 1,
+    "k3-kill-115s": 1
+   },
+   "creatingFiles": {
+    "packages/polaris-dossier/src/start-gates.test.ts": 7
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "dossier-close-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 8,
+    "f1-fresh-after-k1": 8,
+    "f2-fresh-after-k2": 8,
+    "f3-fresh-after-k3": 8,
+    "k3-kill-115s": 8
+   },
+   "creatingFiles": {
+    "packages/polaris-dossier/src/close.test.ts": 40
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "dossier-close-credential-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1,
+    "k3-kill-115s": 1
+   },
+   "creatingFiles": {
+    "packages/polaris-dossier/src/close.test.ts": 5
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "dossier-close-none-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1,
+    "k3-kill-115s": 1
+   },
+   "creatingFiles": {
+    "packages/polaris-dossier/src/close.test.ts": 5
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "dossier-config-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 4,
+    "f1-fresh-after-k1": 4,
+    "f2-fresh-after-k2": 4,
+    "f3-fresh-after-k3": 4,
+    "k2-kill-75s": 4,
+    "k3-kill-115s": 4
+   },
+   "creatingFiles": {
+    "packages/polaris-dossier/src/start-gates.test.ts": 24
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "dossier-cred-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 18,
+    "f1-fresh-after-k1": 18,
+    "f2-fresh-after-k2": 18,
+    "f3-fresh-after-k3": 18
+   },
+   "creatingFiles": {
+    "packages/polaris-dossier/src/credential-probe.test.ts": 72
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "dossier-design-site-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 2,
+    "f1-fresh-after-k1": 2,
+    "f2-fresh-after-k2": 2,
+    "f3-fresh-after-k3": 2
+   },
+   "creatingFiles": {
+    "packages/polaris-dossier/src/design-review.test.ts": 8
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "dossier-doctrine-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1
+   },
+   "creatingFiles": {
+    "packages/polaris-dossier/src/doctrine-quote.test.ts": 4
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "dossier-evidence-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 4,
+    "f1-fresh-after-k1": 4,
+    "f2-fresh-after-k2": 4,
+    "f3-fresh-after-k3": 4,
+    "k3-kill-115s": 4
+   },
+   "creatingFiles": {
+    "packages/polaris-dossier/src/run-evidence.test.ts": 20
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "dossier-flags-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 2,
+    "f1-fresh-after-k1": 2,
+    "f2-fresh-after-k2": 2,
+    "f3-fresh-after-k3": 2
+   },
+   "creatingFiles": {
+    "packages/polaris-dossier/src/execution-flags.test.ts": 8
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "dossier-full-clone-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 9,
+    "f1-fresh-after-k1": 9,
+    "f2-fresh-after-k2": 9,
+    "f3-fresh-after-k3": 9,
+    "k1-kill-40s": 9,
+    "k2-kill-75s": 9,
+    "k3-kill-115s": 9
+   },
+   "creatingFiles": {
+    "packages/polaris-dossier/src/start-gates.test.ts": 63
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "dossier-head-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 13,
+    "f1-fresh-after-k1": 13,
+    "f2-fresh-after-k2": 13,
+    "f3-fresh-after-k3": 13
+   },
+   "creatingFiles": {
+    "packages/polaris-dossier/src/gate-parts.test.ts": 52
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "dossier-head-git-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1
+   },
+   "creatingFiles": {
+    "packages/polaris-dossier/src/gate-parts.test.ts": 4
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "dossier-inventory-clone-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 40,
+    "f1-fresh-after-k1": 40,
+    "f2-fresh-after-k2": 40,
+    "f3-fresh-after-k3": 40,
+    "k3-kill-115s": 40
+   },
+   "creatingFiles": {
+    "packages/polaris-dossier/src/inventory.test.ts": 200
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "dossier-inventory-origin-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1,
+    "k3-kill-115s": 1
+   },
+   "creatingFiles": {
+    "packages/polaris-dossier/src/inventory.test.ts": 5
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "dossier-inventory-state-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 40,
+    "f1-fresh-after-k1": 40,
+    "f2-fresh-after-k2": 40,
+    "f3-fresh-after-k3": 40,
+    "k3-kill-115s": 40
+   },
+   "creatingFiles": {
+    "packages/polaris-dossier/src/inventory.test.ts": 200
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "dossier-link-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1,
+    "k1-kill-40s": 1,
+    "k2-kill-75s": 1,
+    "k3-kill-115s": 1
+   },
+   "creatingFiles": {
+    "packages/polaris-dossier/src/start-gates.test.ts": 7
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "dossier-loose-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1,
+    "k3-kill-115s": 1
+   },
+   "creatingFiles": {
+    "packages/polaris-dossier/src/inventory.test.ts": 5
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "dossier-no-egress-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1,
+    "k3-kill-115s": 1
+   },
+   "creatingFiles": {
+    "packages/polaris-dossier/src/no-egress.test.ts": 5
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "dossier-not-a-run-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1,
+    "k3-kill-115s": 1
+   },
+   "creatingFiles": {
+    "packages/polaris-dossier/src/inventory.test.ts": 5
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "dossier-other-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1,
+    "k1-kill-40s": 1,
+    "k2-kill-75s": 1,
+    "k3-kill-115s": 1
+   },
+   "creatingFiles": {
+    "packages/polaris-dossier/src/waiting-sessions.test.ts": 7
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "dossier-parent-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 2,
+    "f1-fresh-after-k1": 2,
+    "f2-fresh-after-k2": 2,
+    "f3-fresh-after-k3": 2,
+    "k2-kill-75s": 2,
+    "k3-kill-115s": 2
+   },
+   "creatingFiles": {
+    "packages/polaris-dossier/src/waiting-sessions.test.ts": 12
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "dossier-pointer-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1,
+    "k1-kill-40s": 1,
+    "k2-kill-75s": 1,
+    "k3-kill-115s": 1
+   },
+   "creatingFiles": {
+    "packages/polaris-dossier/src/start-gates.test.ts": 7
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "dossier-render-clone-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 42,
+    "f1-fresh-after-k1": 42,
+    "f2-fresh-after-k2": 42,
+    "f3-fresh-after-k3": 42,
+    "k2-kill-75s": 42,
+    "k3-kill-115s": 42
+   },
+   "creatingFiles": {
+    "packages/polaris-dossier/src/render.test.ts": 252
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "dossier-render-origin-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1,
+    "k2-kill-75s": 1,
+    "k3-kill-115s": 1
+   },
+   "creatingFiles": {
+    "packages/polaris-dossier/src/render.test.ts": 6
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "dossier-render-state-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 42,
+    "f1-fresh-after-k1": 42,
+    "f2-fresh-after-k2": 42,
+    "f3-fresh-after-k3": 42,
+    "k2-kill-75s": 42,
+    "k3-kill-115s": 42
+   },
+   "creatingFiles": {
+    "packages/polaris-dossier/src/render.test.ts": 252
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "dossier-review-clone-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 81,
+    "f1-fresh-after-k1": 81,
+    "f2-fresh-after-k2": 81,
+    "f3-fresh-after-k3": 81,
+    "k2-kill-75s": 81,
+    "k3-kill-115s": 81
+   },
+   "creatingFiles": {
+    "packages/polaris-dossier/src/review.test.ts": 486
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "dossier-review-origin-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1,
+    "k2-kill-75s": 1,
+    "k3-kill-115s": 1
+   },
+   "creatingFiles": {
+    "packages/polaris-dossier/src/review.test.ts": 6
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "dossier-review-state-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 81,
+    "f1-fresh-after-k1": 81,
+    "f2-fresh-after-k2": 81,
+    "f3-fresh-after-k3": 81,
+    "k2-kill-75s": 81,
+    "k3-kill-115s": 81
+   },
+   "creatingFiles": {
+    "packages/polaris-dossier/src/review.test.ts": 486
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "dossier-root-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1,
+    "k1-kill-40s": 1,
+    "k2-kill-75s": 1,
+    "k3-kill-115s": 1
+   },
+   "creatingFiles": {
+    "packages/polaris-dossier/src/waiting-sessions.test.ts": 7
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "dossier-screen-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 14,
+    "f1-fresh-after-k1": 14,
+    "f2-fresh-after-k2": 14,
+    "f3-fresh-after-k3": 14,
+    "k3-kill-115s": 14
+   },
+   "creatingFiles": {
+    "packages/polaris-dossier/src/screen.test.ts": 70
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "dossier-signoff-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 24,
+    "f1-fresh-after-k1": 24,
+    "f2-fresh-after-k2": 24,
+    "f3-fresh-after-k3": 24,
+    "k1-kill-40s": 24,
+    "k2-kill-75s": 24,
+    "k3-kill-115s": 24
+   },
+   "creatingFiles": {
+    "packages/polaris-dossier/src/waiting-sessions.test.ts": 147,
+    "packages/polaris-dossier/src/start-gates.test.ts": 21
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "dossier-status-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 30,
+    "f1-fresh-after-k1": 30,
+    "f2-fresh-after-k2": 30,
+    "f3-fresh-after-k3": 30
+   },
+   "creatingFiles": {
+    "packages/polaris-dossier/src/status.test.ts": 120
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "dossier-target-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 2,
+    "f1-fresh-after-k1": 2,
+    "f2-fresh-after-k2": 2,
+    "f3-fresh-after-k3": 2,
+    "k2-kill-75s": 2,
+    "k3-kill-115s": 2
+   },
+   "creatingFiles": {
+    "packages/polaris-dossier/src/waiting-sessions.test.ts": 12
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "dossier-template-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1,
+    "k1-kill-40s": 1,
+    "k2-kill-75s": 1,
+    "k3-kill-115s": 1
+   },
+   "creatingFiles": {
+    "packages/polaris-dossier/src/start-gates.test.ts": 7
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "poc-main-test-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/main.test.ts": 4
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "polaris-draft-browser-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/polaris-generation/draft-preview.browser.test.ts": 4
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "polaris-launched-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1
+   },
+   "creatingFiles": {
+    "packages/polaris-dossier/src/session-view.test.ts": 4
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "polaris-marker-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 76,
+    "f1-fresh-after-k1": 76,
+    "f2-fresh-after-k2": 76,
+    "f3-fresh-after-k3": 76
+   },
+   "creatingFiles": {
+    "packages/polaris-dossier/src/launched.test.ts": 304
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "polaris-view-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1
+   },
+   "creatingFiles": {
+    "packages/polaris-dossier/src/session-view.test.ts": 4
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "polaris-why-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1
+   },
+   "creatingFiles": {
+    "packages/polaris-dossier/src/session-view.test.ts": 4
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "preflight-clone-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1,
+    "k2-kill-75s": 1,
+    "k3-kill-115s": 1
+   },
+   "creatingFiles": {
+    "packages/polaris-dossier/src/start-gates.test.ts": 6
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "preflight-upstream-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1,
+    "k2-kill-75s": 1,
+    "k3-kill-115s": 1
+   },
+   "creatingFiles": {
+    "packages/polaris-dossier/src/start-gates.test.ts": 6
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "rt3-bind-first-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1
+   },
+   "creatingFiles": {
+    "packages/cap1-daemon/src/server.test.ts": 4
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "rt3-bind-second-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1
+   },
+   "creatingFiles": {
+    "packages/cap1-daemon/src/server.test.ts": 4
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "rt3-cred-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 29,
+    "f1-fresh-after-k1": 29,
+    "f2-fresh-after-k2": 29,
+    "f3-fresh-after-k3": 29
+   },
+   "creatingFiles": {
+    "packages/cap1-daemon/src/credentials.test.ts": 116
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "rt3-diagnostic-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1
+   },
+   "creatingFiles": {
+    "packages/cap1-daemon/src/server.test.ts": 4
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "rt3-pipe-empty-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1
+   },
+   "creatingFiles": {
+    "packages/cap1-daemon/src/pipeline.test.ts": 4
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "rt3-pipe-gone-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1
+   },
+   "creatingFiles": {
+    "packages/cap1-daemon/src/pipeline.test.ts": 4
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "rt3-pipe-invalid-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1
+   },
+   "creatingFiles": {
+    "packages/cap1-daemon/src/pipeline.test.ts": 4
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "rt3-pipe-observed-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 4,
+    "f1-fresh-after-k1": 4,
+    "f2-fresh-after-k2": 4,
+    "f3-fresh-after-k3": 4
+   },
+   "creatingFiles": {
+    "packages/cap1-daemon/src/pipeline.test.ts": 16
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "rt3-pipe-root-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 4,
+    "f1-fresh-after-k1": 4,
+    "f2-fresh-after-k2": 4,
+    "f3-fresh-after-k3": 4
+   },
+   "creatingFiles": {
+    "packages/cap1-daemon/src/pipeline.test.ts": 16
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "rt3-srv-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 17,
+    "f1-fresh-after-k1": 17,
+    "f2-fresh-after-k2": 17,
+    "f3-fresh-after-k3": 17
+   },
+   "creatingFiles": {
+    "packages/cap1-daemon/src/server.test.ts": 68
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "rt3-srv-empty-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1
+   },
+   "creatingFiles": {
+    "packages/cap1-daemon/src/server.test.ts": 4
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "rt3-srv-root-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1
+   },
+   "creatingFiles": {
+    "packages/cap1-daemon/src/server.test.ts": 4
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "rt3-srv-writes-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1
+   },
+   "creatingFiles": {
+    "packages/cap1-daemon/src/server.test.ts": 4
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "rt4-citation-root-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1
+   },
+   "creatingFiles": {
+    "packages/cap1-daemon/src/routes-machine.test.ts": 4
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "rt4-citation-state-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1
+   },
+   "creatingFiles": {
+    "packages/cap1-daemon/src/routes-machine.test.ts": 4
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "rt4-mach-empty-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1
+   },
+   "creatingFiles": {
+    "packages/cap1-daemon/src/routes-machine.test.ts": 4
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "rt4-mach-invalid-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1
+   },
+   "creatingFiles": {
+    "packages/cap1-daemon/src/routes-machine.test.ts": 4
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "rt4-mach-observed-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 8,
+    "f1-fresh-after-k1": 8,
+    "f2-fresh-after-k2": 8,
+    "f3-fresh-after-k3": 8
+   },
+   "creatingFiles": {
+    "packages/cap1-daemon/src/routes-machine.test.ts": 32
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "rt4-mach-root-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 8,
+    "f1-fresh-after-k1": 8,
+    "f2-fresh-after-k2": 8,
+    "f3-fresh-after-k3": 8
+   },
+   "creatingFiles": {
+    "packages/cap1-daemon/src/routes-machine.test.ts": 32
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "rt4-mach-state-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 10,
+    "f1-fresh-after-k1": 10,
+    "f2-fresh-after-k2": 10,
+    "f3-fresh-after-k3": 10
+   },
+   "creatingFiles": {
+    "packages/cap1-daemon/src/routes-machine.test.ts": 40
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "rt5-human-empty-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1
+   },
+   "creatingFiles": {
+    "packages/cap1-daemon/src/routes-human.test.ts": 4
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "rt5-human-invalid-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1
+   },
+   "creatingFiles": {
+    "packages/cap1-daemon/src/routes-human.test.ts": 4
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "rt5-human-observed-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 13,
+    "f1-fresh-after-k1": 13,
+    "f2-fresh-after-k2": 13,
+    "f3-fresh-after-k3": 13
+   },
+   "creatingFiles": {
+    "packages/cap1-daemon/src/routes-human.test.ts": 52
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "rt5-human-root-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 13,
+    "f1-fresh-after-k1": 13,
+    "f2-fresh-after-k2": 13,
+    "f3-fresh-after-k3": 13
+   },
+   "creatingFiles": {
+    "packages/cap1-daemon/src/routes-human.test.ts": 52
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "rt5-human-state-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 15,
+    "f1-fresh-after-k1": 15,
+    "f2-fresh-after-k2": 15,
+    "f3-fresh-after-k3": 15
+   },
+   "creatingFiles": {
+    "packages/cap1-daemon/src/routes-human.test.ts": 60
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "s-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1,
+    "k2-kill-75s": 1,
+    "k3-kill-115s": 1
+   },
+   "creatingFiles": {
+    "packages/polaris-dossier/src/start-gates.test.ts": 6
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-a08-consent-convention-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 8,
+    "f1-fresh-after-k1": 8,
+    "f2-fresh-after-k2": 8,
+    "f3-fresh-after-k3": 8
+   },
+   "creatingFiles": {
+    "packages/cap1-conformance/src/consent-record-convention.conformance.test.ts": 32
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-capture-cli-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 7,
+    "f1-fresh-after-k1": 7,
+    "f2-fresh-after-k2": 7,
+    "f3-fresh-after-k3": 7
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/capture-test-artifact-main.test.ts": 28
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-dossier-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 2,
+    "f1-fresh-after-k1": 2,
+    "f2-fresh-after-k2": 2,
+    "f3-fresh-after-k3": 2,
+    "k3-kill-115s": 2
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/polaris-generation/dossier-trigger.ts": 10
+   },
+   "rule": "R6-non-test-module",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-dossier-cap-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/polaris-generation/dossier-cap-measure.test.ts": 4
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-dossier-dotgit-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/polaris-generation/dossier-render.test.ts": 4
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-dossier-eval-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 5,
+    "f1-fresh-after-k1": 5,
+    "f2-fresh-after-k2": 5,
+    "f3-fresh-after-k3": 5
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/polaris-generation/dossier-evaluation-main.test.ts": 20
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-dossier-git-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/polaris-generation/dossier-render.test.ts": 4
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-dossier-gitdir-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/polaris-generation/dossier-render.test.ts": 4
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-dossier-link-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/polaris-generation/dossier-render.test.ts": 4
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-dossier-nogit-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/polaris-generation/dossier-render.test.ts": 4
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-dossier-partial-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/polaris-generation/dossier-render.test.ts": 4
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-dossier-real-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/polaris-generation/dossier-render.test.ts": 4
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-dossier-run-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 2,
+    "f1-fresh-after-k1": 2,
+    "f2-fresh-after-k2": 2,
+    "f3-fresh-after-k3": 2
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/polaris-generation/dossier-render.test.ts": 8
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-dossier-src-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 33,
+    "f1-fresh-after-k1": 33,
+    "f2-fresh-after-k2": 33,
+    "f3-fresh-after-k3": 33,
+    "k3-kill-115s": 33
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/polaris-generation/dossier-trigger.ts": 165
+   },
+   "rule": "R6-non-test-module",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-dov32-pages-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1,
+    "k3-kill-115s": 1
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/tuple-encoding.test.ts": 5
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-dov32-proposal-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1,
+    "k3-kill-115s": 1
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/proposal-disclosure.test.ts": 5
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-dov32-state-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1,
+    "k3-kill-115s": 1
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/tuple-encoding.test.ts": 5
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-fixture-names-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 2,
+    "f1-fresh-after-k1": 2,
+    "f2-fresh-after-k2": 2,
+    "f3-fresh-after-k3": 2
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/test-model-fixture.test.ts": 8
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-fixture-sweep-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 15,
+    "f1-fresh-after-k1": 15,
+    "f2-fresh-after-k2": 15,
+    "f3-fresh-after-k3": 15,
+    "k3-kill-115s": 15
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/fixture-directories.test.ts": 75
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-generator-lifecycle-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 4,
+    "f1-fresh-after-k1": 4,
+    "f2-fresh-after-k2": 4,
+    "f3-fresh-after-k3": 4
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts": 16
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-generator-onramp-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1,
+    "k2-kill-75s": 1,
+    "k3-kill-115s": 1
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/polaris-generation/pipeline-demo.test.ts": 6
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-iso-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 8,
+    "f1-fresh-after-k1": 8,
+    "f2-fresh-after-k2": 8,
+    "f3-fresh-after-k3": 8,
+    "k3-kill-115s": 8
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/polaris-generation/repo-corpus-isolation.test.ts": 40
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-iso-empty-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1,
+    "k3-kill-115s": 1
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/polaris-generation/repo-corpus-isolation.test.ts": 5
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-k66p-shared-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/test-model-fixture.test.ts": 4
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-lifecycle-generate-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 16,
+    "f1-fresh-after-k1": 16,
+    "f2-fresh-after-k2": 16,
+    "f3-fresh-after-k3": 16
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts": 64
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-lsremote-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 2,
+    "f1-fresh-after-k1": 2,
+    "f2-fresh-after-k2": 2,
+    "f3-fresh-after-k3": 2,
+    "k3-kill-115s": 1
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/polaris-generation/dossier-trigger.ts": 9
+   },
+   "rule": "R6-non-test-module",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-materialize-home-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 4,
+    "f1-fresh-after-k1": 4,
+    "f2-fresh-after-k2": 4,
+    "f3-fresh-after-k3": 4,
+    "k3-kill-115s": 3
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/polaris-generation/dossier-trigger.ts": 19
+   },
+   "rule": "R6-non-test-module",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-missing-capability-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1,
+    "k3-kill-115s": 1
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/surface-routes.test.ts": 5
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-orrery-geometry-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1,
+    "k3-kill-115s": 1
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/orrery.browser.test.ts": 5
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-poc-butlers-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 14,
+    "f1-fresh-after-k1": 14,
+    "f2-fresh-after-k2": 14,
+    "f3-fresh-after-k3": 14
+   },
+   "creatingFiles": {
+    "packages/three-surface-poc-core/src/model.test.ts": 56
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-poc-butlers-git-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 3,
+    "f1-fresh-after-k1": 3,
+    "f2-fresh-after-k2": 3,
+    "f3-fresh-after-k3": 3
+   },
+   "creatingFiles": {
+    "packages/three-surface-poc-core/src/model.test.ts": 12
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-poc-butlers-git-template-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1
+   },
+   "creatingFiles": {
+    "packages/three-surface-poc-core/src/model.test.ts": 4
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-poc-code-structure-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 6,
+    "f1-fresh-after-k1": 6,
+    "f2-fresh-after-k2": 6,
+    "f3-fresh-after-k3": 6
+   },
+   "creatingFiles": {
+    "packages/three-surface-poc-core/src/code-structure.test.ts": 24
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-poc-conditional-state-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1,
+    "k3-kill-115s": 1
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/routes.test.ts": 5
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-poc-dispatch-parity-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/materialize-action.test.ts": 4
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-poc-empty-seeds-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1
+   },
+   "creatingFiles": {
+    "packages/three-surface-poc-core/src/model.test.ts": 4
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-poc-fact-conditional-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1,
+    "k3-kill-115s": 1
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/routes.test.ts": 5
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-poc-fake-git-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1
+   },
+   "creatingFiles": {
+    "packages/three-surface-poc-core/src/code-structure.test.ts": 4
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-poc-git-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 6,
+    "f1-fresh-after-k1": 6,
+    "f2-fresh-after-k2": 6,
+    "f3-fresh-after-k3": 6,
+    "k3-kill-115s": 6
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/git-observation.test.ts": 30
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-poc-limit-socket-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/response-limits.test.ts": 4
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-poc-materialize-daemon-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 9,
+    "f1-fresh-after-k1": 9,
+    "f2-fresh-after-k2": 9,
+    "f3-fresh-after-k3": 9
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/materialize-action.test.ts": 36
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-poc-materialize-empty-state-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/materialize-action.test.ts": 4
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-poc-materialize-state-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 21,
+    "f1-fresh-after-k1": 21,
+    "f2-fresh-after-k2": 21,
+    "f3-fresh-after-k3": 21
+   },
+   "creatingFiles": {
+    "packages/three-surface-poc-core/src/materialization.test.ts": 52,
+    "apps/three-surface-poc/src/materialize-action.test.ts": 32
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-poc-model-obs-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 3,
+    "f1-fresh-after-k1": 3,
+    "f2-fresh-after-k2": 3,
+    "f3-fresh-after-k3": 3
+   },
+   "creatingFiles": {
+    "packages/three-surface-poc-core/src/model-observations.test.ts": 12
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-poc-opening-index-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1,
+    "k3-kill-115s": 1
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts": 5
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-poc-presentation-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 2,
+    "f1-fresh-after-k1": 2,
+    "f2-fresh-after-k2": 2,
+    "f3-fresh-after-k3": 2
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/polaris-presentation-route.test.ts": 8
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-poc-route-butlers-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 8,
+    "f1-fresh-after-k1": 8,
+    "f2-fresh-after-k2": 8,
+    "f3-fresh-after-k3": 8,
+    "k3-kill-115s": 8
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/routes.test.ts": 40
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-poc-route-injected-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1,
+    "k3-kill-115s": 1
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/routes.test.ts": 5
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-poc-route-state-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 6,
+    "f1-fresh-after-k1": 6,
+    "f2-fresh-after-k2": 6,
+    "f3-fresh-after-k3": 6,
+    "k3-kill-115s": 6
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/routes.test.ts": 30
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-poc-runtime-pages-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1,
+    "k3-kill-115s": 1
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/surface-routes.test.ts": 5
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-poc-runtime-state-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1,
+    "k3-kill-115s": 1
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/surface-routes.test.ts": 5
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-poc-source-route-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 2,
+    "f1-fresh-after-k1": 2,
+    "f2-fresh-after-k2": 2,
+    "f3-fresh-after-k3": 2
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/polaris-source-route.test.ts": 8
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-poc-surface-state-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 4,
+    "f1-fresh-after-k1": 4,
+    "f2-fresh-after-k2": 4,
+    "f3-fresh-after-k3": 4,
+    "k2-kill-75s": 1,
+    "k3-kill-115s": 4
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/surface-routes.test.ts": 21
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-poc-test-artifact-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 5,
+    "f1-fresh-after-k1": 5,
+    "f2-fresh-after-k2": 5,
+    "f3-fresh-after-k3": 5
+   },
+   "creatingFiles": {
+    "packages/three-surface-poc-core/src/test-artifact-verification.test.ts": 20
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-poc-worker-change-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 8,
+    "f1-fresh-after-k1": 8,
+    "f2-fresh-after-k2": 8,
+    "f3-fresh-after-k3": 8,
+    "k3-kill-115s": 8
+   },
+   "creatingFiles": {
+    "packages/three-surface-poc-core/src/worker-change-observation.test.ts": 40
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-poc-worker-change-noorigin-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1,
+    "k3-kill-115s": 1
+   },
+   "creatingFiles": {
+    "packages/three-surface-poc-core/src/worker-change-observation.test.ts": 5
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-production-reobserve-state-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 4,
+    "f1-fresh-after-k1": 4,
+    "f2-fresh-after-k2": 4,
+    "f3-fresh-after-k3": 4,
+    "k3-kill-115s": 4
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/production-reobserve.test.ts": 20
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-public-screen-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 12,
+    "f1-fresh-after-k1": 12,
+    "f2-fresh-after-k2": 12,
+    "f3-fresh-after-k3": 12,
+    "k3-kill-115s": 12
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/polaris-generation/public-source-screening.test.ts": 60
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-pwb-governance-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/governance-inputs.test.ts": 4
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-redis-shaped-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 2,
+    "f1-fresh-after-k1": 2,
+    "f2-fresh-after-k2": 2,
+    "f3-fresh-after-k3": 2,
+    "k3-kill-115s": 2
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/polaris-generation/redis-shaped-measure-main.ts": 10
+   },
+   "rule": "R6-non-test-module",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-redis-shaped-test-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1,
+    "k3-kill-115s": 1
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/polaris-generation/redis-shaped-discovery.test.ts": 5
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-repo-cli-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/polaris-generation/repo-corpus.test.ts": 4
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-rt1-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 22,
+    "f1-fresh-after-k1": 22,
+    "f2-fresh-after-k2": 22,
+    "f3-fresh-after-k3": 22
+   },
+   "creatingFiles": {
+    "packages/cap1-daemon/src/observation.test.ts": 88
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-rt2-consent-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 11,
+    "f1-fresh-after-k1": 11,
+    "f2-fresh-after-k2": 11,
+    "f3-fresh-after-k3": 11
+   },
+   "creatingFiles": {
+    "packages/cap1-daemon/src/consent-loading.test.ts": 44
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-self-corpus-fixture-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1,
+    "k3-kill-115s": 1
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/polaris-generation/self-corpus.test.ts": 5
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-self-corpus-run-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 3,
+    "f1-fresh-after-k1": 3,
+    "f2-fresh-after-k2": 3,
+    "f3-fresh-after-k3": 3,
+    "k3-kill-115s": 3
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/polaris-generation/self-corpus.ts": 15
+   },
+   "rule": "R6-non-test-module",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-svoj-gitlink-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1,
+    "k2-kill-75s": 1,
+    "k3-kill-115s": 1
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/git-blob-batch.test.ts": 6
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-trajectory-narrowing-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 2,
+    "f1-fresh-after-k1": 2,
+    "f2-fresh-after-k2": 2,
+    "f3-fresh-after-k3": 2,
+    "k3-kill-115s": 2
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/trajectory-narrowing.browser.test.ts": 10
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-trigger-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 35,
+    "f1-fresh-after-k1": 35,
+    "f2-fresh-after-k2": 35,
+    "f3-fresh-after-k3": 35,
+    "k3-kill-115s": 35
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/polaris-generation/dossier-trigger.test.ts": 175
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-trigger-cmd-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1,
+    "k3-kill-115s": 1
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/polaris-generation/dossier-trigger.test.ts": 5
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-trigger-iso-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/polaris-generation/dossier-trigger-isolation.test.ts": 4
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-trigger-iso-dst-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/polaris-generation/dossier-trigger-isolation.test.ts": 4
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-trigger-other-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1,
+    "k3-kill-115s": 1
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/polaris-generation/dossier-trigger.test.ts": 5
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  },
+  {
+   "class": "syzygy-trigger-repo-",
+   "family": "mkdtemp",
+   "created": {
+    "c0-clean": 1,
+    "f1-fresh-after-k1": 1,
+    "f2-fresh-after-k2": 1,
+    "f3-fresh-after-k3": 1,
+    "k3-kill-115s": 1
+   },
+   "creatingFiles": {
+    "apps/three-surface-poc/src/polaris-generation/dossier-trigger.test.ts": 5
+   },
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root"
+  }
+ ],
+ "dispositionRules": [
+  {
+   "rule": "R1-fixture-sweep-landed",
+   "disposition": "owner-pid name and sweep",
+   "why": "PR 509 (merged as 7de5dc40): the name carries the creating pid and namespace, and a sweep at the start of the next run removes the dead owners' directories."
+  },
+  {
+   "rule": "R2-chrome-singleton",
+   "disposition": "stated residual",
+   "why": "Chrome makes this directory itself; its name carries no owner. PR 515 removes it when the launching process survives to run its cleanup; a SIGKILLed runner runs none. It can be removed only through the profile's SingletonSocket link (follow-up F1)."
+  },
+  {
+   "rule": "R3-browser-profile",
+   "disposition": "owner-pid name and sweep",
+   "why": "Proposed, not covered by PR 509 or 515: name the profile with the owner pid and extend the sweep to it, reading SingletonSocket and refusing while a process still carries the --user-data-dir marker (follow-up F1). Until then a residual."
+  },
+  {
+   "rule": "R4-vitest-project-directory",
+   "disposition": "stated residual",
+   "why": "Created by vitest itself in its main process (TestProject.tmpDir = join(tmpdir(), nanoid())), before any test runs, so a test-kit root cannot contain it. A run wrapper that sets TMPDIR to an owner-pid root would (follow-up F3)."
+  },
+  {
+   "rule": "R5-npm-compile-cache",
+   "disposition": "stated residual",
+   "why": "Created by npx/npm (module.enableCompileCache), one directory reused by every run, not one per run. Not growing; outside this repository."
+  },
+  {
+   "rule": "R6-non-test-module",
+   "disposition": "test-kit temp root",
+   "why": "Created by a non-test module under apps/ or packages/: operator code that a test runs (dossier-trigger.ts, self-corpus.ts) or test support (test-model-fixture.ts, cdp-browser.ts when no sweep applies). It calls os.tmpdir() at the point of use, which reads TMPDIR then, so a test-kit root installed as TMPDIR in the worker reaches it; the same code run by an operator keeps its directories in the operator's TMPDIR by design."
+  },
+  {
+   "rule": "R7-stale-lock-by-design",
+   "disposition": "stated residual",
+   "why": "A lock file named for the uid and the port, made with O_EXCL by restart.ts (no trace line: the tracer does not wrap open). The code states its intent: \"A stale lock requires operator inspection; the script never guesses that it is safe to remove one.\" A pid-based sweep would contradict that sentence, so no sweep is proposed; the stale lock matters only to a later run on the same port."
+  },
+  {
+   "rule": "R8-creator-unknown",
+   "disposition": "stated residual",
+   "why": "Unknown: no trace line carries the name and no shape rule names it, or the creating call has no frame under the repository root (third-party or Node internals). Not attributed to any file here."
+  },
+  {
+   "rule": "R9-test-file",
+   "disposition": "test-kit temp root",
+   "why": "Created by a test file. The kit's tempDir() (syzygy-bpyt.4.4) makes one owner-pid root per process and every test directory lives under it, so one sweep covers all of them."
+  }
+ ],
+ "namesTheSamplerSawThatNoTraceLineCarries": {
+  "c0-clean": {
+   "npm-compile-cache: node-compile-cache": {
+    "names": 1,
+    "stillThereAtEnd": 1
+   },
+   "vitest-project-directory: nanoid-21": {
+    "names": 7,
+    "stillThereAtEnd": 0
+   },
+   "chrome-singleton: chrome-singleton-directory": {
+    "names": 20,
+    "stillThereAtEnd": 1
+   },
+   "unattributed: syzygy-poc-restart-<n>-<n>.lock": {
+    "names": 10,
+    "stillThereAtEnd": 0
+   }
+  },
+  "f1-fresh-after-k1": {
+   "vitest-project-directory: nanoid-21": {
+    "names": 7,
+    "stillThereAtEnd": 0
+   },
+   "chrome-singleton: chrome-singleton-directory": {
+    "names": 20,
+    "stillThereAtEnd": 3
+   },
+   "unattributed: syzygy-poc-restart-<n>-<n>.lock": {
+    "names": 10,
+    "stillThereAtEnd": 0
+   }
+  },
+  "f2-fresh-after-k2": {
+   "vitest-project-directory: nanoid-21": {
+    "names": 7,
+    "stillThereAtEnd": 0
+   },
+   "chrome-singleton: chrome-singleton-directory": {
+    "names": 18,
+    "stillThereAtEnd": 1
+   },
+   "unattributed: syzygy-poc-restart-<n>-<n>.lock": {
+    "names": 9,
+    "stillThereAtEnd": 0
+   }
+  },
+  "f3-fresh-after-k3": {
+   "vitest-project-directory: nanoid-21": {
+    "names": 7,
+    "stillThereAtEnd": 0
+   },
+   "chrome-singleton: chrome-singleton-directory": {
+    "names": 19,
+    "stillThereAtEnd": 3
+   },
+   "unattributed: syzygy-poc-restart-<n>-<n>.lock": {
+    "names": 10,
+    "stillThereAtEnd": 0
+   }
+  },
+  "k1-kill-40s": {
+   "npm-compile-cache: node-compile-cache": {
+    "names": 1,
+    "stillThereAtEnd": 1
+   },
+   "vitest-project-directory: nanoid-21": {
+    "names": 2,
+    "stillThereAtEnd": 2
+   },
+   "chrome-singleton: chrome-singleton-directory": {
+    "names": 5,
+    "stillThereAtEnd": 1
+   }
+  },
+  "k2-kill-75s": {
+   "npm-compile-cache: node-compile-cache": {
+    "names": 1,
+    "stillThereAtEnd": 1
+   },
+   "vitest-project-directory: nanoid-21": {
+    "names": 4,
+    "stillThereAtEnd": 4
+   },
+   "chrome-singleton: chrome-singleton-directory": {
+    "names": 21,
+    "stillThereAtEnd": 3
+   },
+   "unattributed: syzygy-poc-restart-<n>-<n>.lock": {
+    "names": 5,
+    "stillThereAtEnd": 1
+   }
+  },
+  "k3-kill-115s": {
+   "npm-compile-cache: node-compile-cache": {
+    "names": 1,
+    "stillThereAtEnd": 1
+   },
+   "vitest-project-directory: nanoid-21": {
+    "names": 4,
+    "stillThereAtEnd": 4
+   },
+   "chrome-singleton: chrome-singleton-directory": {
+    "names": 18,
+    "stillThereAtEnd": 2
+   },
+   "unattributed: syzygy-poc-restart-<n>-<n>.lock": {
+    "names": 9,
+    "stillThereAtEnd": 0
+   }
+  }
+ },
+ "samplerAgainstFinalListing": {
+  "c0-clean": {
+   "inListingNotInSampler": [],
+   "inSamplerFinalNotInListing": []
+  },
+  "f1-fresh-after-k1": {
+   "inListingNotInSampler": [],
+   "inSamplerFinalNotInListing": []
+  },
+  "f2-fresh-after-k2": {
+   "inListingNotInSampler": [],
+   "inSamplerFinalNotInListing": []
+  },
+  "f3-fresh-after-k3": {
+   "inListingNotInSampler": [],
+   "inSamplerFinalNotInListing": []
+  },
+  "k1-kill-40s": {
+   "inListingNotInSampler": [],
+   "inSamplerFinalNotInListing": []
+  },
+  "k2-kill-75s": {
+   "inListingNotInSampler": [],
+   "inSamplerFinalNotInListing": []
+  },
+  "k3-kill-115s": {
+   "inListingNotInSampler": [],
+   "inSamplerFinalNotInListing": []
+  }
+ },
+ "staticGrepScope": "git grep -F -l for the quoted stem (' \" or `) in blobs of the commit under apps, packages, scripts and .syzygy, files ending .ts .mts .cts .js .mjs .cjs .py .sh; docs/ is left out because its evidence tools quote prefixes without creating them",
+ "launcherProbe": {
+  "command": "npx vitest --version",
+  "exit": 0,
+  "stdout": "vitest/3.2.7 linux-x64 node-v24.6.0",
+  "leftInTheTempDirectory": [
+   "node-compile-cache"
+  ],
+  "chromeVersions": {
+   "/opt/google/chrome/chrome": "Google Chrome 120.0.6099.224 unknown",
+   "/usr/bin/google-chrome": "Google Chrome 120.0.6099.224"
+  },
+  "vitestSourceLiteral": {
+   "literal": "tmpDir = join(tmpdir(), nanoid());",
+   "files": [
+    {
+     "path": "node_modules/vitest/dist/chunks/cli-api.DVe0nWUx.js",
+     "occurrences": 1,
+     "sha256": "4c2fecfeb976ee9cdf00cf4a03daef462cefd08e0e502b2ce7c1daf3ac540135"
+    }
+   ],
+   "version": "3.2.7"
+  }
+ },
+ "staticCoverage": {
+  "filesWithAStaticSite": 260,
+  "sitesInThem": 591,
+  "byTree": {
+   ".syzygy": {
+    "files": 5,
+    "sites": 5
+   },
+   "apps": {
+    "files": 56,
+    "sites": 104
+   },
+   "docs": {
+    "files": 60,
+    "sites": 85
+   },
+   "packages": {
+    "files": 46,
+    "sites": 71
+   },
+   "scripts": {
+    "files": 93,
+    "sites": 326
+   }
+  },
+  "filesWithASiteThatWasTheInnermostCreatingFrameInSomeRun": 80,
+  "filesWithASiteThatAppearedInSomeFrame": 81,
+  "filesWithASiteNeverSeen": 180,
+  "neverSeenByTree": {
+   ".syzygy": 5,
+   "apps": 14,
+   "docs": 60,
+   "packages": 8,
+   "scripts": 93
+  },
+  "neverSeen": {
+   ".syzygy/governance/contracts/candidates/scripts/build_active_manifest.py": [
+    "(a prefix passed as a variable)"
+   ],
+   ".syzygy/governance/contracts/candidates/scripts/build_budget_report.py": [
+    "(a prefix passed as a variable)"
+   ],
+   ".syzygy/governance/contracts/candidates/scripts/build_contract_index.py": [
+    "(a prefix passed as a variable)"
+   ],
+   ".syzygy/governance/contracts/candidates/scripts/build_dependency_index.py": [
+    "(a prefix passed as a variable)"
+   ],
+   ".syzygy/governance/contracts/candidates/scripts/verify_final_prespec.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "apps/three-surface-poc/src/capture-test-artifact.test.ts": [
+    "(a prefix passed as a variable)"
+   ],
+   "apps/three-surface-poc/src/cdp-browser.test.ts": [
+    "(a prefix passed as a variable)"
+   ],
+   "apps/three-surface-poc/src/cli.test.ts": [
+    "(a prefix passed as a variable)"
+   ],
+   "apps/three-surface-poc/src/fixture-directories.ts": [
+    "(a prefix passed as a variable)"
+   ],
+   "apps/three-surface-poc/src/fresh-checkout-demo-main.ts": [
+    "(a prefix passed as a variable)"
+   ],
+   "apps/three-surface-poc/src/keyboard-sweep-record.test.ts": [
+    "(a prefix passed as a variable)"
+   ],
+   "apps/three-surface-poc/src/poc-main.ts": [
+    "(a prefix passed as a variable)"
+   ],
+   "apps/three-surface-poc/src/polaris-accessibility-main.ts": [
+    "(a prefix passed as a variable)"
+   ],
+   "apps/three-surface-poc/src/polaris-generation/dossier-render-main.ts": [
+    "(a prefix passed as a variable)"
+   ],
+   "apps/three-surface-poc/src/polaris-generation/generation-mutation-run-main.ts": [
+    "(a prefix passed as a variable)"
+   ],
+   "apps/three-surface-poc/src/polaris-keyboard-sweep-main.ts": [
+    "(a prefix passed as a variable)"
+   ],
+   "apps/three-surface-poc/src/pwb-mutation-run-main.ts": [
+    "(a prefix passed as a variable)"
+   ],
+   "apps/three-surface-poc/src/pwb-mutation-sweep-main.ts": [
+    "(a prefix passed as a variable)"
+   ],
+   "apps/three-surface-poc/src/restart.ts": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/fixture-pid-sweep-review-2026-10-24/r1/count_sweeps.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/fixture-pid-sweep-review-2026-10-24/r1/inner_sweep.mjs": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/fixture-pid-sweep-review-2026-10-24/r1/my_kill_probe.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/fixture-pid-sweep-review-2026-10-24/r1/my_mutants.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/fixture-pid-sweep-review-2026-10-24/r1/ns_probe.mjs": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/fixture-pid-sweep-review-2026-10-24/r1/race_probe.mjs": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/fixture-pid-sweep-review-2026-10-24/r1/safety_probe.mjs": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/fixture-pid-sweep-review-2026-10-24/r1/term_probe.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/fixture-pid-sweep-review-2026-10-24/r2/cli_probe.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/fixture-pid-sweep-review-2026-10-24/r2/fixture-directories.built.mjs": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/fixture-pid-sweep-review-2026-10-24/r2/fixture-directories.uid-guard-dropped.mjs": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/fixture-pid-sweep-review-2026-10-24/r2/foreign_owner_probe.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/fixture-pid-sweep-review-2026-10-24/r2/holder.mjs": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/fixture-pid-sweep-review-2026-10-24/r2/kill_probe.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/fixture-pid-sweep-review-2026-10-24/r2/my_mutants.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/fixture-pid-sweep-review-2026-10-24/r2/race_probe.mjs": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/fixture-pid-sweep-review-2026-10-24/r3/cli_probe.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/fixture-pid-sweep-review-2026-10-24/r3/find_mine.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/fixture-pid-sweep-review-2026-10-24/r3/fixture-directories.head.mjs": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/fixture-pid-sweep-review-2026-10-24/r3/fixture-directories.reads-as-0.mjs": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/fixture-pid-sweep-review-2026-10-24/r3/holder.mjs": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/fixture-pid-sweep-review-2026-10-24/r3/kill_probe.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/fixture-pid-sweep-review-2026-10-24/r3/my_mutants.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/fixture-pid-sweep-review-2026-10-24/r3/ns_probe.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/island-decoupling-review-2026-10-22/tools/mutate.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/launch-form-postcondition-review-2026-10-22/tools/compare.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/launch-form-snapshot-review-2026-10-22/tools/fifo_probe.mjs": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/non-human-principal-pins-2026-10-22/mutate_non_human_principal.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/poc-core-hygiene-2026-10-22/export_census.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/poc-core-hygiene-2026-10-22/mutate_census.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/poc-core-hygiene-2026-10-22/mutate_comment_only.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/poc-core-hygiene-2026-10-22/mutate_compare_captures.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/poc-core-hygiene-2026-10-22/route-capture.mjs": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/poc-core-hygiene-2026-10-22/route_capture_leak_check.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/poc-fixture-leak-2026-10-22/cli_sweep_probe.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/poc-fixture-leak-2026-10-22/guard_probe.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/poc-fixture-leak-2026-10-22/interrupt_probe.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/poc-fixture-leak-2026-10-22/kill_then_fresh_run.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/poc-fixture-leak-2026-10-22/mutate_sweep.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/poc-fixture-leak-2026-10-22/ns_holder.mjs": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/poc-fixture-leak-2026-10-22/ns_sandbox_probe.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/poc-hygiene-2026-10-22/assemble_census.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/poc-hygiene-2026-10-22/invocation_forms.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/poc-hygiene-2026-10-22/limb_isolation.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/poc-hygiene-2026-10-22/mutate_main.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/poc-hygiene-2026-10-22/route-capture.mjs": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/poc-hygiene-2026-10-22/run_differential.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/poc-main-wiring-2026-10-22/mutate_comparators.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/poc-main-wiring-2026-10-22/mutate_dist_compare.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/poc-main-wiring-2026-10-22/mutate_sweep_waits.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/poc-main-wiring-2026-10-22/mutate_wiring.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/poc-main-wiring-2026-10-22/run_differential_fixed_roots.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/scratch-prefix-census-2026-10-23/census_run.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/scratch-prefix-census-2026-10-23/scratch_trace.cjs": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/scratch-prefix-census-2026-10-23/static_sites.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/scratch-prefix-census-2026-10-23/trace_fixture.mjs": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/scratch-prefix-census-2026-10-23/trace_selftest.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/syzygy-bpyt-7-2/route-diff.mjs": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/syzygy-bpyt-8-1/mutate.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "docs/evidence/syzygy-bpyt-8-1/regen_check.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts": [
+    "(a prefix passed as a variable)"
+   ],
+   "packages/cap1-system/src/effect-observer.ts": [
+    "(a prefix passed as a variable)"
+   ],
+   "packages/cap1-system/src/harness.ts": [
+    "(a prefix passed as a variable)"
+   ],
+   "packages/polaris-dossier/src/full-run.testkit.ts": [
+    "(a prefix passed as a variable)"
+   ],
+   "packages/polaris-dossier/src/polaris.ts": [
+    "polaris-"
+   ],
+   "packages/polaris-dossier/src/session-view.ts": [
+    "(a prefix passed as a variable)"
+   ],
+   "packages/three-surface-poc-core/src/test-artifact-verification-live-source.test.ts": [
+    "(a prefix passed as a variable)"
+   ],
+   "packages/three-surface-poc-core/src/test-cleanup.test.ts": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/build_cap1_trusted_bootstrap_consent_adoption.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/build_contract_readability_restyle.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/build_dossier_agent_provider_v2.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/build_dossier_local_agent_acts.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/build_general_trusted_bootstrap_impact_ledger.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/build_general_trusted_bootstrap_transaction.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/build_polaris_dependency_unions.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/build_polaris_dossier_local_agent_mode.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/build_polaris_dossier_local_agent_mode_v1_1.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/build_polaris_dossier_local_agent_mode_v1_2.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/build_polaris_edit_repair_deletion_scenario.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/build_provider_route_messages_api_entry.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/build_public_admission_registry_entries.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/build_public_egress_v2.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/build_public_git_source_acquisition_local_agent.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/build_public_repo_admission.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/build_public_source_screening_scope.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/build_public_source_screening_scope_v2.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/build_public_source_screening_scope_v3.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/build_public_source_screening_scope_v4.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/build_pwb_anchor_resolution_amendment.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/build_pwb_behavior_contract_repin.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/build_pwb_behavior_contract_repin_tree_framing.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/build_pwb_class_granular_extraction_amendment.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/build_pwb_container_shape_profile_amendment.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/build_pwb_dismissal_expiry_amendment.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/build_pwb_exact_source_render_mode_amendment.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/build_pwb_item_depth_amendment.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/build_pwb_machine_view_amendment.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/build_pwb_missing_currency_disclosure_scenario.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/build_pwb_opening_band_scenario.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/build_pwb_readability_successor.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/build_pwb_registry_currency_briefing_amendment.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/build_pwb_registry_loaded_profile_amendment.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/build_pwb_registry_machine_ceiling_amendment.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/build_pwb_release_label_amendment.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/build_pwb_scoped_attributes_amendment.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/build_pwb_tree_framing_amendment.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/build_pwb_truth_policy_amendment.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/build_rfc5_project_documentation_class.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/build_rfc7_scoped_values_successor.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/build_spec_policy_readability_restyle.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/build_three_surface_poc_identity_amendment.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/build_three_surface_poc_readability_successor.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/build_three_surface_poc_vocabulary_epistemic_amendment.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/check_docs_review_campaign_partition.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/check_evidence_currency.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/check_governance.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/check_polaris_response_ceiling_reading.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/check_quotations.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/check_spec_reconciliation.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/count_polaris_effective_scenarios.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/install_redis_local_agent_sitting.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/install_redis_sitting.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/launch_gate_results.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/polaris_generator_approval.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/probe_superseded_policy_act_regeneration.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/pwb_requirement_amendment.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/pwb_signed_selftest.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/readability_successor.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/record_contract_readability_restyle.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/record_dossier_agent_provider_v2_act.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/record_dossier_local_agent_acts.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/record_messages_api_route_registry_act.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/record_narrative_profile_adoption.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/record_polaris_understanding_adoption.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/record_public_admission_registry_entries_acts.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/record_public_egress_v2_act.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/record_public_repo_admission_acts.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/record_public_source_screening_scope_act.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/record_public_source_screening_scope_v2_act.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/record_public_source_screening_scope_v3_act.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/record_public_source_screening_scope_v4_act.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/record_pwb_behavior_amendment_acts.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/record_pwb_behavior_contract_repin_acts.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/record_pwb_registry_machine_ceiling_act.py": [
+    ".p114-",
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/record_rfc7_scoped_values_successor.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/record_spec_policy_readability_restyle.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/record_three_surface_poc_readability_successor.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/record_versioned_signoff.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/redis_screening_remeasure.mjs": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/render_launch_administration.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/rerun_rule6_mutants_selected_tests.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/rule6_mutation_runner.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/rule6_timeout_rerun.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/run_line_slot_rule6_mutants.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/run_m13_literal_mutations.mjs": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/run_m7_literal_mutations.mjs": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/run_m9_literal_mutations.mjs": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/simulate_public_source_screening_scope_act.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/simulate_redis_local_agent_sitting.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/simulate_redis_sitting.py": [
+    "(a prefix passed as a variable)"
+   ],
+   "scripts/validate_launch_administration.py": [
+    "(a prefix passed as a variable)"
+   ]
+  }
+ },
+ "exposureRanking": {
+  "run": "c0-clean",
+  "meaning": "expected number of directories of the class present at a uniformly random moment of the clean run (sampler interval 0.5 s); the upper bound counts every name once for a whole sampler interval more than it was seen",
+  "top": [
+   {
+    "class": "nanoid-21",
+    "upperBound": 3.612,
+    "lowerBound": 3.589
+   },
+   {
+    "class": "syzygy-poc-surface-fixture-p<pid>-n<ns>-",
+    "upperBound": 2.624,
+    "lowerBound": 1.313
+   },
+   {
+    "class": "chrome-singleton-directory",
+    "upperBound": 1.438,
+    "lowerBound": 1.373
+   },
+   {
+    "class": "syzygy-poc-surface-fixture-template-p<pid>-n<ns>-",
+    "upperBound": 1.418,
+    "lowerBound": 1.273
+   },
+   {
+    "class": "syzygy-poc-browser-",
+    "upperBound": 1.159,
+    "lowerBound": 1.12
+   },
+   {
+    "class": "node-compile-cache",
+    "upperBound": 1.035,
+    "lowerBound": 1.032
+   },
+   {
+    "class": "syzygy-poc-a11y-",
+    "upperBound": 0.839,
+    "lowerBound": 0.836
+   },
+   {
+    "class": "dossier-records-",
+    "upperBound": 0.71,
+    "lowerBound": 0.169
+   },
+   {
+    "class": "dossier-state-",
+    "upperBound": 0.683,
+    "lowerBound": 0.166
+   },
+   {
+    "class": "dossier-clone-",
+    "upperBound": 0.677,
+    "lowerBound": 0.203
+   },
+   {
+    "class": "dossier-gate-acts-",
+    "upperBound": 0.525,
+    "lowerBound": 0.053
+   },
+   {
+    "class": "syzygy-poc-names-daemon-",
+    "upperBound": 0.428,
+    "lowerBound": 0.402
+   },
+   {
+    "class": "dossier-review-clone-",
+    "upperBound": 0.372,
+    "lowerBound": 0.105
+   },
+   {
+    "class": "dossier-review-state-",
+    "upperBound": 0.366,
+    "lowerBound": 0.099
+   },
+   {
+    "class": "dossier-waiting-",
+    "upperBound": 0.347,
+    "lowerBound": 0.05
+   }
+  ]
+ },
+ "finding": [
+  "[Observed] A SIGKILL of the full run leaves 16 / 34 / 15 entries in the private temp directory (192.3 / 141.7 / 65.4 MB) at 40.0 / 75.0 / 115.0 s into the run, in 27 classes in all; 10 / 26 / 8 Chrome processes survive the kill of the process group, found by the --user-data-dir marker and stopped by pid.",
+  "[Observed] One fresh full run started in each kill's leftovers removed 1 / 10 / 4 of 16 / 34 / 15 entries, all of them of the two classes PR 509 sweeps (syzygy-poc-surface-fixture-p<pid>-n<ns>-, syzygy-poc-surface-fixture-template-p<pid>-n<ns>-); the other 15 / 24 / 11 stayed, in 25 classes.",
+  "[Observed] The seven runs together put 176 classes of entries directly in the temp directory (170 by mkdtemp): 163 by test files, 6 by non-test modules, 1 by cdp-browser.ts (the browser profile), 3 by Chrome, vitest and npm themselves, and 1 lock file made by restart.ts.",
+  "[Observed] The clean run itself leaves 2 entries (chrome-singleton-directory, node-compile-cache); this tree has no PR 515, so a clean run leaves Chrome singleton directories (3 / 1 / 3 in the fresh runs).",
+  "[Inferred] Which classes a given SIGKILL catches depends on what is alive at that moment. The expected number of directories of a class present at a random moment of the clean run is in exposureInTheCleanRun; the prefixes the bead observation names that none of these three kills left (syzygy-dossier-src-, syzygy-poc-surface-state-, syzygy-public-screen-, syzygy-trigger-, syzygy-trigger-repo-) have an upper bound of 0.156 or less, so a kill misses them most of the time and catches them sometimes."
+ ],
+ "followUps": [
+  {
+   "id": "F1",
+   "title": "Name the browser profile for its owner and sweep it with its Chrome directory and its orphan processes",
+   "size": "small in code (one creating file, cdp-browser.ts), not trivially safe",
+   "covers": [
+    "syzygy-poc-browser-",
+    "chrome-singleton-directory"
+   ],
+   "what": "Extend the PR 509 pattern to the syzygy-poc-browser- profile: the owner pid and namespace in its name; a sweep that removes it only when the owner is dead in this namespace, reads the profile's SingletonSocket link to remove the Chrome singleton directory under PR 515's guard, and first stops processes whose arguments carry --user-data-dir=<that profile>/ (SIGTERM, then SIGKILL after a wait: a stopped process ignores SIGTERM, seen once in an earlier set of these runs at a discarded commit, not retained).",
+   "whyNotTriviallySafe": "It deletes recursively and signals processes by argument match; it needs an independent review and shares cdp-browser.ts with PR 515 (open).",
+   "measure": "census_run.py kill run then --seed-tmp-from fresh run: classes syzygy-poc-browser- and chrome-singleton-directory must read stillThere 0 and the marker count 0."
+  },
+  {
+   "id": "F2",
+   "title": "Add a census acceptance criterion to syzygy-bpyt.4.4 (test-kit temp root)",
+   "size": "a comment on an existing bead, no new bead",
+   "covers": [
+    "dossier-signoff-<random>-outside-RAW.md",
+    "syzygy-poc-surface-fixture-p4194305-n4026531836-AbCdEf",
+    "dossier-brief-",
+    "dossier-check-clone-",
+    "dossier-check-empty-",
+    "dossier-check-origin-",
+    "dossier-check-state-",
+    "dossier-choice-",
+    "dossier-cli-",
+    "dossier-clone-",
+    "dossier-clone-link-",
+    "dossier-close-",
+    "dossier-close-credential-",
+    "dossier-close-none-",
+    "dossier-config-",
+    "dossier-cred-",
+    "dossier-design-site-",
+    "dossier-doctrine-",
+    "dossier-evidence-",
+    "dossier-flags-",
+    "dossier-full-clone-",
+    "dossier-gate-acts-",
+    "dossier-head-",
+    "dossier-head-git-",
+    "dossier-inventory-clone-",
+    "dossier-inventory-origin-",
+    "dossier-inventory-state-",
+    "dossier-link-",
+    "dossier-loose-",
+    "dossier-no-egress-",
+    "dossier-not-a-run-",
+    "dossier-origin-",
+    "dossier-other-",
+    "dossier-parent-",
+    "dossier-pointer-",
+    "dossier-records-",
+    "dossier-render-clone-",
+    "dossier-render-origin-",
+    "dossier-render-state-",
+    "dossier-review-clone-",
+    "dossier-review-origin-",
+    "dossier-review-state-",
+    "dossier-root-",
+    "dossier-screen-",
+    "dossier-signoff-",
+    "dossier-state-",
+    "dossier-status-",
+    "dossier-target-",
+    "dossier-template-",
+    "dossier-waiting-",
+    "git-object-reader-",
+    "poc-main-test-",
+    "polaris-draft-browser-",
+    "polaris-launched-",
+    "polaris-marker-",
+    "polaris-view-",
+    "polaris-why-",
+    "preflight-clone-",
+    "preflight-upstream-",
+    "rt3-bind-first-",
+    "rt3-bind-second-",
+    "rt3-cred-",
+    "rt3-diagnostic-",
+    "rt3-pipe-empty-",
+    "rt3-pipe-gone-",
+    "rt3-pipe-invalid-",
+    "rt3-pipe-observed-",
+    "rt3-pipe-root-",
+    "rt3-srv-",
+    "rt3-srv-empty-",
+    "rt3-srv-root-",
+    "rt3-srv-writes-",
+    "rt4-citation-root-",
+    "rt4-citation-state-",
+    "rt4-mach-empty-",
+    "rt4-mach-invalid-",
+    "rt4-mach-observed-",
+    "rt4-mach-root-",
+    "rt4-mach-state-",
+    "rt5-human-empty-",
+    "rt5-human-invalid-",
+    "rt5-human-observed-",
+    "rt5-human-root-",
+    "rt5-human-state-",
+    "s-",
+    "syzygy-a08-consent-convention-",
+    "syzygy-build-output-",
+    "syzygy-capture-cli-",
+    "syzygy-cross-links-pages-",
+    "syzygy-cross-links-state-",
+    "syzygy-dossier-cap-",
+    "syzygy-dossier-dotgit-",
+    "syzygy-dossier-eval-",
+    "syzygy-dossier-git-",
+    "syzygy-dossier-gitdir-",
+    "syzygy-dossier-link-",
+    "syzygy-dossier-nogit-",
+    "syzygy-dossier-partial-",
+    "syzygy-dossier-real-",
+    "syzygy-dossier-run-",
+    "syzygy-dov32-pages-",
+    "syzygy-dov32-proposal-",
+    "syzygy-dov32-state-",
+    "syzygy-fixture-names-",
+    "syzygy-fixture-sweep-",
+    "syzygy-generator-lifecycle-",
+    "syzygy-generator-onramp-",
+    "syzygy-iso-",
+    "syzygy-iso-empty-",
+    "syzygy-k66p-shared-",
+    "syzygy-lifecycle-generate-",
+    "syzygy-missing-capability-",
+    "syzygy-orrery-geometry-",
+    "syzygy-poc-a11y-",
+    "syzygy-poc-a11y-budget-",
+    "syzygy-poc-butlers-",
+    "syzygy-poc-butlers-git-",
+    "syzygy-poc-butlers-git-template-",
+    "syzygy-poc-code-structure-",
+    "syzygy-poc-conditional-state-",
+    "syzygy-poc-dispatch-parity-",
+    "syzygy-poc-empty-seeds-",
+    "syzygy-poc-fact-conditional-",
+    "syzygy-poc-fake-git-",
+    "syzygy-poc-git-",
+    "syzygy-poc-limit-socket-",
+    "syzygy-poc-materialize-daemon-",
+    "syzygy-poc-materialize-empty-state-",
+    "syzygy-poc-materialize-state-",
+    "syzygy-poc-model-obs-",
+    "syzygy-poc-names-",
+    "syzygy-poc-names-daemon-",
+    "syzygy-poc-opening-index-",
+    "syzygy-poc-presentation-",
+    "syzygy-poc-route-butlers-",
+    "syzygy-poc-route-injected-",
+    "syzygy-poc-route-state-",
+    "syzygy-poc-runtime-pages-",
+    "syzygy-poc-runtime-state-",
+    "syzygy-poc-source-route-",
+    "syzygy-poc-surface-state-",
+    "syzygy-poc-test-artifact-",
+    "syzygy-poc-worker-change-",
+    "syzygy-poc-worker-change-noorigin-",
+    "syzygy-private-restart-",
+    "syzygy-production-reobserve-state-",
+    "syzygy-public-screen-",
+    "syzygy-pwb-governance-",
+    "syzygy-redis-shaped-test-",
+    "syzygy-repo-cli-",
+    "syzygy-repo-corpus-",
+    "syzygy-repo-hostile-",
+    "syzygy-rt1-",
+    "syzygy-rt2-consent-",
+    "syzygy-self-corpus-fixture-",
+    "syzygy-svoj-gitlink-",
+    "syzygy-trajectory-narrowing-",
+    "syzygy-trigger-",
+    "syzygy-trigger-cmd-",
+    "syzygy-trigger-iso-",
+    "syzygy-trigger-iso-dst-",
+    "syzygy-trigger-other-",
+    "syzygy-trigger-repo-",
+    "syzygy-dossier-",
+    "syzygy-dossier-src-",
+    "syzygy-lsremote-",
+    "syzygy-materialize-home-",
+    "syzygy-redis-shaped-",
+    "syzygy-self-corpus-run-"
+   ],
+   "what": "After a SIGKILLed full run and one fresh run in the same private TMPDIR, no entry remains except the classes of rules R2, R4, R5 and R7. A mechanism that reaches non-test modules too: the worker setup file assigns process.env.TMPDIR to an owner-pid root, because os.tmpdir() reads TMPDIR at each call. Budget: Chrome's socket path limits TMPDIR to 65 bytes (PR 515); the root adds about 40.",
+   "measure": "the same runs: assemble_census.py leftBySIGKILL lists only R2, R4, R5, R7 classes after the fresh run."
+  },
+  {
+   "id": "F3",
+   "title": "Option, not proposed as small: a run wrapper that gives the whole vitest run an owner-pid TMPDIR",
+   "size": "medium; changes how npm test is run (root manifest)",
+   "covers": [
+    "chrome-singleton-directory",
+    "nanoid-21",
+    "node-compile-cache",
+    "syzygy-poc-restart-<n>-<n>.lock"
+   ],
+   "what": "Children inherit TMPDIR, so vitest's project directories, npm's compile cache, Chrome's singleton directories and the restart lock would all land in one root swept by one rule. Costs: npm's compile cache stops being shared between runs; the 65-byte Chrome budget; the restart lock's by-design stale-lock behaviour is then moot only for killed runs. An owner or coordinator choice."
+  },
+  {
+   "id": "none",
+   "title": "No sweep is proposed for the restart lock",
+   "what": "restart.ts says \"A stale lock requires operator inspection; the script never guesses that it is safe to remove one.\" The lock is named for the uid and the port, not a pid."
+  }
+ ],
+ "limits": [
+  "The tracer wraps mkdtemp, mkdir, writeFile and symlink only (sync, callback and promise forms). A name made by open/openSync, copyFile, rename, link, cp, a stream, or by a process that is not Node has no trace line: it is classed by shape, or by the static stem and labelled inferred.",
+  "The sampler lists the temp directory every 0.5 s. A directory that lives less than that can be missed; the exposure bounds say so.",
+  "Three SIGKILL points (about 25, 50 and 75 percent of a clean run of about 150 s) catch the directories alive at that moment. A class absent from every kill is not thereby safe; its disposition rests on its creating file, not on a leftover.",
+  "The root vitest run only. test:system (packages/cap1-system) and the Python and shell scripts are in the static census, not in any run.",
+  "Runs shared the host with other work (load average at each start is recorded); one fresh run exited 1 on two 5000 ms test timeouts.",
+  "The fresh run after each kill starts in that kill's leftovers renamed into a new private temp directory; the process ids of the dead owners are not reused within the minutes between the runs [Inferred]."
+ ]
+}

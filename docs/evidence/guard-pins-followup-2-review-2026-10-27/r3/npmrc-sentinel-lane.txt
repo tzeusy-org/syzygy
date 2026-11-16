@@ -1,0 +1,27 @@
+strace -f -e trace=openat,open over the lane's npm_alias_probe.py at 93dc0390, HOME=/tmp/r541c-5/sentinel-home (sentinel .npmrc: package-lock=false, loglevel=silly), inherited npm_config_package_lock=false NPM_CONFIG_LOGLEVEL=silly NPM_CONFIG_USERCONFIG=<sentinel>
+trace lines: 49878
+opens naming sentinel-home: 0
+opens of the probe's empty-user-npmrc: 24
+opens of the probe's empty-global-npmrc: 24
+out.json byte-equal to the committed npm-alias-probe.json: yes
+every open naming npmrc (count, path):
+     23 "/home/tze/.nvm/versions/node/v24.6.0/lib/node_modules/npm/npmrc"
+      1 "/tmp/r541c-5/p/case0/.npmrc"
+      1 "/tmp/r541c-5/p/case1/.npmrc"
+      2 "/tmp/r541c-5/p/case10/.npmrc"
+      2 "/tmp/r541c-5/p/case11/.npmrc"
+      2 "/tmp/r541c-5/p/case12/.npmrc"
+      1 "/tmp/r541c-5/p/case13/.npmrc"
+      1 "/tmp/r541c-5/p/case2/.npmrc"
+      2 "/tmp/r541c-5/p/case3/.npmrc"
+      2 "/tmp/r541c-5/p/case4/.npmrc"
+      1 "/tmp/r541c-5/p/case5/.npmrc"
+      2 "/tmp/r541c-5/p/case6/.npmrc"
+      2 "/tmp/r541c-5/p/case7/.npmrc"
+      1 "/tmp/r541c-5/p/case8/.npmrc"
+      2 "/tmp/r541c-5/p/case9/.npmrc"
+     24 "/tmp/r541c-5/p/empty-global-npmrc"
+     24 "/tmp/r541c-5/p/empty-user-npmrc"
+      1 "<scratchpad>/rev-541c/.npmrc"
+the cwd .npmrc open (trace line, result):
+49836:3679989 openat(AT_FDCWD, "<scratchpad>/rev-541c/.npmrc", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)

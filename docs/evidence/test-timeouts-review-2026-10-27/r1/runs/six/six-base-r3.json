@@ -1,0 +1,2584 @@
+{
+ "files": [
+  {
+   "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-537/base/packages/polaris-dossier/src/gate-acts.test.ts",
+   "project": "@syzygy/polaris-dossier",
+   "type": "suite",
+   "name": "packages/polaris-dossier/src/gate-acts.test.ts",
+   "line": null,
+   "mode": "run",
+   "state": "pass",
+   "durationMs": 57700.237309000004,
+   "errors": [],
+   "tasks": [
+    {
+     "type": "suite",
+     "name": "the sitting's acts as gate sources, with no act recorded",
+     "line": 87,
+     "mode": "run",
+     "state": "pass",
+     "durationMs": 9869.271834,
+     "errors": [],
+     "tasks": [
+      {
+       "type": "test",
+       "name": "establish nothing: D9 and the reading not established, the drawer unstated, no statement, no registry entry",
+       "line": 88,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 31.38120700000036,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "follow this checkout's tree: each source absent while its act record is, and established once the sitting records it",
+       "line": 96,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 6942.738434000001,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "follow the tree in either state: no records, every record, and each act alone",
+       "line": 99,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 2894.4812729999994,
+       "errors": []
+      }
+     ],
+     "hookMs": 1
+    },
+    {
+     "type": "suite",
+     "name": "version 2 of the Anthropic statement",
+     "line": 111,
+     "mode": "run",
+     "state": "pass",
+     "durationMs": 4707.918151999998,
+     "errors": [],
+     "tasks": [
+      {
+       "type": "test",
+       "name": "replaces version 1 from its act's instant, one statement for the pair, the OpenAI statement untouched",
+       "line": 113,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 249.4100839999992,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "leaves version 1 alone in force before version 2's instant",
+       "line": 122,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 247.12847600000168,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "is what preflight lists in force, before and after its instant, agreeing with the gate",
+       "line": 127,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 799.4681730000011,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "closes no other gate: D9, the reading, the drawer and the registry sign-off stay established beside it",
+       "line": 138,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 355.333442000001,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "fails closed when its act record has an appended line: version 1 reads withdrawn and version 2 unbound, so the pair has no statement",
+       "line": 147,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 308.1532079999997,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "fails closed when its act record has another supersession: version 1 reads withdrawn and version 2 unbound, so the pair has no statement",
+       "line": 147,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 199.7421609999983,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "fails closed when its act record has another effect: version 1 reads withdrawn and version 2 unbound, so the pair has no statement",
+       "line": 147,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 257.80241300000125,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "fails closed when its act record has a digest in the packet words: version 1 reads withdrawn and version 2 unbound, so the pair has no statement",
+       "line": 147,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 149.6900519999981,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "fails closed once its record changes after the act",
+       "line": 159,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 232.00832100000116,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "is withdrawn by a decisions file naming it by its phrase label, and version 1 does not come back",
+       "line": 171,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 247.3134140000002,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "is withdrawn by a decisions file naming it by its title, and version 1 does not come back",
+       "line": 171,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 259.62822799999776,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "is withdrawn by a decisions file naming it by its act identity, and version 1 does not come back",
+       "line": 171,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 185.37098400000104,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "is withdrawn by a decisions file naming it by its record's path, and version 1 does not come back",
+       "line": 171,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 370.840064,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "reads version 1's act record past only at its exact render, and version 1 reads version 2's the same way",
+       "line": 178,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 219.9536279999993,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "reads past version 1's exact render only at version 1's own file: a byte-identical copy elsewhere names version 2",
+       "line": 186,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 442.22589199999857,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "is the form its recorder writes: the file it writes and the record byte for byte, CONFIRM and CONFIRM WITH EXCEPTIONS",
+       "line": 193,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 181.75556099999812,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "sweeps its artifact by the artifact's own heading",
+       "line": 201,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 1.5518260000026203,
+       "errors": []
+      }
+     ],
+     "hookMs": 1
+    },
+    {
+     "type": "suite",
+     "name": "the sitting's acts as gate sources, once recorded",
+     "line": 228,
+     "mode": "run",
+     "state": "pass",
+     "durationMs": 1200.884685000001,
+     "errors": [],
+     "tasks": [
+      {
+       "type": "test",
+       "name": "establish every source when every act is recorded, none hiding another",
+       "line": 229,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 331.12252199999784,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "consent to one tool with one provider: Codex with Anthropic, or Claude Code with OpenAI, finds no statement",
+       "line": 243,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 21.29666200000065,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "establish only what was recorded: one act alone leaves every other source as it was",
+       "line": 248,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 48.60573000000295,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "state the drawer for redis-redis only",
+       "line": 262,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 1.9064780000007886,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "establish nothing before the acts' instant",
+       "line": 268,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 797.807667000001,
+       "errors": []
+      }
+     ],
+     "hookMs": 0
+    },
+    {
+     "type": "suite",
+     "name": "the sitting's acts fail closed",
+     "line": 277,
+     "mode": "run",
+     "state": "pass",
+     "durationMs": 35667.91643499999,
+     "errors": [],
+     "tasks": [
+      {
+       "type": "test",
+       "name": "refuse D9 once either doctrine file it binds changes, though the record and its act are untouched",
+       "line": 278,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 13.015470000002097,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuse the reading once the direction file changes, and when it is missing",
+       "line": 285,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 36.59784700000091,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuse an in-force record whose table binds other files than the form names, even when an act binds its bytes",
+       "line": 292,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 1256.3191420000003,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuse every act whose record changed after it",
+       "line": 309,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 310.30485399999816,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuse an act another decisions file names: a withdrawal in a form the reader does not define",
+       "line": 320,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 637.9398409999994,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "withdraw a statement another decisions file names by its Record ID, and only that statement",
+       "line": 341,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 301.1744749999998,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "withdraw a statement another decisions file names by its Record ID, in another case and spelling, and only that statement",
+       "line": 341,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 88.89885900000081,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "withdraw a statement another decisions file names by its Subject, and only that statement",
+       "line": 341,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 673.2648169999993,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "withdraw a statement another decisions file names by its Subject in prose, and only that statement",
+       "line": 341,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 509.3295599999983,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "withdraw a statement the aggregate acceptance record names on a Record ID or Subject field line, though not in its prose",
+       "line": 351,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 385.13748099999793,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuse the registry sign-off another decisions file names by its tag",
+       "line": 367,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 195.2142070000009,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuse the registry sign-off another decisions file names by its tag, in another case",
+       "line": 367,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 244.1076209999992,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuse the registry sign-off another decisions file names by the package as signed off, spelled sign-off",
+       "line": 367,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 177.42750800000067,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuse the registry sign-off another decisions file names by the package as signed off, spelled signoff",
+       "line": 367,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 376.1910199999984,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "read the resolved P-104 register row as any other line, and refuse a row that cites the sign-off's tag",
+       "line": 374,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 307.67672599999787,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuse every sitting act whose record has its supersession line removed",
+       "line": 409,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 185.530872000003,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuse every sitting act whose record has another supersession",
+       "line": 409,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 59.009046999999555,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuse every sitting act whose record has its phrase removed",
+       "line": 409,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 256.94010400000116,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuse every sitting act whose record has a phrase whose argument is not the exact digest",
+       "line": 409,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 172.80096200000116,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuse every sitting act whose record has another second provenance line",
+       "line": 409,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 83.90578000000096,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuse every sitting act whose record has a second provenance state",
+       "line": 409,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 160.93311299999914,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuse every sitting act whose record has another effect",
+       "line": 409,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 86.16876300000149,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuse every sitting act whose record has \"Withdrawn by this record.\" appended",
+       "line": 409,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 75.34828600000037,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuse every sitting act whose record has a digest in the owner's selection",
+       "line": 409,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 112.71291299999939,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuse every sitting act whose record has a recording tag for another date",
+       "line": 409,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 291.71714299999803,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuse every sitting act whose record has a blank selection label",
+       "line": 409,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 243.18968099999984,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuse every sitting act whose record has a carriage return in the selection",
+       "line": 409,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 155.7533309999999,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuse the registry sign-off whose record has no Owner selection line",
+       "line": 436,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 296.99591200000214,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuse the registry sign-off whose record has no Review line",
+       "line": 436,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 431.06845500000054,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuse the registry sign-off whose record has no Reviewed commit line",
+       "line": 436,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 444.54023700000107,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuse the registry sign-off whose record has no Disposition line",
+       "line": 436,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 223.9400940000014,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuse the registry sign-off whose record has no Scope A extension line",
+       "line": 436,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 181.7364290000005,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuse the registry sign-off whose record has no \"What this does not do\" section",
+       "line": 436,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 158.50925500000085,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuse the registry sign-off whose record has its supersession line removed",
+       "line": 436,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 621.1720649999988,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuse the registry sign-off whose record has another second provenance line",
+       "line": 436,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 494.64452999999776,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuse the registry sign-off whose record has \"Withdrawn by this record.\" appended",
+       "line": 436,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 433.95500300000276,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuse the registry sign-off whose record has a selection that does not name the Scope A extension",
+       "line": 436,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 456.1740490000011,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuse the registry sign-off whose record has a digest in the selection",
+       "line": 436,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 517.439864,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuse the registry sign-off whose record has CONFIRM WITH EXCEPTIONS and no disposition record",
+       "line": 436,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 295.8102450000006,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuse the registry sign-off whose record has CONFIRM and a disposition record",
+       "line": 436,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 469.0052079999987,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "count a CONFIRM WITH EXCEPTIONS sign-off that names its disposition record",
+       "line": 443,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 408.5527910000019,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "withdraw what a decisions file names by the statement's governance-relative path",
+       "line": 470,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 306.1956460000001,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "withdraw what a decisions file names by the statement's basename",
+       "line": 470,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 451.6293349999978,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "withdraw what a decisions file names by the statement act's phrase label",
+       "line": 470,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 692.550006999998,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "withdraw what a decisions file names by the statement act's title",
+       "line": 470,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 501.96491499999684,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "withdraw what a decisions file names by the Subject spaced after its colons",
+       "line": 470,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 598.3339059999998,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "withdraw what a decisions file names by the Subject with each part quoted",
+       "line": 470,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 526.2039510000031,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "withdraw what a decisions file names by the D9 record's relative path",
+       "line": 470,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 841.4715399999986,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "withdraw what a decisions file names by the D9 act's phrase label",
+       "line": 470,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 579.6980479999984,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "withdraw what a decisions file names by the reading record's basename",
+       "line": 470,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 1479.625758999995,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "withdraw what a decisions file names by the drawer record's basename",
+       "line": 470,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 761.2952329999971,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "withdraw what a decisions file names by the drawer's Subject on a field line",
+       "line": 470,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 583.632958999995,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "withdraw what a decisions file names by the installed entry's basename",
+       "line": 470,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 416.93545299999823,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "withdraw what a decisions file names by the package as signed off at a version",
+       "line": 470,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 534.0184910000025,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "withdraw what a decisions file names by the sign-off record's title",
+       "line": 470,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 532.1622570000036,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "withdraw what a decisions file names by the D9 record's heading",
+       "line": 470,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 373.1043090000021,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "withdraw what a decisions file names by the reading record's heading",
+       "line": 470,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 252.004359999999,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "withdraw what a decisions file names by the drawer record's heading",
+       "line": 470,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 430.3361189999996,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "withdraw what a decisions file names by the statement's heading",
+       "line": 470,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 418.19770900000003,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "withdraw D9 by a decisions file named for its act record, with a body that names nothing",
+       "line": 481,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 506.17681099999754,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "leave the drawer stated when its Subject tuple appears only in prose, as the statements' Effect quotes it",
+       "line": 487,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 46.59237700000085,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuse an act record, and the registry sign-off, with no owner",
+       "line": 504,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 608.3352749999976,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuse an act record, and the registry sign-off, with another owner",
+       "line": 504,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 457.42503599999327,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuse an act record, and the registry sign-off, with no provenance state",
+       "line": 504,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 441.46729900000355,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuse an act record, and the registry sign-off, with another provenance state",
+       "line": 504,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 327.5871229999975,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuse an act record, and the registry sign-off, with no A1 line",
+       "line": 504,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 572.0084410000054,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuse an act record, and the registry sign-off, with an A1 identity",
+       "line": 504,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 589.4019320000007,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuse an act record, and the registry sign-off, with no scope",
+       "line": 504,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 527.5933829999994,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuse an act record, and the registry sign-off, with a wider scope",
+       "line": 504,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 315.3986470000018,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuse an act record, and the registry sign-off, with a second scope",
+       "line": 504,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 320.3303789999991,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuse D9 when its record carries a second table inside a fence",
+       "line": 520,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 241.57766499999707,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuse D9 when its record carries another separator row",
+       "line": 520,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 317.5378039999996,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuse D9 when its record carries a third row",
+       "line": 520,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 304.72837399999844,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "leave the drawer unstated for a record with another subject, even under an act",
+       "line": 534,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 173.3857860000062,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "leave the drawer unstated for a record with another statement, even under an act",
+       "line": 534,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 541.7470710000052,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "leave the drawer unstated for a record with no record id, even under an act",
+       "line": 534,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 665.3439510000026,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "leave the drawer unstated for a record with no record version, even under an act",
+       "line": 534,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 537.0491090000069,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "leave the drawer unstated for a record with a second Record ID line, even under an act",
+       "line": 534,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 1060.3179700000037,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "leave the drawer unstated for a record with a second Subject line, even under an act",
+       "line": 534,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 850.5868870000049,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "carry no act for a statement whose record names another provider, even under an act",
+       "line": 550,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 485.4374419999949,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "carry no act for a statement whose record names another repository, even under an act",
+       "line": 550,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 495.3350090000022,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "carry no act for a statement whose record names another record id, even under an act",
+       "line": 550,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 159.84977000000072,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "carry no act for a statement whose record names another agent tool, even under an act",
+       "line": 550,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 353.56650400000217,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "carry no act for a statement whose record names a second agent tool line, even under an act",
+       "line": 550,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 596.5731879999948,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "carry no act for a statement whose record names no record version, even under an act",
+       "line": 550,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 494.3662239999976,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "carry no act for a statement whose record names a second Record ID line, even under an act",
+       "line": 550,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 212.90683600000193,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "carry no act for a statement whose record names a second Subject line, even under an act",
+       "line": 550,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 347.13258700000006,
+       "errors": []
+      }
+     ],
+     "hookMs": 9
+    },
+    {
+     "type": "suite",
+     "name": "the registry entry's version-tagged sign-off",
+     "line": 559,
+     "mode": "run",
+     "state": "pass",
+     "durationMs": 3634.153858999998,
+     "errors": [],
+     "tasks": [
+      {
+       "type": "test",
+       "name": "refuses once the installed entry changes",
+       "line": 560,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 344.5957679999992,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses a record with another title",
+       "line": 579,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 140.52843700000085,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses a record with another version",
+       "line": 579,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 219.86651500000153,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses a record with another tag",
+       "line": 579,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 145.02607799999532,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses a record with another package",
+       "line": 579,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 375.48834299999726,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses a record with another kind",
+       "line": 579,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 564.797473999999,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses a record with another installed path",
+       "line": 579,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 361.9168009999994,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses a record with another act type",
+       "line": 579,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 438.90443100000266,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses a record with a REVISE verdict",
+       "line": 579,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 158.48898200000258,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses a record with no recording instant",
+       "line": 579,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 164.9133589999983,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses a record with an instant on another day",
+       "line": 579,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 535.7297790000011,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses a record with its SHA-256 only inside a fence",
+       "line": 579,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 182.613652,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "is the form the recorder writes for this package",
+       "line": 584,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 1.0151610000029905,
+       "errors": []
+      }
+     ],
+     "hookMs": 0
+    },
+    {
+     "type": "suite",
+     "name": "the gate forms against the recorders",
+     "line": 591,
+     "mode": "run",
+     "state": "pass",
+     "durationMs": 2073.049092000001,
+     "errors": [],
+     "tasks": [
+      {
+       "type": "test",
+       "name": "read each record at the path its recorder writes it",
+       "line": 596,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 217.23881099999562,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "render each act record byte for byte as render_act does, from the same fields",
+       "line": 602,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 0.7238300000026356,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "render the sign-off record byte for byte as render_record does, from the same fields: CONFIRM",
+       "line": 613,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 916.1082089999982,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "render the sign-off record byte for byte as render_record does, from the same fields: CONFIRM WITH EXCEPTIONS",
+       "line": 613,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 925.3560759999964,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "sweep each artifact by its own heading",
+       "line": 622,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 13.512960000000021,
+       "errors": []
+      }
+     ],
+     "hookMs": 0
+    },
+    {
+     "type": "suite",
+     "name": "altered prose in a byte-exact act record (characterization, syzygy-bpyt.8.10)",
+     "line": 633,
+     "mode": "run",
+     "state": "pass",
+     "durationMs": 543.8434479999996,
+     "errors": [],
+     "tasks": [
+      {
+       "type": "test",
+       "name": "a sitting act (D9): refused once its Effect or limits change or a withdrawal is appended; its selection label is a slot, so other words count",
+       "line": 637,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 137.2352430000028,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "version 2 of the statement: the same verdicts, read by its own form",
+       "line": 649,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 123.20599600000423,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "the registry sign-off: refused once its What-this-records paragraph or its limits change, a withdrawal is appended or its selection drops the Scope A words; other words that keep them count",
+       "line": 663,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 283.33196500000486,
+       "errors": []
+      }
+     ],
+     "hookMs": 0
+    }
+   ],
+   "hookMs": 3,
+   "collectMs": 3757.0241859999996,
+   "setupMs": 169.00279799999987,
+   "prepareMs": 253.77809200000002,
+   "environmentMs": 0.3069909999999254
+  },
+  {
+   "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-537/base/packages/polaris-dossier/src/start-gates.test.ts",
+   "project": "@syzygy/polaris-dossier",
+   "type": "suite",
+   "name": "packages/polaris-dossier/src/start-gates.test.ts",
+   "line": null,
+   "mode": "run",
+   "state": "fail",
+   "durationMs": 62096.12947000001,
+   "errors": [],
+   "tasks": [
+    {
+     "type": "suite",
+     "name": "init: a run that passes every start gate",
+     "line": 184,
+     "mode": "run",
+     "state": "pass",
+     "durationMs": 2048.1471139999994,
+     "errors": [],
+     "tasks": [
+      {
+       "type": "test",
+       "name": "pins the consented HEAD, records the subject and writes only run.json under the state root",
+       "line": 185,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 1264.7347179999997,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "records the clone by its real path, not the path typed: a symlink or a `..` segment is resolved (R-POLARIS-DOSSIER-S3-GATES-2 note 12)",
+       "line": 206,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 192.3293560000002,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "records the clone by its real path when the operator names it through a symbolic link",
+       "line": 216,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 99.79478200000085,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "starts from a clone of a commit with a parent, shallow at exactly that commit",
+       "line": 224,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 201.35304200000064,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "starts from a clone of a root commit shallow at it, or with no shallow file: a root commit has no parent to cut",
+       "line": 231,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 288.3904220000004,
+       "errors": []
+      }
+     ],
+     "hookMs": 2
+    },
+    {
+     "type": "suite",
+     "name": "init: the clone holds the consented commit alone (syzygy-qkea.24)",
+     "line": 241,
+     "mode": "run",
+     "state": "fail",
+     "durationMs": 22774.419164,
+     "errors": [],
+     "tasks": [
+      {
+       "type": "test",
+       "name": "leaves in .git exactly the entries the allowlist names, as the header derives them",
+       "line": 265,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 106.94622499999969,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "starts from a clone whose objects are packed, with a reverse index",
+       "line": 275,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 417.96551,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses a full clone, before reading any object",
+       "line": 281,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 235.08791100000053,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses HEAD on a branch at the consented commit: the branch is a ref",
+       "line": 288,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 462.4691079999993,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses an extra ref, loose or packed",
+       "line": 294,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 380.3493440000002,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses FETCH_HEAD naming another commit, and passes it naming the pinned commit alone",
+       "line": 303,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 206.98412599999938,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses every top-level name the consented form never leaves: commondir, modules, worktrees, pseudo-refs, bisect and rebase state",
+       "line": 312,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 1160.4631979999995,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses objects/info/alternates and http-alternates, as a file or a link, and whatever they name",
+       "line": 329,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 975.0523039999989,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses in the object store anything but loose objects, an empty info/ and paired packs",
+       "line": 344,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 2252.8136699999995,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses unknown files under the allowed directories: hooks that run, grafts, other logs",
+       "line": 366,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 1427.8808480000007,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses logs/HEAD naming any commit but the pinned one or the zero identifier",
+       "line": 378,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 326.6768669999983,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses a symbolic link anywhere under .git, never following it",
+       "line": 386,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 2113.642807999997,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses an allowed name of the wrong kind",
+       "line": 401,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 873.9796040000001,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "reads shallow without following a link, and only as a regular file",
+       "line": 412,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 1091.5517069999987,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses a file over its bound, and a .git with more entries than the walk's bound",
+       "line": 424,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 366.76240900000266,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses a two-commit shallow clone, and a clone shallow at another commit or not shallow",
+       "line": 434,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 1088.370211999998,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses an object store that names an object beyond the pinned commit and its tree",
+       "line": 449,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 1017.2927039999995,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "reads config bounded and without following a link, and admits the [core] keys git init writes on each mainstream platform",
+       "line": 463,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 980.484206000001,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses config naming a remote, a promisor, an include or a command the agent's git would run (R-POLARIS-DOSSIER-CLONE-SHAPE-2 finding 1)",
+       "line": 482,
+       "mode": "run",
+       "state": "fail",
+       "durationMs": 5095.579122000003,
+       "errors": [
+        "Test timed out in 5000ms."
+       ]
+      },
+      {
+       "type": "test",
+       "name": "starts from a clone made with an older git's template, which leaves an empty branches/, or an empty one; refuses anything in branches/",
+       "line": 514,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 902.7345380000042,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses an identifier in FETCH_HEAD or logs/HEAD in upper case or run on, even the pinned commit's",
+       "line": 534,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 704.3210709999985,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "never reads the working tree: an uncommitted change, or a nested repository, does not change the listing or the decision",
+       "line": 548,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 586.406256000002,
+       "errors": []
+      }
+     ],
+     "hookMs": 1
+    },
+    {
+     "type": "suite",
+     "name": "init: every refusal arm (REQ-polaris-generation-033 scenarios \"Clone at an unconsented revision\" and the governed arms)",
+     "line": 565,
+     "mode": "run",
+     "state": "pass",
+     "durationMs": 12102.557615999998,
+     "errors": [],
+     "tasks": [
+      {
+       "type": "test",
+       "name": "refuses before any object read when the observation consent is absent: no act record, naming why",
+       "line": 586,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 219.07133600000088,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses before any object read when the observation consent is ineffective: the consent bytes changed after the act, naming why",
+       "line": 586,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 472.0271319999956,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses before any object read when the observation consent is not in force yet, naming why",
+       "line": 586,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 302.3416900000011,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses before any object read when the observation consent is withdrawn: another decisions file names the record, naming why",
+       "line": 586,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 257.231706999999,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses before any object read when the observation consent is present only as status words in the record, no act (F8), naming why",
+       "line": 586,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 267.3809620000029,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses before any object read when the registry entry is absent",
+       "line": 597,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 347.693468999998,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses before any object read when the registry entry is ineffective: the entry changed after the sign-off",
+       "line": 597,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 262.9614189999993,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses before any object read when the registry entry is withdrawn: another decisions file names it",
+       "line": 597,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 394.5272130000012,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses before any object read when the registry entry is present only as a status word in the entry, no act (F8)",
+       "line": 597,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 213.95005300000048,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses when the signed registry entry names another implementation or no implementation version",
+       "line": 601,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 1767.4050949999946,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses before any object read when the classification and screening policy is absent",
+       "line": 613,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 351.3432230000035,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses before any object read when the classification and screening policy is ineffective: the policy changed after the act",
+       "line": 613,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 279.7140870000003,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "names both the registry entry and the policy when both fail, not only the first",
+       "line": 618,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 126.08654600000591,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses a HEAD the consent does not name, before any object read, listing the consented revisions",
+       "line": 623,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 453.5501690000019,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses a clone whose .git is a gitdir pointer",
+       "line": 629,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 104.55978999999934,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses a listing whose object no longer hashes to its identifier (scenario \"Object store altered after pinning\")",
+       "line": 635,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 156.52081600000383,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses a subject with a .syzygy/ path, not adopted and no per-project statement, after listing the pinned tree",
+       "line": 654,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 324.53864800000156,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses a subject with an openspec/ path and no per-project statement, after listing the pinned tree",
+       "line": 654,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 230.76585100000375,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses a subject with a recorded kernel evidence drawer and no per-project statement, after listing the pinned tree",
+       "line": 654,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 243.09454100000585,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses a subject with a project input that does not say and no per-project statement, after listing the pinned tree",
+       "line": 654,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 187.8827930000043,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "counts a symlink entry named .syzygy in the pinned tree as governing",
+       "line": 661,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 631.8953610000026,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "counts a gitlink entry named openspec in the pinned tree as governing",
+       "line": 661,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 1053.1722329999975,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "treats the production project input as silent: with no statement every subject is refused",
+       "line": 669,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 366.5231330000024,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses a governed subject whose only statement names another provider",
+       "line": 681,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 256.55143299999327,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses a governed subject whose only statement names the provider for another agent tool",
+       "line": 681,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 487.4822140000033,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses a governed subject whose only statement is withdrawn",
+       "line": 681,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 231.3265790000005,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses a governed subject whose only statement has no act",
+       "line": 681,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 369.22029499999917,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses a Codex run with Anthropic against the Claude Code statement: consent is to the declared tool and provider pair",
+       "line": 686,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 260.47174000000086,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "starts a governed or unstated run that relies on an in-force statement, and cites it",
+       "line": 692,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 582.6073960000067,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses a URL with a ref before reading anything",
+       "line": 705,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 225.50997199999983,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses a URL on another host before reading anything",
+       "line": 705,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 212.2744770000063,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses a configuration with an unlimited limit before reading anything",
+       "line": 705,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 216.06284400000004,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses a relative state root before reading anything",
+       "line": 705,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 117.85004599999957,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses a state root inside the clone, or one that contains it",
+       "line": 711,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 128.16962400000193,
+       "errors": []
+      }
+     ],
+     "hookMs": 1
+    },
+    {
+     "type": "suite",
+     "name": "reverifyPinnedRevision: the guard every later step calls (scenario \"Recorded revision altered\")",
+     "line": 719,
+     "mode": "run",
+     "state": "pass",
+     "durationMs": 14045.637381999994,
+     "errors": [],
+     "tasks": [
+      {
+       "type": "test",
+       "name": "passes while every gate stays in force, listing the pinned tree from the recorded clone and deciding the subject again",
+       "line": 757,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 164.3832110000003,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "reads no object when a gate fails",
+       "line": 772,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 271.451396000004,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "shows the label and consent record the live consent gives, never the run record's (R-POLARIS-DOSSIER-S3-GATES-1 finding 2)",
+       "line": 780,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 588.0067090000011,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses when the pinned tree cannot be listed from the recorded clone",
+       "line": 790,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 243.61215499999525,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses when the recorded pin is changed to a commit in the clone the consent does not name",
+       "line": 798,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 747.6846839999998,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses when the consent stops naming the recorded revision",
+       "line": 806,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 938.3351279999988,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses every later step when the observation consent is withdrawn",
+       "line": 820,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 827.1243620000023,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses every later step when the registry entry is withdrawn",
+       "line": 820,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 483.8864379999941,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses every later step when the policy changes after its act",
+       "line": 820,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 887.6360849999983,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "names why the consent is gone when a withdrawal in a form the reader does not define refuses the whole read",
+       "line": 835,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 491.00591899999563,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "names why the consent is gone when the consent bytes changed after the act",
+       "line": 835,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 513.6915049999952,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "names why the consent is gone when the act record removed",
+       "line": 835,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 677.9712159999981,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses when the statement a governed run relies on is withdrawn mid-run",
+       "line": 842,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 944.229207000004,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "re-checks the statement against the run's declared tool: a Codex run with OpenAI keeps its Codex statement, and no Claude Code one stands in",
+       "line": 849,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 396.29300299999886,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "before the brief, selects the statement by the provider the run record declares, and discloses that the provider is Inferred",
+       "line": 868,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 529.860397000004,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "after the brief, refuses a provider or tool that differs from the one the brief record states, reading no object",
+       "line": 874,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 220.5397989999983,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "passes when the brief record states the tool and provider the run record declares; a coordinated edit of both is the disclosed residual",
+       "line": 885,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 763.8824479999967,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses when the brief record exists but states no agent",
+       "line": 897,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 298.07522600000084,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses when the brief record exists but states a provider that is not a string",
+       "line": 897,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 1054.6288120000027,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses when the brief record exists but is not JSON",
+       "line": 904,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 405.7831359999982,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses a run record altered into an invalid shape",
+       "line": 910,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 327.437705999997,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses a pin moved from a non-governed to a governed consented revision",
+       "line": 918,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 574.5160209999958,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses a governed run whose record was downgraded to non-governed, before and after the statement is withdrawn",
+       "line": 932,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 462.1864549999955,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses when the project input in force now records a drawer the run did not start under",
+       "line": 940,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 294.6910690000004,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "passes a pin moved between non-governed consented revisions, and shows the live label of the revision now pinned",
+       "line": 945,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 932.0655719999995,
+       "errors": []
+      }
+     ],
+     "hookMs": 7
+    },
+    {
+     "type": "suite",
+     "name": "preflight",
+     "line": 954,
+     "mode": "run",
+     "state": "pass",
+     "durationMs": 9298.782974000002,
+     "errors": [],
+     "tasks": [
+      {
+       "type": "test",
+       "name": "reports a ready repository, its consented revisions and the clone commands, reading no object",
+       "line": 956,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 217.15853800000332,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "prints clone commands that leave the consented commit alone in the clone",
+       "line": 975,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 761.5207659999942,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "names each missing record and is not ready",
+       "line": 995,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 32.85801499999798,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "reports D9 and the RFC7-20 reading as not established: no owner-act record binds their digests",
+       "line": 1003,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 86.60863499999687,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "reports D9 established on this checkout only once an act record binds it, though the doctrine amendment log records its adoption",
+       "line": 1009,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 6800.981539,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "reports D9 and the RFC7-20 reading established once the sitting's acts bind their records, and only while the bound bytes hold",
+       "line": 1016,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 1396.6763530000026,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses a URL it cannot parse, and never fetches",
+       "line": 1034,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 2.7925240000040503,
+       "errors": []
+      }
+     ],
+     "hookMs": 0
+    },
+    {
+     "type": "suite",
+     "name": "the CLI: preflight and init",
+     "line": 1039,
+     "mode": "run",
+     "state": "pass",
+     "durationMs": 1360.4938919999986,
+     "errors": [],
+     "tasks": [
+      {
+       "type": "test",
+       "name": "init refuses with no state root, there being no default",
+       "line": 1049,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 271.7330389999988,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "init takes the state root from the environment when no flag is given, and the flag over the environment",
+       "line": 1055,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 816.4157669999986,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "init refuses a missing configuration file and prints the refusal in both forms",
+       "line": 1064,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 142.74022599999444,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "exits 2 for [\"init\"]",
+       "line": 1079,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 1.5393329999933485,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "exits 2 for [\"init\",\"/c\"]",
+       "line": 1079,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 1.0657970000029309,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "exits 2 for [\"init\",\"/c\",\"--url\"]",
+       "line": 1079,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 1.039757999998983,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "exits 2 for [\"init\",\"/c\",\"--url\",\"u\",\"--url\",\"v\"]",
+       "line": 1079,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 0.9930179999937536,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "exits 2 for [\"init\",\"/c\",\"--force\"]",
+       "line": 1079,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 0.8823689999990165,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "exits 2 for [\"preflight\"]",
+       "line": 1079,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 1.0577709999924991,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "exits 2 for [\"preflight\",\"https://github.com/redis/redis\",\"--provider\"]",
+       "line": 1079,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 0.8968670000031125,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "preflight exits 0 when ready and 1 when a record is missing, printing the report on stdout both times",
+       "line": 1084,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 121.94783200000529,
+       "errors": []
+      }
+     ],
+     "hookMs": 0
+    }
+   ],
+   "hookMs": 466,
+   "collectMs": 9329.046312999999,
+   "setupMs": 98.58842300000015,
+   "prepareMs": 144.22179200000005,
+   "environmentMs": 0.20795299999986128
+  },
+  {
+   "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-537/base/apps/three-surface-poc/src/polaris-accessibility.browser.test.ts",
+   "project": "@syzygy/three-surface-poc-app",
+   "type": "suite",
+   "name": "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts",
+   "line": null,
+   "mode": "run",
+   "state": "pass",
+   "durationMs": 169229.395854,
+   "errors": [],
+   "tasks": [
+    {
+     "type": "suite",
+     "name": "WCAG contrast arithmetic (pure)",
+     "line": 32,
+     "mode": "run",
+     "state": "pass",
+     "durationMs": 11.57486499999959,
+     "errors": [],
+     "tasks": [
+      {
+       "type": "test",
+       "name": "computes the reference luminances and ratios",
+       "line": 33,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 5.2534310000000914,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "applies the AA thresholds by size and weight",
+       "line": 45,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 0.885164999999688,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "composites alpha over the backdrop and forks candidates at gradients",
+       "line": 54,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 4.709272000000055,
+       "errors": []
+      }
+     ],
+     "hookMs": 1
+    },
+    {
+     "type": "suite",
+     "name": "Polaris keyboard, non-visual and contrast checks in a real browser",
+     "line": 75,
+     "mode": "run",
+     "state": "pass",
+     "durationMs": 169215.159182,
+     "errors": [],
+     "tasks": [
+      {
+       "type": "test",
+       "name": "keeps a separate desktop section rail and an in-flow mobile drawer",
+       "line": 109,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 1385.0307310000007,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "keeps diagram labels legible and flow order unambiguous across widths",
+       "line": 144,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 964.8652409999995,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "opens a linked component guide and can reveal the complete declaration",
+       "line": 174,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 563.2111550000009,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "keeps complete source columns visible while citation targets remain keyboard-reachable",
+       "line": 217,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 1204.6155400000007,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "gives seven early native shortcuts and a complete no-script outline with a truthful live hidden count",
+       "line": 242,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 810.3935990000009,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "activates more fragment links than Chrome's navigation budget, including a second link to the current hash",
+       "line": 287,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 38718.106572,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "observed: every distinction is keyboard-operable, named for assistive technology, and AA-contrasting",
+       "line": 313,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 35642.993657,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "observed-lawful-state-1: every distinction is keyboard-operable, named for assistive technology, and AA-contrasting",
+       "line": 313,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 29805.911995000002,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "observed-degraded-unlawful: every distinction is keyboard-operable, named for assistive technology, and AA-contrasting",
+       "line": 313,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 29355.061734000003,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "not-admitted: every distinction is keyboard-operable, named for assistive technology, and AA-contrasting",
+       "line": 313,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 8507.922013000003,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "observation-failed: every distinction is keyboard-operable, named for assistive technology, and AA-contrasting",
+       "line": 313,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 11768.61765900001,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "not-evaluated: every distinction is keyboard-operable, named for assistive technology, and AA-contrasting",
+       "line": 313,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 7508.508204999991,
+       "errors": []
+      }
+     ],
+     "hookMs": 2980
+    }
+   ],
+   "hookMs": 3,
+   "collectMs": 7321.040172,
+   "setupMs": 32.53543099999996,
+   "prepareMs": 104.90992699999998,
+   "environmentMs": 0.2141250000000241
+  },
+  {
+   "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-537/base/apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+   "project": "@syzygy/three-surface-poc-app",
+   "type": "suite",
+   "name": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+   "line": null,
+   "mode": "run",
+   "state": "pass",
+   "durationMs": 1615.842767000001,
+   "errors": [],
+   "tasks": [
+    {
+     "type": "suite",
+     "name": "Zero downstream citations of Polaris as authority (PWB-REQ-014)",
+     "line": 96,
+     "mode": "run",
+     "state": "pass",
+     "durationMs": 1613.4932510000008,
+     "errors": [],
+     "tasks": [
+      {
+       "type": "test",
+       "name": "no machine reference on the model or its narrative anchors targets the Polaris surface",
+       "line": 97,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 531.5498779999998,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "every OpenSpec warrant entry belongs to a known id family and none targets Polaris (POLARIS-DIR-* ids are owner decisions)",
+       "line": 108,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 107.38457699999981,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "recognizes dossier decision identity syntax without accepting presentation references",
+       "line": 158,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 3.0249449999992066,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "recognizes generator requirement identity syntax without accepting presentation references",
+       "line": 173,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 8.411227000000508,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "no source/authority/provenance field in the governance, spec, code or docs trees names the Polaris surface",
+       "line": 180,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 962.2002080000002,
+       "errors": []
+      }
+     ],
+     "hookMs": 1
+    }
+   ],
+   "hookMs": 2,
+   "collectMs": 6528.562511,
+   "setupMs": 61.791837999999984,
+   "prepareMs": 170.42266600000005,
+   "environmentMs": 0.24555399999997007
+  }
+ ],
+ "unhandled": []
+}

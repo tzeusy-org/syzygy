@@ -1,0 +1,12 @@
+23.98 30.30 29.70 17/9437 365843
+{"id": "Y1-dossier-serve-falls-through", "build": 0, "buildTail": "", "hook": [[{}, 0, true, 200, 6]], "strace": [[0, true, 6]], "de": 16, "deFailed": [], "static": [165, 165]}
+{"id": "Y2-dossier-serve-reenters-main", "build": 0, "buildTail": "", "hook": [[{}, 0, true, 200, 6]], "strace": [[0, true, 6]], "de": 16, "deFailed": [], "static": [165, 165]}
+{"id": "Y3-flag-rewrites-argv-into-dossier", "build": 0, "buildTail": "", "hook": [[{"SYZYGY_PRELOAD_RENDERER": "1"}, 0, true, 200, 6], [{}, 0, true, 200, 0]], "strace": [[0, true, 6]], "de": 16, "deFailed": [], "static": [165, 165]}
+{"id": "Y4-polaris-labelled-break", "build": 0, "buildTail": "", "hook": [[{}, 0, true, 200, 6]], "strace": [[0, true, 6]], "de": 16, "deFailed": [], "static": [165, 165]}
+{"id": "Y5-dossier-serve-callback-after-branch", "build": 0, "buildTail": "", "hook": [[{}, 0, true, 200, 6]], "strace": [[0, true, 6]], "de": 16, "deFailed": [], "static": [165, 165]}
+{"id": "Y1b-dossier-serve-falls-through-no-new-mention", "build": 0, "buildTail": "", "hook": [[{}, 0, true, 200, 6]], "strace": [[0, true, 6]], "de": 16, "deFailed": [], "static": [165, 165]}
+{"id": "Z8-concatenated-specifier-between-branches", "build": 0, "buildTail": "", "hook": [[{"SYZYGY_PRELOAD_RENDERER": "1"}, 0, false, null, 6], [{}, 0, false, null, 0]], "strace": [[0, false, 6]], "de": 16, "deFailed": [], "static": [159, 165]}
+{"id": "Z9-function-in-branch-called-later", "build": 1, "buildTail": "apps/syzygy/src/main.ts(197,58): error TS2304: Cannot find name 'warm'.\n", "hook": [], "strace": [], "de": null, "deFailed": null, "static": [null, null]}
+{"id": "Z10-hoisted-var-in-branch-called-later", "build": 1, "buildTail": "apps/syzygy/src/main.ts(197,58): error TS2454: Variable 'warm' is used before being assigned.\n", "hook": [], "strace": [], "de": null, "deFailed": null, "static": [null, null]}
+exit 0
+38.10 34.79 31.64 18/9611 460043

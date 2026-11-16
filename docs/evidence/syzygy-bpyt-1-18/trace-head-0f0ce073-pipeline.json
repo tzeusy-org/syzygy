@@ -1,0 +1,152 @@
+{
+ "node": "v24.6.0",
+ "maskThreshold": {
+  "LF": "no throw at 400000",
+  "CRLF": "no throw at 400000",
+  "CR": "no throw at 400000"
+ },
+ "direct": {
+  "LF-100000": {
+   "bytes": 200008,
+   "mask": "ok:masked",
+   "scanActiveContent": "ok:object"
+  },
+  "CRLF-100000": {
+   "bytes": 300010,
+   "mask": "ok:masked",
+   "scanActiveContent": "ok:object"
+  },
+  "CR-100000": {
+   "bytes": 200008,
+   "mask": "ok:masked",
+   "scanActiveContent": "ok:object"
+  },
+  "LF-150000": {
+   "bytes": 300008,
+   "mask": "ok:masked",
+   "scanActiveContent": "ok:object"
+  },
+  "CRLF-150000": {
+   "bytes": 450010,
+   "mask": "ok:masked",
+   "scanActiveContent": "ok:object"
+  },
+  "CR-150000": {
+   "bytes": 300008,
+   "mask": "ok:masked",
+   "scanActiveContent": "ok:object"
+  },
+  "LF-200000": {
+   "bytes": 400008,
+   "mask": "ok:masked",
+   "scanActiveContent": "ok:object"
+  },
+  "CRLF-200000": {
+   "bytes": 600010,
+   "mask": "ok:masked",
+   "scanActiveContent": "ok:object"
+  },
+  "CR-200000": {
+   "bytes": 400008,
+   "mask": "ok:masked",
+   "scanActiveContent": "ok:object"
+  }
+ },
+ "buildProjectShape": {
+  "phase-B vision.md LF 100000 lines (200337 bytes)": {
+   "result": "returned:observed",
+   "detail": {
+    "sourceRecord": "classified"
+   },
+   "gitCatFileCalls": 14
+  },
+  "phase-B vision.md CRLF 100000 lines (300339 bytes)": {
+   "result": "returned:observed",
+   "detail": {
+    "sourceRecord": "classified"
+   },
+   "gitCatFileCalls": 14
+  },
+  "phase-B vision.md CR 100000 lines (200337 bytes)": {
+   "result": "returned:observed",
+   "detail": {
+    "sourceRecord": "classified"
+   },
+   "gitCatFileCalls": 14
+  },
+  "phase-B vision.md LF 200000 lines (400337 bytes)": {
+   "result": "returned:observed",
+   "detail": {
+    "sourceRecord": "classified"
+   },
+   "gitCatFileCalls": 14
+  },
+  "phase-B vision.md CRLF 200000 lines (600339 bytes)": {
+   "result": "returned:observed",
+   "detail": {
+    "sourceRecord": "classified"
+   },
+   "gitCatFileCalls": 14
+  },
+  "phase-B vision.md CR 200000 lines (400337 bytes)": {
+   "result": "returned:observed",
+   "detail": {
+    "sourceRecord": "classified"
+   },
+   "gitCatFileCalls": 14
+  },
+  "phase-A root index LF 100000 lines (200198 bytes)": {
+   "result": "returned:observed",
+   "detail": {
+    "sourceRecord": "classified"
+   },
+   "gitCatFileCalls": 14
+  },
+  "phase-A root index CRLF 100000 lines (300200 bytes)": {
+   "result": "returned:observed",
+   "detail": {
+    "sourceRecord": "classified"
+   },
+   "gitCatFileCalls": 14
+  },
+  "phase-A root index CR 100000 lines (200198 bytes)": {
+   "result": "returned:observed",
+   "detail": {
+    "sourceRecord": "classified"
+   },
+   "gitCatFileCalls": 14
+  },
+  "phase-A root index LF 200000 lines (400198 bytes)": {
+   "result": "returned:observed",
+   "detail": {
+    "sourceRecord": "classified"
+   },
+   "gitCatFileCalls": 14
+  },
+  "phase-A root index CRLF 200000 lines (600200 bytes)": {
+   "result": "returned:observed",
+   "detail": {
+    "sourceRecord": "classified"
+   },
+   "gitCatFileCalls": 14
+  },
+  "phase-A root index CR 200000 lines (400198 bytes)": {
+   "result": "returned:observed",
+   "detail": {
+    "sourceRecord": "classified"
+   },
+   "gitCatFileCalls": 14
+  }
+ },
+ "reobserveState": {
+  "result": "reobserved",
+  "priorModelStillServed": false,
+  "captureStillC0": false
+ },
+ "reobserveRouteCount": 2,
+ "reobserveRouteHuman": {
+  "path": "/polaris/reobserve",
+  "credentialClass": "human-open"
+ },
+ "startupStderrLine": "syzygy POC: observation failed (unexpected observation failure (RangeError))"
+}

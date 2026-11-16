@@ -1,0 +1,65 @@
+{
+ "files": [
+  "packages/polaris-dossier/src/cli.test.ts",
+  "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts",
+  "packages/polaris-generation-core/src/secret-redaction.test.ts",
+  "packages/polaris-generation-core/src/public-source-classification.test.ts",
+  "packages/polaris-generation-core/src/public-source-exemption.test.ts",
+  "packages/polaris-dossier/src/screen.test.ts",
+  "packages/support/src/is-record.test.ts",
+  "packages/polaris-dossier/src/iso-of.test.ts"
+ ],
+ "base": {
+  "checkout": "81862261ddbc2b3c8e8481851f3c27129217d477",
+  "tests": 414,
+  "passed": 414,
+  "failed": 0,
+  "testFiles": [
+   "authority-artifact-fields.test.ts",
+   "cli.test.ts",
+   "public-source-classification.test.ts",
+   "public-source-exemption.test.ts",
+   "screen.test.ts",
+   "secret-redaction.test.ts"
+  ],
+  "reportSha256": "c6e3a86c054f4b50a8f3822f083eee8144354760c5a3638435a984724540facd"
+ },
+ "headTestsOnBase": {
+  "checkout": "81862261ddbc2b3c8e8481851f3c27129217d477",
+  "tests": 491,
+  "passed": 490,
+  "failed": [
+   {
+    "file": "cli.test.ts",
+    "name": "no route and no credential sweeps a non-empty population of source files"
+   }
+  ],
+  "testFiles": [
+   "authority-artifact-fields.test.ts",
+   "cli.test.ts",
+   "public-source-classification.test.ts",
+   "public-source-exemption.test.ts",
+   "screen.test.ts",
+   "secret-redaction.test.ts"
+  ],
+  "reportSha256": "d27f387302fbae849ec6ba35bf1af8532c4008a040bf347faa50f15a5e077e79"
+ },
+ "head": {
+  "checkout": "094a3b34ce1b12faa5b977ac967cc61f1af6a3fd",
+  "tests": 551,
+  "passed": 551,
+  "failed": 0,
+  "testFiles": [
+   "authority-artifact-fields.test.ts",
+   "cli.test.ts",
+   "is-record.test.ts",
+   "iso-of.test.ts",
+   "public-source-classification.test.ts",
+   "public-source-exemption.test.ts",
+   "screen.test.ts",
+   "secret-redaction.test.ts"
+  ],
+  "reportSha256": "748ecd38f7890a5c6004de160f4bd94b8af162be7a255594d8cfa56e60443378"
+ },
+ "note": "base: base commit, base tests, the six existing files (the two new ones absent). headTestsOnBase: base commit with the head versions of the six existing test files. head: the repair commit, all eight files."
+}

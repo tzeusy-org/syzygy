@@ -1,0 +1,625 @@
+{
+ "merge": "767588d4e1be3916839d57de5a976fe69885d6f7",
+ "rows": [
+  {
+   "id": "MM0-unmutated",
+   "commit": "767588d4e1be3916839d57de5a976fe69885d6f7",
+   "edits": [],
+   "mergeCheckExit": 0,
+   "pathsEqualToGitsMerge": 5097,
+   "paths": 5098,
+   "differences": [],
+   "resolvedByHand": [
+    "package.json"
+   ],
+   "mergeCheckReports": false,
+   "unionCheck": {
+    "build": {
+     "setEqualsUnion": true,
+     "noDuplicates": true,
+     "oursOrderKept": true,
+     "theirsOrderKept": true,
+     "addedByOurs": [
+      "packages/support"
+     ],
+     "addedByTheirs": [
+      "packages/http-host"
+     ],
+     "lostFromEitherSide": []
+    },
+    "build:poc": {
+     "setEqualsUnion": true,
+     "noDuplicates": true,
+     "oursOrderKept": true,
+     "theirsOrderKept": true,
+     "addedByOurs": [
+      "packages/support"
+     ],
+     "addedByTheirs": [
+      "packages/http-host"
+     ],
+     "lostFromEitherSide": []
+    },
+    "typecheck": {
+     "setEqualsUnion": true,
+     "noDuplicates": true,
+     "oursOrderKept": true,
+     "theirsOrderKept": true,
+     "addedByOurs": [
+      "packages/support"
+     ],
+     "addedByTheirs": [
+      "packages/http-host"
+     ],
+     "lostFromEitherSide": []
+    }
+   },
+   "unionCheckPasses": true
+  },
+  {
+   "id": "MM1-lane-drop-http-host-dependency-line",
+   "commit": "d2feca79ec460aade0b3202bd9da145e1c263897",
+   "edits": [
+    {
+     "op": "write",
+     "path": "apps/three-surface-poc/package.json",
+     "text": "<557 chars>"
+    }
+   ],
+   "mergeCheckExit": 0,
+   "pathsEqualToGitsMerge": 5096,
+   "paths": 5098,
+   "differences": [
+    "apps/three-surface-poc/package.json"
+   ],
+   "resolvedByHand": [
+    "package.json"
+   ],
+   "mergeCheckReports": true,
+   "unionCheck": {
+    "build": {
+     "setEqualsUnion": true,
+     "noDuplicates": true,
+     "oursOrderKept": true,
+     "theirsOrderKept": true,
+     "addedByOurs": [
+      "packages/support"
+     ],
+     "addedByTheirs": [
+      "packages/http-host"
+     ],
+     "lostFromEitherSide": []
+    },
+    "build:poc": {
+     "setEqualsUnion": true,
+     "noDuplicates": true,
+     "oursOrderKept": true,
+     "theirsOrderKept": true,
+     "addedByOurs": [
+      "packages/support"
+     ],
+     "addedByTheirs": [
+      "packages/http-host"
+     ],
+     "lostFromEitherSide": []
+    },
+    "typecheck": {
+     "setEqualsUnion": true,
+     "noDuplicates": true,
+     "oursOrderKept": true,
+     "theirsOrderKept": true,
+     "addedByOurs": [
+      "packages/support"
+     ],
+     "addedByTheirs": [
+      "packages/http-host"
+     ],
+     "lostFromEitherSide": []
+    }
+   },
+   "unionCheckPasses": true
+  },
+  {
+   "id": "MM2-region-drops-http-host-from-build-only",
+   "commit": "0f01a0cf6c8deacb3d9b3dd994771deedcfce40e",
+   "edits": [
+    {
+     "op": "write",
+     "path": "package.json",
+     "text": "<3463 chars>"
+    }
+   ],
+   "mergeCheckExit": 0,
+   "pathsEqualToGitsMerge": 5097,
+   "paths": 5098,
+   "differences": [],
+   "resolvedByHand": [
+    "package.json"
+   ],
+   "mergeCheckReports": false,
+   "unionCheck": {
+    "build": {
+     "setEqualsUnion": false,
+     "noDuplicates": true,
+     "oursOrderKept": true,
+     "theirsOrderKept": false,
+     "addedByOurs": [
+      "packages/support"
+     ],
+     "addedByTheirs": [
+      "packages/http-host"
+     ],
+     "lostFromEitherSide": [
+      "packages/http-host"
+     ]
+    },
+    "build:poc": {
+     "setEqualsUnion": true,
+     "noDuplicates": true,
+     "oursOrderKept": true,
+     "theirsOrderKept": true,
+     "addedByOurs": [
+      "packages/support"
+     ],
+     "addedByTheirs": [
+      "packages/http-host"
+     ],
+     "lostFromEitherSide": []
+    },
+    "typecheck": {
+     "setEqualsUnion": true,
+     "noDuplicates": true,
+     "oursOrderKept": true,
+     "theirsOrderKept": true,
+     "addedByOurs": [
+      "packages/support"
+     ],
+     "addedByTheirs": [
+      "packages/http-host"
+     ],
+     "lostFromEitherSide": []
+    }
+   },
+   "unionCheckPasses": false
+  },
+  {
+   "id": "MM3-region-keeps-ours-only",
+   "commit": "1683e4401f5b33ca03100c8c5827ccd6b5078dc3",
+   "edits": [
+    {
+     "op": "write",
+     "path": "package.json",
+     "text": "<3425 chars>"
+    }
+   ],
+   "mergeCheckExit": 0,
+   "pathsEqualToGitsMerge": 5097,
+   "paths": 5098,
+   "differences": [],
+   "resolvedByHand": [
+    "package.json"
+   ],
+   "mergeCheckReports": false,
+   "unionCheck": {
+    "build": {
+     "setEqualsUnion": false,
+     "noDuplicates": true,
+     "oursOrderKept": true,
+     "theirsOrderKept": false,
+     "addedByOurs": [
+      "packages/support"
+     ],
+     "addedByTheirs": [
+      "packages/http-host"
+     ],
+     "lostFromEitherSide": [
+      "packages/http-host"
+     ]
+    },
+    "build:poc": {
+     "setEqualsUnion": false,
+     "noDuplicates": true,
+     "oursOrderKept": true,
+     "theirsOrderKept": false,
+     "addedByOurs": [
+      "packages/support"
+     ],
+     "addedByTheirs": [
+      "packages/http-host"
+     ],
+     "lostFromEitherSide": [
+      "packages/http-host"
+     ]
+    },
+    "typecheck": {
+     "setEqualsUnion": false,
+     "noDuplicates": true,
+     "oursOrderKept": true,
+     "theirsOrderKept": false,
+     "addedByOurs": [
+      "packages/support"
+     ],
+     "addedByTheirs": [
+      "packages/http-host"
+     ],
+     "lostFromEitherSide": [
+      "packages/http-host"
+     ]
+    }
+   },
+   "unionCheckPasses": false
+  },
+  {
+   "id": "MM4-region-drops-support-from-typecheck",
+   "commit": "8af73475af748b1a34f86c92c68eada27697d643",
+   "edits": [
+    {
+     "op": "write",
+     "path": "package.json",
+     "text": "<3465 chars>"
+    }
+   ],
+   "mergeCheckExit": 0,
+   "pathsEqualToGitsMerge": 5097,
+   "paths": 5098,
+   "differences": [],
+   "resolvedByHand": [
+    "package.json"
+   ],
+   "mergeCheckReports": false,
+   "unionCheck": {
+    "build": {
+     "setEqualsUnion": true,
+     "noDuplicates": true,
+     "oursOrderKept": true,
+     "theirsOrderKept": true,
+     "addedByOurs": [
+      "packages/support"
+     ],
+     "addedByTheirs": [
+      "packages/http-host"
+     ],
+     "lostFromEitherSide": []
+    },
+    "build:poc": {
+     "setEqualsUnion": true,
+     "noDuplicates": true,
+     "oursOrderKept": true,
+     "theirsOrderKept": true,
+     "addedByOurs": [
+      "packages/support"
+     ],
+     "addedByTheirs": [
+      "packages/http-host"
+     ],
+     "lostFromEitherSide": []
+    },
+    "typecheck": {
+     "setEqualsUnion": false,
+     "noDuplicates": true,
+     "oursOrderKept": false,
+     "theirsOrderKept": true,
+     "addedByOurs": [
+      "packages/support"
+     ],
+     "addedByTheirs": [
+      "packages/http-host"
+     ],
+     "lostFromEitherSide": [
+      "packages/support"
+     ]
+    }
+   },
+   "unionCheckPasses": false
+  },
+  {
+   "id": "MM5-region-misorders-support-after-its-importers",
+   "commit": "41e380e79aa6ab9ee2e4528d8154717f12d818ad",
+   "edits": [
+    {
+     "op": "write",
+     "path": "package.json",
+     "text": "<3482 chars>"
+    }
+   ],
+   "mergeCheckExit": 0,
+   "pathsEqualToGitsMerge": 5097,
+   "paths": 5098,
+   "differences": [],
+   "resolvedByHand": [
+    "package.json"
+   ],
+   "mergeCheckReports": false,
+   "unionCheck": {
+    "build": {
+     "setEqualsUnion": true,
+     "noDuplicates": true,
+     "oursOrderKept": false,
+     "theirsOrderKept": true,
+     "addedByOurs": [
+      "packages/support"
+     ],
+     "addedByTheirs": [
+      "packages/http-host"
+     ],
+     "lostFromEitherSide": []
+    },
+    "build:poc": {
+     "setEqualsUnion": true,
+     "noDuplicates": true,
+     "oursOrderKept": true,
+     "theirsOrderKept": true,
+     "addedByOurs": [
+      "packages/support"
+     ],
+     "addedByTheirs": [
+      "packages/http-host"
+     ],
+     "lostFromEitherSide": []
+    },
+    "typecheck": {
+     "setEqualsUnion": true,
+     "noDuplicates": true,
+     "oursOrderKept": true,
+     "theirsOrderKept": true,
+     "addedByOurs": [
+      "packages/support"
+     ],
+     "addedByTheirs": [
+      "packages/http-host"
+     ],
+     "lostFromEitherSide": []
+    }
+   },
+   "unionCheckPasses": false
+  },
+  {
+   "id": "MM6-outside-region-edit-in-package-json",
+   "commit": "d924c82bcd1ce094c720818f384d96b57f9c9e34",
+   "edits": [
+    {
+     "op": "write",
+     "path": "package.json",
+     "text": "<3500 chars>"
+    }
+   ],
+   "mergeCheckExit": 0,
+   "pathsEqualToGitsMerge": 5097,
+   "paths": 5098,
+   "differences": [
+    "package.json"
+   ],
+   "resolvedByHand": [],
+   "mergeCheckReports": true,
+   "unionCheck": {
+    "build": {
+     "setEqualsUnion": true,
+     "noDuplicates": true,
+     "oursOrderKept": true,
+     "theirsOrderKept": true,
+     "addedByOurs": [
+      "packages/support"
+     ],
+     "addedByTheirs": [
+      "packages/http-host"
+     ],
+     "lostFromEitherSide": []
+    },
+    "build:poc": {
+     "setEqualsUnion": true,
+     "noDuplicates": true,
+     "oursOrderKept": true,
+     "theirsOrderKept": true,
+     "addedByOurs": [
+      "packages/support"
+     ],
+     "addedByTheirs": [
+      "packages/http-host"
+     ],
+     "lostFromEitherSide": []
+    },
+    "typecheck": {
+     "setEqualsUnion": true,
+     "noDuplicates": true,
+     "oursOrderKept": true,
+     "theirsOrderKept": true,
+     "addedByOurs": [
+      "packages/support"
+     ],
+     "addedByTheirs": [
+      "packages/http-host"
+     ],
+     "lostFromEitherSide": []
+    }
+   },
+   "unionCheckPasses": true
+  },
+  {
+   "id": "MM7-file-added",
+   "commit": "cc9a2ac722647cf066803128d5f587d1c050bd91",
+   "edits": [
+    {
+     "op": "write",
+     "path": "packages/support/src/extra.ts",
+     "text": "<20 chars>"
+    }
+   ],
+   "mergeCheckExit": 0,
+   "pathsEqualToGitsMerge": 5097,
+   "paths": 5099,
+   "differences": [
+    "packages/support/src/extra.ts"
+   ],
+   "resolvedByHand": [
+    "package.json"
+   ],
+   "mergeCheckReports": true,
+   "unionCheck": {
+    "build": {
+     "setEqualsUnion": true,
+     "noDuplicates": true,
+     "oursOrderKept": true,
+     "theirsOrderKept": true,
+     "addedByOurs": [
+      "packages/support"
+     ],
+     "addedByTheirs": [
+      "packages/http-host"
+     ],
+     "lostFromEitherSide": []
+    },
+    "build:poc": {
+     "setEqualsUnion": true,
+     "noDuplicates": true,
+     "oursOrderKept": true,
+     "theirsOrderKept": true,
+     "addedByOurs": [
+      "packages/support"
+     ],
+     "addedByTheirs": [
+      "packages/http-host"
+     ],
+     "lostFromEitherSide": []
+    },
+    "typecheck": {
+     "setEqualsUnion": true,
+     "noDuplicates": true,
+     "oursOrderKept": true,
+     "theirsOrderKept": true,
+     "addedByOurs": [
+      "packages/support"
+     ],
+     "addedByTheirs": [
+      "packages/http-host"
+     ],
+     "lostFromEitherSide": []
+    }
+   },
+   "unionCheckPasses": true
+  },
+  {
+   "id": "MM8-file-removed",
+   "commit": "709f156aa77c80d5ba2420912c38b7a02214e81d",
+   "edits": [
+    {
+     "op": "remove",
+     "path": "packages/http-host/src/escape-html.ts"
+    }
+   ],
+   "mergeCheckExit": 0,
+   "pathsEqualToGitsMerge": 5096,
+   "paths": 5098,
+   "differences": [
+    "packages/http-host/src/escape-html.ts"
+   ],
+   "resolvedByHand": [
+    "package.json"
+   ],
+   "mergeCheckReports": true,
+   "unionCheck": {
+    "build": {
+     "setEqualsUnion": true,
+     "noDuplicates": true,
+     "oursOrderKept": true,
+     "theirsOrderKept": true,
+     "addedByOurs": [
+      "packages/support"
+     ],
+     "addedByTheirs": [
+      "packages/http-host"
+     ],
+     "lostFromEitherSide": []
+    },
+    "build:poc": {
+     "setEqualsUnion": true,
+     "noDuplicates": true,
+     "oursOrderKept": true,
+     "theirsOrderKept": true,
+     "addedByOurs": [
+      "packages/support"
+     ],
+     "addedByTheirs": [
+      "packages/http-host"
+     ],
+     "lostFromEitherSide": []
+    },
+    "typecheck": {
+     "setEqualsUnion": true,
+     "noDuplicates": true,
+     "oursOrderKept": true,
+     "theirsOrderKept": true,
+     "addedByOurs": [
+      "packages/support"
+     ],
+     "addedByTheirs": [
+      "packages/http-host"
+     ],
+     "lostFromEitherSide": []
+    }
+   },
+   "unionCheckPasses": true
+  },
+  {
+   "id": "MM9-mode-change",
+   "commit": "b19d6d1fd01f4ffbce672314f51071a670723ced",
+   "edits": [
+    {
+     "op": "chmod",
+     "path": "packages/support/src/sha256.ts"
+    }
+   ],
+   "mergeCheckExit": 0,
+   "pathsEqualToGitsMerge": 5096,
+   "paths": 5098,
+   "differences": [
+    "packages/support/src/sha256.ts"
+   ],
+   "resolvedByHand": [
+    "package.json"
+   ],
+   "mergeCheckReports": true,
+   "unionCheck": {
+    "build": {
+     "setEqualsUnion": true,
+     "noDuplicates": true,
+     "oursOrderKept": true,
+     "theirsOrderKept": true,
+     "addedByOurs": [
+      "packages/support"
+     ],
+     "addedByTheirs": [
+      "packages/http-host"
+     ],
+     "lostFromEitherSide": []
+    },
+    "build:poc": {
+     "setEqualsUnion": true,
+     "noDuplicates": true,
+     "oursOrderKept": true,
+     "theirsOrderKept": true,
+     "addedByOurs": [
+      "packages/support"
+     ],
+     "addedByTheirs": [
+      "packages/http-host"
+     ],
+     "lostFromEitherSide": []
+    },
+    "typecheck": {
+     "setEqualsUnion": true,
+     "noDuplicates": true,
+     "oursOrderKept": true,
+     "theirsOrderKept": true,
+     "addedByOurs": [
+      "packages/support"
+     ],
+     "addedByTheirs": [
+      "packages/http-host"
+     ],
+     "lostFromEitherSide": []
+    }
+   },
+   "unionCheckPasses": true
+  }
+ ]
+}

@@ -1,0 +1,42 @@
+{
+ "head8": {
+  "commit": "2df14d7d2580f453da5b61b5681097d1bfc902c3",
+  "loadBefore": "33.97 27.35 26.43 32/9857 1032888",
+  "loadAfter": "43.72 30.64 27.57 56/9893 1045002",
+  "files": 8,
+  "total": 551,
+  "passed": 551,
+  "failed": 0,
+  "reportSha256": "909bd32c0c8bfd7f881c5e8a741aa61021c6398821698c3cea9a00b0e63e2229",
+  "perFile": {
+   "is-record.test.ts": 41,
+   "public-source-classification.test.ts": 183,
+   "public-source-exemption.test.ts": 50,
+   "secret-redaction.test.ts": 38,
+   "cli.test.ts": 60,
+   "iso-of.test.ts": 18,
+   "screen.test.ts": 129,
+   "authority-artifact-fields.test.ts": 32
+  }
+ },
+ "mergedWithMain": {
+  "main": "e4a3a607333614575d0f3c40bcb063dea8fa0177",
+  "localMerge": "d87d129ad3ea6b319f137e7f606eadaa16afe313",
+  "conflicts": 0,
+  "test": "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts",
+  "result": "Tests  32 passed (32)",
+  "loadBefore": "39.78 31.00 27.79 22/9856 1052634",
+  "loadAfter": "40.92 31.39 27.93 31/9931 1054035"
+ },
+ "aafSingleRunAtHead": {
+  "result": "Tests  32 passed (32)",
+  "load": "22.14 23.69 25.54 13/9711 969884"
+ },
+ "hosted": {
+  "checks": "pass 25m7s run 40634720247",
+  "node": "pass 3m36s run 40634720275",
+  "nodeCheckout": "8eb085b7 Merge 2df14d7d2580f453da5b61b5681097d1bfc902c3 into 1a8864d94f825fb7abff04f61a4588f325e2b098",
+  "nodeTests": "5679 passed | 5 skipped (5684)",
+  "nodeTestFiles": "253 passed | 3 skipped (256)"
+ }
+}

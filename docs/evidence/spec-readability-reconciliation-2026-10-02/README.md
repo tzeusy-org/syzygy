@@ -94,7 +94,7 @@ their cells; the current populations are [`census.json`](census.json) (§2).
 
 | Family | Requirements | Scenarios | Identities |
 |---|---|---|---|
-| CAP1-REQ | 42 | 47 | 001–006, 010–016, 020–023, 030–038, 040–046, 050–053, 060–064 |
+| CAP1-REQ | 42 | 47 [57 since 2026-11-04, the consent overlay composed, §13] | 001–006, 010–016, 020–023, 030–038, 040–046, 050–053, 060–064 |
 | POC-REQ | 24 | 24 | 001–004, 010–013, 020–022, 030–032, 040–043, 050–053, 060–061 |
 | PWB-REQ | 17 | 44 [51 since 2026-10-03, §10] | 001–007, 010–016, 020–022 |
 | REQ-polaris-generation (effective) | 31 [as of 2026-10-02] | 182 [as of 2026-10-02] | 001–031 [as of 2026-10-02] |
@@ -225,6 +225,14 @@ or effect permission from adoption.
   ran at (`5a0df90`, the commit that added the checker; no checker input
   changed after it) [superseded 2026-10-02: regenerated at the
   re-derivation commit, §9].
+  [superseded 2026-11-04, `syzygy-hgkq`: the file now names `5ee1c1a1`, an
+  ancestor of `main`, with `scripts/check_spec_reconciliation.py` at blob
+  `0c0a6fb11c7d84b85cf8c8208a9ee600830182b9`; the same 102 of 102 mutants
+  were killed. The first run, which named the pre-rebase `0bc07cc4` (reached
+  by no ref, same checker blob), is kept unchanged as
+  [`selftest-witnesses-first-run-0bc07cc4.json`](selftest-witnesses-first-run-0bc07cc4.json).
+  The two files differ in one row, `addition-aggregate-block`, whose
+  old and new fragments carry tree-derived text.]
 - **Battery:** `--check` and `--selftest` joined the canonical battery in one
   CG-26 edit — the `PROJECT-STATUS.md` block, the hosted workflow
   `.github/workflows/governance-docs.yml` and the count sentence
@@ -394,3 +402,71 @@ sign-off's recording commit by `--regenerate`, never by hand.
   unchanged. Third method: not run [Unknown].
 - **Results** [Observed, `--check` at the recording commit]: R1 to R5 and
   R7 pass; R6 reports the two PWB pins of §10, unchanged.
+
+## 13. The CAP1 consent overlay composed — 2026-11-04
+
+Not a new outcome: the composition of an outcome recorded 2026-10-15,
+which the census had not yet read (`syzygy-5oqc`).
+
+- **The outcome** [Observed]: `cap1-trusted-bootstrap-consent` v1.0,
+  adopted by version tag 2026-10-15. Record:
+  `.syzygy/governance/decisions/CAP1-TRUSTED-BOOTSTRAP-CONSENT-SIGNOFF-v1.0.md`.
+  Its `spec.md` fully replaces CAP1-REQ-011 and CAP1-REQ-046 in the bound
+  Capability 1 file, which stays unedited.
+- **What the checker does** [Observed]: R3 composes the CAP1 population
+  only when that record (package, version 1.0 and its tag line) terminates
+  the overlay; otherwise it counts the bound file alone and fails. Method A
+  parses both files by regular expression and replaces by identifier;
+  method B splices the overlay's blocks into the bound text line by line
+  and parses the result with the line state machine, and the spliced bytes
+  must hash to the `composed_spec_sha256` the adoption builder recorded in
+  the change's `GOVERNING-DEPENDENCIES.json`. Both refuse an overlay that
+  replaces anything but exactly those two identifiers, names one the bound
+  file lacks, carries any level-2 heading but `## MODIFIED Requirements` or
+  any other delta heading, a U+FEFF, a carriage return, or a non-canonical
+  or fenced requirement header. The literal census is 011: 8 and 046: 4
+  scenarios, totals 42 / 57. R4 requires that JSON record's
+  `requirement_count` and source digests and the `ADOPTION.md` figure to
+  agree with the composed census, and scans the change's directory for
+  identifier mentions; R5 requires its `openspec/README.md` row and
+  `PROJECT-STATUS.md` to cite the record.
+- **Figures**: CAP1 42 requirements / 57 scenarios (47 in the bound file
+  alone); [`census.json`](census.json) regenerated. POC, PWB and Polaris
+  unchanged. Third method: the adoption builder's own figure in
+  `ADOPTION.md`, a separate program, agrees (R4).
+- **Known residue**: `ADOPTION.md` still says the checker "still counts
+  the bound file alone for CAP1"; it is generated and tag-bound, so it is
+  read as of 2026-10-15 and not edited.
+- **Results** [Observed, `--check` at the recording commit]: R1 to R5 and
+  R7 pass; R6 reports the two PWB pins of §10, unchanged. Mutants: the
+  `cap1-overlay-*` rows of
+  [`selftest-witnesses.json`](selftest-witnesses.json).
+
+
+## 14. The dossier local-agent v1.4 sign-off — 2026-11-06
+
+[Observed] The [dedicated record](../../../.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.4.md)
+owns the actual owner selection, the exact reviewed package and the version
+binding. The existing recorder applied the three reviewed spec, design and
+proposal patches over signed v1.3 and wrote the dedicated record and
+aggregate block. Predecessor records and reviewed candidate bytes remain
+unchanged. The inherited Version 1.3 design/proposal navigation headings
+remain as disclosed in the [two retained notes](../../reviews/R-MEA10-10-V14-59768e6f-FINAL-NOTES.md);
+the controlling specification and binding name version 1.4.
+
+[Observed] `check_spec_reconciliation.py --regenerate` wrote the local-agent
+addition's generated `GOVERNING-DEPENDENCIES.md` and [census.json](census.json).
+The effective Polaris composition is 36 requirements and 257 scenarios;
+REQ-polaris-generation-034 gains three scenarios, with requirement identities
+unchanged. The generated union adds the already recorded P115 later-signed-input
+owner direction from the reviewed warrants. Signed base and understanding
+unions are untouched. The checker continues to derive the populations by
+its two independent methods; this entry records regeneration, not a
+clean-battery verdict.
+
+[Observed] Version 1.4's recording authorizes no runtime implementation,
+source read, provider, consent or broader recorder-binding change. The
+installed runtime's empty-cell rendering and other separately tracked
+implementation residuals retain their own owners. P115's accepted
+classification cost remains, without re-signing its act. Installed-commit
+verification is separate evidence bound to the commit it actually checks.

@@ -1,0 +1,167 @@
+{
+ "bead": "syzygy-bpyt.6.15",
+ "base": "bb05df7ea409039c5a6465e7179f9d0c66931ad3",
+ "head": "f207d758eb11830eda2831caa911011e84a966b7",
+ "subject": [
+  "apps/three-surface-poc/src/git-observation.test.ts",
+  "apps/three-surface-poc/src/git-observation.ts"
+ ],
+ "subjectSha256": {
+  "apps/three-surface-poc/src/git-observation.test.ts": "9f10eee74a233de42dbfa1bc3eddf17ab69930fdd04b30bc4d9b5bc22d96a48f",
+  "apps/three-surface-poc/src/git-observation.ts": "993783b1045f1027134f59bce6d4cde47fb667702dd6914066c0d25454db9913"
+ },
+ "gate": {
+  "paths": 5598,
+  "refused": {
+   "base": 319,
+   "head": 328
+  },
+  "differing": [
+   "packages/support/package.json",
+   "packages/support/src/deep-freeze.test.ts",
+   "packages/support/src/deep-freeze.ts",
+   "packages/support/src/index.ts",
+   "packages/support/src/new.ts",
+   "packages/support/src/sha256.test.ts",
+   "packages/support/src/sha256.ts",
+   "packages/support/src/support-purity.test.ts",
+   "packages/support/tsconfig.json"
+  ]
+ },
+ "closure": {
+  "base": {
+   "reachable": 106,
+   "inputs": 116,
+   "unprotected": [
+    "packages/support/src/deep-freeze.ts",
+    "packages/support/src/index.ts",
+    "packages/support/src/sha256.ts",
+    "packages/support/package.json",
+    "packages/support/tsconfig.json"
+   ]
+  },
+  "head": {
+   "reachable": 106,
+   "inputs": 116,
+   "unprotected": []
+  }
+ },
+ "mutants": {
+  "V12-gate-prefix-src-and-manifest-only@base": {
+   "outcome": "survived",
+   "failed": [],
+   "totalTests": 580
+  },
+  "V12-gate-prefix-src-and-manifest-only@head": {
+   "outcome": "killed",
+   "failed": [
+    "apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every file of each protected package, its manifest and tsconfig among them",
+    "apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every module and package the POC daemon imports"
+   ],
+   "totalTests": 582
+  },
+  "V14-gate-cap1-daemon-prefix-narrowed-to-src@base": {
+   "outcome": "survived",
+   "failed": [],
+   "totalTests": 35
+  },
+  "V14-gate-cap1-daemon-prefix-narrowed-to-src@head": {
+   "outcome": "killed",
+   "failed": [
+    "apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every file of each protected package, its manifest and tsconfig among them"
+   ],
+   "totalTests": 37
+  },
+  "V15-gate-three-surface-core-prefix-narrowed-to-src@base": {
+   "outcome": "survived",
+   "failed": [],
+   "totalTests": 35
+  },
+  "V15-gate-three-surface-core-prefix-narrowed-to-src@head": {
+   "outcome": "killed",
+   "failed": [
+    "apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every file of each protected package, its manifest and tsconfig among them",
+    "apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every module and package the POC daemon imports"
+   ],
+   "totalTests": 37
+  },
+  "O1-support-prefix-dropped@head": {
+   "outcome": "killed",
+   "failed": [
+    "apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every file of each protected package, its manifest and tsconfig among them",
+    "apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every module and package the POC daemon imports"
+   ],
+   "totalTests": 13
+  },
+  "O2-support-prefix-narrowed-to-src@head": {
+   "outcome": "killed",
+   "failed": [
+    "apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every file of each protected package, its manifest and tsconfig among them",
+    "apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every module and package the POC daemon imports"
+   ],
+   "totalTests": 13
+  },
+  "O3-unprefixed-package-imported-statically@head": {
+   "outcome": "killed",
+   "failed": [
+    "apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every module and package the POC daemon imports"
+   ],
+   "totalTests": 13
+  },
+  "O4-unprefixed-package-imported-dynamically-from-core@head": {
+   "outcome": "killed",
+   "failed": [
+    "apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every module and package the POC daemon imports"
+   ],
+   "totalTests": 13
+  },
+  "O5-unresolvable-workspace-specifier@head": {
+   "outcome": "killed",
+   "failed": [
+    "apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every module and package the POC daemon imports"
+   ],
+   "totalTests": 13
+  },
+  "O6-cap1-daemon-prefix-dropped@head": {
+   "outcome": "killed",
+   "failed": [
+    "apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation allows unrelated dirty files while protecting POC runtime inputs",
+    "apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every file of each protected package, its manifest and tsconfig among them"
+   ],
+   "totalTests": 13
+  }
+ },
+ "tests": {
+  "titlesBase": 1134,
+  "titlesHead": 1136,
+  "run": {
+   "total": 1138,
+   "passed": 1136,
+   "failed": 0,
+   "skipped": 2,
+   "files": 91,
+   "load1": 49.1
+  },
+  "distAbsent": {
+   "total": 37,
+   "passed": 37,
+   "failed": 0
+  }
+ },
+ "surfaceVersion": {
+  "base": "polaris@e4fd613eed56",
+  "head": "polaris@3f91047d44cf",
+  "moves": true,
+  "why": "apps/three-surface-poc/src holds both subject files; the core tree is unchanged"
+ },
+ "runnerSha256": "fe8ae4e5456c957435954fa368ff075ec31c783766e95c602e1bda3410144dac",
+ "toolsSha256": {
+  "closure.mjs": "5fda58ec3639d53358796733c55bc35ef025e722c82cbcaa136e0758c148becf",
+  "dist_absent.py": "ecfc254e8f48bebf7d756583002a6dfc2f812bc4f1173c31e73d692011cac72d",
+  "gate_diff.py": "5b42cd12e2696cdfe8f33fc95ad4f9820f024dba5e260756a77d1de3a739e597",
+  "record.py": "f440214a6f0b32d6f65599071198516931ec5e2d0bf8353f845c3dc7c3018253",
+  "suite_run.py": "af1877fc7d14ec5bc6be7221a51a78178891c9b25f913e7928a751ec2658b1b8",
+  "titles.py": "f5dbb3ae5baa8c2c86fb7deef4e04428fcc5b5f5aefc7536df41da03f7a5114c"
+ },
+ "problems": []
+}

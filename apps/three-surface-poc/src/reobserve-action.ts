@@ -1,4 +1,4 @@
-import { escapeHtml, type Route, type RouteResponse } from '@syzygy/cap1-daemon';
+import { escapeHtml, type Route, type RouteResponse } from '@syzygy/http-host';
 import type { Reevaluation } from '@syzygy/three-surface-poc-core';
 
 import { browserRequestAllowed } from './browser-origin.js';

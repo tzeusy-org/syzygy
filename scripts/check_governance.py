@@ -1828,6 +1828,25 @@ DOSSIER_PROVIDER_V2_ACT_RECORDS = {
     "CONSENT TO ANTHROPIC AGENT PROVIDER VERSION 2 FOR REDIS":
         f"{DECISIONS}/DOSSIER-AGENT-PROVIDER-V2-REDIS-ANTHROPIC-ACT.md",
 }
+#: The launch-consent write consent (`syzygy-pdja.22`): one state-(1) act over
+#: the one row of its manifest, a write consent (RFC5-12; SEC-4) letting Syzygy
+#: add launch consent records on one dedicated, non-trunk branch. Registered
+#: before its packet exists so a stale argument copy fails CG-7d and CG-7e;
+#: existence-gated on the manifest. The performed record, any chain link and
+#: the recorder arrive with the act.
+LAUNCH_WRITE_CONSENT_DIR = f"{CANDIDATES}/launch-consent-write-consent"
+LAUNCH_WRITE_CONSENT_MANIFEST = f"{LAUNCH_WRITE_CONSENT_DIR}/LAUNCH-CONSENT-WRITE-CONSENT-MANIFEST.txt"
+LAUNCH_WRITE_CONSENT_ACTS = (
+    ("CONSENT TO WRITE LAUNCH CONSENT RECORDS ON THE DEDICATED BRANCH",
+     f"{LAUNCH_WRITE_CONSENT_DIR}/instances/syzygy/WRITE-CONSENT-LAUNCH-RECORDS.md"),
+)
+#: The act's dedicated record, written by
+#: `record_launch_consent_write_consent_act.py` (performed 2026-11-08); it
+#: and the aggregate become copy files once the record exists.
+LAUNCH_WRITE_CONSENT_ACT_RECORDS = {
+    "CONSENT TO WRITE LAUNCH CONSENT RECORDS ON THE DEDICATED BRANCH":
+        f"{DECISIONS}/LAUNCH-CONSENT-WRITE-CONSENT-ACT.md",
+}
 DOSSIER_LOCAL_AGENT_ACT_RECORDS = {
     "STATE NO KERNEL EVIDENCE DRAWER FOR REDIS-REDIS":
         f"{DECISIONS}/DOSSIER-LOCAL-AGENT-REDIS-NO-EVIDENCE-DRAWER-ACT.md",
@@ -1892,12 +1911,41 @@ PWB_EFFECT_AMENDMENT_ACTS = (
      f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V3-ACT.md",
      f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V4-ACT.md",
      "c13bd56c70698ccdf55fa2b0a81ed51f4b3f385848d5eccd97b8be3cfad48fce"),
+    # The version-5 screening-scope act (P-116, variant bcd, 2026-11-03) supersedes the
+    # version-4 act for the policy subject.
+    (PWB_EFFECT_ACTS[1][0], PWB_EFFECT_ACTS[1][1],
+     f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V4-ACT.md",
+     f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V5-ACT.md",
+     "319e404ee413220550d65644f6c93db096ed1cda431760baec70a1e190adb0bd"),
+    # The version-6 screening-scope act (syzygy-mcs4, variant p, 2026-11-05) supersedes the
+    # version-5 act for the policy subject.
+    (PWB_EFFECT_ACTS[1][0], PWB_EFFECT_ACTS[1][1],
+     f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V5-ACT.md",
+     f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V6-ACT.md",
+     "e8a2f4f375fcf3ce1db753a5a30f77dbf961fab2115185946e8067f64ae5fe2b"),
+    # The version-7 screening-scope act (syzygy-pdja.5, variant s, 2026-11-06) supersedes the
+    # version-6 act for the policy subject.
+    (PWB_EFFECT_ACTS[1][0], PWB_EFFECT_ACTS[1][1],
+     f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V6-ACT.md",
+     f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V7-ACT.md",
+     "c44058c02c244e8460c1e33ab01f0343ed0612043d7bf53e0d36410c9f9ebfa2"),
     # P-114's one registry row supersedes act B; all old copies stay history.
     (PWB_EFFECT_ACTS[2][0], PWB_EFFECT_ACTS[2][1],
      f"{DECISIONS}/PWB-OBSERVER-REGISTRY-BEHAVIOR-CONTRACT-REPIN-ACT.md",
      f"{DECISIONS}/PWB-OBSERVER-REGISTRY-MACHINE-CEILING-ACT.md",
      "ad9cd6769bffbb1a3ef94625c73226dec133fb7c9f1e0bc40186b09b15e165fa"),
 )
+#: The version-8 screening-scope act (syzygy-pdja.21, variant pv, private sources) supersedes the
+#: version-7 act for the policy subject. Registered with the recorder and gated on the performed
+#: record: the link, and the version-7 manifest's pinning as history, exist only once the act does.
+PUBLIC_SOURCE_SCOPE_V8_ACT_PATH = f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V8-ACT.md"
+if os.path.isfile(os.path.join(ROOT, PUBLIC_SOURCE_SCOPE_V8_ACT_PATH)):
+    PWB_EFFECT_AMENDMENT_ACTS = PWB_EFFECT_AMENDMENT_ACTS + (
+        (PWB_EFFECT_ACTS[1][0], PWB_EFFECT_ACTS[1][1],
+         f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V7-ACT.md",
+         PUBLIC_SOURCE_SCOPE_V8_ACT_PATH,
+         "626be0cadc248b9ca9b3165d51f97d39aec552eb3a97b8b7df21d2446fc233da"),
+    )
 #: For a chained amendment row, the package that offered the predecessor
 #: amendment: its files hold the predecessor's argument as history once the
 #: later link is performed ("row" = manifest row, "phrase" = phrase line).
@@ -1938,6 +1986,18 @@ PWB_EFFECT_AMENDMENT_OFFERINGS = {
     f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V3-ACT.md": {
         f"{CANDIDATES}/public-source-screening-scope-v3/PUBLIC-SOURCE-SCREENING-SCOPE-V3-MANIFEST.txt": "variant-row",
     },
+    # The version-4 screening-scope act was offered the same way (variant row of its manifest).
+    f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V4-ACT.md": {
+        f"{CANDIDATES}/public-source-screening-scope-v4/PUBLIC-SOURCE-SCREENING-SCOPE-V4-MANIFEST.txt": "variant-row",
+    },
+    # The version-5 screening-scope act was offered the same way (variant row of its manifest).
+    f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V5-ACT.md": {
+        f"{CANDIDATES}/public-source-screening-scope-v5/PUBLIC-SOURCE-SCREENING-SCOPE-V5-MANIFEST.txt": "variant-row",
+    },
+    # The version-6 screening-scope act was offered the same way (variant row of its manifest).
+    f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V6-ACT.md": {
+        f"{CANDIDATES}/public-source-screening-scope-v6/PUBLIC-SOURCE-SCREENING-SCOPE-V6-MANIFEST.txt": "variant-row",
+    },
 }
 PWB_STATE1_SUBJECTS = tuple(sorted((
     "openspec/changes/polaris-project-wide-butlers-model/.openspec.yaml",
@@ -1957,6 +2017,11 @@ PWB_STATE1_SUBJECTS = tuple(sorted((
     "openspec/changes/polaris-project-wide-butlers-model/"
     "contract-coverage-matrix/RFC-0007-0009.md",
 )))
+if os.path.isfile(os.path.join(ROOT, PUBLIC_SOURCE_SCOPE_V8_ACT_PATH)):
+    # The version-7 screening-scope act was offered the same way (variant row of its manifest).
+    PWB_EFFECT_AMENDMENT_OFFERINGS[f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V7-ACT.md"] = {
+        f"{CANDIDATES}/public-source-screening-scope-v7/PUBLIC-SOURCE-SCREENING-SCOPE-V7-MANIFEST.txt": "variant-row",
+    }
 #: The truth-and-readiness amendment binds the same closed eleven-path
 #: population as the state-(1) amendment; only the bytes differ.
 PWB_TRUTH_AMENDMENT_SUBJECTS = PWB_STATE1_SUBJECTS
@@ -2106,6 +2171,10 @@ POC_VERSIONED_SUCCESSORS = (
      f"{DECISIONS}/THREE-SURFACE-POC-VOCABULARY-EPISTEMIC-AMENDMENT-SIGNOFF-v1.0.md",
      f"{CANDIDATES}/three-surface-poc-vocabulary-epistemic-amendment/"
      "THREE-SURFACE-POC-VOCABULARY-EPISTEMIC-AMENDMENT-MANIFEST.txt"),
+    ("three-surface-poc-governedby-reference-amendment", "1.0",
+     f"{DECISIONS}/THREE-SURFACE-POC-GOVERNEDBY-REFERENCE-AMENDMENT-SIGNOFF-v1.0.md",
+     f"{CANDIDATES}/three-surface-poc-governedby-reference-amendment/"
+     "THREE-SURFACE-POC-GOVERNEDBY-REFERENCE-AMENDMENT-MANIFEST.txt"),
 )
 POC_READABILITY_LABEL = "SIGN OFF THREE-SURFACE POC READABILITY SUCCESSOR"
 POC_READABILITY_DIR = f"{CANDIDATES}/three-surface-poc-readability-successor"
@@ -2701,6 +2770,11 @@ def _act_subjects():
                     re.escape(label) + r"\s*:\s*`?([0-9a-f]{64})")))
     if os.path.isfile(os.path.join(ROOT, DOSSIER_PROVIDER_V2_MANIFEST)):
         for label, subject in DOSSIER_PROVIDER_V2_ACTS:
+            if not any(l == label for l, _rel, _pat in out):
+                out.append((label, subject, re.compile(
+                    re.escape(label) + r"\s*:\s*`?([0-9a-f]{64})")))
+    if os.path.isfile(os.path.join(ROOT, LAUNCH_WRITE_CONSENT_MANIFEST)):
+        for label, subject in LAUNCH_WRITE_CONSENT_ACTS:
             if not any(l == label for l, _rel, _pat in out):
                 out.append((label, subject, re.compile(
                     re.escape(label) + r"\s*:\s*`?([0-9a-f]{64})")))
@@ -3611,6 +3685,40 @@ def _activate_dossier_provider_v2_copy_registry():
 _activate_dossier_provider_v2_copy_registry()
 
 
+def _activate_launch_write_consent_copy_registry():
+    """The launch-consent write-consent manifest carries its one argument as a row.
+
+    Existence-gated candidate registration; the performed record joins the
+    aggregate with the act. A round notes record is registered only while
+    it quotes the act phrase: a record that quotes no digest (a REVISE
+    round's) carries no copy to keep current, and CG-7d still checks any
+    phrase-linked digest wherever it is quoted.
+    """
+    labels = tuple(label for label, _subject in LAUNCH_WRITE_CONSENT_ACTS)
+    if os.path.isfile(os.path.join(ROOT, LAUNCH_WRITE_CONSENT_MANIFEST)):
+        ACT_DIGEST_COPY_FILES[LAUNCH_WRITE_CONSENT_MANIFEST] = labels
+        for path in sorted(os.listdir(os.path.join(ROOT, LAUNCH_WRITE_CONSENT_DIR))):
+            if not re.fullmatch(r"ROUND-\d+-DISPOSITIONS\.md", path):
+                continue
+            rel = f"{LAUNCH_WRITE_CONSENT_DIR}/{path}"
+            with open(os.path.join(ROOT, rel), encoding="utf-8") as fh:
+                text = fh.read()
+            carried = tuple(label for label in labels if label in text)
+            if carried:
+                ACT_DIGEST_COPY_FILES[rel] = carried
+    aggregate = f"{DECISIONS}/ACCEPTANCE-ACT-RECORD.md"
+    for label, record in LAUNCH_WRITE_CONSENT_ACT_RECORDS.items():
+        if not os.path.isfile(os.path.join(ROOT, record)):
+            continue
+        present = ACT_DIGEST_COPY_FILES.get(aggregate, ())
+        if label not in present:
+            ACT_DIGEST_COPY_FILES[aggregate] = present + (label,)
+        ACT_DIGEST_COPY_FILES[record] = (label,)
+
+
+_activate_launch_write_consent_copy_registry()
+
+
 #: The public-source screening scope, version 2 (sitting row 12): one state-(1)
 #: `approve-policy` act over ONE of four manifest rows (the variants). It reuses
 #: the policy's existing phrase label, supersedes the version-1 act for that
@@ -3680,11 +3788,113 @@ PUBLIC_SOURCE_SCOPE_V4_ACT = f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBL
 def _activate_public_source_scope_v4_copy_registry():
     """The version-4 manifest is a current copy of the policy argument once the act exists."""
     if (os.path.isfile(os.path.join(ROOT, PUBLIC_SOURCE_SCOPE_V4_ACT))
-            and os.path.isfile(os.path.join(ROOT, PUBLIC_SOURCE_SCOPE_V4_MANIFEST))):
+            and os.path.isfile(os.path.join(ROOT, PUBLIC_SOURCE_SCOPE_V4_MANIFEST))
+            # once the version-5 act exists the version-4 manifest is history (pinned by the amendment registries)
+            and not os.path.isfile(os.path.join(ROOT, f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V5-ACT.md"))):
         ACT_DIGEST_COPY_FILES[PUBLIC_SOURCE_SCOPE_V4_MANIFEST] = (PUBLIC_SOURCE_SCOPE_V2_LABEL,)
 
 
 _activate_public_source_scope_v4_copy_registry()
+
+
+#: The public-source screening scope, version 5 (`syzygy-ha5b`, register row
+#: P-116; recorder `scripts/record_public_source_screening_scope_v5_act.py`):
+#: one `approve-policy` act over ONE of four manifest rows (variants `bcd`,
+#: `bd`, `b`, `t`), reusing the policy's phrase label and superseding the
+#: version-4 act. Its packet carries no digest, so the manifest is the only
+#: copy. Gated on the performed record (2026-11-03, variant `bcd`), for the
+#: reason the version-2 registration gives; the version-4 copies are pinned as
+#: history by the chain link and the version-4 manifest's offering entry.
+PUBLIC_SOURCE_SCOPE_V5_DIR = f"{CANDIDATES}/public-source-screening-scope-v5"
+PUBLIC_SOURCE_SCOPE_V5_MANIFEST = f"{PUBLIC_SOURCE_SCOPE_V5_DIR}/PUBLIC-SOURCE-SCREENING-SCOPE-V5-MANIFEST.txt"
+PUBLIC_SOURCE_SCOPE_V5_ACT = f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V5-ACT.md"
+
+
+def _activate_public_source_scope_v5_copy_registry():
+    """The version-5 manifest is a current copy of the policy argument once the act exists."""
+    if (os.path.isfile(os.path.join(ROOT, PUBLIC_SOURCE_SCOPE_V5_ACT))
+            and os.path.isfile(os.path.join(ROOT, PUBLIC_SOURCE_SCOPE_V5_MANIFEST))
+            # once the version-6 act exists the version-5 manifest is history (pinned by the amendment registries)
+            and not os.path.isfile(os.path.join(ROOT, f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V6-ACT.md"))):
+        ACT_DIGEST_COPY_FILES[PUBLIC_SOURCE_SCOPE_V5_MANIFEST] = (PUBLIC_SOURCE_SCOPE_V2_LABEL,)
+
+
+_activate_public_source_scope_v5_copy_registry()
+
+
+#: The public-source screening scope, version 6 (`syzygy-mcs4`, owner direction
+#: OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-05 item 1, answer A; builder
+#: `scripts/build_public_source_screening_scope_v6.py`): one `approve-policy`
+#: act over the one manifest row (variant `p`: `redis.conf` placed with the
+#: `config-secret-directive` detector), reusing the policy's phrase label and
+#: superseding the version-5 act. Its packet carries no digest, so the manifest
+#: is the only copy. Registered at drafting time and gated on the performed
+#: record, for the reason the version-2 registration gives; the version-5
+#: copies' historical pinning, the chain link and the record's manifest-heading
+#: exemption arrive with the act.
+PUBLIC_SOURCE_SCOPE_V6_DIR = f"{CANDIDATES}/public-source-screening-scope-v6"
+PUBLIC_SOURCE_SCOPE_V6_MANIFEST = f"{PUBLIC_SOURCE_SCOPE_V6_DIR}/PUBLIC-SOURCE-SCREENING-SCOPE-V6-MANIFEST.txt"
+PUBLIC_SOURCE_SCOPE_V6_ACT = f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V6-ACT.md"
+
+
+def _activate_public_source_scope_v6_copy_registry():
+    """The version-6 manifest is a current copy of the policy argument once the act exists."""
+    if (os.path.isfile(os.path.join(ROOT, PUBLIC_SOURCE_SCOPE_V6_ACT))
+            and os.path.isfile(os.path.join(ROOT, PUBLIC_SOURCE_SCOPE_V6_MANIFEST))
+            # once the version-7 act exists the version-6 manifest is history (pinned by the amendment registries)
+            and not os.path.isfile(os.path.join(ROOT, f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V7-ACT.md"))):
+        ACT_DIGEST_COPY_FILES[PUBLIC_SOURCE_SCOPE_V6_MANIFEST] = (PUBLIC_SOURCE_SCOPE_V2_LABEL,)
+
+
+_activate_public_source_scope_v6_copy_registry()
+
+
+#: The public-source screening scope, version 7 (`syzygy-pdja.5`, owner direction
+#: OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-06 item 3, answer A; builder
+#: `scripts/build_public_source_screening_scope_v7.py`): one `approve-policy`
+#: act over the one manifest row (variant `s`: a renderer-owned hash-allowed
+#: inline script). Its packet carries no digest, so the manifest is the only
+#: copy. Gated on the performed record, as for version 6.
+PUBLIC_SOURCE_SCOPE_V7_DIR = f"{CANDIDATES}/public-source-screening-scope-v7"
+PUBLIC_SOURCE_SCOPE_V7_MANIFEST = f"{PUBLIC_SOURCE_SCOPE_V7_DIR}/PUBLIC-SOURCE-SCREENING-SCOPE-V7-MANIFEST.txt"
+PUBLIC_SOURCE_SCOPE_V7_ACT = f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V7-ACT.md"
+
+
+def _activate_public_source_scope_v7_copy_registry():
+    """The version-7 manifest is a current copy of the policy argument once the act exists."""
+    if (os.path.isfile(os.path.join(ROOT, PUBLIC_SOURCE_SCOPE_V7_ACT))
+            and os.path.isfile(os.path.join(ROOT, PUBLIC_SOURCE_SCOPE_V7_MANIFEST))
+            # once the version-8 act exists the version-7 manifest is history (pinned by the amendment registries)
+            and not os.path.isfile(os.path.join(ROOT, PUBLIC_SOURCE_SCOPE_V8_ACT_PATH))):
+        ACT_DIGEST_COPY_FILES[PUBLIC_SOURCE_SCOPE_V7_MANIFEST] = (PUBLIC_SOURCE_SCOPE_V2_LABEL,)
+
+
+_activate_public_source_scope_v7_copy_registry()
+
+
+#: The public-source screening scope, version 8 (`syzygy-pdja.23`, owner direction
+#: OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-08 item `syzygy-pdja.21-public`,
+#: answer B; builder `scripts/build_public_source_screening_scope_v8.py`): one
+#: `approve-policy` act over the one manifest row (variant `pv`: private sources
+#: admitted under stricter rules), reusing the policy's phrase label and
+#: superseding the version-7 act. Its packet carries no digest, so the manifest
+#: is the only copy. Registered at drafting time and gated on the performed
+#: record, for the reason the version-2 registration gives; the version-7
+#: copies' historical pinning, the chain link and the record's manifest-heading
+#: exemption arrive with the act.
+PUBLIC_SOURCE_SCOPE_V8_DIR = f"{CANDIDATES}/public-source-screening-scope-v8"
+PUBLIC_SOURCE_SCOPE_V8_MANIFEST = f"{PUBLIC_SOURCE_SCOPE_V8_DIR}/PUBLIC-SOURCE-SCREENING-SCOPE-V8-MANIFEST.txt"
+PUBLIC_SOURCE_SCOPE_V8_ACT = f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V8-ACT.md"
+
+
+def _activate_public_source_scope_v8_copy_registry():
+    """The version-8 manifest is a current copy of the policy argument once the act exists."""
+    if (os.path.isfile(os.path.join(ROOT, PUBLIC_SOURCE_SCOPE_V8_ACT))
+            and os.path.isfile(os.path.join(ROOT, PUBLIC_SOURCE_SCOPE_V8_MANIFEST))):
+        ACT_DIGEST_COPY_FILES[PUBLIC_SOURCE_SCOPE_V8_MANIFEST] = (PUBLIC_SOURCE_SCOPE_V2_LABEL,)
+
+
+_activate_public_source_scope_v8_copy_registry()
 
 
 #: The act-time digests the specification-policy restyle supersedes as the
@@ -3987,6 +4197,10 @@ BARE_DIGEST_HEADING_MANIFEST_EXEMPTIONS = {
     (PUBLIC_SOURCE_SCOPE_V2_ACT, "manifest"): PUBLIC_SOURCE_SCOPE_V2_MANIFEST,
     (PUBLIC_SOURCE_SCOPE_V3_ACT, "manifest"): PUBLIC_SOURCE_SCOPE_V3_MANIFEST,
     (f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V4-ACT.md", "manifest"): f"{CANDIDATES}/public-source-screening-scope-v4/PUBLIC-SOURCE-SCREENING-SCOPE-V4-MANIFEST.txt",
+    (f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V5-ACT.md", "manifest"): f"{CANDIDATES}/public-source-screening-scope-v5/PUBLIC-SOURCE-SCREENING-SCOPE-V5-MANIFEST.txt",
+    (PUBLIC_SOURCE_SCOPE_V6_ACT, "manifest"): PUBLIC_SOURCE_SCOPE_V6_MANIFEST,
+    (PUBLIC_SOURCE_SCOPE_V7_ACT, "manifest"): PUBLIC_SOURCE_SCOPE_V7_MANIFEST,
+    (PUBLIC_SOURCE_SCOPE_V8_ACT, "manifest"): PUBLIC_SOURCE_SCOPE_V8_MANIFEST,
 }
 
 
@@ -4530,6 +4744,11 @@ def cg7h_general_bootstrap_act(res, act_record=None, dedicated_record=None,
         latest = None
         for package, version, record_rel, manifest_rel in POC_VERSIONED_SUCCESSORS:
             if poc_successor_inputs is None:
+                if package == "three-surface-poc-governedby-reference-amendment":
+                    import pathlib
+                    import prepare_three_surface_poc_governedby_reference_recording as reference
+                    if not reference.is_signed(pathlib.Path(ROOT)):
+                        continue
                 record_body = read_if_present(record_rel)
                 body = read_if_present(manifest_rel)
             else:
@@ -6474,9 +6693,9 @@ _NUMBER_WORDS = {
 }
 
 
-def _number_word(value):
-    """Parse a simple English count word from zero through ninety-nine."""
-    parts = value.lower().split("-")
+def _number_below_hundred(value):
+    """Parse one count word from zero through ninety-nine (hyphen allowed)."""
+    parts = value.split("-")
     if len(parts) == 1:
         return _NUMBER_WORDS.get(parts[0])
     if (len(parts) == 2
@@ -6485,6 +6704,39 @@ def _number_word(value):
             and 1 <= _NUMBER_WORDS.get(parts[1], 0) <= 9):
         return _NUMBER_WORDS[parts[0]] + _NUMBER_WORDS[parts[1]]
     return None
+
+
+def _number_word(value):
+    """Parse an English count phrase from zero through nine hundred ninety-nine.
+
+    Accepts `ninety-nine`, `one hundred`, `one hundred and five`,
+    `one hundred five` and `two hundred and thirteen`. A dangling `and`, a
+    `hundred` without a leading one-to-nine word, or a zero tail after
+    `hundred` is unreadable (None), never guessed.
+    """
+    chunks = value.lower().split()
+    if not chunks:
+        return None
+    if len(chunks) == 1:
+        return _number_below_hundred(chunks[0])
+    if chunks[1] != "hundred":
+        return None
+    lead = _NUMBER_WORDS.get(chunks[0], 0)
+    if not 1 <= lead <= 9:
+        return None
+    rest = chunks[2:]
+    if rest and rest[0] == "and":
+        rest = rest[1:]
+        if not rest:
+            return None
+    if not rest:
+        return lead * 100
+    if len(rest) != 1:
+        return None
+    tail = _number_below_hundred(rest[0])
+    if not tail:
+        return None
+    return lead * 100 + tail
 
 
 def _battery_commands(sh_block):
@@ -6585,18 +6837,39 @@ def cg26_battery_parity(res, status=None, workflow=None):
                         f"and did not")
 
     # The stated count is a third hand-maintained copy of the same fact.
-    for claim in re.finditer(
-            r"\bThe ([a-z]+(?:-[a-z]+)*) checks above are the same "
-            r"([a-z]+(?:-[a-z]+)*)\b",
-            status_text):
+    # The phrase may span several words (`one hundred and five`) and the
+    # sentence may wrap across lines, so whitespace is `\s+`.
+    word = r"[a-z]+(?:-[a-z]+)*"
+    phrase = rf"{word}(?:\s+{word})*?"
+    claims = list(re.finditer(
+        rf"\bThe ({phrase})\s+checks\s+above\s+are\s+the\s+same\s+"
+        rf"({phrase})\s+the\s+hosted\s+workflow\s+runs\b",
+        status_text))
+    if not claims:
+        # Message only: the match above stays case-sensitive. A sentence that
+        # matches only ignoring case is named, so the reason is not hidden.
+        folded = re.search(
+            rf"\bThe ({phrase})\s+checks\s+above\s+are\s+the\s+same\s+"
+            rf"({phrase})\s+the\s+hosted\s+workflow\s+runs\b",
+            status_text, re.I)
+        case_note = ("; a sentence matching only when case is ignored was "
+                     "found, and the match is case-sensitive (lower-case "
+                     "number words)" if folded else "")
+        findings.append(
+            "no parity count sentence matched `The <N> checks above are the "
+            "same <N> the hosted workflow runs`; a count this check cannot "
+            "find is a count it cannot police, and skipping it would read "
+            "as agreement" + case_note)
+    for claim in claims:
         said = _number_word(claim.group(1))
         also = _number_word(claim.group(2))
         for n, which in ((said, "published"), (also, "hosted")):
             if n is None:
                 findings.append(
-                    f"the parity sentence says `{claim.group(0)}` and this "
-                    f"check cannot read one of its numbers as a word; a "
-                    f"number it cannot read is a number it cannot police")
+                    f"the parity sentence says `{' '.join(claim.group(0).split())}`"
+                    f" and this check cannot read one of its numbers as a "
+                    f"word; a number it cannot read is a number it cannot "
+                    f"police")
                 break
         else:
             if said != len(pub_checks):
@@ -7862,7 +8135,27 @@ def selftest():
     def _wf(*cmds):
         return "".join(f"      - name: x\n        run: {c}\n" for c in cmds)
 
-    def _st(block, claim=""):
+    def _spell(n):
+        # Independent of `_number_word`: the oracle must not share its code.
+        ones = ("zero one two three four five six seven eight nine ten "
+                "eleven twelve thirteen fourteen fifteen sixteen seventeen "
+                "eighteen nineteen").split()
+        tens = "x x twenty thirty forty fifty sixty seventy eighty ninety".split()
+        if n < 20:
+            return ones[n]
+        if n < 100:
+            return tens[n // 10] + (f"-{ones[n % 10]}" if n % 10 else "")
+        tail = f" and {_spell(n % 100)}" if n % 100 else ""
+        return f"{ones[n // 100]} hundred{tail}"
+
+    def _st(block, claim=None):
+        if claim is None:
+            # The default claim is the true sentence for the block, since a
+            # missing count sentence is itself a finding.
+            n = sum(1 for ln in block.splitlines()
+                    if ln.startswith("python3 "))
+            claim = (f"The {_spell(n)} checks above are the same "
+                     f"{_spell(n)} the hosted workflow runs.")
         return (f"# S\n\n{BATTERY_HEADING}\n\n```sh\n{block}```\n\n{claim}\n")
 
     AGREE = "python3 scripts/a.py\npython3 scripts/b.py --check\n"
@@ -7957,6 +8250,168 @@ def selftest():
                   c.rows[0][0] == "FAIL"
                   and any("claims 26 hosted checks" in d
                           for d in c.rows[0][4])))
+
+    def _big(n):
+        return ("".join(f"python3 scripts/check-{i}.py\n" for i in range(n)),
+                _wf(*(f"python3 scripts/check-{i}.py" for i in range(n))))
+
+    # Boundaries 99/100 and the real 105 form, wrapped across a line break.
+    for n in (99, 100, 105, 113):
+        blk, wf = _big(n)
+        c = Cap()
+        cg26_battery_parity(c, status=_st(blk), workflow=wf)
+        cases.append((f"CG-26 {n}-check count sentence matches",
+                      c.rows[0][0] == "OK"))
+    blk, wf = _big(105)
+    c = Cap()
+    cg26_battery_parity(
+        c, status=_st(blk, "The one hundred and five checks above are the "
+                           "same one hundred and\nfive the hosted workflow "
+                           "runs."),
+        workflow=wf)
+    cases.append(("CG-26 three-digit count wrapped across lines matches",
+                  c.rows[0][0] == "OK"))
+
+    # Mismatch in each position, at three digits.
+    c = Cap()
+    cg26_battery_parity(
+        c, status=_st(blk, "The one hundred and six checks above are the "
+                           "same one hundred and five the hosted workflow "
+                           "runs."), workflow=wf)
+    cases.append(("CG-26 three-digit published-count mismatch detected",
+                  c.rows[0][0] == "FAIL"
+                  and any("claims 106 published checks" in d
+                          for d in c.rows[0][4])))
+    c = Cap()
+    cg26_battery_parity(
+        c, status=_st(blk, "The one hundred and five checks above are the "
+                           "same one hundred and ten the hosted workflow "
+                           "runs."), workflow=wf)
+    cases.append(("CG-26 three-digit hosted-count mismatch detected",
+                  c.rows[0][0] == "FAIL"
+                  and any("claims 110 hosted checks" in d
+                          for d in c.rows[0][4])))
+    c = Cap()
+    cg26_battery_parity(
+        c, status=_st(blk, "The one hundred and five checks above are the "
+                           "same one hundred and five the hosted workflow "
+                           "runs."),
+        workflow=_big(104)[1])
+    cases.append(("CG-26 three-digit count vs hosted population detected",
+                  c.rows[0][0] == "FAIL"
+                  and any("claims 105 hosted checks" in d
+                          for d in c.rows[0][4])))
+
+    # Unreadable number is a finding.
+    c = Cap()
+    cg26_battery_parity(
+        c, status=_st(blk, "The one hundred and checks above are the same "
+                           "five the hosted workflow runs."), workflow=wf)
+    cases.append(("CG-26 unreadable three-digit count is a finding",
+                  c.rows[0][0] == "FAIL"
+                  and any("cannot read" in d for d in c.rows[0][4])))
+
+    c = Cap()
+    cg26_battery_parity(
+        c, status=_st(blk, "The one hundred zero checks above are the same "
+                           "five the hosted workflow runs."), workflow=wf)
+    cases.append(("CG-26 zero tail after hundred is unreadable, not read",
+                  c.rows[0][0] == "FAIL"
+                  and any("cannot read" in d for d in c.rows[0][4])))
+
+    # Direct table over the helper: each refused phrase stays refused, each
+    # accepted phrase keeps its value (kills `<= 10`, the `hundred` guard,
+    # the lead-word default and the extra-tail-word mutants).
+    cases.append(("CG-26 number words: refused phrases stay unreadable",
+                  all(_number_word(w) is None for w in (
+                      "ten hundred", "one two", "foo hundred five",
+                      "one hundred five six", "one hundred and five six",
+                      "one hundred and", "zero hundred"))))
+    cases.append(("CG-26 number words: accepted phrases keep their value",
+                  [_number_word(w) for w in (
+                      "ninety-nine", "one hundred", "one hundred five",
+                      "one hundred and five", "two hundred and thirteen")]
+                  == [99, 100, 105, 105, 213]))
+
+    # Wrapping outside the number phrase: `\s+` at both fixed joints.
+    blk, wf = _big(105)
+    for label, claim in (
+            ("checks/above", "The one hundred and five checks\nabove are the "
+                             "same one hundred and five the hosted workflow "
+                             "runs."),
+            ("same/number", "The one hundred and five checks above are the "
+                            "same\none hundred and five the hosted workflow "
+                            "runs."),
+            ("number/the", "The one hundred and five checks above are the "
+                           "same one hundred and five\nthe hosted workflow "
+                           "runs.")):
+        c = Cap()
+        cg26_battery_parity(c, status=_st(blk, claim), workflow=wf)
+        cases.append((f"CG-26 sentence wrapped at {label} still matches",
+                      c.rows[0][0] == "OK"))
+
+    # The other seven `\s+` joints of the claim regex, each wrapped alone.
+    # `before` is the text up to the joint; the next char is the space.
+    words = ("The one hundred and five checks above are the same one "
+             "hundred and five the hosted workflow runs.")
+    for label, before in (
+            ("number/checks", "The one hundred and five"),
+            ("above/are", "The one hundred and five checks above"),
+            ("are/the", "The one hundred and five checks above are"),
+            ("the/same", "The one hundred and five checks above are the"),
+            ("the/hosted", "The one hundred and five checks above are the "
+                           "same one hundred and five the"),
+            ("hosted/workflow", "The one hundred and five checks above are "
+                                "the same one hundred and five the hosted"),
+            ("workflow/runs", "The one hundred and five checks above are "
+                              "the same one hundred and five the hosted "
+                              "workflow")):
+        assert words.startswith(before + " ")
+        claim = before + "\n" + words[len(before) + 1:]
+        c = Cap()
+        cg26_battery_parity(c, status=_st(blk, claim), workflow=wf)
+        cases.append((f"CG-26 sentence wrapped at {label} still matches",
+                      c.rows[0][0] == "OK"))
+
+    # Extra tail words after the number are unreadable, not truncated.
+    c = Cap()
+    cg26_battery_parity(
+        c, status=_st(blk, "The one hundred and five six checks above are "
+                           "the same one hundred and five the hosted "
+                           "workflow runs."), workflow=wf)
+    cases.append(("CG-26 extra tail word after count is unreadable",
+                  c.rows[0][0] == "FAIL"
+                  and any("cannot read" in d for d in c.rows[0][4])))
+
+    # Capitalized phrase fails closed and the finding names case.
+    c = Cap()
+    cg26_battery_parity(
+        c, status=_st(blk, "The One Hundred And Five checks above are the "
+                           "same one hundred and five the hosted workflow "
+                           "runs."), workflow=wf)
+    cases.append(("CG-26 capitalized count names case in the finding",
+                  c.rows[0][0] == "FAIL"
+                  and any("matching only when case is ignored" in d
+                          for d in c.rows[0][4])))
+
+    # No count sentence at all is a finding, not a silent skip.
+    c = Cap()
+    cg26_battery_parity(c, status=_st(AGREE, "No count is stated here."),
+                        workflow=_wf("python3 scripts/a.py",
+                                     "python3 scripts/b.py --check"))
+    cases.append(("CG-26 absent count sentence is a finding, not a skip",
+                  c.rows[0][0] == "FAIL"
+                  and any("no parity count sentence" in d
+                          for d in c.rows[0][4])))
+    cases.append(("CG-26 absent count sentence gets no case note",
+                  not any("case is ignored" in d for d in c.rows[0][4])))
+    c = Cap()
+    cg26_battery_parity(c, status=_st(AGREE, "The 2 checks above are the "
+                                             "same 2 the hosted workflow runs."),
+                        workflow=_wf("python3 scripts/a.py",
+                                     "python3 scripts/b.py --check"))
+    cases.append(("CG-26 digit-form count sentence is not silently skipped",
+                  c.rows[0][0] == "FAIL"))
 
     c = Cap()
     cg26_battery_parity(c, status="# S\n\nno block here\n",
@@ -11371,6 +11826,8 @@ def _activate_redis_local_agent_battery_copies():
     pairs = list(DOSSIER_LOCAL_AGENT_ACT_RECORDS.items())
     # the provider statement's version-2 recorder line passes its argument too, once performed
     pairs += list(DOSSIER_PROVIDER_V2_ACT_RECORDS.items())
+    # the launch-record write consent's recorder line, once performed (syzygy-pdja.22)
+    pairs += list(LAUNCH_WRITE_CONSENT_ACT_RECORDS.items())
     # the Redis observation consent's line is in node-ci, not here (NODE_CHECKS)
     # the RFC5-14 constants exist only once that act's chain link is installed; the
     # name is split so this text never carries the chain step's install mark

@@ -1,0 +1,7 @@
+{
+  "reviewedSha256": "dc879afd25a6a105f2fa22c0ca137627c951237faeeb295335349a086ea0f750",
+  "offeredSha256": "c171122e77f11522a67126e9620bfb3a1bd6c18dc1eecfa71dce73ee26a10201",
+  "reviewSha256": "fd9fcda476a21abd8c898404d8d6b6e5b62ece8d224321b360fa75696eca2705",
+  "changes": "Administrative state and review-record fields only; decision, options, recommendation, boundary and proposed chat question unchanged; mechanical Markdown bolding of A and reviewer-id formatting",
+  "ownerAnswer": null
+}

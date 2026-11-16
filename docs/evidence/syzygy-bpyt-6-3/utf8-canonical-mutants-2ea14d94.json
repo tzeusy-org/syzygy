@@ -1,0 +1,993 @@
+{
+ "head": "2ea14d941f377e92884f593f6f1dd7f6291c3e87",
+ "expectedProbeOutput": "/tmp/lc63u/probe-base-a.json",
+ "mutants": [
+  {
+   "id": "D1-decoder-not-fatal",
+   "file": "packages/support/src/decode-utf8.ts",
+   "old": "{ fatal: true }",
+   "new": "{ fatal: false }",
+   "commit": "581ed61d7987881d7a8755abd0011118b6e3c43f",
+   "detectors": {
+    "test": {
+     "killed": true,
+     "files": [
+      "packages/support/src/decode-utf8.test.ts"
+     ],
+     "summary": [
+      "Test Files  1 failed (1)",
+      "Tests  3 failed | 3 passed (6)"
+     ],
+     "failed": [
+      {
+       "test": "decodeUtf8 > refuses every malformed class instead of replacing it",
+       "firstError": "\u2192 a lone continuation byte: expected '\\ufffd' to be undefined"
+      },
+      {
+       "test": "decodeUtf8 > reads only the view, not the buffer behind it",
+       "firstError": "\u2192 expected '\\ufffdab\\ufffd' to be undefined"
+      },
+      {
+       "test": "decodeUtf8 > carries no state from a refused call into the next",
+       "firstError": "\u2192 expected '\\ufffd' to be undefined"
+      }
+     ],
+     "failedCount": 3
+    },
+    "probe": {
+     "killed": true,
+     "rowsCompared": 12841,
+     "rowsDiffer": 6866,
+     "differPerDriver": {
+      "authority-consent": 890,
+      "authority-policy": 890,
+      "authority-registry": 890,
+      "code-structure": 4,
+      "object-reader": 761,
+      "observe-ls-tree": 890,
+      "observe-rev-parse": 890,
+      "observe-show": 890,
+      "seed-reader": 761
+     },
+     "firstDiffering": [
+      [
+       "authority-consent",
+       "bad-then-good"
+      ],
+      [
+       "authority-consent",
+       "consent+bad-head"
+      ],
+      [
+       "authority-consent",
+       "consent+bad-tail"
+      ],
+      [
+       "authority-consent",
+       "consent+overlong-tail"
+      ]
+     ]
+    }
+   },
+   "verdict": "killed by test, probe"
+  },
+  {
+   "id": "D2-decoder-keeps-bom",
+   "file": "packages/support/src/decode-utf8.ts",
+   "old": "{ fatal: true }",
+   "new": "{ fatal: true, ignoreBOM: true }",
+   "commit": "ad8bbd6218c8d8a903b0fb4d83a28c6976afa379",
+   "detectors": {
+    "test": {
+     "killed": true,
+     "files": [
+      "packages/support/src/decode-utf8.test.ts",
+      "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+     ],
+     "summary": [
+      "Test Files  1 failed (1)",
+      "Tests  1 failed | 5 passed (6)",
+      "Test Files  1 failed (1)",
+      "Tests  1 failed | 4 passed (5)"
+     ],
+     "failed": [
+      {
+       "test": "decodeUtf8 > drops one leading byte-order mark and keeps a second",
+       "firstError": "\u2192 expected '\\ufeffa' to be 'a' // Object.is equality"
+      },
+      {
+       "test": "parsePolicyArtifact and parseRegistryArtifact decoding > parse well-formed JSON, with or without a leading byte-order mark",
+       "firstError": "\u2192 expected { kind: 'undecodable', \u2026(1) } to deeply equal { kind: 'parsed', fields: { \u2026(2) } }"
+      }
+     ],
+     "failedCount": 2
+    },
+    "probe": {
+     "killed": true,
+     "rowsCompared": 12841,
+     "rowsDiffer": 552,
+     "differPerDriver": {
+      "authority-policy": 4,
+      "authority-registry": 4,
+      "object-reader": 176,
+      "observe-ls-tree": 192,
+      "seed-reader": 176
+     },
+     "firstDiffering": [
+      [
+       "authority-policy",
+       "policy+bom"
+      ],
+      [
+       "authority-policy",
+       "random-1331"
+      ],
+      [
+       "authority-policy",
+       "registry+bom"
+      ],
+      [
+       "authority-policy",
+       "revision+bom"
+      ]
+     ]
+    }
+   },
+   "verdict": "killed by test, probe"
+  },
+  {
+   "id": "D3-refusal-returns-empty-text",
+   "file": "packages/support/src/decode-utf8.ts",
+   "old": "return undefined;",
+   "new": "return '';",
+   "commit": "20469fb5cfdc5072c0051d719b96e1cd8301de26",
+   "detectors": {
+    "test": {
+     "killed": true,
+     "files": [
+      "packages/support/src/decode-utf8.test.ts"
+     ],
+     "summary": [
+      "Test Files  1 failed (1)",
+      "Tests  3 failed | 3 passed (6)"
+     ],
+     "failed": [
+      {
+       "test": "decodeUtf8 > refuses every malformed class instead of replacing it",
+       "firstError": "\u2192 a lone continuation byte: expected '' to be undefined"
+      },
+      {
+       "test": "decodeUtf8 > reads only the view, not the buffer behind it",
+       "firstError": "\u2192 expected '' to be undefined"
+      },
+      {
+       "test": "decodeUtf8 > carries no state from a refused call into the next",
+       "firstError": "\u2192 expected '' to be undefined"
+      }
+     ],
+     "failedCount": 3
+    },
+    "probe": {
+     "killed": true,
+     "rowsCompared": 12841,
+     "rowsDiffer": 6866,
+     "differPerDriver": {
+      "authority-consent": 890,
+      "authority-policy": 890,
+      "authority-registry": 890,
+      "code-structure": 4,
+      "object-reader": 761,
+      "observe-ls-tree": 890,
+      "observe-rev-parse": 890,
+      "observe-show": 890,
+      "seed-reader": 761
+     },
+     "firstDiffering": [
+      [
+       "authority-consent",
+       "bad-then-good"
+      ],
+      [
+       "authority-consent",
+       "consent+bad-head"
+      ],
+      [
+       "authority-consent",
+       "consent+bad-tail"
+      ],
+      [
+       "authority-consent",
+       "consent+overlong-tail"
+      ]
+     ]
+    }
+   },
+   "verdict": "killed by test, probe"
+  },
+  {
+   "id": "D4-decoder-streams",
+   "file": "packages/support/src/decode-utf8.ts",
+   "old": "STRICT_UTF8.decode(bytes)",
+   "new": "STRICT_UTF8.decode(bytes, { stream: true })",
+   "commit": "f0fe6ce1a10402298ace99971f5d968fa07d03c4",
+   "detectors": {
+    "test": {
+     "killed": true,
+     "files": [
+      "packages/support/src/decode-utf8.test.ts"
+     ],
+     "summary": [
+      "Test Files  1 failed (1)",
+      "Tests  4 failed | 2 passed (6)"
+     ],
+     "failed": [
+      {
+       "test": "decodeUtf8 > refuses every malformed class instead of replacing it",
+       "firstError": "\u2192 a lead byte with no continuation: expected '' to be undefined"
+      },
+      {
+       "test": "decodeUtf8 > drops one leading byte-order mark and keeps a second",
+       "firstError": "\u2192 expected undefined to be 'a' // Object.is equality"
+      },
+      {
+       "test": "decodeUtf8 > carries no state from a refused call into the next",
+       "firstError": "\u2192 expected '' to be undefined"
+      },
+      {
+       "test": "decodeUtf8 > accepts a Buffer",
+       "firstError": "\u2192 expected undefined to be 'h\u00e9llo' // Object.is equality"
+      }
+     ],
+     "failedCount": 4
+    },
+    "probe": {
+     "killed": true,
+     "rowsCompared": 12841,
+     "rowsDiffer": 1569,
+     "differPerDriver": {
+      "authority-consent": 120,
+      "authority-policy": 124,
+      "authority-registry": 124,
+      "object-reader": 286,
+      "observe-ls-tree": 347,
+      "observe-rev-parse": 120,
+      "observe-show": 162,
+      "seed-reader": 286
+     },
+     "firstDiffering": [
+      [
+       "authority-consent",
+       "consent+bad-head"
+      ],
+      [
+       "authority-consent",
+       "consent+truncated-tail"
+      ],
+      [
+       "authority-consent",
+       "instant+bad-head"
+      ],
+      [
+       "authority-consent",
+       "instant+truncated-tail"
+      ]
+     ]
+    }
+   },
+   "verdict": "killed by test, probe"
+  },
+  {
+   "id": "G1-object-reader-decodes-leniently",
+   "file": "packages/three-surface-poc-core/src/git-object-reader.ts",
+   "old": "const text = decodeUtf8(bytes);\n      if (text === undefined) return unavailable({ ...taken, outcome: 'not-utf-8' });",
+   "new": "const text: string | undefined = new TextDecoder().decode(bytes);\n      if (text === undefined) return unavailable({ ...taken, outcome: 'not-utf-8' });",
+   "commit": "50d76ff27833c7e57b5473c0668592f179be2fed",
+   "detectors": {
+    "existing": {
+     "killed": true,
+     "files": [
+      "packages/three-surface-poc-core/src/git-object-reader.test.ts"
+     ],
+     "summary": [
+      "Test Files  1 failed (1)",
+      "Tests  1 failed | 71 passed (72)"
+     ],
+     "failed": [
+      {
+       "test": "exact object reads > rejects NUL bytes and invalid UTF-8 after the identity check",
+       "firstError": "\u2192 expected 'read' to be 'not-utf-8' // Object.is equality"
+      }
+     ],
+     "failedCount": 1
+    },
+    "probe": {
+     "killed": true,
+     "rowsCompared": 12841,
+     "rowsDiffer": 761,
+     "differPerDriver": {
+      "object-reader": 761
+     },
+     "firstDiffering": [
+      [
+       "object-reader",
+       "bad-then-good"
+      ],
+      [
+       "object-reader",
+       "consent+bad-head"
+      ],
+      [
+       "object-reader",
+       "consent+bad-tail"
+      ],
+      [
+       "object-reader",
+       "consent+overlong-tail"
+      ]
+     ]
+    }
+   },
+   "verdict": "killed by existing, probe"
+  },
+  {
+   "id": "O1-seed-reader-decodes-leniently",
+   "file": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+   "old": "const text = decodeUtf8(bytes);\n    if (text === undefined) {\n      reads.push(",
+   "new": "const text: string | undefined = new TextDecoder().decode(bytes);\n    if (text === undefined) {\n      reads.push(",
+   "commit": "69cc99b688d9d99fd38abca7c0b702aa06981219",
+   "detectors": {
+    "existing": {
+     "killed": true,
+     "files": [
+      "packages/three-surface-poc-core/src/project-shape-observation.test.ts"
+     ],
+     "summary": [
+      "Test Files  1 failed (1)",
+      "Tests  1 failed | 38 passed (39)"
+     ],
+     "failed": [
+      {
+       "test": "observeProjectShapeSources \u2014 reads only the phase A allowlist > rejects bytes that are not the tree-named object, NUL-bearing bytes and non-",
+       "firstError": "\u2192 expected { \u2026(4) } to match object { outcome: 'not-utf-8' }"
+      }
+     ],
+     "failedCount": 1
+    },
+    "probe": {
+     "killed": true,
+     "rowsCompared": 12841,
+     "rowsDiffer": 761,
+     "differPerDriver": {
+      "seed-reader": 761
+     },
+     "firstDiffering": [
+      [
+       "seed-reader",
+       "bad-then-good"
+      ],
+      [
+       "seed-reader",
+       "consent+bad-head"
+      ],
+      [
+       "seed-reader",
+       "consent+bad-tail"
+      ],
+      [
+       "seed-reader",
+       "consent+overlong-tail"
+      ]
+     ]
+    }
+   },
+   "verdict": "killed by existing, probe"
+  },
+  {
+   "id": "O2-git-text-decodes-leniently",
+   "file": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+   "old": "const text = decodeUtf8(bytes);\n  return text === undefined ? { kind: 'failed'",
+   "new": "const text: string | undefined = new TextDecoder().decode(bytes);\n  return text === undefined ? { kind: 'failed'",
+   "commit": "a003d7edc6f0f52d4a1a61576c76e3335d5767ca",
+   "detectors": {
+    "existing": {
+     "killed": false,
+     "files": [
+      "packages/three-surface-poc-core/src/project-shape-observation.test.ts"
+     ],
+     "summary": [
+      "Test Files  1 passed (1)",
+      "Tests  39 passed (39)"
+     ],
+     "failed": [],
+     "failedCount": 0
+    },
+    "probe": {
+     "killed": true,
+     "rowsCompared": 12841,
+     "rowsDiffer": 2670,
+     "differPerDriver": {
+      "observe-ls-tree": 890,
+      "observe-rev-parse": 890,
+      "observe-show": 890
+     },
+     "firstDiffering": [
+      [
+       "observe-ls-tree",
+       "bad-then-good"
+      ],
+      [
+       "observe-ls-tree",
+       "consent+bad-head"
+      ],
+      [
+       "observe-ls-tree",
+       "consent+bad-tail"
+      ],
+      [
+       "observe-ls-tree",
+       "consent+overlong-tail"
+      ]
+     ]
+    }
+   },
+   "verdict": "killed by probe"
+  },
+  {
+   "id": "A1-consent-decodes-leniently",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "old": "const text = decodeUtf8(bytes);\n  if (text === undefined) return { kind: 'undecodable', detail: 'not strict UTF-8' };",
+   "new": "const text: string | undefined = new TextDecoder().decode(bytes);\n  if (text === undefined) return { kind: 'undecodable', detail: 'not strict UTF-8' };",
+   "commit": "85b4387e1620066ecccf0188c2034c617eb7a9f2",
+   "detectors": {
+    "test": {
+     "killed": true,
+     "files": [
+      "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+     ],
+     "summary": [
+      "Test Files  1 failed (1)",
+      "Tests  1 failed | 4 passed (5)"
+     ],
+     "failed": [
+      {
+       "test": "parseConsentArtifact decoding > refuses bytes that are not UTF-8 instead of parsing a replaced text",
+       "firstError": "\u2192 a lone continuation byte: expected { kind: 'parsed', fields: { \u2026(3) } } to deeply equal { kind: 'undecodable', \u2026(1) }"
+      }
+     ],
+     "failedCount": 1
+    },
+    "probe": {
+     "killed": true,
+     "rowsCompared": 12841,
+     "rowsDiffer": 890,
+     "differPerDriver": {
+      "authority-consent": 890
+     },
+     "firstDiffering": [
+      [
+       "authority-consent",
+       "bad-then-good"
+      ],
+      [
+       "authority-consent",
+       "consent+bad-head"
+      ],
+      [
+       "authority-consent",
+       "consent+bad-tail"
+      ],
+      [
+       "authority-consent",
+       "consent+overlong-tail"
+      ]
+     ]
+    }
+   },
+   "verdict": "killed by test, probe"
+  },
+  {
+   "id": "A2-json-artifact-decodes-leniently",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "old": "const text = decodeUtf8(bytes);\n  if (text === undefined) return { ok: false, detail: 'not strict UTF-8' };",
+   "new": "const text: string | undefined = new TextDecoder().decode(bytes);\n  if (text === undefined) return { ok: false, detail: 'not strict UTF-8' };",
+   "commit": "5fa4ebc4532dd2c4688daff790a7a6c7d8799160",
+   "detectors": {
+    "test": {
+     "killed": true,
+     "files": [
+      "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+     ],
+     "summary": [
+      "Test Files  1 failed (1)",
+      "Tests  1 failed | 4 passed (5)"
+     ],
+     "failed": [
+      {
+       "test": "parsePolicyArtifact and parseRegistryArtifact decoding > refuse bytes that are not UTF-8, naming the decoding and not the JSON",
+       "firstError": "\u2192 policy, a lone continuation byte: expected { kind: 'undecodable', \u2026(1) } to deeply equal { kind: 'undecodable', \u2026(1) }"
+      }
+     ],
+     "failedCount": 1
+    },
+    "probe": {
+     "killed": true,
+     "rowsCompared": 12841,
+     "rowsDiffer": 1780,
+     "differPerDriver": {
+      "authority-policy": 890,
+      "authority-registry": 890
+     },
+     "firstDiffering": [
+      [
+       "authority-policy",
+       "bad-then-good"
+      ],
+      [
+       "authority-policy",
+       "consent+bad-head"
+      ],
+      [
+       "authority-policy",
+       "consent+bad-tail"
+      ],
+      [
+       "authority-policy",
+       "consent+overlong-tail"
+      ]
+     ]
+    }
+   },
+   "verdict": "killed by test, probe"
+  },
+  {
+   "id": "C1-code-structure-lets-bad-path-through",
+   "file": "packages/three-surface-poc-core/src/code-structure.ts",
+   "old": "if (text === undefined) throw new NonUtf8GitOutput();",
+   "new": "if (text === undefined) return '';",
+   "commit": "a8a46d3b61031be6000670a79e7e38a62bae961e",
+   "detectors": {
+    "existing": {
+     "killed": true,
+     "files": [
+      "packages/three-surface-poc-core/src/code-structure.test.ts"
+     ],
+     "summary": [
+      "Test Files  1 failed (1)",
+      "Tests  1 failed | 9 passed (10)"
+     ],
+     "failed": [
+      {
+       "test": "code-structure observer > makes the inventory Unknown for a committed path that is not valid UTF-8, never a lossy or colliding path",
+       "firstError": "\u2192 expected { kind: 'observed', \u2026(3) } to deeply equal { kind: 'unknown', \u2026(1) }"
+      }
+     ],
+     "failedCount": 1
+    },
+    "probe": {
+     "killed": true,
+     "rowsCompared": 12841,
+     "rowsDiffer": 4,
+     "differPerDriver": {
+      "code-structure": 4
+     },
+     "firstDiffering": [
+      [
+       "code-structure",
+       "bad-name-valid-name"
+      ],
+      [
+       "code-structure",
+       "latin1-pair"
+      ],
+      [
+       "code-structure",
+       "one-bad-byte"
+      ],
+      [
+       "code-structure",
+       "overlong-name"
+      ]
+     ]
+    }
+   },
+   "verdict": "killed by existing, probe"
+  },
+  {
+   "id": "K1-lenient-keys-unsorted",
+   "file": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+   "old": "        .sort()\n        .map((key) => [key, canonicalize(record[key])]),",
+   "new": "        .map((key) => [key, canonicalize(record[key])]),",
+   "commit": "4d38ccab4d57389658ebcbb8ad9275343ee84c96",
+   "detectors": {
+    "test": {
+     "killed": true,
+     "files": [
+      "apps/three-surface-poc/src/canonical-json-divergence.test.ts"
+     ],
+     "summary": [
+      "Test Files  1 failed (1)",
+      "Tests  3 failed | 18 passed (21)"
+     ],
+     "failed": [
+      {
+       "test": "where the two key-sorted JSON encoders agree > agree with each other and with an independent reference on 600 seeded plain JSON values",
+       "firstError": "\u2192 value 11: expected { Object (ok) } to deeply equal { ok: '{\"k_\":0.30000000000000004,\"k\u2026' }"
+      },
+      {
+       "test": "where the two key-sorted JSON encoders agree > agree on the rows the generator cannot reach",
+       "firstError": "\u2192 lenient, a null-prototype object: expected { ok: '{\"b\":1,\"a\":2}' } to deeply equal { ok: '{\"a\":2,\"b\":1}' }"
+      },
+      {
+       "test": "where they differ on plain, acyclic, finite JSON > a key that is an array index sorts first and numerically in the lenient encoder, by code ",
+       "firstError": "\u2192 expected { ok: '{\"2\":4,\"10\":2,\"b\":1,\"a\":3}' } to deeply equal { ok: '{\"2\":4,\"10\":2,\"a\":3,\"b\":1}' }"
+      }
+     ],
+     "failedCount": 3
+    },
+    "existing": {
+     "killed": true,
+     "files": [
+      "packages/three-surface-poc-core/src/project-shape-manifest.test.ts",
+      "packages/three-surface-poc-core/src/response-identity.test.ts"
+     ],
+     "summary": [
+      "Test Files  1 failed | 1 passed (2)",
+      "Tests  1 failed | 32 passed (33)"
+     ],
+     "failed": [
+      {
+       "test": "response identity > sorts object keys canonically, preserves array order, and omits only its own contentKey",
+       "firstError": "\u2192 expected 'sha256:71ddbc7f53b52c96cf94c63e5176f5\u2026' to be 'sha256:927242e5fb447b013d2322df6a6808\u2026' // Object.is equality"
+      }
+     ],
+     "failedCount": 1
+    }
+   },
+   "verdict": "killed by test, existing"
+  },
+  {
+   "id": "K2-lenient-arrays-as-objects",
+   "file": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+   "old": "  if (Array.isArray(value)) return value.map(canonicalize);\n",
+   "new": "",
+   "commit": "0d6b1175521fc6571885702923b6bb6423af924a",
+   "detectors": {
+    "test": {
+     "killed": true,
+     "files": [
+      "apps/three-surface-poc/src/canonical-json-divergence.test.ts"
+     ],
+     "summary": [
+      "Test Files  1 failed (1)",
+      "Tests  5 failed | 16 passed (21)"
+     ],
+     "failed": [
+      {
+       "test": "where the two key-sorted JSON encoders agree > agree with each other and with an independent reference on 600 seeded plain JSON values",
+       "firstError": "\u2192 value 11: expected { ok: '{\"k_\":0.30000000000000004,\"k\u2026' } to deeply equal { ok: '{\"k_\":0.30000000000000004,\"k\u2026' }"
+      },
+      {
+       "test": "where the two key-sorted JSON encoders agree > agree on the rows the generator cannot reach",
+       "firstError": "\u2192 lenient, a lone surrogate, escaped: expected { ok: '{\"0\":\"\\ud800\"}' } to deeply equal { ok: '[\"\\ud800\"]' }"
+      },
+      {
+       "test": "where they differ because the strict encoder refuses what the lenient one spells > an undefined array element",
+       "firstError": "\u2192 expected { ok: '{}' } to deeply equal { ok: '[null]' }"
+      },
+      {
+       "test": "where they differ because the strict encoder refuses what the lenient one spells > Infinity in an array",
+       "firstError": "\u2192 expected { ok: '{\"0\":null}' } to deeply equal { ok: '[null]' }"
+      },
+      {
+       "test": "where they differ because the strict encoder refuses what the lenient one spells > a sparse array",
+       "firstError": "\u2192 expected { ok: '{\"0\":1,\"2\":3}' } to deeply equal { ok: '[1,null,3]' }"
+      }
+     ],
+     "failedCount": 5
+    },
+    "existing": {
+     "killed": false,
+     "files": [
+      "packages/three-surface-poc-core/src/project-shape-manifest.test.ts",
+      "packages/three-surface-poc-core/src/response-identity.test.ts"
+     ],
+     "summary": [
+      "Test Files  2 passed (2)",
+      "Tests  33 passed (33)"
+     ],
+     "failed": [],
+     "failedCount": 0
+    }
+   },
+   "verdict": "killed by test"
+  },
+  {
+   "id": "K3-strict-keys-unsorted",
+   "file": "packages/polaris-generation-core/src/canonical-json.ts",
+   "old": "const sorted = (keys as string[]).sort();",
+   "new": "const sorted = (keys as string[]);",
+   "commit": "497a119e18c28a7e8af058d8f8e1191abaa62e54",
+   "detectors": {
+    "test": {
+     "killed": true,
+     "files": [
+      "apps/three-surface-poc/src/canonical-json-divergence.test.ts"
+     ],
+     "summary": [
+      "Test Files  1 failed (1)",
+      "Tests  3 failed | 18 passed (21)"
+     ],
+     "failed": [
+      {
+       "test": "where the two key-sorted JSON encoders agree > agree with each other and with an independent reference on 600 seeded plain JSON values",
+       "firstError": "\u2192 value 11: expected { Object (ok) } to deeply equal { ok: '{\"k_\":0.30000000000000004,\"k\u2026' }"
+      },
+      {
+       "test": "where the two key-sorted JSON encoders agree > agree on the rows the generator cannot reach",
+       "firstError": "\u2192 strict, a null-prototype object: expected { ok: '{\"b\":1,\"a\":2}' } to deeply equal { ok: '{\"a\":2,\"b\":1}' }"
+      },
+      {
+       "test": "where they differ on plain, acyclic, finite JSON > a key that is an array index sorts first and numerically in the lenient encoder, by code ",
+       "firstError": "\u2192 expected { ok: '{\"2\":4,\"10\":2,\"b\":1,\"a\":3}' } to deeply equal { ok: '{\"10\":2,\"2\":4,\"a\":3,\"b\":1}' }"
+      }
+     ],
+     "failedCount": 3
+    },
+    "existing": {
+     "killed": true,
+     "files": [
+      "packages/polaris-generation-core/src/canonical-json.test.ts"
+     ],
+     "summary": [
+      "Test Files  1 failed (1)",
+      "Tests  1 failed | 14 passed (15)"
+     ],
+     "failed": [
+      {
+       "test": "canonical JSON record bytes > binds sorted object keys but preserves list order, Unicode and primitive spelling",
+       "firstError": "\u2192 expected '{\"z\":[true,null,0,\"\u00e9\\n\"],\"a\":{\"y\":2,\"\u2026' to be '{\"a\":{\"x\":1,\"y\":2},\"z\":[true,null,0,\"\u2026' // Object.is equality"
+      }
+     ],
+     "failedCount": 1
+    }
+   },
+   "verdict": "killed by test, existing"
+  },
+  {
+   "id": "K4-strict-accepts-non-finite",
+   "file": "packages/polaris-generation-core/src/canonical-json.ts",
+   "old": "if (!Number.isFinite(item)) reject('unsupported-value');",
+   "new": "",
+   "commit": "f56c2a473d1174ae0e4f34c7566bc8ccbf5851e2",
+   "detectors": {
+    "test": {
+     "killed": true,
+     "files": [
+      "apps/three-surface-poc/src/canonical-json-divergence.test.ts"
+     ],
+     "summary": [
+      "Test Files  1 failed (1)",
+      "Tests  2 failed | 19 passed (21)"
+     ],
+     "failed": [
+      {
+       "test": "where they differ because the strict encoder refuses what the lenient one spells > NaN",
+       "firstError": "\u2192 expected { ok: 'null' } to deeply equal { error: 'unsupported-value' }"
+      },
+      {
+       "test": "where they differ because the strict encoder refuses what the lenient one spells > Infinity in an array",
+       "firstError": "\u2192 expected { ok: '[null]' } to deeply equal { error: 'unsupported-value' }"
+      }
+     ],
+     "failedCount": 2
+    },
+    "existing": {
+     "killed": true,
+     "files": [
+      "packages/polaris-generation-core/src/canonical-json.test.ts"
+     ],
+     "summary": [
+      "Test Files  1 failed (1)",
+      "Tests  3 failed | 12 passed (15)"
+     ],
+     "failed": [
+      {
+       "test": "canonical JSON record bytes > rejects non-JSON primitives without silent omission",
+       "firstError": "\u2192 expected function to throw an error, but it didn't"
+      },
+      {
+       "test": "canonical JSON record bytes > rejects non-JSON primitives without silent omission",
+       "firstError": "\u2192 expected function to throw an error, but it didn't"
+      },
+      {
+       "test": "canonical JSON record bytes > rejects non-JSON primitives without silent omission",
+       "firstError": "\u2192 expected function to throw an error, but it didn't"
+      }
+     ],
+     "failedCount": 3
+    }
+   },
+   "verdict": "killed by test, existing"
+  },
+  {
+   "id": "K5-strict-accepts-non-plain-objects",
+   "file": "packages/polaris-generation-core/src/canonical-json.ts",
+   "old": "if (array ? prototype !== Array.prototype : prototype !== Object.prototype && prototype !== null) {",
+   "new": "if (false) {",
+   "commit": "3bf451bfa78bc4c37a7b5a5fa06368065dffcaf0",
+   "detectors": {
+    "test": {
+     "killed": true,
+     "files": [
+      "apps/three-surface-poc/src/canonical-json-divergence.test.ts"
+     ],
+     "summary": [
+      "Test Files  1 failed (1)",
+      "Tests  3 failed | 18 passed (21)"
+     ],
+     "failed": [
+      {
+       "test": "where they differ because the strict encoder refuses what the lenient one spells > a Date",
+       "firstError": "\u2192 expected { ok: '{}' } to deeply equal { error: 'unsupported-object' }"
+      },
+      {
+       "test": "where they differ because the strict encoder refuses what the lenient one spells > a Map",
+       "firstError": "\u2192 expected { ok: '{}' } to deeply equal { error: 'unsupported-object' }"
+      },
+      {
+       "test": "where they differ because the strict encoder refuses what the lenient one spells > a class instance",
+       "firstError": "\u2192 expected { ok: '{\"x\":1}' } to deeply equal { error: 'unsupported-object' }"
+      }
+     ],
+     "failedCount": 3
+    },
+    "existing": {
+     "killed": true,
+     "files": [
+      "packages/polaris-generation-core/src/canonical-json.test.ts"
+     ],
+     "summary": [
+      "Test Files  1 failed (1)",
+      "Tests  1 failed | 14 passed (15)"
+     ],
+     "failed": [
+      {
+       "test": "canonical JSON record bytes > refuses custom objects, accessors and proxies without running their hooks",
+       "firstError": "\u2192 expected function to throw an error, but it didn't"
+      }
+     ],
+     "failedCount": 1
+    }
+   },
+   "verdict": "killed by test, existing"
+  },
+  {
+   "id": "K6-strict-accepts-proto-key",
+   "file": "packages/polaris-generation-core/src/canonical-json.ts",
+   "old": "['__proto__', 'prototype', 'constructor'].includes(key)",
+   "new": "['prototype', 'constructor'].includes(key)",
+   "commit": "3d4c273267b164262c49d610dca5227469bdd4e8",
+   "detectors": {
+    "test": {
+     "killed": true,
+     "files": [
+      "apps/three-surface-poc/src/canonical-json-divergence.test.ts"
+     ],
+     "summary": [
+      "Test Files  1 failed (1)",
+      "Tests  1 failed | 20 passed (21)"
+     ],
+     "failed": [
+      {
+       "test": "where they differ because the strict encoder refuses what the lenient one spells > an own key named __proto__",
+       "firstError": "\u2192 expected { ok: '{\"__proto__\":1}' } to deeply equal { error: 'unsupported-property' }"
+      }
+     ],
+     "failedCount": 1
+    },
+    "existing": {
+     "killed": true,
+     "files": [
+      "packages/polaris-generation-core/src/canonical-json.test.ts"
+     ],
+     "summary": [
+      "Test Files  1 failed (1)",
+      "Tests  1 failed | 14 passed (15)"
+     ],
+     "failed": [
+      {
+       "test": "canonical JSON record bytes > rejects hidden, symbol and pollution keys rather than erasing them",
+       "firstError": "\u2192 expected [Function] to throw an error"
+      }
+     ],
+     "failedCount": 1
+    }
+   },
+   "verdict": "killed by test, existing"
+  },
+  {
+   "id": "K7-strict-accepts-accessors",
+   "file": "packages/polaris-generation-core/src/canonical-json.ts",
+   "old": "if (!('value' in property) || !property.enumerable) reject('unsupported-property');",
+   "new": "",
+   "commit": "039409e5efdfcf2d5a89dd312c5a4a5b700dc847",
+   "detectors": {
+    "test": {
+     "killed": true,
+     "files": [
+      "apps/three-surface-poc/src/canonical-json-divergence.test.ts"
+     ],
+     "summary": [
+      "Test Files  1 failed (1)",
+      "Tests  1 failed | 20 passed (21)"
+     ],
+     "failed": [
+      {
+       "test": "where they differ because the strict encoder refuses what the lenient one spells > a getter, which the lenient encoder runs",
+       "firstError": "\u2192 expected { error: 'unsupported-value' } to deeply equal { error: 'unsupported-property' }"
+      }
+     ],
+     "failedCount": 1
+    },
+    "existing": {
+     "killed": true,
+     "files": [
+      "packages/polaris-generation-core/src/canonical-json.test.ts"
+     ],
+     "summary": [
+      "Test Files  1 failed (1)",
+      "Tests  1 failed | 14 passed (15)"
+     ],
+     "failed": [
+      {
+       "test": "canonical JSON record bytes > rejects hidden, symbol and pollution keys rather than erasing them",
+       "firstError": "\u2192 expected [Function] to throw an error"
+      }
+     ],
+     "failedCount": 1
+    }
+   },
+   "verdict": "killed by test, existing"
+  },
+  {
+   "id": "K8-lenient-reads-dates",
+   "file": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+   "old": "if (value !== null && typeof value === 'object') {\n    const record",
+   "new": "if (value !== null && typeof value === 'object' && !(value instanceof Date)) {\n    const record",
+   "commit": "98762297d74ea20169d42aa7ad00e752a1b43e6e",
+   "detectors": {
+    "test": {
+     "killed": true,
+     "files": [
+      "apps/three-surface-poc/src/canonical-json-divergence.test.ts"
+     ],
+     "summary": [
+      "Test Files  1 failed (1)",
+      "Tests  1 failed | 20 passed (21)"
+     ],
+     "failed": [
+      {
+       "test": "where they differ because the strict encoder refuses what the lenient one spells > a Date",
+       "firstError": "\u2192 expected { ok: '\"1970-01-01T00:00:00.000Z\"' } to deeply equal { ok: '{}' }"
+      }
+     ],
+     "failedCount": 1
+    },
+    "existing": {
+     "killed": false,
+     "files": [
+      "packages/three-surface-poc-core/src/project-shape-manifest.test.ts",
+      "packages/three-surface-poc-core/src/response-identity.test.ts"
+     ],
+     "summary": [
+      "Test Files  2 passed (2)",
+      "Tests  33 passed (33)"
+     ],
+     "failed": [],
+     "failedCount": 0
+    }
+   },
+   "verdict": "killed by test"
+  }
+ ]
+}

@@ -1,0 +1,44 @@
+{
+ "files": [
+  {
+   "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-537/clone/apps/three-surface-poc/src/orrery.browser.test.ts",
+   "project": "@syzygy/three-surface-poc-app",
+   "type": "suite",
+   "name": "apps/three-surface-poc/src/orrery.browser.test.ts",
+   "line": null,
+   "mode": "run",
+   "state": "pass",
+   "durationMs": 4297.843981000001,
+   "errors": [],
+   "tasks": [
+    {
+     "type": "suite",
+     "name": "Orrery rendered geometry",
+     "line": 19,
+     "mode": "run",
+     "state": "pass",
+     "durationMs": 4285.416204,
+     "errors": [],
+     "tasks": [
+      {
+       "type": "test",
+       "name": "preserves district size differences and readable labels (C3-3, POC-REQ-050)",
+       "line": 30,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 1437.8373090000005,
+       "errors": []
+      }
+     ],
+     "hookMs": 2848
+    }
+   ],
+   "hookMs": 12,
+   "collectMs": 3729.0978049999994,
+   "setupMs": 39.813229999999976,
+   "prepareMs": 165.07009200000005,
+   "environmentMs": 0.18951800000002095
+  }
+ ],
+ "unhandled": []
+}

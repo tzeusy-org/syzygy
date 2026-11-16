@@ -8,9 +8,16 @@
   "include": [
     "src"
   ],
+  "exclude": [
+    "src/**/*.test.ts",
+    "src/polaris-generation/dossier-reading.testkit.ts",
+    "src/test-deep-dive-markers.ts",
+    "src/test-fixture-sweep.global-setup.ts",
+    "src/test-http-client.ts"
+  ],
   "references": [
     {
-      "path": "../../packages/cap1-daemon"
+      "path": "../../packages/http-host"
     },
     {
       "path": "../../packages/three-surface-poc-core"
@@ -20,6 +27,9 @@
     },
     {
       "path": "../../packages/polaris-generation-consent"
+    },
+    {
+      "path": "../../packages/support"
     }
   ]
 }

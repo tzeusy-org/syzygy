@@ -1,0 +1,47 @@
+classes r1 176 r2 176 onlyR1 [] onlyR2 []
+section moved []
+load-bearing fields equal for every class: {'family': True, 'rule': True, 'disposition': True, 'creatingFiles': True, 'created': True, 'testFiles': True, 'leftAfterSIGKILL': True, 'afterTheNextFreshRun': True, 'leftByTheFreshRunItself': True, 'leftAfterCleanRun': True}
+rows compared 176 fields differing (field: classes): {'exposureInTheCleanRun': 27, 'topLevelChildrenCarriedFrom': 1}
+  example exposureInTheCleanRun chrome-singleton-directory | {"run": "c0-clean", "namesSampled": 20, "namesNeverSampled": 0, "expectedNamesPresentAtARandomMoment": {"lowerBound": 1.373, "upperBound": 1.438}} -> {"run": "c0-clean", "namesSampled": 20, "namesNeverSampled": 0, "expectedNamesPresentAtARandomMoment": {"lowerBound": 1.373, "upperBound": 1.533}}
+  example topLevelChildrenCarriedFrom nanoid-21 | "<absent>" -> {"record": "docs/evidence/scratch-prefix-census-2026-10-23/census-2026-10-24.json", "atCommit": "e2aae62efc5a4c7d346f03a2c581c852b5ea8802", "path": "leftBySIGKILL[26].topLevelChildrenOfOneObserved (class nanoid-21)", "blobSha256": "39e107b0594b5996277c0cf300bf15d460b9496dcfac1578cebad53ce0ef8bdb"}
+differing paths 293 groups 40
+     5  changed  /dispositionRules[]/why
+     1  changed  /exposureRanking/meaning
+     1  added  /exposureRanking/samplerGap
+     9  changed  /exposureRanking/top[]/class
+     9  changed  /exposureRanking/top[]/lowerBound
+    15  changed  /exposureRanking/top[]/upperBound
+     3  changed  /finding[]
+     1  added  /followUps[]/guards
+     2  changed  /followUps[]/measure
+     2  changed  /followUps[]/what
+     1  changed  /followUps[]/whyNotTriviallySafe
+    27  changed  /leftBySIGKILL[]/exposureInTheCleanRun/expectedNamesPresentAtARandomMoment/upperBound
+     1  added  /leftBySIGKILL[]/topLevelChildrenCarriedFrom
+     1  list length 6 -> 8  /limits
+     3  changed  /limits[]
+     1  changed  /namedInTheBeadObservation/chrome-singleton-directory/exposureInTheCleanRun/expectedNamesPresentAtARandomMoment/upperBound
+     1  changed  /namedInTheBeadObservation/syzygy-build-output-/exposureInTheCleanRun/expectedNamesPresentAtARandomMoment/upperBound
+     1  changed  /namedInTheBeadObservation/syzygy-dossier-src-/exposureInTheCleanRun/expectedNamesPresentAtARandomMoment/upperBound
+     1  changed  /namedInTheBeadObservation/syzygy-poc-browser-/exposureInTheCleanRun/expectedNamesPresentAtARandomMoment/upperBound
+     1  changed  /namedInTheBeadObservation/syzygy-poc-surface-fixture-p<pid>-n<ns>-/exposureInTheCleanRun/expectedNamesPresentAtARandomMoment/upperBound
+     1  changed  /namedInTheBeadObservation/syzygy-poc-surface-state-/exposureInTheCleanRun/expectedNamesPresentAtARandomMoment/upperBound
+     1  changed  /namedInTheBeadObservation/syzygy-public-screen-/exposureInTheCleanRun/expectedNamesPresentAtARandomMoment/upperBound
+     1  changed  /namedInTheBeadObservation/syzygy-trigger-/exposureInTheCleanRun/expectedNamesPresentAtARandomMoment/upperBound
+     1  changed  /namedInTheBeadObservation/syzygy-trigger-repo-/exposureInTheCleanRun/expectedNamesPresentAtARandomMoment/upperBound
+   179  changed  /staticCoverage/neverSeen/*
+     1  list length 1 -> 16  /staticCoverage/neverSeen/*
+    10  list length 1 -> 2  /staticCoverage/neverSeen/*
+     1  list length 1 -> 4  /staticCoverage/neverSeen/*
+     1  list length 1 -> 6  /staticCoverage/neverSeen/*
+     1  added  /staticCoverage/sitesWithAPrefixLiteral
+     1  added  /staticCoverage/sitesWithoutOne
+     1  added  /subject/carriedObservationsSha256
+     1  changed  /subject/notRun
+     1  added  /subject/revision
+     1  added  /subject/samplerRecordSha256
+     1  changed  /subject/staticSitesSha256
+     1  changed  /subject/toolSha256/assemble_census.py
+     1  changed  /subject/toolSha256/collect_runs.py
+     1  changed  /subject/toolSha256/static_sites.py
+     1  added  /vitestProjectDirectoriesInTheCleanRun

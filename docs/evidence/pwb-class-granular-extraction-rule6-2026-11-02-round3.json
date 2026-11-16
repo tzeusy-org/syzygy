@@ -1,0 +1,354 @@
+{
+  "subject": {
+    "commit": "3a752ff1d3ddd0ee2fd3f90f568a4ef5b3ad7b7a",
+    "branch": "agent/syzygy-dov.15.2",
+    "fileSha256": {
+      "apps/three-surface-poc/src/polaris.ts": "144bb92f9d714f35143ca1cc9b00ef41c3d7dfacbbca03a26e8992589a16e568",
+      "packages/three-surface-poc-core/src/project-shape-coverage.ts": "f7995e6ba90d01a4fe4ed78f5599b27cfabaa0d7a5204118d1bca0ef09317cb3",
+      "packages/three-surface-poc-core/src/project-shape-extraction.ts": "4ffe1348978d0d38adb5c3cb3bc248c795865ad18d9d95d2a497e75b43517b31"
+    },
+    "testFileSha256": {
+      "apps/three-surface-poc/src/polaris-project-shape.test.ts": "d44a44f7d82f37488698796c935b0f7546a00e70b98c41d83b9a7eaca70814e9",
+      "packages/three-surface-poc-core/src/project-shape-class-granular.test.ts": "389335f54753bec22a5c8bf57146460311a55c49a4aa061684ab997eed1da739"
+    }
+  },
+  "runnerPath": "scripts/rule6_mutation_runner.py",
+  "runnerSha256": "2bc35be550f0beb6ad355e0fc89719c1ae28320d186f41929af96dd59a376b22",
+  "runner": "single-occurrence textual replacement of `old` by `new` in `file`, then `npx vitest run --project <project> <testFiles>` in the tree; killed = at least one failed test; file restored from git after each run",
+  "project": "@syzygy/three-surface-poc-core",
+  "ranAt": "2026-11-02T07:00:00+00:00",
+  "mutants": [
+    {
+      "id": "class-aggregate-drops-unenumerated-reason",
+      "file": "packages/three-surface-poc-core/src/project-shape-coverage.ts",
+      "old": "...(unenumeratedCount === 0 ? {} : { unenumerated: { reason: 'unenumerated-heading' as const, headings: unenumeratedCount } })",
+      "new": "",
+      "tests": [
+        "packages/three-surface-poc-core/src/project-shape-class-granular.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-core packages/three-surface-poc-core/src/project-shape-class-granular.test.ts",
+      "outcome": "killed",
+      "failedTests": 3,
+      "totalTests": 36,
+      "failures": [
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 an unenumerated heading in the composed answer leaves the catalog-entry class D and the source D Unknown with the reason, not partial",
+          "firstErrorLine": "AssertionError: expected { kind: 'unknown', \u2026(1) } to deeply equal { kind: 'unknown', \u2026(2) }"
+        },
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 the unenumerated-heading count is the number of headings, per source and per class counts three headings of one source at the class aggregate, the source and the class outcome",
+          "firstErrorLine": "AssertionError: expected { kind: 'unknown', \u2026(1) } to deeply equal { kind: 'unknown', \u2026(2) }"
+        },
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 the class count is the sum over its sources, each source and outcome its own sums the class aggregate across the sources and surfaces every heading",
+          "firstErrorLine": "AssertionError: expected { kind: 'unknown', reasons: [ \u2026(2) ] } to match object { kind: 'unknown', \u2026(1) }"
+        }
+      ]
+    },
+    {
+      "id": "whole-file-fallback-skipped-when-no-catalog-heading",
+      "file": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+      "old": "const unenumeratedHeadings = unenumeratedHeadingsOf(doc, cls, 3, rowHeadings, V1_DECLARED_HEADINGS);",
+      "new": "const unenumeratedHeadings = rowHeadings.length > 0 ? unenumeratedHeadingsOf(doc, cls, 3, rowHeadings, V1_DECLARED_HEADINGS) : [];",
+      "tests": [
+        "packages/three-surface-poc-core/src/project-shape-class-granular.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-core packages/three-surface-poc-core/src/project-shape-class-granular.test.ts",
+      "outcome": "killed",
+      "failedTests": 3,
+      "totalTests": 36,
+      "failures": [
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 an unenumerated heading is surfaced, counted and mints nothing falls back to the whole file when none of the nine headings is found",
+          "firstErrorLine": "AssertionError: expected [] to deeply equal [ { text: 'Alpha', line: 5 }, \u2026(1) ]"
+        },
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 the class count is the sum over its sources, each source and outcome its own counts each source denominator and each class outcome by its own headings",
+          "firstErrorLine": "AssertionError: expected [ { kind: 'unknown', \u2026(2) }, \u2026(2) ] to deeply equal [ ObjectContaining{\u2026}, \u2026(2) ]"
+        },
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 the class count is the sum over its sources, each source and outcome its own sums the class aggregate across the sources and surfaces every heading",
+          "firstErrorLine": "AssertionError: expected { kind: 'unknown', \u2026(2) } to match object { kind: 'unknown', \u2026(1) }"
+        }
+      ]
+    },
+    {
+      "id": "polaris-class-denominator-drops-unenumerated-word",
+      "file": "apps/three-surface-poc/src/polaris.ts",
+      "old": "...(aggregate.denominator.unenumerated === undefined ? [] : [`${aggregate.denominator.unenumerated.reason}: ${aggregate.denominator.unenumerated.headings}`])",
+      "new": "",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-project-shape.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-app apps/three-surface-poc/src/polaris-project-shape.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 25,
+      "failures": [
+        {
+          "test": "Polaris authority disclosure and discovery (gen-2 repairs PWB-RECON-01/02) says which class failed and which read, surfaces each unenumerated heading, and qualifies counts made without a read root index (PWB-REQ-002)",
+          "firstErrorLine": "AssertionError: expected '<!doctype html>\\n<html lang=\"en\">\\n<h\u2026' to contain 'denominator Unknown (missing-declarat\u2026'"
+        }
+      ]
+    },
+    {
+      "id": "polaris-source-denominator-drops-unenumerated-word",
+      "file": "apps/three-surface-poc/src/polaris.ts",
+      "old": "? `Source item denominator Unknown \u2014 unenumerated-heading (${source.itemDenominator.unenumeratedHeadings}). `",
+      "new": "? ''",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-project-shape.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-app apps/three-surface-poc/src/polaris-project-shape.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 25,
+      "failures": [
+        {
+          "test": "Polaris authority disclosure and discovery (gen-2 repairs PWB-RECON-01/02) says which class failed and which read, surfaces each unenumerated heading, and qualifies counts made without a read root index (PWB-REQ-002)",
+          "firstErrorLine": "AssertionError: expected '<!doctype html>\\n<html lang=\"en\">\\n<h\u2026' to contain 'Source item denominator Unknown \u2014 une\u2026'"
+        }
+      ]
+    },
+    {
+      "id": "r2f1-class-aggregate-count-capped-at-1",
+      "file": "packages/three-surface-poc-core/src/project-shape-coverage.ts",
+      "old": "{ reason: 'unenumerated-heading' as const, headings: unenumeratedCount }",
+      "new": "{ reason: 'unenumerated-heading' as const, headings: Math.min(1, unenumeratedCount) }",
+      "tests": [
+        "packages/three-surface-poc-core/src/project-shape-class-granular.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-core packages/three-surface-poc-core/src/project-shape-class-granular.test.ts",
+      "outcome": "killed",
+      "failedTests": 2,
+      "totalTests": 36,
+      "failures": [
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 the unenumerated-heading count is the number of headings, per source and per class counts three headings of one source at the class aggregate, the source and the class outcome",
+          "firstErrorLine": "AssertionError: expected { kind: 'unknown', \u2026(2) } to deeply equal { kind: 'unknown', \u2026(2) }"
+        },
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 the class count is the sum over its sources, each source and outcome its own sums the class aggregate across the sources and surfaces every heading",
+          "firstErrorLine": "AssertionError: expected { kind: 'unknown', \u2026(2) } to match object { kind: 'unknown', \u2026(1) }"
+        }
+      ],
+      "note": "R2-F1 mutant 1: class aggregate count capped at 1"
+    },
+    {
+      "id": "r2f1-class-aggregate-counts-last-source-only",
+      "file": "packages/three-surface-poc-core/src/project-shape-coverage.ts",
+      "old": "sources.reduce((sum, s) => sum + s.unenumeratedHeadings",
+      "new": "sources.reduce((sum, s) => 0 * sum + s.unenumeratedHeadings",
+      "tests": [
+        "packages/three-surface-poc-core/src/project-shape-class-granular.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-core packages/three-surface-poc-core/src/project-shape-class-granular.test.ts",
+      "outcome": "killed",
+      "failedTests": 3,
+      "totalTests": 36,
+      "failures": [
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 an unenumerated heading in the composed answer leaves the catalog-entry class D and the source D Unknown with the reason, not partial",
+          "firstErrorLine": "AssertionError: expected { kind: 'unknown', \u2026(1) } to deeply equal { kind: 'unknown', \u2026(2) }"
+        },
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 the unenumerated-heading count is the number of headings, per source and per class counts three headings of one source at the class aggregate, the source and the class outcome",
+          "firstErrorLine": "AssertionError: expected { kind: 'unknown', \u2026(1) } to deeply equal { kind: 'unknown', \u2026(2) }"
+        },
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 the class count is the sum over its sources, each source and outcome its own sums the class aggregate across the sources and surfaces every heading",
+          "firstErrorLine": "AssertionError: expected { kind: 'unknown', \u2026(2) } to match object { kind: 'unknown', \u2026(1) }"
+        }
+      ],
+      "note": "extra: aggregate is not a sum over sources"
+    },
+    {
+      "id": "r2f1-source-denominator-capped-at-1-whole",
+      "file": "packages/three-surface-poc-core/src/project-shape-coverage.ts",
+      "old": "{ kind: 'unknown', unknown, ...(grammarFailure === undefined ? {} : { grammarFailure }), ...(headings.length === 0 ? {} : { unenumeratedHeadings: headings.length }) }",
+      "new": "{ kind: 'unknown', unknown, ...(grammarFailure === undefined ? {} : { grammarFailure }), ...(headings.length === 0 ? {} : { unenumeratedHeadings: Math.min(1, headings.length) }) }",
+      "tests": [
+        "packages/three-surface-poc-core/src/project-shape-class-granular.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-core packages/three-surface-poc-core/src/project-shape-class-granular.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 36,
+      "failures": [
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 the class count is the sum over its sources, each source and outcome its own counts each source denominator and each class outcome by its own headings",
+          "firstErrorLine": "AssertionError: expected [ { kind: 'unknown', \u2026(2) }, \u2026(2) ] to deeply equal [ ObjectContaining{\u2026}, \u2026(2) ]"
+        }
+      ],
+      "note": "R2-F1 mutant 2, site 1 of 3 (source withheld whole / unknown)"
+    },
+    {
+      "id": "r2f1-source-denominator-capped-at-1-partial",
+      "file": "packages/three-surface-poc-core/src/project-shape-coverage.ts",
+      "old": "grammarFailure: value.failures[0] as ExtractionFailureRecord, ...(headings.length === 0 ? {} : { unenumeratedHeadings: headings.length })",
+      "new": "grammarFailure: value.failures[0] as ExtractionFailureRecord, ...(headings.length === 0 ? {} : { unenumeratedHeadings: Math.min(1, headings.length) })",
+      "tests": [
+        "packages/three-surface-poc-core/src/project-shape-class-granular.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-core packages/three-surface-poc-core/src/project-shape-class-granular.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 36,
+      "failures": [
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 the class count is the sum over its sources, each source and outcome its own counts each source denominator and each class outcome by its own headings",
+          "firstErrorLine": "AssertionError: expected [ { kind: 'unknown', \u2026(2) }, \u2026(2) ] to deeply equal [ ObjectContaining{\u2026}, \u2026(2) ]"
+        }
+      ],
+      "note": "R2-F1 mutant 2, site 2 of 3 (partial)"
+    },
+    {
+      "id": "r2f1-source-denominator-capped-at-1-extracted",
+      "file": "packages/three-surface-poc-core/src/project-shape-coverage.ts",
+      "old": ": { kind: 'unknown', unknown: UNENUMERATED_UNKNOWN, unenumeratedHeadings: headings.length }",
+      "new": ": { kind: 'unknown', unknown: UNENUMERATED_UNKNOWN, unenumeratedHeadings: Math.min(1, headings.length) }",
+      "tests": [
+        "packages/three-surface-poc-core/src/project-shape-class-granular.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-core packages/three-surface-poc-core/src/project-shape-class-granular.test.ts",
+      "outcome": "killed",
+      "failedTests": 2,
+      "totalTests": 36,
+      "failures": [
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 the unenumerated-heading count is the number of headings, per source and per class counts three headings of one source at the class aggregate, the source and the class outcome",
+          "firstErrorLine": "AssertionError: expected { kind: 'unknown', \u2026(2) } to match object { kind: 'unknown', \u2026(1) }"
+        },
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 the class count is the sum over its sources, each source and outcome its own counts each source denominator and each class outcome by its own headings",
+          "firstErrorLine": "AssertionError: expected [ { kind: 'unknown', \u2026(2) }, \u2026(2) ] to deeply equal [ ObjectContaining{\u2026}, \u2026(2) ]"
+        }
+      ],
+      "note": "R2-F1 mutant 2, site 3 of 3 (extracted)"
+    },
+    {
+      "id": "r2f1-class-outcome-count-fixed-at-1-read",
+      "file": "packages/three-surface-poc-core/src/project-shape-coverage.ts",
+      "old": "unknownReason: UNENUMERATED_UNKNOWN.unknownReason, unenumeratedHeadings: unenumerated }",
+      "new": "unknownReason: UNENUMERATED_UNKNOWN.unknownReason, unenumeratedHeadings: 1 }",
+      "tests": [
+        "packages/three-surface-poc-core/src/project-shape-class-granular.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-core packages/three-surface-poc-core/src/project-shape-class-granular.test.ts",
+      "outcome": "killed",
+      "failedTests": 2,
+      "totalTests": 36,
+      "failures": [
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 the unenumerated-heading count is the number of headings, per source and per class counts three headings of one source at the class aggregate, the source and the class outcome",
+          "firstErrorLine": "AssertionError: expected { kind: 'unknown', \u2026(3) } to match object { kind: 'unknown', \u2026(2) }"
+        },
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 the class count is the sum over its sources, each source and outcome its own counts each source denominator and each class outcome by its own headings",
+          "firstErrorLine": "AssertionError: expected [ { kind: 'unknown', \u2026(3) }, \u2026(2) ] to deeply equal [ ObjectContaining{\u2026}, \u2026(2) ]"
+        }
+      ],
+      "note": "R2-F1 mutant 3: class outcome count fixed at 1 (readOutcome)"
+    },
+    {
+      "id": "r2f1-class-outcome-count-fixed-at-1-unknown",
+      "file": "packages/three-surface-poc-core/src/project-shape-coverage.ts",
+      "old": "...(unenumerated === 0 ? {} : { unenumeratedHeadings: unenumerated }),",
+      "new": "...(unenumerated === 0 ? {} : { unenumeratedHeadings: 1 }),",
+      "tests": [
+        "packages/three-surface-poc-core/src/project-shape-class-granular.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-core packages/three-surface-poc-core/src/project-shape-class-granular.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 36,
+      "failures": [
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 the class count is the sum over its sources, each source and outcome its own counts each source denominator and each class outcome by its own headings",
+          "firstErrorLine": "AssertionError: expected [ { kind: 'unknown', \u2026(3) }, \u2026(2) ] to deeply equal [ ObjectContaining{\u2026}, \u2026(2) ]"
+        }
+      ],
+      "note": "extra: the same fixed count in unknownOutcomes (failed and withheld classes)"
+    },
+    {
+      "id": "r2f1-polaris-class-count-fixed-at-1",
+      "file": "apps/three-surface-poc/src/polaris.ts",
+      "old": "`${aggregate.denominator.unenumerated.reason}: ${aggregate.denominator.unenumerated.headings}`",
+      "new": "`${aggregate.denominator.unenumerated.reason}: 1`",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-project-shape.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-app apps/three-surface-poc/src/polaris-project-shape.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 25,
+      "failures": [
+        {
+          "test": "Polaris authority disclosure and discovery (gen-2 repairs PWB-RECON-01/02) says which class failed and which read, surfaces each unenumerated heading, and qualifies counts made without a read root index (PWB-REQ-002)",
+          "firstErrorLine": "AssertionError: expected '<!doctype html>\\n<html lang=\"en\">\\n<h\u2026' to contain 'denominator Unknown (missing-declarat\u2026'"
+        }
+      ],
+      "note": "Polaris string: class aggregate count"
+    },
+    {
+      "id": "r2f1-polaris-source-count-fixed-at-1",
+      "file": "apps/three-surface-poc/src/polaris.ts",
+      "old": "unenumerated-heading (${source.itemDenominator.unenumeratedHeadings}). `",
+      "new": "unenumerated-heading (1). `",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-project-shape.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-app apps/three-surface-poc/src/polaris-project-shape.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 25,
+      "failures": [
+        {
+          "test": "Polaris authority disclosure and discovery (gen-2 repairs PWB-RECON-01/02) says which class failed and which read, surfaces each unenumerated heading, and qualifies counts made without a read root index (PWB-REQ-002)",
+          "firstErrorLine": "AssertionError: expected '<!doctype html>\\n<html lang=\"en\">\\n<h\u2026' to contain 'Source item denominator Unknown \u2014 une\u2026'"
+        }
+      ],
+      "note": "Polaris string: source denominator count"
+    },
+    {
+      "id": "r2f1-polaris-class-outcome-count-fixed-at-1",
+      "file": "apps/three-surface-poc/src/polaris.ts",
+      "old": "(${d.unenumeratedHeadings} unenumerated heading(s))",
+      "new": "(1 unenumerated heading(s))",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-project-shape.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-app apps/three-surface-poc/src/polaris-project-shape.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 25,
+      "failures": [
+        {
+          "test": "Polaris authority disclosure and discovery (gen-2 repairs PWB-RECON-01/02) says which class failed and which read, surfaces each unenumerated heading, and qualifies counts made without a read root index (PWB-REQ-002)",
+          "firstErrorLine": "AssertionError: expected '<!doctype html>\\n<html lang=\"en\">\\n<h\u2026' to contain 'catalog-entry: Unknown \u2014 unenumerated\u2026'"
+        }
+      ],
+      "note": "Polaris string: class outcome count"
+    },
+    {
+      "id": "r2f1-polaris-list-count-fixed-at-1",
+      "file": "apps/three-surface-poc/src/polaris.ts",
+      "old": "<ul data-polaris-unenumerated=\"${shape.unenumeratedHeadings.length}\">",
+      "new": "<ul data-polaris-unenumerated=\"1\">",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-project-shape.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-app apps/three-surface-poc/src/polaris-project-shape.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 25,
+      "failures": [
+        {
+          "test": "Polaris authority disclosure and discovery (gen-2 repairs PWB-RECON-01/02) says which class failed and which read, surfaces each unenumerated heading, and qualifies counts made without a read root index (PWB-REQ-002)",
+          "firstErrorLine": "AssertionError: expected '<!doctype html>\\n<html lang=\"en\">\\n<h\u2026' to contain 'data-polaris-unenumerated=\"3\"'"
+        }
+      ],
+      "note": "Polaris string: list count"
+    }
+  ]
+}

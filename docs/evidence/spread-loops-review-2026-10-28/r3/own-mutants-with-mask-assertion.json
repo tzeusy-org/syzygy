@@ -1,0 +1,247 @@
+[
+ {
+  "id": "CONTROL",
+  "ranAt": "cc64132bffd8902961714b0ca9fb2ab886661b02",
+  "testFrom": null,
+  "tests": 268,
+  "loadavg1": "33.96",
+  "failing": []
+ },
+ {
+  "id": "L1-mask-spread",
+  "ranAt": "cc64132bffd8902961714b0ca9fb2ab886661b02",
+  "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+  "old": "        for (const pendingLine of pending) out.push(blank(pendingLine));\n",
+  "new": "        out.push(...pending.map(blank));\n",
+  "mutatedFileSha256": "bfdb22340acbcf35c530c96fe151eb74b39176109c4d664be1de491e80ee2767",
+  "outcome": "killed",
+  "tests": 268,
+  "loadavg1": "35.94",
+  "failing": [
+   {
+    "test": "a 200,000-line closed fence under the read limit (GP-B2 Q1) LF: a 200,000-line closed fence holding a script element reads as text, under the read limit",
+    "message": "RangeError: Maximum call stack size exceeded\n    at maskMarkdownCodeContexts (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-surface-poc-core/src/markdown-code-context.ts:120:13)\n    at scanActiveContent (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-",
+    "timeout": false
+   },
+   {
+    "test": "a 200,000-line closed fence under the read limit (GP-B2 Q1) CRLF: a 200,000-line closed fence holding a script element reads as text, under the read limit",
+    "message": "RangeError: Maximum call stack size exceeded\n    at maskMarkdownCodeContexts (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-surface-poc-core/src/markdown-code-context.ts:120:13)\n    at scanActiveContent (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-",
+    "timeout": false
+   },
+   {
+    "test": "a 200,000-line closed fence under the read limit (GP-B2 Q1) CR: a 200,000-line closed fence holding a script element reads as text, under the read limit",
+    "message": "RangeError: Maximum call stack size exceeded\n    at maskMarkdownCodeContexts (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-surface-poc-core/src/markdown-code-context.ts:120:13)\n    at scanActiveContent (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-",
+    "timeout": false
+   },
+   {
+    "test": "a 200,000-line closed fence under the read limit (GP-B2 Q1) LF: a script element after a 200,000-line closed fence is found, with a body-free record",
+    "message": "RangeError: Maximum call stack size exceeded\n    at maskMarkdownCodeContexts (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-surface-poc-core/src/markdown-code-context.ts:120:13)\n    at scanActiveContent (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-",
+    "timeout": false
+   },
+   {
+    "test": "a 200,000-line closed fence under the read limit (GP-B2 Q1) CRLF: a script element after a 200,000-line closed fence is found, with a body-free record",
+    "message": "RangeError: Maximum call stack size exceeded\n    at maskMarkdownCodeContexts (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-surface-poc-core/src/markdown-code-context.ts:120:13)\n    at scanActiveContent (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-",
+    "timeout": false
+   },
+   {
+    "test": "a 200,000-line closed fence under the read limit (GP-B2 Q1) CR: a script element after a 200,000-line closed fence is found, with a body-free record",
+    "message": "RangeError: Maximum call stack size exceeded\n    at maskMarkdownCodeContexts (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-surface-poc-core/src/markdown-code-context.ts:120:13)\n    at scanActiveContent (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-",
+    "timeout": false
+   },
+   {
+    "test": "a 200,000-line closed fence under the read limit (GP-B2 Q1) LF: scanActiveContent over a 200,000-line closed fence finds nothing inside it",
+    "message": "RangeError: Maximum call stack size exceeded\n    at maskMarkdownCodeContexts (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-surface-poc-core/src/markdown-code-context.ts:120:13)\n    at scanActiveContent (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-",
+    "timeout": false
+   },
+   {
+    "test": "a 200,000-line closed fence under the read limit (GP-B2 Q1) CRLF: scanActiveContent over a 200,000-line closed fence finds nothing inside it",
+    "message": "RangeError: Maximum call stack size exceeded\n    at maskMarkdownCodeContexts (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-surface-poc-core/src/markdown-code-context.ts:120:13)\n    at scanActiveContent (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-",
+    "timeout": false
+   },
+   {
+    "test": "a 200,000-line closed fence under the read limit (GP-B2 Q1) CR: scanActiveContent over a 200,000-line closed fence finds nothing inside it",
+    "message": "RangeError: Maximum call stack size exceeded\n    at maskMarkdownCodeContexts (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-surface-poc-core/src/markdown-code-context.ts:120:13)\n    at scanActiveContent (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-",
+    "timeout": false
+   },
+   {
+    "test": "a very long closed fence LF: 200,000 lines are blanked, every line end and the text after the fence kept",
+    "message": "RangeError: Maximum call stack size exceeded\n    at maskMarkdownCodeContexts (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-surface-poc-core/src/markdown-code-context.ts:120:13)\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-surface-poc-core/sr",
+    "timeout": false
+   },
+   {
+    "test": "a very long closed fence CRLF: 200,000 lines are blanked, every line end and the text after the fence kept",
+    "message": "RangeError: Maximum call stack size exceeded\n    at maskMarkdownCodeContexts (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-surface-poc-core/src/markdown-code-context.ts:120:13)\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-surface-poc-core/sr",
+    "timeout": false
+   },
+   {
+    "test": "a very long closed fence CR: 200,000 lines are blanked, every line end and the text after the fence kept",
+    "message": "RangeError: Maximum call stack size exceeded\n    at maskMarkdownCodeContexts (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-surface-poc-core/src/markdown-code-context.ts:120:13)\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-surface-poc-core/sr",
+    "timeout": false
+   },
+   {
+    "test": "a very long closed fence LF: a script element inside the fence is blanked, and the line after the fence keeps its own",
+    "message": "RangeError: Maximum call stack size exceeded\n    at maskMarkdownCodeContexts (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-surface-poc-core/src/markdown-code-context.ts:120:13)\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-surface-poc-core/sr",
+    "timeout": false
+   },
+   {
+    "test": "a very long closed fence CRLF: a script element inside the fence is blanked, and the line after the fence keeps its own",
+    "message": "RangeError: Maximum call stack size exceeded\n    at maskMarkdownCodeContexts (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-surface-poc-core/src/markdown-code-context.ts:120:13)\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-surface-poc-core/sr",
+    "timeout": false
+   },
+   {
+    "test": "a very long closed fence CR: a script element inside the fence is blanked, and the line after the fence keeps its own",
+    "message": "RangeError: Maximum call stack size exceeded\n    at maskMarkdownCodeContexts (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-surface-poc-core/src/markdown-code-context.ts:120:13)\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-surface-poc-core/sr",
+    "timeout": false
+   },
+   {
+    "test": "a very long fence or list does not abort the observation LF: a 200,000-line closed fence at the end of vision.md is classified as a 10-line one is",
+    "message": "RangeError: Maximum call stack size exceeded\n    at maskMarkdownCodeContexts (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-surface-poc-core/src/markdown-code-context.ts:120:13)\n    at scanActiveContent (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-",
+    "timeout": false
+   },
+   {
+    "test": "a very long fence or list does not abort the observation CRLF: a 200,000-line closed fence at the end of vision.md is classified as a 10-line one is",
+    "message": "RangeError: Maximum call stack size exceeded\n    at maskMarkdownCodeContexts (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-surface-poc-core/src/markdown-code-context.ts:120:13)\n    at scanActiveContent (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-",
+    "timeout": false
+   },
+   {
+    "test": "a very long fence or list does not abort the observation CR: a 200,000-line closed fence at the end of vision.md is classified as a 10-line one is",
+    "message": "RangeError: Maximum call stack size exceeded\n    at maskMarkdownCodeContexts (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-surface-poc-core/src/markdown-code-context.ts:120:13)\n    at scanActiveContent (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-",
+    "timeout": false
+   }
+  ]
+ },
+ {
+  "id": "L5-mask-reversed",
+  "ranAt": "cc64132bffd8902961714b0ca9fb2ab886661b02",
+  "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+  "old": "        for (const pendingLine of pending) out.push(blank(pendingLine));\n",
+  "new": "        for (let at = pending.length - 1; at >= 0; at -= 1) out.push(blank(pending[at] ?? ''));\n",
+  "mutatedFileSha256": "55cb76a7427e78eac53b9b1f1b786a7ee01d27e25e94499c09d5a70294971641",
+  "outcome": "killed",
+  "tests": 268,
+  "loadavg1": "36.93",
+  "failing": [
+   {
+    "test": "closed-pwb-code-context-v1 \u2014 fenced code blocks a closed backtick fence is blanked, delimiters included, keeping every newline and length",
+    "message": "AssertionError: expected 'before\\n   \\n     \\n       \\nafter' to be 'before\\n       \\n     \\n   \\nafter' // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-surface-poc-core/src/markdown-code-context.test.ts:24:26\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802a",
+    "timeout": false
+   },
+   {
+    "test": "closed-pwb-code-context-v1 \u2014 fenced code blocks tildes fence too, and a tilde opener info string may contain a backtick",
+    "message": "AssertionError: expected '   \\n   \\n       ' to be '       \\n   \\n   ' // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-surface-poc-core/src/markdown-code-context.test.ts:38:41\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/no",
+    "timeout": false
+   },
+   {
+    "test": "closed-pwb-code-context-v1 \u2014 fenced code blocks a closer must repeat the opener character at least the opener length, then spaces only",
+    "message": "AssertionError: expected '       \\n   \\n   \\n    ' to be '    \\n   \\n   \\n       ' // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-surface-poc-core/src/markdown-code-context.test.ts:46:47\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555",
+    "timeout": false
+   },
+   {
+    "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line LF: a tilde fence, a closer with trailing spaces and a span across lines",
+    "message": "AssertionError: expected '      \\n   \\n   \\nafter\\n' to be '   \\n   \\n      \\nafter\\n' // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-surface-poc-core/src/markdown-code-context.test.ts:147:65\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/re",
+    "timeout": false
+   },
+   {
+    "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CRLF: a tilde fence, a closer with trailing spaces and a span across lines",
+    "message": "AssertionError: expected '      \\r\\n   \\r\\n   \\r\\nafter\\r\\n' to be '   \\r\\n   \\r\\n      \\r\\nafter\\r\\n' // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-surface-poc-core/src/markdown-code-context.test.ts:147:65\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad",
+    "timeout": false
+   },
+   {
+    "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CR: a tilde fence, a closer with trailing spaces and a span across lines",
+    "message": "AssertionError: expected '      \\r   \\r   \\rafter\\r' to be '   \\r   \\r      \\rafter\\r' // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-surface-poc-core/src/markdown-code-context.test.ts:147:65\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/re",
+    "timeout": false
+   },
+   {
+    "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line a CRLF or CR text gets the structure its LF form gets, for every case here",
+    "message": "AssertionError: expected '...\\n..................\\n.......\\n' to be '.......\\n..................\\n...\\n' // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-surface-poc-core/src/markdown-code-context.test.ts:220:40\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802",
+    "timeout": false
+   },
+   {
+    "test": "a very long closed fence LF: a script element inside the fence is blanked, and the line after the fence keeps its own",
+    "message": "AssertionError: the masked text differs from every non-terminator byte blanked, in line order: expected false to be true // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-surface-poc-core/src/markdown-code-context.test.ts:269:178\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4",
+    "timeout": false
+   },
+   {
+    "test": "a very long closed fence CRLF: a script element inside the fence is blanked, and the line after the fence keeps its own",
+    "message": "AssertionError: the masked text differs from every non-terminator byte blanked, in line order: expected false to be true // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-surface-poc-core/src/markdown-code-context.test.ts:269:178\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4",
+    "timeout": false
+   },
+   {
+    "test": "a very long closed fence CR: a script element inside the fence is blanked, and the line after the fence keeps its own",
+    "message": "AssertionError: the masked text differs from every non-terminator byte blanked, in line order: expected false to be true // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-surface-poc-core/src/markdown-code-context.test.ts:269:178\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4",
+    "timeout": false
+   }
+  ]
+ },
+ {
+  "id": "R12-mask-chunks-last-first",
+  "ranAt": "cc64132bffd8902961714b0ca9fb2ab886661b02",
+  "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+  "old": "        for (const pendingLine of pending) out.push(blank(pendingLine));\n",
+  "new": "        for (let at = Math.floor((pending.length - 1) / 50_000) * 50_000; at >= 0; at -= 50_000) out.push(...pending.slice(at, at + 50_000).map(blank));\n",
+  "mutatedFileSha256": "30b6afd631d8192ffc6b7158857b405936fdc6bbeb5bac1c6f18db0105a6b3d9",
+  "outcome": "killed",
+  "tests": 268,
+  "loadavg1": "36.69",
+  "failing": [
+   {
+    "test": "a very long closed fence LF: 200,000 lines are blanked, every line end and the text after the fence kept",
+    "message": "AssertionError: the masked text differs from every non-terminator byte blanked: expected false to be true // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-surface-poc-core/src/markdown-code-context.test.ts:259:146\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea08",
+    "timeout": false
+   },
+   {
+    "test": "a very long closed fence CRLF: 200,000 lines are blanked, every line end and the text after the fence kept",
+    "message": "AssertionError: the masked text differs from every non-terminator byte blanked: expected false to be true // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-surface-poc-core/src/markdown-code-context.test.ts:259:146\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea08",
+    "timeout": false
+   },
+   {
+    "test": "a very long closed fence CR: 200,000 lines are blanked, every line end and the text after the fence kept",
+    "message": "AssertionError: the masked text differs from every non-terminator byte blanked: expected false to be true // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-surface-poc-core/src/markdown-code-context.test.ts:259:146\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea08",
+    "timeout": false
+   },
+   {
+    "test": "a very long closed fence LF: a script element inside the fence is blanked, and the line after the fence keeps its own",
+    "message": "AssertionError: the masked text differs from every non-terminator byte blanked, in line order: expected false to be true // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-surface-poc-core/src/markdown-code-context.test.ts:269:178\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4",
+    "timeout": false
+   },
+   {
+    "test": "a very long closed fence CRLF: a script element inside the fence is blanked, and the line after the fence keeps its own",
+    "message": "AssertionError: the masked text differs from every non-terminator byte blanked, in line order: expected false to be true // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-surface-poc-core/src/markdown-code-context.test.ts:269:178\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4",
+    "timeout": false
+   },
+   {
+    "test": "a very long closed fence CR: a script element inside the fence is blanked, and the line after the fence keeps its own",
+    "message": "AssertionError: the masked text differs from every non-terminator byte blanked, in line order: expected false to be true // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-surface-poc-core/src/markdown-code-context.test.ts:269:178\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4",
+    "timeout": false
+   }
+  ]
+ },
+ {
+  "id": "R13-mask-size-gated-reversal",
+  "ranAt": "cc64132bffd8902961714b0ca9fb2ab886661b02",
+  "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+  "old": "        for (const pendingLine of pending) out.push(blank(pendingLine));\n",
+  "new": "        for (let at = 0; at < pending.length; at += 1) out.push(blank(pending[pending.length > 100_000 ? pending.length - 1 - at : at] ?? ''));\n",
+  "mutatedFileSha256": "ed8cd19c4882efdfe6919010aa8e28c88b9fe89a386e1ddec6d6e5fbe6872294",
+  "outcome": "killed",
+  "tests": 268,
+  "loadavg1": "37.61",
+  "failing": [
+   {
+    "test": "a very long closed fence LF: a script element inside the fence is blanked, and the line after the fence keeps its own",
+    "message": "AssertionError: the masked text differs from every non-terminator byte blanked, in line order: expected false to be true // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-surface-poc-core/src/markdown-code-context.test.ts:269:178\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4",
+    "timeout": false
+   },
+   {
+    "test": "a very long closed fence CRLF: a script element inside the fence is blanked, and the line after the fence keeps its own",
+    "message": "AssertionError: the masked text differs from every non-terminator byte blanked, in line order: expected false to be true // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-surface-poc-core/src/markdown-code-context.test.ts:269:178\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4",
+    "timeout": false
+   },
+   {
+    "test": "a very long closed fence CR: a script element inside the fence is blanked, and the line after the fence keeps its own",
+    "message": "AssertionError: the masked text differs from every non-terminator byte blanked, in line order: expected false to be true // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r3/clone/packages/three-surface-poc-core/src/markdown-code-context.test.ts:269:178\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4",
+    "timeout": false
+   }
+  ]
+ }
+]

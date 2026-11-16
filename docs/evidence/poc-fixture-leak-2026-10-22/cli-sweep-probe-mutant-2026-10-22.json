@@ -1,0 +1,57 @@
+{
+ "tool": "cli_sweep_probe.py",
+ "treeCommit": "88dcdf76db2ad6a30df5856361dc3f9cef8757f5",
+ "mode": "mutant",
+ "file": "apps/three-surface-poc/src/polaris-accessibility-main.ts",
+ "sha256AtCommit": "5eb9f3ad7eea419601d5f276b31b20eb29ee86c8fae52b4a0820ca8888e6b4db",
+ "seededDeadPid": 1516669,
+ "pidNamespace": "4026531836",
+ "seeded": [
+  "syzygy-poc-surface-fixture-p1516669-n4026531836-CliProbe",
+  "syzygy-poc-surface-fixture-template-p1516669-n4026531836-CliProbe",
+  "syzygy-poc-surface-fixture-p1516017-n4026531836-CliLive1",
+  "syzygy-poc-surface-fixture-CliLegacy"
+ ],
+ "mutant": {
+  "id": "accessibility-cli-does-not-sweep",
+  "file": "apps/three-surface-poc/src/polaris-accessibility-main.ts",
+  "edits": [
+   {
+    "old": "  // The fixture helper this CLI builds its models with leaves a directory behind when a run is killed;\n  // Vitest's global setup sweeps those for test runs and never runs here (syzygy-bpyt.4.10).\n  removeFixturesOfDeadProcesses();\n",
+    "new": ""
+   },
+   {
+    "old": "import { removeFixturesOfDeadProcesses } from './fixture-directories.js';\n",
+    "new": ""
+   }
+  ]
+ },
+ "build": {
+  "command": "npx tsc -b apps/three-surface-poc",
+  "exit": 0,
+  "firstLine": []
+ },
+ "run": {
+  "command": "node apps/three-surface-poc/dist/polaris-accessibility-main.js (TMPDIR=<private>, PATH empty, SYZYGY_POC_BROWSER unset)",
+  "exit": 2,
+  "stderrFirstLine": [
+   "No Chrome/Chromium found on PATH and SYZYGY_POC_BROWSER is unset; nothing measured."
+  ],
+  "stdoutBytes": 0
+ },
+ "left": [
+  "syzygy-poc-surface-fixture-CliLegacy",
+  "syzygy-poc-surface-fixture-p1516017-n4026531836-CliLive1",
+  "syzygy-poc-surface-fixture-p1516669-n4026531836-CliProbe",
+  "syzygy-poc-surface-fixture-template-p1516669-n4026531836-CliProbe"
+ ],
+ "deadProcessDirectoriesLeft": [
+  "syzygy-poc-surface-fixture-p1516669-n4026531836-CliProbe",
+  "syzygy-poc-surface-fixture-template-p1516669-n4026531836-CliProbe"
+ ],
+ "liveAndLegacyKept": [
+  "syzygy-poc-surface-fixture-p1516017-n4026531836-CliLive1",
+  "syzygy-poc-surface-fixture-CliLegacy"
+ ],
+ "holds": true
+}

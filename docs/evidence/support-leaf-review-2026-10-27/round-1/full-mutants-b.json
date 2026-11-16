@@ -1,0 +1,76 @@
+[
+ {
+  "id": "C11-dossier-evaluation-questions",
+  "file": "packages/polaris-generation-core/src/dossier-evaluation.ts",
+  "old": "const questionsSha256 = sha256(input.questionsText);",
+  "new": "const questionsSha256 = sha256(input.questionsText + ' ');",
+  "ranAt": "ba5811ff77cce5c52edc671634e9854c25455720",
+  "recordHead": "9029e1cfb7a5ca1b02dbddaa450ac61349639bd7",
+  "exit": 1,
+  "totals": {
+   "numTotalTests": 5315,
+   "numPassedTests": 5309,
+   "numFailedTests": 1,
+   "numPendingTests": 5,
+   "numFailedTestSuites": 2,
+   "numTotalTestSuites": 860
+  },
+  "failed": [
+   {
+    "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+    "test": "parseJUnitRootTotals scans one tag body that is a single word run at the ceiling in linear time",
+    "message": "AssertionError: expected 2134.628078 to be less than 2000\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-530/merged/packages/three-surface-poc-core"
+   }
+  ],
+  "suiteErrors": []
+ },
+ {
+  "id": "F1-headroom-not-frozen",
+  "file": "packages/three-surface-poc-core/src/model.ts",
+  "old": "resourceHeadroom: deepFreeze(deriveResourceHeadroom(",
+  "new": "resourceHeadroom: (deriveResourceHeadroom(",
+  "ranAt": "ba5811ff77cce5c52edc671634e9854c25455720",
+  "recordHead": "9029e1cfb7a5ca1b02dbddaa450ac61349639bd7",
+  "exit": 1,
+  "totals": {
+   "numTotalTests": 5315,
+   "numPassedTests": 5309,
+   "numFailedTests": 1,
+   "numPendingTests": 5,
+   "numFailedTestSuites": 4,
+   "numTotalTestSuites": 860
+  },
+  "failed": [
+   {
+    "file": "apps/three-surface-poc/src/surface-routes.test.ts",
+    "test": "surface routes withholds the post-script Orrery capability href when that exact capability is absent",
+    "message": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-530/merged/node_modules/@vitest/runner/dist/chunk-hooks.js:638"
+   }
+  ],
+  "suiteErrors": [
+   {
+    "file": "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+    "message": ""
+   }
+  ]
+ },
+ {
+  "id": "F3-body-authority-not-frozen",
+  "file": "packages/three-surface-poc-core/src/body-read-authority.ts",
+  "old": "return deepFreeze({",
+  "new": "return ({",
+  "ranAt": "ba5811ff77cce5c52edc671634e9854c25455720",
+  "recordHead": "9029e1cfb7a5ca1b02dbddaa450ac61349639bd7",
+  "exit": 0,
+  "totals": {
+   "numTotalTests": 5315,
+   "numPassedTests": 5310,
+   "numFailedTests": 0,
+   "numPendingTests": 5,
+   "numFailedTestSuites": 0,
+   "numTotalTestSuites": 860
+  },
+  "failed": [],
+  "suiteErrors": []
+ }
+]

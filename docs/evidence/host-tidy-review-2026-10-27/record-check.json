@@ -1,0 +1,507 @@
+[
+ {
+  "check": "code head parents are 3fa4817c then BASE",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "evidence commit parent is the code head",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "evidence commit touches only the lane evidence directory",
+  "ok": true,
+  "detail": "30 paths"
+ },
+ {
+  "check": "merge base of BASE and the code head is BASE",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "subject digest b961f4ee",
+  "ok": true,
+  "detail": "b961f4ee73f50e0083ce96802f781e721db0a02bb2dc6d3a5c65f5fc1fdf0076"
+ },
+ {
+  "check": "code-only digest 6516a6a0",
+  "ok": true,
+  "detail": "6516a6a00077f439a10798aaf6e4b47c5d6aaf3628607a10860001f3e055d394"
+ },
+ {
+  "check": "48 files, 18 code",
+  "ok": true,
+  "detail": "48 18"
+ },
+ {
+  "check": "code +34/-33",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "brief digest of summary.json",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "brief digest of diff-tools/differential.py",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "brief digest of diff-tools/surface.mjs",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "summary toolsSha256 code_equal.cjs",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "summary toolsSha256 poc_alone.py",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "summary toolsSha256 record.py",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "summary toolsSha256 rerun_alone.py",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "summary toolsSha256 suite_run.py",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "summary toolsSha256 titles.py",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "summary subjectSha256 apps/three-surface-poc/package.json",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "summary subjectSha256 apps/three-surface-poc/src/evaluation-footer.test.ts",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "summary subjectSha256 apps/three-surface-poc/src/main.test.ts",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "summary subjectSha256 apps/three-surface-poc/src/materialize-action.test.ts",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "summary subjectSha256 apps/three-surface-poc/src/page-size-delta.test.ts",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "summary subjectSha256 apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "summary subjectSha256 apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "summary subjectSha256 apps/three-surface-poc/src/polaris-source-route.test.ts",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "summary subjectSha256 apps/three-surface-poc/src/reobserve-action.test.ts",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "summary subjectSha256 apps/three-surface-poc/src/response-limits.test.ts",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "summary subjectSha256 apps/three-surface-poc/src/routes.test.ts",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "summary subjectSha256 apps/three-surface-poc/src/surface-routes.test.ts",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "summary subjectSha256 apps/three-surface-poc/src/tuple-encoding.test.ts",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "summary subjectSha256 apps/three-surface-poc/src/verbatim-route.test.ts",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "summary subjectSha256 apps/three-surface-poc/tsconfig.json",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "summary subjectSha256 package-lock.json",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "summary subjectSha256 packages/http-host/src/server.ts",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "summary subjectSha256 packages/http-host/src/shutdown.ts",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "differential record e2e-base.json",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "differential record e2e-head.json",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "differential record host-base-cap1-daemon.json",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "differential record host-base-http-host.json",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "differential record host-head-cap1-daemon.json",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "differential record host-head-http-host.json",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "differential record surface-base.json",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "differential record surface-head.json",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "differential tool differential.py",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "differential tool e2e-diff.mjs",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "differential tool gate-diff.mjs",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "differential tool host-diff.mjs",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "differential tool surface.mjs",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "differential base/head",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "differential mutant refusal-status: old occurs once in packages/http-host/dist/server.js",
+  "ok": true,
+  "detail": "count=1"
+ },
+ {
+  "check": "differential mutant refusal-status: outcome agrees with the check value",
+  "ok": true,
+  "detail": "checkHeld=False"
+ },
+ {
+  "check": "differential mutant credential-detail: old occurs once in packages/http-host/dist/credentials.js",
+  "ok": true,
+  "detail": "count=1"
+ },
+ {
+  "check": "differential mutant credential-detail: outcome agrees with the check value",
+  "ok": true,
+  "detail": "checkHeld=False"
+ },
+ {
+  "check": "differential mutant shutdown-announcement: old occurs once in apps/syzygy/dist/main.js",
+  "ok": true,
+  "detail": "count=1"
+ },
+ {
+  "check": "differential mutant shutdown-announcement: outcome agrees with the check value",
+  "ok": true,
+  "detail": "checkHeld=False"
+ },
+ {
+  "check": "differential mutant gate-cap1-daemon-prefix: old occurs once in apps/three-surface-poc/dist/git-observation.js",
+  "ok": true,
+  "detail": "count=1"
+ },
+ {
+  "check": "differential mutant gate-cap1-daemon-prefix: outcome agrees with the check value",
+  "ok": true,
+  "detail": "checkHeld=False"
+ },
+ {
+  "check": "differential mutant shim-type-dropped: old occurs once in packages/cap1-daemon/src/server.ts",
+  "ok": true,
+  "detail": "count=1"
+ },
+ {
+  "check": "differential mutant shim-type-dropped: outcome agrees with the check value",
+  "ok": true,
+  "detail": "checkHeld=False"
+ },
+ {
+  "check": "differential mutant shim-binding-swapped: old occurs once in packages/cap1-daemon/src/server.ts",
+  "ok": true,
+  "detail": "count=1"
+ },
+ {
+  "check": "differential mutant shim-binding-swapped: outcome agrees with the check value",
+  "ok": true,
+  "detail": "checkHeld=False"
+ },
+ {
+  "check": "differential mutant source-value-changed: old occurs once in packages/http-host/src/server.ts",
+  "ok": true,
+  "detail": "count=1"
+ },
+ {
+  "check": "differential mutant source-value-changed: outcome agrees with the check value",
+  "ok": true,
+  "detail": "checkHeld=True"
+ },
+ {
+  "check": "poc-alone-base commit",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "poc-alone-base mutant old occurs once in apps/three-surface-poc/src/routes.test.ts at base",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "poc-alone-base plain: exit 0 agrees with its errors",
+  "ok": true,
+  "detail": "[]"
+ },
+ {
+  "check": "poc-alone-base mutant: exit 0 agrees with its errors",
+  "ok": true,
+  "detail": "[]"
+ },
+ {
+  "check": "poc-alone-base references are the tsconfig references at base",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "poc-alone-head commit",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "poc-alone-head mutant old occurs once in apps/three-surface-poc/src/routes.test.ts at head",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "poc-alone-head plain: exit 0 agrees with its errors",
+  "ok": true,
+  "detail": "[]"
+ },
+ {
+  "check": "poc-alone-head mutant: exit 2 agrees with its errors",
+  "ok": true,
+  "detail": "[\"apps/three-surface-poc/src/routes.test.ts(7,55): error TS2307: Cannot find module '@syzygy/cap1-daemon' or its corresponding type declarations.\"]"
+ },
+ {
+  "check": "poc-alone-head references are the tsconfig references at head",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "code-equal packages/http-host/src/server.ts base digest",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "code-equal packages/http-host/src/server.ts head digest",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "code-equal packages/http-host/src/server.ts identifierRenamed: first DAEMON_HOST is code, not comment",
+  "ok": true,
+  "detail": "line 33"
+ },
+ {
+  "check": "code-equal packages/http-host/src/server.ts literalChanged: first 'node:http' is code, not comment",
+  "ok": true,
+  "detail": "line 1"
+ },
+ {
+  "check": "code-equal packages/http-host/src/shutdown.ts base digest",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "code-equal packages/http-host/src/shutdown.ts head digest",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "code-equal packages/http-host/src/shutdown.ts identifierRenamed: first ShutdownSignal is code, not comment",
+  "ok": true,
+  "detail": "line 13"
+ },
+ {
+  "check": "code-equal packages/http-host/src/shutdown.ts literalChanged: first './server.js' is code, not comment",
+  "ok": true,
+  "detail": "line 1"
+ },
+ {
+  "check": "suite-head exit agrees with failures",
+  "ok": true,
+  "detail": "exit=0 failed=0"
+ },
+ {
+  "check": "suite-head commit is the code head",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "rerun-alone-base commit",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "rerun-alone-base apps/three-surface-poc/src/polaris-authority-sweep.test.ts: exit agrees",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "rerun-alone-head commit",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "rerun-alone-head apps/three-surface-poc/src/polaris-authority-sweep.test.ts: exit agrees",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "titles commits",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "PR body claim: 31/31",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "PR body claim: 0 of 5,528 / 321 refused",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "PR body claim: 5,528 in body",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "PR body claim: 321 in body",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "PR body claim: 1,262 titles",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "PR body claim: 1,264 / 1,262 / 0 / 2",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "PR body claim: surface versions",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "PR body claim: server lines 11-25 and 76",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "PR body claim: 13 test files",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "PR body claim: six shutdown comment lines",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "PR body claim: 6 of 7 detected, one held",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "PR body claim: rerun 5/5 at both",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "PR body claim: header lines 11-29 claim",
+  "ok": true,
+  "detail": ""
+ }
+]

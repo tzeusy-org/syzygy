@@ -1,0 +1,7 @@
+$ env -u npm_config_userconfig HOME=/tmp/r541b-home npm prefix -g
+/r541b-sentinel-prefix
+$ ... npm --version (stderr lines mentioning the user config)
+npm silly config load:file:/tmp/r541b-home/.npmrc
+11.5.1
+$ with npm_config_userconfig=<empty file>:
+/home/tze/.nvm/versions/node/v24.6.0

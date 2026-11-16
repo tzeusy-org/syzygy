@@ -1,0 +1,28 @@
+{
+ "typescript": "5.9.3",
+ "oldTokens": 1287,
+ "newTokens": 1287,
+ "tokensEqual": true,
+ "unbalanced": [
+  0,
+  0
+ ],
+ "firstDiff": null,
+ "removedLines": [
+  64,
+  66
+ ],
+ "addedLines": [
+  64,
+  65,
+  67,
+  68
+ ],
+ "removedOutsideComment": [],
+ "addedOutsideComment": [],
+ "commentOpenerOfChangedLines": [
+  "/**"
+ ],
+ "commentsOld": 16,
+ "commentsNew": 16
+}

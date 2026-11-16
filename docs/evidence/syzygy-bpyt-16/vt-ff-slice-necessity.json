@@ -1,0 +1,27 @@
+{
+ "record": "syzygy-bpyt.16 round 2: is the VT and FF addition to the separator slice necessary (rule 6)",
+ "subjectCommit": "497515ae38829439aa4faa01196d9e361bce8bd8",
+ "mutant": {
+  "file": "packages/three-surface-poc-core/dist/markdown-code-context.js (a copy of the head build)",
+  "old": "const LINE_END = /\\r\\n|\\r|\\n/g;",
+  "new": "const LINE_END = /\\r\\n|[\\r\\n\\v\\f]/g;",
+  "mutatedFileSha256": "c83f8b5c3614fe634295e0a9e4fc128f4a04f4dc406f8f083d1ded655bd6d9f8",
+  "id": "S7 of crlf-differential-selftest.mjs"
+ },
+ "toolWithoutVtFf": {
+  "what": "crlf-differential.mjs as committed at 561e4f77 (separators U+2028, U+2029, U+0085)",
+  "sha256": "ce981fadd9fc83e26477e6988ba3cfea57c32627c13262834a8f9f4810698092",
+  "exit": 0,
+  "failureCount": 0,
+  "reading": "the round-1 differential does not fail a line end widened to VT and FF"
+ },
+ "toolWithVtFf": {
+  "what": "crlf-differential.mjs at the subject commit (adds U+000B and U+000C)",
+  "sha256": "b71f3db9fe80367e02dc24d5be4ee1b537cbb1373341211f147a6949f81d6ad2",
+  "exit": 1,
+  "failureCount": 2788,
+  "failingChecks": [
+   "C1_lfUnchanged"
+  ]
+ }
+}

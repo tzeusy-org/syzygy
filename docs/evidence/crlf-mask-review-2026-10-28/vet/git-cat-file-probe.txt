@@ -1,0 +1,8 @@
+# synthetic repo: a.md committed CRLF with no attributes; then .gitattributes '* text=auto eol=lf' and b.md (CRLF in worktree) committed
+a.md blob CR bytes (cat-file blob): 3
+a.md blob CR bytes (cat-file --batch): 3
+b.md blob CR bytes (cat-file blob): 0
+i/lf    w/lf    attr/text=auto eol=lf 	.gitattributes
+i/crlf  w/crlf  attr/text=auto eol=lf 	a.md
+i/lf    w/crlf  attr/text=auto eol=lf 	b.md
+git version 2.53.0

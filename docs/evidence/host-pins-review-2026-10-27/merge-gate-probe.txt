@@ -1,0 +1,6 @@
+packages/support/src/sha256.ts true
+packages/support/package.json true
+packages/http-host/src/server.ts false
+packages/http-host/package.json false
+packages/http-host/tsconfig.json false
+packages/cap1-daemon/tsconfig.json false

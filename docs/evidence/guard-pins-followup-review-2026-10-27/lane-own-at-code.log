@@ -1,0 +1,9 @@
+O1-tarball-url-reads-outside killed 1 ['Tests  1 failed | 78 passed (79)'] 8.1 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a remote tarball URL dependency as naming no module
+O2-tar-unread killed 1 ['Tests  1 failed | 78 passed (79)'] 7.3 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a .tar dependency as naming no module
+O3-tar-gz-unread killed 1 ['Tests  1 failed | 78 passed (79)'] 7.7 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a .tar.gz dependency as naming no module
+O4-root-dev-dependencies-dropped killed 1 ['Tests  1 failed | 78 passed (79)'] 5.8 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads the workspace root's manifest beside the packages'
+wrote lane-own-at-code.json 4

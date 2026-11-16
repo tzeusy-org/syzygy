@@ -1,0 +1,29 @@
+{
+  "subject": {
+    "commit": "4b28caccc115ab7e4ac89800120d54d816f9ff3f",
+    "sourceInputs": {
+      "apps/syzygy/src/main.ts": "4dd828fb30f13f8dd36a6d91e286f445fc4b7cbfccae7cb578a8d6d5934d4297",
+      "packages/polaris-dossier/src/state-directory.ts": "d7de7e04e24afb4ec6f2f6da8695cb60620ee3fbcef010a0d29d8a761e613db1",
+      "packages/http-host/src/shutdown.ts": "88969cdbd489e03018a76ec90187ea7ac58db08962f4b89c2d49795ac13641dd",
+      "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts": "b629e399a2c4b72e00c3a764181f1b938985d6a992c44ffcb320af3bebebec69"
+    },
+    "diffFromBaselineSha256": "011fa413d6fad5971d30af47fe87d927d64d1ffee55cf5b874477c0130afe0d8"
+  },
+  "rebuilds": [
+    {
+      "path": "successor-record-attempt2.json",
+      "bytes": 62825,
+      "sha256": "6ce9957d4279249fc86b1065c02dd2e34ab061d162e8d1e4695bec42f2dd8cd0"
+    },
+    {
+      "path": "successor-record-rebuild.json",
+      "bytes": 62825,
+      "sha256": "6ce9957d4279249fc86b1065c02dd2e34ab061d162e8d1e4695bec42f2dd8cd0"
+    }
+  ],
+  "method1": "Python byte equality",
+  "method2": "native cmp -s exit0",
+  "nativeCmpExit": 0,
+  "sameBytes": true,
+  "trackedToolDrift": []
+}

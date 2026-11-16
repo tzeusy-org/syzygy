@@ -9,8 +9,7 @@
 // on what the browser reports. Without a browser the suite is *skipped*,
 // never passed: `npm run poc:accessibility-check` records the evidence
 // with the browser identity it ran on.
-import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
@@ -20,6 +19,7 @@ import { findBrowserExecutable, launchBrowser, type Browser, type BrowserPage } 
 import { aaThreshold, candidateBackdrops, checkPolarisAccessibility, composite, contrastRatio, relativeLuminance } from './polaris-accessibility.js';
 import { renderProjectReading } from './polaris.js';
 import { ACCESSIBILITY_VARIANTS, renderVariant, type AccessibilityVariant } from './polaris-accessibility-variants.js';
+import { tempDir } from '@syzygy/test-kit';
 
 const cleanups: string[] = [];
 afterEach(() => {
@@ -79,7 +79,7 @@ describe.skipIf(executable === undefined)('Polaris keyboard, non-visual and cont
 
   beforeAll(async () => {
     browser = await launchBrowser(executable as string);
-    pages = mkdtempSync(join(tmpdir(), 'syzygy-poc-a11y-'));
+    pages = tempDir('syzygy-poc-a11y-');
     // A fresh Chrome's first render of the page carries cold costs (model
     // build, first renderer and layout) that the first test used to pay
     // inside its 5 s budget: over 203 CI attempts that test ran at p50
@@ -88,11 +88,10 @@ describe.skipIf(executable === undefined)('Polaris keyboard, non-visual and cont
     const warm = await browser.newPage();
     try { await warm.navigate(pageUrl(ACCESSIBILITY_VARIANTS[0] as AccessibilityVariant).url); }
     finally { await warm.close(); }
-  }, 60_000);
+  }, 60_000); // launches Chrome and loads one page: up to 2.8 s in 10 alone runs, but a full-suite run at load1 56-58 left up to 8.0 s of its file's time to its hooks (docs/evidence/syzygy-bpyt-4-31/full-runs.json)
 
   afterAll(async () => {
     await browser?.close();
-    if (pages !== undefined) rmSync(pages, { recursive: true, force: true });
   });
 
   function pageUrl(variant: AccessibilityVariant): { readonly url: string; readonly expectedTargets: readonly string[] } {
@@ -296,8 +295,7 @@ describe.skipIf(executable === undefined)('Polaris keyboard, non-visual and cont
       return index % 50 === 7 ? `${link} <a href="#t${index}">Target ${index} again</a>` : link;
     }).join(' ');
     const rows = Array.from({ length: targets }, (_, index) => `<p id="t${index}">Row ${index}</p>`).join('');
-    const directory = mkdtempSync(join(tmpdir(), 'syzygy-poc-a11y-budget-'));
-    cleanups.push(directory);
+    const directory = tempDir('syzygy-poc-a11y-budget-');
     const file = join(directory, 'budget.html');
     writeFileSync(file, `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Fragment budget</title><style>body{color:#000;background:#fff}a:focus{outline:2px solid #000}</style></head><body><main><h1>Fragment budget</h1><nav aria-label="Targets"><p>${links}</p></nav>${rows}</main></body></html>`);
     const page = await browser.newPage();
@@ -307,7 +305,7 @@ describe.skipIf(executable === undefined)('Polaris keyboard, non-visual and cont
       expect(report.activations.filter((activation, index) => index > 0 && activation.href === report.activations[index - 1]?.href)).toHaveLength(6);
       expect(report.violations).toEqual([]);
     } finally { await page.close(); }
-  }, 240_000);
+  }, 240_000); // over two hundred fragment activations in a real browser: worst 74.6 s over 5 alone runs at load1 20-91 (docs/evidence/syzygy-bpyt-4-31/durations/polaris-accessibility.browser.test.tests.json)
 
   for (const variant of ACCESSIBILITY_VARIANTS) {
     it(`${variant.id}: every distinction is keyboard-operable, named for assistive technology, and AA-contrasting`, async () => {
@@ -329,6 +327,6 @@ describe.skipIf(executable === undefined)('Polaris keyboard, non-visual and cont
       expect(expectedTargets.length).toBeGreaterThan(0);
 
       expect(report.violations).toEqual([]);
-    }, 240_000);
+    }, 240_000); // a full keyboard, accessibility-tree and contrast sweep of one page: worst 77.4 s over 30 alone runs (6 variants) at load1 20-91 (docs/evidence/syzygy-bpyt-4-31/durations/polaris-accessibility.browser.test.tests.json)
   }
 });

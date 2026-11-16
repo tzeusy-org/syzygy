@@ -1,0 +1,94 @@
+{
+ "probe": "zz-rev542-breach-probe.test.ts",
+ "dest": "packages/cap1-daemon/src/zz-rev542-breach-probe.test.ts",
+ "commit": "fb481b4d3b815e20ceeb245a22f6e8c6e6e32788",
+ "results": [
+  {
+   "id": "NONE",
+   "commit": "fb481b4d3b815e20ceeb245a22f6e8c6e6e32788",
+   "edits": [],
+   "exit": 0,
+   "recorded": {
+    "lines": [
+     {
+      "kind": "daemon-http-outcome",
+      "method": "GET",
+      "route": "/breach",
+      "status": 503,
+      "reason": "route-non-success",
+      "contentType": "application/json"
+     }
+    ],
+    "sentinelLogged": false
+   },
+   "cleanAfter": true,
+   "load": "61.14"
+  },
+  {
+   "id": "R8-breach-list-prefix-match",
+   "commit": "fb481b4d3b815e20ceeb245a22f6e8c6e6e32788",
+   "edits": [
+    {
+     "file": "packages/http-host/src/server.ts",
+     "old": "['project shape not-evaluated', 'project shape not-admitted', 'project shape observation-failed'].includes(population.reason)",
+     "new": "['project shape not-evaluated', 'project shape not-admitted', 'project shape observation-failed'].some(listed => population.reason.startsWith(listed))"
+    }
+   ],
+   "exit": 0,
+   "recorded": {
+    "lines": [
+     {
+      "kind": "daemon-http-outcome",
+      "method": "GET",
+      "route": "/breach",
+      "status": 503,
+      "reason": "response-limit-breached",
+      "contentType": "application/json",
+      "evaluation": {
+       "inputsDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+       "asOf": "2026-10-27T00:00:00Z"
+      },
+      "limit": "maxHumanResponseBytes",
+      "declared": 5,
+      "observed": 6,
+      "population": {
+       "kind": "unknown",
+       "reason": "project shape not-admitted free-text-sentinel-542"
+      },
+      "sequence": 1
+     }
+    ],
+    "sentinelLogged": true
+   },
+   "cleanAfter": true,
+   "load": "58.57"
+  },
+  {
+   "id": "R9-breach-list-trimmed-match",
+   "commit": "fb481b4d3b815e20ceeb245a22f6e8c6e6e32788",
+   "edits": [
+    {
+     "file": "packages/http-host/src/server.ts",
+     "old": "['project shape not-evaluated', 'project shape not-admitted', 'project shape observation-failed'].includes(population.reason)",
+     "new": "['project shape not-evaluated', 'project shape not-admitted', 'project shape observation-failed'].includes(population.reason.trim())"
+    }
+   ],
+   "exit": 0,
+   "recorded": {
+    "lines": [
+     {
+      "kind": "daemon-http-outcome",
+      "method": "GET",
+      "route": "/breach",
+      "status": 503,
+      "reason": "route-non-success",
+      "contentType": "application/json"
+     }
+    ],
+    "sentinelLogged": false
+   },
+   "cleanAfter": true,
+   "load": "57.56"
+  }
+ ]
+}

@@ -1,0 +1,47 @@
+{
+ "target": "packages/support/src/support-purity.test.ts",
+ "target_sha256": "cb772b85af091e2890f22d64801d8d1c2350ecf0485ce003199da2e77551c3ca",
+ "nbsp_in_target": 0,
+ "fixes": [
+  {
+   "file": "fix-r2-module-reader.ts.txt",
+   "sha256": "547e3481bde0c5ed05552b274bd4b34e6943fdaf70aca86d7db957763597d1ab",
+   "bytes": 793,
+   "whole_in_head": 1,
+   "stripped_in_head": 1,
+   "nbsp": 0
+  },
+  {
+   "file": "fix-r2-writes-reader.ts.txt",
+   "sha256": "ca2d30a86db8e34189b2394ca0267b3b10ba5a2302073a11a33e840223c77095",
+   "bytes": 1428,
+   "whole_in_head": 1,
+   "stripped_in_head": 1,
+   "nbsp": 0
+  },
+  {
+   "file": "fix-r2-writes-row.ts.txt",
+   "sha256": "af407589ea212a09f0d965c5a6e38212a2d727c33a4058ed1bfe6d67bde820ba",
+   "bytes": 218,
+   "whole_in_head": 1,
+   "stripped_in_head": 1,
+   "nbsp": 0
+  },
+  {
+   "file": "fix-r2-reader-rows.ts.txt",
+   "sha256": "3e95d402f3f8a791ff701610beec0082572c012f8c2cf668a55dce1e21841ff8",
+   "bytes": 1421,
+   "whole_in_head": 1,
+   "stripped_in_head": 1,
+   "nbsp": 0
+  },
+  {
+   "file": "fix-r2-import-call-row.ts.txt",
+   "sha256": "a3bedd26700a469cfd1ada9b325dc54b65558bbca4501dcfabca09137f578f8f",
+   "bytes": 542,
+   "whole_in_head": 1,
+   "stripped_in_head": 1,
+   "nbsp": 0
+  }
+ ]
+}

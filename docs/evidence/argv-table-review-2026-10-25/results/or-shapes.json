@@ -1,0 +1,39 @@
+{
+ "OR1": {
+  "reader": {
+   "fault": "repeated",
+   "arg": "--revision"
+  },
+  "cli": {
+   "exit": 2,
+   "stderr": "syzygy dossier: --revision given more than once"
+  },
+  "readerDash": {
+   "fault": "repeated",
+   "arg": "--revision"
+  }
+ },
+ "OR2": {
+  "reader": {
+   "values": {
+    "--revision": ""
+   },
+   "flags": {},
+   "positional": [
+    "run"
+   ]
+  },
+  "daemonReader": {
+   "values": {
+    "--root": ""
+   },
+   "flags": {},
+   "positional": []
+  }
+ },
+ "corpus": {
+  "rows": 1696,
+  "or1Shape": 0,
+  "or2Shape": 24
+ }
+}

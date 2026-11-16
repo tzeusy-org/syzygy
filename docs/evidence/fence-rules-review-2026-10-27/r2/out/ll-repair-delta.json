@@ -1,0 +1,11 @@
+{
+ "base": "af534d6e",
+ "head": "815d93bb",
+ "method": "ts.createPrinter({removeComments: true}).printFile per file (types kept), before against after; and every changed line a trailing // comment or wholly inside a comment",
+ "typescriptVersion": "5.9.3",
+ "changedFiles": 18,
+ "changedProductionFiles": 0,
+ "commentOnly": 0,
+ "notCommentOnly": [],
+ "rows": []
+}

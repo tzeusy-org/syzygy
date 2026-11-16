@@ -1,0 +1,132 @@
+{
+ "item1": {
+  "baseBlockFirstLine": "  // The `polaris` branch (prototype, POLARIS-DOSSIER-ONE-COMMAND-RUN-2026-10-14) injects the same renderer the same way.",
+  "baseBlockSecondLine": "  it('the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch', () => {",
+  "baseBlockLastLine": "  });",
+  "baseBlockLines": 16,
+  "baseBlockSha256": "ff9d5016fbd23ac63caad459acd2da3789f52d212bed59d0bb3653e93414cc6a",
+  "substringCountAtHead": 1,
+  "lineWindowStartsAtHead": [
+   279
+  ],
+  "substringCountAtPre": 0,
+  "headTestSha256": "a05821cb1115018c7a92f38b50709f99a9bad344805760da8c5a70a416cb02bd",
+  "preTestSha256": "97a02eba0337e5e6a73db3ab605dbf8e0e3a5b4f21e39310edca3f699c232e26",
+  "diffOps": [
+   {
+    "tag": "insert",
+    "pre": [
+     273,
+     272
+    ],
+    "head": [
+     273,
+     294
+    ],
+    "removed": [],
+    "added": [
+     "",
+     "  // Restored from the base byte for byte (syzygy-bpyt.4.5, round 3's stopping rule). The two rows above pass a then-block",
+     "  // that loads the POC app and then falls through, re-enters main(), breaks out of a label or schedules a callback",
+     "  // (rev-532c's Y1-Y5); this pin fails each, since each adds a line naming the app. Its known false refusals, which the",
+     "  // rows above pass: a comment naming the app in the dossier branch, the renderer bound under another name, the two",
+     "  // branches swapped, the dossier import in a nested function and the polaris import in a nested try.",
+     "  // The `polaris` branch (prototype, POLARIS-DOSSIER-ONE-COMMAND-RUN-2026-10-14) injects the same renderer the same way.",
+     "  it('the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch', () => {",
+     "    const main = readFileSync(path.join(REPO_ROOT, 'apps/syzygy/src/main.ts'), 'utf8');",
+     "    const line = \"    const { renderLocalDossier } = await import('@syzygy/three-surface-poc-app/dossier-site');\";",
+     "    const mentions = main.split('\\n').filter((text) => text.includes('three-surface-poc-app'));",
+     "    expect(mentions).toEqual([line, line]);",
+     "    const daemon = main.indexOf('let parsed = parseCli(');",
+     "    const first = main.indexOf(line), second = main.indexOf(line, first + 1);",
+     "    const dossier = main.indexOf(\"if (argv[0] === 'dossier') {\"), polaris = main.indexOf(\"if (argv[0] === 'polaris') {\");",
+     "    expect(dossier).toBeGreaterThan(-1);",
+     "    expect(polaris).toBeGreaterThan(dossier);",
+     "    expect(first).toBeGreaterThan(dossier);",
+     "    expect(first).toBeLessThan(polaris);",
+     "    expect(second).toBeGreaterThan(polaris);",
+     "    expect(second).toBeLessThan(daemon);",
+     "  });"
+    ]
+   }
+  ],
+  "insertedIsBlankPlusCommentPlusBlock": {
+   "insertedLines": 22,
+   "firstIsBlank": true,
+   "tailEqualsBaseBlock": true,
+   "comment": [
+    "  // Restored from the base byte for byte (syzygy-bpyt.4.5, round 3's stopping rule). The two rows above pass a then-block",
+    "  // that loads the POC app and then falls through, re-enters main(), breaks out of a label or schedules a callback",
+    "  // (rev-532c's Y1-Y5); this pin fails each, since each adds a line naming the app. Its known false refusals, which the",
+    "  // rows above pass: a comment naming the app in the dossier branch, the renderer bound under another name, the two",
+    "  // branches swapped, the dossier import in a nested function and the polaris import in a nested try."
+   ],
+   "commentAllStartWithSlashes": true
+  }
+ },
+ "item2": {
+  "Y1-dossier-serve-falls-through": {
+   "inProbe": true,
+   "probeKind": "defect",
+   "probeFile": "apps/syzygy/src/main.ts",
+   "r3Edits": 1,
+   "fragmentsEqual": true,
+   "probeOldOnceInMain": true,
+   "appliedEqual": true,
+   "appliedSha256": "a2e974407e9a542449883283cba6099e3994cba2a0dd0f12d6258adf88828b21",
+   "noteEqual": true
+  },
+  "Y2-dossier-serve-reenters-main": {
+   "inProbe": true,
+   "probeKind": "defect",
+   "probeFile": "apps/syzygy/src/main.ts",
+   "r3Edits": 1,
+   "fragmentsEqual": true,
+   "probeOldOnceInMain": true,
+   "appliedEqual": true,
+   "appliedSha256": "b0c605d925eb51ce6c3bb16e85e673951f78929abce3387cf949a17a6110b018",
+   "noteEqual": true
+  },
+  "Y3-flag-rewrites-argv-into-dossier": {
+   "inProbe": true,
+   "probeKind": "defect",
+   "probeFile": "apps/syzygy/src/main.ts",
+   "r3Edits": 1,
+   "fragmentsEqual": true,
+   "probeOldOnceInMain": true,
+   "appliedEqual": true,
+   "appliedSha256": "1deab5d32d1e7a1e5ac1b7bf097ac8cc030b0d0a5fbb123e0f3a34afdd787bb6",
+   "noteEqual": true
+  },
+  "Y4-polaris-labelled-break": {
+   "inProbe": true,
+   "probeKind": "defect",
+   "probeFile": "apps/syzygy/src/main.ts",
+   "r3Edits": 1,
+   "fragmentsEqual": true,
+   "probeOldOnceInMain": true,
+   "appliedEqual": true,
+   "appliedSha256": "4f607c06c4f24bdd14428a180073d8434fab585659119da0c7c07e06777e5cc5",
+   "noteEqual": true
+  },
+  "Y5-dossier-serve-callback-after-branch": {
+   "inProbe": true,
+   "probeKind": "defect",
+   "probeFile": "apps/syzygy/src/main.ts",
+   "r3Edits": 1,
+   "fragmentsEqual": true,
+   "probeOldOnceInMain": true,
+   "appliedEqual": true,
+   "appliedSha256": "994ee75e48286368b36c407168f83543fa6eae5594602193528e0d7e623491fc",
+   "noteEqual": true
+  }
+ },
+ "probeIdsY": [
+  "Y1-dossier-serve-falls-through",
+  "Y2-dossier-serve-reenters-main",
+  "Y3-flag-rewrites-argv-into-dossier",
+  "Y4-polaris-labelled-break",
+  "Y5-dossier-serve-callback-after-branch"
+ ],
+ "mainTsSha256AtHead": "07404d93c055c83c9334880c062e98687a4c78a99a104049df0e95076c6555e6"
+}

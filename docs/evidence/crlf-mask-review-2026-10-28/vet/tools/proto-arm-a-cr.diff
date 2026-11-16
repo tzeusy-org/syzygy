@@ -1,0 +1,33 @@
+diff --git a/packages/three-surface-poc-core/src/markdown-code-context.ts b/packages/three-surface-poc-core/src/markdown-code-context.ts
+index 0a520646..c8a58b41 100644
+--- a/packages/three-surface-poc-core/src/markdown-code-context.ts
++++ b/packages/three-surface-poc-core/src/markdown-code-context.ts
+@@ -71,8 +71,20 @@ function blank(segment: string): string {
+   return segment.replace(/[^\n]/g, ' ');
+ }
+ 
++// VET PROTOTYPE (scratch clone only): a line ends at CRLF, CR or LF.
++const LINE_END = /\r\n|\r|\n/g;
++
+ export function maskMarkdownCodeContexts(text: string): CodeContextMask {
+-  const lines = text.split('\n');
++  const lines: string[] = [];
++  const terms: string[] = [];
++  let at = 0;
++  for (const end of text.matchAll(LINE_END)) {
++    lines.push(text.slice(at, end.index));
++    terms.push(end[0]);
++    at = end.index + end[0].length;
++  }
++  lines.push(text.slice(at));
++  terms.push('');
+   const out: string[] = [];
+   let fences = 0;
+   let spans = 0;
+@@ -142,5 +154,5 @@ export function maskMarkdownCodeContexts(text: string): CodeContextMask {
+ 
+   if (fence !== undefined) return { kind: 'malformed', reason: 'unclosed-fence', line: fence.line };
+   if (span !== undefined) return { kind: 'malformed', reason: 'unclosed-inline-span', line: span.line };
+-  return { kind: 'masked', masked: out.join('\n'), fences, spans };
++  return { kind: 'masked', masked: out.map((line, i) => line + (terms[i] ?? '')).join(''), fences, spans };
+ }

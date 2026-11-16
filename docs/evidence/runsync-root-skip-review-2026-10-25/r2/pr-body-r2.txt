@@ -1,0 +1,74 @@
+## Outcome
+
+Two test-only changes in `packages/cap1-system`. The first is syzygy-bpyt.4.22. A `packages/cap1-system/src/daemon-entry-unchanged.system.test.ts` row whose argv a regression wrongly admits now fails in about 20 s, where it used to hang with a daemon on port 7477. The second is syzygy-bpyt.4.25. The mode-000 row of `packages/cap1-system/src/state-dir.system.test.ts` is now skipped under root.
+
+## What changed and why
+
+- **4.22: `runSync` in `daemon-entry-unchanged.system.test.ts`.** This is from the PR 518 review, N3 (`docs/reviews/R-GP-IMPL-DOSSIER-CLI-TABLE-1-RAW.md`). Under argv-reader mutants R5 and R9, rows that expect a refusal started a daemon instead. `spawnSync` had no timeout and waited on it. The run hung about 27 minutes, and the mutant daemons bound 127.0.0.1:7477. `spawnSync` blocks the worker, so the suite's own 60 s `testTimeout` cannot fire.
+  - `runSync` now passes `timeout: 20_000` and `killSignal: 'SIGKILL'`. SIGKILL is used because the daemon handles SIGTERM as a graceful shutdown. On any `spawnSync` error `runSync` now throws with the argv and the error, so the row fails by `ETIMEDOUT` rather than by a confusing diff.
+  - `runSync` takes a `portEnv`, default `{ SYZYGY_PORT: '0' }`, and runs with `env: { ...ENV, ...portEnv }`. Eleven of its twelve rows use the default.
+  - **The governed-plane row passes `{}`** and runs as captured, with no `SYZYGY_` variable (round 1's F1). It is the one `runSync` row that reaches port resolution (`apps/syzygy/src/main.ts:99`) with no `--port`, so it pins that the default resolves to a valid port. With `SYZYGY_PORT=0` on it, dropping the default (mutant P1) failed nothing.
+  - The exposure, accepted by the coordinator: a regression that wrongly admits that row's argv binds 7477, if it is free, for at most 20 s before SIGKILL. At base the same regression hung without bound.
+  - `SYZYGY_PORT` is set in `runSync`'s environment only. `runDaemon` and its two rows are unchanged, so the explicit `--port 0` row still runs with no port in its environment.
+  - A 5-line comment says why, the governed-plane row included.
+- **4.25: the row whose `chmodSync(blocked, 0o000)` was `state-dir.system.test.ts:364`.** Its `it` is now at `:358`. This is from the PR 521 review, N7. The row chmods its directory to 000, and that does not block root. It now carries the repository's idiom, `const isRoot = process.getuid?.() === 0;` with `it.skipIf(isRoot)`, plus a one-line comment, as `packages/polaris-dossier/src/state-directory.test.ts` and `packages/polaris-dossier/src/credential-probe.test.ts` already do.
+- **Not touched:** `packages/polaris-dossier/src/launched.test.ts`, whose root skip belongs to syzygy-bpyt.8.35, and the text pin at `daemon-entry-unchanged.system.test.ts:203-218` (base line numbers, now `:213-228`), which belongs to syzygy-bpyt.4.5. No product source changes.
+
+Tests: +0 ~13 -0. That is 12 rows through `runSync` (3 usage, 5 refusals, 1 governed-plane state directory, 3 `dossier`), plus 1 row with a root skip condition. No title changes.
+
+## Round 1 repairs (R-GP-IMPL-RUNSYNC-ROOT-SKIP-1)
+
+- **F1.** The governed-plane row runs without `SYZYGY_PORT`: the reviewer's three fragments of `daemon-entry-unchanged.system.test.ts` (`67f2db90`), and the comment above `RUN_SYNC_TIMEOUT_MS`. The record now carries P1 and P2 (below).
+- **N1.** The class line below is the reviewer's ruling.
+- **N2.** The sampling is stated as the tool does it: a 0.25 s sleep between samples. The record now stores the mean interval and load1 at each run's start and end. The "341 ms" had no source in the record and is replaced by the record's own figure (Residuals).
+- **N3.** The record's `reviewRuns` cites the reviewer's T1–T3, S1, S2, `base-R5-hang`, `base-R5` and `base-R9` as the per-predicate evidence, each by raw line with its outcome quoted. The tool did not re-run them. The skipped-population pin is a follow-up bead, not this PR.
+- **N4** is for syzygy-bpyt.8.35's root skip, not this PR.
+
+## Acceptance criteria evidence
+
+[Observed] The rule-6 record is `docs/evidence/syzygy-bpyt-4-22/runsync-and-root-probe.json`, schema 2. It was generated at `821d807c` by `docs/evidence/syzygy-bpyt-4-22/tools/runsync_and_root_probe.py`, whose sha256 it stores. It also stores both files' sha256 at the base (`3ec69299`), at HEAD and at the prior head (`f7bbb93a`). For each mutant it stores the edits' `old` and `new`, the commit of the test file it ran against, and for R5 and R9 the 8.2 mutant record's path and sha256.
+
+A mutant counts as killed only when vitest exits non-zero and the failed rows are exactly the rows named for it. While each run goes, `ss -ltnpH` is sampled with a 0.25 s sleep between samples (mean interval 0.42–0.44 s in every mutant run).
+
+| Mutant | Edit | Result at HEAD |
+|---|---|---|
+| R5 | `packages/polaris-dossier/src/argv.ts`: `if (!spec.positionals \|\| arg.startsWith('-')) return` → `if (arg.startsWith('-')) return` | exit 1 in 43.9 s. `["--port","0","dossier"]` (20,104 ms) and `["Dossier"]` (20,029 ms) fail by `ETIMEDOUT`. 7477 in 0 of 103 samples; two ephemeral listeners, the mutant daemons under `SYZYGY_PORT=0`; 0 survivors |
+| R9 | `argv.ts`: `if (token.value === undefined \|\| (spec.dashValue` → `if ((spec.dashValue`. It does not type-check: `tsc -b` exits 2 but emits it, and the record keeps both type errors | exit 1 in 24.1 s. `["--port"]` fails by `ETIMEDOUT` (20,033 ms). 7477 in 0 of 56; one ephemeral listener; 0 survivors |
+| P1 | `apps/syzygy/src/main.ts`: `… ?? env['SYZYGY_PORT'] ?? String(DEFAULT_PORT);` → `… ?? env['SYZYGY_PORT'];` (the default dropped) | exit 1 in 3.9 s. The governed-plane row fails (121 ms, no timeout). 7477 in 0 of 9; 0 survivors |
+| P2 | `main.ts`: `env['SYZYGY_PORT']` read before `flags.get('--port')` | exit 1 in 23.9 s. `["--port","70000"]` fails by `ETIMEDOUT` (20,037 ms). 7477 in 0 of 57; one ephemeral listener; 0 survivors |
+| P1 control | P1, with the test file as at `f7bbb93a` | **survives**: exit 0, 15 passed. So the repaired file is what kills P1 |
+
+- **The unmutated suite passes.** The two files give 21 tests at the base and 21 at HEAD, with the same titles and statuses, exit 0. `npm run test:system` gives 8 files passed and 1 skipped, 47 tests passed and 1 skipped. The skipped one is `packages/cap1-system/src/fresh-clone.system.test.ts`, which only runs when its environment variable enables it.
+- **4.25 AC1:** the row uses the idiom with a comment. A getuid shim (`NODE_OPTIONS` importing `process.getuid = () => 0`) runs the file filtered to that row with `-t`:
+  - at HEAD the row is skipped;
+  - at the base (no `skipIf`) it runs and passes;
+  - without the shim, at HEAD, it runs and passes.
+
+  This checks the skip's condition, not the row. The process is not root, so chmod 000 still blocks it. [Inferred] What the row would do under a real root stays unobserved until a root CI job exists. Round 1's reviewer also ran the whole file under a shim that spares the daemon: 5 passed and the target row skipped at head, 6 passed at base.
+- **4.25 AC2:** as the real user, the file passes with the same titles and count (6 tests) at the base and at HEAD.
+
+## CC-REV-1 class
+
+CC-REV-1 classes: 1 and 6, by reviewer ruling. Test-only: runSync's environment and failure mode in daemon-entry-unchanged.system.test.ts, and the root skip of state-dir.system.test.ts's mode-000 row. No product byte changed.
+
+## Residuals
+
+- **The base file's hang under R5 is not in this record.** Round 1's reviewer reproduced it (`base-R5-hang`: SIGKILLed at a 120 s deadline) and the 7477 binding (`base-R5`: `["Dossier"]`; `base-R9`: `["--port"]`). This record does not re-run it, because it would hold 127.0.0.1:7477 on this shared host for as long as it ran.
+- **The 20 s margin is measured at moderate load only.** In the record's unmutated head run, at load1 15.92–16.33, the slowest `runSync` row took 386 ms (`dossier status <missing>`). Round 1's reviewer ran 32 copies of the file at once: the slowest row took 4,382 ms, and load1 peaked at 75.75. [Unknown] It has not been measured at load 127.
+- **Which `runSync` rows read the port.** [Observed, round 1 §3.2] Only the governed-plane row reaches port resolution with no `--port`, and it runs without the variable. Of the other eleven, the usage rows stop before parsing, four refusals fault in the argv reader, `["--port","70000"]` carries the flag, and the three `dossier` rows never reach the daemon's parser. So on a faithful run none of them reads `SYZYGY_PORT`, and the literals captured at `55daf6ce` with no `SYZYGY_` variable still hold.
+
+Gates at `7459cc75`:
+
+- The two changed files at HEAD (the record's `head` run, at `821d807c`, whose test files are the same bytes): 21 passed.
+- `npm run test:system`: 47 passed, 1 skipped (48), at load1 about 12–13.
+- `npm run typecheck`: exit 0.
+- `check_governance`: 32 OK, 21 WARN, 0 FAIL.
+- `check_quotations`: 0 findings.
+- Battery in a clone at `7459cc75`: `commands=110 nonzero=0`.
+
+Cut from `3ec69299`. Main has since moved to `a088f1ca`: 244 paths, none of them a subject path, and none under `apps/syzygy/`, `packages/cap1-system/`, `packages/cap1-daemon/`, `docs/evidence/syzygy-bpyt-4-22/` or `docs/evidence/syzygy-bpyt-8-2/`, and not `packages/polaris-dossier/src/argv.ts`. Main is not merged in.
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+https://claude.ai/code/session_01APhWyj6JKsAs6kzgYByHeD
+

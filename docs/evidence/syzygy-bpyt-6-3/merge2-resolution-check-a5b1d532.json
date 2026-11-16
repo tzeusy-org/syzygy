@@ -1,0 +1,37 @@
+{
+ "merge": "a5b1d5328a7585e1ad03e90fc5df1847d85b9a21",
+ "parents": [
+  "e6afa657d63cc9a47afce06636ef6f0c0c19491d",
+  "41932c3b5aba567376fea3b32a80a54f8b6b30ab"
+ ],
+ "computedTree": "7c057f499594e6a3b32a496bcd46181e760ba138",
+ "mergeTree": "39d12013429b6e9dba5af91272112a1f7c2b05f4",
+ "mergeTreeExit": 1,
+ "paths": 5927,
+ "pathsEqualToGitsMerge": 5925,
+ "conflictedPathsResolvedByHand": [
+  {
+   "path": "AGENTS.md",
+   "regions": [
+    {
+     "ours": "- Three key-sorted JSON encoders are kept apart on purpose: `canonicalJson`\n  (PWB identities) drops `undefined` members and flattens any object;\n  `encodeCanonicalJson` (Polaris generation digests) refuses what it cannot\n  spell and sorts every key by code unit; cap1's own `deterministicLayer`\n  is left out of the divergence test (cap1 imports nothing shared), and\n  only `canonical-json-probe.mjs` compares it. A merge makes one encoder\n  refuse what another spells (an `undefined` member, a BigInt) or reorders\n  array-index keys, so it changes an output or a refusal and goes to the\n  owner (GP-Q0). `canonical-json-divergence.test.ts` pins the first two.\n",
+     "base": "",
+     "theirs": "- Markdown fences are read by five separate rules, kept apart on purpose:\n  `markdown-code-context.ts` (the PWB-REQ-006 profile, the only one a clause\n  states), the manifest's `stripFences`, the extractor's `parseDoc`, the\n  consent `outsideFences` and the Polaris renderer. `docs/evidence/syzygy-bpyt-6-3/dc3-fence-rules-2026-10-25.json`\n  says which clause governs each and where they differ; `fence-rules.test.ts`\n  pins four of them (the consent reader through the probe and its own tests).\n  Do not merge or \"fix\" one without the owner, since that changes what a gate\n  accepts. G1, the CRLF reading, is ruled by the owner (`syzygy-bpyt.1.14`)\n  and `syzygy-bpyt.16` fixes it; G2 and G3 are open owner questions.\n",
+     "resolution": "- Three key-sorted JSON encoders are kept apart on purpose: `canonicalJson`\n  (PWB identities) drops `undefined` members and flattens any object;\n  `encodeCanonicalJson` (Polaris generation digests) refuses what it cannot\n  spell and sorts every key by code unit; cap1's own `deterministicLayer`\n  is left out of the divergence test (cap1 imports nothing shared), and\n  only `canonical-json-probe.mjs` compares it. A merge makes one encoder\n  refuse what another spells (an `undefined` member, a BigInt) or reorders\n  array-index keys, so it changes an output or a refusal and goes to the\n  owner (GP-Q0). `canonical-json-divergence.test.ts` pins the first two.\n- Markdown fences are read by five separate rules, kept apart on purpose:\n  `markdown-code-context.ts` (the PWB-REQ-006 profile, the only one a clause\n  states), the manifest's `stripFences`, the extractor's `parseDoc`, the\n  consent `outsideFences` and the Polaris renderer. `docs/evidence/syzygy-bpyt-6-3/dc3-fence-rules-2026-10-25.json`\n  says which clause governs each and where they differ; `fence-rules.test.ts`\n  pins four of them (the consent reader through the probe and its own tests).\n  Do not merge or \"fix\" one without the owner, since that changes what a gate\n  accepts. G1, the CRLF reading, is ruled by the owner (`syzygy-bpyt.1.14`)\n  and `syzygy-bpyt.16` fixes it; G2 and G3 are open owner questions.\n"
+    }
+   ]
+  },
+  {
+   "path": "docs/evidence/syzygy-bpyt-6-3/repair1-typecheck.log",
+   "regions": [
+    {
+     "ours": "\n> typecheck\n> tsc -b packages/support packages/cap1-core packages/http-host packages/cap1-daemon packages/cap1-conformance packages/three-surface-poc-core apps/syzygy apps/three-surface-poc packages/cap1-system packages/polaris-generation-core packages/polaris-generation-consent packages/polaris-dossier\n\n",
+     "base": "",
+     "theirs": "\n> typecheck\n> tsc -b packages/support packages/cap1-core packages/http-host packages/cap1-daemon packages/cap1-conformance packages/three-surface-poc-core apps/syzygy apps/three-surface-poc packages/cap1-system packages/polaris-generation-core packages/polaris-generation-consent packages/polaris-dossier\n\nexit=0\n",
+     "resolution": "\n> typecheck\n> tsc -b packages/support packages/cap1-core packages/http-host packages/cap1-daemon packages/cap1-conformance packages/three-surface-poc-core apps/syzygy apps/three-surface-poc packages/cap1-system packages/polaris-generation-core packages/polaris-generation-consent packages/polaris-dossier\n\nexit=0\n"
+    }
+   ]
+  }
+ ],
+ "pathsThatDifferWithoutBeingAResolvedConflict": []
+}

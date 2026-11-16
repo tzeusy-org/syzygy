@@ -1,0 +1,22 @@
+{
+ "denominator_tracked_files": 7367,
+ "scanned": "code/config files outside docs/ (js/ts/json/py/yaml)",
+ "importers": {
+  "purity.testkit": [
+   "packages/support/src/support-purity.test.ts",
+   "packages/three-surface-poc-core/src/owner-act-drafter.test.ts"
+  ],
+  "workspace-reach.testkit": [
+   "apps/three-surface-poc/src/git-observation.test.ts",
+   "packages/polaris-dossier/src/no-egress.test.ts",
+   "packages/polaris-dossier/src/subpath-imports.test.ts",
+   "packages/polaris-generation-core/src/island-boundary.test.ts",
+   "packages/polaris-generation-core/src/root-vitest-aliases.test.ts",
+   "packages/polaris-generation-core/src/workspace-reach.test.ts"
+  ]
+ },
+ "non_test_importers": {
+  "purity.testkit": [],
+  "workspace-reach.testkit": []
+ }
+}

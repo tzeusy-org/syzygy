@@ -1,0 +1,101 @@
+{
+ "selftest": [
+  {
+   "name": "identical",
+   "expectPass": true,
+   "got": true,
+   "ok": true,
+   "printEqual": true,
+   "linesOk": true
+  },
+  {
+   "name": "trailing comment added",
+   "expectPass": true,
+   "got": true,
+   "ok": true,
+   "printEqual": true,
+   "linesOk": true
+  },
+  {
+   "name": "jsdoc line edited",
+   "expectPass": true,
+   "got": true,
+   "ok": true,
+   "printEqual": true,
+   "linesOk": true
+  },
+  {
+   "name": "trailing comment edited",
+   "expectPass": true,
+   "got": true,
+   "ok": true,
+   "printEqual": true,
+   "linesOk": true
+  },
+  {
+   "name": "code edited",
+   "expectPass": false,
+   "got": false,
+   "ok": true,
+   "printEqual": false,
+   "linesOk": false
+  },
+  {
+   "name": "type-only edit (emit-equal)",
+   "expectPass": false,
+   "got": false,
+   "ok": true,
+   "printEqual": false,
+   "linesOk": false
+  },
+  {
+   "name": "text appended inside a string",
+   "expectPass": false,
+   "got": false,
+   "ok": true,
+   "printEqual": false,
+   "linesOk": false
+  },
+  {
+   "name": "comment line added",
+   "expectPass": true,
+   "got": true,
+   "ok": true,
+   "printEqual": true,
+   "linesOk": true
+  },
+  {
+   "name": "code line added",
+   "expectPass": false,
+   "got": false,
+   "ok": true,
+   "printEqual": false,
+   "linesOk": false
+  },
+  {
+   "name": "code line removed",
+   "expectPass": false,
+   "got": false,
+   "ok": true,
+   "printEqual": false,
+   "linesOk": false
+  },
+  {
+   "name": "whitespace-only change (print-equal, not comment-only)",
+   "expectPass": false,
+   "got": false,
+   "ok": true,
+   "printEqual": true,
+   "linesOk": false
+  },
+  {
+   "name": "code moved into a comment",
+   "expectPass": false,
+   "got": false,
+   "ok": true,
+   "printEqual": false,
+   "linesOk": false
+  }
+ ],
+ "pass": true
+}

@@ -1,0 +1,88 @@
+{
+ "title": "syzygy-bpyt.8.33: the snapshot field that fails the link row under O1 and O8 at the fix",
+ "bead": "syzygy-bpyt.8.33",
+ "subject": "packages/polaris-dossier/src/launched.test.ts",
+ "testSha256": "5dd0d6c74f5c8de9998d82cf6b8989e24e09f293202eebb3fd0969cfa79bd63c",
+ "commit": "fbe03e304bd9ad13afa861f0bc83e6f900e8814c",
+ "tool": {
+  "path": "field_diff.py",
+  "sha256": "8aa341cfad93549361ca79c41068df1c20b521f827df75b81c443afbcfb82087"
+ },
+ "command": "npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/launched.test.ts (default reporter, NO_COLOR=1)",
+ "kernel": "7.0.0-38-generic",
+ "reading": "On the link row only targetCtimeNs differs between the before and after snapshots; mode, ino, size, ctimeNs, link and bytes are equal.",
+ "runs": [
+  {
+   "mutant": "O1-same-bytes-rewrite",
+   "editsFrom": "mutants-tmpfs.json",
+   "tmpdir": {
+    "path": "/tmp/la-b833/fd",
+    "filesystem": "tmpfs"
+   },
+   "exitCode": 1,
+   "restored": true,
+   "linkRowDiffLines": [
+    "-   \"targetCtimeNs\": 1792859700718986468n,",
+    "+   \"targetCtimeNs\": 1792859700720320250n,"
+   ],
+   "output": {
+    "path": "field-diff-O1-tmpfs.txt",
+    "sha256": "9c658d2dfd4d0ad5aae9f8afee8fe9ef195ab4aaf48874c2286b6b8d894b7da4"
+   }
+  },
+  {
+   "mutant": "O1-same-bytes-rewrite",
+   "editsFrom": "mutants-ext4.json",
+   "tmpdir": {
+    "path": "/var/tmp/la-b833/fd",
+    "filesystem": "ext4"
+   },
+   "exitCode": 1,
+   "restored": true,
+   "linkRowDiffLines": [
+    "-   \"targetCtimeNs\": 1792859704078976385n,",
+    "+   \"targetCtimeNs\": 1792859704079036421n,"
+   ],
+   "output": {
+    "path": "field-diff-O1-ext4.txt",
+    "sha256": "4197b5116fdae044f64427954d9baf0e6a217af385c606f72131598f4d45783c"
+   }
+  },
+  {
+   "mutant": "O8-link-target-chmod-cycle-rewrite",
+   "editsFrom": "mutants-tmpfs.json",
+   "tmpdir": {
+    "path": "/tmp/la-b833/fd",
+    "filesystem": "tmpfs"
+   },
+   "exitCode": 1,
+   "restored": true,
+   "linkRowDiffLines": [
+    "-   \"targetCtimeNs\": 1792859706715075614n,",
+    "+   \"targetCtimeNs\": 1792859706716238685n,"
+   ],
+   "output": {
+    "path": "field-diff-O8-tmpfs.txt",
+    "sha256": "4ba1b5fe4eac03cf659636b30ebffbaa781757dfe0e7c562c3c8d3f61b9b0829"
+   }
+  },
+  {
+   "mutant": "O8-link-target-chmod-cycle-rewrite",
+   "editsFrom": "mutants-ext4.json",
+   "tmpdir": {
+    "path": "/var/tmp/la-b833/fd",
+    "filesystem": "ext4"
+   },
+   "exitCode": 1,
+   "restored": true,
+   "linkRowDiffLines": [
+    "-   \"targetCtimeNs\": 1792859709581369419n,",
+    "+   \"targetCtimeNs\": 1792859709582174891n,"
+   ],
+   "output": {
+    "path": "field-diff-O8-ext4.txt",
+    "sha256": "29e5b1530b657bacde943fd20693a03ecb1f8cd184d8a126010dd4b0bc1819c2"
+   }
+  }
+ ]
+}

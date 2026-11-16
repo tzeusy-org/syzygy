@@ -1,0 +1,7 @@
+{
+ "ranAtCommit": "e405d03e5320256581772ed015a7f723ef07ba65",
+ "tool": "docs/evidence/syzygy-bpyt-54/spread_sweep.py",
+ "toolSha256": "808d6225e5d48c6dba773e09c018a3ce62563c57201d472154d99bdf58d52b93",
+ "selftest": "pass",
+ "failures": []
+}

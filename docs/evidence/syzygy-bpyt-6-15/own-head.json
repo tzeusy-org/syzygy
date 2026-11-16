@@ -1,0 +1,231 @@
+{
+ "tree": "/var/tmp/la-b615/head",
+ "commit": "f207d758eb11830eda2831caa911011e84a966b7",
+ "results": [
+  {
+   "id": "O1-support-prefix-dropped",
+   "commit": "f207d758eb11830eda2831caa911011e84a966b7",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "old": "    'packages/support/',\n",
+     "new": ""
+    }
+   ],
+   "counts": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "exit": 1,
+   "failedTests": 2,
+   "failedFiles": 1,
+   "totalTests": 13,
+   "outcome": "killed",
+   "seconds": 9.1,
+   "cleanAfter": true,
+   "failed": [
+    {
+     "title": "apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every file of each protected package, its manifest and tsconfig among them",
+     "timedOut": false,
+     "message": "AssertionError: packages/support/src/x.ts: expected true to be false // Object.is equality\n    at /var/tmp/la-b615/head/apps/three-surface-poc/src/git-observation.test.ts:135:73\n    at file:///var/tmp/la-b615/head/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///var/tmp/la-b615/"
+    },
+    {
+     "title": "apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every module and package the POC daemon imports",
+     "timedOut": false,
+     "message": "AssertionError: expected [ …(5) ] to deeply equal []\n    at /var/tmp/la-b615/head/apps/three-surface-poc/src/git-observation.test.ts:152:90\n    at file:///var/tmp/la-b615/head/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///var/tmp/la-b615/head/node_modules/@vitest/runner/dist/"
+    }
+   ],
+   "reportError": null
+  },
+  {
+   "id": "O2-support-prefix-narrowed-to-src",
+   "commit": "f207d758eb11830eda2831caa911011e84a966b7",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "old": "    'packages/support/',\n",
+     "new": "    'packages/support/src/',\n"
+    }
+   ],
+   "counts": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "exit": 1,
+   "failedTests": 2,
+   "failedFiles": 1,
+   "totalTests": 13,
+   "outcome": "killed",
+   "seconds": 8.1,
+   "cleanAfter": true,
+   "failed": [
+    {
+     "title": "apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every file of each protected package, its manifest and tsconfig among them",
+     "timedOut": false,
+     "message": "AssertionError: packages/support/package.json: expected true to be false // Object.is equality\n    at /var/tmp/la-b615/head/apps/three-surface-poc/src/git-observation.test.ts:135:73\n    at file:///var/tmp/la-b615/head/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///var/tmp/la-b"
+    },
+    {
+     "title": "apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every module and package the POC daemon imports",
+     "timedOut": false,
+     "message": "AssertionError: expected [ …(2) ] to deeply equal []\n    at /var/tmp/la-b615/head/apps/three-surface-poc/src/git-observation.test.ts:152:90\n    at file:///var/tmp/la-b615/head/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///var/tmp/la-b615/head/node_modules/@vitest/runner/dist/"
+    }
+   ],
+   "reportError": null
+  },
+  {
+   "id": "O3-unprefixed-package-imported-statically",
+   "commit": "f207d758eb11830eda2831caa911011e84a966b7",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/poc-main.ts",
+     "old": "import { sha256 } from '@syzygy/support';\n",
+     "new": "import { sha256 } from '@syzygy/support';\nimport '@syzygy/polaris-generation-core';\n"
+    }
+   ],
+   "counts": [
+    {
+     "file": "apps/three-surface-poc/src/poc-main.ts",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "exit": 1,
+   "failedTests": 1,
+   "failedFiles": 1,
+   "totalTests": 13,
+   "outcome": "killed",
+   "seconds": 8.4,
+   "cleanAfter": true,
+   "failed": [
+    {
+     "title": "apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every module and package the POC daemon imports",
+     "timedOut": false,
+     "message": "AssertionError: expected [ …(27) ] to deeply equal []\n    at /var/tmp/la-b615/head/apps/three-surface-poc/src/git-observation.test.ts:152:90\n    at file:///var/tmp/la-b615/head/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///var/tmp/la-b615/head/node_modules/@vitest/runner/dist"
+    }
+   ],
+   "reportError": null
+  },
+  {
+   "id": "O4-unprefixed-package-imported-dynamically-from-core",
+   "commit": "f207d758eb11830eda2831caa911011e84a966b7",
+   "edits": [
+    {
+     "file": "packages/three-surface-poc-core/src/index.ts",
+     "old": "export * from './evidence-population.js';\n",
+     "new": "export * from './evidence-population.js';\nexport const loadLive = () => import('@syzygy/polaris-generation-consent/live');\n"
+    }
+   ],
+   "counts": [
+    {
+     "file": "packages/three-surface-poc-core/src/index.ts",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "exit": 1,
+   "failedTests": 1,
+   "failedFiles": 1,
+   "totalTests": 13,
+   "outcome": "killed",
+   "seconds": 6.8,
+   "cleanAfter": true,
+   "failed": [
+    {
+     "title": "apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every module and package the POC daemon imports",
+     "timedOut": false,
+     "message": "AssertionError: expected [ …(8) ] to deeply equal []\n    at /var/tmp/la-b615/head/apps/three-surface-poc/src/git-observation.test.ts:152:90\n    at file:///var/tmp/la-b615/head/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///var/tmp/la-b615/head/node_modules/@vitest/runner/dist/"
+    }
+   ],
+   "reportError": null
+  },
+  {
+   "id": "O5-unresolvable-workspace-specifier",
+   "commit": "f207d758eb11830eda2831caa911011e84a966b7",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/poc-main.ts",
+     "old": "import { sha256 } from '@syzygy/support';\n",
+     "new": "import { sha256 } from '@syzygy/support';\nimport '@syzygy/no-such-package';\n"
+    }
+   ],
+   "counts": [
+    {
+     "file": "apps/three-surface-poc/src/poc-main.ts",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "exit": 1,
+   "failedTests": 1,
+   "failedFiles": 1,
+   "totalTests": 13,
+   "outcome": "killed",
+   "seconds": 8.5,
+   "cleanAfter": true,
+   "failed": [
+    {
+     "title": "apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every module and package the POC daemon imports",
+     "timedOut": false,
+     "message": "AssertionError: expected [ Array(1) ] to deeply equal []\n    at /var/tmp/la-b615/head/apps/three-surface-poc/src/git-observation.test.ts:147:80\n    at file:///var/tmp/la-b615/head/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///var/tmp/la-b615/head/node_modules/@vitest/runner/d"
+    }
+   ],
+   "reportError": null
+  },
+  {
+   "id": "O6-cap1-daemon-prefix-dropped",
+   "commit": "f207d758eb11830eda2831caa911011e84a966b7",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "old": "    'packages/cap1-daemon/',\n",
+     "new": ""
+    }
+   ],
+   "counts": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "exit": 1,
+   "failedTests": 2,
+   "failedFiles": 1,
+   "totalTests": 13,
+   "outcome": "killed",
+   "seconds": 11.1,
+   "cleanAfter": true,
+   "failed": [
+    {
+     "title": "apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation allows unrelated dirty files while protecting POC runtime inputs",
+     "timedOut": false,
+     "message": "AssertionError: expected true to be false // Object.is equality\n    at /var/tmp/la-b615/head/apps/three-surface-poc/src/git-observation.test.ts:112:7\n    at file:///var/tmp/la-b615/head/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///var/tmp/la-b615/head/node_modules/@vitest/ru"
+    },
+    {
+     "title": "apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every file of each protected package, its manifest and tsconfig among them",
+     "timedOut": false,
+     "message": "AssertionError: packages/cap1-daemon/src/x.ts: expected true to be false // Object.is equality\n    at /var/tmp/la-b615/head/apps/three-surface-poc/src/git-observation.test.ts:135:73\n    at file:///var/tmp/la-b615/head/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///var/tmp/la-b"
+    }
+   ],
+   "reportError": null
+  }
+ ]
+}

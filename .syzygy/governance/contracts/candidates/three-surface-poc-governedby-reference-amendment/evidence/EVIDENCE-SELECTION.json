@@ -1,0 +1,224 @@
+{
+  "status": "C4 evidence selection/alias map; data retention only, no review/adoption authority",
+  "source_return_receipt_sha256": "2bb7f1b28b91cf0612ba6a7d96a276b46a0ead952cade4cb2b6da2e43388db38",
+  "byte_receipt_sha256": "a06e2715881c5985700bc0482f90a878c47c2631ee0d7fb163994a41ee31fd76",
+  "original_reports": "Historical captures at C3/source-return checkpoints. Exact copies retain original paths; one report is explicitly curated to remove performed-argument quotations and route its selected byte receipt. This map distinguishes every exact copy from the curated successor.",
+  "not_selected": "Executable measurement/static scripts, implementation snapshots, duplicate full baseline spec copies, full trace blobs and unrelated receipts are not installed in the governed candidate. Complete baseline requirement blocks are reconstructed from named BASE450 Git objects by the existing builder.",
+  "rows": [
+    {
+      "original_root": "/home/tze/.cache/syzygy-post-ceiling-2026-10-21/p115/impact-source-reconciliation",
+      "original_relative_path": "FULL-130-ASSESSMENTS.json",
+      "candidate_relative_path": "REQUIREMENT-CONSUMPTION.json",
+      "sha256": "535de5057966801c5e8cc7e1f3258d033b387054d14a920a78b453ff04698b06",
+      "bytes": 590847,
+      "role": "Current block-bound authored disposition data, copied verbatim from the sealed source return. Source status remains authored/pending confirmation.",
+      "copy": "byte-exact; original remains sealed"
+    },
+    {
+      "original_root": "/home/tze/.cache/syzygy-post-ceiling-2026-10-21/p115/impact-source-reconciliation",
+      "original_relative_path": "SOURCE-DECISION-RECONCILIATION.md",
+      "candidate_relative_path": "evidence/source-return/SOURCE-DECISION-RECONCILIATION-CURATED.md",
+      "sha256": "47201aaaafa808945dd03352a11c263de108f535dcb79ed6d176003ff382c6bb",
+      "bytes": 32470,
+      "role": "Curated historical C3 source report; authored/pending confirmation, not a C4 review verdict or authority",
+      "copy": "curated successor; original sealed outside Git",
+      "parent_sha256": "cbf669c92b5ca459da0a119af57e329de7dce3aeef846cc33d9528ebeb8cd90e",
+      "parent_bytes": 31566,
+      "operations": [
+        {
+          "parent_line_start": 36,
+          "parent_line_end_inclusive": 36,
+          "operation": "Remove copied performed-argument source digest from prose; retain source metadata and cite adoption act path instead",
+          "removed_region_sha256": "aa3bd2fc46e73eb69d67b18ee71159c0074e6aa84f18324ba03d6f1966f59514",
+          "replacement": "; source identity is bound in SOURCE-CRITERIA.json, with adoption recorded in .syzygy/governance/decisions/SPEC-POLICY-READABILITY-RESTYLE-ADOPTION-ACT.md."
+        },
+        {
+          "parent_line_start": 61,
+          "parent_line_end_inclusive": 61,
+          "operation": "Remove copied performed-argument source digest from prose; retain source metadata and cite adoption act path instead",
+          "removed_region_sha256": "aa3bd2fc46e73eb69d67b18ee71159c0074e6aa84f18324ba03d6f1966f59514",
+          "replacement": "; source identity is bound in SOURCE-CRITERIA.json, with adoption recorded in .syzygy/governance/decisions/SPEC-POLICY-READABILITY-RESTYLE-ADOPTION-ACT.md."
+        },
+        {
+          "parent_line_start": 95,
+          "parent_line_end_inclusive": 95,
+          "operation": "Remove copied performed-argument source digest from prose; retain source metadata and cite adoption act path instead",
+          "removed_region_sha256": "aa3bd2fc46e73eb69d67b18ee71159c0074e6aa84f18324ba03d6f1966f59514",
+          "replacement": "; source identity is bound in SOURCE-CRITERIA.json, with adoption recorded in .syzygy/governance/decisions/SPEC-POLICY-READABILITY-RESTYLE-ADOPTION-ACT.md."
+        },
+        {
+          "parent_line_start": 107,
+          "parent_line_end_inclusive": 107,
+          "operation": "Remove copied performed-argument source digest from prose; retain source metadata and cite adoption act path instead",
+          "removed_region_sha256": "aa3bd2fc46e73eb69d67b18ee71159c0074e6aa84f18324ba03d6f1966f59514",
+          "replacement": "; source identity is bound in SOURCE-CRITERIA.json, with adoption recorded in .syzygy/governance/decisions/SPEC-POLICY-READABILITY-RESTYLE-ADOPTION-ACT.md."
+        },
+        {
+          "parent_line_start": 125,
+          "parent_line_end_inclusive": 125,
+          "operation": "Remove copied performed-argument source digest from prose; retain source metadata and cite adoption act path instead",
+          "removed_region_sha256": "aa3bd2fc46e73eb69d67b18ee71159c0074e6aa84f18324ba03d6f1966f59514",
+          "replacement": "; source identity is bound in SOURCE-CRITERIA.json, with adoption recorded in .syzygy/governance/decisions/SPEC-POLICY-READABILITY-RESTYLE-ADOPTION-ACT.md."
+        },
+        {
+          "parent_line_start": 282,
+          "parent_line_end_inclusive": 282,
+          "operation": "Map historical outside-cache byte receipt path to selected included alias",
+          "removed_region_sha256": "a01df707b2eaee5e40085fb9b9103230bb761c333f41c20e59364c32a63d2529",
+          "replacement": "`../encoded-byte/FINAL-RECEIPT.json`"
+        },
+        {
+          "parent_line_start": 329,
+          "parent_line_end_inclusive": 329,
+          "operation": "Omit historical extra empty EOF line in curated Markdown successor",
+          "removed_region_sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+          "replacement": ""
+        }
+      ]
+    },
+    {
+      "original_root": "/home/tze/.cache/syzygy-post-ceiling-2026-10-21/p115/impact-source-reconciliation",
+      "original_relative_path": "SOURCE-CRITERIA.json",
+      "candidate_relative_path": "evidence/source-return/SOURCE-CRITERIA.json",
+      "sha256": "a21bc53376bce98a3ef9f8be5acac644f93cd024a24d27468834ebae4c5f9695",
+      "bytes": 20037,
+      "role": "Historical sealed CC-REV-4 source evidence, not a C4 review verdict or authority",
+      "copy": "byte-exact; original remains sealed"
+    },
+    {
+      "original_root": "/home/tze/.cache/syzygy-post-ceiling-2026-10-21/p115/impact-source-reconciliation",
+      "original_relative_path": "SOURCE-BINDINGS.json",
+      "candidate_relative_path": "evidence/source-return/SOURCE-BINDINGS.json",
+      "sha256": "68392a146377ed3cf0eb7b037da1790b98d760bca0d8c695e768875830293e59",
+      "bytes": 16299,
+      "role": "Historical sealed CC-REV-4 source evidence, not a C4 review verdict or authority",
+      "copy": "byte-exact; original remains sealed"
+    },
+    {
+      "original_root": "/home/tze/.cache/syzygy-post-ceiling-2026-10-21/p115/impact-source-reconciliation",
+      "original_relative_path": "C3-CHANGED-AND-MISSED-EDGES.json",
+      "candidate_relative_path": "evidence/source-return/C3-CHANGED-AND-MISSED-EDGES.json",
+      "sha256": "be6e92dc263deb4a10fd50fd233b9f9c39b7fb69ee05d77150a003ede671ab98",
+      "bytes": 58575,
+      "role": "Historical sealed CC-REV-4 source evidence, not a C4 review verdict or authority",
+      "copy": "byte-exact; original remains sealed"
+    },
+    {
+      "original_root": "/home/tze/.cache/syzygy-post-ceiling-2026-10-21/p115/impact-source-reconciliation",
+      "original_relative_path": "CONSUMER-EDGE-MAP.json",
+      "candidate_relative_path": "evidence/source-return/CONSUMER-EDGE-MAP.json",
+      "sha256": "af299b0b68c5efdf9c9d676203e53c6041a02c17ed04e081c1989c15742ae55a",
+      "bytes": 23900,
+      "role": "Historical sealed CC-REV-4 source evidence, not a C4 review verdict or authority",
+      "copy": "byte-exact; original remains sealed"
+    },
+    {
+      "original_root": "/home/tze/.cache/syzygy-post-ceiling-2026-10-21/p115/impact-source-reconciliation",
+      "original_relative_path": "EVIDENCE-EXCERPT-MAP.json",
+      "candidate_relative_path": "evidence/source-return/EVIDENCE-EXCERPT-MAP.json",
+      "sha256": "4e9fefbcb8e4c6b4c5897ebb544be6302b8a0754f4ba3fd262d10dd1d419a861",
+      "bytes": 93766,
+      "role": "Historical sealed CC-REV-4 source evidence, not a C4 review verdict or authority",
+      "copy": "byte-exact; original remains sealed"
+    },
+    {
+      "original_root": "/home/tze/.cache/syzygy-post-ceiling-2026-10-21/p115/impact-source-reconciliation",
+      "original_relative_path": "FINAL-RECEIPT.json",
+      "candidate_relative_path": "evidence/source-return/FINAL-RECEIPT.json",
+      "sha256": "2bb7f1b28b91cf0612ba6a7d96a276b46a0ead952cade4cb2b6da2e43388db38",
+      "bytes": 3467,
+      "role": "Historical sealed CC-REV-4 source evidence, not a C4 review verdict or authority",
+      "copy": "byte-exact; original remains sealed"
+    },
+    {
+      "original_root": "/home/tze/.cache/syzygy-post-ceiling-2026-10-21/p115/encoded-byte-impact-source",
+      "original_relative_path": "SOURCE-RETURN-EVIDENCE.md",
+      "candidate_relative_path": "evidence/encoded-byte/SOURCE-RETURN-EVIDENCE.md",
+      "sha256": "a02fab430dc4d252b8730f867c29efc4bf1ff1f575ebae837293dabbaa38eecf",
+      "bytes": 13374,
+      "role": "Historical sealed byte/source corroboration; measurements are bounded synthetic literal pairs",
+      "copy": "byte-exact; original remains sealed"
+    },
+    {
+      "original_root": "/home/tze/.cache/syzygy-post-ceiling-2026-10-21/p115/encoded-byte-impact-source",
+      "original_relative_path": "FINAL-RECEIPT.json",
+      "candidate_relative_path": "evidence/encoded-byte/FINAL-RECEIPT.json",
+      "sha256": "a06e2715881c5985700bc0482f90a878c47c2631ee0d7fb163994a41ee31fd76",
+      "bytes": 9799,
+      "role": "Historical sealed byte/source corroboration; measurements are bounded synthetic literal pairs",
+      "copy": "byte-exact; original remains sealed"
+    },
+    {
+      "original_root": "/home/tze/.cache/syzygy-post-ceiling-2026-10-21/p115/encoded-byte-impact-source",
+      "original_relative_path": "BOUNDARY-MAP.json",
+      "candidate_relative_path": "evidence/encoded-byte/BOUNDARY-MAP.json",
+      "sha256": "cb1fd91ad124b3eef9d8599c51b749c4516d9f905e68d42e2b93837b76b2df52",
+      "bytes": 26184,
+      "role": "Historical sealed byte/source corroboration; measurements are bounded synthetic literal pairs",
+      "copy": "byte-exact; original remains sealed"
+    },
+    {
+      "original_root": "/home/tze/.cache/syzygy-post-ceiling-2026-10-21/p115/encoded-byte-impact-source",
+      "original_relative_path": "derived-inputs/empty-inline.json",
+      "candidate_relative_path": "evidence/encoded-byte/derived-inputs/empty-inline.json",
+      "sha256": "bb2550437d4db26c0eef6db4b50f6d8d5bbfebc06131180fb710b2bb2ad71d96",
+      "bytes": 2197,
+      "role": "Exact derived synthetic JSON input for fresh-clone byte replay; no product source/code",
+      "copy": "byte-exact; original remains sealed"
+    },
+    {
+      "original_root": "/home/tze/.cache/syzygy-post-ceiling-2026-10-21/p115/encoded-byte-impact-source",
+      "original_relative_path": "derived-inputs/empty-reference.json",
+      "candidate_relative_path": "evidence/encoded-byte/derived-inputs/empty-reference.json",
+      "sha256": "2a17732c3692730fd04f9df0a21ed2282a1eca77bc11d620af798c18d24bb074",
+      "bytes": 2575,
+      "role": "Exact derived synthetic JSON input for fresh-clone byte replay; no product source/code",
+      "copy": "byte-exact; original remains sealed"
+    },
+    {
+      "original_root": "/home/tze/.cache/syzygy-post-ceiling-2026-10-21/p115/encoded-byte-impact-source",
+      "original_relative_path": "derived-inputs/one-item-inline.json",
+      "candidate_relative_path": "evidence/encoded-byte/derived-inputs/one-item-inline.json",
+      "sha256": "c9c2a40919eccd9f5ea1738ce1fe396ccaf1d02c0679161433342175b4727739",
+      "bytes": 3591,
+      "role": "Exact derived synthetic JSON input for fresh-clone byte replay; no product source/code",
+      "copy": "byte-exact; original remains sealed"
+    },
+    {
+      "original_root": "/home/tze/.cache/syzygy-post-ceiling-2026-10-21/p115/encoded-byte-impact-source",
+      "original_relative_path": "derived-inputs/one-item-reference.json",
+      "candidate_relative_path": "evidence/encoded-byte/derived-inputs/one-item-reference.json",
+      "sha256": "0be7bb92937136a16eea35d67ed484b51c14344a6262d712cb0386bed2f30d7e",
+      "bytes": 3605,
+      "role": "Exact derived synthetic JSON input for fresh-clone byte replay; no product source/code",
+      "copy": "byte-exact; original remains sealed"
+    },
+    {
+      "original_root": "/home/tze/.cache/syzygy-post-ceiling-2026-10-21/p115/encoded-byte-impact-source",
+      "original_relative_path": "snapshots/abd3f6ca2e8e99ad59327fdfc7b38d8bf41b07b5/.syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/literal-fixtures/inline-body-A.json",
+      "candidate_relative_path": "compatibility/literal-fixtures/inline-body-A.json",
+      "sha256": "6648e7c17ea5b8f0317d4905d72292b8594e7800fc648154c42dfde28565b39b",
+      "bytes": 4996,
+      "role": "Existing C3 exact two-item fixture, unchanged; named by sealed byte receipt",
+      "copy": "already retained; not rewritten"
+    },
+    {
+      "original_root": "/home/tze/.cache/syzygy-post-ceiling-2026-10-21/p115/encoded-byte-impact-source",
+      "original_relative_path": "snapshots/abd3f6ca2e8e99ad59327fdfc7b38d8bf41b07b5/.syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/literal-fixtures/reference-body-A.json",
+      "candidate_relative_path": "compatibility/literal-fixtures/reference-body-A.json",
+      "sha256": "281cdf84ceda4b30e3418eb478b62ce64b71d9151732e1a36a34120d3751ceb9",
+      "bytes": 4646,
+      "role": "Existing C3 exact two-item fixture, unchanged; named by sealed byte receipt",
+      "copy": "already retained; not rewritten"
+    },
+    {
+      "original_root": "/home/tze/GitHub/syzygy/.worktrees/parallel-agents/p115-owner-offer/.syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment",
+      "original_relative_path": "ROUND-2-DISPOSITIONS.md",
+      "candidate_relative_path": "ROUND-2-DISPOSITIONS.md",
+      "sha256": "e4bb96608152d855988c50182b6c62e4c01c84eb653e6d391c6856090af1b530",
+      "bytes": 2620,
+      "role": "Root-owned actual R2 dispositions, byte-exact; REVISE remains the verdict",
+      "copy": "byte-exact; original remains sealed"
+    }
+  ]
+}

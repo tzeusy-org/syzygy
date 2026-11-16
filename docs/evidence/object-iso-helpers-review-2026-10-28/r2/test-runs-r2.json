@@ -1,0 +1,49 @@
+{
+ "fullSuite": {
+  "what": "npx vitest run, whole suite",
+  "commit": "4d92ac9518dd60cdd124525c3e36c086ccd5e425",
+  "files": 256,
+  "tests": 5679,
+  "passed": 5674,
+  "failed": 0,
+  "pending": 5,
+  "success": true,
+  "failedTests": [],
+  "loadavgAtStart": "25.70 25.55 24.38 16/9644 2746440"
+ },
+ "headTestsOnBase": {
+  "what": "six test files",
+  "commit": "81862261 code + the six existing test files from 4d92ac95",
+  "files": 6,
+  "tests": 486,
+  "passed": 485,
+  "failed": 1,
+  "pending": 0,
+  "success": false,
+  "failedTests": [
+   "no route and no credential sweeps a non-empty population of source files"
+  ]
+ },
+ "head8": {
+  "what": "the eight test files",
+  "commit": "4d92ac95",
+  "files": 8,
+  "tests": 546,
+  "passed": 546,
+  "failed": 0,
+  "pending": 0,
+  "success": true,
+  "failedTests": []
+ },
+ "localMergeWithMain": {
+  "what": "the PR test files, support-purity and main-changed generation-mutation.test.ts",
+  "commit": "4d92ac95 merged with gh/main 1a8864d9 (local 307da249)",
+  "files": 10,
+  "tests": 592,
+  "passed": 592,
+  "failed": 0,
+  "pending": 0,
+  "success": true,
+  "failedTests": []
+ }
+}

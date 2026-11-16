@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto';
 import { constants, lstat, open, readdir, type FileHandle } from 'node:fs/promises';
 import path from 'node:path';
-import { inflateSync } from 'node:zlib';
+import { constants as zlib, inflateSync } from 'node:zlib';
 
 /** Reads Git objects at one pinned revision of a clone, in process (REQ-polaris-generation-033, the reads sentence; design decision 1).
  *
@@ -35,6 +35,11 @@ import { inflateSync } from 'node:zlib';
  *   (`corrupt-object`), so padding cannot buy unbounded work. Nothing carries between calls: a ceiling over many calls is the
  *   caller's. Peak memory in one call is about three times `maxObjectBytes` (a delta's base, the delta and its output held at
  *   once; 3 GiB at the default), plus the `.idx` files;
+ * - answers `storedType` from the object's header alone, never its body (the launch type test, REQ-polaris-generation-046 and
+ *   047): a loose object's stored bytes are inflated one more byte at a time only until its `<type> <size>\0` header ends, and a
+ *   pack entry's type is read from its entry header, a delta's from the entry headers down its base chain. The bytes the last stored
+ *   byte inflates to past the header are discarded unread, and the answer is not re-hashed: a header can lie, so only a commit's
+ *   answer is acted on, and only after `tree` re-hashes it;
  * - refuses a store that cannot be read (`store-unreadable`, a filesystem error code) and its own defects (`reader-fault`, any other
  *   error), and never throws anything else.
  * Not bounded: the bytes of `.idx` files, each read and parsed in full once per call. Classification and screening of what it returns
@@ -75,6 +80,10 @@ export function hashAlgorithmOf(identifier: string): HashAlgorithm {
   return refuse('malformed-identifier', `"${identifier.slice(0, 80)}" is not a 40- or 64-digit lowercase hex object identifier`);
 }
 
+/** Tree entry modes whose object is a blob: regular, executable and symbolic-link files. A submodule (`160000`) is not one. The one copy
+ * every reader of a listing filters by (`check.ts`, `review.ts`, `census.ts`). */
+export const BLOB_MODES: ReadonlySet<string> = new Set(['100644', '100755', '120000']);
+
 export interface TreeEntry {
   readonly path: string;
   readonly mode: string;
@@ -97,6 +106,20 @@ export interface PinnedObjectReader {
   /** What the object store holds beside the pinned revision: the pinned commit's parents, from its re-hashed body, and every
    * identifier the store names that is neither the pinned commit nor a tree or blob under its tree. */
   inventory(): Promise<StoreInventory>;
+  /** The pinned commit's root tree, its parents and its committer date (the line's timestamp and zone only), from its re-hashed body:
+   * the only commit fields a launch reads before consent (REQ-polaris-generation-046). The message, and every author and committer
+   * identity, are never returned. */
+  commitHead(): Promise<CommitHead>;
+  /** The type the pinned identifier's stored header names, read from the header alone: no body byte is inflated or returned, and
+   * nothing is re-hashed. A type test before consent (REQ-polaris-generation-046): a tag or a blob is never read past its header. */
+  storedType(): Promise<GitObjectType>;
+}
+
+export interface CommitHead {
+  readonly tree: string;
+  readonly parents: readonly string[];
+  /** `<seconds> <zone>` as the commit object records it, or null when its committer line carries none. */
+  readonly committerDate: string | null;
 }
 
 /** The store's identifiers are the names it gives: each loose object's file name and each pack index entry, counted without reading
@@ -167,7 +190,25 @@ export function openPinnedObjectReader(options: PinnedObjectReaderOptions): Pinn
       const beyond = [...stored].filter(id => !reachable.has(id)).sort();
       return { parents, stored: stored.size, reachable: reachable.size, beyondCount: beyond.length, beyond: beyond.slice(0, 10) };
     }),
+    commitHead: () => step(async walk => ({ tree: await walk.rootTree(), parents: await walk.parents(), committerDate: await walk.committerDate() })),
+    storedType: () => step(async walk => walk.storedType()),
   };
+}
+
+/** Every identifier the clone's object store names (loose file names and pack index entries), no object read: what an abbreviated
+ * `--revision` is resolved against (REQ-polaris-generation-047). */
+export async function storedIdentifiers(gitDir: string, algorithm: HashAlgorithm): Promise<ReadonlySet<string>> {
+  let store: ObjectStore | null = null;
+  try {
+    store = await ObjectStore.open(gitDir, algorithm, { objectBytes: 2 ** 30, chainDepth: 1_000, callBytes: 2 ** 32, callObjects: 1_000_000 });
+    return await store.ids();
+  } catch (e) {
+    if (e instanceof GitObjectReadRefusal) throw e;
+    const code = errorCode(e);
+    return refuse(typeof code === 'string' && /^E[A-Z0-9]+$/.test(code) ? 'store-unreadable' : 'reader-fault', `the object store could not be listed (${typeof code === 'string' ? code : 'unknown error'})`);
+  } finally {
+    await store?.close().catch(() => undefined);
+  }
 }
 
 const HEX = { sha1: 40, sha256: 64 } as const;
@@ -207,6 +248,17 @@ class Walk {
     return out;
   }
 
+  /** The committer line's trailing `<seconds> <zone>`, read from the re-hashed header; the identity before it is never returned. */
+  async committerDate(): Promise<string | null> {
+    await this.rootTree();
+    const text = Buffer.from(await this.store.verified(this.revision, 'commit', null)).toString('latin1');
+    const header = text.slice(0, text.indexOf('\n\n') < 0 ? text.length : text.indexOf('\n\n'));
+    const lines = header.split('\n').filter(row => row.startsWith('committer '));
+    if (lines.length !== 1) return null;
+    const m = / (\d{1,15}) ([+-]\d{4})$/.exec(lines[0]!);
+    return m === null ? null : `${m[1]} ${m[2]}`;
+  }
+
   /** The pinned commit and each distinct tree and blob under its tree, every tree re-hashed. Submodule entries are left out. */
   async reachable(): Promise<Set<string>> {
     const out = new Set<string>([this.revision]);
@@ -228,6 +280,10 @@ class Walk {
 
   storedIds(): Promise<Set<string>> {
     return this.store.ids();
+  }
+
+  storedType(): Promise<GitObjectType> {
+    return this.store.headerType(this.revision, null);
   }
 
   async blob(target: string): Promise<VerifiedBlob> {
@@ -318,6 +374,11 @@ const errorCode = (e: unknown): unknown => (e as { code?: unknown } | null)?.cod
 type Inflated = { readonly buffer: Buffer; readonly engine: { readonly bytesWritten: number } };
 /** The most bytes a stored (zlib-wrapped) form of an inflated size may take: incompressible input grows a little. */
 const storedBound = (inflated: number): number => inflated + Math.floor(inflated / 8) + 1024;
+/** The longest loose header, `commit ` and a 20-digit size, and the most stored bytes read for one: a dynamic Huffman block's
+ * tables (under 300 bytes) and the zlib wrapper, with room to spare. */
+const HEADER_BYTES = 32, HEADER_STORED_BYTES = 1024;
+/** The most bytes one more stored byte can inflate to, a few back-references of 258 bytes each, with room to spare. */
+const HEADER_STEP_OUTPUT = 64 * 1024;
 
 /** The clone's own object store, read once per call: loose objects first, then packs in name order. Nothing else under `.git`. */
 class ObjectStore {
@@ -398,6 +459,89 @@ class ObjectStore {
     if (actual !== id) refuse('identifier-mismatch', `the object read as ${id} hashes to another identifier`, id, at);
     if (object.type !== type) refuse('type-mismatch', `${id} is a ${object.type}, not a ${type}`, id, at);
     return object.body;
+  }
+
+  /** The type object `id`'s header names, from its header alone (see `storedType`). Not re-hashed. */
+  async headerType(id: string, at: string | null): Promise<GitObjectType> {
+    const loose = await this.looseHeaderType(id, at);
+    if (loose !== null) return loose;
+    for (const pack of this.packs) {
+      const offset = lookup(pack, id, this.algorithm);
+      if (offset !== null) return this.packedHeaderType(pack, offset, id, at, 0);
+    }
+    const why = this.alternatesPresent ? '; objects/info/alternates is present and is never followed' : '';
+    return refuse('object-missing', `${id} is in neither a loose object nor a pack of this clone${why}`, id, at);
+  }
+
+  /** A loose object's header type, its stored bytes read 64 at a time and inflated one more byte at a time until the inflated
+   * prefix holds the header's NUL; null when there is no loose object `id`. The stored bytes read, and what the last prefix inflates
+   * to, are charged to the call: a header costs well under a kilobyte, however large the body. */
+  private async looseHeaderType(id: string, at: string | null): Promise<GitObjectType | null> {
+    if (this.objects === null) return null;
+    const dir = path.join(this.objects, id.slice(0, 2));
+    if (!(await realDirectory(this.gitDir, dir))) return null;
+    const fh = await openRegular(this.gitDir, path.join(dir, id.slice(2)));
+    if (fh === null) return null;
+    this.count(id, at);
+    try {
+      let stored = Buffer.alloc(0);
+      while (stored.length < HEADER_STORED_BYTES) {
+        const more = await readAt(fh, stored.length, 64);
+        if (more.length === 0) break;
+        this.charge(more.length, id, at);
+        const from = stored.length;
+        stored = Buffer.concat([stored, more]);
+        for (let n = from + 1; n <= stored.length; n += 1) {
+          let out: Buffer;
+          try { out = inflateSync(stored.subarray(0, n), { finishFlush: zlib.Z_SYNC_FLUSH, maxOutputLength: HEADER_STEP_OUTPUT }); }
+          catch { return refuse('corrupt-object', `loose object ${id} does not inflate`, id, at); }
+          const nul = out.indexOf(0);
+          if (nul < 0 && out.length <= HEADER_BYTES) continue;
+          this.charge(out.length, id, at);
+          const header = /^(commit|tree|blob|tag) (0|[1-9][0-9]*)$/.exec(nul < 0 || nul > HEADER_BYTES ? '' : out.toString('latin1', 0, nul));
+          return header === null ? refuse('corrupt-object', `loose object ${id} has a malformed header`, id, at) : header[1] as GitObjectType;
+        }
+      }
+      return refuse('corrupt-object', `loose object ${id} has no header within its first ${HEADER_STORED_BYTES} stored bytes`, id, at);
+    } finally { await fh.close(); }
+  }
+
+  /** A pack entry's type from its entry header alone, read a byte at a time; a delta's from its base's, down the chain. */
+  private async packedHeaderType(pack: PackIndex, offset: number, id: string, at: string | null, depth: number): Promise<GitObjectType> {
+    if (depth > this.limits.chainDepth) refuse('budget-exceeded', `${id} has a delta chain longer than ${this.limits.chainDepth}`, id, at);
+    this.count(id, at);
+    const { fh, size: end } = await this.handle(pack);
+    if (offset < 12 || offset >= end) refuse('invalid-pack-index', `${id}: ${pack.name}.idx gives an offset outside its pack`, id, at);
+    let i = 0;
+    const next = async (what: string): Promise<number> => {
+      const b = i < 32 ? (await readAt(fh, offset + i, 1))[0] : undefined;
+      if (b === undefined) return refuse('corrupt-object', `${id}: ${what} too long in ${pack.name}`, id, at);
+      i += 1;
+      return b;
+    };
+    let c = await next('pack entry header');
+    const kind = (c >> 4) & 7;
+    while (c & 0x80) c = await next('pack entry header');
+    if (kind in PACK_TYPES) return PACK_TYPES[kind]!;
+    if (kind === OFS_DELTA) {
+      c = await next('delta offset');
+      let back = c & 0x7f;
+      while (c & 0x80) { c = await next('delta offset'); back = (back + 1) * 128 + (c & 0x7f); }
+      if (back <= 0 || back > offset - 12) refuse('corrupt-object', `${id}: delta base offset out of range in ${pack.name}`, id, at);
+      return this.packedHeaderType(pack, offset - back, id, at, depth + 1);
+    }
+    if (kind === REF_DELTA) {
+      const width = HEX[this.algorithm] / 2, baseId = (await readAt(fh, offset + i, width)).toString('hex');
+      if (baseId.length !== width * 2) refuse('corrupt-object', `${id}: delta base identifier truncated in ${pack.name}`, id, at);
+      for (const p of this.packs) {
+        const o = lookup(p, baseId, this.algorithm);
+        if (o !== null) return this.packedHeaderType(p, o, id, at, depth + 1);
+      }
+      const loose = await this.looseHeaderType(baseId, at);
+      if (loose !== null) return loose;
+      return refuse('object-missing', `${id}: delta base ${baseId} is not in this clone`, id, at);
+    }
+    return refuse('corrupt-object', `${id}: pack entry of unknown type ${kind} in ${pack.name}`, id, at);
   }
 
   private async raw(id: string, at: string | null): Promise<RawObject> {

@@ -1,0 +1,47 @@
+{
+ "tool": "orphan_census.py",
+ "marker": "--user-data-dir=<private-directory>/ in argv (not TMPDIR in environ)",
+ "before": [
+  {
+   "directory": "/tmp/lc410v/intr",
+   "processes": 18,
+   "byKind": {
+    "gpu-process": 2,
+    "leader": 2,
+    "renderer": 6,
+    "utility": 4,
+    "zygote": 4
+   },
+   "oldestAgeSeconds": 132,
+   "pids": [
+    1693704,
+    1693889,
+    1693891,
+    1694022,
+    1694023,
+    1694049,
+    1694143,
+    1695102,
+    1695125,
+    1695127,
+    1695220,
+    1695232,
+    1695233,
+    1695307,
+    1696683,
+    1696848,
+    1697385,
+    1698982
+   ]
+  }
+ ],
+ "afterSigterm": [
+  {
+   "directory": "/tmp/lc410v/intr",
+   "processes": 0,
+   "byKind": {},
+   "oldestAgeSeconds": null,
+   "pids": []
+  }
+ ]
+}

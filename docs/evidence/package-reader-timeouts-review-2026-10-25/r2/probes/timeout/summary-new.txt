@@ -1,0 +1,11 @@
+new-timeout-3-1.json exit 124 at 3.312 clean True survivors 0 
+new-timeout-3-2.json exit 124 at 3.358 clean True survivors 0 
+new-timeout-3-3.json exit 124 at 3.294 clean True survivors 0 
+new-timeout-3-4.json exit 124 at 3.318 clean True survivors 0 
+new-timeout-3-5.json exit 124 at 3.348 clean True survivors 0 
+new-timeout-3-6.json exit 124 at 3.405 clean True survivors 0 
+new-timeout-3-7.json exit 124 at 3.468 clean True survivors 0 
+new-timeout-3-8.json exit 124 at 3.276 clean True survivors 0 
+new-timeout-3-9.json exit 124 at 3.346 clean True survivors 0 
+new-timeout-3-10.json exit 124 at 3.233 clean True survivors 0 
+runs 10 dirty 0 with-survivors 0

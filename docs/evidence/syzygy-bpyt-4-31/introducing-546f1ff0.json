@@ -1,0 +1,1967 @@
+{
+ "tool": "introducing_commits.py",
+ "census": "main-546f1ff0.json",
+ "commit": "546f1ff066e2ffef749c757cdb4621336039113b",
+ "sites": 140,
+ "commits": 51,
+ "rows": [
+  {
+   "site": "apps/three-surface-poc/src/build-output.test.ts:62",
+   "expression": "240_000",
+   "valueMs": 240000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/build-output.test.ts:62",
+   "commit": "d0bf5ca036e64d8fd82a92434afebb127c4bbfc1",
+   "subject": "test(poc): build-output in a private copy; explicit timeouts for load-bound tests [syzygy-gb4l]",
+   "date": "2026-10-03",
+   "timingLines": [
+    "per-test budget covers the measured 69.9 s pair of forced builds.",
+    "self-corpus and durable-lifecycle take explicit per-test timeouts naming"
+   ]
+  },
+  {
+   "site": "apps/three-surface-poc/src/cdp-browser.browser.test.ts:82",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/cdp-browser.browser.test.ts:82",
+   "commit": "f658529758a247a6841542759fe83e83e4c6f4f2",
+   "subject": "test: a frozen Chrome helper must not hold the profile at teardown [syzygy-za9v]",
+   "date": "2026-10-03",
+   "timingLines": []
+  },
+  {
+   "site": "apps/three-surface-poc/src/cdp-browser.browser.test.ts:112",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/cdp-browser.browser.test.ts:112",
+   "commit": "0856f92213d04085088cfa199caa6a94af7569b4",
+   "subject": "fix: make Chrome's singleton directory inside the throwaway profile and launch the draft-preview browser inside its try [syzygy-bpyt.4.11]",
+   "date": "2026-10-22",
+   "timingLines": [
+    "leader when it misses the 1 s close grace) leaves .com.google.Chrome.<random>"
+   ]
+  },
+  {
+   "site": "apps/three-surface-poc/src/cdp-browser.test.ts:335",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/cdp-browser.test.ts:335",
+   "commit": "8dc316a79ce1310af0ab7c88a7b8f35a740718ad",
+   "subject": "fix: remove the Chrome singleton directory read while Chrome ran, instead of moving Chrome's temp directory [syzygy-bpyt.4.11]",
+   "date": "2026-10-22",
+   "timingLines": []
+  },
+  {
+   "site": "apps/three-surface-poc/src/cdp-browser.test.ts:344",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/cdp-browser.test.ts:344",
+   "commit": "8dc316a79ce1310af0ab7c88a7b8f35a740718ad",
+   "subject": "fix: remove the Chrome singleton directory read while Chrome ran, instead of moving Chrome's temp directory [syzygy-bpyt.4.11]",
+   "date": "2026-10-22",
+   "timingLines": []
+  },
+  {
+   "site": "apps/three-surface-poc/src/cdp-browser.test.ts:351",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/cdp-browser.test.ts:351",
+   "commit": "8dc316a79ce1310af0ab7c88a7b8f35a740718ad",
+   "subject": "fix: remove the Chrome singleton directory read while Chrome ran, instead of moving Chrome's temp directory [syzygy-bpyt.4.11]",
+   "date": "2026-10-22",
+   "timingLines": []
+  },
+  {
+   "site": "apps/three-surface-poc/src/cdp-browser.test.ts:364",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/cdp-browser.test.ts:364",
+   "commit": "aa74cbb92f2624640b44e09c38f31a6f333a29f8",
+   "subject": "fix: accept the Chrome singleton directory name without its leading dot [syzygy-bpyt.4.11]",
+   "date": "2026-10-22",
+   "timingLines": []
+  },
+  {
+   "site": "apps/three-surface-poc/src/cdp-browser.test.ts:371",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/cdp-browser.test.ts:371",
+   "commit": "8dc316a79ce1310af0ab7c88a7b8f35a740718ad",
+   "subject": "fix: remove the Chrome singleton directory read while Chrome ran, instead of moving Chrome's temp directory [syzygy-bpyt.4.11]",
+   "date": "2026-10-22",
+   "timingLines": []
+  },
+  {
+   "site": "apps/three-surface-poc/src/cdp-browser.test.ts:383",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/cdp-browser.test.ts:383",
+   "commit": "8dc316a79ce1310af0ab7c88a7b8f35a740718ad",
+   "subject": "fix: remove the Chrome singleton directory read while Chrome ran, instead of moving Chrome's temp directory [syzygy-bpyt.4.11]",
+   "date": "2026-10-22",
+   "timingLines": []
+  },
+  {
+   "site": "apps/three-surface-poc/src/cdp-browser.test.ts:401",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/cdp-browser.test.ts:401",
+   "commit": "8dc316a79ce1310af0ab7c88a7b8f35a740718ad",
+   "subject": "fix: remove the Chrome singleton directory read while Chrome ran, instead of moving Chrome's temp directory [syzygy-bpyt.4.11]",
+   "date": "2026-10-22",
+   "timingLines": []
+  },
+  {
+   "site": "apps/three-surface-poc/src/cdp-browser.test.ts:417",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/cdp-browser.test.ts:417",
+   "commit": "8dc316a79ce1310af0ab7c88a7b8f35a740718ad",
+   "subject": "fix: remove the Chrome singleton directory read while Chrome ran, instead of moving Chrome's temp directory [syzygy-bpyt.4.11]",
+   "date": "2026-10-22",
+   "timingLines": []
+  },
+  {
+   "site": "apps/three-surface-poc/src/cdp-browser.test.ts:426",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/cdp-browser.test.ts:426",
+   "commit": "8dc316a79ce1310af0ab7c88a7b8f35a740718ad",
+   "subject": "fix: remove the Chrome singleton directory read while Chrome ran, instead of moving Chrome's temp directory [syzygy-bpyt.4.11]",
+   "date": "2026-10-22",
+   "timingLines": []
+  },
+  {
+   "site": "apps/three-surface-poc/src/cdp-browser.test.ts:439",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/cdp-browser.test.ts:439",
+   "commit": "8dc316a79ce1310af0ab7c88a7b8f35a740718ad",
+   "subject": "fix: remove the Chrome singleton directory read while Chrome ran, instead of moving Chrome's temp directory [syzygy-bpyt.4.11]",
+   "date": "2026-10-22",
+   "timingLines": []
+  },
+  {
+   "site": "apps/three-surface-poc/src/cdp-browser.test.ts:445",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/cdp-browser.test.ts:445",
+   "commit": "bcd39b4e88a3da042f26899d439c074b020e1f4c",
+   "subject": "fix: trust a profile's singleton link only when it is the user's, and remove only the directory that was read [syzygy-bpyt.4.11]",
+   "date": "2026-10-25",
+   "timingLines": []
+  },
+  {
+   "site": "apps/three-surface-poc/src/cdp-browser.test.ts:451",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/cdp-browser.test.ts:451",
+   "commit": "bcd39b4e88a3da042f26899d439c074b020e1f4c",
+   "subject": "fix: trust a profile's singleton link only when it is the user's, and remove only the directory that was read [syzygy-bpyt.4.11]",
+   "date": "2026-10-25",
+   "timingLines": []
+  },
+  {
+   "site": "apps/three-surface-poc/src/cdp-browser.test.ts:458",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/cdp-browser.test.ts:458",
+   "commit": "bcd39b4e88a3da042f26899d439c074b020e1f4c",
+   "subject": "fix: trust a profile's singleton link only when it is the user's, and remove only the directory that was read [syzygy-bpyt.4.11]",
+   "date": "2026-10-25",
+   "timingLines": []
+  },
+  {
+   "site": "apps/three-surface-poc/src/cdp-browser.test.ts:470",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/cdp-browser.test.ts:470",
+   "commit": "bcd39b4e88a3da042f26899d439c074b020e1f4c",
+   "subject": "fix: trust a profile's singleton link only when it is the user's, and remove only the directory that was read [syzygy-bpyt.4.11]",
+   "date": "2026-10-25",
+   "timingLines": []
+  },
+  {
+   "site": "apps/three-surface-poc/src/cdp-browser.test.ts:478",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/cdp-browser.test.ts:478",
+   "commit": "bcd39b4e88a3da042f26899d439c074b020e1f4c",
+   "subject": "fix: trust a profile's singleton link only when it is the user's, and remove only the directory that was read [syzygy-bpyt.4.11]",
+   "date": "2026-10-25",
+   "timingLines": []
+  },
+  {
+   "site": "apps/three-surface-poc/src/cdp-browser.test.ts:489",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/cdp-browser.test.ts:489",
+   "commit": "8dc316a79ce1310af0ab7c88a7b8f35a740718ad",
+   "subject": "fix: remove the Chrome singleton directory read while Chrome ran, instead of moving Chrome's temp directory [syzygy-bpyt.4.11]",
+   "date": "2026-10-22",
+   "timingLines": []
+  },
+  {
+   "site": "apps/three-surface-poc/src/fixture-directories.test.ts:63",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/fixture-directories.test.ts:63",
+   "commit": "3f08143c5e0c78ca42288d16589f36673c9ba854",
+   "subject": "test: give the fixture-directory tests the 30 s timeout their neighbours use [syzygy-bpyt.4.10]",
+   "date": "2026-10-22",
+   "timingLines": [
+    "Under a load average of 95 the config-pin test timed out at the 5 s default in"
+   ]
+  },
+  {
+   "site": "apps/three-surface-poc/src/fixture-directories.test.ts:71",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/fixture-directories.test.ts:71",
+   "commit": "3f08143c5e0c78ca42288d16589f36673c9ba854",
+   "subject": "test: give the fixture-directory tests the 30 s timeout their neighbours use [syzygy-bpyt.4.10]",
+   "date": "2026-10-22",
+   "timingLines": [
+    "Under a load average of 95 the config-pin test timed out at the 5 s default in"
+   ]
+  },
+  {
+   "site": "apps/three-surface-poc/src/fixture-directories.test.ts:94",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/fixture-directories.test.ts:94",
+   "commit": "3f08143c5e0c78ca42288d16589f36673c9ba854",
+   "subject": "test: give the fixture-directory tests the 30 s timeout their neighbours use [syzygy-bpyt.4.10]",
+   "date": "2026-10-22",
+   "timingLines": [
+    "Under a load average of 95 the config-pin test timed out at the 5 s default in"
+   ]
+  },
+  {
+   "site": "apps/three-surface-poc/src/fixture-directories.test.ts:109",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/fixture-directories.test.ts:109",
+   "commit": "3f08143c5e0c78ca42288d16589f36673c9ba854",
+   "subject": "test: give the fixture-directory tests the 30 s timeout their neighbours use [syzygy-bpyt.4.10]",
+   "date": "2026-10-22",
+   "timingLines": [
+    "Under a load average of 95 the config-pin test timed out at the 5 s default in"
+   ]
+  },
+  {
+   "site": "apps/three-surface-poc/src/fixture-directories.test.ts:128",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/fixture-directories.test.ts:128",
+   "commit": "3f08143c5e0c78ca42288d16589f36673c9ba854",
+   "subject": "test: give the fixture-directory tests the 30 s timeout their neighbours use [syzygy-bpyt.4.10]",
+   "date": "2026-10-22",
+   "timingLines": [
+    "Under a load average of 95 the config-pin test timed out at the 5 s default in"
+   ]
+  },
+  {
+   "site": "apps/three-surface-poc/src/fixture-directories.test.ts:142",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/fixture-directories.test.ts:142",
+   "commit": "3f08143c5e0c78ca42288d16589f36673c9ba854",
+   "subject": "test: give the fixture-directory tests the 30 s timeout their neighbours use [syzygy-bpyt.4.10]",
+   "date": "2026-10-22",
+   "timingLines": [
+    "Under a load average of 95 the config-pin test timed out at the 5 s default in"
+   ]
+  },
+  {
+   "site": "apps/three-surface-poc/src/fixture-directories.test.ts:186",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/fixture-directories.test.ts:186",
+   "commit": "4463e4542f8a7223a0755e2bb0a6191d0854f4fe",
+   "subject": "fix: make the fixture sweep fail closed where the PID namespace cannot be read [syzygy-bpyt.4.10]",
+   "date": "2026-10-22",
+   "timingLines": [
+    "sweep there removed a live run's directories (reproduced by the reviewer: the live holder's directory was gone 3.4 s"
+   ]
+  },
+  {
+   "site": "apps/three-surface-poc/src/fixture-directories.test.ts:198",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/fixture-directories.test.ts:198",
+   "commit": "3f08143c5e0c78ca42288d16589f36673c9ba854",
+   "subject": "test: give the fixture-directory tests the 30 s timeout their neighbours use [syzygy-bpyt.4.10]",
+   "date": "2026-10-22",
+   "timingLines": [
+    "Under a load average of 95 the config-pin test timed out at the 5 s default in"
+   ]
+  },
+  {
+   "site": "apps/three-surface-poc/src/fixture-directories.test.ts:212",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/fixture-directories.test.ts:212",
+   "commit": "3f08143c5e0c78ca42288d16589f36673c9ba854",
+   "subject": "test: give the fixture-directory tests the 30 s timeout their neighbours use [syzygy-bpyt.4.10]",
+   "date": "2026-10-22",
+   "timingLines": [
+    "Under a load average of 95 the config-pin test timed out at the 5 s default in"
+   ]
+  },
+  {
+   "site": "apps/three-surface-poc/src/fixture-directories.test.ts:227",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/fixture-directories.test.ts:227",
+   "commit": "3f08143c5e0c78ca42288d16589f36673c9ba854",
+   "subject": "test: give the fixture-directory tests the 30 s timeout their neighbours use [syzygy-bpyt.4.10]",
+   "date": "2026-10-22",
+   "timingLines": [
+    "Under a load average of 95 the config-pin test timed out at the 5 s default in"
+   ]
+  },
+  {
+   "site": "apps/three-surface-poc/src/fixture-directories.test.ts:241",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/fixture-directories.test.ts:241",
+   "commit": "3f08143c5e0c78ca42288d16589f36673c9ba854",
+   "subject": "test: give the fixture-directory tests the 30 s timeout their neighbours use [syzygy-bpyt.4.10]",
+   "date": "2026-10-22",
+   "timingLines": [
+    "Under a load average of 95 the config-pin test timed out at the 5 s default in"
+   ]
+  },
+  {
+   "site": "apps/three-surface-poc/src/fixture-directories.test.ts:256",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/fixture-directories.test.ts:256",
+   "commit": "3f08143c5e0c78ca42288d16589f36673c9ba854",
+   "subject": "test: give the fixture-directory tests the 30 s timeout their neighbours use [syzygy-bpyt.4.10]",
+   "date": "2026-10-22",
+   "timingLines": [
+    "Under a load average of 95 the config-pin test timed out at the 5 s default in"
+   ]
+  },
+  {
+   "site": "apps/three-surface-poc/src/fixture-directories.test.ts:266",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/fixture-directories.test.ts:266",
+   "commit": "3f08143c5e0c78ca42288d16589f36673c9ba854",
+   "subject": "test: give the fixture-directory tests the 30 s timeout their neighbours use [syzygy-bpyt.4.10]",
+   "date": "2026-10-22",
+   "timingLines": [
+    "Under a load average of 95 the config-pin test timed out at the 5 s default in"
+   ]
+  },
+  {
+   "site": "apps/three-surface-poc/src/fixture-directories.test.ts:284",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/fixture-directories.test.ts:284",
+   "commit": "3f08143c5e0c78ca42288d16589f36673c9ba854",
+   "subject": "test: give the fixture-directory tests the 30 s timeout their neighbours use [syzygy-bpyt.4.10]",
+   "date": "2026-10-22",
+   "timingLines": [
+    "Under a load average of 95 the config-pin test timed out at the 5 s default in"
+   ]
+  },
+  {
+   "site": "apps/three-surface-poc/src/fixture-directories.test.ts:296",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/fixture-directories.test.ts:296",
+   "commit": "3f08143c5e0c78ca42288d16589f36673c9ba854",
+   "subject": "test: give the fixture-directory tests the 30 s timeout their neighbours use [syzygy-bpyt.4.10]",
+   "date": "2026-10-22",
+   "timingLines": [
+    "Under a load average of 95 the config-pin test timed out at the 5 s default in"
+   ]
+  },
+  {
+   "site": "apps/three-surface-poc/src/git-blob-batch.test.ts:241",
+   "expression": "REAL_TREE_TIMEOUT_MS",
+   "valueMs": 120000,
+   "kind": "test",
+   "hasReason": true,
+   "blamed": "apps/three-surface-poc/src/git-blob-batch.test.ts:27",
+   "commit": "f054c80e82c42234a6964f9d68185db9ab8fa679",
+   "subject": "perf(poc): one git cat-file --batch for the governance lifecycle scan and the self-corpus read [syzygy-svoj]",
+   "date": "2026-10-03",
+   "timingLines": []
+  },
+  {
+   "site": "apps/three-surface-poc/src/git-blob-batch.test.ts:253",
+   "expression": "REAL_TREE_TIMEOUT_MS",
+   "valueMs": 120000,
+   "kind": "test",
+   "hasReason": true,
+   "blamed": "apps/three-surface-poc/src/git-blob-batch.test.ts:27",
+   "commit": "f054c80e82c42234a6964f9d68185db9ab8fa679",
+   "subject": "perf(poc): one git cat-file --batch for the governance lifecycle scan and the self-corpus read [syzygy-svoj]",
+   "date": "2026-10-03",
+   "timingLines": []
+  },
+  {
+   "site": "apps/three-surface-poc/src/git-blob-batch.test.ts:286",
+   "expression": "REAL_TREE_TIMEOUT_MS",
+   "valueMs": 120000,
+   "kind": "test",
+   "hasReason": true,
+   "blamed": "apps/three-surface-poc/src/git-blob-batch.test.ts:27",
+   "commit": "f054c80e82c42234a6964f9d68185db9ab8fa679",
+   "subject": "perf(poc): one git cat-file --batch for the governance lifecycle scan and the self-corpus read [syzygy-svoj]",
+   "date": "2026-10-03",
+   "timingLines": []
+  },
+  {
+   "site": "apps/three-surface-poc/src/governance-inputs.test.ts:504",
+   "expression": "REAL_TREE_TIMEOUT_MS",
+   "valueMs": 60000,
+   "kind": "test",
+   "hasReason": true,
+   "blamed": "apps/three-surface-poc/src/governance-inputs.test.ts:436",
+   "commit": "8729bcf4955538509d48755fbc9198e130a61822",
+   "subject": "test(poc): explicit timeout on the real-tree governance-inputs evaluation [syzygy-pln3]",
+   "date": "2026-10-03",
+   "timingLines": []
+  },
+  {
+   "site": "apps/three-surface-poc/src/governing-intent-sweep.test.ts:168",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "kind": "hook",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/governing-intent-sweep.test.ts:168",
+   "commit": "2910f32b28b672ec03702e58c7bfa590d3a8b238",
+   "subject": "poc: restore P-100 counted governing-intent Unknown [syzygy-u05.20]",
+   "date": "2026-10-21",
+   "timingLines": []
+  },
+  {
+   "site": "apps/three-surface-poc/src/keyboard-sweep-record.test.ts:59",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "kind": "test",
+   "hasReason": true,
+   "blamed": "apps/three-surface-poc/src/keyboard-sweep-record.test.ts:59",
+   "commit": "49be63ce72766784d6a00f522e2a4390eb60ce18",
+   "subject": "feat(poc): keyboard sweep requires its task and records the evaluation it swept [syzygy-buzg]",
+   "date": "2026-10-04",
+   "timingLines": []
+  },
+  {
+   "site": "apps/three-surface-poc/src/main.test.ts:366",
+   "expression": "TEST_TIMEOUT_MS",
+   "valueMs": 30000,
+   "kind": "test",
+   "hasReason": true,
+   "blamed": "apps/three-surface-poc/src/main.test.ts:48",
+   "commit": "25aa1ac8ee820429b66a2e8dc6b69fa9994d386d",
+   "subject": "test: pin the bound locator and every repository-rooted argument of main; bound the waits [syzygy-bpyt.5.8]",
+   "date": "2026-10-22",
+   "timingLines": [
+    "the default state directory, the materialize action's target and the Polaris",
+    "carries a timeout below an explicit test timeout."
+   ]
+  },
+  {
+   "site": "apps/three-surface-poc/src/main.test.ts:378",
+   "expression": "TEST_TIMEOUT_MS",
+   "valueMs": 30000,
+   "kind": "test",
+   "hasReason": true,
+   "blamed": "apps/three-surface-poc/src/main.test.ts:48",
+   "commit": "25aa1ac8ee820429b66a2e8dc6b69fa9994d386d",
+   "subject": "test: pin the bound locator and every repository-rooted argument of main; bound the waits [syzygy-bpyt.5.8]",
+   "date": "2026-10-22",
+   "timingLines": [
+    "the default state directory, the materialize action's target and the Polaris",
+    "carries a timeout below an explicit test timeout."
+   ]
+  },
+  {
+   "site": "apps/three-surface-poc/src/main.test.ts:389",
+   "expression": "TEST_TIMEOUT_MS",
+   "valueMs": 30000,
+   "kind": "test",
+   "hasReason": true,
+   "blamed": "apps/three-surface-poc/src/main.test.ts:48",
+   "commit": "25aa1ac8ee820429b66a2e8dc6b69fa9994d386d",
+   "subject": "test: pin the bound locator and every repository-rooted argument of main; bound the waits [syzygy-bpyt.5.8]",
+   "date": "2026-10-22",
+   "timingLines": [
+    "the default state directory, the materialize action's target and the Polaris",
+    "carries a timeout below an explicit test timeout."
+   ]
+  },
+  {
+   "site": "apps/three-surface-poc/src/main.test.ts:406",
+   "expression": "TEST_TIMEOUT_MS",
+   "valueMs": 30000,
+   "kind": "test",
+   "hasReason": true,
+   "blamed": "apps/three-surface-poc/src/main.test.ts:48",
+   "commit": "25aa1ac8ee820429b66a2e8dc6b69fa9994d386d",
+   "subject": "test: pin the bound locator and every repository-rooted argument of main; bound the waits [syzygy-bpyt.5.8]",
+   "date": "2026-10-22",
+   "timingLines": [
+    "the default state directory, the materialize action's target and the Polaris",
+    "carries a timeout below an explicit test timeout."
+   ]
+  },
+  {
+   "site": "apps/three-surface-poc/src/main.test.ts:424",
+   "expression": "TEST_TIMEOUT_MS",
+   "valueMs": 30000,
+   "kind": "test",
+   "hasReason": true,
+   "blamed": "apps/three-surface-poc/src/main.test.ts:48",
+   "commit": "25aa1ac8ee820429b66a2e8dc6b69fa9994d386d",
+   "subject": "test: pin the bound locator and every repository-rooted argument of main; bound the waits [syzygy-bpyt.5.8]",
+   "date": "2026-10-22",
+   "timingLines": [
+    "the default state directory, the materialize action's target and the Polaris",
+    "carries a timeout below an explicit test timeout."
+   ]
+  },
+  {
+   "site": "apps/three-surface-poc/src/main.test.ts:478",
+   "expression": "TEST_TIMEOUT_MS",
+   "valueMs": 30000,
+   "kind": "test",
+   "hasReason": true,
+   "blamed": "apps/three-surface-poc/src/main.test.ts:48",
+   "commit": "25aa1ac8ee820429b66a2e8dc6b69fa9994d386d",
+   "subject": "test: pin the bound locator and every repository-rooted argument of main; bound the waits [syzygy-bpyt.5.8]",
+   "date": "2026-10-22",
+   "timingLines": [
+    "the default state directory, the materialize action's target and the Polaris",
+    "carries a timeout below an explicit test timeout."
+   ]
+  },
+  {
+   "site": "apps/three-surface-poc/src/main.test.ts:498",
+   "expression": "TEST_TIMEOUT_MS",
+   "valueMs": 30000,
+   "kind": "test",
+   "hasReason": true,
+   "blamed": "apps/three-surface-poc/src/main.test.ts:48",
+   "commit": "25aa1ac8ee820429b66a2e8dc6b69fa9994d386d",
+   "subject": "test: pin the bound locator and every repository-rooted argument of main; bound the waits [syzygy-bpyt.5.8]",
+   "date": "2026-10-22",
+   "timingLines": [
+    "the default state directory, the materialize action's target and the Polaris",
+    "carries a timeout below an explicit test timeout."
+   ]
+  },
+  {
+   "site": "apps/three-surface-poc/src/main.test.ts:513",
+   "expression": "TEST_TIMEOUT_MS",
+   "valueMs": 30000,
+   "kind": "test",
+   "hasReason": true,
+   "blamed": "apps/three-surface-poc/src/main.test.ts:48",
+   "commit": "25aa1ac8ee820429b66a2e8dc6b69fa9994d386d",
+   "subject": "test: pin the bound locator and every repository-rooted argument of main; bound the waits [syzygy-bpyt.5.8]",
+   "date": "2026-10-22",
+   "timingLines": [
+    "the default state directory, the materialize action's target and the Polaris",
+    "carries a timeout below an explicit test timeout."
+   ]
+  },
+  {
+   "site": "apps/three-surface-poc/src/main.test.ts:538",
+   "expression": "TEST_TIMEOUT_MS",
+   "valueMs": 30000,
+   "kind": "test",
+   "hasReason": true,
+   "blamed": "apps/three-surface-poc/src/main.test.ts:48",
+   "commit": "25aa1ac8ee820429b66a2e8dc6b69fa9994d386d",
+   "subject": "test: pin the bound locator and every repository-rooted argument of main; bound the waits [syzygy-bpyt.5.8]",
+   "date": "2026-10-22",
+   "timingLines": [
+    "the default state directory, the materialize action's target and the Polaris",
+    "carries a timeout below an explicit test timeout."
+   ]
+  },
+  {
+   "site": "apps/three-surface-poc/src/main.test.ts:548",
+   "expression": "TEST_TIMEOUT_MS",
+   "valueMs": 30000,
+   "kind": "test",
+   "hasReason": true,
+   "blamed": "apps/three-surface-poc/src/main.test.ts:48",
+   "commit": "25aa1ac8ee820429b66a2e8dc6b69fa9994d386d",
+   "subject": "test: pin the bound locator and every repository-rooted argument of main; bound the waits [syzygy-bpyt.5.8]",
+   "date": "2026-10-22",
+   "timingLines": [
+    "the default state directory, the materialize action's target and the Polaris",
+    "carries a timeout below an explicit test timeout."
+   ]
+  },
+  {
+   "site": "apps/three-surface-poc/src/main.test.ts:555",
+   "expression": "2_000",
+   "valueMs": 2000,
+   "kind": "test",
+   "hasReason": true,
+   "blamed": "apps/three-surface-poc/src/main.test.ts:555",
+   "commit": "e8cb47d5daef652f98c2b0d8aac9e981ba73cd21",
+   "subject": "test: give the started() helper tests explicit timeouts [syzygy-bpyt.5.8]",
+   "date": "2026-10-22",
+   "timingLines": [
+    "Every test that waits now carries a test timeout above the sum of its waits'",
+    "bounds: the early-exit case uses the file's TEST_TIMEOUT_MS, and the bound case,",
+    "whose own bound is 50 ms, a 2 s timeout."
+   ]
+  },
+  {
+   "site": "apps/three-surface-poc/src/orrery.browser.test.ts:24",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "kind": "hook",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/orrery.browser.test.ts:24",
+   "commit": "10f3e4f9ff0ce35fadb208948a451bb84292626e",
+   "subject": "fix(poc): preserve Orrery height encoding and readable labels (#27)",
+   "date": "2026-09-09",
+   "timingLines": []
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts:91",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "kind": "hook",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts:91",
+   "commit": "48d6ee026e05ba01d90238200515483a68b8b083",
+   "subject": "feat(poc): browser-measured keyboard and WCAG AA checks for Polaris [syzygy-1z3.20]",
+   "date": "2026-09-04",
+   "timingLines": [
+    "DevTools protocol (no new dependency, no download) to enumerate the",
+    "(1.01:1 default outline on the dark ground). design-tokens.ts now styles"
+   ]
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts:310",
+   "expression": "240_000",
+   "valueMs": 240000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts:310",
+   "commit": "e0a1705d43ff84228d232b706cf2492438a4c467",
+   "subject": "fix: lift Chrome's navigation throttle in the CDP sweep and add the served-page keyboard sweep [syzygy-1z3.30]",
+   "date": "2026-10-03",
+   "timingLines": [
+    "ten-second window, and the scripted sweep crossed that budget, so every",
+    "budget with repeated links to the current hash. poc:keyboard-sweep sweeps"
+   ]
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts:332",
+   "expression": "240_000",
+   "valueMs": 240000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts:332",
+   "commit": "48d6ee026e05ba01d90238200515483a68b8b083",
+   "subject": "feat(poc): browser-measured keyboard and WCAG AA checks for Polaris [syzygy-1z3.20]",
+   "date": "2026-09-04",
+   "timingLines": [
+    "DevTools protocol (no new dependency, no download) to enumerate the",
+    "(1.01:1 default outline on the dark ground). design-tokens.ts now styles"
+   ]
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts:187",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "kind": "hook",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts:187",
+   "commit": "caaa0d130c9973577341b1c6fa178c1e5d4217fe",
+   "subject": "feat(polaris): PWB-REQ-016 distinct accessible names and heading order over every Polaris page (P-99 v1.0) [syzygy-u05.22]",
+   "date": "2026-10-15",
+   "timingLines": []
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts:315",
+   "expression": "240_000",
+   "valueMs": 240000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts:315",
+   "commit": "caaa0d130c9973577341b1c6fa178c1e5d4217fe",
+   "subject": "feat(polaris): PWB-REQ-016 distinct accessible names and heading order over every Polaris page (P-99 v1.0) [syzygy-u05.22]",
+   "date": "2026-10-15",
+   "timingLines": []
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts:329",
+   "expression": "240_000",
+   "valueMs": 240000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts:329",
+   "commit": "cbe82759ac7f7147b320cbf157c26e4029258a14",
+   "subject": "test(polaris): close five surviving PWB-REQ-016 mutants (label containment, aria-level, hidden attribute, summary target, unserved page) [syzygy-u05.22]",
+   "date": "2026-10-15",
+   "timingLines": []
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts:343",
+   "expression": "240_000",
+   "valueMs": 240000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts:343",
+   "commit": "caaa0d130c9973577341b1c6fa178c1e5d4217fe",
+   "subject": "feat(polaris): PWB-REQ-016 distinct accessible names and heading order over every Polaris page (P-99 v1.0) [syzygy-u05.22]",
+   "date": "2026-10-15",
+   "timingLines": []
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-copy.test.ts:226",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "kind": "hook",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/polaris-copy.test.ts:226",
+   "commit": "047220e4546cbf552ec90388e03cf55ed18bc24f",
+   "subject": "test(poc): hoist polaris-copy variant models; explicit timeouts on production re-observe builds [syzygy-4d15]",
+   "date": "2026-10-03",
+   "timingLines": []
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-first-reading.test.ts:52",
+   "expression": "SHARED_FIXTURE_TIMEOUT_MS",
+   "valueMs": 60000,
+   "kind": "hook",
+   "hasReason": true,
+   "blamed": "apps/three-surface-poc/src/test-model-fixture.ts:248",
+   "commit": "7d1e9fe60a55cb768eac611ce9ca22302a08fd8b",
+   "subject": "test(poc): build each file's fixture models once, frozen, instead of per test [syzygy-k66p]",
+   "date": "2026-10-04",
+   "timingLines": [
+    "same fixture models (a repository and an observation each, ~0.5 s",
+    "unloaded) in every test, up to five per test, and failed the 5 s default",
+    "under full-suite load. sharedFixtureModels builds them once in beforeAll"
+   ]
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-generation/dossier-cap-measure.test.ts:12",
+   "expression": "120_000",
+   "valueMs": 120000,
+   "kind": "hook",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/polaris-generation/dossier-cap-measure.test.ts:12",
+   "commit": "468ae39651596ee5b49564899a524397a81ab4a3",
+   "subject": "test(polaris-generation): measure what heuristic discovery reads under the dossier cap on a design-prose fixture variant (baseline)",
+   "date": "2026-10-04",
+   "timingLines": []
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-generation/draft-preview.browser.test.ts:47",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/polaris-generation/draft-preview.browser.test.ts:47",
+   "commit": "cb0614afcf3780a6d957a5d5dff74fe0a1dd4829",
+   "subject": "Connect bounded Polaris generation stages to validated draft previews",
+   "date": "2026-09-13",
+   "timingLines": []
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts:45",
+   "expression": "T",
+   "valueMs": 30000,
+   "kind": "test",
+   "hasReason": true,
+   "blamed": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts:35",
+   "commit": "cb77e06dbbc80b2e1ab83cc657d78044a3104fbe",
+   "subject": "feat(polaris-generation): durable lifecycle with an injected generate port; scripted version is a thin wrapper [syzygy-cqkq]",
+   "date": "2026-10-04",
+   "timingLines": []
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts:54",
+   "expression": "T",
+   "valueMs": 30000,
+   "kind": "test",
+   "hasReason": true,
+   "blamed": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts:35",
+   "commit": "cb77e06dbbc80b2e1ab83cc657d78044a3104fbe",
+   "subject": "feat(polaris-generation): durable lifecycle with an injected generate port; scripted version is a thin wrapper [syzygy-cqkq]",
+   "date": "2026-10-04",
+   "timingLines": []
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts:85",
+   "expression": "T",
+   "valueMs": 30000,
+   "kind": "test",
+   "hasReason": true,
+   "blamed": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts:35",
+   "commit": "cb77e06dbbc80b2e1ab83cc657d78044a3104fbe",
+   "subject": "feat(polaris-generation): durable lifecycle with an injected generate port; scripted version is a thin wrapper [syzygy-cqkq]",
+   "date": "2026-10-04",
+   "timingLines": []
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts:103",
+   "expression": "T",
+   "valueMs": 30000,
+   "kind": "test",
+   "hasReason": true,
+   "blamed": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts:35",
+   "commit": "cb77e06dbbc80b2e1ab83cc657d78044a3104fbe",
+   "subject": "feat(polaris-generation): durable lifecycle with an injected generate port; scripted version is a thin wrapper [syzygy-cqkq]",
+   "date": "2026-10-04",
+   "timingLines": []
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts:115",
+   "expression": "T",
+   "valueMs": 30000,
+   "kind": "test",
+   "hasReason": true,
+   "blamed": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts:35",
+   "commit": "cb77e06dbbc80b2e1ab83cc657d78044a3104fbe",
+   "subject": "feat(polaris-generation): durable lifecycle with an injected generate port; scripted version is a thin wrapper [syzygy-cqkq]",
+   "date": "2026-10-04",
+   "timingLines": []
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts:127",
+   "expression": "T",
+   "valueMs": 30000,
+   "kind": "test",
+   "hasReason": true,
+   "blamed": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts:35",
+   "commit": "cb77e06dbbc80b2e1ab83cc657d78044a3104fbe",
+   "subject": "feat(polaris-generation): durable lifecycle with an injected generate port; scripted version is a thin wrapper [syzygy-cqkq]",
+   "date": "2026-10-04",
+   "timingLines": []
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts:55",
+   "expression": "JOURNAL_TIMEOUT_MS",
+   "valueMs": 30000,
+   "kind": "test",
+   "hasReason": true,
+   "blamed": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts:39",
+   "commit": "d0bf5ca036e64d8fd82a92434afebb127c4bbfc1",
+   "subject": "test(poc): build-output in a private copy; explicit timeouts for load-bound tests [syzygy-gb4l]",
+   "date": "2026-10-03",
+   "timingLines": [
+    "per-test budget covers the measured 69.9 s pair of forced builds.",
+    "self-corpus and durable-lifecycle take explicit per-test timeouts naming"
+   ]
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts:79",
+   "expression": "JOURNAL_TIMEOUT_MS",
+   "valueMs": 30000,
+   "kind": "test",
+   "hasReason": true,
+   "blamed": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts:39",
+   "commit": "d0bf5ca036e64d8fd82a92434afebb127c4bbfc1",
+   "subject": "test(poc): build-output in a private copy; explicit timeouts for load-bound tests [syzygy-gb4l]",
+   "date": "2026-10-03",
+   "timingLines": [
+    "per-test budget covers the measured 69.9 s pair of forced builds.",
+    "self-corpus and durable-lifecycle take explicit per-test timeouts naming"
+   ]
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts:96",
+   "expression": "JOURNAL_TIMEOUT_MS",
+   "valueMs": 30000,
+   "kind": "test",
+   "hasReason": true,
+   "blamed": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts:39",
+   "commit": "d0bf5ca036e64d8fd82a92434afebb127c4bbfc1",
+   "subject": "test(poc): build-output in a private copy; explicit timeouts for load-bound tests [syzygy-gb4l]",
+   "date": "2026-10-03",
+   "timingLines": [
+    "per-test budget covers the measured 69.9 s pair of forced builds.",
+    "self-corpus and durable-lifecycle take explicit per-test timeouts naming"
+   ]
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts:116",
+   "expression": "JOURNAL_TIMEOUT_MS",
+   "valueMs": 30000,
+   "kind": "test",
+   "hasReason": true,
+   "blamed": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts:39",
+   "commit": "d0bf5ca036e64d8fd82a92434afebb127c4bbfc1",
+   "subject": "test(poc): build-output in a private copy; explicit timeouts for load-bound tests [syzygy-gb4l]",
+   "date": "2026-10-03",
+   "timingLines": [
+    "per-test budget covers the measured 69.9 s pair of forced builds.",
+    "self-corpus and durable-lifecycle take explicit per-test timeouts naming"
+   ]
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-generation/pipeline-demo.test.ts:73",
+   "expression": "ONRAMP_TEST_BUDGET_MS",
+   "valueMs": null,
+   "kind": "test",
+   "hasReason": true,
+   "blamed": "apps/three-surface-poc/src/polaris-generation/pipeline-demo.test.ts:19",
+   "commit": "5b9544367d98c0276a0a6423395df71182ca8c5d",
+   "subject": "fix: size the README-onramp test budget from load measurement [syzygy-128g] (#442)",
+   "date": "2026-10-15",
+   "timingLines": [
+    "per-step timeouts, and make the test budget their sum (450 s, was 180 s under",
+    "420 s of inner timeouts). Evidence: docs/evidence/pipeline-demo-onramp-budget-2026-10-15.json"
+   ]
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-generation/redis-shaped-discovery.test.ts:16",
+   "expression": "120_000",
+   "valueMs": 120000,
+   "kind": "hook",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/polaris-generation/redis-shaped-discovery.test.ts:16",
+   "commit": "69524a9901e08b1e370ab590faf95aedb6202058",
+   "subject": "feat(polaris-generation): discovery ranks vendored code in a strict lower tier and breaks path ties by size; synthetic large-C-server fixture and measurement [syzygy-mea.1]",
+   "date": "2026-10-04",
+   "timingLines": []
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-generation/redis-shaped-discovery.test.ts:205",
+   "expression": "120_000",
+   "valueMs": 120000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/polaris-generation/redis-shaped-discovery.test.ts:205",
+   "commit": "69524a9901e08b1e370ab590faf95aedb6202058",
+   "subject": "feat(polaris-generation): discovery ranks vendored code in a strict lower tier and breaks path ties by size; synthetic large-C-server fixture and measurement [syzygy-mea.1]",
+   "date": "2026-10-04",
+   "timingLines": []
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-generation/self-corpus.test.ts:32",
+   "expression": "PINNED_READ_TIMEOUT_MS",
+   "valueMs": 60000,
+   "kind": "test",
+   "hasReason": true,
+   "blamed": "apps/three-surface-poc/src/polaris-generation/self-corpus.test.ts:17",
+   "commit": "d0bf5ca036e64d8fd82a92434afebb127c4bbfc1",
+   "subject": "test(poc): build-output in a private copy; explicit timeouts for load-bound tests [syzygy-gb4l]",
+   "date": "2026-10-03",
+   "timingLines": [
+    "per-test budget covers the measured 69.9 s pair of forced builds.",
+    "self-corpus and durable-lifecycle take explicit per-test timeouts naming"
+   ]
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-generation/self-corpus.test.ts:46",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/polaris-generation/self-corpus.test.ts:46",
+   "commit": "d66a3229847926bcd47527a9a705cf1ac5b0713c",
+   "subject": "feat: bind M7 generation sources and durable stages [syzygy-dov.7.1] (#105)",
+   "date": "2026-09-23",
+   "timingLines": []
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-narrative.test.ts:59",
+   "expression": "SHARED_FIXTURE_TIMEOUT_MS",
+   "valueMs": 60000,
+   "kind": "hook",
+   "hasReason": true,
+   "blamed": "apps/three-surface-poc/src/test-model-fixture.ts:248",
+   "commit": "7d1e9fe60a55cb768eac611ce9ca22302a08fd8b",
+   "subject": "test(poc): build each file's fixture models once, frozen, instead of per test [syzygy-k66p]",
+   "date": "2026-10-04",
+   "timingLines": [
+    "same fixture models (a repository and an observation each, ~0.5 s",
+    "unloaded) in every test, up to five per test, and failed the 5 s default",
+    "under full-suite load. sharedFixtureModels builds them once in beforeAll"
+   ]
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts:316",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "kind": "hook",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts:316",
+   "commit": "7b5884cfb1d1b3bcb5270f672d5b7ada7b2b3d6b",
+   "subject": "feat(polaris): PWB-REQ-010 opening index, reach offsets and stopping line (P-98 v1.0) [syzygy-u05.23]",
+   "date": "2026-10-15",
+   "timingLines": [
+    "the total and the one stopping line are counted in the page after load"
+   ]
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts:352",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts:352",
+   "commit": "7b5884cfb1d1b3bcb5270f672d5b7ada7b2b3d6b",
+   "subject": "feat(polaris): PWB-REQ-010 opening index, reach offsets and stopping line (P-98 v1.0) [syzygy-u05.23]",
+   "date": "2026-10-15",
+   "timingLines": [
+    "the total and the one stopping line are counted in the page after load"
+   ]
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts:364",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts:364",
+   "commit": "7b5884cfb1d1b3bcb5270f672d5b7ada7b2b3d6b",
+   "subject": "feat(polaris): PWB-REQ-010 opening index, reach offsets and stopping line (P-98 v1.0) [syzygy-u05.23]",
+   "date": "2026-10-15",
+   "timingLines": [
+    "the total and the one stopping line are counted in the page after load"
+   ]
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts:370",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts:370",
+   "commit": "7b5884cfb1d1b3bcb5270f672d5b7ada7b2b3d6b",
+   "subject": "feat(polaris): PWB-REQ-010 opening index, reach offsets and stopping line (P-98 v1.0) [syzygy-u05.23]",
+   "date": "2026-10-15",
+   "timingLines": [
+    "the total and the one stopping line are counted in the page after load"
+   ]
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts:408",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts:408",
+   "commit": "cc4d395ed94f1781dc6f00cdcf74e3c744a3f413",
+   "subject": "fix(polaris): drop the redundant row focus handler; follow the exact-requirement row by keyboard on the fixture and on a synthetic disclosure with a later control (R-PWB-OPENING-INDEX-IMPL-1 finding 1) [syzygy-u05.23]",
+   "date": "2026-10-15",
+   "timingLines": []
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts:413",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts:413",
+   "commit": "857afb072175c8fa18d56dfe4a22962e8a4e3b30",
+   "subject": "fix(polaris): following the exact-requirement row opens its disclosure and focuses the target; oracle checks the line's exact text and its markup (R-PWB-OPENING-INDEX-IMPL-1 findings 1 and 3) [syzygy-u05.23]",
+   "date": "2026-10-15",
+   "timingLines": []
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts:424",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts:424",
+   "commit": "da93696798a5175a852233d6514672148f4b1917",
+   "subject": "test(polaris): P-98 oracle runs on an operator-captured /polaris page when SYZYGY_P98_PAGE names one [syzygy-u05.23]",
+   "date": "2026-10-15",
+   "timingLines": []
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts:443",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts:443",
+   "commit": "7b5884cfb1d1b3bcb5270f672d5b7ada7b2b3d6b",
+   "subject": "feat(polaris): PWB-REQ-010 opening index, reach offsets and stopping line (P-98 v1.0) [syzygy-u05.23]",
+   "date": "2026-10-15",
+   "timingLines": [
+    "the total and the one stopping line are counted in the page after load"
+   ]
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts:452",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts:452",
+   "commit": "7b5884cfb1d1b3bcb5270f672d5b7ada7b2b3d6b",
+   "subject": "feat(polaris): PWB-REQ-010 opening index, reach offsets and stopping line (P-98 v1.0) [syzygy-u05.23]",
+   "date": "2026-10-15",
+   "timingLines": [
+    "the total and the one stopping line are counted in the page after load"
+   ]
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-reconciliation.test.ts:81",
+   "expression": "120_000",
+   "valueMs": 120000,
+   "kind": "hook",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/polaris-reconciliation.test.ts:81",
+   "commit": "e7631cb3a3c80245dcef6dcbe3379e834861c4e7",
+   "subject": "feat(poc): Polaris source legend and labelled catalog reconciliation [syzygy-dov.14.1] (#277)",
+   "date": "2026-10-03",
+   "timingLines": []
+  },
+  {
+   "site": "apps/three-surface-poc/src/production-reobserve.test.ts:99",
+   "expression": "PRODUCTION_BUILD_TIMEOUT_MS",
+   "valueMs": 60000,
+   "kind": "test",
+   "hasReason": true,
+   "blamed": "apps/three-surface-poc/src/production-reobserve.test.ts:71",
+   "commit": "047220e4546cbf552ec90388e03cf55ed18bc24f",
+   "subject": "test(poc): hoist polaris-copy variant models; explicit timeouts on production re-observe builds [syzygy-4d15]",
+   "date": "2026-10-03",
+   "timingLines": []
+  },
+  {
+   "site": "apps/three-surface-poc/src/production-reobserve.test.ts:132",
+   "expression": "PRODUCTION_BUILD_TIMEOUT_MS",
+   "valueMs": 60000,
+   "kind": "test",
+   "hasReason": true,
+   "blamed": "apps/three-surface-poc/src/production-reobserve.test.ts:71",
+   "commit": "047220e4546cbf552ec90388e03cf55ed18bc24f",
+   "subject": "test(poc): hoist polaris-copy variant models; explicit timeouts on production re-observe builds [syzygy-4d15]",
+   "date": "2026-10-03",
+   "timingLines": []
+  },
+  {
+   "site": "apps/three-surface-poc/src/production-reobserve.test.ts:160",
+   "expression": "PRODUCTION_BUILD_TIMEOUT_MS",
+   "valueMs": 60000,
+   "kind": "test",
+   "hasReason": true,
+   "blamed": "apps/three-surface-poc/src/production-reobserve.test.ts:71",
+   "commit": "047220e4546cbf552ec90388e03cf55ed18bc24f",
+   "subject": "test(poc): hoist polaris-copy variant models; explicit timeouts on production re-observe builds [syzygy-4d15]",
+   "date": "2026-10-03",
+   "timingLines": []
+  },
+  {
+   "site": "apps/three-surface-poc/src/production-reobserve.test.ts:182",
+   "expression": "PRODUCTION_BUILD_TIMEOUT_MS",
+   "valueMs": 60000,
+   "kind": "test",
+   "hasReason": true,
+   "blamed": "apps/three-surface-poc/src/production-reobserve.test.ts:71",
+   "commit": "047220e4546cbf552ec90388e03cf55ed18bc24f",
+   "subject": "test(poc): hoist polaris-copy variant models; explicit timeouts on production re-observe builds [syzygy-4d15]",
+   "date": "2026-10-03",
+   "timingLines": []
+  },
+  {
+   "site": "apps/three-surface-poc/src/proposal-disclosure.test.ts:147",
+   "expression": "45_000",
+   "valueMs": 45000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/proposal-disclosure.test.ts:147",
+   "commit": "dcd6abcf3d33fd90324bae088df322b168cb273a",
+   "subject": "feat(poc): declared proposal disclosure row with a generated legend [syzygy-dov.3.2 slice 6]",
+   "date": "2026-10-03",
+   "timingLines": []
+  },
+  {
+   "site": "apps/three-surface-poc/src/restart.test.ts:321",
+   "expression": "TEST_MS",
+   "valueMs": 180000,
+   "kind": "hook",
+   "hasReason": true,
+   "blamed": "apps/three-surface-poc/src/restart.test.ts:37",
+   "commit": "b48d86fa3d73c6527ea3da13410633f1a90d9477",
+   "subject": "test(poc): restart tests separate liveness budgets from outcome deadlines [syzygy-ve8n] (#285)",
+   "date": "2026-10-03",
+   "timingLines": [
+    "Under a full suite at load average 60-90, three restart.test.ts tests",
+    "failed: two hit vitest's 5 s default and one reported",
+    "successor-start-timeout instead of successor-failed. Every failing bound",
+    "restart timeoutMs expected not to fire, now use one 30 s liveness",
+    "budget (restart.ts's own ceiling). The per-test and afterEach budget is",
+    "180 s.",
+    "- Outcome deadlines (100 ms, 150 ms) stay short only where the test makes",
+    "- The 150 ms case now waits for the signalled listener to exit before"
+   ]
+  },
+  {
+   "site": "apps/three-surface-poc/src/restart.test.ts:331",
+   "expression": "TEST_MS",
+   "valueMs": 180000,
+   "kind": "suite",
+   "hasReason": true,
+   "blamed": "apps/three-surface-poc/src/restart.test.ts:37",
+   "commit": "b48d86fa3d73c6527ea3da13410633f1a90d9477",
+   "subject": "test(poc): restart tests separate liveness budgets from outcome deadlines [syzygy-ve8n] (#285)",
+   "date": "2026-10-03",
+   "timingLines": [
+    "Under a full suite at load average 60-90, three restart.test.ts tests",
+    "failed: two hit vitest's 5 s default and one reported",
+    "successor-start-timeout instead of successor-failed. Every failing bound",
+    "restart timeoutMs expected not to fire, now use one 30 s liveness",
+    "budget (restart.ts's own ceiling). The per-test and afterEach budget is",
+    "180 s.",
+    "- Outcome deadlines (100 ms, 150 ms) stay short only where the test makes",
+    "- The 150 ms case now waits for the signalled listener to exit before"
+   ]
+  },
+  {
+   "site": "apps/three-surface-poc/src/surface-routes.test.ts:313",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "kind": "hook",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/surface-routes.test.ts:313",
+   "commit": "485ed198c94e64687fae4dad308ba24794c276fa",
+   "subject": "test(poc): let a Chrome drain failure fail the shared exhaustion teardown [syzygy-8hr]",
+   "date": "2026-09-27",
+   "timingLines": [
+    "finally. Hooks budget 60,000ms, matching the other browser suites; a",
+    "Retains the review raw as R-SURFACE-ROUTES-BUDGET-REVIEW-RAW.md in a new"
+   ]
+  },
+  {
+   "site": "apps/three-surface-poc/src/surface-routes.test.ts:328",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "kind": "hook",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/surface-routes.test.ts:328",
+   "commit": "485ed198c94e64687fae4dad308ba24794c276fa",
+   "subject": "test(poc): let a Chrome drain failure fail the shared exhaustion teardown [syzygy-8hr]",
+   "date": "2026-09-27",
+   "timingLines": [
+    "finally. Hooks budget 60,000ms, matching the other browser suites; a",
+    "Retains the review raw as R-SURFACE-ROUTES-BUDGET-REVIEW-RAW.md in a new"
+   ]
+  },
+  {
+   "site": "apps/three-surface-poc/src/surface-routes.test.ts:420",
+   "expression": "15_000",
+   "valueMs": 15000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/surface-routes.test.ts:420",
+   "commit": "b9d1a758433c8f6b4fe28f7fcbfb00d040cbd82e",
+   "subject": "fix(poc): drain disposable Chrome descendants [syzygy-bul] (#112)",
+   "date": "2026-09-23",
+   "timingLines": [
+    "* docs(evidence): retain bul hosted-timeout correction proof [syzygy-bul]"
+   ]
+  },
+  {
+   "site": "apps/three-surface-poc/src/surface-routes.test.ts:453",
+   "expression": "10_000",
+   "valueMs": 10000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/surface-routes.test.ts:453",
+   "commit": "b9d1a758433c8f6b4fe28f7fcbfb00d040cbd82e",
+   "subject": "fix(poc): drain disposable Chrome descendants [syzygy-bul] (#112)",
+   "date": "2026-09-23",
+   "timingLines": [
+    "* docs(evidence): retain bul hosted-timeout correction proof [syzygy-bul]"
+   ]
+  },
+  {
+   "site": "apps/three-surface-poc/src/surface-routes.test.ts:537",
+   "expression": "45_000",
+   "valueMs": 45000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/surface-routes.test.ts:537",
+   "commit": "6746a0722e667e9cae2c725d796c269c356d8127",
+   "subject": "feat: make M3 epistemic encoding honest [syzygy-dov.3.1] (#104)",
+   "date": "2026-09-23",
+   "timingLines": []
+  },
+  {
+   "site": "apps/three-surface-poc/src/test-model-fixture.test.ts:120",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/test-model-fixture.test.ts:120",
+   "commit": "d8532f1afdf965439c70ee6f6f3f1836b3c81bc9",
+   "subject": "test: remove every POC fixture copy when its test file ends [syzygy-bpyt.4.10]",
+   "date": "2026-10-22",
+   "timingLines": []
+  },
+  {
+   "site": "apps/three-surface-poc/src/test-model-fixture.test.ts:131",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/test-model-fixture.test.ts:131",
+   "commit": "d8532f1afdf965439c70ee6f6f3f1836b3c81bc9",
+   "subject": "test: remove every POC fixture copy when its test file ends [syzygy-bpyt.4.10]",
+   "date": "2026-10-22",
+   "timingLines": []
+  },
+  {
+   "site": "apps/three-surface-poc/src/trajectory-narrowing.browser.test.ts:32",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "kind": "hook",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/trajectory-narrowing.browser.test.ts:32",
+   "commit": "2910f32b28b672ec03702e58c7bfa590d3a8b238",
+   "subject": "poc: restore P-100 counted governing-intent Unknown [syzygy-u05.20]",
+   "date": "2026-10-21",
+   "timingLines": []
+  },
+  {
+   "site": "apps/three-surface-poc/src/tuple-encoding.test.ts:94",
+   "expression": "SHARED_FIXTURE_TIMEOUT_MS",
+   "valueMs": 60000,
+   "kind": "hook",
+   "hasReason": true,
+   "blamed": "apps/three-surface-poc/src/test-model-fixture.ts:248",
+   "commit": "7d1e9fe60a55cb768eac611ce9ca22302a08fd8b",
+   "subject": "test(poc): build each file's fixture models once, frozen, instead of per test [syzygy-k66p]",
+   "date": "2026-10-04",
+   "timingLines": [
+    "same fixture models (a repository and an observation each, ~0.5 s",
+    "unloaded) in every test, up to five per test, and failed the 5 s default",
+    "under full-suite load. sharedFixtureModels builds them once in beforeAll"
+   ]
+  },
+  {
+   "site": "apps/three-surface-poc/src/tuple-encoding.test.ts:312",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/tuple-encoding.test.ts:312",
+   "commit": "243d72ea1b1f858537865f13f95f71426830b28d",
+   "subject": "feat(poc): declared tier, freshness and challenge encodings drive tuple marks and the glossary [syzygy-dov.3.2 slice 5]",
+   "date": "2026-10-03",
+   "timingLines": []
+  },
+  {
+   "site": "apps/three-surface-poc/src/unknown-route-sweep.test.ts:173",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "kind": "hook",
+   "hasReason": false,
+   "blamed": "apps/three-surface-poc/src/unknown-route-sweep.test.ts:173",
+   "commit": "7d27a368992b3374d248ca9aff08a0f82441947b",
+   "subject": "feat(poc): a closed reason and a route on every surface Unknown, their machine twins, and a pure owner-act drafter [syzygy-dov.4.1]",
+   "date": "2026-10-03",
+   "timingLines": []
+  },
+  {
+   "site": "packages/cap1-system/src/fresh-clone.system.test.ts:117",
+   "expression": "600_000",
+   "valueMs": 600000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "packages/cap1-system/src/fresh-clone.system.test.ts:117",
+   "commit": "c3cc751c48352e15d9d53c3ac793245d9e636d42",
+   "subject": "RT6: process/filesystem/HTTP system tests",
+   "date": "2026-08-22",
+   "timingLines": []
+  },
+  {
+   "site": "packages/cap1-system/vitest.config.ts:18",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "kind": "config",
+   "hasReason": true,
+   "blamed": "packages/cap1-system/vitest.config.ts:18",
+   "commit": "c3cc751c48352e15d9d53c3ac793245d9e636d42",
+   "subject": "RT6: process/filesystem/HTTP system tests",
+   "date": "2026-08-22",
+   "timingLines": []
+  },
+  {
+   "site": "packages/cap1-system/vitest.config.ts:19",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "kind": "config",
+   "hasReason": true,
+   "blamed": "packages/cap1-system/vitest.config.ts:19",
+   "commit": "c3cc751c48352e15d9d53c3ac793245d9e636d42",
+   "subject": "RT6: process/filesystem/HTTP system tests",
+   "date": "2026-08-22",
+   "timingLines": []
+  },
+  {
+   "site": "packages/polaris-dossier/src/gate-acts.test.ts:98",
+   "expression": "TREE_TIMEOUT",
+   "valueMs": 60000,
+   "kind": "test",
+   "hasReason": true,
+   "blamed": "packages/polaris-dossier/src/gate-acts.test.ts:84",
+   "commit": "0a08add93f3864f2c72ed9aa8c1bdf872330d3bc",
+   "subject": "test(polaris-dossier): a 60 s timeout for the two tree-walking gate-acts tests, which time out under load at the 5 s default [syzygy-qkea.21]",
+   "date": "2026-10-07",
+   "timingLines": []
+  },
+  {
+   "site": "packages/polaris-dossier/src/gate-acts.test.ts:106",
+   "expression": "TREE_TIMEOUT",
+   "valueMs": 60000,
+   "kind": "test",
+   "hasReason": true,
+   "blamed": "packages/polaris-dossier/src/gate-acts.test.ts:84",
+   "commit": "0a08add93f3864f2c72ed9aa8c1bdf872330d3bc",
+   "subject": "test(polaris-dossier): a 60 s timeout for the two tree-walking gate-acts tests, which time out under load at the 5 s default [syzygy-qkea.21]",
+   "date": "2026-10-07",
+   "timingLines": []
+  },
+  {
+   "site": "packages/polaris-dossier/src/git-object-reader.test.ts:582",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "packages/polaris-dossier/src/git-object-reader.test.ts:582",
+   "commit": "eb7a13e0c1f95eb454f7cf9c9f3940b86822dc96",
+   "subject": "fix(polaris-dossier): S2 reader refuses every malformed store typed, follows no link, bounds each call [R-POLARIS-DOSSIER-S2-READER-1]",
+   "date": "2026-10-07",
+   "timingLines": [
+    "4. Each call is bounded. Defaults: maxDeltaChainDepth 1,000 (was 10,000),",
+    "`budget-exceeded`."
+   ]
+  },
+  {
+   "site": "packages/polaris-dossier/src/git-object-reader.test.ts:782",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "packages/polaris-dossier/src/git-object-reader.test.ts:782",
+   "commit": "042044eb5916c2be34c3831c2a9f97144c135651",
+   "subject": "fix(polaris-dossier): bound and charge stored bytes, list large subtrees, refuse .git spellings, reader-fault (R-POLARIS-DOSSIER-S2-READER-2)",
+   "date": "2026-10-07",
+   "timingLines": [
+    "takes are charged to the per-call budget, loose and packed. The",
+    "65 ms; the padded loose base refuses at once."
+   ]
+  },
+  {
+   "site": "packages/polaris-dossier/src/git-object-reader.test.ts:803",
+   "expression": "240_000",
+   "valueMs": 240000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "packages/polaris-dossier/src/git-object-reader.test.ts:803",
+   "commit": "62a96f4dcc4856583126078ab78792538e3dd7ef",
+   "subject": "test: raise the core.maxTreeDepth path tests' timeout from measured load [syzygy-scr7] (#440)",
+   "date": "2026-10-15",
+   "timingLines": [
+    "Both 4,096/4,097-segment tests take 1.9 s / 1.2 s idle and up to 66.5 s at",
+    "load1 ~89; the fixed 30 s timeout failed at load1 >= 75. Timeout is now 240 s"
+   ]
+  },
+  {
+   "site": "packages/polaris-dossier/src/git-object-reader.test.ts:812",
+   "expression": "240_000",
+   "valueMs": 240000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "packages/polaris-dossier/src/git-object-reader.test.ts:812",
+   "commit": "62a96f4dcc4856583126078ab78792538e3dd7ef",
+   "subject": "test: raise the core.maxTreeDepth path tests' timeout from measured load [syzygy-scr7] (#440)",
+   "date": "2026-10-15",
+   "timingLines": [
+    "Both 4,096/4,097-segment tests take 1.9 s / 1.2 s idle and up to 66.5 s at",
+    "load1 ~89; the fixed 30 s timeout failed at load1 >= 75. Timeout is now 240 s"
+   ]
+  },
+  {
+   "site": "packages/polaris-dossier/src/no-egress.test.ts:47",
+   "expression": "120_000",
+   "valueMs": 120000,
+   "kind": "hook",
+   "hasReason": false,
+   "blamed": "packages/polaris-dossier/src/no-egress.test.ts:47",
+   "commit": "3849b36a206e147ce700ab3a8b1b1be42cf30f10",
+   "subject": "feat(polaris-dossier): close writes the Execution Record with operator-declared usage; no-egress proof under strace [syzygy-qkea.11]",
+   "date": "2026-10-07",
+   "timingLines": []
+  },
+  {
+   "site": "packages/polaris-dossier/src/no-egress.test.ts:84",
+   "expression": "240_000",
+   "valueMs": 240000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "packages/polaris-dossier/src/no-egress.test.ts:84",
+   "commit": "3849b36a206e147ce700ab3a8b1b1be42cf30f10",
+   "subject": "feat(polaris-dossier): close writes the Execution Record with operator-declared usage; no-egress proof under strace [syzygy-qkea.11]",
+   "date": "2026-10-07",
+   "timingLines": []
+  },
+  {
+   "site": "packages/polaris-dossier/src/no-egress.test.ts:92",
+   "expression": "240_000",
+   "valueMs": 240000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "packages/polaris-dossier/src/no-egress.test.ts:92",
+   "commit": "3849b36a206e147ce700ab3a8b1b1be42cf30f10",
+   "subject": "feat(polaris-dossier): close writes the Execution Record with operator-declared usage; no-egress proof under strace [syzygy-qkea.11]",
+   "date": "2026-10-07",
+   "timingLines": []
+  },
+  {
+   "site": "packages/polaris-dossier/src/start-gates.test.ts:1015",
+   "expression": "TREE_TIMEOUT",
+   "valueMs": 60000,
+   "kind": "test",
+   "hasReason": true,
+   "blamed": "packages/polaris-dossier/src/start-gates.test.ts:28",
+   "commit": "30d2c2c9a1c536ad3ec25674e12bf9fae113f692",
+   "subject": "test(polaris-dossier): give the real-tree D9 preflight pin the 60 s real-tree budget; post-sitting it sweeps every record [syzygy-s6xo]",
+   "date": "2026-10-07",
+   "timingLines": [
+    "On main with #394 the post-sitting tree takes the preflight about 4.4 s alone,",
+    "past Vitest's 5 s default under full-suite load. gate-acts.test.ts already gives",
+    "its real-tree tests TREE_TIMEOUT = 60_000. The assertions were unchanged and hold"
+   ]
+  },
+  {
+   "site": "packages/polaris-generation-consent/src/package-reader.test.ts:111",
+   "expression": "45_000",
+   "valueMs": 45000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "packages/polaris-generation-consent/src/package-reader.test.ts:111",
+   "commit": "9e748e6819e360e920e2eb44a5c204e31d749a78",
+   "subject": "test: size explicit timeouts for package-reader tests from measured worst cases [syzygy-bpyt.4.13]",
+   "date": "2026-10-24",
+   "timingLines": [
+    "Sixteen of the 299 tests in package-reader.test.ts had a worst measured duration above 2.5 s, alone or inside a",
+    "full run under load. Each now carries an explicit timeout of that worst case x 3, rounded up to a whole 5 s. No",
+    "assertion, fixture or global default changes.",
+    "scripts/measure_vitest_test_durations.py records every test's duration per run, with load1 and the commit.",
+    "scripts/size_vitest_test_timeouts.py applies the rule to those records and, with --check, confirms each collected",
+    "test carries the timeout the rule gives. The before records and the load-127 report extract are under"
+   ]
+  },
+  {
+   "site": "packages/polaris-generation-consent/src/package-reader.test.ts:141",
+   "expression": "10_000",
+   "valueMs": 10000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "packages/polaris-generation-consent/src/package-reader.test.ts:141",
+   "commit": "9e748e6819e360e920e2eb44a5c204e31d749a78",
+   "subject": "test: size explicit timeouts for package-reader tests from measured worst cases [syzygy-bpyt.4.13]",
+   "date": "2026-10-24",
+   "timingLines": [
+    "Sixteen of the 299 tests in package-reader.test.ts had a worst measured duration above 2.5 s, alone or inside a",
+    "full run under load. Each now carries an explicit timeout of that worst case x 3, rounded up to a whole 5 s. No",
+    "assertion, fixture or global default changes.",
+    "scripts/measure_vitest_test_durations.py records every test's duration per run, with load1 and the commit.",
+    "scripts/size_vitest_test_timeouts.py applies the rule to those records and, with --check, confirms each collected",
+    "test carries the timeout the rule gives. The before records and the load-127 report extract are under"
+   ]
+  },
+  {
+   "site": "packages/polaris-generation-consent/src/package-reader.test.ts:259",
+   "expression": "15_000",
+   "valueMs": 15000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "packages/polaris-generation-consent/src/package-reader.test.ts:259",
+   "commit": "9e748e6819e360e920e2eb44a5c204e31d749a78",
+   "subject": "test: size explicit timeouts for package-reader tests from measured worst cases [syzygy-bpyt.4.13]",
+   "date": "2026-10-24",
+   "timingLines": [
+    "Sixteen of the 299 tests in package-reader.test.ts had a worst measured duration above 2.5 s, alone or inside a",
+    "full run under load. Each now carries an explicit timeout of that worst case x 3, rounded up to a whole 5 s. No",
+    "assertion, fixture or global default changes.",
+    "scripts/measure_vitest_test_durations.py records every test's duration per run, with load1 and the commit.",
+    "scripts/size_vitest_test_timeouts.py applies the rule to those records and, with --check, confirms each collected",
+    "test carries the timeout the rule gives. The before records and the load-127 report extract are under"
+   ]
+  },
+  {
+   "site": "packages/polaris-generation-consent/src/package-reader.test.ts:327",
+   "expression": "15_000",
+   "valueMs": 15000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "packages/polaris-generation-consent/src/package-reader.test.ts:327",
+   "commit": "9e748e6819e360e920e2eb44a5c204e31d749a78",
+   "subject": "test: size explicit timeouts for package-reader tests from measured worst cases [syzygy-bpyt.4.13]",
+   "date": "2026-10-24",
+   "timingLines": [
+    "Sixteen of the 299 tests in package-reader.test.ts had a worst measured duration above 2.5 s, alone or inside a",
+    "full run under load. Each now carries an explicit timeout of that worst case x 3, rounded up to a whole 5 s. No",
+    "assertion, fixture or global default changes.",
+    "scripts/measure_vitest_test_durations.py records every test's duration per run, with load1 and the commit.",
+    "scripts/size_vitest_test_timeouts.py applies the rule to those records and, with --check, confirms each collected",
+    "test carries the timeout the rule gives. The before records and the load-127 report extract are under"
+   ]
+  },
+  {
+   "site": "packages/polaris-generation-consent/src/package-reader.test.ts:368",
+   "expression": "40_000",
+   "valueMs": 40000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "packages/polaris-generation-consent/src/package-reader.test.ts:368",
+   "commit": "9e748e6819e360e920e2eb44a5c204e31d749a78",
+   "subject": "test: size explicit timeouts for package-reader tests from measured worst cases [syzygy-bpyt.4.13]",
+   "date": "2026-10-24",
+   "timingLines": [
+    "Sixteen of the 299 tests in package-reader.test.ts had a worst measured duration above 2.5 s, alone or inside a",
+    "full run under load. Each now carries an explicit timeout of that worst case x 3, rounded up to a whole 5 s. No",
+    "assertion, fixture or global default changes.",
+    "scripts/measure_vitest_test_durations.py records every test's duration per run, with load1 and the commit.",
+    "scripts/size_vitest_test_timeouts.py applies the rule to those records and, with --check, confirms each collected",
+    "test carries the timeout the rule gives. The before records and the load-127 report extract are under"
+   ]
+  },
+  {
+   "site": "packages/polaris-generation-consent/src/package-reader.test.ts:375",
+   "expression": "20_000",
+   "valueMs": 20000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "packages/polaris-generation-consent/src/package-reader.test.ts:375",
+   "commit": "9e748e6819e360e920e2eb44a5c204e31d749a78",
+   "subject": "test: size explicit timeouts for package-reader tests from measured worst cases [syzygy-bpyt.4.13]",
+   "date": "2026-10-24",
+   "timingLines": [
+    "Sixteen of the 299 tests in package-reader.test.ts had a worst measured duration above 2.5 s, alone or inside a",
+    "full run under load. Each now carries an explicit timeout of that worst case x 3, rounded up to a whole 5 s. No",
+    "assertion, fixture or global default changes.",
+    "scripts/measure_vitest_test_durations.py records every test's duration per run, with load1 and the commit.",
+    "scripts/size_vitest_test_timeouts.py applies the rule to those records and, with --check, confirms each collected",
+    "test carries the timeout the rule gives. The before records and the load-127 report extract are under"
+   ]
+  },
+  {
+   "site": "packages/polaris-generation-consent/src/package-reader.test.ts:381",
+   "expression": "45_000",
+   "valueMs": 45000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "packages/polaris-generation-consent/src/package-reader.test.ts:381",
+   "commit": "9e748e6819e360e920e2eb44a5c204e31d749a78",
+   "subject": "test: size explicit timeouts for package-reader tests from measured worst cases [syzygy-bpyt.4.13]",
+   "date": "2026-10-24",
+   "timingLines": [
+    "Sixteen of the 299 tests in package-reader.test.ts had a worst measured duration above 2.5 s, alone or inside a",
+    "full run under load. Each now carries an explicit timeout of that worst case x 3, rounded up to a whole 5 s. No",
+    "assertion, fixture or global default changes.",
+    "scripts/measure_vitest_test_durations.py records every test's duration per run, with load1 and the commit.",
+    "scripts/size_vitest_test_timeouts.py applies the rule to those records and, with --check, confirms each collected",
+    "test carries the timeout the rule gives. The before records and the load-127 report extract are under"
+   ]
+  },
+  {
+   "site": "packages/polaris-generation-consent/src/package-reader.test.ts:443",
+   "expression": "40_000",
+   "valueMs": 40000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "packages/polaris-generation-consent/src/package-reader.test.ts:443",
+   "commit": "9e748e6819e360e920e2eb44a5c204e31d749a78",
+   "subject": "test: size explicit timeouts for package-reader tests from measured worst cases [syzygy-bpyt.4.13]",
+   "date": "2026-10-24",
+   "timingLines": [
+    "Sixteen of the 299 tests in package-reader.test.ts had a worst measured duration above 2.5 s, alone or inside a",
+    "full run under load. Each now carries an explicit timeout of that worst case x 3, rounded up to a whole 5 s. No",
+    "assertion, fixture or global default changes.",
+    "scripts/measure_vitest_test_durations.py records every test's duration per run, with load1 and the commit.",
+    "scripts/size_vitest_test_timeouts.py applies the rule to those records and, with --check, confirms each collected",
+    "test carries the timeout the rule gives. The before records and the load-127 report extract are under"
+   ]
+  },
+  {
+   "site": "packages/polaris-generation-consent/src/package-reader.test.ts:498",
+   "expression": "25_000",
+   "valueMs": 25000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "packages/polaris-generation-consent/src/package-reader.test.ts:498",
+   "commit": "9e748e6819e360e920e2eb44a5c204e31d749a78",
+   "subject": "test: size explicit timeouts for package-reader tests from measured worst cases [syzygy-bpyt.4.13]",
+   "date": "2026-10-24",
+   "timingLines": [
+    "Sixteen of the 299 tests in package-reader.test.ts had a worst measured duration above 2.5 s, alone or inside a",
+    "full run under load. Each now carries an explicit timeout of that worst case x 3, rounded up to a whole 5 s. No",
+    "assertion, fixture or global default changes.",
+    "scripts/measure_vitest_test_durations.py records every test's duration per run, with load1 and the commit.",
+    "scripts/size_vitest_test_timeouts.py applies the rule to those records and, with --check, confirms each collected",
+    "test carries the timeout the rule gives. The before records and the load-127 report extract are under"
+   ]
+  },
+  {
+   "site": "packages/polaris-generation-consent/src/package-reader.test.ts:541",
+   "expression": "45_000",
+   "valueMs": 45000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "packages/polaris-generation-consent/src/package-reader.test.ts:541",
+   "commit": "9e748e6819e360e920e2eb44a5c204e31d749a78",
+   "subject": "test: size explicit timeouts for package-reader tests from measured worst cases [syzygy-bpyt.4.13]",
+   "date": "2026-10-24",
+   "timingLines": [
+    "Sixteen of the 299 tests in package-reader.test.ts had a worst measured duration above 2.5 s, alone or inside a",
+    "full run under load. Each now carries an explicit timeout of that worst case x 3, rounded up to a whole 5 s. No",
+    "assertion, fixture or global default changes.",
+    "scripts/measure_vitest_test_durations.py records every test's duration per run, with load1 and the commit.",
+    "scripts/size_vitest_test_timeouts.py applies the rule to those records and, with --check, confirms each collected",
+    "test carries the timeout the rule gives. The before records and the load-127 report extract are under"
+   ]
+  },
+  {
+   "site": "packages/polaris-generation-consent/src/package-reader.test.ts:563",
+   "expression": "20_000",
+   "valueMs": 20000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "packages/polaris-generation-consent/src/package-reader.test.ts:563",
+   "commit": "9e748e6819e360e920e2eb44a5c204e31d749a78",
+   "subject": "test: size explicit timeouts for package-reader tests from measured worst cases [syzygy-bpyt.4.13]",
+   "date": "2026-10-24",
+   "timingLines": [
+    "Sixteen of the 299 tests in package-reader.test.ts had a worst measured duration above 2.5 s, alone or inside a",
+    "full run under load. Each now carries an explicit timeout of that worst case x 3, rounded up to a whole 5 s. No",
+    "assertion, fixture or global default changes.",
+    "scripts/measure_vitest_test_durations.py records every test's duration per run, with load1 and the commit.",
+    "scripts/size_vitest_test_timeouts.py applies the rule to those records and, with --check, confirms each collected",
+    "test carries the timeout the rule gives. The before records and the load-127 report extract are under"
+   ]
+  },
+  {
+   "site": "packages/polaris-generation-consent/src/package-reader.test.ts:581",
+   "expression": "15_000",
+   "valueMs": 15000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "packages/polaris-generation-consent/src/package-reader.test.ts:581",
+   "commit": "9e748e6819e360e920e2eb44a5c204e31d749a78",
+   "subject": "test: size explicit timeouts for package-reader tests from measured worst cases [syzygy-bpyt.4.13]",
+   "date": "2026-10-24",
+   "timingLines": [
+    "Sixteen of the 299 tests in package-reader.test.ts had a worst measured duration above 2.5 s, alone or inside a",
+    "full run under load. Each now carries an explicit timeout of that worst case x 3, rounded up to a whole 5 s. No",
+    "assertion, fixture or global default changes.",
+    "scripts/measure_vitest_test_durations.py records every test's duration per run, with load1 and the commit.",
+    "scripts/size_vitest_test_timeouts.py applies the rule to those records and, with --check, confirms each collected",
+    "test carries the timeout the rule gives. The before records and the load-127 report extract are under"
+   ]
+  },
+  {
+   "site": "packages/polaris-generation-consent/src/package-reader.test.ts:710",
+   "expression": "40_000",
+   "valueMs": 40000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "packages/polaris-generation-consent/src/package-reader.test.ts:710",
+   "commit": "9e748e6819e360e920e2eb44a5c204e31d749a78",
+   "subject": "test: size explicit timeouts for package-reader tests from measured worst cases [syzygy-bpyt.4.13]",
+   "date": "2026-10-24",
+   "timingLines": [
+    "Sixteen of the 299 tests in package-reader.test.ts had a worst measured duration above 2.5 s, alone or inside a",
+    "full run under load. Each now carries an explicit timeout of that worst case x 3, rounded up to a whole 5 s. No",
+    "assertion, fixture or global default changes.",
+    "scripts/measure_vitest_test_durations.py records every test's duration per run, with load1 and the commit.",
+    "scripts/size_vitest_test_timeouts.py applies the rule to those records and, with --check, confirms each collected",
+    "test carries the timeout the rule gives. The before records and the load-127 report extract are under"
+   ]
+  },
+  {
+   "site": "packages/polaris-generation-consent/src/package-reader.test.ts:779",
+   "expression": "15_000",
+   "valueMs": 15000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "packages/polaris-generation-consent/src/package-reader.test.ts:779",
+   "commit": "9e748e6819e360e920e2eb44a5c204e31d749a78",
+   "subject": "test: size explicit timeouts for package-reader tests from measured worst cases [syzygy-bpyt.4.13]",
+   "date": "2026-10-24",
+   "timingLines": [
+    "Sixteen of the 299 tests in package-reader.test.ts had a worst measured duration above 2.5 s, alone or inside a",
+    "full run under load. Each now carries an explicit timeout of that worst case x 3, rounded up to a whole 5 s. No",
+    "assertion, fixture or global default changes.",
+    "scripts/measure_vitest_test_durations.py records every test's duration per run, with load1 and the commit.",
+    "scripts/size_vitest_test_timeouts.py applies the rule to those records and, with --check, confirms each collected",
+    "test carries the timeout the rule gives. The before records and the load-127 report extract are under"
+   ]
+  },
+  {
+   "site": "packages/polaris-generation-consent/src/package-reader.test.ts:804",
+   "expression": "15_000",
+   "valueMs": 15000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "packages/polaris-generation-consent/src/package-reader.test.ts:804",
+   "commit": "9e748e6819e360e920e2eb44a5c204e31d749a78",
+   "subject": "test: size explicit timeouts for package-reader tests from measured worst cases [syzygy-bpyt.4.13]",
+   "date": "2026-10-24",
+   "timingLines": [
+    "Sixteen of the 299 tests in package-reader.test.ts had a worst measured duration above 2.5 s, alone or inside a",
+    "full run under load. Each now carries an explicit timeout of that worst case x 3, rounded up to a whole 5 s. No",
+    "assertion, fixture or global default changes.",
+    "scripts/measure_vitest_test_durations.py records every test's duration per run, with load1 and the commit.",
+    "scripts/size_vitest_test_timeouts.py applies the rule to those records and, with --check, confirms each collected",
+    "test carries the timeout the rule gives. The before records and the load-127 report extract are under"
+   ]
+  },
+  {
+   "site": "packages/polaris-generation-consent/src/package-reader.test.ts:947",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "kind": "hook",
+   "hasReason": false,
+   "blamed": "packages/polaris-generation-consent/src/package-reader.test.ts:947",
+   "commit": "6c91e65ae69cb761e1f6fa43e54db28c935b960d",
+   "subject": "test(polaris-generation-consent): render the recorders' acts before the no-allowlist table, and run it one row per case [syzygy-786c]",
+   "date": "2026-10-07",
+   "timingLines": [
+    "A CPU profile of the case alone: about 3 s of a cold 4.5 s run was five Python spawns rendering the recorders' acts on the first full() call, landing inside the 5 s budget under suite load. A beforeAll renders them once (cached) under its own 60 s budget, and the 197 rows run as one case each (about 20 ms per read). Test-only; no timeout raised on a case."
+   ]
+  },
+  {
+   "site": "packages/polaris-generation-consent/src/package-reader.test.ts:1061",
+   "expression": "50_000",
+   "valueMs": 50000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "packages/polaris-generation-consent/src/package-reader.test.ts:1061",
+   "commit": "9e748e6819e360e920e2eb44a5c204e31d749a78",
+   "subject": "test: size explicit timeouts for package-reader tests from measured worst cases [syzygy-bpyt.4.13]",
+   "date": "2026-10-24",
+   "timingLines": [
+    "Sixteen of the 299 tests in package-reader.test.ts had a worst measured duration above 2.5 s, alone or inside a",
+    "full run under load. Each now carries an explicit timeout of that worst case x 3, rounded up to a whole 5 s. No",
+    "assertion, fixture or global default changes.",
+    "scripts/measure_vitest_test_durations.py records every test's duration per run, with load1 and the commit.",
+    "scripts/size_vitest_test_timeouts.py applies the rule to those records and, with --check, confirms each collected",
+    "test carries the timeout the rule gives. The before records and the load-127 report extract are under"
+   ]
+  },
+  {
+   "site": "packages/polaris-generation-consent/src/real-tree.test.ts:50",
+   "expression": "TIMEOUT",
+   "valueMs": 120000,
+   "kind": "test",
+   "hasReason": true,
+   "blamed": "packages/polaris-generation-consent/src/real-tree.test.ts:31",
+   "commit": "966cb02c95b192ad602efd06a0014b8cfcfcc9a5",
+   "subject": "fix(polaris-generation-consent): tooling and package names are not withdrawals; the real decisions tree is read in CI (R-263-4 notes)",
+   "date": "2026-10-06",
+   "timingLines": []
+  },
+  {
+   "site": "packages/polaris-generation-consent/src/real-tree.test.ts:58",
+   "expression": "TIMEOUT",
+   "valueMs": 120000,
+   "kind": "test",
+   "hasReason": true,
+   "blamed": "packages/polaris-generation-consent/src/real-tree.test.ts:31",
+   "commit": "966cb02c95b192ad602efd06a0014b8cfcfcc9a5",
+   "subject": "fix(polaris-generation-consent): tooling and package names are not withdrawals; the real decisions tree is read in CI (R-263-4 notes)",
+   "date": "2026-10-06",
+   "timingLines": []
+  },
+  {
+   "site": "packages/three-surface-poc-core/src/test-artifact-verification.live.test.ts:139",
+   "expression": "120_000",
+   "valueMs": 120000,
+   "kind": "test",
+   "hasReason": false,
+   "blamed": "packages/three-surface-poc-core/src/test-artifact-verification.live.test.ts:139",
+   "commit": "2c1f8d5a955d5066c9065859d058b07b01454172",
+   "subject": "feat: ingest a real test artifact and render Verified from it [syzygy-0r9] (#10)",
+   "date": "2026-08-30",
+   "timingLines": []
+  }
+ ]
+}

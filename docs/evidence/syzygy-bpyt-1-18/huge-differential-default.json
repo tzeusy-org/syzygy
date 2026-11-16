@@ -1,0 +1,214 @@
+{
+ "node": "v24.6.0",
+ "execArgv": [],
+ "mask": {
+  "LF": {
+   "threshold": {
+    "largestSurviving": 125456,
+    "firstThrowing": 125457,
+    "bytesAtFirstThrow": 250922
+   },
+   "survivors": [
+    {
+     "inner": 1,
+     "baseEqualsHead": true
+    },
+    {
+     "inner": 10,
+     "baseEqualsHead": true
+    },
+    {
+     "inner": 1000,
+     "baseEqualsHead": true
+    },
+    {
+     "inner": 62728,
+     "baseEqualsHead": true
+    },
+    {
+     "inner": 100364,
+     "baseEqualsHead": true
+    }
+   ],
+   "beyond": [
+    {
+     "inner": 125457,
+     "bytes": 250922,
+     "base": "masked",
+     "head": "masked",
+     "headEqualsOracle": true
+    },
+    {
+     "inner": 200000,
+     "bytes": 400008,
+     "base": "RangeError: Maximum call stack size exceeded",
+     "head": "masked",
+     "headEqualsOracle": true
+    },
+    {
+     "inner": 400000,
+     "bytes": 800008,
+     "base": "RangeError: Maximum call stack size exceeded",
+     "head": "masked",
+     "headEqualsOracle": true
+    }
+   ]
+  },
+  "CRLF": {
+   "threshold": {
+    "largestSurviving": 125461,
+    "firstThrowing": 125462,
+    "bytesAtFirstThrow": 376396
+   },
+   "survivors": [
+    {
+     "inner": 1,
+     "baseEqualsHead": true
+    },
+    {
+     "inner": 10,
+     "baseEqualsHead": true
+    },
+    {
+     "inner": 1000,
+     "baseEqualsHead": true
+    },
+    {
+     "inner": 62730,
+     "baseEqualsHead": true
+    },
+    {
+     "inner": 100368,
+     "baseEqualsHead": true
+    }
+   ],
+   "beyond": [
+    {
+     "inner": 125462,
+     "bytes": 376396,
+     "base": "masked",
+     "head": "masked",
+     "headEqualsOracle": true
+    },
+    {
+     "inner": 200000,
+     "bytes": 600010,
+     "base": "RangeError: Maximum call stack size exceeded",
+     "head": "masked",
+     "headEqualsOracle": true
+    },
+    {
+     "inner": 400000,
+     "bytes": 1200010,
+     "base": "RangeError: Maximum call stack size exceeded",
+     "head": "masked",
+     "headEqualsOracle": true
+    }
+   ]
+  },
+  "CR": {
+   "threshold": {
+    "largestSurviving": 125456,
+    "firstThrowing": 125457,
+    "bytesAtFirstThrow": 250922
+   },
+   "survivors": [
+    {
+     "inner": 1,
+     "baseEqualsHead": true
+    },
+    {
+     "inner": 10,
+     "baseEqualsHead": true
+    },
+    {
+     "inner": 1000,
+     "baseEqualsHead": true
+    },
+    {
+     "inner": 62728,
+     "baseEqualsHead": true
+    },
+    {
+     "inner": 100364,
+     "baseEqualsHead": true
+    }
+   ],
+   "beyond": [
+    {
+     "inner": 125457,
+     "bytes": 250922,
+     "base": "masked",
+     "head": "masked",
+     "headEqualsOracle": true
+    },
+    {
+     "inner": 200000,
+     "bytes": 400008,
+     "base": "RangeError: Maximum call stack size exceeded",
+     "head": "masked",
+     "headEqualsOracle": true
+    },
+    {
+     "inner": 400000,
+     "bytes": 800008,
+     "base": "RangeError: Maximum call stack size exceeded",
+     "head": "masked",
+     "headEqualsOracle": true
+    }
+   ]
+  }
+ },
+ "extractor": {
+  "threshold": {
+   "largestSurviving": 125458,
+   "firstThrowing": 125459
+  },
+  "survivors": [
+   {
+    "inner": 1,
+    "baseEqualsHead": true
+   },
+   {
+    "inner": 10,
+    "baseEqualsHead": true
+   },
+   {
+    "inner": 1000,
+    "baseEqualsHead": true
+   },
+   {
+    "inner": 62729,
+    "baseEqualsHead": true
+   },
+   {
+    "inner": 100366,
+    "baseEqualsHead": true
+   }
+  ],
+  "beyond": [
+   {
+    "bullets": 125459,
+    "bytes": 501911,
+    "base": "extracted",
+    "head": "extracted, 125459 items, denominator 125459",
+    "headKeepsEveryItem": true
+   },
+   {
+    "bullets": 200000,
+    "bytes": 800075,
+    "base": "RangeError: Maximum call stack size exceeded",
+    "head": "extracted, 200000 items, denominator 200000",
+    "headKeepsEveryItem": true
+   },
+   {
+    "bullets": 400000,
+    "bytes": 1600075,
+    "base": "RangeError: Maximum call stack size exceeded",
+    "head": "extracted, 400000 items, denominator 400000",
+    "headKeepsEveryItem": true
+   }
+  ]
+ },
+ "failures": []
+}

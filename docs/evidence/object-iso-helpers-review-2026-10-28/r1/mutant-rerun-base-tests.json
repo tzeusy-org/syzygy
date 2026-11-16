@@ -1,0 +1,1172 @@
+{
+ "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+ "rows": [
+  {
+   "id": "base-tests control screen.ts",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 1,
+   "old": null,
+   "new": null,
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 110,
+   "failed": 0,
+   "total": 110,
+   "firstFailures": [],
+   "seconds": 11.0,
+   "loadavg": "23.68 25.58 27.79",
+   "killed": false
+  },
+  {
+   "id": "base-tests control public-source-classification.ts",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 1,
+   "old": null,
+   "new": null,
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 214,
+   "failed": 0,
+   "total": 214,
+   "firstFailures": [],
+   "seconds": 3.3,
+   "loadavg": "23.14 25.44 27.74",
+   "killed": false
+  },
+  {
+   "id": "base-tests control secret-redaction.ts",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "line": 1,
+   "old": null,
+   "new": null,
+   "tests": [
+    "packages/polaris-generation-core/src/secret-redaction.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 26,
+   "failed": 0,
+   "total": 26,
+   "firstFailures": [],
+   "seconds": 2.9,
+   "loadavg": "23.05 25.38 27.70",
+   "killed": false
+  },
+  {
+   "id": "base-tests control authority-artifact-fields.ts",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 1,
+   "old": null,
+   "new": null,
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 5,
+   "failed": 0,
+   "total": 5,
+   "firstFailures": [],
+   "seconds": 2.4,
+   "loadavg": "23.05 25.38 27.70",
+   "killed": false
+  },
+  {
+   "id": "base-tests C-authority-artifact-fields-L102n0-A",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 102,
+   "old": "isRecord(json.value)",
+   "new": "(typeof json.value === 'object' && json.value !== null)",
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 5,
+   "failed": 0,
+   "total": 5,
+   "firstFailures": [],
+   "seconds": 2.0,
+   "loadavg": "23.05 25.34 27.68",
+   "killed": false
+  },
+  {
+   "id": "base-tests C-authority-artifact-fields-L102n0-B",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 102,
+   "old": "isRecord(json.value)",
+   "new": "(typeof json.value === 'object' && !Array.isArray(json.value))",
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 5,
+   "failed": 0,
+   "total": 5,
+   "firstFailures": [],
+   "seconds": 2.4,
+   "loadavg": "23.05 25.34 27.68",
+   "killed": false
+  },
+  {
+   "id": "base-tests C-authority-artifact-fields-L102n0-D",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 102,
+   "old": "isRecord(json.value)",
+   "new": "true",
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 5,
+   "failed": 0,
+   "total": 5,
+   "firstFailures": [],
+   "seconds": 2.2,
+   "loadavg": "23.05 25.34 27.68",
+   "killed": false
+  },
+  {
+   "id": "base-tests C-authority-artifact-fields-L121n1-A",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 121,
+   "old": "isRecord(json.value)",
+   "new": "(typeof json.value === 'object' && json.value !== null)",
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 5,
+   "failed": 0,
+   "total": 5,
+   "firstFailures": [],
+   "seconds": 2.1,
+   "loadavg": "22.80 25.25 27.64",
+   "killed": false
+  },
+  {
+   "id": "base-tests C-authority-artifact-fields-L121n1-B",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 121,
+   "old": "isRecord(json.value)",
+   "new": "(typeof json.value === 'object' && !Array.isArray(json.value))",
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 5,
+   "failed": 0,
+   "total": 5,
+   "firstFailures": [],
+   "seconds": 2.5,
+   "loadavg": "22.80 25.25 27.64",
+   "killed": false
+  },
+  {
+   "id": "base-tests C-authority-artifact-fields-L121n1-D",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 121,
+   "old": "isRecord(json.value)",
+   "new": "true",
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 5,
+   "failed": 0,
+   "total": 5,
+   "firstFailures": [],
+   "seconds": 2.7,
+   "loadavg": "23.70 25.40 27.67",
+   "killed": false
+  },
+  {
+   "id": "base-tests C-authority-artifact-fields-L132n2-A",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 132,
+   "old": "isRecord(entry)",
+   "new": "(typeof entry === 'object' && entry !== null)",
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 5,
+   "failed": 0,
+   "total": 5,
+   "firstFailures": [],
+   "seconds": 2.0,
+   "loadavg": "23.70 25.40 27.67",
+   "killed": false
+  },
+  {
+   "id": "base-tests C-authority-artifact-fields-L132n2-B",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 132,
+   "old": "isRecord(entry)",
+   "new": "(typeof entry === 'object' && !Array.isArray(entry))",
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 5,
+   "failed": 0,
+   "total": 5,
+   "firstFailures": [],
+   "seconds": 3.0,
+   "loadavg": "23.56 25.34 27.64",
+   "killed": false
+  },
+  {
+   "id": "base-tests C-authority-artifact-fields-L132n2-D",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 132,
+   "old": "isRecord(entry)",
+   "new": "true",
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 5,
+   "failed": 0,
+   "total": 5,
+   "firstFailures": [],
+   "seconds": 2.1,
+   "loadavg": "23.56 25.34 27.64",
+   "killed": false
+  },
+  {
+   "id": "base-tests C-authority-artifact-fields-L136n3-A",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 136,
+   "old": "isRecord(subject)",
+   "new": "(typeof subject === 'object' && subject !== null)",
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 5,
+   "failed": 0,
+   "total": 5,
+   "firstFailures": [],
+   "seconds": 2.1,
+   "loadavg": "23.92 25.38 27.64",
+   "killed": false
+  },
+  {
+   "id": "base-tests C-authority-artifact-fields-L136n3-B",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 136,
+   "old": "isRecord(subject)",
+   "new": "(typeof subject === 'object' && !Array.isArray(subject))",
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 5,
+   "failed": 0,
+   "total": 5,
+   "firstFailures": [],
+   "seconds": 2.4,
+   "loadavg": "23.92 25.38 27.64",
+   "killed": false
+  },
+  {
+   "id": "base-tests C-authority-artifact-fields-L136n3-D",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 136,
+   "old": "isRecord(subject)",
+   "new": "true",
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 5,
+   "failed": 0,
+   "total": 5,
+   "firstFailures": [],
+   "seconds": 2.0,
+   "loadavg": "24.08 25.39 27.63",
+   "killed": false
+  },
+  {
+   "id": "base-tests C-authority-artifact-fields-L141n4-B",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 141,
+   "old": "isRecord(authority)",
+   "new": "(typeof authority === 'object' && !Array.isArray(authority))",
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 5,
+   "failed": 0,
+   "total": 5,
+   "firstFailures": [],
+   "seconds": 2.0,
+   "loadavg": "24.08 25.39 27.63",
+   "killed": false
+  },
+  {
+   "id": "base-tests C-authority-artifact-fields-L141n4-D",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 141,
+   "old": "isRecord(authority)",
+   "new": "true",
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 5,
+   "failed": 0,
+   "total": 5,
+   "firstFailures": [],
+   "seconds": 2.8,
+   "loadavg": "25.68 25.70 27.72",
+   "killed": false
+  },
+  {
+   "id": "base-tests C-secret-redaction-L71n0-A",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "line": 71,
+   "old": "isRecord(scope)",
+   "new": "(typeof scope === 'object' && scope !== null)",
+   "tests": [
+    "packages/polaris-generation-core/src/secret-redaction.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 26,
+   "failed": 0,
+   "total": 26,
+   "firstFailures": [],
+   "seconds": 3.2,
+   "loadavg": "25.68 25.70 27.72",
+   "killed": false
+  },
+  {
+   "id": "base-tests C-secret-redaction-L71n0-B",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "line": 71,
+   "old": "isRecord(scope)",
+   "new": "(typeof scope === 'object' && !Array.isArray(scope))",
+   "tests": [
+    "packages/polaris-generation-core/src/secret-redaction.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 26,
+   "failed": 0,
+   "total": 26,
+   "firstFailures": [],
+   "seconds": 3.1,
+   "loadavg": "25.14 25.59 27.67",
+   "killed": false
+  },
+  {
+   "id": "base-tests C-secret-redaction-L71n0-D",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "line": 71,
+   "old": "isRecord(scope)",
+   "new": "true",
+   "tests": [
+    "packages/polaris-generation-core/src/secret-redaction.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 26,
+   "failed": 0,
+   "total": 26,
+   "firstFailures": [],
+   "seconds": 3.1,
+   "loadavg": "24.97 25.55 27.65",
+   "killed": false
+  },
+  {
+   "id": "base-tests C-secret-redaction-L73n1-A",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "line": 73,
+   "old": "isRecord(red)",
+   "new": "(typeof red === 'object' && red !== null)",
+   "tests": [
+    "packages/polaris-generation-core/src/secret-redaction.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 26,
+   "failed": 0,
+   "total": 26,
+   "firstFailures": [],
+   "seconds": 3.5,
+   "loadavg": "24.97 25.55 27.65",
+   "killed": false
+  },
+  {
+   "id": "base-tests C-secret-redaction-L73n1-B",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "line": 73,
+   "old": "isRecord(red)",
+   "new": "(typeof red === 'object' && !Array.isArray(red))",
+   "tests": [
+    "packages/polaris-generation-core/src/secret-redaction.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 26,
+   "failed": 0,
+   "total": 26,
+   "firstFailures": [],
+   "seconds": 2.5,
+   "loadavg": "24.81 25.51 27.62",
+   "killed": false
+  },
+  {
+   "id": "base-tests C-secret-redaction-L73n1-D",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "line": 73,
+   "old": "isRecord(red)",
+   "new": "true",
+   "tests": [
+    "packages/polaris-generation-core/src/secret-redaction.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 26,
+   "failed": 0,
+   "total": 26,
+   "firstFailures": [],
+   "seconds": 2.9,
+   "loadavg": "24.81 25.51 27.62",
+   "killed": false
+  },
+  {
+   "id": "base-tests C-public-source-classification-L68n0-A",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 68,
+   "old": "isRecord(rule)",
+   "new": "(typeof rule === 'object' && rule !== null)",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 214,
+   "failed": 0,
+   "total": 214,
+   "firstFailures": [],
+   "seconds": 2.5,
+   "loadavg": "24.27 25.38 27.57",
+   "killed": false
+  },
+  {
+   "id": "base-tests C-public-source-classification-L68n0-B",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 68,
+   "old": "isRecord(rule)",
+   "new": "(typeof rule === 'object' && !Array.isArray(rule))",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 214,
+   "failed": 0,
+   "total": 214,
+   "firstFailures": [],
+   "seconds": 2.0,
+   "loadavg": "24.27 25.38 27.57",
+   "killed": false
+  },
+  {
+   "id": "base-tests C-public-source-classification-L68n0-D",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 68,
+   "old": "isRecord(rule)",
+   "new": "true",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 214,
+   "failed": 0,
+   "total": 214,
+   "firstFailures": [],
+   "seconds": 2.5,
+   "loadavg": "24.81 25.48 27.59",
+   "killed": false
+  },
+  {
+   "id": "base-tests C-public-source-classification-L78n1-A",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 78,
+   "old": "isRecord(pathRule)",
+   "new": "(typeof pathRule === 'object' && pathRule !== null)",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 214,
+   "failed": 0,
+   "total": 214,
+   "firstFailures": [],
+   "seconds": 2.5,
+   "loadavg": "24.81 25.48 27.59",
+   "killed": false
+  },
+  {
+   "id": "base-tests C-public-source-classification-L78n1-B",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 78,
+   "old": "isRecord(pathRule)",
+   "new": "(typeof pathRule === 'object' && !Array.isArray(pathRule))",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 214,
+   "failed": 0,
+   "total": 214,
+   "firstFailures": [],
+   "seconds": 2.2,
+   "loadavg": "24.50 25.40 27.56",
+   "killed": false
+  },
+  {
+   "id": "base-tests C-public-source-classification-L78n1-D",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 78,
+   "old": "isRecord(pathRule)",
+   "new": "true",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 214,
+   "failed": 0,
+   "total": 214,
+   "firstFailures": [],
+   "seconds": 2.7,
+   "loadavg": "24.50 25.40 27.56",
+   "killed": false
+  },
+  {
+   "id": "base-tests C-public-source-classification-L83n2-A",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 83,
+   "old": "isRecord(prefix)",
+   "new": "(typeof prefix === 'object' && prefix !== null)",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 214,
+   "failed": 0,
+   "total": 214,
+   "firstFailures": [],
+   "seconds": 2.2,
+   "loadavg": "23.74 25.23 27.49",
+   "killed": false
+  },
+  {
+   "id": "base-tests C-public-source-classification-L83n2-B",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 83,
+   "old": "isRecord(prefix)",
+   "new": "(typeof prefix === 'object' && !Array.isArray(prefix))",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 1,
+   "passed": 213,
+   "failed": 1,
+   "total": 214,
+   "firstFailures": [
+    [
+     "reading the rule refuses no prefix object",
+     "TypeError: Cannot read properties of null (reading 'digitCount')"
+    ]
+   ],
+   "seconds": 2.2,
+   "loadavg": "23.74 25.23 27.49",
+   "killed": true
+  },
+  {
+   "id": "base-tests C-public-source-classification-L83n2-D",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 83,
+   "old": "isRecord(prefix)",
+   "new": "true",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 1,
+   "passed": 213,
+   "failed": 1,
+   "total": 214,
+   "firstFailures": [
+    [
+     "reading the rule refuses no prefix object",
+     "TypeError: Cannot read properties of null (reading 'digitCount')"
+    ]
+   ],
+   "seconds": 2.1,
+   "loadavg": "23.74 25.23 27.49",
+   "killed": true
+  },
+  {
+   "id": "base-tests C-public-source-classification-L204n3-A",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 204,
+   "old": "isRecord(scope)",
+   "new": "(typeof scope === 'object' && scope !== null)",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 214,
+   "failed": 0,
+   "total": 214,
+   "firstFailures": [],
+   "seconds": 2.9,
+   "loadavg": "23.92 25.24 27.48",
+   "killed": false
+  },
+  {
+   "id": "base-tests C-public-source-classification-L204n3-B",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 204,
+   "old": "isRecord(scope)",
+   "new": "(typeof scope === 'object' && !Array.isArray(scope))",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 214,
+   "failed": 0,
+   "total": 214,
+   "firstFailures": [],
+   "seconds": 2.5,
+   "loadavg": "23.37 25.10 27.42",
+   "killed": false
+  },
+  {
+   "id": "base-tests C-public-source-classification-L204n3-D",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 204,
+   "old": "isRecord(scope)",
+   "new": "true",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 214,
+   "failed": 0,
+   "total": 214,
+   "firstFailures": [],
+   "seconds": 2.6,
+   "loadavg": "23.37 25.10 27.42",
+   "killed": false
+  },
+  {
+   "id": "base-tests C-public-source-classification-L205n4-A",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 205,
+   "old": "isRecord(active)",
+   "new": "(typeof active === 'object' && active !== null)",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 214,
+   "failed": 0,
+   "total": 214,
+   "firstFailures": [],
+   "seconds": 2.7,
+   "loadavg": "22.94 24.99 27.37",
+   "killed": false
+  },
+  {
+   "id": "base-tests C-public-source-classification-L205n4-B",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 205,
+   "old": "isRecord(active)",
+   "new": "(typeof active === 'object' && !Array.isArray(active))",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 214,
+   "failed": 0,
+   "total": 214,
+   "firstFailures": [],
+   "seconds": 2.6,
+   "loadavg": "22.94 24.99 27.37",
+   "killed": false
+  },
+  {
+   "id": "base-tests C-public-source-classification-L205n4-D",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 205,
+   "old": "isRecord(active)",
+   "new": "true",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 214,
+   "failed": 0,
+   "total": 214,
+   "firstFailures": [],
+   "seconds": 2.0,
+   "loadavg": "22.54 24.87 27.32",
+   "killed": false
+  },
+  {
+   "id": "base-tests C-public-source-classification-L207n5-A",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 207,
+   "old": "isRecord(exemption)",
+   "new": "(typeof exemption === 'object' && exemption !== null)",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 214,
+   "failed": 0,
+   "total": 214,
+   "firstFailures": [],
+   "seconds": 2.2,
+   "loadavg": "22.54 24.87 27.32",
+   "killed": false
+  },
+  {
+   "id": "base-tests C-public-source-classification-L207n5-B",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 207,
+   "old": "isRecord(exemption)",
+   "new": "(typeof exemption === 'object' && !Array.isArray(exemption))",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 214,
+   "failed": 0,
+   "total": 214,
+   "firstFailures": [],
+   "seconds": 2.8,
+   "loadavg": "24.02 25.14 27.39",
+   "killed": false
+  },
+  {
+   "id": "base-tests C-public-source-classification-L207n5-D",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 207,
+   "old": "isRecord(exemption)",
+   "new": "true",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 214,
+   "failed": 0,
+   "total": 214,
+   "firstFailures": [],
+   "seconds": 2.5,
+   "loadavg": "24.02 25.14 27.39",
+   "killed": false
+  },
+  {
+   "id": "base-tests C-screen-L81n0-B",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 81,
+   "old": "isRecord(doc)",
+   "new": "(typeof doc === 'object' && !Array.isArray(doc))",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 110,
+   "failed": 0,
+   "total": 110,
+   "firstFailures": [],
+   "seconds": 9.7,
+   "loadavg": "23.56 25.00 27.33",
+   "killed": false
+  },
+  {
+   "id": "base-tests C-screen-L81n0-D",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 81,
+   "old": "isRecord(doc)",
+   "new": "true",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 110,
+   "failed": 0,
+   "total": 110,
+   "firstFailures": [],
+   "seconds": 9.2,
+   "loadavg": "22.45 24.72 27.21",
+   "killed": false
+  },
+  {
+   "id": "base-tests C-screen-L83n1-A",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 83,
+   "old": "isRecord(scope)",
+   "new": "(typeof scope === 'object' && scope !== null)",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 110,
+   "failed": 0,
+   "total": 110,
+   "firstFailures": [],
+   "seconds": 8.8,
+   "loadavg": "22.25 24.60 27.14",
+   "killed": false
+  },
+  {
+   "id": "base-tests C-screen-L83n1-B",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 83,
+   "old": "isRecord(scope)",
+   "new": "(typeof scope === 'object' && !Array.isArray(scope))",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 1,
+   "passed": 108,
+   "failed": 2,
+   "total": 110,
+   "firstFailures": [
+    [
+     "the screen is refused for a policy with no public-source scope",
+     "TypeError: Cannot read properties of null (reading 'contentClassification')"
+    ],
+    [
+     "parity with the any-repo reader's screen (syzygy-qkea.17) refuses a policy with no public-source scope, as the app does",
+     "TypeError: Cannot read properties of null (reading 'contentClassification')"
+    ]
+   ],
+   "seconds": 12.4,
+   "loadavg": "21.75 24.41 27.05",
+   "killed": true
+  },
+  {
+   "id": "base-tests C-screen-L83n1-D",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 83,
+   "old": "isRecord(scope)",
+   "new": "true",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 1,
+   "passed": 108,
+   "failed": 2,
+   "total": 110,
+   "firstFailures": [
+    [
+     "the screen is refused for a policy with no public-source scope",
+     "TypeError: Cannot read properties of null (reading 'contentClassification')"
+    ],
+    [
+     "parity with the any-repo reader's screen (syzygy-qkea.17) refuses a policy with no public-source scope, as the app does",
+     "TypeError: Cannot read properties of null (reading 'contentClassification')"
+    ]
+   ],
+   "seconds": 15.5,
+   "loadavg": "26.00 25.24 27.28",
+   "killed": true
+  },
+  {
+   "id": "base-tests C-screen-L84n2-B",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 84,
+   "old": "isRecord(admission)",
+   "new": "(typeof admission === 'object' && !Array.isArray(admission))",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 110,
+   "failed": 0,
+   "total": 110,
+   "firstFailures": [],
+   "seconds": 12.7,
+   "loadavg": "25.79 25.24 27.25",
+   "killed": false
+  },
+  {
+   "id": "base-tests C-screen-L84n2-D",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 84,
+   "old": "isRecord(admission)",
+   "new": "true",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 110,
+   "failed": 0,
+   "total": 110,
+   "firstFailures": [],
+   "seconds": 10.5,
+   "loadavg": "24.83 25.05 27.17",
+   "killed": false
+  },
+  {
+   "id": "base-tests C-screen-L88n3-B",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 88,
+   "old": "isRecord(classification)",
+   "new": "(typeof classification === 'object' && !Array.isArray(classification))",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 110,
+   "failed": 0,
+   "total": 110,
+   "firstFailures": [],
+   "seconds": 11.0,
+   "loadavg": "24.86 25.05 27.14",
+   "killed": false
+  },
+  {
+   "id": "base-tests C-screen-L88n3-D",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 88,
+   "old": "isRecord(classification)",
+   "new": "true",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 110,
+   "failed": 0,
+   "total": 110,
+   "firstFailures": [],
+   "seconds": 10.3,
+   "loadavg": "24.20 24.90 27.07",
+   "killed": false
+  },
+  {
+   "id": "base-tests C-screen-L89n4-B",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 89,
+   "old": "isRecord(rule)",
+   "new": "(typeof rule === 'object' && !Array.isArray(rule))",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 110,
+   "failed": 0,
+   "total": 110,
+   "firstFailures": [],
+   "seconds": 9.6,
+   "loadavg": "24.02 24.84 27.03",
+   "killed": false
+  },
+  {
+   "id": "base-tests C-screen-L89n4-D",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 89,
+   "old": "isRecord(rule)",
+   "new": "true",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 110,
+   "failed": 0,
+   "total": 110,
+   "firstFailures": [],
+   "seconds": 9.3,
+   "loadavg": "23.84 24.76 26.98",
+   "killed": false
+  },
+  {
+   "id": "base-tests C-screen-L90n5-D",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 90,
+   "old": "isRecord(codeContent[0])",
+   "new": "true",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 110,
+   "failed": 0,
+   "total": 110,
+   "firstFailures": [],
+   "seconds": 10.4,
+   "loadavg": "23.31 24.62 26.91",
+   "killed": false
+  },
+  {
+   "id": "base-tests C-screen-L100n6-B",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 100,
+   "old": "isRecord(d)",
+   "new": "(typeof d === 'object' && !Array.isArray(d))",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 110,
+   "failed": 0,
+   "total": 110,
+   "firstFailures": [],
+   "seconds": 9.4,
+   "loadavg": "22.33 24.37 26.80",
+   "killed": false
+  },
+  {
+   "id": "base-tests C-screen-L100n6-D",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 100,
+   "old": "isRecord(d)",
+   "new": "true",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477",
+   "commit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+   "exit": 0,
+   "passed": 110,
+   "failed": 0,
+   "total": 110,
+   "firstFailures": [],
+   "seconds": 10.5,
+   "loadavg": "23.06 24.46 26.81",
+   "killed": false
+  }
+ ]
+}

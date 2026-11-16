@@ -1,0 +1,33 @@
+{
+ "numTotalTestSuites": 891,
+ "numPassedTestSuites": 889,
+ "numFailedTestSuites": 2,
+ "numTotalTests": 5511,
+ "numPassedTests": 5505,
+ "numFailedTests": 1,
+ "numPendingTests": 5,
+ "numTodoTests": 0,
+ "success": false,
+ "files": 254,
+ "commit": "38fa15966db89bfede725fbde8073aef552daf0b",
+ "command": "npx vitest run --reporter=json --outputFile=/tmp/r547-1/full-suite.json",
+ "failed": [
+  {
+   "file": "packages/polaris-dossier/src/gate-acts.test.ts",
+   "test": "the gate forms against the recorders render the sign-off record byte for byte as render_record does, from the same fields: CONFIRM WITH EXCEPTIONS",
+   "durationMs": 5096.105359000008,
+   "message": "Error: STACK_TRACE_ERROR"
+  }
+ ],
+ "skipped": [
+  "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+  "apps/three-surface-poc/src/project-shape-discovery.live.test.ts",
+  "packages/polaris-dossier/src/no-egress.test.ts",
+  "packages/three-surface-poc-core/src/test-artifact-verification.live.test.ts",
+  "packages/three-surface-poc-core/src/work-items.live.test.ts"
+ ],
+ "loadavg": [
+  "31.09 30.70 30.49 26/9748 1692790",
+  "34.84 35.18 32.52 20/9760 1819816"
+ ]
+}

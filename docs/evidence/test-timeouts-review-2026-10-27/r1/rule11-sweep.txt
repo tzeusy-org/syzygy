@@ -1,0 +1,9 @@
+records 70
+with a subject-or-commit key 64
+with a 40- or 64-hex token anywhere 69
+   ('docs/evidence/syzygy-bpyt-4-31/ci-durations.json', 'json', '-', True)
+   ('docs/evidence/syzygy-bpyt-4-31/cited.json', 'json', '-', False)
+   ('docs/evidence/syzygy-bpyt-4-31/collect-timeouts.json', 'json', '-', True)
+   ('docs/evidence/syzygy-bpyt-4-31/full-runs.json', 'json', '-', True)
+   ('docs/evidence/syzygy-bpyt-4-31/hook-tool-validation/check.json', 'json', '-', True)
+   ('docs/evidence/syzygy-bpyt-4-31/removal-check.json', 'json', '-', True)

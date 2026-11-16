@@ -1,0 +1,320 @@
+{
+ "tool": "my_mutants_r4.py",
+ "commit": "23af2d080108aabf878845dfe41007fbb77f2c52",
+ "args": [
+  "c104771ff90f47ffd070f2339c36010458679c71",
+  "d38d7a3c",
+  "ba9d990a2b80b9aa5b3d78801b938280ee9988d7",
+  "447d9f083fb120c14ddd8da646c03675f3ce7bc7",
+  "9e00252ae134accc4a42604445a4db66f68d5100",
+  "d621bfa267f24ff68f6f83ac7bfba44b81a32a34"
+ ],
+ "results": [
+  {
+   "id": "control",
+   "form": "json",
+   "note": "no edit",
+   "edits": [],
+   "sound": "pass",
+   "check": null,
+   "exit": 0,
+   "outcome": "pass",
+   "atNamedCheck": true,
+   "asSound": true,
+   "lastLine": "{\"rowDelta\": \"Tests: +2 ~17 -0\", \"testFiles\": 10, \"productFilesChanged\": [], \"mutantTotals\": {\"cases\": 33, \"sides\": 65, \"asExpected\": 65}, \"ac1\": 0, \"bounds\": {\"EDGE_TRIM_CPU_MS\": [1900, 29.4, 31.6], \"HOSTILE_LINE_CPU_MS\": [140, 68.6, 109.5], \"TAG_SCAN_CPU_MS\": [1500, 22.7, 40.0], \"ATTRIBUTE_SCAN_CPU_MS\": [3000, 20.1, 20.0]}, \"pinRowAlone\": {\"defects\": [\"Y1-dossier-serve-falls-through\", \"Y2-dossier-serve-reenters-main\", \"Y3-flag-rewrites-argv-into-dossier\", \"Y4-polaris-labelled-break\", \"Y5-dossi"
+  },
+  {
+   "id": "M1-node22-plural-under-bound",
+   "form": "json",
+   "note": "B3 on the Node 22 path: process-CPU TAG_SCAN's plural row uncapped at 600 ms on every run (under the 1,500 bound), summaries agreeing",
+   "edits": [
+    {
+     "file": "cpu-separation-node22.json",
+     "changed": true
+    }
+   ],
+   "sound": "fail",
+   "check": "the rows not reached are",
+   "exit": 1,
+   "outcome": "fail",
+   "atNamedCheck": true,
+   "asSound": true,
+   "lastLine": "cpu-separation-node22: TAG_SCAN_CPU_MS: the rows not reached are ['scans near-miss tag names at the ceiling', 'scans unterminated plural tags at the ceiling'], not the declared ['scans near-miss tag names at the ceiling']"
+  },
+  {
+   "id": "M2-thread-nearmiss-reached",
+   "form": "json",
+   "note": "the declared unreached row reaches (70,000 ms uncapped, above the 60,021.3 mutant min, so no other figure moves): the set is then empty, not the declared one",
+   "edits": [
+    {
+     "file": "cpu-separation.json",
+     "changed": true
+    }
+   ],
+   "sound": "fail",
+   "check": "the rows not reached are",
+   "exit": 1,
+   "outcome": "fail",
+   "atNamedCheck": true,
+   "asSound": true,
+   "lastLine": "cpu-separation: TAG_SCAN_CPU_MS: the rows not reached are [], not the declared ['scans near-miss tag names at the ceiling']"
+  },
+  {
+   "id": "M3-thread-nearmiss-twice",
+   "form": "json",
+   "note": "the near-miss row held twice: two unreached rows with the declared title",
+   "edits": [
+    {
+     "file": "cpu-separation.json",
+     "changed": true
+    }
+   ],
+   "sound": "fail",
+   "check": "the rows not reached are",
+   "exit": 1,
+   "outcome": "fail",
+   "atNamedCheck": true,
+   "asSound": true,
+   "lastLine": "cpu-separation: TAG_SCAN_CPU_MS: the rows not reached are ['scans near-miss tag names at the ceiling', 'scans near-miss tag names at the ceiling'], not the declared ['scans near-miss tag names at the ceiling']"
+  },
+  {
+   "id": "M4-node22-opening-row-unreached",
+   "form": "json",
+   "note": "an extra unreached row: process-CPU TAG_SCAN's opening-tags row uncapped at 300 ms (under 10x the 64.5 head max and the bound); the mutant min stays the plural row's",
+   "edits": [
+    {
+     "file": "cpu-separation-node22.json",
+     "changed": true
+    }
+   ],
+   "sound": "fail",
+   "check": "the rows not reached are",
+   "exit": 1,
+   "outcome": "fail",
+   "atNamedCheck": true,
+   "asSound": true,
+   "lastLine": "cpu-separation-node22: TAG_SCAN_CPU_MS: the rows not reached are ['scans near-miss tag names at the ceiling', 'scans unterminated opening tags at the ceiling'], not the declared ['scans near-miss tag names at the ceiling']"
+  },
+  {
+   "id": "M5-thread-plural-row-deleted",
+   "form": "json",
+   "note": "thread TAG_SCAN's plural row deleted from the record: no unreached row is added, the mutant min stays the opening row's",
+   "edits": [
+    {
+     "file": "cpu-separation.json",
+     "changed": true
+    }
+   ],
+   "sound": "fail",
+   "check": null,
+   "exit": 0,
+   "outcome": "pass",
+   "atNamedCheck": true,
+   "asSound": false,
+   "lastLine": "{\"rowDelta\": \"Tests: +2 ~17 -0\", \"testFiles\": 10, \"productFilesChanged\": [], \"mutantTotals\": {\"cases\": 33, \"sides\": 65, \"asExpected\": 65}, \"ac1\": 0, \"bounds\": {\"EDGE_TRIM_CPU_MS\": [1900, 29.4, 31.6], \"HOSTILE_LINE_CPU_MS\": [140, 68.6, 109.5], \"TAG_SCAN_CPU_MS\": [1500, 22.7, 40.0], \"ATTRIBUTE_SCAN_CPU_MS\": [3000, 20.1, 20.0]}, \"pinRowAlone\": {\"defects\": [\"Y1-dossier-serve-falls-through\", \"Y2-dossier-serve-reenters-main\", \"Y3-flag-rewrites-argv-into-dossier\", \"Y4-polaris-labelled-break\", \"Y5-dossi"
+  },
+  {
+   "id": "M6-thread-attr-mean-2800",
+   "form": "json",
+   "note": "thread ATTRIBUTE_SCAN's proposedBoundMs 2900 -> 2800, one off in the second significant figure",
+   "edits": [
+    {
+     "file": "cpu-separation.json",
+     "changed": true
+    }
+   ],
+   "sound": "fail",
+   "check": "the runs give a geometric mean of",
+   "exit": 1,
+   "outcome": "fail",
+   "atNamedCheck": true,
+   "asSound": true,
+   "lastLine": "cpu-separation: ATTRIBUTE_SCAN_CPU_MS: the runs give a geometric mean of 2900; the separation records 2800"
+  },
+  {
+   "id": "M7-node22-edge-mean-2400",
+   "form": "json",
+   "note": "Node 22 EDGE_TRIM's proposedBoundMs 2300 -> 2400",
+   "edits": [
+    {
+     "file": "cpu-separation-node22.json",
+     "changed": true
+    }
+   ],
+   "sound": "fail",
+   "check": "the runs give a geometric mean of",
+   "exit": 1,
+   "outcome": "fail",
+   "atNamedCheck": true,
+   "asSound": true,
+   "lastLine": "cpu-separation-node22: EDGE_TRIM_CPU_MS: the runs give a geometric mean of 2300; the separation records 2400"
+  },
+  {
+   "id": "M8-node22-host-mean-150",
+   "form": "json",
+   "note": "Node 22 HOSTILE_LINE's proposedBoundMs 160 -> 150 (three significant figures in reach)",
+   "edits": [
+    {
+     "file": "cpu-separation-node22.json",
+     "changed": true
+    }
+   ],
+   "sound": "fail",
+   "check": "the runs give a geometric mean of",
+   "exit": 1,
+   "outcome": "fail",
+   "atNamedCheck": true,
+   "asSound": true,
+   "lastLine": "cpu-separation-node22: HOSTILE_LINE_CPU_MS: the runs give a geometric mean of 160; the separation records 150"
+  },
+  {
+   "id": "M9-thread-edge-mean-from-runs",
+   "form": "json",
+   "note": "thread EDGE_TRIM: a head region raised to 150 ms with headMaxMs and fileBound agreeing; the runs then give sqrt(150 x 60066.3) -> 3000, against the recorded 1900",
+   "edits": [
+    {
+     "file": "cpu-separation.json",
+     "changed": true
+    }
+   ],
+   "sound": "fail",
+   "check": "the runs give a geometric mean of",
+   "exit": 1,
+   "outcome": "fail",
+   "atNamedCheck": true,
+   "asSound": true,
+   "lastLine": "cpu-separation: EDGE_TRIM_CPU_MS: the runs give a geometric mean of 3000; the separation records 1900"
+  },
+  {
+   "id": "M10-thread-attr-mean-float",
+   "form": "json",
+   "note": "proposedBoundMs 2900 written as 2900.0: the same number",
+   "edits": [],
+   "sound": "pass",
+   "check": null,
+   "exit": 0,
+   "outcome": "pass",
+   "atNamedCheck": true,
+   "asSound": true,
+   "lastLine": "{\"rowDelta\": \"Tests: +2 ~17 -0\", \"testFiles\": 10, \"productFilesChanged\": [], \"mutantTotals\": {\"cases\": 33, \"sides\": 65, \"asExpected\": 65}, \"ac1\": 0, \"bounds\": {\"EDGE_TRIM_CPU_MS\": [1900, 29.4, 31.6], \"HOSTILE_LINE_CPU_MS\": [140, 68.6, 109.5], \"TAG_SCAN_CPU_MS\": [1500, 22.7, 40.0], \"ATTRIBUTE_SCAN_CPU_MS\": [3000, 20.1, 20.0]}, \"pinRowAlone\": {\"defects\": [\"Y1-dossier-serve-falls-through\", \"Y2-dossier-serve-reenters-main\", \"Y3-flag-rewrites-argv-into-dossier\", \"Y4-polaris-labelled-break\", \"Y5-dossi"
+  },
+  {
+   "id": "M11-pin-twice-one-altered",
+   "form": "test",
+   "note": "the exact pin, then a second copy with one byte altered: the exact block occurs once, so the identity check passes it and the daemon-entry binding refuses",
+   "edits": [
+    {
+     "file": "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts",
+     "commit": "57c4b66a26ca1e8abd0e5f1e6b7a349f8b228ccf",
+     "exactBlockCount": 1,
+     "newSha": "33ae687a302d9d350c5d318e539470cb64aa38ef45e7e130a1f9ddd57b07bd11"
+    }
+   ],
+   "sound": "pass-pin-check",
+   "check": null,
+   "exit": 1,
+   "outcome": "fail",
+   "atNamedCheck": true,
+   "asSound": true,
+   "lastLine": "mutants ran at ba9d990a2b80b9aa5b3d78801b938280ee9988d7, not 57c4b66a26ca1e8abd0e5f1e6b7a349f8b228ccf"
+  },
+  {
+   "id": "M12-pin-altered-then-exact",
+   "form": "test",
+   "note": "the altered copy first, the exact block second",
+   "edits": [
+    {
+     "file": "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts",
+     "commit": "9fff864299552596b79c2f7957fb4013a505b8a3",
+     "exactBlockCount": 1,
+     "newSha": "47c2b033a74b5a57d21882fdb20c1f5262ea2b4ed144d67d5dac71cf5a23d2e1"
+    }
+   ],
+   "sound": "pass-pin-check",
+   "check": null,
+   "exit": 1,
+   "outcome": "fail",
+   "atNamedCheck": true,
+   "asSound": true,
+   "lastLine": "mutants ran at ba9d990a2b80b9aa5b3d78801b938280ee9988d7, not 9fff864299552596b79c2f7957fb4013a505b8a3"
+  },
+  {
+   "id": "M13-pin-in-block-comment",
+   "form": "test",
+   "note": "the exact pin wrapped in /* */, so it never runs",
+   "edits": [
+    {
+     "file": "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts",
+     "commit": "3a05f9b4fb49aca38c1049865f6f103c88eacde4",
+     "exactBlockCount": 1,
+     "newSha": "9d6cce97d7d0687d02a46fd747d2407f2202d7f202a44a8c5429f48ce17acdd1"
+    }
+   ],
+   "sound": "pass-pin-check",
+   "check": null,
+   "exit": 1,
+   "outcome": "fail",
+   "atNamedCheck": true,
+   "asSound": true,
+   "lastLine": "mutants ran at ba9d990a2b80b9aa5b3d78801b938280ee9988d7, not 3a05f9b4fb49aca38c1049865f6f103c88eacde4"
+  },
+  {
+   "id": "M14-pin-under-describe-skip",
+   "form": "test",
+   "note": "the exact pin inside describe.skip(), so it never runs",
+   "edits": [
+    {
+     "file": "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts",
+     "commit": "a766afba5556cf23557f91d5617892d7249e3ec0",
+     "exactBlockCount": 1,
+     "newSha": "6efab6836913a7f41879413d42b1a1ecaef8138e552cf056bbb58b052e4d0c15"
+    }
+   ],
+   "sound": "pass-pin-check",
+   "check": null,
+   "exit": 1,
+   "outcome": "fail",
+   "atNamedCheck": true,
+   "asSound": true,
+   "lastLine": "mutants ran at ba9d990a2b80b9aa5b3d78801b938280ee9988d7, not a766afba5556cf23557f91d5617892d7249e3ec0"
+  },
+  {
+   "id": "M15-checker-unreached-extra-title",
+   "form": "checker",
+   "note": "build_record itself declares one more unreached row than the data has: exact equality must refuse",
+   "edits": [
+    {
+     "file": "tools/build_record.py",
+     "old": "UNREACHED = {'TAG_SCAN_CPU_MS': ['scans near-miss tag names at the ceiling']}",
+     "new": "UNREACHED = {'TAG_SCAN_CPU_MS': ['scans near-miss tag names at the ceiling', 'scans unterminated plural tags at the ceiling']}"
+    }
+   ],
+   "sound": "fail",
+   "check": "the rows not reached are",
+   "exit": 1,
+   "outcome": "fail",
+   "atNamedCheck": true,
+   "asSound": true,
+   "lastLine": "cpu-separation-node22: TAG_SCAN_CPU_MS: the rows not reached are ['scans near-miss tag names at the ceiling'], not the declared ['scans near-miss tag names at the ceiling', 'scans unterminated plural tags at the ceiling']"
+  },
+  {
+   "id": "M16-checker-unreached-on-attr",
+   "form": "checker",
+   "note": "build_record declares a reached row of another bound unreached",
+   "edits": [
+    {
+     "file": "tools/build_record.py",
+     "old": "UNREACHED = {'TAG_SCAN_CPU_MS': ['scans near-miss tag names at the ceiling']}",
+     "new": "UNREACHED = {'TAG_SCAN_CPU_MS': ['scans near-miss tag names at the ceiling'], 'ATTRIBUTE_SCAN_CPU_MS': ['scans one tag body that is a single word run at the ceiling']}"
+    }
+   ],
+   "sound": "fail",
+   "check": "the rows not reached are",
+   "exit": 1,
+   "outcome": "fail",
+   "atNamedCheck": true,
+   "asSound": true,
+   "lastLine": "cpu-separation-node22: ATTRIBUTE_SCAN_CPU_MS: the rows not reached are [], not the declared ['scans one tag body that is a single word run at the ceiling']"
+  }
+ ]
+}

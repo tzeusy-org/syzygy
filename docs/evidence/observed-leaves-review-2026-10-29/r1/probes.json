@@ -1,0 +1,50 @@
+{
+ "commit": "6d95c6264b7de14825fd6abfb6e3fed9b8c975f1",
+ "statusAfter": "",
+ "rows": [
+  {
+   "id": "P0-probe-plain",
+   "tmpdir": "/tmp/r559-m-qx",
+   "edits": [
+    {
+     "path": "packages/polaris-dossier/src/review.test.ts",
+     "old": "  return { reviewerText, holderTexts };\n",
+     "new": "  if (process.env['R559_PROBE']) fs.writeFileSync(path.join(process.env['R559_PROBE'], `probe-${Date.now()}-${Math.random().toString(36).slice(2, 8)}.json`), JSON.stringify({ run, tmpdir: tmpdir(), reviewerText, holderTexts, replaced: observedHolders.map((h) => JSON.stringify(h, (_k, v: unknown) => typeof v === 'string' ? v.split(run).join('<run>') : v)), runTwice: observedHolders.flatMap((h) => { const out: string[] = []; const walk = (v: unknown): void => { if (typeof v === 'string') { if (v.split(run).length > 2) out.push(v); } else if (v !== null && typeof v === 'object') Object.values(v).forEach(walk); }; walk(h); return out; }) }));\n  return { reviewerText, holderTexts };\n"
+    }
+   ],
+   "mode": "exact",
+   "expected": [],
+   "failing": [],
+   "messages": {},
+   "exit": 0,
+   "passed": 63,
+   "failed": 0,
+   "total": 63,
+   "asExpected": true,
+   "load1": 24.29,
+   "seconds": 15.2
+  },
+  {
+   "id": "P0P-probe-p1",
+   "tmpdir": "/tmp/r559-m-p1",
+   "edits": [
+    {
+     "path": "packages/polaris-dossier/src/review.test.ts",
+     "old": "  return { reviewerText, holderTexts };\n",
+     "new": "  if (process.env['R559_PROBE']) fs.writeFileSync(path.join(process.env['R559_PROBE'], `probe-${Date.now()}-${Math.random().toString(36).slice(2, 8)}.json`), JSON.stringify({ run, tmpdir: tmpdir(), reviewerText, holderTexts, replaced: observedHolders.map((h) => JSON.stringify(h, (_k, v: unknown) => typeof v === 'string' ? v.split(run).join('<run>') : v)), runTwice: observedHolders.flatMap((h) => { const out: string[] = []; const walk = (v: unknown): void => { if (typeof v === 'string') { if (v.split(run).length > 2) out.push(v); } else if (v !== null && typeof v === 'object') Object.values(v).forEach(walk); }; walk(h); return out; }) }));\n  return { reviewerText, holderTexts };\n"
+    }
+   ],
+   "mode": "exact",
+   "expected": [],
+   "failing": [],
+   "messages": {},
+   "exit": 0,
+   "passed": 63,
+   "failed": 0,
+   "total": 63,
+   "asExpected": true,
+   "load1": 23.18,
+   "seconds": 18.9
+  }
+ ]
+}

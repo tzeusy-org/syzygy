@@ -1,0 +1,47 @@
+{
+ "batch": "H",
+ "profile": false,
+ "version": "mk2",
+ "param": null,
+ "n": 1,
+ "scriptSha256": "886448b30f89c84f7ba85ccfef540d1e8340e94403494d58e5829eec77796d39",
+ "command": "python3 -I <tools>/mk2_measure_vitest_test_durations.py . --file packages/polaris-generation-consent/src/package-reader.test.ts --project @syzygy/polaris-generation-consent --mode alone --runs 1 --out <tmp>/measure-out.json",
+ "sent": [
+  {
+   "t": 3.6113,
+   "signal": "SIGHUP",
+   "to": "pid"
+  }
+ ],
+ "events": [
+  {
+   "t": 0.3659,
+   "what": "vitest worker seen"
+  }
+ ],
+ "scriptExitedAtSeconds": 3.934,
+ "exitCode": 129,
+ "claimedExit": 129,
+ "exitAsClaimed": true,
+ "descendantsSeen": 11,
+ "seenOnlyByCwd": 1,
+ "vitestSeen": true,
+ "npxSeen": true,
+ "treeAfterExit": "",
+ "survivors": {},
+ "recordWritten": false,
+ "recordRuns": null,
+ "recordTests": null,
+ "recordProfileRows": null,
+ "recordExitCode": null,
+ "marks": [],
+ "scriptWrites": null,
+ "tmpdirLeft": [
+  "node-compile-cache",
+  "script.log"
+ ],
+ "trace": [],
+ "outputTail": "stopped by SIGHUP: the run in progress, if any, was ended and is not recorded\n",
+ "exercised": true,
+ "passes": false
+}

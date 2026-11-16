@@ -1,0 +1,131 @@
+{
+ "what": "rev-541b own mutants against the round-1 repair rows (X3, X5 predicates) and the M7 attribution, plus the pin check",
+ "mutants": [
+  {
+   "id": "R541B-Y1-npm-alias-unversioned-only",
+   "what": "the npm: arm refuses only an alias with no version (X3 inverted), so npm:typescript@^5.5.0 reads outside",
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:(?:@[^/@]+\\/)?[^@]*$|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    }
+   ],
+   "projects": [
+    "@syzygy/polaris-generation-core",
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "packages/polaris-generation-core/src/island-boundary.test.ts",
+    "packages/polaris-dossier/src/subpath-imports.test.ts",
+    "packages/polaris-dossier/src/argv.test.ts"
+   ]
+  },
+  {
+   "id": "R541B-Y2-tarball-skips-github-shorthand",
+   "what": "the tarball arm skips a github: shorthand, so github:someone/dossier#v1.tar reads outside",
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|^(?!github:).*\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    }
+   ],
+   "projects": [
+    "@syzygy/polaris-generation-core",
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "packages/polaris-generation-core/src/island-boundary.test.ts",
+    "packages/polaris-dossier/src/subpath-imports.test.ts",
+    "packages/polaris-dossier/src/argv.test.ts"
+   ]
+  },
+  {
+   "id": "R541B-Y3-tarball-path-like-only",
+   "what": "the tarball arm takes only a spec with no colon (N1 failure scenario tidy), so URLs and git specs read outside",
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|^[^:]*\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    }
+   ],
+   "projects": [
+    "@syzygy/polaris-generation-core",
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "packages/polaris-generation-core/src/island-boundary.test.ts",
+    "packages/polaris-dossier/src/subpath-imports.test.ts",
+    "packages/polaris-dossier/src/argv.test.ts"
+   ]
+  },
+  {
+   "id": "R541B-Y4-tarball-tar-dropped",
+   "what": "the tarball arm drops a bare .tar extension",
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar\\.gz)$/iu;"
+    }
+   ],
+   "projects": [
+    "@syzygy/polaris-generation-core",
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "packages/polaris-generation-core/src/island-boundary.test.ts",
+    "packages/polaris-dossier/src/subpath-imports.test.ts",
+    "packages/polaris-dossier/src/argv.test.ts"
+   ]
+  },
+  {
+   "id": "R541B-Y5-npm-arm-needs-target-char",
+   "what": "the npm: arm needs a scoped target or a version, so an unscoped unversioned alias reads outside",
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:(?=@|[^@]*@)|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    }
+   ],
+   "projects": [
+    "@syzygy/polaris-generation-core",
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "packages/polaris-generation-core/src/island-boundary.test.ts",
+    "packages/polaris-dossier/src/subpath-imports.test.ts",
+    "packages/polaris-dossier/src/argv.test.ts"
+   ]
+  },
+  {
+   "id": "R541B-Y6-npm-alias-scoped-or-unversioned-only",
+   "what": "the npm: arm refuses only an alias of a scoped target or with no version, so npm:typescript@^5.5.0 reads outside",
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:(?=@|[^@]*$)|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    }
+   ],
+   "projects": [
+    "@syzygy/polaris-generation-core",
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "packages/polaris-generation-core/src/island-boundary.test.ts",
+    "packages/polaris-dossier/src/subpath-imports.test.ts",
+    "packages/polaris-dossier/src/argv.test.ts"
+   ]
+  }
+ ]
+}

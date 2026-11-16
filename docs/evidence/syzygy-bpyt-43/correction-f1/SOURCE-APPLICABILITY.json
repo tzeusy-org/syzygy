@@ -1,0 +1,30 @@
+{
+  "witnessSubject": "e371e9cd68df22609d1bb8100252cbb28aa544d4",
+  "inputs": {
+    "apps/syzygy/src/main.ts": {
+      "witnessSha256": "4dd828fb30f13f8dd36a6d91e286f445fc4b7cbfccae7cb578a8d6d5934d4297",
+      "worktreeSha256": "4dd828fb30f13f8dd36a6d91e286f445fc4b7cbfccae7cb578a8d6d5934d4297",
+      "unchanged": true
+    },
+    "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts": {
+      "witnessSha256": "b629e399a2c4b72e00c3a764181f1b938985d6a992c44ffcb320af3bebebec69",
+      "worktreeSha256": "b629e399a2c4b72e00c3a764181f1b938985d6a992c44ffcb320af3bebebec69",
+      "unchanged": true
+    },
+    "packages/polaris-dossier/src/state-directory.ts": {
+      "witnessSha256": "d7de7e04e24afb4ec6f2f6da8695cb60620ee3fbcef010a0d29d8a761e613db1",
+      "worktreeSha256": "d7de7e04e24afb4ec6f2f6da8695cb60620ee3fbcef010a0d29d8a761e613db1",
+      "unchanged": true
+    },
+    "packages/http-host/src/shutdown.ts": {
+      "witnessSha256": "88969cdbd489e03018a76ec90187ea7ac58db08962f4b89c2d49795ac13641dd",
+      "worktreeSha256": "88969cdbd489e03018a76ec90187ea7ac58db08962f4b89c2d49795ac13641dd",
+      "unchanged": true
+    },
+    "docs/evidence/syzygy-bpyt-43/tools/daemon_entry_probe.py": {
+      "witnessSha256": "6dd80b245fcbf3c413cdc021aad402f351cc4df8ba32ddd73ece85cbe011aff0",
+      "worktreeSha256": "6dd80b245fcbf3c413cdc021aad402f351cc4df8ba32ddd73ece85cbe011aff0"
+    }
+  },
+  "scope": "Evidence-only correction. Runtime source/test/tool bytes unchanged from witnessed subject; full corrected-commit gate remains required. CPU timing/config/import-closure qualifications in predecessor remain historical/Unknown; no current CPU claim added."
+}

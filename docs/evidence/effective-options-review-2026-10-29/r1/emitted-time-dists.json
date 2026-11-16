@@ -1,0 +1,20 @@
+{
+ "loadavg": [
+  "37.83",
+  "34.07",
+  "32.84"
+ ],
+ "projects": 10,
+ "ms": [
+  7564,
+  6062
+ ],
+ "modules": 247,
+ "runsEqual": true,
+ "equalsTsc": true,
+ "modulesSha256": "dffd6137e4d4e7f96fd6702fc3cff7629ae90c37e08227af11887ed83028ce75",
+ "tscCount": 247,
+ "extensions": {
+  ".ts": 247
+ }
+}

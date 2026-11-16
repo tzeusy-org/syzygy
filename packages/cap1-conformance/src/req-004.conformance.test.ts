@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { readDeclaration, registerProject } from '@syzygy/cap1-core';
-import { projectYaml } from './fixtures/index.js';
+import { corrupt, projectYaml } from './fixtures/index.js';
 
 // CAP1-REQ-004 — Syzygy never silently invents, repairs, or infers a
 // declaration field (prohibition).
@@ -41,7 +41,7 @@ describe('CAP1-REQ-004 — no silent invention, repair, or inference', () => {
   });
 
   it('a missing field is never defaulted: the read fails instead of producing a declaration', () => {
-    const withoutOwner = VALID_SOURCE.replace('owner: uniquosity@gmail.com\n', '');
+    const withoutOwner = corrupt(VALID_SOURCE, 'owner: uniquosity@gmail.com\n', '');
     const read = readDeclaration(withoutOwner);
     expect(read.ok).toBe(false);
     // No declaration object exists on the failed arm — nothing to carry

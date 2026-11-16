@@ -1,0 +1,120 @@
+{
+ "tool": "suite_summary.py",
+ "attempt": "attempt 2: two concurrent runs of the head",
+ "cpus": 12,
+ "changedFilesBetween": [
+  "c104771f",
+  "0a6645ae7d59230b261f27c3c05ef9a9f384ebd1"
+ ],
+ "runs": [
+  {
+   "name": "A",
+   "commit": "0a6645ae7d59230b261f27c3c05ef9a9f384ebd1",
+   "start": "2026-10-25T06:39:06+08:00",
+   "load1Start": 41.57,
+   "exit": 1,
+   "end": "2026-10-25T06:46:41+08:00",
+   "load1End": 76.94,
+   "success": false,
+   "totals": {
+    "numTotalTestSuites": 854,
+    "numFailedTestSuites": 8,
+    "numTotalTests": 5278,
+    "numPassedTests": 5268,
+    "numFailedTests": 5,
+    "numPendingTests": 5,
+    "numTodoTests": 0
+   },
+   "failedTests": [
+    {
+     "file": "packages/polaris-dossier/src/gate-acts.test.ts",
+     "test": "version 2 of the Anthropic statement is what preflight lists in force, before and after its instant, agreeing with the gate",
+     "first": "Error: STACK_TRACE_ERROR",
+     "durationMs": 5496,
+     "inChangedFile": false
+    },
+    {
+     "file": "packages/polaris-dossier/src/gate-acts.test.ts",
+     "test": "the sitting's acts fail closed refuse an in-force record whose table binds other files than the form names, even when an act binds its bytes",
+     "first": "Error: STACK_TRACE_ERROR",
+     "durationMs": 5921,
+     "inChangedFile": false
+    },
+    {
+     "file": "packages/polaris-dossier/src/run-evidence.test.ts",
+     "test": "dossier run evidence record (S12) reports an open run as not closed, and refuses anything but one run directory",
+     "first": "Error: STACK_TRACE_ERROR",
+     "durationMs": 5105,
+     "inChangedFile": false
+    },
+    {
+     "file": "packages/polaris-dossier/src/start-gates.test.ts",
+     "test": "init: a run that passes every start gate pins the consented HEAD, records the subject and writes only run.json under the state root",
+     "first": "Error: STACK_TRACE_ERROR",
+     "durationMs": 5157,
+     "inChangedFile": false
+    },
+    {
+     "file": "packages/polaris-dossier/src/start-gates.test.ts",
+     "test": "init: the clone holds the consented commit alone (syzygy-qkea.24) refuses config naming a remote, a promisor, an include or a command the agent's git would run (R-POLARIS-DOSSIER-CLONE-SHAPE-2 finding 1)",
+     "first": "Error: STACK_TRACE_ERROR",
+     "durationMs": 5489,
+     "inChangedFile": false
+    }
+   ],
+   "failedFilesWithoutFailedTest": [],
+   "failuresInChangedFiles": 0
+  },
+  {
+   "name": "B",
+   "commit": "0a6645ae7d59230b261f27c3c05ef9a9f384ebd1",
+   "start": "2026-10-25T06:39:06+08:00",
+   "load1Start": 41.57,
+   "exit": 1,
+   "end": "2026-10-25T06:46:35+08:00",
+   "load1End": 74.84,
+   "success": false,
+   "totals": {
+    "numTotalTestSuites": 854,
+    "numFailedTestSuites": 7,
+    "numTotalTests": 5278,
+    "numPassedTests": 5269,
+    "numFailedTests": 4,
+    "numPendingTests": 5,
+    "numTodoTests": 0
+   },
+   "failedTests": [
+    {
+     "file": "packages/polaris-dossier/src/gate-acts.test.ts",
+     "test": "version 2 of the Anthropic statement is what preflight lists in force, before and after its instant, agreeing with the gate",
+     "first": "Error: STACK_TRACE_ERROR",
+     "durationMs": 5173,
+     "inChangedFile": false
+    },
+    {
+     "file": "packages/polaris-dossier/src/gate-acts.test.ts",
+     "test": "the sitting's acts fail closed refuse an in-force record whose table binds other files than the form names, even when an act binds its bytes",
+     "first": "Error: STACK_TRACE_ERROR",
+     "durationMs": 6382,
+     "inChangedFile": false
+    },
+    {
+     "file": "packages/polaris-dossier/src/run-evidence.test.ts",
+     "test": "dossier run evidence record (S12) reports an open run as not closed, and refuses anything but one run directory",
+     "first": "Error: STACK_TRACE_ERROR",
+     "durationMs": 5063,
+     "inChangedFile": false
+    },
+    {
+     "file": "packages/polaris-dossier/src/start-gates.test.ts",
+     "test": "init: the clone holds the consented commit alone (syzygy-qkea.24) refuses config naming a remote, a promisor, an include or a command the agent's git would run (R-POLARIS-DOSSIER-CLONE-SHAPE-2 finding 1)",
+     "first": "Error: STACK_TRACE_ERROR",
+     "durationMs": 5136,
+     "inChangedFile": false
+    }
+   ],
+   "failedFilesWithoutFailedTest": [],
+   "failuresInChangedFiles": 0
+  }
+ ]
+}

@@ -1,0 +1,61 @@
+{
+ "commit": "38fa15966db89bfede725fbde8073aef552daf0b",
+ "record": "docs/evidence/syzygy-bpyt-8-39/record.py",
+ "recordSha256": "77e830432fd94637633c08d1fa7393e737890848cf0243bbcd1e60d38a87dfec",
+ "clean": true,
+ "rows": [
+  {
+   "id": "S0-unmutated",
+   "old": null,
+   "new": null,
+   "exit": 0,
+   "survived": [],
+   "tally": "selftest: 76/76",
+   "expected": [],
+   "asExpected": true
+  },
+  {
+   "id": "S5-path-test-dropped",
+   "old": "    if since != [KIT] or not late or any(late_spans[s] is None or not late_spans[s][0] < n <= late_spans[s][1] or not re.match(r' \\* ', text)\n",
+   "new": "    if not late or any(late_spans[s] is None or not late_spans[s][0] < n <= late_spans[s][1] or not re.match(r' \\* ', text)\n",
+   "exit": 1,
+   "survived": [
+    "a non-evidence path changed since the suite ran"
+   ],
+   "tally": "selftest: 75/76",
+   "expected": [
+    "a non-evidence path changed since the suite ran"
+   ],
+   "asExpected": true
+  },
+  {
+   "id": "S4-prefix-test-dropped",
+   "old": "    if since != [KIT] or not late or any(late_spans[s] is None or not late_spans[s][0] < n <= late_spans[s][1] or not re.match(r' \\* ', text)\n",
+   "new": "    if since != [KIT] or not late or any(late_spans[s] is None or not late_spans[s][0] < n <= late_spans[s][1]\n",
+   "exit": 1,
+   "survived": [
+    "a non-comment line inside the span since the suite ran"
+   ],
+   "tally": "selftest: 75/76",
+   "expected": [
+    "a non-comment line inside the span since the suite ran"
+   ],
+   "asExpected": true
+  },
+  {
+   "id": "S6-span-test-dropped",
+   "old": "    if since != [KIT] or not late or any(late_spans[s] is None or not late_spans[s][0] < n <= late_spans[s][1] or not re.match(r' \\* ', text)\n",
+   "new": "    if since != [KIT] or not late or any(late_spans[s] is None or not re.match(r' \\* ', text)\n",
+   "exit": 1,
+   "survived": [
+    "a comment line changed since the suite ran on the LOCAL_VERSION line"
+   ],
+   "tally": "selftest: 75/76",
+   "expected": [
+    "a comment line changed since the suite ran on the LOCAL_VERSION line"
+   ],
+   "asExpected": true
+  }
+ ],
+ "allAsExpected": true
+}

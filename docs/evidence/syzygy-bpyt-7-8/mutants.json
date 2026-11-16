@@ -1,0 +1,91 @@
+{
+ "bead": "syzygy-bpyt.7.8",
+ "commit": "f5bbf40aa7cafa519b7fc9e22cec2dc0c21cd0f0",
+ "test": "packages/cap1-core/src/barrel-guard.test.ts",
+ "command": "npx vitest run packages/cap1-core/src/barrel-guard.test.ts",
+ "summary": {
+  "rows": 5,
+  "asExpected": 5
+ },
+ "rows": [
+  {
+   "id": "U0-unmutated",
+   "edits": [],
+   "exit": 0,
+   "tests": "Tests  3 passed (3)",
+   "expectedExit": 0,
+   "asExpected": true
+  },
+  {
+   "id": "E05-barrel-reexports-write-boundary",
+   "edits": [
+    {
+     "path": "packages/cap1-core/src/index.ts",
+     "old": "export * from './distinction.js';\n",
+     "new": "export * from './distinction.js';\nexport * from './write-boundary.js';\n",
+     "position": "replace"
+    }
+   ],
+   "exit": 1,
+   "tests": "Tests  1 failed | 2 passed (3)",
+   "failing": [
+    "\u00d7 cap1-core test-support entry > shares no exported name with the package barrel 7ms",
+    "FAIL  |@syzygy/cap1-core| packages/cap1-core/src/barrel-guard.test.ts > cap1-core test-support entry > shares no exported name with the package barrel"
+   ],
+   "expectedExit": 1,
+   "asExpected": true
+  },
+  {
+   "id": "N4-daemon-route-imports-testing-entry",
+   "edits": [
+    {
+     "path": "packages/cap1-daemon/src/routes-human.ts",
+     "old": "",
+     "new": "import { fullDisclosure } from '@syzygy/cap1-core/testing';\n",
+     "position": "prepended"
+    }
+   ],
+   "exit": 1,
+   "tests": "Tests  1 failed | 2 passed (3)",
+   "failing": [
+    "\u00d7 cap1-core test-support entry > is imported by no non-test module outside the conformance and system suites 32ms",
+    "FAIL  |@syzygy/cap1-core| packages/cap1-core/src/barrel-guard.test.ts > cap1-core test-support entry > is imported by no non-test module outside the conformance and system suites"
+   ],
+   "expectedExit": 1,
+   "asExpected": true
+  },
+  {
+   "id": "N4b-dynamic-import-of-testing-entry",
+   "edits": [
+    {
+     "path": "packages/cap1-daemon/src/routes-human.ts",
+     "old": "",
+     "new": "void import('@syzygy/cap1-core/testing');\n",
+     "position": "prepended"
+    }
+   ],
+   "exit": 1,
+   "tests": "Tests  1 failed | 2 passed (3)",
+   "failing": [
+    "\u00d7 cap1-core test-support entry > is imported by no non-test module outside the conformance and system suites 25ms",
+    "FAIL  |@syzygy/cap1-core| packages/cap1-core/src/barrel-guard.test.ts > cap1-core test-support entry > is imported by no non-test module outside the conformance and system suites"
+   ],
+   "expectedExit": 1,
+   "asExpected": true
+  },
+  {
+   "id": "N4c-control-excluded-tree-may-import",
+   "edits": [
+    {
+     "path": "packages/cap1-system/src/zz-control.ts",
+     "old": null,
+     "new": "import { fullDisclosure } from '@syzygy/cap1-core/testing';\nexport const probe = fullDisclosure;\n"
+    }
+   ],
+   "exit": 0,
+   "tests": "Tests  3 passed (3)",
+   "expectedExit": 0,
+   "asExpected": true
+  }
+ ]
+}

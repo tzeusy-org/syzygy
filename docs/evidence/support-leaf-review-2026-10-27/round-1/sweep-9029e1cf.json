@@ -1,0 +1,32 @@
+{
+ "commit": "9029e1cf",
+ "population": 249,
+ "sha256Defs": [
+  "apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts:42:sha256",
+  "packages/support/src/sha256.ts:4:sha256"
+ ],
+ "freezeDefs": [
+  "packages/support/src/deep-freeze.ts:7:deepFreeze"
+ ],
+ "createHashSha256": [
+  "apps/three-surface-poc/src/polaris-generation/redis-shaped-measure.ts:91",
+  "apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts:44",
+  "packages/cap1-daemon/src/credentials.ts:379",
+  "packages/cap1-daemon/src/credentials.ts:380",
+  "packages/cap1-system/src/harness.ts:246",
+  "packages/polaris-dossier/src/render.ts:310",
+  "packages/support/src/sha256.ts:5",
+  "packages/three-surface-poc-core/src/test-artifact-verification.ts:309"
+ ],
+ "createHashOther": [
+  "apps/three-surface-poc/src/polaris-accessibility-variants.ts:35:\"createHash('sha1').update(`blob ${body.b\"",
+  "apps/three-surface-poc/src/test-project-shape-fixture.ts:219:\"createHash('sha1').update(`blob ${bytes.\"",
+  "packages/polaris-dossier/src/git-object-reader.ts:397:'createHash(this.algorithm).update(`${obj'",
+  "packages/polaris-generation-core/src/generation-source.ts:135:'createHash(algorithm).update(`blob ${byt'",
+  "packages/three-surface-poc-core/src/project-shape-observation.ts:128:'createHash(format)\\n    .update(`blob ${b'"
+ ],
+ "sha256DefsCount": 2,
+ "freezeDefsCount": 1,
+ "createHashSha256Count": 8,
+ "createHashOtherCount": 5
+}

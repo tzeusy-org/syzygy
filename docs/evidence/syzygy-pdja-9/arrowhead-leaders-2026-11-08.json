@@ -1,0 +1,197 @@
+{
+  "subject": "Leader ends kept clear of other edges' arrowheads (syzygy-pdja.9, owner choice A 2026-11-08)",
+  "bead": "syzygy-pdja.9",
+  "date": "2026-11-08",
+  "ranAt": "147090e47198a201c16b5b64b659f30340e32d1c",
+  "ranAtNote": "Base commit (origin/main); the change ran uncommitted on top of it and is the bytes digested below. The 'main' measurement ran the base commit's diagram-layout.ts with the same scratch harness.",
+  "subjectDigests": {
+    "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts": "3dec2402b110b02a074023eb00021345065817d7166b0564b61b6006c2f486ca",
+    "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts": "e73e80b5c47560a3d5e3e0c75df861f193978b29e1e44137e694544302ec1a16"
+  },
+  "arrowheadModel": "marker viewBox 10x10, markerWidth/markerHeight 8 in stroke units, edge stroke 2 at rest: 1.6 px a unit; triangle (0,0),(10,5),(0,10) with ref (9,5), so tip 1.6 px past the end and base 14.4 px back, 16 px wide; oriented along the end tangent from the last control point that differs from the end. A leader end must lie 1.5 px (LEADER_SHARED) or more from every other edge's triangle.",
+  "measurement": {
+    "harness": "Scratch vitest file (not committed): four synthetic populations of 1500 graphs, each rendered with READABLE_SPACING. A label is moved if its centre is more than 0.11 px from its natural position. A moved label with no leader is againstOwn if its box is within 6 px of its own curve (2000 samples), else neither. A leader end is endInHead if it lies inside another edge's triangle (the model above, recomputed from the SVG path), endNearHead if within 1.4 px.",
+    "populations": {
+      "T": "seed 20261108, 3-10 nodes, label 'carries the request onward'",
+      "G": "seed 77, 4-9 nodes, 'a long label that wraps twice over'",
+      "S": "seed 5, 3-12 nodes, 'sends'",
+      "W": "seed 991, 6-11 nodes, 'writes the replica log'"
+    },
+    "edgesPerGraph": "2 to 2*nodes+1",
+    "results": {
+      "fixed": {
+        "T": {
+          "graphs": 1500,
+          "labels": 11958,
+          "moved": 2077,
+          "leaders": 640,
+          "againstOwn": 1006,
+          "neither": 431,
+          "endInHead": 0,
+          "endNearHead": 0
+        },
+        "G": {
+          "graphs": 1500,
+          "labels": 11962,
+          "moved": 2055,
+          "leaders": 725,
+          "againstOwn": 959,
+          "neither": 371,
+          "endInHead": 0,
+          "endNearHead": 0
+        },
+        "S": {
+          "graphs": 1500,
+          "labels": 13545,
+          "moved": 2239,
+          "leaders": 1202,
+          "againstOwn": 690,
+          "neither": 347,
+          "endInHead": 0,
+          "endNearHead": 0
+        },
+        "W": {
+          "graphs": 1500,
+          "labels": 14953,
+          "moved": 2287,
+          "leaders": 873,
+          "againstOwn": 988,
+          "neither": 426,
+          "endInHead": 0,
+          "endNearHead": 0
+        }
+      },
+      "main": {
+        "T": {
+          "graphs": 1500,
+          "labels": 11958,
+          "moved": 2077,
+          "leaders": 658,
+          "againstOwn": 1006,
+          "neither": 413,
+          "endInHead": 27,
+          "endNearHead": 0
+        },
+        "G": {
+          "graphs": 1500,
+          "labels": 11962,
+          "moved": 2055,
+          "leaders": 740,
+          "againstOwn": 959,
+          "neither": 356,
+          "endInHead": 24,
+          "endNearHead": 0
+        },
+        "S": {
+          "graphs": 1500,
+          "labels": 13545,
+          "moved": 2239,
+          "leaders": 1205,
+          "againstOwn": 690,
+          "neither": 344,
+          "endInHead": 8,
+          "endNearHead": 0
+        },
+        "W": {
+          "graphs": 1500,
+          "labels": 14953,
+          "moved": 2287,
+          "leaders": 873,
+          "againstOwn": 988,
+          "neither": 426,
+          "endInHead": 12,
+          "endNearHead": 0
+        }
+      }
+    },
+    "reading": "Ends inside another edge's arrowhead fall from 71 (27+24+8+12) to 0. Leaders fall by 36 (18+15+3+0); those labels now have neither a leader nor their own line beside them (the fallback the owner accepted). The other 35 rerouted to a clear end. The pre-existing 'neither' population (1,539 of 8,658 moved labels on main) is unchanged in kind."
+  },
+  "cost": {
+    "harness": "40 graphs of 12-20 nodes and 80 edges (the cap), second render timed, two alternating runs each",
+    "runs": [
+      {
+        "tag": "fixed",
+        "median": 90.12926000000016,
+        "max": 191.74867100000006
+      },
+      {
+        "tag": "main",
+        "median": 89.17744399999992,
+        "max": 199.18943499999978
+      },
+      {
+        "tag": "fixed",
+        "median": 92.1261820000002,
+        "max": 167.92228399999976
+      },
+      {
+        "tag": "main",
+        "median": 85.457629,
+        "max": 174.87577699999997
+      }
+    ],
+    "reading": "Within run-to-run noise: medians 85-92 ms both ways."
+  },
+  "command": "npx vitest run apps/three-surface-poc/src/polaris-generation/ (each mutant applied alone to diagram-layout.ts, restored after)",
+  "mutants": [
+    {
+      "id": "no-head-filter",
+      "old": "\n    && otherHeads.every(head => distanceToTriangle(at, head) >= LEADER_SHARED));",
+      "new": ");",
+      "killed": true,
+      "tests": "Tests  2 failed | 352 passed (354)"
+    },
+    {
+      "id": "head-inside-only",
+      "old": "distanceToTriangle(at, head) >= LEADER_SHARED",
+      "new": "distanceToTriangle(at, head) > 0",
+      "killed": true,
+      "tests": "Tests  1 failed | 353 passed (354)"
+    },
+    {
+      "id": "unit-1.0",
+      "old": "const ARROW_UNIT = 1.6;",
+      "new": "const ARROW_UNIT = 1.0;",
+      "killed": true,
+      "tests": "Tests  2 failed | 352 passed (354)"
+    },
+    {
+      "id": "short-head",
+      "old": "return [at(1, 0), at(-9, -5), at(-9, 5)];",
+      "new": "return [at(1, 0), at(-5, -5), at(-5, 5)];",
+      "killed": true,
+      "tests": "Tests  2 failed | 352 passed (354)"
+    },
+    {
+      "id": "narrow-head",
+      "old": "return [at(1, 0), at(-9, -5), at(-9, 5)];",
+      "new": "return [at(1, 0), at(-9, -2), at(-9, 2)];",
+      "killed": true,
+      "tests": "Tests  1 failed | 353 passed (354)"
+    },
+    {
+      "id": "tangent-from-start",
+      "old": "const [fromX, fromY] = x2 !== x3 || y2 !== y3 ? [x2, y2] : x1 !== x3 || y1 !== y3 ? [x1, y1] : [x0, y0];",
+      "new": "const [fromX, fromY] = [x0, y0];",
+      "killed": true,
+      "tests": "Tests  1 failed | 353 passed (354)"
+    },
+    {
+      "id": "one-orientation",
+      "old": "if ((ab >= 0 && bc >= 0 && ca >= 0) || (ab <= 0 && bc <= 0 && ca <= 0)) return 0;",
+      "new": "if (ab >= 0 && bc >= 0 && ca >= 0) return 0;",
+      "killed": true,
+      "tests": "Tests  1 failed | 353 passed (354)"
+    },
+    {
+      "id": "own-head-too",
+      "old": "        heads.filter((_, j) => layout.edges[j]!.d !== at.d))",
+      "new": "        heads)",
+      "killed": true,
+      "tests": "Tests  1 failed | 353 passed (354)"
+    }
+  ],
+  "killed": 8,
+  "total": 8,
+  "firstRunNote": "A first run of the same 8 mutants against the population test alone killed 3 (no-head-filter, unit-1.0, short-head); the geometry unit tests and the own-arrowhead count were added to kill the other 5."
+}

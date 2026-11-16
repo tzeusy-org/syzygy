@@ -1,0 +1,353 @@
+{
+ "subject": {
+  "review": {
+   "file": "R-GP-IMPL-CHROME-SINGLETON-1-RAW.md",
+   "sha256": "4a8f8d769748286096978f114c13f8f7062f1b21e7966888be1185d89e381225",
+   "verdict": "Verdict: REVISE",
+   "reviewedCommit": "490332aa7cc1cdf818ae01bd46e375f8280d8b7d"
+  },
+  "codeCommit": "bcd39b4e88a3da042f26899d439c074b020e1f4c",
+  "mainMerged": "df6046a153fe130202abdf6bd3045a79ba143879",
+  "headAtRecording": "9cfa7cd00e1045d14750788ab09a4ff340fba30a",
+  "gatesRunAtCommit": "9cfa7cd00e1045d14750788ab09a4ff340fba30a",
+  "appsAndConfigDiffSinceCodeCommit": "",
+  "sha256AtCommit": {
+   "apps/three-surface-poc/src/cdp-browser.browser.test.ts": "83f58739e428956e51505694008156d3dd6c73fcfa584efe73bf2509fbecc43a",
+   "apps/three-surface-poc/src/cdp-browser.test.ts": "aea55cef2293f51a7340ce6bea67b2623698b711d0770a05a0fc6aeb151dd03d",
+   "apps/three-surface-poc/src/cdp-browser.ts": "60a3990726bc196703d66719b8c50c9c87c62c91b601fa51f7edcca23f71d68d",
+   "apps/three-surface-poc/src/polaris-generation/draft-preview.browser.test.ts": "70102033956c5597667ab3fca4bc145fcb2f7787227b1cb82849878c8a73856f"
+  }
+ },
+ "toolDigests": {
+  "add_sha256_at_commit.py": "8f277972d807a091e880211ee633e31b2b227208132e3b54312bcb466697f4c0",
+  "assemble_round1.py": "369d0b9c5712d5baff64dae5693cf5d9d6246e894453d75450af7301917ab197",
+  "assemble_verification.py": "c7816200678dcb0ff590652cb042d3164d4b2aa46dd0e15aae4570cb92f5c7bd",
+  "browser_files_run.py": "11f3f4563b2c8f6efce2706b7e346d6b273bfe503844c4c7aba7b04da8be546a",
+  "chrome_matrix.py": "2239d730e1211aca2ed4763c2343607564a7052d90e09e8b84b46b8becc3f637",
+  "compare_test_lists.py": "7be5bec0072d13cd43e7ea3e87546f650547e6891d88e380c5c5ba8adef11da5",
+  "launch_close.mjs": "f451d39beb215f60a295448b85a1dda2d0d91e72e507e8c7bc38a623c6cfc1ad",
+  "launch_failure_probe.py": "a71724e734177cc66d4f382a3108766ecd1462131ec46f54092ba1a1b0aa3583",
+  "launch_probe.py": "f6d152d597e08f6f98c726b5ad3ef458433135c1268359f7f675f248d15d99d1",
+  "mutate_cdp.py": "220bc4db287c1fc2711e8b1a66cda455b7d9dc00e0aa3d0fb483197f7c8aeea8",
+  "mutate_cdp_r1.py": "f7da0a1af63b653ee313e98493de2ca6382b070b7ab0676391cfc9e3a2792eea",
+  "name_probe.py": "73bd0becc207394db474e94cdb06c316adf2145477d3fc9c8d7e52cd42d9a99d",
+  "tmpdir_length_probe.py": "34b66b0c2199f1118e4100bfa1fdca17c75604850bebb5e8bc48a92b348e3b26"
+ },
+ "findings": {
+  "F1-fix-1": {
+   "changed": "the four browser profile cleanup cases pass a path that does not exist in a private root each case makes and removes, not /tmp/syzygy-browser-profile",
+   "tests": [],
+   "mutantsKilled": [
+    "read-failure-propagates"
+   ]
+  },
+  "F1-fix-2": {
+   "changed": "the profile and the link are read only when both are the running user's (lstat uid)",
+   "tests": [
+    "keeps the directory a link names when the profile is not the running user's, as in a shared temp directory where another user made it first",
+    "keeps the directory a link names when the link is not the running user's",
+    "removes the directory a profile's link names when the profile and the link are the running user's, whatever removes the profile"
+   ],
+   "mutantsKilled": [
+    "profile-owner-not-checked",
+    "link-owner-not-checked",
+    "link-trusted-whoever-made-it"
+   ]
+  },
+  "N1": {
+   "changed": "launchBrowser records the directory's device and inode when it reads the link; the removal requires the same pair",
+   "tests": [
+    "keeps a directory made under the same name after the one that was read, as when Chrome exits cleanly and another Chrome follows",
+    "keeps a directory with the recorded inode number on another device"
+   ],
+   "mutantsKilled": [
+    "identity-inode-not-compared",
+    "identity-device-not-compared",
+    "identity-not-compared"
+   ]
+  },
+  "N2": {
+   "changed": "three case variants join the near-miss names",
+   "tests": [
+    "keeps a directory whose name is not exactly Chrome's: another prefix, no suffix, a longer name, a symbol in the suffix"
+   ],
+   "mutantsKilled": [
+    "name-case-insensitive"
+   ]
+  },
+  "N3": {
+   "changed": "the comments say 145 (cdp-browser.ts, cdp-browser.browser.test.ts); the unit test name is unchanged",
+   "tests": [],
+   "mutantsKilled": []
+  },
+  "N4": {
+   "changed": "browser_files_run.py writes sha256AtCommit; add_sha256_at_commit.py added it to the three browser-files records of 2026-10-22",
+   "tests": [],
+   "mutantsKilled": []
+  },
+  "N5": {
+   "changed": "the unreadable-directory case skips when run as root",
+   "tests": [
+    "does not fail the run when the singleton directory cannot be removed"
+   ],
+   "mutantsKilled": []
+  },
+  "N6": {
+   "changed": "disclosed in the PR body as a residual; Chrome's spawn environment is unchanged",
+   "tests": [],
+   "mutantsKilled": []
+  },
+  "N7": {
+   "changed": "filed as syzygy-bpyt.4.21 (inject the clock in the drain-timeout case); not in this PR",
+   "tests": [],
+   "mutantsKilled": []
+  }
+ },
+ "mutants": {
+  "record": "mutants-cdp-r1-2026-10-25.json",
+  "treeCommit": "3fad24d4e24e88528043d009c2ab0f3695ebc126",
+  "total": 31,
+  "killed": 31,
+  "notKilled": {},
+  "outcomes": {
+   "singleton-option-ignored": "killed",
+   "link-not-read-at-removal": "killed",
+   "link-read-after-profile-removed": "killed",
+   "singleton-never-removed": "killed",
+   "profile-not-removed": "killed",
+   "parent-not-checked": "killed",
+   "parent-prefix-comparison": "killed",
+   "name-not-checked": "killed",
+   "name-anchor-dropped": "killed",
+   "name-suffix-unrestricted": "killed",
+   "name-case-insensitive": "killed",
+   "leading-dot-required": "killed",
+   "leading-dot-forbidden": "killed",
+   "leading-dot-repeatable": "killed",
+   "leading-character-any": "killed",
+   "chromium-form-dropped": "killed",
+   "stat-follows-links": "killed",
+   "is-directory-guard-dropped": "killed",
+   "uid-guard-dropped": "killed",
+   "identity-inode-not-compared": "killed",
+   "identity-device-not-compared": "killed",
+   "identity-not-compared": "killed",
+   "profile-owner-not-checked": "killed",
+   "link-owner-not-checked": "killed",
+   "link-trusted-whoever-made-it": "killed",
+   "removal-failure-propagates": "killed",
+   "removal-is-a-no-op": "killed",
+   "read-failure-propagates": "killed",
+   "singleton-not-read-while-running": "killed",
+   "cleanup-not-passed-on-close": "killed",
+   "draft-preview-launch-outside-try": "killed"
+  },
+  "controlHolds": true,
+  "controlLaunchFailureHolds": true,
+  "browserVersion": "Google Chrome 120.0.6099.224"
+ },
+ "ac1": {
+  "claim": "after a passing run of every Chrome-driven vitest file with a fresh private TMPDIR, that TMPDIR holds no .com.google.Chrome.* or polaris-draft-browser-* directory",
+  "chrome120": {
+   "record": "browser-files-head-r1-2026-10-25.json",
+   "treeCommit": "0410e3cdac48e810ef4fab9781b3bad8f85a8b20",
+   "browserVersion": "Google Chrome 120.0.6099.224",
+   "filesInListA": 11,
+   "filesInListB": 7,
+   "inAButNotB": [
+    "apps/three-surface-poc/src/cdp-browser.test.ts",
+    "apps/three-surface-poc/src/proposal-disclosure.test.ts",
+    "apps/three-surface-poc/src/surface-routes.test.ts",
+    "apps/three-surface-poc/src/tuple-encoding.test.ts"
+   ],
+   "inBButNotA": [],
+   "filesWithAPassingAttempt": 11,
+   "chromeSingletonDirectoriesLeftOnPassingAttempts": 0,
+   "draftPreviewDirectoriesLeftOnPassingAttempts": 0,
+   "combinedRunExit": 0,
+   "combinedRunChromeSingletonDirectoriesLeft": 0,
+   "combinedRunDraftPreviewDirectoriesLeft": 0,
+   "everyFilePassedAloneAndLeftNone": true
+  },
+  "chrome154": {
+   "record": "browser-files-head-chrome154-r1-2026-10-25.json",
+   "treeCommit": "0410e3cdac48e810ef4fab9781b3bad8f85a8b20",
+   "browserVersion": "Google Chrome for Testing 154.0.8037.57",
+   "filesInListA": 11,
+   "filesInListB": 7,
+   "inAButNotB": [
+    "apps/three-surface-poc/src/cdp-browser.test.ts",
+    "apps/three-surface-poc/src/proposal-disclosure.test.ts",
+    "apps/three-surface-poc/src/surface-routes.test.ts",
+    "apps/three-surface-poc/src/tuple-encoding.test.ts"
+   ],
+   "inBButNotA": [],
+   "filesWithAPassingAttempt": 11,
+   "chromeSingletonDirectoriesLeftOnPassingAttempts": 0,
+   "draftPreviewDirectoriesLeftOnPassingAttempts": 0,
+   "combinedRunExit": 0,
+   "combinedRunChromeSingletonDirectoriesLeft": 0,
+   "combinedRunDraftPreviewDirectoriesLeft": 0,
+   "everyFilePassedAloneAndLeftNone": true
+  },
+  "matrix": {
+   "record": "chrome-matrix-head-r1-2026-10-25.json",
+   "treeCommit": "0410e3cdac48e810ef4fab9781b3bad8f85a8b20",
+   "holds": true,
+   "runs": [
+    {
+     "version": "Google Chrome 120.0.6099.224",
+     "status": "passed",
+     "singletonShapedLeft": 0
+    },
+    {
+     "version": "Google Chrome for Testing 145.0.7632.6",
+     "status": "passed",
+     "singletonShapedLeft": 0
+    },
+    {
+     "version": "Google Chrome for Testing 147.0.7727.57",
+     "status": "passed",
+     "singletonShapedLeft": 0
+    },
+    {
+     "version": "Google Chrome for Testing 149.0.7827.22",
+     "status": "passed",
+     "singletonShapedLeft": 0
+    },
+    {
+     "version": "Google Chrome for Testing 151.0.7922.47",
+     "status": "passed",
+     "singletonShapedLeft": 0
+    },
+    {
+     "version": "Google Chrome for Testing 154.0.8037.57",
+     "status": "passed",
+     "singletonShapedLeft": 0
+    }
+   ]
+  }
+ },
+ "tests": {
+  "record": "test-lists-r1-2026-10-25.json",
+  "testsLine": "Tests: +17 ~0 -0",
+  "baseTree": {
+   "commit": "df6046a153fe130202abdf6bd3045a79ba143879",
+   "trackedFilesModified": false,
+   "listSha256": "104182ef34327f99c26d6d78a1f0b9c6caffe2fe28ed70284e4dee529ed383c9"
+  },
+  "headTree": {
+   "commit": "42baf076d38e16751bd1ccf0126cd04e37339327",
+   "trackedFilesModified": false,
+   "listSha256": "a3c92002da1aa9f6b8e840c37696331c2804482e2022df084f98aa4f42467672"
+  },
+  "baseLines": 5170,
+  "headLines": 5187,
+  "addedByFile": {
+   "[@syzygy/three-surface-poc-app] apps/three-surface-poc/src/cdp-browser.browser.test.ts": 1,
+   "[@syzygy/three-surface-poc-app] apps/three-surface-poc/src/cdp-browser.test.ts": 16
+  },
+  "removedByFile": {}
+ },
+ "changedOutsideTheEvidenceDirectory": [
+  "apps/three-surface-poc/src/cdp-browser.browser.test.ts",
+  "apps/three-surface-poc/src/cdp-browser.test.ts",
+  "apps/three-surface-poc/src/cdp-browser.ts",
+  "apps/three-surface-poc/src/polaris-generation/draft-preview.browser.test.ts"
+ ],
+ "ac3": {
+  "claim": "no existing assertion changes (against main as merged)",
+  "changedTestFiles": {
+   "apps/three-surface-poc/src/cdp-browser.browser.test.ts": {
+    "removedLines": 1,
+    "removedImportLines": 1,
+    "removedLinesNamingAnAssertion": 0,
+    "removedLinesNamingAMatcher": 0,
+    "removed": [
+     "import { readdirSync, readFileSync } from 'node:fs';"
+    ]
+   },
+   "apps/three-surface-poc/src/cdp-browser.test.ts": {
+    "removedLines": 6,
+    "removedImportLines": 2,
+    "removedLinesNamingAnAssertion": 2,
+    "removedLinesNamingAMatcher": 0,
+    "removed": [
+     "import { describe, expect, it } from 'vitest';",
+     "import { closeDisposableBrowser, killPrivateBrowserMembers, removeBrowserProfile, withBrowserPage, type BrowserPage } from './cdp-browser.js';",
+     "    removeBrowserProfile('/tmp/syzygy-browser-profile', {",
+     "    expect(() => removeBrowserProfile('/tmp/syzygy-browser-profile', {",
+     "    expect(() => removeBrowserProfile('/tmp/syzygy-browser-profile', {",
+     "      removeBrowserProfile(`/tmp/syzygy-browser-profile-${run}`, {"
+    ]
+   },
+   "apps/three-surface-poc/src/polaris-generation/draft-preview.browser.test.ts": {
+    "removedLines": 3,
+    "removedImportLines": 1,
+    "removedLinesNamingAnAssertion": 0,
+    "removedLinesNamingAMatcher": 0,
+    "removed": [
+     "import { findBrowserExecutable, launchBrowser } from '../cdp-browser.js';",
+     "  const browser = await launchBrowser(executable);",
+     "  } finally { await browser.close(); await rm(directory, { recursive: true, force: true }); }"
+    ]
+   }
+  },
+  "note": "the lines of cdp-browser.test.ts that name `expect` are the two `expect(() => removeBrowserProfile(<profile>, {` openings whose first argument changed from /tmp/syzygy-browser-profile to a path in a private root (F1 fix 1); the matcher lines below them (`.toThrow(...)`) are not removed, so no matcher and no expected value changes"
+ },
+ "gates": {
+  "typecheck": {
+   "log": "gate-typecheck.log",
+   "exit": 0,
+   "sha256": "6e9917c045c3a698cee6f074e21d7e7615b77283e0a86a575a145ac3cb673ce3",
+   "resultLines": []
+  },
+  "checkGovernance": {
+   "log": "gate-governance.log",
+   "exit": 0,
+   "sha256": "f1ce6c073ce78e24a611c8357c313dae9c8795c3a75bf43c88f549aa55aa5b85",
+   "resultLines": [
+    "32 OK, 21 WARN, 0 FAIL (53 checks) \u2014 counts derived, not asserted"
+   ]
+  },
+  "checkQuotations": {
+   "log": "gate-quotations.log",
+   "exit": 0,
+   "sha256": "543b9b5bd44fb4256a4195ea50686b547205b9dc1e2a0826cd4ee88df00647c9",
+   "resultLines": [
+    "OK    QC-1  a quotation beside a path:line locator was said by that file \u2014 36 quotations examined in 17 of 939 .md files scanned (loc-paren-quote 2, loc-colon-quote 24, quote-paren-loc 10), 0 findings",
+    "note  QC-1  1 recorded findings, printed every run and never failed (`RECORDED`)",
+    "note  QC-1  5 of 36 are in an earlier revision of their source only: amended since quoted, reported, never failed",
+    "note  QC-1  7 of 36 found outside their cited lines (\u00b12): locator drift, reported, never failed",
+    "note  QC-1  85 locators name no tracked file (CG-1 owns dangling paths); not examined",
+    "note  QC-1  excluded verbatim records, candidates history: 21 .md files, 0 quotations, 0 not in their source now; history not searched",
+    "note  QC-1  excluded verbatim records, raw review: 674 .md files, 1059 quotations, 454 not in their source now; history not searched",
+    "note  QC-1  excluded verbatim records, round directory: 139 .md files, 10 quotations, 4 not in their source now; history not searched"
+   ]
+  },
+  "authoritySweep": {
+   "log": "gate-authority.log",
+   "exit": 0,
+   "sha256": "5d40823d7c3ed7dcd5ed2016428e5c5e821ffc8c3063e1d57b2c9dafbb4a1bfb",
+   "resultLines": [
+    "Test Files  1 passed (1)",
+    "Tests  5 passed (5)"
+   ]
+  },
+  "unitAndRealChromeFiles": {
+   "log": "gate-two-files.log",
+   "exit": 0,
+   "sha256": "9db94a0f49bac9acbee702237eaffc6d3c39cdcc3db61fe0db9fd8959ac5e8bf",
+   "resultLines": [
+    "Test Files  2 passed (2)",
+    "Tests  31 passed (31)"
+   ]
+  }
+ },
+ "residuals": {
+  "N6": "when TMPDIR is unset and TMP or TEMP is set, Node's os.tmpdir() and Chrome's temp directory disagree, the parent check fails closed and a killed Chrome's directory is left in /tmp as at the base; Chrome's spawn environment is not changed",
+  "N7": "a load flake in the untouched unit case \"waits for private Chrome group members before removal and retains the profile on drain timeout\" (real clock, 100 ms drain); syzygy-bpyt.4.21",
+  "inodeReuse": "the identity pair cannot tell a directory from a later one if the file system reuses the inode number and the device is the same and another process makes the same 6-character name in the same window",
+  "lstatRemoveWindow": "between the removal's lstat and its rmSync the directory can still be replaced; a replacement by a link removes the link only (the reviewer's run 12), a replacement by a directory is not detected"
+ }
+}

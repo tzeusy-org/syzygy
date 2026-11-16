@@ -5,17 +5,26 @@
   "type": "module",
   "exports": {
     ".": {
+      "source": "./src/index.ts",
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "default": "./dist/index.js"
     },
+    "./live": {
+      "source": "./src/live.ts",
+      "types": "./dist/live.d.ts",
+      "import": "./dist/live.js",
+      "default": "./dist/live.js"
+    },
     "./testing": {
+      "source": "./src/testing.ts",
       "types": "./dist/testing.d.ts",
       "import": "./dist/testing.js",
       "default": "./dist/testing.js"
     }
   },
   "dependencies": {
-    "@syzygy/polaris-generation-core": "0.0.0"
+    "@syzygy/polaris-generation-core": "0.0.0",
+    "@syzygy/support": "0.0.0"
   }
 }

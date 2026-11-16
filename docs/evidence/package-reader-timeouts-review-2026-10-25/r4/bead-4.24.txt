@@ -1,0 +1,67 @@
+Warning: dolt_server_port in metadata.json is deprecated (can cause cross-project data leakage).
+  The port file (.beads/dolt-server.port) is now the primary source.
+  Remove dolt_server_port from .beads/metadata.json to silence this warning.
+○ syzygy-bpyt.4.24 · Size the dossier-project load timeouts that syzygy-bpyt.4.13's comments added (gate-acts, screen, close, execution-flags, run-evidence) (PR 520 R1 N6)   [P3 · OPEN]
+Created by: Tzeusy · Type: task
+Created: 2026-10-24 · Updated: 2026-10-24
+
+DESCRIPTION
+
+  From the round-1 review of PR #520 (syzygy-bpyt.4.13), docs/reviews/R-GP-   
+  IMPL-PACKAGE-READER-TIMEOUTS-1-RAW.md N6 (retained at landing). The         
+  coordinator ruled PR #520 to package-reader.test.ts alone, but five         
+  coordinator comments on 4.13 (2026-10-22) widened it. Carriers exist for    
+  start-gates.test.ts (syzygy-y3uc), the act-families.test.ts 10 s hook       
+  (syzygy-bpyt.4.8) and git-object-reader.test.ts's 'reviewer's amplification 
+  shape' 30 s bound (syzygy-bpyt.4.5). [Observed by the reviewer, 806-bead    
+  sweep] No bead carries the rest, which this bead now owns, all in the       
+  @syzygy/polaris-dossier project: 5000 ms default timeouts at load about 70  
+  (lane A, PR 516 head bddbbf6c) in gate-acts.test.ts (7), screen.test.ts (4),
+  close.test.ts (3), execution-flags.test.ts (2) and run-evidence.test.ts (1);
+  screen.test.ts's 10 s hook; and gate-acts.test.ts 'follow the tree in either
+  state' over its explicit 60 s bound (60.2-64.7 s at load about 90, lane B on
+  PR 514). Clean-clone batteries stay 110/0 and CI passes; these fail only    
+  under local load.                                                           
+                                                                              
+  Do: apply PR #520's method per file. Measure with the committed             
+  scripts/measure_vitest_test_durations.py (without --profile, which PR #520  
+  removed under its round-3 stopping rule; see syzygy-bpyt.4.27), size with   
+  scripts/size_vitest_test_timeouts.py (worst x3, rounded up to 5 s, for every
+  test whose worst exceeds 2.5 s, stating the denominator), commit the        
+  records, and change no assertion. Where a test is slow because it spawns    
+  git, say so in a one-line comment and prefer lightening the fixture when    
+  that is simpler. Test-only; no CC-REV-1 class unless the review rules       
+  otherwise.                                                                  
+
+
+
+ACCEPTANCE CRITERIA
+
+  AC1: each named file's sized tests carry an explicit timeout from a recorded
+  measurement under load, by the stated rule, with the denominator per file.  
+  AC2: gate-acts 'follow the tree in either state' is re-sized or its fixture 
+  lightened, with the measurement recorded. AC3: --check of the sizing script 
+  passes for each file; assertions byte-identical outside the timeout         
+  argument; Tests: +a ~b -c reported.                                         
+
+
+
+LABELS: complexity:epic, dossier, greenfield-parity, test-quality, testing
+
+PARENT
+  ↑ ○ syzygy-bpyt.4: (EPIC) Greenfield parity M2: tests, build and CI - run from source, honest suite tiers, one test kit, one mutation runner P2
+
+DEPENDS ON
+  → ◐ syzygy-bpyt.4.13: (BUG) package-reader.test.ts: three tests hit vitest's 5000 ms default under load in a full run P3
+
+COMMENTS
+  2026-10-24 18:48 Tzeusy
+    
+      Coordinator 2026-10-25: PR #520's round 3 (REVISE, F4 in --profile's        
+      restore) moved --profile out of #520 to syzygy-bpyt.4.27 under the stopping 
+      rule set before round 3. This bead's instruction 'with the committed        
+      scripts/measure_vitest_test_durations.py (with its F1 restore repair)' now  
+      means the script without --profile: size the five dossier files from        
+      duration runs only, as #520 sized its 16 from before-alone, before-full-1/2 
+      and the load-127 extract. If a profile is needed, wait for 4.27.            
+

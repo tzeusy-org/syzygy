@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { parseRunConfig } from './run-config.js';
+import { parseRunConfig, poleLimitOf } from './run-config.js';
 
 // REQ-polaris-generation-033, scenario "Run configuration incomplete or unbounded": every refusal arm,
 // one input mutation per case against a configuration that is otherwise accepted.
@@ -33,9 +33,24 @@ describe('run configuration (REQ-polaris-generation-033)', () => {
       operator: 'Tzeusy', agentTool: 'claude-code', agentToolVersion: '2.1.0', agentProvider: 'anthropic',
       model: 'claude-opus-5-5', modelVersion: '20261001', deadline: { declared: 'PT2H', seconds: 7200 },
       agentTokenBudget: 2_000_000, agentTurnBudget: 400, maxRepairCycles: 3, maxQuestions: 5,
-      audience: 'a maintainer new to the project', operatorIsOwner: true,
+      audience: 'a maintainer new to the project', operatorIsOwner: true, poleLimit: null,
     });
   });
+
+  // Dossier spec v1.5: the Pole limit is optional, five when undeclared, and a declared one is a positive integer.
+  it('takes an undeclared Pole limit as five and keeps a declared one', () => {
+    const undeclared = parse({});
+    expect(undeclared.ok && undeclared.config.poleLimit).toBe(null);
+    expect(undeclared.ok && poleLimitOf(undeclared.config)).toBe(5);
+    const declared = parse({ poleLimit: 3 });
+    expect(declared.ok && poleLimitOf(declared.config)).toBe(3);
+    expect(parse({ poleLimit: 1 }).ok).toBe(true);
+  });
+
+  it.each([[0, 'poleLimit:zero'], [-2, 'poleLimit:negative'], [2.5, 'poleLimit:non-integer'], ['five', 'poleLimit:wrong-type'], [null, 'poleLimit:unlimited']])(
+    'refuses a Pole limit of %j (dossier spec v1.5, "Invalid Pole limit")', (value, expected) => {
+      expect(refusals(parse({ poleLimit: value }))).toEqual([expected]);
+    });
 
   it('allows 0 for the repair-cycle and question limits', () => {
     const result = parse({ maxRepairCycles: 0, maxQuestions: 0 });

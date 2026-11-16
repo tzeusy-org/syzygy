@@ -1,0 +1,153 @@
+{
+ "tool": "suite_summary.py",
+ "attempt": "attempt 1: two concurrent runs of the head",
+ "cpus": 12,
+ "changedFilesBetween": [
+  "c104771f",
+  "0a6645ae7d59230b261f27c3c05ef9a9f384ebd1"
+ ],
+ "runs": [
+  {
+   "name": "A",
+   "commit": "0a6645ae7d59230b261f27c3c05ef9a9f384ebd1",
+   "start": "2026-10-25T06:11:47+08:00",
+   "load1Start": 21.11,
+   "exit": 1,
+   "end": "2026-10-25T06:20:35+08:00",
+   "load1End": 56.47,
+   "success": false,
+   "totals": {
+    "numTotalTestSuites": 854,
+    "numFailedTestSuites": 7,
+    "numTotalTests": 5278,
+    "numPassedTests": 5202,
+    "numFailedTests": 6,
+    "numPendingTests": 70,
+    "numTodoTests": 0
+   },
+   "failedTests": [
+    {
+     "file": "packages/polaris-dossier/src/gate-acts.test.ts",
+     "test": "the sitting's acts fail closed withdraw what a decisions file names by the installed entry's basename",
+     "first": "Error: STACK_TRACE_ERROR",
+     "durationMs": 5130,
+     "inChangedFile": false
+    },
+    {
+     "file": "packages/polaris-dossier/src/gate-acts.test.ts",
+     "test": "the registry entry's version-tagged sign-off refuses a record with another package",
+     "first": "Error: STACK_TRACE_ERROR",
+     "durationMs": 5341,
+     "inChangedFile": false
+    },
+    {
+     "file": "packages/polaris-dossier/src/gate-acts.test.ts",
+     "test": "the gate forms against the recorders render the sign-off record byte for byte as render_record does, from the same fields: CONFIRM",
+     "first": "Error: STACK_TRACE_ERROR",
+     "durationMs": 7429,
+     "inChangedFile": false
+    },
+    {
+     "file": "packages/polaris-dossier/src/gate-acts.test.ts",
+     "test": "the gate forms against the recorders render the sign-off record byte for byte as render_record does, from the same fields: CONFIRM WITH EXCEPTIONS",
+     "first": "Error: STACK_TRACE_ERROR",
+     "durationMs": 7396,
+     "inChangedFile": false
+    },
+    {
+     "file": "packages/polaris-dossier/src/run-evidence.test.ts",
+     "test": "dossier run evidence record (S12) names the subject, the Syzygy commit and the digest of every file the run and its sessions left",
+     "first": "Error: STACK_TRACE_ERROR",
+     "durationMs": 5160,
+     "inChangedFile": false
+    },
+    {
+     "file": "packages/polaris-dossier/src/run-evidence.test.ts",
+     "test": "dossier run evidence record (S12) reports an open run as not closed, and refuses anything but one run directory",
+     "first": "Error: STACK_TRACE_ERROR",
+     "durationMs": 5076,
+     "inChangedFile": false
+    }
+   ],
+   "failedFilesWithoutFailedTest": [
+    {
+     "file": "packages/polaris-generation-consent/src/act-families.test.ts",
+     "first": "Hook timed out in 10000ms.",
+     "inChangedFile": false
+    }
+   ],
+   "failuresInChangedFiles": 0
+  },
+  {
+   "name": "B",
+   "commit": "0a6645ae7d59230b261f27c3c05ef9a9f384ebd1",
+   "start": "2026-10-25T06:11:47+08:00",
+   "load1Start": 21.11,
+   "exit": 1,
+   "end": "2026-10-25T06:20:32+08:00",
+   "load1End": 58.78,
+   "success": false,
+   "totals": {
+    "numTotalTestSuites": 854,
+    "numFailedTestSuites": 9,
+    "numTotalTests": 5278,
+    "numPassedTests": 5202,
+    "numFailedTests": 6,
+    "numPendingTests": 70,
+    "numTodoTests": 0
+   },
+   "failedTests": [
+    {
+     "file": "packages/polaris-dossier/src/close.test.ts",
+     "test": "close (S10) closes a run once, and refuses after the deadline",
+     "first": "Error: STACK_TRACE_ERROR",
+     "durationMs": 5528,
+     "inChangedFile": false
+    },
+    {
+     "file": "packages/polaris-dossier/src/gate-acts.test.ts",
+     "test": "the sitting's acts fail closed withdraw what a decisions file names by the D9 record's relative path",
+     "first": "Error: STACK_TRACE_ERROR",
+     "durationMs": 5057,
+     "inChangedFile": false
+    },
+    {
+     "file": "packages/polaris-dossier/src/gate-acts.test.ts",
+     "test": "the registry entry's version-tagged sign-off refuses once the installed entry changes",
+     "first": "Error: STACK_TRACE_ERROR",
+     "durationMs": 5593,
+     "inChangedFile": false
+    },
+    {
+     "file": "packages/polaris-dossier/src/gate-acts.test.ts",
+     "test": "the gate forms against the recorders render the sign-off record byte for byte as render_record does, from the same fields: CONFIRM",
+     "first": "Error: STACK_TRACE_ERROR",
+     "durationMs": 5627,
+     "inChangedFile": false
+    },
+    {
+     "file": "packages/polaris-dossier/src/gate-acts.test.ts",
+     "test": "the gate forms against the recorders render the sign-off record byte for byte as render_record does, from the same fields: CONFIRM WITH EXCEPTIONS",
+     "first": "Error: STACK_TRACE_ERROR",
+     "durationMs": 5492,
+     "inChangedFile": false
+    },
+    {
+     "file": "packages/polaris-dossier/src/run-evidence.test.ts",
+     "test": "dossier run evidence record (S12) reports an open run as not closed, and refuses anything but one run directory",
+     "first": "Error: STACK_TRACE_ERROR",
+     "durationMs": 5144,
+     "inChangedFile": false
+    }
+   ],
+   "failedFilesWithoutFailedTest": [
+    {
+     "file": "packages/polaris-generation-consent/src/act-families.test.ts",
+     "first": "Hook timed out in 10000ms.",
+     "inChangedFile": false
+    }
+   ],
+   "failuresInChangedFiles": 0
+  }
+ ]
+}

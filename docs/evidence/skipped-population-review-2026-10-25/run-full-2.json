@@ -1,0 +1,436 @@
+{
+ "case": "full",
+ "n": 2,
+ "head": "1e444071112522ce1b9eb43a8d3964174c54c477",
+ "command": "npx vitest run --config packages/cap1-system/vitest.config.ts --reporter=json --outputFile=<tmp>/report.json",
+ "env": {},
+ "merged": false,
+ "edits": [],
+ "exitCode": 0,
+ "wallSeconds": 6.9,
+ "killedAtDeadline": false,
+ "loadavgStart": [
+  "26.25",
+  "23.50",
+  "24.40"
+ ],
+ "loadavgEnd": [
+  "26.63",
+  "23.69",
+  "24.45"
+ ],
+ "processesSeen": 74,
+ "sessionsSeen": 2,
+ "survivors": {},
+ "counts": {
+  "passed": 48,
+  "skipped": 1
+ },
+ "numTotalTests": 49,
+ "suites": [
+  {
+   "file": "packages/cap1-system/src/credentials.system.test.ts",
+   "status": "passed",
+   "message": ""
+  },
+  {
+   "file": "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts",
+   "status": "passed",
+   "message": ""
+  },
+  {
+   "file": "packages/cap1-system/src/degradation.system.test.ts",
+   "status": "passed",
+   "message": ""
+  },
+  {
+   "file": "packages/cap1-system/src/effect-observer.system.test.ts",
+   "status": "passed",
+   "message": ""
+  },
+  {
+   "file": "packages/cap1-system/src/fresh-clone.system.test.ts",
+   "status": "passed",
+   "message": ""
+  },
+  {
+   "file": "packages/cap1-system/src/full-facts.system.test.ts",
+   "status": "passed",
+   "message": ""
+  },
+  {
+   "file": "packages/cap1-system/src/process.system.test.ts",
+   "status": "passed",
+   "message": ""
+  },
+  {
+   "file": "packages/cap1-system/src/skipped-population.system.test.ts",
+   "status": "passed",
+   "message": ""
+  },
+  {
+   "file": "packages/cap1-system/src/state-dir.system.test.ts",
+   "status": "passed",
+   "message": ""
+  },
+  {
+   "file": "packages/cap1-system/src/write-boundary.system.test.ts",
+   "status": "passed",
+   "message": ""
+  }
+ ],
+ "checkRow": {
+  "file": "packages/cap1-system/src/skipped-population.system.test.ts",
+  "name": "system tier: the skipped population skips exactly the expected tests, by SYZYGY_FRESH_CLONE and uid",
+  "status": "passed",
+  "durationMs": 3263,
+  "failure": null
+ },
+ "tests": [
+  {
+   "file": "packages/cap1-system/src/credentials.system.test.ts",
+   "name": "RT6 — credential enforcement from outside the process refuses missing credentials with no facts served",
+   "status": "passed",
+   "durationMs": 452,
+   "failure": null
+  },
+  {
+   "file": "packages/cap1-system/src/credentials.system.test.ts",
+   "name": "RT6 — credential enforcement from outside the process refuses scheme without separator credentials with no facts served",
+   "status": "passed",
+   "durationMs": 322,
+   "failure": null
+  },
+  {
+   "file": "packages/cap1-system/src/credentials.system.test.ts",
+   "name": "RT6 — credential enforcement from outside the process refuses empty bearer token credentials with no facts served",
+   "status": "passed",
+   "durationMs": 524,
+   "failure": null
+  },
+  {
+   "file": "packages/cap1-system/src/credentials.system.test.ts",
+   "name": "RT6 — credential enforcement from outside the process refuses wrong scheme credentials with no facts served",
+   "status": "passed",
+   "durationMs": 719,
+   "failure": null
+  },
+  {
+   "file": "packages/cap1-system/src/credentials.system.test.ts",
+   "name": "RT6 — credential enforcement from outside the process refuses whitespace-only bearer token credentials with no facts served",
+   "status": "passed",
+   "durationMs": 459,
+   "failure": null
+  },
+  {
+   "file": "packages/cap1-system/src/credentials.system.test.ts",
+   "name": "RT6 — credential enforcement from outside the process refuses malformed scheme casing credentials with no facts served",
+   "status": "passed",
+   "durationMs": 358,
+   "failure": null
+  },
+  {
+   "file": "packages/cap1-system/src/credentials.system.test.ts",
+   "name": "RT6 — credential enforcement from outside the process refuses wrong-length bearer token credentials with no facts served",
+   "status": "passed",
+   "durationMs": 274,
+   "failure": null
+  },
+  {
+   "file": "packages/cap1-system/src/credentials.system.test.ts",
+   "name": "RT6 — credential enforcement from outside the process refuses wrong bearer token credentials with no facts served",
+   "status": "passed",
+   "durationMs": 170,
+   "failure": null
+  },
+  {
+   "file": "packages/cap1-system/src/credentials.system.test.ts",
+   "name": "RT6 — credential enforcement from outside the process the correct token from the state-dir file admits: 200 with the evaluated body",
+   "status": "passed",
+   "durationMs": 182,
+   "failure": null
+  },
+  {
+   "file": "packages/cap1-system/src/credentials.system.test.ts",
+   "name": "RT6 — credential enforcement from outside the process the token file is owner-only (mode 0600)",
+   "status": "passed",
+   "durationMs": 167,
+   "failure": null
+  },
+  {
+   "file": "packages/cap1-system/src/credentials.system.test.ts",
+   "name": "RT6 — credential enforcement from outside the process the credential value is never printed to stdout",
+   "status": "passed",
+   "durationMs": 198,
+   "failure": null
+  },
+  {
+   "file": "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts",
+   "name": "daemon entry: every invocation but `dossier` is unchanged [\"--help\"] prints the usage and exits 0",
+   "status": "passed",
+   "durationMs": 190,
+   "failure": null
+  },
+  {
+   "file": "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts",
+   "name": "daemon entry: every invocation but `dossier` is unchanged [\"-h\"] prints the usage and exits 0",
+   "status": "passed",
+   "durationMs": 461,
+   "failure": null
+  },
+  {
+   "file": "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts",
+   "name": "daemon entry: every invocation but `dossier` is unchanged [\"--help\",\"dossier\"] prints the usage and exits 0",
+   "status": "passed",
+   "durationMs": 531,
+   "failure": null
+  },
+  {
+   "file": "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts",
+   "name": "daemon entry: every invocation but `dossier` is unchanged [\"--bogus\"] is refused with exit 1 and the same message",
+   "status": "passed",
+   "durationMs": 599,
+   "failure": null
+  },
+  {
+   "file": "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts",
+   "name": "daemon entry: every invocation but `dossier` is unchanged [\"--port\",\"0\",\"dossier\"] is refused with exit 1 and the same message",
+   "status": "passed",
+   "durationMs": 640,
+   "failure": null
+  },
+  {
+   "file": "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts",
+   "name": "daemon entry: every invocation but `dossier` is unchanged [\"Dossier\"] is refused with exit 1 and the same message",
+   "status": "passed",
+   "durationMs": 487,
+   "failure": null
+  },
+  {
+   "file": "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts",
+   "name": "daemon entry: every invocation but `dossier` is unchanged [\"--port\"] is refused with exit 1 and the same message",
+   "status": "passed",
+   "durationMs": 284,
+   "failure": null
+  },
+  {
+   "file": "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts",
+   "name": "daemon entry: every invocation but `dossier` is unchanged [\"--port\",\"70000\"] is refused with exit 1 and the same message",
+   "status": "passed",
+   "durationMs": 176,
+   "failure": null
+  },
+  {
+   "file": "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts",
+   "name": "daemon entry: every invocation but `dossier` is unchanged a state directory inside the governed plane is refused with the same message",
+   "status": "passed",
+   "durationMs": 140,
+   "failure": null
+  },
+  {
+   "file": "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts",
+   "name": "daemon entry: every invocation but `dossier` is unchanged with no arguments it serves from the working directory, writes the same state and shuts down the same way",
+   "status": "passed",
+   "durationMs": 254,
+   "failure": null
+  },
+  {
+   "file": "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts",
+   "name": "daemon entry: every invocation but `dossier` is unchanged with explicit flags it serves, writes the same state and shuts down the same way",
+   "status": "passed",
+   "durationMs": 239,
+   "failure": null
+  },
+  {
+   "file": "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts",
+   "name": "daemon entry: the one changed input, `dossier` as the first argument `dossier` alone is a dossier usage error (exit 2), not the daemon's refusal",
+   "status": "passed",
+   "durationMs": 237,
+   "failure": null
+  },
+  {
+   "file": "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts",
+   "name": "daemon entry: the one changed input, `dossier` as the first argument `dossier status <missing>` is a dossier refusal (exit 1) and starts no daemon",
+   "status": "passed",
+   "durationMs": 187,
+   "failure": null
+  },
+  {
+   "file": "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts",
+   "name": "daemon entry: the one changed input, `dossier` as the first argument `dossier render <missing>` reaches the run with the renderer injected, and starts no daemon",
+   "status": "passed",
+   "durationMs": 218,
+   "failure": null
+  },
+  {
+   "file": "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts",
+   "name": "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch",
+   "status": "passed",
+   "durationMs": 1,
+   "failure": null
+  },
+  {
+   "file": "packages/cap1-system/src/degradation.system.test.ts",
+   "name": "RT6 — honest degradation over real disk state an empty fixture root serves the named missing-declaration arm on both channels",
+   "status": "passed",
+   "durationMs": 800,
+   "failure": null
+  },
+  {
+   "file": "packages/cap1-system/src/degradation.system.test.ts",
+   "name": "RT6 — honest degradation over real disk state breaking the declaration between runs changes the served facts to the named invalid arms",
+   "status": "passed",
+   "durationMs": 1593,
+   "failure": null
+  },
+  {
+   "file": "packages/cap1-system/src/effect-observer.system.test.ts",
+   "name": "system effect-observer lifecycle fails closed with one named diagnostic before allocating when strace is unavailable",
+   "status": "passed",
+   "durationMs": 12,
+   "failure": null
+  },
+  {
+   "file": "packages/cap1-system/src/effect-observer.system.test.ts",
+   "name": "system effect-observer lifecycle settles once and cleans once when spawn emits ENOENT followed by exit and close",
+   "status": "passed",
+   "durationMs": 12,
+   "failure": null
+  },
+  {
+   "file": "packages/cap1-system/src/effect-observer.system.test.ts",
+   "name": "system effect-observer lifecycle cleans after a synchronous observer spawn failure",
+   "status": "passed",
+   "durationMs": 1,
+   "failure": null
+  },
+  {
+   "file": "packages/cap1-system/src/effect-observer.system.test.ts",
+   "name": "system effect-observer lifecycle waits for close to include data emitted after nonzero exit and settles duplicate events once",
+   "status": "passed",
+   "durationMs": 2,
+   "failure": null
+  },
+  {
+   "file": "packages/cap1-system/src/effect-observer.system.test.ts",
+   "name": "system effect-observer lifecycle cleans before rejecting an unreadable trace",
+   "status": "passed",
+   "durationMs": 3,
+   "failure": null
+  },
+  {
+   "file": "packages/cap1-system/src/effect-observer.system.test.ts",
+   "name": "system effect-observer lifecycle cleans before rejecting a trace parser failure",
+   "status": "passed",
+   "durationMs": 1,
+   "failure": null
+  },
+  {
+   "file": "packages/cap1-system/src/effect-observer.system.test.ts",
+   "name": "system effect-observer lifecycle kills a non-settling observer and cleans its trace directory on timeout",
+   "status": "passed",
+   "durationMs": 8,
+   "failure": null
+  },
+  {
+   "file": "packages/cap1-system/src/effect-observer.system.test.ts",
+   "name": "system effect-observer lifecycle removes the trace directory before exposing a successful result to caller assertions",
+   "status": "passed",
+   "durationMs": 6,
+   "failure": null
+  },
+  {
+   "file": "packages/cap1-system/src/fresh-clone.system.test.ts",
+   "name": "RT6 — fresh-clone demonstration a fresh clone installs, builds, starts the daemon, and serves the same facts on both channels",
+   "status": "skipped",
+   "durationMs": null,
+   "failure": null
+  },
+  {
+   "file": "packages/cap1-system/src/full-facts.system.test.ts",
+   "name": "RT6 — full-facts demonstration over the spawned daemon serves the human page with verbatim facts, labels, and the Why-this-answer drawer",
+   "status": "passed",
+   "durationMs": 450,
+   "failure": null
+  },
+  {
+   "file": "packages/cap1-system/src/full-facts.system.test.ts",
+   "name": "RT6 — full-facts demonstration over the spawned daemon serves the fixture overview at /entry",
+   "status": "passed",
+   "durationMs": 675,
+   "failure": null
+  },
+  {
+   "file": "packages/cap1-system/src/full-facts.system.test.ts",
+   "name": "RT6 — full-facts demonstration over the spawned daemon serves the JSON facts to an authenticated machine request, and every served JSON fact appears in the HTML (sweep with denominator)",
+   "status": "passed",
+   "durationMs": 1221,
+   "failure": null
+  },
+  {
+   "file": "packages/cap1-system/src/process.system.test.ts",
+   "name": "RT6 — process reality SIGINT exits 0 and the port then refuses connections",
+   "status": "passed",
+   "durationMs": 604,
+   "failure": null
+  },
+  {
+   "file": "packages/cap1-system/src/skipped-population.system.test.ts",
+   "name": "system tier: the skipped population skips exactly the expected tests, by SYZYGY_FRESH_CLONE and uid",
+   "status": "passed",
+   "durationMs": 3263,
+   "failure": null
+  },
+  {
+   "file": "packages/cap1-system/src/state-dir.system.test.ts",
+   "name": "RTF-1 — state-dir governed-plane check resolves symlink reality refuses (nonzero exit, named refusal) a --state-dir symlink whose REAL target lies inside .syzygy/, and writes nothing there",
+   "status": "passed",
+   "durationMs": 868,
+   "failure": null
+  },
+  {
+   "file": "packages/cap1-system/src/state-dir.system.test.ts",
+   "name": "RTF-1 — state-dir governed-plane check resolves symlink reality refuses a dangling --state-dir symlink whose intended target lies inside .syzygy/, before writes or a listener",
+   "status": "passed",
+   "durationMs": 559,
+   "failure": null
+  },
+  {
+   "file": "packages/cap1-system/src/state-dir.system.test.ts",
+   "name": "RTF-1 — state-dir governed-plane check resolves symlink reality still starts and serves through a --state-dir symlink whose real target is OUTSIDE the governed plane",
+   "status": "passed",
+   "durationMs": 701,
+   "failure": null
+  },
+  {
+   "file": "packages/cap1-system/src/state-dir.system.test.ts",
+   "name": "RTF-1 — state-dir governed-plane check resolves symlink reality keeps a dangling benign outside target credential-unprovisionable, with no listener or writes",
+   "status": "passed",
+   "durationMs": 836,
+   "failure": null
+  },
+  {
+   "file": "packages/cap1-system/src/state-dir.system.test.ts",
+   "name": "RTF-1 — state-dir governed-plane check resolves symlink reality rejects a state-dir symlink loop as named invalid before writes or a listener",
+   "status": "passed",
+   "durationMs": 352,
+   "failure": null
+  },
+  {
+   "file": "packages/cap1-system/src/state-dir.system.test.ts",
+   "name": "RTF-1 — state-dir governed-plane check resolves symlink reality rejects an unreadable state-dir path as named invalid before writes or a listener",
+   "status": "passed",
+   "durationMs": 333,
+   "failure": null
+  },
+  {
+   "file": "packages/cap1-system/src/write-boundary.system.test.ts",
+   "name": "RT6 — write boundary by harness-external filesystem observation after requests to all routes, the only filesystem additions live under the state dir and the governed tree is untouched",
+   "status": "passed",
+   "durationMs": 668,
+   "failure": null
+  }
+ ],
+ "stdoutTail": "JSON report written to /tmp/r527-full-2/report.json\n",
+ "treeCleanAfter": true
+}

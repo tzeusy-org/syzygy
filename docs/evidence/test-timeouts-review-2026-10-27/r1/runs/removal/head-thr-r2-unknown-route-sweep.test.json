@@ -1,0 +1,173 @@
+{
+ "files": [
+  {
+   "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-537/clone/apps/three-surface-poc/src/unknown-route-sweep.test.ts",
+   "project": "@syzygy/three-surface-poc-app",
+   "type": "suite",
+   "name": "apps/three-surface-poc/src/unknown-route-sweep.test.ts",
+   "line": null,
+   "mode": "run",
+   "state": "pass",
+   "durationMs": 916.3879820000002,
+   "errors": [],
+   "tasks": [
+    {
+     "type": "suite",
+     "name": "every surface Unknown carries a closed reason and a route (M4 slice 1, POC-REQ-060)",
+     "line": 199,
+     "mode": "run",
+     "state": "pass",
+     "durationMs": 316.6373369999992,
+     "errors": [],
+     "tasks": [
+      {
+       "type": "test",
+       "name": "plain: per-surface denominators, zero exceptions on each",
+       "line": 201,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 143.95305499999995,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "observed-shape: per-surface denominators, zero exceptions on each",
+       "line": 201,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 60.04199299999982,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "unreachable: per-surface denominators, zero exceptions on each",
+       "line": 201,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 10.568003999999746,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "no-seeds: per-surface denominators, zero exceptions on each",
+       "line": 201,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 4.5345360000001165,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "worker-change: per-surface denominators, zero exceptions on each",
+       "line": 201,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 11.301598999999442,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "reaches the worker-change, materialization, region and lifecycle disclosures somewhere in the population",
+       "line": 213,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 53.25221599999986,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "carries the script-built Orrery unmapped block's reason and route in its data island, twinned with the machine entity",
+       "line": 226,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 2.130685000000085,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "fails when a disclosure loses its reason, gains a thirteenth, drops its route, or an Orrery row re-emits a bare provenance-none span",
+       "line": 233,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 28.286454999999478,
+       "errors": []
+      }
+     ],
+     "hookMs": 3
+    },
+    {
+     "type": "suite",
+     "name": "every rendered route has its machine twin under the same id (M4 slice 2, PWB-REQ-020)",
+     "line": 280,
+     "mode": "run",
+     "state": "pass",
+     "durationMs": 72.54323899999963,
+     "errors": [],
+     "tasks": [
+      {
+       "type": "test",
+       "name": "plain: per tuple by id, and over both id sets",
+       "line": 282,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 19.80452200000036,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "observed-shape: per tuple by id, and over both id sets",
+       "line": 282,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 29.27084500000001,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "unreachable: per tuple by id, and over both id sets",
+       "line": 282,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 7.657695999999305,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "no-seeds: per tuple by id, and over both id sets",
+       "line": 282,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 3.0876619999999093,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "worker-change: per tuple by id, and over both id sets",
+       "line": 282,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 10.17334800000026,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "fails when a rendered route, reason or action route parts from its machine twin",
+       "line": 305,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 2.113012000000708,
+       "errors": []
+      }
+     ],
+     "hookMs": 0
+    }
+   ],
+   "hookMs": 527,
+   "collectMs": 4456.125333,
+   "setupMs": 37.96138099999996,
+   "prepareMs": 157.134046,
+   "environmentMs": 0.19782299999997122
+  }
+ ],
+ "unhandled": []
+}

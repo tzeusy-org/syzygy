@@ -22,7 +22,7 @@ export interface TrajectoryLaneItem {
   readonly verification: 'unknown';
 }
 
-export interface TrajectoryProjectionObserved {
+interface TrajectoryProjectionObserved {
   readonly kind: 'observed';
   readonly doltRevision: string;
   readonly selectionRule: string;
@@ -36,13 +36,11 @@ export interface TrajectoryProjectionObserved {
 export interface TrajectoryProjectionUnknown {
   readonly kind: 'unknown';
   readonly reason: string;
-  /** Independently observed work items, when available without a seed graph. */
-  readonly observedItemCount?: number;
 }
 
 export type TrajectoryProjection = TrajectoryProjectionObserved | TrajectoryProjectionUnknown;
 
-export interface ProjectTrajectoryOptions {
+interface ProjectTrajectoryOptions {
   readonly nonClosedLimit: number;
   readonly recentClosedWindow: number;
 }

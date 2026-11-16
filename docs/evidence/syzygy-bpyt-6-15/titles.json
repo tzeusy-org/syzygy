@@ -1,0 +1,384 @@
+{
+ "projects": [
+  "@syzygy/three-surface-poc-app"
+ ],
+ "baseCommit": "bb05df7ea409039c5a6465e7179f9d0c66931ad3",
+ "headCommit": "f207d758eb11830eda2831caa911011e84a966b7",
+ "base": 1134,
+ "head": 1136,
+ "added": [
+  [
+   "apps/three-surface-poc/src/git-observation.test.ts",
+   "read-only Git observation > protects every file of each protected package, its manifest and tsconfig among them"
+  ],
+  [
+   "apps/three-surface-poc/src/git-observation.test.ts",
+   "read-only Git observation > protects every module and package the POC daemon imports"
+  ]
+ ],
+ "removed": [],
+ "duplicatesBase": [],
+ "duplicatesHead": [],
+ "perFile": {
+  "apps/three-surface-poc/src/block-provenance-sweep.test.ts": {
+   "base": 18,
+   "head": 18
+  },
+  "apps/three-surface-poc/src/browser-origin.test.ts": {
+   "base": 3,
+   "head": 3
+  },
+  "apps/three-surface-poc/src/build-output.test.ts": {
+   "base": 1,
+   "head": 1
+  },
+  "apps/three-surface-poc/src/capture-test-artifact-main.test.ts": {
+   "base": 52,
+   "head": 52
+  },
+  "apps/three-surface-poc/src/capture-test-artifact.test.ts": {
+   "base": 26,
+   "head": 26
+  },
+  "apps/three-surface-poc/src/cdp-browser.browser.test.ts": {
+   "base": 2,
+   "head": 2
+  },
+  "apps/three-surface-poc/src/cdp-browser.test.ts": {
+   "base": 29,
+   "head": 29
+  },
+  "apps/three-surface-poc/src/cli.test.ts": {
+   "base": 2,
+   "head": 2
+  },
+  "apps/three-surface-poc/src/cross-cutting.test.ts": {
+   "base": 6,
+   "head": 6
+  },
+  "apps/three-surface-poc/src/design-tokens.test.ts": {
+   "base": 9,
+   "head": 9
+  },
+  "apps/three-surface-poc/src/evaluation-footer.test.ts": {
+   "base": 6,
+   "head": 6
+  },
+  "apps/three-surface-poc/src/fixture-directories.test.ts": {
+   "base": 16,
+   "head": 16
+  },
+  "apps/three-surface-poc/src/fresh-checkout-verdict.test.ts": {
+   "base": 51,
+   "head": 51
+  },
+  "apps/three-surface-poc/src/git-blob-batch.test.ts": {
+   "base": 21,
+   "head": 21
+  },
+  "apps/three-surface-poc/src/git-observation.test.ts": {
+   "base": 11,
+   "head": 13
+  },
+  "apps/three-surface-poc/src/governance-inputs.test.ts": {
+   "base": 26,
+   "head": 26
+  },
+  "apps/three-surface-poc/src/governing-intent-sweep.test.ts": {
+   "base": 28,
+   "head": 28
+  },
+  "apps/three-surface-poc/src/keyboard-sweep-record.test.ts": {
+   "base": 8,
+   "head": 8
+  },
+  "apps/three-surface-poc/src/launcher.test.ts": {
+   "base": 1,
+   "head": 1
+  },
+  "apps/three-surface-poc/src/main.test.ts": {
+   "base": 24,
+   "head": 24
+  },
+  "apps/three-surface-poc/src/materialize-action.test.ts": {
+   "base": 16,
+   "head": 16
+  },
+  "apps/three-surface-poc/src/orrery.browser.test.ts": {
+   "base": 1,
+   "head": 1
+  },
+  "apps/three-surface-poc/src/orrery.test.ts": {
+   "base": 11,
+   "head": 11
+  },
+  "apps/three-surface-poc/src/page-size-delta.test.ts": {
+   "base": 2,
+   "head": 2
+  },
+  "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts": {
+   "base": 15,
+   "head": 15
+  },
+  "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts": {
+   "base": 26,
+   "head": 26
+  },
+  "apps/three-surface-poc/src/polaris-authority-sweep.test.ts": {
+   "base": 5,
+   "head": 5
+  },
+  "apps/three-surface-poc/src/polaris-capability-detail.test.ts": {
+   "base": 7,
+   "head": 7
+  },
+  "apps/three-surface-poc/src/polaris-copy.test.ts": {
+   "base": 7,
+   "head": 7
+  },
+  "apps/three-surface-poc/src/polaris-epistemic-tuples.test.ts": {
+   "base": 8,
+   "head": 8
+  },
+  "apps/three-surface-poc/src/polaris-first-reading.test.ts": {
+   "base": 14,
+   "head": 14
+  },
+  "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts": {
+   "base": 7,
+   "head": 7
+  },
+  "apps/three-surface-poc/src/polaris-generation/dossier-cap-measure.test.ts": {
+   "base": 1,
+   "head": 1
+  },
+  "apps/three-surface-poc/src/polaris-generation/dossier-evaluation-main.test.ts": {
+   "base": 6,
+   "head": 6
+  },
+  "apps/three-surface-poc/src/polaris-generation/dossier-quote-fidelity.test.ts": {
+   "base": 9,
+   "head": 9
+  },
+  "apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.test.ts": {
+   "base": 1,
+   "head": 1
+  },
+  "apps/three-surface-poc/src/polaris-generation/dossier-render.test.ts": {
+   "base": 53,
+   "head": 53
+  },
+  "apps/three-surface-poc/src/polaris-generation/dossier-trigger-isolation.test.ts": {
+   "base": 1,
+   "head": 1
+  },
+  "apps/three-surface-poc/src/polaris-generation/dossier-trigger.test.ts": {
+   "base": 28,
+   "head": 28
+  },
+  "apps/three-surface-poc/src/polaris-generation/draft-preview.browser.test.ts": {
+   "base": 1,
+   "head": 1
+  },
+  "apps/three-surface-poc/src/polaris-generation/draft-preview.test.ts": {
+   "base": 14,
+   "head": 14
+  },
+  "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts": {
+   "base": 8,
+   "head": 8
+  },
+  "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts": {
+   "base": 4,
+   "head": 4
+  },
+  "apps/three-surface-poc/src/polaris-generation/page-sink.test.ts": {
+   "base": 3,
+   "head": 3
+  },
+  "apps/three-surface-poc/src/polaris-generation/pipeline-demo.test.ts": {
+   "base": 5,
+   "head": 5
+  },
+  "apps/three-surface-poc/src/polaris-generation/public-source-screening.test.ts": {
+   "base": 36,
+   "head": 36
+  },
+  "apps/three-surface-poc/src/polaris-generation/redis-shaped-discovery.test.ts": {
+   "base": 14,
+   "head": 14
+  },
+  "apps/three-surface-poc/src/polaris-generation/repo-corpus-isolation.test.ts": {
+   "base": 10,
+   "head": 10
+  },
+  "apps/three-surface-poc/src/polaris-generation/repo-corpus.test.ts": {
+   "base": 22,
+   "head": 22
+  },
+  "apps/three-surface-poc/src/polaris-generation/self-corpus.test.ts": {
+   "base": 4,
+   "head": 4
+  },
+  "apps/three-surface-poc/src/polaris-generation/svg-inert.test.ts": {
+   "base": 31,
+   "head": 31
+  },
+  "apps/three-surface-poc/src/polaris-markdown.test.ts": {
+   "base": 20,
+   "head": 20
+  },
+  "apps/three-surface-poc/src/polaris-narrative.test.ts": {
+   "base": 6,
+   "head": 6
+  },
+  "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts": {
+   "base": 13,
+   "head": 13
+  },
+  "apps/three-surface-poc/src/polaris-parity-sweep.test.ts": {
+   "base": 56,
+   "head": 56
+  },
+  "apps/three-surface-poc/src/polaris-presentation-route.test.ts": {
+   "base": 2,
+   "head": 2
+  },
+  "apps/three-surface-poc/src/polaris-project-shape.test.ts": {
+   "base": 24,
+   "head": 24
+  },
+  "apps/three-surface-poc/src/polaris-proposed-work.test.ts": {
+   "base": 4,
+   "head": 4
+  },
+  "apps/three-surface-poc/src/polaris-reachability.test.ts": {
+   "base": 9,
+   "head": 9
+  },
+  "apps/three-surface-poc/src/polaris-reading.test.ts": {
+   "base": 8,
+   "head": 8
+  },
+  "apps/three-surface-poc/src/polaris-reconciliation.test.ts": {
+   "base": 13,
+   "head": 13
+  },
+  "apps/three-surface-poc/src/polaris-source-route.test.ts": {
+   "base": 6,
+   "head": 6
+  },
+  "apps/three-surface-poc/src/polaris-status-boundary.test.ts": {
+   "base": 2,
+   "head": 2
+  },
+  "apps/three-surface-poc/src/polaris-walkthrough-readiness.test.ts": {
+   "base": 12,
+   "head": 12
+  },
+  "apps/three-surface-poc/src/polaris.test.ts": {
+   "base": 6,
+   "head": 6
+  },
+  "apps/three-surface-poc/src/production-reobserve.test.ts": {
+   "base": 5,
+   "head": 5
+  },
+  "apps/three-surface-poc/src/proposal-disclosure.test.ts": {
+   "base": 5,
+   "head": 5
+  },
+  "apps/three-surface-poc/src/pwb-mutation-sweep.test.ts": {
+   "base": 4,
+   "head": 4
+  },
+  "apps/three-surface-poc/src/pwb-mutation.test.ts": {
+   "base": 5,
+   "head": 5
+  },
+  "apps/three-surface-poc/src/reobserve-action.test.ts": {
+   "base": 4,
+   "head": 4
+  },
+  "apps/three-surface-poc/src/reobserve-session.test.ts": {
+   "base": 6,
+   "head": 6
+  },
+  "apps/three-surface-poc/src/reobserve-state.test.ts": {
+   "base": 2,
+   "head": 2
+  },
+  "apps/three-surface-poc/src/response-identity-independent.test.ts": {
+   "base": 3,
+   "head": 3
+  },
+  "apps/three-surface-poc/src/response-limits.test.ts": {
+   "base": 18,
+   "head": 18
+  },
+  "apps/three-surface-poc/src/restart.test.ts": {
+   "base": 16,
+   "head": 16
+  },
+  "apps/three-surface-poc/src/routes.test.ts": {
+   "base": 11,
+   "head": 11
+  },
+  "apps/three-surface-poc/src/startup-detail.test.ts": {
+   "base": 2,
+   "head": 2
+  },
+  "apps/three-surface-poc/src/surface-render-fractions.test.ts": {
+   "base": 3,
+   "head": 3
+  },
+  "apps/three-surface-poc/src/surface-routes.test.ts": {
+   "base": 18,
+   "head": 18
+  },
+  "apps/three-surface-poc/src/sync-child-process-guard.test.ts": {
+   "base": 6,
+   "head": 6
+  },
+  "apps/three-surface-poc/src/test-artifact-verification-consumers.test.ts": {
+   "base": 4,
+   "head": 4
+  },
+  "apps/three-surface-poc/src/test-model-fixture.test.ts": {
+   "base": 5,
+   "head": 5
+  },
+  "apps/three-surface-poc/src/trajectory-narrowing.browser.test.ts": {
+   "base": 2,
+   "head": 2
+  },
+  "apps/three-surface-poc/src/trajectory.test.ts": {
+   "base": 15,
+   "head": 15
+  },
+  "apps/three-surface-poc/src/tuple-encoding.test.ts": {
+   "base": 6,
+   "head": 6
+  },
+  "apps/three-surface-poc/src/unknown-route-sweep.test.ts": {
+   "base": 14,
+   "head": 14
+  },
+  "apps/three-surface-poc/src/verbatim-route.test.ts": {
+   "base": 13,
+   "head": 13
+  },
+  "apps/three-surface-poc/src/walkthrough-inputs.test.ts": {
+   "base": 18,
+   "head": 18
+  },
+  "apps/three-surface-poc/src/walkthrough-preflight.test.ts": {
+   "base": 43,
+   "head": 43
+  },
+  "apps/three-surface-poc/src/watch-mode.test.ts": {
+   "base": 15,
+   "head": 15
+  }
+ }
+}

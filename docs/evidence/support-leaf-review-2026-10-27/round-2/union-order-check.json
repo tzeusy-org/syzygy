@@ -1,0 +1,329 @@
+{
+ "union": {
+  "build": {
+   "merge": [
+    "packages/support",
+    "packages/cap1-core",
+    "packages/http-host",
+    "packages/cap1-daemon",
+    "packages/cap1-conformance",
+    "packages/three-surface-poc-core",
+    "apps/syzygy",
+    "apps/three-surface-poc",
+    "packages/cap1-system",
+    "packages/polaris-generation-core",
+    "packages/polaris-generation-consent",
+    "packages/polaris-dossier"
+   ],
+   "setEqualsUnion": true,
+   "noDuplicates": true,
+   "oursOrderKept": true,
+   "theirsOrderKept": true,
+   "addedByOurs": [
+    "packages/support"
+   ],
+   "addedByTheirs": [
+    "packages/http-host"
+   ],
+   "lostFromEitherSide": []
+  },
+  "build:poc": {
+   "merge": [
+    "packages/support",
+    "packages/cap1-core",
+    "packages/http-host",
+    "packages/cap1-daemon",
+    "packages/three-surface-poc-core",
+    "packages/polaris-generation-core",
+    "apps/three-surface-poc"
+   ],
+   "setEqualsUnion": true,
+   "noDuplicates": true,
+   "oursOrderKept": true,
+   "theirsOrderKept": true,
+   "addedByOurs": [
+    "packages/support"
+   ],
+   "addedByTheirs": [
+    "packages/http-host"
+   ],
+   "lostFromEitherSide": []
+  },
+  "typecheck": {
+   "merge": [
+    "packages/support",
+    "packages/cap1-core",
+    "packages/http-host",
+    "packages/cap1-daemon",
+    "packages/cap1-conformance",
+    "packages/three-surface-poc-core",
+    "apps/syzygy",
+    "apps/three-surface-poc",
+    "packages/cap1-system",
+    "packages/polaris-generation-core",
+    "packages/polaris-generation-consent",
+    "packages/polaris-dossier"
+   ],
+   "setEqualsUnion": true,
+   "noDuplicates": true,
+   "oursOrderKept": true,
+   "theirsOrderKept": true,
+   "addedByOurs": [
+    "packages/support"
+   ],
+   "addedByTheirs": [
+    "packages/http-host"
+   ],
+   "lostFromEitherSide": []
+  }
+ },
+ "graph": {
+  "apps/syzygy": {
+   "name": "@syzygy/app",
+   "imports": [
+    "@syzygy/cap1-daemon",
+    "@syzygy/http-host",
+    "@syzygy/polaris-dossier"
+   ],
+   "dependencies": [
+    "@syzygy/cap1-daemon",
+    "@syzygy/http-host",
+    "@syzygy/polaris-dossier",
+    "@syzygy/three-surface-poc-app"
+   ],
+   "references": [
+    "../../packages/cap1-daemon",
+    "../../packages/http-host",
+    "../../packages/polaris-dossier",
+    "../three-surface-poc"
+   ]
+  },
+  "apps/three-surface-poc": {
+   "name": "@syzygy/three-surface-poc-app",
+   "imports": [
+    "@syzygy/http-host",
+    "@syzygy/polaris-generation-consent",
+    "@syzygy/polaris-generation-core",
+    "@syzygy/support",
+    "@syzygy/three-surface-poc-core"
+   ],
+   "dependencies": [
+    "@syzygy/cap1-daemon",
+    "@syzygy/http-host",
+    "@syzygy/polaris-generation-consent",
+    "@syzygy/polaris-generation-core",
+    "@syzygy/support",
+    "@syzygy/three-surface-poc-core"
+   ],
+   "references": [
+    "../../packages/cap1-daemon",
+    "../../packages/http-host",
+    "../../packages/polaris-generation-consent",
+    "../../packages/polaris-generation-core",
+    "../../packages/support",
+    "../../packages/three-surface-poc-core"
+   ]
+  },
+  "packages/cap1-conformance": {
+   "name": "@syzygy/cap1-conformance",
+   "imports": [
+    "@syzygy/cap1-core"
+   ],
+   "dependencies": [
+    "@syzygy/cap1-core",
+    "@syzygy/cap1-daemon"
+   ],
+   "references": [
+    "../cap1-core",
+    "../cap1-daemon"
+   ]
+  },
+  "packages/cap1-core": {
+   "name": "@syzygy/cap1-core",
+   "imports": [],
+   "dependencies": [],
+   "references": []
+  },
+  "packages/cap1-daemon": {
+   "name": "@syzygy/cap1-daemon",
+   "imports": [
+    "@syzygy/cap1-core",
+    "@syzygy/http-host"
+   ],
+   "dependencies": [
+    "@syzygy/cap1-core",
+    "@syzygy/http-host"
+   ],
+   "references": [
+    "../cap1-core",
+    "../http-host"
+   ]
+  },
+  "packages/cap1-system": {
+   "name": "@syzygy/cap1-system",
+   "imports": [],
+   "dependencies": [],
+   "references": []
+  },
+  "packages/http-host": {
+   "name": "@syzygy/http-host",
+   "imports": [
+    "@syzygy/cap1-core"
+   ],
+   "dependencies": [
+    "@syzygy/cap1-core"
+   ],
+   "references": [
+    "../cap1-core"
+   ]
+  },
+  "packages/polaris-dossier": {
+   "name": "@syzygy/polaris-dossier",
+   "imports": [
+    "@syzygy/cap1-core",
+    "@syzygy/polaris-generation-consent",
+    "@syzygy/polaris-generation-core",
+    "@syzygy/support",
+    "@syzygy/three-surface-poc-core"
+   ],
+   "dependencies": [
+    "@syzygy/cap1-core",
+    "@syzygy/polaris-generation-consent",
+    "@syzygy/polaris-generation-core",
+    "@syzygy/support",
+    "@syzygy/three-surface-poc-core"
+   ],
+   "references": [
+    "../cap1-core",
+    "../polaris-generation-consent",
+    "../polaris-generation-core",
+    "../support",
+    "../three-surface-poc-core"
+   ]
+  },
+  "packages/polaris-generation-consent": {
+   "name": "@syzygy/polaris-generation-consent",
+   "imports": [
+    "@syzygy/polaris-generation-core",
+    "@syzygy/support"
+   ],
+   "dependencies": [
+    "@syzygy/polaris-generation-core",
+    "@syzygy/support"
+   ],
+   "references": [
+    "../polaris-generation-core",
+    "../support"
+   ]
+  },
+  "packages/polaris-generation-core": {
+   "name": "@syzygy/polaris-generation-core",
+   "imports": [
+    "@syzygy/support"
+   ],
+   "dependencies": [
+    "@syzygy/support"
+   ],
+   "references": [
+    "../support"
+   ]
+  },
+  "packages/support": {
+   "name": "@syzygy/support",
+   "imports": [],
+   "dependencies": [],
+   "references": []
+  },
+  "packages/three-surface-poc-core": {
+   "name": "@syzygy/three-surface-poc-core",
+   "imports": [
+    "@syzygy/cap1-core",
+    "@syzygy/support"
+   ],
+   "dependencies": [
+    "@syzygy/cap1-core",
+    "@syzygy/support"
+   ],
+   "references": [
+    "../cap1-core",
+    "../support"
+   ]
+  }
+ },
+ "edgesPerScript": {
+  "build": 22,
+  "build:poc": 11,
+  "typecheck": 22
+ },
+ "edgesNotEarlierOrUndeclared": {
+  "build": [
+   {
+    "project": "apps/syzygy",
+    "imports": "@syzygy/polaris-dossier",
+    "target": "packages/polaris-dossier",
+    "targetInList": true,
+    "targetEarlier": false,
+    "declaredDependency": true,
+    "tsconfigReference": true
+   },
+   {
+    "project": "apps/three-surface-poc",
+    "imports": "@syzygy/polaris-generation-consent",
+    "target": "packages/polaris-generation-consent",
+    "targetInList": true,
+    "targetEarlier": false,
+    "declaredDependency": true,
+    "tsconfigReference": true
+   },
+   {
+    "project": "apps/three-surface-poc",
+    "imports": "@syzygy/polaris-generation-core",
+    "target": "packages/polaris-generation-core",
+    "targetInList": true,
+    "targetEarlier": false,
+    "declaredDependency": true,
+    "tsconfigReference": true
+   }
+  ],
+  "build:poc": [
+   {
+    "project": "apps/three-surface-poc",
+    "imports": "@syzygy/polaris-generation-consent",
+    "target": "packages/polaris-generation-consent",
+    "targetInList": false,
+    "targetEarlier": false,
+    "declaredDependency": true,
+    "tsconfigReference": true
+   }
+  ],
+  "typecheck": [
+   {
+    "project": "apps/syzygy",
+    "imports": "@syzygy/polaris-dossier",
+    "target": "packages/polaris-dossier",
+    "targetInList": true,
+    "targetEarlier": false,
+    "declaredDependency": true,
+    "tsconfigReference": true
+   },
+   {
+    "project": "apps/three-surface-poc",
+    "imports": "@syzygy/polaris-generation-consent",
+    "target": "packages/polaris-generation-consent",
+    "targetInList": true,
+    "targetEarlier": false,
+    "declaredDependency": true,
+    "tsconfigReference": true
+   },
+   {
+    "project": "apps/three-surface-poc",
+    "imports": "@syzygy/polaris-generation-core",
+    "target": "packages/polaris-generation-core",
+    "targetInList": true,
+    "targetEarlier": false,
+    "declaredDependency": true,
+    "tsconfigReference": true
+   }
+  ]
+ }
+}

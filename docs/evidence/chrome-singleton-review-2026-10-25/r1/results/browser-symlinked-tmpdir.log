@@ -1,0 +1,12 @@
+
+ RUN  v3.2.7 /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-515/clone
+
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/cdp-browser.browser.test.ts (2 tests) 3266ms
+   ✓ disposable Chrome teardown in a real browser > closes and drains even when a helper cannot exit on its own  1643ms
+   ✓ disposable Chrome teardown in a real browser > leaves no Chrome singleton directory behind when the leader is killed  1620ms
+
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+   Start at  22:39:29
+   Duration  3.77s (transform 122ms, setup 24ms, collect 89ms, tests 3.27s, environment 0ms, prepare 86ms)
+

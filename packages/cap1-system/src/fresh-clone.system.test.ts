@@ -114,6 +114,6 @@ describe('RT6 — fresh-clone demonstration', () => {
       expect(asserted).toBe(jsonFacts.length);
       expect(jsonFacts.length).toBe(7);
     },
-    600_000,
+    600_000, // clones, installs and builds: worst 77.5 s over 5 runs at load1 47-75 (docs/evidence/syzygy-bpyt-4-31/durations/cap1-system.hooks.json); 12-19 s on the hosted runs in docs/evidence/syzygy-bpyt-4-31/ci-durations.json
   );
 });

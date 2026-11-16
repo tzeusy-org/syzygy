@@ -1,0 +1,13 @@
+{
+ "kernel": "7.0.0-38-generic",
+ "dir": "/var/tmp/r519-ext4/coarse",
+ "rounds": 2000,
+ "unqueried": {
+  "pairsWithEqualCtime": 1998,
+  "medianWallGapBetweenPlantsNs": "105930",
+  "medianNonZeroStepNs": "260492"
+ },
+ "queried": {
+  "chmodAfterLstatLeftCtimeEqual": 0
+ }
+}

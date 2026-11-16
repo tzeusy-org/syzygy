@@ -1,4 +1,4 @@
-import { escapeHtml } from '@syzygy/cap1-daemon';
+import { escapeHtml } from '@syzygy/http-host';
 import type { PocModel, PocUnknown } from '@syzygy/three-surface-poc-core';
 
 import { crossSurfaceLink } from './surface-links.js';

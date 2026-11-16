@@ -1,0 +1,50 @@
+{
+ "base": "c104771ff90f47ffd070f2339c36010458679c71",
+ "head": "c68fc5ca6ec99a08c118e112df362bfa8ab01070",
+ "surfaceEqual": true,
+ "hostEqualThroughCap1Daemon": true,
+ "hostEqualThroughHttpHost": true,
+ "e2eEqual": true,
+ "asExpected": true,
+ "selftest": [
+  {
+   "mutant": "refusal-status",
+   "file": "packages/http-host/dist/server.js",
+   "old": "export const REFUSAL_STATUS = 401;",
+   "new": "export const REFUSAL_STATUS = 403;",
+   "check": "hostEqualThroughHttpHost",
+   "checkHeld": false,
+   "detected": true
+  },
+  {
+   "mutant": "credential-detail",
+   "file": "packages/http-host/dist/credentials.js",
+   "old": "grants group or other access",
+   "new": "grants access to others",
+   "check": "hostEqualThroughCap1Daemon",
+   "checkHeld": false,
+   "detected": true
+  },
+  {
+   "mutant": "shutdown-announcement",
+   "file": "apps/syzygy/dist/main.js",
+   "old": "received, shutting down",
+   "new": "received; shutting down",
+   "check": "e2eEqual",
+   "checkHeld": false,
+   "detected": true
+  },
+  {
+   "mutant": "gate-host-prefix",
+   "file": "apps/three-surface-poc/dist/git-observation.js",
+   "old": "'packages/http-host/',",
+   "new": "",
+   "check": "onlyHostPathsDiffer",
+   "checkHeld": false,
+   "detected": true
+  }
+ ],
+ "selftestPassed": true
+}
+gate differing: 11 only host paths: True
+exit=0

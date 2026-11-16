@@ -1,0 +1,9 @@
+A summary: ['Test Files  245 passed | 3 skipped (248)', 'Tests  5393 passed | 5 skipped (5398)']
+B summary: ['Test Files  245 passed | 3 skipped (248)', 'Tests  5393 passed | 5 skipped (5398)']
+A rows=248 tests=5398; B rows=248 tests=5398
+A skipped/partial apps/three-surface-poc/src/polaris-opening-index.browser.test.ts ('✓', 14, '1')
+A skipped/partial apps/three-surface-poc/src/project-shape-discovery.live.test.ts ('↓', 1, '1')
+A skipped/partial packages/polaris-dossier/src/no-egress.test.ts ('✓', 3, '1')
+A skipped/partial packages/three-surface-poc-core/src/test-artifact-verification.live.test.ts ('↓', 1, '1')
+A skipped/partial packages/three-surface-poc-core/src/work-items.live.test.ts ('↓', 1, '1')
+paths differing=0

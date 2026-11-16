@@ -1,0 +1,134 @@
+{
+ "base": "a088f1caf061c1a2062527ce8521c9b64c3c7fd1",
+ "blob": "apps/three-surface-poc/src/polaris-narrative.ts",
+ "blobSha256": "b8e2f77cefcdee10e1ad16cf67140bbe66e2aa9cd1023c45faa7e0751150172f",
+ "node": "v24.6.0",
+ "rows": [
+  {
+   "case": "typed array member, non-empty, two siblings",
+   "old": {
+    "implementation": "old (polaris-narrative.ts at the base)",
+    "threw": {
+     "name": "TypeError",
+     "message": "Cannot freeze array buffer views with elements"
+    },
+    "objects": 4,
+    "frozen": 1
+   },
+   "package": {
+    "implementation": "@syzygy/support",
+    "threw": {
+     "name": "TypeError",
+     "message": "Cannot freeze array buffer views with elements"
+    },
+    "objects": 4,
+    "frozen": 2
+   }
+  },
+  {
+   "case": "typed array member, non-empty, one sibling",
+   "old": {
+    "implementation": "old (polaris-narrative.ts at the base)",
+    "threw": {
+     "name": "TypeError",
+     "message": "Cannot freeze array buffer views with elements"
+    },
+    "objects": 3,
+    "frozen": 1
+   },
+   "package": {
+    "implementation": "@syzygy/support",
+    "threw": {
+     "name": "TypeError",
+     "message": "Cannot freeze array buffer views with elements"
+    },
+    "objects": 3,
+    "frozen": 2
+   }
+  },
+  {
+   "case": "typed array member first, non-empty, one sibling",
+   "old": {
+    "implementation": "old (polaris-narrative.ts at the base)",
+    "threw": {
+     "name": "TypeError",
+     "message": "Cannot freeze array buffer views with elements"
+    },
+    "objects": 3,
+    "frozen": 0
+   },
+   "package": {
+    "implementation": "@syzygy/support",
+    "threw": {
+     "name": "TypeError",
+     "message": "Cannot freeze array buffer views with elements"
+    },
+    "objects": 3,
+    "frozen": 1
+   }
+  },
+  {
+   "case": "typed array member, empty",
+   "old": {
+    "implementation": "old (polaris-narrative.ts at the base)",
+    "threw": null,
+    "objects": 3,
+    "frozen": 3
+   },
+   "package": {
+    "implementation": "@syzygy/support",
+    "threw": null,
+    "objects": 3,
+    "frozen": 3
+   }
+  },
+  {
+   "case": "control: nested plain objects",
+   "old": {
+    "implementation": "old (polaris-narrative.ts at the base)",
+    "threw": null,
+    "objects": 7,
+    "frozen": 7
+   },
+   "package": {
+    "implementation": "@syzygy/support",
+    "threw": null,
+    "objects": 7,
+    "frozen": 7
+   }
+  },
+  {
+   "case": "stated difference 1: a cycle",
+   "old": {
+    "implementation": "old (polaris-narrative.ts at the base)",
+    "threw": {
+     "name": "RangeError",
+     "message": "Maximum call stack size exceeded"
+    },
+    "objects": 1,
+    "frozen": 0
+   },
+   "package": {
+    "implementation": "@syzygy/support",
+    "threw": null,
+    "objects": 1,
+    "frozen": 1
+   }
+  },
+  {
+   "case": "stated difference 2: a frozen shell around an unfrozen member",
+   "old": {
+    "implementation": "old (polaris-narrative.ts at the base)",
+    "threw": null,
+    "objects": 3,
+    "frozen": 3
+   },
+   "package": {
+    "implementation": "@syzygy/support",
+    "threw": null,
+    "objects": 3,
+    "frozen": 1
+   }
+  }
+ ]
+}

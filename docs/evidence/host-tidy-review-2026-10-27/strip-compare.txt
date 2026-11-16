@@ -1,0 +1,10 @@
+{"path":"packages/http-host/src/server.ts","bytesEqual":false,"tokensEqual":true,"tokenCounts":[681,681],"firstTokenDiff":null,"emitEqual":true,"selftest":{"identifierRenamed":{"tokensEqual":false,"emitEqual":false},"literalChanged":{"tokensEqual":false,"emitEqual":false},"commentAdded":{"tokensEqual":true,"emitEqual":true}},"selftestOk":true}
+{"path":"packages/http-host/src/shutdown.ts","bytesEqual":false,"tokensEqual":true,"tokenCounts":[200,200],"firstTokenDiff":null,"emitEqual":true,"selftest":{"identifierRenamed":{"tokensEqual":false,"emitEqual":false},"literalChanged":{"tokensEqual":false,"emitEqual":false},"commentAdded":{"tokensEqual":true,"emitEqual":true}},"selftestOk":true}
+{"path":"packages/http-host/src/index.ts","bytesEqual":true,"tokensEqual":true,"tokenCounts":[20,20],"firstTokenDiff":null,"emitEqual":true}
+{"path":"packages/http-host/src/credentials.ts","bytesEqual":true,"tokensEqual":true,"tokenCounts":[683,683],"firstTokenDiff":null,"emitEqual":true}
+{"path":"packages/cap1-daemon/src/server.ts","bytesEqual":true,"tokensEqual":true,"tokenCounts":[268,268],"firstTokenDiff":null,"emitEqual":true}
+{"path":"packages/cap1-daemon/src/credentials.ts","bytesEqual":true,"tokensEqual":true,"tokenCounts":[39,39],"firstTokenDiff":null,"emitEqual":true}
+{"path":"apps/syzygy/src/main.ts","bytesEqual":true,"tokensEqual":true,"tokenCounts":[487,487],"firstTokenDiff":null,"emitEqual":true}
+{"path":"apps/three-surface-poc/src/poc-main.ts","bytesEqual":true,"tokensEqual":true,"tokenCounts":[523,523],"firstTokenDiff":null,"emitEqual":true}
+{"path":"apps/three-surface-poc/src/startup-detail.ts","bytesEqual":true,"tokensEqual":true,"tokenCounts":[191,191],"firstTokenDiff":null,"emitEqual":true}
+{"path":"apps/three-surface-poc/src/git-observation.ts","bytesEqual":true,"tokensEqual":true,"tokenCounts":[573,573],"firstTokenDiff":null,"emitEqual":true}

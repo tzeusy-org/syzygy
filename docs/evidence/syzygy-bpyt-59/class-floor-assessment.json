@@ -1,0 +1,110 @@
+{
+  "status": "author assessment, contested; fresh independent reviewer pending",
+  "classes": [
+    {
+      "class": 1,
+      "touches": true,
+      "basis": "Effective owner-act authority at both gates; GP-B2 Q6 class-1 floor."
+    },
+    {
+      "class": 2,
+      "touches": false,
+      "basis": "No identity minting, split, merge or continuity change."
+    },
+    {
+      "class": 3,
+      "touches": true,
+      "basis": "Deterministic admission/judgment outcomes narrow for exactly four rolled date spellings."
+    },
+    {
+      "class": 4,
+      "touches": true,
+      "basis": "Fail-closed consent/read-authority boundary."
+    },
+    {
+      "class": 5,
+      "touches": false,
+      "basis": "No schema/store migration."
+    },
+    {
+      "class": 6,
+      "touches": true,
+      "basis": "Existing public evaluator behavior changes for authorized invalid inputs; signatures, reasons and exports stay fixed."
+    },
+    {
+      "class": 7,
+      "touches": false,
+      "basis": "No certificate logic."
+    }
+  ],
+  "floors": [
+    {
+      "floor": 1,
+      "name": "Truth",
+      "protection": "Full serialized evaluations, freshness/provenance and fixed identified repeat compared. Invalid authority is Unknown/contradiction; no claim that synthetic records prove real owner attendance."
+    },
+    {
+      "floor": 2,
+      "name": "Evidence",
+      "protection": "Retain attempts, exact source/build/fixture/adapter/tool identities and denominators. Final clean-clone gate and fresh review remain Unknown until separately recorded."
+    },
+    {
+      "floor": 3,
+      "name": "Inference",
+      "protection": "Author design/classes are Inferred. Synthetic admission does not establish actual effective owner acts or positive project status."
+    },
+    {
+      "floor": 4,
+      "name": "Write",
+      "protection": "Operator-authored changes stay in concrete ROOT allocation. Syzygy receives no implementation-write capability or observed-repository write."
+    },
+    {
+      "floor": 5,
+      "name": "Sign-off",
+      "protection": "Existing exact Q6 A authorizes date narrowing only. No adoption, artifact edit or broader security/privacy/retention/spec effect."
+    },
+    {
+      "floor": 6,
+      "name": "Security",
+      "protection": "Private namespace/home/cache/tmp, denied network and hidden credentials/observed repositories. Synthetic fixture reads only. Existing refusals preserved; all newly refused Date/Expires cases use existing reasons."
+    },
+    {
+      "floor": 7,
+      "name": "Identity",
+      "protection": "Durable act/evaluation identities and closed195/84+2 vocabularies preserved; no migration/reminting."
+    }
+  ],
+  "authority": [
+    {
+      "id": "GP-B2 Q6 A",
+      "path": ".syzygy/governance/decisions/OWNER-DIRECTION-GREENFIELD-PARITY-FOLLOWUPS-2026-10-28.md",
+      "quote": "The owner directs that such dates be refused by read-back"
+    },
+    {
+      "id": "RFC3-16(b) item6",
+      "path": ".syzygy/governance/contracts/rfcs/RFC-0003/governance-homes-and-owner-acts.md",
+      "quote": "the act instant"
+    },
+    {
+      "id": "RFC3-16(b) item8",
+      "path": ".syzygy/governance/contracts/rfcs/RFC-0003/governance-homes-and-owner-acts.md",
+      "quote": "no act lapses silently except by an expiry the act itself declared"
+    },
+    {
+      "id": "PWB-REQ-005",
+      "path": "openspec/changes/polaris-project-wide-butlers-model/specs/polaris-project-wide-butlers-model/spec.md",
+      "quote": "The three states SHALL be evaluated independently"
+    },
+    {
+      "id": "PWB-REQ-022",
+      "path": "openspec/changes/polaris-project-wide-butlers-model/specs/polaris-project-wide-butlers-model/spec.md",
+      "quote": "Either absent case SHALL render Unknown, never met, without inventing a verdict."
+    }
+  ],
+  "remainingGates": [
+    "Fresh independent default-model CC-REV-1 review of exact frozen subject by ROOT",
+    "Actual non-blocking GP-Q0 notice via ROOT in syzygy-bpyt.10",
+    "Both actual syzygy-1z3.22 owner judgment AND syzygy-1z3.25 cycle report before any core merge",
+    "Required hosted and protected landing gates; no ready/queue/merge/closure authorization"
+  ]
+}

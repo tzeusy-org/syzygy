@@ -1,0 +1,19 @@
+state=linked preflight@f7477f52-parent exit=0 stderr=''
+state=linked preflight@f7477f52 exit=0 stderr=''
+state=linked preflight@663061c4 exit=0 stderr=''
+state=linked build:poc exit=0 first-error=''
+state=absent preflight@f7477f52-parent exit=0 stderr=''
+state=absent preflight@f7477f52 exit=0 stderr=''
+state=absent preflight@663061c4 exit=1 stderr=Generator\ dependencies\ are\ missing.\ Run\ npm\ ci\ from\ the\ repository\ root\,\ then\ retry.
+state=absent build:poc exit=2 first-error=packages/three-surface-poc-core/src/body-read-authority.ts\(37\,36\):\ error\ TS2307:\ Cannot\ find\ module\ \'@syzygy/support\'\ or\ its\ corresponding\ type\ declarations.
+state=dangling-link preflight@f7477f52-parent exit=0 stderr=''
+state=dangling-link preflight@f7477f52 exit=0 stderr=''
+state=dangling-link preflight@663061c4 exit=1 stderr=Generator\ dependencies\ are\ missing.\ Run\ npm\ ci\ from\ the\ repository\ root\,\ then\ retry.
+state=empty-directory preflight@f7477f52-parent exit=0 stderr=''
+state=empty-directory preflight@f7477f52 exit=0 stderr=''
+state=empty-directory preflight@663061c4 exit=0 stderr=''
+state=empty-directory build:poc exit=2 first-error=packages/three-surface-poc-core/src/body-read-authority.ts\(37\,36\):\ error\ TS2307:\ Cannot\ find\ module\ \'@syzygy/support\'\ or\ its\ corresponding\ type\ declarations.
+state=restored preflight@f7477f52-parent exit=0 stderr=''
+state=restored preflight@f7477f52 exit=0 stderr=''
+state=restored preflight@663061c4 exit=0 stderr=''
+lrwxrwxrwx 1 tze tze 22 Oct 27 12:56 /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-538/clone/node_modules/@syzygy/support -> ../../packages/support

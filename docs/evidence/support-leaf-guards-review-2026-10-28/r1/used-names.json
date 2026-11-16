@@ -1,0 +1,80 @@
+{
+ "commit": "3b04b1cd",
+ "files": [
+  "packages/support/src/decode-utf8.ts",
+  "packages/support/src/deep-freeze.ts",
+  "packages/support/src/index.ts",
+  "packages/support/src/sha256.ts"
+ ],
+ "listCount": 20,
+ "usedCount": 20,
+ "unusedOnList": [],
+ "usedNotOnList": [],
+ "usedBy": {
+  "Object": [
+   "deep-freeze.ts"
+  ],
+  "STRICT_UTF8": [
+   "decode-utf8.ts"
+  ],
+  "T": [
+   "deep-freeze.ts"
+  ],
+  "TextDecoder": [
+   "decode-utf8.ts"
+  ],
+  "Uint8Array": [
+   "decode-utf8.ts",
+   "sha256.ts"
+  ],
+  "bytes": [
+   "decode-utf8.ts"
+  ],
+  "createHash": [
+   "sha256.ts"
+  ],
+  "decode": [
+   "decode-utf8.ts"
+  ],
+  "decodeUtf8": [
+   "decode-utf8.ts",
+   "index.ts"
+  ],
+  "deepFreeze": [
+   "deep-freeze.ts",
+   "index.ts"
+  ],
+  "digest": [
+   "sha256.ts"
+  ],
+  "fatal": [
+   "decode-utf8.ts"
+  ],
+  "freeze": [
+   "deep-freeze.ts"
+  ],
+  "isFrozen": [
+   "deep-freeze.ts"
+  ],
+  "member": [
+   "deep-freeze.ts"
+  ],
+  "sha256": [
+   "index.ts",
+   "sha256.ts"
+  ],
+  "undefined": [
+   "decode-utf8.ts"
+  ],
+  "update": [
+   "sha256.ts"
+  ],
+  "value": [
+   "deep-freeze.ts",
+   "sha256.ts"
+  ],
+  "values": [
+   "deep-freeze.ts"
+  ]
+ }
+}

@@ -1,0 +1,21 @@
+R1-hash-compares-presented-to-itself: killed exit=1 failed=7/580 files=4 clean=True
+R2-bearer-scheme-case-insensitive: killed exit=1 failed=1/580 files=1 clean=True
+R3-bearer-token-whitespace-trimmed: killed exit=1 failed=1/580 files=1 clean=True
+R4-loopback-address-admits: killed exit=1 failed=14/580 files=4 clean=True
+R5-machine-get-routes-treated-as-human-open: killed exit=1 failed=14/580 files=4 clean=True
+R6-handler-invoked-before-admission: killed exit=1 failed=13/580 files=4 clean=True
+R7-breach-line-loses-its-reason: killed exit=1 failed=2/580 files=2 clean=True
+R8-not-admitted-population-dropped: killed exit=1 failed=1/580 files=1 clean=True
+R9-304-logged-as-non-success: killed exit=1 failed=1/580 files=1 clean=True
+R10-daemon-binds-all-interfaces: killed exit=1 failed=21/580 files=8 clean=True
+R11-clean-close-never-resolves: killed exit=1 failed=13/580 files=2 clean=True
+R12-poc-sigterm-registered-as-sigint: killed exit=1 failed=9/580 files=1 clean=True
+R13-shim-unknown-route-status-swapped: killed exit=1 failed=1/580 files=1 clean=True
+R14-credentials-shim-drops-a-type: survived exit=0 failed=0/580 files=0 clean=True
+R15-escape-ampersand-last: killed exit=1 failed=4/580 files=4 clean=True
+R16-gate-host-prefix-removed: killed exit=1 failed=1/35 files=1 clean=True
+R17-gate-host-prefix-narrowed-to-src: killed exit=1 failed=1/35 files=1 clean=True
+R18-origin-prefix-match: killed exit=1 failed=1/580 files=1 clean=True
+R19-state-write-containment-without-separator: killed exit=1 failed=2/580 files=1 clean=True
+killed 18 survived 1 error 0 of 19
+done 0

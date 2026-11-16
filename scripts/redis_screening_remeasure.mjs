@@ -387,7 +387,10 @@ async function measure(options) {
   const run = path.resolve(options.run);
   const runId = path.basename(run);
   const now = Date.now();
-  const { createPackageGateSources, buildFidelityPacket, buildDossierScreen, loadDossierScreen, openPinnedObjectReader } = await dist('packages/polaris-dossier/dist/index.js');
+  const { createPackageGateSources } = await dist('packages/polaris-dossier/dist/gate-sources.js');
+  const { buildFidelityPacket } = await dist('packages/polaris-dossier/dist/review.js');
+  const { buildDossierScreen, loadDossierScreen } = await dist('packages/polaris-dossier/dist/screen.js');
+  const { openPinnedObjectReader } = await dist('packages/polaris-dossier/dist/git-object-reader.js');
   const { collectBlocks, collectCitations } = await dist('packages/polaris-dossier/dist/check.js');
   const { openRun } = await dist('packages/polaris-dossier/dist/inventory.js');
   const { POLICY_PATH, readClassActState } = await dist('packages/polaris-generation-consent/dist/index.js');
@@ -436,7 +439,7 @@ async function measure(options) {
   const v3Found = findByDigest(candidates, v3Digests[0]);
   if (v3Found === undefined) throw new Error('no commit of this checkout holds the policy bytes the retained packets name');
   const classAct = await readClassActState({ root: ROOT, now });
-  const v3Load = buildDossierScreen(new Uint8Array(v3Found.bytes), classAct.state === 'ok');
+  const v3Load = buildDossierScreen(new Uint8Array(v3Found.bytes), classAct.state === 'ok', null, 'public');   // Redis is public by its act's form
   if (!v3Load.ok) throw new Error(`the version-3 screen does not build: ${v3Load.why}`);
   const v4Load = await loadDossierScreen(ROOT, now);
   if (!v4Load.ok) return { exit: 3, texts: [], record: { ...header, gate: { call: 'openRun', ok: true }, screenInForce: { ok: false, why: v4Load.why }, measured: false, bodiesRead: 0 } };

@@ -1,0 +1,15 @@
+{
+ "what": "utf8-probe.mjs run on the tested commit b81010c8c5a375ef9fd446ac9ddc0da407ac1c58 (built with npm run build:poc) and compared with the tracked base output by compare-utf8-probe.py",
+ "testedCommit": "b81010c8c5a375ef9fd446ac9ddc0da407ac1c58",
+ "compare": {
+  "rowsCompared": 12841,
+  "rowsDiffer": 0,
+  "missing": 0,
+  "extra": 0,
+  "differPerDriver": {},
+  "firstDiffering": [],
+  "corpusEqual": true
+ },
+ "headOutputSha256": "be4bd04594ccd42f0b2e129a1a38c0709f342f0a416fdb803b4f3c1f28cc2667",
+ "baseOutputSha256": "be4bd04594ccd42f0b2e129a1a38c0709f342f0a416fdb803b4f3c1f28cc2667"
+}

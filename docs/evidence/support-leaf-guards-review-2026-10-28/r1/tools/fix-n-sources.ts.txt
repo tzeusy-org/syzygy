@@ -1,0 +1,4 @@
+/** Every source module under `dir`, at any depth and with any JavaScript or TypeScript extension, but the tests and the testkit. */
+const sourcesUnder = (dir: URL): string[] => readdirSync(dir, { recursive: true, encoding: 'utf8' })
+  .filter((name) => /\.[cm]?[jt]sx?$/u.test(name) && !name.endsWith('.test.ts') && name !== 'purity.testkit.ts').sort();
+const SOURCES = sourcesUnder(SRC);

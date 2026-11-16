@@ -1,0 +1,36 @@
+{
+ "mutants": [
+  {
+   "id": "GM7-entry-re-exports-the-barrel-as-a-namespace",
+   "edits": [
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nexport * as dossier from '@syzygy/polaris-dossier';\n"
+    }
+   ],
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/subpath-imports.test.ts"
+   ]
+  },
+  {
+   "id": "OE2-walker-drops-require",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/subpath-imports.test.ts",
+     "old": "    else if (ts.isCallExpression(node) && ts.isIdentifier(node.expression) && node.expression.text === 'require' && node.arguments[0]) add('require', node.arguments[0]);\n",
+     "new": ""
+    }
+   ],
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/subpath-imports.test.ts"
+   ]
+  }
+ ]
+}

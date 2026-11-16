@@ -1,0 +1,131 @@
+{
+ "tool": "fix_check_r2.py",
+ "tree": "9e00252ae134accc4a42604445a4db66f68d5100",
+ "fixRow": "  // rev-532b scratch fix (not a proposal of exact bytes): the branches are found by syntax, not by line text.\n  it('every line of main.ts naming the POC app sits inside the `dossier` or the `polaris` branch, before the daemon path', () => {\n    const text = readFileSync(path.join(REPO_ROOT, 'apps/syzygy/src/main.ts'), 'utf8');\n    const source = ts.createSourceFile('main.ts', text, ts.ScriptTarget.Latest, true);\n    const main = source.statements.find((s): s is ts.FunctionDeclaration => ts.isFunctionDeclaration(s) && s.name?.text === 'main');\n    const body = main?.body?.statements ?? ts.factory.createNodeArray<ts.Statement>();\n    const chain = (s: ts.Statement): ts.IfStatement[] => (ts.isIfStatement(s) ? [s, ...(s.elseStatement ? chain(s.elseStatement) : [])] : []);\n    const ifs = body.flatMap((s) => chain(s));\n    const branches = ['dossier', 'polaris'].map((name) => ifs.filter((s) => s.expression.getText(source) === `argv[0] === '${name}'`));\n    const daemon = body.find((s) => s.getText(source).startsWith('let parsed = parseCli('));\n    expect(branches.map((found) => found.length)).toEqual([1, 1]);\n    expect(daemon).toBeDefined();\n    const [dossier, polaris] = branches.map((found) => found[0]!);\n    for (const branch of [dossier, polaris]) {\n      // An `else` runs on every other argv: it may only be the other branch.\n      expect(branch.elseStatement === undefined || branch.elseStatement === dossier || branch.elseStatement === polaris).toBe(true);\n      expect(branch.getEnd()).toBeLessThanOrEqual(daemon!.getStart(source));\n    }\n    const inside = [dossier, polaris].map((branch) => [branch.thenStatement.getStart(source), branch.thenStatement.getEnd()]);\n    const naming: number[] = [];\n    for (let at = text.indexOf('three-surface-poc-app'); at !== -1; at = text.indexOf('three-surface-poc-app', at + 1)) naming.push(at);\n    expect(naming.length).toBeGreaterThan(0);\n    const lineOf = (at: number): string => text.slice(text.lastIndexOf('\\n', at) + 1, text.indexOf('\\n', at));\n    expect(naming.filter((at) => !inside.some(([from, to]) => at > from && at < to)).map(lineOf)).toEqual([]);\n  });\n});\n",
+ "results": {
+  "control": {
+   "status": "passed",
+   "failure": ""
+  },
+  "R1-flag-between-branches": {
+   "status": "failed",
+   "failure": "AssertionError: expected [ Array(1) ] to deeply equal []"
+  },
+  "R2-flag-createRequire-before-daemon": {
+   "status": "failed",
+   "failure": "AssertionError: expected [ Array(1) ] to deeply equal []"
+  },
+  "R3-runtime-hook": {
+   "status": "failed",
+   "failure": "AssertionError: expected [ Array(1) ] to deeply equal []"
+  },
+  "S1-else-if-flag-after-dossier": {
+   "status": "failed",
+   "failure": "AssertionError: expected false to be true // Object.is equality"
+  },
+  "S2-same-line-if-after-dossier": {
+   "status": "failed",
+   "failure": "AssertionError: expected [ Array(1) ] to deeply equal []"
+  },
+  "S3-else-if-flag-after-polaris": {
+   "status": "failed",
+   "failure": "AssertionError: expected false to be true // Object.is equality"
+  },
+  "S4-else-runtime-hook-after-dossier": {
+   "status": "failed",
+   "failure": "AssertionError: expected false to be true // Object.is equality"
+  },
+  "S5-else-createRequire-flag-after-polaris": {
+   "status": "failed",
+   "failure": "AssertionError: expected false to be true // Object.is equality"
+  },
+  "S6-misindented-close-after-dossier": {
+   "status": "failed",
+   "failure": "AssertionError: expected [ Array(1) ] to deeply equal []"
+  },
+  "E-comment-in-branch": {
+   "status": "passed",
+   "failure": ""
+  },
+  "E-renamed-binding": {
+   "status": "passed",
+   "failure": ""
+  },
+  "E-type-only-import": {
+   "status": "failed",
+   "failure": "AssertionError: expected [ Array(1) ] to deeply equal []"
+  },
+  "C1-comment-outside-branches": {
+   "status": "failed",
+   "failure": "AssertionError: expected [ Array(1) ] to deeply equal []"
+  },
+  "L1-else-if-chain": {
+   "status": "passed",
+   "failure": ""
+  },
+  "L2-nested-function-in-dossier": {
+   "status": "passed",
+   "failure": ""
+  },
+  "L3-nested-try-in-polaris": {
+   "status": "passed",
+   "failure": ""
+  },
+  "E-branch-swap": {
+   "status": "passed",
+   "failure": ""
+  },
+  "D1-polaris-after-daemon": {
+   "status": "failed",
+   "failure": "AssertionError: expected 8597 to be less than or equal to 8036"
+  },
+  "lane:P-static": {
+   "status": "failed",
+   "failure": "AssertionError: expected [ Array(1) ] to deeply equal []"
+  },
+  "lane:P-before-branches": {
+   "status": "failed",
+   "failure": "AssertionError: expected [ Array(1) ] to deeply equal []"
+  },
+  "lane:P-daemon-dynamic": {
+   "status": "failed",
+   "failure": "AssertionError: expected [ Array(1) ] to deeply equal []"
+  },
+  "lane:P-help-branch": {
+   "status": "failed",
+   "failure": "AssertionError: expected [ Array(1) ] to deeply equal []"
+  },
+  "lane:P-invalid-branch": {
+   "status": "failed",
+   "failure": "AssertionError: expected [ Array(1) ] to deeply equal []"
+  },
+  "lane:P-start-failure": {
+   "status": "failed",
+   "failure": "AssertionError: expected [ Array(1) ] to deeply equal []"
+  },
+  "lane:P-entry-read": {
+   "status": "failed",
+   "failure": "AssertionError: expected [ Array(1) ] to deeply equal []"
+  },
+  "lane:P-shutdown": {
+   "status": "failed",
+   "failure": "AssertionError: expected [ Array(1) ] to deeply equal []"
+  },
+  "lane:P-close-failure": {
+   "status": "failed",
+   "failure": "AssertionError: expected [ Array(1) ] to deeply equal []"
+  },
+  "V1-no-naming-line": {
+   "status": "failed",
+   "failure": "AssertionError: expected 0 to be greater than 0"
+  },
+  "Q1-template-specifier-between-branches": {
+   "status": "failed",
+   "failure": "AssertionError: expected [ Array(1) ] to deeply equal []"
+  },
+  "Z3-renamed-opening-and-top-level-load": {
+   "status": "failed",
+   "failure": "AssertionError: expected [ +0, 1 ] to deeply equal [ 1, 1 ]"
+  }
+ }
+}

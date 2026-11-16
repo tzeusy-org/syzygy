@@ -1,0 +1,31 @@
+{
+ "node": "v24.6.0",
+ "rows": [
+  {
+   "case": "a sibling, then a getter that throws",
+   "old": {
+    "threw": "Error: getter",
+    "frozen": 0,
+    "objects": 2
+   },
+   "package": {
+    "threw": "Error: getter",
+    "frozen": 1,
+    "objects": 2
+   }
+  },
+  {
+   "case": "a Proxy whose ownKeys trap throws, beside a sibling",
+   "old": {
+    "threw": "Error: trap",
+    "frozen": 1,
+    "objects": 2
+   },
+   "package": {
+    "threw": "Error: trap",
+    "frozen": 2,
+    "objects": 2
+   }
+  }
+ ]
+}

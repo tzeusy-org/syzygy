@@ -1,0 +1,119 @@
+{
+ "batch": "G",
+ "version": "r1",
+ "param": 0,
+ "n": 1,
+ "scriptSha256": "920c5f120209904b37cfe14320ea00edfa18eafbda12fd7dcb02ec8fcf4f1e97",
+ "command": "python3 -I <tools>/r1_measure_vitest_test_durations.py . --file packages/polaris-generation-consent/src/package-reader.test.ts --project @syzygy/polaris-generation-consent --mode alone --runs 1 --out <tmp>/measure-out.json --profile",
+ "sent": [
+  {
+   "t": 1.0306,
+   "signal": "SIGTERM",
+   "to": "pid"
+  },
+  {
+   "t": 1.0307,
+   "signal": "SIGTERM",
+   "to": "pid"
+  }
+ ],
+ "events": [
+  {
+   "t": 0.3996,
+   "what": "vitest worker seen"
+  }
+ ],
+ "scriptExitedAtSeconds": 1.218,
+ "exitCode": 143,
+ "claimedExit": 143,
+ "exitAsClaimed": true,
+ "descendantsSeen": 11,
+ "seenOnlyByCwd": 8,
+ "vitestSeen": true,
+ "npxSeen": false,
+ "treeAfterExit": " M packages/polaris-generation-consent/src/package-reader.test.ts\n M packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts\n",
+ "survivors": {
+  "203350": {
+   "cmdline": "npm exec vitest run --project @syzygy/polaris-generation-consent packages/polaris-generation-consent/src/package-reader.test.ts --reporter=json --outputFile=/tm",
+   "state": "S",
+   "pgid": 203350,
+   "sid": 203350
+  },
+  "203398": {
+   "cmdline": "sh -c \"vitest\" run --project @syzygy/polaris-generation-consent packages/polaris-generation-consent/src/package-reader.test.ts --reporter=json --outputFile=/tmp",
+   "state": "S",
+   "pgid": 203350,
+   "sid": 203350
+  },
+  "203399": {
+   "cmdline": "node (vitest)",
+   "state": "S",
+   "pgid": 203350,
+   "sid": 203350
+  },
+  "203532": {
+   "cmdline": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520c/clone/node_modules/@esbuild/linux-x64/bin/esbuild --service=0.",
+   "state": "S",
+   "pgid": 203350,
+   "sid": 203350
+  },
+  "203646": {
+   "cmdline": "node (vitest 1)",
+   "state": "S",
+   "pgid": 203350,
+   "sid": 203350
+  },
+  "203647": {
+   "cmdline": "node (vitest 2)",
+   "state": "S",
+   "pgid": 203350,
+   "sid": 203350
+  },
+  "203649": {
+   "cmdline": "node (vitest 3)",
+   "state": "S",
+   "pgid": 203350,
+   "sid": 203350
+  },
+  "203655": {
+   "cmdline": "node (vitest 4)",
+   "state": "S",
+   "pgid": 203350,
+   "sid": 203350
+  },
+  "203659": {
+   "cmdline": "node (vitest 5)",
+   "state": "S",
+   "pgid": 203350,
+   "sid": 203350
+  },
+  "203686": {
+   "cmdline": "node (vitest 6)",
+   "state": "S",
+   "pgid": 203350,
+   "sid": 203350
+  },
+  "204570": {
+   "cmdline": null,
+   "state": "R",
+   "pgid": 203350,
+   "sid": 203350
+  }
+ },
+ "recordWritten": false,
+ "recordRuns": null,
+ "recordTests": null,
+ "recordProfileRows": null,
+ "recordExitCode": null,
+ "marks": [],
+ "scriptWrites": null,
+ "tmpdirLeft": [
+  "e3diCLw-pNFt6Cx_rks26",
+  "node-compile-cache",
+  "script.log"
+ ],
+ "trace": [],
+ "outputTail": "",
+ "exercised": true,
+ "passes": false
+}

@@ -1,0 +1,240 @@
+{
+  "tmpdir": "/tmp/r515-p1",
+  "outside": "/tmp/r515-px",
+  "cwd": "/tmp/r515-pc",
+  "partA": [
+    {
+      "id": "absolute-outside",
+      "target": "/tmp/r515-px/.com.google.Chrome.Outsd1/SingletonSocket",
+      "watched": [
+        "/tmp/r515-px/.com.google.Chrome.Outsd1",
+        "/tmp/r515-px/.com.google.Chrome.Outsd1/sentinel"
+      ],
+      "removed": [],
+      "expectRemoved": [],
+      "profileRemoved": true,
+      "threw": null,
+      "holds": true
+    },
+    {
+      "id": "dotdot-leaves-tmpdir",
+      "target": "/tmp/r515-p1/../r515-px/.com.google.Chrome.Outsd2/SingletonSocket",
+      "watched": [
+        "/tmp/r515-px/.com.google.Chrome.Outsd2"
+      ],
+      "removed": [],
+      "expectRemoved": [],
+      "profileRemoved": true,
+      "threw": null,
+      "holds": true
+    },
+    {
+      "id": "dotdot-inside-tmpdir",
+      "target": "/tmp/r515-p1/sub/../.com.google.Chrome.DotDt1/SingletonSocket",
+      "watched": [
+        "/tmp/r515-p1/.com.google.Chrome.DotDt1"
+      ],
+      "removed": [],
+      "expectRemoved": [],
+      "profileRemoved": true,
+      "threw": null,
+      "holds": true
+    },
+    {
+      "id": "relative-target",
+      "target": ".com.google.Chrome.Relat1/SingletonSocket",
+      "watched": [
+        "/tmp/r515-p1/.com.google.Chrome.Relat1",
+        "/tmp/r515-pc/.com.google.Chrome.Relat1"
+      ],
+      "removed": [],
+      "expectRemoved": [],
+      "profileRemoved": true,
+      "threw": null,
+      "holds": true
+    },
+    {
+      "id": "nested",
+      "target": "/tmp/r515-p1/.com.google.Chrome.Nest01/inner/SingletonSocket",
+      "watched": [
+        "/tmp/r515-p1/.com.google.Chrome.Nest01/inner",
+        "/tmp/r515-p1/.com.google.Chrome.Nest01"
+      ],
+      "removed": [],
+      "expectRemoved": [],
+      "profileRemoved": true,
+      "threw": null,
+      "holds": true
+    },
+    {
+      "id": "final-component-symlink",
+      "target": "/tmp/r515-p1/.com.google.Chrome.SymLk1/SingletonSocket",
+      "watched": [
+        "/tmp/r515-p1/.com.google.Chrome.SymLk1",
+        "/tmp/r515-px/victim",
+        "/tmp/r515-px/victim/sentinel"
+      ],
+      "removed": [],
+      "expectRemoved": [],
+      "profileRemoved": true,
+      "threw": null,
+      "holds": true
+    },
+    {
+      "id": "final-component-file",
+      "target": "/tmp/r515-p1/.com.google.Chrome.File01/SingletonSocket",
+      "watched": [
+        "/tmp/r515-p1/.com.google.Chrome.File01"
+      ],
+      "removed": [],
+      "expectRemoved": [],
+      "profileRemoved": true,
+      "threw": null,
+      "holds": true
+    },
+    {
+      "id": "trailing-slash-names-tmpdir",
+      "target": "/tmp/r515-p1/.com.google.Chrome.Trail1/",
+      "watched": [
+        "/tmp/r515-p1/.com.google.Chrome.Trail1",
+        "/tmp/r515-p1"
+      ],
+      "removed": [],
+      "expectRemoved": [],
+      "profileRemoved": true,
+      "threw": null,
+      "holds": true
+    },
+    {
+      "id": "names-tmpdir-itself",
+      "target": "/tmp/r515-p1/SingletonSocket",
+      "watched": [
+        "/tmp/r515-p1"
+      ],
+      "removed": [],
+      "expectRemoved": [],
+      "profileRemoved": true,
+      "threw": null,
+      "holds": true
+    },
+    {
+      "id": "double-slash",
+      "target": "/tmp/r515-p1//.com.google.Chrome.Dbl001/SingletonSocket",
+      "watched": [
+        "/tmp/r515-p1/.com.google.Chrome.Dbl001"
+      ],
+      "removed": [],
+      "expectRemoved": [],
+      "profileRemoved": true,
+      "threw": null,
+      "holds": true
+    },
+    {
+      "id": "newline-in-name",
+      "target": "/tmp/r515-p1/.com.google.Chrome.Ab\n/SingletonSocket",
+      "watched": [
+        "/tmp/r515-p1/.com.google.Chrome.Ab\n"
+      ],
+      "removed": [],
+      "expectRemoved": [],
+      "profileRemoved": true,
+      "threw": null,
+      "holds": true
+    },
+    {
+      "id": "own-among-siblings",
+      "target": "/tmp/r515-p1/.com.google.Chrome.Mine01/SingletonSocket",
+      "watched": [
+        "/tmp/r515-p1/.com.google.Chrome.Mine01",
+        "/tmp/r515-p1/com.google.Chrome.Other1",
+        "/tmp/r515-p1/org.chromium.Chromium.Other2"
+      ],
+      "removed": [
+        "/tmp/r515-p1/.com.google.Chrome.Mine01"
+      ],
+      "expectRemoved": [
+        "/tmp/r515-p1/.com.google.Chrome.Mine01"
+      ],
+      "profileRemoved": true,
+      "threw": null,
+      "holds": true
+    }
+  ],
+  "partB": [
+    {
+      "executable": "/usr/bin/google-chrome",
+      "version": "Chrome/120.0.6099.224",
+      "before": [
+        ".com.google.Chrome.Ab\n",
+        ".com.google.Chrome.Dbl001",
+        ".com.google.Chrome.Decoy1",
+        ".com.google.Chrome.DotDt1",
+        ".com.google.Chrome.File01",
+        ".com.google.Chrome.LinkD1",
+        ".com.google.Chrome.Nest01",
+        ".com.google.Chrome.Relat1",
+        ".com.google.Chrome.SymLk1",
+        ".com.google.Chrome.Trail1",
+        "com.google.Chrome.Decoy2",
+        "com.google.Chrome.Other1",
+        "org.chromium.Chromium.Decoy3",
+        "org.chromium.Chromium.Other2"
+      ],
+      "dirA": [
+        ".com.google.Chrome.kCf3fL"
+      ],
+      "dirB": [
+        ".com.google.Chrome.oEiYRR"
+      ],
+      "leaders": 2,
+      "frozen": 1,
+      "closeA": "ok",
+      "afterCloseA": [
+        ".com.google.Chrome.Ab\n",
+        ".com.google.Chrome.Dbl001",
+        ".com.google.Chrome.Decoy1",
+        ".com.google.Chrome.DotDt1",
+        ".com.google.Chrome.File01",
+        ".com.google.Chrome.LinkD1",
+        ".com.google.Chrome.Nest01",
+        ".com.google.Chrome.Relat1",
+        ".com.google.Chrome.SymLk1",
+        ".com.google.Chrome.Trail1",
+        ".com.google.Chrome.oEiYRR",
+        "com.google.Chrome.Decoy2",
+        "com.google.Chrome.Other1",
+        "org.chromium.Chromium.Decoy3",
+        "org.chromium.Chromium.Other2"
+      ],
+      "bWorks": true,
+      "closeB": "ok",
+      "afterCloseB": [
+        ".com.google.Chrome.Ab\n",
+        ".com.google.Chrome.Dbl001",
+        ".com.google.Chrome.Decoy1",
+        ".com.google.Chrome.DotDt1",
+        ".com.google.Chrome.File01",
+        ".com.google.Chrome.LinkD1",
+        ".com.google.Chrome.Nest01",
+        ".com.google.Chrome.Relat1",
+        ".com.google.Chrome.SymLk1",
+        ".com.google.Chrome.Trail1",
+        "com.google.Chrome.Decoy2",
+        "com.google.Chrome.Other1",
+        "org.chromium.Chromium.Decoy3",
+        "org.chromium.Chromium.Other2"
+      ],
+      "survivors": {
+        "/tmp/r515-p1/.com.google.Chrome.Decoy1": true,
+        "/tmp/r515-p1/com.google.Chrome.Decoy2": true,
+        "/tmp/r515-p1/org.chromium.Chromium.Decoy3": true,
+        "/tmp/r515-p1/.com.google.Chrome.LinkD1": true,
+        "/tmp/r515-px/victim2": true,
+        "/tmp/r515-px/victim2/sentinel": true
+      },
+      "holds": true,
+      "profilesLeft": 0
+    }
+  ],
+  "holds": true
+}

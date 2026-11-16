@@ -1,0 +1,49 @@
+{
+ "batch": "P0",
+ "profile": false,
+ "version": "head",
+ "param": null,
+ "n": 1,
+ "scriptSha256": "7799aa73bae9a4790b75b85a597c57bf07aab4bb4dab6c67570e69af7535128e",
+ "command": "strace -o <tmp>/strace.log -e trace=open,openat,creat,rename,renameat,renameat2,unlink,unlinkat,mkdir,mkdirat,rmdir,truncate,ftruncate,link,linkat,symlink,symlinkat python3 -I scripts/measure_vitest_test_durations.py . --file packages/polaris-generation-consent/src/package-reader.test.ts --project @syzygy/polaris-generation-consent --mode alone --runs 1 --out <tmp>/measure-out.json",
+ "sent": [],
+ "events": [],
+ "scriptExitedAtSeconds": 13.303,
+ "exitCode": 0,
+ "claimedExit": 0,
+ "exitAsClaimed": true,
+ "descendantsSeen": 29,
+ "seenOnlyByCwd": 1,
+ "vitestSeen": true,
+ "npxSeen": false,
+ "treeAfterExit": "",
+ "survivors": {},
+ "recordWritten": true,
+ "recordRuns": 1,
+ "recordTests": 299,
+ "recordProfileRows": 0,
+ "recordExitCode": 0,
+ "marks": [],
+ "scriptWrites": [
+  "openat(AT_FDCWD, \"<tmp>/x3cglxla\", O_RDWR|O_CREAT|O_EXCL|O_NOFOLLOW|O_CLOEXEC, 0600) = 3",
+  "unlink(\"<tmp>/x3cglxla\")  = 0",
+  "mkdir(\"<tmp>/tmpniinjpkf\", 0700) = 0",
+  "openat(AT_FDCWD, \"/dev/null\", O_RDWR|O_CLOEXEC) = 5",
+  "unlinkat(4, \"report.json\", 0)           = 0",
+  "rmdir(\"<tmp>/tmpniinjpkf\") = 0",
+  "openat(AT_FDCWD, \"<tmp>/measure-out.json\", O_WRONLY|O_CREAT|O_TRUNC|O_CLOEXEC, 0666) = 3"
+ ],
+ "tmpdirLeft": [
+  "measure-out.json",
+  "node-compile-cache",
+  "script.log",
+  "strace.log"
+ ],
+ "trace": [],
+ "outputTail": "run 1: exit 0, 13.0 s, load1 {'start': 14.33, 'end': 14.36, 'min': 14.31, 'max': 14.36, 'samples': 3}, 299 tests of the file, 0 failed\n",
+ "scriptWritesFdRelative": [
+  "unlinkat(4, \"report.json\", 0)           = 0"
+ ],
+ "scriptWritesOutsideAllowed": [],
+ "passes": true
+}

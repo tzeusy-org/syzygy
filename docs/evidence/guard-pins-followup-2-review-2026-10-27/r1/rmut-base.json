@@ -1,0 +1,158 @@
+{
+ "tree": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-541/base",
+ "head": "d38d7a3ce632a34c2a41bdb77ad323ba0b05b777",
+ "results": [
+  {
+   "id": "BASELINE",
+   "outcome": "survives",
+   "exit": 0,
+   "total": 165,
+   "passed": 165,
+   "failed": [],
+   "timeouts": 0,
+   "files": 14,
+   "seconds": 5.4,
+   "loadBefore": [
+    "52.98",
+    "48.93",
+    "46.73"
+   ],
+   "loadAfter": [
+    "53.14",
+    "49.03",
+    "46.78"
+   ],
+   "oldCounts": [],
+   "cleanAfter": true,
+   "edits": []
+  },
+  {
+   "id": "RV536-M2-http-url-reads-outside",
+   "outcome": "survives",
+   "exit": 0,
+   "total": 165,
+   "passed": 165,
+   "failed": [],
+   "timeouts": 0,
+   "files": 14,
+   "seconds": 5.8,
+   "loadBefore": [
+    "53.14",
+    "49.03",
+    "46.78"
+   ],
+   "loadAfter": [
+    "52.73",
+    "49.01",
+    "46.79"
+   ],
+   "oldCounts": [
+    1
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|^(?!http:).*\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    }
+   ]
+  },
+  {
+   "id": "RV536-M7-npm-alias-workspace-scope-only",
+   "outcome": "survives",
+   "exit": 0,
+   "total": 165,
+   "passed": 165,
+   "failed": [],
+   "timeouts": 0,
+   "files": 14,
+   "seconds": 5.5,
+   "loadBefore": [
+    "52.73",
+    "49.01",
+    "46.79"
+   ],
+   "loadAfter": [
+    "53.55",
+    "49.24",
+    "46.87"
+   ],
+   "oldCounts": [
+    1
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:@syzygy\\/|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    }
+   ]
+  },
+  {
+   "id": "RV536-M8-root-declarations-unread",
+   "outcome": "survives",
+   "exit": 0,
+   "total": 165,
+   "passed": 165,
+   "failed": [],
+   "timeouts": 0,
+   "files": 14,
+   "seconds": 5.4,
+   "loadBefore": [
+    "53.55",
+    "49.24",
+    "46.87"
+   ],
+   "loadAfter": [
+    "54.47",
+    "49.50",
+    "46.97"
+   ],
+   "oldCounts": [
+    1
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "  for (const manifest of workspace.manifests.values()) {",
+     "new": "  for (const manifest of [...workspace.manifests.values()].filter((manifest) => manifest.dir !== '.')) {"
+    }
+   ]
+  },
+  {
+   "id": "RV536-M9-dotdot-alone-outside",
+   "outcome": "survives",
+   "exit": 0,
+   "total": 165,
+   "passed": 165,
+   "failed": [],
+   "timeouts": 0,
+   "files": 14,
+   "seconds": 5.0,
+   "loadBefore": [
+    "54.47",
+    "49.50",
+    "46.97"
+   ],
+   "loadAfter": [
+    "57.79",
+    "50.28",
+    "47.23"
+   ],
+   "oldCounts": [
+    1
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.(?:\\/|$)|\\.\\.\\/|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    }
+   ]
+  }
+ ]
+}

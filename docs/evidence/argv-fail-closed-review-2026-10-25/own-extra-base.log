@@ -1,0 +1,4 @@
+RV-T14b-absolute-path-via-bridge survives 0 ['Tests  27 passed (27)'] 3.4 clean
+RV-T15b-file-url-via-bridge survives 0 ['Tests  27 passed (27)'] 3.8 clean
+RV-T1b-hash-pattern-alias-via-bridge survives 0 ['Tests  27 passed (27)'] 3.9 clean
+wrote own-extra-base.json 3

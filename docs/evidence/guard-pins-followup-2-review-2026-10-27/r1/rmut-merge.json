@@ -1,0 +1,402 @@
+{
+ "tree": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-541/base",
+ "head": "93cc58d7dfb861cef5ae560850632d65c21e17a4",
+ "results": [
+  {
+   "id": "BASELINE",
+   "outcome": "survives",
+   "exit": 0,
+   "total": 169,
+   "passed": 169,
+   "failed": [],
+   "timeouts": 0,
+   "files": 14,
+   "seconds": 5.0,
+   "loadBefore": [
+    "47.91",
+    "55.75",
+    "56.06"
+   ],
+   "loadAfter": [
+    "47.44",
+    "55.52",
+    "55.98"
+   ],
+   "oldCounts": [],
+   "cleanAfter": true,
+   "edits": []
+  },
+  {
+   "id": "RV536-M1-https-url-reads-outside",
+   "outcome": "killed",
+   "exit": 1,
+   "total": 169,
+   "passed": 168,
+   "failed": [
+    "the shared workspace resolver reads a bare name declared as a remote tarball URL dependency as naming no module"
+   ],
+   "timeouts": 0,
+   "files": 14,
+   "seconds": 7.1,
+   "loadBefore": [
+    "47.44",
+    "55.52",
+    "55.98"
+   ],
+   "loadAfter": [
+    "49.36",
+    "55.65",
+    "56.02"
+   ],
+   "oldCounts": [
+    1
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|^(?!https:).*\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    }
+   ]
+  },
+  {
+   "id": "RV536-M2-http-url-reads-outside",
+   "outcome": "killed",
+   "exit": 1,
+   "total": 169,
+   "passed": 168,
+   "failed": [
+    "the shared workspace resolver reads a bare name declared as a remote http tarball URL dependency as naming no module"
+   ],
+   "timeouts": 0,
+   "files": 14,
+   "seconds": 7.2,
+   "loadBefore": [
+    "49.36",
+    "55.65",
+    "56.02"
+   ],
+   "loadAfter": [
+    "49.81",
+    "55.64",
+    "56.01"
+   ],
+   "oldCounts": [
+    1
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|^(?!http:).*\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    }
+   ]
+  },
+  {
+   "id": "RV536-M3-tarball-needs-dot-slash",
+   "outcome": "killed",
+   "exit": 1,
+   "total": 169,
+   "passed": 164,
+   "failed": [
+    "the shared workspace resolver reads a bare name declared as a .tar dependency as naming no module",
+    "the shared workspace resolver reads a bare name declared as a .tar.gz dependency as naming no module",
+    "the shared workspace resolver reads a bare name declared as a remote http tarball URL dependency as naming no module",
+    "the shared workspace resolver reads a bare name declared as a remote tarball URL dependency as naming no module",
+    "the shared workspace resolver reads a bare name declared as a tarball dependency as naming no module"
+   ],
+   "timeouts": 0,
+   "files": 14,
+   "seconds": 6.6,
+   "loadBefore": [
+    "49.81",
+    "55.64",
+    "56.01"
+   ],
+   "loadAfter": [
+    "48.94",
+    "55.37",
+    "55.92"
+   ],
+   "oldCounts": [
+    1
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|^\\.\\/.*\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    }
+   ]
+  },
+  {
+   "id": "RV536-M4-census-takes-ts-md",
+   "outcome": "killed",
+   "exit": 1,
+   "total": 169,
+   "passed": 168,
+   "failed": [
+    "each policy copy above, against the spec its caller passes reads every module TypeScript compiles under src, .mts, .cts and .tsx among them, and no test module"
+   ],
+   "timeouts": 0,
+   "files": 14,
+   "seconds": 6.4,
+   "loadBefore": [
+    "48.94",
+    "55.37",
+    "55.92"
+   ],
+   "loadAfter": [
+    "49.71",
+    "55.32",
+    "55.90"
+   ],
+   "oldCounts": [
+    1
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": "files.filter((module) => /\\.[cm]?tsx?$/u.test(module)",
+     "new": "files.filter((module) => /\\.[cm]?tsx?(?:\\.md)?$/u.test(module)"
+    }
+   ]
+  },
+  {
+   "id": "RV536-M5-tree-depth-two",
+   "outcome": "survives",
+   "exit": 0,
+   "total": 169,
+   "passed": 169,
+   "failed": [],
+   "timeouts": 0,
+   "files": 14,
+   "seconds": 6.9,
+   "loadBefore": [
+    "49.71",
+    "55.32",
+    "55.90"
+   ],
+   "loadAfter": [
+    "50.53",
+    "55.40",
+    "55.92"
+   ],
+   "oldCounts": [
+    1
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": "fs.readdirSync(path.join(ROOT, dir), { recursive: true, encoding: 'utf8' }).map(",
+     "new": "fs.readdirSync(path.join(ROOT, dir), { recursive: true, encoding: 'utf8' }).filter((file) => file.split('/').length <= 2).map("
+    }
+   ]
+  },
+  {
+   "id": "RV536-M6-root-keeps-only-dependencies",
+   "outcome": "killed",
+   "exit": 1,
+   "total": 169,
+   "passed": 168,
+   "failed": [
+    "the shared workspace resolver reads the workspace root's manifest beside the packages'"
+   ],
+   "timeouts": 0,
+   "files": 14,
+   "seconds": 5.9,
+   "loadBefore": [
+    "50.53",
+    "55.40",
+    "55.92"
+   ],
+   "loadAfter": [
+    "51.29",
+    "55.47",
+    "55.95"
+   ],
+   "oldCounts": [
+    1
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "manifests.set(root.name, { dir: '.', ...root });",
+     "new": "manifests.set(root.name, { dir: '.', name: root.name, dependencies: root.dependencies });"
+    }
+   ]
+  },
+  {
+   "id": "RV536-M7-npm-alias-workspace-scope-only",
+   "outcome": "killed",
+   "exit": 1,
+   "total": 169,
+   "passed": 168,
+   "failed": [
+    "the shared workspace resolver reads a bare name declared as an npm: alias of a registry package as naming no module"
+   ],
+   "timeouts": 0,
+   "files": 14,
+   "seconds": 5.6,
+   "loadBefore": [
+    "51.29",
+    "55.47",
+    "55.95"
+   ],
+   "loadAfter": [
+    "50.82",
+    "55.24",
+    "55.86"
+   ],
+   "oldCounts": [
+    1
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:@syzygy\\/|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    }
+   ]
+  },
+  {
+   "id": "RV536-M8-root-declarations-unread",
+   "outcome": "killed",
+   "exit": 1,
+   "total": 169,
+   "passed": 168,
+   "failed": [
+    "the shared workspace resolver reads a bare name the workspace root's manifest declares as a local dependency as naming no module"
+   ],
+   "timeouts": 0,
+   "files": 14,
+   "seconds": 4.8,
+   "loadBefore": [
+    "50.82",
+    "55.24",
+    "55.86"
+   ],
+   "loadAfter": [
+    "50.82",
+    "55.24",
+    "55.86"
+   ],
+   "oldCounts": [
+    1
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "  for (const manifest of workspace.manifests.values()) {",
+     "new": "  for (const manifest of [...workspace.manifests.values()].filter((manifest) => manifest.dir !== '.')) {"
+    }
+   ]
+  },
+  {
+   "id": "RV536-M9-dotdot-alone-outside",
+   "outcome": "killed",
+   "exit": 1,
+   "total": 169,
+   "passed": 168,
+   "failed": [
+    "the shared workspace resolver reads a bare name declared as a dependency on its parent directory as naming no module"
+   ],
+   "timeouts": 0,
+   "files": 14,
+   "seconds": 6.6,
+   "loadBefore": [
+    "50.82",
+    "55.24",
+    "55.86"
+   ],
+   "loadAfter": [
+    "53.00",
+    "55.55",
+    "55.96"
+   ],
+   "oldCounts": [
+    1
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.(?:\\/|$)|\\.\\.\\/|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    }
+   ]
+  },
+  {
+   "id": "RV536-M10-test-exclusion-end-anchor-dropped",
+   "outcome": "survives",
+   "exit": 0,
+   "total": 169,
+   "passed": 169,
+   "failed": [],
+   "timeouts": 0,
+   "files": 14,
+   "seconds": 6.5,
+   "loadBefore": [
+    "53.00",
+    "55.55",
+    "55.96"
+   ],
+   "loadAfter": [
+    "53.16",
+    "55.54",
+    "55.95"
+   ],
+   "oldCounts": [
+    1
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": "!/\\.test\\.[cm]?tsx?$/u.test(module)",
+     "new": "!/\\.test\\.[cm]?tsx?/u.test(module)"
+    }
+   ]
+  },
+  {
+   "id": "RV536-M11-residual-widened",
+   "outcome": "survives",
+   "exit": 0,
+   "total": 169,
+   "passed": 169,
+   "failed": [],
+   "timeouts": 0,
+   "files": 14,
+   "seconds": 4.9,
+   "loadBefore": [
+    "53.16",
+    "55.54",
+    "55.95"
+   ],
+   "loadAfter": [
+    "53.79",
+    "55.63",
+    "55.98"
+   ],
+   "oldCounts": [
+    1
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/|\\.|[^:]*\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    }
+   ]
+  }
+ ]
+}

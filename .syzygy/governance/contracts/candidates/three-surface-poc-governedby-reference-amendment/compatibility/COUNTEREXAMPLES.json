@@ -1,0 +1,928 @@
+{
+  "epistemic": "Observed",
+  "subject": {
+    "sourceCommit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+    "activeCandidateCommit": "662b4b49505776c21856791abc52cda72346c5d9",
+    "retainedCoreCommit": "ddf1dc69b724df72a5e3c4f224500aa51d344ef0",
+    "manifestFileSha256": "77e53d37ac42c5db4edb4f99d76d937629df5a80d370ac47751c0e62f27270bd",
+    "proposedPocSpecSha256": "01209cce451cbab62a9f39fce1e6a78d9dcd6b56f3e32e0dc9bf0d5534534c37"
+  },
+  "scope": "Literal scratch counterexamples and exact mutations; no production mutation or runtime execution.",
+  "population": 42,
+  "rejectedAtExpectedPredicate": 42,
+  "baseMachineFixture": "literal-fixtures/reference-body-A.json",
+  "baseHumanFixture": "literal-fixtures/human-body-A.html",
+  "separateBodyFixture": "literal-fixtures/reference-body-B.json",
+  "cases": [
+    {
+      "id": "missing-observation-value",
+      "kind": "machine",
+      "path": [
+        "workItems",
+        "governedBy"
+      ],
+      "new": null,
+      "delete": true,
+      "expectedPredicate": "invalid-governing-intent-reference",
+      "old": {
+        "label": "Unknown",
+        "closedReason": "source-uncaptured-or-unreachable",
+        "resolutionRoutes": [
+          {
+            "reason": "source-uncaptured-or-unreachable",
+            "route": "Repair the observer/source; new snapshot",
+            "actor": "operator",
+            "verb": "repair",
+            "target": "evaluation"
+          }
+        ]
+      },
+      "outcome": "rejected-as-expected",
+      "actualPredicate": "invalid-governing-intent-reference",
+      "detail": "Missing or non-identical complete observation-local value",
+      "fixture": "executed-counterexamples/missing-observation-value.json",
+      "sha256": "17020cd2b8111ef857e6fa4abd949649f068ec49782c6caecced41201fbb9789"
+    },
+    {
+      "id": "changed-shared-label",
+      "kind": "machine",
+      "path": [
+        "workItems",
+        "governedBy",
+        "label"
+      ],
+      "new": "Observed",
+      "delete": false,
+      "expectedPredicate": "invalid-governing-intent-reference",
+      "old": "Unknown",
+      "outcome": "rejected-as-expected",
+      "actualPredicate": "invalid-governing-intent-reference",
+      "detail": "Missing or non-identical complete observation-local value",
+      "fixture": "executed-counterexamples/changed-shared-label.json",
+      "sha256": "6c86bdee17e6160a352ef44daf0dd814689d318e53846e3057d03c5018e88364"
+    },
+    {
+      "id": "changed-shared-closedReason",
+      "kind": "machine",
+      "path": [
+        "workItems",
+        "governedBy",
+        "closedReason"
+      ],
+      "new": "missing-evidence",
+      "delete": false,
+      "expectedPredicate": "invalid-governing-intent-reference",
+      "old": "source-uncaptured-or-unreachable",
+      "outcome": "rejected-as-expected",
+      "actualPredicate": "invalid-governing-intent-reference",
+      "detail": "Missing or non-identical complete observation-local value",
+      "fixture": "executed-counterexamples/changed-shared-closedReason.json",
+      "sha256": "45ea25f91fd668545a663b7cbd880f31bcb415dd7945b5e9e5b584713be68224"
+    },
+    {
+      "id": "changed-route-reason",
+      "kind": "machine",
+      "path": [
+        "workItems",
+        "governedBy",
+        "resolutionRoutes",
+        0,
+        "reason"
+      ],
+      "new": "missing-evidence",
+      "delete": false,
+      "expectedPredicate": "invalid-governing-intent-reference",
+      "old": "source-uncaptured-or-unreachable",
+      "outcome": "rejected-as-expected",
+      "actualPredicate": "invalid-governing-intent-reference",
+      "detail": "Missing or non-identical complete observation-local value",
+      "fixture": "executed-counterexamples/changed-route-reason.json",
+      "sha256": "93a0422529d587879da6fb6470e5eaa614363e97e5cd1b5511a0685136e399f8"
+    },
+    {
+      "id": "changed-route-route",
+      "kind": "machine",
+      "path": [
+        "workItems",
+        "governedBy",
+        "resolutionRoutes",
+        0,
+        "route"
+      ],
+      "new": "Use a prior cached answer",
+      "delete": false,
+      "expectedPredicate": "invalid-governing-intent-reference",
+      "old": "Repair the observer/source; new snapshot",
+      "outcome": "rejected-as-expected",
+      "actualPredicate": "invalid-governing-intent-reference",
+      "detail": "Missing or non-identical complete observation-local value",
+      "fixture": "executed-counterexamples/changed-route-route.json",
+      "sha256": "e9cccb7fa24074983391f8a3f99fb2be33b355f06414e225ba2f21f98c4c6db0"
+    },
+    {
+      "id": "changed-route-actor",
+      "kind": "machine",
+      "path": [
+        "workItems",
+        "governedBy",
+        "resolutionRoutes",
+        0,
+        "actor"
+      ],
+      "new": "agent",
+      "delete": false,
+      "expectedPredicate": "invalid-governing-intent-reference",
+      "old": "operator",
+      "outcome": "rejected-as-expected",
+      "actualPredicate": "invalid-governing-intent-reference",
+      "detail": "Missing or non-identical complete observation-local value",
+      "fixture": "executed-counterexamples/changed-route-actor.json",
+      "sha256": "0c5c356226f0706c5f77722723e2ada4d28a8a6e23f4827a828bfd65d576f661"
+    },
+    {
+      "id": "changed-route-verb",
+      "kind": "machine",
+      "path": [
+        "workItems",
+        "governedBy",
+        "resolutionRoutes",
+        0,
+        "verb"
+      ],
+      "new": "adopt",
+      "delete": false,
+      "expectedPredicate": "invalid-governing-intent-reference",
+      "old": "repair",
+      "outcome": "rejected-as-expected",
+      "actualPredicate": "invalid-governing-intent-reference",
+      "detail": "Missing or non-identical complete observation-local value",
+      "fixture": "executed-counterexamples/changed-route-verb.json",
+      "sha256": "1c35e4f44203d56c89527dd4942536f9e617f2291ff9a78c34189364bfc3fad5"
+    },
+    {
+      "id": "changed-route-target",
+      "kind": "machine",
+      "path": [
+        "workItems",
+        "governedBy",
+        "resolutionRoutes",
+        0,
+        "target"
+      ],
+      "new": "item",
+      "delete": false,
+      "expectedPredicate": "invalid-governing-intent-reference",
+      "old": "evaluation",
+      "outcome": "rejected-as-expected",
+      "actualPredicate": "invalid-governing-intent-reference",
+      "detail": "Missing or non-identical complete observation-local value",
+      "fixture": "executed-counterexamples/changed-route-target.json",
+      "sha256": "19f1230f9448c209403f0840a179b5dfaa465133d5096c84a5ad999762d30cb6"
+    },
+    {
+      "id": "extra-shared-key",
+      "kind": "machine",
+      "path": [
+        "workItems",
+        "governedBy",
+        "claimId"
+      ],
+      "new": "aggregate-claim",
+      "delete": false,
+      "expectedPredicate": "invalid-governing-intent-reference",
+      "old": "<absent>",
+      "outcome": "rejected-as-expected",
+      "actualPredicate": "invalid-governing-intent-reference",
+      "detail": "Missing or non-identical complete observation-local value",
+      "fixture": "executed-counterexamples/extra-shared-key.json",
+      "sha256": "1db0139bd5fe6ac89c940a0d0cdbd269335f0dce8d311790d9cdb3ac7d06af09"
+    },
+    {
+      "id": "recursive-shared-value",
+      "kind": "machine",
+      "path": [
+        "workItems",
+        "governedBy"
+      ],
+      "new": {
+        "ref": "observation"
+      },
+      "delete": false,
+      "expectedPredicate": "invalid-governing-intent-reference",
+      "old": {
+        "label": "Unknown",
+        "closedReason": "source-uncaptured-or-unreachable",
+        "resolutionRoutes": [
+          {
+            "reason": "source-uncaptured-or-unreachable",
+            "route": "Repair the observer/source; new snapshot",
+            "actor": "operator",
+            "verb": "repair",
+            "target": "evaluation"
+          }
+        ]
+      },
+      "outcome": "rejected-as-expected",
+      "actualPredicate": "invalid-governing-intent-reference",
+      "detail": "Missing or non-identical complete observation-local value",
+      "fixture": "executed-counterexamples/recursive-shared-value.json",
+      "sha256": "35625a8f0e1a1c8ccddf714948ed50d7c1df39ef907791a2d69a77a7a03e23d1"
+    },
+    {
+      "id": "missing-route",
+      "kind": "machine",
+      "path": [
+        "workItems",
+        "governedBy",
+        "resolutionRoutes"
+      ],
+      "new": [],
+      "delete": false,
+      "expectedPredicate": "invalid-governing-intent-reference",
+      "old": [
+        {
+          "reason": "source-uncaptured-or-unreachable",
+          "route": "Repair the observer/source; new snapshot",
+          "actor": "operator",
+          "verb": "repair",
+          "target": "evaluation"
+        }
+      ],
+      "outcome": "rejected-as-expected",
+      "actualPredicate": "invalid-governing-intent-reference",
+      "detail": "Missing or non-identical complete observation-local value",
+      "fixture": "executed-counterexamples/missing-route.json",
+      "sha256": "276499fd31f63044ec98c7bd13050a45d436d8b2762cc1c5fea1c177beee38c9"
+    },
+    {
+      "id": "two-routes",
+      "kind": "machine",
+      "path": [
+        "workItems",
+        "governedBy",
+        "resolutionRoutes"
+      ],
+      "new": [
+        {
+          "reason": "source-uncaptured-or-unreachable",
+          "route": "Repair the observer/source; new snapshot",
+          "actor": "operator",
+          "verb": "repair",
+          "target": "evaluation"
+        },
+        {
+          "reason": "source-uncaptured-or-unreachable",
+          "route": "Repair the observer/source; new snapshot",
+          "actor": "operator",
+          "verb": "repair",
+          "target": "evaluation"
+        }
+      ],
+      "delete": false,
+      "expectedPredicate": "invalid-governing-intent-reference",
+      "old": [
+        {
+          "reason": "source-uncaptured-or-unreachable",
+          "route": "Repair the observer/source; new snapshot",
+          "actor": "operator",
+          "verb": "repair",
+          "target": "evaluation"
+        }
+      ],
+      "outcome": "rejected-as-expected",
+      "actualPredicate": "invalid-governing-intent-reference",
+      "detail": "Missing or non-identical complete observation-local value",
+      "fixture": "executed-counterexamples/two-routes.json",
+      "sha256": "0373e3db1e1779a16f0334fffd671a9fd379e9f1504bdf590ab6b09ba38b712e"
+    },
+    {
+      "id": "missing-item-reference",
+      "kind": "machine",
+      "path": [
+        "workItems",
+        "items",
+        0,
+        "governedBy"
+      ],
+      "new": null,
+      "delete": true,
+      "expectedPredicate": "invalid-governing-intent-reference",
+      "old": {
+        "ref": "observation"
+      },
+      "outcome": "rejected-as-expected",
+      "actualPredicate": "invalid-governing-intent-reference",
+      "detail": "Only the one-key enclosing-observation reference is admitted",
+      "fixture": "executed-counterexamples/missing-item-reference.json",
+      "sha256": "4c71cc345dc853fe29ad24ad197da4576b1c48aa1484d5dde7fb99480ab26d51"
+    },
+    {
+      "id": "wrong-reference",
+      "kind": "machine",
+      "path": [
+        "workItems",
+        "items",
+        0,
+        "governedBy"
+      ],
+      "new": {
+        "ref": "other-observation"
+      },
+      "delete": false,
+      "expectedPredicate": "invalid-governing-intent-reference",
+      "old": {
+        "ref": "observation"
+      },
+      "outcome": "rejected-as-expected",
+      "actualPredicate": "invalid-governing-intent-reference",
+      "detail": "Only the one-key enclosing-observation reference is admitted",
+      "fixture": "executed-counterexamples/wrong-reference.json",
+      "sha256": "659311341f397ac049ed2964e82f3f91026a626b18c4dbd8de6468e18c510ddb"
+    },
+    {
+      "id": "external-body-reference",
+      "kind": "machine",
+      "path": [
+        "workItems",
+        "items",
+        0,
+        "governedBy"
+      ],
+      "new": {
+        "ref": "body-A#/workItems/governedBy"
+      },
+      "delete": false,
+      "expectedPredicate": "invalid-governing-intent-reference",
+      "old": {
+        "ref": "observation"
+      },
+      "outcome": "rejected-as-expected",
+      "actualPredicate": "invalid-governing-intent-reference",
+      "detail": "Only the one-key enclosing-observation reference is admitted",
+      "fixture": "executed-counterexamples/external-body-reference.json",
+      "sha256": "c0dfab53ecedda089f97350e4f63deecc52cb7274df3b574c1228e0b84925e85"
+    },
+    {
+      "id": "recursive-item-reference",
+      "kind": "machine",
+      "path": [
+        "workItems",
+        "items",
+        0,
+        "governedBy"
+      ],
+      "new": {
+        "ref": "items[0].governedBy"
+      },
+      "delete": false,
+      "expectedPredicate": "invalid-governing-intent-reference",
+      "old": {
+        "ref": "observation"
+      },
+      "outcome": "rejected-as-expected",
+      "actualPredicate": "invalid-governing-intent-reference",
+      "detail": "Only the one-key enclosing-observation reference is admitted",
+      "fixture": "executed-counterexamples/recursive-item-reference.json",
+      "sha256": "8065db73883c41748e288bf30194b74e0185b0ba841e61b7ffb59971a59c394d"
+    },
+    {
+      "id": "inline-fallback",
+      "kind": "machine",
+      "path": [
+        "workItems",
+        "items",
+        0,
+        "governedBy"
+      ],
+      "new": {
+        "label": "Unknown",
+        "closedReason": "source-uncaptured-or-unreachable",
+        "resolutionRoutes": [
+          {
+            "reason": "source-uncaptured-or-unreachable",
+            "route": "Repair the observer/source; new snapshot",
+            "actor": "operator",
+            "verb": "repair",
+            "target": "evaluation"
+          }
+        ]
+      },
+      "delete": false,
+      "expectedPredicate": "invalid-governing-intent-reference",
+      "old": {
+        "ref": "observation"
+      },
+      "outcome": "rejected-as-expected",
+      "actualPredicate": "invalid-governing-intent-reference",
+      "detail": "Only the one-key enclosing-observation reference is admitted",
+      "fixture": "executed-counterexamples/inline-fallback.json",
+      "sha256": "345fd7fbfc5079c2c32ee63b12af61983e6121b7e50c44e8cec11be623b3278a"
+    },
+    {
+      "id": "extra-reference-key",
+      "kind": "machine",
+      "path": [
+        "workItems",
+        "items",
+        0,
+        "governedBy"
+      ],
+      "new": {
+        "ref": "observation",
+        "label": "Unknown"
+      },
+      "delete": false,
+      "expectedPredicate": "invalid-governing-intent-reference",
+      "old": {
+        "ref": "observation"
+      },
+      "outcome": "rejected-as-expected",
+      "actualPredicate": "invalid-governing-intent-reference",
+      "detail": "Only the one-key enclosing-observation reference is admitted",
+      "fixture": "executed-counterexamples/extra-reference-key.json",
+      "sha256": "66371bbf2b2f39344047479a5d6b5dcaa9e7e8370adf8292f1af3b1149084588"
+    },
+    {
+      "id": "second-item-different-value",
+      "kind": "machine",
+      "path": [
+        "workItems",
+        "items",
+        1,
+        "governedBy"
+      ],
+      "new": {
+        "label": "Unknown",
+        "closedReason": "missing-evidence",
+        "resolutionRoutes": []
+      },
+      "delete": false,
+      "expectedPredicate": "invalid-governing-intent-reference",
+      "old": {
+        "ref": "observation"
+      },
+      "outcome": "rejected-as-expected",
+      "actualPredicate": "invalid-governing-intent-reference",
+      "detail": "Only the one-key enclosing-observation reference is admitted",
+      "fixture": "executed-counterexamples/second-item-different-value.json",
+      "sha256": "9fd1db70b3b5f664e41fe2059489e4e8102203b8347861b0070189b222be05ff"
+    },
+    {
+      "id": "evaluation-asOf",
+      "kind": "machine",
+      "path": [
+        "evaluation",
+        "asOf"
+      ],
+      "new": "2026-10-21T00:00:01Z",
+      "delete": false,
+      "expectedPredicate": "evaluation-identity",
+      "old": "2026-10-21T00:00:00Z",
+      "outcome": "rejected-as-expected",
+      "actualPredicate": "evaluation-identity",
+      "detail": "The complete E object must be equal, not just snapshot/revision",
+      "fixture": "executed-counterexamples/evaluation-asOf.json",
+      "sha256": "cf97afbd6a9d47deb50955234e2861aff43ac816f4ca9dcad69880b958b045cd"
+    },
+    {
+      "id": "evaluation-inputsDigest",
+      "kind": "machine",
+      "path": [
+        "evaluation",
+        "inputsDigest"
+      ],
+      "new": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "delete": false,
+      "expectedPredicate": "evaluation-identity",
+      "old": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "outcome": "rejected-as-expected",
+      "actualPredicate": "evaluation-identity",
+      "detail": "The complete E object must be equal, not just snapshot/revision",
+      "fixture": "executed-counterexamples/evaluation-inputsDigest.json",
+      "sha256": "d81d196ddc6e5dfca342991ee42c21c6731b0ce069f4251294b07ad015acc0db"
+    },
+    {
+      "id": "evaluation-snapshot",
+      "kind": "machine",
+      "path": [
+        "evaluation",
+        "snapshot"
+      ],
+      "new": "other-evaluation",
+      "delete": false,
+      "expectedPredicate": "evaluation-identity",
+      "old": "settlement@fixture|inputs:sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "outcome": "rejected-as-expected",
+      "actualPredicate": "evaluation-identity",
+      "detail": "The complete E object must be equal, not just snapshot/revision",
+      "fixture": "executed-counterexamples/evaluation-snapshot.json",
+      "sha256": "d99bf457e5dcd8bee8c3eb85b473c8ac0ea4956e13d822c5fe5730907ddd8f79"
+    },
+    {
+      "id": "evaluation-probe-identity",
+      "kind": "machine",
+      "path": [
+        "evaluation",
+        "evidence",
+        "probe",
+        "evaluationId"
+      ],
+      "new": "other-probe",
+      "delete": false,
+      "expectedPredicate": "evaluation-identity",
+      "old": "evaluation:fixture:currency",
+      "outcome": "rejected-as-expected",
+      "actualPredicate": "evaluation-identity",
+      "detail": "The complete E object must be equal, not just snapshot/revision",
+      "fixture": "executed-counterexamples/evaluation-probe-identity.json",
+      "sha256": "8a27f2f9a56472cb679662879fd9bc7efbc6660c797352ecab92127e1f306a11"
+    },
+    {
+      "id": "observation-capturedAt",
+      "kind": "machine",
+      "path": [
+        "workItems",
+        "capturedAt"
+      ],
+      "new": "2026-10-21T00:00:01Z",
+      "delete": false,
+      "expectedPredicate": "observation-identity",
+      "old": "2026-10-20T23:59:00Z",
+      "outcome": "rejected-as-expected",
+      "actualPredicate": "observation-identity",
+      "detail": "capturedAt",
+      "fixture": "executed-counterexamples/observation-capturedAt.json",
+      "sha256": "c4141ed9dac95d7539dd03ee63d9d5f5d285f82d5d21c97e174431fbb4c16a14"
+    },
+    {
+      "id": "observation-revision",
+      "kind": "machine",
+      "path": [
+        "workItems",
+        "provenance",
+        "revision"
+      ],
+      "new": "fixture-dolt-C",
+      "delete": false,
+      "expectedPredicate": "observation-identity",
+      "old": "fixture-dolt-A",
+      "outcome": "rejected-as-expected",
+      "actualPredicate": "observation-identity",
+      "detail": "provenance",
+      "fixture": "executed-counterexamples/observation-revision.json",
+      "sha256": "c42b065f170fe3698d23054beeaf3d18fee6949eec0ada3851aec483246688a3"
+    },
+    {
+      "id": "item-identity",
+      "kind": "machine",
+      "path": [
+        "workItems",
+        "items",
+        0,
+        "id"
+      ],
+      "new": "fixture-c",
+      "delete": false,
+      "expectedPredicate": "item-identity",
+      "old": "fixture-a",
+      "outcome": "rejected-as-expected",
+      "actualPredicate": "item-identity",
+      "detail": "Item identities/order/membership and all unpooled metadata",
+      "fixture": "executed-counterexamples/item-identity.json",
+      "sha256": "84405cf9f49431ba5aa10061a9bae33d6456c7338524a078c7db2125ef1f3ce3"
+    },
+    {
+      "id": "item-order",
+      "kind": "machine",
+      "path": [
+        "workItems",
+        "items"
+      ],
+      "new": [
+        {
+          "id": "fixture-b",
+          "title": "Beta work",
+          "status": "closed",
+          "issueType": "task",
+          "priority": 3,
+          "createdAt": "2026-10-18T00:00:00Z",
+          "updatedAt": "2026-10-20T01:00:00Z",
+          "closedAt": "2026-10-20T01:00:00Z",
+          "governedBy": {
+            "ref": "observation"
+          }
+        },
+        {
+          "id": "fixture-a",
+          "title": "Alpha work",
+          "status": "open",
+          "issueType": "task",
+          "priority": 2,
+          "createdAt": "2026-10-19T00:00:00Z",
+          "updatedAt": "2026-10-20T02:00:00Z",
+          "closedAt": null,
+          "governedBy": {
+            "ref": "observation"
+          }
+        }
+      ],
+      "delete": false,
+      "expectedPredicate": "item-identity",
+      "old": [
+        {
+          "id": "fixture-a",
+          "title": "Alpha work",
+          "status": "open",
+          "issueType": "task",
+          "priority": 2,
+          "createdAt": "2026-10-19T00:00:00Z",
+          "updatedAt": "2026-10-20T02:00:00Z",
+          "closedAt": null,
+          "governedBy": {
+            "ref": "observation"
+          }
+        },
+        {
+          "id": "fixture-b",
+          "title": "Beta work",
+          "status": "closed",
+          "issueType": "task",
+          "priority": 3,
+          "createdAt": "2026-10-18T00:00:00Z",
+          "updatedAt": "2026-10-20T01:00:00Z",
+          "closedAt": "2026-10-20T01:00:00Z",
+          "governedBy": {
+            "ref": "observation"
+          }
+        }
+      ],
+      "outcome": "rejected-as-expected",
+      "actualPredicate": "item-identity",
+      "detail": "Item identities/order/membership and all unpooled metadata",
+      "fixture": "executed-counterexamples/item-order.json",
+      "sha256": "d7af0b8342bcc751ba38065088d42fb23f8a2ec479ef74560e50d6ba3863e5af"
+    },
+    {
+      "id": "item-membership",
+      "kind": "machine",
+      "path": [
+        "workItems",
+        "items"
+      ],
+      "new": [
+        {
+          "id": "fixture-a",
+          "title": "Alpha work",
+          "status": "open",
+          "issueType": "task",
+          "priority": 2,
+          "createdAt": "2026-10-19T00:00:00Z",
+          "updatedAt": "2026-10-20T02:00:00Z",
+          "closedAt": null,
+          "governedBy": {
+            "ref": "observation"
+          }
+        }
+      ],
+      "delete": false,
+      "expectedPredicate": "item-identity",
+      "old": [
+        {
+          "id": "fixture-a",
+          "title": "Alpha work",
+          "status": "open",
+          "issueType": "task",
+          "priority": 2,
+          "createdAt": "2026-10-19T00:00:00Z",
+          "updatedAt": "2026-10-20T02:00:00Z",
+          "closedAt": null,
+          "governedBy": {
+            "ref": "observation"
+          }
+        },
+        {
+          "id": "fixture-b",
+          "title": "Beta work",
+          "status": "closed",
+          "issueType": "task",
+          "priority": 3,
+          "createdAt": "2026-10-18T00:00:00Z",
+          "updatedAt": "2026-10-20T01:00:00Z",
+          "closedAt": "2026-10-20T01:00:00Z",
+          "governedBy": {
+            "ref": "observation"
+          }
+        }
+      ],
+      "outcome": "rejected-as-expected",
+      "actualPredicate": "item-identity",
+      "detail": "Item identities/order/membership and all unpooled metadata",
+      "fixture": "executed-counterexamples/item-membership.json",
+      "sha256": "283ccd5b916f7805615bd5641ceb9f1058f547007ed50291b5dea49300b966d1"
+    },
+    {
+      "id": "subject-identity",
+      "kind": "machine",
+      "path": [
+        "unknownSubjects",
+        0,
+        "id"
+      ],
+      "new": "pooled-governed-by",
+      "delete": false,
+      "expectedPredicate": "subject-identity",
+      "old": "work-item:fixture-a/governed-by",
+      "outcome": "rejected-as-expected",
+      "actualPredicate": "subject-identity",
+      "detail": "Every separately served subject record stays byte-value identical",
+      "fixture": "executed-counterexamples/subject-identity.json",
+      "sha256": "5b4064bb07a0a5db4ce673708cac0957ba5107ce7ee3a442222aae1403dfe5eb"
+    },
+    {
+      "id": "subject-reason",
+      "kind": "machine",
+      "path": [
+        "unknownSubjects",
+        0,
+        "epistemic",
+        "closedReason"
+      ],
+      "new": "missing-evidence",
+      "delete": false,
+      "expectedPredicate": "subject-identity",
+      "old": "source-uncaptured-or-unreachable",
+      "outcome": "rejected-as-expected",
+      "actualPredicate": "subject-identity",
+      "detail": "Every separately served subject record stays byte-value identical",
+      "fixture": "executed-counterexamples/subject-reason.json",
+      "sha256": "b0244e49b9e4963b750ccbef573956539b5ddd3000e9751f5e31a1547e5ad829"
+    },
+    {
+      "id": "subject-route",
+      "kind": "machine",
+      "path": [
+        "unknownSubjects",
+        0,
+        "epistemic",
+        "resolutionRoutes",
+        0,
+        "route"
+      ],
+      "new": "Trust the aggregate",
+      "delete": false,
+      "expectedPredicate": "subject-identity",
+      "old": "Repair the observer/source; new snapshot",
+      "outcome": "rejected-as-expected",
+      "actualPredicate": "subject-identity",
+      "detail": "Every separately served subject record stays byte-value identical",
+      "fixture": "executed-counterexamples/subject-route.json",
+      "sha256": "686dfaaf34e7521df3b1dcaac05c04029889629f1be73b762b0de7f09b9a9fce"
+    },
+    {
+      "id": "served-count",
+      "kind": "machine",
+      "path": [
+        "workItems",
+        "governedByUnknownCount"
+      ],
+      "new": 0,
+      "delete": false,
+      "expectedPredicate": "full-projection-equality",
+      "old": 2,
+      "outcome": "rejected-as-expected",
+      "actualPredicate": "full-projection-equality",
+      "detail": "Expansion restores exactly the bounded original projection",
+      "fixture": "executed-counterexamples/served-count.json",
+      "sha256": "53fffa62ef526285bed8eb6cce0392bed7decd42899dcdd5fc6808e474bf375f"
+    },
+    {
+      "id": "human-label",
+      "kind": "human",
+      "old": "Governing intent: Unknown. Route:",
+      "new": "Governing intent: Observed. Route:",
+      "expectedPredicate": "effective-field-parity",
+      "outcome": "rejected-as-expected",
+      "actualPredicate": "effective-field-parity",
+      "detail": "Every sampled human scalar equals the expanded machine fact for the same E",
+      "fixture": "executed-counterexamples/human-label.html",
+      "sha256": "29212050910dc6d29641ce3677afc98edcdffba664b68e34bbf193d76f13dfeb"
+    },
+    {
+      "id": "human-reason",
+      "kind": "human",
+      "old": "data-unknown-reason=\"source-uncaptured-or-unreachable\" title=",
+      "new": "data-unknown-reason=\"missing-evidence\" title=",
+      "expectedPredicate": "effective-field-parity",
+      "outcome": "rejected-as-expected",
+      "actualPredicate": "effective-field-parity",
+      "detail": "Every sampled human scalar equals the expanded machine fact for the same E",
+      "fixture": "executed-counterexamples/human-reason.html",
+      "sha256": "efa7428653db6dadf55fa9ecff382028b45feb8de589d03aa923a1a481d493ba"
+    },
+    {
+      "id": "human-route",
+      "kind": "human",
+      "old": ">Repair the observer/source; new snapshot</span>",
+      "new": ">Borrow a prior body</span>",
+      "expectedPredicate": "effective-field-parity",
+      "outcome": "rejected-as-expected",
+      "actualPredicate": "effective-field-parity",
+      "detail": "Every sampled human scalar equals the expanded machine fact for the same E",
+      "fixture": "executed-counterexamples/human-route.html",
+      "sha256": "3384de05d2fe035ab0d2b090d40cad87e2150744499909683c14818c7dcd7256"
+    },
+    {
+      "id": "human-route-action",
+      "kind": "human",
+      "old": "data-route-actor=\"operator\"",
+      "new": "data-route-actor=\"agent\"",
+      "expectedPredicate": "effective-field-parity",
+      "outcome": "rejected-as-expected",
+      "actualPredicate": "effective-field-parity",
+      "detail": "Every sampled human scalar equals the expanded machine fact for the same E",
+      "fixture": "executed-counterexamples/human-route-action.html",
+      "sha256": "3e4cfd682e324b2f422653493d5e12c22f0e00de2d202cb7a3ff414d42851035"
+    },
+    {
+      "id": "human-subject",
+      "kind": "human",
+      "old": "data-unknown-disclosure=\"work-item:fixture-a/governed-by\"",
+      "new": "data-unknown-disclosure=\"work-item:fixture-b/governed-by\"",
+      "expectedPredicate": "effective-field-parity",
+      "outcome": "rejected-as-expected",
+      "actualPredicate": "effective-field-parity",
+      "detail": "Every sampled human scalar equals the expanded machine fact for the same E",
+      "fixture": "executed-counterexamples/human-subject.html",
+      "sha256": "7db062bd33f67f780c3f35160353f6514d97a6e4d363efa3afdef226513f39bd"
+    },
+    {
+      "id": "human-warrant",
+      "kind": "human",
+      "old": "Supplying an item's warrant resolves its governing intent.",
+      "new": "The aggregate resolves all intent.",
+      "expectedPredicate": "warrant-literal",
+      "outcome": "rejected-as-expected",
+      "actualPredicate": "warrant-literal",
+      "detail": "unchanged human instruction",
+      "fixture": "executed-counterexamples/human-warrant.html",
+      "sha256": "a41e773ae8d0cc2220c9849bb3d3ac3aed41d7f0ff6f5ecf80d870e8256ef591"
+    },
+    {
+      "id": "human-extra-marker",
+      "kind": "human",
+      "old": "<ul>",
+      "new": "<ul><li data-parity-field=\"unaccounted\">Other</li>",
+      "expectedPredicate": "human-marker-population",
+      "outcome": "rejected-as-expected",
+      "actualPredicate": "human-marker-population",
+      "detail": "Every declared marker belongs to one sampled family; no extras or missing markers",
+      "fixture": "executed-counterexamples/human-extra-marker.html",
+      "sha256": "60e5071daab89363f4526be6011965afdc11278276f2a0de5bc168d64a94c6b6"
+    },
+    {
+      "id": "cross-body-no-cache-borrow",
+      "kind": "sequential-machine",
+      "priorBody": "fixtures/reference-body-A.json",
+      "body": "fixtures/reference-body-B.json",
+      "old": {
+        "label": "Unknown",
+        "closedReason": "source-uncaptured-or-unreachable",
+        "resolutionRoutes": [
+          {
+            "reason": "source-uncaptured-or-unreachable",
+            "route": "Repair the observer/source; new snapshot",
+            "actor": "operator",
+            "verb": "repair",
+            "target": "evaluation"
+          }
+        ]
+      },
+      "new": "<absent in B>",
+      "outcome": "rejected-as-expected",
+      "actualPredicate": "invalid-governing-intent-reference",
+      "fixture": "executed-counterexamples/cross-body-no-cache-borrow.json",
+      "sha256": "47727e279ce2fddcd0491bdf45eba2d2973ee4f53bdbea00bc058c97c64b8261"
+    },
+    {
+      "id": "duplicate-governedBy",
+      "kind": "raw-json",
+      "old": "one governedBy key",
+      "new": "duplicated governedBy key",
+      "outcome": "rejected-as-expected",
+      "actualPredicate": "duplicate-json-key",
+      "fixture": "executed-counterexamples/duplicate-governedBy.json",
+      "sha256": "79d611a79ac91cb6f395a78a60790427c2ea20eab36d810ae3cfcb3eb381dda3"
+    },
+    {
+      "id": "duplicate-ref",
+      "kind": "raw-json",
+      "old": "one ref key",
+      "new": "duplicated ref key",
+      "outcome": "rejected-as-expected",
+      "actualPredicate": "duplicate-json-key",
+      "fixture": "executed-counterexamples/duplicate-ref.json",
+      "sha256": "061fcb79641a34fa2a1d4cbdbeb377c356c2b57ae56435620c76f0a193cdfd16"
+    }
+  ],
+  "retention": "Each fixture path in cases is relative to the outside-Git compatibility-settlement cache. Full mutated subjects, executable checker and result are retained there with full SHA256 digests."
+}

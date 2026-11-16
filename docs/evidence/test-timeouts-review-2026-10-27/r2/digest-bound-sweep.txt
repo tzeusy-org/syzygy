@@ -1,0 +1,5 @@
+modified files 17 digest tokens (sha256 + blob id each) 34 tracked files searched 5019
+apps/three-surface-poc/src/polaris-generation/dossier-cap-measure.test.ts cited by 2 ['docs/evidence/syzygy-bpyt-4-31/head-durations/dossier-cap-measure.test.hooks.json', 'docs/evidence/syzygy-bpyt-4-31/later-observations.json']
+apps/three-surface-poc/src/production-reobserve.test.ts cited by 1 ['docs/evidence/syzygy-bpyt-4-31/repair-durations/production-reobserve.test.tests.json']
+docs/evidence/syzygy-bpyt-4-31/tools/measure_vitest_hook_durations.py cited by 27 ['docs/evidence/syzygy-bpyt-4-31/durations/cap1-system.hooks.json', 'docs/evidence/syzygy-bpyt-4-31/durations/dossier-cap-measure.test.hooks.json', 'docs/evidence/syzygy-bpyt-4-31/durations/governing-intent-sweep.test.hooks.json', 'docs/evidence/syzygy-bpyt-4-31/durations/no-egress.test.hooks.json', 'docs/evidence/syzygy-bpyt-4-31/durations/orrery.browser.test.hooks.json', 'docs/evidence/syzygy-bpyt-4-31/durations/polaris-accessibility.browser.test.hooks.json']
+citers under .syzygy/ or openspec/: []

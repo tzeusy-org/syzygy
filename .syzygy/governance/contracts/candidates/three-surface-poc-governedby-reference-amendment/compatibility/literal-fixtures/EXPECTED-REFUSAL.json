@@ -1,0 +1,36 @@
+{
+  "httpStatus": 503,
+  "body": {
+    "served": "nothing",
+    "failure": "invalid-governing-intent-reference",
+    "resolution": "Repair the governedBy wire encoding; request a new answer",
+    "evaluation": {
+      "snapshot": "settlement@fixture|inputs:sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "snapshotLabel": "settlement@fixture",
+      "inputsDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "asOf": "2026-10-21T00:00:00Z",
+      "evidence": {
+        "pinnedRevision": "1111111111111111111111111111111111111111",
+        "pinnedCommitterInstant": "2026-10-20T00:00:00Z",
+        "observationInstant": "2026-10-21T00:00:00Z",
+        "probe": {
+          "claimId": "claim:currency-probe",
+          "evaluationId": "evaluation:fixture:currency",
+          "evaluationInstant": "2026-10-21T00:00:00Z",
+          "epistemic": {
+            "label": "Observed",
+            "tier": "report-fact",
+            "challenge": "unchallenged"
+          },
+          "pinnedRevision": "1111111111111111111111111111111111111111",
+          "currentRevision": "1111111111111111111111111111111111111111",
+          "changedSources": 0,
+          "addedSources": 0
+        },
+        "currencyBounds": []
+      }
+    },
+    "readiness": false
+  },
+  "note": "Candidate expected envelope only; no HTTP response was produced or measured."
+}

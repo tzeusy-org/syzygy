@@ -1,8 +1,8 @@
 import { createHash } from 'node:crypto';
 import * as fs from 'node:fs';
-import { tmpdir } from 'node:os';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { tempDir } from '@syzygy/test-kit';
 import { describe, expect, it } from 'vitest';
 import { cutSec3, readSec3 } from './doctrine-quote.js';
 
@@ -62,14 +62,10 @@ describe('readSec3 over the adopted security.md, read live', () => {
   });
 
   it('refuses a records root with no security.md, and one that is not UTF-8', () => {
-    const root = fs.mkdtempSync(path.join(tmpdir(), 'dossier-doctrine-'));
-    try {
-      expect(readSec3(root)).toEqual({ ok: false, reason: '.syzygy/governance/doctrine/security.md cannot be read (ENOENT)' });
-      fs.mkdirSync(path.join(root, '.syzygy/governance/doctrine'), { recursive: true });
-      fs.writeFileSync(path.join(root, '.syzygy/governance/doctrine/security.md'), Buffer.from([0x2a, 0xff, 0x0a]));
-      expect(readSec3(root)).toEqual({ ok: false, reason: '.syzygy/governance/doctrine/security.md is not valid UTF-8' });
-    } finally {
-      fs.rmSync(root, { recursive: true, force: true });
-    }
+    const root = tempDir('dossier-doctrine-');
+    expect(readSec3(root)).toEqual({ ok: false, reason: '.syzygy/governance/doctrine/security.md cannot be read (ENOENT)' });
+    fs.mkdirSync(path.join(root, '.syzygy/governance/doctrine'), { recursive: true });
+    fs.writeFileSync(path.join(root, '.syzygy/governance/doctrine/security.md'), Buffer.from([0x2a, 0xff, 0x0a]));
+    expect(readSec3(root)).toEqual({ ok: false, reason: '.syzygy/governance/doctrine/security.md is not valid UTF-8' });
   });
 });

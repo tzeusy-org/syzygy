@@ -1,0 +1,44 @@
+{
+ "files": [
+  {
+   "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-537/base/apps/three-surface-poc/src/polaris-generation/dossier-cap-measure.test.ts",
+   "project": "@syzygy/three-surface-poc-app",
+   "type": "suite",
+   "name": "apps/three-surface-poc/src/polaris-generation/dossier-cap-measure.test.ts",
+   "line": null,
+   "mode": "run",
+   "state": "pass",
+   "durationMs": 933.005829,
+   "errors": [],
+   "tasks": [
+    {
+     "type": "suite",
+     "name": "what heuristic discovery reads under the dossier cap on the design-prose fixture (no model)",
+     "line": 15,
+     "mode": "run",
+     "state": "pass",
+     "durationMs": 3.9956860000002052,
+     "errors": [],
+     "tasks": [
+      {
+       "type": "test",
+       "name": "reads more of the core, and none of the release notes, configuration or build files, once the prior has role signals",
+       "line": 17,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 3.3968700000000354,
+       "errors": []
+      }
+     ],
+     "hookMs": 1
+    }
+   ],
+   "hookMs": 929,
+   "collectMs": 894.1654470000001,
+   "setupMs": 28.081223000000023,
+   "prepareMs": 127.38532400000003,
+   "environmentMs": 0.24125699999996186
+  }
+ ],
+ "unhandled": []
+}

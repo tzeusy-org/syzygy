@@ -1,0 +1,25 @@
+{
+ "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+ "base": "d38d7a3ce632a34c2a41bdb77ad323ba0b05b777",
+ "head": "308a62f4a48e47b625aeff9cc718b1b2c37161f8",
+ "typescript": "5.9.3",
+ "baseSha256": "ed67106fe74333c97f419f4a52f14f75bfaa34bbfa5b41f33c4f1b6545895731",
+ "headSha256": "94c9d93b40cc4f54afc8a6d56d9062b25e27938016edef566d7bd75b6381cbd3",
+ "bytesDiffer": true,
+ "emitEqual": true,
+ "printEqual": true,
+ "selftest": {
+  "identifierRenamed": {
+   "emitEqual": false,
+   "printEqual": false
+  },
+  "literalChanged": {
+   "emitEqual": false,
+   "printEqual": false
+  },
+  "commentAdded": {
+   "emitEqual": true,
+   "printEqual": true
+  }
+ }
+}

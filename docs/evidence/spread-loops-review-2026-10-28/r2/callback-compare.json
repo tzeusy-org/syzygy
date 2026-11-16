@@ -1,0 +1,59 @@
+{
+ "files": {
+  "packages/three-surface-poc-core/src/git-object-reader.test.ts": {
+   "baseCalls": 39,
+   "headCalls": 42,
+   "common": 39,
+   "onlyBase": [],
+   "onlyHead": [
+    "a 200,000-line closed fence under the read limit (GP-B2 Q1) > %s: a 200,000-line closed fence holding a script element reads as text, under the read limit #0",
+    "a 200,000-line closed fence under the read limit (GP-B2 Q1) > %s: a script element after a 200,000-line closed fence is found, with a body-free record #0",
+    "a 200,000-line closed fence under the read limit (GP-B2 Q1) > %s: scanActiveContent over a 200,000-line closed fence finds nothing inside it #0"
+   ],
+   "callbackChanged": [],
+   "tableChangedResolvedAnyScope": [],
+   "optionsChanged": []
+  },
+  "packages/three-surface-poc-core/src/markdown-code-context.test.ts": {
+   "baseCalls": 30,
+   "headCalls": 34,
+   "common": 30,
+   "onlyBase": [],
+   "onlyHead": [
+    "a very long closed fence > one spread call over 200,002 arguments still overflows the stack in this test process #0",
+    "a very long closed fence > %s: 200,000 lines are blanked, every line end and the text after the fence kept #0",
+    "a very long closed fence > %s: a script element inside the fence is blanked, and the line after the fence keeps its own #0",
+    "a very long closed fence > %s: the same lines left unclosed are still malformed at the opener #0"
+   ],
+   "callbackChanged": [],
+   "tableChangedResolvedAnyScope": [],
+   "optionsChanged": []
+  },
+  "packages/three-surface-poc-core/src/project-shape-extraction.test.ts": {
+   "baseCalls": 42,
+   "headCalls": 44,
+   "common": 42,
+   "onlyBase": [],
+   "onlyHead": [
+    "a source whose class holds 130,000 items > one spread call over 130,002 arguments still overflows the stack in this test process #0",
+    "a source whose class holds 130,000 items > is extracted, every item kept in class order #0"
+   ],
+   "callbackChanged": [],
+   "tableChangedResolvedAnyScope": [],
+   "optionsChanged": []
+  },
+  "packages/three-surface-poc-core/src/project-shape-model.test.ts": {
+   "baseCalls": 29,
+   "headCalls": 31,
+   "common": 29,
+   "onlyBase": [],
+   "onlyHead": [
+    "a very long fence or list does not abort the observation > %s: a 200,000-line closed fence at the end of vision.md is classified as a 10-line one is #0",
+    "a very long fence or list does not abort the observation > a 130,000-item success list is extracted whole #0"
+   ],
+   "callbackChanged": [],
+   "tableChangedResolvedAnyScope": [],
+   "optionsChanged": []
+  }
+ }
+}

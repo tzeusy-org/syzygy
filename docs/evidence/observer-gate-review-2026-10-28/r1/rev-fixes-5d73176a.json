@@ -1,0 +1,134 @@
+{
+ "commit": "5d73176ac26637e4e0597e66d235903df05156b2",
+ "load": [
+  [
+   "25.87",
+   "25.75",
+   "26.49"
+  ],
+  [
+   "25.16",
+   "25.60",
+   "26.44"
+  ],
+  [
+   "25.31",
+   "25.63",
+   "26.44"
+  ],
+  [
+   "28.24",
+   "26.23",
+   "26.64"
+  ],
+  [
+   "28.55",
+   "26.33",
+   "26.67"
+  ]
+ ],
+ "cases": [
+  {
+   "case": "R5-nofix",
+   "edits": [
+    {
+     "path": "packages/support/tsconfig.json",
+     "old": "\"extends\": \"../../tsconfig.base.json\"",
+     "new": "\"extends\": \"../../configs/mid.json\""
+    },
+    {
+     "path": "configs/mid.json",
+     "old": "<new file>",
+     "new": "{ \"extends\": \"../tsconfig.base.json\" }\n"
+    }
+   ],
+   "exit": 0,
+   "failed": 0,
+   "passed": 16,
+   "failing": []
+  },
+  {
+   "case": "fixes",
+   "edits": [
+    {
+     "path": "apps/three-surface-poc/src/git-observation.test.ts",
+     "old": "`${dir}/src/__untracked__.ts`, `${dir}x/a.ts`]), 'scripts/clean_build.mjs.bak'];\n    expect(probes).toHaveLength(49);",
+     "new": "`${dir}/src/__untracked__.ts`, `${dir}x/a.ts`, `docs/${dir}/a.ts`]), 'scripts/clean_build.mjs.bak'];\n    expect(probes).toHaveLength(61);"
+    },
+    {
+     "path": "apps/three-surface-poc/src/git-observation.test.ts",
+     "old": "      expect(chain.at(-1), project).toBe('tsconfig.base.json');\n",
+     "new": "      expect(chain.at(-1), project).toBe('tsconfig.base.json');\n      expect(chain.filter((link) => link !== 'tsconfig.base.json' && !projects.some((dir) => link.startsWith(`${dir}/`))), project).toEqual([]);\n"
+    }
+   ],
+   "exit": 0,
+   "failed": 0,
+   "passed": 16,
+   "failing": []
+  },
+  {
+   "case": "fixes+R2",
+   "edits": [
+    {
+     "path": "apps/three-surface-poc/src/git-observation.test.ts",
+     "old": "`${dir}/src/__untracked__.ts`, `${dir}x/a.ts`]), 'scripts/clean_build.mjs.bak'];\n    expect(probes).toHaveLength(49);",
+     "new": "`${dir}/src/__untracked__.ts`, `${dir}x/a.ts`, `docs/${dir}/a.ts`]), 'scripts/clean_build.mjs.bak'];\n    expect(probes).toHaveLength(61);"
+    },
+    {
+     "path": "apps/three-surface-poc/src/git-observation.test.ts",
+     "old": "      expect(chain.at(-1), project).toBe('tsconfig.base.json');\n",
+     "new": "      expect(chain.at(-1), project).toBe('tsconfig.base.json');\n      expect(chain.filter((link) => link !== 'tsconfig.base.json' && !projects.some((dir) => link.startsWith(`${dir}/`))), project).toEqual([]);\n"
+    },
+    {
+     "path": "apps/three-surface-poc/src/git-observation.ts",
+     "old": "inputPrefixes.every((prefix) => !changedPath.startsWith(prefix))",
+     "new": "inputPrefixes.every((prefix) => !changedPath.includes(prefix))"
+    }
+   ],
+   "exit": 1,
+   "failed": 1,
+   "passed": 15,
+   "failing": [
+    {
+     "test": "read-only Git observation refuses exactly the projects the POC start compiles or loads, and the files that define its build",
+     "message": "AssertionError: expected [ \u2026(8) ] to deeply equal []"
+    }
+   ]
+  },
+  {
+   "case": "fixes+R5",
+   "edits": [
+    {
+     "path": "apps/three-surface-poc/src/git-observation.test.ts",
+     "old": "`${dir}/src/__untracked__.ts`, `${dir}x/a.ts`]), 'scripts/clean_build.mjs.bak'];\n    expect(probes).toHaveLength(49);",
+     "new": "`${dir}/src/__untracked__.ts`, `${dir}x/a.ts`, `docs/${dir}/a.ts`]), 'scripts/clean_build.mjs.bak'];\n    expect(probes).toHaveLength(61);"
+    },
+    {
+     "path": "apps/three-surface-poc/src/git-observation.test.ts",
+     "old": "      expect(chain.at(-1), project).toBe('tsconfig.base.json');\n",
+     "new": "      expect(chain.at(-1), project).toBe('tsconfig.base.json');\n      expect(chain.filter((link) => link !== 'tsconfig.base.json' && !projects.some((dir) => link.startsWith(`${dir}/`))), project).toEqual([]);\n"
+    },
+    {
+     "path": "packages/support/tsconfig.json",
+     "old": "\"extends\": \"../../tsconfig.base.json\"",
+     "new": "\"extends\": \"../../configs/mid.json\""
+    },
+    {
+     "path": "configs/mid.json",
+     "old": "<new file>",
+     "new": "{ \"extends\": \"../tsconfig.base.json\" }\n"
+    }
+   ],
+   "exit": 1,
+   "failed": 1,
+   "passed": 15,
+   "failing": [
+    {
+     "test": "read-only Git observation reads every protected project from tsconfig.base.json through its own extends chain",
+     "message": "AssertionError: packages/support: expected [ 'configs/mid.json' ] to deeply equal []"
+    }
+   ]
+  }
+ ],
+ "cleanAfter": true
+}

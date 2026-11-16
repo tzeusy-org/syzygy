@@ -1,0 +1,33 @@
+{
+ "tool": "suite_summary.py",
+ "attempt": "attempt 6: the round-2 repair merged with main d38d7a3c, run once, default timeouts",
+ "cpus": 12,
+ "changedFilesBetween": [
+  "c104771f",
+  "2b56a253"
+ ],
+ "runs": [
+  {
+   "name": "round2-head",
+   "commit": "2b56a253f81bb4e6d71b46556f0d675a07dfb7c2",
+   "start": "2026-10-27T17:08:32+08:00",
+   "load1Start": 39.92,
+   "exit": 0,
+   "end": "2026-10-27T17:12:00+08:00",
+   "load1End": 49.39,
+   "success": true,
+   "totals": {
+    "numTotalTestSuites": 869,
+    "numFailedTestSuites": 0,
+    "numTotalTests": 5379,
+    "numPassedTests": 5374,
+    "numFailedTests": 0,
+    "numPendingTests": 5,
+    "numTodoTests": 0
+   },
+   "failedTests": [],
+   "failedFilesWithoutFailedTest": [],
+   "failuresInChangedFiles": 0
+  }
+ ]
+}

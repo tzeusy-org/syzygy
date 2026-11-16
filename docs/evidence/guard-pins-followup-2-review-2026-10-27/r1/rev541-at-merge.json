@@ -1,0 +1,236 @@
+{
+ "tree": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-541/base",
+ "head": "93cc58d7dfb861cef5ae560850632d65c21e17a4",
+ "results": [
+  {
+   "id": "R541-X1-root-reads-devDependencies-only",
+   "outcome": "survives",
+   "exit": 0,
+   "total": 169,
+   "passed": 169,
+   "failed": [],
+   "timeouts": 0,
+   "files": 14,
+   "seconds": 5.1,
+   "loadBefore": [
+    "53.79",
+    "55.63",
+    "55.98"
+   ],
+   "loadAfter": [
+    "53.25",
+    "55.49",
+    "55.93"
+   ],
+   "oldCounts": [
+    1
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "    for (const field of [manifest.dependencies, manifest.devDependencies, manifest.optionalDependencies, manifest.peerDependencies]) {",
+     "new": "    for (const field of manifest.dir === '.' ? [manifest.devDependencies] : [manifest.dependencies, manifest.devDependencies, manifest.optionalDependencies, manifest.peerDependencies]) {"
+    }
+   ]
+  },
+  {
+   "id": "R541-X2-root-devDependencies-unread",
+   "outcome": "killed",
+   "exit": 1,
+   "total": 169,
+   "passed": 168,
+   "failed": [
+    "the shared workspace resolver reads a bare name the workspace root's manifest declares as a local dependency as naming no module"
+   ],
+   "timeouts": 0,
+   "files": 14,
+   "seconds": 7.4,
+   "loadBefore": [
+    "53.25",
+    "55.49",
+    "55.93"
+   ],
+   "loadAfter": [
+    "54.10",
+    "55.59",
+    "55.96"
+   ],
+   "oldCounts": [
+    1
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "    for (const field of [manifest.dependencies, manifest.devDependencies, manifest.optionalDependencies, manifest.peerDependencies]) {",
+     "new": "    for (const field of manifest.dir === '.' ? [manifest.dependencies, manifest.optionalDependencies, manifest.peerDependencies] : [manifest.dependencies, manifest.devDependencies, manifest.optionalDependencies, manifest.peerDependencies]) {"
+    }
+   ]
+  },
+  {
+   "id": "R541-X3-npm-alias-needs-version",
+   "outcome": "survives",
+   "exit": 0,
+   "total": 169,
+   "passed": 169,
+   "failed": [],
+   "timeouts": 0,
+   "files": 14,
+   "seconds": 7.0,
+   "loadBefore": [
+    "54.10",
+    "55.59",
+    "55.96"
+   ],
+   "loadAfter": [
+    "53.37",
+    "55.41",
+    "55.90"
+   ],
+   "oldCounts": [
+    1
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:(?:@[^/@]+\\/)?[^@]+@|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    }
+   ]
+  },
+  {
+   "id": "R541-X4-npm-arm-case-sensitive",
+   "outcome": "survives",
+   "exit": 0,
+   "total": 169,
+   "passed": 169,
+   "failed": [],
+   "timeouts": 0,
+   "files": 14,
+   "seconds": 7.0,
+   "loadBefore": [
+    "53.37",
+    "55.41",
+    "55.90"
+   ],
+   "loadAfter": [
+    "55.16",
+    "55.74",
+    "56.00"
+   ],
+   "oldCounts": [
+    1
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|(?-i:npm:)|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    }
+   ]
+  },
+  {
+   "id": "R541-X5-tarball-arm-skips-hash",
+   "outcome": "survives",
+   "exit": 0,
+   "total": 169,
+   "passed": 169,
+   "failed": [],
+   "timeouts": 0,
+   "files": 14,
+   "seconds": 5.9,
+   "loadBefore": [
+    "55.16",
+    "55.74",
+    "56.00"
+   ],
+   "loadAfter": [
+    "55.55",
+    "55.81",
+    "56.02"
+   ],
+   "oldCounts": [
+    1
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|^[^#]*\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    }
+   ]
+  },
+  {
+   "id": "R541-X6-unscoped-manifests-unread",
+   "outcome": "killed",
+   "exit": 1,
+   "total": 169,
+   "passed": 168,
+   "failed": [
+    "the shared workspace resolver reads a bare name the workspace root's manifest declares as a local dependency as naming no module"
+   ],
+   "timeouts": 0,
+   "files": 14,
+   "seconds": 8.0,
+   "loadBefore": [
+    "55.55",
+    "55.81",
+    "56.02"
+   ],
+   "loadAfter": [
+    "56.87",
+    "56.08",
+    "56.11"
+   ],
+   "oldCounts": [
+    1
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "  for (const manifest of workspace.manifests.values()) {",
+     "new": "  for (const manifest of [...workspace.manifests.values()].filter((manifest) => manifest.name.startsWith('@'))) {"
+    }
+   ]
+  },
+  {
+   "id": "R541-X7-http-url-tgz-only",
+   "outcome": "killed",
+   "exit": 1,
+   "total": 169,
+   "passed": 168,
+   "failed": [
+    "the shared workspace resolver reads a bare name declared as a remote http tarball URL dependency as naming no module"
+   ],
+   "timeouts": 0,
+   "files": 14,
+   "seconds": 6.5,
+   "loadBefore": [
+    "56.87",
+    "56.08",
+    "56.11"
+   ],
+   "loadAfter": [
+    "56.50",
+    "56.03",
+    "56.09"
+   ],
+   "oldCounts": [
+    1
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|^(?!https?:.*\\.tar(?:\\.gz)?$).*\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    }
+   ]
+  }
+ ]
+}

@@ -24,6 +24,7 @@ import {
   classifySource,
   compileDetectors,
   detectSecrets,
+  detectSecretsCharged,
   parseFailureExclusion,
   type ClassificationRecord,
   type SecretClassificationPolicy,
@@ -32,8 +33,9 @@ import {
 import { createExactObjectReader, type ExactObjectReader, type ObjectReadRecord } from './git-object-reader.js';
 import { indexGitTree, type GitTreeEntry } from './git-tree.js';
 import type { ManifestSource } from './project-shape-manifest.js';
-import { PWB_RESOURCE_LIMITS, type PwbResourceLimits } from './project-shape-observation.js';
-import { ParsePassBudgetExceeded, createResourceLedger, type ParsePassIdentity } from './resource-ledger.js';
+import { PWB_RESOURCE_LIMITS } from './project-shape-observation.js';
+import type { PwbResourceLimits } from './pwb-types.js';
+import { createResourceLedger, type ParsePassIdentity } from './resource-ledger.js';
 
 // ---------------------------------------------------------------------
 // Fixture repository.
@@ -252,7 +254,7 @@ describe('PWB-REQ-003 — the population survives every fault', () => {
         expect(e.redactionClass).toBe(expected.redactionClass);
         expect(e.repositoryRelativePath).toBe(r.record.path);
         expect(e.policyId).toBe('polaris-butlers-project-shape-secrets');
-        expect(e.policyVersion).toBe('1.5.0-public-source-candidate.1.none.code-all.redact-span');
+        expect(e.policyVersion).toBe('1.9.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd.v6-p.v7-s.v8-pv');
         expect(e.detectorId).toBe(expected.detectorId);
         expect(e.exclusionReason).toBe(expected.exclusionReason);
         expect(e.contentDigest !== undefined, `${r.record.path} digest presence`).toBe(expected.digest);
@@ -283,7 +285,7 @@ describe('PWB-REQ-003 — the population survives every fault', () => {
     expect(result.exclusions).toHaveLength(15);
     expect(new Set(result.exclusions.map((e) => e.redactionClass))).toEqual(new Set(['excluded-artifact', 'unclassifiable-excluded']));
     expect(result.policyId).toBe('polaris-butlers-project-shape-secrets');
-    expect(result.policyVersion).toBe('1.5.0-public-source-candidate.1.none.code-all.redact-span');
+    expect(result.policyVersion).toBe('1.9.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd.v6-p.v7-s.v8-pv');
   });
 
   it('hands a body only to the consumer, and only for classified sources', () => {
@@ -403,7 +405,7 @@ describe('PWB-REQ-003 — classifySource step by step', () => {
           exclusionReason: 'denied-path',
           detail,
           policyId: 'polaris-butlers-project-shape-secrets',
-          policyVersion: '1.5.0-public-source-candidate.1.none.code-all.redact-span',
+          policyVersion: '1.9.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd.v6-p.v7-s.v8-pv',
         });
       }
     }
@@ -471,7 +473,7 @@ describe('PWB-REQ-003 — classifySource step by step', () => {
       contentDigest: `sha256:${sha256Hex(BYTES[member.path] as Uint8Array)}`,
       extractionClasses: ['principle'],
       policyId: 'polaris-butlers-project-shape-secrets',
-      policyVersion: '1.5.0-public-source-candidate.1.none.code-all.redact-span',
+      policyVersion: '1.9.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd.v6-p.v7-s.v8-pv',
       detectorsRun: 4,
       basis: 'body',
     });
@@ -485,7 +487,7 @@ describe('PWB-REQ-003 — classifySource step by step', () => {
         contentDigest: classified.record.contentDigest,
         exclusionReason: 'parse-failure',
         policyId: 'polaris-butlers-project-shape-secrets',
-        policyVersion: '1.5.0-public-source-candidate.1.none.code-all.redact-span',
+        policyVersion: '1.9.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd.v6-p.v7-s.v8-pv',
       },
       unknown: { failureState: 'secretMatchedOrUnclassifiable', degradationState: 'Excluded content', unknownReason: 'excluded-content' },
     });
@@ -502,6 +504,16 @@ describe('PWB-REQ-006 (amended) — phase-A seeds use the same context-aware gua
   it('the same markup outside a context, or a malformed context, excludes the seed', () => {
     expect(classifyPhaseASeed(detectors, '# Index\n\n<script>x</script>\n')).toEqual({ kind: 'excluded', reason: 'active-content', detail: '2' });
     expect(classifyPhaseASeed(detectors, '# Index\n\n```\nnever closed\n')).toEqual({ kind: 'excluded', reason: 'active-content', detail: '1' });
+  });
+
+  // syzygy-bpyt.16 (ruled on syzygy-bpyt.1.14): a CRLF or CR seed gets the decision its LF form gets. The first text was admitted under
+  // CRLF and CR before the fix (a backtick opener with a backtick in its info text hides a script element as an inline span), the
+  // second excluded (a tilde fence the mask did not recognize, leaving the script element it holds in the open).
+  it.each([['LF', '\n'], ['CRLF', '\r\n'], ['CR', '\r']])('%s: a seed is excluded or kept safe as its LF form is', (_name, end) => {
+    const failOpen = ['# Index', '', '```a`b', '<script>x</script>', '```', ''].join(end);
+    const benign = ['# Index', '', '~~~', '<script>x</script>', '~~~', '', '- [a](a.md)', ''].join(end);
+    expect(classifyPhaseASeed(detectors, failOpen)).toEqual({ kind: 'excluded', reason: 'active-content', detail: '1' });
+    expect(classifyPhaseASeed(detectors, benign)).toEqual({ kind: 'safe' });
   });
 
   it('a secret inside a code context is still a secret: detectors see the raw text', () => {
@@ -604,10 +616,11 @@ describe('PWB-REQ-006 (amended) — classification charges one shared resource l
     return { result, consumed, ledger };
   }
 
-  it('detectSecrets charges each detector under its registry identity', () => {
+  it('detectSecretsCharged charges each detector under its registry identity', () => {
     const charged: ParsePassIdentity[] = [];
-    detectSecrets(detectors, '# plain\n', (pass) => {
+    detectSecretsCharged(detectors, '# plain\n', (pass) => {
       charged.push(pass);
+      return undefined;
     });
     expect(charged).toEqual(['secret-private-key-fragments', 'secret-known-token-formats', 'secret-credential-assignment', 'secret-credential-bearing-url']);
   });
@@ -646,12 +659,21 @@ describe('PWB-REQ-006 (amended) — classification charges one shared resource l
     const member = POPULATION.find((s) => s.path === PATH) as ManifestSource;
     const record: ObjectReadRecord = { path: PATH, objectId: oidOf(PATH), outcome: 'read', bytes: 3, contentDigest: `sha256:${sha256Hex(BYTES[PATH] as Uint8Array)}` };
     const breach = { limit: 'maxParsePassesPerSource' as const, declared: 1, observed: 2, path: PATH };
-    const result = classifySource(input, member, record, 'SECRET-BODY', () => {
-      throw new ParsePassBudgetExceeded(breach, 'secret-known-token-formats');
-    });
+    const result = classifySource(input, member, record, 'SECRET-BODY', () => breach);
     expect(result.kind).toBe('withheld');
     expect(result.record).toMatchObject({ outcome: 'excluded', exclusion: { exclusionReason: 'resource-limit', detail: 'maxParsePassesPerSource', repositoryRelativePath: PATH } });
     expect(JSON.stringify(result)).not.toContain('SECRET-BODY');
+  });
+
+  it('classifyPhaseASeed reports over-limit when the budget runs out at the first active-content pass, after all four detectors', () => {
+    const breach = { limit: 'maxParsePassesPerSource' as const, declared: 4, observed: 5, path: 'about/README.md' };
+    const charged: ParsePassIdentity[] = [];
+    const result = classifyPhaseASeed(detectors, '# root\n', (pass) => {
+      charged.push(pass);
+      return pass === 'markdown-code-context-mask' ? breach : undefined;
+    });
+    expect(result).toEqual({ kind: 'over-limit', breach });
+    expect(charged).toEqual(['secret-private-key-fragments', 'secret-known-token-formats', 'secret-credential-assignment', 'secret-credential-bearing-url', 'markdown-code-context-mask']);
   });
 
   it('classifyPhaseASeed reports over-limit with the breach when a detector pass exceeds the budget', () => {
@@ -659,8 +681,10 @@ describe('PWB-REQ-006 (amended) — classification charges one shared resource l
     let calls = 0;
     const result = classifyPhaseASeed(detectors, '# root\n', (pass) => {
       calls += 1;
-      if (calls === 2) throw new ParsePassBudgetExceeded(breach, pass);
+      return calls === 2 && pass === 'secret-known-token-formats' ? breach : undefined;
     });
     expect(result).toEqual({ kind: 'over-limit', breach });
+    // The detector the spent pass would have paid for never ran.
+    expect(calls).toBe(2);
   });
 });

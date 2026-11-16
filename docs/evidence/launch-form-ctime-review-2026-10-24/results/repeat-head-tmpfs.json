@@ -1,0 +1,176 @@
+{
+ "testSha256": "73fd8fe0c835e3910fbc45e2ea026b0b6ec54ac7c04657aeed9aa2311440fa5e",
+ "head": "3fb7380945bd8ac0374e38792a814aed070bd8c6",
+ "tmpRoot": "/tmp/r519-4",
+ "filesystem": "tmpfs",
+ "runs": 20,
+ "parallel": 4,
+ "allPassed43": true,
+ "loadavgAtEnd": [
+  20.77392578125,
+  24.25830078125,
+  27.73291015625
+ ],
+ "results": [
+  {
+   "run": 0,
+   "exit": 0,
+   "total": 43,
+   "passed": 43,
+   "failed": [],
+   "tmpdirLeftovers": 1
+  },
+  {
+   "run": 1,
+   "exit": 0,
+   "total": 43,
+   "passed": 43,
+   "failed": [],
+   "tmpdirLeftovers": 1
+  },
+  {
+   "run": 2,
+   "exit": 0,
+   "total": 43,
+   "passed": 43,
+   "failed": [],
+   "tmpdirLeftovers": 1
+  },
+  {
+   "run": 3,
+   "exit": 0,
+   "total": 43,
+   "passed": 43,
+   "failed": [],
+   "tmpdirLeftovers": 1
+  },
+  {
+   "run": 4,
+   "exit": 0,
+   "total": 43,
+   "passed": 43,
+   "failed": [],
+   "tmpdirLeftovers": 1
+  },
+  {
+   "run": 5,
+   "exit": 0,
+   "total": 43,
+   "passed": 43,
+   "failed": [],
+   "tmpdirLeftovers": 1
+  },
+  {
+   "run": 6,
+   "exit": 0,
+   "total": 43,
+   "passed": 43,
+   "failed": [],
+   "tmpdirLeftovers": 1
+  },
+  {
+   "run": 7,
+   "exit": 0,
+   "total": 43,
+   "passed": 43,
+   "failed": [],
+   "tmpdirLeftovers": 1
+  },
+  {
+   "run": 8,
+   "exit": 0,
+   "total": 43,
+   "passed": 43,
+   "failed": [],
+   "tmpdirLeftovers": 1
+  },
+  {
+   "run": 9,
+   "exit": 0,
+   "total": 43,
+   "passed": 43,
+   "failed": [],
+   "tmpdirLeftovers": 1
+  },
+  {
+   "run": 10,
+   "exit": 0,
+   "total": 43,
+   "passed": 43,
+   "failed": [],
+   "tmpdirLeftovers": 1
+  },
+  {
+   "run": 11,
+   "exit": 0,
+   "total": 43,
+   "passed": 43,
+   "failed": [],
+   "tmpdirLeftovers": 1
+  },
+  {
+   "run": 12,
+   "exit": 0,
+   "total": 43,
+   "passed": 43,
+   "failed": [],
+   "tmpdirLeftovers": 1
+  },
+  {
+   "run": 13,
+   "exit": 0,
+   "total": 43,
+   "passed": 43,
+   "failed": [],
+   "tmpdirLeftovers": 1
+  },
+  {
+   "run": 14,
+   "exit": 0,
+   "total": 43,
+   "passed": 43,
+   "failed": [],
+   "tmpdirLeftovers": 1
+  },
+  {
+   "run": 15,
+   "exit": 0,
+   "total": 43,
+   "passed": 43,
+   "failed": [],
+   "tmpdirLeftovers": 1
+  },
+  {
+   "run": 16,
+   "exit": 0,
+   "total": 43,
+   "passed": 43,
+   "failed": [],
+   "tmpdirLeftovers": 1
+  },
+  {
+   "run": 17,
+   "exit": 0,
+   "total": 43,
+   "passed": 43,
+   "failed": [],
+   "tmpdirLeftovers": 1
+  },
+  {
+   "run": 18,
+   "exit": 0,
+   "total": 43,
+   "passed": 43,
+   "failed": [],
+   "tmpdirLeftovers": 1
+  },
+  {
+   "run": 19,
+   "exit": 0,
+   "total": 43,
+   "passed": 43,
+   "failed": [],
+   "tmpdirLeftovers": 1
+  }
+ ]
+}

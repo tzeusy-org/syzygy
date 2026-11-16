@@ -1,0 +1,221 @@
+{
+  "format": "syzygy-bpyt-8-1-mutants/1",
+  "commit": "8c711bbf1933e05575b50a204f1c334e1448c005",
+  "runnerSha256": "01d7daa5d4f8cccec4f7e0aafd3352e982556a1c84e64444fbbff85c30379cb2",
+  "runner": "single-occurrence replacement of `old` by `new` in `file`, then `npx vitest run` over `tests` (by project, or by config); killed = at least one failed test, errored = no test result (the file failed to collect); restored from git after each run",
+  "fileSha256": {
+    "packages/polaris-dossier/src/gate-sources.ts": "1c6e4ab8988e835adbcf23708c154fce6fad5ae14d96afd0d3ae56ad596ff822",
+    "packages/polaris-dossier/src/screen.ts": "dfb0cfe774454494584f4798f4e6355f49d3a99ec26826eebb0f93caee92d4ec",
+    "packages/polaris-generation-consent/package.json": "7302b8bc43417f4c48b141f5cb559bf3c1deb2e6bda3210f2a322e353c4ce536",
+    "packages/polaris-generation-consent/src/in-force.ts": "afcf1c2dc0a727460f3ca3a3623fd8a62ac3d739c87f2923187125422ab191dc",
+    "packages/polaris-generation-consent/src/index.ts": "d8eb7907e523490280b5191d3793bf6b15c157d94212449f5628f2e982139ce9",
+    "packages/polaris-generation-consent/src/live.ts": "2aa268d84e4ba20f851e15334da5c792621acd25090b6d36674b41b39e53289c",
+    "packages/polaris-generation-consent/src/package-reader.ts": "da42b88df3bc9309685b5f141144edff2d99fee843d84920f5606d934fc15176"
+  },
+  "testFileSha256": {
+    "packages/polaris-generation-core/src/island-boundary.test.ts": "a32d3ddc8f1ef6d7fc0c199bf910ed21722b35dfe6fccb3a08df6c42d22eb3c1"
+  },
+  "ranAt": "2026-10-22T12:02:44+00:00",
+  "mutants": [
+    {
+      "id": "B1-core-root-import-in-in-force",
+      "file": "packages/polaris-generation-consent/src/in-force.ts",
+      "old": "import type { AdmissionRecord } from './admission-record.js';\n",
+      "new": "import type { AdmissionRecord } from './admission-record.js';\nimport { digestCanonicalJson } from '@syzygy/polaris-generation-core';\n",
+      "tests": [
+        "packages/polaris-generation-core/src/island-boundary.test.ts"
+      ],
+      "project": "@syzygy/polaris-generation-core",
+      "outcome": "killed",
+      "totalTests": 4,
+      "failedTests": [
+        {
+          "test": "the syzygy CLI and the parked provider island reaches no island module from the CLI entry",
+          "firstErrorLine": "AssertionError: expected [ \u2026(11) ] to deeply equal []"
+        }
+      ],
+      "erroredFiles": [],
+      "note": "the live consent module imports a value from the core root, which re-exports the island"
+    },
+    {
+      "id": "B2-core-root-type-import-in-in-force",
+      "file": "packages/polaris-generation-consent/src/in-force.ts",
+      "old": "import type { AdmissionRecord } from './admission-record.js';\n",
+      "new": "import type { AdmissionRecord } from './admission-record.js';\nimport type { PipelinePorts } from '@syzygy/polaris-generation-core';\n",
+      "tests": [
+        "packages/polaris-generation-core/src/island-boundary.test.ts"
+      ],
+      "project": "@syzygy/polaris-generation-core",
+      "outcome": "killed",
+      "totalTests": 4,
+      "failedTests": [
+        {
+          "test": "the syzygy CLI and the parked provider island reaches no island module from the CLI entry",
+          "firstErrorLine": "AssertionError: expected [ \u2026(11) ] to deeply equal []"
+        }
+      ],
+      "erroredFiles": [],
+      "note": "a type-only edge from the live consent module to the core root"
+    },
+    {
+      "id": "B3-consent-ports-import-in-in-force",
+      "file": "packages/polaris-generation-consent/src/in-force.ts",
+      "old": "import type { AdmissionRecord } from './admission-record.js';\n",
+      "new": "import type { AdmissionRecord } from './admission-record.js';\nimport './consent-ports.js';\n",
+      "tests": [
+        "packages/polaris-generation-core/src/island-boundary.test.ts"
+      ],
+      "project": "@syzygy/polaris-generation-core",
+      "outcome": "killed",
+      "totalTests": 4,
+      "failedTests": [
+        {
+          "test": "the syzygy CLI and the parked provider island reaches no island module from the CLI entry",
+          "firstErrorLine": "AssertionError: expected [ \u2026(11) ] to deeply equal []"
+        }
+      ],
+      "erroredFiles": [],
+      "note": "the live consent module imports consent-ports.ts"
+    },
+    {
+      "id": "B4-consent-ports-reexport-in-live",
+      "file": "packages/polaris-generation-consent/src/live.ts",
+      "old": "export { inForceRecords, notInForceRecords, type NotInForce } from './in-force.js';\n",
+      "new": "export { inForceRecords, notInForceRecords, type NotInForce } from './in-force.js';\nexport { UNCONSENTED } from './consent-ports.js';\n",
+      "tests": [
+        "packages/polaris-generation-core/src/island-boundary.test.ts"
+      ],
+      "project": "@syzygy/polaris-generation-core",
+      "outcome": "killed",
+      "totalTests": 4,
+      "failedTests": [
+        {
+          "test": "the syzygy CLI and the parked provider island reaches no island module from the CLI entry",
+          "firstErrorLine": "AssertionError: expected [ \u2026(11) ] to deeply equal []"
+        }
+      ],
+      "erroredFiles": [],
+      "note": "the ./live subpath re-exports a consent-ports value"
+    },
+    {
+      "id": "B5-consent-ports-type-reexport-in-live",
+      "file": "packages/polaris-generation-consent/src/live.ts",
+      "old": "export { inForceRecords, notInForceRecords, type NotInForce } from './in-force.js';\n",
+      "new": "export { inForceRecords, notInForceRecords, type NotInForce } from './in-force.js';\nexport type { ConsentPorts } from './consent-ports.js';\n",
+      "tests": [
+        "packages/polaris-generation-core/src/island-boundary.test.ts"
+      ],
+      "project": "@syzygy/polaris-generation-core",
+      "outcome": "killed",
+      "totalTests": 4,
+      "failedTests": [
+        {
+          "test": "the syzygy CLI and the parked provider island reaches no island module from the CLI entry",
+          "firstErrorLine": "AssertionError: expected [ \u2026(11) ] to deeply equal []"
+        }
+      ],
+      "erroredFiles": [],
+      "note": "the ./live subpath re-exports a consent-ports type"
+    },
+    {
+      "id": "B6-screen-imports-consent-root",
+      "file": "packages/polaris-dossier/src/screen.ts",
+      "old": "from '@syzygy/polaris-generation-consent/live';",
+      "new": "from '@syzygy/polaris-generation-consent';",
+      "tests": [
+        "packages/polaris-generation-core/src/island-boundary.test.ts"
+      ],
+      "project": "@syzygy/polaris-generation-core",
+      "outcome": "killed",
+      "totalTests": 4,
+      "failedTests": [
+        {
+          "test": "the syzygy CLI and the parked provider island reaches no island module from the CLI entry",
+          "firstErrorLine": "AssertionError: expected [ \u2026(11) ] to deeply equal []"
+        }
+      ],
+      "erroredFiles": [],
+      "note": "the screen goes back to the consent root"
+    },
+    {
+      "id": "B7-gate-sources-import-consent-root",
+      "file": "packages/polaris-dossier/src/gate-sources.ts",
+      "old": "} from '@syzygy/polaris-generation-consent/live';",
+      "new": "} from '@syzygy/polaris-generation-consent';",
+      "tests": [
+        "packages/polaris-generation-core/src/island-boundary.test.ts"
+      ],
+      "project": "@syzygy/polaris-generation-core",
+      "outcome": "killed",
+      "totalTests": 4,
+      "failedTests": [
+        {
+          "test": "the syzygy CLI and the parked provider island reaches no island module from the CLI entry",
+          "firstErrorLine": "AssertionError: expected [ \u2026(11) ] to deeply equal []"
+        }
+      ],
+      "erroredFiles": [],
+      "note": "the gate sources go back to the consent root"
+    },
+    {
+      "id": "B8-package-reader-imports-consent-ports",
+      "file": "packages/polaris-generation-consent/src/package-reader.ts",
+      "old": "import { inForceRecords, notInForceRecords, type NotInForce } from './in-force.js';",
+      "new": "import { inForceRecords, notInForceRecords, type NotInForce } from './consent-ports.js';",
+      "tests": [
+        "packages/polaris-generation-core/src/island-boundary.test.ts"
+      ],
+      "project": "@syzygy/polaris-generation-core",
+      "outcome": "killed",
+      "totalTests": 4,
+      "failedTests": [
+        {
+          "test": "the syzygy CLI and the parked provider island reaches no island module from the CLI entry",
+          "firstErrorLine": "AssertionError: expected [ \u2026(11) ] to deeply equal []"
+        }
+      ],
+      "erroredFiles": [],
+      "note": "the package reader takes the in-force rules from consent-ports.ts again, as before this bead"
+    },
+    {
+      "id": "B9-live-subpath-resolves-to-root",
+      "file": "packages/polaris-generation-consent/package.json",
+      "old": "\"import\": \"./dist/live.js\",",
+      "new": "\"import\": \"./dist/index.js\",",
+      "tests": [
+        "packages/polaris-generation-core/src/island-boundary.test.ts"
+      ],
+      "project": "@syzygy/polaris-generation-core",
+      "outcome": "killed",
+      "totalTests": 4,
+      "failedTests": [
+        {
+          "test": "the syzygy CLI and the parked provider island reaches no island module from the CLI entry",
+          "firstErrorLine": "AssertionError: expected [ \u2026(11) ] to deeply equal []"
+        }
+      ],
+      "erroredFiles": [],
+      "note": "the ./live subpath resolves to the root barrel"
+    },
+    {
+      "id": "B10-root-without-consent-ports",
+      "file": "packages/polaris-generation-consent/src/index.ts",
+      "old": "export { UNCONSENTED, createConsentPorts, inForceRecords, notInForceRecords, withConsent, type NotInForce, type WithConsentOptions, type ConsentAudit, type ConsentPorts, type ConsentPortsOptions, type ConsentReason, type ReliedRecord } from './consent-ports.js';\n",
+      "new": "export { inForceRecords, notInForceRecords, type NotInForce } from './in-force.js';\n",
+      "tests": [
+        "packages/polaris-generation-core/src/island-boundary.test.ts"
+      ],
+      "project": "@syzygy/polaris-generation-core",
+      "outcome": "killed",
+      "totalTests": 4,
+      "failedTests": [
+        {
+          "test": "the syzygy CLI and the parked provider island reaches the island from the consent package root, which the CLI does not import",
+          "firstErrorLine": "AssertionError: expected 0 to be greater than 0"
+        }
+      ],
+      "erroredFiles": [],
+      "note": "the root stops re-exporting consent-ports.ts: the positive control (the walk from the consent root finds the island) must fail"
+    }
+  ]
+}

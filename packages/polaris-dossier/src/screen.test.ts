@@ -1,14 +1,17 @@
 import { execFile, execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import * as fs from 'node:fs';
-import { tmpdir } from 'node:os';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
 import { DECISIONS_DIR, POLICY_PATH } from '@syzygy/polaris-generation-consent';
-import { renderClassAct, renderPolicyAct } from '@syzygy/polaris-generation-consent/testing';
-import { afterEach, beforeAll, describe, expect, it } from 'vitest';
+import { loadRecorderForms, renderClassAct, renderPolicyAct } from '@syzygy/polaris-generation-consent/testing';
+import { beforeAll, describe, expect, it } from 'vitest';
 import { buildDossierScreen, loadDossierScreen } from './screen.js';
+import { tempDir } from '@syzygy/test-kit';
+
+// The recorder forms render once, before the file collects its tests: some tables render at collection (syzygy-bpyt.4.8).
+await loadRecorderForms();
 
 // Asynchronous, so a slow command cannot starve the vitest worker's RPC (syzygy-w90k).
 const execFileAsync = promisify(execFile);
@@ -24,19 +27,16 @@ const policyOf = (scope: unknown = { contentClassification: { rules: [{ class: '
   `${JSON.stringify({ policyId: 'fixture', policyVersion: '1', detectors: LIVE.detectors, sourceAdmission: LIVE.sourceAdmission, publicSourceScope: scope, ...over }, null, 2)}\n`;
 const encode = (text: string): Uint8Array => new TextEncoder().encode(text);
 
-const cleanups: (() => void)[] = [];
-afterEach(() => { for (const cleanup of cleanups.splice(0).reverse()) cleanup(); });
 // syzygy-2coz: the live scope carries the project-documentation rule (screening scope version 2), classified only while the RFC5-14
 // class amendment act is in force. The class act's argument is the sha256 of the RFC-0005 module in the records root.
-const DOC_SCOPE = { contentClassification: { rules: LIVE.publicSourceScope.contentClassification.rules } };
-const docScopeWith = (over: Record<string, unknown>) => ({ contentClassification: { rules: DOC_SCOPE.contentClassification.rules.map((rule: Record<string, unknown>) => (rule['class'] === 'project-documentation' ? { ...rule, ...over } : rule)) } });
+const DOC_SCOPE = { contentClassification: LIVE.publicSourceScope.contentClassification };
+const docScopeWith = (over: Record<string, unknown>) => ({ contentClassification: { ...DOC_SCOPE.contentClassification, rules: DOC_SCOPE.contentClassification.rules.map((rule: Record<string, unknown>) => (rule['class'] === 'project-documentation' ? { ...rule, ...over } : rule)) } });
 const RFC5_MODULE = '.syzygy/governance/contracts/rfcs/RFC-0005/consent-egress-secrets.md';
 const MODULE_TEXT = '# RFC-0005 fixture module\n\n- `project-documentation`\n';
 const CLASS_ACT_FILE = `${DECISIONS_DIR}/RFC5-PROJECT-DOCUMENTATION-CLASS-AMENDMENT-ACT.md`;
 type ClassAct = { readonly argument?: string; readonly date?: string; readonly withdrawn?: boolean } | null;
 const recordsRoot = (policy: string, actArgument: string = sha(policy), classAct: ClassAct = null): string => {
-  const root = fs.realpathSync(fs.mkdtempSync(path.join(tmpdir(), 'dossier-screen-')));
-  cleanups.push(() => fs.rmSync(root, { recursive: true, force: true }));
+  const root = tempDir('dossier-screen-');
   const files: [string, string][] = [[POLICY_PATH, policy], [`${DECISIONS_DIR}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-ACT.md`, renderPolicyAct(actArgument, '2026-10-04', '2026-10-04T10:00:00Z')]];
   if (classAct !== null) files.push([RFC5_MODULE, MODULE_TEXT], [CLASS_ACT_FILE, renderClassAct(classAct.argument ?? sha(MODULE_TEXT), classAct.date ?? '2026-10-04', `${classAct.date ?? '2026-10-04'}T09:00:00Z`)]);
   if (classAct?.withdrawn === true) files.push([`${DECISIONS_DIR}/RFC5-PROJECT-DOCUMENTATION-WITHDRAWAL-2026-10-06.md`, '# Owner withdrawal\n\nWithdraws `RFC5-PROJECT-DOCUMENTATION-AMEND-2026-10-04`.\n']);
@@ -87,6 +87,42 @@ describe('the screen', () => {
   });
 });
 
+// The object test in @syzygy/support decides at every container the loader reads (syzygy-bpyt.6.3 stack 4): a container that is an array,
+// null or a primitive is refused, or passed over, in the loader's own words; it is never read as an object and never thrown on. The policy
+// arrives as JSON bytes, so an array here never carries a field by name.
+describe('the loader reads each container as an object only when it is one', () => {
+  const REFUSED = (why: string) => ({ ok: false, why: `the screening policy cannot be applied: ${why}` });
+  // `a number` is not redundant with `a string`: a test written as `typeof value !== 'string'` refuses the string and admits the number.
+  const NOT_OBJECTS: ReadonlyArray<readonly [string, unknown]> = [['an array', []], ['null', null], ['a string', 'x'], ['a number', 1]];
+  const CODE_CONTENT = { class: 'code-content', sourceExtensions: ['.c', '.txt'] };
+
+  it.each(NOT_OBJECTS)('refuses a policy document that is %s', (_label, doc) => {
+    expect(buildDossierScreen(encode(JSON.stringify(doc)))).toEqual(REFUSED('its identity is unreadable'));
+  });
+  it.each(NOT_OBJECTS)('refuses a public-source scope that is %s', (_label, scope) => {
+    expect(buildDossierScreen(encode(policyOf(scope)))).toEqual(REFUSED('it carries no publicSourceScope'));
+  });
+  it.each(NOT_OBJECTS)('refuses source admission that is %s', (_label, admission) => {
+    expect(buildDossierScreen(encode(policyOf(undefined, { sourceAdmission: admission })))).toEqual(REFUSED('its denied-path rules are unreadable'));
+  });
+  it.each(NOT_OBJECTS)('refuses a content classification that is %s, which names no code-content rule', (_label, classification) => {
+    expect(buildDossierScreen(encode(policyOf({ contentClassification: classification })))).toEqual(REFUSED('its code-content sourceExtensions are unreadable'));
+  });
+  it('refuses a classification with no rules at all, which names no code-content rule', () => {
+    expect(buildDossierScreen(encode(policyOf({ contentClassification: { rules: [] } })))).toEqual(REFUSED('its code-content sourceExtensions are unreadable'));
+  });
+  it('passes over a rules entry that is not an object, as if it were not there', () => {
+    const noisy = buildDossierScreen(encode(policyOf({ contentClassification: { rules: [null, 'x', 1, true, [], CODE_CONTENT] } })));
+    expect(noisy.ok).toBe(true);
+    expect(noisy.ok && noisy.screen.screenPath('src/server.c')).toBeUndefined();
+    expect(noisy.ok && noisy.screen.screenPath('README.md')).toBe('unknown-extraction-class');
+  });
+  it('passes over a detector entry that is not an object when it collects the detector ids, and leaves the refusal to the compiler', () => {
+    const loaded = buildDossierScreen(encode(policyOf(undefined, { detectors: [null, 'x', 1] })));
+    expect(loaded).toMatchObject({ ok: false, why: expect.stringContaining('its detectors do not compile') });
+  });
+});
+
 describe('the project-documentation class (syzygy-2coz)', () => {
   const build = (inForce: boolean) => {
     const loaded = buildDossierScreen(encode(policyOf(DOC_SCOPE)), inForce);
@@ -98,7 +134,8 @@ describe('the project-documentation class (syzygy-2coz)', () => {
   it.each<[string, string | undefined]>([
     ['README.md', undefined], ['LICENSE.txt', undefined], ['01-CONTRIBUTING.md', undefined], ['COPYING', undefined],
     ['docs/guide.md', undefined], ['doc/intro.rst', undefined], ['licenses/MIT.txt', undefined], ['src/server.c', undefined],
-    ['MANIFESTO', 'unknown-extraction-class'], ['redis.conf', 'unknown-extraction-class'], ['src/README.md', 'unknown-extraction-class'],
+    // Version 5: a root MANIFESTO is governance-text, not project-documentation, and is admitted under that class.
+    ['MANIFESTO', undefined], ['redis.conf', 'unknown-extraction-class'], ['src/README.md', 'unknown-extraction-class'],
     ['docs/design.md', 'unknown-extraction-class'], ['docs/adr/0001.md', 'unknown-extraction-class'], ['docs/requirements.txt', 'unknown-extraction-class'],
     ['licenses/a/MIT.txt', 'unknown-extraction-class'], ['docs//guide.md', 'unknown-extraction-class'],
     // The steps before the class are unchanged: a denied path or a detector match in a documentation path is still withheld.
@@ -138,6 +175,18 @@ describe('the project-documentation class (syzygy-2coz)', () => {
     expect(build(true).screenBody(body)).toBe(outcome);
   });
 
+  // syzygy-bpyt.16 (ruled on syzygy-bpyt.1.14): a CRLF or CR body gets the active-content decision its LF form gets. The first body was
+  // admitted under CRLF and CR before the fix (a backtick opener with a backtick in its info text hides a script element as an inline
+  // span), the second withheld (a tilde fence the mask did not recognize, leaving the script element it holds in the open).
+  it.each([['LF', '\n'], ['CRLF', '\r\n'], ['CR', '\r']])('%s: a documentation body is withheld as active content or admitted as its LF form is', (_name, end) => {
+    const failOpen = ['# Guide', '', '```a`b', '<script>alert(1)</script>', '```', ''].join(end);
+    const benign = ['# Guide', '', '~~~', '<script>alert(1)</script>', '~~~', 'after', ''].join(end);
+    expect(build(true).screenBody(failOpen)).toBe('active-content');
+    expect(build(true).screenBody(benign)).toBeUndefined();
+    expect(build(true).screenTargetBody(failOpen, 'README.md')).toEqual({ kind: 'excluded', outcome: 'active-content' });
+    expect(build(true).screenTargetBody(benign, 'README.md')).toEqual({ kind: 'admitted' });
+  });
+
   it.each<[string, Record<string, unknown>]>([
     ['an edited path rule', { pathRules: [{ id: 'root-document', rule: 'any' }] }],
     ['an unreadable root stem list', { rootStems: 'readme' }],
@@ -156,10 +205,11 @@ const APP_SCREENING = path.join(REAL_ROOT, 'apps/three-surface-poc/src/polaris-g
 type AppScreen = { screenPath: (p: string) => string | undefined; screenBody: (b: string, p?: string) => string | undefined; contentClass: (p: string) => string | undefined; projectDocumentation: boolean };
 // The app's port states whether the class act is in force; `classAct` gives it the same answer the dossier's screen is built with.
 // `checkoutAppScreen` instead lets the app's own checkout port decide it from a records root at `now`, as the dossier's loader does.
-const appScreen = async (policy: string, classAct = false): Promise<AppScreen> => {
+// `visibility` is the pair's decided visibility, which a version-8 policy (sourceVisibility) needs and an earlier one ignores.
+const appScreen = async (policy: string, classAct = false, visibility?: 'public' | 'private'): Promise<AppScreen> => {
   const app = await import(APP_SCREENING);
   const port = { read: async () => ({ actRecord: renderPolicyAct(sha(policy), '2026-10-04', '2026-10-04T10:00:00Z'), policy: encode(policy), classActInForce: classAct }) };
-  return app.loadPublicSourceScreen(port, new Uint8Array(32).fill(7));
+  return app.loadPublicSourceScreen(port, new Uint8Array(32).fill(7), null, visibility);
 };
 const checkoutAppScreen = async (root: string, now: number): Promise<AppScreen> => {
   const app = await import(APP_SCREENING);
@@ -201,7 +251,9 @@ describe('parity with the any-repo reader\'s screen (syzygy-qkea.17)', () => {
     // Under the live scope the class decides real paths both ways, so agreement covers it.
     if (policy.includes('project-documentation')) expect(['README.md', 'docs/design.md'].map((p) => ours.screen.screenPath(p))).toEqual([classAct ? undefined : 'unknown-extraction-class', 'unknown-extraction-class']);
     // The class each admitted path is admitted under, so that agreement on classes is not agreement on one class.
-    expect(new Set(paths.map((p) => ours.screen.contentClass(p) ?? 'excluded'))).toEqual(new Set(['code-content', 'excluded', ...(classAct && policy.includes('project-documentation') ? ['project-documentation'] : [])]));
+    // Version 5's governance-text class is classified whether or not the class act is in force: RFC5-14 already lists it.
+    expect(new Set(paths.map((p) => ours.screen.contentClass(p) ?? 'excluded'))).toEqual(new Set(['code-content', 'excluded', ...(classAct && policy.includes('project-documentation') ? ['project-documentation'] : []),
+      ...(policy.includes('governanceTextPaths') ? ['governance-text'] : [])]));
   });
 
   // R-PR403-SCREEN-DOCS-1 finding 2: each screen decides the class prerequisite from the same records at the same `now`, so a class act
@@ -236,7 +288,7 @@ describe('parity with the any-repo reader\'s screen (syzygy-qkea.17)', () => {
     ['no identity', policyOf(undefined, { policyId: 7 })],
     ['an edited project-documentation path rule', policyOf(docScopeWith({ pathRules: [] }))],
     ['a project-documentation suffix that is a code extension', policyOf(docScopeWith({ licenseTreeSuffixes: ['.c'] }))],
-    ['two project-documentation rules', policyOf({ contentClassification: { rules: [...DOC_SCOPE.contentClassification.rules, ...DOC_SCOPE.contentClassification.rules.filter((rule: Record<string, unknown>) => rule['class'] === 'project-documentation')] } })],
+    ['two project-documentation rules', policyOf({ contentClassification: { ...DOC_SCOPE.contentClassification, rules: [...DOC_SCOPE.contentClassification.rules, ...DOC_SCOPE.contentClassification.rules.filter((rule: Record<string, unknown>) => rule['class'] === 'project-documentation')] } })],
   ])('refuses a policy with %s, as the app does', async (_name, policy) => {
     for (const classAct of [false, true]) {
       expect(buildDossierScreen(encode(policy), classAct)).toMatchObject({ ok: false });
@@ -253,8 +305,19 @@ describe('the code-content exemption of screening scope version 3', () => {
   let V3: Record<string, Record<string, unknown>> = {};
   beforeAll(async () => {
     const py = `import json, sys; sys.path.insert(0, 'scripts')
-import build_public_source_screening_scope_v2 as b2, build_public_source_screening_scope_v3 as b, build_public_source_screening_scope_v4 as b4
-v3_all, _mode = b4.base_bytes()
+import build_public_source_screening_scope_v2 as b2, build_public_source_screening_scope_v3 as b, build_public_source_screening_scope_v4 as b4, build_public_source_screening_scope_v5 as b5
+import build_public_source_screening_scope_v6 as b6
+import build_public_source_screening_scope_v7 as b7
+import build_public_source_screening_scope_v8 as b8
+v7_s, _m8 = b8.base_bytes()
+assert _m8 == 'performed-v8' and b8.propose(v7_s) == open(str(b8.ROOT / b7.POLICY)).read()
+v6_p = b7.v2.reverse_patch((b7.ROOT / b7.patch_path('s')).read_text(), v7_s)
+assert b7.propose(v6_p) == v7_s
+v5_bcd = b2.reverse_patch((b6.ROOT / b6.patch_path('p')).read_text(), v6_p)
+v4_span = b2.reverse_patch((b5.ROOT / b5.patch_path(b6.V5_BASE_VARIANT)).read_text(), v5_bcd)
+assert b5.sha(v4_span) == b5.v4.manifest_rows(b5.ROOT)[b5.V4_BASE_VARIANT] and b5.propose(v4_span, b6.V5_BASE_VARIANT) == v5_bcd
+v3_all = b2.reverse_patch((b4.ROOT / b4.patch_path(b5.V4_BASE_VARIANT)).read_text(), v4_span)
+assert b4.sha(v3_all) == b4.v3.manifest_rows(b4.ROOT)[b4.V3_BASE_VARIANT] and b4.propose(v3_all, b5.V4_BASE_VARIANT) == v4_span
 base = b2.reverse_patch((b.ROOT / b.patch_path('all')).read_text(), v3_all)
 assert b.sha(base) != b.sha(v3_all) and b.propose(base, 'all') == v3_all
 sys.stdout.write(json.dumps({v: json.loads(b.propose(base, v))[b.SCOPE_KEY] for v in b.VARIANTS}))`;
@@ -335,20 +398,30 @@ sys.stdout.write(json.dumps({v: json.loads(b.propose(base, v))[b.SCOPE_KEY] for 
 // (scripts/build_public_source_screening_scope_v4.py `withheld_lines`), so the TypeScript reading is held to the oracle in both screens.
 describe('the secret redaction of screening scope version 4', () => {
   type TargetScreen = { screenTargetBody: (b: string, p: string) => { kind: string; withheld?: readonly number[]; retained?: string }; screenBody: (b: string, p?: string) => string | undefined; secretRedaction: boolean };
-  let fixtures: { body: { name: string; body: string; oracle: number[] | null }[]; whole: { name: string; path: string; body: string; oracle: number[] | null }[] } = { body: [], whole: [] };
+  let fixtures: { body: { name: string; body: string; oracle: number[] | null }[]; whole: { name: string; path: string; body: string; oracle: number[] | null }[]; v4Scope: Record<string, unknown> } = { body: [], whole: [], v4Scope: {} };
   beforeAll(async () => {
-    const py = `import json, sys; sys.path.insert(0, 'scripts'); import build_public_source_screening_scope_v4 as b
+    const py = `import json, sys; sys.path.insert(0, 'scripts'); import build_public_source_screening_scope_v4 as b, build_public_source_screening_scope_v5 as b5, build_public_source_screening_scope_v6 as b6, build_public_source_screening_scope_v7 as b7
 policy = open(str(b.ROOT / b.POLICY)).read()
+import build_public_source_screening_scope_v8 as b8
+v7_s, _m8 = b8.base_bytes()
+assert _m8 == 'performed-v8' and b8.propose(v7_s) == open(str(b8.ROOT / b7.POLICY)).read()
+v6_p = b7.v2.reverse_patch((b7.ROOT / b7.patch_path('s')).read_text(), v7_s)
+assert b7.propose(v6_p) == v7_s
+v5_bcd = b5.v2.reverse_patch((b6.ROOT / b6.patch_path('p')).read_text(), v6_p)
+v4 = b5.v2.reverse_patch((b5.ROOT / b5.patch_path(b6.V5_BASE_VARIANT)).read_text(), v5_bcd)
+assert b5.sha(v4) == b5.v4.manifest_rows(b5.ROOT)[b5.V4_BASE_VARIANT]
 srt = lambda s: None if s is None else sorted(s)
 sys.stdout.write(json.dumps({'body': [{'name': n, 'body': body, 'oracle': srt(b.withheld_lines(body, policy))} for n, body, _w in b.BODY_FIXTURES],
-  'whole': [{'name': n, 'path': p, 'body': body, 'oracle': srt(b.withheld_lines(body, policy, p))} for n, p, body in b.WHOLE_FIXTURES]}))`;
+  'whole': [{'name': n, 'path': p, 'body': body, 'oracle': srt(b.withheld_lines(body, policy, p))} for n, p, body in b.WHOLE_FIXTURES],
+  'v4Scope': json.loads(v4)[b.SCOPE_KEY]}))`;
     fixtures = JSON.parse((await execFileAsync('python3', ['-c', py], { cwd: REAL_ROOT })).stdout) as typeof fixtures;
   });
-  const both = async (): Promise<readonly [TargetScreen, TargetScreen]> => {
-    const policy = policyOf(LIVE.publicSourceScope);
-    const ours = buildDossierScreen(encode(policy), true);
+  // Since the version-8 act the live scope redacts a public pair's bodies only (sourceVisibility), so both screens are built public.
+  const both = async (scope: unknown = LIVE.publicSourceScope): Promise<readonly [TargetScreen, TargetScreen]> => {
+    const policy = policyOf(scope);
+    const ours = buildDossierScreen(encode(policy), true, null, 'public');
     if (!ours.ok) throw new Error(ours.why);
-    return [ours.screen, (await appScreen(policy, true)) as unknown as TargetScreen];
+    return [ours.screen, (await appScreen(policy, true, 'public')) as unknown as TargetScreen];
   };
   const withheldOf = (got: { kind: string; withheld?: readonly number[] }): readonly number[] | null => (got.kind === 'redacted' ? got.withheld! : got.kind === 'admitted' ? [] : null);
 
@@ -381,14 +454,19 @@ sys.stdout.write(json.dumps({'body': [{'name': n, 'body': body, 'oracle': srt(b.
       expect(screen.screenBody(body)).toBe('secret-detector-match');
     }
   });
-  it('runs the active-content scan over the complete body of a redacted one, excluding it whole', async () => {
+  // Under the version-4 bytes (recovered by reversing version 5's patch) a project-documentation body is scanned for active content.
+  // Under version 5 (variant bcd) projectDocumentationExemption lifts that scan, so the same bodies are retained redacted; a page that
+  // cannot confirm the renderCondition rescans the complete body (render.ts), which the render tests pin.
+  it('runs the active-content scan over the complete body of a redacted one, excluding it whole (version 4), and not under version 5', async () => {
     const body = `${['to', 'ken'].join('')}=${'abcdefgh12345678'}\nx\ny\n<script>run()</script>\n`;
-    for (const screen of await both()) expect(screen.screenTargetBody(body, 'README.md')).toEqual({ kind: 'excluded', outcome: 'active-content' });
+    for (const screen of await both(fixtures.v4Scope)) expect(screen.screenTargetBody(body, 'README.md')).toEqual({ kind: 'excluded', outcome: 'active-content' });
+    for (const screen of await both()) expect(screen.screenTargetBody(body, 'README.md')).toMatchObject({ kind: 'redacted', withheld: [1, 2] });
   });
-  it('runs the active-content scan over the withheld lines too: active content only on a matched line excludes the body whole', async () => {
+  it('runs the active-content scan over the withheld lines too: active content only on a matched line excludes the body whole (version 4)', async () => {
     // The retained text (lines 2 to 4 emptied) holds no active content, so a scan of the retained text alone would admit it.
     const body = `a\nb\n<script>run()</script> ${['to', 'ken'].join('')}=${'abcdefgh12345678'}\nc\nd\n`;
-    for (const screen of await both()) expect(screen.screenTargetBody(body, 'README.md')).toEqual({ kind: 'excluded', outcome: 'active-content' });
+    for (const screen of await both(fixtures.v4Scope)) expect(screen.screenTargetBody(body, 'README.md')).toEqual({ kind: 'excluded', outcome: 'active-content' });
+    for (const screen of await both()) expect(screen.screenTargetBody(body, 'README.md')).toMatchObject({ kind: 'redacted', withheld: [2, 3, 4] });
   });
   it.each([
     ['another rule text', (r: Record<string, unknown>) => ({ ...r, rule: `${r['rule'] as string} ` })],

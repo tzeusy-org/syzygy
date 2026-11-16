@@ -1,0 +1,3236 @@
+{
+ "commit": "f7477f52",
+ "population": 514,
+ "sites": 140,
+ "files": 41,
+ "byKind": {
+  "test": 118,
+  "hook": 19,
+  "suite": 1,
+  "config": 2
+ },
+ "cliFlags": [],
+ "sitesList": [
+  {
+   "path": "apps/three-surface-poc/src/build-output.test.ts",
+   "line": 62,
+   "callLine": 42,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "240_000",
+   "title": "'re-emits ignored JavaScript before the launcher executes it'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.browser.test.ts",
+   "line": 82,
+   "callLine": 63,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "60_000",
+   "title": "'closes and drains even when a helper cannot exit on its own'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.browser.test.ts",
+   "line": 112,
+   "callLine": 84,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "60_000",
+   "title": "'leaves no Chrome singleton directory behind when the leader is killed'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 335,
+   "callLine": 329,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "30_000",
+   "title": "'removes the singleton directory read while Chrome ran, with the profile, and only that one'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 344,
+   "callLine": 337,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "30_000",
+   "title": "'reads the directory from the profile\\'s link when none was read while Chrome ran'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 351,
+   "callLine": 346,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "30_000",
+   "title": "'removes the Chromium form of the name too'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 364,
+   "callLine": 353,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "30_000",
+   "title": "'removes the name without a leading dot too, which Chrome 147 to 155 make, whether given or read fro",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 371,
+   "callLine": 366,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "30_000",
+   "title": "'removes the profile and nothing else when Chrome left no singleton directory (a clean exit)'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 383,
+   "callLine": 373,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "30_000",
+   "title": "'keeps a directory that is not directly under the temp directory, whether it was given or read from ",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 401,
+   "callLine": 385,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "30_000",
+   "title": "'keeps a directory whose name is not exactly Chrome\\'s: another prefix, no suffix, a longer name, a ",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 417,
+   "callLine": 403,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "30_000",
+   "title": "'follows no link and removes no file: a link to a directory and a plain file with Chrome\\'s name bot",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 426,
+   "callLine": 419,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "30_000",
+   "title": "'keeps a directory that belongs to another user, never entering it'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 439,
+   "callLine": 428,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "30_000",
+   "title": "'checks no user where the system has no user ids, and removes the directory'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 445,
+   "callLine": 441,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "30_000",
+   "title": "'removes the directory a profile\\'s link names when the profile and the link are the running user\\'s",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 451,
+   "callLine": 447,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "30_000",
+   "title": "'keeps the directory a link names when the profile is not the running user\\'s, as in a shared temp d",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 458,
+   "callLine": 453,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "30_000",
+   "title": "'keeps the directory a link names when the link is not the running user\\'s'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 470,
+   "callLine": 460,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "30_000",
+   "title": "'keeps a directory made under the same name after the one that was read, as when Chrome exits cleanl",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 478,
+   "callLine": 472,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "30_000",
+   "title": "'keeps a directory with the recorded inode number on another device'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 489,
+   "callLine": 480,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "30_000",
+   "title": "'does not fail the run when the singleton directory cannot be removed'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 63,
+   "callLine": 57,
+   "kind": "test",
+   "api": "it",
+   "root": "sweeping",
+   "chain": "sweeping",
+   "timeout": "30_000",
+   "title": "'removes the copy and the template of a process that is gone'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 71,
+   "callLine": 65,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "30_000",
+   "title": "'keeps the directories of a live process, the current one included'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 94,
+   "callLine": 73,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "30_000",
+   "title": "'keeps a name that carries no pid and namespace segment, whatever its suffix'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 109,
+   "callLine": 96,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "30_000",
+   "title": "'keeps a directory whose pid fails with anything but ESRCH'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 128,
+   "callLine": 111,
+   "kind": "test",
+   "api": "it",
+   "root": "sweeping",
+   "chain": "sweeping",
+   "timeout": "30_000",
+   "title": "'follows no symlink and removes no file: only a directory with a dead pid in its name goes'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 142,
+   "callLine": 130,
+   "kind": "test",
+   "api": "it",
+   "root": "sweeping",
+   "chain": "sweeping",
+   "timeout": "30_000",
+   "title": "'keeps the directories of a dead pid that belong to another PID namespace, whatever the neighbouring",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 186,
+   "callLine": 145,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it.each()",
+   "timeout": "30_000",
+   "title": "'removes nothing, and lists nothing, where the PID namespace %s, so a sandbox without /proc never sw",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 198,
+   "callLine": 188,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "30_000",
+   "title": "'keeps a directory that belongs to another user, the sweep never descending into it'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 212,
+   "callLine": 200,
+   "kind": "test",
+   "api": "it",
+   "root": "sweeping",
+   "chain": "sweeping",
+   "timeout": "30_000",
+   "title": "'checks no user where the system has no user ids, and removes the dead process\\'s directory'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 227,
+   "callLine": 214,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "30_000",
+   "title": "'does not fail the run when the temp directory cannot be listed'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 241,
+   "callLine": 229,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "30_000",
+   "title": "'lists only the directory it is given: nothing beside it, nothing below a non-fixture entry'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 256,
+   "callLine": 243,
+   "kind": "test",
+   "api": "it",
+   "root": "sweeping",
+   "chain": "sweeping",
+   "timeout": "30_000",
+   "title": "'does not fail the run when a dead process\\'s directory cannot be removed'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 266,
+   "callLine": 258,
+   "kind": "test",
+   "api": "it",
+   "root": "sweeping",
+   "chain": "sweeping",
+   "timeout": "30_000",
+   "title": "'sweeps the temp directory the process runs under when the global setup runs, and keeps the live and",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 284,
+   "callLine": 268,
+   "kind": "test",
+   "api": "it",
+   "root": "sweeping",
+   "chain": "sweeping",
+   "timeout": "30_000",
+   "title": "'asks the operating system for the temp directory, so it sweeps the same directory the copies are ma",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 296,
+   "callLine": 286,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "30_000",
+   "title": "'is registered as a global setup of the app project and of no other project, so it runs once per run",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/git-blob-batch.test.ts",
+   "line": 241,
+   "callLine": 206,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "REAL_TREE_TIMEOUT_MS",
+   "title": "'reads the same objects and returns the same inputs and evaluation for the governance load'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/git-blob-batch.test.ts",
+   "line": 253,
+   "callLine": 243,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "REAL_TREE_TIMEOUT_MS",
+   "title": "'reads the same blobs with the same bytes for the self-corpus at the pinned commit'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/git-blob-batch.test.ts",
+   "line": 286,
+   "callLine": 278,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "REAL_TREE_TIMEOUT_MS",
+   "title": "'fails the self-corpus read on a missing, unread or altered blob'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/governance-inputs.test.ts",
+   "line": 504,
+   "callLine": 439,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "REAL_TREE_TIMEOUT_MS",
+   "title": "'evaluates the three real current PWB acts without reading any body'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/governing-intent-sweep.test.ts",
+   "line": 168,
+   "callLine": 164,
+   "kind": "hook",
+   "api": "beforeAll",
+   "root": "beforeAll",
+   "chain": "beforeAll",
+   "timeout": "60_000",
+   "title": null,
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/keyboard-sweep-record.test.ts",
+   "line": 59,
+   "callLine": 44,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "30_000",
+   "title": "'reads the Butlers revision and evaluation identity a served Polaris page renders, on both mounts'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/main.test.ts",
+   "line": 366,
+   "callLine": 325,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "TEST_TIMEOUT_MS",
+   "title": "'prints the banner, registers the three route groups, and closes once on the first signal'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/main.test.ts",
+   "line": 378,
+   "callLine": 368,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "TEST_TIMEOUT_MS",
+   "title": "'prints no walkthrough binding while readiness is not evaluated'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/main.test.ts",
+   "line": 389,
+   "callLine": 380,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "TEST_TIMEOUT_MS",
+   "title": "'defaults the state directory to a per-repository directory under the OS temp directory'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/main.test.ts",
+   "line": 406,
+   "callLine": 391,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "TEST_TIMEOUT_MS",
+   "title": "'attaches the Enter console to io only with --watch, and a dirty re-observation keeps the prior eval",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/main.test.ts",
+   "line": 424,
+   "callLine": 408,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "TEST_TIMEOUT_MS",
+   "title": "'prints no console prompt and ignores Enter without --watch'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/main.test.ts",
+   "line": 478,
+   "callLine": 439,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "TEST_TIMEOUT_MS",
+   "title": "'observes, builds, names, materializes and re-evaluates against the bound locator'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/main.test.ts",
+   "line": 498,
+   "callLine": 480,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "TEST_TIMEOUT_MS",
+   "title": "'reads the exact requirement text from the bound repository'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/main.test.ts",
+   "line": 513,
+   "callLine": 500,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "TEST_TIMEOUT_MS",
+   "title": "'resolves a relative --state-dir for the daemon and for the materialize action alike'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/main.test.ts",
+   "line": 538,
+   "callLine": 517,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "TEST_TIMEOUT_MS",
+   "title": "'names the credential provision and the latest named re-evaluation, before and after a materialize'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/main.test.ts",
+   "line": 548,
+   "callLine": 542,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "TEST_TIMEOUT_MS",
+   "title": "'reports a run that finished first, at once and by name'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/main.test.ts",
+   "line": 555,
+   "callLine": 550,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "2_000",
+   "title": "'gives up after its bound on a run that neither serves nor finishes'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/orrery.browser.test.ts",
+   "line": 24,
+   "callLine": 22,
+   "kind": "hook",
+   "api": "beforeAll",
+   "root": "beforeAll",
+   "chain": "beforeAll",
+   "timeout": "60_000",
+   "title": null,
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts",
+   "line": 91,
+   "callLine": 80,
+   "kind": "hook",
+   "api": "beforeAll",
+   "root": "beforeAll",
+   "chain": "beforeAll",
+   "timeout": "60_000",
+   "title": null,
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts",
+   "line": 310,
+   "callLine": 287,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "240_000",
+   "title": "'activates more fragment links than Chrome\\'s navigation budget, including a second link to the curr",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts",
+   "line": 332,
+   "callLine": 313,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "240_000",
+   "title": "`${variant.id}: every distinction is keyboard-operable, named for assistive technology, and AA-contr",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+   "line": 187,
+   "callLine": 184,
+   "kind": "hook",
+   "api": "beforeAll",
+   "root": "beforeAll",
+   "chain": "beforeAll",
+   "timeout": "60_000",
+   "title": null,
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+   "line": 315,
+   "callLine": 298,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "240_000",
+   "title": "'passes every Polaris page one whole-project evaluation serves, the pages listed from the machine an",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+   "line": 329,
+   "callLine": 317,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "240_000",
+   "title": "'fails a listed page the daemon does not serve, never skipping it'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+   "line": 343,
+   "callLine": 338,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "240_000",
+   "title": "`${variant.id}: every served Polaris page passes both checks`",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-copy.test.ts",
+   "line": 226,
+   "callLine": 224,
+   "kind": "hook",
+   "api": "beforeAll",
+   "root": "beforeAll",
+   "chain": "beforeAll",
+   "timeout": "60_000",
+   "title": null,
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-first-reading.test.ts",
+   "line": 52,
+   "callLine": 52,
+   "kind": "hook",
+   "api": "beforeAll",
+   "root": "beforeAll",
+   "chain": "beforeAll",
+   "timeout": "SHARED_FIXTURE_TIMEOUT_MS",
+   "title": null,
+   "predicates": [
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/dossier-cap-measure.test.ts",
+   "line": 12,
+   "callLine": 9,
+   "kind": "hook",
+   "api": "beforeAll",
+   "root": "beforeAll",
+   "chain": "beforeAll",
+   "timeout": "120_000",
+   "title": null,
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/draft-preview.browser.test.ts",
+   "line": 47,
+   "callLine": 12,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it.skipIf()",
+   "timeout": "30_000",
+   "title": "'renders the pipeline draft with working diagram, source and keyboard deep-dive paths at both widths",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts",
+   "line": 45,
+   "callLine": 38,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "T",
+   "title": "'runs the pipeline through the injected port with its permit and abort signal'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts",
+   "line": 54,
+   "callLine": 47,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "T",
+   "title": "'reserves the configured per-attempt ceilings, capped by the request budget'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts",
+   "line": 85,
+   "callLine": 75,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "T",
+   "title": "'a generate failure after the claim leaves an uncertain record that a restart never replays'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts",
+   "line": 103,
+   "callLine": 87,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "T",
+   "title": "'a crash while a call is in flight leaves a claim that refuses any replay, even by a fresh lifecycle",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts",
+   "line": 115,
+   "callLine": 105,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "T",
+   "title": "'reuses completed checkpoints after a restart and sends only the missing stage through the new port'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts",
+   "line": 127,
+   "callLine": 117,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "T",
+   "title": "'releases an attempt whose per-call permission is withdrawn without calling generate, and only an ex",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts",
+   "line": 55,
+   "callLine": 42,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "JOURNAL_TIMEOUT_MS",
+   "title": "'reuses four verified checkpoints and sends only the missing fidelity stage after restart'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts",
+   "line": 79,
+   "callLine": 57,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "JOURNAL_TIMEOUT_MS",
+   "title": "'refuses changed request, route or current permission and a forged completed artifact'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts",
+   "line": 96,
+   "callLine": 81,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "JOURNAL_TIMEOUT_MS",
+   "title": "'keeps uncertain maximum reserved despite missing receipts and an expired lease field'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts",
+   "line": 116,
+   "callLine": 98,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "JOURNAL_TIMEOUT_MS",
+   "title": "'admits at most one concurrent dispatch and keeps distinct run artifacts separate'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/pipeline-demo.test.ts",
+   "line": 73,
+   "callLine": 50,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "ONRAMP_TEST_BUDGET_MS",
+   "title": "'runs the README command after a clean install and requires exactly seven synthetic output files'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/redis-shaped-discovery.test.ts",
+   "line": 16,
+   "callLine": 13,
+   "kind": "hook",
+   "api": "beforeAll",
+   "root": "beforeAll",
+   "chain": "beforeAll",
+   "timeout": "120_000",
+   "title": null,
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/redis-shaped-discovery.test.ts",
+   "line": 205,
+   "callLine": 197,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "120_000",
+   "title": "'writes the measurement through the command and refuses to overwrite it'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/self-corpus.test.ts",
+   "line": 32,
+   "callLine": 21,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "PINNED_READ_TIMEOUT_MS",
+   "title": "'reads only tracked blobs from the pinned commit and independently recounts its denominator'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/self-corpus.test.ts",
+   "line": 46,
+   "callLine": 34,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "30_000",
+   "title": "'refuses a 1 MB corpus budget without truncation or a scripted send, then completes on sufficient bu",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-narrative.test.ts",
+   "line": 59,
+   "callLine": 59,
+   "kind": "hook",
+   "api": "beforeAll",
+   "root": "beforeAll",
+   "chain": "beforeAll",
+   "timeout": "SHARED_FIXTURE_TIMEOUT_MS",
+   "title": null,
+   "predicates": [
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+   "line": 316,
+   "callLine": 313,
+   "kind": "hook",
+   "api": "beforeAll",
+   "root": "beforeAll",
+   "chain": "beforeAll",
+   "timeout": "60_000",
+   "title": null,
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+   "line": 352,
+   "callLine": 347,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "60_000",
+   "title": "`every indexed target renders (${viewport.width}x${viewport.height}): nine routed rows, recounted of",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+   "line": 364,
+   "callLine": 354,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "60_000",
+   "title": "`the opening Unknown aggregate is absent (${viewport.width}x${viewport.height}): the gaps row says s",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+   "line": 370,
+   "callLine": 366,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "60_000",
+   "title": "`an unobserved shape (${viewport.width}x${viewport.height}): only the gaps and claim-strength target",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+   "line": 408,
+   "callLine": 406,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "60_000",
+   "title": "'following the exact-requirement row by keyboard lands on its target and Tab continues from it (fixt",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+   "line": 413,
+   "callLine": 410,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "60_000",
+   "title": "'the same holds where a later control shares the target\\'s disclosure (synthetic body)'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+   "line": 424,
+   "callLine": 418,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it.skipIf()",
+   "timeout": "60_000",
+   "title": "'a captured /polaris page meets the oracle at both viewports'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+   "line": 443,
+   "callLine": 426,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "60_000",
+   "title": "'a tie on the largest offset is broken by document order (synthetic body, hand-counted)'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+   "line": 452,
+   "callLine": 445,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "60_000",
+   "title": "'with no indexed target rendered, the line follows the index and gives only the total (synthetic bod",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-reconciliation.test.ts",
+   "line": 81,
+   "callLine": 75,
+   "kind": "hook",
+   "api": "beforeAll",
+   "root": "beforeAll",
+   "chain": "beforeAll",
+   "timeout": "120_000",
+   "title": null,
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/production-reobserve.test.ts",
+   "line": 99,
+   "callLine": 86,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "PRODUCTION_BUILD_TIMEOUT_MS",
+   "title": "'keeps served bytes and asOf stable when the same capture is rebuilt across wall-clock instants'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/production-reobserve.test.ts",
+   "line": 132,
+   "callLine": 101,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "PRODUCTION_BUILD_TIMEOUT_MS",
+   "title": "'uses the production builder for an atomic successful swap with identity advancement and one in-flig",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/production-reobserve.test.ts",
+   "line": 160,
+   "callLine": 134,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "PRODUCTION_BUILD_TIMEOUT_MS",
+   "title": "'re-evaluates an unchanged repository twice: two distinct named identities, the first result unchang",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/production-reobserve.test.ts",
+   "line": 182,
+   "callLine": 162,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "PRODUCTION_BUILD_TIMEOUT_MS",
+   "title": "'retains the prior production model and non-zero drift when the production build fails'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/proposal-disclosure.test.ts",
+   "line": 147,
+   "callLine": 132,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it.skipIf()",
+   "timeout": "45_000",
+   "title": "'renders every served proposal and the legend row in the declared token and symbol after scripts'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/restart.test.ts",
+   "line": 321,
+   "callLine": 303,
+   "kind": "hook",
+   "api": "afterEach",
+   "root": "afterEach",
+   "chain": "afterEach",
+   "timeout": "TEST_MS",
+   "title": null,
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/restart.test.ts",
+   "line": 331,
+   "callLine": 331,
+   "kind": "suite",
+   "api": "describe",
+   "root": "describe",
+   "chain": "describe",
+   "timeout": "timeout: TEST_MS",
+   "title": "'one-listener POC restart on private fixture sockets'",
+   "predicates": [
+    "S2",
+    "S3"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/surface-routes.test.ts",
+   "line": 313,
+   "callLine": 300,
+   "kind": "hook",
+   "api": "beforeAll",
+   "root": "beforeAll",
+   "chain": "beforeAll",
+   "timeout": "60_000",
+   "title": null,
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/surface-routes.test.ts",
+   "line": 328,
+   "callLine": 315,
+   "kind": "hook",
+   "api": "afterAll",
+   "root": "afterAll",
+   "chain": "afterAll",
+   "timeout": "60_000",
+   "title": null,
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/surface-routes.test.ts",
+   "line": 420,
+   "callLine": 330,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it.skipIf().each()",
+   "timeout": "15_000",
+   "title": "'exhausts 15 runtime cross-surface links over six classes and fetches every %s target'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/surface-routes.test.ts",
+   "line": 453,
+   "callLine": 439,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it.skipIf()",
+   "timeout": "10_000",
+   "title": "'withholds the post-script Orrery capability href when that exact capability is absent'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/surface-routes.test.ts",
+   "line": 537,
+   "callLine": 482,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it.skipIf()",
+   "timeout": "45_000",
+   "title": "'counts the post-JavaScript DOM on all three served surfaces and kills an unmarked Orrery region'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/test-model-fixture.test.ts",
+   "line": 120,
+   "callLine": 111,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "30_000",
+   "title": "'names the template and each copy with the pid and PID namespace of the process that made them'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/test-model-fixture.test.ts",
+   "line": 131,
+   "callLine": 122,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "30_000",
+   "title": "'does not sweep when a file makes its template: the sweep is the global setup\\'s, once per run'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/trajectory-narrowing.browser.test.ts",
+   "line": 32,
+   "callLine": 30,
+   "kind": "hook",
+   "api": "beforeAll",
+   "root": "beforeAll",
+   "chain": "beforeAll",
+   "timeout": "60_000",
+   "title": null,
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/tuple-encoding.test.ts",
+   "line": 94,
+   "callLine": 94,
+   "kind": "hook",
+   "api": "beforeAll",
+   "root": "beforeAll",
+   "chain": "beforeAll",
+   "timeout": "SHARED_FIXTURE_TIMEOUT_MS",
+   "title": null,
+   "predicates": [
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/tuple-encoding.test.ts",
+   "line": 312,
+   "callLine": 276,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it.skipIf()",
+   "timeout": "60_000",
+   "title": "'sweeps the post-JavaScript DOM of the three surfaces, Home apart: every tuple field and glossary ro",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/unknown-route-sweep.test.ts",
+   "line": 173,
+   "callLine": 126,
+   "kind": "hook",
+   "api": "beforeAll",
+   "root": "beforeAll",
+   "chain": "beforeAll",
+   "timeout": "60_000",
+   "title": null,
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "packages/cap1-system/src/fresh-clone.system.test.ts",
+   "line": 117,
+   "callLine": 37,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it.skipIf()",
+   "timeout": "600_000",
+   "title": "'a fresh clone installs, builds, starts the daemon, and serves the same facts on both channels'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "packages/cap1-system/vitest.config.ts",
+   "line": 18,
+   "kind": "config",
+   "name": "testTimeout",
+   "timeout": "60_000",
+   "predicates": [
+    "config-property"
+   ]
+  },
+  {
+   "path": "packages/cap1-system/vitest.config.ts",
+   "line": 19,
+   "kind": "config",
+   "name": "hookTimeout",
+   "timeout": "60_000",
+   "predicates": [
+    "config-property"
+   ]
+  },
+  {
+   "path": "packages/polaris-dossier/src/gate-acts.test.ts",
+   "line": 98,
+   "callLine": 96,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "TREE_TIMEOUT",
+   "title": "'follow this checkout\\'s tree: each source absent while its act record is, and established once the ",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "packages/polaris-dossier/src/gate-acts.test.ts",
+   "line": 106,
+   "callLine": 99,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "TREE_TIMEOUT",
+   "title": "'follow the tree in either state: no records, every record, and each act alone'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "packages/polaris-dossier/src/git-object-reader.test.ts",
+   "line": 582,
+   "callLine": 578,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "60_000",
+   "title": "'the reviewer\\'s amplification shape, 100 levels over a 64 MiB base, refuses within the default per-",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "packages/polaris-dossier/src/git-object-reader.test.ts",
+   "line": 782,
+   "callLine": 775,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "60_000",
+   "title": "'a subdirectory of 200,000 entries lists: a subtree is never spread into call arguments'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "packages/polaris-dossier/src/git-object-reader.test.ts",
+   "line": 803,
+   "callLine": 797,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "240_000",
+   "title": "'a path of 4,096 segments reads and lists; a missing path below names its full prefix'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "packages/polaris-dossier/src/git-object-reader.test.ts",
+   "line": 812,
+   "callLine": 804,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "240_000",
+   "title": "'a path of 4,097 segments refuses before any read, and listTree refuses the tree nested past the cap",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "packages/polaris-dossier/src/no-egress.test.ts",
+   "line": 48,
+   "callLine": 25,
+   "kind": "hook",
+   "api": "beforeAll",
+   "root": "beforeAll",
+   "chain": "beforeAll",
+   "timeout": "120_000",
+   "title": null,
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "packages/polaris-dossier/src/no-egress.test.ts",
+   "line": 85,
+   "callLine": 67,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "240_000",
+   "title": "'creates no Internet-family socket over the whole run, from preflight to close'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "packages/polaris-dossier/src/no-egress.test.ts",
+   "line": 93,
+   "callLine": 87,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "240_000",
+   "title": "'sees the canary: one loopback datagram sent before the same run is in the capture'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "packages/polaris-dossier/src/start-gates.test.ts",
+   "line": 1015,
+   "callLine": 1009,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "TREE_TIMEOUT",
+   "title": "'reports D9 established on this checkout only once an act record binds it, though the doctrine amend",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "line": 111,
+   "callLine": 103,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "45_000",
+   "title": "'returns a record only for an instance that an act record names by path and digest'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "line": 141,
+   "callLine": 121,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "10_000",
+   "title": "'refuses the whole read on unknown shapes instead of guessing'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "line": 259,
+   "callLine": 255,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "15_000",
+   "title": "'recognises the recorder\\'s record by its exact path and format, in force from its instant'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "line": 327,
+   "callLine": 324,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "15_000",
+   "title": "'refuses the recorder\\'s file when its act type, identity, title or provenance is not the recorder\\'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "line": 368,
+   "callLine": 361,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "40_000",
+   "title": "'is read from the recorder\\'s act: version 2 supersedes version 1 once in force'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "line": 375,
+   "callLine": 369,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "20_000",
+   "title": "'leaves version 1 standing before the version 2 act takes effect, and with no version 1 act at all'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "line": 381,
+   "callLine": 376,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "45_000",
+   "title": "'refuses when version 2 did not take effect strictly after version 1: the same instant, or earlier'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "line": 443,
+   "callLine": 425,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "40_000",
+   "title": "'is required: no record, an edited module, a wrong form, or an amendment later than version 2 all re",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "line": 498,
+   "callLine": 488,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "25_000",
+   "title": "'does not refuse the recorders\\' other act records or the aggregate acceptance record they append to",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "line": 541,
+   "callLine": 537,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "45_000",
+   "title": "'counts the version 2 act when the policy carries the version 2 bytes, and the version 1 act goes qu",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "line": 563,
+   "callLine": 557,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "20_000",
+   "title": "'a version 2 act not yet in force leaves version 1 in force, in both views'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "line": 581,
+   "callLine": 574,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "15_000",
+   "title": "'refuses an unlisted record that names the policy: another file, a subdirectory, a loose field spell",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "line": 710,
+   "callLine": 697,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "40_000",
+   "title": "'policy chain: absent without acts; refused for a missing version 1, equal or earlier instants, equa",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "line": 779,
+   "callLine": 771,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "15_000",
+   "title": "'folds soft hyphens, zero-width spaces, underscores and spaces before matching a withdrawal stem (N-",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "line": 804,
+   "callLine": 794,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "15_000",
+   "title": "'takes a time: a strict read of an act recorded after now is absent (N-4)'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "line": 947,
+   "callLine": 947,
+   "kind": "hook",
+   "api": "beforeAll",
+   "root": "beforeAll",
+   "chain": "beforeAll",
+   "timeout": "60_000",
+   "title": null,
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "line": 1061,
+   "callLine": 1050,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "50_000",
+   "title": "'on every world in the fixture set, at every instant'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/real-tree.test.ts",
+   "line": 50,
+   "callLine": 34,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "TIMEOUT",
+   "title": "'refuse nothing: no file in decisions/ trips a sweep or breaks a recorder\\'s form'",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/real-tree.test.ts",
+   "line": 58,
+   "callLine": 51,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "TIMEOUT",
+   "title": "'do reach that directory: one added file naming a record or the class act refuses the reads that swe",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/test-artifact-verification.live.test.ts",
+   "line": 139,
+   "callLine": 49,
+   "kind": "test",
+   "api": "it",
+   "root": "it",
+   "chain": "it",
+   "timeout": "120_000",
+   "title": "'ingests one real, passing operator-reported focused-pytest artifact and resolves it to report-fact,",
+   "predicates": [
+    "S1",
+    "S2"
+   ]
+  }
+ ],
+ "excludedCount": 134,
+ "excludedChains": {
+  "setTimeout": 10,
+  "socket.addEventListener": 2,
+  "tree": 3,
+  "input.sweeps.reduce": 1,
+  "vi.waitFor": 1,
+  "pocRoutes": 7,
+  "reports.reduce": 7,
+  "report.pages.reduce": 1,
+  "rows.reduce": 1,
+  "cost.pages.reduce": 1,
+  "Object.values().reduce": 8,
+  "expect": 7,
+  "lifecycle": 7,
+  "entries.reduce": 2,
+  "result.report.deferred.reduce": 1,
+  "result.sources.filter().reduce": 1,
+  "source.spans.reduce": 3,
+  "population.reduce": 1,
+  "lines.reduce": 1,
+  "values.reduce": 2,
+  "ArrayLiteralExpression.sort().reduce": 1,
+  "core.reduce": 1,
+  "classCounts.reduce": 1,
+  "classCounts.filter().reduce": 1,
+  "counts.reduce": 1,
+  "counts.slice().reduce": 1,
+  "classes.reduce": 1,
+  "classes.filter().reduce": 1,
+  "deriveCapabilityDeepDives().reduce": 1,
+  "complete.reduce": 1,
+  "child.reduce": 2,
+  "districts.reduce": 1,
+  "surfaces.reduce": 2,
+  "importClosure": 2,
+  "setInterval": 1,
+  "pwbSurfaceVersion": 4,
+  "ArrayLiteralExpression.reduce": 5,
+  "only": 4,
+  "entries.slice().reduce": 1,
+  "Object.assign": 2,
+  "designReviewed": 1,
+  "latestCheckedVerdict": 2,
+  "entryCommit": 3,
+  "input.subsystems.reduce": 1,
+  "groups().reduce": 1,
+  "big.reduce": 1,
+  "piece.spans.reduce": 4,
+  "pieces.reduce": 3,
+  "providerCall": 1,
+  "subsystems.reduce": 1,
+  "inspected.reduce": 1,
+  "lines.slice().reduce": 1,
+  "bounded": 6,
+  "classifyManifestSources": 4,
+  "BODIES.reduce": 1,
+  "PHASE_A.reduce": 1,
+  "breachesNow.reduce": 1
+ },
+ "excluded": [
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 22,
+   "chain": "setTimeout",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.ts",
+   "line": 103,
+   "chain": "socket.addEventListener",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.ts",
+   "line": 104,
+   "chain": "socket.addEventListener",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.ts",
+   "line": 112,
+   "chain": "setTimeout",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.ts",
+   "line": 137,
+   "chain": "setTimeout",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.ts",
+   "line": 249,
+   "chain": "setTimeout",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/fresh-checkout-demo-main.ts",
+   "line": 110,
+   "chain": "setTimeout",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/git-blob-batch.test.ts",
+   "line": 142,
+   "chain": "tree",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/git-blob-batch.test.ts",
+   "line": 154,
+   "chain": "tree",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/git-blob-batch.test.ts",
+   "line": 162,
+   "chain": "tree",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/keyboard-sweep-record.ts",
+   "line": 151,
+   "chain": "input.sweeps.reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/main.test.ts",
+   "line": 402,
+   "chain": "vi.waitFor",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/poc-main.ts",
+   "line": 196,
+   "chain": "pocRoutes",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-accessibility-main.ts",
+   "line": 56,
+   "chain": "reports.reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-accessibility-main.ts",
+   "line": 66,
+   "chain": "reports.reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-accessibility-main.ts",
+   "line": 67,
+   "chain": "reports.reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-accessibility-main.ts",
+   "line": 68,
+   "chain": "reports.reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+   "line": 310,
+   "chain": "report.pages.reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-accessible-names.ts",
+   "line": 342,
+   "chain": "reports.reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-accessible-names.ts",
+   "line": 343,
+   "chain": "reports.reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "line": 92,
+   "chain": "rows.reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "line": 392,
+   "chain": "cost.pages.reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "line": 394,
+   "chain": "Object.values().reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/dossier-trigger.test.ts",
+   "line": 33,
+   "chain": "expect",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts",
+   "line": 49,
+   "chain": "lifecycle",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts",
+   "line": 52,
+   "chain": "lifecycle",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts",
+   "line": 64,
+   "chain": "lifecycle",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts",
+   "line": 70,
+   "chain": "lifecycle",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts",
+   "line": 71,
+   "chain": "lifecycle",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts",
+   "line": 107,
+   "chain": "lifecycle",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts",
+   "line": 121,
+   "chain": "lifecycle",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.ts",
+   "line": 112,
+   "chain": "entries.reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.ts",
+   "line": 113,
+   "chain": "entries.reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/pipeline-demo.test.ts",
+   "line": 19,
+   "chain": "Object.values().reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/redis-shaped-discovery.test.ts",
+   "line": 68,
+   "chain": "result.report.deferred.reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/redis-shaped-discovery.test.ts",
+   "line": 145,
+   "chain": "result.sources.filter().reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/redis-shaped-discovery.test.ts",
+   "line": 145,
+   "chain": "source.spans.reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/redis-shaped-discovery.test.ts",
+   "line": 189,
+   "chain": "population.reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/redis-shaped-discovery.test.ts",
+   "line": 189,
+   "chain": "source.spans.reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/redis-shaped-fixture.ts",
+   "line": 93,
+   "chain": "lines.reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/redis-shaped-measure.ts",
+   "line": 12,
+   "chain": "values.reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/redis-shaped-measure.ts",
+   "line": 91,
+   "chain": "ArrayLiteralExpression.sort().reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/redis-shaped-measure.ts",
+   "line": 138,
+   "chain": "source.spans.reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/redis-shaped-measure.ts",
+   "line": 144,
+   "chain": "core.reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-parity-sweep.test.ts",
+   "line": 552,
+   "chain": "classCounts.reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-parity-sweep.test.ts",
+   "line": 553,
+   "chain": "classCounts.filter().reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-parity-sweep.test.ts",
+   "line": 581,
+   "chain": "reports.reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+   "line": 35,
+   "chain": "pocRoutes",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-reconciliation.test.ts",
+   "line": 283,
+   "chain": "counts.reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-reconciliation.test.ts",
+   "line": 284,
+   "chain": "counts.slice().reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-reconciliation.ts",
+   "line": 57,
+   "chain": "classes.reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-reconciliation.ts",
+   "line": 58,
+   "chain": "classes.filter().reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris.ts",
+   "line": 429,
+   "chain": "deriveCapabilityDeepDives().reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris.ts",
+   "line": 1805,
+   "chain": "complete.reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/response-identity-independent.test.ts",
+   "line": 139,
+   "chain": "child.reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/response-limits.test.ts",
+   "line": 40,
+   "chain": "pocRoutes",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/response-limits.test.ts",
+   "line": 66,
+   "chain": "pocRoutes",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/response-limits.test.ts",
+   "line": 181,
+   "chain": "pocRoutes",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/response-limits.test.ts",
+   "line": 214,
+   "chain": "pocRoutes",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/response-limits.test.ts",
+   "line": 270,
+   "chain": "pocRoutes",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/routes.test.ts",
+   "line": 242,
+   "chain": "child.reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/surface-render-fractions.test.ts",
+   "line": 114,
+   "chain": "districts.reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/surface-routes.test.ts",
+   "line": 476,
+   "chain": "surfaces.reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/surface-routes.test.ts",
+   "line": 476,
+   "chain": "Object.values().reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/surface-routes.test.ts",
+   "line": 509,
+   "chain": "Object.values().reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/surface-routes.test.ts",
+   "line": 510,
+   "chain": "Object.values().reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/surface-routes.test.ts",
+   "line": 560,
+   "chain": "Object.values().reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/surface-routes.test.ts",
+   "line": 565,
+   "chain": "Object.values().reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/sync-child-process-guard.test.ts",
+   "line": 178,
+   "chain": "importClosure",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/sync-child-process-guard.test.ts",
+   "line": 262,
+   "chain": "importClosure",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/test-fixtures/restart-listener.mjs",
+   "line": 30,
+   "chain": "setInterval",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/tuple-encoding.test.ts",
+   "line": 171,
+   "chain": "Object.values().reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/tuple-encoding.test.ts",
+   "line": 305,
+   "chain": "surfaces.reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/walkthrough-inputs.test.ts",
+   "line": 241,
+   "chain": "pwbSurfaceVersion",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/walkthrough-inputs.test.ts",
+   "line": 248,
+   "chain": "pwbSurfaceVersion",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/walkthrough-inputs.test.ts",
+   "line": 249,
+   "chain": "pwbSurfaceVersion",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/walkthrough-inputs.test.ts",
+   "line": 250,
+   "chain": "pwbSurfaceVersion",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "packages/cap1-system/src/effect-observer.ts",
+   "line": 247,
+   "chain": "setTimeout",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "packages/cap1-system/src/harness.ts",
+   "line": 164,
+   "chain": "setTimeout",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "packages/cap1-system/src/skipped-population.system.test.ts",
+   "line": 63,
+   "chain": "setTimeout",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "packages/polaris-dossier/src/brief.test.ts",
+   "line": 158,
+   "chain": "ArrayLiteralExpression.reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "packages/polaris-dossier/src/clone-shape.ts",
+   "line": 194,
+   "chain": "only",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "packages/polaris-dossier/src/clone-shape.ts",
+   "line": 195,
+   "chain": "only",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "packages/polaris-dossier/src/clone-shape.ts",
+   "line": 196,
+   "chain": "only",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "packages/polaris-dossier/src/clone-shape.ts",
+   "line": 197,
+   "chain": "only",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "packages/polaris-dossier/src/git-object-reader.test.ts",
+   "line": 106,
+   "chain": "expect",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "packages/polaris-dossier/src/git-object-reader.test.ts",
+   "line": 107,
+   "chain": "expect",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "packages/polaris-dossier/src/git-object-reader.test.ts",
+   "line": 391,
+   "chain": "setTimeout",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "packages/polaris-dossier/src/git-object-reader.test.ts",
+   "line": 413,
+   "chain": "entries.slice().reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "packages/polaris-dossier/src/render.test.ts",
+   "line": 449,
+   "chain": "Object.assign",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "packages/polaris-dossier/src/render.test.ts",
+   "line": 451,
+   "chain": "Object.assign",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "packages/polaris-dossier/src/render.test.ts",
+   "line": 707,
+   "chain": "designReviewed",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "packages/polaris-dossier/src/render.ts",
+   "line": 214,
+   "chain": "ArrayLiteralExpression.reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "packages/polaris-dossier/src/render.ts",
+   "line": 215,
+   "chain": "ArrayLiteralExpression.reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "packages/polaris-dossier/src/render.ts",
+   "line": 534,
+   "chain": "ArrayLiteralExpression.reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "packages/polaris-dossier/src/review.ts",
+   "line": 680,
+   "chain": "latestCheckedVerdict",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "packages/polaris-dossier/src/review.ts",
+   "line": 723,
+   "chain": "latestCheckedVerdict",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "packages/polaris-dossier/src/start-gates.test.ts",
+   "line": 69,
+   "chain": "entryCommit",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "packages/polaris-dossier/src/start-gates.test.ts",
+   "line": 70,
+   "chain": "entryCommit",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "packages/polaris-dossier/src/start-gates.test.ts",
+   "line": 71,
+   "chain": "entryCommit",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/consent-ports.test.ts",
+   "line": 266,
+   "chain": "expect",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "packages/polaris-generation-core/src/discovery.test.ts",
+   "line": 163,
+   "chain": "input.subsystems.reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "packages/polaris-generation-core/src/discovery.test.ts",
+   "line": 349,
+   "chain": "setTimeout",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "packages/polaris-generation-core/src/discovery.test.ts",
+   "line": 379,
+   "chain": "groups().reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "packages/polaris-generation-core/src/discovery.test.ts",
+   "line": 532,
+   "chain": "big.reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "packages/polaris-generation-core/src/discovery.test.ts",
+   "line": 532,
+   "chain": "piece.spans.reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "packages/polaris-generation-core/src/discovery.test.ts",
+   "line": 543,
+   "chain": "pieces.reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "packages/polaris-generation-core/src/discovery.test.ts",
+   "line": 543,
+   "chain": "piece.spans.reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "packages/polaris-generation-core/src/discovery.ts",
+   "line": 133,
+   "chain": "pieces.reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "packages/polaris-generation-core/src/discovery.ts",
+   "line": 133,
+   "chain": "piece.spans.reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "packages/polaris-generation-core/src/discovery.ts",
+   "line": 183,
+   "chain": "pieces.reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "packages/polaris-generation-core/src/discovery.ts",
+   "line": 183,
+   "chain": "piece.spans.reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "packages/polaris-generation-core/src/discovery.ts",
+   "line": 295,
+   "chain": "providerCall",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "packages/polaris-generation-core/src/discovery.ts",
+   "line": 327,
+   "chain": "subsystems.reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "packages/polaris-generation-core/src/dossier-evaluation.ts",
+   "line": 291,
+   "chain": "values.reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "packages/polaris-generation-core/src/dossier-evaluation.ts",
+   "line": 374,
+   "chain": "inspected.reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "packages/polaris-generation-core/src/excerpt.ts",
+   "line": 189,
+   "chain": "lines.slice().reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "packages/polaris-generation-core/src/generation-source.test.ts",
+   "line": 47,
+   "chain": "expect",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "packages/polaris-generation-core/src/generation-source.test.ts",
+   "line": 50,
+   "chain": "expect",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "packages/polaris-generation-core/src/pipeline.ts",
+   "line": 351,
+   "chain": "bounded",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "packages/polaris-generation-core/src/pipeline.ts",
+   "line": 356,
+   "chain": "bounded",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "packages/polaris-generation-core/src/pipeline.ts",
+   "line": 388,
+   "chain": "bounded",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "packages/polaris-generation-core/src/pipeline.ts",
+   "line": 396,
+   "chain": "bounded",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "packages/polaris-generation-core/src/pipeline.ts",
+   "line": 433,
+   "chain": "bounded",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "packages/polaris-generation-core/src/pipeline.ts",
+   "line": 436,
+   "chain": "bounded",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "packages/polaris-generation-core/src/reader-questions.test.ts",
+   "line": 19,
+   "chain": "expect",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/content-classification.test.ts",
+   "line": 223,
+   "chain": "classifyManifestSources",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/content-classification.test.ts",
+   "line": 539,
+   "chain": "classifyManifestSources",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/content-classification.test.ts",
+   "line": 600,
+   "chain": "classifyManifestSources",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/project-shape-model.test.ts",
+   "line": 868,
+   "chain": "BODIES.reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/project-shape-model.ts",
+   "line": 565,
+   "chain": "classifyManifestSources",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/project-shape-observation.test.ts",
+   "line": 857,
+   "chain": "PHASE_A.reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/resource-ledger.ts",
+   "line": 316,
+   "chain": "ArrayLiteralExpression.reduce",
+   "predicates": [
+    "S1"
+   ]
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/resource-ledger.ts",
+   "line": 324,
+   "chain": "breachesNow.reduce",
+   "predicates": [
+    "S1"
+   ]
+  }
+ ]
+}

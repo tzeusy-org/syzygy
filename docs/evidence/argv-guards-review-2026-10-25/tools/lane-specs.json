@@ -1,0 +1,506 @@
+{
+ "mutants": [
+  {
+   "id": "C0-argv",
+   "family": "control",
+   "laneExpect": "passes",
+   "edits": [],
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/argv.test.ts"
+   ]
+  },
+  {
+   "id": "C0-guard",
+   "family": "control",
+   "laneExpect": "passes",
+   "edits": [],
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/subpath-imports.test.ts"
+   ]
+  },
+  {
+   "id": "C0-both-guards",
+   "family": "control",
+   "laneExpect": "passes",
+   "edits": [],
+   "projects": [
+    "@syzygy/polaris-dossier",
+    "@syzygy/polaris-generation-core"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/subpath-imports.test.ts",
+    "packages/polaris-generation-core/src/island-boundary.test.ts"
+   ]
+  },
+  {
+   "id": "OR1-missing-value-judged-before-repeat",
+   "family": "reader table (N1)",
+   "laneExpect": "killed",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.ts",
+     "old": "      if (spec.repeat === 'refuse' && values.has(arg)) return { fault: 'repeated', arg };\n      if (token.value === undefined || (spec.dashValue === 'refuse' && token.value.startsWith('-'))) return { fault: 'missing-value', arg };\n",
+     "new": "      if (token.value === undefined || (spec.dashValue === 'refuse' && token.value.startsWith('-'))) return { fault: 'missing-value', arg };\n      if (spec.repeat === 'refuse' && values.has(arg)) return { fault: 'repeated', arg };\n"
+    }
+   ],
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/argv.test.ts"
+   ]
+  },
+  {
+   "id": "OR2-empty-value-read-as-missing",
+   "family": "reader table (N1)",
+   "laneExpect": "killed",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.ts",
+     "old": "if (token.value === undefined ||",
+     "new": "if (!token.value ||"
+    }
+   ],
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/argv.test.ts"
+   ]
+  },
+  {
+   "id": "D1-polaris-repeat-refused",
+   "family": "policy copies (N2)",
+   "laneExpect": "killed",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/polaris.ts",
+     "old": "'-h'], dashValue: 'take', repeat: 'last', positionals: true,",
+     "new": "'-h'], dashValue: 'take', repeat: 'refuse', positionals: true,"
+    }
+   ],
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/argv.test.ts"
+   ]
+  },
+  {
+   "id": "D2-daemon-repeat-refused",
+   "family": "policy copies (N2)",
+   "laneExpect": "killed",
+   "edits": [
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "    repeat: 'last',\n    positionals: false,\n",
+     "new": "    repeat: 'refuse',\n    positionals: false,\n"
+    }
+   ],
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/argv.test.ts"
+   ]
+  },
+  {
+   "id": "D3-dossier-dash-value-taken",
+   "family": "policy copies (N2)",
+   "laneExpect": "killed",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/cli.ts",
+     "old": "{ valued: shape.options, dashValue: 'refuse',",
+     "new": "{ valued: shape.options, dashValue: 'take',"
+    }
+   ],
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/argv.test.ts"
+   ]
+  },
+  {
+   "id": "OE1-agreement-one-way",
+   "family": "edge finder (N3)",
+   "laneExpect": "killed",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/subpath-imports.test.ts",
+     "old": "if (JSON.stringify(walked) !== JSON.stringify(reported)) throw",
+     "new": "if (walked.some((s) => !reported.includes(s))) throw"
+    }
+   ],
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/subpath-imports.test.ts"
+   ]
+  },
+  {
+   "id": "OE3-main-computed-dynamic-import",
+   "family": "daemon path (N4)",
+   "laneExpect": "killed",
+   "edits": [
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nconst barrel = '@syzygy/polaris-dossier';\nawait import(barrel);\n"
+    }
+   ],
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/subpath-imports.test.ts"
+   ]
+  },
+  {
+   "id": "OE4-main-create-require-alias",
+   "family": "daemon path (N4)",
+   "laneExpect": "killed",
+   "edits": [
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nimport { createRequire as lazyRequire } from 'node:module';\nlazyRequire(import.meta.url)('@syzygy/polaris-dossier');\n"
+    }
+   ],
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/subpath-imports.test.ts"
+   ]
+  },
+  {
+   "id": "OE5-main-intermediate-local-module",
+   "family": "daemon path (N4)",
+   "laneExpect": "killed",
+   "edits": [
+    {
+     "file": "apps/syzygy/src/dossier-bridge.ts",
+     "create": "export * from '@syzygy/polaris-dossier';\n"
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nimport './dossier-bridge.js';\n"
+    }
+   ],
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/subpath-imports.test.ts"
+   ]
+  },
+  {
+   "id": "OS1-guard-after-the-read",
+   "family": "spec guard (N5)",
+   "laneExpect": "killed",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.ts",
+     "old": "  for (const name of spec.valued) if (!LONG.test(name)) throw new Error(`argv: the valued option ${name} is not --<name>`);\n  for (const name of [...(spec.booleans ?? []), ...(spec.stopAt ?? [])]) {\n    if (!LONG.test(name) && !SHORT.test(name)) throw new Error(`argv: the option ${name} is neither --<name> nor -<c>`);\n  }\n",
+     "new": ""
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.ts",
+     "old": "  return { values, flags, positional };\n}",
+     "new": "  for (const name of spec.valued) if (!LONG.test(name)) throw new Error(`argv: the valued option ${name} is not --<name>`);\n  for (const name of [...(spec.booleans ?? []), ...(spec.stopAt ?? [])]) {\n    if (!LONG.test(name) && !SHORT.test(name)) throw new Error(`argv: the option ${name} is neither --<name> nor -<c>`);\n  }\n  return { values, flags, positional };\n}"
+    }
+   ],
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/argv.test.ts"
+   ]
+  },
+  {
+   "id": "OS2-long-form-allows-a-trailing-equals",
+   "family": "spec guard (N5)",
+   "laneExpect": "killed",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.ts",
+     "old": "const LONG = /^--[^-=][^=]*$/u;",
+     "new": "const LONG = /^--[^-=][^=]*=?$/u;"
+    }
+   ],
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/argv.test.ts"
+   ]
+  },
+  {
+   "id": "OB1-condition-counts-as-inside",
+   "family": "branch classifier (N6)",
+   "laneExpect": "killed",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/subpath-imports.test.ts",
+     "old": "if (ts.isIfStatement(parent) && child === parent.thenStatement) return",
+     "new": "if (ts.isIfStatement(parent) && child !== parent.elseStatement) return"
+    }
+   ],
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/subpath-imports.test.ts"
+   ]
+  },
+  {
+   "id": "OB2-outermost-if-not-nearest",
+   "family": "branch classifier (N6)",
+   "laneExpect": "killed",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/subpath-imports.test.ts",
+     "old": "  const where = (node: ts.Node): string => {\n    for (let child = node, parent = node.parent; parent !== undefined; child = parent, parent = parent.parent) {\n      if (ts.isIfStatement(parent) && child === parent.thenStatement) return `inside if (${parent.expression.getText(source)})`;\n      if (ts.isIfStatement(parent) && child === parent.elseStatement) return `inside the else of if (${parent.expression.getText(source)})`;\n    }\n    return 'outside any if';\n  };\n",
+     "new": "  const where = (node: ts.Node): string => {\n    let found = 'outside any if';\n    for (let child = node, parent = node.parent; parent !== undefined; child = parent, parent = parent.parent) {\n      if (ts.isIfStatement(parent) && child === parent.thenStatement) found = `inside if (${parent.expression.getText(source)})`;\n      if (ts.isIfStatement(parent) && child === parent.elseStatement) found = `inside the else of if (${parent.expression.getText(source)})`;\n    }\n    return found;\n  };\n"
+    }
+   ],
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/subpath-imports.test.ts"
+   ]
+  },
+  {
+   "id": "OB3-shadowed-argv-replaces-the-polaris-branch-import",
+   "family": "branch classifier (N6, a recorded residual)",
+   "laneExpect": "survives",
+   "edits": [
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "  if (argv[0] === 'polaris') {\n    const { runPolarisCli } = await import('@syzygy/polaris-dossier');\n",
+     "new": "  { const argv = ['polaris']; if (argv[0] === 'polaris') await import('@syzygy/polaris-dossier'); }\n  if (argv[0] === 'polaris') {\n    const { runPolarisCli } = globalThis as never;\n"
+    }
+   ],
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/subpath-imports.test.ts"
+   ]
+  },
+  {
+   "id": "GM1-entry-re-exports-the-barrel",
+   "family": "subpath guard (8.32, still killed)",
+   "laneExpect": "killed",
+   "edits": [
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nexport { runDossierCli } from '@syzygy/polaris-dossier';\n"
+    }
+   ],
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/subpath-imports.test.ts"
+   ]
+  },
+  {
+   "id": "GM3-argv-loads-the-cli-through-node-module",
+   "family": "subpath guard (8.32, still killed)",
+   "laneExpect": "killed",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.ts",
+     "old": "import { parseArgs } from 'node:util';\n",
+     "new": "import { parseArgs } from 'node:util';\nimport { createRequire } from 'node:module';\nexport const usage = (): unknown => createRequire(import.meta.url)('./cli.js');\n"
+    }
+   ],
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/subpath-imports.test.ts"
+   ]
+  },
+  {
+   "id": "D4-a-new-readArgv-caller",
+   "family": "policy copies (N2)",
+   "laneExpect": "killed",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/polaris.ts",
+     "old": "function parseArgs(argv: readonly string[]): Options | string {\n",
+     "new": "export const rereadArgv = (args: readonly string[]): unknown => readArgv(args, { valued: [], dashValue: 'take', repeat: 'last', positionals: true });\nfunction parseArgs(argv: readonly string[]): Options | string {\n"
+    }
+   ],
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/argv.test.ts"
+   ]
+  },
+  {
+   "id": "D5-readArgv-under-another-name-in-a-new-module",
+   "family": "policy copies (N2)",
+   "laneExpect": "killed",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv-alias.ts",
+     "create": "import { readArgv as read } from './argv.js';\nexport const readAgain = read;\n"
+    }
+   ],
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/argv.test.ts"
+   ]
+  },
+  {
+   "id": "D6-allow-execution-options-change",
+   "family": "policy copies (N2)",
+   "laneExpect": "killed",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/cli.ts",
+     "old": "options: ['--revision', '--declare'], noun: RUN",
+     "new": "options: ['--revision'], noun: RUN"
+    }
+   ],
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/argv.test.ts"
+   ]
+  },
+  {
+   "id": "OE6-main-imports-a-subpath-no-package-exports",
+   "family": "daemon path (N4)",
+   "laneExpect": "killed",
+   "edits": [
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nimport '@syzygy/cap1-core/nowhere';\n"
+    }
+   ],
+   "projects": [
+    "@syzygy/polaris-dossier",
+    "@syzygy/polaris-generation-core"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/subpath-imports.test.ts",
+    "packages/polaris-generation-core/src/island-boundary.test.ts"
+   ]
+  },
+  {
+   "id": "CE1-computed-edge-dropped",
+   "family": "edge finder (N4)",
+   "laneExpect": "killed",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/subpath-imports.test.ts",
+     "old": "    else edges.push({ specifier: null, form, where: where(literal), edge: `${form} of ${literal.getText(source)} ${where(literal)}` });\n",
+     "new": ""
+    }
+   ],
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/subpath-imports.test.ts"
+   ]
+  },
+  {
+   "id": "SK1-every-entry-dynamic-import-skipped",
+   "family": "daemon path (N4)",
+   "laneExpect": "killed",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/subpath-imports.test.ts",
+     "old": "edge.form === 'dynamic import' && BRANCHES.includes(edge.where);",
+     "new": "edge.form === 'dynamic import';"
+    }
+   ],
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/subpath-imports.test.ts"
+   ]
+  },
+  {
+   "id": "SK2-branch-edges-followed",
+   "family": "daemon path (N4)",
+   "laneExpect": "killed",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/subpath-imports.test.ts",
+     "old": "const branch = (edge: Edge): boolean => module === ENTRY &&",
+     "new": "const branch = (edge: Edge): boolean => module === '' &&"
+    }
+   ],
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/subpath-imports.test.ts"
+   ]
+  },
+  {
+   "id": "RW1-reach-stops-at-the-entry",
+   "family": "shared reach (N4)",
+   "laneExpect": "killed",
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "      if (!seen.has(to)) { seen.add(to); queue.push(to); }\n",
+     "new": "      if (!seen.has(to)) { seen.add(to); }\n"
+    }
+   ],
+   "projects": [
+    "@syzygy/polaris-dossier",
+    "@syzygy/polaris-generation-core"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/subpath-imports.test.ts",
+    "packages/polaris-generation-core/src/island-boundary.test.ts"
+   ]
+  },
+  {
+   "id": "RW2-workspace-packages-not-followed",
+   "family": "shared reach (N4)",
+   "laneExpect": "killed",
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "  const named = /^(@syzygy\\/[^/]+)(\\/.*)?$/u.exec(specifier);\n",
+     "new": "  const named = /^(@syzygy\\/[^/]+)(\\/.*)?$/u.exec('');\n"
+    }
+   ],
+   "projects": [
+    "@syzygy/polaris-dossier",
+    "@syzygy/polaris-generation-core"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/subpath-imports.test.ts",
+    "packages/polaris-generation-core/src/island-boundary.test.ts"
+   ]
+  }
+ ]
+}

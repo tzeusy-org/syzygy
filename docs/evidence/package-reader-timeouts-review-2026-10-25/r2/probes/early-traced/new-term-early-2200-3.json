@@ -1,0 +1,99 @@
+{
+ "mode": "term-early",
+ "version": "new",
+ "param": 2200.0,
+ "inject": "trace-exit",
+ "script": "scripts/measure_vitest_test_durations.py",
+ "scriptSha256": "920c5f120209904b37cfe14320ea00edfa18eafbda12fd7dcb02ec8fcf4f1e97",
+ "commit": "dc60c5bcb6ae6f1f31beee3aa0f6117adff5d6cf",
+ "command": "python3 -I /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520b/tools/inject.py trace-exit /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520b/clone/scripts/measure_vitest_test_durations.py . --file packages/polaris-generation-consent/src/package-reader.test.ts --project @syzygy/polaris-generation-consent --mode alone --runs 1 --out <tmp>/measure-out.json --profile",
+ "events": [
+  {
+   "t": 0.1203,
+   "what": "test file write seen; SIGTERM 2200.0 us after",
+   "groupAlive": false
+  }
+ ],
+ "scriptExitAt": 0.284,
+ "exitCode": 143,
+ "outputTail": "s/3.10.12/lib/python3.10/runpy.py\", line 289, in run_path\n    return _run_module_code(code, init_globals, run_name,\n  File \"/home/tze/.pyenv/versions/3.10.12/lib/python3.10/runpy.py\", line 96, in _run_module_code\n    _run_code(code, mod_globals, init_globals,\n  File \"/home/tze/.pyenv/versions/3.10.12/lib/python3.10/runpy.py\", line 86, in _run_code\n    exec(code, run_globals)\n  File \"/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520b/clone/scripts/measure_vitest_test_durations.py\", line 133, in <module>\n    out['runs'].append(one_run(i))\n  File \"/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520b/clone/scripts/measure_vitest_test_durations.py\", line 97, in one_run\n    proc = subprocess.Popen(command, cwd=tree, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, start_new_session=True)\n  File \"/home/tze/.pyenv/versions/3.10.12/lib/python3.10/subprocess.py\", line 971, in __init__\n    self._execute_child(args, executable, preexec_fn, close_fds,\n  File \"/home/tze/.pyenv/versions/3.10.12/lib/python3.10/subprocess.py\", line 1809, in _execute_child\n    os.close(errpipe_write)\n  File \"/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520b/clone/scripts/measure_vitest_test_durations.py\", line 27, in <lambda>\n    for _signal in (signal.SIGTERM, signal.SIGHUP): signal.signal(_signal, lambda number, _frame: sys.exit(128 + number))\nSystemExit: 143\n\n",
+ "descendantsSeen": 10,
+ "descendantsByCwdOnly": 10,
+ "treeAfterExit": "",
+ "diffStatAfterExit": "",
+ "survivors3sAfterExit": {
+  "2869537": {
+   "cmdline": "npm exec vitest run --project @syzygy/polaris-generation-consent packages/polaris-generation-consent/src/package-reader.test.ts --reporter=json --outputFile=/tm",
+   "state": "S",
+   "pgid": 2869537,
+   "sid": 2869537
+  },
+  "2869844": {
+   "cmdline": "sh -c \"vitest\" run --project @syzygy/polaris-generation-consent packages/polaris-generation-consent/src/package-reader.test.ts --reporter=json --outputFile=/tmp",
+   "state": "S",
+   "pgid": 2869537,
+   "sid": 2869537
+  },
+  "2869848": {
+   "cmdline": "node (vitest)",
+   "state": "S",
+   "pgid": 2869537,
+   "sid": 2869537
+  },
+  "2870202": {
+   "cmdline": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520b/clone/node_modules/@esbuild/linux-x64/bin/esbuild --service=0.",
+   "state": "S",
+   "pgid": 2869537,
+   "sid": 2869537
+  },
+  "2870249": {
+   "cmdline": "node (vitest 1)",
+   "state": "S",
+   "pgid": 2869537,
+   "sid": 2869537
+  },
+  "2870251": {
+   "cmdline": "node (vitest 2)",
+   "state": "S",
+   "pgid": 2869537,
+   "sid": 2869537
+  },
+  "2870257": {
+   "cmdline": "node (vitest 3)",
+   "state": "S",
+   "pgid": 2869537,
+   "sid": 2869537
+  },
+  "2870258": {
+   "cmdline": "node (vitest 4)",
+   "state": "S",
+   "pgid": 2869537,
+   "sid": 2869537
+  },
+  "2870263": {
+   "cmdline": "node (vitest 5)",
+   "state": "S",
+   "pgid": 2869537,
+   "sid": 2869537
+  },
+  "2870276": {
+   "cmdline": "node (vitest 6)",
+   "state": "S",
+   "pgid": 2869537,
+   "sid": 2869537
+  },
+  "2871192": {
+   "cmdline": null,
+   "state": "R",
+   "pgid": 2869537,
+   "sid": 2869537
+  }
+ },
+ "recordWritten": false,
+ "recordTests": null,
+ "recordProfileRows": null,
+ "writtenSnapshot": null,
+ "treeCleanAfterReviewerRestore": true,
+ "clean": true,
+ "noSurvivor": false
+}

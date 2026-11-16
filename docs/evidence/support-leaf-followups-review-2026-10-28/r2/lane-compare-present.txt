@@ -1,0 +1,1 @@
+{'committedCommit': 'e2077444dc739ea15db69f424c2372f89b1996de', 'rerunCommit': '330dd89458801e7a150134efa15f3d4af8215304', 'rows': 34, 'rerunRows': 34, 'differing': [], 'rerunSummary': {'rows': 34, 'asExpected': 34, 'unexpected': []}, 'rerunStatusAfter': ''}

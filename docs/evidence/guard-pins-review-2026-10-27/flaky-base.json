@@ -1,0 +1,77 @@
+{
+ "tree": "clone-base",
+ "head": "8ff50172b127cba676ff32ce62c12c91b2b0d924",
+ "files": [
+  "packages/polaris-dossier/src/start-gates.test.ts",
+  "packages/polaris-dossier/src/review.test.ts",
+  "packages/polaris-dossier/src/run-evidence.test.ts",
+  "packages/polaris-dossier/src/git-object-reader.test.ts"
+ ],
+ "cleanAfter": true,
+ "runs": [
+  {
+   "i": 1,
+   "exit": 1,
+   "load1": 42.74,
+   "seconds": 200.9,
+   "tests": [
+    "Tests  9 failed | 221 passed (230)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/start-gates.test.ts > init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses config naming a remote, a promisor, an in",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/start-gates.test.ts > preflight > prints clone commands that leave the consented commit alone in the clone",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/start-gates.test.ts > reverifyPinnedRevision: the guard every later step calls (scenario \"Recorded revision altered\") > after the brief, re",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/start-gates.test.ts > reverifyPinnedRevision: the guard every later step calls (scenario \"Recorded revision altered\") > names why the conse",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/start-gates.test.ts > reverifyPinnedRevision: the guard every later step calls (scenario \"Recorded revision altered\") > passes a pin moved ",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/start-gates.test.ts > reverifyPinnedRevision: the guard every later step calls (scenario \"Recorded revision altered\") > re-checks the state",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/start-gates.test.ts > reverifyPinnedRevision: the guard every later step calls (scenario \"Recorded revision altered\") > refuses a pin moved",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/start-gates.test.ts > reverifyPinnedRevision: the guard every later step calls (scenario \"Recorded revision altered\") > refuses when the co",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/start-gates.test.ts > reverifyPinnedRevision: the guard every later step calls (scenario \"Recorded revision altered\") > refuses when the st"
+   ],
+   "timedOut": 18
+  },
+  {
+   "i": 2,
+   "exit": 1,
+   "load1": 93.56,
+   "seconds": 269.4,
+   "tests": [
+    "Tests  15 failed | 215 passed (230)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/git-object-reader.test.ts > each call is bounded: bytes inflated, delta depth, objects visited (finding 4) > the reviewer's amplification s",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/review.test.ts > review-check > does not count a verdict whose launch record is altered to another form, role or prompt",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/review.test.ts > review-check > retires a counted verdict when the draft is revised, the stored frozen draft is altered or the frozen verdi",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/run-evidence.test.ts > dossier run evidence record (S12) > copies no file body: a credential-shaped token the draft carries never reaches t",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/run-evidence.test.ts > dossier run evidence record (S12) > lists a symbolic link without following it",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/run-evidence.test.ts > dossier run evidence record (S12) > names the subject, the Syzygy commit and the digest of every file the run and it",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/run-evidence.test.ts > dossier run evidence record (S12) > reports an open run as not closed, and refuses anything but one run directory",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/start-gates.test.ts > init: every refusal arm (REQ-polaris-generation-033 scenarios \"Clone at an unconsented revision\" and the governed arm",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/start-gates.test.ts > init: the clone holds the consented commit alone (syzygy-qkea.24) > reads shallow without following a link, and only ",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/start-gates.test.ts > init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses a symbolic link anywhere under .git, neve",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/start-gates.test.ts > init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses an allowed name of the wrong kind",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/start-gates.test.ts > init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses config naming a remote, a promisor, an in",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/start-gates.test.ts > init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses every top-level name the consented form n",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/start-gates.test.ts > init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses in the object store anything but loose ob",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/start-gates.test.ts > init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses objects/info/alternates and http-alternat"
+   ],
+   "timedOut": 28
+  },
+  {
+   "i": 3,
+   "exit": 1,
+   "load1": 80.16,
+   "seconds": 153.2,
+   "tests": [
+    "Tests  4 failed | 226 passed (230)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/run-evidence.test.ts > dossier run evidence record (S12) > copies no file body: a credential-shaped token the draft carries never reaches t",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/run-evidence.test.ts > dossier run evidence record (S12) > names the subject, the Syzygy commit and the digest of every file the run and it",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/start-gates.test.ts > init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses config naming a remote, a promisor, an in",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/start-gates.test.ts > init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses every top-level name the consented form n"
+   ],
+   "timedOut": 8
+  }
+ ]
+}

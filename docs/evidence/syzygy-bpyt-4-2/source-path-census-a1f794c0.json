@@ -1,0 +1,9 @@
+{
+ "commit": "a1f794c06115c377e841f6ae8ad42816ab8c10ca",
+ "files": 521,
+ "filesWithRelativeJsSpecifiers": 405,
+ "relativeJsSpecifiers": 1313,
+ "leftAlone": [],
+ "parameterProperties": 33,
+ "filesWithParameterProperties": 18
+}

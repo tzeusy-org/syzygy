@@ -10,7 +10,7 @@ import {
   type ProjectId,
   type RepositoryId,
 } from '@syzygy/cap1-core';
-import { consent, projectYaml } from './fixtures/index.js';
+import { decisionsFor, consent, projectYaml } from './fixtures/index.js';
 
 // CAP1-REQ-014 — Incomplete coverage is never rendered as complete
 // coverage.
@@ -74,7 +74,11 @@ const OBSERVATIONS: ObservationOutcome[] = [
 
 describe('CAP1-REQ-014 — incomplete coverage is never rendered as complete coverage', () => {
   it('scenario: partial snapshot disclosed — the partial capture declares its captured scope and renders its uncaptured portion Unknown', () => {
-    const result = computeCoverage(declaration(), CONSENTS, OBSERVATIONS);
+    const result = computeCoverage(
+      declaration(),
+      decisionsFor(declaration(), CONSENTS),
+      OBSERVATIONS,
+    );
     const partial = result.repositories.find(
       (e) => e.repositoryId === ('repo-partial' as RepositoryId),
     );
@@ -90,7 +94,11 @@ describe('CAP1-REQ-014 — incomplete coverage is never rendered as complete cov
   });
 
   it('isComplete is false for any partial capture', () => {
-    const result = computeCoverage(declaration(), CONSENTS, OBSERVATIONS);
+    const result = computeCoverage(
+      declaration(),
+      decisionsFor(declaration(), CONSENTS),
+      OBSERVATIONS,
+    );
     expect(isComplete(result)).toBe(false);
   });
 
@@ -99,16 +107,24 @@ describe('CAP1-REQ-014 — incomplete coverage is never rendered as complete cov
       { repositoryId: 'repo-full' as RepositoryId, outcome: 'captured', capturedScope: 'full-tree' },
       { repositoryId: 'repo-partial' as RepositoryId, outcome: 'captured', capturedScope: 'full-tree' },
     ];
-    const whole = computeCoverage(declaration(), CONSENTS, fullOnly);
+    const whole = computeCoverage(declaration(), decisionsFor(declaration(), CONSENTS), fullOnly);
     expect(isComplete(whole)).toBe(true);
     // Removing one repository's capture flips completeness — the claim
     // tracks the full denominator, not the captured part.
-    const missingOne = computeCoverage(declaration(), CONSENTS, [fullOnly[0] as ObservationOutcome]);
+    const missingOne = computeCoverage(
+      declaration(),
+      decisionsFor(declaration(), CONSENTS),
+      [fullOnly[0] as ObservationOutcome],
+    );
     expect(isComplete(missingOne)).toBe(false);
   });
 
   it('falsifier: a full-scope claim over partial data is impossible — a partial outcome can never render as observed', () => {
-    const result = computeCoverage(declaration(), CONSENTS, OBSERVATIONS);
+    const result = computeCoverage(
+      declaration(),
+      decisionsFor(declaration(), CONSENTS),
+      OBSERVATIONS,
+    );
     const partial = result.repositories.find(
       (e) => e.repositoryId === ('repo-partial' as RepositoryId),
     );
@@ -119,7 +135,11 @@ describe('CAP1-REQ-014 — incomplete coverage is never rendered as complete cov
   });
 
   it('the boundary over a partial snapshot carries the declared captured scopes, not an undisclosed whole', () => {
-    const result = computeCoverage(declaration(), CONSENTS, OBSERVATIONS);
+    const result = computeCoverage(
+      declaration(),
+      decisionsFor(declaration(), CONSENTS),
+      OBSERVATIONS,
+    );
     const boundary = coverageBoundary(result);
     const declared = boundary.declaredCapturedScopes.find(
       (s) => s.repositoryId === ('repo-partial' as RepositoryId),

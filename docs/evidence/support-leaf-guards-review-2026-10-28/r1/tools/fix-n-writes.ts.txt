@@ -1,0 +1,14 @@
+  it('assigns to no property in any source, so no allowed global is rewritten', () => {
+    const writes: string[] = [];
+    for (const file of SOURCES) {
+      const source = ts.createSourceFile(file, read(file), ts.ScriptTarget.Latest, false);
+      const visit = (node: ts.Node): void => {
+        if (ts.isBinaryExpression(node) && node.operatorToken.kind >= ts.SyntaxKind.FirstAssignment && node.operatorToken.kind <= ts.SyntaxKind.LastAssignment
+          && (ts.isPropertyAccessExpression(node.left) || ts.isElementAccessExpression(node.left))) writes.push(`${file}: ${node.getText(source)}`);
+        ts.forEachChild(node, visit);
+      };
+      visit(source);
+    }
+    expect(writes).toEqual([]);
+  });
+

@@ -15,13 +15,13 @@
 //   npm run poc:pwb-mutation-run -- --only exact-state-collapse
 
 import { execFileSync, spawnSync } from 'node:child_process';
-import { createHash } from 'node:crypto';
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { INVALID_CASE_IDS } from '@syzygy/three-surface-poc-core';
+import { sha256 } from '@syzygy/support';
 
 import {
   CORE_SOURCE,
@@ -53,10 +53,6 @@ interface TestRun {
   readonly passed: number;
   readonly failed: number;
   readonly failing: readonly string[];
-}
-
-function sha256(bytes: Uint8Array): string {
-  return createHash('sha256').update(bytes).digest('hex');
 }
 
 function runTests(scratch: string, label: string): TestRun {

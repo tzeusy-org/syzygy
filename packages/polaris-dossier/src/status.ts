@@ -5,6 +5,7 @@ import { briefIssuedAt } from './check.js';
 import { USAGE_NOT_RECORDED } from './close.js';
 import { readRunRecord, type RecordedRunConfig } from './run-record.js';
 import { REVIEW_PACKET_DIR, REVIEW_VERDICT_FILE, REVISION_FILE, RUN_LAYOUT } from './state-directory.js';
+import { isoOf } from './iso-of.js';
 
 /** `syzygy dossier status <run>`: the run's state, limits spent, open findings and reviews still
  * required, read from the run directory. Status reads and writes nothing else. Everything it reports
@@ -142,7 +143,7 @@ export function runStatus(runDir: string, now: () => number = Date.now): StatusR
   const passed = endsAt !== undefined && now() >= endsAt;
   const deadline = steps.brief !== 'recorded' ? `${declared.deadline.declared}; not started (no brief recorded)`
     : endsAt === undefined ? `${declared.deadline.declared} from the brief; its end cannot be measured (${issued as string})`
-      : `${declared.deadline.declared} from the brief, ${passed ? 'ended' : 'ending'} at ${new Date(endsAt).toISOString()} on Syzygy's clock; elapsed time ${NOT_RECORDED}`;
+      : `${declared.deadline.declared} from the brief, ${passed ? 'ended' : 'ending'} at ${isoOf(endsAt)} on Syzygy's clock; elapsed time ${NOT_RECORDED}`;
   const values: Record<string, string | number | boolean> = {
     operator: declared.operator, agentTool: declared.agentTool, agentToolVersion: declared.agentToolVersion,
     agentProvider: declared.agentProvider, model: declared.model, modelVersion: declared.modelVersion ?? 'not shown by the agent tool',

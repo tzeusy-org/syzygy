@@ -1,0 +1,357 @@
+{
+ "tool": "rev-544/tools/reviewer-mutants.py",
+ "ranAt": "224e8faaaf60e2809fd167ce934d2dda3d63f131",
+ "rows": [
+  {
+   "id": "CONTROL",
+   "ranAt": "224e8faaaf60e2809fd167ce934d2dda3d63f131",
+   "tests": 388,
+   "failed": 0,
+   "timeouts": 0,
+   "loadavgBefore": "36.50 36.51 35.06 40/9700 2955563",
+   "loadavgAfter": "36.23 36.50 35.09 16/9704 2962334",
+   "failures": [],
+   "failedTests": []
+  },
+  {
+   "id": "RW1-u2029-is-a-line-end",
+   "ranAt": "224e8faaaf60e2809fd167ce934d2dda3d63f131",
+   "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+   "replacements": [
+    {
+     "old": "const LINE_END = /\\r\\n|\\r|\\n/g;",
+     "new": "const LINE_END = /\\r\\n|\\r|\\n|\\u2029/g;"
+    }
+   ],
+   "mutatedSha256": "44c1f9b76f1925b3a05a3b07a79c85bf9948c4d46f1ebdd699abddb8fc61f411",
+   "note": "widening: U+2029 alone ends a line (round 1 named it; MU19 adds it only beside U+2028)",
+   "outcome": "killed",
+   "tests": 388,
+   "failed": 1,
+   "timeouts": 0,
+   "loadavgBefore": "36.23 36.50 35.09 15/9705 2962336",
+   "loadavgAfter": "34.79 36.17 35.01 25/9725 2969426",
+   "failures": [
+    {
+     "file": "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+     "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line U+2028, U+2029 and U+0085 are line content, not line ends",
+     "error": "AssertionError: \"\u2029\": expected 'a   \\u2029   d' to be 'a       d' // Object.is equality"
+    }
+   ],
+   "failedTests": [
+    "markdown-code-context.test.ts :: closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line U+2028, U+2029 and U+0085 are line content, not line ends"
+   ]
+  },
+  {
+   "id": "RW2-unicode-newline-set",
+   "ranAt": "224e8faaaf60e2809fd167ce934d2dda3d63f131",
+   "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+   "replacements": [
+    {
+     "old": "const LINE_END = /\\r\\n|\\r|\\n/g;",
+     "new": "const LINE_END = /\\r\\n|[\\n\\v\\f\\r\\x85\\u2028\\u2029]/g;"
+    }
+   ],
+   "mutatedSha256": "351c0cb9d28d12cf89e5fd1dd84ed40c5fe1e6e40e9228e647c4e0ca9435f5c8",
+   "note": "widening: the Unicode newline-guidelines set (CR, LF, CRLF, NEL, VT, FF, LS, PS)",
+   "outcome": "killed",
+   "tests": 388,
+   "failed": 1,
+   "timeouts": 0,
+   "loadavgBefore": "34.79 36.17 35.01 25/9724 2969427",
+   "loadavgAfter": "34.00 35.91 34.95 24/9755 2976808",
+   "failures": [
+    {
+     "file": "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+     "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line U+2028, U+2029 and U+0085 are line content, not line ends",
+     "error": "AssertionError: \"\u2028\": expected 'a   \\u2028   d' to be 'a       d' // Object.is equality"
+    }
+   ],
+   "failedTests": [
+    "markdown-code-context.test.ts :: closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line U+2028, U+2029 and U+0085 are line content, not line ends"
+   ]
+  },
+  {
+   "id": "RW3-vt-ff-are-line-ends",
+   "ranAt": "224e8faaaf60e2809fd167ce934d2dda3d63f131",
+   "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+   "replacements": [
+    {
+     "old": "const LINE_END = /\\r\\n|\\r|\\n/g;",
+     "new": "const LINE_END = /\\r\\n|[\\r\\n\\v\\f]/g;"
+    }
+   ],
+   "mutatedSha256": "d69b31fd6a48025dbb79c68bbd337f9775a4d817e80612b964fb0e8e764af7bd",
+   "note": "widening: VT and FF end a line (members of that set and of str.splitlines, outside the pinned three)",
+   "outcome": "SURVIVED",
+   "tests": 388,
+   "failed": 0,
+   "timeouts": 0,
+   "loadavgBefore": "34.00 35.91 34.95 20/9757 2976816",
+   "loadavgAfter": "36.67 36.38 35.13 32/9746 2985165",
+   "failures": [],
+   "failedTests": []
+  },
+  {
+   "id": "RW4-python-splitlines-set",
+   "ranAt": "224e8faaaf60e2809fd167ce934d2dda3d63f131",
+   "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+   "replacements": [
+    {
+     "old": "const LINE_END = /\\r\\n|\\r|\\n/g;",
+     "new": "const LINE_END = /\\r\\n|[\\r\\n\\v\\f\\x1c\\x1d\\x1e\\x85\\u2028\\u2029]/g;"
+    }
+   ],
+   "mutatedSha256": "e9163bda4f2052540143512f0400735d8e468cf82173b8a0a745c273c8c42529",
+   "note": "widening: Python str.splitlines' set",
+   "outcome": "killed",
+   "tests": 388,
+   "failed": 1,
+   "timeouts": 0,
+   "loadavgBefore": "36.67 36.38 35.13 30/9746 2985165",
+   "loadavgAfter": "36.27 36.32 35.13 28/9678 2992316",
+   "failures": [
+    {
+     "file": "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+     "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line U+2028, U+2029 and U+0085 are line content, not line ends",
+     "error": "AssertionError: \"\u2028\": expected 'a   \\u2028   d' to be 'a       d' // Object.is equality"
+    }
+   ],
+   "failedTests": [
+    "markdown-code-context.test.ts :: closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line U+2028, U+2029 and U+0085 are line content, not line ends"
+   ]
+  },
+  {
+   "id": "RW5-closer-tolerates-trailing-separators",
+   "ranAt": "224e8faaaf60e2809fd167ce934d2dda3d63f131",
+   "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+   "replacements": [
+    {
+     "old": "/^ {0,3}(`{3,}|~{3,}) *$/",
+     "new": "/^ {0,3}(`{3,}|~{3,})[ \\u2028\\u2029\\x85]*$/"
+    }
+   ],
+   "mutatedSha256": "3b72e9b39794d2c74f4c2ba7b102c84a98fbcae100770285d2a5bc9d23d217ff",
+   "note": "widening at fence positions only: a closer may end in U+2028, U+2029 or U+0085 (the separator read as a line end by the closer alone)",
+   "outcome": "SURVIVED",
+   "tests": 388,
+   "failed": 0,
+   "timeouts": 0,
+   "loadavgBefore": "36.27 36.32 35.13 24/9679 2992318",
+   "loadavgAfter": "38.78 36.89 35.35 19/9722 2999838",
+   "failures": [],
+   "failedTests": []
+  },
+  {
+   "id": "RW6-u2028-kept-in-a-span",
+   "ranAt": "224e8faaaf60e2809fd167ce934d2dda3d63f131",
+   "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+   "replacements": [
+    {
+     "old": "rendered += span === undefined ? line[cursor] : ' ';",
+     "new": "rendered += span === undefined || line[cursor] === '\\u2028' ? line[cursor] : ' ';"
+    }
+   ],
+   "mutatedSha256": "2357eab059a2403daa03935397e0ccda7c44f5939a17f60d02cf94d079c266c0",
+   "note": "widening in spans only: inside a span U+2028 is kept in the mask, as a line end is",
+   "outcome": "killed",
+   "tests": 388,
+   "failed": 1,
+   "timeouts": 0,
+   "loadavgBefore": "38.78 36.89 35.35 19/9721 2999839",
+   "loadavgAfter": "37.71 36.75 35.33 31/9710 3006656",
+   "failures": [
+    {
+     "file": "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+     "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line U+2028, U+2029 and U+0085 are line content, not line ends",
+     "error": "AssertionError: \"\u2028\": expected 'a   \\u2028   d' to be 'a       d' // Object.is equality"
+    }
+   ],
+   "failedTests": [
+    "markdown-code-context.test.ts :: closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line U+2028, U+2029 and U+0085 are line content, not line ends"
+   ]
+  },
+  {
+   "id": "RW7-span-reset-at-u2028",
+   "ranAt": "224e8faaaf60e2809fd167ce934d2dda3d63f131",
+   "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+   "replacements": [
+    {
+     "old": "rendered += span === undefined ? line[cursor] : ' ';",
+     "new": "if (line[cursor] === '\\u2028') span = undefined;\n        rendered += span === undefined ? line[cursor] : ' ';"
+    }
+   ],
+   "mutatedSha256": "1ae97dbae18f9b4753d8c3af24dc37698b8f92a8a11d9c83caf0fb983cfc874b",
+   "note": "widening in spans only: an inline span cannot continue across U+2028 (the RM5 analogue)",
+   "outcome": "killed",
+   "tests": 388,
+   "failed": 1,
+   "timeouts": 0,
+   "loadavgBefore": "37.71 36.75 35.33 30/9710 3006656",
+   "loadavgAfter": "38.67 37.05 35.46 26/9675 3014092",
+   "failures": [
+    {
+     "file": "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+     "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line U+2028, U+2029 and U+0085 are line content, not line ends",
+     "error": "Error: malformed: unclosed-inline-span"
+    }
+   ],
+   "failedTests": [
+    "markdown-code-context.test.ts :: closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line U+2028, U+2029 and U+0085 are line content, not line ends"
+   ]
+  },
+  {
+   "id": "RW8-final-bare-cr-not-a-line-end",
+   "ranAt": "224e8faaaf60e2809fd167ce934d2dda3d63f131",
+   "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+   "replacements": [
+    {
+     "old": "const LINE_END = /\\r\\n|\\r|\\n/g;",
+     "new": "const LINE_END = /\\r\\n|\\r(?!$)|\\n/g;"
+    }
+   ],
+   "mutatedSha256": "a714e8d0d552e58cd1bf6260ab9b34c0621dcd2010bd8647da5be9f67c4dd97a",
+   "note": "narrowing: a CR that ends the text is line content",
+   "outcome": "killed",
+   "tests": 388,
+   "failed": 5,
+   "timeouts": 0,
+   "loadavgBefore": "38.67 37.05 35.46 48/9682 3014100",
+   "loadavgAfter": "36.35 36.64 35.36 29/9719 3020759",
+   "failures": [
+    {
+     "file": "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+     "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CR: a script element between two tilde fences that each show a backtick-fence line is outside every context",
+     "error": "AssertionError: expected { kind: 'malformed', \u2026(2) } to deeply equal { kind: 'masked', \u2026(3) }"
+    },
+    {
+     "file": "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+     "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line a CRLF or CR text gets the structure its LF form gets, for every case here",
+     "error": "AssertionError: CR - ```|<script>x</script>|  ```: expected 'masked' to be 'malformed' // Object.is equality"
+    },
+    {
+     "file": "apps/three-surface-poc/src/fence-rules.test.ts",
+     "test": "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read cr",
+     "error": "AssertionError: backtick-col0 profile: expected 'MMMV' to be 'VHHV' // Object.is equality"
+    },
+    {
+     "file": "apps/three-surface-poc/src/fence-rules.test.ts",
+     "test": "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read cycle",
+     "error": "AssertionError: backtick-col0 whole: expected 'malformed:unclosed-fence' to be 'well-formed' // Object.is equality"
+    },
+    {
+     "file": "apps/three-surface-poc/src/fence-rules.test.ts",
+     "test": "Markdown fence recognizers: what each reader treats as inside a fence G1, fixed: the fail-open class is closed for a well-formed LF source too",
+     "error": "AssertionError: cr: expected [ 'malformed-code-context' ] to deeply equal [ 'script-element', 'script-element' ]"
+    }
+   ],
+   "failedTests": [
+    "fence-rules.test.ts :: Markdown fence recognizers: what each reader treats as inside a fence G1, fixed: the fail-open class is closed for a well-formed LF source t",
+    "fence-rules.test.ts :: Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read c",
+    "fence-rules.test.ts :: Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read c",
+    "markdown-code-context.test.ts :: closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CR: a script element between two tilde fences that each show a backtick-fence",
+    "markdown-code-context.test.ts :: closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line a CRLF or CR text gets the structure its LF form gets, for every case here"
+   ]
+  },
+  {
+   "id": "RW9-lfcr-is-one-line-end",
+   "ranAt": "224e8faaaf60e2809fd167ce934d2dda3d63f131",
+   "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+   "replacements": [
+    {
+     "old": "const LINE_END = /\\r\\n|\\r|\\n/g;",
+     "new": "const LINE_END = /\\r\\n|\\n\\r|\\r|\\n/g;"
+    }
+   ],
+   "mutatedSha256": "8bbf382ea7032727054ebd74cc5ddef532da824291f332eea5f5975774ec6216",
+   "note": "widening of the two-unit terminator: LF CR is one line end",
+   "outcome": "SURVIVED",
+   "tests": 388,
+   "failed": 0,
+   "timeouts": 0,
+   "loadavgBefore": "36.35 36.64 35.36 32/9719 3020759",
+   "loadavgAfter": "37.66 36.91 35.47 20/9751 3029356",
+   "failures": [],
+   "failedTests": []
+  },
+  {
+   "id": "RW10-positionOf-counts-u2028",
+   "ranAt": "224e8faaaf60e2809fd167ce934d2dda3d63f131",
+   "file": "packages/three-surface-poc-core/src/git-object-reader.ts",
+   "replacements": [
+    {
+     "old": "if (text.charCodeAt(i) === 10) {",
+     "new": "if (text.charCodeAt(i) === 10 || text.charCodeAt(i) === 0x2028) {"
+    }
+   ],
+   "mutatedSha256": "7fda7628637eb39993435ee3fc84573022064d451d86ff38e435de773119bb0c",
+   "note": "positionOf counts U+2028: renumbers LF findings after one",
+   "outcome": "SURVIVED",
+   "tests": 388,
+   "failed": 0,
+   "timeouts": 0,
+   "loadavgBefore": "37.66 36.91 35.47 23/9751 3029357",
+   "loadavgAfter": "42.07 37.96 35.85 48/9684 3037156",
+   "failures": [],
+   "failedTests": []
+  },
+  {
+   "id": "RW11-positionOf-skips-lf-of-crlf",
+   "ranAt": "224e8faaaf60e2809fd167ce934d2dda3d63f131",
+   "file": "packages/three-surface-poc-core/src/git-object-reader.ts",
+   "replacements": [
+    {
+     "old": "if (text.charCodeAt(i) === 10) {",
+     "new": "if (text.charCodeAt(i) === 10 && text.charCodeAt(i - 1) !== 13) {"
+    }
+   ],
+   "mutatedSha256": "b23f0f9f07d30290cbc87e5aeb5635685d3adb770736e346063b2e512aa597d3",
+   "note": "positionOf counts no line end at a CRLF",
+   "outcome": "killed",
+   "tests": 388,
+   "failed": 1,
+   "timeouts": 0,
+   "loadavgBefore": "42.07 37.96 35.85 50/9684 3037156",
+   "loadavgAfter": "43.57 38.72 36.17 22/9645 3045318",
+   "failures": [
+    {
+     "file": "packages/three-surface-poc-core/src/git-object-reader.test.ts",
+     "test": "reported positions in CRLF and bare-CR texts CRLF as LF; a bare CR counted by the malformed line only",
+     "error": "AssertionError: expected [ \u2026(2) ] to deeply equal [ \u2026(2) ]"
+    }
+   ],
+   "failedTests": [
+    "git-object-reader.test.ts :: reported positions in CRLF and bare-CR texts CRLF as LF; a bare CR counted by the malformed line only"
+   ]
+  },
+  {
+   "id": "RW12-positionOf-column-resets-at-bare-cr",
+   "ranAt": "224e8faaaf60e2809fd167ce934d2dda3d63f131",
+   "file": "packages/three-surface-poc-core/src/git-object-reader.ts",
+   "replacements": [
+    {
+     "old": "if (text.charCodeAt(i) === 10) {",
+     "new": "if (text.charCodeAt(i) === 13 && text.charCodeAt(i + 1) !== 10) lineStart = i + 1;\n    if (text.charCodeAt(i) === 10) {"
+    }
+   ],
+   "mutatedSha256": "2beed76c331b02287c128c9c4fa9edef51220ec4189f7037d07e61f917b7f6a2",
+   "note": "positionOf restarts the column at a bare CR without counting a line",
+   "outcome": "killed",
+   "tests": 388,
+   "failed": 1,
+   "timeouts": 0,
+   "loadavgBefore": "43.57 38.72 36.17 23/9646 3045319",
+   "loadavgAfter": "39.99 38.21 36.06 19/9685 3051521",
+   "failures": [
+    {
+     "file": "packages/three-surface-poc-core/src/git-object-reader.test.ts",
+     "test": "reported positions in CRLF and bare-CR texts CRLF as LF; a bare CR counted by the malformed line only",
+     "error": "AssertionError: expected [ \u2026(2) ] to deeply equal [ \u2026(2) ]"
+    }
+   ],
+   "failedTests": [
+    "git-object-reader.test.ts :: reported positions in CRLF and bare-CR texts CRLF as LF; a bare CR counted by the malformed line only"
+   ]
+  }
+ ]
+}

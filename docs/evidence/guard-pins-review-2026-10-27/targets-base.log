@@ -1,0 +1,11 @@
+RV-T18-dependency-alias survives 0 ['Tests  27 passed (27)'] 5.6 clean
+RV-C6-mts-caller survives 0 ['Tests  81 passed (81)'] 1.9 clean
+RV-P3-moduleIn-prefix-null survives 0 ['Tests  52 passed (52)'] 2.2 clean
+RV-P4-moduleIn-missing-file-null survives 0 ['Tests  52 passed (52)'] 2.7 clean
+RV-P6-leaves-package-check-dropped survives 0 ['Tests  52 passed (52)'] 2.7 clean
+RV-P8-array-guard-dropped survives 0 ['Tests  52 passed (52)'] 3.3 clean
+RV-Q1-callee-conjunct-dropped survives 0 ['Tests  81 passed (81)'] 2.3 clean
+RV-Q2-declaration-anywhere survives 0 ['Tests  81 passed (81)'] 2.1 clean
+RV-Q3-census-never-fed survives 0 ['Tests  81 passed (81)'] 2.3 clean
+wrote targets-base.json 9
+done-base

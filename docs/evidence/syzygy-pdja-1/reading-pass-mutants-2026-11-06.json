@@ -1,0 +1,935 @@
+{
+ "bead": "syzygy-pdja.1",
+ "subject": "operator-agent dossier reading pass: renderer predicates",
+ "subjectDigests": {
+  "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": "ae2b59ba5609e627c7f371893b90641e626771c562212381772e38fc664266ab",
+  "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts": "cf8203ec63198943b64c61c54d35a5c9ab8d573efe46597c21ed4a316c91d874",
+  "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts": "d681e405c8429a9d61a07d073f36f54d9fa7831dd00e05d750cc63917d777d48",
+  "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts": "439fc489e39c3bf25dc2d0909b1720a2e261803353b8a35622be08c77cf9f29d",
+  "apps/three-surface-poc/src/polaris-generation/dossier-reading.testkit.ts": "e233edf55f17fe1ef14b8fa8d7dff0bbcc8191b93517f8efd925b7cc77357496",
+  "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts": "4cb974da7381d39eb40b95ee50f7749397e5fbc57d7cd6ed051b6ebbf6378d25",
+  "packages/polaris-dossier/src/render.test.ts": "3722aa2c665c575c45ea6e847c5930e53a4363efd13f47a71c22f310115bf371"
+ },
+ "date": "2026-11-06",
+ "commit": "8eafe50b2ac21613cf6e0dba2303f964bb83380d",
+ "runner": "scratch script: replace the fragment once, run npx vitest run on the named tests, restore; the verdict is the exit code",
+ "mutants": [
+  {
+   "id": "note-back-on-citation",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": "[${citeNumber(from, id)}]${cited.mark}</a>`;",
+   "new": "[${citeNumber(from, id)}]${cited.mark}</a> <span class=\"redaction-note\">[redacted-span: 1 withheld line(s) in this file]</span>`;",
+   "tests": [
+    "packages/polaris-dossier/src/render.test.ts"
+   ],
+   "killed": true,
+   "exitCode": 1,
+   "failedTests": 1,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "render draws retained spans with original coordinates and markers while withholding only the removed line"
+   ]
+  },
+  {
+   "id": "count-off-citation-attribute",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": "return { attribute: ` data-redacted-lines=\"${redaction.withheldLines}\"`,",
+   "new": "return { attribute: '',",
+   "tests": [
+    "packages/polaris-dossier/src/render.test.ts"
+   ],
+   "killed": true,
+   "exitCode": 1,
+   "failedTests": 1,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "render draws retained spans with original coordinates and markers while withholding only the removed line"
+   ]
+  },
+  {
+   "id": "count-off-accessible-name",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": "words: `; ${redaction.withheldLines} line(s) of this file withheld by screening`,",
+   "new": "words: '',",
+   "tests": [
+    "packages/polaris-dossier/src/render.test.ts"
+   ],
+   "killed": true,
+   "exitCode": 1,
+   "failedTests": 1,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "render draws retained spans with original coordinates and markers while withholding only the removed line"
+   ]
+  },
+  {
+   "id": "visible-count-removed",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": "aria-hidden=\"true\">†${redaction.withheldLines}</span>`",
+   "new": "aria-hidden=\"true\">†</span>`",
+   "tests": [
+    "packages/polaris-dossier/src/render.test.ts"
+   ],
+   "killed": true,
+   "exitCode": 1,
+   "failedTests": 1,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "render draws retained spans with original coordinates and markers while withholding only the removed line"
+   ]
+  },
+  {
+   "id": "legend-removed",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": "local !== undefined && main.includes('class=\"redaction-mark\"')",
+   "new": "false",
+   "tests": [
+    "packages/polaris-dossier/src/render.test.ts"
+   ],
+   "killed": true,
+   "exitCode": 1,
+   "failedTests": 1,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "render draws retained spans with original coordinates and markers while withholding only the removed line"
+   ]
+  },
+  {
+   "id": "legend-on-every-page",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": "local !== undefined && main.includes('class=\"redaction-mark\"')",
+   "new": "local !== undefined",
+   "tests": [
+    "packages/polaris-dossier/src/render.test.ts"
+   ],
+   "killed": true,
+   "exitCode": 1,
+   "failedTests": 1,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "render draws retained spans with original coordinates and markers while withholding only the removed line"
+   ]
+  },
+  {
+   "id": "id-back-on-sources-index",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": "local === undefined ? ` [${escape(id)}]` : '';",
+   "new": "` [${escape(id)}]`;",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+   ],
+   "killed": true,
+   "exitCode": 1,
+   "failedTests": 1,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "an operator-agent dossier page reads without its machinery shows a source identifier only in the source page i"
+   ]
+  },
+  {
+   "id": "id-back-in-open-questions",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": "return sourcePaths.has(id) ? refs(from, [id]) : escape(source.path);",
+   "new": "return escape(id);",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+   ],
+   "killed": true,
+   "exitCode": 1,
+   "failedTests": 1,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "an operator-agent dossier page reads without its machinery shows a source identifier only in the source page i"
+   ]
+  },
+  {
+   "id": "identity-not-collapsed",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": "<details class=\"source-identity\"><summary>Source identity</summary><p>${escape(source.sourceId)}</p>${anchorDetails(anchor, escape)}</details>",
+   "new": "${anchorDetails(anchor, escape)}",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+   ],
+   "killed": true,
+   "exitCode": 1,
+   "failedTests": 1,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "an operator-agent dossier page reads without its machinery shows a source identifier only in the source page i"
+   ]
+  },
+  {
+   "id": "hashed-route-in-size-report",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": "${escape(pageNames.get(row.path) ?? row.path)}",
+   "new": "${escape(row.path)}",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+   ],
+   "killed": true,
+   "exitCode": 1,
+   "failedTests": 1,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "an operator-agent dossier page reads without its machinery names a size-report source page by its file, not it"
+   ]
+  },
+  {
+   "id": "nav-not-collapsible",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": "<details class=\"contents desktop-contents nav-panel\" open><summary>Contents</summary><nav aria-label=\"Dossier\">${nav}</nav></details>",
+   "new": "<nav class=\"contents desktop-contents\" aria-label=\"Dossier\">${nav}</nav>",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+   ],
+   "killed": true,
+   "exitCode": 1,
+   "failedTests": 1,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "an operator-agent dossier page reads without its machinery folds the desktop navigation with no script, and th"
+   ]
+  },
+  {
+   "id": "nav-keeps-column",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": ".layout:has(>.nav-panel:not([open])){grid-template-columns:auto minmax(0,1fr)}",
+   "new": "",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts"
+   ],
+   "killed": true,
+   "exitCode": 1,
+   "failedTests": 1,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "folds the navigation, keeps diagram labels clear of boxes and shows a glossary entry on focus, with no script"
+   ]
+  },
+  {
+   "id": "focus-ring-clipped",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": ".nav-panel>summary:focus-visible,.mobile-contents>summary:focus-visible{outline-offset:-3px}",
+   "new": ".mobile-contents>summary:focus-visible{outline-offset:-3px}",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts"
+   ],
+   "killed": true,
+   "exitCode": 1,
+   "failedTests": null,
+   "suiteLoadFailures": 0,
+   "firstFailures": [],
+   "note": "Re-run at the final bytes: the original fragment was merged into a wider rule after the commit named."
+  },
+  {
+   "id": "term-every-use",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": "if (term === undefined || termsShown.has(term.id)) return match;",
+   "new": "if (term === undefined) return match;",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+   ],
+   "killed": true,
+   "exitCode": 1,
+   "failedTests": 1,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "glossary terms in agent prose links only the first use in a section, in a hyphen-free form"
+   ]
+  },
+  {
+   "id": "term-not-reset-per-section",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": "draft.sections.map((section, index) => {\n    termsShown.clear();",
+   "new": "draft.sections.map((section, index) => {",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+   ],
+   "killed": true,
+   "exitCode": 1,
+   "failedTests": 2,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "glossary terms in agent prose links again in a new section, in plural, capitalised and upper-case forms",
+    "glossary terms in agent prose leaves a collapsed first use from using up the visible one"
+   ]
+  },
+  {
+   "id": "term-inside-code",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": "i % 2 === 1 ? piece : piece.replace(termPattern",
+   "new": "piece.replace(termPattern",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+   ],
+   "killed": true,
+   "exitCode": 1,
+   "failedTests": 1,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "glossary terms in agent prose never links inline code, a longer word or a file name"
+   ]
+  },
+  {
+   "id": "term-inside-word-before",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": "(?<![\\\\p{L}\\\\p{N}_&;/.-])(",
+   "new": "(",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+   ],
+   "killed": true,
+   "exitCode": 1,
+   "failedTests": 1,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "glossary terms in agent prose never links inline code, a longer word or a file name"
+   ]
+  },
+  {
+   "id": "term-word-after-dropped",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": "(?![\\\\p{L}\\\\p{N}_/-]|\\\\.[\\\\p{L}\\\\p{N}])`",
+   "new": "(?!\\\\.[\\\\p{L}\\\\p{N}])`",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+   ],
+   "killed": true,
+   "exitCode": 1,
+   "failedTests": 1,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "glossary terms in agent prose never links inline code, a longer word or a file name"
+   ]
+  },
+  {
+   "id": "term-file-name",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": "(?![\\\\p{L}\\\\p{N}_/-]|\\\\.[\\\\p{L}\\\\p{N}])`",
+   "new": "(?![\\\\p{L}\\\\p{N}_/-])`",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+   ],
+   "killed": true,
+   "exitCode": 1,
+   "failedTests": 1,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "glossary terms in agent prose never links inline code, a longer word or a file name"
+   ]
+  },
+  {
+   "id": "term-no-regex-escape",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": ".replace(/[.*+?^\\${}()|[\\]\\\\]/gu, '\\\\$&')",
+   "new": "",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+   ],
+   "killed": true,
+   "exitCode": 1,
+   "failedTests": 0,
+   "suiteLoadFailures": 0,
+   "firstFailures": []
+  },
+  {
+   "id": "term-no-upper-case-form",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": "`${capitalised}s`, base.toUpperCase()]",
+   "new": "`${capitalised}s`]",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+   ],
+   "killed": true,
+   "exitCode": 1,
+   "failedTests": 1,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "glossary terms in agent prose links again in a new section, in plural, capitalised and upper-case forms"
+   ]
+  },
+  {
+   "id": "term-no-capitalised-form",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": "[base, `${base}s`, capitalised, `${capitalised}s`, base.toUpperCase()]",
+   "new": "[base, `${base}s`, base.toUpperCase()]",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+   ],
+   "killed": true,
+   "exitCode": 1,
+   "failedTests": 1,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "glossary terms in agent prose links again in a new section, in plural, capitalised and upper-case forms"
+   ]
+  },
+  {
+   "id": "term-no-plural-form",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": "[base, `${base}s`, capitalised, `${capitalised}s`, base.toUpperCase()]",
+   "new": "[base, capitalised, base.toUpperCase()]",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+   ],
+   "killed": true,
+   "exitCode": 1,
+   "failedTests": 1,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "glossary terms in agent prose links again in a new section, in plural, capitalised and upper-case forms"
+   ]
+  },
+  {
+   "id": "term-no-hyphen-free-form",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": "new Set([name, name.replace(/-/gu, ' ')])",
+   "new": "new Set([name])",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+   ],
+   "killed": true,
+   "exitCode": 1,
+   "failedTests": 1,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "glossary terms in agent prose links only the first use in a section, in a hyphen-free form"
+   ]
+  },
+  {
+   "id": "term-unknown-links",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": "if (term.marking !== 'inferred') continue;",
+   "new": "",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+   ],
+   "killed": true,
+   "exitCode": 1,
+   "failedTests": 1,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "glossary terms in agent prose links no term marked Unknown and nothing in a non-normative block"
+   ]
+  },
+  {
+   "id": "term-non-normative-links",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": "termsOff || local!.blocks.get(blockId)?.marking === 'non-normative' ? prose",
+   "new": "termsOff ? prose",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+   ],
+   "killed": true,
+   "exitCode": 1,
+   "failedTests": 1,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "glossary terms in agent prose links no term marked Unknown and nothing in a non-normative block"
+   ]
+  },
+  {
+   "id": "term-table-links",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": "        termsOff = true;\n",
+   "new": "",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+   ],
+   "killed": true,
+   "exitCode": 1,
+   "failedTests": 1,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "glossary terms in agent prose links no term in a table, whose scrolling would clip the entry"
+   ]
+  },
+  {
+   "id": "term-collapsed-uses-up",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": "        termsShown.clear();\n        for (const id of shownBefore) termsShown.add(id);\n",
+   "new": "",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+   ],
+   "killed": true,
+   "exitCode": 1,
+   "failedTests": 1,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "glossary terms in agent prose leaves a collapsed first use from using up the visible one"
+   ]
+  },
+  {
+   "id": "term-in-quotation",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": "${escape(part.text).replace(/\\r/gu, '&#13;')}</q> ${marking('observed')}",
+   "new": "${withTerms(from, part.text)}</q> ${marking('observed')}",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+   ],
+   "killed": true,
+   "exitCode": 1,
+   "failedTests": 1,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "glossary terms in agent prose never marks up a verified quotation, even as the only use of a term in its secti"
+   ]
+  },
+  {
+   "id": "term-no-marking",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": "${prose(term.text)} ${marking(term.marking)}</span></a>",
+   "new": "${prose(term.text)}</span></a>",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+   ],
+   "killed": true,
+   "exitCode": 1,
+   "failedTests": 2,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "glossary terms in agent prose shows the entry as prose with its marking and machine attributes, and lists it i",
+    "glossary terms in agent prose adds no term to a source page or the glossary, and the size report does not coun"
+   ]
+  },
+  {
+   "id": "term-no-machine-attribute",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": " data-epistemic=\"${term.marking}\">${prose(term.text)}",
+   "new": ">${prose(term.text)}",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+   ],
+   "killed": true,
+   "exitCode": 1,
+   "failedTests": 1,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "glossary terms in agent prose shows the entry as prose with its marking and machine attributes, and lists it i"
+   ]
+  },
+  {
+   "id": "term-not-in-machine-view",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": "      glossaryShown,\n",
+   "new": "      glossaryShown: [],\n",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+   ],
+   "killed": true,
+   "exitCode": 1,
+   "failedTests": 1,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "glossary terms in agent prose shows the entry as prose with its marking and machine attributes, and lists it i"
+   ]
+  },
+  {
+   "id": "term-counted-in-size-report",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": "(withoutReviewStatusRegion(html) ?? html).replace(/<span class=\"term-pop\"[^>]*>.*?<span class=\"marking [a-z-]+\">[^<]*<\\/span><\\/span>/gsu, '')",
+   "new": "(withoutReviewStatusRegion(html) ?? html)",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+   ],
+   "killed": true,
+   "exitCode": 1,
+   "failedTests": 1,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "glossary terms in agent prose adds no term to a source page or the glossary, and the size report does not coun"
+   ]
+  },
+  {
+   "id": "entry-not-on-focus",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": "a.term:hover>.term-pop,a.term:focus>.term-pop{display:block}",
+   "new": "a.term:hover>.term-pop{display:block}",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts",
+    "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts"
+   ],
+   "killed": true,
+   "exitCode": 1,
+   "failedTests": 2,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "glossary terms in agent prose opens an entry on hover and on focus, from its block, and dims a withheld marker",
+    "folds the navigation, keeps diagram labels clear of boxes and shows a glossary entry on focus, with no script"
+   ]
+  },
+  {
+   "id": "entry-not-on-hover",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": "a.term:hover>.term-pop,a.term:focus>.term-pop{display:block}",
+   "new": "a.term:focus>.term-pop{display:block}",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+   ],
+   "killed": true,
+   "exitCode": 1,
+   "failedTests": 1,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "glossary terms in agent prose opens an entry on hover and on focus, from its block, and dims a withheld marker"
+   ]
+  },
+  {
+   "id": "entry-overflows-page",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": "main [data-claim-id]{position:relative}a.term{color:inherit;text-decoration:underline dotted var(--muted);text-underline-offset:.2em}.term-pop{display:none;position:absolute;left:0;z-index:5;width:min(22rem,100%);",
+   "new": "a.term{position:relative;color:inherit;text-decoration:underline dotted var(--muted);text-underline-offset:.2em}.term-pop{display:none;position:absolute;left:0;z-index:5;width:min(22rem,70vw);",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts"
+   ],
+   "killed": true,
+   "exitCode": 1,
+   "failedTests": 1,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "folds the navigation, keeps diagram labels clear of boxes and shows a glossary entry on focus, with no script"
+   ]
+  },
+  {
+   "id": "hover-gap-unbridged",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": ".term-pop::before{content:\"\";position:absolute;left:0;right:0;top:-.5rem;height:.5rem}",
+   "new": "",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+   ],
+   "killed": true,
+   "exitCode": 1,
+   "failedTests": 1,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "glossary terms in agent prose opens an entry on hover and on focus, from its block, and dims a withheld marker"
+   ]
+  },
+  {
+   "id": "source-id-outside-details",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": "${anchor === undefined ? `${escape(source.sourceId)} · ` : ''}${extent}",
+   "new": "${escape(source.sourceId)} · ${extent}",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+   ],
+   "killed": true,
+   "exitCode": 1,
+   "failedTests": 1,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "an operator-agent dossier page reads without its machinery shows a source identifier only in the source page i"
+   ]
+  },
+  {
+   "id": "size-report-silent",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": "its review-status region and its glossary entries'",
+   "new": "its review-status region'",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+   ],
+   "killed": true,
+   "exitCode": 1,
+   "failedTests": 1,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "glossary terms in agent prose adds no term to a source page or the glossary, and the size report does not coun"
+   ]
+  },
+  {
+   "id": "wide-diagram-shrinks",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": ".diagram-scroll svg[width=\"1048\"]{max-width:max(100%,860px)}",
+   "new": ".diagram-scroll svg{max-width:100%}",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts"
+   ],
+   "killed": true,
+   "exitCode": 1,
+   "failedTests": 1,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "folds the navigation, keeps diagram labels clear of boxes and shows a glossary entry on focus, with no script"
+   ]
+  },
+  {
+   "id": "marker-not-dimmed",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": "pre.redaction-note{margin:.25rem 0;padding:.1rem .75rem;border-left:4px solid var(--line);color:var(--muted);",
+   "new": "pre.redaction-note{margin:.25rem 0;padding:.1rem .75rem;border-left:4px solid var(--line);",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+   ],
+   "killed": true,
+   "exitCode": 1,
+   "failedTests": 1,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "glossary terms in agent prose opens an entry on hover and on focus, from its block, and dims a withheld marker"
+   ]
+  },
+  {
+   "id": "old-serif-font",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": ":root{--font-serif:ui-sans-serif,system-ui,-apple-system,\"Segoe UI\",Roboto,\"Helvetica Neue\",Arial,sans-serif;",
+   "new": ":root{--font-serif:Georgia,serif;",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+   ],
+   "killed": true,
+   "exitCode": 1,
+   "failedTests": 1,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "an operator-agent dossier page reads without its machinery uses a system sans stack and downloads no font"
+   ]
+  },
+  {
+   "id": "nav-in-code-face",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": ".contents,.contents a,.contents .eyebrow,.pipeline-notice,",
+   "new": ".pipeline-notice,",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts"
+   ],
+   "killed": true,
+   "exitCode": 1,
+   "failedTests": 1,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "folds the navigation, keeps diagram labels clear of boxes and shows a glossary entry on focus, with no script"
+   ]
+  },
+  {
+   "id": "gap-too-narrow",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "READABLE_SPACING: DiagramSpacing = { gapX: 200,",
+   "new": "READABLE_SPACING: DiagramSpacing = { gapX: 120,",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts"
+   ],
+   "killed": true,
+   "exitCode": 1,
+   "failedTests": 10,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "layered left-to-right diagram layout readable spacing continues a long chain on a lower band, its hand-off in ",
+    "layered left-to-right diagram layout the widest readable edge label fits its gap, draws over the nodes and sta"
+   ]
+  },
+  {
+   "id": "no-bands",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "gapY: 64, maxColumns: 3,",
+   "new": "gapY: 64, maxColumns: Number.POSITIVE_INFINITY,",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts"
+   ],
+   "killed": true,
+   "exitCode": 1,
+   "failedTests": 2,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "layered left-to-right diagram layout readable spacing continues a long chain on a lower band, its hand-off in ",
+    "layered left-to-right diagram layout readable spacing keeps every edge label off every node plain chain"
+   ]
+  },
+  {
+   "id": "labels-under-nodes",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "${lines}${nodes}${labels}</svg>`;",
+   "new": "${lines}${labels}${nodes}</svg>`;",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts"
+   ],
+   "killed": true,
+   "exitCode": 1,
+   "failedTests": 9,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "layered left-to-right diagram layout the widest readable edge label fits its gap, draws over the nodes and sta",
+    "layered left-to-right diagram layout readable spacing keeps every edge label off every node plain chain"
+   ]
+  },
+  {
+   "id": "lines-over-nodes",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "${lines}${nodes}${labels}</svg>`;",
+   "new": "${nodes}${lines}${labels}</svg>`;",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts"
+   ],
+   "killed": true,
+   "exitCode": 1,
+   "failedTests": 8,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "layered left-to-right diagram layout readable spacing keeps every edge label off every node plain chain",
+    "layered left-to-right diagram layout readable spacing keeps every edge label off every node chain with a loop "
+   ]
+  },
+  {
+   "id": "skip-label-on-neighbour",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "labelY: skips ? y1 + SKIP_LABEL_DROP : (y1 + y2) / 2 };",
+   "new": "labelY: skips ? y1 : (y1 + y2) / 2 };",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts"
+   ],
+   "killed": true,
+   "exitCode": 1,
+   "failedTests": 1,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "layered left-to-right diagram layout readable spacing keeps every edge label off every node chain with a skip"
+   ]
+  },
+  {
+   "id": "bands-despite-loop",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "&& !back.some(Boolean)\n",
+   "new": "\n",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts"
+   ],
+   "killed": false,
+   "exitCode": 0,
+   "failedTests": 0,
+   "suiteLoadFailures": 0,
+   "firstFailures": [],
+   "equivalent": "a back edge also fails the one-layer-step test beside it, so removing this conjunct changes no diagram"
+  },
+  {
+   "id": "bands-despite-tall-column",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "&& members.every(m => m.length === 1) && ends.every",
+   "new": "&& ends.every",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts"
+   ],
+   "killed": true,
+   "exitCode": 1,
+   "failedTests": 2,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "layered left-to-right diagram layout readable spacing keeps every edge label off every node fan across a band ",
+    "layered left-to-right diagram layout readable spacing keeps every edge label off every node tall column before"
+   ]
+  },
+  {
+   "id": "bands-despite-skip",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "&& ends.every(end => layer[end.to]! === layer[end.from]! + 1);",
+   "new": ";",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts"
+   ],
+   "killed": true,
+   "exitCode": 1,
+   "failedTests": 1,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "layered left-to-right diagram layout readable spacing keeps every edge label off every node chain with a skip"
+   ]
+  },
+  {
+   "id": "skip-label-at-midpoint",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "labelX: skips ? x1 + gapX / 2 : (x1 + x2) / 2,",
+   "new": "labelX: (x1 + x2) / 2,",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts"
+   ],
+   "killed": true,
+   "exitCode": 1,
+   "failedTests": 1,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "layered left-to-right diagram layout readable spacing keeps every edge label off every node chain with a skip"
+   ]
+  },
+  {
+   "id": "back-label-on-curve",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "labelY: spacing.labelsOnTop ? contentBottom + BACK_LABEL_CLEARANCE + lane * spacing.backEdgeStep : (sy + ty + 6 * depth) / 8 };",
+   "new": "labelY: (sy + ty + 6 * depth) / 8 };",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts"
+   ],
+   "killed": true,
+   "exitCode": 1,
+   "failedTests": 1,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "layered left-to-right diagram layout readable spacing keeps every edge label off every node loop over a tall m"
+   ]
+  },
+  {
+   "id": "site-ignores-spacing",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": "local === undefined ? undefined : READABLE_SPACING);",
+   "new": "undefined);",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts"
+   ],
+   "killed": true,
+   "exitCode": 1,
+   "failedTests": 1,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "folds the navigation, keeps diagram labels clear of boxes and shows a glossary entry on focus, with no script"
+   ]
+  },
+  {
+   "id": "mobile-ring-clipped",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": ".nav-panel>summary:focus-visible,.mobile-contents>summary:focus-visible{",
+   "new": ".nav-panel>summary:focus-visible{",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts"
+   ],
+   "killed": true,
+   "exitCode": 1
+  },
+  {
+   "id": "label-hover-off",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": ".diagram-scroll g.edge-text:hover rect.edge-label{stroke:var(--cyan);stroke-width:1.5}",
+   "new": "",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+   ],
+   "killed": true,
+   "exitCode": 1
+  },
+  {
+   "id": "chain-floor-gone",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": ".diagram-scroll svg[width=\"1048\"]{max-width:max(100%,860px)}",
+   "new": ".diagram-scroll svg[width=\"1048\"]{max-width:100%}",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts"
+   ],
+   "killed": true,
+   "exitCode": 1
+  }
+ ],
+ "summary": {
+  "total": 57,
+  "killed": 56,
+  "survived": [
+   "bands-despite-loop"
+  ]
+ },
+ "notCovered": [
+  "Real Redis prose has not been rendered with these changes.",
+  "The fixture has no discovery, clarifications, executions, review or deep-dive page, so the visible-id sweep does not reach them.",
+  "Term hover, diagram hover and the dimmed withheld marker are pinned by stylesheet text only; the page API has no mouse and the fixture has no redacted source.",
+  "Labels can overprint labels where edges share a point; the pointer can lose a far popup on the way to it (syzygy-pdja.3).",
+  "Esc dismissal is on syzygy-pdja.5."
+ ],
+ "note": "Most mutants ran at the commit named, before two stylesheet rules and three test additions. focus-ring-clipped and the last 3 ran at the final bytes. subjectDigests are the final bytes. Every old fragment applies exactly once at those bytes (checked by script); the other 53 were not re-run there."
+}

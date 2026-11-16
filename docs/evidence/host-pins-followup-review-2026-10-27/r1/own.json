@@ -1,0 +1,94 @@
+{
+ "mutants": [
+  {
+   "id": "R1-V7-origin-case-insensitive",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/browser-origin.ts",
+     "old": "  return origin === undefined || origin === expectedOrigin(host);",
+     "new": "  return origin === undefined || origin.toLowerCase() === expectedOrigin(host).toLowerCase();"
+    }
+   ]
+  },
+  {
+   "id": "R2-V8-host-lower-cased",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/browser-origin.ts",
+     "old": "    (/^(?:127\\.0\\.0\\.1|localhost):[0-9]+$/.test(host) || host === TAILNET_HOST);",
+     "new": "    (/^(?:127\\.0\\.0\\.1|localhost):[0-9]+$/.test(host.toLowerCase()) || host.toLowerCase() === TAILNET_HOST);"
+    }
+   ]
+  },
+  {
+   "id": "R3-lexical-containment-case-folded-only",
+   "edits": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "old": "  if (!isWithin(root, resolved)) {",
+     "new": "  if (!isWithin(root.toLowerCase(), resolved.toLowerCase())) {"
+    }
+   ]
+  },
+  {
+   "id": "R4-bearer-header-trimStart",
+   "edits": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "old": "  const match = /^Bearer (.+)$/.exec(header);",
+     "new": "  const match = /^Bearer (.+)$/.exec(header.trimStart());"
+    }
+   ]
+  },
+  {
+   "id": "R5-bearer-header-NFKC-normalized",
+   "edits": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "old": "  const match = /^Bearer (.+)$/.exec(header);",
+     "new": "  const match = /^Bearer (.+)$/.exec(header.normalize('NFKC'));"
+    }
+   ]
+  },
+  {
+   "id": "R6-real-location-containment-case-folded-only",
+   "edits": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "old": "  if (!isWithin(realRoot, realTarget) || realTarget === realRoot) {",
+     "new": "  if (!isWithin(realRoot.toLowerCase(), realTarget.toLowerCase()) || realTarget === realRoot) {"
+    }
+   ]
+  },
+  {
+   "id": "R7-origin-url-normalized",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/browser-origin.ts",
+     "old": "  return origin === undefined || origin === expectedOrigin(host);",
+     "new": "  return origin === undefined || (() => { try { return new URL(origin).origin === expectedOrigin(host); } catch { return false; } })();"
+    }
+   ]
+  },
+  {
+   "id": "R8-breach-list-prefix-match",
+   "edits": [
+    {
+     "file": "packages/http-host/src/server.ts",
+     "old": "['project shape not-evaluated', 'project shape not-admitted', 'project shape observation-failed'].includes(population.reason)",
+     "new": "['project shape not-evaluated', 'project shape not-admitted', 'project shape observation-failed'].some(listed => population.reason.startsWith(listed))"
+    }
+   ]
+  },
+  {
+   "id": "R9-breach-list-trimmed-match",
+   "edits": [
+    {
+     "file": "packages/http-host/src/server.ts",
+     "old": "['project shape not-evaluated', 'project shape not-admitted', 'project shape observation-failed'].includes(population.reason)",
+     "new": "['project shape not-evaluated', 'project shape not-admitted', 'project shape observation-failed'].includes(population.reason.trim())"
+    }
+   ]
+  }
+ ]
+}

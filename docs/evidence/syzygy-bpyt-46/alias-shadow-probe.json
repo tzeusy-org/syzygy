@@ -1,0 +1,25 @@
+{
+ "commit": "e2077444dc739ea15db69f424c2372f89b1996de",
+ "probe": "rev-554/tools/alias-shadow-probe.test.ts.txt, the PR 554 round-1 reviewer's, retained with that review at landing; run verbatim as packages/polaris-generation-core/src/zz-alias-shadow-probe.test.ts and removed after each run",
+ "probeSha256": "bd7f18d7c288c6a1aef99f323a945a518aa22fde806881e4b2b97b72edae07ba",
+ "command": "npx vitest run <probe> (clean clone after npm ci; dist present = the ten npm run build emits, then every dist removed)",
+ "runs": {
+  "present": {
+   "exit": 0,
+   "results": {
+    "@syzygy/polaris-dossier/argv": "loaded: isArgvFault,readArgv",
+    "@syzygy/polaris-dossier/state-directory": "loaded: REVIEW_PACKET_DIR,REVIEW_VERDICT_FILE,REVISION_FILE,RUN_ID,RUN_LAYOUT,createRunDirectory,resolvePathIntent,stateRootViolation,within",
+    "@syzygy/polaris-generation-core/live": "loaded: BoundedJsonError,CANONICAL_JSON_ENCODING,CanonicalJsonError,DIAGRAM_KINDS,DOSSIER_FORMAT,DOSSIER_PROFILE_ID,DOSSIER_READER_QUESTIONS,DOSSIER_REQUESTED_ASSETS,DossierEvaluationError,GENERATION_EXCLUSION_REASONS,GenerationSourceError,ILLUSTRATION_HEADING,MAX_MATCHES,OWNER_TOPICS,PAGE_SINK_CONTRACT,QUOTE_LEAD_IN,READER_QUESTIONS_FORMAT,READER_QUESTIONS_MAX,READER_QUESTION_TEXT_MAX,READER_QUESTION_TOPICS,REVIEW_STATUS_REGION,REVIEW_STATUS_REGION_OPEN,ReaderQuestionsError,SOURCE_ID_MAX_LENGTH,SOURCE_ID_MIN_LENGTH,SOURCE_ID_PATTERN,SOURCE_TEXT_MAX_LENGTH,admittedSourcesDigest,bodyLines,checkBlockQuotes,checkDraftQuotes,clarify,codeContentExempt,compileEveryOffsetMatcher,decodeHtmlText,diagramToMermaid,digestCanonicalJson,documentationPathRules,draftBlocks,encodeCanonicalJson,evaluateDossier,excludedSourceId,fidelity,generationAnchorId,generationSourceIdentity,generationSourceTextAt,generationSourcesForBody,generationSourcesForRedactedBody,generationSpanRange,gitBlobObjectId,inspectBlockQuotes,isDossierPagePath,isGenerationExclusionReason,keyedDigest,leadInQuotationSpans,leadInQuotations,lineCount,locateQuote,newGenerationRunKey,normaliseForQuote,normaliseTracked,openQuestions,pageSinkCspFinding,parseBoundedJson,parseDossierManifest,parsePageBudget,parseReaderQuestions,promptForStage,publicSourceContentClass,quotableGenerationSources,quoteFindingAsReviewFinding,readCodeContentExemption,readProjectDocumentationRule,readSecretRedaction,readerCost,redactBody,redactionMarker,resolveQuote,retainedWithMarkers,reviewVerdict,runReaderTest,scanDossierPage,scriptedAnswers,segmentBody,sourceTextById,spanTouchesWithheld,topicCoverage,validateDraftRecord,validateGenerationSourceTransport,validateGenerationSources,validateReaderQuestions,validateRequestedAssets,verifiedRedactedBody,withoutReviewStatusRegion"
+   }
+  },
+  "absent": {
+   "exit": 0,
+   "results": {
+    "@syzygy/polaris-dossier/argv": "loaded: isArgvFault,readArgv",
+    "@syzygy/polaris-dossier/state-directory": "loaded: REVIEW_PACKET_DIR,REVIEW_VERDICT_FILE,REVISION_FILE,RUN_ID,RUN_LAYOUT,createRunDirectory,resolvePathIntent,stateRootViolation,within",
+    "@syzygy/polaris-generation-core/live": "loaded: BoundedJsonError,CANONICAL_JSON_ENCODING,CanonicalJsonError,DIAGRAM_KINDS,DOSSIER_FORMAT,DOSSIER_PROFILE_ID,DOSSIER_READER_QUESTIONS,DOSSIER_REQUESTED_ASSETS,DossierEvaluationError,GENERATION_EXCLUSION_REASONS,GenerationSourceError,ILLUSTRATION_HEADING,MAX_MATCHES,OWNER_TOPICS,PAGE_SINK_CONTRACT,QUOTE_LEAD_IN,READER_QUESTIONS_FORMAT,READER_QUESTIONS_MAX,READER_QUESTION_TEXT_MAX,READER_QUESTION_TOPICS,REVIEW_STATUS_REGION,REVIEW_STATUS_REGION_OPEN,ReaderQuestionsError,SOURCE_ID_MAX_LENGTH,SOURCE_ID_MIN_LENGTH,SOURCE_ID_PATTERN,SOURCE_TEXT_MAX_LENGTH,admittedSourcesDigest,bodyLines,checkBlockQuotes,checkDraftQuotes,clarify,codeContentExempt,compileEveryOffsetMatcher,decodeHtmlText,diagramToMermaid,digestCanonicalJson,documentationPathRules,draftBlocks,encodeCanonicalJson,evaluateDossier,excludedSourceId,fidelity,generationAnchorId,generationSourceIdentity,generationSourceTextAt,generationSourcesForBody,generationSourcesForRedactedBody,generationSpanRange,gitBlobObjectId,inspectBlockQuotes,isDossierPagePath,isGenerationExclusionReason,keyedDigest,leadInQuotationSpans,leadInQuotations,lineCount,locateQuote,newGenerationRunKey,normaliseForQuote,normaliseTracked,openQuestions,pageSinkCspFinding,parseBoundedJson,parseDossierManifest,parsePageBudget,parseReaderQuestions,promptForStage,publicSourceContentClass,quotableGenerationSources,quoteFindingAsReviewFinding,readCodeContentExemption,readProjectDocumentationRule,readSecretRedaction,readerCost,redactBody,redactionMarker,resolveQuote,retainedWithMarkers,reviewVerdict,runReaderTest,scanDossierPage,scriptedAnswers,segmentBody,sourceTextById,spanTouchesWithheld,topicCoverage,validateDraftRecord,validateGenerationSourceTransport,validateGenerationSources,validateReaderQuestions,validateRequestedAssets,verifiedRedactedBody,withoutReviewStatusRegion"
+   }
+  }
+ },
+ "statusAfterEach": ""
+}

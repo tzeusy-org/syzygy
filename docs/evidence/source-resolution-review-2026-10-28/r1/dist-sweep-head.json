@@ -1,0 +1,1790 @@
+{
+ "populationFiles": 693,
+ "hitLines": 285,
+ "filesHit": [
+  "apps/syzygy/package.json",
+  "apps/syzygy/src/main.ts",
+  "apps/syzygy/tsconfig.json",
+  "apps/three-surface-poc/package.json",
+  "apps/three-surface-poc/src/capture-test-artifact-main.test.ts",
+  "apps/three-surface-poc/src/fresh-checkout-demo-main.ts",
+  "apps/three-surface-poc/src/main.ts",
+  "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+  "apps/three-surface-poc/src/polaris-capability-detail.test.ts",
+  "apps/three-surface-poc/src/product-build.test.ts",
+  "apps/three-surface-poc/src/pwb-n8-synthetic-corpus-coverage-matrix-main.ts",
+  "apps/three-surface-poc/src/restart.ts",
+  "apps/three-surface-poc/src/sync-child-process-guard.test.ts",
+  "apps/three-surface-poc/src/test-artifact-verification-consumers.test.ts",
+  "apps/three-surface-poc/tsconfig.json",
+  "package-lock.json",
+  "package.json",
+  "packages/cap1-core/package.json",
+  "packages/cap1-core/tsconfig.json",
+  "packages/cap1-daemon/package.json",
+  "packages/cap1-daemon/src/package.test.ts",
+  "packages/cap1-daemon/tsconfig.json",
+  "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts",
+  "packages/cap1-system/src/fresh-clone.system.test.ts",
+  "packages/cap1-system/src/harness.ts",
+  "packages/cap1-system/vitest.config.ts",
+  "packages/http-host/package.json",
+  "packages/http-host/src/package.test.ts",
+  "packages/http-host/tsconfig.json",
+  "packages/polaris-dossier/package.json",
+  "packages/polaris-dossier/src/argv.test.ts",
+  "packages/polaris-dossier/src/cli.ts",
+  "packages/polaris-dossier/src/git-object-reader.test.ts",
+  "packages/polaris-dossier/src/polaris.ts",
+  "packages/polaris-dossier/src/subpath-imports.test.ts",
+  "packages/polaris-dossier/src/waiting-sessions.test.ts",
+  "packages/polaris-dossier/tsconfig.json",
+  "packages/polaris-generation-consent/package.json",
+  "packages/polaris-generation-consent/tsconfig.json",
+  "packages/polaris-generation-core/package.json",
+  "packages/polaris-generation-core/src/discovery.test.ts",
+  "packages/polaris-generation-core/src/discovery.ts",
+  "packages/polaris-generation-core/src/island-boundary.test.ts",
+  "packages/polaris-generation-core/src/pipeline.ts",
+  "packages/polaris-generation-core/src/workspace-reach.test.ts",
+  "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+  "packages/polaris-generation-core/tsconfig.json",
+  "packages/support/package.json",
+  "packages/support/tsconfig.json",
+  "packages/three-surface-poc-core/package.json",
+  "packages/three-surface-poc-core/src/evidence-population.ts",
+  "packages/three-surface-poc-core/src/test-artifact-verification-live-source.test.ts",
+  "packages/three-surface-poc-core/tsconfig.json",
+  "scripts/census_consent_exports.mjs",
+  "scripts/check_governance.py",
+  "scripts/check_polaris_response_ceiling_reading.py",
+  "scripts/clean_build.mjs",
+  "scripts/derive_generator_sent_text.mjs",
+  "scripts/differential_consent_act_families.mjs",
+  "scripts/differential_line_slot.mjs",
+  "scripts/dossier_scale_measure.mjs",
+  "scripts/measure_cli_island_loads.mjs",
+  "scripts/measure_consent_gate_recognition.mjs",
+  "scripts/measure_decisions_sweep.mjs",
+  "scripts/measure_line_slot_reads.mjs",
+  "scripts/measure_slot_line_backtracking.mjs",
+  "scripts/prepare_three_surface_poc_governedby_reference_recording.py",
+  "scripts/probe_pwb_gate_on_altered_policy_act.mjs",
+  "scripts/record_versioned_signoff.py",
+  "scripts/redis_screening_remeasure.mjs",
+  "scripts/run_consent_census_mutants.py",
+  "vitest.config.ts"
+ ],
+ "hits": [
+  {
+   "file": "apps/syzygy/package.json",
+   "line": 6,
+   "predicate": "dist",
+   "text": "\"main\": \"./dist/main.js\","
+  },
+  {
+   "file": "apps/syzygy/src/main.ts",
+   "line": 48,
+   "predicate": "dist",
+   "text": "Usage: node apps/syzygy/dist/main.js [options]"
+  },
+  {
+   "file": "apps/syzygy/tsconfig.json",
+   "line": 5,
+   "predicate": "dist",
+   "text": "\"outDir\": \"dist\","
+  },
+  {
+   "file": "apps/syzygy/tsconfig.json",
+   "line": 6,
+   "predicate": "dist",
+   "text": "\"tsBuildInfoFile\": \"dist/.tsbuildinfo\""
+  },
+  {
+   "file": "apps/three-surface-poc/package.json",
+   "line": 6,
+   "predicate": "dist",
+   "text": "\"main\": \"./dist/main.js\","
+  },
+  {
+   "file": "apps/three-surface-poc/package.json",
+   "line": 10,
+   "predicate": "dist",
+   "text": "\"default\": \"./dist/main.js\""
+  },
+  {
+   "file": "apps/three-surface-poc/package.json",
+   "line": 14,
+   "predicate": "dist",
+   "text": "\"default\": \"./dist/polaris-generation/dossier-render.js\""
+  },
+  {
+   "file": "apps/three-surface-poc/package.json",
+   "line": 18,
+   "predicate": "dist",
+   "text": "\"default\": \"./dist/polaris-generation/dossier-site.js\""
+  },
+  {
+   "file": "apps/three-surface-poc/src/capture-test-artifact-main.test.ts",
+   "line": 118,
+   "predicate": "alias",
+   "text": "* `-c alias.x=!\u2026`, `--exec-path` or an environment, so the one call must be"
+  },
+  {
+   "file": "apps/three-surface-poc/src/capture-test-artifact-main.test.ts",
+   "line": 136,
+   "predicate": "alias",
+   "text": "* bracket or alias does not slip past a word match. */"
+  },
+  {
+   "file": "apps/three-surface-poc/src/capture-test-artifact-main.test.ts",
+   "line": 172,
+   "predicate": "alias",
+   "text": "// or an alias of the binding, ran any command past every check. The one permitted process"
+  },
+  {
+   "file": "apps/three-surface-poc/src/capture-test-artifact-main.test.ts",
+   "line": 194,
+   "predicate": "alias",
+   "text": "* their exported name, never the local alias (round-3 note 2), and every"
+  },
+  {
+   "file": "apps/three-surface-poc/src/capture-test-artifact-main.test.ts",
+   "line": 290,
+   "predicate": "alias",
+   "text": "[`${RUN_GIT}('git', ['-c', 'alias.p=!touch x', 'p'], { encoding: 'utf8' });`, 'runs git other than'],"
+  },
+  {
+   "file": "apps/three-surface-poc/src/capture-test-artifact-main.test.ts",
+   "line": 312,
+   "predicate": "alias",
+   "text": "// Round-3 note 2: the check read the local name, so an alias or a"
+  },
+  {
+   "file": "apps/three-surface-poc/src/capture-test-artifact-main.test.ts",
+   "line": 328,
+   "predicate": "alias",
+   "text": "// `.call`, `.apply`, an alias or a rename fails `sourceViolations`."
+  },
+  {
+   "file": "apps/three-surface-poc/src/fresh-checkout-demo-main.ts",
+   "line": 94,
+   "predicate": "dist",
+   "text": "const child = spawn(process.execPath, [join(cloneDir, 'apps', 'three-surface-poc', 'dist', 'main.js'), '--repo', butlersRepo, '--state-dir', stateDir, '--port', '0'], {"
+  },
+  {
+   "file": "apps/three-surface-poc/src/fresh-checkout-demo-main.ts",
+   "line": 257,
+   "predicate": "dist",
+   "text": "const timed = run(cloneDir, process.execPath, [join('apps', 'three-surface-poc', 'dist', 'polaris-accessibility-main.js'), '--out', out], log);"
+  },
+  {
+   "file": "apps/three-surface-poc/src/main.ts",
+   "line": 3,
+   "predicate": "dist",
+   "text": "// The unconditional entry: `node dist/main`, `node dist/main.js` and the"
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+   "line": 53,
+   "predicate": "dist",
+   "text": "if (entry === 'node_modules' || entry === 'dist' || entry === '.git') continue;"
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+   "line": 70,
+   "predicate": "dist",
+   "text": ".filter((path) => path !== '' && !path.split('/').some((part) => part === 'node_modules' || part === 'dist' || part === '.git'))"
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-capability-detail.test.ts",
+   "line": 431,
+   "predicate": "dist",
+   "text": "if (entry === 'node_modules' || entry === 'dist') continue;"
+  },
+  {
+   "file": "apps/three-surface-poc/src/product-build.test.ts",
+   "line": 14,
+   "predicate": "dist",
+   "text": "// over a dist the build has just written whole: scripts/clean_build.mjs removes every dist `tsc -b` will build before it builds,"
+  },
+  {
+   "file": "apps/three-surface-poc/src/product-build.test.ts",
+   "line": 30,
+   "predicate": "dist",
+   "text": "it('builds every workspace project with a tsconfig, each excluding its tests and keeping its outputs under dist', () => {"
+  },
+  {
+   "file": "apps/three-surface-poc/src/product-build.test.ts",
+   "line": 36,
+   "predicate": "dist",
+   "text": "expect(config.compilerOptions, project).toMatchObject({ rootDir: 'src', outDir: 'dist', tsBuildInfoFile: 'dist/.tsbuildinfo' });"
+  },
+  {
+   "file": "apps/three-surface-poc/src/product-build.test.ts",
+   "line": 45,
+   "predicate": "dist",
+   "text": "// with an identical successor from the dist that listener runs, so it builds nothing."
+  },
+  {
+   "file": "apps/three-surface-poc/src/product-build.test.ts",
+   "line": 46,
+   "predicate": "dist",
+   "text": "const tools = scripts.filter(([, script]) => /\\bnode (?:apps|packages)\\/[^ ]+\\/dist\\//u.test(script)).map(([name, script]) => ({ name, script }));"
+  },
+  {
+   "file": "apps/three-surface-poc/src/product-build.test.ts",
+   "line": 69,
+   "predicate": "dist",
+   "text": "compilerOptions: { composite: true, target: 'ES2022', module: 'ES2022', moduleResolution: 'bundler', types: [], rootDir: 'src', outDir: 'dist', tsBuildInfoFile: 'dist/.tsbuildinfo', ...compilerOptions },"
+  },
+  {
+   "file": "apps/three-surface-poc/src/product-build.test.ts",
+   "line": 85,
+   "predicate": "dist",
+   "text": "const fresh = readFileSync(join(root, 'packages/b/dist/b.js'), 'utf8');"
+  },
+  {
+   "file": "apps/three-surface-poc/src/product-build.test.ts",
+   "line": 87,
+   "predicate": "dist",
+   "text": "expect(existsSync(join(root, 'packages/a/dist/a.js'))).toBe(true);"
+  },
+  {
+   "file": "apps/three-surface-poc/src/product-build.test.ts",
+   "line": 88,
+   "predicate": "dist",
+   "text": "plant(root, 'packages/b/dist/b.js', 'throw new Error(\"poisoned output\");\\n');"
+  },
+  {
+   "file": "apps/three-surface-poc/src/product-build.test.ts",
+   "line": 89,
+   "predicate": "dist",
+   "text": "plant(root, 'packages/a/dist/removed-source.js', 'throw new Error(\"stale output\");\\n');"
+  },
+  {
+   "file": "apps/three-surface-poc/src/product-build.test.ts",
+   "line": 90,
+   "predicate": "dist",
+   "text": "rmSync(join(root, 'packages/a/dist/a.js'));"
+  },
+  {
+   "file": "apps/three-surface-poc/src/product-build.test.ts",
+   "line": 91,
+   "predicate": "dist",
+   "text": "plant(root, 'packages/c/dist/c.js', 'not built here\\n');"
+  },
+  {
+   "file": "apps/three-surface-poc/src/product-build.test.ts",
+   "line": 93,
+   "predicate": "dist",
+   "text": "expect(readFileSync(join(root, 'packages/b/dist/b.js'), 'utf8')).toBe(fresh);"
+  },
+  {
+   "file": "apps/three-surface-poc/src/product-build.test.ts",
+   "line": 94,
+   "predicate": "dist",
+   "text": "expect(existsSync(join(root, 'packages/a/dist/removed-source.js'))).toBe(false);"
+  },
+  {
+   "file": "apps/three-surface-poc/src/product-build.test.ts",
+   "line": 95,
+   "predicate": "dist",
+   "text": "expect(existsSync(join(root, 'packages/a/dist/a.js'))).toBe(true);"
+  },
+  {
+   "file": "apps/three-surface-poc/src/product-build.test.ts",
+   "line": 96,
+   "predicate": "dist",
+   "text": "expect(readFileSync(join(root, 'packages/c/dist/c.js'), 'utf8')).toBe('not built here\\n');"
+  },
+  {
+   "file": "apps/three-surface-poc/src/product-build.test.ts",
+   "line": 103,
+   "predicate": "dist",
+   "text": "['reaches a project whose outputs leave dist', ['packages/b'], 'out', 'packages/a/tsconfig.json: its outputs and incremental state are not both under dist'],"
+  },
+  {
+   "file": "apps/three-surface-poc/src/product-build.test.ts",
+   "line": 106,
+   "predicate": "dist",
+   "text": "if (outDir !== '') writeFileSync(join(root, 'packages/a/tsconfig.json'), readFileSync(join(root, 'packages/a/tsconfig.json'), 'utf8').replace('\"outDir\":\"dist\"', `\"outDir\":\"${outDir}\"`));"
+  },
+  {
+   "file": "apps/three-surface-poc/src/product-build.test.ts",
+   "line": 107,
+   "predicate": "dist",
+   "text": "plant(root, 'packages/b/dist/b.js', 'kept\\n');"
+  },
+  {
+   "file": "apps/three-surface-poc/src/product-build.test.ts",
+   "line": 109,
+   "predicate": "dist",
+   "text": "expect(readFileSync(join(root, 'packages/b/dist/b.js'), 'utf8')).toBe('kept\\n');"
+  },
+  {
+   "file": "apps/three-surface-poc/src/pwb-n8-synthetic-corpus-coverage-matrix-main.ts",
+   "line": 21,
+   "predicate": "dist",
+   "text": "// dist/pwb-n8-synthetic-corpus-coverage-matrix-main.js -> apps/three-surface-poc/dist -> apps/three-surface-poc -> apps -> repo root"
+  },
+  {
+   "file": "apps/three-surface-poc/src/restart.ts",
+   "line": 79,
+   "predicate": "dist",
+   "text": "const expectedScript = realpathSync(options.expectedScript ?? resolve('apps/three-surface-poc/dist/main.js'));"
+  },
+  {
+   "file": "apps/three-surface-poc/src/sync-child-process-guard.test.ts",
+   "line": 250,
+   "predicate": "alias",
+   "text": "expect(() => suiteConfig(`resolve: { alias: { '@syzygy/a': path.join(root, 'a') } },\\n${ssr}\\n${project(\"'packages/a/src/**/*.test.ts'\")}`))"
+  },
+  {
+   "file": "apps/three-surface-poc/src/test-artifact-verification-consumers.test.ts",
+   "line": 39,
+   "predicate": "dist",
+   "text": "if (path.includes('/node_modules/') || path.includes('/dist/')) continue;"
+  },
+  {
+   "file": "apps/three-surface-poc/tsconfig.json",
+   "line": 5,
+   "predicate": "dist",
+   "text": "\"outDir\": \"dist\","
+  },
+  {
+   "file": "apps/three-surface-poc/tsconfig.json",
+   "line": 6,
+   "predicate": "dist",
+   "text": "\"tsBuildInfoFile\": \"dist/.tsbuildinfo\""
+  },
+  {
+   "file": "package-lock.json",
+   "line": 1359,
+   "predicate": "dist",
+   "text": "\"rollup\": \"dist/bin/rollup\""
+  },
+  {
+   "file": "package.json",
+   "line": 16,
+   "predicate": "dist",
+   "text": "\"poc\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/main.js\","
+  },
+  {
+   "file": "package.json",
+   "line": 17,
+   "predicate": "dist",
+   "text": "\"poc:restart\": \"node apps/three-surface-poc/dist/restart-main.js\","
+  },
+  {
+   "file": "package.json",
+   "line": 18,
+   "predicate": "dist",
+   "text": "\"poc:capture-test-artifact\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/capture-test-artifact-main.js\","
+  },
+  {
+   "file": "package.json",
+   "line": 19,
+   "predicate": "dist",
+   "text": "\"poc:pwb-mutation-run\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/pwb-mutation-run-main.js\","
+  },
+  {
+   "file": "package.json",
+   "line": 20,
+   "predicate": "dist",
+   "text": "\"poc:accessibility-check\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/polaris-accessibility-main.js\","
+  },
+  {
+   "file": "package.json",
+   "line": 21,
+   "predicate": "dist",
+   "text": "\"poc:redis-shaped-discovery\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/polaris-generation/redis-shaped-measure-main.js\","
+  },
+  {
+   "file": "package.json",
+   "line": 22,
+   "predicate": "dist",
+   "text": "\"poc:fresh-checkout-demo\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/fresh-checkout-demo-main.js\","
+  },
+  {
+   "file": "package.json",
+   "line": 23,
+   "predicate": "dist",
+   "text": "\"poc:keyboard-sweep\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/polaris-keyboard-sweep-main.js\","
+  },
+  {
+   "file": "package.json",
+   "line": 24,
+   "predicate": "dist",
+   "text": "\"poc:accessible-names-sweep\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/polaris-accessible-names-main.js\","
+  },
+  {
+   "file": "package.json",
+   "line": 25,
+   "predicate": "dist",
+   "text": "\"poc:pwb-mutation-sweep\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/pwb-mutation-sweep-main.js\","
+  },
+  {
+   "file": "package.json",
+   "line": 26,
+   "predicate": "dist",
+   "text": "\"poc:pwb-n8-coverage-matrix\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/pwb-n8-synthetic-corpus-coverage-matrix-main.js\","
+  },
+  {
+   "file": "package.json",
+   "line": 29,
+   "predicate": "dist",
+   "text": "\"poc:dossier\": \"node scripts/check_generator_install.mjs && npm run build:poc --silent && node apps/three-surface-poc/dist/polaris-generation/dossier-main.js\","
+  },
+  {
+   "file": "package.json",
+   "line": 30,
+   "predicate": "dist",
+   "text": "\"poc:generator-demo\": \"node scripts/check_generator_install.mjs && npm run build:poc --silent && node apps/three-surface-poc/dist/polaris-generation/pipeline-demo-main.js\","
+  },
+  {
+   "file": "package.json",
+   "line": 31,
+   "predicate": "dist",
+   "text": "\"poc:dossier-render\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/polaris-generation/dossier-render-main.js\","
+  },
+  {
+   "file": "package.json",
+   "line": 32,
+   "predicate": "dist",
+   "text": "\"poc:dossier-evaluation\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/polaris-generation/dossier-evaluation-main.js\","
+  },
+  {
+   "file": "package.json",
+   "line": 33,
+   "predicate": "dist",
+   "text": "\"poc:generation-mutation-run\": \"npm run build:poc --silent && node apps/three-surface-poc/dist/polaris-generation/generation-mutation-run-main.js\""
+  },
+  {
+   "file": "packages/cap1-core/package.json",
+   "line": 9,
+   "predicate": "dist",
+   "text": "\"types\": \"./dist/index.d.ts\","
+  },
+  {
+   "file": "packages/cap1-core/package.json",
+   "line": 10,
+   "predicate": "dist",
+   "text": "\"import\": \"./dist/index.js\","
+  },
+  {
+   "file": "packages/cap1-core/package.json",
+   "line": 11,
+   "predicate": "dist",
+   "text": "\"default\": \"./dist/index.js\""
+  },
+  {
+   "file": "packages/cap1-core/package.json",
+   "line": 15,
+   "predicate": "dist",
+   "text": "\"types\": \"./dist/testing.d.ts\","
+  },
+  {
+   "file": "packages/cap1-core/package.json",
+   "line": 16,
+   "predicate": "dist",
+   "text": "\"import\": \"./dist/testing.js\","
+  },
+  {
+   "file": "packages/cap1-core/package.json",
+   "line": 17,
+   "predicate": "dist",
+   "text": "\"default\": \"./dist/testing.js\""
+  },
+  {
+   "file": "packages/cap1-core/tsconfig.json",
+   "line": 5,
+   "predicate": "dist",
+   "text": "\"outDir\": \"dist\","
+  },
+  {
+   "file": "packages/cap1-core/tsconfig.json",
+   "line": 6,
+   "predicate": "dist",
+   "text": "\"tsBuildInfoFile\": \"dist/.tsbuildinfo\""
+  },
+  {
+   "file": "packages/cap1-daemon/package.json",
+   "line": 9,
+   "predicate": "dist",
+   "text": "\"types\": \"./dist/index.d.ts\","
+  },
+  {
+   "file": "packages/cap1-daemon/package.json",
+   "line": 10,
+   "predicate": "dist",
+   "text": "\"import\": \"./dist/index.js\","
+  },
+  {
+   "file": "packages/cap1-daemon/package.json",
+   "line": 11,
+   "predicate": "dist",
+   "text": "\"default\": \"./dist/index.js\""
+  },
+  {
+   "file": "packages/cap1-daemon/src/package.test.ts",
+   "line": 28,
+   "predicate": "dist",
+   "text": "types: './dist/index.d.ts',"
+  },
+  {
+   "file": "packages/cap1-daemon/src/package.test.ts",
+   "line": 29,
+   "predicate": "dist",
+   "text": "import: './dist/index.js',"
+  },
+  {
+   "file": "packages/cap1-daemon/src/package.test.ts",
+   "line": 30,
+   "predicate": "dist",
+   "text": "default: './dist/index.js',"
+  },
+  {
+   "file": "packages/cap1-daemon/tsconfig.json",
+   "line": 5,
+   "predicate": "dist",
+   "text": "\"outDir\": \"dist\","
+  },
+  {
+   "file": "packages/cap1-daemon/tsconfig.json",
+   "line": 6,
+   "predicate": "dist",
+   "text": "\"tsBuildInfoFile\": \"dist/.tsbuildinfo\""
+  },
+  {
+   "file": "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts",
+   "line": 33,
+   "predicate": "dist",
+   "text": "Usage: node apps/syzygy/dist/main.js [options]"
+  },
+  {
+   "file": "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts",
+   "line": 239,
+   "predicate": "dist",
+   "text": "expect(readFileSync(log, 'utf8').split('\\n')).toContain(`${app}dist/polaris-generation/dossier-site.js`);"
+  },
+  {
+   "file": "packages/cap1-system/src/fresh-clone.system.test.ts",
+   "line": 57,
+   "predicate": "dist",
+   "text": "expect(existsSync(join(cloneDir, 'apps', 'syzygy', 'dist'))).toBe(false);"
+  },
+  {
+   "file": "packages/cap1-system/src/fresh-clone.system.test.ts",
+   "line": 73,
+   "predicate": "dist",
+   "text": "join('packages', 'cap1-core', 'dist', 'index.js'),"
+  },
+  {
+   "file": "packages/cap1-system/src/fresh-clone.system.test.ts",
+   "line": 76,
+   "predicate": "dist",
+   "text": "join('packages', 'cap1-daemon', 'dist', 'index.js'),"
+  },
+  {
+   "file": "packages/cap1-system/src/harness.ts",
+   "line": 30,
+   "predicate": "dist",
+   "text": "return path.join(repoRoot, 'apps', 'syzygy', 'dist', 'main.js');"
+  },
+  {
+   "file": "packages/cap1-system/src/harness.ts",
+   "line": 121,
+   "predicate": "dist",
+   "text": "* Spawn the REAL built daemon (`node apps/syzygy/dist/main.js`) on an"
+  },
+  {
+   "file": "packages/cap1-system/vitest.config.ts",
+   "line": 9,
+   "predicate": "dist",
+   "text": "// COMPILED daemon at apps/syzygy/dist/main.js, never in-process code)."
+  },
+  {
+   "file": "packages/http-host/package.json",
+   "line": 9,
+   "predicate": "dist",
+   "text": "\"types\": \"./dist/index.d.ts\","
+  },
+  {
+   "file": "packages/http-host/package.json",
+   "line": 10,
+   "predicate": "dist",
+   "text": "\"import\": \"./dist/index.js\","
+  },
+  {
+   "file": "packages/http-host/package.json",
+   "line": 11,
+   "predicate": "dist",
+   "text": "\"default\": \"./dist/index.js\""
+  },
+  {
+   "file": "packages/http-host/src/package.test.ts",
+   "line": 27,
+   "predicate": "dist",
+   "text": "types: './dist/index.d.ts',"
+  },
+  {
+   "file": "packages/http-host/src/package.test.ts",
+   "line": 28,
+   "predicate": "dist",
+   "text": "import: './dist/index.js',"
+  },
+  {
+   "file": "packages/http-host/src/package.test.ts",
+   "line": 29,
+   "predicate": "dist",
+   "text": "default: './dist/index.js',"
+  },
+  {
+   "file": "packages/http-host/tsconfig.json",
+   "line": 5,
+   "predicate": "dist",
+   "text": "\"outDir\": \"dist\","
+  },
+  {
+   "file": "packages/http-host/tsconfig.json",
+   "line": 6,
+   "predicate": "dist",
+   "text": "\"tsBuildInfoFile\": \"dist/.tsbuildinfo\""
+  },
+  {
+   "file": "packages/polaris-dossier/package.json",
+   "line": 9,
+   "predicate": "dist",
+   "text": "\"types\": \"./dist/index.d.ts\","
+  },
+  {
+   "file": "packages/polaris-dossier/package.json",
+   "line": 10,
+   "predicate": "dist",
+   "text": "\"import\": \"./dist/index.js\","
+  },
+  {
+   "file": "packages/polaris-dossier/package.json",
+   "line": 11,
+   "predicate": "dist",
+   "text": "\"default\": \"./dist/index.js\""
+  },
+  {
+   "file": "packages/polaris-dossier/package.json",
+   "line": 15,
+   "predicate": "dist",
+   "text": "\"types\": \"./dist/argv.d.ts\","
+  },
+  {
+   "file": "packages/polaris-dossier/package.json",
+   "line": 16,
+   "predicate": "dist",
+   "text": "\"import\": \"./dist/argv.js\","
+  },
+  {
+   "file": "packages/polaris-dossier/package.json",
+   "line": 17,
+   "predicate": "dist",
+   "text": "\"default\": \"./dist/argv.js\""
+  },
+  {
+   "file": "packages/polaris-dossier/package.json",
+   "line": 21,
+   "predicate": "dist",
+   "text": "\"types\": \"./dist/state-directory.d.ts\","
+  },
+  {
+   "file": "packages/polaris-dossier/package.json",
+   "line": 22,
+   "predicate": "dist",
+   "text": "\"import\": \"./dist/state-directory.js\","
+  },
+  {
+   "file": "packages/polaris-dossier/package.json",
+   "line": 23,
+   "predicate": "dist",
+   "text": "\"default\": \"./dist/state-directory.js\""
+  },
+  {
+   "file": "packages/polaris-dossier/src/argv.test.ts",
+   "line": 164,
+   "predicate": "alias",
+   "text": "* of a call the lift below reads: a namespace or element access, an alias, a renamed import, a callback (syzygy-bpyt.8.36, the review"
+  },
+  {
+   "file": "packages/polaris-dossier/src/cli.ts",
+   "line": 180,
+   "predicate": "dist",
+   "text": "/** The Syzygy checkout this package belongs to: packages/polaris-dossier/{src,dist} \u2192 the repository root. */"
+  },
+  {
+   "file": "packages/polaris-dossier/src/git-object-reader.test.ts",
+   "line": 233,
+   "predicate": "alias",
+   "text": "'[extensions]', '\\tobjectFormat = sha256', '[filter \"evil\"]', `\\tsmudge = ${touch}`, `\\ttextconv = ${touch}`, '[alias]', `\\tcat-file = !${touch}`, '',"
+  },
+  {
+   "file": "packages/polaris-dossier/src/polaris.ts",
+   "line": 55,
+   "predicate": "dist",
+   "text": "const MAIN = path.join(CHECKOUT, 'apps/syzygy/dist/main.js');"
+  },
+  {
+   "file": "packages/polaris-dossier/src/subpath-imports.test.ts",
+   "line": 68,
+   "predicate": "dist",
+   "text": "/** The source module a subpath export names: `./dist/X.js` is `src/X.ts`. */"
+  },
+  {
+   "file": "packages/polaris-dossier/src/subpath-imports.test.ts",
+   "line": 72,
+   "predicate": "dist",
+   "text": "return path.posix.join(PACKAGE, target.replace(/^\\.\\/dist\\//u, 'src/').replace(/\\.js$/u, '.ts'));"
+  },
+  {
+   "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+   "line": 884,
+   "predicate": "alias",
+   "text": "const alias = path.join(path.dirname(h.run), 'alias.sessions');"
+  },
+  {
+   "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+   "line": 885,
+   "predicate": "alias",
+   "text": "fs.symlinkSync(h.sessions, alias);"
+  },
+  {
+   "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+   "line": 887,
+   "predicate": "alias",
+   "text": "write(recordFile, { ...readJson(recordFile), directory: 'alias.sessions/fidelity-1' });"
+  },
+  {
+   "file": "packages/polaris-dossier/tsconfig.json",
+   "line": 5,
+   "predicate": "dist",
+   "text": "\"outDir\": \"dist\","
+  },
+  {
+   "file": "packages/polaris-dossier/tsconfig.json",
+   "line": 6,
+   "predicate": "dist",
+   "text": "\"tsBuildInfoFile\": \"dist/.tsbuildinfo\""
+  },
+  {
+   "file": "packages/polaris-generation-consent/package.json",
+   "line": 9,
+   "predicate": "dist",
+   "text": "\"types\": \"./dist/index.d.ts\","
+  },
+  {
+   "file": "packages/polaris-generation-consent/package.json",
+   "line": 10,
+   "predicate": "dist",
+   "text": "\"import\": \"./dist/index.js\","
+  },
+  {
+   "file": "packages/polaris-generation-consent/package.json",
+   "line": 11,
+   "predicate": "dist",
+   "text": "\"default\": \"./dist/index.js\""
+  },
+  {
+   "file": "packages/polaris-generation-consent/package.json",
+   "line": 15,
+   "predicate": "dist",
+   "text": "\"types\": \"./dist/live.d.ts\","
+  },
+  {
+   "file": "packages/polaris-generation-consent/package.json",
+   "line": 16,
+   "predicate": "dist",
+   "text": "\"import\": \"./dist/live.js\","
+  },
+  {
+   "file": "packages/polaris-generation-consent/package.json",
+   "line": 17,
+   "predicate": "dist",
+   "text": "\"default\": \"./dist/live.js\""
+  },
+  {
+   "file": "packages/polaris-generation-consent/package.json",
+   "line": 21,
+   "predicate": "dist",
+   "text": "\"types\": \"./dist/testing.d.ts\","
+  },
+  {
+   "file": "packages/polaris-generation-consent/package.json",
+   "line": 22,
+   "predicate": "dist",
+   "text": "\"import\": \"./dist/testing.js\","
+  },
+  {
+   "file": "packages/polaris-generation-consent/package.json",
+   "line": 23,
+   "predicate": "dist",
+   "text": "\"default\": \"./dist/testing.js\""
+  },
+  {
+   "file": "packages/polaris-generation-consent/tsconfig.json",
+   "line": 5,
+   "predicate": "dist",
+   "text": "\"outDir\": \"dist\","
+  },
+  {
+   "file": "packages/polaris-generation-consent/tsconfig.json",
+   "line": 6,
+   "predicate": "dist",
+   "text": "\"tsBuildInfoFile\": \"dist/.tsbuildinfo\""
+  },
+  {
+   "file": "packages/polaris-generation-core/package.json",
+   "line": 9,
+   "predicate": "dist",
+   "text": "\"types\": \"./dist/index.d.ts\","
+  },
+  {
+   "file": "packages/polaris-generation-core/package.json",
+   "line": 10,
+   "predicate": "dist",
+   "text": "\"import\": \"./dist/index.js\","
+  },
+  {
+   "file": "packages/polaris-generation-core/package.json",
+   "line": 11,
+   "predicate": "dist",
+   "text": "\"default\": \"./dist/index.js\""
+  },
+  {
+   "file": "packages/polaris-generation-core/package.json",
+   "line": 15,
+   "predicate": "dist",
+   "text": "\"types\": \"./dist/live.d.ts\","
+  },
+  {
+   "file": "packages/polaris-generation-core/package.json",
+   "line": 16,
+   "predicate": "dist",
+   "text": "\"import\": \"./dist/live.js\","
+  },
+  {
+   "file": "packages/polaris-generation-core/package.json",
+   "line": 17,
+   "predicate": "dist",
+   "text": "\"default\": \"./dist/live.js\""
+  },
+  {
+   "file": "packages/polaris-generation-core/src/discovery.test.ts",
+   "line": 91,
+   "predicate": "dist",
+   "text": "for (const segment of ['vendor', 'third_party', 'deps', 'node_modules', 'dist', 'build', 'DEPS']) {"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/discovery.test.ts",
+   "line": 99,
+   "predicate": "dist",
+   "text": "for (const name of ['build', 'src/dist', 'deps']) { const [file] = make(name, 'x\\n'); expect(heuristicScore(name, [file!]), name).toBeGreaterThan(-900); }"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/discovery.ts",
+   "line": 149,
+   "predicate": "dist",
+   "text": "const VENDORED_SEGMENT = /^(vendor|third_party|deps|node_modules|dist|build)$/iu;"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/island-boundary.test.ts",
+   "line": 10,
+   "predicate": "dist",
+   "text": "// `./dist/X.js` is `src/X.ts` (workspace-reach.testkit.ts, which the dossier's"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/pipeline.ts",
+   "line": 258,
+   "predicate": "alias",
+   "text": "// Opaque excluded ids are keyed afresh by each read. Only the alias/carrier differs: all safe metadata, reasons and multiplicity"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "line": 17,
+   "predicate": "dist",
+   "text": "function workspace(imports: Record<string, unknown>, dot: unknown = './dist/index.js', app: DependencyFields = {}, lib: DependencyFields = {}): Workspace {"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "line": 19,
+   "predicate": "dist",
+   "text": "{ name: '@syzygy/app', dir: 'apps/app', imports, main: './dist/main.js', ...app },"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "line": 20,
+   "predicate": "dist",
+   "text": "{ name: '@syzygy/lib', dir: 'packages/lib', exports: { '.': dot, './argv': { types: './dist/argv.d.ts', import: './dist/argv.js' } }, ...lib },"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "line": 39,
+   "predicate": "alias",
+   "text": "['a # alias its package does not declare', '#dossier'],"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "line": 47,
+   "predicate": "dist",
+   "text": "['a module of its own package', { '#lib': './dist/local.js' }, 'apps/app/src/local.ts'],"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "line": 48,
+   "predicate": "dist",
+   "text": "['agreeing conditions', { '#lib': { types: './dist/local.d.ts', import: './dist/local.js', default: './dist/local.js' } }, 'apps/app/src/local.ts'],"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "line": 49,
+   "predicate": "alias",
+   "text": "])('follows a # alias its package declares for %s', (_form, imports, module) => {"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "line": 55,
+   "predicate": "alias",
+   "text": "['whose target is another alias', { '#lib': '#other', '#other': '@syzygy/lib' }, 'apps/app/src/main.ts', '#lib'],"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "line": 56,
+   "predicate": "dist",
+   "text": "['whose target leaves its package', { '#lib': '../lib/dist/index.js' }, 'apps/app/src/main.ts', '#lib'],"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "line": 58,
+   "predicate": "dist",
+   "text": "['whose target is a module of its own package outside dist', { '#lib': './src/local.js' }, 'apps/app/src/main.ts', '#lib'],"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "line": 59,
+   "predicate": "dist",
+   "text": "['whose target names no source module', { '#lib': './dist/missing.js' }, 'apps/app/src/main.ts', '#lib'],"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "line": 61,
+   "predicate": "dist",
+   "text": "['whose conditions disagree', { '#lib': { node: '@syzygy/lib', import: './dist/local.js' } }, 'apps/app/src/main.ts', '#lib'],"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "line": 63,
+   "predicate": "alias",
+   "text": "])('reads a # alias %s as naming no module', (_form, imports, from, specifier) => {"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "line": 68,
+   "predicate": "dist",
+   "text": "['node', { types: './dist/index.d.ts', node: './dist/index.js', import: './dist/argv.js' }],"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "line": 69,
+   "predicate": "dist",
+   "text": "['module-sync', { 'module-sync': './dist/index.js', import: './dist/argv.js' }],"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "line": 70,
+   "predicate": "dist",
+   "text": "['require', { import: './dist/argv.js', require: './dist/index.js' }],"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "line": 71,
+   "predicate": "dist",
+   "text": "['default', { import: './dist/argv.js', default: './dist/index.js' }],"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "line": 77,
+   "predicate": "dist",
+   "text": "expect(resolveIn(workspace({}, { import: { types: './dist/argv.d.ts', default: './dist/argv.js' } }), 'apps/app/src/main.ts', '@syzygy/lib')).toBeUndefined();"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "line": 83,
+   "predicate": "alias",
+   "text": "// alias of a registry package read as naming no module too, failing closed (syzygy-bpyt.8.38)."
+  },
+  {
+   "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "line": 90,
+   "predicate": "alias",
+   "text": "['an npm: alias peer dependency', 'dossier', { peerDependencies: { dossier: 'npm:@syzygy/lib@*' } }, {}],"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "line": 101,
+   "predicate": "alias",
+   "text": "['an npm: alias of a registry package', 'dossier', { dependencies: { dossier: 'npm:typescript@^5.5.0' } }, {}],"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "line": 104,
+   "predicate": "alias",
+   "text": "['an npm: alias with no version', 'dossier', { dependencies: { dossier: 'npm:typescript' } }, {}],"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "line": 133,
+   "predicate": "dist",
+   "text": "expect(resolveIn(workspace({}, { types: './dist/argv.d.ts', import: './dist/argv.js', default: './dist/argv.js' }), 'apps/app/src/main.ts', '@syzygy/lib'))"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "line": 138,
+   "predicate": "dist",
+   "text": "// conditions' `./dist/X.js` reads as, so a module reaches the same edges whichever condition loads it."
+  },
+  {
+   "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "line": 140,
+   "predicate": "dist",
+   "text": "expect(resolveIn(workspace({}, { source: './src/argv.ts', types: './dist/argv.d.ts', import: './dist/argv.js', default: './dist/argv.js' }), 'apps/app/src/main.ts', '@syzygy/lib'))"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "line": 146,
+   "predicate": "dist",
+   "text": "['the built target', './dist/argv.js'],"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "line": 150,
+   "predicate": "dist",
+   "text": "expect(resolveIn(workspace({}, { source, types: './dist/argv.d.ts', import: './dist/argv.js', default: './dist/argv.js' }), 'apps/app/src/main.ts', '@syzygy/lib'))"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+   "line": 7,
+   "predicate": "dist",
+   "text": "// specifier resolves through its package's `exports`, where `./dist/X.js` is `src/X.ts`. Each guard says which edges a module has."
+  },
+  {
+   "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+   "line": 9,
+   "predicate": "alias",
+   "text": "// absolute path, a `file:` URL, a `#` alias the importing package's `imports` does not name, and an entry whose conditions name"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+   "line": 12,
+   "predicate": "alias",
+   "text": "// alias it names is followed to its target."
+  },
+  {
+   "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+   "line": 45,
+   "predicate": "dist",
+   "text": "* module that target's `./dist/X.js` reads as, or the entry names none, so a module reads the same under either resolution. */"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+   "line": 54,
+   "predicate": "dist",
+   "text": "return source === first.replace(/^\\.\\/dist\\//u, './src/').replace(/\\.js$/u, '.ts') ? first : undefined;"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+   "line": 57,
+   "predicate": "dist",
+   "text": "/** The module a package's own `./dist/X.js` target names, `src/X.ts`, or undefined for any other target. */"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+   "line": 59,
+   "predicate": "dist",
+   "text": "if (!target.startsWith('./dist/')) return undefined;"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+   "line": 60,
+   "predicate": "dist",
+   "text": "const module = posix.join(dir, target.replace(/^\\.\\/dist\\//u, 'src/').replace(/\\.js$/u, '.ts'));"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+   "line": 69,
+   "predicate": "alias",
+   "text": "* - `npm:`: an alias. npm-package-arg 12.0.2 accepts only a registry spec after `npm:`. npm 11.5.1 skips each declaration in the"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+   "line": 71,
+   "predicate": "alias",
+   "text": "*   npm fetches the alias's spec from the registry unless that declaration is under a workspace's own name and the alias's range"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+   "line": 74,
+   "predicate": "alias",
+   "text": "*   carry a workspace package's name, which other package managers can link locally; every alias is refused, failing closed."
+  },
+  {
+   "file": "packages/polaris-generation-core/tsconfig.json",
+   "line": 5,
+   "predicate": "dist",
+   "text": "\"outDir\": \"dist\","
+  },
+  {
+   "file": "packages/polaris-generation-core/tsconfig.json",
+   "line": 6,
+   "predicate": "dist",
+   "text": "\"tsBuildInfoFile\": \"dist/.tsbuildinfo\""
+  },
+  {
+   "file": "packages/support/package.json",
+   "line": 9,
+   "predicate": "dist",
+   "text": "\"types\": \"./dist/index.d.ts\","
+  },
+  {
+   "file": "packages/support/package.json",
+   "line": 10,
+   "predicate": "dist",
+   "text": "\"import\": \"./dist/index.js\","
+  },
+  {
+   "file": "packages/support/package.json",
+   "line": 11,
+   "predicate": "dist",
+   "text": "\"default\": \"./dist/index.js\""
+  },
+  {
+   "file": "packages/support/tsconfig.json",
+   "line": 5,
+   "predicate": "dist",
+   "text": "\"outDir\": \"dist\","
+  },
+  {
+   "file": "packages/support/tsconfig.json",
+   "line": 6,
+   "predicate": "dist",
+   "text": "\"tsBuildInfoFile\": \"dist/.tsbuildinfo\""
+  },
+  {
+   "file": "packages/three-surface-poc-core/package.json",
+   "line": 9,
+   "predicate": "dist",
+   "text": "\"types\": \"./dist/index.d.ts\","
+  },
+  {
+   "file": "packages/three-surface-poc-core/package.json",
+   "line": 10,
+   "predicate": "dist",
+   "text": "\"import\": \"./dist/index.js\","
+  },
+  {
+   "file": "packages/three-surface-poc-core/package.json",
+   "line": 11,
+   "predicate": "dist",
+   "text": "\"default\": \"./dist/index.js\""
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/evidence-population.ts",
+   "line": 8,
+   "predicate": "dist",
+   "text": "//     (dist/evidence-population.js) by path."
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification-live-source.test.ts",
+   "line": 13,
+   "predicate": "alias",
+   "text": "// bracket, alias or the built-in module table does not slip past a word"
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification-live-source.test.ts",
+   "line": 30,
+   "predicate": "alias",
+   "text": "// an alias in a config file the closure wrote). The static check bounds only"
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification-live-source.test.ts",
+   "line": 33,
+   "predicate": "alias",
+   "text": "// `--config-env`, `--exec-path`, any `alias.` string, and any write to"
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification-live-source.test.ts",
+   "line": 75,
+   "predicate": "alias",
+   "text": "* or that rewrite its configuration (where `alias.*`, `core.fsmonitor` and"
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification-live-source.test.ts",
+   "line": 81,
+   "predicate": "alias",
+   "text": "(text) => text.includes('alias.'),"
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification-live-source.test.ts",
+   "line": 218,
+   "predicate": "alias",
+   "text": "// or an alias starts any command. Outside its import it may appear only"
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification-live-source.test.ts",
+   "line": 313,
+   "predicate": "alias",
+   "text": "[`${RUN_GIT}('git', ['-c', 'alias.probe=!touch x', 'probe']);`, 'names the git option \"-c\"'],"
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification-live-source.test.ts",
+   "line": 316,
+   "predicate": "alias",
+   "text": "[`const key = \\`alias.\\${'p'}\\`;`, 'names the git option \"alias.\"'],"
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification-live-source.test.ts",
+   "line": 332,
+   "predicate": "dist",
+   "text": "[\"const globbed = import.meta.glob('/node_modules/tinyexec/dist/main.js', { eager: true });\\nvoid globbed;\", 'uses import.meta'],"
+  },
+  {
+   "file": "packages/three-surface-poc-core/tsconfig.json",
+   "line": 5,
+   "predicate": "dist",
+   "text": "\"outDir\": \"dist\","
+  },
+  {
+   "file": "packages/three-surface-poc-core/tsconfig.json",
+   "line": 6,
+   "predicate": "dist",
+   "text": "\"tsBuildInfoFile\": \"dist/.tsbuildinfo\""
+  },
+  {
+   "file": "scripts/census_consent_exports.mjs",
+   "line": 42,
+   "predicate": "dist",
+   "text": "/** The source module of one subpath: its `import` target with `./dist/X.js` read as `src/X.ts`. */"
+  },
+  {
+   "file": "scripts/census_consent_exports.mjs",
+   "line": 46,
+   "predicate": "dist",
+   "text": "return path.posix.join(PACKAGE, file.replace(/^\\.\\/dist\\//u, 'src/').replace(/\\.js$/u, '.ts'));"
+  },
+  {
+   "file": "scripts/census_consent_exports.mjs",
+   "line": 48,
+   "predicate": "dist",
+   "text": "const compiledOf = source => path.join(tree, source.replace(/\\/src\\//u, '/dist/').replace(/\\.ts$/u, '.js'));"
+  },
+  {
+   "file": "scripts/check_governance.py",
+   "line": 214,
+   "predicate": "alias",
+   "text": "\"states each elsewhere: T-16's alias, the chain-state alias \""
+  },
+  {
+   "file": "scripts/check_governance.py",
+   "line": 8896,
+   "predicate": "alias",
+   "text": "\"alias\": \"subject path population/order\","
+  },
+  {
+   "file": "scripts/check_governance.py",
+   "line": 10249,
+   "predicate": "alias",
+   "text": "elif kind == \"contract-alias\":"
+  },
+  {
+   "file": "scripts/check_governance.py",
+   "line": 10922,
+   "predicate": "alias",
+   "text": "#: alias or in its \u00a71 rule instead). CG-22c holds the copy to the"
+  },
+  {
+   "file": "scripts/check_governance.py",
+   "line": 11102,
+   "predicate": "alias",
+   "text": "bare alias. A word-boundary match on the registry's own citation form"
+  },
+  {
+   "file": "scripts/check_polaris_response_ceiling_reading.py",
+   "line": 38,
+   "predicate": "alias",
+   "text": "through an alias, a computed import specifier, a dependency other than"
+  },
+  {
+   "file": "scripts/check_polaris_response_ceiling_reading.py",
+   "line": 55,
+   "predicate": "dist",
+   "text": "dist and test-fixtures, and skips *.test.* files."
+  },
+  {
+   "file": "scripts/check_polaris_response_ceiling_reading.py",
+   "line": 272,
+   "predicate": "dist",
+   "text": "dirnames[:] = sorted(d for d in dirnames if d not in (\"node_modules\", \"dist\", \"test-fixtures\"))"
+  },
+  {
+   "file": "scripts/clean_build.mjs",
+   "line": 3,
+   "predicate": "dist",
+   "text": "// `--force` rewrites the first and keeps the second. This removes the dist of every project `tsc -b` builds for the given ones"
+  },
+  {
+   "file": "scripts/clean_build.mjs",
+   "line": 22,
+   "predicate": "dist",
+   "text": "if (config.compilerOptions?.outDir !== 'dist' || config.compilerOptions?.tsBuildInfoFile !== 'dist/.tsbuildinfo') {"
+  },
+  {
+   "file": "scripts/clean_build.mjs",
+   "line": 23,
+   "predicate": "dist",
+   "text": "throw new Error(`${path}: its outputs and incremental state are not both under dist`);"
+  },
+  {
+   "file": "scripts/clean_build.mjs",
+   "line": 30,
+   "predicate": "dist",
+   "text": "for (const project of built) rmSync(join(project, 'dist'), { recursive: true, force: true });"
+  },
+  {
+   "file": "scripts/derive_generator_sent_text.mjs",
+   "line": 18,
+   "predicate": "dist",
+   "text": "import { runGenerationPipeline, promptForStage, stageSchema, generationAnchorId, gitBlobObjectId, READER_QUESTION_TOPICS, discoveryMapEnvelope, discoveryReduceEnvelope, discoverAndSelect, generationSourcesForBody, DEFAULT_DISCOVERY_BUDGET }"
+  },
+  {
+   "file": "scripts/differential_consent_act_families.mjs",
+   "line": 19,
+   "predicate": "dist",
+   "text": "// with the audit records they write), and the dossier screen (`loadDossierScreen` in `packages/polaris-dossier/dist/screen.js`, with"
+  },
+  {
+   "file": "scripts/differential_consent_act_families.mjs",
+   "line": 39,
+   "predicate": "dist",
+   "text": "//   support (`packages/polaris-generation-consent/dist/testing.js`);"
+  },
+  {
+   "file": "scripts/differential_consent_act_families.mjs",
+   "line": 214,
+   "predicate": "dist",
+   "text": "const CONSENT_ROOT = 'packages/polaris-generation-consent/dist/index.js';"
+  },
+  {
+   "file": "scripts/differential_consent_act_families.mjs",
+   "line": 217,
+   "predicate": "dist",
+   "text": "return Object.hasOwn(manifest.exports, './live') ? 'packages/polaris-generation-consent/dist/live.js' : CONSENT_ROOT;"
+  },
+  {
+   "file": "scripts/differential_consent_act_families.mjs",
+   "line": 225,
+   "predicate": "dist",
+   "text": "await module(tree, 'packages/polaris-dossier/dist/gate-sources.js'),"
+  },
+  {
+   "file": "scripts/differential_consent_act_families.mjs",
+   "line": 227,
+   "predicate": "dist",
+   "text": "{ root: await module(tree, CONSENT_ROOT), screen: await module(tree, 'packages/polaris-dossier/dist/screen.js') },"
+  },
+  {
+   "file": "scripts/differential_consent_act_families.mjs",
+   "line": 279,
+   "predicate": "dist",
+   "text": "const TESTING = 'packages/polaris-generation-consent/dist/testing.js';"
+  },
+  {
+   "file": "scripts/differential_consent_act_families.mjs",
+   "line": 557,
+   "predicate": "dist",
+   "text": "packageReaderTs: 'packages/polaris-generation-consent/src/package-reader.ts', packageReaderJs: 'packages/polaris-generation-consent/dist/package-reader.js',"
+  },
+  {
+   "file": "scripts/differential_consent_act_families.mjs",
+   "line": 558,
+   "predicate": "dist",
+   "text": "gateSourcesTs: 'packages/polaris-dossier/src/gate-sources.ts', gateSourcesJs: 'packages/polaris-dossier/dist/gate-sources.js', testingJs: TESTING,"
+  },
+  {
+   "file": "scripts/differential_consent_act_families.mjs",
+   "line": 559,
+   "predicate": "dist",
+   "text": "consentPortsTs: 'packages/polaris-generation-consent/src/consent-ports.ts', consentPortsJs: 'packages/polaris-generation-consent/dist/consent-ports.js',"
+  },
+  {
+   "file": "scripts/differential_consent_act_families.mjs",
+   "line": 560,
+   "predicate": "dist",
+   "text": "inForceTs: 'packages/polaris-generation-consent/src/in-force.ts', inForceJs: 'packages/polaris-generation-consent/dist/in-force.js',"
+  },
+  {
+   "file": "scripts/differential_consent_act_families.mjs",
+   "line": 561,
+   "predicate": "dist",
+   "text": "consentIndexJs: CONSENT_ROOT, consentLiveTs: 'packages/polaris-generation-consent/src/live.ts', consentLiveJs: 'packages/polaris-generation-consent/dist/live.js',"
+  },
+  {
+   "file": "scripts/differential_consent_act_families.mjs",
+   "line": 562,
+   "predicate": "dist",
+   "text": "screenTs: 'packages/polaris-dossier/src/screen.ts', screenJs: 'packages/polaris-dossier/dist/screen.js',"
+  },
+  {
+   "file": "scripts/differential_consent_act_families.mjs",
+   "line": 586,
+   "predicate": "dist",
+   "text": "const consent = await import(pathToFileURL(path.join(root, 'packages/polaris-generation-consent/dist/index.js')).href);"
+  },
+  {
+   "file": "scripts/differential_consent_act_families.mjs",
+   "line": 587,
+   "predicate": "dist",
+   "text": "const gate = await import(pathToFileURL(path.join(root, 'packages/polaris-dossier/dist/gate-sources.js')).href);"
+  },
+  {
+   "file": "scripts/differential_consent_act_families.mjs",
+   "line": 594,
+   "predicate": "dist",
+   "text": "const { CITATION_ALLOWLIST } = await import(pathToFileURL(path.join(root, 'packages/polaris-generation-consent/dist/citation-allowlist.js')).href);"
+  },
+  {
+   "file": "scripts/differential_line_slot.mjs",
+   "line": 47,
+   "predicate": "dist",
+   "text": "const CONSENT = 'packages/polaris-generation-consent/dist/index.js';"
+  },
+  {
+   "file": "scripts/differential_line_slot.mjs",
+   "line": 48,
+   "predicate": "dist",
+   "text": "const GATE = 'packages/polaris-dossier/dist/gate-sources.js';"
+  },
+  {
+   "file": "scripts/differential_line_slot.mjs",
+   "line": 49,
+   "predicate": "dist",
+   "text": "const TESTING = 'packages/polaris-generation-consent/dist/testing.js';"
+  },
+  {
+   "file": "scripts/differential_line_slot.mjs",
+   "line": 179,
+   "predicate": "dist",
+   "text": "recorderTemplateJsSha256: sha256(fs.readFileSync(path.join(tree, 'packages/polaris-generation-consent/dist/recorder-template.js'), 'utf8')),"
+  },
+  {
+   "file": "scripts/dossier_scale_measure.mjs",
+   "line": 14,
+   "predicate": "dist",
+   "text": "// Needs `npm run build` (it imports the built dist of packages/polaris-dossier and apps/three-surface-poc)."
+  },
+  {
+   "file": "scripts/dossier_scale_measure.mjs",
+   "line": 31,
+   "predicate": "dist",
+   "text": "const dist = (rel) => import(pathToFileURL(path.join(ROOT, rel)).href);"
+  },
+  {
+   "file": "scripts/dossier_scale_measure.mjs",
+   "line": 32,
+   "predicate": "dist",
+   "text": "const kit = await dist('packages/polaris-dossier/dist/full-run.testkit.js');"
+  },
+  {
+   "file": "scripts/dossier_scale_measure.mjs",
+   "line": 33,
+   "predicate": "dist",
+   "text": "const { runDossierCli } = await dist('packages/polaris-dossier/dist/cli.js');"
+  },
+  {
+   "file": "scripts/dossier_scale_measure.mjs",
+   "line": 34,
+   "predicate": "dist",
+   "text": "const { openPinnedObjectReader } = await dist('packages/polaris-dossier/dist/git-object-reader.js');"
+  },
+  {
+   "file": "scripts/dossier_scale_measure.mjs",
+   "line": 35,
+   "predicate": "dist",
+   "text": "const { cloneGitDirShape, cloneStoreShape } = await dist('packages/polaris-dossier/dist/clone-shape.js');"
+  },
+  {
+   "file": "scripts/dossier_scale_measure.mjs",
+   "line": 36,
+   "predicate": "dist",
+   "text": "const { initRun } = await dist('packages/polaris-dossier/dist/init.js');"
+  },
+  {
+   "file": "scripts/dossier_scale_measure.mjs",
+   "line": 37,
+   "predicate": "dist",
+   "text": "const { renderLocalDossier } = await dist('apps/three-surface-poc/dist/polaris-generation/dossier-site.js');"
+  },
+  {
+   "file": "scripts/measure_cli_island_loads.mjs",
+   "line": 7,
+   "predicate": "dist",
+   "text": "// It loads, in this process, every module the CLI entry (`apps/syzygy/dist/main.js`) imports: its one static workspace import and"
+  },
+  {
+   "file": "scripts/measure_cli_island_loads.mjs",
+   "line": 21,
+   "predicate": "dist",
+   "text": "const ENTRY = 'apps/syzygy/dist/main.js';"
+  },
+  {
+   "file": "scripts/measure_cli_island_loads.mjs",
+   "line": 43,
+   "predicate": "dist",
+   "text": "const compiled = source => source.replace(/\\/src\\//u, '/dist/').replace(/\\.ts$/u, '.js');"
+  },
+  {
+   "file": "scripts/measure_consent_gate_recognition.mjs",
+   "line": 47,
+   "predicate": "dist",
+   "text": "const dist = rel => import(pathToFileURL(path.join(ROOT, rel)).href);"
+  },
+  {
+   "file": "scripts/measure_consent_gate_recognition.mjs",
+   "line": 62,
+   "predicate": "dist",
+   "text": "const consent = await dist('packages/polaris-generation-consent/dist/index.js');"
+  },
+  {
+   "file": "scripts/measure_consent_gate_recognition.mjs",
+   "line": 63,
+   "predicate": "dist",
+   "text": "const gate = await dist('packages/polaris-dossier/dist/gate-sources.js');"
+  },
+  {
+   "file": "scripts/measure_consent_gate_recognition.mjs",
+   "line": 64,
+   "predicate": "dist",
+   "text": "const { HEAD_FIELD_ALTERATION, PROSE_ALTERATIONS } = await dist('packages/polaris-generation-consent/dist/testing.js');"
+  },
+  {
+   "file": "scripts/measure_decisions_sweep.mjs",
+   "line": 24,
+   "predicate": "dist",
+   "text": "const GATE = 'packages/polaris-dossier/dist/gate-sources.js';"
+  },
+  {
+   "file": "scripts/measure_decisions_sweep.mjs",
+   "line": 75,
+   "predicate": "dist",
+   "text": "packageReaderJsSha256: sha256(fs.readFileSync(path.join(tree, 'packages/polaris-generation-consent/dist/package-reader.js'), 'utf8')),"
+  },
+  {
+   "file": "scripts/measure_line_slot_reads.mjs",
+   "line": 50,
+   "predicate": "dist",
+   "text": "consent: await import(pathToFileURL(path.join(root, 'packages/polaris-generation-consent/dist/index.js')).href),"
+  },
+  {
+   "file": "scripts/measure_line_slot_reads.mjs",
+   "line": 51,
+   "predicate": "dist",
+   "text": "gate: await import(pathToFileURL(path.join(root, 'packages/polaris-dossier/dist/gate-sources.js')).href),"
+  },
+  {
+   "file": "scripts/measure_line_slot_reads.mjs",
+   "line": 54,
+   "predicate": "dist",
+   "text": "const testing = await import(pathToFileURL(path.join(tree, 'packages/polaris-generation-consent/dist/testing.js')).href);"
+  },
+  {
+   "file": "scripts/measure_line_slot_reads.mjs",
+   "line": 113,
+   "predicate": "dist",
+   "text": "recorderTemplateJsSha256: sha256(fs.readFileSync(path.join(root, 'packages/polaris-generation-consent/dist/recorder-template.js'), 'utf8')) });"
+  },
+  {
+   "file": "scripts/measure_slot_line_backtracking.mjs",
+   "line": 29,
+   "predicate": "dist",
+   "text": "const dist = rel => import(pathToFileURL(path.join(ROOT, rel)).href);"
+  },
+  {
+   "file": "scripts/measure_slot_line_backtracking.mjs",
+   "line": 33,
+   "predicate": "dist",
+   "text": "const { recorderTemplate, templateFields, SLOT } = await dist('packages/polaris-generation-consent/dist/index.js');"
+  },
+  {
+   "file": "scripts/measure_slot_line_backtracking.mjs",
+   "line": 34,
+   "predicate": "dist",
+   "text": "const { HEAD_FIELD_ALTERATION, PROSE_ALTERATIONS } = await dist('packages/polaris-generation-consent/dist/testing.js');"
+  },
+  {
+   "file": "scripts/prepare_three_surface_poc_governedby_reference_recording.py",
+   "line": 230,
+   "predicate": "alias",
+   "text": "findings.append(\"P115 family contains an unsupported, alias, naked or malformed delimiter\")"
+  },
+  {
+   "file": "scripts/prepare_three_surface_poc_governedby_reference_recording.py",
+   "line": 1807,
+   "predicate": "alias",
+   "text": "alias = RECORD.with_name(RECORD.name.replace(\"v1.0\", \"v01.0\"))"
+  },
+  {
+   "file": "scripts/prepare_three_surface_poc_governedby_reference_recording.py",
+   "line": 1812,
+   "predicate": "alias",
+   "text": "(\"POP-3 v01 alias file\", \"file\", alias),"
+  },
+  {
+   "file": "scripts/prepare_three_surface_poc_governedby_reference_recording.py",
+   "line": 1821,
+   "predicate": "alias",
+   "text": "(\"POP companion whitespace alias\", \"whitespace\", None),"
+  },
+  {
+   "file": "scripts/prepare_three_surface_poc_governedby_reference_recording.py",
+   "line": 1842,
+   "predicate": "alias",
+   "text": "for path in (unsupported, alias, extra):"
+  },
+  {
+   "file": "scripts/probe_pwb_gate_on_altered_policy_act.mjs",
+   "line": 13,
+   "predicate": "dist",
+   "text": "// loaded from the three `dist` directories, which git does not track. It reads only TREE's Syzygy governance tree, never an observed"
+  },
+  {
+   "file": "scripts/probe_pwb_gate_on_altered_policy_act.mjs",
+   "line": 24,
+   "predicate": "dist",
+   "text": "const DISTS = ['apps/three-surface-poc/dist', 'packages/three-surface-poc-core/dist', 'packages/polaris-generation-consent/dist'];"
+  },
+  {
+   "file": "scripts/probe_pwb_gate_on_altered_policy_act.mjs",
+   "line": 34,
+   "predicate": "dist",
+   "text": "const dist = rel => import(pathToFileURL(path.join(root, rel)).href);"
+  },
+  {
+   "file": "scripts/probe_pwb_gate_on_altered_policy_act.mjs",
+   "line": 35,
+   "predicate": "dist",
+   "text": "const { loadBodyReadAuthorityInputs, defaultReadGitBlob, PWB_ACT_RECORDS, pwbAuthorityExpectations } = await dist('apps/three-surface-poc/dist/governance-inputs.js');"
+  },
+  {
+   "file": "scripts/probe_pwb_gate_on_altered_policy_act.mjs",
+   "line": 36,
+   "predicate": "dist",
+   "text": "const { evaluateBodyReadAuthority } = await dist('packages/three-surface-poc-core/dist/body-read-authority.js');"
+  },
+  {
+   "file": "scripts/probe_pwb_gate_on_altered_policy_act.mjs",
+   "line": 37,
+   "predicate": "dist",
+   "text": "const { PROSE_ALTERATIONS, HEAD_FIELD_ALTERATION } = await dist('packages/polaris-generation-consent/dist/testing.js');"
+  },
+  {
+   "file": "scripts/record_versioned_signoff.py",
+   "line": 73,
+   "predicate": "alias",
+   "text": "refuses. The package key or alias binds only as a whole token"
+  },
+  {
+   "file": "scripts/record_versioned_signoff.py",
+   "line": 2946,
+   "predicate": "alias",
+   "text": "results.append((\"a raw naming the package only by its declared alias records\", code == 0))"
+  },
+  {
+   "file": "scripts/record_versioned_signoff.py",
+   "line": 2947,
+   "predicate": "alias",
+   "text": "refused(\"a raw naming neither the package nor its declared alias\","
+  },
+  {
+   "file": "scripts/record_versioned_signoff.py",
+   "line": 2950,
+   "predicate": "alias",
+   "text": "# R-364-2 F4: the key and the alias bind only as whole tokens outside a fence."
+  },
+  {
+   "file": "scripts/record_versioned_signoff.py",
+   "line": 2960,
+   "predicate": "alias",
+   "text": "refused(\"a raw naming the alias only as a longer name\","
+  },
+  {
+   "file": "scripts/redis_screening_remeasure.mjs",
+   "line": 43,
+   "predicate": "dist",
+   "text": "// The gate code (`openRun`, the read gate, the screens) is loaded from this checkout's `dist` only. A root override that names another"
+  },
+  {
+   "file": "scripts/redis_screening_remeasure.mjs",
+   "line": 322,
+   "predicate": "dist",
+   "text": "const dist = (rel) => import(pathToFileURL(path.join(ROOT, rel)).href);"
+  },
+  {
+   "file": "scripts/redis_screening_remeasure.mjs",
+   "line": 390,
+   "predicate": "dist",
+   "text": "const { createPackageGateSources, buildFidelityPacket, buildDossierScreen, loadDossierScreen, openPinnedObjectReader } = await dist('packages/polaris-dossier/dist/index.js');"
+  },
+  {
+   "file": "scripts/redis_screening_remeasure.mjs",
+   "line": 391,
+   "predicate": "dist",
+   "text": "const { collectBlocks, collectCitations } = await dist('packages/polaris-dossier/dist/check.js');"
+  },
+  {
+   "file": "scripts/redis_screening_remeasure.mjs",
+   "line": 392,
+   "predicate": "dist",
+   "text": "const { openRun } = await dist('packages/polaris-dossier/dist/inventory.js');"
+  },
+  {
+   "file": "scripts/redis_screening_remeasure.mjs",
+   "line": 393,
+   "predicate": "dist",
+   "text": "const { POLICY_PATH, readClassActState } = await dist('packages/polaris-generation-consent/dist/index.js');"
+  },
+  {
+   "file": "scripts/redis_screening_remeasure.mjs",
+   "line": 394,
+   "predicate": "dist",
+   "text": "const { spanTouchesWithheld } = await dist('packages/polaris-generation-core/dist/index.js');"
+  },
+  {
+   "file": "scripts/run_consent_census_mutants.py",
+   "line": 12,
+   "predicate": "dist",
+   "text": "comparison and the wall time. It writes only OUT.json, the mutated files while a mutant runs, and the package's `dist/`.\"\"\""
+  },
+  {
+   "file": "scripts/run_consent_census_mutants.py",
+   "line": 35,
+   "predicate": "dist",
+   "text": "('C7-subpath-removed', [(MANIFEST, '    \"./testing\": {\\n      \"types\": \"./dist/testing.d.ts\",\\n      \"import\": \"./dist/testing.js\",\\n      \"default\": \"./dist/testing.js\"\\n    }\\n', ''),"
+  },
+  {
+   "file": "scripts/run_consent_census_mutants.py",
+   "line": 36,
+   "predicate": "dist",
+   "text": "(MANIFEST, '      \"default\": \"./dist/live.js\"\\n    },\\n', '      \"default\": \"./dist/live.js\"\\n    }\\n')],"
+  },
+  {
+   "file": "vitest.config.ts",
+   "line": 6,
+   "predicate": "dist",
+   "text": "// dist. Vitest runs test files through its server-side resolver, so the condition goes there (a top-level `resolve.conditions`"
+  }
+ ]
+}

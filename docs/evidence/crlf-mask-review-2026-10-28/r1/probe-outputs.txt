@@ -1,0 +1,110 @@
+# rev-544 probe outputs, run 2026-10-27T16:11:24Z against builds of c399eda9 (head) and c399eda9-with-the-f7ea8584-mask (base); loadavg 24.91 27.79 30.55 39/9735 3656906
+## edge-print.mjs (head)
+"" -> {"kind":"masked","masked":"","fences":0,"spans":0} lengthKept=true
+"\r" -> {"kind":"masked","masked":"\r","fences":0,"spans":0} lengthKept=true
+"\n" -> {"kind":"masked","masked":"\n","fences":0,"spans":0} lengthKept=true
+"\r\n" -> {"kind":"masked","masked":"\r\n","fences":0,"spans":0} lengthKept=true
+"\r\r\n" -> {"kind":"masked","masked":"\r\r\n","fences":0,"spans":0} lengthKept=true
+"\n\r" -> {"kind":"masked","masked":"\n\r","fences":0,"spans":0} lengthKept=true
+"\r\r" -> {"kind":"masked","masked":"\r\r","fences":0,"spans":0} lengthKept=true
+"a\r" -> {"kind":"masked","masked":"a\r","fences":0,"spans":0} lengthKept=true
+"```\rx\r```\r" -> {"kind":"masked","masked":"   \r \r   \r","fences":1,"spans":0} lengthKept=true
+"```\r\n<x>\r\n```" -> {"kind":"masked","masked":"   \r\n   \r\n   ","fences":1,"spans":0} lengthKept=true
+"\ud800" -> {"kind":"masked","masked":"\ud800","fences":0,"spans":0} lengthKept=true
+"\udc00`\ud800`\r" -> {"kind":"masked","masked":"\udc00   \r","fences":0,"spans":1} lengthKept=true
+"`\ud800\r\udc00`" -> {"kind":"masked","masked":"  \r  ","fences":0,"spans":1} lengthKept=true
+## positions-print.mjs
+{"name":"bare CR, script-element","text":"a\r<script>x</script>","base":"script-element@1:3,script-element@1:12","head":"script-element@1:3,script-element@1:12","lfForm":"script-element@2:1,script-element@2:10"}
+{"name":"CRLF, script-element","text":"a\r\n<script>x</script>","base":"script-element@2:1,script-element@2:10","head":"script-element@2:1,script-element@2:10","lfForm":"script-element@2:1,script-element@2:10"}
+{"name":"bare CR, unclosed span","text":"a\rb\r`x","base":"malformed-code-context:unclosed-inline-span@1:1","head":"malformed-code-context:unclosed-inline-span@3:1","lfForm":"malformed-code-context:unclosed-inline-span@3:1"}
+{"name":"CRLF, unclosed span","text":"a\r\nb\r\n`x","base":"malformed-code-context:unclosed-inline-span@3:1","head":"malformed-code-context:unclosed-inline-span@3:1","lfForm":"malformed-code-context:unclosed-inline-span@3:1"}
+{"name":"mixed (LF, CR), script-element on line 3","text":"a\nb\r<script>x</script>","base":"script-element@2:3,script-element@2:12","head":"script-element@2:3,script-element@2:12","lfForm":"script-element@3:1,script-element@3:10"}
+## mixed-crlf-positions.mjs (head, 100000, seed 7)
+{"textsMixingLfAndCrlfOnly":84512,"findingsDifferFromLfFormIncludingPositions":0}
+## u2028-probe.mjs
+{"name":"control: opener with backtick info, script, closer","head":["malformed-code-context:backtick-fence-with-backtick-in-info-string"],"baseEqualsHead":true}
+{"name":"same, U+2028 in the info string","head":["malformed-code-context:unclosed-inline-span"],"baseEqualsHead":true}
+{"name":"same, U+2029 in the info string","head":["malformed-code-context:unclosed-inline-span"],"baseEqualsHead":true}
+{"name":"same, U+0085 in the info string","head":["malformed-code-context:backtick-fence-with-backtick-in-info-string"],"baseEqualsHead":true}
+{"name":"control: one line, backtick info holding script and backticks","head":["malformed-code-context:backtick-fence-with-backtick-in-info-string"],"baseEqualsHead":true}
+{"name":"one line, U+2028 after the opener run","head":[],"baseEqualsHead":true}
+{"name":"tilde opener with U+2028 info, script, closer","head":["malformed-code-context:unclosed-fence"],"baseEqualsHead":true}
+## widening-probe.mjs
+{"build":"head","text":"tilde fence around a script, U+2028 line separators","decision":"script-element,script-element"}
+{"build":"head","text":"tilde fence around a script, U+0085 line separators","decision":"malformed-code-context:unclosed-fence"}
+{"build":"RM7-u2028","text":"tilde fence around a script, U+2028 line separators","decision":"admit"}
+{"build":"RM7-u2028","text":"tilde fence around a script, U+0085 line separators","decision":"malformed-code-context:unclosed-fence"}
+{"build":"RM11-nel","text":"tilde fence around a script, U+2028 line separators","decision":"script-element,script-element"}
+{"build":"RM11-nel","text":"tilde fence around a script, U+0085 line separators","decision":"admit"}
+{"build":"RM12-js-set","text":"tilde fence around a script, U+2028 line separators","decision":"admit"}
+{"build":"RM12-js-set","text":"tilde fence around a script, U+0085 line separators","decision":"malformed-code-context:unclosed-fence"}
+## proposed-pin-check.mjs (head build; then the base build in the head slot)
+{"build":"head","pinPasses":true,"got":["a       d","a       d","a       d"]}
+{"build":"RM7-u2028","pinPasses":false,"got":["a       d","a       d","a       d"]}
+{"build":"RM11-nel","pinPasses":false,"got":["a       d","a       d","a      d"]}
+{"build":"RM12-js-set","pinPasses":false,"got":["a       d","a       d","a       d"]}
+{"build":"head","pinPasses":true,"got":["a       d","a       d","a       d"]}
+## big-fence-probe.mjs 100000 / 150000
+{"terminator":"LF","lines":100000,"bytes":100008,"build":"base","out":"masked fences=1 lengthKept=true"}
+{"terminator":"LF","lines":100000,"bytes":100008,"build":"head","out":"masked fences=1 lengthKept=true"}
+{"terminator":"CRLF","lines":100000,"bytes":200010,"build":"base","out":"masked fences=0 lengthKept=true"}
+{"terminator":"CRLF","lines":100000,"bytes":200010,"build":"head","out":"masked fences=1 lengthKept=true"}
+{"terminator":"CR","lines":100000,"bytes":100008,"build":"base","out":"masked fences=0 lengthKept=true"}
+{"terminator":"CR","lines":100000,"bytes":100008,"build":"head","out":"masked fences=1 lengthKept=true"}
+{"terminator":"LF","lines":150000,"bytes":150008,"build":"base","out":"THROWS RangeError: Maximum call stack size exceeded"}
+{"terminator":"LF","lines":150000,"bytes":150008,"build":"head","out":"THROWS RangeError: Maximum call stack size exceeded"}
+{"terminator":"CRLF","lines":150000,"bytes":300010,"build":"base","out":"masked fences=0 lengthKept=true"}
+{"terminator":"CRLF","lines":150000,"bytes":300010,"build":"head","out":"THROWS RangeError: Maximum call stack size exceeded"}
+{"terminator":"CR","lines":150000,"bytes":150008,"build":"base","out":"masked fences=0 lengthKept=true"}
+{"terminator":"CR","lines":150000,"bytes":150008,"build":"head","out":"THROWS RangeError: Maximum call stack size exceeded"}
+## big-fence-reader-probe.mjs
+{"build":"base","bytes":450017,"maxBytesPerSource":1048576,"out":"text read"}
+{"build":"head","bytes":450017,"maxBytesPerSource":1048576,"out":"THROWS RangeError: Maximum call stack size exceeded"}
+## eighteen-ids.py (method 1)
+rows 33 lines in block 33
+18 ['backtick-col0', 'tilde-col0', 'tilde-indent4', 'opener-four-closer-three', 'closer-longer', 'closer-indent4', 'closer-trailing-space', 'closer-with-info', 'closer-longer-with-info', 'closer-with-text', 'closer-other-char', 'tilde-fence-backtick-line', 'tilde-opener-four-closer-three', 'info-string', 'info-string-space', 'tilde-info-with-backtick', 'empty-fence', 'two-fences']
+## eighteen-ids.mjs (method 2)
+33 18 ["backtick-col0","tilde-col0","tilde-indent4","opener-four-closer-three","closer-longer","closer-indent4","closer-trailing-space","closer-with-info","closer-longer-with-info","closer-with-text","closer-other-char","tilde-fence-backtick-line","tilde-opener-four-closer-three","info-string","info-string-space","tilde-info-with-backtick","empty-fence","two-fences"]
+## delta-recount.mjs
+{"fenceCases":33,"fence":{"texts":8050,"refuses":202,"accepts":2705,"sameDecisionOtherFindings":945,"unchanged":4198},"n2Cases":6,"n2":{"texts":2100,"refuses":142,"accepts":449,"sameDecisionOtherFindings":867,"unchanged":642}}
+## digest-sweep.py (c399eda9)
+tracked files 6652
+base method1 22 method2 22 agree True
+    docs/evidence/fence-rules-review-2026-10-27/r1/comment-only-delta.json
+    docs/evidence/fence-rules-review-2026-10-27/r1/comment-only-mutant-typeonly.json
+    docs/evidence/fence-rules-review-2026-10-27/r1/comment-only-record-range.json
+    docs/evidence/fence-rules-review-2026-10-27/r1/digest-citers-9d9c98a6.json
+    docs/evidence/fence-rules-review-2026-10-27/r2/out/co-f74-ba7.json
+    docs/evidence/fence-rules-review-2026-10-27/r2/out/ll-f74-ba7.json
+    docs/evidence/fence-rules-review-2026-10-27/r2/out/neg-typeonly-co.json
+    docs/evidence/fence-rules-review-2026-10-27/r2/out/neg-typeonly-ll.json
+    docs/evidence/syzygy-bpyt-16/crlf-mask-2026-10-27.json
+    docs/evidence/syzygy-bpyt-16/crlf-mask-mutants-output.json
+    docs/evidence/syzygy-bpyt-16/digest-citers-6928b50a.json
+    docs/evidence/syzygy-bpyt-6-3/comment-only-merged-a5ab2b28-a5b1d532.json
+    docs/evidence/syzygy-bpyt-6-3/dc3-fence-rules-2026-10-25.json
+    docs/evidence/syzygy-bpyt-6-3/fence-digest-citers.json
+    docs/evidence/syzygy-bpyt-6-3/repair1-comment-only-f7477f52-ba7fce36.json
+    docs/evidence/syzygy-bpyt-6-3/repair1-line-level-f7477f52-ba7fce36.json
+    docs/evidence/syzygy-bpyt-6-3/repair1-neg-typeonly-comment-only.json
+    docs/evidence/syzygy-bpyt-6-3/repair1-neg-typeonly-line-level.json
+    docs/evidence/utf8-canonical-review-2026-10-27/r2/comment-only-a5ab2b28-41932c3b.json
+    docs/evidence/utf8-canonical-review-2026-10-27/r2/comment-only-a5ab2b28-a5b1d532.json
+    docs/evidence/utf8-canonical-review-2026-10-27/r2/comment-only-e6afa657-a5b1d532.json
+    docs/evidence/utf8-canonical-review-2026-10-27/r2/r2-review.diff
+code method1 3 method2 3 agree True
+    docs/evidence/syzygy-bpyt-16/crlf-mask-2026-10-27.json
+    docs/evidence/syzygy-bpyt-16/crlf-mask-mutants-output.json
+    docs/evidence/syzygy-bpyt-16/digest-citers-6928b50a.json
+## separator-sweep.py (c399eda9)
+tracked files under packages/ and apps/: 549
+files holding one: 4
+   ('apps/three-surface-poc/src/canonical-json-divergence.test.ts', ['U+2028'], [])
+   ('packages/polaris-generation-consent/src/recorder-template.test.ts', [], ['\\u0085', '\\u2028', '\\u2029'])
+   ('packages/polaris-generation-core/src/dossier-profile.test.ts', [], ['\\u2028'])
+   ('packages/polaris-generation-core/src/quote-locate.test.ts', ['U+2028', 'U+2029'], [])
+## built module digests
+27975814d7f8310f68c6937eebf6c4db60c8cbf2fe2d0f1e6db72f62f31df00c  base-dist/markdown-code-context.js
+6e22d480bcbf855ecc174c1a8fe4c1701806ab7adfa0aee97b01ddf61af8a38a  head-dist/markdown-code-context.js
+0aef74669d3d7dec89caea2fe370ffb91ce9c584102faae1342dfaea3e8a1002  base-dist/git-object-reader.js
+0aef74669d3d7dec89caea2fe370ffb91ce9c584102faae1342dfaea3e8a1002  head-dist/git-object-reader.js

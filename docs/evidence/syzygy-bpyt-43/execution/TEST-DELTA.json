@@ -1,0 +1,7 @@
+{
+  "subject": "2f23d97ef854a0297fdc8a0cdb34b9688531dfd0",
+  "base": "740279435178a882f1c2d526a2a7ea0bf2b52cbc",
+  "exit": 0,
+  "stdout": "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts + 0 ~ 2 - 0\n   ~ daemon entry: the one changed input, `dossier` as the first argument > every mention of the POC app in main.ts lies inside the `dossier` or the `polar\n   ~ daemon entry: the one changed input, `dossier` as the first argument > the daemon path never loads the POC app, and the `dossier render` branch does\nTests: +0 ~2 -0\n",
+  "stderr": ""
+}

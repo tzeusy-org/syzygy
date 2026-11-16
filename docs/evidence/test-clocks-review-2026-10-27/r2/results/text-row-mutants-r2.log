@@ -1,0 +1,39 @@
+{"row": "unmutated", "variant": "control", "status": "passed", "failure": ""}
+{"row": "unmutated", "variant": "R1-flag-between-branches", "status": "failed", "failure": "AssertionError: expected [ Array(1) ] to deeply equal []"}
+{"row": "unmutated", "variant": "R2-flag-createRequire-before-daemon", "status": "failed", "failure": "AssertionError: expected [ Array(1) ] to deeply equal []"}
+{"row": "unmutated", "variant": "R3-runtime-hook", "status": "failed", "failure": "AssertionError: expected [ Array(1) ] to deeply equal []"}
+{"row": "unmutated", "variant": "S1-else-if-flag-after-dossier", "status": "passed", "failure": ""}
+{"row": "unmutated", "variant": "S2-same-line-if-after-dossier", "status": "passed", "failure": ""}
+{"row": "unmutated", "variant": "S3-else-if-flag-after-polaris", "status": "passed", "failure": ""}
+{"row": "unmutated", "variant": "S4-else-runtime-hook-after-dossier", "status": "passed", "failure": ""}
+{"row": "unmutated", "variant": "S5-else-createRequire-flag-after-polaris", "status": "passed", "failure": ""}
+{"row": "unmutated", "variant": "S6-misindented-close-after-dossier", "status": "passed", "failure": ""}
+{"row": "unmutated", "variant": "E-comment-in-branch", "status": "passed", "failure": ""}
+{"row": "unmutated", "variant": "E-renamed-binding", "status": "passed", "failure": ""}
+{"row": "unmutated", "variant": "E-type-only-import", "status": "failed", "failure": "AssertionError: expected [ Array(1) ] to deeply equal []"}
+{"row": "unmutated", "variant": "C1-comment-outside-branches", "status": "failed", "failure": "AssertionError: expected [ Array(1) ] to deeply equal []"}
+{"row": "unmutated", "variant": "L1-else-if-chain", "status": "failed", "failure": "AssertionError: expected -1 to be greater than -1"}
+{"row": "unmutated", "variant": "L2-nested-function-in-dossier", "status": "passed", "failure": ""}
+{"row": "unmutated", "variant": "L3-nested-try-in-polaris", "status": "passed", "failure": ""}
+{"row": "unmutated", "variant": "E-branch-swap", "status": "passed", "failure": ""}
+{"row": "unmutated", "variant": "D1-polaris-after-daemon", "status": "failed", "failure": "AssertionError: expected 186 to be greater than 194"}
+{"row": "unmutated", "variant": "lane:P-static", "status": "failed", "failure": "AssertionError: expected [ Array(1) ] to deeply equal []"}
+{"row": "unmutated", "variant": "lane:P-before-branches", "status": "failed", "failure": "AssertionError: expected [ Array(1) ] to deeply equal []"}
+{"row": "unmutated", "variant": "lane:P-daemon-dynamic", "status": "failed", "failure": "AssertionError: expected [ Array(1) ] to deeply equal []"}
+{"row": "unmutated", "variant": "lane:P-help-branch", "status": "failed", "failure": "AssertionError: expected [ Array(1) ] to deeply equal []"}
+{"row": "unmutated", "variant": "lane:P-invalid-branch", "status": "failed", "failure": "AssertionError: expected [ Array(1) ] to deeply equal []"}
+{"row": "unmutated", "variant": "lane:P-start-failure", "status": "failed", "failure": "AssertionError: expected [ Array(1) ] to deeply equal []"}
+{"row": "unmutated", "variant": "lane:P-entry-read", "status": "failed", "failure": "AssertionError: expected [ Array(1) ] to deeply equal []"}
+{"row": "unmutated", "variant": "lane:P-shutdown", "status": "failed", "failure": "AssertionError: expected [ Array(1) ] to deeply equal []"}
+{"row": "unmutated", "variant": "lane:P-close-failure", "status": "failed", "failure": "AssertionError: expected [ Array(1) ] to deeply equal []"}
+{"row": "unmutated", "variant": "V1-no-naming-line", "status": "failed", "failure": "AssertionError: expected 0 to be greater than 0"}
+{"row": "unmutated", "variant": "Q1-template-specifier-between-branches", "status": "failed", "failure": "AssertionError: expected [ Array(1) ] to deeply equal []"}
+{"row": "unmutated", "variant": "Z3-renamed-opening-and-top-level-load", "status": "failed", "failure": "AssertionError: expected -1 to be greater than -1"}
+{"row": "T1-no-daemon-after-close", "variantsRun": 2, "killedBy": ["D1-polaris-after-daemon"], "survives": false}
+{"row": "T2-non-strict-window", "variantsRun": 31, "killedBy": [], "survives": true}
+{"row": "T3-no-vacuity-guard", "variantsRun": 2, "killedBy": ["V1-no-naming-line"], "survives": false}
+{"row": "T6-every-block", "variantsRun": 1, "killedBy": ["control"], "survives": false}
+{"row": "T7-dossier-block-only", "variantsRun": 1, "killedBy": ["control"], "survives": false}
+{"row": "T9-no-close-after-open", "variantsRun": 31, "killedBy": [], "survives": true}
+{"row": "T12-no-open-found", "variantsRun": 3, "killedBy": [], "survives": true}
+{"row": "T14-quoted-specifier-only", "variantsRun": 2, "killedBy": ["Q1-template-specifier-between-branches"], "survives": false}

@@ -1,0 +1,51 @@
+{
+ "base": "f7ea858480b30ffc4407154a84d1d03f3fe4a549",
+ "head": "191d82779ea07f45be612b00ff3cafc9aa7446b8",
+ "copies": {
+  "support-base": {
+   "commit": "f7ea858480b30ffc4407154a84d1d03f3fe4a549",
+   "path": "packages/support/src/support-purity.test.ts",
+   "blob": "8f1cb002f57b0c59bcaa0dbd0640297c17e20e5a",
+   "filter": "source.split('\\n').filter((line) => !line.trimStart().startsWith('//')).join('\\n')",
+   "regexes": [
+    "/\\b(?:import|export)\\b[^;]*?\\bfrom\\s*['\"`]([^'\"`]+)['\"`]/g",
+    "/^\\s*import\\s*['\"`]([^'\"`]+)['\"`]/gm",
+    "/\\b(?:import|require)\\s*\\(\\s*['\"`]([^'\"`]+)['\"`]/g"
+   ],
+   "forbidden": "[/\\brequire\\(/, /\\bimport\\(/, /\\bfetch\\(/, /\\bwriteFile/, /\\bappendFile/, /\\bmkdir/, /\\bprocess\\./, /\\bDate\\b/, /\\b(?:node:)?(?:fs|net|http|https|child_process|os)['\"`]/]",
+   "sha256": "658e42166798af806fa1820df3dfa82add4e0058abd4b678f760c210a1d170b9"
+  },
+  "drafter-base": {
+   "commit": "f7ea858480b30ffc4407154a84d1d03f3fe4a549",
+   "path": "packages/three-surface-poc-core/src/owner-act-drafter.test.ts",
+   "blob": "77574e8fb57e3b738b72962fd9dd8a60f8aea830",
+   "filter": "source.split('\\n').filter((line) => !line.trimStart().startsWith('//')).join('\\n')",
+   "regexes": [
+    "/\\b(?:import|export)\\b[^;]*?\\bfrom\\s*['\"`]([^'\"`]+)['\"`]/g",
+    "/^\\s*import\\s*['\"`]([^'\"`]+)['\"`]/gm",
+    "/\\b(?:import|require)\\s*\\(\\s*['\"`]([^'\"`]+)['\"`]/g"
+   ],
+   "forbidden": "[/\\brequire\\(/, /\\bimport\\(/, /\\bfetch\\(/, /\\bwriteFile/, /\\bappendFile/, /\\bmkdir/, /\\bprocess\\./, /\\bDate\\b/, /\\b(?:node:)?(?:fs|net|http|https|child_process|os)['\"`]/]",
+   "sha256": "658e42166798af806fa1820df3dfa82add4e0058abd4b678f760c210a1d170b9"
+  },
+  "testkit-head": {
+   "commit": "191d82779ea07f45be612b00ff3cafc9aa7446b8",
+   "path": "packages/support/src/purity.testkit.ts",
+   "blob": "d8e3e714864097df611eb7e49c43ce840380befa",
+   "filter": "source.split('\\n').filter((line) => !line.trimStart().startsWith('//')).join('\\n')",
+   "regexes": [
+    "/\\b(?:import|export)\\b[^;]*?\\bfrom\\s*['\"`]([^'\"`]+)['\"`]/g",
+    "/^\\s*import\\s*['\"`]([^'\"`]+)['\"`]/gm",
+    "/\\b(?:import|require)\\s*\\(\\s*['\"`]([^'\"`]+)['\"`]/g"
+   ],
+   "forbidden": "[/\\brequire\\(/, /\\bimport\\(/, /\\bfetch\\(/, /\\bwriteFile/, /\\bappendFile/, /\\bmkdir/, /\\bprocess\\./, /\\bDate\\b/, /\\b(?:node:)?(?:fs|net|http|https|child_process|os)['\"`]/]",
+   "sha256": "658e42166798af806fa1820df3dfa82add4e0058abd4b678f760c210a1d170b9"
+  }
+ },
+ "agree": {
+  "filter": true,
+  "regexes": true,
+  "forbidden": true
+ },
+ "allAgree": true
+}

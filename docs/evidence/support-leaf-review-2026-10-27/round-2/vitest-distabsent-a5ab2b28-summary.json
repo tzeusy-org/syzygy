@@ -1,0 +1,80 @@
+{
+ "summary": {
+  "numTotalTestSuites": 867,
+  "numPassedTestSuites": 867,
+  "numFailedTestSuites": 0,
+  "numPendingTestSuites": 0,
+  "numTotalTests": 5338,
+  "numPassedTests": 5333,
+  "numFailedTests": 0,
+  "numPendingTests": 5,
+  "success": true
+ },
+ "files": 245,
+ "notPassed": [
+  [
+   "packages/polaris-dossier/src/no-egress.test.ts",
+   "is not proved on this host: strace is unavailable, so the capture is skipped, never reported as passed"
+  ],
+  [
+   "packages/three-surface-poc-core/src/test-artifact-verification.live.test.ts",
+   "ingests one real, passing operator-reported focused-pytest artifact and resolves it to report-fact, never Verified, through the full model (AC1/AC3, RFC5-19)"
+  ],
+  [
+   "packages/three-surface-poc-core/src/work-items.live.test.ts",
+   "matches `git rev-parse HEAD` and a direct Dolt read (POC-REQ-001, POC-REQ-010 oracles)"
+  ],
+  [
+   "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+   "a captured /polaris page meets the oracle at both viewports"
+  ],
+  [
+   "apps/three-surface-poc/src/project-shape-discovery.live.test.ts",
+   "matches the independent five-root, seven-Heart, baseline and total populations"
+  ]
+ ],
+ "affected": {
+  "packages/support/src/deep-freeze.test.ts": {
+   "passed": 5
+  },
+  "packages/support/src/sha256.test.ts": {
+   "passed": 4
+  },
+  "packages/support/src/support-purity.test.ts": {
+   "passed": 13
+  },
+  "packages/polaris-dossier/src/no-egress.test.ts": {
+   "passed": 2,
+   "skipped": 1
+  },
+  "packages/http-host/src/credentials.test.ts": {
+   "passed": 26
+  },
+  "packages/http-host/src/package.test.ts": {
+   "passed": 2
+  },
+  "packages/http-host/src/shutdown.test.ts": {
+   "passed": 6
+  },
+  "packages/three-surface-poc-core/src/owner-act-drafter.test.ts": {
+   "passed": 3
+  },
+  "packages/three-surface-poc-core/src/test-artifact-verification-live-source.test.ts": {
+   "passed": 58
+  }
+ },
+ "byProjectStatus": {
+  "apps/three-surface-poc|passed": 1131,
+  "apps/three-surface-poc|skipped": 2,
+  "packages/cap1-conformance|passed": 312,
+  "packages/cap1-daemon|passed": 88,
+  "packages/http-host|passed": 34,
+  "packages/polaris-dossier|passed": 1333,
+  "packages/polaris-dossier|skipped": 1,
+  "packages/polaris-generation-consent|passed": 503,
+  "packages/polaris-generation-core|passed": 799,
+  "packages/support|passed": 22,
+  "packages/three-surface-poc-core|passed": 1111,
+  "packages/three-surface-poc-core|skipped": 2
+ }
+}

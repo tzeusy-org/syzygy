@@ -1,0 +1,38 @@
+{
+ "tool": "cli_sweep_probe.py",
+ "treeCommit": "88dcdf76db2ad6a30df5856361dc3f9cef8757f5",
+ "mode": "head",
+ "file": "apps/three-surface-poc/src/polaris-accessibility-main.ts",
+ "sha256AtCommit": "5eb9f3ad7eea419601d5f276b31b20eb29ee86c8fae52b4a0820ca8888e6b4db",
+ "seededDeadPid": 1480600,
+ "pidNamespace": "4026531836",
+ "seeded": [
+  "syzygy-poc-surface-fixture-p1480600-n4026531836-CliProbe",
+  "syzygy-poc-surface-fixture-template-p1480600-n4026531836-CliProbe",
+  "syzygy-poc-surface-fixture-p1480286-n4026531836-CliLive1",
+  "syzygy-poc-surface-fixture-CliLegacy"
+ ],
+ "build": {
+  "command": "npx tsc -b apps/three-surface-poc",
+  "exit": 0,
+  "firstLine": []
+ },
+ "run": {
+  "command": "node apps/three-surface-poc/dist/polaris-accessibility-main.js (TMPDIR=<private>, PATH empty, SYZYGY_POC_BROWSER unset)",
+  "exit": 2,
+  "stderrFirstLine": [
+   "No Chrome/Chromium found on PATH and SYZYGY_POC_BROWSER is unset; nothing measured."
+  ],
+  "stdoutBytes": 0
+ },
+ "left": [
+  "syzygy-poc-surface-fixture-CliLegacy",
+  "syzygy-poc-surface-fixture-p1480286-n4026531836-CliLive1"
+ ],
+ "deadProcessDirectoriesLeft": [],
+ "liveAndLegacyKept": [
+  "syzygy-poc-surface-fixture-p1480286-n4026531836-CliLive1",
+  "syzygy-poc-surface-fixture-CliLegacy"
+ ],
+ "holds": true
+}

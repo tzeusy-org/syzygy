@@ -1,0 +1,10 @@
+B-E4-lane 1 123 4 ['file: @syzygy/polaris-dossier/state-directory: its entry is not a ./dist/X.js whose src/X.ts exists', 'the daemon path, every module the entry reaches outside its dossier and polaris branches reaches this package through argv.ts and state-directory.ts alone', "the daemon path, every module the entry reaches outside its dossier and polaris branches resolves every workspace specifier on it, and reaches past the entry's own imports", 'the syzygy CLI and the parked provider island resolves every workspace import the CLI reaches, dynamic ones included', "the tree's own exports put a source condition first in every entry, naming the module the built target is read as"]
+    the syzygy CLI and the parked provider island resolves every workspace import the CLI reaches, dynamic ones included :: AssertionError: expected [ Array(1) ] to deeply equal []
+    the tree's own exports put a source condition first in every entry, naming the module the built target is read as :: AssertionError: expected [ Array(1) ] to deeply equal []
+    the daemon path, every module the entry reaches outside its dossier and polaris branches resolves every workspace specif :: AssertionError: expected [ Array(1) ] to deeply equal []
+    the daemon path, every module the entry reaches outside its dossier and polaris branches reaches this package through ar :: AssertionError: expected [ Array(1) ] to deeply equal [ …(2) ]
+B-E4S-all-but-types 0 133 0 []
+B-types-only 0 133 0 []
+B-main 0 133 0 []
+status after ''
+exit 0

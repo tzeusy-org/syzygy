@@ -1,0 +1,6 @@
+env {} host {'cores': 12, 'node': 'v24.6.0'}
+{'index': 1, 'exitCode': 0, 'wallSeconds': 2.5, 'load1': {'start': 23.75, 'end': 22.89, 'min': 23.75, 'max': 23.75, 'samples': 1}} [('(file)', 524, 16), ('what heuristic discovery reads under the dossier cap on the design-prose fixture (no model)', 1, 0)]
+{'index': 2, 'exitCode': 0, 'wallSeconds': 2.7, 'load1': {'start': 22.89, 'end': 22.89, 'min': 22.89, 'max': 22.89, 'samples': 1}} [('(file)', 630, 16), ('what heuristic discovery reads under the dossier cap on the design-prose fixture (no model)', 0, 1)]
+{'index': 3, 'exitCode': 0, 'wallSeconds': 2.9, 'load1': {'start': 22.89, 'end': 22.01, 'min': 22.89, 'max': 22.89, 'samples': 1}} [('(file)', 762, 16), ('what heuristic discovery reads under the dossier cap on the design-prose fixture (no model)', 0, 1)]
+{'index': 4, 'exitCode': 0, 'wallSeconds': 3.8, 'load1': {'start': 22.01, 'end': 22.25, 'min': 22.01, 'max': 22.01, 'samples': 1}} [('(file)', 1081, 26), ('what heuristic discovery reads under the dossier cap on the design-prose fixture (no model)', 0, 1)]
+{'index': 5, 'exitCode': 0, 'wallSeconds': 3.6, 'load1': {'start': 22.25, 'end': 22.25, 'min': 22.25, 'max': 22.25, 'samples': 1}} [('(file)', 874, 20), ('what heuristic discovery reads under the dossier cap on the design-prose fixture (no model)', 0, 1)]

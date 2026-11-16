@@ -1,0 +1,113 @@
+{
+ "tool": "input_checks.py",
+ "treeCommit": "a864e999645a071dda40325b2235976590e02973",
+ "assemblerSha256": "ffbc0f974967a1899e4d1b4f18b580b04e088e1cf01d6489f42a9432c2d501f8",
+ "runsChecked": "k2-kill-75s",
+ "control": {
+  "exit": 0,
+  "lastLine": "",
+  "wroteTheRecord": true,
+  "probeDirectoryLeftBehind": false,
+  "meets": true
+ },
+ "cases": {
+  "trace-byte-changed": {
+   "exit": 1,
+   "lastLine": "AssertionError: ('k2-kill-75s', 'the trace is not the one the record names')",
+   "wroteTheRecord": false,
+   "probeDirectoryLeftBehind": false,
+   "expectedMessage": "the trace is not the one the record names",
+   "refused": true
+  },
+  "trace-line-removed": {
+   "exit": 1,
+   "lastLine": "AssertionError: ('k2-kill-75s', 'the trace is not the one the record names')",
+   "wroteTheRecord": false,
+   "probeDirectoryLeftBehind": false,
+   "expectedMessage": "the trace is not the one the record names",
+   "refused": true
+  },
+  "run-record-names-another-commit": {
+   "exit": 1,
+   "lastLine": "AssertionError: ('k2-kill-75s', 'the run names another commit')",
+   "wroteTheRecord": false,
+   "probeDirectoryLeftBehind": false,
+   "expectedMessage": "the run names another commit",
+   "refused": true
+  },
+  "static-census-names-another-commit": {
+   "exit": 1,
+   "lastLine": "AssertionError: the static census names another commit",
+   "wroteTheRecord": false,
+   "probeDirectoryLeftBehind": false,
+   "expectedMessage": "the static census names another commit",
+   "refused": true
+  },
+  "sampler-record-missing": {
+   "exit": 1,
+   "lastLine": "FileNotFoundError: [Errno 2] No such file or directory: '/tmp/r522ci/sampler-record-missing/runs/k2-kill-75s.samples.json'",
+   "wroteTheRecord": false,
+   "probeDirectoryLeftBehind": false,
+   "expectedMessage": "FileNotFoundError",
+   "refused": true
+  },
+  "sampler-record-byte-changed": {
+   "exit": 1,
+   "lastLine": "AssertionError: ('k2-kill-75s', 'the sampler record is not the one the digest file names')",
+   "wroteTheRecord": false,
+   "probeDirectoryLeftBehind": false,
+   "expectedMessage": "the sampler record is not the one the digest file names",
+   "refused": true
+  },
+  "sampler-digest-entry-removed": {
+   "exit": 1,
+   "lastLine": "AssertionError: ('k2-kill-75s', 'the sampler record is not the one the digest file names')",
+   "wroteTheRecord": false,
+   "probeDirectoryLeftBehind": false,
+   "expectedMessage": "the sampler record is not the one the digest file names",
+   "refused": true
+  }
+ },
+ "mutants": {
+  "sampler-digest-not-compared": {
+   "old": "and hashlib.sha256(raw_samples).hexdigest() == sampler_digests[label],",
+   "new": "and True,",
+   "guards": "sampler-record-byte-changed",
+   "result": {
+    "exit": 0,
+    "lastLine": "",
+    "wroteTheRecord": true,
+    "probeDirectoryLeftBehind": false,
+    "refused": false
+   },
+   "killed": true
+  },
+  "sampler-digest-entry-not-required": {
+   "old": "assert label in sampler_digests and hashlib.sha256(raw_samples).hexdigest() == sampler_digests[label],",
+   "new": "assert hashlib.sha256(raw_samples).hexdigest() == sampler_digests.get(label, hashlib.sha256(raw_samples).hexdigest()),",
+   "guards": "sampler-digest-entry-removed",
+   "result": {
+    "exit": 0,
+    "lastLine": "",
+    "wroteTheRecord": true,
+    "probeDirectoryLeftBehind": false,
+    "refused": false
+   },
+   "killed": true
+  },
+  "probe-directory-left-behind": {
+   "old": "    shutil.rmtree(PROBE / 'tmp', ignore_errors=True)\n    if probe_made_here:\n        PROBE.rmdir()\n",
+   "new": "    pass\n",
+   "guards": "control",
+   "result": {
+    "exit": 0,
+    "lastLine": "",
+    "wroteTheRecord": true,
+    "probeDirectoryLeftBehind": true,
+    "meets": false
+   },
+   "killed": true
+  }
+ },
+ "holds": true
+}

@@ -1,0 +1,14 @@
+commit 5cf4223a184baab1a748566b2f46053dcda72e58
+== packages/polaris-dossier/src/run-evidence.test.ts start 00:43:28 load 41.70 47.12 45.92
+ Test Files  1 passed (1)
+      Tests  4 passed (4)
+== packages/polaris-dossier/src/run-evidence.test.ts end 00:43:57 load 45.75 47.69 46.15
+== packages/polaris-dossier/src/start-gates.test.ts start 00:43:57 load 45.75 47.69 46.15
+ Test Files  1 passed (1)
+      Tests  104 passed (104)
+== packages/polaris-dossier/src/start-gates.test.ts end 00:45:39 load 39.76 45.40 45.53
+== packages/polaris-generation-consent/src/act-families.test.ts start 00:45:39 load 39.76 45.40 45.53
+ Test Files  1 passed (1)
+      Tests  65 passed (65)
+== packages/polaris-generation-consent/src/act-families.test.ts end 00:45:48 load 40.18 45.40 45.52
+ALLDONE

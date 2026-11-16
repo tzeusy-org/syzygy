@@ -1,0 +1,14 @@
+{
+  "base_tests": 81,
+  "head_tests": 82,
+  "base_passed": 81,
+  "head_passed": 82,
+  "added": [
+    "requires every npm workspace to be @syzygy/-named and every dependency or override spec to be a registry version shape"
+  ],
+  "removed": [],
+  "delta": "Tests: +1 ~0 -0",
+  "new_files": 0,
+  "tier": "unit",
+  "second_method": "Exact fullName population difference agrees with reporter numeric totals."
+}

@@ -1,0 +1,2759 @@
+{
+ "tool": {
+  "sha256": "c95f16cfcf7d15f1552abffbf2572293ffcff811afb6ca8127464a36f58350e0"
+ },
+ "base": "7dfad65a69e1b5fd8358e30d78e34f0674892cfb",
+ "head": "687c5e130d7c7d912578c556ca0fef4529299250",
+ "loadavg": [
+  "21.70",
+  "22.48",
+  "23.40"
+ ],
+ "cases": 81,
+ "own": 47,
+ "newlyRefused": [
+  "r2: inherited declarationDir through extends",
+  "65: declarationDir outside dist through extends",
+  "rev: extends depth 2, declarationDir outside at the end",
+  "rev: declarationDir relative to a parent-directory base, outside",
+  "rev: declarationDir with configDir template, outside",
+  "rev: extends a package specifier (pkg/tsconfig.json), declarationDir outside",
+  "rev: inherited declarationDir null",
+  "rev: inherited outFile null",
+  "rev: extends a file with comments and a trailing comma",
+  "rev: duplicate compilerOptions, first sets declarationDir outside",
+  "rev: declarationDir 'dist-x' (prefix trap) through extends",
+  "rev: declarationDir 'dist/../types' through extends"
+ ],
+ "newlyAccepted": [],
+ "headRefusedAfterRemoval": [
+  "rev: extends a missing file",
+  "rev: extends itself"
+ ],
+ "baseRefusedAfterRemoval": [
+  "r2: reference to a non-composite project",
+  "65: outFile through extends",
+  "65: referenced project with composite false",
+  "65: referenced project with composite unset",
+  "65: referenced project inheriting composite false",
+  "65: a project both named and referenced, not composite",
+  "rev: extends depth 3, outFile at the end",
+  "rev: extends depth 2, composite false at the end",
+  "rev: extends array, second sets outFile",
+  "rev: extends array, first composite true, second composite false",
+  "rev: extends a bare package name, composite false",
+  "rev: composite true by extends, overridden false by own",
+  "rev: composite as the string 'true'",
+  "rev: named symlinked project, non-composite reference via it",
+  "rev: inherited composite null",
+  "rev: extends a missing file",
+  "rev: extends itself",
+  "rev: extends a two-file cycle",
+  "rev: two named, the second referenced by the first, second non-composite",
+  "rev: non-composite referenced project already built earlier in the walk"
+ ],
+ "messageChanged": [
+  "r2: reference to a non-composite project",
+  "65: outFile through extends",
+  "65: referenced project with composite false",
+  "65: referenced project with composite unset",
+  "65: referenced project inheriting composite false",
+  "65: a project both named and referenced, not composite",
+  "rev: extends depth 3, outFile at the end",
+  "rev: extends depth 2, composite false at the end",
+  "rev: extends array, second sets outFile",
+  "rev: extends array, first composite true, second composite false",
+  "rev: extends a bare package name, composite false",
+  "rev: composite true by extends, overridden false by own",
+  "rev: composite as the string 'true'",
+  "rev: named symlinked project, non-composite reference via it",
+  "rev: inherited composite null",
+  "rev: extends a two-file cycle",
+  "rev: two named, the second referenced by the first, second non-composite",
+  "rev: non-composite referenced project already built earlier in the walk"
+ ],
+ "acceptedBoth": 26,
+ "acceptedBothSnapshotDiffer": [
+  "r2: named project via ..",
+  "r2: named project a symlink to another project inside the checkout",
+  "accept: the tree as built",
+  "accept: declarationDir under dist through extends",
+  "accept: an inherited outDir the project's own outDir overrides",
+  "accept: a named project nothing references, not composite",
+  "accept: composite true through extends",
+  "rev: extends depth 2, declarationDir relative to the deepest file, under dist",
+  "rev: declarationDir relative to a parent-directory base, resolving under a/dist",
+  "rev: declarationDir with configDir template, under dist",
+  "rev: extends array, first composite false, second composite true",
+  "rev: extends a package via package.json tsconfig field, composite true",
+  "rev: extends a package, declarationDir under dist via configDir",
+  "rev: composite false by extends, overridden true by own",
+  "rev: references a directory with './' form",
+  "rev: reference through a symlinked project directory inside the checkout",
+  "rev: tsBuildInfoFile without incremental, named, nothing references it",
+  "rev: inherited outDir null (own dist)",
+  "rev: duplicate compilerOptions, first sets outDir out, second dist",
+  "rev: duplicate compilerOptions, first is the full set, second lacks composite",
+  "rev: duplicate outDir inside one compilerOptions (out then dist)",
+  "rev: include matches no input",
+  "rev: emitDeclarationOnly with declarationDir under dist",
+  "rev: tsBuildInfoFile inherited elsewhere, own dist (own wins)",
+  "rev: declarationDir exactly dist through extends",
+  "rev: declarationDir a symlink under dist? (dist/types -> ../types)"
+ ],
+ "rows": [
+  {
+   "case": "r2: self-reference",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 1,
+    "message": "Error: packages/d -> packages/b -> packages/a -> packages/a: project references form a cycle",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 17
+   },
+   "head": {
+    "exit": 1,
+    "message": "Error: packages/d -> packages/b -> packages/a -> packages/a: project references form a cycle",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 17
+   },
+   "own": false,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "r2: two-node cycle not through the named project",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 1,
+    "message": "Error: packages/d -> packages/b -> packages/a -> packages/b: project references form a cycle",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 17
+   },
+   "head": {
+    "exit": 1,
+    "message": "Error: packages/d -> packages/b -> packages/a -> packages/b: project references form a cycle",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 17
+   },
+   "own": false,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "r2: reference written as a tsconfig file path",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 1,
+    "message": "Error: packages/a/tsconfig.json: not a workspace project with a tsconfig.json",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 17
+   },
+   "head": {
+    "exit": 1,
+    "message": "Error: packages/a/tsconfig.json: not a workspace project with a tsconfig.json",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 17
+   },
+   "own": false,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "r2: reference with a trailing slash",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 1,
+    "message": "Error: packages/a/: not a workspace project with a tsconfig.json",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 17
+   },
+   "head": {
+    "exit": 1,
+    "message": "Error: packages/a/: not a workspace project with a tsconfig.json",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 17
+   },
+   "own": false,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "r2: compilerOptions a string",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 1,
+    "message": "Error: packages/a/tsconfig.json: its outputs and incremental state are not both under dist",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 17
+   },
+   "head": {
+    "exit": 1,
+    "message": "Error: packages/a/tsconfig.json: its outputs and incremental state are not both under dist",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 17
+   },
+   "own": false,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "r2: tsconfig is JSON null",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 1,
+    "message": "TypeError: Cannot read properties of null (reading 'compilerOptions')",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 17
+   },
+   "head": {
+    "exit": 1,
+    "message": "TypeError: Cannot read properties of null (reading 'compilerOptions')",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 17
+   },
+   "own": false,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "r2: references an object, not a list",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 1,
+    "message": "TypeError: object is not iterable (cannot read property Symbol(Symbol.iterator))",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 17
+   },
+   "head": {
+    "exit": 1,
+    "message": "TypeError: object is not iterable (cannot read property Symbol(Symbol.iterator))",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 17
+   },
+   "own": false,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "r2: declarationDir under dist",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 1,
+    "message": "Error: packages/a/tsconfig.json: its outputs and incremental state are not both under dist",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 17
+   },
+   "head": {
+    "exit": 1,
+    "message": "Error: packages/a/tsconfig.json: its outputs and incremental state are not both under dist",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 17
+   },
+   "own": false,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "r2: outDir './dist'",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 1,
+    "message": "Error: packages/a/tsconfig.json: its outputs and incremental state are not both under dist",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 17
+   },
+   "head": {
+    "exit": 1,
+    "message": "Error: packages/a/tsconfig.json: its outputs and incremental state are not both under dist",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 17
+   },
+   "own": false,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "r2: outFile null",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 1,
+    "message": "Error: packages/a/tsconfig.json: its outputs and incremental state are not both under dist",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 17
+   },
+   "head": {
+    "exit": 1,
+    "message": "Error: packages/a/tsconfig.json: its outputs and incremental state are not both under dist",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 17
+   },
+   "own": false,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "r2: named project via ..",
+   "named": [
+    "packages/c/../d"
+   ],
+   "base": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [],
+    "files": 23
+   },
+   "head": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [],
+    "files": 23
+   },
+   "own": false,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "r2: named project a symlink to another project inside the checkout",
+   "named": [
+    "packages/alias"
+   ],
+   "base": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js"
+    ],
+    "tsErrors": [],
+    "files": 19
+   },
+   "head": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js"
+    ],
+    "tsErrors": [],
+    "files": 19
+   },
+   "own": false,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "r2: reference to a non-composite project",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 2,
+    "message": "packages/b/tsconfig.json(1,237): error TS6306: Referenced project '<tree>/packages/a' must have setting \"composite\": true.",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [
+     "TS6306"
+    ],
+    "files": 22
+   },
+   "head": {
+    "exit": 1,
+    "message": "Error: packages/a/tsconfig.json: a referenced project is not composite",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 17
+   },
+   "own": false,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "packages/a/dist/.tsbuildinfo",
+    "packages/a/dist/a.js",
+    "packages/b/dist/.tsbuildinfo",
+    "packages/b/dist/b.d.ts",
+    "packages/b/dist/b.js",
+    "packages/d/dist/.tsbuildinfo",
+    "packages/d/dist/d.d.ts",
+    "packages/d/dist/d.js",
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "r2: inherited declarationDir through extends",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [],
+    "files": 24
+   },
+   "head": {
+    "exit": 1,
+    "message": "Error: packages/a/tsconfig.json: its outputs and incremental state are not both under dist",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 18
+   },
+   "own": false,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "packages/a/dist/.tsbuildinfo",
+    "packages/a/dist/a.js",
+    "packages/b/dist/.tsbuildinfo",
+    "packages/b/dist/b.d.ts",
+    "packages/b/dist/b.js",
+    "packages/d/dist/.tsbuildinfo",
+    "packages/d/dist/d.d.ts",
+    "packages/d/dist/d.js",
+    "scripts/clean_build.mjs",
+    "types/a.d.ts"
+   ]
+  },
+  {
+   "case": "test: names no project",
+   "named": [],
+   "base": {
+    "exit": 1,
+    "message": "Error: usage: node scripts/clean_build.mjs <project directory>...",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 17
+   },
+   "head": {
+    "exit": 1,
+    "message": "Error: usage: node scripts/clean_build.mjs <project directory>...",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 17
+   },
+   "own": false,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "test: names a directory with no tsconfig.json",
+   "named": [
+    "packages/e"
+   ],
+   "base": {
+    "exit": 1,
+    "message": "Error: packages/e: not a workspace project with a tsconfig.json",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 17
+   },
+   "head": {
+    "exit": 1,
+    "message": "Error: packages/e: not a workspace project with a tsconfig.json",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 17
+   },
+   "own": false,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "test: names a project outside the workspaces",
+   "named": [
+    "tools/x"
+   ],
+   "base": {
+    "exit": 1,
+    "message": "Error: tools/x: not a workspace project with a tsconfig.json",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 17
+   },
+   "head": {
+    "exit": 1,
+    "message": "Error: tools/x: not a workspace project with a tsconfig.json",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 17
+   },
+   "own": false,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "test: reaches a project whose outputs leave dist",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 1,
+    "message": "Error: packages/a/tsconfig.json: its outputs and incremental state are not both under dist",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 17
+   },
+   "head": {
+    "exit": 1,
+    "message": "Error: packages/a/tsconfig.json: its outputs and incremental state are not both under dist",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 17
+   },
+   "own": false,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "test: reaches a project whose declarations leave dist",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 1,
+    "message": "Error: packages/a/tsconfig.json: its outputs and incremental state are not both under dist",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 17
+   },
+   "head": {
+    "exit": 1,
+    "message": "Error: packages/a/tsconfig.json: its outputs and incremental state are not both under dist",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 17
+   },
+   "own": false,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "test: reaches a project that bundles its outputs into one file",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 1,
+    "message": "Error: packages/a/tsconfig.json: its outputs and incremental state are not both under dist",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 17
+   },
+   "head": {
+    "exit": 1,
+    "message": "Error: packages/a/tsconfig.json: its outputs and incremental state are not both under dist",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 17
+   },
+   "own": false,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "test: reaches a reference cycle",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 1,
+    "message": "Error: packages/d -> packages/b -> packages/a -> packages/d: project references form a cycle",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 17
+   },
+   "head": {
+    "exit": 1,
+    "message": "Error: packages/d -> packages/b -> packages/a -> packages/d: project references form a cycle",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 17
+   },
+   "own": false,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "test: reaches a tsconfig.json that is not plain JSON",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 1,
+    "message": "Error: packages/a/tsconfig.json: not plain JSON",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 17
+   },
+   "head": {
+    "exit": 1,
+    "message": "Error: packages/a/tsconfig.json: not plain JSON",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 17
+   },
+   "own": false,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "test: names a project whose directory resolves outside the checkout",
+   "named": [
+    "packages/e"
+   ],
+   "base": {
+    "exit": 1,
+    "message": "Error: packages/e: resolves outside the checkout",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 17
+   },
+   "head": {
+    "exit": 1,
+    "message": "Error: packages/e: resolves outside the checkout",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 17
+   },
+   "own": false,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "65: declarationDir outside dist through extends",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/a/types/a.d.ts",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [],
+    "files": 23
+   },
+   "head": {
+    "exit": 1,
+    "message": "Error: packages/a/tsconfig.json: its outputs and incremental state are not both under dist",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 18
+   },
+   "own": false,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "packages/a/dist/.tsbuildinfo",
+    "packages/a/dist/a.js",
+    "packages/a/types/a.d.ts",
+    "packages/b/dist/.tsbuildinfo",
+    "packages/b/dist/b.d.ts",
+    "packages/b/dist/b.js",
+    "packages/d/dist/.tsbuildinfo",
+    "packages/d/dist/d.d.ts",
+    "packages/d/dist/d.js",
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "65: outFile through extends",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 2,
+    "message": "packages/a/tsconfig.json(1,61): error TS6082: Only 'amd' and 'system' modules are supported alongside --outFile.",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [
+     "TS6053",
+     "TS6082"
+    ],
+    "files": 22
+   },
+   "head": {
+    "exit": 1,
+    "message": "Error: packages/a/tsconfig.json: its outputs and incremental state are not both under dist",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 18
+   },
+   "own": false,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "packages/a/dist/.tsbuildinfo",
+    "packages/a/dist/a.js",
+    "packages/b/dist/.tsbuildinfo",
+    "packages/b/dist/b.d.ts",
+    "packages/b/dist/b.js",
+    "packages/d/dist/.tsbuildinfo",
+    "packages/d/dist/d.d.ts",
+    "packages/d/dist/d.js",
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "65: referenced project with composite false",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 2,
+    "message": "packages/b/tsconfig.json(1,237): error TS6306: Referenced project '<tree>/packages/a' must have setting \"composite\": true.",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [
+     "TS6306"
+    ],
+    "files": 22
+   },
+   "head": {
+    "exit": 1,
+    "message": "Error: packages/a/tsconfig.json: a referenced project is not composite",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 17
+   },
+   "own": false,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "packages/a/dist/.tsbuildinfo",
+    "packages/a/dist/a.js",
+    "packages/b/dist/.tsbuildinfo",
+    "packages/b/dist/b.d.ts",
+    "packages/b/dist/b.js",
+    "packages/d/dist/.tsbuildinfo",
+    "packages/d/dist/d.d.ts",
+    "packages/d/dist/d.js",
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "65: referenced project with composite unset",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 2,
+    "message": "packages/b/tsconfig.json(1,237): error TS6306: Referenced project '<tree>/packages/a' must have setting \"composite\": true.",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [
+     "TS6306"
+    ],
+    "files": 22
+   },
+   "head": {
+    "exit": 1,
+    "message": "Error: packages/a/tsconfig.json: a referenced project is not composite",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 17
+   },
+   "own": false,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "packages/a/dist/.tsbuildinfo",
+    "packages/a/dist/a.js",
+    "packages/b/dist/.tsbuildinfo",
+    "packages/b/dist/b.d.ts",
+    "packages/b/dist/b.js",
+    "packages/d/dist/.tsbuildinfo",
+    "packages/d/dist/d.d.ts",
+    "packages/d/dist/d.js",
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "65: referenced project inheriting composite false",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 2,
+    "message": "packages/b/tsconfig.json(1,237): error TS6306: Referenced project '<tree>/packages/a' must have setting \"composite\": true.",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [
+     "TS6306"
+    ],
+    "files": 23
+   },
+   "head": {
+    "exit": 1,
+    "message": "Error: packages/a/tsconfig.json: a referenced project is not composite",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 18
+   },
+   "own": false,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "packages/a/dist/.tsbuildinfo",
+    "packages/a/dist/a.js",
+    "packages/b/dist/.tsbuildinfo",
+    "packages/b/dist/b.d.ts",
+    "packages/b/dist/b.js",
+    "packages/d/dist/.tsbuildinfo",
+    "packages/d/dist/d.d.ts",
+    "packages/d/dist/d.js",
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "65: a project both named and referenced, not composite",
+   "named": [
+    "packages/a",
+    "packages/b"
+   ],
+   "base": {
+    "exit": 2,
+    "message": "packages/b/tsconfig.json(1,237): error TS6306: Referenced project '<tree>/packages/a' must have setting \"composite\": true.",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js"
+    ],
+    "tsErrors": [
+     "TS6306"
+    ],
+    "files": 20
+   },
+   "head": {
+    "exit": 1,
+    "message": "Error: packages/a/tsconfig.json: a referenced project is not composite",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 17
+   },
+   "own": false,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "packages/a/dist/.tsbuildinfo",
+    "packages/a/dist/a.js",
+    "packages/b/dist/.tsbuildinfo",
+    "packages/b/dist/b.d.ts",
+    "packages/b/dist/b.js",
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "accept: the tree as built",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [],
+    "files": 23
+   },
+   "head": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [],
+    "files": 23
+   },
+   "own": false,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "accept: declarationDir under dist through extends",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [],
+    "files": 24
+   },
+   "head": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [],
+    "files": 24
+   },
+   "own": false,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "accept: an inherited outDir the project's own outDir overrides",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [],
+    "files": 24
+   },
+   "head": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [],
+    "files": 24
+   },
+   "own": false,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "accept: a named project nothing references, not composite",
+   "named": [
+    "packages/c"
+   ],
+   "base": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/c/dist/c.js"
+    ],
+    "tsErrors": [],
+    "files": 18
+   },
+   "head": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/c/dist/c.js"
+    ],
+    "tsErrors": [],
+    "files": 18
+   },
+   "own": false,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "accept: composite true through extends",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [],
+    "files": 24
+   },
+   "head": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [],
+    "files": 24
+   },
+   "own": false,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "rev: extends depth 2, declarationDir outside at the end",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/a/types/a.d.ts",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [],
+    "files": 24
+   },
+   "head": {
+    "exit": 1,
+    "message": "Error: packages/a/tsconfig.json: its outputs and incremental state are not both under dist",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 19
+   },
+   "own": true,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "packages/a/dist/.tsbuildinfo",
+    "packages/a/dist/a.js",
+    "packages/a/types/a.d.ts",
+    "packages/b/dist/.tsbuildinfo",
+    "packages/b/dist/b.d.ts",
+    "packages/b/dist/b.js",
+    "packages/d/dist/.tsbuildinfo",
+    "packages/d/dist/d.d.ts",
+    "packages/d/dist/d.js",
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "rev: extends depth 3, outFile at the end",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 2,
+    "message": "packages/a/tsconfig.json(1,61): error TS6082: Only 'amd' and 'system' modules are supported alongside --outFile.",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [
+     "TS6053",
+     "TS6082"
+    ],
+    "files": 24
+   },
+   "head": {
+    "exit": 1,
+    "message": "Error: packages/a/tsconfig.json: its outputs and incremental state are not both under dist",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 20
+   },
+   "own": true,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "packages/a/dist/.tsbuildinfo",
+    "packages/a/dist/a.js",
+    "packages/b/dist/.tsbuildinfo",
+    "packages/b/dist/b.d.ts",
+    "packages/b/dist/b.js",
+    "packages/d/dist/.tsbuildinfo",
+    "packages/d/dist/d.d.ts",
+    "packages/d/dist/d.js",
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "rev: extends depth 2, composite false at the end",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 2,
+    "message": "packages/b/tsconfig.json(1,237): error TS6306: Referenced project '<tree>/packages/a' must have setting \"composite\": true.",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [
+     "TS6306"
+    ],
+    "files": 24
+   },
+   "head": {
+    "exit": 1,
+    "message": "Error: packages/a/tsconfig.json: a referenced project is not composite",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 19
+   },
+   "own": true,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "packages/a/dist/.tsbuildinfo",
+    "packages/a/dist/a.js",
+    "packages/b/dist/.tsbuildinfo",
+    "packages/b/dist/b.d.ts",
+    "packages/b/dist/b.js",
+    "packages/d/dist/.tsbuildinfo",
+    "packages/d/dist/d.d.ts",
+    "packages/d/dist/d.js",
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "rev: extends depth 2, declarationDir relative to the deepest file, under dist",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [],
+    "files": 25
+   },
+   "head": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [],
+    "files": 25
+   },
+   "own": true,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "rev: declarationDir relative to a parent-directory base, outside",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [],
+    "files": 24
+   },
+   "head": {
+    "exit": 1,
+    "message": "Error: packages/a/tsconfig.json: its outputs and incremental state are not both under dist",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 18
+   },
+   "own": true,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "packages/a/dist/.tsbuildinfo",
+    "packages/a/dist/a.js",
+    "packages/b/dist/.tsbuildinfo",
+    "packages/b/dist/b.d.ts",
+    "packages/b/dist/b.js",
+    "packages/d/dist/.tsbuildinfo",
+    "packages/d/dist/d.d.ts",
+    "packages/d/dist/d.js",
+    "packages/types/a.d.ts",
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "rev: declarationDir relative to a parent-directory base, resolving under a/dist",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [],
+    "files": 24
+   },
+   "head": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [],
+    "files": 24
+   },
+   "own": true,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "rev: declarationDir with configDir template, under dist",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [],
+    "files": 24
+   },
+   "head": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [],
+    "files": 24
+   },
+   "own": true,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "rev: declarationDir with configDir template, outside",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/a/types/a.d.ts",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [],
+    "files": 23
+   },
+   "head": {
+    "exit": 1,
+    "message": "Error: packages/a/tsconfig.json: its outputs and incremental state are not both under dist",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 18
+   },
+   "own": true,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "packages/a/dist/.tsbuildinfo",
+    "packages/a/dist/a.js",
+    "packages/a/types/a.d.ts",
+    "packages/b/dist/.tsbuildinfo",
+    "packages/b/dist/b.d.ts",
+    "packages/b/dist/b.js",
+    "packages/d/dist/.tsbuildinfo",
+    "packages/d/dist/d.d.ts",
+    "packages/d/dist/d.js",
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "rev: extends array, second sets outFile",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 2,
+    "message": "packages/a/tsconfig.json(1,61): error TS6082: Only 'amd' and 'system' modules are supported alongside --outFile.",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [
+     "TS6053",
+     "TS6082"
+    ],
+    "files": 23
+   },
+   "head": {
+    "exit": 1,
+    "message": "Error: packages/a/tsconfig.json: its outputs and incremental state are not both under dist",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 19
+   },
+   "own": true,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "packages/a/dist/.tsbuildinfo",
+    "packages/a/dist/a.js",
+    "packages/b/dist/.tsbuildinfo",
+    "packages/b/dist/b.d.ts",
+    "packages/b/dist/b.js",
+    "packages/d/dist/.tsbuildinfo",
+    "packages/d/dist/d.d.ts",
+    "packages/d/dist/d.js",
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "rev: extends array, first composite false, second composite true",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [],
+    "files": 25
+   },
+   "head": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [],
+    "files": 25
+   },
+   "own": true,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "rev: extends array, first composite true, second composite false",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 2,
+    "message": "packages/b/tsconfig.json(1,237): error TS6306: Referenced project '<tree>/packages/a' must have setting \"composite\": true.",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [
+     "TS6306"
+    ],
+    "files": 24
+   },
+   "head": {
+    "exit": 1,
+    "message": "Error: packages/a/tsconfig.json: a referenced project is not composite",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 19
+   },
+   "own": true,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "packages/a/dist/.tsbuildinfo",
+    "packages/a/dist/a.js",
+    "packages/b/dist/.tsbuildinfo",
+    "packages/b/dist/b.d.ts",
+    "packages/b/dist/b.js",
+    "packages/d/dist/.tsbuildinfo",
+    "packages/d/dist/d.d.ts",
+    "packages/d/dist/d.js",
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "rev: extends a package specifier (pkg/tsconfig.json), declarationDir outside",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [],
+    "files": 22
+   },
+   "head": {
+    "exit": 1,
+    "message": "Error: packages/a/tsconfig.json: its outputs and incremental state are not both under dist",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 17
+   },
+   "own": true,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "packages/a/dist/.tsbuildinfo",
+    "packages/a/dist/a.js",
+    "packages/b/dist/.tsbuildinfo",
+    "packages/b/dist/b.d.ts",
+    "packages/b/dist/b.js",
+    "packages/d/dist/.tsbuildinfo",
+    "packages/d/dist/d.d.ts",
+    "packages/d/dist/d.js",
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "rev: extends a bare package name, composite false",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 2,
+    "message": "packages/b/tsconfig.json(1,237): error TS6306: Referenced project '<tree>/packages/a' must have setting \"composite\": true.",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [
+     "TS6306"
+    ],
+    "files": 22
+   },
+   "head": {
+    "exit": 1,
+    "message": "Error: packages/a/tsconfig.json: a referenced project is not composite",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 17
+   },
+   "own": true,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "packages/a/dist/.tsbuildinfo",
+    "packages/a/dist/a.js",
+    "packages/b/dist/.tsbuildinfo",
+    "packages/b/dist/b.d.ts",
+    "packages/b/dist/b.js",
+    "packages/d/dist/.tsbuildinfo",
+    "packages/d/dist/d.d.ts",
+    "packages/d/dist/d.js",
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "rev: extends a package via package.json tsconfig field, composite true",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [],
+    "files": 23
+   },
+   "head": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [],
+    "files": 23
+   },
+   "own": true,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "rev: extends a package, declarationDir under dist via configDir",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [],
+    "files": 23
+   },
+   "head": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [],
+    "files": 23
+   },
+   "own": true,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "rev: composite true by extends, overridden false by own",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 2,
+    "message": "packages/b/tsconfig.json(1,237): error TS6306: Referenced project '<tree>/packages/a' must have setting \"composite\": true.",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [
+     "TS6306"
+    ],
+    "files": 23
+   },
+   "head": {
+    "exit": 1,
+    "message": "Error: packages/a/tsconfig.json: a referenced project is not composite",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 18
+   },
+   "own": true,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "packages/a/dist/.tsbuildinfo",
+    "packages/a/dist/a.js",
+    "packages/b/dist/.tsbuildinfo",
+    "packages/b/dist/b.d.ts",
+    "packages/b/dist/b.js",
+    "packages/d/dist/.tsbuildinfo",
+    "packages/d/dist/d.d.ts",
+    "packages/d/dist/d.js",
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "rev: composite false by extends, overridden true by own",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [],
+    "files": 24
+   },
+   "head": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [],
+    "files": 24
+   },
+   "own": true,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "rev: composite as the string 'true'",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 1,
+    "message": "packages/a/tsconfig.json(1,35): error TS5024: Compiler option 'composite' requires a value of type boolean.",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [
+     "TS5024",
+     "TS6306"
+    ],
+    "files": 22
+   },
+   "head": {
+    "exit": 1,
+    "message": "Error: packages/a/tsconfig.json: a referenced project is not composite",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 17
+   },
+   "own": true,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "packages/a/dist/.tsbuildinfo",
+    "packages/a/dist/a.js",
+    "packages/b/dist/.tsbuildinfo",
+    "packages/b/dist/b.d.ts",
+    "packages/b/dist/b.js",
+    "packages/d/dist/.tsbuildinfo",
+    "packages/d/dist/d.d.ts",
+    "packages/d/dist/d.js",
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "rev: references a directory with './' form",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [],
+    "files": 23
+   },
+   "head": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [],
+    "files": 23
+   },
+   "own": true,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "rev: references a file (tsconfig.json) in a named project",
+   "named": [
+    "packages/b"
+   ],
+   "base": {
+    "exit": 1,
+    "message": "Error: packages/a/tsconfig.json: not a workspace project with a tsconfig.json",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 17
+   },
+   "head": {
+    "exit": 1,
+    "message": "Error: packages/a/tsconfig.json: not a workspace project with a tsconfig.json",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 17
+   },
+   "own": true,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "rev: reference through a symlinked project directory inside the checkout",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [],
+    "files": 23
+   },
+   "head": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [],
+    "files": 23
+   },
+   "own": true,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "rev: named symlinked project, non-composite reference via it",
+   "named": [
+    "packages/b"
+   ],
+   "base": {
+    "exit": 2,
+    "message": "packages/b/tsconfig.json(1,237): error TS6306: Referenced project '<tree>/packages/alias' must have setting \"composite\": true.",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js"
+    ],
+    "tsErrors": [
+     "TS6306"
+    ],
+    "files": 20
+   },
+   "head": {
+    "exit": 1,
+    "message": "Error: packages/alias/tsconfig.json: a referenced project is not composite",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 17
+   },
+   "own": true,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "packages/a/dist/.tsbuildinfo",
+    "packages/a/dist/a.js",
+    "packages/b/dist/.tsbuildinfo",
+    "packages/b/dist/b.d.ts",
+    "packages/b/dist/b.js",
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "rev: tsBuildInfoFile without incremental, named, nothing references it",
+   "named": [
+    "packages/c"
+   ],
+   "base": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/c/dist/c.js"
+    ],
+    "tsErrors": [],
+    "files": 18
+   },
+   "head": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/c/dist/c.js"
+    ],
+    "tsErrors": [],
+    "files": 18
+   },
+   "own": true,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "rev: inherited declarationDir null",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [],
+    "files": 24
+   },
+   "head": {
+    "exit": 1,
+    "message": "Error: packages/a/tsconfig.json: its outputs and incremental state are not both under dist",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 18
+   },
+   "own": true,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "packages/a/dist/.tsbuildinfo",
+    "packages/a/dist/a.d.ts",
+    "packages/a/dist/a.js",
+    "packages/b/dist/.tsbuildinfo",
+    "packages/b/dist/b.d.ts",
+    "packages/b/dist/b.js",
+    "packages/d/dist/.tsbuildinfo",
+    "packages/d/dist/d.d.ts",
+    "packages/d/dist/d.js",
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "rev: inherited outFile null",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [],
+    "files": 24
+   },
+   "head": {
+    "exit": 1,
+    "message": "Error: packages/a/tsconfig.json: its outputs and incremental state are not both under dist",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 18
+   },
+   "own": true,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "packages/a/dist/.tsbuildinfo",
+    "packages/a/dist/a.d.ts",
+    "packages/a/dist/a.js",
+    "packages/b/dist/.tsbuildinfo",
+    "packages/b/dist/b.d.ts",
+    "packages/b/dist/b.js",
+    "packages/d/dist/.tsbuildinfo",
+    "packages/d/dist/d.d.ts",
+    "packages/d/dist/d.js",
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "rev: inherited outDir null (own dist)",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [],
+    "files": 24
+   },
+   "head": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [],
+    "files": 24
+   },
+   "own": true,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "rev: inherited composite null",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 2,
+    "message": "packages/b/tsconfig.json(1,237): error TS6306: Referenced project '<tree>/packages/a' must have setting \"composite\": true.",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [
+     "TS6306"
+    ],
+    "files": 23
+   },
+   "head": {
+    "exit": 1,
+    "message": "Error: packages/a/tsconfig.json: a referenced project is not composite",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 18
+   },
+   "own": true,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "packages/a/dist/.tsbuildinfo",
+    "packages/a/dist/a.js",
+    "packages/b/dist/.tsbuildinfo",
+    "packages/b/dist/b.d.ts",
+    "packages/b/dist/b.js",
+    "packages/d/dist/.tsbuildinfo",
+    "packages/d/dist/d.d.ts",
+    "packages/d/dist/d.js",
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "rev: extends a missing file",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 2,
+    "message": "error TS5083: Cannot read file '<tree>/packages/a/nope.json'.",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [
+     "TS5083"
+    ],
+    "files": 23
+   },
+   "head": {
+    "exit": 2,
+    "message": "error TS5083: Cannot read file '<tree>/packages/a/nope.json'.",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [
+     "TS5083"
+    ],
+    "files": 23
+   },
+   "own": true,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "rev: extends a file with comments and a trailing comma",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/a/types/a.d.ts",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [],
+    "files": 23
+   },
+   "head": {
+    "exit": 1,
+    "message": "Error: packages/a/tsconfig.json: its outputs and incremental state are not both under dist",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 18
+   },
+   "own": true,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "packages/a/dist/.tsbuildinfo",
+    "packages/a/dist/a.js",
+    "packages/a/types/a.d.ts",
+    "packages/b/dist/.tsbuildinfo",
+    "packages/b/dist/b.d.ts",
+    "packages/b/dist/b.js",
+    "packages/d/dist/.tsbuildinfo",
+    "packages/d/dist/d.d.ts",
+    "packages/d/dist/d.js",
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "rev: extends itself",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 2,
+    "message": "error TS18000: Circularity detected while resolving configuration: <tree>/packages/a/tsconfig.json -> <tree>/packages/a/tsconfig.json",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [
+     "TS18000"
+    ],
+    "files": 23
+   },
+   "head": {
+    "exit": 2,
+    "message": "error TS18000: Circularity detected while resolving configuration: <tree>/packages/a/tsconfig.json -> <tree>/packages/a/tsconfig.json",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [
+     "TS18000"
+    ],
+    "files": 23
+   },
+   "own": true,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "rev: extends a two-file cycle",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 2,
+    "message": "error TS18000: Circularity detected while resolving configuration: <tree>/packages/a/tsconfig.json -> <tree>/packages/a/b1.json -> <tree>/packages/a/b2.json -> <tree>/packages/a/b1.json",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/a/types/a.d.ts",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [
+     "TS18000"
+    ],
+    "files": 24
+   },
+   "head": {
+    "exit": 1,
+    "message": "Error: packages/a/tsconfig.json: its outputs and incremental state are not both under dist",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 19
+   },
+   "own": true,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "packages/a/dist/.tsbuildinfo",
+    "packages/a/dist/a.js",
+    "packages/a/types/a.d.ts",
+    "packages/b/dist/.tsbuildinfo",
+    "packages/b/dist/b.d.ts",
+    "packages/b/dist/b.js",
+    "packages/d/dist/.tsbuildinfo",
+    "packages/d/dist/d.d.ts",
+    "packages/d/dist/d.js",
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "rev: duplicate compilerOptions, first sets declarationDir outside",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/a/types/a.d.ts",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [],
+    "files": 22
+   },
+   "head": {
+    "exit": 1,
+    "message": "Error: packages/a/tsconfig.json: its outputs and incremental state are not both under dist",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 17
+   },
+   "own": true,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "packages/a/dist/.tsbuildinfo",
+    "packages/a/dist/a.js",
+    "packages/a/types/a.d.ts",
+    "packages/b/dist/.tsbuildinfo",
+    "packages/b/dist/b.d.ts",
+    "packages/b/dist/b.js",
+    "packages/d/dist/.tsbuildinfo",
+    "packages/d/dist/d.d.ts",
+    "packages/d/dist/d.js",
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "rev: duplicate compilerOptions, first sets outDir out, second dist",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [],
+    "files": 23
+   },
+   "head": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [],
+    "files": 23
+   },
+   "own": true,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "rev: duplicate compilerOptions, first is the full set, second lacks composite",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [],
+    "files": 23
+   },
+   "head": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [],
+    "files": 23
+   },
+   "own": true,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "rev: duplicate outDir inside one compilerOptions (out then dist)",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [],
+    "files": 23
+   },
+   "head": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [],
+    "files": 23
+   },
+   "own": true,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "rev: tsconfig is an array",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 1,
+    "message": "Error: packages/a/tsconfig.json: its outputs and incremental state are not both under dist",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 17
+   },
+   "head": {
+    "exit": 1,
+    "message": "Error: packages/a/tsconfig.json: its outputs and incremental state are not both under dist",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 17
+   },
+   "own": true,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "rev: compilerOptions an array with outDir property impossible; compilerOptions null",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 1,
+    "message": "Error: packages/a/tsconfig.json: its outputs and incremental state are not both under dist",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 17
+   },
+   "head": {
+    "exit": 1,
+    "message": "Error: packages/a/tsconfig.json: its outputs and incremental state are not both under dist",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 17
+   },
+   "own": true,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "rev: tsconfig.json is a directory",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 1,
+    "message": "Error: packages/a/tsconfig.json: not plain JSON",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 16
+   },
+   "head": {
+    "exit": 1,
+    "message": "Error: packages/a/tsconfig.json: not plain JSON",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 16
+   },
+   "own": true,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "rev: include matches no input",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [],
+    "files": 20
+   },
+   "head": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [],
+    "files": 20
+   },
+   "own": true,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "rev: emitDeclarationOnly with declarationDir under dist",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [],
+    "files": 23
+   },
+   "head": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [],
+    "files": 23
+   },
+   "own": true,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "rev: tsBuildInfoFile inherited elsewhere, own dist (own wins)",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [],
+    "files": 24
+   },
+   "head": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [],
+    "files": 24
+   },
+   "own": true,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "rev: declarationDir exactly dist through extends",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [],
+    "files": 24
+   },
+   "head": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [],
+    "files": 24
+   },
+   "own": true,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "rev: declarationDir 'dist-x' (prefix trap) through extends",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [],
+    "files": 24
+   },
+   "head": {
+    "exit": 1,
+    "message": "Error: packages/a/tsconfig.json: its outputs and incremental state are not both under dist",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 18
+   },
+   "own": true,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "packages/a/dist-x/a.d.ts",
+    "packages/a/dist/.tsbuildinfo",
+    "packages/a/dist/a.js",
+    "packages/b/dist/.tsbuildinfo",
+    "packages/b/dist/b.d.ts",
+    "packages/b/dist/b.js",
+    "packages/d/dist/.tsbuildinfo",
+    "packages/d/dist/d.d.ts",
+    "packages/d/dist/d.js",
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "rev: declarationDir 'dist/../types' through extends",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/a/types/a.d.ts",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [],
+    "files": 23
+   },
+   "head": {
+    "exit": 1,
+    "message": "Error: packages/a/tsconfig.json: its outputs and incremental state are not both under dist",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 18
+   },
+   "own": true,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "packages/a/dist/.tsbuildinfo",
+    "packages/a/dist/a.js",
+    "packages/a/types/a.d.ts",
+    "packages/b/dist/.tsbuildinfo",
+    "packages/b/dist/b.d.ts",
+    "packages/b/dist/b.js",
+    "packages/d/dist/.tsbuildinfo",
+    "packages/d/dist/d.d.ts",
+    "packages/d/dist/d.js",
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "rev: declarationDir a symlink under dist? (dist/types -> ../types)",
+   "named": [
+    "packages/d"
+   ],
+   "base": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [],
+    "files": 24
+   },
+   "head": {
+    "exit": 0,
+    "message": "",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [],
+    "files": 24
+   },
+   "own": true,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "rev: two named, the second referenced by the first, second non-composite",
+   "named": [
+    "packages/b",
+    "packages/a"
+   ],
+   "base": {
+    "exit": 2,
+    "message": "packages/b/tsconfig.json(1,237): error TS6306: Referenced project '<tree>/packages/a' must have setting \"composite\": true.",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js"
+    ],
+    "tsErrors": [
+     "TS6306"
+    ],
+    "files": 20
+   },
+   "head": {
+    "exit": 1,
+    "message": "Error: packages/a/tsconfig.json: a referenced project is not composite",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 17
+   },
+   "own": true,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "packages/a/dist/.tsbuildinfo",
+    "packages/a/dist/a.js",
+    "packages/b/dist/.tsbuildinfo",
+    "packages/b/dist/b.d.ts",
+    "packages/b/dist/b.js",
+    "scripts/clean_build.mjs"
+   ]
+  },
+  {
+   "case": "rev: non-composite referenced project already built earlier in the walk",
+   "named": [
+    "packages/a",
+    "packages/d"
+   ],
+   "base": {
+    "exit": 2,
+    "message": "packages/b/tsconfig.json(1,237): error TS6306: Referenced project '<tree>/packages/a' must have setting \"composite\": true.",
+    "sentinelsGone": [
+     "packages/a/dist/a.js",
+     "packages/b/dist/b.js",
+     "packages/d/dist/d.js"
+    ],
+    "tsErrors": [
+     "TS6306"
+    ],
+    "files": 22
+   },
+   "head": {
+    "exit": 1,
+    "message": "Error: packages/a/tsconfig.json: a referenced project is not composite",
+    "sentinelsGone": [],
+    "tsErrors": [],
+    "files": 17
+   },
+   "own": true,
+   "snapshotsEqual": false,
+   "snapshotDiff": [
+    "packages/a/dist/.tsbuildinfo",
+    "packages/a/dist/a.js",
+    "packages/b/dist/.tsbuildinfo",
+    "packages/b/dist/b.d.ts",
+    "packages/b/dist/b.js",
+    "packages/d/dist/.tsbuildinfo",
+    "packages/d/dist/d.d.ts",
+    "packages/d/dist/d.js",
+    "scripts/clean_build.mjs"
+   ]
+  }
+ ]
+}

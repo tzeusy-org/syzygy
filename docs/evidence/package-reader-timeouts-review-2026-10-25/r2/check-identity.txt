@@ -1,0 +1,48 @@
+test file sha256 at ce322e1a / 3e563ec4 / dc60c5bc: ea6aa505e8bd77004c4a5910dbe27a58588c668d370f7978660ba1d738b8b3c8 / ff2e1d5622da2e4598b7d7a5592d980ee7e2e0b2fc13854c6486e82aab332cd9 / bee795806a6d34e3b8590cd2497d5070042972413d8faf9e60fcc33c2d6bde25
+non-comment lines equal 3e563ec4 vs dc60c5bc: True
+non-comment line count: (1021, 1021)
+changed hunks / changed lines / all comment lines: (1, 5, True)
+timeouts at 3e563ec4 / dc60c5bc: (16, 16)
+timeouts equal (opener, title, value, order): True
+openers: ['it']
+values: [10000, 15000, 15000, 15000, 15000, 15000, 20000, 20000, 25000, 40000, 40000, 40000, 45000, 45000, 45000, 50000]
+comment block lines: 7
+reversed head == ce322e1a bytes (blank line after comment dropped: True): True
+testkit sha256 ce322e1a / dc60c5bc: ('3576a99df9c6da7cec515632b362f237d59028069d5f239e983bc337b31e6fc3', '3576a99df9c6da7cec515632b362f237d59028069d5f239e983bc337b31e6fc3')
+measure script sha256 at 3e563ec4 / dc60c5bc: ('0ef82cd0563f4e09646a51234a33a835ec3f676150456d35a84835b08c128290', '920c5f120209904b37cfe14320ea00edfa18eafbda12fd7dcb02ec8fcf4f1e97')
+  before-alone.json script.sha256 == 3e563ec4 script: (True, 'ce322e1a', False, 3)
+  before-full-1.json script.sha256 == 3e563ec4 script: (True, 'ce322e1a', False, 2)
+  before-full-2.json script.sha256 == 3e563ec4 script: (True, 'ce322e1a', False, 2)
+  before-profile.json script.sha256 == 3e563ec4 script: (True, 'ce322e1a', True, 1)
+  after-alone.json script.sha256 == 3e563ec4 script: (True, '9e748e68', False, 3)
+  after-full.json script.sha256 == 3e563ec4 script: (True, '9e748e68', False, 2)
+evidence json files: 10
+timeout-sizing script sha == head size script: True
+timeout-sizing subject: {'commit': '48ee832a84335b9f3a260a4375f449358d481f5d', 'dirty': False}
+timeout-sizing subject fileSha256 == head test file / == file at subject commit: (True, True)
+  input docs/evidence/syzygy-bpyt-4-13/before-alone.json: True
+  input docs/evidence/syzygy-bpyt-4-13/before-full-1.json: True
+  input docs/evidence/syzygy-bpyt-4-13/before-full-2.json: True
+  input docs/evidence/syzygy-bpyt-4-13/load-127-report-extract.json: True
+  input docs/evidence/syzygy-bpyt-4-13/after-alone.json: True
+  input docs/evidence/syzygy-bpyt-4-13/after-full.json: True
+timeout-sizing top keys: ['bead', 'check', 'denominator', 'inputs', 'rule', 'schema', 'script', 'subject', 'tests', 'text']
+timeout-sizing check: {'problems': [], 'holds': True}
+timeout-sizing tests/denominator/inputs equal to 3e563ec4 record: {'schema': True, 'bead': True, 'text': True, 'rule': True, 'inputs': True, 'denominator': True, 'check': True, 'tests': True}
+probe tool sha == committed tool: True
+probe record commit: 48ee832a84335b9f3a260a4375f449358d481f5d
+  script old at 3e563ec4 sha matches git show: True
+  script new at 48ee832a sha matches git show: True
+  new script sha == head script: True
+probe results: [('P0', 'new', 0, False, 0, True), ('D1', 'old', 1, True, 0, False), ('T', 'old', -15, True, 1, False), ('I', 'old', -2, False, 1, False), ('D1', 'new', 1, False, 0, True), ('T', 'new', 143, False, 0, True), ('I', 'new', -2, False, 0, True)]
+probe summary: {'old': {'D1': False, 'T': False, 'I': False}, 'new': {'P0': True, 'D1': True, 'T': True, 'I': True}}
+48ee832a..dc60c5bc changes: ['docs/evidence/syzygy-bpyt-4-13/measure-restore-probes.json', 'docs/evidence/syzygy-bpyt-4-13/sizing-check-mutants.json', 'docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json']
+mutant tool sha == committed tool: True
+checkScript sha == head size script: True
+mutants: [('M0', 0, 0, True), ('M1', 1, 1, True), ('M2', 1, 1, True), ('M3', 1, 1, True), ('M4', 1, 1, True), ('R5', 1, 1, True), ('M5', 1, 1, True), ('M6', 0, 0, True)]
+allAsExpected: True
+  M1 old fragment occurs in head packages/polaris-generation-consent/src/package-reader.test.ts: 1
+  M2 old fragment occurs in head packages/polaris-generation-consent/src/package-reader.test.ts: 1
+  M3 old fragment occurs in head packages/polaris-generation-consent/src/package-reader.test.ts: 1
+  M4 old fragment occurs in head packages/polaris-generation-consent/src/package-reader.test.ts: 1
+  R5 old fragment occurs in head vitest.config.ts: 1

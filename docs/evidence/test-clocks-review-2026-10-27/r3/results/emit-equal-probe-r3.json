@@ -1,0 +1,132 @@
+{
+ "tool": "emit_equal_probe_r3.py",
+ "ev": "2b56a253f81bb4e6d71b46556f0d675a07dfb7c2",
+ "files": [
+  "packages/polaris-generation-core/src/dossier-profile.test.ts",
+  "packages/polaris-generation-core/src/excerpt.test.ts",
+  "packages/three-surface-poc-core/src/test-artifact-verification.test.ts"
+ ],
+ "probes": [
+  {
+   "id": "P1-type-annotation-only",
+   "file": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "old": "const BUDGET = 1500;\n",
+   "new": "const BUDGET: number = 1500;\n",
+   "note": "a type annotation: erased; runtime-equal",
+   "scratchCommit": "9b76a70cdb3155825450c1606360d6be82e85241",
+   "emitEqual": {
+    "packages/polaris-generation-core/src/dossier-profile.test.ts": true,
+    "packages/polaris-generation-core/src/excerpt.test.ts": true,
+    "packages/three-surface-poc-core/src/test-artifact-verification.test.ts": true
+   }
+  },
+  {
+   "id": "P2-vitest-environment-docblock",
+   "file": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "old": "import { describe, expect, it } from 'vitest';\n",
+   "new": "// @vitest-environment jsdom\nimport { describe, expect, it } from 'vitest';\n",
+   "note": "a comment that vitest reads: the file runs in another environment (jsdom, not installed here)",
+   "scratchCommit": "4f361985704d6e4a2a0f8183aa85a44989c60201",
+   "emitEqual": {
+    "packages/polaris-generation-core/src/dossier-profile.test.ts": true,
+    "packages/polaris-generation-core/src/excerpt.test.ts": true,
+    "packages/three-surface-poc-core/src/test-artifact-verification.test.ts": true
+   }
+  },
+  {
+   "id": "P3-bound-value",
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "old": "const TAG_SCAN_CPU_MS = 1_500;",
+   "new": "const TAG_SCAN_CPU_MS = 150_000;",
+   "note": "a bound's value: masked by design; what the region runs is unchanged, what the test accepts is not",
+   "scratchCommit": "2578c3529a01ab4117eddc9ca5218d405d2da33a",
+   "emitEqual": {
+    "packages/polaris-generation-core/src/dossier-profile.test.ts": true,
+    "packages/polaris-generation-core/src/excerpt.test.ts": true,
+    "packages/three-surface-poc-core/src/test-artifact-verification.test.ts": true
+   }
+  },
+  {
+   "id": "P4-module-under-test-slowed",
+   "file": "packages/polaris-generation-core/src/excerpt.ts",
+   "old": "export function buildExcerpt(path: string, text: string, base: number, maxChars: number): Excerpt {",
+   "new": "export function buildExcerpt(path: string, text: string, base: number, maxChars: number): Excerpt {\n  for (let i = 0; i < 5e7; i++) void i; // rev-532c scratch: a slower region\n",
+   "note": "excerpt.ts (the module the HOSTILE_LINE region runs) gains a busy loop: no timed test file changes",
+   "scratchCommit": "0637d160ed95b0332dbf56b4592b74b804d4c4ac",
+   "emitEqual": {
+    "packages/polaris-generation-core/src/dossier-profile.test.ts": true,
+    "packages/polaris-generation-core/src/excerpt.test.ts": true,
+    "packages/three-surface-poc-core/src/test-artifact-verification.test.ts": true
+   }
+  }
+ ],
+ "lanePairs": {
+  "722231fe~2b56a253": {
+   "packages/polaris-generation-core/src/dossier-profile.test.ts": true,
+   "packages/polaris-generation-core/src/excerpt.test.ts": true,
+   "packages/three-surface-poc-core/src/test-artifact-verification.test.ts": true
+  },
+  "bb5df680~2b56a253": {
+   "packages/polaris-generation-core/src/dossier-profile.test.ts": true,
+   "packages/polaris-generation-core/src/excerpt.test.ts": true,
+   "packages/three-surface-poc-core/src/test-artifact-verification.test.ts": true
+  },
+  "c104771f~2b56a253": {
+   "packages/polaris-generation-core/src/dossier-profile.test.ts": false,
+   "packages/polaris-generation-core/src/excerpt.test.ts": false,
+   "packages/three-surface-poc-core/src/test-artifact-verification.test.ts": false
+  }
+ },
+ "nonTestModuleDriftSinceSeparation": {
+  "722231fe": [
+   "M\tpackages/polaris-generation-core/src/canonical-json.ts",
+   "M\tpackages/polaris-generation-core/src/dossier-evaluation.ts",
+   "M\tpackages/polaris-generation-core/src/dossier-profile.ts",
+   "M\tpackages/polaris-generation-core/src/generation-source.ts",
+   "M\tpackages/polaris-generation-core/src/pipeline.ts",
+   "M\tpackages/polaris-generation-core/src/prompts.ts",
+   "M\tpackages/polaris-generation-core/src/public-source-classification.ts",
+   "M\tpackages/polaris-generation-core/src/secret-redaction.ts",
+   "M\tpackages/polaris-generation-core/src/workspace-reach.testkit.ts",
+   "A\tpackages/support/src/deep-freeze.ts",
+   "A\tpackages/support/src/index.ts",
+   "A\tpackages/support/src/sha256.ts",
+   "M\tpackages/three-surface-poc-core/src/act-fields.ts",
+   "M\tpackages/three-surface-poc-core/src/body-read-authority.ts",
+   "M\tpackages/three-surface-poc-core/src/git-object-reader.ts",
+   "M\tpackages/three-surface-poc-core/src/model.ts",
+   "M\tpackages/three-surface-poc-core/src/owner-act-drafter.ts",
+   "M\tpackages/three-surface-poc-core/src/poc-seeds.ts",
+   "M\tpackages/three-surface-poc-core/src/project-shape-manifest.ts",
+   "M\tpackages/three-surface-poc-core/src/project-shape-observation.ts",
+   "M\tpackages/three-surface-poc-core/src/response-identity.ts",
+   "M\tpackages/three-surface-poc-core/src/walkthrough-judgment.ts",
+   "M\tpackages/three-surface-poc-core/src/walkthrough-readiness.ts"
+  ],
+  "bb5df680": [
+   "M\tpackages/polaris-generation-core/src/canonical-json.ts",
+   "M\tpackages/polaris-generation-core/src/dossier-evaluation.ts",
+   "M\tpackages/polaris-generation-core/src/dossier-profile.ts",
+   "M\tpackages/polaris-generation-core/src/generation-source.ts",
+   "M\tpackages/polaris-generation-core/src/pipeline.ts",
+   "M\tpackages/polaris-generation-core/src/prompts.ts",
+   "M\tpackages/polaris-generation-core/src/public-source-classification.ts",
+   "M\tpackages/polaris-generation-core/src/secret-redaction.ts",
+   "M\tpackages/polaris-generation-core/src/workspace-reach.testkit.ts",
+   "A\tpackages/support/src/deep-freeze.ts",
+   "A\tpackages/support/src/index.ts",
+   "A\tpackages/support/src/sha256.ts",
+   "M\tpackages/three-surface-poc-core/src/act-fields.ts",
+   "M\tpackages/three-surface-poc-core/src/body-read-authority.ts",
+   "M\tpackages/three-surface-poc-core/src/git-object-reader.ts",
+   "M\tpackages/three-surface-poc-core/src/model.ts",
+   "M\tpackages/three-surface-poc-core/src/owner-act-drafter.ts",
+   "M\tpackages/three-surface-poc-core/src/poc-seeds.ts",
+   "M\tpackages/three-surface-poc-core/src/project-shape-manifest.ts",
+   "M\tpackages/three-surface-poc-core/src/project-shape-observation.ts",
+   "M\tpackages/three-surface-poc-core/src/response-identity.ts",
+   "M\tpackages/three-surface-poc-core/src/walkthrough-judgment.ts",
+   "M\tpackages/three-surface-poc-core/src/walkthrough-readiness.ts"
+  ]
+ }
+}

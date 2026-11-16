@@ -1,0 +1,105 @@
+{"node": "v22.18.0", "cpuSource": "process", "only": null}
+{"bound": "EDGE_TRIM_CPU_MS", "head": [60.761], "exit": 0, "load1": 71.06}
+{"bound": "EDGE_TRIM_CPU_MS", "head": [66.953], "exit": 0, "load1": 73.62}
+{"bound": "EDGE_TRIM_CPU_MS", "head": [60.686], "exit": 0, "load1": 70.84}
+{"bound": "EDGE_TRIM_CPU_MS", "head": [61.416], "exit": 0, "load1": 69.89}
+{"bound": "EDGE_TRIM_CPU_MS", "head": [61.215], "exit": 0, "load1": 70.0}
+{"bound": "EDGE_TRIM_CPU_MS", "head": [58.75], "exit": 0, "load1": 70.11}
+{"bound": "EDGE_TRIM_CPU_MS", "head": [61.822], "exit": 0, "load1": 67.71}
+{"bound": "EDGE_TRIM_CPU_MS", "head": [61.207], "exit": 0, "load1": 67.33}
+{"bound": "EDGE_TRIM_CPU_MS", "head": [58.992], "exit": 0, "load1": 66.74}
+{"bound": "EDGE_TRIM_CPU_MS", "head": [60.168], "exit": 0, "load1": 65.56}
+{"bound": "EDGE_TRIM_CPU_MS", "mutant": "edge-backtracking-regex", "title": "trims a long run of spaces in linear time", "capped": 20911.4, "regions": [], "seconds": 53.3, "load1": 64.2}
+{"bound": "EDGE_TRIM_CPU_MS", "mutant": "edge-backtracking-regex", "title": "trims a long run of spaces in linear time", "capped": 21077.6, "regions": [], "seconds": 42.5, "load1": 65.05}
+{"bound": "EDGE_TRIM_CPU_MS", "mutant": "edge-backtracking-regex", "title": "trims a long run of spaces in linear time", "capped": 20969.2, "regions": [], "seconds": 37.6, "load1": 56.12}
+{"bound": "EDGE_TRIM_CPU_MS", "mutant": "edge-backtracking-regex", "title": "trims a long run of spaces in linear time", "capped": 20915.8, "regions": [], "seconds": 40.3, "load1": 51.28}
+{"bound": "EDGE_TRIM_CPU_MS", "mutant": "edge-backtracking-regex", "title": "trims a long run of spaces in linear time", "capped": 20922.0, "regions": [], "seconds": 57.4, "load1": 47.93}
+{"bound": "EDGE_TRIM_CPU_MS", "mutant": "edge-backtracking-regex", "title": "trims a long run of spaces in linear time", "capped": 21010.2, "regions": [], "seconds": 54.8, "load1": 55.27}
+{"bound": "EDGE_TRIM_CPU_MS", "mutant": "edge-backtracking-regex", "title": "trims a long run of spaces in linear time", "capped": 20960.7, "regions": [], "seconds": 45.4, "load1": 55.55}
+{"bound": "EDGE_TRIM_CPU_MS", "mutant": "edge-backtracking-regex", "title": "trims a long run of spaces in linear time", "capped": 20990.4, "regions": [], "seconds": 64.4, "load1": 55.33}
+{"bound": "EDGE_TRIM_CPU_MS", "mutant": "edge-backtracking-regex", "title": "trims a long run of spaces in linear time", "capped": 20914.3, "regions": [], "seconds": 75.0, "load1": 64.12}
+{"bound": "EDGE_TRIM_CPU_MS", "mutant": "edge-backtracking-regex", "title": "trims a long run of spaces in linear time", "capped": 20938.2, "regions": [], "seconds": 71.2, "load1": 74.69}
+{"bound": "EDGE_TRIM_CPU_MS", "committedMs": 1900, "capMs": 20900, "headExitsNonzero": 0, "headRegions": 10, "headMaxMs": 66.953, "boundOverHeadMax": 28.4, "reachedMutantMinMs": 20911.4, "mutantMinOverBound": 11.0, "notReached": [], "load1Range": [47.93, 74.69]}
+{"bound": "HOSTILE_LINE_CPU_MS", "head": [1.335, 0.351], "exit": 0, "load1": 74.43}
+{"bound": "HOSTILE_LINE_CPU_MS", "head": [1.702, 0.426], "exit": 0, "load1": 77.12}
+{"bound": "HOSTILE_LINE_CPU_MS", "head": [1.378, 0.367], "exit": 0, "load1": 78.6}
+{"bound": "HOSTILE_LINE_CPU_MS", "head": [1.672, 0.656], "exit": 0, "load1": 78.95}
+{"bound": "HOSTILE_LINE_CPU_MS", "head": [1.496, 0.398], "exit": 0, "load1": 81.62}
+{"bound": "HOSTILE_LINE_CPU_MS", "head": [1.314, 0.411], "exit": 0, "load1": 80.76}
+{"bound": "HOSTILE_LINE_CPU_MS", "head": [2.059, 0.508], "exit": 0, "load1": 81.82}
+{"bound": "HOSTILE_LINE_CPU_MS", "head": [1.404, 0.353], "exit": 0, "load1": 84.37}
+{"bound": "HOSTILE_LINE_CPU_MS", "head": [1.376, 0.392], "exit": 0, "load1": 84.21}
+{"bound": "HOSTILE_LINE_CPU_MS", "head": [1.385, 0.362], "exit": 0, "load1": 82.83}
+{"bound": "HOSTILE_LINE_CPU_MS", "mutant": "excerpt-no-cap-quadratic-pattern", "title": "stays linear on one 100k line of spaces after an identifier", "capped": null, "regions": [17399.162], "seconds": 52.7, "load1": 83.34}
+{"bound": "HOSTILE_LINE_CPU_MS", "mutant": "excerpt-no-cap-quadratic-pattern", "title": "stays linear on one 100k line of spaces after an identifier", "capped": null, "regions": [17042.748], "seconds": 60.4, "load1": 83.6}
+{"bound": "HOSTILE_LINE_CPU_MS", "mutant": "excerpt-no-cap-quadratic-pattern", "title": "stays linear on one 100k line of spaces after an identifier", "capped": null, "regions": [17323.993], "seconds": 44.1, "load1": 83.55}
+{"bound": "HOSTILE_LINE_CPU_MS", "mutant": "excerpt-no-cap-quadratic-pattern", "title": "stays linear on one 100k line of spaces after an identifier", "capped": null, "regions": [17227.087], "seconds": 45.4, "load1": 71.69}
+{"bound": "HOSTILE_LINE_CPU_MS", "mutant": "excerpt-no-cap-quadratic-pattern", "title": "stays linear on one 100k line of spaces after an identifier", "capped": null, "regions": [16988.112], "seconds": 45.2, "load1": 66.21}
+{"bound": "HOSTILE_LINE_CPU_MS", "mutant": "excerpt-no-cap-quadratic-pattern", "title": "stays linear on one 100k line of spaces after an identifier", "capped": null, "regions": [16949.268], "seconds": 47.5, "load1": 64.67}
+{"bound": "HOSTILE_LINE_CPU_MS", "mutant": "excerpt-no-cap-quadratic-pattern", "title": "stays linear on one 100k line of spaces after an identifier", "capped": null, "regions": [17440.117], "seconds": 54.2, "load1": 70.17}
+{"bound": "HOSTILE_LINE_CPU_MS", "mutant": "excerpt-no-cap-quadratic-pattern", "title": "stays linear on one 100k line of spaces after an identifier", "capped": null, "regions": [17420.445], "seconds": 58.6, "load1": 76.92}
+{"bound": "HOSTILE_LINE_CPU_MS", "mutant": "excerpt-no-cap-quadratic-pattern", "title": "stays linear on one 100k line of spaces after an identifier", "capped": null, "regions": [17471.639], "seconds": 47.4, "load1": 77.63}
+{"bound": "HOSTILE_LINE_CPU_MS", "mutant": "excerpt-no-cap-quadratic-pattern", "title": "stays linear on one 100k line of spaces after an identifier", "capped": null, "regions": [17378.987], "seconds": 39.5, "load1": 69.58}
+{"bound": "HOSTILE_LINE_CPU_MS", "committedMs": 140, "capMs": 120000, "headExitsNonzero": 0, "headRegions": 20, "headMaxMs": 2.059, "boundOverHeadMax": 68.0, "reachedMutantMinMs": 16949.268, "mutantMinOverBound": 121.1, "notReached": [], "load1Range": [64.67, 84.37]}
+{"bound": "TAG_SCAN_CPU_MS", "head": [15.043, 57.277, 34.599], "exit": 0, "load1": 65.8}
+{"bound": "TAG_SCAN_CPU_MS", "head": [14.345, 61.603, 37.309], "exit": 0, "load1": 67.5}
+{"bound": "TAG_SCAN_CPU_MS", "head": [13.555, 88.029, 37.934], "exit": 0, "load1": 67.06}
+{"bound": "TAG_SCAN_CPU_MS", "head": [14.225, 58.684, 37.027], "exit": 0, "load1": 67.63}
+{"bound": "TAG_SCAN_CPU_MS", "head": [13.751, 54.651, 36.584], "exit": 0, "load1": 64.62}
+{"bound": "TAG_SCAN_CPU_MS", "head": [14.82, 56.977, 35.511], "exit": 0, "load1": 64.81}
+{"bound": "TAG_SCAN_CPU_MS", "head": [15.423, 57.136, 35.725], "exit": 0, "load1": 68.19}
+{"bound": "TAG_SCAN_CPU_MS", "head": [14.382, 63.19, 35.48], "exit": 0, "load1": 68.74}
+{"bound": "TAG_SCAN_CPU_MS", "head": [13.602, 51.066, 35.3], "exit": 0, "load1": 66.92}
+{"bound": "TAG_SCAN_CPU_MS", "head": [14.569, 65.551, 34.027], "exit": 0, "load1": 68.2}
+{"bound": "TAG_SCAN_CPU_MS", "mutant": "junit-tag-regex", "title": "scans unterminated opening tags at the ceiling", "capped": 16604.8, "regions": [], "seconds": 27.6, "load1": 66.27}
+{"bound": "TAG_SCAN_CPU_MS", "mutant": "junit-tag-regex", "title": "scans unterminated opening tags at the ceiling", "capped": 16593.0, "regions": [], "seconds": 26.8, "load1": 58.14}
+{"bound": "TAG_SCAN_CPU_MS", "mutant": "junit-tag-regex", "title": "scans unterminated opening tags at the ceiling", "capped": 16580.4, "regions": [], "seconds": 25.5, "load1": 48.37}
+{"bound": "TAG_SCAN_CPU_MS", "mutant": "junit-tag-regex", "title": "scans unterminated opening tags at the ceiling", "capped": 16589.9, "regions": [], "seconds": 39.6, "load1": 40.89}
+{"bound": "TAG_SCAN_CPU_MS", "mutant": "junit-tag-regex", "title": "scans unterminated opening tags at the ceiling", "capped": 16588.0, "regions": [], "seconds": 50.1, "load1": 52.65}
+{"bound": "TAG_SCAN_CPU_MS", "mutant": "junit-tag-regex", "title": "scans unterminated opening tags at the ceiling", "capped": 16510.9, "regions": [], "seconds": 47.2, "load1": 60.4}
+{"bound": "TAG_SCAN_CPU_MS", "mutant": "junit-tag-regex", "title": "scans unterminated opening tags at the ceiling", "capped": 16597.6, "regions": [], "seconds": 53.6, "load1": 56.49}
+{"bound": "TAG_SCAN_CPU_MS", "mutant": "junit-tag-regex", "title": "scans unterminated opening tags at the ceiling", "capped": 16510.5, "regions": [], "seconds": 78.9, "load1": 59.98}
+{"bound": "TAG_SCAN_CPU_MS", "mutant": "junit-tag-regex", "title": "scans unterminated opening tags at the ceiling", "capped": 16588.4, "regions": [], "seconds": 81.1, "load1": 79.9}
+{"bound": "TAG_SCAN_CPU_MS", "mutant": "junit-tag-regex", "title": "scans unterminated opening tags at the ceiling", "capped": 16503.3, "regions": [], "seconds": 60.1, "load1": 89.25}
+{"bound": "TAG_SCAN_CPU_MS", "mutant": "junit-tag-regex", "title": "scans unterminated plural tags at the ceiling", "capped": 16527.7, "regions": [], "seconds": 58.7, "load1": 77.05}
+{"bound": "TAG_SCAN_CPU_MS", "mutant": "junit-tag-regex", "title": "scans unterminated plural tags at the ceiling", "capped": 16501.9, "regions": [], "seconds": 68.6, "load1": 79.47}
+{"bound": "TAG_SCAN_CPU_MS", "mutant": "junit-tag-regex", "title": "scans unterminated plural tags at the ceiling", "capped": 16574.0, "regions": [], "seconds": 46.6, "load1": 84.28}
+{"bound": "TAG_SCAN_CPU_MS", "mutant": "junit-tag-regex", "title": "scans unterminated plural tags at the ceiling", "capped": 16520.0, "regions": [], "seconds": 56.0, "load1": 75.98}
+{"bound": "TAG_SCAN_CPU_MS", "mutant": "junit-tag-regex", "title": "scans unterminated plural tags at the ceiling", "capped": 16523.0, "regions": [], "seconds": 53.7, "load1": 70.97}
+{"bound": "TAG_SCAN_CPU_MS", "mutant": "junit-tag-regex", "title": "scans unterminated plural tags at the ceiling", "capped": 16570.2, "regions": [], "seconds": 41.5, "load1": 64.78}
+{"bound": "TAG_SCAN_CPU_MS", "mutant": "junit-tag-regex", "title": "scans unterminated plural tags at the ceiling", "capped": 16520.0, "regions": [], "seconds": 51.2, "load1": 59.99}
+{"bound": "TAG_SCAN_CPU_MS", "mutant": "junit-tag-regex", "title": "scans unterminated plural tags at the ceiling", "capped": 16591.6, "regions": [], "seconds": 64.2, "load1": 56.73}
+{"bound": "TAG_SCAN_CPU_MS", "mutant": "junit-tag-regex", "title": "scans unterminated plural tags at the ceiling", "capped": 16545.2, "regions": [], "seconds": 80.8, "load1": 64.98}
+{"bound": "TAG_SCAN_CPU_MS", "mutant": "junit-tag-regex", "title": "scans unterminated plural tags at the ceiling", "capped": 16506.9, "regions": [], "seconds": 84.0, "load1": 72.8}
+{"bound": "TAG_SCAN_CPU_MS", "mutant": "junit-tag-regex", "title": "scans near-miss tag names at the ceiling", "capped": null, "regions": [19.479], "seconds": 16.8, "load1": 77.39}
+{"bound": "TAG_SCAN_CPU_MS", "mutant": "junit-tag-regex", "title": "scans near-miss tag names at the ceiling", "capped": null, "regions": [20.081], "seconds": 10.3, "load1": 76.18}
+{"bound": "TAG_SCAN_CPU_MS", "mutant": "junit-tag-regex", "title": "scans near-miss tag names at the ceiling", "capped": null, "regions": [23.003], "seconds": 12.0, "load1": 75.97}
+{"bound": "TAG_SCAN_CPU_MS", "mutant": "junit-tag-regex", "title": "scans near-miss tag names at the ceiling", "capped": null, "regions": [22.346], "seconds": 12.7, "load1": 73.74}
+{"bound": "TAG_SCAN_CPU_MS", "mutant": "junit-tag-regex", "title": "scans near-miss tag names at the ceiling", "capped": null, "regions": [21.124], "seconds": 12.2, "load1": 74.91}
+{"bound": "TAG_SCAN_CPU_MS", "mutant": "junit-tag-regex", "title": "scans near-miss tag names at the ceiling", "capped": null, "regions": [22.282], "seconds": 12.0, "load1": 78.25}
+{"bound": "TAG_SCAN_CPU_MS", "mutant": "junit-tag-regex", "title": "scans near-miss tag names at the ceiling", "capped": null, "regions": [23.411], "seconds": 13.5, "load1": 78.97}
+{"bound": "TAG_SCAN_CPU_MS", "mutant": "junit-tag-regex", "title": "scans near-miss tag names at the ceiling", "capped": null, "regions": [23.622], "seconds": 13.0, "load1": 78.99}
+{"bound": "TAG_SCAN_CPU_MS", "mutant": "junit-tag-regex", "title": "scans near-miss tag names at the ceiling", "capped": null, "regions": [22.013], "seconds": 8.4, "load1": 80.09}
+{"bound": "TAG_SCAN_CPU_MS", "mutant": "junit-tag-regex", "title": "scans near-miss tag names at the ceiling", "capped": null, "regions": [21.685], "seconds": 8.1, "load1": 77.41}
+{"bound": "TAG_SCAN_CPU_MS", "committedMs": 1500, "capMs": 16500, "headExitsNonzero": 0, "headRegions": 30, "headMaxMs": 88.029, "boundOverHeadMax": 17.0, "reachedMutantMinMs": 16501.9, "mutantMinOverBound": 11.0, "notReached": [["scans near-miss tag names at the ceiling", 19.479]], "load1Range": [40.89, 89.25]}
+{"bound": "ATTRIBUTE_SCAN_CPU_MS", "head": [164.464], "exit": 0, "load1": 77.3}
+{"bound": "ATTRIBUTE_SCAN_CPU_MS", "head": [170.217], "exit": 0, "load1": 74.49}
+{"bound": "ATTRIBUTE_SCAN_CPU_MS", "head": [158.754], "exit": 0, "load1": 73.52}
+{"bound": "ATTRIBUTE_SCAN_CPU_MS", "head": [167.982], "exit": 0, "load1": 71.36}
+{"bound": "ATTRIBUTE_SCAN_CPU_MS", "head": [164.889], "exit": 0, "load1": 69.8}
+{"bound": "ATTRIBUTE_SCAN_CPU_MS", "head": [165.831], "exit": 0, "load1": 68.27}
+{"bound": "ATTRIBUTE_SCAN_CPU_MS", "head": [161.192], "exit": 0, "load1": 66.24}
+{"bound": "ATTRIBUTE_SCAN_CPU_MS", "head": [162.112], "exit": 0, "load1": 65.44}
+{"bound": "ATTRIBUTE_SCAN_CPU_MS", "head": [163.983], "exit": 0, "load1": 64.84}
+{"bound": "ATTRIBUTE_SCAN_CPU_MS", "head": [194.649], "exit": 0, "load1": 77.43}
+{"bound": "ATTRIBUTE_SCAN_CPU_MS", "mutant": "junit-attr-regex", "title": "scans one tag body that is a single word run at the ceiling", "capped": 33069.8, "regions": [], "seconds": 122.8, "load1": 76.31}
+{"bound": "ATTRIBUTE_SCAN_CPU_MS", "mutant": "junit-attr-regex", "title": "scans one tag body that is a single word run at the ceiling", "capped": 33022.8, "regions": [], "seconds": 92.4, "load1": 63.77}
+{"bound": "ATTRIBUTE_SCAN_CPU_MS", "mutant": "junit-attr-regex", "title": "scans one tag body that is a single word run at the ceiling", "capped": 33053.4, "regions": [], "seconds": 73.5, "load1": 82.94}
+{"bound": "ATTRIBUTE_SCAN_CPU_MS", "mutant": "junit-attr-regex", "title": "scans one tag body that is a single word run at the ceiling", "capped": 33111.6, "regions": [], "seconds": 95.1, "load1": 80.71}
+{"bound": "ATTRIBUTE_SCAN_CPU_MS", "mutant": "junit-attr-regex", "title": "scans one tag body that is a single word run at the ceiling", "capped": 33014.2, "regions": [], "seconds": 108.6, "load1": 86.02}
+{"bound": "ATTRIBUTE_SCAN_CPU_MS", "mutant": "junit-attr-regex", "title": "scans one tag body that is a single word run at the ceiling", "capped": 33215.4, "regions": [], "seconds": 95.9, "load1": 80.9}
+{"bound": "ATTRIBUTE_SCAN_CPU_MS", "mutant": "junit-attr-regex", "title": "scans one tag body that is a single word run at the ceiling", "capped": 33079.5, "regions": [], "seconds": 60.5, "load1": 65.83}
+{"bound": "ATTRIBUTE_SCAN_CPU_MS", "mutant": "junit-attr-regex", "title": "scans one tag body that is a single word run at the ceiling", "capped": 33030.9, "regions": [], "seconds": 64.3, "load1": 51.59}
+{"bound": "ATTRIBUTE_SCAN_CPU_MS", "mutant": "junit-attr-regex", "title": "scans one tag body that is a single word run at the ceiling", "capped": 33073.2, "regions": [], "seconds": 61.2, "load1": 48.24}
+{"bound": "ATTRIBUTE_SCAN_CPU_MS", "mutant": "junit-attr-regex", "title": "scans one tag body that is a single word run at the ceiling", "capped": 33106.2, "regions": [], "seconds": 74.5, "load1": 40.96}
+{"bound": "ATTRIBUTE_SCAN_CPU_MS", "committedMs": 3000, "capMs": 33000, "headExitsNonzero": 0, "headRegions": 10, "headMaxMs": 194.649, "boundOverHeadMax": 15.4, "reachedMutantMinMs": 33014.2, "mutantMinOverBound": 11.0, "notReached": [], "load1Range": [40.96, 86.02]}

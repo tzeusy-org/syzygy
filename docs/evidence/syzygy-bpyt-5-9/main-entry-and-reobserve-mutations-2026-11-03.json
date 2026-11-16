@@ -1,0 +1,218 @@
+{
+  "bead": "syzygy-bpyt.5.9",
+  "kind": "rule-6 mutation record",
+  "ranAtCommit": "462fe04ea54746112341d3fbff2905747111b70c",
+  "note": "The commit is the pre-rebase head the mutants ran at; a rebase-merge leaves it reachable from no ref, so the digests below are the stable anchor.",
+  "subjectDigests": {
+    "apps/three-surface-poc/src/main-entry.test.ts": "081431856ac17111edd473b3135d1204e70f37385c4fef39e72ff1aae67f8b58",
+    "apps/three-surface-poc/src/main.test.ts": "5d93783a4cb15855d76ace4eedf55bd28d6b18d9e6ad7d261da8ea440a8f58b0",
+    "apps/three-surface-poc/src/main.ts": "cfb0a4e6d55a6b74e8da99612cf33b25c955877b09155ae89e4f875638137e3d",
+    "apps/three-surface-poc/src/poc-main.ts": "419794a51c798bbaed681b42a5c976ac16b0fbc4f1c52db096d2995de264f6ec",
+    "apps/three-surface-poc/src/reobserve-action.ts": "93a22218624369cfe200fa51b352ef0fe48e282f7373210c1b4fc34f960e8a8c",
+    "apps/three-surface-poc/src/reobserve-state.ts": "4ba4de65047df47cecba89f16e34fe16bc87d1e57c241b695dc498775b866247"
+  },
+  "command": "TMPDIR=<private> npx vitest run apps/three-surface-poc/src/main.test.ts apps/three-surface-poc/src/main-entry.test.ts",
+  "method": "Each mutant replaces one fragment (exactly one occurrence asserted), runs both test files, records the failing test names, then restores the file; the tree was clean afterwards.",
+  "mutants": [
+    {
+      "id": "E1-argv-slice",
+      "file": "apps/three-surface-poc/src/main.ts",
+      "old": "process.argv.slice(2)",
+      "new": "process.argv.slice(3)",
+      "outcome": "killed",
+      "failingTests": [
+        "main.ts: the entry binds main() to the real process hands main the command line after the interpreter and script, and exits with what main returns",
+        "main.ts: the real entry end to end prints the usage on --help and exits 0",
+        "main.ts: the real entry end to end refuses a scratch directory that is not the registered repository, naming the gate, and exits 1"
+      ],
+      "suiteLevelFailures": []
+    },
+    {
+      "id": "E2-exit-code-dropped",
+      "file": "apps/three-surface-poc/src/main.ts",
+      "old": "process.exitCode = await main(",
+      "new": "await main(",
+      "outcome": "killed",
+      "failingTests": [
+        "main.ts: the entry binds main() to the real process hands main the command line after the interpreter and script, and exits with what main returns",
+        "main.ts: the real entry end to end prints the usage on --help and exits 0",
+        "main.ts: the real entry end to end refuses a scratch directory that is not the registered repository, naming the gate, and exits 1"
+      ],
+      "suiteLevelFailures": []
+    },
+    {
+      "id": "E3-cwd-constant",
+      "file": "apps/three-surface-poc/src/main.ts",
+      "old": "cwd: () => process.cwd(),",
+      "new": "cwd: () => '/',",
+      "outcome": "killed",
+      "failingTests": [
+        "main.ts: the entry binds main() to the real process binds the five process fields: streams, cwd, the clock as ISO 8601, and the signal hook"
+      ],
+      "suiteLevelFailures": []
+    },
+    {
+      "id": "E4-now-constant",
+      "file": "apps/three-surface-poc/src/main.ts",
+      "old": "now: () => new Date().toISOString(),",
+      "new": "now: () => '2026-01-01T00:00:00.000Z',",
+      "outcome": "killed",
+      "failingTests": [
+        "main.ts: the entry binds main() to the real process binds the five process fields: streams, cwd, the clock as ISO 8601, and the signal hook"
+      ],
+      "suiteLevelFailures": []
+    },
+    {
+      "id": "E5-stdout-is-stderr",
+      "file": "apps/three-surface-poc/src/main.ts",
+      "old": "stdout: process.stdout,",
+      "new": "stdout: process.stderr,",
+      "outcome": "killed",
+      "failingTests": [
+        "main.ts: the entry binds main() to the real process binds the five process fields: streams, cwd, the clock as ISO 8601, and the signal hook",
+        "main.ts: the real entry end to end prints the usage on --help and exits 0"
+      ],
+      "suiteLevelFailures": []
+    },
+    {
+      "id": "E6-stderr-is-stdout",
+      "file": "apps/three-surface-poc/src/main.ts",
+      "old": "stderr: process.stderr,",
+      "new": "stderr: process.stdout,",
+      "outcome": "killed",
+      "failingTests": [
+        "main.ts: the entry binds main() to the real process binds the five process fields: streams, cwd, the clock as ISO 8601, and the signal hook",
+        "main.ts: the real entry end to end refuses a scratch directory that is not the registered repository, naming the gate, and exits 1"
+      ],
+      "suiteLevelFailures": []
+    },
+    {
+      "id": "E7-stdin-dropped",
+      "file": "apps/three-surface-poc/src/main.ts",
+      "old": "stdin: process.stdin,",
+      "new": "stdin: undefined as never,",
+      "outcome": "killed",
+      "failingTests": [
+        "main.ts: the entry binds main() to the real process binds the five process fields: streams, cwd, the clock as ISO 8601, and the signal hook"
+      ],
+      "suiteLevelFailures": []
+    },
+    {
+      "id": "E8-onSignal-noop",
+      "file": "apps/three-surface-poc/src/main.ts",
+      "old": "onSignal: (signal, listener) => { process.on(signal, listener); },",
+      "new": "onSignal: () => undefined,",
+      "outcome": "killed",
+      "failingTests": [
+        "main.ts: the entry binds main() to the real process binds the five process fields: streams, cwd, the clock as ISO 8601, and the signal hook"
+      ],
+      "suiteLevelFailures": []
+    },
+    {
+      "id": "R1-reobserve-routes-unregistered",
+      "file": "apps/three-surface-poc/src/poc-main.ts",
+      "old": "        ...reobserveRoutes({ reobserve: session.reobserve }),\n",
+      "new": "",
+      "outcome": "killed",
+      "failingTests": [
+        "main(argv, io): serving prints the banner, registers the three route groups, and closes once on the first signal",
+        "main(argv, io): the POST /polaris/reobserve handlers main registers the human path re-observes through the session, names the superseded evaluation and swaps the served model",
+        "main(argv, io): the POST /polaris/reobserve handlers main registers the tailnet-mount path is the same handler, answering with mount-prefixed links",
+        "main(argv, io): the POST /polaris/reobserve handlers main registers both paths refuse a cross-origin request before any re-observation runs",
+        "main(argv, io): the POST /polaris/reobserve handlers main registers a refused re-observation answers 502 with the named reason and keeps the prior evaluation served"
+      ],
+      "suiteLevelFailures": []
+    },
+    {
+      "id": "R2-reobserve-stubbed-in-main",
+      "file": "apps/three-surface-poc/src/poc-main.ts",
+      "old": "reobserveRoutes({ reobserve: session.reobserve })",
+      "new": "reobserveRoutes({ reobserve: async () => ({ kind: 'failed' as const, reason: 'stubbed' }) })",
+      "outcome": "killed",
+      "failingTests": [
+        "main(argv, io): the POST /polaris/reobserve handlers main registers the human path re-observes through the session, names the superseded evaluation and swaps the served model",
+        "main(argv, io): the POST /polaris/reobserve handlers main registers the tailnet-mount path is the same handler, answering with mount-prefixed links",
+        "main(argv, io): the POST /polaris/reobserve handlers main registers a refused re-observation answers 502 with the named reason and keeps the prior evaluation served"
+      ],
+      "suiteLevelFailures": []
+    },
+    {
+      "id": "R3-tailnet-handler-removed",
+      "file": "apps/three-surface-poc/src/reobserve-action.ts",
+      "old": "    { method: 'POST', path: REOBSERVE_TAILNET_PATH, credentialClass: 'human-open', handle },\n",
+      "new": "",
+      "outcome": "killed",
+      "failingTests": [
+        "main(argv, io): the POST /polaris/reobserve handlers main registers the tailnet-mount path is the same handler, answering with mount-prefixed links",
+        "main(argv, io): the POST /polaris/reobserve handlers main registers both paths refuse a cross-origin request before any re-observation runs"
+      ],
+      "suiteLevelFailures": []
+    },
+    {
+      "id": "R4-human-handler-removed",
+      "file": "apps/three-surface-poc/src/reobserve-action.ts",
+      "old": "    { method: 'POST', path: REOBSERVE_HUMAN_PATH, credentialClass: 'human-open', handle },\n",
+      "new": "",
+      "outcome": "killed",
+      "failingTests": [
+        "main(argv, io): serving prints the banner, registers the three route groups, and closes once on the first signal",
+        "main(argv, io): the POST /polaris/reobserve handlers main registers the human path re-observes through the session, names the superseded evaluation and swaps the served model",
+        "main(argv, io): the POST /polaris/reobserve handlers main registers both paths refuse a cross-origin request before any re-observation runs",
+        "main(argv, io): the POST /polaris/reobserve handlers main registers a refused re-observation answers 502 with the named reason and keeps the prior evaluation served"
+      ],
+      "suiteLevelFailures": []
+    },
+    {
+      "id": "R5-origin-check-removed",
+      "file": "apps/three-surface-poc/src/reobserve-action.ts",
+      "old": "if (!browserRequestAllowed(request.headers)) {",
+      "new": "if (false as boolean) {",
+      "outcome": "killed",
+      "failingTests": [
+        "main(argv, io): the POST /polaris/reobserve handlers main registers both paths refuse a cross-origin request before any re-observation runs"
+      ],
+      "suiteLevelFailures": []
+    },
+    {
+      "id": "R6-handler-never-reobserves",
+      "file": "apps/three-surface-poc/src/reobserve-action.ts",
+      "old": "options.reobserve().finally(() => { inFlight = undefined; })",
+      "new": "Promise.resolve<ReobserveResult>({ kind: 'failed', reason: 'stubbed' }).finally(() => { inFlight = undefined; })",
+      "outcome": "killed",
+      "failingTests": [
+        "main(argv, io): the POST /polaris/reobserve handlers main registers the human path re-observes through the session, names the superseded evaluation and swaps the served model",
+        "main(argv, io): the POST /polaris/reobserve handlers main registers the tailnet-mount path is the same handler, answering with mount-prefixed links",
+        "main(argv, io): the POST /polaris/reobserve handlers main registers a refused re-observation answers 502 with the named reason and keeps the prior evaluation served"
+      ],
+      "suiteLevelFailures": []
+    },
+    {
+      "id": "R7-mount-prefix-ignored",
+      "file": "apps/three-surface-poc/src/reobserve-action.ts",
+      "old": "resultPage(result, mountPrefixForRequest(request.headers))",
+      "new": "resultPage(result, '')",
+      "outcome": "killed",
+      "failingTests": [
+        "main(argv, io): the POST /polaris/reobserve handlers main registers the tailnet-mount path is the same handler, answering with mount-prefixed links"
+      ],
+      "suiteLevelFailures": []
+    },
+    {
+      "id": "R8-served-model-not-swapped",
+      "file": "apps/three-surface-poc/src/reobserve-state.ts",
+      "old": "          capture = nextCapture;\n          model = nextModel;\n          return { kind: 'reobserved'",
+      "new": "          return { kind: 'reobserved'",
+      "outcome": "killed",
+      "failingTests": [
+        "main(argv, io): the POST /polaris/reobserve handlers main registers the human path re-observes through the session, names the superseded evaluation and swaps the served model",
+        "main(argv, io): the POST /polaris/reobserve handlers main registers the tailnet-mount path is the same handler, answering with mount-prefixed links"
+      ],
+      "suiteLevelFailures": []
+    }
+  ],
+  "summary": {
+    "mutants": 16,
+    "killed": 16,
+    "survived": 0
+  }
+}

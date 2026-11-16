@@ -1,0 +1,39 @@
+{
+ "commit": "330dd89458801e7a150134efa15f3d4af8215304",
+ "dists": [],
+ "node": "v24.6.0",
+ "rows": [
+  {
+   "id": "M6b-import-reader-skips-function-bodies",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "calls.push(node.getText(file));\n    ts.forEachChild(node, visit);",
+     "new": "calls.push(node.getText(file));\n    if (!ts.isArrowFunction(node)) ts.forEachChild(node, visit);"
+    }
+   ],
+   "prediction": "killed by the arrow-body reader row alone",
+   "load1": "22.02",
+   "failing": [
+    "the import() reader the import() row stands on reads \"export const value = () => import ('node:crypto');\""
+   ],
+   "messages": {
+    "the import() reader the import() row stands on reads \"export const value = () => import ('node:crypto');\"": "AssertionError: expected [] to deeply equal [ 'import (\\'node:crypto\\')' ]"
+   },
+   "exit": 1,
+   "passed": 49,
+   "failed": 1,
+   "pending": 0,
+   "total": 50,
+   "failedFiles": [
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-554-r2/packages/support/src/support-purity.test.ts"
+   ],
+   "error": null,
+   "stderrTail": null
+  }
+ ],
+ "statusAfter": ""
+}

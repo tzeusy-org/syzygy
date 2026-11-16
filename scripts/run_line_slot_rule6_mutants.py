@@ -5,7 +5,7 @@ usage: python3 -I scripts/run_line_slot_rule6_mutants.py TREE --out OUT.json
 
 TREE must be a clean checkout. The script runs the tests named `syzygy-bpyt.8.17` in recorder-template.test.ts unmutated, then for each
 mutant below replaces the one occurrence of `old` in recorder-template.ts by `new`, runs `npx vitest run --project
-@syzygy/polaris-generation-consent --reporter=json --outputFile=<tmp> -t syzygy-bpyt.8.17 <test file>` in TREE, and restores the file
+unit --reporter=json --outputFile=<tmp> -t syzygy-bpyt.8.17 <test file>` in TREE, and restores the file
 from git. A mutant is killed when a selected test fails. A run that reports no test is re-run once and, if it still reports none,
 recorded as `errored`, never as killed. OUT.json names the commit, the sha256 of the mutated and test files at HEAD, the command, and per
 mutant its `old`/`new`, the expected outcome, the failed tests each with its first error line (a vm timeout reads `Script execution timed
@@ -16,7 +16,7 @@ import datetime, hashlib, json, os, subprocess, sys, tempfile, time
 SCRIPT = 'scripts/run_line_slot_rule6_mutants.py'
 FILE = 'packages/polaris-generation-consent/src/recorder-template.ts'
 TESTS = 'packages/polaris-generation-consent/src/recorder-template.test.ts'
-PROJECT = '@syzygy/polaris-generation-consent'
+PROJECT = 'unit'
 SELECTOR = 'syzygy-bpyt.8.17'
 SLOT = r"line: '[^\\S\\r\\n]*\\S[^\\r\\n]*',"
 TIMING = 'the line slot (syzygy-bpyt.8.17) refuses a record that fails after four long line slots within a second'

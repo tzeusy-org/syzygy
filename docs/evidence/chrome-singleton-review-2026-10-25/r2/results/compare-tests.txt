@@ -1,0 +1,49 @@
+== name sets: base 5244 lines (5235 distinct), head 5261 lines (5252 distinct); added 17, removed 0
+  +1 [@syzygy/three-surface-poc-app] apps/three-surface-poc/src/cdp-browser.browser.test.ts
+  +16 [@syzygy/three-surface-poc-app] apps/three-surface-poc/src/cdp-browser.test.ts
+  + [@syzygy/three-surface-poc-app] apps/three-surface-poc/src/cdp-browser.browser.test.ts > disposable Chrome teardown in a real browser > leaves no Chrome singleton directory behind when the leader is k
+  + [@syzygy/three-surface-poc-app] apps/three-surface-poc/src/cdp-browser.test.ts > Chrome singleton directory (syzygy-bpyt.4.11) > checks no user where the system has no user ids, and removes the direct
+  + [@syzygy/three-surface-poc-app] apps/three-surface-poc/src/cdp-browser.test.ts > Chrome singleton directory (syzygy-bpyt.4.11) > does not fail the run when the singleton directory cannot be removed
+  + [@syzygy/three-surface-poc-app] apps/three-surface-poc/src/cdp-browser.test.ts > Chrome singleton directory (syzygy-bpyt.4.11) > follows no link and removes no file: a link to a directory and a plain 
+  + [@syzygy/three-surface-poc-app] apps/three-surface-poc/src/cdp-browser.test.ts > Chrome singleton directory (syzygy-bpyt.4.11) > keeps a directory made under the same name after the one that was read,
+  + [@syzygy/three-surface-poc-app] apps/three-surface-poc/src/cdp-browser.test.ts > Chrome singleton directory (syzygy-bpyt.4.11) > keeps a directory that belongs to another user, never entering it
+  + [@syzygy/three-surface-poc-app] apps/three-surface-poc/src/cdp-browser.test.ts > Chrome singleton directory (syzygy-bpyt.4.11) > keeps a directory that is not directly under the temp directory, whethe
+  + [@syzygy/three-surface-poc-app] apps/three-surface-poc/src/cdp-browser.test.ts > Chrome singleton directory (syzygy-bpyt.4.11) > keeps a directory whose name is not exactly Chrome's: another prefix, n
+  + [@syzygy/three-surface-poc-app] apps/three-surface-poc/src/cdp-browser.test.ts > Chrome singleton directory (syzygy-bpyt.4.11) > keeps a directory with the recorded inode number on another device
+  + [@syzygy/three-surface-poc-app] apps/three-surface-poc/src/cdp-browser.test.ts > Chrome singleton directory (syzygy-bpyt.4.11) > keeps the directory a link names when the link is not the running user'
+  + [@syzygy/three-surface-poc-app] apps/three-surface-poc/src/cdp-browser.test.ts > Chrome singleton directory (syzygy-bpyt.4.11) > keeps the directory a link names when the profile is not the running us
+  + [@syzygy/three-surface-poc-app] apps/three-surface-poc/src/cdp-browser.test.ts > Chrome singleton directory (syzygy-bpyt.4.11) > reads the directory from the profile's link when none was read while Ch
+  + [@syzygy/three-surface-poc-app] apps/three-surface-poc/src/cdp-browser.test.ts > Chrome singleton directory (syzygy-bpyt.4.11) > removes the Chromium form of the name too
+  + [@syzygy/three-surface-poc-app] apps/three-surface-poc/src/cdp-browser.test.ts > Chrome singleton directory (syzygy-bpyt.4.11) > removes the directory a profile's link names when the profile and the l
+  + [@syzygy/three-surface-poc-app] apps/three-surface-poc/src/cdp-browser.test.ts > Chrome singleton directory (syzygy-bpyt.4.11) > removes the name without a leading dot too, which Chrome 147 to 155 mak
+  + [@syzygy/three-surface-poc-app] apps/three-surface-poc/src/cdp-browser.test.ts > Chrome singleton directory (syzygy-bpyt.4.11) > removes the profile and nothing else when Chrome left no singleton dire
+  + [@syzygy/three-surface-poc-app] apps/three-surface-poc/src/cdp-browser.test.ts > Chrome singleton directory (syzygy-bpyt.4.11) > removes the singleton directory read while Chrome ran, with the profile
+== test files changed: 3 ['apps/three-surface-poc/src/cdp-browser.browser.test.ts', 'apps/three-surface-poc/src/cdp-browser.test.ts', 'apps/three-surface-poc/src/polaris-generation/draft-preview.browser.test.ts']
+  apps/three-surface-poc/src/cdp-browser.browser.test.ts: removed 1 added 55
+    - [import] import { readdirSync, readFileSync } from 'node:fs';
+  apps/three-surface-poc/src/cdp-browser.test.ts: removed 6 added 238
+    - [import] import { describe, expect, it } from 'vitest';
+    - [import] import { closeDisposableBrowser, killPrivateBrowserMembers, removeBrowserProfile, withBrowserPage, type BrowserPage } from './cdp-browser.js
+    - [other] removeBrowserProfile('/tmp/syzygy-browser-profile', {
+    - [names-a-matcher-or-expect] expect(() => removeBrowserProfile('/tmp/syzygy-browser-profile', { -> paired with added line; changed spans: [('delete', "'/t", ''), ('replace', 'p/', 'i'), ('replace', 'yzy', 'sin'), ('replace', 'y-browser-p', 'P'), ('replace', "'", '()')]
+    - [names-a-matcher-or-expect] expect(() => removeBrowserProfile('/tmp/syzygy-browser-profile', { -> paired with added line; changed spans: [('delete', "'/t", ''), ('replace', 'p/', 'i'), ('replace', 'yzy', 'sin'), ('replace', 'y-browser-p', 'P'), ('replace', "'", '()')]
+    - [other] removeBrowserProfile(`/tmp/syzygy-browser-profile-${run}`, {
+  apps/three-surface-poc/src/polaris-generation/draft-preview.browser.test.ts: removed 3 added 8
+    - [import] import { findBrowserExecutable, launchBrowser } from '../cdp-browser.js';
+    - [other] const browser = await launchBrowser(executable);
+    - [other] } finally { await browser.close(); await rm(directory, { recursive: true, force: true }); }
+== the four browser profile cleanup cases, base versus head
+  cases: base 4 head 4; same names: True
+  retries transient ENOTEMPTY failures and succeeds within the bound:
+      -    removeBrowserProfile('/tmp/syzygy-browser-profile', {
+      +    removeBrowserProfile(missingProfile(), {
+  does not retry a permanent profile cleanup failure:
+      -    expect(() => removeBrowserProfile('/tmp/syzygy-browser-profile', {
+      +    expect(() => removeBrowserProfile(missingProfile(), {
+  preserves a retryable failure at the exact total-call bound:
+      -    expect(() => removeBrowserProfile('/tmp/syzygy-browser-profile', {
+      +    expect(() => removeBrowserProfile(missingProfile(), {
+  stays bounded across repeated transient profile cleanup races:
+      +    const root = privateRoot();
+      -      removeBrowserProfile(`/tmp/syzygy-browser-profile-${run}`, {
+      +      removeBrowserProfile(join(root, `profile-${run}`), {

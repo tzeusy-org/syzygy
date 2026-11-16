@@ -1,0 +1,23 @@
+49.65 42.03 36.04 34/10050 670192
+R1 killed asExpected=True restored=True ["AssertionError: pipeline-max-calls-disabled: the mutation changes the emitted JavaScript: expected 'import { quotableGenerationSources, v…' not to be 'import { quotableGenerationSources, v…' // Object.is equality"]
+R2 killed asExpected=True restored=True ['AssertionError: provider-draft-duplicate-handle-check-disabled: apps/three-surface-poc/src/polaris-generation/generation-mutation.ts is a non-test file under packages/polaris-generation-core/src/: expected false to be true // Object.is equality']
+R3 survived asExpected=True restored=True []
+R4 killed asExpected=True restored=True ['AssertionError: parse-json-pollution-key-check-disabled: must-fail "rejects pollution keyz" is in a test title: expected false to be true // Object.is equality']
+R5 killed asExpected=True restored=True ["AssertionError: pipeline-max-calls-disabled: the mutation changes the emitted JavaScript: expected 'import { quotableGenerationSources, v…' not to be 'import { quotableGenerationSources, v…' // Object.is equality"]
+R6 killed asExpected=True restored=True ["Error: ENOENT: no such file or directory, open '/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-546/clone/packages/polaris-generation-core/src/draft-modle.ts'"]
+R7 killed asExpected=True restored=True ['AssertionError: canonical-json-sorted-keys-disabled: occurrences of the fragment in packages/polaris-generation-core/src/canonical-json.ts: expected 4970 to be 1 // Object.is equality']
+R8 killed asExpected=True restored=True ['AssertionError: provider-draft-duplicate-handle-check-disabled: occurrences of the fragment in packages/polaris-generation-core/src/draft-model.ts: expected 4 to be 1 // Object.is equality']
+T1 killed asExpected=True restored=True ['AssertionError: pipeline-repair-cycle-cap-disabled: occurrences of the fragment in packages/polaris-generation-core/src/pipeline.ts: expected +0 to be 1 // Object.is equality']
+T2 killed asExpected=True restored=True ['AssertionError: provider-draft-duplicate-handle-check-disabled: occurrences of the fragment in packages/polaris-generation-core/src/provider-draft.ts: expected +0 to be 1 // Object.is equality']
+T3 killed asExpected=True restored=True ['AssertionError: provider-draft-unknown-source-check-disabled: occurrences of the fragment in packages/polaris-generation-core/src/provider-draft.ts: expected 2 to be 1 // Object.is equality']
+T4 killed asExpected=True restored=True ["AssertionError: canonical-json-sorted-keys-disabled: the mutation changes the emitted JavaScript: expected 'import { types } from \\'node:util\\';\\…' not to be 'import { types } from \\'node:util\\';\\…' // Object.is equality"]
+T5 killed asExpected=True restored=True ['AssertionError: provider-draft-unknown-finding-target-check-disabled: must-fail names: expected 0 to be greater than 0']
+T6 killed asExpected=True restored=True ['AssertionError: expected 11 to be 12 // Object.is equality']
+T7 killed asExpected=True restored=True ['AssertionError: expected 11 to be 12 // Object.is equality']
+V1 killed asExpected=True restored=True ['AssertionError: pipeline-repair-cycle-cap-disabled: occurrences of the fragment in packages/polaris-generation-core/src/pipeline.ts: expected +0 to be 1 // Object.is equality']
+V2 killed asExpected=True restored=True ["AssertionError: packages/polaris-generation-core/src/provider-draft.test.ts: expected '// polaris-generation-core mutation r…' to contain '\\'packages/polaris-generation-core/sr…'"]
+V3 killed asExpected=True restored=True ['AssertionError: canonical-json-sorted-keys-disabled: packages/polaris-generation-core/src/canonical-json.test.ts is a non-test file under packages/polaris-generation-core/src/: expected false to be true // Object.is equality']
+V4 killed asExpected=True restored=True ['AssertionError: parse-json-duplicate-key-check-disabled: must-fail "rejects duplicate decoded keys" is in a test title: expected false to be true // Object.is equality']
+control passed; {'mutants': 19, 'asExpected': 19, 'killed': 18, 'restored': 19}; tree clean True
+exit=0
+49.47 47.87 39.59 35/10181 728761

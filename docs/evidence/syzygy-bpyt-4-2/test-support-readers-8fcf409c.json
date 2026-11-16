@@ -1,0 +1,197 @@
+{
+  "subject": "readers of the nine test-support modules at HEAD",
+  "commit": "8fcf409c99ecc3b59392b20b36767421515169bf",
+  "tool": {
+    "path": "docs/evidence/syzygy-bpyt-4-2/tools/test_support_readers.py",
+    "sha256": "8f6b25393893b6268de4278460e4fe719eb906eb54a3f67f7927ca64ab43d05b"
+  },
+  "worktreeClean": true,
+  "population": 1564,
+  "hits": 180,
+  "byModule": {
+    "apps/three-surface-poc/src/test-deep-dive-markers.ts": {
+      "test": 4,
+      "kit": 0,
+      "reader": [
+        "apps/three-surface-poc/tsconfig.json:13 [src] \"src/test-deep-dive-markers.ts\",",
+        "docs/evidence/syzygy-bpyt-4-2/tools/test_support_readers.py:21 [src] \"apps/three-surface-poc/src/test-deep-dive-markers.ts\","
+      ]
+    },
+    "apps/three-surface-poc/src/test-fixture-sweep.global-setup.ts": {
+      "test": 5,
+      "kit": 0,
+      "reader": [
+        "apps/three-surface-poc/tsconfig.json:14 [src] \"src/test-fixture-sweep.global-setup.ts\",",
+        "docs/evidence/fixture-pid-sweep-review-2026-10-24/r2/check_raw_digests.py:29 [src] 'apps/three-surface-poc/src/test-fixture-sweep.global-setup.ts', 'apps/three-surface-poc/src/test-model-fixture.ts', 'vitest.config.ts']:",
+        "docs/evidence/fixture-pid-sweep-review-2026-10-24/r2/kill_probe.py:30 [src] FILES = ['apps/three-surface-poc/src/fixture-directories.ts', 'apps/three-surface-poc/src/test-fixture-sweep.global-setup.ts',",
+        "docs/evidence/fixture-pid-sweep-review-2026-10-24/r2/my_mutants.py:23 [src] GS = 'apps/three-surface-poc/src/test-fixture-sweep.global-setup.ts'",
+        "docs/evidence/fixture-pid-sweep-review-2026-10-24/r3/kill_probe.py:29 [src] CODE = ['apps/three-surface-poc/src/fixture-directories.ts', 'apps/three-surface-poc/src/test-fixture-sweep.global-setup.ts',",
+        "docs/evidence/poc-fixture-leak-2026-10-22/interrupt_probe.py:47 [src] CODE = ['apps/three-surface-poc/src/fixture-directories.ts', 'apps/three-surface-poc/src/test-fixture-sweep.global-setup.ts',",
+        "docs/evidence/poc-fixture-leak-2026-10-22/kill_then_fresh_run.py:56 [src] CODE = ['apps/three-surface-poc/src/fixture-directories.ts', 'apps/three-surface-poc/src/test-fixture-sweep.global-setup.ts',",
+        "docs/evidence/poc-fixture-leak-2026-10-22/kill_then_fresh_run.py:61 [src] MUTANT_OLD = \"          // Once per run: removes the fixture directories of killed runs (syzygy-bpyt.4.10).\\n          globalSetup: [fileURLToPath(new URL('./apps/three-surface-poc/src/test-fixture-sw",
+        "docs/evidence/poc-fixture-leak-2026-10-22/mutate_sweep.py:54 [src] GS = 'apps/three-surface-poc/src/test-fixture-sweep.global-setup.ts'",
+        "docs/evidence/poc-fixture-leak-2026-10-22/mutate_sweep.py:58 [src] GLOBAL_SETUP_LINE = \"          // Once per run: removes the fixture directories of killed runs (syzygy-bpyt.4.10).\\n          globalSetup: [fileURLToPath(new URL('./apps/three-surface-poc/src/test-fix",
+        "docs/evidence/poc-fixture-leak-2026-10-22/mutate_sweep.py:118 [src] [(VC, \"    maxWorkers: '50%',\\n\", \"    maxWorkers: '50%',\\n    globalSetup: [fileURLToPath(new URL('./apps/three-surface-poc/src/test-fixture-sweep.global-setup.ts', import.meta.url))],\\n\")]),",
+        "docs/evidence/syzygy-bpyt-4-2/tools/test_support_readers.py:22 [src] \"apps/three-surface-poc/src/test-fixture-sweep.global-setup.ts\",",
+        "vitest.config.ts:78 [src] globalSetup: [fileURLToPath(new URL('./apps/three-surface-poc/src/test-fixture-sweep.global-setup.ts', import.meta.url))],"
+      ]
+    },
+    "apps/three-surface-poc/src/test-http-client.ts": {
+      "test": 6,
+      "kit": 0,
+      "reader": [
+        "apps/three-surface-poc/tsconfig.json:15 [src] \"src/test-http-client.ts\"",
+        "docs/evidence/syzygy-bpyt-4-2/tools/test_support_readers.py:23 [src] \"apps/three-surface-poc/src/test-http-client.ts\","
+      ]
+    },
+    "packages/polaris-dossier/src/child-process.testkit.ts": {
+      "test": 5,
+      "kit": 0,
+      "reader": [
+        "docs/evidence/syzygy-bpyt-4-2/tools/test_support_readers.py:24 [src] \"packages/polaris-dossier/src/child-process.testkit.ts\",",
+        "packages/polaris-dossier/tsconfig.json:9 [src] \"exclude\": [\"src/**/*.test.ts\", \"src/child-process.testkit.ts\", \"src/fs-patch.testkit.ts\"],"
+      ]
+    },
+    "packages/polaris-dossier/src/fs-patch.testkit.ts": {
+      "test": 7,
+      "kit": 0,
+      "reader": [
+        "docs/evidence/syzygy-bpyt-4-2/tools/mutants_r1.py:53 [src] \"packages/polaris-dossier/tsconfig.json\": [(', \"src/fs-patch.testkit.ts\"', \"\")]}, [PB]),",
+        "docs/evidence/syzygy-bpyt-4-2/tools/test_support_readers.py:25 [src] \"packages/polaris-dossier/src/fs-patch.testkit.ts\",",
+        "docs/evidence/syzygy-bpyt-8-2/assemble_path_intent.py:134 [src] 'packages/polaris-dossier/src/fs-patch.testkit.ts', 'packages/polaris-dossier/src/cli.test.ts']",
+        "packages/polaris-dossier/tsconfig.json:9 [src] \"exclude\": [\"src/**/*.test.ts\", \"src/child-process.testkit.ts\", \"src/fs-patch.testkit.ts\"],"
+      ]
+    },
+    "packages/polaris-dossier/src/full-run.testkit.ts": {
+      "test": 7,
+      "kit": 0,
+      "reader": [
+        "docs/evidence/syzygy-bpyt-4-2/tools/mutants_r1.py:51 [src] \"packages/polaris-dossier/src/index.ts\": [(\"\", \"export type {} from './full-run.testkit.js';\\n\")]}, [PB]),",
+        "docs/evidence/syzygy-bpyt-4-2/tools/test_support_readers.py:26 [src] \"packages/polaris-dossier/src/full-run.testkit.ts\",",
+        "packages/polaris-dossier/test-support/no-egress-driver.ts:3 [src] import { fullFixtureRun } from '../src/full-run.testkit.js';",
+        "scripts/dossier_scale_measure.mjs:32 [dist] const kit = await dist('packages/polaris-dossier/dist/full-run.testkit.js');"
+      ]
+    },
+    "packages/polaris-generation-core/src/workspace-reach.testkit.ts": {
+      "test": 9,
+      "kit": 0,
+      "reader": [
+        "docs/evidence/argv-fail-closed-review-2026-10-25/tools/fix_specs.py:9 [src] KIT = 'packages/polaris-generation-core/src/workspace-reach.testkit.ts'",
+        "docs/evidence/argv-fail-closed-review-2026-10-25/tools/island_diff_v-hash.py:23 [other] KIT = f'{DIR}/workspace-reach.testkit.ts'",
+        "docs/evidence/argv-fail-closed-review-2026-10-25/tools/island_diff_v-hash.py:40 [src] assert old_prelude.count(\"from './workspace-reach.testkit.js';\") == 1",
+        "docs/evidence/argv-fail-closed-review-2026-10-25/tools/island_diff_v-hash.py:41 [src] old_prelude = old_prelude.replace(\"from './workspace-reach.testkit.js';\", \"from './zz-836-old-testkit.js';\")",
+        "docs/evidence/argv-fail-closed-review-2026-10-25/tools/island_diff_v-hash.py:47 [src] f'{DIR}/zz-836-new-reach.ts': prelude(head) + \"export { reach as newReach };\\nexport { resolve as newResolve } from './workspace-reach.testkit.js';\\n\",",
+        "docs/evidence/argv-fail-closed-review-2026-10-25/tools/island_diff_v-hash.py:52 [src] \"import { ROOT } from './workspace-reach.testkit.js';\\n\"",
+        "docs/evidence/argv-fail-closed-review-2026-10-25/tools/island_diff_v-types.py:23 [other] KIT = f'{DIR}/workspace-reach.testkit.ts'",
+        "docs/evidence/argv-fail-closed-review-2026-10-25/tools/island_diff_v-types.py:40 [src] assert old_prelude.count(\"from './workspace-reach.testkit.js';\") == 1",
+        "docs/evidence/argv-fail-closed-review-2026-10-25/tools/island_diff_v-types.py:41 [src] old_prelude = old_prelude.replace(\"from './workspace-reach.testkit.js';\", \"from './zz-836-old-testkit.js';\")",
+        "docs/evidence/argv-fail-closed-review-2026-10-25/tools/island_diff_v-types.py:47 [src] f'{DIR}/zz-836-new-reach.ts': prelude(head) + \"export { reach as newReach };\\nexport { resolve as newResolve } from './workspace-reach.testkit.js';\\n\",",
+        "docs/evidence/argv-fail-closed-review-2026-10-25/tools/island_diff_v-types.py:52 [src] \"import { ROOT } from './workspace-reach.testkit.js';\\n\"",
+        "docs/evidence/argv-fail-closed-review-2026-10-25/tools/lane_island_diff.py:23 [other] KIT = f'{DIR}/workspace-reach.testkit.ts'",
+        "docs/evidence/argv-fail-closed-review-2026-10-25/tools/lane_island_diff.py:40 [src] assert old_prelude.count(\"from './workspace-reach.testkit.js';\") == 1",
+        "docs/evidence/argv-fail-closed-review-2026-10-25/tools/lane_island_diff.py:41 [src] old_prelude = old_prelude.replace(\"from './workspace-reach.testkit.js';\", \"from './zz-836-old-testkit.js';\")",
+        "docs/evidence/argv-fail-closed-review-2026-10-25/tools/lane_island_diff.py:47 [src] f'{DIR}/zz-836-new-reach.ts': prelude(head) + \"export { reach as newReach };\\nexport { resolve as newResolve } from './workspace-reach.testkit.js';\\n\",",
+        "docs/evidence/argv-fail-closed-review-2026-10-25/tools/lane_island_diff.py:52 [src] \"import { ROOT } from './workspace-reach.testkit.js';\\n\"",
+        "docs/evidence/argv-fail-closed-review-2026-10-25/tools/own_specs.py:25 [src] KITFILE = 'packages/polaris-generation-core/src/workspace-reach.testkit.ts'",
+        "docs/evidence/argv-guards-review-2026-10-25/tools/reach_compare.py:1 [other] \"\"\"rev-524: compare the island guard's resolver at base with workspace-reach.testkit.ts at head, from the git objects.",
+        "docs/evidence/argv-guards-review-2026-10-25/tools/reach_compare.py:18 [src] new = show(head, 'packages/polaris-generation-core/src/workspace-reach.testkit.ts')",
+        "docs/evidence/guard-pins-followup-2-review-2026-10-27/r2/blobs/test-308a62f4.ts:5 [src] import { ROOT, WORKSPACE, resolve, resolveIn, type Manifest, type Workspace } from './workspace-reach.testkit.js';",
+        "docs/evidence/guard-pins-followup-2-review-2026-10-27/r2/blobs/test-5f0d5547.ts:5 [src] import { ROOT, WORKSPACE, resolve, resolveIn, type Manifest, type Workspace } from './workspace-reach.testkit.js';",
+        "docs/evidence/guard-pins-followup-2-review-2026-10-27/r2/blobs/test-d38d7a3c.ts:5 [src] import { ROOT, WORKSPACE, resolve, resolveIn, type Manifest, type Workspace } from './workspace-reach.testkit.js';",
+        "docs/evidence/guard-pins-followup-2-review-2026-10-27/r2/tools/record_mutants_r2.py:13 [src] KIT = 'packages/polaris-generation-core/src/workspace-reach.testkit.ts'",
+        "docs/evidence/guard-pins-followup-2-review-2026-10-27/r3/tools/npm_alias_probe_r3.py:1 [other] \"\"\"rev-541c: my own offline npm probe for the round-3 `npm:` clause of syzygy-bpyt.8.39 (workspace-reach.testkit.ts:64-69).",
+        "docs/evidence/guard-pins-followup-2-review-2026-10-27/r3/tools/record_mutants_r3.py:15 [src] KIT = 'packages/polaris-generation-core/src/workspace-reach.testkit.ts'",
+        "docs/evidence/guard-pins-followup-review-2026-10-27/tools/check_record.py:97 [src] if d['scratchSha256']['packages/polaris-generation-core/src/zz-836-old-testkit.ts'] != sha(blob(BASE, 'packages/polaris-generation-core/src/workspace-reach.testkit.ts')):",
+        "docs/evidence/guard-pins-followup-review-2026-10-27/tools/check_record.py:107 [src] kit_line = [l for l in blob(CODE, 'packages/polaris-generation-core/src/workspace-reach.testkit.ts').decode().split('\\n') if l.startswith('const LOCAL_VERSION = ')]",
+        "docs/evidence/guard-pins-followup-review-2026-10-27/tools/check_record.py:108 [src] if probe['pattern'] != kit_line[0] or kit_line[0] not in blob(BASE, 'packages/polaris-generation-core/src/workspace-reach.testkit.ts').decode():",
+        "docs/evidence/guard-pins-followup-review-2026-10-27/tools/island_diff.py:23 [other] KIT = f'{DIR}/workspace-reach.testkit.ts'",
+        "docs/evidence/guard-pins-followup-review-2026-10-27/tools/island_diff.py:40 [src] assert old_prelude.count(\"from './workspace-reach.testkit.js';\") == 1",
+        "docs/evidence/guard-pins-followup-review-2026-10-27/tools/island_diff.py:41 [src] old_prelude = old_prelude.replace(\"from './workspace-reach.testkit.js';\", \"from './zz-836-old-testkit.js';\")",
+        "docs/evidence/guard-pins-followup-review-2026-10-27/tools/island_diff.py:47 [src] f'{DIR}/zz-836-new-reach.ts': prelude(head) + \"export { reach as newReach };\\nexport { resolve as newResolve } from './workspace-reach.testkit.js';\\n\",",
+        "docs/evidence/guard-pins-followup-review-2026-10-27/tools/island_diff.py:52 [src] \"import { ROOT } from './workspace-reach.testkit.js';\\n\"",
+        "docs/evidence/guard-pins-followup-review-2026-10-27/tools/island_diff_v_caret.py:24 [other] KIT = f'{DIR}/workspace-reach.testkit.ts'",
+        "docs/evidence/guard-pins-followup-review-2026-10-27/tools/island_diff_v_caret.py:41 [src] assert old_prelude.count(\"from './workspace-reach.testkit.js';\") == 1",
+        "docs/evidence/guard-pins-followup-review-2026-10-27/tools/island_diff_v_caret.py:42 [src] old_prelude = old_prelude.replace(\"from './workspace-reach.testkit.js';\", \"from './zz-836-old-testkit.js';\")",
+        "docs/evidence/guard-pins-followup-review-2026-10-27/tools/island_diff_v_caret.py:48 [src] f'{DIR}/zz-836-new-reach.ts': prelude(head) + \"export { reach as newReach };\\nexport { resolve as newResolve } from './workspace-reach.testkit.js';\\n\",",
+        "docs/evidence/guard-pins-followup-review-2026-10-27/tools/island_diff_v_caret.py:53 [src] \"import { ROOT } from './workspace-reach.testkit.js';\\n\"",
+        "docs/evidence/guard-pins-followup-review-2026-10-27/tools/lane_npa_probe.cjs:10 [src] const kit = fs.readFileSync(path.join(tree, 'packages/polaris-generation-core/src/workspace-reach.testkit.ts'), 'utf8');",
+        "docs/evidence/guard-pins-followup-review-2026-10-27/tools/npa_probe2.cjs:9 [src] const kit = fs.readFileSync(path.join(tree, 'packages/polaris-generation-core/src/workspace-reach.testkit.ts'), 'utf8');",
+        "docs/evidence/guard-pins-followup-review-2026-10-27/tools/rev_specs.py:8 [src] KIT = 'packages/polaris-generation-core/src/workspace-reach.testkit.ts'",
+        "docs/evidence/guard-pins-followup-review-2026-10-27/tools/sweep.cjs:10 [src] const kit = fs.readFileSync(path.join(tree, 'packages/polaris-generation-core/src/workspace-reach.testkit.ts'), 'utf8');",
+        "docs/evidence/guard-pins-review-2026-10-27/tools/island_diff.py:23 [other] KIT = f'{DIR}/workspace-reach.testkit.ts'",
+        "docs/evidence/guard-pins-review-2026-10-27/tools/island_diff.py:40 [src] assert old_prelude.count(\"from './workspace-reach.testkit.js';\") == 1",
+        "docs/evidence/guard-pins-review-2026-10-27/tools/island_diff.py:41 [src] old_prelude = old_prelude.replace(\"from './workspace-reach.testkit.js';\", \"from './zz-836-old-testkit.js';\")",
+        "docs/evidence/guard-pins-review-2026-10-27/tools/island_diff.py:47 [src] f'{DIR}/zz-836-new-reach.ts': prelude(head) + \"export { reach as newReach };\\nexport { resolve as newResolve } from './workspace-reach.testkit.js';\\n\",",
+        "docs/evidence/guard-pins-review-2026-10-27/tools/island_diff.py:52 [src] \"import { ROOT } from './workspace-reach.testkit.js';\\n\"",
+        "docs/evidence/guard-pins-review-2026-10-27/tools/island_diff_v_local.py:23 [other] KIT = f'{DIR}/workspace-reach.testkit.ts'",
+        "docs/evidence/guard-pins-review-2026-10-27/tools/island_diff_v_local.py:40 [src] assert old_prelude.count(\"from './workspace-reach.testkit.js';\") == 1",
+        "docs/evidence/guard-pins-review-2026-10-27/tools/island_diff_v_local.py:41 [src] old_prelude = old_prelude.replace(\"from './workspace-reach.testkit.js';\", \"from './zz-836-old-testkit.js';\")",
+        "docs/evidence/guard-pins-review-2026-10-27/tools/island_diff_v_local.py:47 [src] f'{DIR}/zz-836-new-reach.ts': prelude(head) + \"export { reach as newReach };\\nexport { resolve as newResolve } from './workspace-reach.testkit.js';\\n\",",
+        "docs/evidence/guard-pins-review-2026-10-27/tools/island_diff_v_local.py:52 [src] \"import { ROOT } from './workspace-reach.testkit.js';\\n\"",
+        "docs/evidence/guard-pins-review-2026-10-27/tools/island_diff_v_root.py:23 [other] KIT = f'{DIR}/workspace-reach.testkit.ts'",
+        "docs/evidence/guard-pins-review-2026-10-27/tools/island_diff_v_root.py:40 [src] assert old_prelude.count(\"from './workspace-reach.testkit.js';\") == 1",
+        "docs/evidence/guard-pins-review-2026-10-27/tools/island_diff_v_root.py:41 [src] old_prelude = old_prelude.replace(\"from './workspace-reach.testkit.js';\", \"from './zz-836-old-testkit.js';\")",
+        "docs/evidence/guard-pins-review-2026-10-27/tools/island_diff_v_root.py:47 [src] f'{DIR}/zz-836-new-reach.ts': prelude(head) + \"export { reach as newReach };\\nexport { resolve as newResolve } from './workspace-reach.testkit.js';\\n\",",
+        "docs/evidence/guard-pins-review-2026-10-27/tools/island_diff_v_root.py:52 [src] \"import { ROOT } from './workspace-reach.testkit.js';\\n\"",
+        "docs/evidence/guard-pins-review-2026-10-27/tools/resolve_probe.mts:2 [other] // Usage: node tools/resolve_probe.mts <path to workspace-reach.testkit.ts>",
+        "docs/evidence/guard-pins-review-2026-10-27/tools/rev_specs.py:12 [src] KIT = 'packages/polaris-generation-core/src/workspace-reach.testkit.ts'",
+        "docs/evidence/syzygy-bpyt-4-2/tools/mutants.py:12 [src] \"packages/polaris-generation-core/src/workspace-reach.testkit.ts\",",
+        "docs/evidence/syzygy-bpyt-4-2/tools/mutants.py:16 [src] \"packages/polaris-generation-core/src/workspace-reach.testkit.ts\",",
+        "docs/evidence/syzygy-bpyt-4-2/tools/test_support_readers.py:27 [src] \"packages/polaris-generation-core/src/workspace-reach.testkit.ts\",",
+        "docs/evidence/syzygy-bpyt-6-15/closure.mjs:17 [dist] const kit = await import(pathToFileURL(join(tree, 'packages/polaris-generation-core/dist/workspace-reach.testkit.js')).href);",
+        "docs/evidence/syzygy-bpyt-8-34/build_mutants.py:54 [src] REACH = 'packages/polaris-generation-core/src/workspace-reach.testkit.ts'",
+        "docs/evidence/syzygy-bpyt-8-34/island_differential.py:1 [other] \"\"\"syzygy-bpyt.8.34: the island guard's reach before and after it moved to workspace-reach.testkit.ts. In one committed, clean tree,",
+        "docs/evidence/syzygy-bpyt-8-34/island_differential.py:11 [src] TESTKIT = 'packages/polaris-generation-core/src/workspace-reach.testkit.ts'",
+        "docs/evidence/syzygy-bpyt-8-34/island_differential.py:54 [other] 'workspace-reach.testkit.ts, run on the entries the guard asks about. Generated by island_differential.py; do not edit.'),",
+        "docs/evidence/syzygy-bpyt-8-34/run_record.py:11 [src] 'packages/polaris-generation-core/src/island-boundary.test.ts', 'packages/polaris-generation-core/src/workspace-reach.testkit.ts',",
+        "docs/evidence/syzygy-bpyt-8-36/island_diff.py:23 [other] KIT = f'{DIR}/workspace-reach.testkit.ts'",
+        "docs/evidence/syzygy-bpyt-8-36/island_diff.py:40 [src] assert old_prelude.count(\"from './workspace-reach.testkit.js';\") == 1",
+        "docs/evidence/syzygy-bpyt-8-36/island_diff.py:41 [src] old_prelude = old_prelude.replace(\"from './workspace-reach.testkit.js';\", \"from './zz-836-old-testkit.js';\")",
+        "docs/evidence/syzygy-bpyt-8-36/island_diff.py:47 [src] f'{DIR}/zz-836-new-reach.ts': prelude(head) + \"export { reach as newReach };\\nexport { resolve as newResolve } from './workspace-reach.testkit.js';\\n\",",
+        "docs/evidence/syzygy-bpyt-8-36/island_diff.py:52 [src] \"import { ROOT } from './workspace-reach.testkit.js';\\n\"",
+        "docs/evidence/syzygy-bpyt-8-36/record.py:21 [src] 'packages/polaris-generation-core/src/workspace-reach.testkit.ts']",
+        "docs/evidence/syzygy-bpyt-8-37/own_specs.py:9 [src] KIT = 'packages/polaris-generation-core/src/workspace-reach.testkit.ts'",
+        "docs/evidence/syzygy-bpyt-8-37/record.py:27 [src] 'packages/polaris-generation-core/src/workspace-reach.testkit.ts']",
+        "docs/evidence/syzygy-bpyt-8-38/npa_probe.cjs:10 [src] const kit = fs.readFileSync(path.join(tree, 'packages/polaris-generation-core/src/workspace-reach.testkit.ts'), 'utf8');",
+        "docs/evidence/syzygy-bpyt-8-38/own_specs.py:9 [src] KIT = 'packages/polaris-generation-core/src/workspace-reach.testkit.ts'",
+        "docs/evidence/syzygy-bpyt-8-38/record.py:28 [src] KIT = 'packages/polaris-generation-core/src/workspace-reach.testkit.ts'",
+        "docs/evidence/syzygy-bpyt-8-39/npa_probe.cjs:11 [src] const kit = fs.readFileSync(path.join(tree, 'packages/polaris-generation-core/src/workspace-reach.testkit.ts'), 'utf8');",
+        "docs/evidence/syzygy-bpyt-8-39/record.py:42 [src] KIT = 'packages/polaris-generation-core/src/workspace-reach.testkit.ts'",
+        "docs/evidence/syzygy-bpyt-8-39/record.py:420 [other] importers = hooked('importers', sorted(line.split(':', 1)[1] for line in git('grep', '-l', '-F', 'workspace-reach.testkit', HEAD, '--',"
+      ]
+    },
+    "packages/three-surface-poc-core/src/test-cleanup.ts": {
+      "test": 4,
+      "kit": 1,
+      "reader": [
+        "docs/evidence/poc-core-hygiene-2026-10-22/assemble_dispositions.py:37 [other] 'test-cleanup.ts': (",
+        "docs/evidence/poc-core-hygiene-2026-10-22/assemble_dispositions.py:87 [other] 'test-cleanup.ts': ('orphan-path', 'test-cleanup'),",
+        "docs/evidence/poc-core-hygiene-2026-10-22/consumer_sweep.py:35 [other] ('orphan-path', 'test-cleanup.ts', [CORE + 'test-cleanup.ts', 'test-cleanup']),",
+        "docs/evidence/poc-core-hygiene-2026-10-22/mutate_comment_only.py:29 [src] ('source-file-deleted', CORE + 'src/test-cleanup.ts', None, None, 'comment-only-false'),",
+        "docs/evidence/syzygy-bpyt-4-2/tools/test_support_readers.py:28 [src] \"packages/three-surface-poc-core/src/test-cleanup.ts\",",
+        "packages/three-surface-poc-core/tsconfig.json:13 [src] \"src/test-cleanup.ts\","
+      ]
+    },
+    "packages/three-surface-poc-core/src/test-frozen.ts": {
+      "test": 5,
+      "kit": 1,
+      "reader": [
+        "docs/evidence/support-followups-review-2026-10-27/r1/tools/lane-pins-mutants.py:33 [src] CENSUS_TEST = ['packages/three-surface-poc-core/src/test-frozen.test.ts']",
+        "docs/evidence/support-followups-review-2026-10-27/r1/tools/lane-pins-mutants.py:46 [other] CENSUS = C + 'test-frozen.ts'",
+        "docs/evidence/support-followups-review-2026-10-27/r1/tools/own-mutants.py:40 [other] ('M8-census-skips-arrays', HEAD, CORE + 'test-frozen.ts', '    seen.add(node);\\n', '    if (Array.isArray(node)) return;\\n    seen.add(node);\\n',",
+        "docs/evidence/support-followups-review-2026-10-27/r1/tools/own-mutants.py:41 [other] [CORE + 'test-frozen.test.ts'], 'killed'),",
+        "docs/evidence/support-followups-review-2026-10-27/r1/tools/run-files.sh:17 [src] packages/three-surface-poc-core/src/test-frozen.test.ts",
+        "docs/evidence/syzygy-bpyt-4-2/tools/mutants_r1.py:47 [src] \"packages/three-surface-poc-core/tsconfig.json\": [(',\\n    \"src/test-frozen.ts\"', \"\")]}, [PB]),",
+        "docs/evidence/syzygy-bpyt-4-2/tools/mutants_r1.py:49 [src] \"packages/three-surface-poc-core/src/index.ts\": [(\"\", \"export type {} from './test-frozen.js';\\n\")]}, [PB]),",
+        "docs/evidence/syzygy-bpyt-4-2/tools/test_support_readers.py:29 [src] \"packages/three-surface-poc-core/src/test-frozen.ts\",",
+        "docs/evidence/syzygy-bpyt-6-13/pins-mutants.py:33 [src] CENSUS_TEST = ['packages/three-surface-poc-core/src/test-frozen.test.ts']",
+        "docs/evidence/syzygy-bpyt-6-13/pins-mutants.py:46 [other] CENSUS = C + 'test-frozen.ts'",
+        "packages/three-surface-poc-core/tsconfig.json:14 [src] \"src/test-frozen.ts\""
+      ]
+    }
+  },
+  "distReaders": [
+    "docs/evidence/syzygy-bpyt-6-15/closure.mjs",
+    "scripts/dossier_scale_measure.mjs"
+  ]
+}

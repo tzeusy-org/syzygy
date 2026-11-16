@@ -1,0 +1,1916 @@
+{
+ "head": "43ae35febce90724228e2e6001ee0b6e4c98597b",
+ "base": "3ec6929951080613b3c5cb7205fe303c5449be58",
+ "recordCommit": "20cabca516665412e194e7c10a893cb16e1dcc2d",
+ "fileDigests": {
+  "mutants-record.json": "b86bf874918427020e99a8c169807686c01dda3e54878a5b673631b9863a5437",
+  "island-differential.json": "ec675a3ec2d541d2935671df2c2e5fcd124d27b22180805ea6449cf7a9d4424f",
+  "dossier-golden.json": "bedd9b6cffc7a25063cd4dc0aed0ba685703477a19df91e23c0729638ceaa1b4",
+  "test-delta.json": "7c161199e707aa316207af8dde27bb7e64bc5dadf8fc566f312dc4d48257b1fa"
+ },
+ "checks": 192,
+ "failedChecks": [],
+ "perMutant": [
+  {
+   "id": "C0-argv",
+   "occurrences": [],
+   "verdict": "passes",
+   "exit": 0,
+   "tests": [
+    "Tests  74 passed (74)"
+   ],
+   "failedRows": []
+  },
+  {
+   "id": "C0-guard",
+   "occurrences": [],
+   "verdict": "passes",
+   "exit": 0,
+   "tests": [
+    "Tests  27 passed (27)"
+   ],
+   "failedRows": []
+  },
+  {
+   "id": "C0-both-guards",
+   "occurrences": [],
+   "verdict": "passes",
+   "exit": 0,
+   "tests": [
+    "Tests  31 passed (31)"
+   ],
+   "failedRows": []
+  },
+  {
+   "id": "OR1-missing-value-judged-before-repeat",
+   "occurrences": [
+    {
+     "file": "packages/polaris-dossier/src/argv.ts",
+     "atCommit": 1,
+     "atHead": 1,
+     "atBase": 1
+    }
+   ],
+   "verdict": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  2 failed | 72 passed (74)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > readArgv under the dossier options policy: a dash-led value and a repeat refused > [\"run\",\"--revision\",\"a\",\"--revision\"] reads as {\"fault\":\"repeated\",\"arg\":\"--revision\"}",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > readArgv under the dossier options policy: a dash-led value and a repeat refused > [\"run\",\"--revision\",\"a\",\"--revision\",\"-x\"] reads as {\"fault\":\"repeated\",\"arg\":\"--revision\"}"
+   ]
+  },
+  {
+   "id": "OR2-empty-value-read-as-missing",
+   "occurrences": [
+    {
+     "file": "packages/polaris-dossier/src/argv.ts",
+     "atCommit": 1,
+     "atHead": 1,
+     "atBase": 1
+    }
+   ],
+   "verdict": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  3 failed | 71 passed (74)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > readArgv under the daemon policy: values taken whatever they start with, the last of a repeat, no positionals, stop at help > [\"--root\",\"\"] reads as {\"values\":{\"--root\":\"\"},\"flags\":[],\"positional\":[]}",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > readArgv under the dossier options policy: a dash-led value and a repeat refused > [\"run\",\"--revision\",\"\"] reads as {\"values\":{\"--revision\":\"\"},\"flags\":[],\"positional\":[\"run\"]}",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > readArgv under the polaris policy: boolean options, values taken whatever they start with, the last of a repeat > [\"--model\",\"\",\"url\"] reads as {\"values\":{\"--model\":\"\"},\"flags\":[],\"positional\":[\"url\"]}"
+   ]
+  },
+  {
+   "id": "D1-polaris-repeat-refused",
+   "occurrences": [
+    {
+     "file": "packages/polaris-dossier/src/polaris.ts",
+     "atCommit": 1,
+     "atHead": 1,
+     "atBase": 1
+    }
+   ],
+   "verdict": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 73 passed (74)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > is the spec of every readArgv call, and no other module names readArgv"
+   ]
+  },
+  {
+   "id": "D2-daemon-repeat-refused",
+   "occurrences": [
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "atCommit": 1,
+     "atHead": 1,
+     "atBase": 1
+    }
+   ],
+   "verdict": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 73 passed (74)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > is the spec of every readArgv call, and no other module names readArgv"
+   ]
+  },
+  {
+   "id": "D3-dossier-dash-value-taken",
+   "occurrences": [
+    {
+     "file": "packages/polaris-dossier/src/cli.ts",
+     "atCommit": 1,
+     "atHead": 1,
+     "atBase": 1
+    }
+   ],
+   "verdict": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 73 passed (74)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > is the spec of every readArgv call, and no other module names readArgv"
+   ]
+  },
+  {
+   "id": "OE1-agreement-one-way",
+   "occurrences": [
+    {
+     "file": "packages/polaris-dossier/src/subpath-imports.test.ts",
+     "atCommit": 1,
+     "atHead": 1,
+     "atBase": 1
+    }
+   ],
+   "verdict": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 26 passed (27)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the subpaths the daemon entry imports > fails on a form only the preprocessor reports rather than passing it unseen"
+   ]
+  },
+  {
+   "id": "OE3-main-computed-dynamic-import",
+   "occurrences": [
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "atCommit": 1,
+     "atHead": 1,
+     "atBase": 1
+    }
+   ],
+   "verdict": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 26 passed (27)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > has no node:module edge, and no import() or require of a computed name"
+   ]
+  },
+  {
+   "id": "OE4-main-create-require-alias",
+   "occurrences": [
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "atCommit": 1,
+     "atHead": 1,
+     "atBase": 1
+    }
+   ],
+   "verdict": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 26 passed (27)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > has no node:module edge, and no import() or require of a computed name"
+   ]
+  },
+  {
+   "id": "OE5-main-intermediate-local-module",
+   "occurrences": [
+    {
+     "file": "apps/syzygy/src/dossier-bridge.ts",
+     "absentAtCommit": true,
+     "absentAtHead": true
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "atCommit": 1,
+     "atHead": 1,
+     "atBase": 1
+    }
+   ],
+   "verdict": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 26 passed (27)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > reaches this package through argv.ts and state-directory.ts alone"
+   ]
+  },
+  {
+   "id": "OS1-guard-after-the-read",
+   "occurrences": [
+    {
+     "file": "packages/polaris-dossier/src/argv.ts",
+     "atCommit": 1,
+     "atHead": 1,
+     "atBase": 1
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.ts",
+     "atCommit": 1,
+     "atHead": 1,
+     "atBase": 1
+    }
+   ],
+   "verdict": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 73 passed (74)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > a spec naming an option readArgv could never see > throws for such a spec even when the arguments would fault first"
+   ]
+  },
+  {
+   "id": "OS2-long-form-allows-a-trailing-equals",
+   "occurrences": [
+    {
+     "file": "packages/polaris-dossier/src/argv.ts",
+     "atCommit": 1,
+     "atHead": 1,
+     "atBase": 1
+    }
+   ],
+   "verdict": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 73 passed (74)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > a spec naming an option readArgv could never see > throws for {\"valued\":[\"--out=\"],\"dashValue\":\"refuse\",\"repeat\":\"refuse\",\"positionals\":true}, before reading anything"
+   ]
+  },
+  {
+   "id": "OB1-condition-counts-as-inside",
+   "occurrences": [
+    {
+     "file": "packages/polaris-dossier/src/subpath-imports.test.ts",
+     "atCommit": 1,
+     "atHead": 1,
+     "atBase": 1
+    }
+   ],
+   "verdict": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 26 passed (27)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the subpaths the daemon entry imports > the entry check sees if (await import('@syzygy/polaris-dossier')) {} (its own mutant)"
+   ]
+  },
+  {
+   "id": "OB2-outermost-if-not-nearest",
+   "occurrences": [
+    {
+     "file": "packages/polaris-dossier/src/subpath-imports.test.ts",
+     "atCommit": 1,
+     "atHead": 1,
+     "atBase": 1
+    }
+   ],
+   "verdict": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 26 passed (27)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the subpaths the daemon entry imports > the entry check sees if (a) {} else if (argv[0] === 'dossier') { await import('@syzygy/polaris-dossier'); } (its own mutant)"
+   ]
+  },
+  {
+   "id": "OB3-shadowed-argv-replaces-the-polaris-branch-import",
+   "occurrences": [
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "atCommit": 1,
+     "atHead": 1,
+     "atBase": 1
+    }
+   ],
+   "verdict": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  27 passed (27)"
+   ],
+   "failedRows": []
+  },
+  {
+   "id": "GM1-entry-re-exports-the-barrel",
+   "occurrences": [
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "atCommit": 1,
+     "atHead": 1,
+     "atBase": 1
+    }
+   ],
+   "verdict": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  2 failed | 25 passed (27)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the subpaths the daemon entry imports > are /argv and /state-directory, imported statically, and the barrel only dynamically inside the dossier and polaris branches",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > reaches this package through argv.ts and state-directory.ts alone"
+   ]
+  },
+  {
+   "id": "GM3-argv-loads-the-cli-through-node-module",
+   "occurrences": [
+    {
+     "file": "packages/polaris-dossier/src/argv.ts",
+     "atCommit": 1,
+     "atHead": 1,
+     "atBase": 1
+    }
+   ],
+   "verdict": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  2 failed | 25 passed (27)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the subpaths the daemon entry imports > ./argv is packages/polaris-dossier/src/argv.ts, which imports exactly [\"node:util\"]",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > has no node:module edge, and no import() or require of a computed name"
+   ]
+  },
+  {
+   "id": "D4-a-new-readArgv-caller",
+   "occurrences": [
+    {
+     "file": "packages/polaris-dossier/src/polaris.ts",
+     "atCommit": 1,
+     "atHead": 1,
+     "atBase": 1
+    }
+   ],
+   "verdict": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 73 passed (74)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > is the spec of every readArgv call, and no other module names readArgv"
+   ]
+  },
+  {
+   "id": "D5-readArgv-under-another-name-in-a-new-module",
+   "occurrences": [
+    {
+     "file": "packages/polaris-dossier/src/argv-alias.ts",
+     "absentAtCommit": true,
+     "absentAtHead": true
+    }
+   ],
+   "verdict": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 73 passed (74)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > is the spec of every readArgv call, and no other module names readArgv"
+   ]
+  },
+  {
+   "id": "D6-allow-execution-options-change",
+   "occurrences": [
+    {
+     "file": "packages/polaris-dossier/src/cli.ts",
+     "atCommit": 1,
+     "atHead": 1,
+     "atBase": 1
+    }
+   ],
+   "verdict": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 73 passed (74)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > names allow-execution's options as the dossier options policy's"
+   ]
+  },
+  {
+   "id": "OE6-main-imports-a-subpath-no-package-exports",
+   "occurrences": [
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "atCommit": 1,
+     "atHead": 1,
+     "atBase": 1
+    }
+   ],
+   "verdict": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  2 failed | 29 passed (31)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > resolves every workspace import the CLI reaches, dynamic ones included",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > resolves every workspace specifier on it, and reaches past the entry's own imports"
+   ]
+  },
+  {
+   "id": "CE1-computed-edge-dropped",
+   "occurrences": [
+    {
+     "file": "packages/polaris-dossier/src/subpath-imports.test.ts",
+     "atCommit": 1,
+     "atHead": 1,
+     "atBase": 0
+    }
+   ],
+   "verdict": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  2 failed | 25 passed (27)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the subpaths the daemon entry imports > the walk returns a computed specifier in \"const barrel = '@syzygy/polaris-dossier';\\nawait import(barrel);\" as its own edge (its own mutant)",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the subpaths the daemon entry imports > the walk returns a computed specifier in \"const name = '@syzygy/polaris-dossier';\\nif (argv[0] === 'dossier') require(name);\" as its own edge (its own mutant)"
+   ]
+  },
+  {
+   "id": "SK1-every-entry-dynamic-import-skipped",
+   "occurrences": [
+    {
+     "file": "packages/polaris-dossier/src/subpath-imports.test.ts",
+     "atCommit": 1,
+     "atHead": 1,
+     "atBase": 0
+    }
+   ],
+   "verdict": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 26 passed (27)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > leaves the entry by every edge but the four dynamic imports inside those branches"
+   ]
+  },
+  {
+   "id": "SK2-branch-edges-followed",
+   "occurrences": [
+    {
+     "file": "packages/polaris-dossier/src/subpath-imports.test.ts",
+     "atCommit": 1,
+     "atHead": 1,
+     "atBase": 0
+    }
+   ],
+   "verdict": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  2 failed | 25 passed (27)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > leaves the entry by every edge but the four dynamic imports inside those branches",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > reaches this package through argv.ts and state-directory.ts alone"
+   ]
+  },
+  {
+   "id": "RW1-reach-stops-at-the-entry",
+   "occurrences": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "atCommit": 1,
+     "atHead": 1,
+     "atBase": 0
+    }
+   ],
+   "verdict": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  3 failed | 28 passed (31)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > resolves every workspace import the CLI reaches, dynamic ones included",
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > reaches the island from the consent package root, which the CLI does not import",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > resolves every workspace specifier on it, and reaches past the entry's own imports"
+   ]
+  },
+  {
+   "id": "RW2-workspace-packages-not-followed",
+   "occurrences": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "atCommit": 1,
+     "atHead": 1,
+     "atBase": 0
+    }
+   ],
+   "verdict": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  4 failed | 27 passed (31)"
+   ],
+   "failedRows": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > resolves every workspace import the CLI reaches, dynamic ones included",
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > reaches the island from the consent package root, which the CLI does not import",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > resolves every workspace specifier on it, and reaches past the entry's own imports",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > reaches this package through argv.ts and state-directory.ts alone"
+   ]
+  }
+ ],
+ "allChecks": [
+  {
+   "check": "record base is the stated base",
+   "ok": true,
+   "detail": "3ec6929951080613b3c5cb7205fe303c5449be58"
+  },
+  {
+   "check": "record commit is an ancestor of head",
+   "ok": true,
+   "detail": "20cabca516665412e194e7c10a893cb16e1dcc2d"
+  },
+  {
+   "check": "record commit apps+packages equal head",
+   "ok": true,
+   "detail": []
+  },
+  {
+   "check": "files differing record commit -> head (informational)",
+   "ok": true,
+   "detail": [
+    "docs/evidence/syzygy-bpyt-8-34/dossier-golden.json",
+    "docs/evidence/syzygy-bpyt-8-34/dossier_golden.py",
+    "docs/evidence/syzygy-bpyt-8-34/island-differential.json",
+    "docs/evidence/syzygy-bpyt-8-34/island_differential.py",
+    "docs/evidence/syzygy-bpyt-8-34/mutants-record.json",
+    "docs/evidence/syzygy-bpyt-8-34/test-delta.json",
+    "docs/evidence/syzygy-bpyt-8-34/test_delta.py"
+   ]
+  },
+  {
+   "check": "subject digest packages/polaris-dossier/src/argv.test.ts at head",
+   "ok": true
+  },
+  {
+   "check": "subject digest packages/polaris-dossier/src/argv.test.ts at record commit",
+   "ok": true
+  },
+  {
+   "check": "subject digest packages/polaris-dossier/src/subpath-imports.test.ts at head",
+   "ok": true
+  },
+  {
+   "check": "subject digest packages/polaris-dossier/src/subpath-imports.test.ts at record commit",
+   "ok": true
+  },
+  {
+   "check": "subject digest packages/polaris-generation-core/src/island-boundary.test.ts at head",
+   "ok": true
+  },
+  {
+   "check": "subject digest packages/polaris-generation-core/src/island-boundary.test.ts at record commit",
+   "ok": true
+  },
+  {
+   "check": "subject digest packages/polaris-generation-core/src/workspace-reach.testkit.ts at head",
+   "ok": true
+  },
+  {
+   "check": "subject digest packages/polaris-generation-core/src/workspace-reach.testkit.ts at record commit",
+   "ok": true
+  },
+  {
+   "check": "subject digest packages/polaris-dossier/src/argv.ts at head",
+   "ok": true
+  },
+  {
+   "check": "subject digest packages/polaris-dossier/src/argv.ts at record commit",
+   "ok": true
+  },
+  {
+   "check": "subject digest packages/polaris-dossier/src/cli.ts at head",
+   "ok": true
+  },
+  {
+   "check": "subject digest packages/polaris-dossier/src/cli.ts at record commit",
+   "ok": true
+  },
+  {
+   "check": "subject digest packages/polaris-dossier/src/polaris.ts at head",
+   "ok": true
+  },
+  {
+   "check": "subject digest packages/polaris-dossier/src/polaris.ts at record commit",
+   "ok": true
+  },
+  {
+   "check": "subject digest apps/syzygy/src/main.ts at head",
+   "ok": true
+  },
+  {
+   "check": "subject digest apps/syzygy/src/main.ts at record commit",
+   "ok": true
+  },
+  {
+   "check": "diffSha256 re-derived",
+   "ok": true,
+   "detail": "952ce40f199b14a93b743f7756093e842290e0f35c4f634b470b82f0664f3a2c"
+  },
+  {
+   "check": "tool digest docs/evidence/syzygy-bpyt-8-34/build_mutants.py equals committed bytes",
+   "ok": true,
+   "detail": "88371a401d1c03d07f90b307d7976f3ef96ee3faac66598efa11472ef318cf1e"
+  },
+  {
+   "check": "tool digest docs/evidence/syzygy-bpyt-8-34/run_record.py equals committed bytes",
+   "ok": true,
+   "detail": "a260e54a6834ad81487f1b7e1e1dcad316868fd3f3b8dcf7e6bb3e4fd0f32cab"
+  },
+  {
+   "check": "tool digest docs/evidence/syzygy-bpyt-8-34/mutants.json equals committed bytes",
+   "ok": true,
+   "detail": "9180aca76e4e0e487d004a54021e5145ac0f310552cd47540290b84adf24be71"
+  },
+  {
+   "check": "record ids == spec ids, same order",
+   "ok": true
+  },
+  {
+   "check": "C0-argv: record edits equal spec edits",
+   "ok": true
+  },
+  {
+   "check": "C0-argv: verdict agrees with exit",
+   "ok": true,
+   "detail": [
+    "passes",
+    0
+   ]
+  },
+  {
+   "check": "C0-argv: verdict is the expected one",
+   "ok": true,
+   "detail": [
+    "passes",
+    "passes"
+   ]
+  },
+  {
+   "check": "C0-argv: Tests-line failed count equals failed rows",
+   "ok": true,
+   "detail": [
+    0,
+    0
+   ]
+  },
+  {
+   "check": "C0-argv: a pass has no failed rows",
+   "ok": true,
+   "detail": [
+    0,
+    []
+   ]
+  },
+  {
+   "check": "C0-guard: record edits equal spec edits",
+   "ok": true
+  },
+  {
+   "check": "C0-guard: verdict agrees with exit",
+   "ok": true,
+   "detail": [
+    "passes",
+    0
+   ]
+  },
+  {
+   "check": "C0-guard: verdict is the expected one",
+   "ok": true,
+   "detail": [
+    "passes",
+    "passes"
+   ]
+  },
+  {
+   "check": "C0-guard: Tests-line failed count equals failed rows",
+   "ok": true,
+   "detail": [
+    0,
+    0
+   ]
+  },
+  {
+   "check": "C0-guard: a pass has no failed rows",
+   "ok": true,
+   "detail": [
+    0,
+    []
+   ]
+  },
+  {
+   "check": "C0-both-guards: record edits equal spec edits",
+   "ok": true
+  },
+  {
+   "check": "C0-both-guards: verdict agrees with exit",
+   "ok": true,
+   "detail": [
+    "passes",
+    0
+   ]
+  },
+  {
+   "check": "C0-both-guards: verdict is the expected one",
+   "ok": true,
+   "detail": [
+    "passes",
+    "passes"
+   ]
+  },
+  {
+   "check": "C0-both-guards: Tests-line failed count equals failed rows",
+   "ok": true,
+   "detail": [
+    0,
+    0
+   ]
+  },
+  {
+   "check": "C0-both-guards: a pass has no failed rows",
+   "ok": true,
+   "detail": [
+    0,
+    []
+   ]
+  },
+  {
+   "check": "OR1-missing-value-judged-before-repeat: record edits equal spec edits",
+   "ok": true
+  },
+  {
+   "check": "OR1-missing-value-judged-before-repeat: old occurs once at record commit (packages/polaris-dossier/src/argv.ts)",
+   "ok": true,
+   "detail": {
+    "file": "packages/polaris-dossier/src/argv.ts",
+    "atCommit": 1,
+    "atHead": 1,
+    "atBase": 1
+   }
+  },
+  {
+   "check": "OR1-missing-value-judged-before-repeat: verdict agrees with exit",
+   "ok": true,
+   "detail": [
+    "killed",
+    1
+   ]
+  },
+  {
+   "check": "OR1-missing-value-judged-before-repeat: verdict is the expected one",
+   "ok": true,
+   "detail": [
+    "killed",
+    "killed"
+   ]
+  },
+  {
+   "check": "OR1-missing-value-judged-before-repeat: killed with failed test rows",
+   "ok": true,
+   "detail": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > readArgv under the dossier options policy: a dash-led value and a repeat refused > [\"run\",\"--revision\",\"a\",\"--revision\"] reads as {\"fault\":\"repeated\",\"arg\":\"--revision\"}",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > readArgv under the dossier options policy: a dash-led value and a repeat refused > [\"run\",\"--revision\",\"a\",\"--revision\",\"-x\"] reads as {\"fault\":\"repeated\",\"arg\":\"--revision\"}"
+   ]
+  },
+  {
+   "check": "OR1-missing-value-judged-before-repeat: Tests-line failed count equals failed rows",
+   "ok": true,
+   "detail": [
+    2,
+    2
+   ]
+  },
+  {
+   "check": "OR2-empty-value-read-as-missing: record edits equal spec edits",
+   "ok": true
+  },
+  {
+   "check": "OR2-empty-value-read-as-missing: old occurs once at record commit (packages/polaris-dossier/src/argv.ts)",
+   "ok": true,
+   "detail": {
+    "file": "packages/polaris-dossier/src/argv.ts",
+    "atCommit": 1,
+    "atHead": 1,
+    "atBase": 1
+   }
+  },
+  {
+   "check": "OR2-empty-value-read-as-missing: verdict agrees with exit",
+   "ok": true,
+   "detail": [
+    "killed",
+    1
+   ]
+  },
+  {
+   "check": "OR2-empty-value-read-as-missing: verdict is the expected one",
+   "ok": true,
+   "detail": [
+    "killed",
+    "killed"
+   ]
+  },
+  {
+   "check": "OR2-empty-value-read-as-missing: killed with failed test rows",
+   "ok": true,
+   "detail": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > readArgv under the daemon policy: values taken whatever they start with, the last of a repeat, no positionals, stop at help > [\"--root\",\"\"] reads as {\"values\":{\"--root\":\"\"},\"flags\":[],\"positional\":[]}",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > readArgv under the dossier options policy: a dash-led value and a repeat refused > [\"run\",\"--revision\",\"\"] reads as {\"values\":{\"--revision\":\"\"},\"flags\":[],\"positional\":[\"run\"]}",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > readArgv under the polaris policy: boolean options, values taken whatever they start with, the last of a repeat > [\"--model\",\"\",\"url\"] reads as {\"values\":{\"--model\":\"\"},\"flags\":[],\"positional\":[\"url\"]}"
+   ]
+  },
+  {
+   "check": "OR2-empty-value-read-as-missing: Tests-line failed count equals failed rows",
+   "ok": true,
+   "detail": [
+    3,
+    3
+   ]
+  },
+  {
+   "check": "D1-polaris-repeat-refused: record edits equal spec edits",
+   "ok": true
+  },
+  {
+   "check": "D1-polaris-repeat-refused: old occurs once at record commit (packages/polaris-dossier/src/polaris.ts)",
+   "ok": true,
+   "detail": {
+    "file": "packages/polaris-dossier/src/polaris.ts",
+    "atCommit": 1,
+    "atHead": 1,
+    "atBase": 1
+   }
+  },
+  {
+   "check": "D1-polaris-repeat-refused: verdict agrees with exit",
+   "ok": true,
+   "detail": [
+    "killed",
+    1
+   ]
+  },
+  {
+   "check": "D1-polaris-repeat-refused: verdict is the expected one",
+   "ok": true,
+   "detail": [
+    "killed",
+    "killed"
+   ]
+  },
+  {
+   "check": "D1-polaris-repeat-refused: killed with failed test rows",
+   "ok": true,
+   "detail": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > is the spec of every readArgv call, and no other module names readArgv"
+   ]
+  },
+  {
+   "check": "D1-polaris-repeat-refused: Tests-line failed count equals failed rows",
+   "ok": true,
+   "detail": [
+    1,
+    1
+   ]
+  },
+  {
+   "check": "D2-daemon-repeat-refused: record edits equal spec edits",
+   "ok": true
+  },
+  {
+   "check": "D2-daemon-repeat-refused: old occurs once at record commit (apps/syzygy/src/main.ts)",
+   "ok": true,
+   "detail": {
+    "file": "apps/syzygy/src/main.ts",
+    "atCommit": 1,
+    "atHead": 1,
+    "atBase": 1
+   }
+  },
+  {
+   "check": "D2-daemon-repeat-refused: verdict agrees with exit",
+   "ok": true,
+   "detail": [
+    "killed",
+    1
+   ]
+  },
+  {
+   "check": "D2-daemon-repeat-refused: verdict is the expected one",
+   "ok": true,
+   "detail": [
+    "killed",
+    "killed"
+   ]
+  },
+  {
+   "check": "D2-daemon-repeat-refused: killed with failed test rows",
+   "ok": true,
+   "detail": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > is the spec of every readArgv call, and no other module names readArgv"
+   ]
+  },
+  {
+   "check": "D2-daemon-repeat-refused: Tests-line failed count equals failed rows",
+   "ok": true,
+   "detail": [
+    1,
+    1
+   ]
+  },
+  {
+   "check": "D3-dossier-dash-value-taken: record edits equal spec edits",
+   "ok": true
+  },
+  {
+   "check": "D3-dossier-dash-value-taken: old occurs once at record commit (packages/polaris-dossier/src/cli.ts)",
+   "ok": true,
+   "detail": {
+    "file": "packages/polaris-dossier/src/cli.ts",
+    "atCommit": 1,
+    "atHead": 1,
+    "atBase": 1
+   }
+  },
+  {
+   "check": "D3-dossier-dash-value-taken: verdict agrees with exit",
+   "ok": true,
+   "detail": [
+    "killed",
+    1
+   ]
+  },
+  {
+   "check": "D3-dossier-dash-value-taken: verdict is the expected one",
+   "ok": true,
+   "detail": [
+    "killed",
+    "killed"
+   ]
+  },
+  {
+   "check": "D3-dossier-dash-value-taken: killed with failed test rows",
+   "ok": true,
+   "detail": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > is the spec of every readArgv call, and no other module names readArgv"
+   ]
+  },
+  {
+   "check": "D3-dossier-dash-value-taken: Tests-line failed count equals failed rows",
+   "ok": true,
+   "detail": [
+    1,
+    1
+   ]
+  },
+  {
+   "check": "OE1-agreement-one-way: record edits equal spec edits",
+   "ok": true
+  },
+  {
+   "check": "OE1-agreement-one-way: old occurs once at record commit (packages/polaris-dossier/src/subpath-imports.test.ts)",
+   "ok": true,
+   "detail": {
+    "file": "packages/polaris-dossier/src/subpath-imports.test.ts",
+    "atCommit": 1,
+    "atHead": 1,
+    "atBase": 1
+   }
+  },
+  {
+   "check": "OE1-agreement-one-way: verdict agrees with exit",
+   "ok": true,
+   "detail": [
+    "killed",
+    1
+   ]
+  },
+  {
+   "check": "OE1-agreement-one-way: verdict is the expected one",
+   "ok": true,
+   "detail": [
+    "killed",
+    "killed"
+   ]
+  },
+  {
+   "check": "OE1-agreement-one-way: killed with failed test rows",
+   "ok": true,
+   "detail": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the subpaths the daemon entry imports > fails on a form only the preprocessor reports rather than passing it unseen"
+   ]
+  },
+  {
+   "check": "OE1-agreement-one-way: Tests-line failed count equals failed rows",
+   "ok": true,
+   "detail": [
+    1,
+    1
+   ]
+  },
+  {
+   "check": "OE3-main-computed-dynamic-import: record edits equal spec edits",
+   "ok": true
+  },
+  {
+   "check": "OE3-main-computed-dynamic-import: old occurs once at record commit (apps/syzygy/src/main.ts)",
+   "ok": true,
+   "detail": {
+    "file": "apps/syzygy/src/main.ts",
+    "atCommit": 1,
+    "atHead": 1,
+    "atBase": 1
+   }
+  },
+  {
+   "check": "OE3-main-computed-dynamic-import: verdict agrees with exit",
+   "ok": true,
+   "detail": [
+    "killed",
+    1
+   ]
+  },
+  {
+   "check": "OE3-main-computed-dynamic-import: verdict is the expected one",
+   "ok": true,
+   "detail": [
+    "killed",
+    "killed"
+   ]
+  },
+  {
+   "check": "OE3-main-computed-dynamic-import: killed with failed test rows",
+   "ok": true,
+   "detail": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > has no node:module edge, and no import() or require of a computed name"
+   ]
+  },
+  {
+   "check": "OE3-main-computed-dynamic-import: Tests-line failed count equals failed rows",
+   "ok": true,
+   "detail": [
+    1,
+    1
+   ]
+  },
+  {
+   "check": "OE4-main-create-require-alias: record edits equal spec edits",
+   "ok": true
+  },
+  {
+   "check": "OE4-main-create-require-alias: old occurs once at record commit (apps/syzygy/src/main.ts)",
+   "ok": true,
+   "detail": {
+    "file": "apps/syzygy/src/main.ts",
+    "atCommit": 1,
+    "atHead": 1,
+    "atBase": 1
+   }
+  },
+  {
+   "check": "OE4-main-create-require-alias: verdict agrees with exit",
+   "ok": true,
+   "detail": [
+    "killed",
+    1
+   ]
+  },
+  {
+   "check": "OE4-main-create-require-alias: verdict is the expected one",
+   "ok": true,
+   "detail": [
+    "killed",
+    "killed"
+   ]
+  },
+  {
+   "check": "OE4-main-create-require-alias: killed with failed test rows",
+   "ok": true,
+   "detail": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > has no node:module edge, and no import() or require of a computed name"
+   ]
+  },
+  {
+   "check": "OE4-main-create-require-alias: Tests-line failed count equals failed rows",
+   "ok": true,
+   "detail": [
+    1,
+    1
+   ]
+  },
+  {
+   "check": "OE5-main-intermediate-local-module: record edits equal spec edits",
+   "ok": true
+  },
+  {
+   "check": "OE5-main-intermediate-local-module: created file absent at commit",
+   "ok": true,
+   "detail": "apps/syzygy/src/dossier-bridge.ts"
+  },
+  {
+   "check": "OE5-main-intermediate-local-module: old occurs once at record commit (apps/syzygy/src/main.ts)",
+   "ok": true,
+   "detail": {
+    "file": "apps/syzygy/src/main.ts",
+    "atCommit": 1,
+    "atHead": 1,
+    "atBase": 1
+   }
+  },
+  {
+   "check": "OE5-main-intermediate-local-module: verdict agrees with exit",
+   "ok": true,
+   "detail": [
+    "killed",
+    1
+   ]
+  },
+  {
+   "check": "OE5-main-intermediate-local-module: verdict is the expected one",
+   "ok": true,
+   "detail": [
+    "killed",
+    "killed"
+   ]
+  },
+  {
+   "check": "OE5-main-intermediate-local-module: killed with failed test rows",
+   "ok": true,
+   "detail": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > reaches this package through argv.ts and state-directory.ts alone"
+   ]
+  },
+  {
+   "check": "OE5-main-intermediate-local-module: Tests-line failed count equals failed rows",
+   "ok": true,
+   "detail": [
+    1,
+    1
+   ]
+  },
+  {
+   "check": "OS1-guard-after-the-read: record edits equal spec edits",
+   "ok": true
+  },
+  {
+   "check": "OS1-guard-after-the-read: old occurs once at record commit (packages/polaris-dossier/src/argv.ts)",
+   "ok": true,
+   "detail": {
+    "file": "packages/polaris-dossier/src/argv.ts",
+    "atCommit": 1,
+    "atHead": 1,
+    "atBase": 1
+   }
+  },
+  {
+   "check": "OS1-guard-after-the-read: old occurs once at record commit (packages/polaris-dossier/src/argv.ts)",
+   "ok": true,
+   "detail": {
+    "file": "packages/polaris-dossier/src/argv.ts",
+    "atCommit": 1,
+    "atHead": 1,
+    "atBase": 1
+   }
+  },
+  {
+   "check": "OS1-guard-after-the-read: verdict agrees with exit",
+   "ok": true,
+   "detail": [
+    "killed",
+    1
+   ]
+  },
+  {
+   "check": "OS1-guard-after-the-read: verdict is the expected one",
+   "ok": true,
+   "detail": [
+    "killed",
+    "killed"
+   ]
+  },
+  {
+   "check": "OS1-guard-after-the-read: killed with failed test rows",
+   "ok": true,
+   "detail": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > a spec naming an option readArgv could never see > throws for such a spec even when the arguments would fault first"
+   ]
+  },
+  {
+   "check": "OS1-guard-after-the-read: Tests-line failed count equals failed rows",
+   "ok": true,
+   "detail": [
+    1,
+    1
+   ]
+  },
+  {
+   "check": "OS2-long-form-allows-a-trailing-equals: record edits equal spec edits",
+   "ok": true
+  },
+  {
+   "check": "OS2-long-form-allows-a-trailing-equals: old occurs once at record commit (packages/polaris-dossier/src/argv.ts)",
+   "ok": true,
+   "detail": {
+    "file": "packages/polaris-dossier/src/argv.ts",
+    "atCommit": 1,
+    "atHead": 1,
+    "atBase": 1
+   }
+  },
+  {
+   "check": "OS2-long-form-allows-a-trailing-equals: verdict agrees with exit",
+   "ok": true,
+   "detail": [
+    "killed",
+    1
+   ]
+  },
+  {
+   "check": "OS2-long-form-allows-a-trailing-equals: verdict is the expected one",
+   "ok": true,
+   "detail": [
+    "killed",
+    "killed"
+   ]
+  },
+  {
+   "check": "OS2-long-form-allows-a-trailing-equals: killed with failed test rows",
+   "ok": true,
+   "detail": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > a spec naming an option readArgv could never see > throws for {\"valued\":[\"--out=\"],\"dashValue\":\"refuse\",\"repeat\":\"refuse\",\"positionals\":true}, before reading anything"
+   ]
+  },
+  {
+   "check": "OS2-long-form-allows-a-trailing-equals: Tests-line failed count equals failed rows",
+   "ok": true,
+   "detail": [
+    1,
+    1
+   ]
+  },
+  {
+   "check": "OB1-condition-counts-as-inside: record edits equal spec edits",
+   "ok": true
+  },
+  {
+   "check": "OB1-condition-counts-as-inside: old occurs once at record commit (packages/polaris-dossier/src/subpath-imports.test.ts)",
+   "ok": true,
+   "detail": {
+    "file": "packages/polaris-dossier/src/subpath-imports.test.ts",
+    "atCommit": 1,
+    "atHead": 1,
+    "atBase": 1
+   }
+  },
+  {
+   "check": "OB1-condition-counts-as-inside: verdict agrees with exit",
+   "ok": true,
+   "detail": [
+    "killed",
+    1
+   ]
+  },
+  {
+   "check": "OB1-condition-counts-as-inside: verdict is the expected one",
+   "ok": true,
+   "detail": [
+    "killed",
+    "killed"
+   ]
+  },
+  {
+   "check": "OB1-condition-counts-as-inside: killed with failed test rows",
+   "ok": true,
+   "detail": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the subpaths the daemon entry imports > the entry check sees if (await import('@syzygy/polaris-dossier')) {} (its own mutant)"
+   ]
+  },
+  {
+   "check": "OB1-condition-counts-as-inside: Tests-line failed count equals failed rows",
+   "ok": true,
+   "detail": [
+    1,
+    1
+   ]
+  },
+  {
+   "check": "OB2-outermost-if-not-nearest: record edits equal spec edits",
+   "ok": true
+  },
+  {
+   "check": "OB2-outermost-if-not-nearest: old occurs once at record commit (packages/polaris-dossier/src/subpath-imports.test.ts)",
+   "ok": true,
+   "detail": {
+    "file": "packages/polaris-dossier/src/subpath-imports.test.ts",
+    "atCommit": 1,
+    "atHead": 1,
+    "atBase": 1
+   }
+  },
+  {
+   "check": "OB2-outermost-if-not-nearest: verdict agrees with exit",
+   "ok": true,
+   "detail": [
+    "killed",
+    1
+   ]
+  },
+  {
+   "check": "OB2-outermost-if-not-nearest: verdict is the expected one",
+   "ok": true,
+   "detail": [
+    "killed",
+    "killed"
+   ]
+  },
+  {
+   "check": "OB2-outermost-if-not-nearest: killed with failed test rows",
+   "ok": true,
+   "detail": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the subpaths the daemon entry imports > the entry check sees if (a) {} else if (argv[0] === 'dossier') { await import('@syzygy/polaris-dossier'); } (its own mutant)"
+   ]
+  },
+  {
+   "check": "OB2-outermost-if-not-nearest: Tests-line failed count equals failed rows",
+   "ok": true,
+   "detail": [
+    1,
+    1
+   ]
+  },
+  {
+   "check": "OB3-shadowed-argv-replaces-the-polaris-branch-import: record edits equal spec edits",
+   "ok": true
+  },
+  {
+   "check": "OB3-shadowed-argv-replaces-the-polaris-branch-import: old occurs once at record commit (apps/syzygy/src/main.ts)",
+   "ok": true,
+   "detail": {
+    "file": "apps/syzygy/src/main.ts",
+    "atCommit": 1,
+    "atHead": 1,
+    "atBase": 1
+   }
+  },
+  {
+   "check": "OB3-shadowed-argv-replaces-the-polaris-branch-import: verdict agrees with exit",
+   "ok": true,
+   "detail": [
+    "survives",
+    0
+   ]
+  },
+  {
+   "check": "OB3-shadowed-argv-replaces-the-polaris-branch-import: verdict is the expected one",
+   "ok": true,
+   "detail": [
+    "survives",
+    "survives"
+   ]
+  },
+  {
+   "check": "OB3-shadowed-argv-replaces-the-polaris-branch-import: Tests-line failed count equals failed rows",
+   "ok": true,
+   "detail": [
+    0,
+    0
+   ]
+  },
+  {
+   "check": "OB3-shadowed-argv-replaces-the-polaris-branch-import: a pass has no failed rows",
+   "ok": true,
+   "detail": [
+    0,
+    []
+   ]
+  },
+  {
+   "check": "GM1-entry-re-exports-the-barrel: record edits equal spec edits",
+   "ok": true
+  },
+  {
+   "check": "GM1-entry-re-exports-the-barrel: old occurs once at record commit (apps/syzygy/src/main.ts)",
+   "ok": true,
+   "detail": {
+    "file": "apps/syzygy/src/main.ts",
+    "atCommit": 1,
+    "atHead": 1,
+    "atBase": 1
+   }
+  },
+  {
+   "check": "GM1-entry-re-exports-the-barrel: verdict agrees with exit",
+   "ok": true,
+   "detail": [
+    "killed",
+    1
+   ]
+  },
+  {
+   "check": "GM1-entry-re-exports-the-barrel: verdict is the expected one",
+   "ok": true,
+   "detail": [
+    "killed",
+    "killed"
+   ]
+  },
+  {
+   "check": "GM1-entry-re-exports-the-barrel: killed with failed test rows",
+   "ok": true,
+   "detail": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the subpaths the daemon entry imports > are /argv and /state-directory, imported statically, and the barrel only dynamically inside the dossier and polaris branches",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > reaches this package through argv.ts and state-directory.ts alone"
+   ]
+  },
+  {
+   "check": "GM1-entry-re-exports-the-barrel: Tests-line failed count equals failed rows",
+   "ok": true,
+   "detail": [
+    2,
+    2
+   ]
+  },
+  {
+   "check": "GM3-argv-loads-the-cli-through-node-module: record edits equal spec edits",
+   "ok": true
+  },
+  {
+   "check": "GM3-argv-loads-the-cli-through-node-module: old occurs once at record commit (packages/polaris-dossier/src/argv.ts)",
+   "ok": true,
+   "detail": {
+    "file": "packages/polaris-dossier/src/argv.ts",
+    "atCommit": 1,
+    "atHead": 1,
+    "atBase": 1
+   }
+  },
+  {
+   "check": "GM3-argv-loads-the-cli-through-node-module: verdict agrees with exit",
+   "ok": true,
+   "detail": [
+    "killed",
+    1
+   ]
+  },
+  {
+   "check": "GM3-argv-loads-the-cli-through-node-module: verdict is the expected one",
+   "ok": true,
+   "detail": [
+    "killed",
+    "killed"
+   ]
+  },
+  {
+   "check": "GM3-argv-loads-the-cli-through-node-module: killed with failed test rows",
+   "ok": true,
+   "detail": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the subpaths the daemon entry imports > ./argv is packages/polaris-dossier/src/argv.ts, which imports exactly [\"node:util\"]",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > has no node:module edge, and no import() or require of a computed name"
+   ]
+  },
+  {
+   "check": "GM3-argv-loads-the-cli-through-node-module: Tests-line failed count equals failed rows",
+   "ok": true,
+   "detail": [
+    2,
+    2
+   ]
+  },
+  {
+   "check": "D4-a-new-readArgv-caller: record edits equal spec edits",
+   "ok": true
+  },
+  {
+   "check": "D4-a-new-readArgv-caller: old occurs once at record commit (packages/polaris-dossier/src/polaris.ts)",
+   "ok": true,
+   "detail": {
+    "file": "packages/polaris-dossier/src/polaris.ts",
+    "atCommit": 1,
+    "atHead": 1,
+    "atBase": 1
+   }
+  },
+  {
+   "check": "D4-a-new-readArgv-caller: verdict agrees with exit",
+   "ok": true,
+   "detail": [
+    "killed",
+    1
+   ]
+  },
+  {
+   "check": "D4-a-new-readArgv-caller: verdict is the expected one",
+   "ok": true,
+   "detail": [
+    "killed",
+    "killed"
+   ]
+  },
+  {
+   "check": "D4-a-new-readArgv-caller: killed with failed test rows",
+   "ok": true,
+   "detail": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > is the spec of every readArgv call, and no other module names readArgv"
+   ]
+  },
+  {
+   "check": "D4-a-new-readArgv-caller: Tests-line failed count equals failed rows",
+   "ok": true,
+   "detail": [
+    1,
+    1
+   ]
+  },
+  {
+   "check": "D5-readArgv-under-another-name-in-a-new-module: record edits equal spec edits",
+   "ok": true
+  },
+  {
+   "check": "D5-readArgv-under-another-name-in-a-new-module: created file absent at commit",
+   "ok": true,
+   "detail": "packages/polaris-dossier/src/argv-alias.ts"
+  },
+  {
+   "check": "D5-readArgv-under-another-name-in-a-new-module: verdict agrees with exit",
+   "ok": true,
+   "detail": [
+    "killed",
+    1
+   ]
+  },
+  {
+   "check": "D5-readArgv-under-another-name-in-a-new-module: verdict is the expected one",
+   "ok": true,
+   "detail": [
+    "killed",
+    "killed"
+   ]
+  },
+  {
+   "check": "D5-readArgv-under-another-name-in-a-new-module: killed with failed test rows",
+   "ok": true,
+   "detail": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > is the spec of every readArgv call, and no other module names readArgv"
+   ]
+  },
+  {
+   "check": "D5-readArgv-under-another-name-in-a-new-module: Tests-line failed count equals failed rows",
+   "ok": true,
+   "detail": [
+    1,
+    1
+   ]
+  },
+  {
+   "check": "D6-allow-execution-options-change: record edits equal spec edits",
+   "ok": true
+  },
+  {
+   "check": "D6-allow-execution-options-change: old occurs once at record commit (packages/polaris-dossier/src/cli.ts)",
+   "ok": true,
+   "detail": {
+    "file": "packages/polaris-dossier/src/cli.ts",
+    "atCommit": 1,
+    "atHead": 1,
+    "atBase": 1
+   }
+  },
+  {
+   "check": "D6-allow-execution-options-change: verdict agrees with exit",
+   "ok": true,
+   "detail": [
+    "killed",
+    1
+   ]
+  },
+  {
+   "check": "D6-allow-execution-options-change: verdict is the expected one",
+   "ok": true,
+   "detail": [
+    "killed",
+    "killed"
+   ]
+  },
+  {
+   "check": "D6-allow-execution-options-change: killed with failed test rows",
+   "ok": true,
+   "detail": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > names allow-execution's options as the dossier options policy's"
+   ]
+  },
+  {
+   "check": "D6-allow-execution-options-change: Tests-line failed count equals failed rows",
+   "ok": true,
+   "detail": [
+    1,
+    1
+   ]
+  },
+  {
+   "check": "OE6-main-imports-a-subpath-no-package-exports: record edits equal spec edits",
+   "ok": true
+  },
+  {
+   "check": "OE6-main-imports-a-subpath-no-package-exports: old occurs once at record commit (apps/syzygy/src/main.ts)",
+   "ok": true,
+   "detail": {
+    "file": "apps/syzygy/src/main.ts",
+    "atCommit": 1,
+    "atHead": 1,
+    "atBase": 1
+   }
+  },
+  {
+   "check": "OE6-main-imports-a-subpath-no-package-exports: verdict agrees with exit",
+   "ok": true,
+   "detail": [
+    "killed",
+    1
+   ]
+  },
+  {
+   "check": "OE6-main-imports-a-subpath-no-package-exports: verdict is the expected one",
+   "ok": true,
+   "detail": [
+    "killed",
+    "killed"
+   ]
+  },
+  {
+   "check": "OE6-main-imports-a-subpath-no-package-exports: killed with failed test rows",
+   "ok": true,
+   "detail": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > resolves every workspace import the CLI reaches, dynamic ones included",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > resolves every workspace specifier on it, and reaches past the entry's own imports"
+   ]
+  },
+  {
+   "check": "OE6-main-imports-a-subpath-no-package-exports: Tests-line failed count equals failed rows",
+   "ok": true,
+   "detail": [
+    2,
+    2
+   ]
+  },
+  {
+   "check": "CE1-computed-edge-dropped: record edits equal spec edits",
+   "ok": true
+  },
+  {
+   "check": "CE1-computed-edge-dropped: old occurs once at record commit (packages/polaris-dossier/src/subpath-imports.test.ts)",
+   "ok": true,
+   "detail": {
+    "file": "packages/polaris-dossier/src/subpath-imports.test.ts",
+    "atCommit": 1,
+    "atHead": 1,
+    "atBase": 0
+   }
+  },
+  {
+   "check": "CE1-computed-edge-dropped: verdict agrees with exit",
+   "ok": true,
+   "detail": [
+    "killed",
+    1
+   ]
+  },
+  {
+   "check": "CE1-computed-edge-dropped: verdict is the expected one",
+   "ok": true,
+   "detail": [
+    "killed",
+    "killed"
+   ]
+  },
+  {
+   "check": "CE1-computed-edge-dropped: killed with failed test rows",
+   "ok": true,
+   "detail": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the subpaths the daemon entry imports > the walk returns a computed specifier in \"const barrel = '@syzygy/polaris-dossier';\\nawait import(barrel);\" as its own edge (its own mutant)",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the subpaths the daemon entry imports > the walk returns a computed specifier in \"const name = '@syzygy/polaris-dossier';\\nif (argv[0] === 'dossier') require(name);\" as its own edge (its own mutant)"
+   ]
+  },
+  {
+   "check": "CE1-computed-edge-dropped: Tests-line failed count equals failed rows",
+   "ok": true,
+   "detail": [
+    2,
+    2
+   ]
+  },
+  {
+   "check": "SK1-every-entry-dynamic-import-skipped: record edits equal spec edits",
+   "ok": true
+  },
+  {
+   "check": "SK1-every-entry-dynamic-import-skipped: old occurs once at record commit (packages/polaris-dossier/src/subpath-imports.test.ts)",
+   "ok": true,
+   "detail": {
+    "file": "packages/polaris-dossier/src/subpath-imports.test.ts",
+    "atCommit": 1,
+    "atHead": 1,
+    "atBase": 0
+   }
+  },
+  {
+   "check": "SK1-every-entry-dynamic-import-skipped: verdict agrees with exit",
+   "ok": true,
+   "detail": [
+    "killed",
+    1
+   ]
+  },
+  {
+   "check": "SK1-every-entry-dynamic-import-skipped: verdict is the expected one",
+   "ok": true,
+   "detail": [
+    "killed",
+    "killed"
+   ]
+  },
+  {
+   "check": "SK1-every-entry-dynamic-import-skipped: killed with failed test rows",
+   "ok": true,
+   "detail": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > leaves the entry by every edge but the four dynamic imports inside those branches"
+   ]
+  },
+  {
+   "check": "SK1-every-entry-dynamic-import-skipped: Tests-line failed count equals failed rows",
+   "ok": true,
+   "detail": [
+    1,
+    1
+   ]
+  },
+  {
+   "check": "SK2-branch-edges-followed: record edits equal spec edits",
+   "ok": true
+  },
+  {
+   "check": "SK2-branch-edges-followed: old occurs once at record commit (packages/polaris-dossier/src/subpath-imports.test.ts)",
+   "ok": true,
+   "detail": {
+    "file": "packages/polaris-dossier/src/subpath-imports.test.ts",
+    "atCommit": 1,
+    "atHead": 1,
+    "atBase": 0
+   }
+  },
+  {
+   "check": "SK2-branch-edges-followed: verdict agrees with exit",
+   "ok": true,
+   "detail": [
+    "killed",
+    1
+   ]
+  },
+  {
+   "check": "SK2-branch-edges-followed: verdict is the expected one",
+   "ok": true,
+   "detail": [
+    "killed",
+    "killed"
+   ]
+  },
+  {
+   "check": "SK2-branch-edges-followed: killed with failed test rows",
+   "ok": true,
+   "detail": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > leaves the entry by every edge but the four dynamic imports inside those branches",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > reaches this package through argv.ts and state-directory.ts alone"
+   ]
+  },
+  {
+   "check": "SK2-branch-edges-followed: Tests-line failed count equals failed rows",
+   "ok": true,
+   "detail": [
+    2,
+    2
+   ]
+  },
+  {
+   "check": "RW1-reach-stops-at-the-entry: record edits equal spec edits",
+   "ok": true
+  },
+  {
+   "check": "RW1-reach-stops-at-the-entry: old occurs once at record commit (packages/polaris-generation-core/src/workspace-reach.testkit.ts)",
+   "ok": true,
+   "detail": {
+    "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+    "atCommit": 1,
+    "atHead": 1,
+    "atBase": 0
+   }
+  },
+  {
+   "check": "RW1-reach-stops-at-the-entry: verdict agrees with exit",
+   "ok": true,
+   "detail": [
+    "killed",
+    1
+   ]
+  },
+  {
+   "check": "RW1-reach-stops-at-the-entry: verdict is the expected one",
+   "ok": true,
+   "detail": [
+    "killed",
+    "killed"
+   ]
+  },
+  {
+   "check": "RW1-reach-stops-at-the-entry: killed with failed test rows",
+   "ok": true,
+   "detail": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > resolves every workspace import the CLI reaches, dynamic ones included",
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > reaches the island from the consent package root, which the CLI does not import",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > resolves every workspace specifier on it, and reaches past the entry's own imports"
+   ]
+  },
+  {
+   "check": "RW1-reach-stops-at-the-entry: Tests-line failed count equals failed rows",
+   "ok": true,
+   "detail": [
+    3,
+    3
+   ]
+  },
+  {
+   "check": "RW2-workspace-packages-not-followed: record edits equal spec edits",
+   "ok": true
+  },
+  {
+   "check": "RW2-workspace-packages-not-followed: old occurs once at record commit (packages/polaris-generation-core/src/workspace-reach.testkit.ts)",
+   "ok": true,
+   "detail": {
+    "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+    "atCommit": 1,
+    "atHead": 1,
+    "atBase": 0
+   }
+  },
+  {
+   "check": "RW2-workspace-packages-not-followed: verdict agrees with exit",
+   "ok": true,
+   "detail": [
+    "killed",
+    1
+   ]
+  },
+  {
+   "check": "RW2-workspace-packages-not-followed: verdict is the expected one",
+   "ok": true,
+   "detail": [
+    "killed",
+    "killed"
+   ]
+  },
+  {
+   "check": "RW2-workspace-packages-not-followed: killed with failed test rows",
+   "ok": true,
+   "detail": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > resolves every workspace import the CLI reaches, dynamic ones included",
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > reaches the island from the consent package root, which the CLI does not import",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > resolves every workspace specifier on it, and reaches past the entry's own imports",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > reaches this package through argv.ts and state-directory.ts alone"
+   ]
+  },
+  {
+   "check": "RW2-workspace-packages-not-followed: Tests-line failed count equals failed rows",
+   "ok": true,
+   "detail": [
+    4,
+    4
+   ]
+  }
+ ]
+}

@@ -1,0 +1,98 @@
+[
+ {
+  "id": "F-L102-tests-at-4d92ac95",
+  "ranAt": "4d92ac9518dd60cdd124525c3e36c086ccd5e425",
+  "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+  "line": 102,
+  "old": "isRecord(json.value)",
+  "new": "(json.value !== null && typeof json.value !== 'string' && typeof json.value !== 'number' && !Array.isArray(json.value))",
+  "testFileAt": "4d92ac9518dd60cdd124525c3e36c086ccd5e425",
+  "loadavg": "20.91 27.45 26.69 13/9697 2886608",
+  "exit": 0,
+  "total": 27,
+  "failed": 0,
+  "failedTests": [],
+  "killed": false
+ },
+ {
+  "id": "F-L121-tests-at-4d92ac95",
+  "ranAt": "4d92ac9518dd60cdd124525c3e36c086ccd5e425",
+  "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+  "line": 121,
+  "old": "isRecord(json.value)",
+  "new": "(json.value !== null && typeof json.value !== 'string' && typeof json.value !== 'number' && !Array.isArray(json.value))",
+  "testFileAt": "4d92ac9518dd60cdd124525c3e36c086ccd5e425",
+  "loadavg": "20.91 27.45 26.69 13/9667 2887205",
+  "exit": 0,
+  "total": 27,
+  "failed": 0,
+  "failedTests": [],
+  "killed": false
+ },
+ {
+  "id": "F-L132-tests-at-4d92ac95",
+  "ranAt": "4d92ac9518dd60cdd124525c3e36c086ccd5e425",
+  "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+  "line": 132,
+  "old": "isRecord(entry)",
+  "new": "(entry !== null && typeof entry !== 'string' && typeof entry !== 'number' && !Array.isArray(entry))",
+  "testFileAt": "4d92ac9518dd60cdd124525c3e36c086ccd5e425",
+  "loadavg": "20.76 27.31 26.64 10/9706 2888100",
+  "exit": 0,
+  "total": 27,
+  "failed": 0,
+  "failedTests": [],
+  "killed": false
+ },
+ {
+  "id": "F-L102-tests-at-2e7ab2ec",
+  "ranAt": "4d92ac9518dd60cdd124525c3e36c086ccd5e425",
+  "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+  "line": 102,
+  "old": "isRecord(json.value)",
+  "new": "(json.value !== null && typeof json.value !== 'string' && typeof json.value !== 'number' && !Array.isArray(json.value))",
+  "testFileAt": "2e7ab2ec",
+  "loadavg": "20.76 27.31 26.64 43/9714 2888822",
+  "exit": 1,
+  "total": 32,
+  "failed": 1,
+  "failedTests": [
+   "the parsers read a JSON container as an object only when it is one refuse a policy document that is true"
+  ],
+  "killed": true
+ },
+ {
+  "id": "F-L121-tests-at-2e7ab2ec",
+  "ranAt": "4d92ac9518dd60cdd124525c3e36c086ccd5e425",
+  "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+  "line": 121,
+  "old": "isRecord(json.value)",
+  "new": "(json.value !== null && typeof json.value !== 'string' && typeof json.value !== 'number' && !Array.isArray(json.value))",
+  "testFileAt": "2e7ab2ec",
+  "loadavg": "20.78 27.20 26.61 12/9698 2889323",
+  "exit": 1,
+  "total": 32,
+  "failed": 1,
+  "failedTests": [
+   "the parsers read a JSON container as an object only when it is one refuse a registry document that is true"
+  ],
+  "killed": true
+ },
+ {
+  "id": "F-L132-tests-at-2e7ab2ec",
+  "ranAt": "4d92ac9518dd60cdd124525c3e36c086ccd5e425",
+  "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+  "line": 132,
+  "old": "isRecord(entry)",
+  "new": "(entry !== null && typeof entry !== 'string' && typeof entry !== 'number' && !Array.isArray(entry))",
+  "testFileAt": "2e7ab2ec",
+  "loadavg": "20.78 27.20 26.61 10/9625 2889974",
+  "exit": 1,
+  "total": 32,
+  "failed": 1,
+  "failedTests": [
+   "the parsers read a JSON container as an object only when it is one surface a first registry entry that is true as the malformed entries list"
+  ],
+  "killed": true
+ }
+]

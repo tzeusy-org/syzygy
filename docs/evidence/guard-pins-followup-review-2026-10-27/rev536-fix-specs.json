@@ -1,0 +1,155 @@
+{
+ "what": "rev-536 proposed rows",
+ "mutants": [
+  {
+   "id": "FIX-rows-only",
+   "what": "the four proposed rows, no mutant",
+   "projects": [
+    "@syzygy/polaris-generation-core",
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "packages/polaris-generation-core/src/island-boundary.test.ts",
+    "packages/polaris-dossier/src/subpath-imports.test.ts",
+    "packages/polaris-dossier/src/argv.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "    ['a remote tarball URL dependency', 'dossier', { dependencies: { dossier: 'https://example.com/lib-1.0.0.tgz' } }, {}],\n",
+     "new": "    ['a remote tarball URL dependency', 'dossier', { dependencies: { dossier: 'https://example.com/lib-1.0.0.tgz' } }, {}],\n    ['a remote http tarball URL dependency', 'dossier', { dependencies: { dossier: 'http://example.com/lib-1.0.0.tar.gz' } }, {}],\n    ['an npm: alias of a registry package', 'dossier', { dependencies: { dossier: 'npm:typescript@^5.5.0' } }, {}],\n    ['a dependency on its parent directory', 'dossier', { dependencies: { dossier: '..' } }, {}],\n"
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "    expect(WORKSPACE.manifests.get('syzygy-workspace')).toEqual({ dir: '.', ...JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8')) });\n  });\n",
+     "new": "    expect(WORKSPACE.manifests.get('syzygy-workspace')).toEqual({ dir: '.', ...JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8')) });\n  });\n\n  it(\"reads a bare name the workspace root's manifest declares as a local dependency as naming no module\", () => {\n    const { manifests, isFile } = workspace({});\n    const root: Manifest = { name: 'root', dir: '.', devDependencies: { dossier: './packages/lib' } };\n    expect(resolveIn({ manifests: new Map([...manifests, [root.name, root]]), isFile }, 'apps/app/src/main.ts', 'dossier')).toBeUndefined();\n  });\n"
+    }
+   ]
+  },
+  {
+   "id": "FIX+RV536-M2-http-url-reads-outside",
+   "what": "the four proposed rows, with RV536-M2-http-url-reads-outside",
+   "projects": [
+    "@syzygy/polaris-generation-core",
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "packages/polaris-generation-core/src/island-boundary.test.ts",
+    "packages/polaris-dossier/src/subpath-imports.test.ts",
+    "packages/polaris-dossier/src/argv.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "    ['a remote tarball URL dependency', 'dossier', { dependencies: { dossier: 'https://example.com/lib-1.0.0.tgz' } }, {}],\n",
+     "new": "    ['a remote tarball URL dependency', 'dossier', { dependencies: { dossier: 'https://example.com/lib-1.0.0.tgz' } }, {}],\n    ['a remote http tarball URL dependency', 'dossier', { dependencies: { dossier: 'http://example.com/lib-1.0.0.tar.gz' } }, {}],\n    ['an npm: alias of a registry package', 'dossier', { dependencies: { dossier: 'npm:typescript@^5.5.0' } }, {}],\n    ['a dependency on its parent directory', 'dossier', { dependencies: { dossier: '..' } }, {}],\n"
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "    expect(WORKSPACE.manifests.get('syzygy-workspace')).toEqual({ dir: '.', ...JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8')) });\n  });\n",
+     "new": "    expect(WORKSPACE.manifests.get('syzygy-workspace')).toEqual({ dir: '.', ...JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8')) });\n  });\n\n  it(\"reads a bare name the workspace root's manifest declares as a local dependency as naming no module\", () => {\n    const { manifests, isFile } = workspace({});\n    const root: Manifest = { name: 'root', dir: '.', devDependencies: { dossier: './packages/lib' } };\n    expect(resolveIn({ manifests: new Map([...manifests, [root.name, root]]), isFile }, 'apps/app/src/main.ts', 'dossier')).toBeUndefined();\n  });\n"
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|^(?!http:).*\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    }
+   ]
+  },
+  {
+   "id": "FIX+RV536-M7-npm-alias-workspace-scope-only",
+   "what": "the four proposed rows, with RV536-M7-npm-alias-workspace-scope-only",
+   "projects": [
+    "@syzygy/polaris-generation-core",
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "packages/polaris-generation-core/src/island-boundary.test.ts",
+    "packages/polaris-dossier/src/subpath-imports.test.ts",
+    "packages/polaris-dossier/src/argv.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "    ['a remote tarball URL dependency', 'dossier', { dependencies: { dossier: 'https://example.com/lib-1.0.0.tgz' } }, {}],\n",
+     "new": "    ['a remote tarball URL dependency', 'dossier', { dependencies: { dossier: 'https://example.com/lib-1.0.0.tgz' } }, {}],\n    ['a remote http tarball URL dependency', 'dossier', { dependencies: { dossier: 'http://example.com/lib-1.0.0.tar.gz' } }, {}],\n    ['an npm: alias of a registry package', 'dossier', { dependencies: { dossier: 'npm:typescript@^5.5.0' } }, {}],\n    ['a dependency on its parent directory', 'dossier', { dependencies: { dossier: '..' } }, {}],\n"
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "    expect(WORKSPACE.manifests.get('syzygy-workspace')).toEqual({ dir: '.', ...JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8')) });\n  });\n",
+     "new": "    expect(WORKSPACE.manifests.get('syzygy-workspace')).toEqual({ dir: '.', ...JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8')) });\n  });\n\n  it(\"reads a bare name the workspace root's manifest declares as a local dependency as naming no module\", () => {\n    const { manifests, isFile } = workspace({});\n    const root: Manifest = { name: 'root', dir: '.', devDependencies: { dossier: './packages/lib' } };\n    expect(resolveIn({ manifests: new Map([...manifests, [root.name, root]]), isFile }, 'apps/app/src/main.ts', 'dossier')).toBeUndefined();\n  });\n"
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:@syzygy\\/|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    }
+   ]
+  },
+  {
+   "id": "FIX+RV536-M8-root-declarations-unread",
+   "what": "the four proposed rows, with RV536-M8-root-declarations-unread",
+   "projects": [
+    "@syzygy/polaris-generation-core",
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "packages/polaris-generation-core/src/island-boundary.test.ts",
+    "packages/polaris-dossier/src/subpath-imports.test.ts",
+    "packages/polaris-dossier/src/argv.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "    ['a remote tarball URL dependency', 'dossier', { dependencies: { dossier: 'https://example.com/lib-1.0.0.tgz' } }, {}],\n",
+     "new": "    ['a remote tarball URL dependency', 'dossier', { dependencies: { dossier: 'https://example.com/lib-1.0.0.tgz' } }, {}],\n    ['a remote http tarball URL dependency', 'dossier', { dependencies: { dossier: 'http://example.com/lib-1.0.0.tar.gz' } }, {}],\n    ['an npm: alias of a registry package', 'dossier', { dependencies: { dossier: 'npm:typescript@^5.5.0' } }, {}],\n    ['a dependency on its parent directory', 'dossier', { dependencies: { dossier: '..' } }, {}],\n"
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "    expect(WORKSPACE.manifests.get('syzygy-workspace')).toEqual({ dir: '.', ...JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8')) });\n  });\n",
+     "new": "    expect(WORKSPACE.manifests.get('syzygy-workspace')).toEqual({ dir: '.', ...JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8')) });\n  });\n\n  it(\"reads a bare name the workspace root's manifest declares as a local dependency as naming no module\", () => {\n    const { manifests, isFile } = workspace({});\n    const root: Manifest = { name: 'root', dir: '.', devDependencies: { dossier: './packages/lib' } };\n    expect(resolveIn({ manifests: new Map([...manifests, [root.name, root]]), isFile }, 'apps/app/src/main.ts', 'dossier')).toBeUndefined();\n  });\n"
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "  for (const manifest of workspace.manifests.values()) {",
+     "new": "  for (const manifest of [...workspace.manifests.values()].filter((manifest) => manifest.dir !== '.')) {"
+    }
+   ]
+  },
+  {
+   "id": "FIX+RV536-M9-dotdot-alone-outside",
+   "what": "the four proposed rows, with RV536-M9-dotdot-alone-outside",
+   "projects": [
+    "@syzygy/polaris-generation-core",
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "packages/polaris-generation-core/src/island-boundary.test.ts",
+    "packages/polaris-dossier/src/subpath-imports.test.ts",
+    "packages/polaris-dossier/src/argv.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "    ['a remote tarball URL dependency', 'dossier', { dependencies: { dossier: 'https://example.com/lib-1.0.0.tgz' } }, {}],\n",
+     "new": "    ['a remote tarball URL dependency', 'dossier', { dependencies: { dossier: 'https://example.com/lib-1.0.0.tgz' } }, {}],\n    ['a remote http tarball URL dependency', 'dossier', { dependencies: { dossier: 'http://example.com/lib-1.0.0.tar.gz' } }, {}],\n    ['an npm: alias of a registry package', 'dossier', { dependencies: { dossier: 'npm:typescript@^5.5.0' } }, {}],\n    ['a dependency on its parent directory', 'dossier', { dependencies: { dossier: '..' } }, {}],\n"
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "    expect(WORKSPACE.manifests.get('syzygy-workspace')).toEqual({ dir: '.', ...JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8')) });\n  });\n",
+     "new": "    expect(WORKSPACE.manifests.get('syzygy-workspace')).toEqual({ dir: '.', ...JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8')) });\n  });\n\n  it(\"reads a bare name the workspace root's manifest declares as a local dependency as naming no module\", () => {\n    const { manifests, isFile } = workspace({});\n    const root: Manifest = { name: 'root', dir: '.', devDependencies: { dossier: './packages/lib' } };\n    expect(resolveIn({ manifests: new Map([...manifests, [root.name, root]]), isFile }, 'apps/app/src/main.ts', 'dossier')).toBeUndefined();\n  });\n"
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.(?:\\/|$)|\\.\\.\\/|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    }
+   ]
+  }
+ ]
+}

@@ -17,7 +17,7 @@
 // act can retain a negative judgment. Every arm below is evaluated (a
 // sweep, not a first-failure), so the owner sees every reason at once.
 
-import { createHash } from 'node:crypto';
+import { sha256 } from '@syzygy/support';
 
 import { canonicalJson } from './project-shape-manifest.js';
 import type { ProjectShape } from './project-shape-model.js';
@@ -40,7 +40,7 @@ export const ANSWER_IDENTITIES = [
   'architecture-and-groups',
   'v1-success',
 ] as const;
-export type AnswerIdentity = (typeof ANSWER_IDENTITIES)[number];
+type AnswerIdentity = (typeof ANSWER_IDENTITIES)[number];
 
 /** The ten readiness arms, one per clause of the requirement's readiness
  * sentence. Each makes readiness false; none is an act-validity case. */
@@ -56,9 +56,9 @@ export const READINESS_ARMS = [
   'resource-breach',
   'authority-unresolvable',
 ] as const;
-export type ReadinessArm = (typeof READINESS_ARMS)[number];
+type ReadinessArm = (typeof READINESS_ARMS)[number];
 
-export const ANSWERS_SECTION = 'Answers' as const;
+const ANSWERS_SECTION = 'Answers' as const;
 const SOURCES_LABEL = 'Sources:';
 const AUTHORITY_LABEL = 'Authority:';
 
@@ -123,7 +123,7 @@ export function walkthroughEvaluationIdentity(shape: ProjectShape): string {
     ? { kind: 'evaluated', consent: inputs.authority.consent, policy: inputs.authority.policy, registry: inputs.authority.registry }
     : { kind: inputs.authority.kind };
   const stable = { ...inputs, authority };
-  const digest = createHash('sha256').update(canonicalJson(stable)).digest('hex');
+  const digest = sha256(canonicalJson(stable));
   return `pwb-eval-${digest.slice(0, 24)}`;
 }
 
@@ -131,13 +131,13 @@ export function walkthroughEvaluationIdentity(shape: ProjectShape): string {
 // Outputs.
 // ---------------------------------------------------------------------
 
-export interface AnswerAnchor {
+interface AnswerAnchor {
   readonly path: string;
   readonly line: number;
   readonly resolved: boolean;
 }
 
-export interface RetainedAnswer {
+interface RetainedAnswer {
   readonly identity: string;
   /** The owner's own words, retained verbatim and never judged here. */
   readonly text: string;
@@ -145,7 +145,7 @@ export interface RetainedAnswer {
   readonly authority?: { readonly path: string; readonly resolved: boolean };
 }
 
-export interface ReadinessFinding {
+interface ReadinessFinding {
   readonly arm: ReadinessArm;
   readonly detail: string;
 }

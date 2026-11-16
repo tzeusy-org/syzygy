@@ -165,7 +165,7 @@ beforeAll(() => {
   model = buildFixtureModel(cleanups, { workItemRows: rows() });
   answer = JSON.parse(JSON.stringify(model)) as Obj;
   html = renderTrajectoryPage(model);
-}, 60_000);
+});
 
 afterAll(() => {
   for (const directory of cleanups.splice(0)) rmSync(directory, { recursive: true, force: true });
@@ -242,14 +242,12 @@ describe('POC-REQ-014: every work item\'s governing intent renders as a counted 
   });
 
   // R-IMPL-P100-GOVERNING-INTENT-1 finding 1 asked about an Unknown board
-  // beside observed work items. The model never produces that pair: without
-  // seeds the work-item read is itself Unknown, and the board is Unknown only
-  // when the read is. With no served item set, neither channel serves a count.
+  // beside observed work items. The model never produces that pair: the board
+  // is Unknown only when the work-item read is. With no served item set, neither channel serves a count.
   it('an Unknown board never sits beside a served item set, so neither channel counts one', () => {
     const { repoRoot, revision } = fixtureRepoWithGit(cleanups);
     const evaluation = { snapshot: 'butlers@states', asOf: '2026-08-30T12:00:00Z' };
     const states: Readonly<Record<string, PocModel>> = {
-      'no seeds': buildPocModel({ repoRoot, repositoryRevision: revision, observerRevision: revision, evaluation }),
       'unreachable Dolt': buildPocModel({ seeds: BUTLERS_POC_SEEDS, repoRoot, repositoryRevision: revision, observerRevision: revision, evaluation, runWorkItemQuery: () => { throw new Error('connection refused'); } }),
     };
     for (const [name, state] of Object.entries(states)) {

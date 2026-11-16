@@ -98,6 +98,6 @@ export function renderDossier(input: DossierRenderInput): RenderedDossier {
   if ((result === undefined) === (local === undefined)) throw new DossierRenderError('not-renderable');
   return renderDossierSite(input, result !== undefined ? viewOf(input, result) : localView(local!));
 }
-/** The encoding half of the screening scope's render condition (policy version 3): every page writes each source byte through
+/** The encoding half of the screening scope's render condition (version 7's text): every page writes each source byte through
  * `escape` and carries `DRAFT_PREVIEW_CSP_META` first in its head. `page-sink.test.ts` fails if either stops holding. */
 renderDossier.pageSinkContract = PAGE_SINK_CONTRACT;

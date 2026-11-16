@@ -1,0 +1,116 @@
+[
+ {
+  "arm": "A-stale-dist-mutant",
+  "ranAt": "fe3855a1b4f2164da3274e02d868399236c45c9c",
+  "edits": [
+   {
+    "file": "packages/support/src/sha256.ts",
+    "old": "import { createHash } from 'node:crypto';\n",
+    "new": "import { createHash } from 'node:crypto';\nimport { createSocket } from 'node:dgram';\nconst probeSocket = createSocket('udp4');\nprobeSocket.bind(0, '127.0.0.1');\nprobeSocket.unref();\n"
+   }
+  ],
+  "exit": 0,
+  "summary": [
+   "Test Files  1 passed (1)",
+   "Tests  2 passed | 1 skipped (3)"
+  ],
+  "resolve": [],
+  "internet": [],
+  "distPresent": true
+ },
+ {
+  "arm": "B-stale-dist-mutant-with-alias",
+  "ranAt": "fe3855a1b4f2164da3274e02d868399236c45c9c",
+  "edits": [
+   {
+    "file": "packages/support/src/sha256.ts",
+    "old": "import { createHash } from 'node:crypto';\n",
+    "new": "import { createHash } from 'node:crypto';\nimport { createSocket } from 'node:dgram';\nconst probeSocket = createSocket('udp4');\nprobeSocket.bind(0, '127.0.0.1');\nprobeSocket.unref();\n"
+   },
+   {
+    "file": "packages/polaris-dossier/src/no-egress.test.ts",
+    "old": "      '@syzygy/three-surface-poc-core': src('packages/three-surface-poc-core/src/index.ts'),\n",
+    "new": "      '@syzygy/three-surface-poc-core': src('packages/three-surface-poc-core/src/index.ts'),\n      '@syzygy/support': src('packages/support/src/index.ts'),\n"
+   }
+  ],
+  "exit": 1,
+  "summary": [
+   "Test Files  1 failed (1)",
+   "Tests  1 failed | 1 passed | 1 skipped (3)"
+  ],
+  "resolve": [],
+  "internet": [
+   "+   \"socket(AF_INET, SOCK_DGRAM|SOCK_CLOEXEC|SOCK_NONBLOCK, IPPROTO_IP) = 21\",",
+   "+   \"bind(21, {sa_family=AF_INET, sin_port=htons(0), sin_addr=inet_addr(\\\"127.0.0.1\\\")}, 16) = 0\","
+  ],
+  "distPresent": true
+ },
+ {
+  "arm": "C-dist-present-alias-no-mutant",
+  "ranAt": "fe3855a1b4f2164da3274e02d868399236c45c9c",
+  "edits": [
+   {
+    "file": "packages/polaris-dossier/src/no-egress.test.ts",
+    "old": "      '@syzygy/three-surface-poc-core': src('packages/three-surface-poc-core/src/index.ts'),\n",
+    "new": "      '@syzygy/three-surface-poc-core': src('packages/three-surface-poc-core/src/index.ts'),\n      '@syzygy/support': src('packages/support/src/index.ts'),\n"
+   }
+  ],
+  "exit": 0,
+  "summary": [
+   "Test Files  1 passed (1)",
+   "Tests  2 passed | 1 skipped (3)"
+  ],
+  "resolve": [],
+  "internet": [],
+  "distPresent": true
+ },
+ {
+  "arm": "D-dist-absent-as-committed",
+  "ranAt": "fe3855a1b4f2164da3274e02d868399236c45c9c",
+  "edits": [],
+  "exit": 1,
+  "summary": [
+   "Test Files  1 failed (1)",
+   "Tests  3 skipped (3)"
+  ],
+  "resolve": [
+   "apps/three-surface-poc/src/polaris-generation/dossier-site.ts:9:23: ERROR: Could not resolve \"@syzygy/support\"",
+   "apps/three-surface-poc/src/polaris-generation/draft-preview.ts:7:23: ERROR: Could not resolve \"@syzygy/support\"",
+   "packages/polaris-dossier/src/brief.ts:5:23: ERROR: Could not resolve \"@syzygy/support\""
+  ],
+  "internet": [],
+  "distPresent": false
+ },
+ {
+  "arm": "E-dist-absent-alias",
+  "ranAt": "fe3855a1b4f2164da3274e02d868399236c45c9c",
+  "edits": [
+   {
+    "file": "packages/polaris-dossier/src/no-egress.test.ts",
+    "old": "      '@syzygy/three-surface-poc-core': src('packages/three-surface-poc-core/src/index.ts'),\n",
+    "new": "      '@syzygy/three-surface-poc-core': src('packages/three-surface-poc-core/src/index.ts'),\n      '@syzygy/support': src('packages/support/src/index.ts'),\n"
+   }
+  ],
+  "exit": 0,
+  "summary": [
+   "Test Files  1 passed (1)",
+   "Tests  2 passed | 1 skipped (3)"
+  ],
+  "resolve": [],
+  "internet": [],
+  "distPresent": false
+ },
+ {
+  "arm": "F-base-dist-absent-control",
+  "ranAt": "c104771ff90f47ffd070f2339c36010458679c71",
+  "edits": [],
+  "exit": 0,
+  "summary": [
+   "Test Files  1 passed (1)",
+   "Tests  2 passed | 1 skipped (3)"
+  ],
+  "resolve": [],
+  "internet": [],
+  "distPresent": false
+ }
+]

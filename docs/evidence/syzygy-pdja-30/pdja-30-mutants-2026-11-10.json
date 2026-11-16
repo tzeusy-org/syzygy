@@ -1,0 +1,207 @@
+{
+  "subject": "The launch type test reads an object's header, never its body: PinnedObjectReader.storedType and launch.ts isCommit (syzygy-pdja.30)",
+  "beads": [
+    "syzygy-pdja.30"
+  ],
+  "date": "2026-11-10",
+  "ranAt": "902d38cd747702e8467c5c2a1090aa52cf470cf0",
+  "supersedes": "The first run of this record, 7 of 7 killed at 7822a01c5d2c29340ed9af637b74b09d85f93e4d (head 69d96fcf). This run re-runs those seven and adds the six mutants R1-R6 that R-PDJA-30-1 (docs/reviews/R-PDJA-30-1-RAW.md) found surviving at 69d96fcf, with that raw's old and new text.",
+  "ranAtNote": "The branch commit on agent/syzygy-pdja-30-type-test the mutants ran at; a rebase-merge leaves it reachable from no ref, so the digests below are the anchor.",
+  "subjectDigests": {
+    "packages/polaris-dossier/src/git-object-reader.ts": "e4c6f51df682bd5eb85d3d3a080b79a149ddc3ec20cf34cee9ac736dde7abb3d",
+    "packages/polaris-dossier/src/git-object-reader.test.ts": "fb2f8c3782efed73a8ead76afbb72c667a1affbf1cb5b6d8afd71be4094418d4",
+    "packages/polaris-dossier/src/launch.ts": "d8dd1db239591437fcc73dff5048a4dbfd1cf120729cb2abc1c520cd2e597bcb",
+    "packages/polaris-dossier/src/launch.test.ts": "23d6aa7b89c650bc03e5b13b9068cc8393b787f2a79cde424b3cf3f67384b67b"
+  },
+  "method": "Each mutant replaces exactly one occurrence of `old` with `new` in `file` (count asserted to be 1), runs `npx vitest run --project integration` on `tests` with TMPDIR under the operator's home, and restores the file. Killed means vitest exited non-zero; summary holds the vitest summary lines.",
+  "tests": [
+    "packages/polaris-dossier/src/git-object-reader.test.ts",
+    "packages/polaris-dossier/src/launch.test.ts"
+  ],
+  "killed": 13,
+  "total": 13,
+  "mutants": [
+    {
+      "id": "M1-loose-full-read",
+      "file": "packages/polaris-dossier/src/git-object-reader.ts",
+      "old": "    const loose = await this.looseHeaderType(id, at);\n    if (loose !== null) return loose;\n",
+      "new": "    const looseBytes = await this.looseStored(id, at);\n    if (looseBytes !== null) return this.loose(looseBytes, id, at).type;\n",
+      "exitCode": 1,
+      "outcome": "killed",
+      "summary": [
+        "× REQ-polaris-generation-047 against real clones > an annotated tag or a blob named by --revision refuses from its header alone; its body is never read (syzygy-pdja.30) 99ms",
+        "× storedType reads the header alone, never the body (syzygy-pdja.30) > a loose tag or blob whose body cannot inflate past its header still answers its type; a full read refuses 23ms",
+        "× storedType reads the header alone, never the body (syzygy-pdja.30) > a loose header is charged one 64-byte stored read and its inflation: the body is never charged 1ms",
+        "× storedType's guards: chain depth and the loose header caps (R-PDJA-30-1 finding 2) > a loose stream that has not ended its header within 1024 stored bytes refuses 5ms",
+        "× storedType's guards: chain depth and the loose header caps (R-PDJA-30-1 finding 2) > a loose stream that inflates past 32 bytes with no NUL refuses as a malformed header 2ms",
+        "Test Files  2 failed (2)",
+        "Tests  5 failed | 90 passed (95)"
+      ]
+    },
+    {
+      "id": "M2-packed-full-read",
+      "file": "packages/polaris-dossier/src/git-object-reader.ts",
+      "old": "      if (offset !== null) return this.packedHeaderType(pack, offset, id, at, 0);",
+      "new": "      if (offset !== null) return (await this.packed(pack, offset, id, at, 0)).type;",
+      "exitCode": 1,
+      "outcome": "killed",
+      "summary": [
+        "× storedType reads the header alone, never the body (syzygy-pdja.30) > a packed tag, and a delta whose every chain entry has its body overwritten, answer from entry headers alone 122ms",
+        "× storedType reads the header alone, never the body (syzygy-pdja.30) > a reference delta in git's own pack, its chain's bodies overwritten, answers from entry headers alone 40ms",
+        "× storedType reads the header alone, never the body (syzygy-pdja.30) > a reference delta whose base is loose answers from the base's header; with both bodies unreadable it still answers 4ms",
+        "× storedType reads the header alone, never the body (syzygy-pdja.30) > a reference delta whose base is in another pack answers from that pack's entry header 26ms",
+        "Test Files  1 failed | 1 passed (2)",
+        "Tests  4 failed | 91 passed (95)"
+      ]
+    },
+    {
+      "id": "M3-ofs-base-full-read",
+      "file": "packages/polaris-dossier/src/git-object-reader.ts",
+      "old": "      return this.packedHeaderType(pack, offset - back, id, at, depth + 1);",
+      "new": "      return (await this.packed(pack, offset - back, id, at, depth + 1)).type;",
+      "exitCode": 1,
+      "outcome": "killed",
+      "summary": [
+        "× storedType reads the header alone, never the body (syzygy-pdja.30) > a packed tag, and a delta whose every chain entry has its body overwritten, answer from entry headers alone 140ms",
+        "Test Files  1 failed | 1 passed (2)",
+        "Tests  1 failed | 94 passed (95)"
+      ]
+    },
+    {
+      "id": "M4-loose-stored-read-unbounded",
+      "file": "packages/polaris-dossier/src/git-object-reader.ts",
+      "old": "        const more = await readAt(fh, stored.length, 64);",
+      "new": "        const more = await readAt(fh, stored.length, 1 << 20);",
+      "exitCode": 1,
+      "outcome": "killed",
+      "summary": [
+        "× storedType reads the header alone, never the body (syzygy-pdja.30) > a loose header is charged one 64-byte stored read and its inflation: the body is never charged 7ms",
+        "Test Files  1 failed | 1 passed (2)",
+        "Tests  1 failed | 94 passed (95)"
+      ]
+    },
+    {
+      "id": "M5-inflate-whole-stored-not-prefix",
+      "file": "packages/polaris-dossier/src/git-object-reader.ts",
+      "old": "inflateSync(stored.subarray(0, n), { finishFlush",
+      "new": "inflateSync(stored, { finishFlush",
+      "exitCode": 1,
+      "outcome": "killed",
+      "summary": [
+        "× REQ-polaris-generation-047 against real clones > an annotated tag or a blob named by --revision refuses from its header alone; its body is never read (syzygy-pdja.30) 94ms",
+        "× storedType reads the header alone, never the body (syzygy-pdja.30) > a loose tag or blob whose body cannot inflate past its header still answers its type; a full read refuses 23ms",
+        "× storedType reads the header alone, never the body (syzygy-pdja.30) > a reference delta whose base is loose answers from the base's header; with both bodies unreadable it still answers 8ms",
+        "Test Files  2 failed (2)",
+        "Tests  3 failed | 92 passed (95)"
+      ]
+    },
+    {
+      "id": "M6-launch-type-test-back-to-tree",
+      "file": "packages/polaris-dossier/src/launch.ts",
+      "old": "          if ((await reader.storedType()) !== 'commit') return false;\n",
+      "new": "",
+      "exitCode": 1,
+      "outcome": "killed",
+      "summary": [
+        "× REQ-polaris-generation-047 against real clones > HEAD elsewhere: refused before asking, the clone unchanged, the checkout command printed 114ms",
+        "× REQ-polaris-generation-047 against real clones > an annotated tag or a blob named by --revision refuses from its header alone; its body is never read (syzygy-pdja.30) 106ms",
+        "Test Files  1 failed | 1 passed (2)",
+        "Tests  2 failed | 93 passed (95)"
+      ]
+    },
+    {
+      "id": "M7-stored-read-uncharged",
+      "file": "packages/polaris-dossier/src/git-object-reader.ts",
+      "old": "        this.charge(more.length, id, at);\n",
+      "new": "",
+      "exitCode": 1,
+      "outcome": "killed",
+      "summary": [
+        "× storedType reads the header alone, never the body (syzygy-pdja.30) > a loose header is charged one 64-byte stored read and its inflation: the body is never charged 8ms",
+        "Test Files  1 failed | 1 passed (2)",
+        "Tests  1 failed | 94 passed (95)"
+      ]
+    },
+    {
+      "id": "R1-ref-base-full-read",
+      "file": "packages/polaris-dossier/src/git-object-reader.ts",
+      "old": "        if (o !== null) return this.packedHeaderType(p, o, id, at, depth + 1);",
+      "new": "        if (o !== null) return (await this.packed(p, o, id, at, depth + 1)).type;",
+      "exitCode": 1,
+      "outcome": "killed",
+      "summary": [
+        "× storedType reads the header alone, never the body (syzygy-pdja.30) > a reference delta in git's own pack, its chain's bodies overwritten, answers from entry headers alone 53ms",
+        "× storedType reads the header alone, never the body (syzygy-pdja.30) > a reference delta whose base is in another pack answers from that pack's entry header 30ms",
+        "Test Files  1 failed | 1 passed (2)",
+        "Tests  2 failed | 93 passed (95)"
+      ]
+    },
+    {
+      "id": "R2-header-chain-depth-unchecked",
+      "file": "packages/polaris-dossier/src/git-object-reader.ts",
+      "old": "Promise<GitObjectType> {\n    if (depth > this.limits.chainDepth) refuse('budget-exceeded', `${id} has a delta chain longer than ${this.limits.chainDepth}`, id, at);\n",
+      "new": "Promise<GitObjectType> {\n",
+      "exitCode": 1,
+      "outcome": "killed",
+      "summary": [
+        "× storedType's guards: chain depth and the loose header caps (R-PDJA-30-1 finding 2) > a reference-delta cycle refuses at the chain depth, before the object budget 13ms",
+        "Test Files  1 failed | 1 passed (2)",
+        "Tests  1 failed | 94 passed (95)"
+      ]
+    },
+    {
+      "id": "R3-ref-loose-base-dropped",
+      "file": "packages/polaris-dossier/src/git-object-reader.ts",
+      "old": "      const loose = await this.looseHeaderType(baseId, at);\n      if (loose !== null) return loose;\n",
+      "new": "",
+      "exitCode": 1,
+      "outcome": "killed",
+      "summary": [
+        "× storedType reads the header alone, never the body (syzygy-pdja.30) > a reference delta whose base is loose answers from the base's header; with both bodies unreadable it still answers 7ms",
+        "Test Files  1 failed | 1 passed (2)",
+        "Tests  1 failed | 94 passed (95)"
+      ]
+    },
+    {
+      "id": "R4-stored-header-cap-unbounded",
+      "file": "packages/polaris-dossier/src/git-object-reader.ts",
+      "old": "HEADER_STORED_BYTES = 1024;",
+      "new": "HEADER_STORED_BYTES = 1 << 30;",
+      "exitCode": 1,
+      "outcome": "killed",
+      "summary": [
+        "× storedType's guards: chain depth and the loose header caps (R-PDJA-30-1 finding 2) > a loose stream that has not ended its header within 1024 stored bytes refuses 35ms",
+        "Test Files  1 failed | 1 passed (2)",
+        "Tests  1 failed | 94 passed (95)"
+      ]
+    },
+    {
+      "id": "R5-header-length-cap-removed",
+      "file": "packages/polaris-dossier/src/git-object-reader.ts",
+      "old": "if (nul < 0 && out.length <= HEADER_BYTES) continue;",
+      "new": "if (nul < 0) continue;",
+      "exitCode": 1,
+      "outcome": "killed",
+      "summary": [
+        "× storedType's guards: chain depth and the loose header caps (R-PDJA-30-1 finding 2) > a loose stream that inflates past 32 bytes with no NUL refuses as a malformed header 9ms",
+        "Test Files  1 failed | 1 passed (2)",
+        "Tests  1 failed | 94 passed (95)"
+      ]
+    },
+    {
+      "id": "R6-ref-branch-answers-tree",
+      "file": "packages/polaris-dossier/src/git-object-reader.ts",
+      "old": "        if (o !== null) return this.packedHeaderType(p, o, id, at, depth + 1);",
+      "new": "        if (o !== null) return 'tree';",
+      "exitCode": 1,
+      "outcome": "killed",
+      "summary": [
+        "× storedType reads the header alone, never the body (syzygy-pdja.30) > a reference delta in git's own pack, its chain's bodies overwritten, answers from entry headers alone 66ms",
+        "× storedType reads the header alone, never the body (syzygy-pdja.30) > a reference delta whose base is in another pack answers from that pack's entry header 9ms",
+        "× storedType's guards: chain depth and the loose header caps (R-PDJA-30-1 finding 2) > a reference-delta cycle refuses at the chain depth, before the object budget 3ms",
+        "Test Files  1 failed | 1 passed (2)",
+        "Tests  3 failed | 92 passed (95)"
+      ]
+    }
+  ]
+}

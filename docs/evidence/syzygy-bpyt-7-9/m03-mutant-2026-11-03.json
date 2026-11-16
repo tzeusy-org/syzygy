@@ -1,0 +1,90 @@
+{
+ "subject": "syzygy-bpyt.7.9: conformance corrupting replaces fail loudly when the builder default changes",
+ "baseCommit": "d0844243ed109b1d47f65b910c047af10b8afd9e",
+ "fixCommit": "b8e181a06e5a3af3c8cb87561d7f366ddaf68dfd",
+ "commitNote": "recorded at the pre-rebase head; a rebase-merge re-hashes it, the subject file digests below are the stable anchor",
+ "subjectDigests": {
+  "packages/cap1-conformance/src/fixtures/index.ts": "871aa100fdf392b84ba8a08615f473f508af744b03852f02d8fcc021611a374a",
+  "packages/cap1-conformance/src/req-002.conformance.test.ts": "f1c70dbbf10d4e5b1d87bf88093751ed8528936e7771cab65448e3f8fc128021",
+  "packages/cap1-conformance/src/req-004.conformance.test.ts": "63779241ef00a9bd36536d4bf3954175ff4c45a273aedbf4a55ea834201d3634",
+  "packages/cap1-conformance/src/req-005.conformance.test.ts": "1b1b9dfde2af27bd7c4105380e397b85e1ddd517c25293302d32e5b1cfc57f51",
+  "packages/cap1-conformance/src/req-042.conformance.test.ts": "137cb8952dc16cc3987c3aee8eb4e83bbf29d31382001c374e46cffd8ffa0d4b",
+  "packages/cap1-conformance/src/req-063.conformance.test.ts": "0054992b1a88d754e4d7613c853c887f950307c541801c8939b38f9f7382abe3"
+ },
+ "mutant": {
+  "id": "M03 (PR #498, R-GP-IMPL-CAP1-DEAD-PLANES-1)",
+  "file": "packages/cap1-conformance/src/fixtures/index.ts",
+  "old": "export const FIXTURE_OWNER = 'uniquosity@gmail.com';",
+  "new": "export const FIXTURE_OWNER = 'mutant-owner@example.invalid';",
+  "script": "docs/evidence/syzygy-bpyt-7-9/mutate-m03.sh"
+ },
+ "runForm": "npx vitest run --project @syzygy/cap1-conformance (repository root)",
+ "atBaseCommit": {
+  "ranAt": "d0844243ed109b1d47f65b910c047af10b8afd9e",
+  "failed": 3,
+  "of": 366,
+  "filesFailing": [
+   "req-002.conformance.test.ts",
+   "req-004.conformance.test.ts",
+   "req-063.conformance.test.ts"
+  ],
+  "fiveFilesKilled": [
+   "req-002",
+   "req-004",
+   "req-063"
+  ],
+  "fiveFilesSurvived": [
+   "req-005",
+   "req-042"
+  ],
+  "note": "req-002, req-004, req-063 failed on an unrelated assertion (the no-op replace left valid input); req-005 and req-042 survived silently"
+ },
+ "atFixCommit": {
+  "failed": 6,
+  "of": 366,
+  "failingTests": {
+   "req-002.conformance.test.ts": [
+    "CAP1-REQ-002 \u2014 invalid declaration is a named failure, never a partial registration falsifier: no silent failure \u2014 every failure names what failed"
+   ],
+   "req-004.conformance.test.ts": [
+    "CAP1-REQ-004 \u2014 no silent invention, repair, or inference a missing field is never defaulted: the read fails instead of producing a declaration"
+   ],
+   "req-005.conformance.test.ts": [
+    "CAP1-REQ-005 \u2014 registration facts are deterministic per (declaration, revision) invalid input is deterministic too \u2014 failure sets are deeply equal across runs"
+   ],
+   "req-042.conformance.test.ts": [
+    "CAP1-REQ-042 \u2014 equivalent queries at one evaluation expose equivalent facts sweep: each Capability 1 query issued twice at the pinned evaluation agrees, pair by pair",
+    "CAP1-REQ-042 \u2014 equivalent queries at one evaluation expose equivalent facts every answer names the evaluation identity it was computed at"
+   ],
+   "req-063.conformance.test.ts": [
+    "CAP1-REQ-063 \u2014 proposed material never renders as current state falsifier: an unfavourable answer is never improved by an open proposal"
+   ]
+  },
+  "fiveFilesKilled": [
+   "req-002",
+   "req-004",
+   "req-005",
+   "req-042",
+   "req-063"
+  ],
+  "fiveFilesSurvived": [],
+  "failureMessageInEvery": "corrupt(): expected exactly one occurrence of \"owner: uniquosity@gmail.com\" in the fixture source"
+ },
+ "testList": {
+  "file": "docs/evidence/syzygy-bpyt-7-9/conformance-test-list.txt",
+  "count": 366,
+  "sha256": "1405ed600058af931543508be2859d9b7cca7bd6a919fff3a9b4c3becfff74bc",
+  "comparison": "sorted file::fullName list from vitest --reporter=json, identical before and after the change (cmp), 366 passed, 0 failed both sides"
+ },
+ "otherReplaceSitesNotChanged": [
+  "req-001.conformance.test.ts:55 VALID_SOURCE.replace(DECLARED_PROJECT_ID, otherId)",
+  "req-002.conformance.test.ts:27 and :62 VALID_SOURCE.replace('role: governance-root', 'role: primary')",
+  "req-003.conformance.test.ts:74 .replace('schema_version: \"1\"\\n', '')  (needle is builder-hardcoded)",
+  "req-004.conformance.test.ts:27 VALID_SOURCE.replace('owner:', 'ownerr:')",
+  "req-004.conformance.test.ts:106 VALID_SOURCE.replace('role: governance-root', 'role: guess-me')",
+  "req-005.conformance.test.ts:54 VALID_SOURCE.replace('Orbital Mechanics', 'Orbital Mechanicz')",
+  "req-060.conformance.test.ts:40 SOURCE_BEFORE.replace('Original Name', 'Renamed Project')"
+ ],
+ "otherSitesReason": "needles are values the same file passes to the builder (or fixed builder syntax), not the builder default FIXTURE_OWNER; each is a silent no-op if absent, so the same corrupt() helper would fit, but each needle was not checked to occur exactly once",
+ "sweepPopulation": "git grep -n \"\\.replace(\" and \"replaceAll\" over packages/cap1-conformance/src at the base commit: 13 .replace( lines, 0 replaceAll; 5 changed to corrupt() here, 8 remain (listed above; req-002 has two role sites, so the list names 8 lines)"
+}

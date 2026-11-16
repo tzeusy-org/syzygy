@@ -1,0 +1,10 @@
+{
+  "cause": "Actual assertion message contained only array summary in retained JSON reporter; diagnostic field/name missing. Source correction includes failure entries in assertion message. First three controls passed; unscoped run executed one failed intended test but is invalid as a diagnostic-proof row, never a kill. No collection/setup/timeout/infrastructure error.",
+  "first_subject": "718926b3b91fc56e662a099537773aa133dea865",
+  "corrected_subject": "23a7f5c962d894510b48039a763c7e57971bb1a5",
+  "preserved": [
+    "PREDICATE-PROOFS-attempt1.json",
+    "prove-attempt1.py",
+    "logs/negative-unscoped-no-entry-vitest.json"
+  ]
+}

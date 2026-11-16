@@ -1,0 +1,5 @@
+== packages/polaris-dossier/src/start-gates.test.ts start 00:48:33 load 28.60 38.07 42.68
+ Test Files  1 passed (1)
+      Tests  104 passed (104)
+== packages/polaris-dossier/src/start-gates.test.ts end 00:49:09 load 26.41 36.47 41.97
+ALLDONE

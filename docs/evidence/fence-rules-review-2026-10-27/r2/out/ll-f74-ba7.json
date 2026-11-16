@@ -1,0 +1,97 @@
+{
+ "base": "f7477f52",
+ "head": "ba7fce36",
+ "method": "ts.createPrinter({removeComments: true}).printFile per file (types kept), before against after; and every changed line a trailing // comment or wholly inside a comment",
+ "typescriptVersion": "5.9.3",
+ "changedFiles": 20,
+ "changedProductionFiles": 5,
+ "commentOnly": 5,
+ "notCommentOnly": [],
+ "rows": [
+  {
+   "path": "apps/three-surface-poc/src/polaris-markdown.ts",
+   "status": "M",
+   "sourceSha256Base": "c0f2395109fd2f25fdc314a5ea7fd3360f58675250b7425b943b3b543fc8373c",
+   "sourceSha256Head": "7e70894ee6e3717ada76026004754c521858427abb14a103f591b31cd3727a21",
+   "printSha256Base": "4989f331b0e66e8c7b3e1f735a7b9668044f161a8c011eb966a96819337d2323",
+   "printSha256Head": "4989f331b0e66e8c7b3e1f735a7b9668044f161a8c011eb966a96819337d2323",
+   "printEqual": true,
+   "linesOk": true,
+   "changedLines": [
+    {
+     "line": 99,
+     "kind": "trailing-line-comment"
+    }
+   ],
+   "commentOnly": true
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.ts",
+   "status": "M",
+   "sourceSha256Base": "4804e2e90fd7ab043be1871ec27229955978ba13df345e2fdf84668abfc054b1",
+   "sourceSha256Head": "cb1566140cdf7d02b9991f8564d121e21d90480a791879a74e1889557930f067",
+   "printSha256Base": "983e14b6634aaba77277430873f3e03c34d0a65ed90c69bc4727ff9793f8d30c",
+   "printSha256Head": "983e14b6634aaba77277430873f3e03c34d0a65ed90c69bc4727ff9793f8d30c",
+   "printEqual": true,
+   "linesOk": true,
+   "changedLines": [
+    {
+     "line": 61,
+     "kind": "comment-edited"
+    }
+   ],
+   "commentOnly": true
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+   "status": "M",
+   "sourceSha256Base": "dc888664f2392a4abd55b68627226e6734ecb7e35a1d22cfa74eaaca76c52a2f",
+   "sourceSha256Head": "a02c105a483d11a9e90d27aade01ef5ddee6b60b9e165a9a7193c5baaa21f8fe",
+   "printSha256Base": "26d43a8cbae3f147514567959397faaa0bb0db65130fab23d7f09efef13ba60f",
+   "printSha256Head": "26d43a8cbae3f147514567959397faaa0bb0db65130fab23d7f09efef13ba60f",
+   "printEqual": true,
+   "linesOk": true,
+   "changedLines": [
+    {
+     "line": 60,
+     "kind": "trailing-line-comment"
+    }
+   ],
+   "commentOnly": true
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+   "status": "M",
+   "sourceSha256Base": "baf09d80d52c2c5bf16b1a6036913de0609ca8512976b8fd221a032c7a701219",
+   "sourceSha256Head": "642cf156ed37bfc0ced7cb338e640268fc0e02648913dd71be5dc4efe6ed0dbd",
+   "printSha256Base": "bb2147d19b9359021c182e522bd06dbeed3bcca7de4806c20f399be5f675e3a9",
+   "printSha256Head": "bb2147d19b9359021c182e522bd06dbeed3bcca7de4806c20f399be5f675e3a9",
+   "printEqual": true,
+   "linesOk": true,
+   "changedLines": [
+    {
+     "line": 157,
+     "kind": "trailing-line-comment"
+    }
+   ],
+   "commentOnly": true
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+   "status": "M",
+   "sourceSha256Base": "c32ab4e3dbe509413a4d31afc1bb7a68c1a5a8b2b1d21945b72deb9e54617e34",
+   "sourceSha256Head": "47435438b5d14c944e2c53a510d07b0a3253758d2628f5332123155831494d49",
+   "printSha256Base": "62f34bae1a0d61c0608a69ea8cc6832937df7cee48de8dfa5d3c843d6032322c",
+   "printSha256Head": "62f34bae1a0d61c0608a69ea8cc6832937df7cee48de8dfa5d3c843d6032322c",
+   "printEqual": true,
+   "linesOk": true,
+   "changedLines": [
+    {
+     "line": 175,
+     "kind": "trailing-line-comment"
+    }
+   ],
+   "commentOnly": true
+  }
+ ]
+}

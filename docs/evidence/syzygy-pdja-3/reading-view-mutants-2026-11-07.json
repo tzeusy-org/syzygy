@@ -1,0 +1,358 @@
+{
+  "format": "mutation-record",
+  "bead": "syzygy-pdja.3",
+  "subject": {
+    "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": "806e7a6819190430c8d074444b2589f51db57e642da1c3f949e66dfa5f4f8e78",
+    "packages/polaris-dossier/src/render.ts": "836720196c26ca91855b94b2c6b8cf43868ee559bdc003c52cdb96858e6564ac"
+  },
+  "ranAt": "1ce5ebf08f3d918d33a751b5cc58a16f110e3c9f",
+  "note": "PR 3 of 4, the reading view, evidence view, legend, one sentence and appendix (dossier spec v1.5). Each mutant replaces old with new once in the committed tree at ranAt, runs the four test files with vitest (the render through the real renderer, the site renderer's reading tests, the browser test in headless Chrome, and the page-sink test), then restores the file. Five survived the first run; four gained tests (the reading view clips the self-reported aside and the reason code; the citation pops carry the fixture's literal line and range; a block citing nothing is labeled) and the re-run killed them (rerunAfter); one is accepted as equivalent (accepted). The subject digests are of the files after the added tests, which change no source.",
+  "denominator": 23,
+  "killed": 22,
+  "acceptedEquivalent": 1,
+  "mutants": [
+    {
+      "id": "narrative-off",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "const narrative = (from: string): boolean => local !== undefined && !withheld && (from === 'index.html' || from.startsWith('deep-dives/'));",
+      "new": "const narrative = (from: string): boolean => false;",
+      "killed": true,
+      "tests": "9 failed | 83 passed (92)",
+      "testFiles": [
+        "packages/polaris-dossier/src/render.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/page-sink.test.ts"
+      ]
+    },
+    {
+      "id": "narrative-everywhere",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "const narrative = (from: string): boolean => local !== undefined && !withheld && (from === 'index.html' || from.startsWith('deep-dives/'));",
+      "new": "const narrative = (from: string): boolean => local !== undefined && !withheld;",
+      "killed": true,
+      "tests": "1 failed | 91 passed (92)",
+      "testFiles": [
+        "packages/polaris-dossier/src/render.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/page-sink.test.ts"
+      ]
+    },
+    {
+      "id": "clip-to-hidden",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "const clipped = (html: string): string => `<span class=\"visually-hidden ev\">${html}</span>`;",
+      "new": "const clipped = (html: string): string => `<span class=\"visually-hidden ev\" hidden>${html}</span>`;",
+      "killed": true,
+      "tests": "6 failed | 86 passed (92)",
+      "testFiles": [
+        "packages/polaris-dossier/src/render.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/page-sink.test.ts"
+      ]
+    },
+    {
+      "id": "mark-unclipped",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "const mark = (from: string, m: EpistemicMarking): string => (narrative(from) ? clipped(marking(m)) : marking(m));",
+      "new": "const mark = (from: string, m: EpistemicMarking): string => marking(m);",
+      "killed": true,
+      "tests": "4 failed | 88 passed (92)",
+      "testFiles": [
+        "packages/polaris-dossier/src/render.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/page-sink.test.ts"
+      ]
+    },
+    {
+      "id": "lines-dropped",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "const lines = claimId === undefined ? undefined : local.citationLines?.get(claimId)?.get(id);",
+      "new": "const lines = undefined as string | undefined;",
+      "killed": true,
+      "tests": "2 failed | 90 passed (92)",
+      "testFiles": [
+        "packages/polaris-dossier/src/render.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/page-sink.test.ts"
+      ]
+    },
+    {
+      "id": "pop-shown-always",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "a.cite:hover>.cite-pop,a.cite:focus>.cite-pop,a.cite:focus-visible>.cite-pop{display:block}",
+      "new": "a.cite:hover>.cite-pop,a.cite:focus-visible>.cite-pop{display:block}",
+      "killed": false,
+      "tests": "92 passed (92)",
+      "testFiles": [
+        "packages/polaris-dossier/src/render.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/page-sink.test.ts"
+      ],
+      "rerunAfter": {
+        "killed": false,
+        "tests": "93 passed (93)"
+      },
+      "accepted": "Equivalent for every reachable state: the mutant drops the a.cite:focus selector and keeps :hover and :focus-visible. A keyboard-focused mark matches :focus-visible; a mark focused by the pointer is under the pointer, so :hover shows the pop; the one state that tells them apart (pointer-focused, pointer moved away) is not reached, because the press that focuses a mark also follows its link."
+    },
+    {
+      "id": "pop-in-layout",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": ".cite-pop{display:none;position:absolute;",
+      "new": ".cite-pop{visibility:hidden;position:absolute;",
+      "killed": true,
+      "tests": "1 failed | 91 passed (92)",
+      "testFiles": [
+        "packages/polaris-dossier/src/render.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/page-sink.test.ts"
+      ]
+    },
+    {
+      "id": "evidence-css-off",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "  + 'main:has(#evidence-view:target) .visually-hidden.ev{position:static;width:auto;height:auto;overflow:visible;clip:auto;white-space:normal}'\n",
+      "new": "",
+      "killed": true,
+      "tests": "1 failed | 91 passed (92)",
+      "testFiles": [
+        "packages/polaris-dossier/src/render.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/page-sink.test.ts"
+      ]
+    },
+    {
+      "id": "reason-unclipped",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "reading ? ` <span class=\"unknown-words\">(${escape(b.basis)})</span>${clipped(` <span class=\"unknown-reason\">(${escape(b.unknownReason)})</span>`)}`",
+      "new": "reading ? ` <span class=\"unknown-words\">(${escape(b.basis)})</span> <span class=\"unknown-reason\">(${escape(b.unknownReason)})</span>`",
+      "killed": false,
+      "tests": "92 passed (92)",
+      "testFiles": [
+        "packages/polaris-dossier/src/render.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/page-sink.test.ts"
+      ],
+      "rerunAfter": {
+        "killed": true,
+        "tests": "1 failed | 92 passed (93)"
+      }
+    },
+    {
+      "id": "lead-off",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "const lead = reading && b.marking === 'unknown' ? '<span class=\"not-established\">Not established.</span> ' : '';",
+      "new": "const lead = '';",
+      "killed": true,
+      "tests": "8 failed | 84 passed (92)",
+      "testFiles": [
+        "packages/polaris-dossier/src/render.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/page-sink.test.ts"
+      ]
+    },
+    {
+      "id": "self-reported-unclipped",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "const selfReported = reading ? clipped(' (Inferred, self-reported)') : ' (Inferred, self-reported)';",
+      "new": "const selfReported = ' (Inferred, self-reported)';",
+      "killed": false,
+      "tests": "92 passed (92)",
+      "testFiles": [
+        "packages/polaris-dossier/src/render.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/page-sink.test.ts"
+      ],
+      "rerunAfter": {
+        "killed": true,
+        "tests": "1 failed | 92 passed (93)"
+      }
+    },
+    {
+      "id": "evidence-note-off",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "const evidence = reading ? clipped(` <span class=\"evidence-note\">${escape(evidenceNote(b, kind))}</span>`) : '';",
+      "new": "const evidence = '';",
+      "killed": true,
+      "tests": "2 failed | 90 passed (92)",
+      "testFiles": [
+        "packages/polaris-dossier/src/render.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/page-sink.test.ts"
+      ]
+    },
+    {
+      "id": "evidence-kind-wrong",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "const kind = p.sourceIds.length > 0 ? 'anchored' : 'labeled';",
+      "new": "const kind = 'anchored';",
+      "killed": false,
+      "tests": "92 passed (92)",
+      "testFiles": [
+        "packages/polaris-dossier/src/render.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/page-sink.test.ts"
+      ],
+      "rerunAfter": {
+        "killed": true,
+        "tests": "1 failed | 92 passed (93)"
+      }
+    },
+    {
+      "id": "note-label-wrong",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "const parts = [`label ${MARKING_LABEL[block.marking as EpistemicMarking]}`,",
+      "new": "const parts = [`label Inferred`,",
+      "killed": true,
+      "tests": "1 failed | 91 passed (92)",
+      "testFiles": [
+        "packages/polaris-dossier/src/render.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/page-sink.test.ts"
+      ]
+    },
+    {
+      "id": "legend-off",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "const legended = (path: string, main: string): string => narrative(path) ? `${READING_LEGEND}${main}`",
+      "new": "const legended = (path: string, main: string): string => false ? `${READING_LEGEND}${main}`",
+      "killed": true,
+      "tests": "3 failed | 89 passed (92)",
+      "testFiles": [
+        "packages/polaris-dossier/src/render.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/page-sink.test.ts"
+      ]
+    },
+    {
+      "id": "run-sentence-off",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "disclosure: (path: string) => `<p class=\"run-sentence\">${escape(runSentence)} <a href=",
+      "new": "disclosure: (path: string) => `<p class=\"x\">${escape(runSentence)} <a href=",
+      "killed": true,
+      "tests": "53 failed | 30 passed | 9 skipped (92)",
+      "testFiles": [
+        "packages/polaris-dossier/src/render.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/page-sink.test.ts"
+      ]
+    },
+    {
+      "id": "disclosure-ids-off",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": " data-disclosure-ids=\"${escape(local.disclosure.map(item => item.id).join(' '))}\"`,",
+      "new": "`,",
+      "killed": true,
+      "tests": "52 failed | 31 passed | 9 skipped (92)",
+      "testFiles": [
+        "packages/polaris-dossier/src/render.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/page-sink.test.ts"
+      ]
+    },
+    {
+      "id": "tally-off",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "${tally.length === 0 ? '' : ` It has ${tally.join(' and ')}.`}",
+      "new": "${''}",
+      "killed": true,
+      "tests": "1 failed | 91 passed (92)",
+      "testFiles": [
+        "packages/polaris-dossier/src/render.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/page-sink.test.ts"
+      ]
+    },
+    {
+      "id": "appendix-counts-off",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "${countRows.map(([id, words]) => `<li data-count=\"${id}\">${escape(words)}</li>`).join('')}",
+      "new": "${''}",
+      "killed": true,
+      "tests": "1 failed | 91 passed (92)",
+      "testFiles": [
+        "packages/polaris-dossier/src/render.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/page-sink.test.ts"
+      ]
+    },
+    {
+      "id": "appendix-disclosure-off",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "${disclosureList(local.disclosure, escape)}",
+      "new": "${''}",
+      "killed": true,
+      "tests": "2 failed | 90 passed (92)",
+      "testFiles": [
+        "packages/polaris-dossier/src/render.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/page-sink.test.ts"
+      ]
+    },
+    {
+      "id": "adapter-lines-off",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "if (lines.size > 0) citationLines.set(claimId,",
+      "new": "if (false) citationLines.set(claimId,",
+      "killed": true,
+      "tests": "1 failed | 91 passed (92)",
+      "testFiles": [
+        "packages/polaris-dossier/src/render.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/page-sink.test.ts"
+      ]
+    },
+    {
+      "id": "adapter-line-range",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "startLine === endLine ? `line ${startLine}` : `lines ${startLine}\\u2013${endLine}`",
+      "new": "`line ${startLine}`",
+      "killed": false,
+      "tests": "92 passed (92)",
+      "testFiles": [
+        "packages/polaris-dossier/src/render.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/page-sink.test.ts"
+      ],
+      "rerunAfter": {
+        "killed": true,
+        "tests": "1 failed | 92 passed (93)"
+      }
+    },
+    {
+      "id": "check-run-sentence",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "class=\"run-sentence\"",
+      "new": "class=\"run-sentence-x\"",
+      "killed": true,
+      "tests": "52 failed | 31 passed | 9 skipped (92)",
+      "testFiles": [
+        "packages/polaris-dossier/src/render.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/page-sink.test.ts"
+      ]
+    }
+  ]
+}

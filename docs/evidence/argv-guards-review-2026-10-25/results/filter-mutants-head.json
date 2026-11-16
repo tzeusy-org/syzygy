@@ -1,0 +1,64 @@
+{
+ "tree": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-524/clone",
+ "head": "43ae35febce90724228e2e6001ee0b6e4c98597b",
+ "results": [
+  {
+   "id": "R-IF1-into-island-never-recorded",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 3 passed (4)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > reaches the island from the consent package root, which the CLI does not import"
+   ],
+   "timeouts": 0,
+   "seconds": 2.6,
+   "counts": [
+    {
+     "file": "packages/polaris-generation-core/src/island-boundary.test.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/island-boundary.test.ts",
+     "old": "  return { reachable, intoIsland: edges.filter((edge) => island.has(edge.to) && !island.has(edge.from)), unresolved };",
+     "new": "  return { reachable, intoIsland: edges.filter(() => false), unresolved };"
+    }
+   ]
+  },
+  {
+   "id": "R-IF2-into-island-from-island-counted",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  4 passed (4)"
+   ],
+   "testFiles": [
+    "Test Files  1 passed (1)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 3.7,
+   "counts": [
+    {
+     "file": "packages/polaris-generation-core/src/island-boundary.test.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/island-boundary.test.ts",
+     "old": "  return { reachable, intoIsland: edges.filter((edge) => island.has(edge.to) && !island.has(edge.from)), unresolved };",
+     "new": "  return { reachable, intoIsland: edges.filter((edge) => island.has(edge.to)), unresolved };"
+    }
+   ]
+  }
+ ]
+}

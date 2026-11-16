@@ -1,0 +1,109 @@
+{
+ "base": "bb05df7ea409039c5a6465e7179f9d0c66931ad3",
+ "head": "f207d758eb11830eda2831caa911011e84a966b7",
+ "toolSha256": "f27ab213f847ca84bea71d0a9c3d37c9eb267204acfe4ec83d4e68e2e9959e17",
+ "probes": [
+  "packages/support/src/new.ts",
+  "packages/support/package.json",
+  "packages/support/tsconfig.json",
+  "packages/support",
+  "packages/supportive/x.ts",
+  "packages/support-x/src/a.ts",
+  "packages/polaris-generation-core/src/index.ts",
+  "packages/polaris-generation-consent/src/index.ts",
+  "apps/syzygy/src/main.ts"
+ ],
+ "paths": 5598,
+ "pathsSha256": "06ffe323e058af11f1f8c75974b89ba1bb3a705069850c57792cd906a73e7fee",
+ "refused": {
+  "base": 319,
+  "head": 328
+ },
+ "probeDecisions": {
+  "packages/support/src/new.ts": [
+   "accepted",
+   "refused"
+  ],
+  "packages/support/package.json": [
+   "accepted",
+   "refused"
+  ],
+  "packages/support/tsconfig.json": [
+   "accepted",
+   "refused"
+  ],
+  "packages/support": [
+   "accepted",
+   "accepted"
+  ],
+  "packages/supportive/x.ts": [
+   "accepted",
+   "accepted"
+  ],
+  "packages/support-x/src/a.ts": [
+   "accepted",
+   "accepted"
+  ],
+  "packages/polaris-generation-core/src/index.ts": [
+   "accepted",
+   "accepted"
+  ],
+  "packages/polaris-generation-consent/src/index.ts": [
+   "accepted",
+   "accepted"
+  ],
+  "apps/syzygy/src/main.ts": [
+   "accepted",
+   "accepted"
+  ]
+ },
+ "differing": [
+  [
+   "packages/support/package.json",
+   "accepted",
+   "refused"
+  ],
+  [
+   "packages/support/src/deep-freeze.test.ts",
+   "accepted",
+   "refused"
+  ],
+  [
+   "packages/support/src/deep-freeze.ts",
+   "accepted",
+   "refused"
+  ],
+  [
+   "packages/support/src/index.ts",
+   "accepted",
+   "refused"
+  ],
+  [
+   "packages/support/src/new.ts",
+   "accepted",
+   "refused"
+  ],
+  [
+   "packages/support/src/sha256.test.ts",
+   "accepted",
+   "refused"
+  ],
+  [
+   "packages/support/src/sha256.ts",
+   "accepted",
+   "refused"
+  ],
+  [
+   "packages/support/src/support-purity.test.ts",
+   "accepted",
+   "refused"
+  ],
+  [
+   "packages/support/tsconfig.json",
+   "accepted",
+   "refused"
+  ]
+ ],
+ "onlySupportDiffers": true,
+ "everySupportPathDiffers": true
+}

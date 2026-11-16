@@ -1,0 +1,12 @@
+@syzygy/app
+@syzygy/cap1-conformance
+@syzygy/cap1-core
+@syzygy/cap1-daemon
+@syzygy/cap1-system
+@syzygy/http-host
+@syzygy/polaris-dossier
+@syzygy/polaris-generation-consent
+@syzygy/polaris-generation-core
+@syzygy/support
+@syzygy/three-surface-poc-app
+@syzygy/three-surface-poc-core

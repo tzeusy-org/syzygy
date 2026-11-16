@@ -1,0 +1,75 @@
+{
+ "batch": "DETACHX",
+ "version": "head",
+ "param": null,
+ "n": 1,
+ "scriptSha256": "72a0fabdd0dd12f85ad35fde4b3ee032125757d5276b85802d76fdf5288f0195",
+ "command": "python3 -I scripts/measure_vitest_test_durations.py . --file packages/polaris-generation-consent/src/package-reader.test.ts --project @syzygy/polaris-generation-consent --mode alone --runs 1 --out <tmp>/measure-out.json --profile",
+ "sent": [],
+ "events": [],
+ "scriptExitedAtSeconds": 20.757,
+ "exitCode": 0,
+ "claimedExit": 0,
+ "exitAsClaimed": true,
+ "descendantsSeen": 2,
+ "seenOnlyByCwd": 2,
+ "vitestSeen": true,
+ "npxSeen": true,
+ "treeAfterExit": "",
+ "survivors": {},
+ "recordWritten": true,
+ "recordRuns": 1,
+ "recordTests": 0,
+ "recordProfileRows": 0,
+ "recordExitCode": 0,
+ "marks": [
+  {
+   "what": "start",
+   "pid": 174039,
+   "pgid": 174039,
+   "sid": 174039,
+   "t": 1792865702.7609003,
+   "mode": "detachx"
+  },
+  {
+   "what": "child",
+   "pid": 174087,
+   "pgid": 174087,
+   "sid": 174087,
+   "t": 1792865702.762228,
+   "holds": "stdout"
+  },
+  {
+   "what": "parent-forked",
+   "pid": 174039,
+   "pgid": 174039,
+   "sid": 174039,
+   "t": 1792865702.7626836,
+   "child": 174087
+  },
+  {
+   "what": "parent-exit",
+   "pid": 174039,
+   "pgid": 174039,
+   "sid": 174039,
+   "t": 1792865702.762796
+  },
+  {
+   "what": "child-exit",
+   "pid": 174087,
+   "pgid": 174087,
+   "sid": 174087,
+   "t": 1792865722.7819471
+  }
+ ],
+ "scriptWrites": null,
+ "tmpdirLeft": [
+  "bin",
+  "mark.jsonl",
+  "measure-out.json",
+  "script.log"
+ ],
+ "trace": [],
+ "outputTail": "run 1: exit 0, 20.2 s, load1 {'start': 43.03, 'end': 46.56, 'min': 43.03, 'max': 48.26, 'samples': 5}, 0 tests of the file, 0 failed\n",
+ "passes": true
+}

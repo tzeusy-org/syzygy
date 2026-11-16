@@ -1,0 +1,54 @@
+{
+ "batch": "LOCK",
+ "version": "r1",
+ "param": null,
+ "n": 1,
+ "scriptSha256": "920c5f120209904b37cfe14320ea00edfa18eafbda12fd7dcb02ec8fcf4f1e97",
+ "command": "python3 -I <tools>/r1_measure_vitest_test_durations.py . --file packages/polaris-generation-consent/src/package-reader.test.ts --project @syzygy/polaris-generation-consent --mode alone --runs 1 --out <tmp>/measure-out.json --profile",
+ "sent": [
+  {
+   "t": 2.0185,
+   "signal": "SIGTERM",
+   "to": "pid"
+  }
+ ],
+ "events": [
+  {
+   "t": 1.4432,
+   "what": "vitest worker seen"
+  },
+  {
+   "t": 2.0185,
+   "what": "index.lock created"
+  },
+  {
+   "t": 5.9819,
+   "what": "index.lock removed by the probe"
+  }
+ ],
+ "scriptExitedAtSeconds": 2.366,
+ "exitCode": 1,
+ "claimedExit": 143,
+ "exitAsClaimed": false,
+ "descendantsSeen": 5,
+ "seenOnlyByCwd": 1,
+ "vitestSeen": true,
+ "npxSeen": false,
+ "treeAfterExit": " M packages/polaris-generation-consent/src/package-reader.test.ts\n M packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts\n",
+ "survivors": {},
+ "recordWritten": false,
+ "recordRuns": null,
+ "recordTests": null,
+ "recordProfileRows": null,
+ "recordExitCode": null,
+ "marks": [],
+ "scriptWrites": null,
+ "tmpdirLeft": [
+  "node-compile-cache",
+  "script.log"
+ ],
+ "trace": [],
+ "outputTail": "lib/python3.10/subprocess.py\", line 2021, in _communicate\n    ready = selector.select(timeout)\n  File \"/home/tze/.pyenv/versions/3.10.12/lib/python3.10/selectors.py\", line 416, in select\n    fd_event_list = self._selector.poll(timeout)\n  File \"/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520c/tools/r1_measure_vitest_test_durations.py\", line 27, in <lambda>\n    for _signal in (signal.SIGTERM, signal.SIGHUP): signal.signal(_signal, lambda number, _frame: sys.exit(128 + number))\nSystemExit: 143\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520c/tools/r1_measure_vitest_test_durations.py\", line 133, in <module>\n    out['runs'].append(one_run(i))\n  File \"/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520c/tools/r1_measure_vitest_test_durations.py\", line 104, in one_run\n    if written: subprocess.run(['git', 'checkout', '--', *written], cwd=tree, check=True)\n  File \"/home/tze/.pyenv/versions/3.10.12/lib/python3.10/subprocess.py\", line 526, in run\n    raise CalledProcessError(retcode, process.args,\nsubprocess.CalledProcessError: Command '['git', 'checkout', '--', 'packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts', 'packages/polaris-generation-consent/src/package-reader.test.ts']' returned non-zero exit status 128.\n",
+ "exercised": true,
+ "passes": false
+}

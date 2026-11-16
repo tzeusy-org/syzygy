@@ -1,0 +1,105 @@
+{
+ "subject": "how syzygy-bpyt.4.2 runs POC tools: from the product build, or from source under Node type stripping",
+ "decision": "the product build, from nothing: scripts/clean_build.mjs removes the dist of every project tsc -b will build, then builds",
+ "decidedBy": "the coordinator's ruling (coord-9297eba3), recorded as a comment on bead syzygy-bpyt.4.2 on 2026-10-28; the bead allowed the source path only if measured smaller",
+ "inputs": {
+  "source-path-census-a1f794c0.json": "dfddee428d99742ca7dd7d2eafd953a97fa04ff4da227e406c8a44262b5f8503",
+  "stale-dist-8322df4f.json": "03f9540daf14933f16aeb267b71ebefd318e91125d8b8e4f1722edff17955ae3",
+  "launch-timing-a1f794c0.json": "05b4ab2d855081c8f55e441eea8b73b142098cdc0b7c11f151c5fdbb4c14743c",
+  "emit-8322df4f.json": "f410ad7407e64adacb32a78b52c1d46baaec3c0e7e01103f38e6451caa57c611"
+ },
+ "sourcePath": {
+  "relativeJsSpecifiersToRewrite": 1313,
+  "inFiles": 405,
+  "ofFiles": 521,
+  "constructorParameterPropertiesToRewrite": 33,
+  "inFilesWithParameterProperties": 18,
+  "atCommit": "a1f794c06115c377e841f6ae8ad42816ab8c10ca",
+  "alsoNeeds": "restart.ts to accept apps/three-surface-poc/src/main.ts where it verifies apps/three-surface-poc/dist/main.js, which changes what a refusal accepts (GP-Q0's stop clause)"
+ },
+ "productPath": {
+  "staleDistArms": [
+   {
+    "build": "incremental tsc -b",
+    "left": {
+     "poisonedStillPoisoned": {
+      "apps/three-surface-poc/dist/main.js": true,
+      "packages/support/dist/index.js": true
+     },
+     "orphanStillPresent": true,
+     "deletedStillMissing": true
+    },
+    "distIdenticalToClean": false,
+    "probeUnchanged": false
+   },
+   {
+    "build": "tsc -b --force (build:poc before this change)",
+    "left": {
+     "poisonedStillPoisoned": {
+      "apps/three-surface-poc/dist/main.js": false,
+      "packages/support/dist/index.js": false
+     },
+     "orphanStillPresent": true,
+     "deletedStillMissing": false
+    },
+    "distIdenticalToClean": false,
+    "probeUnchanged": true
+   },
+   {
+    "build": "npm run build:poc (this checkout)",
+    "left": {
+     "poisonedStillPoisoned": {
+      "apps/three-surface-poc/dist/main.js": false,
+      "packages/support/dist/index.js": false
+     },
+     "orphanStillPresent": false,
+     "deletedStillMissing": false
+    },
+    "distIdenticalToClean": true,
+    "probeUnchanged": true
+   }
+  ],
+  "buildPocSeconds": {
+   "base": [
+    18.34,
+    19.36,
+    20.96
+   ],
+   "head": [
+    8.71,
+    10.19,
+    8.59
+   ]
+  },
+  "buildPocLoad1": {
+   "base": [
+    26.27,
+    25.81,
+    27.15
+   ],
+   "head": [
+    26.2,
+    27.73,
+    28.37
+   ]
+  },
+  "buildPocCommits": {
+   "base": "b10e4da9a57a472cb6820ef7dea0a05a5dddc0ce",
+   "head": "a1f794c06115c377e841f6ae8ad42816ab8c10ca"
+  },
+  "emittedJs": {
+   "base": {
+    "commit": "b10e4da9a57a472cb6820ef7dea0a05a5dddc0ce",
+    "files": 520,
+    "tests": 264,
+    "sha256": "ceb1a844d33fc6ca68f85580f013614f60c53f7a841905d32b0add68dab18e7b"
+   },
+   "head": {
+    "commit": "8322df4f49280b989d8a959f8a9a4348750cd254",
+    "files": 253,
+    "tests": 0,
+    "sha256": "fc388870d4f5d50273c90bd4a85fc25530080d2b609f57e73ca3e5c24ef7d6a7"
+   }
+  }
+ }
+}

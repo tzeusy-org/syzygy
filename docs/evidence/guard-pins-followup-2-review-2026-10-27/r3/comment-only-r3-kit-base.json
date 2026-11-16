@@ -1,0 +1,19 @@
+{
+ "a": "d38d7a3c:packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+ "b": "00b7dcf7:packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+ "aSha256": "ed67106fe74333c97f419f4a52f14f75bfaa34bbfa5b41f33c4f1b6545895731",
+ "bSha256": "e07c486b52889129547d5edbc4c2cf89250c8c016085501dbc59747e38f5dc73",
+ "bytesDiffer": true,
+ "tokens": [
+  1287,
+  1287
+ ],
+ "tokensEqual": true,
+ "emitEqual": true,
+ "emitSha256": [
+  "822c6f7935d1f121c9b6651e9a00f5ef9f47d7bd1ef3bed857da464a4c1a910e",
+  "822c6f7935d1f121c9b6651e9a00f5ef9f47d7bd1ef3bed857da464a4c1a910e"
+ ],
+ "typescript": "5.9.3",
+ "esbuild": "0.28.2"
+}

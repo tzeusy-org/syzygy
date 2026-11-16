@@ -1,0 +1,23 @@
+base sha256 ea6aa505e8bd77004c4a5910dbe27a58588c668d370f7978660ba1d738b8b3c8 head sha256 ff2e1d5622da2e4598b7d7a5592d980ee7e2e0b2fc13854c6486e82aab332cd9
+base lines 1055 head lines 1060
+closers of the form "}, N_000);" in base: 0 in head: 16
+comment block lines dropped: 4 (+1 blank) closers reverted: 16
+METHOD 1 reversed head == base bytes: True ea6aa505e8bd77004c4a5910dbe27a58588c668d370f7978660ba1d738b8b3c8
+METHOD 2 difflib opcodes: 17 {'comment-insert': 1, 'closer-replace': 16} other: 0
+METHOD 3 placement: kinds {'it'}
+  L108 45000 ms it @L100: package admission reader returns a record only for an instance that an act record names by path and digest
+  L138 10000 ms it @L118: package admission reader refuses the whole read on unknown shapes instead of guessing
+  L256 15000 ms it @L252: public-source policy act recognises the recorder's record by its exact path and format, in force from its instant
+  L324 15000 ms it @L321: public-source policy act refuses the recorder's file when its act type, identity, title or provenance is not the recorder's form
+  L365 40000 ms it @L358: egress version 2 record is read from the recorder's act: version 2 supersedes version 1 once in force
+  L372 20000 ms it @L366: egress version 2 record leaves version 1 standing before the version 2 act takes effect, and with no version 1 act at all
+  L378 45000 ms it @L373: egress version 2 record refuses when version 2 did not take effect strictly after version 1: the same instant, or earlier
+  L440 40000 ms it @L422: egress version 2 record the RFC5-14 class amendment version 2 depends on is required: no record, an edited module, a wrong form, or an amendment later than version 2 all refuse
+  L495 25000 ms it @L485: egress version 2 record withdrawal and forgery forms the reader does not define does not refuse the recorders' other act records or the aggregate acceptance record they append to
+  L538 45000 ms it @L534: screening scope version 2 policy act counts the version 2 act when the policy carries the version 2 bytes, and the version 1 act goes quiet
+  L560 20000 ms it @L554: screening scope version 2 policy act a version 2 act not yet in force leaves version 1 in force, in both views
+  L578 15000 ms it @L571: screening scope version 2 policy act refuses an unlisted record that names the policy: another file, a subdirectory, a loose field spelling, a Unicode-hyphen identity
+  L707 40000 ms it @L694: strict act reads policy chain: absent without acts; refused for a missing version 1, equal or earlier instants, equal arguments, a supersession that does not name version 1, or other policy bytes
+  L776 15000 ms it @L768: round-3 review notes folds soft hyphens, zero-width spaces, underscores and spaces before matching a withdrawal stem (N-2)
+  L801 15000 ms it @L791: round-3 review notes takes a time: a strict read of an act recorded after now is absent (N-4)
+  L1058 50000 ms it @L1047: the policy port and the strict policy chain agree on every world in the fixture set, at every instant

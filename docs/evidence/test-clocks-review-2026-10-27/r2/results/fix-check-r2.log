@@ -1,0 +1,31 @@
+{"variant": "control", "status": "passed", "failure": ""}
+{"variant": "R1-flag-between-branches", "status": "failed", "failure": "AssertionError: expected [ Array(1) ] to deeply equal []"}
+{"variant": "R2-flag-createRequire-before-daemon", "status": "failed", "failure": "AssertionError: expected [ Array(1) ] to deeply equal []"}
+{"variant": "R3-runtime-hook", "status": "failed", "failure": "AssertionError: expected [ Array(1) ] to deeply equal []"}
+{"variant": "S1-else-if-flag-after-dossier", "status": "failed", "failure": "AssertionError: expected false to be true // Object.is equality"}
+{"variant": "S2-same-line-if-after-dossier", "status": "failed", "failure": "AssertionError: expected [ Array(1) ] to deeply equal []"}
+{"variant": "S3-else-if-flag-after-polaris", "status": "failed", "failure": "AssertionError: expected false to be true // Object.is equality"}
+{"variant": "S4-else-runtime-hook-after-dossier", "status": "failed", "failure": "AssertionError: expected false to be true // Object.is equality"}
+{"variant": "S5-else-createRequire-flag-after-polaris", "status": "failed", "failure": "AssertionError: expected false to be true // Object.is equality"}
+{"variant": "S6-misindented-close-after-dossier", "status": "failed", "failure": "AssertionError: expected [ Array(1) ] to deeply equal []"}
+{"variant": "E-comment-in-branch", "status": "passed", "failure": ""}
+{"variant": "E-renamed-binding", "status": "passed", "failure": ""}
+{"variant": "E-type-only-import", "status": "failed", "failure": "AssertionError: expected [ Array(1) ] to deeply equal []"}
+{"variant": "C1-comment-outside-branches", "status": "failed", "failure": "AssertionError: expected [ Array(1) ] to deeply equal []"}
+{"variant": "L1-else-if-chain", "status": "passed", "failure": ""}
+{"variant": "L2-nested-function-in-dossier", "status": "passed", "failure": ""}
+{"variant": "L3-nested-try-in-polaris", "status": "passed", "failure": ""}
+{"variant": "E-branch-swap", "status": "passed", "failure": ""}
+{"variant": "D1-polaris-after-daemon", "status": "failed", "failure": "AssertionError: expected 8597 to be less than or equal to 8036"}
+{"variant": "lane:P-static", "status": "failed", "failure": "AssertionError: expected [ Array(1) ] to deeply equal []"}
+{"variant": "lane:P-before-branches", "status": "failed", "failure": "AssertionError: expected [ Array(1) ] to deeply equal []"}
+{"variant": "lane:P-daemon-dynamic", "status": "failed", "failure": "AssertionError: expected [ Array(1) ] to deeply equal []"}
+{"variant": "lane:P-help-branch", "status": "failed", "failure": "AssertionError: expected [ Array(1) ] to deeply equal []"}
+{"variant": "lane:P-invalid-branch", "status": "failed", "failure": "AssertionError: expected [ Array(1) ] to deeply equal []"}
+{"variant": "lane:P-start-failure", "status": "failed", "failure": "AssertionError: expected [ Array(1) ] to deeply equal []"}
+{"variant": "lane:P-entry-read", "status": "failed", "failure": "AssertionError: expected [ Array(1) ] to deeply equal []"}
+{"variant": "lane:P-shutdown", "status": "failed", "failure": "AssertionError: expected [ Array(1) ] to deeply equal []"}
+{"variant": "lane:P-close-failure", "status": "failed", "failure": "AssertionError: expected [ Array(1) ] to deeply equal []"}
+{"variant": "V1-no-naming-line", "status": "failed", "failure": "AssertionError: expected 0 to be greater than 0"}
+{"variant": "Q1-template-specifier-between-branches", "status": "failed", "failure": "AssertionError: expected [ Array(1) ] to deeply equal []"}
+{"variant": "Z3-renamed-opening-and-top-level-load", "status": "failed", "failure": "AssertionError: expected [ +0, 1 ] to deeply equal [ 1, 1 ]"}

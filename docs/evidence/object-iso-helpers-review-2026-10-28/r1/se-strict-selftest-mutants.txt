@@ -1,0 +1,3 @@
+G1 guard removed: exit 1 KILLED |   if (compareFiles(`${base}export const s = 'isObj';\n`, `${head}export const s = 'isRecord';\n`, 'x.ts').equal !== false) throw new Error('selftest: a string l
+G2 blank-line filter restored: exit 1 KILLED |   if (compareFiles(tbase, thead.replace('a\n\nb', 'a\nb'), 'x.ts').equal !== false) throw new Error('selftest: a blank line removed inside a template literal is
+restored: 0 site-equivalence selftest ok

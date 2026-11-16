@@ -1,0 +1,25 @@
+{
+ "probe": "foreign_owner_probe.py",
+ "namespace": "4026531836",
+ "deadPid": 3520297,
+ "foreign": "/usr/share/doc/bash",
+ "results": {
+  "reviewed": {
+   "exit": 0,
+   "stdout": "{\"uidSeen\":65534,\"getuid\":1000,\"entriesInsideBefore\":13,\"entriesInsideAfter\":13,\"left\":[\"syzygy-poc-surface-fixture-p3520297-n4026531836-ROOT01\"]}",
+   "stderr": "",
+   "rmSyncCalls": [
+    "/tmp/r509b-10/syzygy-poc-surface-fixture-p3520297-n4026531836-MINE01"
+   ]
+  },
+  "uid-guard-dropped": {
+   "exit": 0,
+   "stdout": "{\"uidSeen\":65534,\"getuid\":1000,\"entriesInsideBefore\":13,\"entriesInsideAfter\":13,\"left\":[\"syzygy-poc-surface-fixture-p3520297-n4026531836-ROOT01\"]}",
+   "stderr": "",
+   "rmSyncCalls": [
+    "/tmp/r509b-10/syzygy-poc-surface-fixture-p3520297-n4026531836-MINE01",
+    "/tmp/r509b-10/syzygy-poc-surface-fixture-p3520297-n4026531836-ROOT01"
+   ]
+  }
+ }
+}

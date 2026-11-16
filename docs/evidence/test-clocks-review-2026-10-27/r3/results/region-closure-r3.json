@@ -1,0 +1,68 @@
+{
+ "EDGE_TRIM_CPU_MS": {
+  "root": "packages/polaris-generation-core/src/dossier-profile.ts",
+  "closure": [
+   "packages/polaris-generation-core/src/closed-schema.ts",
+   "packages/polaris-generation-core/src/dossier-profile.ts",
+   "packages/polaris-generation-core/src/draft-model.ts",
+   "packages/polaris-generation-core/src/generation-source.ts",
+   "packages/polaris-generation-core/src/public-source-classification.ts",
+   "packages/polaris-generation-core/src/secret-redaction.ts",
+   "packages/polaris-generation-core/src/source-model.ts",
+   "packages/polaris-generation-core/src/topics.ts",
+   "packages/support/src/deep-freeze.ts",
+   "packages/support/src/index.ts",
+   "packages/support/src/sha256.ts"
+  ],
+  "differs": {
+   "722231fe": [
+    "packages/polaris-generation-core/src/dossier-profile.ts",
+    "packages/polaris-generation-core/src/generation-source.ts",
+    "packages/polaris-generation-core/src/public-source-classification.ts",
+    "packages/polaris-generation-core/src/secret-redaction.ts",
+    "packages/support/src/deep-freeze.ts",
+    "packages/support/src/index.ts",
+    "packages/support/src/sha256.ts"
+   ],
+   "bb5df680": [
+    "packages/polaris-generation-core/src/dossier-profile.ts",
+    "packages/polaris-generation-core/src/generation-source.ts",
+    "packages/polaris-generation-core/src/public-source-classification.ts",
+    "packages/polaris-generation-core/src/secret-redaction.ts",
+    "packages/support/src/deep-freeze.ts",
+    "packages/support/src/index.ts",
+    "packages/support/src/sha256.ts"
+   ]
+  }
+ },
+ "HOSTILE_LINE_CPU_MS": {
+  "root": "packages/polaris-generation-core/src/excerpt.ts",
+  "closure": [
+   "packages/polaris-generation-core/src/excerpt.ts"
+  ],
+  "differs": {
+   "722231fe": [],
+   "bb5df680": []
+  }
+ },
+ "TAG_SCAN_CPU_MS": {
+  "root": "packages/three-surface-poc-core/src/test-artifact-verification.ts",
+  "closure": [
+   "packages/three-surface-poc-core/src/test-artifact-verification.ts"
+  ],
+  "differs": {
+   "722231fe": [],
+   "bb5df680": []
+  }
+ },
+ "ATTRIBUTE_SCAN_CPU_MS": {
+  "root": "packages/three-surface-poc-core/src/test-artifact-verification.ts",
+  "closure": [
+   "packages/three-surface-poc-core/src/test-artifact-verification.ts"
+  ],
+  "differs": {
+   "722231fe": [],
+   "bb5df680": []
+  }
+ }
+}

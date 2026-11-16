@@ -1,0 +1,33 @@
+{
+  "A": {
+    "commit": "ecea355ba96b0082ad8aad11e9799518f87c2e19",
+    "exit": 0,
+    "load1": "24.01",
+    "distDirs": 12
+  },
+  "B": {
+    "commit": "191d82779ea07f45be612b00ff3cafc9aa7446b8",
+    "exit": 0,
+    "load1": "25.91",
+    "distDirs": 12
+  },
+  "nonTest": {
+    "A": 1028,
+    "B": 1028,
+    "identical": 1028,
+    "differ": [],
+    "onlyA": [],
+    "onlyB": []
+  },
+  "test": {
+    "A": 1052,
+    "B": 1052,
+    "differ": [
+      "packages/support/dist/support-purity.test.js",
+      "packages/support/dist/support-purity.test.js.map"
+    ],
+    "onlyA": [],
+    "onlyB": []
+  },
+  "statusAfter": ""
+}

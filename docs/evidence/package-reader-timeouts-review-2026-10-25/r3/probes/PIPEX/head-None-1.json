@@ -1,0 +1,53 @@
+{
+ "batch": "PIPEX",
+ "version": "head",
+ "param": null,
+ "n": 1,
+ "scriptSha256": "72a0fabdd0dd12f85ad35fde4b3ee032125757d5276b85802d76fdf5288f0195",
+ "command": "python3 -I scripts/measure_vitest_test_durations.py . --file packages/polaris-generation-consent/src/package-reader.test.ts --project @syzygy/polaris-generation-consent --mode alone --runs 1 --out <tmp>/measure-out.json --profile",
+ "sent": [],
+ "events": [],
+ "scriptExitedAtSeconds": 0.596,
+ "exitCode": 0,
+ "claimedExit": 0,
+ "exitAsClaimed": true,
+ "descendantsSeen": 2,
+ "seenOnlyByCwd": 1,
+ "vitestSeen": false,
+ "npxSeen": false,
+ "treeAfterExit": "",
+ "survivors": {},
+ "recordWritten": true,
+ "recordRuns": 1,
+ "recordTests": 0,
+ "recordProfileRows": 0,
+ "recordExitCode": 0,
+ "marks": [
+  {
+   "what": "start",
+   "pid": 160852,
+   "pgid": 160852,
+   "sid": 160852,
+   "t": 1792865669.5256782,
+   "mode": "pipex"
+  },
+  {
+   "what": "pipex-done",
+   "pid": 160852,
+   "pgid": 160852,
+   "sid": 160852,
+   "t": 1792865669.5841057,
+   "blocks": 512
+  }
+ ],
+ "scriptWrites": null,
+ "tmpdirLeft": [
+  "bin",
+  "mark.jsonl",
+  "measure-out.json",
+  "script.log"
+ ],
+ "trace": [],
+ "outputTail": "run 1: exit 0, 0.2 s, load1 {'start': 38.19, 'end': 38.19, 'min': 38.19, 'max': 38.19, 'samples': 1}, 0 tests of the file, 0 failed\n",
+ "passes": true
+}

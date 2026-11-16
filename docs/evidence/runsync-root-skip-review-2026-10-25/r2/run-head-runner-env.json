@@ -1,0 +1,156 @@
+{
+ "tool": "rev-525b/tools/probe.py",
+ "toolSha256": "aa58085d9eb7dbdbfb93b394ab806c9c14d42da14e1102a155fc82f05d98ea67",
+ "case": "head-runner-env",
+ "commit": "7459cc7585205e270f90173737c6d59786af650a",
+ "files": {},
+ "edits": [],
+ "env": {
+  "SYZYGY_PORT": "notaport",
+  "SYZYGY_STATE_DIR": "/nonexistent-r525b/state",
+  "SYZYGY_OBSERVED_ROOT": "/nonexistent-r525b"
+ },
+ "filters": [
+  "daemon-entry-unchanged"
+ ],
+ "expect": "pass",
+ "run": {
+  "command": "npx vitest run --config packages/cap1-system/vitest.config.ts daemon-entry-unchanged --reporter=json --outputFile=<tmp>/report.json",
+  "exitCode": 0,
+  "wallSeconds": 11.4,
+  "load1": {
+   "start": 31.09,
+   "end": 36.39
+  },
+  "deadlineHit": false,
+  "samples": 17,
+  "meanSampleIntervalSeconds": 0.67,
+  "port7477Before": [],
+  "port7477Seen": [],
+  "killedOn7477": [],
+  "ownListeningPorts": [],
+  "processesSeen": 27,
+  "survivors": {},
+  "tmpLeftoversBeforeRemoval": [
+   "node-compile-cache",
+   "report.json",
+   "vitest.log"
+  ],
+  "logTail": "JSON report written to <tmp>/report.json\n",
+  "tests": [
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged [\"--help\"] prints the usage and exits 0",
+    "status": "passed",
+    "durationMs": 620,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged [\"-h\"] prints the usage and exits 0",
+    "status": "passed",
+    "durationMs": 384,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged [\"--help\",\"dossier\"] prints the usage and exits 0",
+    "status": "passed",
+    "durationMs": 235,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged [\"--bogus\"] is refused with exit 1 and the same message",
+    "status": "passed",
+    "durationMs": 438,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged [\"--port\",\"0\",\"dossier\"] is refused with exit 1 and the same message",
+    "status": "passed",
+    "durationMs": 294,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged [\"Dossier\"] is refused with exit 1 and the same message",
+    "status": "passed",
+    "durationMs": 285,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged [\"--port\"] is refused with exit 1 and the same message",
+    "status": "passed",
+    "durationMs": 222,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged [\"--port\",\"70000\"] is refused with exit 1 and the same message",
+    "status": "passed",
+    "durationMs": 410,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged a state directory inside the governed plane is refused with the same message",
+    "status": "passed",
+    "durationMs": 310,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged with no arguments it serves from the working directory, writes the same state and shuts down the same way",
+    "status": "passed",
+    "durationMs": 464,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged with explicit flags it serves, writes the same state and shuts down the same way",
+    "status": "passed",
+    "durationMs": 492,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: the one changed input, `dossier` as the first argument `dossier` alone is a dossier usage error (exit 2), not the daemon's refusal",
+    "status": "passed",
+    "durationMs": 550,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: the one changed input, `dossier` as the first argument `dossier status <missing>` is a dossier refusal (exit 1) and starts no daemon",
+    "status": "passed",
+    "durationMs": 463,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: the one changed input, `dossier` as the first argument `dossier render <missing>` reaches the run with the renderer injected, and starts no daemon",
+    "status": "passed",
+    "durationMs": 578,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch",
+    "status": "passed",
+    "durationMs": 1,
+    "failure": null
+   }
+  ]
+ },
+ "treeCleanAfter": true,
+ "passesExpectation": true,
+ "summary": {
+  "exitCode": 0,
+  "wallSeconds": 11.4,
+  "deadlineHit": false,
+  "statuses": {
+   "passed": 15
+  },
+  "failed": [],
+  "port7477Seen": 0,
+  "samples": 17,
+  "meanInterval": 0.67,
+  "load1": {
+   "start": 31.09,
+   "end": 36.39
+  },
+  "killedOn7477": 0,
+  "ownListeningPorts": [],
+  "survivors": 0,
+  "slowestMs": 620,
+  "passesExpectation": true
+ }
+}

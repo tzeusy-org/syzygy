@@ -1,0 +1,77 @@
+{
+ "files": [
+  {
+   "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-537/clone/packages/polaris-dossier/src/no-egress.test.ts",
+   "project": "@syzygy/polaris-dossier",
+   "type": "suite",
+   "name": "packages/polaris-dossier/src/no-egress.test.ts",
+   "line": null,
+   "mode": "run",
+   "state": "fail",
+   "durationMs": 134.77590499999997,
+   "errors": [
+    "Hook timed out in 1ms.",
+    "Hook timed out in 1ms."
+   ],
+   "tasks": [
+    {
+     "type": "suite",
+     "name": "no provider call and no transmission (S10): an operating-system capture of a full fixture run",
+     "line": 66,
+     "mode": "skip",
+     "state": "skip",
+     "durationMs": null,
+     "errors": [],
+     "tasks": [
+      {
+       "type": "test",
+       "name": "creates no Internet-family socket over the whole run, from preflight to close",
+       "line": 67,
+       "mode": "skip",
+       "state": "skip",
+       "durationMs": null,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "sees the canary: one loopback datagram sent before the same run is in the capture",
+       "line": 87,
+       "mode": "skip",
+       "state": "skip",
+       "durationMs": null,
+       "errors": []
+      }
+     ],
+     "hookMs": null
+    },
+    {
+     "type": "suite",
+     "name": "no provider call and no transmission (S10), without strace",
+     "line": 98,
+     "mode": "skip",
+     "state": "skip",
+     "durationMs": null,
+     "errors": [],
+     "tasks": [
+      {
+       "type": "test",
+       "name": "is not proved on this host: strace is unavailable, so the capture is skipped, never reported as passed",
+       "line": 100,
+       "mode": "skip",
+       "state": "skip",
+       "durationMs": null,
+       "errors": []
+      }
+     ],
+     "hookMs": null
+    }
+   ],
+   "hookMs": 135,
+   "collectMs": 2739.751112,
+   "setupMs": 26.950247999999988,
+   "prepareMs": 132.463006,
+   "environmentMs": 0.20959599999997636
+  }
+ ],
+ "unhandled": []
+}

@@ -1,0 +1,266 @@
+{
+ "tree": "clone-base",
+ "head": "8ff50172b127cba676ff32ce62c12c91b2b0d924",
+ "results": [
+  {
+   "id": "RV-T18-dependency-alias",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  27 passed (27)"
+   ],
+   "testFiles": [
+    "Test Files  1 passed (1)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 5.6,
+   "counts": [
+    {
+     "file": "apps/syzygy/package.json",
+     "oldCount": 1
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "apps/syzygy/package.json",
+     "old": "  \"dependencies\": {\n",
+     "new": "  \"dependencies\": {\n    \"dossier\": \"file:../../packages/polaris-dossier\",\n"
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nimport 'dossier';\n"
+    }
+   ]
+  },
+  {
+   "id": "RV-C6-mts-caller",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  81 passed (81)"
+   ],
+   "testFiles": [
+    "Test Files  1 passed (1)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 1.9,
+   "counts": [
+    {
+     "file": "packages/polaris-dossier/src/extra-reader.mts",
+     "create": true
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/extra-reader.mts",
+     "create": "import { readArgv } from './argv.js';\nexport const readDrift = (args: string[]) => readArgv(args, { valued: ['--drift'], dashValue: 'take', repeat: 'last', positionals: true });\n"
+    }
+   ]
+  },
+  {
+   "id": "RV-P3-moduleIn-prefix-null",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  52 passed (52)"
+   ],
+   "testFiles": [
+    "Test Files  3 passed (3)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 2.2,
+   "counts": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "  if (!target.startsWith('./dist/')) return undefined;\n",
+     "new": "  if (!target.startsWith('./dist/')) return null as never;\n"
+    }
+   ]
+  },
+  {
+   "id": "RV-P4-moduleIn-missing-file-null",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  52 passed (52)"
+   ],
+   "testFiles": [
+    "Test Files  3 passed (3)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 2.7,
+   "counts": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "  return workspace.isFile(module) ? module : undefined;\n",
+     "new": "  return workspace.isFile(module) ? module : (null as never);\n"
+    }
+   ]
+  },
+  {
+   "id": "RV-P6-leaves-package-check-dropped",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  52 passed (52)"
+   ],
+   "testFiles": [
+    "Test Files  3 passed (3)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 2.7,
+   "counts": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "target.startsWith('#') || target.startsWith('../')) return undefined;",
+     "new": "target.startsWith('#')) return undefined;"
+    }
+   ]
+  },
+  {
+   "id": "RV-P8-array-guard-dropped",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  52 passed (52)"
+   ],
+   "testFiles": [
+    "Test Files  3 passed (3)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 3.3,
+   "counts": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": " || Array.isArray(entry)) return undefined;",
+     "new": ") return undefined;"
+    }
+   ]
+  },
+  {
+   "id": "RV-Q1-callee-conjunct-dropped",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  81 passed (81)"
+   ],
+   "testFiles": [
+    "Test Files  1 passed (1)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 2.3,
+   "counts": [
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": "        || (ts.isCallExpression(parent) && parent.expression === node);\n",
+     "new": "        || ts.isCallExpression(parent);\n"
+    }
+   ]
+  },
+  {
+   "id": "RV-Q2-declaration-anywhere",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  81 passed (81)"
+   ],
+   "testFiles": [
+    "Test Files  1 passed (1)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 2.1,
+   "counts": [
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": " && module === 'packages/polaris-dossier/src/argv.ts')",
+     "new": ")"
+    }
+   ]
+  },
+  {
+   "id": "RV-Q3-census-never-fed",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  81 passed (81)"
+   ],
+   "testFiles": [
+    "Test Files  1 passed (1)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 2.3,
+   "counts": [
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": "    unlifted.push(...unliftedOf(module, source));\n",
+     "new": ""
+    }
+   ]
+  }
+ ]
+}

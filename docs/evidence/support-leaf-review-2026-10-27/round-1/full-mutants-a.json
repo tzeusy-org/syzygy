@@ -1,0 +1,65 @@
+[
+ {
+  "id": "C1-manifest-digest",
+  "file": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+  "old": "sha256(canonicalManifestJson(manifest))",
+  "new": "sha256(canonicalManifestJson(manifest) + ' ')",
+  "ranAt": "fe3855a1b4f2164da3274e02d868399236c45c9c",
+  "recordHead": "9029e1cfb7a5ca1b02dbddaa450ac61349639bd7",
+  "exit": 1,
+  "totals": {
+   "numTotalTests": 5287,
+   "numPassedTests": 5281,
+   "numFailedTests": 1,
+   "numPendingTests": 5,
+   "numFailedTestSuites": 2,
+   "numTotalTestSuites": 858
+  },
+  "failed": [
+   {
+    "file": "apps/three-surface-poc/src/cdp-browser.test.ts",
+    "test": "disposable browser shutdown waits for private Chrome group members before removal and retains the profile on drain timeout",
+    "message": "Error: private browser profile drain did not verify two empty scans before deadline\n    at closeDisposableBrowser (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratch"
+   }
+  ],
+  "suiteErrors": []
+ },
+ {
+  "id": "C2-observation-digest",
+  "file": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+  "old": "sha256(canonicalJson(stripCaptureInstant(stable)))",
+  "new": "sha256(canonicalJson(stripCaptureInstant(stable)) + ' ')",
+  "ranAt": "fe3855a1b4f2164da3274e02d868399236c45c9c",
+  "recordHead": "9029e1cfb7a5ca1b02dbddaa450ac61349639bd7",
+  "exit": 0,
+  "totals": {
+   "numTotalTests": 5287,
+   "numPassedTests": 5282,
+   "numFailedTests": 0,
+   "numPendingTests": 5,
+   "numFailedTestSuites": 0,
+   "numTotalTestSuites": 858
+  },
+  "failed": [],
+  "suiteErrors": []
+ },
+ {
+  "id": "C3-model-artifact-digest",
+  "file": "packages/three-surface-poc-core/src/model.ts",
+  "old": "digest: sha256(bytes) };",
+  "new": "digest: sha256(bytes.slice(1)) };",
+  "ranAt": "fe3855a1b4f2164da3274e02d868399236c45c9c",
+  "recordHead": "9029e1cfb7a5ca1b02dbddaa450ac61349639bd7",
+  "exit": 0,
+  "totals": {
+   "numTotalTests": 5287,
+   "numPassedTests": 5282,
+   "numFailedTests": 0,
+   "numPendingTests": 5,
+   "numFailedTestSuites": 0,
+   "numTotalTestSuites": 858
+  },
+  "failed": [],
+  "suiteErrors": []
+ }
+]

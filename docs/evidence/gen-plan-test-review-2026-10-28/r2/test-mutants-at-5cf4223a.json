@@ -1,0 +1,1548 @@
+{
+  "subject": "generation-mutation.test.ts after syzygy-bpyt.47, by mutating the plan, a guarded source, a runner test file, the runner and the test",
+  "commit": "5cf4223a184baab1a748566b2f46053dcda72e58",
+  "tool": {
+    "path": "docs/evidence/syzygy-bpyt-47/test_mutants.py",
+    "sha256": "677682a9f9ccfdc5bbbb32ba31f98d3ae6488d6bd13f5bb176a518306c8dd0eb"
+  },
+  "importedRows": [
+    {
+      "path": "docs/evidence/syzygy-vsqr/test_mutants.py",
+      "sha256": "99fbcca0f05095c5a9bd41935bba3ef671c68c156c6cfd78119552f08ab4eba3"
+    },
+    {
+      "path": "docs/evidence/gen-plan-test-review-2026-10-28/r1/tools/own_mutants.py",
+      "sha256": "d7a91eb5dfe1707328d464dce4b9009462e361790797a3f53c9d15ac0ba87b05"
+    }
+  ],
+  "files": [
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/generation-mutation-run-main.ts",
+      "sha256": "24bf40d8c529e5229b2887e506475ed9422dcb1a4814d149001518b7c8af5d34"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/generation-mutation.test.ts",
+      "sha256": "92b266e25d6c34dcf849b928bb64ac4244168365a9a9b9fbe839323beda149b8"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts",
+      "sha256": "b383c956eb0e7c15c2842b6a86ba3fbc886cc9dfa0c3edd234af9b9a3ec735aa"
+    },
+    {
+      "path": "packages/polaris-generation-core/src/parse-json.test.ts",
+      "sha256": "40985898eda08ceb34e7a27a12fae649565bbc133207fa047304072cbceda612"
+    },
+    {
+      "path": "packages/polaris-generation-core/src/pipeline.ts",
+      "sha256": "89df81566b51fdcc24376f6b1282fea7d2110132dd7caa7c198bb03b00b45164"
+    }
+  ],
+  "control": {
+    "exit": 0,
+    "total": 13,
+    "failed": 0,
+    "failureMessages": [],
+    "fileErrors": []
+  },
+  "controlPassed": true,
+  "mutants": [
+    {
+      "id": "R1",
+      "predicate": "syzygy-vsqr: the mutation changes the emit: a fragment that occurs once, in a comment only",
+      "edits": {
+        "packages/polaris-generation-core/src/pipeline.ts": [
+          {
+            "old": "      if (calls >= budget.maxCalls) stop('budget-exhausted');",
+            "new": "      if (budget.maxCalls <= calls) stop('budget-exhausted'); // was: if (calls >= budget.maxCalls) stop('budget-exhausted');"
+          }
+        ]
+      },
+      "creates": {},
+      "expect": "killed",
+      "expectedFailedTests": 1,
+      "expectedMessages": [
+        "pipeline-max-calls-disabled: the mutation changes the emitted JavaScript"
+      ],
+      "observed": {
+        "exit": 1,
+        "total": 13,
+        "failed": 1,
+        "failureMessages": [
+          "AssertionError: pipeline-max-calls-disabled: the mutation changes the emitted JavaScript: expected 'import { quotableGenerationSources, v…' not to be 'import { quotableGenerationSources, v…' // Object.is equality"
+        ],
+        "fileErrors": []
+      },
+      "outcome": "killed",
+      "asExpected": true,
+      "restored": true
+    },
+    {
+      "id": "R2",
+      "predicate": "syzygy-vsqr: the file is a non-test file under polaris-generation-core/src: the plan's own path, which holds the fragment once",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "    file: DRAFT_MODEL_SOURCE,",
+            "new": "    file: 'apps/three-surface-poc/src/polaris-generation/generation-mutation.ts',"
+          }
+        ]
+      },
+      "creates": {},
+      "expect": "killed",
+      "expectedFailedTests": 1,
+      "expectedMessages": [
+        "provider-draft-duplicate-handle-check-disabled: apps/three-surface-poc/src/polaris-generation/generation-mutation.ts is a normalized non-test .ts file under packages/polaris-generation-core/src/"
+      ],
+      "observed": {
+        "exit": 1,
+        "total": 13,
+        "failed": 1,
+        "failureMessages": [
+          "AssertionError: provider-draft-duplicate-handle-check-disabled: apps/three-surface-poc/src/polaris-generation/generation-mutation.ts is a normalized non-test .ts file under packages/polaris-generation-core/src/: expected false to be true // Object.is equality"
+        ],
+        "fileErrors": []
+      },
+      "outcome": "killed",
+      "asExpected": true,
+      "restored": true
+    },
+    {
+      "id": "R3",
+      "predicate": "syzygy-vsqr: check-side: the it.each table cut to seven rows, with T1's fragment planted",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.test.ts": [
+          {
+            "old": "it.each(GENERATION_LITERAL_MUTATIONS.map(",
+            "new": "it.each(GENERATION_LITERAL_MUTATIONS.slice(0, 7).map("
+          }
+        ],
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "from: \"if (repairs >= budget.maxRepairCycles) {\\n        if (verdict.reviewerBlocking) stop('repair-exhausted');\",",
+            "new": "from: \"if (repairs >= budget.maxRepairCycles) stop('repair-exhausted');\","
+          }
+        ]
+      },
+      "creates": {},
+      "expect": "survived",
+      "expectedFailedTests": null,
+      "expectedMessages": [],
+      "observed": {
+        "exit": 0,
+        "total": 8,
+        "failed": 0,
+        "failureMessages": [],
+        "fileErrors": []
+      },
+      "outcome": "survived",
+      "asExpected": true,
+      "restored": true
+    },
+    {
+      "id": "R4",
+      "predicate": "syzygy-vsqr: every must-fail name is in a test title: a name matching no test",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "mustFail: ['rejects pollution keys'],",
+            "new": "mustFail: ['rejects pollution keyz'],"
+          }
+        ]
+      },
+      "creates": {},
+      "expect": "killed",
+      "expectedFailedTests": 1,
+      "expectedMessages": [
+        "parse-json-pollution-key-check-disabled: test titles holding must-fail \"rejects pollution keyz\": expected +0 to be 1"
+      ],
+      "observed": {
+        "exit": 1,
+        "total": 13,
+        "failed": 1,
+        "failureMessages": [
+          "AssertionError: parse-json-pollution-key-check-disabled: test titles holding must-fail \"rejects pollution keyz\": expected +0 to be 1 // Object.is equality"
+        ],
+        "fileErrors": []
+      },
+      "outcome": "killed",
+      "asExpected": true,
+      "restored": true
+    },
+    {
+      "id": "R5",
+      "predicate": "syzygy-vsqr: the mutation changes the emit: a `to` that differs from `from` only in spacing",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "to: \"if (false) stop('budget-exhausted');\",",
+            "new": "to: \"if (calls >=  budget.maxCalls) stop('budget-exhausted');\","
+          }
+        ]
+      },
+      "creates": {},
+      "expect": "killed",
+      "expectedFailedTests": 1,
+      "expectedMessages": [
+        "pipeline-max-calls-disabled: the mutation changes the emitted JavaScript"
+      ],
+      "observed": {
+        "exit": 1,
+        "total": 13,
+        "failed": 1,
+        "failureMessages": [
+          "AssertionError: pipeline-max-calls-disabled: the mutation changes the emitted JavaScript: expected 'import { quotableGenerationSources, v…' not to be 'import { quotableGenerationSources, v…' // Object.is equality"
+        ],
+        "fileErrors": []
+      },
+      "outcome": "killed",
+      "asExpected": true,
+      "restored": true
+    },
+    {
+      "id": "R6",
+      "predicate": "syzygy-vsqr: the file is read: a path that does not exist",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "    file: DRAFT_MODEL_SOURCE,",
+            "new": "    file: 'packages/polaris-generation-core/src/draft-modle.ts',"
+          }
+        ]
+      },
+      "creates": {},
+      "expect": "killed",
+      "expectedFailedTests": 1,
+      "expectedMessages": [
+        "ENOENT"
+      ],
+      "observed": {
+        "exit": 1,
+        "total": 13,
+        "failed": 1,
+        "failureMessages": [
+          "Error: ENOENT: no such file or directory, open '/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-550/clone/packages/polaris-generation-core/src/draft-modle.ts'"
+        ],
+        "fileErrors": []
+      },
+      "outcome": "killed",
+      "asExpected": true,
+      "restored": true
+    },
+    {
+      "id": "R7",
+      "predicate": "syzygy-vsqr: the fragment occurs once: an empty fragment",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "from: 'const sorted = (keys as string[]).sort();',",
+            "new": "from: '',"
+          }
+        ]
+      },
+      "creates": {},
+      "expect": "killed",
+      "expectedFailedTests": 1,
+      "expectedMessages": [
+        "canonical-json-sorted-keys-disabled: occurrences of the fragment in packages/polaris-generation-core/src/canonical-json.ts"
+      ],
+      "observed": {
+        "exit": 1,
+        "total": 13,
+        "failed": 1,
+        "failureMessages": [
+          "AssertionError: canonical-json-sorted-keys-disabled: occurrences of the fragment in packages/polaris-generation-core/src/canonical-json.ts: expected 4970 to be 1 // Object.is equality"
+        ],
+        "fileErrors": []
+      },
+      "outcome": "killed",
+      "asExpected": true,
+      "restored": true
+    },
+    {
+      "id": "R8",
+      "predicate": "syzygy-vsqr: the fragment occurs once: a fragment that occurs four times in draft-model.ts",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "from: \"if (set.size !== values.length) throw new Error('duplicate-handle');\",",
+            "new": "from: \"unique(\","
+          }
+        ]
+      },
+      "creates": {},
+      "expect": "killed",
+      "expectedFailedTests": 1,
+      "expectedMessages": [
+        "provider-draft-duplicate-handle-check-disabled: occurrences of the fragment in packages/polaris-generation-core/src/draft-model.ts: expected 4 to be 1"
+      ],
+      "observed": {
+        "exit": 1,
+        "total": 13,
+        "failed": 1,
+        "failureMessages": [
+          "AssertionError: provider-draft-duplicate-handle-check-disabled: occurrences of the fragment in packages/polaris-generation-core/src/draft-model.ts: expected 4 to be 1 // Object.is equality"
+        ],
+        "fileErrors": []
+      },
+      "outcome": "killed",
+      "asExpected": true,
+      "restored": true
+    },
+    {
+      "id": "T1",
+      "predicate": "syzygy-vsqr: the fragment occurs once: the repair-cycle cap's pre-5955f8c0 one-line fragment",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "from: \"if (repairs >= budget.maxRepairCycles) {\\n        if (verdict.reviewerBlocking) stop('repair-exhausted');\",",
+            "new": "from: \"if (repairs >= budget.maxRepairCycles) stop('repair-exhausted');\","
+          }
+        ]
+      },
+      "creates": {},
+      "expect": "killed",
+      "expectedFailedTests": 1,
+      "expectedMessages": [
+        "pipeline-repair-cycle-cap-disabled: occurrences of the fragment in packages/polaris-generation-core/src/pipeline.ts: expected +0 to be 1"
+      ],
+      "observed": {
+        "exit": 1,
+        "total": 13,
+        "failed": 1,
+        "failureMessages": [
+          "AssertionError: pipeline-repair-cycle-cap-disabled: occurrences of the fragment in packages/polaris-generation-core/src/pipeline.ts: expected +0 to be 1 // Object.is equality"
+        ],
+        "fileErrors": []
+      },
+      "outcome": "killed",
+      "asExpected": true,
+      "restored": true
+    },
+    {
+      "id": "T2",
+      "predicate": "syzygy-vsqr: the fragment occurs once: the duplicate-handle check's pre-69995614 file",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "    file: DRAFT_MODEL_SOURCE,",
+            "new": "    file: PROVIDER_DRAFT_SOURCE,"
+          }
+        ]
+      },
+      "creates": {},
+      "expect": "killed",
+      "expectedFailedTests": 1,
+      "expectedMessages": [
+        "provider-draft-duplicate-handle-check-disabled: occurrences of the fragment in packages/polaris-generation-core/src/provider-draft.ts: expected +0 to be 1"
+      ],
+      "observed": {
+        "exit": 1,
+        "total": 13,
+        "failed": 1,
+        "failureMessages": [
+          "AssertionError: provider-draft-duplicate-handle-check-disabled: occurrences of the fragment in packages/polaris-generation-core/src/provider-draft.ts: expected +0 to be 1 // Object.is equality"
+        ],
+        "fileErrors": []
+      },
+      "outcome": "killed",
+      "asExpected": true,
+      "restored": true
+    },
+    {
+      "id": "T3",
+      "predicate": "syzygy-vsqr: the fragment occurs once: a fragment that occurs twice",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "from: \"if (Array.isArray(record.sourceIds) && record.sourceIds.some(id => !sources.has(id))) throw new Error('unknown-source');\",",
+            "new": "from: \"throw new Error('unknown-source');\","
+          }
+        ]
+      },
+      "creates": {},
+      "expect": "killed",
+      "expectedFailedTests": 1,
+      "expectedMessages": [
+        "provider-draft-unknown-source-check-disabled: occurrences of the fragment in packages/polaris-generation-core/src/provider-draft.ts: expected 2 to be 1"
+      ],
+      "observed": {
+        "exit": 1,
+        "total": 13,
+        "failed": 1,
+        "failureMessages": [
+          "AssertionError: provider-draft-unknown-source-check-disabled: occurrences of the fragment in packages/polaris-generation-core/src/provider-draft.ts: expected 2 to be 1 // Object.is equality"
+        ],
+        "fileErrors": []
+      },
+      "outcome": "killed",
+      "asExpected": true,
+      "restored": true
+    },
+    {
+      "id": "T4",
+      "predicate": "syzygy-vsqr: the mutation changes the emit: `to` equal to `from`",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "to: 'const sorted = (keys as string[]);',",
+            "new": "to: 'const sorted = (keys as string[]).sort();',"
+          }
+        ]
+      },
+      "creates": {},
+      "expect": "killed",
+      "expectedFailedTests": 1,
+      "expectedMessages": [
+        "canonical-json-sorted-keys-disabled: the mutation changes the emitted JavaScript"
+      ],
+      "observed": {
+        "exit": 1,
+        "total": 13,
+        "failed": 1,
+        "failureMessages": [
+          "AssertionError: canonical-json-sorted-keys-disabled: the mutation changes the emitted JavaScript: expected 'import { types } from \\'node:util\\';\\…' not to be 'import { types } from \\'node:util\\';\\…' // Object.is equality"
+        ],
+        "fileErrors": []
+      },
+      "outcome": "killed",
+      "asExpected": true,
+      "restored": true
+    },
+    {
+      "id": "T5",
+      "predicate": "syzygy-vsqr: every mutation names a must-fail test",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "mustFail: ['requires declared review coverage of inventory and every claim-bearing block'],",
+            "new": "mustFail: [],"
+          }
+        ]
+      },
+      "creates": {},
+      "expect": "killed",
+      "expectedFailedTests": 1,
+      "expectedMessages": [
+        "provider-draft-unknown-finding-target-check-disabled: must-fail names: expected 0 to be greater than 0"
+      ],
+      "observed": {
+        "exit": 1,
+        "total": 13,
+        "failed": 1,
+        "failureMessages": [
+          "AssertionError: provider-draft-unknown-finding-target-check-disabled: must-fail names: expected 0 to be greater than 0"
+        ],
+        "fileErrors": []
+      },
+      "outcome": "killed",
+      "asExpected": true,
+      "restored": true
+    },
+    {
+      "id": "T6",
+      "predicate": "syzygy-vsqr: ids are distinct",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "id: 'canonical-json-cycle-check-disabled',",
+            "new": "id: 'canonical-json-sorted-keys-disabled',"
+          }
+        ]
+      },
+      "creates": {},
+      "expect": "killed",
+      "expectedFailedTests": 1,
+      "expectedMessages": [
+        "duplicate mutation ids: expected 'canonical-json-sorted-keys-disabled' to be ''"
+      ],
+      "observed": {
+        "exit": 1,
+        "total": 13,
+        "failed": 1,
+        "failureMessages": [
+          "AssertionError: duplicate mutation ids: expected 'canonical-json-sorted-keys-disabled' to be '' // Object.is equality"
+        ],
+        "fileErrors": []
+      },
+      "outcome": "killed",
+      "asExpected": true,
+      "restored": true
+    },
+    {
+      "id": "T7",
+      "predicate": "syzygy-vsqr: the plan holds twelve mutations",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "export const GENERATION_LITERAL_MUTATIONS: readonly LiteralMutation[] = [",
+            "new": "export const GENERATION_LITERAL_MUTATIONS: readonly LiteralMutation[] = (["
+          },
+          {
+            "old": "\n];\n",
+            "new": "\n] as LiteralMutation[]).slice(1);\n"
+          }
+        ]
+      },
+      "creates": {},
+      "expect": "killed",
+      "expectedFailedTests": 1,
+      "expectedMessages": [
+        "AssertionError: canonical-json-cycle-check-disabled, canonical-json-proxy-check-disabled, ",
+        ": expected 11 to be 12"
+      ],
+      "observed": {
+        "exit": 1,
+        "total": 12,
+        "failed": 1,
+        "failureMessages": [
+          "AssertionError: canonical-json-cycle-check-disabled, canonical-json-proxy-check-disabled, parse-json-duplicate-key-check-disabled, parse-json-pollution-key-check-disabled, parse-json-byte-limit-check-disabled, pipeline-max-calls-disabled, pipeline-repair-cycle-cap-disabled, pipeline-late-receipt-suppressed, provider-draft-duplicate-handle-check-disabled, provider-draft-unknown-source-check-disabled, provider-draft-unknown-finding-target-check-disabled: expected 11 to be 12 // Object.is equality"
+        ],
+        "fileErrors": []
+      },
+      "outcome": "killed",
+      "asExpected": true,
+      "restored": true
+    },
+    {
+      "id": "V1",
+      "predicate": "syzygy-vsqr: every drift is reported by id in one run (N2): T1 and T2 planted together",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "from: \"if (repairs >= budget.maxRepairCycles) {\\n        if (verdict.reviewerBlocking) stop('repair-exhausted');\",",
+            "new": "from: \"if (repairs >= budget.maxRepairCycles) stop('repair-exhausted');\","
+          },
+          {
+            "old": "    file: DRAFT_MODEL_SOURCE,",
+            "new": "    file: PROVIDER_DRAFT_SOURCE,"
+          }
+        ]
+      },
+      "creates": {},
+      "expect": "killed",
+      "expectedFailedTests": 2,
+      "expectedMessages": [
+        "pipeline-repair-cycle-cap-disabled: occurrences of the fragment",
+        "provider-draft-duplicate-handle-check-disabled: occurrences of the fragment"
+      ],
+      "observed": {
+        "exit": 1,
+        "total": 13,
+        "failed": 2,
+        "failureMessages": [
+          "AssertionError: pipeline-repair-cycle-cap-disabled: occurrences of the fragment in packages/polaris-generation-core/src/pipeline.ts: expected +0 to be 1 // Object.is equality",
+          "AssertionError: provider-draft-duplicate-handle-check-disabled: occurrences of the fragment in packages/polaris-generation-core/src/provider-draft.ts: expected +0 to be 1 // Object.is equality"
+        ],
+        "fileErrors": []
+      },
+      "outcome": "killed",
+      "asExpected": true,
+      "restored": true
+    },
+    {
+      "id": "V2",
+      "predicate": "syzygy-vsqr: the runner runs the test files must-fail names are read from: one dropped from its TEST_FILES",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation-run-main.ts": [
+          {
+            "old": "  'packages/polaris-generation-core/src/provider-draft.test.ts',\n] as const;",
+            "new": "] as const;"
+          }
+        ]
+      },
+      "creates": {},
+      "expect": "killed",
+      "expectedFailedTests": 1,
+      "expectedMessages": [
+        "the runner's TEST_FILES declarations: expected [ [ "
+      ],
+      "observed": {
+        "exit": 1,
+        "total": 13,
+        "failed": 1,
+        "failureMessages": [
+          "AssertionError: the runner's TEST_FILES declarations: expected [ [ …(3) ] ] to deeply equal [ [ …(4) ] ]"
+        ],
+        "fileErrors": []
+      },
+      "outcome": "killed",
+      "asExpected": true,
+      "restored": true
+    },
+    {
+      "id": "V3",
+      "predicate": "syzygy-vsqr: the file is not a test file: a mutation pointed at its own test file",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "    file: CANONICAL_JSON_SOURCE,\n    description: 'object keys are encoded in insertion order",
+            "new": "    file: 'packages/polaris-generation-core/src/canonical-json.test.ts',\n    description: 'object keys are encoded in insertion order"
+          }
+        ]
+      },
+      "creates": {},
+      "expect": "killed",
+      "expectedFailedTests": 1,
+      "expectedMessages": [
+        "canonical-json-sorted-keys-disabled: packages/polaris-generation-core/src/canonical-json.test.ts is a normalized non-test .ts file under packages/polaris-generation-core/src/"
+      ],
+      "observed": {
+        "exit": 1,
+        "total": 13,
+        "failed": 1,
+        "failureMessages": [
+          "AssertionError: canonical-json-sorted-keys-disabled: packages/polaris-generation-core/src/canonical-json.test.ts is a normalized non-test .ts file under packages/polaris-generation-core/src/: expected false to be true // Object.is equality"
+        ],
+        "fileErrors": []
+      },
+      "outcome": "killed",
+      "asExpected": true,
+      "restored": true
+    },
+    {
+      "id": "V4",
+      "predicate": "syzygy-vsqr: check-side: the title reader without its `each` arm",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.test.ts": [
+          {
+            "old": " ||\n  (ts.isCallExpression(callee) && ts.isPropertyAccessExpression(callee.expression) && callee.expression.name.text === 'each' &&\n    ts.isIdentifier(callee.expression.expression) && ['it', 'test'].includes(callee.expression.expression.text));",
+            "new": ";"
+          }
+        ]
+      },
+      "creates": {},
+      "expect": "killed",
+      "expectedFailedTests": 2,
+      "expectedMessages": [
+        "parse-json-duplicate-key-check-disabled: test titles holding must-fail \"rejects duplicate decoded keys\": expected +0 to be 1",
+        "parse-json-pollution-key-check-disabled: test titles holding must-fail \"rejects pollution keys\": expected +0 to be 1"
+      ],
+      "observed": {
+        "exit": 1,
+        "total": 13,
+        "failed": 2,
+        "failureMessages": [
+          "AssertionError: parse-json-duplicate-key-check-disabled: test titles holding must-fail \"rejects duplicate decoded keys\": expected +0 to be 1 // Object.is equality",
+          "AssertionError: parse-json-pollution-key-check-disabled: test titles holding must-fail \"rejects pollution keys\": expected +0 to be 1 // Object.is equality"
+        ],
+        "fileErrors": []
+      },
+      "outcome": "killed",
+      "asExpected": true,
+      "restored": true
+    },
+    {
+      "id": "Q8",
+      "predicate": "reviewer: R4: a must-fail name that matches a describe title only",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "mustFail: ['rejects pollution keys'],",
+            "new": "mustFail: ['bounded provider JSON parsing'],"
+          }
+        ]
+      },
+      "creates": {},
+      "expect": "killed",
+      "expectedFailedTests": 1,
+      "expectedMessages": [
+        "parse-json-pollution-key-check-disabled: test titles holding must-fail \"bounded provider JSON parsing\": expected +0 to be 1"
+      ],
+      "observed": {
+        "exit": 1,
+        "total": 13,
+        "failed": 1,
+        "failureMessages": [
+          "AssertionError: parse-json-pollution-key-check-disabled: test titles holding must-fail \"bounded provider JSON parsing\": expected +0 to be 1 // Object.is equality"
+        ],
+        "fileErrors": []
+      },
+      "outcome": "killed",
+      "asExpected": true,
+      "restored": true
+    },
+    {
+      "id": "Q9",
+      "predicate": "reviewer: R4: a must-fail name that is a strict substring of a longer title",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "mustFail: ['rejects pollution keys'],",
+            "new": "mustFail: ['rejects pollution'],"
+          }
+        ]
+      },
+      "creates": {},
+      "expect": "survived",
+      "expectedFailedTests": null,
+      "expectedMessages": [],
+      "observed": {
+        "exit": 0,
+        "total": 13,
+        "failed": 0,
+        "failureMessages": [],
+        "fileErrors": []
+      },
+      "outcome": "survived",
+      "asExpected": true,
+      "restored": true
+    },
+    {
+      "id": "Q10",
+      "predicate": "reviewer: R4: a must-fail name that is a title in a test file the runner does not run",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "mustFail: ['rejects pollution keys'],",
+            "new": "mustFail: ['reaches no island module from the CLI entry'],"
+          }
+        ]
+      },
+      "creates": {},
+      "expect": "killed",
+      "expectedFailedTests": 1,
+      "expectedMessages": [
+        "parse-json-pollution-key-check-disabled: test titles holding must-fail \"reaches no island module from the CLI entry\": expected +0 to be 1"
+      ],
+      "observed": {
+        "exit": 1,
+        "total": 13,
+        "failed": 1,
+        "failureMessages": [
+          "AssertionError: parse-json-pollution-key-check-disabled: test titles holding must-fail \"reaches no island module from the CLI entry\": expected +0 to be 1 // Object.is equality"
+        ],
+        "fileErrors": []
+      },
+      "outcome": "killed",
+      "asExpected": true,
+      "restored": true
+    },
+    {
+      "id": "Q11",
+      "predicate": "reviewer: R4: a must-fail name that carries the each template's literal %s",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "mustFail: ['rejects pollution keys'],",
+            "new": "mustFail: ['rejects pollution keys: %s'],"
+          }
+        ]
+      },
+      "creates": {},
+      "expect": "killed",
+      "expectedFailedTests": 1,
+      "expectedMessages": [
+        "parse-json-pollution-key-check-disabled: must-fail \"rejects pollution keys: %s\" is a literal title fragment: expected false to be true"
+      ],
+      "observed": {
+        "exit": 1,
+        "total": 13,
+        "failed": 1,
+        "failureMessages": [
+          "AssertionError: parse-json-pollution-key-check-disabled: must-fail \"rejects pollution keys: %s\" is a literal title fragment: expected false to be true // Object.is equality"
+        ],
+        "fileErrors": []
+      },
+      "outcome": "killed",
+      "asExpected": true,
+      "restored": true
+    },
+    {
+      "id": "Q12",
+      "predicate": "reviewer: R4: a must-fail name that carries an each row's substituted value",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "mustFail: ['rejects pollution keys'],",
+            "new": "mustFail: ['rejects pollution keys: __proto__'],"
+          }
+        ]
+      },
+      "creates": {},
+      "expect": "killed",
+      "expectedFailedTests": 1,
+      "expectedMessages": [
+        "parse-json-pollution-key-check-disabled: test titles holding must-fail \"rejects pollution keys: __proto__\": expected +0 to be 1"
+      ],
+      "observed": {
+        "exit": 1,
+        "total": 13,
+        "failed": 1,
+        "failureMessages": [
+          "AssertionError: parse-json-pollution-key-check-disabled: test titles holding must-fail \"rejects pollution keys: __proto__\": expected +0 to be 1 // Object.is equality"
+        ],
+        "fileErrors": []
+      },
+      "outcome": "killed",
+      "asExpected": true,
+      "restored": true
+    },
+    {
+      "id": "Q13",
+      "predicate": "reviewer: R4: a must-fail name spanning the describe title and the test title (vitest's fullName form)",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "mustFail: ['rejects pollution keys'],",
+            "new": "mustFail: ['bounded provider JSON parsing rejects pollution keys'],"
+          }
+        ]
+      },
+      "creates": {},
+      "expect": "killed",
+      "expectedFailedTests": 1,
+      "expectedMessages": [
+        "parse-json-pollution-key-check-disabled: test titles holding must-fail \"bounded provider JSON parsing rejects pollution keys\": expected +0 to be 1"
+      ],
+      "observed": {
+        "exit": 1,
+        "total": 13,
+        "failed": 1,
+        "failureMessages": [
+          "AssertionError: parse-json-pollution-key-check-disabled: test titles holding must-fail \"bounded provider JSON parsing rejects pollution keys\": expected +0 to be 1 // Object.is equality"
+        ],
+        "fileErrors": []
+      },
+      "outcome": "killed",
+      "asExpected": true,
+      "restored": true
+    },
+    {
+      "id": "Q14",
+      "predicate": "reviewer: R4: an empty must-fail name",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "mustFail: ['rejects pollution keys'],",
+            "new": "mustFail: [''],"
+          }
+        ]
+      },
+      "creates": {},
+      "expect": "killed",
+      "expectedFailedTests": 1,
+      "expectedMessages": [
+        "parse-json-pollution-key-check-disabled: must-fail \"\" is a literal title fragment: expected false to be true"
+      ],
+      "observed": {
+        "exit": 1,
+        "total": 13,
+        "failed": 1,
+        "failureMessages": [
+          "AssertionError: parse-json-pollution-key-check-disabled: must-fail \"\" is a literal title fragment: expected false to be true // Object.is equality"
+        ],
+        "fileErrors": []
+      },
+      "outcome": "killed",
+      "asExpected": true,
+      "restored": true
+    },
+    {
+      "id": "Q15",
+      "predicate": "reviewer: the runner check: a TEST_FILES entry commented out, its quoted path kept in the comment",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation-run-main.ts": [
+          {
+            "old": "  'packages/polaris-generation-core/src/provider-draft.test.ts',\n] as const;",
+            "new": "  // 'packages/polaris-generation-core/src/provider-draft.test.ts',\n] as const;"
+          }
+        ]
+      },
+      "creates": {},
+      "expect": "killed",
+      "expectedFailedTests": 1,
+      "expectedMessages": [
+        "the runner's TEST_FILES declarations: expected [ [ "
+      ],
+      "observed": {
+        "exit": 1,
+        "total": 13,
+        "failed": 1,
+        "failureMessages": [
+          "AssertionError: the runner's TEST_FILES declarations: expected [ [ …(3) ] ] to deeply equal [ [ …(4) ] ]"
+        ],
+        "fileErrors": []
+      },
+      "outcome": "killed",
+      "asExpected": true,
+      "restored": true
+    },
+    {
+      "id": "Q16",
+      "predicate": "reviewer: R2: a path with .. that starts with the prefix and resolves to the plan module",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "    file: DRAFT_MODEL_SOURCE,",
+            "new": "    file: 'packages/polaris-generation-core/src/../../../apps/three-surface-poc/src/polaris-generation/generation-mutation.ts',"
+          }
+        ]
+      },
+      "creates": {},
+      "expect": "killed",
+      "expectedFailedTests": 1,
+      "expectedMessages": [
+        "provider-draft-duplicate-handle-check-disabled: packages/polaris-generation-core/src/../../../apps/three-surface-poc/src/polaris-generation/generation-mutation.ts is a normalized non-test .ts file under packages/polaris-generation-core/src/"
+      ],
+      "observed": {
+        "exit": 1,
+        "total": 13,
+        "failed": 1,
+        "failureMessages": [
+          "AssertionError: provider-draft-duplicate-handle-check-disabled: packages/polaris-generation-core/src/../../../apps/three-surface-poc/src/polaris-generation/generation-mutation.ts is a normalized non-test .ts file under packages/polaris-generation-core/src/: expected false to be true // Object.is equality"
+        ],
+        "fileErrors": []
+      },
+      "outcome": "killed",
+      "asExpected": true,
+      "restored": true
+    },
+    {
+      "id": "Q17",
+      "predicate": "reviewer: R2: a .spec.ts copy of draft-model.ts under the prefix",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "    file: DRAFT_MODEL_SOURCE,",
+            "new": "    file: 'packages/polaris-generation-core/src/draft-model.spec.ts',"
+          }
+        ]
+      },
+      "creates": {
+        "packages/polaris-generation-core/src/draft-model.spec.ts": "packages/polaris-generation-core/src/draft-model.ts"
+      },
+      "expect": "killed",
+      "expectedFailedTests": 1,
+      "expectedMessages": [
+        "provider-draft-duplicate-handle-check-disabled: packages/polaris-generation-core/src/draft-model.spec.ts is a normalized non-test .ts file under packages/polaris-generation-core/src/"
+      ],
+      "observed": {
+        "exit": 1,
+        "total": 13,
+        "failed": 1,
+        "failureMessages": [
+          "AssertionError: provider-draft-duplicate-handle-check-disabled: packages/polaris-generation-core/src/draft-model.spec.ts is a normalized non-test .ts file under packages/polaris-generation-core/src/: expected false to be true // Object.is equality"
+        ],
+        "fileErrors": []
+      },
+      "outcome": "killed",
+      "asExpected": true,
+      "restored": true
+    },
+    {
+      "id": "Q18",
+      "predicate": "reviewer: R2: a .test.tsx copy of draft-model.ts under the prefix",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "    file: DRAFT_MODEL_SOURCE,",
+            "new": "    file: 'packages/polaris-generation-core/src/draft-model.test.tsx',"
+          }
+        ]
+      },
+      "creates": {
+        "packages/polaris-generation-core/src/draft-model.test.tsx": "packages/polaris-generation-core/src/draft-model.ts"
+      },
+      "expect": "killed",
+      "expectedFailedTests": 1,
+      "expectedMessages": [
+        "provider-draft-duplicate-handle-check-disabled: packages/polaris-generation-core/src/draft-model.test.tsx is a normalized non-test .ts file under packages/polaris-generation-core/src/"
+      ],
+      "observed": {
+        "exit": 1,
+        "total": 13,
+        "failed": 1,
+        "failureMessages": [
+          "AssertionError: provider-draft-duplicate-handle-check-disabled: packages/polaris-generation-core/src/draft-model.test.tsx is a normalized non-test .ts file under packages/polaris-generation-core/src/: expected false to be true // Object.is equality"
+        ],
+        "fileErrors": []
+      },
+      "outcome": "killed",
+      "asExpected": true,
+      "restored": true
+    },
+    {
+      "id": "Q19",
+      "predicate": "reviewer: R2: a .d.ts copy of draft-model.ts under the prefix",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "    file: DRAFT_MODEL_SOURCE,",
+            "new": "    file: 'packages/polaris-generation-core/src/draft-model.d.ts',"
+          }
+        ]
+      },
+      "creates": {
+        "packages/polaris-generation-core/src/draft-model.d.ts": "packages/polaris-generation-core/src/draft-model.ts"
+      },
+      "expect": "killed",
+      "expectedFailedTests": 1,
+      "expectedMessages": [
+        "provider-draft-duplicate-handle-check-disabled: packages/polaris-generation-core/src/draft-model.d.ts is a normalized non-test .ts file under packages/polaris-generation-core/src/"
+      ],
+      "observed": {
+        "exit": 1,
+        "total": 13,
+        "failed": 1,
+        "failureMessages": [
+          "AssertionError: provider-draft-duplicate-handle-check-disabled: packages/polaris-generation-core/src/draft-model.d.ts is a normalized non-test .ts file under packages/polaris-generation-core/src/: expected false to be true // Object.is equality"
+        ],
+        "fileErrors": []
+      },
+      "outcome": "killed",
+      "asExpected": true,
+      "restored": true
+    },
+    {
+      "id": "Q20",
+      "predicate": "reviewer: N2: three drifts at once (R4's name, T3's twice-occurring fragment, R2's wrong file)",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "mustFail: ['rejects pollution keys'],",
+            "new": "mustFail: ['rejects pollution keyz'],"
+          },
+          {
+            "old": "from: \"if (Array.isArray(record.sourceIds) && record.sourceIds.some(id => !sources.has(id))) throw new Error('unknown-source');\",",
+            "new": "from: \"throw new Error('unknown-source');\","
+          },
+          {
+            "old": "    file: DRAFT_MODEL_SOURCE,",
+            "new": "    file: 'apps/three-surface-poc/src/polaris-generation/generation-mutation.ts',"
+          }
+        ]
+      },
+      "creates": {},
+      "expect": "killed",
+      "expectedFailedTests": 3,
+      "expectedMessages": [
+        "parse-json-pollution-key-check-disabled: test titles holding must-fail \"rejects pollution keyz\": expected +0 to be 1",
+        "provider-draft-unknown-source-check-disabled: occurrences of the fragment in packages/polaris-generation-core/src/provider-draft.ts: expected 2 to be 1",
+        "provider-draft-duplicate-handle-check-disabled: apps/three-surface-poc/src/polaris-generation/generation-mutation.ts is a normalized non-test .ts file under packages/polaris-generation-core/src/"
+      ],
+      "observed": {
+        "exit": 1,
+        "total": 13,
+        "failed": 3,
+        "failureMessages": [
+          "AssertionError: parse-json-pollution-key-check-disabled: test titles holding must-fail \"rejects pollution keyz\": expected +0 to be 1 // Object.is equality",
+          "AssertionError: provider-draft-duplicate-handle-check-disabled: apps/three-surface-poc/src/polaris-generation/generation-mutation.ts is a normalized non-test .ts file under packages/polaris-generation-core/src/: expected false to be true // Object.is equality",
+          "AssertionError: provider-draft-unknown-source-check-disabled: occurrences of the fragment in packages/polaris-generation-core/src/provider-draft.ts: expected 2 to be 1 // Object.is equality"
+        ],
+        "fileErrors": []
+      },
+      "outcome": "killed",
+      "asExpected": true,
+      "restored": true
+    },
+    {
+      "id": "Q21",
+      "predicate": "reviewer: robustness: the TypeScript import cannot be resolved",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.test.ts": [
+          {
+            "old": "import ts from 'typescript';",
+            "new": "import ts from 'typescript-missing';"
+          }
+        ]
+      },
+      "creates": {},
+      "expect": "killed",
+      "expectedFailedTests": null,
+      "expectedMessages": [
+        "typescript-missing"
+      ],
+      "observed": {
+        "exit": 1,
+        "total": 0,
+        "failed": 0,
+        "failureMessages": [],
+        "fileErrors": [
+          "Cannot find package 'typescript-missing' imported from '/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-550/clone/apps/three-surface-poc/src/polaris-generation/generation-mutation.test.ts'"
+        ]
+      },
+      "outcome": "killed",
+      "asExpected": true,
+      "restored": true
+    },
+    {
+      "id": "Q22",
+      "predicate": "reviewer: check-side: removeComments dropped, with R1's source edit",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.test.ts": [
+          {
+            "old": "compilerOptions: { removeComments: true, target:",
+            "new": "compilerOptions: { target:"
+          }
+        ],
+        "packages/polaris-generation-core/src/pipeline.ts": [
+          {
+            "old": "      if (calls >= budget.maxCalls) stop('budget-exhausted');",
+            "new": "      if (budget.maxCalls <= calls) stop('budget-exhausted'); // was: if (calls >= budget.maxCalls) stop('budget-exhausted');"
+          }
+        ]
+      },
+      "creates": {},
+      "expect": "survived",
+      "expectedFailedTests": null,
+      "expectedMessages": [],
+      "observed": {
+        "exit": 0,
+        "total": 13,
+        "failed": 0,
+        "failureMessages": [],
+        "fileErrors": []
+      },
+      "outcome": "survived",
+      "asExpected": true,
+      "restored": true
+    },
+    {
+      "id": "Q23a",
+      "predicate": "check-side: the reviewer's Q23 adapted, the substring title count replaced by equality",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.test.ts": [
+          {
+            "old": "titles.filter((title) => title.includes(name)).length",
+            "new": "titles.filter((title) => title === name).length"
+          }
+        ]
+      },
+      "creates": {},
+      "expect": "killed",
+      "expectedFailedTests": 2,
+      "expectedMessages": [
+        "parse-json-duplicate-key-check-disabled: test titles holding must-fail \"rejects duplicate decoded keys\": expected +0 to be 1",
+        "parse-json-pollution-key-check-disabled: test titles holding must-fail \"rejects pollution keys\": expected +0 to be 1"
+      ],
+      "observed": {
+        "exit": 1,
+        "total": 13,
+        "failed": 2,
+        "failureMessages": [
+          "AssertionError: parse-json-duplicate-key-check-disabled: test titles holding must-fail \"rejects duplicate decoded keys\": expected +0 to be 1 // Object.is equality",
+          "AssertionError: parse-json-pollution-key-check-disabled: test titles holding must-fail \"rejects pollution keys\": expected +0 to be 1 // Object.is equality"
+        ],
+        "fileErrors": []
+      },
+      "outcome": "killed",
+      "asExpected": true,
+      "restored": true
+    },
+    {
+      "id": "W1",
+      "predicate": "N1, the `$` arm alone: a name with `$` that exactly one runner-test title holds",
+      "edits": {
+        "packages/polaris-generation-core/src/parse-json.test.ts": [
+          {
+            "old": "('rejects pollution keys: %s', (key) => {",
+            "new": "('rejects pollution keys$: %s', (key) => {"
+          }
+        ],
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "mustFail: ['rejects pollution keys'],",
+            "new": "mustFail: ['rejects pollution keys$'],"
+          }
+        ]
+      },
+      "creates": {},
+      "expect": "killed",
+      "expectedFailedTests": 1,
+      "expectedMessages": [
+        "parse-json-pollution-key-check-disabled: must-fail \"rejects pollution keys$\" is a literal title fragment: expected false to be true"
+      ],
+      "observed": {
+        "exit": 1,
+        "total": 13,
+        "failed": 1,
+        "failureMessages": [
+          "AssertionError: parse-json-pollution-key-check-disabled: must-fail \"rejects pollution keys$\" is a literal title fragment: expected false to be true // Object.is equality"
+        ],
+        "fileErrors": []
+      },
+      "outcome": "killed",
+      "asExpected": true,
+      "restored": true
+    },
+    {
+      "id": "W2",
+      "predicate": "N1, the blank arm alone: a whitespace-only name that exactly one runner-test title holds",
+      "edits": {
+        "packages/polaris-generation-core/src/parse-json.test.ts": [
+          {
+            "old": "('rejects pollution keys: %s', (key) => {",
+            "new": "('rejects pollution keys:   %s', (key) => {"
+          }
+        ],
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "mustFail: ['rejects pollution keys'],",
+            "new": "mustFail: ['   '],"
+          }
+        ]
+      },
+      "creates": {},
+      "expect": "killed",
+      "expectedFailedTests": 1,
+      "expectedMessages": [
+        "parse-json-pollution-key-check-disabled: must-fail \"   \" is a literal title fragment: expected false to be true"
+      ],
+      "observed": {
+        "exit": 1,
+        "total": 13,
+        "failed": 1,
+        "failureMessages": [
+          "AssertionError: parse-json-pollution-key-check-disabled: must-fail \"   \" is a literal title fragment: expected false to be true // Object.is equality"
+        ],
+        "fileErrors": []
+      },
+      "outcome": "killed",
+      "asExpected": true,
+      "restored": true
+    },
+    {
+      "id": "W3",
+      "predicate": "N1, the exactly-one arm: a literal fragment many titles hold",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "mustFail: ['rejects pollution keys'],",
+            "new": "mustFail: ['rejects'],"
+          }
+        ]
+      },
+      "creates": {},
+      "expect": "killed",
+      "expectedFailedTests": 1,
+      "expectedMessages": [
+        "parse-json-pollution-key-check-disabled: test titles holding must-fail \"rejects\": expected"
+      ],
+      "observed": {
+        "exit": 1,
+        "total": 13,
+        "failed": 1,
+        "failureMessages": [
+          "AssertionError: parse-json-pollution-key-check-disabled: test titles holding must-fail \"rejects\": expected 14 to be 1 // Object.is equality"
+        ],
+        "fileErrors": []
+      },
+      "outcome": "killed",
+      "asExpected": true,
+      "restored": true
+    },
+    {
+      "id": "W4",
+      "predicate": "N2, the normalize arm alone: the right file spelled through ./",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "    file: DRAFT_MODEL_SOURCE,",
+            "new": "    file: 'packages/polaris-generation-core/src/./draft-model.ts',"
+          }
+        ]
+      },
+      "creates": {},
+      "expect": "killed",
+      "expectedFailedTests": 1,
+      "expectedMessages": [
+        "provider-draft-duplicate-handle-check-disabled: packages/polaris-generation-core/src/./draft-model.ts is a normalized non-test .ts file under packages/polaris-generation-core/src/"
+      ],
+      "observed": {
+        "exit": 1,
+        "total": 13,
+        "failed": 1,
+        "failureMessages": [
+          "AssertionError: provider-draft-duplicate-handle-check-disabled: packages/polaris-generation-core/src/./draft-model.ts is a normalized non-test .ts file under packages/polaris-generation-core/src/: expected false to be true // Object.is equality"
+        ],
+        "fileErrors": []
+      },
+      "outcome": "killed",
+      "asExpected": true,
+      "restored": true
+    },
+    {
+      "id": "W5",
+      "predicate": "N2, the testkit arm: a .testkit.ts copy of draft-model.ts under the prefix",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "    file: DRAFT_MODEL_SOURCE,",
+            "new": "    file: 'packages/polaris-generation-core/src/draft-model.testkit.ts',"
+          }
+        ]
+      },
+      "creates": {
+        "packages/polaris-generation-core/src/draft-model.testkit.ts": "packages/polaris-generation-core/src/draft-model.ts"
+      },
+      "expect": "killed",
+      "expectedFailedTests": 1,
+      "expectedMessages": [
+        "provider-draft-duplicate-handle-check-disabled: packages/polaris-generation-core/src/draft-model.testkit.ts is a normalized non-test .ts file under packages/polaris-generation-core/src/"
+      ],
+      "observed": {
+        "exit": 1,
+        "total": 13,
+        "failed": 1,
+        "failureMessages": [
+          "AssertionError: provider-draft-duplicate-handle-check-disabled: packages/polaris-generation-core/src/draft-model.testkit.ts is a normalized non-test .ts file under packages/polaris-generation-core/src/: expected false to be true // Object.is equality"
+        ],
+        "fileErrors": []
+      },
+      "outcome": "killed",
+      "asExpected": true,
+      "restored": true
+    },
+    {
+      "id": "W6",
+      "predicate": "N3: a second TEST_FILES declaration in the runner",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation-run-main.ts": [
+          {
+            "old": "",
+            "new": "\nexport function shadowed(): readonly string[] {\n  const TEST_FILES = ['packages/polaris-generation-core/src/canonical-json.test.ts'];\n  return TEST_FILES;\n}\n"
+          }
+        ]
+      },
+      "creates": {},
+      "expect": "killed",
+      "expectedFailedTests": 1,
+      "expectedMessages": [
+        "the runner's TEST_FILES declarations: expected [ [ "
+      ],
+      "observed": {
+        "exit": 1,
+        "total": 13,
+        "failed": 1,
+        "failureMessages": [
+          "AssertionError: the runner's TEST_FILES declarations: expected [ [ …(4) ], …(1) ] to deeply equal [ [ …(4) ] ]"
+        ],
+        "fileErrors": []
+      },
+      "outcome": "killed",
+      "asExpected": true,
+      "restored": true
+    },
+    {
+      "id": "W7",
+      "predicate": "N3: a spread element in TEST_FILES naming a fifth file",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation-run-main.ts": [
+          {
+            "old": "  'packages/polaris-generation-core/src/provider-draft.test.ts',\n] as const;",
+            "new": "  'packages/polaris-generation-core/src/provider-draft.test.ts',\n  ...['packages/polaris-generation-core/src/island-boundary.test.ts'],\n] as const;"
+          }
+        ]
+      },
+      "creates": {},
+      "expect": "killed",
+      "expectedFailedTests": 1,
+      "expectedMessages": [
+        "the runner's TEST_FILES declarations: expected [ [ "
+      ],
+      "observed": {
+        "exit": 1,
+        "total": 13,
+        "failed": 1,
+        "failureMessages": [
+          "AssertionError: the runner's TEST_FILES declarations: expected [ [ …(5) ] ] to deeply equal [ [ …(4) ] ]"
+        ],
+        "fileErrors": []
+      },
+      "outcome": "killed",
+      "asExpected": true,
+      "restored": true
+    },
+    {
+      "id": "K1",
+      "predicate": "isolation: W1's input with the `$` arm taken out of the test",
+      "edits": {
+        "packages/polaris-generation-core/src/parse-json.test.ts": [
+          {
+            "old": "('rejects pollution keys: %s', (key) => {",
+            "new": "('rejects pollution keys$: %s', (key) => {"
+          }
+        ],
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "mustFail: ['rejects pollution keys'],",
+            "new": "mustFail: ['rejects pollution keys$'],"
+          }
+        ],
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.test.ts": [
+          {
+            "old": "expect(name.trim() !== '' && !/%|\\$/.test(name), ",
+            "new": "expect(name.trim() !== '' && !/%/.test(name), "
+          }
+        ]
+      },
+      "creates": {},
+      "expect": "survived",
+      "expectedFailedTests": null,
+      "expectedMessages": [],
+      "observed": {
+        "exit": 0,
+        "total": 13,
+        "failed": 0,
+        "failureMessages": [],
+        "fileErrors": []
+      },
+      "outcome": "survived",
+      "asExpected": true,
+      "restored": true
+    },
+    {
+      "id": "K2",
+      "predicate": "isolation: W2's input with the blank arm taken out of the test",
+      "edits": {
+        "packages/polaris-generation-core/src/parse-json.test.ts": [
+          {
+            "old": "('rejects pollution keys: %s', (key) => {",
+            "new": "('rejects pollution keys:   %s', (key) => {"
+          }
+        ],
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "mustFail: ['rejects pollution keys'],",
+            "new": "mustFail: ['   '],"
+          }
+        ],
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.test.ts": [
+          {
+            "old": "expect(name.trim() !== '' && !/%|\\$/.test(name), ",
+            "new": "expect(!/%|\\$/.test(name), "
+          }
+        ]
+      },
+      "creates": {},
+      "expect": "survived",
+      "expectedFailedTests": null,
+      "expectedMessages": [],
+      "observed": {
+        "exit": 0,
+        "total": 13,
+        "failed": 0,
+        "failureMessages": [],
+        "fileErrors": []
+      },
+      "outcome": "survived",
+      "asExpected": true,
+      "restored": true
+    },
+    {
+      "id": "K3",
+      "predicate": "isolation: W3's input with the exactly-one count (any title suffices) taken out of the test",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "mustFail: ['rejects pollution keys'],",
+            "new": "mustFail: ['rejects'],"
+          }
+        ],
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.test.ts": [
+          {
+            "old": "expect(titles.filter((title) => title.includes(name)).length, `${id}: test titles holding must-fail \"${name}\"`).toBe(1);",
+            "new": "expect(titles.filter((title) => title.includes(name)).length > 0, `${id}: test titles holding must-fail \"${name}\"`).toBe(true);"
+          }
+        ]
+      },
+      "creates": {},
+      "expect": "survived",
+      "expectedFailedTests": null,
+      "expectedMessages": [],
+      "observed": {
+        "exit": 0,
+        "total": 13,
+        "failed": 0,
+        "failureMessages": [],
+        "fileErrors": []
+      },
+      "outcome": "survived",
+      "asExpected": true,
+      "restored": true
+    },
+    {
+      "id": "K4",
+      "predicate": "isolation: W4's input with the normalize arm taken out of the test",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "    file: DRAFT_MODEL_SOURCE,",
+            "new": "    file: 'packages/polaris-generation-core/src/./draft-model.ts',"
+          }
+        ],
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.test.ts": [
+          {
+            "old": "posix.normalize(file) === file && file.startsWith(SUBJECT_ROOT) && file.endsWith('.ts') && !/\\.(test|spec|testkit|d)\\.ts$/.test(file)",
+            "new": "file.startsWith(SUBJECT_ROOT) && file.endsWith('.ts') && !/\\.(test|spec|testkit|d)\\.ts$/.test(file)"
+          }
+        ]
+      },
+      "creates": {},
+      "expect": "survived",
+      "expectedFailedTests": null,
+      "expectedMessages": [],
+      "observed": {
+        "exit": 0,
+        "total": 13,
+        "failed": 0,
+        "failureMessages": [],
+        "fileErrors": []
+      },
+      "outcome": "survived",
+      "asExpected": true,
+      "restored": true
+    },
+    {
+      "id": "K5",
+      "predicate": "isolation: W5's input with the testkit arm taken out of the test",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "    file: DRAFT_MODEL_SOURCE,",
+            "new": "    file: 'packages/polaris-generation-core/src/draft-model.testkit.ts',"
+          }
+        ],
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.test.ts": [
+          {
+            "old": "posix.normalize(file) === file && file.startsWith(SUBJECT_ROOT) && file.endsWith('.ts') && !/\\.(test|spec|testkit|d)\\.ts$/.test(file)",
+            "new": "posix.normalize(file) === file && file.startsWith(SUBJECT_ROOT) && file.endsWith('.ts') && !/\\.(test|spec|d)\\.ts$/.test(file)"
+          }
+        ]
+      },
+      "creates": {
+        "packages/polaris-generation-core/src/draft-model.testkit.ts": "packages/polaris-generation-core/src/draft-model.ts"
+      },
+      "expect": "survived",
+      "expectedFailedTests": null,
+      "expectedMessages": [],
+      "observed": {
+        "exit": 0,
+        "total": 13,
+        "failed": 0,
+        "failureMessages": [],
+        "fileErrors": []
+      },
+      "outcome": "survived",
+      "asExpected": true,
+      "restored": true
+    }
+  ],
+  "treeCleanAfter": false,
+  "summary": {
+    "mutants": 47,
+    "asExpected": 47,
+    "killed": 39,
+    "survived": [
+      "R3",
+      "Q9",
+      "Q22",
+      "K1",
+      "K2",
+      "K3",
+      "K4",
+      "K5"
+    ],
+    "restored": 47
+  }
+}

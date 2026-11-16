@@ -1,0 +1,28 @@
+{
+  "schema": "syzygy-bpyt.73/root-transaction-receipt-provenance/v1",
+  "capturedAt": "2026-11-06T15:41:08.607912+00:00",
+  "subject": {
+    "metadataRepairBaseCommit": "fb79be3aae4a94b5b7df6a3bbf5a1cf0d3ca775c",
+    "metadataRepairBaseTree": "4051cffec0e1bee4120d6ab790fd68091f03c9a9",
+    "independentlyReviewedCommit": "36ddc6bad5b4b984cb41a3ee8ebe5bd0fe8cfce7",
+    "reviewBindingPath": "docs/evidence/syzygy-bpyt-73/REVIEW-BINDING.json",
+    "reviewBindingSha256": "0a523eaff63bfff6012c908f6befdbf324107c77a17d75f2517d4103071a640a"
+  },
+  "purpose": "Portable copies of non-normative ROOT coordinator receipts; no owner act, adoption, product evidence or lifecycle closure is created.",
+  "copies": [
+    {
+      "path": "docs/evidence/syzygy-bpyt-73/ROOT-NOTICE-RECEIPT.json",
+      "originalSourcePath": "/home/orca/.tmp/syzygy-73-review-record-notice-next-stage-20261106/SUCCESS.json",
+      "bytes": 170,
+      "sha256": "43c59c58334faf0bd3b3cda613bbc7d03933baa386d86b08a795628d2985d061",
+      "copyMethod": "verbatim original bytes; original retained unchanged"
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-73/ROOT-CAMPAIGN-ALLOCATION.json",
+      "originalSourcePath": "/home/orca/.tmp/syzygy-73-root-exact-campaign-allocation-20261106/ROOT-ALLOCATION.json",
+      "bytes": 1206,
+      "sha256": "ac0c3bd8071bc66a586e4f59452cdc452cc5e9e124891686d5c526cd2978f45b",
+      "copyMethod": "verbatim original bytes; original retained unchanged"
+    }
+  ]
+}

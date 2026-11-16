@@ -1,0 +1,93 @@
+{
+  "schema": "consent-port-projection-verification/1",
+  "subjectToolCommit": "2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5",
+  "normalFullRunActualCommit": "134a8c5ba16dda1f3e3935aa1b565166f3b3583f",
+  "records": [
+    {
+      "raw": "M0-full.json",
+      "published": "M0-full.json.commitments.json.gz",
+      "verification": {
+        "success": true,
+        "errors": [],
+        "worlds": 5403,
+        "answers": 70999,
+        "valueCommitments": 775,
+        "rawSha256": "cfe9e4c7dc36a5212f7357e0dce692897c2930fe554a4968ca09e968b567bc7e"
+      }
+    },
+    {
+      "raw": "final-targeted-M0.json",
+      "published": "final-targeted-M0.json.commitments.json.gz",
+      "verification": {
+        "success": true,
+        "errors": [],
+        "worlds": 12,
+        "answers": 274,
+        "valueCommitments": 57,
+        "rawSha256": "731005f8f074169a59584a0cd171ca343b599c33896679016b6fead3ac336731"
+      }
+    },
+    {
+      "raw": "qualification-final-serial.json",
+      "published": "qualification-final-serial.json.commitments.json.gz",
+      "verification": {
+        "success": true,
+        "errors": [],
+        "worlds": 12,
+        "answers": 274,
+        "valueCommitments": 57,
+        "rawSha256": "d755ae3b7108ad1f52c5a9ede17c19d69b349f08616bec2126779ba74bc2ac9f"
+      }
+    },
+    {
+      "raw": "qualification-final-parallel.json",
+      "published": "qualification-final-parallel.json.commitments.json.gz",
+      "verification": {
+        "success": true,
+        "errors": [],
+        "worlds": 12,
+        "answers": 274,
+        "valueCommitments": 57,
+        "rawSha256": "d14fe7c60dc904437ee5196d4ae009496960546a0aeb101d825b515c42170833"
+      }
+    },
+    {
+      "raw": "NC-supersession.json",
+      "published": "NC-supersession.json.commitments.json.gz",
+      "verification": {
+        "success": true,
+        "errors": [],
+        "worlds": 1,
+        "answers": 6,
+        "valueCommitments": 6,
+        "rawSha256": "432a62a289bda71fd33df55cc4e3c1deee811a9318184d741cc258dedafa648d"
+      }
+    },
+    {
+      "raw": "NC-blunt.json",
+      "published": "NC-blunt.json.commitments.json.gz",
+      "verification": {
+        "success": true,
+        "errors": [],
+        "worlds": 8,
+        "answers": 368,
+        "valueCommitments": 40,
+        "rawSha256": "956d1717e25ebf68e001c0b9862a7f029271b579f881c5a302b4a0cb18c85662"
+      }
+    },
+    {
+      "raw": "NC-unrelated.json",
+      "published": "NC-unrelated.json.commitments.json.gz",
+      "verification": {
+        "success": true,
+        "errors": [],
+        "worlds": 4,
+        "answers": 184,
+        "valueCommitments": 38,
+        "rawSha256": "5c60ce98f3eddc41c8a38b563ebdc34bcac03592942922c3ba965f663d01733c"
+      }
+    }
+  ],
+  "success": true,
+  "actor": "author-computed; independent review remains pending"
+}

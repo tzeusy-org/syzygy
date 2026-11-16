@@ -1,0 +1,56 @@
+{
+ "batch": "EARLYW",
+ "version": "head",
+ "param": 50,
+ "n": 2,
+ "scriptSha256": "72a0fabdd0dd12f85ad35fde4b3ee032125757d5276b85802d76fdf5288f0195",
+ "command": "python3 -I <tools>/inject.py trace scripts/measure_vitest_test_durations.py . --file packages/polaris-generation-consent/src/package-reader.test.ts --project @syzygy/polaris-generation-consent --mode alone --runs 1 --out <tmp>/measure-out.json --profile",
+ "sent": [
+  {
+   "t": 0.4052,
+   "signal": "SIGTERM",
+   "to": "pid"
+  }
+ ],
+ "events": [],
+ "scriptExitedAtSeconds": 0.937,
+ "exitCode": 143,
+ "claimedExit": 143,
+ "exitAsClaimed": true,
+ "descendantsSeen": 2,
+ "seenOnlyByCwd": 1,
+ "vitestSeen": false,
+ "npxSeen": false,
+ "treeAfterExit": "",
+ "survivors": {},
+ "recordWritten": false,
+ "recordRuns": null,
+ "recordTests": null,
+ "recordProfileRows": null,
+ "recordExitCode": null,
+ "marks": [],
+ "scriptWrites": null,
+ "tmpdirLeft": [
+  "script.log"
+ ],
+ "trace": [
+  "TRACE 0.1109 popen-enter ['git', 'status', '--porcelain'] stopped []",
+  "TRACE 0.1130 popen-return 47770 stopped []",
+  "TRACE 0.1415 popen-enter ['git', 'rev-parse', 'HEAD'] stopped []",
+  "TRACE 0.1454 popen-return 47780 stopped []",
+  "TRACE 0.1484 popen-enter ['git', 'show', 'HEAD:packages/polaris-generation-consent/src/package-reader.test.ts'] stopped []",
+  "TRACE 0.1510 popen-return 47783 stopped []",
+  "TRACE 0.1626 popen-enter ['git', 'show', 'HEAD:packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts'] stopped []",
+  "TRACE 0.1657 popen-return 47785 stopped []",
+  "TRACE 0.1696 popen-enter ['node', '--version'] stopped []",
+  "TRACE 0.1726 popen-return 47790 stopped []",
+  "TRACE 0.1872 popen-enter ['npx', 'vitest', 'run'] stopped []",
+  "TRACE 0.1898 popen-return 47813 stopped []",
+  "TRACE 0.4098 popen-enter ['git', 'checkout', '--'] stopped [15]",
+  "TRACE 0.4344 popen-return 47880 stopped [15]",
+  "TRACE 0.4885 exit 143 stopped [15]"
+ ],
+ "outputTail": "TRACE 0.1109 popen-enter ['git', 'status', '--porcelain'] stopped []\nTRACE 0.1130 popen-return 47770 stopped []\nTRACE 0.1415 popen-enter ['git', 'rev-parse', 'HEAD'] stopped []\nTRACE 0.1454 popen-return 47780 stopped []\nTRACE 0.1484 popen-enter ['git', 'show', 'HEAD:packages/polaris-generation-consent/src/package-reader.test.ts'] stopped []\nTRACE 0.1510 popen-return 47783 stopped []\nTRACE 0.1626 popen-enter ['git', 'show', 'HEAD:packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts'] stopped []\nTRACE 0.1657 popen-return 47785 stopped []\nTRACE 0.1696 popen-enter ['node', '--version'] stopped []\nTRACE 0.1726 popen-return 47790 stopped []\nTRACE 0.1872 popen-enter ['npx', 'vitest', 'run'] stopped []\nTRACE 0.1898 popen-return 47813 stopped []\nTRACE 0.4098 popen-enter ['git', 'checkout', '--'] stopped [15]\nTRACE 0.4344 popen-return 47880 stopped [15]\nstopped by SIGTERM: the run in progress, if any, was ended and restored and is not recorded\nTRACE 0.4885 exit 143 stopped [15]\n",
+ "exercised": true,
+ "passes": true
+}

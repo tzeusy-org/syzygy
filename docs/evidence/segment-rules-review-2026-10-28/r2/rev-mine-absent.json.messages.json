@@ -1,0 +1,36 @@
+{
+ "00:RX0-entries-unmutated": [],
+ "01:RX3-both-rules-drop-encoded-capital-n": [
+  [
+   "the segment rules the entry reader copies from Node 24's exports resolver reads \"./dist/%4Eode_modules/index.js\" as Node does: it refuses",
+   "AssertionError: expected 'loads' to be 'refuses' // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557-r2/clone/packages/polaris-generation-core/src/workspace-reach.test.ts:253:102\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557-r2/clone/node_modules/@vitest/runner"
+  ]
+ ],
+ "02:RX4-require-not-a-node-condition": [
+  [
+   "the workspace entry modules throws on such a target under a condition Node does not read, or in a main, and names the one Node refuses first",
+   "AssertionError: expected [Function] to throw error including '@syzygy/lib: its require condition ta\u2026' but got '@syzygy/lib: its require condition ta\u2026'\n    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557-r2/clone/node_modules/@vitest/expect/dist/index.js:1420:16)\n    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze"
+  ]
+ ],
+ "03:RK4-key-message-drops-the-path": [
+  [
+   "the workspace entry modules throws on a condition key with a /../ segment, at any depth",
+   "AssertionError: expected [Function] to throw error including '@syzygy/lib: its node > condition key\u2026' but got '@syzygy/lib: its condition key \"x/../\u2026'\n    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557-r2/clone/node_modules/@vitest/expect/dist/index.js:1420:16)\n    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze"
+  ]
+ ],
+ "04:RK5-key-predicate-widened": [
+  [
+   "the workspace entry modules throws on a condition key with a /../ segment, at any depth",
+   "Error: @syzygy/lib: its condition key \"a/..b\" has a /../ segment, and no condition Node matches by default has one\n    at entryModulesIn (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557-r2/clone/packages/polaris-generation-core/src/workspace-reach.testkit.ts:182:38)\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02"
+  ]
+ ],
+ "05:RK3-key-fault-ranked-first": [],
+ "06:RK2-key-walk-skips-arrays": [],
+ "07:RX7-projects-reordered": [],
+ "08:RX8-global-setup-removed": [
+  [
+   "suite child processes and the vitest worker RPC loads the vitest config and finds no alias key at any depth",
+   "AssertionError: expected false to be true // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557-r2/clone/apps/three-surface-poc/src/sync-child-process-guard.test.ts:266:90\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05"
+  ]
+ ]
+}

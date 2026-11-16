@@ -1,0 +1,49 @@
+{
+ "batch": "EARLYW",
+ "commit": "e7f3c71ef84f93cbdeef26db54fbdc63e05bc164",
+ "tool": {
+  "path": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520c/tools/probe.py",
+  "sha256": "58655c993d05d98df899058a757630d758652b0e336b8edda06f32b356af1162"
+ },
+ "scripts": {
+  "head": {
+   "path": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520c/clone/scripts/measure_vitest_test_durations.py",
+   "sha256": "72a0fabdd0dd12f85ad35fde4b3ee032125757d5276b85802d76fdf5288f0195"
+  },
+  "r1": {
+   "path": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520c/tools/r1_measure_vitest_test_durations.py",
+   "sha256": "920c5f120209904b37cfe14320ea00edfa18eafbda12fd7dcb02ec8fcf4f1e97"
+  }
+ },
+ "repeats": 2,
+ "params": [
+  0,
+  50,
+  100,
+  200,
+  400
+ ],
+ "summary": {
+  "head": {
+   "attempts": 10,
+   "passed": 10,
+   "dirty": 0,
+   "withSurvivors": 0,
+   "exitAsClaimed": 10,
+   "exercised": 10
+  },
+  "r1": {
+   "attempts": 10,
+   "passed": 3,
+   "dirty": 0,
+   "withSurvivors": 7,
+   "exitAsClaimed": 10,
+   "exercised": 10
+  }
+ },
+ "loadAtEnd": [
+  49.9091796875,
+  43.46044921875,
+  34.23583984375
+ ]
+}

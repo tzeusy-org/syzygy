@@ -1,0 +1,140 @@
+=== E head,r1 x4 start 17:52:23 load 18.68
+E head 800 #1: exit 143 (claimed 143, as claimed), exited 0.451 s, tree clean, 0 survivors of 2 seen, vitest seen False, record runs None tests None, exercised True -> pass
+E r1 800 #1: exit 143 (claimed 143, as claimed), exited 0.336 s, tree clean, 10 survivors of 10 seen, vitest seen True, record runs None tests None, exercised True -> FAIL
+   survivors: {'3803735': 'npm exec vitest run --project @syzygy/polaris-generation-consent packages/polari', '3803934': 'sh -c "vitest" run --project @syzygy/polaris-generation-consent packages/polaris', '3803935': 'node (vitest)', '3804296': '/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/sc', '3804383': 'node (vitest 1)', '3804389': 'node (vitest 2)', '3804390': 'node (vitest 3)', '3804396': 'node (vitest 4)', '3804405': 'node (vitest 5)', '3804407': 'node (vitest 6)'}
+E head 1000 #1: exit 143 (claimed 143, as claimed), exited 0.428 s, tree clean, 0 survivors of 2 seen, vitest seen False, record runs None tests None, exercised True -> pass
+E r1 1000 #1: exit 143 (claimed 143, as claimed), exited 0.276 s, tree clean, 10 survivors of 10 seen, vitest seen True, record runs None tests None, exercised True -> FAIL
+   survivors: {'3807589': 'npm exec vitest run --project @syzygy/polaris-generation-consent packages/polari', '3807750': 'sh -c "vitest" run --project @syzygy/polaris-generation-consent packages/polaris', '3807751': 'node (vitest)', '3807835': '/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/sc', '3807923': 'node (vitest 1)', '3807935': 'node (vitest 2)', '3807939': 'node (vitest 3)', '3807946': 'node (vitest 4)', '3807966': 'node (vitest 5)', '3807968': 'node (vitest 6)'}
+E head 1200 #1: exit 143 (claimed 143, as claimed), exited 0.697 s, tree clean, 0 survivors of 2 seen, vitest seen False, record runs None tests None, exercised True -> pass
+E r1 1200 #1: exit 143 (claimed 143, as claimed), exited 0.305 s, tree clean, 11 survivors of 10 seen, vitest seen True, record runs None tests None, exercised True -> FAIL
+   survivors: {'3811667': 'npm exec vitest run --project @syzygy/polaris-generation-consent packages/polari', '3812086': 'sh -c "vitest" run --project @syzygy/polaris-generation-consent packages/polaris', '3812091': 'node (vitest)', '3812307': '/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/sc', '3812364': 'node (vitest 1)', '3812368': 'node (vitest 2)', '3812378': 'node (vitest 3)', '3812408': 'node (vitest 4)', '3812427': 'node (vitest 5)', '3812428': 'node (vitest 6)', '3813638': "python3 -c import sys; sys.path.insert(0, 'scripts'); import record_public_sourc"}
+E head 1500 #1: exit 143 (claimed 143, as claimed), exited 0.737 s, tree clean, 0 survivors of 2 seen, vitest seen True, record runs None tests None, exercised True -> pass
+E r1 1500 #1: exit 143 (claimed 143, as claimed), exited 0.342 s, tree clean, 10 survivors of 10 seen, vitest seen True, record runs None tests None, exercised True -> FAIL
+   survivors: {'3815815': 'npm exec vitest run --project @syzygy/polaris-generation-consent packages/polari', '3816115': 'sh -c "vitest" run --project @syzygy/polaris-generation-consent packages/polaris', '3816118': 'node (vitest)', '3816362': '/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/sc', '3816445': 'node (vitest 1)', '3816446': 'node (vitest 2)', '3816465': 'node (vitest 3)', '3816476': 'node (vitest 4)', '3816490': 'node (vitest 5)', '3816492': 'node (vitest 6)'}
+E head 1800 #1: exit 143 (claimed 143, as claimed), exited 0.571 s, tree clean, 0 survivors of 2 seen, vitest seen False, record runs None tests None, exercised True -> pass
+E r1 1800 #1: exit 143 (claimed 143, as claimed), exited 0.443 s, tree clean, 0 survivors of 2 seen, vitest seen False, record runs None tests None, exercised True -> pass
+E head 2200 #1: exit 143 (claimed 143, as claimed), exited 0.462 s, tree clean, 0 survivors of 2 seen, vitest seen False, record runs None tests None, exercised True -> pass
+E r1 2200 #1: exit 143 (claimed 143, as claimed), exited 0.688 s, tree clean, 0 survivors of 2 seen, vitest seen False, record runs None tests None, exercised True -> pass
+E head 800 #2: exit 143 (claimed 143, as claimed), exited 0.429 s, tree clean, 0 survivors of 2 seen, vitest seen False, record runs None tests None, exercised True -> pass
+E r1 800 #2: exit 143 (claimed 143, as claimed), exited 0.278 s, tree clean, 10 survivors of 10 seen, vitest seen True, record runs None tests None, exercised True -> FAIL
+   survivors: {'3825065': 'npm exec vitest run --project @syzygy/polaris-generation-consent packages/polari', '3825395': 'sh -c "vitest" run --project @syzygy/polaris-generation-consent packages/polaris', '3825396': 'node (vitest)', '3825508': '/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/sc', '3825543': 'node (vitest 1)', '3825544': 'node (vitest 2)', '3825550': 'node (vitest 3)', '3825551': 'node (vitest 4)', '3825558': 'node (vitest 5)', '3825563': 'node (vitest 6)'}
+E head 1000 #2: exit 143 (claimed 143, as claimed), exited 0.39 s, tree clean, 0 survivors of 2 seen, vitest seen False, record runs None tests None, exercised True -> pass
+E r1 1000 #2: exit 143 (claimed 143, as claimed), exited 0.489 s, tree clean, 0 survivors of 2 seen, vitest seen False, record runs None tests None, exercised True -> pass
+E head 1200 #2: exit 143 (claimed 143, as claimed), exited 0.591 s, tree clean, 0 survivors of 2 seen, vitest seen False, record runs None tests None, exercised True -> pass
+E r1 1200 #2: exit 143 (claimed 143, as claimed), exited 0.267 s, tree clean, 0 survivors of 0 seen, vitest seen False, record runs None tests None, exercised True -> pass
+E head 1500 #2: exit 143 (claimed 143, as claimed), exited 0.469 s, tree clean, 0 survivors of 2 seen, vitest seen False, record runs None tests None, exercised True -> pass
+E r1 1500 #2: exit 143 (claimed 143, as claimed), exited 0.328 s, tree clean, 10 survivors of 10 seen, vitest seen True, record runs None tests None, exercised True -> FAIL
+   survivors: {'3836570': 'npm exec vitest run --project @syzygy/polaris-generation-consent packages/polari', '3836613': 'sh -c "vitest" run --project @syzygy/polaris-generation-consent packages/polaris', '3836614': 'node (vitest)', '3836908': '/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/sc', '3837088': 'node (vitest 1)', '3837092': 'node (vitest 2)', '3837093': 'node (vitest 3)', '3837100': 'node (vitest 4)', '3837105': 'node (vitest 5)', '3837112': 'node (vitest 6)'}
+E head 1800 #2: exit 143 (claimed 143, as claimed), exited 0.463 s, tree clean, 0 survivors of 2 seen, vitest seen False, record runs None tests None, exercised True -> pass
+E r1 1800 #2: exit 143 (claimed 143, as claimed), exited 0.374 s, tree clean, 0 survivors of 2 seen, vitest seen False, record runs None tests None, exercised True -> pass
+E head 2200 #2: exit 143 (claimed 143, as claimed), exited 0.428 s, tree clean, 0 survivors of 2 seen, vitest seen False, record runs None tests None, exercised True -> pass
+E r1 2200 #2: exit 143 (claimed 143, as claimed), exited 0.377 s, tree clean, 10 survivors of 10 seen, vitest seen True, record runs None tests None, exercised True -> FAIL
+   survivors: {'3842882': 'npm exec vitest run --project @syzygy/polaris-generation-consent packages/polari', '3843389': 'sh -c "vitest" run --project @syzygy/polaris-generation-consent packages/polaris', '3843393': 'node (vitest)', '3843556': '/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/sc', '3843799': 'node (vitest 1)', '3843804': 'node (vitest 2)', '3843807': 'node (vitest 3)', '3843817': 'node (vitest 4)', '3843846': 'node (vitest 5)', '3843860': 'node (vitest 6)'}
+E head 800 #3: exit 143 (claimed 143, as claimed), exited 0.269 s, tree clean, 0 survivors of 0 seen, vitest seen False, record runs None tests None, exercised True -> pass
+E r1 800 #3: exit 143 (claimed 143, as claimed), exited 0.234 s, tree clean, 11 survivors of 10 seen, vitest seen True, record runs None tests None, exercised True -> FAIL
+   survivors: {'3846974': 'npm exec vitest run --project @syzygy/polaris-generation-consent packages/polari', '3847192': 'sh -c "vitest" run --project @syzygy/polaris-generation-consent packages/polaris', '3847193': 'node (vitest)', '3847763': '/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/sc', '3848029': 'node (vitest 1)', '3848031': 'node (vitest 2)', '3848038': 'node (vitest 3)', '3848054': 'node (vitest 4)', '3848062': 'node (vitest 5)', '3848088': 'node (vitest 6)', '3848970': "python3 -c import sys; sys.path.insert(0, 'scripts'); import record_public_sourc"}
+E head 1000 #3: exit 143 (claimed 143, as claimed), exited 0.46 s, tree clean, 0 survivors of 2 seen, vitest seen False, record runs None tests None, exercised True -> pass
+E r1 1000 #3: exit 143 (claimed 143, as claimed), exited 0.308 s, tree clean, 10 survivors of 10 seen, vitest seen True, record runs None tests None, exercised True -> FAIL
+   survivors: {'3850907': 'npm exec vitest run --project @syzygy/polaris-generation-consent packages/polari', '3851116': 'sh -c "vitest" run --project @syzygy/polaris-generation-consent packages/polaris', '3851119': 'node (vitest)', '3851292': '/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/sc', '3851416': 'node (vitest 1)', '3851428': 'node (vitest 2)', '3851445': 'node (vitest 3)', '3851459': 'node (vitest 4)', '3851465': 'node (vitest 5)', '3851470': 'node (vitest 6)'}
+E head 1200 #3: exit 143 (claimed 143, as claimed), exited 0.566 s, tree clean, 0 survivors of 2 seen, vitest seen False, record runs None tests None, exercised True -> pass
+E r1 1200 #3: exit 143 (claimed 143, as claimed), exited 0.416 s, tree clean, 0 survivors of 2 seen, vitest seen False, record runs None tests None, exercised True -> pass
+E head 1500 #3: exit 143 (claimed 143, as claimed), exited 0.526 s, tree clean, 0 survivors of 0 seen, vitest seen False, record runs None tests None, exercised True -> pass
+E r1 1500 #3: exit 143 (claimed 143, as claimed), exited 0.49 s, tree clean, 0 survivors of 2 seen, vitest seen False, record runs None tests None, exercised True -> pass
+E head 1800 #3: exit 143 (claimed 143, as claimed), exited 0.567 s, tree clean, 0 survivors of 2 seen, vitest seen False, record runs None tests None, exercised True -> pass
+E r1 1800 #3: exit 143 (claimed 143, as claimed), exited 0.282 s, tree clean, 11 survivors of 10 seen, vitest seen True, record runs None tests None, exercised True -> FAIL
+   survivors: {'3861306': 'npm exec vitest run --project @syzygy/polaris-generation-consent packages/polari', '3861675': 'sh -c "vitest" run --project @syzygy/polaris-generation-consent packages/polaris', '3861676': 'node (vitest)', '3861917': '/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/sc', '3862212': 'node (vitest 1)', '3862217': 'node (vitest 2)', '3862224': 'node (vitest 3)', '3862230': 'node (vitest 4)', '3862247': 'node (vitest 5)', '3862249': 'node (vitest 6)', '3863171': "python3 -c import sys; sys.path.insert(0, 'scripts'); import record_public_sourc"}
+E head 2200 #3: exit 143 (claimed 143, as claimed), exited 0.458 s, tree clean, 0 survivors of 2 seen, vitest seen False, record runs None tests None, exercised True -> pass
+E r1 2200 #3: exit 143 (claimed 143, as claimed), exited 0.423 s, tree clean, 0 survivors of 2 seen, vitest seen False, record runs None tests None, exercised True -> pass
+E head 800 #4: exit 143 (claimed 143, as claimed), exited 0.48 s, tree clean, 0 survivors of 2 seen, vitest seen False, record runs None tests None, exercised True -> pass
+E r1 800 #4: exit 143 (claimed 143, as claimed), exited 0.26 s, tree clean, 11 survivors of 10 seen, vitest seen True, record runs None tests None, exercised True -> FAIL
+   survivors: {'3870369': 'npm exec vitest run --project @syzygy/polaris-generation-consent packages/polari', '3870561': 'sh -c "vitest" run --project @syzygy/polaris-generation-consent packages/polaris', '3870563': 'node (vitest)', '3870993': '/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/sc', '3871075': 'node (vitest 1)', '3871077': 'node (vitest 2)', '3871084': 'node (vitest 3)', '3871085': 'node (vitest 4)', '3871100': 'node (vitest 5)', '3871103': 'node (vitest 6)', '3872264': "python3 -c import sys; sys.path.insert(0, 'scripts'); import record_public_sourc"}
+E head 1000 #4: exit 143 (claimed 143, as claimed), exited 0.399 s, tree clean, 0 survivors of 2 seen, vitest seen False, record runs None tests None, exercised True -> pass
+E r1 1000 #4: exit 143 (claimed 143, as claimed), exited 0.426 s, tree clean, 0 survivors of 2 seen, vitest seen False, record runs None tests None, exercised True -> pass
+E head 1200 #4: exit 143 (claimed 143, as claimed), exited 0.496 s, tree clean, 0 survivors of 2 seen, vitest seen False, record runs None tests None, exercised True -> pass
+E r1 1200 #4: exit 143 (claimed 143, as claimed), exited 0.254 s, tree clean, 10 survivors of 10 seen, vitest seen True, record runs None tests None, exercised True -> FAIL
+   survivors: {'3878818': 'npm exec vitest run --project @syzygy/polaris-generation-consent packages/polari', '3878944': 'sh -c "vitest" run --project @syzygy/polaris-generation-consent packages/polaris', '3878946': 'node (vitest)', '3879398': '/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/sc', '3879495': 'node (vitest 1)', '3879497': 'node (vitest 2)', '3879504': 'node (vitest 3)', '3879506': 'node (vitest 4)', '3879513': 'node (vitest 5)', '3879519': 'node (vitest 6)'}
+E head 1500 #4: exit 143 (claimed 143, as claimed), exited 0.82 s, tree clean, 0 survivors of 2 seen, vitest seen False, record runs None tests None, exercised True -> pass
+E r1 1500 #4: exit 143 (claimed 143, as claimed), exited 0.464 s, tree clean, 0 survivors of 2 seen, vitest seen False, record runs None tests None, exercised True -> pass
+E head 1800 #4: exit 143 (claimed 143, as claimed), exited 0.43 s, tree clean, 0 survivors of 2 seen, vitest seen False, record runs None tests None, exercised True -> pass
+E r1 1800 #4: exit 143 (claimed 143, as claimed), exited 0.425 s, tree clean, 10 survivors of 10 seen, vitest seen True, record runs None tests None, exercised True -> FAIL
+   survivors: {'3887814': 'npm exec vitest run --project @syzygy/polaris-generation-consent packages/polari', '3888254': 'sh -c "vitest" run --project @syzygy/polaris-generation-consent packages/polaris', '3888261': 'node (vitest)', '3888891': '/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/sc', '3889226': 'node (vitest 1)', '3889259': 'node (vitest 2)', '3889261': 'node (vitest 3)', '3889266': 'node (vitest 4)', '3889269': 'node (vitest 5)', '3889275': 'node (vitest 6)'}
+E head 2200 #4: exit 143 (claimed 143, as claimed), exited 0.771 s, tree clean, 0 survivors of 2 seen, vitest seen False, record runs None tests None, exercised True -> pass
+E r1 2200 #4: exit 143 (claimed 143, as claimed), exited 0.408 s, tree clean, 0 survivors of 2 seen, vitest seen False, record runs None tests None, exercised True -> pass
+SUMMARY E {"head": {"attempts": 24, "passed": 24, "dirty": 0, "withSurvivors": 0, "exitAsClaimed": 24, "exercised": 24}, "r1": {"attempts": 24, "passed": 11, "dirty": 0, "withSurvivors": 13, "exitAsClaimed": 24, "exercised": 24}}
+=== E exit 0 end 17:55:26 load 37.13
+=== G head,r1 x3 start 17:55:26 load 37.13
+G head 0 #1: exit 143 (claimed 143, as claimed), exited 1.659 s, tree clean, 0 survivors of 3 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G r1 0 #1: exit 143 (claimed 143, as claimed), exited 1.408 s, tree clean, 0 survivors of 4 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G head 30 #1: exit 143 (claimed 143, as claimed), exited 1.371 s, tree clean, 0 survivors of 2 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G r1 30 #1: exit 143 (claimed 143, as claimed), exited 1.559 s, tree clean, 0 survivors of 4 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G head 60 #1: exit 143 (claimed 143, as claimed), exited 2.203 s, tree clean, 0 survivors of 5 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G r1 60 #1: exit 143 (claimed 143, as claimed), exited 1.536 s, tree clean, 0 survivors of 4 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G head 100 #1: exit 143 (claimed 143, as claimed), exited 3.217 s, tree clean, 0 survivors of 11 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G r1 100 #1: exit 143 (claimed 143, as claimed), exited 1.479 s, tree clean, 0 survivors of 2 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G head 150 #1: exit 143 (claimed 143, as claimed), exited 1.363 s, tree clean, 0 survivors of 4 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G r1 150 #1: exit 143 (claimed 143, as claimed), exited 2.566 s, tree clean, 0 survivors of 11 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G head 200 #1: exit 143 (claimed 143, as claimed), exited 1.336 s, tree clean, 0 survivors of 4 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G r1 200 #1: exit 143 (claimed 143, as claimed), exited 2.254 s, tree clean, 0 survivors of 5 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G head 300 #1: exit 143 (claimed 143, as claimed), exited 1.361 s, tree clean, 0 survivors of 4 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G r1 300 #1: exit 143 (claimed 143, as claimed), exited 1.388 s, tree clean, 0 survivors of 4 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G head 500 #1: exit 143 (claimed 143, as claimed), exited 1.464 s, tree clean, 0 survivors of 4 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G r1 500 #1: exit 143 (claimed 143, as claimed), exited 2.611 s, tree clean, 0 survivors of 5 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G head 1000 #1: exit 143 (claimed 143, as claimed), exited 4.098 s, tree clean, 0 survivors of 5 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G r1 1000 #1: exit 143 (claimed 143, as claimed), exited 2.582 s, tree clean, 0 survivors of 8 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G head 0 #2: exit 143 (claimed 143, as claimed), exited 2.151 s, tree clean, 0 survivors of 4 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G r1 0 #2: exit 143 (claimed 143, as claimed), exited 1.252 s, tree clean, 0 survivors of 4 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G head 30 #2: exit 143 (claimed 143, as claimed), exited 1.261 s, tree clean, 0 survivors of 4 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G r1 30 #2: exit 143 (claimed 143, as claimed), exited 1.939 s, tree clean, 0 survivors of 5 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G head 60 #2: exit 143 (claimed 143, as claimed), exited 2.766 s, tree clean, 0 survivors of 6 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G r1 60 #2: exit 143 (claimed 143, as claimed), exited 2.506 s, tree clean, 0 survivors of 5 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G head 100 #2: exit 143 (claimed 143, as claimed), exited 1.654 s, tree clean, 0 survivors of 2 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G r1 100 #2: exit 143 (claimed 143, as claimed), exited 1.431 s, tree clean, 0 survivors of 2 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G head 150 #2: exit 143 (claimed 143, as claimed), exited 2.363 s, tree clean, 0 survivors of 5 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G r1 150 #2: exit 143 (claimed 143, as claimed), exited 1.579 s, tree clean, 0 survivors of 4 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G head 200 #2: exit 143 (claimed 143, as claimed), exited 2.036 s, tree clean, 0 survivors of 5 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G r1 200 #2: exit 143 (claimed 143, as claimed), exited 1.5 s, tree clean, 0 survivors of 4 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G head 300 #2: exit 143 (claimed 143, as claimed), exited 2.255 s, tree clean, 0 survivors of 4 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G r1 300 #2: exit 143 (claimed 143, as claimed), exited 1.924 s, tree clean, 0 survivors of 2 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G head 500 #2: exit 143 (claimed 143, as claimed), exited 1.515 s, tree clean, 0 survivors of 2 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G r1 500 #2: exit 143 (claimed 143, as claimed), exited 1.502 s, tree clean, 0 survivors of 4 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G head 1000 #2: exit 143 (claimed 143, as claimed), exited 2.178 s, tree clean, 0 survivors of 4 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G r1 1000 #2: exit 143 (claimed 143, as claimed), exited 2.07 s, tree clean, 0 survivors of 4 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G head 0 #3: exit 143 (claimed 143, as claimed), exited 1.587 s, tree clean, 0 survivors of 2 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G r1 0 #3: exit 143 (claimed 143, as claimed), exited 1.577 s, tree clean, 0 survivors of 4 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G head 30 #3: exit 143 (claimed 143, as claimed), exited 2.579 s, tree clean, 0 survivors of 5 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G r1 30 #3: exit 143 (claimed 143, as claimed), exited 1.825 s, tree clean, 0 survivors of 4 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G head 60 #3: exit 143 (claimed 143, as claimed), exited 1.755 s, tree clean, 0 survivors of 2 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G r1 60 #3: exit 143 (claimed 143, as claimed), exited 1.996 s, tree clean, 0 survivors of 4 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G head 100 #3: exit 143 (claimed 143, as claimed), exited 1.71 s, tree clean, 0 survivors of 2 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G r1 100 #3: exit 143 (claimed 143, as claimed), exited 1.617 s, tree clean, 0 survivors of 4 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G head 150 #3: exit 143 (claimed 143, as claimed), exited 1.261 s, tree clean, 0 survivors of 4 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G r1 150 #3: exit 143 (claimed 143, as claimed), exited 2.899 s, tree clean, 0 survivors of 7 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G head 200 #3: exit 143 (claimed 143, as claimed), exited 2.54 s, tree clean, 0 survivors of 4 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G r1 200 #3: exit 143 (claimed 143, as claimed), exited 2.613 s, tree clean, 0 survivors of 4 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G head 300 #3: exit 143 (claimed 143, as claimed), exited 2.454 s, tree clean, 0 survivors of 5 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G r1 300 #3: exit 143 (claimed 143, as claimed), exited 1.773 s, tree clean, 0 survivors of 2 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G head 500 #3: exit 143 (claimed 143, as claimed), exited 1.552 s, tree clean, 0 survivors of 2 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G r1 500 #3: exit 143 (claimed 143, as claimed), exited 1.863 s, tree clean, 0 survivors of 2 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G head 1000 #3: exit 143 (claimed 143, as claimed), exited 2.055 s, tree clean, 0 survivors of 2 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G r1 1000 #3: exit 143 (claimed 143, as claimed), exited 2.581 s, tree clean, 0 survivors of 4 seen, vitest seen True, record runs None tests None, exercised True -> pass
+SUMMARY G {"head": {"attempts": 27, "passed": 27, "dirty": 0, "withSurvivors": 0, "exitAsClaimed": 27, "exercised": 27}, "r1": {"attempts": 27, "passed": 27, "dirty": 0, "withSurvivors": 0, "exitAsClaimed": 27, "exercised": 27}}
+=== G exit 0 end 18:00:20 load 53.06
+=== K head,r1 x2 start 18:00:20 load 53.06
+K head None #1: exit 0 (claimed 0, as claimed), exited 28.235 s, tree clean, 0 survivors of 21 seen, vitest seen True, record runs 1 tests 299, exercised True -> pass
+   trace: ['KILLPG 4054367 0 -> ESRCH, answered alive (injected)', 'KILLPG 4054367 15 -> ESRCH', 'KILLPG 4054367 0 -> ESRCH', 'KILLPG 4054367 0 -> ESRCH']
+K r1 None #1: exit 1 (claimed 0, NOT as claimed), exited 25.633 s, tree DIRTY 'M packages/polaris-generation-consent/src/package-reader.test.ts\n M packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts', 0 survivors of 20 seen, vitest seen True, record runs None tests None, exercised True -> FAIL
+   trace: ['KILLPG 4066554 0 -> ESRCH, answered alive (injected)', 'KILLPG 4066554 15 -> ESRCH']
+K head None #2: exit 0 (claimed 0, as claimed), exited 17.386 s, tree clean, 0 survivors of 25 seen, vitest seen True, record runs 1 tests 299, exercised True -> pass
+   trace: ['KILLPG 4079165 0 -> ESRCH, answered alive (injected)', 'KILLPG 4079165 15 -> ESRCH', 'KILLPG 4079165 0 -> ESRCH', 'KILLPG 4079165 0 -> ESRCH']
+K r1 None #2: exit 1 (claimed 0, NOT as claimed), exited 14.694 s, tree DIRTY 'M packages/polaris-generation-consent/src/package-reader.test.ts\n M packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts', 0 survivors of 18 seen, vitest seen True, record runs None tests None, exercised True -> FAIL
+   trace: ['KILLPG 4090765 0 -> ESRCH, answered alive (injected)', 'KILLPG 4090765 15 -> ESRCH']
+SUMMARY K {"head": {"attempts": 2, "passed": 2, "dirty": 0, "withSurvivors": 0, "exitAsClaimed": 2, "exercised": 2}, "r1": {"attempts": 2, "passed": 0, "dirty": 2, "withSurvivors": 0, "exitAsClaimed": 0, "exercised": 2}}
+=== K exit 0 end 18:02:01 load 42.75
+=== H head,r1 x2 start 18:02:01 load 42.75
+H head None #1: exit 0 (claimed 129, NOT as claimed), exited 15.066 s, tree clean, 0 survivors of 17 seen, vitest seen True, record runs 1 tests 299, exercised True -> pass
+H r1 None #1: exit 129 (claimed 129, as claimed), exited 3.847 s, tree clean, 0 survivors of 15 seen, vitest seen True, record runs None tests None, exercised True -> FAIL
+H head None #2: exit 0 (claimed 129, NOT as claimed), exited 28.224 s, tree clean, 0 survivors of 29 seen, vitest seen True, record runs 1 tests 299, exercised True -> pass
+H r1 None #2: exit 129 (claimed 129, as claimed), exited 5.269 s, tree clean, 0 survivors of 11 seen, vitest seen True, record runs None tests None, exercised True -> FAIL
+SUMMARY H {"head": {"attempts": 2, "passed": 2, "dirty": 0, "withSurvivors": 0, "exitAsClaimed": 0, "exercised": 2}, "r1": {"attempts": 2, "passed": 0, "dirty": 0, "withSurvivors": 0, "exitAsClaimed": 2, "exercised": 2}}
+=== H exit 0 end 18:03:08 load 47.96
+=== ALL DONE 18:03:08

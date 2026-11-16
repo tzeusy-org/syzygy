@@ -1,0 +1,70 @@
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/cli.test.ts > syzygy dossier > exits 2 with usage when no command is given
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/cli.test.ts > syzygy dossier > exits 2 for a command this build does not have (["publish","r"])
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/cli.test.ts > syzygy dossier > exits 2 for a command this build does not have (["frobnicate"])
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/cli.test.ts > syzygy dossier > exits 2 for malformed arguments (["status"])
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/cli.test.ts > syzygy dossier > exits 2 for malformed arguments (["status","a","b"])
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/cli.test.ts > syzygy dossier > exits 2 for malformed arguments (["status","--verbose","a"])
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/cli.test.ts > syzygy dossier > exits 2 for malformed arguments (["help","extra"])
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/cli.test.ts > syzygy dossier > prints usage and exits 0 for ["help"]
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/cli.test.ts > syzygy dossier > prints usage and exits 0 for ["--help"]
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/cli.test.ts > syzygy dossier > prints usage and exits 0 for ["-h"]
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/cli.test.ts > syzygy dossier > reports status, exit 0, with the human form carrying every JSON leaf in order
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/cli.test.ts > syzygy dossier > accepts --json before the command
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/cli.test.ts > syzygy dossier > refuses an unreadable run with exit 1, the reason on stderr and, with --json, the same reason as JSON
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/cli.test.ts > syzygy dossier > renders an empty list or object as (none)
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/cli.test.ts > no route and no credential > sweeps a non-empty population of source files
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/cli.test.ts > no route and no credential > brief.ts imports no network module
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/cli.test.ts > no route and no credential > check.ts imports no network module
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/cli.test.ts > no route and no credential > child-process.testkit.ts imports no network module
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/cli.test.ts > no route and no credential > class-gate.ts imports no network module
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/cli.test.ts > no route and no credential > cli.ts imports no network module
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/cli.test.ts > no route and no credential > clone-head.ts imports no network module
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/cli.test.ts > no route and no credential > clone-shape.ts imports no network module
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/cli.test.ts > no route and no credential > close.ts imports no network module
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/cli.test.ts > no route and no credential > credential-probe.ts imports no network module
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/cli.test.ts > no route and no credential > design-review.ts imports no network module
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/cli.test.ts > no route and no credential > doctrine-quote.ts imports no network module
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/cli.test.ts > no route and no credential > draft-schema.ts imports no network module
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/cli.test.ts > no route and no credential > execution-choice.ts imports no network module
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/cli.test.ts > no route and no credential > execution-flags.ts imports no network module
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/cli.test.ts > no route and no credential > execution-rule.ts imports no network module
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/cli.test.ts > no route and no credential > fs-patch.testkit.ts imports no network module
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/cli.test.ts > no route and no credential > full-run.testkit.ts imports no network module
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/cli.test.ts > no route and no credential > gate-sources.ts imports no network module
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/cli.test.ts > no route and no credential > git-object-reader.ts imports no network module
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/cli.test.ts > no route and no credential > github-url.ts imports no network module
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/cli.test.ts > no route and no credential > governed.ts imports no network module
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/cli.test.ts > no route and no credential > index.ts imports no network module
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/cli.test.ts > no route and no credential > init.ts imports no network module
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/cli.test.ts > no route and no credential > inventory.ts imports no network module
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/cli.test.ts > no route and no credential > launched.ts imports no network module
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/cli.test.ts > no route and no credential > polaris.ts imports no network module
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/cli.test.ts > no route and no credential > preflight.ts imports no network module
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/cli.test.ts > no route and no credential > render.ts imports no network module
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/cli.test.ts > no route and no credential > reverify.ts imports no network module
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/cli.test.ts > no route and no credential > review.ts imports no network module
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/cli.test.ts > no route and no credential > run-config.ts imports no network module
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/cli.test.ts > no route and no credential > run-record.ts imports no network module
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/cli.test.ts > no route and no credential > screen.ts imports no network module
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/cli.test.ts > no route and no credential > session-handover.ts imports no network module
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/cli.test.ts > no route and no credential > session-statement.ts imports no network module
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/cli.test.ts > no route and no credential > session-view.ts imports no network module
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/cli.test.ts > no route and no credential > state-directory.ts imports no network module
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/cli.test.ts > no route and no credential > status.ts imports no network module
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/cli.test.ts > no route and no credential > waiting-sessions.ts imports no network module
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/cli.test.ts > no route and no credential > broker-client.ts uses node:net for Unix-domain sockets only
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/cli.test.ts > no route and no credential > broker.ts uses node:net for Unix-domain sockets only
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/cli.test.ts > no route and no credential > the sweep pattern catches a network import (its own mutant)
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/state-directory.test.ts > state root placement > accepts a state root outside the clone
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/state-directory.test.ts > state root placement > refuses a state root inside the clone
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/state-directory.test.ts > state root placement > refuses the clone itself as the state root
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/state-directory.test.ts > state root placement > refuses a state root inside the clone's .git directory
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/state-directory.test.ts > state root placement > refuses a state root that contains the clone
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/state-directory.test.ts > state root placement > refuses a symbolic link that lands inside the clone, judged by where it resolves
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/state-directory.test.ts > state root placement > refuses a relative state root
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/state-directory.test.ts > state root placement > refuses a symbolic link cycle
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/state-directory.test.ts > run directory creation > writes only the run directory and its configuration, owner-only, and nothing in the clone
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/state-directory.test.ts > run directory creation > draws a random run id that does not depend on the clone path
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/state-directory.test.ts > run directory creation > never reuses an existing run directory
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/state-directory.test.ts > run directory creation > refuses a malformed run id
+[@syzygy/polaris-dossier] packages/polaris-dossier/src/state-directory.test.ts > run directory creation > writes nothing when the state root is refused

@@ -1,0 +1,260 @@
+{
+  "createdAt": "2026-10-28T00:26:04.086018+00:00",
+  "head": "95c87a52b5a03ef4b1842e82b1c1b961cb51daa3",
+  "purpose": "Narrow successor correction of ADDENDUM section4 prompt-runner disposition; unchanged R2 authority composition",
+  "externalInputs": [
+    {
+      "path": "/home/tze/.cache/syzygy-v1-drive-20261027/runner-authorization-r2/OFFERING.md",
+      "sha256": "70517831f25ff27717010df29a6f6596ba34edb10edcb89acef24821733e14a9",
+      "bytes": 3637
+    },
+    {
+      "path": "/home/tze/.cache/syzygy-v1-drive-20261027/runner-authorization-r2/DRAFT-DIRECTION.md",
+      "sha256": "bf60fef15719c823652438307925e1cf395c6acddfe677b8e28fe16c4a3c034a",
+      "bytes": 13195
+    },
+    {
+      "path": "/home/tze/.cache/syzygy-v1-drive-20261027/runner-authorization-r2/BEHAVIOR-AND-CONSUMERS.md",
+      "sha256": "df1a44f38822d8f725c9094a79eda8f3af48a33340a430841b3f1e7926292953",
+      "bytes": 10068
+    },
+    {
+      "path": "/home/tze/.cache/syzygy-v1-drive-20261027/runner-authorization-r2/FREEZE-r2.json",
+      "sha256": "ca8017387ba4351c16396528968e0a02b8c2d411d74d3312904ce6016ad8d8bd",
+      "bytes": 3684
+    },
+    {
+      "path": "/home/tze/.cache/syzygy-v1-drive-20261027/runner-authorization-r2/consumer-sweep.json",
+      "sha256": "bad96760953c7221df7dd2098667cdb58eccabbb98e542e7292904385da40a43",
+      "bytes": 113504
+    },
+    {
+      "path": "/home/tze/.cache/syzygy-v1-drive-20261027/runner-authorization-review-r2/RAW.md",
+      "sha256": "cb9a2185127f0fbb38a80efce3a529c4faa0b43d76f345087064b6e99a451be0",
+      "bytes": 4152
+    }
+  ],
+  "files": [
+    {
+      "path": "ADDENDUM.md",
+      "sha256": "a096c1a86aa9eeea56b15ec891e199d43cf335ebfdb5f43ea9376a59f4e4b863",
+      "bytes": 10005
+    },
+    {
+      "path": "R2-CHANGE.json",
+      "sha256": "fa69333a666b5f5e1783dc3c7f5c3e11a38099ad259b840ab13057bc797f022a",
+      "bytes": 12799
+    },
+    {
+      "path": "REVIEW-BRIEF.md",
+      "sha256": "6910151de40a9380719d6ea7c4b7eb7e1923edac7630f2fe470c71e75b348871",
+      "bytes": 2859
+    },
+    {
+      "path": "SOURCE-REFRESH.json",
+      "sha256": "0699721f29aa936b531450722ac03d07ae1411a3d8ed2b11271ef1adb31fb166",
+      "bytes": 5201
+    },
+    {
+      "path": "beads.json",
+      "sha256": "9ec40610768289ba53c8db2432e1cc7315215cc3ff0c10b753e5fd914c042c64",
+      "bytes": 3036112
+    },
+    {
+      "path": "consumer-sweep-current.json",
+      "sha256": "b09dd45b8a2beda027e73fbbd8a5710fcf26c334ee2879e3e5d3cce3a0e29e4c",
+      "bytes": 110670
+    },
+    {
+      "path": "generation-plan-identities.json",
+      "sha256": "93c4d68a5e93ce3529a123cf283ae1faba4e2405695f3c78e4552a71f07363cd",
+      "bytes": 3894
+    },
+    {
+      "path": "new-ordinary-shape-candidates.json",
+      "sha256": "9f8f34c4803c7fafdf47d5d82919ebbf5d03ede6ea5550a5af9102f4ef0d6b16",
+      "bytes": 1244
+    },
+    {
+      "path": "open-pr-candidates.json",
+      "sha256": "536e42cab7f184102b737b86d1c333097db537240e72bd53f10b63d0111c13a7",
+      "bytes": 1203
+    },
+    {
+      "path": "plan-and-guard.diff",
+      "sha256": "0e5cc0bfa9de6c5d079fa20604b0641e7f80b05b4013b1c8847ad9e0384d7a16",
+      "bytes": 8560
+    },
+    {
+      "path": "pr-543.json",
+      "sha256": "171a709d690e970d5a85c71ed828d9b85899927c08ccdc8f12e37ce4134da9e9",
+      "bytes": 333
+    },
+    {
+      "path": "pr-546.json",
+      "sha256": "60817e9290dcf6dbda37a4c1bc5d2ec59c6100c7ac4094ec5cf7c295b7ef40b2",
+      "bytes": 351
+    },
+    {
+      "path": "pr-549-files.json",
+      "sha256": "467f233c155333bde939a80b8e194b2c746107099c3b0f3c29b27ef4f972f6f3",
+      "bytes": 238928
+    },
+    {
+      "path": "pr-550-files.json",
+      "sha256": "c77bcd70dd1804f8a3dddbdebac05f8e7a29d07f3fedebd37d528000eaa0756d",
+      "bytes": 94905
+    },
+    {
+      "path": "pr-550.json",
+      "sha256": "e58f0212e22cbbdef1ad0ba2ad86de8f9e346d45e076a1384011bcf6bc86a170",
+      "bytes": 301
+    },
+    {
+      "path": "prior-shape-candidate-refresh.json",
+      "sha256": "df6f0d60f639f3572d3212ff62fc86cb207d50a34bec80b6f13b79fc35c3760f",
+      "bytes": 33537
+    },
+    {
+      "path": "shape-reader-explicit-census.json",
+      "sha256": "4abf77e2382270b31e18e76a9ed326be3a94926c7830ba94da3404eb66663fe9",
+      "bytes": 52784
+    },
+    {
+      "path": "source/.github/workflows/generation-mutation-gate.yml",
+      "sha256": "26b6eb14105b7795c1d2be5b2e4af63d098de71819b82e4afd6d0493cd4fa380",
+      "bytes": 2405
+    },
+    {
+      "path": "source/.syzygy/governance/decisions/OWNER-DIRECTION-GREENFIELD-PARITY-ANSWERS-2026-10-21.md",
+      "sha256": "e00aee73c0c846e4995e54ebe40f370d36f007b483a854388d4d97da17721d5e",
+      "bytes": 8724
+    },
+    {
+      "path": "source/apps/three-surface-poc/src/polaris-generation/generation-mutation-run-main.ts",
+      "sha256": "24bf40d8c529e5229b2887e506475ed9422dcb1a4814d149001518b7c8af5d34",
+      "bytes": 8316
+    },
+    {
+      "path": "source/apps/three-surface-poc/src/polaris-generation/generation-mutation.test.ts",
+      "sha256": "4c4001eb2d280500895c05cc0197d6f27379428266775ae23e1d55a0db3f1031",
+      "bytes": 4924
+    },
+    {
+      "path": "source/apps/three-surface-poc/src/polaris-generation/generation-mutation.ts",
+      "sha256": "5f9b848c2203803949accc22e9f2a211851267fac286529fe2234da23fdab97b",
+      "bytes": 8243
+    },
+    {
+      "path": "source/apps/three-surface-poc/src/pwb-mutation-run-main.ts",
+      "sha256": "34001c55048e7bf945e6353eba798ff22b5517c454170e60be439fa03aaf4f7e",
+      "bytes": 8573
+    },
+    {
+      "path": "source/apps/three-surface-poc/src/pwb-mutation-sweep-main.ts",
+      "sha256": "b6af20150245e93df86a1856b66eac0cd64b8273f0d4ff3a620b1930d93fe1ea",
+      "bytes": 11448
+    },
+    {
+      "path": "source/docs/evidence/gen-mutation-plan-round-1-dispositions-2026-10-27.md",
+      "sha256": "fd0bb52ede31b220887aecbf3beddcce8713e811646b49f7f3db7af9722bc98c",
+      "bytes": 7072
+    },
+    {
+      "path": "source/docs/evidence/gen-plan-test-round-1-dispositions-2026-10-28.md",
+      "sha256": "5691eabf3381907f454501f2dda5c8d39cf4cdd2c361dedae639f029e440ed0d",
+      "bytes": 6367
+    },
+    {
+      "path": "source/package.json",
+      "sha256": "5b77a43d1d5383f1d89b9843df4158c3a8dbfdef38ced074b2d2f71a1f515cc7",
+      "bytes": 3482
+    },
+    {
+      "path": "source/packages/polaris-generation-core/src/island-boundary.test.ts",
+      "sha256": "9c29c24e82c60898e41139b4b75ffd5d5c215d97b8d9897c686f18be9ec0908a",
+      "bytes": 4264
+    },
+    {
+      "path": "source/scripts/build_pwb_dismissal_expiry_amendment.py",
+      "sha256": "04f48def487b983ac37841a637373320017ea89af0dacb1d24a26d7670108e80",
+      "bytes": 68584
+    },
+    {
+      "path": "source/scripts/build_three_surface_poc_readability_successor.py",
+      "sha256": "c2373f8a6f03f889a13e896198eb78024e37f3b6519e54ca77413c380a0d185a",
+      "bytes": 32373
+    },
+    {
+      "path": "source/scripts/check_evidence_currency.py",
+      "sha256": "cb172796309c6b258ed3c315d17a8cff831eab7fa588d29e7afc6e15b41fb9d2",
+      "bytes": 50425
+    },
+    {
+      "path": "source/scripts/check_spec_reconciliation.py",
+      "sha256": "2219d1b862fc2fa4cad000bc76eb3700f7c429f1dc6ba99909ed086d5ca05b6b",
+      "bytes": 111886
+    },
+    {
+      "path": "source/scripts/polaris_prompt_mutants.py",
+      "sha256": "bd9c33cffc779dd01cb09d200747dc6c40149e25562a9af599060c788b4dbeca",
+      "bytes": 23070
+    },
+    {
+      "path": "source/scripts/probe_superseded_policy_act_regeneration.py",
+      "sha256": "0fab009ff373c242fc0dce92e0957313d330b7fa2a52e607a675841305823589",
+      "bytes": 7928
+    },
+    {
+      "path": "source/scripts/rerun_rule6_mutants_selected_tests.py",
+      "sha256": "700452c86f756f0df955cad24cdfe36a222b0138b2af23fc36e797487b3fdc2c",
+      "bytes": 5196
+    },
+    {
+      "path": "source/scripts/rule6_mutation_runner.py",
+      "sha256": "2bc35be550f0beb6ad355e0fc89719c1ae28320d186f41929af96dd59a376b22",
+      "bytes": 4622
+    },
+    {
+      "path": "source/scripts/rule6_timeout_rerun.py",
+      "sha256": "89ee529da96ac4bb2c31af16b060809dc7f51171678c428b88f43b8dae58144d",
+      "bytes": 2952
+    },
+    {
+      "path": "source/scripts/run_m10_conditional_mutations.mjs",
+      "sha256": "bff84256c1608b6d9cd49f54fed49fd3ea8e3ffbac7afe6804b7cf20d6cbc490",
+      "bytes": 5108
+    },
+    {
+      "path": "source/scripts/run_m13_literal_mutations.mjs",
+      "sha256": "61f5992ce499d1310f8fe070e54a3d4c8066c5b2c70535d5a1b3e5fa50076302",
+      "bytes": 8048
+    },
+    {
+      "path": "source/scripts/run_m7_literal_mutations.mjs",
+      "sha256": "7cf5d3c6d7fb3878184a9c80f6c8164667a81b2965d9234400318befcdc04e8a",
+      "bytes": 6650
+    },
+    {
+      "path": "source/scripts/run_m9_literal_mutations.mjs",
+      "sha256": "1efd1e8ed98dc3b3708401fc6a938cdcb486b391dc5213011a62d64d8cc6ed95",
+      "bytes": 7295
+    },
+    {
+      "path": "source-identities.json",
+      "sha256": "4ef6d972ba8d601c437961d6205f23a136c02048eec325b488200c180d052703",
+      "bytes": 5351
+    },
+    {
+      "path": "source.diff",
+      "sha256": "d629a46a93d05a37c74f76ce2adfbd613eff39d8fa513a3b781bea17387699e2",
+      "bytes": 1796
+    },
+    {
+      "path": "tracker-selected.json",
+      "sha256": "cb9494f6ab57a6f757ad98fefc51b627d1933741b8e6b3cac763f06c8fad91b0",
+      "bytes": 40409
+    }
+  ],
+  "predecessorManifestSha256": "965801d5c5068cb7356cc52ad61cffda9ee7813a6c08ef5b5f5233b94f281eb8"
+}

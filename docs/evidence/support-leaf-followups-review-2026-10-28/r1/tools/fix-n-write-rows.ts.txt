@@ -1,0 +1,3 @@
+    ['({ value: Object.freeze } = { value: (bytes) => bytes });', ['{ value: Object.freeze } = { value: (bytes) => bytes }']],
+    ['(Object.freeze) = (value) => value;', ['(Object.freeze) = (value) => value']],
+    ['[...Object.freeze] = [];', ['[...Object.freeze] = []']],

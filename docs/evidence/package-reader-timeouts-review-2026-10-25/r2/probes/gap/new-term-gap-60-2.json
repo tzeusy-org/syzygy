@@ -1,0 +1,49 @@
+{
+ "mode": "term-gap",
+ "version": "new",
+ "param": 60.0,
+ "inject": "trace-exit",
+ "script": "scripts/measure_vitest_test_durations.py",
+ "scriptSha256": "920c5f120209904b37cfe14320ea00edfa18eafbda12fd7dcb02ec8fcf4f1e97",
+ "commit": "dc60c5bcb6ae6f1f31beee3aa0f6117adff5d6cf",
+ "command": "python3 -I /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520b/tools/inject.py trace-exit /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520b/clone/scripts/measure_vitest_test_durations.py . --file packages/polaris-generation-consent/src/package-reader.test.ts --project @syzygy/polaris-generation-consent --mode alone --runs 1 --out <tmp>/measure-out.json --profile",
+ "events": [
+  {
+   "t": 0.4712,
+   "what": "vitest worker seen",
+   "groupAlive": true
+  },
+  {
+   "t": 1.0369,
+   "what": "tree at signal: ' M packages/polaris-generation-consent/src/package-reader.test.ts\\n M packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts\\n'",
+   "groupAlive": true
+  },
+  {
+   "t": 1.0372,
+   "what": "sent 2 SIGTERM 60.0 us apart",
+   "groupAlive": true
+  }
+ ],
+ "scriptExitAt": 1.179,
+ "exitCode": 143,
+ "outputTail": "e/.pyenv/versions/3.10.12/lib/python3.10/runpy.py\", line 96, in _run_module_code\n    _run_code(code, mod_globals, init_globals,\n  File \"/home/tze/.pyenv/versions/3.10.12/lib/python3.10/runpy.py\", line 86, in _run_code\n    exec(code, run_globals)\n  File \"/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520b/clone/scripts/measure_vitest_test_durations.py\", line 133, in <module>\n    out['runs'].append(one_run(i))\n  File \"/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520b/clone/scripts/measure_vitest_test_durations.py\", line 100, in one_run\n    ignored = {s: signal.signal(s, signal.SIG_IGN) for s in STOP_SIGNALS}   # a second stop signal cannot cut the cleanup short\n  File \"/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520b/clone/scripts/measure_vitest_test_durations.py\", line 100, in <dictcomp>\n    ignored = {s: signal.signal(s, signal.SIG_IGN) for s in STOP_SIGNALS}   # a second stop signal cannot cut the cleanup short\n  File \"/home/tze/.pyenv/versions/3.10.12/lib/python3.10/signal.py\", line 54, in signal\n    @_wraps(_signal.signal)\n  File \"/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520b/clone/scripts/measure_vitest_test_durations.py\", line 27, in <lambda>\n    for _signal in (signal.SIGTERM, signal.SIGHUP): signal.signal(_signal, lambda number, _frame: sys.exit(128 + number))\nSystemExit: 143\n\n",
+ "descendantsSeen": 11,
+ "descendantsByCwdOnly": 1,
+ "treeAfterExit": " M packages/polaris-generation-consent/src/package-reader.test.ts\n M packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts\n",
+ "diffStatAfterExit": " packages/polaris-generation-consent/src/package-reader.test.ts       | 4 ++++\n packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts | 4 +++-\n 2 files changed, 7 insertions(+), 1 deletion(-)\n",
+ "survivors3sAfterExit": {
+  "2912207": {
+   "cmdline": "node (vitest 1)",
+   "state": "R",
+   "pgid": 2912126,
+   "sid": 2912126
+  }
+ },
+ "recordWritten": false,
+ "recordTests": null,
+ "recordProfileRows": null,
+ "writtenSnapshot": null,
+ "treeCleanAfterReviewerRestore": true,
+ "clean": false,
+ "noSurvivor": false
+}

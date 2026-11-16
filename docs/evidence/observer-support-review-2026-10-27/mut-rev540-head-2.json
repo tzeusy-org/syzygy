@@ -1,0 +1,41 @@
+{
+ "tree": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-540/code",
+ "commit": "f207d758eb11830eda2831caa911011e84a966b7",
+ "results": [
+  {
+   "id": "T8-guard-walk-follows-no-edge",
+   "commit": "f207d758eb11830eda2831caa911011e84a966b7",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.test.ts",
+     "old": "ts.preProcessFile(readModule(file), true, true).importedFiles.map((imported) => imported.fileName)",
+     "new": "([] as string[])"
+    }
+   ],
+   "counts": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.test.ts",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "exit": 1,
+   "failedTests": 1,
+   "failedFiles": 1,
+   "totalTests": 13,
+   "outcome": "killed",
+   "seconds": 7.2,
+   "cleanAfter": true,
+   "failed": [
+    {
+     "title": "apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every module and package the POC daemon imports",
+     "timedOut": false,
+     "message": "AssertionError: expected [ Array(1) ] to include 'packages/support/src/sha256.ts'\n    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-540/code/node_modules/@vitest/expect/dist/index.js:1191:15)\n    at Proxy.<anonymous> (file:/"
+    }
+   ],
+   "reportError": null
+  }
+ ]
+}

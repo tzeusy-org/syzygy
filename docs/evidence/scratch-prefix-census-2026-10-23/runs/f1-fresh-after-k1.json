@@ -1,0 +1,323 @@
+{
+ "tool": "census_run.py",
+ "treeCommit": "a864e999645a071dda40325b2235976590e02973",
+ "mode": "clean",
+ "command": [
+  "npx",
+  "vitest",
+  "run"
+ ],
+ "privateDirectory": "/tmp/lc418/f1",
+ "tmpdir": "/tmp/lc418/f1/tmp",
+ "sha256": {
+  "census_run.py": "6039545e993610ef67dff1fc60103ade0fe197ab55638c1f9cdec7504b16fe8d",
+  "scratch_trace.cjs": "c9ff0cbbd2c9162c8483082f24202e18fa52f414c9c18a648723285de2ec2688",
+  "tmp_sampler.py": "3e34f06abe672f405ae7107b9e55472e22299dddef2634b167c9373008c2125d"
+ },
+ "loadAverageAtStart": [
+  34.43310546875,
+  24.580078125,
+  26.00341796875
+ ],
+ "killAfterSeconds": null,
+ "seededFrom": {
+  "privateDirectory": "/tmp/lc418/k1",
+  "entriesMovedIn": [
+   ".com.google.Chrome.N4WJkS",
+   "MtKnQPnthe7BWZEzUcREK",
+   "YgwnH4DvW-JSNHWkt_vWK",
+   "dossier-clone-g5U4a6",
+   "dossier-gate-acts-p8YcD5",
+   "dossier-origin-0gdUJr",
+   "dossier-records-yaAv2Z",
+   "dossier-state-jjNLKN",
+   "dossier-waiting-HmQ43G",
+   "git-object-reader-HkCTH2",
+   "node-compile-cache",
+   "syzygy-build-output-l41wDx",
+   "syzygy-poc-a11y-1QRcap",
+   "syzygy-poc-a11y-budget-MSyaIz",
+   "syzygy-poc-browser-yXLBDA",
+   "syzygy-poc-surface-fixture-template-p1746490-n4026531836-1v9N7q"
+  ]
+ },
+ "leader": {
+  "pid": 1913550,
+  "pgid": 1913550
+ },
+ "exit": 1,
+ "seconds": 182.4,
+ "listingAtEnd": [
+  {
+   "name": ".com.google.Chrome.IiIbma",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854737.0,
+   "bytes": 0
+  },
+  {
+   "name": ".com.google.Chrome.K33skr",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854756.6,
+   "bytes": 0
+  },
+  {
+   "name": ".com.google.Chrome.N4WJkS",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854053.5,
+   "bytes": 0
+  },
+  {
+   "name": ".com.google.Chrome.cMElNB",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854754.8,
+   "bytes": 0
+  },
+  {
+   "name": "MtKnQPnthe7BWZEzUcREK",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854049.2,
+   "bytes": 3305472
+  },
+  {
+   "name": "YgwnH4DvW-JSNHWkt_vWK",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854049.1,
+   "bytes": 6000640
+  },
+  {
+   "name": "dossier-clone-g5U4a6",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854087.9,
+   "bytes": 118784
+  },
+  {
+   "name": "dossier-gate-acts-p8YcD5",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854088.1,
+   "bytes": 69632
+  },
+  {
+   "name": "dossier-origin-0gdUJr",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854054.2,
+   "bytes": 253952
+  },
+  {
+   "name": "dossier-records-yaAv2Z",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854087.9,
+   "bytes": 28672
+  },
+  {
+   "name": "dossier-state-jjNLKN",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854088.1,
+   "bytes": 0
+  },
+  {
+   "name": "dossier-waiting-HmQ43G",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854088.1,
+   "bytes": 401408
+  },
+  {
+   "name": "git-object-reader-HkCTH2",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854079.7,
+   "bytes": 46784512
+  },
+  {
+   "name": "node-compile-cache",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854047.8,
+   "bytes": 7032832
+  },
+  {
+   "name": "syzygy-build-output-l41wDx",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854050.9,
+   "bytes": 89554944
+  },
+  {
+   "name": "syzygy-poc-a11y-1QRcap",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854059.0,
+   "bytes": 1052672
+  },
+  {
+   "name": "syzygy-poc-a11y-budget-MSyaIz",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854059.1,
+   "bytes": 16384
+  },
+  {
+   "name": "syzygy-poc-browser-yXLBDA",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854169.9,
+   "bytes": 40222720
+  }
+ ],
+ "processesCarryingTheMarker": {
+  "marker": "--user-data-dir=<private-directory>/tmp/ in the arguments",
+  "count": 0,
+  "byKind": {},
+  "pids": []
+ },
+ "groupMembersAliveAtEnd": 0,
+ "stoppedByPid": {
+  "signal": "SIGTERM",
+  "rounds": 0,
+  "remaining": 0
+ },
+ "listingAfterStopping": [
+  {
+   "name": ".com.google.Chrome.IiIbma",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854737.0,
+   "bytes": 0
+  },
+  {
+   "name": ".com.google.Chrome.K33skr",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854756.6,
+   "bytes": 0
+  },
+  {
+   "name": ".com.google.Chrome.N4WJkS",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854053.5,
+   "bytes": 0
+  },
+  {
+   "name": ".com.google.Chrome.cMElNB",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854754.8,
+   "bytes": 0
+  },
+  {
+   "name": "MtKnQPnthe7BWZEzUcREK",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854049.2,
+   "bytes": 3305472
+  },
+  {
+   "name": "YgwnH4DvW-JSNHWkt_vWK",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854049.1,
+   "bytes": 6000640
+  },
+  {
+   "name": "dossier-clone-g5U4a6",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854087.9,
+   "bytes": 118784
+  },
+  {
+   "name": "dossier-gate-acts-p8YcD5",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854088.1,
+   "bytes": 69632
+  },
+  {
+   "name": "dossier-origin-0gdUJr",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854054.2,
+   "bytes": 253952
+  },
+  {
+   "name": "dossier-records-yaAv2Z",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854087.9,
+   "bytes": 28672
+  },
+  {
+   "name": "dossier-state-jjNLKN",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854088.1,
+   "bytes": 0
+  },
+  {
+   "name": "dossier-waiting-HmQ43G",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854088.1,
+   "bytes": 401408
+  },
+  {
+   "name": "git-object-reader-HkCTH2",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854079.7,
+   "bytes": 46784512
+  },
+  {
+   "name": "node-compile-cache",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854047.8,
+   "bytes": 7032832
+  },
+  {
+   "name": "syzygy-build-output-l41wDx",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854050.9,
+   "bytes": 89554944
+  },
+  {
+   "name": "syzygy-poc-a11y-1QRcap",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854059.0,
+   "bytes": 1052672
+  },
+  {
+   "name": "syzygy-poc-a11y-budget-MSyaIz",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854059.1,
+   "bytes": 16384
+  },
+  {
+   "name": "syzygy-poc-browser-yXLBDA",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854169.9,
+   "bytes": 40222720
+  }
+ ],
+ "samplerRecord": "/tmp/lc418/f1/samples.json",
+ "trace": {
+  "lines": 2599,
+  "sha256": "9881cb1fb9e44affa3d7812a31ddd80769107a7d9adba303ec84f2d535f55537"
+ }
+}

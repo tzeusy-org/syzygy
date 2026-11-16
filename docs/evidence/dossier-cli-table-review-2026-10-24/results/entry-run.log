@@ -1,0 +1,31 @@
+{
+ "rows": 510,
+ "byKind": {
+  "daemon": 263,
+  "polaris": 231,
+  "rtf1": 16
+ },
+ "differ": 0,
+ "rtf1BaseExits": [
+  1
+ ],
+ "rtf1Details": [
+  "syzygy daemon: state directory <FX>/sd-in really resolves to <FX>/root/.syzygy/x, inside the governed plane (<FX>/root/.syzygy); choose a location outside openspec/ and .syzygy/",
+  "syzygy daemon: state directory <FX>/sd-in-rel really resolves to <FX>/root/openspec/y, inside the governed plane (<FX>/root/openspec); choose a location outside openspec/ and .syzygy/",
+  "syzygy daemon: state directory <FX>/sd-in really resolves to <FX>/root/.syzygy/x, inside the governed plane (<FX>/root/.syzygy); choose a location outside openspec/ and .syzygy/",
+  "syzygy daemon: state directory is invalid (symlink-loop): symbolic link cycle revisits <FX>/loop-a",
+  "syzygy daemon: state directory is invalid (symlink-loop): symbolic link cycle revisits <FX>/loop-a",
+  "syzygy daemon: state directory is invalid (symlink-loop): symbolic link cycle revisits <FX>/self",
+  "syzygy daemon: state directory is invalid (path-unreadable): filesystem inspection failed at <FX>/root/locked/inner (EACCES)",
+  "syzygy daemon: state directory is invalid (path-unreadable): filesystem inspection failed at <FX>/root/README.md/child (ENOTDIR)",
+  "syzygy daemon: state directory <FX>/chain-1/deep/er really resolves to <FX>/root/.syzygy/deep/er, inside the governed plane (<FX>/root/.syzygy); choose a location outside openspec/ and .syzygy/",
+  "syzygy daemon: state directory <FX>/root/.syzygy/q really resolves to <FX>/root/.syzygy/q, inside the governed plane (<FX>/root/.syzygy); choose a location outside openspec/ and .syzygy/",
+  "syzygy daemon: state directory <FX>/sd-in really resolves to <FX>/root/.syzygy/x, inside the governed plane (<FX>/root/.syzygy); choose a location outside openspec/ and .syzygy/",
+  "syzygy daemon: observed root is invalid (symlink-loop): symbolic link cycle revisits <FX>/loop-a",
+  "syzygy daemon: observed root is invalid (path-unreadable): filesystem inspection failed at <FX>/root/locked/inner (EACCES)",
+  "syzygy daemon: state directory <FX>/sd-in really resolves to <FX>/root/.syzygy/x, inside the governed plane (<FX>/root/.syzygy); choose a location outside openspec/ and .syzygy/",
+  "syzygy daemon: state directory <FX>/root/.syzygy/z lies inside the governed plane (<FX>/root/.syzygy); choose a location outside openspec/ and .syzygy/",
+  "syzygy daemon: state directory <FX>/sd-in really resolves to <FX>/root/.syzygy/x, inside the governed plane (<FX>/root/.syzygy); choose a location outside openspec/ and .syzygy/"
+ ]
+}
+exit=0

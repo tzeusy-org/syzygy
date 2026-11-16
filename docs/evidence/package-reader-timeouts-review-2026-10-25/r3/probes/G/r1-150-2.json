@@ -1,0 +1,59 @@
+{
+ "batch": "G",
+ "version": "r1",
+ "param": 150,
+ "n": 2,
+ "scriptSha256": "920c5f120209904b37cfe14320ea00edfa18eafbda12fd7dcb02ec8fcf4f1e97",
+ "command": "python3 -I <tools>/r1_measure_vitest_test_durations.py . --file packages/polaris-generation-consent/src/package-reader.test.ts --project @syzygy/polaris-generation-consent --mode alone --runs 1 --out <tmp>/measure-out.json --profile",
+ "sent": [
+  {
+   "t": 0.8776,
+   "signal": "SIGTERM",
+   "to": "pid"
+  },
+  {
+   "t": 0.8778,
+   "signal": "SIGTERM",
+   "to": "pid"
+  }
+ ],
+ "events": [
+  {
+   "t": 0.2954,
+   "what": "vitest worker seen"
+  }
+ ],
+ "scriptExitedAtSeconds": 1.018,
+ "exitCode": 143,
+ "claimedExit": 143,
+ "exitAsClaimed": true,
+ "descendantsSeen": 5,
+ "seenOnlyByCwd": 2,
+ "vitestSeen": true,
+ "npxSeen": false,
+ "treeAfterExit": " M packages/polaris-generation-consent/src/package-reader.test.ts\n M packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts\n",
+ "survivors": {
+  "234093": {
+   "cmdline": "node (vitest 1)",
+   "state": "R",
+   "pgid": 233753,
+   "sid": 233753
+  }
+ },
+ "recordWritten": false,
+ "recordRuns": null,
+ "recordTests": null,
+ "recordProfileRows": null,
+ "recordExitCode": null,
+ "marks": [],
+ "scriptWrites": null,
+ "tmpdirLeft": [
+  "CwjMbi3HLtYq2jxZl3qa3",
+  "node-compile-cache",
+  "script.log"
+ ],
+ "trace": [],
+ "outputTail": "",
+ "exercised": true,
+ "passes": false
+}

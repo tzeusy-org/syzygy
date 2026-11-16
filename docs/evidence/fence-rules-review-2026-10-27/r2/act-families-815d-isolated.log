@@ -1,0 +1,3 @@
+ Test Files 1 passed (1)  Tests 65 passed (65)  Duration 7.44s (transform 668ms, setup 121ms, collect 620ms, tests 5.89s, environment 0ms, prepare 172ms)  run 1
+ Test Files 1 passed (1)  Tests 65 passed (65)  Duration 8.18s (transform 649ms, setup 78ms, collect 720ms, tests 6.58s, environment 0ms, prepare 124ms)  run 2
+ Test Files 7 passed (7)  Tests 507 passed (507)  Duration 33.21s (transform 2.74s, setup 796ms, collect 12.57s, tests 42.43s, environment 9ms, prepare 1.37s) 

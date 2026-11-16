@@ -1,0 +1,154 @@
+{
+  "status": "Source-bound proposed engineering method, not an amendment/owner act or independent confirmation",
+  "authority_binding": {
+    "cc_impact": "ACCEPTANCE-ACT-RECORD.md / Specification-policy readability restyle adoption / 2026-09-28; binds current CC-IMPACT source bytes despite candidate path/banner",
+    "review_policy": "Existing owner-approved craft policy; exact BASE450 bytes preserved",
+    "owner_direction": "Exact Decision ID and scope; draft only, no signature/code authority"
+  },
+  "clauses": [
+    {
+      "identifier": "CC-IMPACT-2",
+      "path": ".syzygy/governance/contracts/candidates/policy-candidates/SHAPE-TO-SPEC-IMPACT-POLICY-CANDIDATE.md",
+      "commit": "4504514c019ca0ee0cb4a89ed97445a0bad21915",
+      "source_sha256": "e08270a2d2589aafaad59d9958683f094fb6170b38cfaa30e49f48c41645989c",
+      "line_start": 118,
+      "line_end_inclusive": 136,
+      "verbatim_quote": "**CC-IMPACT-2 — A shape delta performs a reverse-reference sweep, and the\ntrigger set is the warrant set.**\n\n> **The identities that can trigger a sweep are exactly the identities that\n> can warrant a requirement** — CC-SPEC-2's six classes, and no others.\n\nWhen an adopted doctrine rule, an accepted contract clause, an approved\ncraft/policy clause, a recorded owner decision, an accepted topology\nidentity, or an accepted parent requirement or specification changes, the\nchange carries a sweep over the specification corpus for every\nspecification whose CC-IMPACT-1 declarations name the changed identity, or\nwhose requirements consume its vocabulary. **The sweep is part of the\nchange, not a follow-up task.**\n\nStating the trigger set as an *identity* rather than as a second enumeration\nis deliberate: two lists drift, and the drift is silent.\n\n- Any class that becomes warrantable becomes sweepable in the same act.\n- Any class that cannot trigger a sweep may not warrant a requirement.\n",
+      "quote_sha256": "64aefac94373b89aa4bc1eefa4331e3c712144c7a217c739865bdb5d757ee732"
+    },
+    {
+      "identifier": "CC-IMPACT-3",
+      "path": ".syzygy/governance/contracts/candidates/policy-candidates/SHAPE-TO-SPEC-IMPACT-POLICY-CANDIDATE.md",
+      "commit": "4504514c019ca0ee0cb4a89ed97445a0bad21915",
+      "source_sha256": "e08270a2d2589aafaad59d9958683f094fb6170b38cfaa30e49f48c41645989c",
+      "line_start": 145,
+      "line_end_inclusive": 172,
+      "verbatim_quote": "**CC-IMPACT-3 — The sweep records four sets, with its denominator and its\nmethod.** The sweep's output names:\n\n```text\npopulation              every specification and requirement examined, counted\naffected                those a declaration or a consumption ties to the change\nexplicitly unaffected   those examined and found untied — each with the reason\n                        AND the method that established untiedness\nundecidable             those whose relationship the sweep could not settle,\n                        each with what would settle it\n```\n\n**The reason and the method are two different things, and both are\nrequired.**\n\n- \"Does not declare the changed identity\" is an *observation*; if\n  declaration-matching is the whole method, the sweep says so, and\n  everything that method cannot decide routes to `undecidable` under\n  CC-IMPACT-4 rather than to `explicitly unaffected`.\n- A true reason producing a wrong answer, carried by a denominator and full\n  compliance, is the failure mode this limb exists to prevent.\n\nA sweep that reports only the affected set has reported a numerator without\na denominator, and satisfies nothing. The denominator discipline itself is\n**CC-KNOW-16**'s (candidate, P-12, `CRAFT-KNOWLEDGE-HYGIENE-POLICY.md`) —\ncited, not restated; this clause is that rule's application to the\nspecification corpus, and if CC-KNOW-16 is not approved the discipline still\nrests on VIS-2.\n",
+      "quote_sha256": "0478b64274c5d9114b20999505eae8fe8a6782ebad054e651d6c6b03a61ca505"
+    },
+    {
+      "identifier": "CC-IMPACT-4",
+      "path": ".syzygy/governance/contracts/candidates/policy-candidates/SHAPE-TO-SPEC-IMPACT-POLICY-CANDIDATE.md",
+      "commit": "4504514c019ca0ee0cb4a89ed97445a0bad21915",
+      "source_sha256": "e08270a2d2589aafaad59d9958683f094fb6170b38cfaa30e49f48c41645989c",
+      "line_start": 181,
+      "line_end_inclusive": 186,
+      "verbatim_quote": "**CC-IMPACT-4 — Undecidable impact renders as Unknown or contradiction,\nnever as unaffected.** A specification the sweep could not settle is\nrendered `Unknown` with its settling evidence named, or `contradicted`\nwhere the shape change and the requirement now disagree. Silence is not an\nanswer, and \"not listed as affected\" is never evidence of being unaffected\n(VIS-2, applied to the sweep's own output).\n",
+      "quote_sha256": "e14d40d1d5dd245b81956b16c84fd89ad97dc0b6e318713d5bf37847f88ba07e"
+    },
+    {
+      "identifier": "CC-IMPACT-5",
+      "path": ".syzygy/governance/contracts/candidates/policy-candidates/SHAPE-TO-SPEC-IMPACT-POLICY-CANDIDATE.md",
+      "commit": "4504514c019ca0ee0cb4a89ed97445a0bad21915",
+      "source_sha256": "e08270a2d2589aafaad59d9958683f094fb6170b38cfaa30e49f48c41645989c",
+      "line_start": 188,
+      "line_end_inclusive": 199,
+      "verbatim_quote": "**CC-IMPACT-5 — Every required amendment names its actor, and the sweep\nnames one too.**\n\n- Each affected specification's amendment is owned by a named actor before\n  the change lands.\n- **The sweep itself has an actor**: the shape change's author performs it,\n  and a party other than that author confirms it is adequate — the\n  CC-TEST-4 pattern, because a sweeper grading their own denominator is the\n  unassigned judgment E5 exists to remove.\n- \"The author\" is a name; \"someone\" is not.\n- Where the actor is the owner (VIS-4), the amendment waits on the owner\n  and the wait is visible.\n",
+      "quote_sha256": "991b84d1b4a7c858f75b4a645ce2abbe11083390c54697185746e53924ebaf1a"
+    },
+    {
+      "identifier": "CC-IMPACT-6",
+      "path": ".syzygy/governance/contracts/candidates/policy-candidates/SHAPE-TO-SPEC-IMPACT-POLICY-CANDIDATE.md",
+      "commit": "4504514c019ca0ee0cb4a89ed97445a0bad21915",
+      "source_sha256": "e08270a2d2589aafaad59d9958683f094fb6170b38cfaa30e49f48c41645989c",
+      "line_start": 206,
+      "line_end_inclusive": 222,
+      "verbatim_quote": "**CC-IMPACT-6 — Affected specs move in the same logical change. There is no\nexception today.** CC-REV-2's merge invariant governs, unmodified and\nuncarved: the shape change and its spec amendments land together, so\nmainline never asserts the old truth, and **behavioral specs are the first\npopulation CC-REV-2 names**. CC-REV-2 admits no exception limb of its own;\nits only carve-out is doctrine's owner gate.\n\n**This clause creates no alternative.**\n\n- A lagging specification is lawful only if CC-REV-2 is **itself amended**,\n  in place, through the craft cluster's own amendment act.\n- That amendment is offered separately —\n  `CC-REV-2-LAGGING-SPECIFICATION-AMENDMENT-OFFER.md` in this directory,\n  queued as **P-44** — and it carries five required elements plus a\n  confirmer distinct from the change's author.\n- **Until that act is performed, no lawful lag exists**, and a shape change\n  whose spec amendments cannot land with it does not merge.\n",
+      "quote_sha256": "7ea1597a59e6e1b00e934a372874b3420776ac06fb950e359c062bef13bbd293"
+    },
+    {
+      "identifier": "CC-REV-2",
+      "path": ".syzygy/governance/policies/craft-and-care/review-and-documentation.md",
+      "commit": "4504514c019ca0ee0cb4a89ed97445a0bad21915",
+      "source_sha256": "13928819f6573d85e3074bb6d042fef49c2d42d5beece658a3bc5292f1ea97e1",
+      "line_start": 71,
+      "line_end_inclusive": 109,
+      "verbatim_quote": "## CC-REV-2 — The same-logical-change rule\n\nA change that invalidates any authoritative artifact updates **every**\ninvalidated authoritative artifact in the same logical change; if doctrine\nwould be invalidated, the change instead stops, routes to the owner, and\ndoes not merge while the contradiction is open.\n\n```mermaid\nflowchart TD\n    C[\"Change invalidates authoritative text\"] --> Q{\"Does it invalidate doctrine text?\"}\n    Q -->|\"no\"| U[\"Update every invalidated artifact<br/>in the same logical change\"]\n    Q -->|\"yes\"| O[\"Stop; route to owner as a contradiction<br/>(VIS-4); no in-change edit, no merge while open\"]\n```\n\n- **Authoritative artifacts:** behavioral specs (`openspec/`), declared\n  topology, accepted contracts, and the policies in this cluster.\n- **\"We'll sync the spec later\" is a violation, not a plan** (canonical\n  bias 7, strengthened to *all* typed authorities). [Observed — FD-020 E1-b\n  (done includes same-change spec update, topology when structure moved)\n  and E10 (same-change-mandatory sync).]\n- **The rule is a merge invariant, not a property of how work is\n  packaged.**\n  - No merge may leave mainline with an invalidated authoritative artifact\n    still asserting the old truth.\n  - Splitting one logical change across sequenced merges that pass through\n    such a state *is* the violation — an open follow-up PR is \"syncing\n    later\" by another name.\n\n**The one structural carve-out: doctrine** is amended only through the owner\ngate (VIS-4).\n\n- When a change would invalidate doctrine text, the change stops and routes\n  to the owner as a contradiction.\n- It does not edit doctrine in-change, and it does not merge while the\n  contradiction is open.\n- *Violation:* moving a responsibility between two surfaces, updating code and\n  specs, and leaving declared topology asserting the old placement — creating\n  exactly the intent-vs-observed drift Syzygy exists to expose.\n\n",
+      "quote_sha256": "7b1a070abbb62d1cfa42fc065197935a9e685e733fa831acbfd498aeba0ed163"
+    },
+    {
+      "identifier": "CC-REV-4",
+      "path": ".syzygy/governance/policies/craft-and-care/review-and-documentation.md",
+      "commit": "4504514c019ca0ee0cb4a89ed97445a0bad21915",
+      "source_sha256": "13928819f6573d85e3074bb6d042fef49c2d42d5beece658a3bc5292f1ea97e1",
+      "line_start": 129,
+      "line_end_inclusive": 144,
+      "verbatim_quote": "## CC-REV-4 — Fresh-reader review for normative artifacts\n\nEvery normative artifact passes fresh-reader review at adoption and on\nmaterial amendment (VIS-3).\n\n- **The test:** a reader with no authoring context restates intent and\n  constraints correctly.\n- **Failures** are recorded on the artifact's surface.\n- **Scope, per SDR-14:** material changes and release milestones, not every\n  prose correction.\n- **Two failed review rounds** signal upstream ambiguity — return to the\n  source decision, don't polish prose.\n- *Violation:* a contract amended in five successive LLM sessions, each edit\n  locally reasonable, none fresh-reader-reviewed, until only its authors can\n  parse it.\n\n",
+      "quote_sha256": "3dc5484654f24c460b6f246a90494fdd379789b29edb3684225b048fdd36865e"
+    },
+    {
+      "identifier": "OWNER-DIRECTION-MACHINE-CEILING-2026-10-15 / item 2",
+      "path": ".syzygy/governance/decisions/OWNER-DIRECTION-MACHINE-CEILING-2026-10-15.md",
+      "commit": "4504514c019ca0ee0cb4a89ed97445a0bad21915",
+      "source_sha256": "e2e3301f8f34302691697a5161ac5a89e5de839dd74a4cb1117b6c3051c9cec3",
+      "line_start": 50,
+      "line_end_inclusive": 53,
+      "verbatim_quote": "2. **Then governedBy once.** Draft a POC-REQ-014 amendment that serves the\n   identical governedBy Unknown once per observation, with items\n   referencing it. As of 2026-10-20 its drafting has not started. P-115 is\n   reserved for it and is not yet in the register.\n",
+      "quote_sha256": "f1d79a9feac575f1b9d84f1e4c736b063287fbb953370b8054bdc8987a28d99c"
+    },
+    {
+      "identifier": "OWNER-DIRECTION-MACHINE-CEILING-2026-10-15 / scope",
+      "path": ".syzygy/governance/decisions/OWNER-DIRECTION-MACHINE-CEILING-2026-10-15.md",
+      "commit": "4504514c019ca0ee0cb4a89ed97445a0bad21915",
+      "source_sha256": "e2e3301f8f34302691697a5161ac5a89e5de839dd74a4cb1117b6c3051c9cec3",
+      "line_start": 56,
+      "line_end_inclusive": 62,
+      "verbatim_quote": "## What this does not do\n\nIt signs neither package; each is offered to the owner after its review.\nIt authorizes no code change. The daemon hard-codes the ceiling, so the\nraise takes effect only under a separate implementation authorization,\nasked in the P-114 packet. It changes no check, no recorder and no other\nregistry field.\n",
+      "quote_sha256": "35a60554b6147c71173195c20a143227ba6c2f6c30d9941063a068f108effa65"
+    },
+    {
+      "identifier": "RFC6-14",
+      "path": ".syzygy/governance/contracts/rfcs/RFC-0006-cross-surface-selection-query-drawer.md",
+      "commit": "4504514c019ca0ee0cb4a89ed97445a0bad21915",
+      "source_sha256": "aa83ae4f592639b03b354b2b8df57f600500fab1d8502163b2dace9cefc90f5d",
+      "line_start": 279,
+      "line_end_inclusive": 311,
+      "verbatim_quote": "**RFC6-14 — Label parity.** Every entity and claim instance in a\nmachine answer carries its epistemic state **verbatim from the RFC 0002\nvocabulary**:\n\n- the label (Observed / Inferred / Unknown);\n- the rendering tier (RFC2-25);\n- the Unknown reason where applicable (RFC2-24); and\n- the freshness state (RFC2-10).\n\n**Secondary Unknown annotations travel with the primary**, verbatim and marked\nas secondary (RFC2-24 opens them and closes their vocabulary to the same\ntwelve); an answer carrying the primary alone has dropped part of the claim\ninstance's epistemic state.\n\n**An aggregate carries no epistemic state of its own** — no aggregate-level\nlabel, tier, Unknown reason, or freshness state — and carries instead its\nmembers' composition per RFC6-17: RFC 0002 defines those four for claim\ninstances, not for sets, and a headline label over mixed membership is\nVIS-1's named violation (\"rendering that region green because its neighbors\nare green\") whether or not an honest composition is disclosed beside it.\n\n**A machine answer never omits epistemic state**: an answer listing entities\nwithout their labels, or a count that folds Unknowns into a total silently, is\na violation — an agent must be exactly as unable to mistake Unknown for\nsuccess as the owner is (VIS-2).\n\nSibling surface states (*dismissed by decision*, *unadopted draft*, *editorial\ndraft* — the three RFC2-25 places deliberately outside the registry) travel\nwith the same fidelity, and so does `challenge-pending` (RFC2-13) — the named\ndisclosure a claim carries while a submitted, not-yet-admitted challenge\nstands against it. It is neither a tier nor an Unknown reason and never\ndisplaces the four values above; it travels **beside** them.\n\n",
+      "quote_sha256": "b21886b2570663451f1a1edb4f6f2f2ff249959121e8f17ae5477db6d363d509"
+    },
+    {
+      "identifier": "RFC6-15",
+      "path": ".syzygy/governance/contracts/rfcs/RFC-0006-cross-surface-selection-query-drawer.md",
+      "commit": "4504514c019ca0ee0cb4a89ed97445a0bad21915",
+      "source_sha256": "aa83ae4f592639b03b354b2b8df57f600500fab1d8502163b2dace9cefc90f5d",
+      "line_start": 312,
+      "line_end_inclusive": 317,
+      "verbatim_quote": "**RFC6-15 — Every answer is evaluation-stamped.** Every query answer names the\nevaluation identity (source snapshot + as-of instant) it was computed at.\n**Same evaluation + same filters ⇒ same answer** in the deterministic layer\n(VIS-7; RFC6-7). An answer that cannot name its evaluation is not an answer;\nmixed-evaluation answers must declare the skew per RFC6-3.\n\n",
+      "quote_sha256": "3efc65d37034682cfdaea8e7a69e46cafb9b9fd1ee09df91874e4ff77cf90b1e"
+    },
+    {
+      "identifier": "RFC6-22",
+      "path": ".syzygy/governance/contracts/rfcs/RFC-0006-cross-surface-selection-query-drawer.md",
+      "commit": "4504514c019ca0ee0cb4a89ed97445a0bad21915",
+      "source_sha256": "aa83ae4f592639b03b354b2b8df57f600500fab1d8502163b2dace9cefc90f5d",
+      "line_start": 455,
+      "line_end_inclusive": 468,
+      "verbatim_quote": "**RFC6-22 — The equivalence definition.** Two renderings (3D scene, 2D view,\ntable, machine answer) are **equivalent** iff they present: the same evaluation\nidentity, the same declared filters, the same underlying graph (entities and\nedges), the same epistemic states (label + tier + reason + freshness), the\nsame sibling surface states (dismissed-by-decision, unadopted-draft,\neditorial-draft — RFC6-14), the same **`challenge-pending` disclosure**\n(RFC2-13), and the same **chain state** and **normalized work state** where\nthose are carried (RFC6-19 class 8), and the same scenario context (RFC6-24)\nfor every presented element. Equivalence is over *semantics and query results*,\nnever over pixels. The last two additions are what make the closure arguments\nof RFC2-13 and RFC8-12 true: each justifies naming its values in the contract\nby this clause checking them for parity, and a facet outside this tuple is\nchecked by nothing.\n\n",
+      "quote_sha256": "9386e5520708ad2703052dfb7caba6ae02ded4059abf81d8b636bef66b4ec81f"
+    },
+    {
+      "identifier": "RFC6-23",
+      "path": ".syzygy/governance/contracts/rfcs/RFC-0006-cross-surface-selection-query-drawer.md",
+      "commit": "4504514c019ca0ee0cb4a89ed97445a0bad21915",
+      "source_sha256": "aa83ae4f592639b03b354b2b8df57f600500fab1d8502163b2dace9cefc90f5d",
+      "line_start": 469,
+      "line_end_inclusive": 480,
+      "verbatim_quote": "**RFC6-23 — Finer detail is allowed; contradiction is not.** A non-3D\nrendering may expose **finer detail** than an aggregated 3D scene (SDR-27) —\nthat is a filter/aggregation difference and must be disclosed as one\n(RFC6-16/17). What no pair of equivalent renderings may do is disagree: on an\nentity's existence, an edge, a label, a tier, a reason, a freshness state, a\nsibling surface state, a `challenge-pending` disclosure, a chain state, a\nnormalized work state, a scenario context, or a count over the same declared\nscope. Any such disagreement is a kernel or projection defect,\nrelease-blocking under the trust floor.\n\n### 3.7 Scenario context: base, proposed, historical\n\n",
+      "quote_sha256": "04252ac9e9c9455083a5b8896593ad9bbbbda18324f2932330dc1d7a5994a624"
+    }
+  ],
+  "consumption-criterion": {
+    "positive_edge": "Classify affected when a complete limb actually names the changed requirement/convention or reads the changed carrier/reference, complete representation, whole-record/whole-field population, or a derived byte/refusal/identity/cache/readiness result. Compatibility or equal output does not remove the edge.",
+    "positive_untiedness": "Classify explicitly-unaffected only when the complete limbs have a concrete closed source/effect/record/query population excluding the changed paths, with preserved boundary inputs named and method stated. Shared vocabulary, a citation and a banner do not alone establish reliance; lack of a citation does not establish absence.",
+    "unknown": "If the owning input/consumer relationship remains unsettled, classify undecidable with evidence to settle it. Separate that from unverified implementation conformance where the source itself already establishes affectedness.",
+    "text_change_axis": "Determine separately whether the new behavior invalidates the normative block. An affected-compatible block can remain exact while its existing obligation and compatible integration/evidence move with the same logical change. A textual invalidation cannot lag under CC-REV-2/CC-IMPACT-6.",
+    "no_shortcuts": [
+      "No unchanged-constant/headline/intent/result shortcut",
+      "No changed-ID/declaration-only classifier",
+      "No empty-array absence inference",
+      "No narrowing a broad normative compatibility limb to two known readers",
+      "No all-N savings or readiness claim from a byte saving",
+      "No signature/implementation inferred from a draft direction or prior approve-both"
+    ]
+  }
+}

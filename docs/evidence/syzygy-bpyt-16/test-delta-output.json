@@ -1,0 +1,281 @@
+{
+ "baseTests": 332,
+ "headTests": 391,
+ "added": [
+  [
+   "apps/three-surface-poc/src/fence-rules.test.ts",
+   "Markdown fence recognizers: what each reader treats as inside a fence G1, fixed: a CRLF or CR source is excluded as a malformed code context, as the same LF source is"
+  ],
+  [
+   "apps/three-surface-poc/src/fence-rules.test.ts",
+   "Markdown fence recognizers: what each reader treats as inside a fence G1, fixed: a script element inside a closed tilde fence is admitted whatever ends the lines"
+  ],
+  [
+   "apps/three-surface-poc/src/fence-rules.test.ts",
+   "Markdown fence recognizers: what each reader treats as inside a fence G1, fixed: the fail-open class is closed for a well-formed LF source too"
+  ],
+  [
+   "apps/three-surface-poc/src/fence-rules.test.ts",
+   "Markdown fence recognizers: what each reader treats as inside a fence GAP G2/G3: a bare CR is a line end for the profile, the gate and the renderer, not for the extractor or the link reader the extractor"
+  ],
+  [
+   "apps/three-surface-poc/src/fence-rules.test.ts",
+   "Markdown fence recognizers: what each reader treats as inside a fence GAP G2/G3: a bare CR is a line end for the profile, the gate and the renderer, not for the extractor or the link reader the link reader"
+  ],
+  [
+   "apps/three-surface-poc/src/fence-rules.test.ts",
+   "Markdown fence recognizers: what each reader treats as inside a fence GAP G2/G3: a bare CR is a line end for the profile, the gate and the renderer, not for the extractor or the link reader the renderer reads a bare CR as the LF text is read"
+  ],
+  [
+   "apps/three-surface-poc/src/fence-rules.test.ts",
+   "Markdown fence recognizers: what each reader treats as inside a fence links, extraction and the renderer read CRLF exactly as they read LF"
+  ],
+  [
+   "apps/three-surface-poc/src/fence-rules.test.ts",
+   "Markdown fence recognizers: what each reader treats as inside a fence the cases cover the population this file claims: 33 cases, 152 insertion places per reader, seven renderings"
+  ],
+  [
+   "apps/three-surface-poc/src/fence-rules.test.ts",
+   "Markdown fence recognizers: what each reader treats as inside a fence the extractor and the profile hold one line model for LF and CRLF: where they agree on LF they agree on CRLF"
+  ],
+  [
+   "apps/three-surface-poc/src/fence-rules.test.ts",
+   "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read cr"
+  ],
+  [
+   "apps/three-surface-poc/src/fence-rules.test.ts",
+   "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read crlf"
+  ],
+  [
+   "apps/three-surface-poc/src/fence-rules.test.ts",
+   "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read cycle"
+  ],
+  [
+   "apps/three-surface-poc/src/fence-rules.test.ts",
+   "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read firstCr"
+  ],
+  [
+   "apps/three-surface-poc/src/fence-rules.test.ts",
+   "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read firstCrlf"
+  ],
+  [
+   "apps/three-surface-poc/src/fence-rules.test.ts",
+   "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read lastCrlf"
+  ],
+  [
+   "apps/three-surface-poc/src/polaris-generation/public-source-screening.test.ts",
+   "policy residuals (the detectors see literal forms only) CR: a body is withheld as active content or admitted as its LF form is"
+  ],
+  [
+   "apps/three-surface-poc/src/polaris-generation/public-source-screening.test.ts",
+   "policy residuals (the detectors see literal forms only) CRLF: a body is withheld as active content or admitted as its LF form is"
+  ],
+  [
+   "apps/three-surface-poc/src/polaris-generation/public-source-screening.test.ts",
+   "policy residuals (the detectors see literal forms only) LF: a body is withheld as active content or admitted as its LF form is"
+  ],
+  [
+   "apps/three-surface-poc/src/verbatim-route.test.ts",
+   "verbatim route gates CR: the spec body is refused or served as its LF form is"
+  ],
+  [
+   "apps/three-surface-poc/src/verbatim-route.test.ts",
+   "verbatim route gates CRLF: the spec body is refused or served as its LF form is"
+  ],
+  [
+   "apps/three-surface-poc/src/verbatim-route.test.ts",
+   "verbatim route gates LF: the spec body is refused or served as its LF form is"
+  ],
+  [
+   "packages/polaris-dossier/src/screen.test.ts",
+   "the project-documentation class (syzygy-2coz) CR: a documentation body is withheld as active content or admitted as its LF form is"
+  ],
+  [
+   "packages/polaris-dossier/src/screen.test.ts",
+   "the project-documentation class (syzygy-2coz) CRLF: a documentation body is withheld as active content or admitted as its LF form is"
+  ],
+  [
+   "packages/polaris-dossier/src/screen.test.ts",
+   "the project-documentation class (syzygy-2coz) LF: a documentation body is withheld as active content or admitted as its LF form is"
+  ],
+  [
+   "packages/three-surface-poc-core/src/content-classification.test.ts",
+   "PWB-REQ-006 (amended) \u2014 phase-A seeds use the same context-aware guard CR: a seed is excluded or kept safe as its LF form is"
+  ],
+  [
+   "packages/three-surface-poc-core/src/content-classification.test.ts",
+   "PWB-REQ-006 (amended) \u2014 phase-A seeds use the same context-aware guard CRLF: a seed is excluded or kept safe as its LF form is"
+  ],
+  [
+   "packages/three-surface-poc-core/src/content-classification.test.ts",
+   "PWB-REQ-006 (amended) \u2014 phase-A seeds use the same context-aware guard LF: a seed is excluded or kept safe as its LF form is"
+  ],
+  [
+   "packages/three-surface-poc-core/src/git-object-reader.test.ts",
+   "a CRLF or CR blob gets the outcome its LF form gets CR: a backtick opener whose info text holds a backtick is excluded as a malformed code context, with a body-free record"
+  ],
+  [
+   "packages/three-surface-poc-core/src/git-object-reader.test.ts",
+   "a CRLF or CR blob gets the outcome its LF form gets CR: a script element inside a closed tilde fence reads as text, byte for byte"
+  ],
+  [
+   "packages/three-surface-poc-core/src/git-object-reader.test.ts",
+   "a CRLF or CR blob gets the outcome its LF form gets CRLF: a backtick opener whose info text holds a backtick is excluded as a malformed code context, with a body-free record"
+  ],
+  [
+   "packages/three-surface-poc-core/src/git-object-reader.test.ts",
+   "a CRLF or CR blob gets the outcome its LF form gets CRLF: a script element inside a closed tilde fence reads as text, byte for byte"
+  ],
+  [
+   "packages/three-surface-poc-core/src/git-object-reader.test.ts",
+   "a CRLF or CR blob gets the outcome its LF form gets LF: a backtick opener whose info text holds a backtick is excluded as a malformed code context, with a body-free record"
+  ],
+  [
+   "packages/three-surface-poc-core/src/git-object-reader.test.ts",
+   "a CRLF or CR blob gets the outcome its LF form gets LF: a script element inside a closed tilde fence reads as text, byte for byte"
+  ],
+  [
+   "packages/three-surface-poc-core/src/git-object-reader.test.ts",
+   "reported positions in CRLF and bare-CR texts CRLF as LF; a bare CR counted by the malformed line only"
+  ],
+  [
+   "packages/three-surface-poc-core/src/git-object-reader.test.ts",
+   "reported positions in CRLF and bare-CR texts U+2028 is line content: an LF text reports its finding on line 1"
+  ],
+  [
+   "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+   "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CR: a backtick opener whose info string holds a backtick is malformed at its own line"
+  ],
+  [
+   "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+   "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CR: a backtick run after a list marker opens an inline span that a later fence-shaped line leaves unclosed"
+  ],
+  [
+   "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+   "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CR: a closer followed by text does not close, so the fence is unclosed"
+  ],
+  [
+   "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+   "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CR: a fence closed on the last line, with no final line end, is closed"
+  ],
+  [
+   "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+   "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CR: a script element between two tilde fences that each show a backtick-fence line is outside every context"
+  ],
+  [
+   "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+   "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CR: a tilde fence, a closer with trailing spaces and a span across lines"
+  ],
+  [
+   "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+   "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CR: the reported line counts each line end once"
+  ],
+  [
+   "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+   "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CRLF: a backtick opener whose info string holds a backtick is malformed at its own line"
+  ],
+  [
+   "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+   "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CRLF: a backtick run after a list marker opens an inline span that a later fence-shaped line leaves unclosed"
+  ],
+  [
+   "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+   "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CRLF: a closer followed by text does not close, so the fence is unclosed"
+  ],
+  [
+   "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+   "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CRLF: a fence closed on the last line, with no final line end, is closed"
+  ],
+  [
+   "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+   "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CRLF: a script element between two tilde fences that each show a backtick-fence line is outside every context"
+  ],
+  [
+   "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+   "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CRLF: a tilde fence, a closer with trailing spaces and a span across lines"
+  ],
+  [
+   "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+   "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CRLF: the reported line counts each line end once"
+  ],
+  [
+   "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+   "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line LF: a backtick opener whose info string holds a backtick is malformed at its own line"
+  ],
+  [
+   "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+   "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line LF: a backtick run after a list marker opens an inline span that a later fence-shaped line leaves unclosed"
+  ],
+  [
+   "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+   "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line LF: a closer followed by text does not close, so the fence is unclosed"
+  ],
+  [
+   "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+   "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line LF: a fence closed on the last line, with no final line end, is closed"
+  ],
+  [
+   "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+   "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line LF: a script element between two tilde fences that each show a backtick-fence line is outside every context"
+  ],
+  [
+   "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+   "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line LF: a tilde fence, a closer with trailing spaces and a span across lines"
+  ],
+  [
+   "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+   "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line LF: the reported line counts each line end once"
+  ],
+  [
+   "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+   "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line U+2028, U+2029 and U+0085 after a closing fence are line content: the fence stays unclosed"
+  ],
+  [
+   "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+   "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line U+2028, U+2029 and U+0085 are line content, not line ends"
+  ],
+  [
+   "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+   "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line a CRLF or CR text gets the structure its LF form gets, for every case here"
+  ],
+  [
+   "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+   "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line mixed terminators: each one ends one line, whichever kind it is"
+  ],
+  [
+   "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+   "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line no code unit but CR and LF ends a line"
+  ],
+  [
+   "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+   "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line the mask keeps the length and every CR and LF at its offset (a CR is never blanked, joined to LF or dropped)"
+  ]
+ ],
+ "removed": [
+  [
+   "apps/three-surface-poc/src/fence-rules.test.ts",
+   "Markdown fence recognizers: what each reader treats as inside a fence GAP: a CRLF source is admitted where the same LF source is excluded as a malformed code context"
+  ],
+  [
+   "apps/three-surface-poc/src/fence-rules.test.ts",
+   "Markdown fence recognizers: what each reader treats as inside a fence links, extraction and the renderer read CRLF exactly as they read LF; only the profile does not"
+  ],
+  [
+   "apps/three-surface-poc/src/fence-rules.test.ts",
+   "Markdown fence recognizers: what each reader treats as inside a fence the cases cover the population this file claims: 33 cases, 152 insertion places per reader"
+  ]
+ ],
+ "changedCalls": [
+  {
+   "file": "apps/three-surface-poc/src/fence-rules.test.ts",
+   "call": "Markdown fence recognizers: what each reader treats as inside a fence > $id",
+   "kind": "each"
+  }
+ ],
+ "changedGeneratedTests": {
+  "Markdown fence recognizers: what each reader treats as inside a fence > $id": 33
+ },
+ "line": "Tests: +62 ~33 -3",
+ "allBasePassed": true,
+ "allHeadPassed": true
+}

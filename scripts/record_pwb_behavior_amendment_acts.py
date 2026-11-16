@@ -641,6 +641,12 @@ VERSIONED_LATER = {
                      "three-surface-poc-vocabulary-epistemic-amendment/"
                      "THREE-SURFACE-POC-VOCABULARY-EPISTEMIC-AMENDMENT-MANIFEST.txt"),
     ),
+    "three-surface-poc-governedby-reference-amendment": (
+        DECISIONS / "THREE-SURFACE-POC-GOVERNEDBY-REFERENCE-AMENDMENT-SIGNOFF-v1.0.md",
+        pathlib.Path(".syzygy/governance/contracts/candidates/"
+                     "three-surface-poc-governedby-reference-amendment/"
+                     "THREE-SURFACE-POC-GOVERNEDBY-REFERENCE-AMENDMENT-MANIFEST.txt"),
+    ),
 }
 
 
@@ -652,7 +658,14 @@ def _later_rows(root: pathlib.Path, act: Act | None, path: str,
     one of these; a digest no performed manifest names is still rejected."""
     found: set[str] = set()
     sources = [(a.record, a.manifest) for a in ACTS.values() if a is not act]
-    sources += [pair for pair in VERSIONED_LATER.values() if pair[1] != skip_manifest]
+    for package, pair in VERSIONED_LATER.items():
+        if pair[1] == skip_manifest:
+            continue
+        if package == "three-surface-poc-governedby-reference-amendment":
+            import prepare_three_surface_poc_governedby_reference_recording as reference
+            if not reference.is_signed(root):
+                continue
+        sources.append(pair)
     for record, manifest in sources:
         if not (root / record).is_file() or not (root / manifest).is_file():
             continue

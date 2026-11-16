@@ -1,0 +1,1 @@
+{"sites": 75, "citations": 78, "measuredByTest": 60, "measuredByFileOnly": 13, "residuals": ["apps/three-surface-poc/src/polaris-opening-index.browser.test.ts:424", "packages/three-surface-poc-core/src/test-artifact-verification.live.test.ts:139"]}

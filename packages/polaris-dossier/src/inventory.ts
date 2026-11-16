@@ -1,26 +1,29 @@
-import { createHash } from 'node:crypto';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { UNKNOWN_REASONS } from '@syzygy/cap1-core';
 import { parseBoundedJson } from '@syzygy/polaris-generation-core/live';
+import { isRecord, sha256 } from '@syzygy/support';
 import { QUOTATION_RULE } from './brief.js';
-import {
-  briefIssuedAt, checkSubject, declaredSessionId, type CheckDeps, type CheckFinding, type CheckRecord, type CheckRefusal, type CheckedRevision,
-  type ExcludedQuotation, type CitedBlob, type SubjectBlock, type SubjectPlan, type SubjectReport, type SubjectRules, type VerifiedQuotation,
-} from './check.js';
+import { censusSection, loadCensus, type CensusDeps, type CensusLoad } from './census.js';
+import { checkSubject, declaredSessionId, type CheckDeps, type CheckFinding, type CheckRecord, type CheckRefusal, type CheckedRevision, type ExcludedQuotation, type CitedBlob, type SubjectBlock, type SubjectPlan, type SubjectReport, type SubjectRules, type VerifiedQuotation } from './check.js';
 import { readSec3 } from './doctrine-quote.js';
-import {
-  INVENTORY_ENTRY_KINDS, INVENTORY_QUOTATION_FORM, LOCAL_INVENTORY_SCHEMA_VERSION, SESSION_ID_RULE, inventorySchemaDocument,
-  localInventorySchema,
-} from './draft-schema.js';
+import { INVENTORY_ENTRY_KINDS, INVENTORY_QUOTATION_FORM, LOCAL_INVENTORY_SCHEMA_VERSION, SESSION_ID_RULE, inventorySchemaDocument, localInventorySchema } from './draft-schema.js';
 import { PERMITTING_ARM_ENABLED, decideExecutionRule, executionRuleSection, type ExecutionRule } from './execution-rule.js';
 import { RECORDS_WITHIN_REACH, type GateSources } from './gate-sources.js';
+import { isoOf } from './iso-of.js';
 import { expectedLaunch, launchFormRefusal, launchedMarkerState } from './launched.js';
+import type { Outcome } from './outcome.js';
 import { recheckSessionStatement, type SessionStatementOfRecord } from './session-statement.js';
-import { reverifyPinnedRevision, type ReverifiedRevision, type ReverifyOptions, type ReverifyRefusal } from './reverify.js';
+import { type ReverifyOptions, type ReverifyRefusal } from './reverify.js';
 import type { RunConfig } from './run-config.js';
 import type { RunSubject } from './run-record.js';
-import { REVISION_FILE, RUN_ID, RUN_LAYOUT, resolvePathIntent, within } from './state-directory.js';
+import { placementSubjectOf } from './screen.js';
+import { REVISION_FILE, RUN_LAYOUT, within } from './state-directory.js';
+import { briefCopyLines, briefCopyOf, readLaunchDisclosure, type BriefCopy } from './launch-disclosure.js';
+import { issuedBriefStatement, type LaunchStatement } from './launch-statements.js';
+import { type OpenedRun, errno, openRun, readRecord, sessionDirectory } from './run-dir.js';
+export { SESSION_DIR, sessionDirName, sessionsRoot, sessionDirectory, sessionsRootViolation, errno, openRun, logStep, readRecord } from './run-dir.js';
+export type { OpenedRun } from './run-dir.js';
 
 /** The independent inventory of the operator-agent mode (REQ-polaris-generation-035, 006).
  *
@@ -34,75 +37,16 @@ import { REVISION_FILE, RUN_ID, RUN_LAYOUT, resolvePathIntent, within } from './
  * (`inventoryOfRecord`, `session-statement.ts`). Every stored value is within the agent sessions' write reach and Inferred; the
  * inventory's completeness over the clone is the inventory session's self-report and never verified. */
 
-export const INVENTORY_BRIEF_VERSION = 'polaris-dossier-inventory-brief-v1';
+export const INVENTORY_BRIEF_VERSION = 'polaris-dossier-inventory-brief-v2';
 export const INVENTORY_CHECK_FORMAT = 'polaris-dossier-inventory-check/1';
 export const INVENTORY_BRIEF_FILE = 'inventory-brief.md';
 export const INVENTORY_FILE = 'inventory.json';
-/** A session's directory, under the run's sessions root. */
-export const SESSION_DIR = /^session-([1-9][0-9]*)$/;
-export const sessionDirName = (n: number): string => `session-${n}`;
-/** The run's sessions root, `<state root>/<run id>.sessions/`: a sibling of the run directory, never inside it, so that no ancestor
- * of a session's working directory below the state root is the run directory and `..` from it never reaches `drafts/`. */
-export const sessionsRoot = (run: string): string => path.join(path.dirname(run), `${path.basename(run)}.sessions`);
-export const sessionDirectory = (run: string, n: number): string => path.join(sessionsRoot(run), sessionDirName(n));
-
-/** Why the run's sessions root may not hold a session, or null when it may. Judged on real paths, as the state root is: the sessions
- * root may lie neither inside the run directory or the clone nor around either, and none may resolve unreadably. */
-export function sessionsRootViolation(run: string, clone: string): string | null {
-  const root = sessionsRoot(run);
-  const resolved = [root, run, path.resolve(clone)].map(resolvePathIntent);
-  const real: string[] = [];
-  for (const intent of resolved) {
-    if (!intent.resolved) return `the sessions root ${root} cannot be judged: ${intent.detail}`;
-    real.push(intent.realPath);
-  }
-  const [sessions, realRun, realClone] = real as [string, string, string];
-  for (const [what, other] of [['run directory', realRun], ['clone', realClone]] as const) {
-    if (within(sessions, other)) return `the sessions root ${root} resolves to ${sessions}, inside the ${what} (${other}); choose a state root where it is a sibling of the run directory`;
-    if (within(other, sessions)) return `the sessions root ${root} resolves to ${sessions}, which contains the ${what} (${other}); choose a state root where it does not`;
-  }
-  return null;
-}
-
 /** Within `inventory/`: a session's prompt record and its launch-form record. */
 const PROMPT_RECORD = /^session-([1-9][0-9]*)\.json$/;
 export const promptRecordName = (n: number): string => `session-${n}.json`;
 export const launchRecordName = (n: number): string => `session-${n}.launch.json`;
 export const INVENTORY_CHECKS = path.join(RUN_LAYOUT.inventory, 'checks');
-const RECORD_JSON_LIMITS = Object.freeze({ maxBytes: 262_144, maxNodes: 4096, maxDepth: 8 });
 const DRAFT_JSON_LIMITS = Object.freeze({ maxBytes: 4 * 1024 * 1024, maxNodes: 500_000, maxDepth: 16 });
-
-const isoOf = (instant: number): string => new Date(instant).toISOString();
-const isObj = (value: unknown): value is Readonly<Record<string, unknown>> => value !== null && typeof value === 'object' && !Array.isArray(value);
-const sha256 = (bytes: string | Uint8Array): string => createHash('sha256').update(bytes).digest('hex');
-export const errno = (cause: unknown): string => (cause as NodeJS.ErrnoException).code ?? 'unknown-error';
-
-/** A run step's common opening: the run directory, the pinned revision verified again, a brief issued and its deadline not passed.
- * `revision` is the label and consent record the live consent gives the pinned commit now, never the run record's copy. */
-export type OpenedRun =
-  | { readonly ok: true; readonly run: string; readonly runId: string; readonly subject: RunSubject; readonly declared: RunConfig; readonly deadlineEnds: number; readonly revision: ReverifiedRevision; readonly contentClasses: readonly string[] | null }
-  | { readonly ok: false; readonly stage: 'run' | 'reverify' | 'not-briefed' | 'deadline'; readonly reason: string; readonly reasons?: readonly string[]; readonly refusals?: readonly ReverifyRefusal[] };
-
-export async function openRun(runDir: string, sources: GateSources, now: number, what: string, options: ReverifyOptions = {}): Promise<OpenedRun> {
-  const run = path.resolve(runDir);
-  const runId = path.basename(run);
-  if (!RUN_ID.test(runId) || !fs.existsSync(path.join(run, RUN_LAYOUT.config))) return { ok: false, stage: 'run', reason: `${run} is not a run directory` };
-  const checked = await reverifyPinnedRevision(run, sources, now, options);
-  if (!checked.ok) return { ok: false, stage: 'reverify', reason: `the pinned revision could not be verified again, so ${what}`, reasons: checked.reasons, refusals: checked.refusals };
-  const { subject, declared } = checked.record;
-  const issued = briefIssuedAt(run, subject.pinnedRevision.commit);
-  if (typeof issued === 'string') return { ok: false, stage: 'not-briefed', reason: issued };
-  const deadlineEnds = issued + declared.deadline.seconds * 1000;
-  if (now >= deadlineEnds) return { ok: false, stage: 'deadline', reason: `the deadline ${declared.deadline.declared} from the brief ended at ${isoOf(deadlineEnds)} on Syzygy's clock; no step runs after it` };
-  return { ok: true, run, runId, subject, declared, deadlineEnds, revision: checked.revision, contentClasses: checked.contentClasses };
-}
-
-/** Append one entry to the run's step log; a failure to append changes no result. */
-export function logStep(run: string, step: string, at: number, entry: Record<string, unknown>): void {
-  try {
-    fs.appendFileSync(path.join(run, RUN_LAYOUT.steps), `${JSON.stringify({ format: 'polaris-dossier-step/1', step, at: isoOf(at), ...entry })}\n`, { mode: 0o600 });
-  } catch { /* the step log is a convenience within the agent's reach */ }
-}
 
 /** The highest inventory session number with a prompt record, or 0. */
 export function latestInventorySession(run: string): number {
@@ -110,14 +54,6 @@ export function latestInventorySession(run: string): number {
   try { names = fs.readdirSync(path.join(run, RUN_LAYOUT.inventory)); } catch { return 0; }
   const numbers = names.flatMap((name) => { const match = PROMPT_RECORD.exec(name); return match === null ? [] : [Number(match[1])]; });
   return numbers.length === 0 ? 0 : Math.max(...numbers);
-}
-
-/** A stored record, parsed within bounds, or undefined. */
-export function readRecord(file: string): Readonly<Record<string, unknown>> | undefined {
-  try {
-    const value = parseBoundedJson(fs.readFileSync(file, 'utf8'), RECORD_JSON_LIMITS);
-    return isObj(value) ? value : undefined;
-  } catch { return undefined; }
 }
 
 /** The session identifiers the frozen draft revisions declare, and how many revisions are frozen. Syzygy reads them; it never passes
@@ -147,6 +83,10 @@ export interface InventoryBriefInput {
   readonly deadlineEnds: number;
   readonly session: number;
   readonly executionRule: ExecutionRule;
+  /** The path-only census of the files screening withholds from the review session (`census.ts`), or why it is Unknown. */
+  readonly census: CensusLoad;
+  /** A copy-class run's copy and the operator's clone (`briefCopyOf`); null otherwise. */
+  readonly copy: BriefCopy | null;
 }
 
 const KIND_GLOSS: Readonly<Record<(typeof INVENTORY_ENTRY_KINDS)[number], string>> = {
@@ -161,8 +101,9 @@ const KIND_GLOSS: Readonly<Record<(typeof INVENTORY_ENTRY_KINDS)[number], string
   other: 'anything else it states that a reader would need',
 };
 
-/** The inventory brief. Pure: built from the run record, the brief record's deadline, Syzygy-authored text and the doctrine file;
- * it carries nothing of any draft. */
+/** The inventory brief. Pure: built from the run record, the brief record's deadline, Syzygy-authored text, the doctrine file and the
+ * path-only census of withheld files (from the pinned tree's listing and the screen in force, no body read); it carries nothing of any
+ * draft. */
 export function renderInventoryBrief(input: InventoryBriefInput): string {
   const { subject, declared } = input;
   const commit = subject.pinnedRevision.commit;
@@ -175,7 +116,9 @@ export function renderInventoryBrief(input: InventoryBriefInput): string {
     `- Run: \`${input.runId}\`, inventory session ${input.session}`,
     `- Repository: ${subject.repository.url} (\`${subject.repository.repositoryId}\`)`,
     `- Pinned revision: \`${commit}\` (${subject.pinnedRevision.label})`,
-    `- Clone: \`${subject.clone.path}\`, as the operator gave it at init (operator-declared, Inferred); read it by this path, never as your working directory`,
+    ...(input.copy === null
+      ? [`- Clone: \`${subject.clone.path}\`, as the operator gave it at init (operator-declared, Inferred); read it by this path, never as your working directory`]
+      : briefCopyLines(input.copy)),
     `- Inventory schema: \`${LOCAL_INVENTORY_SCHEMA_VERSION}\`, at the end of this brief`,
     '',
     `You are the inventory session. Prepare, from the clone at the pinned revision, an independent inventory of what the project itself states. Another session is writing a dossier of this project; you are not given its draft, and you must not look for it: never open the run directory's \`${RUN_LAYOUT.drafts}/\`, \`${RUN_LAYOUT.checks}/\`, \`${RUN_LAYOUT.brief}\` or any other session's directory. A reviewer will measure the dossier against your inventory, so cover what the project states, not what you expect a dossier to say.`,
@@ -199,6 +142,8 @@ export function renderInventoryBrief(input: InventoryBriefInput): string {
     `A citation is \`{id, path, startLine, endLine}\`: a repository path and an inclusive line range of that file at the pinned revision \`${commit}\`, never the working tree. Syzygy refuses a cited path that names no file at the pinned revision and a range beyond the file's end.`,
     '',
     `${INVENTORY_QUOTATION_FORM} Only an \`inferred\` entry carries quotations. ${QUOTATION_RULE}`,
+    '',
+    censusSection(input.census),
     '',
     '## Coverage',
     '',
@@ -224,20 +169,23 @@ export function renderInventoryBrief(input: InventoryBriefInput): string {
   ].join('\n');
 }
 
-export type InventoryBriefLoad = { readonly ok: true; readonly text: string; readonly executionRule: ExecutionRule } | { readonly ok: false; readonly stage: 'doctrine'; readonly reason: string };
+export type InventoryBriefLoad = { readonly ok: true; readonly text: string; readonly executionRule: ExecutionRule; readonly stageStatement: LaunchStatement } | { readonly ok: false; readonly stage: 'doctrine' | 'launch-record'; readonly reason: string };
 
 /** Syzygy's rendering of session `session`'s inventory brief, with the execution rule it carries: always SEC-3's, never the permission. */
-export async function buildInventoryBrief(opened: Extract<OpenedRun, { ok: true }>, session: number, sources: GateSources, now: number): Promise<InventoryBriefLoad> {
+export async function buildInventoryBrief(opened: Extract<OpenedRun, { ok: true }>, session: number, sources: GateSources, now: number, deps: CensusDeps = {}): Promise<InventoryBriefLoad> {
+  const copy = briefCopyOf(readLaunchDisclosure(opened.run), { dir: opened.run, clone: opened.subject.clone.path, pinnedAt: opened.subject.pinnedRevision.pinnedAt });
+  if (!copy.ok) return { ok: false, stage: 'launch-record', reason: `${copy.reason}; no inventory brief is rendered` };
   const doctrine = readSec3(sources.recordsRoot);
   if (!doctrine.ok) return { ok: false, stage: 'doctrine', reason: `SEC-3 cannot be quoted as adopted: ${doctrine.reason}` };
   const executionRule = await decideExecutionRule({
     role: 'inventory', runDir: opened.run, runId: opened.runId, pinnedRevision: opened.subject.pinnedRevision.commit,
     operatorIsOwner: opened.declared.operatorIsOwner, sec3: doctrine.sec3, now, d9: sources.d9, launched: () => launchedMarkerState(opened.run), permitting: { enabled: PERMITTING_ARM_ENABLED },
   });
+  const census = await loadCensus({ clonePath: opened.subject.clone.path, pinned: opened.subject.pinnedRevision.commit, consented: opened.contentClasses, recordsRoot: sources.recordsRoot, now, placement: placementSubjectOf(opened.subject) }, deps);
   const text = renderInventoryBrief({
-    runDir: opened.run, runId: opened.runId, subject: opened.subject, declared: opened.declared, deadlineEnds: opened.deadlineEnds, session, executionRule,
+    runDir: opened.run, runId: opened.runId, subject: opened.subject, declared: opened.declared, deadlineEnds: opened.deadlineEnds, session, executionRule, census, copy: copy.copy,
   });
-  return { ok: true, text, executionRule };
+  return { ok: true, text, executionRule, stageStatement: issuedBriefStatement({ role: 'inventory', session }, copy.copy !== null) };
 }
 
 const BRIEF_DISCLOSURES = [
@@ -245,12 +193,13 @@ const BRIEF_DISCLOSURES = [
   'This is Syzygy\'s own rendering of the inventory brief, from the run record and the doctrine file; the copy in the session directory is within the agent sessions\' write reach, so it is compared, never trusted.',
 ];
 
-export type InventoryBriefResult =
-  | { readonly ok: true; readonly report: { readonly command: 'inventory-brief'; readonly outcome: 'rendered'; readonly run: string; readonly session: number; readonly sha256: string; readonly storedCopy: 'matches' | 'differs' | 'absent'; readonly brief: string; readonly disclosures: readonly string[] } }
-  | { readonly ok: false; readonly refusal: { readonly command: 'inventory-brief'; readonly outcome: 'refused'; readonly stage: string; readonly reason: string; readonly reasons?: readonly string[]; readonly refusals?: readonly ReverifyRefusal[]; readonly disclosures: readonly string[] } };
+export type InventoryBriefResult = Outcome<
+  { readonly command: 'inventory-brief'; readonly outcome: 'rendered'; readonly run: string; readonly session: number; readonly sha256: string; readonly storedCopy: 'matches' | 'differs' | 'absent'; readonly brief: string; readonly disclosures: readonly string[] },
+  { readonly command: 'inventory-brief'; readonly outcome: 'refused'; readonly stage: string; readonly reason: string; readonly reasons?: readonly string[]; readonly refusals?: readonly ReverifyRefusal[]; readonly disclosures: readonly string[] }
+>;
 
 /** `syzygy dossier inventory-brief <run>`: print Syzygy's rendering of the latest inventory session's brief. Writes nothing. */
-export async function inventoryBrief(runDir: string, deps: { readonly sources: GateSources; readonly now: () => number; readonly openReader?: ReverifyOptions['openReader'] }): Promise<InventoryBriefResult> {
+export async function inventoryBrief(runDir: string, deps: { readonly sources: GateSources; readonly now: () => number; readonly openReader?: ReverifyOptions['openReader']; readonly loadScreen?: CensusDeps['loadScreen'] }): Promise<InventoryBriefResult> {
   const now = deps.now();
   const refuse = (stage: string, reason: string, reasons?: readonly string[], refusals?: readonly ReverifyRefusal[]): InventoryBriefResult =>
     ({ ok: false, refusal: { command: 'inventory-brief', outcome: 'refused', stage, reason, ...(reasons ? { reasons } : {}), ...(refusals ? { refusals } : {}), disclosures: BRIEF_DISCLOSURES } });
@@ -258,7 +207,7 @@ export async function inventoryBrief(runDir: string, deps: { readonly sources: G
   if (!opened.ok) return refuse(opened.stage, opened.reason, opened.reasons, opened.refusals);
   const session = latestInventorySession(opened.run);
   if (session === 0) return refuse('session', `no inventory session has been handed over: run \`syzygy dossier session-prompt ${opened.run} inventory\` first`);
-  const built = await buildInventoryBrief(opened, session, deps.sources, now);
+  const built = await buildInventoryBrief(opened, session, deps.sources, now, deps);
   if (!built.ok) return refuse(built.stage, built.reason);
   let stored: string | undefined;
   try { stored = fs.readFileSync(path.join(sessionDirectory(opened.run, session), INVENTORY_BRIEF_FILE), 'utf8'); } catch { stored = undefined; }
@@ -275,7 +224,7 @@ export function inventoryRules(pinned: string): SubjectRules {
     schema: localInventorySchema({ pinnedRevision: pinned }),
     maxQuestions: null,
     structural: () => undefined,
-    blocks: (doc) => (Array.isArray(doc['entries']) ? doc['entries'] : []).flatMap((entry, i): SubjectBlock[] => (isObj(entry) ? [{
+    blocks: (doc) => (Array.isArray(doc['entries']) ? doc['entries'] : []).flatMap((entry, i): SubjectBlock[] => (isRecord(entry) ? [{
       at: `$.entries[${i}]`, value: entry, textKey: 'statement', allowed: ['inferred', 'unknown'], quotable: 'inferred',
       unquotable: 'only an inferred entry carries quotations; give this one its own inferred entry with a citation',
     }] : [])),
@@ -313,7 +262,7 @@ export interface InventoryCheckRecord {
   readonly label: 'Inferred';
 }
 
-export type InventoryCheckResult = { readonly ok: true; readonly report: SubjectReport<InventoryCheckRecord> } | { readonly ok: false; readonly refusal: CheckRefusal };
+export type InventoryCheckResult = Outcome<SubjectReport<InventoryCheckRecord>, CheckRefusal>;
 
 const CHECK_DISCLOSURES = [
   RECORDS_WITHIN_REACH,
@@ -338,7 +287,7 @@ const INVENTORY_PLAN: SubjectPlan<InventoryCheckRecord, { readonly session: numb
     const authoring = authoringSessionIds(run);
     if (authoring.frozen === 0) return { ok: false, stage: 'authoring-session', reason: 'no draft revision is frozen, so the authoring session has declared no identifier and the inventory\'s distinctness from it cannot be checked; nothing is frozen' };
     if (authoring.ids.size === 0) return { ok: false, stage: 'authoring-session', reason: 'no frozen draft revision declares a session identifier, so the inventory\'s distinctness from the authoring session cannot be checked; nothing is frozen' };
-    const declared = isObj(doc) && typeof doc['sessionId'] === 'string' ? doc['sessionId'] : null;
+    const declared = isRecord(doc) && typeof doc['sessionId'] === 'string' ? doc['sessionId'] : null;
     if (declared !== null && authoring.ids.has(declared)) {
       return { ok: false, stage: 'session-identity', reason: 'the inventory declares the authoring session\'s identifier: an inventory from the authoring session is refused, and nothing is frozen' };
     }
@@ -415,8 +364,8 @@ export async function inventoryOfRecord(runDir: string, recheck: { readonly sour
   const check = readRecord(path.join(run, INVENTORY_CHECKS, `rev-${revision}.json`));
   if (check === undefined || check['format'] !== INVENTORY_CHECK_FORMAT || check['revision'] !== revision) return no(`the result of inventory revision ${revision} cannot be read`);
   if (check['outcome'] !== 'passed') return no(`inventory revision ${revision} has open findings`);
-  const inventory = isObj(check['inventory']) ? check['inventory'] : {};
-  const session = isObj(check['session']) ? check['session'] : {};
+  const inventory = isRecord(check['inventory']) ? check['inventory'] : {};
+  const session = isRecord(check['session']) ? check['session'] : {};
   const number = session['number'], sessionId = session['sessionId'];
   if (typeof number !== 'number' || !Number.isSafeInteger(number) || number < 1) return no(`the result of inventory revision ${revision} names no session`);
   if (typeof sessionId !== 'string' || declaredSessionId({ sessionId }) === null) return no(`inventory revision ${revision} declares no session identifier`);
@@ -430,7 +379,7 @@ export async function inventoryOfRecord(runDir: string, recheck: { readonly sour
   if (promptSha === undefined || prompt!['promptSha256'] !== promptSha) return no(`the prompt record of inventory session ${number} cannot be read or does not match its own digest`);
   const launch = readRecord(path.join(run, RUN_LAYOUT.inventory, launchRecordName(number)));
   if (launch === undefined) return no(`no launch form is recorded for inventory session ${number}: run \`syzygy dossier launch-form ${run} inventory terminal|bang\` with the operator's answer`);
-  const form = isObj(launch['form']) ? launch['form'] : {};
+  const form = isRecord(launch['form']) ? launch['form'] : {};
   const formRefusal = launchFormRefusal(run, form);
   if (formRefusal !== null || launch['role'] !== 'inventory' || launch['session'] !== number || launch['promptSha256'] !== promptSha) {
     return no(`the launch-form record of inventory session ${number} is not ${expectedLaunch(launchedMarkerState(run))} of that session's prompt`);

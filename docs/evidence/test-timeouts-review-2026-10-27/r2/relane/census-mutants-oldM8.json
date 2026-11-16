@@ -1,0 +1,223 @@
+{
+ "tool": "census_mutants.py",
+ "subject": {
+  "path": "docs/evidence/syzygy-bpyt-4-31/tools/timeout_census.mjs",
+  "sha256": "6e503285dfe1d3faf64d317f95faf17841991db0901bc1b55822870f96cbbc3a",
+  "commit": "e54f65c654e59a9c52c848b8e633e9a4ef4942f0"
+ },
+ "unmutatedSelftest": "selftest passed: 16 sites, every predicate and its negative",
+ "mutants": 21,
+ "killed": 20,
+ "rows": [
+  {
+   "id": "M1",
+   "predicate": "modifiers are stripped",
+   "old": "new Set(['skip', 'only', 'concurrent', ",
+   "new": "new Set(['skip', 'only', ",
+   "exit": 1,
+   "outcome": "killed",
+   "killed": true,
+   "output": "selftest FAILED:\n  missing [\"packages/x/src/a.test.ts\",25,\"test\",\"third-argument\",13000,null,0,0]\n  second method: lines only the regexes find are 25,27,28,31, expected 27,28,31"
+  },
+  {
+   "id": "M2",
+   "predicate": "curried forms are unwrapped",
+   "old": "new Set(['each', 'for', 'skipIf', 'runIf', 'extend'])",
+   "new": "new Set(['each', 'for', 'runIf', 'extend'])",
+   "exit": 1,
+   "outcome": "killed",
+   "killed": true,
+   "output": "selftest FAILED:\n  missing [\"packages/x/src/a.test.ts\",9,\"test\",\"third-argument\",15000,null,0,0]\n  missing [\"packages/x/src/a.test.ts\",11,\"test\",\"third-argument\",12000,null,0,0]\n  second method: lines only the regexes find are 9,11,27,28,31, expected 27,28,31"
+  },
+  {
+   "id": "M3",
+   "predicate": "const aliases resolve",
+   "old": "if (root && (ROOTS.has(root) || HOOKS.has(root)) && root !== node.name.text) aliases.set(node.name.text, root);",
+   "new": "",
+   "exit": 1,
+   "outcome": "killed",
+   "killed": true,
+   "output": "selftest FAILED:\n  missing [\"packages/x/src/a.test.ts\",11,\"test\",\"third-argument\",12000,null,0,0]\n  second method: lines only the regexes find are 11,27,28,31, expected 27,28,31"
+  },
+  {
+   "id": "M4",
+   "predicate": "options-first object",
+   "old": "const t = timeoutProp(args[1]); if (t) { expr = t.initializer; form = 'options-first'; }",
+   "new": "",
+   "exit": 1,
+   "outcome": "killed",
+   "killed": true,
+   "output": "selftest FAILED:\n  missing [\"packages/x/src/a.test.ts\",14,\"suite\",\"options-first\",9000,\"above\",0,1]\n  second method: lines only the regexes find are 14,27,28,31, expected 27,28,31"
+  },
+  {
+   "id": "M5",
+   "predicate": "options-last object",
+   "old": "const t = timeoutProp(args[2]); if (t) { expr = t.initializer; form = 'options-last'; }",
+   "new": "",
+   "exit": 1,
+   "outcome": "killed",
+   "killed": true,
+   "output": "selftest FAILED:\n  missing [\"packages/x/src/a.test.ts\",15,\"test\",\"options-last\",8000,null,0,0]\n  second method: lines only the regexes find are 15,27,28,31, expected 27,28,31"
+  },
+  {
+   "id": "M6",
+   "predicate": "a function third argument is not a timeout",
+   "old": "args.length >= 3 && !ts.isFunctionLike(args[2])",
+   "new": "args.length >= 3",
+   "exit": 1,
+   "outcome": "killed",
+   "killed": true,
+   "output": "selftest FAILED:\n  unexpected [\"packages/x/src/a.test.ts\",35,\"test\",\"third-argument\",null,null,0,0]\n  second method: AST-only lines are 8,17,35,38"
+  },
+  {
+   "id": "M7",
+   "predicate": "hooks",
+   "old": "kind = 'hook'; expr = args[1]; form = 'second-argument';",
+   "new": "",
+   "exit": 1,
+   "outcome": "killed",
+   "killed": true,
+   "output": "selftest FAILED:\n  missing [\"packages/x/src/a.test.ts\",16,\"hook\",\"second-argument\",7000,null,0,0]\n  second method: lines only the regexes find are 16,27,28,31, expected 27,28,31"
+  },
+  {
+   "id": "M8",
+   "predicate": "vi.setConfig",
+   "old": "push(sf, prop.initializer, 'setConfig', 'vi.setConfig', prop.name.text);",
+   "new": "",
+   "exit": 1,
+   "outcome": "error",
+   "killed": false,
+   "output": "file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-537b/clone/docs/evidence/syzygy-bpyt-4-31/tools/.mutant-M8-timeout_census.mjs:250\n          }\n          ^\n\nSyntaxError: Unexpected token '}'\n    at compileSourceTextModule (node:internal/modules/esm/utils:357:16)\n    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:108:18)\n    at #translate (node:internal/modules/esm/loader:550:12)\n    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:597:27)\n    at async #link (node:internal/modules/esm/module_job:180:19)\n\nNode.js v24.6.0"
+  },
+  {
+   "id": "M9",
+   "predicate": "config properties",
+   "old": "push(sf, node.initializer, 'config', node.name.text, 'config-property');",
+   "new": "",
+   "exit": 1,
+   "outcome": "killed",
+   "killed": true,
+   "output": "selftest FAILED:\n  missing [\"packages/x/vitest.config.ts\",3,\"config\",\"config-property\",60000,\"line\",0,0]\n  missing [\"packages/x/vitest.config.ts\",6,\"config\",\"config-property\",61000,\"group\",0,0]\n  missing [\"packages/x/vitest.config.ts\",7,\"config\",\"config-property\",62000,\"group\",0,0]"
+  },
+  {
+   "id": "M10",
+   "predicate": "population excludes docs/",
+   "old": "(/^(apps|packages)\\//.test(p)",
+   "new": "(/^(apps|packages|docs)\\//.test(p)",
+   "exit": 1,
+   "outcome": "killed",
+   "killed": true,
+   "output": "selftest FAILED:\n  unexpected [\"docs/outside.test.ts\",1,\"test\",\"third-argument\",40000,null,0,0]\n  population 4, expected 3 (docs/outside.test.ts is outside it)"
+  },
+  {
+   "id": "M11",
+   "predicate": "reason on the timeout line",
+   "old": "if (onLine) return { where: `${sf.fileName}:${endLine}`, text: onLine };",
+   "new": "",
+   "exit": 1,
+   "outcome": "killed",
+   "killed": true,
+   "output": "selftest FAILED:\n  missing [\"packages/x/src/a.test.ts\",5,\"test\",\"third-argument\",30000,\"line\",1,0]\n  missing [\"packages/x/vitest.config.ts\",3,\"config\",\"config-property\",60000,\"line\",0,0]\n  unexpected [\"packages/x/src/a.test.ts\",5,\"test\",\"third-argument\",30000,null,0,0]\n  unexpected [\"packages/x/vitest.config.ts\",3,\"config\",\"config-property\",60000,null,0,0]"
+  },
+  {
+   "id": "M12",
+   "predicate": "reason above a declaration",
+   "old": "if (above) return { where: `${d.sf.fileName}:${dl - 1}`, text: above };",
+   "new": "",
+   "exit": 1,
+   "outcome": "killed",
+   "killed": true,
+   "output": "selftest FAILED:\n  missing [\"packages/x/src/a.test.ts\",14,\"suite\",\"options-first\",9000,\"above\",0,1]\n  missing [\"packages/x/src/a.test.ts\",24,\"test\",\"third-argument\",14000,\"above\",0,0]\n  unexpected [\"packages/x/src/a.test.ts\",14,\"suite\",\"options-first\",9000,null,0,0]\n  unexpected [\"packages/x/src/a.test.ts\",24,\"test\",\"third-argument\",14000,null,0,0]"
+  },
+  {
+   "id": "M13",
+   "predicate": "reason above a declaration group",
+   "old": "if (group) return { where: `${d.sf.fileName}:${dl}`, text: group, group: true };",
+   "new": "",
+   "exit": 1,
+   "outcome": "killed",
+   "killed": true,
+   "output": "selftest FAILED:\n  missing [\"packages/x/src/a.test.ts\",21,\"test\",\"third-argument\",2000,\"group\",0,0]\n  unexpected [\"packages/x/src/a.test.ts\",21,\"test\",\"third-argument\",2000,null,0,0]"
+  },
+  {
+   "id": "M14",
+   "predicate": "a cited hex run must be a commit",
+   "old": "].filter(isCommit);",
+   "new": "];",
+   "exit": 1,
+   "outcome": "killed",
+   "killed": true,
+   "output": "selftest FAILED:\n  missing [\"packages/x/src/a.test.ts\",14,\"suite\",\"options-first\",9000,\"above\",0,1]\n  unexpected [\"packages/x/src/a.test.ts\",14,\"suite\",\"options-first\",9000,\"above\",1,1]"
+  },
+  {
+   "id": "M15",
+   "predicate": "a cited evidence path must exist",
+   "old": ")))].filter((p) => tracked.has(p));",
+   "new": ")))];",
+   "exit": 1,
+   "outcome": "killed",
+   "killed": true,
+   "output": "selftest FAILED:\n  missing [\"packages/x/src/a.test.ts\",14,\"suite\",\"options-first\",9000,\"above\",0,1]\n  unexpected [\"packages/x/src/a.test.ts\",14,\"suite\",\"options-first\",9000,\"above\",0,2]"
+  },
+  {
+   "id": "M16",
+   "predicate": "relative imports are followed",
+   "old": "if (other) return declaration(other, (el.propertyName ?? el.name).text, seen);",
+   "new": "",
+   "exit": 1,
+   "outcome": "killed",
+   "killed": true,
+   "output": "selftest FAILED:\n  missing [\"packages/x/src/a.test.ts\",24,\"test\",\"third-argument\",14000,\"above\",0,0]\n  unexpected [\"packages/x/src/a.test.ts\",24,\"test\",\"third-argument\",null,null,0,0]"
+  },
+  {
+   "id": "M17",
+   "predicate": "arithmetic is evaluated",
+   "old": "case ts.SyntaxKind.AsteriskToken: return a * b;",
+   "new": "",
+   "exit": 1,
+   "outcome": "killed",
+   "killed": true,
+   "output": "selftest FAILED:\n  missing [\"packages/x/src/a.test.ts\",21,\"test\",\"third-argument\",2000,\"group\",0,0]\n  unexpected [\"packages/x/src/a.test.ts\",21,\"test\",\"third-argument\",null,\"group\",0,0]"
+  },
+  {
+   "id": "M18",
+   "predicate": "a comment above the call is never a reason",
+   "old": "let reason = reasonFor(sf, expr);",
+   "new": "let reason = reasonFor(sf, expr) ?? (callLine ? { where: 'call', text: commentAbove(sf, callLine) } : null);\n    if (reason && reason.text === null) reason = null;",
+   "exit": 1,
+   "outcome": "killed",
+   "killed": true,
+   "output": "selftest FAILED:\n  missing [\"packages/x/src/a.test.ts\",23,\"test\",\"third-argument\",11000,null,0,0]\n  unexpected [\"packages/x/src/a.test.ts\",23,\"test\",\"third-argument\",11000,\"above\",0,0]"
+  },
+  {
+   "id": "M19",
+   "predicate": "second method: the closing regex",
+   "old": "const CLOSE = /\\},\\s*([0-9][0-9_]*|[A-Z][A-Z0-9_]*)\\s*\\)/;",
+   "new": "const CLOSE = /\\},\\s*([0-9][0-9_]*)\\s*\\)/;",
+   "exit": 1,
+   "outcome": "killed",
+   "killed": true,
+   "output": "selftest FAILED:\n  second method: AST-only lines are 8,17,21,24,38"
+  },
+  {
+   "id": "M20",
+   "predicate": "config reason on a group",
+   "old": "else if (group) reason = { where: `${sf.fileName}:${l}`, text: group, group: true };",
+   "new": "",
+   "exit": 1,
+   "outcome": "killed",
+   "killed": true,
+   "output": "selftest FAILED:\n  missing [\"packages/x/vitest.config.ts\",6,\"config\",\"config-property\",61000,\"group\",0,0]\n  missing [\"packages/x/vitest.config.ts\",7,\"config\",\"config-property\",62000,\"group\",0,0]\n  unexpected [\"packages/x/vitest.config.ts\",6,\"config\",\"config-property\",61000,null,0,0]\n  unexpected [\"packages/x/vitest.config.ts\",7,\"config\",\"config-property\",62000,null,0,0]"
+  },
+  {
+   "id": "M21",
+   "predicate": "reason above an own-line timeout",
+   "old": "if (aboveOwnLine) return { where: `${sf.fileName}:${startLine - 1}`, text: aboveOwnLine };",
+   "new": "",
+   "exit": 1,
+   "outcome": "killed",
+   "killed": true,
+   "output": "selftest FAILED:\n  missing [\"packages/x/src/a.test.ts\",38,\"test\",\"third-argument\",16000,\"above\",0,0]\n  unexpected [\"packages/x/src/a.test.ts\",38,\"test\",\"third-argument\",16000,null,0,0]"
+  }
+ ]
+}

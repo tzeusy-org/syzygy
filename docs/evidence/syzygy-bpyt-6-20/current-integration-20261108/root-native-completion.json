@@ -1,0 +1,21 @@
+{
+  "argv": [
+    "/usr/bin/env",
+    "-i",
+    "PATH=/usr/bin:/bin",
+    "/usr/bin/python3",
+    "-I",
+    "/home/orca/.tmp/syzygy-743-current-integration-wti3cdgi/BATCH-001/run-current-batch.py"
+  ],
+  "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+  "pid": 1406892,
+  "exit": 0,
+  "userspaceBeforePopenMonotonicNs": 621481139606951,
+  "userspaceAfterWaitMonotonicNs": 621517856185508,
+  "userspaceBeforePopenUtc": "2026-11-08T05:54:29.882068+00:00",
+  "userspaceAfterWaitUtc": "2026-11-08T05:55:06.598649+00:00",
+  "kernelEndpoints": "Unknown",
+  "stdout": "/home/orca/.tmp/syzygy-743-current-integration-wti3cdgi/ROOT-BATCH-001.stdout",
+  "stderr": "/home/orca/.tmp/syzygy-743-current-integration-wti3cdgi/ROOT-BATCH-001.stderr",
+  "root": "Native command capture only; stage dispositions require actual output/denominators."
+}

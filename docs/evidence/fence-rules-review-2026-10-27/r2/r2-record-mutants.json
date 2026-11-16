@@ -1,0 +1,620 @@
+{
+ "rows": [
+  {
+   "id": "PR1-profile-opener-indent4",
+   "oldCount": 1,
+   "exit": 1,
+   "failedPerFile": {
+    "apps/three-surface-poc/src/fence-rules.test.ts": 2
+   },
+   "failed": {
+    "apps/three-surface-poc/src/fence-rules.test.ts": [
+     "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-indent4'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-indent4'"
+    ]
+   },
+   "killedByFenceRules": true,
+   "recordSaysFenceRulesKills": true,
+   "killedByPackageReader": null,
+   "recordSaysPackageReaderKills": null,
+   "agrees": true
+  },
+  {
+   "id": "PR2-profile-closer-any-whitespace",
+   "oldCount": 1,
+   "exit": 1,
+   "failedPerFile": {
+    "apps/three-surface-poc/src/fence-rules.test.ts": 4
+   },
+   "failed": {
+    "apps/three-surface-poc/src/fence-rules.test.ts": [
+     "Markdown fence recognizers: what each reader treats as inside a fence 'closer-trailing-tab'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'closer-trailing-tab-then-closer'",
+     "Markdown fence recognizers: what each reader treats as inside a fence GAP G2: the extractor keeps its own fence closer a closer-shaped line ending in a tab: the profile keeps the fence open to the plain closer, the extractor closes early and the plain closer then hides the rest",
+     "Markdown fence recognizers: what each reader treats as inside a fence GAP G3: the link reader keeps its own fence and span rules a closer-shaped line ending in a tab, on a text the profile reads as well formed, mints the link inside the fence and hides the one after it"
+    ]
+   },
+   "killedByFenceRules": true,
+   "recordSaysFenceRulesKills": true,
+   "killedByPackageReader": null,
+   "recordSaysPackageReaderKills": null,
+   "agrees": true
+  },
+  {
+   "id": "PR3-profile-closer-strictly-longer",
+   "oldCount": 1,
+   "exit": 1,
+   "failedPerFile": {
+    "apps/three-surface-poc/src/fence-rules.test.ts": 29
+   },
+   "failed": {
+    "apps/three-surface-poc/src/fence-rules.test.ts": [
+     "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-col0'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-indent1'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-indent2'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-indent3'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-col0'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-indent3'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'opener-four-closer-three'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'closer-indent1'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'closer-indent3'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'closer-indent4'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'closer-trailing-space'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'closer-trailing-tab-then-closer'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'closer-with-info'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'closer-longer-with-info'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'closer-with-text'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'closer-other-char'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-fence-backtick-line'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-opener-four-closer-three'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'info-string'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'info-string-space'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-info-with-backtick'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'empty-fence'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'two-fences'",
+     "Markdown fence recognizers: what each reader treats as inside a fence GAP G2: the extractor keeps its own fence closer a plain closer: the control, three principles declared and three extracted",
+     "Markdown fence recognizers: what each reader treats as inside a fence GAP G2: the extractor keeps its own fence closer a closer indented one space: the profile closes the fence, the extractor never does, and the denominator is 1 of 3",
+     "Markdown fence recognizers: what each reader treats as inside a fence GAP G2: the extractor keeps its own fence closer a closer indented three spaces: the profile closes the fence, the extractor never does, and the denominator is 1 of 3",
+     "Markdown fence recognizers: what each reader treats as inside a fence GAP G2: the extractor keeps its own fence closer a closer-shaped line ending in a tab: the profile keeps the fence open to the plain closer, the extractor closes early and the plain closer then hides the rest",
+     "Markdown fence recognizers: what each reader treats as inside a fence GAP G3: the link reader keeps its own fence and span rules a closer-shaped line with an info string closes the fence early, and the real closer hides every later link",
+     "Markdown fence recognizers: what each reader treats as inside a fence GAP G3: the link reader keeps its own fence and span rules a closer-shaped line ending in a tab, on a text the profile reads as well formed, mints the link inside the fence and hides the one after it"
+    ]
+   },
+   "killedByFenceRules": true,
+   "recordSaysFenceRulesKills": true,
+   "killedByPackageReader": null,
+   "recordSaysPackageReaderKills": null,
+   "agrees": true
+  },
+  {
+   "id": "PR4-profile-backtick-info-allowed",
+   "oldCount": 1,
+   "exit": 1,
+   "failedPerFile": {
+    "apps/three-surface-poc/src/fence-rules.test.ts": 2
+   },
+   "failed": {
+    "apps/three-surface-poc/src/fence-rules.test.ts": [
+     "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-info-with-backtick'",
+     "Markdown fence recognizers: what each reader treats as inside a fence GAP: a CRLF source is admitted where the same LF source is excluded as a malformed code context"
+    ]
+   },
+   "killedByFenceRules": true,
+   "recordSaysFenceRulesKills": true,
+   "killedByPackageReader": null,
+   "recordSaysPackageReaderKills": null,
+   "agrees": true
+  },
+  {
+   "id": "PR5-profile-opener-tolerates-CR",
+   "oldCount": 1,
+   "exit": 1,
+   "failedPerFile": {
+    "apps/three-surface-poc/src/fence-rules.test.ts": 29
+   },
+   "failed": {
+    "apps/three-surface-poc/src/fence-rules.test.ts": [
+     "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-col0'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-indent1'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-indent2'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-indent3'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-col0'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-indent3'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'opener-four-closer-three'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'closer-longer'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'closer-indent1'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'closer-indent3'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'closer-indent4'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'closer-trailing-space'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'closer-trailing-tab'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'closer-trailing-tab-then-closer'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'closer-with-info'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'closer-longer-with-info'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'closer-with-text'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'closer-other-char'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-fence-backtick-line'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-opener-four-closer-three'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'info-string'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'info-string-space'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-info-with-backtick'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-info-with-backtick'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'unclosed'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'empty-fence'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'list-item'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'two-fences'",
+     "Markdown fence recognizers: what each reader treats as inside a fence GAP: a CRLF source is admitted where the same LF source is excluded as a malformed code context"
+    ]
+   },
+   "killedByFenceRules": true,
+   "recordSaysFenceRulesKills": true,
+   "killedByPackageReader": null,
+   "recordSaysPackageReaderKills": null,
+   "agrees": true
+  },
+  {
+   "id": "L1-links-opener-spaces-only",
+   "oldCount": 1,
+   "exit": 1,
+   "failedPerFile": {
+    "apps/three-surface-poc/src/fence-rules.test.ts": 2
+   },
+   "failed": {
+    "apps/three-surface-poc/src/fence-rules.test.ts": [
+     "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-tab'",
+     "Markdown fence recognizers: what each reader treats as inside a fence links, extraction and the renderer read CRLF exactly as they read LF; only the profile does not"
+    ]
+   },
+   "killedByFenceRules": true,
+   "recordSaysFenceRulesKills": true,
+   "killedByPackageReader": null,
+   "recordSaysPackageReaderKills": null,
+   "agrees": true
+  },
+  {
+   "id": "L2-links-closer-any-length",
+   "oldCount": 1,
+   "exit": 1,
+   "failedPerFile": {
+    "apps/three-surface-poc/src/fence-rules.test.ts": 3
+   },
+   "failed": {
+    "apps/three-surface-poc/src/fence-rules.test.ts": [
+     "Markdown fence recognizers: what each reader treats as inside a fence 'opener-four-closer-three'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-opener-four-closer-three'",
+     "Markdown fence recognizers: what each reader treats as inside a fence links, extraction and the renderer read CRLF exactly as they read LF; only the profile does not"
+    ]
+   },
+   "killedByFenceRules": true,
+   "recordSaysFenceRulesKills": true,
+   "killedByPackageReader": null,
+   "recordSaysPackageReaderKills": null,
+   "agrees": true
+  },
+  {
+   "id": "L3-links-closer-any-fence-char",
+   "oldCount": 1,
+   "exit": 1,
+   "failedPerFile": {
+    "apps/three-surface-poc/src/fence-rules.test.ts": 7
+   },
+   "failed": {
+    "apps/three-surface-poc/src/fence-rules.test.ts": [
+     "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-col0'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-indent3'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-fence-backtick-line'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-opener-four-closer-three'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-info-with-backtick'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'two-fences'",
+     "Markdown fence recognizers: what each reader treats as inside a fence links, extraction and the renderer read CRLF exactly as they read LF; only the profile does not"
+    ]
+   },
+   "killedByFenceRules": true,
+   "recordSaysFenceRulesKills": true,
+   "killedByPackageReader": null,
+   "recordSaysPackageReaderKills": null,
+   "agrees": true
+  },
+  {
+   "id": "L4-links-inline-span-needs-content",
+   "oldCount": 1,
+   "exit": 1,
+   "failedPerFile": {
+    "apps/three-surface-poc/src/fence-rules.test.ts": 2
+   },
+   "failed": {
+    "apps/three-surface-poc/src/fence-rules.test.ts": [
+     "Markdown fence recognizers: what each reader treats as inside a fence inline span: 'inside-double-span'",
+     "Markdown fence recognizers: what each reader treats as inside a fence inline span: 'double-span-with-inner-backtick-aroun\u2026'"
+    ]
+   },
+   "killedByFenceRules": true,
+   "recordSaysFenceRulesKills": true,
+   "killedByPackageReader": null,
+   "recordSaysPackageReaderKills": null,
+   "agrees": true
+  },
+  {
+   "id": "E1-extraction-opener-indent3",
+   "oldCount": 1,
+   "exit": 1,
+   "failedPerFile": {
+    "apps/three-surface-poc/src/fence-rules.test.ts": 6
+   },
+   "failed": {
+    "apps/three-surface-poc/src/fence-rules.test.ts": [
+     "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-indent1'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-indent2'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-indent3'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-indent3'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'list-item'",
+     "Markdown fence recognizers: what each reader treats as inside a fence links, extraction and the renderer read CRLF exactly as they read LF; only the profile does not"
+    ]
+   },
+   "killedByFenceRules": true,
+   "recordSaysFenceRulesKills": true,
+   "killedByPackageReader": null,
+   "recordSaysPackageReaderKills": null,
+   "agrees": true
+  },
+  {
+   "id": "E2-extraction-closer-trim-both-sides",
+   "oldCount": 1,
+   "exit": 1,
+   "failedPerFile": {
+    "apps/three-surface-poc/src/fence-rules.test.ts": 6
+   },
+   "failed": {
+    "apps/three-surface-poc/src/fence-rules.test.ts": [
+     "Markdown fence recognizers: what each reader treats as inside a fence 'closer-indent1'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'closer-indent3'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'closer-indent4'",
+     "Markdown fence recognizers: what each reader treats as inside a fence links, extraction and the renderer read CRLF exactly as they read LF; only the profile does not",
+     "Markdown fence recognizers: what each reader treats as inside a fence GAP G2: the extractor keeps its own fence closer a closer indented one space: the profile closes the fence, the extractor never does, and the denominator is 1 of 3",
+     "Markdown fence recognizers: what each reader treats as inside a fence GAP G2: the extractor keeps its own fence closer a closer indented three spaces: the profile closes the fence, the extractor never does, and the denominator is 1 of 3"
+    ]
+   },
+   "killedByFenceRules": true,
+   "recordSaysFenceRulesKills": true,
+   "killedByPackageReader": null,
+   "recordSaysPackageReaderKills": null,
+   "agrees": true
+  },
+  {
+   "id": "E3-extraction-closer-any-text",
+   "oldCount": 1,
+   "exit": 1,
+   "failedPerFile": {
+    "apps/three-surface-poc/src/fence-rules.test.ts": 4
+   },
+   "failed": {
+    "apps/three-surface-poc/src/fence-rules.test.ts": [
+     "Markdown fence recognizers: what each reader treats as inside a fence 'closer-with-info'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'closer-longer-with-info'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'closer-with-text'",
+     "Markdown fence recognizers: what each reader treats as inside a fence links, extraction and the renderer read CRLF exactly as they read LF; only the profile does not"
+    ]
+   },
+   "killedByFenceRules": true,
+   "recordSaysFenceRulesKills": true,
+   "killedByPackageReader": null,
+   "recordSaysPackageReaderKills": null,
+   "agrees": true
+  },
+  {
+   "id": "R1-renderer-opener-indent4",
+   "oldCount": 1,
+   "exit": 1,
+   "failedPerFile": {
+    "apps/three-surface-poc/src/fence-rules.test.ts": 1
+   },
+   "failed": {
+    "apps/three-surface-poc/src/fence-rules.test.ts": [
+     "Markdown fence recognizers: what each reader treats as inside a fence renderer: a fence line indented three spaces ends a paragraph, one indented four spaces does not"
+    ]
+   },
+   "killedByFenceRules": true,
+   "recordSaysFenceRulesKills": true,
+   "killedByPackageReader": null,
+   "recordSaysPackageReaderKills": null,
+   "agrees": true
+  },
+  {
+   "id": "R2-renderer-closer-longer-than-opener",
+   "oldCount": 1,
+   "exit": 1,
+   "failedPerFile": {
+    "apps/three-surface-poc/src/fence-rules.test.ts": 28
+   },
+   "failed": {
+    "apps/three-surface-poc/src/fence-rules.test.ts": [
+     "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-col0'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-indent1'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-indent2'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-indent3'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-col0'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-indent3'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'opener-four-closer-three'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'closer-indent1'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'closer-indent3'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'closer-indent4'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'closer-trailing-space'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'closer-trailing-tab'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'closer-trailing-tab-then-closer'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'closer-with-info'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'closer-longer-with-info'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'closer-with-text'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'closer-other-char'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-fence-backtick-line'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-opener-four-closer-three'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'info-string'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'info-string-space'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-info-with-backtick'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-info-with-backtick'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'empty-fence'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'two-fences'",
+     "Markdown fence recognizers: what each reader treats as inside a fence links, extraction and the renderer read CRLF exactly as they read LF; only the profile does not",
+     "Markdown fence recognizers: what each reader treats as inside a fence renderer: a fence line indented three spaces ends a paragraph, one indented four spaces does not",
+     "Markdown fence recognizers: what each reader treats as inside a fence renderer: a closed fence does not hide the heading after it from the fragment root"
+    ]
+   },
+   "killedByFenceRules": true,
+   "recordSaysFenceRulesKills": true,
+   "killedByPackageReader": null,
+   "recordSaysPackageReaderKills": null,
+   "agrees": true
+  },
+  {
+   "id": "R3-renderer-heading-depth-closer-longer",
+   "oldCount": 1,
+   "exit": 1,
+   "failedPerFile": {
+    "apps/three-surface-poc/src/fence-rules.test.ts": 1
+   },
+   "failed": {
+    "apps/three-surface-poc/src/fence-rules.test.ts": [
+     "Markdown fence recognizers: what each reader treats as inside a fence renderer: a closed fence does not hide the heading after it from the fragment root"
+    ]
+   },
+   "killedByFenceRules": true,
+   "recordSaysFenceRulesKills": true,
+   "killedByPackageReader": null,
+   "recordSaysPackageReaderKills": null,
+   "agrees": true
+  },
+  {
+   "id": "K1-consent-opener-indent4",
+   "oldCount": 1,
+   "exit": 1,
+   "failedPerFile": {
+    "packages/polaris-generation-consent/src/package-reader.test.ts": 1,
+    "apps/three-surface-poc/src/fence-rules.test.ts": 0
+   },
+   "failed": {
+    "packages/polaris-generation-consent/src/package-reader.test.ts": [
+     "fence reading of the act records a line indented four spaces is not a fence opener: the record stays in force"
+    ],
+    "apps/three-surface-poc/src/fence-rules.test.ts": []
+   },
+   "killedByFenceRules": false,
+   "recordSaysFenceRulesKills": false,
+   "killedByPackageReader": true,
+   "recordSaysPackageReaderKills": true,
+   "agrees": true
+  },
+  {
+   "id": "K2-consent-closer-strictly-longer",
+   "oldCount": 1,
+   "exit": 1,
+   "failedPerFile": {
+    "packages/polaris-generation-consent/src/package-reader.test.ts": 1,
+    "apps/three-surface-poc/src/fence-rules.test.ts": 0
+   },
+   "failed": {
+    "packages/polaris-generation-consent/src/package-reader.test.ts": [
+     "fence reading of the act records a closed example fence after the title is blanked, and its closer of the opener's length closes it: the record stays in force"
+    ],
+    "apps/three-surface-poc/src/fence-rules.test.ts": []
+   },
+   "killedByFenceRules": false,
+   "recordSaysFenceRulesKills": false,
+   "killedByPackageReader": true,
+   "recordSaysPackageReaderKills": true,
+   "agrees": true
+  },
+  {
+   "id": "K3-consent-closer-any-text",
+   "oldCount": 1,
+   "exit": 1,
+   "failedPerFile": {
+    "packages/polaris-generation-consent/src/package-reader.test.ts": 1,
+    "apps/three-surface-poc/src/fence-rules.test.ts": 0
+   },
+   "failed": {
+    "packages/polaris-generation-consent/src/package-reader.test.ts": [
+     "round-3 review notes closes a fence as CommonMark does: a field a renderer shows inside a code block is not in the prose (N-1)"
+    ],
+    "apps/three-surface-poc/src/fence-rules.test.ts": []
+   },
+   "killedByFenceRules": false,
+   "recordSaysFenceRulesKills": false,
+   "killedByPackageReader": true,
+   "recordSaysPackageReaderKills": true,
+   "agrees": true
+  },
+  {
+   "id": "K4-consent-backtick-info-opens",
+   "oldCount": 1,
+   "exit": 1,
+   "failedPerFile": {
+    "packages/polaris-generation-consent/src/package-reader.test.ts": 1,
+    "apps/three-surface-poc/src/fence-rules.test.ts": 0
+   },
+   "failed": {
+    "packages/polaris-generation-consent/src/package-reader.test.ts": [
+     "round-3 review notes closes a fence as CommonMark does: a field a renderer shows inside a code block is not in the prose (N-1)"
+    ],
+    "apps/three-surface-poc/src/fence-rules.test.ts": []
+   },
+   "killedByFenceRules": false,
+   "recordSaysFenceRulesKills": false,
+   "killedByPackageReader": true,
+   "recordSaysPackageReaderKills": true,
+   "agrees": true
+  },
+  {
+   "id": "RV7-renderer-tab-indented-fence-ends-paragraph",
+   "oldCount": 1,
+   "exit": 1,
+   "failedPerFile": {
+    "apps/three-surface-poc/src/fence-rules.test.ts": 1
+   },
+   "failed": {
+    "apps/three-surface-poc/src/fence-rules.test.ts": [
+     "Markdown fence recognizers: what each reader treats as inside a fence renderer: a fence line indented with a tab does not end a paragraph"
+    ]
+   },
+   "killedByFenceRules": true,
+   "recordSaysFenceRulesKills": true,
+   "killedByPackageReader": null,
+   "recordSaysPackageReaderKills": null,
+   "agrees": true
+  },
+  {
+   "id": "RV11-profile-fence-opener-drops-open-span",
+   "oldCount": 1,
+   "exit": 1,
+   "failedPerFile": {
+    "apps/three-surface-poc/src/fence-rules.test.ts": 1
+   },
+   "failed": {
+    "apps/three-surface-poc/src/fence-rules.test.ts": [
+     "Markdown fence recognizers: what each reader treats as inside a fence 'list-item'"
+    ]
+   },
+   "killedByFenceRules": true,
+   "recordSaysFenceRulesKills": true,
+   "killedByPackageReader": null,
+   "recordSaysPackageReaderKills": null,
+   "agrees": true
+  },
+  {
+   "id": "E4-extraction-closer-is-the-profile-closer",
+   "oldCount": 1,
+   "exit": 1,
+   "failedPerFile": {
+    "apps/three-surface-poc/src/fence-rules.test.ts": 8
+   },
+   "failed": {
+    "apps/three-surface-poc/src/fence-rules.test.ts": [
+     "Markdown fence recognizers: what each reader treats as inside a fence 'closer-indent1'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'closer-indent3'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'closer-trailing-tab'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'closer-trailing-tab-then-closer'",
+     "Markdown fence recognizers: what each reader treats as inside a fence links, extraction and the renderer read CRLF exactly as they read LF; only the profile does not",
+     "Markdown fence recognizers: what each reader treats as inside a fence GAP G2: the extractor keeps its own fence closer a closer indented one space: the profile closes the fence, the extractor never does, and the denominator is 1 of 3",
+     "Markdown fence recognizers: what each reader treats as inside a fence GAP G2: the extractor keeps its own fence closer a closer indented three spaces: the profile closes the fence, the extractor never does, and the denominator is 1 of 3",
+     "Markdown fence recognizers: what each reader treats as inside a fence GAP G2: the extractor keeps its own fence closer a closer-shaped line ending in a tab: the profile keeps the fence open to the plain closer, the extractor closes early and the plain closer then hides the rest"
+    ]
+   },
+   "killedByFenceRules": true,
+   "recordSaysFenceRulesKills": true,
+   "killedByPackageReader": null,
+   "recordSaysPackageReaderKills": null,
+   "agrees": true
+  },
+  {
+   "id": "L5-links-closer-is-the-profile-closer",
+   "oldCount": 1,
+   "exit": 1,
+   "failedPerFile": {
+    "apps/three-surface-poc/src/fence-rules.test.ts": 9
+   },
+   "failed": {
+    "apps/three-surface-poc/src/fence-rules.test.ts": [
+     "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-tab'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'closer-trailing-tab'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'closer-trailing-tab-then-closer'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'closer-with-info'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'closer-longer-with-info'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'closer-with-text'",
+     "Markdown fence recognizers: what each reader treats as inside a fence links, extraction and the renderer read CRLF exactly as they read LF; only the profile does not",
+     "Markdown fence recognizers: what each reader treats as inside a fence GAP G3: the link reader keeps its own fence and span rules a closer-shaped line with an info string closes the fence early, and the real closer hides every later link",
+     "Markdown fence recognizers: what each reader treats as inside a fence GAP G3: the link reader keeps its own fence and span rules a closer-shaped line ending in a tab, on a text the profile reads as well formed, mints the link inside the fence and hides the one after it"
+    ]
+   },
+   "killedByFenceRules": true,
+   "recordSaysFenceRulesKills": true,
+   "killedByPackageReader": null,
+   "recordSaysPackageReaderKills": null,
+   "agrees": true
+  },
+  {
+   "id": "L6-links-strip-spans-across-lines",
+   "oldCount": 1,
+   "exit": 1,
+   "failedPerFile": {
+    "apps/three-surface-poc/src/fence-rules.test.ts": 9
+   },
+   "failed": {
+    "apps/three-surface-poc/src/fence-rules.test.ts": [
+     "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-indent4'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'two-backticks'",
+     "Markdown fence recognizers: what each reader treats as inside a fence 'blockquote'",
+     "Markdown fence recognizers: what each reader treats as inside a fence links, extraction and the renderer read CRLF exactly as they read LF; only the profile does not",
+     "Markdown fence recognizers: what each reader treats as inside a fence inline span: 'inside-double-span'",
+     "Markdown fence recognizers: what each reader treats as inside a fence inline span: 'double-span-with-inner-backtick-aroun\u2026'",
+     "Markdown fence recognizers: what each reader treats as inside a fence GAP G3: the link reader keeps its own fence and span rules a link on a line inside a span that runs across lines is indexed, though the profile hides it: 'double-backtick-span-over-three-lines'",
+     "Markdown fence recognizers: what each reader treats as inside a fence GAP G3: the link reader keeps its own fence and span rules a link on a line inside a span that runs across lines is indexed, though the profile hides it: 'single-backtick-span-over-three-lines'",
+     "Markdown fence recognizers: what each reader treats as inside a fence GAP G3: the link reader keeps its own fence and span rules a link on a line inside a span that runs across lines is indexed, though the profile hides it: 'span-opened-mid-line'"
+    ]
+   },
+   "killedByFenceRules": true,
+   "recordSaysFenceRulesKills": true,
+   "killedByPackageReader": null,
+   "recordSaysPackageReaderKills": null,
+   "agrees": true
+  },
+  {
+   "id": "N1a-consent-act-title-check-tolerates-crlf",
+   "oldCount": 1,
+   "exit": 1,
+   "failedPerFile": {
+    "packages/polaris-generation-consent/src/package-reader.test.ts": 1,
+    "apps/three-surface-poc/src/fence-rules.test.ts": 0
+   },
+   "failed": {
+    "packages/polaris-generation-consent/src/package-reader.test.ts": [
+     "fence reading of the act records refuses an act record written with CRLF line ends"
+    ],
+    "apps/three-surface-poc/src/fence-rules.test.ts": []
+   },
+   "killedByFenceRules": false,
+   "recordSaysFenceRulesKills": false,
+   "killedByPackageReader": true,
+   "recordSaysPackageReaderKills": true,
+   "agrees": true
+  },
+  {
+   "id": "N1b-consent-instance-table-check-tolerates-crlf",
+   "oldCount": 1,
+   "exit": 1,
+   "failedPerFile": {
+    "packages/polaris-generation-consent/src/package-reader.test.ts": 1,
+    "apps/three-surface-poc/src/fence-rules.test.ts": 0
+   },
+   "failed": {
+    "packages/polaris-generation-consent/src/package-reader.test.ts": [
+     "fence reading of the act records refuses an instance written with CRLF line ends, even when its act record binds its digest"
+    ],
+    "apps/three-surface-poc/src/fence-rules.test.ts": []
+   },
+   "killedByFenceRules": false,
+   "recordSaysFenceRulesKills": false,
+   "killedByPackageReader": true,
+   "recordSaysPackageReaderKills": true,
+   "agrees": true
+  }
+ ],
+ "allAgree": true,
+ "treeCleanAfter": true
+}

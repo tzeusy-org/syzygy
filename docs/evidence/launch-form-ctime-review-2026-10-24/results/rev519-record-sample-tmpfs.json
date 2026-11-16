@@ -1,0 +1,261 @@
+{
+ "tmpdir": "/tmp/r519-2",
+ "filesystem": "tmpfs",
+ "kernel": "7.0.0-38-generic",
+ "commit": "3fb7380945bd8ac0374e38792a814aed070bd8c6",
+ "base": "ce322e1a65b784c6304d51b05fb347351912a926",
+ "testSha256": {
+  "base": "e01b040a5f74f044169d46adccde476814187b5d44fa7bfcb44ef082ca2fa740",
+  "head": "73fd8fe0c835e3910fbc45e2ea026b0b6ec54ac7c04657aeed9aa2311440fa5e"
+ },
+ "readerSha256": "c7a25b8b45fe12e2add7874f88d46b2bad1eef16ffa4a17e2464d5c671424921",
+ "command": "npx vitest run --project @syzygy/polaris-dossier --reporter=json --outputFile=/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/work/rev519-vitest.json packages/polaris-dossier/src/launched.test.ts",
+ "mutants": [
+  {
+   "id": "unmutated",
+   "side": "base",
+   "exitCode": 0,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 43,
+    "numFailedTests": 0
+   },
+   "failed": []
+  },
+  {
+   "id": "D4-truncate (from the record)",
+   "side": "base",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { fs.truncateSync(path.join(runDir, RUN_LAYOUT.launched), 0); } catch { /* reviewer mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "exitCode": 1,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 33,
+    "numFailedTests": 10
+   },
+   "outcome": "killed",
+   "failedRows": [
+    "JSON null",
+    "a JSON array",
+    "a JSON string",
+    "a byte-order mark before the marker",
+    "a format that is not a string",
+    "a marker of 4097 bytes, one past the bound",
+    "a symbolic link to the marker Syzygy writes",
+    "another format",
+    "invalid JSON",
+    "no format"
+   ],
+   "otherFailed": [],
+   "firstFailure": {
+    "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: invalid JSON",
+    "message": "AssertionError: expected { mode: 33188, ino: 160286806, \u2026(3) } to deeply equal { mode: 33188, ino: 160286806, \u2026(3) }\n    at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/packages/polaris-dossier/src/launched.test.ts:139:35)\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/packages/polaris-dossier/src/launched.test.ts:144:12\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:861:59\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/node_module"
+   },
+   "restored": true
+  },
+  {
+   "id": "M-every-form-drains-then-refuses (from the record)",
+   "side": "base",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "    if (!stat.isFile() || stat.size > MARKER_BYTES_MAX) return 'unreadable';",
+     "new": "    if (stat.size > MARKER_BYTES_MAX) return 'unreadable';"
+    },
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "    if (length > MARKER_BYTES_MAX) return 'unreadable';",
+     "new": "    if (length > MARKER_BYTES_MAX || !stat.isFile()) return 'unreadable';"
+    }
+   ],
+   "exitCode": 0,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 43,
+    "numFailedTests": 0
+   },
+   "outcome": "survived",
+   "failedRows": [],
+   "otherFailed": [],
+   "firstFailure": null,
+   "restored": true
+  },
+  {
+   "id": "D1-with-memoized-reader (from the record)",
+   "side": "base",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { fs.rmSync(path.join(runDir, RUN_LAYOUT.launched), { recursive: true, force: true }); } catch { /* reviewer mutant */ } try { fs.unlinkSync(path.join(runDir, RUN_LAYOUT.launched)); } catch { /* reviewer mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    },
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "export function launchedMarkerState(runDir: string): LaunchedMarkerState {\n  const file = path.join(runDir, RUN_LAYOUT.launched);",
+     "new": "const REMEMBERED = new Map<string, LaunchedMarkerState>();\nexport function launchedMarkerState(runDir: string): LaunchedMarkerState {\n  const hit = REMEMBERED.get(runDir); if (hit) return hit;\n  const state = launchedMarkerStateOnce(runDir); REMEMBERED.set(runDir, state); return state;\n}\n\nfunction launchedMarkerStateOnce(runDir: string): LaunchedMarkerState {\n  const file = path.join(runDir, RUN_LAYOUT.launched);"
+    }
+   ],
+   "exitCode": 1,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 26,
+    "numFailedTests": 17
+   },
+   "outcome": "killed",
+   "failedRows": [
+    "JSON null",
+    "a FIFO",
+    "a FIFO holding the marker's bytes",
+    "a JSON array",
+    "a JSON string",
+    "a byte-order mark before the marker",
+    "a dangling symbolic link",
+    "a directory",
+    "a file its reader may not read",
+    "a format that is not a string",
+    "a marker of 4097 bytes, one past the bound",
+    "a symbolic link to a character device",
+    "a symbolic link to the marker Syzygy writes",
+    "an empty file",
+    "another format",
+    "invalid JSON",
+    "no format"
+   ],
+   "otherFailed": [],
+   "firstFailure": {
+    "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: an empty file",
+    "message": "AssertionError: expected null to deeply equal { mode: 33188, ino: 160287133, \u2026(3) }\n    at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/packages/polaris-dossier/src/launched.test.ts:139:35)\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/packages/polaris-dossier/src/launched.test.ts:144:12\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:861:59\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/node_modules/@vitest/runner/dist/chunk-hooks"
+   },
+   "restored": true
+  },
+  {
+   "id": "unmutated",
+   "side": "head",
+   "exitCode": 0,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 43,
+    "numFailedTests": 0
+   },
+   "failed": []
+  },
+  {
+   "id": "D4-truncate (from the record)",
+   "side": "head",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { fs.truncateSync(path.join(runDir, RUN_LAYOUT.launched), 0); } catch { /* reviewer mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "exitCode": 1,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 32,
+    "numFailedTests": 11
+   },
+   "outcome": "killed",
+   "failedRows": [
+    "JSON null",
+    "a JSON array",
+    "a JSON string",
+    "a byte-order mark before the marker",
+    "a format that is not a string",
+    "a marker of 4097 bytes, one past the bound",
+    "a symbolic link to the marker Syzygy writes",
+    "an empty file",
+    "another format",
+    "invalid JSON",
+    "no format"
+   ],
+   "otherFailed": [],
+   "firstFailure": {
+    "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: an empty file",
+    "message": "AssertionError: expected { mode: 33188n, ino: 160287403n, \u2026(4) } to deeply equal { mode: 33188n, ino: 160287403n, \u2026(4) }\n    at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/packages/polaris-dossier/src/launched.test.ts:141:35)\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/packages/polaris-dossier/src/launched.test.ts:146:12\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:861:59\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/node_mo"
+   },
+   "restored": true
+  },
+  {
+   "id": "M-every-form-drains-then-refuses (from the record)",
+   "side": "head",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "    if (!stat.isFile() || stat.size > MARKER_BYTES_MAX) return 'unreadable';",
+     "new": "    if (stat.size > MARKER_BYTES_MAX) return 'unreadable';"
+    },
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "    if (length > MARKER_BYTES_MAX) return 'unreadable';",
+     "new": "    if (length > MARKER_BYTES_MAX || !stat.isFile()) return 'unreadable';"
+    }
+   ],
+   "exitCode": 0,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 43,
+    "numFailedTests": 0
+   },
+   "outcome": "survived",
+   "failedRows": [],
+   "otherFailed": [],
+   "firstFailure": null,
+   "restored": true
+  },
+  {
+   "id": "D1-with-memoized-reader (from the record)",
+   "side": "head",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { fs.rmSync(path.join(runDir, RUN_LAYOUT.launched), { recursive: true, force: true }); } catch { /* reviewer mutant */ } try { fs.unlinkSync(path.join(runDir, RUN_LAYOUT.launched)); } catch { /* reviewer mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    },
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "export function launchedMarkerState(runDir: string): LaunchedMarkerState {\n  const file = path.join(runDir, RUN_LAYOUT.launched);",
+     "new": "const REMEMBERED = new Map<string, LaunchedMarkerState>();\nexport function launchedMarkerState(runDir: string): LaunchedMarkerState {\n  const hit = REMEMBERED.get(runDir); if (hit) return hit;\n  const state = launchedMarkerStateOnce(runDir); REMEMBERED.set(runDir, state); return state;\n}\n\nfunction launchedMarkerStateOnce(runDir: string): LaunchedMarkerState {\n  const file = path.join(runDir, RUN_LAYOUT.launched);"
+    }
+   ],
+   "exitCode": 1,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 26,
+    "numFailedTests": 17
+   },
+   "outcome": "killed",
+   "failedRows": [
+    "JSON null",
+    "a FIFO",
+    "a FIFO holding the marker's bytes",
+    "a JSON array",
+    "a JSON string",
+    "a byte-order mark before the marker",
+    "a dangling symbolic link",
+    "a directory",
+    "a file its reader may not read",
+    "a format that is not a string",
+    "a marker of 4097 bytes, one past the bound",
+    "a symbolic link to a character device",
+    "a symbolic link to the marker Syzygy writes",
+    "an empty file",
+    "another format",
+    "invalid JSON",
+    "no format"
+   ],
+   "otherFailed": [],
+   "firstFailure": {
+    "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: an empty file",
+    "message": "AssertionError: expected null to deeply equal { mode: 33188n, ino: 160287694n, \u2026(4) }\n    at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/packages/polaris-dossier/src/launched.test.ts:141:35)\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/packages/polaris-dossier/src/launched.test.ts:146:12\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:861:59\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/node_modules/@vitest/runner/dist/chunk-hoo"
+   },
+   "restored": true
+  }
+ ],
+ "trackedTreeCleanAfter": true
+}

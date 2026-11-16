@@ -1,0 +1,8 @@
+sampler seconds 157.0 run seconds 151.7 distinct sighting instants 255
+gaps between consecutive distinct instants: min 0.5 median (<2 s) 0.5 p90 (<2 s) 0.52 max 12.12
+syzygy-dossier-src-: names 33 sampled 3 never 30 | published upper 0.109 | one 0.5 s gap 0.109 | two 0.5 s gaps 0.119 | two median gaps 0.119
+syzygy-poc-surface-state-: names 4 sampled 0 never 4 | published upper 0.013 | one 0.5 s gap 0.013 | two 0.5 s gaps 0.013 | two median gaps 0.013
+syzygy-public-screen-: names 12 sampled 12 never 0 | published upper 0.156 | one 0.5 s gap 0.156 | two 0.5 s gaps 0.196 | two median gaps 0.196
+syzygy-trigger-: names 35 sampled 4 never 31 | published upper 0.115 | one 0.5 s gap 0.115 | two 0.5 s gaps 0.129 | two median gaps 0.129
+syzygy-trigger-repo-: names 1 sampled 1 never 0 | published upper 0.013 | one 0.5 s gap 0.013 | two 0.5 s gaps 0.017 | two median gaps 0.017
+syzygy-build-output-: names 1 sampled 1 never 0 | published upper 0.297 | one 0.5 s gap 0.297 | two 0.5 s gaps 0.3 | two median gaps 0.3

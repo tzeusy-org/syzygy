@@ -1,0 +1,4 @@
+S4-seed-reader-refusal-reason killed by tests, probe ["Test Files  1 failed | 245 passed | 3 skipped (249)", "Tests  1 failed | 5367 passed | 5 skipped (5373)"] {"seed-reader": 761}
+S9-git-text-keeps-bom killed by tests, probe ["Test Files  1 failed | 245 passed | 3 skipped (249)", "Tests  1 failed | 5367 passed | 5 skipped (5373)"] {"observe-ls-tree": 192}
+S10-code-structure-keeps-bom SURVIVED ["Test Files  246 passed | 3 skipped (249)", "Tests  5368 passed | 5 skipped (5373)"] {}
+done 3

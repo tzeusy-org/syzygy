@@ -1,0 +1,246 @@
+{
+ "tool": "launch_probe.py",
+ "treeCommit": "dccd484f4749b55f981f2e5211de4112ab7951de",
+ "mode": "base",
+ "file": "apps/three-surface-poc/src/cdp-browser.ts",
+ "sha256AtCommit": "c6c0ac6cc626b76155d870502c5549aa430d7cee35a058b0001d849586842033",
+ "launchesRequested": 24,
+ "mutant": {
+  "id": "singleton-directory-kept",
+  "file": "apps/three-surface-poc/src/cdp-browser.ts",
+  "edits": [
+   {
+    "old": "  if (singleton !== undefined) removeChromeSingletonDirectory(singleton);\n",
+    "new": "  if (singleton !== undefined) void singleton;\n"
+   }
+  ]
+ },
+ "build": {
+  "command": "npx tsc -b apps/three-surface-poc",
+  "exit": 0,
+  "firstLine": []
+ },
+ "run": {
+  "command": "TMPDIR=<private> node launch_close.mjs <worktree> <launches>",
+  "exit": 0,
+  "stderrFirstLine": []
+ },
+ "executable": "/usr/bin/google-chrome",
+ "browserVersion": "Google Chrome 120.0.6099.224",
+ "privateTmpdirLength": 15,
+ "rows": [
+  {
+   "launch": 1,
+   "closeMs": 1649,
+   "exitCode": 0,
+   "signalCode": null,
+   "newEntries": []
+  },
+  {
+   "launch": 2,
+   "closeMs": 2680,
+   "exitCode": 0,
+   "signalCode": null,
+   "newEntries": []
+  },
+  {
+   "launch": 3,
+   "closeMs": 2971,
+   "exitCode": 0,
+   "signalCode": null,
+   "newEntries": []
+  },
+  {
+   "launch": 4,
+   "closeMs": 3131,
+   "exitCode": 0,
+   "signalCode": null,
+   "newEntries": []
+  },
+  {
+   "launch": 5,
+   "closeMs": 2322,
+   "exitCode": 0,
+   "signalCode": null,
+   "newEntries": []
+  },
+  {
+   "launch": 6,
+   "closeMs": 3438,
+   "exitCode": 0,
+   "signalCode": null,
+   "newEntries": []
+  },
+  {
+   "launch": 7,
+   "closeMs": 3719,
+   "exitCode": 0,
+   "signalCode": null,
+   "newEntries": []
+  },
+  {
+   "launch": 8,
+   "closeMs": 1783,
+   "exitCode": null,
+   "signalCode": "SIGKILL",
+   "newEntries": [
+    ".com.google.Chrome.amnNr5"
+   ]
+  },
+  {
+   "launch": 9,
+   "closeMs": 2399,
+   "exitCode": 0,
+   "signalCode": null,
+   "newEntries": []
+  },
+  {
+   "launch": 10,
+   "closeMs": 2630,
+   "exitCode": 0,
+   "signalCode": null,
+   "newEntries": []
+  },
+  {
+   "launch": 11,
+   "closeMs": 1452,
+   "exitCode": 0,
+   "signalCode": null,
+   "newEntries": []
+  },
+  {
+   "launch": 12,
+   "closeMs": 3949,
+   "exitCode": null,
+   "signalCode": "SIGKILL",
+   "newEntries": [
+    ".com.google.Chrome.DWujYe"
+   ]
+  },
+  {
+   "launch": 13,
+   "closeMs": 1963,
+   "exitCode": null,
+   "signalCode": "SIGKILL",
+   "newEntries": [
+    ".com.google.Chrome.BgAwIr"
+   ]
+  },
+  {
+   "launch": 14,
+   "closeMs": 4203,
+   "exitCode": null,
+   "signalCode": "SIGKILL",
+   "newEntries": [
+    ".com.google.Chrome.ArXmst"
+   ]
+  },
+  {
+   "launch": 15,
+   "closeMs": 3391,
+   "exitCode": null,
+   "signalCode": "SIGKILL",
+   "newEntries": [
+    ".com.google.Chrome.sq20wG"
+   ]
+  },
+  {
+   "launch": 16,
+   "closeMs": 2225,
+   "exitCode": null,
+   "signalCode": "SIGKILL",
+   "newEntries": [
+    ".com.google.Chrome.IsbvfR"
+   ]
+  },
+  {
+   "launch": 17,
+   "closeMs": 1931,
+   "exitCode": 0,
+   "signalCode": null,
+   "newEntries": []
+  },
+  {
+   "launch": 18,
+   "closeMs": 1760,
+   "exitCode": 0,
+   "signalCode": null,
+   "newEntries": []
+  },
+  {
+   "launch": 19,
+   "closeMs": 3510,
+   "exitCode": 0,
+   "signalCode": null,
+   "newEntries": []
+  },
+  {
+   "launch": 20,
+   "closeMs": 2166,
+   "exitCode": 0,
+   "signalCode": null,
+   "newEntries": []
+  },
+  {
+   "launch": 21,
+   "closeMs": 1638,
+   "exitCode": 0,
+   "signalCode": null,
+   "newEntries": []
+  },
+  {
+   "launch": 22,
+   "closeMs": 1917,
+   "exitCode": 0,
+   "signalCode": null,
+   "newEntries": []
+  },
+  {
+   "launch": 23,
+   "closeMs": 3013,
+   "exitCode": null,
+   "signalCode": "SIGKILL",
+   "newEntries": [
+    ".com.google.Chrome.kJAbFD"
+   ]
+  },
+  {
+   "launch": 24,
+   "closeMs": 2394,
+   "exitCode": 0,
+   "signalCode": null,
+   "newEntries": []
+  }
+ ],
+ "summary": {
+  "launches": 24,
+  "launchesThatClosed": 24,
+  "launchesWhoseCloseThrew": 0,
+  "closeErrors": [],
+  "killed": 7,
+  "exitedCleanly": 17,
+  "killedAndLeftAChromeDirectory": 7,
+  "exitedAndLeftAChromeDirectory": 0,
+  "closedLaunchesThatLeftAnything": 7,
+  "leftByLaunchesWhoseCloseThrew": [],
+  "entriesInPrivateTmpdirAtTheEnd": [
+   ".com.google.Chrome.ArXmst",
+   ".com.google.Chrome.BgAwIr",
+   ".com.google.Chrome.DWujYe",
+   ".com.google.Chrome.IsbvfR",
+   ".com.google.Chrome.amnNr5",
+   ".com.google.Chrome.kJAbFD",
+   ".com.google.Chrome.sq20wG"
+  ],
+  "entriesAtTheEndNotLeftByAThrownClose": [
+   ".com.google.Chrome.ArXmst",
+   ".com.google.Chrome.BgAwIr",
+   ".com.google.Chrome.DWujYe",
+   ".com.google.Chrome.IsbvfR",
+   ".com.google.Chrome.amnNr5",
+   ".com.google.Chrome.kJAbFD",
+   ".com.google.Chrome.sq20wG"
+  ],
+  "holds": true
+ }
+}

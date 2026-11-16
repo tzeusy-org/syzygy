@@ -1,0 +1,16 @@
+[
+  {
+    "id": "x-reviewer-blocking-always",
+    "file": "packages/polaris-generation-core/src/pipeline.ts",
+    "from": "        if (verdict.reviewerBlocking) stop('repair-exhausted');\n        break;",
+    "to": "        if (true) stop('repair-exhausted');\n        break;",
+    "mustFail": []
+  },
+  {
+    "id": "x-reviewer-blocking-never",
+    "file": "packages/polaris-generation-core/src/pipeline.ts",
+    "from": "        if (verdict.reviewerBlocking) stop('repair-exhausted');\n        break;",
+    "to": "        if (false) stop('repair-exhausted');\n        break;",
+    "mustFail": []
+  }
+]

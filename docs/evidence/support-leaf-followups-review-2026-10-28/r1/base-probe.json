@@ -1,0 +1,381 @@
+{
+ "commit": "1a8864d94f825fb7abff04f61a4588f325e2b098",
+ "dist": [],
+ "statusAfter": "",
+ "records": {
+  "docs/evidence/support-leaf-guards-review-2026-10-28/r2/fix-check-r2.json": "839cd109d9ebd359a5357043958a135cd4e4edf35bacf4ec1d05aad906e0f4a2",
+  "docs/evidence/syzygy-bpyt-6-14/residuals-head.json": "2a16e4a4231454c124abdd6b843285aca05739b9c7f3cfcabb46a9c0df5ea517"
+ },
+ "rows": [
+  {
+   "id": "B0-support-unmutated",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [],
+   "predicted": "passes",
+   "exit": 0,
+   "load1": "24.74",
+   "passed": 33,
+   "failed": [],
+   "fileMessages": []
+  },
+  {
+   "id": "B-V7",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { decodeUtf8 } from './decode-utf8.js';\n",
+     "new": "export { decodeUtf8 } from './decode-utf8.js';\nimport value = require ('node:crypto');\nexport { value };\n"
+    }
+   ],
+   "predicted": "passes (accepted at base)",
+   "exit": 0,
+   "load1": "24.76",
+   "passed": 33,
+   "failed": [],
+   "fileMessages": []
+  },
+  {
+   "id": "B-V9",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { decodeUtf8 } from './decode-utf8.js';\n",
+     "new": "export { decodeUtf8 } from './decode-utf8.js';\nexport const value = () => import ('node:crypto');\n"
+    }
+   ],
+   "predicted": "passes",
+   "exit": 0,
+   "load1": "29.11",
+   "passed": 33,
+   "failed": [],
+   "fileMessages": []
+  },
+  {
+   "id": "B-Y5b",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nexport const value = (bytes) => import\n(bytes);\n"
+    }
+   ],
+   "predicted": "passes",
+   "exit": 0,
+   "load1": "28.94",
+   "passed": 33,
+   "failed": [],
+   "fileMessages": []
+  },
+  {
+   "id": "B-Y5c",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nexport const value = (bytes) => import/**/(bytes);\n"
+    }
+   ],
+   "predicted": "passes",
+   "exit": 0,
+   "load1": "28.94",
+   "passed": 33,
+   "failed": [],
+   "fileMessages": []
+  },
+  {
+   "id": "B-R2",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nconst value = 'node:f' + 's';\nvoid import (value);\n"
+    }
+   ],
+   "predicted": "passes",
+   "exit": 0,
+   "load1": "28.86",
+   "passed": 33,
+   "failed": [],
+   "fileMessages": []
+  },
+  {
+   "id": "B-U4",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "  return createHash('sha256').update(value).digest('hex');\n}\n",
+     "new": "  return createHash('sha256').update(value).digest('hex');\n}\n[Object.freeze] = [(value) => value];\n"
+    }
+   ],
+   "predicted": "passes",
+   "exit": 0,
+   "load1": "28.86",
+   "passed": 33,
+   "failed": [],
+   "fileMessages": []
+  },
+  {
+   "id": "B-U5",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "  return createHash('sha256').update(value).digest('hex');\n}\n",
+     "new": "  return createHash('sha256').update(value).digest('hex');\n}\n({ value: Object.freeze } = { value: (bytes) => bytes });\n"
+    }
+   ],
+   "predicted": "passes",
+   "exit": 0,
+   "load1": "28.71",
+   "passed": 33,
+   "failed": [],
+   "fileMessages": []
+  },
+  {
+   "id": "B-paren-write",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "  return createHash('sha256').update(value).digest('hex');\n}\n",
+     "new": "  return createHash('sha256').update(value).digest('hex');\n}\n(Object.freeze) = (value) => value;\n"
+    }
+   ],
+   "predicted": "passes",
+   "exit": 0,
+   "load1": "28.71",
+   "passed": 33,
+   "failed": [],
+   "fileMessages": []
+  },
+  {
+   "id": "B-default-write",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "  return createHash('sha256').update(value).digest('hex');\n}\n",
+     "new": "  return createHash('sha256').update(value).digest('hex');\n}\n[Object.freeze = (value) => value] = [];\n"
+    }
+   ],
+   "predicted": "killed? (the inner assignment is a property write)",
+   "exit": 1,
+   "load1": "27.69",
+   "passed": 32,
+   "failed": [
+    {
+     "name": "@syzygy/support stays a pure leaf assigns to no property in any source, so no allowed global is rewritten",
+     "message": "AssertionError: expected [ Array(1) ] to deeply equal []"
+    }
+   ],
+   "fileMessages": []
+  },
+  {
+   "id": "B-spread-write",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "  return createHash('sha256').update(value).digest('hex');\n}\n",
+     "new": "  return createHash('sha256').update(value).digest('hex');\n}\n[...Object.freeze] = [];\n"
+    }
+   ],
+   "predicted": "passes",
+   "exit": 0,
+   "load1": "27.16",
+   "passed": 33,
+   "failed": [],
+   "fileMessages": []
+  },
+  {
+   "id": "B-nested-write",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "  return createHash('sha256').update(value).digest('hex');\n}\n",
+     "new": "  return createHash('sha256').update(value).digest('hex');\n}\n({ value: [Object.freeze] } = { value: [(bytes) => bytes] });\n"
+    }
+   ],
+   "predicted": "passes",
+   "exit": 0,
+   "load1": "27.16",
+   "passed": 33,
+   "failed": [],
+   "fileMessages": []
+  },
+  {
+   "id": "B-D2",
+   "tests": [
+    "packages/three-surface-poc-core/src/owner-act-drafter.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/three-surface-poc-core/src/owner-act-drafter.ts",
+     "old": "// Owner-act drafter \u2014 claims sharing one reason \u2192 a drafted act packet as\n",
+     "new": "// Owner-act drafter \u2014 claims sharing one reason \u2192 a drafted act packet as\nexport const HOME = (globalThis as Record<string, any>)['process']['env']['HOME'];\n"
+    }
+   ],
+   "predicted": "passes",
+   "exit": 0,
+   "load1": "26.26",
+   "passed": 3,
+   "failed": [],
+   "fileMessages": []
+  },
+  {
+   "id": "B-D5",
+   "tests": [
+    "packages/three-surface-poc-core/src/owner-act-drafter.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/three-surface-poc-core/src/owner-act-drafter.ts",
+     "old": "// Owner-act drafter \u2014 claims sharing one reason \u2192 a drafted act packet as\n",
+     "new": "// Owner-act drafter \u2014 claims sharing one reason \u2192 a drafted act packet as\nexport const open = (url: string): WebSocket => new WebSocket(url);\n"
+    }
+   ],
+   "predicted": "passes",
+   "exit": 0,
+   "load1": "26.26",
+   "passed": 3,
+   "failed": [],
+   "fileMessages": []
+  },
+  {
+   "id": "B-Map",
+   "tests": [
+    "packages/three-surface-poc-core/src/owner-act-drafter.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/three-surface-poc-core/src/owner-act-drafter.ts",
+     "old": "import { sha256 } from '@syzygy/support';\n",
+     "new": "import { sha256 } from '@syzygy/support';\nvoid new Map();\n"
+    }
+   ],
+   "predicted": "passes",
+   "exit": 0,
+   "load1": "28.57",
+   "passed": 3,
+   "failed": [],
+   "fileMessages": []
+  },
+  {
+   "id": "B-A4-new-export-without-alias",
+   "tests": [
+    "packages/polaris-dossier/src/no-egress.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/polaris-dossier/package.json",
+     "old": "      \"default\": \"./dist/state-directory.js\"\n    }\n",
+     "new": "      \"default\": \"./dist/state-directory.js\"\n    },\n    \"./cli\": \"./dist/cli.js\"\n"
+    }
+   ],
+   "predicted": "killed by the S10 alias-map row (refused at base)",
+   "exit": 1,
+   "load1": "28.57",
+   "passed": 5,
+   "failed": [
+    {
+     "name": "the S10 bundle takes each workspace package from the source its entry names (syzygy-bpyt.6.14) aliases every workspace package entry to the src module its exports, or its main, names",
+     "message": "AssertionError: expected { \u2026(19) } to deeply equal { \u2026(18) }"
+    }
+   ],
+   "fileMessages": []
+  },
+  {
+   "id": "B-uniform-dotdot-entry",
+   "tests": [
+    "packages/polaris-dossier/src/no-egress.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/polaris-dossier/package.json",
+     "old": "      \"types\": \"./dist/state-directory.d.ts\",\n      \"import\": \"./dist/state-directory.js\",\n      \"default\": \"./dist/state-directory.js\"",
+     "new": "      \"types\": \"./dist/state-directory.d.ts\",\n      \"import\": \"./dist/x/../state-directory.js\",\n      \"default\": \"./dist/x/../state-directory.js\""
+    }
+   ],
+   "predicted": "passes (accepted at base)",
+   "exit": 0,
+   "load1": "27.33",
+   "passed": 6,
+   "failed": [],
+   "fileMessages": []
+  },
+  {
+   "id": "B-E4-the-lane-dotdot-entry",
+   "tests": [
+    "packages/polaris-dossier/src/no-egress.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/polaris-dossier/package.json",
+     "old": "\"import\": \"./dist/state-directory.js\"",
+     "new": "\"import\": \"./dist/x/../state-directory.js\""
+    }
+   ],
+   "predicted": "killed (refused at base by the unreadable-entry throw)",
+   "exit": 1,
+   "load1": "26.83",
+   "passed": 0,
+   "failed": [],
+   "fileMessages": [
+    "@syzygy/polaris-dossier/state-directory: its entry is not a ./dist/X.js whose src/X.ts exists"
+   ]
+  },
+  {
+   "id": "B-correct-alias-for-a-left-out-entry",
+   "tests": [
+    "apps/three-surface-poc/src/sync-child-process-guard.test.ts",
+    "packages/polaris-dossier/src/subpath-imports.test.ts",
+    "packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "packages/polaris-generation-core/src/island-boundary.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "vitest.config.ts",
+     "old": "      '@syzygy/polaris-dossier': fileURLToPath(",
+     "new": "      '@syzygy/polaris-dossier/argv': fileURLToPath(new URL('./packages/polaris-dossier/src/argv.ts', import.meta.url)),\n      '@syzygy/polaris-dossier': fileURLToPath("
+    }
+   ],
+   "predicted": "passes (accepted at base)",
+   "exit": 0,
+   "load1": "25.80",
+   "passed": 91,
+   "failed": [],
+   "fileMessages": []
+  }
+ ]
+}

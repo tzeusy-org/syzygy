@@ -1,0 +1,7 @@
+  it('takes only createHash from node:crypto, by its own name, and re-exports nothing from it', () => {
+    // An `export *`, a namespace binding or a string-named specifier names no identifier, so the allowlist cannot see it.
+    const external = SOURCES.flatMap((file) => moduleDeclarationsOf(file, read(file))
+      .filter(({ specifier }) => !specifier.startsWith('./')).map(({ text }) => `${file}: ${text}`));
+    expect(external).toEqual(["sha256.ts: import { createHash } from 'node:crypto';"]);
+  });
+

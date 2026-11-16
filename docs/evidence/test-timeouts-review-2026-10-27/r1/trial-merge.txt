@@ -1,0 +1,13 @@
+df3f5f1e d849fcf1 9e00252a Merge commit '9e00252ae134accc4a42604445a4db66f68d5100' into HEAD
+d849fcf1 d38d7a3c f44cd65d Merge commit 'f44cd65d' into HEAD
+f44cd65d d0ccce69 docs: retain the head census, the citation audit, both mutant runs and the collected timeouts at d0ccce69 [syzygy-bpyt.4.31]
+0
+parents of trial head:
+df3f5f1e8e583cc3249b1c02bc000ec07ca12be7 d849fcf16c9372f046164b57a8259ca6261f08d3 9e00252ae134accc4a42604445a4db66f68d5100
+#532 hunks in self-corpus.test.ts vs merge-base 8ff50172b127cba676ff32ce62c12c91b2b0d924:
+@@ -10,0 +11,3 @@ import { proveSelfCorpus, readSelfCorpus } from './self-corpus.js';
+#537 hunks:
+@@ -46 +46 @@ describe('zero-egress Syzygy self-corpus proof', () => {
+merged self-corpus blob equals 3-way expectation check:
+ apps/three-surface-poc/src/polaris-generation/self-corpus.test.ts | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)

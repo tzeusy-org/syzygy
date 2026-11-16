@@ -1,0 +1,181 @@
+{
+  "schema": "consent-port-semantic-controls/1",
+  "M0Sha256": "cfe9e4c7dc36a5212f7357e0dce692897c2930fe554a4968ca09e968b567bc7e",
+  "controls": [
+    {
+      "id": "supersession",
+      "subjectCommit": "a6d98d326b7e33ec10399c462f259dc912e86e53",
+      "source": {
+        "file": "packages/polaris-generation-consent/src/in-force.ts",
+        "originalSha256": "afcf1c2dc0a727460f3ca3a3623fd8a62ac3d739c87f2923187125422ab191dc",
+        "mutatedSha256": "fd771822cd20fed61b0058d44df56810d5f4a63cc8f92a520467d5ad28ef0f07"
+      },
+      "plan": {
+        "id": "supersession-inforce",
+        "temporary_product_file": "packages/polaris-generation-consent/src/in-force.ts",
+        "old": "live: live.filter(r => !replaced.has(ref(r)))",
+        "new": "live: live",
+        "required_reader_mismatches": [
+          "successor-record-port",
+          "successor-gate-port"
+        ],
+        "selection": [
+          "observation-successor"
+        ],
+        "m0_requirement": "Fresh normal new tool M0 over literal expected successor behavior first. Old baseline literal expectations remain checked in control; mutant new literal violations retained as expected sensitivity, never accepted as normal equivalence."
+      },
+      "execution": {
+        "exitCode": 0,
+        "elapsedSeconds": 2.568322838982567
+      },
+      "perReader": {
+        "successor-record-port": {
+          "worlds": 1,
+          "steps": 1,
+          "answers": 3,
+          "mismatches": 2,
+          "byInstant": {
+            "2026-10-08T09:29:59.999Z": 1,
+            "2026-10-08T09:30:00.000Z": 1,
+            "2026-10-08T09:30:00.001Z": 1
+          },
+          "byStep": {
+            "1": 3
+          }
+        },
+        "successor-gate-port": {
+          "worlds": 1,
+          "steps": 1,
+          "answers": 3,
+          "mismatches": 2,
+          "byInstant": {
+            "2026-10-08T09:29:59.999Z": 1,
+            "2026-10-08T09:30:00.000Z": 1,
+            "2026-10-08T09:30:00.001Z": 1
+          },
+          "byStep": {
+            "1": 3
+          }
+        }
+      },
+      "success": true,
+      "oldToolReproduction": {}
+    },
+    {
+      "id": "blunt",
+      "subjectCommit": "67577c20103b393a93e1feed390c9dad067b86e9",
+      "source": {
+        "file": "packages/polaris-generation-consent/src/in-force.ts",
+        "originalSha256": "afcf1c2dc0a727460f3ca3a3623fd8a62ac3d739c87f2923187125422ab191dc",
+        "mutatedSha256": "fef316c430fb51c991d7827debf1037c97195f145b2193f2a6bf1d539a4d531e"
+      },
+      "plan": {
+        "id": "blunt-inforce",
+        "temporary_product_file": "packages/polaris-generation-consent/src/in-force.ts",
+        "old": "return effective(records, now).live;",
+        "new": "return records;",
+        "required_reader_mismatches": [
+          "port",
+          "gate-port"
+        ],
+        "selection": [
+          "base",
+          "base-reduced"
+        ],
+        "factory_boundary": "Actual file-backed normal factories, no fixture adapter used to establish file gate sensitivity."
+      },
+      "execution": {
+        "exitCode": 0,
+        "elapsedSeconds": 99.73944496596232
+      },
+      "perReader": {
+        "port": {
+          "worlds": 8,
+          "steps": 8,
+          "answers": 16,
+          "mismatches": 4,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 8,
+            "2026-10-22T12:00:00Z": 8
+          },
+          "byStep": {
+            "1": 16
+          }
+        },
+        "gate-port": {
+          "worlds": 8,
+          "steps": 8,
+          "answers": 16,
+          "mismatches": 4,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 8,
+            "2026-10-22T12:00:00Z": 8
+          },
+          "byStep": {
+            "1": 16
+          }
+        }
+      },
+      "success": true,
+      "oldToolReproduction": {}
+    },
+    {
+      "id": "unrelated",
+      "subjectCommit": "2a318e4104caf7a1a59400f092cc9685bdbd5be7",
+      "source": {
+        "file": "packages/polaris-dossier/src/gate-sources.ts",
+        "originalSha256": "1c6e4ab8988e835adbcf23708c154fce6fad5ae14d96afd0d3ae56ad596ff822",
+        "mutatedSha256": "0c1bb6c25f7bb85751233d2d532eb1b1a3915a3b608d35f594ad3947764e90c7"
+      },
+      "plan": {
+        "id": "unrelated-reader-cannot-satisfy-port",
+        "temporary_product_file": "packages/polaris-dossier/src/gate-sources.ts",
+        "old": "d9: () => crossCheck(options.d9Form === undefined ? D9_ACT_FORM : options.d9Form, 'the D9 text (SEC-3 amendment)'),",
+        "new": "d9: async () => ({ state: 'absent', why: 'unrelated-reader-control' }),",
+        "required_reader_mismatches": [
+          "port"
+        ],
+        "selection": [
+          "base"
+        ],
+        "expected_tool_exit": "nonzero with unmet port expectation even though gate-d9 answers differ",
+        "old_tool_reproduction": "Old exact script accepts negative control globally despite controlNote demanding port sensitivity, with port mismatch count zero."
+      },
+      "execution": {
+        "exitCode": 1,
+        "elapsedSeconds": 99.29775027098367
+      },
+      "perReader": {
+        "port": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        }
+      },
+      "success": true,
+      "oldToolReproduction": {
+        "totalMismatches": 8,
+        "portMismatches": 0,
+        "falsePositiveReproduced": true
+      }
+    }
+  ],
+  "bundle": {
+    "path": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/semantic-mutants.bundle",
+    "sha256": "122d1531a9ea9e4b42f6a038364946fecf0561ff5b5fd10a10ee2022bab3361c",
+    "bytes": 1743
+  },
+  "success": true,
+  "rawRecordBinding": {
+    "path": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/SEMANTIC-CONTROL-RESULT.json",
+    "sha256": "a53f7a2fccf581f28f05997a3c7f5f4a355cfed4940f8042bdda1a84fcd38481"
+  }
+}

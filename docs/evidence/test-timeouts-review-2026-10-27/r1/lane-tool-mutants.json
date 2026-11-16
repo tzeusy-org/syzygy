@@ -1,0 +1,117 @@
+{
+ "tool": "lane_tool_mutants.py",
+ "repoHead": "f44cd65dfacd12c58776cca65cc40766fdfca6b1",
+ "mutants": [
+  {
+   "id": "T1",
+   "predicate": "decide.py: test threshold at the default",
+   "change": {
+    "file": "decide.py",
+    "old": "TEST_THRESHOLD_MS, HOOK_THRESHOLD_MS = DEFAULT_MS['test'] // 2, DEFAULT_MS['hook'] // 2",
+    "new": "TEST_THRESHOLD_MS, HOOK_THRESHOLD_MS = DEFAULT_MS['test'], DEFAULT_MS['hook'] // 2"
+   },
+   "decideExit": 0,
+   "decideMutantsExit": 0,
+   "decideMutantsLast": [
+    "{\"D1\": \"killed\", \"D1c\": \"holds\", \"D2\": \"killed\", \"D2c\": \"holds\", \"D3\": \"killed\"}"
+   ],
+   "checkRemovalsExit": 0,
+   "decisionsChanged": 6,
+   "changed": [
+    "apps/three-surface-poc/src/fixture-directories.test.ts:296",
+    "apps/three-surface-poc/src/keyboard-sweep-record.test.ts:59",
+    "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts:329",
+    "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts:343",
+    "apps/three-surface-poc/src/test-model-fixture.test.ts:120",
+    "apps/three-surface-poc/src/test-model-fixture.test.ts:131"
+   ],
+   "outcome": "survived"
+  },
+  {
+   "id": "T2",
+   "predicate": "decide.py: hook threshold at the default",
+   "change": {
+    "file": "decide.py",
+    "old": "TEST_THRESHOLD_MS, HOOK_THRESHOLD_MS = DEFAULT_MS['test'] // 2, DEFAULT_MS['hook'] // 2",
+    "new": "TEST_THRESHOLD_MS, HOOK_THRESHOLD_MS = DEFAULT_MS['test'] // 2, DEFAULT_MS['hook']"
+   },
+   "decideExit": 0,
+   "decideMutantsExit": 0,
+   "decideMutantsLast": [
+    "{\"D1\": \"killed\", \"D1c\": \"holds\", \"D2\": \"killed\", \"D2c\": \"holds\", \"D3\": \"killed\"}"
+   ],
+   "checkRemovalsExit": 0,
+   "decisionsChanged": 0,
+   "changed": [],
+   "outcome": "survived"
+  },
+  {
+   "id": "T3",
+   "predicate": "decide.py: no hosted-run condition",
+   "change": {
+    "file": "decide.py",
+    "old": "hosted_ok = bool(hosted) and all(b['boundMs'] is not None and b['boundMs'] <= threshold for b in hosted)",
+    "new": "hosted_ok = True"
+   },
+   "decideExit": 0,
+   "decideMutantsExit": 0,
+   "decideMutantsLast": [
+    "{\"D1\": \"killed\", \"D1c\": \"holds\", \"D2\": \"killed\", \"D2c\": \"holds\", \"D3\": \"killed\"}"
+   ],
+   "checkRemovalsExit": 0,
+   "decisionsChanged": 2,
+   "changed": [
+    "apps/three-surface-poc/src/surface-routes.test.ts:313",
+    "apps/three-surface-poc/src/surface-routes.test.ts:328"
+   ],
+   "outcome": "survived"
+  },
+  {
+   "id": "T4",
+   "predicate": "citation_audit.py: a test site measured only by another test of its file is a counted residual (ruling 6)",
+   "site": "apps/three-surface-poc/src/keyboard-sweep-record.test.ts:59",
+   "citation": "docs/evidence/syzygy-bpyt-4-31/durations/keyboard-sweep-record.test.tests.json",
+   "change": {
+    "everyString": {
+     "old": "reads the Butlers revision and evaluation identity a served Polaris page renders, on both mounts",
+     "new": "decodes the escaped footer and refuses a page that names no evaluation, two, or an abbreviated revision (moved)"
+    }
+   },
+   "before": "test",
+   "after": "file",
+   "outcome": "survived"
+  },
+  {
+   "id": "T5",
+   "predicate": "citation_audit.py: a file match needs the site's own file, not another with its stem",
+   "site": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts:316",
+   "citation": "docs/evidence/syzygy-bpyt-4-31/full-runs.json",
+   "change": {
+    "everyString": {
+     "old": "polaris-opening-index.browser.test.ts",
+     "new": "polaris-opening-index.test.ts"
+    }
+   },
+   "before": "file",
+   "after": "file",
+   "afterName": "apps/three-surface-poc/src/polaris-opening-index.test.ts",
+   "outcome": "survived"
+  },
+  {
+   "id": "T6",
+   "predicate": "check_removals.py: a hook is held to its own threshold, not the hook default",
+   "change": {
+    "file": "check_removals.py",
+    "old": "row['thresholdMs'] (first occurrence)",
+    "new": "(row['thresholdMs'] * (2 if row['kind'] == 'hook' else 1))"
+   },
+   "mutantSuiteExit": 1,
+   "mutantSuiteLast": [
+    "C1 control held: control: an alone worst exactly at the threshold holds",
+    "C2 control held: control: a hook's file time less its tests exactly at the threshold holds",
+    "8 of 9 killed, 2 of 2 controls held"
+   ],
+   "outcome": "killed"
+  }
+ ]
+}

@@ -1,0 +1,5 @@
+=== BADUTF8 head x1 --no-profile start 20:12:53 load 59.36
+BADUTF8-np head None #1: exit 0 (claimed 0, as claimed), exited 1.14 s, tree clean, 0 survivors of 2 seen, vitest seen False, record runs 1 tests 0, exercised - -> pass
+SUMMARY BADUTF8-np {"head": {"attempts": 1, "passed": 1, "dirty": 0, "withSurvivors": 0, "exitAsClaimed": 1, "exercised": 1}}
+=== BADUTF8 exit 0 end 20:12:59 load 58.41
+=== ALL DONE 20:12:59

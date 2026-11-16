@@ -96,12 +96,18 @@ from __future__ import annotations
 
 import argparse
 import datetime
+import hashlib
 import importlib
+import json
+import os
 import pathlib
 import re
 import subprocess
 import sys
 import tempfile
+import traceback
+import shutil
+import stat
 from dataclasses import dataclass, replace as dataclasses_replace
 from typing import Callable
 
@@ -224,6 +230,21 @@ class Package:
     #: The opening of a prior-round recap that closes the raw's findings
     #: section (``split_recap``); findings are read before it only.
     findings_end: str | None = None
+    #: For a registry entry: the record's scope, supersession, "does not" and
+    #: aggregate-closing text where the fixed text would be false for this
+    #: version (a version that widens what the entry admits, or supersedes an
+    #: earlier one). None keeps the fixed text, so every record written before
+    #: these fields existed regenerates byte for byte.
+    record_scope: str | None = None
+    record_supersession: str | None = None
+    record_does_not: str | None = None
+    record_aggregate_scope: str | None = None
+    #: For a registry entry a later version may replace at the same path: the
+    #: bytes that later version's builder takes as its base. Once the later
+    #: version is recorded, ``--check`` of this version holds the record's
+    #: "Installed entry SHA-256" line to them, so the line is never checked
+    #: against itself alone; a replaced version without it fails ``--check``.
+    replaced_bytes: Callable[[pathlib.Path], bytes] | None = None
 
 
 def _module(name: str):
@@ -327,6 +348,781 @@ def patch_package_apply(root: pathlib.Path, proposed: pathlib.Path, findings) ->
     return 0
 
 
+def p115_package_apply(root: pathlib.Path) -> int:
+    """Existing internal subject-only operation, with its own single ledger."""
+    return p115_attempt(root, operation="apply")
+
+
+def p115_tracked(root: pathlib.Path, head: bytes, index: bytes,
+                  exempt: frozenset[pathlib.Path] = frozenset()) -> None:
+    """Read actual Git blob bytes/modes, independent of the index stat cache.
+
+    Only the separately checked intended target bodies may be exempted during
+    publication. Their tracked modes and every index flag are still checked.
+    No index refresh, normalization or optional-lock write is performed.
+    """
+    entries = {}
+    for row in index.split(b"\0"):
+        if not row:
+            continue
+        metadata, path = row.split(b"\t", 1)
+        mode, oid, stage = metadata.split()
+        if stage != b"0" or mode not in {b"100644", b"100755", b"120000"} or path in entries:
+            raise ValueError("P115 tracked checkout has an unsupported index stage, kind or duplicate path")
+        entries[path] = mode, oid
+    tree = {}
+    data = subprocess.run(["git", "ls-tree", "-r", "-z", head.decode().strip()], cwd=root,
+                          capture_output=True, check=True).stdout
+    for row in data.split(b"\0"):
+        if row:
+            metadata, path = row.split(b"\t", 1)
+            mode, kind, oid = metadata.split()
+            if kind != b"blob" or path in tree:
+                raise ValueError("P115 tracked checkout has an unsupported HEAD kind or duplicate path")
+            tree[path] = mode, oid
+    if entries != tree:
+        raise ValueError("P115 tracked index bytes/modes do not match the admitted HEAD")
+    for option in ("-v", "-f"):
+        flags = subprocess.run(["git", "--no-optional-locks", "ls-files", option, "-z"],
+                               cwd=root, capture_output=True, check=True).stdout.split(b"\0")
+        flags = [row for row in flags if row]
+        if (len(flags) != len(entries) or any(row[:2] != b"H " for row in flags)
+                or {row[2:] for row in flags} != set(entries)):
+            raise ValueError("P115 tracked checkout has unsupported index flags")
+    algorithm = subprocess.run(["git", "rev-parse", "--show-object-format"], cwd=root,
+                               capture_output=True, text=True, check=True).stdout.strip()
+    if algorithm not in {"sha1", "sha256"}:
+        raise ValueError("P115 tracked checkout has an unsupported Git object format")
+    for raw_path, (mode, oid) in entries.items():
+        rel = pathlib.Path(os.fsdecode(raw_path))
+        if rel.is_absolute() or ".." in rel.parts:
+            raise ValueError("P115 tracked path escapes the checkout")
+        path = root / rel
+        info = path.lstat()
+        if stat.S_ISLNK(info.st_mode):
+            actual_mode, body = b"120000", os.fsencode(os.readlink(path))
+        elif stat.S_ISREG(info.st_mode):
+            fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+            with os.fdopen(fd, "rb") as stream:
+                info = os.fstat(stream.fileno())
+                if not stat.S_ISREG(info.st_mode):
+                    raise ValueError(f"P115 tracked path is not a regular file: {rel}")
+                actual_mode = b"100755" if info.st_mode & 0o111 else b"100644"
+                body = stream.read() if rel not in exempt else None
+        else:
+            raise ValueError(f"P115 tracked path has an unsupported working kind: {rel}")
+        if actual_mode != mode:
+            raise ValueError(f"P115 tracked working mode differs from the admitted object: {rel}")
+        if rel not in exempt:
+            actual = hashlib.new(algorithm, b"blob " + str(len(body)).encode() + b"\0" + body).hexdigest().encode()
+            if actual != oid:
+                raise ValueError(f"P115 tracked working bytes differ from the admitted object: {rel}")
+
+
+def p115_clean(root: pathlib.Path) -> tuple[bytes, bytes]:
+    """Whole checkout boundary; ignored build outputs are outside this gate."""
+    state = subprocess.run(["git", "--no-optional-locks", "status", "--porcelain=v1", "-z",
+                            "--untracked-files=all", "--ignore-submodules=none"],
+                           cwd=root, capture_output=True, check=True).stdout
+    if state:
+        raise ValueError("refusing P115 recording: index, worktree and untracked-not-ignored files must be clean")
+    head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=root,
+                          capture_output=True, check=True).stdout
+    index = subprocess.run(["git", "ls-files", "--stage", "-z"], cwd=root,
+                           capture_output=True, check=True).stdout
+    p115_tracked(root, head, index)
+    return head, index
+
+
+def p115_apply_batch(root: pathlib.Path, journal: pathlib.Path, before: dict,
+                       proposed: dict, patches: tuple, evidence: dict) -> None:
+    """The identical captured batch runs only in an owned private projection."""
+    reference = _module("prepare_three_surface_poc_governedby_reference_recording")
+    projection, copies, metadata = (journal / name for name in ("projection", "patches", "git"))
+    projection.mkdir()
+    copies.mkdir()
+    for rel in reference.SUBJECTS:
+        path = projection / rel
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(before[rel])
+    names = []
+    rows = []
+    for number, (rel, body) in enumerate(patches):
+        path = copies / f"{number}.patch"
+        path.write_bytes(body)
+        names.append(str(path))
+        rows.append({"source": rel.as_posix(), "copy": str(path), "bytes": len(body),
+                     "sha256": hashlib.sha256(body).hexdigest()})
+    # Child repository location is closed; credentials/config/PATH and the
+    # process environment are unchanged. No parent Git metadata is discovered.
+    env = os.environ.copy()
+    for name in ("GIT_DIR", "GIT_WORK_TREE", "GIT_COMMON_DIR", "GIT_INDEX_FILE",
+                 "GIT_OBJECT_DIRECTORY", "GIT_ALTERNATE_OBJECT_DIRECTORIES", "GIT_QUARANTINE_PATH",
+                 "GIT_GRAFT_FILE", "GIT_SHALLOW_FILE", "GIT_PREFIX", "GIT_NAMESPACE",
+                 "GIT_CEILING_DIRECTORIES", "GIT_DISCOVERY_ACROSS_FILESYSTEM"):
+        env.pop(name, None)
+    env.update(GIT_DIR=str(metadata), GIT_WORK_TREE=str(projection), GIT_INDEX_FILE=str(metadata / "index"))
+    batch = ["git", "apply", "--whitespace=nowarn", "--unidiff-zero"]
+    evidence.update(orderedPatches=rows, batchSha256=hashlib.sha256(json.dumps(
+        [(r["source"], r["sha256"]) for r in rows], separators=(",", ":")).encode()).hexdigest(),
+        cwd=str(projection), gitDir=str(metadata), gitWorkTree=str(projection),
+        gitIndexFile=str(metadata / "index"), commands=[])
+
+    def run(argv):
+        row = {"argv": argv, "cwd": str(projection), "returncode": None}
+        evidence["commands"].append(row)
+        done = subprocess.run(argv, cwd=projection, env=env, capture_output=True, text=True)
+        row.update(returncode=done.returncode, stdout=done.stdout, stderr=done.stderr)
+        return done
+
+    done = run(["git", "init", "--quiet", "--template="])
+    if done.returncode:
+        raise ValueError("P115 private Git initialization failed: " + done.stderr.strip())
+    done = run([*batch, "--check", *names])
+    if done.returncode:
+        raise ValueError("P115 preflight refused: " + done.stderr.strip())
+    if any(p115_read(pathlib.Path(row["copy"])) != body for row, (_rel, body) in zip(rows, patches)):
+        raise ValueError("P115 captured private patch copies changed after preflight")
+    done = run([*batch, *names])
+    if done.returncode:
+        raise ValueError(f"P115 batch apply failed ({done.returncode}): " + done.stderr.strip())
+    files = set()
+    directories = {parent for rel in reference.SUBJECTS for parent in rel.parents if parent != pathlib.Path(".")}
+    for path in projection.rglob("*"):
+        kind = path.lstat().st_mode
+        rel = path.relative_to(projection)
+        if stat.S_ISREG(kind):
+            files.add(rel)
+        elif not stat.S_ISDIR(kind) or rel not in directories:
+            raise ValueError("P115 private projection has unexpected/nonregular output: " + str(rel))
+    if (files != set(reference.SUBJECTS)
+            or any(p115_read(projection / rel) != proposed[rel] for rel in reference.SUBJECTS)
+            or p115_read(projection / reference.SUBJECTS[0]) != before[reference.SUBJECTS[0]]
+            or sum(p115_read(projection / rel) != before[rel] for rel in reference.SUBJECTS) != 5
+            or any(hashlib.sha256(p115_read(projection / rel)).hexdigest() != sha
+                   for sha, rel in reference.manifest_rows(root))):
+        raise ValueError("P115 private batch outputs differ from exact six subjects/five changes/manifest")
+    evidence["validatedOutputs"] = {str(rel): hashlib.sha256(proposed[rel]).hexdigest()
+                                    for rel in reference.SUBJECTS}
+
+
+def p115_read(path: pathlib.Path) -> bytes | None:
+    if path.is_symlink() or (path.exists() and not path.is_file()):
+        raise ValueError(f"P115 transaction path is not a regular file: {path}")
+    return path.read_bytes() if path.exists() else None
+
+
+def p115_identity(path: pathlib.Path) -> tuple[int, int] | None:
+    return (path.lstat().st_dev, path.lstat().st_ino) if path.exists() else None
+
+
+def p115_exception(failure: BaseException) -> dict:
+    """Freeze both visible and suppressed diagnostic edges, without locals."""
+    pending, identities, nodes = [failure], {id(failure): 0}, []
+    for error in pending:
+        node = {"id": identities[id(error)],
+                "type": type(error).__module__ + "." + type(error).__qualname__,
+                "message": str(error), "suppressContext": error.__suppress_context__}
+        for name, target in (("cause", error.__cause__), ("context", error.__context__)):
+            if target is not None and id(target) not in identities:
+                identities[id(target)] = len(pending)
+                pending.append(target)
+            node[name] = None if target is None else identities[id(target)]
+        if isinstance(error, OSError):
+            node["errno"] = error.errno
+            for field in ("filename", "filename2"):
+                value = getattr(error, field)
+                kind = type(value).__module__ + "." + type(value).__qualname__
+                if value is None:
+                    node[field], evidence = None, {"type": kind}
+                else:
+                    try:
+                        raw = os.fsencode(value)
+                        node[field] = os.fsdecode(raw)
+                        evidence = {"type": kind, "filesystemBytesHex": raw.hex()}
+                    except TypeError:
+                        # OSError accepts non-path diagnostic objects too.
+                        node[field], evidence = repr(value), {"type": kind, "representation": "repr"}
+                node[field + "Evidence"] = evidence
+        if isinstance(error, subprocess.CalledProcessError):
+            # Native captures are diagnostic evidence, including empty/absent
+            # values and arbitrary bytes. Do not normalize or replacement-decode.
+            def captured(value):
+                field = {"type": type(value).__module__ + "." + type(value).__qualname__}
+                if value is None:
+                    field["value"] = None
+                elif isinstance(value, bytes):
+                    field["bytesHex"] = value.hex()
+                elif isinstance(value, str):
+                    field["text"] = value
+                elif isinstance(value, os.PathLike):
+                    raw = os.fspath(value)
+                    field["path"] = ({"type": "builtins.bytes", "bytesHex": raw.hex()}
+                                     if isinstance(raw, bytes) else {"type": "builtins.str", "text": raw})
+                else:
+                    field["representation"] = repr(value)
+                return field
+            command = error.cmd
+            command_evidence = ({"type": type(command).__module__ + "." + type(command).__qualname__,
+                                 "items": [captured(value) for value in command]}
+                                if isinstance(command, (list, tuple)) else captured(command))
+            node["process"] = {"returncode": error.returncode, "command": command_evidence,
+                               "stdout": captured(error.stdout), "output": captured(error.output),
+                               "stderr": captured(error.stderr)}
+        nodes.append(node)
+    return {"root": 0, "nodes": nodes, "secondaryExceptions": getattr(failure, "_p115_secondary", []),
+            "traceback": "".join(traceback.format_exception(type(failure), failure,
+                                                            failure.__traceback__, chain=True))}
+
+
+def p115_cleanup_stage(staged: pathlib.Path, identity: tuple[int, int]) -> None:
+    """Only the regular inode created for this stage may be removed."""
+    try:
+        info = staged.lstat()
+    except FileNotFoundError:
+        return  # Replacement consumed the stage; no unlink is necessary.
+    if not stat.S_ISREG(info.st_mode) or (info.st_dev, info.st_ino) != identity:
+        raise ValueError(f"P115 stage cleanup ownership unproven: {staged}")
+    staged.unlink()
+
+
+def p115_stage(path: pathlib.Path, body: bytes, *, on_stage=lambda path, identity: None) -> pathlib.Path:
+    """Close complete bytes on the target filesystem before publication."""
+    fd, name = tempfile.mkstemp(prefix=".p115-", dir=path.parent)
+    staged = pathlib.Path(name)
+    identity = os.fstat(fd).st_dev, os.fstat(fd).st_ino
+    try:
+        with os.fdopen(fd, "wb") as stream:
+            stream.write(body)
+            if path.exists():
+                os.fchmod(stream.fileno(), path.stat().st_mode & 0o777)
+            stream.flush()
+            os.fsync(stream.fileno())
+        on_stage(staged, identity)
+        return staged
+    except BaseException as failure:
+        try:
+            p115_cleanup_stage(staged, identity)
+        except BaseException as cleanup_error:
+            failure._p115_secondary = [*getattr(failure, "_p115_secondary", []), p115_exception(cleanup_error)]
+        raise
+
+
+def p115_publish(path: pathlib.Path, body: bytes, *, expected: bytes | None,
+                  expected_identity, guard=lambda staged, identity, body: None,
+                  published=lambda identity: None) -> None:
+    """One bounded native publication; equality alone never grants ownership."""
+    token = {}
+    staged = p115_stage(path, body, on_stage=lambda _p, identity: token.update(identity=identity))
+    operation_error = None
+    try:
+        if p115_identity(staged) != token["identity"] or p115_read(staged) != body:
+            raise ValueError(f"P115 owned stage changed: {staged}")
+        guard(staged, token["identity"], body)
+        if p115_observe(staged) != (body, token["identity"]):
+            raise ValueError(f"P115 owned stage changed: {staged}")
+        if p115_observe(path) != (expected, expected_identity):
+            raise ValueError(f"P115 publication destination changed: {path}")
+        if expected is None:
+            os.link(staged, path)  # EEXIST refuses even a same-byte foreign creator.
+        else:
+            os.replace(staged, path)
+        # This must precede fallible private cleanup and caller wrapper faults.
+        published(token["identity"])
+    except BaseException as failure:
+        operation_error = failure
+        raise
+    finally:
+        try:
+            p115_cleanup_stage(staged, token["identity"])
+        except BaseException as cleanup_error:
+            # Retain the first native-unlink error even when a retry cleans up.
+            try:
+                p115_cleanup_stage(staged, token["identity"])
+            except BaseException as retry_error:
+                cleanup_error._p115_secondary = [p115_exception(retry_error)]
+            if operation_error is None:
+                raise
+            operation_error._p115_secondary = [*getattr(operation_error, "_p115_secondary", []),
+                                              p115_exception(cleanup_error)]
+
+
+def p115_write(path: pathlib.Path, body: bytes, **publication) -> None:
+    p115_publish(path, body, **publication)
+
+
+@dataclass(frozen=True)
+class P115Publication:
+    attempt: str
+    path: pathlib.Path
+    identity: tuple[int, int]
+    kind: int
+    body: bytes
+    sha256: str
+
+
+def p115_publications(publications: dict) -> dict:
+    return {str(rel): {"attempt": token.attempt, "path": str(token.path), "kind": "regular",
+                      "device": token.identity[0], "inode": token.identity[1], "sha256": token.sha256}
+            for rel, token in publications.items()}
+
+
+def p115_observe(path: pathlib.Path) -> tuple[bytes | None, tuple[int, int] | None]:
+    """One bounded regular-file/absence observation; reader errors are not absence."""
+    try:
+        info = path.lstat()
+    except FileNotFoundError:
+        return None, None
+    if not stat.S_ISREG(info.st_mode):
+        raise ValueError(f"P115 recovery path is not a regular file: {path}")
+    identity = info.st_dev, info.st_ino
+    body = p115_read(path)
+    after = path.lstat()
+    if body is None or not stat.S_ISREG(after.st_mode) or (after.st_dev, after.st_ino) != identity:
+        raise ValueError(f"P115 recovery path changed during observation: {path}")
+    return body, identity
+
+
+def p115_recovery_observation(root: pathlib.Path, before: dict, before_identity: dict,
+                               owned_order: list[pathlib.Path], restored: dict, blocked: set,
+                               conflicts: list[str], errors: list[dict], identity: str) -> dict:
+    """Observe every captured target; known conflicts remain negative without duplication."""
+    started = datetime.datetime.now(datetime.timezone.utc).isoformat().replace("+00:00", "Z")
+    rows = []
+    for rel, original in before.items():
+        try:
+            body, actual_identity = p115_observe(root / rel)
+            row = {"path": str(rel), "sha256": None if body is None else hashlib.sha256(body).hexdigest(),
+                   "identity": actual_identity, "kind": "absent" if body is None else "regular"}
+            if rel not in blocked:
+                witnessed = rel not in owned_order or rel in restored
+                expected_identity = restored.get(rel) if rel in owned_order else before_identity[rel]
+                if not witnessed or body != original or actual_identity != expected_identity:
+                    reason = ("restored preimage/identity unverified" if rel in owned_order else
+                              "independent change retained; no owned write")
+                    conflicts.append(f"{rel}: {reason}")
+                    blocked.add(rel)
+            row["verified"] = rel not in blocked
+        except BaseException as error:
+            snapshot = p115_exception(error)
+            node = snapshot["nodes"][0]
+            row = {"path": str(rel), "verified": False, "kind": "unverified",
+                   "error": {k: node[k] for k in ("type", "message", "errno") if k in node}}
+            if rel not in blocked:
+                conflicts.append(f"{rel}: recovery inspection failed: {error}")
+                errors.append(snapshot)
+                blocked.add(rel)
+        rows.append(row)
+    return {"observationId": identity, "startedAt": started,
+            "endedAt": datetime.datetime.now(datetime.timezone.utc).isoformat().replace("+00:00", "Z"),
+            "scope": "exclusive-checkout sequential read-only observation; no atomic/CAS/beyond-window guarantee",
+            "targetCount": len(before), "targets": rows,
+            "complete": not conflicts and not errors and all(r["verified"] for r in rows)}
+
+
+def p115_recover(root: pathlib.Path, before: dict, outputs: dict, before_identity: dict,
+                  owned_order: list[pathlib.Path], publications: dict, *,
+                  restored: dict | None = None, blocked: set | None = None) -> tuple[list[str], list[dict]]:
+    """Every governed output needs the same successful-native-publication token."""
+    conflicts, errors = [], []
+    restored = {} if restored is None else restored
+    blocked = set() if blocked is None else blocked
+    for rel in reversed(owned_order):
+        try:
+            path, token = root / rel, publications[rel]
+            def owned():
+                return (token.path == rel and token.kind == stat.S_IFREG
+                        and token.body == outputs[rel] and p115_read(path) == token.body
+                        and p115_identity(path) == token.identity)
+            if not owned():
+                conflicts.append(f"{rel}: independently changed or deleted; publication ownership unproven")
+                blocked.add(rel)
+                continue
+            if before[rel] is None:
+                if not owned():
+                    conflicts.append(f"{rel}: recovery ownership changed")
+                    blocked.add(rel)
+                    continue
+                path.unlink()
+                restored[rel] = None  # Only a successful native return witnesses absence.
+            else:
+                def guard(_staged, _identity, _body):
+                    if not owned():
+                        raise ValueError(f"{rel}: recovery ownership changed")
+                p115_publish(path, before[rel], expected=outputs[rel], expected_identity=token.identity,
+                    guard=guard, published=lambda identity: restored.update({rel: identity}))
+            if p115_observe(path) != (before[rel], restored[rel]):
+                raise ValueError(f"{rel}: recovery native result differs from captured preimage/identity")
+        except BaseException as error:
+            conflicts.append(f"{rel}: restoration failed: {type(error).__name__}: {error}")
+            errors.append(p115_exception(error))
+            blocked.add(rel)
+    p115_recovery_observation(root, before, before_identity, owned_order, restored, blocked,
+                              conflicts, errors, "recovery-loop-observation")
+    return conflicts, errors
+
+
+def p115_payload_inventory(journal: pathlib.Path) -> list[dict]:
+    return [{"path": p.name, "bytes": p.stat().st_size,
+             "sha256": hashlib.sha256(p.read_bytes()).hexdigest()}
+            for p in sorted(journal.iterdir()) if p.is_file()] if journal.exists() else []
+
+
+def p115_private_inventory(journal: pathlib.Path) -> list[dict]:
+    """Recursive private payload is separate from the unchanged preimage list."""
+    rows = []
+    if journal.exists():
+        for path in sorted(journal.rglob("*")):
+            rel, kind = path.relative_to(journal).as_posix(), path.lstat().st_mode
+            if path.parent == journal and path.name.endswith(".before"):
+                continue
+            if stat.S_ISREG(kind):
+                body = path.read_bytes()
+                rows.append({"path": rel, "kind": "regular", "bytes": len(body),
+                             "sha256": hashlib.sha256(body).hexdigest()})
+            else:
+                rows.append({"path": rel, "kind": "directory" if stat.S_ISDIR(kind) else "nonregular"})
+    return rows
+
+
+def p115_report_receipt(path: pathlib.Path, published: dict, *, completed: bool) -> dict:
+    """A pathname is not retention evidence; observe a confirmed publication."""
+    try:
+        body = p115_read(path)
+        if body is None:
+            state = "absent"
+        elif (published["body"] is None or published["identity"] is None
+              or body != published["body"] or p115_identity(path) != published["identity"]):
+            state = "unverified"
+        else:
+            record = json.loads(body)
+            phase = record["state"]
+            labels = {"failed": "updated failed", "prepared": "older prepared", "completed": "completed"}
+            if phase not in labels or completed and phase != "completed":
+                state = "unverified"
+            else:
+                print("P115 verified retained receipt phase: " + labels[phase])
+                prefix = ("P115 completed outcome receipt retained: " if completed else
+                          "P115 failed-attempt evidence retained: ")
+                print(prefix + str(path))
+                if not completed and "recoveryObservation" in record:
+                    print("P115 retained receipt recovery observation: "
+                          + record["recoveryObservation"]["observationId"]
+                          + "; historical observation only; final recovery reported separately")
+                return {"verified": True, "phase": phase}
+    except BaseException as verification_error:
+        snapshot = p115_exception(verification_error)
+        print("P115 secondary receipt verification error: " + json.dumps(snapshot))
+        state = "unverified/read-error"
+        print(f"P115 receipt verification: {state}; no retained receipt claimed: {path}")
+        return {"verified": False, "state": state, "exception": snapshot}
+    print(f"P115 receipt verification: {state}; no retained receipt claimed: {path}")
+    return {"verified": False, "state": state}
+
+
+def p115_record(root: pathlib.Path, pkg: Package, version: str, date: str, quote: str,
+                 review_rel: str, disposition_rel: str | None,
+                 options: frozenset[str]) -> int:
+    return p115_attempt(root, operation="record", pkg=pkg, version=version, date=date,
+                        quote=quote, review_rel=review_rel, disposition_rel=disposition_rel, options=options)
+
+
+def p115_attempt(root: pathlib.Path, *, operation: str, pkg: Package | None = None,
+                  version: str = "1.0", date: str | None = None, quote: str = "",
+                  review_rel: str | None = None, disposition_rel: str | None = None,
+                  options: frozenset[str] = frozenset()) -> int:
+    """P115-only provisional publication, receipt commit, then private cleanup.
+
+    Assumes the admitted checkout is exclusively operated. Immediate drift
+    checks and no-clobber creation are not a universal CAS or crash guarantee.
+    """
+    reference = _module("prepare_three_surface_poc_governedby_reference_recording")
+    if operation not in {"record", "apply"}:
+        raise ValueError("P115 supports only the existing record and internal apply operations")
+    pkg = pkg or real_packages()[reference.KEY]
+    owned_order, publications = [], {}
+    journal = outcome = None
+    before, before_identity, outputs, receipt, batch_evidence = {}, {}, {}, {}, {}
+    receipt_state = {"body": None, "identity": None}
+    committed = False
+    try:
+        head, index = p115_clean(root)
+        paths = (*reference.SUBJECTS, reference.RECORD, reference.AGGREGATE)
+        before = {rel: p115_read(root / rel) for rel in paths}
+        before_identity = {rel: p115_identity(root / rel) for rel in paths}
+        target_identity = dict(before_identity)
+        family = reference.family_snapshot(root)
+        inputs = {pathlib.Path(p) for p in reference.validation_inputs(root)}
+        if review_rel is not None:
+            inputs.add(pathlib.Path(review_rel))
+        if disposition_rel:
+            inputs.add(pathlib.Path(disposition_rel))
+        if any(p.is_absolute() or ".." in p.parts for p in inputs):
+            raise ValueError("P115 validation inputs must stay inside the repository")
+        captured = {rel: p115_read(root / rel) for rel in inputs}
+        if version != reference.VERSION or options:
+            raise ValueError("P115 recording covers exactly v1.0 with no options")
+        if reference.transaction_present(root):
+            raise ValueError("P115 transaction is already present or partial")
+        if before[reference.AGGREGATE] is None or any(before[p] is None for p in reference.SUBJECTS):
+            raise ValueError("P115 transaction requires all six subjects and the aggregate")
+        if operation == "record":
+            validate_inputs(version, date, quote, pkg)
+            commit, verdict = verify_reviewed(root, pkg, review_rel, disposition_rel)
+            findings = pkg.check(root) + reference.chain_findings(root, date)
+        else:
+            findings = reference.recording_findings(root) + reference.chain_findings(root, predecessors_only=True)
+        if findings:
+            raise ValueError("package does not verify: " + " | ".join(findings))
+        patch_paths = _patches(root, reference.CANDIDATE / "proposed")
+        if len(patch_paths) != 5 or len(set(patch_paths)) != 5:
+            raise ValueError("refusing P115 apply: exact five-patch population changed")
+        patches = tuple((path.relative_to(root), p115_read(path)) for path in patch_paths)
+        if any(body is None for _rel, body in patches):
+            raise ValueError("P115 captured patch is absent")
+        current, proposed = reference.load_frozen(root).collect()
+        current = {pathlib.Path(p): body for p, body in current.items()}
+        proposed = {pathlib.Path(p): body for p, body in proposed.items()}
+        if set(current) != set(reference.SUBJECTS) or any(current[p] != before[p] for p in current):
+            raise ValueError("P115 validated subjects differ from captured preimages")
+        if (set(proposed) != set(reference.SUBJECTS) or any(
+                hashlib.sha256(proposed[pathlib.Path(p)]).hexdigest() != sha
+                for sha, p in reference.manifest_rows(root))):
+            raise ValueError("P115 proposed outputs differ from the exact six-row manifest")
+        outputs = {**before, **proposed}
+        if operation == "record":
+            disposition = disposition_rel if verdict == "CONFIRM WITH EXCEPTIONS" else None
+            outputs[reference.RECORD] = render_record(
+                pkg, version, date, quote, review_rel, commit, verdict, disposition,
+                root=root, rows=tuple(reference.manifest_rows(root))).encode()
+            outputs[reference.AGGREGATE] = (before[reference.AGGREGATE].decode().rstrip("\n")
+                + "\n\n" + render_aggregate(pkg, version, date, review_rel, verdict, disposition)).encode()
+        expected = dict(before)
+
+        def unchanged(staged=None, identity=None, body=None):
+            for rel, value in {**captured, **expected}.items():
+                if p115_read(root / rel) != value:
+                    raise ValueError(f"P115 transaction input changed: {rel}")
+            expected_family = {"files": dict(family["files"]), "aggregate": expected[reference.AGGREGATE]}
+            if expected[reference.RECORD] is not None:
+                expected_family["files"][reference.RECORD.name] = {"kind": "regular", "body": expected[reference.RECORD]}
+            if reference.family_snapshot(root) != expected_family:
+                raise ValueError("P115 transaction reserved family changed")
+            if any(p115_identity(root / rel) != target_identity[rel] for rel in paths):
+                raise ValueError("P115 transaction target identity changed")
+            if (subprocess.run(["git", "rev-parse", "HEAD"], cwd=root, capture_output=True,
+                               check=True).stdout != head
+                    or subprocess.run(["git", "ls-files", "--stage", "-z"], cwd=root,
+                                      capture_output=True, check=True).stdout != index):
+                raise ValueError("P115 transaction HEAD or index changed")
+            p115_tracked(root, head, index, frozenset(paths))
+            changed = subprocess.run(["git", "--no-optional-locks", "diff", "--name-only", "-z"], cwd=root,
+                                     capture_output=True, check=True).stdout.split(b"\0")
+            changed += subprocess.run(["git", "ls-files", "--others", "--exclude-standard", "-z"],
+                                      cwd=root, capture_output=True, check=True).stdout.split(b"\0")
+            allowed = {rel.as_posix() for rel in paths}
+            if staged is not None:
+                if p115_identity(staged) != identity or p115_read(staged) != body:
+                    raise ValueError("P115 private stage ownership changed")
+                # Only this exact verified live stage may be omitted from dirt.
+                if staged.is_relative_to(root):
+                    allowed.add(staged.relative_to(root).as_posix())
+            if any(p and p.decode() not in allowed for p in changed):
+                raise ValueError("P115 transaction acquired unrelated worktree changes")
+
+        def persist(guard=lambda staged, identity, body: None):
+            receipt["updatedAt"] = datetime.datetime.now(datetime.timezone.utc).isoformat().replace("+00:00", "Z")
+            body = (json.dumps(receipt, indent=2) + "\n").encode()
+            def published(identity):
+                receipt_state.update(body=body, identity=identity)
+            p115_publish(outcome, body, expected=receipt_state["body"],
+                          expected_identity=receipt_state["identity"], guard=guard, published=published)
+            if p115_read(outcome) != body or p115_identity(outcome) != receipt_state["identity"]:
+                raise ValueError("P115 outcome receipt failed readback")
+
+        unchanged()
+        p115_clean(root)
+        git_dir = pathlib.Path(subprocess.run(["git", "rev-parse", "--absolute-git-dir"],
+                               cwd=root, capture_output=True, text=True, check=True).stdout.strip())
+        recovery = git_dir / "p115-recording-recovery"
+        recovery.mkdir(exist_ok=True)
+        journal = pathlib.Path(tempfile.mkdtemp(prefix="attempt-", dir=recovery))
+        outcome = journal.with_name(journal.name + ".ATTEMPT.json")
+        receipt = {"scope": "P115 " + operation + " attempt; selftest calls are synthetic/no owner action",
+                   "operation": operation, "batch": batch_evidence,
+                   "ranAt": head.decode().strip(), "indexSha256": hashlib.sha256(index).hexdigest(),
+                   "attemptId": journal.name,
+                   "capturedAt": datetime.datetime.now(datetime.timezone.utc).isoformat().replace("+00:00", "Z"),
+                   "state": "prepared", "paths": [],
+                   "validationInputs": {str(p): None if b is None else hashlib.sha256(b).hexdigest()
+                                        for p,b in sorted(captured.items())}}
+        for number, rel in enumerate(paths):
+            body = before[rel]
+            name = journal.name + f"/{number}.before"
+            if body is not None:
+                (outcome.parent / name).write_bytes(body)
+            receipt["paths"].append({"path": rel.as_posix(),
+                "before": None if body is None else hashlib.sha256(body).hexdigest(),
+                "after": None if outputs[rel] is None else hashlib.sha256(outputs[rel]).hexdigest(),
+                "preimage": None if body is None else name})
+        persist(unchanged)
+        unchanged()
+        p115_apply_batch(root, journal, before, proposed, patches, batch_evidence)
+        unchanged()
+        changed_subjects = tuple(p for p in reference.SUBJECTS if before[p] != outputs[p])
+        publish_paths = (*changed_subjects, *((reference.RECORD, reference.AGGREGATE)
+                                             if operation == "record" else ()))
+        for rel in publish_paths:
+            unchanged()
+            def published(identity, rel=rel):
+                publications[rel] = P115Publication(journal.name, rel, identity, stat.S_IFREG,
+                    outputs[rel], hashlib.sha256(outputs[rel]).hexdigest())
+                owned_order.append(rel)
+                expected[rel], target_identity[rel] = outputs[rel], identity
+            p115_write(root / rel, outputs[rel], expected=expected[rel],
+                        expected_identity=target_identity[rel], guard=unchanged, published=published)
+        unchanged()
+        if not pkg.applied(root):
+            raise ValueError("P115 applied postcondition failed")
+        if operation == "record":
+            findings = reference.signed_findings(root)
+            if findings:
+                raise ValueError("P115 recorded postcondition failed: " + " | ".join(findings))
+        receipt.update(state="completed", postconditions={"sixSubjects": True, "exactRecords": operation == "record",
+            "signedChain": operation == "record", "capturedInputsAndIndex": True},
+            publications=p115_publications(publications),
+            payloadCapturedAtCompletion=p115_payload_inventory(journal),
+            privatePayloadCapturedAtCompletion=p115_private_inventory(journal))
+        persist(unchanged)
+        # Receipt I/O is precommit too: it must not conceal intervening drift.
+        unchanged()
+        committed = True
+    except BaseException as failure:
+        original = p115_exception(failure)  # Freeze BEFORE any recovery operation.
+        message = f"{type(failure).__name__}: {failure}"
+        diagnostic_errors = []
+        try:
+            print("P115 original exception: " + json.dumps(original))
+        except BaseException as diagnostic_error:
+            diagnostic_errors.append(p115_exception(diagnostic_error))
+        restored, blocked = {}, set()
+        conflicts, recovery_errors = p115_recover(root, before, outputs, before_identity,
+            owned_order, publications, restored=restored, blocked=blocked)
+        observation_prefix = (journal.name if journal is not None else
+            "unstarted-" + datetime.datetime.now(datetime.timezone.utc).strftime("%Y%m%dT%H%M%S%fZ"))
+
+        def observe(label):
+            return p115_recovery_observation(root, before, before_identity, owned_order,
+                restored, blocked, conflicts, recovery_errors, observation_prefix + ":" + label)
+
+        def emit(text):
+            try:
+                print(text)
+            except BaseException as diagnostic_error:
+                diagnostic_errors.append(p115_exception(diagnostic_error))
+                if "failure diagnostic output unavailable" not in conflicts:
+                    conflicts.append("failure diagnostic output unavailable")
+
+        def failure_receipt(observation):
+            receipt.update(state="failed", originalError=message, originalException=original,
+                recoveryConflicts=list(conflicts), recoveryExceptions=list(recovery_errors),
+                diagnosticExceptions=list(diagnostic_errors), recoveryObservation=observation,
+                recoveryPublications={str(rel): identity for rel, identity in restored.items()},
+                publications=p115_publications(publications))
+
+        def report_receipt():
+            try:
+                verified = p115_report_receipt(outcome, receipt_state, completed=False)
+                if not verified["verified"] and not any("failure receipt" in c for c in conflicts):
+                    conflicts.append("failure receipt verification unavailable; no final recovery proof")
+                if verified.get("exception") is not None:
+                    diagnostic_errors.append(verified["exception"])
+            except BaseException as diagnostic_error:
+                diagnostic_errors.append(p115_exception(diagnostic_error))
+                conflicts.append("failure receipt diagnostic unavailable")
+
+        if diagnostic_errors:
+            conflicts.append("original failure diagnostic output unavailable")
+        initial_observation = observe("after-recovery")
+        if outcome is not None:
+            failure_receipt(initial_observation)
+            try:
+                receipt["privatePayloadOnFailure"] = p115_private_inventory(journal)
+            except BaseException as inventory_error:
+                receipt["privatePayloadOnFailure"] = None
+                receipt["privatePayloadInventoryException"] = p115_exception(inventory_error)
+            try:
+                persist()
+            except BaseException as evidence_error:
+                evidence = p115_exception(evidence_error)
+                conflicts.append("failure receipt persistence failed; durable failure update unavailable")
+                diagnostic_errors.append(evidence)
+                emit("P115 secondary evidence error: " + json.dumps(evidence))
+                emit("P115 diagnostic fallback: original exception snapshot printed above; "
+                     "no durable failure update is claimed")
+        for error in recovery_errors:
+            emit("P115 secondary recovery error: " + json.dumps(error))
+        emit("FAILED P115: " + message)
+        if outcome is not None:
+            report_receipt()
+        # Receipt verification and its output are not preservation evidence.
+        # This final read-only observation follows all their effects.
+        final_observation = observe("after-receipt-and-diagnostics")
+        corrected = False
+        if outcome is not None and final_observation["targets"] != initial_observation["targets"]:
+            corrected = True
+            failure_receipt(final_observation)
+            try:
+                persist()  # One corrective update, never a persistence retry loop.
+            except BaseException as evidence_error:
+                diagnostic_errors.append(p115_exception(evidence_error))
+                conflicts.append("corrective failure receipt unavailable; retained observation is historical")
+                emit("P115 secondary corrective evidence error: " + json.dumps(diagnostic_errors[-1]))
+            report_receipt()
+            final_observation = observe("after-one-corrective-receipt")
+        if final_observation["complete"] and not diagnostic_errors:
+            terminal = ("P115 recovery complete; captured preimages preserved at observation "
+                + final_observation["observationId"] + " [" + final_observation["startedAt"]
+                + " .. " + final_observation["endedAt"] + "]; targets=" + str(len(before))
+                + "; exclusive-checkout sequential read-only scope; no atomic/CAS/beyond-window guarantee")
+        else:
+            emit("P115 final recovery observation: " + json.dumps(final_observation))
+            if corrected:
+                emit("P115 retained receipt recovery scope: historical observation; "
+                     "no current preservation claim beyond the final observation window")
+            terminal = "P115 recovery incomplete: " + " | ".join(conflicts)
+        # No receipt, inventory or diagnostic read follows a positive line.
+        emit(terminal)
+        if not isinstance(failure, Exception):
+            raise
+        return 1
+    assert committed  # No governed recovery is permitted beyond this point.
+    try:
+        shutil.rmtree(journal)
+        outcome.unlink()
+    except BaseException as cleanup_error:
+        cleanup = p115_exception(cleanup_error)
+        print("P115 WARNING: recording completed; private cleanup failed: " + json.dumps(cleanup))
+        try:
+            survivors = p115_payload_inventory(journal)
+            receipt.update(payloadSurvivors=survivors, privatePayloadSurvivors=p115_private_inventory(journal))
+        except BaseException as inventory_error:
+            receipt.update(payloadSurvivors=None, payloadInventoryException=p115_exception(inventory_error))
+            print("P115 WARNING: surviving payload inventory unavailable: " + json.dumps(p115_exception(inventory_error)))
+        receipt.update(state="completed", cleanupException=cleanup)
+        try:
+            persist()
+        except BaseException as evidence_error:
+            print("P115 WARNING: cleanup diagnostic persistence failed: " + json.dumps(p115_exception(evidence_error)))
+        p115_report_receipt(outcome, receipt_state, completed=True)
+    if operation == "apply":
+        print("applied the exact five P115 patches as one preflighted batch")
+        return 0
+    print(f"wrote {reference.RECORD.as_posix()}; appended exact P115 aggregate block")
+    print(f"next: review the logical Git transaction, commit, then `git tag -a {tag_for(pkg, version)}` on that commit")
+    return 0
+
+
 def patch_package_applied(root: pathlib.Path, proposed: pathlib.Path,
                           record: pathlib.Path) -> bool:
     """Before its record exists, every patch reverses over the tree; after,
@@ -340,6 +1136,36 @@ def patch_package_applied(root: pathlib.Path, proposed: pathlib.Path,
         cwd=root, capture_output=True).returncode == 0 for patch in patches)
 
 
+GIT_SOURCE_V11_SCOPE = ("the entry's own subject, read authority, fetch, tags and state-directory\n"
+                        "writes, which for a copy-class run admit the one local copy its fetch\n"
+                        "declaration names; nothing wider")
+GIT_SOURCE_V11_SUPERSESSION = (
+    "supersedes version 1.0 of this entry, whose record\n"
+    "(PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-SIGNOFF-v1.0.md) stays the record of\n"
+    "that version and its bytes; revoked only by a later exact owner act naming it")
+GIT_SOURCE_V11_DOES_NOT = (
+    "It approves the registry entry named above at exactly the SHA-256 above and\n"
+    "no other byte: a later edit at that path is unsigned. It is one of the\n"
+    "separate acts a read needs; it gives no observation consent, adopts no\n"
+    "classification or screening policy, widens no network egress and no write to\n"
+    "an observed or external system, and authorizes no implementation. Against\n"
+    "version 1.0 it widens, in a copy-class run alone, local execution and a local\n"
+    "write: the Git processes the entry's fetch declaration names and the copy's\n"
+    "directory its stateDirectoryWrites declaration names; and in that run it reads\n"
+    "that copy in place of the operator's clone. For every launch-consented run it\n"
+    "closes in words the reads Syzygy makes of the operator's clone. Every exclusion\n"
+    "of the acts in force stands.\n")
+GIT_SOURCE_V11_AGGREGATE = (
+    "This sign-off approves the registry entry its dedicated record names, at the\n"
+    "SHA-256 recorded there, under the Scope A extension the owner's selection\n"
+    "names, and supersedes version 1.0. That is one of the separate acts a read\n"
+    "needs. It gives no observation consent and widens no network egress; against\n"
+    "version 1.0 it widens, in a copy-class run alone, local execution and a local\n"
+    "write, and reads that copy in place of the operator's clone, as its record\n"
+    "says. It authorizes no implementation, and a later version of the package is\n"
+    "signed separately.")
+
+
 def real_packages() -> dict[str, Package]:
     missing = lambda: _module("build_pwb_missing_currency_disclosure_scenario")  # noqa: E731
     dismissal = lambda: _module("build_pwb_dismissal_expiry_amendment")  # noqa: E731
@@ -349,8 +1175,16 @@ def real_packages() -> dict[str, Package]:
     tree_framing = lambda: _module("build_pwb_tree_framing_amendment")  # noqa: E731
     dossier = lambda: _module("build_polaris_dossier_local_agent_mode")  # noqa: E731
     git_source = lambda: _module("build_public_git_source_acquisition_local_agent")  # noqa: E731
+    git_source11 = lambda: _module("build_public_git_source_acquisition_local_agent_v1_1")  # noqa: E731
     dossier11 = lambda: _module("build_polaris_dossier_local_agent_mode_v1_1")  # noqa: E731
     dossier12 = lambda: _module("build_polaris_dossier_local_agent_mode_v1_2")  # noqa: E731
+    dossier13 = lambda: _module("build_polaris_dossier_local_agent_mode_v1_3")  # noqa: E731
+    dossier14 = lambda: _module("build_polaris_dossier_local_agent_mode_v1_4")  # noqa: E731
+    dossier15 = lambda: _module("build_polaris_dossier_local_agent_mode_v1_5")  # noqa: E731
+    dossier16 = lambda: _module("build_polaris_dossier_local_agent_mode_v1_6")  # noqa: E731
+    launch_consent = lambda: _module("build_polaris_dossier_launch_consent")  # noqa: E731
+    launch_consent11 = lambda: _module("build_polaris_dossier_launch_consent_v1_1")  # noqa: E731
+    launch_consent12 = lambda: _module("build_polaris_dossier_launch_consent_v1_2")  # noqa: E731
     anchor = lambda: _module("build_pwb_anchor_resolution_amendment")  # noqa: E731
     provenance = lambda: _module("build_three_surface_poc_block_provenance_amendment")  # noqa: E731
     anchor_dir = CANDIDATES / "pwb-anchor-resolution-amendment"
@@ -366,6 +1200,7 @@ def real_packages() -> dict[str, Package]:
     intent_record = DECISIONS / "THREE-SURFACE-POC-GOVERNING-INTENT-AMENDMENT-SIGNOFF-v1.0.md"
     vocabulary = lambda: _module("build_three_surface_poc_vocabulary_epistemic_amendment")  # noqa: E731
     vocabulary_dir = CANDIDATES / "three-surface-poc-vocabulary-epistemic-amendment"
+    reference = lambda: _module("prepare_three_surface_poc_governedby_reference_recording")  # noqa: E731
     consent = lambda: _module("build_cap1_trusted_bootstrap_consent_adoption")  # noqa: E731
     consent_change = pathlib.Path("openspec/changes/cap1-trusted-bootstrap-consent")
 
@@ -592,6 +1427,21 @@ def real_packages() -> dict[str, Package]:
                 "rows against P-84's amended POC-REQ-060, which that arm now reads (the\n"
                 "round-3 raw's note 4). The P-84 package is not edited by this sign-off.\n"),
         ),
+        # Prospective P-115: registration is neither signature nor installation.
+        "three-surface-poc-governedby-reference-amendment": Package(
+            "three-surface-poc-governedby-reference-amendment",
+            "Three-Surface POC governedBy reference amendment",
+            "specification amendment",
+            CANDIDATES / "three-surface-poc-governedby-reference-amendment",
+            "THREE-SURFACE-POC-GOVERNEDBY-REFERENCE-AMENDMENT",
+            lambda root: reference().recording_findings(root),
+            p115_package_apply,
+            lambda root: reference().applied_rows_match(root),
+            subject=CANDIDATES / "three-surface-poc-governedby-reference-amendment" /
+                    "THREE-SURFACE-POC-GOVERNEDBY-REFERENCE-AMENDMENT-MANIFEST.txt",
+            extension=POC_EXTENSION_REL,
+            review_alias="build_three_surface_poc_governedby_reference_amendment.py",
+        ),
         # P-108, cleared by its round-2 notes-only raw; signed 2026-10-15
         # under the POC extension (its item 1 reaches any package patching
         # the POC change).
@@ -693,6 +1543,36 @@ def real_packages() -> dict[str, Package]:
             subject=CANDIDATES / "dossier-local-agent-acts/DOSSIER-LOCAL-AGENT-SITTING-MANIFEST.txt",
             installed=pathlib.Path(".syzygy/governance/declarations/adapter-registry/"
                                    "POLARIS-PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-CANDIDATE.json"),
+            # Once v1.1 is recorded, v1.0's record SHA-256 line is held to the
+            # bytes v1.1's builder takes as its base (round-1 Finding 3).
+            replaced_bytes=lambda root: (root / git_source11().BASE).read_bytes(),
+        ),
+        # Version 1.1 replaces the installed v1.0 entry (the copy step of
+        # launch-consent v1.2): its own candidate directory and builder, under
+        # the same key, record stem and tag series. The review head binds the
+        # proposed entry's bytes; the selection must again name the Scope A
+        # extension, as every registry-entry sign-off's must.
+        "public-git-source-acquisition-local-agent@1.1": Package(
+            "public-git-source-acquisition-local-agent",
+            "Public Git source acquisition, local-agent version",
+            "registry entry",
+            CANDIDATES / "public-git-source-acquisition-local-agent-v1-1",
+            "PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT",
+            lambda root: git_source11().check(root),
+            lambda root: git_source11().apply(root),
+            lambda root: git_source11().applied(root),
+            subject=CANDIDATES / "public-git-source-acquisition-local-agent-v1-1/proposed/"
+                    "POLARIS-PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-CANDIDATE.json",
+            installed=pathlib.Path(".syzygy/governance/declarations/adapter-registry/"
+                                   "POLARIS-PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-CANDIDATE.json"),
+            review_alias="build_public_git_source_acquisition_local_agent_v1_1.py",
+            # The fixed scope, supersession and "does not" text is false for
+            # this version (round-1 Finding 2): it admits, in a copy-class run,
+            # Git processes and the copy's directory, and it replaces v1.0.
+            record_scope=GIT_SOURCE_V11_SCOPE,
+            record_supersession=GIT_SOURCE_V11_SUPERSESSION,
+            record_does_not=GIT_SOURCE_V11_DOES_NOT,
+            record_aggregate_scope=GIT_SOURCE_V11_AGGREGATE,
         ),
         # Version 1.1 patches the installed v1.0: its own candidate directory,
         # builder and reviewed bytes, under the same key, record stem and tag
@@ -729,6 +1609,119 @@ def real_packages() -> dict[str, Package]:
             subject=pathlib.Path("openspec/changes/polaris-dossier-local-agent-mode/"
                                  "specs/polaris-generation/spec.md"),
             subject_bytes=lambda root: dossier12().subject_bytes(root),
+        ),
+        # Version 1.3 (presentation elements) patches the installed, signed
+        # v1.2 the same way, and offers no option.
+        "polaris-dossier-local-agent-mode@1.3": Package(
+            "polaris-dossier-local-agent-mode",
+            "Polaris dossier local-agent mode",
+            "specification delta",
+            CANDIDATES / "polaris-dossier-local-agent-mode-v1-3",
+            "POLARIS-DOSSIER-LOCAL-AGENT-MODE",
+            lambda root: dossier13().check(root),
+            lambda root: dossier13().apply(root),
+            lambda root: dossier13().applied(root),
+            also=(pathlib.Path("openspec/changes/polaris-dossier-local-agent-mode"),),
+            subject=pathlib.Path("openspec/changes/polaris-dossier-local-agent-mode/"
+                                 "specs/polaris-generation/spec.md"),
+            subject_bytes=lambda root: dossier13().subject_bytes(root),
+        ),
+        # Version 1.4 extends the signed v1.3 layer without changing the
+        # recorder's existing review-binding or candidate-drift semantics.
+        "polaris-dossier-local-agent-mode@1.4": Package(
+            "polaris-dossier-local-agent-mode",
+            "Polaris dossier local-agent mode",
+            "specification delta",
+            CANDIDATES / "polaris-dossier-local-agent-mode-v1-4",
+            "POLARIS-DOSSIER-LOCAL-AGENT-MODE",
+            lambda root: dossier14().check(root),
+            lambda root: dossier14().apply(root),
+            lambda root: dossier14().applied(root),
+            also=(pathlib.Path("openspec/changes/polaris-dossier-local-agent-mode"),),
+            subject=pathlib.Path("openspec/changes/polaris-dossier-local-agent-mode/"
+                                 "specs/polaris-generation/spec.md"),
+            subject_bytes=lambda root: dossier14().subject_bytes(root),
+        ),
+        # Version 1.5 extends the signed v1.4 layer the same way.
+        "polaris-dossier-local-agent-mode@1.5": Package(
+            "polaris-dossier-local-agent-mode",
+            "Polaris dossier local-agent mode",
+            "specification delta",
+            CANDIDATES / "polaris-dossier-local-agent-mode-v1-5",
+            "POLARIS-DOSSIER-LOCAL-AGENT-MODE",
+            lambda root: dossier15().check(root),
+            lambda root: dossier15().apply(root),
+            lambda root: dossier15().applied(root),
+            also=(pathlib.Path("openspec/changes/polaris-dossier-local-agent-mode"),),
+            subject=pathlib.Path("openspec/changes/polaris-dossier-local-agent-mode/"
+                                 "specs/polaris-generation/spec.md"),
+            subject_bytes=lambda root: dossier15().subject_bytes(root),
+        ),
+        # Version 1.6 extends the signed v1.5 layer the same way.
+        "polaris-dossier-local-agent-mode@1.6": Package(
+            "polaris-dossier-local-agent-mode",
+            "Polaris dossier local-agent mode",
+            "specification delta",
+            CANDIDATES / "polaris-dossier-local-agent-mode-v1-6",
+            "POLARIS-DOSSIER-LOCAL-AGENT-MODE",
+            lambda root: dossier16().check(root),
+            lambda root: dossier16().apply(root),
+            lambda root: dossier16().applied(root),
+            also=(pathlib.Path("openspec/changes/polaris-dossier-local-agent-mode"),),
+            subject=pathlib.Path("openspec/changes/polaris-dossier-local-agent-mode/"
+                                 "specs/polaris-generation/spec.md"),
+            subject_bytes=lambda root: dossier16().subject_bytes(root),
+        ),
+        # Launch-time consent (syzygy-pdja.21): a new change whose two ADDED
+        # requirements install like the local-agent mode's v1.0.
+        "polaris-dossier-launch-consent": Package(
+            "polaris-dossier-launch-consent",
+            "Polaris dossier launch-time consent",
+            "specification delta",
+            CANDIDATES / "polaris-dossier-launch-consent",
+            "POLARIS-DOSSIER-LAUNCH-CONSENT",
+            lambda root: launch_consent().check(root),
+            lambda root: launch_consent().apply(root),
+            lambda root: launch_consent().applied(root),
+            also=(pathlib.Path("openspec/changes/polaris-dossier-launch-consent"),),
+            subject=pathlib.Path("openspec/changes/polaris-dossier-launch-consent/"
+                                 "proposed/polaris-generation/spec.md"),
+        ),
+        # Launch-consent v1.1 patches the installed, signed v1.0 (the owner's
+        # name-on-branch warning, syzygy-pdja.23-confidence answer C): its own
+        # candidate directory, builder and reviewed bytes, under the same key,
+        # record stem and tag series, and no option.
+        "polaris-dossier-launch-consent@1.1": Package(
+            "polaris-dossier-launch-consent",
+            "Polaris dossier launch-time consent",
+            "specification delta",
+            CANDIDATES / "polaris-dossier-launch-consent-v1-1",
+            "POLARIS-DOSSIER-LAUNCH-CONSENT",
+            lambda root: launch_consent11().check(root),
+            lambda root: launch_consent11().apply(root),
+            lambda root: launch_consent11().applied(root),
+            also=(pathlib.Path("openspec/changes/polaris-dossier-launch-consent"),),
+            subject=pathlib.Path("openspec/changes/polaris-dossier-launch-consent/"
+                                 "specs/polaris-generation/spec.md"),
+            subject_bytes=lambda root: launch_consent11().subject_bytes(root),
+        ),
+        # Launch-consent v1.2 patches the installed, signed v1.1 (the owner's
+        # 2026-11-09 answers: existing full clones, any https or ssh locator):
+        # its own candidate directory, builder and reviewed bytes, under the
+        # same key, record stem and tag series, and no option.
+        "polaris-dossier-launch-consent@1.2": Package(
+            "polaris-dossier-launch-consent",
+            "Polaris dossier launch-time consent",
+            "specification delta",
+            CANDIDATES / "polaris-dossier-launch-consent-v1-2",
+            "POLARIS-DOSSIER-LAUNCH-CONSENT",
+            lambda root: launch_consent12().check(root),
+            lambda root: launch_consent12().apply(root),
+            lambda root: launch_consent12().applied(root),
+            also=(pathlib.Path("openspec/changes/polaris-dossier-launch-consent"),),
+            subject=pathlib.Path("openspec/changes/polaris-dossier-launch-consent/"
+                                 "specs/polaris-generation/spec.md"),
+            subject_bytes=lambda root: launch_consent12().subject_bytes(root),
         ),
     }
 
@@ -1117,30 +2110,40 @@ DIRECTION_NOTE = (
 
 INSTANT_RE = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$")
 RECORDED_RE = re.compile(r"^Recorded at \(UTC\): (\S+)$", re.MULTILINE)
+INSTALLED_SHA_LINE_RE = re.compile(r"^Installed entry SHA-256: ([0-9a-f]{64})$", re.MULTILINE)
 
 
-def installed_lines(pkg: Package, root: pathlib.Path | None, instant: str | None) -> str:
+SCOPE_FIXED = "the entry's own subject and read authority, nothing wider"
+SUPERSESSION_FIXED = "supersedes nothing; revoked only by a later\nexact owner act naming it"
+
+
+def installed_lines(pkg: Package, root: pathlib.Path | None, instant: str | None,
+                    installed_sha: str | None = None) -> str:
     """For a package that installs a registry entry, the RFC3-16(b) binding set
     the tag alone does not carry: the entry and the SHA-256 of its installed
     bytes (item 3), the act type (4), the instant (6), the scope (7), the
     supersession (8), the provenance state and the explicit A1 absence (9).
     RFC4-7 honours an entry only under RFC3-16(a), and RFC3-16(b) makes a
-    record that omits item 9 invalid."""
+    record that omits item 9 invalid.
+
+    ``installed_sha`` is given only by ``check`` for a version a later
+    recorded version has replaced at the same path: those bytes are no longer
+    on disk, so the record's own SHA-256 is regenerated, and the later
+    version's builder answers for them as its base."""
     if pkg.installed is None:
         return ""
     path = (root or ROOT) / pkg.installed
-    sha = beh.digest(path.read_bytes()) if path.is_file() else "absent"
+    sha = installed_sha or (beh.digest(path.read_bytes()) if path.is_file() else "absent")
     return (f"Recorded at (UTC): {instant}\n\n"
             "Act type: `adopt-registry-entry`\n\n"
             "Project identity: `project:syzygy`\n\n"
             f"Installed entry: {pkg.installed.as_posix()}\n\n"
             f"Installed entry SHA-256: {sha}\n\n"
-            "Scope: the entry's own subject and read authority, nothing wider\n\n"
+            f"Scope: {pkg.record_scope or SCOPE_FIXED}\n\n"
             f"Scope A extension: the owner's selection quoted above names it "
             f"(\"{SCOPE_A_EXTENSION}\"); the extension is a plain owner direction "
             "and this record is its only record\n\n"
-            "Supersession / revocation: supersedes nothing; revoked only by a later\n"
-            "exact owner act naming it\n\n"
+            f"Supersession / revocation: {pkg.record_supersession or SUPERSESSION_FIXED}\n\n"
             "Provenance state: `owner-adopted (bootstrap, uncorrelated)` — state (1),\n"
             "the owner's option selection quoted above\n\n"
             "A1 audit-record identity (RFC3-16(b) item 9): **explicitly absent**\n\n")
@@ -1151,6 +2154,8 @@ def does_not(pkg: Package) -> str:
         return ("It authorizes no implementation of the signed semantics, widens no consent,\n"
                 "read, write or egress, and approves no registry or policy byte. Every\n"
                 "exclusion of the acts in force stands.\n")
+    if pkg.record_does_not is not None:
+        return pkg.record_does_not
     return ("It approves the registry entry named above at exactly the SHA-256 above and\n"
             "no other byte: a later edit at that path is unsigned. It is one of the\n"
             "separate acts a read needs; it gives no observation consent, adopts no\n"
@@ -1183,6 +2188,9 @@ def note_section(pkg: Package) -> str:
 
 def checked_phrase(pkg: Package) -> str:
     """How the record says the package was checked and applied."""
+    if pkg.key == "three-surface-poc-governedby-reference-amendment":
+        return ("that the frozen P115 builder check passed before the exact five patches were applied\n"
+                "as one preflighted Git batch through the P115 recording adapter.")
     if pkg.applied_subjects:
         return ("that the package's checks passed (every patch applies to the signed\n"
                 "bytes, and the dependency generator over the patched specification\n"
@@ -1225,7 +2233,8 @@ def render_record(pkg: Package, version: str, date: str, quote: str, review: str
                   commit: str, verdict: str, disposition: str | None,
                   options: frozenset[str] = frozenset(), *,
                   root: pathlib.Path | None = None, instant: str | None = None,
-                  rows: tuple[tuple[str, str], ...] = ()) -> str:
+                  rows: tuple[tuple[str, str], ...] = (),
+                  installed_sha: str | None = None) -> str:
     return f"""# {pkg.title} — version-tagged sign-off v{version}
 
 Date: {date}
@@ -1250,7 +2259,7 @@ Review verdict: {verdict}
 
 Disposition: {disposition or "none"}
 
-{installed_lines(pkg, root, instant)}{options_line(pkg, options)}{extension_line(pkg)}{DIRECTION_NOTE}
+{installed_lines(pkg, root, instant, installed_sha)}{options_line(pkg, options)}{extension_line(pkg)}{DIRECTION_NOTE}
 
 ## What this records
 
@@ -1274,6 +2283,8 @@ def aggregate_scope(pkg: Package) -> str:
     if pkg.installed is None:
         return ("This sign-off authorizes no implementation, widens no consent, read, write or\n"
                 "egress, and a later version of the package is signed separately.")
+    if pkg.record_aggregate_scope is not None:
+        return pkg.record_aggregate_scope
     return ("This sign-off approves the registry entry its dedicated record names, at the\n"
             "SHA-256 recorded there, under the Scope A extension the owner's selection\n"
             "names. That is one of the separate acts a read needs. It gives no observation\n"
@@ -1290,11 +2301,15 @@ def render_aggregate(pkg: Package, version: str, date: str, review: str,
     review_row = f"`{review}`: `{verdict}`"
     if disposition:
         review_row += f"; disposition: `{disposition}`"
+    selection = ("The owner signed off version " + version + " by selecting an option in the\n"
+                 "Claude Code CLI (quoted in the dedicated record).")
+    if pkg.key == "three-surface-poc-governedby-reference-amendment":
+        selection = (f"The owner signed off version {version} by selecting an option in a structured\n"
+                     "question naming this package and version (quoted in the dedicated record).")
     return f"""{start}
 ## Versioned sign-off — {pkg.key} — v{version} — recorded {date}
 
-The owner signed off version {version} by selecting an option in the
-Claude Code CLI (quoted in the dedicated record).
+{selection}
 
 | | |
 |---|---|
@@ -1343,6 +2358,8 @@ def parse_options(pkg: Package, text: str) -> frozenset[str]:
 def record(root: pathlib.Path, pkg: Package, version: str, date: str, quote: str,
            review_rel: str, disposition_rel: str | None,
            options: frozenset[str] = frozenset(), *, instant: str | None = None) -> int:
+    if pkg.key == "three-surface-poc-governedby-reference-amendment":
+        return p115_record(root, pkg, version, date, quote, review_rel, disposition_rel, options)
     if instant is None:
         instant = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     try:
@@ -1395,6 +2412,19 @@ def check(root: pathlib.Path, pkg: Package, version: str) -> int:
     if not VERSION_RE.fullmatch(version):
         print(f"FAILED: version {version!r} is not major.minor")
         return 1
+    if pkg.key == "three-surface-poc-governedby-reference-amendment":
+        reference = _module("prepare_three_surface_poc_governedby_reference_recording")
+        state, findings = reference.family_state(root)
+        if version != reference.VERSION:
+            findings.append("P115 checker supports only exact canonical v1.0")
+        if not findings and state != "ABSENT":
+            try:
+                findings = reference.binding_findings(root)
+            except (OSError, ValueError, KeyError, TypeError, subprocess.CalledProcessError) as exc:
+                findings = [str(exc)]
+        if findings:
+            print("FAILED: " + " | ".join(findings))
+            return 1
     rec = root / record_rel(pkg, version)
     copies = aggregate_copies(root, pkg, version)
     if not rec.exists() and not copies:
@@ -1419,16 +2449,31 @@ def check(root: pathlib.Path, pkg: Package, version: str) -> int:
             if len(found) != 1:
                 raise ValueError(f"record carries {len(found)} 'Recorded at (UTC)' lines, not 1")
             instant = found[0]
+        versions = recorded_versions(root, pkg)
+        latest = versions[-1] == tuple(int(x) for x in version.split("."))
+        # A registry entry a later recorded version replaced at the same path:
+        # regenerate the record's own SHA-256, since those bytes are no longer
+        # installed; the later version's builder answers for them as its base.
+        replaced_sha = None
+        if pkg.installed is not None and not latest:
+            shas = INSTALLED_SHA_LINE_RE.findall(text)
+            if len(shas) != 1:
+                raise ValueError(f"record carries {len(shas)} 'Installed entry SHA-256' lines, not 1")
+            replaced_sha = shas[0]
+            if pkg.replaced_bytes is None:
+                raise ValueError("a later version replaced this entry, and this package names no "
+                                 "bytes to hold the record's SHA-256 to")
+            if beh.digest(pkg.replaced_bytes(root)) != replaced_sha:
+                raise ValueError("the record's installed SHA-256 is not the SHA-256 of the bytes the "
+                                 "later version takes as its base")
         if text != render_record(pkg, version, f["Date"], f["Owner selection"], f["Review"],
                                  commit, verdict, disposition, parse_options(pkg, text),
                                  root=root, instant=instant,
-                                 rows=recorded_rows(pkg, text)):
+                                 rows=recorded_rows(pkg, text), installed_sha=replaced_sha):
             raise ValueError("dedicated record differs from its regeneration")
         block = render_aggregate(pkg, version, f["Date"], f["Review"], verdict, disposition)
         if aggregate_text(root).count(block) != 1:
             raise ValueError("aggregate block differs from its regeneration")
-        versions = recorded_versions(root, pkg)
-        latest = versions[-1] == tuple(int(x) for x in version.split("."))
         if latest and not pkg.applied(root):
             raise ValueError("the latest signed version is not applied to the tree")
         if latest and pkg.applied_options and (
@@ -2181,6 +3226,150 @@ def selftest() -> int:
                     and real12.candidate == v12.CANDIDATE and real12.subject == v12.SPEC
                     and real12.subject_bytes is not None and real12.options == ()
                     and real12.apply_with is None and real12.applied_options is None))
+    real13 = packages["polaris-dossier-local-agent-mode@1.3"]
+    v13 = _module("build_polaris_dossier_local_agent_mode_v1_3")
+    results.append(("the real v1.3 entry shares v1.0's key and record stem, binds the computed "
+                    "subject in its own candidate directory and offers no option",
+                    package_for(packages, real.key, "1.3") is real13
+                    and real13.key == real.key and real13.record_stem == real.record_stem
+                    and real13.candidate == v13.CANDIDATE and real13.subject == v13.SPEC
+                    and real13.subject_bytes is not None and real13.options == ()
+                    and real13.apply_with is None and real13.applied_options is None))
+    real14 = packages["polaris-dossier-local-agent-mode@1.4"]
+    v14 = _module("build_polaris_dossier_local_agent_mode_v1_4")
+    with tempfile.TemporaryDirectory() as temporary:
+        import contextlib
+        import io
+        fixture_root = pathlib.Path(temporary)
+        v14._fixture(fixture_root)
+        expected_subject = v14.subject_bytes(fixture_root)
+        try:
+            routed = (real14.check(fixture_root) == []
+                      and real14.subject_bytes(fixture_root) == expected_subject
+                      and not real14.applied(fixture_root))
+            with contextlib.redirect_stdout(io.StringIO()):
+                routed = routed and real14.apply(fixture_root) == 0
+            routed = (routed and real14.applied(fixture_root)
+                      and (fixture_root / v14.SPEC).read_bytes() == expected_subject
+                      and v14.FIVE_LINKS in (fixture_root / v14.STATUS).read_text())
+        except ValueError:
+            routed = False  # A predecessor subject callback cannot apply to this layer.
+    results.append(("the real v1.4 entry extends the existing no-option spec-binding route",
+                    package_for(packages, real.key, "1.4") is real14
+                    and real14.key == real.key and real14.record_stem == real.record_stem
+                    and real14.candidate == v14.CANDIDATE and real14.subject == v14.SPEC
+                    and real14.subject_bytes is not None and real14.options == ()
+                    and real14.apply_with is None and real14.applied_options is None
+                    and routed))
+    real15 = packages["polaris-dossier-local-agent-mode@1.5"]
+    v15 = _module("build_polaris_dossier_local_agent_mode_v1_5")
+    with tempfile.TemporaryDirectory() as temporary:
+        import contextlib
+        import io
+        fixture_root = pathlib.Path(temporary)
+        v15._fixture(fixture_root)
+        expected_subject = v15.subject_bytes(fixture_root)
+        try:
+            routed = (real15.check(fixture_root) == []
+                      and real15.subject_bytes(fixture_root) == expected_subject
+                      and not real15.applied(fixture_root))
+            with contextlib.redirect_stdout(io.StringIO()):
+                routed = routed and real15.apply(fixture_root) == 0
+            routed = (routed and real15.applied(fixture_root)
+                      and (fixture_root / v15.SPEC).read_bytes() == expected_subject
+                      and v15.SIX_LINKS in (fixture_root / v15.STATUS).read_text())
+        except ValueError:
+            routed = False  # A predecessor subject callback cannot apply to this layer.
+    results.append(("the real v1.5 entry extends the existing no-option spec-binding route",
+                    package_for(packages, real.key, "1.5") is real15
+                    and real15.key == real.key and real15.record_stem == real.record_stem
+                    and real15.candidate == v15.CANDIDATE and real15.subject == v15.SPEC
+                    and real15.subject_bytes is not None and real15.options == ()
+                    and real15.apply_with is None and real15.applied_options is None
+                    and routed))
+    real16 = packages["polaris-dossier-local-agent-mode@1.6"]
+    v16 = _module("build_polaris_dossier_local_agent_mode_v1_6")
+    with tempfile.TemporaryDirectory() as temporary:
+        import contextlib
+        import io
+        fixture_root = pathlib.Path(temporary)
+        v16._fixture(fixture_root)
+        expected_subject = v16.subject_bytes(fixture_root)
+        try:
+            routed = (real16.check(fixture_root) == []
+                      and real16.subject_bytes(fixture_root) == expected_subject
+                      and not real16.applied(fixture_root))
+            with contextlib.redirect_stdout(io.StringIO()):
+                routed = routed and real16.apply(fixture_root) == 0
+            routed = (routed and real16.applied(fixture_root)
+                      and (fixture_root / v16.SPEC).read_bytes() == expected_subject
+                      and v16.SEVEN_LINKS in (fixture_root / v16.STATUS).read_text())
+        except ValueError:
+            routed = False  # A predecessor subject callback cannot apply to this layer.
+    results.append(("the real v1.6 entry extends the existing no-option spec-binding route",
+                    package_for(packages, real.key, "1.6") is real16
+                    and real16.key == real.key and real16.record_stem == real.record_stem
+                    and real16.candidate == v16.CANDIDATE and real16.subject == v16.SPEC
+                    and real16.subject_bytes is not None and real16.options == ()
+                    and real16.apply_with is None and real16.applied_options is None
+                    and routed))
+    real_lc = packages["polaris-dossier-launch-consent"]
+    real_lc11 = packages["polaris-dossier-launch-consent@1.1"]
+    lc11 = _module("build_polaris_dossier_launch_consent_v1_1")
+    with tempfile.TemporaryDirectory() as temporary:
+        import contextlib
+        import io
+        fixture_root = pathlib.Path(temporary)
+        lc11._fixture(fixture_root)
+        expected_subject = lc11.subject_bytes(fixture_root)
+        try:
+            routed = (real_lc11.check(fixture_root) == []
+                      and real_lc11.subject_bytes(fixture_root) == expected_subject
+                      and not real_lc11.applied(fixture_root))
+            with contextlib.redirect_stdout(io.StringIO()):
+                routed = routed and real_lc11.apply(fixture_root) == 0
+            routed = (routed and real_lc11.applied(fixture_root)
+                      and (fixture_root / lc11.SPEC).read_bytes() == expected_subject
+                      and lc11.BOTH_LINKS in (fixture_root / lc11.STATUS).read_text())
+        except ValueError:
+            routed = False
+    results.append(("the real launch-consent v1.1 entry shares v1.0's key and record stem, "
+                    "binds the computed subject in its own candidate directory and offers no option",
+                    package_for(packages, real_lc.key, "1.1") is real_lc11
+                    and package_for(packages, real_lc.key, "1.0") is real_lc
+                    and real_lc11.key == real_lc.key and real_lc11.record_stem == real_lc.record_stem
+                    and real_lc11.candidate == lc11.CANDIDATE and real_lc11.subject == lc11.SPEC
+                    and real_lc11.subject_bytes is not None and real_lc11.options == ()
+                    and real_lc11.apply_with is None and real_lc11.applied_options is None
+                    and routed))
+    real_lc12 = packages["polaris-dossier-launch-consent@1.2"]
+    lc12 = _module("build_polaris_dossier_launch_consent_v1_2")
+    with tempfile.TemporaryDirectory() as temporary:
+        import contextlib
+        import io
+        fixture_root = pathlib.Path(temporary)
+        lc12._fixture(fixture_root)
+        expected_subject = lc12.subject_bytes(fixture_root)
+        try:
+            routed = (real_lc12.check(fixture_root) == []
+                      and real_lc12.subject_bytes(fixture_root) == expected_subject
+                      and not real_lc12.applied(fixture_root))
+            with contextlib.redirect_stdout(io.StringIO()):
+                routed = routed and real_lc12.apply(fixture_root) == 0
+            routed = (routed and real_lc12.applied(fixture_root)
+                      and (fixture_root / lc12.SPEC).read_bytes() == expected_subject
+                      and lc12.THREE_LINKS in (fixture_root / lc12.STATUS).read_text())
+        except ValueError:
+            routed = False
+    results.append(("the real launch-consent v1.2 entry shares v1.0's key and record stem, "
+                    "binds the computed subject in its own candidate directory and offers no option",
+                    package_for(packages, real_lc.key, "1.2") is real_lc12
+                    and package_for(packages, real_lc.key, "1.1") is real_lc11
+                    and real_lc12.key == real_lc.key and real_lc12.record_stem == real_lc.record_stem
+                    and real_lc12.candidate == lc12.CANDIDATE and real_lc12.subject == lc12.SPEC
+                    and real_lc12.subject_bytes is not None and real_lc12.options == ()
+                    and real_lc12.apply_with is None and real_lc12.applied_options is None
+                    and routed))
     taken: list[frozenset[str]] = []
 
     def apply_with(root, options):
@@ -2357,11 +3546,119 @@ def selftest() -> int:
                         no_extension == 1 and off_date == 1 and wrote == 0 and checked == 0 and drifted == 1))
         results.append(("--check refuses a registry-entry record whose quote no longer names the "
                         "Scope A extension", requoted == 1))
+        # A later version replaces the entry at the same path: v1.0's record
+        # still regenerates (its own SHA-256), and v1.1's binds the new bytes.
+        (tmp / entry).write_text('{"entry": 1}\n')
+
+        def install2(root):
+            (root / entry).write_text('{"entry": 2}\n')
+            return 0
+        reg = dataclasses_replace(reg, replaced_bytes=lambda root: b'{"entry": 1}\n')
+        reg2 = dataclasses_replace(reg, apply=install2,
+                                   applied=lambda root: (root / entry).read_text() == '{"entry": 2}\n',
+                                   record_scope="SCOPE-V11", record_supersession="SUPERSEDES-V10",
+                                   record_does_not="DOES-NOT-V11\n", record_aggregate_scope="AGG-V11")
+        with contextlib.redirect_stdout(io.StringIO()):
+            wrote2 = record(tmp, reg2, "1.1", "2026-10-03", "Extend Scope A and sign v1.1", STUB_REVIEW,
+                            None, instant="2026-10-03T09:30:00Z")
+            old_ok = check(tmp, reg, "1.0")
+            new_ok = check(tmp, reg2, "1.1")
+            kept = (tmp / record_rel(reg, "1.0")).read_text(encoding="utf-8")
+            v11_text = (tmp / record_rel(reg2, "1.1")).read_text(encoding="utf-8")
+            v11_block = render_aggregate(reg2, "1.1", "2026-10-03", STUB_REVIEW, "CONFIRM", None)
+            # Round-1 Finding 3, probe B: a forged SHA-256 line in the replaced
+            # record, regenerated consistently, must fail.
+            rec10 = tmp / record_rel(reg, "1.0")
+            rec10.write_text(kept.replace(beh.digest(b'{"entry": 1}\n'), "0" * 64), encoding="utf-8")
+            forged = check(tmp, reg, "1.0")
+            rec10.write_text(kept, encoding="utf-8")
+            unheld = check(tmp, dataclasses_replace(reg, replaced_bytes=None), "1.0")
+            (tmp / entry).write_text('{"entry": 3}\n')
+            new_drift = check(tmp, reg2, "1.1")
+        results.append(("a registry entry replaced by a recorded later version keeps its earlier "
+                        "record checkable by that record's own SHA-256, and the later record binds "
+                        "the installed bytes",
+                        wrote2 == 0 and old_ok == 0 and new_ok == 0 and new_drift == 1
+                        and "Installed entry SHA-256: " + beh.digest(b'{"entry": 1}\n') in kept))
+        results.append(("a replaced version's record with a forged SHA-256 line fails --check, held to "
+                        "the later version's base bytes; one naming no such bytes fails closed",
+                        forged == 1 and unheld == 1))
+        results.append(("a version's own scope, supersession and does-not text replace the fixed lines "
+                        "in its record and aggregate, and the fixed lines stay for a version naming none",
+                        "Scope: SCOPE-V11\n" in v11_text and "Supersession / revocation: SUPERSEDES-V10\n" in v11_text
+                        and "DOES-NOT-V11\n" in v11_text and "nothing wider" not in v11_text
+                        and "supersedes nothing" not in v11_text and "widens no egress, write" not in v11_text
+                        and "AGG-V11" in v11_block and "widens no write, egress" not in v11_block
+                        and "nothing wider" in kept and "supersedes nothing" in kept
+                        and "widens no egress, write or execution" in kept))
     real_reg = real_packages()["public-git-source-acquisition-local-agent"]
     results.append(("the real registry package installs its builder's entry and binds the sitting manifest",
                     real_reg.installed == _module("build_public_git_source_acquisition_local_agent").INSTALLED
                     and real_reg.subject == _module(
                         "build_public_git_source_acquisition_local_agent").SITTING_MANIFEST))
+    all_real = real_packages()
+    real_reg11 = all_real["public-git-source-acquisition-local-agent@1.1"]
+    gs11 = _module("build_public_git_source_acquisition_local_agent_v1_1")
+    with tempfile.TemporaryDirectory() as temporary:
+        import contextlib
+        import io
+        fixture_root = gs11._fixture(pathlib.Path(temporary))
+        try:
+            routed = real_reg11.check(fixture_root) == [] and not real_reg11.applied(fixture_root)
+            with contextlib.redirect_stdout(io.StringIO()):
+                routed = routed and real_reg11.apply(fixture_root) == 0
+            routed = (routed and real_reg11.applied(fixture_root)
+                      and (fixture_root / gs11.INSTALLED).read_bytes()
+                      == (fixture_root / gs11.PROPOSED).read_bytes())
+        except (ValueError, gs11.Refusal):
+            routed = False
+    results.append(("the real registry entry v1.1 shares v1.0's key, record stem and installed path, "
+                    "binds its proposed entry in its own candidate directory and routes to its builder",
+                    package_for(all_real, real_reg.key, "1.1") is real_reg11
+                    and package_for(all_real, real_reg.key, "1.0") is all_real[real_reg.key]
+                    and real_reg11.key == real_reg.key and real_reg11.record_stem == real_reg.record_stem
+                    and real_reg11.installed == real_reg.installed == gs11.INSTALLED
+                    and real_reg11.candidate == gs11.CANDIDATE and real_reg11.subject == gs11.PROPOSED
+                    and real_reg11.subject_bytes is None and real_reg11.options == ()
+                    and routed))
+    results.append(("the real registry entry v1.1 carries its own scope, supersession and does-not text, "
+                    "and v1.0 holds a replaced record to v1.1's base bytes while v1.0 renders the fixed text",
+                    # Round-2 Finding 4: the four texts the signed record will
+                    # carry, pinned in full as literals, so that no edit to them
+                    # passes unseen; the review brief names them as reviewed bytes.
+                    real_reg11.record_scope == (
+                        "the entry's own subject, read authority, fetch, tags and state-directory\n"
+                        "writes, which for a copy-class run admit the one local copy its fetch\n"
+                        "declaration names; nothing wider")
+                    and real_reg11.record_supersession == (
+                        "supersedes version 1.0 of this entry, whose record\n"
+                        "(PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-SIGNOFF-v1.0.md) stays the record of\n"
+                        "that version and its bytes; revoked only by a later exact owner act naming it")
+                    and real_reg11.record_does_not == (
+                        "It approves the registry entry named above at exactly the SHA-256 above and\n"
+                        "no other byte: a later edit at that path is unsigned. It is one of the\n"
+                        "separate acts a read needs; it gives no observation consent, adopts no\n"
+                        "classification or screening policy, widens no network egress and no write to\n"
+                        "an observed or external system, and authorizes no implementation. Against\n"
+                        "version 1.0 it widens, in a copy-class run alone, local execution and a local\n"
+                        "write: the Git processes the entry's fetch declaration names and the copy's\n"
+                        "directory its stateDirectoryWrites declaration names; and in that run it reads\n"
+                        "that copy in place of the operator's clone. For every launch-consented run it\n"
+                        "closes in words the reads Syzygy makes of the operator's clone. Every exclusion\n"
+                        "of the acts in force stands.\n")
+                    and real_reg11.record_aggregate_scope == (
+                        "This sign-off approves the registry entry its dedicated record names, at the\n"
+                        "SHA-256 recorded there, under the Scope A extension the owner's selection\n"
+                        "names, and supersedes version 1.0. That is one of the separate acts a read\n"
+                        "needs. It gives no observation consent and widens no network egress; against\n"
+                        "version 1.0 it widens, in a copy-class run alone, local execution and a local\n"
+                        "write, and reads that copy in place of the operator's clone, as its record\n"
+                        "says. It authorizes no implementation, and a later version of the package is\n"
+                        "signed separately.")
+                    and real_reg.record_scope is None and real_reg.record_supersession is None
+                    and real_reg.record_does_not is None and real_reg.record_aggregate_scope is None
+                    and real_reg.replaced_bytes is not None
+                    and real_reg.replaced_bytes(ROOT) == (ROOT / gs11.BASE).read_bytes()))
 
     # A declared prior-round recap closes the findings section (P-108's
     # round-2 raw): read before it, and fail closed on anything inside it.

@@ -1,0 +1,1 @@
+{"commit": "455c60ea", "exit": 0, "summary": {"numTotalTests": 50, "numPassedTests": 49, "numFailedTests": 0, "numPendingTests": 1, "numTodoTests": 0, "numTotalTestSuites": 21, "numFailedTestSuites": 0, "success": true}, "failed": 0, "broken": 0, "load": [["36.95", "37.64", "39.16"], ["40.43", "38.38", "39.37"]], "seconds": 21}

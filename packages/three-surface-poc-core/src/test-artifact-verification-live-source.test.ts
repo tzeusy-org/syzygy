@@ -108,6 +108,7 @@ function isLiteralKey(node: ts.Expression): boolean {
 /** Workspace packages in the closure, followed into their sources. */
 const WORKSPACE_PACKAGES: Readonly<Record<string, string>> = {
   '@syzygy/cap1-core': '../../cap1-core/src/index.ts',
+  '@syzygy/support': '../../support/src/index.ts',
 };
 
 /** The only members of `process` the closure may touch. */
@@ -268,7 +269,7 @@ describe('the live verification test, and every module it imports, runs no obser
     const { files, violations } = closure(LIVE);
     // Denominator: the closure must actually include the modules that hold
     // process starts, or the check proves nothing about them.
-    for (const expected of [LIVE, 'model.ts', 'test-artifact-verification.ts', 'worker-change-observation.ts', 'work-items.ts', 'code-structure.ts', '../../cap1-core/src/index.ts']) {
+    for (const expected of [LIVE, 'model.ts', 'test-artifact-verification.ts', 'worker-change-observation.ts', 'work-items.ts', 'code-structure.ts', '../../cap1-core/src/index.ts', '../../support/src/index.ts', '../../support/src/sha256.ts', '../../support/src/deep-freeze.ts']) {
       expect(files).toContain(expected);
     }
     expect(violations).toEqual([]);

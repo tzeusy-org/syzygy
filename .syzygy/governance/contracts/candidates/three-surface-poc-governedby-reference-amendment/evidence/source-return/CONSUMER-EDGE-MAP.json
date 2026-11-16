@@ -1,0 +1,325 @@
+{
+  "status": "Inferred source/design evidence only; no runtime or semantic confirmation",
+  "base": "4504514c019ca0ee0cb4a89ed97445a0bad21915",
+  "candidate": "abd3f6ca2e8e99ad59327fdfc7b38d8bf41b07b5",
+  "main_context": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+  "affected_consumers": [
+    {
+      "sequence": 25,
+      "path": "openspec/changes/polaris-manifesto-generation/specs/polaris-generation/spec.md",
+      "ordinal": 19,
+      "requirement_identity": "REQ-polaris-generation-019",
+      "block_sha256": "ae2e8f7b811b5837aef78056a9f0e8db10d7b195cade5e768d52215fbd5cb970",
+      "kind": "wire-convention compatibility",
+      "incoming_and_outgoing_trace": "Changed POC/PWB machine representation -> explicit PWB-convention preservation/adaptation obligation -> supported typed compatibility or explicit inability.",
+      "normative_block_text_change_required": false,
+      "unchanged_obligation": "Affected-compatible: preserve the unchanged explicit adaptation obligation, source-admission limits and typed unsupported behavior. No identified text invalidation or general schema promotion.",
+      "later_verification_obligation": "Before adoption/implementation, record an explicit same-change disposition for the new local form at supported compatibility boundaries; independently verify each supported consumer or retain its unsupported/Unknown result. Current two read sets alone do not prove all canonical adaptation."
+    },
+    {
+      "sequence": 42,
+      "path": "openspec/changes/polaris-manifesto-understanding-amendment/specs/polaris-generation/spec.md",
+      "ordinal": 7,
+      "requirement_identity": "REQ-polaris-generation-019",
+      "block_sha256": "796464323fb006f92248198ffab7296b05ddf735df9c2c84039c1a7068ecc3e7",
+      "kind": "wire-convention compatibility",
+      "incoming_and_outgoing_trace": "Same convention change -> unchanged full GEN019 overlay obligation, independently of additional understanding/clarification records.",
+      "normative_block_text_change_required": false,
+      "unchanged_obligation": "Affected-compatible; retain the entire amended block and its typed unsupported behavior. No added schema promotion, source right or migration is required by the proposed local form.",
+      "later_verification_obligation": "Record the same-change compatibility disposition under the overlay too; verify supported adapters and version/refusal behavior independently. Preserve input/answer dependency and authority separation while broader runtime conformance stays unproven."
+    },
+    {
+      "sequence": 48,
+      "path": "openspec/changes/polaris-project-wide-butlers-model/specs/polaris-project-wide-butlers-model/spec.md",
+      "ordinal": 3,
+      "requirement_identity": "PWB-REQ-003",
+      "block_sha256": "4b57a525b288d7c383f3760d8cdec85a3e755bdae48e4580a2ab62fd16bae7bb",
+      "kind": "full-sink exclusion oracle",
+      "incoming_and_outgoing_trace": "Complete new success/refusal/model/cache/record bytes -> sensitive-sentinel scan -> no excluded body material; source denominator remains a separate preserved projection.",
+      "normative_block_text_change_required": false,
+      "unchanged_obligation": "Affected-compatible; no source policy, denominator or exclusion rule is invalidated. Keep the block unchanged.",
+      "later_verification_obligation": "At the eventual implementation, rescan complete encoded/saved sinks with independent excluded-source sentinels, including new carrier/ref and refusal bodies; retain the exact source/item denominators. No scan or runtime proof is performed by this audit."
+    },
+    {
+      "sequence": 50,
+      "path": "openspec/changes/polaris-project-wide-butlers-model/specs/polaris-project-wide-butlers-model/spec.md",
+      "ordinal": 5,
+      "requirement_identity": "PWB-REQ-006",
+      "block_sha256": "b5ad25343860d2052bed14cdfb25885f95c524927cde59151960e044992ef3a8",
+      "kind": "final physical bytes / failure / cache",
+      "incoming_and_outgoing_trace": "Complete final wire body -> exact UTF-8 bytes -> declared ceiling comparison -> full response or bounded resource failure -> pre-304 branch and existing resource-readiness arm.",
+      "normative_block_text_change_required": false,
+      "unchanged_obligation": "Affected-compatible; preserve the actual final encoded-byte metric, declared ceiling, no-truncation refusal and readiness obligation. No definition/limit/policy exception or text amendment is needed.",
+      "later_verification_obligation": "Independently measure the actual final bytes under each mount/response form and validate below/equal/above ceiling, N=0/1/many, failure envelopes and pre-304 order. Logical expanded/old-inline size is not the served-output metric; verify complete failure-envelope bounds and source/sink safety."
+    },
+    {
+      "sequence": 51,
+      "path": "openspec/changes/polaris-project-wide-butlers-model/specs/polaris-project-wide-butlers-model/spec.md",
+      "ordinal": 6,
+      "requirement_identity": "PWB-REQ-007",
+      "block_sha256": "63648990e5940b6ad7b636796620ba4a4b1a680753318a61a67c3a4a6572aeb9",
+      "kind": "complete per-claim state",
+      "incoming_and_outgoing_trace": "Effective local value plus distinct retained per-item records -> full tuple, stable identity/evaluation and honest composition assurance; unchanged dismissal-as-of rules remain separate.",
+      "normative_block_text_change_required": false,
+      "unchanged_obligation": "Affected-compatible with existing full records, not record pooling. Dismissal semantics and all tuple obligations remain unchanged; no textual invalidation identified.",
+      "later_verification_obligation": "Verify expanded item values against independent full-record expectations and exact per-item identities/reason/routes, alongside retained counts and two-evaluation tuples. Preserve dismissal inputs and their unmodified classes; do not infer zero record counts from unavailable records."
+    },
+    {
+      "sequence": 54,
+      "path": "openspec/changes/polaris-project-wide-butlers-model/specs/polaris-project-wide-butlers-model/spec.md",
+      "ordinal": 9,
+      "requirement_identity": "PWB-REQ-011",
+      "block_sha256": "6d5bdb246afc69a6d8fa26cec048895420270755d681fcb61c7f7092ff1eb09a",
+      "kind": "full-sink withholding / source refusal",
+      "incoming_and_outgoing_trace": "New machine success/refusal sinks -> no withheld body bytes anywhere; exact-source mode, source-class/refusal and source-population branches remain separately preserved.",
+      "normative_block_text_change_required": false,
+      "unchanged_obligation": "Affected-compatible; leave exact-source modes, content classes, gates and source refusal reasons unchanged. No text amendment identified.",
+      "later_verification_obligation": "At implementation, include the new response/refusal forms in withheld-body sentinel scans; independently retain source served/refused denominators and exact-object comparisons. The wire fault must not be misreported as a source-class refusal or grant wider access."
+    },
+    {
+      "sequence": 57,
+      "path": "openspec/changes/polaris-project-wide-butlers-model/specs/polaris-project-wide-butlers-model/spec.md",
+      "ordinal": 12,
+      "requirement_identity": "PWB-REQ-014",
+      "block_sha256": "4541f9a5c212852f2a78c6da7094fee2da189bd1d43ab5e06830846a8465e0ea",
+      "kind": "whole-answer own-identity resolution",
+      "incoming_and_outgoing_trace": "New physical object/reference graph -> own-identity record census -> exact block/narrative anchorsResolved counts; refs are not own identities.",
+      "normative_block_text_change_required": false,
+      "unchanged_obligation": "Affected-compatible. Keep the complete block, exact identity definition, captured tuples and non-authority semantics; no text invalidation identified.",
+      "later_verification_obligation": "Independently census own-identity records from the new answer, reject treating refs/composed identities as records, and reproduce all block/narrative pairs and identity-withholding cases. Confirm no new aggregate/claim identity, target drift or active SVG reaches a sink."
+    },
+    {
+      "sequence": 60,
+      "path": "openspec/changes/polaris-project-wide-butlers-model/specs/polaris-project-wide-butlers-model/spec.md",
+      "ordinal": 15,
+      "requirement_identity": "PWB-REQ-020",
+      "block_sha256": "c1c991de6d47a2b19d300b2b0311b61305d9a6e69b7af834a87fd9c65d36846f",
+      "kind": "own-byte derivation / per-view bounds",
+      "incoming_and_outgoing_trace": "New answer-own representation -> independent same-evaluation derivability and subtraction-free complete fact assurance -> named machine views under their existing ceilings and credential/mount gates.",
+      "normative_block_text_change_required": false,
+      "unchanged_obligation": "Affected-compatible; preserve all categories, routes, complete facts, provenance/multiplicity and existing ceilings. No new route/member or textual amendment is required.",
+      "later_verification_obligation": "Independently prove each currently supported derived value from the new answer at that evaluation, retain full machine facts, both mount credentials and existing per-view bounds. Do not assume a derived view shrinks merely because /api/poc encoding changes; draft-run byte ownership remains separate."
+    },
+    {
+      "sequence": 61,
+      "path": "openspec/changes/polaris-project-wide-butlers-model/specs/polaris-project-wide-butlers-model/spec.md",
+      "ordinal": 16,
+      "requirement_identity": "PWB-REQ-021",
+      "block_sha256": "d986e4ccfa86b9f5be9526f115305f37ade19b790319e9be92319c4665e35318",
+      "kind": "derived resource-readiness",
+      "incoming_and_outgoing_trace": "PWB006 encoded-byte result -> existing any-resource-breach arm -> readiness false, not owner judgment or PWB022 invalidity. Wire-validation refusal is separately response-level only.",
+      "normative_block_text_change_required": false,
+      "unchanged_obligation": "Affected-compatible; retain the existing readiness rules and 9-answer identities. No new model-readiness arm, act-validity case, limit exception or text amendment is needed for that bounded design.",
+      "later_verification_obligation": "Verify final-byte outcome propagation at below/equal/above bounds, exact nine-answer arms and unchanged PWB022 84+2. Wire faults may return readiness:false only as refusal payload; if implementation persists a new model-readiness arm, stop for an explicit PWB021 companion rather than silently treating it as an existing arm."
+    },
+    {
+      "sequence": 106,
+      "path": "openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md",
+      "ordinal": 2,
+      "requirement_identity": "POC-REQ-002",
+      "block_sha256": "e041023c253b48231f4c9e453b83cdae0c4de5e3e86c4eb4e85fb836484bb155",
+      "kind": "whole-channel body-content prohibition",
+      "incoming_and_outgoing_trace": "Changed complete served bytes -> independent planted-code-body sentinel scan over both channels -> content never indexed/served; structure metadata projection stays separate.",
+      "normative_block_text_change_required": false,
+      "unchanged_obligation": "Affected-compatible; preserve the metadata-only prohibition and full-channel sentinel oracle unchanged.",
+      "later_verification_obligation": "Run independent full-channel sentinel scans against the actual new success/failure response bytes at implementation. Check the metadata whitelist separately; logical expansion alone does not exhaust physical served bytes."
+    },
+    {
+      "sequence": 109,
+      "path": "openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md",
+      "ordinal": 5,
+      "requirement_identity": "POC-REQ-010",
+      "block_sha256": "59c9f0c4518447a1c47ecacc1241d1d87e29cd634af68080c95c6a3017ee3c42",
+      "kind": "whole-observation identity/provenance census",
+      "incoming_and_outgoing_trace": "New carrier and marker fields -> exhaustive every-field whole-value comparison -> one complete provenance revision field/capture field and no item copies, with full membership preserved.",
+      "normative_block_text_change_required": false,
+      "unchanged_obligation": "Affected-compatible; preserve the single full provenance record/capture and direct-source semantics. No text invalidation identified.",
+      "later_verification_obligation": "Independently supply expected evaluation, complete provenance, capture identity and literal item populations; scan every field in valid empty/one/many outputs and fault cases. The new fields must not duplicate the Dolt revision/capture whole value or authorize a second source read."
+    },
+    {
+      "sequence": 113,
+      "path": "openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md",
+      "ordinal": 9,
+      "requirement_identity": "POC-REQ-014",
+      "block_sha256": "76ceb3c917a237feb310726af2f7366bea7de7960d1b1ba3d987258dfc4a8d7e",
+      "kind": "normative wire / invalid-form refusal / cache",
+      "incoming_and_outgoing_trace": "Identified captured observation -> exact complete value plus closed local refs -> independent expansion and identity/population checks -> validation before any success/revalidation or specified bounded no-model refusal.",
+      "normative_block_text_change_required": true,
+      "unchanged_obligation": "Text amendment required for POC014 only as presently identified. Candidate remains unsigned/unimplemented; preserve existing human treatment, full records and complete identities, and keep the new fault response-level only.",
+      "later_verification_obligation": "A new independently reviewed source/package freeze must encode this exact bounded contract, honest impact/mapping and current byte obligations. Later authorized product tests must independently exercise every predicate and actual HTTP/cache/population behavior; preparation fixtures are not that proof."
+    },
+    {
+      "sequence": 114,
+      "path": "openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md",
+      "ordinal": 10,
+      "requirement_identity": "POC-REQ-020",
+      "block_sha256": "bc5859385af8cd64bb01980a794d220ff49775eb5fd03f68a2d1f1e8347216b8",
+      "kind": "semantic shared-fact parity",
+      "incoming_and_outgoing_trace": "Validated same-body refs -> distinct effective item facts -> complete shared-model/client fact and tuple comparison.",
+      "normative_block_text_change_required": false,
+      "unchanged_obligation": "Affected-compatible under the existing semantics/fact-set rule. Keep the block unchanged; no new client truth store or lookup is permitted.",
+      "later_verification_obligation": "Use an independent literal expander and independent expected identity/population facts; compare each served/rendered claim and count. Keep actual wire occurrence/byte/fault checks separate and cover wrong-evaluation, missing/duplicate/value-changing markers."
+    },
+    {
+      "sequence": 116,
+      "path": "openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md",
+      "ordinal": 12,
+      "requirement_identity": "POC-REQ-022",
+      "block_sha256": "85f929db8aba12cadaec155a54107d82c3a0904ec96bd73049e444c5e6d0ba6a",
+      "kind": "script-less parity",
+      "incoming_and_outgoing_trace": "New effective machine facts plus unchanged full human per-item state records -> honest server-rendered no-script fact/Unknown/scope comparison.",
+      "normative_block_text_change_required": false,
+      "unchanged_obligation": "Affected-compatible; existing script-less semantics remain valid without a textual amendment or human redesign.",
+      "later_verification_obligation": "Independently compare no-script HTML markers/text to locally expanded machine facts for complete served versus rendered/outside populations and explicit reasons/routes. Actual server/browser evidence remains future implementation verification."
+    },
+    {
+      "sequence": 129,
+      "path": "openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md",
+      "ordinal": 25,
+      "requirement_identity": "POC-REQ-060",
+      "block_sha256": "5155aaeaeb50d07e83e35909bffaa45ce8a7de78634c22305343663630c3ac01",
+      "kind": "epistemic encoding / retained full-record population",
+      "incoming_and_outgoing_trace": "Changed machine serialization -> independent effective-fact/full-record/count/Unknown-set/encoding oracle -> comparison with stable logical-model-driven human facts. Distinct records and counts remain complete; bare value is outside the closed record-shape population. Human renderer does not consume or expand machine wire.",
+      "normative_block_text_change_required": false,
+      "unchanged_obligation": "Affected-compatible without pooling entity/relationship/per-item records, changing the logical model/human renderer or changing the token/record schema. Keep the full block unchanged; wire expansion belongs to independent machine comparators/consumers, not the human rendering path.",
+      "later_verification_obligation": "Keep a positive fixture in the actual declared full record shapes with all IDs/prose reason/provenance/action fields, plus forbidden bare-value copies. Independently derive effective machine item facts, recount every Observed total/Unknown record set under Inferred injection and compare stable human markers against the declared encoding table. Preserve the existing logical-model-to-human path. Preparation cases do not prove the complete runtime record/marker census."
+    }
+  ],
+  "positively_separated_byte_refusal_cache_boundaries": [
+    {
+      "occurrences": [
+        3,
+        4,
+        5,
+        6
+      ],
+      "scope": "Operator-agent Git/read/brief/draft/review admission and declared limits",
+      "positive_separation": "Pinned clone/source objects, brief/draft/schema and packet bytes, not /api/poc observed workItems. No provider/execution effect is added."
+    },
+    {
+      "occurrences": [
+        9,
+        11
+      ],
+      "scope": "Generated bundle content/asset/text/total and provider-call/input/output/charge/time bounds",
+      "positive_separation": "Their counted objects and volume are generation requests/assets/effects. They do not consume final POC HTTP JSON bytes or relax the PWB output ceiling."
+    },
+    {
+      "occurrences": [
+        14,
+        19
+      ],
+      "scope": "Verified checkpoints and cached generator/scheduler projections",
+      "positive_separation": "Fresh scheduler observation, materialization join and execution-control predicates remain independently required; these caches cannot supply a local governing-intent value or cached permission."
+    },
+    {
+      "occurrences": [
+        17,
+        22,
+        35
+      ],
+      "scope": "Generation retention, authored-content storage and captured work history",
+      "positive_separation": "Owned Execution/evidence/intent homes and retention/capture operations are unchanged; response-value sharing is neither record pooling nor authored-content cache migration."
+    },
+    {
+      "occurrences": [
+        23,
+        27,
+        28
+      ],
+      "scope": "Registered generator/effect, caller and protected-audit refusals",
+      "positive_separation": "The existing per-operation identity/permission/audit records decide, before effect admission; an output-data ref cannot be a grant or act."
+    },
+    {
+      "occurrences": [
+        1,
+        2,
+        49,
+        62,
+        70,
+        71,
+        72,
+        74,
+        75,
+        95
+      ],
+      "scope": "Consent/authority/credential/owner-act refusal and closed validity populations",
+      "positive_separation": "Owning records and presented credentials, not body encoding or its byte result, decide these predicates. PWB021 resource/wire readiness is not an additional PWB022 validity arm."
+    },
+    {
+      "occurrences": [
+        63,
+        64,
+        65,
+        66,
+        67,
+        68
+      ],
+      "scope": "Declaration validation and deterministic registration answer bytes",
+      "positive_separation": "Closed declaration fields and declaration-derived registration facts are the scoped byte/fact domain; final POC body bytes are a different population."
+    },
+    {
+      "occurrences": [
+        105,
+        107,
+        108
+      ],
+      "scope": "Code-structure observation every-field/provenance/determinism and failed branch",
+      "positive_separation": "Every-field scope is the separate codeStructure observation, preserved wholesale; it is not the changed workItems observation. POC002 separately has a full-channel byte oracle and is affected."
+    },
+    {
+      "occurrences": [
+        110,
+        111,
+        112,
+        120,
+        121,
+        122
+      ],
+      "scope": "Work source/prefix/failed branch/status/timestamps/selection",
+      "positive_separation": "Closed inputs are Dolt source identity, item IDs/prefix, existing failed union branch, recorded status/times and selected-ID set. Exact changed paths are governing-intent value/ref only; no new column/read/filter or population reduction is permitted."
+    },
+    {
+      "occurrences": [
+        115,
+        124,
+        125,
+        126,
+        127,
+        128,
+        130
+      ],
+      "scope": "Client asset origin, Orrery mappings/code/relationship/route records and rendered accessibility controls",
+      "positive_separation": "No external lookup, new asset, node/edge, route, rendered element or interaction is introduced. Distinct full records are preserved; POC060 still has an affected encoding/count limb."
+    }
+  ],
+  "unknowns": [
+    {
+      "subject": "Actual encoder/validator and HTTP/cache order",
+      "state": "Unknown",
+      "settling_evidence": "A later explicitly authorized implementation at an exact head with independent producer/consumer/fault, final-byte, identity/preimage, credential and pre-304 checks. Static current code is context, not proposed runtime conformance."
+    },
+    {
+      "subject": "Complete bounded failure behavior under declared limits",
+      "state": "Unknown",
+      "settling_evidence": "Measure actual success and both failure envelopes against applicable declared ceilings, including boundary/mount forms. Current boundedResponse constructs its resource-failure JSON after the successful-body count; reading that code does not prove that every failure envelope is independently within its ceiling."
+    },
+    {
+      "subject": "Broader canonical and external/dynamic wire consumers",
+      "state": "Unknown",
+      "settling_evidence": "Inventory supported compatibility boundaries and their declared versions/input schemes, then show explicit handling or typed unsupported/Unknown behavior. Two current readers and this eight-spec sweep are not a complete runtime/external consumer inventory."
+    },
+    {
+      "subject": "Actual P115 saving or headroom on restored current data",
+      "state": "Unknown",
+      "settling_evidence": "Only a separately authorized committed clean implementation can be measured on actual admitted runtime data. Historical approximately 2 MB is an estimate; the source byte witnesses are synthetic and show N=0/1 growth as well as N=2 savings."
+    },
+    {
+      "subject": "Fresh successor adequacy and sign-off readiness",
+      "state": "Unknown",
+      "settling_evidence": "Coordinator integration of this complete method/130 dispositions, compatibility settlements and truthful preparation narrative at a new exact freeze, then distinct independent confirmation/review. Old R1/R2 remain REVISE."
+    }
+  ],
+  "classification_unknowns_in_the_130_population": [],
+  "no_external_absence_claim": "No claim about all external/dynamic or undisclosed consumers follows from this finite corpus assessment."
+}

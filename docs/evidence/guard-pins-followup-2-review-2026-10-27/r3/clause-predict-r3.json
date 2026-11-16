@@ -1,0 +1,801 @@
+{
+ "cases": 51,
+ "bySource": {
+  "lane": 14,
+  "r2": 25,
+  "r3": 12
+ },
+ "tally": {
+  "r2-literal": {
+   "agree": 50,
+   "disagree": [
+    "r3 Q1"
+   ]
+  },
+  "r2-per-declaration": {
+   "agree": 51,
+   "disagree": []
+  },
+  "r3": {
+   "agree": 51,
+   "disagree": []
+  }
+ },
+ "rows": [
+  {
+   "source": "lane",
+   "id": "an alias under a name no workspace has, its target a registry package",
+   "decls": [
+    [
+     "app",
+     "dossier",
+     "npm:typescript@^5.5.0"
+    ]
+   ],
+   "observed": "registry",
+   "r2-literal": "registry",
+   "r2-per-declaration": "registry",
+   "r3": "registry"
+  },
+  {
+   "source": "lane",
+   "id": "an alias under a name no workspace has, its target a workspace's name",
+   "decls": [
+    [
+     "app",
+     "dossier",
+     "npm:wlib@*"
+    ]
+   ],
+   "observed": "registry",
+   "r2-literal": "registry",
+   "r2-per-declaration": "registry",
+   "r3": "registry"
+  },
+  {
+   "source": "lane",
+   "id": "an alias under a name no workspace has, no version",
+   "decls": [
+    [
+     "app",
+     "dossier",
+     "npm:typescript"
+    ]
+   ],
+   "observed": "registry",
+   "r2-literal": "registry",
+   "r2-per-declaration": "registry",
+   "r3": "registry"
+  },
+  {
+   "source": "lane",
+   "id": "an alias under a workspace's name, a range its version satisfies",
+   "decls": [
+    [
+     "app",
+     "wlib",
+     "npm:typescript@*"
+    ]
+   ],
+   "observed": "link",
+   "r2-literal": "link",
+   "r2-per-declaration": "link",
+   "r3": "link"
+  },
+  {
+   "source": "lane",
+   "id": "an alias under a workspace's name, the target's range satisfied by the workspace's version",
+   "decls": [
+    [
+     "app",
+     "wlib",
+     "npm:typescript@^1.0.0"
+    ]
+   ],
+   "observed": "link",
+   "r2-literal": "link",
+   "r2-per-declaration": "link",
+   "r3": "link"
+  },
+  {
+   "source": "lane",
+   "id": "an alias under a workspace's name, a range its version does not satisfy",
+   "decls": [
+    [
+     "app",
+     "wlib",
+     "npm:typescript@^5.5.0"
+    ]
+   ],
+   "observed": "registry",
+   "r2-literal": "registry",
+   "r2-per-declaration": "registry",
+   "r3": "registry"
+  },
+  {
+   "source": "lane",
+   "id": "an alias under a scoped workspace's name, a range its version satisfies",
+   "decls": [
+    [
+     "app",
+     "@syzygy/slib",
+     "npm:typescript@*"
+    ]
+   ],
+   "observed": "link",
+   "r2-literal": "link",
+   "r2-per-declaration": "link",
+   "r3": "link"
+  },
+  {
+   "source": "lane",
+   "id": "control: a plain range under a workspace's name, satisfied",
+   "decls": [
+    [
+     "app",
+     "wlib",
+     "^1.0.0"
+    ]
+   ],
+   "observed": "link",
+   "r2-literal": "link",
+   "r2-per-declaration": "link",
+   "r3": "link"
+  },
+  {
+   "source": "lane",
+   "id": "control: a plain range under a workspace's name, not satisfied",
+   "decls": [
+    [
+     "app",
+     "wlib",
+     "^5.5.0"
+    ]
+   ],
+   "observed": "registry",
+   "r2-literal": "registry",
+   "r2-per-declaration": "registry",
+   "r3": "registry"
+  },
+  {
+   "source": "lane",
+   "id": "an alias under a workspace's name, no version",
+   "decls": [
+    [
+     "app",
+     "wlib",
+     "npm:typescript"
+    ]
+   ],
+   "observed": "link",
+   "r2-literal": "link",
+   "r2-per-declaration": "link",
+   "r3": "link"
+  },
+  {
+   "source": "lane",
+   "id": "the root's manifest: an alias under a workspace's name, a range its version does not satisfy",
+   "decls": [
+    [
+     "root",
+     "wlib",
+     "npm:typescript@^5.5.0"
+    ]
+   ],
+   "observed": "link",
+   "r2-literal": "link",
+   "r2-per-declaration": "link",
+   "r3": "link"
+  },
+  {
+   "source": "lane",
+   "id": "the root's manifest: an alias under a scoped workspace's name, a range its version does not satisfy",
+   "decls": [
+    [
+     "root",
+     "@syzygy/slib",
+     "npm:typescript@^5.5.0"
+    ]
+   ],
+   "observed": "link",
+   "r2-literal": "link",
+   "r2-per-declaration": "link",
+   "r3": "link"
+  },
+  {
+   "source": "lane",
+   "id": "the root's manifest: a plain range under a workspace's name, not satisfied",
+   "decls": [
+    [
+     "root",
+     "wlib",
+     "^5.5.0"
+    ]
+   ],
+   "observed": "link",
+   "r2-literal": "link",
+   "r2-per-declaration": "link",
+   "r3": "link"
+  },
+  {
+   "source": "lane",
+   "id": "control: the root's manifest, an alias under a name no workspace has",
+   "decls": [
+    [
+     "root",
+     "dossier",
+     "npm:typescript@^5.5.0"
+    ]
+   ],
+   "observed": "registry",
+   "r2-literal": "registry",
+   "r2-per-declaration": "registry",
+   "r3": "registry"
+  },
+  {
+   "source": "r2",
+   "id": "A1",
+   "decls": [
+    [
+     "app",
+     "wlib",
+     "npm:wlib@^2.0.0"
+    ]
+   ],
+   "observed": "registry",
+   "r2-literal": "registry",
+   "r2-per-declaration": "registry",
+   "r3": "registry"
+  },
+  {
+   "source": "r2",
+   "id": "A2",
+   "decls": [
+    [
+     "app",
+     "@syzygy/slib",
+     "npm:typescript@^5.5.0"
+    ]
+   ],
+   "observed": "registry",
+   "r2-literal": "registry",
+   "r2-per-declaration": "registry",
+   "r3": "registry"
+  },
+  {
+   "source": "r2",
+   "id": "A3",
+   "decls": [
+    [
+     "root",
+     "wlib",
+     "npm:typescript@^5.5.0"
+    ]
+   ],
+   "observed": "link",
+   "r2-literal": "link",
+   "r2-per-declaration": "link",
+   "r3": "link"
+  },
+  {
+   "source": "r2",
+   "id": "A4",
+   "decls": [
+    [
+     "root",
+     "wlib",
+     "npm:typescript@*"
+    ]
+   ],
+   "observed": "link",
+   "r2-literal": "link",
+   "r2-per-declaration": "link",
+   "r3": "link"
+  },
+  {
+   "source": "r2",
+   "id": "B1",
+   "decls": [
+    [
+     "app",
+     "dossier",
+     "npm:wlib@1.0.0"
+    ]
+   ],
+   "observed": "registry",
+   "r2-literal": "registry",
+   "r2-per-declaration": "registry",
+   "r3": "registry"
+  },
+  {
+   "source": "r2",
+   "id": "B2",
+   "decls": [
+    [
+     "app",
+     "dossier",
+     "npm:@syzygy/slib"
+    ]
+   ],
+   "observed": "registry",
+   "r2-literal": "registry",
+   "r2-per-declaration": "registry",
+   "r3": "registry"
+  },
+  {
+   "source": "r2",
+   "id": "C1",
+   "decls": [
+    [
+     "app",
+     "wlib",
+     "npm:typescript@latest"
+    ]
+   ],
+   "observed": "registry",
+   "r2-literal": "registry",
+   "r2-per-declaration": "registry",
+   "r3": "registry"
+  },
+  {
+   "source": "r2",
+   "id": "C2",
+   "decls": [
+    [
+     "app",
+     "wlib",
+     "npm:typescript@1.0.0"
+    ]
+   ],
+   "observed": "link",
+   "r2-literal": "link",
+   "r2-per-declaration": "link",
+   "r3": "link"
+  },
+  {
+   "source": "r2",
+   "id": "C3",
+   "decls": [
+    [
+     "app",
+     "plib",
+     "npm:typescript@*"
+    ]
+   ],
+   "observed": "link",
+   "r2-literal": "link",
+   "r2-per-declaration": "link",
+   "r3": "link"
+  },
+  {
+   "source": "r2",
+   "id": "C4",
+   "decls": [
+    [
+     "app",
+     "plib",
+     "npm:typescript@>=0.0.0"
+    ]
+   ],
+   "observed": "registry",
+   "r2-literal": "registry",
+   "r2-per-declaration": "registry",
+   "r3": "registry"
+  },
+  {
+   "source": "r2",
+   "id": "R1",
+   "decls": [
+    [
+     "root",
+     "@syzygy/slib",
+     "npm:typescript@^5.5.0"
+    ]
+   ],
+   "observed": "link",
+   "r2-literal": "link",
+   "r2-per-declaration": "link",
+   "r3": "link"
+  },
+  {
+   "source": "r2",
+   "id": "R2",
+   "decls": [
+    [
+     "root",
+     "wlib",
+     "^5.5.0"
+    ]
+   ],
+   "observed": "link",
+   "r2-literal": "link",
+   "r2-per-declaration": "link",
+   "r3": "link"
+  },
+  {
+   "source": "r2",
+   "id": "R3",
+   "decls": [
+    [
+     "root",
+     "dossier",
+     "npm:typescript@^5.5.0"
+    ]
+   ],
+   "observed": "registry",
+   "r2-literal": "registry",
+   "r2-per-declaration": "registry",
+   "r3": "registry"
+  },
+  {
+   "source": "r2",
+   "id": "R4",
+   "decls": [
+    [
+     "root",
+     "wlib",
+     "npm:typescript@^5.5.0"
+    ]
+   ],
+   "observed": "link",
+   "r2-literal": "link",
+   "r2-per-declaration": "link",
+   "r3": "link"
+  },
+  {
+   "source": "r2",
+   "id": "R5",
+   "decls": [
+    [
+     "root",
+     "wlib",
+     "npm:typescript@^5.5.0"
+    ]
+   ],
+   "observed": "link",
+   "r2-literal": "link",
+   "r2-per-declaration": "link",
+   "r3": "link"
+  },
+  {
+   "source": "r2",
+   "id": "R6",
+   "decls": [
+    [
+     "root",
+     "wlib",
+     "npm:typescript@^5.5.0"
+    ]
+   ],
+   "observed": "link",
+   "r2-literal": "link",
+   "r2-per-declaration": "link",
+   "r3": "link"
+  },
+  {
+   "source": "r2",
+   "id": "R7",
+   "decls": [
+    [
+     "root",
+     "wlib",
+     "github:someone/wlib#v1.tar"
+    ]
+   ],
+   "observed": "link",
+   "r2-literal": "link",
+   "r2-per-declaration": "link",
+   "r3": "link"
+  },
+  {
+   "source": "r2",
+   "id": "R8",
+   "decls": [
+    [
+     "root",
+     "dossier",
+     "npm:wlib@*"
+    ]
+   ],
+   "observed": "registry",
+   "r2-literal": "registry",
+   "r2-per-declaration": "registry",
+   "r3": "registry"
+  },
+  {
+   "source": "r2",
+   "id": "R9",
+   "decls": [
+    [
+     "w",
+     "wlib",
+     "npm:typescript@^5.5.0"
+    ]
+   ],
+   "observed": "registry",
+   "r2-literal": "registry",
+   "r2-per-declaration": "registry",
+   "r3": "registry"
+  },
+  {
+   "source": "r2",
+   "id": "F1",
+   "decls": [
+    [
+     "app",
+     "wlib",
+     "npm:typescript"
+    ]
+   ],
+   "observed": "link",
+   "r2-literal": "link",
+   "r2-per-declaration": "link",
+   "r3": "link"
+  },
+  {
+   "source": "r2",
+   "id": "F2",
+   "decls": [
+    [
+     "app",
+     "plib",
+     "npm:typescript"
+    ]
+   ],
+   "observed": "link",
+   "r2-literal": "link",
+   "r2-per-declaration": "link",
+   "r3": "link"
+  },
+  {
+   "source": "r2",
+   "id": "F3",
+   "decls": [
+    [
+     "root",
+     "wlib",
+     "npm:typescript@latest"
+    ]
+   ],
+   "observed": "link",
+   "r2-literal": "link",
+   "r2-per-declaration": "link",
+   "r3": "link"
+  },
+  {
+   "source": "r2",
+   "id": "F4",
+   "decls": [
+    [
+     "app",
+     "wlib",
+     "npm:typescript@<1.0.0"
+    ]
+   ],
+   "observed": "registry",
+   "r2-literal": "registry",
+   "r2-per-declaration": "registry",
+   "r3": "registry"
+  },
+  {
+   "source": "r2",
+   "id": "F5",
+   "decls": [
+    [
+     "s",
+     "wlib",
+     "npm:typescript@*"
+    ]
+   ],
+   "observed": "link",
+   "r2-literal": "link",
+   "r2-per-declaration": "link",
+   "r3": "link"
+  },
+  {
+   "source": "r2",
+   "id": "F6",
+   "decls": [
+    [
+     "s",
+     "wlib",
+     "npm:typescript@^5.5.0"
+    ]
+   ],
+   "observed": "registry",
+   "r2-literal": "registry",
+   "r2-per-declaration": "registry",
+   "r3": "registry"
+  },
+  {
+   "source": "r3",
+   "id": "Q1",
+   "decls": [
+    [
+     "root",
+     "wlib",
+     "npm:typescript@^5.5.0"
+    ],
+    [
+     "app",
+     "wlib",
+     "npm:typescript@^5.5.0"
+    ]
+   ],
+   "observed": "registry",
+   "r2-literal": "link",
+   "r2-per-declaration": "registry",
+   "r3": "registry"
+  },
+  {
+   "source": "r3",
+   "id": "Q2",
+   "decls": [
+    [
+     "root",
+     "wlib",
+     "npm:typescript@^5.5.0"
+    ],
+    [
+     "app",
+     "wlib",
+     "npm:typescript@^1.0.0"
+    ]
+   ],
+   "observed": "link",
+   "r2-literal": "link",
+   "r2-per-declaration": "link",
+   "r3": "link"
+  },
+  {
+   "source": "r3",
+   "id": "Q3",
+   "decls": [
+    [
+     "app",
+     "@syzygy/slib",
+     "npm:typescript@^1.0.0"
+    ]
+   ],
+   "observed": "link",
+   "r2-literal": "link",
+   "r2-per-declaration": "link",
+   "r3": "link"
+  },
+  {
+   "source": "r3",
+   "id": "Q4",
+   "decls": [
+    [
+     "root",
+     "@syzygy/slib",
+     "npm:typescript@next"
+    ]
+   ],
+   "observed": "link",
+   "r2-literal": "link",
+   "r2-per-declaration": "link",
+   "r3": "link"
+  },
+  {
+   "source": "r3",
+   "id": "Q5",
+   "decls": [
+    [
+     "root",
+     "wlib",
+     "npm:./w"
+    ]
+   ],
+   "observed": "link",
+   "r2-literal": "link",
+   "r2-per-declaration": "link",
+   "r3": "link"
+  },
+  {
+   "source": "r3",
+   "id": "Q6",
+   "decls": [
+    [
+     "root",
+     "wlib",
+     "workspace:*"
+    ]
+   ],
+   "observed": "link",
+   "r2-literal": "link",
+   "r2-per-declaration": "link",
+   "r3": "link"
+  },
+  {
+   "source": "r3",
+   "id": "Q7",
+   "decls": [
+    [
+     "root",
+     "wlib",
+     "link:../nowhere"
+    ]
+   ],
+   "observed": "link",
+   "r2-literal": "link",
+   "r2-per-declaration": "link",
+   "r3": "link"
+  },
+  {
+   "source": "r3",
+   "id": "Q8",
+   "decls": [
+    [
+     "w",
+     "wlib",
+     "npm:typescript@^1.0.0"
+    ]
+   ],
+   "observed": "link",
+   "r2-literal": "link",
+   "r2-per-declaration": "link",
+   "r3": "link"
+  },
+  {
+   "source": "r3",
+   "id": "Q9",
+   "decls": [
+    [
+     "app",
+     "wlib",
+     "npm:typescript@^5.5.0"
+    ]
+   ],
+   "observed": "registry",
+   "r2-literal": "registry",
+   "r2-per-declaration": "registry",
+   "r3": "registry"
+  },
+  {
+   "source": "r3",
+   "id": "Q10",
+   "decls": [
+    [
+     "app",
+     "wlib",
+     "npm:typescript@x"
+    ]
+   ],
+   "observed": "link",
+   "r2-literal": "link",
+   "r2-per-declaration": "link",
+   "r3": "link"
+  },
+  {
+   "source": "r3",
+   "id": "Q11",
+   "decls": [
+    [
+     "app",
+     "wlib",
+     "npm:typescript@"
+    ]
+   ],
+   "observed": "link",
+   "r2-literal": "link",
+   "r2-per-declaration": "link",
+   "r3": "link"
+  },
+  {
+   "source": "r3",
+   "id": "Q12",
+   "decls": [
+    [
+     "app",
+     "wlib",
+     "npm:typescript@^5.5.0"
+    ]
+   ],
+   "observed": "registry",
+   "r2-literal": "registry",
+   "r2-per-declaration": "registry",
+   "r3": "registry"
+  }
+ ]
+}

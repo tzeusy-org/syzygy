@@ -1,0 +1,46 @@
+{
+ "tree": "clone-merge",
+ "head": "553d4837dc9ee97a0a7c482024fea38559789f37",
+ "files": [
+  "packages/polaris-generation-core/src/workspace-reach.test.ts",
+  "packages/polaris-generation-core/src/island-boundary.test.ts",
+  "packages/polaris-dossier/src/subpath-imports.test.ts",
+  "packages/polaris-dossier/src/argv.test.ts"
+ ],
+ "cleanAfter": true,
+ "runs": [
+  {
+   "i": 1,
+   "exit": 0,
+   "load1": 37.37,
+   "seconds": 5.0,
+   "tests": [
+    "Tests  157 passed (157)"
+   ],
+   "failed": [],
+   "timedOut": 0
+  },
+  {
+   "i": 2,
+   "exit": 0,
+   "load1": 37.82,
+   "seconds": 6.0,
+   "tests": [
+    "Tests  157 passed (157)"
+   ],
+   "failed": [],
+   "timedOut": 0
+  },
+  {
+   "i": 3,
+   "exit": 0,
+   "load1": 37.68,
+   "seconds": 4.6,
+   "tests": [
+    "Tests  157 passed (157)"
+   ],
+   "failed": [],
+   "timedOut": 0
+  }
+ ]
+}

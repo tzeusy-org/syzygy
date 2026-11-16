@@ -1,0 +1,250 @@
+{
+ "what": "BASELINE plus rev536-specs.json mutants copied unchanged",
+ "mutants": [
+  {
+   "id": "BASELINE",
+   "edits": [],
+   "projects": [
+    "@syzygy/polaris-generation-core",
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "packages/polaris-generation-core/src/island-boundary.test.ts",
+    "packages/polaris-dossier/src/subpath-imports.test.ts",
+    "packages/polaris-dossier/src/argv.test.ts"
+   ]
+  },
+  {
+   "id": "RV536-M1-https-url-reads-outside",
+   "what": "the tarball arm skips an https: URL, so an https tarball URL reads as outside",
+   "projects": [
+    "@syzygy/polaris-generation-core",
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "packages/polaris-generation-core/src/island-boundary.test.ts",
+    "packages/polaris-dossier/src/subpath-imports.test.ts",
+    "packages/polaris-dossier/src/argv.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|^(?!https:).*\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    }
+   ]
+  },
+  {
+   "id": "RV536-M2-http-url-reads-outside",
+   "what": "the tarball arm skips an http: URL only; https: URLs stay refused",
+   "projects": [
+    "@syzygy/polaris-generation-core",
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "packages/polaris-generation-core/src/island-boundary.test.ts",
+    "packages/polaris-dossier/src/subpath-imports.test.ts",
+    "packages/polaris-dossier/src/argv.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|^(?!http:).*\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    }
+   ]
+  },
+  {
+   "id": "RV536-M3-tarball-needs-dot-slash",
+   "what": "the tarball arm matches only a name with a leading ./",
+   "projects": [
+    "@syzygy/polaris-generation-core",
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "packages/polaris-generation-core/src/island-boundary.test.ts",
+    "packages/polaris-dossier/src/subpath-imports.test.ts",
+    "packages/polaris-dossier/src/argv.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|^\\.\\/.*\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    }
+   ]
+  },
+  {
+   "id": "RV536-M4-census-takes-ts-md",
+   "what": "the census extension test also takes a .ts.md name",
+   "projects": [
+    "@syzygy/polaris-generation-core",
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "packages/polaris-generation-core/src/island-boundary.test.ts",
+    "packages/polaris-dossier/src/subpath-imports.test.ts",
+    "packages/polaris-dossier/src/argv.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": "files.filter((module) => /\\.[cm]?tsx?$/u.test(module)",
+     "new": "files.filter((module) => /\\.[cm]?tsx?(?:\\.md)?$/u.test(module)"
+    }
+   ]
+  },
+  {
+   "id": "RV536-M5-tree-depth-two",
+   "what": "treeFiles() keeps only paths at most two segments under src",
+   "projects": [
+    "@syzygy/polaris-generation-core",
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "packages/polaris-generation-core/src/island-boundary.test.ts",
+    "packages/polaris-dossier/src/subpath-imports.test.ts",
+    "packages/polaris-dossier/src/argv.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": "fs.readdirSync(path.join(ROOT, dir), { recursive: true, encoding: 'utf8' }).map(",
+     "new": "fs.readdirSync(path.join(ROOT, dir), { recursive: true, encoding: 'utf8' }).filter((file) => file.split('/').length <= 2).map("
+    }
+   ]
+  },
+  {
+   "id": "RV536-M6-root-keeps-only-dependencies",
+   "what": "the root entry keeps its name and dependencies only",
+   "projects": [
+    "@syzygy/polaris-generation-core",
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "packages/polaris-generation-core/src/island-boundary.test.ts",
+    "packages/polaris-dossier/src/subpath-imports.test.ts",
+    "packages/polaris-dossier/src/argv.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "manifests.set(root.name, { dir: '.', ...root });",
+     "new": "manifests.set(root.name, { dir: '.', name: root.name, dependencies: root.dependencies });"
+    }
+   ]
+  },
+  {
+   "id": "RV536-M7-npm-alias-workspace-scope-only",
+   "what": "the npm: arm refuses an alias of an @syzygy/ package only, so a registry alias reads as outside",
+   "projects": [
+    "@syzygy/polaris-generation-core",
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "packages/polaris-generation-core/src/island-boundary.test.ts",
+    "packages/polaris-dossier/src/subpath-imports.test.ts",
+    "packages/polaris-dossier/src/argv.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:@syzygy\\/|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    }
+   ]
+  },
+  {
+   "id": "RV536-M8-root-declarations-unread",
+   "what": "localNames skips the workspace root's manifest",
+   "projects": [
+    "@syzygy/polaris-generation-core",
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "packages/polaris-generation-core/src/island-boundary.test.ts",
+    "packages/polaris-dossier/src/subpath-imports.test.ts",
+    "packages/polaris-dossier/src/argv.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "  for (const manifest of workspace.manifests.values()) {",
+     "new": "  for (const manifest of [...workspace.manifests.values()].filter((manifest) => manifest.dir !== '.')) {"
+    }
+   ]
+  },
+  {
+   "id": "RV536-M9-dotdot-alone-outside",
+   "what": "`..` alone reads as outside; `.`, `./x` and `../x` stay local",
+   "projects": [
+    "@syzygy/polaris-generation-core",
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "packages/polaris-generation-core/src/island-boundary.test.ts",
+    "packages/polaris-dossier/src/subpath-imports.test.ts",
+    "packages/polaris-dossier/src/argv.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.(?:\\/|$)|\\.\\.\\/|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    }
+   ]
+  },
+  {
+   "id": "RV536-M10-test-exclusion-end-anchor-dropped",
+   "what": "the census test exclusion's $ dropped",
+   "projects": [
+    "@syzygy/polaris-generation-core",
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "packages/polaris-generation-core/src/island-boundary.test.ts",
+    "packages/polaris-dossier/src/subpath-imports.test.ts",
+    "packages/polaris-dossier/src/argv.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": "!/\\.test\\.[cm]?tsx?$/u.test(module)",
+     "new": "!/\\.test\\.[cm]?tsx?/u.test(module)"
+    }
+   ]
+  },
+  {
+   "id": "RV536-M11-residual-widened",
+   "what": "the N3 residual refused: any slashed version with no colon, or any leading dot",
+   "projects": [
+    "@syzygy/polaris-generation-core",
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "packages/polaris-generation-core/src/island-boundary.test.ts",
+    "packages/polaris-dossier/src/subpath-imports.test.ts",
+    "packages/polaris-dossier/src/argv.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/|\\.|[^:]*\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    }
+   ]
+  }
+ ]
+}

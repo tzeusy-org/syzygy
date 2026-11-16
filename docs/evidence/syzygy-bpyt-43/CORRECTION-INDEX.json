@@ -1,0 +1,17 @@
+{
+  "schema": "syzygy-bpyt-43-correction-index/1",
+  "finding": "F1",
+  "status": "author-correction-evidenced-independent-review-pending",
+  "wholeOriginalOutcomes": 8,
+  "wholeCriteria": 22,
+  "entrypoint": "correction-f1/README.md",
+  "qualifiedPredecessor": "correction-f1/PREDECESSOR-QUALIFICATION.json",
+  "successorWitness": "correction-f1/hook-core-positive-control-v2.json",
+  "artifactMap": "correction-f1/PORTABLE-ARTIFACT-MAP.json",
+  "fullAC": "correction-f1/FULL-22-AC-MAP.json",
+  "classesAndFloors": "correction-f1/CLASSES-AND-FLOORS.json",
+  "genuinePriorRaw": "docs/reviews/R-GP-IMPL-TEST-CLOCKS-FOLLOWUPS-1-RAW.md",
+  "independentF1Clearance": "Unknown / requires fresh review",
+  "notice": "pending ROOT",
+  "priorPacketsUnchanged": true
+}

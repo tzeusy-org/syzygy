@@ -1,7 +1,7 @@
-import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import { realpathSync } from 'node:fs';
 import { join, resolve } from 'node:path';
+import { sha256 } from '@syzygy/support';
 
 // Test seam: exported for the tests; production code reaches it only inside this file.
 export const PWB_APPROVED_REPOSITORY_LOCATOR = '/home/tze/GitHub/butlers';
@@ -26,6 +26,7 @@ export interface GitObservation {
 }
 
 function readGit(root: string, args: readonly string[]): string {
+  // G5 row 4 exception: its per-call env override is forbidden in the core live-observer import closure.
   return execFileSync('git', ['--no-optional-locks', '-C', root, ...args], {
     encoding: 'utf8',
     env: { ...process.env, GIT_OPTIONAL_LOCKS: '0' },
@@ -80,7 +81,7 @@ export function observeGitRepository(root: string): GitObservation {
   return {
     revision,
     committerInstant,
-    worktreeMetadataDigest: `sha256:${createHash('sha256').update(worktreeRecord).digest('hex')}`,
+    worktreeMetadataDigest: `sha256:${sha256(worktreeRecord)}`,
     clean: worktreeRecord.length === 0,
     changedPaths: [...new Set(changedPaths)].sort(),
   };
@@ -176,12 +177,20 @@ export function observeObservatoryDrift(
 export function pocObserverInputsAreClean(
   observation: Pick<GitObservation, 'changedPaths'>,
 ): boolean {
-  const exactInputs = new Set(['package.json', 'package-lock.json', 'tsconfig.base.json']);
+  // scripts/clean_build.mjs holds what `build:poc` removes and how it runs tsc (syzygy-bpyt.4.2).
+  const exactInputs = new Set(['package.json', 'package-lock.json', 'tsconfig.base.json', 'scripts/clean_build.mjs']);
+  // Every project the POC start compiles or loads needs a prefix here (owner direction GP-B2 Q3, syzygy-bpyt.56): the projects
+  // build:poc names, every project their tsconfig references reach, and the workspaces main.ts imports. git-observation.test.ts
+  // derives that set and requires the gate to refuse exactly it.
   const inputPrefixes = [
     'apps/three-surface-poc/',
     'packages/three-surface-poc-core/',
     'packages/cap1-daemon/',
+    'packages/http-host/',
     'packages/cap1-core/',
+    'packages/support/',
+    'packages/polaris-generation-core/',
+    'packages/polaris-generation-consent/',
   ];
   return observation.changedPaths.every(
     (changedPath) =>

@@ -1,0 +1,56 @@
+{
+ "tree": "a clone at HEAD",
+ "commit": "5f0d5547dfe7f89adf3e86310f819ddeebfaae90",
+ "cleanAfter": true,
+ "runs": [
+  {
+   "label": "whole",
+   "command": "npx vitest run --reporter=json",
+   "load1Before": 21.18,
+   "load1After": 48.85,
+   "success": true,
+   "files": 246,
+   "total": 5385,
+   "passed": 5380,
+   "failed": 0,
+   "skipped": 5,
+   "notPassed": [
+    {
+     "file": "packages/polaris-dossier/src/no-egress.test.ts",
+     "name": "no provider call and no transmission (S10), without strace is not proved on this host: strace is unavailable, so the capture is skipped, never reported as passed",
+     "status": "skipped",
+     "ms": null,
+     "error": ""
+    },
+    {
+     "file": "packages/three-surface-poc-core/src/test-artifact-verification.live.test.ts",
+     "name": "live real focused-pytest verification (SYZYGY_POC_BUTLERS_REPO gated) ingests one real, passing operator-reported focused-pytest artifact and resolves it to report-fact, never Verified, through the full model (AC1/AC3, RFC5-19)",
+     "status": "skipped",
+     "ms": null,
+     "error": ""
+    },
+    {
+     "file": "packages/three-surface-poc-core/src/work-items.live.test.ts",
+     "name": "live Butlers observation (SYZYGY_POC_BUTLERS_REPO gated) matches `git rev-parse HEAD` and a direct Dolt read (POC-REQ-001, POC-REQ-010 oracles)",
+     "status": "skipped",
+     "ms": null,
+     "error": ""
+    },
+    {
+     "file": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+     "name": "opening index in a real browser (PWB-REQ-010, P-98) a captured /polaris page meets the oracle at both viewports",
+     "status": "skipped",
+     "ms": null,
+     "error": ""
+    },
+    {
+     "file": "apps/three-surface-poc/src/project-shape-discovery.live.test.ts",
+     "name": "live Butlers project-shape discovery at the reviewed revision matches the independent five-root, seven-Heart, baseline and total populations",
+     "status": "skipped",
+     "ms": null,
+     "error": ""
+    }
+   ]
+  }
+ ]
+}

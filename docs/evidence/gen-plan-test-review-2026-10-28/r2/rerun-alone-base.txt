@@ -1,0 +1,13 @@
+== packages/polaris-dossier/src/run-evidence.test.ts start 00:46:00 load 37.49 44.54 45.24
+ Test Files  1 passed (1)
+      Tests  4 passed (4)
+== packages/polaris-dossier/src/run-evidence.test.ts end 00:46:09 load 36.49 44.22 45.13
+== packages/polaris-dossier/src/start-gates.test.ts start 00:46:09 load 36.49 44.22 45.13
+ Test Files  1 passed (1)
+      Tests  104 passed (104)
+== packages/polaris-dossier/src/start-gates.test.ts end 00:46:44 load 29.63 41.47 44.17
+== packages/polaris-generation-consent/src/act-families.test.ts start 00:46:44 load 29.63 41.47 44.17
+ Test Files  1 passed (1)
+      Tests  65 passed (65)
+== packages/polaris-generation-consent/src/act-families.test.ts end 00:46:50 load 28.94 41.13 44.04
+ALLDONE

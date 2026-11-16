@@ -16,9 +16,9 @@
 // It reads no repository itself; the daemon (`main.ts`) never imports it.
 // Exits 0 only when every listed page was served and has zero violations.
 import { execFileSync } from 'node:child_process';
-import { createHash } from 'node:crypto';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
+import { sha256 } from '@syzygy/support';
 
 import { findBrowserExecutable, launchBrowser } from './cdp-browser.js';
 import { sweepPolarisNamesAndHeadings, type MachineAnswerSources, type NameHeadingViolation, type WholeSurfaceReport } from './polaris-accessible-names.js';
@@ -31,10 +31,6 @@ const USAGE = 'Usage: npm run poc:accessible-names-sweep -- --task <bead id> --b
 function argument(name: string): string | undefined {
   const index = process.argv.indexOf(name);
   return index === -1 ? undefined : process.argv[index + 1];
-}
-
-function sha256(text: string): string {
-  return createHash('sha256').update(text).digest('hex');
 }
 
 function byKind(violations: readonly NameHeadingViolation[]): Record<string, number> {

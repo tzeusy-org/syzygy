@@ -1,0 +1,219 @@
+{
+  "subjectCommit": "f5487c186626513724e1eff28a2789a4d78c154c",
+  "node": "v24.6.0",
+  "auditKeys": [
+    "greenfield:reconciliation:R4a:G5",
+    "greenfield:reconciliation:R4a:git-runner-options"
+  ],
+  "originalFiveSeams": [
+    "worker-change-observation/defaultRunGit",
+    "governance-inputs/defaultRunGit",
+    "governance-inputs/defaultReadGitBlob",
+    "git-observation/readGit",
+    "code-structure/defaultRunGit"
+  ],
+  "population": [
+    "packages/three-surface-poc-core/src/worker-change-observation.ts",
+    "apps/three-surface-poc/src/governance-inputs.ts",
+    "apps/three-surface-poc/src/git-observation.ts",
+    "packages/three-surface-poc-core/src/code-structure.ts",
+    "packages/three-surface-poc-core/src/project-shape-observation.ts",
+    "apps/three-surface-poc/src/verbatim-route.ts"
+  ],
+  "fileDenominator": 6,
+  "profileDenominator": 7,
+  "exception": "isolated batch via git-blob-batch.ts",
+  "sources": [
+    {
+      "path": "packages/three-surface-poc-core/src/worker-change-observation.ts",
+      "sha256": "547d1d52e59a3c2150f9c2e45c45404096509be700e8210fc899989dbe62f8e7",
+      "bytes": 7845,
+      "execFileSyncCallCount": 1
+    },
+    {
+      "path": "apps/three-surface-poc/src/governance-inputs.ts",
+      "sha256": "f8c860d7a5a96de953f3d633911b98f065d6b182ea77b59358b657e8a36a2fbf",
+      "bytes": 21629,
+      "execFileSyncCallCount": 2
+    },
+    {
+      "path": "apps/three-surface-poc/src/git-observation.ts",
+      "sha256": "dfe1e173deb17ac96c9cf2420c676f6e81a615271efec2f58bbd2bed5872ea52",
+      "bytes": 8029,
+      "execFileSyncCallCount": 1
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/code-structure.ts",
+      "sha256": "ed623b7076f232447c7073e0595bc080a66c4ed7fda38313b552f75b3233a43c",
+      "bytes": 8199,
+      "execFileSyncCallCount": 0
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+      "sha256": "f5d700fd2d427ed123c3045525a70559926a654d82a972e783afc2452140fb4e",
+      "bytes": 27622,
+      "execFileSyncCallCount": 1
+    },
+    {
+      "path": "apps/three-surface-poc/src/verbatim-route.ts",
+      "sha256": "5f007660acee4dfe17a99dc6517330a63f65dde110d3e30eb1bbdbb17a9bde94",
+      "bytes": 9337,
+      "execFileSyncCallCount": 1
+    },
+    {
+      "path": "apps/three-surface-poc/src/git-blob-batch.ts",
+      "sha256": "74240e99c66ec0ce082bf83ebb5cfbba74e23e7605a65104cb0f1d9d90e23ed2",
+      "bytes": 3467,
+      "execFileSyncCallCount": 0
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/isolated-git.ts",
+      "sha256": "70c0eed161b449d47bcb6a5c1583366f748176f94a8aa9f626ee949da94bcb6d",
+      "bytes": 2370,
+      "execFileSyncCallCount": 1
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/pwb-types.ts",
+      "sha256": "21029d959cdfd603daa9db5a9b9ada58994adf409df73ea616118fb5aceb5290",
+      "bytes": 1867,
+      "execFileSyncCallCount": 0
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/index.ts",
+      "sha256": "34601bba8c9702370f632d6f5cc5e1871490d53bef4c0ed5d87c78a8014a430b",
+      "bytes": 1956,
+      "execFileSyncCallCount": 0
+    }
+  ],
+  "profiles": [
+    {
+      "id": 1,
+      "caller": "worker-change-observation/defaultRunGit",
+      "prefix": [
+        "--no-optional-locks",
+        "-C",
+        "root"
+      ],
+      "cwd": "omitted",
+      "encoding": "utf8",
+      "maxBuffer": 67108864,
+      "stdio": [
+        "ignore",
+        "pipe",
+        "pipe"
+      ],
+      "env": "omitted/inherited"
+    },
+    {
+      "id": 2,
+      "caller": "governance-inputs/defaultRunGit",
+      "prefix": [
+        "--no-optional-locks",
+        "-C",
+        "root"
+      ],
+      "cwd": "omitted",
+      "encoding": "omitted + fatal TextDecoder",
+      "maxBuffer": "omitted",
+      "stdio": [
+        "ignore",
+        "pipe",
+        "ignore"
+      ],
+      "env": "omitted/inherited"
+    },
+    {
+      "id": 3,
+      "caller": "governance-inputs/defaultReadGitBlob",
+      "prefix": [
+        "--no-optional-locks",
+        "-C",
+        "root"
+      ],
+      "suffix": [
+        "cat-file",
+        "blob",
+        "object"
+      ],
+      "cwd": "omitted",
+      "encoding": "omitted/raw Uint8Array",
+      "maxBuffer": "omitted",
+      "stdio": [
+        "ignore",
+        "pipe",
+        "ignore"
+      ],
+      "env": "omitted/inherited"
+    },
+    {
+      "id": 4,
+      "caller": "git-observation/readGit",
+      "prefix": [
+        "--no-optional-locks",
+        "-C",
+        "root"
+      ],
+      "cwd": "omitted",
+      "encoding": "utf8",
+      "maxBuffer": "omitted",
+      "stdio": [
+        "ignore",
+        "pipe",
+        "ignore"
+      ],
+      "env": "per-call {...process.env,GIT_OPTIONAL_LOCKS:0}"
+    },
+    {
+      "id": 5,
+      "caller": "code-structure/defaultRunGit",
+      "delegatesTo": 6,
+      "encoding": "raw byte view then gitlink filtering then strict decode",
+      "metadataListingSeparate": true
+    },
+    {
+      "id": 6,
+      "caller": "project-shape-observation/gitRunnerFor",
+      "prefix": [
+        "--no-optional-locks",
+        "-C",
+        "root"
+      ],
+      "cwd": "omitted",
+      "encoding": "omitted/raw Uint8Array",
+      "maxBuffer": 268435456,
+      "stdio": [
+        "ignore",
+        "pipe",
+        "ignore"
+      ],
+      "env": "omitted/inherited"
+    },
+    {
+      "id": 7,
+      "caller": "verbatim-route/gitBlobReaderFor",
+      "prefix": [],
+      "cwd": "root",
+      "encoding": "omitted/raw Uint8Array",
+      "maxBuffer": "limits.maxBytesPerSource",
+      "stdio": [
+        "ignore",
+        "pipe",
+        "pipe"
+      ],
+      "env": "omitted/inherited"
+    },
+    {
+      "id": 8,
+      "exception": true,
+      "caller": "governance-inputs/batchReaderFor -> git-blob-batch -> isolatedGit",
+      "maxBuffer": 512000000,
+      "stdio": [
+        "pipe",
+        "pipe",
+        "ignore"
+      ],
+      "env": "isolated allowlist",
+      "input": "batch framing retained"
+    }
+  ]
+}

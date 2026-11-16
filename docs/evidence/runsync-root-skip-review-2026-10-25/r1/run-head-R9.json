@@ -1,0 +1,185 @@
+{
+ "tool": "rev-525/tools/probe.py",
+ "toolSha256": "0d82288a92a49bfe8af739ee1f15a61ed3b208b672b07e4c85cb2d18b076cfa6",
+ "case": "head-R9",
+ "commit": "f7bbb93a005b45c2866d8a9993afbca44cd1a34f",
+ "files": {},
+ "edits": [
+  {
+   "file": "packages/polaris-dossier/src/argv.ts",
+   "old": "if (token.value === undefined || (spec.dashValue",
+   "new": "if ((spec.dashValue"
+  }
+ ],
+ "env": {},
+ "filters": [
+  "daemon-entry-unchanged"
+ ],
+ "t": null,
+ "editChecks": [
+  {
+   "file": "packages/polaris-dossier/src/argv.ts",
+   "old": "if (token.value === undefined || (spec.dashValue",
+   "new": "if ((spec.dashValue",
+   "occurrences": 1
+  }
+ ],
+ "build": {
+  "exitCode": 2,
+  "typeErrors": [
+   "packages/polaris-dossier/src/argv.ts(63,43): error TS18048: 'token.value' is possibly 'undefined'.",
+   "packages/polaris-dossier/src/argv.ts(64,23): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'."
+  ]
+ },
+ "distCarries": [
+  {
+   "dist": "packages/polaris-dossier/dist/argv.js",
+   "carries": true
+  }
+ ],
+ "run": {
+  "command": "npx vitest run --config packages/cap1-system/vitest.config.ts daemon-entry-unchanged --reporter=json --outputFile=<tmp>/report.json",
+  "exitCode": 1,
+  "wallSeconds": 24.5,
+  "deadlineHit": false,
+  "samples": 57,
+  "port7477Before": [],
+  "port7477Seen": [],
+  "killedOn7477": [],
+  "unstuck": [],
+  "ownListeningPorts": [
+   "43081"
+  ],
+  "processesSeen": 21,
+  "survivors": {},
+  "tmpLeftoversBeforeRemoval": [
+   "node-compile-cache",
+   "report.json",
+   "vitest.log"
+  ],
+  "logTail": "JSON report written to <tmp>/report.json\n",
+  "tests": [
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged [\"--help\"] prints the usage and exits 0",
+    "status": "passed",
+    "durationMs": 107,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged [\"-h\"] prints the usage and exits 0",
+    "status": "passed",
+    "durationMs": 95,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged [\"--help\",\"dossier\"] prints the usage and exits 0",
+    "status": "passed",
+    "durationMs": 119,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged [\"--bogus\"] is refused with exit 1 and the same message",
+    "status": "passed",
+    "durationMs": 127,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged [\"--port\",\"0\",\"dossier\"] is refused with exit 1 and the same message",
+    "status": "passed",
+    "durationMs": 116,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged [\"Dossier\"] is refused with exit 1 and the same message",
+    "status": "passed",
+    "durationMs": 115,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged [\"--port\"] is refused with exit 1 and the same message",
+    "status": "failed",
+    "durationMs": 20050,
+    "failure": "Error: [\"--port\"]: spawnSync /home/tze/.nvm/versions/node/v24.6.0/bin/node ETIMEDOUT (timeout 20000 ms)\n    at runSync (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-525/clone/packages/cap1-system/src/daemon-entry-unchanged.system.test.ts:84:27)\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-525/clo"
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged [\"--port\",\"70000\"] is refused with exit 1 and the same message",
+    "status": "passed",
+    "durationMs": 193,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged a state directory inside the governed plane is refused with the same message",
+    "status": "passed",
+    "durationMs": 256,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged with no arguments it serves from the working directory, writes the same state and shuts down the same way",
+    "status": "passed",
+    "durationMs": 330,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged with explicit flags it serves, writes the same state and shuts down the same way",
+    "status": "passed",
+    "durationMs": 256,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: the one changed input, `dossier` as the first argument `dossier` alone is a dossier usage error (exit 2), not the daemon's refusal",
+    "status": "passed",
+    "durationMs": 468,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: the one changed input, `dossier` as the first argument `dossier status <missing>` is a dossier refusal (exit 1) and starts no daemon",
+    "status": "passed",
+    "durationMs": 302,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: the one changed input, `dossier` as the first argument `dossier render <missing>` reaches the run with the renderer injected, and starts no daemon",
+    "status": "passed",
+    "durationMs": 270,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch",
+    "status": "passed",
+    "durationMs": 1,
+    "failure": null
+   }
+  ]
+ },
+ "rebuild": {
+  "exitCode": 0,
+  "typeErrors": []
+ },
+ "treeCleanAfter": true,
+ "summary": {
+  "exitCode": 1,
+  "wallSeconds": 24.5,
+  "deadlineHit": false,
+  "statuses": {
+   "failed": 1,
+   "passed": 14
+  },
+  "failed": [
+   {
+    "name": "vocation but `dossier` is unchanged [\"--port\"] is refused with exit 1 and the same message",
+    "ms": 20050,
+    "etimedout": true,
+    "head": "Error: [\"--port\"]: spawnSync /home/tze/.nvm/versions/node/v24.6.0/bin/node ETIMEDOUT (timeout 20000 ms)\n    at runSync (/tmp/claude-1000/-home-tze-GitHub-syzygy"
+   }
+  ],
+  "port7477Seen": 0,
+  "samples": 57,
+  "killedOn7477": 0,
+  "unstuck": 0,
+  "ownListeningPorts": [
+   "43081"
+  ],
+  "survivors": 0,
+  "slowestMs": 20050
+ }
+}

@@ -1,0 +1,53 @@
+schema: measure-restore-probes/2
+record commit: 82565b2fb56f12af5b47c3406ade97c4f4710370
+tool sha256 == git show <record commit>:tool: True
+tool sha256 == git show HEAD:tool: True
+script round0 3e563ec4 sha256 0ef82cd0 == git show: True
+script round1 dc60c5bc sha256 920c5f12 == git show: True
+script fix 82565b2f sha256 72a0fabd == git show: True
+fix script == HEAD script: True
+results: 122
+  D1    fix: attempts 1, passed 1, summary match True, exercised {'-': 1}, exits {1: 1}, dirty 0, with survivors 0, params [(None, 1)]
+  D1 round0: attempts 1, passed 0, summary match True, exercised {'-': 1}, exits {1: 1}, dirty 1, with survivors 0, params [(None, 1)]
+      fail param=None exit=1 dirty=' M packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts\n' survivors=0 exercised=None tests=None prof=None
+  D1 round1: attempts 1, passed 1, summary match True, exercised {'-': 1}, exits {1: 1}, dirty 0, with survivors 0, params [(None, 1)]
+   E    fix: attempts 18, passed 18, summary match True, exercised {True: 18}, exits {143: 18}, dirty 0, with survivors 0, params [(800, 3), (1000, 3), (1200, 3), (1500, 3), (1800, 3), (2200, 3)]
+   E round1: attempts 18, passed 14, summary match True, exercised {True: 18}, exits {143: 18}, dirty 0, with survivors 4, params [(800, 3), (1000, 3), (1200, 3), (1500, 3), (1800, 3), (2200, 3)]
+      fail param=1200 exit=143 dirty='' survivors=11 exercised=True tests=None prof=None
+      fail param=800 exit=143 dirty='' survivors=10 exercised=True tests=None prof=None
+      fail param=1000 exit=143 dirty='' survivors=10 exercised=True tests=None prof=None
+      fail param=1000 exit=143 dirty='' survivors=10 exercised=True tests=None prof=None
+   G    fix: attempts 36, passed 36, summary match True, exercised {True: 36}, exits {143: 36}, dirty 0, with survivors 0, params [(0, 4), (30, 4), (60, 4), (100, 4), (150, 4), (200, 4), (300, 4), (500, 4), (1000, 4)]
+   G round1: attempts 36, passed 32, summary match True, exercised {True: 36}, exits {143: 36}, dirty 4, with survivors 4, params [(0, 4), (30, 4), (60, 4), (100, 4), (150, 4), (200, 4), (300, 4), (500, 4), (1000, 4)]
+      fail param=150 exit=143 dirty=' M packages/polaris-generation-consent/src/package-reader.test.ts\n M packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts\n' survivors=1 exercised=True tests=None prof=None
+      fail param=100 exit=143 dirty=' M packages/polaris-generation-consent/src/package-reader.test.ts\n M packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts\n' survivors=1 exercised=True tests=None prof=None
+      fail param=100 exit=143 dirty=' M packages/polaris-generation-consent/src/package-reader.test.ts\n M packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts\n' survivors=1 exercised=True tests=None prof=None
+      fail param=1000 exit=143 dirty=' M packages/polaris-generation-consent/src/package-reader.test.ts\n M packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts\n' survivors=1 exercised=True tests=None prof=None
+   H    fix: attempts 1, passed 1, summary match True, exercised {True: 1}, exits {0: 1}, dirty 0, with survivors 0, params [(None, 1)]
+   H round1: attempts 1, passed 0, summary match True, exercised {True: 1}, exits {129: 1}, dirty 0, with survivors 0, params [(None, 1)]
+      fail param=None exit=129 dirty='' survivors=0 exercised=True tests=None prof=None
+   I    fix: attempts 1, passed 1, summary match True, exercised {True: 1}, exits {130: 1}, dirty 0, with survivors 0, params [(None, 1)]
+   I round0: attempts 1, passed 0, summary match True, exercised {True: 1}, exits {-2: 1}, dirty 0, with survivors 1, params [(None, 1)]
+      fail param=None exit=-2 dirty='' survivors=1 exercised=True tests=None prof=None
+   I round1: attempts 1, passed 1, summary match True, exercised {True: 1}, exits {-2: 1}, dirty 0, with survivors 0, params [(None, 1)]
+   K    fix: attempts 1, passed 1, summary match True, exercised {True: 1}, exits {0: 1}, dirty 0, with survivors 0, params [(None, 1)]
+   K round1: attempts 1, passed 0, summary match True, exercised {True: 1}, exits {1: 1}, dirty 1, with survivors 0, params [(None, 1)]
+      fail param=None exit=1 dirty=' M packages/polaris-generation-consent/src/package-reader.test.ts\n M packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts\n' survivors=0 exercised=True tests=None prof=None
+  P0    fix: attempts 1, passed 1, summary match True, exercised {'-': 1}, exits {0: 1}, dirty 0, with survivors 0, params [(None, 1)]
+   T    fix: attempts 1, passed 1, summary match True, exercised {True: 1}, exits {143: 1}, dirty 0, with survivors 0, params [(None, 1)]
+   T round0: attempts 1, passed 0, summary match True, exercised {True: 1}, exits {-15: 1}, dirty 1, with survivors 1, params [(None, 1)]
+      fail param=None exit=-15 dirty=' M packages/polaris-generation-consent/src/package-reader.test.ts\n M packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts\n' survivors=1 exercised=True tests=None prof=None
+   T round1: attempts 1, passed 1, summary match True, exercised {True: 1}, exits {143: 1}, dirty 0, with survivors 0, params [(None, 1)]
+summary recomputed from results matches: True
+summary keys: {'P0': ['fix'], 'D1': ['fix', 'round0', 'round1'], 'T': ['fix', 'round0', 'round1'], 'I': ['fix', 'round0', 'round1'], 'E': ['fix', 'round1'], 'G': ['fix', 'round1'], 'K': ['fix', 'round1'], 'H': ['fix', 'round1']}
+E: round1 fails >=1 / fix passes all / fix all exercised: (True, True, True)
+G: round1 fails >=1 / fix passes all / fix all exercised: (True, True, True)
+K: round1 fails >=1 / fix passes all / fix all exercised: (True, True, True)
+H: round1 fails >=1 / fix passes all / fix all exercised: (True, True, True)
+fix E exit codes: Counter({143: 18})
+fix G exit codes: Counter({143: 36})
+fix H: [(0, 299, 299)]
+fix K: [(0, 299, ['KILLPG 3402114 0 -> ESRCH, answered alive', 'KILLPG 3402114 15 -> ESRCH', 'KILLPG 3402114 0 -> ESRCH', 'KILLPG 3402114 0 -> ESRCH'])]
+round1 K: [(1, ' M packages/polaris-generation-consent/src/package-reader.test.ts\n M packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts\n', ['KILLPG 3400442 0 -> ESRCH, answered alive', 'KILLPG 3400442 15 -> ESRCH'])]
+fix I/T: [('I', 130, 'stopped by SIGINT: the run in progress, if any, was ended and restored and is not recorded\n'), ('T', 143, 'stopped by SIGTERM: the run in progress, if any, was ended and restored and is not recorded\n')]
+predicate: an attempt passes iff, 3 s after the script exits, git status --porcelain --untracked-files=no is empty and no process survives; P0, K and H also need exit 0 and a 299-test record with 299 profile rows; D1 also needs a non-zero exit; E, G, T, I, H and K also need the probe to have exercised its case (a signal sent while the script ran; for K, the patched answer followed by the script's SIGTERM call). Expected "fail" means at least one attempt fails; expected "pass" means every attempt passes.

@@ -8,7 +8,7 @@ import {
   type ProjectId,
   type RepositoryId,
 } from '@syzygy/cap1-core';
-import { consent, projectYaml } from './fixtures/index.js';
+import { decisionsFor, consent, projectYaml } from './fixtures/index.js';
 
 // CAP1-REQ-010 — Every declared repository has an explicit coverage
 // result.
@@ -67,7 +67,7 @@ const OBSERVATIONS: ObservationOutcome[] = [
 describe('CAP1-REQ-010 — every declared repository has an explicit coverage result', () => {
   it('oracle: exactly N results, one per declared repository, N = the declared count', () => {
     const decl = declaration();
-    const result = computeCoverage(decl, CONSENTS, OBSERVATIONS);
+    const result = computeCoverage(decl, decisionsFor(decl, CONSENTS), OBSERVATIONS);
     // Denominator asserted against the declaration's own count.
     expect(result.repositories).toHaveLength(decl.repositories.length);
     expect(result.repositories).toHaveLength(3);
@@ -77,7 +77,11 @@ describe('CAP1-REQ-010 — every declared repository has an explicit coverage re
   });
 
   it('oracle: every result carries an observed-or-why-not value', () => {
-    const result = computeCoverage(declaration(), CONSENTS, OBSERVATIONS);
+    const result = computeCoverage(
+      declaration(),
+      decisionsFor(declaration(), CONSENTS),
+      OBSERVATIONS,
+    );
     for (const entry of result.repositories) {
       if (entry.state === 'observed') {
         expect(entry.capturedScope.length).toBeGreaterThan(0);
@@ -93,7 +97,11 @@ describe('CAP1-REQ-010 — every declared repository has an explicit coverage re
   });
 
   it('scenario: three declared, one unconsented — the unconsented one carries its explicit not-observed result rather than being omitted', () => {
-    const result = computeCoverage(declaration(), CONSENTS, OBSERVATIONS);
+    const result = computeCoverage(
+      declaration(),
+      decisionsFor(declaration(), CONSENTS),
+      OBSERVATIONS,
+    );
     const unconsented = result.repositories.find(
       (entry) => entry.repositoryId === ('repo-unconsented' as RepositoryId),
     );
@@ -102,7 +110,11 @@ describe('CAP1-REQ-010 — every declared repository has an explicit coverage re
   });
 
   it('falsifier: a repository with no observation outcome is not silently absent — it renders an explicit capture failure', () => {
-    const result = computeCoverage(declaration(), CONSENTS, OBSERVATIONS);
+    const result = computeCoverage(
+      declaration(),
+      decisionsFor(declaration(), CONSENTS),
+      OBSERVATIONS,
+    );
     const never = result.repositories.find(
       (entry) => entry.repositoryId === ('repo-never-captured' as RepositoryId),
     );
@@ -114,7 +126,32 @@ describe('CAP1-REQ-010 — every declared repository has an explicit coverage re
     // Same declaration queried with zero consents and zero observations:
     // still exactly N explicit results.
     const decl = declaration();
-    const bare = computeCoverage(decl, [], []);
+    const bare = computeCoverage(decl, decisionsFor(decl, []), []);
     expect(bare.repositories).toHaveLength(decl.repositories.length);
+  });
+});
+
+// syzygy-u2a.6: the decisions are joined to the declaration by ordinal. A
+// count, identity or reference disagreement is a caller contract violation
+// that throws; it is never repaired by looking a pair up.
+describe('CAP1-REQ-010 — one decision per declared repository, joined by ordinal', () => {
+  it('falsifier: a missing, a reordered or a re-referenced decision throws rather than being repaired', () => {
+    const decl = declaration();
+    const decisions = decisionsFor(decl, CONSENTS);
+    expect(() => computeCoverage(decl, decisions.slice(0, 2), OBSERVATIONS)).toThrow(
+      '2 consent decisions for 3 declared repositories',
+    );
+    const swapped = [decisions[1], decisions[0], decisions[2]] as typeof decisions;
+    expect(() => computeCoverage(decl, swapped, OBSERVATIONS)).toThrow(
+      'decision 0 is for repo-unconsented (consent-r2), not repo-observed (consent-r1)',
+    );
+    const reidentified = [{ ...decisions[0], repositoryId: 'repo-elsewhere' as RepositoryId }, decisions[1], decisions[2]] as typeof decisions;
+    expect(() => computeCoverage(decl, reidentified, OBSERVATIONS)).toThrow(
+      'decision 0 is for repo-elsewhere (consent-r1), not repo-observed (consent-r1)',
+    );
+    const rereferenced = [{ ...decisions[0], reference: 'consent-r9' }, decisions[1], decisions[2]] as typeof decisions;
+    expect(() => computeCoverage(decl, rereferenced, OBSERVATIONS)).toThrow(
+      'decision 0 is for repo-observed (consent-r9), not repo-observed (consent-r1)',
+    );
   });
 });

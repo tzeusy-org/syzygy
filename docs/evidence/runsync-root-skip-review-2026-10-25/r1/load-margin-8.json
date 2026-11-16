@@ -1,0 +1,57 @@
+{
+ "tool": "rev-525/tools/load_margin.py",
+ "copies": 8,
+ "wallSeconds": 8.0,
+ "exitCodes": [
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0
+ ],
+ "rows": 120,
+ "runSyncRows": 96,
+ "failed": 0,
+ "slowestRunSync": [
+  {
+   "name": "[\"--help\"] prints the usage and exits 0",
+   "status": "passed",
+   "ms": 1168
+  },
+  {
+   "name": "`dossier` alone is a dossier usage error (exit 2), not the daemon's refusal",
+   "status": "passed",
+   "ms": 587
+  },
+  {
+   "name": "`dossier` alone is a dossier usage error (exit 2), not the daemon's refusal",
+   "status": "passed",
+   "ms": 534
+  },
+  {
+   "name": "`dossier` alone is a dossier usage error (exit 2), not the daemon's refusal",
+   "status": "passed",
+   "ms": 496
+  },
+  {
+   "name": "`dossier render <missing>` reaches the run with the renderer injected, and starts no daemon",
+   "status": "passed",
+   "ms": 480
+  }
+ ],
+ "load1Max": 21.86,
+ "loadFirst": [
+  "14.83",
+  "21.36",
+  "29.08"
+ ],
+ "loadLast": [
+  "21.86",
+  "22.69",
+  "29.43"
+ ],
+ "survivors": []
+}

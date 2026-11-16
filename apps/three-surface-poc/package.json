@@ -5,14 +5,27 @@
   "type": "module",
   "main": "./dist/main.js",
   "exports": {
-    ".": "./dist/main.js",
-    "./dossier-render": "./dist/polaris-generation/dossier-render.js",
-    "./dossier-site": "./dist/polaris-generation/dossier-site.js"
+    ".": {
+      "source": "./src/main.ts",
+      "default": "./dist/main.js"
+    },
+    "./dossier-render": {
+      "source": "./src/polaris-generation/dossier-render.ts",
+      "default": "./dist/polaris-generation/dossier-render.js"
+    },
+    "./dossier-site": {
+      "source": "./src/polaris-generation/dossier-site.ts",
+      "default": "./dist/polaris-generation/dossier-site.js"
+    }
   },
   "dependencies": {
-    "@syzygy/cap1-daemon": "0.0.0",
+    "@syzygy/http-host": "0.0.0",
     "@syzygy/three-surface-poc-core": "0.0.0",
     "@syzygy/polaris-generation-consent": "0.0.0",
-    "@syzygy/polaris-generation-core": "0.0.0"
+    "@syzygy/polaris-generation-core": "0.0.0",
+    "@syzygy/support": "0.0.0"
+  },
+  "devDependencies": {
+    "@syzygy/test-kit": "0.0.0"
   }
 }

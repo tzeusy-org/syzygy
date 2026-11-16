@@ -1,0 +1,48 @@
+{
+ "batch": "H",
+ "profile": false,
+ "version": "head",
+ "param": null,
+ "n": 1,
+ "scriptSha256": "7799aa73bae9a4790b75b85a597c57bf07aab4bb4dab6c67570e69af7535128e",
+ "command": "python3 -I scripts/measure_vitest_test_durations.py . --file packages/polaris-generation-consent/src/package-reader.test.ts --project @syzygy/polaris-generation-consent --mode alone --runs 1 --out <tmp>/measure-out.json",
+ "sent": [
+  {
+   "t": 3.6973,
+   "signal": "SIGHUP",
+   "to": "pid"
+  }
+ ],
+ "events": [
+  {
+   "t": 0.5166,
+   "what": "vitest worker seen"
+  }
+ ],
+ "scriptExitedAtSeconds": 30.686,
+ "exitCode": 0,
+ "claimedExit": 129,
+ "exitAsClaimed": false,
+ "descendantsSeen": 29,
+ "seenOnlyByCwd": 1,
+ "vitestSeen": true,
+ "npxSeen": false,
+ "treeAfterExit": "",
+ "survivors": {},
+ "recordWritten": true,
+ "recordRuns": 1,
+ "recordTests": 299,
+ "recordProfileRows": 0,
+ "recordExitCode": 0,
+ "marks": [],
+ "scriptWrites": null,
+ "tmpdirLeft": [
+  "measure-out.json",
+  "node-compile-cache",
+  "script.log"
+ ],
+ "trace": [],
+ "outputTail": "run 1: exit 0, 30.3 s, load1 {'start': 39.6, 'end': 42.73, 'min': 39.6, 'max': 42.98, 'samples': 7}, 299 tests of the file, 0 failed\n",
+ "exercised": true,
+ "passes": true
+}

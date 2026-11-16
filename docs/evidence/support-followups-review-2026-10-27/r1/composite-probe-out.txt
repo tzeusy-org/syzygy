@@ -1,0 +1,6 @@
+base-f7477f52 poc:dossier support-link-absent exit=2 stderr-first='' stderr-lines=0
+base-f7477f52 poc:generator-demo support-link-absent exit=2 stderr-first='' stderr-lines=0
+restored -> ../../packages/support
+head-b214ef10 poc:dossier support-link-absent exit=1 stderr-first=Generator\ dependencies\ are\ missing.\ Run\ npm\ ci\ from\ the\ repository\ root\,\ then\ retry. stderr-lines=1
+head-b214ef10 poc:generator-demo support-link-absent exit=1 stderr-first=Generator\ dependencies\ are\ missing.\ Run\ npm\ ci\ from\ the\ repository\ root\,\ then\ retry. stderr-lines=1
+restored -> ../../packages/support

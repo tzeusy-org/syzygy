@@ -1,0 +1,71 @@
+{
+ "tool": "interrupt_probe.py",
+ "treeCommit": "88dcdf76db2ad6a30df5856361dc3f9cef8757f5",
+ "sha256AtCommit": {
+  "apps/three-surface-poc/src/fixture-directories.ts": "df5a319e02b9bbc3294bf0b0b90a987ecea86bfd219a41d0341855a3e9dc5ada",
+  "apps/three-surface-poc/src/test-fixture-sweep.global-setup.ts": "8f68850a773daf21fde1174532826c5ded2ae372dd89db9ab3b32487e9135317",
+  "apps/three-surface-poc/src/test-model-fixture.ts": "58497e91d23c7244a76ceff055d590dd264c9c09dddbdd647604689b820d413e",
+  "vitest.config.ts": "8e8d698a90f37b1a340e4b9c6500981dda87bb56bd348980a648d1f3d89b625d"
+ },
+ "signal": "TERM",
+ "minCopiesBeforeSignal": 3,
+ "atSignal": {
+  "secondsIntoTheRun": 67.9,
+  "fixtureCopies": 3,
+  "fixtureTemplates": 2,
+  "otherSyzygyEntries": 10,
+  "liveProcessesNamingThisTmpdir": 27
+ },
+ "runFinishedBeforeSignal": false,
+ "series": [
+  {
+   "secondsAfterSignal": 0,
+   "fixtureCopies": 3,
+   "fixtureTemplates": 2,
+   "otherSyzygyEntries": 12,
+   "liveProcessesNamingThisTmpdir": 9
+  },
+  {
+   "secondsAfterSignal": 2,
+   "fixtureCopies": 3,
+   "fixtureTemplates": 2,
+   "otherSyzygyEntries": 12,
+   "liveProcessesNamingThisTmpdir": 9
+  },
+  {
+   "secondsAfterSignal": 5,
+   "fixtureCopies": 3,
+   "fixtureTemplates": 2,
+   "otherSyzygyEntries": 12,
+   "liveProcessesNamingThisTmpdir": 9
+  },
+  {
+   "secondsAfterSignal": 10,
+   "fixtureCopies": 3,
+   "fixtureTemplates": 2,
+   "otherSyzygyEntries": 12,
+   "liveProcessesNamingThisTmpdir": 9
+  },
+  {
+   "secondsAfterSignal": 20,
+   "fixtureCopies": 3,
+   "fixtureTemplates": 2,
+   "otherSyzygyEntries": 12,
+   "liveProcessesNamingThisTmpdir": 9
+  },
+  {
+   "secondsAfterSignal": 40,
+   "fixtureCopies": 3,
+   "fixtureTemplates": 2,
+   "otherSyzygyEntries": 12,
+   "liveProcessesNamingThisTmpdir": 9
+  },
+  {
+   "secondsAfterSignal": 80,
+   "fixtureCopies": 3,
+   "fixtureTemplates": 2,
+   "otherSyzygyEntries": 12,
+   "liveProcessesNamingThisTmpdir": 8
+  }
+ ]
+}

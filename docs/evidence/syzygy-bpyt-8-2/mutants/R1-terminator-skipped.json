@@ -1,0 +1,11 @@
+{
+ "id": "R1-terminator-skipped",
+ "command": "cp $EVIDENCE/dossier-golden-harness.ts packages/polaris-dossier/src/zz-golden.test.ts && GOLDEN_CORPUS=$EVIDENCE/dossier-corpus.json GOLDEN_OUT=$OUT/R1-terminator-skipped-dossier.json GOLDEN_CWD=/tmp/la-b82/gcwd TMPDIR=/tmp/la-b82/g CI=1 npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/zz-golden.test.ts; e=$?; rm packages/polaris-dossier/src/zz-golden.test.ts; node $EVIDENCE/parse-golden.mjs $OUT/oracle $EVIDENCE $OUT/R1-terminator-skipped-parse.json; exit $e",
+ "edits": [
+  {
+   "file": "packages/polaris-dossier/src/argv.ts",
+   "old": "  for (const token of tokens) {\n    const arg = args[token.index]!;\n",
+   "new": "  for (const token of tokens) {\n    if (token.kind === 'option-terminator') continue;\n    const arg = args[token.index]!;\n"
+  }
+ ]
+}

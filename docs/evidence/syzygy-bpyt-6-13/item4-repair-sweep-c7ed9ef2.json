@@ -1,0 +1,47 @@
+{
+ "repairCommit": "c7ed9ef256985b87e3d75447bf6671e2ca97fc71",
+ "baselineAtRepairCommit": {
+  "createHashSha256Sites": 7,
+  "localSha256Definitions": 1
+ },
+ "baselineAtB214ef10InItem4Mutants": {
+  "createHashSha256Sites": 6,
+  "localSha256Definitions": 1
+ },
+ "fixtureBlobAtRepairCommit": "6ea9b5dd7b1974c1addb86c6cf6cf1c941504599",
+ "fixtureBlobAtB214ef10": "6ea9b5dd7b1974c1addb86c6cf6cf1c941504599",
+ "rule": "killed when the reachability-rule createHash sites or local sha256 definitions exceed the repair commit's own counts",
+ "rows": [
+  {
+   "id": "W3-stale-latin1-local-copy",
+   "file": "apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts",
+   "old": "import { sha256 } from '@syzygy/support';\n",
+   "new": "import { createHash } from 'node:crypto';\nconst sha256 = (text: string): string => createHash('sha256').update(text, 'latin1').digest('hex');\n",
+   "commit": "4dc89e9ebd73ffa0077a5c89ac600811331582a6",
+   "commitNote": "a scratch commit in a throwaway clone, reachable from no ref",
+   "createHashSha256Sites": 8,
+   "localSha256Definitions": 2,
+   "killedBySweep": true
+  },
+  {
+   "id": "W4-equivalent-local-copy",
+   "file": "apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts",
+   "old": "import { sha256 } from '@syzygy/support';\n",
+   "new": "import { createHash } from 'node:crypto';\nconst sha256 = (text: string): string => createHash('sha256').update(text).digest('hex');\n",
+   "commit": "42f7e80a6aa958b588bafe12889cc732d1f299bf",
+   "commitNote": "a scratch commit in a throwaway clone, reachable from no ref",
+   "createHashSha256Sites": 8,
+   "localSha256Definitions": 2,
+   "killedBySweep": true
+  }
+ ],
+ "fixtureFileEqualToB214ef10": true,
+ "control": {
+  "commit": "c7ed9ef256985b87e3d75447bf6671e2ca97fc71",
+  "createHashSha256Sites": 7,
+  "localSha256Definitions": 1,
+  "killedBySweep": false,
+  "note": "the unmutated repair commit defines the threshold, so it cannot be killed by it"
+ },
+ "allKilled": true
+}

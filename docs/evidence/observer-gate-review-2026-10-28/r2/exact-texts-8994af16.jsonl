@@ -1,0 +1,11 @@
+{"check": "F1 body bullet", "in": "body", "verbatim": true}
+{"check": "F1 old body bullet absent", "in": "body", "verbatim": true}
+{"check": "F1 test comment", "in": "test", "verbatim": true}
+{"check": "F1 old test comment absent", "in": "test", "verbatim": true}
+{"check": "N1 class sentence", "in": "body", "verbatim": true}
+{"check": "N2 assertion line", "in": "test", "verbatim": true}
+{"check": "N2 comment sentence", "in": "test", "verbatim": true}
+{"check": "N3 probe", "in": "test", "verbatim": true}
+{"check": "N3 length 61", "in": "test", "verbatim": true}
+{"check": "N5 mapping", "in": "test", "verbatim": true}
+{"texts": {"F1 body": "- Since #549, `scripts/clean_build.mjs` refuses both planted forms before it builds anything: it requires each project's own `compilerOptions.outDir` to be `dist`, and the inherited form's tsconfig sets no `outDir` of its own. The rows therefore pin the gate's own refusal, beside the build's. What the build does not read through `extends` is `declarationDir` and `outFile` (`syzygy-bpyt.65` item 3).", "N1": "Classes 3 and 4, and 1 indirectly (as the R-GP-IMPL-OBSERVER-SUPPORT-1 review ruled for this gate): what a gate refuses changes, and here it only refuses more.", "N2 code": "      expect(chain.filter((link) => link !== 'tsconfig.base.json' && !projects.some((dir) => link.startsWith(`${dir}/`))), project).toEqual([]);", "N2 sentence": "A protected project whose chain ends anywhere else, or passes through a file outside every protected project, fails here.", "N5": "`${path}: ${isInput(path) ? 'accepted' : 'refused'}`"}}

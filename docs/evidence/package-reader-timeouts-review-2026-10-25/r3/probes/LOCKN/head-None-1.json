@@ -1,0 +1,47 @@
+{
+ "batch": "LOCKN",
+ "version": "head",
+ "param": null,
+ "n": 1,
+ "scriptSha256": "72a0fabdd0dd12f85ad35fde4b3ee032125757d5276b85802d76fdf5288f0195",
+ "command": "python3 -I scripts/measure_vitest_test_durations.py . --file packages/polaris-generation-consent/src/package-reader.test.ts --project @syzygy/polaris-generation-consent --mode alone --runs 1 --out <tmp>/measure-out.json --profile",
+ "sent": [],
+ "events": [
+  {
+   "t": 1.8257,
+   "what": "vitest worker seen"
+  },
+  {
+   "t": 4.8482,
+   "what": "index.lock created"
+  },
+  {
+   "t": 26.4024,
+   "what": "index.lock removed by the probe"
+  }
+ ],
+ "scriptExitedAtSeconds": 23.064,
+ "exitCode": 1,
+ "claimedExit": 0,
+ "exitAsClaimed": false,
+ "descendantsSeen": 48,
+ "seenOnlyByCwd": 1,
+ "vitestSeen": true,
+ "npxSeen": false,
+ "treeAfterExit": " M packages/polaris-generation-consent/src/package-reader.test.ts\n M packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts\n",
+ "survivors": {},
+ "recordWritten": false,
+ "recordRuns": null,
+ "recordTests": null,
+ "recordProfileRows": null,
+ "recordExitCode": null,
+ "marks": [],
+ "scriptWrites": null,
+ "tmpdirLeft": [
+  "node-compile-cache",
+  "script.log"
+ ],
+ "trace": [],
+ "outputTail": "fatal: Unable to create '/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520c/clone/.git/index.lock': File exists.\n\nAnother git process seems to be running in this repository, e.g.\nan editor opened by 'git commit'. Please make sure all processes\nare terminated then try again. If it still fails, a git process\nmay have crashed in this repository earlier:\nremove the file manually to continue.\nTraceback (most recent call last):\n  File \"/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520c/clone/scripts/measure_vitest_test_durations.py\", line 152, in <module>\n    out['runs'].append(one_run(i))\n  File \"/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520c/clone/scripts/measure_vitest_test_durations.py\", line 123, in one_run\n    if written: subprocess.run(['git', 'checkout', '--', *written], cwd=tree, check=True, start_new_session=True)\n  File \"/home/tze/.pyenv/versions/3.10.12/lib/python3.10/subprocess.py\", line 526, in run\n    raise CalledProcessError(retcode, process.args,\nsubprocess.CalledProcessError: Command '['git', 'checkout', '--', 'packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts', 'packages/polaris-generation-consent/src/package-reader.test.ts']' returned non-zero exit status 128.\n",
+ "passes": false
+}

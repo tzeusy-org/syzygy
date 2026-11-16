@@ -1,0 +1,21 @@
+start 15:37:39 loadavg 21.51 26.47 29.78 13/9771 2490321
+CONTROL {'unit': (41, 0), 'fenceRules': (69, 0), 'callSites': (275, 0)}
+BASE-whole-file-of-the-base-commit killed {'unit': 17, 'fenceRules': 10, 'callSites': 12}
+MU1-lf-only killed {'unit': 17, 'fenceRules': 10, 'callSites': 12}
+MU2-crlf-only killed {'unit': 10, 'fenceRules': 6, 'callSites': 6}
+MU3-crlf-as-two-line-ends killed {'unit': 3, 'fenceRules': 0, 'callSites': 1}
+MU4-no-bare-cr killed {'unit': 10, 'fenceRules': 6, 'callSites': 6}
+MU5-rejoin-with-lf killed {'unit': 9, 'fenceRules': 7, 'callSites': 0}
+MU6-cr-re-emitted-as-lf killed {'unit': 5, 'fenceRules': 3, 'callSites': 0}
+MU7-lf-split-closer-tolerates-cr killed {'unit': 17, 'fenceRules': 10, 'callSites': 12}
+MU8-lf-split-opener-and-closer-tolerate-cr killed {'unit': 13, 'fenceRules': 9, 'callSites': 6}
+MU9-terminator-dropped killed {'unit': 21, 'fenceRules': 36, 'callSites': 2}
+MU10-terminator-index-shifted killed {'unit': 21, 'fenceRules': 36, 'callSites': 2}
+MU11-start-ignores-terminator-length killed {'unit': 9, 'fenceRules': 7, 'callSites': 6}
+MU12-phantom-final-terminator killed {'unit': 24, 'fenceRules': 36, 'callSites': 0}
+MU13-last-line-dropped killed {'unit': 19, 'fenceRules': 4, 'callSites': 7}
+MU14-line-keeps-its-terminator killed {'unit': 36, 'fenceRules': 46, 'callSites': 22}
+MU15-alternation-order killed {'unit': 3, 'fenceRules': 0, 'callSites': 1}
+MU16-blank-keeps-nothing-but-lf survived-equivalent {'unit': 0, 'fenceRules': 0, 'callSites': 0}
+{"codeCommit": "6928b50a49b8a06b405892de0580d7c421c52f5e", "baseCommit": "d621bfa2", "mutants": 16, "killed": 15, "survivedEquivalent": 1, "survived": []}
+exit 0 15:43:26 loadavg 40.52 36.84 33.31 18/9834 2628956

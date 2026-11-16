@@ -1,0 +1,21 @@
+# check_evidence_currency.py --rev f7477f52 / --rev 663061c4, population B (reviewer run, 2026-10-27T05:29:37Z)
+denominator 378 -> 378
+carriesDigestKey 303 -> 303
+current 21 -> 20
+drift 209 -> 210
+driftRecordsWithActionableDrift 202 -> 203
+driftRecordsHistoricalOnly 7 -> 7
+unknown 148 -> 148
+records 378 378 only-one-side 0 changed 4
+  docs/evidence/code-structure-ls-tree-z-mutants-2026-10-21-r2.json | 1/2 in-tree subject digest(s) mismatch current bytes (0 historical-by-design, 1 actionable) -> 2/2 in-tree subject digest(s) mismatch current bytes (0 historical-by-design, 2 actionable)
+  docs/evidence/code-structure-ls-tree-z-mutants-2026-10-21-r3.json | 2/2 in-tree subject digest(s) match current bytes -> 1/2 in-tree subject digest(s) mismatch current bytes (0 historical-by-design, 1 actionable)
+  docs/evidence/polaris-generator-m6-review-correction-evidence-2026-09-23.json | 6/7 in-tree subject digest(s) mismatch current bytes (0 historical-by-design, 6 actionable) -> 7/7 in-tree subject digest(s) mismatch current bytes (0 historical-by-design, 7 actionable)
+  docs/evidence/quote-fidelity-mutants-2026-10-04.json | 7/10 in-tree subject digest(s) mismatch current bytes (0 historical-by-design, 7 actionable) -> 8/10 in-tree subject digest(s) mismatch current bytes (0 historical-by-design, 8 actionable)
+
+# #530 sweep tools re-run read-only (population-audit.py, sweep.py) at f7477f52 and b214ef10
+population-audit f7477f52: byte-identical to the lane's record
+sweep f7477f52: byte-identical to the lane's record
+population-audit b214ef10: byte-identical to the lane's record
+sweep b214ef10: byte-identical to the lane's record
+f7477f52 all .ts under src 509 name {'files': 241, 'createHashSha256Sites': 6, 'localSha256Definitions': 1, 'localDeepFreezeDefinitions': 1} reachability {'files': 245, 'createHashSha256Sites': 8, 'localSha256Definitions': 2, 'localDeepFreezeDefinitions': 1}
+b214ef10 all .ts under src 512 name {'files': 241, 'createHashSha256Sites': 6, 'localSha256Definitions': 1, 'localDeepFreezeDefinitions': 1} reachability {'files': 245, 'createHashSha256Sites': 6, 'localSha256Definitions': 1, 'localDeepFreezeDefinitions': 1}

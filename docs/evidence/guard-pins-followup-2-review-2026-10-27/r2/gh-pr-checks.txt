@@ -1,0 +1,4 @@
+checks	pass	24m42s	https://github.com/Tzeusy/syzygy/actions/runs/40489621927/job/122139972828	
+node	pass	4m40s	https://github.com/Tzeusy/syzygy/actions/runs/40489621910/job/122139972787	
+{"conclusion":"success","createdAt":"2026-10-27T10:35:09Z","headSha":"58e8f60456e9de8d06cd4f8db5defe23e69b7112","name":"governance-docs","workflowName":"governance-docs"}
+{"conclusion":"success","createdAt":"2026-10-27T10:35:09Z","headSha":"58e8f60456e9de8d06cd4f8db5defe23e69b7112","name":"node-ci","workflowName":"node-ci"}

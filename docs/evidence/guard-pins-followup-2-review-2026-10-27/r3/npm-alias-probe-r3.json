@@ -1,0 +1,494 @@
+{
+ "npm": "11.5.1",
+ "arborist": "9.1.3",
+ "npa": "12.0.2",
+ "node": "v24.6.0",
+ "registry": "http://127.0.0.1:9/",
+ "offline": true,
+ "workspaces": {
+  "w": [
+   "wlib",
+   "1.0.0"
+  ],
+  "s": [
+   "@syzygy/slib",
+   "1.0.0"
+  ]
+ },
+ "results": [
+  {
+   "id": "Q1",
+   "shows": "root AND app declare the same alias under a workspace's name, a range the workspace does not satisfy",
+   "declarations": {
+    "": {
+     "dependencies": {
+      "wlib": "npm:typescript@^5.5.0"
+     }
+    },
+    "app": {
+     "dependencies": {
+      "wlib": "npm:typescript@^5.5.0"
+     }
+    }
+   },
+   "inspect": "wlib",
+   "lockExit": 1,
+   "errorCode": "ENOTCACHED",
+   "wouldRequest": "http://127.0.0.1:9/typescript",
+   "errorLines": [
+    "npm error code ENOTCACHED",
+    "npm error request to http://127.0.0.1:9/typescript failed: cache mode is 'only-if-cached' but no cached response is available.",
+    "npm error A complete log of this run can be found in: <scratch>/cache/_logs/2026-10-27T13_07_06_613Z-debug-0.log"
+   ],
+   "warnLines": []
+  },
+  {
+   "id": "Q2",
+   "shows": "root declares an unsatisfied alias, app a satisfied one, both under a workspace's name",
+   "declarations": {
+    "": {
+     "dependencies": {
+      "wlib": "npm:typescript@^5.5.0"
+     }
+    },
+    "app": {
+     "dependencies": {
+      "wlib": "npm:typescript@^1.0.0"
+     }
+    }
+   },
+   "inspect": "wlib",
+   "lockExit": 0,
+   "errorCode": null,
+   "wouldRequest": null,
+   "errorLines": [],
+   "warnLines": [],
+   "lockEntries": {
+    "node_modules/wlib": {
+     "resolved": "w",
+     "link": true
+    }
+   },
+   "installExit": 0,
+   "rootLink": "../w",
+   "lsExit": 0,
+   "lsWarnOrErr": [],
+   "loads": {
+    "app": {
+     "path": "w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    },
+    "w": {
+     "path": "w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    },
+    "s": {
+     "path": "w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    }
+   }
+  },
+  {
+   "id": "Q3",
+   "shows": "app declares an alias under a scoped workspace's name, a range the workspace satisfies",
+   "declarations": {
+    "app": {
+     "dependencies": {
+      "@syzygy/slib": "npm:typescript@^1.0.0"
+     }
+    }
+   },
+   "inspect": "@syzygy/slib",
+   "lockExit": 0,
+   "errorCode": null,
+   "wouldRequest": null,
+   "errorLines": [],
+   "warnLines": [],
+   "lockEntries": {
+    "node_modules/@syzygy/slib": {
+     "resolved": "s",
+     "link": true
+    }
+   },
+   "installExit": 0,
+   "rootLink": "../../s",
+   "lsExit": 0,
+   "lsWarnOrErr": [],
+   "loads": {
+    "app": {
+     "path": "s/package.json",
+     "name": "@syzygy/slib",
+     "version": "1.0.0"
+    },
+    "w": {
+     "path": "s/package.json",
+     "name": "@syzygy/slib",
+     "version": "1.0.0"
+    },
+    "s": {
+     "path": "s/package.json",
+     "name": "@syzygy/slib",
+     "version": "1.0.0"
+    }
+   }
+  },
+  {
+   "id": "Q4",
+   "shows": "root declares an alias under a scoped workspace's name, a dist-tag",
+   "declarations": {
+    "": {
+     "dependencies": {
+      "@syzygy/slib": "npm:typescript@next"
+     }
+    }
+   },
+   "inspect": "@syzygy/slib",
+   "lockExit": 0,
+   "errorCode": null,
+   "wouldRequest": null,
+   "errorLines": [],
+   "warnLines": [],
+   "lockEntries": {
+    "node_modules/@syzygy/slib": {
+     "resolved": "s",
+     "link": true
+    }
+   },
+   "installExit": 0,
+   "rootLink": "../../s",
+   "lsExit": 0,
+   "lsWarnOrErr": [],
+   "loads": {
+    "app": {
+     "path": "s/package.json",
+     "name": "@syzygy/slib",
+     "version": "1.0.0"
+    },
+    "w": {
+     "path": "s/package.json",
+     "name": "@syzygy/slib",
+     "version": "1.0.0"
+    },
+    "s": {
+     "path": "s/package.json",
+     "name": "@syzygy/slib",
+     "version": "1.0.0"
+    }
+   }
+  },
+  {
+   "id": "Q5",
+   "shows": "root declares a non-registry alias under a workspace's name (npa throws for it)",
+   "declarations": {
+    "": {
+     "dependencies": {
+      "wlib": "npm:./w"
+     }
+    }
+   },
+   "inspect": "wlib",
+   "lockExit": 0,
+   "errorCode": null,
+   "wouldRequest": null,
+   "errorLines": [],
+   "warnLines": [],
+   "lockEntries": {
+    "node_modules/wlib": {
+     "resolved": "w",
+     "link": true
+    }
+   },
+   "installExit": 0,
+   "rootLink": "../w",
+   "lsExit": 0,
+   "lsWarnOrErr": [],
+   "loads": {
+    "app": {
+     "path": "w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    },
+    "w": {
+     "path": "w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    },
+    "s": {
+     "path": "w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    }
+   }
+  },
+  {
+   "id": "Q6",
+   "shows": "root declares `workspace:*` under a workspace's name (npa throws EUNSUPPORTEDPROTOCOL for it)",
+   "declarations": {
+    "": {
+     "dependencies": {
+      "wlib": "workspace:*"
+     }
+    }
+   },
+   "inspect": "wlib",
+   "lockExit": 0,
+   "errorCode": null,
+   "wouldRequest": null,
+   "errorLines": [],
+   "warnLines": [],
+   "lockEntries": {
+    "node_modules/wlib": {
+     "resolved": "w",
+     "link": true
+    }
+   },
+   "installExit": 0,
+   "rootLink": "../w",
+   "lsExit": 0,
+   "lsWarnOrErr": [],
+   "loads": {
+    "app": {
+     "path": "w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    },
+    "w": {
+     "path": "w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    },
+    "s": {
+     "path": "w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    }
+   }
+  },
+  {
+   "id": "Q7",
+   "shows": "root declares `link:` to a missing directory under a workspace's name",
+   "declarations": {
+    "": {
+     "dependencies": {
+      "wlib": "link:../nowhere"
+     }
+    }
+   },
+   "inspect": "wlib",
+   "lockExit": 0,
+   "errorCode": null,
+   "wouldRequest": null,
+   "errorLines": [],
+   "warnLines": [],
+   "lockEntries": {
+    "node_modules/wlib": {
+     "resolved": "w",
+     "link": true
+    }
+   },
+   "installExit": 0,
+   "rootLink": "../w",
+   "lsExit": 0,
+   "lsWarnOrErr": [],
+   "loads": {
+    "app": {
+     "path": "w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    },
+    "w": {
+     "path": "w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    },
+    "s": {
+     "path": "w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    }
+   }
+  },
+  {
+   "id": "Q8",
+   "shows": "a workspace (w) declares an alias under its own name, a range it satisfies",
+   "declarations": {
+    "w": {
+     "dependencies": {
+      "wlib": "npm:typescript@^1.0.0"
+     }
+    }
+   },
+   "inspect": "wlib",
+   "lockExit": 0,
+   "errorCode": null,
+   "wouldRequest": null,
+   "errorLines": [],
+   "warnLines": [],
+   "lockEntries": {
+    "node_modules/wlib": {
+     "resolved": "w",
+     "link": true
+    }
+   },
+   "installExit": 0,
+   "rootLink": "../w",
+   "lsExit": 0,
+   "lsWarnOrErr": [],
+   "loads": {
+    "app": {
+     "path": "w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    },
+    "w": {
+     "path": "w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    },
+    "s": {
+     "path": "w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    }
+   }
+  },
+  {
+   "id": "Q9",
+   "shows": "app declares an alias under a workspace's name in peerDependencies, a range not satisfied",
+   "declarations": {
+    "app": {
+     "peerDependencies": {
+      "wlib": "npm:typescript@^5.5.0"
+     }
+    }
+   },
+   "inspect": "wlib",
+   "lockExit": 1,
+   "errorCode": "ENOTCACHED",
+   "wouldRequest": "http://127.0.0.1:9/typescript",
+   "errorLines": [
+    "npm error code ENOTCACHED",
+    "npm error request to http://127.0.0.1:9/typescript failed: cache mode is 'only-if-cached' but no cached response is available.",
+    "npm error A complete log of this run can be found in: <scratch>/cache/_logs/2026-10-27T13_07_16_661Z-debug-0.log"
+   ],
+   "warnLines": [
+    "npm warn ERESOLVE overriding peer dependency",
+    "npm warn While resolving: app@0.0.0",
+    "npm warn Found: wlib@undefined",
+    "npm warn node_modules/wlib"
+   ]
+  },
+  {
+   "id": "Q10",
+   "shows": "app declares an alias under a workspace's name, the x-range `x`",
+   "declarations": {
+    "app": {
+     "dependencies": {
+      "wlib": "npm:typescript@x"
+     }
+    }
+   },
+   "inspect": "wlib",
+   "lockExit": 0,
+   "errorCode": null,
+   "wouldRequest": null,
+   "errorLines": [],
+   "warnLines": [],
+   "lockEntries": {
+    "node_modules/wlib": {
+     "resolved": "w",
+     "link": true
+    }
+   },
+   "installExit": 0,
+   "rootLink": "../w",
+   "lsExit": 0,
+   "lsWarnOrErr": [],
+   "loads": {
+    "app": {
+     "path": "w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    },
+    "w": {
+     "path": "w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    },
+    "s": {
+     "path": "w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    }
+   }
+  },
+  {
+   "id": "Q11",
+   "shows": "app declares an alias under a workspace's name, an empty range after `@`",
+   "declarations": {
+    "app": {
+     "dependencies": {
+      "wlib": "npm:typescript@"
+     }
+    }
+   },
+   "inspect": "wlib",
+   "lockExit": 0,
+   "errorCode": null,
+   "wouldRequest": null,
+   "errorLines": [],
+   "warnLines": [],
+   "lockEntries": {
+    "node_modules/wlib": {
+     "resolved": "w",
+     "link": true
+    }
+   },
+   "installExit": 0,
+   "rootLink": "../w",
+   "lsExit": 0,
+   "lsWarnOrErr": [],
+   "loads": {
+    "app": {
+     "path": "w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    },
+    "w": {
+     "path": "w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    },
+    "s": {
+     "path": "w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    }
+   }
+  },
+  {
+   "id": "Q12",
+   "shows": "control for Q1: app alone declares the alias under a workspace's name, a range not satisfied",
+   "declarations": {
+    "app": {
+     "dependencies": {
+      "wlib": "npm:typescript@^5.5.0"
+     }
+    }
+   },
+   "inspect": "wlib",
+   "lockExit": 1,
+   "errorCode": "ENOTCACHED",
+   "wouldRequest": "http://127.0.0.1:9/typescript",
+   "errorLines": [
+    "npm error code ENOTCACHED",
+    "npm error request to http://127.0.0.1:9/typescript failed: cache mode is 'only-if-cached' but no cached response is available.",
+    "npm error A complete log of this run can be found in: <scratch>/cache/_logs/2026-10-27T13_07_19_671Z-debug-0.log"
+   ],
+   "warnLines": []
+  }
+ ]
+}

@@ -1,0 +1,14 @@
+C0-daemon passes 0 ['Tests  15 passed (15)']
+OR1-project SURVIVED 0 ['Tests  1307 passed | 1 skipped (1308)']
+OR1-golden SURVIVED 0 []
+OR2-project SURVIVED 0 ['Tests  1307 passed | 1 skipped (1308)']
+OR2-golden killed 1 []
+OR2-daemon SURVIVED 0 ['Tests  15 passed (15)']
+D1-polaris-repeat-refused-project SURVIVED 0 ['Tests  1307 passed | 1 skipped (1308)']
+D2-daemon-repeat-refused-project SURVIVED 0 ['Tests  1307 passed | 1 skipped (1308)']
+D2-daemon-repeat-refused-daemon SURVIVED 0 ['Tests  15 passed (15)']
+D3-dossier-dash-value-taken-project SURVIVED 0 ['Tests  1307 passed | 1 skipped (1308)']
+D3-dossier-dash-value-taken-golden killed 1 []
+C1-rebuilt-head-golden passes 0 []
+restoredClean True
+DONE 0

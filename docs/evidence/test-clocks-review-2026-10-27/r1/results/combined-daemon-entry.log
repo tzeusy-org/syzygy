@@ -1,0 +1,25 @@
+
+ RUN  v3.2.7 /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone/packages/cap1-system
+
+ ✓ src/daemon-entry-unchanged.system.test.ts (16 tests) 23726ms
+   ✓ daemon entry: every invocation but `dossier` is unchanged > ["--help"] prints the usage and exits 0  1827ms
+   ✓ daemon entry: every invocation but `dossier` is unchanged > ["-h"] prints the usage and exits 0  393ms
+   ✓ daemon entry: every invocation but `dossier` is unchanged > ["--help","dossier"] prints the usage and exits 0  448ms
+   ✓ daemon entry: every invocation but `dossier` is unchanged > ["--bogus"] is refused with exit 1 and the same message  476ms
+   ✓ daemon entry: every invocation but `dossier` is unchanged > ["--port","0","dossier"] is refused with exit 1 and the same message  624ms
+   ✓ daemon entry: every invocation but `dossier` is unchanged > ["Dossier"] is refused with exit 1 and the same message  780ms
+   ✓ daemon entry: every invocation but `dossier` is unchanged > ["--port"] is refused with exit 1 and the same message  1010ms
+   ✓ daemon entry: every invocation but `dossier` is unchanged > ["--port","70000"] is refused with exit 1 and the same message  822ms
+   ✓ daemon entry: every invocation but `dossier` is unchanged > a state directory inside the governed plane is refused with the same message  1477ms
+   ✓ daemon entry: every invocation but `dossier` is unchanged > with no arguments it serves from the working directory, writes the same state and shuts down the same way  1518ms
+   ✓ daemon entry: every invocation but `dossier` is unchanged > with explicit flags it serves, writes the same state and shuts down the same way  556ms
+   ✓ daemon entry: the one changed input, `dossier` as the first argument > `dossier` alone is a dossier usage error (exit 2), not the daemon's refusal  1390ms
+   ✓ daemon entry: the one changed input, `dossier` as the first argument > `dossier status <missing>` is a dossier refusal (exit 1) and starts no daemon  1710ms
+   ✓ daemon entry: the one changed input, `dossier` as the first argument > `dossier render <missing>` reaches the run with the renderer injected, and starts no daemon  1804ms
+   ✓ daemon entry: the one changed input, `dossier` as the first argument > the daemon path never loads the POC app, and the `dossier render` branch does  8760ms
+
+ Test Files  1 passed (1)
+      Tests  16 passed (16)
+   Start at  09:04:47
+   Duration  25.91s (transform 577ms, setup 0ms, collect 657ms, tests 23.73s, environment 0ms, prepare 168ms)
+

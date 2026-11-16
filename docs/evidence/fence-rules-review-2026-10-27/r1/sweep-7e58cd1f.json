@@ -1,0 +1,61 @@
+{
+ "commit": "7e58cd1f",
+ "population": 501,
+ "nonTest": 249,
+ "lane": {
+  "files": 39,
+  "lineHits": 296,
+  "productionFiles": {
+   "apps/three-surface-poc/src/polaris-markdown.ts": 14,
+   "apps/three-surface-poc/src/polaris-reading.ts": 4,
+   "apps/three-surface-poc/src/polaris.ts": 1,
+   "apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts": 2,
+   "packages/polaris-dossier/src/execution-rule.ts": 5,
+   "packages/polaris-dossier/src/inventory.ts": 3,
+   "packages/polaris-dossier/src/waiting-sessions.ts": 3,
+   "packages/polaris-generation-consent/src/package-reader.ts": 19,
+   "packages/polaris-generation-core/src/parse-json.ts": 1,
+   "packages/three-surface-poc-core/src/content-classification.ts": 1,
+   "packages/three-surface-poc-core/src/git-object-reader.ts": 2,
+   "packages/three-surface-poc-core/src/markdown-code-context.ts": 27,
+   "packages/three-surface-poc-core/src/owner-act-record.ts": 4,
+   "packages/three-surface-poc-core/src/project-shape-extraction.ts": 19,
+   "packages/three-surface-poc-core/src/project-shape-manifest.ts": 10
+  }
+ },
+ "wide": {
+  "files": 53,
+  "lineHits": 383,
+  "productionFiles": {
+   "apps/three-surface-poc/src/polaris-markdown.ts": 14,
+   "apps/three-surface-poc/src/polaris-reading.ts": 4,
+   "apps/three-surface-poc/src/polaris.ts": 1,
+   "apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts": 2,
+   "packages/polaris-dossier/src/brief.ts": 4,
+   "packages/polaris-dossier/src/execution-rule.ts": 5,
+   "packages/polaris-dossier/src/inventory.ts": 3,
+   "packages/polaris-dossier/src/waiting-sessions.ts": 3,
+   "packages/polaris-generation-consent/src/package-reader.ts": 22,
+   "packages/polaris-generation-core/src/parse-json.ts": 1,
+   "packages/polaris-generation-core/src/prompts.ts": 5,
+   "packages/polaris-generation-core/src/quote-fidelity.ts": 1,
+   "packages/polaris-generation-core/src/quote-locate.ts": 1,
+   "packages/three-surface-poc-core/src/content-classification.ts": 1,
+   "packages/three-surface-poc-core/src/git-object-reader.ts": 3,
+   "packages/three-surface-poc-core/src/markdown-code-context.ts": 31,
+   "packages/three-surface-poc-core/src/owner-act-record.ts": 15,
+   "packages/three-surface-poc-core/src/project-shape-extraction.ts": 21,
+   "packages/three-surface-poc-core/src/project-shape-manifest.ts": 13,
+   "packages/three-surface-poc-core/src/walkthrough-judgment.ts": 10,
+   "packages/three-surface-poc-core/src/walkthrough-readiness.ts": 1
+  }
+ },
+ "wideAddsProduction": [
+  "packages/polaris-dossier/src/brief.ts",
+  "packages/polaris-generation-core/src/prompts.ts",
+  "packages/polaris-generation-core/src/quote-fidelity.ts",
+  "packages/polaris-generation-core/src/quote-locate.ts",
+  "packages/three-surface-poc-core/src/walkthrough-judgment.ts",
+  "packages/three-surface-poc-core/src/walkthrough-readiness.ts"
+ ]
+}

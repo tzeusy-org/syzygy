@@ -1,0 +1,257 @@
+{
+ "what": "syzygy-bpyt.8.36 rule-6 mutants of the new checks, one per predicate, for the reviewer's mut.py",
+ "mutants": [
+  {
+   "id": "P1-hash-alias-outside-the-workspace",
+   "what": "a # specifier reads as outside the workspace again (the 8.34 resolver)",
+   "expect": "killed",
+   "projects": [
+    "@syzygy/polaris-generation-core"
+   ],
+   "files": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "  if (specifier.startsWith('#')) {\n    const owner = [...workspace.manifests.values()].find((manifest) => from.startsWith(`${manifest.dir}/`));\n    const target = owner?.imports === undefined ? undefined : targetOf(owner.imports[specifier]);\n    if (owner === undefined || target === undefined || target.startsWith('#') || target.startsWith('../')) return undefined;\n    return target.startsWith('./') ? moduleIn(workspace, owner.dir, target) : resolveIn(workspace, from, target);\n  }\n",
+     "new": ""
+    }
+   ]
+  },
+  {
+   "id": "P2-absolute-path-outside-the-workspace",
+   "what": "an absolute path reads as outside the workspace again",
+   "expect": "killed",
+   "projects": [
+    "@syzygy/polaris-generation-core"
+   ],
+   "files": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "  if (specifier.startsWith('/') || /^file:/iu.test(specifier)) return undefined;\n",
+     "new": "  if (/^file:/iu.test(specifier)) return undefined;\n"
+    }
+   ]
+  },
+  {
+   "id": "P3-file-url-outside-the-workspace",
+   "what": "a file: URL reads as outside the workspace again",
+   "expect": "killed",
+   "projects": [
+    "@syzygy/polaris-generation-core"
+   ],
+   "files": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "  if (specifier.startsWith('/') || /^file:/iu.test(specifier)) return undefined;\n",
+     "new": "  if (specifier.startsWith('/')) return undefined;\n"
+    }
+   ]
+  },
+  {
+   "id": "P3b-file-url-case-sensitive",
+   "what": "only a lower-case file: URL reads as naming no module",
+   "expect": "killed",
+   "projects": [
+    "@syzygy/polaris-generation-core"
+   ],
+   "files": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "/^file:/iu.test(specifier)",
+     "new": "/^file:/u.test(specifier)"
+    }
+   ]
+  },
+  {
+   "id": "P4-import-condition-first",
+   "what": "an exports entry takes its import condition, else default, as in 8.34",
+   "expect": "killed",
+   "projects": [
+    "@syzygy/polaris-generation-core"
+   ],
+   "files": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "  const targets = Object.entries(entry).filter(([condition]) => condition !== 'types').map(([, target]) => target);\n  const [first] = targets;\n  return typeof first === 'string' && targets.every((target) => target === first) ? first : undefined;\n",
+     "new": "  const target = (entry as { import?: unknown; default?: unknown }).import ?? (entry as { default?: unknown }).default;\n  return typeof target === 'string' ? target : undefined;\n"
+    }
+   ]
+  },
+  {
+   "id": "P5-node-condition-ignored",
+   "what": "the agreement check leaves out the node condition",
+   "expect": "killed",
+   "projects": [
+    "@syzygy/polaris-generation-core"
+   ],
+   "files": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "filter(([condition]) => condition !== 'types')",
+     "new": "filter(([condition]) => condition !== 'types' && condition !== 'node')"
+    }
+   ]
+  },
+  {
+   "id": "P6-module-sync-ignored",
+   "what": "the agreement check leaves out the module-sync condition",
+   "expect": "killed",
+   "projects": [
+    "@syzygy/polaris-generation-core"
+   ],
+   "files": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "filter(([condition]) => condition !== 'types')",
+     "new": "filter(([condition]) => condition !== 'types' && condition !== 'module-sync')"
+    }
+   ]
+  },
+  {
+   "id": "P7-hash-alias-never-followed",
+   "what": "a declared # alias also reads as naming no module, so the walk stops there",
+   "expect": "killed",
+   "projects": [
+    "@syzygy/polaris-generation-core"
+   ],
+   "files": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "    return target.startsWith('./') ? moduleIn(workspace, owner.dir, target) : resolveIn(workspace, from, target);\n",
+     "new": "    return undefined;\n"
+    }
+   ]
+  },
+  {
+   "id": "P8-any-package-imports",
+   "what": "a # alias resolves through any package's imports, not the importing one's",
+   "expect": "killed",
+   "projects": [
+    "@syzygy/polaris-generation-core"
+   ],
+   "files": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "find((manifest) => from.startsWith(`${manifest.dir}/`))",
+     "new": "find((manifest) => manifest.imports !== undefined)"
+    }
+   ]
+  },
+  {
+   "id": "P9-alias-to-alias-followed",
+   "what": "a # alias whose target is another alias is followed",
+   "expect": "killed",
+   "projects": [
+    "@syzygy/polaris-generation-core"
+   ],
+   "files": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "target.startsWith('#') || target.startsWith('../')",
+     "new": "target.startsWith('../')"
+    }
+   ]
+  },
+  {
+   "id": "Q1-property-access-allowed",
+   "what": "the census lets a property access named readArgv pass",
+   "expect": "killed",
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/argv.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": "        || (ts.isCallExpression(parent) && parent.expression === node);\n",
+     "new": "        || (ts.isCallExpression(parent) && parent.expression === node)\n        || ts.isPropertyAccessExpression(parent);\n"
+    }
+   ]
+  },
+  {
+   "id": "Q2-string-literal-ignored",
+   "what": "the census sees identifiers only, not a string literal readArgv",
+   "expect": "killed",
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/argv.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": "if ((ts.isIdentifier(node) || ts.isStringLiteralLike(node)) && node.text === 'readArgv') {",
+     "new": "if (ts.isIdentifier(node) && node.text === 'readArgv') {"
+    }
+   ]
+  },
+  {
+   "id": "Q3-renamed-import-allowed",
+   "what": "the census lets an import of readArgv under another name pass",
+   "expect": "killed",
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/argv.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": "parent.name === node && parent.propertyName === undefined)",
+     "new": "(parent.name === node || parent.propertyName === node))"
+    }
+   ]
+  },
+  {
+   "id": "Q4-alias-initializer-allowed",
+   "what": "the census lets readArgv as a variable initializer pass",
+   "expect": "killed",
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/argv.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": "        || (ts.isCallExpression(parent) && parent.expression === node);\n",
+     "new": "        || (ts.isCallExpression(parent) && parent.expression === node)\n        || ts.isVariableDeclaration(parent);\n"
+    }
+   ]
+  }
+ ]
+}

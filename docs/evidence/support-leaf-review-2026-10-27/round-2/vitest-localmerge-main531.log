@@ -1,0 +1,26 @@
+moving aside 12 dist directories
+dist directories present during the run: []
+
+ RUN  v3.2.7 /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-530b/clone
+
+ ✓ |@syzygy/polaris-generation-core| packages/polaris-generation-core/src/workspace-reach.test.ts (41 tests) 56ms
+ ✓ |@syzygy/support| packages/support/src/support-purity.test.ts (13 tests) 41ms
+ ✓ |@syzygy/support| packages/support/src/sha256.test.ts (4 tests) 19ms
+ ✓ |@syzygy/support| packages/support/src/deep-freeze.test.ts (5 tests) 11ms
+ ✓ |@syzygy/polaris-dossier| packages/polaris-dossier/src/argv.test.ts (85 tests) 763ms
+   ✓ each policy copy above, against the spec its caller passes > is the spec of every readArgv call, and no other module names readArgv  577ms
+stdout | packages/polaris-dossier/src/no-egress.test.ts > no provider call and no transmission (S10): an operating-system capture of a full fixture run > creates no Internet-family socket over the whole run, from preflight to close
+no-egress proof ran under strace: 14 network-class calls, traced calls from 1 task(s), 0 Internet-family
+
+ ✓ |@syzygy/polaris-dossier| packages/polaris-dossier/src/no-egress.test.ts (3 tests | 1 skipped) 3360ms
+   ✓ no provider call and no transmission (S10): an operating-system capture of a full fixture run > creates no Internet-family socket over the whole run, from preflight to close  1100ms
+   ✓ no provider call and no transmission (S10): an operating-system capture of a full fixture run > sees the canary: one loopback datagram sent before the same run is in the capture  1892ms
+
+ Test Files  6 passed (6)
+      Tests  150 passed | 1 skipped (151)
+   Start at  10:37:59
+   Duration  9.69s (transform 4.19s, setup 683ms, collect 8.62s, tests 4.25s, environment 1ms, prepare 1.74s)
+
+JSON report written to /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-530b/vitest-localmerge-main531.json
+vitest exit 0
+restored 12

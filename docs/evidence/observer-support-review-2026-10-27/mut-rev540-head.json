@@ -1,0 +1,833 @@
+{
+ "tree": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-540/code",
+ "commit": "f207d758eb11830eda2831caa911011e84a966b7",
+ "results": [
+  {
+   "id": "E1-type-only-import-of-unprefixed-package",
+   "commit": "f207d758eb11830eda2831caa911011e84a966b7",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/poc-main.ts",
+     "old": "import { sha256 } from '@syzygy/support';\n",
+     "new": "import { sha256 } from '@syzygy/support';\nimport type { GenerationSource } from '@syzygy/polaris-generation-core';\n"
+    }
+   ],
+   "counts": [
+    {
+     "file": "apps/three-surface-poc/src/poc-main.ts",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "exit": 1,
+   "failedTests": 1,
+   "failedFiles": 1,
+   "totalTests": 13,
+   "outcome": "killed",
+   "seconds": 17.6,
+   "cleanAfter": true,
+   "failed": [
+    {
+     "title": "apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every module and package the POC daemon imports",
+     "timedOut": false,
+     "message": "AssertionError: expected [ …(27) ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-540/code/apps/three-surface-poc/src/git-observation.test.ts:152:90\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-"
+    }
+   ],
+   "reportError": null
+  },
+  {
+   "id": "E2-type-only-reexport-of-unprefixed-package",
+   "commit": "f207d758eb11830eda2831caa911011e84a966b7",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/poc-main.ts",
+     "old": "import { sha256 } from '@syzygy/support';\n",
+     "new": "import { sha256 } from '@syzygy/support';\nexport type { GenerationSource } from '@syzygy/polaris-generation-core';\n"
+    }
+   ],
+   "counts": [
+    {
+     "file": "apps/three-surface-poc/src/poc-main.ts",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "exit": 1,
+   "failedTests": 1,
+   "failedFiles": 1,
+   "totalTests": 13,
+   "outcome": "killed",
+   "seconds": 16.5,
+   "cleanAfter": true,
+   "failed": [
+    {
+     "title": "apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every module and package the POC daemon imports",
+     "timedOut": false,
+     "message": "AssertionError: expected [ …(27) ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-540/code/apps/three-surface-poc/src/git-observation.test.ts:152:90\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-"
+    }
+   ],
+   "reportError": null
+  },
+  {
+   "id": "E3-value-reexport-from-cap1-core-of-unprefixed-package",
+   "commit": "f207d758eb11830eda2831caa911011e84a966b7",
+   "edits": [
+    {
+     "file": "packages/cap1-core/src/index.ts",
+     "old": "export * from './vocabulary.js';\n",
+     "new": "export * from './vocabulary.js';\nexport * from '@syzygy/polaris-dossier';\n"
+    }
+   ],
+   "counts": [
+    {
+     "file": "packages/cap1-core/src/index.ts",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "exit": 1,
+   "failedTests": 1,
+   "failedFiles": 1,
+   "totalTests": 13,
+   "outcome": "killed",
+   "seconds": 13.6,
+   "cleanAfter": true,
+   "failed": [
+    {
+     "title": "apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every module and package the POC daemon imports",
+     "timedOut": false,
+     "message": "AssertionError: expected [ …(68) ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-540/code/apps/three-surface-poc/src/git-observation.test.ts:152:90\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-"
+    }
+   ],
+   "reportError": null
+  },
+  {
+   "id": "E4-subpath-import-of-unprefixed-package",
+   "commit": "f207d758eb11830eda2831caa911011e84a966b7",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/poc-main.ts",
+     "old": "import { sha256 } from '@syzygy/support';\n",
+     "new": "import { sha256 } from '@syzygy/support';\nimport '@syzygy/polaris-generation-core/live';\n"
+    }
+   ],
+   "counts": [
+    {
+     "file": "apps/three-surface-poc/src/poc-main.ts",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "exit": 1,
+   "failedTests": 1,
+   "failedFiles": 1,
+   "totalTests": 13,
+   "outcome": "killed",
+   "seconds": 11.3,
+   "cleanAfter": true,
+   "failed": [
+    {
+     "title": "apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every module and package the POC daemon imports",
+     "timedOut": false,
+     "message": "AssertionError: expected [ …(19) ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-540/code/apps/three-surface-poc/src/git-observation.test.ts:152:90\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-"
+    }
+   ],
+   "reportError": null
+  },
+  {
+   "id": "E5-relative-import-across-into-unprefixed-package",
+   "commit": "f207d758eb11830eda2831caa911011e84a966b7",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/poc-main.ts",
+     "old": "import { sha256 } from '@syzygy/support';\n",
+     "new": "import { sha256 } from '@syzygy/support';\nimport '../../../packages/polaris-dossier/src/index.js';\n"
+    }
+   ],
+   "counts": [
+    {
+     "file": "apps/three-surface-poc/src/poc-main.ts",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "exit": 1,
+   "failedTests": 1,
+   "failedFiles": 1,
+   "totalTests": 13,
+   "outcome": "killed",
+   "seconds": 11.6,
+   "cleanAfter": true,
+   "failed": [
+    {
+     "title": "apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every module and package the POC daemon imports",
+     "timedOut": false,
+     "message": "AssertionError: expected [ …(68) ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-540/code/apps/three-surface-poc/src/git-observation.test.ts:152:90\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-"
+    }
+   ],
+   "reportError": null
+  },
+  {
+   "id": "E6-relative-import-of-a-non-package-file",
+   "commit": "f207d758eb11830eda2831caa911011e84a966b7",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/poc-main.ts",
+     "old": "import { sha256 } from '@syzygy/support';\n",
+     "new": "import { sha256 } from '@syzygy/support';\nimport '../../../scripts/measure_cli_island_loads.mjs';\n"
+    }
+   ],
+   "counts": [
+    {
+     "file": "apps/three-surface-poc/src/poc-main.ts",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "exit": 1,
+   "failedTests": 1,
+   "failedFiles": 1,
+   "totalTests": 13,
+   "outcome": "killed",
+   "seconds": 13.5,
+   "cleanAfter": true,
+   "failed": [
+    {
+     "title": "apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every module and package the POC daemon imports",
+     "timedOut": false,
+     "message": "AssertionError: expected [ …(3) ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-540/code/apps/three-surface-poc/src/git-observation.test.ts:152:90\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-0"
+    }
+   ],
+   "reportError": null
+  },
+  {
+   "id": "E7-dynamic-import-template-literal",
+   "commit": "f207d758eb11830eda2831caa911011e84a966b7",
+   "edits": [
+    {
+     "file": "packages/three-surface-poc-core/src/index.ts",
+     "old": "export * from './evidence-population.js';\n",
+     "new": "export * from './evidence-population.js';\nexport const loadLive = () => import(`@syzygy/polaris-generation-core/live`);\n"
+    }
+   ],
+   "counts": [
+    {
+     "file": "packages/three-surface-poc-core/src/index.ts",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "exit": 1,
+   "failedTests": 1,
+   "failedFiles": 1,
+   "totalTests": 13,
+   "outcome": "killed",
+   "seconds": 15.3,
+   "cleanAfter": true,
+   "failed": [
+    {
+     "title": "apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every module and package the POC daemon imports",
+     "timedOut": false,
+     "message": "AssertionError: expected [ …(19) ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-540/code/apps/three-surface-poc/src/git-observation.test.ts:152:90\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-"
+    }
+   ],
+   "reportError": null
+  },
+  {
+   "id": "E8-dynamic-import-computed-specifier",
+   "commit": "f207d758eb11830eda2831caa911011e84a966b7",
+   "edits": [
+    {
+     "file": "packages/three-surface-poc-core/src/index.ts",
+     "old": "export * from './evidence-population.js';\n",
+     "new": "export * from './evidence-population.js';\nconst liveName = '@syzygy/polaris-generation-core/live';\nexport const loadLive = () => import(liveName);\n"
+    }
+   ],
+   "counts": [
+    {
+     "file": "packages/three-surface-poc-core/src/index.ts",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "exit": 0,
+   "failedTests": 0,
+   "failedFiles": 0,
+   "totalTests": 13,
+   "outcome": "survived",
+   "seconds": 18.7,
+   "cleanAfter": true,
+   "failed": [],
+   "reportError": null
+  },
+  {
+   "id": "E9-createRequire-of-unprefixed-package",
+   "commit": "f207d758eb11830eda2831caa911011e84a966b7",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/poc-main.ts",
+     "old": "import { sha256 } from '@syzygy/support';\n",
+     "new": "import { sha256 } from '@syzygy/support';\nimport { createRequire } from 'node:module';\nconst generation = createRequire(import.meta.url)('@syzygy/polaris-generation-core');\nvoid generation;\n"
+    }
+   ],
+   "counts": [
+    {
+     "file": "apps/three-surface-poc/src/poc-main.ts",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "exit": 0,
+   "failedTests": 0,
+   "failedFiles": 0,
+   "totalTests": 13,
+   "outcome": "survived",
+   "seconds": 15.0,
+   "cleanAfter": true,
+   "failed": [],
+   "reportError": null
+  },
+  {
+   "id": "E10-triple-slash-reference-into-unprefixed-package",
+   "commit": "f207d758eb11830eda2831caa911011e84a966b7",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/poc-main.ts",
+     "old": "import { realpathSync } from 'node:fs';\n",
+     "new": "/// <reference path=\"../../../packages/polaris-dossier/src/index.ts\" />\nimport { realpathSync } from 'node:fs';\n"
+    }
+   ],
+   "counts": [
+    {
+     "file": "apps/three-surface-poc/src/poc-main.ts",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "exit": 0,
+   "failedTests": 0,
+   "failedFiles": 0,
+   "totalTests": 13,
+   "outcome": "survived",
+   "seconds": 14.1,
+   "cleanAfter": true,
+   "failed": [],
+   "reportError": null
+  },
+  {
+   "id": "E11-manifest-only-dependency-no-import",
+   "commit": "f207d758eb11830eda2831caa911011e84a966b7",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/package.json",
+     "old": "    \"@syzygy/support\": \"0.0.0\"\n",
+     "new": "    \"@syzygy/support\": \"0.0.0\",\n    \"@syzygy/polaris-dossier\": \"0.0.0\"\n"
+    }
+   ],
+   "counts": [
+    {
+     "file": "apps/three-surface-poc/package.json",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "exit": 0,
+   "failedTests": 0,
+   "failedFiles": 0,
+   "totalTests": 13,
+   "outcome": "survived",
+   "seconds": 14.0,
+   "cleanAfter": true,
+   "failed": [],
+   "reportError": null
+  },
+  {
+   "id": "G1-support-prefix-without-trailing-slash",
+   "commit": "f207d758eb11830eda2831caa911011e84a966b7",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "old": "    'packages/support/',\n",
+     "new": "    'packages/support',\n"
+    }
+   ],
+   "counts": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "exit": 0,
+   "failedTests": 0,
+   "failedFiles": 0,
+   "totalTests": 13,
+   "outcome": "survived",
+   "seconds": 16.0,
+   "cleanAfter": true,
+   "failed": [],
+   "reportError": null
+  },
+  {
+   "id": "G2-support-prefix-wrong-case",
+   "commit": "f207d758eb11830eda2831caa911011e84a966b7",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "old": "    'packages/support/',\n",
+     "new": "    'packages/Support/',\n"
+    }
+   ],
+   "counts": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "exit": 1,
+   "failedTests": 2,
+   "failedFiles": 1,
+   "totalTests": 13,
+   "outcome": "killed",
+   "seconds": 15.6,
+   "cleanAfter": true,
+   "failed": [
+    {
+     "title": "apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every file of each protected package, its manifest and tsconfig among them",
+     "timedOut": false,
+     "message": "AssertionError: packages/support/src/x.ts: expected true to be false // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-540/code/apps/three-surface-poc/src/git-observation.test.ts:135:73\n    at file:///tmp/claude-1000/-home-tze-G"
+    },
+    {
+     "title": "apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every module and package the POC daemon imports",
+     "timedOut": false,
+     "message": "AssertionError: expected [ …(5) ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-540/code/apps/three-surface-poc/src/git-observation.test.ts:152:90\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-0"
+    }
+   ],
+   "reportError": null
+  },
+  {
+   "id": "G3-exact-input-package-lock-dropped",
+   "commit": "f207d758eb11830eda2831caa911011e84a966b7",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "old": "  const exactInputs = new Set(['package.json', 'package-lock.json', 'tsconfig.base.json']);\n",
+     "new": "  const exactInputs = new Set(['package.json', 'tsconfig.base.json']);\n"
+    }
+   ],
+   "counts": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "exit": 0,
+   "failedTests": 0,
+   "failedFiles": 0,
+   "totalTests": 13,
+   "outcome": "survived",
+   "seconds": 23.8,
+   "cleanAfter": true,
+   "failed": [],
+   "reportError": null
+  },
+  {
+   "id": "G4-exact-input-tsconfig-base-dropped",
+   "commit": "f207d758eb11830eda2831caa911011e84a966b7",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "old": "  const exactInputs = new Set(['package.json', 'package-lock.json', 'tsconfig.base.json']);\n",
+     "new": "  const exactInputs = new Set(['package.json', 'package-lock.json']);\n"
+    }
+   ],
+   "counts": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "exit": 0,
+   "failedTests": 0,
+   "failedFiles": 0,
+   "totalTests": 13,
+   "outcome": "survived",
+   "seconds": 15.8,
+   "cleanAfter": true,
+   "failed": [],
+   "reportError": null
+  },
+  {
+   "id": "G5-cap1-daemon-src-and-manifest-only",
+   "commit": "f207d758eb11830eda2831caa911011e84a966b7",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "old": "    'packages/cap1-daemon/',\n",
+     "new": "    'packages/cap1-daemon/src/',\n    'packages/cap1-daemon/package.json',\n"
+    }
+   ],
+   "counts": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "exit": 1,
+   "failedTests": 1,
+   "failedFiles": 1,
+   "totalTests": 13,
+   "outcome": "killed",
+   "seconds": 15.8,
+   "cleanAfter": true,
+   "failed": [
+    {
+     "title": "apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every file of each protected package, its manifest and tsconfig among them",
+     "timedOut": false,
+     "message": "AssertionError: packages/cap1-daemon/tsconfig.json: expected true to be false // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-540/code/apps/three-surface-poc/src/git-observation.test.ts:135:73\n    at file:///tmp/claude-1000/-h"
+    }
+   ],
+   "reportError": null
+  },
+  {
+   "id": "T1-table-package-json-alone-with-cap1-daemon-src-and-manifest",
+   "commit": "f207d758eb11830eda2831caa911011e84a966b7",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.test.ts",
+     "old": "[`${prefix}src/x.ts`, `${prefix}package.json`, `${prefix}tsconfig.json`]",
+     "new": "[`${prefix}package.json`]"
+    },
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "old": "    'packages/cap1-daemon/',\n",
+     "new": "    'packages/cap1-daemon/src/',\n    'packages/cap1-daemon/package.json',\n"
+    }
+   ],
+   "counts": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "exit": 0,
+   "failedTests": 0,
+   "failedFiles": 0,
+   "totalTests": 13,
+   "outcome": "survived",
+   "seconds": 15.9,
+   "cleanAfter": true,
+   "failed": [],
+   "reportError": null
+  },
+  {
+   "id": "T2-table-package-json-alone-with-http-host-src-and-manifest",
+   "commit": "f207d758eb11830eda2831caa911011e84a966b7",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.test.ts",
+     "old": "[`${prefix}src/x.ts`, `${prefix}package.json`, `${prefix}tsconfig.json`]",
+     "new": "[`${prefix}package.json`]"
+    },
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "old": "    'packages/http-host/',\n",
+     "new": "    'packages/http-host/src/',\n    'packages/http-host/package.json',\n"
+    }
+   ],
+   "counts": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "exit": 1,
+   "failedTests": 1,
+   "failedFiles": 1,
+   "totalTests": 13,
+   "outcome": "killed",
+   "seconds": 14.7,
+   "cleanAfter": true,
+   "failed": [
+    {
+     "title": "apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every module and package the POC daemon imports",
+     "timedOut": false,
+     "message": "AssertionError: expected [ 'packages/http-host/tsconfig.json' ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-540/code/apps/three-surface-poc/src/git-observation.test.ts:152:90\n    at file:///tmp/claude-1000/-home-tze-GitHub-sy"
+    }
+   ],
+   "reportError": null
+  },
+  {
+   "id": "T3-guard-modules-only-with-http-host-src-and-manifest",
+   "commit": "f207d758eb11830eda2831caa911011e84a966b7",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.test.ts",
+     "old": "  const inputs = [...reachable, ...packages.flatMap((dir) => [`${dir}/package.json`, `${dir}/tsconfig.json`])];\n",
+     "new": "  const inputs = [...reachable];\n"
+    },
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "old": "    'packages/http-host/',\n",
+     "new": "    'packages/http-host/src/',\n    'packages/http-host/package.json',\n"
+    }
+   ],
+   "counts": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "exit": 1,
+   "failedTests": 1,
+   "failedFiles": 1,
+   "totalTests": 13,
+   "outcome": "killed",
+   "seconds": 17.0,
+   "cleanAfter": true,
+   "failed": [
+    {
+     "title": "apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every file of each protected package, its manifest and tsconfig among them",
+     "timedOut": false,
+     "message": "AssertionError: packages/http-host/tsconfig.json: expected true to be false // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-540/code/apps/three-surface-poc/src/git-observation.test.ts:135:73\n    at file:///tmp/claude-1000/-hom"
+    }
+   ],
+   "reportError": null
+  },
+  {
+   "id": "T4-guard-modules-only-alone",
+   "commit": "f207d758eb11830eda2831caa911011e84a966b7",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.test.ts",
+     "old": "  const inputs = [...reachable, ...packages.flatMap((dir) => [`${dir}/package.json`, `${dir}/tsconfig.json`])];\n",
+     "new": "  const inputs = [...reachable];\n"
+    }
+   ],
+   "counts": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.test.ts",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "exit": 0,
+   "failedTests": 0,
+   "failedFiles": 0,
+   "totalTests": 13,
+   "outcome": "survived",
+   "seconds": 15.8,
+   "cleanAfter": true,
+   "failed": [],
+   "reportError": null
+  },
+  {
+   "id": "T5-guard-no-js-import-detection-with-dynamic-import",
+   "commit": "f207d758eb11830eda2831caa911011e84a966b7",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.test.ts",
+     "old": "ts.preProcessFile(readModule(file), true, true)",
+     "new": "ts.preProcessFile(readModule(file), true, false)"
+    },
+    {
+     "file": "packages/three-surface-poc-core/src/index.ts",
+     "old": "export * from './evidence-population.js';\n",
+     "new": "export * from './evidence-population.js';\nexport const loadLive = () => import('@syzygy/polaris-generation-consent/live');\n"
+    }
+   ],
+   "counts": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/three-surface-poc-core/src/index.ts",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "exit": 1,
+   "failedTests": 1,
+   "failedFiles": 1,
+   "totalTests": 13,
+   "outcome": "killed",
+   "seconds": 14.3,
+   "cleanAfter": true,
+   "failed": [
+    {
+     "title": "apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every module and package the POC daemon imports",
+     "timedOut": false,
+     "message": "AssertionError: expected [ …(8) ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-540/code/apps/three-surface-poc/src/git-observation.test.ts:152:90\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-0"
+    }
+   ],
+   "reportError": null
+  },
+  {
+   "id": "T6-guard-unresolved-assertion-dropped-with-unknown-package",
+   "commit": "f207d758eb11830eda2831caa911011e84a966b7",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.test.ts",
+     "old": "    expect(unresolved.map((edge) => `${edge.from} imports ${edge.specifier}`)).toEqual([]);\n",
+     "new": ""
+    },
+    {
+     "file": "apps/three-surface-poc/src/poc-main.ts",
+     "old": "import { sha256 } from '@syzygy/support';\n",
+     "new": "import { sha256 } from '@syzygy/support';\nimport '@syzygy/no-such-package';\n"
+    }
+   ],
+   "counts": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "apps/three-surface-poc/src/poc-main.ts",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "exit": 0,
+   "failedTests": 0,
+   "failedFiles": 0,
+   "totalTests": 13,
+   "outcome": "survived",
+   "seconds": 12.4,
+   "cleanAfter": true,
+   "failed": [],
+   "reportError": null
+  },
+  {
+   "id": "T7-guard-sha256-pin-dropped-with-support-prefix-dropped",
+   "commit": "f207d758eb11830eda2831caa911011e84a966b7",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.test.ts",
+     "old": "    expect(reachable).toContain('packages/support/src/sha256.ts');\n",
+     "new": ""
+    },
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "old": "    'packages/support/',\n",
+     "new": ""
+    }
+   ],
+   "counts": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "exit": 1,
+   "failedTests": 2,
+   "failedFiles": 1,
+   "totalTests": 13,
+   "outcome": "killed",
+   "seconds": 11.3,
+   "cleanAfter": true,
+   "failed": [
+    {
+     "title": "apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every file of each protected package, its manifest and tsconfig among them",
+     "timedOut": false,
+     "message": "AssertionError: packages/support/src/x.ts: expected true to be false // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-540/code/apps/three-surface-poc/src/git-observation.test.ts:135:73\n    at file:///tmp/claude-1000/-home-tze-G"
+    },
+    {
+     "title": "apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every module and package the POC daemon imports",
+     "timedOut": false,
+     "message": "AssertionError: expected [ …(5) ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-540/code/apps/three-surface-poc/src/git-observation.test.ts:151:90\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-0"
+    }
+   ],
+   "reportError": null
+  },
+  {
+   "id": "CONTROL",
+   "commit": "f207d758eb11830eda2831caa911011e84a966b7",
+   "edits": [],
+   "counts": [],
+   "files": [
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "exit": 0,
+   "failedTests": 0,
+   "failedFiles": 0,
+   "totalTests": 13,
+   "outcome": "survived",
+   "seconds": 10.0,
+   "cleanAfter": true,
+   "failed": [],
+   "reportError": null
+  }
+ ]
+}

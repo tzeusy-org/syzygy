@@ -1,0 +1,31 @@
+== mx1-listed-byte-left
+paragraph "Stopping:" equals the list applied (normalised): True
+paragraph "Cleanup,"  equals the list applied (normalised): True
+expected lines 112, actual lines 112; differences beyond the list: 5
+    -        print(f'stopped by {signal.Signals(stopped_by[0]).name}: the run in progress, if any, was ended and is not recorded',
+    +        print(f'stopped by {signal.Signals(stopped_by[0]).name}: the run in progress, if any, was ended and restored and is not recorded',
+of them on neither list: [62]
+stays, present byte-equal in head: True  line 127 `stdout = ...` (on neither list)
+== mx2-unlisted-line-removed
+paragraph "Stopping:" equals the list applied (normalised): True
+paragraph "Cleanup,"  equals the list applied (normalised): True
+expected lines 112, actual lines 111; differences beyond the list: 4
+    -    stdout = output[0] if output else ''
+of them on neither list: [127]
+stays, present byte-equal in head: False  line 127 `stdout = ...` (on neither list)
+== mx3-docstring-word
+paragraph "Stopping:" equals the list applied (normalised): False
+paragraph "Cleanup,"  equals the list applied (normalised): True
+expected lines 112, actual lines 112; differences beyond the list: none
+of them on neither list: none
+stays, present byte-equal in head: True  line 127 `stdout = ...` (on neither list)
+== mx4-kept-code-changed
+paragraph "Stopping:" equals the list applied (normalised): True
+paragraph "Cleanup,"  equals the list applied (normalised): True
+expected lines 112, actual lines 112; differences beyond the list: 5
+    -        while alive() and time.monotonic() < deadline: time.sleep(0.2)
+    +        while alive() and time.monotonic() < deadline: time.sleep(0.5)
+of them on neither list: [94]
+stays, present byte-equal in head: False  end_group (80-96)
+stays, present byte-equal in head: True  line 127 `stdout = ...` (on neither list)
+unmutated copy: output identical to the git-show run

@@ -1,0 +1,10 @@
+AGENTS.md
+apps/three-surface-poc/package.json
+apps/three-surface-poc/src/git-observation.ts
+apps/three-surface-poc/src/poc-main.ts
+apps/three-surface-poc/src/polaris.ts
+apps/three-surface-poc/tsconfig.json
+package-lock.json
+package.json
+packages/polaris-dossier/src/no-egress.test.ts
+vitest.config.ts

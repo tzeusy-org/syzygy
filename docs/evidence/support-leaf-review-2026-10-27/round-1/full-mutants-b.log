@@ -1,0 +1,4 @@
+C11-dossier-evaluation-questions exit 1 {'numTotalTests': 5315, 'numPassedTests': 5309, 'numFailedTests': 1, 'numPendingTests': 5, 'numFailedTestSuites': 2, 'numTotalTestSuites': 860} failed 1 suiteErrors 0
+F1-headroom-not-frozen exit 1 {'numTotalTests': 5315, 'numPassedTests': 5309, 'numFailedTests': 1, 'numPendingTests': 5, 'numFailedTestSuites': 4, 'numTotalTestSuites': 860} failed 1 suiteErrors 1
+F3-body-authority-not-frozen exit 0 {'numTotalTests': 5315, 'numPassedTests': 5310, 'numFailedTests': 0, 'numPendingTests': 5, 'numFailedTestSuites': 0, 'numTotalTestSuites': 860} failed 0 suiteErrors 0
+exit 0

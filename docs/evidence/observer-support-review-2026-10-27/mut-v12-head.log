@@ -1,0 +1,4 @@
+V12-gate-prefix-src-and-manifest-only: killed exit=1 failed=2/582 files=1 timeouts=0 56.2s clean=True
+     apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every file of each protected package, its manifest and tsconfig among them
+     apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every module and package the POC daemon imports
+killed 1 survived 0 error 0 of 1

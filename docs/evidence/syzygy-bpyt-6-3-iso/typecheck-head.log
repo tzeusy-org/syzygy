@@ -1,0 +1,6 @@
+# npm run typecheck at the code commit 22142d9f8731f1494258bfaa6b58ab0c24a2e607, a clean clone after npm ci (syzygy-bpyt.6.3 stack 4)
+
+> typecheck
+> tsc -b packages/support packages/cap1-core packages/http-host packages/cap1-daemon packages/cap1-conformance packages/three-surface-poc-core apps/syzygy apps/three-surface-poc packages/cap1-system p
+
+exit status: 0

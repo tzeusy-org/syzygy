@@ -1,0 +1,18 @@
+{
+  "command": [
+    "python3",
+    "/home/orca/.tmp/syzygy-pr770-f1-correction-20261106/isolated.py",
+    "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.43",
+    "npm",
+    "ci",
+    "--offline",
+    "--ignore-scripts",
+    "--no-audit",
+    "--no-fund"
+  ],
+  "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.43",
+  "startedAt": "2026-11-06T05:22:41.304442+00:00",
+  "exit": 0,
+  "elapsedSeconds": 1.2700892030261457,
+  "finishedAt": "2026-11-06T05:22:42.574528+00:00"
+}

@@ -1,0 +1,11 @@
+  it('bundles the driver only under the guard: an alias that leaves the sources fails it', async () => {
+    const out = fs.realpathSync(fs.mkdtempSync(path.join(tmpdir(), 'dossier-no-egress-bundle-')));
+    try {
+      const outside = { ...workspaceAliases(), '@syzygy/support': path.join(SOURCE_ROOT, 'packages/support/package.json') };
+      await expect(bundleDriver(path.join(out, 'driver.mjs'), outside))
+        .rejects.toThrow('@syzygy/support resolves outside packages/*/src and apps/*/src: packages/support/package.json');
+    } finally {
+      fs.rmSync(out, { recursive: true, force: true });
+    }
+  });
+

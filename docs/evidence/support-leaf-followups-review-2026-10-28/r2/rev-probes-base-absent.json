@@ -1,0 +1,148 @@
+{
+ "commit": "a15b6a04da2cda0c5871a05c538b72943b1d660c",
+ "dists": [],
+ "node": "v24.6.0",
+ "rows": [
+  {
+   "id": "B-E4-lane",
+   "tests": [
+    "packages/polaris-dossier/src/no-egress.test.ts",
+    "packages/polaris-dossier/src/subpath-imports.test.ts",
+    "packages/polaris-generation-core/src/island-boundary.test.ts",
+    "packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "apps/three-surface-poc/src/sync-child-process-guard.test.ts",
+    "apps/three-surface-poc/src/product-build.test.ts",
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/polaris-dossier/package.json",
+     "old": "      \"import\": \"./dist/state-directory.js\",\n      \"default\": \"./dist/state-directory.js\"\n",
+     "new": "      \"import\": \"./dist/x/../state-directory.js\",\n      \"default\": \"./dist/x/../state-directory.js\"\n"
+    }
+   ],
+   "prediction": "base: the source-agreement rule already refuses it",
+   "load1": "25.68",
+   "failing": [
+    "file: @syzygy/polaris-dossier/state-directory: its entry is not a ./dist/X.js whose src/X.ts exists",
+    "the daemon path, every module the entry reaches outside its dossier and polaris branches reaches this package through argv.ts and state-directory.ts alone",
+    "the daemon path, every module the entry reaches outside its dossier and polaris branches resolves every workspace specifier on it, and reaches past the entry's own imports",
+    "the syzygy CLI and the parked provider island resolves every workspace import the CLI reaches, dynamic ones included",
+    "the tree's own exports put a source condition first in every entry, naming the module the built target is read as"
+   ],
+   "messages": {
+    "the syzygy CLI and the parked provider island resolves every workspace import the CLI reaches, dynamic ones included": "AssertionError: expected [ Array(1) ] to deeply equal []",
+    "the tree's own exports put a source condition first in every entry, naming the module the built target is read as": "AssertionError: expected [ Array(1) ] to deeply equal []",
+    "the daemon path, every module the entry reaches outside its dossier and polaris branches resolves every workspace specifier on it, and reaches past the entry's own imports": "AssertionError: expected [ Array(1) ] to deeply equal []",
+    "the daemon path, every module the entry reaches outside its dossier and polaris branches reaches this package through argv.ts and state-directory.ts alone": "AssertionError: expected [ Array(1) ] to deeply equal [ \u2026(2) ]"
+   },
+   "exit": 1,
+   "passed": 123,
+   "failed": 4,
+   "pending": 7,
+   "total": 134,
+   "failedFiles": [
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-554-r2/packages/polaris-generation-core/src/island-boundary.test.ts",
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-554-r2/packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-554-r2/packages/polaris-dossier/src/no-egress.test.ts",
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-554-r2/packages/polaris-dossier/src/subpath-imports.test.ts"
+   ],
+   "error": null,
+   "stderrTail": null
+  },
+  {
+   "id": "B-E4S-all-but-types",
+   "tests": [
+    "packages/polaris-dossier/src/no-egress.test.ts",
+    "packages/polaris-dossier/src/subpath-imports.test.ts",
+    "packages/polaris-generation-core/src/island-boundary.test.ts",
+    "packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "apps/three-surface-poc/src/sync-child-process-guard.test.ts",
+    "apps/three-surface-poc/src/product-build.test.ts",
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/polaris-dossier/package.json",
+     "old": "      \"source\": \"./src/state-directory.ts\",\n      \"types\": \"./dist/state-directory.d.ts\",\n      \"import\": \"./dist/state-directory.js\",\n      \"default\": \"./dist/state-directory.js\"\n",
+     "new": "      \"source\": \"./src/x/../state-directory.ts\",\n      \"types\": \"./dist/state-directory.d.ts\",\n      \"import\": \"./dist/x/../state-directory.js\",\n      \"default\": \"./dist/x/../state-directory.js\"\n"
+    }
+   ],
+   "prediction": "base: ?",
+   "load1": "27.66",
+   "failing": [],
+   "messages": {},
+   "exit": 0,
+   "passed": 133,
+   "failed": 0,
+   "pending": 1,
+   "total": 134,
+   "failedFiles": [],
+   "error": null,
+   "stderrTail": null
+  },
+  {
+   "id": "B-types-only",
+   "tests": [
+    "packages/polaris-dossier/src/no-egress.test.ts",
+    "packages/polaris-dossier/src/subpath-imports.test.ts",
+    "packages/polaris-generation-core/src/island-boundary.test.ts",
+    "packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "apps/three-surface-poc/src/sync-child-process-guard.test.ts",
+    "apps/three-surface-poc/src/product-build.test.ts",
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/polaris-dossier/package.json",
+     "old": "      \"types\": \"./dist/state-directory.d.ts\",\n",
+     "new": "      \"types\": \"./dist/x/../state-directory.d.ts\",\n"
+    }
+   ],
+   "prediction": "base: passes",
+   "load1": "25.96",
+   "failing": [],
+   "messages": {},
+   "exit": 0,
+   "passed": 133,
+   "failed": 0,
+   "pending": 1,
+   "total": 134,
+   "failedFiles": [],
+   "error": null,
+   "stderrTail": null
+  },
+  {
+   "id": "B-main",
+   "tests": [
+    "packages/polaris-dossier/src/no-egress.test.ts",
+    "packages/polaris-dossier/src/subpath-imports.test.ts",
+    "packages/polaris-generation-core/src/island-boundary.test.ts",
+    "packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "apps/three-surface-poc/src/sync-child-process-guard.test.ts",
+    "apps/three-surface-poc/src/product-build.test.ts",
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "apps/syzygy/package.json",
+     "old": "\"main\": \"./dist/main.js\"",
+     "new": "\"main\": \"./dist/x/../main.js\""
+    }
+   ],
+   "prediction": "base: ?",
+   "load1": "26.66",
+   "failing": [],
+   "messages": {},
+   "exit": 0,
+   "passed": 133,
+   "failed": 0,
+   "pending": 1,
+   "total": 134,
+   "failedFiles": [],
+   "error": null,
+   "stderrTail": null
+  }
+ ],
+ "statusAfter": ""
+}

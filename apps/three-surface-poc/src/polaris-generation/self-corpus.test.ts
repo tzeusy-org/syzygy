@@ -1,21 +1,22 @@
 import { execFileSync } from 'node:child_process';
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
-import { afterEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
+import { tempDir } from '@syzygy/test-kit';
 
 import { proveSelfCorpus, readSelfCorpus } from './self-corpus.js';
 
 // The same historical governed commit bound by the dated M7 evidence. Hosted
 // checkout must retain it; substituting HEAD would change the denominator.
+// Kept as an exact pin (syzygy-bpyt.4.5): the commit is the contract the M7
+// record binds (docs/evidence/polaris-m7-synthetic-successor-2026-09-23.json),
+// and node-ci.yml's fetch-depth: 0 is there to keep it in a hosted checkout.
 const PINNED_MAIN = '133106eb0f2564f1cefddd19d11985f1b2619397';
-const cleanups: string[] = [];
 // readSelfCorpus spawns one `git cat-file` per selected blob, over a hundred
 // at the pinned commit (about 1-2 s alone). Measured worst case 7.8 s under
 // the parallel-load protocol (syzygy-gb4l,
 // docs/evidence/load-timeouts-gb4l-2026-10-03.json).
 const PINNED_READ_TIMEOUT_MS = 60_000;
-afterEach(() => { for (const path of cleanups.splice(0)) rmSync(path, { recursive: true, force: true }); });
 
 describe('zero-egress Syzygy self-corpus proof', () => {
   it('reads only tracked blobs from the pinned commit and independently recounts its denominator', () => {
@@ -43,15 +44,14 @@ describe('zero-egress Syzygy self-corpus proof', () => {
     expect(report.networkCalls).toBe(0);
     expect(report.realProjectProof).toBe(false);
     expect(report.unmetReq014).toContain('two separately admitted real projects');
-  }, 30_000);
+  }, 30_000); // the self-corpus proof over the real tree: timed out at the 5 s default in 2 of 5 full-suite runs at load1 38-71, up to 4.6 s in the others (docs/evidence/syzygy-bpyt-4-31/full-runs.json)
 
   it('refuses a requested pinned commit that is unavailable rather than substituting HEAD', () => {
     expect(() => readSelfCorpus(process.cwd(), '0'.repeat(40))).toThrow();
   });
 
   it('does not read a local or untracked file even when it lies in the allowed-looking path', () => {
-    const root = mkdtempSync(join(tmpdir(), 'syzygy-self-corpus-fixture-'));
-    cleanups.push(root);
+    const root = tempDir('syzygy-self-corpus-fixture-');
     execFileSync('git', ['init', '-q', root]);
     execFileSync('git', ['-C', root, 'config', 'gc.auto', '0']);
     execFileSync('git', ['-C', root, 'config', 'maintenance.auto', 'false']);

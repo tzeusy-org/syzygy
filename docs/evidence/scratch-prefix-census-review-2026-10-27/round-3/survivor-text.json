@@ -1,0 +1,91 @@
+{
+ "r3-long-gap-strict-threshold": {
+  "changedOutsideTheTrace": {
+   "/exposureRanking/meaning": {
+    "old": "8 of the 34 classes whose upper bound this record publishes (leftBySIGKILL, namedInTheBeadObservation, exposureRanking.top) rest partly on that assumption: dossier-gate-acts-, dossier-origin-, dossier-records-, dossier-state-, nanoid-21, syzygy-poc-browser-, syzygy-poc-surface-fixture-p<pid>-n<ns>-, syzygy-poc-surface-fixture-template-p<pid>-n<ns>-.",
+    "new": "7 of the 34 classes whose upper bound this record publishes (leftBySIGKILL, namedInTheBeadObservation, exposureRanking.top) rest partly on that assumption: dossier-origin-, dossier-records-, dossier-state-, nanoid-21, syzygy-poc-browser-, syzygy-poc-surface-fixture-p<pid>-n<ns>-, syzygy-poc-surface-fixture-template-p<pid>-n<ns>-."
+   }
+  },
+  "dependentClassesUnderTheMutant": 7,
+  "dependentClasses": [
+   "dossier-origin-",
+   "dossier-records-",
+   "dossier-state-",
+   "nanoid-21",
+   "syzygy-poc-browser-",
+   "syzygy-poc-surface-fixture-p<pid>-n<ns>-",
+   "syzygy-poc-surface-fixture-template-p<pid>-n<ns>-"
+  ]
+ },
+ "r3-published-filter-dropped": {
+  "changedOutsideTheTrace": {
+   "/exposureRanking/meaning": {
+    "old": "8 of the 34 classes whose upper bound this record publishes (leftBySIGKILL, namedInTheBeadObservation, exposureRanking.top) rest partly on that assumption: dossier-gate-acts-, dossier-origin-, dossier-records-, dossier-state-, nanoid-21, syzygy-poc-browser-, syzygy-poc-surface-fixture-p<pid>-n<ns>-, syzygy-poc-surface-fixture-template-p<pid>-n<ns>-.",
+    "new": "60 of the 34 classes whose upper bound this record publishes (leftBySIGKILL, namedInTheBeadObservation, exposureRanking.top) rest partly on that assumption: dossier-brief-, dossier-choice-, dossier-cli-, dossier-cred-, dossier-design-site-, dossier-doctrine-, dossier-gate-acts-, dossier-head-, dossier-head-git-, dossier-origin-, dossier-records-, dossier-screen-, dossier-state-, dossier-status-, nanoid-21, poc-main-test-, polaris-marker-, rt3-bind-first-, rt3-bind-second-, rt3-cred-, rt3-diagnostic-, rt3-pipe-empty-, rt3-pipe-gone-, rt3-pipe-invalid-, rt3-pipe-observed-, rt3-pipe-root-, rt3-srv-, rt3-srv-empty-, rt3-srv-root-, rt3-srv-writes-, rt4-citation-root-, rt4-citation-state-, rt4-mach-empty-, rt4-mach-invalid-, rt4-mach-observed-, rt4-mach-root-, rt4-mach-state-, rt5-human-empty-, rt5-human-invalid-, rt5-human-observed-, rt5-human-root-, rt5-human-state-, syzygy-a08-consent-convention-, syzygy-dossier-eval-, syzygy-fixture-sweep-, syzygy-generator-lifecycle-, syzygy-generator-onramp-, syzygy-lifecycle-generate-, syzygy-lsremote-, syzygy-materialize-home-, syzygy-poc-browser-, syzygy-poc-materialize-state-, syzygy-poc-source-route-, syzygy-poc-surface-fixture-p<pid>-n<ns>-, syzygy-poc-surface-fixture-template-p<pid>-n<ns>-, syzygy-pwb-governance-, syzygy-rt1-, syzygy-rt2-consent-, syzygy-trigger-iso-, syzygy-trigger-iso-dst-."
+   }
+  },
+  "dependentClassesUnderTheMutant": 60,
+  "dependentClasses": [
+   "dossier-brief-",
+   "dossier-choice-",
+   "dossier-cli-",
+   "dossier-cred-",
+   "dossier-design-site-",
+   "dossier-doctrine-",
+   "dossier-gate-acts-",
+   "dossier-head-",
+   "dossier-head-git-",
+   "dossier-origin-",
+   "dossier-records-",
+   "dossier-screen-",
+   "dossier-state-",
+   "dossier-status-",
+   "nanoid-21",
+   "poc-main-test-",
+   "polaris-marker-",
+   "rt3-bind-first-",
+   "rt3-bind-second-",
+   "rt3-cred-",
+   "rt3-diagnostic-",
+   "rt3-pipe-empty-",
+   "rt3-pipe-gone-",
+   "rt3-pipe-invalid-",
+   "rt3-pipe-observed-",
+   "rt3-pipe-root-",
+   "rt3-srv-",
+   "rt3-srv-empty-",
+   "rt3-srv-root-",
+   "rt3-srv-writes-",
+   "rt4-citation-root-",
+   "rt4-citation-state-",
+   "rt4-mach-empty-",
+   "rt4-mach-invalid-",
+   "rt4-mach-observed-",
+   "rt4-mach-root-",
+   "rt4-mach-state-",
+   "rt5-human-empty-",
+   "rt5-human-invalid-",
+   "rt5-human-observed-",
+   "rt5-human-root-",
+   "rt5-human-state-",
+   "syzygy-a08-consent-convention-",
+   "syzygy-dossier-eval-",
+   "syzygy-fixture-sweep-",
+   "syzygy-generator-lifecycle-",
+   "syzygy-generator-onramp-",
+   "syzygy-lifecycle-generate-",
+   "syzygy-lsremote-",
+   "syzygy-materialize-home-",
+   "syzygy-poc-browser-",
+   "syzygy-poc-materialize-state-",
+   "syzygy-poc-source-route-",
+   "syzygy-poc-surface-fixture-p<pid>-n<ns>-",
+   "syzygy-poc-surface-fixture-template-p<pid>-n<ns>-",
+   "syzygy-pwb-governance-",
+   "syzygy-rt1-",
+   "syzygy-rt2-consent-",
+   "syzygy-trigger-iso-",
+   "syzygy-trigger-iso-dst-"
+  ]
+ }
+}

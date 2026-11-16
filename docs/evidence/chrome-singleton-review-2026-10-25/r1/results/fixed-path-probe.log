@@ -1,0 +1,21 @@
+=== plant=no
+before: victim=present link=none
+  vitest:  ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/cdp-browser.test.ts (24 tests | 23 skipped) 6ms
+  vitest:  Test Files  1 passed (1)
+  vitest:       Tests  1 passed | 23 skipped (24)
+vitest exit 0
+after: victim=present sentinel=present
+=== plant=yes
+before: victim=present link=/tmp/.com.google.Chrome.Victim/SingletonSocket
+  vitest:  ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/cdp-browser.test.ts (24 tests | 23 skipped) 5ms
+  vitest:  Test Files  1 passed (1)
+  vitest:       Tests  1 passed | 23 skipped (24)
+vitest exit 0
+after: victim=absent sentinel=absent
+=== base plant=yes
+before: victim=present link=/tmp/.com.google.Chrome.Victim/SingletonSocket
+  vitest:  ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/cdp-browser.test.ts (13 tests | 12 skipped) 10ms
+  vitest:  Test Files  1 passed (1)
+  vitest:       Tests  1 passed | 12 skipped (13)
+vitest exit 0
+after: victim=present sentinel=present

@@ -1,0 +1,16 @@
+O1-support-prefix-dropped: killed exit=1 failed=2/13 files=1 timeouts=0 16.0s clean=True
+     apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every file of each protected package, its manifest and tsconfig among them
+     apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every module and package the POC daemon imports
+O2-support-prefix-narrowed-to-src: killed exit=1 failed=2/13 files=1 timeouts=0 16.2s clean=True
+     apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every file of each protected package, its manifest and tsconfig among them
+     apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every module and package the POC daemon imports
+O3-unprefixed-package-imported-statically: killed exit=1 failed=1/13 files=1 timeouts=0 16.2s clean=True
+     apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every module and package the POC daemon imports
+O4-unprefixed-package-imported-dynamically-from-core: killed exit=1 failed=1/13 files=1 timeouts=0 17.4s clean=True
+     apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every module and package the POC daemon imports
+O5-unresolvable-workspace-specifier: killed exit=1 failed=1/13 files=1 timeouts=0 19.7s clean=True
+     apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every module and package the POC daemon imports
+O6-cap1-daemon-prefix-dropped: killed exit=1 failed=2/13 files=1 timeouts=0 14.3s clean=True
+     apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation allows unrelated dirty files while protecting POC runtime inputs
+     apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every file of each protected package, its manifest and tsconfig among them
+killed 6 survived 0 error 0 of 6

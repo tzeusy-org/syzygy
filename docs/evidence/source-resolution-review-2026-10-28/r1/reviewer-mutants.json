@@ -1,0 +1,307 @@
+{
+ "subject": "reviewer rule-6 mutants, R-GP-IMPL-SOURCE-RESOLUTION-1",
+ "commit": "2f249d2c4d0fc7756c8581c78c733a305336e705",
+ "worktreeClean": true,
+ "distsPresent": [
+  "cap1-core",
+  "cap1-daemon",
+  "http-host",
+  "polaris-dossier",
+  "polaris-generation-consent",
+  "polaris-generation-core",
+  "support",
+  "syzygy",
+  "three-surface-poc",
+  "three-surface-poc-core"
+ ],
+ "loadavgBefore": [
+  "26.40",
+  "31.90",
+  "35.61"
+ ],
+ "unmutated": {
+  "exit": 0,
+  "failed": 0,
+  "passed": 78,
+  "failedSuites": 0,
+  "total": 78,
+  "failing": []
+ },
+ "mutants": [
+  {
+   "id": "X1",
+   "mutation": "an export's source condition names a module that does not exist",
+   "file": "packages/support/package.json",
+   "fileSha256": "b2ba695890a09af6ce9ad5a319e6ed9499e7bf4814a63969245b3a50180444e5",
+   "old": "\"source\": \"./src/index.ts\",",
+   "new": "\"source\": \"./src/missing.ts\",",
+   "tests": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "packages/three-surface-poc-core/src/owner-act-drafter.test.ts"
+   ],
+   "loadavg": [
+    "25.23",
+    "31.47",
+    "35.43"
+   ],
+   "exit": 1,
+   "failed": 1,
+   "passed": 59,
+   "failedSuites": 3,
+   "total": 60,
+   "failing": [
+    {
+     "test": "the tree's own exports put a source condition first in every entry, naming the module the built target is read as",
+     "message": "AssertionError: expected [ '@syzygy/support .' ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-549/head/packages/polaris-generation-core/src/workspace-reach.test.ts:167:81\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/"
+    },
+    {
+     "suite": "packages/three-surface-poc-core/src/owner-act-drafter.test.ts",
+     "message": "Failed to resolve entry for package \"@syzygy/support\". The package may have incorrect main/module/exports specified in its package.json."
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "X2",
+   "mutation": "the vitest config sends one workspace package to its dist by a plugin, with the source condition and no alias key kept",
+   "file": "vitest.config.ts",
+   "fileSha256": "c54019db1fcec4354bd72610c69396ae5276c51017692d151147eb832d4c6750",
+   "old": "export default defineConfig({\n",
+   "new": "export default defineConfig({\n  plugins: [{ name: 'r549-dist', enforce: 'pre', resolveId(id: string) { return id === '@syzygy/support' ? fileURLToPath(new URL('./packages/support/dist/index.js', import.meta.url)) : null; } }],\n",
+   "tests": [
+    "apps/three-surface-poc/src/sync-child-process-guard.test.ts",
+    "packages/three-surface-poc-core/src/owner-act-drafter.test.ts",
+    "packages/polaris-generation-core/src/workspace-reach.test.ts"
+   ],
+   "loadavg": [
+    "25.23",
+    "31.47",
+    "35.43"
+   ],
+   "exit": 1,
+   "failed": 1,
+   "passed": 68,
+   "failedSuites": 2,
+   "total": 69,
+   "failing": [
+    {
+     "test": "suite child processes and the vitest worker RPC runs only short local tools synchronously in a suite test file or any module it imports",
+     "message": "Error: vitest.config.ts: 10 projects but 9 recognized single-glob includes\n    at suiteConfig (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-549/head/apps/three-surface-poc/src/sync-child-process-guard.test.ts:66:11)\n    at /tmp/claude-1000/-home-tze-Gi"
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "X3",
+   "mutation": "the clean build removes the dist of one project fewer than it builds",
+   "file": "scripts/clean_build.mjs",
+   "fileSha256": "406df4b1b4de696541e0b53f96a486d43f667a84f165023397ada9ca5773324a",
+   "old": "for (const project of built) rmSync(",
+   "new": "for (const project of [...built].slice(1)) rmSync(",
+   "tests": [
+    "apps/three-surface-poc/src/product-build.test.ts"
+   ],
+   "loadavg": [
+    "26.90",
+    "31.72",
+    "35.49"
+   ],
+   "exit": 1,
+   "failed": 1,
+   "passed": 8,
+   "failedSuites": 2,
+   "total": 9,
+   "failing": [
+    {
+     "test": "the clean build leaves no output it did not just write in any project it builds, and leaves other projects alone",
+     "message": "AssertionError: expected 'throw new Error(\"poisoned output\");\\n' to be 'export const b = \\'b\\';\\n' // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-549/head/apps/three-surface-poc/src/product-build.test.ts:93:70\n    at processT"
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "X3b",
+   "mutation": "the clean build follows only the named projects' references, not their references' references",
+   "file": "scripts/clean_build.mjs",
+   "fileSha256": "406df4b1b4de696541e0b53f96a486d43f667a84f165023397ada9ca5773324a",
+   "old": "  for (const reference of config.references ?? []) visit(",
+   "new": "  if (projects.includes(project)) for (const reference of config.references ?? []) visit(",
+   "tests": [
+    "apps/three-surface-poc/src/product-build.test.ts"
+   ],
+   "loadavg": [
+    "28.32",
+    "31.86",
+    "35.49"
+   ],
+   "exit": 0,
+   "failed": 0,
+   "passed": 9,
+   "failedSuites": 0,
+   "total": 9,
+   "failing": [],
+   "killed": false
+  },
+  {
+   "id": "X4",
+   "mutation": "a project's tsconfig adds a test by `files`",
+   "file": "packages/support/tsconfig.json",
+   "fileSha256": "4920180153b5dd45529370bff3c286adc528e6b56690abeeecc3836eb63a4913",
+   "old": "\"include\": [\"src\"],",
+   "new": "\"files\": [\"src/sha256.test.ts\"],\n  \"include\": [\"src\"],",
+   "tests": [
+    "apps/three-surface-poc/src/product-build.test.ts"
+   ],
+   "loadavg": [
+    "28.43",
+    "31.72",
+    "35.39"
+   ],
+   "exit": 0,
+   "failed": 0,
+   "passed": 9,
+   "failedSuites": 0,
+   "total": 9,
+   "failing": [],
+   "killed": false
+  },
+  {
+   "id": "X4b",
+   "mutation": "the app's tsconfig includes its tests again",
+   "file": "apps/three-surface-poc/tsconfig.json",
+   "fileSha256": "fca4b07cb4cf506128a161383fb078c28f41538c7be4da448a9090d10b7794f4",
+   "old": ",\n  \"exclude\": [\n    \"src/**/*.test.ts\"\n  ]",
+   "new": "",
+   "tests": [
+    "apps/three-surface-poc/src/product-build.test.ts"
+   ],
+   "loadavg": [
+    "29.97",
+    "31.92",
+    "35.40"
+   ],
+   "exit": 1,
+   "failed": 1,
+   "passed": 8,
+   "failedSuites": 2,
+   "total": 9,
+   "failing": [
+    {
+     "test": "the product build builds every workspace project with a tsconfig, each excluding its tests and keeping its outputs under dist",
+     "message": "AssertionError: apps/three-surface-poc: expected [ [ 'src' ], undefined ] to deeply equal [ [ 'src' ], [ 'src/**/*.test.ts' ] ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-549/head/apps/three-surface-poc/src/product-build.test.ts:35:57\n    at f"
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "X5",
+   "mutation": "the typecheck program drops test-support",
+   "file": "tsconfig.json",
+   "fileSha256": "2ec7d1a43ce779e181a00e0a3a24f66e49a847cef59d1f768828d51ece4e1d5d",
+   "old": "\"include\": [\"apps/*/src\", \"packages/*/src\", \"packages/*/test-support\"]",
+   "new": "\"include\": [\"apps/*/src\", \"packages/*/src\"]",
+   "tests": [
+    "apps/three-surface-poc/src/product-build.test.ts"
+   ],
+   "loadavg": [
+    "30.74",
+    "32.00",
+    "35.37"
+   ],
+   "exit": 1,
+   "failed": 1,
+   "passed": 8,
+   "failedSuites": 2,
+   "total": 9,
+   "failing": [
+    {
+     "test": "the typecheck reads every module of every workspace, tests among them, from source and emits nothing",
+     "message": "AssertionError: expected [ 'apps/*/src', 'packages/*/src' ] to deeply equal [ Array(3) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-549/head/apps/three-surface-poc/src/product-build.test.ts:117:28\n    at file:///tmp/claude-1000/-home-tze-GitHu"
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "X6",
+   "mutation": "an app export's source condition names another module",
+   "file": "apps/three-surface-poc/package.json",
+   "fileSha256": "786c8de77a4c87ea6f229d90f32a7cfba9103031a53e05ce109b68bddfc9eeb9",
+   "old": "\"source\": \"./src/polaris-generation/dossier-site.ts\",",
+   "new": "\"source\": \"./src/polaris-generation/dossier-render.ts\",",
+   "tests": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts"
+   ],
+   "loadavg": [
+    "30.27",
+    "31.87",
+    "35.29"
+   ],
+   "exit": 1,
+   "failed": 1,
+   "passed": 59,
+   "failedSuites": 2,
+   "total": 60,
+   "failing": [
+    {
+     "test": "the tree's own exports put a source condition first in every entry, naming the module the built target is read as",
+     "message": "AssertionError: expected [ Array(1) ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-549/head/packages/polaris-generation-core/src/workspace-reach.test.ts:167:81\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-85"
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "X7",
+   "mutation": "the clean build removes each dist as it visits, before a later project is refused",
+   "file": "scripts/clean_build.mjs",
+   "fileSha256": "406df4b1b4de696541e0b53f96a486d43f667a84f165023397ada9ca5773324a",
+   "old": "  built.add(project);\n",
+   "new": "  built.add(project);\n  rmSync(join(project, 'dist'), { recursive: true, force: true });\n",
+   "tests": [
+    "apps/three-surface-poc/src/product-build.test.ts"
+   ],
+   "loadavg": [
+    "31.21",
+    "32.04",
+    "35.33"
+   ],
+   "exit": 1,
+   "failed": 1,
+   "passed": 8,
+   "failedSuites": 2,
+   "total": 9,
+   "failing": [
+    {
+     "test": "the clean build refuses, removing nothing, when it reaches a project whose outputs leave dist",
+     "message": "Error: ENOENT: no such file or directory, open '/tmp/r549-7/syzygy-clean-build-PSLImI/packages/b/dist/b.js'\n    at readFileSync (node:fs:440:20)\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-549/head/apps/three-surface-poc/src/product-build.test."
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "X8",
+   "mutation": "the clean build drops its workspace-path predicate, keeping only the tsconfig check",
+   "file": "scripts/clean_build.mjs",
+   "fileSha256": "406df4b1b4de696541e0b53f96a486d43f667a84f165023397ada9ca5773324a",
+   "old": "if (!/^(?:apps|packages)\\/[^/]+$/u.test(project) || !existsSync(path))",
+   "new": "if (!existsSync(path))",
+   "tests": [
+    "apps/three-surface-poc/src/product-build.test.ts"
+   ],
+   "loadavg": [
+    "31.96",
+    "32.18",
+    "35.30"
+   ],
+   "exit": 0,
+   "failed": 0,
+   "passed": 9,
+   "failedSuites": 0,
+   "total": 9,
+   "failing": [],
+   "killed": false
+  }
+ ],
+ "killed": 7,
+ "of": 10,
+ "worktreeCleanAfter": true
+}

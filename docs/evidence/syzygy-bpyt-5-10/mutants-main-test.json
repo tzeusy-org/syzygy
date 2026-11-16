@@ -1,0 +1,117 @@
+{
+  "head": "62d82c11fbbcd8a56c46ece4bd6de9a9186c7c56",
+  "control": {
+    "exit": 0,
+    "passed": 26,
+    "failed": 0,
+    "failedTests": []
+  },
+  "mutants": [
+    {
+      "id": "N3-wait-ms-40000 (the reviewer mutant)",
+      "file": "apps/three-surface-poc/src/main.test.ts",
+      "old": "const WAIT_MS = 10_000;",
+      "new": "const WAIT_MS = 40_000;",
+      "killed": true,
+      "exit": 1,
+      "passed": 25,
+      "failed": 1,
+      "failedTests": [
+        "the wait bounds of this file > holds for every test that waited, with the timeout vitest registered"
+      ]
+    },
+    {
+      "id": "N3-test-timeout-lowered",
+      "file": "apps/three-surface-poc/src/main.test.ts",
+      "old": "const TEST_TIMEOUT_MS = 30_000;",
+      "new": "const TEST_TIMEOUT_MS = 15_000;",
+      "killed": true,
+      "exit": 1,
+      "passed": 24,
+      "failed": 2,
+      "failedTests": [
+        "the wait bounds of this file > flags a test whose waits reach its timeout, a default-timeout waiter, and a charge that went missing",
+        "the wait bounds of this file > holds for every test that waited, with the timeout vitest registered"
+      ]
+    },
+    {
+      "id": "N3-waiting-test-omits-timeout",
+      "file": "apps/three-surface-poc/src/main.test.ts",
+      "old": "    fake.signal('SIGINT');\n    await run;\n  }, TEST_TIMEOUT_MS);\n\n  it('attaches the Enter console",
+      "new": "    fake.signal('SIGINT');\n    await run;\n  });\n\n  it('attaches the Enter console",
+      "killed": true,
+      "exit": 1,
+      "passed": 25,
+      "failed": 1,
+      "failedTests": [
+        "the wait bounds of this file > holds for every test that waited, with the timeout vitest registered"
+      ]
+    },
+    {
+      "id": "N3-started-charge-removed",
+      "file": "apps/three-surface-poc/src/main.test.ts",
+      "old": "  if (boundMs === WAIT_MS) chargeWait();",
+      "new": "  if (boundMs === WAIT_MS) undefined;",
+      "killed": true,
+      "exit": 1,
+      "passed": 25,
+      "failed": 1,
+      "failedTests": [
+        "the wait bounds of this file > holds for every test that waited, with the timeout vitest registered"
+      ]
+    },
+    {
+      "id": "N3-started-bound-raised-past-timeout",
+      "file": "apps/three-surface-poc/src/main.test.ts",
+      "old": "boundMs: number = WAIT_MS",
+      "new": "boundMs: number = 4 * WAIT_MS",
+      "killed": true,
+      "exit": 1,
+      "passed": 25,
+      "failed": 1,
+      "failedTests": [
+        "the wait bounds of this file > holds for every test that waited, with the timeout vitest registered"
+      ]
+    },
+    {
+      "id": "N4-verbatim-reader-root (poc-main.ts)",
+      "file": "apps/three-surface-poc/src/poc-main.ts",
+      "old": "gitBlobReaderFor(repoRoot)",
+      "new": "gitBlobReaderFor('/observer/syzygy')",
+      "killed": true,
+      "exit": 1,
+      "passed": 25,
+      "failed": 1,
+      "failedTests": [
+        "main(argv, io): the bound locator reaches every repository-rooted argument > serves the requirement text the bound repository returns for the object it asks for, and withholds the purpose prose"
+      ]
+    },
+    {
+      "id": "N4-verbatim-reader-returns-nothing (poc-main.ts)",
+      "file": "apps/three-surface-poc/src/poc-main.ts",
+      "old": "verbatimRouteReader(current, gitBlobReaderFor(repoRoot))",
+      "new": "verbatimRouteReader(current, () => undefined)",
+      "killed": true,
+      "exit": 1,
+      "passed": 25,
+      "failed": 1,
+      "failedTests": [
+        "main(argv, io): the bound locator reaches every repository-rooted argument > serves the requirement text the bound repository returns for the object it asks for, and withholds the purpose prose"
+      ]
+    },
+    {
+      "id": "N4-verbatim-reader-asked-for-wrong-object (verbatim-route.ts)",
+      "file": "apps/three-surface-poc/src/verbatim-route.ts",
+      "old": "readBlob(source.anchor.objectId);",
+      "new": "readBlob(source.anchor.objectId.slice(1));",
+      "killed": true,
+      "exit": 1,
+      "passed": 25,
+      "failed": 1,
+      "failedTests": [
+        "main(argv, io): the bound locator reaches every repository-rooted argument > serves the requirement text the bound repository returns for the object it asks for, and withholds the purpose prose"
+      ]
+    }
+  ],
+  "allKilled": true
+}

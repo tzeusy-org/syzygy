@@ -1,0 +1,121 @@
+{
+  "capturedAt": "2026-10-24T21:20:31.003Z",
+  "task": "syzygy-dov.10.2 — P-77 route links and weak conditional GET",
+  "testedCommit": "9d55188734e5d7d315591a55daf3a7bb5970c5aa",
+  "command": "node scripts/run_m10_conditional_mutations.mjs --write-evidence",
+  "tests": [
+    "apps/three-surface-poc/src/routes.test.ts",
+    "apps/three-surface-poc/src/response-limits.test.ts"
+  ],
+  "baseline": "Tests  29 passed (29)",
+  "results": [
+    {
+      "id": "omitted-route",
+      "file": "apps/three-surface-poc/src/routes.ts",
+      "old": "const links = routes.map(({ path, method, credentialClass }) =>",
+      "new": "const links = routes.filter((route) => route.path !== '/butlers-syzygy/api/poc').map(({ path, method, credentialClass }) =>",
+      "exitCode": 1,
+      "testsExecuted": true,
+      "failingTests": [
+        "FAIL  |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/response-limits.test.ts > pocRoutes — the machine JSON sink is bounded by maxMachineResponseBytes > /butlers-syzygy/api/poc: limit − 1 fails closed, limit and limit + 1 serve the model",
+        "FAIL  |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/routes.test.ts > three-surface POC routes > projects all 15 registered route tuples into both machine answers, with one request-form self",
+        "FAIL  |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/routes.test.ts > three-surface POC routes > derives links and response identity from the live registered array, including an injected route and order",
+        "FAIL  |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/routes.test.ts > three-surface POC routes > serves one model through human and authenticated machine views",
+        "FAIL  |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/routes.test.ts > three-surface POC routes > keeps GET read-only and byte-identical under five sequential and concurrent requests"
+      ],
+      "restoredSha256": "648a556a49f18a9f0f8345f916cbb7f2a73bdbfc8b700aba5de7a27029ab25e0"
+    },
+    {
+      "id": "wrong-self",
+      "file": "apps/three-surface-poc/src/routes.ts",
+      "old": "self: path === selfPath && method === request.method",
+      "new": "self: false",
+      "exitCode": 1,
+      "testsExecuted": true,
+      "failingTests": [
+        "FAIL  |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/response-limits.test.ts > boundedResponse — the ceiling is measured on the final encoded body > logs a single safe response-limit outcome per real-socket human and machine 503",
+        "FAIL  |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/response-limits.test.ts > pocRoutes — the machine JSON sink is bounded by maxMachineResponseBytes > does not turn a matching validator into a 304 when the complete body breaches its ceiling",
+        "FAIL  |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/response-limits.test.ts > pocRoutes — the machine JSON sink is bounded by maxMachineResponseBytes > /api/poc: limit − 1 fails closed, limit and limit + 1 serve the model",
+        "FAIL  |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/response-limits.test.ts > pocRoutes — the machine JSON sink is bounded by maxMachineResponseBytes > /butlers-syzygy/api/poc: limit − 1 fails closed, limit and limit + 1 serve the model",
+        "FAIL  |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/response-limits.test.ts > pocRoutes — the machine JSON sink is bounded by maxMachineResponseBytes > the human ceiling does not bound the machine sink and vice versa",
+        "FAIL  |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/response-limits.test.ts > pocRoutes — the machine JSON sink is bounded by maxMachineResponseBytes > the registry values are the default ceilings",
+        "FAIL  |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/routes.test.ts > three-surface POC routes > projects all 15 registered route tuples into both machine answers, with one request-form self",
+        "FAIL  |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/routes.test.ts > three-surface POC routes > derives links and response identity from the live registered array, including an injected route and order",
+        "FAIL  |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/routes.test.ts > three-surface POC routes > revalidates only the complete bounded /api/poc representation, after credential admission",
+        "FAIL  |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/routes.test.ts > three-surface POC routes > refuses a stale validator after a project-shape fact changes while inputsDigest stays fixed",
+        "FAIL  |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/routes.test.ts > three-surface POC routes > serves one model through human and authenticated machine views",
+        "FAIL  |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/routes.test.ts > three-surface POC routes > recomputes the authenticated served-body contentKey with an independent walker and canonicalizer",
+        "FAIL  |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/routes.test.ts > three-surface POC routes > keeps GET read-only and byte-identical under five sequential and concurrent requests",
+        "FAIL  |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/routes.test.ts > three-surface POC routes > projects the same mayNot tuples in human Polaris and authenticated machine JSON",
+        "FAIL  |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/routes.test.ts > three-surface POC routes > keeps empty-seed human and machine responses in parity"
+      ],
+      "restoredSha256": "648a556a49f18a9f0f8345f916cbb7f2a73bdbfc8b700aba5de7a27029ab25e0"
+    },
+    {
+      "id": "inputs-digest-validator",
+      "file": "apps/three-surface-poc/src/routes.ts",
+      "old": "const etag = `W/\"${model.responseIdentity.contentKey}\"`;",
+      "new": "const etag = `W/\"${model.evaluation.inputsDigest}\"`;",
+      "exitCode": 1,
+      "testsExecuted": true,
+      "failingTests": [
+        "FAIL  |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/response-limits.test.ts > pocRoutes — the machine JSON sink is bounded by maxMachineResponseBytes > does not turn a matching validator into a 304 when the complete body breaches its ceiling",
+        "FAIL  |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/routes.test.ts > three-surface POC routes > revalidates only the complete bounded /api/poc representation, after credential admission",
+        "FAIL  |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/routes.test.ts > three-surface POC routes > refuses a stale validator after a project-shape fact changes while inputsDigest stays fixed",
+        "FAIL  |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/routes.test.ts > three-surface POC routes > keeps GET read-only and byte-identical under five sequential and concurrent requests"
+      ],
+      "restoredSha256": "648a556a49f18a9f0f8345f916cbb7f2a73bdbfc8b700aba5de7a27029ab25e0"
+    },
+    {
+      "id": "strong-validator",
+      "file": "apps/three-surface-poc/src/routes.ts",
+      "old": "const etag = `W/\"${model.responseIdentity.contentKey}\"`;",
+      "new": "const etag = `\"${model.responseIdentity.contentKey}\"`;",
+      "exitCode": 1,
+      "testsExecuted": true,
+      "failingTests": [
+        "FAIL  |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/response-limits.test.ts > pocRoutes — the machine JSON sink is bounded by maxMachineResponseBytes > does not turn a matching validator into a 304 when the complete body breaches its ceiling",
+        "FAIL  |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/routes.test.ts > three-surface POC routes > revalidates only the complete bounded /api/poc representation, after credential admission"
+      ],
+      "restoredSha256": "648a556a49f18a9f0f8345f916cbb7f2a73bdbfc8b700aba5de7a27029ab25e0"
+    },
+    {
+      "id": "ceiling-bypass",
+      "file": "apps/three-surface-poc/src/routes.ts",
+      "old": "if (full.status !== 200) return full;",
+      "new": "if (false && full.status !== 200) return full;",
+      "exitCode": 1,
+      "testsExecuted": true,
+      "failingTests": [
+        "FAIL  |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/response-limits.test.ts > pocRoutes — the machine JSON sink is bounded by maxMachineResponseBytes > does not turn a matching validator into a 304 when the complete body breaches its ceiling"
+      ],
+      "restoredSha256": "648a556a49f18a9f0f8345f916cbb7f2a73bdbfc8b700aba5de7a27029ab25e0"
+    },
+    {
+      "id": "false-presentation-304",
+      "file": "apps/three-surface-poc/src/routes.ts",
+      "old": "return boundedResponse(model, limits, 'maxMachineResponseBytes', 'application/json', JSON.stringify(envelope), recorder);",
+      "new": "return request.headers['if-none-match'] ? { status: 304, contentType: 'application/json', body: '' } : boundedResponse(model, limits, 'maxMachineResponseBytes', 'application/json', JSON.stringify(envelope), recorder);",
+      "exitCode": 1,
+      "testsExecuted": true,
+      "failingTests": [
+        "FAIL  |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/routes.test.ts > three-surface POC routes > revalidates only the complete bounded /api/poc representation, after credential admission"
+      ],
+      "restoredSha256": "648a556a49f18a9f0f8345f916cbb7f2a73bdbfc8b700aba5de7a27029ab25e0"
+    },
+    {
+      "id": "auth-order-bypass",
+      "file": "packages/http-host/src/server.ts",
+      "old": "if (route.credentialClass === 'machine-credentialed') {",
+      "new": "if (false) {",
+      "exitCode": 1,
+      "testsExecuted": true,
+      "failingTests": [
+        "FAIL  |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/routes.test.ts > three-surface POC routes > revalidates only the complete bounded /api/poc representation, after credential admission",
+        "FAIL  |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/routes.test.ts > three-surface POC routes > serves one model through human and authenticated machine views"
+      ],
+      "restoredSha256": "84be8923e8a50880f84060221b8cf058e2984202f5b0723b8630c511e406d1c4"
+    }
+  ],
+  "scope": "Synthetic real-socket route and ceiling tests only; no registered repository body read, provider call, or governed artifact changed."
+}

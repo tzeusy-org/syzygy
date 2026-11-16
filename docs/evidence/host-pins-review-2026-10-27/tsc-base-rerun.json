@@ -1,0 +1,460 @@
+{
+ "tree": "base",
+ "head": "546f1ff066e2ffef749c757cdb4621336039113b",
+ "controls": [
+  {
+   "when": "before",
+   "exit": 0,
+   "errors": [],
+   "seconds": 24.8
+  },
+  {
+   "when": "after",
+   "exit": 0,
+   "errors": [],
+   "seconds": 8.5
+  }
+ ],
+ "results": [
+  {
+   "id": "T-drop-CredentialInspection",
+   "outcome": "survived",
+   "exit": 0,
+   "errors": [],
+   "seconds": 5.7,
+   "counts": [
+    {
+     "file": "packages/cap1-daemon/src/credentials.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/cap1-daemon/src/credentials.ts",
+     "old": "  type CredentialInspection,\n",
+     "new": ""
+    }
+   ],
+   "commit": "546f1ff066e2ffef749c757cdb4621336039113b"
+  },
+  {
+   "id": "T-drop-CredentialProvision",
+   "outcome": "survived",
+   "exit": 0,
+   "errors": [],
+   "seconds": 4.3,
+   "counts": [
+    {
+     "file": "packages/cap1-daemon/src/credentials.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/cap1-daemon/src/credentials.ts",
+     "old": "  type CredentialProvision,\n",
+     "new": ""
+    }
+   ],
+   "commit": "546f1ff066e2ffef749c757cdb4621336039113b"
+  },
+  {
+   "id": "T-drop-CredentialStat",
+   "outcome": "survived",
+   "exit": 0,
+   "errors": [],
+   "seconds": 4.4,
+   "counts": [
+    {
+     "file": "packages/cap1-daemon/src/credentials.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/cap1-daemon/src/credentials.ts",
+     "old": "  type CredentialStat,\n",
+     "new": ""
+    }
+   ],
+   "commit": "546f1ff066e2ffef749c757cdb4621336039113b"
+  },
+  {
+   "id": "T-drop-StateWriteAuthorization",
+   "outcome": "survived",
+   "exit": 0,
+   "errors": [],
+   "seconds": 6.0,
+   "counts": [
+    {
+     "file": "packages/cap1-daemon/src/credentials.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/cap1-daemon/src/credentials.ts",
+     "old": "  type StateWriteAuthorization,\n",
+     "new": ""
+    }
+   ],
+   "commit": "546f1ff066e2ffef749c757cdb4621336039113b"
+  },
+  {
+   "id": "T-drop-StateWriteRefusalName",
+   "outcome": "survived",
+   "exit": 0,
+   "errors": [],
+   "seconds": 6.0,
+   "counts": [
+    {
+     "file": "packages/cap1-daemon/src/credentials.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/cap1-daemon/src/credentials.ts",
+     "old": "  type StateWriteRefusalName,\n",
+     "new": ""
+    }
+   ],
+   "commit": "546f1ff066e2ffef749c757cdb4621336039113b"
+  },
+  {
+   "id": "T-drop-CredentialClass",
+   "outcome": "survived",
+   "exit": 0,
+   "errors": [],
+   "seconds": 8.6,
+   "counts": [
+    {
+     "file": "packages/cap1-daemon/src/server.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/cap1-daemon/src/server.ts",
+     "old": "  type CredentialClass,\n",
+     "new": ""
+    }
+   ],
+   "commit": "546f1ff066e2ffef749c757cdb4621336039113b"
+  },
+  {
+   "id": "T-drop-DaemonOptions",
+   "outcome": "killed",
+   "exit": 2,
+   "errors": [
+    "apps/three-surface-poc/src/main.test.ts(198,57): error TS7006: Parameter 'candidate' implicitly has an 'any' type.",
+    "apps/three-surface-poc/src/main.test.ts(345,59): error TS7006: Parameter 'route' implicitly has an 'any' type.",
+    "apps/three-surface-poc/src/main.test.ts(9,15): error TS2305: Module '\"@syzygy/cap1-daemon\"' has no exported member 'DaemonOptions'."
+   ],
+   "seconds": 6.8,
+   "counts": [
+    {
+     "file": "packages/cap1-daemon/src/server.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/cap1-daemon/src/server.ts",
+     "old": "  type DaemonOptions,\n",
+     "new": ""
+    }
+   ],
+   "commit": "546f1ff066e2ffef749c757cdb4621336039113b"
+  },
+  {
+   "id": "T-drop-DaemonStart",
+   "outcome": "killed",
+   "exit": 2,
+   "errors": [
+    "apps/three-surface-poc/src/main.test.ts(9,30): error TS2305: Module '\"@syzygy/cap1-daemon\"' has no exported member 'DaemonStart'."
+   ],
+   "seconds": 6.5,
+   "counts": [
+    {
+     "file": "packages/cap1-daemon/src/server.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/cap1-daemon/src/server.ts",
+     "old": "  type DaemonStart,\n",
+     "new": ""
+    }
+   ],
+   "commit": "546f1ff066e2ffef749c757cdb4621336039113b"
+  },
+  {
+   "id": "T-drop-Route",
+   "outcome": "killed",
+   "exit": 2,
+   "errors": [
+    "apps/three-surface-poc/src/main.test.ts(9,43): error TS2305: Module '\"@syzygy/cap1-daemon\"' has no exported member 'Route'.",
+    "apps/three-surface-poc/src/routes.test.ts(8,29): error TS2305: Module '\"@syzygy/cap1-daemon\"' has no exported member 'Route'.",
+    "apps/three-surface-poc/src/verbatim-route.test.ts(10,15): error TS2305: Module '\"@syzygy/cap1-daemon\"' has no exported member 'Route'.",
+    "packages/cap1-daemon/src/routes-human.test.ts(20,29): error TS2459: Module '\"./server.js\"' declares 'Route' locally, but it is not exported.",
+    "packages/cap1-daemon/src/server.test.ts(12,8): error TS2459: Module '\"./server.js\"' declares 'Route' locally, but it is not exported."
+   ],
+   "seconds": 8.2,
+   "counts": [
+    {
+     "file": "packages/cap1-daemon/src/server.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/cap1-daemon/src/server.ts",
+     "old": "  type Route,\n",
+     "new": ""
+    }
+   ],
+   "commit": "546f1ff066e2ffef749c757cdb4621336039113b"
+  },
+  {
+   "id": "T-drop-RouteContext",
+   "outcome": "killed",
+   "exit": 2,
+   "errors": [
+    "apps/three-surface-poc/src/reobserve-action.test.ts(2,15): error TS2305: Module '\"@syzygy/cap1-daemon\"' has no exported member 'RouteContext'.",
+    "apps/three-surface-poc/src/response-limits.test.ts(11,29): error TS2305: Module '\"@syzygy/cap1-daemon\"' has no exported member 'RouteContext'.",
+    "apps/three-surface-poc/src/verbatim-route.test.ts(10,22): error TS2305: Module '\"@syzygy/cap1-daemon\"' has no exported member 'RouteContext'."
+   ],
+   "seconds": 6.4,
+   "counts": [
+    {
+     "file": "packages/cap1-daemon/src/server.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/cap1-daemon/src/server.ts",
+     "old": "  type RouteContext,\n",
+     "new": ""
+    }
+   ],
+   "commit": "546f1ff066e2ffef749c757cdb4621336039113b"
+  },
+  {
+   "id": "T-drop-RouteRequest",
+   "outcome": "survived",
+   "exit": 0,
+   "errors": [],
+   "seconds": 6.3,
+   "counts": [
+    {
+     "file": "packages/cap1-daemon/src/server.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/cap1-daemon/src/server.ts",
+     "old": "  type RouteRequest,\n",
+     "new": ""
+    }
+   ],
+   "commit": "546f1ff066e2ffef749c757cdb4621336039113b"
+  },
+  {
+   "id": "T-drop-RouteResponse",
+   "outcome": "killed",
+   "exit": 2,
+   "errors": [
+    "apps/three-surface-poc/src/response-limits.test.ts(11,48): error TS2305: Module '\"@syzygy/cap1-daemon\"' has no exported member 'RouteResponse'.",
+    "apps/three-surface-poc/src/verbatim-route.test.ts(10,36): error TS2305: Module '\"@syzygy/cap1-daemon\"' has no exported member 'RouteResponse'."
+   ],
+   "seconds": 8.3,
+   "counts": [
+    {
+     "file": "packages/cap1-daemon/src/server.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/cap1-daemon/src/server.ts",
+     "old": "  type RouteResponse,\n",
+     "new": ""
+    }
+   ],
+   "commit": "546f1ff066e2ffef749c757cdb4621336039113b"
+  },
+  {
+   "id": "T-drop-RunningDaemon",
+   "outcome": "killed",
+   "exit": 2,
+   "errors": [
+    "apps/three-surface-poc/src/materialize-action.test.ts(6,29): error TS2305: Module '\"@syzygy/cap1-daemon\"' has no exported member 'RunningDaemon'.",
+    "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts(19,29): error TS2305: Module '\"@syzygy/cap1-daemon\"' has no exported member 'RunningDaemon'.",
+    "apps/three-surface-poc/src/polaris-presentation-route.test.ts(14,29): error TS2305: Module '\"@syzygy/cap1-daemon\"' has no exported member 'RunningDaemon'.",
+    "apps/three-surface-poc/src/polaris-source-route.test.ts(17,41): error TS2305: Module '\"@syzygy/cap1-daemon\"' has no exported member 'RunningDaemon'.",
+    "apps/three-surface-poc/src/routes.test.ts(8,41): error TS2305: Module '\"@syzygy/cap1-daemon\"' has no exported member 'RunningDaemon'.",
+    "apps/three-surface-poc/src/surface-routes.test.ts(8,29): error TS2305: Module '\"@syzygy/cap1-daemon\"' has no exported member 'RunningDaemon'.",
+    "apps/three-surface-poc/src/tuple-encoding.test.ts(7,29): error TS2305: Module '\"@syzygy/cap1-daemon\"' has no exported member 'RunningDaemon'.",
+    "packages/cap1-daemon/src/routes-human.test.ts(20,41): error TS2305: Module '\"./server.js\"' has no exported member 'RunningDaemon'.",
+    "packages/cap1-daemon/src/routes-machine.test.ts(18,29): error TS2305: Module '\"./server.js\"' has no exported member 'RunningDaemon'.",
+    "packages/cap1-daemon/src/server.test.ts(13,8): error TS2305: Module '\"./server.js\"' has no exported member 'RunningDaemon'."
+   ],
+   "seconds": 8.0,
+   "counts": [
+    {
+     "file": "packages/cap1-daemon/src/server.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/cap1-daemon/src/server.ts",
+     "old": "  type RunningDaemon,\n",
+     "new": ""
+    }
+   ],
+   "commit": "546f1ff066e2ffef749c757cdb4621336039113b"
+  },
+  {
+   "id": "T-swap-RouteContext",
+   "outcome": "killed",
+   "exit": 2,
+   "errors": [
+    "apps/three-surface-poc/src/reobserve-action.test.ts(28,12): error TS2353: Object literal may only specify known properties, and 'request' does not exist in type 'RouteRequest'.",
+    "apps/three-surface-poc/src/reobserve-action.test.ts(38,36): error TS2345: Argument of type 'RouteRequest' is not assignable to parameter of type 'RouteContext'.",
+    "apps/three-surface-poc/src/reobserve-action.test.ts(39,37): error TS2345: Argument of type 'RouteRequest' is not assignable to parameter of type 'RouteContext'.",
+    "apps/three-surface-poc/src/reobserve-action.test.ts(51,44): error TS2345: Argument of type 'RouteRequest' is not assignable to parameter of type 'RouteContext'.",
+    "apps/three-surface-poc/src/reobserve-action.test.ts(54,44): error TS2345: Argument of type 'RouteRequest' is not assignable to parameter of type 'RouteContext'.",
+    "apps/three-surface-poc/src/reobserve-action.test.ts(59,41): error TS2345: Argument of type 'RouteRequest' is not assignable to parameter of type 'RouteContext'.",
+    "apps/three-surface-poc/src/reobserve-action.test.ts(78,44): error TS2345: Argument of type 'RouteRequest' is not assignable to parameter of type 'RouteContext'.",
+    "apps/three-surface-poc/src/response-limits.test.ts(183,32): error TS2345: Argument of type 'RouteRequest' is not assignable to parameter of type 'RouteContext'.",
+    "apps/three-surface-poc/src/response-limits.test.ts(216,34): error TS2345: Argument of type 'RouteRequest' is not assignable to parameter of type 'RouteContext'.",
+    "apps/three-surface-poc/src/response-limits.test.ts(273,37): error TS2345: Argument of type 'RouteRequest' is not assignable to parameter of type 'RouteContext'.",
+    "apps/three-surface-poc/src/response-limits.test.ts(36,12): error TS2353: Object literal may only specify known properties, and 'request' does not exist in type 'RouteRequest'.",
+    "apps/three-surface-poc/src/response-limits.test.ts(44,37): error TS2345: Argument of type 'RouteRequest' is not assignable to parameter of type 'RouteContext'.",
+    "apps/three-surface-poc/src/verbatim-route.test.ts(208,54): error TS2353: Object literal may only specify known properties, and 'request' does not exist in type 'RouteRequest'.",
+    "apps/three-surface-poc/src/verbatim-route.test.ts(223,60): error TS2345: Argument of type 'RouteRequest' is not assignable to parameter of type 'RouteContext'.",
+    "apps/three-surface-poc/src/verbatim-route.test.ts(229,73): error TS2345: Argument of type 'RouteRequest' is not assignable to parameter of type 'RouteContext'.",
+    "apps/three-surface-poc/src/verbatim-route.test.ts(234,47): error TS2345: Argument of type 'RouteRequest' is not assignable to parameter of type 'RouteContext'.",
+    "apps/three-surface-poc/src/verbatim-route.test.ts(237,76): error TS2345: Argument of type 'RouteRequest' is not assignable to parameter of type 'RouteContext'."
+   ],
+   "seconds": 8.5,
+   "counts": [
+    {
+     "file": "packages/cap1-daemon/src/server.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/cap1-daemon/src/server.ts",
+     "old": "  type RouteContext,\n",
+     "new": "  type RouteRequest as RouteContext,\n"
+    }
+   ],
+   "commit": "546f1ff066e2ffef749c757cdb4621336039113b"
+  },
+  {
+   "id": "T-swap-CredentialStat",
+   "outcome": "survived",
+   "exit": 0,
+   "errors": [],
+   "seconds": 10.2,
+   "counts": [
+    {
+     "file": "packages/cap1-daemon/src/credentials.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/cap1-daemon/src/credentials.ts",
+     "old": "  type CredentialStat,\n",
+     "new": "  type CredentialInspection as CredentialStat,\n"
+    }
+   ],
+   "commit": "546f1ff066e2ffef749c757cdb4621336039113b"
+  },
+  {
+   "id": "TT1-local-equal-type",
+   "outcome": "survived",
+   "exit": 0,
+   "errors": [],
+   "seconds": 10.2,
+   "counts": [
+    {
+     "file": "packages/cap1-daemon/src/server.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/cap1-daemon/src/server.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/cap1-daemon/src/server.ts",
+     "old": "  type CredentialClass,\n",
+     "new": ""
+    },
+    {
+     "file": "packages/cap1-daemon/src/server.ts",
+     "old": "// --- This wave's minimal root route",
+     "new": "export type CredentialClass = 'human-open' | 'machine-credentialed';\n\n// --- This wave's minimal root route"
+    }
+   ],
+   "commit": "546f1ff066e2ffef749c757cdb4621336039113b"
+  },
+  {
+   "id": "TT2-local-wider-type",
+   "outcome": "survived",
+   "exit": 0,
+   "errors": [],
+   "seconds": 10.8,
+   "counts": [
+    {
+     "file": "packages/cap1-daemon/src/server.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/cap1-daemon/src/server.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/cap1-daemon/src/server.ts",
+     "old": "  type CredentialClass,\n",
+     "new": ""
+    },
+    {
+     "file": "packages/cap1-daemon/src/server.ts",
+     "old": "// --- This wave's minimal root route",
+     "new": "export type CredentialClass = string;\n\n// --- This wave's minimal root route"
+    }
+   ],
+   "commit": "546f1ff066e2ffef749c757cdb4621336039113b"
+  }
+ ]
+}

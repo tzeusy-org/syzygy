@@ -1,0 +1,440 @@
+{
+ "subject": "rule-6 mutants of syzygy-bpyt.56's gate and its derived test",
+ "commit": "8994af16e5ae735aa3d6f26a925c93e4a0ad7f45",
+ "worktreeClean": true,
+ "tool": {
+  "path": "docs/evidence/syzygy-bpyt-56/tools/mutants.py",
+  "sha256": "c139b49b0e6fddcc060815ad57bef1939f86854781d19a2beb5e006daf429a47"
+ },
+ "loadavgBefore": [
+  "25.22",
+  "22.87",
+  "25.08"
+ ],
+ "unmutated": {
+  "exit": 0,
+  "failed": 0,
+  "passed": 16,
+  "failedSuites": 0,
+  "total": 16,
+  "failing": []
+ },
+ "mutants": [
+  {
+   "id": "M1",
+   "mutation": "the gate drops polaris-generation-core",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "old": "    'packages/polaris-generation-core/',\n",
+     "new": "",
+     "fileSha256": "dfe1e173deb17ac96c9cf2420c676f6e81a615271efec2f58bbd2bed5872ea52"
+    }
+   ],
+   "tests": [
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "exit": 1,
+   "failed": 2,
+   "passed": 14,
+   "failedSuites": 2,
+   "total": 16,
+   "failing": [
+    {
+     "test": "read-only Git observation refuses exactly the projects the POC start compiles or loads, and the files that define its build",
+     "message": "AssertionError: expected [ …(53) ] to deeply equal []"
+    },
+    {
+     "test": "read-only Git observation refuses a tree that builds packages/polaris-generation-core into another package's dist",
+     "message": "AssertionError: own outDir: expected true to be false // Object.is equality"
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "M2",
+   "mutation": "the gate drops cap1-daemon, which build:poc builds",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "old": "    'packages/cap1-daemon/',\n",
+     "new": "",
+     "fileSha256": "dfe1e173deb17ac96c9cf2420c676f6e81a615271efec2f58bbd2bed5872ea52"
+    }
+   ],
+   "tests": [
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "exit": 1,
+   "failed": 3,
+   "passed": 13,
+   "failedSuites": 2,
+   "total": 16,
+   "failing": [
+    {
+     "test": "read-only Git observation allows unrelated dirty files while protecting POC runtime inputs",
+     "message": "AssertionError: expected true to be false // Object.is equality"
+    },
+    {
+     "test": "read-only Git observation refuses exactly the projects the POC start compiles or loads, and the files that define its build",
+     "message": "AssertionError: expected [ …(18) ] to deeply equal []"
+    },
+    {
+     "test": "read-only Git observation refuses a tree that builds packages/cap1-daemon into another package's dist",
+     "message": "AssertionError: own outDir: expected true to be false // Object.is equality"
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "M3",
+   "mutation": "the gate drops polaris-generation-consent, which the app's tsconfig references",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "old": "    'packages/polaris-generation-consent/',\n",
+     "new": "",
+     "fileSha256": "dfe1e173deb17ac96c9cf2420c676f6e81a615271efec2f58bbd2bed5872ea52"
+    }
+   ],
+   "tests": [
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "exit": 1,
+   "failed": 1,
+   "passed": 15,
+   "failedSuites": 2,
+   "total": 16,
+   "failing": [
+    {
+     "test": "read-only Git observation refuses exactly the projects the POC start compiles or loads, and the files that define its build",
+     "message": "AssertionError: expected [ …(21) ] to deeply equal []"
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "M4",
+   "mutation": "the gate protects a project the start neither compiles nor loads",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "old": "    'packages/polaris-generation-consent/',\n",
+     "new": "    'packages/polaris-generation-consent/',\n    'packages/polaris-dossier/',\n",
+     "fileSha256": "dfe1e173deb17ac96c9cf2420c676f6e81a615271efec2f58bbd2bed5872ea52"
+    }
+   ],
+   "tests": [
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "exit": 1,
+   "failed": 1,
+   "passed": 15,
+   "failedSuites": 2,
+   "total": 16,
+   "failing": [
+    {
+     "test": "read-only Git observation refuses exactly the projects the POC start compiles or loads, and the files that define its build",
+     "message": "AssertionError: expected [ …(81) ] to deeply equal []"
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "M5",
+   "mutation": "the gate drops the build step's program",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "old": ", 'scripts/clean_build.mjs']);",
+     "new": "]);",
+     "fileSha256": "dfe1e173deb17ac96c9cf2420c676f6e81a615271efec2f58bbd2bed5872ea52"
+    }
+   ],
+   "tests": [
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "exit": 1,
+   "failed": 2,
+   "passed": 14,
+   "failedSuites": 2,
+   "total": 16,
+   "failing": [
+    {
+     "test": "read-only Git observation protects the clean-build script that build:poc runs",
+     "message": "AssertionError: expected true to be false // Object.is equality"
+    },
+    {
+     "test": "read-only Git observation refuses exactly the projects the POC start compiles or loads, and the files that define its build",
+     "message": "AssertionError: expected [ 'scripts/clean_build.mjs: accepted' ] to deeply equal []"
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "M6",
+   "mutation": "the gate protects only each project's src/ (the PR 535 review's N6)",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "old": "inputPrefixes.every((prefix) => !changedPath.startsWith(prefix))",
+     "new": "inputPrefixes.every((prefix) => !changedPath.startsWith(`${prefix}src/`))",
+     "fileSha256": "dfe1e173deb17ac96c9cf2420c676f6e81a615271efec2f58bbd2bed5872ea52"
+    }
+   ],
+   "tests": [
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "exit": 1,
+   "failed": 2,
+   "passed": 14,
+   "failedSuites": 2,
+   "total": 16,
+   "failing": [
+    {
+     "test": "read-only Git observation protects the HTTP host package the POC serves through",
+     "message": "AssertionError: expected true to be false // Object.is equality"
+    },
+    {
+     "test": "read-only Git observation refuses exactly the projects the POC start compiles or loads, and the files that define its build",
+     "message": "AssertionError: expected [ …(18) ] to deeply equal []"
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "M7",
+   "mutation": "build:poc builds one more project",
+   "edits": [
+    {
+     "file": "package.json",
+     "old": "packages/polaris-generation-core apps/three-surface-poc\",",
+     "new": "packages/polaris-generation-core packages/polaris-dossier apps/three-surface-poc\",",
+     "fileSha256": "cb4ef3e3922ae05b7af2334c3b5ed4df033d4832ec7829402737b75f8d784dd1"
+    }
+   ],
+   "tests": [
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "exit": 1,
+   "failed": 1,
+   "passed": 15,
+   "failedSuites": 2,
+   "total": 16,
+   "failing": [
+    {
+     "test": "read-only Git observation refuses exactly the projects the POC start compiles or loads, and the files that define its build",
+     "message": "AssertionError: expected [ 'apps/three-surface-poc', …(8) ] to deeply equal [ 'apps/three-surface-poc', …(7) ]"
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "M8",
+   "mutation": "the app's tsconfig references one more project",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/tsconfig.json",
+     "old": "      \"path\": \"../../packages/support\"\n",
+     "new": "      \"path\": \"../../packages/support\"\n    },\n    {\n      \"path\": \"../../packages/polaris-dossier\"\n",
+     "fileSha256": "271f2a277342cd68945dfcf13b890c1ba18e15b473f0f8ad0bbc50fea06f01e0"
+    }
+   ],
+   "tests": [
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "exit": 1,
+   "failed": 1,
+   "passed": 15,
+   "failedSuites": 2,
+   "total": 16,
+   "failing": [
+    {
+     "test": "read-only Git observation refuses exactly the projects the POC start compiles or loads, and the files that define its build",
+     "message": "AssertionError: expected [ 'apps/three-surface-poc', …(8) ] to deeply equal [ 'apps/three-surface-poc', …(7) ]"
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "M9",
+   "mutation": "the POC entry imports one more workspace",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/main.ts",
+     "old": "",
+     "new": "export type {} from '@syzygy/polaris-dossier';\n",
+     "fileSha256": "cfb0a4e6d55a6b74e8da99612cf33b25c955877b09155ae89e4f875638137e3d"
+    }
+   ],
+   "tests": [
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "exit": 1,
+   "failed": 1,
+   "passed": 15,
+   "failedSuites": 2,
+   "total": 16,
+   "failing": [
+    {
+     "test": "read-only Git observation refuses exactly the projects the POC start compiles or loads, and the files that define its build",
+     "message": "AssertionError: expected [ 'apps/three-surface-poc', …(8) ] to deeply equal [ 'apps/three-surface-poc', …(7) ]"
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "M10",
+   "mutation": "a protected project's tsconfig extends no base",
+   "edits": [
+    {
+     "file": "packages/support/tsconfig.json",
+     "old": "  \"extends\": \"../../tsconfig.base.json\",\n",
+     "new": "",
+     "fileSha256": "0e4a1f8cb9c6a2e138f921061b590d73ab16d3f9d8194af91965f50e4623a534"
+    }
+   ],
+   "tests": [
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "exit": 1,
+   "failed": 1,
+   "passed": 15,
+   "failedSuites": 2,
+   "total": 16,
+   "failing": [
+    {
+     "test": "read-only Git observation reads every protected project from tsconfig.base.json through its own extends chain",
+     "message": "AssertionError: packages/support: expected 'packages/support/tsconfig.json' to be 'tsconfig.base.json' // Object.is equality"
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "M11",
+   "mutation": "the poc script takes a shape the derivation does not read",
+   "edits": [
+    {
+     "file": "package.json",
+     "old": "\"poc\": \"npm run build:poc --silent && node",
+     "new": "\"poc\": \"npm run build:poc && node",
+     "fileSha256": "cb4ef3e3922ae05b7af2334c3b5ed4df033d4832ec7829402737b75f8d784dd1"
+    }
+   ],
+   "tests": [
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "exit": 1,
+   "failed": 2,
+   "passed": 14,
+   "failedSuites": 2,
+   "total": 16,
+   "failing": [
+    {
+     "test": "read-only Git observation refuses exactly the projects the POC start compiles or loads, and the files that define its build",
+     "message": "Error: scripts.poc is not \"npm run <build> --silent && node <project>/dist/<entry>.js\": npm run build:poc && node apps/three-surface-poc/dist/main.js"
+    },
+    {
+     "test": "read-only Git observation reads every protected project from tsconfig.base.json through its own extends chain",
+     "message": "Error: scripts.poc is not \"npm run <build> --silent && node <project>/dist/<entry>.js\": npm run build:poc && node apps/three-surface-poc/dist/main.js"
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "R2",
+   "mutation": "the gate matches a protected prefix anywhere in the path",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "old": "inputPrefixes.every((prefix) => !changedPath.startsWith(prefix))",
+     "new": "inputPrefixes.every((prefix) => !changedPath.includes(prefix))",
+     "fileSha256": "dfe1e173deb17ac96c9cf2420c676f6e81a615271efec2f58bbd2bed5872ea52"
+    }
+   ],
+   "tests": [
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "exit": 1,
+   "failed": 1,
+   "passed": 15,
+   "failedSuites": 2,
+   "total": 16,
+   "failing": [
+    {
+     "test": "read-only Git observation refuses exactly the projects the POC start compiles or loads, and the files that define its build",
+     "message": "AssertionError: expected [ …(8) ] to deeply equal []"
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "R5",
+   "mutation": "a protected project's extends chain passes through a file outside every protected project",
+   "edits": [
+    {
+     "file": "packages/support/tsconfig.json",
+     "old": "\"extends\": \"../../tsconfig.base.json\"",
+     "new": "\"extends\": \"../../configs/mid.json\"",
+     "fileSha256": "0e4a1f8cb9c6a2e138f921061b590d73ab16d3f9d8194af91965f50e4623a534"
+    },
+    {
+     "file": "configs/mid.json",
+     "old": null,
+     "new": "{ \"extends\": \"../tsconfig.base.json\" }\n",
+     "fileSha256": null
+    }
+   ],
+   "tests": [
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "exit": 1,
+   "failed": 1,
+   "passed": 15,
+   "failedSuites": 2,
+   "total": 16,
+   "failing": [
+    {
+     "test": "read-only Git observation reads every protected project from tsconfig.base.json through its own extends chain",
+     "message": "AssertionError: packages/support: expected [ 'configs/mid.json' ] to deeply equal []"
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "D1t",
+   "mutation": "a project only a depth-2 reference reaches: the consent package's tsconfig references polaris-dossier",
+   "edits": [
+    {
+     "file": "packages/polaris-generation-consent/tsconfig.json",
+     "old": "      \"path\": \"../support\"\n",
+     "new": "      \"path\": \"../support\"\n    },\n    {\n      \"path\": \"../polaris-dossier\"\n",
+     "fileSha256": "931527478c61add14cc34cd7b23fa92265fd246c1c6a94c6fbb273cf8cc2deae"
+    }
+   ],
+   "tests": [
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "exit": 1,
+   "failed": 1,
+   "passed": 15,
+   "failedSuites": 2,
+   "total": 16,
+   "failing": [
+    {
+     "test": "read-only Git observation refuses exactly the projects the POC start compiles or loads, and the files that define its build",
+     "message": "AssertionError: expected [ 'apps/three-surface-poc', …(8) ] to deeply equal [ 'apps/three-surface-poc', …(7) ]"
+    }
+   ],
+   "killed": true
+  }
+ ],
+ "loadavgAfter": [
+  "33.72",
+  "27.33",
+  "26.48"
+ ],
+ "worktreeCleanAfter": true,
+ "killed": 14,
+ "of": 14
+}

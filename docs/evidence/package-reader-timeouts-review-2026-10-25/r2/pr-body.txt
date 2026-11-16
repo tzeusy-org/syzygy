@@ -1,0 +1,133 @@
+## Outcome
+
+Sixteen of the 299 tests in `packages/polaris-generation-consent/src/package-reader.test.ts` now carry an explicit timeout. Each is that test's worst measured duration × 3, rounded up to a whole 5 s. These are the tests whose worst case, alone or inside a run under load, exceeded 2.5 s. The other 283 keep vitest's 5 s default.
+
+- No assertion, fixture, testkit or global default changes. [Observed] Remove the 7-line comment and turn each `}, N_000);` back into `});`, and the file is byte-identical to `ce322e1a`, checked by script at `dc60c5bc`.
+- All three tests the bead names are among the sixteen:
+  - "egress version 2 record > is read from the recorder's act…": 40 s.
+  - "…refuses when version 2 did not take effect strictly after version 1…": 45 s.
+  - "the policy port and the strict policy chain agree > on every world…": 50 s.
+
+## Round 1 repairs (R-GP-IMPL-PACKAGE-READER-TIMEOUTS-1)
+
+- **F1.** `scripts/measure_vitest_test_durations.py --profile` no longer leaves tracked files instrumented. It checks both anchors before it writes either file, instruments inside the `try`, and restores from git only the files it wrote. SIGTERM and SIGHUP map to `SystemExit`, so the restore runs, and further stop signals are ignored during cleanup. vitest starts in a session of its own (`Popen(..., start_new_session=True)`); when a run ends or is stopped, its process group gets SIGTERM, then SIGKILL after 10 s. The docstring now says what the script writes and when: a SIGKILL of the script itself can still leave the files written, and the next run then refuses on the unclean tree.
+  - [Observed] Rule-6 record: `docs/evidence/syzygy-bpyt-4-13/measure-restore-probes.json` (tool `tools/probe_measure_restore.py`, at `48ee832a`; each script named by commit and sha256). A probe passes only when, 3 s after the script exits, `git status --porcelain --untracked-files=no` is empty and no descendant survives.
+    - Against the script at `3e563ec4`, all three probes fail. D1 (`--file consent-ports.test.ts`, whose vitest import line misses the anchor) leaves the testkit written. SIGTERM leaves both files written and one vitest worker running. SIGINT leaves one vitest worker running.
+    - Against the fixed script, D1, SIGTERM and SIGINT each pass, with exits 1, 143 and −2. The control P0, a profiled run to the end, exits 0 with 299 tests and 299 profile rows.
+  - The duration records are not re-run. The six of them (`before-alone`, `before-full-1`, `before-full-2`, `before-profile`, `after-alone`, `after-full`) keep naming script sha256 `0ef82cd0…`. That is correct under rule 11, since that script produced them. The fix changes how a run is started, stopped and cleaned up, not the vitest command it runs or what it reads back.
+- **N1.** `size_vitest_test_timeouts.py --check` now also fails unless the default the tests carry is 5000 ms, twice the threshold. The round-1 reviewer's R5 (the consent project's `testTimeout` raised to 60 s in `vitest.config.ts`) is added to `sizing-check-mutants.json` and killed: "the default the tests carry is 60000 ms, not 5000 ms".
+- **N3, N4.** The test-file comment now names the envelope: sized for load1 up to about 127 on 12 cores, ten of the sixteen from lower bounds that timed out there. It also says the timeouts are sized for the whole file run in order, since the render cache moves each render's cost to whichever test needs it first, so a run filtered with `-t`, or shuffled, can time out a test that carries no timeout. Comment lines only.
+- **N5, N6.** The follow-ups are named under Residuals.
+- `timeout-sizing.json` and `sizing-check-mutants.json` are re-run at `48ee832a` with the changed check. The result is the same: 299 collected, 299 measured, 16 sized (10 from a lower bound), 0 problems.
+- Main is merged at `df6046a1` (#517, #509, #518 and #519 since `ce322e1a`). None of them touches this test file or the testkit.
+
+## CC-REV-1 class
+
+None claimed. This is a test-only change in the consent package and no gate's behaviour changes. The reviewer rules.
+
+## Authority
+
+- Bead `syzygy-bpyt.4.13`.
+- The coordinator's scope rulings of 2026-10-24:
+  - the testkit stays unchanged;
+  - size every test in this file whose measured worst case exceeds 2.5 s;
+  - each timeout is the worst case × a stated margin;
+  - no assertion changes.
+
+## Where the time goes
+
+[Observed] Profiled alone at `ce322e1a`, load1 52–57 (`before-profile.json`):
+
+- The file spends 16,360 ms in tests. 6,963 ms of that is 28 synchronous recorder renders (`spawnSync('python3', …)` in `recorder-fixtures.testkit.ts`), each cached per process by its arguments.
+- **The agreement test is compute-bound.** It takes 5,245 ms with 0 spawns.
+  - [Observed, scratch instrumentation not retained] It reads 118 collected worlds (88 distinct) × 8 instants, through both the port and the strict chain. The port took 2,718 ms of that and the chain 2,662 ms.
+  - A scratch CPU profile, not retained, puts the read cost in the reader's withdrawal sweeps (`findActRecords` → `namesAct` → `stemFolds`).
+- **The other fifteen sized tests are spawn-bound.** Each is the first test to need some render. For example, "strict act reads > policy chain…" took 843 ms, 825 of it in 4 spawns.
+- **Load multiplies both kinds.** In the load-127 run, "…returns a record only for an instance…" took at least 14,149 ms. Alone at load 52–57 it takes 411–854 ms.
+
+## The rule and its denominator
+
+`scripts/size_vitest_test_timeouts.py` (new) states the rule. It collects every test from the file with all tests skipped, so no test or hook runs. That gives the denominator: 299 collected, 299 measured.
+
+- Each test's worst case is the largest duration over every observation:
+  - `before-alone.json`: 3 runs alone at `ce322e1a`, load1 52.45–56.89;
+  - `before-full-1.json` and `before-full-2.json`: 4 full `npx vitest run`s at `ce322e1a`, load1 34.42–55.25;
+  - `load-127-report-extract.json`: lane B's consent-and-dossier run at `8b143272`, load1 127.56 at the start and 83.31 at the end. Over the consent `src` directory and the eight recorder scripts, that commit differs from `ce322e1a` only in `recorder-template.ts` and its test (the 8.21 change). The extract lists both.
+- **Every sized test's worst case comes from the load-127 run.** The worst any of my runs measured was the agreement test at 6,890 ms. The largest unsized worst case is 530 ms.
+- **Ten of the sixteen are sized from a lower bound.** Those tests failed by timeout in the load-127 run, so their duration there stops at the timeout. `timeout-sizing.json` marks each one.
+- `--check` exits 1 when any of these fails:
+  - a sized test does not carry exactly its timeout;
+  - an unsized test carries anything but the default;
+  - a collected test was measured in no record;
+  - a measured test is not collected.
+
+  Since round 1 it also fails when the default the tests carry is not 5000 ms. At `48ee832a` it holds with 0 problems.
+- [Observed] Rule-6 mutants (`sizing-check-mutants.json`, the old/new fragments and commit are in the record):
+  - M1 (a timeout below the rule), M2 (a timeout removed), M3 (a timeout on an unsized test), M4 (a test renamed) and M5 (an unsized test measured at 2,501 ms) each make `--check` exit 1.
+  - R5, the consent project's default raised to 60 s, also makes it exit 1 (round 1, N1).
+  - M6, the same test at exactly 2,500 ms, passes. That is the rule: strictly above the threshold.
+
+| Timeout | Tests | Worst case (ms) |
+|---|---|---|
+| 50 s | the agreement test | 16,465 (lower bound) |
+| 45 s | 3 | 13,826–14,198 (lower bounds) |
+| 40 s | 3 | 11,800–12,015 (lower bounds) |
+| 25 s | 1 | 8,089 (lower bound) |
+| 20 s | 2 | 5,039–5,040 (lower bounds) |
+| 15 s | 5 | 3,348–4,808 |
+| 10 s | 1 | 2,564 |
+
+## Before and after
+
+`scripts/measure_vitest_test_durations.py` (new) runs vitest with the JSON reporter and `--testTimeout=600000`, so slow tests are measured rather than cut off. It records every test's duration per run, with load1 at the start and end, its minimum and maximum over 5 s samples, and the full commit. It also records the file's and the testkit's sha256 and its own sha256. The records below name the script as first pushed, `0ef82cd0…`, which produced them (see F1 above).
+
+| Record | Commit | load1 (min–max) | File test time (ms) | Agreement test (ms) | Slowest other sized test (ms) | Failed |
+|---|---|---|---|---|---|---|
+| before-alone ×3 | `ce322e1a` | 52.45–56.89 | 16,467 / 19,474 / 19,508 | 5,132 / 6,890 / 6,029 | 1,020 / 1,897 / 1,695 | 0 |
+| before-full-1 ×2 | `ce322e1a` | 34.42–53.78 | 15,776 / 11,386 | 4,152 / 3,591 | 1,050 / 885 | 0 |
+| before-full-2 ×2 | `ce322e1a` | 34.56–55.25 | 24,227 / 17,868 | 6,308 / 4,381 | 1,976 / 1,875 | 0 |
+| after-alone ×3 | `9e748e68` | 28.41–42.2 | 23,274 / 13,235 / 17,143 | 6,130 / 3,752 / 4,541 | 1,853 / 1,121 / 1,502 | 0 |
+| after-full ×2 | `9e748e68` | 27.97–50.19 | 14,338 / 12,993 | 3,940 / 4,282 | 1,070 / 777 | 0 |
+
+Run 1 of `before-full-2` had 2 failed tests elsewhere in the full suite. Their names are not recorded, since the script keeps only this file's tests and the suite totals.
+
+Earlier measurements of the same test names are consistent with these worst cases and are not inputs to the rule:
+
+- The PR 512 review raw (`docs/reviews/R-GP-IMPL-DECISIONS-SWEEP-1-RAW.md:144-148`, at `c6875163`, whose consent `src` matches `ce322e1a`):
+  - at load1 74.52, the three named tests took 6,041, 5,662 and 8,825 ms, all timed out;
+  - at load1 31.44 with a 120 s timeout, they took 3,848, 4,717 and 7,673 ms.
+- The bead comments: figures up to 9,688 ms for the agreement test, on older reader bytes.
+
+Each of these is below the worst case the rule used for its test.
+
+## Changed outputs
+
+None at runtime. Nothing outside the test file changes behaviour. The two new scripts are evidence tools, and each writes only its `--out` file; the measurement script also writes the two files it instruments, only under `--profile` and only while a profiled run is in progress. It restores whichever it wrote, however the run ends short of a SIGKILL of the script itself (F1). No rendered bytes, wire format, spec, consent, security or retention decision changes.
+
+## Residuals
+
+- **Ten timeouts are sized from lower bounds.** [Unknown] Their true durations at load 127 are not known. A run at that load with `--testTimeout=600000` would replace those lower bounds with true durations.
+- **The timeouts measure this host only.** They are sized from this 12-core host's load envelope (load1 up to 127.56). CI passes at the default.
+- **The testkit is unchanged, as ruled.** The fifteen spawn-bound timeouts could come down with syzygy-bpyt.4.8 (render the recorder testkit's act fixtures without blocking the vitest worker). The agreement test's could come down with syzygy-bpyt.4.23 (a count-based budget for the agreement sweep, and its worlds deduplicated).
+- **Scope 4.13's comments added beyond this file** is carried by syzygy-bpyt.4.24: the dossier-project load timeouts in gate-acts, screen, close, execution-flags and run-evidence. 4.23 and 4.24 both depend on 4.13.
+- **The timeouts hold for the whole file run in order** (N4, now in the test-file comment). A filtered or shuffled run can move a render's cost onto an unsized test.
+
+Tests: +0 ~16 -0 (the timeout argument of 16 tests in `package-reader.test.ts`).
+
+Gates at `dc60c5bc` (round-1 repairs, main merged at `df6046a1`):
+
+- The file alone: 299 passed (299), at load1 about 36.
+- Its project: 503 passed (503), 7 files.
+- `npm run typecheck`: exit 0.
+- `check_governance`: 32 OK, 21 WARN, 0 FAIL.
+- `check_quotations`: 0 findings.
+- `size_vitest_test_timeouts.py --check`: 0 problems.
+- Battery in a clone at `dc60c5bc`: `commands=110 nonzero=0`.
+
+At `3e563ec4` (round 0): the same file and project results, typecheck, `check_governance` and `check_quotations`, and the battery at `commands=110 nonzero=0`.
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+https://claude.ai/code/session_01APhWyj6JKsAs6kzgYByHeD
+
+

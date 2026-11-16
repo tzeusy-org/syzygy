@@ -1,0 +1,7 @@
+A-stale-dist-mutant 0 ['Test Files  1 passed (1)', 'Tests  2 passed | 1 skipped (3)'] [] []
+B-stale-dist-mutant-with-alias 1 ['Test Files  1 failed (1)', 'Tests  1 failed | 1 passed | 1 skipped (3)'] [] ['+   "socket(AF_INET, SOCK_DGRAM|SOCK_CLOEXEC|SOCK_NONBLOCK, IPPROTO_IP) = 21",', '+   "bind(21, {sa_family=AF_INET, sin_port=htons(0), sin_addr=inet_addr(\\"127.0.0.1\\")}, 16) = 0",']
+C-dist-present-alias-no-mutant 0 ['Test Files  1 passed (1)', 'Tests  2 passed | 1 skipped (3)'] [] []
+D-dist-absent-as-committed 1 ['Test Files  1 failed (1)', 'Tests  3 skipped (3)'] ['apps/three-surface-poc/src/polaris-generation/dossier-site.ts:9:23: ERROR: Could not resolve "@syzygy/support"'] []
+E-dist-absent-alias 0 ['Test Files  1 passed (1)', 'Tests  2 passed | 1 skipped (3)'] [] []
+F-base-dist-absent-control 0 ['Test Files  1 passed (1)', 'Tests  2 passed | 1 skipped (3)'] [] []
+exit 0

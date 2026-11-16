@@ -1,0 +1,12 @@
+{
+ "reportSha256": "06d6700eb480a2d6a9eb44f7aea7f78cbb43e000abfe86ff26732a10caa48749",
+ "success": true,
+ "files": 3,
+ "total": 55,
+ "passed": 55,
+ "failed": 0,
+ "pending": 0,
+ "todo": 0,
+ "failedFiles": 0,
+ "notPassed": []
+}

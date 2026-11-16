@@ -1,0 +1,12 @@
+42.74 46.63 45.85 26/9438 1002685
+$ npx vitest run apps/three-surface-poc/src/governing-intent-sweep.test.ts --hookTimeout=1 --reporter=dot
+
+····························
+
+ Test Files  1 passed (1)
+      Tests  28 passed (28)
+   Start at  16:21:47
+   Duration  2.27s (transform 1.16s, setup 36ms, collect 1.43s, tests 218ms, environment 0ms, prepare 138ms)
+
+exit 0
+45.17 47.06 45.99 13/9427 1004530

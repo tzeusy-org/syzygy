@@ -1,0 +1,59 @@
+O1-bearer-separator-space-run survives 0 ['Tests  571 passed (571)'] 30.7 clean
+O2-bearer-separator-any-whitespace survives 0 ['Tests  571 passed (571)'] 31.4 clean
+O3-bearer-trailing-whitespace-trimmed survives 0 ['Tests  571 passed (571)'] 29.9 clean
+O4-bearer-end-matches-before-newline survives 0 ['Tests  571 passed (571)'] 34.2 clean
+O5-presented-token-trimmed-before-compare survives 0 ['Tests  571 passed (571)'] 34.5 clean
+O6-lexical-containment-without-separator survives 0 ['Tests  571 passed (571)'] 35.9 clean
+O7-real-containment-without-separator survives 0 ['Tests  571 passed (571)'] 31.5 clean
+O8-not-evaluated-population-dropped killed 1 ['Tests  1 failed | 570 passed (571)'] 28.2 clean
+    FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/response-limits.test.ts > boundedResponse — the ceiling is measured on the final encoded body > logs a single safe response-limit outcome per real-socket human and machine 503
+O9-observation-failed-population-dropped survives 0 ['Tests  571 passed (571)'] 21.1 clean
+O10-any-project-shape-reason-logged survives 0 ['Tests  571 passed (571)'] 23.4 clean
+O11-breach-reason-keyed-by-status survives 0 ['Tests  571 passed (571)'] 19.4 clean
+O12-origin-reversed-prefix survives 0 ['Tests  571 passed (571)'] 21.8 clean
+O13-origin-required killed 1 ['Tests  34 failed | 537 passed (571)'] 23.3 clean
+    FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/materialize-action.test.ts > materializeRoutes > creates exactly one Bead on trigger, persists the record, and calls onMaterialized (AC2)
+    FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/materialize-action.test.ts > materializeRoutes > fails closed without invoking Beads when the actual model has no seed-backed materialization graph
+    FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/materialize-action.test.ts > materializeRoutes > is idempotent over HTTP: a second POST reuses the same Bead without a second create (AC3)
+    FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/materialize-action.test.ts > materializeRoutes > refuses an effect the registry does not name before any runner is called
+    FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/materialize-action.test.ts > materializeRoutes > refuses the foreclosed write with a bounded typed refusal and never runs Beads (P-71-Q5)
+    FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/materialize-action.test.ts > materializeRoutes > renders a named failure over HTTP and leaves no partial record when bd is missing (AC5)
+    FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/materialize-action.test.ts > materializeRoutes > states the Bead exists when it was created but only the local record write failed, instead of the generic no-Bead suffix (AC5)
+    FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/materialize-action.test.ts > renderMaterializePanel > matches decoded Trajectory fields to authenticated API dispatch with exact denominators and named machine-only values
+    FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/polaris-presentation-route.test.ts > Polaris machine presentation envelope (PWB-REQ-014; RFC7-2, RFC7-3) > refuses without the bearer and, with it, serves the narrative of the same render the hum
+    FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/polaris-source-route.test.ts > Polaris exact-source route (PWB-REQ-011 as amended; RFC7-1, RFC7-13) > serves the route human-open: direct GET renders the text, the tailnet Host rebinds the back l
+    FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/reobserve-action.test.ts > human-triggered re-observation route > names the superseded evaluation, the three clocks and both limbs on the result page (syzygy-u05.2)
+    FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/reobserve-action.test.ts > human-triggered re-observation route > preserves a named failure and refuses cross-origin requests
+    FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/reobserve-action.test.ts > human-triggered re-observation route > single-flights concurrent requests and swaps only after a complete success
+    FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/response-limits.test.ts > boundedResponse — the ceiling is measured on the final encoded body > logs a single safe response-limit outcome per real-socket human and machine 503
+    FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/response-limits.test.ts > pocRoutes — every human HTML sink is bounded by maxHumanResponseBytes > /: limit − 1 fails closed, limit and limit + 1 serve the page
+    FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/response-limits.test.ts > pocRoutes — every human HTML sink is bounded by maxHumanResponseBytes > /orrery: limit − 1 fails closed, limit and limit + 1 serve the page
+    FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/response-limits.test.ts > pocRoutes — every human HTML sink is bounded by maxHumanResponseBytes > /polaris: limit − 1 fails closed, limit and limit + 1 serve the page
+    FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/response-limits.test.ts > pocRoutes — every human HTML sink is bounded by maxHumanResponseBytes > /trajectory: limit − 1 fails closed, limit and limit + 1 serve the page
+    FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/response-limits.test.ts > pocRoutes — every human HTML sink is bounded by maxHumanResponseBytes > names the observed-project limb, the observatory limb and the Dolt clock separately, Unknown when
+    FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/response-limits.test.ts > pocRoutes — every human HTML sink is bounded by maxHumanResponseBytes > places one compact factual status line before main on each direct and tailnet page
+    FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/response-limits.test.ts > pocRoutes — every human HTML sink is bounded by maxHumanResponseBytes > places one resource-ledger entry in the status slot of every direct and tailnet page, Unknown whe
+    FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/response-limits.test.ts > pocRoutes — every human HTML sink is bounded by maxHumanResponseBytes > the tailnet mount (selected by Host) is measured on its own rendered body
+    FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/response-limits.test.ts > pocRoutes — the machine JSON sink is bounded by maxMachineResponseBytes > the human ceiling does not bound the machine sink and vice versa
+    FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/response-limits.test.ts > pocRoutes — the machine JSON sink is bounded by maxMachineResponseBytes > the registry values are the default ceilings
+    FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/routes.test.ts > three-surface POC routes > projects the same mayNot tuples in human Polaris and authenticated machine JSON
+    FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/routes.test.ts > three-surface POC routes > serves one model through human and authenticated machine views
+    FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/surface-routes.test.ts > surface routes > 15-link cross-surface exhaustion > exhausts 15 runtime cross-surface links over six classes and fetches every direct target
+    FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/surface-routes.test.ts > surface routes > counts the post-JavaScript DOM on all three served surfaces and kills an unmarked Orrery region
+    FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/surface-routes.test.ts > surface routes > exhausts every served badge, tuple and Unknown disclosure on the three surfaces; Home is a separate diagnostic (POC-REQ-060)
+    FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/surface-routes.test.ts > surface routes > nav links stay inside the current mount — root-relative for direct loopback access, prefixed for the tailnet-Host-headered request `tailscale serve` actu
+    FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/surface-routes.test.ts > surface routes > serves Polaris, Trajectory, and Orrery as human-open, same-origin-guarded pages
+    FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/surface-routes.test.ts > surface routes > serves the exact state-(1) authority sentence on Polaris both directly and through the tailnet Host mount (PWB-REQ-005; PWB-RECON-01)
+    FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/tuple-encoding.test.ts > tuple field encoding tables (syzygy-dov.3.2; P-70 M3 slice 5) > sweeps the post-JavaScript DOM of the three surfaces, Home apart: every tuple field and glossary row rende
+    FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/verbatim-route.test.ts > Polaris route with the verbatim reader > serves the selected requirement blocks on the Polaris human route only; the machine channel never carries them
+O14-tailnet-origin-over-http killed 1 ['Tests  6 failed | 565 passed (571)'] 16.7 clean
+    FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/materialize-action.test.ts > materializeRoutes > keeps the result page's back-link under the tailnet mount when the tailnet-Host-headered request `tailscale serve` actually forwards triggers it (
+    FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/surface-routes.test.ts > surface routes > 15-link cross-surface exhaustion > exhausts 15 runtime cross-surface links over six classes and fetches every tailnet target
+    FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/surface-routes.test.ts > surface routes > counts the post-JavaScript DOM on all three served surfaces and kills an unmarked Orrery region
+    FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/surface-routes.test.ts > surface routes > nav links stay inside the current mount — root-relative for direct loopback access, prefixed for the tailnet-Host-headered request `tailscale serve` actu
+    FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/surface-routes.test.ts > surface routes > serves the exact state-(1) authority sentence on Polaris both directly and through the tailnet Host mount (PWB-REQ-005; PWB-RECON-01)
+    FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/tuple-encoding.test.ts > tuple field encoding tables (syzygy-dov.3.2; P-70 M3 slice 5) > sweeps the post-JavaScript DOM of the three surfaces, Home apart: every tuple field and glossary row rende
+O15-shim-function-aliased survives 0 ['Tests  571 passed (571)'] 18.0 clean
+O16-shim-constant-aliased survives 0 ['Tests  571 passed (571)'] 15.4 clean
+O17-shim-equal-local-constant survives 0 ['Tests  571 passed (571)'] 23.4 clean
+wrote /tmp/la-b714/own-base.json 17

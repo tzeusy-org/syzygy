@@ -1,0 +1,530 @@
+{
+ "commit": "f7ea858480b30ffc4407154a84d1d03f3fe4a549",
+ "dist": "absent",
+ "distDirs": [],
+ "summary": {
+  "rows": 17,
+  "asExpected": 13,
+  "unexpected": [
+   "Y1-reflect-get-globalThis-env",
+   "Y2-eval-under-an-allowed-name",
+   "Y4-new-Function",
+   "Y13-import-meta"
+  ]
+ },
+ "statusAfter": "",
+ "leftovers": [],
+ "rows": [
+  {
+   "id": "S0-purity-unmutated",
+   "probe": "baseline",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [],
+   "expected": "pass",
+   "observed": "pass",
+   "loadavg": [
+    "30.51",
+    "28.01",
+    "26.42"
+   ],
+   "exit": 0,
+   "passed": 13,
+   "failed": 0,
+   "pending": 0,
+   "total": 13,
+   "failedFiles": [],
+   "fileMessages": [],
+   "failedTests": []
+  },
+  {
+   "id": "Y1-reflect-get-globalThis-env",
+   "probe": "Reflect.get(globalThis, ...)",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nexport const HOME = Reflect.get(globalThis, 'process').env.HOME;\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "survives",
+   "loadavg": [
+    "31.03",
+    "28.16",
+    "26.48"
+   ],
+   "exit": 0,
+   "passed": 13,
+   "failed": 0,
+   "pending": 0,
+   "total": 13,
+   "failedFiles": [],
+   "fileMessages": [],
+   "failedTests": []
+  },
+  {
+   "id": "Y2-eval-under-an-allowed-name",
+   "probe": "eval aliased to value",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nconst value = eval;\nexport { value };\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "survives",
+   "loadavg": [
+    "32.15",
+    "28.44",
+    "26.58"
+   ],
+   "exit": 0,
+   "passed": 13,
+   "failed": 0,
+   "pending": 0,
+   "total": 13,
+   "failedFiles": [],
+   "fileMessages": [],
+   "failedTests": []
+  },
+  {
+   "id": "Y3-R1-escalated-to-the-environment",
+   "probe": "R1 reaching process.env",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nexport const value = Object['constructor']['constructor']('return globalThis')()['process']['env']['HOME'];\n"
+    }
+   ],
+   "expected": "survives",
+   "observed": "survives",
+   "loadavg": [
+    "33.42",
+    "28.76",
+    "26.69"
+   ],
+   "exit": 0,
+   "passed": 13,
+   "failed": 0,
+   "pending": 0,
+   "total": 13,
+   "failedFiles": [],
+   "fileMessages": [],
+   "failedTests": []
+  },
+  {
+   "id": "Y4-new-Function",
+   "probe": "new Function",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nexport const value = new Function('return 1');\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "survives",
+   "loadavg": [
+    "33.38",
+    "28.83",
+    "26.73"
+   ],
+   "exit": 0,
+   "passed": 13,
+   "failed": 0,
+   "pending": 0,
+   "total": 13,
+   "failedFiles": [],
+   "fileMessages": [],
+   "failedTests": []
+  },
+  {
+   "id": "Y5-computed-import-no-space",
+   "probe": "import(bytes), allowed names only",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nexport const value = (bytes) => import(bytes);\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "loadavg": [
+    "35.28",
+    "29.30",
+    "26.89"
+   ],
+   "exit": 1,
+   "passed": 12,
+   "failed": 1,
+   "pending": 0,
+   "total": 13,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf names no write, process, clock, network or file-system token in any source",
+     "message": "AssertionError: sha256.ts /\\bimport\\(/: expected 'import { createHash } from \\'node:cry\u2026' not to match /\\bimport\\(/\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545/base/packages/support/src/support-purity.test.ts:39:93\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545/base/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy"
+    }
+   ]
+  },
+  {
+   "id": "Y5b-computed-import-newline",
+   "probe": "R2 with a newline",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nexport const value = (bytes) => import\n(bytes);\n"
+    }
+   ],
+   "expected": "survives",
+   "observed": "survives",
+   "loadavg": [
+    "35.17",
+    "29.38",
+    "26.93"
+   ],
+   "exit": 0,
+   "passed": 13,
+   "failed": 0,
+   "pending": 0,
+   "total": 13,
+   "failedFiles": [],
+   "fileMessages": [],
+   "failedTests": []
+  },
+  {
+   "id": "Y5c-computed-import-comment",
+   "probe": "R2 with a comment",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nexport const value = (bytes) => import/**/(bytes);\n"
+    }
+   ],
+   "expected": "survives",
+   "observed": "survives",
+   "loadavg": [
+    "35.00",
+    "29.44",
+    "26.96"
+   ],
+   "exit": 0,
+   "passed": 13,
+   "failed": 0,
+   "pending": 0,
+   "total": 13,
+   "failedFiles": [],
+   "fileMessages": [],
+   "failedTests": []
+  },
+  {
+   "id": "Y6-allowed-global-member-replaced",
+   "probe": "a member of an allowed global replaced at import",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nObject.freeze = (value) => value;\n"
+    }
+   ],
+   "expected": "survives",
+   "observed": "survives",
+   "loadavg": [
+    "36.20",
+    "29.78",
+    "27.09"
+   ],
+   "exit": 0,
+   "passed": 13,
+   "failed": 0,
+   "pending": 0,
+   "total": 13,
+   "failedFiles": [],
+   "fileMessages": [],
+   "failedTests": []
+  },
+  {
+   "id": "Y7-export-star-from-node-crypto",
+   "probe": "export * re-exports randomBytes, randomUUID, setEngine",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { decodeUtf8 } from './decode-utf8.js';\n",
+     "new": "export { decodeUtf8 } from './decode-utf8.js';\nexport * from 'node:crypto';\n"
+    }
+   ],
+   "expected": "survives",
+   "observed": "survives",
+   "loadavg": [
+    "35.46",
+    "29.73",
+    "27.08"
+   ],
+   "exit": 0,
+   "passed": 13,
+   "failed": 0,
+   "pending": 0,
+   "total": 13,
+   "failedFiles": [],
+   "fileMessages": [],
+   "failedTests": []
+  },
+  {
+   "id": "Y8-export-star-from-node-fs",
+   "probe": "export * of node:fs",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { decodeUtf8 } from './decode-utf8.js';\n",
+     "new": "export { decodeUtf8 } from './decode-utf8.js';\nexport * from 'node:fs';\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "loadavg": [
+    "35.46",
+    "29.73",
+    "27.08"
+   ],
+   "exit": 1,
+   "passed": 11,
+   "failed": 2,
+   "pending": 0,
+   "total": 13,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf imports only node:crypto and its own modules, so no file read, no workspace package and no network",
+     "message": "AssertionError: expected [ { file: 'index.ts', \u2026(1) } ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545/base/packages/support/src/support-purity.test.ts:31:83\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545/base/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scr"
+    },
+    {
+     "name": "@syzygy/support stays a pure leaf names no write, process, clock, network or file-system token in any source",
+     "message": "AssertionError: index.ts /\\b(?:node:)?(?:fs|net|http|https|child_process|os)['\"`]/: expected '// Internal helpers that more than on\u2026' not to match /\\b(?:node:)?(?:fs|net|http|https|chil\u2026/\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545/base/packages/support/src/support-purity.test.ts:39:93\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545/base/node_modules/@vitest/runner/dist/chun"
+    }
+   ]
+  },
+  {
+   "id": "Y9-export-star-as-allowed-name",
+   "probe": "namespace re-export under an allowed name",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { decodeUtf8 } from './decode-utf8.js';\n",
+     "new": "export { decodeUtf8 } from './decode-utf8.js';\nexport * as value from 'node:crypto';\n"
+    }
+   ],
+   "expected": "survives",
+   "observed": "survives",
+   "loadavg": [
+    "34.87",
+    "29.71",
+    "27.09"
+   ],
+   "exit": 0,
+   "passed": 13,
+   "failed": 0,
+   "pending": 0,
+   "total": 13,
+   "failedFiles": [],
+   "fileMessages": [],
+   "failedTests": []
+  },
+  {
+   "id": "Y10-string-named-re-export",
+   "probe": "string-named re-export of randomBytes",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { decodeUtf8 } from './decode-utf8.js';\n",
+     "new": "export { decodeUtf8 } from './decode-utf8.js';\nexport { 'randomBytes' as 'value' } from 'node:crypto';\n"
+    }
+   ],
+   "expected": "survives",
+   "observed": "survives",
+   "loadavg": [
+    "34.16",
+    "29.64",
+    "27.08"
+   ],
+   "exit": 0,
+   "passed": 13,
+   "failed": 0,
+   "pending": 0,
+   "total": 13,
+   "failedFiles": [],
+   "fileMessages": [],
+   "failedTests": []
+  },
+  {
+   "id": "Y11-string-named-import-called-at-import",
+   "probe": "RP8 with a string-named import",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash, 'randomBytes' as value } from 'node:crypto';\nexport const T = value(8);\n"
+    }
+   ],
+   "expected": "survives",
+   "observed": "survives",
+   "loadavg": [
+    "34.16",
+    "29.64",
+    "27.08"
+   ],
+   "exit": 0,
+   "passed": 13,
+   "failed": 0,
+   "pending": 0,
+   "total": 13,
+   "failedFiles": [],
+   "fileMessages": [],
+   "failedTests": []
+  },
+  {
+   "id": "Y12-namespace-import-re-exported",
+   "probe": "import * as value, then export { value }",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nimport * as value from 'node:crypto';\nexport { value };\n"
+    }
+   ],
+   "expected": "survives",
+   "observed": "survives",
+   "loadavg": [
+    "34.16",
+    "29.64",
+    "27.08"
+   ],
+   "exit": 0,
+   "passed": 13,
+   "failed": 0,
+   "pending": 0,
+   "total": 13,
+   "failedFiles": [],
+   "fileMessages": [],
+   "failedTests": []
+  },
+  {
+   "id": "Y13-import-meta",
+   "probe": "import.meta.dirname",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nexport const value = import.meta.dirname;\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "survives",
+   "loadavg": [
+    "33.74",
+    "29.63",
+    "27.10"
+   ],
+   "exit": 0,
+   "passed": 13,
+   "failed": 0,
+   "pending": 0,
+   "total": 13,
+   "failedFiles": [],
+   "fileMessages": [],
+   "failedTests": []
+  },
+  {
+   "id": "Y14-drafter-takes-randomness-through-support",
+   "probe": "Y7 plus the owner-act drafter calling randomUUID",
+   "tests": [
+    "packages/support/src/support-purity.test.ts",
+    "packages/three-surface-poc-core/src/owner-act-drafter.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { decodeUtf8 } from './decode-utf8.js';\n",
+     "new": "export { decodeUtf8 } from './decode-utf8.js';\nexport * from 'node:crypto';\n"
+    },
+    {
+     "path": "packages/three-surface-poc-core/src/owner-act-drafter.ts",
+     "old": "import { sha256 } from '@syzygy/support';\n",
+     "new": "import { sha256, randomUUID } from '@syzygy/support';\nexport const nonce = (): string => randomUUID();\n"
+    }
+   ],
+   "expected": "survives",
+   "observed": "survives",
+   "loadavg": [
+    "33.92",
+    "29.74",
+    "27.14"
+   ],
+   "exit": 0,
+   "passed": 16,
+   "failed": 0,
+   "pending": 0,
+   "total": 16,
+   "failedFiles": [],
+   "fileMessages": [],
+   "failedTests": []
+  }
+ ]
+}

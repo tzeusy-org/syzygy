@@ -1,0 +1,2 @@
+records 15 passed runSync rows 169
+slowest passed runSync row: (1230, 'R9-head', 'missing>` is a dossier refusal (exit 1) and starts no daemon', {'start': 55.6, 'end': 50.3})

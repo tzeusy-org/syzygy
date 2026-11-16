@@ -105,23 +105,6 @@ describe('Orrery', () => {
     expect(html).toContain('observed-file denominator: Unknown (code structure was not observed)');
   });
 
-  it('renders an explicit denominator-bearing Unknown graph when no seeds are supplied', () => {
-    const { repoRoot, revision } = fixtureRepoWithGit(cleanups);
-    const model = buildPocModel({
-      repoRoot,
-      repositoryRevision: revision,
-      observerRevision: revision,
-      evaluation: { snapshot: 'empty-seed-orrery', asOf: '2026-09-22T00:00:00Z' },
-    });
-    expect(model.orrery.kind).toBe('unknown');
-    if (model.orrery.kind !== 'unknown') throw new Error('unreachable');
-    const html = renderOrreryPage(model);
-    expect(html).toContain('data-unknown-disclosure="region:code-structure"');
-    expect(html).toContain(`observed-file denominator: ${model.codeStructure.kind === 'observed' ? model.codeStructure.files.length : 0}`);
-    expect(html).not.toContain('id="orrery-canvas"');
-    expect(html).not.toContain('data-parity-field="orrery-mapped-region"');
-  });
-
   it('two renders of one observation produce identical layout-relevant data (POC-REQ-050)', () => {
     const model = buildFixtureModel(cleanups);
     const first = renderOrreryPage(model);

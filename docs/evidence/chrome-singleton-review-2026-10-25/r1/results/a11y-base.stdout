@@ -1,0 +1,7 @@
+observed: focusables 192/192, activations 130, ax nodes 3960, contrast min 4.69:1 over 2085, violations 0
+observed-lawful-state-1: focusables 192/192, activations 130, ax nodes 4226, contrast min 4.69:1 over 2233, violations 0
+observed-degraded-unlawful: focusables 199/199, activations 133, ax nodes 4229, contrast min 4.69:1 over 2203, violations 0
+not-admitted: focusables 88/88, activations 64, ax nodes 1722, contrast min 5.09:1 over 964, violations 0
+observation-failed: focusables 88/88, activations 64, ax nodes 1702, contrast min 5.09:1 over 958, violations 0
+not-evaluated: focusables 88/88, activations 64, ax nodes 1533, contrast min 5.09:1 over 862, violations 0
+wrote /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-515/results/a11y-base.json: 0 violations across 6 variants

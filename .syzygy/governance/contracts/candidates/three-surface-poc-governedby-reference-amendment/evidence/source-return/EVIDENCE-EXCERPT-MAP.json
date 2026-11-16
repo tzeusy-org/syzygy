@@ -1,0 +1,2131 @@
+{
+  "status": "Exact excerpt offsets and mapping; not a classifier/parser or semantic confirmation",
+  "consumption_field_mapping": "input_boundary + literal arrow + output_and_oracle_boundary; normative text-change decision remains separate",
+  "entries": [
+    {
+      "sequence": 1,
+      "path": "openspec/changes/cap1-trusted-bootstrap-consent/specs/project-registration-and-honest-shape-visibility/spec.md",
+      "ordinal": 1,
+      "block_sha256": "ec9624a9bfd800ee55b98ca48bdeb5c54ab6a963fc1667ee56e6dbf88ddaf023",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 89,
+          "end_exclusive": 1970,
+          "quote_sha256": "1f29bfea2217803e2bed43958f80003cddb5c70bcb22668809b96f7e5384afef"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 1,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 2,
+      "path": "openspec/changes/cap1-trusted-bootstrap-consent/specs/project-registration-and-honest-shape-visibility/spec.md",
+      "ordinal": 2,
+      "block_sha256": "c50f7bc4704aa9273042c4b1e6989d1a0e30f26ff3f32a399a5f205f055b35c5",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 116,
+          "end_exclusive": 1766,
+          "quote_sha256": "33b48f260979bb5b2b895b58b9eb7c60b1b3fec7e5457ae2c28bd54ab1de30cd"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 2,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 3,
+      "path": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "ordinal": 1,
+      "block_sha256": "48c8c660e67ea2bd0ca0d0f855464aaff83490ec4738666944adeed10aeca7da",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 48,
+          "end_exclusive": 891,
+          "quote_sha256": "c4a95600ea9e80952eeeecd36314a68b6a28f8df62d6ac8a32cdf64d0e22eb35"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 3,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 4,
+      "path": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "ordinal": 2,
+      "block_sha256": "2a9dad17f37d3c95756433039f42fe1a1cb2897132b507f1ce2f1b169ac2b903",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 61,
+          "end_exclusive": 1146,
+          "quote_sha256": "7221d76953e862eb28d212219fe921a1009c2d86d3290371cf4eab8479c45813"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 4,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 5,
+      "path": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "ordinal": 3,
+      "block_sha256": "34608a779bd316fac1b57aca775bcdf1039802268d70c4d3f71adfaea355ef9c",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 66,
+          "end_exclusive": 2496,
+          "quote_sha256": "1fac15956ac16026f8e34746e937835d1fe674c9448932b7678c381200b9ce85"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 5,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 6,
+      "path": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "ordinal": 4,
+      "block_sha256": "5c93292a1ccafab6364a4ca8776f854818f637465b9296c34deaa0817a3a6080",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 71,
+          "end_exclusive": 1304,
+          "quote_sha256": "1ce66ed2ab5be538f6f020f31508af724ea6eaf797a4dd305e1bf0664e723749"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 6,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 7,
+      "path": "openspec/changes/polaris-manifesto-generation/specs/polaris-generation/spec.md",
+      "ordinal": 1,
+      "block_sha256": "7614ef1d5c1cc73153f35243a41a3b187bbc7f39f5e482989cdacc680f173d6a",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 41,
+          "end_exclusive": 797,
+          "quote_sha256": "168bf00ef83297074f51617b6976709632a673f8c51c50572f9c732492f0de14"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 7,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 8,
+      "path": "openspec/changes/polaris-manifesto-generation/specs/polaris-generation/spec.md",
+      "ordinal": 2,
+      "block_sha256": "ba89bb536501336ffe44978c9840d468592e0d88adcc305c8820ad7cf078b997",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 45,
+          "end_exclusive": 624,
+          "quote_sha256": "8cd70cb7854318fbc72ab4601ba172f37533082e91c684dbe33e3390f006f696"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 8,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 9,
+      "path": "openspec/changes/polaris-manifesto-generation/specs/polaris-generation/spec.md",
+      "ordinal": 3,
+      "block_sha256": "8b9ac8d23fdef34ba55b0e2fa5a5bd6801d201fefdf6d0b7488ccb809e1f61f8",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 42,
+          "end_exclusive": 2696,
+          "quote_sha256": "9cdc2398a4e8982f23fa105d1dccec296c045736495fc6ade50c36d6326485c7"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 9,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 10,
+      "path": "openspec/changes/polaris-manifesto-generation/specs/polaris-generation/spec.md",
+      "ordinal": 4,
+      "block_sha256": "6853636524ed752162a87388c9d5ea0dabe6a7ea952440583fb01899e5c9360d",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 48,
+          "end_exclusive": 2096,
+          "quote_sha256": "74c02e0143022fea90de1992c7028f6c8dbec8e567079697e829f159e1793eca"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 10,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 11,
+      "path": "openspec/changes/polaris-manifesto-generation/specs/polaris-generation/spec.md",
+      "ordinal": 5,
+      "block_sha256": "c8777525b07dbe2b94b0049dd7962f4bfa6ef62335bd9436a35ebacb8ee69683",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 46,
+          "end_exclusive": 408,
+          "quote_sha256": "7842283d4a1da40e2e3bdecdc37e274c3770c10b62a08ecccef8573093aa987b"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 11,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 12,
+      "path": "openspec/changes/polaris-manifesto-generation/specs/polaris-generation/spec.md",
+      "ordinal": 6,
+      "block_sha256": "224e729b723fb6556cb116932f3898b22ed4c59c94dffef2e4e7479d9a3a1c9e",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 48,
+          "end_exclusive": 1593,
+          "quote_sha256": "0e699f944fa58dd55c5cdc81d2a1dcd0d303b75175a9ba61e555fd8d60488d72"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 12,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 13,
+      "path": "openspec/changes/polaris-manifesto-generation/specs/polaris-generation/spec.md",
+      "ordinal": 7,
+      "block_sha256": "585bd8a05c8ec76fd39405369b4ed7c70fca8820069835d3820fec70b4d74959",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 48,
+          "end_exclusive": 897,
+          "quote_sha256": "4bebdf7084f9b7c277236e0e22174ee0fbe1aa330991c350cd1d6d5eefafc2bb"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 13,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 14,
+      "path": "openspec/changes/polaris-manifesto-generation/specs/polaris-generation/spec.md",
+      "ordinal": 8,
+      "block_sha256": "55f0ebbc3a8236855c0c024588eee31cbc5f49d6649df078560f7ed5e386dd12",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 53,
+          "end_exclusive": 1988,
+          "quote_sha256": "7bf65dd38b86032757f6efe21a90a1d8b4a3bdaf2a181b68258f5c221d646746"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 14,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 15,
+      "path": "openspec/changes/polaris-manifesto-generation/specs/polaris-generation/spec.md",
+      "ordinal": 9,
+      "block_sha256": "818f62afb44e49341003e4e228cb6607f6076968f3970fc24802c9806d8a6d64",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 48,
+          "end_exclusive": 805,
+          "quote_sha256": "23101c2a1d605dcb4742f54ed0fb36657d100dae1a161b8c684e9002a02eb8de"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 15,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 16,
+      "path": "openspec/changes/polaris-manifesto-generation/specs/polaris-generation/spec.md",
+      "ordinal": 10,
+      "block_sha256": "65981d8141db1dcef697961492b39b4269a2a8e456c7faa8b956743bb6301470",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 46,
+          "end_exclusive": 445,
+          "quote_sha256": "cfb452a691fc8d927a5eb879810aea3f462f1243ecb071c82174af76fa7f3b87"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 16,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 17,
+      "path": "openspec/changes/polaris-manifesto-generation/specs/polaris-generation/spec.md",
+      "ordinal": 11,
+      "block_sha256": "87e34b147d4b15093786fb43774376f2541b5955ee051d08e49d2e744c7724a2",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 42,
+          "end_exclusive": 1711,
+          "quote_sha256": "042978d21687c0b96d5bdc186dbd2281296f56d1f58de3e94d4172bfde580b61"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 17,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 18,
+      "path": "openspec/changes/polaris-manifesto-generation/specs/polaris-generation/spec.md",
+      "ordinal": 12,
+      "block_sha256": "3f224f79e9a44baa5a8cb6d1a67e96ead5d2c7f0b4f8e44fb5b6c6c8177eb219",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 47,
+          "end_exclusive": 897,
+          "quote_sha256": "08368d0911b9caaef5272fddd8c82c8c6760bdb66e1ee388173ef97194a27751"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 18,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 19,
+      "path": "openspec/changes/polaris-manifesto-generation/specs/polaris-generation/spec.md",
+      "ordinal": 13,
+      "block_sha256": "9896449d43f2edf3f72e20045338633ca98977159f8d3ddcb1d09e23de5a7418",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 44,
+          "end_exclusive": 2497,
+          "quote_sha256": "2612e387eba53000477a0665f4ebc3a90dbaf90265387c8db058aa059c9fd96f"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 19,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 20,
+      "path": "openspec/changes/polaris-manifesto-generation/specs/polaris-generation/spec.md",
+      "ordinal": 14,
+      "block_sha256": "9968c16e021cc6e79425df59c4e4460636629a988af544429807ec8d763793ea",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 46,
+          "end_exclusive": 1344,
+          "quote_sha256": "89b5fdae07b34ffd4b471dda5076b3bc54b1f48e99f5314f3335a60ad8a829d4"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 20,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 21,
+      "path": "openspec/changes/polaris-manifesto-generation/specs/polaris-generation/spec.md",
+      "ordinal": 15,
+      "block_sha256": "5325ec5512f88fef4cd7d55afc7d1b884e96131653d97062b0d144173ac4ae46",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 49,
+          "end_exclusive": 512,
+          "quote_sha256": "ea129788069176bc967ef3226fcf1e1cf1d3c4be2380b105d6b47d25c8de425c"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 21,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 22,
+      "path": "openspec/changes/polaris-manifesto-generation/specs/polaris-generation/spec.md",
+      "ordinal": 16,
+      "block_sha256": "0b5043246610baebebe14260aadfa3a03d882faa76e8f5e671f10f7805e3213a",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 57,
+          "end_exclusive": 884,
+          "quote_sha256": "de606c20665abbd1430c5d80b2254898c2280447250f53781993d5273def44d5"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 22,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 23,
+      "path": "openspec/changes/polaris-manifesto-generation/specs/polaris-generation/spec.md",
+      "ordinal": 17,
+      "block_sha256": "4967608663766f94360dff411717839ed5db9dc11416f8aaa23462ae27743cf6",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 48,
+          "end_exclusive": 1955,
+          "quote_sha256": "db1c8bbe142b26c14f51be42f3a72ff32bc03e0a35e1e91fd52c38d3a4bac386"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 23,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 24,
+      "path": "openspec/changes/polaris-manifesto-generation/specs/polaris-generation/spec.md",
+      "ordinal": 18,
+      "block_sha256": "6aea56b64b976f3308934dd5cb8134ef6068c5d63945582415325c29baf25a56",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 45,
+          "end_exclusive": 1743,
+          "quote_sha256": "b95464004fc17a47787252fdddd504c93fa6aa342a499cba719463201f741676"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 24,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 25,
+      "path": "openspec/changes/polaris-manifesto-generation/specs/polaris-generation/spec.md",
+      "ordinal": 19,
+      "block_sha256": "ae2e8f7b811b5837aef78056a9f0e8db10d7b195cade5e768d52215fbd5cb970",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 64,
+          "end_exclusive": 2222,
+          "quote_sha256": "2e018b466e5fb6c64480f1f106ab158f076062352944922cc2816bc052270a4f"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 25,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 26,
+      "path": "openspec/changes/polaris-manifesto-generation/specs/polaris-generation/spec.md",
+      "ordinal": 20,
+      "block_sha256": "28a26127e4411b7990b4fde827a88768ffc4bdcf0bb572b24f7d1db028d66fd5",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 51,
+          "end_exclusive": 2484,
+          "quote_sha256": "cf6ad29edbe941954a45e4eee4036fd2d5a19137150b04b619c74a5666223b86"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 26,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 27,
+      "path": "openspec/changes/polaris-manifesto-generation/specs/polaris-generation/spec.md",
+      "ordinal": 21,
+      "block_sha256": "b67debbdbbe5599f1a1b2f5a986b48486073c5b76210aa45579c496e4bb17f05",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 67,
+          "end_exclusive": 2298,
+          "quote_sha256": "8dc2050feb78c6de71305cf115f99d31ebb7f47d216f6e7cb6872596c5ff70ef"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 27,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 28,
+      "path": "openspec/changes/polaris-manifesto-generation/specs/polaris-generation/spec.md",
+      "ordinal": 22,
+      "block_sha256": "44b0e9c67d8e4f377fd9b6de181ba385962098834f33845b3f7155c155397a41",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 61,
+          "end_exclusive": 3290,
+          "quote_sha256": "4130743fc38fb1ecf86d6f4937dd63e1148b2609b0fbcf31a363cda61208df92"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 28,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 29,
+      "path": "openspec/changes/polaris-manifesto-generation/specs/polaris-generation/spec.md",
+      "ordinal": 23,
+      "block_sha256": "45ffdad2873700d29944eda95b6cfe6fe7f5723849607b44edd404854cc30624",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 71,
+          "end_exclusive": 1783,
+          "quote_sha256": "afe45223c5894b51cbdee1de217e416ab355c9edfe0ad9ba2f87a968891fd606"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 29,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 30,
+      "path": "openspec/changes/polaris-manifesto-generation/specs/polaris-generation/spec.md",
+      "ordinal": 24,
+      "block_sha256": "a41cfdd84905d96c11fdc06fee082b4429cbbc5868284c12348d875611899578",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 65,
+          "end_exclusive": 2810,
+          "quote_sha256": "9dbe2dbfe9198b07f38869c581cbbaa7878199feaf60cf5f630a75a333252d98"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 30,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 31,
+      "path": "openspec/changes/polaris-manifesto-generation/specs/polaris-generation/spec.md",
+      "ordinal": 25,
+      "block_sha256": "14a75e3c89bd587a0883e89e6aec58d0eaaf0dd1c0c910bbf972cc6e9d1ffd03",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 49,
+          "end_exclusive": 2724,
+          "quote_sha256": "1ae5780f3d5b76f5b7933be05c291bb153e7c824e1af18448d1eb96402f5bcc7"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 31,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 32,
+      "path": "openspec/changes/polaris-manifesto-generation/specs/polaris-generation/spec.md",
+      "ordinal": 26,
+      "block_sha256": "17ae7d7238d52dafcadd831408a40c51a726030341584b97a4fe8ed0706ede2b",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 56,
+          "end_exclusive": 2123,
+          "quote_sha256": "2e790a3a95fe1e4424d39ffd9878be7a7319b5ab4a79439e7e6e62e0fc01aeed"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 32,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 33,
+      "path": "openspec/changes/polaris-manifesto-generation/specs/polaris-generation/spec.md",
+      "ordinal": 27,
+      "block_sha256": "7642ab19ba103d99bca32e88c38a8353d6cdda597ccc8b4822f7232d8a6b4974",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 64,
+          "end_exclusive": 2744,
+          "quote_sha256": "70ce05f6722d456eb26a19d7e270644834f73e80d81e8a6da54a7208c0d08974"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 33,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 34,
+      "path": "openspec/changes/polaris-manifesto-generation/specs/polaris-generation/spec.md",
+      "ordinal": 28,
+      "block_sha256": "c0d5b54c9ecea18bab93eba35e360e8c6e3c10b7eec9a8607f53c4447339abfd",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 59,
+          "end_exclusive": 3259,
+          "quote_sha256": "3f263ae3f25f42d8c669722d050b36ff7b64003f967ff288438a79fa1f3f7815"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 34,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 35,
+      "path": "openspec/changes/polaris-manifesto-generation/specs/polaris-generation/spec.md",
+      "ordinal": 29,
+      "block_sha256": "be4e12ddc52b55fd03ff9be2238d37c8a8ccc0833aabb72fd0d483e9775bcfa4",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 65,
+          "end_exclusive": 3036,
+          "quote_sha256": "9675406fe8ea582baa8a333284a828e3b7453925dab568ec07166a545b192335"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 35,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 36,
+      "path": "openspec/changes/polaris-manifesto-understanding-amendment/specs/polaris-generation/spec.md",
+      "ordinal": 1,
+      "block_sha256": "ddfe590f125865055c541bc0c7f538840bbee9ad48068dcce9806aea17cd7d68",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 45,
+          "end_exclusive": 1629,
+          "quote_sha256": "d1bfe3b127ef08ff9b7bd7baf182256c1711c6d4a24a1ec2ddad099a471f5632"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 36,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 37,
+      "path": "openspec/changes/polaris-manifesto-understanding-amendment/specs/polaris-generation/spec.md",
+      "ordinal": 2,
+      "block_sha256": "91f77301c85c76ff6bf5c9657c6c46e7722504abdbf25607f02a5978445e8a1f",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 48,
+          "end_exclusive": 5838,
+          "quote_sha256": "4c95c47b46584da6a23010c1b207928be3e07d8d570ffa42080b8d40c614072a"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 37,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 38,
+      "path": "openspec/changes/polaris-manifesto-understanding-amendment/specs/polaris-generation/spec.md",
+      "ordinal": 3,
+      "block_sha256": "b8cba6b24f467e7692e07dd686a2d1f981350980c16f9ac4efee23eb98543978",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 48,
+          "end_exclusive": 2306,
+          "quote_sha256": "e415eca60a0f73f4032ae39ad08b1e7e9d0d60330c74650a94bd3e3fbcf933c8"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 38,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 39,
+      "path": "openspec/changes/polaris-manifesto-understanding-amendment/specs/polaris-generation/spec.md",
+      "ordinal": 4,
+      "block_sha256": "05e0c341bb2bd244766b6b5a336a08c2b815d8d54a7fc570551f1ac19253286e",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 48,
+          "end_exclusive": 1410,
+          "quote_sha256": "4a9cefcc8e89e36ce602c3f985baab61bf9bc2859739a700d9be2a33b5d12ba4"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 39,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 40,
+      "path": "openspec/changes/polaris-manifesto-understanding-amendment/specs/polaris-generation/spec.md",
+      "ordinal": 5,
+      "block_sha256": "df98504ef259a67d443fe238d33562530878048a09352c0b36c5215d51e707e9",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 47,
+          "end_exclusive": 1586,
+          "quote_sha256": "42eb6412f893c74aaefc6f18d95ce3af719a40cc286bd7df1aeb829f3a46d297"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 40,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 41,
+      "path": "openspec/changes/polaris-manifesto-understanding-amendment/specs/polaris-generation/spec.md",
+      "ordinal": 6,
+      "block_sha256": "b5ff1d1beec4cd0057e096ccf1a6ac82d45e11789b79784c91aa8b62c9ad4685",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 46,
+          "end_exclusive": 3888,
+          "quote_sha256": "a4e084ba86786fd101ebd140130f277fb7f36b10477ae2f1d112b431c991a90c"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 41,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 42,
+      "path": "openspec/changes/polaris-manifesto-understanding-amendment/specs/polaris-generation/spec.md",
+      "ordinal": 7,
+      "block_sha256": "796464323fb006f92248198ffab7296b05ddf735df9c2c84039c1a7068ecc3e7",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 64,
+          "end_exclusive": 3209,
+          "quote_sha256": "9a522cc9eaa00ef66cc00929e7f84502c5c586b9e2ad05b44163ec9965b1ebd3"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 42,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 43,
+      "path": "openspec/changes/polaris-manifesto-understanding-amendment/specs/polaris-generation/spec.md",
+      "ordinal": 8,
+      "block_sha256": "f2ee8a2cd43f2d4fa35c041a09392751db024e344b964fb4f40e7fe8f94d5cec",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 57,
+          "end_exclusive": 1494,
+          "quote_sha256": "c257271bb1c0eb4e6a9edd762ba253f986079af4d14e2c31a02207784e876f69"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 43,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 44,
+      "path": "openspec/changes/polaris-manifesto-understanding-amendment/specs/polaris-generation/spec.md",
+      "ordinal": 9,
+      "block_sha256": "220486a7fb81ea4192fad5a9c6626b65c2d0b8fff2c289e257664b2059baa433",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 52,
+          "end_exclusive": 1448,
+          "quote_sha256": "ce77ae1c36f8eb704c4914bcff5f6989b93ad50552614de9b0f6bd3f2d8be3ff"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 44,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 45,
+      "path": "openspec/changes/polaris-non-governed-narrative-profile/specs/polaris-generation/spec.md",
+      "ordinal": 1,
+      "block_sha256": "73852f567bbe434cdfd49022da0e7b631b2c374a448fc57f4cc0692515b07f8f",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 49,
+          "end_exclusive": 3123,
+          "quote_sha256": "f10a4a6c559f135b46103232ee51a51e86a27b3277a2dd92c6fcc95bb0343c43"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 45,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 46,
+      "path": "openspec/changes/polaris-project-wide-butlers-model/specs/polaris-project-wide-butlers-model/spec.md",
+      "ordinal": 1,
+      "block_sha256": "edfbdf656e1bdc22911905d47604e0876485c9ef7c523e2b76ceeec8ec31af84",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 153,
+          "end_exclusive": 660,
+          "quote_sha256": "ad40ac50307e096a1dffccd0f783c84789260814dfdeccc4d9743e0873a65408"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 46,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 47,
+      "path": "openspec/changes/polaris-project-wide-butlers-model/specs/polaris-project-wide-butlers-model/spec.md",
+      "ordinal": 2,
+      "block_sha256": "41232e8bcd32bcd86b98aff9776559219c04cd5a1ad97dadd65cdd6e9ad6e6a1",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 122,
+          "end_exclusive": 1264,
+          "quote_sha256": "7f7b315ac7a145fa1b91be87f763f15a76649113b0cc4864819dd58cf3d579b9"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 47,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 48,
+      "path": "openspec/changes/polaris-project-wide-butlers-model/specs/polaris-project-wide-butlers-model/spec.md",
+      "ordinal": 3,
+      "block_sha256": "4b57a525b288d7c383f3760d8cdec85a3e755bdae48e4580a2ab62fd16bae7bb",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 832,
+          "end_exclusive": 1109,
+          "quote_sha256": "1a632106203a906092ce2124330d9eaff5102bdbfdc0cfcf0633e63e177e645a"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 48,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 49,
+      "path": "openspec/changes/polaris-project-wide-butlers-model/specs/polaris-project-wide-butlers-model/spec.md",
+      "ordinal": 4,
+      "block_sha256": "f16c8e0443ba56194c08ac5827e78ae2a6a099eb76d8758d1e54b306cde1af41",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 127,
+          "end_exclusive": 999,
+          "quote_sha256": "c4a78222be4cc2f88b3aaf94e8bf698d57d256c0b8fc5b3065b70ceced03bfc7"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 49,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 50,
+      "path": "openspec/changes/polaris-project-wide-butlers-model/specs/polaris-project-wide-butlers-model/spec.md",
+      "ordinal": 5,
+      "block_sha256": "b5ad25343860d2052bed14cdfb25885f95c524927cde59151960e044992ef3a8",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 2833,
+          "end_exclusive": 3364,
+          "quote_sha256": "882597a9ed7ad45ea5c2abee57e93d3ddd1ced99340219e9f7c5c67bef16adc0"
+        },
+        {
+          "start_inclusive": 3958,
+          "end_exclusive": 4152,
+          "quote_sha256": "0b1a5f9bb78ccf27ec5d7f5fe1f3dd61478e5169a344fedda280f90d5493d23c"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 50,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 51,
+      "path": "openspec/changes/polaris-project-wide-butlers-model/specs/polaris-project-wide-butlers-model/spec.md",
+      "ordinal": 6,
+      "block_sha256": "63648990e5940b6ad7b636796620ba4a4b1a680753318a61a67c3a4a6572aeb9",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 125,
+          "end_exclusive": 901,
+          "quote_sha256": "e2bedff98c3009e7b20555ca946bfb41a5243d92b9622b40c2af87cf68badfdc"
+        },
+        {
+          "start_inclusive": 6829,
+          "end_exclusive": 7306,
+          "quote_sha256": "4da8e9ecd37c6fa8cef531ac79f789aa4a9b8c84122ebe512a8f228957a2713b"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 51,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 52,
+      "path": "openspec/changes/polaris-project-wide-butlers-model/specs/polaris-project-wide-butlers-model/spec.md",
+      "ordinal": 7,
+      "block_sha256": "a60d70920d7adb33b9d60ec9f0c312595525b21e9725d618556ccb4d1593ea38",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 137,
+          "end_exclusive": 722,
+          "quote_sha256": "a87d7a2f70fb8a23fbd306f6f4cd96fbb967574b96bec1b45e188d6b0f53f183"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 52,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 53,
+      "path": "openspec/changes/polaris-project-wide-butlers-model/specs/polaris-project-wide-butlers-model/spec.md",
+      "ordinal": 8,
+      "block_sha256": "b4436bd8f92251817830ccf925eb66dae18d59c80e23535286b7693915449d18",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 125,
+          "end_exclusive": 304,
+          "quote_sha256": "721d28ca7d59a6cb6a54b0f213be1c3ea522e09740558f020c9bae7eaf3b076e"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 53,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 54,
+      "path": "openspec/changes/polaris-project-wide-butlers-model/specs/polaris-project-wide-butlers-model/spec.md",
+      "ordinal": 9,
+      "block_sha256": "6d5bdb246afc69a6d8fa26cec048895420270755d681fcb61c7f7092ff1eb09a",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 762,
+          "end_exclusive": 1029,
+          "quote_sha256": "190fb0dddd910436799df0ffe92286c2150fcb36204c694740e6606e2e3eb405"
+        },
+        {
+          "start_inclusive": 1627,
+          "end_exclusive": 1812,
+          "quote_sha256": "405546d20997354671f5edd133ac0cfe9dcb2585cd4f3a93794ddce7db0a281f"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 54,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 55,
+      "path": "openspec/changes/polaris-project-wide-butlers-model/specs/polaris-project-wide-butlers-model/spec.md",
+      "ordinal": 10,
+      "block_sha256": "976c839dfac535b648fa7be3e1587db0a501e27dfa039b235d693436248365d8",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 117,
+          "end_exclusive": 636,
+          "quote_sha256": "a1c3f454f22de64fe6292b24b15c5b6c8ff8b34db8f22f7bf57516c55c623b37"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 55,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 56,
+      "path": "openspec/changes/polaris-project-wide-butlers-model/specs/polaris-project-wide-butlers-model/spec.md",
+      "ordinal": 11,
+      "block_sha256": "29b1f407387f50b30cb834a7dc6517878516d36ae6be2eaf257059c42fe15ef3",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 134,
+          "end_exclusive": 369,
+          "quote_sha256": "d64b3e62b3bdf18484aee7e9ad8cbf6814036046423c05ac5142a8c4e3b8aa1a"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 56,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 57,
+      "path": "openspec/changes/polaris-project-wide-butlers-model/specs/polaris-project-wide-butlers-model/spec.md",
+      "ordinal": 12,
+      "block_sha256": "4541f9a5c212852f2a78c6da7094fee2da189bd1d43ab5e06830846a8465e0ea",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 1525,
+          "end_exclusive": 3420,
+          "quote_sha256": "eece794e12b42f28ea84792ece36630aecd14382ebc9f3a29f2e7e5c57ddd9b9"
+        },
+        {
+          "start_inclusive": 10200,
+          "end_exclusive": 11821,
+          "quote_sha256": "a90527bf004b76cebe2ebecba0de6808ade7cd6314f3af22b45f1045cfaebf44"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 57,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 58,
+      "path": "openspec/changes/polaris-project-wide-butlers-model/specs/polaris-project-wide-butlers-model/spec.md",
+      "ordinal": 13,
+      "block_sha256": "d5710b3c924045b13e3d609730e083947fdbfe48fe96b3c9675aadf67f7a5088",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 130,
+          "end_exclusive": 311,
+          "quote_sha256": "f903c1cb93a75dbd6f0e7c8a091f62fa051944b8fcf47a2f6be76b3c108390d0"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 58,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 59,
+      "path": "openspec/changes/polaris-project-wide-butlers-model/specs/polaris-project-wide-butlers-model/spec.md",
+      "ordinal": 14,
+      "block_sha256": "c95b0c69a8b37775f28ac885e8aebc5c0d1e921c2fdb6d90828c8cce9e84c1f8",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 137,
+          "end_exclusive": 427,
+          "quote_sha256": "4090e6249ee9fbb06c573065bf02c0e687455f5cc80b5718241e90882022a21e"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 59,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 60,
+      "path": "openspec/changes/polaris-project-wide-butlers-model/specs/polaris-project-wide-butlers-model/spec.md",
+      "ordinal": 15,
+      "block_sha256": "c1c991de6d47a2b19d300b2b0311b61305d9a6e69b7af834a87fd9c65d36846f",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 580,
+          "end_exclusive": 1434,
+          "quote_sha256": "dc8dd3c41521d004b5a342b9da076e832f12d71d1916d5836771839d0c3f09eb"
+        },
+        {
+          "start_inclusive": 2083,
+          "end_exclusive": 2790,
+          "quote_sha256": "3879bb645e4ac27a96d9978da7eb1d41f777d57a6dec17777ec172b69974731a"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 60,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 61,
+      "path": "openspec/changes/polaris-project-wide-butlers-model/specs/polaris-project-wide-butlers-model/spec.md",
+      "ordinal": 16,
+      "block_sha256": "d986e4ccfa86b9f5be9526f115305f37ade19b790319e9be92319c4665e35318",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 1222,
+          "end_exclusive": 2276,
+          "quote_sha256": "8ec8e675c13a35183b7994d8fe1b2acffd3c035216f263aa4d4b4faf7fed5c9d"
+        },
+        {
+          "start_inclusive": 2923,
+          "end_exclusive": 3349,
+          "quote_sha256": "8235f9b6ee0baf8cb42500fea6bc74dbf28e7e89cb19f17d325ad9e7e92e65cb"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 61,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 62,
+      "path": "openspec/changes/polaris-project-wide-butlers-model/specs/polaris-project-wide-butlers-model/spec.md",
+      "ordinal": 17,
+      "block_sha256": "ca885a897acdd261a4ffaa9f57c9c7117fc26c1b194e9e00f4b482774865b82f",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 131,
+          "end_exclusive": 905,
+          "quote_sha256": "dd8ef8df81afad088ba5c5dbbc5e12802eb7482d2ca8c4cb2a5b6daab0b42246"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 62,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 63,
+      "path": "openspec/changes/project-registration-and-honest-shape-visibility/specs/project-registration-and-honest-shape-visibility/spec.md",
+      "ordinal": 1,
+      "block_sha256": "26845673889d48a4dcd72fcf058f0b87298cddac39bd1c33f3b84926a6b60a74",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 138,
+          "end_exclusive": 538,
+          "quote_sha256": "15d1d91b29c95e30d61c4ee4a10057d7aad6541d19a12f15bddef6039d153854"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 63,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 64,
+      "path": "openspec/changes/project-registration-and-honest-shape-visibility/specs/project-registration-and-honest-shape-visibility/spec.md",
+      "ordinal": 2,
+      "block_sha256": "cd3b075e24676fd73e00211f1ddb8591854190ca731efad0ccf99986b6705dd2",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 160,
+          "end_exclusive": 547,
+          "quote_sha256": "67e7c278418c5041b2d3221edea97c5bd194c35ce57540baebccaa982bf4367d"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 64,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 65,
+      "path": "openspec/changes/project-registration-and-honest-shape-visibility/specs/project-registration-and-honest-shape-visibility/spec.md",
+      "ordinal": 3,
+      "block_sha256": "e0e5147d5aec4918d1bdfd46d0d76efd2a1f03a78c60a66ceb53af11984e6008",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 128,
+          "end_exclusive": 344,
+          "quote_sha256": "e497235e580cd6359d24ea565c11d96056826695e7194c32e3306e06b8786d49"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 65,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 66,
+      "path": "openspec/changes/project-registration-and-honest-shape-visibility/specs/project-registration-and-honest-shape-visibility/spec.md",
+      "ordinal": 4,
+      "block_sha256": "dc2d61796cab45386639405643394e5d95b9eca2e5af746b769b0ddf34b2070c",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 155,
+          "end_exclusive": 421,
+          "quote_sha256": "95ee6210f13f9fd0c73d1844de33fd3cd438e40023bdde3093ef717a4bb03117"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 66,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 67,
+      "path": "openspec/changes/project-registration-and-honest-shape-visibility/specs/project-registration-and-honest-shape-visibility/spec.md",
+      "ordinal": 5,
+      "block_sha256": "d6e0570728bef22378765a962ec4c8567ed068d80ecaa9ba62f8e6459bb41c15",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 149,
+          "end_exclusive": 348,
+          "quote_sha256": "b8cf3cc6051b797e094a44a60f193bbbf1d236c9593ec1369bf4e0886c8a4f41"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 67,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 68,
+      "path": "openspec/changes/project-registration-and-honest-shape-visibility/specs/project-registration-and-honest-shape-visibility/spec.md",
+      "ordinal": 6,
+      "block_sha256": "92b16fbfeaafa6446eace4cd468d373179c7af38bb71b40d31d2829164742c97",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 154,
+          "end_exclusive": 608,
+          "quote_sha256": "e12446b6b17989a54dac301e2f257e78db56ce5943058767fd42751edeb427ab"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 68,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 69,
+      "path": "openspec/changes/project-registration-and-honest-shape-visibility/specs/project-registration-and-honest-shape-visibility/spec.md",
+      "ordinal": 7,
+      "block_sha256": "8fabf554e70cea68b7803000747d82dad06295fbc1021e8931227dabb23835eb",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 155,
+          "end_exclusive": 423,
+          "quote_sha256": "5727838630ef414be7407faa39e27e7f0dd10ec8e17493282216c3e201f07626"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 69,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 70,
+      "path": "openspec/changes/project-registration-and-honest-shape-visibility/specs/project-registration-and-honest-shape-visibility/spec.md",
+      "ordinal": 8,
+      "block_sha256": "44c22f5ceec38a189bee38eb995ec85d71b5423e83d2bf10304e6392789ac092",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 140,
+          "end_exclusive": 522,
+          "quote_sha256": "da5cb16a11bd56679fec44cb0b80486b708579dcd0152dad40899dcf38ff973e"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 70,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 71,
+      "path": "openspec/changes/project-registration-and-honest-shape-visibility/specs/project-registration-and-honest-shape-visibility/spec.md",
+      "ordinal": 9,
+      "block_sha256": "d0bcfd51aeaee4af5762c2f508db8c44efab5532adddaa60c7e6aa3af4ef57bb",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 170,
+          "end_exclusive": 559,
+          "quote_sha256": "9d52a39b44fd33ee8896f8aae606a1684ec716bdce6304bf85f71f0222bd15b2"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 71,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 72,
+      "path": "openspec/changes/project-registration-and-honest-shape-visibility/specs/project-registration-and-honest-shape-visibility/spec.md",
+      "ordinal": 10,
+      "block_sha256": "412eb376498638b371d6d93473024b1657b909399c298f156cf0a8f5730a3017",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 128,
+          "end_exclusive": 749,
+          "quote_sha256": "2eef890187e8b717a697f667685d8b1b84765b29c27e301c3cd628a52bb5cb19"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 72,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 73,
+      "path": "openspec/changes/project-registration-and-honest-shape-visibility/specs/project-registration-and-honest-shape-visibility/spec.md",
+      "ordinal": 11,
+      "block_sha256": "394717f2e0e2c56d4d323d14038d34ebb360e3979feebdc466b418ad1bc02bc7",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 145,
+          "end_exclusive": 389,
+          "quote_sha256": "c36b8640a4085ff30573f2809f901d629f1ebe326f747fe94d5d025faf3171f6"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 73,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 74,
+      "path": "openspec/changes/project-registration-and-honest-shape-visibility/specs/project-registration-and-honest-shape-visibility/spec.md",
+      "ordinal": 12,
+      "block_sha256": "808de9d42d8f260ac2c232f3db5c137c23f9e76324776ce921958ecaea1bd2e4",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 165,
+          "end_exclusive": 607,
+          "quote_sha256": "300adf2a5fe6d33b7d1f03e0b594497bdb2022eb8300810b3f2bd76863201d49"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 74,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 75,
+      "path": "openspec/changes/project-registration-and-honest-shape-visibility/specs/project-registration-and-honest-shape-visibility/spec.md",
+      "ordinal": 13,
+      "block_sha256": "3f5449609ed943c60321ce81e6877e0717d5a8166311989a4b5cf20703f76807",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 153,
+          "end_exclusive": 458,
+          "quote_sha256": "589c084bb8b77263101c3571c1b7db9ab56e91d4736b1d6f10c50541d454cd66"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 75,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 76,
+      "path": "openspec/changes/project-registration-and-honest-shape-visibility/specs/project-registration-and-honest-shape-visibility/spec.md",
+      "ordinal": 14,
+      "block_sha256": "afdc84d2b3962ade2444ff22a75ead932ca3d936c3f98246d90084ed594f9ebb",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 136,
+          "end_exclusive": 503,
+          "quote_sha256": "0de48d7bd899bec722cbf35d7970f481b9f2c0dce3f1a57b8c0c20a54b8f160b"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 76,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 77,
+      "path": "openspec/changes/project-registration-and-honest-shape-visibility/specs/project-registration-and-honest-shape-visibility/spec.md",
+      "ordinal": 15,
+      "block_sha256": "e7b4286467bad93e0dcffa6eaa2c7e310607c09c8464278054a405b57d5cbcbc",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 149,
+          "end_exclusive": 669,
+          "quote_sha256": "086c94eb85a6a5af0c72082efedfa134414b1d2cced1bc4f1718260d3295b9f3"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 77,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 78,
+      "path": "openspec/changes/project-registration-and-honest-shape-visibility/specs/project-registration-and-honest-shape-visibility/spec.md",
+      "ordinal": 16,
+      "block_sha256": "37b85e5019af64d256ec251b35062a198da200bb153fba8cc5ece18374ad033e",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 165,
+          "end_exclusive": 469,
+          "quote_sha256": "cfa44af16e9c5caf422df79c921078ae640d18f7723d8d89c96bc03571093060"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 78,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 79,
+      "path": "openspec/changes/project-registration-and-honest-shape-visibility/specs/project-registration-and-honest-shape-visibility/spec.md",
+      "ordinal": 17,
+      "block_sha256": "bdbccc92ba072ba20b27a4e97e943e9bc9e215e775ce704f0844485b1ce731cf",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 145,
+          "end_exclusive": 299,
+          "quote_sha256": "da2c739c340cfe6bfdfaf65370e7420840fc935e79cc7a519bbfeb0df87b3fdd"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 79,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 80,
+      "path": "openspec/changes/project-registration-and-honest-shape-visibility/specs/project-registration-and-honest-shape-visibility/spec.md",
+      "ordinal": 18,
+      "block_sha256": "d1ab044509c21ace983aac8ac49809717404b7146af8e27f2990ebc509c44d5b",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 183,
+          "end_exclusive": 512,
+          "quote_sha256": "286c78bd8857782a0a42dcec114b8495659488f3b064112902491ca56c4250c5"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 80,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 81,
+      "path": "openspec/changes/project-registration-and-honest-shape-visibility/specs/project-registration-and-honest-shape-visibility/spec.md",
+      "ordinal": 19,
+      "block_sha256": "ca70a253fc6f4da1cdac950df599150f21d200a2178d1de2148295273bc25c68",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 162,
+          "end_exclusive": 484,
+          "quote_sha256": "83cb4153b33935d3a58e0a934aae5e4b70344b6b2ff6ef4fa5a3608324a87389"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 81,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 82,
+      "path": "openspec/changes/project-registration-and-honest-shape-visibility/specs/project-registration-and-honest-shape-visibility/spec.md",
+      "ordinal": 20,
+      "block_sha256": "b9eee85a0a0f2b2954783dee1432ba2b02ce3a6970d7371e9464eb725cc290b3",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 133,
+          "end_exclusive": 461,
+          "quote_sha256": "400c446807b64262db104d1311f6cc61b0b9ebdd12e195cb7a4a6c37c57c8824"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 82,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 83,
+      "path": "openspec/changes/project-registration-and-honest-shape-visibility/specs/project-registration-and-honest-shape-visibility/spec.md",
+      "ordinal": 21,
+      "block_sha256": "f6f937dc0e443d082ff884e5853e8df85bedf1fea05ac7409af0dbc7c78a85bd",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 163,
+          "end_exclusive": 395,
+          "quote_sha256": "d25a13677d128b3c39efc7fb0b214a97407b2de20aef3a31976f1b2b061c2c2b"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 83,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 84,
+      "path": "openspec/changes/project-registration-and-honest-shape-visibility/specs/project-registration-and-honest-shape-visibility/spec.md",
+      "ordinal": 22,
+      "block_sha256": "d1c250daf75b7b539e5dbf6f75e0a5dfa56946cba5ef9e80dabccfb5129b942e",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 181,
+          "end_exclusive": 472,
+          "quote_sha256": "8f862c3606d219d66513cef80235c206a06c0fce27797e45ece59d7707ad21e0"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 84,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 85,
+      "path": "openspec/changes/project-registration-and-honest-shape-visibility/specs/project-registration-and-honest-shape-visibility/spec.md",
+      "ordinal": 23,
+      "block_sha256": "85d058f3232ea5ead5c4029d15d89c379969b07716e58a0987e8947ef8b3f774",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 169,
+          "end_exclusive": 476,
+          "quote_sha256": "128b26d4716820a13a9eccab81a724e2bd1e26013c541e59af0fff3a594b8b5c"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 85,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 86,
+      "path": "openspec/changes/project-registration-and-honest-shape-visibility/specs/project-registration-and-honest-shape-visibility/spec.md",
+      "ordinal": 24,
+      "block_sha256": "77ff75587b7a5d38174a1f5b94646ff84b4fcea732718ed23cc08cfd7278da3b",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 158,
+          "end_exclusive": 722,
+          "quote_sha256": "939b53cba5f03fb1c2ea54fa03fe3a6654d22dadebe29c3bc1a3ed3f66b99059"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 86,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 87,
+      "path": "openspec/changes/project-registration-and-honest-shape-visibility/specs/project-registration-and-honest-shape-visibility/spec.md",
+      "ordinal": 25,
+      "block_sha256": "845346391c3ee3a604ae341a2ca2776ed3755cfbae2655e7299ba93f0d422466",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 139,
+          "end_exclusive": 555,
+          "quote_sha256": "bbd92d001f1b9ab7d3922aa529a510dfa8e9855a5c597edda2ae5763e34b883c"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 87,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 88,
+      "path": "openspec/changes/project-registration-and-honest-shape-visibility/specs/project-registration-and-honest-shape-visibility/spec.md",
+      "ordinal": 26,
+      "block_sha256": "e4cd4f8ba98c47a8799f0a83907154b42ff0e8c32ffb1cd63a90c41a0421800f",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 163,
+          "end_exclusive": 339,
+          "quote_sha256": "25ceb55914e4ddab33a9a3feeba6051b7e5d7575c8f3cc2195bc27e8eeb82d42"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 88,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 89,
+      "path": "openspec/changes/project-registration-and-honest-shape-visibility/specs/project-registration-and-honest-shape-visibility/spec.md",
+      "ordinal": 27,
+      "block_sha256": "180487b49df4bb84c8e6b1fa752f51a5ac6568c2f7557ed6fd3ae32ab5e0cbce",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 165,
+          "end_exclusive": 1022,
+          "quote_sha256": "e64f219f1f6d15c9f7e9588a3ba2521dcf69231b8b2772948aa000245abe7273"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 89,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 90,
+      "path": "openspec/changes/project-registration-and-honest-shape-visibility/specs/project-registration-and-honest-shape-visibility/spec.md",
+      "ordinal": 28,
+      "block_sha256": "2a435f330f4194b114c510b69d431be5c845a69f38c4c3b2413339b7f982ceea",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 147,
+          "end_exclusive": 538,
+          "quote_sha256": "d2a6897e437cfd1192f374cfa395b129c2628f060899cc165c09b4933cf911fd"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 90,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 91,
+      "path": "openspec/changes/project-registration-and-honest-shape-visibility/specs/project-registration-and-honest-shape-visibility/spec.md",
+      "ordinal": 29,
+      "block_sha256": "cb0f8cfdcb431567a8fa4aaa5ef608409d7655df102945465029c7a027fc9351",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 163,
+          "end_exclusive": 466,
+          "quote_sha256": "59cb8d4e6f4982028e52ba4ceaa7d4d768b683bf3b6796c120db76a84b16f88c"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 91,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 92,
+      "path": "openspec/changes/project-registration-and-honest-shape-visibility/specs/project-registration-and-honest-shape-visibility/spec.md",
+      "ordinal": 30,
+      "block_sha256": "3d7df7b57215350334a6c64af9ff3373ae3080c81ae31ae252954ef8d8c0d009",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 192,
+          "end_exclusive": 680,
+          "quote_sha256": "390ed3ecec2b780144d73fe68ab5287bb9dd120afa237b5f09c7f6c2121eb47a"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 92,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 93,
+      "path": "openspec/changes/project-registration-and-honest-shape-visibility/specs/project-registration-and-honest-shape-visibility/spec.md",
+      "ordinal": 31,
+      "block_sha256": "54051ef50049b13439191e7e2be9be4c1e9899994abf9f6da4e2abe855748a76",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 171,
+          "end_exclusive": 538,
+          "quote_sha256": "e5e467b3da350f0a0bd9bbc5165008b9e4dee896f2e2a36f1859445fd3d3c540"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 93,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 94,
+      "path": "openspec/changes/project-registration-and-honest-shape-visibility/specs/project-registration-and-honest-shape-visibility/spec.md",
+      "ordinal": 32,
+      "block_sha256": "5d0fa4f75ca8044fc6cb633dcfbf29c6c328a62f9f563cf089c1e206494cee08",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 190,
+          "end_exclusive": 610,
+          "quote_sha256": "93a21e90b11de888499fa39fb6576f90871a4f0bc65d7625d774e86e494526ad"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 94,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 95,
+      "path": "openspec/changes/project-registration-and-honest-shape-visibility/specs/project-registration-and-honest-shape-visibility/spec.md",
+      "ordinal": 33,
+      "block_sha256": "947cd8ea024f6c158cf94611a890454e36df104cce8812b22e9d72d74584fe0b",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 200,
+          "end_exclusive": 670,
+          "quote_sha256": "6cadad6c98ec2b5cd00667b29113ec332d754ed49d153dba8e8608a26a9b4a6c"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 95,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 96,
+      "path": "openspec/changes/project-registration-and-honest-shape-visibility/specs/project-registration-and-honest-shape-visibility/spec.md",
+      "ordinal": 34,
+      "block_sha256": "55d403d95720ff6413d24df3f44411bbbc4bda9ffb549cca0ce6a9f470858f44",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 171,
+          "end_exclusive": 863,
+          "quote_sha256": "7e26853d03886effb2072b1df47a1b52961add227f9fb71e7209fa85bf2dfa57"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 96,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 97,
+      "path": "openspec/changes/project-registration-and-honest-shape-visibility/specs/project-registration-and-honest-shape-visibility/spec.md",
+      "ordinal": 35,
+      "block_sha256": "f64d0ee20ee9b44da195d7c442e55b26da27c8664d761ee4cd73f7619ff19961",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 171,
+          "end_exclusive": 829,
+          "quote_sha256": "a57f71356b49064a3a61604f039dd416fb825075a7d615532bbdaf12d1b26d52"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 97,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 98,
+      "path": "openspec/changes/project-registration-and-honest-shape-visibility/specs/project-registration-and-honest-shape-visibility/spec.md",
+      "ordinal": 36,
+      "block_sha256": "176e521872d7827c48dca67582de73e7665fd06a0c39e93d7b2db3f559c57355",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 141,
+          "end_exclusive": 577,
+          "quote_sha256": "3a9c9323918ae339a80db44fac941809832497ea25625d6a79dd32b4240decf1"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 98,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 99,
+      "path": "openspec/changes/project-registration-and-honest-shape-visibility/specs/project-registration-and-honest-shape-visibility/spec.md",
+      "ordinal": 37,
+      "block_sha256": "122f72ec7bcad44adc6264e60bc89e90c590b06b1e1efeb700d82d15cf7e432c",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 181,
+          "end_exclusive": 616,
+          "quote_sha256": "ba25c247dfcf0d0275ac1d9fc1c7ef9ca7d406d084e35e07a2c11949a4da1b74"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 99,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 100,
+      "path": "openspec/changes/project-registration-and-honest-shape-visibility/specs/project-registration-and-honest-shape-visibility/spec.md",
+      "ordinal": 38,
+      "block_sha256": "93929bd6aed1d3c0bf39b471d08eb190c0ffd10746acbf988904fc5c9c21b1f7",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 127,
+          "end_exclusive": 477,
+          "quote_sha256": "b05f6dea73f5bb3fc70cee160546089e45c8e556ca295196bd33cc93f68984d5"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 100,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 101,
+      "path": "openspec/changes/project-registration-and-honest-shape-visibility/specs/project-registration-and-honest-shape-visibility/spec.md",
+      "ordinal": 39,
+      "block_sha256": "e305468a73c6feac9edee0dd5f3cfd423437c4cf9a51335c473c331313e05a8a",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 156,
+          "end_exclusive": 635,
+          "quote_sha256": "7022127b25c2e09d91e11ff27e7b3463c22616a7d2a5c171afc694236b5c4da3"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 101,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 102,
+      "path": "openspec/changes/project-registration-and-honest-shape-visibility/specs/project-registration-and-honest-shape-visibility/spec.md",
+      "ordinal": 40,
+      "block_sha256": "fb2bce555178408f892d73bcc286cdfe125f5fec1b4e2e14b27e43f00bdc6159",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 137,
+          "end_exclusive": 629,
+          "quote_sha256": "af45197deea1a713726382e6fca26b27ec91df91281da4816c2647ca677aeab2"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 102,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 103,
+      "path": "openspec/changes/project-registration-and-honest-shape-visibility/specs/project-registration-and-honest-shape-visibility/spec.md",
+      "ordinal": 41,
+      "block_sha256": "495aa6e376f4fd679b38f0aa34d5a78203568302b20a5b8ea69089d1dcd845fd",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 128,
+          "end_exclusive": 434,
+          "quote_sha256": "c9d1e9a1b64538de0214b4ded7f0bf47692eb0d80f9ff71e94596d3d2bd0daa7"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 103,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 104,
+      "path": "openspec/changes/project-registration-and-honest-shape-visibility/specs/project-registration-and-honest-shape-visibility/spec.md",
+      "ordinal": 42,
+      "block_sha256": "78feffc213b5e66b9ea6760f20541faadd53e2255c3c38294867a23d6d4b4105",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 146,
+          "end_exclusive": 606,
+          "quote_sha256": "5e00625751331bf544abdc0341a7959d939cf0e2a877a591ab7308a0c674c44e"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 104,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 105,
+      "path": "openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md",
+      "ordinal": 1,
+      "block_sha256": "15b9cc79b57cb4ddda645c12c7b025e70b755e8c19c2d33f7bca559da7dec320",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 151,
+          "end_exclusive": 497,
+          "quote_sha256": "d28278806a2590a1fb5555c4763a6dccb8cac9d51030ceb28d0ccf615e851655"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 105,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 106,
+      "path": "openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md",
+      "ordinal": 2,
+      "block_sha256": "e041023c253b48231f4c9e453b83cdae0c4de5e3e86c4eb4e85fb836484bb155",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 280,
+          "end_exclusive": 948,
+          "quote_sha256": "bb50054990f29654d55776996aa73bf25e278fb9103a2c38c3a073544a668b59"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 106,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 107,
+      "path": "openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md",
+      "ordinal": 3,
+      "block_sha256": "81591af2bb17de031238cb43c2779c7890196025d05abfc731c77f447d9d3ce9",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 155,
+          "end_exclusive": 436,
+          "quote_sha256": "8c8e67c4c44da56429509035cbb5877b8a230f6f445ceff5b04f6ea6ba57a071"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 107,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 108,
+      "path": "openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md",
+      "ordinal": 4,
+      "block_sha256": "bd43b5889437fec1d941c4914ba983e5fa4d24f87230b9b873e45c421b151c92",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 136,
+          "end_exclusive": 279,
+          "quote_sha256": "960bf84c7d3612b396df197143a81a4b08d45c1fc8d13a8f047aa85a64169bef"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 108,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 109,
+      "path": "openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md",
+      "ordinal": 5,
+      "block_sha256": "59c9f0c4518447a1c47ecacc1241d1d87e29cd634af68080c95c6a3017ee3c42",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 452,
+          "end_exclusive": 1304,
+          "quote_sha256": "0a912ed2318df606d84c6a56eb6425a906ef3200ab92e901036adfec80b913f0"
+        },
+        {
+          "start_inclusive": 1756,
+          "end_exclusive": 2357,
+          "quote_sha256": "a5151922f81803b70666f2d24d5f49e45c039c34bd5996866bbc778841a3fdfd"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 109,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 110,
+      "path": "openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md",
+      "ordinal": 6,
+      "block_sha256": "d7ef7237811e88b47fb78c505a3e525dd609999450823ba3c210b501503cb401",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 146,
+          "end_exclusive": 272,
+          "quote_sha256": "a3fc97ccfa9e3708541e6666e98300169dc5380d477b6218afb766d32562c05a"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 110,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 111,
+      "path": "openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md",
+      "ordinal": 7,
+      "block_sha256": "233a70ab80d90ac32c22490cb797f4cdff09ca8946fffe9131b5cf7e23170853",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 133,
+          "end_exclusive": 291,
+          "quote_sha256": "3f4de34d2881e1f257687e43e64f97e0d92a8408cafd5019b969afcb6796f167"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 111,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 112,
+      "path": "openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md",
+      "ordinal": 8,
+      "block_sha256": "c26d00d794c8d7fedc811edb5fa469b8d6bd580aa8e6e095b4d7634b87da203a",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 136,
+          "end_exclusive": 410,
+          "quote_sha256": "ce01af31ea0f531c8baac1da707c4c69fcf16cc768766f1d4cc0b4bb3dc1cb8f"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 112,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 113,
+      "path": "openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md",
+      "ordinal": 9,
+      "block_sha256": "76ceb3c917a237feb310726af2f7366bea7de7960d1b1ba3d987258dfc4a8d7e",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 148,
+          "end_exclusive": 1077,
+          "quote_sha256": "856ec868ada5f5eac2eb8010ed737b831c6dc458da36027990ae04a3232e344b"
+        },
+        {
+          "start_inclusive": 2672,
+          "end_exclusive": 3781,
+          "quote_sha256": "2091b736d4ad534a406228561fc0a561c42942c78499deb737e927c8da3cc0fc"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 113,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 114,
+      "path": "openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md",
+      "ordinal": 10,
+      "block_sha256": "bc5859385af8cd64bb01980a794d220ff49775eb5fd03f68a2d1f1e8347216b8",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 141,
+          "end_exclusive": 1100,
+          "quote_sha256": "c88a8e6bf573c74a27d8b19f412d223643e9ebef7854b072215c11e6fdd917b7"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 114,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 115,
+      "path": "openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md",
+      "ordinal": 11,
+      "block_sha256": "11311fe951bc447fc96a719e9a3321b4f1512834137919d830609f27c74b758f",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 148,
+          "end_exclusive": 323,
+          "quote_sha256": "19ae4e53398f359fe216553a69044d5ff09aacee5368681942f281856bb0839d"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 115,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 116,
+      "path": "openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md",
+      "ordinal": 12,
+      "block_sha256": "85f929db8aba12cadaec155a54107d82c3a0904ec96bd73049e444c5e6d0ba6a",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 139,
+          "end_exclusive": 1058,
+          "quote_sha256": "e554355a3d8d8c64a9999e545f5e333b69e62cafa5a3adb3f93aac297cb6b100"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 116,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 117,
+      "path": "openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md",
+      "ordinal": 13,
+      "block_sha256": "05e441c9f4776cfbab63f89289cf3292c12dd68971e136adba8bcb2a92d8992a",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 150,
+          "end_exclusive": 377,
+          "quote_sha256": "44d43b25fe991e7894ee7f5aa9e2d03cc035460e8b56f9977f4481a935d640af"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 117,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 118,
+      "path": "openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md",
+      "ordinal": 14,
+      "block_sha256": "e1805d041cfe5913b3b3ff81d26b6a688f764eb87cda1190701c358cc3ce2002",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 129,
+          "end_exclusive": 296,
+          "quote_sha256": "0635e29ca3344a6c7987c889d36be02960351f9754ccc94bbea146fec5bd8479"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 118,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 119,
+      "path": "openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md",
+      "ordinal": 15,
+      "block_sha256": "e2ca125f76614460935c2de92bce02db9d50d87a02c9be93a76ed6008be52798",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 121,
+          "end_exclusive": 347,
+          "quote_sha256": "04dffe697b8cb6729408a65f332bcf9533aa113a65e6542217722b2e1f258e2e"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 119,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 120,
+      "path": "openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md",
+      "ordinal": 16,
+      "block_sha256": "1cf3e013d7ccaf35e3c4a00c0360a0b6305cfda3845d6face5276d2b118f6561",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 144,
+          "end_exclusive": 400,
+          "quote_sha256": "d23a3d7cddf35e9c3394f4ff526dcf16727928c2bc17d06d982c49fa8e493cd6"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 120,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 121,
+      "path": "openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md",
+      "ordinal": 17,
+      "block_sha256": "1fe39174a1f70664869f4314c5ce45e900d0ee19153b3e35486ddeb89fffb26d",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 133,
+          "end_exclusive": 369,
+          "quote_sha256": "dc96f37522931f8ff0d803bc1d6698c4f8f93a1d3756f1023531cf140c9a7fe1"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 121,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 122,
+      "path": "openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md",
+      "ordinal": 18,
+      "block_sha256": "d29eb541f586569521138c7ded7f5b667f9fd7935394ceedaf6d43b44b5a5eee",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 119,
+          "end_exclusive": 343,
+          "quote_sha256": "dacbc484588d17e592ed65591f0eecedaf5b3f25b74e735cbd673cdfdd202086"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 122,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 123,
+      "path": "openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md",
+      "ordinal": 19,
+      "block_sha256": "3e74b9d387d204084860c23b60ce62b084f7d12cd064bbed2a2ccc4643825fee",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 118,
+          "end_exclusive": 252,
+          "quote_sha256": "504eea61f7d39392dac6dd94ecbb2f8ccf03aa7a34ad55d0739db86b8e877c53"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 123,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 124,
+      "path": "openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md",
+      "ordinal": 20,
+      "block_sha256": "49d89ffd3d1e8ccfe0cb3afea1254848f8ca803af8d912765e3b5b633c5889da",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 134,
+          "end_exclusive": 385,
+          "quote_sha256": "ed8e8a1350eb412157899fcc50e5299ec1625c93928ce01c6c34c46002b529f2"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 124,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 125,
+      "path": "openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md",
+      "ordinal": 21,
+      "block_sha256": "eec27469e3cab638958c1aeede9da6412f9a043415a4e4dbc8fe048cbb95c9a5",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 130,
+          "end_exclusive": 332,
+          "quote_sha256": "1220f24c21273bf2524bd68d12f33d1b39780e429ee994ed8aa1dbea8659497d"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 125,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 126,
+      "path": "openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md",
+      "ordinal": 22,
+      "block_sha256": "f78a3e428d1afd89638df0849c38715afddce710160ba526bb6c372247706360",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 105,
+          "end_exclusive": 249,
+          "quote_sha256": "b8f9fe8d39a43710aa22b43a331a1dc900fb911885faff80f7e2ac75a90f535b"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 126,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 127,
+      "path": "openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md",
+      "ordinal": 23,
+      "block_sha256": "f34ba85c4ab97471c44c3a9fba8f3b83cc400721cc838b4ebf814541b184de56",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 117,
+          "end_exclusive": 300,
+          "quote_sha256": "1081d73a65f3f8d740b185a3389b7d4e63923ad5d1c4ae5b0e29befbbe609a79"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 127,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 128,
+      "path": "openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md",
+      "ordinal": 24,
+      "block_sha256": "9c920890b111fe0987cdfbf79c7d34a54b1bf3a463b36dc6e738957bc75ab2bf",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 159,
+          "end_exclusive": 1079,
+          "quote_sha256": "3c3e632736a21268fefd62f5b89d2162138e048d039f3815f12d1f99fd62d45c"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 128,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 129,
+      "path": "openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md",
+      "ordinal": 25,
+      "block_sha256": "5155aaeaeb50d07e83e35909bffaa45ce8a7de78634c22305343663630c3ac01",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 1310,
+          "end_exclusive": 1870,
+          "quote_sha256": "6a6ee79c1653ebd39bde97c73731d1d65909cec8754472424b3317b5df530447"
+        },
+        {
+          "start_inclusive": 3140,
+          "end_exclusive": 4200,
+          "quote_sha256": "f26577bf3e10b9c3f1229127900797856e15634cec92a9d0f59b69c5f3ca1877"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 129,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    },
+    {
+      "sequence": 130,
+      "path": "openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md",
+      "ordinal": 26,
+      "block_sha256": "0473850f0c6b5999b9b3eb898d7fa956d18c563afc325716e1dfe250c8eedb37",
+      "character_offsets_not_byte_offsets": [
+        {
+          "start_inclusive": 134,
+          "end_exclusive": 398,
+          "quote_sha256": "26242b16897ffa6e2239ca7343dfb0ad51e894ad9e590ea2373fdd4319330093"
+        }
+      ],
+      "complete_source_artifact": "BASE450-REQUIREMENT-BLOCKS.json",
+      "complete_source_sequence": 130,
+      "purpose": "Builder schema mapping only; quotation preservation is not semantic confirmation."
+    }
+  ]
+}

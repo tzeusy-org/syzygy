@@ -1,0 +1,12 @@
+{
+ "note": "sha256 of each <label>.samples.json as collected; assemble_census.py refuses a sampler record whose bytes differ",
+ "sha256": {
+  "c0-clean": "40dd6a1c1f64bf7aa6a3ee11d673e69c57ce4d998f9a3424c278bf1b0ad6a258",
+  "f1-fresh-after-k1": "f75026bcd451ed46464a0a2aea7e04fb8de373ba892b382f45aced4a25c47a1d",
+  "f2-fresh-after-k2": "a1f86f2d1189113cd46b90b9b2e1e6286bbb2fbab0c6909a75238acbd4f5c65f",
+  "f3-fresh-after-k3": "b8148a14fc3cc5231a358dd942008f877689968a5c7eafd012ea0e410f89e9b0",
+  "k1-kill-40s": "29a492a98acc0f0bc133099a0b2162c20287faedf972213e8a75adb3469db27d",
+  "k2-kill-75s": "a0c1894f84018f71d374f9604121f9904d5a12b58f88c3232c49f4a22703ced0",
+  "k3-kill-115s": "fd02d8576854a3d231cd2271cfc9e9859e0a47df3226c192dd51a223b48f667c"
+ }
+}

@@ -1,0 +1,25 @@
+{
+  "head": "5414a20faf3d2deafc576d4eac6dcb72d8042a07",
+  "tree": "1c2f1c638ee233912b59edf74e81260e6ea2169e",
+  "at": "2026-11-08T05:54:33.640014+00:00",
+  "sourceCache": "/home/orca/.tmp/427cdn-20261107/cache",
+  "sourceCacheReceiptSha256": "9891bb50e0a905ad90c7ef82863490fe81813610d98dfd85ef01c1c6e478ac42",
+  "cacheFilesCopied": 225,
+  "publicIdentities": 107,
+  "sourceLockSha256": "a7884de5e824029a290b5c2e96049195a3ea80ebe21fec835016842cfd618cd8",
+  "inputs": [
+    {
+      "name": "capture-current.py",
+      "sha256": "0d90da8c84c532c087e57cdcdc9cf123d5889e6fb65c01531b4bb9e36fd2dc06"
+    },
+    {
+      "name": "differential-current.mjs",
+      "sha256": "e5275167fe23f77caf91e516454520d1ecacd5e2c194e0a56bbc21cd9dd3a718"
+    },
+    {
+      "name": "served-current.mjs",
+      "sha256": "ddd2e62d849791b75265266233e5e859207ae4a200ed1c2e88fe272a373b7837"
+    }
+  ],
+  "qualification": "Prepared private inputs/cache only. No installation or product execution result."
+}

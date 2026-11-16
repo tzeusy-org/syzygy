@@ -1,4 +1,4 @@
-import { createHash } from 'node:crypto';
+import { sha256 } from '@syzygy/support';
 
 import { ARCHITECTURE_READING_PLAN, V1_READING_PLAN } from './polaris-reading-plan.js';
 
@@ -45,7 +45,7 @@ export interface ReadingPlan {
 export function applyReadingPlan(text: string, plan: ReadingPlan): ProjectReading {
   const full = { summary: text, full: text, condensed: false };
   const failed = (withdrawalReason: ProjectReading['withdrawalReason']): ProjectReading => ({ ...full, withdrawalReason });
-  if (createHash('sha256').update(text, 'utf8').digest('hex') !== plan.statementSha256) return failed('digest-mismatch');
+  if (sha256(text) !== plan.statementSha256) return failed('digest-mismatch');
   if (plan.passages.length === 0) return failed('no-passages');
   let previousEnd = 0;
   for (const passage of plan.passages) {

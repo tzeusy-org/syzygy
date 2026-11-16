@@ -1,0 +1,18 @@
+{
+  "old": "d755ae3b7108ad1f52c5a9ede17c19d69b349f08616bec2126779ba74bc2ac9f",
+  "new": "d14fe7c60dc904437ee5196d4ae009496960546a0aeb101d825b515c42170833",
+  "fields": {
+    "populations": true,
+    "readerSpecifications": true,
+    "expectedPerLogicalReader": true,
+    "perLogicalReader": true,
+    "answerTable": true,
+    "worlds": true,
+    "mismatches": true
+  },
+  "serialSeconds": 58.165,
+  "parallelSeconds": 26.651,
+  "comparisonIdentities": 274,
+  "same": true,
+  "chosenFullWorkers": 4
+}

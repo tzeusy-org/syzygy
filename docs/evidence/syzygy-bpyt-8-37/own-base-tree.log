@@ -1,0 +1,10 @@
+T18-link survives 0 ['Tests  27 passed (27)'] 4.6 clean
+T18-workspace survives 0 ['Tests  27 passed (27)'] 4.4 clean
+T18-npm survives 0 ['Tests  27 passed (27)'] 3.3 clean
+T18-path survives 0 ['Tests  27 passed (27)'] 5.6 clean
+T18-subpath survives 0 ['Tests  27 passed (27)'] 3.9 clean
+T18-root survives 0 ['Tests  27 passed (27)'] 5.1 clean
+T18-island survives 0 ['Tests  4 passed (4)'] 5.8 clean
+C6-cts survives 0 ['Tests  81 passed (81)'] 4.8 clean
+C6-tsx survives 0 ['Tests  81 passed (81)'] 4.8 clean
+wrote /tmp/la-b837/own-base-tree.json 9

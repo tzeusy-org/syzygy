@@ -1,0 +1,128 @@
+{
+ "commit": "7d408fd9ae096d10885475f24e9e8ada177c5ef3",
+ "tests": [
+  "apps/three-surface-poc/src/keyboard-sweep-record.test.ts",
+  "apps/three-surface-poc/src/polaris-copy.test.ts",
+  "apps/three-surface-poc/src/polaris-parity-sweep.test.ts",
+  "apps/three-surface-poc/src/polaris-walkthrough-readiness.test.ts",
+  "apps/three-surface-poc/src/response-identity-independent.test.ts"
+ ],
+ "rows": [
+  {
+   "label": "control-before",
+   "exit": 0,
+   "total": 86,
+   "failed": 0,
+   "failedTests": [],
+   "loadavg": [
+    "24.66",
+    "29.13",
+    "28.59"
+   ],
+   "id": "control-before"
+  },
+  {
+   "label": "W1-run-digest-over-changed-text",
+   "exit": 1,
+   "total": 86,
+   "failed": 5,
+   "failedTests": [
+    "PWB-REQ-020 exhaustive Polaris parity sweep > the observed-degraded / lawful-state-2 matrix cell carries every marker family with a non-empty denominator, and state (2) alone claims independent verification",
+    "PWB-REQ-021 readiness on Polaris > an unlawful judgment does not make readiness false, and a not-ready record does not make the judgment unlawful",
+    "PWB-REQ-021 readiness on Polaris > is ready and lawful together for a `/polaris`-only record",
+    "PWB-REQ-021 readiness on Polaris > the default fixture record (through `/entry`) is not ready for path-outside-polaris even when the judgment is lawful",
+    "Polaris copy roles (PWB-REQ-012) > keeps the copy table closed and rendered: unique ids, roles and kinds from the closed sets, and every row present with its role in some rendered state"
+   ],
+   "loadavg": [
+    "25.62",
+    "29.18",
+    "28.62"
+   ],
+   "id": "W1-run-digest-over-changed-text",
+   "expect": "killed",
+   "old": "  const runDigest = sha256(runText);",
+   "new": "  const runDigest = sha256(runText + ' ');",
+   "killedByTests": true,
+   "restoredClean": true
+  },
+  {
+   "label": "W2-judgment-digest-drops-the-first-character",
+   "exit": 1,
+   "total": 86,
+   "failed": 5,
+   "failedTests": [
+    "PWB-REQ-020 exhaustive Polaris parity sweep > the observed-degraded / lawful-state-2 matrix cell carries every marker family with a non-empty denominator, and state (2) alone claims independent verification",
+    "PWB-REQ-021 readiness on Polaris > an unlawful judgment does not make readiness false, and a not-ready record does not make the judgment unlawful",
+    "PWB-REQ-021 readiness on Polaris > is ready and lawful together for a `/polaris`-only record",
+    "PWB-REQ-021 readiness on Polaris > the default fixture record (through `/entry`) is not ready for path-outside-polaris even when the judgment is lawful",
+    "Polaris copy roles (PWB-REQ-012) > keeps the copy table closed and rendered: unique ids, roles and kinds from the closed sets, and every row present with its role in some rendered state"
+   ],
+   "loadavg": [
+    "25.92",
+    "29.12",
+    "28.60"
+   ],
+   "id": "W2-judgment-digest-drops-the-first-character",
+   "expect": "killed",
+   "old": "  const judgmentDigest = sha256(judgmentText);",
+   "new": "  const judgmentDigest = sha256(judgmentText.slice(1));",
+   "killedByTests": true,
+   "restoredClean": true
+  },
+  {
+   "label": "W3-stale-latin1-local-copy",
+   "exit": 1,
+   "total": 86,
+   "failed": 5,
+   "failedTests": [
+    "PWB-REQ-020 exhaustive Polaris parity sweep > the observed-degraded / lawful-state-2 matrix cell carries every marker family with a non-empty denominator, and state (2) alone claims independent verification",
+    "PWB-REQ-021 readiness on Polaris > an unlawful judgment does not make readiness false, and a not-ready record does not make the judgment unlawful",
+    "PWB-REQ-021 readiness on Polaris > is ready and lawful together for a `/polaris`-only record",
+    "PWB-REQ-021 readiness on Polaris > the default fixture record (through `/entry`) is not ready for path-outside-polaris even when the judgment is lawful",
+    "Polaris copy roles (PWB-REQ-012) > keeps the copy table closed and rendered: unique ids, roles and kinds from the closed sets, and every row present with its role in some rendered state"
+   ],
+   "loadavg": [
+    "36.06",
+    "31.15",
+    "29.27"
+   ],
+   "id": "W3-stale-latin1-local-copy",
+   "expect": "killed",
+   "old": "import { sha256 } from '@syzygy/support';\n",
+   "new": "import { createHash } from 'node:crypto';\nconst sha256 = (text: string): string => createHash('sha256').update(text, 'latin1').digest('hex');\n",
+   "killedByTests": true,
+   "restoredClean": true
+  },
+  {
+   "label": "W4-equivalent-local-copy",
+   "exit": 0,
+   "total": 86,
+   "failed": 0,
+   "failedTests": [],
+   "loadavg": [
+    "36.11",
+    "31.41",
+    "29.39"
+   ],
+   "id": "W4-equivalent-local-copy",
+   "expect": "sweep-only",
+   "old": "import { sha256 } from '@syzygy/support';\n",
+   "new": "import { createHash } from 'node:crypto';\nconst sha256 = (text: string): string => createHash('sha256').update(text).digest('hex');\n",
+   "killedByTests": false,
+   "restoredClean": true
+  },
+  {
+   "label": "control-after",
+   "exit": 0,
+   "total": 86,
+   "failed": 0,
+   "failedTests": [],
+   "loadavg": [
+    "37.27",
+    "31.88",
+    "29.58"
+   ],
+   "id": "control-after"
+  }
+ ]
+}

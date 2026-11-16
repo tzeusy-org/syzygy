@@ -1,0 +1,7 @@
+total 5523 passed 5452 failed 1 pending 70 files 253 failedFiles 2 success False
+  failed packages/polaris-generation-consent/src/act-families.test.ts {'skipped': 65} Hook timed out in 10000ms.
+If this is a long-running hook, pass a timeout value as the last argument or configure it globally with "hookTimeout".
+  failed packages/polaris-dossier/src/start-gates.test.ts {'failed': 1, 'passed': 103} 
+    FAILED init: a run that passes every start gate pins the consented HEAD, records the subject and writes only run.json under the state root :: Error: STACK_TRACE_ERROR
+2026-10-28T01:12:55+08:00
+43.95 38.93 34.56 27/9953 644851

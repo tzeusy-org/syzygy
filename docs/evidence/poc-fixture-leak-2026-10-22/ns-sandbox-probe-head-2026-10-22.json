@@ -1,0 +1,161 @@
+{
+ "tool": "ns_sandbox_probe.py",
+ "treeCommit": "88dcdf76db2ad6a30df5856361dc3f9cef8757f5",
+ "mode": "head",
+ "file": "apps/three-surface-poc/src/fixture-directories.ts",
+ "sha256AtCommit": "df5a319e02b9bbc3294bf0b0b90a987ecea86bfd219a41d0341855a3e9dc5ada",
+ "moduleSha256": "2bf2fe12d1deb358fd3ebb0848ae56c94fede9db376bcfda1f3fb01cc26eba5e",
+ "holders": {
+  "host": {
+   "cmd": [
+    "/home/tze/.nvm/versions/node/v24.6.0/bin/node",
+    "/home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.4.10/docs/evidence/poc-fixture-leak-2026-10-22/ns_holder.mjs",
+    "/tmp/lc410w/nsp/scratch/fixture-directories.mjs",
+    "/tmp/lc410w/nsp/fixtures",
+    "/tmp/lc410w/nsp/scratch/holder-host.json",
+    "/tmp/lc410w/nsp/scratch/stop"
+   ],
+   "hostPid": 905672,
+   "exit": 0,
+   "pid": 905672,
+   "nsReading": "pid:[4026531836]",
+   "name": "syzygy-poc-surface-fixture-p905672-n4026531836-pEawyj",
+   "goneWhileAlive": false,
+   "stoppedAfterMs": 5270
+  },
+  "bwrap-proc": {
+   "cmd": [
+    "bwrap",
+    "--unshare-user",
+    "--unshare-pid",
+    "--die-with-parent",
+    "--dev-bind",
+    "/",
+    "/",
+    "--proc",
+    "/proc",
+    "--",
+    "/bin/sh",
+    "-c",
+    "i=0; while [ $i -lt 60 ]; do /bin/true; i=$((i+1)); done; /home/tze/.nvm/versions/node/v24.6.0/bin/node /home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.4.10/docs/evidence/poc-fixture-leak-2026-10-22/ns_holder.mjs /tmp/lc410w/nsp/scratch/fixture-directories.mjs /tmp/lc410w/nsp/fixtures /tmp/lc410w/nsp/scratch/holder-bwrap-proc.json /tmp/lc410w/nsp/scratch/stop; true"
+   ],
+   "hostPid": 905675,
+   "exit": 0,
+   "pid": 63,
+   "nsReading": "pid:[4026541045]",
+   "name": "syzygy-poc-surface-fixture-p63-n4026541045-mMaDYY",
+   "goneWhileAlive": false,
+   "stoppedAfterMs": 4401
+  },
+  "bwrap-no-proc": {
+   "cmd": [
+    "bwrap",
+    "--unshare-user",
+    "--unshare-pid",
+    "--die-with-parent",
+    "--dev-bind",
+    "/",
+    "/",
+    "--tmpfs",
+    "/proc",
+    "--",
+    "/bin/sh",
+    "-c",
+    "i=0; while [ $i -lt 60 ]; do /bin/true; i=$((i+1)); done; /home/tze/.nvm/versions/node/v24.6.0/bin/node /home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.4.10/docs/evidence/poc-fixture-leak-2026-10-22/ns_holder.mjs /tmp/lc410w/nsp/scratch/fixture-directories.mjs /tmp/lc410w/nsp/fixtures /tmp/lc410w/nsp/scratch/holder-bwrap-no-proc.json /tmp/lc410w/nsp/scratch/stop; true"
+   ],
+   "hostPid": 905679,
+   "exit": 0,
+   "pid": 63,
+   "nsReading": "unreadable:ENOENT",
+   "name": "syzygy-poc-surface-fixture-p63-n0-SmykzR",
+   "goneWhileAlive": false,
+   "stoppedAfterMs": 4413
+  }
+ },
+ "sweeps": {
+  "bwrap-proc": {
+   "exit": 0,
+   "stderr": "",
+   "pid": 2,
+   "nsReading": "pid:[4026541048]",
+   "control": "syzygy-poc-surface-fixture-p9-n4026541048-CTRL01",
+   "reapedAnswer": "ESRCH",
+   "signal0": {
+    "63": "ESRCH",
+    "905672": "ESRCH"
+   },
+   "before": [
+    "syzygy-poc-surface-fixture-p63-n0-SmykzR",
+    "syzygy-poc-surface-fixture-p63-n4026541045-mMaDYY",
+    "syzygy-poc-surface-fixture-p9-n4026541048-CTRL01",
+    "syzygy-poc-surface-fixture-p905672-n4026531836-pEawyj"
+   ],
+   "after": [
+    "syzygy-poc-surface-fixture-p63-n0-SmykzR",
+    "syzygy-poc-surface-fixture-p63-n4026541045-mMaDYY",
+    "syzygy-poc-surface-fixture-p905672-n4026531836-pEawyj"
+   ],
+   "removed": [
+    "syzygy-poc-surface-fixture-p9-n4026541048-CTRL01"
+   ]
+  },
+  "host": {
+   "exit": 0,
+   "stderr": "",
+   "pid": 906382,
+   "nsReading": "pid:[4026531836]",
+   "control": "syzygy-poc-surface-fixture-p906414-n4026531836-CTRL01",
+   "reapedAnswer": "ESRCH",
+   "signal0": {
+    "63": "EPERM",
+    "905672": "alive"
+   },
+   "before": [
+    "syzygy-poc-surface-fixture-p63-n0-SmykzR",
+    "syzygy-poc-surface-fixture-p63-n4026541045-mMaDYY",
+    "syzygy-poc-surface-fixture-p905672-n4026531836-pEawyj",
+    "syzygy-poc-surface-fixture-p906414-n4026531836-CTRL01"
+   ],
+   "after": [
+    "syzygy-poc-surface-fixture-p63-n0-SmykzR",
+    "syzygy-poc-surface-fixture-p63-n4026541045-mMaDYY",
+    "syzygy-poc-surface-fixture-p905672-n4026531836-pEawyj"
+   ],
+   "removed": [
+    "syzygy-poc-surface-fixture-p906414-n4026531836-CTRL01"
+   ]
+  },
+  "bwrap-no-proc": {
+   "exit": 0,
+   "stderr": "",
+   "pid": 2,
+   "nsReading": "unreadable:ENOENT",
+   "control": "syzygy-poc-surface-fixture-p9-n0-CTRL01",
+   "reapedAnswer": "ESRCH",
+   "signal0": {
+    "63": "ESRCH",
+    "905672": "ESRCH"
+   },
+   "before": [
+    "syzygy-poc-surface-fixture-p63-n0-SmykzR",
+    "syzygy-poc-surface-fixture-p63-n4026541045-mMaDYY",
+    "syzygy-poc-surface-fixture-p9-n0-CTRL01",
+    "syzygy-poc-surface-fixture-p905672-n4026531836-pEawyj"
+   ],
+   "after": [
+    "syzygy-poc-surface-fixture-p63-n0-SmykzR",
+    "syzygy-poc-surface-fixture-p63-n4026541045-mMaDYY",
+    "syzygy-poc-surface-fixture-p9-n0-CTRL01",
+    "syzygy-poc-surface-fixture-p905672-n4026531836-pEawyj"
+   ],
+   "removed": []
+  }
+ },
+ "leftAfterAll": [
+  "syzygy-poc-surface-fixture-p63-n0-SmykzR",
+  "syzygy-poc-surface-fixture-p63-n4026541045-mMaDYY",
+  "syzygy-poc-surface-fixture-p9-n0-CTRL01",
+  "syzygy-poc-surface-fixture-p905672-n4026531836-pEawyj"
+ ],
+ "holds": true
+}

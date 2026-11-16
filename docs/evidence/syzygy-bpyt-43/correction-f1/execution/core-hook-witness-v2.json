@@ -1,0 +1,14 @@
+{
+  "command": [
+    "python3",
+    "/home/orca/.tmp/syzygy-pr770-f1-correction-20261106/isolated.py",
+    "/home/orca/.tmp/syzygy-pr770-f1-correction-20261106/subject",
+    "python3",
+    "/home/orca/.tmp/syzygy-pr770-f1-correction-20261106/core_hook_witness_v2.py"
+  ],
+  "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.43",
+  "startedAt": "2026-11-06T05:23:35.022789+00:00",
+  "exit": 0,
+  "elapsedSeconds": 30.328314677986782,
+  "finishedAt": "2026-11-06T05:24:05.351098+00:00"
+}

@@ -1,0 +1,21 @@
+{
+ "id": "NEG-accept-inline-value",
+ "command": "cp $EVIDENCE/dossier-golden-harness.ts packages/polaris-dossier/src/zz-golden.test.ts && GOLDEN_CORPUS=$EVIDENCE/dossier-corpus.json GOLDEN_OUT=$OUT/dossier-negctl.json GOLDEN_CWD=/tmp/la-b82/gcwd TMPDIR=/tmp/la-b82/g CI=1 npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/zz-golden.test.ts; e=$?; rm packages/polaris-dossier/src/zz-golden.test.ts; node $EVIDENCE/parse-golden.mjs $OUT/oracle $EVIDENCE $OUT/parse-negctl.json; exit $e",
+ "edits": [
+  {
+   "file": "packages/polaris-dossier/src/argv.ts",
+   "old": "} else if (token.kind === 'option' && spec.valued.includes(arg)) {",
+   "new": "} else if (token.kind === 'option' && spec.valued.includes(token.rawName)) {"
+  },
+  {
+   "file": "packages/polaris-dossier/src/argv.ts",
+   "old": "if (spec.repeat === 'refuse' && values.has(arg)) return",
+   "new": "if (spec.repeat === 'refuse' && values.has(token.rawName)) return"
+  },
+  {
+   "file": "packages/polaris-dossier/src/argv.ts",
+   "old": "      values.set(arg, token.value);",
+   "new": "      values.set(token.rawName, token.value);"
+  }
+ ]
+}

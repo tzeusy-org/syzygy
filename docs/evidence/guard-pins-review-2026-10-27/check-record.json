@@ -1,0 +1,192 @@
+{
+ "problems": [],
+ "facts": {
+  "premise-base.json": {
+   "results": 9,
+   "outcomes": {
+    "survives": 9
+   }
+  },
+  "targets-head.json": {
+   "results": 9,
+   "outcomes": {
+    "killed": 8,
+    "survives": 1
+   }
+  },
+  "own-head.json": {
+   "results": 36,
+   "outcomes": {
+    "killed": 36
+   }
+  },
+  "own-base-tree.json": {
+   "results": 9,
+   "outcomes": {
+    "survives": 9
+   }
+  },
+  "retained-base.json": {
+   "results": 123,
+   "outcomes": {
+    "killed": 99,
+    "survives": 24
+   }
+  },
+  "retained-head.json": {
+   "results": 123,
+   "outcomes": {
+    "killed": 107,
+    "survives": 16
+   }
+  },
+  "retainedCompare": {
+   "specs": 123,
+   "unchanged": 114,
+   "missing": 0,
+   "stronger": [
+    "RV-C6-mts-caller",
+    "RV-P2-hash-guard-null",
+    "RV-P3-moduleIn-prefix-null",
+    "RV-P4-moduleIn-missing-file-null",
+    "RV-P6-leaves-package-check-dropped",
+    "RV-Q1-callee-conjunct-dropped",
+    "RV-Q2-declaration-anywhere",
+    "RV-Q3-census-never-fed",
+    "RV-T18-dependency-alias"
+   ],
+   "weaker": [],
+   "survivorsHead": [
+    "C0-argv",
+    "C0-both-guards",
+    "C0-guard",
+    "OB3-shadowed-argv-replaces-the-polaris-branch-import",
+    "R-IF2-into-island-from-island-counted",
+    "R-X8-get-builtin-module-create-require",
+    "R-Y8-another-options-command-gains-a-valued-option",
+    "RV-C5-concatenated-name",
+    "RV-P8-array-guard-dropped",
+    "RV-T19-node-modules-relative-path",
+    "consen:R3-computed-dynamic-import-of-core-root-in-in-force",
+    "consen:R5-vitest-alias-for-live-points-at-root",
+    "island:R1-non-literal-dynamic-import-of-core-root-in-render-step",
+    "island:R5-broker-client-entry-imports-core-root",
+    "island:R6-create-require-of-core-root-in-render-step",
+    "island:R9-island-import-hidden-inside-the-exception"
+   ],
+   "headSurvivorsNotSurvivingAtBase": []
+  },
+  "ownHeadNotKilled": [],
+  "ownBaseTree": {
+   "T18-link": "survives",
+   "T18-workspace": "survives",
+   "T18-npm": "survives",
+   "T18-path": "survives",
+   "T18-subpath": "survives",
+   "T18-root": "survives",
+   "T18-island": "survives",
+   "C6-cts": "survives",
+   "C6-tsx": "survives"
+  },
+  "subjectCodeDiffSha256": "615db956261b0a5b28d548486fc48282fa0a9ec51e0fe8c928f9f84d0e132fee",
+  "subjectFullDiffSha256": "cb95ae6d6283a641951273f820bc9c33caa04da56555ae92b5c4de8d6c8ef90a",
+  "summarySubjectSha256": "615db956261b0a5b28d548486fc48282fa0a9ec51e0fe8c928f9f84d0e132fee",
+  "summaryMutRunner": "ca2b8eadc503305bb3767b7220b02775429164ef6c183ac9854acf9d8ed9b6a5",
+  "mutPySha256AtEvc": "ca2b8eadc503305bb3767b7220b02775429164ef6c183ac9854acf9d8ed9b6a5",
+  "islandDiffToolAtEvc": "131206846b062bc60ba7efeb67bf6ecf81802a54921d94979f2bc7428b8afc04",
+  "recordPy": "6f1a80e44e4527f04ad5cf27fb033dcd22c5ab5eef084777748a812d333074b5",
+  "summaryJson": "641ea1d8214dad89b306a9dbaa8747fc7e8c7bfd66c39631028da8eabd6e48cc",
+  "islandDiff": {
+   "tool": "131206846b062bc60ba7efeb67bf6ecf81802a54921d94979f2bc7428b8afc04",
+   "walks": [
+    246,
+    246
+   ],
+   "resolves": [
+    496,
+    2612,
+    2612
+   ],
+   "walksSha": "e297b289a9f722bdfe5840064f27e1454df131795eecb5b6c1546f30a1cae777",
+   "selftestUnequal": [
+    186,
+    1286
+   ],
+   "selftestTool": "131206846b062bc60ba7efeb67bf6ecf81802a54921d94979f2bc7428b8afc04"
+  },
+  "repeat": {
+   "commit": "c90cd7327a24fee44d0e7135872a3b08277c73b0",
+   "tests": [
+    "Tests  157 passed (157)",
+    "Tests  157 passed (157)",
+    "Tests  157 passed (157)",
+    "Tests  157 passed (157)",
+    "Tests  157 passed (157)"
+   ],
+   "load1": [
+    22.69,
+    25.2,
+    27.26,
+    26.28,
+    25.7
+   ]
+  },
+  "titles": {
+   "base": 5301,
+   "head": 5325,
+   "added": 24,
+   "removed": 0,
+   "addedPerFile": {
+    "packages/polaris-dossier/src/argv.test.ts": 4,
+    "packages/polaris-generation-core/src/workspace-reach.test.ts": 20
+   }
+  },
+  "targets": {
+   "RV-C6-mts-caller": [
+    "survives",
+    "killed",
+    1
+   ],
+   "RV-P3-moduleIn-prefix-null": [
+    "survives",
+    "killed",
+    1
+   ],
+   "RV-P4-moduleIn-missing-file-null": [
+    "survives",
+    "killed",
+    1
+   ],
+   "RV-P6-leaves-package-check-dropped": [
+    "survives",
+    "killed",
+    1
+   ],
+   "RV-P8-array-guard-dropped": [
+    "survives",
+    "survives",
+    0
+   ],
+   "RV-Q1-callee-conjunct-dropped": [
+    "survives",
+    "killed",
+    1
+   ],
+   "RV-Q2-declaration-anywhere": [
+    "survives",
+    "killed",
+    1
+   ],
+   "RV-Q3-census-never-fed": [
+    "survives",
+    "killed",
+    1
+   ],
+   "RV-T18-dependency-alias": [
+    "survives",
+    "killed",
+    1
+   ]
+  }
+ }
+}

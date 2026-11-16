@@ -1,0 +1,20 @@
+
+ RUN  v3.2.7 /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520b/clone
+
+ ✓ |@syzygy/polaris-generation-consent| packages/polaris-generation-consent/src/package-reader.test.ts (299 tests) 9527ms
+   ✓ package admission reader > returns a record only for an instance that an act record names by path and digest  462ms
+   ✓ egress version 2 record > is read from the recorder's act: version 2 supersedes version 1 once in force  681ms
+   ✓ egress version 2 record > refuses when version 2 did not take effect strictly after version 1: the same instant, or earlier  718ms
+   ✓ egress version 2 record > the RFC5-14 class amendment version 2 depends on > is required: no record, an edited module, a wrong form, or an amendment later than version 2 all refuse  827ms
+   ✓ egress version 2 record > withdrawal and forgery forms the reader does not define > does not refuse the recorders' other act records or the aggregate acceptance record they append to  436ms
+   ✓ screening scope version 2 policy act > counts the version 2 act when the policy carries the version 2 bytes, and the version 1 act goes quiet  406ms
+   ✓ strict act reads > policy chain: absent without acts; refused for a missing version 1, equal or earlier instants, equal arguments, a supersession that does not name version 1, or other policy bytes  852ms
+   ✓ round-3 review notes > takes a time: a strict read of an act recorded after now is absent (N-4)  392ms
+   ✓ the policy port and the strict policy chain agree > on every world in the fixture set, at every instant  1975ms
+
+ Test Files  1 passed (1)
+      Tests  299 passed (299)
+   Start at  00:47:53
+   Duration  12.53s (transform 444ms, setup 17ms, collect 2.66s, tests 9.53s, environment 0ms, prepare 68ms)
+
+JSON report written to /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520b/file-run-head.report.json

@@ -1,0 +1,25 @@
+{
+ "node": "v24.6.0",
+ "rows": [
+  {
+   "id": "M12-questions-freeze-compared-with-another-digest",
+   "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+   "file": "packages/polaris-generation-core/src/dossier-evaluation.ts",
+   "old": "input.expectedQuestionsSha256 !== questionsSha256)",
+   "new": "input.expectedQuestionsSha256 !== sha256(input.questionsText + '\\n'))",
+   "files": [
+    "packages/polaris-generation-core/src/dossier-evaluation.test.ts"
+   ],
+   "expect": "killed",
+   "outcome": "killed",
+   "agrees": true,
+   "exit": 1,
+   "total": 34,
+   "failed": 1,
+   "failedTests": [
+    "dossier-evaluation.test.ts > report subject (rule 11) binds the questions file by the SHA-256 of its own text, and takes that digest as the freeze"
+   ],
+   "filesFailedToLoad": []
+  }
+ ]
+}

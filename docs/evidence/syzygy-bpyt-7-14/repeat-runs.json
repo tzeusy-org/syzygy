@@ -1,0 +1,71 @@
+{
+ "what": "the changed test files, run repeatedly at one commit",
+ "commit": "01df68eab9ef3f9b6f556c6aa00f28c70ba6e5f1",
+ "command": [
+  "npx",
+  "vitest",
+  "run",
+  "apps/three-surface-poc/src/browser-origin.test.ts",
+  "apps/three-surface-poc/src/git-observation.test.ts",
+  "packages/cap1-daemon/src/package.test.ts",
+  "packages/cap1-daemon/src/server.test.ts",
+  "packages/http-host/src/credentials.test.ts"
+ ],
+ "runs": [
+  {
+   "run": 1,
+   "exit": 0,
+   "testFiles": "Test Files  5 passed (5)",
+   "tests": "Tests  68 passed (68)",
+   "passed": 68,
+   "total": 68,
+   "failed": false,
+   "logSha256": "6df91817ef2a02c7d685b7ed86020dcf373eba7c56553cdad6963ef57c02fe4a",
+   "load1": 55.97
+  },
+  {
+   "run": 2,
+   "exit": 0,
+   "testFiles": "Test Files  5 passed (5)",
+   "tests": "Tests  68 passed (68)",
+   "passed": 68,
+   "total": 68,
+   "failed": false,
+   "logSha256": "d09fd38a94d7764898b29ee28a82800563046067d24635cdbea5a84f0689c4ac",
+   "load1": 56.66
+  },
+  {
+   "run": 3,
+   "exit": 0,
+   "testFiles": "Test Files  5 passed (5)",
+   "tests": "Tests  68 passed (68)",
+   "passed": 68,
+   "total": 68,
+   "failed": false,
+   "logSha256": "5bb45e432d0ad3560de7a6e7d2cdb7080f360d40c4ba0f10a33fe5fd7877bfa2",
+   "load1": 56.19
+  },
+  {
+   "run": 4,
+   "exit": 0,
+   "testFiles": "Test Files  5 passed (5)",
+   "tests": "Tests  68 passed (68)",
+   "passed": 68,
+   "total": 68,
+   "failed": false,
+   "logSha256": "4e159a622e61af573063f716bad83366ad9c034dbfdcc556e0aec8d3400547cb",
+   "load1": 57.07
+  },
+  {
+   "run": 5,
+   "exit": 0,
+   "testFiles": "Test Files  5 passed (5)",
+   "tests": "Tests  68 passed (68)",
+   "passed": 68,
+   "total": 68,
+   "failed": false,
+   "logSha256": "7bf1216bfcaa10c0208dc171dd0a56032ad8b20bf8201d884e9fec682490eac3",
+   "load1": 56.83
+  }
+ ]
+}

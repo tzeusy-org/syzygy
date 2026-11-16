@@ -1,0 +1,371 @@
+{
+  "epistemic": "Observed",
+  "scope": "Historical bounded interface/static/literal facts retained with current inferred source-method dispositions. Neither a complete consumer inventory nor a canonical-adapter/runtime conformance report.",
+  "sourceProjection": {
+    "definition": {
+      "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+      "path": "apps/three-surface-poc/src/polaris-generation/source-adapter.ts",
+      "startLine": 16,
+      "endLine": 56,
+      "fileSha256": "980d0b5baa40fef01923bbce72219e9e326156379ad4a459f6d804d8e9b59d85",
+      "gitBlob": "2eb799d5aa0f1083ce9e531f9c40752c867eaac7"
+    },
+    "inputType": "PocModel",
+    "inputContainer": "model.projectShape",
+    "inputLeafOrPopulationFamilies": [
+      "shape.kind",
+      "shape.sources membership",
+      "shape.identity.repositoryId",
+      "shape.identity.revision",
+      "source.anchor.kind",
+      "source.anchor.objectId",
+      "source.identity",
+      "source.path",
+      "source.claim.evaluationId",
+      "source.record.outcome",
+      "source.record.basis",
+      "source.record.exclusion.exclusionReason",
+      "source.record.reason"
+    ],
+    "inputFamilyPopulation": 13,
+    "separateParameter": "runKey; default creates a fresh random key, so stable excluded source IDs require the same explicit key.",
+    "emittedSlots": [
+      "sourceId",
+      "repositoryId",
+      "revision",
+      "path",
+      "objectId",
+      "evaluationId",
+      "classificationBasis",
+      "exclusion",
+      "spans"
+    ],
+    "emittedSlotPopulation": 9,
+    "generationSourceTypedSlotPopulation": 12,
+    "notEmittedOptionalSlots": [
+      "redaction",
+      "segment",
+      "body"
+    ],
+    "downstreamBoundaries": [
+      {
+        "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+        "path": "packages/polaris-generation-core/src/generation-source.ts",
+        "startLine": 34,
+        "endLine": 59,
+        "fileSha256": "a881ab1206bce8e773652c4c45460e73d98c6ef8de8a1026a98534191e2f82d4",
+        "gitBlob": "b4c0d7fd7632f25362540f08d3d7945967d518a9"
+      },
+      {
+        "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+        "path": "packages/polaris-generation-core/src/generation-source.ts",
+        "startLine": 120,
+        "endLine": 161,
+        "fileSha256": "a881ab1206bce8e773652c4c45460e73d98c6ef8de8a1026a98534191e2f82d4",
+        "gitBlob": "b4c0d7fd7632f25362540f08d3d7945967d518a9"
+      },
+      {
+        "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+        "path": "apps/three-surface-poc/src/polaris-source.ts",
+        "startLine": 40,
+        "endLine": 43,
+        "fileSha256": "091f4785b54bae53539e12c7d378b7df0e9d0f22ff48417a1c1de8947a70fab7",
+        "gitBlob": "e498e41b1e5a748ce668dd5dfdc3298938b81c62"
+      }
+    ],
+    "p115InputMapping": {
+      "epistemic": "Inferred",
+      "workItems.governedBy": "Not an input to this fully read function or its helpers: the only PocModel projection read is projectShape; validation receives the nine newly constructed slots. This is positive closure evidence for this function, not a grep-based global absence claim.",
+      "workItems.items[].governedBy": "Same bounded non-consumption. Holding projectShape and the explicit runKey constant preserves this projection without any reference expansion."
+    },
+    "staticCallerDenominator": {
+      "trackedPaths": 2934,
+      "parsedJsTsBlobs": 483,
+      "parseDiagnostics": 0,
+      "referenceBearingFiles": [
+        "apps/three-surface-poc/src/polaris-generation/source-adapter.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/source-adapter.ts"
+      ],
+      "namedIdentifierOccurrences": 23,
+      "directCalls": 15,
+      "testCalls": 13,
+      "internalHelperCalls": 2,
+      "moduleEdges": [
+        {
+          "path": "apps/three-surface-poc/src/polaris-generation/source-adapter.test.ts",
+          "line": 10,
+          "text": "import { generationExclusionReason, generationSourceRoute, generationSourcesFromPocModel } from './source-adapter.js';"
+        }
+      ],
+      "moduleExports": [
+        {
+          "text": "export { newGenerationRunKey };",
+          "kind": "re-export",
+          "line": 9
+        },
+        {
+          "name": "generationExclusionReason",
+          "kind": "function",
+          "line": 16
+        },
+        {
+          "name": "generationSourcesFromPocModel",
+          "kind": "function",
+          "line": 27
+        },
+        {
+          "name": "generationSourceRoute",
+          "kind": "function",
+          "line": 53
+        }
+      ],
+      "secondMethod": "AST named-reference file set equals independent textual identifier file set over the same 483 blobs.",
+      "limit": "Does not establish external/dynamic consumer completeness. No production call was executed."
+    }
+  },
+  "pwbAnchorBoundary": {
+    "definition": {
+      "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+      "path": "apps/three-surface-poc/src/polaris-narrative.ts",
+      "startLine": 25,
+      "endLine": 73,
+      "fileSha256": "6f47d20dedbc4bc7013a750d25062646584692808494a161d93afb5570369b5a",
+      "gitBlob": "0c745b2f7ebd673d378be98b41ddabb9caa1f11a"
+    },
+    "anchorSlots": [
+      "anchorId",
+      "targetClass",
+      "targetId",
+      "revision",
+      "supports",
+      "captured",
+      "locator"
+    ],
+    "capturedSlots": [
+      "label",
+      "tier",
+      "reason"
+    ],
+    "construction": [
+      {
+        "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+        "path": "apps/three-surface-poc/src/polaris-narrative.ts",
+        "startLine": 103,
+        "endLine": 137,
+        "fileSha256": "6f47d20dedbc4bc7013a750d25062646584692808494a161d93afb5570369b5a",
+        "gitBlob": "0c745b2f7ebd673d378be98b41ddabb9caa1f11a"
+      },
+      {
+        "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+        "path": "apps/three-surface-poc/src/polaris-narrative.ts",
+        "startLine": 156,
+        "endLine": 193,
+        "fileSha256": "6f47d20dedbc4bc7013a750d25062646584692808494a161d93afb5570369b5a",
+        "gitBlob": "0c745b2f7ebd673d378be98b41ddabb9caa1f11a"
+      },
+      {
+        "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+        "path": "apps/three-surface-poc/src/polaris.ts",
+        "startLine": 195,
+        "endLine": 213,
+        "fileSha256": "029d439f1d41584b803cc84d5688b89d826e6797ac4926daa95c59b0504bd563",
+        "gitBlob": "9d5df03c630be1ec3bd2477f1aece680bfecc08e"
+      },
+      {
+        "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+        "path": "apps/three-surface-poc/src/polaris.ts",
+        "startLine": 304,
+        "endLine": 325,
+        "fileSha256": "029d439f1d41584b803cc84d5688b89d826e6797ac4926daa95c59b0504bd563",
+        "gitBlob": "9d5df03c630be1ec3bd2477f1aece680bfecc08e"
+      },
+      {
+        "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+        "path": "apps/three-surface-poc/src/polaris.ts",
+        "startLine": 1728,
+        "endLine": 1743,
+        "fileSha256": "029d439f1d41584b803cc84d5688b89d826e6797ac4926daa95c59b0504bd563",
+        "gitBlob": "9d5df03c630be1ec3bd2477f1aece680bfecc08e"
+      },
+      {
+        "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+        "path": "apps/three-surface-poc/src/routes.ts",
+        "startLine": 25,
+        "endLine": 35,
+        "fileSha256": "81cd2099b9a162579a87c154137217e97d1e08e11542c07d91d42ad9a8cdd050",
+        "gitBlob": "23a7c2d46689522792653389cfd7f2ba8926c599"
+      },
+      {
+        "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+        "path": "apps/three-surface-poc/src/routes.ts",
+        "startLine": 241,
+        "endLine": 258,
+        "fileSha256": "81cd2099b9a162579a87c154137217e97d1e08e11542c07d91d42ad9a8cdd050",
+        "gitBlob": "23a7c2d46689522792653389cfd7f2ba8926c599"
+      }
+    ],
+    "workObservationAnchor": {
+      "claimId": "region:work-items",
+      "targetClass": "work",
+      "targetId": "beads-dolt:<workItems.provenance.revision>",
+      "revision": "workItems.provenance.revision",
+      "locator": "beads-dolt",
+      "captured": {
+        "label": "Observed",
+        "tier": "report-fact",
+        "reason": "none"
+      },
+      "meaning": "Source-population observation; this is not an item governing-intent state."
+    },
+    "preservedInputs": [
+      "complete evaluation envelope",
+      "workItems.kind",
+      "workItems.provenance.revision",
+      "workItems.beadPrefix",
+      "workItems.items membership/count",
+      "all entity/relationship records",
+      "all projectShape claim/support inputs"
+    ],
+    "p115Mapping": {
+      "epistemic": "Inferred",
+      "referenceCarrier": "The new three-field value and one-key item reference are not a NarrativeAnchor or CapturedTargetState. P115 explicitly preserves this boundary and its identities; expansion must never reinterpret the source-population Observed state as an intent state.",
+      "normativeScope": "SCHEMA-CONTRACT identifies the PWB compatibility form by the six local classes and universal revision. Preserve that form; do not promote either it or the new POC reference into a generic canonical schema.",
+      "wholeOccurrenceLimit": "This positive anchor-interface preservation is not a whole-GEN019 unaffected conclusion. Its explicit broad convention-preservation limb is affected and remains normative, with unproven runtime conformance separate."
+    },
+    "broaderCanonicalAdaptation": {
+      "epistemic": "Unknown",
+      "finding": "The bounded source projection and PWB narrative emitter do not demonstrate target-specific generic canonical adaptation. Do not infer revision-to-evaluation/state recovery or full REQ-019 implementation conformance from this evidence. Unsupported adaptation must stay explicit."
+    }
+  },
+  "currentHumanConsumers": {
+    "trajectory": {
+      "definitions": [
+        {
+          "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+          "path": "apps/three-surface-poc/src/trajectory.ts",
+          "startLine": 133,
+          "endLine": 162,
+          "fileSha256": "99bd7785f2512ffeeba001fffbed9b50075c1782dc8dfbaa8b85ea1e54d50ef8",
+          "gitBlob": "d28e0a7d68bfb640aab9e96b60496f9e894def1e"
+        },
+        {
+          "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+          "path": "apps/three-surface-poc/src/trajectory.ts",
+          "startLine": 165,
+          "endLine": 189,
+          "fileSha256": "99bd7785f2512ffeeba001fffbed9b50075c1782dc8dfbaa8b85ea1e54d50ef8",
+          "gitBlob": "d28e0a7d68bfb640aab9e96b60496f9e894def1e"
+        },
+        {
+          "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+          "path": "packages/three-surface-poc-core/src/model.ts",
+          "startLine": 572,
+          "endLine": 585,
+          "fileSha256": "72c58ab8f0234c763ece630ae85a52b0871100cf6f33854f42e0eb907210f489",
+          "gitBlob": "de21d1f0d4d759f081816d216533cf02283afe3c"
+        }
+      ],
+      "inputs": "Per rendered item: existing unknownSubjects record by work-item:<id>/governed-by, its label/reason/closedReason/full route; count region: stored served count, items.length, rendered selection and separate region subject.",
+      "mapping": {
+        "epistemic": "Inferred",
+        "compatibility": "Keeping these existing records and selection unchanged preserves server-rendered Unknown, reason, route and warrant instruction. The fixture does not execute that renderer."
+      }
+    },
+    "orrery": {
+      "definitions": [
+        {
+          "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+          "path": "apps/three-surface-poc/src/orrery.ts",
+          "startLine": 14,
+          "endLine": 38,
+          "fileSha256": "868df1a1ea21483864e0237321f7fda16246e4df456b6476f22627499ca1d77e",
+          "gitBlob": "d908e37dba5768a9b0fd1f415c0beb58dcdbf338"
+        },
+        {
+          "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+          "path": "apps/three-surface-poc/src/orrery.ts",
+          "startLine": 160,
+          "endLine": 205,
+          "fileSha256": "868df1a1ea21483864e0237321f7fda16246e4df456b6476f22627499ca1d77e",
+          "gitBlob": "d908e37dba5768a9b0fd1f415c0beb58dcdbf338"
+        },
+        {
+          "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+          "path": "apps/three-surface-poc/src/exact-tables.ts",
+          "startLine": 6,
+          "endLine": 90,
+          "fileSha256": "bb6c5044a447bf892b42e60e70fe3d15752726f73f49539f03b01eec3fa104ff",
+          "gitBlob": "950db765e6509b64d77350a84cf999dbb0023ca9"
+        }
+      ],
+      "islandTopSlots": [
+        "revision",
+        "districts",
+        "mappedRegions",
+        "mappedFileCount",
+        "unmappedFileCount",
+        "totalFileCount",
+        "unmappedRegionEntityId",
+        "unmappedRegionUnknown"
+      ],
+      "islandTopSlotPopulation": 8,
+      "inputs": "model.orrery; region:unmapped-code entity for Unknown route; cross-surface link metadata; exact tables use entities and relationships.",
+      "mapping": {
+        "epistemic": "Inferred",
+        "compatibility": "The complete island construction and exact-table functions read these positive inputs, which P115 preserves. No work-item reference expansion is necessary for these current Orrery inputs."
+      }
+    },
+    "existingTestLimits": {
+      "epistemic": "Observed",
+      "source": {
+        "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+        "path": "apps/three-surface-poc/src/orrery.test.ts",
+        "startLine": 63,
+        "endLine": 90,
+        "fileSha256": "7e4fd5ad563c57333327a24e87440a1e7f25d53eb0b77009c41d1462f228dd78",
+        "gitBlob": "cd6d44a5ce53a20647a9af16f0df3cf532928459"
+      },
+      "poc020": "Existing named test compares four Orrery island fields: mappedFileCount, unmappedFileCount, totalFileCount, revision. It does not by itself exhaust all three-surface markers.",
+      "poc022": "Existing named test checks noscript/unavailability text and exact-table section IDs, not a complete machine-derived sample equality.",
+      "runtime": "Unknown; these production tests were read, not run for this evidence task."
+    },
+    "c4ArchitectureBoundary": {
+      "epistemic": "Inferred",
+      "logicalHumanPath": "Existing human renderer consumes the existing logical model/full per-item records, never serialized machine wire.",
+      "machineComparisonPath": "Independent machine consumers/comparators/samplers perform the one observation-local hop when deriving effective facts.",
+      "recordBoundary": "Full entities, relationships and separately served per-item records retain all identities and metadata; the bare value is not a pooled record."
+    }
+  },
+  "literalProof": {
+    "epistemic": "Observed",
+    "checkerRetention": "Outside Git: check-literal-pairs.py",
+    "checkerSha256": "043627863e8f9dfcfb1b5564d6c75dd0d353271a1257bac2591dbe13db27152a",
+    "resultRetention": "Outside Git: LITERAL-PAIR-RESULTS.json and .txt",
+    "resultSha256": "d548400c3c3abedb46dcfadd6a862ec68798fc48a649108172e07de4ca122fbc",
+    "scalarFacts": 40,
+    "sampleMarkers": 13,
+    "counterexamples": 42,
+    "result": "All 42 reject at their intended predicate; two item hops restore the complete bounded inline projection. The physical inline-property reader is an explicit failing control.",
+    "limits": "Literal synthetic projections, not complete PocModel objects, generated pages, browser census, HTTP/304 test, production serializer or runtime conformance."
+  },
+  "historicalEvidenceSubject": {
+    "sourceCommit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+    "activeCandidateCommit": "662b4b49505776c21856791abc52cda72346c5d9",
+    "retainedCoreCommit": "ddf1dc69b724df72a5e3c4f224500aa51d344ef0",
+    "manifestFileSha256": "77e53d37ac42c5db4edb4f99d76d937629df5a80d370ac47751c0e62f27270bd",
+    "proposedPocSpecSha256": "01209cce451cbab62a9f39fce1e6a78d9dcd6b56f3e32e0dc9bf0d5534534c37"
+  },
+  "sourceReturnReconciliation": {
+    "epistemic": "Inferred",
+    "date": "2026-10-21",
+    "wholeOccurrenceClassification": "Both REQ-polaris-generation-019 occurrences are affected-compatible through the explicit broad PWB wire-convention preservation/adaptation limb. The narrow source projection and PWB anchor records below remain positively separate but cannot narrow that normative obligation.",
+    "normativeBlockTextChangeRequired": false,
+    "sameChangeObligation": "Preserve convention meaning and source admission; supported compatibility boundaries must handle the new form or expose typed inability. No canonical identity/state invention or generic schema promotion.",
+    "evidence": [
+      "../REQUIREMENT-CONSUMPTION.json",
+      "../evidence/source-return/SOURCE-CRITERIA.json",
+      "PROPOSED-DISPOSITIONS.json"
+    ],
+    "runtimeConformance": "Unknown"
+  }
+}

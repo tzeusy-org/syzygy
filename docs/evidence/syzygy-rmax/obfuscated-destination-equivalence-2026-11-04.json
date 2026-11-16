@@ -1,0 +1,368 @@
+{
+ "record": "syzygy-rmax: OBFUSCATED_DESTINATION linear rewrite, match-set equivalence with the replaced pattern (GP-Q0)",
+ "date": "2026-11-04",
+ "subject": {
+  "path": "packages/three-surface-poc-core/src/git-object-reader.ts",
+  "sha256": "c8d51daa308e599ed430ede5fa1f58a4e0826b8282901c91ec8ab7b9bed862c2",
+  "test": {
+   "path": "packages/three-surface-poc-core/src/obfuscated-destination-equivalence.test.ts",
+   "sha256": "aef94e2ed8096fdb2415fe74e1fa5d0d30c5aae0cd6479370494b793da024d5a"
+  }
+ },
+ "oldPattern": "/\\]\\(\\s*<?[^)\\s]*&(?:#\\d+|#[xX][0-9a-fA-F]+|[A-Za-z][A-Za-z0-9]*);/g",
+ "newPattern": "/\\]\\(\\s*(?:<?[^)\\s]*&(?:#\\d+|#[xX][0-9a-fA-F]+|[A-Za-z][A-Za-z0-9]*);|((?:[^)\\s\\]]|\\](?!\\(\\s))*))/g, matches with group 1 defined dropped (obfuscatedDestinationMatches)",
+ "sweptTree": {
+  "note": "the tracked tree of baseCommit plus exactly the branchFiles below, at these digests; this record is the one tracked file the sweep did not read",
+  "baseCommit": "a332ff69f14868128a1667b685b258b9add36953",
+  "baseCommitReachableFrom": "origin/main (the #638 merge commit)",
+  "branchFiles": [
+   {
+    "path": "docs/evidence/syzygy-bpyt-52/unsafe-url-equivalence-2026-11-04.json",
+    "sha256": "0c5b2d33d329a4341eb5505008270ac18cf5bca78ca74e9de075712fd57364da"
+   },
+   {
+    "path": "docs/evidence/syzygy-rmax/obfuscated-destination-equivalence-2026-11-04.json",
+    "sha256": "17660cda820f2a4c562ac1079e3e3ca229be9c166b24c6e274ad540583066754"
+   },
+   {
+    "path": "docs/evidence/syzygy-rmax/tools/mutants.py",
+    "sha256": "3773b1064c58acc2e0614aee47a64154c9e270c55e12c0a78f73aad3bb95c179"
+   },
+   {
+    "path": "docs/evidence/syzygy-rmax/tools/sweep.mjs",
+    "sha256": "fc331f46730f59c84946af3c2ffacea70aed6e260dbbb9e6d7d1c48a72a4e05e"
+   },
+   {
+    "path": "docs/evidence/syzygy-rmax/tools/timing.mjs",
+    "sha256": "79a33d077efd75bdb44359b792744efc0029567e425393d349d7c906327ffad6"
+   },
+   {
+    "path": "packages/three-surface-poc-core/src/git-object-reader.ts",
+    "sha256": "c8d51daa308e599ed430ede5fa1f58a4e0826b8282901c91ec8ab7b9bed862c2"
+   },
+   {
+    "path": "packages/three-surface-poc-core/src/obfuscated-destination-equivalence.test.ts",
+    "sha256": "aef94e2ed8096fdb2415fe74e1fa5d0d30c5aae0cd6479370494b793da024d5a"
+   }
+  ],
+  "provenanceCommit": "5ec1358a3f1e22d1efa03cc4193fb1236a48344b",
+  "provenanceNote": "branch commit on agent/syzygy-rmax; a rebase-merge may leave it reachable from no ref, so the tree is identified by baseCommit plus branchFiles"
+ },
+ "sweep": {
+  "tool": "docs/evidence/syzygy-rmax/tools/sweep.mjs",
+  "args": "<root> sweep.json 120000 8",
+  "predicate": "every file of `git ls-files -z`, NUL-bearing files skipped, decoded as strict UTF-8; each compared raw and, where the PWB-REQ-006 mask is not malformed, masked; a form is same when JSON of [{index,value}] from the oracle matchAll equals obfuscatedDestinationMatches; the oracle runs in a worker (source and flags asserted) terminated at the cap",
+  "headMatcher": "packages/three-surface-poc-core/dist/git-object-reader.js built from the subject",
+  "capMs": 120000,
+  "trackedFiles": 8551,
+  "skipped": 13,
+  "comparedForms": 16760,
+  "same": 16760,
+  "oracleMatches": 77,
+  "filesWithMatches": 5,
+  "slowestOld": [
+   {
+    "f": "docs/evidence/syzygy-bpyt-4-5/daemon-entry-round1-test.json",
+    "form": "raw",
+    "bytes": 161479,
+    "oldMs": 12.3,
+    "headMs": 0.11
+   },
+   {
+    "f": "docs/evidence/syzygy-bpyt-8-34/island_differential.py",
+    "form": "raw",
+    "bytes": 4185,
+    "oldMs": 11.5,
+    "headMs": 0.01
+   },
+   {
+    "f": "docs/evidence/syzygy-prn1-ci-contract-index-selftest-rule6-2026-10-04.json",
+    "form": "masked",
+    "bytes": 2163,
+    "oldMs": 11.2,
+    "headMs": 0
+   },
+   {
+    "f": "docs/evidence/guard-pins-notes-review-2026-10-28/r2/tools/proposed_fixes.py",
+    "form": "raw",
+    "bytes": 4705,
+    "oldMs": 9.2,
+    "headMs": 0.01
+   },
+   {
+    "f": "docs/evidence/consent-act-family-differential-2026-10-22.json",
+    "form": "raw",
+    "bytes": 1451973,
+    "oldMs": 7.9,
+    "headMs": 0.83
+   }
+  ],
+  "skippedFiles": [
+   {
+    "f": "docs/evidence/orrery-height-repaired-narrow-2026-09-09.png",
+    "why": "nul"
+   },
+   {
+    "f": "docs/evidence/orrery-height-repaired-wide-2026-09-09.png",
+    "why": "nul"
+   },
+   {
+    "f": "docs/evidence/polaris-existing-orrery-narrow-2026-09-09.png",
+    "why": "nul"
+   },
+   {
+    "f": "docs/evidence/polaris-existing-orrery-wide-2026-09-09.png",
+    "why": "nul"
+   },
+   {
+    "f": "docs/evidence/scratch-prefix-census-2026-10-23/runs/c0-clean.trace.jsonl.gz",
+    "why": "nul"
+   },
+   {
+    "f": "docs/evidence/scratch-prefix-census-2026-10-23/runs/f1-fresh-after-k1.trace.jsonl.gz",
+    "why": "nul"
+   },
+   {
+    "f": "docs/evidence/scratch-prefix-census-2026-10-23/runs/f2-fresh-after-k2.trace.jsonl.gz",
+    "why": "nul"
+   },
+   {
+    "f": "docs/evidence/scratch-prefix-census-2026-10-23/runs/f3-fresh-after-k3.trace.jsonl.gz",
+    "why": "nul"
+   },
+   {
+    "f": "docs/evidence/scratch-prefix-census-2026-10-23/runs/k1-kill-40s.trace.jsonl.gz",
+    "why": "nul"
+   },
+   {
+    "f": "docs/evidence/scratch-prefix-census-2026-10-23/runs/k2-kill-75s.trace.jsonl.gz",
+    "why": "nul"
+   },
+   {
+    "f": "docs/evidence/scratch-prefix-census-2026-10-23/runs/k3-kill-115s.trace.jsonl.gz",
+    "why": "nul"
+   },
+   {
+    "f": "docs/evidence/spread-loops-review-2026-10-28/r1/md-list.bin",
+    "why": "nul"
+   },
+   {
+    "f": "packages/three-surface-poc-core/src/project-shape-coverage.test.ts",
+    "why": "nul"
+   }
+  ],
+  "differ": [],
+  "overCap": []
+ },
+ "unitTests": {
+  "file": "packages/three-surface-poc-core/src/obfuscated-destination-equivalence.test.ts",
+  "rows": [
+   "package fixtures and reader/scan test sources, whole and per line",
+   "hand-written edge cases, alone and joined by '', ' ', newline and ')'",
+   "every string of up to 5 tokens over a 13-token alphabet (402,234 sequences, the empty string included)",
+   "'](' followed by every string of up to 6 tokens over a 9-token alphabet (597,871 sequences, at least 3,000 matching)",
+   "every 3-token sequence over 12 short tokens with 7 entity tails (12,096)",
+   "adversarial floods: 11 units x 6 tails x 3 placements",
+   "20,000 seeded random strings (mulberry32 seed 0x0bf5d), over 2,000 matching and over 2,000 missing",
+   "timing: six 100,000-unit floods each under 1,000 ms thread CPU"
+  ]
+ },
+ "timing": {
+  "tool": "docs/evidence/syzygy-rmax/tools/timing.mjs --old",
+  "unit": "thread CPU ms (process.threadCpuUsage)",
+  "rows": [
+   {
+    "flood": "10000 x \"](\"",
+    "headMatcherMs": 1,
+    "headScanMs": 2,
+    "oldMs": 256.81
+   },
+   {
+    "flood": "10000 x \"](<\"",
+    "headMatcherMs": 0.99,
+    "headScanMs": 1,
+    "oldMs": 758.52
+   },
+   {
+    "flood": "10000 x \"](&\"",
+    "headMatcherMs": 0,
+    "headScanMs": 1,
+    "oldMs": 444.58
+   },
+   {
+    "flood": "10000 x \"](&a\"",
+    "headMatcherMs": 0.95,
+    "headScanMs": 0.94,
+    "oldMs": 853.09
+   },
+   {
+    "flood": "10000 x \"](\" + \"&amp;\"",
+    "headMatcherMs": 0,
+    "headScanMs": 1,
+    "oldMs": 0
+   },
+   {
+    "flood": "30000 x \"](\"",
+    "headMatcherMs": 0,
+    "headScanMs": 1,
+    "oldMs": 2329.27
+   },
+   {
+    "flood": "30000 x \"](<\"",
+    "headMatcherMs": 1,
+    "headScanMs": 2,
+    "oldMs": 6588.13
+   },
+   {
+    "flood": "30000 x \"](&\"",
+    "headMatcherMs": 0,
+    "headScanMs": 1,
+    "oldMs": 3828.13
+   },
+   {
+    "flood": "30000 x \"](&a\"",
+    "headMatcherMs": 2,
+    "headScanMs": 2,
+    "oldMs": 6483.33
+   },
+   {
+    "flood": "30000 x \"](\" + \"&amp;\"",
+    "headMatcherMs": 0,
+    "headScanMs": 1,
+    "oldMs": 0
+   },
+   {
+    "flood": "100000 x \"](\"",
+    "headMatcherMs": 2,
+    "headScanMs": 2,
+    "oldMs": 25216.79
+   },
+   {
+    "flood": "100000 x \"](<\"",
+    "headMatcherMs": 4,
+    "headScanMs": 7
+   },
+   {
+    "flood": "100000 x \"](&\"",
+    "headMatcherMs": 2,
+    "headScanMs": 5
+   },
+   {
+    "flood": "100000 x \"](&a\"",
+    "headMatcherMs": 2.99,
+    "headScanMs": 6
+   },
+   {
+    "flood": "100000 x \"](\" + \"&amp;\"",
+    "headMatcherMs": 1,
+    "headScanMs": 2
+   }
+  ],
+  "note": "old pattern measured at 100,000 only for the bare '](' flood; the ending-in-entity rows match at the first start, so the old pattern is fast there. An earlier run on the pre-rebase branch measured the old pattern at 0.27 s, 3.0 s and 28 s for 10,000, 30,000 and 100,000 '](' (the figures in the test and reader comments)"
+ },
+ "mutants": {
+  "tool": "docs/evidence/syzygy-rmax/tools/mutants.py",
+  "ranAt": {
+   "commit": "5ec1358a3f1e22d1efa03cc4193fb1236a48344b",
+   "subjectSha256": "c8d51daa308e599ed430ede5fa1f58a4e0826b8282901c91ec8ab7b9bed862c2"
+  },
+  "judge": "the differential rows (-t 'matches the replaced pattern'); a mutant they do not kill is run against the timing rows (-t linear)",
+  "killed": 10,
+  "total": 10,
+  "rows": [
+   {
+    "id": "m1-drop-run-end-lookahead",
+    "old": "const OBFUSCATED_DESTINATION = /\\]\\(\\s*(?:<?[^)\\s]*&(?:#\\d+|#[xX][0-9a-fA-F]+|[A-Za-z][A-Za-z0-9]*);|((?:[^)\\s\\]]|\\](?!\\(\\s))*))/g;",
+    "new": "const OBFUSCATED_DESTINATION = /\\]\\(\\s*(?:<?[^)\\s]*&(?:#\\d+|#[xX][0-9a-fA-F]+|[A-Za-z][A-Za-z0-9]*);|((?:[^)\\s\\]]|\\])*))/g;",
+    "exit": 1,
+    "tests": "Tests  6 failed | 1 passed | 6 skipped (13)",
+    "killed": true,
+    "killedBy": "differential"
+   },
+   {
+    "id": "m2-lookahead-without-ws",
+    "old": "const OBFUSCATED_DESTINATION = /\\]\\(\\s*(?:<?[^)\\s]*&(?:#\\d+|#[xX][0-9a-fA-F]+|[A-Za-z][A-Za-z0-9]*);|((?:[^)\\s\\]]|\\](?!\\(\\s))*))/g;",
+    "new": "const OBFUSCATED_DESTINATION = /\\]\\(\\s*(?:<?[^)\\s]*&(?:#\\d+|#[xX][0-9a-fA-F]+|[A-Za-z][A-Za-z0-9]*);|((?:[^)\\s\\]]|\\](?!\\())*))/g;",
+    "exit": 0,
+    "tests": "Tests  7 passed | 6 skipped (13)",
+    "killed": true,
+    "killedBy": "timing",
+    "timingExit": 1,
+    "timingTests": "Tests  5 failed | 1 passed | 7 skipped (13)"
+   },
+   {
+    "id": "m3-consume-ws-in-skip",
+    "old": "const OBFUSCATED_DESTINATION = /\\]\\(\\s*(?:<?[^)\\s]*&(?:#\\d+|#[xX][0-9a-fA-F]+|[A-Za-z][A-Za-z0-9]*);|((?:[^)\\s\\]]|\\](?!\\(\\s))*))/g;",
+    "new": "const OBFUSCATED_DESTINATION = /\\]\\(\\s*(?:<?[^)\\s]*&(?:#\\d+|#[xX][0-9a-fA-F]+|[A-Za-z][A-Za-z0-9]*);|((?:[^)\\]]|\\](?!\\(\\s))*))/g;",
+    "exit": 1,
+    "tests": "Tests  3 failed | 4 passed | 6 skipped (13)",
+    "killed": true,
+    "killedBy": "differential"
+   },
+   {
+    "id": "m4-skip-consumes-close-paren",
+    "old": "const OBFUSCATED_DESTINATION = /\\]\\(\\s*(?:<?[^)\\s]*&(?:#\\d+|#[xX][0-9a-fA-F]+|[A-Za-z][A-Za-z0-9]*);|((?:[^)\\s\\]]|\\](?!\\(\\s))*))/g;",
+    "new": "const OBFUSCATED_DESTINATION = /\\]\\(\\s*(?:<?[^)\\s]*&(?:#\\d+|#[xX][0-9a-fA-F]+|[A-Za-z][A-Za-z0-9]*);|((?:[^\\s\\]]|\\](?!\\(\\s))*))/g;",
+    "exit": 1,
+    "tests": "Tests  5 failed | 2 passed | 6 skipped (13)",
+    "killed": true,
+    "killedBy": "differential"
+   },
+   {
+    "id": "m5-skip-branch-captures-nothing",
+    "old": "const OBFUSCATED_DESTINATION = /\\]\\(\\s*(?:<?[^)\\s]*&(?:#\\d+|#[xX][0-9a-fA-F]+|[A-Za-z][A-Za-z0-9]*);|((?:[^)\\s\\]]|\\](?!\\(\\s))*))/g;",
+    "new": "const OBFUSCATED_DESTINATION = /\\]\\(\\s*(?:<?[^)\\s]*&(?:#\\d+|#[xX][0-9a-fA-F]+|[A-Za-z][A-Za-z0-9]*);|(?:[^)\\s\\]]|\\](?!\\(\\s))*)/g;",
+    "exit": 1,
+    "tests": "Tests  7 failed | 6 skipped (13)",
+    "killed": true,
+    "killedBy": "differential"
+   },
+   {
+    "id": "m6-lazy-run",
+    "old": "const OBFUSCATED_DESTINATION = /\\]\\(\\s*(?:<?[^)\\s]*&(?:#\\d+|#[xX][0-9a-fA-F]+|[A-Za-z][A-Za-z0-9]*);|((?:[^)\\s\\]]|\\](?!\\(\\s))*))/g;",
+    "new": "const OBFUSCATED_DESTINATION = /\\]\\(\\s*(?:<?[^)\\s]*?&(?:#\\d+|#[xX][0-9a-fA-F]+|[A-Za-z][A-Za-z0-9]*);|((?:[^)\\s\\]]|\\](?!\\(\\s))*))/g;",
+    "exit": 1,
+    "tests": "Tests  5 failed | 2 passed | 6 skipped (13)",
+    "killed": true,
+    "killedBy": "differential"
+   },
+   {
+    "id": "m7-drop-angle",
+    "old": "const OBFUSCATED_DESTINATION = /\\]\\(\\s*(?:<?[^)\\s]*&(?:#\\d+|#[xX][0-9a-fA-F]+|[A-Za-z][A-Za-z0-9]*);|((?:[^)\\s\\]]|\\](?!\\(\\s))*))/g;",
+    "new": "const OBFUSCATED_DESTINATION = /\\]\\(\\s*(?:[^)\\s<]*&(?:#\\d+|#[xX][0-9a-fA-F]+|[A-Za-z][A-Za-z0-9]*);|((?:[^)\\s\\]]|\\](?!\\(\\s))*))/g;",
+    "exit": 1,
+    "tests": "Tests  7 failed | 6 skipped (13)",
+    "killed": true,
+    "killedBy": "differential"
+   },
+   {
+    "id": "m8-drop-hex-branch",
+    "old": "const OBFUSCATED_DESTINATION = /\\]\\(\\s*(?:<?[^)\\s]*&(?:#\\d+|#[xX][0-9a-fA-F]+|[A-Za-z][A-Za-z0-9]*);|((?:[^)\\s\\]]|\\](?!\\(\\s))*))/g;",
+    "new": "const OBFUSCATED_DESTINATION = /\\]\\(\\s*(?:<?[^)\\s]*&(?:#\\d+|[A-Za-z][A-Za-z0-9]*);|((?:[^)\\s\\]]|\\](?!\\(\\s))*))/g;",
+    "exit": 1,
+    "tests": "Tests  5 failed | 2 passed | 6 skipped (13)",
+    "killed": true,
+    "killedBy": "differential"
+   },
+   {
+    "id": "m9-skip-first",
+    "old": "const OBFUSCATED_DESTINATION = /\\]\\(\\s*(?:<?[^)\\s]*&(?:#\\d+|#[xX][0-9a-fA-F]+|[A-Za-z][A-Za-z0-9]*);|((?:[^)\\s\\]]|\\](?!\\(\\s))*))/g;",
+    "new": "const OBFUSCATED_DESTINATION = /\\]\\(\\s*(?:((?:[^)\\s\\]]|\\](?!\\(\\s))*)|<?[^)\\s]*&(?:#\\d+|#[xX][0-9a-fA-F]+|[A-Za-z][A-Za-z0-9]*);)/g;",
+    "exit": 1,
+    "tests": "Tests  7 failed | 6 skipped (13)",
+    "killed": true,
+    "killedBy": "differential"
+   },
+   {
+    "id": "m10-sticky-flag",
+    "old": "const OBFUSCATED_DESTINATION = /\\]\\(\\s*(?:<?[^)\\s]*&(?:#\\d+|#[xX][0-9a-fA-F]+|[A-Za-z][A-Za-z0-9]*);|((?:[^)\\s\\]]|\\](?!\\(\\s))*))/g;",
+    "new": "const OBFUSCATED_DESTINATION = /\\]\\(\\s*(?:<?[^)\\s]*&(?:#\\d+|#[xX][0-9a-fA-F]+|[A-Za-z][A-Za-z0-9]*);|((?:[^)\\s\\]]|\\](?!\\(\\s))*))/gy;",
+    "exit": 1,
+    "tests": "Tests  7 failed | 6 skipped (13)",
+    "killed": true,
+    "killedBy": "differential"
+   }
+  ],
+  "note": "m2 (stop the skip at every '](') reports the same matches and is quadratic, so only the timing rows can kill it, and they do"
+ }
+}

@@ -1,0 +1,102 @@
+{
+ "bead": "syzygy-bpyt.78",
+ "base": "f361108c",
+ "commit": "b0136200b8585a0ce184c9859cffc739a7e13e40",
+ "review": {
+  "raw": "docs/reviews/R-GP-IMPL-SEGMENT-RULES-2-RAW.md",
+  "sha256": "d3590d5a21ae915e3226713837afeaf5eb40ed15f75cf528261fa401c2c11bff"
+ },
+ "subject": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+ "subjectSha256": "202b58aaff98b6acbea1dba24c9b347b8b51cc533a381575688cc72594b929b5",
+ "record70": {
+  "path": "docs/evidence/syzygy-bpyt-70/record.json",
+  "sha256": {
+   "base": "f124c255aa84c9788fb70705e4163bc6bb73db9038e8c28b9c3eac31e0074792",
+   "head": "54be657b2fc7220d0f34d86290589d0edd50eae216f3389e221ac21d7dac876a"
+  },
+  "rebuiltAt": "52d8b96f6ad91c765a6b4675d5eea72ea2067732",
+  "movedOnly": [
+   "newRefusals[3]",
+   "differential.base/head/tool/testkitSha256",
+   "files.tools/build_record.py"
+  ]
+ },
+ "items": {
+  "1": "F2's record half: the raw's replacement text for newRefusals[3], inserted into syzygy-bpyt-70/tools/build_record.py byte for byte, and record.json rebuilt at 52d8b96f (nothing re-measured)",
+  "2": "N1: syzygy-bpyt-70/record.json's differential names its base and head commits, the tool, and each testkit's sha256; re-running the tool over those two testkits gives differential.json's bytes (sha256 d6629b351547263fe6ea4f7029cd96b3ae5b3022cc51d5192c402a89eb19c566)",
+  "3": "N2: the raw's proposed key-plus-target expectation, inserted into the key row byte for byte (indented as the row's others) with a one-line comment; RK3 now fails the key row, and fails nothing with that expectation removed (RK3B); RK2 survives, equivalent in outcome as the raw says",
+  "4": "N3, not applied: measured, the message-equality form prints exactly what the row's toThrow form prints. Under vitest's default reporter both forms print the two messages whole on their Expected and Received lines; under the JSON reporter both keep only the first failure line, which vitest truncates in both (RX4, RX4E, R2, R2E). The row keeps its toThrow form",
+  "5": "N4: the two residuals below"
+ },
+ "newTestRefusals": [
+  "an entry reader that names a condition-key fault before a target fault Node refuses, when an entry has both"
+ ],
+ "residuals": [
+  "Node 24.6.0 also tests a pattern's substituted subpath against both segment rules (internal/modules/esm/resolve lines 433-435, per the round-2 raw); entryModulesIn reads no pattern entry, and the tree has 0 pattern subpaths",
+  "DEP0166 is given for empty-segment forms beyond '//' and a trailing '/': a leading './/', a bare './', a '\\\\' pair, '/\\' and a trailing '\\' (the round-2 raw's probe); the guard names each 'accepts with a deprecation warning (DEP0166)'"
+ ],
+ "mutants": {
+  "absent": {
+   "rows": 9,
+   "asExpected": 9,
+   "unexpected": []
+  },
+  "present": {
+   "rows": 9,
+   "asExpected": 9,
+   "unexpected": []
+  }
+ },
+ "n3Printed": {
+  "RX4-require-not-a-node-condition": {
+   "printed": [
+    "Expected: \"@syzygy/lib: its require condition target \"./dist/./index.js\" has an empty, '.', '..' or 'node_modules' segment, which Node refuses (ERR_INVALID_PACKAGE_TARGET)\"",
+    "Received: \"@syzygy/lib: its require condition target \"./dist/./index.js\" has an empty, '.', '..' or 'node_modules' segment, which Node does not read\""
+   ],
+   "firstLine": [
+    "AssertionError: expected [Function] to throw error including '@syzygy/lib: its require condition ta…' but got '@syzygy/lib: its require condition ta…'"
+   ]
+  },
+  "RX4E-require-not-a-node-condition-equality-form": {
+   "printed": [
+    "Expected: \"@syzygy/lib: its require condition target \"./dist/./index.js\" has an empty, '.', '..' or 'node_modules' segment, which Node refuses (ERR_INVALID_PACKAGE_TARGET)\"",
+    "Received: \"@syzygy/lib: its require condition target \"./dist/./index.js\" has an empty, '.', '..' or 'node_modules' segment, which Node does not read\""
+   ],
+   "firstLine": [
+    "AssertionError: expected '@syzygy/lib: its require condition ta…' to be '@syzygy/lib: its require condition ta…' // Object.is equality"
+   ]
+  }
+ },
+ "suite": {
+  "commit": "b0136200b8585a0ce184c9859cffc739a7e13e40",
+  "distDirs": [],
+  "exit": 0,
+  "files": 256,
+  "total": 5835,
+  "passed": 5830,
+  "failed": 0,
+  "skipped": 5,
+  "load1": 36.5,
+  "wallSeconds": 243.1,
+  "cleanAfter": true
+ },
+ "titles": {
+  "base": "f361108c94233195a19a7e1bc639f90170c3b88d",
+  "head": "b0136200b8585a0ce184c9859cffc739a7e13e40",
+  "baseTitles": 5830,
+  "headTitles": 5830,
+  "delta": 0,
+  "addedByFile": {},
+  "removed": 0,
+  "added": []
+ },
+ "files": {
+  "mutants-absent.json": "7e6764c088f3a522f8377b5cc49a37244de76be21ca72a4c17f91cb5c7cd0146",
+  "mutants-present.json": "5e4c6895dce4c091e448dc75f36bd4a52a66f52df39f19e316498da17ebcfb55",
+  "suite-absent.json": "fb5a9c65298cbe246fee0d30be025e13c67855082a0e1a43b3d7fb5d48ca6e84",
+  "titles.json": "4b54f79a739eb6812d4cd4d5a2b431d03a5471ddb101a311cf0411a78c3ec0e3",
+  "tools/build_record.py": "e462e43947df6114364959cabe732ff69afcdfea414b4f162bf430b4555193b1",
+  "tools/mutants.py": "3e2426eb84eb4f41b20e138c5149931108a941fe5c486fdc26c2c2b3c98f029a",
+  "tools/titles.py": "56c62cd52a6fd98fd0e7a52b917f771375719f5e54c0eff2d771339f641c65eb"
+ }
+}

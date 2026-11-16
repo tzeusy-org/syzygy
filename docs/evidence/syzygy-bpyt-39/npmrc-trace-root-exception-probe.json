@@ -1,0 +1,128 @@
+{
+ "probe": "docs/evidence/syzygy-bpyt-39/root_exception_probe.py",
+ "probeSha256": "d7b29a5401027f1c1da70c349872b6aca915f662b9c80811f4f9138cc55b9b17",
+ "caller": "/tmp/la49/caller",
+ "callerNpmrcOpened": [],
+ "exit": 0,
+ "recordSha256": "cea10b3c635d0239f6dbe0796d0b0c6bf48080bd4609586720ef454e69872ab9",
+ "recordEqualsReference": null,
+ "reference": null,
+ "npmrcOutsideScratch": [
+  {
+   "path": "/home/tze/.nvm/versions/node/v24.6.0/lib/node_modules/npm/npmrc",
+   "call": "openat",
+   "result": "ENOENT",
+   "count": 25
+  }
+ ],
+ "npmrcInsideScratch": [
+  {
+   "path": "<scratch>/.npmrc",
+   "call": "openat",
+   "result": "ENOENT",
+   "count": 1
+  },
+  {
+   "path": "<scratch>/A1/.npmrc",
+   "call": "openat",
+   "result": "ENOENT",
+   "count": 2
+  },
+  {
+   "path": "<scratch>/A2/.npmrc",
+   "call": "openat",
+   "result": "ENOENT",
+   "count": 2
+  },
+  {
+   "path": "<scratch>/A3/.npmrc",
+   "call": "openat",
+   "result": "ENOENT",
+   "count": 1
+  },
+  {
+   "path": "<scratch>/A4/.npmrc",
+   "call": "openat",
+   "result": "ENOENT",
+   "count": 1
+  },
+  {
+   "path": "<scratch>/A5/.npmrc",
+   "call": "openat",
+   "result": "ENOENT",
+   "count": 1
+  },
+  {
+   "path": "<scratch>/N1/.npmrc",
+   "call": "openat",
+   "result": "ENOENT",
+   "count": 2
+  },
+  {
+   "path": "<scratch>/N2/.npmrc",
+   "call": "openat",
+   "result": "ENOENT",
+   "count": 2
+  },
+  {
+   "path": "<scratch>/N3/.npmrc",
+   "call": "openat",
+   "result": "ENOENT",
+   "count": 1
+  },
+  {
+   "path": "<scratch>/N4/.npmrc",
+   "call": "openat",
+   "result": "ENOENT",
+   "count": 1
+  },
+  {
+   "path": "<scratch>/N5/.npmrc",
+   "call": "openat",
+   "result": "ENOENT",
+   "count": 1
+  },
+  {
+   "path": "<scratch>/R1/.npmrc",
+   "call": "openat",
+   "result": "ENOENT",
+   "count": 2
+  },
+  {
+   "path": "<scratch>/R2/.npmrc",
+   "call": "openat",
+   "result": "ENOENT",
+   "count": 2
+  },
+  {
+   "path": "<scratch>/R3/.npmrc",
+   "call": "openat",
+   "result": "ENOENT",
+   "count": 2
+  },
+  {
+   "path": "<scratch>/R4/.npmrc",
+   "call": "openat",
+   "result": "ENOENT",
+   "count": 2
+  },
+  {
+   "path": "<scratch>/R5/.npmrc",
+   "call": "openat",
+   "result": "ENOENT",
+   "count": 2
+  },
+  {
+   "path": "<scratch>/global-npmrc",
+   "call": "openat",
+   "result": "ok",
+   "count": 26
+  },
+  {
+   "path": "<scratch>/user-npmrc",
+   "call": "openat",
+   "result": "ok",
+   "count": 26
+  }
+ ]
+}

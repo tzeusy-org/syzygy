@@ -1,0 +1,11 @@
+{
+ "base": "815d93bb",
+ "head": "939a7c33",
+ "method": "ts.transpileModule, target ES2022, module NodeNext, removeComments, per file, before against after",
+ "typescriptVersion": "5.9.3",
+ "changedFiles": 3,
+ "changedProductionFiles": 0,
+ "commentOnly": 0,
+ "notCommentOnly": [],
+ "rows": []
+}

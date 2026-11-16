@@ -1,0 +1,78 @@
+{
+ "base": "f7ea8584",
+ "head": "3b04b1cd",
+ "counts": {
+  "testkit": {
+   "filter": 1,
+   "regexes": 3,
+   "nonNull": 3,
+   "forbidden": 1
+  },
+  "baseSupport": {
+   "filter": 1,
+   "regexes": 3,
+   "nonNull": 3,
+   "forbidden": 1
+  },
+  "baseDrafter": {
+   "filter": 1,
+   "regexes": 3,
+   "nonNull": 3,
+   "forbidden": 1
+  },
+  "headSupport": {
+   "filter": 0,
+   "regexes": 0,
+   "nonNull": 0,
+   "forbidden": 0
+  },
+  "headDrafter": {
+   "filter": 0,
+   "regexes": 0,
+   "nonNull": 0,
+   "forbidden": 0
+  }
+ },
+ "filterEqual": true,
+ "regexesEqual": true,
+ "forbiddenEqual": true,
+ "nonNullAssertions": {
+  "testkit": [
+   "!",
+   "!",
+   "!"
+  ],
+  "baseSupport": [
+   "!",
+   "!",
+   "!"
+  ],
+  "baseDrafter": [
+   "",
+   "",
+   ""
+  ]
+ },
+ "headCopiesLeft": {
+  "support": {
+   "filter": [],
+   "regexes": [],
+   "nonNull": [],
+   "forbidden": []
+  },
+  "drafter": {
+   "filter": [],
+   "regexes": [],
+   "nonNull": [],
+   "forbidden": []
+  }
+ },
+ "regexes": [
+  "/\\b(?:import|export)\\b[^;]*?\\bfrom\\s*['\"`]([^'\"`]+)['\"`]/g",
+  "/^\\s*import\\s*['\"`]([^'\"`]+)['\"`]/gm",
+  "/\\b(?:import|require)\\s*\\(\\s*['\"`]([^'\"`]+)['\"`]/g"
+ ],
+ "forbidden": [
+  "[/\\brequire\\(/, /\\bimport\\(/, /\\bfetch\\(/, /\\bwriteFile/, /\\bappendFile/, /\\bmkdir/, /\\bprocess\\./, /\\bDate\\b/, /\\b(?:node:)?(?:fs|net|http|https|child_process|os)['\"`]/]"
+ ]
+}

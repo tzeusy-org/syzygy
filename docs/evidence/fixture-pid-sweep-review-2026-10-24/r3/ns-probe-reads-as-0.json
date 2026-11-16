@@ -1,0 +1,213 @@
+{
+ "probe": "rev-509c ns_probe.py",
+ "probeSha256": "f0c4f8a714622b5608daed9b28be2b89bbc6cf59d8bd644a4f54441bc6098950",
+ "holderSha256": "0af2948035d28c6483e26e4be9f138a1ddfeb6e89875199a857d07b8f08b9347",
+ "sweeperSha256": "6662f06aad5400767f558a4087a186280573f2b14e9d5b3d08c387421398aeae",
+ "module": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-509c/tools/fixture-directories.reads-as-0.mjs",
+ "moduleSha256": "c154cf7c56150c1ac48f1370c53eb276461486aea6638480e8aba34dc5b7273e",
+ "directory": "/tmp/r509c-4",
+ "holders": {
+  "no-proc": {
+   "cmd": [
+    "bwrap",
+    "--unshare-user",
+    "--unshare-pid",
+    "--die-with-parent",
+    "--dev-bind",
+    "/",
+    "/",
+    "--tmpfs",
+    "/proc",
+    "--",
+    "/bin/sh",
+    "-c",
+    "i=0; while [ $i -lt 60 ]; do /bin/true; i=$((i+1)); done; /home/tze/.nvm/versions/node/v24.6.0/bin/node /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-509c/tools/holder.mjs /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-509c/tools/fixture-directories.reads-as-0.mjs /tmp/r509c-4 /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-509c/tools/r509c-4-holder-no-proc.json /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-509c/tools/r509c-4.stop; true"
+   ],
+   "hostPid": 2753368,
+   "exit": 0,
+   "pid": 63,
+   "nsReading": "unreadable:ENOENT",
+   "name": "syzygy-poc-surface-fixture-p63-n0-jBYKQm",
+   "goneWhileAlive": true,
+   "goneAfterMs": 808,
+   "stoppedAfterMs": 4165,
+   "existsAtStop": false
+  },
+  "proc": {
+   "cmd": [
+    "bwrap",
+    "--unshare-user",
+    "--unshare-pid",
+    "--die-with-parent",
+    "--dev-bind",
+    "/",
+    "/",
+    "--proc",
+    "/proc",
+    "--",
+    "/bin/sh",
+    "-c",
+    "i=0; while [ $i -lt 60 ]; do /bin/true; i=$((i+1)); done; /home/tze/.nvm/versions/node/v24.6.0/bin/node /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-509c/tools/holder.mjs /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-509c/tools/fixture-directories.reads-as-0.mjs /tmp/r509c-4 /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-509c/tools/r509c-4-holder-proc.json /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-509c/tools/r509c-4.stop; true"
+   ],
+   "hostPid": 2753369,
+   "exit": 0,
+   "pid": 63,
+   "nsReading": "pid:[4026539611]",
+   "name": "syzygy-poc-surface-fixture-p63-n4026539611-A3RZXi",
+   "goneWhileAlive": false,
+   "stoppedAfterMs": 4228,
+   "existsAtStop": true
+  },
+  "host": {
+   "cmd": [
+    "/home/tze/.nvm/versions/node/v24.6.0/bin/node",
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-509c/tools/holder.mjs",
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-509c/tools/fixture-directories.reads-as-0.mjs",
+    "/tmp/r509c-4",
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-509c/tools/r509c-4-holder-host.json",
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-509c/tools/r509c-4.stop"
+   ],
+   "hostPid": 2753372,
+   "exit": 0,
+   "pid": 2753372,
+   "nsReading": "pid:[4026531836]",
+   "name": "syzygy-poc-surface-fixture-p2753372-n4026531836-ZYx5jB",
+   "goneWhileAlive": false,
+   "stoppedAfterMs": 4477,
+   "existsAtStop": true
+  }
+ },
+ "sweeps": {
+  "no-proc": {
+   "cmd": [
+    "bwrap",
+    "--unshare-user",
+    "--unshare-pid",
+    "--die-with-parent",
+    "--dev-bind",
+    "/",
+    "/",
+    "--tmpfs",
+    "/proc",
+    "--",
+    "/home/tze/.nvm/versions/node/v24.6.0/bin/node",
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-509c/tools/sweeper.mjs",
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-509c/tools/fixture-directories.reads-as-0.mjs",
+    "/tmp/r509c-4",
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-509c/tools/r509c-4-sweeper-no-proc.json",
+    "2753372,63"
+   ],
+   "exit": 0,
+   "stderr": "",
+   "pid": 2,
+   "nsReading": "unreadable:ENOENT",
+   "control": "syzygy-poc-surface-fixture-p9-n0-CTRL01",
+   "reapedAnswer": "ESRCH",
+   "signal0": {
+    "63": "ESRCH",
+    "2753372": "ESRCH"
+   },
+   "moduleListings": [
+    "/tmp/r509c-4"
+   ],
+   "before": [
+    "syzygy-poc-surface-fixture-p2753372-n4026531836-ZYx5jB",
+    "syzygy-poc-surface-fixture-p63-n0-jBYKQm",
+    "syzygy-poc-surface-fixture-p63-n4026539611-A3RZXi",
+    "syzygy-poc-surface-fixture-p9-n0-CTRL01"
+   ],
+   "after": [
+    "syzygy-poc-surface-fixture-p2753372-n4026531836-ZYx5jB",
+    "syzygy-poc-surface-fixture-p63-n4026539611-A3RZXi"
+   ],
+   "removed": [
+    "syzygy-poc-surface-fixture-p63-n0-jBYKQm",
+    "syzygy-poc-surface-fixture-p9-n0-CTRL01"
+   ]
+  },
+  "proc": {
+   "cmd": [
+    "bwrap",
+    "--unshare-user",
+    "--unshare-pid",
+    "--die-with-parent",
+    "--dev-bind",
+    "/",
+    "/",
+    "--proc",
+    "/proc",
+    "--",
+    "/home/tze/.nvm/versions/node/v24.6.0/bin/node",
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-509c/tools/sweeper.mjs",
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-509c/tools/fixture-directories.reads-as-0.mjs",
+    "/tmp/r509c-4",
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-509c/tools/r509c-4-sweeper-proc.json",
+    "2753372,63"
+   ],
+   "exit": 0,
+   "stderr": "",
+   "pid": 2,
+   "nsReading": "pid:[4026539621]",
+   "control": "syzygy-poc-surface-fixture-p9-n4026539621-CTRL01",
+   "reapedAnswer": "ESRCH",
+   "signal0": {
+    "63": "ESRCH",
+    "2753372": "ESRCH"
+   },
+   "moduleListings": [
+    "/tmp/r509c-4"
+   ],
+   "before": [
+    "syzygy-poc-surface-fixture-p2753372-n4026531836-ZYx5jB",
+    "syzygy-poc-surface-fixture-p63-n4026539611-A3RZXi",
+    "syzygy-poc-surface-fixture-p9-n4026539621-CTRL01"
+   ],
+   "after": [
+    "syzygy-poc-surface-fixture-p2753372-n4026531836-ZYx5jB",
+    "syzygy-poc-surface-fixture-p63-n4026539611-A3RZXi"
+   ],
+   "removed": [
+    "syzygy-poc-surface-fixture-p9-n4026539621-CTRL01"
+   ]
+  },
+  "host": {
+   "cmd": [
+    "/home/tze/.nvm/versions/node/v24.6.0/bin/node",
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-509c/tools/sweeper.mjs",
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-509c/tools/fixture-directories.reads-as-0.mjs",
+    "/tmp/r509c-4",
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-509c/tools/r509c-4-sweeper-host.json",
+    "2753372,63"
+   ],
+   "exit": 0,
+   "stderr": "",
+   "pid": 2754408,
+   "nsReading": "pid:[4026531836]",
+   "control": "syzygy-poc-surface-fixture-p2754438-n4026531836-CTRL01",
+   "reapedAnswer": "ESRCH",
+   "signal0": {
+    "63": "EPERM",
+    "2753372": "alive"
+   },
+   "moduleListings": [
+    "/tmp/r509c-4"
+   ],
+   "before": [
+    "syzygy-poc-surface-fixture-p2753372-n4026531836-ZYx5jB",
+    "syzygy-poc-surface-fixture-p2754438-n4026531836-CTRL01",
+    "syzygy-poc-surface-fixture-p63-n4026539611-A3RZXi"
+   ],
+   "after": [
+    "syzygy-poc-surface-fixture-p2753372-n4026531836-ZYx5jB",
+    "syzygy-poc-surface-fixture-p63-n4026539611-A3RZXi"
+   ],
+   "removed": [
+    "syzygy-poc-surface-fixture-p2754438-n4026531836-CTRL01"
+   ]
+  }
+ },
+ "leftAfterAll": [
+  "syzygy-poc-surface-fixture-p2753372-n4026531836-ZYx5jB",
+  "syzygy-poc-surface-fixture-p63-n4026539611-A3RZXi"
+ ]
+}

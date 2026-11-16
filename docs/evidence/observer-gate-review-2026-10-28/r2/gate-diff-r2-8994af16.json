@@ -1,0 +1,48 @@
+{
+ "base": "29db2b11",
+ "head": "8994af16",
+ "popCommit": "8994af16",
+ "population": {
+  "total": 8081,
+  "tracked": 7887,
+  "laneProbes": 61,
+  "extraProbes": 157,
+  "workspaces": 12
+ },
+ "refused": {
+  "base": 384,
+  "head": 470
+ },
+ "newlyRefused": {
+  "count": 86,
+  "tracked": 72,
+  "core": 59,
+  "consent": 27,
+  "probesAmongThem": [
+   "packages/polaris-generation-consent/",
+   "packages/polaris-generation-consent//a.ts",
+   "packages/polaris-generation-consent/dist/.tsbuildinfo",
+   "packages/polaris-generation-consent/dist/index.js",
+   "packages/polaris-generation-consent/escape.json",
+   "packages/polaris-generation-consent/node_modules/x/index.js",
+   "packages/polaris-generation-consent/src/__untracked__.ts",
+   "packages/polaris-generation-core/",
+   "packages/polaris-generation-core//a.ts",
+   "packages/polaris-generation-core/dist/.tsbuildinfo",
+   "packages/polaris-generation-core/dist/index.js",
+   "packages/polaris-generation-core/escape.json",
+   "packages/polaris-generation-core/node_modules/x/index.js",
+   "packages/polaris-generation-core/src/__untracked__.ts"
+  ]
+ },
+ "newlyRefusedOutsideTwoPrefixes": [],
+ "newlyAccepted": [],
+ "mixedObservationRefused": {
+  "base": true,
+  "head": true
+ },
+ "emptyObservationClean": [
+  true,
+  true
+ ]
+}

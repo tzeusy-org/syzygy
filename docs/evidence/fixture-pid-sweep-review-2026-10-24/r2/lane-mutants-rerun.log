@@ -1,0 +1,24 @@
+control True 19 0
+live-pid-removed killed 4
+foreign-namespace-swept killed 1
+every-error-means-dead killed 1
+name-without-pid-is-dead killed 3
+hyphen-after-namespace-dropped killed 1
+anchor-dropped killed 1
+template-form-unmatched killed 3
+is-directory-guard-dropped killed 1
+uid-guard-dropped killed 1
+stat-follows-symlink killed 1
+removal-failure-propagates killed 1
+readdir-outside-try killed 1
+lists-the-parent killed 7
+tmpdir-read-from-the-variable killed 1
+copy-name-without-pid killed 1
+copy-name-without-namespace killed 1
+template-name-without-pid killed 1
+template-name-without-namespace killed 1
+global-setup-does-not-sweep killed 2
+global-setup-not-registered killed 1
+global-setup-on-every-project killed 1
+sweep-per-file killed 1
+survivors: []

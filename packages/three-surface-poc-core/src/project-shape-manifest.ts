@@ -24,7 +24,7 @@
 // the PWB-REQ-005 gate admits, and only for the paths listed in
 // `phaseAReads`. Rules 3 and 4 use tree metadata alone.
 
-import { createHash } from 'node:crypto';
+import { deepFreeze, sha256 } from '@syzygy/support';
 
 import {
   indexGitTree,
@@ -34,6 +34,12 @@ import {
   type GitTreeEntry,
   type GitTreeIndex,
 } from './git-tree.js';
+import {
+  type CodeContextRange,
+  fenceRangesWithin,
+  recognizeCodeContexts,
+  spanRangesWithin,
+} from './markdown-code-context.js';
 
 // Byte-equal to the adopted registry entry's `discoveryVersion` and the
 // adopted policy's `sourceAdmission.phaseA.fixedSeedPaths`;
@@ -70,6 +76,18 @@ export type ExtractionClass = (typeof EXTRACTION_CLASSES)[number];
 
 export const SOURCE_RULES = ['root-index', 'pillar-index', 'pillar-named-file', 'baseline-spec-tree', 'roster-tree'] as const;
 export type SourceRule = (typeof SOURCE_RULES)[number];
+
+// PWB-REQ-002 (class-granular extraction amendment): each rule declares
+// whether it needs the root index read. The flag belongs to the rule. Rules 1
+// and 2 are named by the root index; rules 3 and 4 write their own path
+// patterns in the reader definitions, so Git-tree metadata alone admits them.
+export const SOURCE_RULE_NEEDS_ROOT_INDEX: Readonly<Record<SourceRule, boolean>> = {
+  'root-index': true,
+  'pillar-index': true,
+  'pillar-named-file': true,
+  'baseline-spec-tree': false,
+  'roster-tree': false,
+};
 
 export type SourceAnchor =
   | { readonly kind: 'blob'; readonly mode: string; readonly objectId: string }
@@ -117,8 +135,8 @@ export type PillarDiscovery =
       readonly ignoredLinks: readonly IgnoredLink[];
     };
 
-export const IGNORED_LINK_REASONS = ['external', 'escapes-repository', 'outside-pillar-root', 'names-a-directory', 'self'] as const;
-export interface IgnoredLink {
+const IGNORED_LINK_REASONS = ['external', 'escapes-repository', 'outside-pillar-root', 'names-a-directory', 'self'] as const;
+interface IgnoredLink {
   readonly target: string;
   readonly reason: (typeof IGNORED_LINK_REASONS)[number];
 }
@@ -143,13 +161,13 @@ export interface ProjectShapeSourceManifest {
   readonly digest: string;
 }
 
-export type DeclaredPillarRoots = ReadonlyMap<PillarKey, { readonly root: string; readonly ambiguous: boolean }>;
+type DeclaredPillarRoots = ReadonlyMap<PillarKey, { readonly root: string; readonly ambiguous: boolean }>;
 
 export type SeedRead =
   | { readonly kind: 'text'; readonly text: string; readonly pillarRoots?: DeclaredPillarRoots }
   | { readonly kind: 'unavailable'; readonly reason: string };
 
-export interface DeriveManifestInput {
+interface DeriveManifestInput {
   readonly repositoryId: string;
   readonly revision: string;
   readonly discoveryVersion?: string;
@@ -160,7 +178,7 @@ export interface DeriveManifestInput {
   readonly readSeed: (seed: { readonly path: string; readonly objectId: string }) => SeedRead;
 }
 
-export type DeriveManifestResult =
+type DeriveManifestResult =
   | { readonly kind: 'manifest'; readonly manifest: ProjectShapeSourceManifest }
   | { readonly kind: 'invalid-input'; readonly reason: string };
 
@@ -172,24 +190,43 @@ export type DeriveManifestResult =
 // line start. Images (`![...]`) are not links. Fragments and queries are
 // dropped. Nothing else in an index names a file.
 
+// Which characters sit inside a fence, and which inside a code span, are the PWB-REQ-006 profile's rules (`recognizeCodeContexts`), not
+// rules of this module (syzygy-bpyt.55). The line model stays this module's: the text splits at LF. Every fenced character becomes a
+// space, so a profile fence that opens or closes at a bare CR inside an LF line hides exactly its own characters (round-1 F1); a line
+// with no character outside a fence but CR is dropped whole, as the reader always dropped a fenced line. Every character of a profile
+// span becomes a space too, never deleted, so the text on either side of a span never joins into a link the text does not write
+// (round-1 F2). A CR or LF stays where it stands. `stripInlineCode` false leaves spans alone (the root index's pillar table keeps its
+// code-span directory cells).
 function stripFences(text: string, stripInlineCode = true): readonly string[] {
+  const recognition = recognizeCodeContexts(text);
   const kept: string[] = [];
-  let fence: string | undefined;
+  let offset = 0;
   for (const line of text.split('\n')) {
-    const opener = /^\s{0,3}(`{3,}|~{3,})/.exec(line);
-    if (fence === undefined && opener !== null) {
-      fence = opener[1] ?? '';
-      continue;
+    const start = offset;
+    const end = start + line.length;
+    offset = end + 1;
+    const fenced = fenceRangesWithin(recognition, start, end);
+    if (fenced.length > 0 && outsideIsOnlyCr(line, start, fenced)) continue;
+    const blanked = stripInlineCode ? [...fenced, ...spanRangesWithin(recognition, start, end)].sort((a, b) => a[0] - b[0]) : fenced;
+    let rendered = '';
+    let at = 0;
+    for (const [from, to] of blanked) {
+      rendered += line.slice(at, from - start) + line.slice(from - start, to - start).replace(/[^\r\n]/g, ' ');
+      at = to - start;
     }
-    if (fence !== undefined) {
-      if (opener !== null && (opener[1] ?? '').startsWith(fence[0] ?? '') && (opener[1] ?? '').length >= fence.length) {
-        fence = undefined;
-      }
-      continue;
-    }
-    kept.push(stripInlineCode ? line.replace(/`[^`]*`/g, '') : line);
+    kept.push(rendered + line.slice(at));
   }
   return kept;
+}
+
+// Whether every character of the line outside the given fenced ranges (sorted, clipped to the line) is a CR.
+function outsideIsOnlyCr(line: string, start: number, fenced: readonly CodeContextRange[]): boolean {
+  let at = 0;
+  for (const [from, to] of [...fenced, [start + line.length, start + line.length] as const]) {
+    if (/[^\r]/.test(line.slice(at, from - start))) return false;
+    at = to - start;
+  }
+  return true;
 }
 
 const INLINE_LINK = /(!?)\[[^\]]*\]\(\s*(?:<([^>]*)>|([^\s)]+))(?:\s+(?:"[^"]*"|'[^']*'|\([^)]*\)))?\s*\)/g;
@@ -329,7 +366,7 @@ function canonicalize(value: unknown): unknown {
 }
 
 // Key-sorted JSON with `undefined` members dropped; the one canonical form
-// every PWB sha256 identity (manifest, resource limits, observation) uses.
+// every PWB sha256 identity (manifest, resource limits, observation) uses. Not the Polaris generation encoder: the two differ on purpose (docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json).
 export function canonicalJson(value: unknown): string {
   return JSON.stringify(canonicalize(value));
 }
@@ -339,7 +376,7 @@ export function canonicalManifestJson(manifest: Omit<ProjectShapeSourceManifest,
 }
 
 function digestOf(manifest: Omit<ProjectShapeSourceManifest, 'digest'>): string {
-  return `sha256:${createHash('sha256').update(canonicalManifestJson(manifest)).digest('hex')}`;
+  return `sha256:${sha256(canonicalManifestJson(manifest))}`;
 }
 
 // The registry's `project-shape-source-manifest` output identity:
@@ -415,6 +452,21 @@ export function deriveProjectShapeManifest(input: DeriveManifestInput): DeriveMa
     for (const [key, declared] of rootRead.pillarRoots ?? declaredPillarRoots(rootRead.text)) rootsByKey.set(key, { root: declared.root, ambiguous: declared.ambiguous });
   }
 
+  // The index file of every pillar that will be discovered. A pillar's index
+  // file is `pillar-index` even when another pillar's index names it, which
+  // happens only when one declared root lies inside another: registration
+  // runs in `PILLAR_KEYS` order, so an earlier pillar's named files must
+  // leave these paths to the pillar whose index they are (Q8 "Drafted order").
+  const pillarIndexPaths = new Set<string>();
+  if (rootIndex.state === 'read') {
+    for (const key of PILLAR_KEYS) {
+      const named = rootsByKey.get(key);
+      if (named === undefined || named.ambiguous || !tree.hasDirectory(named.root)) continue;
+      const indexPath = `${named.root}/README.md`;
+      if (anchorFor(tree, indexPath).kind === 'blob') pillarIndexPaths.add(indexPath);
+    }
+  }
+
   // Rule 2 — each declared pillar's own README index, restricted to its root.
   const pillars: PillarDiscovery[] = PILLAR_KEYS.map((key) => {
     if (rootIndex.state === 'missing-at-revision') {
@@ -468,6 +520,8 @@ export function deriveProjectShapeManifest(input: DeriveManifestInput): DeriveMa
       namedPaths.add(resolved.path);
     }
     for (const path of namedPaths) {
+      // Another discovered pillar's own index file is that pillar's `pillar-index`.
+      if (pillarIndexPaths.has(path)) continue;
       // A baseline spec or roster file is owned by Rules 3 and 4 with their
       // classes (the spec: `baseline-spec` uses each baseline spec directory)
       // whoever names it; a pillar declared at `openspec/` or `roster/` would
@@ -516,12 +570,4 @@ export function deriveProjectShapeManifest(input: DeriveManifestInput): DeriveMa
     phaseAReads,
   };
   return { kind: 'manifest', manifest: deepFreeze({ ...body, digest: digestOf(body) }) };
-}
-
-function deepFreeze<T>(value: T): T {
-  if (value !== null && typeof value === 'object' && !Object.isFrozen(value)) {
-    Object.freeze(value);
-    for (const inner of Object.values(value as Record<string, unknown>)) deepFreeze(inner);
-  }
-  return value;
 }

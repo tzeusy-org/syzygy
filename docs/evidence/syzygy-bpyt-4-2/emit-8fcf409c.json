@@ -1,0 +1,162 @@
+{
+ "subject": "every file `npm run build` emits under apps/*/dist and packages/*/dist, by suffix",
+ "bySuffix": {
+  ".d.ts.map": {
+   "base": {
+    "commit": "b10e4da9a57a472cb6820ef7dea0a05a5dddc0ce",
+    "files": 520,
+    "tests": 264,
+    "sha256": "2c60e4e5333e677a11f1a41deb263641d1c624ec816db32f1fdeacc356601226"
+   },
+   "head": {
+    "commit": "8fcf409c99ecc3b59392b20b36767421515169bf",
+    "files": 245,
+    "tests": 0,
+    "sha256": "469127beda86441a2bd98ba5557b245c5f2bfa9fd0dc6c7d86b19fdf2a8b988e"
+   },
+   "common": 245,
+   "onlyInBaseTests": 264,
+   "onlyInBaseOther": [
+    "apps/three-surface-poc/dist/test-deep-dive-markers.d.ts.map",
+    "apps/three-surface-poc/dist/test-fixture-sweep.global-setup.d.ts.map",
+    "apps/three-surface-poc/dist/test-http-client.d.ts.map",
+    "packages/cap1-conformance/dist/fixtures/index.d.ts.map",
+    "packages/cap1-system/dist/effect-observer.d.ts.map",
+    "packages/cap1-system/dist/harness.d.ts.map",
+    "packages/polaris-dossier/dist/child-process.testkit.d.ts.map",
+    "packages/polaris-dossier/dist/fs-patch.testkit.d.ts.map",
+    "packages/polaris-generation-core/dist/workspace-reach.testkit.d.ts.map",
+    "packages/three-surface-poc-core/dist/test-cleanup.d.ts.map",
+    "packages/three-surface-poc-core/dist/test-frozen.d.ts.map"
+   ],
+   "onlyInHead": [],
+   "byteIdentical": 244,
+   "differ": [
+    "apps/three-surface-poc/dist/git-observation.d.ts.map"
+   ]
+  },
+  ".js.map": {
+   "base": {
+    "commit": "b10e4da9a57a472cb6820ef7dea0a05a5dddc0ce",
+    "files": 520,
+    "tests": 264,
+    "sha256": "be1cda98cbcf28c541904ee62ffc4c780a700433be93a02980ffbc523ff15df6"
+   },
+   "head": {
+    "commit": "8fcf409c99ecc3b59392b20b36767421515169bf",
+    "files": 245,
+    "tests": 0,
+    "sha256": "c349ac937136d31fc1e3c05790144203986e487301ed2c07b0c09054bcc67024"
+   },
+   "common": 245,
+   "onlyInBaseTests": 264,
+   "onlyInBaseOther": [
+    "apps/three-surface-poc/dist/test-deep-dive-markers.js.map",
+    "apps/three-surface-poc/dist/test-fixture-sweep.global-setup.js.map",
+    "apps/three-surface-poc/dist/test-http-client.js.map",
+    "packages/cap1-conformance/dist/fixtures/index.js.map",
+    "packages/cap1-system/dist/effect-observer.js.map",
+    "packages/cap1-system/dist/harness.js.map",
+    "packages/polaris-dossier/dist/child-process.testkit.js.map",
+    "packages/polaris-dossier/dist/fs-patch.testkit.js.map",
+    "packages/polaris-generation-core/dist/workspace-reach.testkit.js.map",
+    "packages/three-surface-poc-core/dist/test-cleanup.js.map",
+    "packages/three-surface-poc-core/dist/test-frozen.js.map"
+   ],
+   "onlyInHead": [],
+   "byteIdentical": 243,
+   "differ": [
+    "apps/three-surface-poc/dist/git-observation.js.map",
+    "packages/polaris-dossier/dist/cli.js.map"
+   ]
+  },
+  ".d.ts": {
+   "base": {
+    "commit": "b10e4da9a57a472cb6820ef7dea0a05a5dddc0ce",
+    "files": 520,
+    "tests": 264,
+    "sha256": "e0811560b112664c102d02b9496c628d3be000b6f69edec1871f71fe2c11a739"
+   },
+   "head": {
+    "commit": "8fcf409c99ecc3b59392b20b36767421515169bf",
+    "files": 245,
+    "tests": 0,
+    "sha256": "127b840bcb382f3fe5582264ca9a561b44c48a0e2bf2e1fbd18aa57a3ae1b9ce"
+   },
+   "common": 245,
+   "onlyInBaseTests": 264,
+   "onlyInBaseOther": [
+    "apps/three-surface-poc/dist/test-deep-dive-markers.d.ts",
+    "apps/three-surface-poc/dist/test-fixture-sweep.global-setup.d.ts",
+    "apps/three-surface-poc/dist/test-http-client.d.ts",
+    "packages/cap1-conformance/dist/fixtures/index.d.ts",
+    "packages/cap1-system/dist/effect-observer.d.ts",
+    "packages/cap1-system/dist/harness.d.ts",
+    "packages/polaris-dossier/dist/child-process.testkit.d.ts",
+    "packages/polaris-dossier/dist/fs-patch.testkit.d.ts",
+    "packages/polaris-generation-core/dist/workspace-reach.testkit.d.ts",
+    "packages/three-surface-poc-core/dist/test-cleanup.d.ts",
+    "packages/three-surface-poc-core/dist/test-frozen.d.ts"
+   ],
+   "onlyInHead": [],
+   "byteIdentical": 245,
+   "differ": []
+  },
+  ".js": {
+   "base": {
+    "commit": "b10e4da9a57a472cb6820ef7dea0a05a5dddc0ce",
+    "files": 520,
+    "tests": 264,
+    "sha256": "ceb1a844d33fc6ca68f85580f013614f60c53f7a841905d32b0add68dab18e7b"
+   },
+   "head": {
+    "commit": "8fcf409c99ecc3b59392b20b36767421515169bf",
+    "files": 245,
+    "tests": 0,
+    "sha256": "d71df05c499ce1788c9485f94d027395cb93e107a1901f5a8737eed0fa087292"
+   },
+   "common": 245,
+   "onlyInBaseTests": 264,
+   "onlyInBaseOther": [
+    "apps/three-surface-poc/dist/test-deep-dive-markers.js",
+    "apps/three-surface-poc/dist/test-fixture-sweep.global-setup.js",
+    "apps/three-surface-poc/dist/test-http-client.js",
+    "packages/cap1-conformance/dist/fixtures/index.js",
+    "packages/cap1-system/dist/effect-observer.js",
+    "packages/cap1-system/dist/harness.js",
+    "packages/polaris-dossier/dist/child-process.testkit.js",
+    "packages/polaris-dossier/dist/fs-patch.testkit.js",
+    "packages/polaris-generation-core/dist/workspace-reach.testkit.js",
+    "packages/three-surface-poc-core/dist/test-cleanup.js",
+    "packages/three-surface-poc-core/dist/test-frozen.js"
+   ],
+   "onlyInHead": [],
+   "byteIdentical": 244,
+   "differ": [
+    "apps/three-surface-poc/dist/git-observation.js"
+   ]
+  },
+  "other": {
+   "base": {
+    "commit": "b10e4da9a57a472cb6820ef7dea0a05a5dddc0ce",
+    "files": 12,
+    "tests": 0,
+    "sha256": "257efc6b755df8a83ff187bd154e302277be92b5a41a330c4ecac6ba2cf06fdf"
+   },
+   "head": {
+    "commit": "8fcf409c99ecc3b59392b20b36767421515169bf",
+    "files": 10,
+    "tests": 0,
+    "sha256": "60b9cc7bf43d17d41c2f507e3a8f6a7593ecf608605d2ceac30c9a5a448f0920"
+   },
+   "common": 10,
+   "onlyInBaseTests": 0,
+   "onlyInBaseOther": [
+    "packages/cap1-conformance/dist/.tsbuildinfo",
+    "packages/cap1-system/dist/.tsbuildinfo"
+   ],
+   "onlyInHead": [],
+   "compared": false
+  }
+ }
+}

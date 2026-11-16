@@ -1,0 +1,39 @@
+{
+ "mutant": {
+  "id": "R1-flag-between-branches",
+  "file": "apps/syzygy/src/main.ts",
+  "old": "  // `syzygy polaris <url>` is the one-command launched run",
+  "new": "  if (process.env.SYZYGY_PRELOAD_RENDERER === '1') await import('@syzygy/three-surface-poc-app/dossier-site');\n\n  // `syzygy polaris <url>` is the one-command launched run",
+  "note": "a dynamic import behind an environment flag, between the dossier and polaris branches; runs on the daemon path when the flag is set"
+ },
+ "runs": [
+  {
+   "flag": null,
+   "exit": 0,
+   "stderr": "",
+   "hookLoggedPocUrls": 0,
+   "hookFirst": [],
+   "straceExit": 0,
+   "straceOpenedPocDistFiles": 0,
+   "straceFirst": []
+  },
+  {
+   "flag": "1",
+   "exit": 0,
+   "stderr": "",
+   "hookLoggedPocUrls": 6,
+   "hookFirst": [
+    "file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone/apps/three-surface-poc/dist/polaris-generation/dossier-site.js",
+    "file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone/apps/three-surface-poc/dist/design-tokens.js",
+    "file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone/apps/three-surface-poc/dist/polaris-generation/diagram-layout.js"
+   ],
+   "straceExit": 0,
+   "straceOpenedPocDistFiles": 6,
+   "straceFirst": [
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone/apps/three-surface-poc/dist/design-tokens.js",
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone/apps/three-surface-poc/dist/polaris-generation/diagram-layout.js",
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone/apps/three-surface-poc/dist/polaris-generation/dossier-render-local.js"
+   ]
+  }
+ ]
+}

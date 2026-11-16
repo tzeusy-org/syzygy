@@ -1,0 +1,58 @@
+{
+ "numTotalTests": 5306,
+ "numPassedTests": 5230,
+ "numFailedTests": 6,
+ "numPendingTests": 70,
+ "numTodoTests": 0,
+ "numTotalTestSuites": 856,
+ "numFailedTestSuites": 9,
+ "success": false,
+ "files": 240,
+ "failed": [
+  {
+   "file": "packages/polaris-dossier/src/gate-acts.test.ts",
+   "title": "the sitting's acts fail closed refuse an in-force record whose table binds other files than the form names, even when an act binds its bytes",
+   "failure": "Error: STACK_TRACE_ERROR",
+   "inSubject": false
+  },
+  {
+   "file": "packages/polaris-dossier/src/review.test.ts",
+   "title": "review-check does not count a verdict whose launch record is altered to another form, role or prompt",
+   "failure": "Error: STACK_TRACE_ERROR",
+   "inSubject": false
+  },
+  {
+   "file": "packages/polaris-dossier/src/start-gates.test.ts",
+   "title": "init: a run that passes every start gate pins the consented HEAD, records the subject and writes only run.json under the state root",
+   "failure": "Error: STACK_TRACE_ERROR",
+   "inSubject": false
+  },
+  {
+   "file": "packages/polaris-dossier/src/start-gates.test.ts",
+   "title": "init: the clone holds the consented commit alone (syzygy-qkea.24) refuses every top-level name the consented form never leaves: commondir, modules, worktrees, p",
+   "failure": "Error: STACK_TRACE_ERROR",
+   "inSubject": false
+  },
+  {
+   "file": "packages/polaris-dossier/src/start-gates.test.ts",
+   "title": "init: the clone holds the consented commit alone (syzygy-qkea.24) refuses config naming a remote, a promisor, an include or a command the agent's git would run ",
+   "failure": "Error: STACK_TRACE_ERROR",
+   "inSubject": false
+  },
+  {
+   "file": "packages/polaris-dossier/src/start-gates.test.ts",
+   "title": "init: every refusal arm (REQ-polaris-generation-033 scenarios \"Clone at an unconsented revision\" and the governed arms) refuses when the signed registry entry n",
+   "failure": "Error: STACK_TRACE_ERROR",
+   "inSubject": false
+  }
+ ],
+ "skippedByFile": {
+  "packages/polaris-generation-consent/src/act-families.test.ts": 65,
+  "packages/polaris-dossier/src/no-egress.test.ts": 1,
+  "packages/three-surface-poc-core/src/test-artifact-verification.live.test.ts": 1,
+  "packages/three-surface-poc-core/src/work-items.live.test.ts": 1,
+  "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts": 1,
+  "apps/three-surface-poc/src/project-shape-discovery.live.test.ts": 1
+ },
+ "failedInSubject": 0
+}

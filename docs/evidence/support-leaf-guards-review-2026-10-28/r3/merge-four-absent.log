@@ -1,0 +1,11 @@
+31.42 40.04 33.80 16/9893 2700862
+exit 0
+30.36 39.53 33.70 18/9696 2703726
+total 113 passed 112 failed 0 pending 1 files 7 success True
+  packages/support/src/decode-utf8.test.ts passed 6 6
+  packages/support/src/deep-freeze.test.ts passed 6 6
+  packages/support/src/sha256.test.ts passed 4 4
+  packages/support/src/support-purity.test.ts passed 33 33
+  packages/polaris-generation-core/src/workspace-reach.test.ts passed 54 54
+  packages/polaris-dossier/src/no-egress.test.ts passed 7 6
+  packages/three-surface-poc-core/src/owner-act-drafter.test.ts passed 3 3

@@ -1,0 +1,161 @@
+{
+ "baseTests": 241,
+ "headTests": 268,
+ "added": [
+  [
+   "packages/three-surface-poc-core/src/git-object-reader.test.ts",
+   "a 200,000-line closed fence under the read limit (GP-B2 Q1) CR: a 200,000-line closed fence holding a script element reads as text, under the read limit",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/git-object-reader.test.ts",
+   "a 200,000-line closed fence under the read limit (GP-B2 Q1) CR: a script element after a 200,000-line closed fence is found, with a body-free record",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/git-object-reader.test.ts",
+   "a 200,000-line closed fence under the read limit (GP-B2 Q1) CR: scanActiveContent over a 200,000-line closed fence finds nothing inside it",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/git-object-reader.test.ts",
+   "a 200,000-line closed fence under the read limit (GP-B2 Q1) CRLF: a 200,000-line closed fence holding a script element reads as text, under the read limit",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/git-object-reader.test.ts",
+   "a 200,000-line closed fence under the read limit (GP-B2 Q1) CRLF: a script element after a 200,000-line closed fence is found, with a body-free record",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/git-object-reader.test.ts",
+   "a 200,000-line closed fence under the read limit (GP-B2 Q1) CRLF: scanActiveContent over a 200,000-line closed fence finds nothing inside it",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/git-object-reader.test.ts",
+   "a 200,000-line closed fence under the read limit (GP-B2 Q1) LF: a 200,000-line closed fence holding a script element reads as text, under the read limit",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/git-object-reader.test.ts",
+   "a 200,000-line closed fence under the read limit (GP-B2 Q1) LF: a script element after a 200,000-line closed fence is found, with a body-free record",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/git-object-reader.test.ts",
+   "a 200,000-line closed fence under the read limit (GP-B2 Q1) LF: scanActiveContent over a 200,000-line closed fence finds nothing inside it",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/git-object-reader.test.ts",
+   "a 200,000-line closed fence under the read limit (GP-B2 Q1) one spread call over 200,002 arguments still overflows the stack in this test process",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+   "a very long closed fence CR: 200,000 lines are blanked, every line end and the text after the fence kept",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+   "a very long closed fence CR: a script element inside the fence is blanked, and the line after the fence keeps its own",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+   "a very long closed fence CR: the same lines left unclosed are still malformed at the opener",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+   "a very long closed fence CRLF: 200,000 lines are blanked, every line end and the text after the fence kept",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+   "a very long closed fence CRLF: a script element inside the fence is blanked, and the line after the fence keeps its own",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+   "a very long closed fence CRLF: the same lines left unclosed are still malformed at the opener",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+   "a very long closed fence LF: 200,000 lines are blanked, every line end and the text after the fence kept",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+   "a very long closed fence LF: a script element inside the fence is blanked, and the line after the fence keeps its own",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+   "a very long closed fence LF: the same lines left unclosed are still malformed at the opener",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+   "a very long closed fence one spread call over 200,002 arguments still overflows the stack in this test process",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/project-shape-extraction.test.ts",
+   "a source whose class holds 130,000 items is extracted, every item kept in class order",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/project-shape-extraction.test.ts",
+   "a source whose class holds 130,000 items one spread call over 130,002 arguments still overflows the stack in this test process",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/project-shape-model.test.ts",
+   "a very long fence or list does not abort the observation CR: a 200,000-line closed fence at the end of vision.md is classified as a 10-line one is",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/project-shape-model.test.ts",
+   "a very long fence or list does not abort the observation CRLF: a 200,000-line closed fence at the end of vision.md is classified as a 10-line one is",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/project-shape-model.test.ts",
+   "a very long fence or list does not abort the observation LF: a 200,000-line closed fence at the end of vision.md is classified as a 10-line one is",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/project-shape-model.test.ts",
+   "a very long fence or list does not abort the observation a 130,000-item success list is extracted whole",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/project-shape-model.test.ts",
+   "a very long fence or list does not abort the observation one spread call over 200,002 arguments still overflows the stack in this test process",
+   0
+  ]
+ ],
+ "removed": [],
+ "changedCalls": [
+  {
+   "file": "packages/three-surface-poc-core/src/git-object-reader.test.ts",
+   "call": "a CRLF or CR blob gets the outcome its LF form gets > %s: a backtick opener whose info text holds a backtick is excluded as a malformed code context, with a body-free record",
+   "kind": "each"
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/git-object-reader.test.ts",
+   "call": "a CRLF or CR blob gets the outcome its LF form gets > %s: a script element inside a closed tilde fence reads as text, byte for byte",
+   "kind": "each"
+  }
+ ],
+ "changedGeneratedTests": {
+  "a CRLF or CR blob gets the outcome its LF form gets > %s: a backtick opener whose info text holds a backtick is excluded as a malformed code context, with a body-free record": 3,
+  "a CRLF or CR blob gets the outcome its LF form gets > %s: a script element inside a closed tilde fence reads as text, byte for byte": 3
+ },
+ "line": "Tests: +27 ~6 -0",
+ "allBasePassed": true,
+ "allHeadPassed": true
+}

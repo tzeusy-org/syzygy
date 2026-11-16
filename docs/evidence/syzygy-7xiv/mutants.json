@@ -1,0 +1,131 @@
+{
+ "commit": "5a1240805ce7e4a2a4aca89a1ce8559d13e70a4c",
+ "subject": "packages/polaris-dossier/src/execution-choice.ts",
+ "test": "packages/polaris-dossier/src/execution-choice.test.ts",
+ "mutants": [
+  {
+   "id": "R1-check-before-write",
+   "old": "  const marker = launchedMarkerState(run);\n  if (marker === 'launched') {\n    return refuse('launched', 'this run was launched by `syzygy polaris`, and Syzygy never gives the execution instruction to a session it started (SEC-3, as amended by D9); a launched run executes nothing');\n  }\n  if (marker === 'unreadable') {\n    return refuse('launched', 'this run\\'s launched marker is present but cannot be read as the one `syzygy polaris` writes, so the run is treated as launched: Syzygy never gives the execution instruction to a session it started (SEC-3, as amended by D9)');\n  }\n(at its place) and   const choice: StoredExecutionChoice = {\n",
+   "new": "(removed) and   const marker = launchedMarkerState(run);\n  if (marker === 'launched') {\n    return refuse('launched', 'this run was launched by `syzygy polaris`, and Syzygy never gives the execution instruction to a session it started (SEC-3, as amended by D9); a launched run executes nothing');\n  }\n  if (marker === 'unreadable') {\n    return refuse('launched', 'this run\\'s launched marker is present but cannot be read as the one `syzygy polaris` writes, so the run is treated as launched: Syzygy never gives the execution instruction to a session it started (SEC-3, as amended by D9)');\n  }\n  const choice: StoredExecutionChoice = {\n",
+   "exit": 1,
+   "killed": true,
+   "failed": 1,
+   "failedTests": [
+    "\u00d7 allow-execution: refused > checks the marker before every other refusal, where the CLI checked it before 10ms"
+   ],
+   "summary": [
+    "Tests  1 failed | 36 passed (37)"
+   ]
+  },
+  {
+   "id": "R2-launched-reason-swapped",
+   "old": "  if (marker === 'launched') {\n    return refuse('launched', 'this run was launched by `syzygy polaris`, and Syzygy never gives the execution instruction to a session it started (SEC-3, as amended by D9); a launched run executes nothing');\n  }\n",
+   "new": "  if (marker === 'launched') {\n    return refuse('launched', 'this run\\'s launched marker is present but cannot be read as the one `syzygy polaris` writes, so the run is treated as launched: Syzygy never gives the execution instruction to a session it started (SEC-3, as amended by D9)');\n  }\n",
+   "exit": 1,
+   "killed": true,
+   "failed": 2,
+   "failedTests": [
+    "\u00d7 allow-execution: refused > refuses a launched run and records nothing 9ms",
+    "\u00d7 syzygy dossier allow-execution > refuses a launched run and records nothing 2ms"
+   ],
+   "summary": [
+    "Tests  2 failed | 35 passed (37)"
+   ]
+  },
+  {
+   "id": "R3-launched-without-disclosures",
+   "old": "  if (marker === 'launched') {\n    return refuse('launched', 'this run was launched by `syzygy polaris`, and Syzygy never gives the execution instruction to a session it started (SEC-3, as amended by D9); a launched run executes nothing');\n  }\n",
+   "new": "  if (marker === 'launched') {\n    return { ok: false, refusal: { command: 'allow-execution', outcome: 'refused', stage: 'launched', reason: 'this run was launched by `syzygy polaris`, and Syzygy never gives the execution instruction to a session it started (SEC-3, as amended by D9); a launched run executes nothing' } } as AllowExecutionResult;\n  }\n",
+   "exit": 1,
+   "killed": true,
+   "failed": 2,
+   "failedTests": [
+    "\u00d7 allow-execution: refused > refuses a launched run and records nothing 10ms",
+    "\u00d7 syzygy dossier allow-execution > refuses a launched run and records nothing 2ms"
+   ],
+   "summary": [
+    "Tests  2 failed | 35 passed (37)"
+   ]
+  },
+  {
+   "id": "R4-wrong-directory",
+   "old": "  const marker = launchedMarkerState(run);\n",
+   "new": "  const marker = launchedMarkerState(path.dirname(run));\n",
+   "exit": 1,
+   "killed": true,
+   "failed": 11,
+   "failedTests": [
+    "\u00d7 allow-execution: refused > refuses a launched run and records nothing 10ms",
+    "\u00d7 allow-execution: refused > refuses a run whose launched marker is an empty file, as a launched run, and records nothing 3ms",
+    "\u00d7 allow-execution: refused > refuses a run whose launched marker is invalid JSON, as a launched run, and records nothing 3ms",
+    "\u00d7 allow-execution: refused > refuses a run whose launched marker is another format, as a launched run, and records nothing 2ms",
+    "\u00d7 allow-execution: refused > refuses a run whose launched marker is a directory, as a launched run, and records nothing 2ms",
+    "\u00d7 allow-execution: refused > checks the marker before every other refusal, where the CLI checked it before 2ms",
+    "\u00d7 syzygy dossier allow-execution > refuses a launched run and records nothing 1ms",
+    "\u00d7 syzygy dossier allow-execution > refuses a run whose launched marker is an empty file, as a launched run, and records nothing 1ms",
+    "\u00d7 syzygy dossier allow-execution > refuses a run whose launched marker is invalid JSON, as a launched run, and records nothing 1ms",
+    "\u00d7 syzygy dossier allow-execution > refuses a run whose launched marker is another format, as a launched run, and records nothing 1ms",
+    "\u00d7 syzygy dossier allow-execution > refuses a run whose launched marker is a directory, as a launched run, and records nothing 1ms"
+   ],
+   "summary": [
+    "Tests  11 failed | 26 passed (37)"
+   ]
+  },
+  {
+   "id": "R5-unreadable-stage-run",
+   "old": "  if (marker === 'unreadable') {\n    return refuse('launched', 'this run\\'s launched marker is present but cannot be read as the one `syzygy polaris` writes, so the run is treated as launched: Syzygy never gives the execution instruction to a session it started (SEC-3, as amended by D9)');\n  }\n",
+   "new": "  if (marker === 'unreadable') {\n    return refuse('run', 'this run\\'s launched marker is present but cannot be read as the one `syzygy polaris` writes, so the run is treated as launched: Syzygy never gives the execution instruction to a session it started (SEC-3, as amended by D9)');\n  }\n",
+   "exit": 1,
+   "killed": true,
+   "failed": 8,
+   "failedTests": [
+    "\u00d7 allow-execution: refused > refuses a run whose launched marker is an empty file, as a launched run, and records nothing 9ms",
+    "\u00d7 allow-execution: refused > refuses a run whose launched marker is invalid JSON, as a launched run, and records nothing 1ms",
+    "\u00d7 allow-execution: refused > refuses a run whose launched marker is another format, as a launched run, and records nothing 1ms",
+    "\u00d7 allow-execution: refused > refuses a run whose launched marker is a directory, as a launched run, and records nothing 1ms",
+    "\u00d7 syzygy dossier allow-execution > refuses a run whose launched marker is an empty file, as a launched run, and records nothing 1ms",
+    "\u00d7 syzygy dossier allow-execution > refuses a run whose launched marker is invalid JSON, as a launched run, and records nothing 1ms",
+    "\u00d7 syzygy dossier allow-execution > refuses a run whose launched marker is another format, as a launched run, and records nothing 1ms",
+    "\u00d7 syzygy dossier allow-execution > refuses a run whose launched marker is a directory, as a launched run, and records nothing 1ms"
+   ],
+   "summary": [
+    "Tests  8 failed | 29 passed (37)"
+   ]
+  },
+  {
+   "id": "R6-arms-merged",
+   "old": "  if (marker === 'launched') {\n    return refuse('launched', 'this run was launched by `syzygy polaris`, and Syzygy never gives the execution instruction to a session it started (SEC-3, as amended by D9); a launched run executes nothing');\n  }\n  if (marker === 'unreadable') {\n    return refuse('launched', 'this run\\'s launched marker is present but cannot be read as the one `syzygy polaris` writes, so the run is treated as launched: Syzygy never gives the execution instruction to a session it started (SEC-3, as amended by D9)');\n  }\n",
+   "new": "  if (marker !== 'absent') {\n    return refuse('launched', 'this run was launched by `syzygy polaris`, and Syzygy never gives the execution instruction to a session it started (SEC-3, as amended by D9); a launched run executes nothing');\n  }\n",
+   "exit": 1,
+   "killed": true,
+   "failed": 8,
+   "failedTests": [
+    "\u00d7 allow-execution: refused > refuses a run whose launched marker is an empty file, as a launched run, and records nothing 8ms",
+    "\u00d7 allow-execution: refused > refuses a run whose launched marker is invalid JSON, as a launched run, and records nothing 2ms",
+    "\u00d7 allow-execution: refused > refuses a run whose launched marker is another format, as a launched run, and records nothing 1ms",
+    "\u00d7 allow-execution: refused > refuses a run whose launched marker is a directory, as a launched run, and records nothing 1ms",
+    "\u00d7 syzygy dossier allow-execution > refuses a run whose launched marker is an empty file, as a launched run, and records nothing 1ms",
+    "\u00d7 syzygy dossier allow-execution > refuses a run whose launched marker is invalid JSON, as a launched run, and records nothing 1ms",
+    "\u00d7 syzygy dossier allow-execution > refuses a run whose launched marker is another format, as a launched run, and records nothing 1ms",
+    "\u00d7 syzygy dossier allow-execution > refuses a run whose launched marker is a directory, as a launched run, and records nothing 1ms"
+   ],
+   "summary": [
+    "Tests  8 failed | 29 passed (37)"
+   ]
+  },
+  {
+   "id": "R7-check-after-run-name-before-reverify",
+   "old": "  const marker = launchedMarkerState(run);\n  if (marker === 'launched') {\n    return refuse('launched', 'this run was launched by `syzygy polaris`, and Syzygy never gives the execution instruction to a session it started (SEC-3, as amended by D9); a launched run executes nothing');\n  }\n  if (marker === 'unreadable') {\n    return refuse('launched', 'this run\\'s launched marker is present but cannot be read as the one `syzygy polaris` writes, so the run is treated as launched: Syzygy never gives the execution instruction to a session it started (SEC-3, as amended by D9)');\n  }\n(at its place) and   const checked = await reverifyPinnedRevision(",
+   "new": "(removed) and   const marker = launchedMarkerState(run);\n  if (marker === 'launched') {\n    return refuse('launched', 'this run was launched by `syzygy polaris`, and Syzygy never gives the execution instruction to a session it started (SEC-3, as amended by D9); a launched run executes nothing');\n  }\n  if (marker === 'unreadable') {\n    return refuse('launched', 'this run\\'s launched marker is present but cannot be read as the one `syzygy polaris` writes, so the run is treated as launched: Syzygy never gives the execution instruction to a session it started (SEC-3, as amended by D9)');\n  }\n  const checked = await reverifyPinnedRevision(",
+   "exit": 1,
+   "killed": true,
+   "failed": 1,
+   "failedTests": [
+    "\u00d7 allow-execution: refused > checks the marker before every other refusal, where the CLI checked it before 11ms"
+   ],
+   "summary": [
+    "Tests  1 failed | 36 passed (37)"
+   ]
+  }
+ ]
+}

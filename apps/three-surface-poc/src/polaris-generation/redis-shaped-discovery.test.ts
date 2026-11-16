@@ -1,7 +1,7 @@
-import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
+import { tempDir } from '@syzygy/test-kit';
 
 import { DEFAULT_DISCOVERY_BUDGET, gitBlobObjectId, generationSourcesForBody, validateGenerationSources, DEFERRED_BY_BUDGET, DOSSIER_DISCOVERY_BUDGET, discoverAndSelect, quotableGenerationSources } from '@syzygy/polaris-generation-core';
 
@@ -11,10 +11,9 @@ import { measureRedisShapedDiscovery } from './redis-shaped-measure.js';
 
 let scratch = '', run: Awaited<ReturnType<typeof measureRedisShapedDiscovery>>;
 beforeAll(async () => {
-  scratch = mkdtempSync(join(tmpdir(), 'syzygy-redis-shaped-test-'));
+  scratch = tempDir('syzygy-redis-shaped-test-');
   run = await measureRedisShapedDiscovery(join(scratch, 'repo'));
 }, 120_000);
-afterAll(() => rmSync(scratch, { recursive: true, force: true }));
 
 const VENDORED = /^(?:deps|vendor|third_party)\//u;
 
@@ -124,6 +123,8 @@ describe('discovery on a synthetic tree shaped like a large C key-value server',
 
   describe('under the dossier byte cap (400,000 bytes of quotable text)', () => {
     const CORE = Object.values(CORE_FILES).flat() as string[];
+    const inputBytes = (path: string): number => run.corpus.sources.filter(source => source.path === path && !source.exclusion.excluded)
+      .reduce((n, source) => n + source.spans.reduce((m, span) => m + Buffer.byteLength(span.text, 'utf8'), 0), 0);
     const keptPaths = (result: Awaited<ReturnType<typeof discoverAndSelect>>): Set<string> =>
       new Set(result.sources.filter(source => !source.exclusion.excluded && source.spans.length > 0).map(source => source.path));
     const coreMap = async (input: { items: readonly { blobId: string; path: string }[] }) =>
@@ -134,7 +135,12 @@ describe('discovery on a synthetic tree shaped like a large C key-value server',
       const { bytes, selected, deferred, population } = capped.report;
       expect(bytes.cap).toBe(400_000);
       expect(bytes.selected).toBeLessThanOrEqual(400_000);
-      expect(bytes.selected).toBeGreaterThan(390_000);
+      // The fill is greedy: every deferred file that is not split holds more quotable bytes, counted from the input,
+      // than the room the selection left, so none of them would have fit.
+      const room = 400_000 - bytes.selected;
+      const wholeDeferred = deferred.filter(({ path }) => run.corpus.sources.filter(source => source.path === path).length === 1);
+      expect(wholeDeferred.length).toBeGreaterThan(0);
+      for (const { path } of wholeDeferred) expect(inputBytes(path), path).toBeGreaterThan(room);
       expect([...keptPaths(capped)].filter(path => VENDORED.test(path))).toEqual([]);
       expect(selected.blobs + deferred.length).toBe(population.candidateBlobs);
       expect(bytes.selected + bytes.deferred).toBe(run.result.report.bytes.selected + run.result.report.bytes.deferred);
@@ -144,6 +150,8 @@ describe('discovery on a synthetic tree shaped like a large C key-value server',
     const bytesKept = (result: Awaited<ReturnType<typeof discoverAndSelect>>, path: string): number =>
       result.sources.filter(source => source.path === path && !source.exclusion.excluded).reduce((n, source) => n + source.spans.reduce((m, span) => m + Buffer.byteLength(span.text, 'utf8'), 0), 0);
 
+    // The two [Observed] rows keep their exact byte totals (syzygy-bpyt.4.5): each reports what selection measured on this
+    // fixed fixture corpus, so the totals are the observation itself, not a bound; the greedy fill is the row above's property.
     it('[Observed] with the path-and-size prior alone, the three files over 100,000 bytes each take their share and only 6 of 18 core files are read', async () => {
       const capped = await discoverAndSelect(run.corpus.sources, ['q'], DOSSIER_DISCOVERY_BUDGET, { permitted: async () => true });
       const kept = keptPaths(capped);

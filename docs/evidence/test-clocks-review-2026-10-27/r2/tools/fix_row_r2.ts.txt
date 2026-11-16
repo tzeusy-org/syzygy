@@ -1,0 +1,26 @@
+  // rev-532b scratch fix (not a proposal of exact bytes): the branches are found by syntax, not by line text.
+  it('every line of main.ts naming the POC app sits inside the `dossier` or the `polaris` branch, before the daemon path', () => {
+    const text = readFileSync(path.join(REPO_ROOT, 'apps/syzygy/src/main.ts'), 'utf8');
+    const source = ts.createSourceFile('main.ts', text, ts.ScriptTarget.Latest, true);
+    const main = source.statements.find((s): s is ts.FunctionDeclaration => ts.isFunctionDeclaration(s) && s.name?.text === 'main');
+    const body = main?.body?.statements ?? ts.factory.createNodeArray<ts.Statement>();
+    const chain = (s: ts.Statement): ts.IfStatement[] => (ts.isIfStatement(s) ? [s, ...(s.elseStatement ? chain(s.elseStatement) : [])] : []);
+    const ifs = body.flatMap((s) => chain(s));
+    const branches = ['dossier', 'polaris'].map((name) => ifs.filter((s) => s.expression.getText(source) === `argv[0] === '${name}'`));
+    const daemon = body.find((s) => s.getText(source).startsWith('let parsed = parseCli('));
+    expect(branches.map((found) => found.length)).toEqual([1, 1]);
+    expect(daemon).toBeDefined();
+    const [dossier, polaris] = branches.map((found) => found[0]!);
+    for (const branch of [dossier, polaris]) {
+      // An `else` runs on every other argv: it may only be the other branch.
+      expect(branch.elseStatement === undefined || branch.elseStatement === dossier || branch.elseStatement === polaris).toBe(true);
+      expect(branch.getEnd()).toBeLessThanOrEqual(daemon!.getStart(source));
+    }
+    const inside = [dossier, polaris].map((branch) => [branch.thenStatement.getStart(source), branch.thenStatement.getEnd()]);
+    const naming: number[] = [];
+    for (let at = text.indexOf('three-surface-poc-app'); at !== -1; at = text.indexOf('three-surface-poc-app', at + 1)) naming.push(at);
+    expect(naming.length).toBeGreaterThan(0);
+    const lineOf = (at: number): string => text.slice(text.lastIndexOf('\n', at) + 1, text.indexOf('\n', at));
+    expect(naming.filter((at) => !inside.some(([from, to]) => at > from && at < to)).map(lineOf)).toEqual([]);
+  });
+});

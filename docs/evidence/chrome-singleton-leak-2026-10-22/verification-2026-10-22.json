@@ -1,0 +1,510 @@
+{
+ "subject": {
+  "baseCommit": "9a30237ed700e6579f3fcc1c6292e6c759861c3f",
+  "codeCommit": "aa74cbb92f2624640b44e09c38f31a6f333a29f8",
+  "firstApproachCommit": "0856f92213d04085088cfa199caa6a94af7569b4",
+  "headAtRecording": "012e6c84229aa4b4657108fd58f5f524df501bb8",
+  "gatesRunAtCommit": "012e6c84229aa4b4657108fd58f5f524df501bb8"
+ },
+ "appsAndConfigDiffSinceCodeCommit": "",
+ "toolDigests": {
+  "assemble_verification.py": "c7816200678dcb0ff590652cb042d3164d4b2aa46dd0e15aae4570cb92f5c7bd",
+  "browser_files_run.py": "1e5f2df47bfabcd99fbfc02d9bb03101bb852d81bb3154c8976463f8f2c40bf6",
+  "chrome_matrix.py": "2239d730e1211aca2ed4763c2343607564a7052d90e09e8b84b46b8becc3f637",
+  "compare_test_lists.py": "7be5bec0072d13cd43e7ea3e87546f650547e6891d88e380c5c5ba8adef11da5",
+  "launch_close.mjs": "f451d39beb215f60a295448b85a1dda2d0d91e72e507e8c7bc38a623c6cfc1ad",
+  "launch_failure_probe.py": "a71724e734177cc66d4f382a3108766ecd1462131ec46f54092ba1a1b0aa3583",
+  "launch_probe.py": "f6d152d597e08f6f98c726b5ad3ef458433135c1268359f7f675f248d15d99d1",
+  "mutate_cdp.py": "220bc4db287c1fc2711e8b1a66cda455b7d9dc00e0aa3d0fb483197f7c8aeea8",
+  "name_probe.py": "73bd0becc207394db474e94cdb06c316adf2145477d3fc9c8d7e52cd42d9a99d",
+  "tmpdir_length_probe.py": "34b66b0c2199f1118e4100bfa1fdca17c75604850bebb5e8bc48a92b348e3b26"
+ },
+ "diagnosis": {
+  "claim": "Chrome leaves its singleton directory (`.com.google.Chrome.<random>` in Chrome 120, `org.chromium.Chromium.<random>` in the builds from 145) in TMPDIR only when its leader is killed (closeDisposableBrowser, after the 1 s close grace); a clean exit removes it",
+  "atBase": {
+   "record": "launch-probe-base-2026-10-22.json",
+   "launches": 24,
+   "launchesWhoseCloseThrew": 0,
+   "killed": 7,
+   "exitedCleanly": 17,
+   "killedAndLeftAChromeDirectory": 7,
+   "exitedAndLeftAChromeDirectory": 0,
+   "holds": true
+  },
+  "linkGoneByRemoval": "Chrome unlinks <profile>/SingletonSocket as it begins to shut down, before it removes the directory, so a link read at removal time finds nothing on a killed launch (the first revision of this fix read it there and still left the directory on killed launches; see the commit message of the replacing commit)",
+  "existingTeardownTestAtBase": {
+   "file": "apps/three-surface-poc/src/cdp-browser.browser.test.ts",
+   "attempts": 1,
+   "chromeSingletonDirectoriesLeftOnPassingAttempt": [
+    1
+   ]
+  }
+ },
+ "ac1": {
+  "claim": "after a passing run of every Chrome-driven vitest file with a fresh private TMPDIR, that TMPDIR holds no .com.google.Chrome.* or polaris-draft-browser-* directory",
+  "listA": [
+   "apps/three-surface-poc/src/cdp-browser.browser.test.ts",
+   "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "apps/three-surface-poc/src/orrery.browser.test.ts",
+   "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts",
+   "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+   "apps/three-surface-poc/src/polaris-generation/draft-preview.browser.test.ts",
+   "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+   "apps/three-surface-poc/src/proposal-disclosure.test.ts",
+   "apps/three-surface-poc/src/surface-routes.test.ts",
+   "apps/three-surface-poc/src/trajectory-narrowing.browser.test.ts",
+   "apps/three-surface-poc/src/tuple-encoding.test.ts"
+  ],
+  "listB": [
+   "apps/three-surface-poc/src/cdp-browser.browser.test.ts",
+   "apps/three-surface-poc/src/orrery.browser.test.ts",
+   "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts",
+   "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+   "apps/three-surface-poc/src/polaris-generation/draft-preview.browser.test.ts",
+   "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+   "apps/three-surface-poc/src/trajectory-narrowing.browser.test.ts"
+  ],
+  "inAButNotB": [
+   "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "apps/three-surface-poc/src/proposal-disclosure.test.ts",
+   "apps/three-surface-poc/src/surface-routes.test.ts",
+   "apps/three-surface-poc/src/tuple-encoding.test.ts"
+  ],
+  "inBButNotA": [],
+  "atHead": {
+   "record": "browser-files-head-2026-10-22.json",
+   "treeCommit": "dccd484f4749b55f981f2e5211de4112ab7951de",
+   "filesInListA": 11,
+   "filesInListB": 7,
+   "filesWithAPassingAttempt": 10,
+   "chromeSingletonDirectoriesLeftOnPassingAttempts": 0,
+   "draftPreviewDirectoriesLeftOnPassingAttempts": 0,
+   "combinedRunExit": 1,
+   "combinedRunChromeSingletonDirectoriesLeft": 1,
+   "combinedRunDraftPreviewDirectoriesLeft": 0,
+   "everyFilePassedAloneAndLeftNone": false
+  },
+  "atBase": {
+   "record": "browser-files-base-2026-10-22.json",
+   "treeCommit": "9a30237ed700e6579f3fcc1c6292e6c759861c3f",
+   "filesInListA": 11,
+   "filesInListB": 7,
+   "filesWithAPassingAttempt": 11,
+   "chromeSingletonDirectoriesLeftOnPassingAttempts": 2,
+   "draftPreviewDirectoriesLeftOnPassingAttempts": 0,
+   "combinedRunExit": 1,
+   "combinedRunChromeSingletonDirectoriesLeft": 1,
+   "combinedRunDraftPreviewDirectoriesLeft": 0,
+   "everyFilePassedAloneAndLeftNone": false
+  },
+  "launchProbeAtHead": {
+   "record": "launch-probe-head-2026-10-22.json",
+   "launches": 24,
+   "launchesThatClosed": 24,
+   "launchesWhoseCloseThrew": 0,
+   "closeErrors": [],
+   "killed": 7,
+   "exitedCleanly": 17,
+   "closedLaunchesThatLeftAnything": 0,
+   "leftByLaunchesWhoseCloseThrew": [],
+   "entriesInPrivateTmpdirAtTheEnd": [],
+   "entriesAtTheEndNotLeftByAThrownClose": [],
+   "holds": true
+  },
+  "launchFailure": {
+   "atHead": {
+    "record": "launch-failure-head-2026-10-22.json",
+    "draftPreviewDirectoriesLeft": 0,
+    "retainedProfilesLeft": 0,
+    "holds": true
+   },
+   "atBase": {
+    "record": "launch-failure-base-2026-10-22.json",
+    "draftPreviewDirectoriesLeft": 1,
+    "retainedProfilesLeft": 0,
+    "holds": true
+   }
+  }
+ },
+ "closeThrewUnderLoad": {
+  "claim": "closeDisposableBrowser throws, and keeps the profile (and so Chrome's singleton directory, which is removed only with it), when two empty scans of the process group do not come within its 3 s drain; on this loaded host it happened in runs of the real-Chrome cases",
+  "attemptsOfTheBrowserFilesRunAtHead": [
+   {
+    "file": "apps/three-surface-poc/src/cdp-browser.browser.test.ts",
+    "attempt": 1,
+    "firstErrorLine": "Error: promise rejected \"Error: private browser profile drain did \u2026\" instead of resolving",
+    "chromeSingletonDirectoriesLeft": 1,
+    "browserProfilesLeft": 1
+   },
+   {
+    "file": "apps/three-surface-poc/src/cdp-browser.browser.test.ts",
+    "attempt": 2,
+    "firstErrorLine": "Error: promise rejected \"Error: private browser profile drain did \u2026\" instead of resolving",
+    "chromeSingletonDirectoriesLeft": 1,
+    "browserProfilesLeft": 1
+   }
+  ],
+  "attemptsOfTheMutantControl": [
+   {
+    "attempt": 1,
+    "status": "passed",
+    "chromeSingletonDirectoriesLeft": 0,
+    "drainErrors": 0
+   }
+  ],
+  "acceptedAs": "a load failure, not a pass and not a kill: the criterion of AC1 is over passing attempts, and the mutant runs score only failures with another first error line"
+ },
+ "repair": {
+  "claim": "the hosted node-ci failure (run 39768592736) was the leading dot: Chrome 155 names its singleton directory without the dot Chrome 120 gives it; the pattern and the case's assertion take the dot as optional, and the real-Chrome file passes under every Chrome installed here",
+  "hostedRun": {
+   "run": 39768592736,
+   "failingTest": "cdp-browser.browser.test.ts > disposable Chrome teardown in a real browser > leaves no Chrome singleton directory behind when the leader is killed",
+   "firstErrorLine": "AssertionError: expected 'com.google.Chrome.CCtKIQ' to match /^\\.(com\\.google\\.Chrome|org\\.chromium\u2026/",
+   "runnerChrome": "Google Chrome 155.0.8059.39",
+   "runnerImage": "Image: ubuntu-26.04"
+  },
+  "hostedRunAfterTheFix": {
+   "run": 39793328073,
+   "headCommit": "dccd484f4749b55f981f2e5211de4112ab7951de",
+   "runnerChrome": "Google Chrome 155.0.8059.39",
+   "runnerImage": "Image: ubuntu-26.04",
+   "realChromeFile": "\u2713  @syzygy/three-surface-poc-app  apps/three-surface-poc/src/cdp-browser.browser.test.ts (2 tests) 3623ms",
+   "unitSuite": "Test Files  232 passed | 3 skipped (235)",
+   "logSha256": "6f29b14a3a53d009a2fcf4761fef23ceaee902921a77be442fe3b220edeeb767",
+   "note": "lines read from `gh run view <run> --log` (the log is not stored here; its digest is, and the run stays readable on the hosted service); the later commits of this branch add only files in this directory"
+  },
+  "names": {
+   "record": "chrome-names-2026-10-22.json",
+   "chromes": [
+    {
+     "version": "Google Chrome 120.0.6099.224",
+     "singletonDirectoryName": ".com.google.Chrome.<random>",
+     "leadingDot": true
+    },
+    {
+     "version": "Google Chrome for Testing 145.0.7632.6",
+     "singletonDirectoryName": "org.chromium.Chromium.<random>",
+     "leadingDot": false
+    },
+    {
+     "version": "Google Chrome for Testing 147.0.7727.57",
+     "singletonDirectoryName": "org.chromium.Chromium.<random>",
+     "leadingDot": false
+    },
+    {
+     "version": "Google Chrome for Testing 149.0.7827.22",
+     "singletonDirectoryName": "org.chromium.Chromium.<random>",
+     "leadingDot": false
+    },
+    {
+     "version": "Google Chrome for Testing 151.0.7922.47",
+     "singletonDirectoryName": "org.chromium.Chromium.<random>",
+     "leadingDot": false
+    },
+    {
+     "version": "Google Chrome for Testing 154.0.8037.57",
+     "singletonDirectoryName": "org.chromium.Chromium.<random>",
+     "leadingDot": false
+    }
+   ],
+   "dotBetween": "the dot is present in 120 and absent in every build from 145 to 154 probed, and in 155 on the hosted runner; which release dropped it is not known"
+  },
+  "matrixPreFix": {
+   "record": "chrome-matrix-pre-fix-2026-10-22.json",
+   "treeCommit": "dccd484f4749b55f981f2e5211de4112ab7951de",
+   "mutant": "leading-dot-required",
+   "runs": [
+    {
+     "version": "Google Chrome 120.0.6099.224",
+     "status": "passed",
+     "failingOnTheNameAssertion": 0,
+     "firstErrorLine": null,
+     "singletonShapedLeft": 0
+    },
+    {
+     "version": "Google Chrome for Testing 145.0.7632.6",
+     "status": "failed",
+     "failingOnTheNameAssertion": 1,
+     "firstErrorLine": "AssertionError: expected 'org.chromium.Chromium.1B7EXr' to match /^\\.(com\\.google\\.Chrome|org\\.chromium\u2026/",
+     "singletonShapedLeft": 1
+    },
+    {
+     "version": "Google Chrome for Testing 147.0.7727.57",
+     "status": "failed",
+     "failingOnTheNameAssertion": 1,
+     "firstErrorLine": "AssertionError: expected 'org.chromium.Chromium.lLc2N3' to match /^\\.(com\\.google\\.Chrome|org\\.chromium\u2026/",
+     "singletonShapedLeft": 1
+    },
+    {
+     "version": "Google Chrome for Testing 149.0.7827.22",
+     "status": "failed",
+     "failingOnTheNameAssertion": 1,
+     "firstErrorLine": "AssertionError: expected 'org.chromium.Chromium.UK9p4O' to match /^\\.(com\\.google\\.Chrome|org\\.chromium\u2026/",
+     "singletonShapedLeft": 1
+    },
+    {
+     "version": "Google Chrome for Testing 151.0.7922.47",
+     "status": "failed",
+     "failingOnTheNameAssertion": 1,
+     "firstErrorLine": "AssertionError: expected 'org.chromium.Chromium.tFD51V' to match /^\\.(com\\.google\\.Chrome|org\\.chromium\u2026/",
+     "singletonShapedLeft": 1
+    },
+    {
+     "version": "Google Chrome for Testing 154.0.8037.57",
+     "status": "failed",
+     "failingOnTheNameAssertion": 1,
+     "firstErrorLine": "AssertionError: expected 'org.chromium.Chromium.0mz6cM' to match /^\\.(com\\.google\\.Chrome|org\\.chromium\u2026/",
+     "singletonShapedLeft": 1
+    }
+   ],
+   "holds": true
+  },
+  "matrixHead": {
+   "record": "chrome-matrix-head-2026-10-22.json",
+   "treeCommit": "dccd484f4749b55f981f2e5211de4112ab7951de",
+   "runs": [
+    {
+     "version": "Google Chrome 120.0.6099.224",
+     "status": "passed",
+     "singletonShapedLeft": 0
+    },
+    {
+     "version": "Google Chrome for Testing 145.0.7632.6",
+     "status": "passed",
+     "singletonShapedLeft": 0
+    },
+    {
+     "version": "Google Chrome for Testing 147.0.7727.57",
+     "status": "passed",
+     "singletonShapedLeft": 0
+    },
+    {
+     "version": "Google Chrome for Testing 149.0.7827.22",
+     "status": "passed",
+     "singletonShapedLeft": 0
+    },
+    {
+     "version": "Google Chrome for Testing 151.0.7922.47",
+     "status": "passed",
+     "singletonShapedLeft": 0
+    },
+    {
+     "version": "Google Chrome for Testing 154.0.8037.57",
+     "status": "passed",
+     "singletonShapedLeft": 0
+    }
+   ],
+   "holds": true
+  },
+  "launchProbeChrome154": {
+   "head": {
+    "record": "launch-probe-head-chrome154-2026-10-22.json",
+    "browserVersion": "Google Chrome for Testing 154.0.8037.57",
+    "launches": 24,
+    "launchesThatClosed": 21,
+    "launchesWhoseCloseThrew": 3,
+    "killed": 2,
+    "exitedCleanly": 19,
+    "closedLaunchesThatLeftAnything": 0,
+    "holds": true
+   },
+   "base": {
+    "record": "launch-probe-base-chrome154-2026-10-22.json",
+    "browserVersion": "Google Chrome for Testing 154.0.8037.57",
+    "launches": 24,
+    "launchesThatClosed": 22,
+    "launchesWhoseCloseThrew": 2,
+    "killed": 1,
+    "exitedCleanly": 21,
+    "killedAndLeftAChromeDirectory": 1,
+    "exitedAndLeftAChromeDirectory": 0,
+    "holds": true
+   }
+  },
+  "browserFilesChrome154": {
+   "record": "browser-files-head-chrome154-2026-10-22.json",
+   "browserVersion": "Google Chrome for Testing 154.0.8037.57",
+   "filesInListA": 11,
+   "filesInListB": 7,
+   "filesWithAPassingAttempt": 11,
+   "chromeSingletonDirectoriesLeftOnPassingAttempts": 0,
+   "draftPreviewDirectoriesLeftOnPassingAttempts": 0,
+   "combinedRunExit": 1,
+   "combinedRunChromeSingletonDirectoriesLeft": 0,
+   "combinedRunDraftPreviewDirectoriesLeft": 0,
+   "everyFilePassedAloneAndLeftNone": true
+  },
+  "replacedRecords": {
+   "launch-probe-head-2026-10-22.json": {
+    "treeCommit": "8dc316a79ce1310af0ab7c88a7b8f35a740718ad",
+    "lastCommitHoldingIt": "ba857fd4d1f1697227398b210419b1bd507bf8eb"
+   },
+   "launch-probe-base-2026-10-22.json": {
+    "treeCommit": "8dc316a79ce1310af0ab7c88a7b8f35a740718ad",
+    "lastCommitHoldingIt": "ba857fd4d1f1697227398b210419b1bd507bf8eb"
+   },
+   "tmpdir-length-head-2026-10-22.json": {
+    "treeCommit": "8dc316a79ce1310af0ab7c88a7b8f35a740718ad",
+    "lastCommitHoldingIt": "ba857fd4d1f1697227398b210419b1bd507bf8eb"
+   },
+   "tmpdir-length-base-2026-10-22.json": {
+    "treeCommit": "8dc316a79ce1310af0ab7c88a7b8f35a740718ad",
+    "lastCommitHoldingIt": "ba857fd4d1f1697227398b210419b1bd507bf8eb"
+   },
+   "tmpdir-length-rejected-2026-10-22.json": {
+    "treeCommit": "8dc316a79ce1310af0ab7c88a7b8f35a740718ad",
+    "lastCommitHoldingIt": "ba857fd4d1f1697227398b210419b1bd507bf8eb"
+   },
+   "launch-failure-head-2026-10-22.json": {
+    "treeCommit": "8dc316a79ce1310af0ab7c88a7b8f35a740718ad",
+    "lastCommitHoldingIt": "ba857fd4d1f1697227398b210419b1bd507bf8eb"
+   },
+   "launch-failure-base-2026-10-22.json": {
+    "treeCommit": "8dc316a79ce1310af0ab7c88a7b8f35a740718ad",
+    "lastCommitHoldingIt": "ba857fd4d1f1697227398b210419b1bd507bf8eb"
+   },
+   "mutants-cdp-2026-10-22.json": {
+    "treeCommit": "8dc316a79ce1310af0ab7c88a7b8f35a740718ad",
+    "lastCommitHoldingIt": "ba857fd4d1f1697227398b210419b1bd507bf8eb"
+   },
+   "browser-files-head-2026-10-22.json": {
+    "treeCommit": "8dc316a79ce1310af0ab7c88a7b8f35a740718ad",
+    "lastCommitHoldingIt": "ba857fd4d1f1697227398b210419b1bd507bf8eb"
+   },
+   "test-lists-2026-10-22.json": {
+    "treeCommit": "8dc316a79ce1310af0ab7c88a7b8f35a740718ad",
+    "lastCommitHoldingIt": "ba857fd4d1f1697227398b210419b1bd507bf8eb"
+   },
+   "note": "each was replaced in this commit by a record of the repaired head; the earlier one is in git history at lastCommitHoldingIt and named the commit shown. browser-files-base is not re-run: it describes the base, which this repair does not touch. The three tmpdir-length records were re-run because the probe now tries a launch whose close threw the drain error up to 3 times and counts it as inconclusive because of load, not as a failed launch"
+  }
+ },
+ "ac2": "out of scope: a killed test runner (SIGKILL/SIGTERM of vitest or of an operator command) leaves whatever Chrome and the helper had made; syzygy-bpyt.4.10 sweeps only syzygy-poc-surface-fixture-* directories of dead processes and this change adds no sweep. What this change covers is a Chrome the helper itself kills in a run that otherwise ends normally.",
+ "ac3": {
+  "claim": "no existing assertion changes",
+  "changedTestFiles": {
+   "apps/three-surface-poc/src/cdp-browser.browser.test.ts": {
+    "removedLines": 1,
+    "removedImportLines": 1,
+    "removedLinesNamingAnAssertion": 0,
+    "removed": [
+     "import { readdirSync, readFileSync } from 'node:fs';"
+    ]
+   },
+   "apps/three-surface-poc/src/cdp-browser.test.ts": {
+    "removedLines": 1,
+    "removedImportLines": 1,
+    "removedLinesNamingAnAssertion": 0,
+    "removed": [
+     "import { describe, expect, it } from 'vitest';"
+    ]
+   },
+   "apps/three-surface-poc/src/polaris-generation/draft-preview.browser.test.ts": {
+    "removedLines": 3,
+    "removedImportLines": 1,
+    "removedLinesNamingAnAssertion": 0,
+    "removed": [
+     "import { findBrowserExecutable, launchBrowser } from '../cdp-browser.js';",
+     "  const browser = await launchBrowser(executable);",
+     "  } finally { await browser.close(); await rm(directory, { recursive: true, force: true }); }"
+    ]
+   }
+  }
+ },
+ "tmpdirLength": {
+  "claim": "the longest TMPDIR that launches Chrome did not move; the first approach (Chrome's temp directory set to the profile) cut it",
+  "head": {
+   "record": "tmpdir-length-head-2026-10-22.json",
+   "longestLaunched": 65,
+   "shortestFailed": 66,
+   "inconclusiveBecauseOfLoad": [],
+   "monotone": true
+  },
+  "base": {
+   "record": "tmpdir-length-base-2026-10-22.json",
+   "longestLaunched": 65,
+   "shortestFailed": 66,
+   "inconclusiveBecauseOfLoad": [],
+   "monotone": true
+  },
+  "rejected": {
+   "record": "tmpdir-length-rejected-2026-10-22.json",
+   "longestLaunched": 39,
+   "shortestFailed": 40,
+   "inconclusiveBecauseOfLoad": [],
+   "monotone": true
+  }
+ },
+ "mutants": {
+  "record": "mutants-cdp-2026-10-22.json",
+  "treeCommit": "dccd484f4749b55f981f2e5211de4112ab7951de",
+  "total": 21,
+  "killed": 21,
+  "outcomes": {
+   "singleton-option-ignored": "killed",
+   "link-not-read-at-removal": "killed",
+   "link-read-after-profile-removed": "killed",
+   "singleton-never-removed": "killed",
+   "profile-not-removed": "killed",
+   "parent-not-checked": "killed",
+   "name-not-checked": "killed",
+   "name-anchor-dropped": "killed",
+   "name-suffix-unrestricted": "killed",
+   "leading-dot-required": "killed",
+   "leading-dot-forbidden": "killed",
+   "leading-dot-repeatable": "killed",
+   "leading-character-any": "killed",
+   "chromium-form-dropped": "killed",
+   "stat-follows-links": "killed",
+   "is-directory-guard-dropped": "killed",
+   "uid-guard-dropped": "killed",
+   "removal-failure-propagates": "killed",
+   "singleton-not-read-while-running": "killed",
+   "cleanup-not-passed-on-close": "killed",
+   "draft-preview-launch-outside-try": "killed"
+  },
+  "controlHolds": true,
+  "controlLaunchFailureHolds": true
+ },
+ "tests": {
+  "record": "test-lists-2026-10-22.json",
+  "testsLine": "Tests: +12 ~0 -0",
+  "baseLines": 5115,
+  "headLines": 5127,
+  "addedByFile": {
+   "[@syzygy/three-surface-poc-app] apps/three-surface-poc/src/cdp-browser.browser.test.ts": 1,
+   "[@syzygy/three-surface-poc-app] apps/three-surface-poc/src/cdp-browser.test.ts": 11
+  },
+  "removedByFile": {},
+  "firstListing": {
+   "record": "test-lists-attempt-1-2026-10-22.json",
+   "testsLine": "Tests: +11 ~0 -3",
+   "why": "the first head listing omitted three session-view tests that are gated by a bwrap probe at import time (packages/polaris-dossier/src/session-view.test.ts: `hasBwrap`, which runs bwrap and so depends on host load); a relisting matched"
+  }
+ },
+ "gates": {
+  "typecheck": {
+   "log": "gate-typecheck.log",
+   "exit": 0,
+   "sha256": "6e9917c045c3a698cee6f074e21d7e7615b77283e0a86a575a145ac3cb673ce3",
+   "resultLine": "> tsc -b packages/cap1-core packages/cap1-daemon packages/cap1-conformance packages/three-surface-poc-core apps/syzygy apps/three-surface-poc packages/cap1-system packages/polaris-generation-core packages/polaris-generation-consent packages/polaris-dossier"
+  },
+  "checkGovernance": {
+   "log": "gate-governance.log",
+   "exit": 0,
+   "sha256": "a6b1ffefcbe04990c709fa5ea148c9d7c3aea996c26126e0fc15a290c7020b54",
+   "resultLine": "32 OK, 21 WARN, 0 FAIL (53 checks) \u2014 counts derived, not asserted"
+  },
+  "checkQuotations": {
+   "log": "gate-quotations.log",
+   "exit": 0,
+   "sha256": "693a5d66abdd998dd4eb0a4dab219c8df6861514bfd84645bbea2e6c9737a15b",
+   "resultLine": "note  QC-1  excluded verbatim records, round directory: 139 .md files, 10 quotations, 4 not in their source now; history not searched"
+  },
+  "authoritySweep": {
+   "log": "gate-authority.log",
+   "exit": 0,
+   "sha256": "ac99544a8aafe8197145dd0c04ae808eb71a54a177e9fb8e6f539aeba40a4458",
+   "resultLine": "Tests  5 passed (5)"
+  }
+ }
+}

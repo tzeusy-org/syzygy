@@ -1,0 +1,61 @@
+{
+ "base": 157,
+ "head": 165,
+ "added": 8,
+ "removed": 0,
+ "perFile": {
+  "packages/polaris-dossier/src/argv.test.ts": {
+   "base": 85,
+   "head": 86
+  },
+  "packages/polaris-dossier/src/subpath-imports.test.ts": {
+   "base": 27,
+   "head": 27
+  },
+  "packages/polaris-generation-core/src/island-boundary.test.ts": {
+   "base": 4,
+   "head": 4
+  },
+  "packages/polaris-generation-core/src/workspace-reach.test.ts": {
+   "base": 41,
+   "head": 48
+  }
+ },
+ "duplicatesBase": [],
+ "duplicatesHead": [],
+ "addedNames": [
+  [
+   "packages/polaris-dossier/src/argv.test.ts",
+   "each policy copy above, against the spec its caller passes > reads every src directory to its depth"
+  ],
+  [
+   "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "the shared workspace resolver > leaves a bare name declared as a git dependency whose path holds .tgz outside the workspace"
+  ],
+  [
+   "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "the shared workspace resolver > leaves a bare name declared as a registry tilde range outside the workspace"
+  ],
+  [
+   "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "the shared workspace resolver > reads a bare name declared as a ./ path dependency as naming no module"
+  ],
+  [
+   "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "the shared workspace resolver > reads a bare name declared as a .tar dependency as naming no module"
+  ],
+  [
+   "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "the shared workspace resolver > reads a bare name declared as a .tar.gz dependency as naming no module"
+  ],
+  [
+   "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "the shared workspace resolver > reads a bare name declared as a dependency on its own directory as naming no module"
+  ],
+  [
+   "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "the shared workspace resolver > reads a bare name declared as a remote tarball URL dependency as naming no module"
+  ]
+ ],
+ "removedNames": []
+}

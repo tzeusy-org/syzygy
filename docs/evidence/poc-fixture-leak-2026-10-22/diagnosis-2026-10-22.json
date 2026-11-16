@@ -1,0 +1,253 @@
+{
+ "subject": {
+  "baseCommit": "0d4d50984f6aa501217fe7109b6aec1b9679e4c9",
+  "note": "the diagnosis is of main after PR 503, before the change. Revised 2026-10-22 after the coordinator dropped the per-file removal hook this branch first carried: its records (unit mutants, non-draining probe, head interrupt probe) are removed from this directory and are in git history at 0d963aaf30a8d425b83f0d369b137281d586ea93"
+ },
+ "cleanRunsAtBase": {
+  "command": "npx vitest run --project @syzygy/three-surface-poc-app",
+  "runs": [
+   {
+    "tmpdir": "a path of 110 characters under the scratchpad",
+    "log": "diagnosis-run-1/2",
+    "summary": [
+     "Test Files  10 failed | 78 passed | 1 skipped (89)",
+     "Tests  6 failed | 1040 passed | 43 skipped (1089)",
+     "Duration  38.61s (transform 3.61s, setup 664ms, collect 19.47s, tests 94.03s, environment 18ms, prepare 6.31s)"
+    ],
+    "note": "ten browser-driven files failed with \"browser exited with signal before announcing a DevTools endpoint\"; see tmpdirLengthProbe. Not a clean run."
+   },
+   {
+    "tmpdir": "/tmp/lc410/base",
+    "summary": [
+     "Test Files  88 passed | 1 skipped (89)",
+     "Tests  1087 passed | 2 skipped (1089)",
+     "Duration  78.35s (transform 3.98s, setup 925ms, collect 24.26s, tests 255.08s, environment 21ms, prepare 8.98s)"
+    ],
+    "left": {
+     "entries": 2,
+     "fixtureCopies": 0,
+     "fixtureTemplates": 0,
+     "byKind": {
+      ".com.google.Chrome.4U8QSs": 1,
+      "node-compile-cache": 1
+     }
+    }
+   }
+  ],
+  "tmpdirLengthProbe": [
+   {
+    "label": "long",
+    "tmpdirLength": 110,
+    "profilePathLength": 136,
+    "exit": 1,
+    "summary": [
+     "Test Files  1 failed (1)",
+     "Tests  1 skipped (1)"
+    ],
+    "firstBrowserErrorLine": "Error: browser exited with signal before announcing a DevTools endpoint:"
+   },
+   {
+    "label": "short",
+    "tmpdirLength": 16,
+    "profilePathLength": 42,
+    "exit": 0,
+    "summary": [
+     "Test Files  1 passed (1)",
+     "Tests  1 passed (1)"
+    ],
+    "firstBrowserErrorLine": ""
+   }
+  ]
+ },
+ "perFileAtBase": {
+  "treeCommit": "0d4d5098",
+  "testFilesInDirectory": 89,
+  "fixtureUsingTestFiles": 42,
+  "filesWithCopiesLeft": 0,
+  "filesWithTemplatesLeft": 0,
+  "copiesLeftTotal": 0,
+  "templatesLeftTotal": 0,
+  "nonzeroExits": []
+ },
+ "callersThatDrainNothing": {
+  "population": "44 tracked .ts files under apps/three-surface-poc/src name test-model-fixture or polaris-accessibility-variants; 42 create repositories",
+  "scanFlaggedNoDrain": [
+   "apps/three-surface-poc/src/polaris-accessibility-main.ts",
+   "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts"
+  ],
+  "scanDelegatedArrays": [
+   "apps/three-surface-poc/src/polaris-accessibility-variants.ts",
+   "apps/three-surface-poc/src/polaris-copy.test.ts",
+   "apps/three-surface-poc/src/polaris-first-reading.test.ts",
+   "apps/three-surface-poc/src/polaris-narrative.test.ts"
+  ],
+  "readByHand": {
+   "apps/three-surface-poc/src/polaris-accessibility-main.ts": "drains cleanups in a finally block, line 50 (a CLI, no test hook exists outside Vitest)",
+   "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts": "one array drained in a try/finally inside the test, line 290; the other drained by afterAll, line 321",
+   "apps/three-surface-poc/src/polaris-accessibility-variants.ts": "cleanups is a parameter; its three test callers and the CLI drain it (afterEach, afterAll, afterAll, finally)",
+   "apps/three-surface-poc/src/polaris-copy.test.ts": "owned is a parameter of buildVariant, called with variantCleanups, drained by afterAll lines 228-230; cleanups drained by afterEach lines 25-27",
+   "apps/three-surface-poc/src/polaris-first-reading.test.ts": "cleanupList is the sharedFixtureModels callback parameter, drained by afterAll(shared.remove) line 53; cleanups drained by afterEach lines 27-28",
+   "apps/three-surface-poc/src/polaris-narrative.test.ts": "cleanupList is the sharedFixtureModels callback parameter, drained by afterAll(shared.remove) line 60; cleanups drained by afterEach lines 18-19"
+  },
+  "conclusion": "no caller was found that drains nothing: 0 of 42, by the static scan plus the by-hand reading above, and 0 of 42 test files by the per-file run (perFileAtBase)",
+  "atTheFinalCodeCommit": {
+   "treeCommit": "3f08143c5e0c78ca42288d16589f36673c9ba854",
+   "filesNamingTheHelper": 46,
+   "callers": 43,
+   "scanFlaggedNoDrain": [
+    "apps/three-surface-poc/src/polaris-accessibility-main.ts",
+    "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts"
+   ],
+   "scanDelegatedArrays": [
+    "apps/three-surface-poc/src/polaris-accessibility-variants.ts",
+    "apps/three-surface-poc/src/polaris-copy.test.ts",
+    "apps/three-surface-poc/src/polaris-first-reading.test.ts",
+    "apps/three-surface-poc/src/polaris-narrative.test.ts"
+   ],
+   "callersNotInTheScanAtTheFirstRevision": {
+    "apps/three-surface-poc/src/fixture-directories.test.ts": {},
+    "apps/three-surface-poc/src/main.test.ts": {
+     "fixtureDirectories": "afterAll"
+    }
+   },
+   "perFileRun": {
+    "treeCommit": "3f08143c5e0c78ca42288d16589f36673c9ba854",
+    "testFilesInDirectory": 90,
+    "fixtureUsingTestFiles": 44,
+    "filesWithCopiesLeft": 0,
+    "filesWithTemplatesLeft": 0,
+    "copiesLeftTotal": 0,
+    "templatesLeftTotal": 0,
+    "nonzeroExits": []
+   },
+   "note": "main moved from 0d4d5098 to a04069678c02881cd41a25b850e14f79d581c083 with PR 507, whose main.test.ts now calls buildFixtureModel and drains in afterAll. The six files the scan flagged are the six read by hand above; the scan flags the same six. fixture-directories.test.ts is in the population of files naming the helper only because a comment in it names test-model-fixture.test.ts; it creates no repository (createsRepositories is false), which is why the files naming the helper rise from 44 at the base to 46 and the callers from 42 to 43 (main.test.ts alone); the per-file run counts it among its 44 files and it leaves 0."
+  }
+ },
+ "interruptedRuns": {
+  "method": "interrupt_probe.py: the project run as the leader of a new process group, SIGKILL (`base`) or SIGTERM (`baseSigterm`) sent to that group once three fixture copies exist, then the TMPDIR sampled for 80 seconds",
+  "base": {
+   "treeCommit": "0d4d5098",
+   "signal": "KILL",
+   "atSignal": {
+    "secondsIntoTheRun": 29.5,
+    "fixtureCopies": 3,
+    "fixtureTemplates": 2,
+    "otherSyzygyEntries": 9,
+    "liveProcessesNamingThisTmpdir": 27
+   },
+   "lastSample": {
+    "secondsAfterSignal": 80,
+    "fixtureCopies": 3,
+    "fixtureTemplates": 2,
+    "otherSyzygyEntries": 10,
+    "liveProcessesNamingThisTmpdir": 8
+   }
+  },
+  "note": "the copies and templates are still there 80 seconds after the signal: no hook runs in a killed worker, so nothing a test file registers can remove them. The orphaned processes in the samples are Chrome crashpad handlers and `cat` pipes of killed browser launches; each probe run's own were stopped afterwards by PID, each re-checked against the probe's unique TMPDIR in its environment.",
+  "baseSigterm": {
+   "treeCommit": "0d4d50984f6aa501217fe7109b6aec1b9679e4c9",
+   "signal": "TERM",
+   "atSignal": {
+    "secondsIntoTheRun": 35.0,
+    "fixtureCopies": 3,
+    "fixtureTemplates": 3,
+    "otherSyzygyEntries": 7,
+    "liveProcessesNamingThisTmpdir": 10
+   },
+   "lastSample": {
+    "secondsAfterSignal": 80,
+    "fixtureCopies": 3,
+    "fixtureTemplates": 3,
+    "otherSyzygyEntries": 5,
+    "liveProcessesNamingThisTmpdir": 0
+   },
+   "record": "interrupt-term-base-2026-10-22.json"
+  }
+ },
+ "tmpCensus": {
+  "afterCleanup": {
+   "tool": "census_tmp.py",
+   "directory": "/tmp",
+   "takenAt": "2026-10-22 06:52:29",
+   "burstGapSeconds": 120,
+   "total": 193,
+   "copies": 192,
+   "templates": 1,
+   "owners": [
+    1000
+   ],
+   "bursts": 13,
+   "burstSizeHistogram": {
+    "1": 5,
+    "2": 1,
+    "3": 1,
+    "25": 2,
+    "28": 3,
+    "49": 1
+   },
+   "largestBursts": [
+    {
+     "first": "2026-10-22 01:39:06",
+     "last": "2026-10-22 01:45:30",
+     "size": 49
+    },
+    {
+     "first": "2026-10-22 03:40:45",
+     "last": "2026-10-22 03:43:30",
+     "size": 28
+    },
+    {
+     "first": "2026-10-22 03:47:35",
+     "last": "2026-10-22 03:51:11",
+     "size": 28
+    },
+    {
+     "first": "2026-10-22 04:01:37",
+     "last": "2026-10-22 04:06:20",
+     "size": 28
+    },
+    {
+     "first": "2026-10-22 01:07:50",
+     "last": "2026-10-22 01:14:30",
+     "size": 25
+    },
+    {
+     "first": "2026-10-22 01:49:29",
+     "last": "2026-10-22 01:51:51",
+     "size": 25
+    },
+    {
+     "first": "2026-10-22 01:03:31",
+     "last": "2026-10-22 01:03:42",
+     "size": 3
+    },
+    {
+     "first": "2026-10-22 05:53:45",
+     "last": "2026-10-22 05:53:59",
+     "size": 2
+    }
+   ]
+  },
+  "beforeCleanup": {
+   "asPrintedByTheCensusToolAt": "2026-10-22 06:2x +08, before the 58 oldest directories were removed (the tool was then a scratch script; census_tmp.py is its recorded successor)",
+   "total": 251,
+   "copies": 243,
+   "templates": 8,
+   "bursts": 31,
+   "burstSizeHistogram": {
+    "1": 9,
+    "2": 5,
+    "3": 4,
+    "4": 2,
+    "5": 1,
+    "6": 4,
+    "25": 2,
+    "28": 3,
+    "49": 1
+   },
+   "note": "typed from the tool output, not re-derivable: those directories no longer exist"
+  },
+  "readingOfTheCensus": "[Inferred] the six bursts of 25 to 49 copies over 3 to 7 minutes are interrupted runs, not a non-draining caller, which would leave a count tied to its file on every complete run"
+ },
+ "finding": "The leak in /tmp is not a caller that fails to drain: a clean project run leaves 0 fixture directories, all fixture-using test files leave 0 when run alone, and no caller was found that drains nothing. The directories come from runs that were killed or aborted (mtime bursts of 25 to 49 copies, and SIGKILL and SIGTERM probes that leave them in place at base): no teardown hook runs there. [Inferred for the bursts, Observed for the probes]"
+}

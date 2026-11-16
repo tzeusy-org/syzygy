@@ -1,0 +1,313 @@
+{
+ "tree": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-539/clone-mut",
+ "commit": "561c80b38d447a56e4c1542e0a8fbbdb2dd1d845",
+ "mutants": [
+  {
+   "mutant": "M1-poc-source-imports-cap1-daemon",
+   "file": "apps/three-surface-poc/src/routes.ts",
+   "old": "import { escapeHtml, type Route, type RouteResponse } from '@syzygy/http-host';\n",
+   "new": "import { type Route, type RouteResponse } from '@syzygy/http-host';\nimport { escapeHtml } from '@syzygy/cap1-daemon';\n",
+   "commit": "561c80b38d447a56e4c1542e0a8fbbdb2dd1d845",
+   "oldCount": 1,
+   "checks": {
+    "typecheck": {
+     "command": "npx tsc -b <root typecheck list>",
+     "exit": 0,
+     "seconds": 61.2,
+     "errors": [],
+     "survives": true
+    },
+    "poc-alone": {
+     "command": "rm -rf */*/dist; npx tsc -b apps/three-surface-poc",
+     "exit": 2,
+     "seconds": 28.8,
+     "errors": [
+      "apps/three-surface-poc/src/routes.ts(2,28): error TS2307: Cannot find module '@syzygy/cap1-daemon' or its corresponding type declarations."
+     ],
+     "survives": false
+    },
+    "vitest": {
+     "command": "npx vitest run <2 files>",
+     "files": [
+      "apps/three-surface-poc/src/routes.test.ts",
+      "apps/three-surface-poc/src/surface-routes.test.ts"
+     ],
+     "exit": 0,
+     "seconds": 30.5,
+     "total": 29,
+     "passed": 29,
+     "failed": 0,
+     "firstFailures": [],
+     "survives": true
+    }
+   },
+   "killedBy": [
+    "poc-alone"
+   ],
+   "cleanAfter": true
+  },
+  {
+   "mutant": "M2-poc-banner-one-char",
+   "file": "apps/three-surface-poc/src/poc-main.ts",
+   "old": "'Credential value is never printed. POC is local, experimental, and non-release.',",
+   "new": "'Credential value is never printed. POC is local, experimental, and non-release!',",
+   "commit": "561c80b38d447a56e4c1542e0a8fbbdb2dd1d845",
+   "oldCount": 1,
+   "checks": {
+    "vitest": {
+     "command": "npx vitest run <1 files>",
+     "files": [
+      "apps/three-surface-poc/src/main.test.ts"
+     ],
+     "exit": 1,
+     "seconds": 15.1,
+     "total": 24,
+     "passed": 23,
+     "failed": 1,
+     "firstFailures": [
+      "main(argv, io): serving prints the banner, registers the three route groups, and closes once on the first signal"
+     ],
+     "survives": false
+    }
+   },
+   "killedBy": [
+    "vitest"
+   ],
+   "cleanAfter": true
+  },
+  {
+   "mutant": "M3-host-refusal-status",
+   "file": "packages/http-host/src/server.ts",
+   "old": "export const REFUSAL_STATUS = 401;",
+   "new": "export const REFUSAL_STATUS = 403;",
+   "commit": "561c80b38d447a56e4c1542e0a8fbbdb2dd1d845",
+   "oldCount": 1,
+   "checks": {
+    "vitest": {
+     "command": "npx vitest run <13 files>",
+     "files": [
+      "apps/three-surface-poc/src/evaluation-footer.test.ts",
+      "apps/three-surface-poc/src/main.test.ts",
+      "apps/three-surface-poc/src/materialize-action.test.ts",
+      "apps/three-surface-poc/src/page-size-delta.test.ts",
+      "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+      "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+      "apps/three-surface-poc/src/polaris-source-route.test.ts",
+      "apps/three-surface-poc/src/reobserve-action.test.ts",
+      "apps/three-surface-poc/src/response-limits.test.ts",
+      "apps/three-surface-poc/src/routes.test.ts",
+      "apps/three-surface-poc/src/surface-routes.test.ts",
+      "apps/three-surface-poc/src/tuple-encoding.test.ts",
+      "apps/three-surface-poc/src/verbatim-route.test.ts"
+     ],
+     "exit": 1,
+     "seconds": 62.2,
+     "total": 152,
+     "passed": 149,
+     "failed": 3,
+     "firstFailures": [
+      "Polaris machine presentation envelope (PWB-REQ-014; RFC7-2, RFC7-3) refuses without the bearer and, with it, serves the narrative of the same render the human p",
+      "three-surface POC routes revalidates only the complete bounded /api/poc representation, after credential admission",
+      "three-surface POC routes serves one model through human and authenticated machine views"
+     ],
+     "survives": false
+    }
+   },
+   "killedBy": [
+    "vitest"
+   ],
+   "cleanAfter": true
+  },
+  {
+   "mutant": "M4-host-type-unexported",
+   "file": "packages/http-host/src/server.ts",
+   "old": "export interface RouteContext {",
+   "new": "interface RouteContext {",
+   "commit": "561c80b38d447a56e4c1542e0a8fbbdb2dd1d845",
+   "oldCount": 1,
+   "checks": {
+    "typecheck": {
+     "command": "npx tsc -b <root typecheck list>",
+     "exit": 2,
+     "seconds": 46.9,
+     "errors": [
+      "packages/cap1-daemon/src/package.test.ts(77,60): error TS2694: Namespace '\"/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-539/clone-mut/packages/http-host/dist/index\"' has no exported member 'RouteContext'.",
+      "packages/cap1-daemon/src/server.ts(23,8): error TS2305: Module '\"@syzygy/http-host\"' has no exported member 'RouteContext'.",
+      "apps/three-surface-poc/src/reobserve-action.test.ts(2,15): error TS2305: Module '\"@syzygy/http-host\"' has no exported member 'RouteContext'.",
+      "apps/three-surface-poc/src/response-limits.test.ts(11,29): error TS2305: Module '\"@syzygy/http-host\"' has no exported member 'RouteContext'."
+     ],
+     "survives": false
+    },
+    "vitest": {
+     "command": "npx vitest run <2 files>",
+     "files": [
+      "apps/three-surface-poc/src/reobserve-action.test.ts",
+      "apps/three-surface-poc/src/verbatim-route.test.ts"
+     ],
+     "exit": 0,
+     "seconds": 20.0,
+     "total": 17,
+     "passed": 17,
+     "failed": 0,
+     "firstFailures": [],
+     "survives": true
+    }
+   },
+   "killedBy": [
+    "typecheck"
+   ],
+   "cleanAfter": true
+  },
+  {
+   "mutant": "M5-poc-tsconfig-drops-http-host-reference",
+   "file": "apps/three-surface-poc/tsconfig.json",
+   "old": "    {\n      \"path\": \"../../packages/http-host\"\n    },\n",
+   "new": "",
+   "commit": "561c80b38d447a56e4c1542e0a8fbbdb2dd1d845",
+   "oldCount": 1,
+   "checks": {
+    "typecheck": {
+     "command": "npx tsc -b <root typecheck list>",
+     "exit": 0,
+     "seconds": 22.1,
+     "errors": [],
+     "survives": true
+    },
+    "poc-alone": {
+     "command": "rm -rf */*/dist; npx tsc -b apps/three-surface-poc",
+     "exit": 2,
+     "seconds": 42.7,
+     "errors": [
+      "apps/three-surface-poc/src/evaluation-footer.test.ts(4,28): error TS2307: Cannot find module '@syzygy/http-host' or its corresponding type declarations.",
+      "apps/three-surface-poc/src/exact-tables.ts(1,28): error TS2307: Cannot find module '@syzygy/http-host' or its corresponding type declarations.",
+      "apps/three-surface-poc/src/main.test.ts(9,56): error TS2307: Cannot find module '@syzygy/http-host' or its corresponding type declarations.",
+      "apps/three-surface-poc/src/main.test.ts(162,26): error TS7006: Parameter 'daemonStartOptions' implicitly has an 'any' type."
+     ],
+     "survives": false
+    }
+   },
+   "killedBy": [
+    "poc-alone"
+   ],
+   "cleanAfter": true
+  },
+  {
+   "mutant": "M6-lock-keeps-cap1-daemon-edge",
+   "file": "package-lock.json",
+   "old": "      \"dependencies\": {\n        \"@syzygy/http-host\": \"0.0.0\",\n        \"@syzygy/polaris-generation-consent\": \"0.0.0\",",
+   "new": "      \"dependencies\": {\n        \"@syzygy/cap1-daemon\": \"0.0.0\",\n        \"@syzygy/http-host\": \"0.0.0\",\n        \"@syzygy/polaris-generation-consent\": \"0.0.0\",",
+   "commit": "561c80b38d447a56e4c1542e0a8fbbdb2dd1d845",
+   "oldCount": 1,
+   "checks": {
+    "npm-ci": {
+     "command": "npm ci --ignore-scripts",
+     "exit": 0,
+     "seconds": 3.4,
+     "tail": [
+      "added 117 packages in 3s"
+     ],
+     "survives": true
+    }
+   },
+   "killedBy": [],
+   "cleanAfter": true
+  },
+  {
+   "mutant": "S1-shim-credential-binding-swapped",
+   "file": "packages/cap1-daemon/src/credentials.ts",
+   "old": "  CREDENTIAL_FILE_MODE,\n",
+   "new": "  STATE_DIR_MODE as CREDENTIAL_FILE_MODE,\n",
+   "commit": "561c80b38d447a56e4c1542e0a8fbbdb2dd1d845",
+   "oldCount": 1,
+   "checks": {
+    "surface": {
+     "command": "surface.mjs base vs mutant, 7.15 key",
+     "surfaceEqual": false,
+     "changedRows": {
+      "packages/cap1-daemon/src/index.ts": [
+       [
+        "CREDENTIAL_FILE_MODE",
+        true,
+        false,
+        "packages/http-host/src/credentials.ts",
+        "STATE_DIR_MODE"
+       ]
+      ],
+      "packages/cap1-daemon/src/credentials.ts": [
+       [
+        "CREDENTIAL_FILE_MODE",
+        true,
+        false,
+        "packages/http-host/src/credentials.ts",
+        "STATE_DIR_MODE"
+       ]
+      ]
+     },
+     "survives": false
+    }
+   },
+   "killedBy": [
+    "surface"
+   ],
+   "cleanAfter": true
+  },
+  {
+   "mutant": "S2-shim-value-made-type-only",
+   "file": "packages/cap1-daemon/src/server.ts",
+   "old": "  REFUSAL_BODY,\n",
+   "new": "  type REFUSAL_BODY,\n",
+   "commit": "561c80b38d447a56e4c1542e0a8fbbdb2dd1d845",
+   "oldCount": 1,
+   "checks": {
+    "surface": {
+     "command": "surface.mjs base vs mutant, 7.15 key",
+     "surfaceEqual": true,
+     "changedRows": {},
+     "survives": true
+    },
+    "typecheck": {
+     "command": "npx tsc -b <root typecheck list>",
+     "exit": 2,
+     "seconds": 27.5,
+     "errors": [
+      "packages/cap1-daemon/src/package.test.ts(60,14): error TS7053: Element implicitly has an 'any' type because expression of type '\"CREDENTIAL_FILE_MODE\" | \"CREDENTIAL_FILE_NAME\" | \"CREDENTIAL_TOKEN_BYTES\" | \"DAEMON_HOST\" | \"HANDLER_FAILURE_REASON\" | \"HANDLER_FAILURE_STATUS\" | \"REFUSAL_BODY\" | \"REFUSAL_STATUS\" | ... 9 more ... | \"verifyCredential\"' can't be used to index type 'typeof import(\"/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-539/clone-mut/packages/cap1-daemon/src/index\", { with: { \"resolution-mode\": \"import\" } })'."
+     ],
+     "survives": false
+    }
+   },
+   "killedBy": [
+    "typecheck"
+   ],
+   "cleanAfter": true
+  },
+  {
+   "mutant": "S3-host-option-type-widened",
+   "file": "packages/http-host/src/server.ts",
+   "old": "  readonly port?: number | undefined;",
+   "new": "  readonly port?: number | string | undefined;",
+   "commit": "561c80b38d447a56e4c1542e0a8fbbdb2dd1d845",
+   "oldCount": 1,
+   "checks": {
+    "surface": {
+     "command": "surface.mjs base vs mutant, 7.15 key",
+     "surfaceEqual": true,
+     "changedRows": {},
+     "survives": true
+    },
+    "typecheck": {
+     "command": "npx tsc -b <root typecheck list>",
+     "exit": 2,
+     "seconds": 12.3,
+     "errors": [
+      "packages/http-host/src/server.ts(298,25): error TS2769: No overload matches this call."
+     ],
+     "survives": false
+    }
+   },
+   "killedBy": [
+    "typecheck"
+   ],
+   "cleanAfter": true
+  }
+ ]
+}

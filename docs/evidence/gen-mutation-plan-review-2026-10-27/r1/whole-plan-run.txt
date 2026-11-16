@@ -1,0 +1,20 @@
+
+> poc:generation-mutation-run
+> npm run build:poc --silent && node apps/three-surface-poc/dist/polaris-generation/generation-mutation-run-main.js --date 2026-10-27-r543
+
+baseline: 107/107 passed; 12 mutations
+killed   canonical-json-sorted-keys-disabled (1 failing)
+killed   canonical-json-cycle-check-disabled (1 failing)
+killed   canonical-json-proxy-check-disabled (1 failing)
+killed   parse-json-duplicate-key-check-disabled (6 failing)
+killed   parse-json-pollution-key-check-disabled (4 failing)
+killed   parse-json-byte-limit-check-disabled (1 failing)
+killed   pipeline-max-calls-disabled (1 failing)
+killed   pipeline-repair-cycle-cap-disabled (3 failing)
+killed   pipeline-late-receipt-suppressed (1 failing)
+killed   provider-draft-duplicate-handle-check-disabled (4 failing)
+killed   provider-draft-unknown-source-check-disabled (2 failing)
+killed   provider-draft-unknown-finding-target-check-disabled (1 failing)
+evidence: /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-543/clone/docs/evidence/polaris-generation-core-mutation-run-2026-10-27-r543.json
+summary: 12/12 killed, 0 survived, 0 restore failures
+exit 0

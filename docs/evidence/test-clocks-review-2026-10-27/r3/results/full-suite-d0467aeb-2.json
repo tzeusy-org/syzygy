@@ -1,0 +1,33 @@
+{
+ "tool": "suite_r3.py",
+ "commit": "d0467aeb44a1a980572118f20d322be519b72bbe",
+ "args": [],
+ "exit": 0,
+ "seconds": 286,
+ "load": [
+  [
+   "45.93",
+   "44.83",
+   "39.19"
+  ],
+  [
+   "48.75",
+   "47.27",
+   "41.59"
+  ]
+ ],
+ "summary": {
+  "numTotalTests": 5379,
+  "numPassedTests": 5374,
+  "numFailedTests": 0,
+  "numPendingTests": 5,
+  "numTodoTests": 0,
+  "numTotalTestSuites": 869,
+  "numFailedTestSuites": 0,
+  "success": true
+ },
+ "failed": [],
+ "brokenFiles": [],
+ "stdoutTail": "etterInsideClosedDetails\":false,\"line\":\"4 / 11 words\",\"violations\":[]}},{\"page\":\"none\",\"report\":{\"viewport\":{\"width\":1280,\"height\":900},\"total\":6,\"rows\":[{\"identity\":\"why\",\"rendered\":false},{\"identity\":\"promises\",\"rendered\":false},{\"identity\":\"refusals-and-rule\",\"rendered\":false},{\"identity\":\"capabilities-and-fit\",\"rendered\":false},{\"identity\":\"exact-requirement\",\"rendered\":false},{\"identity\":\"unknown-or-contradiction\",\"rendered\":false},{\"identity\":\"claim-strength\",\"rendered\":false},{\"identity\":\"architecture-and-groups\",\"rendered\":false},{\"identity\":\"v1-success\",\"rendered\":false}],\"setter\":null,\"setterInsideClosedDetails\":false,\"line\":\"6 words\",\"violations\":[]}}]\n[M4 unknown sweep] {\"model\":\"plain\",\"polaris\":21,\"trajectory\":17,\"orrery\":9}\n[M4 unknown sweep] {\"model\":\"observed-shape\",\"polaris\":13,\"trajectory\":17,\"orrery\":9}\n[M4 unknown sweep] {\"model\":\"unreachable\",\"polaris\":24,\"trajectory\":1,\"orrery\":10}\n[M4 unknown sweep] {\"model\":\"no-seeds\",\"polaris\":8,\"trajectory\":2,\"orrery\":1}\n[M4 unknown sweep] {\"model\":\"worker-change\",\"polaris\":19,\"trajectory\":6,\"orrery\":7}\n[M4 route parity] {\"model\":\"plain\",\"tuples\":35,\"ids\":21,\"machine\":21}\n[M4 route parity] {\"model\":\"observed-shape\",\"tuples\":35,\"ids\":21,\"machine\":21}\n[M4 route parity] {\"model\":\"unreachable\",\"tuples\":23,\"ids\":12,\"machine\":12}\n[M4 route parity] {\"model\":\"no-seeds\",\"tuples\":4,\"ids\":3,\"machine\":3}\n[M4 route parity] {\"model\":\"worker-change\",\"tuples\":20,\"ids\":12,\"machine\":12}\nJSON report written to /tmp/r532c-6/suite.json\n",
+ "stderrTail": ":21.690Z\",\"method\":\"GET\",\"route\":\"/machine\",\"status\":401,\"reason\":\"credential-refused\",\"contentType\":\"application/json\"}\n{\"kind\":\"daemon-http-outcome\",\"at\":\"2026-10-27T11:03:21.702Z\",\"method\":\"GET\",\"route\":\"/machine\",\"status\":401,\"reason\":\"credential-refused\",\"contentType\":\"application/json\"}\n{\"kind\":\"daemon-http-outcome\",\"at\":\"2026-10-27T11:03:21.719Z\",\"method\":\"GET\",\"route\":\"/machine\",\"status\":401,\"reason\":\"credential-refused\",\"contentType\":\"application/json\"}\n{\"kind\":\"daemon-http-outcome\",\"at\":\"2026-10-27T11:03:21.728Z\",\"method\":\"GET\",\"route\":\"/machine\",\"status\":401,\"reason\":\"credential-refused\",\"contentType\":\"application/json\"}\n{\"kind\":\"daemon-http-outcome\",\"at\":\"2026-10-27T11:03:21.745Z\",\"method\":\"GET\",\"route\":\"/machine\",\"status\":401,\"reason\":\"credential-refused\",\"contentType\":\"application/json\"}\n{\"kind\":\"daemon-http-outcome\",\"at\":\"2026-10-27T11:03:21.777Z\",\"method\":\"GET\",\"route\":\"/machine\",\"status\":401,\"reason\":\"credential-refused\",\"contentType\":\"application/json\"}\n{\"kind\":\"daemon-http-outcome\",\"at\":\"2026-10-27T11:03:21.787Z\",\"method\":\"GET\",\"route\":\"/machine\",\"status\":401,\"reason\":\"credential-refused\",\"contentType\":\"application/json\"}\n{\"kind\":\"daemon-http-outcome\",\"at\":\"2026-10-27T11:03:21.799Z\",\"method\":\"GET\",\"route\":\"/machine\",\"status\":401,\"reason\":\"credential-refused\",\"contentType\":\"application/json\"}\n{\"kind\":\"daemon-http-outcome\",\"at\":\"2026-10-27T11:03:21.822Z\",\"method\":\"UNKNOWN\",\"pathLength\":8,\"status\":404,\"reason\":\"unknown-route\",\"contentType\":\"application/json\"}\n"
+}

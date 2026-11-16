@@ -1,0 +1,27 @@
+{
+ "subject": "the JavaScript `npm run build` emits under apps/*/dist and packages/*/dist",
+ "base": {
+  "commit": "b10e4da9a57a472cb6820ef7dea0a05a5dddc0ce",
+  "files": 520,
+  "tests": 264,
+  "sha256": "ceb1a844d33fc6ca68f85580f013614f60c53f7a841905d32b0add68dab18e7b"
+ },
+ "head": {
+  "commit": "8322df4f49280b989d8a959f8a9a4348750cd254",
+  "files": 253,
+  "tests": 0,
+  "sha256": "fc388870d4f5d50273c90bd4a85fc25530080d2b609f57e73ca3e5c24ef7d6a7"
+ },
+ "common": 253,
+ "byteIdentical": 252,
+ "differ": [
+  "packages/polaris-generation-core/dist/workspace-reach.testkit.js"
+ ],
+ "onlyInBaseTests": 264,
+ "onlyInBaseOther": [
+  "packages/cap1-conformance/dist/fixtures/index.js",
+  "packages/cap1-system/dist/effect-observer.js",
+  "packages/cap1-system/dist/harness.js"
+ ],
+ "onlyInHead": []
+}

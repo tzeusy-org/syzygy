@@ -1,0 +1,467 @@
+{
+ "bead": "syzygy-mea.10.5",
+ "baseCommit": "672da889be40c2544d09f24f6baf492eb7f4990b",
+ "subjects": {
+  "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": "c422f134d577b824b7bfe88b479d2e3450c43d586e5c4b31fd43456bb6bd2413",
+  "packages/polaris-generation-core/src/closed-schema.ts": "2e11a3f07c17cc1a00be0eead09f60004d680edb1b9b883481617160f7cd5d4d",
+  "packages/polaris-dossier/src/draft-schema.ts": "53d82622c63820f76da89b9e84beca13bc241cdeb8b27235334956a771020a05",
+  "packages/polaris-dossier/src/brief.ts": "b964af8e2b4a08c764cf9c6440a6381e2e59ad28d85a48e55f87b5727e51d0c1",
+  "packages/polaris-dossier/src/render.ts": "3b64a1c63df3ac4e42779922d6a94f9c1ab340dc9dc91542165587ceeb2959ba",
+  "packages/polaris-dossier/src/check-derive.ts": "8762582ee38e993fa6a6f38f346fd69b5fb52935551e3544c598c3a79e1ff533",
+  "packages/polaris-dossier/src/review-packet.ts": "5c657df19c0724325c1121385548663a892977698287b79795d27de7312a46e9"
+ },
+ "note": "each mutant applied to its subject at baseCommit (bytes named by subjects), the suites run, then restored",
+ "tests": [
+  "packages/polaris-dossier/src/render.test.ts",
+  "packages/polaris-dossier/src/check.test.ts",
+  "packages/polaris-dossier/src/draft-schema.test.ts",
+  "packages/polaris-dossier/src/review.test.ts",
+  "packages/polaris-dossier/src/brief.test.ts",
+  "packages/polaris-generation-core/src/closed-schema.test.ts",
+  "apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.test.ts",
+  "apps/three-surface-poc/src/polaris-generation/dossier-quote-fidelity.test.ts"
+ ],
+ "mutants": [
+  {
+   "subject": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "id": "th-no-scope",
+   "old": "`<th scope=\"row\"${html.slice('<th'.length)}`",
+   "new": "html",
+   "outcome": "killed"
+  },
+  {
+   "subject": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "id": "no-caption",
+   "old": "<table><caption>${escape(e.caption)}</caption>${head}",
+   "new": "<table>${head}",
+   "outcome": "killed"
+  },
+  {
+   "subject": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "id": "col-no-scope",
+   "old": "`<th scope=\"col\">${escape(column)}</th>`",
+   "new": "`<th>${escape(column)}</th>`",
+   "outcome": "killed"
+  },
+  {
+   "subject": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "id": "rowheaders-ignored",
+   "old": "const tag = e.rowHeaders && c === 0 ? 'th' : 'td';",
+   "new": "const tag = 'td';",
+   "outcome": "killed"
+  },
+  {
+   "subject": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "id": "empty-blank",
+   "old": "<${tag} class=\"empty-cell\">no entry</${tag}>",
+   "new": "<${tag} class=\"empty-cell\"></${tag}>",
+   "outcome": "killed"
+  },
+  {
+   "subject": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "id": "callout-no-tone-text",
+   "old": "<span class=\"callout-tone\">${TONE_NAME[e.tone]}</span> ",
+   "new": "",
+   "outcome": "killed"
+  },
+  {
+   "subject": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "id": "callout-children-dropped",
+   "old": "${e.children.map(child => block(from, child)).join('')}</aside>",
+   "new": "</aside>",
+   "outcome": "killed"
+  },
+  {
+   "subject": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "id": "steps-ul",
+   "old": "`<ol class=\"steps\"${attrs}>${e.items.map(item => paragraph(from, item, 'li')).join('')}</ol>`",
+   "new": "`<ul class=\"steps\"${attrs}>${e.items.map(item => paragraph(from, item, 'li')).join('')}</ul>`",
+   "outcome": "killed"
+  },
+  {
+   "subject": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "id": "dt-dropped",
+   "old": "`<dt>${escape(entry.term)}</dt>${paragraph(from, entry.definition, 'dd')}`",
+   "new": "paragraph(from, entry.definition, 'dd')",
+   "outcome": "killed"
+  },
+  {
+   "subject": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "id": "card-label-dropped",
+   "old": "<p class=\"card-label\">${escape(item.label)}</p>",
+   "new": "",
+   "outcome": "killed"
+  },
+  {
+   "subject": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "id": "details-summary-dropped",
+   "old": "<summary>${escape(e.summary)}${count}</summary>",
+   "new": "<summary>${count}</summary>",
+   "outcome": "killed"
+  },
+  {
+   "subject": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "id": "caption-unescaped",
+   "old": "<caption>${escape(e.caption)}</caption>",
+   "new": "<caption>${e.caption}</caption>",
+   "outcome": "killed"
+  },
+  {
+   "subject": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "id": "provider-element-allowed",
+   "old": "      if (local === undefined) throw new DossierRenderError('not-renderable');\n      return element(",
+   "new": "      return element(",
+   "outcome": "survived",
+   "disposition": "equivalent: a provider draft never carries `element` (its closed schema refuses the field before render), so the guard is unreachable from any input"
+  },
+  {
+   "subject": "packages/polaris-generation-core/src/closed-schema.ts",
+   "id": "fallback-off",
+   "old": "    if (named.length === 0 && unnamed.length === 1 && keys.size > 0 && carriesNone(value, keys)) {",
+   "new": "    if (false) {",
+   "outcome": "killed"
+  },
+  {
+   "subject": "packages/polaris-generation-core/src/closed-schema.ts",
+   "id": "fallback-ignores-keys",
+   "old": "unnamed.length === 1 && keys.size > 0 && carriesNone(value, keys)",
+   "new": "unnamed.length === 1",
+   "outcome": "killed"
+  },
+  {
+   "subject": "packages/polaris-generation-core/src/closed-schema.ts",
+   "id": "fallback-any-unnamed",
+   "old": "named.length === 0 && unnamed.length === 1 &&",
+   "new": "named.length === 0 && unnamed.length >= 1 &&",
+   "outcome": "killed"
+  },
+  {
+   "subject": "packages/polaris-generation-core/src/closed-schema.ts",
+   "id": "names-unresolved",
+   "old": "schema.oneOf.map((arm) => describeForm(resolve(walk.defs, arm))).join('; ')",
+   "new": "schema.oneOf.map(describeForm).join('; ')",
+   "outcome": "killed"
+  },
+  {
+   "subject": "packages/polaris-dossier/src/draft-schema.ts",
+   "id": "details-may-nest",
+   "old": "elements: list(ref('detailContent'), 1, 30) }),",
+   "new": "elements: list(ref('content'), 1, 30) }),",
+   "outcome": "killed"
+  },
+  {
+   "subject": "packages/polaris-dossier/src/draft-schema.ts",
+   "id": "steps-min-one",
+   "old": "items: list(ref('paragraph'), 2, 20) }),",
+   "new": "items: list(ref('paragraph'), 1, 20) }),",
+   "outcome": "killed"
+  },
+  {
+   "subject": "packages/polaris-dossier/src/brief.ts",
+   "id": "elements-rule-dropped",
+   "old": "  '5. Elements.",
+   "new": "  '5. Elementz.",
+   "outcome": "killed"
+  },
+  {
+   "subject": "packages/polaris-dossier/src/brief.ts",
+   "id": "readability-v1",
+   "old": "'polaris-dossier-readability-v2'",
+   "new": "'polaris-dossier-readability-v1'",
+   "outcome": "killed"
+  },
+  {
+   "subject": "packages/polaris-dossier/src/render.ts",
+   "id": "empty-cell-as-claim",
+   "old": "cell['kind'] === 'empty' ? null : paragraph(cell)",
+   "new": "cell['kind'] === 'emptyx' ? null : paragraph(cell)",
+   "outcome": "killed"
+  },
+  {
+   "subject": "packages/polaris-dossier/src/check-derive.ts",
+   "id": "check-table-skipped",
+   "old": "if (isRecord(cell) && cell['kind'] !== 'empty') visit(",
+   "new": "if (false) visit(",
+   "outcome": "killed"
+  },
+  {
+   "subject": "packages/polaris-dossier/src/check-derive.ts",
+   "id": "check-callout-skipped",
+   "old": "    case 'callout': each('children', (child, childAt) => contentClaims(childAt, child, visit)); return;",
+   "new": "    case 'callout': return;",
+   "outcome": "killed"
+  },
+  {
+   "subject": "packages/polaris-dossier/src/check-derive.ts",
+   "id": "check-steps-skipped",
+   "old": "    case 'steps': each('items', (item, itemAt) => visit(itemAt, item)); return;",
+   "new": "    case 'steps': return;",
+   "outcome": "killed"
+  },
+  {
+   "subject": "packages/polaris-dossier/src/check-derive.ts",
+   "id": "check-definitions-skipped",
+   "old": "if (isRecord(item['definition'])) visit(",
+   "new": "if (false) visit(",
+   "outcome": "killed"
+  },
+  {
+   "subject": "packages/polaris-dossier/src/check-derive.ts",
+   "id": "check-cards-skipped",
+   "old": "if (isRecord(item['body'])) visit(",
+   "new": "if (false) visit(",
+   "outcome": "killed"
+  },
+  {
+   "subject": "packages/polaris-dossier/src/check-derive.ts",
+   "id": "check-details-skipped",
+   "old": "    case 'details': each('elements', (item, itemAt) => contentClaims(itemAt, item, visit)); return;",
+   "new": "    case 'details': return;",
+   "outcome": "killed"
+  },
+  {
+   "subject": "packages/polaris-dossier/src/check-derive.ts",
+   "id": "check-children-skipped",
+   "old": "      each('children', (child, childAt) => visit(childAt, child));",
+   "new": "",
+   "outcome": "killed"
+  },
+  {
+   "subject": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "id": "details-count-dropped",
+   "old": "<summary>${escape(e.summary)}${count}</summary>",
+   "new": "<summary>${escape(e.summary)}</summary>",
+   "outcome": "killed"
+  },
+  {
+   "subject": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "id": "details-count-all",
+   "old": "const unknown = pending.slice(before).filter(entry => entry.epistemic === 'unknown').length;",
+   "new": "const unknown = pending.slice(before).length;",
+   "outcome": "killed"
+  },
+  {
+   "subject": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "id": "code-unescaped",
+   "old": "data-quote-end=\"${part.end}\">${escape(part.text).replace(/\\r/gu, '&#13;')}</code>",
+   "new": "data-quote-end=\"${part.end}\">${part.text}</code>",
+   "outcome": "killed"
+  },
+  {
+   "subject": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "id": "code-withheld-observed",
+   "old": "return claim('figure', id, 'unknown', `${caption}<p>",
+   "new": "return claim('figure', id, 'observed', `${caption}<p>",
+   "outcome": "killed"
+  },
+  {
+   "subject": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "id": "code-no-anchor",
+   "old": "${marking('observed')} ${located.map(part => anchorLink(from, part)).join(' ')}</p>",
+   "new": "${marking('observed')}</p>",
+   "outcome": "killed"
+  },
+  {
+   "subject": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "id": "code-no-language",
+   "old": "<span class=\"code-language\">${escape(e.language)}</span> ",
+   "new": "",
+   "outcome": "killed"
+  },
+  {
+   "subject": "packages/polaris-dossier/src/render.ts",
+   "id": "code-excerpt-whole-file",
+   "old": "const end = blob.lineByteOffsets === undefined ? byteOf(blob.raw, endLine + 1) : blob.lineByteOffsets[endLine] ?? blob.originalBytes!;",
+   "new": "const end = Buffer.byteLength(blob.raw);",
+   "outcome": "killed"
+  },
+  {
+   "subject": "packages/polaris-dossier/src/render.ts",
+   "id": "code-excluded-shown",
+   "old": "    if (blob === undefined || (blob.withheld !== undefined",
+   "new": "    if (false && blob === undefined || (blob?.withheld !== undefined",
+   "outcome": "killed"
+  },
+  {
+   "subject": "packages/polaris-dossier/src/render.ts",
+   "id": "code-language-ignored",
+   "old": "const language = text(record['language']) === undefined ? languageOf(repositoryPath) : label(record['language']);",
+   "new": "const language = languageOf(repositoryPath);",
+   "outcome": "killed"
+  },
+  {
+   "subject": "packages/polaris-dossier/src/render.ts",
+   "id": "code-language-not-derived",
+   "old": "const language = text(record['language']) === undefined ? languageOf(repositoryPath) : label(record['language']);",
+   "new": "const language = label(record['language']);",
+   "outcome": "killed"
+  },
+  {
+   "subject": "packages/polaris-dossier/src/check-derive.ts",
+   "id": "code-limit-off",
+   "old": "    if (at.endsWith('.citation') && end - start + 1 > CODE_EXCERPT_MAX_LINES) {",
+   "new": "    if (false) {",
+   "outcome": "killed"
+  },
+  {
+   "subject": "packages/polaris-dossier/src/check-derive.ts",
+   "id": "code-limit-61",
+   "old": "export const CODE_EXCERPT_MAX_LINES = 60;",
+   "new": "export const CODE_EXCERPT_MAX_LINES = 61;",
+   "outcome": "killed"
+  },
+  {
+   "subject": "packages/polaris-dossier/src/check-derive.ts",
+   "id": "code-citation-unreached",
+   "old": "    if (value['kind'] === 'code' && isRecord(value['citation'])) out.push",
+   "new": "    if (false) out.push",
+   "outcome": "killed"
+  },
+  {
+   "subject": "packages/polaris-dossier/src/check-derive.ts",
+   "id": "label-check-off",
+   "old": "    else if (labelMarkup(label.value)) add(",
+   "new": "    else if (false) add(",
+   "outcome": "killed"
+  },
+  {
+   "subject": "packages/polaris-dossier/src/check-derive.ts",
+   "id": "label-quotation-off",
+   "old": "    if (labelQuotation(label.value)) add(",
+   "new": "    if (false) add(",
+   "outcome": "killed"
+  },
+  {
+   "subject": "packages/polaris-dossier/src/check-derive.ts",
+   "id": "label-no-curly",
+   "old": "const LABEL_QUOTATION = /[\"\\u201C\\u201D\\u201E\\u00AB\\u00BB]|",
+   "new": "const LABEL_QUOTATION = /[\"]|",
+   "outcome": "survived",
+   "disposition": "test gap, carried: curly quotation marks alone in a label are unpinned (the fixture pairs them with a lead-in); follow-up bead, not repaired after the round-3 confirmation (stopping rule, rule 10)"
+  },
+  {
+   "subject": "packages/polaris-dossier/src/check-derive.ts",
+   "id": "label-no-straight",
+   "old": "const LABEL_QUOTATION = /[\"\\u201C",
+   "new": "const LABEL_QUOTATION = /[\\u201C",
+   "outcome": "killed"
+  },
+  {
+   "subject": "packages/polaris-dossier/src/check-derive.ts",
+   "id": "label-no-leadin",
+   "old": "|\\bstates:/iu;",
+   "new": "/iu;",
+   "outcome": "killed"
+  },
+  {
+   "subject": "packages/polaris-dossier/src/check-derive.ts",
+   "id": "label-leadin-case",
+   "old": "|\\bstates:/iu;",
+   "new": "|\\bstates:/u;",
+   "outcome": "killed"
+  },
+  {
+   "subject": "packages/polaris-dossier/src/check-derive.ts",
+   "id": "excluded-range-unchecked",
+   "old": "    if (state.state === 'excluded' && at.endsWith('.citation') && state.lines !== undefined && end > state.lines) {",
+   "new": "    if (false) {",
+   "outcome": "killed"
+  },
+  {
+   "subject": "packages/polaris-dossier/src/check-derive.ts",
+   "id": "excluded-range-all-citations",
+   "old": "    if (state.state === 'excluded' && at.endsWith('.citation') && state.lines !== undefined && end > state.lines) {",
+   "new": "    if (state.state === 'excluded' && state.lines !== undefined && end > state.lines) {",
+   "outcome": "survived",
+   "disposition": "test gap, carried: that block citations of a read-then-excluded body are not range-checked is unpinned; this is R-MEA10-RICH-ELEMENTS-9a7a-3 note 3, follow-up bead"
+  },
+  {
+   "subject": "packages/polaris-dossier/src/check-derive.ts",
+   "id": "v2-elements-allowed",
+   "old": "  if (doc['schemaVersion'] === 'polaris-dossier-local-draft-v2') {",
+   "new": "  if (false) {",
+   "outcome": "killed"
+  },
+  {
+   "subject": "packages/polaris-dossier/src/check-derive.ts",
+   "id": "limit-admitted-only",
+   "old": "    if (at.endsWith('.citation') && end - start + 1 > CODE_EXCERPT_MAX_LINES) {",
+   "new": "    if (state.state === 'admitted' && at.endsWith('.citation') && end - start + 1 > CODE_EXCERPT_MAX_LINES) {",
+   "outcome": "killed"
+  },
+  {
+   "subject": "packages/polaris-dossier/src/check-derive.ts",
+   "id": "label-no-angle",
+   "old": "const LABEL_MARKUP = /[<>&`]|",
+   "new": "const LABEL_MARKUP = /[&`]|",
+   "outcome": "killed"
+  },
+  {
+   "subject": "packages/polaris-dossier/src/check-derive.ts",
+   "id": "label-no-amp",
+   "old": "const LABEL_MARKUP = /[<>&`]|",
+   "new": "const LABEL_MARKUP = /[<>`]|",
+   "outcome": "killed"
+  },
+  {
+   "subject": "packages/polaris-dossier/src/check-derive.ts",
+   "id": "label-no-backtick",
+   "old": "const LABEL_MARKUP = /[<>&`]|",
+   "new": "const LABEL_MARKUP = /[<>&]|",
+   "outcome": "killed"
+  },
+  {
+   "subject": "packages/polaris-dossier/src/check-derive.ts",
+   "id": "label-no-link",
+   "old": "|!?\\[[^\\]\\n]*\\]\\(|",
+   "new": "|",
+   "outcome": "killed"
+  },
+  {
+   "subject": "packages/polaris-dossier/src/check-derive.ts",
+   "id": "label-columns-skipped",
+   "old": "    if (kind === 'table') list(value['columns'])",
+   "new": "    if (false) list(value['columns'])",
+   "outcome": "killed"
+  },
+  {
+   "subject": "packages/polaris-dossier/src/check-derive.ts",
+   "id": "label-terms-skipped",
+   "old": "    if (kind === 'definitions') list(value['entries'])",
+   "new": "    if (false) list(value['entries'])",
+   "outcome": "killed"
+  },
+  {
+   "subject": "packages/polaris-dossier/src/check-derive.ts",
+   "id": "label-cards-skipped",
+   "old": "    if (kind === 'cards') list(value['items'])",
+   "new": "    if (false) list(value['items'])",
+   "outcome": "killed"
+  },
+  {
+   "subject": "packages/polaris-dossier/src/check-derive.ts",
+   "id": "label-keys-skipped",
+   "old": "    for (const key of keys[kind] ?? [])",
+   "new": "    for (const key of [] as string[])",
+   "outcome": "killed"
+  },
+  {
+   "subject": "packages/polaris-dossier/src/brief.ts",
+   "id": "code-rule-dropped",
+   "old": "and `code` to show 1 to 60 lines",
+   "new": "and `kode` to show 1 to 60 lines",
+   "outcome": "killed"
+  },
+  {
+   "subject": "packages/polaris-dossier/src/review-packet.ts",
+   "id": "cell-headings-dropped",
+   "old": "Judge a table cell as it reads with its row\\'s and its column\\'s labels",
+   "new": "Judge a table cell alone",
+   "outcome": "killed"
+  }
+ ],
+ "tally": {
+  "killed": 59,
+  "survived": 3
+ }
+}

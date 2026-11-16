@@ -1,0 +1,83 @@
+{
+  "status": "CANDIDATE_R2_RECOMMENDATION_RECHECK_PENDING",
+  "source_commit": "d621bfa267f24ff68f6f83ac7bfba44b81a32a34",
+  "artifacts": {
+    "OFFERING.md": "70517831f25ff27717010df29a6f6596ba34edb10edcb89acef24821733e14a9",
+    "DRAFT-DIRECTION.md": "bf60fef15719c823652438307925e1cf395c6acddfe677b8e28fe16c4a3c034a",
+    "BEHAVIOR-AND-CONSUMERS.md": "df1a44f38822d8f725c9094a79eda8f3af48a33340a430841b3f1e7926292953",
+    "consumer-sweep.json": "bad96760953c7221df7dd2098667cdb58eccabbb98e542e7292904385da40a43"
+  },
+  "source_identities": [
+    {
+      "path": "package.json",
+      "sha256": "5b77a43d1d5383f1d89b9843df4158c3a8dbfdef38ced074b2d2f71a1f515cc7"
+    },
+    {
+      "path": ".github/workflows/generation-mutation-gate.yml",
+      "sha256": "6162f7be1b05ad6937fc51e2f78a01f8ce23abe12e59c8eeb5d160b80d1a39d2"
+    },
+    {
+      "path": "scripts/rule6_mutation_runner.py",
+      "sha256": "2bc35be550f0beb6ad355e0fc89719c1ae28320d186f41929af96dd59a376b22"
+    },
+    {
+      "path": "scripts/run_m7_literal_mutations.mjs",
+      "sha256": "7cf5d3c6d7fb3878184a9c80f6c8164667a81b2965d9234400318befcdc04e8a"
+    },
+    {
+      "path": "scripts/run_m9_literal_mutations.mjs",
+      "sha256": "1efd1e8ed98dc3b3708401fc6a938cdcb486b391dc5213011a62d64d8cc6ed95"
+    },
+    {
+      "path": "scripts/run_m10_conditional_mutations.mjs",
+      "sha256": "bff84256c1608b6d9cd49f54fed49fd3ea8e3ffbac7afe6804b7cf20d6cbc490"
+    },
+    {
+      "path": "scripts/run_m13_literal_mutations.mjs",
+      "sha256": "61f5992ce499d1310f8fe070e54a3d4c8066c5b2c70535d5a1b3e5fa50076302"
+    },
+    {
+      "path": "scripts/polaris_prompt_mutants.py",
+      "sha256": "bd9c33cffc779dd01cb09d200747dc6c40149e25562a9af599060c788b4dbeca"
+    },
+    {
+      "path": "scripts/rerun_rule6_mutants_selected_tests.py",
+      "sha256": "700452c86f756f0df955cad24cdfe36a222b0138b2af23fc36e797487b3fdc2c"
+    },
+    {
+      "path": "scripts/rule6_timeout_rerun.py",
+      "sha256": "89ee529da96ac4bb2c31af16b060809dc7f51171678c428b88f43b8dae58144d"
+    },
+    {
+      "path": "scripts/check_evidence_currency.py",
+      "sha256": "cb172796309c6b258ed3c315d17a8cff831eab7fa588d29e7afc6e15b41fb9d2"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/generation-mutation-run-main.ts",
+      "sha256": "658d9e95feae0ce9342161e1d4c4055573c7558c05bd3af74e8e18bdc547b8a8"
+    },
+    {
+      "path": "apps/three-surface-poc/src/pwb-mutation-run-main.ts",
+      "sha256": "34001c55048e7bf945e6353eba798ff22b5517c454170e60be439fa03aaf4f7e"
+    },
+    {
+      "path": "apps/three-surface-poc/src/pwb-mutation-sweep-main.ts",
+      "sha256": "b6af20150245e93df86a1856b66eac0cd64b8273f0d4ff3a620b1930d93fe1ea"
+    },
+    {
+      "path": ".syzygy/governance/decisions/OWNER-DIRECTION-GREENFIELD-PARITY-ANSWERS-2026-10-21.md",
+      "sha256": "e00aee73c0c846e4995e54ebe40f370d36f007b483a854388d4d97da17721d5e"
+    }
+  ],
+  "held_packet_inputs": {
+    "/home/tze/.cache/syzygy-v1-drive-20261027/backlog/runner-batch/proposal-r1.json": "1448b15eb94a9d99a6e8a6870093e4b3034f5201fc6781bdc590ad832a0f070f",
+    "/home/tze/.cache/syzygy-v1-drive-20261027/backlog/runner-batch/proposal-r2.json": "68dda1b51478f9a2c49e4f82d31afe257cb435dbab35fefefdae8cf02f0b95fc"
+  },
+  "population_check": {
+    "retained-evidence": 97,
+    "ordinary": 16
+  },
+  "scope": "one bounded runner authorization offering; no user question, tracker/source mutation, implementation or tests performed",
+  "predecessorFreezeSha256": "2abad0244441c9dc70fadb659ae8944a74bacc70eda957adbe5a588835ba08bb",
+  "change": "Only recommendation cost/tradeoff paragraph corrected; direction/behavior/consumer/source/heldinputs unchanged."
+}

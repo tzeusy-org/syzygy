@@ -1,0 +1,754 @@
+{
+ "label": "head-thr",
+ "sites": 49,
+ "rows": [
+  {
+   "site": "apps/three-surface-poc/src/cdp-browser.test.ts:335",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "observations": 5,
+   "worstMs": 21,
+   "load1Range": [
+    27.17,
+    45.83
+   ],
+   "exceeds": 0,
+   "exceeding": [],
+   "laneAloneWorstMs": 2,
+   "laneFullWorstMs": 300
+  },
+  {
+   "site": "apps/three-surface-poc/src/cdp-browser.test.ts:344",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "observations": 5,
+   "worstMs": 5,
+   "load1Range": [
+    27.17,
+    45.83
+   ],
+   "exceeds": 0,
+   "exceeding": [],
+   "laneAloneWorstMs": 1,
+   "laneFullWorstMs": 300
+  },
+  {
+   "site": "apps/three-surface-poc/src/cdp-browser.test.ts:351",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "observations": 5,
+   "worstMs": 3,
+   "load1Range": [
+    27.17,
+    45.83
+   ],
+   "exceeds": 0,
+   "exceeding": [],
+   "laneAloneWorstMs": 1,
+   "laneFullWorstMs": 300
+  },
+  {
+   "site": "apps/three-surface-poc/src/cdp-browser.test.ts:364",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "observations": 5,
+   "worstMs": 15,
+   "load1Range": [
+    27.17,
+    45.83
+   ],
+   "exceeds": 0,
+   "exceeding": [],
+   "laneAloneWorstMs": 74,
+   "laneFullWorstMs": 300
+  },
+  {
+   "site": "apps/three-surface-poc/src/cdp-browser.test.ts:371",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "observations": 5,
+   "worstMs": 2,
+   "load1Range": [
+    27.17,
+    45.83
+   ],
+   "exceeds": 0,
+   "exceeding": [],
+   "laneAloneWorstMs": 1,
+   "laneFullWorstMs": 300
+  },
+  {
+   "site": "apps/three-surface-poc/src/cdp-browser.test.ts:383",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "observations": 5,
+   "worstMs": 1,
+   "load1Range": [
+    27.17,
+    45.83
+   ],
+   "exceeds": 0,
+   "exceeding": [],
+   "laneAloneWorstMs": 1,
+   "laneFullWorstMs": 300
+  },
+  {
+   "site": "apps/three-surface-poc/src/cdp-browser.test.ts:401",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "observations": 5,
+   "worstMs": 5,
+   "load1Range": [
+    27.17,
+    45.83
+   ],
+   "exceeds": 0,
+   "exceeding": [],
+   "laneAloneWorstMs": 9,
+   "laneFullWorstMs": 300
+  },
+  {
+   "site": "apps/three-surface-poc/src/cdp-browser.test.ts:417",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "observations": 5,
+   "worstMs": 10,
+   "load1Range": [
+    27.17,
+    45.83
+   ],
+   "exceeds": 0,
+   "exceeding": [],
+   "laneAloneWorstMs": 1,
+   "laneFullWorstMs": 300
+  },
+  {
+   "site": "apps/three-surface-poc/src/cdp-browser.test.ts:426",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "observations": 5,
+   "worstMs": 7,
+   "load1Range": [
+    27.17,
+    45.83
+   ],
+   "exceeds": 0,
+   "exceeding": [],
+   "laneAloneWorstMs": 4,
+   "laneFullWorstMs": 300
+  },
+  {
+   "site": "apps/three-surface-poc/src/cdp-browser.test.ts:439",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "observations": 5,
+   "worstMs": 36,
+   "load1Range": [
+    27.17,
+    45.83
+   ],
+   "exceeds": 0,
+   "exceeding": [],
+   "laneAloneWorstMs": 1,
+   "laneFullWorstMs": 300
+  },
+  {
+   "site": "apps/three-surface-poc/src/cdp-browser.test.ts:445",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "observations": 5,
+   "worstMs": 5,
+   "load1Range": [
+    27.17,
+    45.83
+   ],
+   "exceeds": 0,
+   "exceeding": [],
+   "laneAloneWorstMs": 2,
+   "laneFullWorstMs": 300
+  },
+  {
+   "site": "apps/three-surface-poc/src/cdp-browser.test.ts:451",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "observations": 5,
+   "worstMs": 2,
+   "load1Range": [
+    27.17,
+    45.83
+   ],
+   "exceeds": 0,
+   "exceeding": [],
+   "laneAloneWorstMs": 1,
+   "laneFullWorstMs": 300
+  },
+  {
+   "site": "apps/three-surface-poc/src/cdp-browser.test.ts:458",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "observations": 5,
+   "worstMs": 6,
+   "load1Range": [
+    27.17,
+    45.83
+   ],
+   "exceeds": 0,
+   "exceeding": [],
+   "laneAloneWorstMs": 1,
+   "laneFullWorstMs": 300
+  },
+  {
+   "site": "apps/three-surface-poc/src/cdp-browser.test.ts:470",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "observations": 5,
+   "worstMs": 25,
+   "load1Range": [
+    27.17,
+    45.83
+   ],
+   "exceeds": 0,
+   "exceeding": [],
+   "laneAloneWorstMs": 0,
+   "laneFullWorstMs": 300
+  },
+  {
+   "site": "apps/three-surface-poc/src/cdp-browser.test.ts:478",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "observations": 5,
+   "worstMs": 3,
+   "load1Range": [
+    27.17,
+    45.83
+   ],
+   "exceeds": 0,
+   "exceeding": [],
+   "laneAloneWorstMs": 0,
+   "laneFullWorstMs": 300
+  },
+  {
+   "site": "apps/three-surface-poc/src/cdp-browser.test.ts:489",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "observations": 5,
+   "worstMs": 3,
+   "load1Range": [
+    27.17,
+    45.83
+   ],
+   "exceeds": 0,
+   "exceeding": [],
+   "laneAloneWorstMs": 1,
+   "laneFullWorstMs": 300
+  },
+  {
+   "site": "apps/three-surface-poc/src/fixture-directories.test.ts:63",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "observations": 5,
+   "worstMs": 276,
+   "load1Range": [
+    29.24,
+    45.83
+   ],
+   "exceeds": 0,
+   "exceeding": [],
+   "laneAloneWorstMs": 61,
+   "laneFullWorstMs": 467
+  },
+  {
+   "site": "apps/three-surface-poc/src/fixture-directories.test.ts:71",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "observations": 5,
+   "worstMs": 25,
+   "load1Range": [
+    29.24,
+    45.83
+   ],
+   "exceeds": 0,
+   "exceeding": [],
+   "laneAloneWorstMs": 1,
+   "laneFullWorstMs": 300
+  },
+  {
+   "site": "apps/three-surface-poc/src/fixture-directories.test.ts:94",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "observations": 5,
+   "worstMs": 129,
+   "load1Range": [
+    29.24,
+    45.83
+   ],
+   "exceeds": 0,
+   "exceeding": [],
+   "laneAloneWorstMs": 110,
+   "laneFullWorstMs": 333
+  },
+  {
+   "site": "apps/three-surface-poc/src/fixture-directories.test.ts:109",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "observations": 5,
+   "worstMs": 481,
+   "load1Range": [
+    29.24,
+    45.83
+   ],
+   "exceeds": 0,
+   "exceeding": [],
+   "laneAloneWorstMs": 79,
+   "laneFullWorstMs": 348
+  },
+  {
+   "site": "apps/three-surface-poc/src/fixture-directories.test.ts:128",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "observations": 5,
+   "worstMs": 348,
+   "load1Range": [
+    29.24,
+    45.83
+   ],
+   "exceeds": 0,
+   "exceeding": [],
+   "laneAloneWorstMs": 64,
+   "laneFullWorstMs": 550
+  },
+  {
+   "site": "apps/three-surface-poc/src/fixture-directories.test.ts:142",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "observations": 5,
+   "worstMs": 189,
+   "load1Range": [
+    29.24,
+    45.83
+   ],
+   "exceeds": 0,
+   "exceeding": [],
+   "laneAloneWorstMs": 66,
+   "laneFullWorstMs": 351
+  },
+  {
+   "site": "apps/three-surface-poc/src/fixture-directories.test.ts:186",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "observations": 10,
+   "worstMs": 167,
+   "load1Range": [
+    29.24,
+    45.83
+   ],
+   "exceeds": 0,
+   "exceeding": [],
+   "laneAloneWorstMs": 84,
+   "laneFullWorstMs": 405
+  },
+  {
+   "site": "apps/three-surface-poc/src/fixture-directories.test.ts:198",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "observations": 5,
+   "worstMs": 234,
+   "load1Range": [
+    29.24,
+    45.83
+   ],
+   "exceeds": 0,
+   "exceeding": [],
+   "laneAloneWorstMs": 69,
+   "laneFullWorstMs": 348
+  },
+  {
+   "site": "apps/three-surface-poc/src/fixture-directories.test.ts:212",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "observations": 5,
+   "worstMs": 204,
+   "load1Range": [
+    29.24,
+    45.83
+   ],
+   "exceeds": 0,
+   "exceeding": [],
+   "laneAloneWorstMs": 53,
+   "laneFullWorstMs": 694
+  },
+  {
+   "site": "apps/three-surface-poc/src/fixture-directories.test.ts:227",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "observations": 5,
+   "worstMs": 83,
+   "load1Range": [
+    29.24,
+    45.83
+   ],
+   "exceeds": 0,
+   "exceeding": [],
+   "laneAloneWorstMs": 68,
+   "laneFullWorstMs": 615
+  },
+  {
+   "site": "apps/three-surface-poc/src/fixture-directories.test.ts:241",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "observations": 5,
+   "worstMs": 251,
+   "load1Range": [
+    29.24,
+    45.83
+   ],
+   "exceeds": 0,
+   "exceeding": [],
+   "laneAloneWorstMs": 81,
+   "laneFullWorstMs": 329
+  },
+  {
+   "site": "apps/three-surface-poc/src/fixture-directories.test.ts:256",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "observations": 5,
+   "worstMs": 173,
+   "load1Range": [
+    29.24,
+    45.83
+   ],
+   "exceeds": 0,
+   "exceeding": [],
+   "laneAloneWorstMs": 81,
+   "laneFullWorstMs": 300
+  },
+  {
+   "site": "apps/three-surface-poc/src/fixture-directories.test.ts:266",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "observations": 5,
+   "worstMs": 133,
+   "load1Range": [
+    29.24,
+    45.83
+   ],
+   "exceeds": 0,
+   "exceeding": [],
+   "laneAloneWorstMs": 69,
+   "laneFullWorstMs": 437
+  },
+  {
+   "site": "apps/three-surface-poc/src/fixture-directories.test.ts:284",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "observations": 5,
+   "worstMs": 251,
+   "load1Range": [
+    29.24,
+    45.83
+   ],
+   "exceeds": 0,
+   "exceeding": [],
+   "laneAloneWorstMs": 98,
+   "laneFullWorstMs": 420
+  },
+  {
+   "site": "apps/three-surface-poc/src/governing-intent-sweep.test.ts:168",
+   "kind": "hook",
+   "thresholdMs": 5000,
+   "observations": 5,
+   "worstMs": 253,
+   "load1Range": [
+    29.62,
+    44.01
+   ],
+   "exceeds": 0,
+   "exceeding": [],
+   "laneAloneWorstMs": 230,
+   "laneFullWorstMs": 2018
+  },
+  {
+   "site": "apps/three-surface-poc/src/orrery.browser.test.ts:24",
+   "kind": "hook",
+   "thresholdMs": 5000,
+   "observations": 5,
+   "worstMs": 2848,
+   "load1Range": [
+    29.49,
+    42.41
+   ],
+   "exceeds": 0,
+   "exceeding": [],
+   "laneAloneWorstMs": 447,
+   "laneFullWorstMs": 3391
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts:187",
+   "kind": "hook",
+   "thresholdMs": 5000,
+   "observations": 5,
+   "worstMs": 3722,
+   "load1Range": [
+    29.49,
+    46.4
+   ],
+   "exceeds": 0,
+   "exceeding": [],
+   "laneAloneWorstMs": 766,
+   "laneFullWorstMs": 4750
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-generation/dossier-cap-measure.test.ts:12",
+   "kind": "hook",
+   "thresholdMs": 5000,
+   "observations": 5,
+   "worstMs": 5107,
+   "load1Range": [
+    34.14,
+    54.89
+   ],
+   "exceeds": 1,
+   "exceeding": [
+    {
+     "round": 3,
+     "hookMs": 5107,
+     "hookTimedOut": true,
+     "errors": [
+      "Hook timed out in 5000ms."
+     ],
+     "load1": [
+      46.4,
+      54.89
+     ]
+    }
+   ],
+   "laneAloneWorstMs": 933,
+   "laneFullWorstMs": 3313
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts:45",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "observations": 5,
+   "worstMs": 35,
+   "load1Range": [
+    30.26,
+    45.28
+   ],
+   "exceeds": 0,
+   "exceeding": [],
+   "laneAloneWorstMs": 24,
+   "laneFullWorstMs": 300
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts:54",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "observations": 5,
+   "worstMs": 22,
+   "load1Range": [
+    30.26,
+    45.28
+   ],
+   "exceeds": 0,
+   "exceeding": [],
+   "laneAloneWorstMs": 23,
+   "laneFullWorstMs": 300
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts:85",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "observations": 5,
+   "worstMs": 14,
+   "load1Range": [
+    30.26,
+    45.28
+   ],
+   "exceeds": 0,
+   "exceeding": [],
+   "laneAloneWorstMs": 13,
+   "laneFullWorstMs": 300
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts:103",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "observations": 5,
+   "worstMs": 6,
+   "load1Range": [
+    30.26,
+    45.28
+   ],
+   "exceeds": 0,
+   "exceeding": [],
+   "laneAloneWorstMs": 5,
+   "laneFullWorstMs": 300
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts:115",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "observations": 5,
+   "worstMs": 18,
+   "load1Range": [
+    30.26,
+    45.28
+   ],
+   "exceeds": 0,
+   "exceeding": [],
+   "laneAloneWorstMs": 14,
+   "laneFullWorstMs": 300
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts:127",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "observations": 5,
+   "worstMs": 22,
+   "load1Range": [
+    30.26,
+    45.28
+   ],
+   "exceeds": 0,
+   "exceeding": [],
+   "laneAloneWorstMs": 13,
+   "laneFullWorstMs": 300
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts:364",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "observations": 10,
+   "worstMs": 576,
+   "load1Range": [
+    30.37,
+    44.62
+   ],
+   "exceeds": 0,
+   "exceeding": [],
+   "laneAloneWorstMs": 688,
+   "laneFullWorstMs": 2108
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts:408",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "observations": 5,
+   "worstMs": 787,
+   "load1Range": [
+    30.37,
+    44.62
+   ],
+   "exceeds": 0,
+   "exceeding": [],
+   "laneAloneWorstMs": 815,
+   "laneFullWorstMs": 1886
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts:413",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "observations": 5,
+   "worstMs": 274,
+   "load1Range": [
+    30.37,
+    44.62
+   ],
+   "exceeds": 0,
+   "exceeding": [],
+   "laneAloneWorstMs": 321,
+   "laneFullWorstMs": 1521
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts:443",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "observations": 5,
+   "worstMs": 168,
+   "load1Range": [
+    30.37,
+    44.62
+   ],
+   "exceeds": 0,
+   "exceeding": [],
+   "laneAloneWorstMs": 335,
+   "laneFullWorstMs": 842
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts:452",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "observations": 5,
+   "worstMs": 230,
+   "load1Range": [
+    30.37,
+    44.62
+   ],
+   "exceeds": 0,
+   "exceeding": [],
+   "laneAloneWorstMs": 356,
+   "laneFullWorstMs": 805
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-reconciliation.test.ts:81",
+   "kind": "hook",
+   "thresholdMs": 5000,
+   "observations": 5,
+   "worstMs": 884,
+   "load1Range": [
+    33.97,
+    54.89
+   ],
+   "exceeds": 0,
+   "exceeding": [],
+   "laneAloneWorstMs": 793,
+   "laneFullWorstMs": 2630
+  },
+  {
+   "site": "apps/three-surface-poc/src/trajectory-narrowing.browser.test.ts:32",
+   "kind": "hook",
+   "thresholdMs": 5000,
+   "observations": 5,
+   "worstMs": 1724,
+   "load1Range": [
+    33.52,
+    52.37
+   ],
+   "exceeds": 0,
+   "exceeding": [],
+   "laneAloneWorstMs": 572,
+   "laneFullWorstMs": 4180
+  },
+  {
+   "site": "apps/three-surface-poc/src/unknown-route-sweep.test.ts:173",
+   "kind": "hook",
+   "thresholdMs": 5000,
+   "observations": 5,
+   "worstMs": 622,
+   "load1Range": [
+    33.52,
+    49.93
+   ],
+   "exceeds": 0,
+   "exceeding": [],
+   "laneAloneWorstMs": 533,
+   "laneFullWorstMs": 2516
+  },
+  {
+   "site": "packages/polaris-dossier/src/no-egress.test.ts:47",
+   "kind": "hook",
+   "thresholdMs": 5000,
+   "observations": 5,
+   "worstMs": 855,
+   "load1Range": [
+    32.15,
+    46.1
+   ],
+   "exceeds": 0,
+   "exceeding": [],
+   "laneAloneWorstMs": 736,
+   "laneFullWorstMs": 2761
+  }
+ ]
+}

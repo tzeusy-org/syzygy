@@ -1,0 +1,355 @@
+{
+ "commit": "5995aa3c0a23f4862f7107c401a72a222b8a7998",
+ "dist": "present",
+ "fixedTestSha256": "46a4f110ff01c7380e954bf6d143347d88a35169b2fa72a1cd61cd92e0542674",
+ "fixes": [
+  {
+   "old": "import { readdirSync, readFileSync } from 'node:fs';\n",
+   "new": "import { mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';\nimport { tmpdir } from 'node:os';\nimport { dirname, join } from 'node:path';\nimport { pathToFileURL } from 'node:url';\n"
+  },
+  {
+   "old": "const SOURCES = readdirSync(SRC, { recursive: true, encoding: 'utf8' })\n  .filter((name) => /\\.[cm]?[jt]sx?$/u.test(name) && !name.endsWith('.test.ts') && name !== 'purity.testkit.ts').sort();\n",
+   "new": "/** Every source module under `dir`, at any depth and with any JavaScript or TypeScript extension, but the tests and the testkit. */\nconst sourcesUnder = (dir: URL): string[] => readdirSync(dir, { recursive: true, encoding: 'utf8' })\n  .filter((name) => /\\.[cm]?[jt]sx?$/u.test(name) && !name.endsWith('.test.ts') && name !== 'purity.testkit.ts').sort();\nconst SOURCES = sourcesUnder(SRC);\n"
+  },
+  {
+   "old": "  return [...names].sort();\n}\n",
+   "new": "  return [...names].sort();\n}\n\n/** Every import and re-export declaration of a module, by its specifier and as written. */\nfunction moduleDeclarationsOf(name: string, source: string): { specifier: string; text: string }[] {\n  const file = ts.createSourceFile(name, source, ts.ScriptTarget.Latest, false);\n  return file.statements.flatMap((statement) =>\n    (ts.isImportDeclaration(statement) || ts.isExportDeclaration(statement)) && statement.moduleSpecifier !== undefined && ts.isStringLiteral(statement.moduleSpecifier)\n      ? [{ specifier: statement.moduleSpecifier.text, text: statement.getText(file) }]\n      : []);\n}\n"
+  },
+  {
+   "old": "  it('names no module but node:crypto and a module beside it in any literal specifier of any source', () => {\n",
+   "new": "  it('lists a module at any depth and with any extension, and skips only the tests and the testkit', () => {\n    const dir = mkdtempSync(join(tmpdir(), 'support-sources-'));\n    try {\n      for (const file of ['a.ts', 'io/b.ts', 'c.mts', 'd.cjs', 'e.test.ts', 'purity.testkit.ts', 'f.json']) {\n        mkdirSync(dirname(join(dir, file)), { recursive: true });\n        writeFileSync(join(dir, file), '');\n      }\n      expect(sourcesUnder(pathToFileURL(`${dir}/`))).toEqual(['a.ts', 'c.mts', 'd.cjs', 'io/b.ts']);\n    } finally {\n      rmSync(dir, { recursive: true, force: true });\n    }\n  });\n\n  it('names no module but node:crypto and a module beside it in any literal specifier of any source', () => {\n"
+  },
+  {
+   "old": "  it('names none of the forbidden tokens it shares with the owner-act drafter in any source', () => {\n",
+   "new": "  it('takes only createHash from node:crypto, by its own name, and re-exports nothing from it', () => {\n    // An `export *`, a namespace binding or a string-named specifier names no identifier, so the allowlist cannot see it.\n    const external = SOURCES.flatMap((file) => moduleDeclarationsOf(file, read(file))\n      .filter(({ specifier }) => !specifier.startsWith('./')).map(({ text }) => `${file}: ${text}`));\n    expect(external).toEqual([\"sha256.ts: import { createHash } from 'node:crypto';\"]);\n  });\n\n  it('names none of the forbidden tokens it shares with the owner-act drafter in any source', () => {\n"
+  },
+  {
+   "old": "describe('the forbidden-token list both guards stand on', () => {\n",
+   "new": "describe('the forbidden-token list both guards stand on', () => {\n  it('is the literal list, so a narrowed token fails here', () => {\n    expect(FORBIDDEN.map(String)).toEqual([\n      '/\\\\brequire\\\\(/', '/\\\\bimport\\\\(/', '/\\\\bfetch\\\\(/', '/\\\\bwriteFile/', '/\\\\bappendFile/', '/\\\\bmkdir/', '/\\\\bprocess\\\\./', '/\\\\bDate\\\\b/',\n      \"/\\\\b(?:node:)?(?:fs|net|http|https|child_process|os)['\\\"`]/\",\n    ]);\n  });\n"
+  }
+ ],
+ "summary": {
+  "rows": 11,
+  "asExpected": 11,
+  "unexpected": []
+ },
+ "buildWithFixes": {
+  "exit": 0,
+  "out": ""
+ },
+ "rebuildAfter": 0,
+ "statusAfter": "",
+ "rows": [
+  {
+   "id": "FX0-fixed-test-unmutated",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "expected": "pass",
+   "observed": "pass",
+   "loadavg": [
+    "48.65",
+    "42.69",
+    "40.30"
+   ],
+   "exit": 0,
+   "passed": 32,
+   "failed": 0,
+   "pending": 0,
+   "total": 32,
+   "failedFiles": [],
+   "fileMessages": [],
+   "failedTests": []
+  },
+  {
+   "id": "FX-Y7-export-star-from-node-crypto",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "loadavg": [
+    "49.82",
+    "43.13",
+    "40.47"
+   ],
+   "exit": 1,
+   "passed": 31,
+   "failed": 1,
+   "pending": 0,
+   "total": 32,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it",
+     "message": "AssertionError: expected [ \u2026(2) ] to deeply equal [ Array(1) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545/clone/packages/support/src/support-purity.test.ts:85:22\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/re"
+    }
+   ]
+  },
+  {
+   "id": "FX-Y9-export-star-as-allowed-name",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "loadavg": [
+    "49.60",
+    "43.19",
+    "40.51"
+   ],
+   "exit": 1,
+   "passed": 31,
+   "failed": 1,
+   "pending": 0,
+   "total": 32,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it",
+     "message": "AssertionError: expected [ \u2026(2) ] to deeply equal [ Array(1) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545/clone/packages/support/src/support-purity.test.ts:85:22\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/re"
+    }
+   ]
+  },
+  {
+   "id": "FX-Y10-string-named-re-export",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "loadavg": [
+    "50.59",
+    "43.50",
+    "40.62"
+   ],
+   "exit": 1,
+   "passed": 31,
+   "failed": 1,
+   "pending": 0,
+   "total": 32,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it",
+     "message": "AssertionError: expected [ \u2026(2) ] to deeply equal [ Array(1) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545/clone/packages/support/src/support-purity.test.ts:85:22\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/re"
+    }
+   ]
+  },
+  {
+   "id": "FX-Y11-string-named-import-called-at-import",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "loadavg": [
+    "49.19",
+    "43.44",
+    "40.63"
+   ],
+   "exit": 1,
+   "passed": 31,
+   "failed": 1,
+   "pending": 0,
+   "total": 32,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it",
+     "message": "AssertionError: expected [ Array(1) ] to deeply equal [ Array(1) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545/clone/packages/support/src/support-purity.test.ts:85:22\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpa"
+    }
+   ]
+  },
+  {
+   "id": "FX-Y12-namespace-import-re-exported",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "loadavg": [
+    "49.17",
+    "43.53",
+    "40.68"
+   ],
+   "exit": 1,
+   "passed": 31,
+   "failed": 1,
+   "pending": 0,
+   "total": 32,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it",
+     "message": "AssertionError: expected [ \u2026(2) ] to deeply equal [ Array(1) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545/clone/packages/support/src/support-purity.test.ts:85:22\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/re"
+    }
+   ]
+  },
+  {
+   "id": "FX-Y14-drafter-takes-randomness-through-support",
+   "tests": [
+    "packages/support/src/support-purity.test.ts",
+    "packages/three-surface-poc-core/src/owner-act-drafter.test.ts"
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "loadavg": [
+    "47.88",
+    "43.45",
+    "40.68"
+   ],
+   "exit": 1,
+   "passed": 34,
+   "failed": 1,
+   "pending": 0,
+   "total": 35,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it",
+     "message": "AssertionError: expected [ \u2026(2) ] to deeply equal [ Array(1) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545/clone/packages/support/src/support-purity.test.ts:85:22\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/re"
+    }
+   ]
+  },
+  {
+   "id": "FX-K4-shared-Date-token-weakened-plus-DK1",
+   "tests": [
+    "packages/support/src/support-purity.test.ts",
+    "packages/three-surface-poc-core/src/owner-act-drafter.test.ts"
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "loadavg": [
+    "46.29",
+    "43.19",
+    "40.61"
+   ],
+   "exit": 1,
+   "passed": 34,
+   "failed": 1,
+   "pending": 0,
+   "total": 35,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "the forbidden-token list both guards stand on is the literal list, so a narrowed token fails here",
+     "message": "AssertionError: expected [ '/\\brequire\\(/', \u2026(8) ] to deeply equal [ '/\\brequire\\(/', \u2026(8) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545/clone/packages/support/src/support-purity.test.ts:128:35\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-"
+    }
+   ]
+  },
+  {
+   "id": "FX-T1-scan-without-recursion",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "loadavg": [
+    "45.87",
+    "43.15",
+    "40.61"
+   ],
+   "exit": 1,
+   "passed": 31,
+   "failed": 1,
+   "pending": 0,
+   "total": 32,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit",
+     "message": "AssertionError: expected [ 'a.ts', 'c.mts', 'd.cjs' ] to deeply equal [ 'a.ts', 'c.mts', 'd.cjs', 'io/b.ts' ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545/clone/packages/support/src/support-purity.test.ts:64:54\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/929"
+    }
+   ]
+  },
+  {
+   "id": "FX-Y1-reflect-get-globalThis-env",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "loadavg": [
+    "46.04",
+    "43.23",
+    "40.65"
+   ],
+   "exit": 1,
+   "passed": 31,
+   "failed": 1,
+   "pending": 0,
+   "total": 32,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source",
+     "message": "AssertionError: expected [ 'sha256.ts: HOME', \u2026(4) ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545/clone/packages/support/src/support-purity.test.ts:78:155\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scr"
+    }
+   ]
+  },
+  {
+   "id": "FX-Y8-export-star-from-node-fs",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "loadavg": [
+    "45.72",
+    "43.21",
+    "40.66"
+   ],
+   "exit": 1,
+   "passed": 29,
+   "failed": 3,
+   "pending": 0,
+   "total": 32,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf names no module but node:crypto and a module beside it in any literal specifier of any source",
+     "message": "AssertionError: expected [ { file: 'index.ts', \u2026(1) } ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545/clone/packages/support/src/support-purity.test.ts:72:83\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/s"
+    },
+    {
+     "name": "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it",
+     "message": "AssertionError: expected [ \u2026(2) ] to deeply equal [ Array(1) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545/clone/packages/support/src/support-purity.test.ts:85:22\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/re"
+    },
+    {
+     "name": "@syzygy/support stays a pure leaf names none of the forbidden tokens it shares with the owner-act drafter in any source",
+     "message": "AssertionError: index.ts /\\b(?:node:)?(?:fs|net|http|https|child_process|os)['\"`]/: expected '// Internal helpers that more than on\u2026' not to match /\\b(?:node:)?(?:fs|net|http|https|chil\u2026/\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545/clone/packages/support/src/support-purity.test.ts:91:93\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545/clone/node_modules/@vitest/runner/dist/ch"
+    }
+   ]
+  }
+ ]
+}

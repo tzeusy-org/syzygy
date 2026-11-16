@@ -1,0 +1,500 @@
+{
+ "commit": "330dd89458801e7a150134efa15f3d4af8215304",
+ "run1": {
+  "commands": 96,
+  "nonzero": 0,
+  "then": "command 97, check_spec_reconciliation.py --selftest, hit battery.py's 1800 s timeout (TimeoutExpired); no JSON written"
+ },
+ "run2": {
+  "first": 96,
+  "commands": 18,
+  "nonzero": 0,
+  "cleanAfter": true
+ },
+ "total": {
+  "commands": 114,
+  "nonzero": 0
+ },
+ "run1Rows": [
+  {
+   "exit": 0,
+   "seconds": 45.3,
+   "line120": "python3 scripts/check_governance.py"
+  },
+  {
+   "exit": 0,
+   "seconds": 3.4,
+   "line120": "python3 scripts/check_governance.py --selftest"
+  },
+  {
+   "exit": 0,
+   "seconds": 5.3,
+   "line120": "python3 scripts/record_polaris_understanding_adoption.py --check"
+  },
+  {
+   "exit": 0,
+   "seconds": 8.7,
+   "line120": "python3 scripts/record_polaris_understanding_adoption.py --selftest"
+  },
+  {
+   "exit": 0,
+   "seconds": 1.3,
+   "line120": "python3 scripts/launch_gate_results.py --selftest            # historical Markdown records"
+  },
+  {
+   "exit": 0,
+   "seconds": 11.7,
+   "line120": "python3 scripts/validate_launch_administration.py --selftest # the structured record path"
+  },
+  {
+   "exit": 0,
+   "seconds": 6.1,
+   "line120": "python3 scripts/render_launch_administration.py --selftest"
+  },
+  {
+   "exit": 0,
+   "seconds": 0.2,
+   "line120": "python3 $CS/verify_final_prespec.py"
+  },
+  {
+   "exit": 0,
+   "seconds": 0.2,
+   "line120": "python3 $CS/build_contract_index.py --check"
+  },
+  {
+   "exit": 0,
+   "seconds": 6.5,
+   "line120": "python3 $CS/build_contract_index.py --selftest   # needs PyYAML (test-only); without it the YAML cases fail, never skip"
+  },
+  {
+   "exit": 0,
+   "seconds": 0.3,
+   "line120": "python3 $CS/build_dependency_index.py --check"
+  },
+  {
+   "exit": 0,
+   "seconds": 0.2,
+   "line120": "python3 $CS/build_budget_report.py --check"
+  },
+  {
+   "exit": 0,
+   "seconds": 0.1,
+   "line120": "python3 $CS/build_active_manifest.py --check"
+  },
+  {
+   "exit": 0,
+   "seconds": 0.2,
+   "line120": "python3 $CS/build_task_router.py --check"
+  },
+  {
+   "exit": 0,
+   "seconds": 0.7,
+   "line120": "python3 $CS/build_task_router.py --selftest"
+  },
+  {
+   "exit": 0,
+   "seconds": 0.1,
+   "line120": "python3 $CS/build_capability_1_views.py --check      # capability 1: charter -> views"
+  },
+  {
+   "exit": 0,
+   "seconds": 0.1,
+   "line120": "python3 $CS/build_capability_1_views.py --selftest"
+  },
+  {
+   "exit": 0,
+   "seconds": 0.2,
+   "line120": "python3 scripts/build_capability_1_spec_dependencies.py --check  # capability 1 spec: warrants -> generated union"
+  },
+  {
+   "exit": 0,
+   "seconds": 0.0,
+   "line120": "python3 scripts/build_capability_1_spec_dependencies.py --selftest"
+  },
+  {
+   "exit": 0,
+   "seconds": 0.2,
+   "line120": "python3 scripts/build_cap1_trusted_bootstrap_consent_adoption.py --check   # CAP1 consent overlay: reviewed subject, com"
+  },
+  {
+   "exit": 0,
+   "seconds": 0.7,
+   "line120": "python3 scripts/build_cap1_trusted_bootstrap_consent_adoption.py --selftest"
+  },
+  {
+   "exit": 0,
+   "seconds": 1.4,
+   "line120": "python3 scripts/build_general_trusted_bootstrap_impact_ledger.py --check"
+  },
+  {
+   "exit": 0,
+   "seconds": 0.1,
+   "line120": "python3 scripts/build_general_trusted_bootstrap_transaction.py --check"
+  },
+  {
+   "exit": 0,
+   "seconds": 0.2,
+   "line120": "python3 scripts/build_polaris_project_wide_contract_coverage.py --check"
+  },
+  {
+   "exit": 0,
+   "seconds": 0.1,
+   "line120": "python3 scripts/build_polaris_project_wide_spec_dependencies.py --check"
+  },
+  {
+   "exit": 0,
+   "seconds": 0.1,
+   "line120": "python3 scripts/build_pwb_truth_policy_amendment.py --check"
+  },
+  {
+   "exit": 0,
+   "seconds": 11.1,
+   "line120": "python3 scripts/record_versioned_signoff.py --check pwb-missing-currency-disclosure-scenario --version 1.0   # missing-c"
+  },
+  {
+   "exit": 0,
+   "seconds": 10.7,
+   "line120": "python3 scripts/record_versioned_signoff.py --check pwb-dismissal-expiry-amendment --version 1.0   # dismissal-expiry si"
+  },
+  {
+   "exit": 0,
+   "seconds": 10.6,
+   "line120": "python3 scripts/record_versioned_signoff.py --check pwb-container-shape-profile-amendment --version 1.0   # container-sh"
+  },
+  {
+   "exit": 0,
+   "seconds": 9.0,
+   "line120": "python3 scripts/record_versioned_signoff.py --check pwb-item-depth-amendment --version 1.0   # item-depth sign-off, v1.0"
+  },
+  {
+   "exit": 0,
+   "seconds": 8.1,
+   "line120": "python3 scripts/record_versioned_signoff.py --check pwb-readability-successor --version 1.0   # PWB readability sign-off"
+  },
+  {
+   "exit": 0,
+   "seconds": 8.7,
+   "line120": "python3 scripts/record_versioned_signoff.py --check pwb-tree-framing-amendment --version 1.0   # tree-framing sign-off, "
+  },
+  {
+   "exit": 0,
+   "seconds": 9.3,
+   "line120": "python3 scripts/record_versioned_signoff.py --check pwb-anchor-resolution-amendment --version 1.0   # anchor-resolution "
+  },
+  {
+   "exit": 0,
+   "seconds": 8.7,
+   "line120": "python3 scripts/record_versioned_signoff.py --check three-surface-poc-block-provenance-amendment --version 1.0   # POC b"
+  },
+  {
+   "exit": 0,
+   "seconds": 4.8,
+   "line120": "python3 scripts/record_versioned_signoff.py --check pwb-class-granular-extraction-amendment --version 1.0   # class-gran"
+  },
+  {
+   "exit": 0,
+   "seconds": 3.6,
+   "line120": "python3 scripts/record_versioned_signoff.py --check pwb-accessible-name-amendment --version 1.0   # accessible-name sign"
+  },
+  {
+   "exit": 0,
+   "seconds": 0.2,
+   "line120": "python3 scripts/record_versioned_signoff.py --check pwb-opening-index-amendment --version 1.0   # opening-index sign-off"
+  },
+  {
+   "exit": 0,
+   "seconds": 11.1,
+   "line120": "python3 scripts/record_versioned_signoff.py --check three-surface-poc-governing-intent-amendment --version 1.0   # POC g"
+  },
+  {
+   "exit": 0,
+   "seconds": 9.4,
+   "line120": "python3 scripts/record_versioned_signoff.py --check three-surface-poc-vocabulary-epistemic-amendment --version 1.0   # P"
+  },
+  {
+   "exit": 0,
+   "seconds": 1.2,
+   "line120": "python3 scripts/record_versioned_signoff.py --check three-surface-poc-governedby-reference-amendment --version 1.0   # P"
+  },
+  {
+   "exit": 0,
+   "seconds": 0.2,
+   "line120": "python3 scripts/record_versioned_signoff.py --check cap1-trusted-bootstrap-consent --version 1.0   # CAP1 consent adopti"
+  },
+  {
+   "exit": 0,
+   "seconds": 0.2,
+   "line120": "python3 scripts/record_versioned_signoff.py --check polaris-dossier-local-agent-mode --version 1.0   # dossier local-age"
+  },
+  {
+   "exit": 0,
+   "seconds": 0.2,
+   "line120": "python3 scripts/record_versioned_signoff.py --check polaris-dossier-local-agent-mode --version 1.1   # dossier local-age"
+  },
+  {
+   "exit": 0,
+   "seconds": 0.8,
+   "line120": "python3 scripts/record_versioned_signoff.py --check polaris-dossier-local-agent-mode --version 1.2   # dossier local-age"
+  },
+  {
+   "exit": 0,
+   "seconds": 38.2,
+   "line120": "python3 scripts/record_pwb_behavior_amendment_acts.py --check render-mode 527be5ac3732619608355ae9658c92cee45341e831521b"
+  },
+  {
+   "exit": 0,
+   "seconds": 35.5,
+   "line120": "python3 scripts/record_pwb_behavior_amendment_acts.py --check machine-view acabc7915e4461186b5878ce40cc0c62ed7cf91eadd7e"
+  },
+  {
+   "exit": 0,
+   "seconds": 8.8,
+   "line120": "python3 scripts/record_versioned_signoff.py --selftest   # version-tagged sign-off recorder (Scope A); per-package --che"
+  },
+  {
+   "exit": 0,
+   "seconds": 6.2,
+   "line120": "python3 scripts/prepare_three_surface_poc_governedby_reference_recording.py --check   # P-115 unsigned candidate or exac"
+  },
+  {
+   "exit": 0,
+   "seconds": 1338.3,
+   "line120": "python3 scripts/prepare_three_surface_poc_governedby_reference_recording.py --selftest   # P-115 recording, successor an"
+  },
+  {
+   "exit": 0,
+   "seconds": 2.9,
+   "line120": "python3 scripts/build_three_surface_poc_vocabulary_epistemic_amendment.py --selftest   # P-108 historical fixtures retai"
+  },
+  {
+   "exit": 0,
+   "seconds": 0.8,
+   "line120": "python3 scripts/pwb_signed_selftest.py --selftest   # reruns a signed builder's fixtures against its pre-adoption tree ("
+  },
+  {
+   "exit": 0,
+   "seconds": 1.5,
+   "line120": "python3 scripts/build_pwb_missing_currency_disclosure_scenario.py --selftest   # missing-currency builder fixtures, at i"
+  },
+  {
+   "exit": 0,
+   "seconds": 3.0,
+   "line120": "python3 scripts/build_pwb_dismissal_expiry_amendment.py --selftest   # dismissal-expiry builder fixtures, at its pre-ado"
+  },
+  {
+   "exit": 0,
+   "seconds": 2.3,
+   "line120": "python3 scripts/build_pwb_container_shape_profile_amendment.py --selftest   # container-shape builder fixtures, at its p"
+  },
+  {
+   "exit": 0,
+   "seconds": 2.8,
+   "line120": "python3 scripts/build_pwb_item_depth_amendment.py --selftest   # item-depth builder fixtures, at its pre-adoption tree"
+  },
+  {
+   "exit": 0,
+   "seconds": 5.9,
+   "line120": "python3 scripts/build_pwb_readability_successor.py --selftest   # PWB readability successor builder fixtures, at its pre"
+  },
+  {
+   "exit": 0,
+   "seconds": 3.2,
+   "line120": "python3 scripts/build_pwb_tree_framing_amendment.py --selftest   # tree-framing builder fixtures, at its pre-adoption tr"
+  },
+  {
+   "exit": 0,
+   "seconds": 0.3,
+   "line120": "python3 scripts/build_polaris_dossier_local_agent_mode.py --check   # dossier local-agent package: absent, unapplied or "
+  },
+  {
+   "exit": 0,
+   "seconds": 0.3,
+   "line120": "python3 scripts/build_polaris_dossier_local_agent_mode.py --selftest   # dossier local-agent builder fixtures, before an"
+  },
+  {
+   "exit": 0,
+   "seconds": 0.7,
+   "line120": "python3 scripts/build_polaris_dossier_local_agent_mode_v1_1.py --check   # dossier v1.1 package: absent, unapplied or ap"
+  },
+  {
+   "exit": 0,
+   "seconds": 2.4,
+   "line120": "python3 scripts/build_polaris_dossier_local_agent_mode_v1_1.py --selftest   # dossier v1.1 builder fixtures, including t"
+  },
+  {
+   "exit": 0,
+   "seconds": 0.7,
+   "line120": "python3 scripts/build_polaris_dossier_local_agent_mode_v1_2.py --check   # dossier v1.2 package: absent, unapplied or ap"
+  },
+  {
+   "exit": 0,
+   "seconds": 10.3,
+   "line120": "python3 scripts/build_polaris_dossier_local_agent_mode_v1_2.py --selftest   # dossier v1.2 builder fixtures, including t"
+  },
+  {
+   "exit": 0,
+   "seconds": 18.0,
+   "line120": "python3 scripts/record_pwb_behavior_amendment_acts.py --check opening-band 7f80cb05f644dd1e4f49e7b212d6972ee4754e4068245"
+  },
+  {
+   "exit": 0,
+   "seconds": 0.2,
+   "line120": "python3 scripts/build_pwb_registry_currency_briefing_amendment.py --check   # registry amendment, performed 2026-09-30, "
+  },
+  {
+   "exit": 0,
+   "seconds": 0.2,
+   "line120": "python3 scripts/build_pwb_registry_currency_briefing_amendment.py --selftest"
+  },
+  {
+   "exit": 0,
+   "seconds": 0.2,
+   "line120": "python3 scripts/record_pwb_registry_currency_amendment.py --check 2356b9ed3235b3dff79caeb352803a30c446b7365a2a7ea74df302"
+  },
+  {
+   "exit": 0,
+   "seconds": 0.1,
+   "line120": "python3 scripts/record_pwb_registry_currency_amendment.py --selftest"
+  },
+  {
+   "exit": 0,
+   "seconds": 1.5,
+   "line120": "python3 scripts/build_pwb_behavior_contract_repin.py --selftest"
+  },
+  {
+   "exit": 0,
+   "seconds": 0.2,
+   "line120": "python3 scripts/record_pwb_behavior_contract_repin_acts.py --check registry ad9cd6769bffbb1a3ef94625c73226dec133fb7c9f1e"
+  },
+  {
+   "exit": 0,
+   "seconds": 0.3,
+   "line120": "python3 scripts/record_pwb_behavior_contract_repin_acts.py --selftest"
+  },
+  {
+   "exit": 0,
+   "seconds": 0.1,
+   "line120": "python3 scripts/build_pwb_registry_machine_ceiling_amendment.py --check   # P-114 approved registry row and current appl"
+  },
+  {
+   "exit": 0,
+   "seconds": 1.5,
+   "line120": "python3 scripts/record_pwb_registry_machine_ceiling_act.py --builder-selftest   # P-114 frozen builder: actual 22 predic"
+  },
+  {
+   "exit": 0,
+   "seconds": 0.1,
+   "line120": "python3 scripts/record_pwb_registry_machine_ceiling_act.py --check   # P-114 paired version/Ask-2 act, exact registry ro"
+  },
+  {
+   "exit": 0,
+   "seconds": 0.5,
+   "line120": "python3 scripts/record_pwb_registry_machine_ceiling_act.py --selftest   # P-114 recorder predicates and filesystem rollb"
+  },
+  {
+   "exit": 0,
+   "seconds": 0.2,
+   "line120": "python3 scripts/record_public_source_screening_scope_v4_act.py --check 319e404ee413220550d65644f6c93db096ed1cda431760bae"
+  },
+  {
+   "exit": 0,
+   "seconds": 0.7,
+   "line120": "python3 scripts/record_public_source_screening_scope_v4_act.py --selftest"
+  },
+  {
+   "exit": 0,
+   "seconds": 1.1,
+   "line120": "python3 scripts/check_polaris_response_ceiling_reading.py --check   # P-77 Q2 reading: quotes intact, compression only u"
+  },
+  {
+   "exit": 0,
+   "seconds": 26.0,
+   "line120": "python3 scripts/check_polaris_response_ceiling_reading.py --selftest"
+  },
+  {
+   "exit": 0,
+   "seconds": 0.2,
+   "line120": "python3 scripts/build_contract_readability_restyle.py --check   # restyle package: manifest = exact regeneration, applie"
+  },
+  {
+   "exit": 0,
+   "seconds": 9.4,
+   "line120": "python3 scripts/build_contract_readability_restyle.py --selftest"
+  },
+  {
+   "exit": 0,
+   "seconds": 0.1,
+   "line120": "python3 scripts/record_contract_readability_restyle.py --check  # restyle act, performed 2026-09-28: record and aggregat"
+  },
+  {
+   "exit": 0,
+   "seconds": 4.1,
+   "line120": "python3 scripts/record_contract_readability_restyle.py --selftest"
+  },
+  {
+   "exit": 0,
+   "seconds": 0.1,
+   "line120": "python3 scripts/build_spec_policy_readability_restyle.py --check   # spec-policy restyle: installed bytes = manifest row"
+  },
+  {
+   "exit": 0,
+   "seconds": 0.1,
+   "line120": "python3 scripts/build_spec_policy_readability_restyle.py --selftest"
+  },
+  {
+   "exit": 0,
+   "seconds": 0.1,
+   "line120": "python3 scripts/record_spec_policy_readability_restyle.py --check  # spec-policy restyle act: performed 2026-09-28; reco"
+  },
+  {
+   "exit": 0,
+   "seconds": 0.1,
+   "line120": "python3 scripts/record_spec_policy_readability_restyle.py --selftest"
+  },
+  {
+   "exit": 0,
+   "seconds": 1.3,
+   "line120": "python3 scripts/build_three_surface_poc_readability_successor.py --check   # POC readability successor: candidate = exac"
+  },
+  {
+   "exit": 0,
+   "seconds": 109.0,
+   "line120": "python3 scripts/build_three_surface_poc_readability_successor.py --selftest"
+  },
+  {
+   "exit": 0,
+   "seconds": 2.3,
+   "line120": "python3 scripts/record_three_surface_poc_readability_successor.py --check  # POC successor sign-off: performed 2026-09-2"
+  },
+  {
+   "exit": 0,
+   "seconds": 16.2,
+   "line120": "python3 scripts/record_three_surface_poc_readability_successor.py --selftest"
+  },
+  {
+   "exit": 0,
+   "seconds": 0.1,
+   "line120": "python3 scripts/readability_successor.py --all --check   # readability successors (Capability 1, Polaris base and unders"
+  },
+  {
+   "exit": 0,
+   "seconds": 0.3,
+   "line120": "python3 scripts/readability_successor.py --selftest"
+  },
+  {
+   "exit": 0,
+   "seconds": 0.1,
+   "line120": "python3 scripts/build_polaris_dependency_unions.py --check   # both Polaris dependency unions, and each signed addition'"
+  },
+  {
+   "exit": 0,
+   "seconds": 0.2,
+   "line120": "python3 scripts/build_polaris_dependency_unions.py --selftest"
+  },
+  {
+   "exit": 0,
+   "seconds": 20.1,
+   "line120": "python3 scripts/check_spec_reconciliation.py --check   # five readability outcomes terminal and binding; populations by "
+  }
+ ]
+}

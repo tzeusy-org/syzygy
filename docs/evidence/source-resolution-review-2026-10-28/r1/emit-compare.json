@@ -1,0 +1,60 @@
+{
+  "base": {
+    ".d.ts product": 256,
+    ".d.ts test": 264,
+    ".d.ts.map product": 256,
+    ".d.ts.map test": 264,
+    ".js product": 256,
+    ".js test": 264,
+    ".js.map product": 256,
+    ".js.map test": 264,
+    ".tsbuildinfo product": 12,
+    "total": 2092
+  },
+  "head": {
+    ".d.ts product": 253,
+    ".d.ts.map product": 253,
+    ".js product": 253,
+    ".js.map product": 253,
+    ".tsbuildinfo product": 10,
+    "total": 1022
+  },
+  "headVsBase": {
+    "headFiles": 1022,
+    "identical": 1009,
+    "differing": 13,
+    "headOnly": 0
+  },
+  "baseOnlyNonTest": [
+    "packages/cap1-conformance/dist/.tsbuildinfo",
+    "packages/cap1-conformance/dist/fixtures/index.d.ts",
+    "packages/cap1-conformance/dist/fixtures/index.d.ts.map",
+    "packages/cap1-conformance/dist/fixtures/index.js",
+    "packages/cap1-conformance/dist/fixtures/index.js.map",
+    "packages/cap1-system/dist/.tsbuildinfo",
+    "packages/cap1-system/dist/effect-observer.d.ts",
+    "packages/cap1-system/dist/effect-observer.d.ts.map",
+    "packages/cap1-system/dist/effect-observer.js",
+    "packages/cap1-system/dist/effect-observer.js.map",
+    "packages/cap1-system/dist/harness.d.ts",
+    "packages/cap1-system/dist/harness.d.ts.map",
+    "packages/cap1-system/dist/harness.js",
+    "packages/cap1-system/dist/harness.js.map"
+  ],
+  "headOnly": [],
+  "differing": [
+    "apps/syzygy/dist/.tsbuildinfo",
+    "apps/three-surface-poc/dist/.tsbuildinfo",
+    "packages/cap1-daemon/dist/.tsbuildinfo",
+    "packages/http-host/dist/.tsbuildinfo",
+    "packages/polaris-dossier/dist/.tsbuildinfo",
+    "packages/polaris-dossier/dist/cli.d.ts",
+    "packages/polaris-generation-consent/dist/.tsbuildinfo",
+    "packages/polaris-generation-core/dist/.tsbuildinfo",
+    "packages/polaris-generation-core/dist/workspace-reach.testkit.d.ts.map",
+    "packages/polaris-generation-core/dist/workspace-reach.testkit.js",
+    "packages/polaris-generation-core/dist/workspace-reach.testkit.js.map",
+    "packages/support/dist/.tsbuildinfo",
+    "packages/three-surface-poc-core/dist/.tsbuildinfo"
+  ]
+}

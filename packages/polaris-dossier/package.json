@@ -5,15 +5,92 @@
   "type": "module",
   "exports": {
     ".": {
+      "source": "./src/index.ts",
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "default": "./dist/index.js"
+    },
+    "./argv": {
+      "source": "./src/argv.ts",
+      "types": "./dist/argv.d.ts",
+      "import": "./dist/argv.js",
+      "default": "./dist/argv.js"
+    },
+    "./check": {
+      "source": "./src/check.ts",
+      "types": "./dist/check.d.ts",
+      "import": "./dist/check.js",
+      "default": "./dist/check.js"
+    },
+    "./cli": {
+      "source": "./src/cli.ts",
+      "types": "./dist/cli.d.ts",
+      "import": "./dist/cli.js",
+      "default": "./dist/cli.js"
+    },
+    "./clone-shape": {
+      "source": "./src/clone-shape.ts",
+      "types": "./dist/clone-shape.d.ts",
+      "import": "./dist/clone-shape.js",
+      "default": "./dist/clone-shape.js"
+    },
+    "./full-run.testkit": {
+      "source": "./src/full-run.testkit.ts",
+      "types": "./dist/full-run.testkit.d.ts",
+      "import": "./dist/full-run.testkit.js",
+      "default": "./dist/full-run.testkit.js"
+    },
+    "./gate-sources": {
+      "source": "./src/gate-sources.ts",
+      "types": "./dist/gate-sources.d.ts",
+      "import": "./dist/gate-sources.js",
+      "default": "./dist/gate-sources.js"
+    },
+    "./git-object-reader": {
+      "source": "./src/git-object-reader.ts",
+      "types": "./dist/git-object-reader.d.ts",
+      "import": "./dist/git-object-reader.js",
+      "default": "./dist/git-object-reader.js"
+    },
+    "./init": {
+      "source": "./src/init.ts",
+      "types": "./dist/init.d.ts",
+      "import": "./dist/init.js",
+      "default": "./dist/init.js"
+    },
+    "./inventory": {
+      "source": "./src/inventory.ts",
+      "types": "./dist/inventory.d.ts",
+      "import": "./dist/inventory.js",
+      "default": "./dist/inventory.js"
+    },
+    "./review": {
+      "source": "./src/review.ts",
+      "types": "./dist/review.d.ts",
+      "import": "./dist/review.js",
+      "default": "./dist/review.js"
+    },
+    "./screen": {
+      "source": "./src/screen.ts",
+      "types": "./dist/screen.d.ts",
+      "import": "./dist/screen.js",
+      "default": "./dist/screen.js"
+    },
+    "./state-directory": {
+      "source": "./src/state-directory.ts",
+      "types": "./dist/state-directory.d.ts",
+      "import": "./dist/state-directory.js",
+      "default": "./dist/state-directory.js"
     }
   },
   "dependencies": {
     "@syzygy/cap1-core": "0.0.0",
     "@syzygy/polaris-generation-consent": "0.0.0",
     "@syzygy/polaris-generation-core": "0.0.0",
+    "@syzygy/support": "0.0.0",
     "@syzygy/three-surface-poc-core": "0.0.0"
+  },
+  "devDependencies": {
+    "@syzygy/test-kit": "0.0.0"
   }
 }

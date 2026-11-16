@@ -1,0 +1,8 @@
+M0 exit 0 expected 0 | 299 collected, 16 sized (10 from a lower bound), 0 problems
+M1 exit 1 expected 1 | 299 collected, 16 sized (10 from a lower bound), 1 problems | problem: carries 45000 ms, the rule gives 50000 ms: the policy port and the strict policy chain agree on every world in the fixture set, at every instant
+M2 exit 1 expected 1 | 299 collected, 16 sized (10 from a lower bound), 1 problems | problem: carries 5000 ms, the rule gives 10000 ms: package admission reader refuses the whole read on unknown shapes instead of guessing
+M3 exit 1 expected 1 | 299 collected, 16 sized (10 from a lower bound), 1 problems | problem: carries 15000 ms, the rule gives 5000 ms: package admission reader refuses when the decisions directory cannot be listed
+M4 exit 1 expected 1 | 299 collected, 16 sized (10 from a lower bound), 2 problems | problem: observed but not collected: package admission reader refuses when the decisions directory cannot be listed
+R5 exit 1 expected 1 | 299 collected, 16 sized (10 from a lower bound), 1 problems | problem: the default the tests carry is 60000 ms, not 5000 ms: the threshold assumes a 5000 ms default
+M5 exit 1 expected 1 | 299 collected, 17 sized (10 from a lower bound), 1 problems | problem: carries 5000 ms, the rule gives 10000 ms: package admission reader refuses when the decisions directory cannot be listed
+M6 exit 0 expected 0 | 299 collected, 16 sized (10 from a lower bound), 0 problems

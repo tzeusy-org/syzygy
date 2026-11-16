@@ -1,0 +1,33 @@
+{
+ "batch": "LINGERN",
+ "commit": "e7f3c71ef84f93cbdeef26db54fbdc63e05bc164",
+ "tool": {
+  "path": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520c/tools/probe.py",
+  "sha256": "bde424f6a1c02304310cddcad7b9943536890d83466d1d335502adb82d2a18f6"
+ },
+ "scripts": {
+  "head": {
+   "path": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520c/clone/scripts/measure_vitest_test_durations.py",
+   "sha256": "72a0fabdd0dd12f85ad35fde4b3ee032125757d5276b85802d76fdf5288f0195"
+  }
+ },
+ "repeats": 1,
+ "params": [
+  null
+ ],
+ "summary": {
+  "head": {
+   "attempts": 1,
+   "passed": 1,
+   "dirty": 0,
+   "withSurvivors": 0,
+   "exitAsClaimed": 1,
+   "exercised": 1
+  }
+ },
+ "loadAtEnd": [
+  16.51953125,
+  17.38525390625,
+  18.31298828125
+ ]
+}

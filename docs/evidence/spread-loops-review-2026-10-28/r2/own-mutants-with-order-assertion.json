@@ -1,0 +1,127 @@
+[
+ {
+  "id": "CONTROL",
+  "ranAt": "a37ca31e7ef03e18bec76d7c7aaa9b9d855dde11",
+  "testFrom": null,
+  "tests": 266,
+  "loadavg1": "22.55",
+  "failing": []
+ },
+ {
+  "id": "L6-extractor-reversed",
+  "ranAt": "a37ca31e7ef03e18bec76d7c7aaa9b9d855dde11",
+  "file": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+  "old": "    for (const item of result.items) all.push(item);\n",
+  "new": "    for (let at = result.items.length - 1; at >= 0; at -= 1) all.push(result.items[at] as ExtractedItem);\n",
+  "mutatedFileSha256": "52aecf9f8fa7caa45810fd3c4c6e389c79c8146708ed130e2cd2a81be6a6b119",
+  "outcome": "killed",
+  "tests": 266,
+  "loadavg1": "22.67",
+  "failing": [
+   {
+    "test": "PWB-REQ-002 \u2014 two independent extractors agree on every fixture heart-and-soul/vision.md mints the oracle's identities and denominators",
+    "message": "AssertionError: expected [ 'refusals', 'promises', 'purpose' ] to deeply equal [ 'purpose', 'promises', 'refusals' ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r2/clone/packages/three-surface-poc-core/src/project-shape-extraction.test.ts:353:37\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/sc",
+    "timeout": false
+   },
+   {
+    "test": "PWB-REQ-002 \u2014 two independent extractors agree on every fixture heart-and-soul/v1.md mints the oracle's identities and denominators",
+    "message": "AssertionError: expected [ 'v1-success', 'v1-scope' ] to deeply equal [ 'v1-scope', 'v1-success' ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r2/clone/packages/three-surface-poc-core/src/project-shape-extraction.test.ts:353:37\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r",
+    "timeout": false
+   },
+   {
+    "test": "PWB-REQ-002 \u2014 two independent extractors agree on every fixture legends-and-lore/README.md mints the oracle's identities and denominators",
+    "message": "AssertionError: expected [ 'RFC 0002', 'RFC 0001' ] to deeply equal [ 'RFC 0001', 'RFC 0002' ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r2/clone/packages/three-surface-poc-core/src/project-shape-extraction.test.ts:353:37\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r2/cl",
+    "timeout": false
+   },
+   {
+    "test": "PWB-REQ-002 \u2014 two independent extractors agree on every fixture lay-and-land/components.md mints the oracle's identities and denominators",
+    "message": "AssertionError: expected [ '12:cli', '2a:Daemon', \u2026(2) ] to deeply equal [ '1:Daemon', '1:Store', \u2026(2) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r2/clone/packages/three-surface-poc-core/src/project-shape-extraction.test.ts:353:37\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev",
+    "timeout": false
+   },
+   {
+    "test": "PWB-REQ-002 \u2014 two independent extractors agree on every fixture craft-and-care/README.md mints the oracle's identities and denominators",
+    "message": "AssertionError: expected [ 'cc-impact.md', 'cc-spec.md' ] to deeply equal [ 'cc-spec.md', 'cc-impact.md' ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r2/clone/packages/three-surface-poc-core/src/project-shape-extraction.test.ts:353:37\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/r",
+    "timeout": false
+   },
+   {
+    "test": "PWB-REQ-002 \u2014 two independent extractors agree on every fixture hand-typed expectations pin the grammar on the vision fixture",
+    "message": "AssertionError: expected [ 'Caf\u00e9 rule', \u2026(2) ] to deeply equal [ 'Fail closed', \u2026(2) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r2/clone/packages/three-surface-poc-core/src/project-shape-extraction.test.ts:375:36\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r2/clone/node",
+    "timeout": false
+   },
+   {
+    "test": "PWB-REQ-002 \u2014 two independent extractors agree on every fixture hand-typed expectations pin the grammar on the v1, lore, components, craft and roster fixtures",
+    "message": "AssertionError: expected [ 'Tracing', 'Identity', \u2026(5) ] to deeply equal [ 'Bus', 'scheduler', \u2026(5) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r2/clone/packages/three-surface-poc-core/src/project-shape-extraction.test.ts:387:41\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-55",
+    "timeout": false
+   },
+   {
+    "test": "PWB-REQ-002 \u2014 the grammar is literal keys are NFC-normalized and nothing else",
+    "message": "AssertionError: expected 'Fail closed' to be 'Caf\u00e9 rule' // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r2/clone/packages/three-surface-poc-core/src/project-shape-extraction.test.ts:832:21\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r2/clone/node_modules",
+    "timeout": false
+   },
+   {
+    "test": "a source whose class holds 130,000 items is extracted, every item kept in class order",
+    "message": "AssertionError: the success-criterion items are not in line order: expected false to be true // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r2/clone/packages/three-surface-poc-core/src/project-shape-extraction.test.ts:1155:120\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/sc",
+    "timeout": false
+   },
+   {
+    "test": "an admitted, fully readable fixture accounts for every declared identity, all modeled",
+    "message": "AssertionError: expected [ \u2026(20) ] to deeply equal [ \u2026(20) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r2/clone/packages/three-surface-poc-core/src/project-shape-model.test.ts:482:54\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r2/clone/node_modules/@vitest/runner/dist/ch",
+    "timeout": false
+   }
+  ]
+ },
+ {
+  "id": "R9-extractor-swaps-at-global-index",
+  "ranAt": "a37ca31e7ef03e18bec76d7c7aaa9b9d855dde11",
+  "file": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+  "old": "    for (const item of result.items) all.push(item);\n",
+  "new": "    for (const item of result.items) all.push(item);\n    if (all.length > 130_000) { const a = all[65_000] as ExtractedItem; all[65_000] = all[65_001] as ExtractedItem; all[65_001] = a; }\n",
+  "mutatedFileSha256": "fff5a63b63c80c2a7d860b5c1c7cd28d5aabc30fc16b9e580b4beabad270ed9e",
+  "outcome": "killed",
+  "tests": 266,
+  "loadavg1": "23.34",
+  "failing": [
+   {
+    "test": "a source whose class holds 130,000 items is extracted, every item kept in class order",
+    "message": "AssertionError: the success-criterion items are not in line order: expected false to be true // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r2/clone/packages/three-surface-poc-core/src/project-shape-extraction.test.ts:1155:120\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/sc",
+    "timeout": false
+   }
+  ]
+ },
+ {
+  "id": "R10-extractor-size-gated-reversal",
+  "ranAt": "a37ca31e7ef03e18bec76d7c7aaa9b9d855dde11",
+  "file": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+  "old": "    for (const item of result.items) all.push(item);\n",
+  "new": "    for (let at = 0; at < result.items.length; at += 1) all.push(result.items[result.items.length > 100_000 ? result.items.length - 1 - at : at] as ExtractedItem);\n",
+  "mutatedFileSha256": "3f9ee7fad03f13c9e743eeeae3048397917a3c89c21af32febd34241ec85137e",
+  "outcome": "killed",
+  "tests": 266,
+  "loadavg1": "23.41",
+  "failing": [
+   {
+    "test": "a source whose class holds 130,000 items is extracted, every item kept in class order",
+    "message": "AssertionError: the success-criterion items are not in line order: expected false to be true // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r2/clone/packages/three-surface-poc-core/src/project-shape-extraction.test.ts:1155:120\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/sc",
+    "timeout": false
+   }
+  ]
+ },
+ {
+  "id": "R11-extractor-chunks-last-first",
+  "ranAt": "a37ca31e7ef03e18bec76d7c7aaa9b9d855dde11",
+  "file": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+  "old": "    for (const item of result.items) all.push(item);\n",
+  "new": "    for (let at = Math.floor((result.items.length - 1) / 50_000) * 50_000; at >= 0; at -= 50_000) all.push(...result.items.slice(at, at + 50_000));\n",
+  "mutatedFileSha256": "832cd6cbe6e4cc0a2bdbd0af6cfb6eeaee0617cb49f9263ec890877ef239ac4c",
+  "outcome": "killed",
+  "tests": 266,
+  "loadavg1": "23.21",
+  "failing": [
+   {
+    "test": "a source whose class holds 130,000 items is extracted, every item kept in class order",
+    "message": "AssertionError: the success-criterion items are not in line order: expected false to be true // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r2/clone/packages/three-surface-poc-core/src/project-shape-extraction.test.ts:1155:120\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/sc",
+    "timeout": false
+   }
+  ]
+ }
+]

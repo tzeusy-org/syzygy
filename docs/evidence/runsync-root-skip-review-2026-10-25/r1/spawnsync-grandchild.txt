@@ -1,0 +1,2 @@
+A child hangs: elapsed 2008 ms, error ETIMEDOUT, signal SIGKILL, grandchild - alive after: false 
+B grandchild holds pipes: elapsed 2006 ms, error ETIMEDOUT, signal SIGKILL, grandchild 719404 alive after: true sleep 12

@@ -1,0 +1,922 @@
+{
+ "commit": "e3e6a78b2ae9db8a26e5139ce74213325f3e8d72",
+ "restoredClean": true,
+ "results": [
+  {
+   "id": "C0-argv",
+   "control": true,
+   "edits": [],
+   "command": "TMPDIR=/tmp/r521-4 CI=1 npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/argv.test.ts",
+   "exit": 0,
+   "tests": [
+    "Tests  65 passed (65)"
+   ],
+   "failed": [],
+   "tail": [
+    "      Tests  65 passed (65)",
+    "   Start at  00:34:55",
+    "   Duration  574ms (transform 85ms, setup 23ms, collect 63ms, tests 16ms, environment 0ms, prepare 107ms)"
+   ],
+   "verdict": "passes"
+  },
+  {
+   "id": "C0-guard",
+   "control": true,
+   "edits": [],
+   "command": "TMPDIR=/tmp/r521-4 CI=1 npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/subpath-imports.test.ts",
+   "exit": 0,
+   "tests": [
+    "Tests  17 passed (17)"
+   ],
+   "failed": [],
+   "tail": [
+    "      Tests  17 passed (17)",
+    "   Start at  00:34:56",
+    "   Duration  1.31s (transform 86ms, setup 25ms, collect 740ms, tests 89ms, environment 0ms, prepare 124ms)"
+   ],
+   "verdict": "passes"
+  },
+  {
+   "id": "C0-row-user",
+   "control": true,
+   "edits": [],
+   "command": "TMPDIR=/tmp/r521-4 CI=1 npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/state-directory.test.ts --reporter=json --outputFile=/tmp/r521-4/C0-row-user.json; v=$?; python3 -I /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-521/tools/row_check.py /tmp/r521-4/C0-row-user.json 'refuses a component below a directory it may not search as unreadable' passed; r=$?; exit $((v|r))",
+   "exit": 0,
+   "tests": [],
+   "failed": [],
+   "tail": [
+    "JSON report written to /tmp/r521-4/C0-row-user.json",
+    "row 'refuses a component below a directory it may not search as unreadable': ['passed']"
+   ],
+   "verdict": "passes"
+  },
+  {
+   "id": "C0-row-fake-root",
+   "control": true,
+   "edits": [],
+   "command": "NODE_OPTIONS=--import=/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-521/tools/fake-root.mjs TMPDIR=/tmp/r521-4 CI=1 npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/state-directory.test.ts --reporter=json --outputFile=/tmp/r521-4/C0-row-fake-root.json; v=$?; python3 -I /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-521/tools/row_check.py /tmp/r521-4/C0-row-fake-root.json 'refuses a component below a directory it may not search as unreadable' skipped; r=$?; exit $((v|r))",
+   "exit": 0,
+   "tests": [],
+   "failed": [],
+   "tail": [
+    "JSON report written to /tmp/r521-4/C0-row-fake-root.json",
+    "row 'refuses a component below a directory it may not search as unreadable': ['skipped']"
+   ],
+   "verdict": "passes"
+  },
+  {
+   "id": "R1-terminator-skipped",
+   "family": "lane reader",
+   "from": "docs/evidence/syzygy-bpyt-8-2/mutants/R1-terminator-skipped.json",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.ts",
+     "old": "  for (const token of tokens) {\n    const arg = args[token.index]!;\n",
+     "new": "  for (const token of tokens) {\n    if (token.kind === 'option-terminator') continue;\n    const arg = args[token.index]!;\n"
+    }
+   ],
+   "command": "TMPDIR=/tmp/r521-4 CI=1 npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/argv.test.ts",
+   "exit": 1,
+   "tests": [
+    "Tests  4 failed | 61 passed (65)"
+   ],
+   "failed": [
+    "× readArgv under the daemon policy: values taken whatever they start with, the last of a repeat, no positionals, stop at help > [\"--\",\"--help\"] reads as {\"fault\":\"unknown\",\"arg\":\"--\"} 27ms",
+    "× readArgv under the dossier one-argument policy: positionals only > [\"--\",\"run\"] reads as {\"fault\":\"unknown\",\"arg\":\"--\"} 2ms",
+    "× readArgv under the dossier options policy: a dash-led value and a repeat refused > [\"run\",\"--\",\"--revision\",\"x\"] reads as {\"fault\":\"unknown\",\"arg\":\"--\"} 1ms",
+    "× readArgv under the polaris policy: boolean options, values taken whatever they start with, the last of a repeat > [\"--\",\"url\"] reads as {\"fault\":\"unknown\",\"arg\":\"--\"} 2ms"
+   ],
+   "tail": [
+    "    107| });",
+    "",
+    "⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯"
+   ],
+   "verdict": "killed"
+  },
+  {
+   "id": "R2b-group-read-by-its-first-option",
+   "family": "lane reader",
+   "from": "docs/evidence/syzygy-bpyt-8-2/mutants/R2b-group-read-by-its-first-option.json",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.ts",
+     "old": "} else if (spec.stopAt?.includes(arg)) {",
+     "new": "} else if (spec.stopAt?.includes(token.kind === 'option' ? token.rawName : arg)) {"
+    }
+   ],
+   "command": "TMPDIR=/tmp/r521-4 CI=1 npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/argv.test.ts",
+   "exit": 1,
+   "tests": [
+    "Tests  2 failed | 63 passed (65)"
+   ],
+   "failed": [
+    "× readArgv under the daemon policy: values taken whatever they start with, the last of a repeat, no positionals, stop at help > [\"-hx\"] reads as {\"fault\":\"unknown\",\"arg\":\"-hx\"} 20ms",
+    "× readArgv under the daemon policy: values taken whatever they start with, the last of a repeat, no positionals, stop at help > [\"--help=1\"] reads as {\"fault\":\"unknown\",\"arg\":\"--help=1\"} 8ms"
+   ],
+   "tail": [
+    "     49| });",
+    "",
+    "⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯"
+   ],
+   "verdict": "killed"
+  },
+  {
+   "id": "R3-dash-value-taken-when-refused",
+   "family": "lane reader",
+   "from": "docs/evidence/syzygy-bpyt-8-2/mutants/R3-dash-value-taken-when-refused.json",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.ts",
+     "old": "(spec.dashValue === 'refuse' && token.value.startsWith('-'))",
+     "new": "(false && token.value.startsWith('-'))"
+    }
+   ],
+   "command": "TMPDIR=/tmp/r521-4 CI=1 npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/argv.test.ts",
+   "exit": 1,
+   "tests": [
+    "Tests  3 failed | 62 passed (65)"
+   ],
+   "failed": [
+    "× readArgv under the dossier options policy: a dash-led value and a repeat refused > [\"run\",\"--revision\",\"-x\"] reads as {\"fault\":\"missing-value\",\"arg\":\"--revision\"} 17ms",
+    "× readArgv under the dossier options policy: a dash-led value and a repeat refused > [\"--revision\",\"--declare\",\"d\"] reads as {\"fault\":\"missing-value\",\"arg\":\"--revision\"} 2ms",
+    "× readArgv under the dossier options policy: a dash-led value and a repeat refused > [\"--revision\",\"-\"] reads as {\"fault\":\"missing-value\",\"arg\":\"--revision\"} 2ms"
+   ],
+   "tail": [
+    "     86| });",
+    "",
+    "⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯"
+   ],
+   "verdict": "killed"
+  },
+  {
+   "id": "R4-repeat-taken-when-refused",
+   "family": "lane reader",
+   "from": "docs/evidence/syzygy-bpyt-8-2/mutants/R4-repeat-taken-when-refused.json",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.ts",
+     "old": "if (spec.repeat === 'refuse' && values.has(arg)) return",
+     "new": "if (false && values.has(arg)) return"
+    }
+   ],
+   "command": "TMPDIR=/tmp/r521-4 CI=1 npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/argv.test.ts",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 64 passed (65)"
+   ],
+   "failed": [
+    "× readArgv under the dossier options policy: a dash-led value and a repeat refused > [\"--revision\",\"a\",\"--revision\",\"b\"] reads as {\"fault\":\"repeated\",\"arg\":\"--revision\"} 10ms"
+   ],
+   "tail": [
+    "     86| });",
+    "",
+    "⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯"
+   ],
+   "verdict": "killed"
+  },
+  {
+   "id": "R5-positional-taken-when-refused",
+   "family": "lane reader",
+   "from": "docs/evidence/syzygy-bpyt-8-2/mutants/R5-positional-taken-when-refused.json",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.ts",
+     "old": "if (!spec.positionals || arg.startsWith('-')) return",
+     "new": "if (arg.startsWith('-')) return"
+    }
+   ],
+   "command": "TMPDIR=/tmp/r521-4 CI=1 npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/argv.test.ts",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 64 passed (65)"
+   ],
+   "failed": [
+    "× readArgv under the daemon policy: values taken whatever they start with, the last of a repeat, no positionals, stop at help > [\"dossier\"] reads as {\"fault\":\"unknown\",\"arg\":\"dossier\"} 10ms"
+   ],
+   "tail": [
+    "     49| });",
+    "",
+    "⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯"
+   ],
+   "verdict": "killed"
+  },
+  {
+   "id": "R6-stop-option-ignored",
+   "family": "lane reader",
+   "from": "docs/evidence/syzygy-bpyt-8-2/mutants/R6-stop-option-ignored.json",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.ts",
+     "old": "} else if (spec.stopAt?.includes(arg)) {",
+     "new": "} else if (false) {"
+    }
+   ],
+   "command": "TMPDIR=/tmp/r521-4 CI=1 npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/argv.test.ts",
+   "exit": 1,
+   "tests": [
+    "Tests  3 failed | 62 passed (65)"
+   ],
+   "failed": [
+    "× readArgv under the daemon policy: values taken whatever they start with, the last of a repeat, no positionals, stop at help > [\"--help\",\"--bogus\",\"x\"] reads as {\"values\":{},\"flags\":[],\"positional\":[],\"stoppedAt\":\"--help\"} 10ms",
+    "× readArgv under the daemon policy: values taken whatever they start with, the last of a repeat, no positionals, stop at help > [\"--port\",\"1\",\"-h\",\"--root\"] reads as {\"values\":{\"--port\":\"1\"},\"flags\":[],\"positional\":[],\"stoppedAt\":\"-h\"} 4ms",
+    "× a spec naming an option readArgv could never see > reads a short boolean option and a short stop option, which are judged by the whole argument 1ms"
+   ],
+   "tail": [
+    "    129| });",
+    "",
+    "⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯"
+   ],
+   "verdict": "killed"
+  },
+  {
+   "id": "R7-dash-positional-taken",
+   "family": "lane reader",
+   "from": "docs/evidence/syzygy-bpyt-8-2/mutants/R7-dash-positional-taken.json",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.ts",
+     "old": "if (!spec.positionals || arg.startsWith('-')) return",
+     "new": "if (!spec.positionals) return"
+    }
+   ],
+   "command": "TMPDIR=/tmp/r521-4 CI=1 npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/argv.test.ts",
+   "exit": 1,
+   "tests": [
+    "Tests  3 failed | 62 passed (65)"
+   ],
+   "failed": [
+    "× readArgv under the dossier one-argument policy: positionals only > [\"run\",\"-\"] reads as {\"fault\":\"unknown\",\"arg\":\"-\"} 15ms",
+    "× readArgv under the dossier options policy: a dash-led value and a repeat refused > [\"--revision\",\"a\",\"-\"] reads as {\"fault\":\"unknown\",\"arg\":\"-\"} 2ms",
+    "× readArgv under the polaris policy: boolean options, values taken whatever they start with, the last of a repeat > [\"-\"] reads as {\"fault\":\"unknown\",\"arg\":\"-\"} 1ms"
+   ],
+   "tail": [
+    "    107| });",
+    "",
+    "⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯"
+   ],
+   "verdict": "killed"
+  },
+  {
+   "id": "R8-boolean-option-ignored",
+   "family": "lane reader",
+   "from": "docs/evidence/syzygy-bpyt-8-2/mutants/R8-boolean-option-ignored.json",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.ts",
+     "old": "} else if (spec.booleans?.includes(arg)) {",
+     "new": "} else if (false) {"
+    }
+   ],
+   "command": "TMPDIR=/tmp/r521-4 CI=1 npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/argv.test.ts",
+   "exit": 1,
+   "tests": [
+    "Tests  3 failed | 62 passed (65)"
+   ],
+   "failed": [
+    "× readArgv under the polaris policy: boolean options, values taken whatever they start with, the last of a repeat > [\"--supervise\",\"--no-attach\"] reads as {\"values\":{},\"flags\":[\"--supervise\",\"--no-attach\"],\"positional\":[]} 11ms",
+    "× readArgv under the polaris policy: boolean options, values taken whatever they start with, the last of a repeat > [\"url\",\"-h\"] reads as {\"values\":{},\"flags\":[\"-h\"],\"positional\":[\"url\"]} 2ms",
+    "× a spec naming an option readArgv could never see > reads a short boolean option and a short stop option, which are judged by the whole argument 1ms"
+   ],
+   "tail": [
+    "    128|   });",
+    "",
+    "⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯"
+   ],
+   "verdict": "killed"
+  },
+  {
+   "id": "R9-missing-value-unchecked",
+   "family": "lane reader",
+   "from": "docs/evidence/syzygy-bpyt-8-2/mutants/R9-missing-value-unchecked.json",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.ts",
+     "old": "if (token.value === undefined || (spec.dashValue",
+     "new": "if ((spec.dashValue"
+    }
+   ],
+   "command": "TMPDIR=/tmp/r521-4 CI=1 npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/argv.test.ts",
+   "exit": 1,
+   "tests": [
+    "Tests  3 failed | 62 passed (65)"
+   ],
+   "failed": [
+    "× readArgv under the daemon policy: values taken whatever they start with, the last of a repeat, no positionals, stop at help > [\"--port\"] reads as {\"fault\":\"missing-value\",\"arg\":\"--port\"} 10ms",
+    "× readArgv under the dossier options policy: a dash-led value and a repeat refused > [\"run\",\"--revision\"] reads as {\"fault\":\"missing-value\",\"arg\":\"--revision\"} 2ms",
+    "× readArgv under the polaris policy: boolean options, values taken whatever they start with, the last of a repeat > [\"url\",\"--deadline\"] reads as {\"fault\":\"missing-value\",\"arg\":\"--deadline\"} 1ms"
+   ],
+   "tail": [
+    "    107| });",
+    "",
+    "⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯"
+   ],
+   "verdict": "killed"
+  },
+  {
+   "id": "R10-first-value-kept",
+   "family": "lane reader",
+   "from": "docs/evidence/syzygy-bpyt-8-2/mutants/R10-first-value-kept.json",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.ts",
+     "old": "      values.set(arg, token.value);",
+     "new": "      if (!values.has(arg)) values.set(arg, token.value);"
+    }
+   ],
+   "command": "TMPDIR=/tmp/r521-4 CI=1 npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/argv.test.ts",
+   "exit": 1,
+   "tests": [
+    "Tests  2 failed | 63 passed (65)"
+   ],
+   "failed": [
+    "× readArgv under the daemon policy: values taken whatever they start with, the last of a repeat, no positionals, stop at help > [\"--port\",\"1\",\"--port\",\"2\"] reads as {\"values\":{\"--port\":\"2\"},\"flags\":[],\"positional\":[]} 9ms",
+    "× readArgv under the polaris policy: boolean options, values taken whatever they start with, the last of a repeat > [\"--model\",\"a\",\"--model\",\"b\",\"url\"] reads as {\"values\":{\"--model\":\"b\"},\"flags\":[],\"positional\":[\"url\"]} 2ms"
+   ],
+   "tail": [
+    "    107| });",
+    "",
+    "⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯"
+   ],
+   "verdict": "killed"
+  },
+  {
+   "id": "GM1-entry-re-exports-the-barrel",
+   "family": "review guard",
+   "from": "docs/evidence/dossier-cli-table-review-2026-10-24/mutants/GM1.json",
+   "edits": [
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nexport { runDossierCli } from '@syzygy/polaris-dossier';\n"
+    }
+   ],
+   "command": "TMPDIR=/tmp/r521-4 CI=1 npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/subpath-imports.test.ts",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 16 passed (17)"
+   ],
+   "failed": [
+    "× the subpaths the daemon entry imports > are /argv and /state-directory, imported statically, and the barrel only dynamically inside the dossier and polaris branches 37ms"
+   ],
+   "tail": [
+    "     69|       \"import '@syzygy/polaris-dossier/state-directory' outside any if…",
+    "",
+    "⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯"
+   ],
+   "verdict": "killed"
+  },
+  {
+   "id": "GM3-argv-loads-the-cli-through-node-module",
+   "family": "review guard",
+   "from": "docs/evidence/dossier-cli-table-review-2026-10-24/mutants/GM3.json",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.ts",
+     "old": "import { parseArgs } from 'node:util';\n",
+     "new": "import { parseArgs } from 'node:util';\nimport { createRequire } from 'node:module';\nexport const usage = (): unknown => createRequire(import.meta.url)('./cli.js');\n"
+    }
+   ],
+   "command": "TMPDIR=/tmp/r521-4 CI=1 npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/subpath-imports.test.ts",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 16 passed (17)"
+   ],
+   "failed": [
+    "× the subpaths the daemon entry imports > ./argv is packages/polaris-dossier/src/argv.ts, which imports exactly [\"node:util\"] 33ms"
+   ],
+   "tail": [
+    "     82| ",
+    "",
+    "⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯"
+   ],
+   "verdict": "killed"
+  },
+  {
+   "id": "GM7-entry-re-exports-the-barrel-as-a-namespace",
+   "family": "lane own",
+   "from": "docs/evidence/syzygy-bpyt-8-32/mutants.json",
+   "edits": [
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nexport * as dossier from '@syzygy/polaris-dossier';\n"
+    }
+   ],
+   "command": "TMPDIR=/tmp/r521-4 CI=1 npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/subpath-imports.test.ts",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 16 passed (17)"
+   ],
+   "failed": [
+    "× the subpaths the daemon entry imports > are /argv and /state-directory, imported statically, and the barrel only dynamically inside the dossier and polaris branches 32ms"
+   ],
+   "tail": [
+    " ❯ packages/polaris-dossier/src/subpath-imports.test.ts:67:12",
+    "",
+    "⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯"
+   ],
+   "verdict": "killed"
+  },
+  {
+   "id": "S3-stop-names-unchecked",
+   "family": "lane own",
+   "from": "docs/evidence/syzygy-bpyt-8-32/mutants.json",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.ts",
+     "old": "[...(spec.booleans ?? []), ...(spec.stopAt ?? [])]",
+     "new": "[...(spec.booleans ?? [])]"
+    }
+   ],
+   "command": "TMPDIR=/tmp/r521-4 CI=1 npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/argv.test.ts",
+   "exit": 1,
+   "tests": [
+    "Tests  2 failed | 63 passed (65)"
+   ],
+   "failed": [
+    "× a spec naming an option readArgv could never see > throws for {\"valued\":[],\"dashValue\":\"refuse\",\"repeat\":\"refuse\",\"positionals\":true,\"stopAt\":[\"help\"]}, before reading anything 7ms",
+    "× a spec naming an option readArgv could never see > throws for {\"valued\":[],\"dashValue\":\"refuse\",\"repeat\":\"refuse\",\"positionals\":true,\"stopAt\":[\"--\"]}, before reading anything 1ms"
+   ],
+   "tail": [
+    "    124| ",
+    "",
+    "⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯"
+   ],
+   "verdict": "killed"
+  },
+  {
+   "id": "S7-short-form-never",
+   "family": "lane own",
+   "from": "docs/evidence/syzygy-bpyt-8-32/mutants.json",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.ts",
+     "old": "const SHORT = /^-[^-]$/u;",
+     "new": "const SHORT = /$^/u;"
+    }
+   ],
+   "command": "TMPDIR=/tmp/r521-4 CI=1 npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/argv.test.ts",
+   "exit": 1,
+   "tests": [
+    "Tests  32 failed | 33 passed (65)"
+   ],
+   "failed": [
+    "× readArgv under the daemon policy: values taken whatever they start with, the last of a repeat, no positionals, stop at help > [] reads as {\"values\":{},\"flags\":[],\"positional\":[]} 6ms",
+    "× readArgv under the daemon policy: values taken whatever they start with, the last of a repeat, no positionals, stop at help > [\"--root\",\"/r\",\"--state-dir\",\"/s\",\"--port\",\"0\"] reads as {\"values\":{\"--root\":\"/r\",\"--state-dir\":\"/s\",\"--port\":\"0\"},\"flags\":[],\"positional\":[]} 4ms",
+    "× readArgv under the daemon policy: values taken whatever they start with, the last of a repeat, no positionals, stop at help > [\"--port\",\"1\",\"--port\",\"2\"] reads as {\"values\":{\"--port\":\"2\"},\"flags\":[],\"positional\":[]} 1ms",
+    "× readArgv under the daemon policy: values taken whatever they start with, the last of a repeat, no positionals, stop at help > [\"--root\",\"-x\"] reads as {\"values\":{\"--root\":\"-x\"},\"flags\":[],\"positional\":[]} 0ms",
+    "× readArgv under the daemon policy: values taken whatever they start with, the last of a repeat, no positionals, stop at help > [\"--port\",\"--help\"] reads as {\"values\":{\"--port\":\"--help\"},\"flags\":[],\"positional\":[]} 1ms",
+    "× readArgv under the daemon policy: values taken whatever they start with, the last of a repeat, no positionals, stop at help > [\"--port\"] reads as {\"fault\":\"missing-value\",\"arg\":\"--port\"} 0ms",
+    "× readArgv under the daemon policy: values taken whatever they start with, the last of a repeat, no positionals, stop at help > [\"--help\",\"--bogus\",\"x\"] reads as {\"values\":{},\"flags\":[],\"positional\":[],\"stoppedAt\":\"--help\"} 0ms",
+    "× readArgv under the daemon policy: values taken whatever they start with, the last of a repeat, no positionals, stop at help > [\"--port\",\"1\",\"-h\",\"--root\"] reads as {\"values\":{\"--port\":\"1\"},\"flags\":[],\"positional\":[],\"stoppedAt\":\"-h\"} 0ms",
+    "× readArgv under the daemon policy: values taken whatever they start with, the last of a repeat, no positionals, stop at help > [\"dossier\"] reads as {\"fault\":\"unknown\",\"arg\":\"dossier\"} 0ms",
+    "× readArgv under the daemon policy: values taken whatever they start with, the last of a repeat, no positionals, stop at help > [\"--\",\"--help\"] reads as {\"fault\":\"unknown\",\"arg\":\"--\"} 1ms",
+    "× readArgv under the daemon policy: values taken whatever they start with, the last of a repeat, no positionals, stop at help > [\"-hx\"] reads as {\"fault\":\"unknown\",\"arg\":\"-hx\"} 0ms",
+    "× readArgv under the daemon policy: values taken whatever they start with, the last of a repeat, no positionals, stop at help > [\"--help=1\"] reads as {\"fault\":\"unknown\",\"arg\":\"--help=1\"} 0ms"
+   ],
+   "tail": [
+    " ❯ packages/polaris-dossier/src/argv.test.ts:126:12",
+    "",
+    "⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/32]⎯"
+   ],
+   "verdict": "killed"
+  },
+  {
+   "id": "K1-root-skip-dropped",
+   "family": "lane own",
+   "from": "docs/evidence/syzygy-bpyt-8-32/mutants.json",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/state-directory.test.ts",
+     "old": "  it.skipIf(isRoot)('refuses a component below a directory it may not search as unreadable'",
+     "new": "  it('refuses a component below a directory it may not search as unreadable'"
+    }
+   ],
+   "command": "NODE_OPTIONS=--import=/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-521/tools/fake-root.mjs TMPDIR=/tmp/r521-4 CI=1 npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/state-directory.test.ts --reporter=json --outputFile=/tmp/r521-4/K1-root-skip-dropped.json; v=$?; python3 -I /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-521/tools/row_check.py /tmp/r521-4/K1-root-skip-dropped.json 'refuses a component below a directory it may not search as unreadable' skipped; r=$?; exit $((v|r))",
+   "exit": 1,
+   "tests": [],
+   "failed": [],
+   "tail": [
+    "JSON report written to /tmp/r521-4/K1-root-skip-dropped.json",
+    "row 'refuses a component below a directory it may not search as unreadable': ['passed']"
+   ],
+   "verdict": "killed"
+  },
+  {
+   "id": "K2-root-skip-inverted",
+   "family": "lane own",
+   "from": "docs/evidence/syzygy-bpyt-8-32/mutants.json",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/state-directory.test.ts",
+     "old": "  it.skipIf(isRoot)('refuses a component below a directory it may not search as unreadable'",
+     "new": "  it.skipIf(!isRoot)('refuses a component below a directory it may not search as unreadable'"
+    }
+   ],
+   "command": "TMPDIR=/tmp/r521-4 CI=1 npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/state-directory.test.ts --reporter=json --outputFile=/tmp/r521-4/K2-root-skip-inverted.json; v=$?; python3 -I /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-521/tools/row_check.py /tmp/r521-4/K2-root-skip-inverted.json 'refuses a component below a directory it may not search as unreadable' passed; r=$?; exit $((v|r))",
+   "exit": 1,
+   "tests": [],
+   "failed": [],
+   "tail": [
+    "JSON report written to /tmp/r521-4/K2-root-skip-inverted.json",
+    "row 'refuses a component below a directory it may not search as unreadable': ['skipped']"
+   ],
+   "verdict": "killed"
+  },
+  {
+   "id": "OR1-missing-value-judged-before-repeat",
+   "family": "reader",
+   "from": "rev-521",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.ts",
+     "old": "      if (spec.repeat === 'refuse' && values.has(arg)) return { fault: 'repeated', arg };\n      if (token.value === undefined || (spec.dashValue === 'refuse' && token.value.startsWith('-'))) return { fault: 'missing-value', arg };\n",
+     "new": "      if (token.value === undefined || (spec.dashValue === 'refuse' && token.value.startsWith('-'))) return { fault: 'missing-value', arg };\n      if (spec.repeat === 'refuse' && values.has(arg)) return { fault: 'repeated', arg };\n"
+    }
+   ],
+   "command": "TMPDIR=/tmp/r521-4 CI=1 npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/argv.test.ts",
+   "exit": 0,
+   "tests": [
+    "Tests  65 passed (65)"
+   ],
+   "failed": [],
+   "tail": [
+    "      Tests  65 passed (65)",
+    "   Start at  00:35:33",
+    "   Duration  435ms (transform 61ms, setup 19ms, collect 45ms, tests 23ms, environment 0ms, prepare 60ms)"
+   ],
+   "verdict": "SURVIVED"
+  },
+  {
+   "id": "OR2-empty-value-read-as-missing",
+   "family": "reader",
+   "from": "rev-521",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.ts",
+     "old": "if (token.value === undefined ||",
+     "new": "if (!token.value ||"
+    }
+   ],
+   "command": "TMPDIR=/tmp/r521-4 CI=1 npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/argv.test.ts",
+   "exit": 0,
+   "tests": [
+    "Tests  65 passed (65)"
+   ],
+   "failed": [],
+   "tail": [
+    "      Tests  65 passed (65)",
+    "   Start at  00:35:34",
+    "   Duration  455ms (transform 55ms, setup 20ms, collect 37ms, tests 18ms, environment 0ms, prepare 77ms)"
+   ],
+   "verdict": "SURVIVED"
+  },
+  {
+   "id": "OR3-valued-arm-judged-by-raw-name",
+   "family": "reader",
+   "from": "rev-521",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.ts",
+     "old": "token.kind === 'option' && spec.valued.includes(arg)",
+     "new": "token.kind === 'option' && spec.valued.includes(token.rawName)"
+    }
+   ],
+   "command": "TMPDIR=/tmp/r521-4 CI=1 npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/argv.test.ts",
+   "exit": 1,
+   "tests": [
+    "Tests  2 failed | 63 passed (65)"
+   ],
+   "failed": [
+    "× readArgv under the daemon policy: values taken whatever they start with, the last of a repeat, no positionals, stop at help > [\"--port=5\"] reads as {\"fault\":\"unknown\",\"arg\":\"--port=5\"} 7ms",
+    "× readArgv under the dossier options policy: a dash-led value and a repeat refused > [\"--revision=abc\"] reads as {\"fault\":\"unknown\",\"arg\":\"--revision=abc\"} 1ms"
+   ],
+   "tail": [
+    "     86| });",
+    "",
+    "⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯"
+   ],
+   "verdict": "killed"
+  },
+  {
+   "id": "OR4-boolean-arm-judged-by-raw-name",
+   "family": "reader",
+   "from": "rev-521",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.ts",
+     "old": "} else if (spec.booleans?.includes(arg)) {",
+     "new": "} else if (spec.booleans?.includes(token.kind === 'option' ? token.rawName : arg)) {"
+    }
+   ],
+   "command": "TMPDIR=/tmp/r521-4 CI=1 npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/argv.test.ts",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 64 passed (65)"
+   ],
+   "failed": [
+    "× readArgv under the polaris policy: boolean options, values taken whatever they start with, the last of a repeat > [\"--supervise=1\"] reads as {\"fault\":\"unknown\",\"arg\":\"--supervise=1\"} 9ms"
+   ],
+   "tail": [
+    "    107| });",
+    "",
+    "⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯"
+   ],
+   "verdict": "killed"
+  },
+  {
+   "id": "OE1-agreement-one-way",
+   "family": "edge finder",
+   "from": "rev-521",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/subpath-imports.test.ts",
+     "old": "if (JSON.stringify(walked) !== JSON.stringify(reported)) throw",
+     "new": "if (walked.some((s) => !reported.includes(s))) throw"
+    }
+   ],
+   "command": "TMPDIR=/tmp/r521-4 CI=1 npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/subpath-imports.test.ts",
+   "exit": 0,
+   "tests": [
+    "Tests  17 passed (17)"
+   ],
+   "failed": [],
+   "tail": [
+    "      Tests  17 passed (17)",
+    "   Start at  00:35:38",
+    "   Duration  890ms (transform 47ms, setup 18ms, collect 522ms, tests 67ms, environment 0ms, prepare 59ms)"
+   ],
+   "verdict": "SURVIVED"
+  },
+  {
+   "id": "OE2-walker-drops-require",
+   "family": "edge finder",
+   "from": "rev-521",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/subpath-imports.test.ts",
+     "old": "    else if (ts.isCallExpression(node) && ts.isIdentifier(node.expression) && node.expression.text === 'require' && node.arguments[0]) add('require', node.arguments[0]);\n",
+     "new": ""
+    }
+   ],
+   "command": "TMPDIR=/tmp/r521-4 CI=1 npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/subpath-imports.test.ts",
+   "exit": 1,
+   "tests": [
+    "Tests  2 failed | 15 passed (17)"
+   ],
+   "failed": [
+    "× the subpaths the daemon entry imports > the check sees a forbidden import in const fs = require('fs'); (its own mutant) 4ms",
+    "× the subpaths the daemon entry imports > the entry check sees if (argv[0] !== 'dossier') require('@syzygy/polaris-dossier'); (its own mutant) 1ms"
+   ],
+   "tail": [
+    " ❯ packages/polaris-dossier/src/subpath-imports.test.ts:102:12",
+    "",
+    "⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯"
+   ],
+   "verdict": "killed"
+  },
+  {
+   "id": "OE3-main-computed-dynamic-import",
+   "family": "edge finder (subject)",
+   "from": "rev-521",
+   "edits": [
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nconst barrel = '@syzygy/polaris-dossier';\nawait import(barrel);\n"
+    }
+   ],
+   "command": "TMPDIR=/tmp/r521-4 CI=1 npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/subpath-imports.test.ts",
+   "exit": 0,
+   "tests": [
+    "Tests  17 passed (17)"
+   ],
+   "failed": [],
+   "tail": [
+    "      Tests  17 passed (17)",
+    "   Start at  00:35:41",
+    "   Duration  957ms (transform 48ms, setup 17ms, collect 497ms, tests 66ms, environment 0ms, prepare 74ms)"
+   ],
+   "verdict": "SURVIVED"
+  },
+  {
+   "id": "OE4-main-create-require-alias",
+   "family": "edge finder (subject)",
+   "from": "rev-521",
+   "edits": [
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nimport { createRequire as lazyRequire } from 'node:module';\nlazyRequire(import.meta.url)('@syzygy/polaris-dossier');\n"
+    }
+   ],
+   "command": "TMPDIR=/tmp/r521-4 CI=1 npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/subpath-imports.test.ts",
+   "exit": 0,
+   "tests": [
+    "Tests  17 passed (17)"
+   ],
+   "failed": [],
+   "tail": [
+    "      Tests  17 passed (17)",
+    "   Start at  00:35:43",
+    "   Duration  912ms (transform 43ms, setup 17ms, collect 480ms, tests 62ms, environment 0ms, prepare 66ms)"
+   ],
+   "verdict": "SURVIVED"
+  },
+  {
+   "id": "OE5-main-intermediate-local-module",
+   "family": "edge finder (subject)",
+   "from": "rev-521",
+   "edits": [
+    {
+     "file": "apps/syzygy/src/dossier-bridge.ts",
+     "create": "export * from '@syzygy/polaris-dossier';\n"
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nimport './dossier-bridge.js';\n"
+    }
+   ],
+   "command": "TMPDIR=/tmp/r521-4 CI=1 npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/subpath-imports.test.ts",
+   "exit": 0,
+   "tests": [
+    "Tests  17 passed (17)"
+   ],
+   "failed": [],
+   "tail": [
+    "      Tests  17 passed (17)",
+    "   Start at  00:35:44",
+    "   Duration  829ms (transform 43ms, setup 19ms, collect 462ms, tests 61ms, environment 0ms, prepare 58ms)"
+   ],
+   "verdict": "SURVIVED"
+  },
+  {
+   "id": "OB1-condition-counts-as-inside",
+   "family": "branch classifier",
+   "from": "rev-521",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/subpath-imports.test.ts",
+     "old": "if (ts.isIfStatement(parent) && child === parent.thenStatement) return",
+     "new": "if (ts.isIfStatement(parent) && child !== parent.elseStatement) return"
+    }
+   ],
+   "command": "TMPDIR=/tmp/r521-4 CI=1 npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/subpath-imports.test.ts",
+   "exit": 0,
+   "tests": [
+    "Tests  17 passed (17)"
+   ],
+   "failed": [],
+   "tail": [
+    "      Tests  17 passed (17)",
+    "   Start at  00:35:46",
+    "   Duration  889ms (transform 49ms, setup 22ms, collect 502ms, tests 61ms, environment 0ms, prepare 66ms)"
+   ],
+   "verdict": "SURVIVED"
+  },
+  {
+   "id": "OB2-outermost-if-not-nearest",
+   "family": "branch classifier",
+   "from": "rev-521",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/subpath-imports.test.ts",
+     "old": "  const where = (node: ts.Node): string => {\n    for (let child = node, parent = node.parent; parent !== undefined; child = parent, parent = parent.parent) {\n      if (ts.isIfStatement(parent) && child === parent.thenStatement) return `inside if (${parent.expression.getText(source)})`;\n      if (ts.isIfStatement(parent) && child === parent.elseStatement) return `inside the else of if (${parent.expression.getText(source)})`;\n    }\n    return 'outside any if';\n  };\n",
+     "new": "  const where = (node: ts.Node): string => {\n    let found = 'outside any if';\n    for (let child = node, parent = node.parent; parent !== undefined; child = parent, parent = parent.parent) {\n      if (ts.isIfStatement(parent) && child === parent.thenStatement) found = `inside if (${parent.expression.getText(source)})`;\n      if (ts.isIfStatement(parent) && child === parent.elseStatement) found = `inside the else of if (${parent.expression.getText(source)})`;\n    }\n    return found;\n  };\n"
+    }
+   ],
+   "command": "TMPDIR=/tmp/r521-4 CI=1 npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/subpath-imports.test.ts",
+   "exit": 0,
+   "tests": [
+    "Tests  17 passed (17)"
+   ],
+   "failed": [],
+   "tail": [
+    "      Tests  17 passed (17)",
+    "   Start at  00:35:47",
+    "   Duration  1.05s (transform 51ms, setup 20ms, collect 606ms, tests 85ms, environment 0ms, prepare 87ms)"
+   ],
+   "verdict": "SURVIVED"
+  },
+  {
+   "id": "OB3-shadowed-argv-replaces-the-polaris-branch-import",
+   "family": "branch classifier (subject)",
+   "from": "rev-521",
+   "edits": [
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "  if (argv[0] === 'polaris') {\n    const { runPolarisCli } = await import('@syzygy/polaris-dossier');\n",
+     "new": "  { const argv = ['polaris']; if (argv[0] === 'polaris') await import('@syzygy/polaris-dossier'); }\n  if (argv[0] === 'polaris') {\n    const { runPolarisCli } = globalThis as never;\n"
+    }
+   ],
+   "command": "TMPDIR=/tmp/r521-4 CI=1 npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/subpath-imports.test.ts",
+   "exit": 0,
+   "tests": [
+    "Tests  17 passed (17)"
+   ],
+   "failed": [],
+   "tail": [
+    "      Tests  17 passed (17)",
+    "   Start at  00:35:49",
+    "   Duration  994ms (transform 47ms, setup 18ms, collect 511ms, tests 67ms, environment 0ms, prepare 73ms)"
+   ],
+   "verdict": "SURVIVED"
+  },
+  {
+   "id": "OS1-guard-after-the-read",
+   "family": "spec guard",
+   "from": "rev-521",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.ts",
+     "old": "  for (const name of spec.valued) if (!LONG.test(name)) throw new Error(`argv: the valued option ${name} is not --<name>`);\n  for (const name of [...(spec.booleans ?? []), ...(spec.stopAt ?? [])]) {\n    if (!LONG.test(name) && !SHORT.test(name)) throw new Error(`argv: the option ${name} is neither --<name> nor -<c>`);\n  }\n",
+     "new": ""
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.ts",
+     "old": "  return { values, flags, positional };\n}",
+     "new": "  for (const name of spec.valued) if (!LONG.test(name)) throw new Error(`argv: the valued option ${name} is not --<name>`);\n  for (const name of [...(spec.booleans ?? []), ...(spec.stopAt ?? [])]) {\n    if (!LONG.test(name) && !SHORT.test(name)) throw new Error(`argv: the option ${name} is neither --<name> nor -<c>`);\n  }\n  return { values, flags, positional };\n}"
+    }
+   ],
+   "command": "TMPDIR=/tmp/r521-4 CI=1 npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/argv.test.ts",
+   "exit": 0,
+   "tests": [
+    "Tests  65 passed (65)"
+   ],
+   "failed": [],
+   "tail": [
+    "      Tests  65 passed (65)",
+    "   Start at  00:35:51",
+    "   Duration  351ms (transform 56ms, setup 18ms, collect 32ms, tests 16ms, environment 0ms, prepare 73ms)"
+   ],
+   "verdict": "SURVIVED"
+  },
+  {
+   "id": "OS2-long-form-allows-a-trailing-equals",
+   "family": "spec guard",
+   "from": "rev-521",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.ts",
+     "old": "const LONG = /^--[^-=][^=]*$/u;",
+     "new": "const LONG = /^--[^-=][^=]*=?$/u;"
+    }
+   ],
+   "command": "TMPDIR=/tmp/r521-4 CI=1 npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/argv.test.ts",
+   "exit": 0,
+   "tests": [
+    "Tests  65 passed (65)"
+   ],
+   "failed": [],
+   "tail": [
+    "      Tests  65 passed (65)",
+    "   Start at  00:35:52",
+    "   Duration  362ms (transform 53ms, setup 18ms, collect 39ms, tests 14ms, environment 0ms, prepare 63ms)"
+   ],
+   "verdict": "SURVIVED"
+  },
+  {
+   "id": "OK1-isRoot-by-geteuid",
+   "family": "root skip",
+   "from": "rev-521",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/state-directory.test.ts",
+     "old": "const isRoot = process.getuid?.() === 0;",
+     "new": "const isRoot = process.geteuid?.() === 0;"
+    }
+   ],
+   "command": "NODE_OPTIONS=--import=/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-521/tools/fake-root.mjs TMPDIR=/tmp/r521-4 CI=1 npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/state-directory.test.ts --reporter=json --outputFile=/tmp/r521-4/OK1-isRoot-by-geteuid.json; v=$?; python3 -I /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-521/tools/row_check.py /tmp/r521-4/OK1-isRoot-by-geteuid.json 'refuses a component below a directory it may not search as unreadable' skipped; r=$?; exit $((v|r))",
+   "exit": 1,
+   "tests": [],
+   "failed": [],
+   "tail": [
+    "JSON report written to /tmp/r521-4/OK1-isRoot-by-geteuid.json",
+    "row 'refuses a component below a directory it may not search as unreadable': ['passed']"
+   ],
+   "verdict": "killed"
+  },
+  {
+   "id": "OK2-skip-as-an-early-return",
+   "family": "root skip",
+   "from": "rev-521",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/state-directory.test.ts",
+     "old": "  it.skipIf(isRoot)('refuses a component below a directory it may not search as unreadable', () => {\n",
+     "new": "  it('refuses a component below a directory it may not search as unreadable', () => {\n    if (isRoot) return;\n"
+    }
+   ],
+   "command": "NODE_OPTIONS=--import=/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-521/tools/fake-root.mjs TMPDIR=/tmp/r521-4 CI=1 npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/state-directory.test.ts --reporter=json --outputFile=/tmp/r521-4/OK2-skip-as-an-early-return.json; v=$?; python3 -I /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-521/tools/row_check.py /tmp/r521-4/OK2-skip-as-an-early-return.json 'refuses a component below a directory it may not search as unreadable' skipped; r=$?; exit $((v|r))",
+   "exit": 1,
+   "tests": [],
+   "failed": [],
+   "tail": [
+    "JSON report written to /tmp/r521-4/OK2-skip-as-an-early-return.json",
+    "row 'refuses a component below a directory it may not search as unreadable': ['passed']"
+   ],
+   "verdict": "killed"
+  }
+ ]
+}

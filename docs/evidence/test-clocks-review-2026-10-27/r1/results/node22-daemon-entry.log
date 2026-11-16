@@ -1,0 +1,16 @@
+
+ RUN  v3.2.7 /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone/packages/cap1-system
+
+ ✓ src/daemon-entry-unchanged.system.test.ts (16 tests) 5038ms
+   ✓ daemon entry: every invocation but `dossier` is unchanged > with no arguments it serves from the working directory, writes the same state and shuts down the same way  318ms
+   ✓ daemon entry: every invocation but `dossier` is unchanged > with explicit flags it serves, writes the same state and shuts down the same way  347ms
+   ✓ daemon entry: the one changed input, `dossier` as the first argument > `dossier` alone is a dossier usage error (exit 2), not the daemon's refusal  354ms
+   ✓ daemon entry: the one changed input, `dossier` as the first argument > `dossier status <missing>` is a dossier refusal (exit 1) and starts no daemon  328ms
+   ✓ daemon entry: the one changed input, `dossier` as the first argument > `dossier render <missing>` reaches the run with the renderer injected, and starts no daemon  358ms
+   ✓ daemon entry: the one changed input, `dossier` as the first argument > the daemon path never loads the POC app, and the `dossier render` branch does  1604ms
+
+ Test Files  1 passed (1)
+      Tests  16 passed (16)
+   Start at  08:57:40
+   Duration  6.09s (transform 244ms, setup 0ms, collect 223ms, tests 5.04s, environment 0ms, prepare 225ms)
+

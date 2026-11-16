@@ -1,0 +1,47 @@
+{
+ "base": "eb8fb6cb",
+ "head": "fb481b4d",
+ "files": 19,
+ "changedLines": 2552,
+ "codeChangedLines": 33,
+ "codeNonAscii": [],
+ "nonAsciiAll": 71,
+ "nonAsciiByFile": {
+  "docs/evidence/syzygy-bpyt-7-16/own-head.json": 4,
+  "docs/evidence/syzygy-bpyt-7-16/own-head.log": 2,
+  "docs/evidence/syzygy-bpyt-7-16/record.py": 6,
+  "docs/evidence/syzygy-bpyt-7-16/rev535-at-base.json": 11,
+  "docs/evidence/syzygy-bpyt-7-16/rev535-at-base.log": 4,
+  "docs/evidence/syzygy-bpyt-7-16/rev535-at-head.json": 23,
+  "docs/evidence/syzygy-bpyt-7-16/rev535-at-head.log": 9,
+  "docs/evidence/syzygy-bpyt-7-16/summary.json": 8,
+  "docs/evidence/syzygy-bpyt-7-16/titles.json": 4
+ },
+ "nbspInChangedLines": 1,
+ "subjectWhole": {
+  "packages/http-host/src/credentials.test.ts": {
+   "lines": 399,
+   "nonAsciiCodePoints": [
+    "U+2014"
+   ],
+   "nbsp": 0,
+   "escapeU00a0": 1
+  },
+  "apps/three-surface-poc/src/browser-origin.test.ts": {
+   "lines": 35,
+   "nonAsciiCodePoints": [
+    "U+2014"
+   ],
+   "nbsp": 0,
+   "escapeU00a0": 0
+  },
+  "packages/cap1-daemon/src/server.test.ts": {
+   "lines": 420,
+   "nonAsciiCodePoints": [
+    "U+2014"
+   ],
+   "nbsp": 0,
+   "escapeU00a0": 0
+  }
+ }
+}

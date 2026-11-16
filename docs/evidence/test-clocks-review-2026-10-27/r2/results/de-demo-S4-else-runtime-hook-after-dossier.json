@@ -1,0 +1,40 @@
+{
+ "mutant": {
+  "id": "S4-else-runtime-hook-after-dossier",
+  "kind": "defect",
+  "file": "apps/syzygy/src/main.ts",
+  "old": "    }, { renderer: renderLocalDossier });\n  }\n",
+  "new": "    }, { renderer: renderLocalDossier });\n  } else {\n    const { registerHooks } = process.getBuiltinModule('node:module');\n    const { readFileSync } = process.getBuiltinModule('node:fs');\n    registerHooks({ load: (url, context, nextLoad) => (url.includes('/apps/three-surface-poc/')\n      ? { format: 'module', source: readFileSync(new URL(url), 'utf8'), shortCircuit: true } : nextLoad(url, context)) });\n    await import('@syzygy/three-surface-poc-app/dossier-site');\n  }\n",
+  "note": "R3's runtime hook and import in an unconditional `else` on the dossier branch: every non-dossier argv loads the POC app, unseen by the test's hook"
+ },
+ "runs": [
+  {
+   "flag": null,
+   "exit": 0,
+   "stderr": "",
+   "hookLoggedPocUrls": 0,
+   "hookFirst": [],
+   "straceExit": 0,
+   "straceOpenedPocDistFiles": 6,
+   "straceFirst": [
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532b/clone/apps/three-surface-poc/dist/design-tokens.js",
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532b/clone/apps/three-surface-poc/dist/polaris-generation/diagram-layout.js",
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532b/clone/apps/three-surface-poc/dist/polaris-generation/dossier-render-local.js"
+   ]
+  },
+  {
+   "flag": "1",
+   "exit": 0,
+   "stderr": "",
+   "hookLoggedPocUrls": 0,
+   "hookFirst": [],
+   "straceExit": 0,
+   "straceOpenedPocDistFiles": 6,
+   "straceFirst": [
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532b/clone/apps/three-surface-poc/dist/design-tokens.js",
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532b/clone/apps/three-surface-poc/dist/polaris-generation/diagram-layout.js",
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532b/clone/apps/three-surface-poc/dist/polaris-generation/dossier-render-local.js"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,4 @@
+{"rowsLane": 22, "rowsRerun": 22, "controls": 6, "summaryEqual": true, "differences": []}
+exit=0
+{"rowsLane": 22, "rowsRerun": 22, "controls": 6, "summaryEqual": true, "differences": [["F1-headroom-not-frozen", "after", "failedTests"]]}
+mutated-input exit=1

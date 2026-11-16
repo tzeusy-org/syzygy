@@ -1,0 +1,50 @@
+[
+  {
+    "source": "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/isolated.py",
+    "source_sha256": "7b6993490c0de96747204f4825dac11333d5a2d49646d4831ab3b12b989c1fa0",
+    "copy": "isolated.py",
+    "copy_sha256": "f4854c2f4255b302566f2869c46c84b5448007b5999f193a4a9426e1f6c5746a"
+  },
+  {
+    "source": "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/capture_inside.py",
+    "source_sha256": "46e02c6cef8e1328b54517d0037bd2d58cda51f6d1612ff31e8fcb03c8fc01f7",
+    "copy": "capture_inside.py",
+    "copy_sha256": "0282d8bb7612098484c9d14ecc1b923fbc13260c4b9e3d765ccae51afe72a91f"
+  },
+  {
+    "source": "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/etc-hosts",
+    "source_sha256": "b69b2c741be48691edabe3771c644c70473ccd6aa8effd9f17cc07fa129917f9",
+    "copy": "etc-hosts",
+    "copy_sha256": "b69b2c741be48691edabe3771c644c70473ccd6aa8effd9f17cc07fa129917f9"
+  },
+  {
+    "source": "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/etc-nsswitch.conf",
+    "source_sha256": "2ad90a00ddc40e2931e9da1b7c943a5d40d15039436ea2e20442d47c0916959e",
+    "copy": "etc-nsswitch.conf",
+    "copy_sha256": "2ad90a00ddc40e2931e9da1b7c943a5d40d15039436ea2e20442d47c0916959e"
+  },
+  {
+    "source": "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/etc-resolv.conf",
+    "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "copy": "etc-resolv.conf",
+    "copy_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "source": "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/user.npmrc",
+    "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "copy": "user.npmrc",
+    "copy_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "source": "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/global.npmrc",
+    "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "copy": "global.npmrc",
+    "copy_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "source": "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/prepare-cache.cjs",
+    "source_sha256": "dc06e5511b379c417c920a1e6aef760c295c6ede725a8fa3b7a50eb2536022a9",
+    "copy": "prepare-cache.cjs",
+    "copy_sha256": "4453c650671591e7035c97d6bf1325bc527561a170c056713f0da6baa19cb36b"
+  }
+]

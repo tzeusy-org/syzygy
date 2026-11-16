@@ -1,0 +1,212 @@
+{
+ "tool": "orphan_census.py",
+ "marker": "--user-data-dir=<private-directory>/ in argv (not TMPDIR in environ)",
+ "before": [
+  {
+   "directory": "/tmp/lc410v/sweep",
+   "processes": 26,
+   "byKind": {
+    "gpu-process": 3,
+    "leader": 3,
+    "renderer": 8,
+    "utility": 6,
+    "zygote": 6
+   },
+   "oldestAgeSeconds": 30352,
+   "pids": [
+    1483500,
+    1483650,
+    1483787,
+    1483794,
+    1483796,
+    1483798,
+    1484003,
+    1484014,
+    1484028,
+    1484032,
+    1484033,
+    1484046,
+    1484070,
+    1484533,
+    1488118,
+    1490128,
+    1491345,
+    1492279,
+    1856530,
+    1857069,
+    1857070,
+    1857692,
+    1857713,
+    1857728,
+    1857952,
+    1857953
+   ]
+  },
+  {
+   "directory": "/tmp/lc410v/sweepmut",
+   "processes": 62,
+   "byKind": {
+    "gpu-process": 7,
+    "leader": 7,
+    "renderer": 19,
+    "utility": 15,
+    "zygote": 14
+   },
+   "oldestAgeSeconds": 29087,
+   "pids": [
+    1190838,
+    1190904,
+    1190907,
+    1190963,
+    1190967,
+    1190998,
+    1191095,
+    1192663,
+    1192836,
+    1192840,
+    1193022,
+    1193025,
+    1193026,
+    1193169,
+    1195020,
+    1195596,
+    1197610,
+    1719000,
+    1719133,
+    1719148,
+    1719322,
+    1719324,
+    1719337,
+    1719452,
+    1719788,
+    1719913,
+    1719914,
+    1720112,
+    1720114,
+    1720161,
+    1720266,
+    1722051,
+    1722720,
+    1723299,
+    1728128,
+    1728317,
+    1728318,
+    1728451,
+    1728453,
+    1728455,
+    1728490,
+    1731248,
+    1743006,
+    1752781,
+    2254494,
+    2254689,
+    2254769,
+    2254788,
+    2254886,
+    2254894,
+    2254895,
+    2254912,
+    2254943,
+    2255265,
+    2255334,
+    2255352,
+    2255355,
+    2255503,
+    2257484,
+    2258195,
+    2258561,
+    2259009
+   ]
+  },
+  {
+   "directory": "/tmp/lc410v/clean",
+   "processes": 0,
+   "byKind": {},
+   "oldestAgeSeconds": null,
+   "pids": []
+  },
+  {
+   "directory": "/tmp/lc410v/clih",
+   "processes": 0,
+   "byKind": {},
+   "oldestAgeSeconds": null,
+   "pids": []
+  },
+  {
+   "directory": "/tmp/lc410v/clim",
+   "processes": 0,
+   "byKind": {},
+   "oldestAgeSeconds": null,
+   "pids": []
+  },
+  {
+   "directory": "/tmp/lc410v/intr",
+   "processes": 0,
+   "byKind": {},
+   "oldestAgeSeconds": null,
+   "pids": []
+  },
+  {
+   "directory": "/tmp/lc410v/sweepterm",
+   "processes": 0,
+   "byKind": {},
+   "oldestAgeSeconds": null,
+   "pids": []
+  }
+ ],
+ "afterSigterm": [
+  {
+   "directory": "/tmp/lc410v/sweep",
+   "processes": 0,
+   "byKind": {},
+   "oldestAgeSeconds": null,
+   "pids": []
+  },
+  {
+   "directory": "/tmp/lc410v/sweepmut",
+   "processes": 1,
+   "byKind": {
+    "utility": 1
+   },
+   "oldestAgeSeconds": 28866,
+   "pids": [
+    1752781
+   ]
+  },
+  {
+   "directory": "/tmp/lc410v/clean",
+   "processes": 0,
+   "byKind": {},
+   "oldestAgeSeconds": null,
+   "pids": []
+  },
+  {
+   "directory": "/tmp/lc410v/clih",
+   "processes": 0,
+   "byKind": {},
+   "oldestAgeSeconds": null,
+   "pids": []
+  },
+  {
+   "directory": "/tmp/lc410v/clim",
+   "processes": 0,
+   "byKind": {},
+   "oldestAgeSeconds": null,
+   "pids": []
+  },
+  {
+   "directory": "/tmp/lc410v/intr",
+   "processes": 0,
+   "byKind": {},
+   "oldestAgeSeconds": null,
+   "pids": []
+  },
+  {
+   "directory": "/tmp/lc410v/sweepterm",
+   "processes": 0,
+   "byKind": {},
+   "oldestAgeSeconds": null,
+   "pids": []
+  }
+ ]
+}

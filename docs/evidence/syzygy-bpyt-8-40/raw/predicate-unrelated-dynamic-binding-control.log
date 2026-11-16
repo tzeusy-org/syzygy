@@ -1,0 +1,51 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject
+
+ ❯ |unit| packages/polaris-generation-core/src/island-boundary.test.ts (9 tests | 1 failed) 3257ms
+   ✓ the live Node entries and the parked provider island > lists twenty-four island modules, each a file in the tree 5ms
+   ✓ the live Node entries and the parked provider island > admits transitive island ingress only from the island and exact parked remainder  1801ms
+   ✓ the live Node entries and the parked provider island > resolves every workspace import both entries reach, dynamic ones included  658ms
+   ✓ the live Node entries and the parked provider island > reaches no island module from either live entry  624ms
+   ✓ the live Node entries and the parked provider island > reaches the island from the consent package root, which neither live entry imports 154ms
+   ✓ the live Node entries and the parked provider island > refuses computed import arguments, including template expressions 3ms
+   ✓ the live Node entries and the parked provider island > refuses require calls and import-equals loaders 1ms
+   × the live Node entries and the parked provider island > refuses createRequire calls, including imported aliases and module properties 9ms
+     → expected { specifiers: [ …(2) ], …(1) } to deeply equal { specifiers: [ …(2) ], …(1) }
+   ✓ the live Node entries and the parked provider island > follows a no-substitution template and the existing static, type and literal dynamic forms 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |unit| packages/polaris-generation-core/src/island-boundary.test.ts > the live Node entries and the parked provider island > refuses createRequire calls, including imported aliases and module properties
+AssertionError: expected { specifiers: [ …(2) ], …(1) } to deeply equal { specifiers: [ …(2) ], …(1) }
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[2m  {[22m
+[2m    "specifiers": [[22m
+[2m      "node:readline/promises",[22m
+[2m      "./ordinary.js",[22m
+[2m    ],[22m
+[32m-   "unsupported": [],[39m
+[31m+   "unsupported": [[39m
+[31m+     "fixture.ts:4:72 require/createRequire call: ordinaryName()",[39m
+[31m+   ],[39m
+[2m  }[22m
+
+ ❯ packages/polaris-generation-core/src/island-boundary.test.ts:254:20
+    252|       "const { createInterface: ordinary } = await import('node:readli…
+    253|       "const { createRequire: ordinaryName } = await import('./ordinar…
+    254|     ].join('\n'))).toEqual({ specifiers: ['node:readline/promises', '.…
+       |                    ^
+    255|   });
+    256| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 8 passed (9)
+   Start at  16:14:48
+   Duration  4.22s (transform 89ms, setup 32ms, collect 550ms, tests 3.26s, environment 0ms, prepare 62ms)
+
+JSON report written to /home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/predicate-unrelated-dynamic-binding-control.vitest.json

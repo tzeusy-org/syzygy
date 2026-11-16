@@ -1,0 +1,23 @@
+=== H mk2 x1 --no-profile start 20:08:25 load 47.15
+H-np mk2 None #1: exit 129 (claimed 129, as claimed), exited 3.934 s, tree clean, 0 survivors of 11 seen, vitest seen True, record runs None tests None, exercised True -> FAIL
+SUMMARY H-np {"mk2": {"attempts": 1, "passed": 0, "dirty": 0, "withSurvivors": 0, "exitAsClaimed": 1, "exercised": 1}}
+=== H exit 0 end 20:08:33 load 46.90
+=== K mk3 x1 --no-profile start 20:08:33 load 46.90
+K-np mk3 None #1: exit 1 (claimed 0, NOT as claimed), exited 42.637 s, tree clean, 0 survivors of 39 seen, vitest seen True, record runs None tests None, exercised True -> FAIL
+   trace: ['KILLPG 1300170 0 -> ESRCH, answered alive (injected)', 'KILLPG 1300170 15 -> ESRCH']
+SUMMARY K-np {"mk3": {"attempts": 1, "passed": 0, "dirty": 0, "withSurvivors": 0, "exitAsClaimed": 0, "exercised": 1}}
+=== K exit 0 end 20:09:21 load 52.61
+=== G mk6 x1 --no-profile start 20:09:21 load 52.61
+G-np mk6 0 #1: exit 143 (claimed 143, as claimed), exited 4.504 s, tree clean, 0 survivors of 4 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G-np mk6 30 #1: exit 143 (claimed 143, as claimed), exited 3.444 s, tree clean, 0 survivors of 5 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G-np mk6 60 #1: exit 143 (claimed 143, as claimed), exited 1.606 s, tree clean, 0 survivors of 2 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G-np mk6 100 #1: exit 143 (claimed 143, as claimed), exited 1.833 s, tree clean, 0 survivors of 2 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G-np mk6 150 #1: exit 143 (claimed 143, as claimed), exited 3.895 s, tree clean, 10 survivors of 11 seen, vitest seen True, record runs None tests None, exercised True -> FAIL
+   survivors: {'1348710': 'npm exec vitest run --project @syzygy/polaris-generation-consent packages/polari', '1349870': 'sh -c "vitest" run --project @syzygy/polaris-generation-consent packages/polaris', '1349887': 'node (vitest)', '1350553': '/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/sc', '1350935': 'node (vitest 1)', '1350939': 'node (vitest 2)', '1350953': 'node (vitest 3)', '1350960': 'node (vitest 4)', '1350972': 'node (vitest 5)', '1351010': 'node (vitest 6)'}
+G-np mk6 200 #1: exit 143 (claimed 143, as claimed), exited 3.946 s, tree clean, 0 survivors of 4 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G-np mk6 300 #1: exit 143 (claimed 143, as claimed), exited 2.614 s, tree clean, 0 survivors of 2 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G-np mk6 500 #1: exit 143 (claimed 143, as claimed), exited 1.587 s, tree clean, 0 survivors of 2 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G-np mk6 1000 #1: exit 143 (claimed 143, as claimed), exited 3.346 s, tree clean, 0 survivors of 4 seen, vitest seen True, record runs None tests None, exercised True -> pass
+SUMMARY G-np {"mk6": {"attempts": 9, "passed": 8, "dirty": 0, "withSurvivors": 1, "exitAsClaimed": 9, "exercised": 9}}
+=== G exit 0 end 20:10:25 load 55.73
+=== ALL DONE 20:10:25

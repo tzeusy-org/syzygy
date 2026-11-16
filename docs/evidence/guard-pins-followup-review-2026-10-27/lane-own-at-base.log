@@ -1,0 +1,5 @@
+O1-tarball-url-reads-outside survives 0 ['Tests  72 passed (72)'] 7.3 clean
+O2-tar-unread survives 0 ['Tests  72 passed (72)'] 7.1 clean
+O3-tar-gz-unread survives 0 ['Tests  72 passed (72)'] 6.4 clean
+O4-root-dev-dependencies-dropped survives 0 ['Tests  72 passed (72)'] 6.6 clean
+wrote lane-own-at-base.json 4

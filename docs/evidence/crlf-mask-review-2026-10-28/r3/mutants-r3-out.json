@@ -1,0 +1,466 @@
+{
+ "tool": "rev-544-r3/tools/mutants-r3.py",
+ "ranAt": "497515ae38829439aa4faa01196d9e361bce8bd8",
+ "rows": [
+  {
+   "id": "PX1-closer-tolerates-vt-ff",
+   "ranAt": "497515ae38829439aa4faa01196d9e361bce8bd8",
+   "note": "a closer that tolerates a trailing VT or FF: RW5 with the two units the fence row does not name",
+   "replacements": [
+    {
+     "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+     "old": "/^ {0,3}(`{3,}|~{3,}) *$/",
+     "new": "/^ {0,3}(`{3,}|~{3,})[ \\v\\f]*$/"
+    }
+   ],
+   "mutatedFileSha256": {
+    "packages/three-surface-poc-core/src/markdown-code-context.ts": "658ff20c4a35d0f284c709ae804a2ec3691e6113d4712af3274af8385ddc9f45"
+   },
+   "ran": [
+    "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+    "packages/three-surface-poc-core/src/content-classification.test.ts",
+    "packages/three-surface-poc-core/src/git-object-reader.test.ts",
+    "apps/three-surface-poc/src/fence-rules.test.ts",
+    "apps/three-surface-poc/src/verbatim-route.test.ts",
+    "apps/three-surface-poc/src/polaris-generation/public-source-screening.test.ts",
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "outcome": "SURVIVED",
+   "tests": 391,
+   "failed": 0,
+   "failures": [],
+   "loadBefore": "19.55 21.19 22.88 16/9690 3829022",
+   "loadAfter": "21.41 21.51 22.96 25/9715 3832426"
+  },
+  {
+   "id": "PX2-closer-tolerates-js-whitespace",
+   "ranAt": "497515ae38829439aa4faa01196d9e361bce8bd8",
+   "note": "a closer that tolerates any trailing JavaScript whitespace (\\s), a plausible \"allow trailing whitespace\" edit",
+   "replacements": [
+    {
+     "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+     "old": "/^ {0,3}(`{3,}|~{3,}) *$/",
+     "new": "/^ {0,3}(`{3,}|~{3,})\\s*$/"
+    }
+   ],
+   "mutatedFileSha256": {
+    "packages/three-surface-poc-core/src/markdown-code-context.ts": "93fb33d51af6f13fe16a6d68f7d4c3954eb9fcc8dc8092bb386a065d24bbf69f"
+   },
+   "ran": [
+    "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+    "packages/three-surface-poc-core/src/content-classification.test.ts",
+    "packages/three-surface-poc-core/src/git-object-reader.test.ts",
+    "apps/three-surface-poc/src/fence-rules.test.ts",
+    "apps/three-surface-poc/src/verbatim-route.test.ts",
+    "apps/three-surface-poc/src/polaris-generation/public-source-screening.test.ts",
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "outcome": "killed",
+   "tests": 391,
+   "failed": 14,
+   "failures": [
+    {
+     "file": "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+     "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line LF: a closer followed by text does not close, so the fence is unclosed",
+     "error": "Error: expected a malformed context"
+    },
+    {
+     "file": "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+     "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CRLF: a closer followed by text does not close, so the fence is unclosed",
+     "error": "Error: expected a malformed context"
+    },
+    {
+     "file": "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+     "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CR: a closer followed by text does not close, so the fence is unclosed",
+     "error": "Error: expected a malformed context"
+    },
+    {
+     "file": "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+     "test": "de-context-v1 \u2014 CRLF, CR and LF each end one line U+2028, U+2029 and U+0085 after a closing fence are line content: the fence stays unclosed",
+     "error": "Error: expected a malformed context"
+    },
+    {
+     "file": "apps/three-surface-poc/src/fence-rules.test.ts",
+     "test": "Markdown fence recognizers: what each reader treats as inside a fence 'closer-trailing-tab'",
+     "error": "AssertionError: closer-trailing-tab profile: expected 'VHHV' to be 'MMMM' // Object.is equality"
+    },
+    {
+     "file": "apps/three-surface-poc/src/fence-rules.test.ts",
+     "test": "Markdown fence recognizers: what each reader treats as inside a fence 'closer-trailing-tab-then-closer'",
+     "error": "AssertionError: closer-trailing-tab-then-closer profile: expected 'MMMMMM' to be 'VHHHHV' // Object.is equality"
+    },
+    {
+     "file": "apps/three-surface-poc/src/fence-rules.test.ts",
+     "test": "kdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read crlf",
+     "error": "AssertionError: closer-trailing-tab profile: expected 'VHHV' to be 'MMMM' // Object.is equality"
+    },
+    {
+     "file": "apps/three-surface-poc/src/fence-rules.test.ts",
+     "test": "arkdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read cr",
+     "error": "AssertionError: closer-trailing-tab profile: expected 'VHHV' to be 'MMMM' // Object.is equality"
+    },
+    {
+     "file": "apps/three-surface-poc/src/fence-rules.test.ts",
+     "test": " fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read firstCrlf",
+     "error": "AssertionError: closer-trailing-tab profile: expected 'VHHV' to be 'MMMM' // Object.is equality"
+    },
+    {
+     "file": "apps/three-surface-poc/src/fence-rules.test.ts",
+     "test": "n fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read lastCrlf",
+     "error": "AssertionError: closer-trailing-tab profile: expected 'VHHV' to be 'MMMM' // Object.is equality"
+    },
+    {
+     "file": "apps/three-surface-poc/src/fence-rules.test.ts",
+     "test": "wn fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read firstCr",
+     "error": "AssertionError: closer-trailing-tab profile: expected 'VHHV' to be 'MMMM' // Object.is equality"
+    },
+    {
+     "file": "apps/three-surface-poc/src/fence-rules.test.ts",
+     "test": "down fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read cycle",
+     "error": "AssertionError: closer-trailing-tab profile: expected 'VHHV' to be 'MMMM' // Object.is equality"
+    },
+    {
+     "file": "apps/three-surface-poc/src/fence-rules.test.ts",
+     "test": "e ending in a tab: the profile keeps the fence open to the plain closer, the extractor closes early and the plain closer then hides the rest",
+     "error": "AssertionError: expected 'malformed' to be 'masked' // Object.is equality"
+    },
+    {
+     "file": "apps/three-surface-poc/src/fence-rules.test.ts",
+     "test": "a closer-shaped line ending in a tab, on a text the profile reads as well formed, mints the link inside the fence and hides the one after it",
+     "error": "AssertionError: expected false to be true // Object.is equality"
+    }
+   ],
+   "loadBefore": "21.41 21.51 22.96 19/9717 3832429",
+   "loadAfter": "23.71 22.02 23.10 12/9688 3835896"
+  },
+  {
+   "id": "PX3-fs-gs-rs-are-line-ends",
+   "ranAt": "497515ae38829439aa4faa01196d9e361bce8bd8",
+   "note": "LINE_END widened to U+001C..U+001E (str.splitlines reads them as line ends); not in the differential slice",
+   "replacements": [
+    {
+     "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+     "old": "const LINE_END = /\\r\\n|\\r|\\n/g;",
+     "new": "const LINE_END = /\\r\\n|[\\r\\n\\x1c-\\x1e]/g;"
+    }
+   ],
+   "mutatedFileSha256": {
+    "packages/three-surface-poc-core/src/markdown-code-context.ts": "89187fc5df75acb0a43d3c4e02784b5ba6061b3d9c0d1ef1b9f63c43d5796a82"
+   },
+   "ran": [
+    "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+    "packages/three-surface-poc-core/src/content-classification.test.ts",
+    "packages/three-surface-poc-core/src/git-object-reader.test.ts",
+    "apps/three-surface-poc/src/fence-rules.test.ts",
+    "apps/three-surface-poc/src/verbatim-route.test.ts",
+    "apps/three-surface-poc/src/polaris-generation/public-source-screening.test.ts",
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "outcome": "killed",
+   "tests": 391,
+   "failed": 1,
+   "failures": [
+    {
+     "file": "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+     "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line no code unit but CR and LF ends a line",
+     "error": "AssertionError: expected [ '1c', '1d', '1e' ] to deeply equal []"
+    }
+   ],
+   "loadBefore": "23.71 22.02 23.10 10/9688 3835896",
+   "loadAfter": "23.73 22.08 23.11 13/9657 3838635"
+  },
+  {
+   "id": "PX4-positionOf-counts-u2029",
+   "ranAt": "497515ae38829439aa4faa01196d9e361bce8bd8",
+   "note": "positionOf counts U+2029: RW10 with the paragraph separator the position pin does not name",
+   "replacements": [
+    {
+     "file": "packages/three-surface-poc-core/src/git-object-reader.ts",
+     "old": "if (text.charCodeAt(i) === 10) {",
+     "new": "if (text.charCodeAt(i) === 10 || text.charCodeAt(i) === 0x2029) {"
+    }
+   ],
+   "mutatedFileSha256": {
+    "packages/three-surface-poc-core/src/git-object-reader.ts": "3fb5fb298f1346a1554b604856efc7e488ab677aeccc1fbf13e06369955897d6"
+   },
+   "ran": [
+    "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+    "packages/three-surface-poc-core/src/content-classification.test.ts",
+    "packages/three-surface-poc-core/src/git-object-reader.test.ts",
+    "apps/three-surface-poc/src/fence-rules.test.ts",
+    "apps/three-surface-poc/src/verbatim-route.test.ts",
+    "apps/three-surface-poc/src/polaris-generation/public-source-screening.test.ts",
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "outcome": "SURVIVED",
+   "tests": 391,
+   "failed": 0,
+   "failures": [],
+   "loadBefore": "23.73 22.08 23.11 14/9657 3838635",
+   "loadAfter": "28.10 23.13 23.44 13/9685 3841519"
+  },
+  {
+   "id": "PX5-positionOf-counts-vt",
+   "ranAt": "497515ae38829439aa4faa01196d9e361bce8bd8",
+   "note": "positionOf counts VT",
+   "replacements": [
+    {
+     "file": "packages/three-surface-poc-core/src/git-object-reader.ts",
+     "old": "if (text.charCodeAt(i) === 10) {",
+     "new": "if (text.charCodeAt(i) === 10 || text.charCodeAt(i) === 0x0b) {"
+    }
+   ],
+   "mutatedFileSha256": {
+    "packages/three-surface-poc-core/src/git-object-reader.ts": "cb28d39ad1342f14e275e15759d6b1245dab83bb1d0193bf7f8250ffc803df2e"
+   },
+   "ran": [
+    "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+    "packages/three-surface-poc-core/src/content-classification.test.ts",
+    "packages/three-surface-poc-core/src/git-object-reader.test.ts",
+    "apps/three-surface-poc/src/fence-rules.test.ts",
+    "apps/three-surface-poc/src/verbatim-route.test.ts",
+    "apps/three-surface-poc/src/polaris-generation/public-source-screening.test.ts",
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "outcome": "SURVIVED",
+   "tests": 391,
+   "failed": 0,
+   "failures": [],
+   "loadBefore": "28.10 23.13 23.44 11/9685 3841519",
+   "loadAfter": "28.26 23.32 23.50 11/9681 3843548"
+  },
+  {
+   "id": "PX6-opener-dotall",
+   "ranAt": "497515ae38829439aa4faa01196d9e361bce8bd8",
+   "note": "the opener regex gains the s flag, so U+2028 and U+2029 become info-string content (an LF reading change)",
+   "replacements": [
+    {
+     "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+     "old": "const FENCE_OPENER = /^ {0,3}(`{3,}|~{3,})(.*)$/;",
+     "new": "const FENCE_OPENER = /^ {0,3}(`{3,}|~{3,})(.*)$/s;"
+    }
+   ],
+   "mutatedFileSha256": {
+    "packages/three-surface-poc-core/src/markdown-code-context.ts": "70e493f3c5ac440da896ded5cde19f1f56579d40ab02f12eed0acad54951ffb2"
+   },
+   "ran": [
+    "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+    "packages/three-surface-poc-core/src/content-classification.test.ts",
+    "packages/three-surface-poc-core/src/git-object-reader.test.ts",
+    "apps/three-surface-poc/src/fence-rules.test.ts",
+    "apps/three-surface-poc/src/verbatim-route.test.ts",
+    "apps/three-surface-poc/src/polaris-generation/public-source-screening.test.ts",
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "outcome": "SURVIVED",
+   "tests": 391,
+   "failed": 0,
+   "failures": [],
+   "loadBefore": "28.26 23.32 23.50 12/9681 3843548",
+   "loadAfter": "27.90 23.41 23.52 14/9667 3846185"
+  },
+  {
+   "id": "TX1-general-pin-skips-vt-ff+MU22",
+   "ranAt": "497515ae38829439aa4faa01196d9e361bce8bd8",
+   "note": "the general pin loop skips U+000B and U+000C; MU22 applied",
+   "replacements": [
+    {
+     "file": "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+     "old": "for (let unit = 0; unit <= 0xffff; unit += 1) {",
+     "new": "for (let unit = 0; unit <= 0xffff; unit += unit === 0x0a ? 3 : 1) {"
+    },
+    {
+     "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+     "old": "const LINE_END = /\\r\\n|\\r|\\n/g;",
+     "new": "const LINE_END = /\\r\\n|[\\r\\n\\v\\f]/g;"
+    }
+   ],
+   "mutatedFileSha256": {
+    "packages/three-surface-poc-core/src/markdown-code-context.test.ts": "ef74c32a2c8096c2d5ad31c98ae7661474d6d88ef4a040c74b42801904f02b0c",
+    "packages/three-surface-poc-core/src/markdown-code-context.ts": "d69b31fd6a48025dbb79c68bbd337f9775a4d817e80612b964fb0e8e764af7bd"
+   },
+   "ran": [
+    "packages/three-surface-poc-core/src/markdown-code-context.test.ts"
+   ],
+   "outcome": "SURVIVED",
+   "tests": 44,
+   "failed": 0,
+   "failures": [],
+   "loadBefore": "27.90 23.41 23.52 10/9667 3846185",
+   "loadAfter": "28.71 23.65 23.60 9/9662 3846698"
+  },
+  {
+   "id": "TX2-general-pin-stops-below-0x80+MU17",
+   "ranAt": "497515ae38829439aa4faa01196d9e361bce8bd8",
+   "note": "the general pin covers ASCII only; MU17 (U+2028) applied: the F1 pin and the fence row still see it",
+   "replacements": [
+    {
+     "file": "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+     "old": "for (let unit = 0; unit <= 0xffff; unit += 1) {",
+     "new": "for (let unit = 0; unit < 0x80; unit += 1) {"
+    },
+    {
+     "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+     "old": "const LINE_END = /\\r\\n|\\r|\\n/g;",
+     "new": "const LINE_END = /\\r\\n|\\r|\\n|\\u2028/g;"
+    }
+   ],
+   "mutatedFileSha256": {
+    "packages/three-surface-poc-core/src/markdown-code-context.test.ts": "6718aa03d3d42bcbd925aa65970884cc95e880db86bc7fa85fe37638da022ab1",
+    "packages/three-surface-poc-core/src/markdown-code-context.ts": "fc83a936f843db1e27e203a7b0b0fecf05611f0ab29bce8ad519c7a366e7301e"
+   },
+   "ran": [
+    "packages/three-surface-poc-core/src/markdown-code-context.test.ts"
+   ],
+   "outcome": "killed",
+   "tests": 44,
+   "failed": 2,
+   "failures": [
+    {
+     "file": "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+     "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line U+2028, U+2029 and U+0085 are line content, not line ends",
+     "error": "AssertionError: \"\u2028\": expected 'a   \\u2028   d' to be 'a       d' // Object.is equality"
+    },
+    {
+     "file": "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+     "test": "de-context-v1 \u2014 CRLF, CR and LF each end one line U+2028, U+2029 and U+0085 after a closing fence are line content: the fence stays unclosed",
+     "error": "Error: expected a malformed context"
+    }
+   ],
+   "loadBefore": "28.71 23.65 23.60 8/9662 3846698",
+   "loadAfter": "28.71 23.65 23.60 10/9661 3847202"
+  },
+  {
+   "id": "TX3-fence-row-reason-only+MU23",
+   "ranAt": "497515ae38829439aa4faa01196d9e361bce8bd8",
+   "note": "the fence row checks the reason and not the line; MU23 applied",
+   "replacements": [
+    {
+     "file": "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+     "old": "JSON.stringify(separator)).toEqual({ reason: 'unclosed-fence', line: 1 });",
+     "new": "JSON.stringify(separator)).toMatchObject({ reason: 'unclosed-fence' });"
+    },
+    {
+     "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+     "old": "/^ {0,3}(`{3,}|~{3,}) *$/",
+     "new": "/^ {0,3}(`{3,}|~{3,})[ \\u2028\\u2029\\u0085]*$/"
+    }
+   ],
+   "mutatedFileSha256": {
+    "packages/three-surface-poc-core/src/markdown-code-context.test.ts": "3be8df6beb3bf5f3653fef9a4c617ad4dce388f21a9ed9923439729efd725615",
+    "packages/three-surface-poc-core/src/markdown-code-context.ts": "1bab121b04fdc7178472a617521b0ca690d48b98cead424534a2d9e04d372353"
+   },
+   "ran": [
+    "packages/three-surface-poc-core/src/markdown-code-context.test.ts"
+   ],
+   "outcome": "killed",
+   "tests": 44,
+   "failed": 1,
+   "failures": [
+    {
+     "file": "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+     "test": "de-context-v1 \u2014 CRLF, CR and LF each end one line U+2028, U+2029 and U+0085 after a closing fence are line content: the fence stays unclosed",
+     "error": "Error: expected a malformed context"
+    }
+   ],
+   "loadBefore": "28.71 23.65 23.60 10/9661 3847202",
+   "loadAfter": "28.71 23.65 23.60 12/9668 3847832"
+  },
+  {
+   "id": "TX4-fence-row-u0085-only+closer-ls-ps",
+   "ranAt": "497515ae38829439aa4faa01196d9e361bce8bd8",
+   "note": "the fence row names U+0085 only; a closer tolerating U+2028 and U+2029 applied",
+   "replacements": [
+    {
+     "file": "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+     "old": "for (const separator of ['\\u2028', '\\u2029', '\\u0085']) expect(malformed(",
+     "new": "for (const separator of ['\\u0085']) expect(malformed("
+    },
+    {
+     "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+     "old": "/^ {0,3}(`{3,}|~{3,}) *$/",
+     "new": "/^ {0,3}(`{3,}|~{3,})[ \\u2028\\u2029]*$/"
+    }
+   ],
+   "mutatedFileSha256": {
+    "packages/three-surface-poc-core/src/markdown-code-context.test.ts": "77b8153790eaac262127e594327287bf290ac84ffa0bcfbd140de33c9a8f21fc",
+    "packages/three-surface-poc-core/src/markdown-code-context.ts": "ee166a21d7ebf220bd2537291c451a3870ba1057ef82380f49a0226078b39148"
+   },
+   "ran": [
+    "packages/three-surface-poc-core/src/markdown-code-context.test.ts"
+   ],
+   "outcome": "SURVIVED",
+   "tests": 44,
+   "failed": 0,
+   "failures": [],
+   "loadBefore": "28.71 23.65 23.60 13/9668 3847832",
+   "loadAfter": "28.01 23.59 23.58 14/9667 3848312"
+  },
+  {
+   "id": "TX5-position-pin-either-line+MU24",
+   "ranAt": "497515ae38829439aa4faa01196d9e361bce8bd8",
+   "note": "the position pin accepts line 1 or 2 and ignores the column; MU24 applied",
+   "replacements": [
+    {
+     "file": "packages/three-surface-poc-core/src/git-object-reader.test.ts",
+     "old": "expect(scanActiveContent('a\\u2028<script>x</script>')).toEqual([{ form: 'script-element', line: 1, column: 3 }, { form: 'script-element', line: 1, column: 12 }]);",
+     "new": "const found = scanActiveContent('a\\u2028<script>x</script>');\n    expect(found.map((f) => f.form)).toEqual(['script-element', 'script-element']);\n    expect(found.every((f) => f.line === 1 || f.line === 2)).toBe(true);"
+    },
+    {
+     "file": "packages/three-surface-poc-core/src/git-object-reader.ts",
+     "old": "if (text.charCodeAt(i) === 10) {",
+     "new": "if (text.charCodeAt(i) === 10 || text.charCodeAt(i) === 0x2028) {"
+    }
+   ],
+   "mutatedFileSha256": {
+    "packages/three-surface-poc-core/src/git-object-reader.test.ts": "d1f7e996716bb4a4e8cd0c4f64f5d2c33a2c5e7fa28c4ed415678803cfd9857d",
+    "packages/three-surface-poc-core/src/git-object-reader.ts": "7fda7628637eb39993435ee3fc84573022064d451d86ff38e435de773119bb0c"
+   },
+   "ran": [
+    "packages/three-surface-poc-core/src/git-object-reader.test.ts"
+   ],
+   "outcome": "SURVIVED",
+   "tests": 81,
+   "failed": 0,
+   "failures": [],
+   "loadBefore": "28.01 23.59 23.58 10/9667 3848312",
+   "loadAfter": "28.01 23.59 23.58 11/9669 3849013"
+  },
+  {
+   "id": "TX6-position-pin-line-only+MU24",
+   "ranAt": "497515ae38829439aa4faa01196d9e361bce8bd8",
+   "note": "the position pin checks the line and not the column; MU24 applied",
+   "replacements": [
+    {
+     "file": "packages/three-surface-poc-core/src/git-object-reader.test.ts",
+     "old": "expect(scanActiveContent('a\\u2028<script>x</script>')).toEqual([{ form: 'script-element', line: 1, column: 3 }, { form: 'script-element', line: 1, column: 12 }]);",
+     "new": "expect(scanActiveContent('a\\u2028<script>x</script>').map((f) => f.line)).toEqual([1, 1]);"
+    },
+    {
+     "file": "packages/three-surface-poc-core/src/git-object-reader.ts",
+     "old": "if (text.charCodeAt(i) === 10) {",
+     "new": "if (text.charCodeAt(i) === 10 || text.charCodeAt(i) === 0x2028) {"
+    }
+   ],
+   "mutatedFileSha256": {
+    "packages/three-surface-poc-core/src/git-object-reader.test.ts": "b7f012baf37fb45e88073deee1c77884b9f037871cfcd82338a6dcec9280f7d4",
+    "packages/three-surface-poc-core/src/git-object-reader.ts": "7fda7628637eb39993435ee3fc84573022064d451d86ff38e435de773119bb0c"
+   },
+   "ran": [
+    "packages/three-surface-poc-core/src/git-object-reader.test.ts"
+   ],
+   "outcome": "killed",
+   "tests": 81,
+   "failed": 1,
+   "failures": [
+    {
+     "file": "packages/three-surface-poc-core/src/git-object-reader.test.ts",
+     "test": "reported positions in CRLF and bare-CR texts U+2028 is line content: an LF text reports its finding on line 1",
+     "error": "AssertionError: expected [ 2, 2 ] to deeply equal [ 1, 1 ]"
+    }
+   ],
+   "loadBefore": "28.01 23.59 23.58 13/9669 3849013",
+   "loadAfter": "28.17 23.70 23.62 14/9690 3849673"
+  }
+ ]
+}

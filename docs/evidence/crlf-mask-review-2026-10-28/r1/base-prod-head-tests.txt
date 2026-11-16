@@ -1,0 +1,49 @@
+loadavg before: 28.73 30.19 31.60 27/9773 2377781
+loadavg after: 31.43 30.64 31.71 18/9857 2388080
+tests 386 passed 347 failed 39 files 7
+  screen.test.ts failed 113 failed 2
+     FAIL the project-documentation class (syzygy-2coz) CRLF: a documentation body is withheld as active content or admitted as its LF form is | AssertionError: expected undefined to be 'active-content' // Object.is equality
+     FAIL the project-documentation class (syzygy-2coz) CR: a documentation body is withheld as active content or admitted as its LF form is | AssertionError: expected undefined to be 'active-content' // Object.is equality
+  content-classification.test.ts failed 29 failed 2
+     FAIL PWB-REQ-006 (amended) — phase-A seeds use the same context-aware guard CRLF: a seed is excluded or kept safe as its LF form is | AssertionError: expected { kind: 'safe' } to deeply equal { kind: 'excluded', …(2) }
+     FAIL PWB-REQ-006 (amended) — phase-A seeds use the same context-aware guard CR: a seed is excluded or kept safe as its LF form is | AssertionError: expected { kind: 'safe' } to deeply equal { kind: 'excluded', …(2) }
+  git-object-reader.test.ts failed 79 failed 4
+     FAIL a CRLF or CR blob gets the outcome its LF form gets CRLF: a backtick opener whose info text holds a backtick is excluded as a malformed code context,  | AssertionError: expected 'text' to be 'unavailable' // Object.is equality
+     FAIL a CRLF or CR blob gets the outcome its LF form gets CR: a backtick opener whose info text holds a backtick is excluded as a malformed code context, wi | AssertionError: expected 'text' to be 'unavailable' // Object.is equality
+     FAIL a CRLF or CR blob gets the outcome its LF form gets CRLF: a script element inside a closed tilde fence reads as text, byte for byte | AssertionError: expected 'unavailable' to be 'text' // Object.is equality
+     FAIL a CRLF or CR blob gets the outcome its LF form gets CR: a script element inside a closed tilde fence reads as text, byte for byte | AssertionError: expected 'unavailable' to be 'text' // Object.is equality
+  markdown-code-context.test.ts failed 41 failed 17
+     FAIL closed-pwb-code-context-v1 — CRLF, CR and LF each end one line CRLF: a backtick opener whose info string holds a backtick is malformed at its own line | AssertionError: expected { Object (reason, line) } to deeply equal { …(2) }
+     FAIL closed-pwb-code-context-v1 — CRLF, CR and LF each end one line CR: a backtick opener whose info string holds a backtick is malformed at its own line | Error: expected a malformed context
+     FAIL closed-pwb-code-context-v1 — CRLF, CR and LF each end one line CRLF: the reported line counts each line end once | AssertionError: expected { Object (reason, line) } to deeply equal { reason: 'unclosed-fence', line: 3 }
+     FAIL closed-pwb-code-context-v1 — CRLF, CR and LF each end one line CR: the reported line counts each line end once | AssertionError: expected { Object (reason, line) } to deeply equal { reason: 'unclosed-fence', line: 3 }
+     FAIL closed-pwb-code-context-v1 — CRLF, CR and LF each end one line mixed terminators: each one ends one line, whichever kind it is | AssertionError: expected { Object (reason, line) } to deeply equal { reason: 'unclosed-fence', line: 3 }
+     FAIL closed-pwb-code-context-v1 — CRLF, CR and LF each end one line the mask keeps the length and every CR and LF at its offset (a CR is never blanked, joi | AssertionError: expected { kind: 'masked', …(3) } to deeply equal { kind: 'masked', …(3) }
+     FAIL closed-pwb-code-context-v1 — CRLF, CR and LF each end one line CRLF: a fence closed on the last line, with no final line end, is closed | Error: malformed: unclosed-inline-span
+     FAIL closed-pwb-code-context-v1 — CRLF, CR and LF each end one line CR: a fence closed on the last line, with no final line end, is closed | AssertionError: expected '           ' to be '   \r   \r   ' // Object.is equality
+     FAIL closed-pwb-code-context-v1 — CRLF, CR and LF each end one line CRLF: a tilde fence, a closer with trailing spaces and a span across lines | AssertionError: expected '~~~\r\n<x>\r\n~~~\r\nafter\r\n' to be '   \r\n   \r\n   \r\nafter\r\n' // Object.is equality
+     FAIL closed-pwb-code-context-v1 — CRLF, CR and LF each end one line CR: a tilde fence, a closer with trailing spaces and a span across lines | AssertionError: expected '~~~\r<x>\r~~~\rafter\r' to be '   \r   \r   \rafter\r' // Object.is equality
+     FAIL closed-pwb-code-context-v1 — CRLF, CR and LF each end one line CRLF: a backtick run after a list marker opens an inline span that a later fence-shaped | Error: expected a malformed context
+     FAIL closed-pwb-code-context-v1 — CRLF, CR and LF each end one line CR: a backtick run after a list marker opens an inline span that a later fence-shaped l | Error: expected a malformed context
+     FAIL closed-pwb-code-context-v1 — CRLF, CR and LF each end one line CRLF: a script element between two tilde fences that each show a backtick-fence line is | AssertionError: expected { kind: 'masked', …(3) } to deeply equal { kind: 'masked', …(3) }
+     FAIL closed-pwb-code-context-v1 — CRLF, CR and LF each end one line CR: a script element between two tilde fences that each show a backtick-fence line is o | AssertionError: expected { kind: 'masked', …(3) } to deeply equal { kind: 'masked', …(3) }
+     FAIL closed-pwb-code-context-v1 — CRLF, CR and LF each end one line CRLF: a closer followed by text does not close, so the fence is unclosed | Error: expected a malformed context
+     FAIL closed-pwb-code-context-v1 — CRLF, CR and LF each end one line CR: a closer followed by text does not close, so the fence is unclosed | Error: expected a malformed context
+     FAIL closed-pwb-code-context-v1 — CRLF, CR and LF each end one line a CRLF or CR text gets the structure its LF form gets, for every case here | AssertionError: CRLF ```|<script>x</script>|```|after: expected '    \n                   \n   \r\naft…' to be '   \r\n                  \r\n   \r\na…' // Object.is equality
+  fence-rules.test.ts failed 69 failed 10
+     FAIL Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read crlf | AssertionError: the mask keeps the length and every terminator at its offset: expected '......................\r\n....\n..\n.…' to be '......................\r\n...\r\n.\r\…' // Object.is equality
+     FAIL Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read cr | AssertionError: the mask keeps the length and every terminator at its offset: expected '......................\r.........\r' to be '......................\r...\r.\r...\r' // Object.is equality
+     FAIL Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read firstCrlf | AssertionError: backtick-col0 profile: expected 'VMMM' to be 'VHHV' // Object.is equality
+     FAIL Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read lastCrlf | AssertionError: backtick-col0 profile: expected 'MMMV' to be 'VHHV' // Object.is equality
+     FAIL Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read firstCr | AssertionError: backtick-col0 profile: expected 'MMMM' to be 'VHHV' // Object.is equality
+     FAIL Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read cycle | AssertionError: the mask keeps the length and every terminator at its offset: expected '......................\n....\n.....\n' to be '......................\n...\r\n.\r...…' // Object.is equality
+     FAIL Markdown fence recognizers: what each reader treats as inside a fence the extractor and the profile hold one line model for LF and CRLF: where they ag | AssertionError: the mask keeps the length and every terminator at its offset: expected '......................\r\n....\n..\n.…' to be '......................\r\n...\r\n.\r\…' // Object.is equality
+     FAIL Markdown fence recognizers: what each reader treats as inside a fence G1, fixed: a CRLF or CR source is excluded as a malformed code context, as the s | AssertionError: "\r\n": expected [] to deeply equal [ { …(4) } ]
+     FAIL Markdown fence recognizers: what each reader treats as inside a fence G1, fixed: a script element inside a closed tilde fence is admitted whatever end | AssertionError: "\r\n": expected [ …(2) ] to deeply equal []
+     FAIL Markdown fence recognizers: what each reader treats as inside a fence G1, fixed: the fail-open class is closed for a well-formed LF source too | AssertionError: crlf: expected [] to deeply equal [ 'script-element', 'script-element' ]
+  verbatim-route.test.ts failed 16 failed 2
+     FAIL verbatim route gates CRLF: the spec body is refused or served as its LF form is | Error: expected a refusal, got bytes
+     FAIL verbatim route gates CR: the spec body is refused or served as its LF form is | Error: expected a refusal, got bytes
+  polaris-generation/public-source-screening.test.ts failed 39 failed 2
+     FAIL policy residuals (the detectors see literal forms only) CRLF: a body is withheld as active content or admitted as its LF form is | AssertionError: expected undefined to be 'active-content' // Object.is equality
+     FAIL policy residuals (the detectors see literal forms only) CR: a body is withheld as active content or admitted as its LF form is | AssertionError: expected undefined to be 'active-content' // Object.is equality

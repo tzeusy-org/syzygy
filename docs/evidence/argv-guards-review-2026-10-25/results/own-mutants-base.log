@@ -1,0 +1,24 @@
+R-OR3-empty-value-missing-only-under-refuse survives 0 ['Tests  65 passed (65)'] 3.0 clean
+R-OR4-empty-value-missing-only-under-take survives 0 ['Tests  65 passed (65)'] 3.8 clean
+R-Y1-polaris-valued-entry-added survives 0 ['Tests  65 passed (65)'] 2.6 clean
+R-Y2-daemon-positionals-true survives 0 ['Tests  65 passed (65)'] 4.0 clean
+R-Y3-daemon-spec-through-a-variable survives 0 ['Tests  65 passed (65)'] 4.4 clean
+R-Y4-polaris-booleans-through-a-spread survives 0 ['Tests  65 passed (65)'] 4.2 clean
+R-Y5-second-identifier-call-in-cli survives 0 ['Tests  65 passed (65)'] 4.4 clean
+R-Y6-extra-namespace-call-in-cli survives 0 ['Tests  65 passed (65)'] 5.0 clean
+R-Y7-extra-aliased-call-in-cli survives 0 ['Tests  65 passed (65)'] 4.6 clean
+R-Y8-another-options-command-gains-a-valued-option survives 0 ['Tests  65 passed (65)'] 4.9 clean
+R-X1-two-deep-local-re-export-chain survives 0 ['Tests  17 passed (17)'] 7.2 clean
+R-X2-chain-through-another-workspace-package survives 0 ['Tests  17 passed (17)'] 5.3 clean
+R-X3-create-require-in-an-intermediate-module survives 0 ['Tests  17 passed (17)'] 3.9 clean
+R-X3b-bare-module-specifier-in-main survives 0 ['Tests  17 passed (17)'] 4.3 clean
+R-X4-import-meta-resolve-into-import survives 0 ['Tests  17 passed (17)'] 3.8 clean
+R-X5-literal-dynamic-import-outside-the-two-branches killed 1 ['Tests  1 failed | 16 passed (17)'] 3.9 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the subpaths the daemon entry imports > are /argv and /state-directory, imported statically, and the barrel only dynamically inside the dossier and polaris branches
+R-X6-package-imports-alias-to-the-barrel survives 0 ['Tests  17 passed (17)'] 3.4 clean
+R-X6b-package-imports-alias-in-an-intermediate-module survives 0 ['Tests  17 passed (17)'] 3.5 clean
+R-X8-get-builtin-module-create-require survives 0 ['Tests  17 passed (17)'] 4.8 clean
+R-X6i-island-package-imports-alias-to-consent-root survives 0 ['Tests  4 passed (4)'] 5.1 clean
+R-X6j-island-control-same-edge-by-name killed 1 ['Tests  1 failed | 3 passed (4)'] 3.8 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > reaches no island module from the CLI entry
+wrote /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-524/own-mutants-base.json 21

@@ -1,0 +1,74 @@
+[
+  {
+    "id": "syzygy-bpyt.4.24",
+    "title": "Size the dossier-project load timeouts that syzygy-bpyt.4.13's comments added (gate-acts, screen, close, execution-flags, run-evidence) (PR 520 R1 N6)",
+    "description": "From the round-1 review of PR #520 (syzygy-bpyt.4.13), docs/reviews/R-GP-IMPL-PACKAGE-READER-TIMEOUTS-1-RAW.md N6 (retained at landing). The coordinator ruled PR #520 to package-reader.test.ts alone, but five coordinator comments on 4.13 (2026-10-22) widened it. Carriers exist for start-gates.test.ts (syzygy-y3uc), the act-families.test.ts 10 s hook (syzygy-bpyt.4.8) and git-object-reader.test.ts's 'reviewer's amplification shape' 30 s bound (syzygy-bpyt.4.5). [Observed by the reviewer, 806-bead sweep] No bead carries the rest, which this bead now owns, all in the @syzygy/polaris-dossier project: 5000 ms default timeouts at load about 70 (lane A, PR 516 head bddbbf6c) in gate-acts.test.ts (7), screen.test.ts (4), close.test.ts (3), execution-flags.test.ts (2) and run-evidence.test.ts (1); screen.test.ts's 10 s hook; and gate-acts.test.ts 'follow the tree in either state' over its explicit 60 s bound (60.2-64.7 s at load about 90, lane B on PR 514). Clean-clone batteries stay 110/0 and CI passes; these fail only under local load.\n\nDo: apply PR #520's method per file. Measure with the committed scripts/measure_vitest_test_durations.py (without --profile, which PR #520 removed under its round-3 stopping rule; see syzygy-bpyt.4.27), size with scripts/size_vitest_test_timeouts.py (worst x3, rounded up to 5 s, for every test whose worst exceeds 2.5 s, stating the denominator), commit the records, and change no assertion. Where a test is slow because it spawns git, say so in a one-line comment and prefer lightening the fixture when that is simpler. Test-only; no CC-REV-1 class unless the review rules otherwise.",
+    "acceptance_criteria": "AC1: each named file's sized tests carry an explicit timeout from a recorded measurement under load, by the stated rule, with the denominator per file. AC2: gate-acts 'follow the tree in either state' is re-sized or its fixture lightened, with the measurement recorded. AC3: --check of the sizing script passes for each file; assertions byte-identical outside the timeout argument; Tests: +a ~b -c reported.",
+    "status": "open",
+    "priority": 3,
+    "issue_type": "task",
+    "owner": "uniquosity@gmail.com",
+    "created_at": "2026-10-24T15:31:36Z",
+    "created_by": "Tzeusy",
+    "updated_at": "2026-10-24T19:57:05Z",
+    "labels": [
+      "complexity:epic",
+      "dossier",
+      "greenfield-parity",
+      "test-quality",
+      "testing"
+    ],
+    "dependencies": [
+      {
+        "id": "syzygy-bpyt.4",
+        "title": "Greenfield parity M2: tests, build and CI - run from source, honest suite tiers, one test kit, one mutation runner",
+        "description": "Outcome: the product builds without compiling tests, tooling runs from source without --force rebuilds, the unit suite is hermetic and fast with integration and end-to-end tiers beside it, test helpers live in one kit, and rule-6 mutation runs use one runner and one evidence schema.\n\nWhy (docs/plans/2026-10-21-greenfield-parity-audit.md findings TB-1..TB-6): 4,679 tests in 228 files took 3:40 wall; 65 files (spawning processes, git, servers or Chrome) take 68% of the time and run in the \"unit\" run; 233 of about 451 emitted dist/*.js files are tests; 15 of 22 root scripts prefix `npm run build:poc --silent` (tsc -b --force); `build` and `typecheck` are byte-identical; the package graph is encoded in five places (package.json, tsconfig references, imports, vitest.config.ts aliases, guard-test root lists); one guard's root list has already drifted (a bug); six mutation frameworks share one spec shape.",
+        "design": "Audit-key: greenfield:tooling-sprawl:vitest.config.ts\nModel tier: Opus-class lead; children carry their own tiers.",
+        "acceptance_criteria": "1. Children closed.\n2. Unit-tier wall time and test counts per tier reported.\n3. Reconciliation bead closed.",
+        "status": "open",
+        "priority": 2,
+        "issue_type": "epic",
+        "owner": "uniquosity@gmail.com",
+        "created_at": "2026-10-20T16:46:35Z",
+        "created_by": "Tzeusy",
+        "updated_at": "2026-10-20T16:46:35Z",
+        "labels": [
+          "complexity:epic",
+          "greenfield-parity",
+          "testing"
+        ],
+        "dependency_type": "parent-child"
+      },
+      {
+        "id": "syzygy-bpyt.4.13",
+        "title": "package-reader.test.ts: three tests hit vitest's 5000 ms default under load in a full run",
+        "description": "Reported by lane A in the syzygy-bpyt.8.1 Worker Report (PR #510). [Observed by the lane] In a full npx vitest run at load average about 25, three tests in packages/polaris-generation-consent/src/package-reader.test.ts (lines 353, 368 and 1042 at c55acb73) timed out at vitest's 5000 ms default. The file passes alone: Tests 299 passed (299). Fix: profile those three tests; give each an explicit timeout sized from a measured worst case under load, or lighten their fixtures. Do not raise the global default. Line numbers may shift once #505 (syzygy-bpyt.8.4) lands; re-locate by test name.",
+        "notes": "[beads-heartbeat]\nowner=coordinator:coord-9297eba3\nlast_heartbeat_at=2026-10-24T19:57:52Z\n[/beads-heartbeat]",
+        "status": "in_progress",
+        "priority": 3,
+        "issue_type": "bug",
+        "assignee": "Tzeusy",
+        "owner": "uniquosity@gmail.com",
+        "created_at": "2026-10-22T00:52:52Z",
+        "created_by": "Tzeusy",
+        "updated_at": "2026-10-24T19:57:53Z",
+        "started_at": "2026-10-22T15:57:19Z",
+        "lease_expires_at": "2026-10-22T16:02:19Z",
+        "heartbeat_at": "2026-10-22T15:57:19Z",
+        "labels": [
+          "consent",
+          "gh-pr:520",
+          "greenfield-parity",
+          "test-quality"
+        ],
+        "dependency_type": "blocks"
+      }
+    ],
+    "parent": "syzygy-bpyt.4",
+    "dependent_count": 0,
+    "dependency_count": 2,
+    "comment_count": 1,
+    "comments_omitted": true,
+    "revision": "-6353612184114661555"
+  }
+]

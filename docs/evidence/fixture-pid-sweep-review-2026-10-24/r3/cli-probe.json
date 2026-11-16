@@ -1,0 +1,68 @@
+{
+ "probe": "rev-509c cli_probe.py",
+ "probeSha256": "777386dc0663e2fa7460dfd4309d9aa994933addafea3667ecfd40a6fe977905",
+ "cliSha256": "f514899a7e7530fb56c0fbf4b32144799fdb3dbcb87e1dfc889039d281b8fde9",
+ "moduleSha256": "2bf2fe12d1deb358fd3ebb0848ae56c94fede9db376bcfda1f3fb01cc26eba5e",
+ "hostNamespace": "4026531836",
+ "deadPid": 1181929,
+ "livePid": 1181849,
+ "modes": {
+  "host": {
+   "cmd": [
+    "/home/tze/.nvm/versions/node/v24.6.0/bin/node",
+    "../clone/apps/three-surface-poc/dist/polaris-accessibility-main.js"
+   ],
+   "exit": 2,
+   "stdout": "",
+   "stderr": "No Chrome/Chromium found on PATH and SYZYGY_POC_BROWSER is unset; nothing measured.\n",
+   "removed": [
+    "syzygy-poc-surface-fixture-p1181929-n4026531836-DEAD01",
+    "syzygy-poc-surface-fixture-template-p1181929-n4026531836-DEAD02"
+   ],
+   "kept": [
+    "syzygy-poc-surface-fixture-LEGACY",
+    "syzygy-poc-surface-fixture-p1181849-n4026531836-LIVE01",
+    "syzygy-poc-surface-fixture-p1181929-n0-NOPROC",
+    "syzygy-poc-surface-fixture-p1181929-n4026531836-AFILE1",
+    "syzygy-poc-surface-fixture-p1181929-n4026531836-LINK01",
+    "syzygy-poc-surface-fixture-p1181929-n4026531837-FOREIGN",
+    "syzygy-poc-surface-fixture-template-p1181849-n4026531836-LIVE02",
+    "syzygy-poc-surface-fixture-template-p1181929-LEGACY"
+   ],
+   "outsideIntact": true
+  },
+  "no-proc": {
+   "cmd": [
+    "/usr/bin/bwrap",
+    "--unshare-user",
+    "--unshare-pid",
+    "--die-with-parent",
+    "--dev-bind",
+    "/",
+    "/",
+    "--tmpfs",
+    "/proc",
+    "--",
+    "/home/tze/.nvm/versions/node/v24.6.0/bin/node",
+    "../clone/apps/three-surface-poc/dist/polaris-accessibility-main.js"
+   ],
+   "exit": 2,
+   "stdout": "",
+   "stderr": "No Chrome/Chromium found on PATH and SYZYGY_POC_BROWSER is unset; nothing measured.\n",
+   "removed": [],
+   "kept": [
+    "syzygy-poc-surface-fixture-LEGACY",
+    "syzygy-poc-surface-fixture-p1181849-n4026531836-LIVE01",
+    "syzygy-poc-surface-fixture-p1181929-n0-NOPROC",
+    "syzygy-poc-surface-fixture-p1181929-n4026531836-AFILE1",
+    "syzygy-poc-surface-fixture-p1181929-n4026531836-DEAD01",
+    "syzygy-poc-surface-fixture-p1181929-n4026531836-LINK01",
+    "syzygy-poc-surface-fixture-p1181929-n4026531837-FOREIGN",
+    "syzygy-poc-surface-fixture-template-p1181849-n4026531836-LIVE02",
+    "syzygy-poc-surface-fixture-template-p1181929-LEGACY",
+    "syzygy-poc-surface-fixture-template-p1181929-n4026531836-DEAD02"
+   ],
+   "outsideIntact": true
+  }
+ }
+}

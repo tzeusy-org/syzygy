@@ -1,0 +1,364 @@
+// Run as a scratch test file: copy this file to packages/three-surface-poc-core/src/zz-trace-probe.test.ts of a built checkout, then
+//   PROBE_TAG=<tag> TMPDIR=/tmp/lci npx vitest run packages/three-surface-poc-core/src/zz-trace-probe.test.ts
+// It writes /tmp/lci/trace-<tag>-1.json (pipeline) and -2.json (extractor). Everything between "PWB 2.7" and the step-1 probe is a copy of
+// lines 1-266 of project-shape-model.test.ts (fixture helpers), kept so the probe runs against the same fixture. Synthetic text only.
+// PWB 2.7: the composed project-shape pipeline behind `PocModel.projectShape`.
+//
+// Oracle independence: the Git runner is a fixture answering exactly the
+// commands the pipeline may issue; the expected population, items, claims and
+// vocabularies are hand-typed here (the closed label/tier/reason/freshness
+// lists are literal copies, compared against cap1-core, never imported from
+// the module under test). No Butlers repository is touched; the gate test
+// proves a non-admitting authority issues zero Git commands.
+
+import { createHash } from 'node:crypto';
+import { describe, expect, it } from 'vitest';
+
+import { FRESHNESS_STATES, RENDERING_TIERS, UNKNOWN_REASONS } from '@syzygy/cap1-core';
+
+import type { BodyReadAuthorityEvaluation } from './body-read-authority.js';
+import type { GitTreeEntry } from './git-tree.js';
+import { PWB_RESOURCE_LIMITS, type PwbResourceLimits } from './project-shape-observation.js';
+import {
+  CHALLENGE_STATES,
+  PWB_REPOSITORY_ID,
+  UNKNOWN_REASON_ROUTES,
+  buildProjectShape,
+  countReasons,
+  itemClaim,
+  ownerActProvenance,
+  unevaluatedProjectShape,
+  type ProjectShape,
+  type ProjectShapeClaim,
+} from './project-shape-model.js';
+
+// ---------------------------------------------------------------------
+// Hard-coded vocabularies (RFC2-24 / RFC2-25 / RFC2-10 / three labels).
+
+const LABELS = ['Observed', 'Inferred', 'Unknown'] as const;
+const TIERS = ['gate-backed', 'report-fact', 'asserted-by-worker', 'reduced-fidelity', 'declared-only', 'suspended'] as const;
+const REASONS = [
+  'missing-declaration',
+  'missing-evidence',
+  'no-currency-bound-declared',
+  'stale-beyond-currency-bound',
+  'mapping-coverage-absent',
+  'unconsented-source-or-provider',
+  'excluded-content',
+  'contradicted-pending-adjudication',
+  'challenge-suspended',
+  'source-uncaptured-or-unreachable',
+  'reference-unresolvable',
+  'execution-blocked',
+] as const;
+const FRESHNESS = ['fresh', 'stale', 'broken', 'superseded'] as const;
+
+// ---------------------------------------------------------------------
+// Fixture repository: Butlers-shaped, not Butlers.
+
+const COMMIT = '4'.repeat(40);
+const COMMITTED_AT = '2026-08-15T10:00:00+00:00';
+const CAPTURED_AT = '2026-09-04T09:00:00.000Z';
+const SENTINEL = 'EXCLUDED-BODY-SENTINEL-7f3a';
+
+const VISION = [
+  '# Fixture',
+  '',
+  '## What Butlers Is',
+  '',
+  'A household of agents that keep promises.',
+  '',
+  '## What Success Looks Like',
+  '',
+  '- Every promise is visible.',
+  '- Nothing is inferred silently.',
+  '',
+  '## What Butlers Is Not',
+  '',
+  'Not a chat toy.',
+  '',
+  '## Non-Negotiable Rules',
+  '',
+  '1. **Fail closed** — silence is Unknown.',
+  '2. **Cite or stay quiet** — every claim carries a source.',
+  '',
+].join('\n');
+
+const ARCHITECTURE = ['# Architecture', '', '## Runtime', '', 'One process.', ''].join('\n');
+
+const V1 = [
+  '# v1',
+  '',
+  '## What v1 Ships',
+  '',
+  'Ships text.',
+  '',
+  '### Core Infrastructure',
+  '',
+  '- **Bus** - the message bus',
+  '',
+  '### Staffers',
+  '',
+  '### Butlers',
+  '',
+  '- **Atlas** - maps',
+  '- **Bishop** - moves',
+  '',
+  '### Modules',
+  '',
+  '### Connectors',
+  '',
+  '### Dashboard',
+  '',
+  '### Identity System',
+  '',
+  '### Situational Awareness',
+  '',
+  '### Observability',
+  '',
+  '## What v1 Defers',
+  '',
+  'Defers text.',
+  '',
+  '## Success Criteria',
+  '',
+  '1. Ships on time.',
+  '',
+].join('\n');
+
+const LORE_README = ['# Lore', '', '## Index', '', '| Contract | Status |', '| --- | --- |', '| [RFC 0001](0001.md) | accepted |', ''].join('\n');
+const COMPONENTS = ['# Components', '', '## 1 Runtime', '', '| Component | Role |', '|---|---|', '| **Daemon** | serves |', ''].join('\n');
+const CRAFT_README = ['# Craft', '', '### Reading Order', '', '| Order | File |', '|---|---|', '| 1 | [Spec policy](policies/cc-spec.md) |', ''].join('\n');
+const CRAFT_SECRET = ['# Craft', '', '### Reading Order', '', '| Order | File |', '|---|---|', '| 1 | [Spec policy](policies/cc-spec.md) |', '', `token AKIA${'A'.repeat(16)} ${SENTINEL}`, ''].join('\n');
+
+const BASE_TEXTS: Readonly<Record<string, string>> = {
+  'about/README.md': [
+    '# Fixture',
+    '',
+    '[Heart and Soul](heart-and-soul/) · [Legends and Lore](legends-and-lore/) ·',
+    '[Spec and Spine](spec-and-spine/) · [Lay and Land](lay-and-land/) · [Craft and Care](craft-and-care/)',
+    '',
+  ].join('\n'),
+  'about/heart-and-soul/README.md': '- [Vision](vision.md)\n- [Architecture](architecture.md)\n- [v1](v1.md)\n',
+  'about/heart-and-soul/vision.md': VISION,
+  'about/heart-and-soul/architecture.md': ARCHITECTURE,
+  'about/heart-and-soul/v1.md': V1,
+  'about/legends-and-lore/README.md': LORE_README,
+  'about/legends-and-lore/0001.md': '# RFC 0001\n',
+  'about/spec-and-spine/README.md': 'Specs.\n',
+  'about/lay-and-land/README.md': '[Components](components.md)\n',
+  'about/lay-and-land/components.md': COMPONENTS,
+  'about/craft-and-care/README.md': CRAFT_README,
+  'about/craft-and-care/policies/cc-spec.md': '# Spec policy\n',
+  'openspec/specs/alpha/spec.md': '# Alpha\n',
+  'roster/atlas/butler.toml': '[butler]\nname = "atlas"\n',
+  'roster/bishop/butler.toml': '[butler]\nname = "bishop"\n',
+};
+
+// The root index carrying the two PWB-REQ-004 grammars: the seven-row
+// precedence table and a summary stating three butlers where v1.md declares
+// two (Atlas, Bishop) and no staffers where it states one.
+const ROOT_LINKS = BASE_TEXTS['about/README.md'] as string;
+const ROOT_TABLE = [
+  '### Precedence Order When Layers Disagree',
+  '',
+  '| # | Layer | Owns | Home |',
+  '|---|-------|------|------|',
+  '| 1 | **Heart and Soul** | Principles, scope boundaries, the 7 non-negotiable rules | `about/heart-and-soul/` |',
+  '| 2 | **Legends and Lore** | Wire contracts, state machines, data models, sanctioned rule exceptions | `about/legends-and-lore/rfcs/` |',
+  '| 3 | **Spec and Spine** | Feature behaviour, acceptance scenarios (WHEN/THEN), per-butler contracts | `openspec/specs/` |',
+  '| 4 | **Craft and Care** | Execution-quality standards, test scope, review gates, observability bar | `about/craft-and-care/` |',
+  '| 5 | **Lay and Land** | Topology snapshot \u2014 where components live, how they connect, stability levels | `about/lay-and-land/` |',
+  '| 6 | **Roster config** | Live butler identity: `butler.toml`, `MANIFESTO.md`, `CLAUDE.md`, skills, API routes | `roster/{butler}/` |',
+  '| 7 | **Code** | Runtime behaviour \u2014 executed source, migrations, tests | `src/`, `alembic/`, `tests/` |',
+  '',
+].join('\n');
+const ROOT_SUMMARY = ['## Key Architectural Facts', '', '- **4 daemons** \u2014 1 staffers (Switchboard) + 3 domain', '  butlers, each on its own port.', ''].join('\n');
+const ROOT_SUMMARY_ONLY_TEXTS: Readonly<Record<string, string>> = { ...BASE_TEXTS, 'about/README.md': `${ROOT_LINKS}\n${ROOT_SUMMARY}` };
+const ROOT_GRAMMAR_TEXTS: Readonly<Record<string, string>> = { ...BASE_TEXTS, 'about/README.md': `${ROOT_LINKS}\n${ROOT_TABLE}\n${ROOT_SUMMARY}` };
+
+const encoder = new TextEncoder();
+
+function sha1Blob(bytes: Uint8Array): string {
+  return createHash('sha1').update(`blob ${bytes.byteLength}\0`).update(bytes).digest('hex');
+}
+
+function sha256(text: string): string {
+  return `sha256:${createHash('sha256').update(text).digest('hex')}`;
+}
+
+interface Fixture {
+  readonly texts: Readonly<Record<string, string>>;
+  readonly failRevParse?: boolean;
+  readonly failPhaseBLsTree?: boolean;
+  readonly dropFromTree?: readonly string[];
+}
+
+function fixture(input: Fixture) {
+  const bytes = new Map(Object.entries(input.texts).map(([path, text]) => [path, encoder.encode(text)]));
+  const entries: GitTreeEntry[] = [...bytes.entries()]
+    .filter(([path]) => !(input.dropFromTree ?? []).includes(path))
+    .map(([path, body]) => ({ mode: '100644', type: 'blob', objectId: sha1Blob(body), sizeBytes: body.byteLength, path }));
+  const byOid = new Map(entries.map((entry) => [entry.objectId, bytes.get(entry.path) as Uint8Array]));
+  const listing = entries.map((e) => `${e.mode} ${e.type} ${e.objectId} ${String(e.sizeBytes).padStart(7)}\t${e.path}\x00`).join('');
+  const calls: string[][] = [];
+  let lsTreeCalls = 0;
+  const runGit = (args: readonly string[]): Uint8Array => {
+    calls.push([...args]);
+    switch (args[0]) {
+      case 'rev-parse':
+        if (input.failRevParse === true) throw new Error('fatal: Needed a single revision');
+        return encoder.encode(`${COMMIT}\n`);
+      case 'show':
+        return encoder.encode(`${COMMITTED_AT}\n`);
+      case 'ls-tree':
+        lsTreeCalls += 1;
+        if (args[4] !== COMMIT) throw new Error(`fixture lists trees only at the resolved commit, not ${args[4] ?? ''}`);
+        if (input.failPhaseBLsTree === true && lsTreeCalls === 2) throw new Error('fatal: not a tree object');
+        return encoder.encode(listing);
+      case 'cat-file': {
+        const body = byOid.get(args[2] ?? '');
+        if (body === undefined) throw new Error(`fixture has no object ${args[2] ?? ''}`);
+        return body;
+      }
+      default:
+        throw new Error(`unexpected git command ${args.join(' ')}`);
+    }
+  };
+  return { runGit, calls, entries };
+}
+
+const ADMITTING: BodyReadAuthorityEvaluation = {
+  evaluationId: 'evaluation:test-admitting',
+  evaluationInstant: '2026-09-04T00:00:00Z',
+  admits: true,
+  authorizationMode: 'owner-trusted-bootstrap',
+  consent: { kind: 'valid', provenance: 'state-1', actIdentity: 'act:consent', artifactDigest: 'sha256:c'.padEnd(71, '0'), actInstant: '2026-09-02T00:00:00Z' },
+  policy: { kind: 'valid', provenance: 'state-1', actIdentity: 'act:policy', artifactDigest: 'sha256:p'.padEnd(71, '0'), actInstant: '2026-09-02T00:00:00Z' },
+  registry: { kind: 'valid', provenance: 'state-1', actIdentity: 'act:registry', artifactDigest: 'sha256:r'.padEnd(71, '0'), actInstant: '2026-09-02T00:00:00Z' },
+  contradiction: undefined,
+};
+
+const REJECTING: BodyReadAuthorityEvaluation = {
+  evaluationId: 'evaluation:test-rejecting',
+  evaluationInstant: '2026-09-04T00:00:00Z',
+  admits: false,
+  authorizationMode: 'rejected',
+  consent: { kind: 'absent', what: 'artifact-missing', artifactDigest: undefined },
+  policy: { kind: 'valid', provenance: 'state-1', actIdentity: 'act:policy', artifactDigest: 'sha256:p'.padEnd(71, '0'), actInstant: '2026-09-02T00:00:00Z' },
+  registry: { kind: 'invalid', caseId: 'registry:phrase-mismatched', detail: 'wrong phrase', artifactDigest: 'sha256:r'.padEnd(71, '0'), claimedProvenance: 'state-1' },
+  contradiction: { clause: 'RFC3-16(a)', definedTerm: 'authorization-bearing governance artifact', statement: 'No effective act.', failing: [] },
+};
+
+function build(input: Fixture & { authority?: BodyReadAuthorityEvaluation; revision?: string; limits?: Partial<PwbResourceLimits> }) {
+  const git = fixture(input);
+  const shape = buildProjectShape({
+    authority: input.authority ?? ADMITTING,
+    revision: input.revision ?? 'main',
+    capturedAt: CAPTURED_AT,
+    runGit: git.runGit,
+    ...(input.limits === undefined ? {} : { resourceLimits: { ...PWB_RESOURCE_LIMITS, ...input.limits } }),
+  });
+  return { shape, calls: git.calls, entries: git.entries };
+}
+
+function observed(input: Parameters<typeof build>[0]): Extract<ProjectShape, { kind: 'observed' }> {
+  const { shape } = build(input);
+  if (shape.kind !== 'observed') throw new Error(`expected observed, got ${shape.kind}`);
+  return shape;
+}
+
+
+// ---- step-1 probe of syzygy-bpyt.1.18: synthetic text only, no daemon, no repository read.
+import { writeFileSync } from 'node:fs';
+import { maskMarkdownCodeContexts } from './markdown-code-context.js';
+import { scanActiveContent } from './git-object-reader.js';
+import { createReobserveState } from '../../../apps/three-surface-poc/src/reobserve-state.js';
+import { reobserveRoutes } from '../../../apps/three-surface-poc/src/reobserve-action.js';
+import { unexpectedObservationDetail } from '../../../apps/three-surface-poc/src/startup-detail.js';
+
+const TERMS: Record<string, string> = { LF: '\n', CRLF: '\r\n', CR: '\r' };
+const fenceText = (n: number, term: string): string => ['```', ...Array.from({ length: n }, () => 'x'), '```', ''].join(term);
+const attempt = (fn: () => unknown): string => { try { const r = fn() as { kind?: string }; return `ok:${r.kind ?? typeof r}`; } catch (e) { return `throw:${(e as Error).name}:${(e as Error).message}`; } };
+
+describe('step 1 probe', () => {
+  it('measures', async () => {
+    const out: Record<string, unknown> = { node: process.version };
+    // A. thresholds: the largest closed-fence line count the mask survives, per terminator
+    const threshold: Record<string, unknown> = {};
+    for (const [name, term] of Object.entries(TERMS)) {
+      let lo = 1000, hi = 400000; // lo survives, hi throws
+      if (!attempt(() => maskMarkdownCodeContexts(fenceText(hi, term))).startsWith('throw')) { threshold[name] = 'no throw at 400000'; continue; }
+      while (hi - lo > 1) { const mid = (lo + hi) >> 1; if (attempt(() => maskMarkdownCodeContexts(fenceText(mid, term))).startsWith('throw')) hi = mid; else lo = mid; }
+      threshold[name] = { largestSurviving: lo, firstThrowing: hi, bytesAtFirstThrow: fenceText(hi, term).length };
+    }
+    out.maskThreshold = threshold;
+    // B. the scanner and call sites over 150,000 / 200,000 lines
+    const direct: Record<string, unknown> = {};
+    for (const n of [100000, 150000, 200000]) for (const [name, term] of Object.entries(TERMS)) {
+      const t = fenceText(n, term);
+      direct[`${name}-${n}`] = { bytes: t.length, mask: attempt(() => maskMarkdownCodeContexts(t)), scanActiveContent: attempt(() => scanActiveContent(t)) };
+    }
+    out.direct = direct;
+    // C. buildProjectShape: the long fence in a phase-B class source (vision.md) and in the phase-A root index
+    const shapes: Record<string, unknown> = {};
+    for (const [where, path] of [['phase-B vision.md', 'about/heart-and-soul/vision.md'], ['phase-A root index', 'about/README.md']] as const) {
+      for (const n of [100000, 200000]) for (const [name, term] of Object.entries(TERMS)) {
+        const base = BASE_TEXTS[path] as string;
+        const texts = { ...BASE_TEXTS, [path]: `${base}\n${fenceText(n, term)}` };
+        const git = fixture({ texts });
+        let result = '';
+        let detail: unknown;
+        try {
+          const shape = buildProjectShape({ authority: ADMITTING, revision: 'main', capturedAt: CAPTURED_AT, runGit: git.runGit });
+          result = `returned:${shape.kind}`;
+          if (shape.kind === 'observed') { const s = shape.sources.find((x) => x.path === path); detail = { sourceRecord: s?.record.outcome, exclusion: s?.record.outcome === 'excluded' ? s.record.exclusion : undefined, wholeShape: shape.claim.label }; }
+        } catch (e) { result = `threw:${(e as Error).name}:${(e as Error).message}`; }
+        shapes[`${where} ${name} ${n} lines (${texts[path].length} bytes)`] = { result, detail, gitCatFileCalls: git.calls.filter((c) => c[0] === 'cat-file').length };
+      }
+    }
+    out.buildProjectShape = shapes;
+    // D. re-observation: the state wrapper around a build that hits the long fence
+    const longTexts = { ...BASE_TEXTS, 'about/heart-and-soul/vision.md': `${VISION}\n${fenceText(200000, '\n')}` };
+    const okGit = fixture({ texts: BASE_TEXTS });
+    const goodModel = buildProjectShape({ authority: ADMITTING, revision: 'main', capturedAt: CAPTURED_AT, runGit: okGit.runGit });
+    const state = createReobserveState<string, ProjectShape>({
+      capture: 'c0', model: goodModel, observe: async () => 'c1',
+      build: () => buildProjectShape({ authority: ADMITTING, revision: 'main', capturedAt: CAPTURED_AT, runGit: fixture({ texts: longTexts }).runGit }),
+    });
+    const res = await state.reobserve();
+    out.reobserveState = { result: res.kind, reason: res.kind === 'failed' ? res.reason : undefined, priorModelStillServed: state.get() === goodModel, captureStillC0: state.getCapture() === 'c0' };
+    const routes = reobserveRoutes({ reobserve: async () => ({ kind: 'failed', reason: res.kind === 'failed' ? res.reason : '' }) });
+    const human = routes.find((r) => r.method === 'POST');
+    out.reobserveRouteCount = routes.length;
+    out.reobserveRouteHuman = human === undefined ? 'none' : { path: human.path, credentialClass: human.credentialClass };
+    // E. startup
+    out.startupStderrLine = `syzygy POC: observation failed (${unexpectedObservationDetail(new RangeError('Maximum call stack size exceeded'))})`;
+    writeFileSync(`/tmp/lci/trace-${process.env['PROBE_TAG']}-1.json`, JSON.stringify(out, null, 1));
+    expect(out).toBeDefined();
+  }, 600000);
+});
+
+describe('step 1 probe: the extractor push', () => {
+  it('measures a long success-criteria list', () => {
+    const out: Record<string, unknown> = {};
+    for (const n of [100000, 125000, 130000, 200000]) {
+      const section = ['## What Success Looks Like', '', ...Array.from({ length: n }, () => '- x'), ''].join('\n');
+      const vision = VISION.replace(/## What Success Looks Like[\s\S]*?(?=## What Butlers Is Not)/, `${section}\n`);
+      const texts = { ...BASE_TEXTS, 'about/heart-and-soul/vision.md': vision };
+      const git = fixture({ texts });
+      let result = '';
+      let detail: unknown;
+      try {
+        const shape = buildProjectShape({ authority: ADMITTING, revision: 'main', capturedAt: CAPTURED_AT, runGit: git.runGit });
+        result = `returned:${shape.kind}`;
+        if (shape.kind === 'observed') {
+          const s = shape.sources.find((x) => x.path === 'about/heart-and-soul/vision.md');
+          detail = { sourceRecord: s?.record.outcome, items: shape.items.filter((i) => i.class === 'success-criterion').length, wholeShape: shape.claim.label };
+        }
+      } catch (e) { result = `threw:${(e as Error).name}:${(e as Error).message}`; }
+      out[`${n} bullets (${vision.length} bytes, under 1048576: ${vision.length < 1048576})`] = { result, detail };
+    }
+    writeFileSync(`/tmp/lci/trace-${process.env['PROBE_TAG']}-2.json`, JSON.stringify(out, null, 1));
+  }, 600000);
+});

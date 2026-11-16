@@ -1,0 +1,191 @@
+{
+ "schema": "rev-520-sizing-mutants/1",
+ "commit": "3e563ec4ccabd0f2a40fa423c39b5efeb9fd5e4a",
+ "results": [
+  {
+   "id": "M0",
+   "what": "unmutated control",
+   "exitCode": 0,
+   "expectedExit": 0,
+   "asExpected": true,
+   "output": [
+    "299 collected, 16 sized (10 from a lower bound), 0 problems"
+   ]
+  },
+  {
+   "id": "M1",
+   "what": "a sized timeout below the rule",
+   "file": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "old": "  }, 50_000);\n});\n",
+   "new": "  }, 45_000);\n});\n",
+   "expectedExit": 1,
+   "exitCode": 1,
+   "asExpected": true,
+   "output": [
+    "299 collected, 16 sized (10 from a lower bound), 1 problems",
+    "problem: carries 45000 ms, the rule gives 50000 ms: the policy port and the strict policy chain agree on every world in the fixture set, at every instant"
+   ]
+  },
+  {
+   "id": "M3",
+   "what": "an explicit timeout on a test the rule does not size",
+   "file": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "old": "    await expect(createPackageAdmissionReader({ root: '/missing', fs: memoryFs(world()) }).read()).rejects.toBeInstanceOf(AdmissionRecordError);\n  });\n",
+   "new": "    await expect(createPackageAdmissionReader({ root: '/missing', fs: memoryFs(world()) }).read()).rejects.toBeInstanceOf(AdmissionRecordError);\n  }, 15_000);\n",
+   "expectedExit": 1,
+   "exitCode": 1,
+   "asExpected": true,
+   "output": [
+    "299 collected, 16 sized (10 from a lower bound), 1 problems",
+    "problem: carries 15000 ms, the rule gives 5000 ms: package admission reader refuses when the decisions directory cannot be listed"
+   ]
+  },
+  {
+   "id": "M4",
+   "what": "a measured test renamed",
+   "file": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "old": "it('refuses when the decisions directory cannot be listed'",
+   "new": "it('refuses when the decisions directory cannot be listed, renamed'",
+   "expectedExit": 1,
+   "exitCode": 1,
+   "asExpected": true,
+   "output": [
+    "299 collected, 16 sized (10 from a lower bound), 2 problems",
+    "problem: observed but not collected: package admission reader refuses when the decisions directory cannot be listed",
+    "problem: collected but measured in no --record: package admission reader refuses when the decisions directory cannot be listed, renamed"
+   ]
+  },
+  {
+   "id": "M5",
+   "what": "an unsized test measured at 2,501 ms",
+   "record": "docs/evidence/syzygy-bpyt-4-13/before-alone.json",
+   "test": "package admission reader refuses when the decisions directory cannot be listed",
+   "run": 1,
+   "old": {
+    "durationMs": 1
+   },
+   "new": {
+    "durationMs": 2501
+   },
+   "expectedExit": 1,
+   "exitCode": 1,
+   "asExpected": true,
+   "output": [
+    "299 collected, 17 sized (10 from a lower bound), 1 problems",
+    "problem: carries 5000 ms, the rule gives 10000 ms: package admission reader refuses when the decisions directory cannot be listed"
+   ]
+  },
+  {
+   "id": "M6",
+   "what": "the same test at exactly 2,500 ms (rule is strictly above: expected to pass)",
+   "record": "docs/evidence/syzygy-bpyt-4-13/before-alone.json",
+   "test": "package admission reader refuses when the decisions directory cannot be listed",
+   "run": 1,
+   "old": {
+    "durationMs": 1
+   },
+   "new": {
+    "durationMs": 2500
+   },
+   "expectedExit": 0,
+   "exitCode": 0,
+   "asExpected": true,
+   "output": [
+    "299 collected, 16 sized (10 from a lower bound), 0 problems"
+   ]
+  },
+  {
+   "id": "R1",
+   "what": "a sized timeout above the rule (the direction that hides a hang)",
+   "file": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "old": "  }, 50_000);\n});\n",
+   "new": "  }, 55_000);\n});\n",
+   "expectedExit": 1,
+   "exitCode": 1,
+   "asExpected": true,
+   "output": [
+    "299 collected, 16 sized (10 from a lower bound), 1 problems",
+    "problem: carries 55000 ms, the rule gives 50000 ms: the policy port and the strict policy chain agree on every world in the fixture set, at every instant"
+   ]
+  },
+  {
+   "id": "R2",
+   "what": "a second test with a name the file already has",
+   "file": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "old": "  it('refuses when the decisions directory cannot be listed', async () => {",
+   "new": "  it('refuses when the decisions directory cannot be listed', () => {});\n  it('refuses when the decisions directory cannot be listed', async () => {",
+   "expectedExit": 1,
+   "exitCode": 1,
+   "asExpected": true,
+   "output": [
+    "two collected tests share a name; durations cannot be told apart"
+   ]
+  },
+  {
+   "id": "R3",
+   "what": "a new test no record measured",
+   "file": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "old": "  it('refuses when the decisions directory cannot be listed', async () => {",
+   "new": "  it('a new test no record measured', () => {});\n  it('refuses when the decisions directory cannot be listed', async () => {",
+   "expectedExit": 1,
+   "exitCode": 1,
+   "asExpected": true,
+   "output": [
+    "300 collected, 16 sized (10 from a lower bound), 1 problems",
+    "problem: collected but measured in no --record: package admission reader a new test no record measured"
+   ]
+  },
+  {
+   "id": "R4a",
+   "what": "rounding boundary: agreement test worst 16,666 ms in the load-127 extract (x3 = 49,998, rounds to 50,000: expected to pass)",
+   "record": "docs/evidence/syzygy-bpyt-4-13/load-127-report-extract.json",
+   "test": "the policy port and the strict policy chain agree on every world in the fixture set, at every instant",
+   "run": null,
+   "old": {
+    "durationMs": 16464.869911000016
+   },
+   "new": {
+    "durationMs": 16666.4
+   },
+   "expectedExit": 0,
+   "exitCode": 0,
+   "asExpected": true,
+   "output": [
+    "299 collected, 16 sized (10 from a lower bound), 0 problems"
+   ]
+  },
+  {
+   "id": "R4b",
+   "what": "rounding boundary: agreement test worst 16,667 ms (x3 = 50,001, rounds to 55,000: expected to fail)",
+   "record": "docs/evidence/syzygy-bpyt-4-13/load-127-report-extract.json",
+   "test": "the policy port and the strict policy chain agree on every world in the fixture set, at every instant",
+   "run": null,
+   "old": {
+    "durationMs": 16464.869911000016
+   },
+   "new": {
+    "durationMs": 16667
+   },
+   "expectedExit": 1,
+   "exitCode": 1,
+   "asExpected": true,
+   "output": [
+    "299 collected, 16 sized (10 from a lower bound), 1 problems",
+    "problem: carries 50000 ms, the rule gives 55000 ms: the policy port and the strict policy chain agree on every world in the fixture set, at every instant"
+   ]
+  },
+  {
+   "id": "R5",
+   "what": "the consent project default raised to 60 s in vitest.config.ts (the bead forbids raising the default)",
+   "file": "vitest.config.ts",
+   "old": "          name: '@syzygy/polaris-generation-consent',\n          include: ['packages/polaris-generation-consent/src/**/*.test.ts'],\n",
+   "new": "          name: '@syzygy/polaris-generation-consent',\n          include: ['packages/polaris-generation-consent/src/**/*.test.ts'],\n          testTimeout: 60_000,\n",
+   "expectedExit": 1,
+   "exitCode": 0,
+   "asExpected": false,
+   "output": [
+    "299 collected, 16 sized (10 from a lower bound), 0 problems"
+   ]
+  }
+ ]
+}

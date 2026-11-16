@@ -1,0 +1,145 @@
+OK   record commit resolves -- 821d807cde16a5c4de26fa17690784f7236f5119
+OK   record commit is an ancestor of the reviewed commit 
+OK   only the record changed between record commit and reviewed commit -- docs/evidence/syzygy-bpyt-4-22/runsync-and-root-probe.json
+OK   base is merge base with main now -- 3ec6929951080613b3c5cb7205fe303c5449be58
+OK   prior commit is f7bbb93a and ancestor of record commit 
+OK   tool sha256 at 821d807c -- 98ec93ac7916d9bb1109d621663140ba18a42d82578bca3960cdac49ba7bc8ae
+OK   tool sha256 at 7459cc75 -- 98ec93ac7916d9bb1109d621663140ba18a42d82578bca3960cdac49ba7bc8ae
+OK   packages/cap1-system/src/daemon-entry-unchanged.system.test.ts head sha at record commit 
+OK   packages/cap1-system/src/daemon-entry-unchanged.system.test.ts head sha at reviewed commit 
+OK   packages/cap1-system/src/daemon-entry-unchanged.system.test.ts base sha 
+OK   packages/cap1-system/src/daemon-entry-unchanged.system.test.ts prior sha 
+OK   packages/cap1-system/src/state-dir.system.test.ts head sha at record commit 
+OK   packages/cap1-system/src/state-dir.system.test.ts head sha at reviewed commit 
+OK   packages/cap1-system/src/state-dir.system.test.ts base sha 
+OK   packages/cap1-system/src/state-dir.system.test.ts prior sha 
+OK   base: passes recomputed 
+OK   base: passes and 21 tests -- 21
+OK   base: mean interval recomputed 
+OK   head: passes recomputed 
+OK   head: passes and 21 tests -- 21
+OK   head: mean interval recomputed 
+OK   populations recomputed 
+OK   R5: 8.2 mutant record sha 
+OK   R5: edits equal the 8.2 record edits 
+OK   R5: old occurs once in packages/polaris-dossier/src/argv.ts at 821d807c -- 1
+OK   R5: old occurs once in packages/polaris-dossier/src/argv.ts at 7459cc75 -- 1
+OK   R5: old occurs once in packages/polaris-dossier/src/argv.ts at 3ec69299 -- 1
+OK   R5: old occurs once in packages/polaris-dossier/src/argv.ts at f7bbb93a -- 1
+OK   R5: entryTestAt sha 
+OK   R5: failedRows recomputed -- (2, 2)
+OK   R5: timedOutRows recomputed -- (2, 2)
+OK   R5: slowestFailedRowMs recomputed 
+OK   R5: mean interval recomputed 
+OK   R5: 7477 empty, no survivors, no deadline 
+OK   R5: exit non-zero -- 1
+OK   R5: failed rows exactly the named ones -- ['","0","dossier"] is refused with exit 1 and the same message', 'nged ["Dossier"] is refused with exit 1 and the same message']
+OK   R5: failure mode timeout 
+OK   R5: every failed row under timeout + 5 s 
+OK   R5: passes true 
+OK   R9: 8.2 mutant record sha 
+OK   R9: edits equal the 8.2 record edits 
+OK   R9: old occurs once in packages/polaris-dossier/src/argv.ts at 821d807c -- 1
+OK   R9: old occurs once in packages/polaris-dossier/src/argv.ts at 7459cc75 -- 1
+OK   R9: old occurs once in packages/polaris-dossier/src/argv.ts at 3ec69299 -- 1
+OK   R9: old occurs once in packages/polaris-dossier/src/argv.ts at f7bbb93a -- 1
+OK   R9: entryTestAt sha 
+OK   R9: failedRows recomputed -- (1, 1)
+OK   R9: timedOutRows recomputed -- (1, 1)
+OK   R9: slowestFailedRowMs recomputed 
+OK   R9: mean interval recomputed 
+OK   R9: 7477 empty, no survivors, no deadline 
+OK   R9: exit non-zero -- 1
+OK   R9: failed rows exactly the named ones -- ['anged ["--port"] is refused with exit 1 and the same message']
+OK   R9: failure mode timeout 
+OK   R9: every failed row under timeout + 5 s 
+OK   R9: passes true 
+OK   P1: old occurs once in apps/syzygy/src/main.ts at 821d807c -- 1
+OK   P1: old occurs once in apps/syzygy/src/main.ts at 7459cc75 -- 1
+OK   P1: old occurs once in apps/syzygy/src/main.ts at 3ec69299 -- 1
+OK   P1: old occurs once in apps/syzygy/src/main.ts at f7bbb93a -- 1
+OK   P1: entryTestAt sha 
+OK   P1: failedRows recomputed -- (1, 1)
+OK   P1: timedOutRows recomputed -- (0, 0)
+OK   P1: slowestFailedRowMs recomputed 
+OK   P1: mean interval recomputed 
+OK   P1: 7477 empty, no survivors, no deadline 
+OK   P1: exit non-zero -- 1
+OK   P1: failed rows exactly the named ones -- ['y inside the governed plane is refused with the same message']
+OK   P1: failure mode fails 
+OK   P1: every failed row under timeout + 5 s 
+OK   P1: passes true 
+OK   P2: old occurs once in apps/syzygy/src/main.ts at 821d807c -- 1
+OK   P2: old occurs once in apps/syzygy/src/main.ts at 7459cc75 -- 1
+OK   P2: old occurs once in apps/syzygy/src/main.ts at 3ec69299 -- 1
+OK   P2: old occurs once in apps/syzygy/src/main.ts at f7bbb93a -- 1
+OK   P2: entryTestAt sha 
+OK   P2: failedRows recomputed -- (1, 1)
+OK   P2: timedOutRows recomputed -- (1, 1)
+OK   P2: slowestFailedRowMs recomputed 
+OK   P2: mean interval recomputed 
+OK   P2: 7477 empty, no survivors, no deadline 
+OK   P2: exit non-zero -- 1
+OK   P2: failed rows exactly the named ones -- ['--port","70000"] is refused with exit 1 and the same message']
+OK   P2: failure mode timeout 
+OK   P2: every failed row under timeout + 5 s 
+OK   P2: passes true 
+OK   P1-at-prior: old occurs once in apps/syzygy/src/main.ts at 821d807c -- 1
+OK   P1-at-prior: old occurs once in apps/syzygy/src/main.ts at 7459cc75 -- 1
+OK   P1-at-prior: old occurs once in apps/syzygy/src/main.ts at 3ec69299 -- 1
+OK   P1-at-prior: old occurs once in apps/syzygy/src/main.ts at f7bbb93a -- 1
+OK   P1-at-prior: entryTestAt sha 
+OK   P1-at-prior: failedRows recomputed -- (0, 0)
+OK   P1-at-prior: timedOutRows recomputed -- (0, 0)
+OK   P1-at-prior: slowestFailedRowMs recomputed 
+OK   P1-at-prior: mean interval recomputed 
+OK   P1-at-prior: 7477 empty, no survivors, no deadline 
+OK   P1-at-prior: survives (exit 0, none failed, passes) -- (0, 0, 15)
+OK   root-shim: target row status 
+OK   root-shim-base: target row status 
+OK   root-control: target row status 
+OK   allPass recomputed 
+OK   reviewRuns raw sha256 equals round 1 raw 
+OK   reviewRuns base-R5-hang: outcome quoted from raw line 244 -- ['**hangs**']
+OK   reviewRuns base-R5-hang: raw line names the case 
+OK   reviewRuns base-R5: outcome quoted from raw line 245 -- ['Then **`Dossier` bound 127.0.0.1:7477**']
+OK   reviewRuns base-R5: raw line names the case 
+OK   reviewRuns base-R9: outcome quoted from raw line 246 -- ['**`--port` bound 127.0.0.1:7477**']
+OK   reviewRuns base-R9: raw line names the case 
+OK   reviewRuns T1-no-port-env-R5: outcome quoted from raw line 247 -- ['**killed by the 7477 predicate**']
+OK   reviewRuns T1-no-port-env-R5: raw line names the case 
+OK   reviewRuns T2-no-timeout-R5: outcome quoted from raw line 248 -- ['**killed by the hang predicate**']
+OK   reviewRuns T2-no-timeout-R5: raw line names the case 
+OK   reviewRuns T3-no-throw-R5: outcome quoted from raw line 249 -- ['**equivalent for pass/fail**', "Only the lane's `timedOutRows` predicate kills it."]
+OK   reviewRuns T3-no-throw-R5: raw line names the case 
+OK   reviewRuns S1-skip-always-noshim: outcome quoted from raw line 266 -- ["S1, `skipIf(true)` as the real user: `{'passed': 5, 'skipped': 1}`;"]
+OK   reviewRuns S1-skip-always-noshim: raw line names the case 
+OK   reviewRuns S2-skip-inverted: outcome quoted from raw line 267 -- ["S2, `getuid?.() !== 0`: as the real user `{'passed': 5, 'skipped': 1}`, under the shim `{'passed': 6}`."]
+OK   reviewRuns S2-skip-inverted: raw line names the case 
+OK   R5 43.9 s, 20,104 / 20,029 ms, 0 of 103, two listeners 
+OK   R9 24.1 s, 20,033 ms, 0 of 56, one listener 
+OK   P1 3.9 s, governed row 121 ms, 0 of 9 
+OK   P2 23.9 s, 20,037 ms, 0 of 57, one listener 
+OK   P1 control 15 passed 
+OK   mutant mean intervals within 0.42-0.44 -- [0.42, 0.43, 0.43, 0.43, 0.44]
+OK   head: 12 runSync rows -- 12
+OK   head slowest runSync row 386 ms dossier status -- (386, 'r status <missing>` is a dossier refusal (exit 1) and starts no daemon')
+OK   head load1 15.92-16.33 -- {'start': 15.92, 'end': 16.33}
+OK   info: base slowest runSync row -- 259
+OK   info: head slowest row overall -- (386, 'missing>` is a dossier refusal (exit 1) and starts no daemon')
+129 OK, 0 FAIL, of 129 checks
+selftest tool sha: killed ['tool sha256 at 821d807c', 'tool sha256 at 7459cc75']
+selftest base commit: killed ['base is merge base with main now', 'packages/cap1-system/src/daemon-entry-unchanged.system.test.ts base sha']
+selftest head file sha: killed ['packages/cap1-system/src/daemon-entry-unchanged.system.test.ts head sha at record commit', 'packages/cap1-system/src/daemon-entry-unchanged.system.test.ts head sha at reviewed commit']
+selftest P1 failedRows: killed ['P1: failedRows recomputed']
+selftest P2 timedOutRows: killed ['P2: timedOutRows recomputed']
+selftest R5 old fragment: killed ['R5: edits equal the 8.2 record edits', 'R5: old occurs once in packages/polaris-dossier/src/argv.ts at 821d807c']
+selftest P1 old fragment: killed ['P1: old occurs once in apps/syzygy/src/main.ts at 821d807c', 'P1: old occurs once in apps/syzygy/src/main.ts at 7459cc75']
+selftest P1 control exit: killed ['P1-at-prior: survives (exit 0, none failed, passes)']
+selftest R9 mustFail extra row: killed ['R9: failed rows exactly the named ones']
+selftest mean interval: killed ['R5: mean interval recomputed', 'mutant mean intervals within 0.42-0.44']
+selftest reviewRuns quote: killed ['reviewRuns base-R5-hang: outcome quoted from raw line 244']
+selftest reviewRuns line: killed ['reviewRuns T1-no-port-env-R5: outcome quoted from raw line 248', 'reviewRuns T1-no-port-env-R5: raw line names the case']
+selftest P1 entryTestAt commit: killed ['P1-at-prior: entryTestAt sha']
+selftest head test status: killed ['populations recomputed']
+selftest: 14 of 14 mutants killed; control clean: True

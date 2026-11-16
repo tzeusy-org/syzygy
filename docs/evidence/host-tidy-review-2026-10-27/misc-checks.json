@@ -1,0 +1,96 @@
+{
+ "main536": {
+  "pathsChanged": 75,
+  "subjectPaths": 48,
+  "overlap": [],
+  "mergeTree": "1b01569cec7a2baf586a824de6fac862ff7fe8d7",
+  "localMergeTree": "1b01569cec7a2baf586a824de6fac862ff7fe8d7"
+ },
+ "surfaceVersion": {
+  "9dba2589": "polaris@e4fd613eed56",
+  "f2304fd5": "polaris@2bb1f43332fd",
+  "561c80b3": "polaris@2bb1f43332fd",
+  "bb05df7e": "polaris@e4fd613eed56"
+ },
+ "sweepPopulation": {
+  "9dba2589": {
+   "files": 4164,
+   "bytes": 100662706
+  },
+  "f2304fd5": {
+   "files": 4164,
+   "bytes": 100662968
+  },
+  "561c80b3": {
+   "files": 4181,
+   "bytes": 101684067
+  },
+  "bb05df7e": {
+   "files": 4206,
+   "bytes": 101703745
+  }
+ },
+ "serverHeader": {
+  "9dba2589": {
+   "lines": 327,
+   "lines11to29AllComment": true,
+   "line10Blank": true,
+   "line30Blank": true
+  },
+  "f2304fd5": {
+   "lines": 327,
+   "lines11to29AllComment": true,
+   "line10Blank": true,
+   "line30Blank": true
+  }
+ },
+ "hiddenLockEqualModuloTheEdge": true,
+ "installedTree": {
+  "base": {
+   "entries": 1294,
+   "sha256": "d4447131a7d7f81ace88230fc3183d371ae85a82526cf76e1bee4b5921610e5f"
+  },
+  "head": {
+   "entries": 1294,
+   "sha256": "d4447131a7d7f81ace88230fc3183d371ae85a82526cf76e1bee4b5921610e5f"
+  },
+  "merge": {
+   "entries": 1294,
+   "sha256": "d4447131a7d7f81ace88230fc3183d371ae85a82526cf76e1bee4b5921610e5f"
+  }
+ },
+ "builtFiles": {
+  "base": 2052,
+  "head": 2052,
+  "onlyBase": [],
+  "onlyHead": [],
+  "differing": [
+   "apps/three-surface-poc/dist/.tsbuildinfo",
+   "apps/three-surface-poc/dist/evaluation-footer.test.js",
+   "apps/three-surface-poc/dist/evaluation-footer.test.js.map",
+   "apps/three-surface-poc/dist/materialize-action.test.js",
+   "apps/three-surface-poc/dist/materialize-action.test.js.map",
+   "apps/three-surface-poc/dist/page-size-delta.test.js",
+   "apps/three-surface-poc/dist/page-size-delta.test.js.map",
+   "apps/three-surface-poc/dist/polaris-accessible-names.browser.test.js",
+   "apps/three-surface-poc/dist/polaris-accessible-names.browser.test.js.map",
+   "apps/three-surface-poc/dist/polaris-presentation-route.test.js",
+   "apps/three-surface-poc/dist/polaris-presentation-route.test.js.map",
+   "apps/three-surface-poc/dist/polaris-source-route.test.js",
+   "apps/three-surface-poc/dist/polaris-source-route.test.js.map",
+   "apps/three-surface-poc/dist/response-limits.test.js",
+   "apps/three-surface-poc/dist/response-limits.test.js.map",
+   "apps/three-surface-poc/dist/routes.test.js",
+   "apps/three-surface-poc/dist/routes.test.js.map",
+   "apps/three-surface-poc/dist/surface-routes.test.js",
+   "apps/three-surface-poc/dist/surface-routes.test.js.map",
+   "apps/three-surface-poc/dist/tuple-encoding.test.js",
+   "apps/three-surface-poc/dist/tuple-encoding.test.js.map",
+   "packages/http-host/dist/.tsbuildinfo",
+   "packages/http-host/dist/server.js",
+   "packages/http-host/dist/server.js.map",
+   "packages/http-host/dist/shutdown.d.ts.map",
+   "packages/http-host/dist/shutdown.js.map"
+  ]
+ }
+}

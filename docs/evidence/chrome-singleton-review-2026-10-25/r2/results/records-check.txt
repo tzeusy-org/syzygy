@@ -1,0 +1,76 @@
+== sha256AtCommit against git show <treeCommit>:<path>, and against the reviewed head
+json records at head: 25
+  browser-files-base-2026-10-22.json: treeCommit 9a30237e files 4 mismatched-at-treeCommit 0 equal-at-head 0/4
+  browser-files-head-2026-10-22.json: treeCommit dccd484f files 4 mismatched-at-treeCommit 0 equal-at-head 1/4
+  browser-files-head-chrome154-2026-10-22.json: treeCommit dccd484f files 4 mismatched-at-treeCommit 0 equal-at-head 1/4
+  browser-files-head-chrome154-r1-2026-10-25.json: treeCommit 0410e3cd files 4 mismatched-at-treeCommit 0 equal-at-head 4/4
+  browser-files-head-r1-2026-10-25.json: treeCommit 0410e3cd files 4 mismatched-at-treeCommit 0 equal-at-head 4/4
+  chrome-matrix-head-2026-10-22.json: treeCommit dccd484f files 2 mismatched-at-treeCommit 0 equal-at-head 0/2
+  chrome-matrix-head-r1-2026-10-25.json: treeCommit 0410e3cd files 2 mismatched-at-treeCommit 0 equal-at-head 2/2
+  chrome-matrix-pre-fix-2026-10-22.json: treeCommit dccd484f files 2 mismatched-at-treeCommit 0 equal-at-head 0/2
+  chrome-names-2026-10-22.json: no treeCommit
+  launch-failure-base-2026-10-22.json: treeCommit dccd484f sha256AtCommit is a str: 70102033956c5597667ab3fca4bc145fcb2f7787227b1cb82849878c8a73856f
+  launch-failure-head-2026-10-22.json: treeCommit dccd484f sha256AtCommit is a str: 70102033956c5597667ab3fca4bc145fcb2f7787227b1cb82849878c8a73856f
+  launch-probe-base-2026-10-22.json: treeCommit dccd484f sha256AtCommit is a str: c6c0ac6cc626b76155d870502c5549aa430d7cee35a058b0001d849586842033
+  launch-probe-base-chrome154-2026-10-22.json: treeCommit dccd484f sha256AtCommit is a str: c6c0ac6cc626b76155d870502c5549aa430d7cee35a058b0001d849586842033
+  launch-probe-head-2026-10-22.json: treeCommit dccd484f sha256AtCommit is a str: c6c0ac6cc626b76155d870502c5549aa430d7cee35a058b0001d849586842033
+  launch-probe-head-chrome154-2026-10-22.json: treeCommit dccd484f sha256AtCommit is a str: c6c0ac6cc626b76155d870502c5549aa430d7cee35a058b0001d849586842033
+  mutants-cdp-2026-10-22.json: treeCommit dccd484f files 4 mismatched-at-treeCommit 0 equal-at-head 1/4
+  mutants-cdp-r1-2026-10-25.json: treeCommit 3fad24d4 files 4 mismatched-at-treeCommit 0 equal-at-head 4/4
+  test-lists-2026-10-22.json: no treeCommit
+  test-lists-attempt-1-2026-10-22.json: no treeCommit
+  test-lists-r1-2026-10-25.json: no treeCommit
+  tmpdir-length-base-2026-10-22.json: treeCommit 6f84e689 sha256AtCommit is a str: c6c0ac6cc626b76155d870502c5549aa430d7cee35a058b0001d849586842033
+  tmpdir-length-head-2026-10-22.json: treeCommit 6f84e689 sha256AtCommit is a str: c6c0ac6cc626b76155d870502c5549aa430d7cee35a058b0001d849586842033
+  tmpdir-length-rejected-2026-10-22.json: treeCommit 6f84e689 sha256AtCommit is a str: c6c0ac6cc626b76155d870502c5549aa430d7cee35a058b0001d849586842033
+  verification-2026-10-22.json: treeCommit aa74cbb9 and NO sha256AtCommit
+  verification-round1-2026-10-25.json: treeCommit bcd39b4e files 4 mismatched-at-treeCommit 0 equal-at-head 4/4
+records with a commit: 21; of those with digests: 20
+== the three 2026-10-22 browser-files records: only sha256AtCommit added since round 1
+  browser-files-base-2026-10-22.json: keys added ['sha256AtCommit'] removed []; rest equal: True
+  browser-files-head-2026-10-22.json: keys added ['sha256AtCommit'] removed []; rest equal: True
+  browser-files-head-chrome154-2026-10-22.json: keys added ['sha256AtCommit'] removed []; rest equal: True
+== mutants-cdp-r1
+  mutants field 31 killed field 31 results 31 outcomes {'killed': 31}
+  results with other than 1 attempt: ['draft-preview-launch-outside-try'] | control attempts 1
+  results lacking an old/new fragment: []
+  distinct ids: 31
+  profile-owner-not-checked: killed exit 1 tests 31 edits 1 failing 1 left []
+     first failing: Chrome singleton directory (syzygy-bpyt.4.11) keeps the directory a link names when the profile is not the run | AssertionError: expected false to be true // Object.is equality
+  link-owner-not-checked: killed exit 1 tests 31 edits 1 failing 1 left []
+     first failing: Chrome singleton directory (syzygy-bpyt.4.11) keeps the directory a link names when the link is not the runnin | AssertionError: expected false to be true // Object.is equality
+  link-trusted-whoever-made-it: killed exit 1 tests 31 edits 1 failing 2 left []
+     first failing: Chrome singleton directory (syzygy-bpyt.4.11) keeps the directory a link names when the profile is not the run | AssertionError: expected false to be true // Object.is equality
+  identity-inode-not-compared: killed exit 1 tests 31 edits 1 failing 1 left []
+     first failing: Chrome singleton directory (syzygy-bpyt.4.11) keeps a directory made under the same name after the one that wa | AssertionError: expected false to be true // Object.is equality
+  identity-device-not-compared: killed exit 1 tests 31 edits 1 failing 1 left []
+     first failing: Chrome singleton directory (syzygy-bpyt.4.11) keeps a directory with the recorded inode number on another devi | AssertionError: expected false to be true // Object.is equality
+  identity-not-compared: killed exit 1 tests 31 edits 1 failing 2 left []
+     first failing: Chrome singleton directory (syzygy-bpyt.4.11) keeps a directory made under the same name after the one that wa | AssertionError: expected false to be true // Object.is equality
+  name-case-insensitive: killed exit 1 tests 31 edits 1 failing 1 left []
+     first failing: Chrome singleton directory (syzygy-bpyt.4.11) keeps a directory whose name is not exactly Chrome's: another pr | AssertionError: expected [ '..com.google.Chrome.AbCdEf', …(16) ] to deeply equal [ '..com.google.Chrome.AbCdEf
+== browser-files r1 records
+  browser-files-head-r1-2026-10-25.json: version Google Chrome 120.0.6099.224 treeCommit 0410e3cd files 11 passed 11 first-attempt-pass 11 attempt-counts [1] entries-left-over-all-attempts 0
+     combined exit 0 tests 119 passed 118 skipped 1 left {'entries': [], 'chromeSingletonDirectories': 0, 'draftPreviewDirectories': 0, 'browserProfiles': 0, 'other': []}
+  browser-files-head-chrome154-r1-2026-10-25.json: version Google Chrome for Testing 154.0.8037.57 treeCommit 0410e3cd files 11 passed 11 first-attempt-pass 11 attempt-counts [1] entries-left-over-all-attempts 0
+     combined exit 0 tests 119 passed 118 skipped 1 left {'entries': [], 'chromeSingletonDirectories': 0, 'draftPreviewDirectories': 0, 'browserProfiles': 0, 'other': []}
+== chrome-matrix-head-r1
+  Google Chrome 120.0.6099.224: passed exit 0 tests 2 attempts 1 left [] singletonShapedLeft []
+  Google Chrome for Testing 145.0.7632.6: passed exit 0 tests 2 attempts 1 left [] singletonShapedLeft []
+  Google Chrome for Testing 147.0.7727.57: passed exit 0 tests 2 attempts 1 left [] singletonShapedLeft []
+  Google Chrome for Testing 149.0.7827.22: passed exit 0 tests 2 attempts 1 left [] singletonShapedLeft []
+  Google Chrome for Testing 151.0.7922.47: passed exit 0 tests 2 attempts 1 left [] singletonShapedLeft []
+  Google Chrome for Testing 154.0.8037.57: passed exit 0 tests 2 attempts 1 left [] singletonShapedLeft []
+  holds True
+== test-lists-r1
+  {'baseLines': 5170, 'headLines': 5187, 'added': 17, 'removed': 0, 'addedByFile': {'[@syzygy/three-surface-poc-app] apps/three-surface-poc/src/cdp-browser.browser.test.ts': 1, '[@syzygy/three-surface-poc-app] apps/three-surface-poc/src/cdp-browser.test.ts': 16}, 'testsLine': 'Tests: +17 ~0 -0'}
+== verification-round1 ac3 and changed files
+  ac3.changedTestFiles {"apps/three-surface-poc/src/cdp-browser.browser.test.ts": {"removedLines": 1, "removedImportLines": 1, "removedLinesNamingAnAssertion": 0, "removedLinesNamingAMatcher": 0, "removed": ["import { readdirSync, readFileSync } from 'node:fs';"]}, "apps/three-surface-poc/src/cdp-browser.test.ts": {"removedLines": 6, "removedImportLines": 2, "removedLinesNamingAnAssertion": 2, "removedLinesNamingAMatcher": 0, "removed": ["import { describe, expect, it } from 'vitest';", "import { closeDisposableBrowser, killPrivateBrowserMembers, removeBrowserProfile, withBrowserPage, type BrowserPage } from './cdp-browser.js';", "    removeBrowserProfile('/tmp/syzygy-browser-profile', {", "    expect(() => removeBrowserProfile('/tmp/syzygy-browser-profile', {", "    expect(() => removeBrowserProfile('/tmp/syzygy-browser-profile', {", "      removeBrowserProfile(`/tmp/syzygy-browser-profile-${run}`, {"]}, "app
+  changedOutsideTheEvidenceDirectory ['apps/three-surface-poc/src/cdp-browser.browser.test.ts', 'apps/three-surface-poc/src/cdp-browser.test.ts', 'apps/three-surface-poc/src/cdp-browser.ts', 'apps/three-surface-poc/src/polaris-generation/draft-preview.browser.test.ts']
+  subject {'codeCommit': 'bcd39b4e88a3da042f26899d439c074b020e1f4c', 'mainMerged': 'df6046a153fe130202abdf6bd3045a79ba143879', 'headAtRecording': '9cfa7cd00e1045d14750788ab09a4ff340fba30a', 'gatesRunAtCommit': '9cfa7cd00e1045d14750788ab09a4ff340fba30a', 'appsAndConfigDiffSinceCodeCommit': ''}
+  review {'file': 'R-GP-IMPL-CHROME-SINGLETON-1-RAW.md', 'sha256': '4a8f8d769748286096978f114c13f8f7062f1b21e7966888be1185d89e381225', 'verdict': 'Verdict: REVISE', 'reviewedCommit': '490332aa7cc1cdf818ae01bd46e375f8280d8b7d'}
+  gate typecheck {'log': 'gate-typecheck.log', 'exit': 0, 'resultLines': []}
+  gate checkGovernance {'log': 'gate-governance.log', 'exit': 0, 'resultLines': ['32 OK, 21 WARN, 0 FAIL (53 checks) — counts derived, not asserted']}
+  gate checkQuotations {'log': 'gate-quotations.log', 'exit': 0, 'resultLines': ['OK    QC-1  a quotation beside a path:line locator was said by that file — 36 quotations examined in 17 of 939 .md files scanned (loc-paren-quote 2, loc-colon-quote 24, quote-paren-loc 10), 0 findings', 'note  QC-1  1 recorded findings, printed every run and never failed (`RECORDED`)', 'note  QC-1  5 of 36 are in an earlier revision of their source only: amended since quoted, reported, never failed', 'note  QC-1  7 of 36 found outside their cited lines (±2): locator drift, reported, never failed', 'note  QC-1  85 locators name no tracked file (CG-1 owns dangling paths); not examined', 'note  QC-1  excluded verbatim records, candidates history: 21 .md files, 0 quotations, 0 not in their source now; history not searched', 'note  QC-1  excluded verbatim records, raw review: 674 .md files, 1059 quotations, 454 not in their source now; history not searched', 'note  QC-1  excluded verbatim records, round directory: 139 .md files, 10 quotations, 4 not in their source now; history not searched']}
+  gate authoritySweep {'log': 'gate-authority.log', 'exit': 0, 'resultLines': ['Test Files  1 passed (1)', 'Tests  5 passed (5)']}
+  gate unitAndRealChromeFiles {'log': 'gate-two-files.log', 'exit': 0, 'resultLines': ['Test Files  2 passed (2)', 'Tests  31 passed (31)']}

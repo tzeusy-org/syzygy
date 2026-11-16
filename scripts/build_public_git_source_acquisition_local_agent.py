@@ -33,7 +33,8 @@ reviewed bytes are the signed bytes.
 - the sitting manifest, when present, rows the proposed file at its SHA-256;
 - the parked version is not installed (two adapters for one authority);
 - an installed copy is byte-identical to the proposed file, and exists only
-  beside its sign-off record.
+  beside its sign-off record; once a v1.1 sign-off record exists, the v1.1
+  builder's ``signed_findings()`` answers for the installed bytes instead.
 
 `apply(root)` refuses unless the package verifies unapplied and the
 implementation file exists, then copies the proposed bytes, unchanged, to
@@ -71,6 +72,10 @@ BUTLERS = INSTALLED_DIR / "POLARIS-BUTLERS-PROJECT-SHAPE-OBSERVER-CANDIDATE.json
 SITTING_MANIFEST = CANDIDATES / "dossier-local-agent-acts/DOSSIER-LOCAL-AGENT-SITTING-MANIFEST.txt"
 SIGNOFF_RECORD = pathlib.Path(".syzygy/governance/decisions/"
                               "PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-SIGNOFF-v1.0.md")
+#: A later version's record; once it exists the v1.1 builder answers for the
+#: installed bytes (`build_public_git_source_acquisition_local_agent_v1_1.py`).
+V11_RECORD = pathlib.Path(".syzygy/governance/decisions/"
+                          "PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-SIGNOFF-v1.1.md")
 IMPLEMENTATION = "packages/polaris-dossier/src/git-object-reader.ts"
 OBSERVER_ID = "polaris-public-git-source-acquisition"
 OBSERVER_VERSION = "2.0.0-candidate.1"
@@ -220,7 +225,12 @@ def check(root: pathlib.Path = ROOT) -> list[str]:
     if (root / PARKED_INSTALLED).exists():
         out.append("the parked provider-mode version is installed: one authority, two adapters")
     installed = root / INSTALLED
-    if installed.exists():
+    if (root / V11_RECORD).is_file():
+        # Once v1.1 is signed the installed bytes are v1.1's, and the v1.1
+        # builder answers for them (and for v1.0's bytes as its base).
+        import build_public_git_source_acquisition_local_agent_v1_1 as v11
+        out += v11.signed_findings(root)
+    elif installed.exists():
         if installed.read_bytes() != data:
             out.append("the installed copy differs from the proposed bytes")
         if not (root / SIGNOFF_RECORD).is_file():
@@ -349,6 +359,13 @@ def selftest() -> int:
         (tmp / SIGNOFF_RECORD).parent.mkdir(parents=True, exist_ok=True)
         (tmp / SIGNOFF_RECORD).write_text("record\n")
     caught("an installed copy differing from the proposed bytes refused", drift, "differs")
+
+    def later(tmp):
+        shutil.copyfile(tmp / PROPOSED, tmp / INSTALLED)
+        (tmp / V11_RECORD).parent.mkdir(parents=True, exist_ok=True)
+        (tmp / V11_RECORD).write_text("record\n")
+    caught("a v1.1 record defers to the v1.1 builder, which refuses v1.0's bytes installed", later,
+           "installed entry is not the v1.1 bytes")
 
     with tempfile.TemporaryDirectory() as t:
         tmp = _fixture(pathlib.Path(t))

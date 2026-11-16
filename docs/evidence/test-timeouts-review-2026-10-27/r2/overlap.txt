@@ -1,0 +1,4 @@
+apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts
+apps/three-surface-poc/src/surface-routes.test.ts
+apps/three-surface-poc/src/tuple-encoding.test.ts
+packages/polaris-generation-consent/src/package-reader.test.ts

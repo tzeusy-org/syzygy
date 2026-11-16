@@ -1,0 +1,15 @@
+base titles 5273 distinct 5264 | head titles 5283 distinct 5274
+keys only at head 36 | only at base 26 | moved (same name) 26 | new 10 | removed 0
+  NEW apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation > protects the HTTP host package the POC serves through
+  NEW packages/cap1-daemon/src/package.test.ts > cap1-daemon package > exports the values it exported before the host moved out
+  NEW packages/http-host/src/package.test.ts > http-host package > exports the host and nothing of the Capability 1 app
+  NEW packages/http-host/src/package.test.ts > http-host package > is importable with built runtime and declaration entries
+  NEW packages/http-host/src/shutdown.test.ts > closeOnSignal > announces SIGINT, closes the daemon once and resolves
+  NEW packages/http-host/src/shutdown.test.ts > closeOnSignal > announces SIGTERM, closes the daemon once and resolves
+  NEW packages/http-host/src/shutdown.test.ts > closeOnSignal > does nothing on a signal after the first
+  NEW packages/http-host/src/shutdown.test.ts > closeOnSignal > resolves quietly on a failed close when nothing listens for one
+  NEW packages/http-host/src/shutdown.test.ts > closeOnSignal > stays pending until a signal arrives
+  NEW packages/http-host/src/shutdown.test.ts > closeOnSignal > tells a failed close to closeFailed and still resolves
+  MOVED 26 packages/cap1-daemon/src/credentials.test.ts -> ['packages/http-host/src/credentials.test.ts']
+duplicate keys base 3 head 3 equal True
+keys with changed multiplicity []

@@ -1,0 +1,117 @@
+{
+ "direct": {
+  "frozen shell around unfrozen member": {
+   "old": {
+    "ok": true,
+    "census": {
+     "objects": 3,
+     "frozen": 3
+    }
+   },
+   "support": {
+    "ok": true,
+    "census": {
+     "objects": 3,
+     "frozen": 1
+    }
+   }
+  },
+  "cycle": {
+   "old": {
+    "ok": false,
+    "error": "RangeError: Maximum call stack size exceeded",
+    "census": {
+     "objects": 2,
+     "frozen": 0
+    }
+   },
+   "support": {
+    "ok": true,
+    "census": {
+     "objects": 2,
+     "frozen": 2
+    }
+   }
+  },
+  "typed array member": {
+   "old": {
+    "ok": false,
+    "error": "TypeError: Cannot freeze array buffer views with elements",
+    "census": {
+     "objects": 3,
+     "frozen": 1
+    }
+   },
+   "support": {
+    "ok": false,
+    "error": "TypeError: Cannot freeze array buffer views with elements",
+    "census": {
+     "objects": 3,
+     "frozen": 2
+    }
+   }
+  },
+  "shared member (DAG)": {
+   "old": {
+    "ok": true,
+    "census": {
+     "objects": 3,
+     "frozen": 3
+    }
+   },
+   "support": {
+    "ok": true,
+    "census": {
+     "objects": 3,
+     "frozen": 3
+    }
+   }
+  },
+  "plain tree": {
+   "old": {
+    "ok": true,
+    "census": {
+     "objects": 4,
+     "frozen": 4
+    }
+   },
+   "support": {
+    "ok": true,
+    "census": {
+     "objects": 4,
+     "frozen": 4
+    }
+   }
+  }
+ },
+ "registry": {
+  "base": {
+   "json": "{\"kind\":\"polaris-narrative\",\"presentation\":\"presentation-artifact\",\"citable\":false,\"roles\":[\"anchored-project-fact\",\"non-normative-framing\",\"epistemic-claim\"],\"anchorTargetClasses\":[\"doctrine\",\"contract\",\"requirement\",\"decision\",\"evidence\",\"work\"],\"blocks\":[{\"kind\":\"narrative-block\",\"blockId\":\"block:1\",\"role\":\"anchored-project-fact\",\"presentation\":\"presentation-artifact\",\"citable\":false,\"claims\":[\"claim:a\",\"claim:b\"],\"anchors\":[{\"anchorId\":\"block:1#a1\",\"targetClass\":\"evidence\",\"targetId\":\"sha256:00\",\"revision\":\"r1\",\"supports\":[\"claim:b\"],\"captured\":{\"label\":\"Observed\",\"tier\":\"unstated\",\"reason\":\"none\"},\"locator\":\"a.md:1\"},{\"anchorId\":\"block:1#a2\",\"targetClass\":\"evidence\",\"targetId\":\"sha256:01\",\"revision\":\"r1\",\"supports\":[\"claim:a\"],\"captured\":{\"label\":\"Unknown\",\"tier\":\"t\",\"reason\":\"x\"},\"locator\":\"b.md\"}]}],\"deepDives\":[{\"kind\":\"capability-deep-dive\",\"capabilityId\":\"cap:1\",\"readingMode\":\"m\",\"adoption\":\"adopted\",\"bands\":[{\"band\":\"argument\",\"authorityClass\":\"x\",\"blockIds\":[\"block:1\"]},{\"band\":\"argument\",\"authorityClass\":\"x\",\"blockIds\":[\"block:1\"]}],\"intent\":{\"verbatim\":\"rendered\",\"requirements\":[\"R1\"]},\"proposals\":[{\"changeId\":\"c\",\"exclusiveWith\":[\"d\"],\"anchorable\":false,\"statusBearing\":false}],\"exclusivityBasis\":{\"kind\":\"k\",\"ids\":[\"e\"]}}]}",
+   "census": {
+    "objects": 25,
+    "frozen": 25
+   },
+   "blockFrozen": {
+    "objects": 9,
+    "frozen": 9
+   },
+   "inputsStillUnfrozen": true,
+   "cycleOutcome": "RangeError"
+  },
+  "head": {
+   "json": "{\"kind\":\"polaris-narrative\",\"presentation\":\"presentation-artifact\",\"citable\":false,\"roles\":[\"anchored-project-fact\",\"non-normative-framing\",\"epistemic-claim\"],\"anchorTargetClasses\":[\"doctrine\",\"contract\",\"requirement\",\"decision\",\"evidence\",\"work\"],\"blocks\":[{\"kind\":\"narrative-block\",\"blockId\":\"block:1\",\"role\":\"anchored-project-fact\",\"presentation\":\"presentation-artifact\",\"citable\":false,\"claims\":[\"claim:a\",\"claim:b\"],\"anchors\":[{\"anchorId\":\"block:1#a1\",\"targetClass\":\"evidence\",\"targetId\":\"sha256:00\",\"revision\":\"r1\",\"supports\":[\"claim:b\"],\"captured\":{\"label\":\"Observed\",\"tier\":\"unstated\",\"reason\":\"none\"},\"locator\":\"a.md:1\"},{\"anchorId\":\"block:1#a2\",\"targetClass\":\"evidence\",\"targetId\":\"sha256:01\",\"revision\":\"r1\",\"supports\":[\"claim:a\"],\"captured\":{\"label\":\"Unknown\",\"tier\":\"t\",\"reason\":\"x\"},\"locator\":\"b.md\"}]}],\"deepDives\":[{\"kind\":\"capability-deep-dive\",\"capabilityId\":\"cap:1\",\"readingMode\":\"m\",\"adoption\":\"adopted\",\"bands\":[{\"band\":\"argument\",\"authorityClass\":\"x\",\"blockIds\":[\"block:1\"]},{\"band\":\"argument\",\"authorityClass\":\"x\",\"blockIds\":[\"block:1\"]}],\"intent\":{\"verbatim\":\"rendered\",\"requirements\":[\"R1\"]},\"proposals\":[{\"changeId\":\"c\",\"exclusiveWith\":[\"d\"],\"anchorable\":false,\"statusBearing\":false}],\"exclusivityBasis\":{\"kind\":\"k\",\"ids\":[\"e\"]}}]}",
+   "census": {
+    "objects": 25,
+    "frozen": 25
+   },
+   "blockFrozen": {
+    "objects": 9,
+    "frozen": 9
+   },
+   "inputsStillUnfrozen": true,
+   "cycleOutcome": "terminated"
+  },
+  "jsonEqual": true,
+  "censusEqual": true
+ }
+}

@@ -1,0 +1,7 @@
+RV-T14b-absolute-path-via-bridge killed 1 ['Tests  1 failed | 26 passed (27)'] 4.8 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > resolves every workspace specifier on it, and reaches past the entry's own imports
+RV-T15b-file-url-via-bridge killed 1 ['Tests  1 failed | 26 passed (27)'] 8.6 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > resolves every workspace specifier on it, and reaches past the entry's own imports
+RV-T1b-hash-pattern-alias-via-bridge killed 1 ['Tests  1 failed | 26 passed (27)'] 6.5 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > resolves every workspace specifier on it, and reaches past the entry's own imports
+wrote own-extra-head.json 3

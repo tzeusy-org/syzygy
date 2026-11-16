@@ -1,0 +1,86 @@
+[
+ {
+  "version": "file:../../packages/lib",
+  "answer": "null"
+ },
+ {
+  "version": "../../packages/lib",
+  "answer": "null"
+ },
+ {
+  "version": "./lib",
+  "answer": "null"
+ },
+ {
+  "version": ".",
+  "answer": "null"
+ },
+ {
+  "version": "..",
+  "answer": "null"
+ },
+ {
+  "version": "/srv/lib",
+  "answer": "null"
+ },
+ {
+  "version": "~/lib",
+  "answer": "null"
+ },
+ {
+  "version": "lib-0.0.0.tgz",
+  "answer": "null"
+ },
+ {
+  "version": "https://example.com/lib-1.0.0.tgz",
+  "answer": "null"
+ },
+ {
+  "version": "http://example.com/lib.tar.gz",
+  "answer": "null"
+ },
+ {
+  "version": "git+https://example.com/lib.git",
+  "answer": "null"
+ },
+ {
+  "version": "github:someone/lib",
+  "answer": "null"
+ },
+ {
+  "version": ".hidden-lib",
+  "answer": "null"
+ },
+ {
+  "version": "C:/lib",
+  "answer": "null"
+ },
+ {
+  "version": "a/b/c",
+  "answer": "null"
+ },
+ {
+  "version": "npm:typescript@^5.5.0",
+  "answer": "null"
+ },
+ {
+  "version": "~1.2.3",
+  "answer": "null"
+ },
+ {
+  "version": "2.9.0",
+  "answer": "null"
+ },
+ {
+  "specifier": "",
+  "answer": "null"
+ },
+ {
+  "specifier": "@scope",
+  "answer": "null"
+ },
+ {
+  "specifier": "dossier/argv",
+  "answer": "null"
+ }
+]

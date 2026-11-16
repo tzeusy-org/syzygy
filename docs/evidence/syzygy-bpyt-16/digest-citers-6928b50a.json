@@ -1,0 +1,46 @@
+{
+ "baseCommit": "d621bfa2",
+ "codeHeadCommit": "6928b50a49b8a06b405892de0580d7c421c52f5e",
+ "populationCommit": "6928b50a49b8a06b405892de0580d7c421c52f5e",
+ "population": "6064 tracked files at the population commit, excluding docs/evidence/syzygy-bpyt-6-3/",
+ "editedProductionFiles": [
+  "packages/three-surface-poc-core/src/markdown-code-context.ts"
+ ],
+ "digests": [
+  {
+   "path": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+   "at": "base",
+   "sha256": "a02c105a483d11a9e90d27aade01ef5ddee6b60b9e165a9a7193c5baaa21f8fe"
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+   "at": "head",
+   "sha256": "93b95f6d4eabc440344404d01040ba1f10bdceb65e69ab74c4ea59c1fa5831f7"
+  }
+ ],
+ "needles": 4,
+ "methods": "one: Python bytes.find over every blob; two: git grep -F -l per needle",
+ "methodsAgree": true,
+ "needlesCited": {
+  "a02c105a483d": [
+   "docs/evidence/fence-rules-review-2026-10-27/r1/comment-only-delta.json",
+   "docs/evidence/fence-rules-review-2026-10-27/r1/comment-only-mutant-typeonly.json",
+   "docs/evidence/fence-rules-review-2026-10-27/r1/comment-only-record-range.json",
+   "docs/evidence/fence-rules-review-2026-10-27/r1/digest-citers-9d9c98a6.json",
+   "docs/evidence/fence-rules-review-2026-10-27/r2/out/co-f74-ba7.json",
+   "docs/evidence/fence-rules-review-2026-10-27/r2/out/ll-f74-ba7.json",
+   "docs/evidence/fence-rules-review-2026-10-27/r2/out/neg-typeonly-co.json",
+   "docs/evidence/fence-rules-review-2026-10-27/r2/out/neg-typeonly-ll.json"
+  ],
+  "a02c105a483d11a9e90d27aade01ef5ddee6b60b9e165a9a7193c5baaa21f8fe": [
+   "docs/evidence/fence-rules-review-2026-10-27/r1/comment-only-delta.json",
+   "docs/evidence/fence-rules-review-2026-10-27/r1/comment-only-mutant-typeonly.json",
+   "docs/evidence/fence-rules-review-2026-10-27/r1/comment-only-record-range.json",
+   "docs/evidence/fence-rules-review-2026-10-27/r1/digest-citers-9d9c98a6.json",
+   "docs/evidence/fence-rules-review-2026-10-27/r2/out/co-f74-ba7.json",
+   "docs/evidence/fence-rules-review-2026-10-27/r2/out/ll-f74-ba7.json",
+   "docs/evidence/fence-rules-review-2026-10-27/r2/out/neg-typeonly-co.json",
+   "docs/evidence/fence-rules-review-2026-10-27/r2/out/neg-typeonly-ll.json"
+  ]
+ }
+}

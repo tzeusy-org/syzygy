@@ -1,0 +1,758 @@
+{
+ "summary": {
+  "commit": "22142d9f8731f1494258bfaa6b58ab0c24a2e607",
+  "population": "546 tracked .ts, .mjs, .cjs files under packages/, apps/, scripts/",
+  "populationFiles": 546,
+  "rows": 40,
+  "named": {
+   "isObj": 3,
+   "isObject": 1,
+   "isRecord": 2,
+   "isoOf": 1,
+   "isIsoDate": 1
+  },
+  "namedTotal": 8,
+  "namedInPackagesAndApps": 7,
+  "namedTests": 2,
+  "shape": 12,
+  "shapeUnderOtherNames": [
+   "apps/three-surface-poc/src/polaris-generation/public-source-screening.ts:167 (anonymous)",
+   "packages/cap1-core/src/declaration.ts:72 isPlainObject",
+   "packages/cap1-daemon/src/consent-loading.ts:124 isPlainObject",
+   "packages/polaris-dossier/src/draft-schema.test.ts:94 refs",
+   "packages/three-surface-poc-core/src/body-read-authority.test.ts:189 isPlainObject",
+   "scripts/differential_line_slot.mjs:73 isTemplate"
+  ],
+  "date": 28
+ },
+ "rows": [
+  {
+   "file": "apps/three-surface-poc/src/block-provenance-sweep.test.ts",
+   "line": 40,
+   "endLine": 42,
+   "name": "isObj",
+   "kinds": [
+    "named",
+    "shape"
+   ],
+   "test": true,
+   "exported": false,
+   "params": [
+    "value: Json | undefined"
+   ],
+   "returnType": "value is Obj",
+   "exactText": "function isObj(value: Json | undefined): value is Obj {\n  return value !== null && value !== undefined && typeof value === 'object' && !Array.isArray(value);\n}",
+   "exactSha256": "b16e0f031852e3f2faacdf2e3794afd0b1453f582eab75d8dfb8cc5e47a96689",
+   "normalizedSha256": "876d552295b166a10951a5a51330282864d36bb07c8995e89839c21a8ec1b2e1"
+  },
+  {
+   "file": "apps/three-surface-poc/src/governing-intent-sweep.test.ts",
+   "line": 39,
+   "endLine": 41,
+   "name": "isObj",
+   "kinds": [
+    "named",
+    "shape"
+   ],
+   "test": true,
+   "exported": false,
+   "params": [
+    "value: Json | undefined"
+   ],
+   "returnType": "value is Obj",
+   "exactText": "function isObj(value: Json | undefined): value is Obj {\n  return value !== null && value !== undefined && typeof value === 'object' && !Array.isArray(value);\n}",
+   "exactSha256": "b16e0f031852e3f2faacdf2e3794afd0b1453f582eab75d8dfb8cc5e47a96689",
+   "normalizedSha256": "876d552295b166a10951a5a51330282864d36bb07c8995e89839c21a8ec1b2e1"
+  },
+  {
+   "file": "apps/three-surface-poc/src/materialize-action.ts",
+   "line": 154,
+   "endLine": 173,
+   "name": "runMaterialize",
+   "kinds": [
+    "date"
+   ],
+   "test": false,
+   "exported": false,
+   "params": [
+    "options: MaterializeRoutesOptions"
+   ],
+   "returnType": "MaterializeResult",
+   "exactText": "function runMaterialize(options: MaterializeRoutesOptions): MaterializeResult {\n  const packet = buildTrajectoryMaterializationPacket(options.getModel());\n  if (packet === null) {\n    return {\n      kind: 'unknown',\n      reason: 'no seed-backed proposed-work graph was evaluated; materialization is disabled',\n    };\n  }\n  const dir = options.stateDir();\n  return materializeWorkItem({\n    targetRepoRoot: options.targetRepoRoot,\n    packet,\n    attribution: MATERIALIZE_ATTRIBUTION,\n    now: () => new Date().toISOString(),\n    readRecord: () => readMaterializationRecordFile(dir),\n    writeRecord: (record) => writeMaterializationRecordFile(dir, record),\n    ...(options.runQuery === undefined ? {} : { runQuery: options.runQuery }),\n    ...(options.runCreate === undefined ? {} : { runCreate: options.runCreate }),\n  });\n}",
+   "exactSha256": "ec84b13b482c7ff94e36be3b6ce679dc152345d930fea5f087386f331249347f",
+   "normalizedSha256": "d417d70d45fa568383e4a03c6dfff40f2c5123de59806e847f4f6732b97442a8"
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-generation/generation-mutation-run-main.ts",
+   "line": 81,
+   "endLine": 91,
+   "name": "parseArgs",
+   "kinds": [
+    "date"
+   ],
+   "test": false,
+   "exported": false,
+   "params": [
+    "argv: readonly string[]"
+   ],
+   "returnType": "{ readonly only: string | undefined; readonly date: string }",
+   "exactText": "function parseArgs(argv: readonly string[]): { readonly only: string | undefined; readonly date: string } {\n  let only: string | undefined;\n  let date = new Date().toISOString().slice(0, 10);\n  for (let index = 0; index < argv.length; index += 1) {\n    const arg = argv[index];\n    if (arg === '--only') only = argv[index + 1];\n    if (arg === '--date') date = argv[index + 1] ?? date;\n    if (arg === '--only' || arg === '--date') index += 1;\n  }\n  return { only, date };\n}",
+   "exactSha256": "8eec45308aa08122b4f59bd62538c42ea03b0aef7c903c70fe8d011f4b47778b",
+   "normalizedSha256": "d439687c2f22ffc4983d2f02a8df9cb757555a495b03da35fb5ce83afe61d263"
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-generation/public-source-screening.ts",
+   "line": 167,
+   "endLine": 167,
+   "name": "(anonymous)",
+   "kinds": [
+    "shape"
+   ],
+   "test": false,
+   "exported": false,
+   "params": [
+    "d: unknown"
+   ],
+   "returnType": null,
+   "exactText": "(d: unknown) => (d !== null && typeof d === 'object' && typeof (d as Record<string, unknown>).id === 'string' ? [(d as Record<string, unknown>).id as string] : [])",
+   "exactSha256": "4d2ce589c3adb3095a5eb1b06464720a7a18136dc4bbbd9e7fad78197c2954fc",
+   "normalizedSha256": "4d2ce589c3adb3095a5eb1b06464720a7a18136dc4bbbd9e7fad78197c2954fc"
+  },
+  {
+   "file": "apps/three-surface-poc/src/pwb-mutation-run-main.ts",
+   "line": 85,
+   "endLine": 95,
+   "name": "parseArgs",
+   "kinds": [
+    "date"
+   ],
+   "test": false,
+   "exported": false,
+   "params": [
+    "argv: readonly string[]"
+   ],
+   "returnType": "{ readonly only: string | undefined; readonly date: string }",
+   "exactText": "function parseArgs(argv: readonly string[]): { readonly only: string | undefined; readonly date: string } {\n  let only: string | undefined;\n  let date = new Date().toISOString().slice(0, 10);\n  for (let index = 0; index < argv.length; index += 1) {\n    const arg = argv[index];\n    if (arg === '--only') only = argv[index + 1];\n    if (arg === '--date') date = argv[index + 1] ?? date;\n    if (arg === '--only' || arg === '--date') index += 1;\n  }\n  return { only, date };\n}",
+   "exactSha256": "8eec45308aa08122b4f59bd62538c42ea03b0aef7c903c70fe8d011f4b47778b",
+   "normalizedSha256": "d439687c2f22ffc4983d2f02a8df9cb757555a495b03da35fb5ce83afe61d263"
+  },
+  {
+   "file": "apps/three-surface-poc/src/pwb-mutation-sweep-main.ts",
+   "line": 79,
+   "endLine": 91,
+   "name": "parseArgs",
+   "kinds": [
+    "date"
+   ],
+   "test": false,
+   "exported": false,
+   "params": [
+    "argv: readonly string[]"
+   ],
+   "returnType": "Args",
+   "exactText": "function parseArgs(argv: readonly string[]): Args {\n  let only: string | undefined;\n  let group: string | undefined;\n  let date = new Date().toISOString().slice(0, 10);\n  for (let index = 0; index < argv.length; index += 1) {\n    const arg = argv[index];\n    if (arg === '--only') only = argv[index + 1];\n    if (arg === '--group') group = argv[index + 1];\n    if (arg === '--date') date = argv[index + 1] ?? date;\n    if (arg === '--only' || arg === '--group' || arg === '--date') index += 1;\n  }\n  return { only, group, date };\n}",
+   "exactSha256": "0ddfab853a76512f51b17b434d393e0e7f3597b93917fc21b3e342fd5d9052c6",
+   "normalizedSha256": "b99decb57c8e477aa1fdbdc61e008a15dbc37060cf4983da0a2ae8eb8d4d3751"
+  },
+  {
+   "file": "apps/three-surface-poc/src/pwb-n8-synthetic-corpus-coverage-matrix-main.ts",
+   "line": 24,
+   "endLine": 33,
+   "name": "parseArgs",
+   "kinds": [
+    "date"
+   ],
+   "test": false,
+   "exported": false,
+   "params": [
+    "argv: readonly string[]"
+   ],
+   "returnType": "{ readonly date: string }",
+   "exactText": "function parseArgs(argv: readonly string[]): { readonly date: string } {\n  let date = new Date().toISOString().slice(0, 10);\n  for (let index = 0; index < argv.length; index += 1) {\n    if (argv[index] === '--date' && argv[index + 1] !== undefined) {\n      date = argv[index + 1] as string;\n      index += 1;\n    }\n  }\n  return { date };\n}",
+   "exactSha256": "0b21b3099d19bc3fc2a10e4e4b87d8941582e1fc15e14392b01acc4ebce01b09",
+   "normalizedSha256": "a88e543c593c7e5923b17ac2c267f76e01bf74f799dbcf7e272829aa0efc0a1a"
+  },
+  {
+   "file": "apps/three-surface-poc/src/trajectory.test.ts",
+   "line": 243,
+   "endLine": 343,
+   "name": "(anonymous)",
+   "kinds": [
+    "date"
+   ],
+   "test": true,
+   "exported": false,
+   "params": [
+    "workerChangeIntentId"
+   ],
+   "returnType": null,
+   "exactText": "(workerChangeIntentId) => {\n    const { repoRoot, revision } = fixtureRepoWithGit(cleanups);\n    writeWorkerChangeSeam(repoRoot, 'x = 1\\n');\n    git(repoRoot, ['add', '-A']);\n    git(repoRoot, ['commit', '-qm', 'fix(whatsapp): normalize single-event sender [bu-verified-1]']);\n    const changedRevision = git(repoRoot, ['rev-parse', 'HEAD']);\n    const changedCommitAuthoredAt = git(repoRoot, ['log', '-1', '--format=%aI', changedRevision]);\n    git(repoRoot, ['update-ref', 'refs/remotes/origin/main', changedRevision]);\n    git(repoRoot, ['symbolic-ref', 'refs/remotes/origin/HEAD', 'refs/remotes/origin/main']);\n\n    const materializationRecord = {\n      beadId: 'bu-verified-1',\n      externalRef: 'syzygy-poc:work:whatsapp-single-event-normalization',\n      targetRepoRoot: repoRoot,\n      createdAt: '2026-08-30T00:00:00Z',\n      doltRevisionAtCreation: 'dolt-rev-1',\n      attribution: 'test-actor',\n    } as const;\n    const rows = [\n      {\n        revision: 'dolt-rev-2',\n        id: 'bu-verified-1',\n        title: 'Materialized work item',\n        status: 'in_progress',\n        issue_type: 'task',\n        priority: 2,\n        created_at: '2026-08-30T00:00:00Z',\n        updated_at: '2026-08-30T00:00:00Z',\n        closed_at: null,\n      },\n    ];\n    const capturedAt = new Date(Date.parse(changedCommitAuthoredAt) + 60 * 60 * 1000).toISOString();\n    const evaluationAsOf = new Date(Date.parse(capturedAt) + 60 * 60 * 1000).toISOString();\n    const alternateSeeds = {\n      ...BUTLERS_POC_SEEDS,\n      project: { ...BUTLERS_POC_SEEDS.project, displayName: 'Alternate project' },\n      workerChangeIntentId,\n    } as const;\n\n    const passing = {\n      command: ['python3', '-m', 'pytest', 'tests/connectors/test_whatsapp_user_client.py', '-q'],\n      exitCode: 0,\n      repositoryCommit: changedRevision,\n      scope: 'tests/connectors/test_whatsapp_user_client.py',\n      digest: 'sha256:' + '2'.repeat(64),\n      summary: '4 passed, 0 failed, 0 errored, 0 skipped in 0.5s',\n    };\n    const reported: TestArtifactRecord = { ...passing, provenance: 'operator-reported', ingestedAt: capturedAt };\n    const build = (seeds: typeof BUTLERS_POC_SEEDS, testArtifactRecord: TestArtifactRecord = reported) => buildPocModel({\n      seeds,\n      repoRoot,\n      repositoryRevision: changedRevision,\n      observerRevision: revision,\n      evaluation: { snapshot: 'butlers@verified', asOf: evaluationAsOf },\n      materializationRecord,\n      runWorkItemQuery: (_repoRoot, sql) =>\n        sql.includes('WHERE id LIKE') ? JSON.stringify(rows) : JSON.stringify([{ revision: 'dolt-rev-2' }]),\n      testArtifactRecord,\n    });\n    // Round-2 note 2: a passing, binding record with no provenance (the\n    // retired spawning capture's shape, or a hand-written file) fails closed.\n    const unmarkedModel = build(alternateSeeds, { ...passing, capturedAt });\n    expect(unmarkedModel.testArtifactVerification).toEqual({ kind: 'unknown', reason: UNMARKED_RECORD_REASON });\n    const unmarkedCard = cardBody(renderTrajectoryPage(unmarkedModel), 'bu-verified-1');\n    expect(unmarkedCard).toContain('Verification: Not verified.');\n    expect(unmarkedCard).not.toContain('Verification: Verified');\n    expect(unmarkedCard).not.toContain('4 passed, 0 failed, 0 errored, 0 skipped in 0.5s');\n    expect(unmarkedModel.unknownSubjects.find((subject) => subject.id === workerChangeVerificationId('bu-verified-1'))?.epistemic.label).toBe('Unknown');\n\n    // Built, not spread: the verification Unknown and its route are model\n    // facts under the disclosure's id (M4 slice 1).\n    const missingIdentityModel = build({ ...alternateSeeds, workerChangeIntentId: '' });\n    expect(missingIdentityModel.governingIntentId).toBeNull();\n    const missingIdentityHtml = renderTrajectoryPage(missingIdentityModel);\n    const missingIdentityCard = cardBody(missingIdentityHtml, 'bu-verified-1');\n    expect(missingIdentityCard).toContain('Verification: Unknown — governing intent identity unavailable');\n    expect(missingIdentityCard).not.toContain('Verification: Verified');\n    expect(missingIdentityCard).not.toContain(BUTLERS_POC_SEEDS.workerChangeIntentId);\n\n    // Round-1 finding 1: the same passing run, reported by the operator,\n    // caps at report-fact (RFC5-19). It renders with the declared Unknown\n    // encoding and its disclosure, never Observed and never \"Verified\".\n    const reportedModel = build(alternateSeeds);\n    expect(reportedModel.testArtifactVerification.kind).toBe('reported');\n    const reportedSubject = reportedModel.unknownSubjects.find((subject) => subject.id === workerChangeVerificationId('bu-verified-1'));\n    expect(reportedSubject?.epistemic.label).toBe('Unknown');\n    // Round-2 note 4: present but not believed, because the run that would\n    // count (one Syzygy launches under a profile) does not launch (RFC5-18).\n    expect(reportedSubject?.epistemic.closedReason).toBe('execution-blocked');\n    const reportedCard = cardBody(renderTrajectoryPage(reportedModel), 'bu-verified-1');\n    const badge = /<span class=\"epistemic [^\"]*\" data-parity-field=\"worker-change-verification\"[^>]*>/.exec(reportedCard)?.[0] ?? '';\n    expect(badge).toContain('class=\"epistemic epistemic-unknown\"');\n    // #383 round 3, note 4: report-fact is a tier of Observed (RFC2-25), so\n    // the Unknown element never carries it as its own tier.\n    expect(badge).not.toContain('data-evidence-tier');\n    expect(reportedCard).not.toContain('data-evidence-tier');\n    expect(reportedCard).toContain('Verification: Not verified by Syzygy — operator-reported (report-fact): 4 passed, 0 failed, 0 errored, 0 skipped in 0.5s.');\n    expect(reportedCard).toContain('That the tests ran, at this commit, on a clean working tree, with exit status 0, is the operator&#39;s report');\n    expect(reportedCard).not.toContain('Verification: Verified');\n    expect(reportedCard).not.toContain('epistemic-observed\" data-parity-field=\"worker-change-verification\"');\n    }",
+   "exactSha256": "b121a848569a3a430c2abebcdf8d5f85924682505d2862a7627797742e9f024c",
+   "normalizedSha256": "45ec174276c218633f0ffcb03f7a7c6ceed594a74daa5102195ce05a40ffa414"
+  },
+  {
+   "file": "packages/cap1-core/src/declaration.ts",
+   "line": 72,
+   "endLine": 74,
+   "name": "isPlainObject",
+   "kinds": [
+    "shape"
+   ],
+   "test": false,
+   "exported": false,
+   "params": [
+    "value: unknown"
+   ],
+   "returnType": "value is Record<string, unknown>",
+   "exactText": "function isPlainObject(value: unknown): value is Record<string, unknown> {\n  return typeof value === 'object' && value !== null && !Array.isArray(value);\n}",
+   "exactSha256": "b6fa25736b47558e7806aa33b36801c1283b7763104a64d3d753603b98ace819",
+   "normalizedSha256": "40a144cec969f4391bedc9f36059f0b52708d48031e58d1085a53b74797f4ac2"
+  },
+  {
+   "file": "packages/cap1-daemon/src/consent-loading.ts",
+   "line": 124,
+   "endLine": 126,
+   "name": "isPlainObject",
+   "kinds": [
+    "shape"
+   ],
+   "test": false,
+   "exported": false,
+   "params": [
+    "value: unknown"
+   ],
+   "returnType": "value is Record<string, unknown>",
+   "exactText": "function isPlainObject(value: unknown): value is Record<string, unknown> {\n  return typeof value === 'object' && value !== null && !Array.isArray(value);\n}",
+   "exactSha256": "b6fa25736b47558e7806aa33b36801c1283b7763104a64d3d753603b98ace819",
+   "normalizedSha256": "40a144cec969f4391bedc9f36059f0b52708d48031e58d1085a53b74797f4ac2"
+  },
+  {
+   "file": "packages/http-host/src/server.ts",
+   "line": 171,
+   "endLine": 190,
+   "name": "emitNonSuccess",
+   "kinds": [
+    "date"
+   ],
+   "test": false,
+   "exported": false,
+   "params": [
+    "input: {\n  readonly method: Route['method'] | 'UNKNOWN';\n  readonly route: string | null;\n  readonly pathLength?: number;\n  readonly response: RouteResponse;\n  readonly reason: 'unknown-route' | 'credential-refused' | 'handler-failure' | 'route-non-success' | 'response-limit-breached';\n}"
+   ],
+   "returnType": "void",
+   "exactText": "function emitNonSuccess(input: {\n  readonly method: Route['method'] | 'UNKNOWN';\n  readonly route: string | null;\n  readonly pathLength?: number;\n  readonly response: RouteResponse;\n  readonly reason: 'unknown-route' | 'credential-refused' | 'handler-failure' | 'route-non-success' | 'response-limit-breached';\n}): void {\n  if (input.response.status < 300 || input.response.status === 304 || input.response.status > 599) return;\n  const diagnostic = safeResponseDiagnostic(input.response);\n  process.stderr.write(`${JSON.stringify({\n    kind: 'daemon-http-outcome',\n    at: new Date().toISOString(),\n    method: input.method,\n    ...(input.route === null ? { pathLength: input.pathLength } : { route: input.route }),\n    status: input.response.status,\n    reason: diagnostic === undefined ? input.reason : 'response-limit-breached',\n    contentType: input.response.contentType === 'application/json' ? 'application/json' : 'other',\n    ...(diagnostic === undefined ? {} : diagnostic),\n  })}\\n`);\n}",
+   "exactSha256": "a4a4c27d9ede9784654d3e068a1d7b34bc20856a659f9098b16cd52cfde08097",
+   "normalizedSha256": "6722a1656f369d69b5fef79f47ceb86fcfb88ce050f1dc309e1b5b5c2770255b"
+  },
+  {
+   "file": "packages/polaris-dossier/src/check.test.ts",
+   "line": 549,
+   "endLine": 549,
+   "name": "instant",
+   "kinds": [
+    "date"
+   ],
+   "test": true,
+   "exported": false,
+   "params": [
+    "file: string"
+   ],
+   "returnType": "number",
+   "exactText": "const instant = (file: string): number => Date.parse(/^Recorded at \\(UTC\\): (\\S+)$/m.exec(fs.readFileSync(file, 'utf8'))?.[1] ?? '');",
+   "exactSha256": "db2e86c4781a9944f216dce92e0b6fa2247cec5dc0cbc5a9ddf4611d78cd652c",
+   "normalizedSha256": "db2e86c4781a9944f216dce92e0b6fa2247cec5dc0cbc5a9ddf4611d78cd652c"
+  },
+  {
+   "file": "packages/polaris-dossier/src/draft-schema.test.ts",
+   "line": 94,
+   "endLine": 95,
+   "name": "refs",
+   "kinds": [
+    "shape"
+   ],
+   "test": true,
+   "exported": false,
+   "params": [
+    "value: unknown"
+   ],
+   "returnType": "string[]",
+   "exactText": "const refs = (value: unknown): string[] => (value !== null && typeof value === 'object'\n    ? Object.entries(value).flatMap(([key, child]) => (key === '$ref' ? [child as string] : refs(child))) : []);",
+   "exactSha256": "6cdcd9c75d4c0a8a81343f3a6b758592f4ffc60335be363376a802e6bf8a9a61",
+   "normalizedSha256": "43a8b70863a06724c041be4046fd31c6b5d179fc4938d0eba0befe61bca15626"
+  },
+  {
+   "file": "packages/polaris-dossier/src/execution-rule.ts",
+   "line": 92,
+   "endLine": 130,
+   "name": "decideExecutionRule",
+   "kinds": [
+    "date"
+   ],
+   "test": false,
+   "exported": true,
+   "params": [
+    "inputs: ExecutionInputs"
+   ],
+   "returnType": "Promise<ExecutionRule>",
+   "exactText": "export async function decideExecutionRule(inputs: ExecutionInputs): Promise<ExecutionRule> {\n  const doctrine = { path: inputs.sec3.path, sha256: inputs.sec3.sha256 };\n  const sec3 = (reasons: readonly string[]): ExecutionRule => ({ arm: 'sec-3', cites: 'SEC-3', doctrine, sec3Head: inputs.sec3.head, notPermittedBecause: reasons });\n  if (inputs.role !== 'authoring') return sec3([`only the authoring session's brief may carry the permission; this is the ${inputs.role} brief`]);\n  if (!inputs.permitting.enabled) return sec3([PERMITTING_ARM_DISABLED_REASON]);\n  const { choices, probe } = inputs.permitting;\n  if (choices === undefined || probe === undefined) return sec3(['the permitting arm is enabled without its choice source or credential probe']);\n\n  const reasons: string[] = [];\n  const launched = inputs.launched();\n  if (launched === 'launched') reasons.push('this run was launched by `syzygy polaris`, and Syzygy never gives the execution instruction to a session it started');\n  if (launched === 'unreadable') reasons.push('the run\\'s launched marker is present but cannot be read as the one `syzygy polaris` writes, so the run is treated as launched');\n  const d9 = await inputs.d9();\n  if (d9.state !== 'ok') reasons.push(`D9 is not established in force: ${d9.why}`);\n  if (inputs.sec3.cost === null) reasons.push(`SEC-3 in ${inputs.sec3.path} carries no cost bullet for the permitted case, so the cost cannot be quoted`);\n  if (inputs.operatorIsOwner !== true) reasons.push('the run configuration does not declare the operator to be the owner');\n  const found = await choices.choiceFor(inputs.runDir);\n  let choice: ExecutionChoice | null = null;\n  if (found.state !== 'ok') {\n    reasons.push(`no execution choice is recorded for this run by allow-execution: ${found.why}`);\n  } else {\n    choice = found.choice;\n    if (choice.command !== 'allow-execution') reasons.push(`the execution choice ${choice.recordId} was not recorded by allow-execution`);\n    if (choice.runId !== inputs.runId) reasons.push(`the execution choice ${choice.recordId} names run ${choice.runId}, not ${inputs.runId}`);\n    if (choice.revision !== inputs.pinnedRevision) reasons.push(`the execution choice ${choice.recordId} names revision ${choice.revision}, not the pinned ${inputs.pinnedRevision}`);\n    const at = Date.parse(choice.recordedAt);\n    if (!/^\\d{4}-\\d{2}-\\d{2}T/.test(choice.recordedAt) || Number.isNaN(at)) reasons.push(`the execution choice ${choice.recordId} carries no readable instant`);\n    else if (at > inputs.now) reasons.push(`the execution choice ${choice.recordId} is dated after the brief`);\n    const declared = choice.declarations;\n    if (declared.ownerStartedSession !== true) reasons.push('the operator has not declared that the owner started the authoring session');\n    if (declared.ownersOwnHost !== true) reasons.push('the operator has not declared that the authoring session runs on the owner\\'s own host');\n    if (declared.ownerAttends !== true) reasons.push('the operator has not declared that the owner attends the authoring session');\n  }\n  const probed = await probe.probe();\n  if (!probed.passed) reasons.push(`the adapter-credential probe did not pass: ${probed.why}`);\n\n  if (reasons.length > 0 || d9.state !== 'ok' || choice === null || !probed.passed || inputs.sec3.cost === null) return sec3(reasons);\n  return { arm: 'permitting', cites: 'SEC-3 (D9)', doctrine, d9: d9.record, choice, choiceLabel: 'Inferred', probe: { checked: probed.checked, source: probed.source }, cost: inputs.sec3.cost };\n}",
+   "exactSha256": "74046a88c37e109c4ede8302752a4b1226d6bd1d96a1e5309d2bd5de36994eb5",
+   "normalizedSha256": "b1ba5a09fa6b5a0a3f2a15fb10f7dafda8fec82ecaf549aecd700430b8925b94"
+  },
+  {
+   "file": "packages/polaris-dossier/src/iso-of.ts",
+   "line": 9,
+   "endLine": 9,
+   "name": "isoOf",
+   "kinds": [
+    "named",
+    "date"
+   ],
+   "test": false,
+   "exported": true,
+   "params": [
+    "instant: number"
+   ],
+   "returnType": "string",
+   "exactText": "export const isoOf = (instant: number): string => new Date(instant).toISOString();",
+   "exactSha256": "1b115c1606de5c41fb39c0c371ae7f73e770ce1f2361baaf305692eb497460ee",
+   "normalizedSha256": "1b115c1606de5c41fb39c0c371ae7f73e770ce1f2361baaf305692eb497460ee"
+  },
+  {
+   "file": "packages/polaris-dossier/src/polaris.ts",
+   "line": 185,
+   "endLine": 193,
+   "name": "stop",
+   "kinds": [
+    "date"
+   ],
+   "test": false,
+   "exported": false,
+   "params": [
+    "options: Options"
+   ],
+   "returnType": "number",
+   "exactText": "function stop(options: Options): number {\n  const state = readState(options.stateRoot, options.run!);\n  if (state === null) return refuse(`no launched run ${options.run} under ${options.stateRoot}`);\n  if (tmuxHas(state.tmuxSession)) spawnSync('tmux', ['kill-session', '-t', state.tmuxSession], { stdio: 'ignore' });\n  state.stopped ??= new Date().toISOString();\n  saveState(options.stateRoot, state);\n  process.stdout.write(`Stopped run ${state.runId}; every session it started has ended.\\n  resume: syzygy polaris --resume ${state.runId}\\n`);\n  return 0;\n}",
+   "exactSha256": "a577f2de8fe8c0f67818f4c4a49093d3862f3da7a55adc3e7b77968eb49a6db4",
+   "normalizedSha256": "8f03323b70c91af392f865d7d55ab9b429ad1b225d31e0324dcb29cd056119a9"
+  },
+  {
+   "file": "packages/polaris-dossier/src/run-record.ts",
+   "line": 143,
+   "endLine": 171,
+   "name": "readSubject",
+   "kinds": [
+    "date"
+   ],
+   "test": false,
+   "exported": false,
+   "params": [
+    "value: unknown"
+   ],
+   "returnType": "RunSubject | string",
+   "exactText": "function readSubject(value: unknown): RunSubject | string {\n  if (!isRecord(value) || !hasKeys(value, ['repository', 'clone', 'pinnedRevision', 'startGates', 'governed', 'providerStatement', 'workItem'])) return 'it must carry exactly repository, clone, pinnedRevision, startGates, governed, providerStatement and workItem';\n  const { repository, clone, pinnedRevision, startGates, governed, providerStatement, workItem } = value;\n  if (!isRecord(repository) || !hasKeys(repository, ['url', 'repositoryId']) || !isText(repository['url']) || !isText(repository['repositoryId'])) return 'repository must carry a url and a repositoryId';\n  const url = dossierRepositoryUrl(repository['url']);\n  if (!url.ok || url.url !== repository['url'] || !/^[a-z0-9][a-z0-9-]*$/.test(repository['repositoryId'])) return 'repository url or repositoryId is malformed';\n  if (!isRecord(clone) || !hasKeys(clone, ['path', 'declaredBy', 'label', 'use']) || clone['declaredBy'] !== 'operator' || clone['label'] !== 'Inferred' || clone['use'] !== 'read') return 'clone must carry its path, declared by the operator, labelled Inferred, for reading only';\n  if (typeof clone['path'] !== 'string' || clone['path'].length > 4096 || path.resolve(clone['path']) !== clone['path'] || clone['path'].includes('\\0')) return 'the clone path is not an absolute, normalised path';\n  if (!isRecord(pinnedRevision) || !hasKeys(pinnedRevision, ['commit', 'label', 'consentRecord', 'pinnedAt'])) return 'pinnedRevision must carry commit, label, consentRecord and pinnedAt';\n  if (typeof pinnedRevision['commit'] !== 'string' || !/^(?:[0-9a-f]{40}|[0-9a-f]{64})$/.test(pinnedRevision['commit'])) return 'the pinned commit is not a full commit identifier';\n  if (!isText(pinnedRevision['label']) || !isText(pinnedRevision['consentRecord'])) return 'the pinned revision must name its label and consent record';\n  if (typeof pinnedRevision['pinnedAt'] !== 'string' || !INSTANT.test(pinnedRevision['pinnedAt']) || Number.isNaN(Date.parse(pinnedRevision['pinnedAt']))) return 'pinnedAt is not a UTC instant';\n  if (!isRecord(startGates) || !hasKeys(startGates, ['registryEntry', 'screeningPolicy']) || !isText(startGates['registryEntry']) || !isText(startGates['screeningPolicy'])) return 'startGates must cite the registry entry and screening policy records';\n  if (!isRecord(governed) || !hasKeys(governed, ['kind', 'because']) || !GOVERNED_KINDS.includes(governed['kind'] as GovernedKind)\n    || !Array.isArray(governed['because']) || governed['because'].length === 0 || !governed['because'].every(isText)) return 'governed must carry a kind and its reasons';\n  const kind = governed['kind'] as GovernedKind;\n  if (providerStatement !== null && !isText(providerStatement)) return 'providerStatement must be a record citation or null';\n  if (kind !== 'non-governed' && providerStatement === null) return `${kind === 'unstated' ? 'an unstated' : 'a governed'} subject must cite the per-project statement it relies on`;\n  if (!isRecord(workItem) || !hasKeys(workItem, ['identity', 'reason']) || workItem['identity'] !== null || workItem['reason'] !== NO_WORK_ITEM_REASON) return 'workItem must record an absent identity with its reason';\n  return {\n    repository: { url: repository['url'], repositoryId: repository['repositoryId'] },\n    clone: { path: clone['path'], declaredBy: 'operator', label: 'Inferred', use: 'read' },\n    pinnedRevision: { commit: pinnedRevision['commit'], label: pinnedRevision['label'], consentRecord: pinnedRevision['consentRecord'], pinnedAt: pinnedRevision['pinnedAt'] },\n    startGates: { registryEntry: startGates['registryEntry'], screeningPolicy: startGates['screeningPolicy'] },\n    governed: { kind, because: [...(governed['because'] as string[])] },\n    providerStatement: providerStatement as string | null,\n    workItem: { identity: null, reason: NO_WORK_ITEM_REASON },\n  };\n}",
+   "exactSha256": "70b32d2141457724e6c6f679b3492a792f6080554d89fb2f5500d0cc72b31e10",
+   "normalizedSha256": "ba0fa2211e36888d4bcfbff0a12c3dd5fd7dae9e50cc3148548f56c1645e4b9b"
+  },
+  {
+   "file": "packages/polaris-dossier/src/status.test.ts",
+   "line": 109,
+   "endLine": 109,
+   "name": "at",
+   "kinds": [
+    "date"
+   ],
+   "test": true,
+   "exported": false,
+   "params": [
+    "instant: string"
+   ],
+   "returnType": null,
+   "exactText": "const at = (instant: string) => runStatus(runDir, () => Date.parse(instant));",
+   "exactSha256": "dc6bdaa9b6c6124e1e74599d9661f37f09e88161514765bfa1ea1c7f55fe02cb",
+   "normalizedSha256": "dc6bdaa9b6c6124e1e74599d9661f37f09e88161514765bfa1ea1c7f55fe02cb"
+  },
+  {
+   "file": "packages/polaris-dossier/src/status.test.ts",
+   "line": 127,
+   "endLine": 131,
+   "name": "status",
+   "kinds": [
+    "date"
+   ],
+   "test": true,
+   "exported": false,
+   "params": [
+    "instant: string"
+   ],
+   "returnType": "Promise<string>",
+   "exactText": "const status = async (instant: string): Promise<string> => {\n      let stdout = '';\n      expect(await runDossierCli(['status', runDir, '--json'], { stdout: (text) => { stdout += text; }, stderr: () => {} }, { now: () => Date.parse(instant) })).toBe(0);\n      return JSON.parse(stdout).executionRecord;\n    };",
+   "exactSha256": "7cfe424a0f8e7b8c1e74d810e4806de7cadf89fe6360db92bdfc31dbca7f7928",
+   "normalizedSha256": "8ff1a908c9220e70ded0a76410b3aaf323f78eda1820ab37ff4db8659dfeb88b"
+  },
+  {
+   "file": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "line": 1050,
+   "endLine": 1054,
+   "name": "(anonymous)",
+   "kinds": [
+    "date"
+   ],
+   "test": true,
+   "exported": false,
+   "params": [
+    "act"
+   ],
+   "returnType": null,
+   "exactText": "async act => {\n      try {\n        return (await reader(world({ [OBSERVATION]: act })).read()).map(r => `${r.recordId}@${r.version} from ${new Date(r.inForceAt!).toISOString()}`).join('; ');\n      } catch (error) { if (error instanceof AdmissionRecordError) return 'refused'; throw error; }\n    }",
+   "exactSha256": "8434f5989292874774725013fcfef1de6bdd7046b41816e461dbcc9af2b56d8d",
+   "normalizedSha256": "b60024459cd41b0cb485a2f7fbd15e41b49a93db4d696b5c71d6dfe20d9f0cbc"
+  },
+  {
+   "file": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "line": 1052,
+   "endLine": 1052,
+   "name": "(anonymous)",
+   "kinds": [
+    "date"
+   ],
+   "test": true,
+   "exported": false,
+   "params": [
+    "r"
+   ],
+   "returnType": null,
+   "exactText": "r => `${r.recordId}@${r.version} from ${new Date(r.inForceAt!).toISOString()}`",
+   "exactSha256": "61a9b8ac15667d45549ff2f6a37d7a3253b6c4d9afc14e865ae769c13f291728",
+   "normalizedSha256": "61a9b8ac15667d45549ff2f6a37d7a3253b6c4d9afc14e865ae769c13f291728"
+  },
+  {
+   "file": "packages/polaris-generation-consent/src/package-reader.ts",
+   "line": 872,
+   "endLine": 895,
+   "name": "readVersionedSignoffState",
+   "kinds": [
+    "date"
+   ],
+   "test": false,
+   "exported": true,
+   "params": [
+    "options: StrictReadOptions & { readonly form: VersionedSignoffForm }"
+   ],
+   "returnType": "Promise<ActState<DigestBoundAct>>",
+   "exactText": "export function readVersionedSignoffState(options: StrictReadOptions & { readonly form: VersionedSignoffForm }): Promise<ActState<DigestBoundAct>> {\n  return strict<DigestBoundAct>(async () => {\n    const fs = options.fs ?? nodeFs, form = options.form;\n    const found = await findActRecords(fs, options.root, { forms: [form], sweep: digestBoundSweep(form, form.installed) });\n    if ('why' in found) return { state: 'refused', why: found.why, namedBy: found.namedBy };\n    const record = found.records.at(-1);\n    if (record === undefined) return { state: 'absent', why: `no owner-act record ${DECISIONS_DIR}/${form.file} exists` };\n    const text = record.text, tag = `${form.packageKey}-v${form.version}`;\n    // The template, built from this form, fixes every literal line: the title, package, version, tag, kind, installed entry, act type,\n    // project, owner, provenance, A1 and scope. The recorder's own input checks (validate_inputs, validate_disposition) follow: the\n    // selection names the Scope A extension, and a disposition record is named exactly when the verdict is CONFIRM WITH EXCEPTIONS\n    // (record() passes one only then; R-POLARIS-DOSSIER-GATE-SOURCES-3 note 3).\n    const slots = fromTemplate(form.template, text);\n    if (!slots['quote']!.includes('Extend Scope A') || (slots['verdict'] === 'CONFIRM WITH EXCEPTIONS') !== (slots['disposition'] !== 'none')) refuse();\n    const date = slots['date']!, digest = slots['sha']!, day = Date.parse(`${date}T00:00:00Z`);\n    if (!Number.isSafeInteger(day) || new Date(day).toISOString().slice(0, 10) !== date) refuse();\n    const act: ParsedAct = { file: form.file, identity: tag, type: 'adopt-registry-entry', artifact: form.installed, project: 'project:syzygy', digest, date, recordedAt: actInstant(text, date), supersession: supersessionText(text), text };\n    let artifactText: string;\n    try { artifactText = await fs.readFile(path.join(options.root, form.installed)); } catch { return { state: 'refused', why: `the signed entry ${form.installed} cannot be read` }; }\n    if (sha256(artifactText) !== digest) return { state: 'refused', why: `the bytes of ${form.installed} differ from the SHA-256 the sign-off records` };\n    if (act.recordedAt > options.now) return { state: 'absent', why: `the sign-off ${tag} is not in force yet` };\n    return { state: 'ok', act, artifactDigest: digest, artifactText };\n  });\n}",
+   "exactSha256": "d320bf7e4f1fb316702f1e1ad4e4fa3c8d4f16f2726bf72bd3bc36dea0bd5172",
+   "normalizedSha256": "8a7cd7285d6d424f0be47fcfb3f483f3cc1f5ae52ad9ea4d9fdc3b71707656c4"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/discovery-provider.ts",
+   "line": 66,
+   "endLine": 68,
+   "name": "isRecord",
+   "kinds": [
+    "named",
+    "shape"
+   ],
+   "test": false,
+   "exported": false,
+   "params": [
+    "value: unknown"
+   ],
+   "returnType": "value is Record<string, unknown>",
+   "exactText": "const isRecord = (value: unknown): value is Record<string, unknown> =>\n  value !== null && typeof value === 'object' && !Array.isArray(value)\n  && [Object.prototype, null].includes(Object.getPrototypeOf(value) as object | null);",
+   "exactSha256": "ee11410dffba4a4cb6da63a22dd39ef4a804bd64cca4f4855ce7e5a16c809587",
+   "normalizedSha256": "6367d37a628c38a9b1f2125d909f2b93e729a3bfb79564e2afaf6ef32d9f0832"
+  },
+  {
+   "file": "packages/support/src/is-record.ts",
+   "line": 7,
+   "endLine": 9,
+   "name": "isRecord",
+   "kinds": [
+    "named",
+    "shape"
+   ],
+   "test": false,
+   "exported": true,
+   "params": [
+    "value: unknown"
+   ],
+   "returnType": "value is Readonly<Record<string, unknown>>",
+   "exactText": "export function isRecord(value: unknown): value is Readonly<Record<string, unknown>> {\n  return value !== null && typeof value === 'object' && !Array.isArray(value);\n}",
+   "exactSha256": "14457d22e0c52291a1609bb2e1b1040482e78cabeaebc53b69a1af5b10b501cc",
+   "normalizedSha256": "1efb6628e1c35677b1da19a0d96e380cdc17cd0ff6a41bb34b02d5ae145cd169"
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/act-fields.ts",
+   "line": 39,
+   "endLine": 41,
+   "name": "isIsoDate",
+   "kinds": [
+    "named",
+    "date"
+   ],
+   "test": false,
+   "exported": true,
+   "params": [
+    "value: string"
+   ],
+   "returnType": "boolean",
+   "exactText": "export function isIsoDate(value: string): boolean {\n  return ISO_DATE.test(value) && !Number.isNaN(Date.parse(`${value}T00:00:00Z`));\n}",
+   "exactSha256": "4849ab4a02385b7af4c0fb0ade4595a3d82a1de83c90047d4df6c36c07d930ba",
+   "normalizedSha256": "3e366e5f66cad5662bdd2fb30c58300169dea3238cb66eab9734346f4b189bc1"
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/body-read-authority.test.ts",
+   "line": 189,
+   "endLine": 191,
+   "name": "isPlainObject",
+   "kinds": [
+    "shape"
+   ],
+   "test": true,
+   "exported": false,
+   "params": [
+    "value: unknown"
+   ],
+   "returnType": "boolean",
+   "exactText": "function isPlainObject(value: unknown): boolean {\n  return typeof value === 'object' && value !== null && !Array.isArray(value);\n}",
+   "exactSha256": "c579c06d8a141f6f3a10e078bc269aeadfe7616e0087b18ec700dcefd8e62467",
+   "normalizedSha256": "64cbf4fe20dd6495dd782805397c61cb82a132b4aea6e736e6b3441bc50ec829"
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+   "line": 348,
+   "endLine": 350,
+   "name": "isIsoInstant",
+   "kinds": [
+    "date"
+   ],
+   "test": false,
+   "exported": false,
+   "params": [
+    "text: string"
+   ],
+   "returnType": "boolean",
+   "exactText": "function isIsoInstant(text: string): boolean {\n  return /^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})$/.test(text) && !Number.isNaN(Date.parse(text));\n}",
+   "exactSha256": "96fd1e3ca38e61e6528b7ae5d88196e6ce3af8c3354bd77178af973777885504",
+   "normalizedSha256": "b528b5686b18784b913582d5b9ca3e7f12ff836ffa4aa49571e8f17890f10538"
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/response-identity.ts",
+   "line": 131,
+   "endLine": 133,
+   "name": "isObject",
+   "kinds": [
+    "named",
+    "shape"
+   ],
+   "test": false,
+   "exported": false,
+   "params": [
+    "value: unknown"
+   ],
+   "returnType": "value is Record<string, unknown>",
+   "exactText": "function isObject(value: unknown): value is Record<string, unknown> {\n  return value !== null && typeof value === 'object' && !Array.isArray(value);\n}",
+   "exactSha256": "c3cd992f30b6979554da6b3cec7a2c62a02104b5b6ff0aed3246a819fe574140",
+   "normalizedSha256": "7fd236adfe4b4322c190c76a3b02dcf4eab99415ab279ddf989347f4158f3171"
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.ts",
+   "line": 444,
+   "endLine": 508,
+   "name": "resolveTestArtifactVerification",
+   "kinds": [
+    "date"
+   ],
+   "test": false,
+   "exported": true,
+   "params": [
+    "input: ResolveTestArtifactVerificationInput"
+   ],
+   "returnType": "TestArtifactVerificationResult",
+   "exactText": "export function resolveTestArtifactVerification(\n  input: ResolveTestArtifactVerificationInput,\n): TestArtifactVerificationResult {\n  if (input.observedCommit === null) {\n    return {\n      kind: 'unknown',\n      reason: 'no observed changed-or-merged commit exists to bind test evidence against',\n    };\n  }\n  if (input.record === null) {\n    return { kind: 'unknown', reason: 'no test artifact has been ingested for this evaluation' };\n  }\n  if (input.record.scope !== input.expectedScope) {\n    return {\n      kind: 'unknown',\n      reason: `test artifact scope (${input.record.scope}) does not match the configured seam (${input.expectedScope})`,\n    };\n  }\n  if (input.record.repositoryCommit !== input.observedCommit) {\n    return {\n      kind: 'unknown',\n      reason: `test artifact commit (${input.record.repositoryCommit}) does not match the observed change commit (${input.observedCommit})`,\n    };\n  }\n  if (input.record.exitCode !== 0) {\n    return {\n      kind: 'unknown',\n      reason: `test artifact reports a non-zero exit status (${input.record.exitCode})`,\n    };\n  }\n  // An operator-reported record has no capture instant, only the ingest\n  // instant. The same two refusals apply to it (an ingest before the commit\n  // existed, or after this evaluation, is impossible honest evidence), but\n  // passing them says nothing about when the tests ran.\n  const reported = isOperatorReported(input.record);\n  const instantName = reported ? 'ingest time' : 'capture time';\n  const instantMs = Date.parse(reported ? input.record.ingestedAt : input.record.capturedAt);\n  if (Number.isNaN(instantMs)) {\n    return { kind: 'unknown', reason: `test artifact ${instantName} is not a valid instant` };\n  }\n  const evaluationAsOfMs = Date.parse(input.evaluationAsOf);\n  if (!Number.isNaN(evaluationAsOfMs) && instantMs > evaluationAsOfMs) {\n    return {\n      kind: 'unknown',\n      reason: `test artifact ${instantName} is after this evaluation (future-dated evidence is treated as stale)`,\n    };\n  }\n  if (input.commitAuthoredAt !== null) {\n    const commitAuthoredAtMs = Date.parse(input.commitAuthoredAt);\n    if (!Number.isNaN(commitAuthoredAtMs) && instantMs < commitAuthoredAtMs) {\n      return {\n        kind: 'unknown',\n        reason: reported\n          ? 'test artifact was ingested before the commit it claims to verify existed'\n          : 'test artifact was captured before the commit it claims to verify existed',\n      };\n    }\n  }\n  if (isOperatorReported(input.record)) {\n    return { kind: 'reported', tier: 'report-fact', record: input.record, disclosure: OPERATOR_REPORTED_DISCLOSURE };\n  }\n  // Round-2 note 2: an unmarked record fails closed, after the checks above\n  // so a mismatched or failing one still names its own defect.\n  return { kind: 'unknown', reason: UNMARKED_RECORD_REASON };\n}",
+   "exactSha256": "04f09879dc5252567df383ada6ceb24c9fe790a2b07a1fe06fa45f6983999fd9",
+   "normalizedSha256": "ad2e500efbe8ce321f432d986749ff154f7de6609684fbdec2a5c7b0e6ad1ea2"
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/trajectory-projection.ts",
+   "line": 55,
+   "endLine": 70,
+   "name": "recordedInstant",
+   "kinds": [
+    "date"
+   ],
+   "test": false,
+   "exported": false,
+   "params": [
+    "value: string | null"
+   ],
+   "returnType": "bigint | null",
+   "exactText": "function recordedInstant(value: string | null): bigint | null {\n  const match = /^(\\d{4})-(\\d{2})-(\\d{2})T([01]\\d|2[0-3]):([0-5]\\d):([0-5]\\d)(?:\\.(\\d{1,9}))?(Z|[+-](?:[01]\\d|2[0-3]):[0-5]\\d)$/.exec(value ?? '');\n  if (match === null) return null;\n  const year = Number(match[1]);\n  const month = Number(match[2]);\n  const day = Number(match[3]);\n  const leap = year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);\n  const days = [31, leap ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];\n  if (month < 1 || month > 12 || day < 1 || day > days[month - 1]!) return null;\n  // Calendar validity is checked before Date.parse, which otherwise rolls\n  // impossible dates forward. Parse whole seconds, retaining up to nine\n  // fractional digits separately so sub-millisecond updates remain ordered.\n  const milliseconds = Date.parse(`${match[1]}-${match[2]}-${match[3]}T${match[4]}:${match[5]}:${match[6]}${match[8]}`);\n  if (!Number.isFinite(milliseconds)) return null;\n  return BigInt(milliseconds) * 1_000_000n + BigInt((match[7] ?? '').padEnd(9, '0'));\n}",
+   "exactSha256": "4b228bd61d622c08f6d9c9ec7af32be4499a3f82317d8f11d91d3ecd6598058a",
+   "normalizedSha256": "7ec441c5a78214385efd57d2ba9ece2481d5d53d801cbc80381bec8b8b5434a8"
+  },
+  {
+   "file": "scripts/differential_consent_act_families.mjs",
+   "line": 70,
+   "endLine": 70,
+   "name": "(anonymous)",
+   "kinds": [
+    "date"
+   ],
+   "test": false,
+   "exported": false,
+   "params": [
+    "at"
+   ],
+   "returnType": null,
+   "exactText": "at => [at, Date.parse(at)]",
+   "exactSha256": "be5e72ff48d42193a8d08b38d4d2efd94464585c2d5efa7714e226e4de9ad7f9",
+   "normalizedSha256": "be5e72ff48d42193a8d08b38d4d2efd94464585c2d5efa7714e226e4de9ad7f9"
+  },
+  {
+   "file": "scripts/differential_consent_act_families.mjs",
+   "line": 546,
+   "endLine": 704,
+   "name": "main",
+   "kinds": [
+    "date"
+   ],
+   "test": false,
+   "exported": false,
+   "params": [
+    "argv"
+   ],
+   "returnType": null,
+   "exactText": "async function main(argv) {\n  const arg = flag => (argv.includes(flag) ? argv[argv.indexOf(flag) + 1] : undefined);\n  const oldTree = arg('--old'), newTree = arg('--new'), out = arg('--out'), bead = arg('--bead'), control = argv.includes('--expect-mismatches');\n  if (oldTree === undefined || newTree === undefined || ((out === undefined || bead === undefined) && !argv.includes('--count')) || (control && arg('--control-note') === undefined)) {\n    process.stderr.write('usage: node scripts/differential_consent_act_families.mjs --old <tree> --new <tree> --out <file.json> --bead <id> [--workers <n>] [--kinds <k,...>] [--count] [--expect-mismatches --control-note <text>]\\n');\n    return 2;\n  }\n  const trees = [path.resolve(oldTree), path.resolve(newTree)], root = trees[0];\n  // Each tree's sources and the compiled files the workers load (N5 of the syzygy-bpyt.8.4 review), and whether its dossier build\n  // resolves the consent package inside its own tree (a fresh worktree without `npm ci` resolves the main checkout's).\n  const FILES = {\n    packageReaderTs: 'packages/polaris-generation-consent/src/package-reader.ts', packageReaderJs: 'packages/polaris-generation-consent/dist/package-reader.js',\n    gateSourcesTs: 'packages/polaris-dossier/src/gate-sources.ts', gateSourcesJs: 'packages/polaris-dossier/dist/gate-sources.js', testingJs: TESTING,\n    consentPortsTs: 'packages/polaris-generation-consent/src/consent-ports.ts', consentPortsJs: 'packages/polaris-generation-consent/dist/consent-ports.js',\n    inForceTs: 'packages/polaris-generation-consent/src/in-force.ts', inForceJs: 'packages/polaris-generation-consent/dist/in-force.js',\n    consentIndexJs: CONSENT_ROOT, consentLiveTs: 'packages/polaris-generation-consent/src/live.ts', consentLiveJs: 'packages/polaris-generation-consent/dist/live.js',\n    screenTs: 'packages/polaris-dossier/src/screen.ts', screenJs: 'packages/polaris-dossier/dist/screen.js',\n  };\n  const inTree = (tree, from, specifier, rel) => fs.realpathSync(createRequire(path.join(tree, from)).resolve(specifier)) === fs.realpathSync(path.join(tree, rel));\n  const binding = await Promise.all(trees.map(async (tree, i) => {\n    const entry = consentEntry(tree), live = entry !== CONSENT_ROOT;\n    const loadedEntry = await import(pathToFileURL(path.join(tree, entry)).href), loadedRoot = await import(pathToFileURL(path.join(tree, CONSENT_ROOT)).href);\n    return {\n      role: i === 0 ? 'old' : 'new',\n      commit: git(tree, 'rev-parse', 'HEAD'),\n      clean: git(tree, 'status', '--porcelain', '--untracked-files=no') === '',\n      sha256: Object.fromEntries(Object.entries(FILES).map(([key, rel]) => [key, fs.existsSync(path.join(tree, rel)) ? sha256(fs.readFileSync(path.join(tree, rel), 'utf8')) : null])),\n      dossierResolvesConsentInsideTree: inTree(tree, FILES.gateSourcesJs, '@syzygy/polaris-generation-consent', CONSENT_ROOT),\n      // The readers' consent module, and, where it is the `./live` subpath, whether the dossier's gate sources and screen resolve that\n      // subpath inside this tree and whether each value it exports is the root's own object (syzygy-bpyt.8.19).\n      consentEntry: entry,\n      liveResolvesInsideTree: live ? [FILES.gateSourcesJs, FILES.screenJs].every(from => inTree(tree, from, '@syzygy/polaris-generation-consent/live', entry)) : null,\n      liveValuesAreRootObjects: live ? Object.keys(loadedEntry).every(name => Object.hasOwn(loadedRoot, name) && loadedRoot[name] === loadedEntry[name]) : null,\n    };\n  }));\n  if (!binding.every(b => b.dossierResolvesConsentInsideTree && b.liveResolvesInsideTree !== false)) throw new Error('a dossier build resolves the consent package outside its own tree');\n  if (binding.some(b => b.liveValuesAreRootObjects === false)) throw new Error('a ./live value is not the consent root\\'s own object');\n  const testing = await import(pathToFileURL(path.join(trees[1], TESTING)).href);\n  if (!Array.isArray(testing.PROSE_ALTERATIONS) || typeof testing.HEAD_FIELD_ALTERATION !== 'function') throw new Error(`${TESTING} in --new exports no PROSE_ALTERATIONS and HEAD_FIELD_ALTERATION`);\n  const NAMED = namedAlterations(testing);\n  const consent = await import(pathToFileURL(path.join(root, 'packages/polaris-generation-consent/dist/index.js')).href);\n  const gate = await import(pathToFileURL(path.join(root, 'packages/polaris-dossier/dist/gate-sources.js')).href);\n  const instance = rel => fs.readFileSync(path.join(root, rel), 'utf8');\n  const firstRow = text => /^\\| `[^`\\n]+` \\| `([0-9a-f]{40})` \\|$/m.exec(text)[1];\n  const repo = text => /^Subject: `\\(project:syzygy, repository:([a-z0-9-]+)\\)`$/m.exec(text)[1];\n  const redis = instance(`${consent.INSTANCES_DIR}/redis/OBSERVATION-CONSENT.md`), requests = instance(`${consent.INSTANCES_DIR}/requests/OBSERVATION-CONSENT.md`);\n  const probe = { redisId: repo(redis), redisRevision: firstRow(redis), redisUrl: /^Upstream: (\\S+)/m.exec(redis)[1], requestsId: repo(requests), requestsRevision: firstRow(requests) };\n\n  const { CITATION_ALLOWLIST } = await import(pathToFileURL(path.join(root, 'packages/polaris-generation-consent/dist/citation-allowlist.js')).href);\n  const built = await corpus(root, consent, gate, CITATION_ALLOWLIST, NAMED), kinds = arg('--kinds')?.split(',');\n  const { subjects, needles, bases, drops, kept, policyBytes } = built, worlds = kinds === undefined ? built.worlds : built.worlds.filter(w => kinds.includes(w.kind));\n  // The consent ports' probe provider and class: those of the first egress record in force in the admission-acts base world at the\n  // later instant (syzygy-bpyt.8.19).\n  const baseRecords = await consent.createPackageAdmissionReader({ root, fs: overlayFs(root, built.baseOverlays['admission-acts']) }).read();\n  const egress = consent.inForceRecords(baseRecords, Date.parse(INSTANT_LATE)).filter(r => r.class === 'egress').sort((a, b) => a.recordId.localeCompare(b.recordId))[0];\n  probe.egress = egress === undefined ? null : { providerId: egress.providerId, contentClass: egress.contentClasses[0] ?? null };\n  // The corpus's digest: each world's kind, subject, operator, base, readers, instants and tree, and each overlaid file's path and the\n  // sha256 of its text, with the reduced tree's dropped files.\n  const layer = overlay => Object.entries(overlay).sort(([a], [b]) => a.localeCompare(b)).map(([rel, text]) => [rel, text === null ? null : sha256(text)]);\n  const corpusSha256 = sha256(JSON.stringify({\n    drops, worlds: worlds.map(w => [w.kind, w.subject, w.operator, w.base, w.readers, w.instants, w.reduced, (w.steps ?? [w.overlay]).map(layer)]),\n  }));\n  if (argv.includes('--count')) {\n    const count = {};\n    for (const w of built.worlds) count[w.kind] = (count[w.kind] ?? 0) + 1;\n    process.stdout.write(`${JSON.stringify({ worlds: built.worlds.length, byKind: count, corpusSha256, needles: needles.length, policyBytes, subjects: subjects.map(x => x.key) })}\\n`);\n    return 0;\n  }\n  const workers = Number(arg('--workers') ?? Math.max(1, Math.min(os.availableParallelism() - 2, 8)));\n  const scratch = fs.mkdtempSync(path.join(os.tmpdir(), 'consent-differential-'));\n  const started = Date.now(), runs = pool(workers, { trees, root, probe, drops, scratch });\n  let done = 0;\n  const results = await Promise.all(worlds.map(async world => {\n    const result = await runs.run(world);\n    done += 1;\n    if (done % 250 === 0) process.stderr.write(`${done}/${worlds.length} worlds, ${Math.round((Date.now() - started) / 1000)} s\\n`);\n    return result;\n  }));\n  await runs.close();\n  const leftOver = fs.readdirSync(scratch).length;\n  fs.rmSync(scratch, { recursive: true, force: true });\n\n  const rows = [], mismatches = [], vectors = new Map(), labelVectors = new Map(), perReader = new Map();\n  for (const [k, world] of worlds.entries()) {\n    const { old: before, new: after } = results[k];\n    const vectorSha = sha256(before.map(([name, sha]) => `${name} ${sha}`).join('\\n'));\n    // The same vector over labels: what each answer says, digests and texts dropped (N6 of the syzygy-bpyt.8.4 review).\n    const labelSha = sha256(before.map(([name, , said]) => `${name} ${said}`).join('\\n'));\n    labelVectors.set(labelSha, (labelVectors.get(labelSha) ?? 0) + 1);\n    for (const [j, [name, sha, said]] of before.entries()) {\n      const [, otherSha, otherSaid] = after[j];\n      if (otherSha !== sha) mismatches.push({ world: k, kind: world.kind, subject: world.subject, operator: world.operator, reader: name, old: { sha256: sha, label: said }, new: { sha256: otherSha, label: otherSaid } });\n      const answers = perReader.get(name) ?? new Map();\n      const entry = answers.get(sha) ?? { sha256: sha, label: said, worlds: 0 };\n      entry.worlds += 1;\n      answers.set(sha, entry);\n      perReader.set(name, answers);\n    }\n    const v = vectors.get(vectorSha) ?? { sha256: vectorSha, worlds: 0, first: k };\n    v.worlds += 1;\n    vectors.set(vectorSha, v);\n    rows.push({ world: k, kind: world.kind, base: world.base, subject: world.subject, operator: world.operator, answers: vectorSha, labels: labelSha, same: before.every(([, sha], j) => after[j][1] === sha) });\n  }\n  const readerNames = [...new Set(results.flatMap(r => r.old.map(([name]) => name)))];\n  // The materialization control (syzygy-bpyt.8.19): in each tree, the policy chain and the class act read from the world on disk give\n  // the answers their ported reads give over the same world.\n  const materialization = { pairs: 0, differing: 0, differences: [], materializedLeftOver: leftOver };\n  for (const [k, world] of worlds.entries()) {\n    for (const role of ['old', 'new']) {\n      const answers = new Map(results[k][role].map(([name, sha, said]) => [name, { sha, said }]));\n      for (const [name, { sha, said }] of answers) {\n        const ported = name.replace(/(^|:)(policy-chain|class-act)-disk@/u, '$1$2@');\n        if (ported === name || !answers.has(ported)) continue;\n        materialization.pairs += 1;\n        if (answers.get(ported).sha === sha) continue;\n        materialization.differing += 1;\n        if (materialization.differences.length < 50) materialization.differences.push({ world: k, kind: world.kind, subject: world.subject, operator: world.operator, tree: role, reader: name, disk: said, ported: answers.get(ported).said });\n      }\n    }\n  }\n  const document = {\n    schema: 'consent-act-family-differential/2',\n    bead,\n    role: control ? 'negative-control' : 'differential',\n    ...(control ? { controlNote: arg('--control-note') } : {}),\n    text: 'Evidence record, not authority: the consent gate\\'s act-record readers in two trees over one corpus. Generated by the script named here; do not edit.',\n    script: { path: SCRIPT_REL, sha256: sha256(fs.readFileSync(SCRIPT, 'utf8')) },\n    trees: binding,\n    corpusRoot: 'old',\n    corpus: { sha256: corpusSha256, alterations: { module: TESTING, tree: 'new', named: NAMED.map(([n]) => n) }, policyBytes },\n    instants: INSTANTS.map(([at]) => at),\n    pool: { workers, node: process.version, wallSeconds: Math.round((Date.now() - started) / 1000) },\n    readers: readerNames,\n    materialization,\n    consentPortsProbe: probe.egress,\n    bases,\n    reducedTree: { kept, dropped: drops.length },\n    subjects: subjects.map(({ key, path: p, base, model, readers: names }) => ({ key, path: p, base, model, readers: names })),\n    needles: needles.length,\n    operators: { line: LINE_OPERATORS.map(([n]) => n), named: NAMED.map(([n]) => n), placements: PLACEMENTS.map(([n]) => n) },\n    totals: {\n      worlds: worlds.length,\n      byKind: Object.fromEntries([...new Set(worlds.map(w => w.kind))].map(kind => [kind, worlds.filter(w => w.kind === kind).length])),\n      answersCompared: results.reduce((n, r) => n + r.old.length, 0),\n      mismatches: mismatches.length,\n      distinctAnswerVectors: vectors.size,\n      distinctLabelVectors: labelVectors.size,\n      worldsWithDistinctVector: [...vectors.values()].filter(v => v.worlds === 1).length,\n      distinctAnswersPerReader: Object.fromEntries([...perReader].map(([name, answers]) => [name, answers.size])),\n      distinctLabelsPerReader: Object.fromEntries([...perReader].map(([name, answers]) => [name, new Set([...answers.values()].map(a => a.label)).size])),\n    },\n    mismatches,\n    answersPerReader: Object.fromEntries([...perReader].map(([name, answers]) => [name, [...answers.values()].sort((a, b) => b.worlds - a.worlds)])),\n    worlds: rows,\n  };\n  fs.writeFileSync(out, `${JSON.stringify(document, null, 1)}\\n`);\n  process.stderr.write(`${worlds.length} worlds, ${document.totals.answersCompared} answers compared, ${mismatches.length} mismatches, ${vectors.size} distinct answer vectors, ${labelVectors.size} distinct label vectors, materialization ${materialization.differing} of ${materialization.pairs} pairs differing\\n`);\n  return (mismatches.length === 0) !== control && materialization.differing === 0 && leftOver === 0 ? 0 : 1;\n}",
+   "exactSha256": "34789bf1ca7c8b4e591b3d95c827d06fecdf34112191111e7811d65bfd83cdb4",
+   "normalizedSha256": "ff2568e1f9ee8757683453bf3da9d955bdb834094bf835fb2616ba2585f93bfa"
+  },
+  {
+   "file": "scripts/differential_line_slot.mjs",
+   "line": 73,
+   "endLine": 73,
+   "name": "isTemplate",
+   "kinds": [
+    "shape"
+   ],
+   "test": false,
+   "exported": false,
+   "params": [
+    "v"
+   ],
+   "returnType": null,
+   "exactText": "const isTemplate = v => v !== null && typeof v === 'object' && typeof v.fields === 'function' && typeof v.render === 'function';",
+   "exactSha256": "95632b83a3bbd66b5951feaae21c4a3f1e6d2b3bd2428f23cfc2c04b83ace46e",
+   "normalizedSha256": "95632b83a3bbd66b5951feaae21c4a3f1e6d2b3bd2428f23cfc2c04b83ace46e"
+  },
+  {
+   "file": "scripts/differential_line_slot.mjs",
+   "line": 119,
+   "endLine": 140,
+   "name": "(anonymous)",
+   "kinds": [
+    "date"
+   ],
+   "test": false,
+   "exported": false,
+   "params": [
+    "job"
+   ],
+   "returnType": null,
+   "exactText": "async job => {\n    const out = [];\n    for (const tree of loaded) {\n      const started = performance.now(), answers = [];\n      if (job.kind === 'templates') {\n        for (const [key, { template }] of tree.templates) {\n          const text = await answer(() => [template.fields(job.text), tree.consent.templateFields(template, job.text)]);\n          answers.push([key, sha256(text), text.startsWith('throws') ? text : JSON.parse(text)[1] === null ? 'refused' : 'read']);\n        }\n      } else {\n        const fs = overlayFs(root, job.overlay);\n        for (const [name, read] of tree.readers) {\n          for (const at of INSTANTS) {\n            const text = await answer(() => read(fs, root, Date.parse(at)));\n            answers.push([`${name}@${at}`, sha256(text), label(text)]);\n          }\n        }\n      }\n      out.push({ answers, ms: Math.round(performance.now() - started) });\n    }\n    parentPort.postMessage({ id: job.id, old: out[0], new: out[1] });\n  }",
+   "exactSha256": "9cbc084d2ceba0a5a614d90bb1fca192d2a2c416b6772aa92fe1e72ab6e7ab29",
+   "normalizedSha256": "0cfb319498d9ad6f5f25e99ebd463e95a848bb1126d529511d3f420387d51c82"
+  },
+  {
+   "file": "scripts/measure_consent_gate_recognition.mjs",
+   "line": 86,
+   "endLine": 91,
+   "name": "read",
+   "kinds": [
+    "date"
+   ],
+   "test": false,
+   "exported": false,
+   "params": [
+    "fs"
+   ],
+   "returnType": null,
+   "exactText": "read: async fs => {\n      try {\n        const records = await consent.createPackageAdmissionReader({ root: R, fs }).read();\n        return `ok ${records.map(r => `${r.recordId}@${r.version} in force from ${r.inForceAt === null ? 'never' : new Date(r.inForceAt).toISOString()}`).join('; ')}`;\n      } catch (error) { return `refused: ${error.message}`; }\n    }",
+   "exactSha256": "87cdb9af7947b0ed200bd39aac927554c5ef28d2679bb4eecf7c76df3a57c5aa",
+   "normalizedSha256": "829a75bcb5980839bc81704f8882af297faf20af19e82768a063309cea78de51"
+  },
+  {
+   "file": "scripts/measure_consent_gate_recognition.mjs",
+   "line": 89,
+   "endLine": 89,
+   "name": "(anonymous)",
+   "kinds": [
+    "date"
+   ],
+   "test": false,
+   "exported": false,
+   "params": [
+    "r"
+   ],
+   "returnType": null,
+   "exactText": "r => `${r.recordId}@${r.version} in force from ${r.inForceAt === null ? 'never' : new Date(r.inForceAt).toISOString()}`",
+   "exactSha256": "1bd5a1509d8161e84e8e789eac26570ad98b2ad29572995276858d67656599b5",
+   "normalizedSha256": "1bd5a1509d8161e84e8e789eac26570ad98b2ad29572995276858d67656599b5"
+  },
+  {
+   "file": "scripts/measure_decisions_sweep.mjs",
+   "line": 41,
+   "endLine": 96,
+   "name": "main",
+   "kinds": [
+    "date"
+   ],
+   "test": false,
+   "exported": false,
+   "params": [
+    "argv"
+   ],
+   "returnType": null,
+   "exactText": "function main(argv) {\n  const arg = flag => (argv.includes(flag) ? argv[argv.indexOf(flag) + 1] : undefined);\n  const oldTree = arg('--old'), newTree = arg('--new'), out = arg('--out'), rounds = Number(arg('--rounds') ?? 8), repository = arg('--repository') ?? 'redis-redis';\n  if (oldTree === undefined || newTree === undefined || out === undefined) {\n    process.stderr.write('usage: node scripts/measure_decisions_sweep.mjs --old <tree> --new <tree> --out <file.json> [--rounds <n>] [--repository <id>]\\n');\n    return 2;\n  }\n  const trees = { old: path.resolve(oldTree), new: path.resolve(newTree) }, root = trees.old;\n  const git = (tree, ...args) => execFileSync('git', ['-C', tree, ...args], { encoding: 'utf8' }).trim();\n  const sample = (role, round) => {\n    const load1Before = os.loadavg()[0], startedAt = new Date().toISOString();\n    const run = spawnSync(process.execPath, [SCRIPT, '--child', trees[role], root, repository], { encoding: 'utf8' });\n    if (run.status !== 0) throw new Error(`the ${role} sample failed: ${run.stderr}`);\n    const { ms, answerSha256 } = JSON.parse(run.stdout);\n    const row = { round, role, ms: Math.round(ms), load1Before: Number(load1Before.toFixed(2)), load1After: Number(os.loadavg()[0].toFixed(2)), startedAt, answerSha256 };\n    process.stderr.write(`${round} ${role} ${row.ms} ms load1 ${row.load1Before}\\n`);\n    return row;\n  };\n  const samples = [];\n  for (let round = 0; round < rounds; round += 1) {\n    for (const role of round % 2 === 0 ? ['old', 'new'] : ['new', 'old']) samples.push(sample(role, round));\n  }\n  const of = role => samples.filter(s => s.role === role);\n  const ratios = Array.from({ length: rounds }, (_, round) => samples.find(s => s.round === round && s.role === 'new').ms / samples.find(s => s.round === round && s.role === 'old').ms).sort((a, b) => a - b);\n  const median = ratios.length % 2 === 1 ? ratios[(ratios.length - 1) / 2] : (ratios[ratios.length / 2 - 1] + ratios[ratios.length / 2]) / 2;\n  const loads = samples.flatMap(s => [s.load1Before, s.load1After]);\n  const newMsMax = Math.max(...of('new').map(s => s.ms)), load1Max = Math.max(...loads);\n  const document = {\n    schema: 'decisions-sweep-measurement/1',\n    bead: 'syzygy-bpyt.8.20',\n    text: 'Evidence record, not authority: whole statementsFor calls over one decisions directory, old tree against new, each in a fresh process, with the host load beside each sample. Generated by the script named here; do not edit.',\n    script: { path: SCRIPT_REL, sha256: sha256(fs.readFileSync(SCRIPT, 'utf8')) },\n    trees: Object.entries(trees).map(([role, tree]) => ({\n      role, commit: git(tree, 'rev-parse', 'HEAD'), clean: git(tree, 'status', '--porcelain', '--untracked-files=no') === '',\n      packageReaderJsSha256: sha256(fs.readFileSync(path.join(tree, 'packages/polaris-generation-consent/dist/package-reader.js'), 'utf8')),\n      gateSourcesJsSha256: sha256(fs.readFileSync(path.join(tree, GATE), 'utf8')),\n    })),\n    recordsRoot: 'old',\n    call: { reader: 'createPackageGateSources(...).providerStatements.statementsFor', repository, now: new Date(NOW).toISOString() },\n    host: { cpus: os.cpus().length, node: process.version, platform: `${os.platform()} ${os.release()}` },\n    rounds,\n    samples,\n    summary: {\n      oldMs: { min: Math.min(...of('old').map(s => s.ms)), max: Math.max(...of('old').map(s => s.ms)) },\n      newMs: { min: Math.min(...of('new').map(s => s.ms)), max: newMsMax },\n      load1: { min: Math.min(...loads), max: load1Max },\n      pairedRatioMedian: Number(median.toFixed(3)),\n      pairedRatios: ratios.map(r => Number(r.toFixed(3))),\n      answersAgree: new Set(samples.map(s => s.answerSha256)).size === 1,\n    },\n    bound: { ...BOUND, holds: newMsMax <= BOUND.newMsMax && load1Max <= BOUND.atLoad1Max && median <= BOUND.medianRatioMax, note: 'computed over every sample; a sample whose load exceeds atLoad1Max is outside the bound\\'s conditions, and the record then does not hold it' },\n  };\n  fs.writeFileSync(out, `${JSON.stringify(document, null, 1)}\\n`);\n  process.stderr.write(`old ${document.summary.oldMs.min}-${document.summary.oldMs.max} ms, new ${document.summary.newMs.min}-${newMsMax} ms, median ratio ${document.summary.pairedRatioMedian}, load1 ${document.summary.load1.min}-${load1Max}, bound holds: ${document.bound.holds}\\n`);\n  return document.summary.answersAgree ? 0 : 1;\n}",
+   "exactSha256": "84b7fb481b54361e7ad1140adfe4a25070ee062fe60cec9ac319b77b8ac21bf9",
+   "normalizedSha256": "e18d23ab4aaaa06ff050b71c0208a53a1b61073b6462c15a4f6a77f44d83bf30"
+  },
+  {
+   "file": "scripts/redis_screening_remeasure.mjs",
+   "line": 326,
+   "endLine": 326,
+   "name": "isObj",
+   "kinds": [
+    "named",
+    "shape"
+   ],
+   "test": false,
+   "exported": false,
+   "params": [
+    "value"
+   ],
+   "returnType": null,
+   "exactText": "const isObj = (value) => value !== null && typeof value === 'object' && !Array.isArray(value);",
+   "exactSha256": "350411b40edb98e732bc0d6c88ccd6f585c9147621debd8af79414340ac688bf",
+   "normalizedSha256": "350411b40edb98e732bc0d6c88ccd6f585c9147621debd8af79414340ac688bf"
+  },
+  {
+   "file": "scripts/redis_screening_remeasure.mjs",
+   "line": 386,
+   "endLine": 545,
+   "name": "measure",
+   "kinds": [
+    "date"
+   ],
+   "test": false,
+   "exported": false,
+   "params": [
+    "options"
+   ],
+   "returnType": null,
+   "exactText": "async function measure(options) {\n  const run = path.resolve(options.run);\n  const runId = path.basename(run);\n  const now = Date.now();\n  const { createPackageGateSources, buildFidelityPacket, buildDossierScreen, loadDossierScreen, openPinnedObjectReader } = await dist('packages/polaris-dossier/dist/index.js');\n  const { collectBlocks, collectCitations } = await dist('packages/polaris-dossier/dist/check.js');\n  const { openRun } = await dist('packages/polaris-dossier/dist/inventory.js');\n  const { POLICY_PATH, readClassActState } = await dist('packages/polaris-generation-consent/dist/index.js');\n  const { spanTouchesWithheld } = await dist('packages/polaris-generation-core/dist/index.js');\n  const sources = createPackageGateSources({ root: ROOT, now: () => now });\n\n  // `path` beside `scriptSha256` lets the evidence-currency sweep re-check the script's bytes in this checkout (rule 11).\n  const syzygy = { commit: git('rev-parse', 'HEAD').trim(), treeClean: git('status', '--porcelain', '--untracked-files=no').trim() === '', path: 'scripts/redis_screening_remeasure.mjs', scriptSha256: sha256(fs.readFileSync(SCRIPT)) };\n  const runRecordBytes = fs.readFileSync(path.join(run, 'run.json'));\n  const runRecord = JSON.parse(runRecordBytes.toString('utf8'));\n  const header = {\n    format: FORMAT,\n    label: 'Observed',\n    measuredAt: new Date(now).toISOString(),\n    syzygy,\n    invocation: {\n      script: 'scripts/redis_screening_remeasure.mjs', runDirectory: options.run, out: options.out,\n      headlineRevision: options.headlineRevision ?? null, supersedes: options.supersedes, syzygyRemeasureRootOverride: ROOT_OVERRIDE,\n    },\n    measuredOn: {\n      runId, runRecordSha256: sha256(runRecordBytes),\n      repository: runRecord.subject?.repository?.url ?? null, pinnedCommit: runRecord.subject?.pinnedRevision?.commit ?? null,\n      pinnedLabel: runRecord.subject?.pinnedRevision?.label ?? null, consentRecordAtPin: runRecord.subject?.pinnedRevision?.consentRecord ?? null,\n      screeningPolicyAtStart: runRecord.subject?.startGates?.screeningPolicy ?? null,\n    },\n    withdrawnMeasurements: options.supersedes.map(supersededRecord),\n    scriptChecks: { atCommit: syzygy.commit, selftestFailures: await selftest(), rule6: runMutants() },\n  };\n\n  // The run's own step gate (P12): the installed read gate, then the deadline. Any refusal stops before any body is read.\n  const step = await gateStep(() => openRun(run, sources, now, 'no re-measure read runs'), header, runId);\n  if (step.stop !== null) return step.stop;\n  const opened = step.opened;\n  const subject = opened.subject;\n\n  // The screens: version 3 from the bytes the retained packets name, and the one in force now.\n  const packets = fs.readdirSync(path.join(run, 'reviews')).filter((name) => /^fidelity-packet-[0-9a-f]{64}$/.test(name)).map((name) => {\n    const bytes = fs.readFileSync(path.join(run, 'reviews', name, 'packet.json'));\n    const doc = JSON.parse(bytes.toString('utf8'));\n    return { dir: name, sha256: sha256(bytes), namedSha256: name.slice('fidelity-packet-'.length), doc };\n  }).sort((x, y) => x.doc.draft.revision - y.doc.draft.revision);\n  const v3Digests = [...new Set(packets.map((packet) => packet.doc.screeningPolicy.sha256))];\n  if (v3Digests.length !== 1) throw new Error(`the retained packets name ${v3Digests.length} policy digests, not one`);\n  const commits = git('log', '--format=%H', '--', POLICY_PATH).trim().split('\\n');\n  const candidates = commits.map((commit) => { try { return { commit, bytes: gitBytes('show', `${commit}:${POLICY_PATH}`) }; } catch { return { commit, bytes: Buffer.alloc(0) }; } });\n  const v3Found = findByDigest(candidates, v3Digests[0]);\n  if (v3Found === undefined) throw new Error('no commit of this checkout holds the policy bytes the retained packets name');\n  const classAct = await readClassActState({ root: ROOT, now });\n  const v3Load = buildDossierScreen(new Uint8Array(v3Found.bytes), classAct.state === 'ok');\n  if (!v3Load.ok) throw new Error(`the version-3 screen does not build: ${v3Load.why}`);\n  const v4Load = await loadDossierScreen(ROOT, now);\n  if (!v4Load.ok) return { exit: 3, texts: [], record: { ...header, gate: { call: 'openRun', ok: true }, screenInForce: { ok: false, why: v4Load.why }, measured: false, bodiesRead: 0 } };\n  const v4 = v4Load.screen;\n  const screens = {\n    v3: { policyId: v3Load.screen.policyId, policyVersion: v3Load.screen.policyVersion, sha256: v3Load.screen.policySha256, foundAtCommit: v3Found.commit, projectDocumentationClassified: v3Load.screen.projectDocumentation, secretRedaction: v3Load.screen.secretRedaction },\n    v4: { policyId: v4.policyId, policyVersion: v4.policyVersion, sha256: v4.policySha256, projectDocumentationClassified: v4.projectDocumentation, secretRedaction: v4.secretRedaction },\n  };\n\n  const reader = openPinnedObjectReader({ gitDir: path.join(subject.clone.path, '.git'), revision: subject.pinnedRevision.commit });\n  const tree = new Map((await reader.listTree()).map((entry) => [entry.path, entry]));\n  const base = fs.mkdtempSync(path.join(os.tmpdir(), 'redis-remeasure-view-'));\n  const texts = [];\n  const revisions = [];\n  const redactedBodies = {};\n  try {\n    for (const retained of packets) {\n      const revision = retained.doc.draft.revision;\n      const viewOpened = await openRun(runView(run, revision, base), sources, now, 'no re-measure read runs');\n      if (!viewOpened.ok) throw new Error(`the view of draft revision ${revision} does not open: ${viewOpened.reason}`);\n      const builtV3 = await buildFidelityPacket(viewOpened, { sources, now: () => now, loadScreen: async () => v3Load });\n      const builtV4 = await buildFidelityPacket(viewOpened, { sources, now: () => now });\n      if (!builtV3.ok || !builtV4.ok) throw new Error(`draft revision ${revision}: the packet does not build (${builtV3.ok ? builtV4.reason : builtV3.reason})`);\n      for (const span of [...builtV3.spans, ...builtV4.spans, ...retained.doc.spans]) if (typeof span.text === 'string') texts.push(span.text);\n\n      const redactedPaths = [...new Set(builtV4.spans.filter((span) => span.redaction !== undefined).map((span) => span.path))];\n      const withheldOf = new Map();\n      if (redactedPaths.length > 0) {\n        for (const blob of await reader.readBlobs(redactedPaths)) {\n          const screened = v4.screenTargetBody(new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(blob.bytes), blob.path);\n          if (screened.kind !== 'redacted') throw new Error(`${blob.path} screened ${screened.kind} on the second read`);\n          withheldOf.set(blob.path, screened.withheld);\n          // Keyed by `redisPath`, never `path` or a path-named key: the evidence-currency sweep would resolve a Redis path here.\n          redactedBodies[blob.path] = { redisPath: blob.path, objectId: tree.get(blob.path).id, contentSha256: screened.contentSha256, lines: screened.retainedLines.length, withheldLines: screened.withheld, detectorIds: screened.detectorIds };\n        }\n      }\n      const v4Cause = (span) => causeOf(span, span.outcome === 'redacted-span' ? redactedCauseWith(spanTouchesWithheld, withheldOf.get(span.path), span.startLine, span.endLine) : undefined);\n      const v3Cause = (span) => causeOf(span);\n      const oracle = compareSpans(builtV3.spans, retained.doc.spans);\n      const readme = (spans, causeFor) => tally(spans.filter((span) => span.path === 'README.md'), causeFor);\n\n      const v3ByKey = new Map(builtV3.spans.map((span) => [spanKey(span.path, span.startLine, span.endLine), { outcome: span.outcome }]));\n      const v4ByKey = new Map(builtV4.spans.map((span) => [spanKey(span.path, span.startLine, span.endLine), { outcome: span.outcome, cause: v4Cause(span) }]));\n      const cited = (doc) => citedOutcomes(collectCitations(doc).map(({ value }) => value), v3ByKey, v4ByKey);\n      const blockCites = new Map(collectBlocks(builtV4.draft.doc).map((block) => [block.value.id, cited({ citations: list(block.value.citations), evidence: list(block.value.evidence) })]));\n      const entryCites = new Map(list(builtV4.inventory.doc.entries).filter(isObj).map((entry) => [entry.id, cited(entry)]));\n      const verdicts = fs.readdirSync(path.join(run, 'reviews', 'checks')).filter((name) => /^fidelity-verdict-\\d+\\.json$/.test(name)).map((name) => ({ name, check: readJson(path.join(run, 'reviews', 'checks', name)) }))\n        .filter(({ check }) => check.outcome === 'validated' && check.packet?.sha256 === retained.namedSha256).sort((x, y) => x.check.number - y.check.number);\n      let verdictRecord = null;\n      if (verdicts.length > 0) {\n        const { name, check } = verdicts[verdicts.length - 1];\n        const verdictBytes = fs.readFileSync(path.join(run, check.verdict.file));\n        const verdict = JSON.parse(verdictBytes.toString('utf8'));\n        const rows = nonPassingRows(verdict);\n        const sorted = {}, byClass = {}, stillBy = {};\n        const stillWithheld = { rows: 0, onlyOutsideByDesign: 0, mixedWithAdmitted: 0, mixedWithRecovered: 0 };\n        for (const row of rows) {\n          const cites = rowSubject(row, blockCites, entryCites);\n          const cls = cites === null ? 'target-not-found' : rowClass(cites);\n          const key = `${row.kind}:${row.value}`;\n          sorted[key] ??= {};\n          sorted[key][cls] = (sorted[key][cls] ?? 0) + 1;\n          byClass[cls] = (byClass[cls] ?? 0) + 1;\n          if (cls !== 'still-cites-a-span-withheld-under-v4') continue;\n          const detail = stillDetail(cites);\n          stillWithheld.rows++;\n          if (detail.onlyOutsideByDesign) stillWithheld.onlyOutsideByDesign++;\n          if (detail.mixedWithAdmitted) stillWithheld.mixedWithAdmitted++;\n          if (detail.mixedWithRecovered) stillWithheld.mixedWithRecovered++;\n          for (const cause of new Set(cites.filter((span) => span.v4 !== 'admitted').map((span) => `${BY_DESIGN.includes(span.path) ? 'by-design' : span.path === 'README.md' ? 'README.md' : 'not-by-design'}:${span.v4Cause}`))) stillBy[cause] = (stillBy[cause] ?? 0) + 1;\n        }\n        const counts = (key, field) => list(verdict[key]).reduce((acc, row) => ({ ...acc, [row[field]]: (acc[row[field]] ?? 0) + 1 }), {});\n        verdictRecord = {\n          verdictFile: check.verdict.file, verdictSha256: sha256(verdictBytes), recordedSha256: check.verdict.sha256, checkFile: `reviews/checks/${name}`,\n          readinessDeclared: verdict.readiness, label: 'Inferred', declaredBy: 'the review session',\n          rows: { blockSupport: counts('blockSupport', 'verdict'), inventoryCoverage: counts('inventoryCoverage', 'disposition'), inventoryAccuracy: counts('inventoryAccuracy', 'accuracy'), findings: counts('findings', 'severity') },\n          nonPassingRows: rows.length, nonPassingRowsByClass: byClass, nonPassingRowsByScreening: sorted,\n          stillWithheld, stillWithheldRowsByCause: stillBy,\n          rowRule: 'nonPassingRows (P9) as review.ts derivedBlocking reads it; a row\\'s cited spans are its subject\\'s own citations in the draft or inventory (P10); an unmatched citation is Unknown (P8, P5); a row counts once per cause it cites in stillWithheldRowsByCause',\n        };\n      }\n      revisions.push({\n        draftRevision: revision, inventoryRevision: builtV4.inventory.revision,\n        draftSha256: builtV4.draft.sha256, inventorySha256: builtV4.inventory.sha256,\n        retainedPacket: { dir: `reviews/${retained.dir}`, sha256: retained.sha256, digestMatchesName: retained.sha256 === retained.namedSha256, spans: tally(retained.doc.spans, v3Cause) },\n        rebuiltV3: { spans: tally(builtV3.spans, v3Cause), spansEqualRetainedPacket: oracle },\n        rebuiltV4: { spans: tally(builtV4.spans, v4Cause) },\n        readme: {\n          v3: readme(builtV3.spans, v3Cause), v4: readme(builtV4.spans, v4Cause),\n          admittedUnderV4: builtV4.spans.filter((span) => span.path === 'README.md' && span.outcome === 'admitted').length,\n          withheldUnderV4: builtV4.spans.filter((span) => span.path === 'README.md' && span.outcome !== 'admitted').map((span) => ({ id: span.id, startLine: span.startLine, endLine: span.endLine, outcome: span.outcome })),\n        },\n        retainedVerdict: verdictRecord,\n      });\n    }\n  } finally { fs.rmSync(base, { recursive: true, force: true }); }\n\n  const chosen = revisions.find((r) => r.draftRevision === (options.headlineRevision ?? revisions[revisions.length - 1].draftRevision));\n  if (chosen === undefined) throw new Error(`no retained packet for draft revision ${options.headlineRevision}`);\n  return { exit: 0, texts, record: {\n    ...header,\n    gate: { call: 'openRun', ok: true, revision: opened.revision, contentClasses: opened.contentClasses },\n    screens, byDesignFiles: BY_DESIGN, redactedBodiesUnderV4: Object.values(redactedBodies), revisions, measured: true,\n    headline: headlineOf(chosen, revisions[revisions.length - 1].draftRevision),\n  } };\n}",
+   "exactSha256": "b325e76f20df0b07d8914cbd6499fa9c2b4a825a27f5c7f217603212f8b68245",
+   "normalizedSha256": "5ff71dd82005c7563e44ef24a713e74b0c413b1a84f0ca97fe381dedb5454596"
+  }
+ ]
+}

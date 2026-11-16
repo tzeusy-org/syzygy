@@ -1,0 +1,227 @@
+{
+ "commit": "fb481b4d3b815e20ceeb245a22f6e8c6e6e32788",
+ "exit": 0,
+ "count": 55,
+ "titles": [
+  [
+   "apps/three-surface-poc/src/browser-origin.test.ts",
+   "browserRequestAllowed \u2014 the Origin is compared whole > allows no Origin and the exact origin of each allowed host"
+  ],
+  [
+   "apps/three-surface-poc/src/browser-origin.test.ts",
+   "browserRequestAllowed \u2014 the Origin is compared whole > refuses an origin that only begins with the host origin"
+  ],
+  [
+   "apps/three-surface-poc/src/browser-origin.test.ts",
+   "browserRequestAllowed \u2014 the Origin is compared whole > refuses an origin that only ends with the host origin, and the opaque origin null"
+  ],
+  [
+   "apps/three-surface-poc/src/browser-origin.test.ts",
+   "browserRequestAllowed \u2014 the Origin is compared whole > refuses an origin that the host origin only begins with"
+  ],
+  [
+   "packages/cap1-daemon/src/server.test.ts",
+   "RT3 \u2014 credential stability across daemon restarts > a restarted daemon reuses the same credential file and token"
+  ],
+  [
+   "packages/cap1-daemon/src/server.test.ts",
+   "RT3 \u2014 credential-classed admission at the transport > a human-open route serves without any credential"
+  ],
+  [
+   "packages/cap1-daemon/src/server.test.ts",
+   "RT3 \u2014 credential-classed admission at the transport > an unknown route is an explicit named 404 body, never silence"
+  ],
+  [
+   "packages/cap1-daemon/src/server.test.ts",
+   "RT3 \u2014 credential-classed admission at the transport > binds 127.0.0.1 only"
+  ],
+  [
+   "packages/cap1-daemon/src/server.test.ts",
+   "RT3 \u2014 credential-classed admission at the transport > logs a 503 breach diagnostic for each listed Unknown population and withholds an unlisted one"
+  ],
+  [
+   "packages/cap1-daemon/src/server.test.ts",
+   "RT3 \u2014 credential-classed admission at the transport > refuses empty bearer token credentials before invoking the handler"
+  ],
+  [
+   "packages/cap1-daemon/src/server.test.ts",
+   "RT3 \u2014 credential-classed admission at the transport > refuses malformed scheme casing credentials before invoking the handler"
+  ],
+  [
+   "packages/cap1-daemon/src/server.test.ts",
+   "RT3 \u2014 credential-classed admission at the transport > refuses missing credentials before invoking the handler"
+  ],
+  [
+   "packages/cap1-daemon/src/server.test.ts",
+   "RT3 \u2014 credential-classed admission at the transport > refuses scheme without separator credentials before invoking the handler"
+  ],
+  [
+   "packages/cap1-daemon/src/server.test.ts",
+   "RT3 \u2014 credential-classed admission at the transport > refuses whitespace-only bearer token credentials before invoking the handler"
+  ],
+  [
+   "packages/cap1-daemon/src/server.test.ts",
+   "RT3 \u2014 credential-classed admission at the transport > refuses wrong bearer token credentials before invoking the handler"
+  ],
+  [
+   "packages/cap1-daemon/src/server.test.ts",
+   "RT3 \u2014 credential-classed admission at the transport > refuses wrong scheme credentials before invoking the handler"
+  ],
+  [
+   "packages/cap1-daemon/src/server.test.ts",
+   "RT3 \u2014 credential-classed admission at the transport > refuses wrong-length bearer token credentials before invoking the handler"
+  ],
+  [
+   "packages/cap1-daemon/src/server.test.ts",
+   "RT3 \u2014 credential-classed admission at the transport > the correct bearer token (read from the credential file) admits and the handler runs"
+  ],
+  [
+   "packages/cap1-daemon/src/server.test.ts",
+   "RT3 \u2014 credential-classed admission at the transport > writes one content-blind JSONL diagnostic per non-2xx socket outcome and none for success"
+  ],
+  [
+   "packages/cap1-daemon/src/server.test.ts",
+   "RT3 \u2014 startup failure arms are named > a second private daemon on the same port reports a bind failure with an available code"
+  ],
+  [
+   "packages/cap1-daemon/src/server.test.ts",
+   "RT3 \u2014 startup failure arms are named > an unprovisionable credential refuses to start, named"
+  ],
+  [
+   "packages/cap1-daemon/src/server.test.ts",
+   "RT3 \u2014 startup failure arms are named > two routes on one (method, path) refuse to start, named"
+  ],
+  [
+   "packages/cap1-daemon/src/server.test.ts",
+   "RT3 \u2014 startup write boundary (harness-external snapshot diff) > daemon startup writes nothing outside the state directory"
+  ],
+  [
+   "packages/cap1-daemon/src/server.test.ts",
+   "RT3 \u2014 the minimal root route > serves a plain served-facts statement for an evaluated project"
+  ],
+  [
+   "packages/cap1-daemon/src/server.test.ts",
+   "RT3 \u2014 the minimal root route > states a missing declaration honestly, with its verbatim reason"
+  ],
+  [
+   "packages/http-host/src/credentials.test.ts",
+   "RT3 \u2014 credential provisioning > an existing empty credential file is a named failure, never a silent re-mint"
+  ],
+  [
+   "packages/http-host/src/credentials.test.ts",
+   "RT3 \u2014 credential provisioning > first start mints a random token, persisted with mode 0600"
+  ],
+  [
+   "packages/http-host/src/credentials.test.ts",
+   "RT3 \u2014 credential provisioning > restart reuses the persisted token unchanged"
+  ],
+  [
+   "packages/http-host/src/credentials.test.ts",
+   "RT3 \u2014 credential provisioning > two distinct state dirs mint distinct tokens"
+  ],
+  [
+   "packages/http-host/src/credentials.test.ts",
+   "RT3 \u2014 credential reuse inspection > accepts an 0600 file in an 0700 directory"
+  ],
+  [
+   "packages/http-host/src/credentials.test.ts",
+   "RT3 \u2014 credential reuse inspection > accepts an 0600 file in an 0755 directory: others may list it, not read the token"
+  ],
+  [
+   "packages/http-host/src/credentials.test.ts",
+   "RT3 \u2014 credential reuse inspection > refuses a dangling symlink rather than minting through it"
+  ],
+  [
+   "packages/http-host/src/credentials.test.ts",
+   "RT3 \u2014 credential reuse inspection > refuses a file owned by another uid (injected stat)"
+  ],
+  [
+   "packages/http-host/src/credentials.test.ts",
+   "RT3 \u2014 credential reuse inspection > refuses a group-readable 0640 file"
+  ],
+  [
+   "packages/http-host/src/credentials.test.ts",
+   "RT3 \u2014 credential reuse inspection > refuses a group-writable 0775 directory"
+  ],
+  [
+   "packages/http-host/src/credentials.test.ts",
+   "RT3 \u2014 credential reuse inspection > refuses a state directory owned by another uid (injected stat)"
+  ],
+  [
+   "packages/http-host/src/credentials.test.ts",
+   "RT3 \u2014 credential reuse inspection > refuses a state directory that is not a directory (injected stat)"
+  ],
+  [
+   "packages/http-host/src/credentials.test.ts",
+   "RT3 \u2014 credential reuse inspection > refuses a symlinked credential file without following it"
+  ],
+  [
+   "packages/http-host/src/credentials.test.ts",
+   "RT3 \u2014 credential reuse inspection > refuses a symlinked state directory"
+  ],
+  [
+   "packages/http-host/src/credentials.test.ts",
+   "RT3 \u2014 credential reuse inspection > refuses a world-writable 0777 directory"
+  ],
+  [
+   "packages/http-host/src/credentials.test.ts",
+   "RT3 \u2014 credential reuse inspection > refuses an other-readable 0644 file"
+  ],
+  [
+   "packages/http-host/src/credentials.test.ts",
+   "RT3 \u2014 credential reuse inspection > refuses every reuse when the platform reports no process uid"
+  ],
+  [
+   "packages/http-host/src/credentials.test.ts",
+   "RT3 \u2014 credential reuse inspection > the six refusals carry six distinct details"
+  ],
+  [
+   "packages/http-host/src/credentials.test.ts",
+   "RT3 \u2014 credential verification through core admission > a correct bearer header is admitted as a machine client"
+  ],
+  [
+   "packages/http-host/src/credentials.test.ts",
+   "RT3 \u2014 credential verification through core admission > a missing header is a non-presented credential and refuses, named"
+  ],
+  [
+   "packages/http-host/src/credentials.test.ts",
+   "RT3 \u2014 credential verification through core admission > a wrong token refuses with the named vocabulary, never a bare string"
+  ],
+  [
+   "packages/http-host/src/credentials.test.ts",
+   "RT3 \u2014 credential verification through core admission > non-Bearer and empty-token headers refuse, named"
+  ],
+  [
+   "packages/http-host/src/credentials.test.ts",
+   "RT3 \u2014 credential verification through core admission > the minted token behind any other whitespace refuses, named"
+  ],
+  [
+   "packages/http-host/src/credentials.test.ts",
+   "RT3 \u2014 state-write boundary > authorizes a plain file name inside the state dir"
+  ],
+  [
+   "packages/http-host/src/credentials.test.ts",
+   "RT3 \u2014 state-write boundary > refuses a sibling directory whose name extends the state dir name, as traversal"
+  ],
+  [
+   "packages/http-host/src/credentials.test.ts",
+   "RT3 \u2014 state-write boundary > refuses a sibling whose name differs from the state dir name only in case, as traversal"
+  ],
+  [
+   "packages/http-host/src/credentials.test.ts",
+   "RT3 \u2014 state-write boundary > refuses a symlink escape, named"
+  ],
+  [
+   "packages/http-host/src/credentials.test.ts",
+   "RT3 \u2014 state-write boundary > refuses a symlink into a sibling whose name extends the state dir name, named"
+  ],
+  [
+   "packages/http-host/src/credentials.test.ts",
+   "RT3 \u2014 state-write boundary > refuses empty and self-naming candidates, named"
+  ],
+  [
+   "packages/http-host/src/credentials.test.ts",
+   "RT3 \u2014 state-write boundary > refuses traversal out of the state dir, named"
+  ]
+ ]
+}

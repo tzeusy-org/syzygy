@@ -1,0 +1,81 @@
+{
+ "subject": "mutate_non_human_principal.py --selftest",
+ "commit": "bf5f5263a04677e90aaaa4946308651e70046767",
+ "harnessDigest": "6d7ab39a9ac1ceeb74e66a2031848b3269e3194e5c7f36aed8a3868d3da20f92",
+ "ruleArms": "^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$",
+ "cases": [
+  {
+   "predicate": "load_rule",
+   "mutation": "the rule has a fifth word in the model-name arm",
+   "old": "llm",
+   "new": "llm|gemini",
+   "unmutatedPasses": true,
+   "mutatedRefused": true
+  },
+  {
+   "predicate": "load_rule",
+   "mutation": "the rule loses its end anchor on the suffix arm",
+   "old": "|(?:\\[bot\\]|-bot|-agent)$",
+   "new": "|(?:\\[bot\\]|-bot|-agent)",
+   "unmutatedPasses": true,
+   "mutatedRefused": true
+  },
+  {
+   "predicate": "load_rule",
+   "mutation": "the rule literal is missing",
+   "old": "export const NON_HUMAN_PRINCIPAL",
+   "new": "export const OTHER",
+   "unmutatedPasses": true,
+   "mutatedRefused": true
+  },
+  {
+   "predicate": "load_rule",
+   "mutation": "the rule literal occurs twice",
+   "old": "one literal",
+   "new": "two literals",
+   "unmutatedPasses": true,
+   "mutatedRefused": true
+  },
+  {
+   "predicate": "require_changed",
+   "mutation": "a mutant whose literal equals the original",
+   "old": "new_literal != literal",
+   "new": "new_literal == literal",
+   "unmutatedPasses": true,
+   "mutatedRefused": true
+  },
+  {
+   "predicate": "require_same_total",
+   "mutation": "a mutant that ran fewer tests than the baseline",
+   "old": "total 463",
+   "new": "total 0",
+   "unmutatedPasses": true,
+   "mutatedRefused": true
+  },
+  {
+   "predicate": "require_same_total",
+   "mutation": "a mutant that ran more tests than the baseline",
+   "old": "total 463",
+   "new": "total 464",
+   "unmutatedPasses": true,
+   "mutatedRefused": true
+  },
+  {
+   "predicate": "require_restored",
+   "mutation": "a rule file whose digest differs after the restore",
+   "old": "digest d1",
+   "new": "digest d2",
+   "unmutatedPasses": true,
+   "mutatedRefused": true
+  },
+  {
+   "predicate": "require_restored",
+   "mutation": "the file on disk gains a trailing newline",
+   "old": "bytes as written",
+   "new": "bytes plus one newline",
+   "unmutatedPasses": true,
+   "mutatedRefused": true
+  }
+ ],
+ "allRefused": true
+}

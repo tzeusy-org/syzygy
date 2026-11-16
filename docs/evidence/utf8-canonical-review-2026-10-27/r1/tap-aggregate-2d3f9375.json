@@ -1,0 +1,555 @@
+{
+ "files": 71,
+ "linesRead": 5205,
+ "byOriginAndEncoder": [
+  {
+   "origin": "production",
+   "encoder": "lenient",
+   "calls": 1433,
+   "same": 679,
+   "different": 754
+  },
+  {
+   "origin": "production",
+   "encoder": "strict",
+   "calls": 2454,
+   "same": 2453,
+   "different": 1
+  },
+  {
+   "origin": "test",
+   "encoder": "lenient",
+   "calls": 628,
+   "same": 610,
+   "different": 18
+  },
+  {
+   "origin": "test",
+   "encoder": "strict",
+   "calls": 690,
+   "same": 643,
+   "different": 47
+  }
+ ],
+ "callers": [
+  {
+   "origin": "production",
+   "kind": "lenient",
+   "caller": "packages/three-surface-poc-core/src/project-shape-manifest.ts:canonicalManifestJson",
+   "calls": 297,
+   "same": 297,
+   "different": 0,
+   "distinctInputs": 61,
+   "maxNodes": 272,
+   "whyDifferent": {},
+   "outcomesWhenDifferent": {}
+  },
+  {
+   "origin": "production",
+   "kind": "lenient",
+   "caller": "packages/three-surface-poc-core/src/project-shape-observation.ts:observeProjectShapeSources",
+   "calls": 269,
+   "same": 79,
+   "different": 190,
+   "distinctInputs": 51,
+   "maxNodes": 525,
+   "whyDifferent": {
+    "undefinedValue": 190
+   },
+   "outcomesWhenDifferent": {
+    "lenient=ok strict=unsupported-value": 190
+   }
+  },
+  {
+   "origin": "production",
+   "kind": "lenient",
+   "caller": "packages/three-surface-poc-core/src/project-shape-observation.ts:resourceLimitsDigest",
+   "calls": 270,
+   "same": 270,
+   "different": 0,
+   "distinctInputs": 5,
+   "maxNodes": 8,
+   "whyDifferent": {},
+   "outcomesWhenDifferent": {}
+  },
+  {
+   "origin": "production",
+   "kind": "lenient",
+   "caller": "packages/three-surface-poc-core/src/response-identity.ts:buildResponseIdentity",
+   "calls": 586,
+   "same": 22,
+   "different": 564,
+   "distinctInputs": 538,
+   "maxNodes": 13874,
+   "whyDifferent": {
+    "undefinedValue": 563,
+    "bigint": 1
+   },
+   "outcomesWhenDifferent": {
+    "lenient=ok strict=unsupported-value": 563,
+    "lenient=TypeError strict=unsupported-value": 1
+   }
+  },
+  {
+   "origin": "production",
+   "kind": "lenient",
+   "caller": "packages/three-surface-poc-core/src/walkthrough-readiness.ts:walkthroughEvaluationIdentity",
+   "calls": 11,
+   "same": 11,
+   "different": 0,
+   "distinctInputs": 9,
+   "maxNodes": 27,
+   "whyDifferent": {},
+   "outcomesWhenDifferent": {}
+  },
+  {
+   "origin": "production",
+   "kind": "strict",
+   "caller": "apps/three-surface-poc/src/polaris-generation/pipeline-demo.ts:runSyntheticProject",
+   "calls": 32,
+   "same": 32,
+   "different": 0,
+   "distinctInputs": 3,
+   "maxNodes": 10,
+   "whyDifferent": {},
+   "outcomesWhenDifferent": {}
+  },
+  {
+   "origin": "production",
+   "kind": "strict",
+   "caller": "packages/polaris-generation-consent/src/consent-ports.ts:identityOf",
+   "calls": 75,
+   "same": 75,
+   "different": 0,
+   "distinctInputs": 7,
+   "maxNodes": 13,
+   "whyDifferent": {},
+   "outcomesWhenDifferent": {}
+  },
+  {
+   "origin": "production",
+   "kind": "strict",
+   "caller": "packages/polaris-generation-consent/src/consent-ports.ts:populationDigest",
+   "calls": 108,
+   "same": 108,
+   "different": 0,
+   "distinctInputs": 19,
+   "maxNodes": 90,
+   "whyDifferent": {},
+   "outcomesWhenDifferent": {}
+  },
+  {
+   "origin": "production",
+   "kind": "strict",
+   "caller": "packages/polaris-generation-core/src/discovery-provider.ts:envelopeFor",
+   "calls": 11,
+   "same": 11,
+   "different": 0,
+   "distinctInputs": 6,
+   "maxNodes": 53,
+   "whyDifferent": {},
+   "outcomesWhenDifferent": {}
+  },
+  {
+   "origin": "production",
+   "kind": "strict",
+   "caller": "packages/polaris-generation-core/src/discovery.ts:providerCall",
+   "calls": 220,
+   "same": 220,
+   "different": 0,
+   "distinctInputs": 113,
+   "maxNodes": 797,
+   "whyDifferent": {},
+   "outcomesWhenDifferent": {}
+  },
+  {
+   "origin": "production",
+   "kind": "strict",
+   "caller": "packages/polaris-generation-core/src/dossier-evaluation.ts:admittedSourcesDigest",
+   "calls": 72,
+   "same": 72,
+   "different": 0,
+   "distinctInputs": 12,
+   "maxNodes": 81,
+   "whyDifferent": {},
+   "outcomesWhenDifferent": {}
+  },
+  {
+   "origin": "production",
+   "kind": "strict",
+   "caller": "packages/polaris-generation-core/src/dossier-evaluation.ts:evaluateDossier",
+   "calls": 3,
+   "same": 3,
+   "different": 0,
+   "distinctInputs": 3,
+   "maxNodes": 2,
+   "whyDifferent": {},
+   "outcomesWhenDifferent": {}
+  },
+  {
+   "origin": "production",
+   "kind": "strict",
+   "caller": "packages/polaris-generation-core/src/dossier-evaluation.ts:scriptedAnswers",
+   "calls": 5,
+   "same": 5,
+   "different": 0,
+   "distinctInputs": 5,
+   "maxNodes": 20,
+   "whyDifferent": {},
+   "outcomesWhenDifferent": {}
+  },
+  {
+   "origin": "production",
+   "kind": "strict",
+   "caller": "packages/polaris-generation-core/src/pipeline.ts:keyOf",
+   "calls": 32,
+   "same": 32,
+   "different": 0,
+   "distinctInputs": 10,
+   "maxNodes": 42,
+   "whyDifferent": {},
+   "outcomesWhenDifferent": {}
+  },
+  {
+   "origin": "production",
+   "kind": "strict",
+   "caller": "packages/polaris-generation-core/src/pipeline.ts:runGenerationPipeline",
+   "calls": 234,
+   "same": 234,
+   "different": 0,
+   "distinctInputs": 204,
+   "maxNodes": 3456,
+   "whyDifferent": {},
+   "outcomesWhenDifferent": {}
+  },
+  {
+   "origin": "production",
+   "kind": "strict",
+   "caller": "packages/polaris-generation-core/src/pipeline.ts:stage",
+   "calls": 1634,
+   "same": 1633,
+   "different": 1,
+   "distinctInputs": 450,
+   "maxNodes": 1769,
+   "whyDifferent": {
+    "nonPlainObject": 1
+   },
+   "outcomesWhenDifferent": {
+    "lenient=ok strict=unsupported-object": 1
+   }
+  },
+  {
+   "origin": "production",
+   "kind": "strict",
+   "caller": "packages/polaris-generation-core/src/rendered-design.ts:renderedDesignSubjectDigest",
+   "calls": 1,
+   "same": 1,
+   "different": 0,
+   "distinctInputs": 1,
+   "maxNodes": 155,
+   "whyDifferent": {},
+   "outcomesWhenDifferent": {}
+  },
+  {
+   "origin": "production",
+   "kind": "strict",
+   "caller": "packages/polaris-generation-core/src/rendered-design.ts:renderedDesignVerdict",
+   "calls": 27,
+   "same": 27,
+   "different": 0,
+   "distinctInputs": 2,
+   "maxNodes": 155,
+   "whyDifferent": {},
+   "outcomesWhenDifferent": {}
+  },
+  {
+   "origin": "test",
+   "kind": "lenient",
+   "caller": "apps/three-surface-poc/src/canonical-json-divergence.test.ts:lenient",
+   "calls": 627,
+   "same": 609,
+   "different": 18,
+   "distinctInputs": 257,
+   "maxNodes": 48,
+   "whyDifferent": {
+    "orderSensitiveIntegerKeys": 1,
+    "undefinedValue": 4,
+    "functionValue": 1,
+    "nonFinite": 2,
+    "nonPlainObject": 3,
+    "accessor": 1,
+    "sparse": 1,
+    "symbolKey": 1,
+    "forbiddenKey": 2,
+    "bigint": 1,
+    "no-flag": 1,
+    "cycle": 1
+   },
+   "outcomesWhenDifferent": {
+    "lenient=ok strict=ok": 1,
+    "lenient=ok strict=unsupported-value": 5,
+    "lenient=returned-non-string strict=unsupported-value": 1,
+    "lenient=ok strict=unsupported-object": 4,
+    "lenient=ok strict=unsupported-property": 5,
+    "lenient=TypeError strict=unsupported-value": 1,
+    "lenient=RangeError strict=cycle": 1
+   }
+  },
+  {
+   "origin": "test",
+   "kind": "lenient",
+   "caller": "packages/three-surface-poc-core/src/response-identity.test.ts:/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-534/tap/packages/three-surface-poc-core/src/response-identity.test.ts:90:60",
+   "calls": 1,
+   "same": 1,
+   "different": 0,
+   "distinctInputs": 1,
+   "maxNodes": 45,
+   "whyDifferent": {},
+   "outcomesWhenDifferent": {}
+  },
+  {
+   "origin": "test",
+   "kind": "strict",
+   "caller": "apps/three-surface-poc/src/canonical-json-divergence.test.ts:strict",
+   "calls": 630,
+   "same": 612,
+   "different": 18,
+   "distinctInputs": 260,
+   "maxNodes": 48,
+   "whyDifferent": {
+    "orderSensitiveIntegerKeys": 1,
+    "undefinedValue": 4,
+    "functionValue": 1,
+    "nonFinite": 2,
+    "nonPlainObject": 3,
+    "accessor": 1,
+    "sparse": 1,
+    "symbolKey": 1,
+    "forbiddenKey": 2,
+    "bigint": 1,
+    "no-flag": 1,
+    "cycle": 1
+   },
+   "outcomesWhenDifferent": {
+    "lenient=ok strict=ok": 1,
+    "lenient=ok strict=unsupported-value": 5,
+    "lenient=returned-non-string strict=unsupported-value": 1,
+    "lenient=ok strict=unsupported-object": 4,
+    "lenient=ok strict=unsupported-property": 5,
+    "lenient=TypeError strict=unsupported-value": 1,
+    "lenient=RangeError strict=cycle": 1
+   }
+  },
+  {
+   "origin": "test",
+   "kind": "strict",
+   "caller": "packages/polaris-generation-core/src/canonical-json.test.ts:/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-534/tap/packages/polaris-generation-core/src/canonical-json.test.ts:12:12",
+   "calls": 1,
+   "same": 1,
+   "different": 0,
+   "distinctInputs": 1,
+   "maxNodes": 9,
+   "whyDifferent": {},
+   "outcomesWhenDifferent": {}
+  },
+  {
+   "origin": "test",
+   "kind": "strict",
+   "caller": "packages/polaris-generation-core/src/canonical-json.test.ts:/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-534/tap/packages/polaris-generation-core/src/canonical-json.test.ts:12:56",
+   "calls": 1,
+   "same": 1,
+   "different": 0,
+   "distinctInputs": 1,
+   "maxNodes": 9,
+   "whyDifferent": {},
+   "outcomesWhenDifferent": {}
+  },
+  {
+   "origin": "test",
+   "kind": "strict",
+   "caller": "packages/polaris-generation-core/src/canonical-json.test.ts:/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-534/tap/packages/polaris-generation-core/src/canonical-json.test.ts:13:12",
+   "calls": 1,
+   "same": 1,
+   "different": 0,
+   "distinctInputs": 1,
+   "maxNodes": 3,
+   "whyDifferent": {},
+   "outcomesWhenDifferent": {}
+  },
+  {
+   "origin": "test",
+   "kind": "strict",
+   "caller": "packages/polaris-generation-core/src/canonical-json.test.ts:/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-534/tap/packages/polaris-generation-core/src/canonical-json.test.ts:13:61",
+   "calls": 1,
+   "same": 1,
+   "different": 0,
+   "distinctInputs": 1,
+   "maxNodes": 3,
+   "whyDifferent": {},
+   "outcomesWhenDifferent": {}
+  },
+  {
+   "origin": "test",
+   "kind": "strict",
+   "caller": "packages/polaris-generation-core/src/canonical-json.test.ts:/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-534/tap/packages/polaris-generation-core/src/canonical-json.test.ts:18:12",
+   "calls": 1,
+   "same": 1,
+   "different": 0,
+   "distinctInputs": 1,
+   "maxNodes": 1,
+   "whyDifferent": {},
+   "outcomesWhenDifferent": {}
+  },
+  {
+   "origin": "test",
+   "kind": "strict",
+   "caller": "packages/polaris-generation-core/src/canonical-json.test.ts:/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-534/tap/packages/polaris-generation-core/src/canonical-json.test.ts:68:12",
+   "calls": 1,
+   "same": 1,
+   "different": 0,
+   "distinctInputs": 1,
+   "maxNodes": 1,
+   "whyDifferent": {},
+   "outcomesWhenDifferent": {}
+  },
+  {
+   "origin": "test",
+   "kind": "strict",
+   "caller": "packages/polaris-generation-core/src/canonical-json.test.ts:/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-534/tap/packages/polaris-generation-core/src/canonical-json.test.ts:69:18",
+   "calls": 1,
+   "same": 1,
+   "different": 0,
+   "distinctInputs": 1,
+   "maxNodes": 1,
+   "whyDifferent": {},
+   "outcomesWhenDifferent": {}
+  },
+  {
+   "origin": "test",
+   "kind": "strict",
+   "caller": "packages/polaris-generation-core/src/canonical-json.test.ts:/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-534/tap/packages/polaris-generation-core/src/canonical-json.test.ts:70:12",
+   "calls": 1,
+   "same": 1,
+   "different": 0,
+   "distinctInputs": 1,
+   "maxNodes": 2,
+   "whyDifferent": {},
+   "outcomesWhenDifferent": {}
+  },
+  {
+   "origin": "test",
+   "kind": "strict",
+   "caller": "packages/polaris-generation-core/src/canonical-json.test.ts:/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-534/tap/packages/polaris-generation-core/src/canonical-json.test.ts:71:18",
+   "calls": 1,
+   "same": 1,
+   "different": 0,
+   "distinctInputs": 1,
+   "maxNodes": 2,
+   "whyDifferent": {},
+   "outcomesWhenDifferent": {}
+  },
+  {
+   "origin": "test",
+   "kind": "strict",
+   "caller": "packages/polaris-generation-core/src/canonical-json.test.ts:/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-534/tap/packages/polaris-generation-core/src/canonical-json.test.ts:72:18",
+   "calls": 1,
+   "same": 1,
+   "different": 0,
+   "distinctInputs": 1,
+   "maxNodes": 2,
+   "whyDifferent": {},
+   "outcomesWhenDifferent": {}
+  },
+  {
+   "origin": "test",
+   "kind": "strict",
+   "caller": "packages/polaris-generation-core/src/canonical-json.test.ts:/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-534/tap/packages/polaris-generation-core/src/canonical-json.test.ts:73:18",
+   "calls": 1,
+   "same": 1,
+   "different": 0,
+   "distinctInputs": 1,
+   "maxNodes": 2,
+   "whyDifferent": {},
+   "outcomesWhenDifferent": {}
+  },
+  {
+   "origin": "test",
+   "kind": "strict",
+   "caller": "packages/polaris-generation-core/src/canonical-json.test.ts:/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-534/tap/packages/polaris-generation-core/src/canonical-json.test.ts:78:20",
+   "calls": 6,
+   "same": 6,
+   "different": 0,
+   "distinctInputs": 1,
+   "maxNodes": 1,
+   "whyDifferent": {},
+   "outcomesWhenDifferent": {}
+  },
+  {
+   "origin": "test",
+   "kind": "strict",
+   "caller": "packages/polaris-generation-core/src/canonical-json.test.ts:/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-534/tap/packages/polaris-generation-core/src/canonical-json.test.ts:79:20",
+   "calls": 6,
+   "same": 6,
+   "different": 0,
+   "distinctInputs": 1,
+   "maxNodes": 1,
+   "whyDifferent": {},
+   "outcomesWhenDifferent": {}
+  },
+  {
+   "origin": "test",
+   "kind": "strict",
+   "caller": "packages/polaris-generation-core/src/canonical-json.test.ts:/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-534/tap/packages/polaris-generation-core/src/canonical-json.test.ts:81:18",
+   "calls": 1,
+   "same": 1,
+   "different": 0,
+   "distinctInputs": 1,
+   "maxNodes": 1,
+   "whyDifferent": {},
+   "outcomesWhenDifferent": {}
+  },
+  {
+   "origin": "test",
+   "kind": "strict",
+   "caller": "packages/polaris-generation-core/src/canonical-json.test.ts:encode",
+   "calls": 35,
+   "same": 6,
+   "different": 29,
+   "distinctInputs": 20,
+   "maxNodes": 9,
+   "whyDifferent": {
+    "undefinedValue": 3,
+    "nonFinite": 6,
+    "bigint": 2,
+    "functionValue": 5,
+    "cycle": 1,
+    "nonPlainObject": 3,
+    "accessor": 1,
+    "no-flag": 2,
+    "symbolKey": 1,
+    "forbiddenKey": 3,
+    "sparse": 3
+   },
+   "outcomesWhenDifferent": {
+    "lenient=returned-non-string strict=unsupported-value": 3,
+    "lenient=ok strict=unsupported-value": 10,
+    "lenient=TypeError strict=unsupported-value": 2,
+    "lenient=RangeError strict=cycle": 1,
+    "lenient=ok strict=unsupported-object": 4,
+    "lenient=ok strict=unsupported-property": 9
+   }
+  },
+  {
+   "origin": "test",
+   "kind": "strict",
+   "caller": "packages/polaris-generation-core/src/discovery.test.ts:/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-534/tap/packages/polaris-generation-core/src/discovery.test.ts:449:40",
+   "calls": 1,
+   "same": 1,
+   "different": 0,
+   "distinctInputs": 1,
+   "maxNodes": 9,
+   "whyDifferent": {},
+   "outcomesWhenDifferent": {}
+  }
+ ]
+}

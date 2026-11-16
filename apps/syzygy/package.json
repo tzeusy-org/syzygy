@@ -6,6 +6,7 @@
   "main": "./dist/main.js",
   "dependencies": {
     "@syzygy/cap1-daemon": "0.0.0",
+    "@syzygy/http-host": "0.0.0",
     "@syzygy/polaris-dossier": "0.0.0",
     "@syzygy/three-surface-poc-app": "0.0.0"
   }

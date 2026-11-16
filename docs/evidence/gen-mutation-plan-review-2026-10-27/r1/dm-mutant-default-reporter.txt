@@ -1,0 +1,148 @@
+
+ RUN  v3.2.7 /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-543/clone
+
+ ✓ |@syzygy/polaris-generation-core| packages/polaris-generation-core/src/parse-json.test.ts (39 tests) 167ms
+ ✓ |@syzygy/polaris-generation-core| packages/polaris-generation-core/src/canonical-json.test.ts (15 tests) 166ms
+ ❯ |@syzygy/polaris-generation-core| packages/polaris-generation-core/src/provider-draft.test.ts (20 tests | 3 failed) 364ms
+   ✓ provider-local intermediate validation > accepts the complete staged path with serializable isolated schemas and outputs 126ms
+   ✓ provider-local intermediate validation > validates the checked-in synthetic inventory block as an isolated clone 33ms
+   × provider-local intermediate validation > refuses missing admitted sources, unknown support and duplicate local identities 17ms
+     → expected [Function] to throw an error
+   × provider-local intermediate validation > refuses dangling diagram endpoints, deep-dive parents and duplicate draft handles 10ms
+     → expected [Function] to throw error including 'duplicate-handle' but got 'unknown-asset'
+   ✓ provider-local intermediate validation > requires declared review coverage of inventory and every claim-bearing block 15ms
+   ✓ provider-local intermediate validation > requires exact asset dispositions and refuses invented produced identities 5ms
+   ✓ provider-local intermediate validation > renders unresolved dispositions as reviewable absence rather than output identity 2ms
+   ✓ provider-local intermediate validation > makes every negative coverage row block the fidelity verdict while all-positive rows proceed 3ms
+   ✓ provider-local intermediate validation > joins positive coverage to real blocks and each supported source to that block 10ms
+   ✓ provider-local intermediate validation > joins produced assets and disposition references to admitted bundle identities 4ms
+   ✓ provider-local intermediate validation > uses trusted request identity and requiredness for exact produced, omitted and unresolved dispositions 50ms
+   ✓ provider-local intermediate validation > preserves inert text for escaped rendering 9ms
+   ✓ provider-local intermediate validation > preserves inert text for escaped rendering 26ms
+   ✓ provider-local intermediate validation > preserves inert text for escaped rendering 4ms
+   ✓ provider-local intermediate validation > rejects extras, accessors and sparse arrays without executing hooks 1ms
+   ✓ provider-local intermediate validation > versions only the draft stages at v2 1ms
+   ✓ provider-local intermediate validation > bounds tree blocks at one level of 0-12 children and closes the diagram vocabularies 9ms
+   × provider-local intermediate validation > counts child blocks as blocks in handles, produced assets and fidelity coverage 15ms
+     → expected [Function] to throw error including 'duplicate-handle' but got 'unknown-asset'
+   ✓ provider-local intermediate validation > requires every produced diagram label in its own section text, children included 15ms
+   ✓ provider-local intermediate validation > exports deterministic, escaped Mermaid from the structured diagram 1ms
+ ❯ |@syzygy/polaris-generation-core| packages/polaris-generation-core/src/pipeline.test.ts (33 tests | 1 failed) 586ms
+   ✓ source to editorial draft pipeline > binds each stage route and model to its own receipt, including a repair, while equal routes remain valid 27ms
+   ✓ source to editorial draft pipeline > rejects a missing stage route before dispatch 99ms
+   ✓ source to editorial draft pipeline > keeps the author plan out of the canonically encoded fidelity and repair envelopes 11ms
+   ✓ source to editorial draft pipeline > sends full corpus once and downstream only the spans cited by their inputs 4ms
+   ✓ source to editorial draft pipeline > counts a path-only source in inventory but never offers its body or support handle to the provider 4ms
+   ✓ source to editorial draft pipeline > stops on malformed reader questions before any dispatch 133ms
+   ✓ source to editorial draft pipeline > refuses a 201st quotable source instead of silently truncating the corpus 82ms
+   ✓ source to editorial draft pipeline > refuses a population that segmentation tips over the 200 cap 57ms
+   ✓ source to editorial draft pipeline > executes independent inventory, planning, authoring, editing and source review with bound recipes 6ms
+   ✓ source to editorial draft pipeline > repairs named findings then independently re-reviews, without treating source review as rendered readiness 4ms
+   ✓ source to editorial draft pipeline > refuses source failure, duplicate admissions and absent effect permission without sending 6ms
+   × source to editorial draft pipeline > rejects duplicate or malformed trusted asset requests before provider dispatch 30ms
+     → expected { …(7) } to match object { status: 'stopped', …(1) }
+(9 matching properties omitted from actual)
+   ✓ source to editorial draft pipeline > rejects duplicate-key output before schema validation and never records its body 27ms
+   ✓ source to editorial draft pipeline > carries the schema-rejection reason and message out of the bare catch, typed 2ms
+   ✓ source to editorial draft pipeline > carries the canonical-encode rejection reason and message out of the bare catch, typed 1ms
+   ✓ source to editorial draft pipeline > stops when calls or repairs are exhausted and when usage is unknown 9ms
+   ✓ source to editorial draft pipeline > cancellation during permission evaluation prevents dispatch 2ms
+   ✓ source to editorial draft pipeline > deadline bounds a stalled verifySources adapter 4ms
+   ✓ source to editorial draft pipeline > deadline bounds a stalled admit adapter 1ms
+   ✓ source to editorial draft pipeline > deadline bounds a stalled permitted adapter 2ms
+   ✓ source to editorial draft pipeline > deadline bounds a stalled record adapter 1ms
+   ✓ source to editorial draft pipeline > dispatches the exact schema bound before asynchronous admission 6ms
+   ✓ source to editorial draft pipeline > retains late usage capture even when recording the interruption fails 5ms
+   ✓ source to editorial draft pipeline > deterministic quote fidelity joins the reviewer verdict > lets a verbatim quotation through without a repair 16ms
+   ✓ source to editorial draft pipeline > deterministic quote fidelity joins the reviewer verdict > blocks a quotation absent from the cited source even when the reviewer finds nothing, and hands the repair stage the finding 7ms
+   ✓ source to editorial draft pipeline > deterministic quote fidelity joins the reviewer verdict > does not stop the run when a misquote survives the last repair: it returns the finding for that block, and keeps the reviewer's own findings first in the repair input 6ms
+   ✓ source to editorial draft pipeline > deterministic quote fidelity joins the reviewer verdict > returns no quote findings for a clean draft 6ms
+   ✓ source to editorial draft pipeline > deterministic quote fidelity joins the reviewer verdict > still stops as repair-exhausted when the reviewer's own verdict blocks after the last repair 4ms
+   ✓ source to editorial draft pipeline > deterministic quote fidelity joins the reviewer verdict > keeps a blocking reviewer verdict blocking, and a non-array reviewer finding is carried 4ms
+   ✓ source to editorial draft pipeline > prompt profile > sends the dossier prompts for a dossier request, and records the profile, version and digest of each stage 6ms
+   ✓ source to editorial draft pipeline > prompt profile > sends the dossier prompts on repair and on the second fidelity review too 7ms
+   ✓ source to editorial draft pipeline > prompt profile > sends the manifesto prompts when no profile is named 3ms
+   ✓ source to editorial draft pipeline > prompt profile > refuses an unknown profile before any call 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |@syzygy/polaris-generation-core| packages/polaris-generation-core/src/pipeline.test.ts > source to editorial draft pipeline > rejects duplicate or malformed trusted asset requests before provider dispatch
+AssertionError: expected { …(7) } to match object { status: 'stopped', …(1) }
+(9 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "reason": "invalid-request",
+-   "status": "stopped",
++   "status": "awaiting-rendered-review",
+  }
+
+ ❯ packages/polaris-generation-core/src/pipeline.test.ts:217:10
+    215|       const h = harness();
+    216|       expect(await runGenerationPipeline({ ...request(), requestedAsse…
+    217|         .toMatchObject({ status: 'stopped', reason: 'invalid-request' …
+       |          ^
+    218|       expect(h.sends).toHaveLength(0);
+    219|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  |@syzygy/polaris-generation-core| packages/polaris-generation-core/src/provider-draft.test.ts > provider-local intermediate validation > refuses missing admitted sources, unknown support and duplicate local identities
+AssertionError: expected [Function] to throw an error
+
+- Expected: 
+null
+
++ Received: 
+undefined
+
+ ❯ packages/polaris-generation-core/src/provider-draft.test.ts:88:114
+     86|   it('refuses missing admitted sources, unknown support and duplicate …
+     87|     expect(() => validateStage('inventory', { entries: inventory.entri…
+     88|     expect(() => validateStage('inventory', { entries: [...inventory.e…
+       |                                                                                                                  ^
+     89|     expect(() => validateStage('author', { ...draft, introduction: { .…
+     90|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  |@syzygy/polaris-generation-core| packages/polaris-generation-core/src/provider-draft.test.ts > provider-local intermediate validation > refuses dangling diagram endpoints, deep-dive parents and duplicate draft handles
+AssertionError: expected [Function] to throw error including 'duplicate-handle' but got 'unknown-asset'
+
+Expected: "duplicate-handle"
+Received: "unknown-asset"
+
+ ❯ packages/polaris-generation-core/src/provider-draft.test.ts:101:57
+     99|     bad.deepDives[0]!.sectionId = 'section';
+    100|     bad.introduction.id = 'n1';
+    101|     expect(() => validateStage('author', bad, context)).toThrow('dupli…
+       |                                                         ^
+    102|   });
+    103| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  |@syzygy/polaris-generation-core| packages/polaris-generation-core/src/provider-draft.test.ts > provider-local intermediate validation > counts child blocks as blocks in handles, produced assets and fidelity coverage
+AssertionError: expected [Function] to throw error including 'duplicate-handle' but got 'unknown-asset'
+
+Expected: "duplicate-handle"
+Received: "unknown-asset"
+
+ ❯ packages/polaris-generation-core/src/provider-draft.test.ts:241:59
+    239|     const clash = structuredClone(d);
+    240|     clash.sections[0]!.paragraphs[0]!.children[0]!.id = 'n1';
+    241|     expect(() => validateStage('author', clash, context)).toThrow('dup…
+       |                                                           ^
+    242|     const unknownChild = structuredClone(d);
+    243|     unknownChild.sections[0]!.paragraphs[0]!.children[0]!.sourceIds = …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  2 failed | 2 passed (4)
+      Tests  4 failed | 103 passed (107)
+   Start at  21:31:23
+   Duration  2.94s (transform 2.39s, setup 185ms, collect 3.54s, tests 1.28s, environment 1ms, prepare 782ms)
+

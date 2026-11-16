@@ -1,0 +1,219 @@
+{
+ "probe": "rev-509c ns_probe.py",
+ "probeSha256": "f0c4f8a714622b5608daed9b28be2b89bbc6cf59d8bd644a4f54441bc6098950",
+ "holderSha256": "0af2948035d28c6483e26e4be9f138a1ddfeb6e89875199a857d07b8f08b9347",
+ "sweeperSha256": "6662f06aad5400767f558a4087a186280573f2b14e9d5b3d08c387421398aeae",
+ "module": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-509c/tools/fixture-directories.head.mjs",
+ "moduleSha256": "2bf2fe12d1deb358fd3ebb0848ae56c94fede9db376bcfda1f3fb01cc26eba5e",
+ "directory": "/tmp/r509c-3",
+ "holders": {
+  "no-proc": {
+   "cmd": [
+    "bwrap",
+    "--unshare-user",
+    "--unshare-pid",
+    "--die-with-parent",
+    "--dev-bind",
+    "/",
+    "/",
+    "--tmpfs",
+    "/proc",
+    "--",
+    "/bin/sh",
+    "-c",
+    "i=0; while [ $i -lt 60 ]; do /bin/true; i=$((i+1)); done; /home/tze/.nvm/versions/node/v24.6.0/bin/node /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-509c/tools/holder.mjs /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-509c/tools/fixture-directories.head.mjs /tmp/r509c-3 /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-509c/tools/r509c-3-holder-no-proc.json /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-509c/tools/r509c-3.stop; true"
+   ],
+   "hostPid": 2749014,
+   "exit": 0,
+   "pid": 63,
+   "nsReading": "unreadable:ENOENT",
+   "name": "syzygy-poc-surface-fixture-p63-n0-VUveTb",
+   "goneWhileAlive": false,
+   "stoppedAfterMs": 4770,
+   "existsAtStop": true
+  },
+  "proc": {
+   "cmd": [
+    "bwrap",
+    "--unshare-user",
+    "--unshare-pid",
+    "--die-with-parent",
+    "--dev-bind",
+    "/",
+    "/",
+    "--proc",
+    "/proc",
+    "--",
+    "/bin/sh",
+    "-c",
+    "i=0; while [ $i -lt 60 ]; do /bin/true; i=$((i+1)); done; /home/tze/.nvm/versions/node/v24.6.0/bin/node /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-509c/tools/holder.mjs /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-509c/tools/fixture-directories.head.mjs /tmp/r509c-3 /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-509c/tools/r509c-3-holder-proc.json /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-509c/tools/r509c-3.stop; true"
+   ],
+   "hostPid": 2749015,
+   "exit": 0,
+   "pid": 63,
+   "nsReading": "pid:[4026539611]",
+   "name": "syzygy-poc-surface-fixture-p63-n4026539611-Sn9LhP",
+   "goneWhileAlive": false,
+   "stoppedAfterMs": 4693,
+   "existsAtStop": true
+  },
+  "host": {
+   "cmd": [
+    "/home/tze/.nvm/versions/node/v24.6.0/bin/node",
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-509c/tools/holder.mjs",
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-509c/tools/fixture-directories.head.mjs",
+    "/tmp/r509c-3",
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-509c/tools/r509c-3-holder-host.json",
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-509c/tools/r509c-3.stop"
+   ],
+   "hostPid": 2749016,
+   "exit": 0,
+   "pid": 2749016,
+   "nsReading": "pid:[4026531836]",
+   "name": "syzygy-poc-surface-fixture-p2749016-n4026531836-9iGeJ7",
+   "goneWhileAlive": false,
+   "stoppedAfterMs": 5024,
+   "existsAtStop": true
+  }
+ },
+ "sweeps": {
+  "no-proc": {
+   "cmd": [
+    "bwrap",
+    "--unshare-user",
+    "--unshare-pid",
+    "--die-with-parent",
+    "--dev-bind",
+    "/",
+    "/",
+    "--tmpfs",
+    "/proc",
+    "--",
+    "/home/tze/.nvm/versions/node/v24.6.0/bin/node",
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-509c/tools/sweeper.mjs",
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-509c/tools/fixture-directories.head.mjs",
+    "/tmp/r509c-3",
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-509c/tools/r509c-3-sweeper-no-proc.json",
+    "2749016,63"
+   ],
+   "exit": 0,
+   "stderr": "",
+   "pid": 2,
+   "nsReading": "unreadable:ENOENT",
+   "control": "syzygy-poc-surface-fixture-p9-n0-CTRL01",
+   "reapedAnswer": "ESRCH",
+   "signal0": {
+    "63": "ESRCH",
+    "2749016": "ESRCH"
+   },
+   "moduleListings": [],
+   "before": [
+    "syzygy-poc-surface-fixture-p2749016-n4026531836-9iGeJ7",
+    "syzygy-poc-surface-fixture-p63-n0-VUveTb",
+    "syzygy-poc-surface-fixture-p63-n4026539611-Sn9LhP",
+    "syzygy-poc-surface-fixture-p9-n0-CTRL01"
+   ],
+   "after": [
+    "syzygy-poc-surface-fixture-p2749016-n4026531836-9iGeJ7",
+    "syzygy-poc-surface-fixture-p63-n0-VUveTb",
+    "syzygy-poc-surface-fixture-p63-n4026539611-Sn9LhP",
+    "syzygy-poc-surface-fixture-p9-n0-CTRL01"
+   ],
+   "removed": []
+  },
+  "proc": {
+   "cmd": [
+    "bwrap",
+    "--unshare-user",
+    "--unshare-pid",
+    "--die-with-parent",
+    "--dev-bind",
+    "/",
+    "/",
+    "--proc",
+    "/proc",
+    "--",
+    "/home/tze/.nvm/versions/node/v24.6.0/bin/node",
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-509c/tools/sweeper.mjs",
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-509c/tools/fixture-directories.head.mjs",
+    "/tmp/r509c-3",
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-509c/tools/r509c-3-sweeper-proc.json",
+    "2749016,63"
+   ],
+   "exit": 0,
+   "stderr": "",
+   "pid": 2,
+   "nsReading": "pid:[4026539621]",
+   "control": "syzygy-poc-surface-fixture-p9-n4026539621-CTRL01",
+   "reapedAnswer": "ESRCH",
+   "signal0": {
+    "63": "ESRCH",
+    "2749016": "ESRCH"
+   },
+   "moduleListings": [
+    "/tmp/r509c-3"
+   ],
+   "before": [
+    "syzygy-poc-surface-fixture-p2749016-n4026531836-9iGeJ7",
+    "syzygy-poc-surface-fixture-p63-n0-VUveTb",
+    "syzygy-poc-surface-fixture-p63-n4026539611-Sn9LhP",
+    "syzygy-poc-surface-fixture-p9-n0-CTRL01",
+    "syzygy-poc-surface-fixture-p9-n4026539621-CTRL01"
+   ],
+   "after": [
+    "syzygy-poc-surface-fixture-p2749016-n4026531836-9iGeJ7",
+    "syzygy-poc-surface-fixture-p63-n0-VUveTb",
+    "syzygy-poc-surface-fixture-p63-n4026539611-Sn9LhP",
+    "syzygy-poc-surface-fixture-p9-n0-CTRL01"
+   ],
+   "removed": [
+    "syzygy-poc-surface-fixture-p9-n4026539621-CTRL01"
+   ]
+  },
+  "host": {
+   "cmd": [
+    "/home/tze/.nvm/versions/node/v24.6.0/bin/node",
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-509c/tools/sweeper.mjs",
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-509c/tools/fixture-directories.head.mjs",
+    "/tmp/r509c-3",
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-509c/tools/r509c-3-sweeper-host.json",
+    "2749016,63"
+   ],
+   "exit": 0,
+   "stderr": "",
+   "pid": 2750367,
+   "nsReading": "pid:[4026531836]",
+   "control": "syzygy-poc-surface-fixture-p2750398-n4026531836-CTRL01",
+   "reapedAnswer": "ESRCH",
+   "signal0": {
+    "63": "EPERM",
+    "2749016": "alive"
+   },
+   "moduleListings": [
+    "/tmp/r509c-3"
+   ],
+   "before": [
+    "syzygy-poc-surface-fixture-p2749016-n4026531836-9iGeJ7",
+    "syzygy-poc-surface-fixture-p2750398-n4026531836-CTRL01",
+    "syzygy-poc-surface-fixture-p63-n0-VUveTb",
+    "syzygy-poc-surface-fixture-p63-n4026539611-Sn9LhP",
+    "syzygy-poc-surface-fixture-p9-n0-CTRL01"
+   ],
+   "after": [
+    "syzygy-poc-surface-fixture-p2749016-n4026531836-9iGeJ7",
+    "syzygy-poc-surface-fixture-p63-n0-VUveTb",
+    "syzygy-poc-surface-fixture-p63-n4026539611-Sn9LhP",
+    "syzygy-poc-surface-fixture-p9-n0-CTRL01"
+   ],
+   "removed": [
+    "syzygy-poc-surface-fixture-p2750398-n4026531836-CTRL01"
+   ]
+  }
+ },
+ "leftAfterAll": [
+  "syzygy-poc-surface-fixture-p2749016-n4026531836-9iGeJ7",
+  "syzygy-poc-surface-fixture-p63-n0-VUveTb",
+  "syzygy-poc-surface-fixture-p63-n4026539611-Sn9LhP",
+  "syzygy-poc-surface-fixture-p9-n0-CTRL01"
+ ]
+}

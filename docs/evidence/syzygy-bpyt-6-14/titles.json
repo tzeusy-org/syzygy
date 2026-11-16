@@ -1,0 +1,151 @@
+{
+ "files": [
+  "packages/polaris-dossier/src/no-egress.test.ts",
+  "packages/support/src/support-purity.test.ts",
+  "packages/three-surface-poc-core/src/owner-act-drafter.test.ts"
+ ],
+ "baseCommit": "f7ea858480b30ffc4407154a84d1d03f3fe4a549",
+ "headCommit": "191d82779ea07f45be612b00ff3cafc9aa7446b8",
+ "base": 18,
+ "head": 42,
+ "added": [
+  [
+   "packages/polaris-dossier/src/no-egress.test.ts",
+   "the S10 bundle takes each workspace package from the source its entry names (syzygy-bpyt.6.14) > aliases every workspace package entry to the src module its exports, or its main, names"
+  ],
+  [
+   "packages/polaris-dossier/src/no-egress.test.ts",
+   "the S10 bundle takes each workspace package from the source its entry names (syzygy-bpyt.6.14) > bundles the driver only under the guard: an alias that leaves the sources fails it"
+  ],
+  [
+   "packages/polaris-dossier/src/no-egress.test.ts",
+   "the S10 bundle takes each workspace package from the source its entry names (syzygy-bpyt.6.14) > bundles the driver with every @syzygy specifier inside packages/*/src or apps/*/src"
+  ],
+  [
+   "packages/polaris-dossier/src/no-egress.test.ts",
+   "the S10 bundle takes each workspace package from the source its entry names (syzygy-bpyt.6.14) > fails the bundle when an @syzygy specifier resolves outside them"
+  ],
+  [
+   "packages/support/src/support-purity.test.ts",
+   "@syzygy/support stays a pure leaf > assigns to no property in any source, so no allowed global is rewritten"
+  ],
+  [
+   "packages/support/src/support-purity.test.ts",
+   "@syzygy/support stays a pure leaf > exports exactly the \".\" entry, index.js, so no other module is an entry"
+  ],
+  [
+   "packages/support/src/support-purity.test.ts",
+   "@syzygy/support stays a pure leaf > lists a module at any depth and with any extension, and skips only the tests and the testkit"
+  ],
+  [
+   "packages/support/src/support-purity.test.ts",
+   "@syzygy/support stays a pure leaf > names no identifier outside its literal list in any source"
+  ],
+  [
+   "packages/support/src/support-purity.test.ts",
+   "@syzygy/support stays a pure leaf > names no module but node:crypto and a module beside it in any literal specifier of any source"
+  ],
+  [
+   "packages/support/src/support-purity.test.ts",
+   "@syzygy/support stays a pure leaf > names none of the forbidden tokens it shares with the owner-act drafter in any source"
+  ],
+  [
+   "packages/support/src/support-purity.test.ts",
+   "@syzygy/support stays a pure leaf > scans every source module under src, at any depth, not an empty list"
+  ],
+  [
+   "packages/support/src/support-purity.test.ts",
+   "@syzygy/support stays a pure leaf > takes only createHash from node:crypto, by its own name, and re-exports nothing from it"
+  ],
+  [
+   "packages/support/src/support-purity.test.ts",
+   "the forbidden-token list both guards stand on > is the literal list, so a narrowed token fails here"
+  ],
+  [
+   "packages/support/src/support-purity.test.ts",
+   "the forbidden-token list both guards stand on > refuses \"appendFileSync(p, d);\""
+  ],
+  [
+   "packages/support/src/support-purity.test.ts",
+   "the forbidden-token list both guards stand on > refuses \"await fetch(url);\""
+  ],
+  [
+   "packages/support/src/support-purity.test.ts",
+   "the forbidden-token list both guards stand on > refuses \"const h = process.env.HOME;\""
+  ],
+  [
+   "packages/support/src/support-purity.test.ts",
+   "the forbidden-token list both guards stand on > refuses \"const m = await import(name);\""
+  ],
+  [
+   "packages/support/src/support-purity.test.ts",
+   "the forbidden-token list both guards stand on > refuses \"const m = require(name);\""
+  ],
+  [
+   "packages/support/src/support-purity.test.ts",
+   "the forbidden-token list both guards stand on > refuses \"const t = new Date();\""
+  ],
+  [
+   "packages/support/src/support-purity.test.ts",
+   "the forbidden-token list both guards stand on > refuses \"import { readFileSync } from 'node:fs';\""
+  ],
+  [
+   "packages/support/src/support-purity.test.ts",
+   "the forbidden-token list both guards stand on > refuses \"mkdirSync(p);\""
+  ],
+  [
+   "packages/support/src/support-purity.test.ts",
+   "the forbidden-token list both guards stand on > refuses \"writeFileSync(p, d);\""
+  ],
+  [
+   "packages/support/src/support-purity.test.ts",
+   "the identifier reader the allowlist stands on > reads \"/** fetch(url) */\\nexport const a = b.c?.(`${d}e`);\""
+  ],
+  [
+   "packages/support/src/support-purity.test.ts",
+   "the identifier reader the allowlist stands on > reads \"class K { #p = 1; m<T>(v: T): T { return v; } }\""
+  ],
+  [
+   "packages/support/src/support-purity.test.ts",
+   "the identifier reader the allowlist stands on > reads \"const \\\\u0070rocess = 1;\""
+  ],
+  [
+   "packages/support/src/support-purity.test.ts",
+   "the identifier reader the allowlist stands on > reads \"const h = globalThis['process']; // console.log(h)\""
+  ],
+  [
+   "packages/support/src/support-purity.test.ts",
+   "the identifier reader the allowlist stands on > reads \"import { randomBytes as r } from \\\"node:crypto\\\";\""
+  ]
+ ],
+ "removed": [
+  [
+   "packages/support/src/support-purity.test.ts",
+   "@syzygy/support stays a pure leaf > imports only node:crypto and its own modules, so no file read, no workspace package and no network"
+  ],
+  [
+   "packages/support/src/support-purity.test.ts",
+   "@syzygy/support stays a pure leaf > names no write, process, clock, network or file-system token in any source"
+  ],
+  [
+   "packages/support/src/support-purity.test.ts",
+   "@syzygy/support stays a pure leaf > scans the package sources, not an empty list"
+  ]
+ ],
+ "duplicatesBase": [],
+ "duplicatesHead": [],
+ "perFile": {
+  "packages/polaris-dossier/src/no-egress.test.ts": {
+   "base": 2,
+   "head": 6
+  },
+  "packages/support/src/support-purity.test.ts": {
+   "base": 13,
+   "head": 33
+  },
+  "packages/three-surface-poc-core/src/owner-act-drafter.test.ts": {
+   "base": 3,
+   "head": 3
+  }
+ }
+}

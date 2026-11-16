@@ -1,0 +1,33 @@
+{
+ "tool": "suite_summary.py",
+ "attempt": "attempt 7: the round-3 repair, run once, default timeouts",
+ "cpus": 12,
+ "changedFilesBetween": [
+  "c104771f",
+  "ba9d990a"
+ ],
+ "runs": [
+  {
+   "name": "round3-head",
+   "commit": "ba9d990a2b80b9aa5b3d78801b938280ee9988d7",
+   "start": "2026-10-27T22:27:30+08:00",
+   "load1Start": 33.36,
+   "exit": 0,
+   "end": "2026-10-27T22:31:46+08:00",
+   "load1End": 36.26,
+   "success": true,
+   "totals": {
+    "numTotalTestSuites": 869,
+    "numFailedTestSuites": 0,
+    "numTotalTests": 5379,
+    "numPassedTests": 5374,
+    "numFailedTests": 0,
+    "numPendingTests": 5,
+    "numTodoTests": 0
+   },
+   "failedTests": [],
+   "failedFilesWithoutFailedTest": [],
+   "failuresInChangedFiles": 0
+  }
+ ]
+}

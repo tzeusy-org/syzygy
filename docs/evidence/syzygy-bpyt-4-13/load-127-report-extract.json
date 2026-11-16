@@ -1,0 +1,3352 @@
+{
+ "text": "Extract, not authority: the package-reader.test.ts results of one vitest JSON report, copied unchanged from a run by lane B (syzygy-bpyt.8.21) at the commit named here (the consent and dossier projects, 2026-10-22). Over the consent package src directory and the eight recorder scripts the testkit imports, that commit differs from ce322e1a only in the files listed under differsFromCe322e1aIn (the 8.21 change, which package-reader.ts imports). The /proc/loadavg lines were taken just before and just after the run.",
+ "extractedFrom": {
+  "path": "scratchpad/lane-b/suite821.json (session scratch, not retained)",
+  "sha256": "c383659e032f3bf9e832684cde946b1d6a781ab53249d8adc293392c53467e22",
+  "bytes": 756210
+ },
+ "commit": "8b143272113f216c797684d7c28cd3204831248f",
+ "differsFromCe322e1aIn": [
+  "packages/polaris-generation-consent/src/recorder-template.test.ts",
+  "packages/polaris-generation-consent/src/recorder-template.ts"
+ ],
+ "command": "npx vitest run --project @syzygy/polaris-generation-consent --project @syzygy/polaris-dossier --reporter=default --reporter=json",
+ "loadavgBeforeAndAfter": [
+  "127.56 109.51 90.71 103/13407 3738107",
+  "83.31 94.61 94.48 71/13156 3852294"
+ ],
+ "startTime": 1792661270553,
+ "numTotalTests": 1729,
+ "numFailedTests": 50,
+ "testResults": [
+  {
+   "assertionResults": [
+    {
+     "ancestorTitles": [
+      "package admission reader"
+     ],
+     "fullName": "package admission reader returns a record only for an instance that an act record names by path and digest",
+     "status": "failed",
+     "title": "returns a record only for an instance that an act record names by path and digest",
+     "duration": 14148.527532,
+     "failureMessages": [
+      "Error: STACK_TRACE_ERROR\n    at task (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:662:16)\n    at Object.<anonymous> (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:458:28)\n    at chain (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:369:14)\n    at /home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/packages/polaris-generation-consent/src/package-reader.test.ts:95:3\n    at file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:734:40\n    at runWithSuite (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:1849:8)\n    at Object.collect (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:734:10)\n    at Object.collect (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:738:54)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at collectTests (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:1179:25)\n    at startTests (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:1817:17)\n    at file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/vitest/dist/chunks/runBaseTests.9Ij9_de-.js:117:26\n    at withEnv (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/vitest/dist/chunks/runBaseTests.9Ij9_de-.js:84:3)\n    at run (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/vitest/dist/chunks/runBaseTests.9Ij9_de-.js:109:2)"
+     ],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "package admission reader"
+     ],
+     "fullName": "package admission reader returns nothing when no act record exists: a candidate instance binds nothing",
+     "status": "passed",
+     "title": "returns nothing when no act record exists: a candidate instance binds nothing",
+     "duration": 2.0154730000067502,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "package admission reader"
+     ],
+     "fullName": "package admission reader marks a record not in force when the instance bytes changed after the act",
+     "status": "passed",
+     "title": "marks a record not in force when the instance bytes changed after the act",
+     "duration": 3.5792439999931958,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "package admission reader"
+     ],
+     "fullName": "package admission reader refuses the whole read on unknown shapes instead of guessing",
+     "status": "passed",
+     "title": "refuses the whole read on unknown shapes instead of guessing",
+     "duration": 2563.6952779999992,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "package admission reader"
+     ],
+     "fullName": "package admission reader refuses when the decisions directory cannot be listed",
+     "status": "passed",
+     "title": "refuses when the decisions directory cannot be listed",
+     "duration": 1.3621810000040568,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "admission records port"
+     ],
+     "fullName": "admission records port satisfies observation and egress exactly when an act is in force, and not before the act's instant",
+     "status": "passed",
+     "title": "satisfies observation and egress exactly when an act is in force, and not before the act's instant",
+     "duration": 69.51283299998613,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "admission records port"
+     ],
+     "fullName": "admission records port is unsatisfied for an unadmitted revision, an unadmitted repository, a stale instance and the policy record",
+     "status": "passed",
+     "title": "is unsatisfied for an unadmitted revision, an unadmitted repository, a stale instance and the policy record",
+     "duration": 14.809557000000495,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "admission records port"
+     ],
+     "fullName": "admission records port does not take another provider's egress record for the Anthropic requirement",
+     "status": "passed",
+     "title": "does not take another provider's egress record for the Anthropic requirement",
+     "duration": 8.987819999994827,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "admission records port"
+     ],
+     "fullName": "admission records port is unsatisfied, with a reason, when records cannot be read or none exist",
+     "status": "passed",
+     "title": "is unsatisfied, with a reason, when records cannot be read or none exist",
+     "duration": 1.137577000001329,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "admission records port"
+     ],
+     "fullName": "admission records port reads fresh on every check: a later withdrawal-form file turns a satisfied answer into a refusal",
+     "status": "passed",
+     "title": "reads fresh on every check: a later withdrawal-form file turns a satisfied answer into a refusal",
+     "duration": 9.741122000006726,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "consented revisions for a repository"
+     ],
+     "fullName": "consented revisions for a repository returns the owner's label and full commit id for each revision of the repository, in force now",
+     "status": "passed",
+     "title": "returns the owner's label and full commit id for each revision of the repository, in force now",
+     "duration": 8.763036000003922,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "consented revisions for a repository"
+     ],
+     "fullName": "consented revisions for a repository is empty before the act, for another repository, for stale bytes, with no act, and when the records cannot be read",
+     "status": "passed",
+     "title": "is empty before the act, for another repository, for stale bytes, with no act, and when the records cannot be read",
+     "duration": 13.527216000002227,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "consented revisions for a repository"
+     ],
+     "fullName": "consented revisions for a repository is empty when records in force disagree: one label for two commits, or one commit under two labels",
+     "status": "passed",
+     "title": "is empty when records in force disagree: one label for two commits, or one commit under two labels",
+     "duration": 1.616942000007839,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "act instant"
+     ],
+     "fullName": "act instant uses the Recorded at (UTC) instant when the record carries exactly one",
+     "status": "passed",
+     "title": "uses the Recorded at (UTC) instant when the record carries exactly one",
+     "duration": 8.145480999999563,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "act instant"
+     ],
+     "fullName": "act instant refuses a record with no instant: there is no date-only reading",
+     "status": "passed",
+     "title": "refuses a record with no instant: there is no date-only reading",
+     "duration": 1.5139970000018366,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "act instant"
+     ],
+     "fullName": "act instant refuses a malformed, repeated, wrong-day or non-whole-second instant",
+     "status": "passed",
+     "title": "refuses a malformed, repeated, wrong-day or non-whole-second instant",
+     "duration": 41.33791600000404,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "act instant"
+     ],
+     "fullName": "act instant refuses any other spelling or placement of a recorded-at line instead of falling back",
+     "status": "passed",
+     "title": "refuses any other spelling or placement of a recorded-at line instead of falling back",
+     "duration": 20.667360000006738,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "act instant"
+     ],
+     "fullName": "act instant accepts only the pinned owner-answers file by name and bytes",
+     "status": "passed",
+     "title": "accepts only the pinned owner-answers file by name and bytes",
+     "duration": 4.576275999992504,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "public-source policy act"
+     ],
+     "fullName": "public-source policy act recognises the recorder's record by its exact path and format, in force from its instant",
+     "status": "passed",
+     "title": "recognises the recorder's record by its exact path and format, in force from its instant",
+     "duration": 3865.536862000008,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "public-source policy act"
+     ],
+     "fullName": "public-source policy act uses the act instant when present",
+     "status": "passed",
+     "title": "uses the act instant when present",
+     "duration": 21.117852000010316,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "public-source policy act"
+     ],
+     "fullName": "public-source policy act is unsatisfied when the policy declares no public-source scope, even under an act over those bytes",
+     "status": "passed",
+     "title": "is unsatisfied when the policy declares no public-source scope, even under an act over those bytes",
+     "duration": 7.759332999994513,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "public-source policy act"
+     ],
+     "fullName": "public-source policy act is unsatisfied when the policy bytes changed after the act, or the act is another type",
+     "status": "passed",
+     "title": "is unsatisfied when the policy bytes changed after the act, or the act is another type",
+     "duration": 22.56231700000353,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "public-source policy act"
+     ],
+     "fullName": "public-source policy act is unsatisfied with no act record",
+     "status": "passed",
+     "title": "is unsatisfied with no act record",
+     "duration": 2.362638999999035,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "public-source policy act"
+     ],
+     "fullName": "public-source policy act refuses the read on a record that names the policy without a readable act form, or for another project",
+     "status": "passed",
+     "title": "refuses the read on a record that names the policy without a readable act form, or for another project",
+     "duration": 19.740892999994685,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "public-source policy act"
+     ],
+     "fullName": "public-source policy act refuses when the policy file is missing or not JSON",
+     "status": "passed",
+     "title": "refuses when the policy file is missing or not JSON",
+     "duration": 5.747475999989547,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "public-source policy act"
+     ],
+     "fullName": "public-source policy act refuses a record other than the recorder's that names the policy as its artifact (packets, quotations, other act types)",
+     "status": "passed",
+     "title": "refuses a record other than the recorder's that names the policy as its artifact (packets, quotations, other act types)",
+     "duration": 32.49775700000464,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "public-source policy act"
+     ],
+     "fullName": "public-source policy act does not count a Recorded-at line inside a code fence (both readers)",
+     "status": "passed",
+     "title": "does not count a Recorded-at line inside a code fence (both readers)",
+     "duration": 15.162071999991895,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "public-source policy act"
+     ],
+     "fullName": "public-source policy act counts a field only in prose: a fenced copy of any act or instance field refuses both readers",
+     "status": "passed",
+     "title": "counts a field only in prose: a fenced copy of any act or instance field refuses both readers",
+     "duration": 38.276751999990665,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "public-source policy act"
+     ],
+     "fullName": "public-source policy act refuses the recorder's file when its act type, identity, title or provenance is not the recorder's form",
+     "status": "passed",
+     "title": "refuses the recorder's file when its act type, identity, title or provenance is not the recorder's form",
+     "duration": 4808.430989,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "public-source policy act"
+     ],
+     "fullName": "public-source policy act refuses a malformed recorded-at line in the policy act",
+     "status": "passed",
+     "title": "refuses a malformed recorded-at line in the policy act",
+     "duration": 150.25410799999372,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "public-source policy act"
+     ],
+     "fullName": "public-source policy act without a policy reader the requirement stays unsatisfied",
+     "status": "passed",
+     "title": "without a policy reader the requirement stays unsatisfied",
+     "duration": 0.6673290000035195,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "egress version 2 record"
+     ],
+     "fullName": "egress version 2 record is read from the recorder's act: version 2 supersedes version 1 once in force",
+     "status": "failed",
+     "title": "is read from the recorder's act: version 2 supersedes version 1 once in force",
+     "duration": 11816.956416999994,
+     "failureMessages": [
+      "Error: STACK_TRACE_ERROR\n    at task (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:662:16)\n    at Object.<anonymous> (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:458:28)\n    at chain (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:369:14)\n    at /home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/packages/polaris-generation-consent/src/package-reader.test.ts:353:3\n    at file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:734:40\n    at runWithSuite (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:1849:8)\n    at Object.collect (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:734:10)\n    at Object.collect (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:738:54)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at collectTests (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:1179:25)\n    at startTests (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:1817:17)\n    at file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/vitest/dist/chunks/runBaseTests.9Ij9_de-.js:117:26\n    at withEnv (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/vitest/dist/chunks/runBaseTests.9Ij9_de-.js:84:3)\n    at run (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/vitest/dist/chunks/runBaseTests.9Ij9_de-.js:109:2)"
+     ],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "egress version 2 record"
+     ],
+     "fullName": "egress version 2 record leaves version 1 standing before the version 2 act takes effect, and with no version 1 act at all",
+     "status": "failed",
+     "title": "leaves version 1 standing before the version 2 act takes effect, and with no version 1 act at all",
+     "duration": 5039.992851000003,
+     "failureMessages": [
+      "Error: STACK_TRACE_ERROR\n    at task (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:662:16)\n    at Object.<anonymous> (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:458:28)\n    at chain (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:369:14)\n    at /home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/packages/polaris-generation-consent/src/package-reader.test.ts:361:3\n    at file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:734:40\n    at runWithSuite (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:1849:8)\n    at Object.collect (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:734:10)\n    at Object.collect (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:738:54)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at collectTests (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:1179:25)\n    at startTests (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:1817:17)\n    at file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/vitest/dist/chunks/runBaseTests.9Ij9_de-.js:117:26\n    at withEnv (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/vitest/dist/chunks/runBaseTests.9Ij9_de-.js:84:3)\n    at run (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/vitest/dist/chunks/runBaseTests.9Ij9_de-.js:109:2)"
+     ],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "egress version 2 record"
+     ],
+     "fullName": "egress version 2 record refuses when version 2 did not take effect strictly after version 1: the same instant, or earlier",
+     "status": "failed",
+     "title": "refuses when version 2 did not take effect strictly after version 1: the same instant, or earlier",
+     "duration": 13825.929969999997,
+     "failureMessages": [
+      "Error: STACK_TRACE_ERROR\n    at task (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:662:16)\n    at Object.<anonymous> (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:458:28)\n    at chain (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:369:14)\n    at /home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/packages/polaris-generation-consent/src/package-reader.test.ts:368:3\n    at file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:734:40\n    at runWithSuite (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:1849:8)\n    at Object.collect (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:734:10)\n    at Object.collect (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:738:54)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at collectTests (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:1179:25)\n    at startTests (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:1817:17)\n    at file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/vitest/dist/chunks/runBaseTests.9Ij9_de-.js:117:26\n    at withEnv (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/vitest/dist/chunks/runBaseTests.9Ij9_de-.js:84:3)\n    at run (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/vitest/dist/chunks/runBaseTests.9Ij9_de-.js:109:2)"
+     ],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "egress version 2 record"
+     ],
+     "fullName": "egress version 2 record binds the exact bytes: an edited record is not in force",
+     "status": "passed",
+     "title": "binds the exact bytes: an edited record is not in force",
+     "duration": 5.901941000003717,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "egress version 2 record"
+     ],
+     "fullName": "egress version 2 record supersession follows the version 2 act's instant, not its current bytes: drifted version 2 leaves version 1 replaced and nothing granted",
+     "status": "passed",
+     "title": "supersession follows the version 2 act's instant, not its current bytes: drifted version 2 leaves version 1 replaced and nothing granted",
+     "duration": 12.703529999998864,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "egress version 2 record"
+     ],
+     "fullName": "egress version 2 record accepts the closed list only: other names, identities, artifacts, titles and revocation lines refuse the read",
+     "status": "passed",
+     "title": "accepts the closed list only: other names, identities, artifacts, titles and revocation lines refuse the read",
+     "duration": 20.77359399999841,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "egress version 2 record"
+     ],
+     "fullName": "egress version 2 record refuses a version 1 act typed as an observation over observation bytes at the egress instance path",
+     "status": "passed",
+     "title": "refuses a version 1 act typed as an observation over observation bytes at the egress instance path",
+     "duration": 16.263600999998744,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "egress version 2 record"
+     ],
+     "fullName": "egress version 2 record ignores a Recorded-at line inside a code fence in the version 2 act, and refuses it",
+     "status": "passed",
+     "title": "ignores a Recorded-at line inside a code fence in the version 2 act, and refuses it",
+     "duration": 10.516781999991508,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "egress version 2 record",
+      "the RFC5-14 class amendment version 2 depends on"
+     ],
+     "fullName": "egress version 2 record the RFC5-14 class amendment version 2 depends on is required: no record, an edited module, a wrong form, or an amendment later than version 2 all refuse",
+     "status": "failed",
+     "title": "is required: no record, an edited module, a wrong form, or an amendment later than version 2 all refuse",
+     "duration": 11799.637147999994,
+     "failureMessages": [
+      "Error: STACK_TRACE_ERROR\n    at task (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:662:16)\n    at Object.<anonymous> (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:458:28)\n    at chain (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:369:14)\n    at /home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/packages/polaris-generation-consent/src/package-reader.test.ts:417:5\n    at file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:734:40\n    at runWithSuite (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:1849:8)\n    at Object.collect (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:734:10)\n    at Object.collect (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:738:54)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at Object.collect (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:738:46)\n    at collectTests (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:1179:25)\n    at startTests (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:1817:17)\n    at file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/vitest/dist/chunks/runBaseTests.9Ij9_de-.js:117:26\n    at withEnv (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/vitest/dist/chunks/runBaseTests.9Ij9_de-.js:84:3)"
+     ],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "egress version 2 record",
+      "the RFC5-14 class amendment version 2 depends on"
+     ],
+     "fullName": "egress version 2 record the RFC5-14 class amendment version 2 depends on is found only at the top of the decisions directory: a copy in a subdirectory is not the recorder's file",
+     "status": "passed",
+     "title": "is found only at the top of the decisions directory: a copy in a subdirectory is not the recorder's file",
+     "duration": 11.54854200000409,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "egress version 2 record",
+      "the RFC5-14 class amendment version 2 depends on"
+     ],
+     "fullName": "egress version 2 record the RFC5-14 class amendment version 2 depends on is not asked of a world without version 2",
+     "status": "passed",
+     "title": "is not asked of a world without version 2",
+     "duration": 9.10648200000287,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "egress version 2 record",
+      "withdrawal and forgery forms the reader does not define"
+     ],
+     "fullName": "egress version 2 record withdrawal and forgery forms the reader does not define refuses a file outside the closed list that names an admission artifact, act identity or record id, in any case, dash spelling or directory",
+     "status": "passed",
+     "title": "refuses a file outside the closed list that names an admission artifact, act identity or record id, in any case, dash spelling or directory",
+     "duration": 66.2393410000077,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "egress version 2 record",
+      "withdrawal and forgery forms the reader does not define"
+     ],
+     "fullName": "egress version 2 record withdrawal and forgery forms the reader does not define applies the field-line rule to the aggregate acceptance record, which is exempt from the whole-text rule only",
+     "status": "passed",
+     "title": "applies the field-line rule to the aggregate acceptance record, which is exempt from the whole-text rule only",
+     "duration": 20.282640999997966,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "egress version 2 record",
+      "withdrawal and forgery forms the reader does not define"
+     ],
+     "fullName": "egress version 2 record withdrawal and forgery forms the reader does not define refuses a file whose name carries an admission stem, in a subdirectory too",
+     "status": "passed",
+     "title": "refuses a file whose name carries an admission stem, in a subdirectory too",
+     "duration": 98.34039399999892,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "egress version 2 record",
+      "withdrawal and forgery forms the reader does not define"
+     ],
+     "fullName": "egress version 2 record withdrawal and forgery forms the reader does not define does not refuse unrelated records, including ones in subdirectories",
+     "status": "passed",
+     "title": "does not refuse unrelated records, including ones in subdirectories",
+     "duration": 13.994518999999855,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "egress version 2 record",
+      "withdrawal and forgery forms the reader does not define"
+     ],
+     "fullName": "egress version 2 record withdrawal and forgery forms the reader does not define does not refuse the recorders' other act records or the aggregate acceptance record they append to",
+     "status": "failed",
+     "title": "does not refuse the recorders' other act records or the aggregate acceptance record they append to",
+     "duration": 8088.845383000007,
+     "failureMessages": [
+      "Error: STACK_TRACE_ERROR\n    at task (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:662:16)\n    at Object.<anonymous> (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:458:28)\n    at chain (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:369:14)\n    at /home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/packages/polaris-generation-consent/src/package-reader.test.ts:480:5\n    at file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:734:40\n    at runWithSuite (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:1849:8)\n    at Object.collect (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:734:10)\n    at Object.collect (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:738:54)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at Object.collect (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:738:46)\n    at collectTests (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:1179:25)\n    at startTests (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:1817:17)\n    at file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/vitest/dist/chunks/runBaseTests.9Ij9_de-.js:117:26\n    at withEnv (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/vitest/dist/chunks/runBaseTests.9Ij9_de-.js:84:3)"
+     ],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "egress version 2 record",
+      "withdrawal and forgery forms the reader does not define"
+     ],
+     "fullName": "egress version 2 record withdrawal and forgery forms the reader does not define refuses when a subdirectory cannot be listed or the tree is too deep",
+     "status": "passed",
+     "title": "refuses when a subdirectory cannot be listed or the tree is too deep",
+     "duration": 4.22276299999794,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "egress version 2 record",
+      "instance sections"
+     ],
+     "fullName": "egress version 2 record instance sections takes admitted repositories only from the Scope section",
+     "status": "passed",
+     "title": "takes admitted repositories only from the Scope section",
+     "duration": 2.1793840000173077,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "egress version 2 record",
+      "instance sections"
+     ],
+     "fullName": "egress version 2 record instance sections takes admitted revisions only from the one revisions table",
+     "status": "passed",
+     "title": "takes admitted revisions only from the one revisions table",
+     "duration": 5.26268600000185,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "screening scope version 2 policy act"
+     ],
+     "fullName": "screening scope version 2 policy act counts the version 2 act when the policy carries the version 2 bytes, and the version 1 act goes quiet",
+     "status": "failed",
+     "title": "counts the version 2 act when the policy carries the version 2 bytes, and the version 1 act goes quiet",
+     "duration": 14197.974599000008,
+     "failureMessages": [
+      "Error: STACK_TRACE_ERROR\n    at task (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:662:16)\n    at Object.<anonymous> (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:458:28)\n    at chain (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:369:14)\n    at /home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/packages/polaris-generation-consent/src/package-reader.test.ts:529:3\n    at file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:734:40\n    at runWithSuite (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:1849:8)\n    at Object.collect (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:734:10)\n    at Object.collect (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:738:54)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at collectTests (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:1179:25)\n    at startTests (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:1817:17)\n    at file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/vitest/dist/chunks/runBaseTests.9Ij9_de-.js:117:26\n    at withEnv (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/vitest/dist/chunks/runBaseTests.9Ij9_de-.js:84:3)\n    at run (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/vitest/dist/chunks/runBaseTests.9Ij9_de-.js:109:2)"
+     ],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "screening scope version 2 policy act"
+     ],
+     "fullName": "screening scope version 2 policy act counts the version 1 act while the policy still carries the version 1 bytes",
+     "status": "passed",
+     "title": "counts the version 1 act while the policy still carries the version 1 bytes",
+     "duration": 62.734445000009146,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "screening scope version 2 policy act"
+     ],
+     "fullName": "screening scope version 2 policy act never brings back the superseded version 1 act when the policy bytes revert to its argument (B-4)",
+     "status": "passed",
+     "title": "never brings back the superseded version 1 act when the policy bytes revert to its argument (B-4)",
+     "duration": 529.9295210000128,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "screening scope version 2 policy act"
+     ],
+     "fullName": "screening scope version 2 policy act a version 2 act not yet in force leaves version 1 in force, in both views",
+     "status": "failed",
+     "title": "a version 2 act not yet in force leaves version 1 in force, in both views",
+     "duration": 5038.918183000002,
+     "failureMessages": [
+      "Error: STACK_TRACE_ERROR\n    at task (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:662:16)\n    at Object.<anonymous> (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:458:28)\n    at chain (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:369:14)\n    at /home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/packages/polaris-generation-consent/src/package-reader.test.ts:549:3\n    at file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:734:40\n    at runWithSuite (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:1849:8)\n    at Object.collect (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:734:10)\n    at Object.collect (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:738:54)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at collectTests (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:1179:25)\n    at startTests (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:1817:17)\n    at file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/vitest/dist/chunks/runBaseTests.9Ij9_de-.js:117:26\n    at withEnv (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/vitest/dist/chunks/runBaseTests.9Ij9_de-.js:84:3)\n    at run (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/vitest/dist/chunks/runBaseTests.9Ij9_de-.js:109:2)"
+     ],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "screening scope version 2 policy act"
+     ],
+     "fullName": "screening scope version 2 policy act counts nothing for version 2 bytes with only the version 1 act, or for an edited policy under the version 2 act",
+     "status": "passed",
+     "title": "counts nothing for version 2 bytes with only the version 1 act, or for an edited policy under the version 2 act",
+     "duration": 28.064134000014747,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "screening scope version 2 policy act"
+     ],
+     "fullName": "screening scope version 2 policy act refuses a version 2 act in a form the recorder does not write",
+     "status": "passed",
+     "title": "refuses a version 2 act in a form the recorder does not write",
+     "duration": 7.817141000006814,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "screening scope version 2 policy act"
+     ],
+     "fullName": "screening scope version 2 policy act refuses an unlisted record that names the policy: another file, a subdirectory, a loose field spelling, a Unicode-hyphen identity",
+     "status": "passed",
+     "title": "refuses an unlisted record that names the policy: another file, a subdirectory, a loose field spelling, a Unicode-hyphen identity",
+     "duration": 3451.586684000009,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "screening scope version 3 policy act"
+     ],
+     "fullName": "screening scope version 3 policy act puts version 3 in force from its instant over version 2 over version 1, in both views",
+     "status": "passed",
+     "title": "puts version 3 in force from its instant over version 2 over version 1, in both views",
+     "duration": 10.197746999998344,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "screening scope version 3 policy act"
+     ],
+     "fullName": "screening scope version 3 policy act leaves version 2 in force before version 3's instant, and never brings it back after",
+     "status": "passed",
+     "title": "leaves version 2 in force before version 3's instant, and never brings it back after",
+     "duration": 25.09927599999355,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "screening scope version 3 policy act"
+     ],
+     "fullName": "screening scope version 3 policy act refuses version 3 without version 2",
+     "status": "passed",
+     "title": "refuses version 3 without version 2",
+     "duration": 3.2576919999846723,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "screening scope version 3 policy act"
+     ],
+     "fullName": "screening scope version 3 policy act refuses version 3 without version 1 or 2",
+     "status": "passed",
+     "title": "refuses version 3 without version 1 or 2",
+     "duration": 2.0822620000108145,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "screening scope version 3 policy act"
+     ],
+     "fullName": "screening scope version 3 policy act refuses version 3 not later than version 2",
+     "status": "passed",
+     "title": "refuses version 3 not later than version 2",
+     "duration": 3.3329739999899175,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "screening scope version 3 policy act"
+     ],
+     "fullName": "screening scope version 3 policy act refuses version 3 over version 2's bytes",
+     "status": "passed",
+     "title": "refuses version 3 over version 2's bytes",
+     "duration": 2.3135590000019874,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "screening scope version 3 policy act"
+     ],
+     "fullName": "screening scope version 3 policy act refuses a supersession naming version 1's argument",
+     "status": "passed",
+     "title": "refuses a supersession naming version 1's argument",
+     "duration": 4.769916999997804,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "screening scope version 3 policy act"
+     ],
+     "fullName": "screening scope version 3 policy act refuses a supersession naming version 1's record",
+     "status": "passed",
+     "title": "refuses a supersession naming version 1's record",
+     "duration": 3.0164869999862276,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "screening scope version 3 policy act"
+     ],
+     "fullName": "screening scope version 3 policy act refuses a version 3 record titled as version 2",
+     "status": "passed",
+     "title": "refuses a version 3 record titled as version 2",
+     "duration": 103.33572300002561,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "screening scope version 3 policy act"
+     ],
+     "fullName": "screening scope version 3 policy act refuses a version 3 record with version 2's identity",
+     "status": "passed",
+     "title": "refuses a version 3 record with version 2's identity",
+     "duration": 4.938456000003498,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "screening scope version 3 policy act"
+     ],
+     "fullName": "screening scope version 3 policy act refuses other policy bytes",
+     "status": "passed",
+     "title": "refuses other policy bytes",
+     "duration": 2.6604840000218246,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "screening scope version 4 policy act"
+     ],
+     "fullName": "screening scope version 4 policy act puts version 4 in force from its instant over versions 3, 2 and 1, in both views",
+     "status": "passed",
+     "title": "puts version 4 in force from its instant over versions 3, 2 and 1, in both views",
+     "duration": 8.463602000003448,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "screening scope version 4 policy act"
+     ],
+     "fullName": "screening scope version 4 policy act leaves version 3 in force before version 4's instant, and never brings it back after",
+     "status": "passed",
+     "title": "leaves version 3 in force before version 4's instant, and never brings it back after",
+     "duration": 10.427620999980718,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "screening scope version 4 policy act"
+     ],
+     "fullName": "screening scope version 4 policy act refuses version 4 without version 3",
+     "status": "passed",
+     "title": "refuses version 4 without version 3",
+     "duration": 22.488996999978554,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "screening scope version 4 policy act"
+     ],
+     "fullName": "screening scope version 4 policy act refuses version 4 alone",
+     "status": "passed",
+     "title": "refuses version 4 alone",
+     "duration": 8.62226199998986,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "screening scope version 4 policy act"
+     ],
+     "fullName": "screening scope version 4 policy act refuses version 4 not later than version 3",
+     "status": "passed",
+     "title": "refuses version 4 not later than version 3",
+     "duration": 48.73457800000324,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "screening scope version 4 policy act"
+     ],
+     "fullName": "screening scope version 4 policy act refuses version 4 over version 3's bytes",
+     "status": "passed",
+     "title": "refuses version 4 over version 3's bytes",
+     "duration": 9.533082000009017,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "screening scope version 4 policy act"
+     ],
+     "fullName": "screening scope version 4 policy act refuses a supersession naming version 2's argument",
+     "status": "passed",
+     "title": "refuses a supersession naming version 2's argument",
+     "duration": 24.961897000001045,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "screening scope version 4 policy act"
+     ],
+     "fullName": "screening scope version 4 policy act refuses a supersession naming version 2's record",
+     "status": "passed",
+     "title": "refuses a supersession naming version 2's record",
+     "duration": 3.154666999995243,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "screening scope version 4 policy act"
+     ],
+     "fullName": "screening scope version 4 policy act refuses a version 4 record titled as version 3",
+     "status": "passed",
+     "title": "refuses a version 4 record titled as version 3",
+     "duration": 17.54993999999715,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "screening scope version 4 policy act"
+     ],
+     "fullName": "screening scope version 4 policy act refuses a version 4 record with version 3's identity",
+     "status": "passed",
+     "title": "refuses a version 4 record with version 3's identity",
+     "duration": 10.031853000022238,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "screening scope version 4 policy act"
+     ],
+     "fullName": "screening scope version 4 policy act refuses other policy bytes",
+     "status": "passed",
+     "title": "refuses other policy bytes",
+     "duration": 5.181443999987096,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "strict act reads"
+     ],
+     "fullName": "strict act reads policy chain: version 2 over version 1 over the on-disk policy is ok and returns the parsed fields",
+     "status": "passed",
+     "title": "policy chain: version 2 over version 1 over the on-disk policy is ok and returns the parsed fields",
+     "duration": 9.167691999988165,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "strict act reads"
+     ],
+     "fullName": "strict act reads policy chain: absent without acts; refused for a missing version 1, equal or earlier instants, equal arguments, a supersession that does not name version 1, or other policy bytes",
+     "status": "failed",
+     "title": "policy chain: absent without acts; refused for a missing version 1, equal or earlier instants, equal arguments, a supersession that does not name version 1, or other policy bytes",
+     "duration": 12014.600460999995,
+     "failureMessages": [
+      "Error: STACK_TRACE_ERROR\n    at task (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:662:16)\n    at Object.<anonymous> (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:458:28)\n    at chain (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:369:14)\n    at /home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/packages/polaris-generation-consent/src/package-reader.test.ts:689:3\n    at file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:734:40\n    at runWithSuite (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:1849:8)\n    at Object.collect (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:734:10)\n    at Object.collect (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:738:54)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at collectTests (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:1179:25)\n    at startTests (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:1817:17)\n    at file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/vitest/dist/chunks/runBaseTests.9Ij9_de-.js:117:26\n    at withEnv (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/vitest/dist/chunks/runBaseTests.9Ij9_de-.js:84:3)\n    at run (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/vitest/dist/chunks/runBaseTests.9Ij9_de-.js:109:2)"
+     ],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "strict act reads"
+     ],
+     "fullName": "strict act reads policy reads count a head field only in prose: an HTML comment or fence hides nothing and adds nothing",
+     "status": "passed",
+     "title": "policy reads count a head field only in prose: an HTML comment or fence hides nothing and adds nothing",
+     "duration": 13.933282999991206,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "strict act reads"
+     ],
+     "fullName": "strict act reads class act: ok with the installed module's digest; absent without a record; refused for a mismatch, a bad form, or a file elsewhere naming it",
+     "status": "passed",
+     "title": "class act: ok with the installed module's digest; absent without a record; refused for a mismatch, a bad form, or a file elsewhere naming it",
+     "duration": 4.707079000014346,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "strict act reads"
+     ],
+     "fullName": "strict act reads egress: returns the in-force record's listed content classes, absent before any act and refused when the read is",
+     "status": "passed",
+     "title": "egress: returns the in-force record's listed content classes, absent before any act and refused when the read is",
+     "duration": 13.098506000009365,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "round-3 review notes"
+     ],
+     "fullName": "round-3 review notes closes a fence as CommonMark does: a field a renderer shows inside a code block is not in the prose (N-1)",
+     "status": "passed",
+     "title": "closes a fence as CommonMark does: a field a renderer shows inside a code block is not in the prose (N-1)",
+     "duration": 5.866369000024861,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "round-3 review notes"
+     ],
+     "fullName": "round-3 review notes folds soft hyphens, zero-width spaces, underscores and spaces before matching a withdrawal stem (N-2)",
+     "status": "passed",
+     "title": "folds soft hyphens, zero-width spaces, underscores and spaces before matching a withdrawal stem (N-2)",
+     "duration": 3348.15823500001,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "round-3 review notes"
+     ],
+     "fullName": "round-3 review notes takes Scope repositories from the one list before the next heading of any level, and refuses a second list (N-3)",
+     "status": "passed",
+     "title": "takes Scope repositories from the one list before the next heading of any level, and refuses a second list (N-3)",
+     "duration": 21.381840999994893,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "round-3 review notes"
+     ],
+     "fullName": "round-3 review notes reads the real egress instances' Scope lists, whose items wrap and nest class bullets around the repository bullets",
+     "status": "passed",
+     "title": "reads the real egress instances' Scope lists, whose items wrap and nest class bullets around the repository bullets",
+     "duration": 10.73978299999726,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "round-3 review notes"
+     ],
+     "fullName": "round-3 review notes takes a time: a strict read of an act recorded after now is absent (N-4)",
+     "status": "passed",
+     "title": "takes a time: a strict read of an act recorded after now is absent (N-4)",
+     "duration": 4265.6605090000085,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "round-3 review notes"
+     ],
+     "fullName": "round-3 review notes refuses labels that differ only in case, in one table and across records (N-5)",
+     "status": "passed",
+     "title": "refuses labels that differ only in case, in one table and across records (N-5)",
+     "duration": 20.331718000001274,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses nothing in the base world, and the table holds every row",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses nothing in the base world, and the table holds every row",
+     "duration": 41.99141499999678,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: A3 bare package directory",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: A3 bare package directory",
+     "duration": 10.138347000000067,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: A4 bare package directory, short",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: A4 bare package directory, short",
+     "duration": 16.740726999996696,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: A5 instance file without instances/",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: A5 instance file without instances/",
+     "duration": 29.97670400000061,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: A id-named package file that does not exist",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: A id-named package file that does not exist",
+     "duration": 34.59663000001456,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: A2 id under the package directory",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: A2 id under the package directory",
+     "duration": 25.609396000014385,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: F2 URL into the package",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: F2 URL into the package",
+     "duration": 32.42536900000414,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: G2 link target carrying the id",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: G2 link target carrying the id",
+     "duration": 27.072890000010375,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: B id as a directory before a script name",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: B id as a directory before a script name",
+     "duration": 29.60685700000613,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: B2 instance path ending in a script name",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: B2 instance path ending in a script name",
+     "duration": 36.711865000019316,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: H2 fullwidth slash",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: H2 fullwidth slash",
+     "duration": 38.54680000001099,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: J decisions file under a package-named directory",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: J decisions file under a package-named directory",
+     "duration": 21.28334600001108,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: K decisions file named as a script",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: K decisions file named as a script",
+     "duration": 16.223740999994334,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: L policy stem as a script name",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: L policy stem as a script name",
+     "duration": 26.081237999984296,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: M class stem as a script name",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: M class stem as a script name",
+     "duration": 17.54238100000657,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: the disclosed round-4 residual",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: the disclosed round-4 residual",
+     "duration": 4.966619999991963,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: a script name that does not exist in scripts/",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: a script name that does not exist in scripts/",
+     "duration": 4.742626999999629,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: an existing script under another directory",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: an existing script under another directory",
+     "duration": 6.053352000017185,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: an existing script in another case",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: an existing script in another case",
+     "duration": 5.781128000002354,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: an existing script glued to an id",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: an existing script glued to an id",
+     "duration": 5.60806099997717,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: a record id beside an existing script",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: a record id beside an existing script",
+     "duration": 5.538010000018403,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: an act record path",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: an act record path",
+     "duration": 5.091786000004504,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: an egress v2 instance path",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: an egress v2 instance path",
+     "duration": 6.525433999981033,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: an observation instance path",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: an observation instance path",
+     "duration": 13.861578999989433,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: the class act id beside its recorder",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: the class act id beside its recorder",
+     "duration": 10.740886000014143,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: a snake_case record id",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: a snake_case record id",
+     "duration": 5.768734999990556,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: an existing script whose name carries a record id",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: an existing script whose name carries a record id",
+     "duration": 5.990944999997737,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: an existing package file whose name carries a record id",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: an existing package file whose name carries a record id",
+     "duration": 12.124217999982648,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: N-1 egress withdrawal citing its recorder",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: N-1 egress withdrawal citing its recorder",
+     "duration": 26.745051000005333,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: N-1 withdrawal citing the builder",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: N-1 withdrawal citing the builder",
+     "duration": 20.615935000008903,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: N-1 class revocation citing its recorder",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: N-1 class revocation citing its recorder",
+     "duration": 31.573550000000978,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: N-1 admission withdrawal citing its recorder",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: N-1 admission withdrawal citing its recorder",
+     "duration": 15.999477000004845,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: N-1 withdrawal citing a package file",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: N-1 withdrawal citing a package file",
+     "duration": 21.947439999989,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: N-1 the intended-difference row of #355",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: N-1 the intended-difference row of #355",
+     "duration": 14.349170000001322,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: N-2 a package WITHDRAWAL.md (citing it puts the word in the text)",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: N-2 a package WITHDRAWAL.md (citing it puts the word in the text)",
+     "duration": 19.22142200000235,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: N-2 a nested instances file",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: N-2 a nested instances file",
+     "duration": 16.273535000014817,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: N-2 a script for another provider",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: N-2 a script for another provider",
+     "duration": 16.309241999988444,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: N-2 a withdraw script for another provider",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: N-2 a withdraw script for another provider",
+     "duration": 15.717713999998523,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: a bare package directory, no withdrawal word",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: a bare package directory, no withdrawal word",
+     "duration": 16.022490000003017,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: an existing id-named package file, no withdrawal word",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: an existing id-named package file, no withdrawal word",
+     "duration": 17.16517799999565,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: N-3a bare package file name",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: N-3a bare package file name",
+     "duration": 24.559322999994038,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: N-3b decisions file named as an existing script",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: N-3b decisions file named as an existing script",
+     "duration": 45.28401400000439,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: #355 citation: a script in a code span",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: #355 citation: a script in a code span",
+     "duration": 119.21361100001377,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: #355 citation: the class recorder",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: #355 citation: the class recorder",
+     "duration": 97.62373600000865,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: #355 citation: a bare script name",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: #355 citation: a bare script name",
+     "duration": 26.433012000023155,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: #355 citation: a package file path",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: #355 citation: a package file path",
+     "duration": 22.93381399998907,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: #355 citation: package path suffixes",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: #355 citation: package path suffixes",
+     "duration": 48.67201300000306,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: #355 citation: a link target",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: #355 citation: a link target",
+     "duration": 20.542799000017112,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: #361 unseen: a citation-only stem",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: #361 unseen: a citation-only stem",
+     "duration": 18.575032000022475,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: #361 unseen: a citation as act identity",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: #361 unseen: a citation as act identity",
+     "duration": 23.60849800001597,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: #361 unseen: a citation as artifact identity",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: #361 unseen: a citation as artifact identity",
+     "duration": 36.34097499999916,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E withdraw",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E withdraw",
+     "duration": 13.829750000004424,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C withdraw",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C withdraw",
+     "duration": 42.17331000001286,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E Withdrawn",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E Withdrawn",
+     "duration": 58.90448900000774,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C Withdrawn",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C Withdrawn",
+     "duration": 56.30285599999479,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E WITHDRAWN",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E WITHDRAWN",
+     "duration": 125.0058410000056,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C WITHDRAWN",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C WITHDRAWN",
+     "duration": 39.99260100000538,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E withdrawing",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E withdrawing",
+     "duration": 19.390821999986656,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C withdrawing",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C withdrawing",
+     "duration": 27.489568000019062,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E withdrawal",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E withdrawal",
+     "duration": 175.6044229999825,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C withdrawal",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C withdrawal",
+     "duration": 13.289369000005536,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E withdrew",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E withdrew",
+     "duration": 5.304197999997996,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C withdrew",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C withdrew",
+     "duration": 21.917603999987477,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E withdrawl-typo",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E withdrawl-typo",
+     "duration": 38.16395799999009,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C withdrawl-typo",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C withdrawl-typo",
+     "duration": 20.76600000000326,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E revoked",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E revoked",
+     "duration": 62.6103389999771,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C revoked",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C revoked",
+     "duration": 86.71086699998705,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E revocation",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E revocation",
+     "duration": 52.78190699999686,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C revocation",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C revocation",
+     "duration": 17.61299500000314,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E revoking",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E revoking",
+     "duration": 41.038446999998996,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C revoking",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C revoking",
+     "duration": 481.77537599997595,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E retracted",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E retracted",
+     "duration": 109.17303999999422,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C retracted",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C retracted",
+     "duration": 190.0943430000043,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E retraction",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E retraction",
+     "duration": 42.017116000002716,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C retraction",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C retraction",
+     "duration": 172.5317550000036,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E rescinded",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E rescinded",
+     "duration": 59.03296399998362,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C rescinded",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C rescinded",
+     "duration": 80.28914999999688,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E rescission",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E rescission",
+     "duration": 81.7064160000009,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C rescission",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C rescission",
+     "duration": 326.07341300000553,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E recission-typo",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E recission-typo",
+     "duration": 41.46422200000961,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C recission-typo",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C recission-typo",
+     "duration": 8.347595999977784,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E recinded-typo",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E recinded-typo",
+     "duration": 4.98462400000426,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C recinded-typo",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C recinded-typo",
+     "duration": 8.187082999997074,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E with-drawn",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E with-drawn",
+     "duration": 5.217804000014439,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C with-drawn",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C with-drawn",
+     "duration": 24.73564699999406,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E with drawn",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E with drawn",
+     "duration": 5.121091999986675,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C with drawn",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C with drawn",
+     "duration": 9.3299410000036,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E with-NL-drawn",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E with-NL-drawn",
+     "duration": 5.164935000007972,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C with-NL-drawn",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C with-NL-drawn",
+     "duration": 8.214073000010103,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E with NL drawn",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E with NL drawn",
+     "duration": 5.631426000007195,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C with NL drawn",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C with NL drawn",
+     "duration": 13.960988000006182,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E with**drawn**",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E with**drawn**",
+     "duration": 4.644873000012012,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C with**drawn**",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C with**drawn**",
+     "duration": 7.61575399999856,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E code span",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E code span",
+     "duration": 4.75361799998791,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C code span",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C code span",
+     "duration": 88.49426700000186,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E heading",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E heading",
+     "duration": 107.12070700002369,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C heading",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C heading",
+     "duration": 102.15079000001424,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E re-voked",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E re-voked",
+     "duration": 53.846538999991026,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C re-voked",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C re-voked",
+     "duration": 36.78574700001627,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E re U+2011 voked",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E re U+2011 voked",
+     "duration": 97.57454699999653,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C re U+2011 voked",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C re U+2011 voked",
+     "duration": 148.89655800000764,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E soft hyphen",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E soft hyphen",
+     "duration": 50.726316000014776,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C soft hyphen",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C soft hyphen",
+     "duration": 124.79351499999757,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E ZWSP",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E ZWSP",
+     "duration": 54.394393999973545,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C ZWSP",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C ZWSP",
+     "duration": 166.20769300000393,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E fullwidth",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E fullwidth",
+     "duration": 110.83970099998987,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C fullwidth",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C fullwidth",
+     "duration": 133.89461600000504,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E Cyrillic a",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E Cyrillic a",
+     "duration": 30.78070599999046,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C Cyrillic a",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C Cyrillic a",
+     "duration": 89.15457600000082,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E Greek omicron",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E Greek omicron",
+     "duration": 49.950952000013785,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C Greek omicron",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C Greek omicron",
+     "duration": 91.26957000000402,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E &shy; entity",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E &shy; entity",
+     "duration": 80.99438400001964,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C &shy; entity",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C &shy; entity",
+     "duration": 91.78285000001779,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E &#119; entity",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E &#119; entity",
+     "duration": 43.26888100002543,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C &#119; entity",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C &#119; entity",
+     "duration": 126.44683899998199,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E combining mark",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E combining mark",
+     "duration": 145.48526699998183,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C combining mark",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C combining mark",
+     "duration": 143.81864099999075,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E re-tract",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E re-tract",
+     "duration": 237.4468169999891,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C re-tract",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C re-tract",
+     "duration": 110.34922699999879,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E re-scind",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E re-scind",
+     "duration": 98.50685100001283,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C re-scind",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C re-scind",
+     "duration": 183.61958299999242,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E w/drawn",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E w/drawn",
+     "duration": 46.48139000000083,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C w/drawn",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C w/drawn",
+     "duration": 99.55143299998599,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E W-I-T-H",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E W-I-T-H",
+     "duration": 105.92986099998234,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C W-I-T-H",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C W-I-T-H",
+     "duration": 118.95281800001976,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E cancelled",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E cancelled",
+     "duration": 43.51083000001381,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C cancelled",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C cancelled",
+     "duration": 220.50521199998911,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E terminated",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E terminated",
+     "duration": 137.03880800001207,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C terminated",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C terminated",
+     "duration": 329.72171199999866,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E ends today",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E ends today",
+     "duration": 167.37329299998237,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C ends today",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C ends today",
+     "duration": 207.03420200000983,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E void",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E void",
+     "duration": 144.30831000002217,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C void",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C void",
+     "duration": 18.49426000000676,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E pulled",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E pulled",
+     "duration": 13.244234000012511,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C pulled",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C pulled",
+     "duration": 15.815410999988671,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E annulled",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E annulled",
+     "duration": 11.737750000000233,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C annulled",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C annulled",
+     "duration": 81.44488799999817,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E repealed",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E repealed",
+     "duration": 32.81207300000824,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C repealed",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C repealed",
+     "duration": 38.48095100000501,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E retired",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E retired",
+     "duration": 136.43038999999408,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C retired",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C retired",
+     "duration": 22.613320000004023,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E superseded",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E superseded",
+     "duration": 15.615843999985373,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C superseded",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C superseded",
+     "duration": 31.447446000005584,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E suspended",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E suspended",
+     "duration": 11.727890999987721,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C suspended",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C suspended",
+     "duration": 25.335240999993403,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E lapsed",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E lapsed",
+     "duration": 17.72717199998442,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C lapsed",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C lapsed",
+     "duration": 29.610547000018414,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E expired",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E expired",
+     "duration": 13.512921999994433,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C expired",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C expired",
+     "duration": 31.78750800000853,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E stopped",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E stopped",
+     "duration": 12.144678000011481,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C stopped",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C stopped",
+     "duration": 32.38742199999979,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E invalidated",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E invalidated",
+     "duration": 13.141189999994822,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C invalidated",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C invalidated",
+     "duration": 34.702705000003334,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E nullified",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E nullified",
+     "duration": 34.063066000002436,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C nullified",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C nullified",
+     "duration": 36.026444999995874,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E no longer consent",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E no longer consent",
+     "duration": 20.11251700000139,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C no longer consent",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C no longer consent",
+     "duration": 19.998973000008846,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E no longer in force",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E no longer in force",
+     "duration": 11.27057700001751,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C no longer in force",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C no longer in force",
+     "duration": 32.80773600001703,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E abandoned",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E abandoned",
+     "duration": 22.759868000022834,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C abandoned",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C abandoned",
+     "duration": 20.22846600000048,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E reversed",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E reversed",
+     "duration": 7.234192999982042,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C reversed",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C reversed",
+     "duration": 10.85313900001347,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E removed",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E removed",
+     "duration": 6.558175999991363,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C removed",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C removed",
+     "duration": 11.61129100000835,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E opted out",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E opted out",
+     "duration": 7.12923600000795,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C opted out",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C opted out",
+     "duration": 11.74018399999477,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E disabled",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E disabled",
+     "duration": 6.9550060000037774,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C disabled",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C disabled",
+     "duration": 11.064216999977361,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E halted",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E halted",
+     "duration": 7.4809689999965485,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C halted",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C halted",
+     "duration": 15.34898000000976,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E do not use",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E do not use",
+     "duration": 13.202725999988616,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C do not use",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C do not use",
+     "duration": 24.22079700001632,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E end",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E end",
+     "duration": 67.0251130000106,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C end",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C end",
+     "duration": 62.80292799999006,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E undone",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E undone",
+     "duration": 5.854698000010103,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C undone",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C undone",
+     "duration": 15.182224999996834,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E deauthorized",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E deauthorized",
+     "duration": 4.8982019999821205,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C deauthorized",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C deauthorized",
+     "duration": 7.351515999995172,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: E refused",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: E refused",
+     "duration": 5.985525999974925,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: C refused",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: C refused",
+     "duration": 71.35931899998104,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: control stem outside citation, synonym",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: control stem outside citation, synonym",
+     "duration": 24.581257000012556,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: name EGRESS-WITHDRAWAL.md",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: name EGRESS-WITHDRAWAL.md",
+     "duration": 19.097930999996606,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: name REVOCATION.md",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: name REVOCATION.md",
+     "duration": 22.065355999977328,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: split files word+cite",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: split files word+cite",
+     "duration": 8.258417999983067,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: split files, word file no word in name",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: split files, word file no word in name",
+     "duration": 21.855149000009988,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: word in fence",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: word in fence",
+     "duration": 55.81371799999033,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: word in html comment",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: word in html comment",
+     "duration": 29.94695299997693,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: benign: withdrawal process doc",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: benign: withdrawal process doc",
+     "duration": 21.06257199999527,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: bare manifest name withdrawn",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: bare manifest name withdrawn",
+     "duration": 26.011670000007143,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: bare manifest name ends",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: bare manifest name ends",
+     "duration": 61.980715999990935,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: v2 manifest pkg-relative ends",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: v2 manifest pkg-relative ends",
+     "duration": 25.512787000014214,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: public_egress_v2x script",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: public_egress_v2x script",
+     "duration": 4.21847799999523,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: public_egress_v20 script",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: public_egress_v20 script",
+     "duration": 4.531849999999395,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: instances nested deep",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: instances nested deep",
+     "duration": 5.999191000009887,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: Instances capital segment",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: Instances capital segment",
+     "duration": 4.333062999998219,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: instances.md file",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: instances.md file",
+     "duration": 5.176367000007303,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) with no file allowlisted, refuses the reads the pre-#355 reader refused: instance-x dir",
+     "status": "passed",
+     "title": "with no file allowlisted, refuses the reads the pre-#355 reader refused: instance-x dir",
+     "duration": 4.885538000002271,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) a file at its allowlisted path with its allowlisted bytes has its exact tooling citations set aside, and only those",
+     "status": "passed",
+     "title": "a file at its allowlisted path with its allowlisted bytes has its exact tooling citations set aside, and only those",
+     "duration": 289.8170939999982,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) one changed byte gives the file the whole-text sweep",
+     "status": "passed",
+     "title": "one changed byte gives the file the whole-text sweep",
+     "duration": 116.60440800001379,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) the same bytes at any other path are not allowlisted",
+     "status": "passed",
+     "title": "the same bytes at any other path are not allowlisted",
+     "duration": 199.99354900000617,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+     ],
+     "fullName": "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1) an allowlisted file named for a stem still refuses: the allowlist sets aside citations in the text, never the name",
+     "status": "passed",
+     "title": "an allowlisted file named for a stem still refuses: the allowlist sets aside citations in the text, never the name",
+     "duration": 13.78753100000904,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "altered prose in a field-parsed act record (characterization, syzygy-bpyt.8.10)"
+     ],
+     "fullName": "altered prose in a field-parsed act record (characterization, syzygy-bpyt.8.10) the admission reader (parseAct) counts the recorder's record, and still counts it with each prose alteration",
+     "status": "passed",
+     "title": "the admission reader (parseAct) counts the recorder's record, and still counts it with each prose alteration",
+     "duration": 5.546976999990875,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "altered prose in a field-parsed act record (characterization, syzygy-bpyt.8.10)"
+     ],
+     "fullName": "altered prose in a field-parsed act record (characterization, syzygy-bpyt.8.10) the policy chain (parsePolicyAct) counts the recorder's record, and still counts it with each prose alteration",
+     "status": "passed",
+     "title": "the policy chain (parsePolicyAct) counts the recorder's record, and still counts it with each prose alteration",
+     "duration": 15.512619999994058,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "altered prose in a field-parsed act record (characterization, syzygy-bpyt.8.10)"
+     ],
+     "fullName": "altered prose in a field-parsed act record (characterization, syzygy-bpyt.8.10) the class act (readClassAct) counts the recorder's record, and still counts it with each prose alteration",
+     "status": "passed",
+     "title": "the class act (readClassAct) counts the recorder's record, and still counts it with each prose alteration",
+     "duration": 2.880551000009291,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "altered prose in a field-parsed act record (characterization, syzygy-bpyt.8.10)"
+     ],
+     "fullName": "altered prose in a field-parsed act record (characterization, syzygy-bpyt.8.10) the admission reader (parseAct) refuses the record with a head field altered (the control)",
+     "status": "passed",
+     "title": "the admission reader (parseAct) refuses the record with a head field altered (the control)",
+     "duration": 290.6878789999755,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "altered prose in a field-parsed act record (characterization, syzygy-bpyt.8.10)"
+     ],
+     "fullName": "altered prose in a field-parsed act record (characterization, syzygy-bpyt.8.10) the policy chain (parsePolicyAct) refuses the record with a head field altered (the control)",
+     "status": "passed",
+     "title": "the policy chain (parsePolicyAct) refuses the record with a head field altered (the control)",
+     "duration": 1.410383999987971,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "altered prose in a field-parsed act record (characterization, syzygy-bpyt.8.10)"
+     ],
+     "fullName": "altered prose in a field-parsed act record (characterization, syzygy-bpyt.8.10) the class act (readClassAct) refuses the record with a head field altered (the control)",
+     "status": "passed",
+     "title": "the class act (readClassAct) refuses the record with a head field altered (the control)",
+     "duration": 0.3236509999842383,
+     "failureMessages": [],
+     "meta": {}
+    },
+    {
+     "ancestorTitles": [
+      "the policy port and the strict policy chain agree"
+     ],
+     "fullName": "the policy port and the strict policy chain agree on every world in the fixture set, at every instant",
+     "status": "failed",
+     "title": "on every world in the fixture set, at every instant",
+     "duration": 16464.869911000016,
+     "failureMessages": [
+      "Error: STACK_TRACE_ERROR\n    at task (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:662:16)\n    at Object.<anonymous> (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:458:28)\n    at chain (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:369:14)\n    at /home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/packages/polaris-generation-consent/src/package-reader.test.ts:1042:3\n    at file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:734:40\n    at runWithSuite (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:1849:8)\n    at Object.collect (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:734:10)\n    at Object.collect (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:738:54)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at collectTests (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:1179:25)\n    at startTests (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/@vitest/runner/dist/chunk-hooks.js:1817:17)\n    at file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/vitest/dist/chunks/runBaseTests.9Ij9_de-.js:117:26\n    at withEnv (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/vitest/dist/chunks/runBaseTests.9Ij9_de-.js:84:3)\n    at run (file:///home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/node_modules/vitest/dist/chunks/runBaseTests.9Ij9_de-.js:109:2)"
+     ],
+     "meta": {}
+    }
+   ],
+   "startTime": 1792661335945,
+   "endTime": 1792661483404.8699,
+   "status": "failed",
+   "message": "",
+   "name": "/home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.21/packages/polaris-generation-consent/src/package-reader.test.ts"
+  }
+ ]
+}

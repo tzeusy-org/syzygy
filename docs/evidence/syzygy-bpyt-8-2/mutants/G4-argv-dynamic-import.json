@@ -1,0 +1,11 @@
+{
+ "id": "G4-argv-dynamic-import",
+ "command": "TMPDIR=/tmp/la-b82/g CI=1 npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/subpath-imports.test.ts",
+ "edits": [
+  {
+   "file": "packages/polaris-dossier/src/argv.ts",
+   "old": "import { parseArgs } from 'node:util';\n",
+   "new": "import { parseArgs } from 'node:util';\nexport const lazy = (): Promise<unknown> => import('@syzygy/cap1-core');\n"
+  }
+ ]
+}

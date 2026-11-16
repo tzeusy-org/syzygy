@@ -1,0 +1,238 @@
+{
+ "entries": 17,
+ "ok": 17,
+ "rows": [
+  {
+   "package": "@syzygy/three-surface-poc-app",
+   "subpath": ".",
+   "conditions": [
+    "source",
+    "default"
+   ],
+   "target": "./dist/main.js",
+   "compiledFrom": "apps/three-surface-poc/src/main.ts",
+   "source": "apps/three-surface-poc/src/main.ts",
+   "ok": true
+  },
+  {
+   "package": "@syzygy/three-surface-poc-app",
+   "subpath": "./dossier-render",
+   "conditions": [
+    "source",
+    "default"
+   ],
+   "target": "./dist/polaris-generation/dossier-render.js",
+   "compiledFrom": "apps/three-surface-poc/src/polaris-generation/dossier-render.ts",
+   "source": "apps/three-surface-poc/src/polaris-generation/dossier-render.ts",
+   "ok": true
+  },
+  {
+   "package": "@syzygy/three-surface-poc-app",
+   "subpath": "./dossier-site",
+   "conditions": [
+    "source",
+    "default"
+   ],
+   "target": "./dist/polaris-generation/dossier-site.js",
+   "compiledFrom": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "source": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "ok": true
+  },
+  {
+   "package": "@syzygy/cap1-core",
+   "subpath": ".",
+   "conditions": [
+    "source",
+    "types",
+    "import",
+    "default"
+   ],
+   "target": "./dist/index.js",
+   "compiledFrom": "packages/cap1-core/src/index.ts",
+   "source": "packages/cap1-core/src/index.ts",
+   "ok": true
+  },
+  {
+   "package": "@syzygy/cap1-core",
+   "subpath": "./testing",
+   "conditions": [
+    "source",
+    "types",
+    "import",
+    "default"
+   ],
+   "target": "./dist/testing.js",
+   "compiledFrom": "packages/cap1-core/src/testing.ts",
+   "source": "packages/cap1-core/src/testing.ts",
+   "ok": true
+  },
+  {
+   "package": "@syzygy/cap1-daemon",
+   "subpath": ".",
+   "conditions": [
+    "source",
+    "types",
+    "import",
+    "default"
+   ],
+   "target": "./dist/index.js",
+   "compiledFrom": "packages/cap1-daemon/src/index.ts",
+   "source": "packages/cap1-daemon/src/index.ts",
+   "ok": true
+  },
+  {
+   "package": "@syzygy/http-host",
+   "subpath": ".",
+   "conditions": [
+    "source",
+    "types",
+    "import",
+    "default"
+   ],
+   "target": "./dist/index.js",
+   "compiledFrom": "packages/http-host/src/index.ts",
+   "source": "packages/http-host/src/index.ts",
+   "ok": true
+  },
+  {
+   "package": "@syzygy/polaris-dossier",
+   "subpath": ".",
+   "conditions": [
+    "source",
+    "types",
+    "import",
+    "default"
+   ],
+   "target": "./dist/index.js",
+   "compiledFrom": "packages/polaris-dossier/src/index.ts",
+   "source": "packages/polaris-dossier/src/index.ts",
+   "ok": true
+  },
+  {
+   "package": "@syzygy/polaris-dossier",
+   "subpath": "./argv",
+   "conditions": [
+    "source",
+    "types",
+    "import",
+    "default"
+   ],
+   "target": "./dist/argv.js",
+   "compiledFrom": "packages/polaris-dossier/src/argv.ts",
+   "source": "packages/polaris-dossier/src/argv.ts",
+   "ok": true
+  },
+  {
+   "package": "@syzygy/polaris-dossier",
+   "subpath": "./state-directory",
+   "conditions": [
+    "source",
+    "types",
+    "import",
+    "default"
+   ],
+   "target": "./dist/state-directory.js",
+   "compiledFrom": "packages/polaris-dossier/src/state-directory.ts",
+   "source": "packages/polaris-dossier/src/state-directory.ts",
+   "ok": true
+  },
+  {
+   "package": "@syzygy/polaris-generation-consent",
+   "subpath": ".",
+   "conditions": [
+    "source",
+    "types",
+    "import",
+    "default"
+   ],
+   "target": "./dist/index.js",
+   "compiledFrom": "packages/polaris-generation-consent/src/index.ts",
+   "source": "packages/polaris-generation-consent/src/index.ts",
+   "ok": true
+  },
+  {
+   "package": "@syzygy/polaris-generation-consent",
+   "subpath": "./live",
+   "conditions": [
+    "source",
+    "types",
+    "import",
+    "default"
+   ],
+   "target": "./dist/live.js",
+   "compiledFrom": "packages/polaris-generation-consent/src/live.ts",
+   "source": "packages/polaris-generation-consent/src/live.ts",
+   "ok": true
+  },
+  {
+   "package": "@syzygy/polaris-generation-consent",
+   "subpath": "./testing",
+   "conditions": [
+    "source",
+    "types",
+    "import",
+    "default"
+   ],
+   "target": "./dist/testing.js",
+   "compiledFrom": "packages/polaris-generation-consent/src/testing.ts",
+   "source": "packages/polaris-generation-consent/src/testing.ts",
+   "ok": true
+  },
+  {
+   "package": "@syzygy/polaris-generation-core",
+   "subpath": ".",
+   "conditions": [
+    "source",
+    "types",
+    "import",
+    "default"
+   ],
+   "target": "./dist/index.js",
+   "compiledFrom": "packages/polaris-generation-core/src/index.ts",
+   "source": "packages/polaris-generation-core/src/index.ts",
+   "ok": true
+  },
+  {
+   "package": "@syzygy/polaris-generation-core",
+   "subpath": "./live",
+   "conditions": [
+    "source",
+    "types",
+    "import",
+    "default"
+   ],
+   "target": "./dist/live.js",
+   "compiledFrom": "packages/polaris-generation-core/src/live.ts",
+   "source": "packages/polaris-generation-core/src/live.ts",
+   "ok": true
+  },
+  {
+   "package": "@syzygy/support",
+   "subpath": ".",
+   "conditions": [
+    "source",
+    "types",
+    "import",
+    "default"
+   ],
+   "target": "./dist/index.js",
+   "compiledFrom": "packages/support/src/index.ts",
+   "source": "packages/support/src/index.ts",
+   "ok": true
+  },
+  {
+   "package": "@syzygy/three-surface-poc-core",
+   "subpath": ".",
+   "conditions": [
+    "source",
+    "types",
+    "import",
+    "default"
+   ],
+   "target": "./dist/index.js",
+   "compiledFrom": "packages/three-surface-poc-core/src/index.ts",
+   "source": "packages/three-surface-poc-core/src/index.ts",
+   "ok": true
+  }
+ ]
+}

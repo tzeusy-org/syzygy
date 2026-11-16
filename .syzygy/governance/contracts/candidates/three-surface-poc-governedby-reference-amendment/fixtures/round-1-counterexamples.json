@@ -1,0 +1,2443 @@
+{
+  "reviewed_subject_commit": "b81f2cf480e57ce7741b32e9d9a55e713d77ab66",
+  "review_raw_sha256": "fabdf0d656ba0e6c6536e10683a6032fb196557b7ab74c20a02960dc8f8494c9",
+  "legacy_builder_sha256": "93485ecface1c0844153d01d2f21f654e9f58f539d31ec8b2460392b478c7ac4",
+  "note": "Original three oracle counterexamples and prose-consumer counterexample reproduced against b81 before repair; their old acceptance is retained. New checks must reject each while preserving literal expectations. Additional cases isolate binding and multiset predicates.",
+  "wireCounterexamples": [
+    {
+      "name": "duplicate-complete-value-under-unrelated-key",
+      "body": {
+        "evaluation": {
+          "snapshot": "fixture-evaluation-A",
+          "asOf": "2026-10-21T00:00:00Z"
+        },
+        "workItems": {
+          "kind": "observed",
+          "provenance": {
+            "revision": "fixture-revision-A"
+          },
+          "capturedAt": "2026-10-21T00:00:00Z",
+          "governedBy": {
+            "label": "Unknown",
+            "closedReason": "source-uncaptured-or-unreachable",
+            "resolutionRoutes": [
+              {
+                "reason": "source-uncaptured-or-unreachable",
+                "route": "Repair the observer/source; new snapshot",
+                "actor": "operator",
+                "verb": "repair",
+                "target": "evaluation"
+              }
+            ]
+          },
+          "governedByUnknownCount": 2,
+          "items": [
+            {
+              "id": "A",
+              "title": "Implement POC-REQ-010",
+              "governedBy": {
+                "ref": "observation"
+              },
+              "governedByCopy": {
+                "label": "Unknown",
+                "closedReason": "source-uncaptured-or-unreachable",
+                "resolutionRoutes": [
+                  {
+                    "reason": "source-uncaptured-or-unreachable",
+                    "route": "Repair the observer/source; new snapshot",
+                    "actor": "operator",
+                    "verb": "repair",
+                    "target": "evaluation"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "B",
+              "title": "Unrelated work",
+              "governedBy": {
+                "ref": "observation"
+              }
+            }
+          ]
+        }
+      },
+      "renderedIds": [
+        "A"
+      ],
+      "expected": {
+        "valid": true,
+        "fault": null,
+        "evaluation": {
+          "snapshot": "fixture-evaluation-A",
+          "asOf": "2026-10-21T00:00:00Z"
+        },
+        "observation": {
+          "provenance": {
+            "revision": "fixture-revision-A"
+          },
+          "capturedAt": "2026-10-21T00:00:00Z"
+        },
+        "effectiveIds": [
+          "A",
+          "B"
+        ],
+        "claimIdentities": [
+          {
+            "evaluation": {
+              "snapshot": "fixture-evaluation-A",
+              "asOf": "2026-10-21T00:00:00Z"
+            },
+            "observation": {
+              "provenance": {
+                "revision": "fixture-revision-A"
+              },
+              "capturedAt": "2026-10-21T00:00:00Z"
+            },
+            "itemId": "A",
+            "field": "governedBy"
+          },
+          {
+            "evaluation": {
+              "snapshot": "fixture-evaluation-A",
+              "asOf": "2026-10-21T00:00:00Z"
+            },
+            "observation": {
+              "provenance": {
+                "revision": "fixture-revision-A"
+              },
+              "capturedAt": "2026-10-21T00:00:00Z"
+            },
+            "itemId": "B",
+            "field": "governedBy"
+          }
+        ],
+        "unknownCount": 2,
+        "renderedIds": [
+          "A"
+        ],
+        "insideUnknownCount": 1,
+        "outsideIds": [
+          "B"
+        ],
+        "outsideUnknownCount": 1
+      },
+      "expectedCarrierPaths": [
+        [
+          "workItems",
+          "governedBy"
+        ]
+      ],
+      "requiredFailure": "complete-value-carrier-census",
+      "legacyExpected": {
+        "valid": true,
+        "effectiveIds": [
+          "A",
+          "B"
+        ],
+        "unknownCount": 2,
+        "fault": null
+      },
+      "oldFixtureFindings": []
+    },
+    {
+      "name": "missing-all-bound-identity",
+      "body": {
+        "workItems": {
+          "kind": "observed",
+          "governedBy": {
+            "label": "Unknown",
+            "closedReason": "source-uncaptured-or-unreachable",
+            "resolutionRoutes": [
+              {
+                "reason": "source-uncaptured-or-unreachable",
+                "route": "Repair the observer/source; new snapshot",
+                "actor": "operator",
+                "verb": "repair",
+                "target": "evaluation"
+              }
+            ]
+          },
+          "governedByUnknownCount": 2,
+          "items": [
+            {
+              "id": "A",
+              "title": "Implement POC-REQ-010",
+              "governedBy": {
+                "ref": "observation"
+              }
+            },
+            {
+              "id": "B",
+              "title": "Unrelated work",
+              "governedBy": {
+                "ref": "observation"
+              }
+            }
+          ]
+        }
+      },
+      "renderedIds": [
+        "A"
+      ],
+      "expected": {
+        "valid": true,
+        "fault": null,
+        "evaluation": {
+          "snapshot": "fixture-evaluation-A",
+          "asOf": "2026-10-21T00:00:00Z"
+        },
+        "observation": {
+          "provenance": {
+            "revision": "fixture-revision-A"
+          },
+          "capturedAt": "2026-10-21T00:00:00Z"
+        },
+        "effectiveIds": [
+          "A",
+          "B"
+        ],
+        "claimIdentities": [
+          {
+            "evaluation": {
+              "snapshot": "fixture-evaluation-A",
+              "asOf": "2026-10-21T00:00:00Z"
+            },
+            "observation": {
+              "provenance": {
+                "revision": "fixture-revision-A"
+              },
+              "capturedAt": "2026-10-21T00:00:00Z"
+            },
+            "itemId": "A",
+            "field": "governedBy"
+          },
+          {
+            "evaluation": {
+              "snapshot": "fixture-evaluation-A",
+              "asOf": "2026-10-21T00:00:00Z"
+            },
+            "observation": {
+              "provenance": {
+                "revision": "fixture-revision-A"
+              },
+              "capturedAt": "2026-10-21T00:00:00Z"
+            },
+            "itemId": "B",
+            "field": "governedBy"
+          }
+        ],
+        "unknownCount": 2,
+        "renderedIds": [
+          "A"
+        ],
+        "insideUnknownCount": 1,
+        "outsideIds": [
+          "B"
+        ],
+        "outsideUnknownCount": 1
+      },
+      "expectedCarrierPaths": [
+        [
+          "workItems",
+          "governedBy"
+        ]
+      ],
+      "requiredFailure": "bound-evaluation",
+      "legacyExpected": {
+        "valid": true,
+        "effectiveIds": [
+          "A",
+          "B"
+        ],
+        "unknownCount": 2,
+        "fault": null
+      },
+      "oldFixtureFindings": []
+    },
+    {
+      "name": "duplicate-rendered-population",
+      "body": {
+        "evaluation": {
+          "snapshot": "fixture-evaluation-A",
+          "asOf": "2026-10-21T00:00:00Z"
+        },
+        "workItems": {
+          "kind": "observed",
+          "provenance": {
+            "revision": "fixture-revision-A"
+          },
+          "capturedAt": "2026-10-21T00:00:00Z",
+          "governedBy": {
+            "label": "Unknown",
+            "closedReason": "source-uncaptured-or-unreachable",
+            "resolutionRoutes": [
+              {
+                "reason": "source-uncaptured-or-unreachable",
+                "route": "Repair the observer/source; new snapshot",
+                "actor": "operator",
+                "verb": "repair",
+                "target": "evaluation"
+              }
+            ]
+          },
+          "governedByUnknownCount": 2,
+          "items": [
+            {
+              "id": "A",
+              "title": "Implement POC-REQ-010",
+              "governedBy": {
+                "ref": "observation"
+              }
+            },
+            {
+              "id": "B",
+              "title": "Unrelated work",
+              "governedBy": {
+                "ref": "observation"
+              }
+            }
+          ]
+        }
+      },
+      "renderedIds": [
+        "A",
+        "A"
+      ],
+      "expected": {
+        "valid": true,
+        "fault": null,
+        "evaluation": {
+          "snapshot": "fixture-evaluation-A",
+          "asOf": "2026-10-21T00:00:00Z"
+        },
+        "observation": {
+          "provenance": {
+            "revision": "fixture-revision-A"
+          },
+          "capturedAt": "2026-10-21T00:00:00Z"
+        },
+        "effectiveIds": [
+          "A",
+          "B"
+        ],
+        "claimIdentities": [
+          {
+            "evaluation": {
+              "snapshot": "fixture-evaluation-A",
+              "asOf": "2026-10-21T00:00:00Z"
+            },
+            "observation": {
+              "provenance": {
+                "revision": "fixture-revision-A"
+              },
+              "capturedAt": "2026-10-21T00:00:00Z"
+            },
+            "itemId": "A",
+            "field": "governedBy"
+          },
+          {
+            "evaluation": {
+              "snapshot": "fixture-evaluation-A",
+              "asOf": "2026-10-21T00:00:00Z"
+            },
+            "observation": {
+              "provenance": {
+                "revision": "fixture-revision-A"
+              },
+              "capturedAt": "2026-10-21T00:00:00Z"
+            },
+            "itemId": "B",
+            "field": "governedBy"
+          }
+        ],
+        "unknownCount": 2,
+        "renderedIds": [
+          "A"
+        ],
+        "insideUnknownCount": 1,
+        "outsideIds": [
+          "B"
+        ],
+        "outsideUnknownCount": 1
+      },
+      "expectedCarrierPaths": [
+        [
+          "workItems",
+          "governedBy"
+        ]
+      ],
+      "requiredFailure": "rendered-population-unique",
+      "legacyExpected": {
+        "valid": true,
+        "effectiveIds": [
+          "A",
+          "B"
+        ],
+        "unknownCount": 2,
+        "fault": null
+      },
+      "oldFixtureFindings": []
+    },
+    {
+      "name": "different-rendered-population",
+      "body": {
+        "evaluation": {
+          "snapshot": "fixture-evaluation-A",
+          "asOf": "2026-10-21T00:00:00Z"
+        },
+        "workItems": {
+          "kind": "observed",
+          "provenance": {
+            "revision": "fixture-revision-A"
+          },
+          "capturedAt": "2026-10-21T00:00:00Z",
+          "governedBy": {
+            "label": "Unknown",
+            "closedReason": "source-uncaptured-or-unreachable",
+            "resolutionRoutes": [
+              {
+                "reason": "source-uncaptured-or-unreachable",
+                "route": "Repair the observer/source; new snapshot",
+                "actor": "operator",
+                "verb": "repair",
+                "target": "evaluation"
+              }
+            ]
+          },
+          "governedByUnknownCount": 2,
+          "items": [
+            {
+              "id": "A",
+              "title": "Implement POC-REQ-010",
+              "governedBy": {
+                "ref": "observation"
+              }
+            },
+            {
+              "id": "B",
+              "title": "Unrelated work",
+              "governedBy": {
+                "ref": "observation"
+              }
+            }
+          ]
+        }
+      },
+      "renderedIds": [
+        "B"
+      ],
+      "expected": {
+        "valid": true,
+        "fault": null,
+        "evaluation": {
+          "snapshot": "fixture-evaluation-A",
+          "asOf": "2026-10-21T00:00:00Z"
+        },
+        "observation": {
+          "provenance": {
+            "revision": "fixture-revision-A"
+          },
+          "capturedAt": "2026-10-21T00:00:00Z"
+        },
+        "effectiveIds": [
+          "A",
+          "B"
+        ],
+        "claimIdentities": [
+          {
+            "evaluation": {
+              "snapshot": "fixture-evaluation-A",
+              "asOf": "2026-10-21T00:00:00Z"
+            },
+            "observation": {
+              "provenance": {
+                "revision": "fixture-revision-A"
+              },
+              "capturedAt": "2026-10-21T00:00:00Z"
+            },
+            "itemId": "A",
+            "field": "governedBy"
+          },
+          {
+            "evaluation": {
+              "snapshot": "fixture-evaluation-A",
+              "asOf": "2026-10-21T00:00:00Z"
+            },
+            "observation": {
+              "provenance": {
+                "revision": "fixture-revision-A"
+              },
+              "capturedAt": "2026-10-21T00:00:00Z"
+            },
+            "itemId": "B",
+            "field": "governedBy"
+          }
+        ],
+        "unknownCount": 2,
+        "renderedIds": [
+          "A"
+        ],
+        "insideUnknownCount": 1,
+        "outsideIds": [
+          "B"
+        ],
+        "outsideUnknownCount": 1
+      },
+      "expectedCarrierPaths": [
+        [
+          "workItems",
+          "governedBy"
+        ]
+      ],
+      "requiredFailure": "literal renderedIds"
+    },
+    {
+      "name": "changed-evaluation-vs-literal-claim-identities",
+      "body": {
+        "evaluation": {
+          "snapshot": "fixture-evaluation-B",
+          "asOf": "2026-10-21T00:01:00Z"
+        },
+        "workItems": {
+          "kind": "observed",
+          "provenance": {
+            "revision": "fixture-revision-A"
+          },
+          "capturedAt": "2026-10-21T00:00:00Z",
+          "governedBy": {
+            "label": "Unknown",
+            "closedReason": "source-uncaptured-or-unreachable",
+            "resolutionRoutes": [
+              {
+                "reason": "source-uncaptured-or-unreachable",
+                "route": "Repair the observer/source; new snapshot",
+                "actor": "operator",
+                "verb": "repair",
+                "target": "evaluation"
+              }
+            ]
+          },
+          "governedByUnknownCount": 2,
+          "items": [
+            {
+              "id": "A",
+              "title": "Implement POC-REQ-010",
+              "governedBy": {
+                "ref": "observation"
+              }
+            },
+            {
+              "id": "B",
+              "title": "Unrelated work",
+              "governedBy": {
+                "ref": "observation"
+              }
+            }
+          ]
+        }
+      },
+      "renderedIds": [
+        "A"
+      ],
+      "expected": {
+        "valid": true,
+        "fault": null,
+        "evaluation": {
+          "snapshot": "fixture-evaluation-A",
+          "asOf": "2026-10-21T00:00:00Z"
+        },
+        "observation": {
+          "provenance": {
+            "revision": "fixture-revision-A"
+          },
+          "capturedAt": "2026-10-21T00:00:00Z"
+        },
+        "effectiveIds": [
+          "A",
+          "B"
+        ],
+        "claimIdentities": [
+          {
+            "evaluation": {
+              "snapshot": "fixture-evaluation-A",
+              "asOf": "2026-10-21T00:00:00Z"
+            },
+            "observation": {
+              "provenance": {
+                "revision": "fixture-revision-A"
+              },
+              "capturedAt": "2026-10-21T00:00:00Z"
+            },
+            "itemId": "A",
+            "field": "governedBy"
+          },
+          {
+            "evaluation": {
+              "snapshot": "fixture-evaluation-A",
+              "asOf": "2026-10-21T00:00:00Z"
+            },
+            "observation": {
+              "provenance": {
+                "revision": "fixture-revision-A"
+              },
+              "capturedAt": "2026-10-21T00:00:00Z"
+            },
+            "itemId": "B",
+            "field": "governedBy"
+          }
+        ],
+        "unknownCount": 2,
+        "renderedIds": [
+          "A"
+        ],
+        "insideUnknownCount": 1,
+        "outsideIds": [
+          "B"
+        ],
+        "outsideUnknownCount": 1
+      },
+      "expectedCarrierPaths": [
+        [
+          "workItems",
+          "governedBy"
+        ]
+      ],
+      "requiredFailure": "literal claimIdentities"
+    },
+    {
+      "name": "changed-provenance-vs-literal-claim-identities",
+      "body": {
+        "evaluation": {
+          "snapshot": "fixture-evaluation-A",
+          "asOf": "2026-10-21T00:00:00Z"
+        },
+        "workItems": {
+          "kind": "observed",
+          "provenance": {
+            "revision": "fixture-revision-B"
+          },
+          "capturedAt": "2026-10-21T00:00:00Z",
+          "governedBy": {
+            "label": "Unknown",
+            "closedReason": "source-uncaptured-or-unreachable",
+            "resolutionRoutes": [
+              {
+                "reason": "source-uncaptured-or-unreachable",
+                "route": "Repair the observer/source; new snapshot",
+                "actor": "operator",
+                "verb": "repair",
+                "target": "evaluation"
+              }
+            ]
+          },
+          "governedByUnknownCount": 2,
+          "items": [
+            {
+              "id": "A",
+              "title": "Implement POC-REQ-010",
+              "governedBy": {
+                "ref": "observation"
+              }
+            },
+            {
+              "id": "B",
+              "title": "Unrelated work",
+              "governedBy": {
+                "ref": "observation"
+              }
+            }
+          ]
+        }
+      },
+      "renderedIds": [
+        "A"
+      ],
+      "expected": {
+        "valid": true,
+        "fault": null,
+        "evaluation": {
+          "snapshot": "fixture-evaluation-A",
+          "asOf": "2026-10-21T00:00:00Z"
+        },
+        "observation": {
+          "provenance": {
+            "revision": "fixture-revision-A"
+          },
+          "capturedAt": "2026-10-21T00:00:00Z"
+        },
+        "effectiveIds": [
+          "A",
+          "B"
+        ],
+        "claimIdentities": [
+          {
+            "evaluation": {
+              "snapshot": "fixture-evaluation-A",
+              "asOf": "2026-10-21T00:00:00Z"
+            },
+            "observation": {
+              "provenance": {
+                "revision": "fixture-revision-A"
+              },
+              "capturedAt": "2026-10-21T00:00:00Z"
+            },
+            "itemId": "A",
+            "field": "governedBy"
+          },
+          {
+            "evaluation": {
+              "snapshot": "fixture-evaluation-A",
+              "asOf": "2026-10-21T00:00:00Z"
+            },
+            "observation": {
+              "provenance": {
+                "revision": "fixture-revision-A"
+              },
+              "capturedAt": "2026-10-21T00:00:00Z"
+            },
+            "itemId": "B",
+            "field": "governedBy"
+          }
+        ],
+        "unknownCount": 2,
+        "renderedIds": [
+          "A"
+        ],
+        "insideUnknownCount": 1,
+        "outsideIds": [
+          "B"
+        ],
+        "outsideUnknownCount": 1
+      },
+      "expectedCarrierPaths": [
+        [
+          "workItems",
+          "governedBy"
+        ]
+      ],
+      "requiredFailure": "literal claimIdentities"
+    },
+    {
+      "name": "changed-capture-vs-literal-claim-identities",
+      "body": {
+        "evaluation": {
+          "snapshot": "fixture-evaluation-A",
+          "asOf": "2026-10-21T00:00:00Z"
+        },
+        "workItems": {
+          "kind": "observed",
+          "provenance": {
+            "revision": "fixture-revision-A"
+          },
+          "capturedAt": "2026-10-21T00:01:00Z",
+          "governedBy": {
+            "label": "Unknown",
+            "closedReason": "source-uncaptured-or-unreachable",
+            "resolutionRoutes": [
+              {
+                "reason": "source-uncaptured-or-unreachable",
+                "route": "Repair the observer/source; new snapshot",
+                "actor": "operator",
+                "verb": "repair",
+                "target": "evaluation"
+              }
+            ]
+          },
+          "governedByUnknownCount": 2,
+          "items": [
+            {
+              "id": "A",
+              "title": "Implement POC-REQ-010",
+              "governedBy": {
+                "ref": "observation"
+              }
+            },
+            {
+              "id": "B",
+              "title": "Unrelated work",
+              "governedBy": {
+                "ref": "observation"
+              }
+            }
+          ]
+        }
+      },
+      "renderedIds": [
+        "A"
+      ],
+      "expected": {
+        "valid": true,
+        "fault": null,
+        "evaluation": {
+          "snapshot": "fixture-evaluation-A",
+          "asOf": "2026-10-21T00:00:00Z"
+        },
+        "observation": {
+          "provenance": {
+            "revision": "fixture-revision-A"
+          },
+          "capturedAt": "2026-10-21T00:00:00Z"
+        },
+        "effectiveIds": [
+          "A",
+          "B"
+        ],
+        "claimIdentities": [
+          {
+            "evaluation": {
+              "snapshot": "fixture-evaluation-A",
+              "asOf": "2026-10-21T00:00:00Z"
+            },
+            "observation": {
+              "provenance": {
+                "revision": "fixture-revision-A"
+              },
+              "capturedAt": "2026-10-21T00:00:00Z"
+            },
+            "itemId": "A",
+            "field": "governedBy"
+          },
+          {
+            "evaluation": {
+              "snapshot": "fixture-evaluation-A",
+              "asOf": "2026-10-21T00:00:00Z"
+            },
+            "observation": {
+              "provenance": {
+                "revision": "fixture-revision-A"
+              },
+              "capturedAt": "2026-10-21T00:00:00Z"
+            },
+            "itemId": "B",
+            "field": "governedBy"
+          }
+        ],
+        "unknownCount": 2,
+        "renderedIds": [
+          "A"
+        ],
+        "insideUnknownCount": 1,
+        "outsideIds": [
+          "B"
+        ],
+        "outsideUnknownCount": 1
+      },
+      "expectedCarrierPaths": [
+        [
+          "workItems",
+          "governedBy"
+        ]
+      ],
+      "requiredFailure": "literal claimIdentities"
+    },
+    {
+      "name": "missing-evaluation-snapshot",
+      "body": {
+        "evaluation": {
+          "asOf": "2026-10-21T00:00:00Z"
+        },
+        "workItems": {
+          "kind": "observed",
+          "provenance": {
+            "revision": "fixture-revision-A"
+          },
+          "capturedAt": "2026-10-21T00:00:00Z",
+          "governedBy": {
+            "label": "Unknown",
+            "closedReason": "source-uncaptured-or-unreachable",
+            "resolutionRoutes": [
+              {
+                "reason": "source-uncaptured-or-unreachable",
+                "route": "Repair the observer/source; new snapshot",
+                "actor": "operator",
+                "verb": "repair",
+                "target": "evaluation"
+              }
+            ]
+          },
+          "governedByUnknownCount": 2,
+          "items": [
+            {
+              "id": "A",
+              "title": "Implement POC-REQ-010",
+              "governedBy": {
+                "ref": "observation"
+              }
+            },
+            {
+              "id": "B",
+              "title": "Unrelated work",
+              "governedBy": {
+                "ref": "observation"
+              }
+            }
+          ]
+        }
+      },
+      "renderedIds": [
+        "A"
+      ],
+      "expected": {
+        "valid": true,
+        "fault": null,
+        "evaluation": {
+          "snapshot": "fixture-evaluation-A",
+          "asOf": "2026-10-21T00:00:00Z"
+        },
+        "observation": {
+          "provenance": {
+            "revision": "fixture-revision-A"
+          },
+          "capturedAt": "2026-10-21T00:00:00Z"
+        },
+        "effectiveIds": [
+          "A",
+          "B"
+        ],
+        "claimIdentities": [
+          {
+            "evaluation": {
+              "snapshot": "fixture-evaluation-A",
+              "asOf": "2026-10-21T00:00:00Z"
+            },
+            "observation": {
+              "provenance": {
+                "revision": "fixture-revision-A"
+              },
+              "capturedAt": "2026-10-21T00:00:00Z"
+            },
+            "itemId": "A",
+            "field": "governedBy"
+          },
+          {
+            "evaluation": {
+              "snapshot": "fixture-evaluation-A",
+              "asOf": "2026-10-21T00:00:00Z"
+            },
+            "observation": {
+              "provenance": {
+                "revision": "fixture-revision-A"
+              },
+              "capturedAt": "2026-10-21T00:00:00Z"
+            },
+            "itemId": "B",
+            "field": "governedBy"
+          }
+        ],
+        "unknownCount": 2,
+        "renderedIds": [
+          "A"
+        ],
+        "insideUnknownCount": 1,
+        "outsideIds": [
+          "B"
+        ],
+        "outsideUnknownCount": 1
+      },
+      "expectedCarrierPaths": [
+        [
+          "workItems",
+          "governedBy"
+        ]
+      ],
+      "requiredFailure": "bound-evaluation"
+    },
+    {
+      "name": "missing-evaluation-asof",
+      "body": {
+        "evaluation": {
+          "snapshot": "fixture-evaluation-A"
+        },
+        "workItems": {
+          "kind": "observed",
+          "provenance": {
+            "revision": "fixture-revision-A"
+          },
+          "capturedAt": "2026-10-21T00:00:00Z",
+          "governedBy": {
+            "label": "Unknown",
+            "closedReason": "source-uncaptured-or-unreachable",
+            "resolutionRoutes": [
+              {
+                "reason": "source-uncaptured-or-unreachable",
+                "route": "Repair the observer/source; new snapshot",
+                "actor": "operator",
+                "verb": "repair",
+                "target": "evaluation"
+              }
+            ]
+          },
+          "governedByUnknownCount": 2,
+          "items": [
+            {
+              "id": "A",
+              "title": "Implement POC-REQ-010",
+              "governedBy": {
+                "ref": "observation"
+              }
+            },
+            {
+              "id": "B",
+              "title": "Unrelated work",
+              "governedBy": {
+                "ref": "observation"
+              }
+            }
+          ]
+        }
+      },
+      "renderedIds": [
+        "A"
+      ],
+      "expected": {
+        "valid": true,
+        "fault": null,
+        "evaluation": {
+          "snapshot": "fixture-evaluation-A",
+          "asOf": "2026-10-21T00:00:00Z"
+        },
+        "observation": {
+          "provenance": {
+            "revision": "fixture-revision-A"
+          },
+          "capturedAt": "2026-10-21T00:00:00Z"
+        },
+        "effectiveIds": [
+          "A",
+          "B"
+        ],
+        "claimIdentities": [
+          {
+            "evaluation": {
+              "snapshot": "fixture-evaluation-A",
+              "asOf": "2026-10-21T00:00:00Z"
+            },
+            "observation": {
+              "provenance": {
+                "revision": "fixture-revision-A"
+              },
+              "capturedAt": "2026-10-21T00:00:00Z"
+            },
+            "itemId": "A",
+            "field": "governedBy"
+          },
+          {
+            "evaluation": {
+              "snapshot": "fixture-evaluation-A",
+              "asOf": "2026-10-21T00:00:00Z"
+            },
+            "observation": {
+              "provenance": {
+                "revision": "fixture-revision-A"
+              },
+              "capturedAt": "2026-10-21T00:00:00Z"
+            },
+            "itemId": "B",
+            "field": "governedBy"
+          }
+        ],
+        "unknownCount": 2,
+        "renderedIds": [
+          "A"
+        ],
+        "insideUnknownCount": 1,
+        "outsideIds": [
+          "B"
+        ],
+        "outsideUnknownCount": 1
+      },
+      "expectedCarrierPaths": [
+        [
+          "workItems",
+          "governedBy"
+        ]
+      ],
+      "requiredFailure": "bound-evaluation"
+    },
+    {
+      "name": "missing-provenance-revision",
+      "body": {
+        "evaluation": {
+          "snapshot": "fixture-evaluation-A",
+          "asOf": "2026-10-21T00:00:00Z"
+        },
+        "workItems": {
+          "kind": "observed",
+          "provenance": {},
+          "capturedAt": "2026-10-21T00:00:00Z",
+          "governedBy": {
+            "label": "Unknown",
+            "closedReason": "source-uncaptured-or-unreachable",
+            "resolutionRoutes": [
+              {
+                "reason": "source-uncaptured-or-unreachable",
+                "route": "Repair the observer/source; new snapshot",
+                "actor": "operator",
+                "verb": "repair",
+                "target": "evaluation"
+              }
+            ]
+          },
+          "governedByUnknownCount": 2,
+          "items": [
+            {
+              "id": "A",
+              "title": "Implement POC-REQ-010",
+              "governedBy": {
+                "ref": "observation"
+              }
+            },
+            {
+              "id": "B",
+              "title": "Unrelated work",
+              "governedBy": {
+                "ref": "observation"
+              }
+            }
+          ]
+        }
+      },
+      "renderedIds": [
+        "A"
+      ],
+      "expected": {
+        "valid": true,
+        "fault": null,
+        "evaluation": {
+          "snapshot": "fixture-evaluation-A",
+          "asOf": "2026-10-21T00:00:00Z"
+        },
+        "observation": {
+          "provenance": {
+            "revision": "fixture-revision-A"
+          },
+          "capturedAt": "2026-10-21T00:00:00Z"
+        },
+        "effectiveIds": [
+          "A",
+          "B"
+        ],
+        "claimIdentities": [
+          {
+            "evaluation": {
+              "snapshot": "fixture-evaluation-A",
+              "asOf": "2026-10-21T00:00:00Z"
+            },
+            "observation": {
+              "provenance": {
+                "revision": "fixture-revision-A"
+              },
+              "capturedAt": "2026-10-21T00:00:00Z"
+            },
+            "itemId": "A",
+            "field": "governedBy"
+          },
+          {
+            "evaluation": {
+              "snapshot": "fixture-evaluation-A",
+              "asOf": "2026-10-21T00:00:00Z"
+            },
+            "observation": {
+              "provenance": {
+                "revision": "fixture-revision-A"
+              },
+              "capturedAt": "2026-10-21T00:00:00Z"
+            },
+            "itemId": "B",
+            "field": "governedBy"
+          }
+        ],
+        "unknownCount": 2,
+        "renderedIds": [
+          "A"
+        ],
+        "insideUnknownCount": 1,
+        "outsideIds": [
+          "B"
+        ],
+        "outsideUnknownCount": 1
+      },
+      "expectedCarrierPaths": [
+        [
+          "workItems",
+          "governedBy"
+        ]
+      ],
+      "requiredFailure": "bound-observation"
+    },
+    {
+      "name": "incorrect-literal-outside-population",
+      "body": {
+        "evaluation": {
+          "snapshot": "fixture-evaluation-A",
+          "asOf": "2026-10-21T00:00:00Z"
+        },
+        "workItems": {
+          "kind": "observed",
+          "provenance": {
+            "revision": "fixture-revision-A"
+          },
+          "capturedAt": "2026-10-21T00:00:00Z",
+          "governedBy": {
+            "label": "Unknown",
+            "closedReason": "source-uncaptured-or-unreachable",
+            "resolutionRoutes": [
+              {
+                "reason": "source-uncaptured-or-unreachable",
+                "route": "Repair the observer/source; new snapshot",
+                "actor": "operator",
+                "verb": "repair",
+                "target": "evaluation"
+              }
+            ]
+          },
+          "governedByUnknownCount": 2,
+          "items": [
+            {
+              "id": "A",
+              "title": "Implement POC-REQ-010",
+              "governedBy": {
+                "ref": "observation"
+              }
+            },
+            {
+              "id": "B",
+              "title": "Unrelated work",
+              "governedBy": {
+                "ref": "observation"
+              }
+            }
+          ]
+        }
+      },
+      "renderedIds": [
+        "A"
+      ],
+      "expected": {
+        "valid": true,
+        "fault": null,
+        "evaluation": {
+          "snapshot": "fixture-evaluation-A",
+          "asOf": "2026-10-21T00:00:00Z"
+        },
+        "observation": {
+          "provenance": {
+            "revision": "fixture-revision-A"
+          },
+          "capturedAt": "2026-10-21T00:00:00Z"
+        },
+        "effectiveIds": [
+          "A",
+          "B"
+        ],
+        "claimIdentities": [
+          {
+            "evaluation": {
+              "snapshot": "fixture-evaluation-A",
+              "asOf": "2026-10-21T00:00:00Z"
+            },
+            "observation": {
+              "provenance": {
+                "revision": "fixture-revision-A"
+              },
+              "capturedAt": "2026-10-21T00:00:00Z"
+            },
+            "itemId": "A",
+            "field": "governedBy"
+          },
+          {
+            "evaluation": {
+              "snapshot": "fixture-evaluation-A",
+              "asOf": "2026-10-21T00:00:00Z"
+            },
+            "observation": {
+              "provenance": {
+                "revision": "fixture-revision-A"
+              },
+              "capturedAt": "2026-10-21T00:00:00Z"
+            },
+            "itemId": "B",
+            "field": "governedBy"
+          }
+        ],
+        "unknownCount": 2,
+        "renderedIds": [
+          "A"
+        ],
+        "insideUnknownCount": 1,
+        "outsideIds": [],
+        "outsideUnknownCount": 1
+      },
+      "expectedCarrierPaths": [
+        [
+          "workItems",
+          "governedBy"
+        ]
+      ],
+      "requiredFailure": "literal outsideIds"
+    },
+    {
+      "name": "merged-literal-claim-identity-population",
+      "body": {
+        "evaluation": {
+          "snapshot": "fixture-evaluation-A",
+          "asOf": "2026-10-21T00:00:00Z"
+        },
+        "workItems": {
+          "kind": "observed",
+          "provenance": {
+            "revision": "fixture-revision-A"
+          },
+          "capturedAt": "2026-10-21T00:00:00Z",
+          "governedBy": {
+            "label": "Unknown",
+            "closedReason": "source-uncaptured-or-unreachable",
+            "resolutionRoutes": [
+              {
+                "reason": "source-uncaptured-or-unreachable",
+                "route": "Repair the observer/source; new snapshot",
+                "actor": "operator",
+                "verb": "repair",
+                "target": "evaluation"
+              }
+            ]
+          },
+          "governedByUnknownCount": 2,
+          "items": [
+            {
+              "id": "A",
+              "title": "Implement POC-REQ-010",
+              "governedBy": {
+                "ref": "observation"
+              }
+            },
+            {
+              "id": "B",
+              "title": "Unrelated work",
+              "governedBy": {
+                "ref": "observation"
+              }
+            }
+          ]
+        }
+      },
+      "renderedIds": [
+        "A"
+      ],
+      "expected": {
+        "valid": true,
+        "fault": null,
+        "evaluation": {
+          "snapshot": "fixture-evaluation-A",
+          "asOf": "2026-10-21T00:00:00Z"
+        },
+        "observation": {
+          "provenance": {
+            "revision": "fixture-revision-A"
+          },
+          "capturedAt": "2026-10-21T00:00:00Z"
+        },
+        "effectiveIds": [
+          "A",
+          "B"
+        ],
+        "claimIdentities": [
+          {
+            "evaluation": {
+              "snapshot": "fixture-evaluation-A",
+              "asOf": "2026-10-21T00:00:00Z"
+            },
+            "observation": {
+              "provenance": {
+                "revision": "fixture-revision-A"
+              },
+              "capturedAt": "2026-10-21T00:00:00Z"
+            },
+            "itemId": "A",
+            "field": "governedBy"
+          }
+        ],
+        "unknownCount": 2,
+        "renderedIds": [
+          "A"
+        ],
+        "insideUnknownCount": 1,
+        "outsideIds": [
+          "B"
+        ],
+        "outsideUnknownCount": 1
+      },
+      "expectedCarrierPaths": [
+        [
+          "workItems",
+          "governedBy"
+        ]
+      ],
+      "requiredFailure": "literal claimIdentities"
+    },
+    {
+      "name": "altered-retained-entities-population",
+      "body": {
+        "evaluation": {
+          "snapshot": "fixture-evaluation-A",
+          "asOf": "2026-10-21T00:00:00Z"
+        },
+        "workItems": {
+          "kind": "observed",
+          "provenance": {
+            "kind": "dolt-revision",
+            "source": "synthetic-beads-observation",
+            "revision": "fixture-revision-A"
+          },
+          "capturedAt": "2026-10-21T00:00:00Z",
+          "governedBy": {
+            "label": "Unknown",
+            "closedReason": "source-uncaptured-or-unreachable",
+            "resolutionRoutes": [
+              {
+                "reason": "source-uncaptured-or-unreachable",
+                "route": "Repair the observer/source; new snapshot",
+                "actor": "operator",
+                "verb": "repair",
+                "target": "evaluation"
+              }
+            ]
+          },
+          "governedByUnknownCount": 2,
+          "items": [
+            {
+              "id": "A",
+              "title": "Implement POC-REQ-010",
+              "governedBy": {
+                "ref": "observation"
+              }
+            },
+            {
+              "id": "B",
+              "title": "Unrelated work",
+              "governedBy": {
+                "ref": "observation"
+              }
+            }
+          ]
+        },
+        "entities": [
+          {
+            "id": "work-item:A",
+            "kind": "work-item",
+            "title": "Synthetic A",
+            "detail": "Synthetic observed work-item record",
+            "epistemic": {
+              "label": "Unknown",
+              "reason": "Synthetic entity support is not captured.",
+              "closedReason": "source-uncaptured-or-unreachable",
+              "resolutionRoutes": [
+                {
+                  "reason": "source-uncaptured-or-unreachable",
+                  "route": "Repair the observer/source; new snapshot",
+                  "actor": "operator",
+                  "verb": "repair",
+                  "target": "evaluation"
+                }
+              ]
+            },
+            "provenance": [
+              {
+                "kind": "dolt-revision",
+                "source": "synthetic-beads-observation",
+                "revision": "fixture-revision-A"
+              }
+            ]
+          }
+        ],
+        "relationships": [
+          {
+            "id": "relation:fixture-depends-on",
+            "kind": "depends_on",
+            "from": "work-item:A",
+            "to": "work-item:B",
+            "statement": "Synthetic work-item dependency",
+            "epistemic": {
+              "label": "Unknown",
+              "reason": "Synthetic dependency evidence is not captured.",
+              "closedReason": "source-uncaptured-or-unreachable",
+              "resolutionRoutes": [
+                {
+                  "reason": "source-uncaptured-or-unreachable",
+                  "route": "Repair the observer/source; new snapshot",
+                  "actor": "operator",
+                  "verb": "repair",
+                  "target": "evaluation"
+                }
+              ]
+            },
+            "provenance": [
+              {
+                "kind": "dolt-revision",
+                "source": "synthetic-beads-observation",
+                "revision": "fixture-revision-A"
+              }
+            ]
+          }
+        ],
+        "unknownSubjects": [
+          {
+            "id": "work-item:A/governed-by",
+            "epistemic": {
+              "label": "Unknown",
+              "reason": "No governing intent was captured for this work item: the observation reads no link from an item to the intent that warrants it, and none is taken from its title.",
+              "closedReason": "source-uncaptured-or-unreachable",
+              "resolutionRoutes": [
+                {
+                  "reason": "source-uncaptured-or-unreachable",
+                  "route": "Repair the observer/source; new snapshot",
+                  "actor": "operator",
+                  "verb": "repair",
+                  "target": "evaluation"
+                }
+              ]
+            }
+          },
+          {
+            "id": "work-item:B/governed-by",
+            "epistemic": {
+              "label": "Unknown",
+              "reason": "No governing intent was captured for this work item: the observation reads no link from an item to the intent that warrants it, and none is taken from its title.",
+              "closedReason": "source-uncaptured-or-unreachable",
+              "resolutionRoutes": [
+                {
+                  "reason": "source-uncaptured-or-unreachable",
+                  "route": "Repair the observer/source; new snapshot",
+                  "actor": "operator",
+                  "verb": "repair",
+                  "target": "evaluation"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "renderedIds": [
+        "A"
+      ],
+      "expected": {
+        "valid": true,
+        "fault": null,
+        "evaluation": {
+          "snapshot": "fixture-evaluation-A",
+          "asOf": "2026-10-21T00:00:00Z"
+        },
+        "observation": {
+          "provenance": {
+            "kind": "dolt-revision",
+            "source": "synthetic-beads-observation",
+            "revision": "fixture-revision-A"
+          },
+          "capturedAt": "2026-10-21T00:00:00Z"
+        },
+        "effectiveIds": [
+          "A",
+          "B"
+        ],
+        "claimIdentities": [
+          {
+            "evaluation": {
+              "snapshot": "fixture-evaluation-A",
+              "asOf": "2026-10-21T00:00:00Z"
+            },
+            "observation": {
+              "provenance": {
+                "kind": "dolt-revision",
+                "source": "synthetic-beads-observation",
+                "revision": "fixture-revision-A"
+              },
+              "capturedAt": "2026-10-21T00:00:00Z"
+            },
+            "itemId": "A",
+            "field": "governedBy"
+          },
+          {
+            "evaluation": {
+              "snapshot": "fixture-evaluation-A",
+              "asOf": "2026-10-21T00:00:00Z"
+            },
+            "observation": {
+              "provenance": {
+                "kind": "dolt-revision",
+                "source": "synthetic-beads-observation",
+                "revision": "fixture-revision-A"
+              },
+              "capturedAt": "2026-10-21T00:00:00Z"
+            },
+            "itemId": "B",
+            "field": "governedBy"
+          }
+        ],
+        "unknownCount": 2,
+        "renderedIds": [
+          "A"
+        ],
+        "insideUnknownCount": 1,
+        "outsideIds": [
+          "B"
+        ],
+        "outsideUnknownCount": 1
+      },
+      "expectedCarrierPaths": [
+        [
+          "workItems",
+          "governedBy"
+        ]
+      ],
+      "expectedRecordPopulations": {
+        "entities": [
+          {
+            "id": "work-item:A",
+            "kind": "work-item",
+            "title": "Synthetic A",
+            "detail": "Synthetic observed work-item record",
+            "epistemic": {
+              "label": "Unknown",
+              "reason": "Synthetic entity support is not captured.",
+              "closedReason": "source-uncaptured-or-unreachable",
+              "resolutionRoutes": [
+                {
+                  "reason": "source-uncaptured-or-unreachable",
+                  "route": "Repair the observer/source; new snapshot",
+                  "actor": "operator",
+                  "verb": "repair",
+                  "target": "evaluation"
+                }
+              ]
+            },
+            "provenance": [
+              {
+                "kind": "dolt-revision",
+                "source": "synthetic-beads-observation",
+                "revision": "fixture-revision-A"
+              }
+            ]
+          },
+          {
+            "id": "work-item:B",
+            "kind": "work-item",
+            "title": "Synthetic B",
+            "detail": "Synthetic observed work-item record",
+            "epistemic": {
+              "label": "Unknown",
+              "reason": "Synthetic entity support is not captured.",
+              "closedReason": "source-uncaptured-or-unreachable",
+              "resolutionRoutes": [
+                {
+                  "reason": "source-uncaptured-or-unreachable",
+                  "route": "Repair the observer/source; new snapshot",
+                  "actor": "operator",
+                  "verb": "repair",
+                  "target": "evaluation"
+                }
+              ]
+            },
+            "provenance": [
+              {
+                "kind": "dolt-revision",
+                "source": "synthetic-beads-observation",
+                "revision": "fixture-revision-A"
+              }
+            ]
+          }
+        ],
+        "relationships": [
+          {
+            "id": "relation:fixture-depends-on",
+            "kind": "depends_on",
+            "from": "work-item:A",
+            "to": "work-item:B",
+            "statement": "Synthetic work-item dependency",
+            "epistemic": {
+              "label": "Unknown",
+              "reason": "Synthetic dependency evidence is not captured.",
+              "closedReason": "source-uncaptured-or-unreachable",
+              "resolutionRoutes": [
+                {
+                  "reason": "source-uncaptured-or-unreachable",
+                  "route": "Repair the observer/source; new snapshot",
+                  "actor": "operator",
+                  "verb": "repair",
+                  "target": "evaluation"
+                }
+              ]
+            },
+            "provenance": [
+              {
+                "kind": "dolt-revision",
+                "source": "synthetic-beads-observation",
+                "revision": "fixture-revision-A"
+              }
+            ]
+          }
+        ],
+        "unknownSubjects": [
+          {
+            "id": "work-item:A/governed-by",
+            "epistemic": {
+              "label": "Unknown",
+              "reason": "No governing intent was captured for this work item: the observation reads no link from an item to the intent that warrants it, and none is taken from its title.",
+              "closedReason": "source-uncaptured-or-unreachable",
+              "resolutionRoutes": [
+                {
+                  "reason": "source-uncaptured-or-unreachable",
+                  "route": "Repair the observer/source; new snapshot",
+                  "actor": "operator",
+                  "verb": "repair",
+                  "target": "evaluation"
+                }
+              ]
+            }
+          },
+          {
+            "id": "work-item:B/governed-by",
+            "epistemic": {
+              "label": "Unknown",
+              "reason": "No governing intent was captured for this work item: the observation reads no link from an item to the intent that warrants it, and none is taken from its title.",
+              "closedReason": "source-uncaptured-or-unreachable",
+              "resolutionRoutes": [
+                {
+                  "reason": "source-uncaptured-or-unreachable",
+                  "route": "Repair the observer/source; new snapshot",
+                  "actor": "operator",
+                  "verb": "repair",
+                  "target": "evaluation"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "requiredFailure": "literal retained entities"
+    },
+    {
+      "name": "altered-retained-relationships-population",
+      "body": {
+        "evaluation": {
+          "snapshot": "fixture-evaluation-A",
+          "asOf": "2026-10-21T00:00:00Z"
+        },
+        "workItems": {
+          "kind": "observed",
+          "provenance": {
+            "kind": "dolt-revision",
+            "source": "synthetic-beads-observation",
+            "revision": "fixture-revision-A"
+          },
+          "capturedAt": "2026-10-21T00:00:00Z",
+          "governedBy": {
+            "label": "Unknown",
+            "closedReason": "source-uncaptured-or-unreachable",
+            "resolutionRoutes": [
+              {
+                "reason": "source-uncaptured-or-unreachable",
+                "route": "Repair the observer/source; new snapshot",
+                "actor": "operator",
+                "verb": "repair",
+                "target": "evaluation"
+              }
+            ]
+          },
+          "governedByUnknownCount": 2,
+          "items": [
+            {
+              "id": "A",
+              "title": "Implement POC-REQ-010",
+              "governedBy": {
+                "ref": "observation"
+              }
+            },
+            {
+              "id": "B",
+              "title": "Unrelated work",
+              "governedBy": {
+                "ref": "observation"
+              }
+            }
+          ]
+        },
+        "entities": [
+          {
+            "id": "work-item:A",
+            "kind": "work-item",
+            "title": "Synthetic A",
+            "detail": "Synthetic observed work-item record",
+            "epistemic": {
+              "label": "Unknown",
+              "reason": "Synthetic entity support is not captured.",
+              "closedReason": "source-uncaptured-or-unreachable",
+              "resolutionRoutes": [
+                {
+                  "reason": "source-uncaptured-or-unreachable",
+                  "route": "Repair the observer/source; new snapshot",
+                  "actor": "operator",
+                  "verb": "repair",
+                  "target": "evaluation"
+                }
+              ]
+            },
+            "provenance": [
+              {
+                "kind": "dolt-revision",
+                "source": "synthetic-beads-observation",
+                "revision": "fixture-revision-A"
+              }
+            ]
+          },
+          {
+            "id": "work-item:B",
+            "kind": "work-item",
+            "title": "Synthetic B",
+            "detail": "Synthetic observed work-item record",
+            "epistemic": {
+              "label": "Unknown",
+              "reason": "Synthetic entity support is not captured.",
+              "closedReason": "source-uncaptured-or-unreachable",
+              "resolutionRoutes": [
+                {
+                  "reason": "source-uncaptured-or-unreachable",
+                  "route": "Repair the observer/source; new snapshot",
+                  "actor": "operator",
+                  "verb": "repair",
+                  "target": "evaluation"
+                }
+              ]
+            },
+            "provenance": [
+              {
+                "kind": "dolt-revision",
+                "source": "synthetic-beads-observation",
+                "revision": "fixture-revision-A"
+              }
+            ]
+          }
+        ],
+        "relationships": [
+          {
+            "id": "relation:fixture-depends-on",
+            "kind": "depends_on",
+            "from": "work-item:A",
+            "to": "work-item:B",
+            "statement": "Changed retained relationship",
+            "epistemic": {
+              "label": "Unknown",
+              "reason": "Synthetic dependency evidence is not captured.",
+              "closedReason": "source-uncaptured-or-unreachable",
+              "resolutionRoutes": [
+                {
+                  "reason": "source-uncaptured-or-unreachable",
+                  "route": "Repair the observer/source; new snapshot",
+                  "actor": "operator",
+                  "verb": "repair",
+                  "target": "evaluation"
+                }
+              ]
+            },
+            "provenance": [
+              {
+                "kind": "dolt-revision",
+                "source": "synthetic-beads-observation",
+                "revision": "fixture-revision-A"
+              }
+            ]
+          }
+        ],
+        "unknownSubjects": [
+          {
+            "id": "work-item:A/governed-by",
+            "epistemic": {
+              "label": "Unknown",
+              "reason": "No governing intent was captured for this work item: the observation reads no link from an item to the intent that warrants it, and none is taken from its title.",
+              "closedReason": "source-uncaptured-or-unreachable",
+              "resolutionRoutes": [
+                {
+                  "reason": "source-uncaptured-or-unreachable",
+                  "route": "Repair the observer/source; new snapshot",
+                  "actor": "operator",
+                  "verb": "repair",
+                  "target": "evaluation"
+                }
+              ]
+            }
+          },
+          {
+            "id": "work-item:B/governed-by",
+            "epistemic": {
+              "label": "Unknown",
+              "reason": "No governing intent was captured for this work item: the observation reads no link from an item to the intent that warrants it, and none is taken from its title.",
+              "closedReason": "source-uncaptured-or-unreachable",
+              "resolutionRoutes": [
+                {
+                  "reason": "source-uncaptured-or-unreachable",
+                  "route": "Repair the observer/source; new snapshot",
+                  "actor": "operator",
+                  "verb": "repair",
+                  "target": "evaluation"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "renderedIds": [
+        "A"
+      ],
+      "expected": {
+        "valid": true,
+        "fault": null,
+        "evaluation": {
+          "snapshot": "fixture-evaluation-A",
+          "asOf": "2026-10-21T00:00:00Z"
+        },
+        "observation": {
+          "provenance": {
+            "kind": "dolt-revision",
+            "source": "synthetic-beads-observation",
+            "revision": "fixture-revision-A"
+          },
+          "capturedAt": "2026-10-21T00:00:00Z"
+        },
+        "effectiveIds": [
+          "A",
+          "B"
+        ],
+        "claimIdentities": [
+          {
+            "evaluation": {
+              "snapshot": "fixture-evaluation-A",
+              "asOf": "2026-10-21T00:00:00Z"
+            },
+            "observation": {
+              "provenance": {
+                "kind": "dolt-revision",
+                "source": "synthetic-beads-observation",
+                "revision": "fixture-revision-A"
+              },
+              "capturedAt": "2026-10-21T00:00:00Z"
+            },
+            "itemId": "A",
+            "field": "governedBy"
+          },
+          {
+            "evaluation": {
+              "snapshot": "fixture-evaluation-A",
+              "asOf": "2026-10-21T00:00:00Z"
+            },
+            "observation": {
+              "provenance": {
+                "kind": "dolt-revision",
+                "source": "synthetic-beads-observation",
+                "revision": "fixture-revision-A"
+              },
+              "capturedAt": "2026-10-21T00:00:00Z"
+            },
+            "itemId": "B",
+            "field": "governedBy"
+          }
+        ],
+        "unknownCount": 2,
+        "renderedIds": [
+          "A"
+        ],
+        "insideUnknownCount": 1,
+        "outsideIds": [
+          "B"
+        ],
+        "outsideUnknownCount": 1
+      },
+      "expectedCarrierPaths": [
+        [
+          "workItems",
+          "governedBy"
+        ]
+      ],
+      "expectedRecordPopulations": {
+        "entities": [
+          {
+            "id": "work-item:A",
+            "kind": "work-item",
+            "title": "Synthetic A",
+            "detail": "Synthetic observed work-item record",
+            "epistemic": {
+              "label": "Unknown",
+              "reason": "Synthetic entity support is not captured.",
+              "closedReason": "source-uncaptured-or-unreachable",
+              "resolutionRoutes": [
+                {
+                  "reason": "source-uncaptured-or-unreachable",
+                  "route": "Repair the observer/source; new snapshot",
+                  "actor": "operator",
+                  "verb": "repair",
+                  "target": "evaluation"
+                }
+              ]
+            },
+            "provenance": [
+              {
+                "kind": "dolt-revision",
+                "source": "synthetic-beads-observation",
+                "revision": "fixture-revision-A"
+              }
+            ]
+          },
+          {
+            "id": "work-item:B",
+            "kind": "work-item",
+            "title": "Synthetic B",
+            "detail": "Synthetic observed work-item record",
+            "epistemic": {
+              "label": "Unknown",
+              "reason": "Synthetic entity support is not captured.",
+              "closedReason": "source-uncaptured-or-unreachable",
+              "resolutionRoutes": [
+                {
+                  "reason": "source-uncaptured-or-unreachable",
+                  "route": "Repair the observer/source; new snapshot",
+                  "actor": "operator",
+                  "verb": "repair",
+                  "target": "evaluation"
+                }
+              ]
+            },
+            "provenance": [
+              {
+                "kind": "dolt-revision",
+                "source": "synthetic-beads-observation",
+                "revision": "fixture-revision-A"
+              }
+            ]
+          }
+        ],
+        "relationships": [
+          {
+            "id": "relation:fixture-depends-on",
+            "kind": "depends_on",
+            "from": "work-item:A",
+            "to": "work-item:B",
+            "statement": "Synthetic work-item dependency",
+            "epistemic": {
+              "label": "Unknown",
+              "reason": "Synthetic dependency evidence is not captured.",
+              "closedReason": "source-uncaptured-or-unreachable",
+              "resolutionRoutes": [
+                {
+                  "reason": "source-uncaptured-or-unreachable",
+                  "route": "Repair the observer/source; new snapshot",
+                  "actor": "operator",
+                  "verb": "repair",
+                  "target": "evaluation"
+                }
+              ]
+            },
+            "provenance": [
+              {
+                "kind": "dolt-revision",
+                "source": "synthetic-beads-observation",
+                "revision": "fixture-revision-A"
+              }
+            ]
+          }
+        ],
+        "unknownSubjects": [
+          {
+            "id": "work-item:A/governed-by",
+            "epistemic": {
+              "label": "Unknown",
+              "reason": "No governing intent was captured for this work item: the observation reads no link from an item to the intent that warrants it, and none is taken from its title.",
+              "closedReason": "source-uncaptured-or-unreachable",
+              "resolutionRoutes": [
+                {
+                  "reason": "source-uncaptured-or-unreachable",
+                  "route": "Repair the observer/source; new snapshot",
+                  "actor": "operator",
+                  "verb": "repair",
+                  "target": "evaluation"
+                }
+              ]
+            }
+          },
+          {
+            "id": "work-item:B/governed-by",
+            "epistemic": {
+              "label": "Unknown",
+              "reason": "No governing intent was captured for this work item: the observation reads no link from an item to the intent that warrants it, and none is taken from its title.",
+              "closedReason": "source-uncaptured-or-unreachable",
+              "resolutionRoutes": [
+                {
+                  "reason": "source-uncaptured-or-unreachable",
+                  "route": "Repair the observer/source; new snapshot",
+                  "actor": "operator",
+                  "verb": "repair",
+                  "target": "evaluation"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "requiredFailure": "literal retained relationships"
+    },
+    {
+      "name": "altered-retained-unknownSubjects-population",
+      "body": {
+        "evaluation": {
+          "snapshot": "fixture-evaluation-A",
+          "asOf": "2026-10-21T00:00:00Z"
+        },
+        "workItems": {
+          "kind": "observed",
+          "provenance": {
+            "kind": "dolt-revision",
+            "source": "synthetic-beads-observation",
+            "revision": "fixture-revision-A"
+          },
+          "capturedAt": "2026-10-21T00:00:00Z",
+          "governedBy": {
+            "label": "Unknown",
+            "closedReason": "source-uncaptured-or-unreachable",
+            "resolutionRoutes": [
+              {
+                "reason": "source-uncaptured-or-unreachable",
+                "route": "Repair the observer/source; new snapshot",
+                "actor": "operator",
+                "verb": "repair",
+                "target": "evaluation"
+              }
+            ]
+          },
+          "governedByUnknownCount": 2,
+          "items": [
+            {
+              "id": "A",
+              "title": "Implement POC-REQ-010",
+              "governedBy": {
+                "ref": "observation"
+              }
+            },
+            {
+              "id": "B",
+              "title": "Unrelated work",
+              "governedBy": {
+                "ref": "observation"
+              }
+            }
+          ]
+        },
+        "entities": [
+          {
+            "id": "work-item:A",
+            "kind": "work-item",
+            "title": "Synthetic A",
+            "detail": "Synthetic observed work-item record",
+            "epistemic": {
+              "label": "Unknown",
+              "reason": "Synthetic entity support is not captured.",
+              "closedReason": "source-uncaptured-or-unreachable",
+              "resolutionRoutes": [
+                {
+                  "reason": "source-uncaptured-or-unreachable",
+                  "route": "Repair the observer/source; new snapshot",
+                  "actor": "operator",
+                  "verb": "repair",
+                  "target": "evaluation"
+                }
+              ]
+            },
+            "provenance": [
+              {
+                "kind": "dolt-revision",
+                "source": "synthetic-beads-observation",
+                "revision": "fixture-revision-A"
+              }
+            ]
+          },
+          {
+            "id": "work-item:B",
+            "kind": "work-item",
+            "title": "Synthetic B",
+            "detail": "Synthetic observed work-item record",
+            "epistemic": {
+              "label": "Unknown",
+              "reason": "Synthetic entity support is not captured.",
+              "closedReason": "source-uncaptured-or-unreachable",
+              "resolutionRoutes": [
+                {
+                  "reason": "source-uncaptured-or-unreachable",
+                  "route": "Repair the observer/source; new snapshot",
+                  "actor": "operator",
+                  "verb": "repair",
+                  "target": "evaluation"
+                }
+              ]
+            },
+            "provenance": [
+              {
+                "kind": "dolt-revision",
+                "source": "synthetic-beads-observation",
+                "revision": "fixture-revision-A"
+              }
+            ]
+          }
+        ],
+        "relationships": [
+          {
+            "id": "relation:fixture-depends-on",
+            "kind": "depends_on",
+            "from": "work-item:A",
+            "to": "work-item:B",
+            "statement": "Synthetic work-item dependency",
+            "epistemic": {
+              "label": "Unknown",
+              "reason": "Synthetic dependency evidence is not captured.",
+              "closedReason": "source-uncaptured-or-unreachable",
+              "resolutionRoutes": [
+                {
+                  "reason": "source-uncaptured-or-unreachable",
+                  "route": "Repair the observer/source; new snapshot",
+                  "actor": "operator",
+                  "verb": "repair",
+                  "target": "evaluation"
+                }
+              ]
+            },
+            "provenance": [
+              {
+                "kind": "dolt-revision",
+                "source": "synthetic-beads-observation",
+                "revision": "fixture-revision-A"
+              }
+            ]
+          }
+        ],
+        "unknownSubjects": [
+          {
+            "id": "work-item:A/governed-by",
+            "epistemic": {
+              "label": "Unknown",
+              "reason": "No governing intent was captured for this work item: the observation reads no link from an item to the intent that warrants it, and none is taken from its title.",
+              "closedReason": "source-uncaptured-or-unreachable",
+              "resolutionRoutes": [
+                {
+                  "reason": "source-uncaptured-or-unreachable",
+                  "route": "Repair the observer/source; new snapshot",
+                  "actor": "operator",
+                  "verb": "repair",
+                  "target": "evaluation"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "renderedIds": [
+        "A"
+      ],
+      "expected": {
+        "valid": true,
+        "fault": null,
+        "evaluation": {
+          "snapshot": "fixture-evaluation-A",
+          "asOf": "2026-10-21T00:00:00Z"
+        },
+        "observation": {
+          "provenance": {
+            "kind": "dolt-revision",
+            "source": "synthetic-beads-observation",
+            "revision": "fixture-revision-A"
+          },
+          "capturedAt": "2026-10-21T00:00:00Z"
+        },
+        "effectiveIds": [
+          "A",
+          "B"
+        ],
+        "claimIdentities": [
+          {
+            "evaluation": {
+              "snapshot": "fixture-evaluation-A",
+              "asOf": "2026-10-21T00:00:00Z"
+            },
+            "observation": {
+              "provenance": {
+                "kind": "dolt-revision",
+                "source": "synthetic-beads-observation",
+                "revision": "fixture-revision-A"
+              },
+              "capturedAt": "2026-10-21T00:00:00Z"
+            },
+            "itemId": "A",
+            "field": "governedBy"
+          },
+          {
+            "evaluation": {
+              "snapshot": "fixture-evaluation-A",
+              "asOf": "2026-10-21T00:00:00Z"
+            },
+            "observation": {
+              "provenance": {
+                "kind": "dolt-revision",
+                "source": "synthetic-beads-observation",
+                "revision": "fixture-revision-A"
+              },
+              "capturedAt": "2026-10-21T00:00:00Z"
+            },
+            "itemId": "B",
+            "field": "governedBy"
+          }
+        ],
+        "unknownCount": 2,
+        "renderedIds": [
+          "A"
+        ],
+        "insideUnknownCount": 1,
+        "outsideIds": [
+          "B"
+        ],
+        "outsideUnknownCount": 1
+      },
+      "expectedCarrierPaths": [
+        [
+          "workItems",
+          "governedBy"
+        ]
+      ],
+      "expectedRecordPopulations": {
+        "entities": [
+          {
+            "id": "work-item:A",
+            "kind": "work-item",
+            "title": "Synthetic A",
+            "detail": "Synthetic observed work-item record",
+            "epistemic": {
+              "label": "Unknown",
+              "reason": "Synthetic entity support is not captured.",
+              "closedReason": "source-uncaptured-or-unreachable",
+              "resolutionRoutes": [
+                {
+                  "reason": "source-uncaptured-or-unreachable",
+                  "route": "Repair the observer/source; new snapshot",
+                  "actor": "operator",
+                  "verb": "repair",
+                  "target": "evaluation"
+                }
+              ]
+            },
+            "provenance": [
+              {
+                "kind": "dolt-revision",
+                "source": "synthetic-beads-observation",
+                "revision": "fixture-revision-A"
+              }
+            ]
+          },
+          {
+            "id": "work-item:B",
+            "kind": "work-item",
+            "title": "Synthetic B",
+            "detail": "Synthetic observed work-item record",
+            "epistemic": {
+              "label": "Unknown",
+              "reason": "Synthetic entity support is not captured.",
+              "closedReason": "source-uncaptured-or-unreachable",
+              "resolutionRoutes": [
+                {
+                  "reason": "source-uncaptured-or-unreachable",
+                  "route": "Repair the observer/source; new snapshot",
+                  "actor": "operator",
+                  "verb": "repair",
+                  "target": "evaluation"
+                }
+              ]
+            },
+            "provenance": [
+              {
+                "kind": "dolt-revision",
+                "source": "synthetic-beads-observation",
+                "revision": "fixture-revision-A"
+              }
+            ]
+          }
+        ],
+        "relationships": [
+          {
+            "id": "relation:fixture-depends-on",
+            "kind": "depends_on",
+            "from": "work-item:A",
+            "to": "work-item:B",
+            "statement": "Synthetic work-item dependency",
+            "epistemic": {
+              "label": "Unknown",
+              "reason": "Synthetic dependency evidence is not captured.",
+              "closedReason": "source-uncaptured-or-unreachable",
+              "resolutionRoutes": [
+                {
+                  "reason": "source-uncaptured-or-unreachable",
+                  "route": "Repair the observer/source; new snapshot",
+                  "actor": "operator",
+                  "verb": "repair",
+                  "target": "evaluation"
+                }
+              ]
+            },
+            "provenance": [
+              {
+                "kind": "dolt-revision",
+                "source": "synthetic-beads-observation",
+                "revision": "fixture-revision-A"
+              }
+            ]
+          }
+        ],
+        "unknownSubjects": [
+          {
+            "id": "work-item:A/governed-by",
+            "epistemic": {
+              "label": "Unknown",
+              "reason": "No governing intent was captured for this work item: the observation reads no link from an item to the intent that warrants it, and none is taken from its title.",
+              "closedReason": "source-uncaptured-or-unreachable",
+              "resolutionRoutes": [
+                {
+                  "reason": "source-uncaptured-or-unreachable",
+                  "route": "Repair the observer/source; new snapshot",
+                  "actor": "operator",
+                  "verb": "repair",
+                  "target": "evaluation"
+                }
+              ]
+            }
+          },
+          {
+            "id": "work-item:B/governed-by",
+            "epistemic": {
+              "label": "Unknown",
+              "reason": "No governing intent was captured for this work item: the observation reads no link from an item to the intent that warrants it, and none is taken from its title.",
+              "closedReason": "source-uncaptured-or-unreachable",
+              "resolutionRoutes": [
+                {
+                  "reason": "source-uncaptured-or-unreachable",
+                  "route": "Repair the observer/source; new snapshot",
+                  "actor": "operator",
+                  "verb": "repair",
+                  "target": "evaluation"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "requiredFailure": "literal retained unknownSubjects"
+    }
+  ],
+  "syntheticConsumer": {
+    "heading": "Synthetic prose consumer",
+    "block": "### Requirement: Synthetic prose consumer\n\n**Required behavior.** The consumer SHALL read every POC-REQ-014 governedBy value from the machine answer.\n\n```yaml\nwarrants:\n  primary: VIS-2\n  doctrine: []\n  contracts: []\n  policies: []\n  decisions: []\n  topology: []\n  parent_requirements: []\n```\n",
+    "oldClassification": "explicitly-unaffected",
+    "expectedClassification": "undecidable"
+  }
+}

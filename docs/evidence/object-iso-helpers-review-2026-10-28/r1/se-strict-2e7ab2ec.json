@@ -1,0 +1,176 @@
+{
+ "base": "81862261ddbc2b3c8e8481851f3c27129217d477",
+ "head": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+ "changedSourceFiles": 22,
+ "testFilesNotCompared": [
+  "M packages/polaris-dossier/src/cli.test.ts",
+  "A packages/polaris-dossier/src/iso-of.test.ts",
+  "M packages/polaris-dossier/src/screen.test.ts",
+  "M packages/polaris-generation-core/src/public-source-classification.test.ts",
+  "M packages/polaris-generation-core/src/public-source-exemption.test.ts",
+  "M packages/polaris-generation-core/src/secret-redaction.test.ts",
+  "A packages/support/src/is-record.test.ts",
+  "M packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+ ],
+ "modified": 20,
+ "equal": 19,
+ "notEqual": [
+  "packages/polaris-dossier/src/iso-of.ts",
+  "packages/support/src/index.ts",
+  "packages/support/src/is-record.ts"
+ ],
+ "rows": [
+  {
+   "path": "packages/polaris-dossier/src/brief.ts",
+   "status": "M",
+   "equal": true,
+   "baseSha256": "31b6826f221bbc396cc35e459349142ffd079378b4e30555e31a8a70367d2e88",
+   "headSha256": "31b6826f221bbc396cc35e459349142ffd079378b4e30555e31a8a70367d2e88"
+  },
+  {
+   "path": "packages/polaris-dossier/src/check.ts",
+   "status": "M",
+   "equal": true,
+   "baseSha256": "67f3b90f456de3f922da530b36c410b709e56d5f65c8a58d9bd6d2e9f69de579",
+   "headSha256": "67f3b90f456de3f922da530b36c410b709e56d5f65c8a58d9bd6d2e9f69de579"
+  },
+  {
+   "path": "packages/polaris-dossier/src/close.ts",
+   "status": "M",
+   "equal": true,
+   "baseSha256": "b8dbb92ad48f2f1e8b00057c8bbd8cdac346006207537b6af39d9bc523207075",
+   "headSha256": "b8dbb92ad48f2f1e8b00057c8bbd8cdac346006207537b6af39d9bc523207075"
+  },
+  {
+   "path": "packages/polaris-dossier/src/design-review.ts",
+   "status": "M",
+   "equal": true,
+   "baseSha256": "d31f8624055745d8950793796b170dada94b59e492c67b5780f4392b929e2781",
+   "headSha256": "d31f8624055745d8950793796b170dada94b59e492c67b5780f4392b929e2781"
+  },
+  {
+   "path": "packages/polaris-dossier/src/execution-flags.ts",
+   "status": "M",
+   "equal": true,
+   "baseSha256": "c5d911712ab246227d85cad75510a21192960602f0dda9290e22a5ca31d289a9",
+   "headSha256": "c5d911712ab246227d85cad75510a21192960602f0dda9290e22a5ca31d289a9"
+  },
+  {
+   "path": "packages/polaris-dossier/src/inventory.ts",
+   "status": "M",
+   "equal": true,
+   "baseSha256": "b44f8a92eb7b14dbdfad6b9cd1729955d0c92b1aee224e82e27c84d335974ab0",
+   "headSha256": "b44f8a92eb7b14dbdfad6b9cd1729955d0c92b1aee224e82e27c84d335974ab0"
+  },
+  {
+   "path": "packages/polaris-dossier/src/iso-of.ts",
+   "status": "A",
+   "equal": false,
+   "note": "added or removed by the change: outside this check"
+  },
+  {
+   "path": "packages/polaris-dossier/src/render.ts",
+   "status": "M",
+   "equal": true,
+   "baseSha256": "fa769cb966d7bcd19597111b1f767505a5354634a5d047fe1c46a5640f23bb4c",
+   "headSha256": "fa769cb966d7bcd19597111b1f767505a5354634a5d047fe1c46a5640f23bb4c"
+  },
+  {
+   "path": "packages/polaris-dossier/src/review.ts",
+   "status": "M",
+   "equal": true,
+   "baseSha256": "c46dbe035c59719932a5f26256503928e32cbfaa3e2fda91c310478ec304f9b1",
+   "headSha256": "c46dbe035c59719932a5f26256503928e32cbfaa3e2fda91c310478ec304f9b1"
+  },
+  {
+   "path": "packages/polaris-dossier/src/run-record.ts",
+   "status": "M",
+   "equal": true,
+   "baseSha256": "798cdacdfbbd5acefffd5a887d689e5d39ddd7bdd4ff3d098b89f494fa9e1528",
+   "headSha256": "798cdacdfbbd5acefffd5a887d689e5d39ddd7bdd4ff3d098b89f494fa9e1528"
+  },
+  {
+   "path": "packages/polaris-dossier/src/screen.ts",
+   "status": "M",
+   "equal": true,
+   "baseSha256": "ed012a87b5d81edb8d42a4e2560a28bdc6e0013b44052254e2e5679ce4699c7c",
+   "headSha256": "ed012a87b5d81edb8d42a4e2560a28bdc6e0013b44052254e2e5679ce4699c7c"
+  },
+  {
+   "path": "packages/polaris-dossier/src/session-handover.ts",
+   "status": "M",
+   "equal": true,
+   "baseSha256": "77ce0987fedbbf6cfbfb3c45834fa8458e001541e4df733152e740aa9433d9c0",
+   "headSha256": "77ce0987fedbbf6cfbfb3c45834fa8458e001541e4df733152e740aa9433d9c0"
+  },
+  {
+   "path": "packages/polaris-dossier/src/session-statement.ts",
+   "status": "M",
+   "equal": true,
+   "baseSha256": "69722c4e9bdb415972e6c0921c656c14cc4967978c30958be3d7be55b4f5bc1f",
+   "headSha256": "69722c4e9bdb415972e6c0921c656c14cc4967978c30958be3d7be55b4f5bc1f"
+  },
+  {
+   "path": "packages/polaris-dossier/src/waiting-sessions.ts",
+   "status": "M",
+   "equal": true,
+   "baseSha256": "c49faab5595027f200dabbdb1f99703da03c1683af3928130dcf3b3dbbceddf0",
+   "headSha256": "c49faab5595027f200dabbdb1f99703da03c1683af3928130dcf3b3dbbceddf0"
+  },
+  {
+   "path": "packages/polaris-generation-core/src/discovery.ts",
+   "status": "M",
+   "equal": true,
+   "baseSha256": "427dfdb82518efc8cb6cdf8810633f737c1a84a6079042f8affe0709893353c4",
+   "headSha256": "427dfdb82518efc8cb6cdf8810633f737c1a84a6079042f8affe0709893353c4"
+  },
+  {
+   "path": "packages/polaris-generation-core/src/dossier-evaluation.ts",
+   "status": "M",
+   "equal": true,
+   "baseSha256": "87a77bb019b3b44e8efa0ddd9a0481c0159397e0741c96020a49de1c53d64e04",
+   "headSha256": "87a77bb019b3b44e8efa0ddd9a0481c0159397e0741c96020a49de1c53d64e04"
+  },
+  {
+   "path": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "status": "M",
+   "equal": true,
+   "baseSha256": "3d90c2e957c2170c67264d2d9d2646a4001e73f7eafbd983f976aaecfff9b7ef",
+   "headSha256": "3d90c2e957c2170c67264d2d9d2646a4001e73f7eafbd983f976aaecfff9b7ef"
+  },
+  {
+   "path": "packages/polaris-generation-core/src/reader-questions.ts",
+   "status": "M",
+   "equal": true,
+   "baseSha256": "bae07df3b1ce707168d3552bef1821b868559300379474000638b62884c63f8f",
+   "headSha256": "bae07df3b1ce707168d3552bef1821b868559300379474000638b62884c63f8f"
+  },
+  {
+   "path": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "status": "M",
+   "equal": true,
+   "baseSha256": "fbb1387a542d31c8fe1c13542f347116a06f508f05416e3ec0a086cd51b99b5c",
+   "headSha256": "fbb1387a542d31c8fe1c13542f347116a06f508f05416e3ec0a086cd51b99b5c"
+  },
+  {
+   "path": "packages/support/src/index.ts",
+   "status": "M",
+   "equal": false,
+   "baseSha256": "ecaf320274459b6c8685c116b7f502023ac2af97e8690af0e2a378c47bd51db8",
+   "headSha256": "0b003c8999751ea57b0a58809d8955e3e07a5126cebf9d2d4bf1168da70cb0da"
+  },
+  {
+   "path": "packages/support/src/is-record.ts",
+   "status": "A",
+   "equal": false,
+   "note": "added or removed by the change: outside this check"
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "status": "M",
+   "equal": true,
+   "baseSha256": "6a3f6657ce4814c2f0334756d92c27bf0b6a2779e85f7ffb22ccf2c39ad6c5d2",
+   "headSha256": "6a3f6657ce4814c2f0334756d92c27bf0b6a2779e85f7ffb22ccf2c39ad6c5d2"
+  }
+ ]
+}

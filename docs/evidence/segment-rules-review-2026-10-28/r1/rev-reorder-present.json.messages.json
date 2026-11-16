@@ -1,0 +1,8 @@
+{
+ "RX7-projects-reordered": [
+  [
+   "suite child processes and the vitest worker RPC loads the vitest config and finds no alias key at any depth",
+   "AssertionError: expected [ 'ssr', 'ssr.resolve', \u2026(66) ] to deeply equal ArrayContaining{\u2026}\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/apps/three-surface-poc/src/sync-child-process-guard.test.ts:265:19\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9"
+  ]
+ ]
+}

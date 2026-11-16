@@ -1,0 +1,313 @@
+{
+  "scope": "CC-REV-4 source return only; evidence not authority",
+  "baseline": "4504514c019ca0ee0cb4a89ed97445a0bad21915",
+  "c3": "abd3f6ca2e8e99ad59327fdfc7b38d8bf41b07b5",
+  "main_checkpoint": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+  "population": {
+    "tracked_paths": 2927,
+    "spec_files": 8,
+    "requirements": 130,
+    "full_block_characters": 577766
+  },
+  "bindings": [
+    {
+      "path": "openspec/changes/cap1-trusted-bootstrap-consent/specs/project-registration-and-honest-shape-visibility/spec.md",
+      "commit": "4504514c019ca0ee0cb4a89ed97445a0bad21915",
+      "sha256": "359ff741742902f0b07bbf1b4ec9aa997d17145cd56805fb49d6e683a12776e7",
+      "bytes": 11873,
+      "requirements": 2,
+      "git_blob": "817e32b84f2e6b44fda62f8542184f9f89b7482e"
+    },
+    {
+      "path": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "commit": "4504514c019ca0ee0cb4a89ed97445a0bad21915",
+      "sha256": "d6bce6b3aca13098f8d7ca28cee6aed5475e7522b2305958580eb17c4ffc3ea2",
+      "bytes": 85688,
+      "requirements": 4,
+      "git_blob": "ae5b4237ab4f9d27cac9e46033f0bef55fd365d0"
+    },
+    {
+      "path": "openspec/changes/polaris-manifesto-generation/specs/polaris-generation/spec.md",
+      "commit": "4504514c019ca0ee0cb4a89ed97445a0bad21915",
+      "sha256": "a8199646c3b7953e8c4101d70d0307813dd1b3927d0b403f76c22d280dd6a89b",
+      "bytes": 146216,
+      "requirements": 29,
+      "git_blob": "72edfdd1736ca33ac2a2d6a0f9353385dff1bd53"
+    },
+    {
+      "path": "openspec/changes/polaris-manifesto-understanding-amendment/specs/polaris-generation/spec.md",
+      "commit": "4504514c019ca0ee0cb4a89ed97445a0bad21915",
+      "sha256": "6841e63cda0ccdb81966a6fabbdfaf3721910df8ea04959711eb59843859ba58",
+      "bytes": 59815,
+      "requirements": 9,
+      "git_blob": "b03930a944ef81739ba7b21a6b6c71b17e9e126c"
+    },
+    {
+      "path": "openspec/changes/polaris-non-governed-narrative-profile/specs/polaris-generation/spec.md",
+      "commit": "4504514c019ca0ee0cb4a89ed97445a0bad21915",
+      "sha256": "3b2abfe9221c6aba641c86a23819a3fce5bb0e15617170e7aa7351fc479cb9b3",
+      "bytes": 17231,
+      "requirements": 1,
+      "git_blob": "8cb51d2257ca4695e7448cd96cbfd7a05393bf88"
+    },
+    {
+      "path": "openspec/changes/polaris-project-wide-butlers-model/specs/polaris-project-wide-butlers-model/spec.md",
+      "commit": "4504514c019ca0ee0cb4a89ed97445a0bad21915",
+      "sha256": "44f4ad77e62525595be5839883ac491d26bdd6859f353f91edc1d48903011ed2",
+      "bytes": 148762,
+      "requirements": 17,
+      "git_blob": "aa4c03215d86d6e64f84edf8795d05ed1004b386"
+    },
+    {
+      "path": "openspec/changes/project-registration-and-honest-shape-visibility/specs/project-registration-and-honest-shape-visibility/spec.md",
+      "commit": "4504514c019ca0ee0cb4a89ed97445a0bad21915",
+      "sha256": "65b66c913cd2650881a9df8cb34a3c63b3f518041e83f45d2451980d9f1d0448",
+      "bytes": 82891,
+      "requirements": 42,
+      "git_blob": "2c255b6abb935752bbb0ab641564e927de067e22"
+    },
+    {
+      "path": "openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md",
+      "commit": "4504514c019ca0ee0cb4a89ed97445a0bad21915",
+      "sha256": "3a2e5a2be8fc69f0fb70f32b0fce1b2b6ca9589db16224090a0351112385b691",
+      "bytes": 58098,
+      "requirements": 26,
+      "git_blob": "df6a14e4accaec50b78e7498a76212b8ca67b9a7"
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/SEMANTIC-DELTA.md",
+      "commit": "abd3f6ca2e8e99ad59327fdfc7b38d8bf41b07b5",
+      "sha256": "3f3d253fc3acc6650dcf142ef422a6e9ce3ba98b7e386b0aea1fa6d83ac0ff15",
+      "bytes": 26691,
+      "git_blob": "d00453ba1f1a66d7fedb8afb6ffb8367546a9dac"
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/DESIGN.md",
+      "commit": "abd3f6ca2e8e99ad59327fdfc7b38d8bf41b07b5",
+      "sha256": "4f436cba70c7fba6a0ac05018872c4849ae5a478f3a9b43f2e20adc9041bcc1f",
+      "bytes": 20827,
+      "git_blob": "7a5719cebd92d9a6f76bdf6c8f25ba96da7396a6"
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/REQUIREMENT-CONSUMPTION.json",
+      "commit": "abd3f6ca2e8e99ad59327fdfc7b38d8bf41b07b5",
+      "sha256": "d0814dc083695fdc7747c45e395d68e8b7efc15316e7590c4dd06adc75055874",
+      "bytes": 221055,
+      "git_blob": "1ad40ed2bb9aca2b06ee2fd384e9dacf70f51203"
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/IMPACT-LEDGER.md",
+      "commit": "abd3f6ca2e8e99ad59327fdfc7b38d8bf41b07b5",
+      "sha256": "f13ffaf56210367ed641d0f3544c3cb9de71944d4f084993e3d7979e5d34b096",
+      "bytes": 7373,
+      "git_blob": "ef0a288ad42d2ce61cf60842f3509dcd8792cba6"
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/IMPACT-SWEEP.json",
+      "commit": "abd3f6ca2e8e99ad59327fdfc7b38d8bf41b07b5",
+      "sha256": "f81bb32c56d4f1aabe0b433f9b85243729e2ab3bd52c435ee03abf8f8a4b1dd8",
+      "bytes": 263083,
+      "git_blob": "57fac676285f7e1100ab4f81919365a5eff40e4f"
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/THREE-SURFACE-POC-GOVERNEDBY-REFERENCE-AMENDMENT-MANIFEST.txt",
+      "commit": "abd3f6ca2e8e99ad59327fdfc7b38d8bf41b07b5",
+      "sha256": "77e53d37ac42c5db4edb4f99d76d937629df5a80d370ac47751c0e62f27270bd",
+      "bytes": 1081,
+      "git_blob": "e2dafa90f23ffae3ed6f142aad667728ccca8c9e"
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/COMPATIBILITY-SETTLEMENT.md",
+      "commit": "abd3f6ca2e8e99ad59327fdfc7b38d8bf41b07b5",
+      "sha256": "a67dc6692356bf66f7ac8e205c3ef03d7ee2e3fbcdbcc5cc5691c71a46d61a94",
+      "bytes": 12790,
+      "git_blob": "360ddc58ed545095d4e47d596e380816f0580e9e"
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/COMPATIBILITY-MAP.json",
+      "commit": "abd3f6ca2e8e99ad59327fdfc7b38d8bf41b07b5",
+      "sha256": "23cdc9e056bea780544982f7ffe80f0f403ee4c4e1de519a5c6d87eb339a5cd6",
+      "bytes": 15036,
+      "git_blob": "d064bccf605355685d9be999609145845e784618"
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/SOURCE-MAP.json",
+      "commit": "abd3f6ca2e8e99ad59327fdfc7b38d8bf41b07b5",
+      "sha256": "d98fce4bd18c0c464d9651e906d6bd06200f1cf3ce8f595c90be49db0ee64fd3",
+      "bytes": 14645,
+      "git_blob": "7a5daf71a3f7040674e23b780a63d9d73225b899"
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/policy-candidates/SHAPE-TO-SPEC-IMPACT-POLICY-CANDIDATE.md",
+      "commit": "4504514c019ca0ee0cb4a89ed97445a0bad21915",
+      "sha256": "e08270a2d2589aafaad59d9958683f094fb6170b38cfaa30e49f48c41645989c",
+      "bytes": 17972,
+      "exact_at_c3_and_main": true,
+      "git_blob": "ac8d6f4afd134c690e5bb572f0eb39d5b5b54659"
+    },
+    {
+      "path": ".syzygy/governance/policies/craft-and-care/review-and-documentation.md",
+      "commit": "4504514c019ca0ee0cb4a89ed97445a0bad21915",
+      "sha256": "13928819f6573d85e3074bb6d042fef49c2d42d5beece658a3bc5292f1ea97e1",
+      "bytes": 11117,
+      "exact_at_c3_and_main": true,
+      "git_blob": "5624cb6afa504ae539972e32869227eddd317d68"
+    },
+    {
+      "path": ".syzygy/governance/decisions/OWNER-DIRECTION-MACHINE-CEILING-2026-10-15.md",
+      "commit": "4504514c019ca0ee0cb4a89ed97445a0bad21915",
+      "sha256": "e2e3301f8f34302691697a5161ac5a89e5de839dd74a4cb1117b6c3051c9cec3",
+      "bytes": 3396,
+      "exact_at_c3_and_main": true,
+      "git_blob": "3dcf52cf63df73245226f0e5ed9947d747f5a8c8"
+    },
+    {
+      "path": ".syzygy/governance/decisions/ACCEPTANCE-ACT-RECORD.md",
+      "commit": "4504514c019ca0ee0cb4a89ed97445a0bad21915",
+      "sha256": "bbded40712eba4bdf24493b0d9b4d3fa86fe275b8de7e5350adf34313d094ccc",
+      "bytes": 110039,
+      "exact_at_c3_and_main": true,
+      "git_blob": "4f186f762bedbca93f57284bb64e0734105dd7fb"
+    },
+    {
+      "path": ".syzygy/governance/doctrine/vision.md",
+      "commit": "4504514c019ca0ee0cb4a89ed97445a0bad21915",
+      "sha256": "ff8410443dee3b53e4c8aad2e3b4072239e18ca9c16e3bef2518c8a44ae9ceeb",
+      "bytes": 17876,
+      "exact_at_c3_and_main": true,
+      "git_blob": "2e1033eeb257e47635f2a05d0a49d189ea62a80b"
+    },
+    {
+      "path": ".syzygy/governance/doctrine/trust-and-evidence.md",
+      "commit": "4504514c019ca0ee0cb4a89ed97445a0bad21915",
+      "sha256": "a62742ba79886fa9a300f08f9a33412919286f6442a0c90a42b14f91dc80a52a",
+      "bytes": 9748,
+      "exact_at_c3_and_main": true,
+      "git_blob": "9ef6bd7e4cf3411d649fdae87e3709f2dd8ad2de"
+    },
+    {
+      "path": ".syzygy/governance/doctrine/security.md",
+      "commit": "4504514c019ca0ee0cb4a89ed97445a0bad21915",
+      "sha256": "766c953d01d1a7bba3319b538a35851c88b9901d8fe79399af0f23ec3011bc00",
+      "bytes": 7338,
+      "exact_at_c3_and_main": true,
+      "git_blob": "c0949ec64b69f9a28937209e2950777dbd3770ee"
+    },
+    {
+      "external_path": "/home/tze/.cache/syzygy-post-ceiling-2026-10-21/p115/core-freeze-c3/FROZEN-C3-BINDING.json",
+      "sha256": "a674875b2e270837e4b406e62f191ce4907d7462fdbd8b1df34ec38745194e53",
+      "bytes": 14562
+    },
+    {
+      "external_path": "/home/tze/.cache/syzygy-post-ceiling-2026-10-21/p115/fresh-review-round-2-c3/evidence/R-P115-GOVERNEDBY-REFERENCE-2-RAW.md",
+      "sha256": "3fd702def5cd8444edca13c296e1415c8b083c1d5709e6a1cf2755a251f0dfc0",
+      "bytes": 5621
+    },
+    {
+      "path": ".syzygy/governance/contracts/rfcs/RFC-0006-cross-surface-selection-query-drawer.md",
+      "commit": "4504514c019ca0ee0cb4a89ed97445a0bad21915",
+      "sha256": "aa83ae4f592639b03b354b2b8df57f600500fab1d8502163b2dace9cefc90f5d",
+      "bytes": 41085,
+      "git_blob": "66a9d2b76c247bf6af4986cfe6a3d0ddb09cd383",
+      "cache_copy": "sources/.syzygy/governance/contracts/rfcs/RFC-0006-cross-surface-selection-query-drawer.md"
+    },
+    {
+      "path": "apps/three-surface-poc/src/routes.ts",
+      "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+      "sha256": "81cd2099b9a162579a87c154137217e97d1e08e11542c07d91d42ad9a8cdd050",
+      "bytes": 18061,
+      "git_blob": "23a7c2d46689522792653389cfd7f2ba8926c599",
+      "cache_copy": "main-context/apps/three-surface-poc/src/routes.ts"
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/response-identity.ts",
+      "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+      "sha256": "c191332d854d4de7b22bd1e5ece65d6f7994c5275805b681955a9122be8571b1",
+      "bytes": 9473,
+      "git_blob": "1c981c48a3135cf7da563e8a6bebc184f5308ddc",
+      "cache_copy": "main-context/packages/three-surface-poc-core/src/response-identity.ts"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/source-adapter.ts",
+      "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+      "sha256": "980d0b5baa40fef01923bbce72219e9e326156379ad4a459f6d804d8e9b59d85",
+      "bytes": 3493,
+      "git_blob": "2eb799d5aa0f1083ce9e531f9c40752c867eaac7",
+      "cache_copy": "main-context/apps/three-surface-poc/src/polaris-generation/source-adapter.ts"
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/fixtures/wire-cases.json",
+      "commit": "abd3f6ca2e8e99ad59327fdfc7b38d8bf41b07b5",
+      "sha256": "7be86c331e9b0f39efff42427059ba7eb80ae40f4fcdc98af7597aeb45ce3552",
+      "bytes": 85586,
+      "git_blob": "1a430aa5d0fa1ca5ba5070a5033e72d3b56c9d7e",
+      "cache_copy": "c3-sources/.syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/fixtures/wire-cases.json"
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/literal-fixtures/inline-body-A.json",
+      "commit": "abd3f6ca2e8e99ad59327fdfc7b38d8bf41b07b5",
+      "sha256": "6648e7c17ea5b8f0317d4905d72292b8594e7800fc648154c42dfde28565b39b",
+      "bytes": 4996,
+      "git_blob": "b3cab57155b3bab65155e4b47a0326860ce59b1b",
+      "cache_copy": "c3-sources/.syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/literal-fixtures/inline-body-A.json"
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/literal-fixtures/reference-body-A.json",
+      "commit": "abd3f6ca2e8e99ad59327fdfc7b38d8bf41b07b5",
+      "sha256": "281cdf84ceda4b30e3418eb478b62ce64b71d9151732e1a36a34120d3751ceb9",
+      "bytes": 4646,
+      "git_blob": "97b509a16d4297340c01430452f66cc89caee80a",
+      "cache_copy": "c3-sources/.syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/literal-fixtures/reference-body-A.json"
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/literal-fixtures/reference-empty.json",
+      "commit": "abd3f6ca2e8e99ad59327fdfc7b38d8bf41b07b5",
+      "sha256": "2a17732c3692730fd04f9df0a21ed2282a1eca77bc11d620af798c18d24bb074",
+      "bytes": 2575,
+      "git_blob": "5d178f928f432bb93f543a471e336732892e2f09",
+      "cache_copy": "c3-sources/.syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/literal-fixtures/reference-empty.json"
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/PROPOSED-DISPOSITIONS.json",
+      "commit": "abd3f6ca2e8e99ad59327fdfc7b38d8bf41b07b5",
+      "sha256": "243c1a441e8975298224957c84255aee37d3c1379b3c388064723a6efcd4876d",
+      "bytes": 9895,
+      "git_blob": "57839ca34a13110d7a91a62a031cb4bf92b9294f",
+      "cache_copy": "c3-sources/.syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/PROPOSED-DISPOSITIONS.json"
+    },
+    {
+      "external_path": "/home/tze/.cache/syzygy-post-ceiling-2026-10-21/p115/encoded-byte-impact-source/FINAL-RECEIPT.json",
+      "sha256": "a06e2715881c5985700bc0482f90a878c47c2631ee0d7fb163994a41ee31fd76",
+      "bytes": 9799,
+      "role": "Supplemental evidence only; neither authority nor independent confirmation of these 130 judgments"
+    },
+    {
+      "external_path": "/home/tze/.cache/syzygy-post-ceiling-2026-10-21/p115/encoded-byte-impact-source/SOURCE-RETURN-EVIDENCE.md",
+      "sha256": "a02fab430dc4d252b8730f867c29efc4bf1ff1f575ebae837293dabbaa38eecf",
+      "bytes": 13374,
+      "role": "Supplemental evidence only; neither authority nor independent confirmation of these 130 judgments"
+    },
+    {
+      "external_path": "/home/tze/.cache/syzygy-post-ceiling-2026-10-21/p115/encoded-byte-impact-source/BOUNDARY-MAP.json",
+      "sha256": "cb1fd91ad124b3eef9d8599c51b749c4516d9f905e68d42e2b93837b76b2df52",
+      "bytes": 26184,
+      "role": "Supplemental evidence only; neither authority nor independent confirmation of these 130 judgments"
+    },
+    {
+      "external_path": "/home/tze/.cache/syzygy-post-ceiling-2026-10-21/p115/ROOT-BASE-TO-MAIN-SPEC-IDENTITY.json",
+      "sha256": "7ffc931877231d7774a31c4b818224e5e792e6d7a2aa21feceb58c2227428ef4",
+      "bytes": 3563,
+      "role": "Supplemental evidence only; neither authority nor independent confirmation of these 130 judgments"
+    },
+    {
+      "external_path": "/home/tze/.cache/syzygy-post-ceiling-2026-10-21/p115/fresh-review/R-P115-GOVERNEDBY-REFERENCE-1-RAW.md",
+      "sha256": "fabdf0d656ba0e6c6536e10683a6032fb196557b7ab74c20a02960dc8f8494c9",
+      "bytes": 8062,
+      "role": "Supplemental evidence only; neither authority nor independent confirmation of these 130 judgments"
+    }
+  ],
+  "proposed014_sha256": "fc9a3b6732d0e03aa243223b613d3ce5ddb199a5a2004c8bc01f71311c391190",
+  "proposed_spec_sha256": "01209cce451cbab62a9f39fce1e6a78d9dcd6b56f3e32e0dc9bf0d5534534c37",
+  "supplemental_receipts_are_not_authority_or_confirmation": true,
+  "source_rfc_exact_at_c3_and_main": true
+}

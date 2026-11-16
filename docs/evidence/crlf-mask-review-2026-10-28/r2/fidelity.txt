@@ -1,0 +1,20 @@
+packages/three-surface-poc-core/src/markdown-code-context.test.ts
+  pin bytes 472 sha256 19e0f958c3f99de58d81b9cd87390fabd3135c1a9febe2d7794bcbbe80e71b92
+  occurrences of pin at 224e8faa: 1 at c399eda9: 0
+  head minus pin+blank == c399eda9: True
+  pin followed by blank line then anchor: True
+  U+00A0 in head file: 0 raw CR: 0
+packages/three-surface-poc-core/src/git-object-reader.test.ts
+  pin bytes 890 sha256 bb9d36edc51db21e3a41284fdc3eba8bdc2cd8e63cea0f3d1cc075b8edc2374d
+  occurrences of pin at 224e8faa: 1 at c399eda9: 0
+  head minus pin+blank == c399eda9: True
+  pin followed by blank line then anchor: True
+  U+00A0 in head file: 0 raw CR: 0
+docs/evidence/syzygy-bpyt-16/crlf-mask-mutants.py rows sha256 39512a7f014255c57448518eb2022b2bfd93dc29c8c8b47080e5e185bb161156 occurrences at 224e8faa: 1 at c399eda9: 0
+packages/three-surface-poc-core/src/markdown-code-context.ts d621bfa2 6084 a02c105a483d11a9e90d27aade01ef5ddee6b60b9e165a9a7193c5baaa21f8fe
+packages/three-surface-poc-core/src/markdown-code-context.ts f7ea8584 6084 a02c105a483d11a9e90d27aade01ef5ddee6b60b9e165a9a7193c5baaa21f8fe
+packages/three-surface-poc-core/src/markdown-code-context.ts 6928b50a 7465 93b95f6d4eabc440344404d01040ba1f10bdceb65e69ab74c4ea59c1fa5831f7
+packages/three-surface-poc-core/src/markdown-code-context.ts c399eda9 7465 93b95f6d4eabc440344404d01040ba1f10bdceb65e69ab74c4ea59c1fa5831f7
+packages/three-surface-poc-core/src/markdown-code-context.ts 224e8faa 7465 93b95f6d4eabc440344404d01040ba1f10bdceb65e69ab74c4ea59c1fa5831f7
+packages/three-surface-poc-core/src/markdown-code-context.ts 561e4f77 7465 93b95f6d4eabc440344404d01040ba1f10bdceb65e69ab74c4ea59c1fa5831f7
+code paths changed c399eda9..561e4f77: ['packages/three-surface-poc-core/src/git-object-reader.test.ts', 'packages/three-surface-poc-core/src/markdown-code-context.test.ts']

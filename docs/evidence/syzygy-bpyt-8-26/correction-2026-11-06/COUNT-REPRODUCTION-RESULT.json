@@ -1,0 +1,51 @@
+{
+  "schema": "corrected-count-defect-reproduction/1",
+  "oldF2": {
+    "subject": "4dc2af1e57bfc3e09ec8d5839e46c277eb521878",
+    "recordSha256": "9eb1b7c78c182a5c7a3d27ffe6fbaf95e02894f5e5f6caa9761be5462cd6bced",
+    "bindingOmissionRejected": true,
+    "expectedAnswerDenominator": 6,
+    "errors": [
+      "executing tool identity",
+      "old/new subject population",
+      "literal fixture records",
+      "fixture record binding",
+      "fixture one-import adapter recipe binding",
+      "finite count resource identity"
+    ]
+  },
+  "oldSelection": {
+    "subject": "740279435178a882f1c2d526a2a7ea0bf2b52cbc",
+    "reportedWorlds": 5402,
+    "selectedBaseWorlds": 4,
+    "wrongGeneratedCountReproduced": true
+  },
+  "corrected": {
+    "generated": {
+      "worlds": 5403,
+      "byKind": {
+        "base": 4,
+        "base-reduced": 4,
+        "line": 3056,
+        "named": 535,
+        "record": 17,
+        "artifact": 24,
+        "pin": 8,
+        "probe": 1541,
+        "real-file": 197,
+        "edited-between-reads": 11,
+        "policy-bytes": 5,
+        "observation-successor": 1
+      }
+    },
+    "selected": {
+      "worlds": 4,
+      "byKind": {
+        "base": 4
+      }
+    },
+    "execution": null,
+    "independentCountAndFullKeysAgree": true
+  },
+  "success": true
+}

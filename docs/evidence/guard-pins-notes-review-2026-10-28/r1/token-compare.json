@@ -1,0 +1,38 @@
+{
+ "real": {
+  "tokensBase": 1300,
+  "tokensHead": 1300,
+  "equal": true,
+  "commentsBase": 8,
+  "commentsHead": 8,
+  "linesBase": 136,
+  "linesHead": 136
+ },
+ "typeOnlyMutant": {
+  "tokensBase": 1300,
+  "tokensHead": 1303,
+  "equal": false,
+  "commentsBase": 8,
+  "commentsHead": 8,
+  "linesBase": 136,
+  "linesHead": 136
+ },
+ "stringMutant": {
+  "tokensBase": 1300,
+  "tokensHead": 1300,
+  "equal": false,
+  "commentsBase": 8,
+  "commentsHead": 8,
+  "linesBase": 136,
+  "linesHead": 136
+ },
+ "commentMutant": {
+  "tokensBase": 1300,
+  "tokensHead": 1300,
+  "equal": true,
+  "commentsBase": 8,
+  "commentsHead": 9,
+  "linesBase": 136,
+  "linesHead": 137
+ }
+}

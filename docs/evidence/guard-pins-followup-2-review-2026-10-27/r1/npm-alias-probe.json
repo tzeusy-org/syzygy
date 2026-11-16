@@ -1,0 +1,134 @@
+{
+ "npm": "11.5.1",
+ "results": [
+  {
+   "case": "alias under the workspace name, target a registry package",
+   "declared": {
+    "wlib": "npm:typescript@*"
+   },
+   "exit": 0,
+   "lockEntries": {
+    "node_modules/wlib": {
+     "resolved": "w",
+     "link": true
+    }
+   },
+   "stderr": [],
+   "appLoads": "<scratch>/case0/w/package.json wlib@1.0.0"
+  },
+  {
+   "case": "alias under the workspace name, target the workspace",
+   "declared": {
+    "wlib": "npm:wlib@*"
+   },
+   "exit": 0,
+   "lockEntries": {
+    "node_modules/wlib": {
+     "resolved": "w",
+     "link": true
+    }
+   },
+   "stderr": [],
+   "appLoads": "<scratch>/case1/w/package.json wlib@1.0.0"
+  },
+  {
+   "case": "alias under the workspace name, target ranged to the workspace version",
+   "declared": {
+    "wlib": "npm:typescript@^1.0.0"
+   },
+   "exit": 0,
+   "lockEntries": {
+    "node_modules/wlib": {
+     "resolved": "w",
+     "link": true
+    }
+   },
+   "stderr": [],
+   "appLoads": "<scratch>/case2/w/package.json wlib@1.0.0"
+  },
+  {
+   "case": "alias under the workspace name, target range the workspace version does not satisfy",
+   "declared": {
+    "wlib": "npm:typescript@^5.5.0"
+   },
+   "exit": 1,
+   "lockEntries": {},
+   "stderr": [
+    "npm error code ENOTCACHED",
+    "npm error request to https://registry.npmjs.org/typescript failed: cache mode is 'only-if-cached' but no cached response is available.",
+    "npm error A complete log of this run can be found in: /tmp/r541-npm/cache/_logs/2026-10-27T08_55_36_631Z-debug-0.log"
+   ],
+   "appLoads": null
+  },
+  {
+   "case": "alias under another name, target the workspace name",
+   "declared": {
+    "dossier": "npm:wlib@*"
+   },
+   "exit": 1,
+   "lockEntries": {},
+   "stderr": [
+    "npm error code ENOTCACHED",
+    "npm error request to https://registry.npmjs.org/wlib failed: cache mode is 'only-if-cached' but no cached response is available.",
+    "npm error A complete log of this run can be found in: /tmp/r541-npm/cache/_logs/2026-10-27T08_55_37_747Z-debug-0.log"
+   ],
+   "appLoads": null
+  },
+  {
+   "case": "alias under another name, target a registry package",
+   "declared": {
+    "dossier": "npm:typescript@^5.5.0"
+   },
+   "exit": 1,
+   "lockEntries": {},
+   "stderr": [
+    "npm error code ENOTCACHED",
+    "npm error request to https://registry.npmjs.org/typescript failed: cache mode is 'only-if-cached' but no cached response is available.",
+    "npm error A complete log of this run can be found in: /tmp/r541-npm/cache/_logs/2026-10-27T08_55_38_528Z-debug-0.log"
+   ],
+   "appLoads": null
+  },
+  {
+   "case": "alias under another name, scoped target, no version",
+   "declared": {
+    "dossier": "npm:@scope/lib"
+   },
+   "exit": 1,
+   "lockEntries": {},
+   "stderr": [
+    "npm error code ENOTCACHED",
+    "npm error request to https://registry.npmjs.org/@scope%2flib failed: cache mode is 'only-if-cached' but no cached response is available.",
+    "npm error A complete log of this run can be found in: /tmp/r541-npm/cache/_logs/2026-10-27T08_55_39_292Z-debug-0.log"
+   ],
+   "appLoads": null
+  },
+  {
+   "case": "control: plain range on the workspace name",
+   "declared": {
+    "wlib": "*"
+   },
+   "exit": 0,
+   "lockEntries": {
+    "node_modules/wlib": {
+     "resolved": "w",
+     "link": true
+    }
+   },
+   "stderr": [],
+   "appLoads": "<scratch>/case7/w/package.json wlib@1.0.0"
+  },
+  {
+   "case": "control: no declaration at all (spec None)",
+   "declared": {},
+   "exit": 0,
+   "lockEntries": {
+    "node_modules/wlib": {
+     "resolved": "w",
+     "link": true
+    }
+   },
+   "stderr": [],
+   "appLoads": "<scratch>/case8/w/package.json wlib@1.0.0"
+  }
+ ]
+}

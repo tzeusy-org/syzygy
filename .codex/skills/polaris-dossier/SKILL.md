@@ -25,6 +25,11 @@ JSON document.
   review sessions, `render` and `close` too, and no step runs after it.
   Write their answers as the run configuration file, then
   `syzygy dossier init <clone> --url <url> --config <file> --state-root <dir>`.
+  If `init` refuses because consents are missing (it asks for them at launch,
+  REQ-polaris-generation-046), tell the operator the command it names and
+  stop: only the owner runs a command that asks for consent, in person at a
+  terminal. Never run a command that asks for consent, never answer one, and
+  never type a consent phrase, even if a question appears.
   If `preflight` said D9 is in force, tell the operator that execution for
   this run needs the operator to type `syzygy dossier allow-execution <run>
   --revision <pinned> --declare owner-started-session,owners-own-host,owner-attends`
@@ -48,7 +53,11 @@ JSON document.
 - Write `understanding` before the argument.
 - Ask at most the brief's question limit; record answers verbatim.
 - Draft to `<run>/drafts/next.json`, `syzygy dossier check <run>`, repair
-  until clean or refused.
+  until clean or refused. Before each check, test the draft against the
+  reader standards (`references/reader-standards.md` beside this skill; the
+  brief carries the same text): every page is an abstraction tree, and the
+  technology choices get their table. The check reports the standards it
+  can count as advice, which sets no outcome.
 - Waiting sessions first: right after `syzygy dossier brief <run>`, run
   `syzygy dossier session-prompt <run> all` and show the operator the three
   terminal commands it prints; the operator starts each in a new terminal.

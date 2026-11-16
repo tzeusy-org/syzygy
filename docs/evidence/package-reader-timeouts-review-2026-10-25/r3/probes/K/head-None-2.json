@@ -1,0 +1,40 @@
+{
+ "batch": "K",
+ "version": "head",
+ "param": null,
+ "n": 2,
+ "scriptSha256": "72a0fabdd0dd12f85ad35fde4b3ee032125757d5276b85802d76fdf5288f0195",
+ "command": "python3 -I <tools>/inject.py killpg-race scripts/measure_vitest_test_durations.py . --file packages/polaris-generation-consent/src/package-reader.test.ts --project @syzygy/polaris-generation-consent --mode alone --runs 1 --out <tmp>/measure-out.json --profile",
+ "sent": [],
+ "events": [],
+ "scriptExitedAtSeconds": 17.386,
+ "exitCode": 0,
+ "claimedExit": 0,
+ "exitAsClaimed": true,
+ "descendantsSeen": 25,
+ "seenOnlyByCwd": 1,
+ "vitestSeen": true,
+ "npxSeen": false,
+ "treeAfterExit": "",
+ "survivors": {},
+ "recordWritten": true,
+ "recordRuns": 1,
+ "recordTests": 299,
+ "recordProfileRows": 299,
+ "recordExitCode": 0,
+ "marks": [],
+ "tmpdirLeft": [
+  "measure-out.json",
+  "node-compile-cache",
+  "script.log"
+ ],
+ "trace": [
+  "KILLPG 4079165 0 -> ESRCH, answered alive (injected)",
+  "KILLPG 4079165 15 -> ESRCH",
+  "KILLPG 4079165 0 -> ESRCH",
+  "KILLPG 4079165 0 -> ESRCH"
+ ],
+ "outputTail": "KILLPG 4079165 0 -> ESRCH, answered alive (injected)\nKILLPG 4079165 15 -> ESRCH\nKILLPG 4079165 0 -> ESRCH\nKILLPG 4079165 0 -> ESRCH\nrun 1: exit 0, 17.2 s, load1 {'start': 50.06, 'end': 48.74, 'min': 48.21, 'max': 50.06, 'samples': 4}, 299 tests of the file, 0 failed\n",
+ "exercised": true,
+ "passes": true
+}

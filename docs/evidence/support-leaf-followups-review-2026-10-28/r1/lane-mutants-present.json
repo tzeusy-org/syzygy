@@ -1,0 +1,875 @@
+{
+ "commit": "2f48eefa98e1cf91379f0c22ebf73748cbb6184d",
+ "dist": "present",
+ "distDirs": [
+  "apps/syzygy/dist",
+  "apps/three-surface-poc/dist",
+  "packages/cap1-conformance/dist",
+  "packages/cap1-core/dist",
+  "packages/cap1-daemon/dist",
+  "packages/cap1-system/dist",
+  "packages/http-host/dist",
+  "packages/polaris-dossier/dist",
+  "packages/polaris-generation-consent/dist",
+  "packages/polaris-generation-core/dist",
+  "packages/support/dist",
+  "packages/three-surface-poc-core/dist"
+ ],
+ "lane614Sha256": "133094bce703dad13917d73b4bb1dd29cc8eb43212d2ec9e307656f530f3fe4e",
+ "reviewerRecords": {
+  "docs/evidence/support-leaf-review-2026-10-27/round-2/purity-mutants.json": "f477e54b75da431ff1ee0bae9431b370201a53e0b08dbf65fad98aebab4582e8",
+  "docs/evidence/support-leaf-review-2026-10-27/round-2/purity-mutants-2.json": "dc7b6396c6d1c1d542e9f488eff3636648c3374c0bf256c342969e676795877f",
+  "docs/evidence/support-leaf-review-2026-10-27/round-2/egress-mutants-2.json": "5c194c3ff02f86364de97c25ca399543e5ba6195c331cc2999e0533f41746a11",
+  "docs/evidence/support-leaf-review-2026-10-27/round-2/egress-mutants-3.json": "30d63c6f665cf668426c2d4842a06383e61a4ead0f7ded40d1ff789e18c110a0",
+  "docs/evidence/support-leaf-guards-review-2026-10-28/r2/fix-check-r2.json": "839cd109d9ebd359a5357043958a135cd4e4edf35bacf4ec1d05aad906e0f4a2",
+  "docs/evidence/syzygy-bpyt-6-14/residuals-head.json": "2a16e4a4231454c124abdd6b843285aca05739b9c7f3cfcabb46a9c0df5ea517"
+ },
+ "node": "v24.6.0",
+ "summary": {
+  "rows": 33,
+  "asExpected": 33,
+  "unexpected": []
+ },
+ "statusAfter": "",
+ "leftovers": [],
+ "rows": [
+  {
+   "id": "P0-support-unmutated",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [],
+   "expectedFailing": [],
+   "failing": [],
+   "asExpected": true,
+   "exit": 0,
+   "passed": 43,
+   "failed": 0,
+   "total": 43,
+   "failedFiles": [],
+   "fileMessages": [],
+   "error": null
+  },
+  {
+   "id": "D0-drafter-unmutated",
+   "test": "packages/three-surface-poc-core/src/owner-act-drafter.test.ts",
+   "edits": [],
+   "expectedFailing": [],
+   "failing": [],
+   "asExpected": true,
+   "exit": 0,
+   "passed": 4,
+   "failed": 0,
+   "total": 4,
+   "failedFiles": [],
+   "fileMessages": [],
+   "error": null
+  },
+  {
+   "id": "W0-entries-unmutated",
+   "test": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "edits": [],
+   "expectedFailing": [],
+   "failing": [],
+   "asExpected": true,
+   "exit": 0,
+   "passed": 57,
+   "failed": 0,
+   "total": 57,
+   "failedFiles": [],
+   "fileMessages": [],
+   "error": null
+  },
+  {
+   "id": "A0-root-aliases-unmutated",
+   "test": "packages/polaris-generation-core/src/root-vitest-aliases.test.ts",
+   "edits": [],
+   "expectedFailing": [],
+   "failing": [],
+   "asExpected": true,
+   "exit": 0,
+   "passed": 2,
+   "failed": 0,
+   "total": 2,
+   "failedFiles": [],
+   "fileMessages": [],
+   "error": null
+  },
+  {
+   "id": "N0-no-egress-unmutated",
+   "test": "packages/polaris-dossier/src/no-egress.test.ts",
+   "edits": [],
+   "expectedFailing": [],
+   "failing": [],
+   "asExpected": true,
+   "exit": 0,
+   "passed": 6,
+   "failed": 0,
+   "total": 7,
+   "failedFiles": [],
+   "fileMessages": [],
+   "error": null
+  },
+  {
+   "id": "D2-drafter-globalThis-bracket-read",
+   "test": "packages/three-surface-poc-core/src/owner-act-drafter.test.ts",
+   "edits": [
+    {
+     "path": "packages/three-surface-poc-core/src/owner-act-drafter.ts",
+     "old": "// Owner-act drafter \u2014 claims sharing one reason \u2192 a drafted act packet as\n",
+     "new": "// Owner-act drafter \u2014 claims sharing one reason \u2192 a drafted act packet as\nexport const HOME = (globalThis as Record<string, any>)['process']['env']['HOME'];\n"
+    }
+   ],
+   "expectedFailing": [
+    "owner-act drafter (M4 slice 7) names no identifier outside its literal list, so it reads no global it does not use"
+   ],
+   "failing": [
+    "owner-act drafter (M4 slice 7) names no identifier outside its literal list, so it reads no global it does not use"
+   ],
+   "asExpected": true,
+   "exit": 1,
+   "passed": 3,
+   "failed": 1,
+   "total": 4,
+   "failedFiles": [
+    "packages/three-surface-poc-core/src/owner-act-drafter.test.ts"
+   ],
+   "fileMessages": [],
+   "error": null
+  },
+  {
+   "id": "D5-drafter-WebSocket",
+   "test": "packages/three-surface-poc-core/src/owner-act-drafter.test.ts",
+   "edits": [
+    {
+     "path": "packages/three-surface-poc-core/src/owner-act-drafter.ts",
+     "old": "// Owner-act drafter \u2014 claims sharing one reason \u2192 a drafted act packet as\n",
+     "new": "// Owner-act drafter \u2014 claims sharing one reason \u2192 a drafted act packet as\nexport const open = (url: string): WebSocket => new WebSocket(url);\n"
+    }
+   ],
+   "expectedFailing": [
+    "owner-act drafter (M4 slice 7) names no identifier outside its literal list, so it reads no global it does not use"
+   ],
+   "failing": [
+    "owner-act drafter (M4 slice 7) names no identifier outside its literal list, so it reads no global it does not use"
+   ],
+   "asExpected": true,
+   "exit": 1,
+   "passed": 3,
+   "failed": 1,
+   "total": 4,
+   "failedFiles": [
+    "packages/three-surface-poc-core/src/owner-act-drafter.test.ts"
+   ],
+   "fileMessages": [],
+   "error": null
+  },
+  {
+   "id": "DK1-drafter-clock-read",
+   "test": "packages/three-surface-poc-core/src/owner-act-drafter.test.ts",
+   "edits": [
+    {
+     "path": "packages/three-surface-poc-core/src/owner-act-drafter.ts",
+     "old": "import { sha256 } from '@syzygy/support';\n",
+     "new": "import { sha256 } from '@syzygy/support';\nexport const now = (): number => Date.now();\n"
+    }
+   ],
+   "expectedFailing": [
+    "owner-act drafter (M4 slice 7) is pure: it imports no filesystem, network or process module and names no write",
+    "owner-act drafter (M4 slice 7) names no identifier outside its literal list, so it reads no global it does not use"
+   ],
+   "failing": [
+    "owner-act drafter (M4 slice 7) is pure: it imports no filesystem, network or process module and names no write",
+    "owner-act drafter (M4 slice 7) names no identifier outside its literal list, so it reads no global it does not use"
+   ],
+   "asExpected": true,
+   "exit": 1,
+   "passed": 2,
+   "failed": 2,
+   "total": 4,
+   "failedFiles": [
+    "packages/three-surface-poc-core/src/owner-act-drafter.test.ts"
+   ],
+   "fileMessages": [],
+   "error": null
+  },
+  {
+   "id": "DK2-drafter-re-export-from-node-fs",
+   "test": "packages/three-surface-poc-core/src/owner-act-drafter.test.ts",
+   "edits": [
+    {
+     "path": "packages/three-surface-poc-core/src/owner-act-drafter.ts",
+     "old": "import { sha256 } from '@syzygy/support';\n",
+     "new": "import { sha256 } from '@syzygy/support';\nexport { readFileSync } from 'node:fs';\n"
+    }
+   ],
+   "expectedFailing": [
+    "owner-act drafter (M4 slice 7) is pure: it imports no filesystem, network or process module and names no write",
+    "owner-act drafter (M4 slice 7) names no identifier outside its literal list, so it reads no global it does not use"
+   ],
+   "failing": [
+    "owner-act drafter (M4 slice 7) is pure: it imports no filesystem, network or process module and names no write",
+    "owner-act drafter (M4 slice 7) names no identifier outside its literal list, so it reads no global it does not use"
+   ],
+   "asExpected": true,
+   "exit": 1,
+   "passed": 2,
+   "failed": 2,
+   "total": 4,
+   "failedFiles": [
+    "packages/three-surface-poc-core/src/owner-act-drafter.test.ts"
+   ],
+   "fileMessages": [],
+   "error": null
+  },
+  {
+   "id": "DA1-drafter-allowlist-loses-a-used-name",
+   "test": "packages/three-surface-poc-core/src/owner-act-drafter.test.ts",
+   "edits": [
+    {
+     "path": "packages/three-surface-poc-core/src/owner-act-drafter.test.ts",
+     "old": " 'sha256', 'size',",
+     "new": " 'size',"
+    }
+   ],
+   "expectedFailing": [
+    "owner-act drafter (M4 slice 7) names no identifier outside its literal list, so it reads no global it does not use"
+   ],
+   "failing": [
+    "owner-act drafter (M4 slice 7) names no identifier outside its literal list, so it reads no global it does not use"
+   ],
+   "asExpected": true,
+   "exit": 1,
+   "passed": 3,
+   "failed": 1,
+   "total": 4,
+   "failedFiles": [
+    "packages/three-surface-poc-core/src/owner-act-drafter.test.ts"
+   ],
+   "fileMessages": [],
+   "error": null
+  },
+  {
+   "id": "K3-shared-identifier-reader-skips-private-names",
+   "test": [
+    "packages/support/src/support-purity.test.ts",
+    "packages/three-surface-poc-core/src/owner-act-drafter.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/purity.testkit.ts",
+     "old": "if (ts.isIdentifier(node) || ts.isPrivateIdentifier(node))",
+     "new": "if (ts.isIdentifier(node))"
+    }
+   ],
+   "expectedFailing": [
+    "the identifier reader the allowlist stands on reads \"class K { #p = 1; m<T>(v: T): T { return v; } }\""
+   ],
+   "failing": [
+    "the identifier reader the allowlist stands on reads \"class K { #p = 1; m<T>(v: T): T { return v; } }\""
+   ],
+   "asExpected": true,
+   "exit": 1,
+   "passed": 46,
+   "failed": 1,
+   "total": 47,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "error": null
+  },
+  {
+   "id": "FN-Y7",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { decodeUtf8 } from './decode-utf8.js';\n",
+     "new": "export { decodeUtf8 } from './decode-utf8.js';\nexport * from 'node:crypto';\n"
+    }
+   ],
+   "expectedFailing": [
+    "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it"
+   ],
+   "failing": [
+    "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it"
+   ],
+   "asExpected": true,
+   "exit": 1,
+   "passed": 42,
+   "failed": 1,
+   "total": 43,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "error": null
+  },
+  {
+   "id": "FN-Y6",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "  return createHash('sha256').update(value).digest('hex');\n}\n",
+     "new": "  return createHash('sha256').update(value).digest('hex');\n}\nObject.freeze = (value) => value;\n"
+    }
+   ],
+   "expectedFailing": [
+    "@syzygy/support stays a pure leaf assigns to no property in any source, so no allowed global is rewritten"
+   ],
+   "failing": [
+    "@syzygy/support stays a pure leaf assigns to no property in any source, so no allowed global is rewritten"
+   ],
+   "asExpected": true,
+   "exit": 1,
+   "passed": 42,
+   "failed": 1,
+   "total": 43,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "error": null
+  },
+  {
+   "id": "FN-V7",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { decodeUtf8 } from './decode-utf8.js';\n",
+     "new": "export { decodeUtf8 } from './decode-utf8.js';\nimport value = require ('node:crypto');\nexport { value };\n"
+    }
+   ],
+   "expectedFailing": [
+    "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it"
+   ],
+   "failing": [
+    "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it"
+   ],
+   "asExpected": true,
+   "exit": 1,
+   "passed": 42,
+   "failed": 1,
+   "total": 43,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "error": null
+  },
+  {
+   "id": "FN-V9",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { decodeUtf8 } from './decode-utf8.js';\n",
+     "new": "export { decodeUtf8 } from './decode-utf8.js';\nexport const value = () => import ('node:crypto');\n"
+    }
+   ],
+   "expectedFailing": [
+    "@syzygy/support stays a pure leaf calls no import() in any source, however it is spaced or commented"
+   ],
+   "failing": [
+    "@syzygy/support stays a pure leaf calls no import() in any source, however it is spaced or commented"
+   ],
+   "asExpected": true,
+   "exit": 1,
+   "passed": 42,
+   "failed": 1,
+   "total": 43,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "error": null
+  },
+  {
+   "id": "FN-Y5b",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nexport const value = (bytes) => import\n(bytes);\n"
+    }
+   ],
+   "expectedFailing": [
+    "@syzygy/support stays a pure leaf calls no import() in any source, however it is spaced or commented"
+   ],
+   "failing": [
+    "@syzygy/support stays a pure leaf calls no import() in any source, however it is spaced or commented"
+   ],
+   "asExpected": true,
+   "exit": 1,
+   "passed": 42,
+   "failed": 1,
+   "total": 43,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "error": null
+  },
+  {
+   "id": "FN-Y5c",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nexport const value = (bytes) => import/**/(bytes);\n"
+    }
+   ],
+   "expectedFailing": [
+    "@syzygy/support stays a pure leaf calls no import() in any source, however it is spaced or commented"
+   ],
+   "failing": [
+    "@syzygy/support stays a pure leaf calls no import() in any source, however it is spaced or commented"
+   ],
+   "asExpected": true,
+   "exit": 1,
+   "passed": 42,
+   "failed": 1,
+   "total": 43,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "error": null
+  },
+  {
+   "id": "FN-U4",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "  return createHash('sha256').update(value).digest('hex');\n}\n",
+     "new": "  return createHash('sha256').update(value).digest('hex');\n}\n[Object.freeze] = [(value) => value];\n"
+    }
+   ],
+   "expectedFailing": [
+    "@syzygy/support stays a pure leaf assigns to no property in any source, so no allowed global is rewritten"
+   ],
+   "failing": [
+    "@syzygy/support stays a pure leaf assigns to no property in any source, so no allowed global is rewritten"
+   ],
+   "asExpected": true,
+   "exit": 1,
+   "passed": 42,
+   "failed": 1,
+   "total": 43,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "error": null
+  },
+  {
+   "id": "FN-U5",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "  return createHash('sha256').update(value).digest('hex');\n}\n",
+     "new": "  return createHash('sha256').update(value).digest('hex');\n}\n({ value: Object.freeze } = { value: (bytes) => bytes });\n"
+    }
+   ],
+   "expectedFailing": [
+    "@syzygy/support stays a pure leaf assigns to no property in any source, so no allowed global is rewritten"
+   ],
+   "failing": [
+    "@syzygy/support stays a pure leaf assigns to no property in any source, so no allowed global is rewritten"
+   ],
+   "asExpected": true,
+   "exit": 1,
+   "passed": 42,
+   "failed": 1,
+   "total": 43,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "error": null
+  },
+  {
+   "id": "FN-Q1",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "ts.isImportDeclaration(statement) || ts.isExportDeclaration(statement) ? statement.moduleSpecifier",
+     "new": "ts.isImportDeclaration(statement) ? statement.moduleSpecifier"
+    }
+   ],
+   "expectedFailing": [
+    "the module-declaration reader the createHash row stands on reads \"export * from 'node:crypto';\"",
+    "the module-declaration reader the createHash row stands on reads \"export { sha256 } from './sha256.js';\\nexport { value };\""
+   ],
+   "failing": [
+    "the module-declaration reader the createHash row stands on reads \"export * from 'node:crypto';\"",
+    "the module-declaration reader the createHash row stands on reads \"export { sha256 } from './sha256.js';\\nexport { value };\""
+   ],
+   "asExpected": true,
+   "exit": 1,
+   "passed": 41,
+   "failed": 2,
+   "total": 43,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "error": null
+  },
+  {
+   "id": "FN-Q2",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "ts.isPropertyAccessExpression(target) || ts.isElementAccessExpression(target)",
+     "new": "ts.isPropertyAccessExpression(target)"
+    }
+   ],
+   "expectedFailing": [
+    "the property-write reader the no-write row stands on reads \"Object['freeze'] ??= (value) => value;\""
+   ],
+   "failing": [
+    "the property-write reader the no-write row stands on reads \"Object['freeze'] ??= (value) => value;\""
+   ],
+   "asExpected": true,
+   "exit": 1,
+   "passed": 42,
+   "failed": 1,
+   "total": 43,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "error": null
+  },
+  {
+   "id": "R2-dynamic-import-with-a-space-of-an-allowed-name",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nconst value = 'node:f' + 's';\nvoid import (value);\n"
+    }
+   ],
+   "expectedFailing": [
+    "@syzygy/support stays a pure leaf calls no import() in any source, however it is spaced or commented"
+   ],
+   "failing": [
+    "@syzygy/support stays a pure leaf calls no import() in any source, however it is spaced or commented"
+   ],
+   "asExpected": true,
+   "exit": 1,
+   "passed": 42,
+   "failed": 1,
+   "total": 43,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "error": null
+  },
+  {
+   "id": "R1-function-constructor-through-object-brackets",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nObject['constructor']['constructor'](\"return globalThis['proc' + 'ess']['env']['HOME']\")();\n"
+    }
+   ],
+   "expectedFailing": [],
+   "failing": [],
+   "asExpected": true,
+   "exit": 0,
+   "passed": 43,
+   "failed": 0,
+   "total": 43,
+   "failedFiles": [],
+   "fileMessages": [],
+   "error": null
+  },
+  {
+   "id": "Y3-R1-escalated-to-the-environment",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nexport const value = Object['constructor']['constructor']('return globalThis')()['process']['env']['HOME'];\n"
+    }
+   ],
+   "expectedFailing": [],
+   "failing": [],
+   "asExpected": true,
+   "exit": 0,
+   "passed": 43,
+   "failed": 0,
+   "total": 43,
+   "failedFiles": [],
+   "fileMessages": [],
+   "error": null
+  },
+  {
+   "id": "Z7-unscoped-workspace-with-no-entry",
+   "test": "packages/polaris-dossier/src/no-egress.test.ts",
+   "edits": [
+    {
+     "path": "packages/leak/package.json",
+     "old": null,
+     "new": "{\n  \"name\": \"leak\",\n  \"version\": \"0.0.0\",\n  \"private\": true,\n  \"type\": \"module\"\n}\n"
+    },
+    {
+     "path": "packages/leak/index.js",
+     "old": null,
+     "new": "export const LEAK = 1;\n"
+    },
+    {
+     "path": "node_modules/leak",
+     "link": "../packages/leak"
+    },
+    {
+     "path": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+     "old": "import { DESIGN_TOKENS_CSS } from '../design-tokens.js';\n",
+     "new": "import 'leak';\nimport { DESIGN_TOKENS_CSS } from '../design-tokens.js';\n"
+    }
+   ],
+   "expectedFailing": [],
+   "failing": [],
+   "asExpected": true,
+   "exit": 0,
+   "passed": 6,
+   "failed": 0,
+   "total": 7,
+   "failedFiles": [],
+   "fileMessages": [],
+   "error": null
+  },
+  {
+   "id": "E1-dotdot-check-dropped",
+   "test": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "edits": [
+    {
+     "path": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "      if (JSON.stringify(entry).includes('/../')) throw new Error(`${specifier}: its entry has a /../ segment, which Node refuses`);\n",
+     "new": ""
+    }
+   ],
+   "expectedFailing": [
+    "the workspace entry modules throws on a /../ segment that the resolver would join away, since Node refuses the entry"
+   ],
+   "failing": [
+    "the workspace entry modules throws on a /../ segment that the resolver would join away, since Node refuses the entry"
+   ],
+   "asExpected": true,
+   "exit": 1,
+   "passed": 56,
+   "failed": 1,
+   "total": 57,
+   "failedFiles": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts"
+   ],
+   "fileMessages": [],
+   "error": null
+  },
+  {
+   "id": "E2-unreadable-entry-not-thrown",
+   "test": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "edits": [
+    {
+     "path": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "if (typeof module !== 'string') throw new Error(",
+     "new": "if (typeof module !== 'string' && false) throw new Error("
+    }
+   ],
+   "expectedFailing": [
+    "the workspace entry modules throws on an entry the resolver cannot read"
+   ],
+   "failing": [
+    "the workspace entry modules throws on an entry the resolver cannot read"
+   ],
+   "asExpected": true,
+   "exit": 1,
+   "passed": 56,
+   "failed": 1,
+   "total": 57,
+   "failedFiles": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts"
+   ],
+   "fileMessages": [],
+   "error": null
+  },
+  {
+   "id": "E3-main-fallback-dropped",
+   "test": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "edits": [
+    {
+     "path": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": " : manifest.main !== undefined ? [['.', manifest.main]] : [];",
+     "new": " : [];"
+    }
+   ],
+   "expectedFailing": [
+    "the workspace entry modules reads each entry of each package, its main where it has no exports, as the src module it names"
+   ],
+   "failing": [
+    "the workspace entry modules reads each entry of each package, its main where it has no exports, as the src module it names"
+   ],
+   "asExpected": true,
+   "exit": 1,
+   "passed": 56,
+   "failed": 1,
+   "total": 57,
+   "failedFiles": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts"
+   ],
+   "fileMessages": [],
+   "error": null
+  },
+  {
+   "id": "E4-dotdot-entry-in-the-workspace",
+   "test": "packages/polaris-generation-core/src/root-vitest-aliases.test.ts",
+   "edits": [
+    {
+     "path": "packages/polaris-dossier/package.json",
+     "old": "\"import\": \"./dist/state-directory.js\"",
+     "new": "\"import\": \"./dist/x/../state-directory.js\""
+    }
+   ],
+   "expectedFailing": [
+    "the root vitest.config.ts aliases alias each specifier to the src module its package's entry names",
+    "the root vitest.config.ts aliases leave exactly these entries to their built dist"
+   ],
+   "failing": [
+    "the root vitest.config.ts aliases alias each specifier to the src module its package's entry names",
+    "the root vitest.config.ts aliases leave exactly these entries to their built dist"
+   ],
+   "asExpected": true,
+   "exit": 1,
+   "passed": 0,
+   "failed": 2,
+   "total": 2,
+   "failedFiles": [
+    "packages/polaris-generation-core/src/root-vitest-aliases.test.ts"
+   ],
+   "fileMessages": [],
+   "error": null
+  },
+  {
+   "id": "A1-alias-moved-to-another-module",
+   "test": "packages/polaris-generation-core/src/root-vitest-aliases.test.ts",
+   "edits": [
+    {
+     "path": "vitest.config.ts",
+     "old": "      '@syzygy/support': fileURLToPath(new URL('./packages/support/src/index.ts', import.meta.url)),\n",
+     "new": "      '@syzygy/support': fileURLToPath(new URL('./packages/support/src/sha256.ts', import.meta.url)),\n"
+    }
+   ],
+   "expectedFailing": [
+    "the root vitest.config.ts aliases alias each specifier to the src module its package's entry names"
+   ],
+   "failing": [
+    "the root vitest.config.ts aliases alias each specifier to the src module its package's entry names"
+   ],
+   "asExpected": true,
+   "exit": 1,
+   "passed": 1,
+   "failed": 1,
+   "total": 2,
+   "failedFiles": [
+    "packages/polaris-generation-core/src/root-vitest-aliases.test.ts"
+   ],
+   "fileMessages": [],
+   "error": null
+  },
+  {
+   "id": "A2-alias-with-no-entry",
+   "test": "packages/polaris-generation-core/src/root-vitest-aliases.test.ts",
+   "edits": [
+    {
+     "path": "vitest.config.ts",
+     "old": "      '@syzygy/support': fileURLToPath(new URL('./packages/support/src/index.ts', import.meta.url)),\n",
+     "new": "      '@syzygy/support': fileURLToPath(new URL('./packages/support/src/index.ts', import.meta.url)),\n      '@syzygy/support/extra': fileURLToPath(new URL('./packages/support/src/index.ts', import.meta.url)),\n"
+    }
+   ],
+   "expectedFailing": [
+    "the root vitest.config.ts aliases alias each specifier to the src module its package's entry names"
+   ],
+   "failing": [
+    "the root vitest.config.ts aliases alias each specifier to the src module its package's entry names"
+   ],
+   "asExpected": true,
+   "exit": 1,
+   "passed": 1,
+   "failed": 1,
+   "total": 2,
+   "failedFiles": [
+    "packages/polaris-generation-core/src/root-vitest-aliases.test.ts"
+   ],
+   "fileMessages": [],
+   "error": null
+  },
+  {
+   "id": "A3-alias-removed",
+   "test": "packages/polaris-generation-core/src/root-vitest-aliases.test.ts",
+   "edits": [
+    {
+     "path": "vitest.config.ts",
+     "old": "      '@syzygy/polaris-dossier': fileURLToPath(new URL('./packages/polaris-dossier/src/index.ts', import.meta.url)),\n",
+     "new": ""
+    }
+   ],
+   "expectedFailing": [
+    "the root vitest.config.ts aliases leave exactly these entries to their built dist"
+   ],
+   "failing": [
+    "the root vitest.config.ts aliases leave exactly these entries to their built dist"
+   ],
+   "asExpected": true,
+   "exit": 1,
+   "passed": 1,
+   "failed": 1,
+   "total": 2,
+   "failedFiles": [
+    "packages/polaris-generation-core/src/root-vitest-aliases.test.ts"
+   ],
+   "fileMessages": [],
+   "error": null
+  },
+  {
+   "id": "A4-entry-added-without-an-alias",
+   "test": "packages/polaris-generation-core/src/root-vitest-aliases.test.ts",
+   "edits": [
+    {
+     "path": "packages/polaris-dossier/package.json",
+     "old": "      \"default\": \"./dist/state-directory.js\"\n    }\n",
+     "new": "      \"default\": \"./dist/state-directory.js\"\n    },\n    \"./cli\": \"./dist/cli.js\"\n"
+    }
+   ],
+   "expectedFailing": [
+    "the root vitest.config.ts aliases leave exactly these entries to their built dist"
+   ],
+   "failing": [
+    "the root vitest.config.ts aliases leave exactly these entries to their built dist"
+   ],
+   "asExpected": true,
+   "exit": 1,
+   "passed": 1,
+   "failed": 1,
+   "total": 2,
+   "failedFiles": [
+    "packages/polaris-generation-core/src/root-vitest-aliases.test.ts"
+   ],
+   "fileMessages": [],
+   "error": null
+  }
+ ]
+}

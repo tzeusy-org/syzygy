@@ -1,0 +1,9 @@
+total 5528 passed 5523 failed 0 pending 5 todo 0 files 253 failedFiles 0 success True
+failedFiles []
+start 1793137403632
+29.95 27.20 26.50 13/9751 2552551
+45.42 43.94 34.52 17/9929 2675165
+files mine 253 lane 253 sameKeys True differ []
+packages/support/src/support-purity.test.ts passed 33 ['passed']
+packages/polaris-dossier/src/no-egress.test.ts passed 7 ['passed', 'skipped']
+packages/three-surface-poc-core/src/owner-act-drafter.test.ts passed 3 ['passed']

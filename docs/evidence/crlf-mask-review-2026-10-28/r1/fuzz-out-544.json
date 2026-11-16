@@ -1,0 +1,29 @@
+{
+ "tool": "rev-544/tools/fuzz.mjs",
+ "seed": 544,
+ "iterations": 20000,
+ "edgeCases": 20,
+ "counts": {
+  "texts": 26762,
+  "lfTexts": 17074,
+  "crTexts": 9688,
+  "uniformCrlf": 2106,
+  "H1fail": 0,
+  "H2fail": 0,
+  "H3fail": 0,
+  "H4fail": 0,
+  "H5fail": 0,
+  "baseVsHead": {
+   "refuses": 506,
+   "accepts": 110,
+   "sameDecisionOtherFindings": 1918,
+   "positionOnly": 2270,
+   "unchanged": 4884
+  },
+  "positionVsLf": {
+   "rowsWithNonMalformedPositionDiff": 116,
+   "rowsMalformedLineDiffFromBase": 2270
+  }
+ },
+ "failures": []
+}

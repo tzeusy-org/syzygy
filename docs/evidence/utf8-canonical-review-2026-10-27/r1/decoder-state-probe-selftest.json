@@ -1,0 +1,63 @@
+{
+ "calls": 300000,
+ "refusedByFresh": 191776,
+ "bomLed": 8014,
+ "freshVsShared": 9685,
+ "freshVsDecodeUtf8": 0,
+ "examples": [
+  {
+   "i": 24,
+   "bytes": [
+    10,
+    226,
+    130
+   ],
+   "shared": "\n"
+  },
+  {
+   "i": 108,
+   "bytes": [
+    240,
+    172
+   ],
+   "shared": ""
+  },
+  {
+   "i": 111,
+   "bytes": [
+    195,
+    169,
+    226,
+    130,
+    172,
+    240,
+    159,
+    152,
+    128,
+    240
+   ],
+   "shared": "é€😀"
+  },
+  {
+   "i": 123,
+   "bytes": [
+    240,
+    160,
+    128
+   ],
+   "shared": ""
+  },
+  {
+   "i": 156,
+   "bytes": [
+    239,
+    187,
+    191,
+    240
+   ],
+   "shared": "﻿"
+  }
+ ],
+ "freshOutputsSha256": "4863437fb91dc50c2ef15cc4c84ea51af068839fff382e3fd63dc2c30c576534",
+ "node": "v24.6.0"
+}

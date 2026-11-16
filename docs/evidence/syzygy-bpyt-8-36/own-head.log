@@ -1,0 +1,50 @@
+P1-hash-alias-outside-the-workspace killed 1 ['Tests  11 failed | 10 passed (21)'] 3.9 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > follows a # alias its package declares for a module of its own package
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > follows a # alias its package declares for a package by name
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > follows a # alias its package declares for a subpath by name
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > follows a # alias its package declares for agreeing conditions
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a # alias from a module of another package as naming no module
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a # alias its package does not declare as naming no module
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a # alias under a name its package does not declare as naming no module
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a # alias whose conditions disagree as naming no module
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a # alias whose target is an absolute path as naming no module
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a # alias whose target is another alias as naming no module
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a # alias whose target leaves its package as naming no module
+P2-absolute-path-outside-the-workspace killed 1 ['Tests  2 failed | 19 passed (21)'] 3.8 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a # alias whose target is an absolute path as naming no module
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads an absolute path to the barrel as naming no module
+P3-file-url-outside-the-workspace killed 1 ['Tests  2 failed | 19 passed (21)'] 2.7 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a FILE: URL of the barrel as naming no module
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a file: URL of the barrel as naming no module
+P3b-file-url-case-sensitive killed 1 ['Tests  1 failed | 20 passed (21)'] 3.2 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a FILE: URL of the barrel as naming no module
+P4-import-condition-first killed 1 ['Tests  5 failed | 16 passed (21)'] 2.6 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a # alias whose conditions disagree as naming no module
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads an export whose default condition names another target as naming no module
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads an export whose module-sync condition names another target as naming no module
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads an export whose node condition names another target as naming no module
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads an export whose require condition names another target as naming no module
+P5-node-condition-ignored killed 1 ['Tests  2 failed | 19 passed (21)'] 3.5 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a # alias whose conditions disagree as naming no module
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads an export whose node condition names another target as naming no module
+P6-module-sync-ignored killed 1 ['Tests  1 failed | 20 passed (21)'] 3.3 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads an export whose module-sync condition names another target as naming no module
+P7-hash-alias-never-followed killed 1 ['Tests  4 failed | 17 passed (21)'] 3.6 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > follows a # alias its package declares for a module of its own package
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > follows a # alias its package declares for a package by name
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > follows a # alias its package declares for a subpath by name
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > follows a # alias its package declares for agreeing conditions
+P8-any-package-imports killed 1 ['Tests  1 failed | 20 passed (21)'] 2.4 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a # alias from a module of another package as naming no module
+P9-alias-to-alias-followed killed 1 ['Tests  1 failed | 20 passed (21)'] 1.9 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a # alias whose target is another alias as naming no module
+Q1-property-access-allowed killed 1 ['Tests  2 failed | 79 passed (81)'] 4.0 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > the census sees a reading the lift does not in "import * as argvNs from './argv.js';\nvoid argvNs.readArgv([], { valued: []
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > the census sees a reading the lift does not in "import { readArgv } from './argv.js';\n[[]].map((args) => readArgv.call(und
+Q2-string-literal-ignored killed 1 ['Tests  1 failed | 80 passed (81)'] 3.9 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > the census sees a reading the lift does not in "import * as argvNs from './argv.js';\nvoid argvNs['readArgv']([], { valued:
+Q3-renamed-import-allowed killed 1 ['Tests  1 failed | 80 passed (81)'] 3.7 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > the census sees a reading the lift does not in "import { readArgv as readArgs } from './argv.js';\nvoid readArgs([], { valu
+Q4-alias-initializer-allowed killed 1 ['Tests  1 failed | 80 passed (81)'] 3.5 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > the census sees a reading the lift does not in "import { readArgv } from './argv.js';\nconst readArgs = readArgv;\nvoid rea
+wrote /var/tmp/la-b836/out/own-head.json 14

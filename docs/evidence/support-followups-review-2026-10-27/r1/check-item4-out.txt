@@ -1,0 +1,11 @@
+ok  J1-digest-drops-the-first-byte oldOnceAtHead=True tests=True probe=True sweep=True killedBy=['probe', 'tests'] mutantCommitInRepo=False
+ok  J2-digest-over-the-whole-backing-buffer oldOnceAtHead=True tests=True probe=True sweep=True killedBy=['probe', 'tests'] mutantCommitInRepo=False
+ok  J3-digest-over-the-decoded-text oldOnceAtHead=True tests=True probe=True sweep=True killedBy=['probe', 'tests'] mutantCommitInRepo=False
+ok  J4-prefix-dropped oldOnceAtHead=True tests=True probe=True sweep=True killedBy=['probe', 'tests'] mutantCommitInRepo=False
+ok  J5-equivalent-local-copy oldOnceAtHead=True tests=True probe=True sweep=True killedBy=['sweep'] mutantCommitInRepo=False
+ok  W1-run-digest-over-changed-text oldOnceAtHead=True tests=True probe=True sweep=True killedBy=['probe', 'tests'] mutantCommitInRepo=False
+ok  W2-judgment-digest-drops-the-first-character oldOnceAtHead=True tests=True probe=True sweep=True killedBy=['probe', 'tests'] mutantCommitInRepo=False
+ok  W3-stale-latin1-local-copy oldOnceAtHead=True tests=True probe=True sweep=True killedBy=['probe', 'sweep', 'tests'] mutantCommitInRepo=False
+ok  W4-equivalent-local-copy oldOnceAtHead=True tests=True probe=True sweep=True killedBy=['sweep'] mutantCommitInRepo=False
+control killedBy nothing: True control commit b214ef10
+rows=9 bad=0

@@ -10,7 +10,7 @@ import {
   type RepositoryId,
   type ShapeAnswerInputs,
 } from '@syzygy/cap1-core';
-import { consent, evaluation, projectYaml } from './fixtures/index.js';
+import { decisionsFor, consent, evaluation, projectYaml } from './fixtures/index.js';
 
 // CAP1-REQ-030 — The seven project-shape answers, defined here and
 // answered independently (state projection/query).
@@ -74,7 +74,11 @@ function registeredInputs(): ShapeAnswerInputs {
       { reference: 'declarations/topology', resolution: 'resolved' },
     ],
     comprehension: [{ recordId: 'walkthrough-1', ownerVerdict: 'stands' }],
-    coverage: computeCoverage(read.declaration, CONSENTS, OBSERVATIONS),
+    coverage: computeCoverage(
+      read.declaration,
+      decisionsFor(read.declaration, CONSENTS),
+      OBSERVATIONS,
+    ),
     links: [{ link: 'overview->spec', resolved: true }],
     reconciliation: {
       computed: true,

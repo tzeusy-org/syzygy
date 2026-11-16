@@ -96,7 +96,7 @@ function tableHeader(lines: string[], index: number): boolean {
 }
 
 const listItem = /^( *)([-+*]|\d+[.)]) +(.*)$/;
-const fenceStart = /^ {0,3}(`{3,}|~{3,})(.*)$/;
+const fenceStart = /^ {0,3}(`{3,}|~{3,})(.*)$/; // not the PWB-REQ-006 profile; one of five fence rules: docs/evidence/syzygy-bpyt-6-3/dc3-fence-rules-2026-10-25.json
 
 function diagramNodeAttrs(anchorId: string | undefined): string {
   return anchorId === undefined

@@ -1,0 +1,281 @@
+{
+ "bead": "syzygy-bpyt.7.1",
+ "commit": "4321fc94387e79cac30a763abfdf746c7ff43ca9",
+ "subjects": [
+  {
+   "path": "packages/three-surface-poc-core/src/model.ts",
+   "sha256": "f4791a12179830194c3f958b04dfa6945fb7713f85bd58fe88f0984727eafc72"
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/seed-graph.ts",
+   "sha256": "2b5ec3d4995b571b64c5cebb0f53d36c726444623fa651356a2f4bfaa54b285a"
+  }
+ ],
+ "command": [
+  "npx",
+  "vitest",
+  "run",
+  "packages/three-surface-poc-core/src/model.test.ts",
+  "packages/three-surface-poc-core/src/model-observations.test.ts",
+  "packages/three-surface-poc-core/src/response-identity.test.ts",
+  "apps/three-surface-poc/src/unknown-route-sweep.test.ts",
+  "apps/three-surface-poc/src/trajectory.test.ts",
+  "apps/three-surface-poc/src/orrery.test.ts",
+  "apps/three-surface-poc/src/materialize-action.test.ts",
+  "apps/three-surface-poc/src/polaris-walkthrough-readiness.test.ts",
+  "apps/three-surface-poc/src/polaris-parity-sweep.test.ts",
+  "apps/three-surface-poc/src/response-identity-independent.test.ts"
+ ],
+ "baseline": {
+  "exitCode": 0,
+  "tests": "156 passed (156)"
+ },
+ "mutants": [
+  {
+   "id": "compose-drops-acceptance",
+   "file": "packages/three-surface-poc-core/src/model.ts",
+   "old": "(input.acceptance ?? walkthroughAcceptance())(project.projectShape)",
+   "new": "walkthroughAcceptance()(project.projectShape)",
+   "outcome": "killed",
+   "tests": "17 failed | 139 passed (156)",
+   "firstFailures": [
+    "apps/three-surface-poc/src/polaris-parity-sweep.test.ts > PWB-REQ-020 exhaustive Polaris parity sweep > the observed-degraded / lawful-state-2 matrix cell carries every marker family with a non-empty ",
+    "apps/three-surface-poc/src/polaris-parity-sweep.test.ts > PWB-REQ-020 exhaustive Polaris parity sweep > resolves every declared exclusion on the complete observed fixture",
+    "apps/three-surface-poc/src/polaris-walkthrough-readiness.test.ts > PWB-REQ-021 readiness on Polaris > projects served breaches into the existing resource-breach arm without changing input evidence or "
+   ]
+  },
+  {
+   "id": "compose-proposed-work-null-for-unknowns",
+   "file": "packages/three-surface-poc-core/src/model.ts",
+   "old": "      proposedWork: project.proposedWork,\n    })),",
+   "new": "      proposedWork: null,\n    })),",
+   "outcome": "killed",
+   "tests": "1 failed | 155 passed (156)",
+   "firstFailures": [
+    "apps/three-surface-poc/src/unknown-route-sweep.test.ts > every rendered route has its machine twin under the same id (M4 slice 2, PWB-REQ-020) > unreachable: per tuple by id, and over both id sets"
+   ]
+  },
+  {
+   "id": "compose-dispatch-null",
+   "file": "packages/three-surface-poc-core/src/model.ts",
+   "old": "    dispatch: trajectory.dispatch,",
+   "new": "    dispatch: null,",
+   "outcome": "killed",
+   "tests": "36 failed | 120 passed (156)",
+   "firstFailures": [
+    "apps/three-surface-poc/src/materialize-action.test.ts > renderMaterializePanel > previews the exact packet and target repository read-only, before any trigger (AC1)",
+    "apps/three-surface-poc/src/materialize-action.test.ts > renderMaterializePanel > matches decoded Trajectory fields to authenticated API dispatch with exact denominators and named machine-only values",
+    "apps/three-surface-poc/src/materialize-action.test.ts > renderMaterializePanel > is embedded on the Trajectory page with the write foreclosed and the trigger disabled"
+   ]
+  },
+  {
+   "id": "compose-surfaces-empty",
+   "file": "packages/three-surface-poc-core/src/model.ts",
+   "old": "    surfaces: graph.surfaces,",
+   "new": "    surfaces: [],",
+   "outcome": "killed",
+   "tests": "7 failed | 149 passed (156)",
+   "firstFailures": [
+    "apps/three-surface-poc/src/unknown-route-sweep.test.ts > every rendered route has its machine twin under the same id (M4 slice 2, PWB-REQ-020) > plain: per tuple by id, and over both id sets",
+    "apps/three-surface-poc/src/unknown-route-sweep.test.ts > every rendered route has its machine twin under the same id (M4 slice 2, PWB-REQ-020) > observed-shape: per tuple by id, and over both id sets",
+    "apps/three-surface-poc/src/unknown-route-sweep.test.ts > every rendered route has its machine twin under the same id (M4 slice 2, PWB-REQ-020) > unreachable: per tuple by id, and over both id sets"
+   ]
+  },
+  {
+   "id": "compose-ignores-evidence",
+   "file": "packages/three-surface-poc-core/src/model.ts",
+   "old": "evidence: input.evidence ?? zeroDriftEvidence(input),",
+   "new": "evidence: zeroDriftEvidence(input),",
+   "outcome": "killed",
+   "tests": "3 failed | 153 passed (156)",
+   "firstFailures": [
+    "apps/three-surface-poc/src/polaris-parity-sweep.test.ts > PWB-REQ-020 exhaustive Polaris parity sweep > keeps the response identity stable when a complete evaluation changes only its as-of instant",
+    "apps/three-surface-poc/src/response-identity-independent.test.ts > response identity independent census and mutation proofs > maps both evaluation instants to exactly the 25 declared structural paths,",
+    "apps/three-surface-poc/src/response-identity-independent.test.ts > response identity independent census and mutation proofs > fails stability on an undeclared instant and names the injected structural"
+   ]
+  },
+  {
+   "id": "compose-raw-snapshot-label",
+   "file": "packages/three-surface-poc-core/src/model.ts",
+   "old": "const snapshotLabel = snapshotLabelFor(input.evaluation.snapshot, input.seeds.project.repositoryId);",
+   "new": "const snapshotLabel = input.evaluation.snapshot;",
+   "outcome": "killed",
+   "tests": "3 failed | 153 passed (156)",
+   "firstFailures": [
+    "packages/three-surface-poc-core/src/model.test.ts > three-surface Butlers POC model > builds one deterministic provenance-backed graph with honest Unknowns",
+    "packages/three-surface-poc-core/src/model.test.ts > three-surface Butlers POC model > changes seeded display labels without changing graph identities or snapshot identity",
+    "packages/three-surface-poc-core/src/model.test.ts > three-surface Butlers POC model > derives snapshot identity from an opaque repository id for non-Butlers display labels"
+   ]
+  },
+  {
+   "id": "compose-skips-validation",
+   "file": "packages/three-surface-poc-core/src/model.ts",
+   "old": "  validateSeedGraph(input.seeds);\n",
+   "new": "",
+   "outcome": "killed",
+   "tests": "2 failed | 154 passed (156)",
+   "firstFailures": [
+    "packages/three-surface-poc-core/src/model.test.ts > three-surface Butlers POC model > rejects invalid public seed graphs before observation with typed failures",
+    "packages/three-surface-poc-core/src/model.test.ts > three-surface Butlers POC model > names a seed role the role tables do not carry"
+   ]
+  },
+  {
+   "id": "compose-identity-over-other-model",
+   "file": "packages/three-surface-poc-core/src/model.ts",
+   "old": "responseIdentity: buildResponseIdentity(model) }",
+   "new": "responseIdentity: buildResponseIdentity({ ...model, entities: [] }) }",
+   "outcome": "killed",
+   "tests": "1 failed | 155 passed (156)",
+   "firstFailures": [
+    "apps/three-surface-poc/src/response-identity-independent.test.ts > response identity independent census and mutation proofs > serves the content key of the very body it is served with"
+   ]
+  },
+  {
+   "id": "compose-materialized-bead-null",
+   "file": "packages/three-surface-poc-core/src/model.ts",
+   "old": "materializedBeadId: trajectory.materialization.beadId,",
+   "new": "materializedBeadId: null,",
+   "outcome": "killed",
+   "tests": "3 failed | 153 passed (156)",
+   "firstFailures": [
+    "apps/three-surface-poc/src/trajectory.test.ts > Trajectory > calls out and highlights the demonstrated item, and separates Bead status from worker-change state (PRF-2, PRF-3)",
+    "apps/three-surface-poc/src/trajectory.test.ts > Trajectory > discloses a demonstrated closed item excluded by its population limit (N-1)",
+    "apps/three-surface-poc/src/trajectory.test.ts > Trajectory > discloses a demonstrated open item excluded by its population limit (N-1)"
+   ]
+  },
+  {
+   "id": "compose-graph-unmaterialized",
+   "file": "packages/three-surface-poc-core/src/model.ts",
+   "old": "buildGraphSlice(input.seeds, seed, trajectory.materialization)",
+   "new": "buildGraphSlice(input.seeds, seed, { ...trajectory.materialization, beadId: null })",
+   "outcome": "killed",
+   "tests": "3 failed | 153 passed (156)",
+   "firstFailures": [
+    "apps/three-surface-poc/src/unknown-route-sweep.test.ts > every surface Unknown carries a closed reason and a route (M4 slice 1, POC-REQ-060) > worker-change: per-surface denominators, zero exceptions ",
+    "packages/three-surface-poc-core/src/model.test.ts > three-surface Butlers POC model > shows the materialized work item Observed only once the recorded Bead is confirmed present (AC4)",
+    "packages/three-surface-poc-core/src/model.test.ts > three-surface Butlers POC model > words the intent-to-work basis by the record origin: created, reused, or the honest legacy both (PRF-4)"
+   ]
+  },
+  {
+   "id": "table-work-detail-kept",
+   "file": "packages/three-surface-poc-core/src/seed-graph.ts",
+   "old": "context.materialization.beadId === null ? detail :",
+   "new": "true ? detail :",
+   "outcome": "killed",
+   "tests": "1 failed | 155 passed (156)",
+   "firstFailures": [
+    "packages/three-surface-poc-core/src/model.test.ts > three-surface Butlers POC model > shows the materialized work item Observed only once the recorded Bead is confirmed present (AC4)"
+   ]
+  },
+  {
+   "id": "table-capability-provenance-short",
+   "file": "packages/three-surface-poc-core/src/seed-graph.ts",
+   "old": "provenance: (context) => [file('design')(context), file('requirement')(context)],",
+   "new": "provenance: (context) => [file('requirement')(context)],",
+   "outcome": "killed",
+   "tests": "1 failed | 155 passed (156)",
+   "firstFailures": [
+    "packages/three-surface-poc-core/src/model.test.ts > three-surface Butlers POC model > builds one deterministic provenance-backed graph with honest Unknowns"
+   ]
+  },
+  {
+   "id": "table-materialization-verb-swapped",
+   "file": "packages/three-surface-poc-core/src/seed-graph.ts",
+   "old": "origin === 'created' ? 'created'",
+   "new": "origin === 'reused' ? 'created'",
+   "outcome": "killed",
+   "tests": "1 failed | 155 passed (156)",
+   "firstFailures": [
+    "packages/three-surface-poc-core/src/model.test.ts > three-surface Butlers POC model > words the intent-to-work basis by the record origin: created, reused, or the honest legacy both (PRF-4)"
+   ]
+  },
+  {
+   "id": "table-test-definition-maps-code",
+   "file": "packages/three-surface-poc-core/src/seed-graph.ts",
+   "old": "    provenance: mapped('test'),\n  },\n  work:",
+   "new": "    provenance: mapped('code'),\n  },\n  work:",
+   "outcome": "killed",
+   "tests": "1 failed | 155 passed (156)",
+   "firstFailures": [
+    "packages/three-surface-poc-core/src/model.test.ts > three-surface Butlers POC model > records each required artifact under the SHA-256 of its own bytes"
+   ]
+  },
+  {
+   "id": "table-code-kind-renamed",
+   "file": "packages/three-surface-poc-core/src/seed-graph.ts",
+   "old": "  code: {\n    kind: 'code-region',",
+   "new": "  code: {\n    kind: 'code',",
+   "outcome": "killed",
+   "tests": "129 failed | 13 passed | 14 skipped (156)",
+   "firstFailures": [
+    "apps/three-surface-poc/src/materialize-action.test.ts > renderMaterializePanel > previews the exact packet and target repository read-only, before any trigger (AC1)",
+    "apps/three-surface-poc/src/materialize-action.test.ts > renderMaterializePanel > matches decoded Trajectory fields to authenticated API dispatch with exact denominators and named machine-only values",
+    "apps/three-surface-poc/src/materialize-action.test.ts > renderMaterializePanel > is embedded on the Trajectory page with the write foreclosed and the trigger disabled"
+   ]
+  },
+  {
+   "id": "table-relationship-uses-entity-row",
+   "file": "packages/three-surface-poc-core/src/seed-graph.ts",
+   "old": "    statement: renderSeedText(seed.statement, seeds),\n    epistemic: role.epistemic(context),",
+   "new": "    statement: renderSeedText(seed.statement, seeds),\n    epistemic: ENTITY_ROLES.project.epistemic(context),",
+   "outcome": "killed",
+   "tests": "28 failed | 128 passed (156)",
+   "firstFailures": [
+    "apps/three-surface-poc/src/orrery.test.ts > Orrery > reconciles declared mapped and unmapped counts against the observed total (POC-REQ-051)",
+    "apps/three-surface-poc/src/orrery.test.ts > Orrery > every entity-backed spatial region resolves to the same route the exact tables serve (POC-REQ-053)",
+    "apps/three-surface-poc/src/orrery.test.ts > Orrery > embeds the same facts the machine answer serves (POC-REQ-020 parity by construction)"
+   ]
+  },
+  {
+   "id": "table-orrery-membership-moved",
+   "file": "packages/three-surface-poc-core/src/seed-graph.ts",
+   "old": "entityIds: surface.id === 'orrery' ?",
+   "new": "entityIds: surface.id === 'polaris' ?",
+   "outcome": "killed",
+   "tests": "1 failed | 155 passed (156)",
+   "firstFailures": [
+    "packages/three-surface-poc-core/src/model.test.ts > three-surface Butlers POC model > owns returned surface membership arrays and keeps the exported seed graph isolated"
+   ]
+  },
+  {
+   "id": "table-unknown-region-reason",
+   "file": "packages/three-surface-poc-core/src/seed-graph.ts",
+   "old": "epistemic: () => unknown('mapping-coverage-absent', 'The first slice",
+   "new": "epistemic: () => unknown('missing-evidence', 'The first slice",
+   "outcome": "killed",
+   "tests": "2 failed | 154 passed (156)",
+   "firstFailures": [
+    "apps/three-surface-poc/src/unknown-route-sweep.test.ts > every surface Unknown carries a closed reason and a route (M4 slice 1, POC-REQ-060) > carries the script-built Orrery unmapped block's reason a",
+    "packages/three-surface-poc-core/src/model.test.ts > three-surface Butlers POC model > builds one deterministic provenance-backed graph with honest Unknowns"
+   ]
+  },
+  {
+   "id": "table-code-to-evidence-reason",
+   "file": "packages/three-surface-poc-core/src/seed-graph.ts",
+   "old": "  'code-to-evidence': {\n    kind: 'verified-by',\n    epistemic: () => unknown('missing-evidence',",
+   "new": "  'code-to-evidence': {\n    kind: 'verified-by',\n    epistemic: () => unknown('mapping-coverage-absent',",
+   "outcome": "killed",
+   "tests": "1 failed | 155 passed (156)",
+   "firstFailures": [
+    "packages/three-surface-poc-core/src/model.test.ts > three-surface Butlers POC model > builds one deterministic provenance-backed graph with honest Unknowns"
+   ]
+  },
+  {
+   "id": "table-unsupported-role-accepted",
+   "file": "packages/three-surface-poc-core/src/seed-graph.ts",
+   "old": "    if (expectedKind === undefined) {\n      errors.push(`entity ${entity.id} has unsupported role",
+   "new": "    if (expectedKind === undefined && false) {\n      errors.push(`entity ${entity.id} has unsupported role",
+   "outcome": "killed",
+   "tests": "1 failed | 155 passed (156)",
+   "firstFailures": [
+    "packages/three-surface-poc-core/src/model.test.ts > three-surface Butlers POC model > names a seed role the role tables do not carry"
+   ]
+  }
+ ],
+ "totals": {
+  "killed": 20,
+  "survived": 0,
+  "error": 0,
+  "not-applied": 0
+ }
+}

@@ -1,0 +1,340 @@
+{
+  "epistemic": "Observed",
+  "subject": {
+    "sourceCommit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+    "activeCandidateCommit": "662b4b49505776c21856791abc52cda72346c5d9",
+    "retainedCoreCommit": "ddf1dc69b724df72a5e3c4f224500aa51d344ef0",
+    "manifestFileSha256": "77e53d37ac42c5db4edb4f99d76d937629df5a80d370ac47751c0e62f27270bd",
+    "proposedPocSpecSha256": "01209cce451cbab62a9f39fce1e6a78d9dcd6b56f3e32e0dc9bf0d5534534c37"
+  },
+  "requirements": [
+    {
+      "path": "openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md",
+      "identity": "POC-REQ-020",
+      "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+      "startLine": 544,
+      "endLine": 583,
+      "fileSha256": "3a2e5a2be8fc69f0fb70f32b0fce1b2b6ca9589db16224090a0351112385b691",
+      "blockSha256": "bc5859385af8cd64bb01980a794d220ff49775eb5fd03f68a2d1f1e8347216b8"
+    },
+    {
+      "path": "openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md",
+      "identity": "POC-REQ-022",
+      "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+      "startLine": 624,
+      "endLine": 663,
+      "fileSha256": "3a2e5a2be8fc69f0fb70f32b0fce1b2b6ca9589db16224090a0351112385b691",
+      "blockSha256": "85f929db8aba12cadaec155a54107d82c3a0904ec96bd73049e444c5e6d0ba6a"
+    },
+    {
+      "path": "openspec/changes/polaris-manifesto-generation/specs/polaris-generation/spec.md",
+      "identity": "REQ-polaris-generation-019",
+      "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+      "startLine": 1013,
+      "endLine": 1080,
+      "fileSha256": "a8199646c3b7953e8c4101d70d0307813dd1b3927d0b403f76c22d280dd6a89b",
+      "blockSha256": "ae2e8f7b811b5837aef78056a9f0e8db10d7b195cade5e768d52215fbd5cb970"
+    },
+    {
+      "path": "openspec/changes/polaris-manifesto-understanding-amendment/specs/polaris-generation/spec.md",
+      "identity": "REQ-polaris-generation-019",
+      "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+      "startLine": 506,
+      "endLine": 581,
+      "fileSha256": "6841e63cda0ccdb81966a6fabbdfaf3721910df8ea04959711eb59843859ba58",
+      "blockSha256": "796464323fb006f92248198ffab7296b05ddf735df9c2c84039c1a7068ecc3e7"
+    }
+  ],
+  "sourceFiles": [
+    {
+      "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+      "path": "packages/three-surface-poc-core/src/model.ts",
+      "snapshot": "source-snapshot/packages/three-surface-poc-core/src/model.ts",
+      "sha256": "72c58ab8f0234c763ece630ae85a52b0871100cf6f33854f42e0eb907210f489",
+      "gitBlob": "de21d1f0d4d759f081816d216533cf02283afe3c",
+      "lines": 1310
+    },
+    {
+      "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+      "path": "packages/three-surface-poc-core/src/work-items.ts",
+      "snapshot": "source-snapshot/packages/three-surface-poc-core/src/work-items.ts",
+      "sha256": "002199fca7ebbeea5c77237d830bb2f586c281d606d9c739f0c4f57191d9db6f",
+      "gitBlob": "38f80882a6c9e694e7f1e84ff231cd4fb892ba1f",
+      "lines": 248
+    },
+    {
+      "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+      "path": "packages/three-surface-poc-core/src/trajectory-projection.ts",
+      "snapshot": "source-snapshot/packages/three-surface-poc-core/src/trajectory-projection.ts",
+      "sha256": "f0d2a5b90e8b76e8a7fad815b96c66bbe7cc53b3f671c982ab088c1bcfd91647",
+      "gitBlob": "9223ded2d7631b9877ad3a8ee138ce5d5e593cf2",
+      "lines": 149
+    },
+    {
+      "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+      "path": "packages/three-surface-poc-core/src/project-shape-model.ts",
+      "snapshot": "source-snapshot/packages/three-surface-poc-core/src/project-shape-model.ts",
+      "sha256": "be9a7ea24b634be130378b89a735d1830ceb7625b95cc687e5dea9bd8b5daf75",
+      "gitBlob": "e036349d32d4da6d82fb8edc732746f00fa31104",
+      "lines": 722
+    },
+    {
+      "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+      "path": "packages/three-surface-poc-core/src/project-shape-coverage.ts",
+      "snapshot": "source-snapshot/packages/three-surface-poc-core/src/project-shape-coverage.ts",
+      "sha256": "e44268cb7c2e725c684883e87fef263afbf51579959b70b1bd97549d9dc2e16f",
+      "gitBlob": "e055ed578ee67c540eca6c28a867fab6e864e805",
+      "lines": 593
+    },
+    {
+      "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+      "path": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+      "snapshot": "source-snapshot/packages/three-surface-poc-core/src/project-shape-manifest.ts",
+      "sha256": "df5e1122af74643a09c28a450751242fad18f47760901b137a9c8d8fdf2f6ea5",
+      "gitBlob": "1d85bb89b679ae2a56db05f16814f80f921b6b20",
+      "lines": 527
+    },
+    {
+      "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+      "path": "packages/three-surface-poc-core/src/content-classification.ts",
+      "snapshot": "source-snapshot/packages/three-surface-poc-core/src/content-classification.ts",
+      "sha256": "1a7874ad67b27b55c324065a421f822d1dc864d1fdf648836e326629d4cd5a0d",
+      "gitBlob": "a92173f1c027dd931de03de21ffa14029c30f0f1",
+      "lines": 561
+    },
+    {
+      "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+      "path": "apps/three-surface-poc/src/polaris-generation/source-adapter.ts",
+      "snapshot": "source-snapshot/apps/three-surface-poc/src/polaris-generation/source-adapter.ts",
+      "sha256": "980d0b5baa40fef01923bbce72219e9e326156379ad4a459f6d804d8e9b59d85",
+      "gitBlob": "2eb799d5aa0f1083ce9e531f9c40752c867eaac7",
+      "lines": 56
+    },
+    {
+      "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+      "path": "apps/three-surface-poc/src/polaris-generation/source-adapter.test.ts",
+      "snapshot": "source-snapshot/apps/three-surface-poc/src/polaris-generation/source-adapter.test.ts",
+      "sha256": "1d509131b2226394e48c16a772d61a60096feef13f1d489b9db14ce6638fc205",
+      "gitBlob": "e0c01b37338f2338f92aa955b8d1b7cf0fabd255",
+      "lines": 104
+    },
+    {
+      "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+      "path": "apps/three-surface-poc/src/polaris-generation/run-key.ts",
+      "snapshot": "source-snapshot/apps/three-surface-poc/src/polaris-generation/run-key.ts",
+      "sha256": "089f3401e707131c0f8bb348c0901f95d676ff25831d75f30d13a832c444a390",
+      "gitBlob": "7d1bccb2422a3b1cc5bf6c636aaddcb8512e56fd",
+      "lines": 1
+    },
+    {
+      "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+      "path": "packages/polaris-generation-core/src/generation-source.ts",
+      "snapshot": "source-snapshot/packages/polaris-generation-core/src/generation-source.ts",
+      "sha256": "a881ab1206bce8e773652c4c45460e73d98c6ef8de8a1026a98534191e2f82d4",
+      "gitBlob": "b4c0d7fd7632f25362540f08d3d7945967d518a9",
+      "lines": 455
+    },
+    {
+      "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+      "path": "packages/polaris-generation-core/src/index.ts",
+      "snapshot": "source-snapshot/packages/polaris-generation-core/src/index.ts",
+      "sha256": "487f4f7753d5aff4ea75f1811c59ed5fa5f1b24cd23680aad8517f66b3470b96",
+      "gitBlob": "a32c3d65ab02e20545dadab03051cb831975b157",
+      "lines": 55
+    },
+    {
+      "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+      "path": "packages/polaris-generation-core/src/provider-draft.ts",
+      "snapshot": "source-snapshot/packages/polaris-generation-core/src/provider-draft.ts",
+      "sha256": "910b01c8919610026a0568a7f936a3194bbcc0721bec6cdfc22eb2142bd0ba6b",
+      "gitBlob": "4e2e41b7fb178685d8a816d4c6c4d115916c58a2",
+      "lines": 434
+    },
+    {
+      "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+      "path": "packages/polaris-generation-core/src/pipeline.ts",
+      "snapshot": "source-snapshot/packages/polaris-generation-core/src/pipeline.ts",
+      "sha256": "d4fbf19f6d1fa5fa260de2f3c637ae408153a206242053299f2461802475e711",
+      "gitBlob": "0f93ce522bf5b1d0afb26469af4cd3413a55d1aa",
+      "lines": 472
+    },
+    {
+      "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+      "path": "packages/polaris-generation-core/src/local-render.ts",
+      "snapshot": "source-snapshot/packages/polaris-generation-core/src/local-render.ts",
+      "sha256": "04667c37d159bbfa2928ad92ffb7d9bf6bccaab7b50de438f59525e5c02167fb",
+      "gitBlob": "1fad0ddda3fd6ad4d0be813ab068559162a02073",
+      "lines": 133
+    },
+    {
+      "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+      "path": "apps/three-surface-poc/src/polaris-generation/repo-corpus.ts",
+      "snapshot": "source-snapshot/apps/three-surface-poc/src/polaris-generation/repo-corpus.ts",
+      "sha256": "f834c3525bbb0d779fd6cdf40b4649c23e2b9a0d09331a8eff9b1409fa64bbc5",
+      "gitBlob": "07c36dd736bff4dc1208e335e1b4b6e4ecddcbf2",
+      "lines": 271
+    },
+    {
+      "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+      "path": "apps/three-surface-poc/src/polaris-generation/dossier-trigger.ts",
+      "snapshot": "source-snapshot/apps/three-surface-poc/src/polaris-generation/dossier-trigger.ts",
+      "sha256": "37eeef5f4a56e3936c6f71855ca347485e8358e99f1a63f7f39b47d913e4d99d",
+      "gitBlob": "108fff7ed6ffe36379229ff419729f25fa45c971",
+      "lines": 224
+    },
+    {
+      "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+      "path": "apps/three-surface-poc/src/polaris-narrative.ts",
+      "snapshot": "source-snapshot/apps/three-surface-poc/src/polaris-narrative.ts",
+      "sha256": "6f47d20dedbc4bc7013a750d25062646584692808494a161d93afb5570369b5a",
+      "gitBlob": "0c745b2f7ebd673d378be98b41ddabb9caa1f11a",
+      "lines": 199
+    },
+    {
+      "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+      "path": "apps/three-surface-poc/src/polaris-narrative.test.ts",
+      "snapshot": "source-snapshot/apps/three-surface-poc/src/polaris-narrative.test.ts",
+      "sha256": "14e5043c917a23b43b9ffc958cd1f2077d9d6e1041c186c8d5e5362ed8250508",
+      "gitBlob": "26c6a5fe5481fa813b729b68c6d3d15f3e5cad45",
+      "lines": 326
+    },
+    {
+      "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+      "path": "apps/three-surface-poc/src/polaris.ts",
+      "snapshot": "source-snapshot/apps/three-surface-poc/src/polaris.ts",
+      "sha256": "029d439f1d41584b803cc84d5688b89d826e6797ac4926daa95c59b0504bd563",
+      "gitBlob": "9d5df03c630be1ec3bd2477f1aece680bfecc08e",
+      "lines": 1904
+    },
+    {
+      "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+      "path": "apps/three-surface-poc/src/routes.ts",
+      "snapshot": "source-snapshot/apps/three-surface-poc/src/routes.ts",
+      "sha256": "81cd2099b9a162579a87c154137217e97d1e08e11542c07d91d42ad9a8cdd050",
+      "gitBlob": "23a7c2d46689522792653389cfd7f2ba8926c599",
+      "lines": 321
+    },
+    {
+      "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+      "path": "apps/three-surface-poc/src/trajectory.ts",
+      "snapshot": "source-snapshot/apps/three-surface-poc/src/trajectory.ts",
+      "sha256": "99bd7785f2512ffeeba001fffbed9b50075c1782dc8dfbaa8b85ea1e54d50ef8",
+      "gitBlob": "d28e0a7d68bfb640aab9e96b60496f9e894def1e",
+      "lines": 305
+    },
+    {
+      "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+      "path": "apps/three-surface-poc/src/unknown-marker.ts",
+      "snapshot": "source-snapshot/apps/three-surface-poc/src/unknown-marker.ts",
+      "sha256": "46aaa5ad48d5e325cc6b5def07695da86d4d085dac218b84aa7460d041e3a7d2",
+      "gitBlob": "b6ee70fb67816aacdd3a1f6e4d147f4d06be0fd3",
+      "lines": 39
+    },
+    {
+      "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+      "path": "apps/three-surface-poc/src/evaluation-footer.ts",
+      "snapshot": "source-snapshot/apps/three-surface-poc/src/evaluation-footer.ts",
+      "sha256": "1a276fb886d680f87280e0ad9fc3d1c730711736caa544ce22232d40e1f6e992",
+      "gitBlob": "2fe0cd05caf156f482d2193c53e422520d41aa2d",
+      "lines": 72
+    },
+    {
+      "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+      "path": "openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md",
+      "snapshot": "source-snapshot/openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md",
+      "sha256": "3a2e5a2be8fc69f0fb70f32b0fce1b2b6ca9589db16224090a0351112385b691",
+      "gitBlob": "df6a14e4accaec50b78e7498a76212b8ca67b9a7",
+      "lines": 1325
+    },
+    {
+      "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+      "path": "openspec/changes/polaris-manifesto-generation/specs/polaris-generation/spec.md",
+      "snapshot": "source-snapshot/openspec/changes/polaris-manifesto-generation/specs/polaris-generation/spec.md",
+      "sha256": "a8199646c3b7953e8c4101d70d0307813dd1b3927d0b403f76c22d280dd6a89b",
+      "gitBlob": "72edfdd1736ca33ac2a2d6a0f9353385dff1bd53",
+      "lines": 1719
+    },
+    {
+      "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+      "path": "openspec/changes/polaris-manifesto-understanding-amendment/specs/polaris-generation/spec.md",
+      "snapshot": "source-snapshot/openspec/changes/polaris-manifesto-understanding-amendment/specs/polaris-generation/spec.md",
+      "sha256": "6841e63cda0ccdb81966a6fabbdfaf3721910df8ea04959711eb59843859ba58",
+      "gitBlob": "b03930a944ef81739ba7b21a6b6c71b17e9e126c",
+      "lines": 692
+    },
+    {
+      "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+      "path": "openspec/changes/polaris-manifesto-generation/SCHEMA-CONTRACT.md",
+      "snapshot": "source-snapshot/openspec/changes/polaris-manifesto-generation/SCHEMA-CONTRACT.md",
+      "sha256": "722eea7233cfb913f4f2e21060f359d721a86336efa1a3851e31ba113a857e8f",
+      "gitBlob": "b6746e7de01fd1917fe19cf64c919772c1c143e7",
+      "lines": 152
+    },
+    {
+      "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+      "path": ".syzygy/governance/contracts/candidates/policy-candidates/SHAPE-TO-SPEC-IMPACT-POLICY-CANDIDATE.md",
+      "snapshot": "source-snapshot/.syzygy/governance/contracts/candidates/policy-candidates/SHAPE-TO-SPEC-IMPACT-POLICY-CANDIDATE.md",
+      "sha256": "e08270a2d2589aafaad59d9958683f094fb6170b38cfaa30e49f48c41645989c",
+      "gitBlob": "ac8d6f4afd134c690e5bb572f0eb39d5b5b54659",
+      "lines": 328
+    },
+    {
+      "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+      "path": ".syzygy/governance/doctrine/trust-and-evidence.md",
+      "snapshot": "source-snapshot/.syzygy/governance/doctrine/trust-and-evidence.md",
+      "sha256": "a62742ba79886fa9a300f08f9a33412919286f6442a0c90a42b14f91dc80a52a",
+      "gitBlob": "9ef6bd7e4cf3411d649fdae87e3709f2dd8ad2de",
+      "lines": 200
+    },
+    {
+      "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+      "path": "apps/three-surface-poc/src/orrery.ts",
+      "snapshot": "source-snapshot/apps/three-surface-poc/src/orrery.ts",
+      "sha256": "868df1a1ea21483864e0237321f7fda16246e4df456b6476f22627499ca1d77e",
+      "gitBlob": "d908e37dba5768a9b0fd1f415c0beb58dcdbf338",
+      "lines": 247
+    },
+    {
+      "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+      "path": "apps/three-surface-poc/src/orrery.test.ts",
+      "snapshot": "source-snapshot/apps/three-surface-poc/src/orrery.test.ts",
+      "sha256": "7e4fd5ad563c57333327a24e87440a1e7f25d53eb0b77009c41d1462f228dd78",
+      "gitBlob": "cd6d44a5ce53a20647a9af16f0df3cf532928459",
+      "lines": 190
+    },
+    {
+      "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+      "path": "apps/three-surface-poc/src/exact-tables.ts",
+      "snapshot": "source-snapshot/apps/three-surface-poc/src/exact-tables.ts",
+      "sha256": "bb6c5044a447bf892b42e60e70fe3d15752726f73f49539f03b01eec3fa104ff",
+      "gitBlob": "950db765e6509b64d77350a84cf999dbb0023ca9",
+      "lines": 68
+    },
+    {
+      "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+      "path": "apps/three-surface-poc/src/polaris-source.ts",
+      "snapshot": "source-snapshot/apps/three-surface-poc/src/polaris-source.ts",
+      "sha256": "091f4785b54bae53539e12c7d378b7df0e9d0f22ff48417a1c1de8947a70fab7",
+      "gitBlob": "e498e41b1e5a748ce668dd5dfdc3298938b81c62",
+      "lines": 145
+    },
+    {
+      "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+      "path": "apps/three-surface-poc/src/polaris-parity-sweep.test.ts",
+      "snapshot": "source-snapshot/apps/three-surface-poc/src/polaris-parity-sweep.test.ts",
+      "sha256": "bc2bb22653b985dcadcfb4577bb104c7110263c4ee3fe7176543ff8f84c1cdd0",
+      "gitBlob": "f8a5309e8631f1df7085d18d7c258e3ff40fbe35",
+      "lines": 741
+    },
+    {
+      "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+      "path": "apps/three-surface-poc/src/test-model-fixture.ts",
+      "snapshot": "source-snapshot/apps/three-surface-poc/src/test-model-fixture.ts",
+      "sha256": "2de4be6821fbd83bb22c072593acebb47e6fedfb33248014c5132b4e986c8770",
+      "gitBlob": "4e5837ab5715179dfe887021502928e9299e5b2f",
+      "lines": 263
+    }
+  ],
+  "sourceMapRetention": "Outside Git SOURCE-MAP.json; snapshots are exact Git objects from sourceCommit.",
+  "sourcePopulation": 36
+}

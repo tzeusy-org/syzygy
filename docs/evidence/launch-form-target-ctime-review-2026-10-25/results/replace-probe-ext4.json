@@ -1,0 +1,1 @@
+{"kernel":"linux","root":"/var/tmp/r523-ext4/rp","asTest":{"rounds":2000,"equalTargetCtime":1687,"targetInoChanged":2000,"plantToReplacedNsMedian":179028},"tight":{"rounds":2000,"equalTargetCtime":1746,"targetInoChanged":2000,"plantToReplacedNsMedian":156144}}

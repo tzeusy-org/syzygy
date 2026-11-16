@@ -1,0 +1,30 @@
+{
+ "typeonly": {
+  "mutantCommit": "a49a16f49c0cfb8684689f729e8bd59099dd9202",
+  "file": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+  "old": "function stripFences(text: string, stripInlineCode = true): readonly string[] {",
+  "new": "function stripFences(text: string, stripInlineCode = true): string[] {",
+  "comment-only": {
+   "exit": 0,
+   "stdout": "production files changed 5, comment-only 5, not 0"
+  },
+  "line-level": {
+   "exit": 1,
+   "stdout": "production files changed 5, comment-only (print and lines) 4, not 1"
+  }
+ },
+ "code": {
+  "mutantCommit": "a363f695ef56ba4382ccbde55c22295e4b0fcc78",
+  "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+  "old": "const FENCE_OPENER = /^ {0,3}(`{3,}|~{3,})(.*)$/;",
+  "new": "const FENCE_OPENER = /^ {0,3}(`{3,}|~{3,})([^\\n]*)$/;",
+  "comment-only": {
+   "exit": 1,
+   "stdout": "production files changed 5, comment-only 4, not 1"
+  },
+  "line-level": {
+   "exit": 1,
+   "stdout": "production files changed 5, comment-only (print and lines) 4, not 1"
+  }
+ }
+}

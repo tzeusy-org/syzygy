@@ -1,0 +1,1003 @@
+{
+ "tool": "dist_code_diff.py",
+ "baseTree": {
+  "commit": "0285819da45684e6299e81402d6ad1b7e4032eab",
+  "trackedFilesModified": false
+ },
+ "headTree": {
+  "commit": "695bf136da35dc9d94bf4abf80c709f3d4244adb",
+  "trackedFilesModified": false
+ },
+ "projects": [
+  {
+   "project": "packages/cap1-core",
+   "filesCompared": 50,
+   "onlyInBase": [],
+   "onlyInHead": [],
+   "differingAfterCommentStrip": []
+  },
+  {
+   "project": "packages/cap1-daemon",
+   "filesCompared": 18,
+   "onlyInBase": [],
+   "onlyInHead": [],
+   "differingAfterCommentStrip": []
+  },
+  {
+   "project": "packages/cap1-conformance",
+   "filesCompared": 0,
+   "onlyInBase": [],
+   "onlyInHead": [],
+   "differingAfterCommentStrip": []
+  },
+  {
+   "project": "packages/three-surface-poc-core",
+   "filesCompared": 76,
+   "onlyInBase": [],
+   "onlyInHead": [],
+   "differingAfterCommentStrip": [
+    {
+     "file": "authority-artifact-fields.d.ts",
+     "explained": true,
+     "problems": [],
+     "removedOrAddedLines": [
+      "-export interface ConsentArtifactFields {",
+      "+interface ConsentArtifactFields {",
+      "-export interface PolicyArtifactFields {",
+      "+interface PolicyArtifactFields {",
+      "-export interface RegistryArtifactFields {",
+      "+interface RegistryArtifactFields {",
+      "-export type ArtifactParse<T> = {",
+      "+type ArtifactParse<T> = {",
+      "+export {};"
+     ]
+    },
+    {
+     "file": "authority-disclosure.d.ts",
+     "explained": true,
+     "problems": [],
+     "removedOrAddedLines": [
+      "-import { STATE_1_LABEL, STATE_2_LABEL, type AuthorityKind, type AuthorityState, type BodyReadAuthorityEvaluation } from './body-read-authority.js';",
+      "+import { STATE_1_LABEL, STATE_2_LABEL, type AuthorityKind, type BodyReadAuthorityEvaluation } from './body-read-authority.js';",
+      "-export interface AuthorityStateDisclosure {",
+      "+interface AuthorityStateDisclosure {",
+      "-export interface AuthorityMayNot {",
+      "+interface AuthorityMayNot {",
+      "-export declare function discloseAuthorityState(authority: AuthorityKind, state: AuthorityState): AuthorityStateDisclosure;",
+      "+export {};"
+     ]
+    },
+    {
+     "file": "authority-disclosure.js",
+     "explained": true,
+     "problems": [],
+     "removedOrAddedLines": [
+      "-export function discloseAuthorityState(authority, state) {",
+      "+function discloseAuthorityState(authority, state) {"
+     ]
+    },
+    {
+     "file": "body-read-authority.d.ts",
+     "explained": true,
+     "problems": [],
+     "removedOrAddedLines": [
+      "-export declare const CONSENT_SPECIFIC_CASES: readonly [",
+      "+declare const CONSENT_SPECIFIC_CASES: readonly [",
+      "-export declare const POLICY_SPECIFIC_CASES: readonly [",
+      "+declare const POLICY_SPECIFIC_CASES: readonly [",
+      "-export declare const REGISTRY_SPECIFIC_CASES: readonly [",
+      "+declare const REGISTRY_SPECIFIC_CASES: readonly [",
+      "-export type InvalidCaseId = `${AuthorityKind}:${CommonInvalidCase}` | `consent:${(typeof CONSENT_SPECIFIC_CASES)[number]}` | `policy:${(typeof POLICY_SPECIFIC_CASES)[number]}` | `registry:${(typeof REGISTRY_SPECIFIC_CASES)[number]}`;",
+      "+type InvalidCaseId = `${AuthorityKind}:${CommonInvalidCase}` | `consent:${(typeof CONSENT_SPECIFIC_CASES)[number]}` | `policy:${(typeof POLICY_SPECIFIC_CASES)[number]}` | `registry:${(typeof REGISTRY_SPECIFIC_CASES)[number]}`;",
+      "-export interface AuthorityExpectation {",
+      "+interface AuthorityExpectation {",
+      "-export type SupersessionExpectation = {",
+      "+type SupersessionExpectation = {",
+      "-export interface CorrelationRequest {",
+      "+interface CorrelationRequest {",
+      "-export type AuthorizationMode = 'independently-verified' | 'owner-trusted-bootstrap' | 'rejected';",
+      "+type AuthorizationMode = 'independently-verified' | 'owner-trusted-bootstrap' | 'rejected';"
+     ]
+    },
+    {
+     "file": "body-read-authority.js",
+     "explained": true,
+     "problems": [],
+     "removedOrAddedLines": [
+      "-export const CONSENT_SPECIFIC_CASES = [",
+      "+const CONSENT_SPECIFIC_CASES = [",
+      "-export const POLICY_SPECIFIC_CASES = [",
+      "+const POLICY_SPECIFIC_CASES = [",
+      "-export const REGISTRY_SPECIFIC_CASES = [",
+      "+const REGISTRY_SPECIFIC_CASES = ["
+     ]
+    },
+    {
+     "file": "code-structure.d.ts",
+     "explained": true,
+     "problems": [],
+     "removedOrAddedLines": [
+      "-export declare const CODE_LANGUAGE_CLASSIFICATIONS: readonly [",
+      "+declare const CODE_LANGUAGE_CLASSIFICATIONS: readonly [",
+      "-export interface CodeStructureUnknown {",
+      "+interface CodeStructureUnknown {",
+      "+export {};"
+     ]
+    },
+    {
+     "file": "code-structure.js",
+     "explained": true,
+     "problems": [],
+     "removedOrAddedLines": [
+      "-export const CODE_LANGUAGE_CLASSIFICATIONS = [",
+      "+const CODE_LANGUAGE_CLASSIFICATIONS = ["
+     ]
+    },
+    {
+     "file": "content-classification.d.ts",
+     "explained": true,
+     "problems": [],
+     "removedOrAddedLines": [
+      "-export type RedactionClass = (typeof REDACTION_CLASSES)[number];",
+      "-export type EmittedRedactionClass = 'excluded-artifact' | 'unclassifiable-excluded';",
+      "+type RedactionClass = (typeof REDACTION_CLASSES)[number];",
+      "+type EmittedRedactionClass = 'excluded-artifact' | 'unclassifiable-excluded';",
+      "-export interface CompiledDetector {",
+      "+interface CompiledDetector {",
+      "-export type ExclusionReason = (typeof EXCLUSION_REASONS)[number];",
+      "+type ExclusionReason = (typeof EXCLUSION_REASONS)[number];",
+      "-export type SourceClassification = {",
+      "+type SourceClassification = {",
+      "-export interface ClassifyInput {",
+      "+interface ClassifyInput {",
+      "-export interface ClassifiedPopulation<T> {",
+      "+interface ClassifiedPopulation<T> {",
+      "-export type PathOnlyDerivation<T> = (source: ManifestSource) => {",
+      "+type PathOnlyDerivation<T> = (source: ManifestSource) => {",
+      "+export {};"
+     ]
+    },
+    {
+     "file": "effect-authority.d.ts",
+     "explained": true,
+     "problems": [],
+     "removedOrAddedLines": [
+      "-export interface RegistryWriteAuthority {",
+      "+interface RegistryWriteAuthority {",
+      "-export declare const P71_Q5_FORECLOSURE: Foreclosure;",
+      "-export declare const FORECLOSED_EFFECTS: ReadonlyMap<string, Foreclosure>;",
+      "+export {};"
+     ]
+    },
+    {
+     "file": "effect-authority.js",
+     "explained": true,
+     "problems": [],
+     "removedOrAddedLines": [
+      "-export const P71_Q5_FORECLOSURE = {",
+      "+const P71_Q5_FORECLOSURE = {",
+      "-export const FORECLOSED_EFFECTS = new Map([",
+      "+const FORECLOSED_EFFECTS = new Map(["
+     ]
+    },
+    {
+     "file": "evidence-population.d.ts",
+     "explained": true,
+     "problems": [],
+     "removedOrAddedLines": [
+      "-export interface PopulationBlock {",
+      "+interface PopulationBlock {",
+      "-export interface PopulationSources {",
+      "+interface PopulationSources {",
+      "+export {};"
+     ]
+    },
+    {
+     "file": "git-object-reader.d.ts",
+     "explained": true,
+     "problems": [],
+     "removedOrAddedLines": [
+      "-export type ReadRefusalReason = (typeof READ_REFUSAL_REASONS)[number];",
+      "-export type ReadAdmission = {",
+      "+type ReadRefusalReason = (typeof READ_REFUSAL_REASONS)[number];",
+      "+type ReadAdmission = {",
+      "-export type ActiveContentForm = (typeof ACTIVE_CONTENT_FORMS)[number];",
+      "-export interface ActiveContentFinding {",
+      "+type ActiveContentForm = (typeof ACTIVE_CONTENT_FORMS)[number];",
+      "+interface ActiveContentFinding {",
+      "-export declare const OBJECT_READ_OUTCOMES: readonly [",
+      "+declare const OBJECT_READ_OUTCOMES: readonly [",
+      "-export type ObjectReadOutcome = (typeof OBJECT_READ_OUTCOMES)[number];",
+      "+type ObjectReadOutcome = (typeof OBJECT_READ_OUTCOMES)[number];",
+      "-export type ExactObjectRead = {",
+      "+type ExactObjectRead = {",
+      "-export interface ExactObjectReaderInput {",
+      "+interface ExactObjectReaderInput {",
+      "-export interface SourceReadResult<T> {",
+      "+interface SourceReadResult<T> {",
+      "+export {};"
+     ]
+    },
+    {
+     "file": "git-object-reader.js",
+     "explained": true,
+     "problems": [],
+     "removedOrAddedLines": [
+      "-export const OBJECT_READ_OUTCOMES = [",
+      "+const OBJECT_READ_OUTCOMES = ["
+     ]
+    },
+    {
+     "file": "git-tree.d.ts",
+     "explained": true,
+     "problems": [],
+     "removedOrAddedLines": [
+      "-export declare const GIT_TREE_OBJECT_TYPES: readonly [",
+      "+declare const GIT_TREE_OBJECT_TYPES: readonly [",
+      "-export type GitTreeObjectType = (typeof GIT_TREE_OBJECT_TYPES)[number];",
+      "+type GitTreeObjectType = (typeof GIT_TREE_OBJECT_TYPES)[number];",
+      "-export type ParsedGitTree = {",
+      "+type ParsedGitTree = {",
+      "+export {};"
+     ]
+    },
+    {
+     "file": "git-tree.js",
+     "explained": true,
+     "problems": [],
+     "removedOrAddedLines": [
+      "-export const GIT_TREE_OBJECT_TYPES = ['blob', 'tree', 'commit'];",
+      "+const GIT_TREE_OBJECT_TYPES = ['blob', 'tree', 'commit'];"
+     ]
+    },
+    {
+     "file": "markdown-code-context.d.ts",
+     "explained": true,
+     "problems": [],
+     "removedOrAddedLines": [
+      "-export interface CodeContextRecognition {",
+      "+interface CodeContextRecognition {",
+      "+export {};"
+     ]
+    },
+    {
+     "file": "materialization.d.ts",
+     "explained": true,
+     "problems": [],
+     "removedOrAddedLines": [
+      "-export declare const MATERIALIZATION_SUPPORTED_REPOSITORY_ID: \"repository:butlers-configured-poc\";",
+      "-export interface BuildDispatchDisclosureInput extends BuildMaterializationPacketInput {",
+      "+interface BuildDispatchDisclosureInput extends BuildMaterializationPacketInput {",
+      "-export interface BuildMaterializationPacketInput {",
+      "+interface BuildMaterializationPacketInput {",
+      "-export declare const MATERIALIZATION_RECORD_FILE_NAME: \"materialization-record.json\";",
+      "-export type ReadMaterializationRecord = () => MaterializationRecord | null;",
+      "-export type WriteMaterializationRecord = (record: MaterializationRecord) => void;",
+      "-export type ClearMaterializationRecord = () => void;",
+      "+type ReadMaterializationRecord = () => MaterializationRecord | null;",
+      "+type WriteMaterializationRecord = (record: MaterializationRecord) => void;",
+      "+type ClearMaterializationRecord = () => void;",
+      "-export interface MaterializeWorkItemInput {",
+      "+interface MaterializeWorkItemInput {",
+      "-export type RollbackResult = {",
+      "+type RollbackResult = {",
+      "-export interface RollbackMaterializedWorkItemInput {",
+      "+interface RollbackMaterializedWorkItemInput {",
+      "+export {};"
+     ]
+    },
+    {
+     "file": "materialization.js",
+     "explained": true,
+     "problems": [],
+     "removedOrAddedLines": [
+      "-export const MATERIALIZATION_SUPPORTED_REPOSITORY_ID = 'repository:butlers-configured-poc';",
+      "+const MATERIALIZATION_SUPPORTED_REPOSITORY_ID = 'repository:butlers-configured-poc';",
+      "-export const MATERIALIZATION_RECORD_FILE_NAME = 'materialization-record.json';",
+      "+const MATERIALIZATION_RECORD_FILE_NAME = 'materialization-record.json';"
+     ]
+    },
+    {
+     "file": "model.d.ts",
+     "explained": true,
+     "problems": [],
+     "removedOrAddedLines": [
+      "-export interface CurrencyProbe {",
+      "+interface CurrencyProbe {",
+      "-export declare const WORK_ITEM_VERIFICATION_BASIS = \"Activity is not verification: no test evidence has been ingested for this item.\";"
+     ]
+    },
+    {
+     "file": "model.js",
+     "explained": true,
+     "problems": [],
+     "removedOrAddedLines": [
+      "-export const WORK_ITEM_VERIFICATION_BASIS = 'Activity is not verification: no test evidence has been ingested for this item.';",
+      "+const WORK_ITEM_VERIFICATION_BASIS = 'Activity is not verification: no test evidence has been ingested for this item.';"
+     ]
+    },
+    {
+     "file": "orrery-projection.d.ts",
+     "explained": true,
+     "problems": [],
+     "removedOrAddedLines": [
+      "-export interface OrreryDistrict {",
+      "+interface OrreryDistrict {",
+      "-export interface OrreryMappedRegion {",
+      "+interface OrreryMappedRegion {",
+      "-export interface OrreryProjectionObserved {",
+      "+interface OrreryProjectionObserved {",
+      "-export interface OrreryProjectionUnknown {",
+      "+interface OrreryProjectionUnknown {",
+      "+export {};"
+     ]
+    },
+    {
+     "file": "owner-act-record.d.ts",
+     "explained": true,
+     "problems": [],
+     "removedOrAddedLines": [
+      "-export interface ProvenanceStateField {",
+      "+interface ProvenanceStateField {",
+      "-export type A1Field = {",
+      "+type A1Field = {",
+      "-export type SupersessionField = {",
+      "+type SupersessionField = {",
+      "+export {};"
+     ]
+    },
+    {
+     "file": "poc-seeds.d.ts",
+     "explained": true,
+     "problems": [],
+     "removedOrAddedLines": [
+      "-export type PocSeedEntityRole = 'project' | 'capability' | 'intent' | 'code' | 'test-definition' | 'work' | 'test-evidence' | 'runtime' | 'unknown-region';",
+      "-export type PocSeedRelationshipRole = 'project-to-capability' | 'capability-to-intent' | 'capability-to-code' | 'capability-to-test-definition' | 'intent-to-work' | 'work-to-code' | 'code-to-evidence' | 'code-to-runtime' | 'capability-to-unmapped-region';",
+      "+type PocSeedEntityRole = 'project' | 'capability' | 'intent' | 'code' | 'test-definition' | 'work' | 'test-evidence' | 'runtime' | 'unknown-region';",
+      "+type PocSeedRelationshipRole = 'project-to-capability' | 'capability-to-intent' | 'capability-to-code' | 'capability-to-test-definition' | 'intent-to-work' | 'work-to-code' | 'code-to-evidence' | 'code-to-runtime' | 'capability-to-unmapped-region';",
+      "-export interface PocSeedArtifacts {",
+      "+interface PocSeedArtifacts {",
+      "-export interface PocSeedIntentMarkers {",
+      "+interface PocSeedIntentMarkers {",
+      "+export {};"
+     ]
+    },
+    {
+     "file": "project-shape-coverage.d.ts",
+     "explained": true,
+     "problems": [],
+     "removedOrAddedLines": [
+      "-export type CoverageState = (typeof COVERAGE_STATES)[number];",
+      "+type CoverageState = (typeof COVERAGE_STATES)[number];",
+      "-export type DeclarationBasis = (typeof DECLARATION_BASES)[number];",
+      "+type DeclarationBasis = (typeof DECLARATION_BASES)[number];",
+      "-export type FactFamily = {",
+      "-    readonly kind: 'item' | 'count';",
+      "-    readonly class: ExtractionClass;",
+      "-} | {",
+      "-    readonly kind: 'catalog-count';",
+      "-} | {",
+      "-    readonly kind: 'project-account';",
+      "-};",
+      "-export declare const FACT_FAMILY_ROWS: Readonly<Record<string, LayerOrdinal>>;",
+      "-export declare function factFamilyOf(fact: string): FactFamily | undefined;",
+      "-export declare function factFamilyRow(fact: string): LayerOrdinal | undefined;",
+      "-export declare const layerRuleId: (ordinal: LayerOrdinal) => string;",
+      "-export type RuleRejection = (typeof RULE_REJECTIONS)[number];",
+      "+type RuleRejection = (typeof RULE_REJECTIONS)[number];",
+      "-export interface ConsideredRule {",
+      "+interface ConsideredRule {",
+      "-export interface UnenumeratedUnknown {",
+      "+interface UnenumeratedUnknown {",
+      "-export interface SourceClassOutcome {",
+      "+interface SourceClassOutcome {",
+      "-export declare function expandedHomes(rule: Pick<LayerRule, 'home'>, rosterKeys: ReadonlySet<string>): readonly string[];",
+      "-export interface ReconcileInput {",
+      "+interface ReconcileInput {",
+      "-export declare function considerRule(rule: LayerRule, fact: string, declarations: readonly Declaration[], input: ReconcileInput): {",
+      "-    readonly outcome: 'applied';",
+      "-    readonly winner: Declaration;",
+      "-} | {",
+      "-    readonly outcome: RuleRejection;",
+      "-};",
+      "-export declare function rowStatement(rule: LayerRow): string;",
+      "-export interface CoverageInput {",
+      "+interface CoverageInput {",
+      "+export {};"
+     ]
+    },
+    {
+     "file": "project-shape-coverage.js",
+     "explained": true,
+     "problems": [],
+     "removedOrAddedLines": [
+      "-export const FACT_FAMILY_ROWS = {",
+      "+const FACT_FAMILY_ROWS = {",
+      "-export function factFamilyOf(fact) {",
+      "+function factFamilyOf(fact) {",
+      "-export function factFamilyRow(fact) {",
+      "+function factFamilyRow(fact) {",
+      "-export const layerRuleId = (ordinal) => `layer:${ordinal}`;",
+      "+const layerRuleId = (ordinal) => `layer:${ordinal}`;",
+      "-export function expandedHomes(rule, rosterKeys) {",
+      "+function expandedHomes(rule, rosterKeys) {",
+      "-export function considerRule(rule, fact, declarations, input) {",
+      "+function considerRule(rule, fact, declarations, input) {",
+      "-export function rowStatement(rule) {",
+      "+function rowStatement(rule) {"
+     ]
+    },
+    {
+     "file": "project-shape-extraction.d.ts",
+     "explained": true,
+     "problems": [],
+     "removedOrAddedLines": [
+      "-export interface CatalogHeading {",
+      "+interface CatalogHeading {",
+      "-export declare const ROOT_SUMMARY_HEADING = \"Key Architectural Facts\";",
+      "-export declare const PRECEDENCE_HEADING = \"Precedence Order When Layers Disagree\";",
+      "-export declare const PRECEDENCE_COLUMNS: readonly [",
+      "-    \"#\",",
+      "-    \"Layer\",",
+      "-    \"Owns\",",
+      "-    \"Home\"",
+      "-];",
+      "-export declare const LAYER_ORDINALS: readonly [",
+      "+declare const LAYER_ORDINALS: readonly [",
+      "-export declare const STATED_COUNT_FACTS: readonly [",
+      "+declare const STATED_COUNT_FACTS: readonly [",
+      "-export type StatedCountFact = (typeof STATED_COUNT_FACTS)[number];",
+      "+type StatedCountFact = (typeof STATED_COUNT_FACTS)[number];",
+      "-export type RootSummaryExtraction = {",
+      "+type RootSummaryExtraction = {",
+      "-export interface AdmittedLayerRule extends LayerRow {",
+      "+interface AdmittedLayerRule extends LayerRow {",
+      "-export type PrecedenceExtraction = {",
+      "+type PrecedenceExtraction = {",
+      "-export declare function extractRootSummary(doc: Doc): RootSummaryExtraction;",
+      "-export declare function extractPrecedenceTable(doc: Doc): PrecedenceExtraction;"
+     ]
+    },
+    {
+     "file": "project-shape-extraction.js",
+     "explained": true,
+     "problems": [],
+     "removedOrAddedLines": [
+      "-export const ROOT_SUMMARY_HEADING = 'Key Architectural Facts';",
+      "-export const PRECEDENCE_HEADING = 'Precedence Order When Layers Disagree';",
+      "-export const PRECEDENCE_COLUMNS = ['#', 'Layer', 'Owns', 'Home'];",
+      "-export const LAYER_ORDINALS = [1, 2, 3, 4, 5, 6, 7];",
+      "+const ROOT_SUMMARY_HEADING = 'Key Architectural Facts';",
+      "+const PRECEDENCE_HEADING = 'Precedence Order When Layers Disagree';",
+      "+const PRECEDENCE_COLUMNS = ['#', 'Layer', 'Owns', 'Home'];",
+      "+const LAYER_ORDINALS = [1, 2, 3, 4, 5, 6, 7];",
+      "-export const STATED_COUNT_FACTS = ['catalog-count:Staffers', 'catalog-count:Butlers'];",
+      "+const STATED_COUNT_FACTS = ['catalog-count:Staffers', 'catalog-count:Butlers'];",
+      "-export function extractRootSummary(doc) {",
+      "+function extractRootSummary(doc) {",
+      "-export function extractPrecedenceTable(doc) {",
+      "+function extractPrecedenceTable(doc) {"
+     ]
+    },
+    {
+     "file": "project-shape-manifest.d.ts",
+     "explained": true,
+     "problems": [],
+     "removedOrAddedLines": [
+      "-export declare const IGNORED_LINK_REASONS: readonly [",
+      "+declare const IGNORED_LINK_REASONS: readonly [",
+      "-export interface IgnoredLink {",
+      "+interface IgnoredLink {",
+      "-export type DeclaredPillarRoots = ReadonlyMap<PillarKey, {",
+      "+type DeclaredPillarRoots = ReadonlyMap<PillarKey, {",
+      "-export interface DeriveManifestInput {",
+      "+interface DeriveManifestInput {",
+      "-export type DeriveManifestResult = {",
+      "+type DeriveManifestResult = {",
+      "+export {};"
+     ]
+    },
+    {
+     "file": "project-shape-manifest.js",
+     "explained": true,
+     "problems": [],
+     "removedOrAddedLines": [
+      "-export const IGNORED_LINK_REASONS = ['external', 'escapes-repository', 'outside-pillar-root', 'names-a-directory', 'self'];",
+      "+const IGNORED_LINK_REASONS = ['external', 'escapes-repository', 'outside-pillar-root', 'names-a-directory', 'self'];"
+     ]
+    },
+    {
+     "file": "project-shape-model.d.ts",
+     "explained": true,
+     "problems": [],
+     "removedOrAddedLines": [
+      "-export declare const ROUTE_ACTORS: readonly [",
+      "+declare const ROUTE_ACTORS: readonly [",
+      "-export type RouteActor = (typeof ROUTE_ACTORS)[number];",
+      "-export declare const ROUTE_VERBS: readonly [",
+      "+type RouteActor = (typeof ROUTE_ACTORS)[number];",
+      "+declare const ROUTE_VERBS: readonly [",
+      "-export type RouteVerb = (typeof ROUTE_VERBS)[number];",
+      "-export declare const ROUTE_TARGETS: readonly [",
+      "+type RouteVerb = (typeof ROUTE_VERBS)[number];",
+      "+declare const ROUTE_TARGETS: readonly [",
+      "-export type RouteTarget = (typeof ROUTE_TARGETS)[number];",
+      "-export declare const UNKNOWN_REASON_ACTIONS: Readonly<Record<UnknownReason, {",
+      "-    readonly actor: RouteActor;",
+      "-    readonly verb: RouteVerb;",
+      "-    readonly target: RouteTarget;",
+      "-}>>;",
+      "+type RouteTarget = (typeof ROUTE_TARGETS)[number];",
+      "-export interface ProjectShapeUnenumeratedHeading extends SurfacedUnenumeratedHeading {",
+      "+interface ProjectShapeUnenumeratedHeading extends SurfacedUnenumeratedHeading {",
+      "-export interface ProjectShapeBuildInput {",
+      "+interface ProjectShapeBuildInput {"
+     ]
+    },
+    {
+     "file": "project-shape-model.js",
+     "explained": true,
+     "problems": [],
+     "removedOrAddedLines": [
+      "-export const ROUTE_ACTORS = ['owner', 'operator', 'agent'];",
+      "-export const ROUTE_VERBS = ['draft', 'capture', 'declare', 'consent', 'decide', 'adjudicate', 'repair', 'run'];",
+      "-export const ROUTE_TARGETS = ['artifact', 'act', 'policy', 'evaluation', 'external-work'];",
+      "-export const UNKNOWN_REASON_ACTIONS = {",
+      "+const ROUTE_ACTORS = ['owner', 'operator', 'agent'];",
+      "+const ROUTE_VERBS = ['draft', 'capture', 'declare', 'consent', 'decide', 'adjudicate', 'repair', 'run'];",
+      "+const ROUTE_TARGETS = ['artifact', 'act', 'policy', 'evaluation', 'external-work'];",
+      "+const UNKNOWN_REASON_ACTIONS = {"
+     ]
+    },
+    {
+     "file": "project-shape-observation.d.ts",
+     "explained": true,
+     "problems": [],
+     "removedOrAddedLines": [
+      "-export declare const PHASE_A_REFUSAL_REASONS: readonly [",
+      "+declare const PHASE_A_REFUSAL_REASONS: readonly [",
+      "-export type PhaseARefusalReason = (typeof PHASE_A_REFUSAL_REASONS)[number];",
+      "-export type PhaseAAdmission = {",
+      "+type PhaseARefusalReason = (typeof PHASE_A_REFUSAL_REASONS)[number];",
+      "+type PhaseAAdmission = {",
+      "-export declare const PHASE_A_READ_OUTCOMES: readonly [",
+      "+declare const PHASE_A_READ_OUTCOMES: readonly [",
+      "-export type PhaseAReadOutcome = (typeof PHASE_A_READ_OUTCOMES)[number];",
+      "-export interface PhaseAReadRecord {",
+      "+type PhaseAReadOutcome = (typeof PHASE_A_READ_OUTCOMES)[number];",
+      "+interface PhaseAReadRecord {",
+      "-export type AuthorityInputIdentity = {",
+      "+type AuthorityInputIdentity = {",
+      "-export interface ObserveProjectShapeSourcesInput {",
+      "+interface ObserveProjectShapeSourcesInput {",
+      "-export interface PhaseASeedReaderDeps {",
+      "+interface PhaseASeedReaderDeps {",
+      "+export {};"
+     ]
+    },
+    {
+     "file": "project-shape-observation.js",
+     "explained": true,
+     "problems": [],
+     "removedOrAddedLines": [
+      "-export const PHASE_A_REFUSAL_REASONS = [",
+      "+const PHASE_A_REFUSAL_REASONS = [",
+      "-export const PHASE_A_READ_OUTCOMES = [",
+      "+const PHASE_A_READ_OUTCOMES = ["
+     ]
+    },
+    {
+     "file": "project-shape-observer.d.ts",
+     "explained": true,
+     "problems": [],
+     "removedOrAddedLines": [
+      "-export interface ProjectShapeReadContext {",
+      "+interface ProjectShapeReadContext {",
+      "-export type ProjectShapeObservation<T> = {",
+      "+type ProjectShapeObservation<T> = {",
+      "+export {};"
+     ]
+    },
+    {
+     "file": "proposed-work.d.ts",
+     "explained": true,
+     "problems": [],
+     "removedOrAddedLines": [
+      "-export declare const PROPOSED_WORK_LIFECYCLE_STATES: readonly [",
+      "+declare const PROPOSED_WORK_LIFECYCLE_STATES: readonly [",
+      "-export type ProposedWorkLifecycleState = (typeof PROPOSED_WORK_LIFECYCLE_STATES)[number];",
+      "-export interface ProposedWorkArtifact {",
+      "+type ProposedWorkLifecycleState = (typeof PROPOSED_WORK_LIFECYCLE_STATES)[number];",
+      "+interface ProposedWorkArtifact {",
+      "-export type ProposedWorkLifecycle = {",
+      "+type ProposedWorkLifecycle = {",
+      "-export interface ParsedChangeDelta {",
+      "+interface ParsedChangeDelta {",
+      "-export interface DeriveProposedWorkInput {",
+      "+interface DeriveProposedWorkInput {",
+      "+export {};"
+     ]
+    },
+    {
+     "file": "proposed-work.js",
+     "explained": true,
+     "problems": [],
+     "removedOrAddedLines": [
+      "-export const PROPOSED_WORK_LIFECYCLE_STATES = ['active', 'archived'];",
+      "+const PROPOSED_WORK_LIFECYCLE_STATES = ['active', 'archived'];"
+     ]
+    },
+    {
+     "file": "reevaluation.d.ts",
+     "explained": true,
+     "problems": [],
+     "removedOrAddedLines": [
+      "-export interface EvaluationClocks {",
+      "+interface EvaluationClocks {",
+      "-export type ObservedProjectLimb = {",
+      "+type ObservedProjectLimb = {",
+      "-export interface ReevaluationInput {",
+      "+interface ReevaluationInput {",
+      "+export {};"
+     ]
+    },
+    {
+     "file": "resource-headroom.d.ts",
+     "explained": true,
+     "problems": [],
+     "removedOrAddedLines": [
+      "-export type ResourceHeadroomId = `resource-headroom:${keyof PwbResourceLimits}`;",
+      "+type ResourceHeadroomId = `resource-headroom:${keyof PwbResourceLimits}`;",
+      "-export declare const RESOURCE_COST_ID: \"resource-cost\";",
+      "-export type ResourceCost = ({",
+      "+declare const RESOURCE_COST_ID: \"resource-cost\";",
+      "+type ResourceCost = ({",
+      "-export declare function resourceHeadroomId(limit: keyof PwbResourceLimits): ResourceHeadroomId;",
+      "+export {};"
+     ]
+    },
+    {
+     "file": "resource-headroom.js",
+     "explained": true,
+     "problems": [],
+     "removedOrAddedLines": [
+      "-export const RESOURCE_COST_ID = 'resource-cost';",
+      "-export function resourceHeadroomId(limit) {",
+      "+const RESOURCE_COST_ID = 'resource-cost';",
+      "+function resourceHeadroomId(limit) {"
+     ]
+    },
+    {
+     "file": "resource-ledger.d.ts",
+     "explained": true,
+     "problems": [],
+     "removedOrAddedLines": [
+      "-export interface TransientBody {",
+      "+interface TransientBody {",
+      "+export {};"
+     ]
+    },
+    {
+     "file": "response-identity.d.ts",
+     "explained": true,
+     "problems": [],
+     "removedOrAddedLines": [
+      "-export declare const RESPONSE_IDENTITY_EXCLUDES: readonly [",
+      "-    \"codeStructure.capturedAt\",",
+      "-    \"evaluation.asOf\",",
+      "-    \"projectShape.authority.evaluationId\",",
+      "-    \"projectShape.authority.evaluationInstant\",",
+      "-    \"projectShape.claim.evaluationId\",",
+      "-    \"projectShape.classes.baseline-spec.claim.evaluationId\",",
+      "-    \"projectShape.classes.catalog-entry.claim.evaluationId\",",
+      "-    \"projectShape.classes.craft-policy.claim.evaluationId\",",
+      "-    \"projectShape.classes.design-contract.claim.evaluationId\",",
+      "-    \"projectShape.classes.principle.claim.evaluationId\",",
+      "-    \"projectShape.classes.project-account-section.claim.evaluationId\",",
+      "-    \"projectShape.classes.roster-identity.claim.evaluationId\",",
+      "-    \"projectShape.classes.success-criterion.claim.evaluationId\",",
+      "-    \"projectShape.classes.topology-component.claim.evaluationId\",",
+      "-    \"projectShape.facts[].claim.evaluationId\",",
+      "-    \"projectShape.identity.capturedAt\",",
+      "-    \"projectShape.identity.deterministicInputs.authority.evaluationId\",",
+      "-    \"projectShape.items[].claim.evaluationId\",",
+      "-    \"projectShape.projectAccount[].claim.evaluationId\",",
+      "-    \"projectShape.sources[].claim.evaluationId\",",
+      "-    \"projectShape.sources[].stamp.capturedAt\",",
+      "-    \"proposedWork.currentAuthority.claim.evaluationId\",",
+      "-    \"walkthroughJudgment.evaluation.evaluationId\",",
+      "-    \"walkthroughJudgment.evaluation.evaluationInstant\",",
+      "-    \"workItems.capturedAt\"",
+      "-];",
+      "-export declare const RESPONSE_IDENTITY_STABLE_ACROSS: readonly [",
+      "-    \"daemon restart at one evaluation input set\"",
+      "-];",
+      "-export declare const RESPONSE_IDENTITY_VARYING_WITH: readonly [",
+      "-    \"butlers revision\",",
+      "-    \"observer revision\",",
+      "-    \"project shape\"",
+      "-];",
+      "-export interface ResponseIdentityPreimage {",
+      "+interface ResponseIdentityPreimage {",
+      "+export {};"
+     ]
+    },
+    {
+     "file": "response-identity.js",
+     "explained": true,
+     "problems": [],
+     "removedOrAddedLines": [
+      "-export const RESPONSE_IDENTITY_EXCLUDES = Object.freeze([",
+      "+const RESPONSE_IDENTITY_EXCLUDES = Object.freeze([",
+      "-export const RESPONSE_IDENTITY_STABLE_ACROSS = Object.freeze([",
+      "+const RESPONSE_IDENTITY_STABLE_ACROSS = Object.freeze([",
+      "-export const RESPONSE_IDENTITY_VARYING_WITH = Object.freeze([",
+      "+const RESPONSE_IDENTITY_VARYING_WITH = Object.freeze(["
+     ]
+    },
+    {
+     "file": "synthetic-corpus-coverage.d.ts",
+     "explained": true,
+     "problems": [],
+     "removedOrAddedLines": [
+      "-export type RepairKind = 'profile-row' | 'code-path';",
+      "-export interface ClassCellResult {",
+      "+type RepairKind = 'profile-row' | 'code-path';",
+      "+interface ClassCellResult {",
+      "+export {};"
+     ]
+    },
+    {
+     "file": "test-artifact-verification.d.ts",
+     "explained": true,
+     "problems": [],
+     "removedOrAddedLines": [
+      "-export declare function isOperatorReported(record: TestArtifactRecord): record is OperatorReportedTestArtifactRecord;",
+      "-export declare const TEST_ARTIFACT_RECORD_FILE_NAME: \"test-artifact-record.json\";",
+      "-export declare function testArtifactRecordPath(stateDir: string): string;",
+      "-export interface JUnitRootTotals {",
+      "+interface JUnitRootTotals {",
+      "-export declare function summarizeJUnitTotals(totals: JUnitRootTotals): string;",
+      "-export interface BuildOperatorReportedRecordInput {",
+      "+interface BuildOperatorReportedRecordInput {",
+      "-export type BuildOperatorReportedRecordResult = {",
+      "+type BuildOperatorReportedRecordResult = {",
+      "-export interface ResolveTestArtifactVerificationInput {",
+      "+interface ResolveTestArtifactVerificationInput {"
+     ]
+    },
+    {
+     "file": "test-artifact-verification.js",
+     "explained": true,
+     "problems": [],
+     "removedOrAddedLines": [
+      "-export function isOperatorReported(record) {",
+      "+function isOperatorReported(record) {",
+      "-export const TEST_ARTIFACT_RECORD_FILE_NAME = 'test-artifact-record.json';",
+      "+const TEST_ARTIFACT_RECORD_FILE_NAME = 'test-artifact-record.json';",
+      "-export function testArtifactRecordPath(stateDir) {",
+      "+function testArtifactRecordPath(stateDir) {",
+      "-export function summarizeJUnitTotals(totals) {",
+      "+function summarizeJUnitTotals(totals) {"
+     ]
+    },
+    {
+     "file": "trajectory-projection.d.ts",
+     "explained": true,
+     "problems": [],
+     "removedOrAddedLines": [
+      "-export interface TrajectoryProjectionObserved {",
+      "+interface TrajectoryProjectionObserved {",
+      "-export interface ProjectTrajectoryOptions {",
+      "+interface ProjectTrajectoryOptions {",
+      "+export {};"
+     ]
+    },
+    {
+     "file": "walkthrough-judgment.d.ts",
+     "explained": true,
+     "problems": [],
+     "removedOrAddedLines": [
+      "-export declare const RUN_RECORD_HOME: \".syzygy/governance/records/\";",
+      "-export declare const JUDGMENT_HOME: \".syzygy/governance/decisions/\";",
+      "-export declare const WALKTHROUGH_MODES: readonly [",
+      "+declare const WALKTHROUGH_MODES: readonly [",
+      "-export type WalkthroughMode = (typeof WALKTHROUGH_MODES)[number];",
+      "-export declare const VERDICT_VALUES: readonly [",
+      "+type WalkthroughMode = (typeof WALKTHROUGH_MODES)[number];",
+      "+declare const VERDICT_VALUES: readonly [",
+      "-export type VerdictValue = (typeof VERDICT_VALUES)[number];",
+      "-export declare const RUN_RECORD_INVALID_CASES: readonly [",
+      "+type VerdictValue = (typeof VERDICT_VALUES)[number];",
+      "+declare const RUN_RECORD_INVALID_CASES: readonly [",
+      "-export declare const JUDGMENT_FIELD_INVALID_CASES: readonly [",
+      "+declare const JUDGMENT_FIELD_INVALID_CASES: readonly [",
+      "-export declare const GOVERNANCE_HOME_INVALID_CASES: readonly [",
+      "+declare const GOVERNANCE_HOME_INVALID_CASES: readonly [",
+      "-export declare const JUDGMENT_ABSENT_CASES: readonly [",
+      "+declare const JUDGMENT_ABSENT_CASES: readonly [",
+      "-export type JudgmentAbsentCase = (typeof JUDGMENT_ABSENT_CASES)[number];",
+      "+type JudgmentAbsentCase = (typeof JUDGMENT_ABSENT_CASES)[number];",
+      "-export interface JudgmentActExpectation {",
+      "+interface JudgmentActExpectation {",
+      "-export interface JudgmentCorrelationRequest {",
+      "+interface JudgmentCorrelationRequest {",
+      "-export interface RfcJudgmentContradiction {",
+      "+interface RfcJudgmentContradiction {",
+      "-export interface RunRecordSummary {",
+      "+interface RunRecordSummary {",
+      "-export interface OwnerVerdict {",
+      "+interface OwnerVerdict {",
+      "-export type WalkthroughJudgmentOutcome = {",
+      "+type WalkthroughJudgmentOutcome = {",
+      "-export interface ParsedRunRecord {",
+      "+interface ParsedRunRecord {",
+      "-export interface ParsedJudgment {",
+      "-    readonly verdict: ParsedField<string>;",
+      "-    readonly rationale: ParsedField<string>;",
+      "-    readonly judgingParty: ParsedField<string>;",
+      "-    readonly runRecordReference: ParsedField<string>;",
+      "-}",
+      "-export declare function parseJudgment(text: string): ParsedJudgment;",
+      "+export {};"
+     ]
+    },
+    {
+     "file": "walkthrough-judgment.js",
+     "explained": true,
+     "problems": [],
+     "removedOrAddedLines": [
+      "-export const RUN_RECORD_HOME = '.syzygy/governance/records/';",
+      "-export const JUDGMENT_HOME = '.syzygy/governance/decisions/';",
+      "+const RUN_RECORD_HOME = '.syzygy/governance/records/';",
+      "+const JUDGMENT_HOME = '.syzygy/governance/decisions/';",
+      "-export const WALKTHROUGH_MODES = ['nonvisual-keyboard-only', 'visual-pointer'];",
+      "-export const VERDICT_VALUES = ['met', 'not-met'];",
+      "-export const RUN_RECORD_INVALID_CASES = [",
+      "+const WALKTHROUGH_MODES = ['nonvisual-keyboard-only', 'visual-pointer'];",
+      "+const VERDICT_VALUES = ['met', 'not-met'];",
+      "+const RUN_RECORD_INVALID_CASES = [",
+      "-export const JUDGMENT_FIELD_INVALID_CASES = [",
+      "+const JUDGMENT_FIELD_INVALID_CASES = [",
+      "-export const GOVERNANCE_HOME_INVALID_CASES = [",
+      "+const GOVERNANCE_HOME_INVALID_CASES = [",
+      "-export const JUDGMENT_ABSENT_CASES = ['no-run-record', 'no-judgment'];",
+      "+const JUDGMENT_ABSENT_CASES = ['no-run-record', 'no-judgment'];",
+      "-export function parseJudgment(text) {",
+      "+function parseJudgment(text) {"
+     ]
+    },
+    {
+     "file": "walkthrough-readiness.d.ts",
+     "explained": true,
+     "problems": [],
+     "removedOrAddedLines": [
+      "-export type AnswerIdentity = (typeof ANSWER_IDENTITIES)[number];",
+      "-export type ReadinessArm = (typeof READINESS_ARMS)[number];",
+      "-export declare const ANSWERS_SECTION: \"Answers\";",
+      "+type ReadinessArm = (typeof READINESS_ARMS)[number];",
+      "-export interface AnswerAnchor {",
+      "+interface AnswerAnchor {",
+      "-export interface RetainedAnswer {",
+      "+interface RetainedAnswer {",
+      "-export interface ReadinessFinding {",
+      "+interface ReadinessFinding {"
+     ]
+    },
+    {
+     "file": "walkthrough-readiness.js",
+     "explained": true,
+     "problems": [],
+     "removedOrAddedLines": [
+      "-export const ANSWERS_SECTION = 'Answers';",
+      "+const ANSWERS_SECTION = 'Answers';"
+     ]
+    },
+    {
+     "file": "work-items.d.ts",
+     "explained": true,
+     "problems": [],
+     "removedOrAddedLines": [
+      "-export declare const WORK_ITEM_STATUSES: readonly [",
+      "+declare const WORK_ITEM_STATUSES: readonly [",
+      "-export interface WorkItemTitlesWithheld {",
+      "+interface WorkItemTitlesWithheld {",
+      "-export declare const WORK_ITEM_TITLES_WITHHELD_BASIS = \"Work-item titles are withheld under SEC-5: a title is free text, the only declared secret-classification policy covers declared-project-shape-text and none covers work-item titles, so the observation never reads them. Each item is named by its identifier.\";",
+      "-export interface WorkItemsUnknown {",
+      "+interface WorkItemsUnknown {",
+      "-export interface ObserveWorkItemsInput {",
+      "+interface ObserveWorkItemsInput {",
+      "+export {};"
+     ]
+    },
+    {
+     "file": "work-items.js",
+     "explained": true,
+     "problems": [],
+     "removedOrAddedLines": [
+      "-export const WORK_ITEM_STATUSES = [",
+      "+const WORK_ITEM_STATUSES = [",
+      "-export const WORK_ITEM_TITLES_WITHHELD_BASIS = 'Work-item titles are withheld under SEC-5: a title is free text, the only declared secret-classification policy covers declared-project-shape-text and none covers work-item titles, so the observation never reads them. Each item is named by its identifier.';",
+      "+const WORK_ITEM_TITLES_WITHHELD_BASIS = 'Work-item titles are withheld under SEC-5: a title is free text, the only declared secret-classification policy covers declared-project-shape-text and none covers work-item titles, so the observation never reads them. Each item is named by its identifier.';"
+     ]
+    },
+    {
+     "file": "worker-change-observation.d.ts",
+     "explained": true,
+     "problems": [],
+     "removedOrAddedLines": [
+      "-export declare const WORKER_CHANGE_LIFECYCLE_STATES: readonly [",
+      "+declare const WORKER_CHANGE_LIFECYCLE_STATES: readonly [",
+      "-export type WorkerChangeLifecycleState = (typeof WORKER_CHANGE_LIFECYCLE_STATES)[number];",
+      "+type WorkerChangeLifecycleState = (typeof WORKER_CHANGE_LIFECYCLE_STATES)[number];",
+      "-export interface WorkerChangeUnknown {",
+      "+interface WorkerChangeUnknown {",
+      "-export interface ObserveWorkerChangeInput {",
+      "+interface ObserveWorkerChangeInput {",
+      "+export {};"
+     ]
+    },
+    {
+     "file": "worker-change-observation.js",
+     "explained": true,
+     "problems": [],
+     "removedOrAddedLines": [
+      "-export const WORKER_CHANGE_LIFECYCLE_STATES = ['planned', 'active', 'changed-or-merged'];",
+      "+const WORKER_CHANGE_LIFECYCLE_STATES = ['planned', 'active', 'changed-or-merged'];"
+     ]
+    }
+   ]
+  },
+  {
+   "project": "apps/syzygy",
+   "filesCompared": 2,
+   "onlyInBase": [],
+   "onlyInHead": [],
+   "differingAfterCommentStrip": []
+  },
+  {
+   "project": "apps/three-surface-poc",
+   "filesCompared": 184,
+   "onlyInBase": [],
+   "onlyInHead": [],
+   "differingAfterCommentStrip": []
+  },
+  {
+   "project": "packages/cap1-system",
+   "filesCompared": 0,
+   "onlyInBase": [],
+   "onlyInHead": [],
+   "differingAfterCommentStrip": []
+  },
+  {
+   "project": "packages/polaris-generation-core",
+   "filesCompared": 50,
+   "onlyInBase": [],
+   "onlyInHead": [],
+   "differingAfterCommentStrip": []
+  },
+  {
+   "project": "packages/polaris-generation-consent",
+   "filesCompared": 20,
+   "onlyInBase": [],
+   "onlyInHead": [],
+   "differingAfterCommentStrip": []
+  },
+  {
+   "project": "packages/polaris-dossier",
+   "filesCompared": 84,
+   "onlyInBase": [],
+   "onlyInHead": [],
+   "differingAfterCommentStrip": []
+  }
+ ],
+ "filesCompared": 484,
+ "filesDiffering": 54,
+ "unexportedNamesGiven": 185,
+ "filesDifferingExplained": 54,
+ "linesRemovedAndAdded": {
+  "removed": 299,
+  "added": 233
+ },
+ "filesInOnlyOneTree": 0
+}

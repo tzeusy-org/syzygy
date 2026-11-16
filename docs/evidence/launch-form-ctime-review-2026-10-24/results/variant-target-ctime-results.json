@@ -1,0 +1,144 @@
+{
+ "tmpdir": "/tmp/r519-2",
+ "filesystem": "tmpfs",
+ "kernel": "7.0.0-38-generic",
+ "commit": "3fb7380945bd8ac0374e38792a814aed070bd8c6",
+ "base": "ce322e1a65b784c6304d51b05fb347351912a926",
+ "testSha256": {
+  "variant": "9815465501909b50279ab600e405f8f399d4b7b3165acc3dbe50cff314e283ec"
+ },
+ "readerSha256": "c7a25b8b45fe12e2add7874f88d46b2bad1eef16ffa4a17e2464d5c671424921",
+ "command": "npx vitest run --project @syzygy/polaris-dossier --reporter=json --outputFile=/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/work/rev519-vitest.json packages/polaris-dossier/src/launched.test.ts",
+ "mutants": [
+  {
+   "id": "unmutated",
+   "side": "variant",
+   "exitCode": 0,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 43,
+    "numFailedTests": 0
+   },
+   "failed": []
+  },
+  {
+   "id": "R-chmod-cycle-rewrite (from the record)",
+   "side": "variant",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { const p = path.join(runDir, RUN_LAYOUT.launched); const s = fs.lstatSync(p); if (s.isFile() && (s.mode & 0o777) === 0) { fs.chmodSync(p, 0o600); fs.writeFileSync(p, ' '.repeat(s.size)); fs.chmodSync(p, 0o000); } } catch { /* reviewer mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "exitCode": 1,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 42,
+    "numFailedTests": 1
+   },
+   "outcome": "killed",
+   "failedRows": [
+    "a file its reader may not read"
+   ],
+   "otherFailed": [],
+   "firstFailure": {
+    "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a file its reader may not read",
+    "message": "AssertionError: expected { mode: 32768n, ino: 160151700n, \u2026(5) } to deeply equal { mode: 32768n, ino: 160151700n, \u2026(5) }\n    at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/packages/polaris-dossier/src/launched.test.ts:143:35)\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/packages/polaris-dossier/src/launched.test.ts:148:12\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:861:59\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/node_mo"
+   },
+   "restored": true
+  },
+  {
+   "id": "O1-same-bytes-rewrite",
+   "side": "variant",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { const p = path.join(runDir, RUN_LAYOUT.launched); const s = fs.lstatSync(p); if (fs.statSync(p).isFile()) { const b = fs.readFileSync(p); fs.writeFileSync(p, b); } } catch { /* rev519 mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "exitCode": 1,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 32,
+    "numFailedTests": 11
+   },
+   "outcome": "killed",
+   "failedRows": [
+    "JSON null",
+    "a JSON array",
+    "a JSON string",
+    "a byte-order mark before the marker",
+    "a format that is not a string",
+    "a marker of 4097 bytes, one past the bound",
+    "a symbolic link to the marker Syzygy writes",
+    "an empty file",
+    "another format",
+    "invalid JSON",
+    "no format"
+   ],
+   "otherFailed": [],
+   "firstFailure": {
+    "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: an empty file",
+    "message": "AssertionError: expected { mode: 33188n, ino: 160157436n, \u2026(5) } to deeply equal { mode: 33188n, ino: 160157436n, \u2026(5) }\n    at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/packages/polaris-dossier/src/launched.test.ts:143:35)\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/packages/polaris-dossier/src/launched.test.ts:148:12\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:861:59\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/node_mo"
+   },
+   "restored": true
+  },
+  {
+   "id": "O5-fifo-drain-and-refill",
+   "side": "variant",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { const p = path.join(runDir, RUN_LAYOUT.launched); const s = fs.lstatSync(p); if (s.isFIFO()) { const r = fs.openSync(p, fs.constants.O_RDONLY | fs.constants.O_NONBLOCK); const b = Buffer.alloc(65536); let n = 0; try { n = fs.readSync(r, b, 0, b.length, null); } catch { n = 0; } const w = fs.openSync(p, fs.constants.O_WRONLY | fs.constants.O_NONBLOCK); if (n > 0) fs.writeSync(w, b, 0, n); fs.closeSync(w); fs.closeSync(r); } } catch { /* rev519 mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "exitCode": 1,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 42,
+    "numFailedTests": 1
+   },
+   "outcome": "killed",
+   "failedRows": [
+    "a FIFO holding the marker's bytes"
+   ],
+   "otherFailed": [],
+   "firstFailure": {
+    "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a FIFO holding the marker's bytes",
+    "message": "AssertionError: expected { mode: 4516n, ino: 160161529n, \u2026(5) } to deeply equal { mode: 4516n, ino: 160161529n, \u2026(5) }\n    at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/packages/polaris-dossier/src/launched.test.ts:143:35)\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/packages/polaris-dossier/src/launched.test.ts:148:12\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:861:59\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/node_modu"
+   },
+   "restored": true
+  },
+  {
+   "id": "O8-link-target-chmod-cycle-rewrite",
+   "side": "variant",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { const p = path.join(runDir, RUN_LAYOUT.launched); const s = fs.lstatSync(p); if (s.isSymbolicLink()) { const t = fs.statSync(p); if (t.isFile()) { const b = fs.readFileSync(p); fs.chmodSync(p, 0); fs.chmodSync(p, 0o600); fs.writeFileSync(p, b); fs.chmodSync(p, t.mode & 0o777); } } } catch { /* rev519 mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "exitCode": 1,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 42,
+    "numFailedTests": 1
+   },
+   "outcome": "killed",
+   "failedRows": [
+    "a symbolic link to the marker Syzygy writes"
+   ],
+   "otherFailed": [],
+   "firstFailure": {
+    "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to the marker Syzygy writes",
+    "message": "AssertionError: expected { mode: 41471n, ino: 160163324n, \u2026(5) } to deeply equal { mode: 41471n, ino: 160163324n, \u2026(5) }\n    at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/packages/polaris-dossier/src/launched.test.ts:143:35)\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/packages/polaris-dossier/src/launched.test.ts:148:12\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:861:59\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-519/clone/node_mo"
+   },
+   "restored": true
+  }
+ ],
+ "trackedTreeCleanAfter": true
+}

@@ -1,0 +1,21 @@
+# junit/fixture differential re-run (reviewer), Node v24.6.0
+8f58818c4a978473e4a8463f56701248f0d8c3ad8b6d13dc8b852f71074750bb  base.json
+8f58818c4a978473e4a8463f56701248f0d8c3ad8b6d13dc8b852f71074750bb  base2.json
+8f58818c4a978473e4a8463f56701248f0d8c3ad8b6d13dc8b852f71074750bb  head.json
+8f58818c4a978473e4a8463f56701248f0d8c3ad8b6d13dc8b852f71074750bb  pins-head.json
+8f58818c4a978473e4a8463f56701248f0d8c3ad8b6d13dc8b852f71074750bb  pins-head2.json
+8f58818c4a978473e4a8463f56701248f0d8c3ad8b6d13dc8b852f71074750bb  lane:junit-fixture-differential-base-f7477f52.json
+8f58818c4a978473e4a8463f56701248f0d8c3ad8b6d13dc8b852f71074750bb  lane:junit-fixture-differential-head-b214ef10.json
+## base.json = base-clone f7477f52 build; base2.json = same, second run; head.json = clone 663061c4 build; pins-head.json = pins-clone b214ef10 build; pins-head2.json = pins-clone after restoring both mutated dist files
+## compare-rows.py base vs head:
+{'rowsOld': 40, 'rowsNew': 40, 'rowsCompared': 40, 'rowsThatDiffer': 0, 'rowsOnlyInOld': 0, 'rowsOnlyInNew': 0}
+exit=0
+## mutated INPUT (one built row's digest edited in head.json):
+1 [{'row': 'A-junitDigest/passing-subarray-view-offset-17', 'keys': ['result']}]
+exit=1
+## mutated BUILD, junitDigest over new Uint8Array(rawJUnit.buffer) in pins-clone dist:
+40 9 ['A-junitDigest/empty-run-exit-5', 'A-junitDigest/failing-exit-1', 'A-junitDigest/invalid-utf8-tail', 'A-junitDigest/multibyte-names', 'A-junitDigest/passing-buffer', 'A-junitDigest/passing-pooled-small-buffer', 'A-junitDigest/passing-subarray-view-offset-17', 'A-junitDigest/passing-uint8array-view-offset-5', 'A-junitDigest/utf8-bom']
+exit=1
+## mutated BUILD, fixture sha256 replaced by a latin1 local copy in pins-clone dist:
+40 25 ['default', 'lone-surrogate-answer-text', 'no-answers-section', 'non-ascii-answer-text', 'traversed-one-route']
+exit=1

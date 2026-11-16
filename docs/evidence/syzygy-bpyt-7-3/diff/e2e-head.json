@@ -1,0 +1,1266 @@
+{
+ "entry": "apps/syzygy/dist/main.js",
+ "runs": [
+  {
+   "kind": "complete",
+   "signals": [
+    "SIGINT"
+   ],
+   "requests": [
+    {
+     "method": "GET",
+     "target": "/",
+     "auth": "none",
+     "status": 200,
+     "headers": [
+      [
+       "content-type",
+       "text/html; charset=utf-8"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "<!doctype html>\n<html lang=\"en\">\n<head><meta charset=\"utf-8\"><title>Project prj-sys-fixture — served facts</title><style>body{font-family:system-ui,sans-serif;margin:2rem auto;max-width:52rem;line-height:1.5;padding:0 1rem}section{margin:1.5rem 0}details{border:1px solid currentColor;padding:.5rem;margin:.5rem 0}summary{cursor:pointer}dt{font-weight:bold}code{font-family:ui-monospace,monospace}</style></head>\n<body data-evaluation-kind=\"project-evaluated\" data-non-citable=\"true\" data-artifact-class=\"presentation-artifact\">\n<header><h1>Project prj-sys-fixture</h1><p data-selection=\"project:prj-sys-fixture\" data-scenario-context=\"daemon-runtime\" data-evaluation-snapshot=\"daemon-start-<ISO>\" data-evaluation-as-of=\"<ISO>\">Selection <code>project:prj-sys-fixture</code>, evaluated at snapshot <code>daemon-start-<ISO></code> as of <code><ISO></code>, scenario context <code>daemon-runtime</code>.</p><p data-artifact-class=\"presentation-artifact\" data-non-citable=\"true\">This page is a generated presentation artifact — never a citable basis for any fact it renders.</p></header>\n<section class=\"answers\" data-section=\"shape-answers\"><h2>The seven shape answers</h2>\n<article class=\"answer\" data-answer-name=\"Registered\" data-answer-value=\"satisfied\" data-epistemic-label=\"Observed\"><h3>Registered</h3><p>Answer: <span class=\"answer-value\">satisfied</span> <span class=\"answer-label\">[Observed]</span></p><details data-explains=\"Registered\" data-explanation-served=\"true\"><summary>Why this answer?</summary><dl><dt>Evaluation identity</dt><dd data-evaluation-snapshot=\"daemon-start-<ISO>\" data-evaluation-as-of=\"<ISO>\">snapshot <code>daemon-start-<ISO></code>, as of <code><ISO></code></dd><dt>Selection</dt><dd>project:prj-sys-fixture</dd><dt>Scenario context</dt><dd>daemon-runtime</dd><dt>Evidence classification</dt><dd data-epistemic-label=\"Observed\">label Observed</dd><dt>Coverage and consent boundary</dt><dd><span class=\"coverage-record\" data-repository-id=\"repo-governance-root\" data-coverage-state=\"observed\" data-consent-state=\"in-force\">repo-governance-root: observed; consent consent-gov-root in-force; captured scope repository-root</span> </dd><dt>Constituent facts (scope project:prj-sys-fixture)</dt><dd><ul><li data-constituent-fact=\"declaration\">declaration: revision daemon-start-<ISO></li><li data-constituent-fact=\"validation\">validation: valid</li><li data-constituent-fact=\"root-designation\">root-designation: declared-location</li></ul><p>Stated basis: declaration, validation, root-designation</p></dd><dt>Explanation classes present</dt><dd data-present-classes=\"evidenceClassification evaluation coverageAndConsentBoundary\">evidenceClassification, evaluation, coverageAndConsentBoundary</dd><dt>Internal references</dt><dd data-reference-count=\"2\" data-unresolved-count=\"0\">2 followed; unresolved: none of the followed set</dd></dl></details></article>\n<article class=\"answer\" data-answer-name=\"Shape present\" data-answer-value=\"Unknown\" data-epistemic-label=\"Unknown\"><h3>Shape present</h3><p>Answer: <span class=\"answer-value\">Unknown</span> <span class=\"answer-label\">[Unknown]</span></p><p class=\"answer-reason\" data-unknown-reason-primary=\"missing-declaration\">reason: missing-declaration</p><details data-explains=\"Shape present\" data-explanation-served=\"true\"><summary>Why this answer?</summary><dl><dt>Evaluation identity</dt><dd data-evaluation-snapshot=\"daemon-start-<ISO>\" data-evaluation-as-of=\"<ISO>\">snapshot <code>daemon-start-<ISO></code>, as of <code><ISO></code></dd><dt>Selection</dt><dd>project:prj-sys-fixture</dd><dt>Scenario context</dt><dd>daemon-runtime</dd><dt>Evidence classification</dt><dd data-epistemic-label=\"Unknown\">label Unknown</dd><dt>Unknown reasons</dt><dd data-unknown-reason-primary=\"missing-declaration\">primary: missing-declaration; secondary: []</dd><dt>Coverage and consent boundary</dt><dd><span class=\"coverage-record\" data-repository-id=\"repo-governance-root\" data-coverage-state=\"observed\" data-consent-state=\"in-force\">repo-governance-root: observed; consent consent-gov-root in-force; captured scope repository-root</span> </dd><dt>Constituent facts (scope project:prj-sys-fixture)</dt><dd><ul><li data-constituent-fact=\"declarations-references\">declarations-references: absent — no validated declaration supplies the reference list</li></ul><p>Stated basis: declarations-references</p></dd><dt>Explanation classes present</dt><dd data-present-classes=\"evidenceClassification evaluation unknownReasons coverageAndConsentBoundary\">evidenceClassification, evaluation, unknownReasons, coverageAndConsentBoundary</dd><dt>Internal references</dt><dd data-reference-count=\"2\" data-unresolved-count=\"0\">2 followed; unresolved: none of the followed set</dd></dl></details></article>\n<article class=\"answer\" data-answer-name=\"Human-understandable\" data-answer-value=\"Unknown\" data-epistemic-label=\"Unknown\"><h3>Human-understandable</h3><p>Answer: <span class=\"answer-value\">Unknown</span> <span class=\"answer-label\">[Unknown]</span></p><p class=\"answer-reason\" data-unknown-reason-primary=\"missing-evidence\">reason: missing-evidence</p><details data-explains=\"Human-understandable\" data-explanation-served=\"true\"><summary>Why this answer?</summary><dl><dt>Evaluation identity</dt><dd data-evaluation-snapshot=\"daemon-start-<ISO>\" data-evaluation-as-of=\"<ISO>\">snapshot <code>daemon-start-<ISO></code>, as of <code><ISO></code></dd><dt>Selection</dt><dd>project:prj-sys-fixture</dd><dt>Scenario context</dt><dd>daemon-runtime</dd><dt>Evidence classification</dt><dd data-epistemic-label=\"Unknown\">label Unknown</dd><dt>Unknown reasons</dt><dd data-unknown-reason-primary=\"missing-evidence\">primary: missing-evidence; secondary: []</dd><dt>Coverage and consent boundary</dt><dd><span class=\"coverage-record\" data-repository-id=\"repo-governance-root\" data-coverage-state=\"observed\" data-consent-state=\"in-force\">repo-governance-root: observed; consent consent-gov-root in-force; captured scope repository-root</span> </dd><dt>Constituent facts (scope project:prj-sys-fixture)</dt><dd><ul><li data-constituent-fact=\"comprehension-records\">comprehension-records: none recorded</li></ul><p>Stated basis: comprehension-records</p></dd><dt>Explanation classes present</dt><dd data-present-classes=\"evidenceClassification evaluation unknownReasons coverageAndConsentBoundary\">evidenceClassification, evaluation, unknownReasons, coverageAndConsentBoundary</dd><dt>Internal references</dt><dd data-reference-count=\"2\" data-unresolved-count=\"0\">2 followed; unresolved: none of the followed set</dd></dl></details></article>\n<article class=\"answer\" data-answer-name=\"Observable\" data-answer-value=\"satisfied\" data-epistemic-label=\"Observed\"><h3>Observable</h3><p>Answer: <span class=\"answer-value\">satisfied</span> <span class=\"answer-label\">[Observed]</span></p><details data-explains=\"Observable\" data-explanation-served=\"true\"><summary>Why this answer?</summary><dl><dt>Evaluation identity</dt><dd data-evaluation-snapshot=\"daemon-start-<ISO>\" data-evaluation-as-of=\"<ISO>\">snapshot <code>daemon-start-<ISO></code>, as of <code><ISO></code></dd><dt>Selection</dt><dd>project:prj-sys-fixture</dd><dt>Scenario context</dt><dd>daemon-runtime</dd><dt>Evidence classification</dt><dd data-epistemic-label=\"Observed\">label Observed</dd><dt>Coverage and consent boundary</dt><dd><span class=\"coverage-record\" data-repository-id=\"repo-governance-root\" data-coverage-state=\"observed\" data-consent-state=\"in-force\">repo-governance-root: observed; consent consent-gov-root in-force; captured scope repository-root</span> </dd><dt>Constituent facts (scope project:prj-sys-fixture)</dt><dd><ul><li data-constituent-fact=\"repository:repo-governance-root\">repository:repo-governance-root: observed; consent consent-gov-root in-force; captured scope repository-root</li></ul><p>Stated basis: repository:repo-governance-root</p></dd><dt>Explanation classes present</dt><dd data-present-classes=\"evidenceClassification evaluation coverageAndConsentBoundary\">evidenceClassification, evaluation, coverageAndConsentBoundary</dd><dt>Internal references</dt><dd data-reference-count=\"2\" data-unresolved-count=\"0\">2 followed; unresolved: none of the followed set</dd></dl></details></article>\n<article class=\"answer\" data-answer-name=\"Traceable\" data-answer-value=\"Unknown\" data-epistemic-label=\"Unknown\"><h3>Traceable</h3><p>Answer: <span class=\"answer-value\">Unknown</span> <span class=\"answer-label\">[Unknown]</span></p><p class=\"answer-reason\" data-unknown-reason-primary=\"missing-evidence\">reason: missing-evidence</p><details data-explains=\"Traceable\" data-explanation-served=\"true\"><summary>Why this answer?</summary><dl><dt>Evaluation identity</dt><dd data-evaluation-snapshot=\"daemon-start-<ISO>\" data-evaluation-as-of=\"<ISO>\">snapshot <code>daemon-start-<ISO></code>, as of <code><ISO></code></dd><dt>Selection</dt><dd>project:prj-sys-fixture</dd><dt>Scenario context</dt><dd>daemon-runtime</dd><dt>Evidence classification</dt><dd data-epistemic-label=\"Unknown\">label Unknown</dd><dt>Unknown reasons</dt><dd data-unknown-reason-primary=\"missing-evidence\">primary: missing-evidence; secondary: []</dd><dt>Coverage and consent boundary</dt><dd><span class=\"coverage-record\" data-repository-id=\"repo-governance-root\" data-coverage-state=\"observed\" data-consent-state=\"in-force\">repo-governance-root: observed; consent consent-gov-root in-force; captured scope repository-root</span> </dd><dt>Constituent facts (scope project:prj-sys-fixture)</dt><dd><ul><li data-constituent-fact=\"link-resolution\">link-resolution: not computed at this evaluation</li></ul><p>Stated basis: link-resolution</p></dd><dt>Explanation classes present</dt><dd data-present-classes=\"evidenceClassification evaluation unknownReasons coverageAndConsentBoundary\">evidenceClassification, evaluation, unknownReasons, coverageAndConsentBoundary</dd><dt>Internal references</dt><dd data-reference-count=\"2\" data-unresolved-count=\"0\">2 followed; unresolved: none of the followed set</dd></dl></details></article>\n<article class=\"answer\" data-answer-name=\"Mission-ready\" data-answer-value=\"not evaluated\" data-epistemic-label=\"Unknown\"><h3>Mission-ready</h3><p>Answer: <span class=\"answer-value\">not evaluated</span> <span class=\"answer-label\">[Unknown]</span></p><p class=\"answer-basis\" data-unknown-basis=\"deferred\">basis: deferred</p><details data-explains=\"Mission-ready\" data-explanation-served=\"true\"><summary>Why this answer?</summary><dl><dt>Evaluation identity</dt><dd data-evaluation-snapshot=\"daemon-start-<ISO>\" data-evaluation-as-of=\"<ISO>\">snapshot <code>daemon-start-<ISO></code>, as of <code><ISO></code></dd><dt>Selection</dt><dd>project:prj-sys-fixture</dd><dt>Scenario context</dt><dd>daemon-runtime</dd><dt>Evidence classification</dt><dd data-epistemic-label=\"Unknown\">label Unknown</dd><dt>Coverage and consent boundary</dt><dd><span class=\"coverage-record\" data-repository-id=\"repo-governance-root\" data-coverage-state=\"observed\" data-consent-state=\"in-force\">repo-governance-root: observed; consent consent-gov-root in-force; captured scope repository-root</span> </dd><dt>Constituent facts (scope project:prj-sys-fixture)</dt><dd><ul><li data-constituent-fact=\"mission-contracts\">mission-contracts: unaccepted — posture deferred (SDR-36 rule 3)</li></ul><p>Stated basis: mission-contracts</p></dd><dt>Explanation classes present</dt><dd data-present-classes=\"evidenceClassification evaluation coverageAndConsentBoundary\">evidenceClassification, evaluation, coverageAndConsentBoundary</dd><dt>Internal references</dt><dd data-reference-count=\"2\" data-unresolved-count=\"0\">2 followed; unresolved: none of the followed set</dd></dl></details></article>\n<article class=\"answer\" data-answer-name=\"Reconciled\" data-answer-value=\"Unknown\" data-epistemic-label=\"Unknown\"><h3>Reconciled</h3><p>Answer: <span class=\"answer-value\">Unknown</span> <span class=\"answer-label\">[Unknown]</span></p><p class=\"answer-reason\" data-unknown-reason-primary=\"missing-evidence\">reason: missing-evidence</p><details data-explains=\"Reconciled\" data-explanation-served=\"true\"><summary>Why this answer?</summary><dl><dt>Evaluation identity</dt><dd data-evaluation-snapshot=\"daemon-start-<ISO>\" data-evaluation-as-of=\"<ISO>\">snapshot <code>daemon-start-<ISO></code>, as of <code><ISO></code></dd><dt>Selection</dt><dd>project:prj-sys-fixture</dd><dt>Scenario context</dt><dd>daemon-runtime</dd><dt>Evidence classification</dt><dd data-epistemic-label=\"Unknown\">label Unknown</dd><dt>Unknown reasons</dt><dd data-unknown-reason-primary=\"missing-evidence\">primary: missing-evidence; secondary: []</dd><dt>Coverage and consent boundary</dt><dd><span class=\"coverage-record\" data-repository-id=\"repo-governance-root\" data-coverage-state=\"observed\" data-consent-state=\"in-force\">repo-governance-root: observed; consent consent-gov-root in-force; captured scope repository-root</span> </dd><dt>Constituent facts (scope project:prj-sys-fixture)</dt><dd><ul><li data-constituent-fact=\"reconciliation\">reconciliation: not computed at this evaluation</li></ul><p>Stated basis: reconciliation</p></dd><dt>Explanation classes present</dt><dd data-present-classes=\"evidenceClassification evaluation unknownReasons coverageAndConsentBoundary\">evidenceClassification, evaluation, unknownReasons, coverageAndConsentBoundary</dd><dt>Internal references</dt><dd data-reference-count=\"2\" data-unresolved-count=\"0\">2 followed; unresolved: none of the followed set</dd></dl></details></article>\n<details class=\"aggregate\" data-membership-count=\"7\"><summary>Aggregate composition over 7 answers: Observed 2, Inferred 0, Unknown 5</summary><p>Per-primary-reason: missing-declaration 1, missing-evidence 3. Secondary annotations (disclosed separately, never folded in): none.</p><ul><li data-fact-name=\"Registered\" data-epistemic-label=\"Observed\"><span class=\"fact-name\">Registered</span>: <span class=\"fact-value\">satisfied</span> <span class=\"fact-label\">[Observed]</span></li><li data-fact-name=\"Shape present\" data-epistemic-label=\"Unknown\" data-unknown-reason=\"missing-declaration\"><span class=\"fact-name\">Shape present</span>: <span class=\"fact-value\">Unknown</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-reason\">(reason: missing-declaration)</span></li><li data-fact-name=\"Human-understandable\" data-epistemic-label=\"Unknown\" data-unknown-reason=\"missing-evidence\"><span class=\"fact-name\">Human-understandable</span>: <span class=\"fact-value\">Unknown</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-reason\">(reason: missing-evidence)</span></li><li data-fact-name=\"Observable\" data-epistemic-label=\"Observed\"><span class=\"fact-name\">Observable</span>: <span class=\"fact-value\">satisfied</span> <span class=\"fact-label\">[Observed]</span></li><li data-fact-name=\"Traceable\" data-epistemic-label=\"Unknown\" data-unknown-reason=\"missing-evidence\"><span class=\"fact-name\">Traceable</span>: <span class=\"fact-value\">Unknown</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-reason\">(reason: missing-evidence)</span></li><li data-fact-name=\"Mission-ready\" data-epistemic-label=\"Unknown\" data-unknown-basis=\"deferred\"><span class=\"fact-name\">Mission-ready</span>: <span class=\"fact-value\">not evaluated</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-basis\">(basis: deferred)</span></li><li data-fact-name=\"Reconciled\" data-epistemic-label=\"Unknown\" data-unknown-reason=\"missing-evidence\"><span class=\"fact-name\">Reconciled</span>: <span class=\"fact-value\">Unknown</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-reason\">(reason: missing-evidence)</span></li></ul></details>\n</section>\n<section class=\"disclosure\" data-section-heading=\"Further facts\"><h2>Further facts</h2><ul><li data-fact-name=\"Registered\" data-epistemic-label=\"Observed\"><span class=\"fact-name\">Registered</span>: <span class=\"fact-value\">satisfied</span> <span class=\"fact-label\">[Observed]</span></li><li data-fact-name=\"Shape present\" data-epistemic-label=\"Unknown\" data-unknown-reason=\"missing-declaration\"><span class=\"fact-name\">Shape present</span>: <span class=\"fact-value\">Unknown</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-reason\">(reason: missing-declaration)</span></li><li data-fact-name=\"Human-understandable\" data-epistemic-label=\"Unknown\" data-unknown-reason=\"missing-evidence\"><span class=\"fact-name\">Human-understandable</span>: <span class=\"fact-value\">Unknown</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-reason\">(reason: missing-evidence)</span></li><li data-fact-name=\"Observable\" data-epistemic-label=\"Observed\"><span class=\"fact-name\">Observable</span>: <span class=\"fact-value\">satisfied</span> <span class=\"fact-label\">[Observed]</span></li><li data-fact-name=\"Traceable\" data-epistemic-label=\"Unknown\" data-unknown-reason=\"missing-evidence\"><span class=\"fact-name\">Traceable</span>: <span class=\"fact-value\">Unknown</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-reason\">(reason: missing-evidence)</span></li><li data-fact-name=\"Mission-ready\" data-epistemic-label=\"Unknown\" data-unknown-basis=\"deferred\"><span class=\"fact-name\">Mission-ready</span>: <span class=\"fact-value\">not evaluated</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-basis\">(basis: deferred)</span></li><li data-fact-name=\"Reconciled\" data-epistemic-label=\"Unknown\" data-unknown-reason=\"missing-evidence\"><span class=\"fact-name\">Reconciled</span>: <span class=\"fact-value\">Unknown</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-reason\">(reason: missing-evidence)</span></li></ul></section>\n<section class=\"coverage\" data-section=\"coverage-and-consent\"><h2>Coverage and consent</h2><ul><li><span class=\"coverage-record\" data-repository-id=\"repo-governance-root\" data-coverage-state=\"observed\" data-consent-state=\"in-force\">repo-governance-root: observed; consent consent-gov-root in-force; captured scope repository-root</span> </li></ul></section>\n<section class=\"authority\" data-section=\"authority-exposure\"><h2>Authority exposure</h2><p data-state=\"absent\">No authority exposures were supplied at this evaluation.</p></section>\n<section class=\"discoverability\" data-section=\"discoverability\"><h2>Repository discoverability</h2><p data-state=\"absent\">No discoverability findings were supplied at this evaluation.</p></section>\n<section class=\"entry\" data-section=\"human-entry\"><h2>Human entry</h2><p data-entry-path=\".syzygy/intent/OVERVIEW.md\" data-entry-path-is-identity=\"false\">The project's one human entry is published at <code>.syzygy/intent/OVERVIEW.md</code> (a publication location, never an identity) — <a href=\"/entry\">read the entry document</a>.</p></section>\n</body>\n</html>"
+    },
+    {
+     "method": "GET",
+     "target": "/",
+     "auth": "right",
+     "status": 200,
+     "headers": [
+      [
+       "content-type",
+       "text/html; charset=utf-8"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "<!doctype html>\n<html lang=\"en\">\n<head><meta charset=\"utf-8\"><title>Project prj-sys-fixture — served facts</title><style>body{font-family:system-ui,sans-serif;margin:2rem auto;max-width:52rem;line-height:1.5;padding:0 1rem}section{margin:1.5rem 0}details{border:1px solid currentColor;padding:.5rem;margin:.5rem 0}summary{cursor:pointer}dt{font-weight:bold}code{font-family:ui-monospace,monospace}</style></head>\n<body data-evaluation-kind=\"project-evaluated\" data-non-citable=\"true\" data-artifact-class=\"presentation-artifact\">\n<header><h1>Project prj-sys-fixture</h1><p data-selection=\"project:prj-sys-fixture\" data-scenario-context=\"daemon-runtime\" data-evaluation-snapshot=\"daemon-start-<ISO>\" data-evaluation-as-of=\"<ISO>\">Selection <code>project:prj-sys-fixture</code>, evaluated at snapshot <code>daemon-start-<ISO></code> as of <code><ISO></code>, scenario context <code>daemon-runtime</code>.</p><p data-artifact-class=\"presentation-artifact\" data-non-citable=\"true\">This page is a generated presentation artifact — never a citable basis for any fact it renders.</p></header>\n<section class=\"answers\" data-section=\"shape-answers\"><h2>The seven shape answers</h2>\n<article class=\"answer\" data-answer-name=\"Registered\" data-answer-value=\"satisfied\" data-epistemic-label=\"Observed\"><h3>Registered</h3><p>Answer: <span class=\"answer-value\">satisfied</span> <span class=\"answer-label\">[Observed]</span></p><details data-explains=\"Registered\" data-explanation-served=\"true\"><summary>Why this answer?</summary><dl><dt>Evaluation identity</dt><dd data-evaluation-snapshot=\"daemon-start-<ISO>\" data-evaluation-as-of=\"<ISO>\">snapshot <code>daemon-start-<ISO></code>, as of <code><ISO></code></dd><dt>Selection</dt><dd>project:prj-sys-fixture</dd><dt>Scenario context</dt><dd>daemon-runtime</dd><dt>Evidence classification</dt><dd data-epistemic-label=\"Observed\">label Observed</dd><dt>Coverage and consent boundary</dt><dd><span class=\"coverage-record\" data-repository-id=\"repo-governance-root\" data-coverage-state=\"observed\" data-consent-state=\"in-force\">repo-governance-root: observed; consent consent-gov-root in-force; captured scope repository-root</span> </dd><dt>Constituent facts (scope project:prj-sys-fixture)</dt><dd><ul><li data-constituent-fact=\"declaration\">declaration: revision daemon-start-<ISO></li><li data-constituent-fact=\"validation\">validation: valid</li><li data-constituent-fact=\"root-designation\">root-designation: declared-location</li></ul><p>Stated basis: declaration, validation, root-designation</p></dd><dt>Explanation classes present</dt><dd data-present-classes=\"evidenceClassification evaluation coverageAndConsentBoundary\">evidenceClassification, evaluation, coverageAndConsentBoundary</dd><dt>Internal references</dt><dd data-reference-count=\"2\" data-unresolved-count=\"0\">2 followed; unresolved: none of the followed set</dd></dl></details></article>\n<article class=\"answer\" data-answer-name=\"Shape present\" data-answer-value=\"Unknown\" data-epistemic-label=\"Unknown\"><h3>Shape present</h3><p>Answer: <span class=\"answer-value\">Unknown</span> <span class=\"answer-label\">[Unknown]</span></p><p class=\"answer-reason\" data-unknown-reason-primary=\"missing-declaration\">reason: missing-declaration</p><details data-explains=\"Shape present\" data-explanation-served=\"true\"><summary>Why this answer?</summary><dl><dt>Evaluation identity</dt><dd data-evaluation-snapshot=\"daemon-start-<ISO>\" data-evaluation-as-of=\"<ISO>\">snapshot <code>daemon-start-<ISO></code>, as of <code><ISO></code></dd><dt>Selection</dt><dd>project:prj-sys-fixture</dd><dt>Scenario context</dt><dd>daemon-runtime</dd><dt>Evidence classification</dt><dd data-epistemic-label=\"Unknown\">label Unknown</dd><dt>Unknown reasons</dt><dd data-unknown-reason-primary=\"missing-declaration\">primary: missing-declaration; secondary: []</dd><dt>Coverage and consent boundary</dt><dd><span class=\"coverage-record\" data-repository-id=\"repo-governance-root\" data-coverage-state=\"observed\" data-consent-state=\"in-force\">repo-governance-root: observed; consent consent-gov-root in-force; captured scope repository-root</span> </dd><dt>Constituent facts (scope project:prj-sys-fixture)</dt><dd><ul><li data-constituent-fact=\"declarations-references\">declarations-references: absent — no validated declaration supplies the reference list</li></ul><p>Stated basis: declarations-references</p></dd><dt>Explanation classes present</dt><dd data-present-classes=\"evidenceClassification evaluation unknownReasons coverageAndConsentBoundary\">evidenceClassification, evaluation, unknownReasons, coverageAndConsentBoundary</dd><dt>Internal references</dt><dd data-reference-count=\"2\" data-unresolved-count=\"0\">2 followed; unresolved: none of the followed set</dd></dl></details></article>\n<article class=\"answer\" data-answer-name=\"Human-understandable\" data-answer-value=\"Unknown\" data-epistemic-label=\"Unknown\"><h3>Human-understandable</h3><p>Answer: <span class=\"answer-value\">Unknown</span> <span class=\"answer-label\">[Unknown]</span></p><p class=\"answer-reason\" data-unknown-reason-primary=\"missing-evidence\">reason: missing-evidence</p><details data-explains=\"Human-understandable\" data-explanation-served=\"true\"><summary>Why this answer?</summary><dl><dt>Evaluation identity</dt><dd data-evaluation-snapshot=\"daemon-start-<ISO>\" data-evaluation-as-of=\"<ISO>\">snapshot <code>daemon-start-<ISO></code>, as of <code><ISO></code></dd><dt>Selection</dt><dd>project:prj-sys-fixture</dd><dt>Scenario context</dt><dd>daemon-runtime</dd><dt>Evidence classification</dt><dd data-epistemic-label=\"Unknown\">label Unknown</dd><dt>Unknown reasons</dt><dd data-unknown-reason-primary=\"missing-evidence\">primary: missing-evidence; secondary: []</dd><dt>Coverage and consent boundary</dt><dd><span class=\"coverage-record\" data-repository-id=\"repo-governance-root\" data-coverage-state=\"observed\" data-consent-state=\"in-force\">repo-governance-root: observed; consent consent-gov-root in-force; captured scope repository-root</span> </dd><dt>Constituent facts (scope project:prj-sys-fixture)</dt><dd><ul><li data-constituent-fact=\"comprehension-records\">comprehension-records: none recorded</li></ul><p>Stated basis: comprehension-records</p></dd><dt>Explanation classes present</dt><dd data-present-classes=\"evidenceClassification evaluation unknownReasons coverageAndConsentBoundary\">evidenceClassification, evaluation, unknownReasons, coverageAndConsentBoundary</dd><dt>Internal references</dt><dd data-reference-count=\"2\" data-unresolved-count=\"0\">2 followed; unresolved: none of the followed set</dd></dl></details></article>\n<article class=\"answer\" data-answer-name=\"Observable\" data-answer-value=\"satisfied\" data-epistemic-label=\"Observed\"><h3>Observable</h3><p>Answer: <span class=\"answer-value\">satisfied</span> <span class=\"answer-label\">[Observed]</span></p><details data-explains=\"Observable\" data-explanation-served=\"true\"><summary>Why this answer?</summary><dl><dt>Evaluation identity</dt><dd data-evaluation-snapshot=\"daemon-start-<ISO>\" data-evaluation-as-of=\"<ISO>\">snapshot <code>daemon-start-<ISO></code>, as of <code><ISO></code></dd><dt>Selection</dt><dd>project:prj-sys-fixture</dd><dt>Scenario context</dt><dd>daemon-runtime</dd><dt>Evidence classification</dt><dd data-epistemic-label=\"Observed\">label Observed</dd><dt>Coverage and consent boundary</dt><dd><span class=\"coverage-record\" data-repository-id=\"repo-governance-root\" data-coverage-state=\"observed\" data-consent-state=\"in-force\">repo-governance-root: observed; consent consent-gov-root in-force; captured scope repository-root</span> </dd><dt>Constituent facts (scope project:prj-sys-fixture)</dt><dd><ul><li data-constituent-fact=\"repository:repo-governance-root\">repository:repo-governance-root: observed; consent consent-gov-root in-force; captured scope repository-root</li></ul><p>Stated basis: repository:repo-governance-root</p></dd><dt>Explanation classes present</dt><dd data-present-classes=\"evidenceClassification evaluation coverageAndConsentBoundary\">evidenceClassification, evaluation, coverageAndConsentBoundary</dd><dt>Internal references</dt><dd data-reference-count=\"2\" data-unresolved-count=\"0\">2 followed; unresolved: none of the followed set</dd></dl></details></article>\n<article class=\"answer\" data-answer-name=\"Traceable\" data-answer-value=\"Unknown\" data-epistemic-label=\"Unknown\"><h3>Traceable</h3><p>Answer: <span class=\"answer-value\">Unknown</span> <span class=\"answer-label\">[Unknown]</span></p><p class=\"answer-reason\" data-unknown-reason-primary=\"missing-evidence\">reason: missing-evidence</p><details data-explains=\"Traceable\" data-explanation-served=\"true\"><summary>Why this answer?</summary><dl><dt>Evaluation identity</dt><dd data-evaluation-snapshot=\"daemon-start-<ISO>\" data-evaluation-as-of=\"<ISO>\">snapshot <code>daemon-start-<ISO></code>, as of <code><ISO></code></dd><dt>Selection</dt><dd>project:prj-sys-fixture</dd><dt>Scenario context</dt><dd>daemon-runtime</dd><dt>Evidence classification</dt><dd data-epistemic-label=\"Unknown\">label Unknown</dd><dt>Unknown reasons</dt><dd data-unknown-reason-primary=\"missing-evidence\">primary: missing-evidence; secondary: []</dd><dt>Coverage and consent boundary</dt><dd><span class=\"coverage-record\" data-repository-id=\"repo-governance-root\" data-coverage-state=\"observed\" data-consent-state=\"in-force\">repo-governance-root: observed; consent consent-gov-root in-force; captured scope repository-root</span> </dd><dt>Constituent facts (scope project:prj-sys-fixture)</dt><dd><ul><li data-constituent-fact=\"link-resolution\">link-resolution: not computed at this evaluation</li></ul><p>Stated basis: link-resolution</p></dd><dt>Explanation classes present</dt><dd data-present-classes=\"evidenceClassification evaluation unknownReasons coverageAndConsentBoundary\">evidenceClassification, evaluation, unknownReasons, coverageAndConsentBoundary</dd><dt>Internal references</dt><dd data-reference-count=\"2\" data-unresolved-count=\"0\">2 followed; unresolved: none of the followed set</dd></dl></details></article>\n<article class=\"answer\" data-answer-name=\"Mission-ready\" data-answer-value=\"not evaluated\" data-epistemic-label=\"Unknown\"><h3>Mission-ready</h3><p>Answer: <span class=\"answer-value\">not evaluated</span> <span class=\"answer-label\">[Unknown]</span></p><p class=\"answer-basis\" data-unknown-basis=\"deferred\">basis: deferred</p><details data-explains=\"Mission-ready\" data-explanation-served=\"true\"><summary>Why this answer?</summary><dl><dt>Evaluation identity</dt><dd data-evaluation-snapshot=\"daemon-start-<ISO>\" data-evaluation-as-of=\"<ISO>\">snapshot <code>daemon-start-<ISO></code>, as of <code><ISO></code></dd><dt>Selection</dt><dd>project:prj-sys-fixture</dd><dt>Scenario context</dt><dd>daemon-runtime</dd><dt>Evidence classification</dt><dd data-epistemic-label=\"Unknown\">label Unknown</dd><dt>Coverage and consent boundary</dt><dd><span class=\"coverage-record\" data-repository-id=\"repo-governance-root\" data-coverage-state=\"observed\" data-consent-state=\"in-force\">repo-governance-root: observed; consent consent-gov-root in-force; captured scope repository-root</span> </dd><dt>Constituent facts (scope project:prj-sys-fixture)</dt><dd><ul><li data-constituent-fact=\"mission-contracts\">mission-contracts: unaccepted — posture deferred (SDR-36 rule 3)</li></ul><p>Stated basis: mission-contracts</p></dd><dt>Explanation classes present</dt><dd data-present-classes=\"evidenceClassification evaluation coverageAndConsentBoundary\">evidenceClassification, evaluation, coverageAndConsentBoundary</dd><dt>Internal references</dt><dd data-reference-count=\"2\" data-unresolved-count=\"0\">2 followed; unresolved: none of the followed set</dd></dl></details></article>\n<article class=\"answer\" data-answer-name=\"Reconciled\" data-answer-value=\"Unknown\" data-epistemic-label=\"Unknown\"><h3>Reconciled</h3><p>Answer: <span class=\"answer-value\">Unknown</span> <span class=\"answer-label\">[Unknown]</span></p><p class=\"answer-reason\" data-unknown-reason-primary=\"missing-evidence\">reason: missing-evidence</p><details data-explains=\"Reconciled\" data-explanation-served=\"true\"><summary>Why this answer?</summary><dl><dt>Evaluation identity</dt><dd data-evaluation-snapshot=\"daemon-start-<ISO>\" data-evaluation-as-of=\"<ISO>\">snapshot <code>daemon-start-<ISO></code>, as of <code><ISO></code></dd><dt>Selection</dt><dd>project:prj-sys-fixture</dd><dt>Scenario context</dt><dd>daemon-runtime</dd><dt>Evidence classification</dt><dd data-epistemic-label=\"Unknown\">label Unknown</dd><dt>Unknown reasons</dt><dd data-unknown-reason-primary=\"missing-evidence\">primary: missing-evidence; secondary: []</dd><dt>Coverage and consent boundary</dt><dd><span class=\"coverage-record\" data-repository-id=\"repo-governance-root\" data-coverage-state=\"observed\" data-consent-state=\"in-force\">repo-governance-root: observed; consent consent-gov-root in-force; captured scope repository-root</span> </dd><dt>Constituent facts (scope project:prj-sys-fixture)</dt><dd><ul><li data-constituent-fact=\"reconciliation\">reconciliation: not computed at this evaluation</li></ul><p>Stated basis: reconciliation</p></dd><dt>Explanation classes present</dt><dd data-present-classes=\"evidenceClassification evaluation unknownReasons coverageAndConsentBoundary\">evidenceClassification, evaluation, unknownReasons, coverageAndConsentBoundary</dd><dt>Internal references</dt><dd data-reference-count=\"2\" data-unresolved-count=\"0\">2 followed; unresolved: none of the followed set</dd></dl></details></article>\n<details class=\"aggregate\" data-membership-count=\"7\"><summary>Aggregate composition over 7 answers: Observed 2, Inferred 0, Unknown 5</summary><p>Per-primary-reason: missing-declaration 1, missing-evidence 3. Secondary annotations (disclosed separately, never folded in): none.</p><ul><li data-fact-name=\"Registered\" data-epistemic-label=\"Observed\"><span class=\"fact-name\">Registered</span>: <span class=\"fact-value\">satisfied</span> <span class=\"fact-label\">[Observed]</span></li><li data-fact-name=\"Shape present\" data-epistemic-label=\"Unknown\" data-unknown-reason=\"missing-declaration\"><span class=\"fact-name\">Shape present</span>: <span class=\"fact-value\">Unknown</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-reason\">(reason: missing-declaration)</span></li><li data-fact-name=\"Human-understandable\" data-epistemic-label=\"Unknown\" data-unknown-reason=\"missing-evidence\"><span class=\"fact-name\">Human-understandable</span>: <span class=\"fact-value\">Unknown</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-reason\">(reason: missing-evidence)</span></li><li data-fact-name=\"Observable\" data-epistemic-label=\"Observed\"><span class=\"fact-name\">Observable</span>: <span class=\"fact-value\">satisfied</span> <span class=\"fact-label\">[Observed]</span></li><li data-fact-name=\"Traceable\" data-epistemic-label=\"Unknown\" data-unknown-reason=\"missing-evidence\"><span class=\"fact-name\">Traceable</span>: <span class=\"fact-value\">Unknown</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-reason\">(reason: missing-evidence)</span></li><li data-fact-name=\"Mission-ready\" data-epistemic-label=\"Unknown\" data-unknown-basis=\"deferred\"><span class=\"fact-name\">Mission-ready</span>: <span class=\"fact-value\">not evaluated</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-basis\">(basis: deferred)</span></li><li data-fact-name=\"Reconciled\" data-epistemic-label=\"Unknown\" data-unknown-reason=\"missing-evidence\"><span class=\"fact-name\">Reconciled</span>: <span class=\"fact-value\">Unknown</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-reason\">(reason: missing-evidence)</span></li></ul></details>\n</section>\n<section class=\"disclosure\" data-section-heading=\"Further facts\"><h2>Further facts</h2><ul><li data-fact-name=\"Registered\" data-epistemic-label=\"Observed\"><span class=\"fact-name\">Registered</span>: <span class=\"fact-value\">satisfied</span> <span class=\"fact-label\">[Observed]</span></li><li data-fact-name=\"Shape present\" data-epistemic-label=\"Unknown\" data-unknown-reason=\"missing-declaration\"><span class=\"fact-name\">Shape present</span>: <span class=\"fact-value\">Unknown</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-reason\">(reason: missing-declaration)</span></li><li data-fact-name=\"Human-understandable\" data-epistemic-label=\"Unknown\" data-unknown-reason=\"missing-evidence\"><span class=\"fact-name\">Human-understandable</span>: <span class=\"fact-value\">Unknown</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-reason\">(reason: missing-evidence)</span></li><li data-fact-name=\"Observable\" data-epistemic-label=\"Observed\"><span class=\"fact-name\">Observable</span>: <span class=\"fact-value\">satisfied</span> <span class=\"fact-label\">[Observed]</span></li><li data-fact-name=\"Traceable\" data-epistemic-label=\"Unknown\" data-unknown-reason=\"missing-evidence\"><span class=\"fact-name\">Traceable</span>: <span class=\"fact-value\">Unknown</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-reason\">(reason: missing-evidence)</span></li><li data-fact-name=\"Mission-ready\" data-epistemic-label=\"Unknown\" data-unknown-basis=\"deferred\"><span class=\"fact-name\">Mission-ready</span>: <span class=\"fact-value\">not evaluated</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-basis\">(basis: deferred)</span></li><li data-fact-name=\"Reconciled\" data-epistemic-label=\"Unknown\" data-unknown-reason=\"missing-evidence\"><span class=\"fact-name\">Reconciled</span>: <span class=\"fact-value\">Unknown</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-reason\">(reason: missing-evidence)</span></li></ul></section>\n<section class=\"coverage\" data-section=\"coverage-and-consent\"><h2>Coverage and consent</h2><ul><li><span class=\"coverage-record\" data-repository-id=\"repo-governance-root\" data-coverage-state=\"observed\" data-consent-state=\"in-force\">repo-governance-root: observed; consent consent-gov-root in-force; captured scope repository-root</span> </li></ul></section>\n<section class=\"authority\" data-section=\"authority-exposure\"><h2>Authority exposure</h2><p data-state=\"absent\">No authority exposures were supplied at this evaluation.</p></section>\n<section class=\"discoverability\" data-section=\"discoverability\"><h2>Repository discoverability</h2><p data-state=\"absent\">No discoverability findings were supplied at this evaluation.</p></section>\n<section class=\"entry\" data-section=\"human-entry\"><h2>Human entry</h2><p data-entry-path=\".syzygy/intent/OVERVIEW.md\" data-entry-path-is-identity=\"false\">The project's one human entry is published at <code>.syzygy/intent/OVERVIEW.md</code> (a publication location, never an identity) — <a href=\"/entry\">read the entry document</a>.</p></section>\n</body>\n</html>"
+    },
+    {
+     "method": "GET",
+     "target": "/",
+     "auth": "wrong",
+     "status": 200,
+     "headers": [
+      [
+       "content-type",
+       "text/html; charset=utf-8"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "<!doctype html>\n<html lang=\"en\">\n<head><meta charset=\"utf-8\"><title>Project prj-sys-fixture — served facts</title><style>body{font-family:system-ui,sans-serif;margin:2rem auto;max-width:52rem;line-height:1.5;padding:0 1rem}section{margin:1.5rem 0}details{border:1px solid currentColor;padding:.5rem;margin:.5rem 0}summary{cursor:pointer}dt{font-weight:bold}code{font-family:ui-monospace,monospace}</style></head>\n<body data-evaluation-kind=\"project-evaluated\" data-non-citable=\"true\" data-artifact-class=\"presentation-artifact\">\n<header><h1>Project prj-sys-fixture</h1><p data-selection=\"project:prj-sys-fixture\" data-scenario-context=\"daemon-runtime\" data-evaluation-snapshot=\"daemon-start-<ISO>\" data-evaluation-as-of=\"<ISO>\">Selection <code>project:prj-sys-fixture</code>, evaluated at snapshot <code>daemon-start-<ISO></code> as of <code><ISO></code>, scenario context <code>daemon-runtime</code>.</p><p data-artifact-class=\"presentation-artifact\" data-non-citable=\"true\">This page is a generated presentation artifact — never a citable basis for any fact it renders.</p></header>\n<section class=\"answers\" data-section=\"shape-answers\"><h2>The seven shape answers</h2>\n<article class=\"answer\" data-answer-name=\"Registered\" data-answer-value=\"satisfied\" data-epistemic-label=\"Observed\"><h3>Registered</h3><p>Answer: <span class=\"answer-value\">satisfied</span> <span class=\"answer-label\">[Observed]</span></p><details data-explains=\"Registered\" data-explanation-served=\"true\"><summary>Why this answer?</summary><dl><dt>Evaluation identity</dt><dd data-evaluation-snapshot=\"daemon-start-<ISO>\" data-evaluation-as-of=\"<ISO>\">snapshot <code>daemon-start-<ISO></code>, as of <code><ISO></code></dd><dt>Selection</dt><dd>project:prj-sys-fixture</dd><dt>Scenario context</dt><dd>daemon-runtime</dd><dt>Evidence classification</dt><dd data-epistemic-label=\"Observed\">label Observed</dd><dt>Coverage and consent boundary</dt><dd><span class=\"coverage-record\" data-repository-id=\"repo-governance-root\" data-coverage-state=\"observed\" data-consent-state=\"in-force\">repo-governance-root: observed; consent consent-gov-root in-force; captured scope repository-root</span> </dd><dt>Constituent facts (scope project:prj-sys-fixture)</dt><dd><ul><li data-constituent-fact=\"declaration\">declaration: revision daemon-start-<ISO></li><li data-constituent-fact=\"validation\">validation: valid</li><li data-constituent-fact=\"root-designation\">root-designation: declared-location</li></ul><p>Stated basis: declaration, validation, root-designation</p></dd><dt>Explanation classes present</dt><dd data-present-classes=\"evidenceClassification evaluation coverageAndConsentBoundary\">evidenceClassification, evaluation, coverageAndConsentBoundary</dd><dt>Internal references</dt><dd data-reference-count=\"2\" data-unresolved-count=\"0\">2 followed; unresolved: none of the followed set</dd></dl></details></article>\n<article class=\"answer\" data-answer-name=\"Shape present\" data-answer-value=\"Unknown\" data-epistemic-label=\"Unknown\"><h3>Shape present</h3><p>Answer: <span class=\"answer-value\">Unknown</span> <span class=\"answer-label\">[Unknown]</span></p><p class=\"answer-reason\" data-unknown-reason-primary=\"missing-declaration\">reason: missing-declaration</p><details data-explains=\"Shape present\" data-explanation-served=\"true\"><summary>Why this answer?</summary><dl><dt>Evaluation identity</dt><dd data-evaluation-snapshot=\"daemon-start-<ISO>\" data-evaluation-as-of=\"<ISO>\">snapshot <code>daemon-start-<ISO></code>, as of <code><ISO></code></dd><dt>Selection</dt><dd>project:prj-sys-fixture</dd><dt>Scenario context</dt><dd>daemon-runtime</dd><dt>Evidence classification</dt><dd data-epistemic-label=\"Unknown\">label Unknown</dd><dt>Unknown reasons</dt><dd data-unknown-reason-primary=\"missing-declaration\">primary: missing-declaration; secondary: []</dd><dt>Coverage and consent boundary</dt><dd><span class=\"coverage-record\" data-repository-id=\"repo-governance-root\" data-coverage-state=\"observed\" data-consent-state=\"in-force\">repo-governance-root: observed; consent consent-gov-root in-force; captured scope repository-root</span> </dd><dt>Constituent facts (scope project:prj-sys-fixture)</dt><dd><ul><li data-constituent-fact=\"declarations-references\">declarations-references: absent — no validated declaration supplies the reference list</li></ul><p>Stated basis: declarations-references</p></dd><dt>Explanation classes present</dt><dd data-present-classes=\"evidenceClassification evaluation unknownReasons coverageAndConsentBoundary\">evidenceClassification, evaluation, unknownReasons, coverageAndConsentBoundary</dd><dt>Internal references</dt><dd data-reference-count=\"2\" data-unresolved-count=\"0\">2 followed; unresolved: none of the followed set</dd></dl></details></article>\n<article class=\"answer\" data-answer-name=\"Human-understandable\" data-answer-value=\"Unknown\" data-epistemic-label=\"Unknown\"><h3>Human-understandable</h3><p>Answer: <span class=\"answer-value\">Unknown</span> <span class=\"answer-label\">[Unknown]</span></p><p class=\"answer-reason\" data-unknown-reason-primary=\"missing-evidence\">reason: missing-evidence</p><details data-explains=\"Human-understandable\" data-explanation-served=\"true\"><summary>Why this answer?</summary><dl><dt>Evaluation identity</dt><dd data-evaluation-snapshot=\"daemon-start-<ISO>\" data-evaluation-as-of=\"<ISO>\">snapshot <code>daemon-start-<ISO></code>, as of <code><ISO></code></dd><dt>Selection</dt><dd>project:prj-sys-fixture</dd><dt>Scenario context</dt><dd>daemon-runtime</dd><dt>Evidence classification</dt><dd data-epistemic-label=\"Unknown\">label Unknown</dd><dt>Unknown reasons</dt><dd data-unknown-reason-primary=\"missing-evidence\">primary: missing-evidence; secondary: []</dd><dt>Coverage and consent boundary</dt><dd><span class=\"coverage-record\" data-repository-id=\"repo-governance-root\" data-coverage-state=\"observed\" data-consent-state=\"in-force\">repo-governance-root: observed; consent consent-gov-root in-force; captured scope repository-root</span> </dd><dt>Constituent facts (scope project:prj-sys-fixture)</dt><dd><ul><li data-constituent-fact=\"comprehension-records\">comprehension-records: none recorded</li></ul><p>Stated basis: comprehension-records</p></dd><dt>Explanation classes present</dt><dd data-present-classes=\"evidenceClassification evaluation unknownReasons coverageAndConsentBoundary\">evidenceClassification, evaluation, unknownReasons, coverageAndConsentBoundary</dd><dt>Internal references</dt><dd data-reference-count=\"2\" data-unresolved-count=\"0\">2 followed; unresolved: none of the followed set</dd></dl></details></article>\n<article class=\"answer\" data-answer-name=\"Observable\" data-answer-value=\"satisfied\" data-epistemic-label=\"Observed\"><h3>Observable</h3><p>Answer: <span class=\"answer-value\">satisfied</span> <span class=\"answer-label\">[Observed]</span></p><details data-explains=\"Observable\" data-explanation-served=\"true\"><summary>Why this answer?</summary><dl><dt>Evaluation identity</dt><dd data-evaluation-snapshot=\"daemon-start-<ISO>\" data-evaluation-as-of=\"<ISO>\">snapshot <code>daemon-start-<ISO></code>, as of <code><ISO></code></dd><dt>Selection</dt><dd>project:prj-sys-fixture</dd><dt>Scenario context</dt><dd>daemon-runtime</dd><dt>Evidence classification</dt><dd data-epistemic-label=\"Observed\">label Observed</dd><dt>Coverage and consent boundary</dt><dd><span class=\"coverage-record\" data-repository-id=\"repo-governance-root\" data-coverage-state=\"observed\" data-consent-state=\"in-force\">repo-governance-root: observed; consent consent-gov-root in-force; captured scope repository-root</span> </dd><dt>Constituent facts (scope project:prj-sys-fixture)</dt><dd><ul><li data-constituent-fact=\"repository:repo-governance-root\">repository:repo-governance-root: observed; consent consent-gov-root in-force; captured scope repository-root</li></ul><p>Stated basis: repository:repo-governance-root</p></dd><dt>Explanation classes present</dt><dd data-present-classes=\"evidenceClassification evaluation coverageAndConsentBoundary\">evidenceClassification, evaluation, coverageAndConsentBoundary</dd><dt>Internal references</dt><dd data-reference-count=\"2\" data-unresolved-count=\"0\">2 followed; unresolved: none of the followed set</dd></dl></details></article>\n<article class=\"answer\" data-answer-name=\"Traceable\" data-answer-value=\"Unknown\" data-epistemic-label=\"Unknown\"><h3>Traceable</h3><p>Answer: <span class=\"answer-value\">Unknown</span> <span class=\"answer-label\">[Unknown]</span></p><p class=\"answer-reason\" data-unknown-reason-primary=\"missing-evidence\">reason: missing-evidence</p><details data-explains=\"Traceable\" data-explanation-served=\"true\"><summary>Why this answer?</summary><dl><dt>Evaluation identity</dt><dd data-evaluation-snapshot=\"daemon-start-<ISO>\" data-evaluation-as-of=\"<ISO>\">snapshot <code>daemon-start-<ISO></code>, as of <code><ISO></code></dd><dt>Selection</dt><dd>project:prj-sys-fixture</dd><dt>Scenario context</dt><dd>daemon-runtime</dd><dt>Evidence classification</dt><dd data-epistemic-label=\"Unknown\">label Unknown</dd><dt>Unknown reasons</dt><dd data-unknown-reason-primary=\"missing-evidence\">primary: missing-evidence; secondary: []</dd><dt>Coverage and consent boundary</dt><dd><span class=\"coverage-record\" data-repository-id=\"repo-governance-root\" data-coverage-state=\"observed\" data-consent-state=\"in-force\">repo-governance-root: observed; consent consent-gov-root in-force; captured scope repository-root</span> </dd><dt>Constituent facts (scope project:prj-sys-fixture)</dt><dd><ul><li data-constituent-fact=\"link-resolution\">link-resolution: not computed at this evaluation</li></ul><p>Stated basis: link-resolution</p></dd><dt>Explanation classes present</dt><dd data-present-classes=\"evidenceClassification evaluation unknownReasons coverageAndConsentBoundary\">evidenceClassification, evaluation, unknownReasons, coverageAndConsentBoundary</dd><dt>Internal references</dt><dd data-reference-count=\"2\" data-unresolved-count=\"0\">2 followed; unresolved: none of the followed set</dd></dl></details></article>\n<article class=\"answer\" data-answer-name=\"Mission-ready\" data-answer-value=\"not evaluated\" data-epistemic-label=\"Unknown\"><h3>Mission-ready</h3><p>Answer: <span class=\"answer-value\">not evaluated</span> <span class=\"answer-label\">[Unknown]</span></p><p class=\"answer-basis\" data-unknown-basis=\"deferred\">basis: deferred</p><details data-explains=\"Mission-ready\" data-explanation-served=\"true\"><summary>Why this answer?</summary><dl><dt>Evaluation identity</dt><dd data-evaluation-snapshot=\"daemon-start-<ISO>\" data-evaluation-as-of=\"<ISO>\">snapshot <code>daemon-start-<ISO></code>, as of <code><ISO></code></dd><dt>Selection</dt><dd>project:prj-sys-fixture</dd><dt>Scenario context</dt><dd>daemon-runtime</dd><dt>Evidence classification</dt><dd data-epistemic-label=\"Unknown\">label Unknown</dd><dt>Coverage and consent boundary</dt><dd><span class=\"coverage-record\" data-repository-id=\"repo-governance-root\" data-coverage-state=\"observed\" data-consent-state=\"in-force\">repo-governance-root: observed; consent consent-gov-root in-force; captured scope repository-root</span> </dd><dt>Constituent facts (scope project:prj-sys-fixture)</dt><dd><ul><li data-constituent-fact=\"mission-contracts\">mission-contracts: unaccepted — posture deferred (SDR-36 rule 3)</li></ul><p>Stated basis: mission-contracts</p></dd><dt>Explanation classes present</dt><dd data-present-classes=\"evidenceClassification evaluation coverageAndConsentBoundary\">evidenceClassification, evaluation, coverageAndConsentBoundary</dd><dt>Internal references</dt><dd data-reference-count=\"2\" data-unresolved-count=\"0\">2 followed; unresolved: none of the followed set</dd></dl></details></article>\n<article class=\"answer\" data-answer-name=\"Reconciled\" data-answer-value=\"Unknown\" data-epistemic-label=\"Unknown\"><h3>Reconciled</h3><p>Answer: <span class=\"answer-value\">Unknown</span> <span class=\"answer-label\">[Unknown]</span></p><p class=\"answer-reason\" data-unknown-reason-primary=\"missing-evidence\">reason: missing-evidence</p><details data-explains=\"Reconciled\" data-explanation-served=\"true\"><summary>Why this answer?</summary><dl><dt>Evaluation identity</dt><dd data-evaluation-snapshot=\"daemon-start-<ISO>\" data-evaluation-as-of=\"<ISO>\">snapshot <code>daemon-start-<ISO></code>, as of <code><ISO></code></dd><dt>Selection</dt><dd>project:prj-sys-fixture</dd><dt>Scenario context</dt><dd>daemon-runtime</dd><dt>Evidence classification</dt><dd data-epistemic-label=\"Unknown\">label Unknown</dd><dt>Unknown reasons</dt><dd data-unknown-reason-primary=\"missing-evidence\">primary: missing-evidence; secondary: []</dd><dt>Coverage and consent boundary</dt><dd><span class=\"coverage-record\" data-repository-id=\"repo-governance-root\" data-coverage-state=\"observed\" data-consent-state=\"in-force\">repo-governance-root: observed; consent consent-gov-root in-force; captured scope repository-root</span> </dd><dt>Constituent facts (scope project:prj-sys-fixture)</dt><dd><ul><li data-constituent-fact=\"reconciliation\">reconciliation: not computed at this evaluation</li></ul><p>Stated basis: reconciliation</p></dd><dt>Explanation classes present</dt><dd data-present-classes=\"evidenceClassification evaluation unknownReasons coverageAndConsentBoundary\">evidenceClassification, evaluation, unknownReasons, coverageAndConsentBoundary</dd><dt>Internal references</dt><dd data-reference-count=\"2\" data-unresolved-count=\"0\">2 followed; unresolved: none of the followed set</dd></dl></details></article>\n<details class=\"aggregate\" data-membership-count=\"7\"><summary>Aggregate composition over 7 answers: Observed 2, Inferred 0, Unknown 5</summary><p>Per-primary-reason: missing-declaration 1, missing-evidence 3. Secondary annotations (disclosed separately, never folded in): none.</p><ul><li data-fact-name=\"Registered\" data-epistemic-label=\"Observed\"><span class=\"fact-name\">Registered</span>: <span class=\"fact-value\">satisfied</span> <span class=\"fact-label\">[Observed]</span></li><li data-fact-name=\"Shape present\" data-epistemic-label=\"Unknown\" data-unknown-reason=\"missing-declaration\"><span class=\"fact-name\">Shape present</span>: <span class=\"fact-value\">Unknown</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-reason\">(reason: missing-declaration)</span></li><li data-fact-name=\"Human-understandable\" data-epistemic-label=\"Unknown\" data-unknown-reason=\"missing-evidence\"><span class=\"fact-name\">Human-understandable</span>: <span class=\"fact-value\">Unknown</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-reason\">(reason: missing-evidence)</span></li><li data-fact-name=\"Observable\" data-epistemic-label=\"Observed\"><span class=\"fact-name\">Observable</span>: <span class=\"fact-value\">satisfied</span> <span class=\"fact-label\">[Observed]</span></li><li data-fact-name=\"Traceable\" data-epistemic-label=\"Unknown\" data-unknown-reason=\"missing-evidence\"><span class=\"fact-name\">Traceable</span>: <span class=\"fact-value\">Unknown</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-reason\">(reason: missing-evidence)</span></li><li data-fact-name=\"Mission-ready\" data-epistemic-label=\"Unknown\" data-unknown-basis=\"deferred\"><span class=\"fact-name\">Mission-ready</span>: <span class=\"fact-value\">not evaluated</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-basis\">(basis: deferred)</span></li><li data-fact-name=\"Reconciled\" data-epistemic-label=\"Unknown\" data-unknown-reason=\"missing-evidence\"><span class=\"fact-name\">Reconciled</span>: <span class=\"fact-value\">Unknown</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-reason\">(reason: missing-evidence)</span></li></ul></details>\n</section>\n<section class=\"disclosure\" data-section-heading=\"Further facts\"><h2>Further facts</h2><ul><li data-fact-name=\"Registered\" data-epistemic-label=\"Observed\"><span class=\"fact-name\">Registered</span>: <span class=\"fact-value\">satisfied</span> <span class=\"fact-label\">[Observed]</span></li><li data-fact-name=\"Shape present\" data-epistemic-label=\"Unknown\" data-unknown-reason=\"missing-declaration\"><span class=\"fact-name\">Shape present</span>: <span class=\"fact-value\">Unknown</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-reason\">(reason: missing-declaration)</span></li><li data-fact-name=\"Human-understandable\" data-epistemic-label=\"Unknown\" data-unknown-reason=\"missing-evidence\"><span class=\"fact-name\">Human-understandable</span>: <span class=\"fact-value\">Unknown</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-reason\">(reason: missing-evidence)</span></li><li data-fact-name=\"Observable\" data-epistemic-label=\"Observed\"><span class=\"fact-name\">Observable</span>: <span class=\"fact-value\">satisfied</span> <span class=\"fact-label\">[Observed]</span></li><li data-fact-name=\"Traceable\" data-epistemic-label=\"Unknown\" data-unknown-reason=\"missing-evidence\"><span class=\"fact-name\">Traceable</span>: <span class=\"fact-value\">Unknown</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-reason\">(reason: missing-evidence)</span></li><li data-fact-name=\"Mission-ready\" data-epistemic-label=\"Unknown\" data-unknown-basis=\"deferred\"><span class=\"fact-name\">Mission-ready</span>: <span class=\"fact-value\">not evaluated</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-basis\">(basis: deferred)</span></li><li data-fact-name=\"Reconciled\" data-epistemic-label=\"Unknown\" data-unknown-reason=\"missing-evidence\"><span class=\"fact-name\">Reconciled</span>: <span class=\"fact-value\">Unknown</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-reason\">(reason: missing-evidence)</span></li></ul></section>\n<section class=\"coverage\" data-section=\"coverage-and-consent\"><h2>Coverage and consent</h2><ul><li><span class=\"coverage-record\" data-repository-id=\"repo-governance-root\" data-coverage-state=\"observed\" data-consent-state=\"in-force\">repo-governance-root: observed; consent consent-gov-root in-force; captured scope repository-root</span> </li></ul></section>\n<section class=\"authority\" data-section=\"authority-exposure\"><h2>Authority exposure</h2><p data-state=\"absent\">No authority exposures were supplied at this evaluation.</p></section>\n<section class=\"discoverability\" data-section=\"discoverability\"><h2>Repository discoverability</h2><p data-state=\"absent\">No discoverability findings were supplied at this evaluation.</p></section>\n<section class=\"entry\" data-section=\"human-entry\"><h2>Human entry</h2><p data-entry-path=\".syzygy/intent/OVERVIEW.md\" data-entry-path-is-identity=\"false\">The project's one human entry is published at <code>.syzygy/intent/OVERVIEW.md</code> (a publication location, never an identity) — <a href=\"/entry\">read the entry document</a>.</p></section>\n</body>\n</html>"
+    },
+    {
+     "method": "GET",
+     "target": "/?x=1",
+     "auth": "none",
+     "status": 200,
+     "headers": [
+      [
+       "content-type",
+       "text/html; charset=utf-8"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "<!doctype html>\n<html lang=\"en\">\n<head><meta charset=\"utf-8\"><title>Project prj-sys-fixture — served facts</title><style>body{font-family:system-ui,sans-serif;margin:2rem auto;max-width:52rem;line-height:1.5;padding:0 1rem}section{margin:1.5rem 0}details{border:1px solid currentColor;padding:.5rem;margin:.5rem 0}summary{cursor:pointer}dt{font-weight:bold}code{font-family:ui-monospace,monospace}</style></head>\n<body data-evaluation-kind=\"project-evaluated\" data-non-citable=\"true\" data-artifact-class=\"presentation-artifact\">\n<header><h1>Project prj-sys-fixture</h1><p data-selection=\"project:prj-sys-fixture\" data-scenario-context=\"daemon-runtime\" data-evaluation-snapshot=\"daemon-start-<ISO>\" data-evaluation-as-of=\"<ISO>\">Selection <code>project:prj-sys-fixture</code>, evaluated at snapshot <code>daemon-start-<ISO></code> as of <code><ISO></code>, scenario context <code>daemon-runtime</code>.</p><p data-artifact-class=\"presentation-artifact\" data-non-citable=\"true\">This page is a generated presentation artifact — never a citable basis for any fact it renders.</p></header>\n<section class=\"answers\" data-section=\"shape-answers\"><h2>The seven shape answers</h2>\n<article class=\"answer\" data-answer-name=\"Registered\" data-answer-value=\"satisfied\" data-epistemic-label=\"Observed\"><h3>Registered</h3><p>Answer: <span class=\"answer-value\">satisfied</span> <span class=\"answer-label\">[Observed]</span></p><details data-explains=\"Registered\" data-explanation-served=\"true\"><summary>Why this answer?</summary><dl><dt>Evaluation identity</dt><dd data-evaluation-snapshot=\"daemon-start-<ISO>\" data-evaluation-as-of=\"<ISO>\">snapshot <code>daemon-start-<ISO></code>, as of <code><ISO></code></dd><dt>Selection</dt><dd>project:prj-sys-fixture</dd><dt>Scenario context</dt><dd>daemon-runtime</dd><dt>Evidence classification</dt><dd data-epistemic-label=\"Observed\">label Observed</dd><dt>Coverage and consent boundary</dt><dd><span class=\"coverage-record\" data-repository-id=\"repo-governance-root\" data-coverage-state=\"observed\" data-consent-state=\"in-force\">repo-governance-root: observed; consent consent-gov-root in-force; captured scope repository-root</span> </dd><dt>Constituent facts (scope project:prj-sys-fixture)</dt><dd><ul><li data-constituent-fact=\"declaration\">declaration: revision daemon-start-<ISO></li><li data-constituent-fact=\"validation\">validation: valid</li><li data-constituent-fact=\"root-designation\">root-designation: declared-location</li></ul><p>Stated basis: declaration, validation, root-designation</p></dd><dt>Explanation classes present</dt><dd data-present-classes=\"evidenceClassification evaluation coverageAndConsentBoundary\">evidenceClassification, evaluation, coverageAndConsentBoundary</dd><dt>Internal references</dt><dd data-reference-count=\"2\" data-unresolved-count=\"0\">2 followed; unresolved: none of the followed set</dd></dl></details></article>\n<article class=\"answer\" data-answer-name=\"Shape present\" data-answer-value=\"Unknown\" data-epistemic-label=\"Unknown\"><h3>Shape present</h3><p>Answer: <span class=\"answer-value\">Unknown</span> <span class=\"answer-label\">[Unknown]</span></p><p class=\"answer-reason\" data-unknown-reason-primary=\"missing-declaration\">reason: missing-declaration</p><details data-explains=\"Shape present\" data-explanation-served=\"true\"><summary>Why this answer?</summary><dl><dt>Evaluation identity</dt><dd data-evaluation-snapshot=\"daemon-start-<ISO>\" data-evaluation-as-of=\"<ISO>\">snapshot <code>daemon-start-<ISO></code>, as of <code><ISO></code></dd><dt>Selection</dt><dd>project:prj-sys-fixture</dd><dt>Scenario context</dt><dd>daemon-runtime</dd><dt>Evidence classification</dt><dd data-epistemic-label=\"Unknown\">label Unknown</dd><dt>Unknown reasons</dt><dd data-unknown-reason-primary=\"missing-declaration\">primary: missing-declaration; secondary: []</dd><dt>Coverage and consent boundary</dt><dd><span class=\"coverage-record\" data-repository-id=\"repo-governance-root\" data-coverage-state=\"observed\" data-consent-state=\"in-force\">repo-governance-root: observed; consent consent-gov-root in-force; captured scope repository-root</span> </dd><dt>Constituent facts (scope project:prj-sys-fixture)</dt><dd><ul><li data-constituent-fact=\"declarations-references\">declarations-references: absent — no validated declaration supplies the reference list</li></ul><p>Stated basis: declarations-references</p></dd><dt>Explanation classes present</dt><dd data-present-classes=\"evidenceClassification evaluation unknownReasons coverageAndConsentBoundary\">evidenceClassification, evaluation, unknownReasons, coverageAndConsentBoundary</dd><dt>Internal references</dt><dd data-reference-count=\"2\" data-unresolved-count=\"0\">2 followed; unresolved: none of the followed set</dd></dl></details></article>\n<article class=\"answer\" data-answer-name=\"Human-understandable\" data-answer-value=\"Unknown\" data-epistemic-label=\"Unknown\"><h3>Human-understandable</h3><p>Answer: <span class=\"answer-value\">Unknown</span> <span class=\"answer-label\">[Unknown]</span></p><p class=\"answer-reason\" data-unknown-reason-primary=\"missing-evidence\">reason: missing-evidence</p><details data-explains=\"Human-understandable\" data-explanation-served=\"true\"><summary>Why this answer?</summary><dl><dt>Evaluation identity</dt><dd data-evaluation-snapshot=\"daemon-start-<ISO>\" data-evaluation-as-of=\"<ISO>\">snapshot <code>daemon-start-<ISO></code>, as of <code><ISO></code></dd><dt>Selection</dt><dd>project:prj-sys-fixture</dd><dt>Scenario context</dt><dd>daemon-runtime</dd><dt>Evidence classification</dt><dd data-epistemic-label=\"Unknown\">label Unknown</dd><dt>Unknown reasons</dt><dd data-unknown-reason-primary=\"missing-evidence\">primary: missing-evidence; secondary: []</dd><dt>Coverage and consent boundary</dt><dd><span class=\"coverage-record\" data-repository-id=\"repo-governance-root\" data-coverage-state=\"observed\" data-consent-state=\"in-force\">repo-governance-root: observed; consent consent-gov-root in-force; captured scope repository-root</span> </dd><dt>Constituent facts (scope project:prj-sys-fixture)</dt><dd><ul><li data-constituent-fact=\"comprehension-records\">comprehension-records: none recorded</li></ul><p>Stated basis: comprehension-records</p></dd><dt>Explanation classes present</dt><dd data-present-classes=\"evidenceClassification evaluation unknownReasons coverageAndConsentBoundary\">evidenceClassification, evaluation, unknownReasons, coverageAndConsentBoundary</dd><dt>Internal references</dt><dd data-reference-count=\"2\" data-unresolved-count=\"0\">2 followed; unresolved: none of the followed set</dd></dl></details></article>\n<article class=\"answer\" data-answer-name=\"Observable\" data-answer-value=\"satisfied\" data-epistemic-label=\"Observed\"><h3>Observable</h3><p>Answer: <span class=\"answer-value\">satisfied</span> <span class=\"answer-label\">[Observed]</span></p><details data-explains=\"Observable\" data-explanation-served=\"true\"><summary>Why this answer?</summary><dl><dt>Evaluation identity</dt><dd data-evaluation-snapshot=\"daemon-start-<ISO>\" data-evaluation-as-of=\"<ISO>\">snapshot <code>daemon-start-<ISO></code>, as of <code><ISO></code></dd><dt>Selection</dt><dd>project:prj-sys-fixture</dd><dt>Scenario context</dt><dd>daemon-runtime</dd><dt>Evidence classification</dt><dd data-epistemic-label=\"Observed\">label Observed</dd><dt>Coverage and consent boundary</dt><dd><span class=\"coverage-record\" data-repository-id=\"repo-governance-root\" data-coverage-state=\"observed\" data-consent-state=\"in-force\">repo-governance-root: observed; consent consent-gov-root in-force; captured scope repository-root</span> </dd><dt>Constituent facts (scope project:prj-sys-fixture)</dt><dd><ul><li data-constituent-fact=\"repository:repo-governance-root\">repository:repo-governance-root: observed; consent consent-gov-root in-force; captured scope repository-root</li></ul><p>Stated basis: repository:repo-governance-root</p></dd><dt>Explanation classes present</dt><dd data-present-classes=\"evidenceClassification evaluation coverageAndConsentBoundary\">evidenceClassification, evaluation, coverageAndConsentBoundary</dd><dt>Internal references</dt><dd data-reference-count=\"2\" data-unresolved-count=\"0\">2 followed; unresolved: none of the followed set</dd></dl></details></article>\n<article class=\"answer\" data-answer-name=\"Traceable\" data-answer-value=\"Unknown\" data-epistemic-label=\"Unknown\"><h3>Traceable</h3><p>Answer: <span class=\"answer-value\">Unknown</span> <span class=\"answer-label\">[Unknown]</span></p><p class=\"answer-reason\" data-unknown-reason-primary=\"missing-evidence\">reason: missing-evidence</p><details data-explains=\"Traceable\" data-explanation-served=\"true\"><summary>Why this answer?</summary><dl><dt>Evaluation identity</dt><dd data-evaluation-snapshot=\"daemon-start-<ISO>\" data-evaluation-as-of=\"<ISO>\">snapshot <code>daemon-start-<ISO></code>, as of <code><ISO></code></dd><dt>Selection</dt><dd>project:prj-sys-fixture</dd><dt>Scenario context</dt><dd>daemon-runtime</dd><dt>Evidence classification</dt><dd data-epistemic-label=\"Unknown\">label Unknown</dd><dt>Unknown reasons</dt><dd data-unknown-reason-primary=\"missing-evidence\">primary: missing-evidence; secondary: []</dd><dt>Coverage and consent boundary</dt><dd><span class=\"coverage-record\" data-repository-id=\"repo-governance-root\" data-coverage-state=\"observed\" data-consent-state=\"in-force\">repo-governance-root: observed; consent consent-gov-root in-force; captured scope repository-root</span> </dd><dt>Constituent facts (scope project:prj-sys-fixture)</dt><dd><ul><li data-constituent-fact=\"link-resolution\">link-resolution: not computed at this evaluation</li></ul><p>Stated basis: link-resolution</p></dd><dt>Explanation classes present</dt><dd data-present-classes=\"evidenceClassification evaluation unknownReasons coverageAndConsentBoundary\">evidenceClassification, evaluation, unknownReasons, coverageAndConsentBoundary</dd><dt>Internal references</dt><dd data-reference-count=\"2\" data-unresolved-count=\"0\">2 followed; unresolved: none of the followed set</dd></dl></details></article>\n<article class=\"answer\" data-answer-name=\"Mission-ready\" data-answer-value=\"not evaluated\" data-epistemic-label=\"Unknown\"><h3>Mission-ready</h3><p>Answer: <span class=\"answer-value\">not evaluated</span> <span class=\"answer-label\">[Unknown]</span></p><p class=\"answer-basis\" data-unknown-basis=\"deferred\">basis: deferred</p><details data-explains=\"Mission-ready\" data-explanation-served=\"true\"><summary>Why this answer?</summary><dl><dt>Evaluation identity</dt><dd data-evaluation-snapshot=\"daemon-start-<ISO>\" data-evaluation-as-of=\"<ISO>\">snapshot <code>daemon-start-<ISO></code>, as of <code><ISO></code></dd><dt>Selection</dt><dd>project:prj-sys-fixture</dd><dt>Scenario context</dt><dd>daemon-runtime</dd><dt>Evidence classification</dt><dd data-epistemic-label=\"Unknown\">label Unknown</dd><dt>Coverage and consent boundary</dt><dd><span class=\"coverage-record\" data-repository-id=\"repo-governance-root\" data-coverage-state=\"observed\" data-consent-state=\"in-force\">repo-governance-root: observed; consent consent-gov-root in-force; captured scope repository-root</span> </dd><dt>Constituent facts (scope project:prj-sys-fixture)</dt><dd><ul><li data-constituent-fact=\"mission-contracts\">mission-contracts: unaccepted — posture deferred (SDR-36 rule 3)</li></ul><p>Stated basis: mission-contracts</p></dd><dt>Explanation classes present</dt><dd data-present-classes=\"evidenceClassification evaluation coverageAndConsentBoundary\">evidenceClassification, evaluation, coverageAndConsentBoundary</dd><dt>Internal references</dt><dd data-reference-count=\"2\" data-unresolved-count=\"0\">2 followed; unresolved: none of the followed set</dd></dl></details></article>\n<article class=\"answer\" data-answer-name=\"Reconciled\" data-answer-value=\"Unknown\" data-epistemic-label=\"Unknown\"><h3>Reconciled</h3><p>Answer: <span class=\"answer-value\">Unknown</span> <span class=\"answer-label\">[Unknown]</span></p><p class=\"answer-reason\" data-unknown-reason-primary=\"missing-evidence\">reason: missing-evidence</p><details data-explains=\"Reconciled\" data-explanation-served=\"true\"><summary>Why this answer?</summary><dl><dt>Evaluation identity</dt><dd data-evaluation-snapshot=\"daemon-start-<ISO>\" data-evaluation-as-of=\"<ISO>\">snapshot <code>daemon-start-<ISO></code>, as of <code><ISO></code></dd><dt>Selection</dt><dd>project:prj-sys-fixture</dd><dt>Scenario context</dt><dd>daemon-runtime</dd><dt>Evidence classification</dt><dd data-epistemic-label=\"Unknown\">label Unknown</dd><dt>Unknown reasons</dt><dd data-unknown-reason-primary=\"missing-evidence\">primary: missing-evidence; secondary: []</dd><dt>Coverage and consent boundary</dt><dd><span class=\"coverage-record\" data-repository-id=\"repo-governance-root\" data-coverage-state=\"observed\" data-consent-state=\"in-force\">repo-governance-root: observed; consent consent-gov-root in-force; captured scope repository-root</span> </dd><dt>Constituent facts (scope project:prj-sys-fixture)</dt><dd><ul><li data-constituent-fact=\"reconciliation\">reconciliation: not computed at this evaluation</li></ul><p>Stated basis: reconciliation</p></dd><dt>Explanation classes present</dt><dd data-present-classes=\"evidenceClassification evaluation unknownReasons coverageAndConsentBoundary\">evidenceClassification, evaluation, unknownReasons, coverageAndConsentBoundary</dd><dt>Internal references</dt><dd data-reference-count=\"2\" data-unresolved-count=\"0\">2 followed; unresolved: none of the followed set</dd></dl></details></article>\n<details class=\"aggregate\" data-membership-count=\"7\"><summary>Aggregate composition over 7 answers: Observed 2, Inferred 0, Unknown 5</summary><p>Per-primary-reason: missing-declaration 1, missing-evidence 3. Secondary annotations (disclosed separately, never folded in): none.</p><ul><li data-fact-name=\"Registered\" data-epistemic-label=\"Observed\"><span class=\"fact-name\">Registered</span>: <span class=\"fact-value\">satisfied</span> <span class=\"fact-label\">[Observed]</span></li><li data-fact-name=\"Shape present\" data-epistemic-label=\"Unknown\" data-unknown-reason=\"missing-declaration\"><span class=\"fact-name\">Shape present</span>: <span class=\"fact-value\">Unknown</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-reason\">(reason: missing-declaration)</span></li><li data-fact-name=\"Human-understandable\" data-epistemic-label=\"Unknown\" data-unknown-reason=\"missing-evidence\"><span class=\"fact-name\">Human-understandable</span>: <span class=\"fact-value\">Unknown</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-reason\">(reason: missing-evidence)</span></li><li data-fact-name=\"Observable\" data-epistemic-label=\"Observed\"><span class=\"fact-name\">Observable</span>: <span class=\"fact-value\">satisfied</span> <span class=\"fact-label\">[Observed]</span></li><li data-fact-name=\"Traceable\" data-epistemic-label=\"Unknown\" data-unknown-reason=\"missing-evidence\"><span class=\"fact-name\">Traceable</span>: <span class=\"fact-value\">Unknown</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-reason\">(reason: missing-evidence)</span></li><li data-fact-name=\"Mission-ready\" data-epistemic-label=\"Unknown\" data-unknown-basis=\"deferred\"><span class=\"fact-name\">Mission-ready</span>: <span class=\"fact-value\">not evaluated</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-basis\">(basis: deferred)</span></li><li data-fact-name=\"Reconciled\" data-epistemic-label=\"Unknown\" data-unknown-reason=\"missing-evidence\"><span class=\"fact-name\">Reconciled</span>: <span class=\"fact-value\">Unknown</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-reason\">(reason: missing-evidence)</span></li></ul></details>\n</section>\n<section class=\"disclosure\" data-section-heading=\"Further facts\"><h2>Further facts</h2><ul><li data-fact-name=\"Registered\" data-epistemic-label=\"Observed\"><span class=\"fact-name\">Registered</span>: <span class=\"fact-value\">satisfied</span> <span class=\"fact-label\">[Observed]</span></li><li data-fact-name=\"Shape present\" data-epistemic-label=\"Unknown\" data-unknown-reason=\"missing-declaration\"><span class=\"fact-name\">Shape present</span>: <span class=\"fact-value\">Unknown</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-reason\">(reason: missing-declaration)</span></li><li data-fact-name=\"Human-understandable\" data-epistemic-label=\"Unknown\" data-unknown-reason=\"missing-evidence\"><span class=\"fact-name\">Human-understandable</span>: <span class=\"fact-value\">Unknown</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-reason\">(reason: missing-evidence)</span></li><li data-fact-name=\"Observable\" data-epistemic-label=\"Observed\"><span class=\"fact-name\">Observable</span>: <span class=\"fact-value\">satisfied</span> <span class=\"fact-label\">[Observed]</span></li><li data-fact-name=\"Traceable\" data-epistemic-label=\"Unknown\" data-unknown-reason=\"missing-evidence\"><span class=\"fact-name\">Traceable</span>: <span class=\"fact-value\">Unknown</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-reason\">(reason: missing-evidence)</span></li><li data-fact-name=\"Mission-ready\" data-epistemic-label=\"Unknown\" data-unknown-basis=\"deferred\"><span class=\"fact-name\">Mission-ready</span>: <span class=\"fact-value\">not evaluated</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-basis\">(basis: deferred)</span></li><li data-fact-name=\"Reconciled\" data-epistemic-label=\"Unknown\" data-unknown-reason=\"missing-evidence\"><span class=\"fact-name\">Reconciled</span>: <span class=\"fact-value\">Unknown</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-reason\">(reason: missing-evidence)</span></li></ul></section>\n<section class=\"coverage\" data-section=\"coverage-and-consent\"><h2>Coverage and consent</h2><ul><li><span class=\"coverage-record\" data-repository-id=\"repo-governance-root\" data-coverage-state=\"observed\" data-consent-state=\"in-force\">repo-governance-root: observed; consent consent-gov-root in-force; captured scope repository-root</span> </li></ul></section>\n<section class=\"authority\" data-section=\"authority-exposure\"><h2>Authority exposure</h2><p data-state=\"absent\">No authority exposures were supplied at this evaluation.</p></section>\n<section class=\"discoverability\" data-section=\"discoverability\"><h2>Repository discoverability</h2><p data-state=\"absent\">No discoverability findings were supplied at this evaluation.</p></section>\n<section class=\"entry\" data-section=\"human-entry\"><h2>Human entry</h2><p data-entry-path=\".syzygy/intent/OVERVIEW.md\" data-entry-path-is-identity=\"false\">The project's one human entry is published at <code>.syzygy/intent/OVERVIEW.md</code> (a publication location, never an identity) — <a href=\"/entry\">read the entry document</a>.</p></section>\n</body>\n</html>"
+    },
+    {
+     "method": "GET",
+     "target": "/?x=1",
+     "auth": "right",
+     "status": 200,
+     "headers": [
+      [
+       "content-type",
+       "text/html; charset=utf-8"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "<!doctype html>\n<html lang=\"en\">\n<head><meta charset=\"utf-8\"><title>Project prj-sys-fixture — served facts</title><style>body{font-family:system-ui,sans-serif;margin:2rem auto;max-width:52rem;line-height:1.5;padding:0 1rem}section{margin:1.5rem 0}details{border:1px solid currentColor;padding:.5rem;margin:.5rem 0}summary{cursor:pointer}dt{font-weight:bold}code{font-family:ui-monospace,monospace}</style></head>\n<body data-evaluation-kind=\"project-evaluated\" data-non-citable=\"true\" data-artifact-class=\"presentation-artifact\">\n<header><h1>Project prj-sys-fixture</h1><p data-selection=\"project:prj-sys-fixture\" data-scenario-context=\"daemon-runtime\" data-evaluation-snapshot=\"daemon-start-<ISO>\" data-evaluation-as-of=\"<ISO>\">Selection <code>project:prj-sys-fixture</code>, evaluated at snapshot <code>daemon-start-<ISO></code> as of <code><ISO></code>, scenario context <code>daemon-runtime</code>.</p><p data-artifact-class=\"presentation-artifact\" data-non-citable=\"true\">This page is a generated presentation artifact — never a citable basis for any fact it renders.</p></header>\n<section class=\"answers\" data-section=\"shape-answers\"><h2>The seven shape answers</h2>\n<article class=\"answer\" data-answer-name=\"Registered\" data-answer-value=\"satisfied\" data-epistemic-label=\"Observed\"><h3>Registered</h3><p>Answer: <span class=\"answer-value\">satisfied</span> <span class=\"answer-label\">[Observed]</span></p><details data-explains=\"Registered\" data-explanation-served=\"true\"><summary>Why this answer?</summary><dl><dt>Evaluation identity</dt><dd data-evaluation-snapshot=\"daemon-start-<ISO>\" data-evaluation-as-of=\"<ISO>\">snapshot <code>daemon-start-<ISO></code>, as of <code><ISO></code></dd><dt>Selection</dt><dd>project:prj-sys-fixture</dd><dt>Scenario context</dt><dd>daemon-runtime</dd><dt>Evidence classification</dt><dd data-epistemic-label=\"Observed\">label Observed</dd><dt>Coverage and consent boundary</dt><dd><span class=\"coverage-record\" data-repository-id=\"repo-governance-root\" data-coverage-state=\"observed\" data-consent-state=\"in-force\">repo-governance-root: observed; consent consent-gov-root in-force; captured scope repository-root</span> </dd><dt>Constituent facts (scope project:prj-sys-fixture)</dt><dd><ul><li data-constituent-fact=\"declaration\">declaration: revision daemon-start-<ISO></li><li data-constituent-fact=\"validation\">validation: valid</li><li data-constituent-fact=\"root-designation\">root-designation: declared-location</li></ul><p>Stated basis: declaration, validation, root-designation</p></dd><dt>Explanation classes present</dt><dd data-present-classes=\"evidenceClassification evaluation coverageAndConsentBoundary\">evidenceClassification, evaluation, coverageAndConsentBoundary</dd><dt>Internal references</dt><dd data-reference-count=\"2\" data-unresolved-count=\"0\">2 followed; unresolved: none of the followed set</dd></dl></details></article>\n<article class=\"answer\" data-answer-name=\"Shape present\" data-answer-value=\"Unknown\" data-epistemic-label=\"Unknown\"><h3>Shape present</h3><p>Answer: <span class=\"answer-value\">Unknown</span> <span class=\"answer-label\">[Unknown]</span></p><p class=\"answer-reason\" data-unknown-reason-primary=\"missing-declaration\">reason: missing-declaration</p><details data-explains=\"Shape present\" data-explanation-served=\"true\"><summary>Why this answer?</summary><dl><dt>Evaluation identity</dt><dd data-evaluation-snapshot=\"daemon-start-<ISO>\" data-evaluation-as-of=\"<ISO>\">snapshot <code>daemon-start-<ISO></code>, as of <code><ISO></code></dd><dt>Selection</dt><dd>project:prj-sys-fixture</dd><dt>Scenario context</dt><dd>daemon-runtime</dd><dt>Evidence classification</dt><dd data-epistemic-label=\"Unknown\">label Unknown</dd><dt>Unknown reasons</dt><dd data-unknown-reason-primary=\"missing-declaration\">primary: missing-declaration; secondary: []</dd><dt>Coverage and consent boundary</dt><dd><span class=\"coverage-record\" data-repository-id=\"repo-governance-root\" data-coverage-state=\"observed\" data-consent-state=\"in-force\">repo-governance-root: observed; consent consent-gov-root in-force; captured scope repository-root</span> </dd><dt>Constituent facts (scope project:prj-sys-fixture)</dt><dd><ul><li data-constituent-fact=\"declarations-references\">declarations-references: absent — no validated declaration supplies the reference list</li></ul><p>Stated basis: declarations-references</p></dd><dt>Explanation classes present</dt><dd data-present-classes=\"evidenceClassification evaluation unknownReasons coverageAndConsentBoundary\">evidenceClassification, evaluation, unknownReasons, coverageAndConsentBoundary</dd><dt>Internal references</dt><dd data-reference-count=\"2\" data-unresolved-count=\"0\">2 followed; unresolved: none of the followed set</dd></dl></details></article>\n<article class=\"answer\" data-answer-name=\"Human-understandable\" data-answer-value=\"Unknown\" data-epistemic-label=\"Unknown\"><h3>Human-understandable</h3><p>Answer: <span class=\"answer-value\">Unknown</span> <span class=\"answer-label\">[Unknown]</span></p><p class=\"answer-reason\" data-unknown-reason-primary=\"missing-evidence\">reason: missing-evidence</p><details data-explains=\"Human-understandable\" data-explanation-served=\"true\"><summary>Why this answer?</summary><dl><dt>Evaluation identity</dt><dd data-evaluation-snapshot=\"daemon-start-<ISO>\" data-evaluation-as-of=\"<ISO>\">snapshot <code>daemon-start-<ISO></code>, as of <code><ISO></code></dd><dt>Selection</dt><dd>project:prj-sys-fixture</dd><dt>Scenario context</dt><dd>daemon-runtime</dd><dt>Evidence classification</dt><dd data-epistemic-label=\"Unknown\">label Unknown</dd><dt>Unknown reasons</dt><dd data-unknown-reason-primary=\"missing-evidence\">primary: missing-evidence; secondary: []</dd><dt>Coverage and consent boundary</dt><dd><span class=\"coverage-record\" data-repository-id=\"repo-governance-root\" data-coverage-state=\"observed\" data-consent-state=\"in-force\">repo-governance-root: observed; consent consent-gov-root in-force; captured scope repository-root</span> </dd><dt>Constituent facts (scope project:prj-sys-fixture)</dt><dd><ul><li data-constituent-fact=\"comprehension-records\">comprehension-records: none recorded</li></ul><p>Stated basis: comprehension-records</p></dd><dt>Explanation classes present</dt><dd data-present-classes=\"evidenceClassification evaluation unknownReasons coverageAndConsentBoundary\">evidenceClassification, evaluation, unknownReasons, coverageAndConsentBoundary</dd><dt>Internal references</dt><dd data-reference-count=\"2\" data-unresolved-count=\"0\">2 followed; unresolved: none of the followed set</dd></dl></details></article>\n<article class=\"answer\" data-answer-name=\"Observable\" data-answer-value=\"satisfied\" data-epistemic-label=\"Observed\"><h3>Observable</h3><p>Answer: <span class=\"answer-value\">satisfied</span> <span class=\"answer-label\">[Observed]</span></p><details data-explains=\"Observable\" data-explanation-served=\"true\"><summary>Why this answer?</summary><dl><dt>Evaluation identity</dt><dd data-evaluation-snapshot=\"daemon-start-<ISO>\" data-evaluation-as-of=\"<ISO>\">snapshot <code>daemon-start-<ISO></code>, as of <code><ISO></code></dd><dt>Selection</dt><dd>project:prj-sys-fixture</dd><dt>Scenario context</dt><dd>daemon-runtime</dd><dt>Evidence classification</dt><dd data-epistemic-label=\"Observed\">label Observed</dd><dt>Coverage and consent boundary</dt><dd><span class=\"coverage-record\" data-repository-id=\"repo-governance-root\" data-coverage-state=\"observed\" data-consent-state=\"in-force\">repo-governance-root: observed; consent consent-gov-root in-force; captured scope repository-root</span> </dd><dt>Constituent facts (scope project:prj-sys-fixture)</dt><dd><ul><li data-constituent-fact=\"repository:repo-governance-root\">repository:repo-governance-root: observed; consent consent-gov-root in-force; captured scope repository-root</li></ul><p>Stated basis: repository:repo-governance-root</p></dd><dt>Explanation classes present</dt><dd data-present-classes=\"evidenceClassification evaluation coverageAndConsentBoundary\">evidenceClassification, evaluation, coverageAndConsentBoundary</dd><dt>Internal references</dt><dd data-reference-count=\"2\" data-unresolved-count=\"0\">2 followed; unresolved: none of the followed set</dd></dl></details></article>\n<article class=\"answer\" data-answer-name=\"Traceable\" data-answer-value=\"Unknown\" data-epistemic-label=\"Unknown\"><h3>Traceable</h3><p>Answer: <span class=\"answer-value\">Unknown</span> <span class=\"answer-label\">[Unknown]</span></p><p class=\"answer-reason\" data-unknown-reason-primary=\"missing-evidence\">reason: missing-evidence</p><details data-explains=\"Traceable\" data-explanation-served=\"true\"><summary>Why this answer?</summary><dl><dt>Evaluation identity</dt><dd data-evaluation-snapshot=\"daemon-start-<ISO>\" data-evaluation-as-of=\"<ISO>\">snapshot <code>daemon-start-<ISO></code>, as of <code><ISO></code></dd><dt>Selection</dt><dd>project:prj-sys-fixture</dd><dt>Scenario context</dt><dd>daemon-runtime</dd><dt>Evidence classification</dt><dd data-epistemic-label=\"Unknown\">label Unknown</dd><dt>Unknown reasons</dt><dd data-unknown-reason-primary=\"missing-evidence\">primary: missing-evidence; secondary: []</dd><dt>Coverage and consent boundary</dt><dd><span class=\"coverage-record\" data-repository-id=\"repo-governance-root\" data-coverage-state=\"observed\" data-consent-state=\"in-force\">repo-governance-root: observed; consent consent-gov-root in-force; captured scope repository-root</span> </dd><dt>Constituent facts (scope project:prj-sys-fixture)</dt><dd><ul><li data-constituent-fact=\"link-resolution\">link-resolution: not computed at this evaluation</li></ul><p>Stated basis: link-resolution</p></dd><dt>Explanation classes present</dt><dd data-present-classes=\"evidenceClassification evaluation unknownReasons coverageAndConsentBoundary\">evidenceClassification, evaluation, unknownReasons, coverageAndConsentBoundary</dd><dt>Internal references</dt><dd data-reference-count=\"2\" data-unresolved-count=\"0\">2 followed; unresolved: none of the followed set</dd></dl></details></article>\n<article class=\"answer\" data-answer-name=\"Mission-ready\" data-answer-value=\"not evaluated\" data-epistemic-label=\"Unknown\"><h3>Mission-ready</h3><p>Answer: <span class=\"answer-value\">not evaluated</span> <span class=\"answer-label\">[Unknown]</span></p><p class=\"answer-basis\" data-unknown-basis=\"deferred\">basis: deferred</p><details data-explains=\"Mission-ready\" data-explanation-served=\"true\"><summary>Why this answer?</summary><dl><dt>Evaluation identity</dt><dd data-evaluation-snapshot=\"daemon-start-<ISO>\" data-evaluation-as-of=\"<ISO>\">snapshot <code>daemon-start-<ISO></code>, as of <code><ISO></code></dd><dt>Selection</dt><dd>project:prj-sys-fixture</dd><dt>Scenario context</dt><dd>daemon-runtime</dd><dt>Evidence classification</dt><dd data-epistemic-label=\"Unknown\">label Unknown</dd><dt>Coverage and consent boundary</dt><dd><span class=\"coverage-record\" data-repository-id=\"repo-governance-root\" data-coverage-state=\"observed\" data-consent-state=\"in-force\">repo-governance-root: observed; consent consent-gov-root in-force; captured scope repository-root</span> </dd><dt>Constituent facts (scope project:prj-sys-fixture)</dt><dd><ul><li data-constituent-fact=\"mission-contracts\">mission-contracts: unaccepted — posture deferred (SDR-36 rule 3)</li></ul><p>Stated basis: mission-contracts</p></dd><dt>Explanation classes present</dt><dd data-present-classes=\"evidenceClassification evaluation coverageAndConsentBoundary\">evidenceClassification, evaluation, coverageAndConsentBoundary</dd><dt>Internal references</dt><dd data-reference-count=\"2\" data-unresolved-count=\"0\">2 followed; unresolved: none of the followed set</dd></dl></details></article>\n<article class=\"answer\" data-answer-name=\"Reconciled\" data-answer-value=\"Unknown\" data-epistemic-label=\"Unknown\"><h3>Reconciled</h3><p>Answer: <span class=\"answer-value\">Unknown</span> <span class=\"answer-label\">[Unknown]</span></p><p class=\"answer-reason\" data-unknown-reason-primary=\"missing-evidence\">reason: missing-evidence</p><details data-explains=\"Reconciled\" data-explanation-served=\"true\"><summary>Why this answer?</summary><dl><dt>Evaluation identity</dt><dd data-evaluation-snapshot=\"daemon-start-<ISO>\" data-evaluation-as-of=\"<ISO>\">snapshot <code>daemon-start-<ISO></code>, as of <code><ISO></code></dd><dt>Selection</dt><dd>project:prj-sys-fixture</dd><dt>Scenario context</dt><dd>daemon-runtime</dd><dt>Evidence classification</dt><dd data-epistemic-label=\"Unknown\">label Unknown</dd><dt>Unknown reasons</dt><dd data-unknown-reason-primary=\"missing-evidence\">primary: missing-evidence; secondary: []</dd><dt>Coverage and consent boundary</dt><dd><span class=\"coverage-record\" data-repository-id=\"repo-governance-root\" data-coverage-state=\"observed\" data-consent-state=\"in-force\">repo-governance-root: observed; consent consent-gov-root in-force; captured scope repository-root</span> </dd><dt>Constituent facts (scope project:prj-sys-fixture)</dt><dd><ul><li data-constituent-fact=\"reconciliation\">reconciliation: not computed at this evaluation</li></ul><p>Stated basis: reconciliation</p></dd><dt>Explanation classes present</dt><dd data-present-classes=\"evidenceClassification evaluation unknownReasons coverageAndConsentBoundary\">evidenceClassification, evaluation, unknownReasons, coverageAndConsentBoundary</dd><dt>Internal references</dt><dd data-reference-count=\"2\" data-unresolved-count=\"0\">2 followed; unresolved: none of the followed set</dd></dl></details></article>\n<details class=\"aggregate\" data-membership-count=\"7\"><summary>Aggregate composition over 7 answers: Observed 2, Inferred 0, Unknown 5</summary><p>Per-primary-reason: missing-declaration 1, missing-evidence 3. Secondary annotations (disclosed separately, never folded in): none.</p><ul><li data-fact-name=\"Registered\" data-epistemic-label=\"Observed\"><span class=\"fact-name\">Registered</span>: <span class=\"fact-value\">satisfied</span> <span class=\"fact-label\">[Observed]</span></li><li data-fact-name=\"Shape present\" data-epistemic-label=\"Unknown\" data-unknown-reason=\"missing-declaration\"><span class=\"fact-name\">Shape present</span>: <span class=\"fact-value\">Unknown</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-reason\">(reason: missing-declaration)</span></li><li data-fact-name=\"Human-understandable\" data-epistemic-label=\"Unknown\" data-unknown-reason=\"missing-evidence\"><span class=\"fact-name\">Human-understandable</span>: <span class=\"fact-value\">Unknown</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-reason\">(reason: missing-evidence)</span></li><li data-fact-name=\"Observable\" data-epistemic-label=\"Observed\"><span class=\"fact-name\">Observable</span>: <span class=\"fact-value\">satisfied</span> <span class=\"fact-label\">[Observed]</span></li><li data-fact-name=\"Traceable\" data-epistemic-label=\"Unknown\" data-unknown-reason=\"missing-evidence\"><span class=\"fact-name\">Traceable</span>: <span class=\"fact-value\">Unknown</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-reason\">(reason: missing-evidence)</span></li><li data-fact-name=\"Mission-ready\" data-epistemic-label=\"Unknown\" data-unknown-basis=\"deferred\"><span class=\"fact-name\">Mission-ready</span>: <span class=\"fact-value\">not evaluated</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-basis\">(basis: deferred)</span></li><li data-fact-name=\"Reconciled\" data-epistemic-label=\"Unknown\" data-unknown-reason=\"missing-evidence\"><span class=\"fact-name\">Reconciled</span>: <span class=\"fact-value\">Unknown</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-reason\">(reason: missing-evidence)</span></li></ul></details>\n</section>\n<section class=\"disclosure\" data-section-heading=\"Further facts\"><h2>Further facts</h2><ul><li data-fact-name=\"Registered\" data-epistemic-label=\"Observed\"><span class=\"fact-name\">Registered</span>: <span class=\"fact-value\">satisfied</span> <span class=\"fact-label\">[Observed]</span></li><li data-fact-name=\"Shape present\" data-epistemic-label=\"Unknown\" data-unknown-reason=\"missing-declaration\"><span class=\"fact-name\">Shape present</span>: <span class=\"fact-value\">Unknown</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-reason\">(reason: missing-declaration)</span></li><li data-fact-name=\"Human-understandable\" data-epistemic-label=\"Unknown\" data-unknown-reason=\"missing-evidence\"><span class=\"fact-name\">Human-understandable</span>: <span class=\"fact-value\">Unknown</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-reason\">(reason: missing-evidence)</span></li><li data-fact-name=\"Observable\" data-epistemic-label=\"Observed\"><span class=\"fact-name\">Observable</span>: <span class=\"fact-value\">satisfied</span> <span class=\"fact-label\">[Observed]</span></li><li data-fact-name=\"Traceable\" data-epistemic-label=\"Unknown\" data-unknown-reason=\"missing-evidence\"><span class=\"fact-name\">Traceable</span>: <span class=\"fact-value\">Unknown</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-reason\">(reason: missing-evidence)</span></li><li data-fact-name=\"Mission-ready\" data-epistemic-label=\"Unknown\" data-unknown-basis=\"deferred\"><span class=\"fact-name\">Mission-ready</span>: <span class=\"fact-value\">not evaluated</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-basis\">(basis: deferred)</span></li><li data-fact-name=\"Reconciled\" data-epistemic-label=\"Unknown\" data-unknown-reason=\"missing-evidence\"><span class=\"fact-name\">Reconciled</span>: <span class=\"fact-value\">Unknown</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-reason\">(reason: missing-evidence)</span></li></ul></section>\n<section class=\"coverage\" data-section=\"coverage-and-consent\"><h2>Coverage and consent</h2><ul><li><span class=\"coverage-record\" data-repository-id=\"repo-governance-root\" data-coverage-state=\"observed\" data-consent-state=\"in-force\">repo-governance-root: observed; consent consent-gov-root in-force; captured scope repository-root</span> </li></ul></section>\n<section class=\"authority\" data-section=\"authority-exposure\"><h2>Authority exposure</h2><p data-state=\"absent\">No authority exposures were supplied at this evaluation.</p></section>\n<section class=\"discoverability\" data-section=\"discoverability\"><h2>Repository discoverability</h2><p data-state=\"absent\">No discoverability findings were supplied at this evaluation.</p></section>\n<section class=\"entry\" data-section=\"human-entry\"><h2>Human entry</h2><p data-entry-path=\".syzygy/intent/OVERVIEW.md\" data-entry-path-is-identity=\"false\">The project's one human entry is published at <code>.syzygy/intent/OVERVIEW.md</code> (a publication location, never an identity) — <a href=\"/entry\">read the entry document</a>.</p></section>\n</body>\n</html>"
+    },
+    {
+     "method": "GET",
+     "target": "/?x=1",
+     "auth": "wrong",
+     "status": 200,
+     "headers": [
+      [
+       "content-type",
+       "text/html; charset=utf-8"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "<!doctype html>\n<html lang=\"en\">\n<head><meta charset=\"utf-8\"><title>Project prj-sys-fixture — served facts</title><style>body{font-family:system-ui,sans-serif;margin:2rem auto;max-width:52rem;line-height:1.5;padding:0 1rem}section{margin:1.5rem 0}details{border:1px solid currentColor;padding:.5rem;margin:.5rem 0}summary{cursor:pointer}dt{font-weight:bold}code{font-family:ui-monospace,monospace}</style></head>\n<body data-evaluation-kind=\"project-evaluated\" data-non-citable=\"true\" data-artifact-class=\"presentation-artifact\">\n<header><h1>Project prj-sys-fixture</h1><p data-selection=\"project:prj-sys-fixture\" data-scenario-context=\"daemon-runtime\" data-evaluation-snapshot=\"daemon-start-<ISO>\" data-evaluation-as-of=\"<ISO>\">Selection <code>project:prj-sys-fixture</code>, evaluated at snapshot <code>daemon-start-<ISO></code> as of <code><ISO></code>, scenario context <code>daemon-runtime</code>.</p><p data-artifact-class=\"presentation-artifact\" data-non-citable=\"true\">This page is a generated presentation artifact — never a citable basis for any fact it renders.</p></header>\n<section class=\"answers\" data-section=\"shape-answers\"><h2>The seven shape answers</h2>\n<article class=\"answer\" data-answer-name=\"Registered\" data-answer-value=\"satisfied\" data-epistemic-label=\"Observed\"><h3>Registered</h3><p>Answer: <span class=\"answer-value\">satisfied</span> <span class=\"answer-label\">[Observed]</span></p><details data-explains=\"Registered\" data-explanation-served=\"true\"><summary>Why this answer?</summary><dl><dt>Evaluation identity</dt><dd data-evaluation-snapshot=\"daemon-start-<ISO>\" data-evaluation-as-of=\"<ISO>\">snapshot <code>daemon-start-<ISO></code>, as of <code><ISO></code></dd><dt>Selection</dt><dd>project:prj-sys-fixture</dd><dt>Scenario context</dt><dd>daemon-runtime</dd><dt>Evidence classification</dt><dd data-epistemic-label=\"Observed\">label Observed</dd><dt>Coverage and consent boundary</dt><dd><span class=\"coverage-record\" data-repository-id=\"repo-governance-root\" data-coverage-state=\"observed\" data-consent-state=\"in-force\">repo-governance-root: observed; consent consent-gov-root in-force; captured scope repository-root</span> </dd><dt>Constituent facts (scope project:prj-sys-fixture)</dt><dd><ul><li data-constituent-fact=\"declaration\">declaration: revision daemon-start-<ISO></li><li data-constituent-fact=\"validation\">validation: valid</li><li data-constituent-fact=\"root-designation\">root-designation: declared-location</li></ul><p>Stated basis: declaration, validation, root-designation</p></dd><dt>Explanation classes present</dt><dd data-present-classes=\"evidenceClassification evaluation coverageAndConsentBoundary\">evidenceClassification, evaluation, coverageAndConsentBoundary</dd><dt>Internal references</dt><dd data-reference-count=\"2\" data-unresolved-count=\"0\">2 followed; unresolved: none of the followed set</dd></dl></details></article>\n<article class=\"answer\" data-answer-name=\"Shape present\" data-answer-value=\"Unknown\" data-epistemic-label=\"Unknown\"><h3>Shape present</h3><p>Answer: <span class=\"answer-value\">Unknown</span> <span class=\"answer-label\">[Unknown]</span></p><p class=\"answer-reason\" data-unknown-reason-primary=\"missing-declaration\">reason: missing-declaration</p><details data-explains=\"Shape present\" data-explanation-served=\"true\"><summary>Why this answer?</summary><dl><dt>Evaluation identity</dt><dd data-evaluation-snapshot=\"daemon-start-<ISO>\" data-evaluation-as-of=\"<ISO>\">snapshot <code>daemon-start-<ISO></code>, as of <code><ISO></code></dd><dt>Selection</dt><dd>project:prj-sys-fixture</dd><dt>Scenario context</dt><dd>daemon-runtime</dd><dt>Evidence classification</dt><dd data-epistemic-label=\"Unknown\">label Unknown</dd><dt>Unknown reasons</dt><dd data-unknown-reason-primary=\"missing-declaration\">primary: missing-declaration; secondary: []</dd><dt>Coverage and consent boundary</dt><dd><span class=\"coverage-record\" data-repository-id=\"repo-governance-root\" data-coverage-state=\"observed\" data-consent-state=\"in-force\">repo-governance-root: observed; consent consent-gov-root in-force; captured scope repository-root</span> </dd><dt>Constituent facts (scope project:prj-sys-fixture)</dt><dd><ul><li data-constituent-fact=\"declarations-references\">declarations-references: absent — no validated declaration supplies the reference list</li></ul><p>Stated basis: declarations-references</p></dd><dt>Explanation classes present</dt><dd data-present-classes=\"evidenceClassification evaluation unknownReasons coverageAndConsentBoundary\">evidenceClassification, evaluation, unknownReasons, coverageAndConsentBoundary</dd><dt>Internal references</dt><dd data-reference-count=\"2\" data-unresolved-count=\"0\">2 followed; unresolved: none of the followed set</dd></dl></details></article>\n<article class=\"answer\" data-answer-name=\"Human-understandable\" data-answer-value=\"Unknown\" data-epistemic-label=\"Unknown\"><h3>Human-understandable</h3><p>Answer: <span class=\"answer-value\">Unknown</span> <span class=\"answer-label\">[Unknown]</span></p><p class=\"answer-reason\" data-unknown-reason-primary=\"missing-evidence\">reason: missing-evidence</p><details data-explains=\"Human-understandable\" data-explanation-served=\"true\"><summary>Why this answer?</summary><dl><dt>Evaluation identity</dt><dd data-evaluation-snapshot=\"daemon-start-<ISO>\" data-evaluation-as-of=\"<ISO>\">snapshot <code>daemon-start-<ISO></code>, as of <code><ISO></code></dd><dt>Selection</dt><dd>project:prj-sys-fixture</dd><dt>Scenario context</dt><dd>daemon-runtime</dd><dt>Evidence classification</dt><dd data-epistemic-label=\"Unknown\">label Unknown</dd><dt>Unknown reasons</dt><dd data-unknown-reason-primary=\"missing-evidence\">primary: missing-evidence; secondary: []</dd><dt>Coverage and consent boundary</dt><dd><span class=\"coverage-record\" data-repository-id=\"repo-governance-root\" data-coverage-state=\"observed\" data-consent-state=\"in-force\">repo-governance-root: observed; consent consent-gov-root in-force; captured scope repository-root</span> </dd><dt>Constituent facts (scope project:prj-sys-fixture)</dt><dd><ul><li data-constituent-fact=\"comprehension-records\">comprehension-records: none recorded</li></ul><p>Stated basis: comprehension-records</p></dd><dt>Explanation classes present</dt><dd data-present-classes=\"evidenceClassification evaluation unknownReasons coverageAndConsentBoundary\">evidenceClassification, evaluation, unknownReasons, coverageAndConsentBoundary</dd><dt>Internal references</dt><dd data-reference-count=\"2\" data-unresolved-count=\"0\">2 followed; unresolved: none of the followed set</dd></dl></details></article>\n<article class=\"answer\" data-answer-name=\"Observable\" data-answer-value=\"satisfied\" data-epistemic-label=\"Observed\"><h3>Observable</h3><p>Answer: <span class=\"answer-value\">satisfied</span> <span class=\"answer-label\">[Observed]</span></p><details data-explains=\"Observable\" data-explanation-served=\"true\"><summary>Why this answer?</summary><dl><dt>Evaluation identity</dt><dd data-evaluation-snapshot=\"daemon-start-<ISO>\" data-evaluation-as-of=\"<ISO>\">snapshot <code>daemon-start-<ISO></code>, as of <code><ISO></code></dd><dt>Selection</dt><dd>project:prj-sys-fixture</dd><dt>Scenario context</dt><dd>daemon-runtime</dd><dt>Evidence classification</dt><dd data-epistemic-label=\"Observed\">label Observed</dd><dt>Coverage and consent boundary</dt><dd><span class=\"coverage-record\" data-repository-id=\"repo-governance-root\" data-coverage-state=\"observed\" data-consent-state=\"in-force\">repo-governance-root: observed; consent consent-gov-root in-force; captured scope repository-root</span> </dd><dt>Constituent facts (scope project:prj-sys-fixture)</dt><dd><ul><li data-constituent-fact=\"repository:repo-governance-root\">repository:repo-governance-root: observed; consent consent-gov-root in-force; captured scope repository-root</li></ul><p>Stated basis: repository:repo-governance-root</p></dd><dt>Explanation classes present</dt><dd data-present-classes=\"evidenceClassification evaluation coverageAndConsentBoundary\">evidenceClassification, evaluation, coverageAndConsentBoundary</dd><dt>Internal references</dt><dd data-reference-count=\"2\" data-unresolved-count=\"0\">2 followed; unresolved: none of the followed set</dd></dl></details></article>\n<article class=\"answer\" data-answer-name=\"Traceable\" data-answer-value=\"Unknown\" data-epistemic-label=\"Unknown\"><h3>Traceable</h3><p>Answer: <span class=\"answer-value\">Unknown</span> <span class=\"answer-label\">[Unknown]</span></p><p class=\"answer-reason\" data-unknown-reason-primary=\"missing-evidence\">reason: missing-evidence</p><details data-explains=\"Traceable\" data-explanation-served=\"true\"><summary>Why this answer?</summary><dl><dt>Evaluation identity</dt><dd data-evaluation-snapshot=\"daemon-start-<ISO>\" data-evaluation-as-of=\"<ISO>\">snapshot <code>daemon-start-<ISO></code>, as of <code><ISO></code></dd><dt>Selection</dt><dd>project:prj-sys-fixture</dd><dt>Scenario context</dt><dd>daemon-runtime</dd><dt>Evidence classification</dt><dd data-epistemic-label=\"Unknown\">label Unknown</dd><dt>Unknown reasons</dt><dd data-unknown-reason-primary=\"missing-evidence\">primary: missing-evidence; secondary: []</dd><dt>Coverage and consent boundary</dt><dd><span class=\"coverage-record\" data-repository-id=\"repo-governance-root\" data-coverage-state=\"observed\" data-consent-state=\"in-force\">repo-governance-root: observed; consent consent-gov-root in-force; captured scope repository-root</span> </dd><dt>Constituent facts (scope project:prj-sys-fixture)</dt><dd><ul><li data-constituent-fact=\"link-resolution\">link-resolution: not computed at this evaluation</li></ul><p>Stated basis: link-resolution</p></dd><dt>Explanation classes present</dt><dd data-present-classes=\"evidenceClassification evaluation unknownReasons coverageAndConsentBoundary\">evidenceClassification, evaluation, unknownReasons, coverageAndConsentBoundary</dd><dt>Internal references</dt><dd data-reference-count=\"2\" data-unresolved-count=\"0\">2 followed; unresolved: none of the followed set</dd></dl></details></article>\n<article class=\"answer\" data-answer-name=\"Mission-ready\" data-answer-value=\"not evaluated\" data-epistemic-label=\"Unknown\"><h3>Mission-ready</h3><p>Answer: <span class=\"answer-value\">not evaluated</span> <span class=\"answer-label\">[Unknown]</span></p><p class=\"answer-basis\" data-unknown-basis=\"deferred\">basis: deferred</p><details data-explains=\"Mission-ready\" data-explanation-served=\"true\"><summary>Why this answer?</summary><dl><dt>Evaluation identity</dt><dd data-evaluation-snapshot=\"daemon-start-<ISO>\" data-evaluation-as-of=\"<ISO>\">snapshot <code>daemon-start-<ISO></code>, as of <code><ISO></code></dd><dt>Selection</dt><dd>project:prj-sys-fixture</dd><dt>Scenario context</dt><dd>daemon-runtime</dd><dt>Evidence classification</dt><dd data-epistemic-label=\"Unknown\">label Unknown</dd><dt>Coverage and consent boundary</dt><dd><span class=\"coverage-record\" data-repository-id=\"repo-governance-root\" data-coverage-state=\"observed\" data-consent-state=\"in-force\">repo-governance-root: observed; consent consent-gov-root in-force; captured scope repository-root</span> </dd><dt>Constituent facts (scope project:prj-sys-fixture)</dt><dd><ul><li data-constituent-fact=\"mission-contracts\">mission-contracts: unaccepted — posture deferred (SDR-36 rule 3)</li></ul><p>Stated basis: mission-contracts</p></dd><dt>Explanation classes present</dt><dd data-present-classes=\"evidenceClassification evaluation coverageAndConsentBoundary\">evidenceClassification, evaluation, coverageAndConsentBoundary</dd><dt>Internal references</dt><dd data-reference-count=\"2\" data-unresolved-count=\"0\">2 followed; unresolved: none of the followed set</dd></dl></details></article>\n<article class=\"answer\" data-answer-name=\"Reconciled\" data-answer-value=\"Unknown\" data-epistemic-label=\"Unknown\"><h3>Reconciled</h3><p>Answer: <span class=\"answer-value\">Unknown</span> <span class=\"answer-label\">[Unknown]</span></p><p class=\"answer-reason\" data-unknown-reason-primary=\"missing-evidence\">reason: missing-evidence</p><details data-explains=\"Reconciled\" data-explanation-served=\"true\"><summary>Why this answer?</summary><dl><dt>Evaluation identity</dt><dd data-evaluation-snapshot=\"daemon-start-<ISO>\" data-evaluation-as-of=\"<ISO>\">snapshot <code>daemon-start-<ISO></code>, as of <code><ISO></code></dd><dt>Selection</dt><dd>project:prj-sys-fixture</dd><dt>Scenario context</dt><dd>daemon-runtime</dd><dt>Evidence classification</dt><dd data-epistemic-label=\"Unknown\">label Unknown</dd><dt>Unknown reasons</dt><dd data-unknown-reason-primary=\"missing-evidence\">primary: missing-evidence; secondary: []</dd><dt>Coverage and consent boundary</dt><dd><span class=\"coverage-record\" data-repository-id=\"repo-governance-root\" data-coverage-state=\"observed\" data-consent-state=\"in-force\">repo-governance-root: observed; consent consent-gov-root in-force; captured scope repository-root</span> </dd><dt>Constituent facts (scope project:prj-sys-fixture)</dt><dd><ul><li data-constituent-fact=\"reconciliation\">reconciliation: not computed at this evaluation</li></ul><p>Stated basis: reconciliation</p></dd><dt>Explanation classes present</dt><dd data-present-classes=\"evidenceClassification evaluation unknownReasons coverageAndConsentBoundary\">evidenceClassification, evaluation, unknownReasons, coverageAndConsentBoundary</dd><dt>Internal references</dt><dd data-reference-count=\"2\" data-unresolved-count=\"0\">2 followed; unresolved: none of the followed set</dd></dl></details></article>\n<details class=\"aggregate\" data-membership-count=\"7\"><summary>Aggregate composition over 7 answers: Observed 2, Inferred 0, Unknown 5</summary><p>Per-primary-reason: missing-declaration 1, missing-evidence 3. Secondary annotations (disclosed separately, never folded in): none.</p><ul><li data-fact-name=\"Registered\" data-epistemic-label=\"Observed\"><span class=\"fact-name\">Registered</span>: <span class=\"fact-value\">satisfied</span> <span class=\"fact-label\">[Observed]</span></li><li data-fact-name=\"Shape present\" data-epistemic-label=\"Unknown\" data-unknown-reason=\"missing-declaration\"><span class=\"fact-name\">Shape present</span>: <span class=\"fact-value\">Unknown</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-reason\">(reason: missing-declaration)</span></li><li data-fact-name=\"Human-understandable\" data-epistemic-label=\"Unknown\" data-unknown-reason=\"missing-evidence\"><span class=\"fact-name\">Human-understandable</span>: <span class=\"fact-value\">Unknown</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-reason\">(reason: missing-evidence)</span></li><li data-fact-name=\"Observable\" data-epistemic-label=\"Observed\"><span class=\"fact-name\">Observable</span>: <span class=\"fact-value\">satisfied</span> <span class=\"fact-label\">[Observed]</span></li><li data-fact-name=\"Traceable\" data-epistemic-label=\"Unknown\" data-unknown-reason=\"missing-evidence\"><span class=\"fact-name\">Traceable</span>: <span class=\"fact-value\">Unknown</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-reason\">(reason: missing-evidence)</span></li><li data-fact-name=\"Mission-ready\" data-epistemic-label=\"Unknown\" data-unknown-basis=\"deferred\"><span class=\"fact-name\">Mission-ready</span>: <span class=\"fact-value\">not evaluated</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-basis\">(basis: deferred)</span></li><li data-fact-name=\"Reconciled\" data-epistemic-label=\"Unknown\" data-unknown-reason=\"missing-evidence\"><span class=\"fact-name\">Reconciled</span>: <span class=\"fact-value\">Unknown</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-reason\">(reason: missing-evidence)</span></li></ul></details>\n</section>\n<section class=\"disclosure\" data-section-heading=\"Further facts\"><h2>Further facts</h2><ul><li data-fact-name=\"Registered\" data-epistemic-label=\"Observed\"><span class=\"fact-name\">Registered</span>: <span class=\"fact-value\">satisfied</span> <span class=\"fact-label\">[Observed]</span></li><li data-fact-name=\"Shape present\" data-epistemic-label=\"Unknown\" data-unknown-reason=\"missing-declaration\"><span class=\"fact-name\">Shape present</span>: <span class=\"fact-value\">Unknown</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-reason\">(reason: missing-declaration)</span></li><li data-fact-name=\"Human-understandable\" data-epistemic-label=\"Unknown\" data-unknown-reason=\"missing-evidence\"><span class=\"fact-name\">Human-understandable</span>: <span class=\"fact-value\">Unknown</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-reason\">(reason: missing-evidence)</span></li><li data-fact-name=\"Observable\" data-epistemic-label=\"Observed\"><span class=\"fact-name\">Observable</span>: <span class=\"fact-value\">satisfied</span> <span class=\"fact-label\">[Observed]</span></li><li data-fact-name=\"Traceable\" data-epistemic-label=\"Unknown\" data-unknown-reason=\"missing-evidence\"><span class=\"fact-name\">Traceable</span>: <span class=\"fact-value\">Unknown</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-reason\">(reason: missing-evidence)</span></li><li data-fact-name=\"Mission-ready\" data-epistemic-label=\"Unknown\" data-unknown-basis=\"deferred\"><span class=\"fact-name\">Mission-ready</span>: <span class=\"fact-value\">not evaluated</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-basis\">(basis: deferred)</span></li><li data-fact-name=\"Reconciled\" data-epistemic-label=\"Unknown\" data-unknown-reason=\"missing-evidence\"><span class=\"fact-name\">Reconciled</span>: <span class=\"fact-value\">Unknown</span> <span class=\"fact-label\">[Unknown]</span> <span class=\"fact-reason\">(reason: missing-evidence)</span></li></ul></section>\n<section class=\"coverage\" data-section=\"coverage-and-consent\"><h2>Coverage and consent</h2><ul><li><span class=\"coverage-record\" data-repository-id=\"repo-governance-root\" data-coverage-state=\"observed\" data-consent-state=\"in-force\">repo-governance-root: observed; consent consent-gov-root in-force; captured scope repository-root</span> </li></ul></section>\n<section class=\"authority\" data-section=\"authority-exposure\"><h2>Authority exposure</h2><p data-state=\"absent\">No authority exposures were supplied at this evaluation.</p></section>\n<section class=\"discoverability\" data-section=\"discoverability\"><h2>Repository discoverability</h2><p data-state=\"absent\">No discoverability findings were supplied at this evaluation.</p></section>\n<section class=\"entry\" data-section=\"human-entry\"><h2>Human entry</h2><p data-entry-path=\".syzygy/intent/OVERVIEW.md\" data-entry-path-is-identity=\"false\">The project's one human entry is published at <code>.syzygy/intent/OVERVIEW.md</code> (a publication location, never an identity) — <a href=\"/entry\">read the entry document</a>.</p></section>\n</body>\n</html>"
+    },
+    {
+     "method": "HEAD",
+     "target": "/",
+     "auth": "none",
+     "status": 404,
+     "headers": [
+      [
+       "content-type",
+       "application/json"
+      ]
+     ],
+     "body": ""
+    },
+    {
+     "method": "HEAD",
+     "target": "/",
+     "auth": "right",
+     "status": 404,
+     "headers": [
+      [
+       "content-type",
+       "application/json"
+      ]
+     ],
+     "body": ""
+    },
+    {
+     "method": "HEAD",
+     "target": "/",
+     "auth": "wrong",
+     "status": 404,
+     "headers": [
+      [
+       "content-type",
+       "application/json"
+      ]
+     ],
+     "body": ""
+    },
+    {
+     "method": "POST",
+     "target": "/",
+     "auth": "none",
+     "status": 404,
+     "headers": [
+      [
+       "content-type",
+       "application/json"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "{\"served\":\"nothing\",\"reason\":\"unknown-route\",\"method\":\"POST\",\"path\":\"/\"}"
+    },
+    {
+     "method": "POST",
+     "target": "/",
+     "auth": "right",
+     "status": 404,
+     "headers": [
+      [
+       "content-type",
+       "application/json"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "{\"served\":\"nothing\",\"reason\":\"unknown-route\",\"method\":\"POST\",\"path\":\"/\"}"
+    },
+    {
+     "method": "POST",
+     "target": "/",
+     "auth": "wrong",
+     "status": 404,
+     "headers": [
+      [
+       "content-type",
+       "application/json"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "{\"served\":\"nothing\",\"reason\":\"unknown-route\",\"method\":\"POST\",\"path\":\"/\"}"
+    },
+    {
+     "method": "GET",
+     "target": "/entry",
+     "auth": "none",
+     "status": 200,
+     "headers": [
+      [
+       "content-type",
+       "text/html; charset=utf-8"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "<!doctype html>\n<html lang=\"en\">\n<head><meta charset=\"utf-8\"><title>Human entry</title><style>body{font-family:system-ui,sans-serif;margin:2rem auto;max-width:52rem;line-height:1.5;padding:0 1rem}section{margin:1.5rem 0}details{border:1px solid currentColor;padding:.5rem;margin:.5rem 0}summary{cursor:pointer}dt{font-weight:bold}code{font-family:ui-monospace,monospace}</style></head>\n<body data-non-citable=\"true\" data-artifact-class=\"presentation-artifact\" data-entry-state=\"present\">\n<header><h1>Human entry</h1><p data-entry-path=\".syzygy/intent/OVERVIEW.md\" data-entry-path-is-identity=\"false\">Published at <code>.syzygy/intent/OVERVIEW.md</code> — a publication location, never an identity.</p><p data-non-citable=\"true\" data-artifact-class=\"presentation-artifact\">This entry is governed presentation: non-citable, a presentation artifact, never the source of any project fact.</p></header><section data-section=\"entry-content\" data-entry-state=\"present\"><pre class=\"entry-text\"># Syzygy system fixture overview\n\nThis is the fixture entry document.\n</pre></section><section data-section=\"entry-authorities\"><h2>Routes to authority</h2><p data-state=\"absent\">No authority citations were supplied for this entry.</p></section>\n</body>\n</html>"
+    },
+    {
+     "method": "GET",
+     "target": "/entry",
+     "auth": "right",
+     "status": 200,
+     "headers": [
+      [
+       "content-type",
+       "text/html; charset=utf-8"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "<!doctype html>\n<html lang=\"en\">\n<head><meta charset=\"utf-8\"><title>Human entry</title><style>body{font-family:system-ui,sans-serif;margin:2rem auto;max-width:52rem;line-height:1.5;padding:0 1rem}section{margin:1.5rem 0}details{border:1px solid currentColor;padding:.5rem;margin:.5rem 0}summary{cursor:pointer}dt{font-weight:bold}code{font-family:ui-monospace,monospace}</style></head>\n<body data-non-citable=\"true\" data-artifact-class=\"presentation-artifact\" data-entry-state=\"present\">\n<header><h1>Human entry</h1><p data-entry-path=\".syzygy/intent/OVERVIEW.md\" data-entry-path-is-identity=\"false\">Published at <code>.syzygy/intent/OVERVIEW.md</code> — a publication location, never an identity.</p><p data-non-citable=\"true\" data-artifact-class=\"presentation-artifact\">This entry is governed presentation: non-citable, a presentation artifact, never the source of any project fact.</p></header><section data-section=\"entry-content\" data-entry-state=\"present\"><pre class=\"entry-text\"># Syzygy system fixture overview\n\nThis is the fixture entry document.\n</pre></section><section data-section=\"entry-authorities\"><h2>Routes to authority</h2><p data-state=\"absent\">No authority citations were supplied for this entry.</p></section>\n</body>\n</html>"
+    },
+    {
+     "method": "GET",
+     "target": "/entry",
+     "auth": "wrong",
+     "status": 200,
+     "headers": [
+      [
+       "content-type",
+       "text/html; charset=utf-8"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "<!doctype html>\n<html lang=\"en\">\n<head><meta charset=\"utf-8\"><title>Human entry</title><style>body{font-family:system-ui,sans-serif;margin:2rem auto;max-width:52rem;line-height:1.5;padding:0 1rem}section{margin:1.5rem 0}details{border:1px solid currentColor;padding:.5rem;margin:.5rem 0}summary{cursor:pointer}dt{font-weight:bold}code{font-family:ui-monospace,monospace}</style></head>\n<body data-non-citable=\"true\" data-artifact-class=\"presentation-artifact\" data-entry-state=\"present\">\n<header><h1>Human entry</h1><p data-entry-path=\".syzygy/intent/OVERVIEW.md\" data-entry-path-is-identity=\"false\">Published at <code>.syzygy/intent/OVERVIEW.md</code> — a publication location, never an identity.</p><p data-non-citable=\"true\" data-artifact-class=\"presentation-artifact\">This entry is governed presentation: non-citable, a presentation artifact, never the source of any project fact.</p></header><section data-section=\"entry-content\" data-entry-state=\"present\"><pre class=\"entry-text\"># Syzygy system fixture overview\n\nThis is the fixture entry document.\n</pre></section><section data-section=\"entry-authorities\"><h2>Routes to authority</h2><p data-state=\"absent\">No authority citations were supplied for this entry.</p></section>\n</body>\n</html>"
+    },
+    {
+     "method": "GET",
+     "target": "/api/project",
+     "auth": "none",
+     "status": 401,
+     "headers": [
+      [
+       "content-type",
+       "application/json"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "{\"admitted\":false,\"served\":\"nothing\"}"
+    },
+    {
+     "method": "GET",
+     "target": "/api/project",
+     "auth": "right",
+     "status": 200,
+     "headers": [
+      [
+       "content-type",
+       "application/json"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "{\"kind\":\"project-evaluated\",\"state\":{\"current\":{\"channel\":\"machine\",\"selection\":\"project:prj-sys-fixture\",\"evaluation\":{\"snapshot\":\"daemon-start-<ISO>\",\"asOf\":\"<ISO>\"},\"scenarioContext\":\"daemon-runtime\",\"declaredFilters\":{},\"facts\":[{\"name\":\"Registered\",\"value\":\"satisfied\",\"epistemic\":{\"label\":\"Observed\"}},{\"name\":\"Shape present\",\"value\":\"Unknown\",\"epistemic\":{\"label\":\"Unknown\",\"reasons\":{\"primary\":\"missing-declaration\",\"secondary\":[]}}},{\"name\":\"Human-understandable\",\"value\":\"Unknown\",\"epistemic\":{\"label\":\"Unknown\",\"reasons\":{\"primary\":\"missing-evidence\",\"secondary\":[]}}},{\"name\":\"Observable\",\"value\":\"satisfied\",\"epistemic\":{\"label\":\"Observed\"}},{\"name\":\"Traceable\",\"value\":\"Unknown\",\"epistemic\":{\"label\":\"Unknown\",\"reasons\":{\"primary\":\"missing-evidence\",\"secondary\":[]}}},{\"name\":\"Mission-ready\",\"value\":\"not evaluated\",\"epistemic\":{\"label\":\"Unknown\",\"basis\":\"deferred\"}},{\"name\":\"Reconciled\",\"value\":\"Unknown\",\"epistemic\":{\"label\":\"Unknown\",\"reasons\":{\"primary\":\"missing-evidence\",\"secondary\":[]}}}]},\"proposed\":[]},\"evaluationId\":\"daemon-start-<ISO>@<ISO>\",\"identities\":{\"registration\":[{\"field\":\"facts.projectId\",\"value\":\"prj-sys-fixture\"}],\"coverage\":[{\"field\":\"projectId\",\"value\":\"prj-sys-fixture\"},{\"field\":\"repositories[0].repositoryId\",\"value\":\"repo-governance-root\"}]},\"distinctions\":{\"perFact\":[{\"fact\":\"Registered\",\"distinctions\":[{\"name\":\"epistemic-label\",\"value\":\"Observed\",\"recoverableBy\":\"text-attribute\"}]},{\"fact\":\"Shape present\",\"distinctions\":[{\"name\":\"epistemic-label\",\"value\":\"Unknown\",\"recoverableBy\":\"text-attribute\"},{\"name\":\"unknown-reason\",\"value\":\"missing-declaration\",\"recoverableBy\":\"text-attribute\"}]},{\"fact\":\"Human-understandable\",\"distinctions\":[{\"name\":\"epistemic-label\",\"value\":\"Unknown\",\"recoverableBy\":\"text-attribute\"},{\"name\":\"unknown-reason\",\"value\":\"missing-evidence\",\"recoverableBy\":\"text-attribute\"}]},{\"fact\":\"Observable\",\"distinctions\":[{\"name\":\"epistemic-label\",\"value\":\"Observed\",\"recoverableBy\":\"text-attribute\"}]},{\"fact\":\"Traceable\",\"distinctions\":[{\"name\":\"epistemic-label\",\"value\":\"Unknown\",\"recoverableBy\":\"text-attribute\"},{\"name\":\"unknown-reason\",\"value\":\"missing-evidence\",\"recoverableBy\":\"text-attribute\"}]},{\"fact\":\"Mission-ready\",\"distinctions\":[{\"name\":\"epistemic-label\",\"value\":\"Unknown\",\"recoverableBy\":\"text-attribute\"}]},{\"fact\":\"Reconciled\",\"distinctions\":[{\"name\":\"epistemic-label\",\"value\":\"Unknown\",\"recoverableBy\":\"text-attribute\"},{\"name\":\"unknown-reason\",\"value\":\"missing-evidence\",\"recoverableBy\":\"text-attribute\"}]}],\"perRepositoryConsent\":[{\"repositoryId\":\"repo-governance-root\",\"distinctions\":[{\"name\":\"consent-state\",\"value\":\"observed\",\"recoverableBy\":\"text-attribute\"}]}],\"perProposal\":[],\"sweep\":{\"totalDistinctions\":9,\"coveredDistinctions\":[\"epistemic-label\",\"unknown-reason\",\"consent-state\"],\"missingDistinctions\":[\"rendering-tier\",\"freshness-state\",\"adopted-vs-unadopted\",\"proposed-vs-current\",\"effective-status-vs-stamp\",\"discoverability-value\"]}}}"
+    },
+    {
+     "method": "GET",
+     "target": "/api/project",
+     "auth": "wrong",
+     "status": 401,
+     "headers": [
+      [
+       "content-type",
+       "application/json"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "{\"admitted\":false,\"served\":\"nothing\"}"
+    },
+    {
+     "method": "GET",
+     "target": "/unknown",
+     "auth": "none",
+     "status": 404,
+     "headers": [
+      [
+       "content-type",
+       "application/json"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "{\"served\":\"nothing\",\"reason\":\"unknown-route\",\"method\":\"GET\",\"path\":\"/unknown\"}"
+    },
+    {
+     "method": "GET",
+     "target": "/unknown",
+     "auth": "right",
+     "status": 404,
+     "headers": [
+      [
+       "content-type",
+       "application/json"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "{\"served\":\"nothing\",\"reason\":\"unknown-route\",\"method\":\"GET\",\"path\":\"/unknown\"}"
+    },
+    {
+     "method": "GET",
+     "target": "/unknown",
+     "auth": "wrong",
+     "status": 404,
+     "headers": [
+      [
+       "content-type",
+       "application/json"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "{\"served\":\"nothing\",\"reason\":\"unknown-route\",\"method\":\"GET\",\"path\":\"/unknown\"}"
+    },
+    {
+     "method": "GET",
+     "target": "/api/project/",
+     "auth": "none",
+     "status": 404,
+     "headers": [
+      [
+       "content-type",
+       "application/json"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "{\"served\":\"nothing\",\"reason\":\"unknown-route\",\"method\":\"GET\",\"path\":\"/api/project/\"}"
+    },
+    {
+     "method": "GET",
+     "target": "/api/project/",
+     "auth": "right",
+     "status": 404,
+     "headers": [
+      [
+       "content-type",
+       "application/json"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "{\"served\":\"nothing\",\"reason\":\"unknown-route\",\"method\":\"GET\",\"path\":\"/api/project/\"}"
+    },
+    {
+     "method": "GET",
+     "target": "/api/project/",
+     "auth": "wrong",
+     "status": 404,
+     "headers": [
+      [
+       "content-type",
+       "application/json"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "{\"served\":\"nothing\",\"reason\":\"unknown-route\",\"method\":\"GET\",\"path\":\"/api/project/\"}"
+    }
+   ],
+   "stdout": "syzygy daemon listening at http://127.0.0.1:<PORT>/\nobserved root: <SCRATCH>/complete/root\nmachine credential (minted) at: <SCRATCH>/complete/state/machine-credential.token\nthe credential value is never printed; read the file to authenticate machine requests.\nsyzygy daemon: SIGINT received, shutting down\n",
+   "stderr": "{\"kind\":\"daemon-http-outcome\",\"at\":\"<ISO>\",\"method\":\"UNKNOWN\",\"pathLength\":1,\"status\":404,\"reason\":\"unknown-route\",\"contentType\":\"application/json\"}\n{\"kind\":\"daemon-http-outcome\",\"at\":\"<ISO>\",\"method\":\"UNKNOWN\",\"pathLength\":1,\"status\":404,\"reason\":\"unknown-route\",\"contentType\":\"application/json\"}\n{\"kind\":\"daemon-http-outcome\",\"at\":\"<ISO>\",\"method\":\"UNKNOWN\",\"pathLength\":1,\"status\":404,\"reason\":\"unknown-route\",\"contentType\":\"application/json\"}\n{\"kind\":\"daemon-http-outcome\",\"at\":\"<ISO>\",\"method\":\"UNKNOWN\",\"pathLength\":1,\"status\":404,\"reason\":\"unknown-route\",\"contentType\":\"application/json\"}\n{\"kind\":\"daemon-http-outcome\",\"at\":\"<ISO>\",\"method\":\"UNKNOWN\",\"pathLength\":1,\"status\":404,\"reason\":\"unknown-route\",\"contentType\":\"application/json\"}\n{\"kind\":\"daemon-http-outcome\",\"at\":\"<ISO>\",\"method\":\"UNKNOWN\",\"pathLength\":1,\"status\":404,\"reason\":\"unknown-route\",\"contentType\":\"application/json\"}\n{\"kind\":\"daemon-http-outcome\",\"at\":\"<ISO>\",\"method\":\"GET\",\"route\":\"/api/project\",\"status\":401,\"reason\":\"credential-refused\",\"contentType\":\"application/json\"}\n{\"kind\":\"daemon-http-outcome\",\"at\":\"<ISO>\",\"method\":\"GET\",\"route\":\"/api/project\",\"status\":401,\"reason\":\"credential-refused\",\"contentType\":\"application/json\"}\n{\"kind\":\"daemon-http-outcome\",\"at\":\"<ISO>\",\"method\":\"UNKNOWN\",\"pathLength\":8,\"status\":404,\"reason\":\"unknown-route\",\"contentType\":\"application/json\"}\n{\"kind\":\"daemon-http-outcome\",\"at\":\"<ISO>\",\"method\":\"UNKNOWN\",\"pathLength\":8,\"status\":404,\"reason\":\"unknown-route\",\"contentType\":\"application/json\"}\n{\"kind\":\"daemon-http-outcome\",\"at\":\"<ISO>\",\"method\":\"UNKNOWN\",\"pathLength\":8,\"status\":404,\"reason\":\"unknown-route\",\"contentType\":\"application/json\"}\n{\"kind\":\"daemon-http-outcome\",\"at\":\"<ISO>\",\"method\":\"UNKNOWN\",\"pathLength\":13,\"status\":404,\"reason\":\"unknown-route\",\"contentType\":\"application/json\"}\n{\"kind\":\"daemon-http-outcome\",\"at\":\"<ISO>\",\"method\":\"UNKNOWN\",\"pathLength\":13,\"status\":404,\"reason\":\"unknown-route\",\"contentType\":\"application/json\"}\n{\"kind\":\"daemon-http-outcome\",\"at\":\"<ISO>\",\"method\":\"UNKNOWN\",\"pathLength\":13,\"status\":404,\"reason\":\"unknown-route\",\"contentType\":\"application/json\"}\n",
+   "exit": {
+    "code": 0,
+    "signal": null
+   }
+  },
+  {
+   "kind": "bare",
+   "signals": [
+    "SIGTERM"
+   ],
+   "requests": [
+    {
+     "method": "GET",
+     "target": "/",
+     "auth": "none",
+     "status": 200,
+     "headers": [
+      [
+       "content-type",
+       "text/html; charset=utf-8"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "<!doctype html>\n<html lang=\"en\">\n<head><meta charset=\"utf-8\"><title>No project evaluated</title><style>body{font-family:system-ui,sans-serif;margin:2rem auto;max-width:52rem;line-height:1.5;padding:0 1rem}section{margin:1.5rem 0}details{border:1px solid currentColor;padding:.5rem;margin:.5rem 0}summary{cursor:pointer}dt{font-weight:bold}code{font-family:ui-monospace,monospace}</style></head>\n<body data-evaluation-kind=\"no-declaration-observed\" data-non-citable=\"true\" data-artifact-class=\"presentation-artifact\">\n<header><h1>No project evaluated</h1></header><section data-section=\"degradation\"><p data-observation-kind=\"declaration-missing\" data-epistemic-label=\"Unknown\" data-unknown-reason=\"missing-declaration\">Declaration at <code>.syzygy/project.yaml</code>: Unknown — reason: missing-declaration.</p><p>No shape answers are served: nothing was evaluated, and absence of evidence is never rendered as success.</p></section>\n</body>\n</html>"
+    },
+    {
+     "method": "GET",
+     "target": "/",
+     "auth": "right",
+     "status": 200,
+     "headers": [
+      [
+       "content-type",
+       "text/html; charset=utf-8"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "<!doctype html>\n<html lang=\"en\">\n<head><meta charset=\"utf-8\"><title>No project evaluated</title><style>body{font-family:system-ui,sans-serif;margin:2rem auto;max-width:52rem;line-height:1.5;padding:0 1rem}section{margin:1.5rem 0}details{border:1px solid currentColor;padding:.5rem;margin:.5rem 0}summary{cursor:pointer}dt{font-weight:bold}code{font-family:ui-monospace,monospace}</style></head>\n<body data-evaluation-kind=\"no-declaration-observed\" data-non-citable=\"true\" data-artifact-class=\"presentation-artifact\">\n<header><h1>No project evaluated</h1></header><section data-section=\"degradation\"><p data-observation-kind=\"declaration-missing\" data-epistemic-label=\"Unknown\" data-unknown-reason=\"missing-declaration\">Declaration at <code>.syzygy/project.yaml</code>: Unknown — reason: missing-declaration.</p><p>No shape answers are served: nothing was evaluated, and absence of evidence is never rendered as success.</p></section>\n</body>\n</html>"
+    },
+    {
+     "method": "GET",
+     "target": "/",
+     "auth": "wrong",
+     "status": 200,
+     "headers": [
+      [
+       "content-type",
+       "text/html; charset=utf-8"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "<!doctype html>\n<html lang=\"en\">\n<head><meta charset=\"utf-8\"><title>No project evaluated</title><style>body{font-family:system-ui,sans-serif;margin:2rem auto;max-width:52rem;line-height:1.5;padding:0 1rem}section{margin:1.5rem 0}details{border:1px solid currentColor;padding:.5rem;margin:.5rem 0}summary{cursor:pointer}dt{font-weight:bold}code{font-family:ui-monospace,monospace}</style></head>\n<body data-evaluation-kind=\"no-declaration-observed\" data-non-citable=\"true\" data-artifact-class=\"presentation-artifact\">\n<header><h1>No project evaluated</h1></header><section data-section=\"degradation\"><p data-observation-kind=\"declaration-missing\" data-epistemic-label=\"Unknown\" data-unknown-reason=\"missing-declaration\">Declaration at <code>.syzygy/project.yaml</code>: Unknown — reason: missing-declaration.</p><p>No shape answers are served: nothing was evaluated, and absence of evidence is never rendered as success.</p></section>\n</body>\n</html>"
+    },
+    {
+     "method": "GET",
+     "target": "/?x=1",
+     "auth": "none",
+     "status": 200,
+     "headers": [
+      [
+       "content-type",
+       "text/html; charset=utf-8"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "<!doctype html>\n<html lang=\"en\">\n<head><meta charset=\"utf-8\"><title>No project evaluated</title><style>body{font-family:system-ui,sans-serif;margin:2rem auto;max-width:52rem;line-height:1.5;padding:0 1rem}section{margin:1.5rem 0}details{border:1px solid currentColor;padding:.5rem;margin:.5rem 0}summary{cursor:pointer}dt{font-weight:bold}code{font-family:ui-monospace,monospace}</style></head>\n<body data-evaluation-kind=\"no-declaration-observed\" data-non-citable=\"true\" data-artifact-class=\"presentation-artifact\">\n<header><h1>No project evaluated</h1></header><section data-section=\"degradation\"><p data-observation-kind=\"declaration-missing\" data-epistemic-label=\"Unknown\" data-unknown-reason=\"missing-declaration\">Declaration at <code>.syzygy/project.yaml</code>: Unknown — reason: missing-declaration.</p><p>No shape answers are served: nothing was evaluated, and absence of evidence is never rendered as success.</p></section>\n</body>\n</html>"
+    },
+    {
+     "method": "GET",
+     "target": "/?x=1",
+     "auth": "right",
+     "status": 200,
+     "headers": [
+      [
+       "content-type",
+       "text/html; charset=utf-8"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "<!doctype html>\n<html lang=\"en\">\n<head><meta charset=\"utf-8\"><title>No project evaluated</title><style>body{font-family:system-ui,sans-serif;margin:2rem auto;max-width:52rem;line-height:1.5;padding:0 1rem}section{margin:1.5rem 0}details{border:1px solid currentColor;padding:.5rem;margin:.5rem 0}summary{cursor:pointer}dt{font-weight:bold}code{font-family:ui-monospace,monospace}</style></head>\n<body data-evaluation-kind=\"no-declaration-observed\" data-non-citable=\"true\" data-artifact-class=\"presentation-artifact\">\n<header><h1>No project evaluated</h1></header><section data-section=\"degradation\"><p data-observation-kind=\"declaration-missing\" data-epistemic-label=\"Unknown\" data-unknown-reason=\"missing-declaration\">Declaration at <code>.syzygy/project.yaml</code>: Unknown — reason: missing-declaration.</p><p>No shape answers are served: nothing was evaluated, and absence of evidence is never rendered as success.</p></section>\n</body>\n</html>"
+    },
+    {
+     "method": "GET",
+     "target": "/?x=1",
+     "auth": "wrong",
+     "status": 200,
+     "headers": [
+      [
+       "content-type",
+       "text/html; charset=utf-8"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "<!doctype html>\n<html lang=\"en\">\n<head><meta charset=\"utf-8\"><title>No project evaluated</title><style>body{font-family:system-ui,sans-serif;margin:2rem auto;max-width:52rem;line-height:1.5;padding:0 1rem}section{margin:1.5rem 0}details{border:1px solid currentColor;padding:.5rem;margin:.5rem 0}summary{cursor:pointer}dt{font-weight:bold}code{font-family:ui-monospace,monospace}</style></head>\n<body data-evaluation-kind=\"no-declaration-observed\" data-non-citable=\"true\" data-artifact-class=\"presentation-artifact\">\n<header><h1>No project evaluated</h1></header><section data-section=\"degradation\"><p data-observation-kind=\"declaration-missing\" data-epistemic-label=\"Unknown\" data-unknown-reason=\"missing-declaration\">Declaration at <code>.syzygy/project.yaml</code>: Unknown — reason: missing-declaration.</p><p>No shape answers are served: nothing was evaluated, and absence of evidence is never rendered as success.</p></section>\n</body>\n</html>"
+    },
+    {
+     "method": "HEAD",
+     "target": "/",
+     "auth": "none",
+     "status": 404,
+     "headers": [
+      [
+       "content-type",
+       "application/json"
+      ]
+     ],
+     "body": ""
+    },
+    {
+     "method": "HEAD",
+     "target": "/",
+     "auth": "right",
+     "status": 404,
+     "headers": [
+      [
+       "content-type",
+       "application/json"
+      ]
+     ],
+     "body": ""
+    },
+    {
+     "method": "HEAD",
+     "target": "/",
+     "auth": "wrong",
+     "status": 404,
+     "headers": [
+      [
+       "content-type",
+       "application/json"
+      ]
+     ],
+     "body": ""
+    },
+    {
+     "method": "POST",
+     "target": "/",
+     "auth": "none",
+     "status": 404,
+     "headers": [
+      [
+       "content-type",
+       "application/json"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "{\"served\":\"nothing\",\"reason\":\"unknown-route\",\"method\":\"POST\",\"path\":\"/\"}"
+    },
+    {
+     "method": "POST",
+     "target": "/",
+     "auth": "right",
+     "status": 404,
+     "headers": [
+      [
+       "content-type",
+       "application/json"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "{\"served\":\"nothing\",\"reason\":\"unknown-route\",\"method\":\"POST\",\"path\":\"/\"}"
+    },
+    {
+     "method": "POST",
+     "target": "/",
+     "auth": "wrong",
+     "status": 404,
+     "headers": [
+      [
+       "content-type",
+       "application/json"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "{\"served\":\"nothing\",\"reason\":\"unknown-route\",\"method\":\"POST\",\"path\":\"/\"}"
+    },
+    {
+     "method": "GET",
+     "target": "/entry",
+     "auth": "none",
+     "status": 200,
+     "headers": [
+      [
+       "content-type",
+       "text/html; charset=utf-8"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "<!doctype html>\n<html lang=\"en\">\n<head><meta charset=\"utf-8\"><title>Human entry</title><style>body{font-family:system-ui,sans-serif;margin:2rem auto;max-width:52rem;line-height:1.5;padding:0 1rem}section{margin:1.5rem 0}details{border:1px solid currentColor;padding:.5rem;margin:.5rem 0}summary{cursor:pointer}dt{font-weight:bold}code{font-family:ui-monospace,monospace}</style></head>\n<body data-non-citable=\"true\" data-artifact-class=\"presentation-artifact\" data-entry-state=\"absent\">\n<header><h1>Human entry</h1><p data-entry-path=\".syzygy/intent/OVERVIEW.md\" data-entry-path-is-identity=\"false\">Published at <code>.syzygy/intent/OVERVIEW.md</code> — a publication location, never an identity.</p><p data-non-citable=\"true\" data-artifact-class=\"presentation-artifact\">This entry is governed presentation: non-citable, a presentation artifact, never the source of any project fact.</p></header><section data-section=\"entry-content\" data-entry-state=\"absent\"><p data-assessment-kind=\"finding\">The entry document is absent — a finding (entry-absent), rendered as such, never a silently missing page.</p></section><section data-section=\"entry-authorities\"><h2>Routes to authority</h2><p data-state=\"absent\">No authority citations were supplied for this entry.</p></section>\n</body>\n</html>"
+    },
+    {
+     "method": "GET",
+     "target": "/entry",
+     "auth": "right",
+     "status": 200,
+     "headers": [
+      [
+       "content-type",
+       "text/html; charset=utf-8"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "<!doctype html>\n<html lang=\"en\">\n<head><meta charset=\"utf-8\"><title>Human entry</title><style>body{font-family:system-ui,sans-serif;margin:2rem auto;max-width:52rem;line-height:1.5;padding:0 1rem}section{margin:1.5rem 0}details{border:1px solid currentColor;padding:.5rem;margin:.5rem 0}summary{cursor:pointer}dt{font-weight:bold}code{font-family:ui-monospace,monospace}</style></head>\n<body data-non-citable=\"true\" data-artifact-class=\"presentation-artifact\" data-entry-state=\"absent\">\n<header><h1>Human entry</h1><p data-entry-path=\".syzygy/intent/OVERVIEW.md\" data-entry-path-is-identity=\"false\">Published at <code>.syzygy/intent/OVERVIEW.md</code> — a publication location, never an identity.</p><p data-non-citable=\"true\" data-artifact-class=\"presentation-artifact\">This entry is governed presentation: non-citable, a presentation artifact, never the source of any project fact.</p></header><section data-section=\"entry-content\" data-entry-state=\"absent\"><p data-assessment-kind=\"finding\">The entry document is absent — a finding (entry-absent), rendered as such, never a silently missing page.</p></section><section data-section=\"entry-authorities\"><h2>Routes to authority</h2><p data-state=\"absent\">No authority citations were supplied for this entry.</p></section>\n</body>\n</html>"
+    },
+    {
+     "method": "GET",
+     "target": "/entry",
+     "auth": "wrong",
+     "status": 200,
+     "headers": [
+      [
+       "content-type",
+       "text/html; charset=utf-8"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "<!doctype html>\n<html lang=\"en\">\n<head><meta charset=\"utf-8\"><title>Human entry</title><style>body{font-family:system-ui,sans-serif;margin:2rem auto;max-width:52rem;line-height:1.5;padding:0 1rem}section{margin:1.5rem 0}details{border:1px solid currentColor;padding:.5rem;margin:.5rem 0}summary{cursor:pointer}dt{font-weight:bold}code{font-family:ui-monospace,monospace}</style></head>\n<body data-non-citable=\"true\" data-artifact-class=\"presentation-artifact\" data-entry-state=\"absent\">\n<header><h1>Human entry</h1><p data-entry-path=\".syzygy/intent/OVERVIEW.md\" data-entry-path-is-identity=\"false\">Published at <code>.syzygy/intent/OVERVIEW.md</code> — a publication location, never an identity.</p><p data-non-citable=\"true\" data-artifact-class=\"presentation-artifact\">This entry is governed presentation: non-citable, a presentation artifact, never the source of any project fact.</p></header><section data-section=\"entry-content\" data-entry-state=\"absent\"><p data-assessment-kind=\"finding\">The entry document is absent — a finding (entry-absent), rendered as such, never a silently missing page.</p></section><section data-section=\"entry-authorities\"><h2>Routes to authority</h2><p data-state=\"absent\">No authority citations were supplied for this entry.</p></section>\n</body>\n</html>"
+    },
+    {
+     "method": "GET",
+     "target": "/api/project",
+     "auth": "none",
+     "status": 401,
+     "headers": [
+      [
+       "content-type",
+       "application/json"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "{\"admitted\":false,\"served\":\"nothing\"}"
+    },
+    {
+     "method": "GET",
+     "target": "/api/project",
+     "auth": "right",
+     "status": 200,
+     "headers": [
+      [
+       "content-type",
+       "application/json"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "{\"kind\":\"no-declaration-observed\",\"declarationObservation\":{\"kind\":\"declaration-missing\",\"relativePath\":\".syzygy/project.yaml\",\"label\":\"Unknown\",\"reason\":\"missing-declaration\"}}"
+    },
+    {
+     "method": "GET",
+     "target": "/api/project",
+     "auth": "wrong",
+     "status": 401,
+     "headers": [
+      [
+       "content-type",
+       "application/json"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "{\"admitted\":false,\"served\":\"nothing\"}"
+    },
+    {
+     "method": "GET",
+     "target": "/unknown",
+     "auth": "none",
+     "status": 404,
+     "headers": [
+      [
+       "content-type",
+       "application/json"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "{\"served\":\"nothing\",\"reason\":\"unknown-route\",\"method\":\"GET\",\"path\":\"/unknown\"}"
+    },
+    {
+     "method": "GET",
+     "target": "/unknown",
+     "auth": "right",
+     "status": 404,
+     "headers": [
+      [
+       "content-type",
+       "application/json"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "{\"served\":\"nothing\",\"reason\":\"unknown-route\",\"method\":\"GET\",\"path\":\"/unknown\"}"
+    },
+    {
+     "method": "GET",
+     "target": "/unknown",
+     "auth": "wrong",
+     "status": 404,
+     "headers": [
+      [
+       "content-type",
+       "application/json"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "{\"served\":\"nothing\",\"reason\":\"unknown-route\",\"method\":\"GET\",\"path\":\"/unknown\"}"
+    },
+    {
+     "method": "GET",
+     "target": "/api/project/",
+     "auth": "none",
+     "status": 404,
+     "headers": [
+      [
+       "content-type",
+       "application/json"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "{\"served\":\"nothing\",\"reason\":\"unknown-route\",\"method\":\"GET\",\"path\":\"/api/project/\"}"
+    },
+    {
+     "method": "GET",
+     "target": "/api/project/",
+     "auth": "right",
+     "status": 404,
+     "headers": [
+      [
+       "content-type",
+       "application/json"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "{\"served\":\"nothing\",\"reason\":\"unknown-route\",\"method\":\"GET\",\"path\":\"/api/project/\"}"
+    },
+    {
+     "method": "GET",
+     "target": "/api/project/",
+     "auth": "wrong",
+     "status": 404,
+     "headers": [
+      [
+       "content-type",
+       "application/json"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "{\"served\":\"nothing\",\"reason\":\"unknown-route\",\"method\":\"GET\",\"path\":\"/api/project/\"}"
+    }
+   ],
+   "stdout": "syzygy daemon listening at http://127.0.0.1:<PORT>/\nobserved root: <SCRATCH>/bare/root\nmachine credential (minted) at: <SCRATCH>/bare/state/machine-credential.token\nthe credential value is never printed; read the file to authenticate machine requests.\nsyzygy daemon: SIGTERM received, shutting down\n",
+   "stderr": "{\"kind\":\"daemon-http-outcome\",\"at\":\"<ISO>\",\"method\":\"UNKNOWN\",\"pathLength\":1,\"status\":404,\"reason\":\"unknown-route\",\"contentType\":\"application/json\"}\n{\"kind\":\"daemon-http-outcome\",\"at\":\"<ISO>\",\"method\":\"UNKNOWN\",\"pathLength\":1,\"status\":404,\"reason\":\"unknown-route\",\"contentType\":\"application/json\"}\n{\"kind\":\"daemon-http-outcome\",\"at\":\"<ISO>\",\"method\":\"UNKNOWN\",\"pathLength\":1,\"status\":404,\"reason\":\"unknown-route\",\"contentType\":\"application/json\"}\n{\"kind\":\"daemon-http-outcome\",\"at\":\"<ISO>\",\"method\":\"UNKNOWN\",\"pathLength\":1,\"status\":404,\"reason\":\"unknown-route\",\"contentType\":\"application/json\"}\n{\"kind\":\"daemon-http-outcome\",\"at\":\"<ISO>\",\"method\":\"UNKNOWN\",\"pathLength\":1,\"status\":404,\"reason\":\"unknown-route\",\"contentType\":\"application/json\"}\n{\"kind\":\"daemon-http-outcome\",\"at\":\"<ISO>\",\"method\":\"UNKNOWN\",\"pathLength\":1,\"status\":404,\"reason\":\"unknown-route\",\"contentType\":\"application/json\"}\n{\"kind\":\"daemon-http-outcome\",\"at\":\"<ISO>\",\"method\":\"GET\",\"route\":\"/api/project\",\"status\":401,\"reason\":\"credential-refused\",\"contentType\":\"application/json\"}\n{\"kind\":\"daemon-http-outcome\",\"at\":\"<ISO>\",\"method\":\"GET\",\"route\":\"/api/project\",\"status\":401,\"reason\":\"credential-refused\",\"contentType\":\"application/json\"}\n{\"kind\":\"daemon-http-outcome\",\"at\":\"<ISO>\",\"method\":\"UNKNOWN\",\"pathLength\":8,\"status\":404,\"reason\":\"unknown-route\",\"contentType\":\"application/json\"}\n{\"kind\":\"daemon-http-outcome\",\"at\":\"<ISO>\",\"method\":\"UNKNOWN\",\"pathLength\":8,\"status\":404,\"reason\":\"unknown-route\",\"contentType\":\"application/json\"}\n{\"kind\":\"daemon-http-outcome\",\"at\":\"<ISO>\",\"method\":\"UNKNOWN\",\"pathLength\":8,\"status\":404,\"reason\":\"unknown-route\",\"contentType\":\"application/json\"}\n{\"kind\":\"daemon-http-outcome\",\"at\":\"<ISO>\",\"method\":\"UNKNOWN\",\"pathLength\":13,\"status\":404,\"reason\":\"unknown-route\",\"contentType\":\"application/json\"}\n{\"kind\":\"daemon-http-outcome\",\"at\":\"<ISO>\",\"method\":\"UNKNOWN\",\"pathLength\":13,\"status\":404,\"reason\":\"unknown-route\",\"contentType\":\"application/json\"}\n{\"kind\":\"daemon-http-outcome\",\"at\":\"<ISO>\",\"method\":\"UNKNOWN\",\"pathLength\":13,\"status\":404,\"reason\":\"unknown-route\",\"contentType\":\"application/json\"}\n",
+   "exit": {
+    "code": 0,
+    "signal": null
+   }
+  },
+  {
+   "kind": "invalid",
+   "signals": [
+    "SIGINT",
+    "SIGTERM"
+   ],
+   "requests": [
+    {
+     "method": "GET",
+     "target": "/",
+     "auth": "none",
+     "status": 200,
+     "headers": [
+      [
+       "content-type",
+       "text/html; charset=utf-8"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "<!doctype html>\n<html lang=\"en\">\n<head><meta charset=\"utf-8\"><title>Declaration invalid</title><style>body{font-family:system-ui,sans-serif;margin:2rem auto;max-width:52rem;line-height:1.5;padding:0 1rem}section{margin:1.5rem 0}details{border:1px solid currentColor;padding:.5rem;margin:.5rem 0}summary{cursor:pointer}dt{font-weight:bold}code{font-family:ui-monospace,monospace}</style></head>\n<body data-evaluation-kind=\"declaration-invalid\" data-non-citable=\"true\" data-artifact-class=\"presentation-artifact\">\n<header><h1>Declaration read but invalid</h1></header><section data-section=\"degradation\"><p>The declaration was read but did not validate; registration failed and no shape answers are served for an unregistered project. The named failures:</p><ul class=\"failures\"><li data-failure-kind=\"unparseable\">unparseable: Flow sequence in block collection must be sufficiently indented and end with a ] at line 2, column 1:\n\nschema_version: [not, a, version\n\n^\n</li></ul></section>\n</body>\n</html>"
+    },
+    {
+     "method": "GET",
+     "target": "/",
+     "auth": "right",
+     "status": 200,
+     "headers": [
+      [
+       "content-type",
+       "text/html; charset=utf-8"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "<!doctype html>\n<html lang=\"en\">\n<head><meta charset=\"utf-8\"><title>Declaration invalid</title><style>body{font-family:system-ui,sans-serif;margin:2rem auto;max-width:52rem;line-height:1.5;padding:0 1rem}section{margin:1.5rem 0}details{border:1px solid currentColor;padding:.5rem;margin:.5rem 0}summary{cursor:pointer}dt{font-weight:bold}code{font-family:ui-monospace,monospace}</style></head>\n<body data-evaluation-kind=\"declaration-invalid\" data-non-citable=\"true\" data-artifact-class=\"presentation-artifact\">\n<header><h1>Declaration read but invalid</h1></header><section data-section=\"degradation\"><p>The declaration was read but did not validate; registration failed and no shape answers are served for an unregistered project. The named failures:</p><ul class=\"failures\"><li data-failure-kind=\"unparseable\">unparseable: Flow sequence in block collection must be sufficiently indented and end with a ] at line 2, column 1:\n\nschema_version: [not, a, version\n\n^\n</li></ul></section>\n</body>\n</html>"
+    },
+    {
+     "method": "GET",
+     "target": "/",
+     "auth": "wrong",
+     "status": 200,
+     "headers": [
+      [
+       "content-type",
+       "text/html; charset=utf-8"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "<!doctype html>\n<html lang=\"en\">\n<head><meta charset=\"utf-8\"><title>Declaration invalid</title><style>body{font-family:system-ui,sans-serif;margin:2rem auto;max-width:52rem;line-height:1.5;padding:0 1rem}section{margin:1.5rem 0}details{border:1px solid currentColor;padding:.5rem;margin:.5rem 0}summary{cursor:pointer}dt{font-weight:bold}code{font-family:ui-monospace,monospace}</style></head>\n<body data-evaluation-kind=\"declaration-invalid\" data-non-citable=\"true\" data-artifact-class=\"presentation-artifact\">\n<header><h1>Declaration read but invalid</h1></header><section data-section=\"degradation\"><p>The declaration was read but did not validate; registration failed and no shape answers are served for an unregistered project. The named failures:</p><ul class=\"failures\"><li data-failure-kind=\"unparseable\">unparseable: Flow sequence in block collection must be sufficiently indented and end with a ] at line 2, column 1:\n\nschema_version: [not, a, version\n\n^\n</li></ul></section>\n</body>\n</html>"
+    },
+    {
+     "method": "GET",
+     "target": "/?x=1",
+     "auth": "none",
+     "status": 200,
+     "headers": [
+      [
+       "content-type",
+       "text/html; charset=utf-8"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "<!doctype html>\n<html lang=\"en\">\n<head><meta charset=\"utf-8\"><title>Declaration invalid</title><style>body{font-family:system-ui,sans-serif;margin:2rem auto;max-width:52rem;line-height:1.5;padding:0 1rem}section{margin:1.5rem 0}details{border:1px solid currentColor;padding:.5rem;margin:.5rem 0}summary{cursor:pointer}dt{font-weight:bold}code{font-family:ui-monospace,monospace}</style></head>\n<body data-evaluation-kind=\"declaration-invalid\" data-non-citable=\"true\" data-artifact-class=\"presentation-artifact\">\n<header><h1>Declaration read but invalid</h1></header><section data-section=\"degradation\"><p>The declaration was read but did not validate; registration failed and no shape answers are served for an unregistered project. The named failures:</p><ul class=\"failures\"><li data-failure-kind=\"unparseable\">unparseable: Flow sequence in block collection must be sufficiently indented and end with a ] at line 2, column 1:\n\nschema_version: [not, a, version\n\n^\n</li></ul></section>\n</body>\n</html>"
+    },
+    {
+     "method": "GET",
+     "target": "/?x=1",
+     "auth": "right",
+     "status": 200,
+     "headers": [
+      [
+       "content-type",
+       "text/html; charset=utf-8"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "<!doctype html>\n<html lang=\"en\">\n<head><meta charset=\"utf-8\"><title>Declaration invalid</title><style>body{font-family:system-ui,sans-serif;margin:2rem auto;max-width:52rem;line-height:1.5;padding:0 1rem}section{margin:1.5rem 0}details{border:1px solid currentColor;padding:.5rem;margin:.5rem 0}summary{cursor:pointer}dt{font-weight:bold}code{font-family:ui-monospace,monospace}</style></head>\n<body data-evaluation-kind=\"declaration-invalid\" data-non-citable=\"true\" data-artifact-class=\"presentation-artifact\">\n<header><h1>Declaration read but invalid</h1></header><section data-section=\"degradation\"><p>The declaration was read but did not validate; registration failed and no shape answers are served for an unregistered project. The named failures:</p><ul class=\"failures\"><li data-failure-kind=\"unparseable\">unparseable: Flow sequence in block collection must be sufficiently indented and end with a ] at line 2, column 1:\n\nschema_version: [not, a, version\n\n^\n</li></ul></section>\n</body>\n</html>"
+    },
+    {
+     "method": "GET",
+     "target": "/?x=1",
+     "auth": "wrong",
+     "status": 200,
+     "headers": [
+      [
+       "content-type",
+       "text/html; charset=utf-8"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "<!doctype html>\n<html lang=\"en\">\n<head><meta charset=\"utf-8\"><title>Declaration invalid</title><style>body{font-family:system-ui,sans-serif;margin:2rem auto;max-width:52rem;line-height:1.5;padding:0 1rem}section{margin:1.5rem 0}details{border:1px solid currentColor;padding:.5rem;margin:.5rem 0}summary{cursor:pointer}dt{font-weight:bold}code{font-family:ui-monospace,monospace}</style></head>\n<body data-evaluation-kind=\"declaration-invalid\" data-non-citable=\"true\" data-artifact-class=\"presentation-artifact\">\n<header><h1>Declaration read but invalid</h1></header><section data-section=\"degradation\"><p>The declaration was read but did not validate; registration failed and no shape answers are served for an unregistered project. The named failures:</p><ul class=\"failures\"><li data-failure-kind=\"unparseable\">unparseable: Flow sequence in block collection must be sufficiently indented and end with a ] at line 2, column 1:\n\nschema_version: [not, a, version\n\n^\n</li></ul></section>\n</body>\n</html>"
+    },
+    {
+     "method": "HEAD",
+     "target": "/",
+     "auth": "none",
+     "status": 404,
+     "headers": [
+      [
+       "content-type",
+       "application/json"
+      ]
+     ],
+     "body": ""
+    },
+    {
+     "method": "HEAD",
+     "target": "/",
+     "auth": "right",
+     "status": 404,
+     "headers": [
+      [
+       "content-type",
+       "application/json"
+      ]
+     ],
+     "body": ""
+    },
+    {
+     "method": "HEAD",
+     "target": "/",
+     "auth": "wrong",
+     "status": 404,
+     "headers": [
+      [
+       "content-type",
+       "application/json"
+      ]
+     ],
+     "body": ""
+    },
+    {
+     "method": "POST",
+     "target": "/",
+     "auth": "none",
+     "status": 404,
+     "headers": [
+      [
+       "content-type",
+       "application/json"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "{\"served\":\"nothing\",\"reason\":\"unknown-route\",\"method\":\"POST\",\"path\":\"/\"}"
+    },
+    {
+     "method": "POST",
+     "target": "/",
+     "auth": "right",
+     "status": 404,
+     "headers": [
+      [
+       "content-type",
+       "application/json"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "{\"served\":\"nothing\",\"reason\":\"unknown-route\",\"method\":\"POST\",\"path\":\"/\"}"
+    },
+    {
+     "method": "POST",
+     "target": "/",
+     "auth": "wrong",
+     "status": 404,
+     "headers": [
+      [
+       "content-type",
+       "application/json"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "{\"served\":\"nothing\",\"reason\":\"unknown-route\",\"method\":\"POST\",\"path\":\"/\"}"
+    },
+    {
+     "method": "GET",
+     "target": "/entry",
+     "auth": "none",
+     "status": 200,
+     "headers": [
+      [
+       "content-type",
+       "text/html; charset=utf-8"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "<!doctype html>\n<html lang=\"en\">\n<head><meta charset=\"utf-8\"><title>Human entry</title><style>body{font-family:system-ui,sans-serif;margin:2rem auto;max-width:52rem;line-height:1.5;padding:0 1rem}section{margin:1.5rem 0}details{border:1px solid currentColor;padding:.5rem;margin:.5rem 0}summary{cursor:pointer}dt{font-weight:bold}code{font-family:ui-monospace,monospace}</style></head>\n<body data-non-citable=\"true\" data-artifact-class=\"presentation-artifact\" data-entry-state=\"absent\">\n<header><h1>Human entry</h1><p data-entry-path=\".syzygy/intent/OVERVIEW.md\" data-entry-path-is-identity=\"false\">Published at <code>.syzygy/intent/OVERVIEW.md</code> — a publication location, never an identity.</p><p data-non-citable=\"true\" data-artifact-class=\"presentation-artifact\">This entry is governed presentation: non-citable, a presentation artifact, never the source of any project fact.</p></header><section data-section=\"entry-content\" data-entry-state=\"absent\"><p data-assessment-kind=\"finding\">The entry document is absent — a finding (entry-absent), rendered as such, never a silently missing page.</p></section><section data-section=\"entry-authorities\"><h2>Routes to authority</h2><p data-state=\"absent\">No authority citations were supplied for this entry.</p></section>\n</body>\n</html>"
+    },
+    {
+     "method": "GET",
+     "target": "/entry",
+     "auth": "right",
+     "status": 200,
+     "headers": [
+      [
+       "content-type",
+       "text/html; charset=utf-8"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "<!doctype html>\n<html lang=\"en\">\n<head><meta charset=\"utf-8\"><title>Human entry</title><style>body{font-family:system-ui,sans-serif;margin:2rem auto;max-width:52rem;line-height:1.5;padding:0 1rem}section{margin:1.5rem 0}details{border:1px solid currentColor;padding:.5rem;margin:.5rem 0}summary{cursor:pointer}dt{font-weight:bold}code{font-family:ui-monospace,monospace}</style></head>\n<body data-non-citable=\"true\" data-artifact-class=\"presentation-artifact\" data-entry-state=\"absent\">\n<header><h1>Human entry</h1><p data-entry-path=\".syzygy/intent/OVERVIEW.md\" data-entry-path-is-identity=\"false\">Published at <code>.syzygy/intent/OVERVIEW.md</code> — a publication location, never an identity.</p><p data-non-citable=\"true\" data-artifact-class=\"presentation-artifact\">This entry is governed presentation: non-citable, a presentation artifact, never the source of any project fact.</p></header><section data-section=\"entry-content\" data-entry-state=\"absent\"><p data-assessment-kind=\"finding\">The entry document is absent — a finding (entry-absent), rendered as such, never a silently missing page.</p></section><section data-section=\"entry-authorities\"><h2>Routes to authority</h2><p data-state=\"absent\">No authority citations were supplied for this entry.</p></section>\n</body>\n</html>"
+    },
+    {
+     "method": "GET",
+     "target": "/entry",
+     "auth": "wrong",
+     "status": 200,
+     "headers": [
+      [
+       "content-type",
+       "text/html; charset=utf-8"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "<!doctype html>\n<html lang=\"en\">\n<head><meta charset=\"utf-8\"><title>Human entry</title><style>body{font-family:system-ui,sans-serif;margin:2rem auto;max-width:52rem;line-height:1.5;padding:0 1rem}section{margin:1.5rem 0}details{border:1px solid currentColor;padding:.5rem;margin:.5rem 0}summary{cursor:pointer}dt{font-weight:bold}code{font-family:ui-monospace,monospace}</style></head>\n<body data-non-citable=\"true\" data-artifact-class=\"presentation-artifact\" data-entry-state=\"absent\">\n<header><h1>Human entry</h1><p data-entry-path=\".syzygy/intent/OVERVIEW.md\" data-entry-path-is-identity=\"false\">Published at <code>.syzygy/intent/OVERVIEW.md</code> — a publication location, never an identity.</p><p data-non-citable=\"true\" data-artifact-class=\"presentation-artifact\">This entry is governed presentation: non-citable, a presentation artifact, never the source of any project fact.</p></header><section data-section=\"entry-content\" data-entry-state=\"absent\"><p data-assessment-kind=\"finding\">The entry document is absent — a finding (entry-absent), rendered as such, never a silently missing page.</p></section><section data-section=\"entry-authorities\"><h2>Routes to authority</h2><p data-state=\"absent\">No authority citations were supplied for this entry.</p></section>\n</body>\n</html>"
+    },
+    {
+     "method": "GET",
+     "target": "/api/project",
+     "auth": "none",
+     "status": 401,
+     "headers": [
+      [
+       "content-type",
+       "application/json"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "{\"admitted\":false,\"served\":\"nothing\"}"
+    },
+    {
+     "method": "GET",
+     "target": "/api/project",
+     "auth": "right",
+     "status": 200,
+     "headers": [
+      [
+       "content-type",
+       "application/json"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "{\"kind\":\"declaration-invalid\",\"failures\":[{\"kind\":\"unparseable\",\"detail\":\"Flow sequence in block collection must be sufficiently indented and end with a ] at line 2, column 1:\\n\\nschema_version: [not, a, version\\n\\n^\\n\"}]}"
+    },
+    {
+     "method": "GET",
+     "target": "/api/project",
+     "auth": "wrong",
+     "status": 401,
+     "headers": [
+      [
+       "content-type",
+       "application/json"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "{\"admitted\":false,\"served\":\"nothing\"}"
+    },
+    {
+     "method": "GET",
+     "target": "/unknown",
+     "auth": "none",
+     "status": 404,
+     "headers": [
+      [
+       "content-type",
+       "application/json"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "{\"served\":\"nothing\",\"reason\":\"unknown-route\",\"method\":\"GET\",\"path\":\"/unknown\"}"
+    },
+    {
+     "method": "GET",
+     "target": "/unknown",
+     "auth": "right",
+     "status": 404,
+     "headers": [
+      [
+       "content-type",
+       "application/json"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "{\"served\":\"nothing\",\"reason\":\"unknown-route\",\"method\":\"GET\",\"path\":\"/unknown\"}"
+    },
+    {
+     "method": "GET",
+     "target": "/unknown",
+     "auth": "wrong",
+     "status": 404,
+     "headers": [
+      [
+       "content-type",
+       "application/json"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "{\"served\":\"nothing\",\"reason\":\"unknown-route\",\"method\":\"GET\",\"path\":\"/unknown\"}"
+    },
+    {
+     "method": "GET",
+     "target": "/api/project/",
+     "auth": "none",
+     "status": 404,
+     "headers": [
+      [
+       "content-type",
+       "application/json"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "{\"served\":\"nothing\",\"reason\":\"unknown-route\",\"method\":\"GET\",\"path\":\"/api/project/\"}"
+    },
+    {
+     "method": "GET",
+     "target": "/api/project/",
+     "auth": "right",
+     "status": 404,
+     "headers": [
+      [
+       "content-type",
+       "application/json"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "{\"served\":\"nothing\",\"reason\":\"unknown-route\",\"method\":\"GET\",\"path\":\"/api/project/\"}"
+    },
+    {
+     "method": "GET",
+     "target": "/api/project/",
+     "auth": "wrong",
+     "status": 404,
+     "headers": [
+      [
+       "content-type",
+       "application/json"
+      ],
+      [
+       "Transfer-Encoding",
+       "chunked"
+      ]
+     ],
+     "body": "{\"served\":\"nothing\",\"reason\":\"unknown-route\",\"method\":\"GET\",\"path\":\"/api/project/\"}"
+    }
+   ],
+   "stdout": "syzygy daemon listening at http://127.0.0.1:<PORT>/\nobserved root: <SCRATCH>/invalid/root\nmachine credential (minted) at: <SCRATCH>/invalid/state/machine-credential.token\nthe credential value is never printed; read the file to authenticate machine requests.\nsyzygy daemon: SIGINT received, shutting down\n",
+   "stderr": "{\"kind\":\"daemon-http-outcome\",\"at\":\"<ISO>\",\"method\":\"UNKNOWN\",\"pathLength\":1,\"status\":404,\"reason\":\"unknown-route\",\"contentType\":\"application/json\"}\n{\"kind\":\"daemon-http-outcome\",\"at\":\"<ISO>\",\"method\":\"UNKNOWN\",\"pathLength\":1,\"status\":404,\"reason\":\"unknown-route\",\"contentType\":\"application/json\"}\n{\"kind\":\"daemon-http-outcome\",\"at\":\"<ISO>\",\"method\":\"UNKNOWN\",\"pathLength\":1,\"status\":404,\"reason\":\"unknown-route\",\"contentType\":\"application/json\"}\n{\"kind\":\"daemon-http-outcome\",\"at\":\"<ISO>\",\"method\":\"UNKNOWN\",\"pathLength\":1,\"status\":404,\"reason\":\"unknown-route\",\"contentType\":\"application/json\"}\n{\"kind\":\"daemon-http-outcome\",\"at\":\"<ISO>\",\"method\":\"UNKNOWN\",\"pathLength\":1,\"status\":404,\"reason\":\"unknown-route\",\"contentType\":\"application/json\"}\n{\"kind\":\"daemon-http-outcome\",\"at\":\"<ISO>\",\"method\":\"UNKNOWN\",\"pathLength\":1,\"status\":404,\"reason\":\"unknown-route\",\"contentType\":\"application/json\"}\n{\"kind\":\"daemon-http-outcome\",\"at\":\"<ISO>\",\"method\":\"GET\",\"route\":\"/api/project\",\"status\":401,\"reason\":\"credential-refused\",\"contentType\":\"application/json\"}\n{\"kind\":\"daemon-http-outcome\",\"at\":\"<ISO>\",\"method\":\"GET\",\"route\":\"/api/project\",\"status\":401,\"reason\":\"credential-refused\",\"contentType\":\"application/json\"}\n{\"kind\":\"daemon-http-outcome\",\"at\":\"<ISO>\",\"method\":\"UNKNOWN\",\"pathLength\":8,\"status\":404,\"reason\":\"unknown-route\",\"contentType\":\"application/json\"}\n{\"kind\":\"daemon-http-outcome\",\"at\":\"<ISO>\",\"method\":\"UNKNOWN\",\"pathLength\":8,\"status\":404,\"reason\":\"unknown-route\",\"contentType\":\"application/json\"}\n{\"kind\":\"daemon-http-outcome\",\"at\":\"<ISO>\",\"method\":\"UNKNOWN\",\"pathLength\":8,\"status\":404,\"reason\":\"unknown-route\",\"contentType\":\"application/json\"}\n{\"kind\":\"daemon-http-outcome\",\"at\":\"<ISO>\",\"method\":\"UNKNOWN\",\"pathLength\":13,\"status\":404,\"reason\":\"unknown-route\",\"contentType\":\"application/json\"}\n{\"kind\":\"daemon-http-outcome\",\"at\":\"<ISO>\",\"method\":\"UNKNOWN\",\"pathLength\":13,\"status\":404,\"reason\":\"unknown-route\",\"contentType\":\"application/json\"}\n{\"kind\":\"daemon-http-outcome\",\"at\":\"<ISO>\",\"method\":\"UNKNOWN\",\"pathLength\":13,\"status\":404,\"reason\":\"unknown-route\",\"contentType\":\"application/json\"}\n",
+   "exit": {
+    "code": 0,
+    "signal": null
+   }
+  }
+ ],
+ "invocations": [
+  {
+   "args": [
+    "--help"
+   ],
+   "status": 0,
+   "stdout": "syzygy — Capability 1 local daemon\n\nUsage: node apps/syzygy/dist/main.js [options]\n\nOptions:\n  --root <dir>        observed repository root (env SYZYGY_OBSERVED_ROOT; default: cwd)\n  --state-dir <dir>   daemon state directory (env SYZYGY_STATE_DIR;\n                      default: <root>/.syzygy-daemon-state);\n                      refused if inside <root>/openspec or <root>/.syzygy\n  --port <n>          TCP port, 0 for ephemeral (env SYZYGY_PORT; default: 7477)\n  --help              print this usage and exit\n",
+   "stderr": ""
+  },
+  {
+   "args": [
+    "--port",
+    "70000"
+   ],
+   "status": 1,
+   "stdout": "",
+   "stderr": "syzygy daemon: port must be an integer in [0, 65535]; got `70000`\n\nsyzygy — Capability 1 local daemon\n\nUsage: node apps/syzygy/dist/main.js [options]\n\nOptions:\n  --root <dir>        observed repository root (env SYZYGY_OBSERVED_ROOT; default: cwd)\n  --state-dir <dir>   daemon state directory (env SYZYGY_STATE_DIR;\n                      default: <root>/.syzygy-daemon-state);\n                      refused if inside <root>/openspec or <root>/.syzygy\n  --port <n>          TCP port, 0 for ephemeral (env SYZYGY_PORT; default: 7477)\n  --help              print this usage and exit\n"
+  },
+  {
+   "args": [
+    "--root",
+    "<SCRATCH>/governed/root",
+    "--state-dir",
+    "<SCRATCH>/governed/root/.syzygy/state"
+   ],
+   "status": 1,
+   "stdout": "",
+   "stderr": "syzygy daemon: state directory <SCRATCH>/governed/root/.syzygy/state lies inside the governed plane (<SCRATCH>/governed/root/.syzygy); choose a location outside openspec/ and .syzygy/\n\nsyzygy — Capability 1 local daemon\n\nUsage: node apps/syzygy/dist/main.js [options]\n\nOptions:\n  --root <dir>        observed repository root (env SYZYGY_OBSERVED_ROOT; default: cwd)\n  --state-dir <dir>   daemon state directory (env SYZYGY_STATE_DIR;\n                      default: <root>/.syzygy-daemon-state);\n                      refused if inside <root>/openspec or <root>/.syzygy\n  --port <n>          TCP port, 0 for ephemeral (env SYZYGY_PORT; default: 7477)\n  --help              print this usage and exit\n"
+  }
+ ]
+}

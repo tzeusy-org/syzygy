@@ -1,0 +1,52 @@
+{
+ "base": "8ff50172b127cba676ff32ce62c12c91b2b0d924",
+ "head": "c90cd7327a24fee44d0e7135872a3b08277c73b0",
+ "selftest": true,
+ "vitestExit": 0,
+ "walks": {
+  "entries": 246,
+  "equal": 246,
+  "unequal": [],
+  "entriesWithEdgesIntoIsland": 20,
+  "entriesWithUnresolved": 0,
+  "stats": {
+   "apps/syzygy/src/main.ts": {
+    "reachable": 137,
+    "intoIsland": 0,
+    "unresolved": 0
+   },
+   "packages/polaris-generation-consent/src/index.ts": {
+    "reachable": 32,
+    "intoIsland": 11,
+    "unresolved": 0
+   }
+  },
+  "answersSha256": "e297b289a9f722bdfe5840064f27e1454df131795eecb5b6c1546f30a1cae777"
+ },
+ "resolves": {
+  "files": 496,
+  "specifiers": 2612,
+  "equal": 2607,
+  "unequal": [
+   "apps/three-surface-poc/src/capture-test-artifact-main.test.ts imports typescript: null -> undefined",
+   "packages/polaris-dossier/src/argv.test.ts imports typescript: null -> undefined",
+   "packages/polaris-dossier/src/subpath-imports.test.ts imports typescript: null -> undefined",
+   "packages/polaris-generation-core/src/island-boundary.test.ts imports typescript: null -> undefined",
+   "packages/three-surface-poc-core/src/test-artifact-verification-live-source.test.ts imports typescript: null -> undefined"
+  ],
+  "byAnswer": {
+   "module": 1547,
+   "null": 1060,
+   "undefined": 5
+  },
+  "answersSha256": "0e778016687c398090c511877932f320133142b73b0a6e675c9d506358d283b8"
+ },
+ "cleanAfter": true,
+ "toolSha256": "ba254a3b7af235a9e484d9bdc2cf5fd9de2e5c7c25bbf417b1a6f8edda4b308b",
+ "scratchSha256": {
+  "packages/polaris-generation-core/src/zz-836-old-testkit.ts": "3c05cf32f92d20c691b735cdd5242502ec6dcdfac8c8a8a9883df1f88ccadfb7",
+  "packages/polaris-generation-core/src/zz-836-old-reach.ts": "869eeb312427ce65ffe0404795b9ac41a1431d929339eda09a0d5d77966ceb7c",
+  "packages/polaris-generation-core/src/zz-836-new-reach.ts": "d35dbec4de42c65aad4f0e0d9c1f91fde539e2948435599b5108507315642dee",
+  "packages/polaris-generation-core/src/zz-836-diff.test.ts": "20a3e3e9055ce7483d610a502d617f602a27beb77970b626fa1a4e1076e6ebdc"
+ }
+}

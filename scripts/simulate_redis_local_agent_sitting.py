@@ -102,54 +102,12 @@ class Rehearsal(sim.Sim):
             p = self.git("merge", "--no-ff", "--no-edit", "-q", local, check=False)
             if p.returncode:
                 files = self.git("diff", "--name-only", "--diff-filter=U").stdout.split()
-                if files == ["docs/README.md"] and self.merge_campaign_rows():
-                    self.git("add", "docs/README.md")
-                    self.git("-c", "user.name=sim", "-c", "user.email=sim@invalid", "commit", "-qm", f"merge {ref}")
-                    self.repartition()
-                    merged.append((ref, head[:12]))
-                    self.finding_note(f"{ref}: docs/README.md campaign rows merged and the partition sentence re-derived")
-                    continue
                 self.git("merge", "--abort", check=False)
                 failed.append((ref, f"conflicts: {files}"))
             else:
                 merged.append((ref, head[:12]))
         self.step("merge", merged=merged, failed=failed)
         return not failed
-
-    def finding_note(self, text):
-        self.steps.append({"step": "merge-note", "note": text})
-        print(f"[merge-note] {text}", flush=True)
-
-    def merge_campaign_rows(self):
-        """docs/README.md conflicts only on its campaign table and the partition sentence
-        (each branch re-derives the count): keep ours, add every table row only theirs has."""
-        ours = self.git("show", ":2:docs/README.md").stdout
-        theirs = self.git("show", ":3:docs/README.md").stdout
-        mine = set(ours.split("\n"))
-        extra = [ln for ln in theirs.split("\n") if ln.startswith("| ") and ln not in mine]
-        lines = ours.split("\n")
-        idx = [i for i, ln in enumerate(lines) if re.match(r"^The \d+ rows partition", ln)]
-        if len(idx) != 1:
-            return False
-        at = idx[0] - 1   # the blank line after the table
-        while at > 0 and not lines[at - 1].startswith("| "):
-            at -= 1
-        (self.scratch / "docs/README.md").write_text("\n".join(lines[:at] + extra + lines[at:]))
-        return True
-
-    def repartition(self):
-        """Re-derive the partition sentence's figures and date for the merged HEAD."""
-        p = self.run([sys.executable, "scripts/check_docs_review_campaign_partition.py", "--json"])
-        data = json.loads(p.stdout)
-        path = self.scratch / "docs/README.md"
-        text = path.read_text()
-        text = re.sub(r"The \d+ rows partition the tracked directory at HEAD: \d+ files, \d+ assigned,",
-                      f"The {len(data['campaigns'])} rows partition the tracked directory at HEAD: "
-                      f"{data['total']} files, {data['assigned']} assigned,", text, count=1)
-        text = re.sub(r"re-derived for HEAD dated \d{4}-\d{2}-\d{2}",
-                      f"re-derived for HEAD dated {data['observed_date']}", text, count=1)
-        path.write_text(text)
-        self.commit("rehearsal: partition sentence re-derived after the merge")
 
     def overlay(self):
         for rel in OVERLAY:

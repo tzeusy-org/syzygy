@@ -1,0 +1,375 @@
+{
+ "tool": "assemble_census.py --selftest",
+ "sha256": "6c651b650fef0baea1768dc862410d8998bfc1e3d4bce0cb21c417baf538fdfb",
+ "expected": {
+  "dossier-records-AAAAAA": [
+   "mkdtemp",
+   "dossier-records-",
+   "R9-test-file",
+   "test-kit temp root"
+  ],
+  "syzygy-poc-surface-fixture-p123-n4567-BBBBBB": [
+   "mkdtemp",
+   "syzygy-poc-surface-fixture-p<pid>-n<ns>-",
+   "R1-fixture-sweep-landed",
+   "owner-pid name and sweep"
+  ],
+  "syzygy-poc-surface-fixture-EEEEEE": [
+   "mkdtemp",
+   "syzygy-poc-surface-fixture-",
+   "R6-non-test-module",
+   "test-kit temp root"
+  ],
+  "syzygy-dossier-src-CCCCCC": [
+   "mkdtemp",
+   "syzygy-dossier-src-",
+   "R6-non-test-module",
+   "test-kit temp root"
+  ],
+  "syzygy-poc-browser-DDDDDD": [
+   "mkdtemp",
+   "syzygy-poc-browser-",
+   "R3-browser-profile",
+   "owner-pid name and sweep"
+  ],
+  "dossier-records-AAAAAA-outside-RAW.md": [
+   "derived",
+   "dossier-records-<random>-outside-RAW.md",
+   "R9-test-file",
+   "test-kit temp root"
+  ],
+  "fixed-dir": [
+   "fixed",
+   "fixed-dir",
+   "R9-test-file",
+   "test-kit temp root"
+  ],
+  "thirdparty-FFFFFF": [
+   "mkdtemp",
+   "thirdparty-",
+   "R8-creator-unknown",
+   "stated residual"
+  ],
+  ".com.google.Chrome.b7S2hn": [
+   "chrome-singleton",
+   "chrome-singleton-directory",
+   "R2-chrome-singleton",
+   "stated residual"
+  ],
+  "com.google.Chrome.CCtKIQ": [
+   "chrome-singleton",
+   "chrome-singleton-directory",
+   "R2-chrome-singleton",
+   "stated residual"
+  ],
+  "org.chromium.Chromium.x1y2z3": [
+   "chrome-singleton",
+   "chrome-singleton-directory",
+   "R2-chrome-singleton",
+   "stated residual"
+  ],
+  ".com.google.Chrome.b7S2hn.bak": [
+   "unattributed",
+   ".com.google.Chrome.b7S2hn.bak",
+   "R8-creator-unknown",
+   "stated residual"
+  ],
+  "syzygy-poc-restart-1000-39331.lock": [
+   "unattributed",
+   "syzygy-poc-restart-<n>-<n>.lock",
+   "R7-stale-lock-by-design",
+   "stated residual"
+  ],
+  "5dlMwwEPs6llimFC5iPYz": [
+   "vitest-project-directory",
+   "nanoid-21",
+   "R4-vitest-project-directory",
+   "stated residual"
+  ],
+  "5dlMwwEPs6llimFC5iPY": [
+   "unattributed",
+   "5dlMwwEPs6llimFC5iPY",
+   "R8-creator-unknown",
+   "stated residual"
+  ],
+  "node-compile-cache": [
+   "npm-compile-cache",
+   "node-compile-cache",
+   "R5-npm-compile-cache",
+   "stated residual"
+  ],
+  "mystery": [
+   "unattributed",
+   "mystery",
+   "R8-creator-unknown",
+   "stated residual"
+  ]
+ },
+ "unmutated": {
+  "got": {
+   "dossier-records-AAAAAA": [
+    "mkdtemp",
+    "dossier-records-",
+    "R9-test-file",
+    "test-kit temp root"
+   ],
+   "syzygy-poc-surface-fixture-p123-n4567-BBBBBB": [
+    "mkdtemp",
+    "syzygy-poc-surface-fixture-p<pid>-n<ns>-",
+    "R1-fixture-sweep-landed",
+    "owner-pid name and sweep"
+   ],
+   "syzygy-poc-surface-fixture-EEEEEE": [
+    "mkdtemp",
+    "syzygy-poc-surface-fixture-",
+    "R6-non-test-module",
+    "test-kit temp root"
+   ],
+   "syzygy-dossier-src-CCCCCC": [
+    "mkdtemp",
+    "syzygy-dossier-src-",
+    "R6-non-test-module",
+    "test-kit temp root"
+   ],
+   "syzygy-poc-browser-DDDDDD": [
+    "mkdtemp",
+    "syzygy-poc-browser-",
+    "R3-browser-profile",
+    "owner-pid name and sweep"
+   ],
+   "dossier-records-AAAAAA-outside-RAW.md": [
+    "derived",
+    "dossier-records-<random>-outside-RAW.md",
+    "R9-test-file",
+    "test-kit temp root"
+   ],
+   "fixed-dir": [
+    "fixed",
+    "fixed-dir",
+    "R9-test-file",
+    "test-kit temp root"
+   ],
+   "thirdparty-FFFFFF": [
+    "mkdtemp",
+    "thirdparty-",
+    "R8-creator-unknown",
+    "stated residual"
+   ],
+   ".com.google.Chrome.b7S2hn": [
+    "chrome-singleton",
+    "chrome-singleton-directory",
+    "R2-chrome-singleton",
+    "stated residual"
+   ],
+   "com.google.Chrome.CCtKIQ": [
+    "chrome-singleton",
+    "chrome-singleton-directory",
+    "R2-chrome-singleton",
+    "stated residual"
+   ],
+   "org.chromium.Chromium.x1y2z3": [
+    "chrome-singleton",
+    "chrome-singleton-directory",
+    "R2-chrome-singleton",
+    "stated residual"
+   ],
+   ".com.google.Chrome.b7S2hn.bak": [
+    "unattributed",
+    ".com.google.Chrome.b7S2hn.bak",
+    "R8-creator-unknown",
+    "stated residual"
+   ],
+   "syzygy-poc-restart-1000-39331.lock": [
+    "unattributed",
+    "syzygy-poc-restart-<n>-<n>.lock",
+    "R7-stale-lock-by-design",
+    "stated residual"
+   ],
+   "5dlMwwEPs6llimFC5iPYz": [
+    "vitest-project-directory",
+    "nanoid-21",
+    "R4-vitest-project-directory",
+    "stated residual"
+   ],
+   "5dlMwwEPs6llimFC5iPY": [
+    "unattributed",
+    "5dlMwwEPs6llimFC5iPY",
+    "R8-creator-unknown",
+    "stated residual"
+   ],
+   "node-compile-cache": [
+    "npm-compile-cache",
+    "node-compile-cache",
+    "R5-npm-compile-cache",
+    "stated residual"
+   ],
+   "mystery": [
+    "unattributed",
+    "mystery",
+    "R8-creator-unknown",
+    "stated residual"
+   ]
+  },
+  "meets": true
+ },
+ "mutants": {
+  "owner-pid-digits-not-normalised": {
+   "old": "OWNER_PID = re.compile(r'-p\\d+-n\\d+-')",
+   "new": "OWNER_PID = re.compile(r'-q\\d+-n\\d+-')",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "syzygy-poc-surface-fixture-p123-n4567-BBBBBB"
+   ]
+  },
+  "derived-names-not-recognised": {
+   "old": "if name.startswith(made) and name != made:",
+   "new": "if False:",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "dossier-records-AAAAAA-outside-RAW.md"
+   ]
+  },
+  "chrome-dotted-form-only": {
+   "old": "CHROME = re.compile(r'^\\.?(?:",
+   "new": "CHROME = re.compile(r'^\\.(?:",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "com.google.Chrome.CCtKIQ",
+    "org.chromium.Chromium.x1y2z3"
+   ]
+  },
+  "chromium-form-dropped": {
+   "old": "(?:com\\.google\\.Chrome|org\\.chromium\\.Chromium)\\.[A-Za-z0-9]+$')\nNANOID",
+   "new": "(?:com\\.google\\.Chrome)\\.[A-Za-z0-9]+$')\nNANOID",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "org.chromium.Chromium.x1y2z3"
+   ]
+  },
+  "chrome-suffix-unanchored": {
+   "old": "\\.[A-Za-z0-9]+$')\nNANOID",
+   "new": "\\.[A-Za-z0-9]*')\nNANOID",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    ".com.google.Chrome.b7S2hn.bak"
+   ]
+  },
+  "nanoid-length-one-more": {
+   "old": "NANOID = re.compile(r'^[A-Za-z0-9_-]{21}$')",
+   "new": "NANOID = re.compile(r'^[A-Za-z0-9_-]{22}$')",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "5dlMwwEPs6llimFC5iPYz"
+   ]
+  },
+  "nanoid-length-any-near": {
+   "old": "NANOID = re.compile(r'^[A-Za-z0-9_-]{21}$')",
+   "new": "NANOID = re.compile(r'^[A-Za-z0-9_-]{20,22}$')",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "5dlMwwEPs6llimFC5iPY"
+   ]
+  },
+  "fixture-rule-matches-every-surface-prefix": {
+   "old": "and '<pid>' in label,",
+   "new": ",",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "syzygy-poc-surface-fixture-EEEEEE"
+   ]
+  },
+  "operator-rule-matches-test-files": {
+   "old": "not any(TEST_FILE.search(f) for f in files)\n     and all(",
+   "new": "all(",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "dossier-records-AAAAAA",
+    "dossier-records-AAAAAA-outside-RAW.md",
+    "fixed-dir"
+   ]
+  },
+  "operator-code-given-the-wrong-disposition": {
+   "old": "('R6-non-test-module', TEST_KIT_ROOT,",
+   "new": "('R6-non-test-module', RESIDUAL,",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "syzygy-dossier-src-CCCCCC",
+    "syzygy-poc-surface-fixture-EEEEEE"
+   ]
+  },
+  "stale-lock-rule-dropped": {
+   "old": "lambda family, label, files: family == 'unattributed' and label.startswith('syzygy-poc-restart-'),",
+   "new": "lambda family, label, files: False,",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "syzygy-poc-restart-1000-39331.lock"
+   ]
+  },
+  "unknown-creator-rule-dropped": {
+   "old": "lambda family, label, files: family == 'unattributed' or files == {NO_FRAME},",
+   "new": "lambda family, label, files: False,",
+   "killed": true,
+   "exit": 1,
+   "diverges": "the mutant stopped with an error"
+  },
+  "no-frame-not-treated-as-unknown": {
+   "old": "or files == {NO_FRAME},",
+   "new": ",",
+   "killed": true,
+   "exit": 1,
+   "diverges": "the mutant stopped with an error"
+  },
+  "creating-frame-ignores-calledFrom": {
+   "old": "return row['calledFrom'] if 'calledFrom' in row else row['frames']",
+   "new": "return row['frames']",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "syzygy-dossier-src-CCCCCC"
+   ]
+  },
+  "unattributed-name-given-a-class": {
+   "old": "return ('unattributed', NUMERIC.sub('<n>', name))",
+   "new": "return ('npm-compile-cache', 'node-compile-cache')",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    ".com.google.Chrome.b7S2hn.bak",
+    "5dlMwwEPs6llimFC5iPY",
+    "mystery",
+    "syzygy-poc-restart-1000-39331.lock"
+   ]
+  },
+  "numeric-segments-not-normalised": {
+   "old": "NUMERIC = re.compile(r'(?<![A-Za-z0-9])\\d+(?![A-Za-z0-9])')",
+   "new": "NUMERIC = re.compile(r'(?<![A-Za-z0-9])\\d+(?![A-Za-z0-9])x')",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "syzygy-poc-restart-1000-39331.lock"
+   ]
+  },
+  "digits-inside-words-normalised": {
+   "old": "NUMERIC = re.compile(r'(?<![A-Za-z0-9])\\d+(?![A-Za-z0-9])')",
+   "new": "NUMERIC = re.compile(r'\\d+')",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    ".com.google.Chrome.b7S2hn.bak",
+    "5dlMwwEPs6llimFC5iPY"
+   ]
+  }
+ },
+ "holds": true
+}

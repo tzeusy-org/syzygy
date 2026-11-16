@@ -1,0 +1,1 @@
+      for (const file of ['a.ts', 'io/b.ts', 'c.mts', 'd.cjs', 'e.test.ts', 'purity.testkit.ts', 'f.json', 'g.tsx', 'h.jsx', 'latest.ts', 'io/purity.testkit.ts']) {

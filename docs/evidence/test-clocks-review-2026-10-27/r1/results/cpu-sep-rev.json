@@ -1,0 +1,1541 @@
+{
+ "tool": "cpu_sep_rev.py",
+ "tree": "447d9f083fb120c14ddd8da646c03675f3ce7bc7",
+ "node": "v24.6.0",
+ "cpus": 12,
+ "sites": [
+  {
+   "bound": "EDGE_TRIM_CPU_MS",
+   "committedMs": 1900,
+   "capMs": 20900,
+   "headRuns": [
+    {
+     "title": "trims a long run of spaces in linear time",
+     "exit": 0,
+     "seconds": 3.5,
+     "load1Start": 39.73,
+     "load1End": 39.73,
+     "regions": [
+      {
+       "line": 176,
+       "bound": "EDGE_TRIM_CPU_MS",
+       "cpuMs": 46.495
+      }
+     ],
+     "cappedAtLeastMs": null
+    },
+    {
+     "title": "trims a long run of spaces in linear time",
+     "exit": 0,
+     "seconds": 3.3,
+     "load1Start": 39.73,
+     "load1End": 40.23,
+     "regions": [
+      {
+       "line": 176,
+       "bound": "EDGE_TRIM_CPU_MS",
+       "cpuMs": 53.805
+      }
+     ],
+     "cappedAtLeastMs": null
+    },
+    {
+     "title": "trims a long run of spaces in linear time",
+     "exit": 0,
+     "seconds": 4.1,
+     "load1Start": 40.23,
+     "load1End": 41.57,
+     "regions": [
+      {
+       "line": 176,
+       "bound": "EDGE_TRIM_CPU_MS",
+       "cpuMs": 55.391
+      }
+     ],
+     "cappedAtLeastMs": null
+    },
+    {
+     "title": "trims a long run of spaces in linear time",
+     "exit": 0,
+     "seconds": 2.6,
+     "load1Start": 41.57,
+     "load1End": 41.57,
+     "regions": [
+      {
+       "line": 176,
+       "bound": "EDGE_TRIM_CPU_MS",
+       "cpuMs": 50.23
+      }
+     ],
+     "cappedAtLeastMs": null
+    },
+    {
+     "title": "trims a long run of spaces in linear time",
+     "exit": 0,
+     "seconds": 4.4,
+     "load1Start": 41.57,
+     "load1End": 41.13,
+     "regions": [
+      {
+       "line": 176,
+       "bound": "EDGE_TRIM_CPU_MS",
+       "cpuMs": 51.971
+      }
+     ],
+     "cappedAtLeastMs": null
+    },
+    {
+     "title": "trims a long run of spaces in linear time",
+     "exit": 0,
+     "seconds": 3.5,
+     "load1Start": 41.13,
+     "load1End": 41.04,
+     "regions": [
+      {
+       "line": 176,
+       "bound": "EDGE_TRIM_CPU_MS",
+       "cpuMs": 53
+      }
+     ],
+     "cappedAtLeastMs": null
+    },
+    {
+     "title": "trims a long run of spaces in linear time",
+     "exit": 0,
+     "seconds": 3.0,
+     "load1Start": 41.04,
+     "load1End": 40.15,
+     "regions": [
+      {
+       "line": 176,
+       "bound": "EDGE_TRIM_CPU_MS",
+       "cpuMs": 56.774
+      }
+     ],
+     "cappedAtLeastMs": null
+    },
+    {
+     "title": "trims a long run of spaces in linear time",
+     "exit": 0,
+     "seconds": 3.0,
+     "load1Start": 40.15,
+     "load1End": 40.15,
+     "regions": [
+      {
+       "line": 176,
+       "bound": "EDGE_TRIM_CPU_MS",
+       "cpuMs": 55.3
+      }
+     ],
+     "cappedAtLeastMs": null
+    },
+    {
+     "title": "trims a long run of spaces in linear time",
+     "exit": 0,
+     "seconds": 3.5,
+     "load1Start": 40.15,
+     "load1End": 39.42,
+     "regions": [
+      {
+       "line": 176,
+       "bound": "EDGE_TRIM_CPU_MS",
+       "cpuMs": 57.43
+      }
+     ],
+     "cappedAtLeastMs": null
+    },
+    {
+     "title": "trims a long run of spaces in linear time",
+     "exit": 0,
+     "seconds": 2.8,
+     "load1Start": 39.42,
+     "load1End": 38.18,
+     "regions": [
+      {
+       "line": 176,
+       "bound": "EDGE_TRIM_CPU_MS",
+       "cpuMs": 54.153
+      }
+     ],
+     "cappedAtLeastMs": null
+    }
+   ],
+   "headExitsNonzero": 0,
+   "headRegions": 10,
+   "headMaxMs": 57.43,
+   "boundOverHeadMax": 33.1,
+   "mutants": [
+    {
+     "mutant": "edge-backtracking-regex",
+     "title": "trims a long run of spaces in linear time",
+     "runs": [
+      {
+       "title": "trims a long run of spaces in linear time",
+       "exit": -9,
+       "seconds": 45.9,
+       "load1Start": 38.18,
+       "load1End": 47.46,
+       "regions": [],
+       "cappedAtLeastMs": 20954.2
+      },
+      {
+       "title": "trims a long run of spaces in linear time",
+       "exit": -9,
+       "seconds": 63.2,
+       "load1Start": 47.46,
+       "load1End": 71.14,
+       "regions": [],
+       "cappedAtLeastMs": 20902.7
+      },
+      {
+       "title": "trims a long run of spaces in linear time",
+       "exit": -9,
+       "seconds": 49.9,
+       "load1Start": 71.14,
+       "load1End": 71.94,
+       "regions": [],
+       "cappedAtLeastMs": 20958.0
+      },
+      {
+       "title": "trims a long run of spaces in linear time",
+       "exit": -9,
+       "seconds": 61.6,
+       "load1Start": 71.94,
+       "load1End": 78.64,
+       "regions": [],
+       "cappedAtLeastMs": 20956.9
+      },
+      {
+       "title": "trims a long run of spaces in linear time",
+       "exit": -9,
+       "seconds": 79.7,
+       "load1Start": 78.64,
+       "load1End": 82.72,
+       "regions": [],
+       "cappedAtLeastMs": 21023.4
+      },
+      {
+       "title": "trims a long run of spaces in linear time",
+       "exit": -9,
+       "seconds": 48.5,
+       "load1Start": 82.72,
+       "load1End": 69.6,
+       "regions": [],
+       "cappedAtLeastMs": 20909.6
+      },
+      {
+       "title": "trims a long run of spaces in linear time",
+       "exit": -9,
+       "seconds": 45.8,
+       "load1Start": 69.6,
+       "load1End": 69.65,
+       "regions": [],
+       "cappedAtLeastMs": 20925.4
+      },
+      {
+       "title": "trims a long run of spaces in linear time",
+       "exit": -9,
+       "seconds": 63.1,
+       "load1Start": 69.65,
+       "load1End": 65.84,
+       "regions": [],
+       "cappedAtLeastMs": 20913.1
+      },
+      {
+       "title": "trims a long run of spaces in linear time",
+       "exit": -9,
+       "seconds": 45.0,
+       "load1Start": 65.84,
+       "load1End": 59.38,
+       "regions": [],
+       "cappedAtLeastMs": 20935.2
+      },
+      {
+       "title": "trims a long run of spaces in linear time",
+       "exit": -9,
+       "seconds": 58.8,
+       "load1Start": 59.38,
+       "load1End": 64.15,
+       "regions": [],
+       "cappedAtLeastMs": 20956.3
+      }
+     ],
+     "min": 20902.7,
+     "unmeasured": 0,
+     "cappedRuns": 10
+    }
+   ],
+   "reachedMutantMinMs": 20902.7,
+   "mutantMinOverBound": 11.0,
+   "notReached": []
+  },
+  {
+   "bound": "HOSTILE_LINE_CPU_MS",
+   "committedMs": 140,
+   "capMs": 120000,
+   "headRuns": [
+    {
+     "title": "stays linear on one 100k line of spaces after",
+     "exit": 0,
+     "seconds": 5.2,
+     "load1Start": 64.15,
+     "load1End": 64.13,
+     "regions": [
+      {
+       "line": 267,
+       "bound": "HOSTILE_LINE_CPU_MS",
+       "cpuMs": 0.967
+      },
+      {
+       "line": 267,
+       "bound": "HOSTILE_LINE_CPU_MS",
+       "cpuMs": 0
+      }
+     ],
+     "cappedAtLeastMs": null
+    },
+    {
+     "title": "stays linear on one 100k line of spaces after",
+     "exit": 0,
+     "seconds": 3.0,
+     "load1Start": 64.13,
+     "load1End": 64.13,
+     "regions": [
+      {
+       "line": 267,
+       "bound": "HOSTILE_LINE_CPU_MS",
+       "cpuMs": 1.031
+      },
+      {
+       "line": 267,
+       "bound": "HOSTILE_LINE_CPU_MS",
+       "cpuMs": 0
+      }
+     ],
+     "cappedAtLeastMs": null
+    },
+    {
+     "title": "stays linear on one 100k line of spaces after",
+     "exit": 0,
+     "seconds": 4.1,
+     "load1Start": 64.13,
+     "load1End": 61.16,
+     "regions": [
+      {
+       "line": 267,
+       "bound": "HOSTILE_LINE_CPU_MS",
+       "cpuMs": 1.429
+      },
+      {
+       "line": 267,
+       "bound": "HOSTILE_LINE_CPU_MS",
+       "cpuMs": 0
+      }
+     ],
+     "cappedAtLeastMs": null
+    },
+    {
+     "title": "stays linear on one 100k line of spaces after",
+     "exit": 0,
+     "seconds": 4.3,
+     "load1Start": 61.16,
+     "load1End": 64.51,
+     "regions": [
+      {
+       "line": 267,
+       "bound": "HOSTILE_LINE_CPU_MS",
+       "cpuMs": 1.001
+      },
+      {
+       "line": 267,
+       "bound": "HOSTILE_LINE_CPU_MS",
+       "cpuMs": 0
+      }
+     ],
+     "cappedAtLeastMs": null
+    },
+    {
+     "title": "stays linear on one 100k line of spaces after",
+     "exit": 0,
+     "seconds": 3.2,
+     "load1Start": 64.51,
+     "load1End": 61.83,
+     "regions": [
+      {
+       "line": 267,
+       "bound": "HOSTILE_LINE_CPU_MS",
+       "cpuMs": 1.231
+      },
+      {
+       "line": 267,
+       "bound": "HOSTILE_LINE_CPU_MS",
+       "cpuMs": 0.177
+      }
+     ],
+     "cappedAtLeastMs": null
+    },
+    {
+     "title": "stays linear on one 100k line of spaces after",
+     "exit": 0,
+     "seconds": 3.0,
+     "load1Start": 61.83,
+     "load1End": 61.83,
+     "regions": [
+      {
+       "line": 267,
+       "bound": "HOSTILE_LINE_CPU_MS",
+       "cpuMs": 1.57
+      },
+      {
+       "line": 267,
+       "bound": "HOSTILE_LINE_CPU_MS",
+       "cpuMs": 0.099
+      }
+     ],
+     "cappedAtLeastMs": null
+    },
+    {
+     "title": "stays linear on one 100k line of spaces after",
+     "exit": 0,
+     "seconds": 3.1,
+     "load1Start": 61.83,
+     "load1End": 60.56,
+     "regions": [
+      {
+       "line": 267,
+       "bound": "HOSTILE_LINE_CPU_MS",
+       "cpuMs": 1.112
+      },
+      {
+       "line": 267,
+       "bound": "HOSTILE_LINE_CPU_MS",
+       "cpuMs": 0.274
+      }
+     ],
+     "cappedAtLeastMs": null
+    },
+    {
+     "title": "stays linear on one 100k line of spaces after",
+     "exit": 0,
+     "seconds": 2.8,
+     "load1Start": 60.56,
+     "load1End": 58.59,
+     "regions": [
+      {
+       "line": 267,
+       "bound": "HOSTILE_LINE_CPU_MS",
+       "cpuMs": 1
+      },
+      {
+       "line": 267,
+       "bound": "HOSTILE_LINE_CPU_MS",
+       "cpuMs": 0
+      }
+     ],
+     "cappedAtLeastMs": null
+    },
+    {
+     "title": "stays linear on one 100k line of spaces after",
+     "exit": 0,
+     "seconds": 3.0,
+     "load1Start": 58.59,
+     "load1End": 58.59,
+     "regions": [
+      {
+       "line": 267,
+       "bound": "HOSTILE_LINE_CPU_MS",
+       "cpuMs": 1.509
+      },
+      {
+       "line": 267,
+       "bound": "HOSTILE_LINE_CPU_MS",
+       "cpuMs": 0
+      }
+     ],
+     "cappedAtLeastMs": null
+    },
+    {
+     "title": "stays linear on one 100k line of spaces after",
+     "exit": 0,
+     "seconds": 2.6,
+     "load1Start": 58.59,
+     "load1End": 57.9,
+     "regions": [
+      {
+       "line": 267,
+       "bound": "HOSTILE_LINE_CPU_MS",
+       "cpuMs": 1.847
+      },
+      {
+       "line": 267,
+       "bound": "HOSTILE_LINE_CPU_MS",
+       "cpuMs": 0
+      }
+     ],
+     "cappedAtLeastMs": null
+    }
+   ],
+   "headExitsNonzero": 0,
+   "headRegions": 20,
+   "headMaxMs": 1.847,
+   "boundOverHeadMax": 75.8,
+   "mutants": [
+    {
+     "mutant": "excerpt-no-cap-quadratic-pattern",
+     "title": "stays linear on one 100k line of spaces after an identifier",
+     "runs": [
+      {
+       "title": "stays linear on one 100k line of spaces after an identifier",
+       "exit": 1,
+       "seconds": 25.6,
+       "load1Start": 57.9,
+       "load1End": 52.37,
+       "regions": [
+        {
+         "line": 267,
+         "bound": "HOSTILE_LINE_CPU_MS",
+         "cpuMs": 15528.597
+        }
+       ],
+       "cappedAtLeastMs": null
+      },
+      {
+       "title": "stays linear on one 100k line of spaces after an identifier",
+       "exit": 1,
+       "seconds": 36.8,
+       "load1Start": 52.37,
+       "load1End": 61.17,
+       "regions": [
+        {
+         "line": 267,
+         "bound": "HOSTILE_LINE_CPU_MS",
+         "cpuMs": 15836.994
+        }
+       ],
+       "cappedAtLeastMs": null
+      },
+      {
+       "title": "stays linear on one 100k line of spaces after an identifier",
+       "exit": 1,
+       "seconds": 35.7,
+       "load1Start": 61.17,
+       "load1End": 57.62,
+       "regions": [
+        {
+         "line": 267,
+         "bound": "HOSTILE_LINE_CPU_MS",
+         "cpuMs": 15968.497
+        }
+       ],
+       "cappedAtLeastMs": null
+      },
+      {
+       "title": "stays linear on one 100k line of spaces after an identifier",
+       "exit": 1,
+       "seconds": 25.5,
+       "load1Start": 57.62,
+       "load1End": 51.19,
+       "regions": [
+        {
+         "line": 267,
+         "bound": "HOSTILE_LINE_CPU_MS",
+         "cpuMs": 15434.236
+        }
+       ],
+       "cappedAtLeastMs": null
+      },
+      {
+       "title": "stays linear on one 100k line of spaces after an identifier",
+       "exit": 1,
+       "seconds": 25.8,
+       "load1Start": 51.19,
+       "load1End": 48.63,
+       "regions": [
+        {
+         "line": 267,
+         "bound": "HOSTILE_LINE_CPU_MS",
+         "cpuMs": 15444.677
+        }
+       ],
+       "cappedAtLeastMs": null
+      },
+      {
+       "title": "stays linear on one 100k line of spaces after an identifier",
+       "exit": 1,
+       "seconds": 30.3,
+       "load1Start": 48.63,
+       "load1End": 47.15,
+       "regions": [
+        {
+         "line": 267,
+         "bound": "HOSTILE_LINE_CPU_MS",
+         "cpuMs": 15978.805
+        }
+       ],
+       "cappedAtLeastMs": null
+      },
+      {
+       "title": "stays linear on one 100k line of spaces after an identifier",
+       "exit": 1,
+       "seconds": 31.1,
+       "load1Start": 47.15,
+       "load1End": 46.26,
+       "regions": [
+        {
+         "line": 267,
+         "bound": "HOSTILE_LINE_CPU_MS",
+         "cpuMs": 15894.767
+        }
+       ],
+       "cappedAtLeastMs": null
+      },
+      {
+       "title": "stays linear on one 100k line of spaces after an identifier",
+       "exit": 1,
+       "seconds": 21.8,
+       "load1Start": 46.26,
+       "load1End": 42.17,
+       "regions": [
+        {
+         "line": 267,
+         "bound": "HOSTILE_LINE_CPU_MS",
+         "cpuMs": 15006.729
+        }
+       ],
+       "cappedAtLeastMs": null
+      },
+      {
+       "title": "stays linear on one 100k line of spaces after an identifier",
+       "exit": 1,
+       "seconds": 20.7,
+       "load1Start": 42.17,
+       "load1End": 36.93,
+       "regions": [
+        {
+         "line": 267,
+         "bound": "HOSTILE_LINE_CPU_MS",
+         "cpuMs": 14559.457
+        }
+       ],
+       "cappedAtLeastMs": null
+      },
+      {
+       "title": "stays linear on one 100k line of spaces after an identifier",
+       "exit": 1,
+       "seconds": 21.8,
+       "load1Start": 36.93,
+       "load1End": 36.26,
+       "regions": [
+        {
+         "line": 267,
+         "bound": "HOSTILE_LINE_CPU_MS",
+         "cpuMs": 14907.104
+        }
+       ],
+       "cappedAtLeastMs": null
+      }
+     ],
+     "min": 14559.457,
+     "unmeasured": 0,
+     "cappedRuns": 0
+    }
+   ],
+   "reachedMutantMinMs": 14559.457,
+   "mutantMinOverBound": 104.0,
+   "notReached": []
+  },
+  {
+   "bound": "TAG_SCAN_CPU_MS",
+   "committedMs": 1500,
+   "capMs": 16500,
+   "headRuns": [
+    {
+     "title": "scans (unterminated opening tags|unterminated plural tags|near-miss tag names) at the ceiling",
+     "exit": 0,
+     "seconds": 3.5,
+     "load1Start": 36.26,
+     "load1End": 36.26,
+     "regions": [
+      {
+       "line": 103,
+       "bound": "TAG_SCAN_CPU_MS",
+       "cpuMs": 10.571
+      },
+      {
+       "line": 103,
+       "bound": "TAG_SCAN_CPU_MS",
+       "cpuMs": 47.852
+      },
+      {
+       "line": 103,
+       "bound": "TAG_SCAN_CPU_MS",
+       "cpuMs": 33.453
+      }
+     ],
+     "cappedAtLeastMs": null
+    },
+    {
+     "title": "scans (unterminated opening tags|unterminated plural tags|near-miss tag names) at the ceiling",
+     "exit": 0,
+     "seconds": 3.7,
+     "load1Start": 36.26,
+     "load1End": 35.84,
+     "regions": [
+      {
+       "line": 103,
+       "bound": "TAG_SCAN_CPU_MS",
+       "cpuMs": 10.831
+      },
+      {
+       "line": 103,
+       "bound": "TAG_SCAN_CPU_MS",
+       "cpuMs": 37.008
+      },
+      {
+       "line": 103,
+       "bound": "TAG_SCAN_CPU_MS",
+       "cpuMs": 32.319
+      }
+     ],
+     "cappedAtLeastMs": null
+    },
+    {
+     "title": "scans (unterminated opening tags|unterminated plural tags|near-miss tag names) at the ceiling",
+     "exit": 0,
+     "seconds": 2.7,
+     "load1Start": 35.84,
+     "load1End": 37.37,
+     "regions": [
+      {
+       "line": 103,
+       "bound": "TAG_SCAN_CPU_MS",
+       "cpuMs": 7.732
+      },
+      {
+       "line": 103,
+       "bound": "TAG_SCAN_CPU_MS",
+       "cpuMs": 33.906
+      },
+      {
+       "line": 103,
+       "bound": "TAG_SCAN_CPU_MS",
+       "cpuMs": 38.522
+      }
+     ],
+     "cappedAtLeastMs": null
+    },
+    {
+     "title": "scans (unterminated opening tags|unterminated plural tags|near-miss tag names) at the ceiling",
+     "exit": 0,
+     "seconds": 1.8,
+     "load1Start": 37.37,
+     "load1End": 37.37,
+     "regions": [
+      {
+       "line": 103,
+       "bound": "TAG_SCAN_CPU_MS",
+       "cpuMs": 9.389
+      },
+      {
+       "line": 103,
+       "bound": "TAG_SCAN_CPU_MS",
+       "cpuMs": 39.21
+      },
+      {
+       "line": 103,
+       "bound": "TAG_SCAN_CPU_MS",
+       "cpuMs": 31.896
+      }
+     ],
+     "cappedAtLeastMs": null
+    },
+    {
+     "title": "scans (unterminated opening tags|unterminated plural tags|near-miss tag names) at the ceiling",
+     "exit": 0,
+     "seconds": 3.9,
+     "load1Start": 37.37,
+     "load1End": 37.82,
+     "regions": [
+      {
+       "line": 103,
+       "bound": "TAG_SCAN_CPU_MS",
+       "cpuMs": 10.88
+      },
+      {
+       "line": 103,
+       "bound": "TAG_SCAN_CPU_MS",
+       "cpuMs": 60.162
+      },
+      {
+       "line": 103,
+       "bound": "TAG_SCAN_CPU_MS",
+       "cpuMs": 35.009
+      }
+     ],
+     "cappedAtLeastMs": null
+    },
+    {
+     "title": "scans (unterminated opening tags|unterminated plural tags|near-miss tag names) at the ceiling",
+     "exit": 0,
+     "seconds": 4.8,
+     "load1Start": 37.82,
+     "load1End": 37.68,
+     "regions": [
+      {
+       "line": 103,
+       "bound": "TAG_SCAN_CPU_MS",
+       "cpuMs": 10.908
+      },
+      {
+       "line": 103,
+       "bound": "TAG_SCAN_CPU_MS",
+       "cpuMs": 45.188
+      },
+      {
+       "line": 103,
+       "bound": "TAG_SCAN_CPU_MS",
+       "cpuMs": 35.355
+      }
+     ],
+     "cappedAtLeastMs": null
+    },
+    {
+     "title": "scans (unterminated opening tags|unterminated plural tags|near-miss tag names) at the ceiling",
+     "exit": 0,
+     "seconds": 4.3,
+     "load1Start": 37.68,
+     "load1End": 36.74,
+     "regions": [
+      {
+       "line": 103,
+       "bound": "TAG_SCAN_CPU_MS",
+       "cpuMs": 11.774
+      },
+      {
+       "line": 103,
+       "bound": "TAG_SCAN_CPU_MS",
+       "cpuMs": 42.997
+      },
+      {
+       "line": 103,
+       "bound": "TAG_SCAN_CPU_MS",
+       "cpuMs": 34.102
+      }
+     ],
+     "cappedAtLeastMs": null
+    },
+    {
+     "title": "scans (unterminated opening tags|unterminated plural tags|near-miss tag names) at the ceiling",
+     "exit": 0,
+     "seconds": 3.3,
+     "load1Start": 36.74,
+     "load1End": 36.74,
+     "regions": [
+      {
+       "line": 103,
+       "bound": "TAG_SCAN_CPU_MS",
+       "cpuMs": 10.526
+      },
+      {
+       "line": 103,
+       "bound": "TAG_SCAN_CPU_MS",
+       "cpuMs": 39.76
+      },
+      {
+       "line": 103,
+       "bound": "TAG_SCAN_CPU_MS",
+       "cpuMs": 27.92
+      }
+     ],
+     "cappedAtLeastMs": null
+    },
+    {
+     "title": "scans (unterminated opening tags|unterminated plural tags|near-miss tag names) at the ceiling",
+     "exit": 0,
+     "seconds": 2.6,
+     "load1Start": 36.74,
+     "load1End": 37.8,
+     "regions": [
+      {
+       "line": 103,
+       "bound": "TAG_SCAN_CPU_MS",
+       "cpuMs": 9.912
+      },
+      {
+       "line": 103,
+       "bound": "TAG_SCAN_CPU_MS",
+       "cpuMs": 40.749
+      },
+      {
+       "line": 103,
+       "bound": "TAG_SCAN_CPU_MS",
+       "cpuMs": 31.262
+      }
+     ],
+     "cappedAtLeastMs": null
+    },
+    {
+     "title": "scans (unterminated opening tags|unterminated plural tags|near-miss tag names) at the ceiling",
+     "exit": 0,
+     "seconds": 3.5,
+     "load1Start": 37.8,
+     "load1End": 37.8,
+     "regions": [
+      {
+       "line": 103,
+       "bound": "TAG_SCAN_CPU_MS",
+       "cpuMs": 10.682
+      },
+      {
+       "line": 103,
+       "bound": "TAG_SCAN_CPU_MS",
+       "cpuMs": 40.467
+      },
+      {
+       "line": 103,
+       "bound": "TAG_SCAN_CPU_MS",
+       "cpuMs": 31.399
+      }
+     ],
+     "cappedAtLeastMs": null
+    }
+   ],
+   "headExitsNonzero": 0,
+   "headRegions": 30,
+   "headMaxMs": 60.162,
+   "boundOverHeadMax": 24.9,
+   "mutants": [
+    {
+     "mutant": "junit-tag-regex",
+     "title": "scans unterminated opening tags at the ceiling",
+     "runs": [
+      {
+       "title": "scans unterminated opening tags at the ceiling",
+       "exit": -9,
+       "seconds": 22.1,
+       "load1Start": 37.8,
+       "load1End": 33.73,
+       "regions": [],
+       "cappedAtLeastMs": 16537.0
+      },
+      {
+       "title": "scans unterminated opening tags at the ceiling",
+       "exit": -9,
+       "seconds": 23.2,
+       "load1Start": 33.73,
+       "load1End": 34.48,
+       "regions": [],
+       "cappedAtLeastMs": 16513.1
+      },
+      {
+       "title": "scans unterminated opening tags at the ceiling",
+       "exit": -9,
+       "seconds": 34.6,
+       "load1Start": 34.48,
+       "load1End": 44.37,
+       "regions": [],
+       "cappedAtLeastMs": 16598.8
+      },
+      {
+       "title": "scans unterminated opening tags at the ceiling",
+       "exit": -9,
+       "seconds": 33.8,
+       "load1Start": 44.37,
+       "load1End": 49.2,
+       "regions": [],
+       "cappedAtLeastMs": 16526.1
+      },
+      {
+       "title": "scans unterminated opening tags at the ceiling",
+       "exit": -9,
+       "seconds": 41.9,
+       "load1Start": 49.2,
+       "load1End": 59.51,
+       "regions": [],
+       "cappedAtLeastMs": 16572.6
+      },
+      {
+       "title": "scans unterminated opening tags at the ceiling",
+       "exit": -9,
+       "seconds": 65.3,
+       "load1Start": 59.51,
+       "load1End": 88.0,
+       "regions": [],
+       "cappedAtLeastMs": 16623.8
+      },
+      {
+       "title": "scans unterminated opening tags at the ceiling",
+       "exit": -9,
+       "seconds": 76.9,
+       "load1Start": 88.0,
+       "load1End": 98.0,
+       "regions": [],
+       "cappedAtLeastMs": 16685.9
+      },
+      {
+       "title": "scans unterminated opening tags at the ceiling",
+       "exit": -9,
+       "seconds": 99.7,
+       "load1Start": 98.0,
+       "load1End": 101.6,
+       "regions": [],
+       "cappedAtLeastMs": 16538.7
+      },
+      {
+       "title": "scans unterminated opening tags at the ceiling",
+       "exit": -9,
+       "seconds": 43.6,
+       "load1Start": 101.6,
+       "load1End": 92.67,
+       "regions": [],
+       "cappedAtLeastMs": 16554.7
+      },
+      {
+       "title": "scans unterminated opening tags at the ceiling",
+       "exit": -9,
+       "seconds": 52.2,
+       "load1Start": 92.67,
+       "load1End": 95.63,
+       "regions": [],
+       "cappedAtLeastMs": 16572.9
+      }
+     ],
+     "min": 16513.1,
+     "unmeasured": 0,
+     "cappedRuns": 10
+    },
+    {
+     "mutant": "junit-tag-regex",
+     "title": "scans unterminated plural tags at the ceiling",
+     "runs": [
+      {
+       "title": "scans unterminated plural tags at the ceiling",
+       "exit": -9,
+       "seconds": 49.9,
+       "load1Start": 95.63,
+       "load1End": 79.27,
+       "regions": [],
+       "cappedAtLeastMs": 16524.2
+      },
+      {
+       "title": "scans unterminated plural tags at the ceiling",
+       "exit": -9,
+       "seconds": 42.9,
+       "load1Start": 79.27,
+       "load1End": 70.03,
+       "regions": [],
+       "cappedAtLeastMs": 16586.3
+      },
+      {
+       "title": "scans unterminated plural tags at the ceiling",
+       "exit": -9,
+       "seconds": 41.1,
+       "load1Start": 70.03,
+       "load1End": 68.02,
+       "regions": [],
+       "cappedAtLeastMs": 16504.0
+      },
+      {
+       "title": "scans unterminated plural tags at the ceiling",
+       "exit": -9,
+       "seconds": 51.4,
+       "load1Start": 68.02,
+       "load1End": 74.25,
+       "regions": [],
+       "cappedAtLeastMs": 16616.9
+      },
+      {
+       "title": "scans unterminated plural tags at the ceiling",
+       "exit": -9,
+       "seconds": 38.2,
+       "load1Start": 74.25,
+       "load1End": 63.69,
+       "regions": [],
+       "cappedAtLeastMs": 16541.8
+      },
+      {
+       "title": "scans unterminated plural tags at the ceiling",
+       "exit": -9,
+       "seconds": 37.2,
+       "load1Start": 63.69,
+       "load1End": 65.2,
+       "regions": [],
+       "cappedAtLeastMs": 16660.0
+      },
+      {
+       "title": "scans unterminated plural tags at the ceiling",
+       "exit": -9,
+       "seconds": 36.2,
+       "load1Start": 65.2,
+       "load1End": 66.77,
+       "regions": [],
+       "cappedAtLeastMs": 16548.5
+      },
+      {
+       "title": "scans unterminated plural tags at the ceiling",
+       "exit": -9,
+       "seconds": 43.3,
+       "load1Start": 66.77,
+       "load1End": 75.16,
+       "regions": [],
+       "cappedAtLeastMs": 16542.5
+      },
+      {
+       "title": "scans unterminated plural tags at the ceiling",
+       "exit": -9,
+       "seconds": 44.4,
+       "load1Start": 75.16,
+       "load1End": 75.09,
+       "regions": [],
+       "cappedAtLeastMs": 16568.4
+      },
+      {
+       "title": "scans unterminated plural tags at the ceiling",
+       "exit": -9,
+       "seconds": 67.1,
+       "load1Start": 75.09,
+       "load1End": 88.91,
+       "regions": [],
+       "cappedAtLeastMs": 16538.3
+      }
+     ],
+     "min": 16504.0,
+     "unmeasured": 0,
+     "cappedRuns": 10
+    },
+    {
+     "mutant": "junit-tag-regex",
+     "title": "scans near-miss tag names at the ceiling",
+     "runs": [
+      {
+       "title": "scans near-miss tag names at the ceiling",
+       "exit": 0,
+       "seconds": 20.6,
+       "load1Start": 88.91,
+       "load1End": 100.08,
+       "regions": [
+        {
+         "line": 103,
+         "bound": "TAG_SCAN_CPU_MS",
+         "cpuMs": 19.262
+        }
+       ],
+       "cappedAtLeastMs": null
+      },
+      {
+       "title": "scans near-miss tag names at the ceiling",
+       "exit": 0,
+       "seconds": 13.7,
+       "load1Start": 100.08,
+       "load1End": 97.23,
+       "regions": [
+        {
+         "line": 103,
+         "bound": "TAG_SCAN_CPU_MS",
+         "cpuMs": 20.949
+        }
+       ],
+       "cappedAtLeastMs": null
+      },
+      {
+       "title": "scans near-miss tag names at the ceiling",
+       "exit": 0,
+       "seconds": 21.0,
+       "load1Start": 97.23,
+       "load1End": 99.69,
+       "regions": [
+        {
+         "line": 103,
+         "bound": "TAG_SCAN_CPU_MS",
+         "cpuMs": 18.764
+        }
+       ],
+       "cappedAtLeastMs": null
+      },
+      {
+       "title": "scans near-miss tag names at the ceiling",
+       "exit": 0,
+       "seconds": 12.7,
+       "load1Start": 99.69,
+       "load1End": 97.15,
+       "regions": [
+        {
+         "line": 103,
+         "bound": "TAG_SCAN_CPU_MS",
+         "cpuMs": 16.831
+        }
+       ],
+       "cappedAtLeastMs": null
+      },
+      {
+       "title": "scans near-miss tag names at the ceiling",
+       "exit": 0,
+       "seconds": 11.5,
+       "load1Start": 97.15,
+       "load1End": 92.61,
+       "regions": [
+        {
+         "line": 103,
+         "bound": "TAG_SCAN_CPU_MS",
+         "cpuMs": 18.848
+        }
+       ],
+       "cappedAtLeastMs": null
+      },
+      {
+       "title": "scans near-miss tag names at the ceiling",
+       "exit": 0,
+       "seconds": 17.2,
+       "load1Start": 92.61,
+       "load1End": 95.22,
+       "regions": [
+        {
+         "line": 103,
+         "bound": "TAG_SCAN_CPU_MS",
+         "cpuMs": 19.152
+        }
+       ],
+       "cappedAtLeastMs": null
+      },
+      {
+       "title": "scans near-miss tag names at the ceiling",
+       "exit": 0,
+       "seconds": 14.1,
+       "load1Start": 95.22,
+       "load1End": 99.79,
+       "regions": [
+        {
+         "line": 103,
+         "bound": "TAG_SCAN_CPU_MS",
+         "cpuMs": 17.688
+        }
+       ],
+       "cappedAtLeastMs": null
+      },
+      {
+       "title": "scans near-miss tag names at the ceiling",
+       "exit": 0,
+       "seconds": 22.5,
+       "load1Start": 99.79,
+       "load1End": 109.03,
+       "regions": [
+        {
+         "line": 103,
+         "bound": "TAG_SCAN_CPU_MS",
+         "cpuMs": 19.633
+        }
+       ],
+       "cappedAtLeastMs": null
+      },
+      {
+       "title": "scans near-miss tag names at the ceiling",
+       "exit": 0,
+       "seconds": 26.7,
+       "load1Start": 109.03,
+       "load1End": 114.67,
+       "regions": [
+        {
+         "line": 103,
+         "bound": "TAG_SCAN_CPU_MS",
+         "cpuMs": 18.479
+        }
+       ],
+       "cappedAtLeastMs": null
+      },
+      {
+       "title": "scans near-miss tag names at the ceiling",
+       "exit": 0,
+       "seconds": 26.6,
+       "load1Start": 114.67,
+       "load1End": 123.55,
+       "regions": [
+        {
+         "line": 103,
+         "bound": "TAG_SCAN_CPU_MS",
+         "cpuMs": 17.639
+        }
+       ],
+       "cappedAtLeastMs": null
+      }
+     ],
+     "min": 16.831,
+     "unmeasured": 0,
+     "cappedRuns": 0
+    }
+   ],
+   "reachedMutantMinMs": 16504.0,
+   "mutantMinOverBound": 11.0,
+   "notReached": [
+    [
+     "scans near-miss tag names at the ceiling",
+     16.831
+    ]
+   ]
+  },
+  {
+   "bound": "ATTRIBUTE_SCAN_CPU_MS",
+   "committedMs": 3000,
+   "capMs": 33000,
+   "headRuns": [
+    {
+     "title": "scans one tag body that is a single word run at the ceiling",
+     "exit": 0,
+     "seconds": 36.0,
+     "load1Start": 123.55,
+     "load1End": 137.42,
+     "regions": [
+      {
+       "line": 110,
+       "bound": "ATTRIBUTE_SCAN_CPU_MS",
+       "cpuMs": 153.351
+      }
+     ],
+     "cappedAtLeastMs": null
+    },
+    {
+     "title": "scans one tag body that is a single word run at the ceiling",
+     "exit": 0,
+     "seconds": 30.0,
+     "load1Start": 137.42,
+     "load1End": 132.98,
+     "regions": [
+      {
+       "line": 110,
+       "bound": "ATTRIBUTE_SCAN_CPU_MS",
+       "cpuMs": 152.626
+      }
+     ],
+     "cappedAtLeastMs": null
+    },
+    {
+     "title": "scans one tag body that is a single word run at the ceiling",
+     "exit": 0,
+     "seconds": 28.0,
+     "load1Start": 132.98,
+     "load1End": 133.06,
+     "regions": [
+      {
+       "line": 110,
+       "bound": "ATTRIBUTE_SCAN_CPU_MS",
+       "cpuMs": 149.824
+      }
+     ],
+     "cappedAtLeastMs": null
+    },
+    {
+     "title": "scans one tag body that is a single word run at the ceiling",
+     "exit": 0,
+     "seconds": 19.8,
+     "load1Start": 133.06,
+     "load1End": 137.67,
+     "regions": [
+      {
+       "line": 110,
+       "bound": "ATTRIBUTE_SCAN_CPU_MS",
+       "cpuMs": 149.553
+      }
+     ],
+     "cappedAtLeastMs": null
+    },
+    {
+     "title": "scans one tag body that is a single word run at the ceiling",
+     "exit": 0,
+     "seconds": 27.6,
+     "load1Start": 137.67,
+     "load1End": 139.27,
+     "regions": [
+      {
+       "line": 110,
+       "bound": "ATTRIBUTE_SCAN_CPU_MS",
+       "cpuMs": 156.822
+      }
+     ],
+     "cappedAtLeastMs": null
+    },
+    {
+     "title": "scans one tag body that is a single word run at the ceiling",
+     "exit": 0,
+     "seconds": 22.6,
+     "load1Start": 139.27,
+     "load1End": 147.59,
+     "regions": [
+      {
+       "line": 110,
+       "bound": "ATTRIBUTE_SCAN_CPU_MS",
+       "cpuMs": 150.156
+      }
+     ],
+     "cappedAtLeastMs": null
+    },
+    {
+     "title": "scans one tag body that is a single word run at the ceiling",
+     "exit": 0,
+     "seconds": 30.5,
+     "load1Start": 147.59,
+     "load1End": 131.59,
+     "regions": [
+      {
+       "line": 110,
+       "bound": "ATTRIBUTE_SCAN_CPU_MS",
+       "cpuMs": 155.726
+      }
+     ],
+     "cappedAtLeastMs": null
+    },
+    {
+     "title": "scans one tag body that is a single word run at the ceiling",
+     "exit": 0,
+     "seconds": 17.8,
+     "load1Start": 131.59,
+     "load1End": 132.98,
+     "regions": [
+      {
+       "line": 110,
+       "bound": "ATTRIBUTE_SCAN_CPU_MS",
+       "cpuMs": 196.215
+      }
+     ],
+     "cappedAtLeastMs": null
+    },
+    {
+     "title": "scans one tag body that is a single word run at the ceiling",
+     "exit": 0,
+     "seconds": 25.1,
+     "load1Start": 132.98,
+     "load1End": 132.03,
+     "regions": [
+      {
+       "line": 110,
+       "bound": "ATTRIBUTE_SCAN_CPU_MS",
+       "cpuMs": 148.586
+      }
+     ],
+     "cappedAtLeastMs": null
+    },
+    {
+     "title": "scans one tag body that is a single word run at the ceiling",
+     "exit": 0,
+     "seconds": 29.1,
+     "load1Start": 132.03,
+     "load1End": 138.61,
+     "regions": [
+      {
+       "line": 110,
+       "bound": "ATTRIBUTE_SCAN_CPU_MS",
+       "cpuMs": 161.811
+      }
+     ],
+     "cappedAtLeastMs": null
+    }
+   ],
+   "headExitsNonzero": 0,
+   "headRegions": 10,
+   "headMaxMs": 196.215,
+   "boundOverHeadMax": 15.3,
+   "mutants": [
+    {
+     "mutant": "junit-attr-regex",
+     "title": "scans one tag body that is a single word run at the ceiling",
+     "runs": [
+      {
+       "title": "scans one tag body that is a single word run at the ceiling",
+       "exit": -9,
+       "seconds": 144.5,
+       "load1Start": 138.61,
+       "load1End": 110.88,
+       "regions": [],
+       "cappedAtLeastMs": 33010.5
+      },
+      {
+       "title": "scans one tag body that is a single word run at the ceiling",
+       "exit": -9,
+       "seconds": 88.1,
+       "load1Start": 110.88,
+       "load1End": 78.07,
+       "regions": [],
+       "cappedAtLeastMs": 33145.0
+      },
+      {
+       "title": "scans one tag body that is a single word run at the ceiling",
+       "exit": -9,
+       "seconds": 82.0,
+       "load1Start": 78.07,
+       "load1End": 63.3,
+       "regions": [],
+       "cappedAtLeastMs": 33122.5
+      },
+      {
+       "title": "scans one tag body that is a single word run at the ceiling",
+       "exit": -9,
+       "seconds": 87.3,
+       "load1Start": 63.3,
+       "load1End": 74.22,
+       "regions": [],
+       "cappedAtLeastMs": 33050.0
+      },
+      {
+       "title": "scans one tag body that is a single word run at the ceiling",
+       "exit": -9,
+       "seconds": 64.1,
+       "load1Start": 74.22,
+       "load1End": 62.32,
+       "regions": [],
+       "cappedAtLeastMs": 33073.6
+      },
+      {
+       "title": "scans one tag body that is a single word run at the ceiling",
+       "exit": -9,
+       "seconds": 77.9,
+       "load1Start": 62.32,
+       "load1End": 66.92,
+       "regions": [],
+       "cappedAtLeastMs": 33148.2
+      },
+      {
+       "title": "scans one tag body that is a single word run at the ceiling",
+       "exit": -9,
+       "seconds": 73.9,
+       "load1Start": 66.92,
+       "load1End": 64.37,
+       "regions": [],
+       "cappedAtLeastMs": 33098.1
+      },
+      {
+       "title": "scans one tag body that is a single word run at the ceiling",
+       "exit": -9,
+       "seconds": 82.0,
+       "load1Start": 64.37,
+       "load1End": 65.33,
+       "regions": [],
+       "cappedAtLeastMs": 33162.6
+      },
+      {
+       "title": "scans one tag body that is a single word run at the ceiling",
+       "exit": -9,
+       "seconds": 47.0,
+       "load1Start": 65.33,
+       "load1End": 44.77,
+       "regions": [],
+       "cappedAtLeastMs": 33176.0
+      },
+      {
+       "title": "scans one tag body that is a single word run at the ceiling",
+       "exit": -9,
+       "seconds": 45.9,
+       "load1Start": 44.77,
+       "load1End": 35.95,
+       "regions": [],
+       "cappedAtLeastMs": 33120.9
+      }
+     ],
+     "min": 33010.5,
+     "unmeasured": 0,
+     "cappedRuns": 10
+    }
+   ],
+   "reachedMutantMinMs": 33010.5,
+   "mutantMinOverBound": 11.0,
+   "notReached": []
+  }
+ ]
+}

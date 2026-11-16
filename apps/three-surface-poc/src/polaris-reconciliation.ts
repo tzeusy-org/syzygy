@@ -13,7 +13,7 @@
  * a single placeholder and substituted after the whole page exists. Nothing
  * here is cached or stored: the figures are derived per render.
  */
-import { escapeHtml } from '@syzygy/cap1-daemon';
+import { escapeHtml } from '@syzygy/http-host';
 import { EXTRACTION_CLASSES, UNKNOWN_REASON_ROUTES, type ExtractionClass, type ProjectShape, type ProjectShapeClaim } from '@syzygy/three-surface-poc-core';
 
 import { copyAttr, copyText, roleAttr, type PolarisCopyId } from './polaris-copy.js';

@@ -1,19 +1,21 @@
-import { createHash } from 'node:crypto';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { parseBoundedJson } from '@syzygy/polaris-generation-core/live';
+import { isRecord, sha256 } from '@syzygy/support';
 import { DRAFT_MAX_BYTES, type CheckDeps } from './check.js';
 import { RECORDS_WITHIN_REACH, type GateSources } from './gate-sources.js';
 import {
   INVENTORY_BRIEF_FILE, checkInventory, errno, latestInventorySession, logStep, openRun, promptRecordName, readRecord, sessionsRoot,
   type InventoryCheckResult,
 } from './inventory.js';
+import { isoOf } from './iso-of.js';
+import type { Outcome } from './outcome.js';
 import type { ReverifyOptions, ReverifyRefusal } from './reverify.js';
 import {
   PACKET_DIGEST_FILE, PACKET_FILE, REVIEW_CHECKS, isReviewKind, latestReviewSession, reviewCheck, reviewPromptRecordName, verdictFileName,
   writePacket, type ReviewCheckResult, type ReviewDeps, type ReviewKind,
 } from './review.js';
-import type { ScreenLoad } from './screen.js';
+import type { ScreenLoader } from './screen.js';
 import { RUN_ID, RUN_LAYOUT } from './state-directory.js';
 
 /** Pre-started waiting sessions (owner direction `POLARIS-DOSSIER-WAITING-SESSIONS-2026-10-08`; the candidate v1.2 of
@@ -35,7 +37,7 @@ import { RUN_ID, RUN_LAYOUT } from './state-directory.js';
  * recorded in the run directory; `continuationOf` reads those records, and the declared session identifiers of earlier verdicts, so the
  * review page can disclose a continuing reviewer. Every record lies within the agent sessions' write reach, so all of it is Inferred.
  *
- * Gated: until the owner signs off version 1.2 of the specification, `waitModeSigned` is false and every wait-mode step refuses. */
+ * Gated by a matching sign-off at or after v1.2 and its effective UTC day (OWNER-DIRECTION-POLARIS-WAIT-MODE-UTC-DAY-2026-11-05). */
 
 export const WAIT_MODE_DIRECTION = 'POLARIS-DOSSIER-WAITING-SESSIONS-2026-10-08';
 export const WAIT_MODE_SPEC = 'polaris-dossier-local-agent-mode v1.2';
@@ -66,22 +68,18 @@ const SIGNOFF_RECORD = /^POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v([0-9]+)\.([0
 const DECISIONS = path.join('.syzygy', 'governance', 'decisions');
 const DELIVERY_JSON_LIMITS = Object.freeze({ maxBytes: 65_536, maxNodes: 256, maxDepth: 4 });
 
-const isoOf = (instant: number): string => new Date(instant).toISOString();
-const isObj = (value: unknown): value is Readonly<Record<string, unknown>> => value !== null && typeof value === 'object' && !Array.isArray(value);
-const sha256 = (bytes: string | Uint8Array): string => createHash('sha256').update(bytes).digest('hex');
-
 const SIGNOFF_PACKAGE = 'polaris-dossier-local-agent-mode';
 const AGGREGATE = 'ACCEPTANCE-ACT-RECORD.md';
 
-/** Whether a sign-off record of `version` is one `record_versioned_signoff.py` wrote: its head as the recorder renders it (title, package,
- * version, tag, a reviewed commit and a confirming verdict), and exactly one marked block for the version in the aggregate record, as
- * the recorder's `--check` requires. A file that only carries the name opens nothing. */
-export function signoffRecordHolds(decisions: string, name: string, version: string): boolean {
+/** Read a trusted-checkout record whose structural subset holds: the first twelve nonblank lines carry the recorder's title, package,
+ * version, tag, reviewed commit and confirming verdict; the aggregate has exactly one marked block. This is not full-template or
+ * owner-act provenance verification. Effective-day eligibility is evaluated separately, after matching the applied subject. */
+function readSignoffRecord(decisions: string, name: string, version: string): string | undefined {
   let text: string, aggregate: string;
   try {
     text = fs.readFileSync(path.join(decisions, name), 'utf8');
     aggregate = fs.readFileSync(path.join(decisions, AGGREGATE), 'utf8');
-  } catch { return false; }
+  } catch { return undefined; }
   const head = text.split('\n').filter((line) => line.trim() !== '').slice(0, 12);
   const field = (key: string): string | undefined => head.find((line) => line.startsWith(`${key}: `))?.slice(key.length + 2);
   const headHolds = head[0] === `# Polaris dossier local-agent mode — version-tagged sign-off v${version}`
@@ -89,7 +87,11 @@ export function signoffRecordHolds(decisions: string, name: string, version: str
     && /^[0-9a-f]{40}$/u.test(field('Reviewed commit') ?? '') && (field('Review verdict') === 'CONFIRM' || field('Review verdict') === 'CONFIRM WITH EXCEPTIONS');
   const start = `<!-- versioned-signoff:${SIGNOFF_PACKAGE}:v${version} -->`, end = `<!-- /versioned-signoff:${SIGNOFF_PACKAGE}:v${version} -->`;
   const blockHolds = aggregate.split(start).length === 2 && aggregate.split(end).length === 2 && aggregate.indexOf(start) < aggregate.indexOf(end);
-  return headHolds && blockHolds;
+  return headHolds && blockHolds ? text : undefined;
+}
+
+export function signoffRecordHolds(decisions: string, name: string, version: string): boolean {
+  return readSignoffRecord(decisions, name, version) !== undefined;
 }
 
 const INSTALLED_SPEC = path.join('openspec', 'changes', SIGNOFF_PACKAGE, 'specs', 'polaris-generation', 'spec.md');
@@ -97,7 +99,7 @@ const MANIFEST_LINE = /^Manifest SHA-256: ([0-9a-f]{64})$/u;
 
 /** Whether the records root carries the applied, signed bytes of `version`, as the v1.2 builder's signed check reads them: the review the
  * record names (a path inside the records root) carries exactly one `Manifest SHA-256` in its head, its first four non-blank lines; the
- * installed spec hashes to it; and the spec's head names the version. A record written by hand, with no review and no applied patch,
+ * installed spec hashes to it; and a line of the spec opens with the version (`specNamesVersion`). A record written by hand, with no review and no applied patch,
  * opens nothing. */
 export function appliedSubjectHolds(recordsRoot: string, recordFile: string, version: string): boolean {
   let record: string, spec: Buffer;
@@ -112,45 +114,123 @@ export function appliedSubjectHolds(recordsRoot: string, recordFile: string, ver
   try { reviewText = fs.readFileSync(path.join(recordsRoot, review), 'utf8'); } catch { return false; }
   const digests = reviewText.split(/\r?\n/u).filter((line) => line.trim() !== '').slice(0, 4)
     .flatMap((line) => { const match = MANIFEST_LINE.exec(line); return match === null ? [] : [match[1]]; });
-  return digests.length === 1 && sha256(spec) === digests[0] && spec.toString('utf8').includes(`Exact behavioral delta, version ${version}.`);
+  return digests.length === 1 && sha256(spec) === digests[0] && specNamesVersion(spec.toString('utf8'), version);
 }
 
-/** Whether the owner has signed off a version of the local-agent mode at or after 1.2: a sign-off record for it in the records root's
- * decisions that `signoffRecordHolds`, over a tree that carries its applied subject (`appliedSubjectHolds`). The record lies in the Syzygy
- * checkout, not the run's state directory. */
-export function waitModeSignedIn(recordsRoot: string): boolean {
+/** Whether a line of the spec opens with its version statement for `version`: "Exact behavioral delta, version 1.4." and, since the
+ * signed v1.5 bytes, "Exact behavioral delta, version 1.5, a candidate on version 1.4." Anchored at a line start and followed by a full
+ * stop or a comma, so a predecessor named mid-sentence ("on version 1.4.") or a longer version ("1.25") does not count. */
+export function specNamesVersion(spec: string, version: string): boolean {
+  const escaped = version.replace(/\./gu, '\\.');
+  return new RegExp(`^Exact behavioral delta, version ${escaped}[.,]`, 'mu').test(spec);
+}
+
+/** A matching applied subject may still lack effective-day authorization. These temporal states never assert installed-byte drift. */
+export type WaitModeStatus = 'signed' | 'drifted' | 'unsigned' | 'future' | 'missing-date' | 'invalid-date' | 'invalid-evaluation';
+
+/** The local-agent recorder has a Date-only dialect, distinct from registry Recorded-at instants. The owner direction
+ * OWNER-DIRECTION-POLARIS-WAIT-MODE-UTC-DAY-2026-11-05 makes it an effective UTC day, not an exact signing instant. */
+function signoffDateStatus(text: string, utcDay: number): 'signed' | 'future' | 'missing-date' | 'invalid-date' {
+  const lines = text.split('\n').filter((line) => line.trim() !== '');
+  const dates = lines.filter((line) => line.startsWith('Date:'));
+  if (dates.length === 0) return 'missing-date';
+  if (dates.length !== 1 || lines[1] !== dates[0]) return 'invalid-date';
+  const match = /^Date: ([0-9]{4}-[0-9]{2}-[0-9]{2})$/u.exec(dates[0]!);
+  if (match === null) return 'invalid-date';
+  const day = Date.parse(`${match[1]}T00:00:00Z`);
+  if (!Number.isFinite(day) || new Date(day).toISOString().slice(0, 10) !== match[1]) return 'invalid-date';
+  return day / 86_400_000 > utcDay ? 'future' : 'signed';
+}
+
+/** One entry evaluation over a trusted checkout, using one captured instant for every candidate. Reads of the record, aggregate,
+ * review and specification are not an atomic snapshot. A matching in-force candidate wins regardless of directory order; otherwise
+ * matching temporal refusals take precedence (future, invalid, missing), then an unmatched recorded subject, then absence. */
+export function waitModeStatus(recordsRoot: string, now = Date.now()): WaitModeStatus {
+  if (!Number.isFinite(now) || !Number.isFinite(new Date(now).getTime())) return 'invalid-evaluation';
+  const utcDay = Math.floor(now / 86_400_000);
   const decisions = path.join(recordsRoot, DECISIONS);
   let names: string[];
-  try { names = fs.readdirSync(decisions); } catch { return false; }
-  return names.some((name) => {
+  try { names = fs.readdirSync(decisions); } catch { return 'unsigned'; }
+  let recorded = false;
+  const temporal = new Set<WaitModeStatus>();
+  for (const name of names) {
     const match = SIGNOFF_RECORD.exec(name);
-    const version = match === null ? '' : `${match[1]}.${match[2]}`;
-    return match !== null && (Number(match[1]) > 1 || (Number(match[1]) === 1 && Number(match[2]) >= 2))
-      && signoffRecordHolds(decisions, name, version) && appliedSubjectHolds(recordsRoot, path.join(decisions, name), version);
-  });
+    if (match === null || !(Number(match[1]) > 1 || (Number(match[1]) === 1 && Number(match[2]) >= 2))) continue;
+    const version = `${match[1]}.${match[2]}`;
+    const text = readSignoffRecord(decisions, name, version);
+    if (text === undefined) continue;
+    recorded = true;
+    if (!appliedSubjectHolds(recordsRoot, path.join(decisions, name), version)) continue;
+    const status = signoffDateStatus(text, utcDay);
+    if (status === 'signed') return 'signed';
+    temporal.add(status);
+  }
+  for (const status of ['future', 'invalid-date', 'missing-date'] as const) if (temporal.has(status)) return status;
+  return recorded ? 'drifted' : 'unsigned';
 }
 
-/** Why a session directory may not be written into or delivered to, or null. The sessions root and the session directory must each be
- * a directory itself, never a link (lstat), and each real path must be its real parent's entry of its own name: a linked root would move
+/** Whether a matching eligible local-agent sign-off is in force for this operation's UTC day; see `waitModeStatus`. */
+export function waitModeSignedIn(recordsRoot: string, now = Date.now()): boolean {
+  return waitModeStatus(recordsRoot, now) === 'signed';
+}
+
+/** A session directory that passed the link checks, with its real path, or why it may not be written into. */
+export type ResolvedSessionDirectory = { readonly ok: true; readonly real: string } | { readonly ok: false; readonly reason: string };
+
+/** Check a session directory once and hand back the real path the checks resolved, so that a caller writes through that path and never
+ * resolves the lexical one a second time (review-408 round 3, note 1). The sessions root and the session directory must each be a
+ * directory itself, never a link (lstat), and each real path must be its real parent's entry of its own name: a linked root would move
  * the root and its entries together, so checking the entry against the resolved root alone is not enough. Then no write Syzygy makes
- * for a session lands outside the root, or the root outside its parent in the state directory. */
-export function sessionDirectoryRefusal(root: string, directory: string): string | null {
+ * for a session lands outside the root, or the root outside its parent in the state directory.
+ *
+ * Residual, named: a real path is still a path. A writer racing in the state root between this check and the writes could replace the
+ * session directory's own entry (or the root's) with a link, and Node offers no `openat` to pin the checked inode. Writing through
+ * `real` removes the re-resolution of the lexical path (a link in an ancestor swapped in after the check no longer moves the writes),
+ * not that last swap. The window is a few synchronous calls wide, and the writer is the party the F1 threat already names. */
+export function resolveSessionDirectory(root: string, directory: string): ResolvedSessionDirectory {
+  const refuse = (reason: string): ResolvedSessionDirectory => ({ ok: false, reason });
   let rootStats: fs.Stats;
-  try { rootStats = fs.lstatSync(root); } catch (cause) { return `the sessions root ${root} cannot be read (${errno(cause)})`; }
-  if (!rootStats.isDirectory()) return `the sessions root ${root} is not a directory of its own (a link, or another kind of file), so Syzygy writes nothing through it`;
-  let realRootOwn: string, realParent: string;
-  try { realRootOwn = fs.realpathSync(root); realParent = fs.realpathSync(path.dirname(root)); } catch (cause) { return `the sessions root ${root} cannot be resolved (${errno(cause)})`; }
-  if (realRootOwn !== path.join(realParent, path.basename(root))) return `the sessions root ${root} resolves to ${realRootOwn}, not to its parent's ${path.basename(root)}, so Syzygy writes nothing there`;
+  try { rootStats = fs.lstatSync(root); } catch (cause) { return refuse(`the sessions root ${root} cannot be read (${errno(cause)})`); }
+  if (!rootStats.isDirectory()) return refuse(`the sessions root ${root} is not a directory of its own (a link, or another kind of file), so Syzygy writes nothing through it`);
+  let realRoot: string, realParent: string;
+  try { realRoot = fs.realpathSync(root); realParent = fs.realpathSync(path.dirname(root)); } catch (cause) { return refuse(`the sessions root ${root} cannot be resolved (${errno(cause)})`); }
+  if (realRoot !== path.join(realParent, path.basename(root))) return refuse(`the sessions root ${root} resolves to ${realRoot}, not to its parent's ${path.basename(root)}, so Syzygy writes nothing there`);
   let stats: fs.Stats;
-  try { stats = fs.lstatSync(directory); } catch (cause) { return `${directory} cannot be read (${errno(cause)})`; }
-  if (!stats.isDirectory()) return `${directory} is not a directory of its own (a link, or another kind of file), so Syzygy writes nothing through it`;
-  let real: string, realRoot: string;
-  try { real = fs.realpathSync(directory); realRoot = fs.realpathSync(root); } catch (cause) { return `${directory} cannot be resolved (${errno(cause)})`; }
-  if (real !== path.join(realRoot, path.basename(directory))) return `${directory} resolves to ${real}, not to the sessions root's ${path.basename(directory)}, so Syzygy writes nothing there`;
-  return null;
+  try { stats = fs.lstatSync(directory); } catch (cause) { return refuse(`${directory} cannot be read (${errno(cause)})`); }
+  if (!stats.isDirectory()) return refuse(`${directory} is not a directory of its own (a link, or another kind of file), so Syzygy writes nothing through it`);
+  let real: string;
+  try { real = fs.realpathSync(directory); } catch (cause) { return refuse(`${directory} cannot be resolved (${errno(cause)})`); }
+  if (real !== path.join(realRoot, path.basename(directory))) return refuse(`${directory} resolves to ${real}, not to the sessions root's ${path.basename(directory)}, so Syzygy writes nothing there`);
+  return { ok: true, real };
+}
+
+/** Why a session directory may not be written into, or null; see `resolveSessionDirectory`. */
+export function sessionDirectoryRefusal(root: string, directory: string): string | null {
+  const resolved = resolveSessionDirectory(root, directory);
+  return resolved.ok ? null : resolved.reason;
 }
 
 export const WAIT_MODE_UNSIGNED = `wait mode is specified only by ${WAIT_MODE_SPEC}, which the owner has not signed off; until the version-tagged sign-off is recorded, hand each session over with session-prompt as signed in v1.1`;
+/** The same refusal when a sign-off record exists but its applied subject no longer holds (review-408 round 3, note 3): failing closed is
+ * right, and the reason says which state it is. It refines the reason text only; the gate opens and closes exactly as before. */
+export const WAIT_MODE_DRIFTED = `wait mode is specified only by ${WAIT_MODE_SPEC}; a sign-off record for it exists, but the signed subject it names is not what is installed (the installed specification does not hash to the digest in the review the record names, or that review or the specification's version head is missing or disagrees); hand each session over with session-prompt as signed in v1.1, and tell the owner`;
+
+/** The reason a wait-mode step refuses, or null when the gate is open. An injected `signed` (a test's, or a caller's) can say only open or
+ * closed, so its closed state keeps the unsigned reason. Operation callers pass NaN for a missing captured clock rather than invoking
+ * this helper's convenience default. */
+export function waitModeRefusal(recordsRoot: string, signed?: () => boolean, now = Date.now()): string | null {
+  if (signed !== undefined) return signed() ? null : WAIT_MODE_UNSIGNED;
+  const status = waitModeStatus(recordsRoot, now);
+  switch (status) {
+    case 'signed': return null;
+    case 'drifted': return WAIT_MODE_DRIFTED;
+    case 'unsigned': return WAIT_MODE_UNSIGNED;
+    case 'future': return "wait mode cannot be authorized by the matching local-agent sign-off because its Date is later than this operation's UTC day; it is not in force yet for wait mode; hand each session over with session-prompt as signed in v1.1";
+    case 'missing-date': return 'wait mode cannot be authorized by the local-agent sign-off because its recorder-position Date is missing; hand each session over with session-prompt as signed in v1.1';
+    case 'invalid-date': return 'wait mode cannot be authorized by the local-agent sign-off because its Date is duplicate, misplaced, malformed or not a real calendar day; hand each session over with session-prompt as signed in v1.1';
+    case 'invalid-evaluation': return 'wait mode cannot be evaluated because this operation has no finite, representable evaluation instant; hand each session over with session-prompt as signed in v1.1';
+  }
+}
 
 /** The prompt record of a waiting session: written by `session-prompt <run> all`. */
 export interface WaitingSession { readonly session: number; readonly record: Readonly<Record<string, unknown>> }
@@ -163,8 +243,11 @@ export function waitingReviewSession(run: string, kind: ReviewKind): WaitingSess
   return record !== undefined && record['mode'] === WAITING_MODE ? { session, record } : null;
 }
 
+/** A round delivered to a waiting review session: its packet digest and, where its record states one, the packet's size in bytes. */
+export interface Delivery { readonly round: number; readonly packetSha256: string; readonly packetBytes: number | null }
+
 /** The rounds delivered to a waiting review session, with their packet digests, in order. */
-export function deliveries(run: string, kind: ReviewKind, session: number): readonly { readonly round: number; readonly packetSha256: string }[] {
+export function deliveries(run: string, kind: ReviewKind, session: number): readonly Delivery[] {
   let names: string[];
   try { names = fs.readdirSync(path.join(run, RUN_LAYOUT.reviews)); } catch { return []; }
   const pattern = DELIVERY_RECORD(kind, session);
@@ -173,7 +256,9 @@ export function deliveries(run: string, kind: ReviewKind, session: number): read
     if (match === null) return [];
     const record = readRecord(path.join(run, RUN_LAYOUT.reviews, name));
     const round = Number(match[1]);
-    return record !== undefined && record['round'] === round && typeof record['packetSha256'] === 'string' ? [{ round, packetSha256: record['packetSha256'] }] : [];
+    if (record === undefined || record['round'] !== round || typeof record['packetSha256'] !== 'string') return [];
+    const bytes = record['packetBytes'];
+    return [{ round, packetSha256: record['packetSha256'], packetBytes: Number.isSafeInteger(bytes) && (bytes as number) >= 0 ? bytes as number : null }];
   }).sort((a, b) => a.round - b.round);
 }
 
@@ -189,8 +274,34 @@ export interface DeliveryReport {
   readonly continuing: boolean;
   readonly directory: string;
   readonly packetSha256: string;
+  /** The UTF-8 size of the packet Syzygy built and wrote at this step. */
+  readonly packetBytes: number;
+  /** syzygy-pdja.19: what this round adds to the session's reading, in bytes, with the advice that keeps the next round small. */
+  readonly usageNote: string;
   readonly next: string;
   readonly disclosures: readonly string[];
+}
+
+/** syzygy-pdja.19: the per-round usage note of a delivery. Syzygy observes the bytes it built and wrote at this step; the earlier rounds
+ * come from its delivery records, within the agent sessions' write reach, so Inferred; a round below this one with no readable record
+ * (one `deliveries` drops) is counted as Unknown; what the session does with its context, and its tokens, are not observed. */
+export function deliveryUsageNote(kind: ReviewKind, round: number, packetBytes: number, earlier: readonly Delivery[]): string {
+  const plural = (n: number, word: string): string => `${n} ${word}${n === 1 ? '' : 's'}`;
+  const head = `Round ${round} packet: ${packetBytes} bytes (Observed: Syzygy built and wrote them at this step). A packet carries the whole frozen subject (REQ-polaris-generation-035), so each round is a whole-packet review.`;
+  let held = '';
+  if (round > 1) {
+    const sized = earlier.filter((entry) => entry.packetBytes !== null);
+    const total = sized.reduce((sum, entry) => sum + entry.packetBytes!, 0);
+    const unsized = earlier.length - sized.length;
+    const unread = Math.max(0, round - 1 - earlier.length);
+    const parts = [
+      sized.length === 0 ? '' : `${total} bytes over ${sized.length === round - 1 ? 'them' : `${sized.length} of them`}, as Syzygy's delivery records state (Inferred: those records lie within the agent sessions' write reach)`,
+      unsized === 0 ? '' : `${plural(unsized, 'round')} whose record states no size (Unknown)`,
+      unread === 0 ? '' : `${plural(unread, 'round')} whose record Syzygy could not read (Unknown)`,
+    ].filter((part) => part !== '');
+    held = ` Syzygy delivered ${plural(round - 1, 'earlier round')} to this session (${parts.join('; ')}). [Inferred] A continuing session keeps them in its context, and each model call it makes may read that context again.`;
+  }
+  return `${head}${held} Syzygy cannot observe the session's token use; only the figure the operator declares at close records it, labelled Inferred. To keep the next round small: repair every finding of a verdict in one draft revision before the next check and delivery, and to hand the next ${kind} round to a session that holds only its packet, add --fresh, which the operator starts in a new terminal.`;
 }
 
 export const DELIVERY_DISCLOSURES = [
@@ -203,22 +314,25 @@ export const DELIVERY_DISCLOSURES = [
  * `round-N/` files, `delivery.json` last and by rename, so a waiting slice never sees a partial round. */
 export function deliverToWaiting(
   run: string, runId: string, kind: ReviewKind, waiting: WaitingSession, built: { readonly bytes: string; readonly sha256: string },
-  packet: Readonly<Record<string, unknown>>, now: number,
+  packet: Readonly<Record<string, unknown>>, now: number, afterCheck: () => void = () => undefined,
 ): { readonly ok: true; readonly report: DeliveryReport } | { readonly ok: false; readonly reason: string } {
   const { session } = waiting;
   const relative = waiting.record['directory'];
   if (typeof relative !== 'string') return { ok: false, reason: `the prompt record of waiting ${kind} session ${session} names no directory` };
   const directory = path.join(path.dirname(run), relative);
   if (path.dirname(directory) !== sessionsRoot(run)) return { ok: false, reason: `the prompt record of waiting ${kind} session ${session} names a directory outside the sessions root` };
-  const unsafe = sessionDirectoryRefusal(sessionsRoot(run), directory);
-  if (unsafe !== null) return { ok: false, reason: unsafe };
+  const resolved = resolveSessionDirectory(sessionsRoot(run), directory);
+  if (!resolved.ok) return { ok: false, reason: resolved.reason };
+  // `afterCheck` is a test seam, run in the window between the check and the writes; every write for the session goes through `resolved.real`.
+  afterCheck();
   const earlier = deliveries(run, kind, session);
   const round = earlier.length === 0 ? 1 : earlier[earlier.length - 1]!.round + 1;
+  const packetBytes = Buffer.byteLength(built.bytes, 'utf8');
   const record = {
-    format: DELIVERY_FORMAT, role: 'review', kind, runId, session, round, packetSha256: built.sha256, packet, deliveredAt: isoOf(now),
+    format: DELIVERY_FORMAT, role: 'review', kind, runId, session, round, packetSha256: built.sha256, packetBytes, packet, deliveredAt: isoOf(now),
     continuing: round > 1, earlierRounds: earlier.map((entry) => entry.round), label: 'Inferred',
   };
-  const roundDir = path.join(directory, roundDirName(round));
+  const roundDir = path.join(resolved.real, roundDirName(round));
   try {
     writePacket(run, kind, built);
     fs.writeFileSync(path.join(run, RUN_LAYOUT.reviews, deliveryRecordName(kind, session, round)), `${JSON.stringify(record, null, 2)}\n`, { mode: 0o600, flag: 'wx' });
@@ -234,6 +348,7 @@ export function deliverToWaiting(
   logStep(run, 'session-prompt', now, { outcome: 'delivered', role: 'review', kind, session, round, packetSha256: built.sha256 });
   return { ok: true, report: {
     command: 'session-prompt', outcome: 'delivered', role: 'review', kind, run, session, round, continuing: round > 1, directory, packetSha256: built.sha256,
+    packetBytes, usageNote: deliveryUsageNote(kind, round, packetBytes, earlier),
     next: `Syzygy delivered round ${round} to the waiting ${kind} session ${session}; its \`syzygy dossier await\` returns with it. Start nothing and signal nothing: the session hands its verdict to \`await --submit --stdin\`, and Syzygy writes and checks it. When it has, run \`syzygy dossier status ${run}\` to see whether the review counts.`,
     disclosures: DELIVERY_DISCLOSURES,
   } };
@@ -265,7 +380,7 @@ export function continuationOf(run: string, kind: ReviewKind, session: number, n
   const earlierVerdicts: number[] = [];
   for (let n = 0; n < number; n++) {
     const check = readRecord(path.join(run, REVIEW_CHECKS, verdictFileName(kind, n)));
-    const recorded = check !== undefined && isObj(check['session']) ? check['session']['sessionId'] : undefined;
+    const recorded = check !== undefined && isRecord(check['session']) ? check['session']['sessionId'] : undefined;
     if (recorded === sessionId) earlierVerdicts.push(n);
   }
   const continuing = earlierRounds.length > 0 || earlierVerdicts.length > 0;
@@ -300,7 +415,7 @@ export interface AwaitDeps {
   /** Whether version 1.2 is signed off; by default `waitModeSignedIn` over the records root. */
   readonly waitModeSigned?: () => boolean;
   readonly probe: CheckDeps['probe'];
-  readonly loadScreen?: () => Promise<ScreenLoad>;
+  readonly loadScreen?: ScreenLoader;
   readonly openReader?: ReverifyOptions['openReader'];
 }
 
@@ -330,7 +445,7 @@ export interface AwaitRefusal {
   readonly reasons?: readonly string[]; readonly refusals?: readonly ReverifyRefusal[]; readonly disclosures: readonly string[];
 }
 
-export type AwaitResult = { readonly ok: true; readonly report: AwaitReport } | { readonly ok: false; readonly refusal: AwaitRefusal };
+export type AwaitResult = Outcome<AwaitReport, AwaitRefusal>;
 
 export const AWAIT_DISCLOSURES = [
   RECORDS_WITHIN_REACH,
@@ -403,8 +518,8 @@ export async function awaitSession(directoryArg: string, request: AwaitRequest, 
   const startedAt = deps.now();
   const refuse = (stage: string, reason: string, reasons?: readonly string[], refusals?: readonly ReverifyRefusal[]): AwaitResult =>
     ({ ok: false, refusal: { command: 'await', outcome: 'refused', stage, reason, ...(reasons ? { reasons } : {}), ...(refusals ? { refusals } : {}), disclosures: AWAIT_DISCLOSURES } });
-  const signed = deps.waitModeSigned ?? (() => waitModeSignedIn(deps.sources.recordsRoot));
-  if (!signed()) return refuse('unsigned', WAIT_MODE_UNSIGNED);
+  const gateRefusal = waitModeRefusal(deps.sources.recordsRoot, deps.waitModeSigned, startedAt ?? NaN);
+  if (gateRefusal !== null) return refuse('unsigned', gateRefusal);
 
   // The directory: absolute, normalised, ending in one slash, so the printed permission rule's prefix names exactly this session.
   if (!PLAIN_PATH.test(directoryArg) || !directoryArg.endsWith('/') || path.normalize(directoryArg) !== directoryArg || directoryArg.split('/').some((part) => part === '.' || part === '..')) {
@@ -433,22 +548,21 @@ export async function awaitSession(directoryArg: string, request: AwaitRequest, 
   const opened = await openRun(run, deps.sources, startedAt, what, deps.openReader ? { openReader: deps.openReader } : {});
   if (!opened.ok) return refuse(opened.stage, opened.reason, opened.reasons, opened.refusals);
   const self = `syzygy dossier await ${directoryArg}`;
-  const unsafe = sessionDirectoryRefusal(parent, directory);
-  if (unsafe !== null) return refuse('directory', unsafe);
+  const resolved = resolveSessionDirectory(parent, directory);
+  if (!resolved.ok) return refuse('directory', resolved.reason);
+  const realDir = resolved.real;
 
   if (request.stdin === true && request.submit === undefined) return refuse('usage', '--stdin applies only with --submit');
   if (request.submit !== undefined) {
     if (request.round !== undefined || request.waitMinutes !== undefined) return refuse('usage', '--submit takes no --round or --wait-minutes');
     const latest = role.role === 'inventory' ? latestInventorySession(run) : latestReviewSession(run, role.kind);
     if (latest !== role.session) return refuse('submit', `${name} is no longer the latest ${role.role === 'inventory' ? 'inventory' : role.kind} session, so its file is not checked`);
-    const realDir = realOrNull(directory);
-    if (realDir === null) return refuse('submit', `${directory} cannot be read`);
     if (request.stdin === true) {
       // The session holds no write permission: Syzygy writes the role's own file from standard input, then checks it.
       const stdinRefusal = await writeFromStdin(realDir, role, request.submit, deps.readStdin ?? ((maxBytes) => readStdinBytes(maxBytes)));
       if (stdinRefusal !== null) return refuse('submit', stdinRefusal);
     }
-    const file = realOrNull(path.resolve(directory, request.submit));
+    const file = realOrNull(path.resolve(realDir, request.submit));
     if (file === null || !file.startsWith(`${realDir}${path.sep}`)) return refuse('submit', `the file to submit must exist inside ${directory}`);
     const deps2: CheckDeps & ReviewDeps = {
       sources: deps.sources, now: deps.now, probe: deps.probe, ...(deps.loadScreen ? { loadScreen: deps.loadScreen } : {}), ...(deps.openReader ? { openReader: deps.openReader } : {}),
@@ -485,7 +599,7 @@ export async function awaitSession(directoryArg: string, request: AwaitRequest, 
   if (role.role === 'inventory') {
     if (round !== 1) return refuse('usage', 'an inventory session has one round: its brief, delivered when it was started');
     const brief = prompt['brief'];
-    const expected = isObj(brief) && typeof brief['sha256'] === 'string' ? brief['sha256'] : undefined;
+    const expected = isRecord(brief) && typeof brief['sha256'] === 'string' ? brief['sha256'] : undefined;
     let bytes: Uint8Array;
     try { bytes = new Uint8Array(fs.readFileSync(path.join(directory, INVENTORY_BRIEF_FILE))); } catch (cause) { return refuse('rehash', `the inventory brief cannot be read (${errno(cause)})`); }
     if (expected === undefined || sha256(bytes) !== expected) return refuse('rehash', `${INVENTORY_BRIEF_FILE} does not hash to the digest Syzygy recorded when it wrote it; stop, and tell the operator`);
@@ -536,7 +650,7 @@ export async function awaitSession(directoryArg: string, request: AwaitRequest, 
   } catch (cause) { return refuse('rehash', `round ${round} cannot be read (${errno(cause)}); stop, and tell the operator`); }
   const record = readRecord(path.join(run, RUN_LAYOUT.reviews, deliveryRecordName(role.kind, role.session, round)));
   const actual = sha256(packetBytes);
-  const named = isObj(delivery) && delivery['round'] === round && delivery['kind'] === role.kind && delivery['session'] === role.session ? delivery['packetSha256'] : undefined;
+  const named = isRecord(delivery) && delivery['round'] === round && delivery['kind'] === role.kind && delivery['session'] === role.session ? delivery['packetSha256'] : undefined;
   if (named !== actual || digestLine !== `${actual}  ${PACKET_FILE}\n` || record === undefined || record['packetSha256'] !== actual) {
     logStep(run, 'await', at, { outcome: 'refused', stage: 'rehash', role: 'review', kind: role.kind, session: role.session, round });
     return refuse('rehash', `round ${round}'s ${PACKET_FILE} does not hash to the digest in ${DELIVERY_FILE}, ${PACKET_DIGEST_FILE} and the delivery record Syzygy wrote; do not read it: stop, and tell the operator`);

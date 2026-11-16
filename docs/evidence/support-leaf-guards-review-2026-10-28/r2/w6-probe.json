@@ -1,0 +1,108 @@
+{
+ "commit": "ecea355ba96b0082ad8aad11e9799518f87c2e19",
+ "statusAfter": "",
+ "rows": [
+  {
+   "id": "W6b-head",
+   "fix": [],
+   "edits": [
+    {
+     "path": "packages/support/src/latest.ts",
+     "old": null,
+     "new": "export * from 'node:crypto';\n"
+    },
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { decodeUtf8 } from './decode-utf8.js';\n",
+     "new": "export { decodeUtf8 } from './decode-utf8.js';\nexport * from './latest.js';\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "failing": [
+    "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it"
+   ],
+   "failingAsExpected": true,
+   "passed": 32,
+   "failedCount": 1,
+   "build": null,
+   "load1": "33.94"
+  },
+  {
+   "id": "W6b",
+   "fix": [],
+   "edits": [
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "!name.endsWith('.test.ts')",
+     "new": "!name.includes('test')"
+    },
+    {
+     "path": "packages/support/src/latest.ts",
+     "old": null,
+     "new": "export * from 'node:crypto';\n"
+    },
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { decodeUtf8 } from './decode-utf8.js';\n",
+     "new": "export { decodeUtf8 } from './decode-utf8.js';\nexport * from './latest.js';\n"
+    }
+   ],
+   "expected": "survives",
+   "observed": "survives",
+   "failing": [],
+   "failingAsExpected": true,
+   "passed": 33,
+   "failedCount": 0,
+   "build": {
+    "tscExit": 0,
+    "tscFirstLines": [],
+    "loaded": "[\"function\",true]",
+    "nodeExit": 0
+   },
+   "load1": "32.98"
+  },
+  {
+   "id": "W6b-fixB",
+   "fix": [
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "      for (const file of ['a.ts', 'io/b.ts', 'c.mts', 'd.cjs', 'e.test.ts', 'purity.testkit.ts', 'f.json']) {\n",
+     "new": "      for (const file of ['a.ts', 'io/b.ts', 'c.mts', 'd.cjs', 'e.test.ts', 'purity.testkit.ts', 'f.json', 'g.tsx', 'h.jsx', 'latest.ts', 'io/purity.testkit.ts']) {\n"
+    },
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "      expect(sourcesUnder(pathToFileURL(`${dir}/`))).toEqual(['a.ts', 'c.mts', 'd.cjs', 'io/b.ts']);\n",
+     "new": "      expect(sourcesUnder(pathToFileURL(`${dir}/`))).toEqual(['a.ts', 'c.mts', 'd.cjs', 'g.tsx', 'h.jsx', 'io/b.ts', 'io/purity.testkit.ts', 'latest.ts']);\n"
+    }
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "!name.endsWith('.test.ts')",
+     "new": "!name.includes('test')"
+    },
+    {
+     "path": "packages/support/src/latest.ts",
+     "old": null,
+     "new": "export * from 'node:crypto';\n"
+    },
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { decodeUtf8 } from './decode-utf8.js';\n",
+     "new": "export { decodeUtf8 } from './decode-utf8.js';\nexport * from './latest.js';\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "failing": [
+    "@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit"
+   ],
+   "failingAsExpected": true,
+   "passed": 32,
+   "failedCount": 1,
+   "build": null,
+   "load1": "32.99"
+  }
+ ]
+}

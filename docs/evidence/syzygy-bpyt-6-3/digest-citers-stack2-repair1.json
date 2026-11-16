@@ -1,0 +1,228 @@
+{
+ "baseCommit": "a5ab2b28",
+ "codeHeadCommit": "b81010c8c5a375ef9fd446ac9ddc0da407ac1c58",
+ "populationCommit": "b81010c8c5a375ef9fd446ac9ddc0da407ac1c58",
+ "population": "5089 tracked files at the population commit, excluding docs/evidence/syzygy-bpyt-6-3/",
+ "editedProductionFiles": [
+  "packages/polaris-generation-core/src/canonical-json.ts",
+  "packages/support/src/decode-utf8.ts",
+  "packages/support/src/index.ts",
+  "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+  "packages/three-surface-poc-core/src/code-structure.ts",
+  "packages/three-surface-poc-core/src/git-object-reader.ts",
+  "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+  "packages/three-surface-poc-core/src/project-shape-observation.ts"
+ ],
+ "addedByTheChange": [
+  "packages/support/src/decode-utf8.ts"
+ ],
+ "digests": [
+  {
+   "path": "packages/polaris-generation-core/src/canonical-json.ts",
+   "at": "base",
+   "sha256": "4d7e745dc505c0de74666511a90ccda4673a5bc3d3e9deb73f424bce92875608",
+   "gitBlobId": "4925daed61da1c21d34ba6335f5cb16863312f1e"
+  },
+  {
+   "path": "packages/polaris-generation-core/src/canonical-json.ts",
+   "at": "head",
+   "sha256": "c51a3ca5ec1210e06fb462088c8a9fd541168de9c333b114cb8369621ebce7ed",
+   "gitBlobId": "a2324fcc59e90bd791a07646042880f0fe781889"
+  },
+  {
+   "path": "packages/support/src/decode-utf8.ts",
+   "at": "head",
+   "sha256": "f57863901787c528672976af4efd285d6daf8d3895df9d332c28724ac435ca27",
+   "gitBlobId": "953a049f8b1453e5ab04d61f9a33725f40c48e8d"
+  },
+  {
+   "path": "packages/support/src/index.ts",
+   "at": "base",
+   "sha256": "9b82aa1f60a468084496a62c2dc22775171c4678f663761e463e3f120a99d1bb",
+   "gitBlobId": "11bd1b83b741d61264e31db01b86e019ff5ee4ac"
+  },
+  {
+   "path": "packages/support/src/index.ts",
+   "at": "head",
+   "sha256": "a4b3aa184877c9851ee46623e00c33a5ebbf25029d7ca16ff7324a6e7d31ea56",
+   "gitBlobId": "41a9a88a9a2b771a4709f5d8dc450f296fb4815d"
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "at": "base",
+   "sha256": "01fc903901fc09082ce4923bf7bdcf4937b492ef93e62058be5a7c04ca87395e",
+   "gitBlobId": "4435c52a53aa467cf955523922557fcf5aa62ab2"
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "at": "head",
+   "sha256": "6098ed3fdd6d5055cf7952e836c25c9474239f6b2e2ac60d8e03af836be4d8dc",
+   "gitBlobId": "82494cbd10999a1825e703aefe51daaf0337c1ef"
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/code-structure.ts",
+   "at": "base",
+   "sha256": "ef137dafdd666104b9249d5516b0567e8daf9db7a5814c68c29e362f87ca56c1",
+   "gitBlobId": "adb48b93859e51ed02fa370a06c71574c678e6f4"
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/code-structure.ts",
+   "at": "head",
+   "sha256": "bc56dca9270b397298a578f109ddfee47ccbf9b7b9830eb9f3dfef2c68e241b1",
+   "gitBlobId": "d866e4b578c29d404cae38c35f0af9f4e9dff4b4"
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/git-object-reader.ts",
+   "at": "base",
+   "sha256": "19405187526e79585f92b65a926a07492929ea7335dd5a4994b8f204b7a0bf46",
+   "gitBlobId": "637769ce407210155130e0581791676bcac0a2bd"
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/git-object-reader.ts",
+   "at": "head",
+   "sha256": "76ac22aab6091645ea4ed6a562efc4984e7a4e38a7fb1777aa2fe3bd738f7b65",
+   "gitBlobId": "26d231faabbce957d4d8d70f379d0925220c04a8"
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+   "at": "base",
+   "sha256": "c32ab4e3dbe509413a4d31afc1bb7a68c1a5a8b2b1d21945b72deb9e54617e34",
+   "gitBlobId": "c2d2d95640a96bf4232c64330332f3dc7cad5517"
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+   "at": "head",
+   "sha256": "a70be15e9c6d1af6325c234c83e389adf7291140e9a3dccbb1847e8210b3299f",
+   "gitBlobId": "10558b07b9c0ee973ea8dd16ac3ba589838a90b5"
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+   "at": "base",
+   "sha256": "db2cd5cfb37f45895ca0794169339ca680918d0111c658534e6ede301a8d04a0",
+   "gitBlobId": "1aeafc325cab69e22e795872bea5b81e27a64240"
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+   "at": "head",
+   "sha256": "b57746bb67286dfbe3ed0deaaf844e11d8568936b94c79cc0262ea912b635bff",
+   "gitBlobId": "3b6d754b7a30e9a67c893fa0215d2c646109dcce"
+  }
+ ],
+ "needles": 75,
+ "methods": "one: Python bytes.find over every blob; two: git grep -F -l per needle",
+ "methodsAgree": true,
+ "needlesCited": {
+  "01fc9039": [
+   "docs/evidence/live-verification-test-no-spawn-mutants-2026-10-07.json",
+   "docs/evidence/live-verification-test-no-spawn-mutants-round1-repairs-2026-10-07.json",
+   "docs/evidence/live-verification-test-no-spawn-mutants-round2-repairs-2026-10-07.json",
+   "docs/evidence/live-verification-test-no-spawn-mutants-round3-repairs-2026-10-07.json",
+   "docs/reviews/R-LIVE-TEST-NO-SPAWN-1-RAW.md",
+   "docs/reviews/R-P110-EXPLICIT-SELECTION-PROBES-EFCBB78F-1-RAW.md"
+  ],
+  "01fc903901fc": [
+   "docs/evidence/live-verification-test-no-spawn-mutants-2026-10-07.json",
+   "docs/evidence/live-verification-test-no-spawn-mutants-round1-repairs-2026-10-07.json",
+   "docs/evidence/live-verification-test-no-spawn-mutants-round2-repairs-2026-10-07.json",
+   "docs/evidence/live-verification-test-no-spawn-mutants-round3-repairs-2026-10-07.json",
+   "docs/reviews/R-P110-EXPLICIT-SELECTION-PROBES-EFCBB78F-1-RAW.md"
+  ],
+  "01fc903901fc09082ce4923bf7bdcf4937b492ef93e62058be5a7c04ca87395e": [
+   "docs/evidence/live-verification-test-no-spawn-mutants-2026-10-07.json",
+   "docs/evidence/live-verification-test-no-spawn-mutants-round1-repairs-2026-10-07.json",
+   "docs/evidence/live-verification-test-no-spawn-mutants-round2-repairs-2026-10-07.json",
+   "docs/evidence/live-verification-test-no-spawn-mutants-round3-repairs-2026-10-07.json",
+   "docs/reviews/R-P110-EXPLICIT-SELECTION-PROBES-EFCBB78F-1-RAW.md"
+  ],
+  "ef137daf": [
+   "docs/evidence/code-structure-ls-tree-z-differential-2026-10-21-r3.json",
+   "docs/evidence/code-structure-ls-tree-z-mutants-2026-10-21-r3.json",
+   "docs/reviews/R-GP-IMPL-CODE-STRUCTURE-3-RAW.md"
+  ],
+  "ef137dafdd66": [
+   "docs/evidence/code-structure-ls-tree-z-differential-2026-10-21-r3.json",
+   "docs/evidence/code-structure-ls-tree-z-mutants-2026-10-21-r3.json",
+   "docs/reviews/R-GP-IMPL-CODE-STRUCTURE-3-RAW.md"
+  ],
+  "ef137dafdd666104b9249d5516b0567e8daf9db7a5814c68c29e362f87ca56c1": [
+   "docs/evidence/code-structure-ls-tree-z-differential-2026-10-21-r3.json",
+   "docs/evidence/code-structure-ls-tree-z-mutants-2026-10-21-r3.json",
+   "docs/reviews/R-GP-IMPL-CODE-STRUCTURE-3-RAW.md"
+  ]
+ },
+ "editedFilesWhoseDigestIsCited": [
+  "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+  "packages/three-surface-poc-core/src/code-structure.ts"
+ ],
+ "carries": [
+  {
+   "path": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "at": "base",
+   "citedBy": "docs/evidence/live-verification-test-no-spawn-mutants-2026-10-07.json",
+   "carriesHexDigits": 64
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "at": "base",
+   "citedBy": "docs/evidence/live-verification-test-no-spawn-mutants-round1-repairs-2026-10-07.json",
+   "carriesHexDigits": 64
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "at": "base",
+   "citedBy": "docs/evidence/live-verification-test-no-spawn-mutants-round2-repairs-2026-10-07.json",
+   "carriesHexDigits": 64
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "at": "base",
+   "citedBy": "docs/evidence/live-verification-test-no-spawn-mutants-round3-repairs-2026-10-07.json",
+   "carriesHexDigits": 64
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "at": "base",
+   "citedBy": "docs/reviews/R-LIVE-TEST-NO-SPAWN-1-RAW.md",
+   "carriesHexDigits": 8
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "at": "base",
+   "citedBy": "docs/reviews/R-P110-EXPLICIT-SELECTION-PROBES-EFCBB78F-1-RAW.md",
+   "carriesHexDigits": 64
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/code-structure.ts",
+   "at": "base",
+   "citedBy": "docs/evidence/code-structure-ls-tree-z-differential-2026-10-21-r3.json",
+   "carriesHexDigits": 64
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/code-structure.ts",
+   "at": "base",
+   "citedBy": "docs/evidence/code-structure-ls-tree-z-mutants-2026-10-21-r3.json",
+   "carriesHexDigits": 64
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/code-structure.ts",
+   "at": "base",
+   "citedBy": "docs/reviews/R-GP-IMPL-CODE-STRUCTURE-3-RAW.md",
+   "carriesHexDigits": 64
+  }
+ ],
+ "citersByTree": {
+  "docs/evidence": [
+   "docs/evidence/code-structure-ls-tree-z-differential-2026-10-21-r3.json",
+   "docs/evidence/code-structure-ls-tree-z-mutants-2026-10-21-r3.json",
+   "docs/evidence/live-verification-test-no-spawn-mutants-2026-10-07.json",
+   "docs/evidence/live-verification-test-no-spawn-mutants-round1-repairs-2026-10-07.json",
+   "docs/evidence/live-verification-test-no-spawn-mutants-round2-repairs-2026-10-07.json",
+   "docs/evidence/live-verification-test-no-spawn-mutants-round3-repairs-2026-10-07.json"
+  ],
+  "docs/reviews": [
+   "docs/reviews/R-GP-IMPL-CODE-STRUCTURE-3-RAW.md",
+   "docs/reviews/R-LIVE-TEST-NO-SPAWN-1-RAW.md",
+   "docs/reviews/R-P110-EXPLICIT-SELECTION-PROBES-EFCBB78F-1-RAW.md"
+  ]
+ }
+}

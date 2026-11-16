@@ -1,0 +1,166 @@
+{
+ "head": "58e8f60456e9de8d06cd4f8db5defe23e69b7112",
+ "specs": "rev541b-specs.json",
+ "results": [
+  {
+   "id": "BASELINE",
+   "oldCounts": [],
+   "exit": 0,
+   "outcome": "survives",
+   "tests": 171,
+   "passed": 171,
+   "failing": [],
+   "timeouts": 0,
+   "filesFailedWithoutRows": [],
+   "load1": "31.85",
+   "seconds": 6.0,
+   "edits": []
+  },
+  {
+   "id": "R541B-Y1-npm-alias-unversioned-only",
+   "oldCounts": [
+    1
+   ],
+   "exit": 1,
+   "outcome": "killed",
+   "tests": 171,
+   "passed": 169,
+   "failing": [
+    "the shared workspace resolver reads a bare name declared as an npm: alias of a registry package as naming no module",
+    "the shared workspace resolver reads a bare name declared as an npm: alias peer dependency as naming no module"
+   ],
+   "timeouts": 0,
+   "filesFailedWithoutRows": [],
+   "load1": "32.50",
+   "seconds": 5.8,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:(?:@[^/@]+\\/)?[^@]*$|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    }
+   ]
+  },
+  {
+   "id": "R541B-Y2-tarball-skips-github-shorthand",
+   "oldCounts": [
+    1
+   ],
+   "exit": 1,
+   "outcome": "killed",
+   "tests": 171,
+   "passed": 170,
+   "failing": [
+    "the shared workspace resolver reads a bare name declared as a git dependency whose spec ends in a tarball extension as naming no module"
+   ],
+   "timeouts": 0,
+   "filesFailedWithoutRows": [],
+   "load1": "32.46",
+   "seconds": 6.1,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|^(?!github:).*\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    }
+   ]
+  },
+  {
+   "id": "R541B-Y3-tarball-path-like-only",
+   "oldCounts": [
+    1
+   ],
+   "exit": 1,
+   "outcome": "killed",
+   "tests": 171,
+   "passed": 168,
+   "failing": [
+    "the shared workspace resolver reads a bare name declared as a git dependency whose spec ends in a tarball extension as naming no module",
+    "the shared workspace resolver reads a bare name declared as a remote http tarball URL dependency as naming no module",
+    "the shared workspace resolver reads a bare name declared as a remote tarball URL dependency as naming no module"
+   ],
+   "timeouts": 0,
+   "filesFailedWithoutRows": [],
+   "load1": "32.59",
+   "seconds": 6.0,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|^[^:]*\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    }
+   ]
+  },
+  {
+   "id": "R541B-Y4-tarball-tar-dropped",
+   "oldCounts": [
+    1
+   ],
+   "exit": 1,
+   "outcome": "killed",
+   "tests": 171,
+   "passed": 169,
+   "failing": [
+    "the shared workspace resolver reads a bare name declared as a .tar dependency as naming no module",
+    "the shared workspace resolver reads a bare name declared as a git dependency whose spec ends in a tarball extension as naming no module"
+   ],
+   "timeouts": 0,
+   "filesFailedWithoutRows": [],
+   "load1": "33.59",
+   "seconds": 5.6,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar\\.gz)$/iu;"
+    }
+   ]
+  },
+  {
+   "id": "R541B-Y5-npm-arm-needs-target-char",
+   "oldCounts": [
+    1
+   ],
+   "exit": 1,
+   "outcome": "killed",
+   "tests": 171,
+   "passed": 170,
+   "failing": [
+    "the shared workspace resolver reads a bare name declared as an npm: alias with no version as naming no module"
+   ],
+   "timeouts": 0,
+   "filesFailedWithoutRows": [],
+   "load1": "34.34",
+   "seconds": 4.8,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:(?=@|[^@]*@)|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    }
+   ]
+  },
+  {
+   "id": "R541B-PIN-repair-tests-on-base-testkit",
+   "oldCounts": [
+    1
+   ],
+   "exit": 0,
+   "outcome": "survives",
+   "tests": 171,
+   "passed": 171,
+   "failing": [],
+   "timeouts": 0,
+   "filesFailedWithoutRows": [],
+   "load1": "34.55",
+   "seconds": 4.2,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';\nimport { join, posix } from 'node:path';\nimport { fileURLToPath } from 'node:url';\n\n// Test support: which workspace modules an entry reaches, for the guards that keep a module off a path the `syzygy` CLI takes\n// (island-boundary.test.ts, syzygy-bpyt.8.1, and polaris-dossier's subpath-imports.test.ts, syzygy-bpyt.8.34). An `@syzygy/*`\n// specifier resolves through its package's `exports`, where `./dist/X.js` is `src/X.ts`. Each guard says which edges a module has.\n// A specifier the walk cannot follow as Node would reads as naming no module, so both guards' \"resolves every\" rows fail on it: an\n// absolute path, a `file:` URL, a `#` alias the importing package's `imports` does not name, and an entry whose conditions name\n// more than one target (syzygy-bpyt.8.36, the review of 8.34, N1); and a bare name some manifest declares as a local dependency,\n// which npm installs under that name from a directory or another package's name (syzygy-bpyt.8.37, the review of 8.36, N2). A `#`\n// alias it names is followed to its target.\n\nexport const ROOT = fileURLToPath(new URL('../../../', import.meta.url));\n\nexport interface ReachEdge { readonly from: string; readonly specifier: string; readonly to: string }\n\nexport const isFile = (path: string): boolean => existsSync(join(ROOT, path)) && statSync(join(ROOT, path)).isFile();\nexport const readModule = (path: string): string => readFileSync(join(ROOT, path), 'utf8');\n\ntype Dependencies = Readonly<Record<string, string>>;\nexport interface Manifest {\n  readonly name: string; readonly dir: string; readonly exports?: Record<string, unknown>; readonly imports?: Record<string, unknown>; readonly main?: string;\n  readonly dependencies?: Dependencies; readonly devDependencies?: Dependencies; readonly optionalDependencies?: Dependencies; readonly peerDependencies?: Dependencies;\n}\n/** What a resolver reads: each manifest by its name, the workspace root's among them, and which paths are files. */\nexport interface Workspace { readonly manifests: ReadonlyMap<string, Manifest>; readonly isFile: (path: string) => boolean }\n\nconst manifests = new Map<string, Manifest>();\nconst root = JSON.parse(readModule('package.json')) as Omit<Manifest, 'dir'>;\nmanifests.set(root.name, { dir: '.', ...root });\nfor (const parent of ['apps', 'packages']) {\n  for (const name of readdirSync(join(ROOT, parent))) {\n    const path = `${parent}/${name}/package.json`;\n    if (!isFile(path)) continue;\n    const manifest = JSON.parse(readModule(path)) as Omit<Manifest, 'dir'>;\n    manifests.set(manifest.name, { dir: `${parent}/${name}`, ...manifest });\n  }\n}\nexport const WORKSPACE: Workspace = { manifests, isFile };\n\n/** The one target an `exports` or `imports` entry names: a string, or an object whose conditions other than `types` all name the\n * same string. Node takes the first condition it matches, so `node` or `module-sync` ahead of `import` changes what it loads. */\nfunction targetOf(entry: unknown): string | undefined {\n  if (typeof entry === 'string') return entry;\n  if (typeof entry !== 'object' || entry === null || Array.isArray(entry)) return undefined;\n  const targets = Object.entries(entry).filter(([condition]) => condition !== 'types').map(([, target]) => target);\n  const [first] = targets;\n  return typeof first === 'string' && targets.every((target) => target === first) ? first : undefined;\n}\n\n/** The module a package's own `./dist/X.js` target names, `src/X.ts`, or undefined for any other target. */\nfunction moduleIn(workspace: Workspace, dir: string, target: string): string | undefined {\n  if (!target.startsWith('./dist/')) return undefined;\n  const module = posix.join(dir, target.replace(/^\\.\\/dist\\//u, 'src/').replace(/\\.js$/u, '.ts'));\n  return workspace.isFile(module) ? module : undefined;\n}\n\n/** A dependency version the guards treat as possibly local, so a bare name declared with it names no module:\n * - `file:`, or a path (`.`, `..`, `./x`, `../x`, `/x`, `~/x`) or tarball name (`x.tgz`, `x.tar`, `x.tar.gz`): npm reads each\n *   as a directory or a file;\n * - `link:` and `workspace:`: npm does not install them at all (npm-package-arg 12.0.2 throws EUNSUPPORTEDPROTOCOL), and other\n *   package managers link them locally;\n * - `npm:`: an alias. npm-package-arg 12.0.2 accepts only a registry spec after `npm:`, and npm fetches that spec from the\n *   registry unless the alias is declared under a workspace's own name and that workspace's version satisfies it; then npm links\n *   the workspace, as for any dependency declared under a workspace's name (every workspace here is `@syzygy/`-scoped, and the\n *   `@syzygy/*` branch reads such a name before this pattern). Its target may carry a workspace package's name, which other\n *   package managers can link locally; every alias is refused, failing closed.\n * The tarball arm also matches a tarball URL (`https://\u2026/x.tgz`), which npm types as `remote`, and a git spec whose text ends in a\n * tarball extension (`github:someone/dossier#v1.tar`), which npm types as `git`; both are refused too, failing closed.\n * Residual (syzygy-bpyt.8.38): npm also reads a directory spec with no leading `./`, `../`, `/` or `~/` (`packages/polaris-dossier/`,\n * `.hidden-lib`, `a/b/c`) as a directory. Those still read as outside the workspace; widening the pattern to them changes what the\n * guards refuse and needs a GP-Q0 ruling first.\n * Residual (the review of 8.39, N2): a workspace whose name is not `@syzygy/`-scoped is read by its bare name as outside the\n * workspace (unless some manifest declares that name with a version this pattern matches), while npm links it under that name\n * and Node loads it from there. 0 of the 12 workspaces are unscoped today; closing it changes what the guards refuse and needs a\n * GP-Q0 ruling first. */\nconst LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;\n\n/** Every name any manifest declares a local dependency under. npm installs a dependency where every workspace module resolves it. */\nfunction localNames(workspace: Workspace): Set<string> {\n  const names = new Set<string>();\n  for (const manifest of workspace.manifests.values()) {\n    for (const field of [manifest.dependencies, manifest.devDependencies, manifest.optionalDependencies, manifest.peerDependencies]) {\n      for (const [name, version] of Object.entries(field ?? {})) if (LOCAL_VERSION.test(version)) names.add(name);\n    }\n  }\n  return names;\n}\n\n/** The module a specifier names in `workspace`, null for one outside the workspace (`node:*`, a dependency), or undefined when it\n * names none. */\nexport function resolveIn(workspace: Workspace, from: string, specifier: string): string | null | undefined {\n  if (specifier.startsWith('.')) {\n    const base = posix.normalize(posix.join(posix.dirname(from), specifier));\n    return [base.replace(/\\.js$/u, '.ts'), `${base}.ts`, `${base}/index.ts`].find(workspace.isFile);\n  }\n  if (specifier.startsWith('/') || /^file:/iu.test(specifier)) return undefined;\n  if (specifier.startsWith('#')) {\n    const owner = [...workspace.manifests.values()].find((manifest) => from.startsWith(`${manifest.dir}/`));\n    const target = owner?.imports === undefined ? undefined : targetOf(owner.imports[specifier]);\n    if (owner === undefined || target === undefined || target.startsWith('#') || target.startsWith('../')) return undefined;\n    return target.startsWith('./') ? moduleIn(workspace, owner.dir, target) : resolveIn(workspace, from, target);\n  }\n  const named = /^(@syzygy\\/[^/]+)(\\/.*)?$/u.exec(specifier);\n  if (named === null) return localNames(workspace).has(/^(?:@[^/]+\\/)?[^/]+/u.exec(specifier)![0]) ? undefined : null;\n  const manifest = workspace.manifests.get(named[1]!);\n  if (manifest === undefined) return undefined;\n  const subpath = named[2] === undefined ? '.' : `.${named[2]}`;\n  const target = manifest.exports === undefined ? (subpath === '.' ? manifest.main : undefined) : targetOf(manifest.exports[subpath]);\n  return target === undefined ? undefined : moduleIn(workspace, manifest.dir, target);\n}\n\n/** The module a specifier names in this workspace (`resolveIn` over the tree's own manifests and files). */\nexport const resolve = (from: string, specifier: string): string | null | undefined => resolveIn(WORKSPACE, from, specifier);\n\n/** Every module `entry` reaches by the specifiers `specifiersOf` gives for each module, in the order it reaches them: every edge\n * between workspace modules, and any workspace specifier that names no module. */\nexport function reach(entry: string, specifiersOf: (module: string) => readonly string[]): { reachable: string[]; edges: ReachEdge[]; unresolved: Omit<ReachEdge, 'to'>[] } {\n  const seen = new Set([entry]);\n  const queue = [entry];\n  const edges: ReachEdge[] = [];\n  const unresolved: Omit<ReachEdge, 'to'>[] = [];\n  for (let file = queue.shift(); file !== undefined; file = queue.shift()) {\n    for (const specifier of specifiersOf(file)) {\n      const to = resolve(file, specifier);\n      if (to === null) continue;\n      if (to === undefined) { unresolved.push({ from: file, specifier }); continue; }\n      edges.push({ from: file, specifier, to });\n      if (!seen.has(to)) { seen.add(to); queue.push(to); }\n    }\n  }\n  return { reachable: [...seen].sort(), edges, unresolved };\n}\n",
+     "new": "import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';\nimport { join, posix } from 'node:path';\nimport { fileURLToPath } from 'node:url';\n\n// Test support: which workspace modules an entry reaches, for the guards that keep a module off a path the `syzygy` CLI takes\n// (island-boundary.test.ts, syzygy-bpyt.8.1, and polaris-dossier's subpath-imports.test.ts, syzygy-bpyt.8.34). An `@syzygy/*`\n// specifier resolves through its package's `exports`, where `./dist/X.js` is `src/X.ts`. Each guard says which edges a module has.\n// A specifier the walk cannot follow as Node would reads as naming no module, so both guards' \"resolves every\" rows fail on it: an\n// absolute path, a `file:` URL, a `#` alias the importing package's `imports` does not name, and an entry whose conditions name\n// more than one target (syzygy-bpyt.8.36, the review of 8.34, N1); and a bare name some manifest declares as a local dependency,\n// which npm installs under that name from a directory or another package's name (syzygy-bpyt.8.37, the review of 8.36, N2). A `#`\n// alias it names is followed to its target.\n\nexport const ROOT = fileURLToPath(new URL('../../../', import.meta.url));\n\nexport interface ReachEdge { readonly from: string; readonly specifier: string; readonly to: string }\n\nexport const isFile = (path: string): boolean => existsSync(join(ROOT, path)) && statSync(join(ROOT, path)).isFile();\nexport const readModule = (path: string): string => readFileSync(join(ROOT, path), 'utf8');\n\ntype Dependencies = Readonly<Record<string, string>>;\nexport interface Manifest {\n  readonly name: string; readonly dir: string; readonly exports?: Record<string, unknown>; readonly imports?: Record<string, unknown>; readonly main?: string;\n  readonly dependencies?: Dependencies; readonly devDependencies?: Dependencies; readonly optionalDependencies?: Dependencies; readonly peerDependencies?: Dependencies;\n}\n/** What a resolver reads: each manifest by its name, the workspace root's among them, and which paths are files. */\nexport interface Workspace { readonly manifests: ReadonlyMap<string, Manifest>; readonly isFile: (path: string) => boolean }\n\nconst manifests = new Map<string, Manifest>();\nconst root = JSON.parse(readModule('package.json')) as Omit<Manifest, 'dir'>;\nmanifests.set(root.name, { dir: '.', ...root });\nfor (const parent of ['apps', 'packages']) {\n  for (const name of readdirSync(join(ROOT, parent))) {\n    const path = `${parent}/${name}/package.json`;\n    if (!isFile(path)) continue;\n    const manifest = JSON.parse(readModule(path)) as Omit<Manifest, 'dir'>;\n    manifests.set(manifest.name, { dir: `${parent}/${name}`, ...manifest });\n  }\n}\nexport const WORKSPACE: Workspace = { manifests, isFile };\n\n/** The one target an `exports` or `imports` entry names: a string, or an object whose conditions other than `types` all name the\n * same string. Node takes the first condition it matches, so `node` or `module-sync` ahead of `import` changes what it loads. */\nfunction targetOf(entry: unknown): string | undefined {\n  if (typeof entry === 'string') return entry;\n  if (typeof entry !== 'object' || entry === null || Array.isArray(entry)) return undefined;\n  const targets = Object.entries(entry).filter(([condition]) => condition !== 'types').map(([, target]) => target);\n  const [first] = targets;\n  return typeof first === 'string' && targets.every((target) => target === first) ? first : undefined;\n}\n\n/** The module a package's own `./dist/X.js` target names, `src/X.ts`, or undefined for any other target. */\nfunction moduleIn(workspace: Workspace, dir: string, target: string): string | undefined {\n  if (!target.startsWith('./dist/')) return undefined;\n  const module = posix.join(dir, target.replace(/^\\.\\/dist\\//u, 'src/').replace(/\\.js$/u, '.ts'));\n  return workspace.isFile(module) ? module : undefined;\n}\n\n/** A dependency version the guards treat as possibly local, so a bare name declared with it names no module:\n * - `file:`, or a path (`.`, `..`, `./x`, `../x`, `/x`, `~/x`) or tarball name (`x.tgz`, `x.tar`, `x.tar.gz`): npm reads each\n *   as a directory or a file;\n * - `link:` and `workspace:`: npm does not install them at all (npm-package-arg 12.0.2 throws EUNSUPPORTEDPROTOCOL), and other\n *   package managers link them locally;\n * - `npm:`: an alias of another package, which may be a workspace package's name. An alias of a registry package is refused too,\n *   failing closed.\n * The tarball arm also matches a tarball URL (`https://\u2026/x.tgz`), which npm types as `remote`; it is refused too, failing closed.\n * Residual (syzygy-bpyt.8.38): npm also reads a directory spec with no leading `./`, `../`, `/` or `~/` (`packages/polaris-dossier/`,\n * `.hidden-lib`, `a/b/c`) as a directory. Those still read as outside the workspace; widening the pattern to them changes what the\n * guards refuse and needs a GP-Q0 ruling first. */\nconst LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;\n\n/** Every name any manifest declares a local dependency under. npm installs a dependency where every workspace module resolves it. */\nfunction localNames(workspace: Workspace): Set<string> {\n  const names = new Set<string>();\n  for (const manifest of workspace.manifests.values()) {\n    for (const field of [manifest.dependencies, manifest.devDependencies, manifest.optionalDependencies, manifest.peerDependencies]) {\n      for (const [name, version] of Object.entries(field ?? {})) if (LOCAL_VERSION.test(version)) names.add(name);\n    }\n  }\n  return names;\n}\n\n/** The module a specifier names in `workspace`, null for one outside the workspace (`node:*`, a dependency), or undefined when it\n * names none. */\nexport function resolveIn(workspace: Workspace, from: string, specifier: string): string | null | undefined {\n  if (specifier.startsWith('.')) {\n    const base = posix.normalize(posix.join(posix.dirname(from), specifier));\n    return [base.replace(/\\.js$/u, '.ts'), `${base}.ts`, `${base}/index.ts`].find(workspace.isFile);\n  }\n  if (specifier.startsWith('/') || /^file:/iu.test(specifier)) return undefined;\n  if (specifier.startsWith('#')) {\n    const owner = [...workspace.manifests.values()].find((manifest) => from.startsWith(`${manifest.dir}/`));\n    const target = owner?.imports === undefined ? undefined : targetOf(owner.imports[specifier]);\n    if (owner === undefined || target === undefined || target.startsWith('#') || target.startsWith('../')) return undefined;\n    return target.startsWith('./') ? moduleIn(workspace, owner.dir, target) : resolveIn(workspace, from, target);\n  }\n  const named = /^(@syzygy\\/[^/]+)(\\/.*)?$/u.exec(specifier);\n  if (named === null) return localNames(workspace).has(/^(?:@[^/]+\\/)?[^/]+/u.exec(specifier)![0]) ? undefined : null;\n  const manifest = workspace.manifests.get(named[1]!);\n  if (manifest === undefined) return undefined;\n  const subpath = named[2] === undefined ? '.' : `.${named[2]}`;\n  const target = manifest.exports === undefined ? (subpath === '.' ? manifest.main : undefined) : targetOf(manifest.exports[subpath]);\n  return target === undefined ? undefined : moduleIn(workspace, manifest.dir, target);\n}\n\n/** The module a specifier names in this workspace (`resolveIn` over the tree's own manifests and files). */\nexport const resolve = (from: string, specifier: string): string | null | undefined => resolveIn(WORKSPACE, from, specifier);\n\n/** Every module `entry` reaches by the specifiers `specifiersOf` gives for each module, in the order it reaches them: every edge\n * between workspace modules, and any workspace specifier that names no module. */\nexport function reach(entry: string, specifiersOf: (module: string) => readonly string[]): { reachable: string[]; edges: ReachEdge[]; unresolved: Omit<ReachEdge, 'to'>[] } {\n  const seen = new Set([entry]);\n  const queue = [entry];\n  const edges: ReachEdge[] = [];\n  const unresolved: Omit<ReachEdge, 'to'>[] = [];\n  for (let file = queue.shift(); file !== undefined; file = queue.shift()) {\n    for (const specifier of specifiersOf(file)) {\n      const to = resolve(file, specifier);\n      if (to === null) continue;\n      if (to === undefined) { unresolved.push({ from: file, specifier }); continue; }\n      edges.push({ from: file, specifier, to });\n      if (!seen.has(to)) { seen.add(to); queue.push(to); }\n    }\n  }\n  return { reachable: [...seen].sort(), edges, unresolved };\n}\n"
+    }
+   ]
+  }
+ ]
+}

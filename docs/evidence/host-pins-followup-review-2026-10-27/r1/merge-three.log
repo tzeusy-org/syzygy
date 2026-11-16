@@ -1,0 +1,11 @@
+{"kind":"daemon-http-outcome","at":"2026-10-27T11:52:48.945Z","method":"GET","route":"/machine","status":401,"reason":"credential-refused","contentType":"application/json"}
+{"kind":"daemon-http-outcome","at":"2026-10-27T11:52:48.953Z","method":"GET","route":"/machine","status":401,"reason":"credential-refused","contentType":"application/json"}
+{"kind":"daemon-http-outcome","at":"2026-10-27T11:52:48.956Z","method":"GET","route":"/machine","status":401,"reason":"credential-refused","contentType":"application/json"}
+{"kind":"daemon-http-outcome","at":"2026-10-27T11:52:48.961Z","method":"GET","route":"/machine","status":401,"reason":"credential-refused","contentType":"application/json"}
+{"kind":"daemon-http-outcome","at":"2026-10-27T11:52:48.964Z","method":"GET","route":"/machine","status":401,"reason":"credential-refused","contentType":"application/json"}
+{"kind":"daemon-http-outcome","at":"2026-10-27T11:52:48.967Z","method":"GET","route":"/machine","status":401,"reason":"credential-refused","contentType":"application/json"}
+{"kind":"daemon-http-outcome","at":"2026-10-27T11:52:48.970Z","method":"GET","route":"/machine","status":401,"reason":"credential-refused","contentType":"application/json"}
+{"kind":"daemon-http-outcome","at":"2026-10-27T11:52:48.974Z","method":"GET","route":"/machine","status":401,"reason":"credential-refused","contentType":"application/json"}
+{"kind":"daemon-http-outcome","at":"2026-10-27T11:52:48.985Z","method":"UNKNOWN","pathLength":8,"status":404,"reason":"unknown-route","contentType":"application/json"}
+JSON report written to /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-542/merge-three-raw.json
+exit=0

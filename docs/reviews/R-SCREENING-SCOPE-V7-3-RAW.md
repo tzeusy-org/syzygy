@@ -1,0 +1,198 @@
+# Review, round 3 — public-source screening scope, version 7
+Reviewed commit: 7f98407d4257115a1cb890f8d15e7ad3c42a00ff
+Manifest SHA-256: b187ba86f5020e55c299db5ed39a6141dea951643911c44a77c82627bd7edcd7
+Verdict: CONFIRM WITH EXCEPTIONS
+
+- CONFIRM WITH EXCEPTIONS: no blocking finding; clause and row can stand
+  - Clause, `csp_finding`, packet and sweeps all held under test
+  - All round 2 repairs hold: B1 to B4, N1 to N5, N7; N6 holds in part
+  - One exception must carry into the install: E1, the page-level CSP read
+    - A page can pass today's reader while Chrome enforces no such policy
+    - Fix is a ledger sentence; no clause byte or manifest row changes
+  - E2 to E7 are smaller notes for ledger, delta or packet
+- Blocking findings: none, and E1's classification is a judgement the lead may overrule
+  - Blocking test applied, per the dispatch
+    - Signer misled about the act: not found
+    - Clause or `csp_finding` wrong in a browser test: not found
+    - Implementer unable to build: not found
+  - E1 is the closest case
+    - The dispatch's words "its reader" could be read to reach it
+    - I read them as this package's reading, which is correct
+    - Reasons for note grade are under E1
+- E1, exception: the install plan leaves the page-level CSP read to a regex that Chrome disagrees with
+  - Anchors
+    - `packages/polaris-generation-core/src/public-source-classification.ts:388`, `CSP_META`
+    - `packages/polaris-generation-core/src/public-source-classification.ts:406`, double-quoted `content` tried first
+    - `IMPACT-LEDGER.md:26`, changes the comparison only
+    - `IMPACT-LEDGER.md:33`, the tokenizer is named for scripts only
+  - [Observed] Duplicate `content`: reader and browser read different policies
+    - Page: first `content='default-src * ; script-src &#39;unsafe-inline&#39;'`, then a double-quoted strict `content`
+    - A copy of lines 388 and 406 returned the strict text
+    - Chrome 120 over `file://` ran an unhashed inline script and requested an image
+    - Control with the strict policy alone: image blocked, script blocked
+  - [Observed] A smuggled meta: the reader confirms a page with no CSP at all
+    - Page: `<meta name='a http-equiv="Content-Security-Policy" content="..."'>`
+    - Copied reader logic: 1 meta, head position accepted, strict text read
+    - Chrome ran the unhashed script and requested the image
+  - [Inferred] Why this is a note and not blocking
+    - A body cannot mint either form: its quotes are written as character references
+    - Only the renderer could write them, and its encoding half is already declared on trust
+    - The defect is in code at version 6 as well; v7 neither adds nor widens it
+    - `csp_finding` takes a policy string, and that reading is correct
+    - The per-page script check would still refuse a script outside the pin
+  - [Inferred] Why it must still be carried
+    - v7 rests more on this read: the trusted-types guard lives in the same meta
+    - A pinned script on such a page runs with no CSP or trusted types, and the page confirms
+  - Repair, in `IMPACT-LEDGER.md` only
+    - Read the CSP meta with the same tokenizer that finds scripts
+    - Add both pages above as fixtures with a Chrome check
+- E2, note: "this" now has a long antecedent in the clause
+  - Anchor: the policy patch, "A consumer that cannot confirm this for a page sink"
+  - [Observed] In version 6 "this" followed one sentence; it now follows five
+    - The nearest antecedent is "Every page reads and navigates completely with scripts off"
+  - [Inferred] Nobody is misled: the delta and the ledger read it as the whole condition
+  - Changing it changes the row, so take it only if another round happens anyway
+    - Example: "cannot confirm this whole condition"
+- E3, note: the clause's "loads nothing" sits beside an allowed navigation
+  - Anchor: `SEMANTIC-DELTA.md:36`, "opens no connection and loads nothing" and "an href the renderer wrote"
+  - [Inferred] Navigating to a renderer-written external href opens a connection
+    - Read literally, one limb forbids what another permits
+    - It also permits navigation with no user gesture
+  - [Observed] `window.open` is named while `a.click()` and `location` work the same way on the wire
+  - Reading I took: the navigation limb governs navigation; the signer is told in `OWNER-DECISION-PACKET.md`
+- E4, note: ledger gaps an implementer will meet, none of them hidden
+  - `packages/polaris-generation-consent/src/package-reader.ts:366` is not named in "What an act requires"
+    - [Observed] The version-6 install, `8f45fc78`, changed it and its testkit: a new act form, a `v6` field
+    - [Inferred] It is production code the v7 install must extend, or the act chain will not read
+    - The ledger's second sweep does find it, in its 8 files
+  - No HTML tokenizer exists to use
+    - [Observed] No workspace `package.json` lists `parse5` or `htmlparser2`
+    - [Inferred] The install adds a dependency or writes one; `IMPACT-LEDGER.md:33` does not cost that
+    - [Inferred] A bare tokenizer needs tree context; a full parser is the safer reading of "real"
+  - [Observed] Hash input needs stating: Chrome hashes after newline normalisation
+    - CRLF script: raw-bytes hash did not run; LF-normalised hash ran
+    - It fails closed in the browser, but a consumer hashing raw bytes would disagree with it
+  - No one is named to approve a change to the pinned hash set
+    - [Inferred] Script and pin can change in one PR, and the check still passes
+    - "Review confirms what those bytes do" is true only if a review is required then
+- E5, note: spec text beyond "no-script" must change too
+  - Anchor: `SEMANTIC-DELTA.md:112`, "the dossier spec's no-script text"
+  - [Observed] The dossier spec also says the CSP is unchanged
+    - `openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md:247`, also `:334`, `:341`, `:343`
+    - `openspec/changes/polaris-dossier-local-agent-mode/design.md:429-430`
+    - A hash in the policy is a CSP change, so these move with the script
+  - [Inferred] No signature is at risk: the packet already says a spec version is needed
+- E6, note: packet wording a signer might want sharper
+  - `OWNER-DECISION-PACKET.md:43-44`, "tighter than today's" is true of everything but scripts
+    - The same list admits `script-src`, which version 6 forbade
+    - The packet says so above; the recommendation line alone reads one-sided
+  - `OWNER-DECISION-PACKET.md:16`, "Nothing else may run" has an unstated edge
+    - [Observed] A markup `script src` with an allowed `integrity` runs an external file with those bytes
+    - [Observed] The check runs only where a cited body relies on the exemption, `SEMANTIC-DELTA.md:50`
+    - That scope is in the delta and not in the packet; it is the same as version 6
+- E7, note: tests and scans are thinner than the limbs in three places
+  - The storage dump would not see `window.name`, `history.state` or a page-text fragment
+    - The limb "stores no page text" covers them in words; `IMPACT-LEDGER.md:57` does not test them
+  - The source scan matches names, so computed names escape it
+    - Example: `window['RTC' + 'PeerConnection']`; only the reviewer catches it
+  - `window.open` needs a gesture to show up in a test
+    - [Observed] Without a gesture: no hit. On a CDP click: `GET /openclick` reached my listener
+- Round 2 findings: each repair holds; N6 holds in part
+  - B1 holds: every token compares exactly
+    - [Observed] `'SCRIPT'`, `'Script'` and `'script' 'script'` refused for the named reason
+    - [Observed] Chrome 120 with `'SCRIPT'`: `innerHTML` allowed; with `'script'`: throws
+    - [Observed] Mutants on both limbs flip rows
+  - B2 holds: the plan names `trim`, `/\s+/u` and a non-ASCII refusal first
+    - Anchor: `IMPACT-LEDGER.md:27-29`
+    - [Observed] 2,320 non-ASCII insertions at every offset of two lawful policies: 0 pass
+    - [Observed] Rows exist for leading NBSP, BOM and trailing U+3000
+  - B3 holds as a plan, with E1 and E4 as residue
+    - [Observed] Pin beside `PAGE_SINK_CONTRACT`; both directions; tokenizer; no extension skip; bytes against conduct stated
+    - [Observed] The `render.ts` scope is now disclosed, `SEMANTIC-DELTA.md:50`
+    - [Observed] All four script spellings ran under a matching hash, as stated
+  - B4 holds: the listener's limit is stated
+    - [Observed] Created `preconnect`: 1 TCP accept, 0 HTTP requests
+    - [Observed] `RTCPeerConnection`: 1 STUN packet at my UDP listener, 0 HTTP requests
+    - Anchors: `SEMANTIC-DELTA.md:105-106`, `OWNER-DECISION-PACKET.md:21`
+  - N1 holds: `trusted-types 'none'` is in the clause
+    - [Observed] `createPolicy` throws for `x` and for `default`
+  - N2 holds: a separate bullet scopes markup
+    - [Observed] Markup `meta` refresh navigated; markup `preconnect` connected, both on a no-script page
+  - N3 holds: "unless a limb of the script's conduct fails"
+  - N4 holds: the delta lists what throws
+    - [Observed] Reproduced for every named sink, over `file://` and loopback
+    - [Observed] `innerHTML = ''` throws, as stated
+    - [Observed] Also throws, and unlisted: `execCommand('insertHTML')`
+  - N5 holds: both packet sentences corrected
+    - [Observed] `render.ts` refuses the whole render on a finding, as the packet now says
+  - N6 holds in part
+    - [Observed] The VT row's reason is now right: Chrome 120 enforced VT-separated `default-src`
+    - [Observed] Seven character-class mutants of mine each flip the right row
+      - They are not in `READING_MUTANTS`, so the selftest does not hold them
+    - [Observed] Two listed mutants still die only by a raise
+      - `if name not in sources` by `KeyError`; the empty-directive filter by `IndexError`
+      - This is now disclosed in the delta, so it is no longer a defect in the claim
+  - N7 holds
+    - [Observed] The ledger says `dossier-site.ts` uses the constant and the install splits it
+    - [Observed] "No navigation off the page" is gone, replaced by "a URL the renderer did not write"
+    - [Observed] A scripts-off crawl is named; `setHTMLUnsafe` is in the clause
+    - [Observed] The bare TCP accept is disclosed; my run saw 0 accepts in 15 submits
+      - Not a contradiction: round 2's was intermittent and mine was one run
+- Criteria
+  - Criterion 1: the clause keeps what it protects
+    - [Observed] Nothing blocked by policy got through, over `file://` and loopback
+      - fetch, XHR, beacon, WebSocket, EventSource, WebTransport, image, `Audio`
+      - CSS background, `FontFace`, stylesheet, preload, modulepreload, prefetch
+      - iframe, embed, object, SVG `image`, worker, shared worker, service worker
+      - `import()`, `a ping`, created `speculationrules`
+    - [Observed] SVG `script href` and `xlink:href` did not load, with or without `integrity`
+      - So "no src attribute" misses no live path here
+    - [Observed] Text appended to a created script did not run
+    - [Inferred] Clobbering and fragment attacks need a real script; none exists, and the ledger names both tests
+    - [Unknown] Other browsers and later Chrome versions
+  - Criterion 2: no missing directive found
+    - [Observed] The set is closed, and all 16 extra names in the table refuse
+  - Criterion 3: the reading is faithful
+    - [Observed] All 70 rows answer as expected, each refusal for the reason its name gives
+    - [Observed] All 16 listed mutants flip or raise; selftest 29 of 29
+    - [Observed] Today's preview constant passes as the lawful no-script row
+    - Install plan's reading: same, apart from E1
+  - Criterion 4: the script half is checkable enough to bind, not a wish
+    - Pinned mechanically: script bytes, by hash and both-way check
+    - Pinned by browser: most loading and code-injection sinks
+    - Pinned by test: scripts-off crawl, canary text, request listener, storage dump
+    - Pinned by scan and reviewer only: WebRTC, preconnect, element list, "page text only as text"
+    - The delta states this split plainly
+  - Criterion 5: the packet states the costs plainly, apart from E6
+    - [Observed] Chrome-only testing, the review-reliant network promise and the diagram limit are all stated
+    - [Observed] Phrase form matches the version-6 packet
+    - [Observed] Prerequisite spec version and freeze are stated
+  - Criterion 6: the sweeps reproduce
+    - [Observed] At base `0bf6b9c1` and at the subject commit
+      - Version literal: 18 lines in 11 files outside the builders
+      - v6 act file name: 8 files outside the builders
+- Mechanics
+  - [Observed] `--manifest-digest` printed the dispatched digest
+  - [Observed] An independent hunk application hashed to the manifest row
+  - [Observed] `--check` current; the policy on disk is the version-6 base
+  - [Observed] Clause and added patch lines hold 0 non-ASCII characters
+  - [Observed] `projectDocumentationExemption.renderCondition` is unchanged and defers to the clause
+  - [Observed] Registration is gated on the act file, as for version 6
+  - [Observed] Freeze prefixes cover the two files the ledger names
+    - They also cover `dossier-site.ts` and `page-sink.test.ts`; the ledger's feature section does not say so
+  - [Observed] `check_governance.py`: 32 OK, 21 WARN, 0 FAIL; not the full battery
+  - [Observed] Campaign partition: PASS, 0 unmatched
+  - [Inferred] `main.ts` does not reach the dossier renderer
+    - My walk of relative imports: 42 files, 0 naming `dossier` or `draft-preview`
+    - It did not follow package imports; round 2's wider walk found the same
+  - [Observed] The page scanner already treats `script` as raw text, so a script adds no counted words
+- What I ran, and its limits
+  - `google-chrome` 120.0.6099.224 headless, `--no-sandbox`
+    - `--dump-dom` probes and a CDP driver, over `file://` and one loopback origin
+    - Raw TCP and UDP listeners
+    - Harness: `/tmp/claude-996/-home-orca-orca-projects-syzygy/2521ee96-232a-47bb-8d46-79eeeed3789c/scratchpad/v7r3probe`
+  - Not re-run this round: `navigate-to 'none'`, which I took from round 2
+  - The TypeScript reader was tested by copying its lines into node, not through `npm ci` or a test tier
+  - No target repository, site directory, dossier run or provider call
+  - Throwaway worktree used and removed; no existing checkout touched
+  - No script exists yet, so every statement about one is about the text and the policy

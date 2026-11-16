@@ -1,0 +1,6 @@
+-import { createDaemon, type RunningDaemon } from '@syzygy/cap1-daemon';
++import { createDaemon, type RunningDaemon } from '@syzygy/http-host';
+-import { createDaemon, type RunningDaemon } from '@syzygy/cap1-daemon';
++import { createDaemon, type RunningDaemon } from '@syzygy/http-host';
+-import { createDaemon, type RunningDaemon } from '@syzygy/cap1-daemon';
++import { createDaemon, type RunningDaemon } from '@syzygy/http-host';

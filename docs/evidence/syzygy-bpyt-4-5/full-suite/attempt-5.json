@@ -1,0 +1,55 @@
+{
+ "tool": "suite_summary.py",
+ "attempt": "attempt 5: the reworked head (threadCpuUsage bounds, load-hook and kept text rows), run twice in sequence",
+ "cpus": 12,
+ "changedFilesBetween": [
+  "8ff50172",
+  "d1dbac8dfe9209f42f0eeeb5e08b47e1665f7b7f"
+ ],
+ "runs": [
+  {
+   "name": "first",
+   "commit": "d1dbac8dfe9209f42f0eeeb5e08b47e1665f7b7f",
+   "start": "2026-10-25T08:07:46+08:00",
+   "load1Start": 11.53,
+   "exit": 0,
+   "end": "2026-10-25T08:10:07+08:00",
+   "load1End": 21.27,
+   "success": true,
+   "totals": {
+    "numTotalTestSuites": 856,
+    "numFailedTestSuites": 0,
+    "numTotalTests": 5306,
+    "numPassedTests": 5301,
+    "numFailedTests": 0,
+    "numPendingTests": 5,
+    "numTodoTests": 0
+   },
+   "failedTests": [],
+   "failedFilesWithoutFailedTest": [],
+   "failuresInChangedFiles": 0
+  },
+  {
+   "name": "second",
+   "commit": "d1dbac8dfe9209f42f0eeeb5e08b47e1665f7b7f",
+   "start": "2026-10-25T08:10:07+08:00",
+   "load1Start": 21.27,
+   "exit": 0,
+   "end": "2026-10-25T08:12:19+08:00",
+   "load1End": 27.73,
+   "success": true,
+   "totals": {
+    "numTotalTestSuites": 856,
+    "numFailedTestSuites": 0,
+    "numTotalTests": 5306,
+    "numPassedTests": 5301,
+    "numFailedTests": 0,
+    "numPendingTests": 5,
+    "numTodoTests": 0
+   },
+   "failedTests": [],
+   "failedFilesWithoutFailedTest": [],
+   "failuresInChangedFiles": 0
+  }
+ ]
+}

@@ -1,0 +1,12 @@
+
+/** Every `import()` call of a module, as written, however it is spaced or commented and whatever its argument. */
+function importCallsOf(name: string, source: string): string[] {
+  const file = ts.createSourceFile(name, source, ts.ScriptTarget.Latest, false);
+  const calls: string[] = [];
+  const visit = (node: ts.Node): void => {
+    if (ts.isCallExpression(node) && node.expression.kind === ts.SyntaxKind.ImportKeyword) calls.push(node.getText(file));
+    ts.forEachChild(node, visit);
+  };
+  visit(file);
+  return calls;
+}

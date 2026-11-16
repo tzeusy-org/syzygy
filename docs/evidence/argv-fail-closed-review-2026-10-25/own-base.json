@@ -1,0 +1,968 @@
+{
+ "tree": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-528/base",
+ "head": "a088f1caf061c1a2062527ce8521c9b64c3c7fd1",
+ "results": [
+  {
+   "id": "RV-T1-hash-pattern-alias",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  27 passed (27)"
+   ],
+   "testFiles": [
+    "Test Files  1 passed (1)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 4.9,
+   "counts": [
+    {
+     "file": "apps/syzygy/package.json",
+     "oldCount": 1
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "apps/syzygy/package.json",
+     "old": "  \"main\": \"./dist/main.js\",\n",
+     "new": "  \"main\": \"./dist/main.js\",\n  \"imports\": {\"#d/*\": \"@syzygy/polaris-dossier\"},\n"
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nimport '#d/barrel';\n"
+    }
+   ]
+  },
+  {
+   "id": "RV-T2-hash-pattern-alias-island",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  4 passed (4)"
+   ],
+   "testFiles": [
+    "Test Files  1 passed (1)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 4.5,
+   "counts": [
+    {
+     "file": "apps/three-surface-poc/package.json",
+     "oldCount": 1
+    },
+    {
+     "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/package.json",
+     "old": "  \"main\": \"./dist/main.js\",\n",
+     "new": "  \"main\": \"./dist/main.js\",\n  \"imports\": {\"#c/*\": \"@syzygy/polaris-generation-consent\"},\n"
+    },
+    {
+     "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+     "old": "import { assertInertSvg } from './svg-inert.js';\n",
+     "new": "import { assertInertSvg } from './svg-inert.js';\nimport '#c/root';\n"
+    }
+   ]
+  },
+  {
+   "id": "RV-T3-node-object-ahead-of-import",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  27 passed (27)"
+   ],
+   "testFiles": [
+    "Test Files  1 passed (1)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 5.2,
+   "counts": [
+    {
+     "file": "packages/polaris-dossier/package.json",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/package.json",
+     "old": "      \"types\": \"./dist/argv.d.ts\",\n      \"import\": \"./dist/argv.js\",",
+     "new": "      \"types\": \"./dist/argv.d.ts\",\n      \"node\": { \"import\": \"./dist/index.js\", \"default\": \"./dist/index.js\" },\n      \"import\": \"./dist/argv.js\","
+    }
+   ]
+  },
+  {
+   "id": "RV-T4-node-nested-inside-import",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  3 failed | 24 passed (27)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > reaches this package through argv.ts and state-directory.ts alone",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > resolves every workspace specifier on it, and reaches past the entry's own imports",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the subpaths the daemon entry imports > ./argv is packages/polaris-dossier/src/argv.ts, which imports exactly [\"node:util\"]"
+   ],
+   "timeouts": 0,
+   "seconds": 5.3,
+   "counts": [
+    {
+     "file": "packages/polaris-dossier/package.json",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/package.json",
+     "old": "      \"types\": \"./dist/argv.d.ts\",\n      \"import\": \"./dist/argv.js\",",
+     "new": "      \"types\": \"./dist/argv.d.ts\",\n      \"import\": { \"node\": \"./dist/index.js\", \"default\": \"./dist/argv.js\" },"
+    }
+   ]
+  },
+  {
+   "id": "RV-T5-require-ahead-of-import",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  27 passed (27)"
+   ],
+   "testFiles": [
+    "Test Files  1 passed (1)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 6.3,
+   "counts": [
+    {
+     "file": "packages/polaris-dossier/package.json",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/package.json",
+     "old": "      \"types\": \"./dist/argv.d.ts\",\n      \"import\": \"./dist/argv.js\",",
+     "new": "      \"types\": \"./dist/argv.d.ts\",\n      \"require\": \"./dist/index.js\",\n      \"import\": \"./dist/argv.js\","
+    }
+   ]
+  },
+  {
+   "id": "RV-T6-exports-fallback-array",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  3 failed | 24 passed (27)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > reaches this package through argv.ts and state-directory.ts alone",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > resolves every workspace specifier on it, and reaches past the entry's own imports",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the subpaths the daemon entry imports > ./argv is packages/polaris-dossier/src/argv.ts, which imports exactly [\"node:util\"]"
+   ],
+   "timeouts": 0,
+   "seconds": 8.0,
+   "counts": [
+    {
+     "file": "packages/polaris-dossier/package.json",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/package.json",
+     "old": "      \"types\": \"./dist/argv.d.ts\",\n      \"import\": \"./dist/argv.js\",",
+     "new": "      \"types\": \"./dist/argv.d.ts\",\n      \"import\": [\"./dist/index.js\", \"./dist/argv.js\"],"
+    }
+   ]
+  },
+  {
+   "id": "RV-T7-imports-fallback-array-alias",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  27 passed (27)"
+   ],
+   "testFiles": [
+    "Test Files  1 passed (1)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 8.4,
+   "counts": [
+    {
+     "file": "apps/syzygy/package.json",
+     "oldCount": 1
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "apps/syzygy/package.json",
+     "old": "  \"main\": \"./dist/main.js\",\n",
+     "new": "  \"main\": \"./dist/main.js\",\n  \"imports\": {\"#dossier\": [\"@syzygy/polaris-dossier\"]},\n"
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nimport '#dossier';\n"
+    }
+   ]
+  },
+  {
+   "id": "RV-T8-mts-bridge",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 26 passed (27)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > resolves every workspace specifier on it, and reaches past the entry's own imports"
+   ],
+   "timeouts": 0,
+   "seconds": 5.2,
+   "counts": [
+    {
+     "file": "apps/syzygy/src/bridge.mts",
+     "create": true
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "apps/syzygy/src/bridge.mts",
+     "create": "export * from '@syzygy/polaris-dossier';\n"
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nimport './bridge.mjs';\n"
+    }
+   ]
+  },
+  {
+   "id": "RV-T9-cts-bridge",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 26 passed (27)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > resolves every workspace specifier on it, and reaches past the entry's own imports"
+   ],
+   "timeouts": 0,
+   "seconds": 5.2,
+   "counts": [
+    {
+     "file": "apps/syzygy/src/bridge.cts",
+     "create": true
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "apps/syzygy/src/bridge.cts",
+     "create": "export * from '@syzygy/polaris-dossier';\n"
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nimport './bridge.cjs';\n"
+    }
+   ]
+  },
+  {
+   "id": "RV-T10-directory-index",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 26 passed (27)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > reaches this package through argv.ts and state-directory.ts alone"
+   ],
+   "timeouts": 0,
+   "seconds": 7.9,
+   "counts": [
+    {
+     "file": "apps/syzygy/src/index.ts",
+     "create": true
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "apps/syzygy/src/index.ts",
+     "create": "export * from '@syzygy/polaris-dossier';\n"
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nimport '.';\n"
+    }
+   ]
+  },
+  {
+   "id": "RV-T11-template-literal-dynamic-alias",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  27 passed (27)"
+   ],
+   "testFiles": [
+    "Test Files  1 passed (1)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 7.4,
+   "counts": [
+    {
+     "file": "apps/syzygy/package.json",
+     "oldCount": 1
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "apps/syzygy/package.json",
+     "old": "  \"main\": \"./dist/main.js\",\n",
+     "new": "  \"main\": \"./dist/main.js\",\n  \"imports\": {\"#dossier\": \"@syzygy/polaris-dossier\"},\n"
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nvoid import(`#dossier`);\n"
+    }
+   ]
+  },
+  {
+   "id": "RV-T12-computed-alias",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 26 passed (27)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > has no node:module edge, and no import() or require of a computed name"
+   ],
+   "timeouts": 0,
+   "seconds": 8.6,
+   "counts": [
+    {
+     "file": "apps/syzygy/package.json",
+     "oldCount": 1
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "apps/syzygy/package.json",
+     "old": "  \"main\": \"./dist/main.js\",\n",
+     "new": "  \"main\": \"./dist/main.js\",\n  \"imports\": {\"#dossier\": \"@syzygy/polaris-dossier\"},\n"
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nconst hashName = '#dossier';\nvoid import(hashName);\n"
+    }
+   ]
+  },
+  {
+   "id": "RV-T13-template-literal-dynamic-alias-island",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  4 passed (4)"
+   ],
+   "testFiles": [
+    "Test Files  1 passed (1)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 6.4,
+   "counts": [
+    {
+     "file": "apps/three-surface-poc/package.json",
+     "oldCount": 1
+    },
+    {
+     "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/package.json",
+     "old": "  \"main\": \"./dist/main.js\",\n",
+     "new": "  \"main\": \"./dist/main.js\",\n  \"imports\": {\"#consent\": \"@syzygy/polaris-generation-consent\"},\n"
+    },
+    {
+     "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+     "old": "import { assertInertSvg } from './svg-inert.js';\n",
+     "new": "import { assertInertSvg } from './svg-inert.js';\nvoid import(`#consent`);\n"
+    }
+   ]
+  },
+  {
+   "id": "RV-T14-absolute-path",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 26 passed (27)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the subpaths the daemon entry imports > are /argv and /state-directory, imported statically, and the barrel only dynamically inside the dossier and polaris branches"
+   ],
+   "timeouts": 0,
+   "seconds": 6.5,
+   "counts": [
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nimport '/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-528/base/packages/polaris-dossier/src/index.js';\n"
+    }
+   ]
+  },
+  {
+   "id": "RV-T15-file-url-mixed-case",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 26 passed (27)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the subpaths the daemon entry imports > are /argv and /state-directory, imported statically, and the barrel only dynamically inside the dossier and polaris branches"
+   ],
+   "timeouts": 0,
+   "seconds": 9.0,
+   "counts": [
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nimport 'File:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-528/base/packages/polaris-dossier/src/index.js';\n"
+    }
+   ]
+  },
+  {
+   "id": "RV-T16-alias-declared-by-another-package",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  27 passed (27)"
+   ],
+   "testFiles": [
+    "Test Files  1 passed (1)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 6.0,
+   "counts": [
+    {
+     "file": "apps/three-surface-poc/package.json",
+     "oldCount": 1
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/package.json",
+     "old": "  \"main\": \"./dist/main.js\",\n",
+     "new": "  \"main\": \"./dist/main.js\",\n  \"imports\": {\"#dossier\": \"@syzygy/polaris-dossier\"},\n"
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nimport '#dossier';\n"
+    }
+   ]
+  },
+  {
+   "id": "RV-T17-alias-to-own-dist-module",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  27 passed (27)"
+   ],
+   "testFiles": [
+    "Test Files  1 passed (1)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 6.1,
+   "counts": [
+    {
+     "file": "apps/syzygy/package.json",
+     "oldCount": 1
+    },
+    {
+     "file": "apps/syzygy/src/bridge.ts",
+     "create": true
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "apps/syzygy/package.json",
+     "old": "  \"main\": \"./dist/main.js\",\n",
+     "new": "  \"main\": \"./dist/main.js\",\n  \"imports\": {\"#bridge\": \"./dist/bridge.js\"},\n"
+    },
+    {
+     "file": "apps/syzygy/src/bridge.ts",
+     "create": "export * from '@syzygy/polaris-dossier';\n"
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nimport '#bridge';\n"
+    }
+   ]
+  },
+  {
+   "id": "RV-T18-dependency-alias",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  27 passed (27)"
+   ],
+   "testFiles": [
+    "Test Files  1 passed (1)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 5.7,
+   "counts": [
+    {
+     "file": "apps/syzygy/package.json",
+     "oldCount": 1
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "apps/syzygy/package.json",
+     "old": "  \"dependencies\": {\n",
+     "new": "  \"dependencies\": {\n    \"dossier\": \"file:../../packages/polaris-dossier\",\n"
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nimport 'dossier';\n"
+    }
+   ]
+  },
+  {
+   "id": "RV-T19-node-modules-relative-path",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  27 passed (27)"
+   ],
+   "testFiles": [
+    "Test Files  1 passed (1)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 8.4,
+   "counts": [
+    {
+     "file": "apps/syzygy/src/bridge.ts",
+     "create": true
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "apps/syzygy/src/bridge.ts",
+     "create": "export * from '../../../node_modules/@syzygy/polaris-dossier/src/index.js';\n"
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nimport './bridge.js';\n"
+    }
+   ]
+  },
+  {
+   "id": "RV-C1-destructured-alias",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  74 passed (74)"
+   ],
+   "testFiles": [
+    "Test Files  1 passed (1)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 5.1,
+   "counts": [
+    {
+     "file": "packages/polaris-dossier/src/cli.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-dossier/src/cli.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/cli.ts",
+     "old": "import { isArgvFault, readArgv } from './argv.js';\n",
+     "new": "import { isArgvFault, readArgv } from './argv.js';\nimport * as argvNs from './argv.js';\nconst { readArgv: readArgs } = argvNs;\n"
+    },
+    {
+     "file": "packages/polaris-dossier/src/cli.ts",
+     "old": "    const read = readArgv(rest, { valued: [], dashValue: 'refuse', repeat: 'refuse', positionals: true });",
+     "new": "    const read = readArgv(rest, { valued: [], dashValue: 'refuse', repeat: 'refuse', positionals: true });\n    void readArgs(rest, { valued: ['--drift'], dashValue: 'take', repeat: 'last', positionals: true });"
+    }
+   ]
+  },
+  {
+   "id": "RV-C2-reexport-renamed-in-cli",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  74 passed (74)"
+   ],
+   "testFiles": [
+    "Test Files  1 passed (1)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 9.3,
+   "counts": [
+    {
+     "file": "packages/polaris-dossier/src/cli.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/cli.ts",
+     "old": "import { isArgvFault, readArgv } from './argv.js';\n",
+     "new": "import { isArgvFault, readArgv } from './argv.js';\nexport { readArgv as readArgs } from './argv.js';\n"
+    }
+   ]
+  },
+  {
+   "id": "RV-C3-reflect-get",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  74 passed (74)"
+   ],
+   "testFiles": [
+    "Test Files  1 passed (1)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 7.4,
+   "counts": [
+    {
+     "file": "packages/polaris-dossier/src/cli.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-dossier/src/cli.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/cli.ts",
+     "old": "import { isArgvFault, readArgv } from './argv.js';\n",
+     "new": "import { isArgvFault, readArgv } from './argv.js';\nimport * as argvNs from './argv.js';\n"
+    },
+    {
+     "file": "packages/polaris-dossier/src/cli.ts",
+     "old": "    const read = readArgv(rest, { valued: [], dashValue: 'refuse', repeat: 'refuse', positionals: true });",
+     "new": "    const read = readArgv(rest, { valued: [], dashValue: 'refuse', repeat: 'refuse', positionals: true });\n    void Reflect.apply(Reflect.get(argvNs, 'readArgv'), undefined, [rest, { valued: ['--drift'], dashValue: 'take', repeat: 'last', positionals: true }]);"
+    }
+   ]
+  },
+  {
+   "id": "RV-C4-element-access",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  74 passed (74)"
+   ],
+   "testFiles": [
+    "Test Files  1 passed (1)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 7.7,
+   "counts": [
+    {
+     "file": "packages/polaris-dossier/src/cli.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-dossier/src/cli.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/cli.ts",
+     "old": "import { isArgvFault, readArgv } from './argv.js';\n",
+     "new": "import { isArgvFault, readArgv } from './argv.js';\nimport * as argvNs from './argv.js';\n"
+    },
+    {
+     "file": "packages/polaris-dossier/src/cli.ts",
+     "old": "    const read = readArgv(rest, { valued: [], dashValue: 'refuse', repeat: 'refuse', positionals: true });",
+     "new": "    const read = readArgv(rest, { valued: [], dashValue: 'refuse', repeat: 'refuse', positionals: true });\n    void argvNs['readArgv'](rest, { valued: ['--drift'], dashValue: 'take', repeat: 'last', positionals: true });"
+    }
+   ]
+  },
+  {
+   "id": "RV-C5-concatenated-name",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  74 passed (74)"
+   ],
+   "testFiles": [
+    "Test Files  1 passed (1)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 4.1,
+   "counts": [
+    {
+     "file": "packages/polaris-dossier/src/cli.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-dossier/src/cli.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/cli.ts",
+     "old": "import { isArgvFault, readArgv } from './argv.js';\n",
+     "new": "import { isArgvFault, readArgv } from './argv.js';\nimport * as argvNs from './argv.js';\n"
+    },
+    {
+     "file": "packages/polaris-dossier/src/cli.ts",
+     "old": "    const read = readArgv(rest, { valued: [], dashValue: 'refuse', repeat: 'refuse', positionals: true });",
+     "new": "    const read = readArgv(rest, { valued: [], dashValue: 'refuse', repeat: 'refuse', positionals: true });\n    void (argvNs as Record<string, Function>)['read' + 'Argv'](rest, { valued: ['--drift'], dashValue: 'take', repeat: 'last', positionals: true });"
+    }
+   ]
+  },
+  {
+   "id": "RV-C6-mts-caller",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  74 passed (74)"
+   ],
+   "testFiles": [
+    "Test Files  1 passed (1)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 3.6,
+   "counts": [
+    {
+     "file": "packages/polaris-dossier/src/extra-reader.mts",
+     "create": true
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/extra-reader.mts",
+     "create": "import { readArgv } from './argv.js';\nexport const readDrift = (args: string[]) => readArgv(args, { valued: ['--drift'], dashValue: 'take', repeat: 'last', positionals: true });\n"
+    }
+   ]
+  },
+  {
+   "id": "RV-C7-callback-argument",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  74 passed (74)"
+   ],
+   "testFiles": [
+    "Test Files  1 passed (1)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 4.3,
+   "counts": [
+    {
+     "file": "packages/polaris-dossier/src/cli.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/cli.ts",
+     "old": "    const read = readArgv(rest, { valued: [], dashValue: 'refuse', repeat: 'refuse', positionals: true });",
+     "new": "    const read = readArgv(rest, { valued: [], dashValue: 'refuse', repeat: 'refuse', positionals: true });\n    void [rest].map(readArgv);"
+    }
+   ]
+  },
+  {
+   "id": "RV-C8-optional-call",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 73 passed (74)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > is the spec of every readArgv call, and no other module names readArgv"
+   ],
+   "timeouts": 0,
+   "seconds": 3.6,
+   "counts": [
+    {
+     "file": "packages/polaris-dossier/src/cli.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/cli.ts",
+     "old": "    const read = readArgv(rest, { valued: [], dashValue: 'refuse', repeat: 'refuse', positionals: true });",
+     "new": "    const read = readArgv(rest, { valued: [], dashValue: 'refuse', repeat: 'refuse', positionals: true });\n    void readArgv?.(rest, { valued: ['--drift'], dashValue: 'take', repeat: 'last', positionals: true });"
+    }
+   ]
+  },
+  {
+   "id": "RV-C9-apply",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  74 passed (74)"
+   ],
+   "testFiles": [
+    "Test Files  1 passed (1)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 3.9,
+   "counts": [
+    {
+     "file": "packages/polaris-dossier/src/cli.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/cli.ts",
+     "old": "    const read = readArgv(rest, { valued: [], dashValue: 'refuse', repeat: 'refuse', positionals: true });",
+     "new": "    const read = readArgv(rest, { valued: [], dashValue: 'refuse', repeat: 'refuse', positionals: true });\n    void readArgv.apply(undefined, [rest, { valued: ['--drift'], dashValue: 'take', repeat: 'last', positionals: true }]);"
+    }
+   ]
+  }
+ ]
+}

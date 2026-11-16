@@ -1,0 +1,271 @@
+{
+ "files": [
+  "apps/three-surface-poc/src/git-observation.test.ts"
+ ],
+ "mutants": [
+  {
+   "id": "E1-type-only-import-of-unprefixed-package",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/poc-main.ts",
+     "old": "import { sha256 } from '@syzygy/support';\n",
+     "new": "import { sha256 } from '@syzygy/support';\nimport type { GenerationSource } from '@syzygy/polaris-generation-core';\n"
+    }
+   ]
+  },
+  {
+   "id": "E2-type-only-reexport-of-unprefixed-package",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/poc-main.ts",
+     "old": "import { sha256 } from '@syzygy/support';\n",
+     "new": "import { sha256 } from '@syzygy/support';\nexport type { GenerationSource } from '@syzygy/polaris-generation-core';\n"
+    }
+   ]
+  },
+  {
+   "id": "E3-value-reexport-from-cap1-core-of-unprefixed-package",
+   "edits": [
+    {
+     "file": "packages/cap1-core/src/index.ts",
+     "old": "export * from './vocabulary.js';\n",
+     "new": "export * from './vocabulary.js';\nexport * from '@syzygy/polaris-dossier';\n"
+    }
+   ]
+  },
+  {
+   "id": "E4-subpath-import-of-unprefixed-package",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/poc-main.ts",
+     "old": "import { sha256 } from '@syzygy/support';\n",
+     "new": "import { sha256 } from '@syzygy/support';\nimport '@syzygy/polaris-generation-core/live';\n"
+    }
+   ]
+  },
+  {
+   "id": "E5-relative-import-across-into-unprefixed-package",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/poc-main.ts",
+     "old": "import { sha256 } from '@syzygy/support';\n",
+     "new": "import { sha256 } from '@syzygy/support';\nimport '../../../packages/polaris-dossier/src/index.js';\n"
+    }
+   ]
+  },
+  {
+   "id": "E6-relative-import-of-a-non-package-file",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/poc-main.ts",
+     "old": "import { sha256 } from '@syzygy/support';\n",
+     "new": "import { sha256 } from '@syzygy/support';\nimport '../../../scripts/measure_cli_island_loads.mjs';\n"
+    }
+   ]
+  },
+  {
+   "id": "E7-dynamic-import-template-literal",
+   "edits": [
+    {
+     "file": "packages/three-surface-poc-core/src/index.ts",
+     "old": "export * from './evidence-population.js';\n",
+     "new": "export * from './evidence-population.js';\nexport const loadLive = () => import(`@syzygy/polaris-generation-core/live`);\n"
+    }
+   ]
+  },
+  {
+   "id": "E8-dynamic-import-computed-specifier",
+   "edits": [
+    {
+     "file": "packages/three-surface-poc-core/src/index.ts",
+     "old": "export * from './evidence-population.js';\n",
+     "new": "export * from './evidence-population.js';\nconst liveName = '@syzygy/polaris-generation-core/live';\nexport const loadLive = () => import(liveName);\n"
+    }
+   ]
+  },
+  {
+   "id": "E9-createRequire-of-unprefixed-package",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/poc-main.ts",
+     "old": "import { sha256 } from '@syzygy/support';\n",
+     "new": "import { sha256 } from '@syzygy/support';\nimport { createRequire } from 'node:module';\nconst generation = createRequire(import.meta.url)('@syzygy/polaris-generation-core');\nvoid generation;\n"
+    }
+   ]
+  },
+  {
+   "id": "E10-triple-slash-reference-into-unprefixed-package",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/poc-main.ts",
+     "old": "import { realpathSync } from 'node:fs';\n",
+     "new": "/// <reference path=\"../../../packages/polaris-dossier/src/index.ts\" />\nimport { realpathSync } from 'node:fs';\n"
+    }
+   ]
+  },
+  {
+   "id": "E11-manifest-only-dependency-no-import",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/package.json",
+     "old": "    \"@syzygy/support\": \"0.0.0\"\n",
+     "new": "    \"@syzygy/support\": \"0.0.0\",\n    \"@syzygy/polaris-dossier\": \"0.0.0\"\n"
+    }
+   ]
+  },
+  {
+   "id": "G1-support-prefix-without-trailing-slash",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "old": "    'packages/support/',\n",
+     "new": "    'packages/support',\n"
+    }
+   ]
+  },
+  {
+   "id": "G2-support-prefix-wrong-case",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "old": "    'packages/support/',\n",
+     "new": "    'packages/Support/',\n"
+    }
+   ]
+  },
+  {
+   "id": "G3-exact-input-package-lock-dropped",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "old": "  const exactInputs = new Set(['package.json', 'package-lock.json', 'tsconfig.base.json']);\n",
+     "new": "  const exactInputs = new Set(['package.json', 'tsconfig.base.json']);\n"
+    }
+   ]
+  },
+  {
+   "id": "G4-exact-input-tsconfig-base-dropped",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "old": "  const exactInputs = new Set(['package.json', 'package-lock.json', 'tsconfig.base.json']);\n",
+     "new": "  const exactInputs = new Set(['package.json', 'package-lock.json']);\n"
+    }
+   ]
+  },
+  {
+   "id": "G5-cap1-daemon-src-and-manifest-only",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "old": "    'packages/cap1-daemon/',\n",
+     "new": "    'packages/cap1-daemon/src/',\n    'packages/cap1-daemon/package.json',\n"
+    }
+   ]
+  },
+  {
+   "id": "T1-table-package-json-alone-with-cap1-daemon-src-and-manifest",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.test.ts",
+     "old": "[`${prefix}src/x.ts`, `${prefix}package.json`, `${prefix}tsconfig.json`]",
+     "new": "[`${prefix}package.json`]"
+    },
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "old": "    'packages/cap1-daemon/',\n",
+     "new": "    'packages/cap1-daemon/src/',\n    'packages/cap1-daemon/package.json',\n"
+    }
+   ]
+  },
+  {
+   "id": "T2-table-package-json-alone-with-http-host-src-and-manifest",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.test.ts",
+     "old": "[`${prefix}src/x.ts`, `${prefix}package.json`, `${prefix}tsconfig.json`]",
+     "new": "[`${prefix}package.json`]"
+    },
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "old": "    'packages/http-host/',\n",
+     "new": "    'packages/http-host/src/',\n    'packages/http-host/package.json',\n"
+    }
+   ]
+  },
+  {
+   "id": "T3-guard-modules-only-with-http-host-src-and-manifest",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.test.ts",
+     "old": "  const inputs = [...reachable, ...packages.flatMap((dir) => [`${dir}/package.json`, `${dir}/tsconfig.json`])];\n",
+     "new": "  const inputs = [...reachable];\n"
+    },
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "old": "    'packages/http-host/',\n",
+     "new": "    'packages/http-host/src/',\n    'packages/http-host/package.json',\n"
+    }
+   ]
+  },
+  {
+   "id": "T4-guard-modules-only-alone",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.test.ts",
+     "old": "  const inputs = [...reachable, ...packages.flatMap((dir) => [`${dir}/package.json`, `${dir}/tsconfig.json`])];\n",
+     "new": "  const inputs = [...reachable];\n"
+    }
+   ]
+  },
+  {
+   "id": "T5-guard-no-js-import-detection-with-dynamic-import",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.test.ts",
+     "old": "ts.preProcessFile(readModule(file), true, true)",
+     "new": "ts.preProcessFile(readModule(file), true, false)"
+    },
+    {
+     "file": "packages/three-surface-poc-core/src/index.ts",
+     "old": "export * from './evidence-population.js';\n",
+     "new": "export * from './evidence-population.js';\nexport const loadLive = () => import('@syzygy/polaris-generation-consent/live');\n"
+    }
+   ]
+  },
+  {
+   "id": "T6-guard-unresolved-assertion-dropped-with-unknown-package",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.test.ts",
+     "old": "    expect(unresolved.map((edge) => `${edge.from} imports ${edge.specifier}`)).toEqual([]);\n",
+     "new": ""
+    },
+    {
+     "file": "apps/three-surface-poc/src/poc-main.ts",
+     "old": "import { sha256 } from '@syzygy/support';\n",
+     "new": "import { sha256 } from '@syzygy/support';\nimport '@syzygy/no-such-package';\n"
+    }
+   ]
+  },
+  {
+   "id": "T7-guard-sha256-pin-dropped-with-support-prefix-dropped",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.test.ts",
+     "old": "    expect(reachable).toContain('packages/support/src/sha256.ts');\n",
+     "new": ""
+    },
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "old": "    'packages/support/',\n",
+     "new": ""
+    }
+   ]
+  },
+  {
+   "id": "CONTROL",
+   "edits": []
+  }
+ ]
+}

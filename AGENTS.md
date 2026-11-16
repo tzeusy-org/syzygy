@@ -88,6 +88,9 @@ the round files that running software still reads.
   only, after the implementation's PWB-REQ-005 evaluation).
 - The daemon never executes observed project code or test suites; separate
   operator commands do.
+- Never run a command that asks for consent, never answer one, and never
+  type a consent phrase, even if a question appears: only the owner gives
+  consent, in person at a terminal (REQ-polaris-generation-046).
 - Syzygy never writes implementation code or adopts intent autonomously.
 - Never adopt doctrine, accept contracts, approve policy, or label anything
   accepted on the owner's behalf (VIS-4); never install candidate material
@@ -141,6 +144,10 @@ A generator that quotes prose has re-opened the door it closed.
 `PROJECT-STATUS.md` §"How to verify this page" owns the canonical battery;
 run that block, never a copy. Everyday: `python3 scripts/check_governance.py`
 (`--selftest` runs the fixtures). All read-only; run before claiming clean.
+Code: `npm run check` (typecheck plus the hermetic unit tier) while working,
+`npm run check:all` (adds the integration and e2e tiers and that battery, read
+from `PROJECT-STATUS.md`) before a PR; `CONTRIBUTING.md` ("Checking a change")
+defines the tiers and `vitest.tiers.ts` places each test file.
 
 ## Beads scope
 
@@ -181,10 +188,66 @@ sweep lessons added 2026-09-23; the raw-head digest lesson the same day.
   the barrel; conformance fixtures build through
   `packages/cap1-conformance/src/fixtures/` (inputs only, expected values
   stay literals).
+- `packages/support/` (`@syzygy/support`): the one `sha256`, the one
+  `deepFreeze`, a shared strict `decodeUtf8` and the shared object test
+  `isRecord` (non-null, not an array; it does not check the prototype)
+  (the `isoOf` formatter stays in `polaris-dossier`: the support
+  purity guard forbids `Date`), a leaf with no workspace
+  dependency, imported by the PWB core, the Polaris generation packages,
+  the dossier and the POC app. `decodeUtf8` is the one named helper, not
+  the only strict decoder: 20 `fatal: true` `TextDecoder` constructions
+  remain inline or as module constants, converted by no PR yet (the sites
+  are listed in `docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json`).
+  The cap1 packages never import it (`cap1-system` is an independent oracle).
+  Its own purity guard, `packages/support/src/support-purity.test.ts`, pins
+  what every importer inherits: no module but `node:crypto` (`createHash`
+  alone) and its own siblings, no identifier outside a literal list, no
+  property write, no `import()`, no dependency and the one `"."` export. A
+  helper that needs another global or module fails it until the list grows
+  in the same change (`syzygy-bpyt.6.14`, `syzygy-bpyt.46`).
+  After a merge that adds a workspace package, run `npm ci` in every checkout
+  that builds or serves from it: until the `node_modules/@syzygy/` link
+  exists, the package does not resolve.
+- Three key-sorted JSON encoders are kept apart on purpose: `canonicalJson`
+  (PWB identities) drops `undefined` members and flattens any object;
+  `encodeCanonicalJson` (Polaris generation digests) refuses what it cannot
+  spell and sorts every key by code unit; cap1's own `deterministicLayer`
+  is left out of the divergence test (cap1 imports nothing shared), and
+  only `canonical-json-probe.mjs` compares it. A merge makes one encoder
+  refuse what another spells (an `undefined` member, a BigInt) or reorders
+  array-index keys, so it changes an output or a refusal and goes to the
+  owner (GP-Q0). `canonical-json-divergence.test.ts` pins the first two.
+- Markdown fences are read by three rules, kept apart on purpose: the
+  PWB-REQ-006 profile's recognizer (`recognizeCodeContexts` in
+  `markdown-code-context.ts`, the only one a clause states), which the mask,
+  the extractor's `parseDoc`, the manifest's `stripFences` (the link reader
+  alone also reads its code spans) and the root-index pillar reader all use
+  since `syzygy-bpyt.55`; the consent `outsideFences`; and the Polaris
+  renderer. Read fences by the recognizer, never by the mask.
+  `docs/evidence/syzygy-bpyt-6-3/dc3-fence-rules-2026-10-25.json` says which
+  clause governed each of the five before that change, and
+  `docs/evidence/syzygy-bpyt-6-3/dc3-fence-rules-addendum-2026-10-29.json`
+  what moved; `fence-rules.test.ts` pins four of them (the consent reader
+  through the probe and its own tests). Do not merge or "fix" the consent
+  reader or the renderer without the owner, since that changes what a gate
+  accepts. The profile ends a line at CRLF, CR and LF and keeps every
+  terminator (`syzygy-bpyt.16`; the differential is in
+  `docs/evidence/syzygy-bpyt-16/crlf-mask-2026-10-27.json`); the extractor
+  keeps its LF-only line model and asks the recognizer whether a line's first
+  offset is fenced, so a text with bare CRs stays its residual. The link
+  readers split at LF too but blank every fenced and span character (never
+  delete one: deletion joins text into a link the text never writes), so a
+  bare CR cannot hide or expose a link. Two stray single backticks around a
+  list of links make those links a span, and they drop with no signal: the
+  owner chose that (GP-B2 Q2, answer C, 2026-10-28), and
+  `fence-rules.test.ts` pins it.
 - Three-Surface POC: `packages/three-surface-poc-core/` (one shared
   `PocModel`) and `apps/three-surface-poc/` read the same instance — never
-  split surface truth stores. `build:poc` keeps `tsc -b --force`: ignored
-  incremental outputs are executable inputs.
+  split surface truth stores. Ignored build outputs are executable inputs, so
+  `build` and `build:poc` run `scripts/clean_build.mjs`: it removes the dist of
+  every project `tsc -b` will build, then builds (`syzygy-bpyt.4.2`).
+  `tsc -b` alone keeps an altered output whose source is unchanged, and
+  `--force` keeps an output whose source is gone.
 - PWB pipeline (pure, injectable, in order): `body-read-authority` gates
   every Butlers read → observation → `git-object-reader` → classification
   (excluded content yields hash-not-body records) → extraction (literal
@@ -237,6 +300,13 @@ sweep lessons added 2026-09-23; the raw-head digest lesson the same day.
 - Fresh `git worktree`: run `npm ci` inside it first, or `NodeNext` silently
   resolves `@syzygy/*` to the main checkout's `node_modules`.
 - `git ls-tree` needs `-z`, or quoted paths break the parser.
+- Never hand a whole array to one call (`out.push(...lines)`): the argument
+  list is bounded by the stack, so past roughly 100,000 to 125,000 elements at
+  node's default stack (less the deeper the caller; half that at half the
+  stack, four times it in a worker thread) it throws a `RangeError`. In the
+  PWB reader nothing catches it before the daemon. Loop instead. A test that
+  pins such a fix holds only at the stack it ran at; give it a canary that the
+  one-call form still throws there.
 - `npm run poc:pwb-*-mutation-*` rewrites sources in place (~35 min): never
   edit or commit while it runs.
 - CDP headless: enable `Emulation.setFocusEmulationEnabled` or focus never
@@ -258,6 +328,10 @@ sweep lessons added 2026-09-23; the raw-head digest lesson the same day.
   assert the match ends where the next heading begins.
 - The Write tool has emitted mixed NFC/NFD bytes; use Unicode escapes in
   fixtures when exact matching matters.
+- Tool input, including Bash heredocs, can turn a typed `\u00a0` escape
+  into literal U+00A0. After any Edit or Write whose text names a `\u`
+  escape, use Python to check changed lines for new non-ASCII (for example,
+  count `chr(0xa0)`). Fixtures should write escapes rather than literals.
 - A mutation that throws at describe time reports zero tests and scores as
   survived — build fixtures in `beforeAll`.
 - A rule-6 evidence record must store each mutant's `old`/`new` fragment and
@@ -272,8 +346,12 @@ sweep lessons added 2026-09-23; the raw-head digest lesson the same day.
   stale; no evidence → Unknown.
 - Conformance expected values are hard-coded literals, never imported from
   the module under test.
-- Root Vitest `test.projects` must alias both `@syzygy/cap1-core` and
-  `@syzygy/cap1-daemon` to source; verify with every `dist/` absent.
+- Tests, the typecheck and the no-egress bundle load every `@syzygy/*`
+  package by the `source` condition its `exports` lists first, never its
+  `dist/` (`syzygy-bpyt.4.2`). Vitest takes it from `ssr.resolve.conditions`;
+  a top-level `resolve.conditions` never reaches the test runner. A new
+  export needs its `source` entry, or the tree's-own-exports row of
+  `workspace-reach.test.ts` fails. Verify with every `dist/` absent.
 - Butlers' pytest needs its own `.venv/bin/python`.
 - Never wire `WORKER_CHANGE_SEAM` test-artifact evidence into the unrelated
   identity-resolution entities in `model.ts` — false "Verified" (reverted
@@ -286,10 +364,16 @@ sweep lessons added 2026-09-23; the raw-head digest lesson the same day.
   (`syzygy-bpyt.7.2` removed `write-guard.ts`). `authorizeWrite` survives
   only as test support (`@syzygy/cap1-core/testing`) and compares raw
   `startsWith`; a future write path must normalize first.
-- App typecheck (`tsc --noEmit -p apps/three-surface-poc`) resolves both
-  `packages/three-surface-poc-core` and `packages/polaris-generation-core`
-  through `dist` declarations: run `tsc -b` on each (or `npm run build:poc`)
-  first after either changes, or a stale `dist` reports phantom errors.
+- `npm run typecheck` is one noEmit program over every workspace's `src/`,
+  tests among them (the root `tsconfig.json`); it reads no `dist`
+  declaration, so it needs no build first. Each package `tsconfig.json` is
+  the product build and excludes its tests and test-support modules; it
+  still emits two kits a reader takes from `dist` (`full-run.testkit.ts` for
+  `scripts/dossier_scale_measure.mjs`, `recorder-fixtures.testkit.ts` for the
+  consent package's `./testing` entry). TypeScript emits any module a built
+  one imports, so no other built module may import a test or test support
+  (`product-build.test.ts` lists the excludes per project and pins the one
+  import edge into test support, the consent `testing.ts`).
 - Ledger semantics: a refused read is not a counted pass; phase-B breaches
   are typed findings and do not set the degradation state; catalog
   extraction keys off the basename `v1.md`. The tailnet mount is detected
@@ -311,11 +395,18 @@ sweep lessons added 2026-09-23; the raw-head digest lesson the same day.
   overwrites silently: pass a suffixed `--date` (`2026-09-06-gen2`) when a
   same-day file exists. Rebase-merge re-hashes the recorded head; the
   surface version (sha256 over both `src` trees) is the stable anchor.
-- **A response-ceiling breach serves nothing and logs nothing.** `routes.ts`'s
-  `boundedResponse` answers HTTP 503 with a JSON body (`served: 'nothing'`,
-  readiness false); no ledger, stderr line or status record sees it — the 503
-  body of the breaching request is the only trace. The resource ledger is
-  the input-side reader budget and never sees a response ceiling. Two
+- **A response-ceiling breach serves nothing; it no longer logs nothing.**
+  `routes.ts`'s `boundedResponse` answers HTTP 503 with a JSON body
+  (`served: 'nothing'`, readiness false). *Stale 2026-11-04 (superseded
+  2026-09-23, `syzygy-dov.11.1`): this note used to say "logs nothing" and
+  that no stderr line or status record sees a breach.* Now `boundedResponse`
+  records the breach in the process-local `ServedResponseRecorder`, which
+  feeds served readiness, and `http-host`'s `emitNonSuccess` writes one
+  `daemon-http-outcome` stderr line (`reason: 'response-limit-breached'`)
+  built by `safeResponseDiagnostic`: digest, as-of, limit, declared and
+  observed bytes, population counts. A diagnostic failing that allow-list
+  falls back to the generic `route-non-success` line. The resource ledger is
+  still the input-side reader budget and never sees a response ceiling. Two
   governance records said "degrades honestly" / "the ledger reports the
   breach" for a day; both marked 2026-09-07. `/polaris` sat 44 KB under
   the 2 MB ceiling; the P-63 trim (`syzygy-1z3.27`) cut 434,960 bytes on
@@ -508,14 +599,13 @@ sweep lessons added 2026-09-23; the raw-head digest lesson the same day.
   byte-compared by CI. A count of unbannered heads measures what a reader may
   open, never how much work is available; check what protects each file before
   costing a pass over a population.
-- `docs/README.md`'s review-campaign table is one row per campaign over
-  every file in `docs/reviews/`, each row carrying its last verdict of record
-  and where the findings landed. It is re-derived, not maintained: the count
-  moved 88 → 90 within a day of being written, and again the same day, so
-  rerun `scripts/check_docs_review_campaign_partition.py` rather than
-  trusting a row. A new `-RAW.md` whose basename matches no campaign
-  pattern fails it as `unmatched`: add the pattern and the row in the same
-  commit as the raw.
+- Review campaigns are one file each under `docs/review-campaigns/<key>.md`
+  (display, patterns, subject, verdict of record), never a table in
+  `docs/README.md`. No file stores a derived figure: print counts and dates
+  with `scripts/check_docs_review_campaign_partition.py --table`. A new
+  `-RAW.md` whose basename matches no campaign pattern fails `--check` as
+  `unmatched`: add the pattern (or a new campaign file) in the same commit as
+  the raw (`syzygy-gkvu`, 2026-11-02).
 - **An index that routes by short name makes the files it routes read as
   orphans.** `contracts/candidates/reviews/DISPOSITIONS.md` sections are
   titled "rev10-boundary", "rev10-safety" — never the filename — so a sweep
@@ -573,16 +663,16 @@ sweep lessons added 2026-09-23; the raw-head digest lesson the same day.
   `docs/reviews/*-RAW.md` are skipped since 2026-09-21 (reviewer `Anchor:`
   lines, uneditable under CC-REV-6), the same population
   `check_governance._is_raw_review` exempts; any other `-RAW.md` still counts.
-- **The `docs/README.md` partition count races between sessions.** A
-  rebase-merge never re-runs CI against the other branch's count, so two raws
-  landing minutes apart each pass at N+1 and leave main at N+1 with N+2 files
-  (2026-09-22, repaired by #89). Rebase onto the latest main, re-run
-  `check_docs_review_campaign_partition.py` immediately before merging, and
-  again on main after; treat the count sentence like the CG-26 triple — one
-  integration edit per batch of raws. A clean rebase proves nothing: two
-  branches that each rewrote the count line to the same stale number merge
-  with no conflict (both said 236 over 237 files on 2026-09-23), so
-  re-derive after every rebase even when git reports success.
+- **Stored derived counts race between sessions; that is why none is stored.**
+  Until 2026-11-02 `docs/README.md` carried per-campaign counts and a total
+  sentence, so every PR retaining a raw edited the same lines: rebase-merges
+  left main at N+1 with N+2 files (2026-09-22, #89), two branches agreed on the
+  same stale number with no conflict (2026-09-23), and the merge queue ejected
+  four reviewed PRs. Since `syzygy-gkvu` two raw-retaining PRs touch
+  different files unless they edit the same campaign's verdict. Run
+  `check_docs_review_campaign_partition.py --check` on the merged head; never
+  reintroduce a count into a campaign file (the parser refuses any section
+  but the three it names).
 - **A repair that copies a reviewer's figure, commit or population inherits
   the reviewer's error, and rule 10 charges a round for each one.** Rounds
   5–9 of the P-71 opening-band review each faulted the previous round's

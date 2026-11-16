@@ -9,11 +9,11 @@
 
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { afterEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
+import { tempDir } from '@syzygy/test-kit';
 
 import {
   discloseAuthority,
@@ -22,6 +22,9 @@ import {
 } from '@syzygy/three-surface-poc-core';
 
 import {
+  batchReaderFor,
+  defaultReadGitBlob,
+  defaultRunGit,
   PWB_ACT_RECORDS,
   PWB_AUTHORITY_ARTIFACTS,
   PWB_OBSERVING_PROJECT,
@@ -32,21 +35,15 @@ import {
 } from './governance-inputs.js';
 
 const REPO_ROOT = fileURLToPath(new URL('../../../', import.meta.url));
-const EVALUATION_INSTANT = '2026-10-20T00:00:00Z';
+const EVALUATION_INSTANT = '2026-11-09T09:27:14Z';
 const CURRENT_COMMIT = 'f'.repeat(40);
-const cleanups: string[] = [];
-
-afterEach(() => {
-  for (const root of cleanups.splice(0)) rmSync(root, { recursive: true, force: true });
-});
 
 function git(root: string, args: readonly string[]): string {
   return execFileSync('git', ['-C', root, ...args], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim();
 }
 
 function realGovernanceFixture(): string {
-  const root = mkdtempSync(join(tmpdir(), 'syzygy-pwb-governance-'));
-  cleanups.push(root);
+  const root = tempDir('syzygy-pwb-governance-');
   git(root, ['init', '-q']);
   git(root, ['config', 'gc.auto', '0']);
   git(root, ['config', 'maintenance.auto', 'false']);
@@ -183,7 +180,7 @@ describe('loadBodyReadAuthorityInputs (hermetic)', () => {
     const tree = fakeTree();
     tree.files.delete(PWB_ACT_RECORDS.policy);
     const inputs = loaderFor(tree);
-    expect(inputs.policy.actRecord).toEqual({ kind: 'git-ref-only', ref: 'pwb-approve-policy-public-source-scope-v4-signed-2026-10-20' });
+    expect(inputs.policy.actRecord).toEqual({ kind: 'git-ref-only', ref: 'pwb-approve-policy-public-source-scope-v8-signed-2026-11-09' });
     const evaluation = evaluateBodyReadAuthority(inputs);
     expect(evaluation.policy.kind === 'invalid' && evaluation.policy.caseId).toBe('policy:git-ref-only');
   });
@@ -348,12 +345,12 @@ describe('loadBodyReadAuthorityInputs (hermetic)', () => {
   it('the gate admits the current exact acts and refuses when either act names another digest', () => {
     const tree = fakeTree();
     const expected = pwbAuthorityExpectations(EVALUATION_INSTANT).authorities;
-    expect(expected.policy.actIdentity).toBe('PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V4-APPROVAL-2026-10-20');
+    expect(expected.policy.actIdentity).toBe('PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V8-APPROVAL-2026-11-09');
     expect(expected.registry.actIdentity).toBe('PWB-OBSERVER-REGISTRY-ENTRY-MACHINE-CEILING-2026-10-20');
-    expect(expected.policy.recordingTag).toBe('pwb-approve-policy-public-source-scope-v4-signed-2026-10-20');
+    expect(expected.policy.recordingTag).toBe('pwb-approve-policy-public-source-scope-v8-signed-2026-11-09');
     expect(expected.registry.recordingTag).toBe('pwb-registry-machine-ceiling-amendment-v1.0');
     // Registry version and scope anchors are unchanged by the ceiling act.
-    expect(expected.policy.scopeAnchors).toContain('1.5.0-public-source-candidate.1.none.code-all.redact-span');
+    expect(expected.policy.scopeAnchors).toContain('1.9.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd.v6-p.v7-s.v8-pv');
     expect(expected.registry.scopeAnchors).toContain('1.2.0-candidate.1');
     const admitted = evaluateBodyReadAuthority(loaderFor(tree));
     expect(admitted.admits).toBe(true);
@@ -534,5 +531,146 @@ describe('pwbAuthorityExpectationsForProject (authority set keyed by observed pr
     const withDefault = evaluateBodyReadAuthority(loaderFor(tree));
     const withExplicit = evaluateBodyReadAuthority(loaderFor(tree, false, { observingProject: PWB_OBSERVING_PROJECT }));
     expect(withDefault).toEqual(withExplicit);
+  });
+});
+
+// Characterization (syzygy-bpyt.6.10): how the gate treats an altered owner-act record. It pins today's behaviour and proposes no
+// change; every FAIL-OPEN title names a result a tightening would flip (an owner question, GP-Q0). The alterations copy the shapes of
+// `PROSE_ALTERATIONS` in packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts (this package cannot import it), plus
+// `effect-appended-grant`. Two readings: `isolated` keeps the recording tag resolved over the altered bytes (what the parser and
+// evaluator say alone); `faithful` leaves the tag's blob as recorded, as the loader does, so any byte change reads tag-mismatched.
+// The census over every line is scripts/measure_owner_act_parser_recognition.mjs, recorded in
+// docs/evidence/syzygy-bpyt-6-10/owner-act-parser-recognition-2026-11-03.json.
+describe('owner-act records under altered prose (characterization, syzygy-bpyt.6.10)', () => {
+  const KINDS = ['consent', 'policy', 'registry'] as const;
+  const MARK = ' [altered]';
+  const ALTERATIONS: ReadonlyArray<readonly [string, (text: string) => string]> = [
+    ['date-field-altered', (text) => text.replace(/^(Date: .+)$/m, `$1${MARK}`)],
+    ['effect-widened', (text) => text.replace(/(\n## (?:Effect|What this records)\n\n)[^\n]+(?:\n[^\n]+)*/, '$1The act grants every read, egress, write and execution, for every repository, tool and provider.')],
+    ['limits-removed', (text) => text.replace(/\n## What this (?:act does not authorize|does not do)\n[\s\S]*?(?=\n## |$)/, '')],
+    ['selection-replaced', (text) => {
+      for (const [pattern, replacement] of [[/^\| "[^"\n]*" \| "/m, '| "Decline" | "'], [/^> .+$/m, '> Decline'], [/^Owner selection: .+$/m, 'Owner selection: Decline']] as const) {
+        if (pattern.test(text)) return text.replace(pattern, replacement);
+      }
+      return text;
+    }],
+    ['withdrawal-appended', (text) => `${text}\n## Withdrawal\n\nThe owner withdraws this act; it no longer counts.\n`],
+    ['effect-appended-grant', (text) => text.replace(/(\n## Effect\n[\s\S]*?)(?=\n## |$)/, '$1\nThe act also grants every read, egress, write and execution, for every repository, tool and provider.\n')],
+  ];
+
+  type Reading = 'isolated' | 'faithful';
+  /** The named authority's verdict with its record replaced by `text`. */
+  function verdictOf(kind: (typeof KINDS)[number], text: string, reading: Reading): string {
+    const tree = fakeTree();
+    tree.files.set(PWB_ACT_RECORDS[kind], text);
+    if (reading === 'isolated') {
+      for (const key of tree.taggedRecords.keys()) if (key.endsWith(`:${PWB_ACT_RECORDS[kind]}`)) tree.taggedRecords.set(key, text);
+    }
+    const state = evaluateBodyReadAuthority(loaderFor(tree))[kind];
+    return state.kind === 'valid' ? 'valid' : state.kind === 'invalid' ? state.caseId : `absent:${state.what}`;
+  }
+  const recordText = (kind: (typeof KINDS)[number]): string => readFileSync(join(REPO_ROOT, PWB_ACT_RECORDS[kind]), 'utf8');
+
+  it('reads the three unaltered records as valid under both readings', () => {
+    for (const kind of KINDS) {
+      expect(verdictOf(kind, recordText(kind), 'isolated'), kind).toBe('valid');
+      expect(verdictOf(kind, recordText(kind), 'faithful'), kind).toBe('valid');
+    }
+  });
+
+  // [authority, alteration, took, isolated verdict, faithful verdict]
+  const VERDICTS: ReadonlyArray<readonly [(typeof KINDS)[number], string, boolean, string, string]> = [
+    ['consent', 'date-field-altered', true, 'consent:act-instant-malformed', 'consent:act-instant-malformed'],
+    ['consent', 'effect-widened', true, 'consent:scope-wrong', 'consent:scope-wrong'],
+    ['consent', 'limits-removed', true, 'valid', 'consent:recording-tag-mismatched'],
+    ['consent', 'selection-replaced', false, 'valid', 'valid'],
+    ['consent', 'withdrawal-appended', true, 'valid', 'consent:recording-tag-mismatched'],
+    ['consent', 'effect-appended-grant', true, 'valid', 'consent:recording-tag-mismatched'],
+    ['policy', 'date-field-altered', true, 'policy:act-instant-malformed', 'policy:act-instant-malformed'],
+    ['policy', 'effect-widened', true, 'policy:scope-wrong', 'policy:scope-wrong'],
+    ['policy', 'limits-removed', true, 'valid', 'policy:recording-tag-mismatched'],
+    ['policy', 'selection-replaced', true, 'valid', 'policy:recording-tag-mismatched'],
+    ['policy', 'withdrawal-appended', true, 'valid', 'policy:recording-tag-mismatched'],
+    ['policy', 'effect-appended-grant', true, 'valid', 'policy:recording-tag-mismatched'],
+    ['registry', 'date-field-altered', true, 'registry:act-instant-malformed', 'registry:act-instant-malformed'],
+    ['registry', 'effect-widened', true, 'registry:scope-wrong', 'registry:scope-wrong'],
+    ['registry', 'limits-removed', false, 'valid', 'valid'],
+    ['registry', 'selection-replaced', true, 'valid', 'registry:recording-tag-mismatched'],
+    ['registry', 'withdrawal-appended', true, 'valid', 'registry:recording-tag-mismatched'],
+    ['registry', 'effect-appended-grant', true, 'valid', 'registry:recording-tag-mismatched'],
+  ];
+
+  it.each(VERDICTS)('%s record, %s: took %s, parser-isolated %s, loader-faithful %s', (kind, name, took, isolated, faithful) => {
+    const alter = ALTERATIONS.find(([n]) => n === name)![1];
+    const text = recordText(kind);
+    const altered = alter(text);
+    expect(altered !== text).toBe(took);
+    expect(verdictOf(kind, altered, 'isolated')).toBe(isolated);
+    expect(verdictOf(kind, altered, 'faithful')).toBe(faithful);
+  });
+
+  it('FAIL-OPEN (parser-isolated): an appended withdrawal section, a removed limits section and a grant appended inside the Effect all leave every act valid', () => {
+    for (const kind of KINDS) {
+      for (const name of ['withdrawal-appended', 'limits-removed', 'effect-appended-grant']) {
+        const alter = ALTERATIONS.find(([n]) => n === name)![1];
+        expect(verdictOf(kind, alter(recordText(kind)), 'isolated'), `${kind} ${name}`).toBe('valid');
+      }
+    }
+  });
+
+  it('effect-widened is refused only because its replacement drops the scope anchors, which scope-wrong tests by substring', () => {
+    for (const kind of KINDS) {
+      expect(verdictOf(kind, ALTERATIONS.find(([n]) => n === 'effect-widened')![1](recordText(kind)), 'isolated'), kind).toBe(`${kind}:scope-wrong`);
+    }
+  });
+
+  // [authority, non-blank lines, append ignored, delete ignored]; ignored = the authority's verdict is unchanged (parser-isolated).
+  const CENSUS: ReadonlyArray<readonly [(typeof KINDS)[number], number, number, number]> = [
+    ['consent', 56, 42, 37],
+    ['policy', 69, 55, 50],   // the version-8 act record (69 non-blank lines; version 7's had 70)
+    ['registry', 52, 38, 30],
+  ];
+  it.each(CENSUS)('FAIL-OPEN (parser-isolated) line census, %s record: of %s non-blank lines, %s ignore an appended suffix and %s ignore deletion; none do under the loader-faithful reading', (kind, nonBlank, appendIgnored, deleteIgnored) => {
+    const lines = recordText(kind).split('\n');
+    if (lines.at(-1) === '') lines.pop();
+    const counts = { nonBlank: 0, append: { isolated: 0, faithful: 0 }, delete: { isolated: 0, faithful: 0 } };
+    lines.forEach((line, index) => {
+      if (line.trim() === '') return;
+      counts.nonBlank += 1;
+      for (const [op, replacement] of [['append', [`${line}${MARK}`]], ['delete', []]] as const) {
+        const altered = `${[...lines.slice(0, index), ...replacement, ...lines.slice(index + 1)].join('\n')}\n`;
+        if (verdictOf(kind, altered, 'isolated') === 'valid') counts[op].isolated += 1;
+        if (verdictOf(kind, altered, 'faithful') === 'valid') counts[op].faithful += 1;
+      }
+    });
+    expect(counts).toEqual({ nonBlank, append: { isolated: appendIgnored, faithful: 0 }, delete: { isolated: deleteIgnored, faithful: 0 } });
+  });
+
+  it('FAIL-OPEN (parser-isolated): text appended to the recording-tag line, and extra prose after the Supersession value, are ignored', () => {
+    const consent = recordText('consent');
+    const tagged = consent.replace(/^(- recording tag: `[^`]+`)/m, `$1${MARK}`);
+    expect(tagged).not.toBe(consent);
+    expect(verdictOf('consent', tagged, 'isolated')).toBe('valid');
+    const none = consent.replace(/^(Supersession \/ revocation: none)\b/m, '$1, except that this act revokes every earlier act');
+    expect(none).not.toBe(consent);
+    expect(verdictOf('consent', none, 'isolated')).toBe('valid');
+  });
+});
+
+// G5 transport regression: the loader retains strict text decoding and byte-exact single reads.
+describe('governance Git transport adapters', () => {
+  it('distinguishes fatal text, raw bytes, Git failures and explicit single/batch selection', () => {
+    const root = realGovernanceFixture();
+    const bytes = Buffer.from([0xef, 0xbb, 0xbf, 0x61, 0, 0xff]);
+    const object = execFileSync('git', ['-C', root, 'hash-object', '-w', '--stdin'], { input: bytes, encoding: 'utf8' }).trim();
+    expect(defaultReadGitBlob(root, object)).toEqual(new Uint8Array(bytes));
+    expect(() => defaultRunGit(root, ['cat-file', 'blob', object])).toThrow(TypeError);
+    expect(() => defaultReadGitBlob(root, 'missing-object')).toThrow();
+    expect(() => defaultRunGit(root, ['rev-parse', 'missing-ref'])).toThrow();
+    const single = () => new Uint8Array();
+    const batch = () => new Map<string, Uint8Array>();
+    expect(batchReaderFor({})).toBeTypeOf('function');
+    expect(batchReaderFor({ readGitBlob: single })).toBeUndefined();
+    expect(batchReaderFor({ readGitBlob: single, readGitBlobs: batch })).toBe(batch);
   });
 });

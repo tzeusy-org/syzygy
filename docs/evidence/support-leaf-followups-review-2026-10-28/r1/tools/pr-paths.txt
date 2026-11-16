@@ -1,0 +1,14 @@
+docs/evidence/syzygy-bpyt-46/mutants-head-absent.json
+docs/evidence/syzygy-bpyt-46/mutants-head-absent.log
+docs/evidence/syzygy-bpyt-46/mutants-head-present.json
+docs/evidence/syzygy-bpyt-46/mutants-head-present.log
+docs/evidence/syzygy-bpyt-46/suite-head.json
+docs/evidence/syzygy-bpyt-46/titles.json
+docs/evidence/syzygy-bpyt-46/tools/mutants.py
+packages/polaris-dossier/src/no-egress.test.ts
+packages/polaris-generation-core/src/root-vitest-aliases.test.ts
+packages/polaris-generation-core/src/workspace-reach.test.ts
+packages/polaris-generation-core/src/workspace-reach.testkit.ts
+packages/support/src/purity.testkit.ts
+packages/support/src/support-purity.test.ts
+packages/three-surface-poc-core/src/owner-act-drafter.test.ts

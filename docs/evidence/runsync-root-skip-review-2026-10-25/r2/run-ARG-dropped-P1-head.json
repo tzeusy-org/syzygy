@@ -1,0 +1,191 @@
+{
+ "tool": "rev-525b/tools/probe.py",
+ "toolSha256": "aa58085d9eb7dbdbfb93b394ab806c9c14d42da14e1102a155fc82f05d98ea67",
+ "case": "ARG-dropped-P1-head",
+ "commit": "7459cc7585205e270f90173737c6d59786af650a",
+ "files": {},
+ "edits": [
+  {
+   "file": "apps/syzygy/src/main.ts",
+   "old": "const portText = flags.get('--port') ?? env['SYZYGY_PORT'] ?? String(DEFAULT_PORT);",
+   "new": "const portText = flags.get('--port') ?? env['SYZYGY_PORT'];"
+  },
+  {
+   "file": "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts",
+   "old": "path.join(root, '.syzygy', 'x')], dir, {})).toEqual({",
+   "new": "path.join(root, '.syzygy', 'x')], dir)).toEqual({"
+  }
+ ],
+ "env": {},
+ "filters": [
+  "daemon-entry-unchanged"
+ ],
+ "expect": "survives",
+ "editChecks": [
+  {
+   "file": "apps/syzygy/src/main.ts",
+   "old": "const portText = flags.get('--port') ?? env['SYZYGY_PORT'] ?? String(DEFAULT_PORT);",
+   "new": "const portText = flags.get('--port') ?? env['SYZYGY_PORT'];",
+   "occurrences": 1
+  },
+  {
+   "file": "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts",
+   "old": "path.join(root, '.syzygy', 'x')], dir, {})).toEqual({",
+   "new": "path.join(root, '.syzygy', 'x')], dir)).toEqual({",
+   "occurrences": 1
+  }
+ ],
+ "build": {
+  "exitCode": 0,
+  "typeErrors": []
+ },
+ "distCarries": [
+  {
+   "dist": "apps/syzygy/dist/main.js",
+   "carries": true
+  }
+ ],
+ "run": {
+  "command": "npx vitest run --config packages/cap1-system/vitest.config.ts daemon-entry-unchanged --reporter=json --outputFile=<tmp>/report.json",
+  "exitCode": 0,
+  "wallSeconds": 11.7,
+  "load1": {
+   "start": 49.49,
+   "end": 52.61
+  },
+  "deadlineHit": false,
+  "samples": 14,
+  "meanSampleIntervalSeconds": 0.84,
+  "port7477Before": [],
+  "port7477Seen": [],
+  "killedOn7477": [],
+  "ownListeningPorts": [],
+  "processesSeen": 21,
+  "survivors": {},
+  "tmpLeftoversBeforeRemoval": [
+   "node-compile-cache",
+   "report.json",
+   "vitest.log"
+  ],
+  "logTail": "JSON report written to <tmp>/report.json\n",
+  "tests": [
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged [\"--help\"] prints the usage and exits 0",
+    "status": "passed",
+    "durationMs": 186,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged [\"-h\"] prints the usage and exits 0",
+    "status": "passed",
+    "durationMs": 193,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged [\"--help\",\"dossier\"] prints the usage and exits 0",
+    "status": "passed",
+    "durationMs": 346,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged [\"--bogus\"] is refused with exit 1 and the same message",
+    "status": "passed",
+    "durationMs": 228,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged [\"--port\",\"0\",\"dossier\"] is refused with exit 1 and the same message",
+    "status": "passed",
+    "durationMs": 431,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged [\"Dossier\"] is refused with exit 1 and the same message",
+    "status": "passed",
+    "durationMs": 796,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged [\"--port\"] is refused with exit 1 and the same message",
+    "status": "passed",
+    "durationMs": 184,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged [\"--port\",\"70000\"] is refused with exit 1 and the same message",
+    "status": "passed",
+    "durationMs": 380,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged a state directory inside the governed plane is refused with the same message",
+    "status": "passed",
+    "durationMs": 908,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged with no arguments it serves from the working directory, writes the same state and shuts down the same way",
+    "status": "passed",
+    "durationMs": 1111,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged with explicit flags it serves, writes the same state and shuts down the same way",
+    "status": "passed",
+    "durationMs": 968,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: the one changed input, `dossier` as the first argument `dossier` alone is a dossier usage error (exit 2), not the daemon's refusal",
+    "status": "passed",
+    "durationMs": 825,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: the one changed input, `dossier` as the first argument `dossier status <missing>` is a dossier refusal (exit 1) and starts no daemon",
+    "status": "passed",
+    "durationMs": 441,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: the one changed input, `dossier` as the first argument `dossier render <missing>` reaches the run with the renderer injected, and starts no daemon",
+    "status": "passed",
+    "durationMs": 463,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch",
+    "status": "passed",
+    "durationMs": 1,
+    "failure": null
+   }
+  ]
+ },
+ "rebuild": {
+  "exitCode": 0,
+  "typeErrors": []
+ },
+ "treeCleanAfter": true,
+ "passesExpectation": true,
+ "summary": {
+  "exitCode": 0,
+  "wallSeconds": 11.7,
+  "deadlineHit": false,
+  "statuses": {
+   "passed": 15
+  },
+  "failed": [],
+  "port7477Seen": 0,
+  "samples": 14,
+  "meanInterval": 0.84,
+  "load1": {
+   "start": 49.49,
+   "end": 52.61
+  },
+  "killedOn7477": 0,
+  "ownListeningPorts": [],
+  "survivors": 0,
+  "slowestMs": 1111,
+  "passesExpectation": true
+ }
+}

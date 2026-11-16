@@ -1,0 +1,3 @@
+r3.py: 0 stored-never-loaded names: []
+head.py: 2 stored-never-loaded names: [('<module>', 'stdout', 92), ('one_run', 'stdout', 92)]
+mx2-unlisted-line-removed.py: 0 stored-never-loaded names: []

@@ -1,0 +1,85 @@
+{
+ "clone": {
+  "commit": "a5ab2b287266e9be6b8e96b381d014cb8e73d9d4",
+  "aliasForSupportPresent": true,
+  "distDirs": 12,
+  "statusAfter": ""
+ },
+ "mutants": [
+  {
+   "id": "E9-obfuscated-file-read-at-import (RP6 form)",
+   "kind": "globalThis['process'].getBuiltinModule('node:f' + 's').readFileSync('/etc/hostname') at import: non-network I/O in a form the purity test accepts",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nconst p = (globalThis as Record<string, any>)['process'];\nexport const HOST: string = p.getBuiltinModule('node:f' + 's').readFileSync('/etc/hostname', 'utf8');\n"
+    }
+   ]
+  }
+ ],
+ "rows": [
+  {
+   "id": "E9-obfuscated-file-read-at-import (RP6 form)",
+   "kind": "globalThis['process'].getBuiltinModule('node:f' + 's').readFileSync('/etc/hostname') at import: non-network I/O in a form the purity test accepts",
+   "distAbsent": false,
+   "exit": 0,
+   "seconds": 23.2,
+   "tests": {
+    "passed": 2,
+    "failed": 0,
+    "pending": 1,
+    "total": 3
+   },
+   "perTest": [
+    {
+     "title": "creates no Internet-family socket over the whole run, from preflight to close",
+     "status": "passed",
+     "failure": ""
+    },
+    {
+     "title": "sees the canary: one loopback datagram sent before the same run is in the capture",
+     "status": "passed",
+     "failure": ""
+    },
+    {
+     "title": "is not proved on this host: strace is unavailable, so the capture is skipped, never reported as passed",
+     "status": "skipped",
+     "failure": ""
+    }
+   ],
+   "suiteFailure": []
+  },
+  {
+   "id": "E9-obfuscated-file-read-at-import (RP6 form)",
+   "kind": "globalThis['process'].getBuiltinModule('node:f' + 's').readFileSync('/etc/hostname') at import: non-network I/O in a form the purity test accepts",
+   "distAbsent": true,
+   "exit": 0,
+   "seconds": 26.0,
+   "tests": {
+    "passed": 2,
+    "failed": 0,
+    "pending": 1,
+    "total": 3
+   },
+   "perTest": [
+    {
+     "title": "creates no Internet-family socket over the whole run, from preflight to close",
+     "status": "passed",
+     "failure": ""
+    },
+    {
+     "title": "sees the canary: one loopback datagram sent before the same run is in the capture",
+     "status": "passed",
+     "failure": ""
+    },
+    {
+     "title": "is not proved on this host: strace is unavailable, so the capture is skipped, never reported as passed",
+     "status": "skipped",
+     "failure": ""
+    }
+   ],
+   "suiteFailure": []
+  }
+ ]
+}

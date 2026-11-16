@@ -1,0 +1,66 @@
+{
+ "what": "canonical-json-tap-aggregate.json (committed, round 0, taken before the repair) against canonical-json-tap-aggregate-repair1.json (tested commit), compared per (origin, encoder, caller) after removing the scratch clone prefix /tmp/lc63t/ from the committed labels",
+ "callerRowsCompared": {
+  "committed": 37,
+  "repair1": 37
+ },
+ "committedTotals": {
+  "linesRead": 5205,
+  "tapFiles": 71
+ },
+ "repair1Totals": {
+  "linesRead": 5211,
+  "tapFiles": 72
+ },
+ "rowsThatDiffer": [
+  {
+   "caller": "packages/three-surface-poc-core/src/project-shape-manifest.ts:canonicalManifestJson",
+   "origin": "production",
+   "encoder": "lenient",
+   "committed": {
+    "calls": 297,
+    "same": 297,
+    "different": 0
+   },
+   "repair1": {
+    "calls": 299,
+    "same": 299,
+    "different": 0
+   }
+  },
+  {
+   "caller": "packages/three-surface-poc-core/src/project-shape-observation.ts:observeProjectShapeSources",
+   "origin": "production",
+   "encoder": "lenient",
+   "committed": {
+    "calls": 269,
+    "same": 79,
+    "different": 190
+   },
+   "repair1": {
+    "calls": 271,
+    "same": 81,
+    "different": 190
+   }
+  },
+  {
+   "caller": "packages/three-surface-poc-core/src/project-shape-observation.ts:resourceLimitsDigest",
+   "origin": "production",
+   "encoder": "lenient",
+   "committed": {
+    "calls": 270,
+    "same": 270,
+    "different": 0
+   },
+   "repair1": {
+    "calls": 272,
+    "same": 272,
+    "different": 0
+   }
+  }
+ ],
+ "explanation": "[Observed] the only differences are six more calls, all spelled alike by both encoders (two each to canonicalManifestJson, observeProjectShapeSources and resourceLimitsDigest). [Inferred] they are the two new seed-reader tests of this repair in project-shape-observation.test.ts, each of which reaches the three functions once; not traced per test. A tap file is one per worker process, not one per test file.",
+ "differencesAreOnlySixSameCalls": true,
+ "instrumentationFailures": "the tapped full run (249 files, 5,379 tests, vitest --testTimeout=60000 --hookTimeout=60000) had 2 failing tests, both caused by the instrumentation: canonical-json.test.ts \"refuses custom objects, accessors and proxies without running their hooks\" (the tap reads the proxy) and test-artifact-verification-live-source.test.ts closure guard (the tap names globalThis in project-shape-manifest.ts); the earlier run also had the no-egress build test failing, which passed this time",
+ "tappedCommit": "b81010c8c5a375ef9fd446ac9ddc0da407ac1c58"
+}

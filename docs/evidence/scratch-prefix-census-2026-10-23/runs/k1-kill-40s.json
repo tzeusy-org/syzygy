@@ -1,0 +1,316 @@
+{
+ "tool": "census_run.py",
+ "treeCommit": "a864e999645a071dda40325b2235976590e02973",
+ "mode": "kill",
+ "command": [
+  "npx",
+  "vitest",
+  "run"
+ ],
+ "privateDirectory": "/tmp/lc418/k1",
+ "tmpdir": "/tmp/lc418/k1/tmp",
+ "sha256": {
+  "census_run.py": "6039545e993610ef67dff1fc60103ade0fe197ab55638c1f9cdec7504b16fe8d",
+  "scratch_trace.cjs": "c9ff0cbbd2c9162c8483082f24202e18fa52f414c9c18a648723285de2ec2688",
+  "tmp_sampler.py": "3e34f06abe672f405ae7107b9e55472e22299dddef2634b167c9373008c2125d"
+ },
+ "loadAverageAtStart": [
+  22.68359375,
+  24.97314453125,
+  28.29541015625
+ ],
+ "killAfterSeconds": 40.0,
+ "leader": {
+  "pid": 1746362,
+  "pgid": 1746362
+ },
+ "runFinishedBeforeSignal": false,
+ "secondsIntoTheRun": 40.4,
+ "groupMembersAtSignal": 14,
+ "entriesAtSignal": 16,
+ "exit": -9,
+ "afterSignal": [
+  {
+   "secondsAfterSignal": 5,
+   "entries": 16,
+   "groupMembersAlive": 0
+  },
+  {
+   "secondsAfterSignal": 20,
+   "entries": 16,
+   "groupMembersAlive": 0
+  },
+  {
+   "secondsAfterSignal": 40,
+   "entries": 16,
+   "groupMembersAlive": 0
+  },
+  {
+   "secondsAfterSignal": 80,
+   "entries": 16,
+   "groupMembersAlive": 0
+  }
+ ],
+ "listingAtEnd": [
+  {
+   "name": ".com.google.Chrome.N4WJkS",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854053.5,
+   "bytes": 0
+  },
+  {
+   "name": "MtKnQPnthe7BWZEzUcREK",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854049.2,
+   "bytes": 3305472
+  },
+  {
+   "name": "YgwnH4DvW-JSNHWkt_vWK",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854049.1,
+   "bytes": 6000640
+  },
+  {
+   "name": "dossier-clone-g5U4a6",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854087.9,
+   "bytes": 118784
+  },
+  {
+   "name": "dossier-gate-acts-p8YcD5",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854088.1,
+   "bytes": 69632
+  },
+  {
+   "name": "dossier-origin-0gdUJr",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854054.2,
+   "bytes": 253952
+  },
+  {
+   "name": "dossier-records-yaAv2Z",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854087.9,
+   "bytes": 28672
+  },
+  {
+   "name": "dossier-state-jjNLKN",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854088.1,
+   "bytes": 0
+  },
+  {
+   "name": "dossier-waiting-HmQ43G",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854088.1,
+   "bytes": 401408
+  },
+  {
+   "name": "git-object-reader-HkCTH2",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854079.7,
+   "bytes": 46784512
+  },
+  {
+   "name": "node-compile-cache",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854047.8,
+   "bytes": 4276224
+  },
+  {
+   "name": "syzygy-build-output-l41wDx",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854050.9,
+   "bytes": 89554944
+  },
+  {
+   "name": "syzygy-poc-a11y-1QRcap",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854059.0,
+   "bytes": 1052672
+  },
+  {
+   "name": "syzygy-poc-a11y-budget-MSyaIz",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854059.1,
+   "bytes": 16384
+  },
+  {
+   "name": "syzygy-poc-browser-yXLBDA",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854143.6,
+   "bytes": 40222720
+  },
+  {
+   "name": "syzygy-poc-surface-fixture-template-p1746490-n4026531836-1v9N7q",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854054.0,
+   "bytes": 233472
+  }
+ ],
+ "processesCarryingTheMarker": {
+  "marker": "--user-data-dir=<private-directory>/tmp/ in the arguments",
+  "count": 10,
+  "byKind": {
+   "gpu-process": 1,
+   "leader": 1,
+   "renderer": 3,
+   "utility": 3,
+   "zygote": 2
+  },
+  "pids": [
+   1747511,
+   1747547,
+   1747549,
+   1747577,
+   1747581,
+   1747583,
+   1747630,
+   1748847,
+   1749036,
+   1790159
+  ]
+ },
+ "groupMembersAliveAtEnd": 0,
+ "stoppedByPid": {
+  "signal": "SIGTERM",
+  "rounds": 1,
+  "remaining": 0
+ },
+ "listingAfterStopping": [
+  {
+   "name": ".com.google.Chrome.N4WJkS",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854053.5,
+   "bytes": 0
+  },
+  {
+   "name": "MtKnQPnthe7BWZEzUcREK",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854049.2,
+   "bytes": 3305472
+  },
+  {
+   "name": "YgwnH4DvW-JSNHWkt_vWK",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854049.1,
+   "bytes": 6000640
+  },
+  {
+   "name": "dossier-clone-g5U4a6",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854087.9,
+   "bytes": 118784
+  },
+  {
+   "name": "dossier-gate-acts-p8YcD5",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854088.1,
+   "bytes": 69632
+  },
+  {
+   "name": "dossier-origin-0gdUJr",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854054.2,
+   "bytes": 253952
+  },
+  {
+   "name": "dossier-records-yaAv2Z",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854087.9,
+   "bytes": 28672
+  },
+  {
+   "name": "dossier-state-jjNLKN",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854088.1,
+   "bytes": 0
+  },
+  {
+   "name": "dossier-waiting-HmQ43G",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854088.1,
+   "bytes": 401408
+  },
+  {
+   "name": "git-object-reader-HkCTH2",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854079.7,
+   "bytes": 46784512
+  },
+  {
+   "name": "node-compile-cache",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854047.8,
+   "bytes": 4276224
+  },
+  {
+   "name": "syzygy-build-output-l41wDx",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854050.9,
+   "bytes": 89554944
+  },
+  {
+   "name": "syzygy-poc-a11y-1QRcap",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854059.0,
+   "bytes": 1052672
+  },
+  {
+   "name": "syzygy-poc-a11y-budget-MSyaIz",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854059.1,
+   "bytes": 16384
+  },
+  {
+   "name": "syzygy-poc-browser-yXLBDA",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854169.9,
+   "bytes": 40222720
+  },
+  {
+   "name": "syzygy-poc-surface-fixture-template-p1746490-n4026531836-1v9N7q",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792854054.0,
+   "bytes": 233472
+  }
+ ],
+ "samplerRecord": "/tmp/lc418/k1/samples.json",
+ "trace": {
+  "lines": 670,
+  "sha256": "852717088c9f37b2bbe76e25ae9254c89ba68172c74fb95795a0419bd8d1a017"
+ }
+}

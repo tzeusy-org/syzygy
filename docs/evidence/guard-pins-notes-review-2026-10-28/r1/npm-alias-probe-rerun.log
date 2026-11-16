@@ -1,0 +1,16 @@
+0 an alias under a name no workspace has, its target a registry package | 1 ENOTCACHED http://127.0.0.1:9/typescript None None None
+1 an alias under a name no workspace has, its target a workspace's name | 1 ENOTCACHED http://127.0.0.1:9/wlib None None None
+2 an alias under a name no workspace has, no version | 1 ENOTCACHED http://127.0.0.1:9/typescript None None None
+3 an alias under a workspace's name, a range its version satisfies | 0 None None {'resolved': 'w', 'link': True} ../w {'packageJson': 'w/package.json', 'name': 'wlib', 'version': '1.0.0'}
+4 an alias under a workspace's name, the target's range satisfied by the workspace's version | 0 None None {'resolved': 'w', 'link': True} ../w {'packageJson': 'w/package.json', 'name': 'wlib', 'version': '1.0.0'}
+5 an alias under a workspace's name, a range its version does not satisfy | 1 ENOTCACHED http://127.0.0.1:9/typescript None None None
+6 an alias under a scoped workspace's name, a range its version satisfies | 0 None None {'resolved': 's', 'link': True} ../../s {'packageJson': 's/package.json', 'name': '@syzygy/slib', 'version': '1.0.0'}
+7 control: a plain range under a workspace's name, satisfied | 0 None None {'resolved': 'w', 'link': True} ../w {'packageJson': 'w/package.json', 'name': 'wlib', 'version': '1.0.0'}
+8 control: a plain range under a workspace's name, not satisfied | 1 ENOTCACHED http://127.0.0.1:9/wlib None None None
+9 an alias under a workspace's name, no version | 0 None None {'resolved': 'w', 'link': True} ../w {'packageJson': 'w/package.json', 'name': 'wlib', 'version': '1.0.0'}
+10 the root's manifest: an alias under a workspace's name, a range its version does not satisfy | 0 None None {'resolved': 'w', 'link': True} ../w {'packageJson': 'w/package.json', 'name': 'wlib', 'version': '1.0.0'}
+11 the root's manifest: an alias under a scoped workspace's name, a range its version does not satisfy | 0 None None {'resolved': 's', 'link': True} ../../s {'packageJson': 's/package.json', 'name': '@syzygy/slib', 'version': '1.0.0'}
+12 the root's manifest: a plain range under a workspace's name, not satisfied | 0 None None {'resolved': 'w', 'link': True} ../w {'packageJson': 'w/package.json', 'name': 'wlib', 'version': '1.0.0'}
+13 control: the root's manifest, an alias under a name no workspace has | 1 ENOTCACHED http://127.0.0.1:9/typescript None None None
+14 the root's manifest and app's: the same alias under a workspace's name, a range its version does not satisfy | 1 ENOTCACHED http://127.0.0.1:9/typescript None None None
+wrote /tmp/r547-2/npm-alias-probe-rerun.json

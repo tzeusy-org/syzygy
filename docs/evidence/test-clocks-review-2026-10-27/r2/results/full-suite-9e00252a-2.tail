@@ -1,0 +1,10 @@
+      2      → Test timed out in 5000ms.
+      1  FAIL  |@syzygy/polaris-dossier| packages/polaris-dossier/src/start-gates.test.ts > init: a run that passes every start gate > pins the consented HEAD, records the subject and writes only run.json under the state root
+      1  FAIL  |@syzygy/polaris-dossier| packages/polaris-dossier/src/start-gates.test.ts > init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses config naming a remote, a promisor, an include or a command the agent's git would run (R-POLARIS-DOSSIER-CLONE-SHAPE-2 finding 1)
+      2 Error: Test timed out in 5000ms.
+ Test Files  1 failed | 236 passed | 3 skipped (240)
+      Tests  2 failed | 5299 passed | 5 skipped (5306)
+   Start at  15:22:16
+   Duration  344.42s (transform 35.42s, setup 6.47s, collect 186.22s, tests 1634.61s, environment 166ms, prepare 63.24s)
+
+JSON report written to /tmp/r532b-14/full-9e00252a-2.json

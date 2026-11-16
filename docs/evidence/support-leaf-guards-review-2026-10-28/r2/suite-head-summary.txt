@@ -1,0 +1,9 @@
+npx vitest run at ecea355b, all 12 dist/ built, TMPDIR /tmp/r545b-7; load1 at start: 36.00 37.27 35.75 24/9857 295434
+total 5528 passed 5522 failed 1 pending 5 files 253 failedFiles 1 success False
+  packages/polaris-dossier/src/start-gates.test.ts failed {'failed': 1, 'passed': 103} 
+     failed 5521 ms | init: a run that passes every start gate pins the consented HEAD, records the subject and writes only run.json under the state root | Error: STACK_TRACE_ERROR
+exit 1
+41.23 42.09 38.59 18/9823 444115
+alone:
+total 104 passed 104 failed 0 pending 0 files 1 failedFiles 0 success True
+  packages/polaris-dossier/src/start-gates.test.ts passed {'passed': 104} 

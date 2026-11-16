@@ -1,0 +1,46 @@
+{
+ "base": "a088f1caf061c1a2062527ce8521c9b64c3c7fd1",
+ "head": "aa3312691d815d09239958c2dec4116cfb1d9cbe",
+ "selftest": true,
+ "vitestExit": 0,
+ "walks": {
+  "entries": 246,
+  "equal": 246,
+  "unequal": [],
+  "entriesWithEdgesIntoIsland": 20,
+  "entriesWithUnresolved": 0,
+  "stats": {
+   "apps/syzygy/src/main.ts": {
+    "reachable": 137,
+    "intoIsland": 0,
+    "unresolved": 0
+   },
+   "packages/polaris-generation-consent/src/index.ts": {
+    "reachable": 32,
+    "intoIsland": 11,
+    "unresolved": 0
+   }
+  },
+  "answersSha256": "e297b289a9f722bdfe5840064f27e1454df131795eecb5b6c1546f30a1cae777"
+ },
+ "resolves": {
+  "files": 495,
+  "specifiers": 2608,
+  "equal": 2608,
+  "unequal": [],
+  "byAnswer": {
+   "module": 1546,
+   "null": 1062,
+   "undefined": 0
+  },
+  "answersSha256": "7102ef1bdb999d6576e62f9c9b915cd11bfd01d286e662994ed5c5f511622834"
+ },
+ "cleanAfter": true,
+ "toolSha256": "60f39876ff37ee30ccea1e4989b4369bc76d2c0d3655a5b35772cf66a60184f6",
+ "scratchSha256": {
+  "packages/polaris-generation-core/src/zz-836-old-testkit.ts": "96f4c0e758929e71fc98ca6c8efc8a602e041a31be19a14012cc4bea2e8f37d4",
+  "packages/polaris-generation-core/src/zz-836-old-reach.ts": "869eeb312427ce65ffe0404795b9ac41a1431d929339eda09a0d5d77966ceb7c",
+  "packages/polaris-generation-core/src/zz-836-new-reach.ts": "d35dbec4de42c65aad4f0e0d9c1f91fde539e2948435599b5108507315642dee",
+  "packages/polaris-generation-core/src/zz-836-diff.test.ts": "20f54127ab8539bde1d53ba0d4f2e165ee41a6176eb1efea5af2714a5a4ac23d"
+ }
+}

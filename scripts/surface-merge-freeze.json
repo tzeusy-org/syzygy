@@ -1,0 +1,6 @@
+{
+  "direction": "OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-06",
+  "state": "inactive",
+  "candidateHead": null,
+  "reason": "No candidate head's readiness run has begun. Set state to frozen, with the head, when one begins; set inactive again if that head is NOT READY or once the judgment and cycle report are recorded."
+}

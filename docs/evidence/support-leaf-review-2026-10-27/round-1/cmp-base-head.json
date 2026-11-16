@@ -1,0 +1,14 @@
+{
+ "baseFile": {
+  "sha256": "774265553ec2d9b5a73d7cfba85eb0348f576b30055c630fb854aa836ce69a47",
+  "bytes": 73272
+ },
+ "headFile": {
+  "sha256": "774265553ec2d9b5a73d7cfba85eb0348f576b30055c630fb854aa836ce69a47",
+  "bytes": 73272
+ },
+ "rowsCompared": 68,
+ "rowsErroredOnBaseAndHeadAlike": [],
+ "rowsThatDiffer": 0,
+ "differences": []
+}

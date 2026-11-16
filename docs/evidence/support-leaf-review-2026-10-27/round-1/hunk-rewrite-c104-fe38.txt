@@ -1,0 +1,52 @@
+DIFF packages/support/src/deep-freeze.ts @@ -0,0 +1,13 @@
+  rm*: 
+  add: /** * Freezes the value and everything it reaches through own enumerable * properties. An object that is already frozen ends the walk there, so a * frozen shell around an unfrozen member keeps the member unfrozen, and a * cycle terminates. */ export function deepFreeze<T>(value: T): T { if (value !== null && typeof value === 'object' && !Object.isFrozen(value)) { Object.freeze(value); for (const m
+DIFF packages/support/src/index.ts @@ -0,0 +1,8 @@
+  rm*: 
+  add: // Internal helpers that more than one workspace package needs and that have // one meaning everywhere (syzygy-bpyt.6.3). The package depends on nothing in // the workspace: the import graph has two leaves that cannot import each other // (`@syzygy/cap1-core` and `@syzygy/polaris-generation-core`), and the helpers // are needed on both sides of the Polaris generation kit's boundary, so they // sit
+DIFF packages/support/src/sha256.ts @@ -0,0 +1,6 @@
+  rm*: 
+  add: import { createHash } from 'node:crypto'; /** Lowercase hex SHA-256 of the bytes, or of the UTF-8 bytes of the text. */ export function sha256(value: string | Uint8Array): string { return createHash('sha256').update(value).digest('hex'); }
+DIFF vitest.config.ts @@ -6,0 +7 @@ export default defineConfig({
+  rm*: 
+  add: '@syzygy/support': fileURLToPath(new URL('./packages/support/src/index.ts', import.meta.url)),
+DIFF vitest.config.ts @@ -33,0 +35,7 @@ export default defineConfig({
+  rm*: 
+  add: { extends: true, test: { name: '@syzygy/support', include: ['packages/support/src/**/*.test.ts'], }, },
+hunks 168 checked 168 differing 5
+helper definitions removed: 35
+  apps/three-surface-poc/src/fresh-checkout-demo-main.ts | function sha256(bytes: Uint8Array | string): string { return createHash('sha256').update(bytes).digest('hex'); }
+  apps/three-surface-poc/src/polaris-accessible-names-main.ts | function sha256(text: string): string { return createHash('sha256').update(text).digest('hex'); }
+  apps/three-surface-poc/src/polaris-generation/dossier-site.ts | const digest = (value: string): string => createHash('sha256').update(value).digest('hex');
+  apps/three-surface-poc/src/polaris-generation/durable-lifecycle.ts | const digest = (value: string): string => createHash('sha256').update(value).digest('hex');
+  apps/three-surface-poc/src/polaris-generation/generation-mutation-run-main.ts | function sha256(bytes: Uint8Array): string { return createHash('sha256').update(bytes).digest('hex'); }
+  apps/three-surface-poc/src/polaris-generation/repo-corpus.ts | const sha256 = (value: string): string => createHash('sha256').update(value).digest('hex');
+  apps/three-surface-poc/src/polaris-generation/self-corpus.ts | const sha256 = (value: string): string => createHash('sha256').update(value).digest('hex');
+  apps/three-surface-poc/src/polaris-narrative.ts | function deepFreeze<T>(value: T): T { if (value !== null && typeof value === 'object') { for (const inner of Object.values(value as Record<string, unknown>)) deepFreeze(inner); Object.freeze(value); } return value; }
+  apps/three-surface-poc/src/pwb-mutation-run-main.ts | function sha256(bytes: Uint8Array): string { return createHash('sha256').update(bytes).digest('hex'); }
+  apps/three-surface-poc/src/pwb-mutation-sweep-main.ts | function sha256(bytes: Uint8Array): string { return createHash('sha256').update(bytes).digest('hex'); }
+  packages/polaris-dossier/src/brief.ts | const sha256 = (text: string): string => createHash('sha256').update(text, 'utf8').digest('hex');
+  packages/polaris-dossier/src/check.ts | const sha256 = (bytes: Uint8Array): string => createHash('sha256').update(bytes).digest('hex');
+  packages/polaris-dossier/src/close.ts | const sha256 = (bytes: string | Uint8Array): string => createHash('sha256').update(bytes).digest('hex');
+  packages/polaris-dossier/src/design-review.ts | const sha256 = (bytes: string | Uint8Array): string => createHash('sha256').update(bytes).digest('hex');
+  packages/polaris-dossier/src/inventory.ts | const sha256 = (bytes: string | Uint8Array): string => createHash('sha256').update(bytes).digest('hex');
+  packages/polaris-dossier/src/launched.ts | const sha256 = (text: string): string => createHash('sha256').update(text, 'utf8').digest('hex');
+  packages/polaris-dossier/src/polaris.ts | const sha256 = (text: string): string => createHash('sha256').update(text, 'utf8').digest('hex');
+  packages/polaris-dossier/src/render.ts | const sha256 = (value: string | Uint8Array): string => createHash('sha256').update(value).digest('hex');
+  packages/polaris-dossier/src/review.ts | const sha256 = (bytes: string | Uint8Array): string => createHash('sha256').update(bytes).digest('hex');
+  packages/polaris-dossier/src/session-handover.ts | const sha256 = (text: string): string => createHash('sha256').update(text, 'utf8').digest('hex');
+  packages/polaris-dossier/src/waiting-sessions.ts | const sha256 = (bytes: string | Uint8Array): string => createHash('sha256').update(bytes).digest('hex');
+  packages/polaris-generation-consent/src/consent-ports.ts | const sha256 = (text: string): string => createHash('sha256').update(text, 'utf8').digest('hex');
+  packages/polaris-generation-consent/src/package-reader.ts | const sha256 = (text: string): string => createHash('sha256').update(text, 'utf8').digest('hex');
+  packages/polaris-generation-core/src/dossier-evaluation.ts | const sha256 = (bytes: Uint8Array | string): string => createHash('sha256').update(bytes).digest('hex');
+  packages/polaris-generation-core/src/prompts.ts | function deepFreeze<T>(value: T): T { if (value !== null && typeof value === 'object' && !Object.isFrozen(value)) { Object.freeze(value); for (const child of Object.values(value)) deepFreeze(child); } return value; }
+  packages/polaris-generation-core/src/prompts.ts | /** Freezes a value and everything it holds, so no importer can change it. */
+  packages/polaris-generation-core/src/public-source-classification.ts | const sha256 = (text: string): string => createHash('sha256').update(text, 'utf8').digest('hex');
+  packages/polaris-generation-core/src/secret-redaction.ts | const sha256 = (text: string): string => createHash('sha256').update(text, 'utf8').digest('hex');
+  packages/three-surface-poc-core/src/act-fields.ts | export function sha256(bytes: Uint8Array): string { return createHash('sha256').update(bytes).digest('hex'); }
+  packages/three-surface-poc-core/src/act-fields.ts | export function deepFreeze<T>(value: T): T { if (typeof value === 'object' && value !== null && !Object.isFrozen(value)) { Object.freeze(value); for (const key of Object.keys(value as object)) { deepFreeze((value as Reco
+  packages/three-surface-poc-core/src/model.ts | function deepFreeze<T>(value: T): T { if (typeof value !== 'object' || value === null || Object.isFrozen(value)) return value; Object.freeze(value); for (const child of Object.values(value as Record<string, unknown>)) de
+  packages/three-surface-poc-core/src/model.ts | function sha256(bytes: Uint8Array | string): string { return createHash('sha256').update(bytes).digest('hex'); }
+  packages/three-surface-poc-core/src/poc-seeds.ts | function deepFreeze<T>(value: T): T { if (typeof value !== 'object' || value === null || Object.isFrozen(value)) { return value; } Object.freeze(value); for (const child of Object.values(value as Record<string, unknown>)
+  packages/three-surface-poc-core/src/project-shape-manifest.ts | function deepFreeze<T>(value: T): T { if (value !== null && typeof value === 'object' && !Object.isFrozen(value)) { Object.freeze(value); for (const inner of Object.values(value as Record<string, unknown>)) deepFreeze(in
+  packages/three-surface-poc-core/src/project-shape-observation.ts | function deepFreeze<T>(value: T): T { if (value !== null && typeof value === 'object' && !Object.isFrozen(value)) { Object.freeze(value); for (const member of Object.values(value as Record<string, unknown>)) deepFreeze(m

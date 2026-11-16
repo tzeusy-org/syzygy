@@ -1,0 +1,74 @@
+{
+ "files": [
+  {
+   "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-537/clone/packages/polaris-dossier/src/no-egress.test.ts",
+   "project": "@syzygy/polaris-dossier",
+   "type": "suite",
+   "name": "packages/polaris-dossier/src/no-egress.test.ts",
+   "line": null,
+   "mode": "run",
+   "state": "pass",
+   "durationMs": 2430.1861,
+   "errors": [],
+   "tasks": [
+    {
+     "type": "suite",
+     "name": "no provider call and no transmission (S10): an operating-system capture of a full fixture run",
+     "line": 66,
+     "mode": "run",
+     "state": "pass",
+     "durationMs": 2181.4294720000003,
+     "errors": [],
+     "tasks": [
+      {
+       "type": "test",
+       "name": "creates no Internet-family socket over the whole run, from preflight to close",
+       "line": 67,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 1032.7227819999998,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "sees the canary: one loopback datagram sent before the same run is in the capture",
+       "line": 87,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 1147.4825059999998,
+       "errors": []
+      }
+     ],
+     "hookMs": 1
+    },
+    {
+     "type": "suite",
+     "name": "no provider call and no transmission (S10), without strace",
+     "line": 98,
+     "mode": "skip",
+     "state": "skip",
+     "durationMs": null,
+     "errors": [],
+     "tasks": [
+      {
+       "type": "test",
+       "name": "is not proved on this host: strace is unavailable, so the capture is skipped, never reported as passed",
+       "line": 100,
+       "mode": "skip",
+       "state": null,
+       "durationMs": null,
+       "errors": []
+      }
+     ],
+     "hookMs": null
+    }
+   ],
+   "hookMs": 249,
+   "collectMs": 2073.895324,
+   "setupMs": 43.26893200000006,
+   "prepareMs": 102.49891699999995,
+   "environmentMs": 0.19753500000001623
+  }
+ ],
+ "unhandled": []
+}

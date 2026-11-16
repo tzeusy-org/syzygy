@@ -1,0 +1,68 @@
+{
+ "mutants": [
+  {
+   "id": "CONTROL",
+   "edits": []
+  },
+  {
+   "id": "V2-bearer-leading-whitespace-admitted",
+   "edits": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "old": "  const match = /^Bearer (.+)$/.exec(header);",
+     "new": "  const match = /^\\s*Bearer (.+)$/.exec(header);"
+    }
+   ]
+  },
+  {
+   "id": "V4-containment-case-insensitive",
+   "edits": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "old": "  return candidate === root || candidate.startsWith(root + path.sep);",
+     "new": "  return candidate.toLowerCase() === root.toLowerCase() || candidate.toLowerCase().startsWith(root.toLowerCase() + path.sep);"
+    }
+   ]
+  },
+  {
+   "id": "V6-origin-suffix-match",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/browser-origin.ts",
+     "old": "  return origin === undefined || origin === expectedOrigin(host);",
+     "new": "  return origin === undefined || origin.endsWith(expectedOrigin(host));"
+    }
+   ]
+  },
+  {
+   "id": "V10-listed-reason-matched-case-insensitively",
+   "edits": [
+    {
+     "file": "packages/http-host/src/server.ts",
+     "old": "['project shape not-evaluated', 'project shape not-admitted', 'project shape observation-failed'].includes(population.reason)",
+     "new": "['project shape not-evaluated', 'project shape not-admitted', 'project shape observation-failed'].includes(population.reason.toLowerCase())"
+    }
+   ]
+  },
+  {
+   "id": "O1-bearer-no-break-space-admitted",
+   "edits": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "old": "  const match = /^Bearer (.+)$/.exec(header);",
+     "new": "  const match = /^Bearer[ \\u00a0](.+)$/.exec(header);"
+    }
+   ]
+  },
+  {
+   "id": "O2-origin-null-allowed",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/browser-origin.ts",
+     "old": "  return origin === undefined || origin === expectedOrigin(host);",
+     "new": "  return origin === undefined || origin === 'null' || origin === expectedOrigin(host);"
+    }
+   ]
+  }
+ ]
+}

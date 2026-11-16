@@ -8,7 +8,7 @@ import {
   type ProjectId,
   type RepositoryId,
 } from '@syzygy/cap1-core';
-import { consent, projectYaml } from './fixtures/index.js';
+import { decisionsFor, consent, projectYaml } from './fixtures/index.js';
 
 // CAP1-REQ-013 — Coverage failure states are distinguishable.
 //
@@ -87,7 +87,7 @@ function renderedValue(entry: {
 describe('CAP1-REQ-013 — coverage failure states are distinguishable', () => {
   it('sweep: the four conditions render four states, pairwise distinct in the machine-readable state field — denominator: the full fixture repository set', () => {
     const decl = declaration();
-    const result = computeCoverage(decl, CONSENTS, OBSERVATIONS);
+    const result = computeCoverage(decl, decisionsFor(decl, CONSENTS), OBSERVATIONS);
     // The sweep covers every declared repository, not a sample.
     expect(result.repositories).toHaveLength(decl.repositories.length);
     expect(result.repositories).toHaveLength(4);
@@ -105,7 +105,11 @@ describe('CAP1-REQ-013 — coverage failure states are distinguishable', () => {
   });
 
   it('each reason matches its closed-vocabulary entry verbatim', () => {
-    const result = computeCoverage(declaration(), CONSENTS, OBSERVATIONS);
+    const result = computeCoverage(
+      declaration(),
+      decisionsFor(declaration(), CONSENTS),
+      OBSERVATIONS,
+    );
     const byId = new Map(result.repositories.map((e) => [e.repositoryId as string, e]));
 
     const noConsent = byId.get('repo-no-consent');
@@ -135,7 +139,11 @@ describe('CAP1-REQ-013 — coverage failure states are distinguishable', () => {
   });
 
   it('scenario: unreachable is not unconsented — the consented-but-unreachable repository and the recordless one render different reasons', () => {
-    const result = computeCoverage(declaration(), CONSENTS, OBSERVATIONS);
+    const result = computeCoverage(
+      declaration(),
+      decisionsFor(declaration(), CONSENTS),
+      OBSERVATIONS,
+    );
     const unreachable = result.repositories.find(
       (e) => e.repositoryId === ('repo-unreachable' as RepositoryId),
     );
@@ -152,7 +160,11 @@ describe('CAP1-REQ-013 — coverage failure states are distinguishable', () => {
   });
 
   it('falsifier: a stale observation is not rendered as current, and an observer degradation is not rendered as missing consent', () => {
-    const result = computeCoverage(declaration(), CONSENTS, OBSERVATIONS);
+    const result = computeCoverage(
+      declaration(),
+      decisionsFor(declaration(), CONSENTS),
+      OBSERVATIONS,
+    );
     const stale = result.repositories.find(
       (e) => e.repositoryId === ('repo-stale' as RepositoryId),
     );

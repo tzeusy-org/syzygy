@@ -1,0 +1,24 @@
+{
+  "tmpdir": "/tmp/r515b-p1",
+  "tmpdirMode": "755",
+  "cases": {
+    "P1a symlinked profile answered as another owner: victim kept": true,
+    "P1b symlinked profile that is ours, real lstat: victim removed (same-user link trusted, by design)": true,
+    "P2 link swapped after its owner check: the directory the new link names is removed": true,
+    "P3 directory replaced after the identity check: the replacement is removed and the one that was read survives": true,
+    "P4 inode reuse": {
+      "trials": 2000,
+      "sameInode": 0
+    },
+    "P5 racer without the seam": {
+      "trials": 300,
+      "replacementRemoved": 4,
+      "originalRemoved": 182,
+      "neitherRemoved": 114,
+      "other": 0
+    }
+  },
+  "leftInTmpdir": [
+    "syzygy-browser-profile"
+  ]
+}

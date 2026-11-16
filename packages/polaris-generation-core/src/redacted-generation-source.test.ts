@@ -11,9 +11,11 @@ import type { DossierManifest } from './dossier-evaluation.js';
 
 const policy = readFileSync(new URL('../../../.syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json', import.meta.url), 'utf8');
 const doc = JSON.parse(policy);
-const read = readSecretRedaction(doc.publicSourceScope, doc.detectors.map((d: RedactionDetector) => d.id));
+// Since version 5 the scope's own detectors join the policy's for this scope, and wholeArtifactDetectors names two of them.
+const detectors: RedactionDetector[] = [...doc.detectors, ...doc.publicSourceScope.scopeDetectors.detectors];
+const read = readSecretRedaction(doc.publicSourceScope, detectors.map((d) => d.id));
 if (!read.ok || read.redaction === null) throw Error('fixture policy');
-const matcher = compileEveryOffsetMatcher(doc.detectors);
+const matcher = compileEveryOffsetMatcher(detectors);
 const screen = (body: string) => redactBody(body, 'project-documentation', matcher, read.redaction);
 const BODY = 'a\rg\ntoken=abcdefghij\nh\nvisible\nlast\n';
 const identity = { sourceId: 'doc', repositoryId: 'repository:fixture', revision: 'a'.repeat(40), path: 'docs/mixed.txt',

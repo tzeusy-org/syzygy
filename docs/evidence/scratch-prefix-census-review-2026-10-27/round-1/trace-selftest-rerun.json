@@ -1,0 +1,314 @@
+{
+ "tool": "trace_selftest.py",
+ "preloadSha256": "c9ff0cbbd2c9162c8483082f24202e18fa52f414c9c18a648723285de2ec2688",
+ "expected": [
+  [
+   "mkdir",
+   "st-fixed-dir"
+  ],
+  [
+   "mkdir",
+   "st-promise-dir"
+  ],
+  [
+   "mkdtemp",
+   "st-callback-"
+  ],
+  [
+   "mkdtemp",
+   "st-child-"
+  ],
+  [
+   "mkdtemp",
+   "st-promise-"
+  ],
+  [
+   "mkdtemp",
+   "st-sync-"
+  ],
+  [
+   "symlink",
+   "st-link"
+  ],
+  [
+   "writeFile",
+   "st-file.txt"
+  ],
+  [
+   "writeFile",
+   "st-promise-file.txt"
+  ]
+ ],
+ "forbiddenNames": [
+  "nested",
+  "st-nested-"
+ ],
+ "unmutated": {
+  "exit": 0,
+  "traceFileExists": true,
+  "lines": 9,
+  "got": [
+   [
+    "mkdir",
+    "st-fixed-dir"
+   ],
+   [
+    "mkdir",
+    "st-promise-dir"
+   ],
+   [
+    "mkdtemp",
+    "st-callback-"
+   ],
+   [
+    "mkdtemp",
+    "st-child-"
+   ],
+   [
+    "mkdtemp",
+    "st-promise-"
+   ],
+   [
+    "mkdtemp",
+    "st-sync-"
+   ],
+   [
+    "symlink",
+    "st-link"
+   ],
+   [
+    "writeFile",
+    "st-file.txt"
+   ],
+   [
+    "writeFile",
+    "st-promise-file.txt"
+   ]
+  ],
+  "listing": [
+   "st-callback-XV9jYE",
+   "st-child-cwtTus",
+   "st-file.txt",
+   "st-fixed-dir",
+   "st-link",
+   "st-promise-2qe4oX",
+   "st-promise-dir",
+   "st-promise-file.txt",
+   "st-sync-7Wjt9e"
+  ],
+  "strayEntriesInTheTempDirectory": [],
+  "missing": [],
+  "unexpected": [],
+  "forbiddenLogged": [],
+  "creatorFrameNamesTheFixture": false,
+  "childTraced": true,
+  "meets": true
+ },
+ "withoutLogVariable": {
+  "exit": 0,
+  "traceFileExists": false,
+  "lines": 0,
+  "got": [],
+  "listing": [
+   "st-callback-83Ghcz",
+   "st-child-c3Ddc1",
+   "st-file.txt",
+   "st-fixed-dir",
+   "st-link",
+   "st-promise-dir",
+   "st-promise-file.txt",
+   "st-promise-mu5M8K",
+   "st-sync-MHtcCz"
+  ],
+  "strayEntriesInTheTempDirectory": [],
+  "missing": [
+   [
+    "mkdir",
+    "st-fixed-dir"
+   ],
+   [
+    "mkdir",
+    "st-promise-dir"
+   ],
+   [
+    "mkdtemp",
+    "st-callback-"
+   ],
+   [
+    "mkdtemp",
+    "st-child-"
+   ],
+   [
+    "mkdtemp",
+    "st-promise-"
+   ],
+   [
+    "mkdtemp",
+    "st-sync-"
+   ],
+   [
+    "symlink",
+    "st-link"
+   ],
+   [
+    "writeFile",
+    "st-file.txt"
+   ],
+   [
+    "writeFile",
+    "st-promise-file.txt"
+   ]
+  ],
+  "unexpected": [],
+  "forbiddenLogged": [],
+  "creatorFrameNamesTheFixture": true,
+  "childTraced": false,
+  "meets": true
+ },
+ "mutants": {
+  "sync-wrappers-dropped": {
+   "old": "for (const [name, kind, pick] of [['mkdtempSync'",
+   "new": "for (const [name, kind, pick] of [] || [['mkdtempSync'",
+   "killed": true,
+   "killedByTheRunWithTheLogVariable": true,
+   "killedByTheRunWithoutIt": false,
+   "missing": [
+    [
+     "mkdir",
+     "st-fixed-dir"
+    ],
+    [
+     "mkdtemp",
+     "st-child-"
+    ],
+    [
+     "mkdtemp",
+     "st-sync-"
+    ],
+    [
+     "symlink",
+     "st-link"
+    ],
+    [
+     "writeFile",
+     "st-file.txt"
+    ]
+   ],
+   "unexpected": [],
+   "forbiddenLogged": [],
+   "strayWithoutTheVariable": [],
+   "exit": 0
+  },
+  "callback-wrappers-dropped": {
+   "old": "for (const [name, kind, pick] of [['mkdtemp', 'mkdtemp', created.mkdtemp], ['mkdir', 'mkdir', created.path], ['writeFile', 'writeFile', created.path], ['symlink', 'symlink', created.link]]) wrapCallback",
+   "new": "for (const [name, kind, pick] of []) wrapCallback",
+   "killed": true,
+   "killedByTheRunWithTheLogVariable": true,
+   "killedByTheRunWithoutIt": false,
+   "missing": [
+    [
+     "mkdtemp",
+     "st-callback-"
+    ]
+   ],
+   "unexpected": [],
+   "forbiddenLogged": [],
+   "strayWithoutTheVariable": [],
+   "exit": 0
+  },
+  "promise-wrappers-dropped": {
+   "old": "for (const [name, kind, pick] of [['mkdtemp', 'mkdtemp', created.mkdtemp], ['mkdir', 'mkdir', created.path], ['writeFile', 'writeFile', created.path], ['symlink', 'symlink', created.link]]) wrapPromise",
+   "new": "for (const [name, kind, pick] of []) wrapPromise",
+   "killed": true,
+   "killedByTheRunWithTheLogVariable": true,
+   "killedByTheRunWithoutIt": false,
+   "missing": [
+    [
+     "mkdir",
+     "st-promise-dir"
+    ],
+    [
+     "mkdtemp",
+     "st-promise-"
+    ],
+    [
+     "writeFile",
+     "st-promise-file.txt"
+    ]
+   ],
+   "unexpected": [],
+   "forbiddenLogged": [],
+   "strayWithoutTheVariable": [],
+   "exit": 0
+  },
+  "directly-in-temp-test-removed": {
+   "old": "return path.dirname(resolved) === path.resolve(os.tmpdir()) ? resolved : undefined;",
+   "new": "return resolved;",
+   "killed": true,
+   "killedByTheRunWithTheLogVariable": true,
+   "killedByTheRunWithoutIt": false,
+   "missing": [],
+   "unexpected": [
+    [
+     "mkdir",
+     "nested"
+    ],
+    [
+     "mkdtemp",
+     "st-nested-"
+    ],
+    [
+     "writeFile",
+     "trace.jsonl"
+    ]
+   ],
+   "forbiddenLogged": [
+    "/tmp/r522-ts/case-mutant-directly-in-temp-test-removed-1/tmp/st-fixed-dir/nested",
+    "/tmp/r522-ts/case-mutant-directly-in-temp-test-removed-1/tmp/st-fixed-dir/st-nested-z1nTJX"
+   ],
+   "strayWithoutTheVariable": [],
+   "exit": 0
+  },
+  "prefix-not-recorded": {
+   "old": "kind === 'mkdtemp' ? { prefix: prefixOf(args[0]) } : {});\n      return result;",
+   "new": "{});\n      return result;",
+   "killed": true,
+   "killedByTheRunWithTheLogVariable": true,
+   "killedByTheRunWithoutIt": false,
+   "missing": [
+    [
+     "mkdtemp",
+     "st-child-"
+    ],
+    [
+     "mkdtemp",
+     "st-sync-"
+    ]
+   ],
+   "unexpected": [
+    [
+     "mkdtemp",
+     null
+    ]
+   ],
+   "forbiddenLogged": [],
+   "strayWithoutTheVariable": [],
+   "exit": 0
+  },
+  "log-variable-defaults-to-the-temp-directory": {
+   "old": "const log = process.env.SCRATCH_TRACE_LOG;",
+   "new": "const log = process.env.SCRATCH_TRACE_LOG || require('node:path').join(require('node:os').tmpdir(), 'trace-default.jsonl');",
+   "killed": true,
+   "killedByTheRunWithTheLogVariable": false,
+   "killedByTheRunWithoutIt": true,
+   "missing": [],
+   "unexpected": [],
+   "forbiddenLogged": [],
+   "strayWithoutTheVariable": [
+    "trace-default.jsonl"
+   ],
+   "exit": 0
+  }
+ },
+ "holds": true
+}

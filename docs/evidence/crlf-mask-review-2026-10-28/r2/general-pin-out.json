@@ -1,0 +1,52 @@
+[
+ {
+  "label": "head",
+  "tests": 43,
+  "failed": 0,
+  "loadavgBefore": "27.52 34.22 34.86 15/9671 3097217",
+  "loadavgAfter": "27.32 34.06 34.81 17/9650 3098752",
+  "candidateMs": [
+   128
+  ],
+  "failures": []
+ },
+ {
+  "label": "RW3-vt-ff",
+  "tests": 43,
+  "failed": 1,
+  "loadavgBefore": "27.32 34.06 34.81 19/9650 3098961",
+  "loadavgAfter": "27.32 34.06 34.81 24/9674 3100706",
+  "candidateMs": [
+   245
+  ],
+  "failures": [
+   [
+    "no code unit but CR and LF ends a line",
+    "AssertionError: expected [ 'b', 'c' ] to deeply equal []",
+    245
+   ]
+  ]
+ },
+ {
+  "label": "MU17-u2028",
+  "tests": 43,
+  "failed": 2,
+  "loadavgBefore": "27.32 34.06 34.81 37/9671 3100912",
+  "loadavgAfter": "29.13 34.33 34.89 24/9668 3102828",
+  "candidateMs": [
+   141
+  ],
+  "failures": [
+   [
+    "U+2028, U+2029 and U+0085 are line content, not line ends",
+    "AssertionError: \"\u2028\": expected 'a   \\u2028   d' to be 'a       d' // Object.is equality",
+    12
+   ],
+   [
+    "no code unit but CR and LF ends a line",
+    "AssertionError: expected [ '2028' ] to deeply equal []",
+    141
+   ]
+  ]
+ }
+]

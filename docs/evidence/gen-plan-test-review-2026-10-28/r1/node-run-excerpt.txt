@@ -1,0 +1,6 @@
+node	Run actions/checkout@v4	2026-10-27T16:55:27.4572627Z HEAD is now at f779d92a Merge 02eb444f22a673748567620c5f0d45877a27f2ff into 81862261ddbc2b3c8e8481851f3c27129217d477
+node	unit + conformance tests (npm test)	2026-10-27T16:58:47.8065393Z  ✓  @syzygy/three-surface-poc-app  apps/three-surface-poc/src/polaris-generation/generation-mutation.test.ts (13 tests) 748ms
+node	unit + conformance tests (npm test)	2026-10-27T16:59:18.8180029Z  Test Files  251 passed | 3 skipped (254)
+node	unit + conformance tests (npm test)	2026-10-27T16:59:18.8202245Z       Tests  5518 passed | 5 skipped (5523)
+node	system tests (npm run test:system)	2026-10-27T16:59:40.6984978Z  Test Files  10 passed (10)
+node	system tests (npm run test:system)	2026-10-27T16:59:40.6986205Z       Tests  49 passed (49)

@@ -1,0 +1,147 @@
+{
+ "commit": "191d82779ea07f45be612b00ff3cafc9aa7446b8",
+ "reviewerR1Record": "2ff98a8d5624ffcd7c073a39857ff23b5f7c69f8b189ec8f326bc5db0159c977",
+ "statusAfter": "",
+ "rows": [
+  {
+   "id": "R1-function-constructor-through-object-brackets",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nObject['constructor']['constructor'](\"return globalThis['proc' + 'ess']['env']['HOME']\")();\n"
+    }
+   ],
+   "expected": "survives",
+   "observed": "survives",
+   "exit": 0,
+   "passed": 33,
+   "failed": 0,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [],
+   "fileMessages": [],
+   "failedTests": []
+  },
+  {
+   "id": "R2-dynamic-import-with-a-space-of-an-allowed-name",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nconst value = 'node:f' + 's';\nvoid import (value);\n"
+    }
+   ],
+   "expected": "survives",
+   "observed": "survives",
+   "exit": 0,
+   "passed": 33,
+   "failed": 0,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [],
+   "fileMessages": [],
+   "failedTests": []
+  },
+  {
+   "id": "Y3-R1-escalated-to-the-environment",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nexport const value = Object['constructor']['constructor']('return globalThis')()['process']['env']['HOME'];\n"
+    }
+   ],
+   "expected": "survives",
+   "observed": "survives",
+   "exit": 0,
+   "passed": 33,
+   "failed": 0,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [],
+   "fileMessages": [],
+   "failedTests": []
+  },
+  {
+   "id": "Y5b-computed-import-newline",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nexport const value = (bytes) => import\n(bytes);\n"
+    }
+   ],
+   "expected": "survives",
+   "observed": "survives",
+   "exit": 0,
+   "passed": 33,
+   "failed": 0,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [],
+   "fileMessages": [],
+   "failedTests": []
+  },
+  {
+   "id": "Y5c-computed-import-comment",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nexport const value = (bytes) => import/**/(bytes);\n"
+    }
+   ],
+   "expected": "survives",
+   "observed": "survives",
+   "exit": 0,
+   "passed": 33,
+   "failed": 0,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [],
+   "fileMessages": [],
+   "failedTests": []
+  },
+  {
+   "id": "Z7-unscoped-workspace-with-no-entry",
+   "test": "packages/polaris-dossier/src/no-egress.test.ts",
+   "edits": [
+    {
+     "path": "packages/leak/package.json",
+     "old": null,
+     "new": "{\n  \"name\": \"leak\",\n  \"version\": \"0.0.0\",\n  \"private\": true,\n  \"type\": \"module\"\n}\n"
+    },
+    {
+     "path": "packages/leak/index.js",
+     "old": null,
+     "new": "export const LEAK = 1;\n"
+    },
+    {
+     "path": "node_modules/leak",
+     "link": "../packages/leak"
+    },
+    {
+     "path": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+     "old": "import { DESIGN_TOKENS_CSS } from '../design-tokens.js';\n",
+     "new": "import 'leak';\nimport { DESIGN_TOKENS_CSS } from '../design-tokens.js';\n"
+    }
+   ],
+   "expected": "survives",
+   "observed": "survives",
+   "exit": 0,
+   "passed": 6,
+   "failed": 0,
+   "pending": 1,
+   "total": 7,
+   "failedFiles": [],
+   "fileMessages": [],
+   "failedTests": []
+  }
+ ]
+}

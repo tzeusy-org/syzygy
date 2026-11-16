@@ -1,0 +1,28 @@
+{"label":"type position","file":"case.ts","source":"let a: Map<string, process.Env> = b;","ids":["Env","Map","a","b","process"],"outside":["Env","Map","a","b","process"]}
+{"label":"decorator","file":"case.ts","source":"@dec class K { @prop m() {} }","ids":["K","dec","m","prop"],"outside":["K","dec","m","prop"]}
+{"label":"JSX in .tsx","file":"case.tsx","source":"const a = <div onClick={b} />;","ids":["a","b","div","onClick"],"outside":["a","b","div","onClick"]}
+{"label":"import.meta","file":"case.ts","source":"const a = import.meta.url;","ids":["a","meta","url"],"outside":["a","meta","url"]}
+{"label":"label","file":"case.ts","source":"outer: for (;;) { break outer; }","ids":["outer"],"outside":["outer"]}
+{"label":"shorthand property","file":"case.ts","source":"const a = { b };","ids":["a","b"],"outside":["a","b"]}
+{"label":"destructuring default","file":"case.ts","source":"const { a = b } = c;","ids":["a","b","c"],"outside":["a","b","c"]}
+{"label":"computed key","file":"case.ts","source":"const a = { [b]: 1 };","ids":["a","b"],"outside":["a","b"]}
+{"label":"export * from","file":"case.ts","source":"export * from 'node:crypto';","ids":[],"outside":[]}
+{"label":"export * as value from","file":"case.ts","source":"export * as value from 'node:crypto';","ids":["value"],"outside":[]}
+{"label":"export * as 'string' from","file":"case.ts","source":"export * as 'randomBytes' from 'node:crypto';","ids":[],"outside":[]}
+{"label":"string-named import","file":"case.ts","source":"import { 'randomBytes' as value } from 'node:crypto';","ids":["value"],"outside":[]}
+{"label":"string-named re-export","file":"case.ts","source":"export { 'randomBytes' as 'value' } from 'node:crypto';","ids":[],"outside":[]}
+{"label":"namespace import","file":"case.ts","source":"import * as value from 'node:crypto';\nexport { value };","ids":["value"],"outside":[]}
+{"label":"element access by string","file":"case.ts","source":"Object['constructor']['constructor']('return 1')();","ids":["Object"],"outside":[]}
+{"label":"element access by template","file":"case.ts","source":"Object[`constructor`];","ids":["Object"],"outside":[]}
+{"label":"this keyword","file":"case.ts","source":"function value() { return this; }","ids":["value"],"outside":[]}
+{"label":"new.target","file":"case.ts","source":"function value() { return new.target; }","ids":["target","value"],"outside":["target"]}
+{"label":"import call, newline","file":"case.ts","source":"import\n(value);","ids":["value"],"outside":[]}
+{"label":"import call, comment","file":"case.ts","source":"import/**/(value);","ids":["value"],"outside":[]}
+{"label":"type-only import type","file":"case.ts","source":"type value = typeof import('node:fs');","ids":["value"],"outside":[]}
+{"label":"JSDoc in .js","file":"case.js","source":"/** @type {import('node:fs')} */\nconst value = 1;","ids":["value"],"outside":[]}
+{"label":"escaped identifier","file":"case.ts","source":"const \\u{70}rocess = 1;","ids":["process"],"outside":["process"]}
+{"label":"private name","file":"case.ts","source":"class K { #x = 1; }","ids":["#x","K"],"outside":["#x","K"]}
+{"label":"arguments","file":"case.ts","source":"function value() { return arguments; }","ids":["arguments","value"],"outside":["arguments"]}
+{"label":"global mutation","file":"case.ts","source":"Object.freeze = (value) => value;","ids":["Object","freeze","value"],"outside":[]}
+{"label":"using declaration","file":"case.ts","source":"using value = bytes;","ids":["bytes","value"],"outside":[]}
+{"label":"import attributes","file":"case.ts","source":"import value from './x.js' with { type: 'json' };","ids":["type","value"],"outside":["type"]}

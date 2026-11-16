@@ -1,0 +1,14 @@
+
+ RUN  v3.2.7 /home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20
+
+ ✓ |integration| apps/three-surface-poc/src/governance-inputs.test.ts (52 tests) 2684ms
+   ✓ loadBodyReadAuthorityInputs (real Syzygy governance tree) > evaluates the three real current PWB acts without reading any body  828ms
+   ✓ owner-act records under altered prose (characterization, syzygy-bpyt.6.10) > FAIL-OPEN (parser-isolated) line census, consent record: of 56 non-blank lines, 42 ignore an appended suffix and 37 ignore deletion; none do under the loader-faithful reading  421ms
+   ✓ owner-act records under altered prose (characterization, syzygy-bpyt.6.10) > FAIL-OPEN (parser-isolated) line census, policy record: of 70 non-blank lines, 56 ignore an appended suffix and 51 ignore deletion; none do under the loader-faithful reading  437ms
+   ✓ owner-act records under altered prose (characterization, syzygy-bpyt.6.10) > FAIL-OPEN (parser-isolated) line census, registry record: of 52 non-blank lines, 38 ignore an appended suffix and 30 ignore deletion; none do under the loader-faithful reading  353ms
+
+ Test Files  1 passed (1)
+      Tests  52 passed (52)
+   Start at  13:55:00
+   Duration  5.28s (transform 1.44s, setup 12ms, collect 1.89s, tests 2.68s, environment 0ms, prepare 127ms)
+

@@ -1,0 +1,2 @@
+{'tree': '/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-539/clone-base', 'commit': '9dba258992667f62ad503ec76d8a6b99efcc4bac', 'treeId': '44ce5c699600450e4d56aff0125b5c5ec40ff2bd', 'command': 'npx vitest run --project @syzygy/three-surface-poc-app --project @syzygy/http-host --project @syzygy/cap1-daemon', 'exit': 0, 'files': 101, 'total': 1264, 'passed': 1262, 'failed': 0, 'skipped': 2, 'load1': 30.3, 'load1After': 40.1, 'wallSeconds': 255.8, 'cleanAfter': True}
+distDirsBefore: 12

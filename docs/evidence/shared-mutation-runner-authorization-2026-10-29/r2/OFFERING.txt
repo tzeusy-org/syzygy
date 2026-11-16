@@ -1,0 +1,22 @@
+# Shared mutation runner — bounded authorization offering
+
+**Candidate offering. Not yet independently reviewed; not owner-ready and grants no authority.** Prepared for root to review and route after the current P115 question. No question has been put to the owner.
+
+[Observed] The existing plan, `syzygy-bpyt.4.6`, replaces several mutation-test runners with one engine. The 2026-10-21 greenfield direction permits behavior-preserving refactoring, but its explicit exception list does not include the proposed changes to runner evidence, replay or success/refusal behavior. GP-Q0 therefore requires this narrow authorization before implementation.
+
+[Observed] The generic Python runner currently loses a mutant's overridden test project when writing its result and has no automatic unmutated baseline. It can finish successfully after recording survived or errored mutants. Other runners already have meaningful baseline guards: the scheduled generation runner checks once before its plan; M7/M9/M13 and the prompt runner check before every mutant. The new engine must preserve those existing guards, not replace them with a weaker cached control.
+
+**Proposed owner question:** Authorize the shared runner's bounded evidence, replay and failure behavior described in `DRAFT-DIRECTION.md`?
+
+| Choice | Consequence |
+|---|---|
+| **A — Authorize the bounded change (recommended)** | Permit implementation of the named runner/consumer migration with faithful project replay, explicit incomplete/refused evidence, preserved existing baseline checks, the stated nonzero failure exits and isolated scratch execution. Existing review, exact-head verification and source-ownership gates still apply. |
+| **B — Keep the current behavior** | Keep the output-changing migration blocked. Historical runners and records remain as they are; ordinary preparation and strictly behavior-preserving work retain their existing authority. |
+
+[Inferred] A is recommended because mutation evidence should distinguish a real detected regression from a broken test run, and replay must use the test project that was actually selected. It also consolidates the already planned runner work without revising historical evidence. The all-groups preflight catches an invalid selected test group before any mutation. It adds runtime even to plans that already check each mutant or group, and an initially invalid group prevents all mutation work in that selection, including work that the old sequential sweep could perform before reaching that group. Required later baseline failures still retain genuine earlier results as incomplete evidence. The migration also needs explicit new output consumption and verification before the scheduled gate switches.
+
+**Unanswered default: B/status quo.** No elapsed time, review verdict, tracker closure or generic readiness request grants this change.
+
+The exact technical scope and exclusions are in `DRAFT-DIRECTION.md`; `BEHAVIOR-AND-CONSUMERS.md` identifies preserved versus changed outcomes and the current consumers. No retired record, old runner, provider permission, repository consent, product behavior, parallel-job feature or JSON-field oracle is approved by this offering.
+
+Before presentation, root must obtain independent scope and recommendation review on these exact bytes, resolve any required findings, refresh PR543/`syzygy-kpbq` and the source identities, and confirm that the recorded owner choice will bind this exact bounded direction. If source drift changes an outcome or consumer, re-review that change before offering it. This is one decision, not a general waiver for future runner behavior.

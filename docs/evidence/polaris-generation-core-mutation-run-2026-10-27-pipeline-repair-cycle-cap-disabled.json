@@ -1,0 +1,57 @@
+{
+  "subject": "polaris-generation-core mutation gate (bead syzygy-u05.11 slice 2)",
+  "date": "2026-10-27",
+  "commit": "1d37276dbe9671e435bbd12426b6e657ea9646e7",
+  "uncommittedChanges": [],
+  "testFiles": [
+    "packages/polaris-generation-core/src/canonical-json.test.ts",
+    "packages/polaris-generation-core/src/parse-json.test.ts",
+    "packages/polaris-generation-core/src/pipeline.test.ts",
+    "packages/polaris-generation-core/src/provider-draft.test.ts"
+  ],
+  "baseline": {
+    "total": 107,
+    "passed": 107,
+    "failed": 0
+  },
+  "sourceDigestsBefore": {
+    "packages/polaris-generation-core/src/canonical-json.ts": "4d7e745dc505c0de74666511a90ccda4673a5bc3d3e9deb73f424bce92875608",
+    "packages/polaris-generation-core/src/parse-json.ts": "f56eafe27e3881fb8bb6727b295e03bf946729af4d3c5966d4291aee9a6abe45",
+    "packages/polaris-generation-core/src/pipeline.ts": "89df81566b51fdcc24376f6b1282fea7d2110132dd7caa7c198bb03b00b45164",
+    "packages/polaris-generation-core/src/provider-draft.ts": "9294fd906187fd2abe8012e363beecbb3d9d420f4d272bd8accc2fb6a9d01734"
+  },
+  "sourceDigestsAfter": {
+    "packages/polaris-generation-core/src/canonical-json.ts": "4d7e745dc505c0de74666511a90ccda4673a5bc3d3e9deb73f424bce92875608",
+    "packages/polaris-generation-core/src/parse-json.ts": "f56eafe27e3881fb8bb6727b295e03bf946729af4d3c5966d4291aee9a6abe45",
+    "packages/polaris-generation-core/src/pipeline.ts": "89df81566b51fdcc24376f6b1282fea7d2110132dd7caa7c198bb03b00b45164",
+    "packages/polaris-generation-core/src/provider-draft.ts": "9294fd906187fd2abe8012e363beecbb3d9d420f4d272bd8accc2fb6a9d01734"
+  },
+  "mutations": [
+    {
+      "id": "pipeline-repair-cycle-cap-disabled",
+      "kind": "literal",
+      "file": "packages/polaris-generation-core/src/pipeline.ts",
+      "description": "the repair-cycle cap is never enforced, so a persistently blocking review repairs forever instead of stopping",
+      "old": "if (repairs >= budget.maxRepairCycles) {\n        if (verdict.reviewerBlocking) stop('repair-exhausted');",
+      "new": "if (false) {\n        if (verdict.reviewerBlocking) stop('repair-exhausted');",
+      "mustFail": [
+        "stops when calls or repairs are exhausted and when usage is unknown"
+      ],
+      "observed": {
+        "total": 107,
+        "passed": 104,
+        "failed": 3
+      },
+      "mustFailMissing": [],
+      "killed": true,
+      "restored": true
+    }
+  ],
+  "summary": {
+    "planned": 1,
+    "literalMutations": 12,
+    "killed": 1,
+    "survived": 0,
+    "restoreFailures": 0
+  }
+}

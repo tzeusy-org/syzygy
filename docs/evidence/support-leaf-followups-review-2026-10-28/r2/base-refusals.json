@@ -1,0 +1,178 @@
+{
+ "commit": "a15b6a04da2cda0c5871a05c538b72943b1d660c",
+ "dists": [],
+ "rows": [
+  {
+   "id": "V7",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { decodeUtf8 } from './decode-utf8.js';\n",
+     "new": "export { decodeUtf8 } from './decode-utf8.js';\nimport value = require ('node:crypto');\nexport { value };\n"
+    }
+   ],
+   "load1": "19.20",
+   "exit": 0,
+   "passed": 33,
+   "failed": 0,
+   "total": 33,
+   "failedTests": [],
+   "fileMessages": [],
+   "error": null
+  },
+  {
+   "id": "V9",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { decodeUtf8 } from './decode-utf8.js';\n",
+     "new": "export { decodeUtf8 } from './decode-utf8.js';\nexport const value = () => import ('node:crypto');\n"
+    }
+   ],
+   "load1": "19.20",
+   "exit": 0,
+   "passed": 33,
+   "failed": 0,
+   "total": 33,
+   "failedTests": [],
+   "fileMessages": [],
+   "error": null
+  },
+  {
+   "id": "Y5b",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nexport const value = (bytes) => import\n(bytes);\n"
+    }
+   ],
+   "load1": "20.54",
+   "exit": 0,
+   "passed": 33,
+   "failed": 0,
+   "total": 33,
+   "failedTests": [],
+   "fileMessages": [],
+   "error": null
+  },
+  {
+   "id": "Y5c",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nexport const value = (bytes) => import/**/(bytes);\n"
+    }
+   ],
+   "load1": "20.54",
+   "exit": 0,
+   "passed": 33,
+   "failed": 0,
+   "total": 33,
+   "failedTests": [],
+   "fileMessages": [],
+   "error": null
+  },
+  {
+   "id": "R2",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nconst value = 'node:f' + 's';\nvoid import (value);\n"
+    }
+   ],
+   "load1": "20.50",
+   "exit": 0,
+   "passed": 33,
+   "failed": 0,
+   "total": 33,
+   "failedTests": [],
+   "fileMessages": [],
+   "error": null
+  },
+  {
+   "id": "U4",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "  return createHash('sha256').update(value).digest('hex');\n}\n",
+     "new": "  return createHash('sha256').update(value).digest('hex');\n}\n[Object.freeze] = [(value) => value];\n"
+    }
+   ],
+   "load1": "21.82",
+   "exit": 0,
+   "passed": 33,
+   "failed": 0,
+   "total": 33,
+   "failedTests": [],
+   "fileMessages": [],
+   "error": null
+  },
+  {
+   "id": "U5",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "  return createHash('sha256').update(value).digest('hex');\n}\n",
+     "new": "  return createHash('sha256').update(value).digest('hex');\n}\n({ value: Object.freeze } = { value: (bytes) => bytes });\n"
+    }
+   ],
+   "load1": "21.82",
+   "exit": 0,
+   "passed": 33,
+   "failed": 0,
+   "total": 33,
+   "failedTests": [],
+   "fileMessages": [],
+   "error": null
+  },
+  {
+   "id": "D2",
+   "test": "packages/three-surface-poc-core/src/owner-act-drafter.test.ts",
+   "edits": [
+    {
+     "path": "packages/three-surface-poc-core/src/owner-act-drafter.ts",
+     "old": "// Owner-act drafter \u2014 claims sharing one reason \u2192 a drafted act packet as\n",
+     "new": "// Owner-act drafter \u2014 claims sharing one reason \u2192 a drafted act packet as\nexport const HOME = (globalThis as Record<string, any>)['process']['env']['HOME'];\n"
+    }
+   ],
+   "load1": "23.12",
+   "exit": 0,
+   "passed": 3,
+   "failed": 0,
+   "total": 3,
+   "failedTests": [],
+   "fileMessages": [],
+   "error": null
+  },
+  {
+   "id": "D5",
+   "test": "packages/three-surface-poc-core/src/owner-act-drafter.test.ts",
+   "edits": [
+    {
+     "path": "packages/three-surface-poc-core/src/owner-act-drafter.ts",
+     "old": "// Owner-act drafter \u2014 claims sharing one reason \u2192 a drafted act packet as\n",
+     "new": "// Owner-act drafter \u2014 claims sharing one reason \u2192 a drafted act packet as\nexport const open = (url: string): WebSocket => new WebSocket(url);\n"
+    }
+   ],
+   "load1": "23.12",
+   "exit": 0,
+   "passed": 3,
+   "failed": 0,
+   "total": 3,
+   "failedTests": [],
+   "fileMessages": [],
+   "error": null
+  }
+ ],
+ "statusAfter": ""
+}

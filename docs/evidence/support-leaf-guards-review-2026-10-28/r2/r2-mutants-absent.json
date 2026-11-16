@@ -1,0 +1,1808 @@
+{
+ "commit": "ecea355ba96b0082ad8aad11e9799518f87c2e19",
+ "dist": "absent",
+ "distDirs": [],
+ "which": "all",
+ "summary": {
+  "rows": 48,
+  "asExpected": 48,
+  "unexpected": []
+ },
+ "statusAfter": "",
+ "leftovers": [],
+ "rows": [
+  {
+   "id": "lane:C0-purity-unmutated",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [],
+   "expected": "pass",
+   "observed": "pass",
+   "expectedFailing": "any",
+   "failing": [],
+   "failingAsExpected": true,
+   "load1Before": "24.53",
+   "load1After": "24.25",
+   "exit": 0,
+   "passed": 33,
+   "failed": 0,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [],
+   "fileMessages": [],
+   "failedTests": []
+  },
+  {
+   "id": "lane:RP8-randomness-from-the-allowed-node-crypto",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash, randomBytes } from 'node:crypto';\nexport const SALT = randomBytes(8).toString('hex');\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "expectedFailing": "any",
+   "failing": [
+    "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source",
+    "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it"
+   ],
+   "failingAsExpected": true,
+   "load1Before": "24.25",
+   "load1After": "25.51",
+   "exit": 1,
+   "passed": 31,
+   "failed": 2,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source",
+     "message": "AssertionError: expected [ 'sha256.ts: SALT', \u2026(2) ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/packages/support/src/support-purity.test.ts:78:155\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/node_modules/@vitest/runner/dist/chunk-hooks.j"
+    },
+    {
+     "name": "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it",
+     "message": "AssertionError: expected [ Array(1) ] to deeply equal [ Array(1) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/packages/support/src/support-purity.test.ts:85:22\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/node_modules/@vitest/runner/dist/chunk-hooks.js:155:"
+    }
+   ]
+  },
+  {
+   "id": "lane:L1-unreached-subdirectory-module",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/io/read.ts",
+     "old": null,
+     "new": "import { readFileSync } from 'node:fs';\nexport const read = (p: string): string => readFileSync(p, 'utf8');\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "expectedFailing": "any",
+   "failing": [
+    "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source",
+    "@syzygy/support stays a pure leaf names no module but node:crypto and a module beside it in any literal specifier of any source",
+    "@syzygy/support stays a pure leaf names none of the forbidden tokens it shares with the owner-act drafter in any source",
+    "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it"
+   ],
+   "failingAsExpected": true,
+   "load1Before": "25.51",
+   "load1After": "26.27",
+   "exit": 1,
+   "passed": 29,
+   "failed": 4,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf names no module but node:crypto and a module beside it in any literal specifier of any source",
+     "message": "AssertionError: expected [ { file: 'io/read.ts', \u2026(1) } ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/packages/support/src/support-purity.test.ts:72:83\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/node_modules/@vitest/runner/dist/chunk-hoo"
+    },
+    {
+     "name": "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source",
+     "message": "AssertionError: expected [ 'io/read.ts: p', \u2026(2) ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/packages/support/src/support-purity.test.ts:78:155\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/node_modules/@vitest/runner/dist/chunk-hooks.js:"
+    },
+    {
+     "name": "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it",
+     "message": "AssertionError: expected [ \u2026(2) ] to deeply equal [ Array(1) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/packages/support/src/support-purity.test.ts:85:22\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n "
+    },
+    {
+     "name": "@syzygy/support stays a pure leaf names none of the forbidden tokens it shares with the owner-act drafter in any source",
+     "message": "AssertionError: io/read.ts /\\b(?:node:)?(?:fs|net|http|https|child_process|os)['\"`]/: expected 'import { readFileSync } from \\'node:f\u2026' not to match /\\b(?:node:)?(?:fs|net|http|https|chil\u2026/\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/packages/support/src/support-purity.test.ts:105:93\n    at file:///tmp/claude-1000/-home-tze-GitHub"
+    }
+   ]
+  },
+  {
+   "id": "lane:T1-scan-without-recursion-plus-L1",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "readdirSync(dir, { recursive: true, encoding: 'utf8' })",
+     "new": "readdirSync(dir, { encoding: 'utf8' })"
+    },
+    {
+     "path": "packages/support/src/io/read.ts",
+     "old": null,
+     "new": "import { readFileSync } from 'node:fs';\nexport const read = (p: string): string => readFileSync(p, 'utf8');\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "expectedFailing": [
+    "@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit"
+   ],
+   "failing": [
+    "@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit"
+   ],
+   "failingAsExpected": true,
+   "load1Before": "26.27",
+   "load1After": "26.89",
+   "exit": 1,
+   "passed": 32,
+   "failed": 1,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit",
+     "message": "AssertionError: expected [ 'a.ts', 'c.mts', 'd.cjs' ] to deeply equal [ 'a.ts', 'c.mts', 'd.cjs', 'io/b.ts' ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/packages/support/src/support-purity.test.ts:64:54\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/node_modu"
+    }
+   ]
+  },
+  {
+   "id": "lane:Y7-export-star-from-node-crypto",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { decodeUtf8 } from './decode-utf8.js';\n",
+     "new": "export { decodeUtf8 } from './decode-utf8.js';\nexport * from 'node:crypto';\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "expectedFailing": [
+    "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it"
+   ],
+   "failing": [
+    "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it"
+   ],
+   "failingAsExpected": true,
+   "load1Before": "26.89",
+   "load1After": "28.66",
+   "exit": 1,
+   "passed": 32,
+   "failed": 1,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it",
+     "message": "AssertionError: expected [ \u2026(2) ] to deeply equal [ Array(1) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/packages/support/src/support-purity.test.ts:85:22\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n "
+    }
+   ]
+  },
+  {
+   "id": "lane:Y9-export-star-as-allowed-name",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { decodeUtf8 } from './decode-utf8.js';\n",
+     "new": "export { decodeUtf8 } from './decode-utf8.js';\nexport * as value from 'node:crypto';\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "expectedFailing": [
+    "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it"
+   ],
+   "failing": [
+    "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it"
+   ],
+   "failingAsExpected": true,
+   "load1Before": "28.66",
+   "load1After": "29.73",
+   "exit": 1,
+   "passed": 32,
+   "failed": 1,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it",
+     "message": "AssertionError: expected [ \u2026(2) ] to deeply equal [ Array(1) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/packages/support/src/support-purity.test.ts:85:22\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n "
+    }
+   ]
+  },
+  {
+   "id": "lane:Y10-string-named-re-export",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { decodeUtf8 } from './decode-utf8.js';\n",
+     "new": "export { decodeUtf8 } from './decode-utf8.js';\nexport { 'randomBytes' as 'value' } from 'node:crypto';\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "expectedFailing": [
+    "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it"
+   ],
+   "failing": [
+    "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it"
+   ],
+   "failingAsExpected": true,
+   "load1Before": "29.73",
+   "load1After": "29.91",
+   "exit": 1,
+   "passed": 32,
+   "failed": 1,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it",
+     "message": "AssertionError: expected [ \u2026(2) ] to deeply equal [ Array(1) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/packages/support/src/support-purity.test.ts:85:22\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n "
+    }
+   ]
+  },
+  {
+   "id": "lane:Y11-string-named-import-called-at-import",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash, 'randomBytes' as value } from 'node:crypto';\nexport const T = value(8);\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "expectedFailing": [
+    "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it"
+   ],
+   "failing": [
+    "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it"
+   ],
+   "failingAsExpected": true,
+   "load1Before": "29.91",
+   "load1After": "29.28",
+   "exit": 1,
+   "passed": 32,
+   "failed": 1,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it",
+     "message": "AssertionError: expected [ Array(1) ] to deeply equal [ Array(1) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/packages/support/src/support-purity.test.ts:85:22\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/node_modules/@vitest/runner/dist/chunk-hooks.js:155:"
+    }
+   ]
+  },
+  {
+   "id": "lane:Y12-namespace-import-re-exported",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nimport * as value from 'node:crypto';\nexport { value };\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "expectedFailing": [
+    "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it"
+   ],
+   "failing": [
+    "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it"
+   ],
+   "failingAsExpected": true,
+   "load1Before": "29.28",
+   "load1After": "30.39",
+   "exit": 1,
+   "passed": 32,
+   "failed": 1,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it",
+     "message": "AssertionError: expected [ \u2026(2) ] to deeply equal [ Array(1) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/packages/support/src/support-purity.test.ts:85:22\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n "
+    }
+   ]
+  },
+  {
+   "id": "lane:Y14-drafter-takes-randomness-through-support",
+   "tests": [
+    "packages/support/src/support-purity.test.ts",
+    "packages/three-surface-poc-core/src/owner-act-drafter.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { decodeUtf8 } from './decode-utf8.js';\n",
+     "new": "export { decodeUtf8 } from './decode-utf8.js';\nexport * from 'node:crypto';\n"
+    },
+    {
+     "path": "packages/three-surface-poc-core/src/owner-act-drafter.ts",
+     "old": "import { sha256 } from '@syzygy/support';\n",
+     "new": "import { sha256, randomUUID } from '@syzygy/support';\nexport const nonce = (): string => randomUUID();\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "expectedFailing": [
+    "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it"
+   ],
+   "failing": [
+    "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it"
+   ],
+   "failingAsExpected": true,
+   "load1Before": "30.39",
+   "load1After": "30.39",
+   "exit": 1,
+   "passed": 35,
+   "failed": 1,
+   "pending": 0,
+   "total": 36,
+   "failedFiles": [
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it",
+     "message": "AssertionError: expected [ \u2026(2) ] to deeply equal [ Array(1) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/packages/support/src/support-purity.test.ts:85:22\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n "
+    }
+   ]
+  },
+  {
+   "id": "lane:K4-shared-Date-token-weakened-plus-DK1",
+   "tests": [
+    "packages/support/src/support-purity.test.ts",
+    "packages/three-surface-poc-core/src/owner-act-drafter.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/purity.testkit.ts",
+     "old": " /\\bDate\\b/,",
+     "new": " /\\bDate\\(/,"
+    },
+    {
+     "path": "packages/three-surface-poc-core/src/owner-act-drafter.ts",
+     "old": "import { sha256 } from '@syzygy/support';\n",
+     "new": "import { sha256 } from '@syzygy/support';\nexport const now = (): number => Date.now();\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "expectedFailing": [
+    "the forbidden-token list both guards stand on is the literal list, so a narrowed token fails here"
+   ],
+   "failing": [
+    "the forbidden-token list both guards stand on is the literal list, so a narrowed token fails here"
+   ],
+   "failingAsExpected": true,
+   "load1Before": "30.39",
+   "load1After": "30.91",
+   "exit": 1,
+   "passed": 35,
+   "failed": 1,
+   "pending": 0,
+   "total": 36,
+   "failedFiles": [
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "the forbidden-token list both guards stand on is the literal list, so a narrowed token fails here",
+     "message": "AssertionError: expected [ '/\\brequire\\(/', \u2026(8) ] to deeply equal [ '/\\brequire\\(/', \u2026(8) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/packages/support/src/support-purity.test.ts:142:35\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/node_modules/@vitest/runn"
+    }
+   ]
+  },
+  {
+   "id": "lane:Y6-allowed-global-member-replaced",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nObject.freeze = (value) => value;\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "expectedFailing": [
+    "@syzygy/support stays a pure leaf assigns to no property in any source, so no allowed global is rewritten"
+   ],
+   "failing": [
+    "@syzygy/support stays a pure leaf assigns to no property in any source, so no allowed global is rewritten"
+   ],
+   "failingAsExpected": true,
+   "load1Before": "30.91",
+   "load1After": "31.83",
+   "exit": 1,
+   "passed": 32,
+   "failed": 1,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf assigns to no property in any source, so no allowed global is rewritten",
+     "message": "AssertionError: expected [ Array(1) ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/packages/support/src/support-purity.test.ts:99:20\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at "
+    }
+   ]
+  },
+  {
+   "id": "lane:M2-new-package-with-no-entry-imported-by-the-closure",
+   "tests": [
+    "packages/polaris-dossier/src/no-egress.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/leak/package.json",
+     "old": null,
+     "new": "{\n  \"name\": \"@syzygy/leak\",\n  \"version\": \"0.0.0\",\n  \"private\": true,\n  \"type\": \"module\"\n}\n"
+    },
+    {
+     "path": "packages/leak/index.js",
+     "old": null,
+     "new": "export const LEAK = 1;\n"
+    },
+    {
+     "path": "node_modules/@syzygy/leak",
+     "link": "../../packages/leak"
+    },
+    {
+     "path": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+     "old": "import { DESIGN_TOKENS_CSS } from '../design-tokens.js';\n",
+     "new": "import '@syzygy/leak';\nimport { DESIGN_TOKENS_CSS } from '../design-tokens.js';\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "expectedFailing": "any",
+   "failing": [
+    "file: Build failed with 1 error:"
+   ],
+   "failingAsExpected": true,
+   "load1Before": "31.83",
+   "load1After": "32.47",
+   "exit": 1,
+   "passed": 0,
+   "failed": 0,
+   "pending": 7,
+   "total": 7,
+   "failedFiles": [
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/packages/polaris-dossier/src/no-egress.test.ts"
+   ],
+   "fileMessages": [
+    "Build failed with 1 error:\napps/three-surface-poc/src/polaris-generation/dossier-site.ts:1:7: ERROR: [plugin: workspace-sources-only] @syzygy/leak resolves outside packages/*/src and apps/*/src: packages/leak/index.js"
+   ],
+   "failedTests": []
+  },
+  {
+   "id": "lane:M5-guard-removed-plus-M2",
+   "tests": [
+    "packages/polaris-dossier/src/no-egress.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/polaris-dossier/src/no-egress.test.ts",
+     "old": "    plugins: [sourcesOnly(SOURCE_ROOT)],\n  });\n}\n",
+     "new": "    plugins: [],\n  });\n}\n"
+    },
+    {
+     "path": "packages/leak/package.json",
+     "old": null,
+     "new": "{\n  \"name\": \"@syzygy/leak\",\n  \"version\": \"0.0.0\",\n  \"private\": true,\n  \"type\": \"module\"\n}\n"
+    },
+    {
+     "path": "packages/leak/index.js",
+     "old": null,
+     "new": "export const LEAK = 1;\n"
+    },
+    {
+     "path": "node_modules/@syzygy/leak",
+     "link": "../../packages/leak"
+    },
+    {
+     "path": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+     "old": "import { DESIGN_TOKENS_CSS } from '../design-tokens.js';\n",
+     "new": "import '@syzygy/leak';\nimport { DESIGN_TOKENS_CSS } from '../design-tokens.js';\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "expectedFailing": [
+    "the S10 bundle takes each workspace package from the source its entry names (syzygy-bpyt.6.14) bundles the driver only under the guard: an alias that leaves the sources fails it"
+   ],
+   "failing": [
+    "the S10 bundle takes each workspace package from the source its entry names (syzygy-bpyt.6.14) bundles the driver only under the guard: an alias that leaves the sources fails it"
+   ],
+   "failingAsExpected": true,
+   "load1Before": "32.47",
+   "load1After": "32.11",
+   "exit": 1,
+   "passed": 5,
+   "failed": 1,
+   "pending": 1,
+   "total": 7,
+   "failedFiles": [
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/packages/polaris-dossier/src/no-egress.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "the S10 bundle takes each workspace package from the source its entry names (syzygy-bpyt.6.14) bundles the driver only under the guard: an alias that leaves the sources fails it",
+     "message": "AssertionError: expected [Function] to throw error including '@syzygy/support resolves outside pack\u2026' but got 'Build failed with 41 errors:\\napps/th\u2026'\n    at _Assertion.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/node_modules/@vitest/expect/dist/index.js:1420:16)\n    at _Assertion.<anonymous> (file:///tmp/claude-1000/"
+    }
+   ]
+  },
+  {
+   "id": "lane:G0-guard-removed-alone",
+   "tests": [
+    "packages/polaris-dossier/src/no-egress.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/polaris-dossier/src/no-egress.test.ts",
+     "old": "    plugins: [sourcesOnly(SOURCE_ROOT)],\n  });\n}\n",
+     "new": "    plugins: [],\n  });\n}\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "expectedFailing": [
+    "the S10 bundle takes each workspace package from the source its entry names (syzygy-bpyt.6.14) bundles the driver only under the guard: an alias that leaves the sources fails it"
+   ],
+   "failing": [
+    "the S10 bundle takes each workspace package from the source its entry names (syzygy-bpyt.6.14) bundles the driver only under the guard: an alias that leaves the sources fails it"
+   ],
+   "failingAsExpected": true,
+   "load1Before": "32.11",
+   "load1After": "31.03",
+   "exit": 1,
+   "passed": 5,
+   "failed": 1,
+   "pending": 1,
+   "total": 7,
+   "failedFiles": [
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/packages/polaris-dossier/src/no-egress.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "the S10 bundle takes each workspace package from the source its entry names (syzygy-bpyt.6.14) bundles the driver only under the guard: an alias that leaves the sources fails it",
+     "message": "AssertionError: expected [Function] to throw error including '@syzygy/support resolves outside pack\u2026' but got 'Build failed with 41 errors:\\napps/th\u2026'\n    at _Assertion.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/node_modules/@vitest/expect/dist/index.js:1420:16)\n    at _Assertion.<anonymous> (file:///tmp/claude-1000/"
+    }
+   ]
+  },
+  {
+   "id": "V0-unmutated",
+   "tests": [
+    "packages/support/src/support-purity.test.ts",
+    "packages/polaris-dossier/src/no-egress.test.ts"
+   ],
+   "edits": [],
+   "expected": "pass",
+   "observed": "pass",
+   "expectedFailing": null,
+   "failing": [],
+   "failingAsExpected": true,
+   "load1Before": "31.03",
+   "load1After": "32.52",
+   "exit": 0,
+   "passed": 39,
+   "failed": 0,
+   "pending": 1,
+   "total": 40,
+   "failedFiles": [],
+   "fileMessages": [],
+   "failedTests": []
+  },
+  {
+   "id": "V1-side-effect-import-of-node-crypto",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { decodeUtf8 } from './decode-utf8.js';\n",
+     "new": "export { decodeUtf8 } from './decode-utf8.js';\nimport 'node:crypto';\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "expectedFailing": [
+    "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it"
+   ],
+   "failing": [
+    "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it"
+   ],
+   "failingAsExpected": true,
+   "load1Before": "32.52",
+   "load1After": "33.44",
+   "exit": 1,
+   "passed": 32,
+   "failed": 1,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it",
+     "message": "AssertionError: expected [ \u2026(2) ] to deeply equal [ Array(1) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/packages/support/src/support-purity.test.ts:85:22\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n "
+    }
+   ]
+  },
+  {
+   "id": "V2-default-import-under-an-allowed-name-re-exported",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { decodeUtf8 } from './decode-utf8.js';\n",
+     "new": "export { decodeUtf8 } from './decode-utf8.js';\nimport value from 'node:crypto';\nexport { value };\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "expectedFailing": [
+    "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it"
+   ],
+   "failing": [
+    "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it"
+   ],
+   "failingAsExpected": true,
+   "load1Before": "33.44",
+   "load1After": "32.40",
+   "exit": 1,
+   "passed": 32,
+   "failed": 1,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it",
+     "message": "AssertionError: expected [ \u2026(2) ] to deeply equal [ Array(1) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/packages/support/src/support-purity.test.ts:85:22\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n "
+    }
+   ]
+  },
+  {
+   "id": "V3-export-star-with-a-string-keyed-import-attribute",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { decodeUtf8 } from './decode-utf8.js';\n",
+     "new": "export { decodeUtf8 } from './decode-utf8.js';\nexport * from 'node:crypto' with { 'type': 'json' };\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "expectedFailing": [
+    "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it"
+   ],
+   "failing": [
+    "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it"
+   ],
+   "failingAsExpected": true,
+   "load1Before": "32.40",
+   "load1After": "33.81",
+   "exit": 1,
+   "passed": 32,
+   "failed": 1,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it",
+     "message": "AssertionError: expected [ \u2026(2) ] to deeply equal [ Array(1) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/packages/support/src/support-purity.test.ts:85:22\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n "
+    }
+   ]
+  },
+  {
+   "id": "V4-type-only-import",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { decodeUtf8 } from './decode-utf8.js';\n",
+     "new": "export { decodeUtf8 } from './decode-utf8.js';\nimport type { value } from 'node:crypto';\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "expectedFailing": [
+    "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it"
+   ],
+   "failing": [
+    "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it"
+   ],
+   "failingAsExpected": true,
+   "load1Before": "33.81",
+   "load1After": "34.39",
+   "exit": 1,
+   "passed": 32,
+   "failed": 1,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it",
+     "message": "AssertionError: expected [ \u2026(2) ] to deeply equal [ Array(1) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/packages/support/src/support-purity.test.ts:85:22\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n "
+    }
+   ]
+  },
+  {
+   "id": "V5-type-only-export-star",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { decodeUtf8 } from './decode-utf8.js';\n",
+     "new": "export { decodeUtf8 } from './decode-utf8.js';\nexport type * from 'node:crypto';\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "expectedFailing": [
+    "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it"
+   ],
+   "failing": [
+    "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it"
+   ],
+   "failingAsExpected": true,
+   "load1Before": "34.39",
+   "load1After": "35.32",
+   "exit": 1,
+   "passed": 32,
+   "failed": 1,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it",
+     "message": "AssertionError: expected [ \u2026(2) ] to deeply equal [ Array(1) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/packages/support/src/support-purity.test.ts:85:22\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n "
+    }
+   ]
+  },
+  {
+   "id": "V6-export-star-inside-a-nested-declare-module-block",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { decodeUtf8 } from './decode-utf8.js';\n",
+     "new": "export { decodeUtf8 } from './decode-utf8.js';\ndeclare module './sha256.js' {\n  export * from 'node:crypto';\n}\n"
+    }
+   ],
+   "expected": "survives",
+   "observed": "survives",
+   "expectedFailing": null,
+   "failing": [],
+   "failingAsExpected": true,
+   "load1Before": "35.32",
+   "load1After": "34.61",
+   "exit": 0,
+   "passed": 33,
+   "failed": 0,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [],
+   "fileMessages": [],
+   "failedTests": []
+  },
+  {
+   "id": "V7-import-equals-require-with-a-space",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { decodeUtf8 } from './decode-utf8.js';\n",
+     "new": "export { decodeUtf8 } from './decode-utf8.js';\nimport value = require ('node:crypto');\nexport { value };\n"
+    }
+   ],
+   "expected": "survives",
+   "observed": "survives",
+   "expectedFailing": null,
+   "failing": [],
+   "failingAsExpected": true,
+   "load1Before": "34.61",
+   "load1After": "33.68",
+   "exit": 0,
+   "passed": 33,
+   "failed": 0,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [],
+   "fileMessages": [],
+   "failedTests": []
+  },
+  {
+   "id": "V8-local-re-export-of-createHash",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "  return createHash('sha256').update(value).digest('hex');\n}\n",
+     "new": "  return createHash('sha256').update(value).digest('hex');\n}\nexport { createHash };\n"
+    },
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { sha256 } from './sha256.js';\n",
+     "new": "export { sha256, createHash } from './sha256.js';\n"
+    }
+   ],
+   "expected": "survives",
+   "observed": "survives",
+   "expectedFailing": null,
+   "failing": [],
+   "failingAsExpected": true,
+   "load1Before": "33.68",
+   "load1After": "32.99",
+   "exit": 0,
+   "passed": 33,
+   "failed": 0,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [],
+   "fileMessages": [],
+   "failedTests": []
+  },
+  {
+   "id": "V9-literal-dynamic-import-of-node-crypto-with-a-space",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { decodeUtf8 } from './decode-utf8.js';\n",
+     "new": "export { decodeUtf8 } from './decode-utf8.js';\nexport const value = () => import ('node:crypto');\n"
+    }
+   ],
+   "expected": "survives",
+   "observed": "survives",
+   "expectedFailing": null,
+   "failing": [],
+   "failingAsExpected": true,
+   "load1Before": "32.99",
+   "load1After": "32.19",
+   "exit": 0,
+   "passed": 33,
+   "failed": 0,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [],
+   "fileMessages": [],
+   "failedTests": []
+  },
+  {
+   "id": "V10-named-re-export-under-an-allowed-name",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { decodeUtf8 } from './decode-utf8.js';\n",
+     "new": "export { decodeUtf8 } from './decode-utf8.js';\nexport { createHash as value } from 'node:crypto';\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "expectedFailing": [
+    "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it"
+   ],
+   "failing": [
+    "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it"
+   ],
+   "failingAsExpected": true,
+   "load1Before": "32.19",
+   "load1After": "34.25",
+   "exit": 1,
+   "passed": 32,
+   "failed": 1,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it",
+     "message": "AssertionError: expected [ \u2026(2) ] to deeply equal [ Array(1) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/packages/support/src/support-purity.test.ts:85:22\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n "
+    }
+   ]
+  },
+  {
+   "id": "V11-export-star-in-a-nested-mts-module",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/io/value.mts",
+     "old": null,
+     "new": "export * from 'node:crypto';\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "expectedFailing": [
+    "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it"
+   ],
+   "failing": [
+    "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it"
+   ],
+   "failingAsExpected": true,
+   "load1Before": "34.25",
+   "load1After": "33.43",
+   "exit": 1,
+   "passed": 32,
+   "failed": 1,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it",
+     "message": "AssertionError: expected [ \u2026(2) ] to deeply equal [ Array(1) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/packages/support/src/support-purity.test.ts:85:22\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n "
+    }
+   ]
+  },
+  {
+   "id": "V12-export-star-in-a-tsx-module-re-exported",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/value.tsx",
+     "old": null,
+     "new": "export * from 'node:crypto';\n"
+    },
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { decodeUtf8 } from './decode-utf8.js';\n",
+     "new": "export { decodeUtf8 } from './decode-utf8.js';\nexport * from './value.js';\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "expectedFailing": [
+    "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it"
+   ],
+   "failing": [
+    "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it"
+   ],
+   "failingAsExpected": true,
+   "load1Before": "33.43",
+   "load1After": "36.52",
+   "exit": 1,
+   "passed": 32,
+   "failed": 1,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it",
+     "message": "AssertionError: expected [ \u2026(2) ] to deeply equal [ Array(1) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/packages/support/src/support-purity.test.ts:85:22\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n "
+    }
+   ]
+  },
+  {
+   "id": "Q1-module-declaration-reader-reads-imports-only",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "(ts.isImportDeclaration(statement) || ts.isExportDeclaration(statement)) && ",
+     "new": "ts.isImportDeclaration(statement) && "
+    }
+   ],
+   "expected": "survives",
+   "observed": "survives",
+   "expectedFailing": null,
+   "failing": [],
+   "failingAsExpected": true,
+   "load1Before": "36.52",
+   "load1After": "35.90",
+   "exit": 0,
+   "passed": 33,
+   "failed": 0,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [],
+   "fileMessages": [],
+   "failedTests": []
+  },
+  {
+   "id": "Q1Y7-reader-narrowed-plus-export-star",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "(ts.isImportDeclaration(statement) || ts.isExportDeclaration(statement)) && ",
+     "new": "ts.isImportDeclaration(statement) && "
+    },
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { decodeUtf8 } from './decode-utf8.js';\n",
+     "new": "export { decodeUtf8 } from './decode-utf8.js';\nexport * from 'node:crypto';\n"
+    }
+   ],
+   "expected": "survives",
+   "observed": "survives",
+   "expectedFailing": null,
+   "failing": [],
+   "failingAsExpected": true,
+   "load1Before": "35.90",
+   "load1After": "35.03",
+   "exit": 0,
+   "passed": 33,
+   "failed": 0,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [],
+   "fileMessages": [],
+   "failedTests": []
+  },
+  {
+   "id": "W1-scan-without-recursion-alone",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "readdirSync(dir, { recursive: true, encoding: 'utf8' })",
+     "new": "readdirSync(dir, { encoding: 'utf8' })"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "expectedFailing": [
+    "@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit"
+   ],
+   "failing": [
+    "@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit"
+   ],
+   "failingAsExpected": true,
+   "load1Before": "35.03",
+   "load1After": "34.86",
+   "exit": 1,
+   "passed": 32,
+   "failed": 1,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit",
+     "message": "AssertionError: expected [ 'a.ts', 'c.mts', 'd.cjs' ] to deeply equal [ 'a.ts', 'c.mts', 'd.cjs', 'io/b.ts' ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/packages/support/src/support-purity.test.ts:64:54\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/node_modu"
+    }
+   ]
+  },
+  {
+   "id": "W2-filter-narrowed-to-ts",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "/\\.[cm]?[jt]sx?$/u.test(name)",
+     "new": "/\\.ts$/u.test(name)"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "expectedFailing": [
+    "@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit"
+   ],
+   "failing": [
+    "@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit"
+   ],
+   "failingAsExpected": true,
+   "load1Before": "34.86",
+   "load1After": "37.12",
+   "exit": 1,
+   "passed": 32,
+   "failed": 1,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit",
+     "message": "AssertionError: expected [ 'a.ts', 'io/b.ts' ] to deeply equal [ 'a.ts', 'c.mts', 'd.cjs', 'io/b.ts' ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/packages/support/src/support-purity.test.ts:64:54\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/node_modules/@vi"
+    }
+   ]
+  },
+  {
+   "id": "W3-filter-drops-m-and-c",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "/\\.[cm]?[jt]sx?$/u.test(name)",
+     "new": "/\\.[jt]sx?$/u.test(name)"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "expectedFailing": [
+    "@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit"
+   ],
+   "failing": [
+    "@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit"
+   ],
+   "failingAsExpected": true,
+   "load1Before": "37.12",
+   "load1After": "36.79",
+   "exit": 1,
+   "passed": 32,
+   "failed": 1,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit",
+     "message": "AssertionError: expected [ 'a.ts', 'io/b.ts' ] to deeply equal [ 'a.ts', 'c.mts', 'd.cjs', 'io/b.ts' ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/packages/support/src/support-purity.test.ts:64:54\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/node_modules/@vi"
+    }
+   ]
+  },
+  {
+   "id": "W4-filter-drops-js",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "/\\.[cm]?[jt]sx?$/u.test(name)",
+     "new": "/\\.[cm]?tsx?$/u.test(name)"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "expectedFailing": [
+    "@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit"
+   ],
+   "failing": [
+    "@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit"
+   ],
+   "failingAsExpected": true,
+   "load1Before": "36.79",
+   "load1After": "36.56",
+   "exit": 1,
+   "passed": 32,
+   "failed": 1,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit",
+     "message": "AssertionError: expected [ 'a.ts', 'c.mts', 'io/b.ts' ] to deeply equal [ 'a.ts', 'c.mts', 'd.cjs', 'io/b.ts' ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/packages/support/src/support-purity.test.ts:64:54\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/node_mo"
+    }
+   ]
+  },
+  {
+   "id": "W5-filter-drops-the-x-forms",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "/\\.[cm]?[jt]sx?$/u.test(name)",
+     "new": "/\\.[cm]?[jt]s$/u.test(name)"
+    }
+   ],
+   "expected": "survives",
+   "observed": "survives",
+   "expectedFailing": null,
+   "failing": [],
+   "failingAsExpected": true,
+   "load1Before": "36.56",
+   "load1After": "36.52",
+   "exit": 0,
+   "passed": 33,
+   "failed": 0,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [],
+   "fileMessages": [],
+   "failedTests": []
+  },
+  {
+   "id": "W5V12-x-forms-dropped-plus-a-tsx-export-star",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "/\\.[cm]?[jt]sx?$/u.test(name)",
+     "new": "/\\.[cm]?[jt]s$/u.test(name)"
+    },
+    {
+     "path": "packages/support/src/value.tsx",
+     "old": null,
+     "new": "export * from 'node:crypto';\n"
+    },
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { decodeUtf8 } from './decode-utf8.js';\n",
+     "new": "export { decodeUtf8 } from './decode-utf8.js';\nexport * from './value.js';\n"
+    }
+   ],
+   "expected": "survives",
+   "observed": "survives",
+   "expectedFailing": null,
+   "failing": [],
+   "failingAsExpected": true,
+   "load1Before": "36.52",
+   "load1After": "35.12",
+   "exit": 0,
+   "passed": 33,
+   "failed": 0,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [],
+   "fileMessages": [],
+   "failedTests": []
+  },
+  {
+   "id": "W6-test-exclusion-broadened-to-any-test-substring",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "!name.endsWith('.test.ts')",
+     "new": "!name.includes('test')"
+    }
+   ],
+   "expected": "survives",
+   "observed": "survives",
+   "expectedFailing": null,
+   "failing": [],
+   "failingAsExpected": true,
+   "load1Before": "35.12",
+   "load1After": "34.31",
+   "exit": 0,
+   "passed": 33,
+   "failed": 0,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [],
+   "fileMessages": [],
+   "failedTests": []
+  },
+  {
+   "id": "W7-testkit-exclusion-broadened-to-any-depth",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "name !== 'purity.testkit.ts'",
+     "new": "!name.endsWith('purity.testkit.ts')"
+    }
+   ],
+   "expected": "survives",
+   "observed": "survives",
+   "expectedFailing": null,
+   "failing": [],
+   "failingAsExpected": true,
+   "load1Before": "34.31",
+   "load1After": "34.13",
+   "exit": 0,
+   "passed": 33,
+   "failed": 0,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [],
+   "fileMessages": [],
+   "failedTests": []
+  },
+  {
+   "id": "K5-process-token-narrowed-to-process-env",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/purity.testkit.ts",
+     "old": "/\\bprocess\\./",
+     "new": "/\\bprocess\\.env/"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "expectedFailing": [
+    "the forbidden-token list both guards stand on is the literal list, so a narrowed token fails here"
+   ],
+   "failing": [
+    "the forbidden-token list both guards stand on is the literal list, so a narrowed token fails here"
+   ],
+   "failingAsExpected": true,
+   "load1Before": "34.13",
+   "load1After": "35.32",
+   "exit": 1,
+   "passed": 32,
+   "failed": 1,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "the forbidden-token list both guards stand on is the literal list, so a narrowed token fails here",
+     "message": "AssertionError: expected [ '/\\brequire\\(/', \u2026(8) ] to deeply equal [ '/\\brequire\\(/', \u2026(8) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/packages/support/src/support-purity.test.ts:142:35\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/node_modules/@vitest/runn"
+    }
+   ]
+  },
+  {
+   "id": "K6-os-dropped-from-the-module-token",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/purity.testkit.ts",
+     "old": "|child_process|os)",
+     "new": "|child_process)"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "expectedFailing": [
+    "the forbidden-token list both guards stand on is the literal list, so a narrowed token fails here"
+   ],
+   "failing": [
+    "the forbidden-token list both guards stand on is the literal list, so a narrowed token fails here"
+   ],
+   "failingAsExpected": true,
+   "load1Before": "35.32",
+   "load1After": "36.89",
+   "exit": 1,
+   "passed": 32,
+   "failed": 1,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "the forbidden-token list both guards stand on is the literal list, so a narrowed token fails here",
+     "message": "AssertionError: expected [ '/\\brequire\\(/', \u2026(8) ] to deeply equal [ '/\\brequire\\(/', \u2026(8) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/packages/support/src/support-purity.test.ts:142:35\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/node_modules/@vitest/runn"
+    }
+   ]
+  },
+  {
+   "id": "U1-logical-and-assignment",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "  return createHash('sha256').update(value).digest('hex');\n}\n",
+     "new": "  return createHash('sha256').update(value).digest('hex');\n}\nObject.freeze &&= (value) => value;\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "expectedFailing": [
+    "@syzygy/support stays a pure leaf assigns to no property in any source, so no allowed global is rewritten"
+   ],
+   "failing": [
+    "@syzygy/support stays a pure leaf assigns to no property in any source, so no allowed global is rewritten"
+   ],
+   "failingAsExpected": true,
+   "load1Before": "36.89",
+   "load1After": "35.95",
+   "exit": 1,
+   "passed": 32,
+   "failed": 1,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf assigns to no property in any source, so no allowed global is rewritten",
+     "message": "AssertionError: expected [ Array(1) ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/packages/support/src/support-purity.test.ts:99:20\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at "
+    }
+   ]
+  },
+  {
+   "id": "U2-compound-plus-assignment",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "  return createHash('sha256').update(value).digest('hex');\n}\n",
+     "new": "  return createHash('sha256').update(value).digest('hex');\n}\nObject.values += '';\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "expectedFailing": [
+    "@syzygy/support stays a pure leaf assigns to no property in any source, so no allowed global is rewritten"
+   ],
+   "failing": [
+    "@syzygy/support stays a pure leaf assigns to no property in any source, so no allowed global is rewritten"
+   ],
+   "failingAsExpected": true,
+   "load1Before": "35.95",
+   "load1After": "36.11",
+   "exit": 1,
+   "passed": 32,
+   "failed": 1,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf assigns to no property in any source, so no allowed global is rewritten",
+     "message": "AssertionError: expected [ 'sha256.ts: Object.values += \\'\\'' ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/packages/support/src/support-purity.test.ts:99:20\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/node_modules/@vitest/runner/dist/chu"
+    }
+   ]
+  },
+  {
+   "id": "U3-element-write",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "  return createHash('sha256').update(value).digest('hex');\n}\n",
+     "new": "  return createHash('sha256').update(value).digest('hex');\n}\nObject['freeze'] = (value) => value;\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "expectedFailing": [
+    "@syzygy/support stays a pure leaf assigns to no property in any source, so no allowed global is rewritten"
+   ],
+   "failing": [
+    "@syzygy/support stays a pure leaf assigns to no property in any source, so no allowed global is rewritten"
+   ],
+   "failingAsExpected": true,
+   "load1Before": "36.11",
+   "load1After": "35.06",
+   "exit": 1,
+   "passed": 32,
+   "failed": 1,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf assigns to no property in any source, so no allowed global is rewritten",
+     "message": "AssertionError: expected [ Array(1) ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/packages/support/src/support-purity.test.ts:99:20\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at "
+    }
+   ]
+  },
+  {
+   "id": "U4-array-destructuring-write",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "  return createHash('sha256').update(value).digest('hex');\n}\n",
+     "new": "  return createHash('sha256').update(value).digest('hex');\n}\n[Object.freeze] = [(value) => value];\n"
+    }
+   ],
+   "expected": "survives",
+   "observed": "survives",
+   "expectedFailing": null,
+   "failing": [],
+   "failingAsExpected": true,
+   "load1Before": "35.06",
+   "load1After": "36.26",
+   "exit": 0,
+   "passed": 33,
+   "failed": 0,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [],
+   "fileMessages": [],
+   "failedTests": []
+  },
+  {
+   "id": "U5-object-destructuring-write",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "  return createHash('sha256').update(value).digest('hex');\n}\n",
+     "new": "  return createHash('sha256').update(value).digest('hex');\n}\n({ value: Object.freeze } = { value: (bytes) => bytes });\n"
+    }
+   ],
+   "expected": "survives",
+   "observed": "survives",
+   "expectedFailing": null,
+   "failing": [],
+   "failingAsExpected": true,
+   "load1Before": "36.26",
+   "load1After": "37.04",
+   "exit": 0,
+   "passed": 33,
+   "failed": 0,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [],
+   "fileMessages": [],
+   "failedTests": []
+  },
+  {
+   "id": "Q2-write-reader-drops-element-access-plus-U3",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "(ts.isPropertyAccessExpression(node.left) || ts.isElementAccessExpression(node.left)))",
+     "new": "(ts.isPropertyAccessExpression(node.left)))"
+    },
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "  return createHash('sha256').update(value).digest('hex');\n}\n",
+     "new": "  return createHash('sha256').update(value).digest('hex');\n}\nObject['freeze'] = (value) => value;\n"
+    }
+   ],
+   "expected": "survives",
+   "observed": "survives",
+   "expectedFailing": null,
+   "failing": [],
+   "failingAsExpected": true,
+   "load1Before": "37.04",
+   "load1After": "35.76",
+   "exit": 0,
+   "passed": 33,
+   "failed": 0,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [],
+   "fileMessages": [],
+   "failedTests": []
+  },
+  {
+   "id": "G1-bundleDriver-ignores-its-aliases",
+   "tests": [
+    "packages/polaris-dossier/src/no-egress.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/polaris-dossier/src/no-egress.test.ts",
+     "old": "    alias: aliases,\n",
+     "new": "    alias: workspaceAliases(),\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "expectedFailing": [
+    "the S10 bundle takes each workspace package from the source its entry names (syzygy-bpyt.6.14) bundles the driver only under the guard: an alias that leaves the sources fails it"
+   ],
+   "failing": [
+    "the S10 bundle takes each workspace package from the source its entry names (syzygy-bpyt.6.14) bundles the driver only under the guard: an alias that leaves the sources fails it"
+   ],
+   "failingAsExpected": true,
+   "load1Before": "35.76",
+   "load1After": "34.60",
+   "exit": 1,
+   "passed": 5,
+   "failed": 1,
+   "pending": 1,
+   "total": 7,
+   "failedFiles": [
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/packages/polaris-dossier/src/no-egress.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "the S10 bundle takes each workspace package from the source its entry names (syzygy-bpyt.6.14) bundles the driver only under the guard: an alias that leaves the sources fails it",
+     "message": "Error: promise resolved \"undefined\" instead of rejecting\n    at _Assertion.__VITEST_REJECTS__ (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/node_modules/@vitest/expect/dist/index.js:1610:17)\n    at _Assertion.propertyGetter (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/h"
+    }
+   ]
+  },
+  {
+   "id": "G2-guard-checks-only-external",
+   "tests": [
+    "packages/polaris-dossier/src/no-egress.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/polaris-dossier/src/no-egress.test.ts",
+     "old": "if (resolved.external || !/^(?:packages|apps)\\/[^/]+\\/src\\//u.test(relative)) {",
+     "new": "if (resolved.external) {"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "expectedFailing": [
+    "the S10 bundle takes each workspace package from the source its entry names (syzygy-bpyt.6.14) bundles the driver only under the guard: an alias that leaves the sources fails it",
+    "the S10 bundle takes each workspace package from the source its entry names (syzygy-bpyt.6.14) fails the bundle when an @syzygy specifier resolves outside them"
+   ],
+   "failing": [
+    "the S10 bundle takes each workspace package from the source its entry names (syzygy-bpyt.6.14) bundles the driver only under the guard: an alias that leaves the sources fails it",
+    "the S10 bundle takes each workspace package from the source its entry names (syzygy-bpyt.6.14) fails the bundle when an @syzygy specifier resolves outside them"
+   ],
+   "failingAsExpected": true,
+   "load1Before": "34.60",
+   "load1After": "33.69",
+   "exit": 1,
+   "passed": 4,
+   "failed": 2,
+   "pending": 1,
+   "total": 7,
+   "failedFiles": [
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/packages/polaris-dossier/src/no-egress.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "the S10 bundle takes each workspace package from the source its entry names (syzygy-bpyt.6.14) bundles the driver only under the guard: an alias that leaves the sources fails it",
+     "message": "AssertionError: expected [Function] to throw error including '@syzygy/support resolves outside pack\u2026' but got 'Build failed with 41 errors:\\napps/th\u2026'\n    at _Assertion.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/node_modules/@vitest/expect/dist/index.js:1420:16)\n    at _Assertion.<anonymous> (file:///tmp/claude-1000/"
+    },
+    {
+     "name": "the S10 bundle takes each workspace package from the source its entry names (syzygy-bpyt.6.14) fails the bundle when an @syzygy specifier resolves outside them",
+     "message": "Error: promise resolved \"{ errors: [], \u2026(4) }\" instead of rejecting\n    at _Assertion.__VITEST_REJECTS__ (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r2/head/node_modules/@vitest/expect/dist/index.js:1610:17)\n    at _Assertion.propertyGetter (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/r"
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,8 @@
+key a/../b alone	import	node=error ERR_PACKAGE_PATH_NOT_EXPORTED	guard=its condition key "a/../b" has a /../ segment, and no condition Node matches by default has one
+key a/../b alone	require	node=error ERR_PACKAGE_PATH_NOT_EXPORTED	guard=its condition key "a/../b" has a /../ segment, and no condition Node matches by default has one
+nested key, default after	import	node=loads	guard=its node > condition key "x/../import" has a /../ segment, and no condition Node matches by default has one
+nested key, default after	require	node=loads	guard=its node > condition key "x/../import" has a /../ segment, and no condition Node matches by default has one
+key after default	import	node=loads	guard=its condition key "a/../b" has a /../ segment, and no condition Node matches by default has one
+key after default	require	node=loads	guard=its condition key "a/../b" has a /../ segment, and no condition Node matches by default has one
+key a/..b, default after	import	node=loads	guard=accepts
+key a/..b, default after	require	node=loads	guard=accepts

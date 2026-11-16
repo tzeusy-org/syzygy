@@ -1,0 +1,12 @@
+fragment 1: old occurs 1 in prior, 1 before apply; new occurs 1 in head; old occurs 0 in head
+fragment 2: old occurs 1 in prior, 1 before apply; new occurs 1 in head; old occurs 0 in head
+fragment 3: old occurs 1 in prior, 1 before apply; new occurs 1 in head; old occurs 0 in head
+prior lines 226, head lines 228, patched lines 226
+residual diff (prior+fragments -> head):
+--- prior+fragments
++++ head
+@@ -77 +77,3 @@
+-// fire (syzygy-bpyt.4.22). SIGKILL, because the daemon handles SIGTERM as a graceful shutdown.
++// fire (syzygy-bpyt.4.22). SIGKILL, because the daemon handles SIGTERM as a graceful shutdown. The governed-plane row runs
++// without the variable, as captured: it is the one row that reaches port resolution with no --port, so it pins that the
++// default resolves to a valid port. A regression that wrongly admitted that argv could hold 7477 until the timeout.

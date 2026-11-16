@@ -1,0 +1,11 @@
+
+ RUN  v3.2.7 /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-515b/clone
+
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/polaris-authority-sweep.test.ts (5 tests) 701ms
+   ✓ Zero downstream citations of Polaris as authority (PWB-REQ-014) > no source/authority/provenance field in the governance, spec, code or docs trees names the Polaris surface  462ms
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  02:20:20
+   Duration  3.32s (transform 1.49s, setup 33ms, collect 1.90s, tests 701ms, environment 1ms, prepare 97ms)
+

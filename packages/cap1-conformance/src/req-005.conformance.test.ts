@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { readDeclaration, registerProject } from '@syzygy/cap1-core';
-import { projectYaml } from './fixtures/index.js';
+import { corrupt, projectYaml } from './fixtures/index.js';
 
 // CAP1-REQ-005 — Registration facts are deterministic per declaration
 // and revision (invariant).
@@ -30,7 +30,7 @@ describe('CAP1-REQ-005 — registration facts are deterministic per (declaration
   });
 
   it('invalid input is deterministic too — failure sets are deeply equal across runs', () => {
-    const corrupted = VALID_SOURCE.replace('owner: uniquosity@gmail.com', 'owner: ""');
+    const corrupted = corrupt(VALID_SOURCE, 'owner: uniquosity@gmail.com', 'owner: ""');
     const first = registerProject(readDeclaration(corrupted), 'rev-1');
     const second = registerProject(readDeclaration(corrupted), 'rev-1');
     expect(second).toEqual(first);

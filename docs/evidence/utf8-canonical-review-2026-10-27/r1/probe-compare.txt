@@ -1,0 +1,13 @@
+probe-base.json (utf8-probe.mjs on a5ab2b28 built) sha256 be4bd04594ccd42f0b2e129a1a38c0709f342f0a416fdb803b4f3c1f28cc2667 bytes 1893911
+probe-head.json (utf8-probe.mjs on 2d3f9375 built) sha256 be4bd04594ccd42f0b2e129a1a38c0709f342f0a416fdb803b4f3c1f28cc2667 bytes 1893911
+committed docs/evidence/syzygy-bpyt-6-3/utf8-probe-output-base.json at 2d3f9375 sha256 be4bd04594ccd42f0b2e129a1a38c0709f342f0a416fdb803b4f3c1f28cc2667
+compare-utf8-probe.py probe-base.json probe-head.json:
+{
+ "rowsCompared": 12841,
+ "rowsDiffer": 0,
+ "missing": 0,
+ "extra": 0,
+ "differPerDriver": {},
+ "firstDiffering": [],
+ "corpusEqual": true
+}

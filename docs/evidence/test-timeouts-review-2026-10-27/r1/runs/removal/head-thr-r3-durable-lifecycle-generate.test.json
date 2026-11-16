@@ -1,0 +1,107 @@
+{
+ "files": [
+  {
+   "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-537/clone/apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts",
+   "project": "@syzygy/three-surface-poc-app",
+   "type": "suite",
+   "name": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts",
+   "line": null,
+   "mode": "run",
+   "state": "pass",
+   "durationMs": 70.8121699999997,
+   "errors": [],
+   "tasks": [
+    {
+     "type": "suite",
+     "name": "durable lifecycle with an injected generate port",
+     "line": 35,
+     "mode": "run",
+     "state": "pass",
+     "durationMs": 70.07225200000039,
+     "errors": [],
+     "tasks": [
+      {
+       "type": "test",
+       "name": "runs the pipeline through the injected port with its permit and abort signal",
+       "line": 36,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 16.91222800000014,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "reserves the configured per-attempt ceilings, capped by the request budget",
+       "line": 45,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 14.187220999999681,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "has no default ceilings: a missing or malformed one is refused at construction, before any state",
+       "line": 54,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 2.38121799999999,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "refuses a malformed per-attempt ceiling before creating any state",
+       "line": 65,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 3.016298000000006,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "a generate failure after the claim leaves an uncertain record that a restart never replays",
+       "line": 73,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 10.415426000000025,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "a crash while a call is in flight leaves a claim that refuses any replay, even by a fresh lifecycle",
+       "line": 85,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 4.021056000000044,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "reuses completed checkpoints after a restart and sends only the missing stage through the new port",
+       "line": 103,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 9.063120999999683,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "releases an attempt whose per-call permission is withdrawn without calling generate, and only an exact true permits",
+       "line": 115,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 9.244042999999692,
+       "errors": []
+      }
+     ],
+     "hookMs": 1
+    }
+   ],
+   "hookMs": 1,
+   "collectMs": 1003.9520009999999,
+   "setupMs": 17.004752999999937,
+   "prepareMs": 539.273167,
+   "environmentMs": 0.23138700000004064
+  }
+ ],
+ "unhandled": []
+}

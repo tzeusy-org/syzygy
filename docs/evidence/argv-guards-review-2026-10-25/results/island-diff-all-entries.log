@@ -1,0 +1,29 @@
+{
+ "base": "3ec6929951080613b3c5cb7205fe303c5449be58",
+ "head": "43ae35febce90724228e2e6001ee0b6e4c98597b",
+ "vitestExit": 0,
+ "entries": 246,
+ "equal": 246,
+ "unequal": [],
+ "entriesWithEdgesIntoIsland": 20,
+ "entriesWithUnresolved": 0,
+ "stats": {
+  "apps/syzygy/src/main.ts": {
+   "reachable": 137,
+   "intoIsland": 0,
+   "unresolved": 0
+  },
+  "packages/polaris-generation-consent/src/index.ts": {
+   "reachable": 32,
+   "intoIsland": 11,
+   "unresolved": 0
+  }
+ },
+ "answersSha256": "e297b289a9f722bdfe5840064f27e1454df131795eecb5b6c1546f30a1cae777",
+ "cleanAfter": true,
+ "scratchSha256": {
+  "packages/polaris-generation-core/src/zz-r524-old-reach.ts": "e554fba6e959260e64d67ce22280dd7c24f580b17d5f8a147c1a475a151eed16",
+  "packages/polaris-generation-core/src/zz-r524-new-reach.ts": "a5d3b559f6723f15c4a6fe035ae239ca474a12a10d4a3e4a95683ca8945b58ba",
+  "packages/polaris-generation-core/src/zz-r524-island-diff.test.ts": "ad0884812374c40c63032e03335298eca9c4a69bd7933820b6987fa53ec1eaf2"
+ }
+}

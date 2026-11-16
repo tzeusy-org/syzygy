@@ -1,0 +1,20 @@
+{
+ "numTotalTests": 5379,
+ "numPassedTests": 5374,
+ "numFailedTests": 0,
+ "numPendingTests": 5,
+ "numTodoTests": 0,
+ "numTotalTestSuites": 869,
+ "numFailedTestSuites": 0,
+ "success": true,
+ "files": 246,
+ "failed": [],
+ "skippedByFile": {
+  "packages/polaris-dossier/src/no-egress.test.ts": 1,
+  "packages/three-surface-poc-core/src/test-artifact-verification.live.test.ts": 1,
+  "packages/three-surface-poc-core/src/work-items.live.test.ts": 1,
+  "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts": 1,
+  "apps/three-surface-poc/src/project-shape-discovery.live.test.ts": 1
+ },
+ "failedInSubject": 0
+}

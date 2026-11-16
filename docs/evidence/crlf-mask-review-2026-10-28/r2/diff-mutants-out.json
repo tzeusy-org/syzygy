@@ -1,0 +1,233 @@
+{
+ "tool": "rev-544-r2/tools/diff-mutants.mjs",
+ "results": [
+  {
+   "id": "none",
+   "file": null,
+   "old": null,
+   "new": null,
+   "head": {
+    "exit": 0,
+    "failingChecks": [],
+    "failureCount": 0,
+    "c1": 0,
+    "first50ByCorpus": {}
+   },
+   "withoutSlice": {
+    "exit": 0,
+    "failingChecks": [],
+    "failureCount": 0,
+    "c1": 0,
+    "first50ByCorpus": {}
+   }
+  },
+  {
+   "id": "S5-js-set",
+   "file": "markdown-code-context.js",
+   "old": "const LINE_END = /\\r\\n|\\r|\\n/g;",
+   "new": "const LINE_END = /\\r\\n|[\\r\\n\\u2028\\u2029]/g;",
+   "head": {
+    "exit": 1,
+    "failingChecks": [
+     "C1"
+    ],
+    "failureCount": 2918,
+    "c1": 2918,
+    "first50ByCorpus": {
+     "C1:lf-separators": 50
+    }
+   },
+   "withoutSlice": {
+    "exit": 0,
+    "failingChecks": [],
+    "failureCount": 0,
+    "c1": 0,
+    "first50ByCorpus": {}
+   }
+  },
+  {
+   "id": "S6-nel",
+   "file": "markdown-code-context.js",
+   "old": "const LINE_END = /\\r\\n|\\r|\\n/g;",
+   "new": "const LINE_END = /\\r\\n|\\r|\\n|\\x85/g;",
+   "head": {
+    "exit": 1,
+    "failingChecks": [
+     "C1"
+    ],
+    "failureCount": 1394,
+    "c1": 1394,
+    "first50ByCorpus": {
+     "C1:lf-separators": 50
+    }
+   },
+   "withoutSlice": {
+    "exit": 0,
+    "failingChecks": [],
+    "failureCount": 0,
+    "c1": 0,
+    "first50ByCorpus": {}
+   }
+  },
+  {
+   "id": "MU17-u2028",
+   "file": "markdown-code-context.js",
+   "old": "const LINE_END = /\\r\\n|\\r|\\n/g;",
+   "new": "const LINE_END = /\\r\\n|\\r|\\n|\\u2028/g;",
+   "head": {
+    "exit": 1,
+    "failingChecks": [
+     "C1"
+    ],
+    "failureCount": 1459,
+    "c1": 1459,
+    "first50ByCorpus": {
+     "C1:lf-separators": 50
+    }
+   },
+   "withoutSlice": {
+    "exit": 0,
+    "failingChecks": [],
+    "failureCount": 0,
+    "c1": 0,
+    "first50ByCorpus": {}
+   }
+  },
+  {
+   "id": "RW1-u2029",
+   "file": "markdown-code-context.js",
+   "old": "const LINE_END = /\\r\\n|\\r|\\n/g;",
+   "new": "const LINE_END = /\\r\\n|\\r|\\n|\\u2029/g;",
+   "head": {
+    "exit": 1,
+    "failingChecks": [
+     "C1"
+    ],
+    "failureCount": 1459,
+    "c1": 1459,
+    "first50ByCorpus": {
+     "C1:lf-separators": 50
+    }
+   },
+   "withoutSlice": {
+    "exit": 0,
+    "failingChecks": [],
+    "failureCount": 0,
+    "c1": 0,
+    "first50ByCorpus": {}
+   }
+  },
+  {
+   "id": "RW3-vt-ff",
+   "file": "markdown-code-context.js",
+   "old": "const LINE_END = /\\r\\n|\\r|\\n/g;",
+   "new": "const LINE_END = /\\r\\n|[\\r\\n\\v\\f]/g;",
+   "head": {
+    "exit": 0,
+    "failingChecks": [],
+    "failureCount": 0,
+    "c1": 0,
+    "first50ByCorpus": {}
+   },
+   "withoutSlice": {
+    "exit": 0,
+    "failingChecks": [],
+    "failureCount": 0,
+    "c1": 0,
+    "first50ByCorpus": {}
+   }
+  },
+  {
+   "id": "RW5-closer-separators",
+   "file": "markdown-code-context.js",
+   "old": "/^ {0,3}(`{3,}|~{3,}) *$/",
+   "new": "/^ {0,3}(`{3,}|~{3,})[ \\u2028\\u2029\\x85]*$/",
+   "head": {
+    "exit": 1,
+    "failingChecks": [
+     "C1"
+    ],
+    "failureCount": 324,
+    "c1": 324,
+    "first50ByCorpus": {
+     "C1:lf-separators": 50
+    }
+   },
+   "withoutSlice": {
+    "exit": 0,
+    "failingChecks": [],
+    "failureCount": 0,
+    "c1": 0,
+    "first50ByCorpus": {}
+   }
+  },
+  {
+   "id": "RW7-span-reset-at-u2028",
+   "file": "markdown-code-context.js",
+   "old": "rendered += span === undefined ? line[cursor] : ' ';",
+   "new": "if (line[cursor] === '\\u2028') span = undefined;\n        rendered += span === undefined ? line[cursor] : ' ';",
+   "head": {
+    "exit": 1,
+    "failingChecks": [
+     "C1"
+    ],
+    "failureCount": 424,
+    "c1": 424,
+    "first50ByCorpus": {
+     "C1:lf-separators": 50
+    }
+   },
+   "withoutSlice": {
+    "exit": 0,
+    "failingChecks": [],
+    "failureCount": 0,
+    "c1": 0,
+    "first50ByCorpus": {}
+   }
+  },
+  {
+   "id": "RW9-lfcr-is-one-line-end",
+   "file": "markdown-code-context.js",
+   "old": "const LINE_END = /\\r\\n|\\r|\\n/g;",
+   "new": "const LINE_END = /\\r\\n|\\n\\r|\\r|\\n/g;",
+   "head": {
+    "exit": 0,
+    "failingChecks": [],
+    "failureCount": 0,
+    "c1": 0,
+    "first50ByCorpus": {}
+   },
+   "withoutSlice": {
+    "exit": 0,
+    "failingChecks": [],
+    "failureCount": 0,
+    "c1": 0,
+    "first50ByCorpus": {}
+   }
+  },
+  {
+   "id": "RW10-positionOf-u2028",
+   "file": "git-object-reader.js",
+   "old": "if (text.charCodeAt(i) === 10) {",
+   "new": "if (text.charCodeAt(i) === 10 || text.charCodeAt(i) === 0x2028) {",
+   "head": {
+    "exit": 1,
+    "failingChecks": [
+     "C1"
+    ],
+    "failureCount": 261,
+    "c1": 261,
+    "first50ByCorpus": {
+     "C1:lf-separators": 50
+    }
+   },
+   "withoutSlice": {
+    "exit": 0,
+    "failingChecks": [],
+    "failureCount": 0,
+    "c1": 0,
+    "first50ByCorpus": {}
+   }
+  }
+ ]
+}

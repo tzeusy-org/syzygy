@@ -1,0 +1,44 @@
+{
+ "head": "5db78a26699a07716edd303484c0f7241df02e9e",
+ "specs": "rev536-specs.json",
+ "results": [
+  {
+   "id": "BASELINE",
+   "oldCounts": [],
+   "exit": 0,
+   "outcome": "survives",
+   "tests": 169,
+   "passed": 169,
+   "failing": [],
+   "timeouts": 0,
+   "filesFailedWithoutRows": [],
+   "load1": "37.29",
+   "seconds": 5.8,
+   "edits": []
+  },
+  {
+   "id": "RV536-M7-npm-alias-workspace-scope-only",
+   "oldCounts": [
+    1
+   ],
+   "exit": 1,
+   "outcome": "killed",
+   "tests": 169,
+   "passed": 168,
+   "failing": [
+    "the shared workspace resolver reads a bare name declared as an npm: alias of a registry package as naming no module"
+   ],
+   "timeouts": 0,
+   "filesFailedWithoutRows": [],
+   "load1": "35.22",
+   "seconds": 4.5,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:@syzygy\\/|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,112 @@
+{
+  "subject": "the PR #543 reviewer's four survivors against generation-mutation.test.ts (PR #546)",
+  "commit": "02eb444f22a673748567620c5f0d45877a27f2ff",
+  "reviewerTool": {
+    "path": "docs/evidence/gen-mutation-plan-review-2026-10-27/r1/tools/own_test_mutants.py",
+    "sha256": "d2424e20e7a7da2c64f4c32060a6b6fbdef8eeb727ef44479c147125175f870f"
+  },
+  "tool": {
+    "path": "rev-546/tools/reviewer_survivors.py",
+    "sha256": "0f096e22c76956c627d1892f0f5bd668c685158e8e8027e48833c288ca6c9b07"
+  },
+  "mutants": [
+    {
+      "id": "R1",
+      "edits": {
+        "packages/polaris-generation-core/src/pipeline.ts": [
+          {
+            "old": "      if (calls >= budget.maxCalls) stop('budget-exhausted');",
+            "new": "      if (budget.maxCalls <= calls) stop('budget-exhausted'); // was: if (calls >= budget.maxCalls) stop('budget-exhausted');"
+          }
+        ]
+      },
+      "sameEditsInPrTool": true,
+      "observed": {
+        "exit": 1,
+        "total": 13,
+        "failed": 1,
+        "failureMessages": [
+          "AssertionError: pipeline-max-calls-disabled: the mutation changes the emitted JavaScript: expected 'import { quotableGenerationSources, v…' not to be 'import { quotableGenerationSources, v…' // Object.is equality"
+        ],
+        "fileErrors": []
+      },
+      "killed": true,
+      "restored": true
+    },
+    {
+      "id": "R2",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "    file: DRAFT_MODEL_SOURCE,",
+            "new": "    file: 'apps/three-surface-poc/src/polaris-generation/generation-mutation.ts',"
+          }
+        ]
+      },
+      "sameEditsInPrTool": true,
+      "observed": {
+        "exit": 1,
+        "total": 13,
+        "failed": 1,
+        "failureMessages": [
+          "AssertionError: provider-draft-duplicate-handle-check-disabled: apps/three-surface-poc/src/polaris-generation/generation-mutation.ts is a non-test file under packages/polaris-generation-core/src/: expected false to be true // Object.is equality"
+        ],
+        "fileErrors": []
+      },
+      "killed": true,
+      "restored": true
+    },
+    {
+      "id": "R4",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "mustFail: ['rejects pollution keys'],",
+            "new": "mustFail: ['rejects pollution keyz'],"
+          }
+        ]
+      },
+      "sameEditsInPrTool": true,
+      "observed": {
+        "exit": 1,
+        "total": 13,
+        "failed": 1,
+        "failureMessages": [
+          "AssertionError: parse-json-pollution-key-check-disabled: must-fail \"rejects pollution keyz\" is in a test title: expected false to be true // Object.is equality"
+        ],
+        "fileErrors": []
+      },
+      "killed": true,
+      "restored": true
+    },
+    {
+      "id": "R5",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "to: \"if (false) stop('budget-exhausted');\",",
+            "new": "to: \"if (calls >=  budget.maxCalls) stop('budget-exhausted');\","
+          }
+        ]
+      },
+      "sameEditsInPrTool": true,
+      "observed": {
+        "exit": 1,
+        "total": 13,
+        "failed": 1,
+        "failureMessages": [
+          "AssertionError: pipeline-max-calls-disabled: the mutation changes the emitted JavaScript: expected 'import { quotableGenerationSources, v…' not to be 'import { quotableGenerationSources, v…' // Object.is equality"
+        ],
+        "fileErrors": []
+      },
+      "killed": true,
+      "restored": true
+    }
+  ],
+  "treeCleanAfter": true,
+  "summary": {
+    "mutants": 4,
+    "killed": 4,
+    "restored": 4
+  }
+}

@@ -1,0 +1,70 @@
+
+ RUN  v3.2.7 /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-541/clone
+
+ ✓ |@syzygy/polaris-dossier| packages/polaris-dossier/src/waiting-sessions.test.ts (116 tests) 39452ms
+   ✓ await > waits a bounded slice, on the local file system, and says to run it again (mutant: no slice bound)  363ms
+   ✓ await > refuses a session directory given under a sessions root named for no run (mutant: drop that directory check)  418ms
+   ✓ await > refuses a session directory given naming no session (mutant: drop that directory check)  338ms
+   ✓ await > checks only a file inside the session directory (mutant: drop the containment check)  492ms
+   ✓ await > checks nothing from a session a newer one replaced (mutant: drop the latest-session check)  317ms
+   ✓ await --submit --stdin: the session writes nothing, Syzygy writes its file > writes the inventory from standard input into the session directory, byte for byte, and checks it (mutant: check without writing)  312ms
+   ✓ await --submit --stdin: the session writes nothing, Syzygy writes its file > replaces an earlier submission when the session resubmits after a repair (mutant: create the file only once)  425ms
+   ✓ await --submit --stdin: the session writes nothing, Syzygy writes its file > writes nothing for an inventory session, any name but inventory.json (mutant: drop the file-name rule)  399ms
+   ✓ await --submit --stdin: the session writes nothing, Syzygy writes its file > writes nothing for an inventory session, a path out of its directory (mutant: drop the file-name rule)  445ms
+   ✓ await --submit --stdin: the session writes nothing, Syzygy writes its file > writes nothing for a review session, a verdict outside a round (mutant: drop the file-name rule)  1408ms
+   ✓ await --submit --stdin: the session writes nothing, Syzygy writes its file > writes nothing for a review session, a round not delivered (mutant: drop the file-name rule)  829ms
+   ✓ await --submit --stdin: the session writes nothing, Syzygy writes its file > writes nothing for a review session, another file in a delivered round (mutant: drop the file-name rule)  805ms
+   ✓ await --submit --stdin: the session writes nothing, Syzygy writes its file > writes nothing for a review session, a round whose delivery note is missing (mutant: drop the file-name rule)  741ms
+   ✓ await --submit --stdin: the session writes nothing, Syzygy writes its file > refuses standard input that is empty, writing nothing (mutant: drop the bound)  485ms
+   ✓ await --submit --stdin: the session writes nothing, Syzygy writes its file > refuses standard input that is over the draft size bound, writing nothing (mutant: drop the bound)  308ms
+   ✓ await --submit --stdin: the session writes nothing, Syzygy writes its file > takes --stdin only with --submit (mutant: ignore a stray --stdin)  397ms
+   ✓ delivery to a waiting review session > delivers the packet as round 1, which await re-hashes and names (mutant: deliver into the session root)  1033ms
+   ✓ delivery to a waiting review session > refuses a round whose the packet no longer matches (mutant: compare one digest only)  558ms
+   ✓ delivery to a waiting review session > refuses a round whose the run's delivery record no longer matches (mutant: compare one digest only)  478ms
+   ✓ delivery to a waiting review session > refuses a round whose the digest file no longer matches (mutant: compare one digest only)  613ms
+   ✓ delivery to a waiting review session > refuses a round whose the session's delivery file no longer matches (mutant: compare one digest only)  567ms
+   ✓ delivery to a waiting review session > takes no new tool, version or model for a waiting session (mutant: let --tool through)  750ms
+   ✓ delivery to a waiting review session > checks the waiting session's own provider statement at delivery (mutant: check the run's pair instead)  489ms
+   ✓ delivery to a waiting review session > refuses a delivery when a successor replaced the statement the waiting session was started under (mutant: drop the citation recheck)  507ms
+   ✓ delivery to a waiting review session > says no packet is delivered when the waiting session's record cites no statement (mutant: string-replace the counting phrase)  408ms
+   ✓ delivery to a waiting review session > with --fresh hands the packet to a new session instead (mutant: ignore --fresh)  516ms
+   ✓ a reviewer that continues across revisions > discloses a first-round reviewer as such on the review page (mutant: omit the continuity item)  829ms
+   ✓ a reviewer that continues across revisions > delivers the repaired subject to the same session as round 2 and discloses it on the review page and in the machine view (mutant: never mark continuing)  723ms
+   ✓ a reviewer that continues across revisions > discloses a fresh session that declares an earlier verdict's session identifier as continuing (mutant: read delivery records only)  631ms
+   ✓ a reviewer that continues across revisions > does not mark a fresh session with a new identifier as continuing (mutant: mark every later verdict continuing)  1283ms
+   ✓ a rendered-design reviewer's continuity, disclosed in the review-status region > says a first-round design reviewer had no earlier packet (mutant: disclose a continuing design reviewer only)  619ms
+   ✓ a rendered-design reviewer's continuity, disclosed in the review-status region > discloses a design reviewer that continued to round 2 (mutant: drop the design continuity sentence)  975ms
+   ✓ link-safe session directories (review-408 F1) > delivers nothing into a review session directory replaced by a link (mutant: skip the directory check in delivery)  453ms
+   ✓ link-safe session directories (review-408 F1) > delivers nothing to a prompt record naming a directory outside the sessions root, even one that resolves into it (mutant: drop the lexical sessions-root check)  321ms
+   ✓ the predicates review-408 F4 named > delivers nothing to a prompt record that names no directory (mutant: drop the directory-type check)  325ms
+   ✓ the predicates review-408 F4 named > hands a packet over at once when the latest session of its kind was not started to wait (mutant: drop the waiting-mode check on delivery)  359ms
+   ✓ the predicates review-408 F4 named > counts no delivery record with a round that disagrees with its name (mutant: drop that record check)  511ms
+   ✓ the predicates review-408 F4 named > counts no delivery record with no packet digest (mutant: drop that record check)  1248ms
+   ✓ the predicates review-408 F4 named > refuses --round 0 (mutant: loosen that grammar or drop the cap)  879ms
+   ✓ the predicates review-408 F4 named > refuses --round two (mutant: loosen that grammar or drop the cap)  386ms
+   ✓ the predicates review-408 F4 named > refuses --wait-minutes 0 (mutant: loosen that grammar or drop the cap)  389ms
+   ✓ the predicates review-408 F4 named > refuses --wait-minutes 61, past the cap (mutant: loosen that grammar or drop the cap)  367ms
+   ✓ the predicates review-408 F4 named > refuses --submit with --round (mutant: let --submit take it)  380ms
+   ✓ the predicates review-408 F4 named > refuses --submit with --wait-minutes (mutant: let --submit take it)  493ms
+   ✓ the predicates review-408 F4 named > gives an inventory session one round only (mutant: drop the inventory round check)  566ms
+   ✓ the predicates review-408 F4 named > refuses a prompt record with no prompt (mutant: drop that part of the prompt record check)  373ms
+   ✓ the predicates review-408 F4 named > refuses a delivery note that names another round, even with the right digest (mutant: drop that field of the note check)  359ms
+   ✓ the predicates review-408 F4 named > refuses a delivery note that names another kind, even with the right digest (mutant: drop that field of the note check)  438ms
+   ✓ the predicates review-408 F4 named > refuses a delivery note that names another session, even with the right digest (mutant: drop that field of the note check)  484ms
+   ✓ the predicates review-408 F4 named > delivers nothing when the waiting session's record names no agent tool (mutant: drop the recorded-tool check)  822ms
+   ✓ the predicates review-408 F4 named > delivers no design packet before a render, and no fidelity packet before the inventory counts (mutant: deliver a packet that failed to build)  649ms
+   ✓ the predicates review-408 F4 named > verifies the gates again when a packet arrives, and reads nothing past the deadline (mutant: drop the re-check)  467ms
+   ✓ the predicates review-408 F4 named > refuses session-prompt all once the run's deadline has passed (mutant: drop that step's gate check)  321ms
+   ✓ the predicates review-408 F4 named > refuses await once the run's deadline has passed (mutant: drop that step's gate check)  419ms
+   ✓ the predicates review-408 F4 named > refuses a delivery once the run's deadline has passed (mutant: drop that step's gate check)  323ms
+   ✓ the predicates review-408 F4 named > refuses a sessions root that resolves into the clone (mutant: drop the sessions-root check of session-prompt all)  335ms
+   ✓ the predicates review-408 F4 named > refuses session-prompt for an inventory with --fresh (mutant: drop that refusal)  411ms
+   ✓ await --stdin validates before it writes (review-408 F5) > keeps the inventory that passed when the next submission is not JSON (mutant: drop that check)  418ms
+   ✓ await --stdin validates before it writes (review-408 F5) > keeps the inventory that passed when the next submission is not UTF-8 (mutant: drop that check)  695ms
+   ✓ await --stdin validates before it writes (review-408 F5) > keeps the inventory that passed when the next submission is deeper than the bound (mutant: drop that check)  323ms
+
+ Test Files  1 passed (1)
+      Tests  116 passed (116)
+   Start at  16:46:47
+   Duration  41.84s (transform 1.43s, setup 22ms, collect 1.78s, tests 39.45s, environment 0ms, prepare 128ms)
+

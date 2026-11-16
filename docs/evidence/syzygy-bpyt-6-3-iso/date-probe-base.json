@@ -1,0 +1,787 @@
+{
+ "commit": "81862261ddbc2b3c8e8481851f3c27129217d477",
+ "corpusSize": 59,
+ "validators": [
+  {
+   "id": "act-fields isIsoDate",
+   "kind": "date",
+   "file": "packages/three-surface-poc-core/src/act-fields.ts",
+   "how": "the function itself, from its exact text",
+   "exactText": "export function isIsoDate(value: string): boolean {\n  return ISO_DATE.test(value) && !Number.isNaN(Date.parse(`${value}T00:00:00Z`));\n}",
+   "exactTextSha256": "4849ab4a02385b7af4c0fb0ade4595a3d82a1de83c90047d4df6c36c07d930ba"
+  },
+  {
+   "id": "package-reader day (line 706)",
+   "kind": "date",
+   "file": "packages/polaris-generation-consent/src/package-reader.ts",
+   "how": "rebuilt from the line: finite parse, then the round trip to the same day",
+   "exactText": "const day = Date.parse(`${date}T00:00:00Z`);\n  if (!Number.isSafeInteger(day) || new Date(day).toISOString().slice(0, 10) !== date",
+   "exactTextSha256": "c47d3522a1f6a4148330dfdfcc2dc147f67554647baaee56d29cd5b40d5da450"
+  },
+  {
+   "id": "project-shape-observation isIsoInstant",
+   "kind": "instant",
+   "file": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+   "how": "the function itself, from its exact text",
+   "exactText": "function isIsoInstant(text: string): boolean {\n  return /^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})$/.test(text) && !Number.isNaN(Date.parse(text));\n}",
+   "exactTextSha256": "96fd1e3ca38e61e6528b7ae5d88196e6ce3af8c3354bd77178af973777885504"
+  },
+  {
+   "id": "dossier check issuedAt (line 414)",
+   "kind": "instant",
+   "file": "packages/polaris-dossier/src/check.ts",
+   "how": "rebuilt from the line: the millisecond form, then a finite parse",
+   "exactText": "!/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$/.test(issuedAt) ? Number.NaN : Date.parse(issuedAt)",
+   "exactTextSha256": "8e159cc02e8fd99edd22ecbc7dadbb86d26e2b9e9abc9db5aa75582299b21dc1"
+  },
+  {
+   "id": "dossier run-record pinnedAt (line 154)",
+   "kind": "instant",
+   "file": "packages/polaris-dossier/src/run-record.ts",
+   "how": "rebuilt from the line and its INSTANT constant: the form with optional milliseconds, then a finite parse",
+   "exactText": "const INSTANT = /^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3})?Z$/;",
+   "exactTextSha256": "87d2a178cad06389a694c5df3c034d18bd61fce7b1631bcb4f6c23060aee7fb2"
+  },
+  {
+   "id": "package-reader actInstant (line 111)",
+   "kind": "instant",
+   "file": "packages/polaris-generation-consent/src/package-reader.ts",
+   "how": "rebuilt from the lines: whole seconds with Z, the same day as the stated date, finite parse, round trip to the same text",
+   "exactText": "const m = /^(\\d{4}-\\d{2}-\\d{2})T\\d{2}:\\d{2}:\\d{2}Z$/.exec(value);",
+   "exactTextSha256": "9628e795f771a2e30a116cd73630e598db8082c0c53211719e699a6f9e0e67aa"
+  }
+ ],
+ "pairs": {
+  "dateOnly": {
+   "\"2026-02-28\"": {
+    "act-fields isIsoDate": "T",
+    "package-reader day (line 706)": "T"
+   },
+   "\"2026-02-29\"": {
+    "act-fields isIsoDate": "T",
+    "package-reader day (line 706)": "F"
+   },
+   "\"2024-02-29\"": {
+    "act-fields isIsoDate": "T",
+    "package-reader day (line 706)": "T"
+   },
+   "\"2000-02-29\"": {
+    "act-fields isIsoDate": "T",
+    "package-reader day (line 706)": "T"
+   },
+   "\"1900-02-29\"": {
+    "act-fields isIsoDate": "T",
+    "package-reader day (line 706)": "F"
+   },
+   "\"2026-02-30\"": {
+    "act-fields isIsoDate": "T",
+    "package-reader day (line 706)": "F"
+   },
+   "\"2026-02-31\"": {
+    "act-fields isIsoDate": "T",
+    "package-reader day (line 706)": "F"
+   },
+   "\"2026-04-31\"": {
+    "act-fields isIsoDate": "T",
+    "package-reader day (line 706)": "F"
+   },
+   "\"2026-13-01\"": {
+    "act-fields isIsoDate": "F",
+    "package-reader day (line 706)": "F"
+   },
+   "\"2026-00-10\"": {
+    "act-fields isIsoDate": "F",
+    "package-reader day (line 706)": "F"
+   },
+   "\"2026-01-00\"": {
+    "act-fields isIsoDate": "F",
+    "package-reader day (line 706)": "F"
+   },
+   "\"2026-01-32\"": {
+    "act-fields isIsoDate": "F",
+    "package-reader day (line 706)": "F"
+   },
+   "\"0000-01-01\"": {
+    "act-fields isIsoDate": "T",
+    "package-reader day (line 706)": "T"
+   },
+   "\"0001-01-01\"": {
+    "act-fields isIsoDate": "T",
+    "package-reader day (line 706)": "T"
+   },
+   "\"9999-12-31\"": {
+    "act-fields isIsoDate": "T",
+    "package-reader day (line 706)": "T"
+   },
+   "\"10000-01-01\"": {
+    "act-fields isIsoDate": "F",
+    "package-reader day (line 706)": "F"
+   },
+   "\"+010000-01-01\"": {
+    "act-fields isIsoDate": "F",
+    "package-reader day (line 706)": "F"
+   },
+   "\"-000001-01-01\"": {
+    "act-fields isIsoDate": "F",
+    "package-reader day (line 706)": "F"
+   },
+   "\"+275760-09-13\"": {
+    "act-fields isIsoDate": "F",
+    "package-reader day (line 706)": "F"
+   }
+  }
+ },
+ "table": [
+  {
+   "input": "\"2026-02-28\"",
+   "outcomes": {
+    "act-fields isIsoDate": "T",
+    "package-reader day (line 706)": "T",
+    "project-shape-observation isIsoInstant": "F",
+    "dossier check issuedAt (line 414)": "F",
+    "dossier run-record pinnedAt (line 154)": "F",
+    "package-reader actInstant (line 111)": "F"
+   }
+  },
+  {
+   "input": "\"2026-02-29\"",
+   "outcomes": {
+    "act-fields isIsoDate": "T",
+    "package-reader day (line 706)": "F",
+    "project-shape-observation isIsoInstant": "F",
+    "dossier check issuedAt (line 414)": "F",
+    "dossier run-record pinnedAt (line 154)": "F",
+    "package-reader actInstant (line 111)": "F"
+   }
+  },
+  {
+   "input": "\"2024-02-29\"",
+   "outcomes": {
+    "act-fields isIsoDate": "T",
+    "package-reader day (line 706)": "T",
+    "project-shape-observation isIsoInstant": "F",
+    "dossier check issuedAt (line 414)": "F",
+    "dossier run-record pinnedAt (line 154)": "F",
+    "package-reader actInstant (line 111)": "F"
+   }
+  },
+  {
+   "input": "\"2000-02-29\"",
+   "outcomes": {
+    "act-fields isIsoDate": "T",
+    "package-reader day (line 706)": "T",
+    "project-shape-observation isIsoInstant": "F",
+    "dossier check issuedAt (line 414)": "F",
+    "dossier run-record pinnedAt (line 154)": "F",
+    "package-reader actInstant (line 111)": "F"
+   }
+  },
+  {
+   "input": "\"1900-02-29\"",
+   "outcomes": {
+    "act-fields isIsoDate": "T",
+    "package-reader day (line 706)": "F",
+    "project-shape-observation isIsoInstant": "F",
+    "dossier check issuedAt (line 414)": "F",
+    "dossier run-record pinnedAt (line 154)": "F",
+    "package-reader actInstant (line 111)": "F"
+   }
+  },
+  {
+   "input": "\"2026-02-30\"",
+   "outcomes": {
+    "act-fields isIsoDate": "T",
+    "package-reader day (line 706)": "F",
+    "project-shape-observation isIsoInstant": "F",
+    "dossier check issuedAt (line 414)": "F",
+    "dossier run-record pinnedAt (line 154)": "F",
+    "package-reader actInstant (line 111)": "F"
+   }
+  },
+  {
+   "input": "\"2026-02-31\"",
+   "outcomes": {
+    "act-fields isIsoDate": "T",
+    "package-reader day (line 706)": "F",
+    "project-shape-observation isIsoInstant": "F",
+    "dossier check issuedAt (line 414)": "F",
+    "dossier run-record pinnedAt (line 154)": "F",
+    "package-reader actInstant (line 111)": "F"
+   }
+  },
+  {
+   "input": "\"2026-04-31\"",
+   "outcomes": {
+    "act-fields isIsoDate": "T",
+    "package-reader day (line 706)": "F",
+    "project-shape-observation isIsoInstant": "F",
+    "dossier check issuedAt (line 414)": "F",
+    "dossier run-record pinnedAt (line 154)": "F",
+    "package-reader actInstant (line 111)": "F"
+   }
+  },
+  {
+   "input": "\"2026-13-01\"",
+   "outcomes": {
+    "act-fields isIsoDate": "F",
+    "package-reader day (line 706)": "F",
+    "project-shape-observation isIsoInstant": "F",
+    "dossier check issuedAt (line 414)": "F",
+    "dossier run-record pinnedAt (line 154)": "F",
+    "package-reader actInstant (line 111)": "F"
+   }
+  },
+  {
+   "input": "\"2026-00-10\"",
+   "outcomes": {
+    "act-fields isIsoDate": "F",
+    "package-reader day (line 706)": "F",
+    "project-shape-observation isIsoInstant": "F",
+    "dossier check issuedAt (line 414)": "F",
+    "dossier run-record pinnedAt (line 154)": "F",
+    "package-reader actInstant (line 111)": "F"
+   }
+  },
+  {
+   "input": "\"2026-01-00\"",
+   "outcomes": {
+    "act-fields isIsoDate": "F",
+    "package-reader day (line 706)": "F",
+    "project-shape-observation isIsoInstant": "F",
+    "dossier check issuedAt (line 414)": "F",
+    "dossier run-record pinnedAt (line 154)": "F",
+    "package-reader actInstant (line 111)": "F"
+   }
+  },
+  {
+   "input": "\"2026-01-32\"",
+   "outcomes": {
+    "act-fields isIsoDate": "F",
+    "package-reader day (line 706)": "F",
+    "project-shape-observation isIsoInstant": "F",
+    "dossier check issuedAt (line 414)": "F",
+    "dossier run-record pinnedAt (line 154)": "F",
+    "package-reader actInstant (line 111)": "F"
+   }
+  },
+  {
+   "input": "\"0000-01-01\"",
+   "outcomes": {
+    "act-fields isIsoDate": "T",
+    "package-reader day (line 706)": "T",
+    "project-shape-observation isIsoInstant": "F",
+    "dossier check issuedAt (line 414)": "F",
+    "dossier run-record pinnedAt (line 154)": "F",
+    "package-reader actInstant (line 111)": "F"
+   }
+  },
+  {
+   "input": "\"0001-01-01\"",
+   "outcomes": {
+    "act-fields isIsoDate": "T",
+    "package-reader day (line 706)": "T",
+    "project-shape-observation isIsoInstant": "F",
+    "dossier check issuedAt (line 414)": "F",
+    "dossier run-record pinnedAt (line 154)": "F",
+    "package-reader actInstant (line 111)": "F"
+   }
+  },
+  {
+   "input": "\"9999-12-31\"",
+   "outcomes": {
+    "act-fields isIsoDate": "T",
+    "package-reader day (line 706)": "T",
+    "project-shape-observation isIsoInstant": "F",
+    "dossier check issuedAt (line 414)": "F",
+    "dossier run-record pinnedAt (line 154)": "F",
+    "package-reader actInstant (line 111)": "F"
+   }
+  },
+  {
+   "input": "\"10000-01-01\"",
+   "outcomes": {
+    "act-fields isIsoDate": "F",
+    "package-reader day (line 706)": "F",
+    "project-shape-observation isIsoInstant": "F",
+    "dossier check issuedAt (line 414)": "F",
+    "dossier run-record pinnedAt (line 154)": "F",
+    "package-reader actInstant (line 111)": "F"
+   }
+  },
+  {
+   "input": "\"+010000-01-01\"",
+   "outcomes": {
+    "act-fields isIsoDate": "F",
+    "package-reader day (line 706)": "F",
+    "project-shape-observation isIsoInstant": "F",
+    "dossier check issuedAt (line 414)": "F",
+    "dossier run-record pinnedAt (line 154)": "F",
+    "package-reader actInstant (line 111)": "F"
+   }
+  },
+  {
+   "input": "\"-000001-01-01\"",
+   "outcomes": {
+    "act-fields isIsoDate": "F",
+    "package-reader day (line 706)": "F",
+    "project-shape-observation isIsoInstant": "F",
+    "dossier check issuedAt (line 414)": "F",
+    "dossier run-record pinnedAt (line 154)": "F",
+    "package-reader actInstant (line 111)": "F"
+   }
+  },
+  {
+   "input": "\"+275760-09-13\"",
+   "outcomes": {
+    "act-fields isIsoDate": "F",
+    "package-reader day (line 706)": "F",
+    "project-shape-observation isIsoInstant": "F",
+    "dossier check issuedAt (line 414)": "F",
+    "dossier run-record pinnedAt (line 154)": "F",
+    "package-reader actInstant (line 111)": "F"
+   }
+  },
+  {
+   "input": "\"2026-1-1\"",
+   "outcomes": {
+    "act-fields isIsoDate": "F",
+    "package-reader day (line 706)": "F",
+    "project-shape-observation isIsoInstant": "F",
+    "dossier check issuedAt (line 414)": "F",
+    "dossier run-record pinnedAt (line 154)": "F",
+    "package-reader actInstant (line 111)": "F"
+   }
+  },
+  {
+   "input": "\"20260101\"",
+   "outcomes": {
+    "act-fields isIsoDate": "F",
+    "package-reader day (line 706)": "F",
+    "project-shape-observation isIsoInstant": "F",
+    "dossier check issuedAt (line 414)": "F",
+    "dossier run-record pinnedAt (line 154)": "F",
+    "package-reader actInstant (line 111)": "F"
+   }
+  },
+  {
+   "input": "\" 2026-01-01\"",
+   "outcomes": {
+    "act-fields isIsoDate": "F",
+    "package-reader day (line 706)": "F",
+    "project-shape-observation isIsoInstant": "F",
+    "dossier check issuedAt (line 414)": "F",
+    "dossier run-record pinnedAt (line 154)": "F",
+    "package-reader actInstant (line 111)": "F"
+   }
+  },
+  {
+   "input": "\"2026-01-01 \"",
+   "outcomes": {
+    "act-fields isIsoDate": "F",
+    "package-reader day (line 706)": "F",
+    "project-shape-observation isIsoInstant": "F",
+    "dossier check issuedAt (line 414)": "F",
+    "dossier run-record pinnedAt (line 154)": "F",
+    "package-reader actInstant (line 111)": "F"
+   }
+  },
+  {
+   "input": "\"2026-01-01\\n\"",
+   "outcomes": {
+    "act-fields isIsoDate": "F",
+    "package-reader day (line 706)": "F",
+    "project-shape-observation isIsoInstant": "F",
+    "dossier check issuedAt (line 414)": "F",
+    "dossier run-record pinnedAt (line 154)": "F",
+    "package-reader actInstant (line 111)": "F"
+   }
+  },
+  {
+   "input": "\"\"",
+   "outcomes": {
+    "act-fields isIsoDate": "F",
+    "package-reader day (line 706)": "F",
+    "project-shape-observation isIsoInstant": "F",
+    "dossier check issuedAt (line 414)": "F",
+    "dossier run-record pinnedAt (line 154)": "F",
+    "package-reader actInstant (line 111)": "F"
+   }
+  },
+  {
+   "input": "\"2026-01-01T\"",
+   "outcomes": {
+    "act-fields isIsoDate": "F",
+    "package-reader day (line 706)": "F",
+    "project-shape-observation isIsoInstant": "F",
+    "dossier check issuedAt (line 414)": "F",
+    "dossier run-record pinnedAt (line 154)": "F",
+    "package-reader actInstant (line 111)": "F"
+   }
+  },
+  {
+   "input": "\"x\"",
+   "outcomes": {
+    "act-fields isIsoDate": "F",
+    "package-reader day (line 706)": "F",
+    "project-shape-observation isIsoInstant": "F",
+    "dossier check issuedAt (line 414)": "F",
+    "dossier run-record pinnedAt (line 154)": "F",
+    "package-reader actInstant (line 111)": "F"
+   }
+  },
+  {
+   "input": "\"2026-01-01T00:00:00Z\"",
+   "outcomes": {
+    "act-fields isIsoDate": "F",
+    "package-reader day (line 706)": "F",
+    "project-shape-observation isIsoInstant": "T",
+    "dossier check issuedAt (line 414)": "F",
+    "dossier run-record pinnedAt (line 154)": "T",
+    "package-reader actInstant (line 111)": "T"
+   }
+  },
+  {
+   "input": "\"2026-01-01t00:00:00z\"",
+   "outcomes": {
+    "act-fields isIsoDate": "F",
+    "package-reader day (line 706)": "F",
+    "project-shape-observation isIsoInstant": "F",
+    "dossier check issuedAt (line 414)": "F",
+    "dossier run-record pinnedAt (line 154)": "F",
+    "package-reader actInstant (line 111)": "F"
+   }
+  },
+  {
+   "input": "\"2026-01-01T00:00:00z\"",
+   "outcomes": {
+    "act-fields isIsoDate": "F",
+    "package-reader day (line 706)": "F",
+    "project-shape-observation isIsoInstant": "F",
+    "dossier check issuedAt (line 414)": "F",
+    "dossier run-record pinnedAt (line 154)": "F",
+    "package-reader actInstant (line 111)": "F"
+   }
+  },
+  {
+   "input": "\"2026-01-01t00:00:00Z\"",
+   "outcomes": {
+    "act-fields isIsoDate": "F",
+    "package-reader day (line 706)": "F",
+    "project-shape-observation isIsoInstant": "F",
+    "dossier check issuedAt (line 414)": "F",
+    "dossier run-record pinnedAt (line 154)": "F",
+    "package-reader actInstant (line 111)": "F"
+   }
+  },
+  {
+   "input": "\"2026-01-01T00:00Z\"",
+   "outcomes": {
+    "act-fields isIsoDate": "F",
+    "package-reader day (line 706)": "F",
+    "project-shape-observation isIsoInstant": "F",
+    "dossier check issuedAt (line 414)": "F",
+    "dossier run-record pinnedAt (line 154)": "F",
+    "package-reader actInstant (line 111)": "F"
+   }
+  },
+  {
+   "input": "\"2026-01-01T24:00:00Z\"",
+   "outcomes": {
+    "act-fields isIsoDate": "F",
+    "package-reader day (line 706)": "F",
+    "project-shape-observation isIsoInstant": "T",
+    "dossier check issuedAt (line 414)": "F",
+    "dossier run-record pinnedAt (line 154)": "T",
+    "package-reader actInstant (line 111)": "F"
+   }
+  },
+  {
+   "input": "\"2026-01-01T24:00:01Z\"",
+   "outcomes": {
+    "act-fields isIsoDate": "F",
+    "package-reader day (line 706)": "F",
+    "project-shape-observation isIsoInstant": "F",
+    "dossier check issuedAt (line 414)": "F",
+    "dossier run-record pinnedAt (line 154)": "F",
+    "package-reader actInstant (line 111)": "F"
+   }
+  },
+  {
+   "input": "\"2026-01-01T23:59:60Z\"",
+   "outcomes": {
+    "act-fields isIsoDate": "F",
+    "package-reader day (line 706)": "F",
+    "project-shape-observation isIsoInstant": "F",
+    "dossier check issuedAt (line 414)": "F",
+    "dossier run-record pinnedAt (line 154)": "F",
+    "package-reader actInstant (line 111)": "F"
+   }
+  },
+  {
+   "input": "\"2026-01-01T23:59:59Z\"",
+   "outcomes": {
+    "act-fields isIsoDate": "F",
+    "package-reader day (line 706)": "F",
+    "project-shape-observation isIsoInstant": "T",
+    "dossier check issuedAt (line 414)": "F",
+    "dossier run-record pinnedAt (line 154)": "T",
+    "package-reader actInstant (line 111)": "T"
+   }
+  },
+  {
+   "input": "\"2026-01-01T00:00:00.5Z\"",
+   "outcomes": {
+    "act-fields isIsoDate": "F",
+    "package-reader day (line 706)": "F",
+    "project-shape-observation isIsoInstant": "T",
+    "dossier check issuedAt (line 414)": "F",
+    "dossier run-record pinnedAt (line 154)": "F",
+    "package-reader actInstant (line 111)": "F"
+   }
+  },
+  {
+   "input": "\"2026-01-01T00:00:00.123Z\"",
+   "outcomes": {
+    "act-fields isIsoDate": "F",
+    "package-reader day (line 706)": "F",
+    "project-shape-observation isIsoInstant": "T",
+    "dossier check issuedAt (line 414)": "T",
+    "dossier run-record pinnedAt (line 154)": "T",
+    "package-reader actInstant (line 111)": "F"
+   }
+  },
+  {
+   "input": "\"2026-01-01T00:00:00.1234567Z\"",
+   "outcomes": {
+    "act-fields isIsoDate": "F",
+    "package-reader day (line 706)": "F",
+    "project-shape-observation isIsoInstant": "T",
+    "dossier check issuedAt (line 414)": "F",
+    "dossier run-record pinnedAt (line 154)": "F",
+    "package-reader actInstant (line 111)": "F"
+   }
+  },
+  {
+   "input": "\"2026-01-01T00:00:00.Z\"",
+   "outcomes": {
+    "act-fields isIsoDate": "F",
+    "package-reader day (line 706)": "F",
+    "project-shape-observation isIsoInstant": "F",
+    "dossier check issuedAt (line 414)": "F",
+    "dossier run-record pinnedAt (line 154)": "F",
+    "package-reader actInstant (line 111)": "F"
+   }
+  },
+  {
+   "input": "\"2026-01-01T00:00:00+05:30\"",
+   "outcomes": {
+    "act-fields isIsoDate": "F",
+    "package-reader day (line 706)": "F",
+    "project-shape-observation isIsoInstant": "T",
+    "dossier check issuedAt (line 414)": "F",
+    "dossier run-record pinnedAt (line 154)": "F",
+    "package-reader actInstant (line 111)": "F"
+   }
+  },
+  {
+   "input": "\"2026-01-01T00:00:00+0530\"",
+   "outcomes": {
+    "act-fields isIsoDate": "F",
+    "package-reader day (line 706)": "F",
+    "project-shape-observation isIsoInstant": "F",
+    "dossier check issuedAt (line 414)": "F",
+    "dossier run-record pinnedAt (line 154)": "F",
+    "package-reader actInstant (line 111)": "F"
+   }
+  },
+  {
+   "input": "\"2026-01-01T00:00:00-00:00\"",
+   "outcomes": {
+    "act-fields isIsoDate": "F",
+    "package-reader day (line 706)": "F",
+    "project-shape-observation isIsoInstant": "T",
+    "dossier check issuedAt (line 414)": "F",
+    "dossier run-record pinnedAt (line 154)": "F",
+    "package-reader actInstant (line 111)": "F"
+   }
+  },
+  {
+   "input": "\"2026-01-01T00:00:00+24:00\"",
+   "outcomes": {
+    "act-fields isIsoDate": "F",
+    "package-reader day (line 706)": "F",
+    "project-shape-observation isIsoInstant": "F",
+    "dossier check issuedAt (line 414)": "F",
+    "dossier run-record pinnedAt (line 154)": "F",
+    "package-reader actInstant (line 111)": "F"
+   }
+  },
+  {
+   "input": "\"2026-01-01T00:00:00+23:59\"",
+   "outcomes": {
+    "act-fields isIsoDate": "F",
+    "package-reader day (line 706)": "F",
+    "project-shape-observation isIsoInstant": "T",
+    "dossier check issuedAt (line 414)": "F",
+    "dossier run-record pinnedAt (line 154)": "F",
+    "package-reader actInstant (line 111)": "F"
+   }
+  },
+  {
+   "input": "\"2026-01-01T00:00:00\"",
+   "outcomes": {
+    "act-fields isIsoDate": "F",
+    "package-reader day (line 706)": "F",
+    "project-shape-observation isIsoInstant": "F",
+    "dossier check issuedAt (line 414)": "F",
+    "dossier run-record pinnedAt (line 154)": "F",
+    "package-reader actInstant (line 111)": "F"
+   }
+  },
+  {
+   "input": "\"2026-01-01 00:00:00Z\"",
+   "outcomes": {
+    "act-fields isIsoDate": "F",
+    "package-reader day (line 706)": "F",
+    "project-shape-observation isIsoInstant": "F",
+    "dossier check issuedAt (line 414)": "F",
+    "dossier run-record pinnedAt (line 154)": "F",
+    "package-reader actInstant (line 111)": "F"
+   }
+  },
+  {
+   "input": "\"2026-02-30T00:00:00Z\"",
+   "outcomes": {
+    "act-fields isIsoDate": "F",
+    "package-reader day (line 706)": "F",
+    "project-shape-observation isIsoInstant": "T",
+    "dossier check issuedAt (line 414)": "F",
+    "dossier run-record pinnedAt (line 154)": "T",
+    "package-reader actInstant (line 111)": "F"
+   }
+  },
+  {
+   "input": "\"2026-02-29T00:00:00Z\"",
+   "outcomes": {
+    "act-fields isIsoDate": "F",
+    "package-reader day (line 706)": "F",
+    "project-shape-observation isIsoInstant": "T",
+    "dossier check issuedAt (line 414)": "F",
+    "dossier run-record pinnedAt (line 154)": "T",
+    "package-reader actInstant (line 111)": "F"
+   }
+  },
+  {
+   "input": "\"2024-02-29T12:00:00Z\"",
+   "outcomes": {
+    "act-fields isIsoDate": "F",
+    "package-reader day (line 706)": "F",
+    "project-shape-observation isIsoInstant": "T",
+    "dossier check issuedAt (line 414)": "F",
+    "dossier run-record pinnedAt (line 154)": "T",
+    "package-reader actInstant (line 111)": "T"
+   }
+  },
+  {
+   "input": "\"0000-01-01T00:00:00Z\"",
+   "outcomes": {
+    "act-fields isIsoDate": "F",
+    "package-reader day (line 706)": "F",
+    "project-shape-observation isIsoInstant": "T",
+    "dossier check issuedAt (line 414)": "F",
+    "dossier run-record pinnedAt (line 154)": "T",
+    "package-reader actInstant (line 111)": "T"
+   }
+  },
+  {
+   "input": "\"-000001-01-01T00:00:00Z\"",
+   "outcomes": {
+    "act-fields isIsoDate": "F",
+    "package-reader day (line 706)": "F",
+    "project-shape-observation isIsoInstant": "F",
+    "dossier check issuedAt (line 414)": "F",
+    "dossier run-record pinnedAt (line 154)": "F",
+    "package-reader actInstant (line 111)": "F"
+   }
+  },
+  {
+   "input": "\"+010000-01-01T00:00:00Z\"",
+   "outcomes": {
+    "act-fields isIsoDate": "F",
+    "package-reader day (line 706)": "F",
+    "project-shape-observation isIsoInstant": "F",
+    "dossier check issuedAt (line 414)": "F",
+    "dossier run-record pinnedAt (line 154)": "F",
+    "package-reader actInstant (line 111)": "F"
+   }
+  },
+  {
+   "input": "\"+275760-09-13T00:00:00.000Z\"",
+   "outcomes": {
+    "act-fields isIsoDate": "F",
+    "package-reader day (line 706)": "F",
+    "project-shape-observation isIsoInstant": "F",
+    "dossier check issuedAt (line 414)": "F",
+    "dossier run-record pinnedAt (line 154)": "F",
+    "package-reader actInstant (line 111)": "F"
+   }
+  },
+  {
+   "input": "\"+275760-09-13T00:00:00.001Z\"",
+   "outcomes": {
+    "act-fields isIsoDate": "F",
+    "package-reader day (line 706)": "F",
+    "project-shape-observation isIsoInstant": "F",
+    "dossier check issuedAt (line 414)": "F",
+    "dossier run-record pinnedAt (line 154)": "F",
+    "package-reader actInstant (line 111)": "F"
+   }
+  },
+  {
+   "input": "\"2026-01-01T00:00:00.000Z\"",
+   "outcomes": {
+    "act-fields isIsoDate": "F",
+    "package-reader day (line 706)": "F",
+    "project-shape-observation isIsoInstant": "T",
+    "dossier check issuedAt (line 414)": "T",
+    "dossier run-record pinnedAt (line 154)": "T",
+    "package-reader actInstant (line 111)": "F"
+   }
+  },
+  {
+   "input": "\"2026-01-01T00:00:00\\n\"",
+   "outcomes": {
+    "act-fields isIsoDate": "F",
+    "package-reader day (line 706)": "F",
+    "project-shape-observation isIsoInstant": "F",
+    "dossier check issuedAt (line 414)": "F",
+    "dossier run-record pinnedAt (line 154)": "F",
+    "package-reader actInstant (line 111)": "F"
+   }
+  },
+  {
+   "input": "\"２０２６-01-01\"",
+   "outcomes": {
+    "act-fields isIsoDate": "F",
+    "package-reader day (line 706)": "F",
+    "project-shape-observation isIsoInstant": "F",
+    "dossier check issuedAt (line 414)": "F",
+    "dossier run-record pinnedAt (line 154)": "F",
+    "package-reader actInstant (line 111)": "F"
+   }
+  },
+  {
+   "input": "\"٢٠٢٦-01-01\"",
+   "outcomes": {
+    "act-fields isIsoDate": "F",
+    "package-reader day (line 706)": "F",
+    "project-shape-observation isIsoInstant": "F",
+    "dossier check issuedAt (line 414)": "F",
+    "dossier run-record pinnedAt (line 154)": "F",
+    "package-reader actInstant (line 111)": "F"
+   }
+  }
+ ],
+ "disagreementCount": 25,
+ "dateOnlyRows": 59
+}

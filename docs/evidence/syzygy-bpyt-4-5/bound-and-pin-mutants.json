@@ -1,0 +1,1912 @@
+{
+ "tool": {
+  "name": "bound_and_pin_mutants.py",
+  "sha256": "c496ba4072b31347e2f7c3ac9d58efd750a4fa2f71cc3a188c8c05167980ff47"
+ },
+ "cases": {
+  "path": "mutant-cases.json",
+  "sha256": "80a34aae115f99b80d2cafdd0928aa5e93126d786fb729242b39bb1029745583"
+ },
+ "tree": "ba9d990a2b80b9aa5b3d78801b938280ee9988d7",
+ "treeDirty": false,
+ "base": "c104771ff90f47ffd070f2339c36010458679c71",
+ "results": [
+  {
+   "id": "control-capture",
+   "note": null,
+   "test": "apps/three-surface-poc/src/capture-test-artifact-main.test.ts",
+   "title": "refuses a FIFO without opening it, so a pipe nobody writes cannot hang the ingest",
+   "mutations": [],
+   "expect": {
+    "base": "pass",
+    "head": "pass"
+   },
+   "sides": [
+    {
+     "side": "base",
+     "outcome": "pass",
+     "exit": 0,
+     "killedAfterLimit": false,
+     "sessionCpuSecondsAtKill": null,
+     "seconds": 7.0,
+     "load1Start": 28.29,
+     "rows": [
+      {
+       "title": "capture-test-artifact never starts the observed project (run check) refuses a FIFO without opening it, so a pipe nobody writes cannot hang the ingest",
+       "status": "passed",
+       "durationMs": 396.487936,
+       "failure": "",
+       "byTimeout": false
+      }
+     ],
+     "tail": [],
+     "asExpected": true
+    },
+    {
+     "side": "head",
+     "outcome": "pass",
+     "exit": 0,
+     "killedAfterLimit": false,
+     "sessionCpuSecondsAtKill": null,
+     "seconds": 6.8,
+     "load1Start": 29.95,
+     "rows": [
+      {
+       "title": "capture-test-artifact never starts the observed project (run check) refuses a FIFO without opening it, so a pipe nobody writes cannot hang the ingest",
+       "status": "passed",
+       "durationMs": 190.30183599999964,
+       "failure": "",
+       "byTimeout": false
+      }
+     ],
+     "tail": [],
+     "asExpected": true
+    }
+   ]
+  },
+  {
+   "id": "fifo-no-lstat",
+   "note": "the lstat regular-file check removed: the non-blocking open and fstat refuse with another message",
+   "test": "apps/three-surface-poc/src/capture-test-artifact-main.test.ts",
+   "title": "refuses a FIFO without opening it, so a pipe nobody writes cannot hang the ingest",
+   "mutations": [
+    {
+     "file": "packages/three-surface-poc-core/src/test-artifact-verification.ts",
+     "old": "  if (!seen.isFile()) {\n    throw new Error('it is not a regular file (a symlink, FIFO, device or directory is refused)');\n  }\n",
+     "new": ""
+    }
+   ],
+   "expect": {
+    "base": "fail",
+    "head": "fail"
+   },
+   "sides": [
+    {
+     "side": "base",
+     "outcome": "fail",
+     "exit": 1,
+     "killedAfterLimit": false,
+     "sessionCpuSecondsAtKill": null,
+     "seconds": 5.9,
+     "load1Start": 33.16,
+     "rows": [
+      {
+       "title": "capture-test-artifact never starts the observed project (run check) refuses a FIFO without opening it, so a pipe nobody writes cannot hang the ingest",
+       "status": "failed",
+       "durationMs": 229.3593410000003,
+       "failure": "AssertionError: expected 'capture-test-artifact: the JUnit arti\u2026' to contain 'it is not a regular file'",
+       "byTimeout": false
+      }
+     ],
+     "tail": [],
+     "asExpected": true
+    },
+    {
+     "side": "head",
+     "outcome": "fail",
+     "exit": 1,
+     "killedAfterLimit": false,
+     "sessionCpuSecondsAtKill": null,
+     "seconds": 6.8,
+     "load1Start": 32.47,
+     "rows": [
+      {
+       "title": "capture-test-artifact never starts the observed project (run check) refuses a FIFO without opening it, so a pipe nobody writes cannot hang the ingest",
+       "status": "failed",
+       "durationMs": 247.2571109999999,
+       "failure": "AssertionError: expected 'capture-test-artifact: the JUnit arti\u2026' to contain 'it is not a regular file'",
+       "byTimeout": false
+      }
+     ],
+     "tail": [],
+     "asExpected": true
+    }
+   ]
+  },
+  {
+   "id": "fifo-blocking-open",
+   "note": "the lstat check and O_NONBLOCK removed: the open blocks, at base before the elapsed bound is reached",
+   "test": "apps/three-surface-poc/src/capture-test-artifact-main.test.ts",
+   "title": "refuses a FIFO without opening it, so a pipe nobody writes cannot hang the ingest",
+   "mutations": [
+    {
+     "file": "packages/three-surface-poc-core/src/test-artifact-verification.ts",
+     "old": "  if (!seen.isFile()) {\n    throw new Error('it is not a regular file (a symlink, FIFO, device or directory is refused)');\n  }\n",
+     "new": ""
+    },
+    {
+     "file": "packages/three-surface-poc-core/src/test-artifact-verification.ts",
+     "old": "  const fd = openSync(path, constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK);\n",
+     "new": "  const fd = openSync(path, constants.O_RDONLY | constants.O_NOFOLLOW);\n"
+    }
+   ],
+   "expect": {
+    "base": "killed",
+    "head": "killed"
+   },
+   "sides": [
+    {
+     "side": "base",
+     "outcome": "killed",
+     "exit": -9,
+     "killedAfterLimit": true,
+     "sessionCpuSecondsAtKill": 4.66,
+     "seconds": 90.2,
+     "load1Start": 34.6,
+     "rows": [],
+     "tail": [],
+     "asExpected": true
+    },
+    {
+     "side": "head",
+     "outcome": "killed",
+     "exit": -9,
+     "killedAfterLimit": true,
+     "sessionCpuSecondsAtKill": 4.19,
+     "seconds": 90.2,
+     "load1Start": 24.16,
+     "rows": [],
+     "tail": [],
+     "asExpected": true
+    }
+   ]
+  },
+  {
+   "id": "control-main",
+   "note": null,
+   "test": "apps/three-surface-poc/src/main.test.ts",
+   "title": "reports a run that finished first, at once and by name",
+   "mutations": [],
+   "expect": {
+    "base": "pass",
+    "head": "pass"
+   },
+   "sides": [
+    {
+     "side": "base",
+     "outcome": "pass",
+     "exit": 0,
+     "killedAfterLimit": false,
+     "sessionCpuSecondsAtKill": null,
+     "seconds": 4.7,
+     "load1Start": 21.77,
+     "rows": [
+      {
+       "title": "started(): the wait for main to serve reports a run that finished first, at once and by name",
+       "status": "passed",
+       "durationMs": 12.432834000000184,
+       "failure": "",
+       "byTimeout": false
+      }
+     ],
+     "tail": [],
+     "asExpected": true
+    },
+    {
+     "side": "head",
+     "outcome": "pass",
+     "exit": 0,
+     "killedAfterLimit": false,
+     "sessionCpuSecondsAtKill": null,
+     "seconds": 6.0,
+     "load1Start": 23.55,
+     "rows": [
+      {
+       "title": "started(): the wait for main to serve reports a run that finished first, at once and by name",
+       "status": "passed",
+       "durationMs": 10.385110000000168,
+       "failure": "",
+       "byTimeout": false
+      }
+     ],
+     "tail": [],
+     "asExpected": true
+    }
+   ]
+  },
+  {
+   "id": "started-waits-for-bound",
+   "note": "started() stops polling only at its bound, not when main finished",
+   "test": "apps/three-surface-poc/src/main.test.ts",
+   "title": "reports a run that finished first, at once and by name",
+   "mutations": [
+    {
+     "file": "apps/three-surface-poc/src/main.test.ts",
+     "old": "  while (fake.registered() < 2 && exitCode === undefined && Date.now() < deadline)",
+     "new": "  while (fake.registered() < 2 && Date.now() < deadline)"
+    }
+   ],
+   "expect": {
+    "base": "fail",
+    "head": "fail"
+   },
+   "sides": [
+    {
+     "side": "base",
+     "outcome": "fail",
+     "exit": 1,
+     "killedAfterLimit": false,
+     "sessionCpuSecondsAtKill": null,
+     "seconds": 13.7,
+     "load1Start": 25.35,
+     "rows": [
+      {
+       "title": "started(): the wait for main to serve reports a run that finished first, at once and by name",
+       "status": "failed",
+       "durationMs": 10031.546123,
+       "failure": "AssertionError: expected 10007 to be less than 5000",
+       "byTimeout": false
+      }
+     ],
+     "tail": [],
+     "asExpected": true
+    },
+    {
+     "side": "head",
+     "outcome": "fail",
+     "exit": 1,
+     "killedAfterLimit": false,
+     "sessionCpuSecondsAtKill": null,
+     "seconds": 33.9,
+     "load1Start": 25.63,
+     "rows": [
+      {
+       "title": "started(): the wait for main to serve reports a run that finished first, at once and by name",
+       "status": "failed",
+       "durationMs": 30039.805797,
+       "failure": "Error: STACK_TRACE_ERROR",
+       "byTimeout": true
+      }
+     ],
+     "tail": [],
+     "asExpected": true
+    }
+   ]
+  },
+  {
+   "id": "control-reader-amp",
+   "note": null,
+   "test": "packages/polaris-dossier/src/git-object-reader.test.ts",
+   "title": "the reviewer's amplification shape, 100 levels over a 64 MiB base",
+   "mutations": [],
+   "expect": {
+    "base": "pass",
+    "head": "pass"
+   },
+   "sides": [
+    {
+     "side": "base",
+     "outcome": "pass",
+     "exit": 0,
+     "killedAfterLimit": false,
+     "sessionCpuSecondsAtKill": null,
+     "seconds": 9.6,
+     "load1Start": 22.63,
+     "rows": [
+      {
+       "title": "each call is bounded: bytes inflated, delta depth, objects visited (finding 4) the reviewer's amplification shape, 100 levels over a 64 MiB base, refuses within the default per-call budget",
+       "status": "passed",
+       "durationMs": 5692.762977,
+       "failure": "",
+       "byTimeout": false
+      }
+     ],
+     "tail": [],
+     "asExpected": true
+    },
+    {
+     "side": "head",
+     "outcome": "pass",
+     "exit": 0,
+     "killedAfterLimit": false,
+     "sessionCpuSecondsAtKill": null,
+     "seconds": 8.2,
+     "load1Start": 22.14,
+     "rows": [
+      {
+       "title": "each call is bounded: bytes inflated, delta depth, objects visited (finding 4) the reviewer's amplification shape, 100 levels over a 64 MiB base, refuses within the default per-call budget",
+       "status": "passed",
+       "durationMs": 5775.7323209999995,
+       "failure": "",
+       "byTimeout": false
+      }
+     ],
+     "tail": [],
+     "asExpected": true
+    }
+   ]
+  },
+  {
+   "id": "reader-no-call-budget",
+   "note": "the per-call byte budget never refuses",
+   "test": "packages/polaris-dossier/src/git-object-reader.test.ts",
+   "title": "the reviewer's amplification shape, 100 levels over a 64 MiB base",
+   "mutations": [
+    {
+     "file": "packages/polaris-dossier/src/git-object-reader.ts",
+     "old": "    if (this.inflatedBytes > this.limits.callBytes) refuse(",
+     "new": "    if (false && this.inflatedBytes > this.limits.callBytes) refuse("
+    }
+   ],
+   "expect": {
+    "base": "fail-or-killed",
+    "head": "fail-or-killed"
+   },
+   "sides": [
+    {
+     "side": "base",
+     "outcome": "fail",
+     "exit": 1,
+     "killedAfterLimit": false,
+     "sessionCpuSecondsAtKill": null,
+     "seconds": 11.3,
+     "load1Start": 22.37,
+     "rows": [
+      {
+       "title": "each call is bounded: bytes inflated, delta depth, objects visited (finding 4) the reviewer's amplification shape, 100 levels over a 64 MiB base, refuses within the default per-call budget",
+       "status": "failed",
+       "durationMs": 8782.659803999999,
+       "failure": "Error: expected a refusal, got a result",
+       "byTimeout": false
+      }
+     ],
+     "tail": [],
+     "asExpected": true
+    },
+    {
+     "side": "head",
+     "outcome": "fail",
+     "exit": 1,
+     "killedAfterLimit": false,
+     "sessionCpuSecondsAtKill": null,
+     "seconds": 11.5,
+     "load1Start": 24.73,
+     "rows": [
+      {
+       "title": "each call is bounded: bytes inflated, delta depth, objects visited (finding 4) the reviewer's amplification shape, 100 levels over a 64 MiB base, refuses within the default per-call budget",
+       "status": "failed",
+       "durationMs": 8672.572354,
+       "failure": "Error: expected a refusal, got a result",
+       "byTimeout": false
+      }
+     ],
+     "tail": [],
+     "asExpected": true
+    }
+   ]
+  },
+  {
+   "id": "control-reader-cycle",
+   "note": null,
+   "test": "packages/polaris-dossier/src/git-object-reader.test.ts",
+   "title": "a reference delta naming itself refuses at the depth cap, quickly",
+   "mutations": [],
+   "expect": {
+    "base": "pass",
+    "head": "pass"
+   },
+   "sides": [
+    {
+     "side": "base",
+     "outcome": "pass",
+     "exit": 0,
+     "killedAfterLimit": false,
+     "sessionCpuSecondsAtKill": null,
+     "seconds": 3.5,
+     "load1Start": 24.55,
+     "rows": [
+      {
+       "title": "each call is bounded: bytes inflated, delta depth, objects visited (finding 4) a reference delta naming itself refuses at the depth cap, quickly",
+       "status": "passed",
+       "durationMs": 94.21774000000005,
+       "failure": "",
+       "byTimeout": false
+      }
+     ],
+     "tail": [],
+     "asExpected": true
+    },
+    {
+     "side": "head",
+     "outcome": "pass",
+     "exit": 0,
+     "killedAfterLimit": false,
+     "sessionCpuSecondsAtKill": null,
+     "seconds": 2.6,
+     "load1Start": 24.55,
+     "rows": [
+      {
+       "title": "each call is bounded: bytes inflated, delta depth, objects visited (finding 4) a reference delta naming itself refuses at the depth cap, quickly",
+       "status": "passed",
+       "durationMs": 72.23695599999996,
+       "failure": "",
+       "byTimeout": false
+      }
+     ],
+     "tail": [],
+     "asExpected": true
+    }
+   ]
+  },
+  {
+   "id": "reader-no-depth-cap",
+   "note": "the delta-chain depth cap never refuses",
+   "test": "packages/polaris-dossier/src/git-object-reader.test.ts",
+   "title": "a reference delta naming itself refuses at the depth cap, quickly",
+   "mutations": [
+    {
+     "file": "packages/polaris-dossier/src/git-object-reader.ts",
+     "old": "    if (depth > this.limits.chainDepth) refuse(",
+     "new": "    if (false && depth > this.limits.chainDepth) refuse("
+    }
+   ],
+   "expect": {
+    "base": "fail-or-killed",
+    "head": "fail-or-killed"
+   },
+   "sides": [
+    {
+     "side": "base",
+     "outcome": "fail",
+     "exit": 1,
+     "killedAfterLimit": false,
+     "sessionCpuSecondsAtKill": null,
+     "seconds": 7.6,
+     "load1Start": 24.67,
+     "rows": [
+      {
+       "title": "each call is bounded: bytes inflated, delta depth, objects visited (finding 4) a reference delta naming itself refuses at the depth cap, quickly",
+       "status": "failed",
+       "durationMs": 5015.124652,
+       "failure": "Error: STACK_TRACE_ERROR",
+       "byTimeout": true
+      }
+     ],
+     "tail": [],
+     "asExpected": true
+    },
+    {
+     "side": "head",
+     "outcome": "fail",
+     "exit": 1,
+     "killedAfterLimit": false,
+     "sessionCpuSecondsAtKill": null,
+     "seconds": 7.4,
+     "load1Start": 24.22,
+     "rows": [
+      {
+       "title": "each call is bounded: bytes inflated, delta depth, objects visited (finding 4) a reference delta naming itself refuses at the depth cap, quickly",
+       "status": "failed",
+       "durationMs": 5012.377237,
+       "failure": "Error: STACK_TRACE_ERROR",
+       "byTimeout": true
+      }
+     ],
+     "tail": [],
+     "asExpected": true
+    }
+   ]
+  },
+  {
+   "id": "control-reader-special",
+   "note": null,
+   "test": "packages/polaris-dossier/src/git-object-reader.test.ts",
+   "title": "a loose object that is a link to a FIFO, a FIFO, a directory or a link to a device refuses at once, never blocks",
+   "mutations": [],
+   "expect": {
+    "base": "pass",
+    "head": "pass"
+   },
+   "sides": [
+    {
+     "side": "base",
+     "outcome": "pass",
+     "exit": 0,
+     "killedAfterLimit": false,
+     "sessionCpuSecondsAtKill": null,
+     "seconds": 3.0,
+     "load1Start": 24.24,
+     "rows": [
+      {
+       "title": "nothing under .git is read through a link or from a special file (R-POLARIS-DOSSIER-S2-READER-1 finding 2) a loose object that is a link to a FIFO, a FIFO, a directory or a link to a device refuses at once, never blocks",
+       "status": "passed",
+       "durationMs": 56.83302200000003,
+       "failure": "",
+       "byTimeout": false
+      }
+     ],
+     "tail": [],
+     "asExpected": true
+    },
+    {
+     "side": "head",
+     "outcome": "pass",
+     "exit": 0,
+     "killedAfterLimit": false,
+     "sessionCpuSecondsAtKill": null,
+     "seconds": 3.1,
+     "load1Start": 25.26,
+     "rows": [
+      {
+       "title": "nothing under .git is read through a link or from a special file (R-POLARIS-DOSSIER-S2-READER-1 finding 2) a loose object that is a link to a FIFO, a FIFO, a directory or a link to a device refuses at once, never blocks",
+       "status": "passed",
+       "durationMs": 52.44961000000012,
+       "failure": "",
+       "byTimeout": false
+      }
+     ],
+     "tail": [],
+     "asExpected": true
+    }
+   ]
+  },
+  {
+   "id": "reader-blocking-open",
+   "note": "O_NONBLOCK dropped: opening a FIFO blocks a libuv thread",
+   "test": "packages/polaris-dossier/src/git-object-reader.test.ts",
+   "title": "a loose object that is a link to a FIFO, a FIFO, a directory or a link to a device refuses at once, never blocks",
+   "mutations": [
+    {
+     "file": "packages/polaris-dossier/src/git-object-reader.ts",
+     "old": "const OPEN_FLAGS = constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK;",
+     "new": "const OPEN_FLAGS = constants.O_RDONLY | constants.O_NOFOLLOW;"
+    }
+   ],
+   "expect": {
+    "base": "fail-or-killed",
+    "head": "fail-or-killed"
+   },
+   "sides": [
+    {
+     "side": "base",
+     "outcome": "fail",
+     "exit": 1,
+     "killedAfterLimit": false,
+     "sessionCpuSecondsAtKill": null,
+     "seconds": 4.9,
+     "load1Start": 25.26,
+     "rows": [
+      {
+       "title": "nothing under .git is read through a link or from a special file (R-POLARIS-DOSSIER-S2-READER-1 finding 2) a loose object that is a link to a FIFO, a FIFO, a directory or a link to a device refuses at once, never blocks",
+       "status": "failed",
+       "durationMs": 2073.021425,
+       "failure": "Error: no refusal within 2000 ms",
+       "byTimeout": false
+      }
+     ],
+     "tail": [],
+     "asExpected": true
+    },
+    {
+     "side": "head",
+     "outcome": "fail",
+     "exit": 1,
+     "killedAfterLimit": false,
+     "sessionCpuSecondsAtKill": null,
+     "seconds": 8.1,
+     "load1Start": 25.64,
+     "rows": [
+      {
+       "title": "nothing under .git is read through a link or from a special file (R-POLARIS-DOSSIER-S2-READER-1 finding 2) a loose object that is a link to a FIFO, a FIFO, a directory or a link to a device refuses at once, never blocks",
+       "status": "failed",
+       "durationMs": 5021.619262,
+       "failure": "Error: STACK_TRACE_ERROR",
+       "byTimeout": true
+      }
+     ],
+     "tail": [],
+     "asExpected": true
+    }
+   ]
+  },
+  {
+   "id": "control-reader-pad",
+   "note": null,
+   "test": "packages/polaris-dossier/src/git-object-reader.test.ts",
+   "title": "the reviewer's padded pack base",
+   "mutations": [],
+   "expect": {
+    "base": "pass",
+    "head": "pass"
+   },
+   "sides": [
+    {
+     "side": "base",
+     "outcome": "pass",
+     "exit": 0,
+     "killedAfterLimit": false,
+     "sessionCpuSecondsAtKill": null,
+     "seconds": 3.3,
+     "load1Start": 27.43,
+     "rows": [
+      {
+       "title": "stored bytes are bounded and charged: padding buys no work (R-POLARIS-DOSSIER-S2-READER-2 finding 1) the reviewer's padded pack base: 50 offset deltas over a base padded by 4 MiB refuse at once, under any budget",
+       "status": "passed",
+       "durationMs": 79.5044170000001,
+       "failure": "",
+       "byTimeout": false
+      }
+     ],
+     "tail": [],
+     "asExpected": true
+    },
+    {
+     "side": "head",
+     "outcome": "pass",
+     "exit": 0,
+     "killedAfterLimit": false,
+     "sessionCpuSecondsAtKill": null,
+     "seconds": 3.2,
+     "load1Start": 27.43,
+     "rows": [
+      {
+       "title": "stored bytes are bounded and charged: padding buys no work (R-POLARIS-DOSSIER-S2-READER-2 finding 1) the reviewer's padded pack base: 50 offset deltas over a base padded by 4 MiB refuse at once, under any budget",
+       "status": "passed",
+       "durationMs": 66.80154700000003,
+       "failure": "",
+       "byTimeout": false
+      }
+     ],
+     "tail": [],
+     "asExpected": true
+    }
+   ]
+  },
+  {
+   "id": "reader-no-stored-bound",
+   "note": "a pack entry is read to its end, not to the stored bound git writes",
+   "test": "packages/polaris-dossier/src/git-object-reader.test.ts",
+   "title": "the reviewer's padded pack base",
+   "mutations": [
+    {
+     "file": "packages/polaris-dossier/src/git-object-reader.ts",
+     "old": "    const chunk = await readAt(fh, start, Math.min(storedBound(size), end - start));",
+     "new": "    const chunk = await readAt(fh, start, end - start);"
+    }
+   ],
+   "expect": {
+    "base": "fail-or-killed",
+    "head": "fail-or-killed"
+   },
+   "sides": [
+    {
+     "side": "base",
+     "outcome": "fail",
+     "exit": 1,
+     "killedAfterLimit": false,
+     "sessionCpuSecondsAtKill": null,
+     "seconds": 3.6,
+     "load1Start": 27.4,
+     "rows": [
+      {
+       "title": "stored bytes are bounded and charged: padding buys no work (R-POLARIS-DOSSIER-S2-READER-2 finding 1) the reviewer's padded pack base: 50 offset deltas over a base padded by 4 MiB refuse at once, under any budget",
+       "status": "failed",
+       "durationMs": 951.4674640000001,
+       "failure": "Error: expected a refusal, got a result",
+       "byTimeout": false
+      }
+     ],
+     "tail": [],
+     "asExpected": true
+    },
+    {
+     "side": "head",
+     "outcome": "fail",
+     "exit": 1,
+     "killedAfterLimit": false,
+     "sessionCpuSecondsAtKill": null,
+     "seconds": 3.9,
+     "load1Start": 26.97,
+     "rows": [
+      {
+       "title": "stored bytes are bounded and charged: padding buys no work (R-POLARIS-DOSSIER-S2-READER-2 finding 1) the reviewer's padded pack base: 50 offset deltas over a base padded by 4 MiB refuse at once, under any budget",
+       "status": "failed",
+       "durationMs": 732.610394,
+       "failure": "Error: expected a refusal, got a result",
+       "byTimeout": false
+      }
+     ],
+     "tail": [],
+     "asExpected": true
+    }
+   ]
+  },
+  {
+   "id": "control-dossier-scan",
+   "note": null,
+   "test": "packages/polaris-generation-core/src/dossier-evaluation.test.ts",
+   "title": "measures bytes to the close of the last level-0 element and totals per page depth",
+   "mutations": [],
+   "expect": {
+    "base": "pass",
+    "head": "pass"
+   },
+   "sides": [
+    {
+     "side": "base",
+     "outcome": "pass",
+     "exit": 0,
+     "killedAfterLimit": false,
+     "sessionCpuSecondsAtKill": null,
+     "seconds": 2.4,
+     "load1Start": 26.57,
+     "rows": [
+      {
+       "title": "(a) reader cost measures bytes to the close of the last level-0 element and totals per page depth",
+       "status": "passed",
+       "durationMs": 5.513028000000077,
+       "failure": "",
+       "byTimeout": false
+      }
+     ],
+     "tail": [],
+     "asExpected": true
+    },
+    {
+     "side": "head",
+     "outcome": "pass",
+     "exit": 0,
+     "killedAfterLimit": false,
+     "sessionCpuSecondsAtKill": null,
+     "seconds": 2.3,
+     "load1Start": 26.57,
+     "rows": [
+      {
+       "title": "(a) reader cost measures bytes to the close of the last level-0 element and totals per page depth",
+       "status": "passed",
+       "durationMs": 5.445130999999947,
+       "failure": "",
+       "byTimeout": false
+      }
+     ],
+     "tail": [],
+     "asExpected": true
+    }
+   ]
+  },
+  {
+   "id": "dossier-page-bytes-plus-one",
+   "note": null,
+   "test": "packages/polaris-generation-core/src/dossier-evaluation.test.ts",
+   "title": "measures bytes to the close of the last level-0 element and totals per page depth",
+   "mutations": [
+    {
+     "file": "packages/polaris-generation-core/src/dossier-evaluation.ts",
+     "old": "    bytes: Buffer.byteLength(html, 'utf8'),\n",
+     "new": "    bytes: Buffer.byteLength(html, 'utf8') + 1,\n"
+    }
+   ],
+   "expect": {
+    "base": "fail",
+    "head": "fail"
+   },
+   "sides": [
+    {
+     "side": "base",
+     "outcome": "fail",
+     "exit": 1,
+     "killedAfterLimit": false,
+     "sessionCpuSecondsAtKill": null,
+     "seconds": 2.4,
+     "load1Start": 26.76,
+     "rows": [
+      {
+       "title": "(a) reader cost measures bytes to the close of the last level-0 element and totals per page depth",
+       "status": "failed",
+       "durationMs": 22.60254599999996,
+       "failure": "AssertionError: expected 1039 to be 1038 // Object.is equality",
+       "byTimeout": false
+      }
+     ],
+     "tail": [],
+     "asExpected": true
+    },
+    {
+     "side": "head",
+     "outcome": "fail",
+     "exit": 1,
+     "killedAfterLimit": false,
+     "sessionCpuSecondsAtKill": null,
+     "seconds": 2.2,
+     "load1Start": 26.76,
+     "rows": [
+      {
+       "title": "(a) reader cost measures bytes to the close of the last level-0 element and totals per page depth",
+       "status": "failed",
+       "durationMs": 13.57413699999995,
+       "failure": "AssertionError: expected 1039 to be 1038 // Object.is equality",
+       "byTimeout": false
+      }
+     ],
+     "tail": [],
+     "asExpected": true
+    }
+   ]
+  },
+  {
+   "id": "dossier-first-level-short",
+   "note": "bytes through the first level stop one byte before the close",
+   "test": "packages/polaris-generation-core/src/dossier-evaluation.test.ts",
+   "title": "measures bytes to the close of the last level-0 element and totals per page depth",
+   "mutations": [
+    {
+     "file": "packages/polaris-generation-core/src/dossier-evaluation.ts",
+     "old": "lastLevelZeroClose = Buffer.byteLength(html.slice(0, cursor), 'utf8');",
+     "new": "lastLevelZeroClose = Buffer.byteLength(html.slice(0, cursor - 1), 'utf8');"
+    }
+   ],
+   "expect": {
+    "base": "fail",
+    "head": "fail"
+   },
+   "sides": [
+    {
+     "side": "base",
+     "outcome": "fail",
+     "exit": 1,
+     "killedAfterLimit": false,
+     "sessionCpuSecondsAtKill": null,
+     "seconds": 2.6,
+     "load1Start": 26.76,
+     "rows": [
+      {
+       "title": "(a) reader cost measures bytes to the close of the last level-0 element and totals per page depth",
+       "status": "failed",
+       "durationMs": 16.60317699999996,
+       "failure": "AssertionError: expected 669 to be 670 // Object.is equality",
+       "byTimeout": false
+      }
+     ],
+     "tail": [],
+     "asExpected": true
+    },
+    {
+     "side": "head",
+     "outcome": "fail",
+     "exit": 1,
+     "killedAfterLimit": false,
+     "sessionCpuSecondsAtKill": null,
+     "seconds": 2.2,
+     "load1Start": 25.82,
+     "rows": [
+      {
+       "title": "(a) reader cost measures bytes to the close of the last level-0 element and totals per page depth",
+       "status": "failed",
+       "durationMs": 12.178406999999993,
+       "failure": "AssertionError: expected 669 to be 670 // Object.is equality",
+       "byTimeout": false
+      }
+     ],
+     "tail": [],
+     "asExpected": true
+    }
+   ]
+  },
+  {
+   "id": "dossier-total-first-page",
+   "note": null,
+   "test": "packages/polaris-generation-core/src/dossier-evaluation.test.ts",
+   "title": "measures bytes to the close of the last level-0 element and totals per page depth",
+   "mutations": [
+    {
+     "file": "packages/polaris-generation-core/src/dossier-evaluation.ts",
+     "old": "  const totalBytes = sum(pages.map(page => page.bytes));",
+     "new": "  const totalBytes = sum(pages.slice(0, 1).map(page => page.bytes));"
+    }
+   ],
+   "expect": {
+    "base": "fail",
+    "head": "fail"
+   },
+   "sides": [
+    {
+     "side": "base",
+     "outcome": "fail",
+     "exit": 1,
+     "killedAfterLimit": false,
+     "sessionCpuSecondsAtKill": null,
+     "seconds": 2.2,
+     "load1Start": 25.82,
+     "rows": [
+      {
+       "title": "(a) reader cost measures bytes to the close of the last level-0 element and totals per page depth",
+       "status": "failed",
+       "durationMs": 22.537642000000005,
+       "failure": "AssertionError: expected 1038 to be 1273 // Object.is equality",
+       "byTimeout": false
+      }
+     ],
+     "tail": [],
+     "asExpected": true
+    },
+    {
+     "side": "head",
+     "outcome": "fail",
+     "exit": 1,
+     "killedAfterLimit": false,
+     "sessionCpuSecondsAtKill": null,
+     "seconds": 2.5,
+     "load1Start": 24.79,
+     "rows": [
+      {
+       "title": "(a) reader cost measures bytes to the close of the last level-0 element and totals per page depth",
+       "status": "failed",
+       "durationMs": 18.35031200000003,
+       "failure": "AssertionError: expected 1038 to be 1273 // Object.is equality",
+       "byTimeout": false
+      }
+     ],
+     "tail": [],
+     "asExpected": true
+    }
+   ]
+  },
+  {
+   "id": "control-dossier-budget",
+   "note": null,
+   "test": "packages/polaris-generation-core/src/dossier-evaluation.test.ts",
+   "title": "reports each budget bound as within, over, or Unknown when none is declared",
+   "mutations": [],
+   "expect": {
+    "base": "pass",
+    "head": "pass"
+   },
+   "sides": [
+    {
+     "side": "base",
+     "outcome": "pass",
+     "exit": 0,
+     "killedAfterLimit": false,
+     "sessionCpuSecondsAtKill": null,
+     "seconds": 2.4,
+     "load1Start": 24.79,
+     "rows": [
+      {
+       "title": "(a) reader cost reports each budget bound as within, over, or Unknown when none is declared",
+       "status": "passed",
+       "durationMs": 8.807759999999917,
+       "failure": "",
+       "byTimeout": false
+      }
+     ],
+     "tail": [],
+     "asExpected": true
+    },
+    {
+     "side": "head",
+     "outcome": "pass",
+     "exit": 0,
+     "killedAfterLimit": false,
+     "sessionCpuSecondsAtKill": null,
+     "seconds": 2.5,
+     "load1Start": 24.17,
+     "rows": [
+      {
+       "title": "(a) reader cost reports each budget bound as within, over, or Unknown when none is declared",
+       "status": "passed",
+       "durationMs": 6.469327000000021,
+       "failure": "",
+       "byTimeout": false
+      }
+     ],
+     "tail": [],
+     "asExpected": true
+    }
+   ]
+  },
+  {
+   "id": "dossier-budget-first-level-short",
+   "note": null,
+   "test": "packages/polaris-generation-core/src/dossier-evaluation.test.ts",
+   "title": "reports each budget bound as within, over, or Unknown when none is declared",
+   "mutations": [
+    {
+     "file": "packages/polaris-generation-core/src/dossier-evaluation.ts",
+     "old": "lastLevelZeroClose = Buffer.byteLength(html.slice(0, cursor), 'utf8');",
+     "new": "lastLevelZeroClose = Buffer.byteLength(html.slice(0, cursor - 1), 'utf8');"
+    }
+   ],
+   "expect": {
+    "base": "fail",
+    "head": "fail"
+   },
+   "sides": [
+    {
+     "side": "base",
+     "outcome": "fail",
+     "exit": 1,
+     "killedAfterLimit": false,
+     "sessionCpuSecondsAtKill": null,
+     "seconds": 2.1,
+     "load1Start": 24.17,
+     "rows": [
+      {
+       "title": "(a) reader cost reports each budget bound as within, over, or Unknown when none is declared",
+       "status": "failed",
+       "durationMs": 17.976433999999927,
+       "failure": "AssertionError: expected { bound: 669, observed: 669, \u2026(1) } to deeply equal { bound: 669, observed: 670, \u2026(1) }",
+       "byTimeout": false
+      }
+     ],
+     "tail": [],
+     "asExpected": true
+    },
+    {
+     "side": "head",
+     "outcome": "fail",
+     "exit": 1,
+     "killedAfterLimit": false,
+     "sessionCpuSecondsAtKill": null,
+     "seconds": 3.0,
+     "load1Start": 23.99,
+     "rows": [
+      {
+       "title": "(a) reader cost reports each budget bound as within, over, or Unknown when none is declared",
+       "status": "failed",
+       "durationMs": 25.27719300000001,
+       "failure": "AssertionError: expected { bound: 669, observed: 669, \u2026(1) } to deeply equal { bound: 669, observed: 670, \u2026(1) }",
+       "byTimeout": false
+      }
+     ],
+     "tail": [],
+     "asExpected": true
+    }
+   ]
+  },
+  {
+   "id": "dossier-budget-total-first-page",
+   "note": null,
+   "test": "packages/polaris-generation-core/src/dossier-evaluation.test.ts",
+   "title": "reports each budget bound as within, over, or Unknown when none is declared",
+   "mutations": [
+    {
+     "file": "packages/polaris-generation-core/src/dossier-evaluation.ts",
+     "old": "  const totalBytes = sum(pages.map(page => page.bytes));",
+     "new": "  const totalBytes = sum(pages.slice(0, 1).map(page => page.bytes));"
+    }
+   ],
+   "expect": {
+    "base": "fail",
+    "head": "fail"
+   },
+   "sides": [
+    {
+     "side": "base",
+     "outcome": "fail",
+     "exit": 1,
+     "killedAfterLimit": false,
+     "sessionCpuSecondsAtKill": null,
+     "seconds": 2.9,
+     "load1Start": 23.99,
+     "rows": [
+      {
+       "title": "(a) reader cost reports each budget bound as within, over, or Unknown when none is declared",
+       "status": "failed",
+       "durationMs": 22.731407999999988,
+       "failure": "AssertionError: expected { bound: 2000, observed: 1038, \u2026(1) } to deeply equal { bound: 2000, observed: 1273, \u2026(1) }",
+       "byTimeout": false
+      }
+     ],
+     "tail": [],
+     "asExpected": true
+    },
+    {
+     "side": "head",
+     "outcome": "fail",
+     "exit": 1,
+     "killedAfterLimit": false,
+     "sessionCpuSecondsAtKill": null,
+     "seconds": 2.7,
+     "load1Start": 24.64,
+     "rows": [
+      {
+       "title": "(a) reader cost reports each budget bound as within, over, or Unknown when none is declared",
+       "status": "failed",
+       "durationMs": 33.15716900000007,
+       "failure": "AssertionError: expected { bound: 2000, observed: 1038, \u2026(1) } to deeply equal { bound: 2000, observed: 1273, \u2026(1) }",
+       "byTimeout": false
+      }
+     ],
+     "tail": [],
+     "asExpected": true
+    }
+   ]
+  },
+  {
+   "id": "control-redis",
+   "note": null,
+   "test": "apps/three-surface-poc/src/polaris-generation/redis-shaped-discovery.test.ts",
+   "title": "keeps the selection inside the cap, with no vendored file",
+   "mutations": [],
+   "expect": {
+    "base": "pass",
+    "head": "pass"
+   },
+   "sides": [
+    {
+     "side": "base",
+     "outcome": "pass",
+     "exit": 0,
+     "killedAfterLimit": false,
+     "sessionCpuSecondsAtKill": null,
+     "seconds": 3.9,
+     "load1Start": 24.64,
+     "rows": [
+      {
+       "title": "discovery on a synthetic tree shaped like a large C key-value server under the dossier byte cap (400,000 bytes of quotable text) keeps the selection inside the cap, with no vendored file, and closes the denominator and the byte totals",
+       "status": "passed",
+       "durationMs": 42.65644800000018,
+       "failure": "",
+       "byTimeout": false
+      }
+     ],
+     "tail": [],
+     "asExpected": true
+    },
+    {
+     "side": "head",
+     "outcome": "pass",
+     "exit": 0,
+     "killedAfterLimit": false,
+     "sessionCpuSecondsAtKill": null,
+     "seconds": 4.2,
+     "load1Start": 24.18,
+     "rows": [
+      {
+       "title": "discovery on a synthetic tree shaped like a large C key-value server under the dossier byte cap (400,000 bytes of quotable text) keeps the selection inside the cap, with no vendored file, and closes the denominator and the byte totals",
+       "status": "passed",
+       "durationMs": 73.25042699999995,
+       "failure": "",
+       "byTimeout": false
+      }
+     ],
+     "tail": [],
+     "asExpected": true
+    }
+   ]
+  },
+  {
+   "id": "redis-stop-at-first-misfit",
+   "note": "the byte-cap loop stops at the first file that does not fit instead of trying the next, smaller one",
+   "test": "apps/three-surface-poc/src/polaris-generation/redis-shaped-discovery.test.ts",
+   "title": "keeps the selection inside the cap, with no vendored file",
+   "mutations": [
+    {
+     "file": "packages/polaris-generation-core/src/discovery.ts",
+     "old": "        deferredBytes += blob.bytes;\n        continue;\n      }\n      chosen.set(blob.blobId, total); used += total; usedBytes += blob.bytes;\n      continue;\n    }\n    const limit",
+     "new": "        deferredBytes += blob.bytes;\n        break;\n      }\n      chosen.set(blob.blobId, total); used += total; usedBytes += blob.bytes;\n      continue;\n    }\n    const limit"
+    }
+   ],
+   "expect": {
+    "base": "fail",
+    "head": "fail"
+   },
+   "sides": [
+    {
+     "side": "base",
+     "outcome": "fail",
+     "exit": 1,
+     "killedAfterLimit": false,
+     "sessionCpuSecondsAtKill": null,
+     "seconds": 3.8,
+     "load1Start": 24.33,
+     "rows": [
+      {
+       "title": "discovery on a synthetic tree shaped like a large C key-value server under the dossier byte cap (400,000 bytes of quotable text) keeps the selection inside the cap, with no vendored file, and closes the denominator and the byte totals",
+       "status": "failed",
+       "durationMs": 60.646866000000045,
+       "failure": "AssertionError: expected 495420 to be 3871277 // Object.is equality",
+       "byTimeout": false
+      }
+     ],
+     "tail": [],
+     "asExpected": true
+    },
+    {
+     "side": "head",
+     "outcome": "fail",
+     "exit": 1,
+     "killedAfterLimit": false,
+     "sessionCpuSecondsAtKill": null,
+     "seconds": 4.2,
+     "load1Start": 23.82,
+     "rows": [
+      {
+       "title": "discovery on a synthetic tree shaped like a large C key-value server under the dossier byte cap (400,000 bytes of quotable text) keeps the selection inside the cap, with no vendored file, and closes the denominator and the byte totals",
+       "status": "failed",
+       "durationMs": 46.271114000000125,
+       "failure": "AssertionError: LICENSE.txt: expected 592 to be greater than 4228",
+       "byTimeout": false
+      }
+     ],
+     "tail": [],
+     "asExpected": true
+    }
+   ]
+  },
+  {
+   "id": "control-dossier-profile",
+   "note": null,
+   "test": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "title": "trims a long run of spaces in linear time",
+   "mutations": [],
+   "expect": {
+    "base": "pass",
+    "head": "pass"
+   },
+   "sides": [
+    {
+     "side": "base",
+     "outcome": "pass",
+     "exit": 0,
+     "killedAfterLimit": false,
+     "sessionCpuSecondsAtKill": null,
+     "seconds": 2.6,
+     "load1Start": 23.2,
+     "rows": [
+      {
+       "title": "REQ-031 clarification counts default-ignorable and zero-width-split text as blank or unknown, and trims a long run of spaces in linear time",
+       "status": "passed",
+       "durationMs": 72.07579299999998,
+       "failure": "",
+       "byTimeout": false
+      }
+     ],
+     "tail": [],
+     "asExpected": true
+    },
+    {
+     "side": "head",
+     "outcome": "pass",
+     "exit": 0,
+     "killedAfterLimit": false,
+     "sessionCpuSecondsAtKill": null,
+     "seconds": 2.5,
+     "load1Start": 23.2,
+     "rows": [
+      {
+       "title": "REQ-031 clarification counts default-ignorable and zero-width-split text as blank or unknown, and trims a long run of spaces in linear time",
+       "status": "passed",
+       "durationMs": 100.20799499999998,
+       "failure": "",
+       "byTimeout": false
+      }
+     ],
+     "tail": [],
+     "asExpected": true
+    }
+   ]
+  },
+  {
+   "id": "edge-backtracking-regex",
+   "note": "the edge trim before d7e25daf's linear pass (its character class widened to today's, so outputs agree): quadratic only on a blank run between visible characters, which the base timed inputs lack",
+   "test": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "title": "trims a long run of spaces in linear time",
+   "mutations": [
+    {
+     "file": "packages/polaris-generation-core/src/dossier-profile.ts",
+     "old": "const edge = (value: string): string => {\n  const chars = [...value];\n  let start = 0, end = chars.length;\n  while (start < end && INVISIBLE.test(chars[start]!)) start++;\n  while (end > start && INVISIBLE.test(chars[end - 1]!)) end--;\n  return chars.slice(start, end).join('');\n};\n",
+     "new": "const edge = (value: string): string => value.replace(/^[\\p{Cf}\\p{Z}\\s\\p{Default_Ignorable_Code_Point}\u2800]+|[\\p{Cf}\\p{Z}\\s\\p{Default_Ignorable_Code_Point}\u2800]+$/gu, '');\n"
+    }
+   ],
+   "expect": {
+    "base": "pass",
+    "head": "fail-or-killed"
+   },
+   "sides": [
+    {
+     "side": "base",
+     "outcome": "pass",
+     "exit": 0,
+     "killedAfterLimit": false,
+     "sessionCpuSecondsAtKill": null,
+     "seconds": 2.4,
+     "load1Start": 23.58,
+     "rows": [
+      {
+       "title": "REQ-031 clarification counts default-ignorable and zero-width-split text as blank or unknown, and trims a long run of spaces in linear time",
+       "status": "passed",
+       "durationMs": 12.25266600000009,
+       "failure": "",
+       "byTimeout": false
+      }
+     ],
+     "tail": [],
+     "asExpected": true
+    },
+    {
+     "side": "head",
+     "outcome": "killed",
+     "exit": -9,
+     "killedAfterLimit": true,
+     "sessionCpuSecondsAtKill": 130.85,
+     "seconds": 150.2,
+     "load1Start": 23.58,
+     "rows": [],
+     "tail": [],
+     "asExpected": true
+    }
+   ]
+  },
+  {
+   "id": "control-excerpt",
+   "note": null,
+   "test": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "title": "stays linear on one 100k line of spaces after",
+   "mutations": [],
+   "expect": {
+    "base": "pass",
+    "head": "pass"
+   },
+   "sides": [
+    {
+     "side": "base",
+     "outcome": "pass",
+     "exit": 0,
+     "killedAfterLimit": false,
+     "sessionCpuSecondsAtKill": null,
+     "seconds": 2.0,
+     "load1Start": 18.81,
+     "rows": [
+      {
+       "title": "excerpt: line endings and hostile lines stays linear on one 100k line of spaces after a tag keyword",
+       "status": "passed",
+       "durationMs": 11.047112999999968,
+       "failure": "",
+       "byTimeout": false
+      },
+      {
+       "title": "excerpt: line endings and hostile lines stays linear on one 100k line of spaces after an identifier",
+       "status": "passed",
+       "durationMs": 0.8324039999999968,
+       "failure": "",
+       "byTimeout": false
+      }
+     ],
+     "tail": [],
+     "asExpected": true
+    },
+    {
+     "side": "head",
+     "outcome": "pass",
+     "exit": 0,
+     "killedAfterLimit": false,
+     "sessionCpuSecondsAtKill": null,
+     "seconds": 1.6,
+     "load1Start": 20.1,
+     "rows": [
+      {
+       "title": "excerpt: line endings and hostile lines stays linear on one 100k line of spaces after a tag keyword",
+       "status": "passed",
+       "durationMs": 2.1729200000000333,
+       "failure": "",
+       "byTimeout": false
+      },
+      {
+       "title": "excerpt: line endings and hostile lines stays linear on one 100k line of spaces after an identifier",
+       "status": "passed",
+       "durationMs": 0.5146139999999946,
+       "failure": "",
+       "byTimeout": false
+      }
+     ],
+     "tail": [],
+     "asExpected": true
+    }
+   ]
+  },
+  {
+   "id": "excerpt-quadratic-pattern-only",
+   "note": "FUNCTION_LINE given overlapping blank runs (quadratic); the 512-character prefix cap still skips the hostile line",
+   "test": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "title": "stays linear on one 100k line of spaces after",
+   "mutations": [
+    {
+     "file": "packages/polaris-generation-core/src/excerpt.ts",
+     "old": "const FUNCTION_LINE = /^[A-Za-z_][A-Za-z0-9_ \\t*]*[A-Za-z0-9_*][ \\t]*\\(/u;",
+     "new": "const FUNCTION_LINE = /^[A-Za-z_][A-Za-z0-9_ \\t*]*[ \\t]*[A-Za-z0-9_*][ \\t]*\\(/u;"
+    }
+   ],
+   "expect": {
+    "base": "pass",
+    "head": "pass"
+   },
+   "sides": [
+    {
+     "side": "base",
+     "outcome": "pass",
+     "exit": 0,
+     "killedAfterLimit": false,
+     "sessionCpuSecondsAtKill": null,
+     "seconds": 1.7,
+     "load1Start": 20.1,
+     "rows": [
+      {
+       "title": "excerpt: line endings and hostile lines stays linear on one 100k line of spaces after a tag keyword",
+       "status": "passed",
+       "durationMs": 2.1197090000000003,
+       "failure": "",
+       "byTimeout": false
+      },
+      {
+       "title": "excerpt: line endings and hostile lines stays linear on one 100k line of spaces after an identifier",
+       "status": "passed",
+       "durationMs": 0.46045099999997774,
+       "failure": "",
+       "byTimeout": false
+      }
+     ],
+     "tail": [],
+     "asExpected": true
+    },
+    {
+     "side": "head",
+     "outcome": "pass",
+     "exit": 0,
+     "killedAfterLimit": false,
+     "sessionCpuSecondsAtKill": null,
+     "seconds": 2.1,
+     "load1Start": 20.1,
+     "rows": [
+      {
+       "title": "excerpt: line endings and hostile lines stays linear on one 100k line of spaces after a tag keyword",
+       "status": "passed",
+       "durationMs": 3.5186639999999443,
+       "failure": "",
+       "byTimeout": false
+      },
+      {
+       "title": "excerpt: line endings and hostile lines stays linear on one 100k line of spaces after an identifier",
+       "status": "passed",
+       "durationMs": 0.8283560000000989,
+       "failure": "",
+       "byTimeout": false
+      }
+     ],
+     "tail": [],
+     "asExpected": true
+    }
+   ]
+  },
+  {
+   "id": "excerpt-no-prefix-cap",
+   "note": "the prefix cap removed, patterns unchanged: the `struct` case takes the long line as a tag (an output failure, not a time one)",
+   "test": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "title": "stays linear on one 100k line of spaces after",
+   "mutations": [
+    {
+     "file": "packages/polaris-generation-core/src/excerpt.ts",
+     "old": "    if (t === '' || t.length > PATTERN_PREFIX_MAX) continue;",
+     "new": "    if (t === '') continue;"
+    }
+   ],
+   "expect": {
+    "base": "fail",
+    "head": "fail"
+   },
+   "sides": [
+    {
+     "side": "base",
+     "outcome": "fail",
+     "exit": 1,
+     "killedAfterLimit": false,
+     "sessionCpuSecondsAtKill": null,
+     "seconds": 1.8,
+     "load1Start": 20.42,
+     "rows": [
+      {
+       "title": "excerpt: line endings and hostile lines stays linear on one 100k line of spaces after a tag keyword",
+       "status": "failed",
+       "durationMs": 16.16489100000001,
+       "failure": "AssertionError: expected 'struct                               \u2026' to be 'int f(int a) {' // Object.is equality",
+       "byTimeout": false
+      },
+      {
+       "title": "excerpt: line endings and hostile lines stays linear on one 100k line of spaces after an identifier",
+       "status": "passed",
+       "durationMs": 1.8676530000000184,
+       "failure": "",
+       "byTimeout": false
+      }
+     ],
+     "tail": [],
+     "asExpected": true
+    },
+    {
+     "side": "head",
+     "outcome": "fail",
+     "exit": 1,
+     "killedAfterLimit": false,
+     "sessionCpuSecondsAtKill": null,
+     "seconds": 2.0,
+     "load1Start": 20.42,
+     "rows": [
+      {
+       "title": "excerpt: line endings and hostile lines stays linear on one 100k line of spaces after a tag keyword",
+       "status": "failed",
+       "durationMs": 15.413870999999972,
+       "failure": "AssertionError: expected 'struct                               \u2026' to be 'int f(int a) {' // Object.is equality",
+       "byTimeout": false
+      },
+      {
+       "title": "excerpt: line endings and hostile lines stays linear on one 100k line of spaces after an identifier",
+       "status": "passed",
+       "durationMs": 1.1221119999999019,
+       "failure": "",
+       "byTimeout": false
+      }
+     ],
+     "tail": [],
+     "asExpected": true
+    }
+   ]
+  },
+  {
+   "id": "excerpt-no-cap-quadratic-pattern",
+   "note": "the prefix cap removed and FUNCTION_LINE quadratic: only the time bound can fail the `an identifier` case",
+   "test": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "title": "stays linear on one 100k line of spaces after an identifier",
+   "mutations": [
+    {
+     "file": "packages/polaris-generation-core/src/excerpt.ts",
+     "old": "    if (t === '' || t.length > PATTERN_PREFIX_MAX) continue;",
+     "new": "    if (t === '') continue;"
+    },
+    {
+     "file": "packages/polaris-generation-core/src/excerpt.ts",
+     "old": "const FUNCTION_LINE = /^[A-Za-z_][A-Za-z0-9_ \\t*]*[A-Za-z0-9_*][ \\t]*\\(/u;",
+     "new": "const FUNCTION_LINE = /^[A-Za-z_][A-Za-z0-9_ \\t*]*[ \\t]*[A-Za-z0-9_*][ \\t]*\\(/u;"
+    }
+   ],
+   "expect": {
+    "base": "fail-or-killed",
+    "head": "fail-or-killed"
+   },
+   "sides": [
+    {
+     "side": "base",
+     "outcome": "fail",
+     "exit": 1,
+     "killedAfterLimit": false,
+     "sessionCpuSecondsAtKill": null,
+     "seconds": 18.9,
+     "load1Start": 20.42,
+     "rows": [
+      {
+       "title": "excerpt: line endings and hostile lines stays linear on one 100k line of spaces after an identifier",
+       "status": "failed",
+       "durationMs": 16816.685712000002,
+       "failure": "AssertionError: expected 16807 to be less than 500",
+       "byTimeout": false
+      }
+     ],
+     "tail": [],
+     "asExpected": true
+    },
+    {
+     "side": "head",
+     "outcome": "fail",
+     "exit": 1,
+     "killedAfterLimit": false,
+     "sessionCpuSecondsAtKill": null,
+     "seconds": 17.3,
+     "load1Start": 19.07,
+     "rows": [
+      {
+       "title": "excerpt: line endings and hostile lines stays linear on one 100k line of spaces after an identifier",
+       "status": "failed",
+       "durationMs": 15612.772887000001,
+       "failure": "AssertionError: expected 14548.798 to be less than 140",
+       "byTimeout": false
+      }
+     ],
+     "tail": [],
+     "asExpected": true
+    }
+   ]
+  },
+  {
+   "id": "excerpt-time-only",
+   "note": "excerpt-no-cap-quadratic-pattern with the CPU-time bound deleted and vitest's timeout lifted: the output assertion alone passes, so the bound is the only predicate that fails this mutant",
+   "test": "packages/polaris-generation-core/src/excerpt.test.ts",
+   "title": "stays linear on one 100k line of spaces after an identifier",
+   "mutations": [
+    {
+     "file": "packages/polaris-generation-core/src/excerpt.ts",
+     "old": "    if (t === '' || t.length > PATTERN_PREFIX_MAX) continue;",
+     "new": "    if (t === '') continue;"
+    },
+    {
+     "file": "packages/polaris-generation-core/src/excerpt.ts",
+     "old": "const FUNCTION_LINE = /^[A-Za-z_][A-Za-z0-9_ \\t*]*[A-Za-z0-9_*][ \\t]*\\(/u;",
+     "new": "const FUNCTION_LINE = /^[A-Za-z_][A-Za-z0-9_ \\t*]*[ \\t]*[A-Za-z0-9_*][ \\t]*\\(/u;"
+    },
+    {
+     "file": "packages/polaris-generation-core/src/excerpt.test.ts",
+     "old": "      expect(cpuMsSince(cpu)).toBeLessThan(HOSTILE_LINE_CPU_MS);\n",
+     "new": ""
+    }
+   ],
+   "expect": {
+    "head": "pass"
+   },
+   "sides": [
+    {
+     "side": "head",
+     "outcome": "pass",
+     "exit": 0,
+     "killedAfterLimit": false,
+     "sessionCpuSecondsAtKill": null,
+     "seconds": 17.6,
+     "load1Start": 18.1,
+     "rows": [
+      {
+       "title": "excerpt: line endings and hostile lines stays linear on one 100k line of spaces after an identifier",
+       "status": "passed",
+       "durationMs": 15984.942197999999,
+       "failure": "",
+       "byTimeout": false
+      }
+     ],
+     "tail": [],
+     "asExpected": true
+    }
+   ]
+  },
+  {
+   "id": "control-junit-tags",
+   "note": null,
+   "test": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "title": "at the ceiling in linear time",
+   "mutations": [],
+   "expect": {
+    "base": "pass",
+    "head": "pass"
+   },
+   "sides": [
+    {
+     "side": "base",
+     "outcome": "pass",
+     "exit": 0,
+     "killedAfterLimit": false,
+     "sessionCpuSecondsAtKill": null,
+     "seconds": 2.2,
+     "load1Start": 19.03,
+     "rows": [
+      {
+       "title": "parseJUnitRootTotals scans unterminated opening tags at the ceiling in linear time",
+       "status": "passed",
+       "durationMs": 11.827947999999992,
+       "failure": "",
+       "byTimeout": false
+      },
+      {
+       "title": "parseJUnitRootTotals scans unterminated plural tags at the ceiling in linear time",
+       "status": "passed",
+       "durationMs": 44.863864000000035,
+       "failure": "",
+       "byTimeout": false
+      },
+      {
+       "title": "parseJUnitRootTotals scans near-miss tag names at the ceiling in linear time",
+       "status": "passed",
+       "durationMs": 42.633895999999936,
+       "failure": "",
+       "byTimeout": false
+      },
+      {
+       "title": "parseJUnitRootTotals scans one tag body that is a single word run at the ceiling in linear time",
+       "status": "passed",
+       "durationMs": 158.85739,
+       "failure": "",
+       "byTimeout": false
+      }
+     ],
+     "tail": [],
+     "asExpected": true
+    },
+    {
+     "side": "head",
+     "outcome": "pass",
+     "exit": 0,
+     "killedAfterLimit": false,
+     "sessionCpuSecondsAtKill": null,
+     "seconds": 2.1,
+     "load1Start": 20.07,
+     "rows": [
+      {
+       "title": "parseJUnitRootTotals scans unterminated opening tags at the ceiling in linear time",
+       "status": "passed",
+       "durationMs": 13.205162000000087,
+       "failure": "",
+       "byTimeout": false
+      },
+      {
+       "title": "parseJUnitRootTotals scans unterminated plural tags at the ceiling in linear time",
+       "status": "passed",
+       "durationMs": 56.540655000000015,
+       "failure": "",
+       "byTimeout": false
+      },
+      {
+       "title": "parseJUnitRootTotals scans near-miss tag names at the ceiling in linear time",
+       "status": "passed",
+       "durationMs": 54.770237000000066,
+       "failure": "",
+       "byTimeout": false
+      },
+      {
+       "title": "parseJUnitRootTotals scans one tag body that is a single word run at the ceiling in linear time",
+       "status": "passed",
+       "durationMs": 158.49503400000003,
+       "failure": "",
+       "byTimeout": false
+      }
+     ],
+     "tail": [],
+     "asExpected": true
+    }
+   ]
+  },
+  {
+   "id": "junit-tag-regex",
+   "note": "the `/<testsuite\\s+([^>]*?)\\/?>/i` scan 169e38db replaced (round-1 finding 2)",
+   "test": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "title": "at the ceiling in linear time",
+   "mutations": [
+    {
+     "file": "packages/three-surface-poc-core/src/test-artifact-verification.ts",
+     "old": "  const opener = `<${name}`;\n  let from = 0;\n  for (;;) {\n",
+     "new": "  const m = new RegExp(`<${name}\\\\s+([^>]*?)\\\\/?>`, 'i').exec(rawXml);\n  if (lowerXml.length >= 0) return m === null ? null : (m[1] ?? '');\n  const opener = `<${name}`;\n  let from = 0;\n  for (;;) {\n"
+    }
+   ],
+   "expect": {
+    "base": "fail-or-killed",
+    "head": "fail-or-killed"
+   },
+   "sides": [
+    {
+     "side": "base",
+     "outcome": "killed",
+     "exit": -9,
+     "killedAfterLimit": true,
+     "sessionCpuSecondsAtKill": 131.51,
+     "seconds": 150.2,
+     "load1Start": 20.07,
+     "rows": [],
+     "tail": [],
+     "asExpected": true
+    },
+    {
+     "side": "head",
+     "outcome": "killed",
+     "exit": -9,
+     "killedAfterLimit": true,
+     "sessionCpuSecondsAtKill": 138.46,
+     "seconds": 150.2,
+     "load1Start": 18.92,
+     "rows": [],
+     "tail": [],
+     "asExpected": true
+    }
+   ]
+  },
+  {
+   "id": "control-junit-word-run",
+   "note": null,
+   "test": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "title": "scans one tag body that is a single word run at the ceiling in linear time",
+   "mutations": [],
+   "expect": {
+    "base": "pass",
+    "head": "pass"
+   },
+   "sides": [
+    {
+     "side": "base",
+     "outcome": "pass",
+     "exit": 0,
+     "killedAfterLimit": false,
+     "sessionCpuSecondsAtKill": null,
+     "seconds": 1.5,
+     "load1Start": 13.86,
+     "rows": [
+      {
+       "title": "parseJUnitRootTotals scans one tag body that is a single word run at the ceiling in linear time",
+       "status": "passed",
+       "durationMs": 142.10694500000005,
+       "failure": "",
+       "byTimeout": false
+      }
+     ],
+     "tail": [],
+     "asExpected": true
+    },
+    {
+     "side": "head",
+     "outcome": "pass",
+     "exit": 0,
+     "killedAfterLimit": false,
+     "sessionCpuSecondsAtKill": null,
+     "seconds": 1.8,
+     "load1Start": 13.86,
+     "rows": [
+      {
+       "title": "parseJUnitRootTotals scans one tag body that is a single word run at the ceiling in linear time",
+       "status": "passed",
+       "durationMs": 153.10330799999997,
+       "failure": "",
+       "byTimeout": false
+      }
+     ],
+     "tail": [],
+     "asExpected": true
+    }
+   ]
+  },
+  {
+   "id": "junit-attr-regex",
+   "note": "the `(\\w+)=\"...\"` attribute scan 169e38db replaced",
+   "test": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+   "title": "scans one tag body that is a single word run at the ceiling in linear time",
+   "mutations": [
+    {
+     "file": "packages/three-surface-poc-core/src/test-artifact-verification.ts",
+     "old": "  const attrs = new Map<string, string>();\n  let i = 0;\n",
+     "new": "  const attrs = new Map<string, string>();\n  for (const m of tagBody.matchAll(/(\\w+)=\"([^\"]*)\"/g)) { if (attrs.has(m[1]!)) return null; attrs.set(m[1]!, m[2]!); }\n  if (attrs.size >= 0) return attrs;\n  let i = 0;\n"
+    }
+   ],
+   "expect": {
+    "base": "fail-or-killed",
+    "head": "fail-or-killed"
+   },
+   "sides": [
+    {
+     "side": "base",
+     "outcome": "killed",
+     "exit": -9,
+     "killedAfterLimit": true,
+     "sessionCpuSecondsAtKill": 137.37,
+     "seconds": 150.2,
+     "load1Start": 13.71,
+     "rows": [],
+     "tail": [],
+     "asExpected": true
+    },
+    {
+     "side": "head",
+     "outcome": "killed",
+     "exit": -9,
+     "killedAfterLimit": true,
+     "sessionCpuSecondsAtKill": 125.57,
+     "seconds": 150.3,
+     "load1Start": 14.57,
+     "rows": [],
+     "tail": [],
+     "asExpected": true
+    }
+   ]
+  }
+ ],
+ "allAsExpected": true
+}

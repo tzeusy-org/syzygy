@@ -1,0 +1,159 @@
+{
+ "mutants": [
+  {
+   "id": "R-Y6-extra-namespace-call-in-cli",
+   "expect": "survives",
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/argv.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/cli.ts",
+     "old": "import { isArgvFault, readArgv } from './argv.js';\n",
+     "new": "import { isArgvFault, readArgv } from './argv.js';\nimport * as argvNs from './argv.js';\n"
+    },
+    {
+     "file": "packages/polaris-dossier/src/cli.ts",
+     "old": "    const read = readArgv(rest, { valued: [], dashValue: 'refuse', repeat: 'refuse', positionals: true });",
+     "new": "    const read = readArgv(rest, { valued: [], dashValue: 'refuse', repeat: 'refuse', positionals: true });\n    void argvNs.readArgv(rest, { valued: ['--drift'], dashValue: 'take', repeat: 'last', positionals: true });"
+    }
+   ],
+   "from": "own-specs.json"
+  },
+  {
+   "id": "R-Y7-extra-aliased-call-in-cli",
+   "expect": "survives",
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/argv.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/cli.ts",
+     "old": "import { isArgvFault, readArgv } from './argv.js';\n",
+     "new": "import { isArgvFault, readArgv } from './argv.js';\nconst readArgs = readArgv;\n"
+    },
+    {
+     "file": "packages/polaris-dossier/src/cli.ts",
+     "old": "    const read = readArgv(rest, { valued: [], dashValue: 'refuse', repeat: 'refuse', positionals: true });",
+     "new": "    const read = readArgv(rest, { valued: [], dashValue: 'refuse', repeat: 'refuse', positionals: true });\n    void readArgs(rest, { valued: ['--drift'], dashValue: 'take', repeat: 'last', positionals: true });"
+    }
+   ],
+   "from": "own-specs.json"
+  },
+  {
+   "id": "R-X6-package-imports-alias-to-the-barrel",
+   "expect": "survives",
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/subpath-imports.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "apps/syzygy/package.json",
+     "old": "  \"main\": \"./dist/main.js\",\n",
+     "new": "  \"main\": \"./dist/main.js\",\n  \"imports\": { \"#dossier\": \"@syzygy/polaris-dossier\" },\n"
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nimport '#dossier';\n"
+    }
+   ],
+   "from": "own-specs.json"
+  },
+  {
+   "id": "R-X6b-package-imports-alias-in-an-intermediate-module",
+   "expect": "survives",
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/subpath-imports.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "apps/syzygy/package.json",
+     "old": "  \"main\": \"./dist/main.js\",\n",
+     "new": "  \"main\": \"./dist/main.js\",\n  \"imports\": { \"#cli\": \"@syzygy/polaris-dossier\" },\n"
+    },
+    {
+     "file": "apps/syzygy/src/bridge-hash.ts",
+     "create": "export { runDossierCli } from '#cli';\n"
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nimport './bridge-hash.js';\n"
+    }
+   ],
+   "from": "own-specs.json"
+  },
+  {
+   "id": "R-X6i-island-package-imports-alias-to-consent-root",
+   "expect": "survives",
+   "projects": [
+    "@syzygy/polaris-generation-core"
+   ],
+   "files": [
+    "packages/polaris-generation-core/src/island-boundary.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/package.json",
+     "old": "  \"main\": \"./dist/main.js\",\n",
+     "new": "  \"main\": \"./dist/main.js\",\n  \"imports\": { \"#consent\": \"@syzygy/polaris-generation-consent\" },\n"
+    },
+    {
+     "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+     "old": "import { assertInertSvg } from './svg-inert.js';\n",
+     "new": "import { assertInertSvg } from './svg-inert.js';\nimport '#consent';\n"
+    }
+   ],
+   "from": "own-specs.json"
+  },
+  {
+   "id": "R-X6j-island-control-same-edge-by-name",
+   "expect": "killed",
+   "projects": [
+    "@syzygy/polaris-generation-core"
+   ],
+   "files": [
+    "packages/polaris-generation-core/src/island-boundary.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+     "old": "import { assertInertSvg } from './svg-inert.js';\n",
+     "new": "import { assertInertSvg } from './svg-inert.js';\nimport '@syzygy/polaris-generation-consent';\n"
+    }
+   ],
+   "from": "own-specs.json"
+  },
+  {
+   "id": "R-X9-node-condition-ahead-of-import-in-the-argv-export",
+   "expect": "survives",
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/subpath-imports.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/package.json",
+     "old": "      \"types\": \"./dist/argv.d.ts\",\n      \"import\": \"./dist/argv.js\",",
+     "new": "      \"types\": \"./dist/argv.d.ts\",\n      \"node\": \"./dist/index.js\",\n      \"import\": \"./dist/argv.js\","
+    }
+   ],
+   "from": "x9-specs.json"
+  }
+ ]
+}

@@ -15,7 +15,7 @@ import {
   type ServedFact,
 } from '@syzygy/cap1-core';
 import { compareRenderings, disclosureOf } from '@syzygy/cap1-core/testing';
-import { evaluation, projectYaml } from './fixtures/index.js';
+import { decisionsFor, evaluation, projectYaml } from './fixtures/index.js';
 
 // CAP1-REQ-041 — Humans and machines receive the same facts
 // (invariant).
@@ -86,7 +86,7 @@ function answerSet(): readonly FactModel[] {
   const read = readDeclaration(SOURCE);
   if (!read.ok) throw new Error('fixture must parse');
   const registration = registerProject(read, EVALUATION.snapshot);
-  const coverage = computeCoverage(read.declaration, CONSENTS, [
+  const coverage = computeCoverage(read.declaration, decisionsFor(read.declaration, CONSENTS), [
     { repositoryId: REPO_A, outcome: 'captured', capturedScope: 'full' },
   ]);
   const shape = computeShapeAnswers(PROJECT, EVALUATION, {

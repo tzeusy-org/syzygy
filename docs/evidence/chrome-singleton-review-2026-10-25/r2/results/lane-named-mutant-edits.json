@@ -1,0 +1,51 @@
+{
+ "name-case-insensitive": [
+  {
+   "file": "apps/three-surface-poc/src/cdp-browser.ts",
+   "old": "const CHROME_SINGLETON_DIRECTORY = /^\\.?(?:com\\.google\\.Chrome|org\\.chromium\\.Chromium)\\.[A-Za-z0-9]+$/;",
+   "new": "const CHROME_SINGLETON_DIRECTORY = /^\\.?(?:com\\.google\\.Chrome|org\\.chromium\\.Chromium)\\.[A-Za-z0-9]+$/i;"
+  }
+ ],
+ "identity-inode-not-compared": [
+  {
+   "file": "apps/three-surface-poc/src/cdp-browser.ts",
+   "old": "if (entry.isDirectory() && ownedByRunningUser(entry) && entry.dev === recorded.dev && entry.ino === recorded.ino) rmSync(",
+   "new": "if (entry.isDirectory() && ownedByRunningUser(entry) && entry.dev === recorded.dev) rmSync("
+  }
+ ],
+ "identity-device-not-compared": [
+  {
+   "file": "apps/three-surface-poc/src/cdp-browser.ts",
+   "old": "if (entry.isDirectory() && ownedByRunningUser(entry) && entry.dev === recorded.dev && entry.ino === recorded.ino) rmSync(",
+   "new": "if (entry.isDirectory() && ownedByRunningUser(entry) && entry.ino === recorded.ino) rmSync("
+  }
+ ],
+ "identity-not-compared": [
+  {
+   "file": "apps/three-surface-poc/src/cdp-browser.ts",
+   "old": "if (entry.isDirectory() && ownedByRunningUser(entry) && entry.dev === recorded.dev && entry.ino === recorded.ino) rmSync(",
+   "new": "if (entry.isDirectory() && ownedByRunningUser(entry)) rmSync("
+  }
+ ],
+ "profile-owner-not-checked": [
+  {
+   "file": "apps/three-surface-poc/src/cdp-browser.ts",
+   "old": "    if (!ownedByRunningUser(lstat(profile)) || !ownedByRunningUser(lstat(link))) return undefined;\n",
+   "new": "    if (!ownedByRunningUser(lstat(link))) return undefined;\n"
+  }
+ ],
+ "link-owner-not-checked": [
+  {
+   "file": "apps/three-surface-poc/src/cdp-browser.ts",
+   "old": "    if (!ownedByRunningUser(lstat(profile)) || !ownedByRunningUser(lstat(link))) return undefined;\n",
+   "new": "    if (!ownedByRunningUser(lstat(profile))) return undefined;\n"
+  }
+ ],
+ "link-trusted-whoever-made-it": [
+  {
+   "file": "apps/three-surface-poc/src/cdp-browser.ts",
+   "old": "    if (!ownedByRunningUser(lstat(profile)) || !ownedByRunningUser(lstat(link))) return undefined;\n",
+   "new": ""
+  }
+ ]
+}

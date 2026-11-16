@@ -1,0 +1,14 @@
+diff --git a/packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts b/packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts
+index de310336..f4414a21 100644
+--- a/packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts
++++ b/packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts
+@@ -1,6 +1,8 @@
+ /** Test support. Owner-act text rendered by the real recorders (scripts/record_public_repo_admission_acts.py, the registry-entry recorder and
+  * scripts/record_public_egress_v2_act.py), so a reader's expected forms are tested against what the writer writes. */
+-import { spawnSync } from 'node:child_process';
++import { spawnSync as realSpawnSync } from 'node:child_process';
++const prof = ((globalThis as any).__prof ??= { spawnMs: 0, spawns: 0 });
++const spawnSync = ((...args: any[]) => { const t = performance.now(); try { return (realSpawnSync as any)(...args); } finally { prof.spawnMs += performance.now() - t; prof.spawns += 1; } }) as typeof realSpawnSync;
+ import path from 'node:path';
+ import { fileURLToPath } from 'node:url';
+ 

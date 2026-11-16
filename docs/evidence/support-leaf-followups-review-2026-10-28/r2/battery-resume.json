@@ -1,0 +1,118 @@
+{
+ "commit": "330dd89458801e7a150134efa15f3d4af8215304",
+ "first": 96,
+ "skipped": 96,
+ "commands": 18,
+ "nonzero": 0,
+ "cleanAfter": true,
+ "rows": [
+  {
+   "line": "python3 scripts/check_spec_reconciliation.py --selftest",
+   "exit": 0,
+   "seconds": 1694.1,
+   "tail": "SELFTEST PASS: clean scratch copy and its signed- and adopted-addition variants pass; 85 of 85 mutants killed by their expected predicate (commit 330dd8945880)"
+  },
+  {
+   "line": "python3 scripts/build_three_surface_poc_spec_dependencies.py --check",
+   "exit": 0,
+   "seconds": 0.1,
+   "tail": "three-surface POC spec dependencies match regeneration \u2014 26 requirement(s), 91 distinct authorities"
+  },
+  {
+   "line": "python3 scripts/build_directive_register.py --check     # every identifier -> its definition site",
+   "exit": 0,
+   "seconds": 0.8,
+   "tail": "OK: DIRECTIVE-REGISTER.md matches the tree"
+  },
+  {
+   "line": "python3 scripts/build_directive_register.py --selftest",
+   "exit": 0,
+   "seconds": 0.8,
+   "tail": "21 checks, 0 failing \u2014 a check that cannot fail is not a check"
+  },
+  {
+   "line": "python3 scripts/check_quotations.py     # a quotation beside a path:line locator was said by that file (RD-6, syzygy-0wf)",
+   "exit": 0,
+   "seconds": 13.9,
+   "tail": "note  QC-1  excluded verbatim records, round directory: 139 .md files, 10 quotations, 4 not in their source now; history not searched"
+  },
+  {
+   "line": "python3 scripts/check_quotations.py --selftest",
+   "exit": 0,
+   "seconds": 0.3,
+   "tail": "selftest: 20 of 20 passed"
+  },
+  {
+   "line": "python3 scripts/validate_launch_administration.py $DR",
+   "exit": 0,
+   "seconds": 0.2,
+   "tail": "record valid \u2014 the verdict above is computed from the rows"
+  },
+  {
+   "line": "python3 scripts/render_launch_administration.py $DR --check",
+   "exit": 0,
+   "seconds": 0.1,
+   "tail": "--check: .syzygy/governance/contracts/candidates/round-2026-08f/fixtures/DRY-RUN-ADMINISTRATION.md matches the record's rendering"
+  },
+  {
+   "line": "git tag --list 'doctrine-*'",
+   "exit": 0,
+   "seconds": 0.0,
+   "tail": "doctrine-d5-2026-09-27"
+  },
+  {
+   "line": "python3 scripts/record_rfc5_project_documentation_act.py --check a69a606cc7c14da5de03ec26aaec435af2fee3fa4c7bfb8a92fc30deefa40c91 --date 2026-10-07 --question-opening 'Do you sign the RFC5-14 project-documentation class amendment at its row of the contract amendment manifest?' --selection-label 'Sign it, at the manifest row; direct the SOURCE-POLICY.md readability successor' --selection-description 'Act form 1, which makes screening scope version 2 performable; the six-class sentence in SOURCE-POLICY.md gets a readability successor.'   # rfc5 --check",
+   "exit": 0,
+   "seconds": 0.3,
+   "tail": "recorded act matches the exact owner argument"
+  },
+  {
+   "line": "python3 scripts/record_versioned_signoff.py --check public-git-source-acquisition-local-agent --version 1.0   # public-git-source-acquisition-local-agent v1.0 --check",
+   "exit": 0,
+   "seconds": 0.2,
+   "tail": "recorded public-git-source-acquisition-local-agent v1.0 sign-off regenerates exactly; applied tree verified"
+  },
+  {
+   "line": "python3 scripts/record_dossier_local_agent_acts.py --check redis-agent-anthropic fbbcd3c0e3d49aab3384a4ab18bf35816dbd8fb952e658d1edbac3d1c50e48a7 --date 2026-10-07 --question-opening 'Which statement do you sign for Redis at its row of the dossier local-agent acts manifest?' --selection-label 'Anthropic provider statement' --selection-description 'Claude Code may receive Redis content even if Redis counts as governed.'   # redis-agent-anthropic --check",
+   "exit": 0,
+   "seconds": 0.1,
+   "tail": "recorded redis-agent-anthropic act matches the exact owner argument"
+  },
+  {
+   "line": "python3 scripts/record_dossier_agent_provider_v2_act.py --check b7a8d099ce108bfd70133b729327534f29806cb0118ee0b3e0f9ca077a946df3 --date 2026-10-08 --question-opening 'Decision 2 (P-106):'' your Redis Anthropic provider statement predates the README/docs class, so Syzygy withholds docs text from the packets it gives your own Claude Code sessions, and README-based claims render Unknown. Version 2 adds `project-documentation` and changes nothing else. Sign it?' --selection-label 'Sign version 2 (Recommended)' --selection-description 'Docs text goes to your own Claude Code sessions, which can already read the whole clone. Phrase:'' \"Sign the Redis Anthropic provider statement, version 2\".' --packet-words 'Sign the Redis Anthropic provider statement, version 2'   # agent-provider statement version 2 --check",
+   "exit": 0,
+   "seconds": 0.1,
+   "tail": "recorded provider statement version-2 act matches the exact owner argument"
+  },
+  {
+   "line": "python3 scripts/record_dossier_agent_provider_v2_act.py --selftest   # agent-provider statement version 2 --selftest",
+   "exit": 0,
+   "seconds": 0.1,
+   "tail": "selftest: 43 of 43 predicates held"
+  },
+  {
+   "line": "python3 scripts/record_dossier_local_agent_acts.py --check d9-in-force 41fdfaea8cbde4cd8220910113fb5b376c7834a470d8c2d9badd9ab0fec9ac66 --date 2026-10-07 --question-opening 'Do you sign the D9 in-force record at its row of the dossier local-agent acts manifest?' --selection-label 'Sign it' --selection-description 'Binds D9 to the current security.md and v1.md bytes; it runs nothing until a choice for one run is recorded.'   # d9-in-force --check",
+   "exit": 0,
+   "seconds": 0.1,
+   "tail": "recorded d9-in-force act matches the exact owner argument"
+  },
+  {
+   "line": "python3 scripts/record_dossier_local_agent_acts.py --check rfc7-20-reading-in-force f0725a204b6e6ccbccb211441e26e139502ef42a6447d0f4a40df2d09062f3d9 --date 2026-10-07 --question-opening 'Do you sign the RFC7-20 reading in-force record at its row of the dossier local-agent acts manifest?' --selection-label 'Sign it' --selection-description 'The agent draft renders as an editorial draft; it binds item 1 of the direction, whole-file.'   # rfc7-20-reading-in-force --check",
+   "exit": 0,
+   "seconds": 0.1,
+   "tail": "recorded rfc7-20-reading-in-force act matches the exact owner argument"
+  },
+  {
+   "line": "python3 scripts/record_narrative_profile_adoption.py --check --date 2026-10-07 --question-opening 'Do you adopt the non-governed narrative profile, requirement 032, at its row of the profile manifest?' --selection-label 'Adopt as recommended' --selection-description 'O1 to O7 as the packet recommends; Scope A is not read to cover it; the two known limitations stand.'   # narrative profile --check",
+   "exit": 0,
+   "seconds": 0.1,
+   "tail": "recorded adoption matches the live bytes"
+  },
+  {
+   "line": "python3 scripts/record_rfc5_project_documentation_act.py --selftest   # rfc5 --selftest",
+   "exit": 0,
+   "seconds": 0.1,
+   "tail": "selftest: 34 of 34 predicates held"
+  }
+ ]
+}

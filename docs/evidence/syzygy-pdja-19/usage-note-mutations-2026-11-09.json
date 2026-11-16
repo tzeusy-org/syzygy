@@ -1,0 +1,79 @@
+{
+  "bead": "syzygy-pdja.19",
+  "kind": "rule-6 mutation record",
+  "ranAt": "4569f5d1605c4e1c93a394304763086aa63071ab",
+  "supersedes": "the six-mutant record of 184a7a2a in this file (see git history), whose M3 fragment the R-PDJA-19-USAGE-NOTE-1 repairs replaced",
+  "subjects": [
+    {
+      "path": "packages/polaris-dossier/src/waiting-sessions.ts",
+      "sha256": "34e0dfd3fef17422ab781c7af6911dfbdad0542ea113ebf2a89e7775398f92f5"
+    },
+    {
+      "path": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "sha256": "cb12b45e40ea384066561d627a3b1e6d8d41c8454a088969c6e81f5b4dead47b"
+    }
+  ],
+  "command": "npx vitest run packages/polaris-dossier/src/waiting-sessions.test.ts -t 'usage note|deliveryUsageNote|continues across|delivery to a waiting'",
+  "population": "every mutant listed; each applied alone to waiting-sessions.ts, the file restored after each",
+  "baselineExitAfterRestore": 0,
+  "mutants": [
+    {
+      "id": "M1-utf16-length",
+      "old": "Buffer.byteLength(built.bytes, 'utf8')",
+      "new": "built.bytes.length",
+      "exit": 1,
+      "outcome": "killed"
+    },
+    {
+      "id": "M2-drop-record-field",
+      "old": "packetSha256: built.sha256, packetBytes, packet, deliveredAt",
+      "new": "packetSha256: built.sha256, packet, deliveredAt",
+      "exit": 1,
+      "outcome": "killed"
+    },
+    {
+      "id": "M3-omit-earlier-rounds",
+      "old": "  if (round > 1) {\n    const sized",
+      "new": "  if (round < 1) {\n    const sized",
+      "exit": 1,
+      "outcome": "killed"
+    },
+    {
+      "id": "M4-missing-size-as-zero",
+      "old": "(bytes as number) >= 0 ? bytes as number : null }]",
+      "new": "(bytes as number) >= 0 ? bytes as number : 0 }]",
+      "exit": 1,
+      "outcome": "killed"
+    },
+    {
+      "id": "M5-every-round-sized",
+      "old": "const sized = earlier.filter((entry) => entry.packetBytes !== null);",
+      "new": "const sized = earlier.filter(() => true);",
+      "exit": 1,
+      "outcome": "killed"
+    },
+    {
+      "id": "M6-hard-code-fidelity",
+      "old": "hand the next ${kind} round",
+      "new": "hand the next fidelity round",
+      "exit": 1,
+      "outcome": "killed"
+    },
+    {
+      "id": "M7-omit-unreadable-rounds",
+      "old": "const unread = Math.max(0, round - 1 - earlier.length);",
+      "new": "const unread = 0;",
+      "exit": 1,
+      "outcome": "killed"
+    },
+    {
+      "id": "M8-drop-inferred-label",
+      "old": "[Inferred] A continuing session keeps",
+      "new": "A continuing session keeps",
+      "exit": 1,
+      "outcome": "killed"
+    }
+  ],
+  "killed": 8,
+  "total": 8
+}

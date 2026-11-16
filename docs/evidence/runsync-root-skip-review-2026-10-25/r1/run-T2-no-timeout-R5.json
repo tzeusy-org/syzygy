@@ -1,0 +1,93 @@
+{
+ "tool": "rev-525/tools/probe.py",
+ "toolSha256": "0d82288a92a49bfe8af739ee1f15a61ed3b208b672b07e4c85cb2d18b076cfa6",
+ "case": "T2-no-timeout-R5",
+ "commit": "f7bbb93a005b45c2866d8a9993afbca44cd1a34f",
+ "files": {},
+ "edits": [
+  {
+   "file": "packages/polaris-dossier/src/argv.ts",
+   "old": "if (!spec.positionals || arg.startsWith('-')) return",
+   "new": "if (arg.startsWith('-')) return"
+  },
+  {
+   "file": "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts",
+   "old": ", timeout: RUN_SYNC_TIMEOUT_MS, killSignal: 'SIGKILL',",
+   "new": ","
+  }
+ ],
+ "env": {},
+ "filters": [
+  "daemon-entry-unchanged"
+ ],
+ "t": null,
+ "editChecks": [
+  {
+   "file": "packages/polaris-dossier/src/argv.ts",
+   "old": "if (!spec.positionals || arg.startsWith('-')) return",
+   "new": "if (arg.startsWith('-')) return",
+   "occurrences": 1
+  },
+  {
+   "file": "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts",
+   "old": ", timeout: RUN_SYNC_TIMEOUT_MS, killSignal: 'SIGKILL',",
+   "new": ",",
+   "occurrences": 1
+  }
+ ],
+ "build": {
+  "exitCode": 0,
+  "typeErrors": []
+ },
+ "distCarries": [
+  {
+   "dist": "packages/polaris-dossier/dist/argv.js",
+   "carries": true
+  }
+ ],
+ "run": {
+  "command": "npx vitest run --config packages/cap1-system/vitest.config.ts daemon-entry-unchanged --reporter=json --outputFile=<tmp>/report.json",
+  "exitCode": -9,
+  "wallSeconds": 90.1,
+  "deadlineHit": true,
+  "samples": 215,
+  "port7477Before": [],
+  "port7477Seen": [],
+  "killedOn7477": [],
+  "unstuck": [],
+  "ownListeningPorts": [
+   "41371"
+  ],
+  "processesSeen": 15,
+  "survivors": {},
+  "tmpLeftoversBeforeRemoval": [
+   "node-compile-cache",
+   "syz-entry-HaAxkG",
+   "tr9_jYOWVO-l-ygA3yxaT",
+   "vitest.log"
+  ],
+  "logTail": "",
+  "tests": []
+ },
+ "rebuild": {
+  "exitCode": 0,
+  "typeErrors": []
+ },
+ "treeCleanAfter": true,
+ "summary": {
+  "exitCode": -9,
+  "wallSeconds": 90.1,
+  "deadlineHit": true,
+  "statuses": {},
+  "failed": [],
+  "port7477Seen": 0,
+  "samples": 215,
+  "killedOn7477": 0,
+  "unstuck": 0,
+  "ownListeningPorts": [
+   "41371"
+  ],
+  "survivors": 0,
+  "slowestMs": null
+ }
+}

@@ -1,0 +1,143 @@
+{
+ "numTotalTestSuites": 902,
+ "numPassedTestSuites": 902,
+ "numFailedTestSuites": 0,
+ "numPendingTestSuites": 0,
+ "numTotalTests": 5629,
+ "numPassedTests": 5624,
+ "numFailedTests": 0,
+ "numPendingTests": 5,
+ "numTodoTests": 0,
+ "success": true,
+ "newTests": [
+  {
+   "test": "a CRLF or CR blob gets the outcome its LF form gets LF: a 200,000-line closed fence holding a script element reads as text, under the read limit",
+   "status": "passed",
+   "ms": 144
+  },
+  {
+   "test": "a CRLF or CR blob gets the outcome its LF form gets CRLF: a 200,000-line closed fence holding a script element reads as text, under the read limit",
+   "status": "passed",
+   "ms": 154
+  },
+  {
+   "test": "a CRLF or CR blob gets the outcome its LF form gets CR: a 200,000-line closed fence holding a script element reads as text, under the read limit",
+   "status": "passed",
+   "ms": 189
+  },
+  {
+   "test": "a CRLF or CR blob gets the outcome its LF form gets LF: a script element after a 200,000-line closed fence is found, with a body-free record",
+   "status": "passed",
+   "ms": 97
+  },
+  {
+   "test": "a CRLF or CR blob gets the outcome its LF form gets CRLF: a script element after a 200,000-line closed fence is found, with a body-free record",
+   "status": "passed",
+   "ms": 157
+  },
+  {
+   "test": "a CRLF or CR blob gets the outcome its LF form gets CR: a script element after a 200,000-line closed fence is found, with a body-free record",
+   "status": "passed",
+   "ms": 89
+  },
+  {
+   "test": "a CRLF or CR blob gets the outcome its LF form gets LF: scanActiveContent over a 200,000-line closed fence finds nothing inside it",
+   "status": "passed",
+   "ms": 148
+  },
+  {
+   "test": "a CRLF or CR blob gets the outcome its LF form gets CRLF: scanActiveContent over a 200,000-line closed fence finds nothing inside it",
+   "status": "passed",
+   "ms": 118
+  },
+  {
+   "test": "a CRLF or CR blob gets the outcome its LF form gets CR: scanActiveContent over a 200,000-line closed fence finds nothing inside it",
+   "status": "passed",
+   "ms": 139
+  },
+  {
+   "test": "a very long closed fence LF: 200,000 lines are blanked, every line end and the text after the fence kept",
+   "status": "passed",
+   "ms": 157
+  },
+  {
+   "test": "a very long closed fence CRLF: 200,000 lines are blanked, every line end and the text after the fence kept",
+   "status": "passed",
+   "ms": 250
+  },
+  {
+   "test": "a very long closed fence CR: 200,000 lines are blanked, every line end and the text after the fence kept",
+   "status": "passed",
+   "ms": 179
+  },
+  {
+   "test": "a very long closed fence LF: a script element inside the fence is blanked, and the line after the fence keeps its own",
+   "status": "passed",
+   "ms": 148
+  },
+  {
+   "test": "a very long closed fence CRLF: a script element inside the fence is blanked, and the line after the fence keeps its own",
+   "status": "passed",
+   "ms": 133
+  },
+  {
+   "test": "a very long closed fence CR: a script element inside the fence is blanked, and the line after the fence keeps its own",
+   "status": "passed",
+   "ms": 155
+  },
+  {
+   "test": "a very long closed fence LF: the same lines left unclosed are still malformed at the opener",
+   "status": "passed",
+   "ms": 174
+  },
+  {
+   "test": "a very long closed fence CRLF: the same lines left unclosed are still malformed at the opener",
+   "status": "passed",
+   "ms": 111
+  },
+  {
+   "test": "a very long closed fence CR: the same lines left unclosed are still malformed at the opener",
+   "status": "passed",
+   "ms": 90
+  },
+  {
+   "test": "a source whose class holds 130,000 items is extracted, every item kept in class order",
+   "status": "passed",
+   "ms": 969
+  },
+  {
+   "test": "a very long fence or list does not abort the observation LF: a 200,000-line closed fence at the end of vision.md is classified as a 10-line one is",
+   "status": "passed",
+   "ms": 280
+  },
+  {
+   "test": "a very long fence or list does not abort the observation CRLF: a 200,000-line closed fence at the end of vision.md is classified as a 10-line one is",
+   "status": "passed",
+   "ms": 422
+  },
+  {
+   "test": "a very long fence or list does not abort the observation CR: a 200,000-line closed fence at the end of vision.md is classified as a 10-line one is",
+   "status": "passed",
+   "ms": 133
+  },
+  {
+   "test": "a very long fence or list does not abort the observation a 130,000-item success list is extracted whole",
+   "status": "passed",
+   "ms": 2206
+  }
+ ],
+ "skipped": [
+  "no provider call and no transmission (S10), without strace is not proved on this host: strace is unavailable, so the capture is skipped, never reported as passed",
+  "live real focused-pytest verification (SYZYGY_POC_BUTLERS_REPO gated) ingests one real, passing operator-reported focused-pytest artifact and resolves it to report-fact, never Verified, through the full model (AC1/AC3, RFC5-19)",
+  "live Butlers observation (SYZYGY_POC_BUTLERS_REPO gated) matches `git rev-parse HEAD` and a direct Dolt read (POC-REQ-001, POC-REQ-010 oracles)",
+  "opening index in a real browser (PWB-REQ-010, P-98) a captured /polaris page meets the oracle at both viewports",
+  "live Butlers project-shape discovery at the reviewed revision matches the independent five-root, seven-Heart, baseline and total populations"
+ ],
+ "files": 254,
+ "loadavgBeforeAfter": [
+  "20.11 23.00 24.31 21/9547 3611341",
+  "31.35 29.03 26.54 17/9570 3688532"
+ ],
+ "commit": "241b28ff5cc651d4367d508141e91736f9a858de",
+ "command": "TMPDIR=/tmp/r555-2 npx vitest run --reporter=json (default timeouts, every dist/ absent)"
+}

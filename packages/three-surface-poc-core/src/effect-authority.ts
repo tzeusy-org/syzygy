@@ -20,7 +20,7 @@ export interface Effect {
 
 /** The registry entry's typed write authority. `writeSurface` is read as
  * untrusted JSON: anything but an array of strings authorizes nothing. */
-export interface RegistryWriteAuthority {
+interface RegistryWriteAuthority {
   readonly writeSurface: unknown;
 }
 
@@ -53,7 +53,7 @@ export const BUTLERS_TRACKER_WRITE: Effect = {
   surface: 'butlers:.beads',
 };
 
-export const P71_Q5_FORECLOSURE: Foreclosure = {
+const P71_Q5_FORECLOSURE: Foreclosure = {
   citation: 'P-71-Q5',
   ruling:
     "Reading B: the return path's write into Butlers is foreclosed by the 2026-09-02 act; " +
@@ -62,7 +62,7 @@ export const P71_Q5_FORECLOSURE: Foreclosure = {
 };
 
 /** Effects an owner ruling forecloses, keyed by effect id. */
-export const FORECLOSED_EFFECTS: ReadonlyMap<string, Foreclosure> = new Map([
+const FORECLOSED_EFFECTS: ReadonlyMap<string, Foreclosure> = new Map([
   [BUTLERS_TRACKER_WRITE.id, P71_Q5_FORECLOSURE],
 ]);
 

@@ -1,0 +1,5 @@
+unmutated (0, 33, 0, [])
+source dropped (1, 32, 1, [('@syzygy/support stays a pure leaf exports exactly the "." entry, index.js, so no other mod', "AssertionError: expected { '.': { …(3) } } to deeply equal { '.': { …(4) } }")])
+source names another module (1, 32, 1, [('@syzygy/support stays a pure leaf exports exactly the "." entry, index.js, so no other mod', "AssertionError: expected { '.': { …(4) } } to deeply equal { '.': { …(4) } }")])
+a second entry ./purity (1, 32, 1, [('@syzygy/support stays a pure leaf exports exactly the "." entry, index.js, so no other mod', "AssertionError: expected { '.': { …(4) }, './purity': { …(4) } } to deeply equal { '.': { …(4) } }")])
+restored True

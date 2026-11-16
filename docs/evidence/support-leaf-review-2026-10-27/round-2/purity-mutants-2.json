@@ -1,0 +1,65 @@
+{
+ "clone": "a5ab2b287266e9be6b8e96b381d014cb8e73d9d4",
+ "statusAfter": "",
+ "rows": [
+  {
+   "id": "RP14-subpath-export-of-an-unscanned-subdirectory-module",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/io/read.ts",
+     "old": null,
+     "new": "import { readFileSync } from 'node:fs';\nexport const read = (p: string): string => readFileSync(p, 'utf8');\n"
+    },
+    {
+     "path": "packages/support/package.json",
+     "old": "      \"default\": \"./dist/index.js\"\n    }\n",
+     "new": "      \"default\": \"./dist/index.js\"\n    },\n    \"./io\": { \"types\": \"./dist/io/read.d.ts\", \"import\": \"./dist/io/read.js\" }\n"
+    }
+   ],
+   "expected": "survives",
+   "observed": "survives",
+   "exit": 0,
+   "passed": 13,
+   "failed": 0,
+   "total": 13,
+   "failedTests": []
+  },
+  {
+   "id": "RP15-optional-call-fetch-at-import",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nvoid globalThis.fetch?.('http://127.0.0.1:65530/').catch(() => {});\n"
+    }
+   ],
+   "expected": "survives",
+   "observed": "survives",
+   "exit": 0,
+   "passed": 13,
+   "failed": 0,
+   "total": 13,
+   "failedTests": []
+  },
+  {
+   "id": "RP16-optional-chained-process-env-read",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nexport const HOME = globalThis.process?.env['HOME'];\n"
+    }
+   ],
+   "expected": "survives",
+   "observed": "survives",
+   "exit": 0,
+   "passed": 13,
+   "failed": 0,
+   "total": 13,
+   "failedTests": []
+  }
+ ]
+}

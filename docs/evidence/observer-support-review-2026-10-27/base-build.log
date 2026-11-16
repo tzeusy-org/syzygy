@@ -1,0 +1,5 @@
+
+> build:poc
+> tsc -b --force packages/support packages/cap1-core packages/http-host packages/cap1-daemon packages/three-surface-poc-core packages/polaris-generation-core apps/three-surface-poc
+
+base build exit=0

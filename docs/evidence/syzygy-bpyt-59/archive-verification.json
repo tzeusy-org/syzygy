@@ -1,0 +1,8 @@
+{
+  "archive": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.59/docs/evidence/syzygy-bpyt-59/calendar-readback-proof.tar.gz",
+  "archiveSha256": "1bb91db7c14075553333b4772f5e06c51682ddb2f3ecfbe27ef43c3b54a7dd00",
+  "entries": 102,
+  "bytes": 48770454,
+  "pythonTarLengthSha256": "pass",
+  "nativeTarWcSha256sum": "pass"
+}

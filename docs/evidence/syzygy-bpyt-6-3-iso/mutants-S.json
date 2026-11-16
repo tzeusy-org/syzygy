@@ -1,0 +1,218 @@
+{
+ "commit": "28024ade30ac30ffeac3bb09fe0833fe63a43981",
+ "controls": [
+  {
+   "id": "C0-support",
+   "file": "packages/support/src/is-record.ts",
+   "tests": [
+    "packages/support/src/is-record.test.ts"
+   ],
+   "exit": 0,
+   "passed": 41,
+   "failed": 0,
+   "total": 41,
+   "failedTests": [],
+   "passed_clean": true
+  },
+  {
+   "id": "N0-support-comment",
+   "file": "packages/support/src/is-record.ts",
+   "tests": [
+    "packages/support/src/is-record.test.ts"
+   ],
+   "exit": 0,
+   "passed": 41,
+   "failed": 0,
+   "total": 41,
+   "failedTests": [],
+   "passed_clean": true
+  }
+ ],
+ "mutants": [
+  {
+   "id": "S1-admits-null",
+   "group": "S",
+   "file": "packages/support/src/is-record.ts",
+   "line": 8,
+   "old": "return value !== null && typeof value === 'object' && !Array.isArray(value);",
+   "new": "return typeof value === 'object' && !Array.isArray(value);",
+   "tests": [
+    "packages/support/src/is-record.test.ts"
+   ],
+   "exit": 1,
+   "passed": 40,
+   "failed": 1,
+   "total": 41,
+   "failedTests": [
+    "isRecord refuses null"
+   ],
+   "killed": true
+  },
+  {
+   "id": "S2-admits-primitives",
+   "group": "S",
+   "file": "packages/support/src/is-record.ts",
+   "line": 8,
+   "old": "return value !== null && typeof value === 'object' && !Array.isArray(value);",
+   "new": "return value !== null && !Array.isArray(value);",
+   "tests": [
+    "packages/support/src/is-record.test.ts"
+   ],
+   "exit": 1,
+   "passed": 29,
+   "failed": 12,
+   "total": 41,
+   "failedTests": [
+    "isRecord refuses undefined",
+    "isRecord refuses true",
+    "isRecord refuses zero"
+   ],
+   "killed": true
+  },
+  {
+   "id": "S3-admits-arrays",
+   "group": "S",
+   "file": "packages/support/src/is-record.ts",
+   "line": 8,
+   "old": "return value !== null && typeof value === 'object' && !Array.isArray(value);",
+   "new": "return value !== null && typeof value === 'object';",
+   "tests": [
+    "packages/support/src/is-record.test.ts"
+   ],
+   "exit": 1,
+   "passed": 34,
+   "failed": 7,
+   "total": 41,
+   "failedTests": [
+    "isRecord refuses an empty array",
+    "isRecord refuses an array with a hole",
+    "isRecord refuses an array with an extra key"
+   ],
+   "killed": true
+  },
+  {
+   "id": "S4-admits-functions",
+   "group": "S",
+   "file": "packages/support/src/is-record.ts",
+   "line": 8,
+   "old": "return value !== null && typeof value === 'object' && !Array.isArray(value);",
+   "new": "return value !== null && (typeof value === 'object' || typeof value === 'function') && !Array.isArray(value);",
+   "tests": [
+    "packages/support/src/is-record.test.ts"
+   ],
+   "exit": 1,
+   "passed": 38,
+   "failed": 3,
+   "total": 41,
+   "failedTests": [
+    "isRecord refuses a function",
+    "isRecord refuses a class",
+    "isRecord refuses a proxy of a function"
+   ],
+   "killed": true
+  },
+  {
+   "id": "S5-instanceof-array-for-array-is-array",
+   "group": "S",
+   "file": "packages/support/src/is-record.ts",
+   "line": 8,
+   "old": "return value !== null && typeof value === 'object' && !Array.isArray(value);",
+   "new": "return value !== null && typeof value === 'object' && !(value instanceof Array);",
+   "tests": [
+    "packages/support/src/is-record.test.ts"
+   ],
+   "exit": 1,
+   "passed": 38,
+   "failed": 3,
+   "total": 41,
+   "failedTests": [
+    "isRecord admits an object whose prototype is Array.prototype",
+    "isRecord admits a proxy whose traps throw, which no trap is asked",
+    "isRecord refuses an array from another realm"
+   ],
+   "killed": true
+  },
+  {
+   "id": "S6-plain-objects-only",
+   "group": "S",
+   "file": "packages/support/src/is-record.ts",
+   "line": 8,
+   "old": "return value !== null && typeof value === 'object' && !Array.isArray(value);",
+   "new": "return value !== null && typeof value === 'object' && !Array.isArray(value) && [Object.prototype, null].includes(Object.getPrototypeOf(value) as object | null);",
+   "tests": [
+    "packages/support/src/is-record.test.ts"
+   ],
+   "exit": 1,
+   "passed": 30,
+   "failed": 11,
+   "total": 41,
+   "failedTests": [
+    "isRecord admits an object whose prototype is Array.prototype",
+    "isRecord admits a class instance",
+    "isRecord admits a typed array"
+   ],
+   "killed": true
+  },
+  {
+   "id": "S7-swallows-the-revoked-proxy-throw",
+   "group": "S",
+   "file": "packages/support/src/is-record.ts",
+   "line": 8,
+   "old": "return value !== null && typeof value === 'object' && !Array.isArray(value);",
+   "new": "try { return value !== null && typeof value === 'object' && !Array.isArray(value); } catch { return false; }",
+   "tests": [
+    "packages/support/src/is-record.test.ts"
+   ],
+   "exit": 1,
+   "passed": 40,
+   "failed": 1,
+   "total": 41,
+   "failedTests": [
+    "isRecord throws a TypeError on a revoked proxy, of an object or of an array, instead of answering"
+   ],
+   "killed": true
+  },
+  {
+   "id": "S8-always-true",
+   "group": "S",
+   "file": "packages/support/src/is-record.ts",
+   "line": 8,
+   "old": "return value !== null && typeof value === 'object' && !Array.isArray(value);",
+   "new": "return true;",
+   "tests": [
+    "packages/support/src/is-record.test.ts"
+   ],
+   "exit": 1,
+   "passed": 21,
+   "failed": 20,
+   "total": 41,
+   "failedTests": [
+    "isRecord refuses undefined",
+    "isRecord refuses null",
+    "isRecord refuses true"
+   ],
+   "killed": true
+  },
+  {
+   "id": "S9-always-false",
+   "group": "S",
+   "file": "packages/support/src/is-record.ts",
+   "line": 8,
+   "old": "return value !== null && typeof value === 'object' && !Array.isArray(value);",
+   "new": "return false;",
+   "tests": [
+    "packages/support/src/is-record.test.ts"
+   ],
+   "exit": 1,
+   "passed": 19,
+   "failed": 22,
+   "total": 41,
+   "failedTests": [
+    "isRecord admits an empty object",
+    "isRecord admits an object with a key",
+    "isRecord admits an array-like object"
+   ],
+   "killed": true
+  }
+ ]
+}

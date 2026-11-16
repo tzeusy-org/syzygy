@@ -1,0 +1,164 @@
+[
+ {
+  "id": "CONTROL",
+  "ranAt": "45f7d85571f2d216313a2ee399b9d091c37a9e68",
+  "testFrom": null,
+  "tests": 266,
+  "loadavg1": "21.11",
+  "failing": []
+ },
+ {
+  "id": "R5-extractor-dedupes-statement",
+  "ranAt": "45f7d85571f2d216313a2ee399b9d091c37a9e68",
+  "file": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+  "old": "    for (const item of result.items) all.push(item);\n",
+  "new": "    const seen = new Set<string | undefined>();\n    for (const item of result.items) { if (seen.has(item.statement)) continue; seen.add(item.statement); all.push(item); }\n",
+  "mutatedFileSha256": "17e0c6796a6c07b56d7ef28f84491e0c05c72270f63c3cf481fe0a0b535329a2",
+  "outcome": "killed",
+  "tests": 266,
+  "loadavg1": "21.10",
+  "failing": [
+   {
+    "test": "PWB-REQ-002 \u2014 two independent extractors agree on every fixture legends-and-lore/README.md mints the oracle's identities and denominators",
+    "message": "AssertionError: expected [ 'RFC 0001' ] to deeply equal [ 'RFC 0001', 'RFC 0002' ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r2/clone/packages/three-surface-poc-core/src/project-shape-extraction.test.ts:353:37\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r2/clone/node_mod",
+    "timeout": false
+   },
+   {
+    "test": "PWB-REQ-002 \u2014 two independent extractors agree on every fixture lay-and-land/components.md mints the oracle's identities and denominators",
+    "message": "AssertionError: expected [ '1:Daemon' ] to deeply equal [ '1:Daemon', '1:Store', \u2026(2) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r2/clone/packages/three-surface-poc-core/src/project-shape-extraction.test.ts:353:37\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r2/clone/nod",
+    "timeout": false
+   },
+   {
+    "test": "PWB-REQ-002 \u2014 two independent extractors agree on every fixture craft-and-care/README.md mints the oracle's identities and denominators",
+    "message": "AssertionError: expected [ 'cc-spec.md' ] to deeply equal [ 'cc-spec.md', 'cc-impact.md' ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r2/clone/packages/three-surface-poc-core/src/project-shape-extraction.test.ts:353:37\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r2/clone/",
+    "timeout": false
+   },
+   {
+    "test": "PWB-REQ-002 \u2014 two independent extractors agree on every fixture hand-typed expectations pin the grammar on the v1, lore, components, craft and roster fixtures",
+    "message": "AssertionError: expected [ 'RFC 0001' ] to deeply equal [ 'RFC 0001', 'RFC 0002' ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r2/clone/packages/three-surface-poc-core/src/project-shape-extraction.test.ts:401:74\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r2/clone/node_mod",
+    "timeout": false
+   },
+   {
+    "test": "a source whose class holds 130,000 items is extracted, every item kept in class order",
+    "message": "AssertionError: expected [ { \u2026(5) }, { \u2026(5) }, { \u2026(5) }, \u2026(4) ] to have a length of 130006 but got 7\n    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r2/clone/node_modules/@vitest/expect/dist/index.js:1257:20)\n    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad0",
+    "timeout": false
+   },
+   {
+    "test": "a very long fence or list does not abort the observation a 130,000-item success list is extracted whole",
+    "message": "AssertionError: expected [ Array(1) ] to have a length of 130000 but got 1\n    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r2/clone/node_modules/@vitest/expect/dist/index.js:1257:20)\n    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r2/cl",
+    "timeout": false
+   }
+  ]
+ },
+ {
+  "id": "R6-extractor-caps-125000",
+  "ranAt": "45f7d85571f2d216313a2ee399b9d091c37a9e68",
+  "file": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+  "old": "    for (const item of result.items) all.push(item);\n",
+  "new": "    for (const item of result.items.slice(0, 125_000)) all.push(item);\n",
+  "mutatedFileSha256": "83ab116ffeb46d61b83026d580aa53106a43cf4f4e5ef0f10efa39e97b580fa2",
+  "outcome": "killed",
+  "tests": 266,
+  "loadavg1": "21.65",
+  "failing": [
+   {
+    "test": "a source whose class holds 130,000 items is extracted, every item kept in class order",
+    "message": "AssertionError: expected [ { \u2026(5) }, { \u2026(5) }, \u2026(125004) ] to have a length of 130006 but got 125006\n    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r2/clone/node_modules/@vitest/expect/dist/index.js:1257:20)\n    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad0",
+    "timeout": false
+   },
+   {
+    "test": "a very long fence or list does not abort the observation a 130,000-item success list is extracted whole",
+    "message": "AssertionError: expected [ { \u2026(6) }, { \u2026(6) }, \u2026(124998) ] to have a length of 130000 but got 125000\n    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r2/clone/node_modules/@vitest/expect/dist/index.js:1257:20)\n    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad0",
+    "timeout": false
+   }
+  ]
+ },
+ {
+  "id": "R8-extractor-pushes-first-twice",
+  "ranAt": "45f7d85571f2d216313a2ee399b9d091c37a9e68",
+  "file": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+  "old": "    for (const item of result.items) all.push(item);\n",
+  "new": "    for (const item of result.items) all.push(item);\n    if (result.items.length > 100_000) all.push(result.items[0] as ExtractedItem);\n",
+  "mutatedFileSha256": "c70ddfc0f4c19293021a2de9ba7918aa008782395f4ff4c6682bf2ba1a178602",
+  "outcome": "killed",
+  "tests": 266,
+  "loadavg1": "24.09",
+  "failing": [
+   {
+    "test": "a source whose class holds 130,000 items is extracted, every item kept in class order",
+    "message": "AssertionError: expected [ { \u2026(5) }, { \u2026(5) }, \u2026(130005) ] to have a length of 130006 but got 130007\n    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r2/clone/node_modules/@vitest/expect/dist/index.js:1257:20)\n    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad0",
+    "timeout": false
+   }
+  ]
+ },
+ {
+  "id": "R9-extractor-swaps-at-global-index",
+  "ranAt": "45f7d85571f2d216313a2ee399b9d091c37a9e68",
+  "file": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+  "old": "    for (const item of result.items) all.push(item);\n",
+  "new": "    for (const item of result.items) all.push(item);\n    if (all.length > 130_000) { const a = all[65_000] as ExtractedItem; all[65_000] = all[65_001] as ExtractedItem; all[65_001] = a; }\n",
+  "mutatedFileSha256": "fff5a63b63c80c2a7d860b5c1c7cd28d5aabc30fc16b9e580b4beabad270ed9e",
+  "outcome": "killed",
+  "tests": 266,
+  "loadavg1": "25.12",
+  "failing": [
+   {
+    "test": "a source whose class holds 130,000 items is extracted, every item kept in class order",
+    "message": "AssertionError: success-criterion items differ from its one-class result: expected false to be true // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r2/clone/packages/three-surface-poc-core/src/project-shape-extraction.test.ts:1160:147\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802",
+    "timeout": false
+   }
+  ]
+ },
+ {
+  "id": "R10-extractor-size-gated-reversal",
+  "ranAt": "45f7d85571f2d216313a2ee399b9d091c37a9e68",
+  "file": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+  "old": "    for (const item of result.items) all.push(item);\n",
+  "new": "    for (let at = 0; at < result.items.length; at += 1) all.push(result.items[result.items.length > 100_000 ? result.items.length - 1 - at : at] as ExtractedItem);\n",
+  "mutatedFileSha256": "3f9ee7fad03f13c9e743eeeae3048397917a3c89c21af32febd34241ec85137e",
+  "outcome": "SURVIVED",
+  "tests": 266,
+  "loadavg1": "26.35",
+  "failing": []
+ },
+ {
+  "id": "R11-extractor-chunks-last-first",
+  "ranAt": "45f7d85571f2d216313a2ee399b9d091c37a9e68",
+  "file": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+  "old": "    for (const item of result.items) all.push(item);\n",
+  "new": "    for (let at = Math.floor((result.items.length - 1) / 50_000) * 50_000; at >= 0; at -= 50_000) all.push(...result.items.slice(at, at + 50_000));\n",
+  "mutatedFileSha256": "832cd6cbe6e4cc0a2bdbd0af6cfb6eeaee0617cb49f9263ec890877ef239ac4c",
+  "outcome": "SURVIVED",
+  "tests": 266,
+  "loadavg1": "27.85",
+  "failing": []
+ },
+ {
+  "id": "R12-mask-chunks-last-first",
+  "ranAt": "45f7d85571f2d216313a2ee399b9d091c37a9e68",
+  "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+  "old": "        for (const pendingLine of pending) out.push(blank(pendingLine));\n",
+  "new": "        for (let at = Math.floor((pending.length - 1) / 50_000) * 50_000; at >= 0; at -= 50_000) out.push(...pending.slice(at, at + 50_000).map(blank));\n",
+  "mutatedFileSha256": "30b6afd631d8192ffc6b7158857b405936fdc6bbeb5bac1c6f18db0105a6b3d9",
+  "outcome": "killed",
+  "tests": 266,
+  "loadavg1": "27.78",
+  "failing": [
+   {
+    "test": "a very long closed fence LF: 200,000 lines are blanked, every line end and the text after the fence kept",
+    "message": "AssertionError: the masked text differs from every non-terminator byte blanked: expected false to be true // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r2/clone/packages/three-surface-poc-core/src/markdown-code-context.test.ts:259:146\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea08",
+    "timeout": false
+   },
+   {
+    "test": "a very long closed fence CRLF: 200,000 lines are blanked, every line end and the text after the fence kept",
+    "message": "AssertionError: the masked text differs from every non-terminator byte blanked: expected false to be true // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r2/clone/packages/three-surface-poc-core/src/markdown-code-context.test.ts:259:146\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea08",
+    "timeout": false
+   },
+   {
+    "test": "a very long closed fence CR: 200,000 lines are blanked, every line end and the text after the fence kept",
+    "message": "AssertionError: the masked text differs from every non-terminator byte blanked: expected false to be true // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-555-r2/clone/packages/three-surface-poc-core/src/markdown-code-context.test.ts:259:146\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea08",
+    "timeout": false
+   }
+  ]
+ }
+]

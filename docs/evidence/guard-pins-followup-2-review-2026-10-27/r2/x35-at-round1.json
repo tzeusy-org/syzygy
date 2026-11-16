@@ -1,0 +1,64 @@
+{
+ "head": "5db78a26699a07716edd303484c0f7241df02e9e",
+ "specs": "rev541-specs.json",
+ "results": [
+  {
+   "id": "BASELINE",
+   "oldCounts": [],
+   "exit": 0,
+   "outcome": "survives",
+   "tests": 169,
+   "passed": 169,
+   "failing": [],
+   "timeouts": 0,
+   "filesFailedWithoutRows": [],
+   "load1": "41.46",
+   "seconds": 6.0,
+   "edits": []
+  },
+  {
+   "id": "R541-X3-npm-alias-needs-version",
+   "oldCounts": [
+    1
+   ],
+   "exit": 0,
+   "outcome": "survives",
+   "tests": 169,
+   "passed": 169,
+   "failing": [],
+   "timeouts": 0,
+   "filesFailedWithoutRows": [],
+   "load1": "40.86",
+   "seconds": 4.8,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:(?:@[^/@]+\\/)?[^@]+@|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    }
+   ]
+  },
+  {
+   "id": "R541-X5-tarball-arm-skips-hash",
+   "oldCounts": [
+    1
+   ],
+   "exit": 0,
+   "outcome": "survives",
+   "tests": 169,
+   "passed": 169,
+   "failing": [],
+   "timeouts": 0,
+   "filesFailedWithoutRows": [],
+   "load1": "39.67",
+   "seconds": 5.8,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|^[^#]*\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    }
+   ]
+  }
+ ]
+}

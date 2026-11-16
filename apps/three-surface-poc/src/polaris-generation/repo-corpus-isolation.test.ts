@@ -1,12 +1,12 @@
 import { execFileSync as realExecFileSync } from 'node:child_process';
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
-import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { readGitBlobsBatch } from '../git-blob-batch.js';
 import { ISOLATED_GIT_ENV_KEYS, ISOLATED_GIT_FLAGS, isolatedGit, isolatedGitEnv } from './isolated-git.js';
 import { readRepoCorpus, type CorpusAdmissionPort } from './repo-corpus.js';
+import { tempDir } from '@syzygy/test-kit';
 
 const spy = vi.hoisted(() => ({ calls: [] as { file: string; args: string[]; env: Record<string, string | undefined> | undefined }[] }));
 vi.mock('node:child_process', async importOriginal => {
@@ -18,12 +18,10 @@ vi.mock('node:child_process', async importOriginal => {
 });
 
 const allow: CorpusAdmissionPort = { decide: async () => ({ allowed: true, permissionIdentity: 'fixture-consent-v1' }) };
-const scratch: string[] = [];
-afterAll(() => { for (const dir of scratch.splice(0)) rmSync(dir, { recursive: true, force: true }); });
 
 interface Fixture { readonly dir: string; readonly commit: string; readonly run: (...args: string[]) => string }
 function makeRepo(files: Record<string, string | Buffer>, init: string[] = []): Fixture {
-  const dir = mkdtempSync(join(tmpdir(), 'syzygy-iso-')); scratch.push(dir);
+  const dir = tempDir('syzygy-iso-');
   const run = (...args: string[]): string => realExecFileSync('git', ['-C', dir, ...args], { encoding: 'utf8' }).trim();
   run('init', '-q', ...init); run('config', 'gc.auto', '0'); run('config', 'maintenance.auto', 'false'); run('config', 'user.email', 'f@example.invalid'); run('config', 'user.name', 'F');
   for (const [path, body] of Object.entries(files)) { mkdirSync(dirname(join(dir, path)), { recursive: true }); writeFileSync(join(dir, path), body); }
@@ -82,7 +80,7 @@ describe('an ambient environment or a replace ref cannot steer the pinned read',
 
   it('ignores GIT_DIR, GIT_OBJECT_DIRECTORY and GIT_ALTERNATE_OBJECT_DIRECTORIES pointing elsewhere', async () => {
     const other = makeRepo({ 'other.txt': 'OTHER REPO\n' });
-    const empty = mkdtempSync(join(tmpdir(), 'syzygy-iso-empty-')); scratch.push(empty);
+    const empty = tempDir('syzygy-iso-empty-');
     Object.assign(process.env, { GIT_DIR: join(other.dir, '.git'), GIT_OBJECT_DIRECTORY: empty, GIT_ALTERNATE_OBJECT_DIRECTORIES: join(other.dir, '.git', 'objects') });
     // Without isolation the ambient GIT_DIR wins over -C: the call answers from the other repository.
     expect(realExecFileSync('git', ['-C', small.dir, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).trim()).toBe(other.commit);

@@ -1,0 +1,4824 @@
+{
+  "epistemic": "Observed",
+  "sourceCommit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+  "tool": {
+    "typescriptVersion": "5.9.3",
+    "module": "/home/tze/GitHub/syzygy/node_modules/typescript/lib/typescript.js",
+    "moduleSha256": "3ae902c92cc44dace175c0e69e13a4b0899f6983c6121d76b9ab8dd5795e7675"
+  },
+  "scope": "Every tracked JS/TS-family blob at the named Git commit; static named references/module edges only, not runtime/external consumer completeness.",
+  "trackedPopulation": 2934,
+  "codePopulation": 483,
+  "parseDiagnosticPopulation": 0,
+  "diagnostics": [],
+  "sourceAdapterReferenceFiles": [
+    "apps/three-surface-poc/src/polaris-generation/source-adapter.test.ts",
+    "apps/three-surface-poc/src/polaris-generation/source-adapter.ts"
+  ],
+  "sourceAdapterNamedReferences": [
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/source-adapter.test.ts",
+      "line": 10,
+      "column": 10,
+      "symbol": "generationExclusionReason",
+      "kind": "import"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/source-adapter.test.ts",
+      "line": 10,
+      "column": 37,
+      "symbol": "generationSourceRoute",
+      "kind": "import"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/source-adapter.test.ts",
+      "line": 10,
+      "column": 60,
+      "symbol": "generationSourcesFromPocModel",
+      "kind": "import"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/source-adapter.test.ts",
+      "line": 19,
+      "column": 23,
+      "symbol": "generationSourcesFromPocModel",
+      "kind": "direct-call"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/source-adapter.test.ts",
+      "line": 25,
+      "column": 38,
+      "symbol": "generationSourceRoute",
+      "kind": "direct-call"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/source-adapter.test.ts",
+      "line": 33,
+      "column": 12,
+      "symbol": "generationSourceRoute",
+      "kind": "direct-call"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/source-adapter.test.ts",
+      "line": 34,
+      "column": 12,
+      "symbol": "generationSourceRoute",
+      "kind": "direct-call"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/source-adapter.test.ts",
+      "line": 36,
+      "column": 12,
+      "symbol": "generationSourceRoute",
+      "kind": "direct-call"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/source-adapter.test.ts",
+      "line": 44,
+      "column": 52,
+      "symbol": "generationExclusionReason",
+      "kind": "direct-call"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/source-adapter.test.ts",
+      "line": 45,
+      "column": 54,
+      "symbol": "generationExclusionReason",
+      "kind": "direct-call"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/source-adapter.test.ts",
+      "line": 46,
+      "column": 12,
+      "symbol": "generationExclusionReason",
+      "kind": "direct-call"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/source-adapter.test.ts",
+      "line": 47,
+      "column": 12,
+      "symbol": "generationExclusionReason",
+      "kind": "direct-call"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/source-adapter.test.ts",
+      "line": 48,
+      "column": 12,
+      "symbol": "generationExclusionReason",
+      "kind": "direct-call"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/source-adapter.test.ts",
+      "line": 54,
+      "column": 22,
+      "symbol": "generationSourcesFromPocModel",
+      "kind": "direct-call"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/source-adapter.test.ts",
+      "line": 72,
+      "column": 43,
+      "symbol": "generationSourcesFromPocModel",
+      "kind": "type-reference"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/source-adapter.test.ts",
+      "line": 73,
+      "column": 28,
+      "symbol": "generationSourcesFromPocModel",
+      "kind": "direct-call"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/source-adapter.test.ts",
+      "line": 85,
+      "column": 43,
+      "symbol": "generationSourcesFromPocModel",
+      "kind": "type-reference"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/source-adapter.test.ts",
+      "line": 86,
+      "column": 43,
+      "symbol": "generationSourcesFromPocModel",
+      "kind": "direct-call"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/source-adapter.ts",
+      "line": 16,
+      "column": 17,
+      "symbol": "generationExclusionReason",
+      "kind": "definition"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/source-adapter.ts",
+      "line": 27,
+      "column": 17,
+      "symbol": "generationSourcesFromPocModel",
+      "kind": "definition"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/source-adapter.ts",
+      "line": 33,
+      "column": 44,
+      "symbol": "generationExclusionReason",
+      "kind": "direct-call"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/source-adapter.ts",
+      "line": 35,
+      "column": 46,
+      "symbol": "generationExclusionReason",
+      "kind": "direct-call"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/source-adapter.ts",
+      "line": 53,
+      "column": 17,
+      "symbol": "generationSourceRoute",
+      "kind": "definition"
+    }
+  ],
+  "sourceAdapterModuleEdges": [
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/source-adapter.test.ts",
+      "line": 10,
+      "text": "import { generationExclusionReason, generationSourceRoute, generationSourcesFromPocModel } from './source-adapter.js';"
+    }
+  ],
+  "sourceAdapterModuleExports": [
+    {
+      "text": "export { newGenerationRunKey };",
+      "kind": "re-export",
+      "line": 9
+    },
+    {
+      "name": "generationExclusionReason",
+      "kind": "function",
+      "line": 16
+    },
+    {
+      "name": "generationSourcesFromPocModel",
+      "kind": "function",
+      "line": 27
+    },
+    {
+      "name": "generationSourceRoute",
+      "kind": "function",
+      "line": 53
+    }
+  ],
+  "sourceAdapterPropertyAccessPopulation": 44,
+  "sourceAdapterPropertyAccesses": [
+    {
+      "line": 17,
+      "expression": "record.outcome",
+      "operation": "property-access"
+    },
+    {
+      "line": 17,
+      "expression": "record.exclusion.exclusionReason",
+      "operation": "property-access"
+    },
+    {
+      "line": 17,
+      "expression": "record.exclusion",
+      "operation": "property-access"
+    },
+    {
+      "line": 18,
+      "expression": "record.outcome",
+      "operation": "property-access"
+    },
+    {
+      "line": 18,
+      "expression": "record.reason",
+      "operation": "property-access"
+    },
+    {
+      "line": 28,
+      "expression": "model.projectShape",
+      "operation": "property-access"
+    },
+    {
+      "line": 29,
+      "expression": "shape.kind",
+      "operation": "property-access"
+    },
+    {
+      "line": 30,
+      "expression": "shape.sources.map",
+      "operation": "method-call"
+    },
+    {
+      "line": 30,
+      "expression": "shape.sources",
+      "operation": "property-access"
+    },
+    {
+      "line": 31,
+      "expression": "source.anchor.kind",
+      "operation": "property-access"
+    },
+    {
+      "line": 31,
+      "expression": "source.anchor",
+      "operation": "property-access"
+    },
+    {
+      "line": 31,
+      "expression": "source.anchor.objectId",
+      "operation": "property-access"
+    },
+    {
+      "line": 31,
+      "expression": "source.anchor",
+      "operation": "property-access"
+    },
+    {
+      "line": 32,
+      "expression": "source.record.outcome",
+      "operation": "property-access"
+    },
+    {
+      "line": 32,
+      "expression": "source.record",
+      "operation": "property-access"
+    },
+    {
+      "line": 33,
+      "expression": "source.record",
+      "operation": "property-access"
+    },
+    {
+      "line": 34,
+      "expression": "source.record.outcome",
+      "operation": "property-access"
+    },
+    {
+      "line": 34,
+      "expression": "source.record",
+      "operation": "property-access"
+    },
+    {
+      "line": 35,
+      "expression": "source.record",
+      "operation": "property-access"
+    },
+    {
+      "line": 36,
+      "expression": "source.record.basis",
+      "operation": "property-access"
+    },
+    {
+      "line": 36,
+      "expression": "source.record",
+      "operation": "property-access"
+    },
+    {
+      "line": 39,
+      "expression": "exclusion.excluded",
+      "operation": "property-access"
+    },
+    {
+      "line": 39,
+      "expression": "source.identity",
+      "operation": "property-access"
+    },
+    {
+      "line": 40,
+      "expression": "createHash('sha256').update(source.identity).digest('hex').slice",
+      "operation": "method-call"
+    },
+    {
+      "line": 40,
+      "expression": "createHash('sha256').update(source.identity).digest",
+      "operation": "method-call"
+    },
+    {
+      "line": 40,
+      "expression": "createHash('sha256').update",
+      "operation": "method-call"
+    },
+    {
+      "line": 40,
+      "expression": "source.identity",
+      "operation": "property-access"
+    },
+    {
+      "line": 42,
+      "expression": "shape.identity.repositoryId",
+      "operation": "property-access"
+    },
+    {
+      "line": 42,
+      "expression": "shape.identity",
+      "operation": "property-access"
+    },
+    {
+      "line": 42,
+      "expression": "shape.identity.revision",
+      "operation": "property-access"
+    },
+    {
+      "line": 42,
+      "expression": "shape.identity",
+      "operation": "property-access"
+    },
+    {
+      "line": 43,
+      "expression": "source.path",
+      "operation": "property-access"
+    },
+    {
+      "line": 43,
+      "expression": "source.claim.evaluationId",
+      "operation": "property-access"
+    },
+    {
+      "line": 43,
+      "expression": "source.claim",
+      "operation": "property-access"
+    },
+    {
+      "line": 44,
+      "expression": "source.record.outcome",
+      "operation": "property-access"
+    },
+    {
+      "line": 44,
+      "expression": "source.record",
+      "operation": "property-access"
+    },
+    {
+      "line": 44,
+      "expression": "source.record.basis",
+      "operation": "property-access"
+    },
+    {
+      "line": 44,
+      "expression": "source.record",
+      "operation": "property-access"
+    },
+    {
+      "line": 54,
+      "expression": "source.objectId",
+      "operation": "property-access"
+    },
+    {
+      "line": 54,
+      "expression": "source.exclusion.excluded",
+      "operation": "property-access"
+    },
+    {
+      "line": 54,
+      "expression": "source.exclusion",
+      "operation": "property-access"
+    },
+    {
+      "line": 54,
+      "expression": "source.spans.length",
+      "operation": "property-access"
+    },
+    {
+      "line": 54,
+      "expression": "source.spans",
+      "operation": "property-access"
+    },
+    {
+      "line": 55,
+      "expression": "source.objectId",
+      "operation": "property-access"
+    }
+  ],
+  "owningTypes": [
+    {
+      "path": "apps/three-surface-poc/src/polaris-narrative.ts",
+      "name": "CapturedTargetState",
+      "startLine": 32,
+      "endLine": 36,
+      "fields": [
+        {
+          "name": "label",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "tier",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "reason",
+          "optional": false,
+          "type": "string"
+        }
+      ],
+      "text": "export interface CapturedTargetState {\n  readonly label: string;\n  readonly tier: string;\n  readonly reason: string;\n}"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-narrative.ts",
+      "name": "NarrativeAnchor",
+      "startLine": 38,
+      "endLine": 51,
+      "fields": [
+        {
+          "name": "anchorId",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "targetClass",
+          "optional": false,
+          "type": "AnchorTargetClass"
+        },
+        {
+          "name": "targetId",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "revision",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "supports",
+          "optional": false,
+          "type": "readonly string[]"
+        },
+        {
+          "name": "captured",
+          "optional": false,
+          "type": "CapturedTargetState"
+        },
+        {
+          "name": "locator",
+          "optional": false,
+          "type": "string"
+        }
+      ],
+      "text": "export interface NarrativeAnchor {\n  readonly anchorId: string;\n  readonly targetClass: AnchorTargetClass;\n  /** Durable target identity — a registry identity, digest or revision;\n   * never a label, a bare path or a line coordinate. */\n  readonly targetId: string;\n  readonly revision: string;\n  /** Claim ids inside the block that this anchor supports. */\n  readonly supports: readonly string[];\n  /** The target's state as captured at render time; frozen, never re-read. */\n  readonly captured: CapturedTargetState;\n  /** Human locator (path[:line]) — display only, not identity. */\n  readonly locator: string;\n}"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-narrative.ts",
+      "name": "NarrativeBlock",
+      "startLine": 53,
+      "endLine": 61,
+      "fields": [
+        {
+          "name": "kind",
+          "optional": false,
+          "type": "'narrative-block'"
+        },
+        {
+          "name": "blockId",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "role",
+          "optional": false,
+          "type": "NarrativeClaimRole"
+        },
+        {
+          "name": "presentation",
+          "optional": false,
+          "type": "'presentation-artifact'"
+        },
+        {
+          "name": "citable",
+          "optional": false,
+          "type": "false"
+        },
+        {
+          "name": "claims",
+          "optional": false,
+          "type": "readonly string[]"
+        },
+        {
+          "name": "anchors",
+          "optional": false,
+          "type": "readonly NarrativeAnchor[]"
+        }
+      ],
+      "text": "export interface NarrativeBlock {\n  readonly kind: 'narrative-block';\n  readonly blockId: string;\n  readonly role: NarrativeClaimRole;\n  readonly presentation: 'presentation-artifact';\n  readonly citable: false;\n  readonly claims: readonly string[];\n  readonly anchors: readonly NarrativeAnchor[];\n}"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-narrative.ts",
+      "name": "PolarisNarrative",
+      "startLine": 63,
+      "endLine": 73,
+      "fields": [
+        {
+          "name": "kind",
+          "optional": false,
+          "type": "'polaris-narrative'"
+        },
+        {
+          "name": "presentation",
+          "optional": false,
+          "type": "'presentation-artifact'"
+        },
+        {
+          "name": "citable",
+          "optional": false,
+          "type": "false"
+        },
+        {
+          "name": "roles",
+          "optional": false,
+          "type": "readonly NarrativeClaimRole[]"
+        },
+        {
+          "name": "anchorTargetClasses",
+          "optional": false,
+          "type": "readonly AnchorTargetClass[]"
+        },
+        {
+          "name": "blocks",
+          "optional": false,
+          "type": "readonly NarrativeBlock[]"
+        },
+        {
+          "name": "deepDives",
+          "optional": false,
+          "type": "readonly DeepDiveMachineForm[]"
+        }
+      ],
+      "text": "export interface PolarisNarrative {\n  readonly kind: 'polaris-narrative';\n  readonly presentation: 'presentation-artifact';\n  readonly citable: false;\n  readonly roles: readonly NarrativeClaimRole[];\n  readonly anchorTargetClasses: readonly AnchorTargetClass[];\n  readonly blocks: readonly NarrativeBlock[];\n  /** Capability deep dives: band composition, verbatim state and the\n   * proposals' non-anchorable, non-status-bearing futures (PWB-REQ-015). */\n  readonly deepDives: readonly DeepDiveMachineForm[];\n}"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-narrative.ts",
+      "name": "AnchorInput",
+      "startLine": 96,
+      "endLine": 101,
+      "fields": [
+        {
+          "name": "targetClass",
+          "optional": false,
+          "type": "AnchorTargetClass"
+        },
+        {
+          "name": "targetId",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "revision",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "locator",
+          "optional": false,
+          "type": "string"
+        }
+      ],
+      "text": "export interface AnchorInput {\n  readonly targetClass: AnchorTargetClass;\n  readonly targetId: string;\n  readonly revision: string;\n  readonly locator: string;\n}"
+    },
+    {
+      "path": "apps/three-surface-poc/src/routes.ts",
+      "name": "PolarisPresentationEnvelope",
+      "startLine": 25,
+      "endLine": 35,
+      "fields": [
+        {
+          "name": "kind",
+          "optional": false,
+          "type": "typeof POLARIS_PRESENTATION_KIND"
+        },
+        {
+          "name": "version",
+          "optional": false,
+          "type": "1"
+        },
+        {
+          "name": "presentation",
+          "optional": false,
+          "type": "'presentation-artifact'"
+        },
+        {
+          "name": "citable",
+          "optional": false,
+          "type": "false"
+        },
+        {
+          "name": "evaluation",
+          "optional": false,
+          "type": "PocModel['evaluation']"
+        },
+        {
+          "name": "evidence",
+          "optional": false,
+          "type": "PocModel['evaluation']['evidence']"
+        },
+        {
+          "name": "project",
+          "optional": false,
+          "type": "{ readonly revision: string }"
+        },
+        {
+          "name": "narrative",
+          "optional": false,
+          "type": "ReturnType<typeof renderPolarisPresentation>['narrative']"
+        },
+        {
+          "name": "links",
+          "optional": false,
+          "type": "NonNullable<PocModel['links']>"
+        }
+      ],
+      "text": "export interface PolarisPresentationEnvelope {\n  readonly kind: typeof POLARIS_PRESENTATION_KIND;\n  readonly version: 1;\n  readonly presentation: 'presentation-artifact';\n  readonly citable: false;\n  readonly evaluation: PocModel['evaluation'];\n  readonly evidence: PocModel['evaluation']['evidence'];\n  readonly project: { readonly revision: string };\n  readonly narrative: ReturnType<typeof renderPolarisPresentation>['narrative'];\n  readonly links: NonNullable<PocModel['links']>;\n}"
+    },
+    {
+      "path": "packages/polaris-generation-core/src/generation-source.ts",
+      "name": "GenerationSpan",
+      "startLine": 23,
+      "endLine": 30,
+      "fields": [
+        {
+          "name": "anchorId",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "start",
+          "optional": false,
+          "type": "number"
+        },
+        {
+          "name": "end",
+          "optional": false,
+          "type": "number"
+        },
+        {
+          "name": "text",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "original",
+          "optional": true,
+          "type": "{ readonly start: number; readonly startLine: number; readonly endLine: number }"
+        }
+      ],
+      "text": "export interface GenerationSpan {\n  readonly anchorId: string;\n  /** Byte offsets into this source's safe body. A redacted span separately names its original Git coordinates. */\n  readonly start: number;\n  readonly end: number;\n  readonly text: string;\n  readonly original?: { readonly start: number; readonly startLine: number; readonly endLine: number };\n}"
+    },
+    {
+      "path": "packages/polaris-generation-core/src/generation-source.ts",
+      "name": "GenerationSource",
+      "startLine": 34,
+      "endLine": 55,
+      "fields": [
+        {
+          "name": "sourceId",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "repositoryId",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "revision",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "path",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "objectId",
+          "optional": false,
+          "type": "string | null"
+        },
+        {
+          "name": "evaluationId",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "classificationBasis",
+          "optional": false,
+          "type": "'body' | 'path-only'"
+        },
+        {
+          "name": "redaction",
+          "optional": true,
+          "type": "SourceRedaction"
+        },
+        {
+          "name": "segment",
+          "optional": true,
+          "type": "{ readonly index: number; readonly count: number; readonly start: number; readonly end: number; readonly blobBytes: number }"
+        },
+        {
+          "name": "exclusion",
+          "optional": false,
+          "type": "{ readonly excluded: false } | { readonly excluded: true; readonly reason: GenerationExclusionReason }"
+        },
+        {
+          "name": "body",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "spans",
+          "optional": false,
+          "type": "readonly GenerationSpan[]"
+        }
+      ],
+      "text": "export interface GenerationSource {\n  readonly sourceId: string;\n  readonly repositoryId: string;\n  readonly revision: string;\n  readonly path: string;\n  /** Null only when the named tree entry is missing or is not a blob. */\n  readonly objectId: string | null;\n  readonly evaluationId: string;\n  readonly classificationBasis: 'body' | 'path-only';\n  readonly redaction?: SourceRedaction;\n  /** Present only on one contiguous piece of a blob too long to quote whole.\n   * `start`/`end` are UTF-8 byte offsets into the full blob; `body` and span\n   * offsets are relative to the piece, anchors use the blob offsets. For redacted\n   * sources the segment covers the safe marker projection; every evidence span\n   * separately carries its original Git coordinates. */\n  readonly segment?: { readonly index: number; readonly count: number; readonly start: number; readonly end: number; readonly blobBytes: number };\n  readonly exclusion: { readonly excluded: false } | { readonly excluded: true; readonly reason: GenerationExclusionReason };\n  /** Present only for an admitted body. Never sent to a provider except in\n   * the inventory envelope or a later explicitly cited span. */\n  readonly body?: string;\n  readonly spans: readonly GenerationSpan[];\n}"
+    },
+    {
+      "path": "packages/polaris-generation-core/src/generation-source.ts",
+      "name": "GenerationSourceFailure",
+      "startLine": 57,
+      "endLine": 59,
+      "fields": null,
+      "text": "export type GenerationSourceFailure =\n  | 'invalid-source' | 'duplicate-source' | 'duplicate-anchor' | 'invalid-anchor'\n  | 'unquotable-source' | 'body-mismatch' | 'object-mismatch' | 'source-too-long' | 'invalid-segments';"
+    },
+    {
+      "path": "packages/polaris-generation-core/src/local-render.ts",
+      "name": "EvidenceAnchor",
+      "startLine": 31,
+      "endLine": 43,
+      "fields": [
+        {
+          "name": "targetClass",
+          "optional": false,
+          "type": "'evidence-artifact-identifier-with-integrity-digest'"
+        },
+        {
+          "name": "identifier",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "algorithm",
+          "optional": false,
+          "type": "'sha1' | 'sha256'"
+        },
+        {
+          "name": "fragment",
+          "optional": false,
+          "type": "{ readonly start: number; readonly end: number } | null"
+        },
+        {
+          "name": "targetState",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "pathLabel",
+          "optional": false,
+          "type": "string"
+        }
+      ],
+      "text": "export interface EvidenceAnchor {\n  readonly targetClass: 'evidence-artifact-identifier-with-integrity-digest';\n  /** The blob's object identifier as Syzygy recomputed it from the bytes it read: the owning identifier and the integrity digest at once. */\n  readonly identifier: string;\n  /** The hash algorithm the consented revision's identifier is written in. */\n  readonly algorithm: 'sha1' | 'sha256';\n  /** The span's UTF-8 byte range in the blob, `[start, end)`; null for the whole blob. */\n  readonly fragment: { readonly start: number; readonly end: number } | null;\n  /** The pinned revision. */\n  readonly targetState: string;\n  /** The repository path, shown beside the anchor as a label, never as its identity. */\n  readonly pathLabel: string;\n}"
+    },
+    {
+      "path": "packages/polaris-generation-core/src/pipeline.ts",
+      "name": "PipelineRequest",
+      "startLine": 21,
+      "endLine": 36,
+      "fields": [
+        {
+          "name": "requestId",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "projectId",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "snapshotId",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "routes",
+          "optional": false,
+          "type": "Readonly<Record<GenerationStage, string>>"
+        },
+        {
+          "name": "startedAt",
+          "optional": false,
+          "type": "number"
+        },
+        {
+          "name": "budget",
+          "optional": false,
+          "type": "GenerationBudget"
+        },
+        {
+          "name": "sources",
+          "optional": false,
+          "type": "readonly GenerationSource[]"
+        },
+        {
+          "name": "readerQuestions",
+          "optional": false,
+          "type": "unknown"
+        },
+        {
+          "name": "requestedAssets",
+          "optional": false,
+          "type": "readonly RequestedAsset[]"
+        },
+        {
+          "name": "promptProfile",
+          "optional": true,
+          "type": "PromptProfile"
+        }
+      ],
+      "text": "export interface PipelineRequest {\n  readonly requestId: string;\n  readonly projectId: string;\n  readonly snapshotId: string;\n  readonly routes: Readonly<Record<GenerationStage, string>>;\n  readonly startedAt: number;\n  readonly budget: GenerationBudget;\n  /** Complete counted population; only validated body spans may cross a\n   * provider stage boundary. Permission is still a trusted port decision. */\n  readonly sources: readonly GenerationSource[];\n  readonly readerQuestions: unknown;\n  /** Trusted operator request identities and requiredness, never model-supplied. */\n  readonly requestedAssets: readonly RequestedAsset[];\n  /** Which stage prompts the run sends; absent means `manifesto`. A dossier run sets `dossier`. */\n  readonly promptProfile?: PromptProfile;\n}"
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/content-classification.ts",
+      "name": "ClassificationRecord",
+      "startLine": 257,
+      "endLine": 280,
+      "fields": null,
+      "text": "export type ClassificationRecord =\n  | {\n      readonly path: string;\n      readonly outcome: 'classified';\n      // Absent for a path-only identity whose body was deliberately not read.\n      readonly contentDigest?: string;\n      readonly extractionClasses: readonly string[];\n      readonly policyId: string;\n      readonly policyVersion: string;\n      readonly detectorsRun: number;\n      readonly basis: 'body' | 'path-only';\n    }\n  | {\n      readonly path: string;\n      readonly outcome: 'excluded';\n      readonly exclusion: Exclusion;\n      readonly unknown: FixedUnknown;\n    }\n  | {\n      readonly path: string;\n      readonly outcome: 'unavailable';\n      readonly reason: UnavailableReason;\n      readonly unknown: FixedUnknown;\n    };"
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/content-classification.ts",
+      "name": "ClassifiedSource",
+      "startLine": 464,
+      "endLine": 470,
+      "fields": [
+        {
+          "name": "source",
+          "optional": false,
+          "type": "ManifestSource"
+        },
+        {
+          "name": "read",
+          "optional": false,
+          "type": "ObjectReadRecord"
+        },
+        {
+          "name": "record",
+          "optional": false,
+          "type": "ClassificationRecord"
+        },
+        {
+          "name": "value",
+          "optional": true,
+          "type": "T"
+        }
+      ],
+      "text": "export interface ClassifiedSource<T> {\n  readonly source: ManifestSource;\n  readonly read: ObjectReadRecord;\n  readonly record: ClassificationRecord;\n  // Present only for outcome `classified`; whatever `consume` returned.\n  readonly value?: T;\n}"
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/model.ts",
+      "name": "PocUnknown",
+      "startLine": 62,
+      "endLine": 68,
+      "fields": [
+        {
+          "name": "label",
+          "optional": false,
+          "type": "'Unknown'"
+        },
+        {
+          "name": "reason",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "closedReason",
+          "optional": false,
+          "type": "UnknownReason"
+        },
+        {
+          "name": "resolutionRoutes",
+          "optional": false,
+          "type": "ResolutionRoutes"
+        },
+        {
+          "name": "actionRoute",
+          "optional": true,
+          "type": "PocActionRoute"
+        }
+      ],
+      "text": "export interface PocUnknown {\n  readonly label: 'Unknown';\n  readonly reason: string;\n  readonly closedReason: UnknownReason;\n  readonly resolutionRoutes: ResolutionRoutes;\n  readonly actionRoute?: PocActionRoute;\n}"
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/model.ts",
+      "name": "PocUnknownSubject",
+      "startLine": 76,
+      "endLine": 79,
+      "fields": [
+        {
+          "name": "id",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "epistemic",
+          "optional": false,
+          "type": "PocUnknown"
+        }
+      ],
+      "text": "export interface PocUnknownSubject {\n  readonly id: string;\n  readonly epistemic: PocUnknown;\n}"
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/model.ts",
+      "name": "PocProvenance",
+      "startLine": 81,
+      "endLine": 94,
+      "fields": [
+        {
+          "name": "kind",
+          "optional": false,
+          "type": "| 'repository-file'\n    | 'git-revision'\n    | 'dolt-revision'\n    | 'manual-mapping'\n    | 'materialization-record'\n    | 'test-artifact-record'\n    | 'project-shape-source'\n    | 'owner-act'"
+        },
+        {
+          "name": "source",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "revision",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "digest",
+          "optional": true,
+          "type": "string | undefined"
+        }
+      ],
+      "text": "export interface PocProvenance {\n  readonly kind:\n    | 'repository-file'\n    | 'git-revision'\n    | 'dolt-revision'\n    | 'manual-mapping'\n    | 'materialization-record'\n    | 'test-artifact-record'\n    | 'project-shape-source'\n    | 'owner-act';\n  readonly source: string;\n  readonly revision: string;\n  readonly digest?: string | undefined;\n}"
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/model.ts",
+      "name": "PocModel",
+      "startLine": 162,
+      "endLine": 245,
+      "fields": [
+        {
+          "name": "schema",
+          "optional": false,
+          "type": "'syzygy-three-surface-poc/v1'"
+        },
+        {
+          "name": "evaluation",
+          "optional": false,
+          "type": "{\n    /** Human-oriented composite identity,\n     * `<snapshotLabel>|inputs:sha256:<inputsDigest>`. Machine consumers\n     * should read `snapshotLabel` and `inputsDigest` directly instead of\n     * splitting this string. */\n    readonly snapshot: string;\n    /** The evaluation's human label, without the input-digest suffix. */\n    readonly snapshotLabel: string;\n    /** SHA-256 hex digest of the canonical observation inputs. */\n    readonly inputsDigest: string;\n    readonly asOf: string;\n    readonly evidence: PocEvaluationEvidence;\n  }"
+        },
+        {
+          "name": "project",
+          "optional": false,
+          "type": "{\n    readonly name: string;\n    readonly root: string;\n    readonly revision: string;\n  }"
+        },
+        {
+          "name": "observerRevision",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "governingIntentId",
+          "optional": false,
+          "type": "string | null"
+        },
+        {
+          "name": "capabilityId",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "entities",
+          "optional": false,
+          "type": "readonly PocEntity[]"
+        },
+        {
+          "name": "relationships",
+          "optional": false,
+          "type": "readonly PocRelationship[]"
+        },
+        {
+          "name": "surfaces",
+          "optional": false,
+          "type": "readonly PocSurface[]"
+        },
+        {
+          "name": "codeStructure",
+          "optional": false,
+          "type": "CodeStructureResult"
+        },
+        {
+          "name": "workItems",
+          "optional": false,
+          "type": "WorkItemsResult"
+        },
+        {
+          "name": "workerChange",
+          "optional": false,
+          "type": "WorkerChangeResult"
+        },
+        {
+          "name": "testArtifactVerification",
+          "optional": false,
+          "type": "TestArtifactVerificationResult"
+        },
+        {
+          "name": "orrery",
+          "optional": false,
+          "type": "OrreryProjection"
+        },
+        {
+          "name": "trajectory",
+          "optional": false,
+          "type": "TrajectoryProjection"
+        },
+        {
+          "name": "materializedBeadId",
+          "optional": false,
+          "type": "string | null"
+        },
+        {
+          "name": "unknownSubjects",
+          "optional": false,
+          "type": "readonly PocUnknownSubject[]"
+        },
+        {
+          "name": "projectShape",
+          "optional": false,
+          "type": "ProjectShape"
+        },
+        {
+          "name": "resourceHeadroom",
+          "optional": false,
+          "type": "ResourceHeadroom"
+        },
+        {
+          "name": "proposedWork",
+          "optional": false,
+          "type": "ProposedWork"
+        },
+        {
+          "name": "dispatch",
+          "optional": false,
+          "type": "DispatchDisclosure | null"
+        },
+        {
+          "name": "walkthroughJudgment",
+          "optional": false,
+          "type": "WalkthroughJudgmentPresentation"
+        },
+        {
+          "name": "walkthroughReadiness",
+          "optional": false,
+          "type": "WalkthroughReadinessPresentation"
+        },
+        {
+          "name": "links",
+          "optional": true,
+          "type": "readonly {\n    readonly path: string;\n    readonly method: 'GET' | 'HEAD' | 'POST' | 'PUT' | 'DELETE';\n    readonly credentialClass: 'human-open' | 'machine-credentialed';\n    readonly self: boolean;\n  }[]"
+        },
+        {
+          "name": "responseIdentity",
+          "optional": false,
+          "type": "ResponseIdentity"
+        }
+      ],
+      "text": "export interface PocModel {\n  readonly schema: 'syzygy-three-surface-poc/v1';\n  readonly evaluation: {\n    /** Human-oriented composite identity,\n     * `<snapshotLabel>|inputs:sha256:<inputsDigest>`. Machine consumers\n     * should read `snapshotLabel` and `inputsDigest` directly instead of\n     * splitting this string. */\n    readonly snapshot: string;\n    /** The evaluation's human label, without the input-digest suffix. */\n    readonly snapshotLabel: string;\n    /** SHA-256 hex digest of the canonical observation inputs. */\n    readonly inputsDigest: string;\n    readonly asOf: string;\n    readonly evidence: PocEvaluationEvidence;\n  };\n  readonly project: {\n    readonly name: string;\n    readonly root: string;\n    readonly revision: string;\n  };\n  readonly observerRevision: string;\n  /** The seed-supplied governing intent for the worker-change evidence seam.\n   * Null means that this evaluation supplied no usable identity; renderers\n   * must keep verification Unknown rather than borrowing a proving-case ID. */\n  readonly governingIntentId: string | null;\n  readonly capabilityId: string;\n  readonly entities: readonly PocEntity[];\n  readonly relationships: readonly PocRelationship[];\n  readonly surfaces: readonly PocSurface[];\n  readonly codeStructure: CodeStructureResult;\n  readonly workItems: WorkItemsResult;\n  readonly workerChange: WorkerChangeResult;\n  readonly testArtifactVerification: TestArtifactVerificationResult;\n  readonly orrery: OrreryProjection;\n  readonly trajectory: TrajectoryProjection;\n  /** The confirmed materialized Bead id, or null when nothing has been\n   * materialized (or the record could not be confirmed against the\n   * live-observed work items). The typed source for renderers — never\n   * re-derived from human-readable entity text. */\n  readonly materializedBeadId: string | null;\n  /** Every surface Unknown that is not an entity, relationship or\n   * project-shape claim, by the id its disclosure renders under (M4\n   * slice 1): the human route and its machine twin share that id. */\n  readonly unknownSubjects: readonly PocUnknownSubject[];\n  /** The project-wide Butlers shape (PWB): body-read authority disclosure,\n   * revision-bound source population, items, coverage, contradictions and\n   * the project account, every fact with its complete epistemic tuple.\n   * `not-evaluated` when the builder was given no authority evaluation —\n   * nothing is read then. */\n  readonly projectShape: ProjectShape;\n  /** The resource ledger's headroom against all seven declared limits and\n   * its cost record (pursuit N3, syzygy-u05.3): one tuple per id, Unknown\n   * with its reason when no ledger ran. */\n  readonly resourceHeadroom: ResourceHeadroom;\n  /** PWB-REQ-013: the one followed OpenSpec change as a distinct type, with its lifecycle and the current authority it would amend. */\n  readonly proposedWork: ProposedWork;\n  /** The exact materialization packet and its observed dispatch state, or\n   * null when this evaluation has no supported seed-backed work graph. */\n  readonly dispatch: DispatchDisclosure | null;\n  /** PWB-REQ-021/022: the owner's cold-open walkthrough judgment as the\n   * PWB-REQ-022 evaluator carried it — lawful (state (1) or (2), verdict\n   * carried), unlawful (no verdict), absent (no pair) — or `not-evaluated`\n   * when the builder was given no run-record/judgment pair. Never a score,\n   * never evidence of success. */\n  readonly walkthroughJudgment: WalkthroughJudgmentPresentation;\n  /** PWB-REQ-021 (as amended 2026-09-05): whether the retained walkthrough\n   * record is a ready answer population against this evaluation — the nine\n   * identities, resolved anchors, same surface and evaluation, Polaris-only\n   * traversal, no PWB-REQ-006 breach, resolvable cited authority. An\n   * execution fact only: never a verdict, never a score, and independent\n   * of the PWB-REQ-022 outcome. `not-evaluated` when the builder was given\n   * no run record or no traversal predicate. */\n  readonly walkthroughReadiness: WalkthroughReadinessPresentation;\n  /** Routes in the selected machine response, projected from the daemon's\n   * registered POC routes at serve time. Absent on an unserved model. */\n  readonly links?: readonly {\n    readonly path: string;\n    readonly method: 'GET' | 'HEAD' | 'POST' | 'PUT' | 'DELETE';\n    readonly credentialClass: 'human-open' | 'machine-credentialed';\n    readonly self: boolean;\n  }[];\n  /** A canonical body identity with declared capture-instant exclusions. */\n  readonly responseIdentity: ResponseIdentity;\n}"
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/project-shape-coverage.ts",
+      "name": "SourceCoverage",
+      "startLine": 188,
+      "endLine": 195,
+      "fields": [
+        {
+          "name": "path",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "extractionClasses",
+          "optional": false,
+          "type": "readonly ExtractionClass[]"
+        },
+        {
+          "name": "itemDenominator",
+          "optional": false,
+          "type": "ItemDenominator"
+        },
+        {
+          "name": "record",
+          "optional": false,
+          "type": "ClassificationRecord"
+        }
+      ],
+      "text": "export interface SourceCoverage {\n  readonly path: string;\n  readonly extractionClasses: readonly ExtractionClass[];\n  readonly itemDenominator: ItemDenominator;\n  // The classification record that governs this source (the parse-failure\n  // exclusion when the grammar failed).\n  readonly record: ClassificationRecord;\n}"
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+      "name": "ManifestSource",
+      "startLine": 79,
+      "endLine": 87,
+      "fields": [
+        {
+          "name": "path",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "rule",
+          "optional": false,
+          "type": "SourceRule"
+        },
+        {
+          "name": "pillar",
+          "optional": true,
+          "type": "PillarKey"
+        },
+        {
+          "name": "declaredBy",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "extractionClasses",
+          "optional": false,
+          "type": "readonly ExtractionClass[]"
+        },
+        {
+          "name": "anchor",
+          "optional": false,
+          "type": "SourceAnchor"
+        }
+      ],
+      "text": "export interface ManifestSource {\n  readonly path: string;\n  readonly rule: SourceRule;\n  readonly pillar?: PillarKey;\n  // The index whose link named this source (rules 1–2 only).\n  readonly declaredBy?: string;\n  readonly extractionClasses: readonly ExtractionClass[];\n  readonly anchor: SourceAnchor;\n}"
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/project-shape-model.ts",
+      "name": "ProjectShapeClaim",
+      "startLine": 163,
+      "endLine": 174,
+      "fields": [
+        {
+          "name": "claimId",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "evaluationId",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "epistemic",
+          "optional": false,
+          "type": "EpistemicState"
+        },
+        {
+          "name": "resolutionRoutes",
+          "optional": false,
+          "type": "readonly ResolutionRoute[]"
+        },
+        {
+          "name": "challenge",
+          "optional": false,
+          "type": "ChallengeState"
+        },
+        {
+          "name": "support",
+          "optional": false,
+          "type": "readonly ProjectShapeSupport[]"
+        }
+      ],
+      "text": "export interface ProjectShapeClaim {\n  // Stable semantic identity: the same subject keeps the same id across\n  // evaluations; `evaluationId` is the instance.\n  readonly claimId: string;\n  readonly evaluationId: string;\n  // cap1-core's tuple verbatim: label, tier, reasons (primary + secondary), freshness.\n  readonly epistemic: EpistemicState;\n  // One route per carried reason, RFC2-24 order preserved.\n  readonly resolutionRoutes: readonly ResolutionRoute[];\n  readonly challenge: ChallengeState;\n  readonly support: readonly ProjectShapeSupport[];\n}"
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/project-shape-model.ts",
+      "name": "ProjectShapeIdentity",
+      "startLine": 243,
+      "endLine": 256,
+      "fields": [
+        {
+          "name": "repositoryId",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "requestedRevision",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "revision",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "capturedAt",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "sourceClaimedInstant",
+          "optional": false,
+          "type": "{ readonly kind: 'git-committer-instant'; readonly instant: string }"
+        },
+        {
+          "name": "scope",
+          "optional": false,
+          "type": "ObservationScope"
+        },
+        {
+          "name": "observer",
+          "optional": false,
+          "type": "typeof PWB_OBSERVER_IDENTITY"
+        },
+        {
+          "name": "policy",
+          "optional": false,
+          "type": "{ readonly policyId: string; readonly policyVersion: string }"
+        },
+        {
+          "name": "manifestIdentity",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "manifestDigest",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "observationDigest",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "deterministicInputs",
+          "optional": false,
+          "type": "DeterministicInputs"
+        }
+      ],
+      "text": "export interface ProjectShapeIdentity {\n  readonly repositoryId: string;\n  readonly requestedRevision: string;\n  readonly revision: string;\n  readonly capturedAt: string;\n  readonly sourceClaimedInstant: { readonly kind: 'git-committer-instant'; readonly instant: string };\n  readonly scope: ObservationScope;\n  readonly observer: typeof PWB_OBSERVER_IDENTITY;\n  readonly policy: { readonly policyId: string; readonly policyVersion: string };\n  readonly manifestIdentity: string;\n  readonly manifestDigest: string;\n  readonly observationDigest: string;\n  readonly deterministicInputs: DeterministicInputs;\n}"
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/project-shape-model.ts",
+      "name": "ProjectShapeSource",
+      "startLine": 258,
+      "endLine": 266,
+      "fields": [
+        {
+          "name": "identity",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "stamp",
+          "optional": false,
+          "type": "EmissionStamp"
+        },
+        {
+          "name": "rule",
+          "optional": false,
+          "type": "SourceRule"
+        },
+        {
+          "name": "pillar",
+          "optional": true,
+          "type": "PillarKey"
+        },
+        {
+          "name": "declaredBy",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "anchor",
+          "optional": false,
+          "type": "ManifestSource['anchor']"
+        },
+        {
+          "name": "claim",
+          "optional": false,
+          "type": "ProjectShapeClaim"
+        }
+      ],
+      "text": "export interface ProjectShapeSource extends SourceCoverage {\n  readonly identity: string;\n  readonly stamp: EmissionStamp;\n  readonly rule: SourceRule;\n  readonly pillar?: PillarKey;\n  readonly declaredBy?: string;\n  readonly anchor: ManifestSource['anchor'];\n  readonly claim: ProjectShapeClaim;\n}"
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/project-shape-model.ts",
+      "name": "ProjectShape",
+      "startLine": 311,
+      "endLine": 364,
+      "fields": null,
+      "text": "export type ProjectShape =\n  | {\n      readonly kind: 'not-evaluated';\n      readonly authority: undefined;\n      readonly detail: string;\n      readonly claim: ProjectShapeClaim;\n    }\n  | {\n      readonly kind: 'not-admitted';\n      readonly authority: AuthorityDisclosure;\n      readonly reason: AdmissionFailureReason;\n      readonly secondaryReasons: readonly AdmissionFailureReason[];\n      readonly contradiction: Rfc316aContradiction;\n      readonly claim: ProjectShapeClaim;\n    }\n  | {\n      readonly kind: 'observation-failed';\n      readonly authority: AuthorityDisclosure;\n      readonly failure: {\n        readonly failureState: string | undefined;\n        readonly degradationState: string | undefined;\n        readonly reason: UnknownReason;\n        readonly detail: string;\n      };\n      readonly claim: ProjectShapeClaim;\n    }\n  | {\n      readonly kind: 'observed';\n      readonly authority: AuthorityDisclosure;\n      readonly identity: ProjectShapeIdentity;\n      readonly sources: readonly ProjectShapeSource[];\n      readonly items: readonly ProjectShapeItem[];\n      readonly classes: Readonly<Record<ExtractionClass, ProjectShapeClassAggregate>>;\n      readonly facts: readonly ProjectShapeFact[];\n      readonly contradictions: readonly ProjectShapeFact[];\n      // The root index's own declarations, disclosed whether or not any\n      // conflict needed them: the seven layer rules and the two stated\n      // summary counts, or why each is absent.\n      readonly precedence: PrecedenceDisclosure;\n      readonly rootSummary: RootSummaryDisclosure;\n      readonly exclusions: readonly Exclusion[];\n      // Every breach of the one evaluation-wide envelope, both phases, in\n      // order; `resourceUse` is the ledger's closing count.\n      readonly limitBreaches: readonly ResourceLimitBreach[];\n      readonly resourceUse: ResourceLedgerSummary;\n      readonly degradation: ObservationDegradation | undefined;\n      // Phase A's discovery outcome per pillar (PWB-RECON-02): the page and\n      // the machine answer both say which home was found, which index was\n      // read, and why a pillar is Unknown — never only the aggregate reason.\n      readonly discovery: readonly PillarDiscovery[];\n      readonly projectAccount: readonly ProjectAccountStatement[];\n      readonly counts: ProjectShapeCounts;\n      readonly claim: ProjectShapeClaim;\n    };"
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/work-items.ts",
+      "name": "WorkItemFact",
+      "startLine": 20,
+      "endLine": 33,
+      "fields": [
+        {
+          "name": "id",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "title",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "status",
+          "optional": false,
+          "type": "WorkItemStatus"
+        },
+        {
+          "name": "issueType",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "priority",
+          "optional": false,
+          "type": "number"
+        },
+        {
+          "name": "createdAt",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "updatedAt",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "closedAt",
+          "optional": false,
+          "type": "string | null"
+        },
+        {
+          "name": "governedBy",
+          "optional": false,
+          "type": "GoverningIntentUnknown"
+        }
+      ],
+      "text": "export interface WorkItemFact {\n  readonly id: string;\n  readonly title: string;\n  readonly status: WorkItemStatus;\n  readonly issueType: string;\n  readonly priority: number;\n  readonly createdAt: string;\n  readonly updatedAt: string;\n  readonly closedAt: string | null;\n  /** POC-REQ-014: the item's governing intent. Always the one Unknown below:\n   * the observation reads no link from an item to the intent that warrants\n   * it, and nothing is taken from the title. */\n  readonly governedBy: GoverningIntentUnknown;\n}"
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/work-items.ts",
+      "name": "GoverningIntentUnknown",
+      "startLine": 41,
+      "endLine": 45,
+      "fields": [
+        {
+          "name": "label",
+          "optional": false,
+          "type": "'Unknown'"
+        },
+        {
+          "name": "closedReason",
+          "optional": false,
+          "type": "UnknownReason"
+        },
+        {
+          "name": "resolutionRoutes",
+          "optional": false,
+          "type": "ResolutionRoutes"
+        }
+      ],
+      "text": "export interface GoverningIntentUnknown {\n  readonly label: 'Unknown';\n  readonly closedReason: UnknownReason;\n  readonly resolutionRoutes: ResolutionRoutes;\n}"
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/work-items.ts",
+      "name": "WorkItemsObserved",
+      "startLine": 82,
+      "endLine": 90,
+      "fields": [
+        {
+          "name": "kind",
+          "optional": false,
+          "type": "'observed'"
+        },
+        {
+          "name": "beadPrefix",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "provenance",
+          "optional": false,
+          "type": "PocProvenance"
+        },
+        {
+          "name": "capturedAt",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "items",
+          "optional": false,
+          "type": "readonly WorkItemFact[]"
+        },
+        {
+          "name": "governedByUnknownCount",
+          "optional": false,
+          "type": "number"
+        }
+      ],
+      "text": "export interface WorkItemsObserved {\n  readonly kind: 'observed';\n  readonly beadPrefix: string;\n  readonly provenance: PocProvenance;\n  readonly capturedAt: string;\n  readonly items: readonly WorkItemFact[];\n  /** POC-REQ-014: the served items whose `governedBy` is the Unknown. */\n  readonly governedByUnknownCount: number;\n}"
+    }
+  ],
+  "otherBoundaryReferences": [
+    {
+      "path": "apps/three-surface-poc/src/polaris-narrative.test.ts",
+      "line": 6,
+      "column": 10,
+      "symbol": "NarrativeRegistry",
+      "kind": "import"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-narrative.test.ts",
+      "line": 281,
+      "column": 26,
+      "symbol": "NarrativeRegistry",
+      "kind": "reference"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-narrative.ts",
+      "line": 32,
+      "column": 18,
+      "symbol": "CapturedTargetState",
+      "kind": "definition"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-narrative.ts",
+      "line": 38,
+      "column": 18,
+      "symbol": "NarrativeAnchor",
+      "kind": "definition"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-narrative.ts",
+      "line": 48,
+      "column": 22,
+      "symbol": "CapturedTargetState",
+      "kind": "type-reference"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-narrative.ts",
+      "line": 60,
+      "column": 30,
+      "symbol": "NarrativeAnchor",
+      "kind": "type-reference"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-narrative.ts",
+      "line": 96,
+      "column": 18,
+      "symbol": "AnchorInput",
+      "kind": "definition"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-narrative.ts",
+      "line": 103,
+      "column": 17,
+      "symbol": "provenanceAnchor",
+      "kind": "definition"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-narrative.ts",
+      "line": 103,
+      "column": 56,
+      "symbol": "AnchorInput",
+      "kind": "type-reference"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-narrative.ts",
+      "line": 114,
+      "column": 17,
+      "symbol": "supportAnchor",
+      "kind": "definition"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-narrative.ts",
+      "line": 114,
+      "column": 125,
+      "symbol": "AnchorInput",
+      "kind": "type-reference"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-narrative.ts",
+      "line": 125,
+      "column": 17,
+      "symbol": "artifactAnchor",
+      "kind": "definition"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-narrative.ts",
+      "line": 125,
+      "column": 101,
+      "symbol": "AnchorInput",
+      "kind": "type-reference"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-narrative.ts",
+      "line": 129,
+      "column": 17,
+      "symbol": "capturedStateOf",
+      "kind": "definition"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-narrative.ts",
+      "line": 129,
+      "column": 60,
+      "symbol": "CapturedTargetState",
+      "kind": "type-reference"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-narrative.ts",
+      "line": 146,
+      "column": 14,
+      "symbol": "NarrativeRegistry",
+      "kind": "definition"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-narrative.ts",
+      "line": 156,
+      "column": 83,
+      "symbol": "AnchorInput",
+      "kind": "type-reference"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-narrative.ts",
+      "line": 156,
+      "column": 156,
+      "symbol": "CapturedTargetState",
+      "kind": "type-reference"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+      "line": 19,
+      "column": 98,
+      "symbol": "PolarisPresentationEnvelope",
+      "kind": "import"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+      "line": 66,
+      "column": 49,
+      "symbol": "PolarisPresentationEnvelope",
+      "kind": "type-reference"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+      "line": 100,
+      "column": 47,
+      "symbol": "PolarisPresentationEnvelope",
+      "kind": "type-reference"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris.ts",
+      "line": 65,
+      "column": 3,
+      "symbol": "NarrativeRegistry",
+      "kind": "import"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris.ts",
+      "line": 66,
+      "column": 3,
+      "symbol": "artifactAnchor",
+      "kind": "import"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris.ts",
+      "line": 67,
+      "column": 3,
+      "symbol": "capturedStateOf",
+      "kind": "import"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris.ts",
+      "line": 68,
+      "column": 3,
+      "symbol": "provenanceAnchor",
+      "kind": "import"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris.ts",
+      "line": 69,
+      "column": 3,
+      "symbol": "supportAnchor",
+      "kind": "import"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris.ts",
+      "line": 70,
+      "column": 8,
+      "symbol": "AnchorInput",
+      "kind": "import"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris.ts",
+      "line": 72,
+      "column": 8,
+      "symbol": "CapturedTargetState",
+      "kind": "import"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris.ts",
+      "line": 73,
+      "column": 8,
+      "symbol": "NarrativeAnchor",
+      "kind": "import"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris.ts",
+      "line": 131,
+      "column": 21,
+      "symbol": "NarrativeRegistry",
+      "kind": "type-reference"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris.ts",
+      "line": 183,
+      "column": 22,
+      "symbol": "NarrativeRegistry",
+      "kind": "type-reference"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris.ts",
+      "line": 190,
+      "column": 30,
+      "symbol": "AnchorInput",
+      "kind": "type-reference"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris.ts",
+      "line": 191,
+      "column": 22,
+      "symbol": "CapturedTargetState",
+      "kind": "type-reference"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris.ts",
+      "line": 197,
+      "column": 129,
+      "symbol": "NarrativeAnchor",
+      "kind": "type-reference"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris.ts",
+      "line": 198,
+      "column": 34,
+      "symbol": "AnchorInput",
+      "kind": "type-reference"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris.ts",
+      "line": 198,
+      "column": 80,
+      "symbol": "CapturedTargetState",
+      "kind": "type-reference"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris.ts",
+      "line": 216,
+      "column": 30,
+      "symbol": "NarrativeAnchor",
+      "kind": "type-reference"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris.ts",
+      "line": 220,
+      "column": 91,
+      "symbol": "CapturedTargetState",
+      "kind": "type-reference"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris.ts",
+      "line": 235,
+      "column": 86,
+      "symbol": "NarrativeAnchor",
+      "kind": "type-reference"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris.ts",
+      "line": 242,
+      "column": 85,
+      "symbol": "NarrativeAnchor",
+      "kind": "type-reference"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris.ts",
+      "line": 261,
+      "column": 109,
+      "symbol": "provenanceAnchor",
+      "kind": "reference"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris.ts",
+      "line": 277,
+      "column": 127,
+      "symbol": "provenanceAnchor",
+      "kind": "reference"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris.ts",
+      "line": 300,
+      "column": 106,
+      "symbol": "NarrativeAnchor",
+      "kind": "type-reference"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris.ts",
+      "line": 321,
+      "column": 106,
+      "symbol": "NarrativeAnchor",
+      "kind": "type-reference"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris.ts",
+      "line": 504,
+      "column": 86,
+      "symbol": "NarrativeAnchor",
+      "kind": "type-reference"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris.ts",
+      "line": 512,
+      "column": 150,
+      "symbol": "NarrativeAnchor",
+      "kind": "type-reference"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris.ts",
+      "line": 520,
+      "column": 205,
+      "symbol": "NarrativeAnchor",
+      "kind": "type-reference"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris.ts",
+      "line": 521,
+      "column": 50,
+      "symbol": "supportAnchor",
+      "kind": "direct-call"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris.ts",
+      "line": 521,
+      "column": 124,
+      "symbol": "AnchorInput",
+      "kind": "type-reference"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris.ts",
+      "line": 522,
+      "column": 79,
+      "symbol": "capturedStateOf",
+      "kind": "direct-call"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris.ts",
+      "line": 976,
+      "column": 89,
+      "symbol": "NarrativeAnchor",
+      "kind": "type-reference"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris.ts",
+      "line": 1205,
+      "column": 21,
+      "symbol": "capturedStateOf",
+      "kind": "direct-call"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris.ts",
+      "line": 1207,
+      "column": 225,
+      "symbol": "NarrativeAnchor",
+      "kind": "type-reference"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris.ts",
+      "line": 1289,
+      "column": 59,
+      "symbol": "supportAnchor",
+      "kind": "direct-call"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris.ts",
+      "line": 1289,
+      "column": 135,
+      "symbol": "AnchorInput",
+      "kind": "type-reference"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris.ts",
+      "line": 1290,
+      "column": 21,
+      "symbol": "capturedStateOf",
+      "kind": "direct-call"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris.ts",
+      "line": 1706,
+      "column": 176,
+      "symbol": "NarrativeRegistry",
+      "kind": "type-reference"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris.ts",
+      "line": 1708,
+      "column": 24,
+      "symbol": "NarrativeRegistry",
+      "kind": "reference"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris.ts",
+      "line": 1728,
+      "column": 236,
+      "symbol": "NarrativeRegistry",
+      "kind": "type-reference"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris.ts",
+      "line": 1730,
+      "column": 24,
+      "symbol": "NarrativeRegistry",
+      "kind": "reference"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris.ts",
+      "line": 1832,
+      "column": 77,
+      "symbol": "NarrativeRegistry",
+      "kind": "type-reference"
+    },
+    {
+      "path": "apps/three-surface-poc/src/routes.ts",
+      "line": 25,
+      "column": 18,
+      "symbol": "PolarisPresentationEnvelope",
+      "kind": "definition"
+    },
+    {
+      "path": "apps/three-surface-poc/src/routes.ts",
+      "line": 244,
+      "column": 21,
+      "symbol": "PolarisPresentationEnvelope",
+      "kind": "type-reference"
+    }
+  ],
+  "corpus": [
+    {
+      "path": "apps/syzygy/src/main.ts",
+      "gitBlob": "f904cfe756cafa93c9f03e66d827e0bae838c96d",
+      "sha256": "46a27dc243b343f817dab3e2b090d335cd8b13b79b4bc6307b24c798925905ff",
+      "bytes": 14265
+    },
+    {
+      "path": "apps/three-surface-poc/src/block-provenance-sweep.test.ts",
+      "gitBlob": "2aba6e53b5f758f151b8ab4aed4835aa15e3186c",
+      "sha256": "8122604935a7b477ec9679884769bdb5eca80b3bb5873153937b679103073465",
+      "bytes": 15308
+    },
+    {
+      "path": "apps/three-surface-poc/src/browser-origin.ts",
+      "gitBlob": "17becffd10f3f89e8829ee9527c02ba39fa8d6af",
+      "sha256": "5b1d5e238e86382e5858e8b9041efed0e19f753ef99bd9b5dd0e84d3871718d8",
+      "bytes": 1487
+    },
+    {
+      "path": "apps/three-surface-poc/src/build-output.test.ts",
+      "gitBlob": "9accbef82965ce28946383d2f5a46c0919634995",
+      "sha256": "f8ca0ead090dff0dbe5fafd03d8c265cdf597994f186881d161fd2a84257635e",
+      "bytes": 3089
+    },
+    {
+      "path": "apps/three-surface-poc/src/capability-detail.ts",
+      "gitBlob": "41616bfde3a0d406e6646e86123820a29bf69387",
+      "sha256": "006376d0deca374e4a77a2130ef9539c2b9e7e3f69da8c6d2887433d43290a9d",
+      "bytes": 15485
+    },
+    {
+      "path": "apps/three-surface-poc/src/capture-test-artifact-main.test.ts",
+      "gitBlob": "a6be2534561c5edd87204c0d96e5989e50791fa1",
+      "sha256": "b6b7531a8e65513ed6ae840dac9b96bef46309b5d01497dfa98204393cf3ea69",
+      "bytes": 24722
+    },
+    {
+      "path": "apps/three-surface-poc/src/capture-test-artifact-main.ts",
+      "gitBlob": "ef7523d7a88518be0cdd358125c7e7e59aa48553",
+      "sha256": "45cf6c523026785ac15cce703d147924db7e2deedb44f82d809e90bfe893ea77",
+      "bytes": 5660
+    },
+    {
+      "path": "apps/three-surface-poc/src/capture-test-artifact.test.ts",
+      "gitBlob": "2a121fb9a00a24223714915372cdb763e0ffe40b",
+      "sha256": "c979ed3f1a478023add182f453f745b3fc9ba218c59650e632113c2b580f053c",
+      "bytes": 8123
+    },
+    {
+      "path": "apps/three-surface-poc/src/capture-test-artifact.ts",
+      "gitBlob": "091129842a59458da90d440e456b0f789103b938",
+      "sha256": "607bb27b43886f51e1f50900fa91aa59adb26b95b9c4f2eb1e816fb6714ff8a8",
+      "bytes": 6308
+    },
+    {
+      "path": "apps/three-surface-poc/src/cdp-browser.browser.test.ts",
+      "gitBlob": "f25f48bd996c6673fca11314693a70d7d70f25dd",
+      "sha256": "45f95c40a52aef7098a338c648bd667c3494f4ae7ed2d15b632f89e606a8458f",
+      "bytes": 2781
+    },
+    {
+      "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+      "gitBlob": "c45428e15672c15ce21f429e64c703588104e41d",
+      "sha256": "d3c8dbea200cbd9ba8805c36f3fc674d4c141a889f2c6ecac7a75e98ea93a909",
+      "bytes": 12017
+    },
+    {
+      "path": "apps/three-surface-poc/src/cdp-browser.ts",
+      "gitBlob": "38db92dbea525a554308038fb35b5a6f8cf92bef",
+      "sha256": "c4dcbfe2d0f1d20e2e395b1426f52d0450fbbdbc84e165c88b80c96d62b75702",
+      "bytes": 23468
+    },
+    {
+      "path": "apps/three-surface-poc/src/cli.test.ts",
+      "gitBlob": "920f1f2eb3d4485f1700a9972ad00d14c3cd660f",
+      "sha256": "c3782d73057fac84ca7e34d21a8991a0d6f7da4256b5dc0bd17851dd7287639f",
+      "bytes": 1706
+    },
+    {
+      "path": "apps/three-surface-poc/src/cli.ts",
+      "gitBlob": "ef1c43f9c3625f293fe9a16211804194c2a7ea46",
+      "sha256": "d1b2d62e81fa729f359070faff617f036eabb9dc496f698b88e06a0d857bf5ed",
+      "bytes": 2052
+    },
+    {
+      "path": "apps/three-surface-poc/src/cross-cutting.test.ts",
+      "gitBlob": "7432bbfcfc2dfe77215ee37f4a672c12446c9b2f",
+      "sha256": "4f113c73f436350e156325740c7ee03475c2964343ba83ec2fe59feb527b9d60",
+      "bytes": 5891
+    },
+    {
+      "path": "apps/three-surface-poc/src/design-tokens.test.ts",
+      "gitBlob": "a3b33cc3375475910c7978336c6f56f6650b6b0b",
+      "sha256": "f2fa4c2d167b8f6bc9bff2030a2f9c89cc7aadea7c17db22a3f6536f18293b36",
+      "bytes": 7866
+    },
+    {
+      "path": "apps/three-surface-poc/src/design-tokens.ts",
+      "gitBlob": "4dfd5dca6ee51fc5b103681e203176b05cfcfb82",
+      "sha256": "80c516a1e41a0a5d206e132afa31f696d22b8be5f9ab0c5442d01143e84c6a42",
+      "bytes": 17433
+    },
+    {
+      "path": "apps/three-surface-poc/src/evaluation-footer.test.ts",
+      "gitBlob": "845a858a1600de6f41951a0b5b532801e720787b",
+      "sha256": "41125e1450039191e59374415a16f2d184a554c12196170dfa7403f6bdb2d8d5",
+      "bytes": 3896
+    },
+    {
+      "path": "apps/three-surface-poc/src/evaluation-footer.ts",
+      "gitBlob": "2fe0cd05caf156f482d2193c53e422520d41aa2d",
+      "sha256": "1a276fb886d680f87280e0ad9fc3d1c730711736caa544ce22232d40e1f6e992",
+      "bytes": 3813
+    },
+    {
+      "path": "apps/three-surface-poc/src/exact-tables.ts",
+      "gitBlob": "950db765e6509b64d77350a84cf999dbb0023ca9",
+      "sha256": "bb6c5044a447bf892b42e60e70fe3d15752726f73f49539f03b01eec3fa104ff",
+      "bytes": 4340
+    },
+    {
+      "path": "apps/three-surface-poc/src/fresh-checkout-demo-main.ts",
+      "gitBlob": "f714c291662a8278489508d9f84b28c41d290ff7",
+      "sha256": "afcca52b645b756d4e01182a34047251d22c9e5b4bf2ceea9146a8cba450d427",
+      "bytes": 35104
+    },
+    {
+      "path": "apps/three-surface-poc/src/fresh-checkout-verdict.test.ts",
+      "gitBlob": "3b692ca60c101478ec57e09c77b38f82ef7559a7",
+      "sha256": "3b923f044881a145da1976476b7542c65046d983ab9790c964e9477c74714505",
+      "bytes": 12322
+    },
+    {
+      "path": "apps/three-surface-poc/src/fresh-checkout-verdict.ts",
+      "gitBlob": "d89a63b499802796d7643c47b50551750620438a",
+      "sha256": "81510c126b3875fe7e95abcc13c5ab81c1480288e411e458cdc1e66ca1a43090",
+      "bytes": 8890
+    },
+    {
+      "path": "apps/three-surface-poc/src/git-blob-batch.test.ts",
+      "gitBlob": "abbbea6e9251f02142f62af3c6e13bb087138a8f",
+      "sha256": "2ebc495f19d18979a91dc87705710414f65b351612ce76776cefbe4de8a652bd",
+      "bytes": 15330
+    },
+    {
+      "path": "apps/three-surface-poc/src/git-blob-batch.ts",
+      "gitBlob": "03682d7770f18b68f8b13d620ba1cdf1f33efb50",
+      "sha256": "5e6e63ef2d56667113f921a7775658ead100e8e1f3f580b1e40fc34c2eaf9714",
+      "bytes": 3288
+    },
+    {
+      "path": "apps/three-surface-poc/src/git-observation.test.ts",
+      "gitBlob": "a8c3664f31fb78ad6d4cea66c31a0fefdb963f80",
+      "sha256": "da04b2520bf9f98e9d2a9340ff4f4f5dc4d22db6a98111c97c29b8cbb3d97124",
+      "bytes": 9081
+    },
+    {
+      "path": "apps/three-surface-poc/src/git-observation.ts",
+      "gitBlob": "3da0191ab3e595a86e3f0613043ba8c94dd8aaba",
+      "sha256": "e3c70efbeaa16c37159529670ed40d0bbcfb5ef5063d89b1d2078c774d599bc0",
+      "bytes": 7313
+    },
+    {
+      "path": "apps/three-surface-poc/src/governance-inputs.test.ts",
+      "gitBlob": "11f6c60ead3a804759c2e2995029e02c8cb7833a",
+      "sha256": "331bbb05ec46a6cfdb525408c907978ccbaf68f4e737432a98f3415f6cff27a2",
+      "bytes": 27459
+    },
+    {
+      "path": "apps/three-surface-poc/src/governance-inputs.ts",
+      "gitBlob": "c957968591919c0aa93757d0ac8f2f239b2b4129",
+      "sha256": "e4068869f4a9f53335660b426ae777478c502c9ec68a3ab1849b5ac6e98d75de",
+      "bytes": 20796
+    },
+    {
+      "path": "apps/three-surface-poc/src/governing-intent-sweep.test.ts",
+      "gitBlob": "290ec1df684d55f0f3d38178f0ee046e099c0a27",
+      "sha256": "6c0849933660820e0be1bcc7e164719519a5eee6593ea2c324dfa1f4218ee946",
+      "bytes": 18969
+    },
+    {
+      "path": "apps/three-surface-poc/src/keyboard-sweep-record.test.ts",
+      "gitBlob": "0956decdda5da24dc801973eadfd7a38b1df3dd7",
+      "sha256": "e327d38a01ea8be2b45e4b6d1ac219255a864d8e0382e534421aa19d9483a90f",
+      "bytes": 11771
+    },
+    {
+      "path": "apps/three-surface-poc/src/keyboard-sweep-record.ts",
+      "gitBlob": "9d40dfd50f77ea75a2dfaa5b4ce3c43af3a2feaa",
+      "sha256": "b7698b1ed28cca6a4a76a792b7c920e90e5c626089c3046067bca2b8ba102c45",
+      "bytes": 9250
+    },
+    {
+      "path": "apps/three-surface-poc/src/launcher.test.ts",
+      "gitBlob": "a8dd65522766e5895dd1ca5764edef5a2ad686ae",
+      "sha256": "00c4ba157c3802546c3a4f8195f79fffcf90e8dc7fa1e5f4d4144e22496ed466",
+      "bytes": 767
+    },
+    {
+      "path": "apps/three-surface-poc/src/launcher.ts",
+      "gitBlob": "b91706d30a11545cd0e94c6cf1519b15032fed84",
+      "sha256": "9683c4bf18a9aa0c19639b4204b0cb60db5e70adcf90148b693f02ebe6df4b75",
+      "bytes": 836
+    },
+    {
+      "path": "apps/three-surface-poc/src/main.ts",
+      "gitBlob": "5f873660fe95974eb8adaf67d554d3d46d886a5f",
+      "sha256": "470ff646cec7a94d3f9bcb0029e082549a7c5769577e4a549d225f6de09e6da2",
+      "bytes": 10089
+    },
+    {
+      "path": "apps/three-surface-poc/src/materialize-action.test.ts",
+      "gitBlob": "203ba057d5e1db1b627f4960152ca545860af880",
+      "sha256": "c9896f8ccde25e432ec5f8e211b4be81ebd4f61756dd906b4c3b62a3916eccf3",
+      "bytes": 21344
+    },
+    {
+      "path": "apps/three-surface-poc/src/materialize-action.ts",
+      "gitBlob": "f2acff057155fe2c4cd1909cb22861daec7c7753",
+      "sha256": "baab89bd86f2b5fe05931659995124bfa34ddc4cac2f15d2892b076f5c2ca47e",
+      "bytes": 12150
+    },
+    {
+      "path": "apps/three-surface-poc/src/orrery.browser.test.ts",
+      "gitBlob": "fe8239ddde5a4c72d47e90966095b0b035a30432",
+      "sha256": "fae4d0addfa274bd79f88c2789bd7aeaa57b4ed485c4a0b3b2584a07a4d3f43b",
+      "bytes": 3404
+    },
+    {
+      "path": "apps/three-surface-poc/src/orrery.test.ts",
+      "gitBlob": "cd6d44a5ce53a20647a9af16f0df3cf532928459",
+      "sha256": "7e4fd5ad563c57333327a24e87440a1e7f25d53eb0b77009c41d1462f228dd78",
+      "bytes": 9027
+    },
+    {
+      "path": "apps/three-surface-poc/src/orrery.ts",
+      "gitBlob": "d908e37dba5768a9b0fd1f415c0beb58dcdbf338",
+      "sha256": "868df1a1ea21483864e0237321f7fda16246e4df456b6476f22627499ca1d77e",
+      "bytes": 11209
+    },
+    {
+      "path": "apps/three-surface-poc/src/page-shell.ts",
+      "gitBlob": "b6caf44ace131397b3817c5eb38ea115460c1ec1",
+      "sha256": "c628b683482b42b71987f92afa7fc915b6b1d063f03d4d577f1b939e58e27b5a",
+      "bytes": 9200
+    },
+    {
+      "path": "apps/three-surface-poc/src/page-size-delta.test.ts",
+      "gitBlob": "718d5c21de02f4a9179d6ef6bd202119a3e93660",
+      "sha256": "808eeb1b4e6b77eeefd0106e4036b13b0eda54ddc52f821413e364cf470f1906",
+      "bytes": 4050
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-accessibility-main.ts",
+      "gitBlob": "f7e65b249f6c44696f4dac07067a56bc9b2caed1",
+      "sha256": "2aa9b3acd0fc07d9a1f606d65eb01ff43625e9db23a8ff3d94c69e6b7fec8c41",
+      "bytes": 4154
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-accessibility-variants.ts",
+      "gitBlob": "31a16f42508dac245aac9f9f1ef44968f7e56c8a",
+      "sha256": "c6814cd7483342ad08f2b79032385a8f2abdaffe07c91b219fe2b879b7152b02",
+      "bytes": 4508
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts",
+      "gitBlob": "29abaea1b955519521d0dcf606af447c5cfabc3d",
+      "sha256": "9080589214e7d30e77417e47411faa69500d088ccc268ddf189a15a03042ac32",
+      "bytes": 22374
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-accessibility.ts",
+      "gitBlob": "4773666b00ede0cd606c503b5ccf34800501b0e8",
+      "sha256": "00f21a3d9bccdd5c696bdaf166ef0a6be90aa8d8933eef86efddc9881225b4b9",
+      "bytes": 26381
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-accessible-names-main.ts",
+      "gitBlob": "744c8d9bdded4d653111c13d7fe49bdd2d603d59",
+      "sha256": "087b4d1c880ef272c1fb3af9fbea300dd5f232d4ef9b94d87bcdd7a69d45ae97",
+      "bytes": 6999
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+      "gitBlob": "cb97c881f30bb02e9dfcdd76400546b3214fa21d",
+      "sha256": "1aa253624539a8c1d3c528f5bc32fe975980dd01229adf692610871123556c65",
+      "bytes": 21548
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-accessible-names.ts",
+      "gitBlob": "350fe983932b809d6383cbc994d67f8af6c2ff24",
+      "sha256": "f9a0509737518c55f513fd8fe600f1916b1b88c79cf1e0303b4ef9d2df351cca",
+      "bytes": 16749
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+      "gitBlob": "e2c8c57c532622833fe3a72996ad51df1f0a9b3c",
+      "sha256": "55fedf1cbb97463c93c80522b4820c644ffe59a079ba68516f4e90a84cfd349d",
+      "bytes": 12435
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-capability-detail.test.ts",
+      "gitBlob": "692a8c54ed0727dbff5a8fa83c5b8d5fbcfd4c26",
+      "sha256": "8d969f077a9d384809a3c155120c83c089cb7f99fa0289ea78aa57ca851e41f8",
+      "bytes": 27635
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-copy.test.ts",
+      "gitBlob": "492d5cd046e2a343236601080834f2c5d03e90b2",
+      "sha256": "8fb2282a9c3e876a0d5e78f8c116c8ffbb19d89d33152f54f3878ac346068dd2",
+      "bytes": 26137
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-copy.ts",
+      "gitBlob": "63bd742e232f672947d2a71adab133344662609a",
+      "sha256": "5f6e94faec7608b3cad490234cae5ddbfb7c3f7f4f87bac2efe23f0a9fc3b3ae",
+      "bytes": 30724
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-epistemic-tuples.test.ts",
+      "gitBlob": "e3b2b747054fc21cba314deb34e5d3c2315df7c1",
+      "sha256": "1ae7743427a0dc769c8b8b11b9572c0d21e344193a0d9048fbf40c1227869ab7",
+      "bytes": 21282
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-first-reading.test.ts",
+      "gitBlob": "ffab761fbc449e25956d5aefddcf418f75a7c0bc",
+      "sha256": "2b8233786aec9c9f6bd6a11c48a2bb4789591bb1ef6f2e190c8a92f145bb8652",
+      "bytes": 28929
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts",
+      "gitBlob": "b1509e5fa16229c3cb1489e1cdf38d715ee633e8",
+      "sha256": "8efb5826df02166508affe272cb2be6f170307734ca965f051b28aae8243a2d3",
+      "bytes": 3986
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+      "gitBlob": "852c53de80a76119e62a79a714b73a25dbbd1a13",
+      "sha256": "2a64fb9f9408c036dff156fb4b8c5b2ee312ef35ebb0a55a32c2873588235a00",
+      "bytes": 10486
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/dossier-cap-measure.test.ts",
+      "gitBlob": "eb9ee8c514bb1a8ef2ae4bf5a9af31cc98cdac19",
+      "sha256": "f3168eefea453fd94c56708210c021d6753518945b5c0d48d4879d792bced828",
+      "bytes": 1457
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/dossier-evaluation-main.test.ts",
+      "gitBlob": "fb655a71024b38e8d57d7c317bdef8dac23e5387",
+      "sha256": "3297b7a46f4679a592fc7c5b30b5280901b43e82ea23f9c1427b27c7feb1255b",
+      "bytes": 6733
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/dossier-evaluation-main.ts",
+      "gitBlob": "90cdb0be736b9d827c5649bc270ec44c4a0a192b",
+      "sha256": "438aeb520083971793d694aa2142902e0601adf8959d93e2c21e8740713fd2a0",
+      "bytes": 4902
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/dossier-main.ts",
+      "gitBlob": "2daa05923b2007dce99ae79ed49543c8d2a8c6a5",
+      "sha256": "4ec9cb847e226dccf7499bdd4868a2b2c7efd904424b0e1724f2da5b708a9674",
+      "bytes": 1899
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/dossier-quote-fidelity.test.ts",
+      "gitBlob": "43d37fb34cfea951293f83a63465a32ca540a40c",
+      "sha256": "1211ff8a46bb86402862d96b4f477608b678cd2caf3d8b73989ea61b39a3a179",
+      "bytes": 9477
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/dossier-render-local.ts",
+      "gitBlob": "edf6d2692e62ff9ee6f069a7a37f9451a22201b8",
+      "sha256": "6300eda88a229d23fd201aeed97e8a5f7ec632366789919ea8f0266d520eb33f",
+      "bytes": 3817
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/dossier-render-main.ts",
+      "gitBlob": "fa8e799658c838b2c82b17a5eb0ab5b2e8bc6b65",
+      "sha256": "97603e5cce386536dbc1d614c86431172cbf2a1f58ee0429759911abf852941c",
+      "bytes": 5723
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.test.ts",
+      "gitBlob": "f3b4e5a6972b114c0cb8f1ab5d90e9f698c5fe05",
+      "sha256": "ed4578ea5b1c804a7bf4e4b1700eb30e009fcc3b280312bd1c248739fded4104",
+      "bytes": 2763
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/dossier-render.test.ts",
+      "gitBlob": "d84d5e8700378e4c679d25fd6380a286ebc74e66",
+      "sha256": "311784f9e58cd3c727ea95c8d636ed91549b1fc071a054a8f0b1a6ac5a3ce8ae",
+      "bytes": 36934
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/dossier-render.ts",
+      "gitBlob": "c23dea0ea2ab8c1e2708a39beb5499cd73879d2c",
+      "sha256": "927dbd8d3471e14700a793adb4b997efb6d7e505ab5a657b6de8fed11543f511",
+      "bytes": 43111
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/dossier-trigger-isolation.test.ts",
+      "gitBlob": "3d03e91da28c65f51cbad91bb0b0bf8b95c328c2",
+      "sha256": "d4a53ad70cd5e7d8a6850b50440e436fa1988a2b5117c03e0928be1c007e2db3",
+      "bytes": 2826
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/dossier-trigger.test.ts",
+      "gitBlob": "204f7155038dcc1840e48ee51c75fa5241a597d5",
+      "sha256": "de51ac0b76e09cde66e4d1f0e43a73be28d96eb13967a3a18349c471d9ba8206",
+      "bytes": 36469
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/dossier-trigger.ts",
+      "gitBlob": "108fff7ed6ffe36379229ff419729f25fa45c971",
+      "sha256": "37eeef5f4a56e3936c6f71855ca347485e8358e99f1a63f7f39b47d913e4d99d",
+      "bytes": 19096
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/draft-preview.browser.test.ts",
+      "gitBlob": "92055cd2e1ae71b8662d887d74a439522ed5d15e",
+      "sha256": "933ce88d78cd226755e9f19320b059b0087c00455a88334e020dbb5482879bc5",
+      "bytes": 2781
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/draft-preview.test.ts",
+      "gitBlob": "548d97477f512971a376c10a4fa1f7df7c9dd489",
+      "sha256": "4be805986430ccd3f9acf957a780a9c145b8ebef24132931c4ccd98078c153fa",
+      "bytes": 14391
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/draft-preview.ts",
+      "gitBlob": "056988c6569b2b0812e53c2093ba360f421c164b",
+      "sha256": "0f364d648d0f9510083829894a12a365b642d17d118d8d991a73bde4eeffce79",
+      "bytes": 14287
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts",
+      "gitBlob": "3bd9e2ea0e8d512544eb5a27736cbd9a1cec6ee2",
+      "sha256": "89e44e83f141b5b129a12dad156a4678f2404125a4e62a4e196ff81e9e9ca4bd",
+      "bytes": 10235
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts",
+      "gitBlob": "739ec139a55af1e0becdd590790b1814dc3c16dc",
+      "sha256": "e362b0c10d90be4abb1809983433ab80e8edf41722574a09847ed20765c5ef89",
+      "bytes": 8112
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.ts",
+      "gitBlob": "b2877289e4bc13b332560813a06233e8c547bec2",
+      "sha256": "962d669501fda93b7a1dc9c1a453c96aab02c16aeff492a0cfb61b36672b452a",
+      "bytes": 8784
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/generation-mutation-run-main.ts",
+      "gitBlob": "89cc98accaabf8330f1c70ade751c64e36a32870",
+      "sha256": "6903b35e4e389ba310235b2b8a38420bddb1e4e81313cfa357b0165c0236d2f7",
+      "bytes": 8368
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts",
+      "gitBlob": "d648886b544fdf2768fc88b0c8f8ada3295a9cc4",
+      "sha256": "14c9492c666f0069dee96d4cb529fcf8ea84b4898e05355c6d9030c12b2e76be",
+      "bytes": 7900
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/isolated-git.ts",
+      "gitBlob": "6cc9d442635b9e080ce8b13dac2b5ae3aa258cbb",
+      "sha256": "1a8867e9038746d4515c09877c5b768bac964dc4b8e409647fcfaa3ed1d713b7",
+      "bytes": 2128
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/page-sink.test.ts",
+      "gitBlob": "be51eaa43aedecefc14f3002e6afd263c2afed03",
+      "sha256": "6d145d878640d2cf8e9ddcf87df4b8912f77daa15501600cb92f2fa1a78d11b0",
+      "bytes": 3121
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/pipeline-demo-main.ts",
+      "gitBlob": "2e501942776ec9244a6cc25aa9acffedfe6dc2ed",
+      "sha256": "b31d82748ab2d0a66187a4efbfd6ffcb1f712614bc93866c55702775fd5a493c",
+      "bytes": 2389
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/pipeline-demo.test.ts",
+      "gitBlob": "a23f2bd7574f0e71ad885912d94971ce3aed3ecb",
+      "sha256": "aea7072e2ac6c39d5b0d3e8a7c9c40956c5ae093cc5fd149e72d3b150d00eb1e",
+      "bytes": 6159
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/pipeline-demo.ts",
+      "gitBlob": "36b11ec842604054b86e99a1ef58a5fbe8724e13",
+      "sha256": "36e71a413ada6c90d5d7b7c9d147bb3d86a51b336368e0e7038ad4c4e95b2403",
+      "bytes": 8274
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/public-source-screening.test.ts",
+      "gitBlob": "8f0031ee845c300483ed4832193b3ef21f699a12",
+      "sha256": "16123da9e7086704ff10725390d23233b22331281ef59b3b97f78088cb30982e",
+      "bytes": 45845
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/public-source-screening.ts",
+      "gitBlob": "63ce3724bc10e5a671cfeda8b2ac6abe5ed9c4b9",
+      "sha256": "4c6ce26946e3791774be4a9a8b21e2a734618cc7f0387587969a16f6baa8f625",
+      "bytes": 17572
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/redis-shaped-discovery.test.ts",
+      "gitBlob": "2077e6004c11d5bc4cd3f3ada345728e8d9e2f03",
+      "sha256": "773d09e42861266f35e6efdfa293aa1c5179ac8369eca89067173fd1ea04ab53",
+      "bytes": 14937
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/redis-shaped-fixture.ts",
+      "gitBlob": "a9ffd4ac5c0925cc7d0db2c8a0fd44c3a11af65e",
+      "sha256": "b0603bdce14fbaf3dae96a46f0acab826f27718c6b80f91573185b27fcdc07be",
+      "bytes": 14148
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/redis-shaped-measure-main.ts",
+      "gitBlob": "1abaad69424dcbef5c2dac90fd5ef36d1634000c",
+      "sha256": "5c8c53cf1f58923001c884206806cc720a527daffbb7aed9045e435af2a3fb77",
+      "bytes": 2424
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/redis-shaped-measure.ts",
+      "gitBlob": "2dca5ce52fb554c3bf6e050a23f02dc989490665",
+      "sha256": "a87e31bcbd48f3a6113410bb01e2190e875786d48e24325daa3f018f8c555895",
+      "bytes": 11372
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/repo-corpus-isolation.test.ts",
+      "gitBlob": "0cff7a1321f69da34de477fb29093ebcc27764f5",
+      "sha256": "3e00d51d133748d61592d0d21ed6e625882f34ff4afe5c40504d816ec8615602",
+      "bytes": 11564
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/repo-corpus-main.ts",
+      "gitBlob": "ec30468647b26e8b78f516eb54f44ae855e5b50d",
+      "sha256": "7dab0e54363dc409c561c0e1e4abc1598e6a68c87b7b9e1ff9173c1bc38b6d90",
+      "bytes": 2307
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/repo-corpus.test.ts",
+      "gitBlob": "b51159d2e12a737bee26332930f6eaeb11dab4e3",
+      "sha256": "4d95e81cb43309ac1cfee55274920b5457080d293b09ea98d5fc1829a5a94d1f",
+      "bytes": 18430
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/repo-corpus.ts",
+      "gitBlob": "07c36dd736bff4dc1208e335e1b4b6e4ecddcbf2",
+      "sha256": "f834c3525bbb0d779fd6cdf40b4649c23e2b9a0d09331a8eff9b1409fa64bbc5",
+      "bytes": 19978
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/run-key.ts",
+      "gitBlob": "7d1bccb2422a3b1cc5bf6c636aaddcb8512e56fd",
+      "sha256": "089f3401e707131c0f8bb348c0901f95d676ff25831d75f30d13a832c444a390",
+      "bytes": 102
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/self-corpus-main.ts",
+      "gitBlob": "e527afca35ed1cb003595434a3aa44df4d28d494",
+      "sha256": "7d134fe4c7c6375a13eb20d28612544d4966c77f1d82c44c3102a07655fbf25d",
+      "bytes": 867
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/self-corpus.test.ts",
+      "gitBlob": "fddc4aa9589dd54b695a2f8f86d90b7487322d11",
+      "sha256": "da34b5859c2968ec107d1a0e3a1d340af05270efa39ff719c7decff6d587a68e",
+      "bytes": 4924
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/self-corpus.ts",
+      "gitBlob": "f93580bdeddbc425dcfd5f1ecb3281e92bbe5b7f",
+      "sha256": "b8273864370104510f6e93c9740bd8e74063dd04ee4be1759177c8dc783d6c34",
+      "bytes": 14103
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/source-adapter.test.ts",
+      "gitBlob": "e0c01b37338f2338f92aa955b8d1b7cf0fabd255",
+      "sha256": "1d509131b2226394e48c16a772d61a60096feef13f1d489b9db14ce6638fc205",
+      "bytes": 8332
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/source-adapter.ts",
+      "gitBlob": "2eb799d5aa0f1083ce9e531f9c40752c867eaac7",
+      "sha256": "980d0b5baa40fef01923bbce72219e9e326156379ad4a459f6d804d8e9b59d85",
+      "bytes": 3493
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/svg-inert.test.ts",
+      "gitBlob": "9240ee3186924ec53b7f8b710ab58a322002b372",
+      "sha256": "9b816c05012dd685894aed4388148894ad3e674f74934ae24609336f0083b828",
+      "bytes": 5301
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/svg-inert.ts",
+      "gitBlob": "148ae4d12835d3052ecead880f856c569621b072",
+      "sha256": "0bcb759a3d1da12a9fab1480f0d52b9dd69c180f6be15bb9078d828311e2fddb",
+      "bytes": 4040
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/synthetic-source.ts",
+      "gitBlob": "37d740e528fe998539562533de70c11166851245",
+      "sha256": "45e02df3ea9bd4a72ed57257a803adefff2595854fcb465240a73fe1a7c3b992",
+      "bytes": 753
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-keyboard-sweep-main.ts",
+      "gitBlob": "fd6c5c4b7b6c16f476b391efbf6493d53d60a12a",
+      "sha256": "9fab3c963088465ae5051bb5a0fbfc0a8de2769e84c0f0ae4558cadf8159e699",
+      "bytes": 6641
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-markdown.test.ts",
+      "gitBlob": "b541ebd0520ec1fe4f28df3d3c28fdcc8304cd40",
+      "sha256": "13fba88b4963a189fc4911d24284570ad6229170c44a13204e0c382fe574c33d",
+      "bytes": 8006
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-markdown.ts",
+      "gitBlob": "b8340ce1a886a753edde21ad4e62147ba429c4d2",
+      "sha256": "c0f2395109fd2f25fdc314a5ea7fd3360f58675250b7425b943b3b543fc8373c",
+      "bytes": 11843
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-narrative.test.ts",
+      "gitBlob": "26c6a5fe5481fa813b729b68c6d3d15f3e5cad45",
+      "sha256": "14e5043c917a23b43b9ffc958cd1f2077d9d6e1041c186c8d5e5362ed8250508",
+      "bytes": 19878
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-narrative.ts",
+      "gitBlob": "0c745b2f7ebd673d378be98b41ddabb9caa1f11a",
+      "sha256": "6f47d20dedbc4bc7013a750d25062646584692808494a161d93afb5570369b5a",
+      "bytes": 8005
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+      "gitBlob": "4e5076b92c3c689589910d8929ded4968e1e8e7c",
+      "sha256": "950abd88d742074781e063ced8efd08e3640550225fc73c52fde3d58593f529c",
+      "bytes": 27431
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-opening-index.ts",
+      "gitBlob": "a6fc57be3dacc72b72fab0616346934b646587c3",
+      "sha256": "07eabe28ecdaf9f377d5ad766e6b29180055f5e94763f45cea606d60c7d95b16",
+      "bytes": 10525
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-parity-sweep.test.ts",
+      "gitBlob": "f8a5309e8631f1df7085d18d7c258e3ff40fbe35",
+      "sha256": "bc2bb22653b985dcadcfb4577bb104c7110263c4ee3fe7176543ff8f84c1cdd0",
+      "bytes": 48920
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+      "gitBlob": "7d1f3723abec5ede690dbbb3b6da7ac429eb1116",
+      "sha256": "afab827c23fc60956ba038bc8785ad3b80ef945d1daaa7c5e1374e58723df94d",
+      "bytes": 7750
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-project-shape.test.ts",
+      "gitBlob": "60f34ae069c0b481befe25c8c4c7af672c695980",
+      "sha256": "912b0eab847f1d75c6723b8e98b8de9b7a01db9dcb04a1146f4b6ddb6b60cf82",
+      "bytes": 34268
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-proposed-work.test.ts",
+      "gitBlob": "0ea210f267dabd50c0e9eb9cd724efe146486766",
+      "sha256": "5b7e16cf450919f10353adef1b009f962480608234b3fae29d2445daa5ee8005",
+      "bytes": 9614
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-reachability.test.ts",
+      "gitBlob": "1fabfc1608d56f4d9f961f9ba40baa4a24a24a2d",
+      "sha256": "09a0d613ec9690e44040f2577f771083874499728023cfccc2d0ad945a24bc93",
+      "bytes": 28138
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-reading-plan.ts",
+      "gitBlob": "5db82868cc587d7c9cc3a1ff5ef00a76fec4b1bc",
+      "sha256": "732e410c9d364181b89bcc4191e8a59aa29d7130e1292beb46703af535d6acd9",
+      "bytes": 5400
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-reading.test.ts",
+      "gitBlob": "7f7bd3257408319d8172410d8f1967cb5b1a9470",
+      "sha256": "56166db511b1d497806948c047320234fb2d1d209ba87b12218a6d7a1001664a",
+      "bytes": 7070
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-reading.ts",
+      "gitBlob": "e24c7598d9ebc27d5adda7c103c34b04d7f9d4f8",
+      "sha256": "f10e4355b182512457a89e77f11b296f6d412349f4c30ff94421eb88e5fcad6e",
+      "bytes": 7213
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-reconciliation.test.ts",
+      "gitBlob": "004526855741d5e1c03224dcafd624b59763b806",
+      "sha256": "5fbabfc22440ef8481fbae837f514ff203b283ee2020e8b54a53ee57c0e69df9",
+      "bytes": 22343
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-reconciliation.ts",
+      "gitBlob": "6adc246228ec84b36421bda3954fc3b3e9c08917",
+      "sha256": "e2392ed6d08f1dd9ba9ea441835630cd660c0fce869ce93e2f32390c4e76b623",
+      "bytes": 6478
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-source-route.test.ts",
+      "gitBlob": "e4662b737e9421c95eb210a09bf41a3fba1cf511",
+      "sha256": "77b2c44995a5882b2b5143819f74abe0196bac5a07c3e903a981380511480bf7",
+      "bytes": 17651
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-source.ts",
+      "gitBlob": "e498e41b1e5a748ce668dd5dfdc3298938b81c62",
+      "sha256": "091f4785b54bae53539e12c7d378b7df0e9d0f22ff48417a1c1de8947a70fab7",
+      "bytes": 9106
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-status-boundary.test.ts",
+      "gitBlob": "672a0e49e96e40b6ca63581e24c03d8ce149b4a6",
+      "sha256": "bb4afac4a987fd59604d58078570d78c31beb72d0d199da7d85d59fdbfd3f07b",
+      "bytes": 556
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-walkthrough-readiness.test.ts",
+      "gitBlob": "dd659fcc82669cc7d47dfc05fbc84612c316e1ea",
+      "sha256": "5b23bac425cf357fff2b132e8470891f58c0eb8c5a1b4243aee9b25885a17e78",
+      "bytes": 18372
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris.test.ts",
+      "gitBlob": "36cd518ef640a3bbccdef325d9a14befd269f465",
+      "sha256": "7f3779045de95f72a76001331842e88debd359dcd1592f5d6cce3950b03bd57d",
+      "bytes": 10388
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris.ts",
+      "gitBlob": "9d5df03c630be1ec3bd2477f1aece680bfecc08e",
+      "sha256": "029d439f1d41584b803cc84d5688b89d826e6797ac4926daa95c59b0504bd563",
+      "bytes": 134728
+    },
+    {
+      "path": "apps/three-surface-poc/src/production-reobserve.test.ts",
+      "gitBlob": "1082ee4a9383d00b52c43248203b0095f1172257",
+      "sha256": "e5f84517b3d24c087202ad80cc59bceedd396b8c78095fbce02e7cd0e3abdbcd",
+      "bytes": 9398
+    },
+    {
+      "path": "apps/three-surface-poc/src/production-reobserve.ts",
+      "gitBlob": "b3d0d31c720efcd3251a53ffd6de9c8806767b6f",
+      "sha256": "367300a8f0576edf780c65b0d406b44f902c70c257b9f5e77300ae7e8492cf0f",
+      "bytes": 5791
+    },
+    {
+      "path": "apps/three-surface-poc/src/project-shape-discovery.live.test.ts",
+      "gitBlob": "5421e68e1f59ca8a170ffc9ac4bc593c646f86c0",
+      "sha256": "b247d30e4e89051828cf45535bd0e77de9be64753dbe4a4879f5ac988d15c01d",
+      "bytes": 5489
+    },
+    {
+      "path": "apps/three-surface-poc/src/proposal-disclosure.test.ts",
+      "gitBlob": "1f5794b1ab5aaf34864b8b50415112ae9174a9a4",
+      "sha256": "f5afa4e74405cee547ad1eff41b8efc664565dc7a589622a263025cc09a15f05",
+      "bytes": 10908
+    },
+    {
+      "path": "apps/three-surface-poc/src/pwb-mutation-run-main.ts",
+      "gitBlob": "3edeeda95caa7707b8c2839a1abaebdea3862c38",
+      "sha256": "5fb6f68ca834e8f4b4b024a840128d78729bc223ebb5e046a061d123a6b52475",
+      "bytes": 8680
+    },
+    {
+      "path": "apps/three-surface-poc/src/pwb-mutation-sweep-main.ts",
+      "gitBlob": "afc68b3452c3e2245617af57ae5284defb88fa7f",
+      "sha256": "c14d30d8d797bcb65b9f8076cf4b77f95656d3e37ef108f9b637a44ac1a25443",
+      "bytes": 11555
+    },
+    {
+      "path": "apps/three-surface-poc/src/pwb-mutation-sweep.test.ts",
+      "gitBlob": "c888d404cd6e98500e4b4bd69334feb318018b9c",
+      "sha256": "474da7b901148ced1492f7550427c05a8d0fd693f64006c83415038d266f1d5d",
+      "bytes": 3865
+    },
+    {
+      "path": "apps/three-surface-poc/src/pwb-mutation-sweep.ts",
+      "gitBlob": "ac1fcaba4cc0aeb2ef19a4b32f3af7b94317765b",
+      "sha256": "c3a1284b01aa6dfcceea15caebfc1eaca3af112ef257186c8946213cc627a1fa",
+      "bytes": 36213
+    },
+    {
+      "path": "apps/three-surface-poc/src/pwb-mutation.test.ts",
+      "gitBlob": "fe9ec871b5939df68f1db83446b5525ef1193474",
+      "sha256": "1df467637fbbcee2c047e22cc8fae255649b445ef6436848326ffa35cdaa5a13",
+      "bytes": 3619
+    },
+    {
+      "path": "apps/three-surface-poc/src/pwb-mutation.ts",
+      "gitBlob": "00fa3c30f2bfd4dddaf3832592fe9a8a1b55001c",
+      "sha256": "a847b44ffcc5f6f7e63004900e090289d693abd949072c6c36e24e832bc87d78",
+      "bytes": 9691
+    },
+    {
+      "path": "apps/three-surface-poc/src/pwb-n8-synthetic-corpus-coverage-matrix-main.ts",
+      "gitBlob": "de32df6334a848df5c0b5bf9305151642823abc2",
+      "sha256": "d772a5be80e6a2e843f7943f0ab5b205d80a3303b08597c4ef2281f4c0940b5f",
+      "bytes": 8851
+    },
+    {
+      "path": "apps/three-surface-poc/src/reevaluation-copy.ts",
+      "gitBlob": "d820897ac0f98415fc8742fa230cf816be2d63c7",
+      "sha256": "6cfe32d50e18d5cb3bdd74501e2933230214560b7b3a84488a711ffcee74d6fa",
+      "bytes": 2591
+    },
+    {
+      "path": "apps/three-surface-poc/src/reobserve-action.test.ts",
+      "gitBlob": "8b5df713cf6c5d3d2f6d0f5f03bf6e200db4d1ff",
+      "sha256": "d467574626ae2c84ddbb5785bab1f82609ec6b35c8c45ddf7cb4dbbd049ad831",
+      "bytes": 4823
+    },
+    {
+      "path": "apps/three-surface-poc/src/reobserve-action.ts",
+      "gitBlob": "0291af758c8d0f193867bdb419cf4eb8e3156561",
+      "sha256": "9c47ead7e691998feaec5da3352af53a632542f6ea2655c3c68d5a016918d0cd",
+      "bytes": 2994
+    },
+    {
+      "path": "apps/three-surface-poc/src/reobserve-session.test.ts",
+      "gitBlob": "ed48ccdaa6274518b6e810d9c301471615f6efaf",
+      "sha256": "da571828b540b95ff21d725faa0f6df7c7fe3fb7de0802326cb986f1e8d8a8ea",
+      "bytes": 7183
+    },
+    {
+      "path": "apps/three-surface-poc/src/reobserve-session.ts",
+      "gitBlob": "1bdd0b7f265337acc016170c7859961902ff870d",
+      "sha256": "6b6721bf2e2e845029be2dc96e0274adf57f7853fee1a2907fc5143542209150",
+      "bytes": 4819
+    },
+    {
+      "path": "apps/three-surface-poc/src/reobserve-state.test.ts",
+      "gitBlob": "80f0c8268832cac58ff51e1d16cf5eca243fb0af",
+      "sha256": "f74d02515110512e114c589cb5e92c8c7c70a1a41ea1236903f8b8970550e973",
+      "bytes": 2206
+    },
+    {
+      "path": "apps/three-surface-poc/src/reobserve-state.ts",
+      "gitBlob": "c9aaad9f293138770359886546b7feefad17b04d",
+      "sha256": "bb5cf9feed9cbfce2aa7c8a272aaa6b0c82b086b5ff59debb510c28b564e7cc9",
+      "bytes": 1707
+    },
+    {
+      "path": "apps/three-surface-poc/src/resource-headroom-line.ts",
+      "gitBlob": "2a5a19ea18a4118562e03800148844b800e2c01f",
+      "sha256": "a887185e0e2a44e9d2f7110e01071bd139f3bc37e88b2b86c372004858698473",
+      "bytes": 3161
+    },
+    {
+      "path": "apps/three-surface-poc/src/response-identity-independent.test.ts",
+      "gitBlob": "583bc98227da7998d27555778b5cb95053265d24",
+      "sha256": "1d0554db4bb1a3ffff6377f1bf959609fcf3bf6d83e25782ab6c8df9ac59f5a1",
+      "bytes": 10638
+    },
+    {
+      "path": "apps/three-surface-poc/src/response-limits.test.ts",
+      "gitBlob": "448f4b44c8b8f8c021ad7709b78930d96e5024c5",
+      "sha256": "f9f39d8e861b9e7a01606b463d37c5688303fb9127c5937d5eacb5b90dd88c58",
+      "bytes": 19655
+    },
+    {
+      "path": "apps/three-surface-poc/src/restart-main.ts",
+      "gitBlob": "e48b6de434fb90d88e0fbc758d84ada8df04bf0c",
+      "sha256": "f27c25f6705718f64fda6a8edcc017933c75a5651034198374c4cf5ecd04cf69",
+      "bytes": 1262
+    },
+    {
+      "path": "apps/three-surface-poc/src/restart.test.ts",
+      "gitBlob": "66220d547754bb1019e954375ecacdc0232d0744",
+      "sha256": "e021db580c6f423d2bb2d8b55cf3f45a845fb999f1f251253393d578360720af",
+      "bytes": 27854
+    },
+    {
+      "path": "apps/three-surface-poc/src/restart.ts",
+      "gitBlob": "28e9abb1ca9bed63c853fab1f77240fdcf0bd19c",
+      "sha256": "a48e32d0eb080381b07f96e66758c7ea8132fa4d9322a3f8f1869f2743cabbe7",
+      "bytes": 8868
+    },
+    {
+      "path": "apps/three-surface-poc/src/routes.test.ts",
+      "gitBlob": "8e0f51d64f959eae365c63e0821b662857e20715",
+      "sha256": "e220deef9ad1ead0a95a5e104f38f46fd19db7dcc648269c095e70fb05bd20d6",
+      "bytes": 29100
+    },
+    {
+      "path": "apps/three-surface-poc/src/routes.ts",
+      "gitBlob": "23a7c2d46689522792653389cfd7f2ba8926c599",
+      "sha256": "81cd2099b9a162579a87c154137217e97d1e08e11542c07d91d42ad9a8cdd050",
+      "bytes": 18061
+    },
+    {
+      "path": "apps/three-surface-poc/src/served-response-recorder.ts",
+      "gitBlob": "67fd78a9d543b413c265c21b62bd360ed568b810",
+      "sha256": "53a9c7f6451eb2bfa6607b97f1b877c387d29c105311fb19558c7132ed32cdc0",
+      "bytes": 2082
+    },
+    {
+      "path": "apps/three-surface-poc/src/startup-detail.test.ts",
+      "gitBlob": "40ac445409a471e630a0ff6d8b0049339fa88ff5",
+      "sha256": "24337eb28ef01a59791fc3f83356f12aa8c6556000083be00da295e2ee1e359d",
+      "bytes": 1732
+    },
+    {
+      "path": "apps/three-surface-poc/src/startup-detail.ts",
+      "gitBlob": "dbd39e1fcb27f03bddcdd4afa1a4fc601012310e",
+      "sha256": "2b41477077da787fb249d9c5f5090dbd17e75775bf4d0574f3081e465e15c20e",
+      "bytes": 2145
+    },
+    {
+      "path": "apps/three-surface-poc/src/surface-links.ts",
+      "gitBlob": "f819c6757ca0e2f28d9996ec96d248436de0e08a",
+      "sha256": "e4cd4018d64d0fcaa380293a8fcb15fb9cbf0e572fc14ad64850d955aaa7ff7d",
+      "bytes": 3217
+    },
+    {
+      "path": "apps/three-surface-poc/src/surface-render-fractions.test.ts",
+      "gitBlob": "7c7427f89b782914aee9a6b66cbb5413ae09b33d",
+      "sha256": "70188c9a730063e71009c5b35877813b95734fc82e4d36989010100905b9ddc9",
+      "bytes": 5861
+    },
+    {
+      "path": "apps/three-surface-poc/src/surface-routes.test.ts",
+      "gitBlob": "0769a18a6b9f639cc9ea03a3b2027f2c666b6480",
+      "sha256": "f3c9ac32c76dd8084b9b4c18280e303570818cd977936e8057d8cfb5e0860ad1",
+      "bytes": 37370
+    },
+    {
+      "path": "apps/three-surface-poc/src/sync-child-process-guard.test.ts",
+      "gitBlob": "bf12f0e443b518e120735ea60e11beba29d452c8",
+      "sha256": "a0774fc807a836c0693829b183b11a3ec37616d2388ad9ef049a0e6b4cff4062",
+      "bytes": 14388
+    },
+    {
+      "path": "apps/three-surface-poc/src/tailnet.ts",
+      "gitBlob": "b50b0121362650042e7e2cdcf531b16071a16f9b",
+      "sha256": "1faa833eaf0442da54c0617df12c1e9a2a75e0b078d58777417bcd7671474bd5",
+      "bytes": 1937
+    },
+    {
+      "path": "apps/three-surface-poc/src/temporary-directory.ts",
+      "gitBlob": "dec34c2e3e462db7120f851402e4835eb66badcf",
+      "sha256": "d96620743f61f2e9eae9adc78a50e797554f4352b492776ccde23eb6597e88f1",
+      "bytes": 1458
+    },
+    {
+      "path": "apps/three-surface-poc/src/test-artifact-verification-consumers.test.ts",
+      "gitBlob": "67e5b8094790643d0f98039a0c21c07c5317af7e",
+      "sha256": "a66754b0c16bc0ee00693ada0c4ac9fd8830ec2308f2d0707ca27c08595c75c4",
+      "bytes": 5342
+    },
+    {
+      "path": "apps/three-surface-poc/src/test-deep-dive-markers.ts",
+      "gitBlob": "90a23beaf420be769ab7551f7f1890bc86cbace9",
+      "sha256": "d449ee10280eaaaa9d7e2fe5528a611272527b3a55e243ee1eaa1d4fe46f0c29",
+      "bytes": 403
+    },
+    {
+      "path": "apps/three-surface-poc/src/test-fixtures/restart-listener.mjs",
+      "gitBlob": "bd5151df1921f22b782b26bd1ead562d56078e22",
+      "sha256": "00c783bb7c3303d4d2c493e0ac54ed8a5c42655241b20b044461339b5fb21f47",
+      "bytes": 1907
+    },
+    {
+      "path": "apps/three-surface-poc/src/test-http-client.ts",
+      "gitBlob": "0d76ea27f6698aa8e39ee1c17a030637503caa9f",
+      "sha256": "8c68e5937daa7502462eebc172faf40698bcb353ef061d531951610615bc0e54",
+      "bytes": 1406
+    },
+    {
+      "path": "apps/three-surface-poc/src/test-model-fixture.test.ts",
+      "gitBlob": "3fc84043a86b4a5ada2b3badb056f2a2a2a23225",
+      "sha256": "d4c49b4f5e9be5e27066ee4a2b4b7f7b84d3e660458498b29b4465289ff75b1b",
+      "bytes": 4642
+    },
+    {
+      "path": "apps/three-surface-poc/src/test-model-fixture.ts",
+      "gitBlob": "4e5837ab5715179dfe887021502928e9299e5b2f",
+      "sha256": "2de4be6821fbd83bb22c072593acebb47e6fedfb33248014c5132b4e986c8770",
+      "bytes": 10620
+    },
+    {
+      "path": "apps/three-surface-poc/src/test-project-shape-fixture.ts",
+      "gitBlob": "fbc2231170473936ba01f93947d1eb55589c463f",
+      "sha256": "f0b865d01cd0e9538e103e001ec22dbde3867051a50dae22e4bcfbe4d553a857",
+      "bytes": 12588
+    },
+    {
+      "path": "apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts",
+      "gitBlob": "c0f50a34f8c4c7208a918fca133e5601fa69c3c6",
+      "sha256": "b5019ff5a4e991760dd89c9d627aaaf094d77eb6510e13ae0d4570530de813f1",
+      "bytes": 9171
+    },
+    {
+      "path": "apps/three-surface-poc/src/trajectory-narrowing.browser.test.ts",
+      "gitBlob": "426df8b6015c59a7a7f230aaff5de413116c37a3",
+      "sha256": "eceb35a5c1a583b7aa7cb5e9c49db24cc35d8ef83e81771a56ea8902d9f85a51",
+      "bytes": 5172
+    },
+    {
+      "path": "apps/three-surface-poc/src/trajectory.test.ts",
+      "gitBlob": "6752a0d556d1be364090658e21b261bb7d50b807",
+      "sha256": "d57c80c650eca043b9f7e4f2cda0533ec2c52197bbc25a341ec4942fb8deb27b",
+      "bytes": 24768
+    },
+    {
+      "path": "apps/three-surface-poc/src/trajectory.ts",
+      "gitBlob": "d28e0a7d68bfb640aab9e96b60496f9e894def1e",
+      "sha256": "99bd7785f2512ffeeba001fffbed9b50075c1782dc8dfbaa8b85ea1e54d50ef8",
+      "bytes": 16509
+    },
+    {
+      "path": "apps/three-surface-poc/src/tuple-encoding.test.ts",
+      "gitBlob": "cd555bc26e4e09380b77c9e6cbde08f559f6c2b8",
+      "sha256": "20a8601617db7005cb63cab8bda858e93d031b4c6a7f57985028a439e3ba7aba",
+      "bytes": 23452
+    },
+    {
+      "path": "apps/three-surface-poc/src/unknown-marker.ts",
+      "gitBlob": "b6ee70fb67816aacdd3a1f6e4d147f4d06be0fd3",
+      "sha256": "46aaa5ad48d5e325cc6b5def07695da86d4d085dac218b84aa7460d041e3a7d2",
+      "bytes": 2259
+    },
+    {
+      "path": "apps/three-surface-poc/src/unknown-route-sweep.test.ts",
+      "gitBlob": "e2557c7d00b5db255ee9cd1dff119a7a7c39de43",
+      "sha256": "1be8f317e87dc78aaa24a5ff82879614ecb117e7f05b0b87a6124b7dbc58f4b3",
+      "bytes": 17556
+    },
+    {
+      "path": "apps/three-surface-poc/src/verbatim-route.test.ts",
+      "gitBlob": "c2c0db872222ea6704f39bae9f6998686f579592",
+      "sha256": "aafd697bca8bd31edf52990ee368f03640962ac1dc4bae339f29b2611a57ce5b",
+      "bytes": 14532
+    },
+    {
+      "path": "apps/three-surface-poc/src/verbatim-route.ts",
+      "gitBlob": "056e9f7a05f3002cf07c7e12834012b279e767a2",
+      "sha256": "839023e497abdb0aa10d908ac3389baff7ab5e68f86baee4e535ab801cb09191",
+      "bytes": 6819
+    },
+    {
+      "path": "apps/three-surface-poc/src/walkthrough-inputs.test.ts",
+      "gitBlob": "f8e91cf7e300ea7e7817fcc5089e7897356c78df",
+      "sha256": "70e703d56030b7de6d52ec08e08b929482e37b0253f247765ca272a21c605983",
+      "bytes": 21041
+    },
+    {
+      "path": "apps/three-surface-poc/src/walkthrough-inputs.ts",
+      "gitBlob": "13e325a4e8b1862ab54c37a136ea0f56e12af415",
+      "sha256": "a6f9e330bdff2cc565c5c5556eaa01e0804ac66f959b4c457ff3548302d4cf06",
+      "bytes": 11356
+    },
+    {
+      "path": "apps/three-surface-poc/src/walkthrough-preflight.test.ts",
+      "gitBlob": "adc870fcf4e33a1da40211b5582fdc655d92e2f3",
+      "sha256": "cbb8e4ea42e52d6c4919ae4ecc101aace672fc8529e2a53043b954c3dee1687a",
+      "bytes": 24159
+    },
+    {
+      "path": "apps/three-surface-poc/src/walkthrough-preflight.ts",
+      "gitBlob": "9592d29cf239646acbaf5c1f37a39a3b6d6036d7",
+      "sha256": "fdd6b8b78c546068656f9389deb1c29569be6393dc99aca82b875c0ba8cf5270",
+      "bytes": 22613
+    },
+    {
+      "path": "apps/three-surface-poc/src/watch-mode.test.ts",
+      "gitBlob": "2f463abc2821b7122b314b73bad6246e6e17c001",
+      "sha256": "0ea1e87fbd46d64de11fa2e7f3a1d371cc7cb5afaada2344c81a3e83c92e73f9",
+      "bytes": 5173
+    },
+    {
+      "path": "apps/three-surface-poc/src/watch-mode.ts",
+      "gitBlob": "fdfa1c6e1e4a7e646ed84eb3235685fcc31eac48",
+      "sha256": "d0992c7969c653487d0eb9c985138a867ac4036665c5a0344a02d3c47615aa75",
+      "bytes": 1747
+    },
+    {
+      "path": "packages/cap1-conformance/src/consent-record-convention.conformance.test.ts",
+      "gitBlob": "37aa3e438a2bd54b946ae54be078b3983bc3c876",
+      "sha256": "7791311205f4fe4c3ceccb162fc5a55d3051dd389729f90d82b34de4b7b0c9ba",
+      "bytes": 6045
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-001.conformance.test.ts",
+      "gitBlob": "53376c9b8f3bddbc2df0d7ce7bd8b4d6eb431fb1",
+      "sha256": "e3969c44f79105d00b610c2e8cec24d43496b3bd7fd3ecbe1e70851f263643dd",
+      "bytes": 2781
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-002.conformance.test.ts",
+      "gitBlob": "3032ac1da75e59cce58d50c21451e3c031e6ea5c",
+      "sha256": "22dddf55631e46f482060f63081fccfb1099d2cb270c5bbf3ac10ac03d9c517a",
+      "bytes": 3738
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-003.conformance.test.ts",
+      "gitBlob": "b438991e1c36a589e0f34a041b51383f68664ad0",
+      "sha256": "4e71d5c34e9ac23efe23a90361341cfa7bc5d44d5d49a4af36dd24594f6c11fa",
+      "bytes": 3517
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-004.conformance.test.ts",
+      "gitBlob": "eecbf0adf80fdcc4b093b39bad99423728885927",
+      "sha256": "f9a38a1876bf144da3058da5feada9dea20c2c4486e93d8e0f8ed083c58c3326",
+      "bytes": 4497
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-005.conformance.test.ts",
+      "gitBlob": "88e8148430840caabeb3fb92ea9e5de5ee017623",
+      "sha256": "c29d9dcb33dfa843d20954dceca13d51d9538ad6c85a96661801e34c879c1f6b",
+      "bytes": 3606
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-006.conformance.test.ts",
+      "gitBlob": "e55c4a010176d7928411f5d059b4c1918bb8e9dd",
+      "sha256": "7b27afc8a22bf7493132a058bfc2fc480e6e211ad89e0107a75661f904dec84d",
+      "bytes": 3989
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-010.conformance.test.ts",
+      "gitBlob": "2429e377e41e3a3c2a62df9ca13221b6022c0962",
+      "sha256": "fc329d9e22d9014c116eede5b624b62500705dc67008673574a8fc3c2b0f284b",
+      "bytes": 4814
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-011.conformance.test.ts",
+      "gitBlob": "1d97663e46a9a34271a3bb04df988f21991de570",
+      "sha256": "4e0ba28b7a265ba4409c030d35a35204ab9c10feb4a7daab4824ed9b8ef5f5ee",
+      "bytes": 13734
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-012.conformance.test.ts",
+      "gitBlob": "85e91b69b40288407ff29e0ad2ea12a6a6cc4675",
+      "sha256": "1da72a87af4114c0c7fed66cea6e6661b3c281b692d5b6e84754b4a835141ea5",
+      "bytes": 4604
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-013.conformance.test.ts",
+      "gitBlob": "e5a94dfe17454959fcba76314131e5fe26c9bdc6",
+      "sha256": "88b49bee282ca8a4d642ea012087cad48e08c55c2baf79b88c35c185a0e4efa5",
+      "bytes": 7159
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-014.conformance.test.ts",
+      "gitBlob": "cd4b3b6d6be128f3d4b7b72bc030e78f75c30cb1",
+      "sha256": "5cd31554b41caeb3d3c9adce18d3e071019f3d075f8f7fc931f38129932bcdca",
+      "bytes": 5233
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-015.conformance.test.ts",
+      "gitBlob": "2e57560270d08d9eb4ae9b28f6137a9c3f21d216",
+      "sha256": "646fcc4439d52b476dc664f551c43583f9529b7785b11c98d91a42784446b877",
+      "bytes": 5734
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-016.conformance.test.ts",
+      "gitBlob": "de05de4cd93c5eab1f668c767103c478f9748e67",
+      "sha256": "48d9eeb339bd37f21db869712a720c6288b4d00ab2020694baf70c885acb0bf4",
+      "bytes": 7265
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-020.conformance.test.ts",
+      "gitBlob": "e1fa44eee47c40c54bdd20666409c9dd19bd0311",
+      "sha256": "e213318d4992da65d07884f3237147e16b8250c2e47be12d94f417568e588a9b",
+      "bytes": 1287
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-021.conformance.test.ts",
+      "gitBlob": "51113e35ee50499f3856d24128fd130aca356058",
+      "sha256": "aa4180656c0a169c056a29b3deb6492b2831363fa4f6bdf1c6bf6ffc1994fb34",
+      "bytes": 2268
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-022.conformance.test.ts",
+      "gitBlob": "cdd09e19a2224837db697d9fdd0d5090d122e555",
+      "sha256": "235d7fc15ebbde9a779e214b7b84f95b558c4845431ef5ca0114192685aab43e",
+      "bytes": 2565
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-023.conformance.test.ts",
+      "gitBlob": "5597a806a650a6e9c48839fca8999339af402c24",
+      "sha256": "489d0038c3b4cebb43de1e5db1bd7f225244b6bb05699b9ad06771b3a876c406",
+      "bytes": 2154
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-030.conformance.test.ts",
+      "gitBlob": "73706fd0f9b4272521e7b24315b5936ab88dc2e7",
+      "sha256": "58a87e38eb924aa375109f9f651f9eb8479edf80044fdc20d575b0d0a18d91a5",
+      "bytes": 6417
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-031.conformance.test.ts",
+      "gitBlob": "791e2b197b9946f2a69c92a0c1daf4685e700e66",
+      "sha256": "25cf86a57f7ea272c6474e74e0d67b695de5167c529b3b78b4ba8fe636be5f04",
+      "bytes": 6276
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-032.conformance.test.ts",
+      "gitBlob": "e2a728c50c17d2c7437a2910b1b5edfba821a80b",
+      "sha256": "f97a34c96bb7550d96871ca61b25b5178f24cd8cd834fbc850cfec167534b8d0",
+      "bytes": 9934
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-033.conformance.test.ts",
+      "gitBlob": "cf2a91544587863be5aa278835ae8e4388c92e3e",
+      "sha256": "368d7ed25d779930f790ced8935c452fbae06c258298c2fe62a00a64b0a19d58",
+      "bytes": 6927
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-034.conformance.test.ts",
+      "gitBlob": "d6f054e5cb50ceba53313d4f5b941282c0296fb0",
+      "sha256": "ad0883075225e87dfc29d5c95a74dcbf7fffb802f2dd57275cfecc7c929b701e",
+      "bytes": 7331
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-035.conformance.test.ts",
+      "gitBlob": "b009cebc621e24ee4089837a7d5b9338656d7b6e",
+      "sha256": "7109fc7dc882b56a93dd3cb35d8c5fd2eea938d43e01dc4c704373de62230793",
+      "bytes": 6134
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-036.conformance.test.ts",
+      "gitBlob": "51cbec92f22342a99b34a25d3f6daa843ed06aaa",
+      "sha256": "0dd38f61f07cbbabb5d300342912a722b51c4150575ac996169d3abd49da39ba",
+      "bytes": 6284
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-037.conformance.test.ts",
+      "gitBlob": "c291501243ed93affb36a04cc7cc8fb92df5704a",
+      "sha256": "21d81f7d6f6163624e8f2c5f91b67e8461640560a591501d31a6b87810265a37",
+      "bytes": 5069
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-038.conformance.test.ts",
+      "gitBlob": "a75a1e7c16f76ca1870f2da22455952303a0ab2b",
+      "sha256": "37a1fd1666726c5d00890097788380d2f308a813e4757a160c7509a381a33127",
+      "bytes": 4480
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-040.conformance.test.ts",
+      "gitBlob": "6f4c39d377d232f847eebc4d6116eba221bb7513",
+      "sha256": "a8f7f41e72405135ae6e08938dd08bc2e60cd8077073f65c1c53e30fc8e83bbe",
+      "bytes": 10187
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-041.conformance.test.ts",
+      "gitBlob": "242a9f7535e1dd05308ca9f7914cdf60d4e0deb6",
+      "sha256": "97fea35cf1a5747536c37e4ecfc76a1bfbc543f79efd39ab97bae106155835d9",
+      "bytes": 14017
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-042.conformance.test.ts",
+      "gitBlob": "c6832790cde4824028ff70b62f82467c6eb97068",
+      "sha256": "bcba3ae1ed3880390618fa86e2775862033ccf565201b964682b219778d40f18",
+      "bytes": 7707
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-043.conformance.test.ts",
+      "gitBlob": "e180a59b899849ca43cc42700534e483781a0dbd",
+      "sha256": "f792ada46e2136541a3fdffc4da8f70046abd8d052aead595d7af414577723b9",
+      "bytes": 9541
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-044.conformance.test.ts",
+      "gitBlob": "88a68682e81a1688b48c2513b8cf0b7c514cc43c",
+      "sha256": "a273938c5e741af96dd7a333053827ccb5d37d585d3adf288ae942bb34605886",
+      "bytes": 6043
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-045.conformance.test.ts",
+      "gitBlob": "f56adcb43f3f3f2f27d76903ef6fed0d48bd0366",
+      "sha256": "f7b889f98b93cc4814f20b49e06e39715e45d31788a2b6ff53bace8a21dccaed",
+      "bytes": 7321
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-046.conformance.test.ts",
+      "gitBlob": "30986637868d560f2018eb73895ab4742dd01bf8",
+      "sha256": "4555d07f31c8dcf71d36dc7768d7c31748503cc22dac3728ff7f404691252a09",
+      "bytes": 6355
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-050.conformance.test.ts",
+      "gitBlob": "9226d346a9532d37f5dc1d4dc0dfa106e33113f3",
+      "sha256": "09980928242adce1b91d8d7869042bb7634884d2435ba258c885214a0a364d90",
+      "bytes": 1652
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-051.conformance.test.ts",
+      "gitBlob": "c5010bcef7dde1f3839fd77a16c6ed25602f83d8",
+      "sha256": "f8ec964bcfba356776246deb6f83ed3a4c89ff72b1d642c8295c11bab48f7dfd",
+      "bytes": 2583
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-052.conformance.test.ts",
+      "gitBlob": "3034cabc1ac1016c0a719b11f0d45c7f301a1819",
+      "sha256": "a7276c64319a54d78922b979b7994188fe3dc5f855aedd8d455a495a8c29c330",
+      "bytes": 1852
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-053.conformance.test.ts",
+      "gitBlob": "da757d39556f2ba4f8f3151225e4a3a90d88ab4c",
+      "sha256": "d891856462d3af09cab9574a1656b4e31e79b9ae69f3a8d25bb698f971d609b3",
+      "bytes": 2415
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-060.conformance.test.ts",
+      "gitBlob": "ae0d7121b6601d723b2a8abc093573d94b0bfbad",
+      "sha256": "27b5b58a4c4f990080a54eef9020b9f425c13f1e4fa384c4d5a45e9d0ad813c5",
+      "bytes": 6038
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-061.conformance.test.ts",
+      "gitBlob": "5dc6d6cd5efdc708d2c3efea8e5e3b2a54a0c65c",
+      "sha256": "a56a3a87af7e86b6106bb9f89acdb7f7fb8258f583c69d2359d7d3cc1545274b",
+      "bytes": 5855
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-062.conformance.test.ts",
+      "gitBlob": "28bb59ba39e2f886df226664072ead3da2e58694",
+      "sha256": "93ab249c042ae3b67864512181d32189632587276aeed9f5d8622d1030fff482",
+      "bytes": 7156
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-063.conformance.test.ts",
+      "gitBlob": "b6e6a9f7e53f663cc703bccde29d80dbf890eb6e",
+      "sha256": "aa4470ca876e3500ee7f86090ca1651e898645cedde187b5615b0e306f5c3fd5",
+      "bytes": 6484
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-064.conformance.test.ts",
+      "gitBlob": "d46242942ae9d4a1411c71dcd96dc2fb706645ff",
+      "sha256": "95c3da67c3e6a5c65b4974cfbd78da44dffd52d2f7a8825baec39e8858b0addf",
+      "bytes": 10688
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-integration.conformance.test.ts",
+      "gitBlob": "e18750525f06f5dba6a880ecc531b59b322a03a5",
+      "sha256": "8a94b265f7fa4fde60190de6619e922db0b0f8684afe51dddae9ffe03481ade2",
+      "bytes": 10580
+    },
+    {
+      "path": "packages/cap1-conformance/src/vocabulary.conformance.test.ts",
+      "gitBlob": "fc802e6fc1cf4b5ed7b17fc808b1b63267242722",
+      "sha256": "b1bcc91b5bf2065880a31a1d59e7b4973f3f0a9730150e148c53a701023a9618",
+      "bytes": 3212
+    },
+    {
+      "path": "packages/cap1-core/src/admission.ts",
+      "gitBlob": "dc138de1cff1885e21b380a5c5796066d157f305",
+      "sha256": "d0ef0989a524cde9d94430f3c1469a192d0a0cc9f56104c1248906a39d7495b6",
+      "bytes": 4035
+    },
+    {
+      "path": "packages/cap1-core/src/authority.ts",
+      "gitBlob": "47978571765bfbe9e7abe431d5ca48f03d9b8367",
+      "sha256": "c0ffa70ac1bf32049bec408d614b3a4c8771ce826621d58524d492ba1e69608c",
+      "bytes": 6716
+    },
+    {
+      "path": "packages/cap1-core/src/consent.ts",
+      "gitBlob": "966a01aa24d06d0552df70b5ec0c57a00693e06d",
+      "sha256": "91db8cd0be0390007a3fbac1ec4c269fd38949f535701743d13b70ddc40e9b9d",
+      "bytes": 5196
+    },
+    {
+      "path": "packages/cap1-core/src/coverage.ts",
+      "gitBlob": "fb2cfb3ef2b33da83e6422bab6a50ac047146575",
+      "sha256": "ff649d9a227ec16f41a5a56b5f7988ea3a15e76bc4b0d881ae2ebca62796df07",
+      "bytes": 12057
+    },
+    {
+      "path": "packages/cap1-core/src/declaration.ts",
+      "gitBlob": "b2d28f63c9d020c2de91e19c2522a6332daf177c",
+      "sha256": "8e6d757d5c523cce80eec0ef32876d22099a7085ae2fb450646e3198f4c1238e",
+      "bytes": 14261
+    },
+    {
+      "path": "packages/cap1-core/src/discoverability.ts",
+      "gitBlob": "0c8ea7e0b9e6f58bfaa703dd92f7ad306d0528cd",
+      "sha256": "cf36dd2753eacd59626d879a15d957d050f7f3b41b6887581b43b7614f295611",
+      "bytes": 3936
+    },
+    {
+      "path": "packages/cap1-core/src/distinction.ts",
+      "gitBlob": "15c2d536e38e6ee5d43fe9c1d2426cdeeb78ff11",
+      "sha256": "f8226c8871fb556c90154078332b34bf3e22081fd27855c72fc5de576d30a05e",
+      "bytes": 5531
+    },
+    {
+      "path": "packages/cap1-core/src/drawer.ts",
+      "gitBlob": "6db3b2c77b4f792344c8bb99d85a2ef7d3b0b38b",
+      "sha256": "5e281ca094deb4f4f9507bae9d938455600d0820a21a010cf5a4d0f87e1ccac2",
+      "bytes": 14505
+    },
+    {
+      "path": "packages/cap1-core/src/entry.ts",
+      "gitBlob": "29280bd2a129a6ffe6f5c4488f9ee8b5e8dab4da",
+      "sha256": "287f28e9c5d778a24a935e55b8abf70ce793ec5c0306e20d406610ff78dfe56a",
+      "bytes": 4261
+    },
+    {
+      "path": "packages/cap1-core/src/epistemic.ts",
+      "gitBlob": "0a6ca435794a626359c920d1694bf4c7b926f4a6",
+      "sha256": "d8d6417fa4675ac2a927dd5e300f5f1e164ff0c7bc3eb69757e6dea4ef07f99c",
+      "bytes": 5844
+    },
+    {
+      "path": "packages/cap1-core/src/evaluation.ts",
+      "gitBlob": "7f5f2535044d52765b0baad6695744cf128e0717",
+      "sha256": "4628e23d38bb365aa79ed4217e38a9301eca984a9c15d24d2f79f6554a113bf0",
+      "bytes": 4432
+    },
+    {
+      "path": "packages/cap1-core/src/facets.ts",
+      "gitBlob": "1f24c14657fa8bb136652a23c9177a06f6f32ccf",
+      "sha256": "ef4437388079de96ae76fa3451d21ef04006a2866469460323a477a3592f02dd",
+      "bytes": 26686
+    },
+    {
+      "path": "packages/cap1-core/src/identity.ts",
+      "gitBlob": "f215997360754c43bbf1f6c508777bb7e8a63d5c",
+      "sha256": "33912949ae028c29070016860fbd2468fb346275ec8e50dee11af1b37025734a",
+      "bytes": 512
+    },
+    {
+      "path": "packages/cap1-core/src/index.ts",
+      "gitBlob": "8e807ab9822df7d0facc38b1ad43cd7af3dc2aad",
+      "sha256": "0f2e0414896770a82249501828dda1e07eaaeb80369651bbfc8e58c755961e2e",
+      "bytes": 648
+    },
+    {
+      "path": "packages/cap1-core/src/parity.ts",
+      "gitBlob": "c0ebf5593eb0390cc7ce88fed070a8e1e5847122",
+      "sha256": "8f29b140cedf843980c42c913ddfa9e5c38def37200c7199273e66d58b93a41b",
+      "bytes": 16721
+    },
+    {
+      "path": "packages/cap1-core/src/proposal.ts",
+      "gitBlob": "06164ad7cc32b1eac130cb129ad956636bc4ea54",
+      "sha256": "821060a306dc6f3257ff25dda8f3785b00956430524447ff105450bfa0a396df",
+      "bytes": 3481
+    },
+    {
+      "path": "packages/cap1-core/src/stable-identity.ts",
+      "gitBlob": "9a67e395a65e2fa3274fccda7b668a638fcc4aa7",
+      "sha256": "04b1942f8bf4aa544f093b3c24aab90b499cc071b85e11878f6b6a778abdab75",
+      "bytes": 4219
+    },
+    {
+      "path": "packages/cap1-core/src/staleness.ts",
+      "gitBlob": "5bfd9ab2b289b8d0fa33432e4db1837082e66629",
+      "sha256": "520305502eed72a3ac0c0bf3c2e05ca4ae81a031ac41b60e8f02739e7ad2b31d",
+      "bytes": 6599
+    },
+    {
+      "path": "packages/cap1-core/src/vocabulary.ts",
+      "gitBlob": "18bdb878aacb1793e93feb6213b74650acf365c1",
+      "sha256": "88f56e68c301c77bfaad78d4082ed4ebc96a19443299ff2bf6e74e985ea84e1c",
+      "bytes": 2478
+    },
+    {
+      "path": "packages/cap1-core/src/write-boundary.ts",
+      "gitBlob": "cac438eaf63cf4c589992214ac3410e5b2654669",
+      "sha256": "9498ec320d11fd8ef87d31d83bcafbba516d95f4186cc2fb8158920f1a12fac1",
+      "bytes": 2349
+    },
+    {
+      "path": "packages/cap1-core/src/yaml-dialect.ts",
+      "gitBlob": "0731d59441926677543f6ac06affd43287b29ee9",
+      "sha256": "ce2d0eece0eb6169aec036b36e9f2275c0fac0e76793f70b7ad5a59ca5dd68cc",
+      "bytes": 875
+    },
+    {
+      "path": "packages/cap1-daemon/src/consent-loading.test.ts",
+      "gitBlob": "31d0d160a1568d3c859379468b308e7a14e0d1eb",
+      "sha256": "bd790a8ffa2404bac8b4b5102f0b4e8ac2e22a17736a9239a1363e50a501f7ed",
+      "bytes": 14701
+    },
+    {
+      "path": "packages/cap1-daemon/src/consent-loading.ts",
+      "gitBlob": "25621e0ef469d29247b006ca21ccf3e8b4ef6b40",
+      "sha256": "8026edd16d705efcb950653154a54a3ad8d7eb0d4f666969ca271db0c8692074",
+      "bytes": 12617
+    },
+    {
+      "path": "packages/cap1-daemon/src/credentials.test.ts",
+      "gitBlob": "3ba6d3b05ddb00c53479ecd6390c39c9e86d1655",
+      "sha256": "9fa65c4494644a505cc6af28739b3da60598391510c87794f117f18df446aaec",
+      "bytes": 13048
+    },
+    {
+      "path": "packages/cap1-daemon/src/credentials.ts",
+      "gitBlob": "93f3dcd9c4cf51df2b11386a6ab6b854914b3943",
+      "sha256": "4d120795e4792898028c4faeb1becebdda392d73b0c4d3d7c3c6ac63f7c5dbdb",
+      "bytes": 14421
+    },
+    {
+      "path": "packages/cap1-daemon/src/index.ts",
+      "gitBlob": "ae0ea1f700b4a5b0d80fbb3b86a522f6ebc6b562",
+      "sha256": "953126321c2235528d2d21e68ed5ab6130ae73bd8df11a543cbe1f9ec54e1058",
+      "bytes": 272
+    },
+    {
+      "path": "packages/cap1-daemon/src/observation.test.ts",
+      "gitBlob": "ee5950529d766b72add9eaf23c764a6e8b797cc4",
+      "sha256": "37426f0dcd2c18ff9fcd720ff6c0c63e7a4b1e2080c372f29422ebb9928923fc",
+      "bytes": 14968
+    },
+    {
+      "path": "packages/cap1-daemon/src/observation.ts",
+      "gitBlob": "2d11d280d5ff8602a734ba59282b0827956944e2",
+      "sha256": "ed9b9b6ed03ace75784126d077289eee809822e7a993a1504f4d9f38e27f27f1",
+      "bytes": 12660
+    },
+    {
+      "path": "packages/cap1-daemon/src/package.test.ts",
+      "gitBlob": "6793013c3923fd829734b527110f2e4184f04c4c",
+      "sha256": "9e3780129f0dc4b76e867d9124454b0484c784d7792306bef6c674a6293a29c6",
+      "bytes": 760
+    },
+    {
+      "path": "packages/cap1-daemon/src/pipeline.test.ts",
+      "gitBlob": "22dd15faba32ee80a64a49dc3c1244b00e07815c",
+      "sha256": "552140eb4bb6e5d7474cb8d8f25a23a902d27bf2986e79f687c8079336a758a3",
+      "bytes": 9227
+    },
+    {
+      "path": "packages/cap1-daemon/src/pipeline.ts",
+      "gitBlob": "f5d6373b3c7b6d70886b37b2ca34869cf689cd75",
+      "sha256": "c43e7cbdfc4463ba51eb420404f312085a17c1fb9c167edb73728ec08ca2f221",
+      "bytes": 9628
+    },
+    {
+      "path": "packages/cap1-daemon/src/routes-human.test.ts",
+      "gitBlob": "1daf7ac9ea6de6cf2588ec76df60bc324a5689a5",
+      "sha256": "105121d206b86b5d24bd8506393195f7a4c99d6b276f969c9992b2b918944b12",
+      "bytes": 21382
+    },
+    {
+      "path": "packages/cap1-daemon/src/routes-human.ts",
+      "gitBlob": "4d484aa1b3aeb5d1552dfa19c4e00498f2aee27e",
+      "sha256": "8db67190fbe858e967fcb176ea58814235b955ca7ba41ff6ad67fa5daa3784f3",
+      "bytes": 35335
+    },
+    {
+      "path": "packages/cap1-daemon/src/routes-machine.test.ts",
+      "gitBlob": "cac77a6eb6b14c64f754357e7877f8a534b58111",
+      "sha256": "2f22856496f44e745deafd2f10b02a4a9300e98a3ae3a6e08b7dde3a25305b45",
+      "bytes": 21637
+    },
+    {
+      "path": "packages/cap1-daemon/src/routes-machine.ts",
+      "gitBlob": "3d4e35255755f41fbf51d2afb7cc000e24be8b55",
+      "sha256": "746fd8e15f767a5e03d45b5142aa278174ae460bb407d26f1e94bf0992c019a5",
+      "bytes": 10417
+    },
+    {
+      "path": "packages/cap1-daemon/src/server.test.ts",
+      "gitBlob": "6c98c8ccc25f35feba63540c4d2a75a178fb7286",
+      "sha256": "c14580d2aae0c7e4dafcf08f175814ae98c63af9f0eb27044bbd860120af83f9",
+      "bytes": 14657
+    },
+    {
+      "path": "packages/cap1-daemon/src/server.ts",
+      "gitBlob": "edd86b9dd818b03f3c86e4258bc2959d9ef6177b",
+      "sha256": "03d73e9f01a9f4a8a27c98a97949655b33620bf9b37725ad2c8a7a564a259f29",
+      "bytes": 15277
+    },
+    {
+      "path": "packages/cap1-daemon/src/write-guard.test.ts",
+      "gitBlob": "6d35b56755672e11feaf29a3e72cc0a24f18e3c7",
+      "sha256": "6e131b5183133c8f102ca08268254406cc6fca6c2a693df9d6a1d3d2dc66d400",
+      "bytes": 10112
+    },
+    {
+      "path": "packages/cap1-daemon/src/write-guard.ts",
+      "gitBlob": "1ca69b13895cba31e827075c8f3d129e74f79422",
+      "sha256": "e768f3869a84e45b4e1c77afcc746fae20912444f00f58a5ff6724a588dc3dfb",
+      "bytes": 7142
+    },
+    {
+      "path": "packages/cap1-system/src/credentials.system.test.ts",
+      "gitBlob": "3bcfa19e90e4e84a793af725eb19df699be56288",
+      "sha256": "e9e4f84a41e95a8461363abbd7a4105f88fecdaca8d65b2e2976a8c83e113ebe",
+      "bytes": 3152
+    },
+    {
+      "path": "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts",
+      "gitBlob": "ff9cf8587af86d91caaf9c7179bd122a2286c7fc",
+      "sha256": "d07bfcbd2990647f16addf9a1cf2bb1a18bd01006b0e994b0c3304e37712a3f3",
+      "bytes": 10922
+    },
+    {
+      "path": "packages/cap1-system/src/degradation.system.test.ts",
+      "gitBlob": "9adf408a223714cc5d6458f4b61c5f4ce2c9e3c5",
+      "sha256": "e4d9ee320c3fa831d857b721e624b92396b147d9fcccaa8f05c3ad8034f4a687",
+      "bytes": 4987
+    },
+    {
+      "path": "packages/cap1-system/src/effect-observer.system.test.ts",
+      "gitBlob": "888103218b868c183b57f8c462a1bf60c4591dad",
+      "sha256": "597ab82dff6bdbb7b4f850392812f9dc9d4d0f0775cb164a9189c68529692777",
+      "bytes": 6205
+    },
+    {
+      "path": "packages/cap1-system/src/effect-observer.ts",
+      "gitBlob": "cb91e2ba7f6af2adf04ae11106d95ca2794225de",
+      "sha256": "1f94a908e1cbd9a6b746d1b8ba127d3e3421bd14d6f8a78aa0ae99bc86bc40f6",
+      "bytes": 7500
+    },
+    {
+      "path": "packages/cap1-system/src/fresh-clone.system.test.ts",
+      "gitBlob": "804c6e03a74cfe7df4de65195ff968327f8b3ea2",
+      "sha256": "13ff76965cd899867dee06f3927c242342065503b9299c3e2c6e27402fcd8244",
+      "bytes": 4452
+    },
+    {
+      "path": "packages/cap1-system/src/full-facts.system.test.ts",
+      "gitBlob": "99ce15438b420cd5446ca375c3cfa85898375b54",
+      "sha256": "e3db4f3715812e38c0b77350df746f5d5f3e7700508329f05aab2d69247c2e77",
+      "bytes": 5004
+    },
+    {
+      "path": "packages/cap1-system/src/harness.ts",
+      "gitBlob": "048b5b1af6d87f0f841941d59bb504074976ebcc",
+      "sha256": "8a7833572f54efd4838458bb7e00f45ce98631696b35f6cb4154cd9a0804ba01",
+      "bytes": 10410
+    },
+    {
+      "path": "packages/cap1-system/src/process.system.test.ts",
+      "gitBlob": "44aff315b2dcc12dda322dc4cf39c398edca0f07",
+      "sha256": "8623addb97acad170d41efbdfd748b12dd4541e215fb0b48fecc53239ac008e0",
+      "bytes": 1483
+    },
+    {
+      "path": "packages/cap1-system/src/state-dir.system.test.ts",
+      "gitBlob": "d2737dbd068625d290b1193064e877f126d9012f",
+      "sha256": "fb305a2a25abb3cd2f79cc23ed7e0d9617db3dead008986a09d44d2657cd4945",
+      "bytes": 12793
+    },
+    {
+      "path": "packages/cap1-system/src/write-boundary.system.test.ts",
+      "gitBlob": "364c3343fe73d37fdd40e1c1c392ee7ece43d6fb",
+      "sha256": "b50feaafc9fb72b65ed1c3cedc0b7baa784819c58facea4d0f5af1f9f8e3c68d",
+      "bytes": 4948
+    },
+    {
+      "path": "packages/cap1-system/vitest.config.ts",
+      "gitBlob": "d1f7b58b752ddbdc63988c08d95dea12e22103f3",
+      "sha256": "6e7702d9b7c2cbaa68d3c5fa3103d18d778f9c83d1882e39275547a73db703fc",
+      "bytes": 935
+    },
+    {
+      "path": "packages/polaris-dossier/src/agent-texts.test.ts",
+      "gitBlob": "1e83eb34604c2ac6834502073f62f22bc5b733bd",
+      "sha256": "d064d168cde380d9321e398926805de4300d9fdc0568739ee7b15f8003fa684e",
+      "bytes": 17879
+    },
+    {
+      "path": "packages/polaris-dossier/src/brief.test.ts",
+      "gitBlob": "9e4cbdc47d033e10d171cbba1ef8797edf6aedde",
+      "sha256": "c7303484b70b430ade3f5af5cd73b5d13ba1464b75e8d69f0b4bc0f2b3573663",
+      "bytes": 21825
+    },
+    {
+      "path": "packages/polaris-dossier/src/brief.ts",
+      "gitBlob": "9816b7696b55f71c9d42fb1bd3d643ba5275ac34",
+      "sha256": "e8d8176ee9fd0656ab48434fb988ccdd96f20b211397062f0bc36b515d7ee3f6",
+      "bytes": 18944
+    },
+    {
+      "path": "packages/polaris-dossier/src/broker-client.ts",
+      "gitBlob": "1545435a6c5e70a2914a614ba6d249fa5cf6e6b6",
+      "sha256": "7853bd22cf01d41429678275703476da10b6d7b08b1c941fc6309d50bf3294c7",
+      "bytes": 1948
+    },
+    {
+      "path": "packages/polaris-dossier/src/broker.ts",
+      "gitBlob": "684a5557954ccc05386d545348f8ae27b73810fb",
+      "sha256": "171fde89df2d70edb765d608e8b73e64cd9e6b8c6a0f8255a3a82dfdce1d0442",
+      "bytes": 4891
+    },
+    {
+      "path": "packages/polaris-dossier/src/check.test.ts",
+      "gitBlob": "0015d8a7b60d61e9cc30ad78ea1e406b7fe33a9f",
+      "sha256": "6aa99277f76f6da69ab8099b5c71fa80751848ff6d52b49655cc130bf1747108",
+      "bytes": 42504
+    },
+    {
+      "path": "packages/polaris-dossier/src/check.ts",
+      "gitBlob": "a7a90e4dec73cd1ce552bdc6b409c8335a60e14b",
+      "sha256": "e44f7a0525faf72cda0ea0d4c265c42a4bff89393ddac380e534d1c5191ada43",
+      "bytes": 49184
+    },
+    {
+      "path": "packages/polaris-dossier/src/class-gate.test.ts",
+      "gitBlob": "1ec819166c8ce17b8cc814e9036e34c3e70dc1c4",
+      "sha256": "23694e9065b8a2c290bcd0544d833a5993c7947dc4a6c391c9ff0bbb0c03d5ae",
+      "bytes": 1899
+    },
+    {
+      "path": "packages/polaris-dossier/src/class-gate.ts",
+      "gitBlob": "51cfe58e4714f2975ad6d9423a26ea7c139c5574",
+      "sha256": "a885417de2bbcaf3229f430a7f21b3861a99c062bb63bbcf96812b82720c048c",
+      "bytes": 3593
+    },
+    {
+      "path": "packages/polaris-dossier/src/cli.test.ts",
+      "gitBlob": "b4eb79303e53f7a38b576b96bb991c20e2b77cdd",
+      "sha256": "57b6bfcc78ee62c199947a9b79761e4ce5083907e19927bbaaa1f84d12ac39b4",
+      "bytes": 8283
+    },
+    {
+      "path": "packages/polaris-dossier/src/cli.ts",
+      "gitBlob": "42dbbb50b5026c4d0ca3c92a47531de210927af5",
+      "sha256": "cf8958217485b2e4d230f87c667d3dd249414936a4cfdd8d9f479f1676d9059c",
+      "bytes": 29038
+    },
+    {
+      "path": "packages/polaris-dossier/src/clone-head.ts",
+      "gitBlob": "11bbaaff3ed5d219844210320d60a1754f83b08c",
+      "sha256": "ea3095465fed53ea8c85c2a62a5beeae4d4d16b57ce0a45f6322acaa9707af5b",
+      "bytes": 4338
+    },
+    {
+      "path": "packages/polaris-dossier/src/clone-shape.ts",
+      "gitBlob": "ff98440a1cbf53bd58541ee9ee31d5001b553584",
+      "sha256": "dec99bd7f8cb719c94da388a7680608faf42c61b5733b83e6d86bd04cdc51c55",
+      "bytes": 16796
+    },
+    {
+      "path": "packages/polaris-dossier/src/close.test.ts",
+      "gitBlob": "827a5770b123b465b64350390051f47f37833f0b",
+      "sha256": "f4f2d3d9ba3e15090d5beff47cff2dc990822afb48b44e0df686c08088074e11",
+      "bytes": 14759
+    },
+    {
+      "path": "packages/polaris-dossier/src/close.ts",
+      "gitBlob": "fac02f954d245558bfd4ad45ebdb2e23ee1ad2cd",
+      "sha256": "bd4872c519a67c77bb0789ae7c0218061b7af23dc9eeb30c58d3341aa5237a6c",
+      "bytes": 16262
+    },
+    {
+      "path": "packages/polaris-dossier/src/credential-probe.test.ts",
+      "gitBlob": "a5b5f7717f09f32e51b37a9bb96e1b38e594260d",
+      "sha256": "c27094d2f6a5720122284d3a0d688401561137b9dcae549a7304b850032a61e5",
+      "bytes": 10129
+    },
+    {
+      "path": "packages/polaris-dossier/src/credential-probe.ts",
+      "gitBlob": "9190c188a895aebfa75a40e07336d49eebc1c6b9",
+      "sha256": "f1ad12b476de4269b5ef8ea191250b030e068e70e10f1b2577118df34141a45e",
+      "bytes": 11434
+    },
+    {
+      "path": "packages/polaris-dossier/src/design-review.test.ts",
+      "gitBlob": "6619ab9daf878ea8e929f1c9b04f093c3c2b7dcf",
+      "sha256": "ed41faa00f79f70e7c73f66a7fb7fd594de466a3103b0f5bb2d965d488027379",
+      "bytes": 7315
+    },
+    {
+      "path": "packages/polaris-dossier/src/design-review.ts",
+      "gitBlob": "439a1b2dfae9561366159d057b3e8168c806ca7b",
+      "sha256": "f1d0065a57847141e1e398c35eb7606eaa78f87e5ca62815a7eb21c52896aecc",
+      "bytes": 13957
+    },
+    {
+      "path": "packages/polaris-dossier/src/doctrine-quote.test.ts",
+      "gitBlob": "f06c9fbdb4858d58fc843eaf517e8e0f239f87e7",
+      "sha256": "8c19b569b3be36b99b5d498849b0bdba238929614b1d83c129a54cbb157b199d",
+      "bytes": 4454
+    },
+    {
+      "path": "packages/polaris-dossier/src/doctrine-quote.ts",
+      "gitBlob": "f25a4dc95b460675aa2519a67b9c2556d48eda4e",
+      "sha256": "2568b47d6c39eb520fa184b8b48bc934d61baf242c5f6252cf571bb85f240bd5",
+      "bytes": 4487
+    },
+    {
+      "path": "packages/polaris-dossier/src/draft-schema.test.ts",
+      "gitBlob": "63c4ca4ce933f9e746567e552e32a1bd532885a8",
+      "sha256": "0491cc8ed2419a630e319bd23e3ca8b4236eaaf8f2868cecad3d07ba58e665be",
+      "bytes": 9841
+    },
+    {
+      "path": "packages/polaris-dossier/src/draft-schema.ts",
+      "gitBlob": "e18084fff6f6403de33f61e44b349e6662edeb3f",
+      "sha256": "2693e2f5732cc3a29ae5c0b4ce40cb419400b65f087278fddf1b83a4ae194d1d",
+      "bytes": 25426
+    },
+    {
+      "path": "packages/polaris-dossier/src/execution-choice.test.ts",
+      "gitBlob": "400dbfe35332dd990c1401c24d4ec428d6ad3340",
+      "sha256": "f29eaafe0175b9eea10786931e26b780323277d02111bfbf187b0c9be1df06ba",
+      "bytes": 15079
+    },
+    {
+      "path": "packages/polaris-dossier/src/execution-choice.ts",
+      "gitBlob": "70a9b6d5d39ac8a1afecca8574edd37268e17ac6",
+      "sha256": "beaf3ec27c9b2bc4d6557905a2147c0383d27456b4ed32c6ea8e96c4c4391538",
+      "bytes": 11845
+    },
+    {
+      "path": "packages/polaris-dossier/src/execution-flags.test.ts",
+      "gitBlob": "9bff4962ae085f65995be9508619845c24b133d2",
+      "sha256": "c3f99a2f9158017b3e8d3cf4c5ca22f5660722417809128f02a9b77c5a9146a6",
+      "bytes": 13353
+    },
+    {
+      "path": "packages/polaris-dossier/src/execution-flags.ts",
+      "gitBlob": "eb662d7e4518406f8a140459140c98b723778029",
+      "sha256": "f70e08e098e3f21954ccbdfab9d095a89b4f91c1820324837f1a3501c83ad2af",
+      "bytes": 5386
+    },
+    {
+      "path": "packages/polaris-dossier/src/execution-rule.test.ts",
+      "gitBlob": "cf4c1c9233fb5254457a9f5b577c702700f487ca",
+      "sha256": "29ffed56e7992076d484c511b932407f8e7d5b131e55c83a18ad6fc63ba21381",
+      "bytes": 10450
+    },
+    {
+      "path": "packages/polaris-dossier/src/execution-rule.ts",
+      "gitBlob": "bcb7ec8f460895016f4acc16c04107ed83d578d4",
+      "sha256": "fbc3f57a367c192019bf4c9f2a7357c6bc8eb3a6e8d65a62f992288ff24ff179",
+      "bytes": 11217
+    },
+    {
+      "path": "packages/polaris-dossier/src/full-run.testkit.ts",
+      "gitBlob": "02bb8bd179ea4fe9371ed7cd2fedae86518c27d6",
+      "sha256": "fe0307a1723ce290b1b558c524e6b7732a6e1d26cfd24701a757965f3392002f",
+      "bytes": 15899
+    },
+    {
+      "path": "packages/polaris-dossier/src/gate-acts.test.ts",
+      "gitBlob": "82bf84a30d755c71698f1dbe352b9039eef1b80d",
+      "sha256": "9e7e3654a62ac34400a88099844d70852aa9d0d6a23a2385fba587120793e5f6",
+      "bytes": 54236
+    },
+    {
+      "path": "packages/polaris-dossier/src/gate-parts.test.ts",
+      "gitBlob": "c282cf0b96c82c85f54b82d1761e3877d6919557",
+      "sha256": "ba5f537affe3da9edd14e3bf98641f03dfc257d99dd920c25bf0a349a5540770",
+      "bytes": 13786
+    },
+    {
+      "path": "packages/polaris-dossier/src/gate-sources.ts",
+      "gitBlob": "a5ce7c22fe11b6cb0d760ca078853389398b9d6b",
+      "sha256": "95a8ffcede9266f6531b0b2f2a5e10c25a0f5135b3114249090cce3ac78850d6",
+      "bytes": 37206
+    },
+    {
+      "path": "packages/polaris-dossier/src/git-object-reader.test.ts",
+      "gitBlob": "9b03e55dd24c09ce3e623bdcf07248c6a66a81f3",
+      "sha256": "43ea7f9d526ddcdd59ccc0c2e8f4b9e9d724052cb363259990101b004f00a378",
+      "bytes": 64501
+    },
+    {
+      "path": "packages/polaris-dossier/src/git-object-reader.ts",
+      "gitBlob": "6fe7b1adeeca4e26a23f8fcf2cfe6339f1955ffd",
+      "sha256": "9f33e5fbbf464b1df28b79c3fcf5016b8ad7db1910041734c5fb8e4a790998f3",
+      "bytes": 35827
+    },
+    {
+      "path": "packages/polaris-dossier/src/github-url.ts",
+      "gitBlob": "13b074e27b0874180ca63ae5ba513e4c1db7bdb2",
+      "sha256": "97e5aea7fdaf6e93981ae600b7a7817e600d664a34a12423bf7ead28ec4c303c",
+      "bytes": 2355
+    },
+    {
+      "path": "packages/polaris-dossier/src/governed.ts",
+      "gitBlob": "59fefd926fce73603398a3fa42a156bbd406757b",
+      "sha256": "82538513c2b3c95561e0802441abe8bb6af99292a6d6f0027b01bf85d637963f",
+      "bytes": 3686
+    },
+    {
+      "path": "packages/polaris-dossier/src/index.ts",
+      "gitBlob": "b1a21e9b1c9770eed4b895b337931a5701d6fb0d",
+      "sha256": "f122a77977f3d6858fef6f2c0ac2ce0f690e40779c25a2ebf15e81c4d981be88",
+      "bytes": 7678
+    },
+    {
+      "path": "packages/polaris-dossier/src/init.ts",
+      "gitBlob": "bad777a985365ea496a32c04471ef58526bf15dc",
+      "sha256": "47448429baa40bd76dfb0c1f3a08c07bc74953370012f06f1aba8e6a237d99ad",
+      "bytes": 10517
+    },
+    {
+      "path": "packages/polaris-dossier/src/inventory.test.ts",
+      "gitBlob": "84803ee791b232a249e4ca25d0ae20dc06d32f47",
+      "sha256": "b413785d4688a562996e1d79a99adae99abe3aad9d7d505ac7497397c0bd2003",
+      "bytes": 40801
+    },
+    {
+      "path": "packages/polaris-dossier/src/inventory.ts",
+      "gitBlob": "cce2fa262559270b278cbabf862ba51b13645dfb",
+      "sha256": "d3b6e41461e892b71443f805c37db4ae450be00e1ee3d2651ace3aa1ca72a090",
+      "bytes": 31840
+    },
+    {
+      "path": "packages/polaris-dossier/src/launched.ts",
+      "gitBlob": "2b1fafeac1cbe4022d5c0d18eb87a9d6cc35d757",
+      "sha256": "e079457635df6b3353d874ea30385024684cd321f80278bcf40a64a4417d20f3",
+      "bytes": 5019
+    },
+    {
+      "path": "packages/polaris-dossier/src/no-egress.test.ts",
+      "gitBlob": "d973d2d52fa07dca152f28896199d021aaffe96c",
+      "sha256": "2de26f8896aba8f27b95a2b2839f4af2ab69de7bb7a7d89ab795aa0c0d262fb8",
+      "bytes": 6599
+    },
+    {
+      "path": "packages/polaris-dossier/src/polaris.ts",
+      "gitBlob": "ebe46ffcc96a009da30baa4bbc645246560e3ddd",
+      "sha256": "077cbaa82c5d28a0fae0ccd18ec510556876abe984824a30cf3c667780eaaba2",
+      "bytes": 41674
+    },
+    {
+      "path": "packages/polaris-dossier/src/preflight.ts",
+      "gitBlob": "49622897f9400ef634b189542860d0ceb857346e",
+      "sha256": "5b6cb3409f17ccb9af711d7c5bf759aa5317ea5327dbc0edc01d1383be0eb924",
+      "bytes": 5239
+    },
+    {
+      "path": "packages/polaris-dossier/src/render.test.ts",
+      "gitBlob": "89eeb87d8562434d0d831a825ced997f2bfe09dc",
+      "sha256": "34b5bbf71db9d768704d742c23e90b4465f4295ceaba72ca075ba2b21f5755eb",
+      "bytes": 68764
+    },
+    {
+      "path": "packages/polaris-dossier/src/render.ts",
+      "gitBlob": "a95e1bc4d383ed6bc638aa8127bd73e906aff6a3",
+      "sha256": "f760a40b1566d92d712bdc00d292df1480799e05a2de20efee3aed21cd893a57",
+      "bytes": 53595
+    },
+    {
+      "path": "packages/polaris-dossier/src/reverify.ts",
+      "gitBlob": "d8dc7f3aa222896e2f81f7860b2a32c91e526cf8",
+      "sha256": "908809b52ae67b364b182ba4a29ee18dfcabac78849381e01c925f5de9fbd640",
+      "bytes": 12291
+    },
+    {
+      "path": "packages/polaris-dossier/src/review.test.ts",
+      "gitBlob": "95a63945da987b7aac69da59accf4843156c1d94",
+      "sha256": "9cc70ded1b1a4fde54c6995d01dc5c4ccade31e8fcd2b00fa7b84259670d271b",
+      "bytes": 66440
+    },
+    {
+      "path": "packages/polaris-dossier/src/review.ts",
+      "gitBlob": "a97cf32c4eb8b61f48daf6aa7626e7fbf91d5b00",
+      "sha256": "7b2e332134ca53f02d2b0c4c5e454aefb0c2545966bfc5a2ec797ce9923b636f",
+      "bytes": 61123
+    },
+    {
+      "path": "packages/polaris-dossier/src/run-config.test.ts",
+      "gitBlob": "d9f3e2e6243a49120e5ffed53ed6f91918953b19",
+      "sha256": "ff0c4f9c8f3ea6ceb51852bf9b201e847e4111701fe2151476cdd410bab00763",
+      "bytes": 6880
+    },
+    {
+      "path": "packages/polaris-dossier/src/run-config.ts",
+      "gitBlob": "41e6b1ece42992e72d597a6559bebef261d758f1",
+      "sha256": "25978fa8d926a588ff127b4c0ed914b613ca13b9f54b84ae31fd60ee0b7e18b2",
+      "bytes": 11008
+    },
+    {
+      "path": "packages/polaris-dossier/src/run-evidence.test.ts",
+      "gitBlob": "fa6451e3d69a0e5045775e387b19bf66e75ff123",
+      "sha256": "4ddf713fed4fe2e7adf1fa00c9283f004575a8c5937d56d04b93d6ef363e7b15",
+      "bytes": 6503
+    },
+    {
+      "path": "packages/polaris-dossier/src/run-record.ts",
+      "gitBlob": "fb1a7cdc77db5b0b8c1017e02efc356806d646ca",
+      "sha256": "7ea6fe080a20a963ffb561ead72afd9fd045b4c01f4abec1f79f3cab86819e0d",
+      "bytes": 12426
+    },
+    {
+      "path": "packages/polaris-dossier/src/screen.test.ts",
+      "gitBlob": "d1dedeb19921b2ff1d8ced20e9112bc43024c21c",
+      "sha256": "6f2dab59911242a3b0b9e045e1410d63a3a31da455cc019e5c15a5571d0eb128",
+      "bytes": 34705
+    },
+    {
+      "path": "packages/polaris-dossier/src/screen.ts",
+      "gitBlob": "9d56c8e4e9da6e68456def5e7d705af1f2c82a4e",
+      "sha256": "a86d18e557a402852ea99a0e6f93d1a142b81dffa8215ecdba615fd1dc980e75",
+      "bytes": 13623
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-handover.ts",
+      "gitBlob": "787ca480f41f15cd24d11d6ceacabe2aaefdb601",
+      "sha256": "0bc06966d6fcabedea3105ca529550f7de6d40d2600c0109733516ad5cea5cce",
+      "bytes": 48190
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-statement.ts",
+      "gitBlob": "c7705ec6324b6296a5bb06a4c4a2a1277cf2ce53",
+      "sha256": "7273d0899caba37086df2f5b0a77be49414b73f42320427bb5b873c8def6ff2a",
+      "bytes": 7260
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-view.test.ts",
+      "gitBlob": "906abcc79f2e9396da75e60464aab4ad0a34060b",
+      "sha256": "83767dc88fa7c4bab9e6056ba3c8cb8bdbe88810a8576602ee44777c621298e7",
+      "bytes": 8527
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-view.ts",
+      "gitBlob": "0c6518675776fe02d4059b86ba3fca56be6990f9",
+      "sha256": "bf224d0cd8d83b22feae3d7cf36a5459d51d1efcc96667c5e55844c1e6b40d0e",
+      "bytes": 6421
+    },
+    {
+      "path": "packages/polaris-dossier/src/start-gates.test.ts",
+      "gitBlob": "60f3fcb78c5c1c88f1174eb4830643b6210fae11",
+      "sha256": "68b4ab0b931c31a9438782f9384c476c93aedcb15449f3a98d3ec4a1a8706256",
+      "bytes": 82447
+    },
+    {
+      "path": "packages/polaris-dossier/src/state-directory.test.ts",
+      "gitBlob": "0f7bb08ae68deb500957411f2decbe1bd60ddafa",
+      "sha256": "8e51a7c11a65d596a251bbaf2455b8f0c549821d163914e2d1092e6ac0116b4e",
+      "bytes": 5047
+    },
+    {
+      "path": "packages/polaris-dossier/src/state-directory.ts",
+      "gitBlob": "c8ee4317b836975805f7361ed5c9df493439af4b",
+      "sha256": "8f0dafd396d72875487bdbc7d3bf6b0171b5e281a42263abbf7200c11974e6c1",
+      "bytes": 6142
+    },
+    {
+      "path": "packages/polaris-dossier/src/status.test.ts",
+      "gitBlob": "4c0a089e5d89d530fb1590ee7b8c52b53e98e53d",
+      "sha256": "d60850d9e16b9d4f86840bc0b91723bbbaca2fa44c363a59bc75c2ff4720697e",
+      "bytes": 14879
+    },
+    {
+      "path": "packages/polaris-dossier/src/status.ts",
+      "gitBlob": "75b5ebce1a209771785886f32b805e81319336ec",
+      "sha256": "e1095697451b02b6c4e421c8f63e5a763987e0f80acaade7ffbc388c799f474f",
+      "bytes": 9878
+    },
+    {
+      "path": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "gitBlob": "22579340dcd2dec1bb4acaba097090ddd7c6de90",
+      "sha256": "c28e33879d18b50ad4aa63ffe3a4e2b8120b9f3a5adfaba1f5678b98086d459b",
+      "bytes": 78074
+    },
+    {
+      "path": "packages/polaris-dossier/src/waiting-sessions.ts",
+      "gitBlob": "235650ac1507cf9dff27e403d0e580d15738833c",
+      "sha256": "748afb167b34dcc80906735adaf41e7d4db794c5d1dcc9c08b694dd2ff811d80",
+      "bytes": 42113
+    },
+    {
+      "path": "packages/polaris-dossier/test-support/no-egress-driver.ts",
+      "gitBlob": "1e408f1d32c3e31fd257a244c0589e6561772007",
+      "sha256": "438c9d051c74609fa90990e1c7f74bf41d6064cf7bb1ca7780d71365e87bea19",
+      "bytes": 1303
+    },
+    {
+      "path": "packages/polaris-generation-consent/src/admission-record.ts",
+      "gitBlob": "63279e131f2d45368bc08dd9a7209f930802346d",
+      "sha256": "e84f5515e0c5344ee63b58188201683ab5a51967b91a2a5d0d19a55024c0577d",
+      "bytes": 5799
+    },
+    {
+      "path": "packages/polaris-generation-consent/src/citation-allowlist.ts",
+      "gitBlob": "cdc686d99488514a2bbaa606e56444025f4f8970",
+      "sha256": "e434743e90c03cc011e8a636236b89987e12af4cb5af459d74ce044dd321aa2a",
+      "bytes": 786
+    },
+    {
+      "path": "packages/polaris-generation-consent/src/consent-ports.test.ts",
+      "gitBlob": "7efb9ab6fcf71f5e16f47929328fb8cabec9037a",
+      "sha256": "544a2986b1b100e60c653fa04cdff2b2d9dfaf5f7fdae7b1b8aed2d562de0697",
+      "bytes": 27701
+    },
+    {
+      "path": "packages/polaris-generation-consent/src/consent-ports.ts",
+      "gitBlob": "18469cddeb2085841d6be1830135ac50cfd913ee",
+      "sha256": "44dcaf5ae547d72c92885a9bd44dec33e2c6e7dd43bec599db54ff79afb69b15",
+      "bytes": 15099
+    },
+    {
+      "path": "packages/polaris-generation-consent/src/digest-bound-act.test.ts",
+      "gitBlob": "fa41cb7da9f177067f18ad46cf0833de0133181f",
+      "sha256": "829c55973110a9ced8226204a95be0fa44a6c25fdc3dcf4567c061d0749d62b5",
+      "bytes": 12867
+    },
+    {
+      "path": "packages/polaris-generation-consent/src/index.ts",
+      "gitBlob": "8ed2fee24b1a54d4009b9036c35965577ed60ddd",
+      "sha256": "d8eb7907e523490280b5191d3793bf6b15c157d94212449f5628f2e982139ce9",
+      "bytes": 1386
+    },
+    {
+      "path": "packages/polaris-generation-consent/src/package-reader.test.ts",
+      "gitBlob": "1471fe4541058d91ee5e878f71fae901f4ebd847",
+      "sha256": "17294c01520b48aa7910ecbddb50a13d27b61bcc0d5ec393d5526676db571431",
+      "bytes": 96635
+    },
+    {
+      "path": "packages/polaris-generation-consent/src/package-reader.ts",
+      "gitBlob": "4a5611178580798a7dcafe5ee02561dd71abeb4b",
+      "sha256": "ebf5cbf468fd442289e11e390c9a7e3b20c39bdcd02e1a6214d096a52d0e3dc3",
+      "bytes": 68466
+    },
+    {
+      "path": "packages/polaris-generation-consent/src/real-tree.test.ts",
+      "gitBlob": "3a7f604fdfc08a1112ac195b46bc32771947afdc",
+      "sha256": "77cc8a081cea5ba5aee23c8c79ab5e941413da60951c3b9e0a29db2ee034b55d",
+      "bytes": 5375
+    },
+    {
+      "path": "packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts",
+      "gitBlob": "8dfa58915d8d82fa28ea9085c37f5657125a3593",
+      "sha256": "33484526837e7fa889db498b4167248f1b778429622f2d9bb2137502055ccb16",
+      "bytes": 10062
+    },
+    {
+      "path": "packages/polaris-generation-consent/src/recorder-template.test.ts",
+      "gitBlob": "baa35041d046fd2292e06e8b479320b7bbb974df",
+      "sha256": "8cd7baa906d1c77959fa358e16bf5358f16806bac4b3d435190a3c51a7b88134",
+      "bytes": 2250
+    },
+    {
+      "path": "packages/polaris-generation-consent/src/recorder-template.ts",
+      "gitBlob": "27227060be981be4adbd9df28662ebf93182b1a3",
+      "sha256": "0066184f855f42f2674b0e3d9d6990e10d091082869c3786ecf2f9a88d92c0c2",
+      "bytes": 2558
+    },
+    {
+      "path": "packages/polaris-generation-consent/src/testing.ts",
+      "gitBlob": "d6f35bea1e42de01dd935c5eb1a195e5b1d55f55",
+      "sha256": "944a19851d1324672088ee6f564d06022f2f4199c58a8ab43bcd9043e36de743",
+      "bytes": 324
+    },
+    {
+      "path": "packages/polaris-generation-core/src/admitted-input.test.ts",
+      "gitBlob": "521526357ed54c381ab8a45627c42cf57292fe72",
+      "sha256": "b277705cc1ecf5d6544c7ac3b85e9592c6c0b31cebe1d68712a47803b250c41b",
+      "bytes": 6820
+    },
+    {
+      "path": "packages/polaris-generation-core/src/admitted-input.ts",
+      "gitBlob": "b9364231a9046ee81f927c30adebbc73ce1db213",
+      "sha256": "abfe9e8ac16e4f4561743fb54198118fa45c52714fb7ddc7d314587b4636ad59",
+      "bytes": 6725
+    },
+    {
+      "path": "packages/polaris-generation-core/src/canonical-json.test.ts",
+      "gitBlob": "434f29c595d7f2db263af3d11446585c57b70c9c",
+      "sha256": "11e8ad4b556404bacd052d3fdfa931f441fd9702776bb39fe94759505a056883",
+      "bytes": 4197
+    },
+    {
+      "path": "packages/polaris-generation-core/src/canonical-json.ts",
+      "gitBlob": "999ac02bba282911d60f4dcf7f8951f54b8d49ce",
+      "sha256": "35128de621c8afc44ed51f911415568843b87da28b3b4322a7f97ce9f55a44e7",
+      "bytes": 4872
+    },
+    {
+      "path": "packages/polaris-generation-core/src/discovery-provider.test.ts",
+      "gitBlob": "6035d04004a158f41e2ad19b17c02654cb91ac94",
+      "sha256": "a644155ca3f489c2642a2cecc433fdd332cebab767445217e9d2bf52c48d1775",
+      "bytes": 16671
+    },
+    {
+      "path": "packages/polaris-generation-core/src/discovery-provider.ts",
+      "gitBlob": "f722c78709a6a75fafd52deea24988843ea44703",
+      "sha256": "1b90b6ca2430099ab223edbdace7e5bbfe27057a72c78b01c625fd6b9a3b7cda",
+      "bytes": 10631
+    },
+    {
+      "path": "packages/polaris-generation-core/src/discovery.test.ts",
+      "gitBlob": "e4129f30cadb90d5c127b7de0b3ddaffaf822f14",
+      "sha256": "047e7f271b6223702685670229f3ba6d86794f9dd9bd93ddffa4284db78fa581",
+      "bytes": 52208
+    },
+    {
+      "path": "packages/polaris-generation-core/src/discovery.ts",
+      "gitBlob": "bc63fb17eeccdd95d6d5ae084181a858e51bf914",
+      "sha256": "71d84d85bd92141d576e8e207ad67af61637cff5effc81911c7fb236556f21e3",
+      "bytes": 31183
+    },
+    {
+      "path": "packages/polaris-generation-core/src/dossier-evaluation.test.ts",
+      "gitBlob": "17ce4471633b0f2b1938e149400f64694530f2e0",
+      "sha256": "7221f3ac696ba586f9200109def1cd9c03f1dee242e56870c3a101760a39f2d4",
+      "bytes": 24355
+    },
+    {
+      "path": "packages/polaris-generation-core/src/dossier-evaluation.ts",
+      "gitBlob": "7fc9eb0b259420978fdf4d337cea090e7cef5d34",
+      "sha256": "4011300437e72df0fc4287addddcb077f40eab8abc9e06a7b91c6c74ee7c9498",
+      "bytes": 33087
+    },
+    {
+      "path": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+      "gitBlob": "156ace6f304042614115397b0aa71ddf52260e46",
+      "sha256": "08142221b69ebd46b640c9ccc0a8f747e204090b67153393b1fddb5fca430c00",
+      "bytes": 17829
+    },
+    {
+      "path": "packages/polaris-generation-core/src/dossier-profile.ts",
+      "gitBlob": "005118263bcbbc954c29561f581c7acb56eea2b9",
+      "sha256": "17d978723bca1c8f533e810d26a42f4b978159e12d577bbeb8874dc678c49807",
+      "bytes": 15119
+    },
+    {
+      "path": "packages/polaris-generation-core/src/dossier-prompts.test.ts",
+      "gitBlob": "c401c418859e8c23e2ffb830189911b0ef2ec338",
+      "sha256": "6367cf4a8385410fd8faebdc01da04c347795b802bed38c6eec313bc8384834f",
+      "bytes": 21411
+    },
+    {
+      "path": "packages/polaris-generation-core/src/excerpt.test.ts",
+      "gitBlob": "e757bbc09529df957a20bc447f9d74decf17add9",
+      "sha256": "7174af9e9cb7b72b660b96636ea500490094550abbcc8af3076315094406caac",
+      "bytes": 14176
+    },
+    {
+      "path": "packages/polaris-generation-core/src/excerpt.ts",
+      "gitBlob": "554461504fd405b928d56202cd3e9153f72b8a04",
+      "sha256": "23273486f2981227dab7d5afe1a9399c2edd984bdba1faf0996ff4bbb2c26e17",
+      "bytes": 9432
+    },
+    {
+      "path": "packages/polaris-generation-core/src/generation-source.test.ts",
+      "gitBlob": "c531695ef1dbc79fa917dec01983be3e62d062fd",
+      "sha256": "349671600cff0fdea95816ee2b1b37fc66ee1bcb0221a9b21f9b55f1f0b0569f",
+      "bytes": 13851
+    },
+    {
+      "path": "packages/polaris-generation-core/src/generation-source.ts",
+      "gitBlob": "b4c0d7fd7632f25362540f08d3d7945967d518a9",
+      "sha256": "a881ab1206bce8e773652c4c45460e73d98c6ef8de8a1026a98534191e2f82d4",
+      "bytes": 29632
+    },
+    {
+      "path": "packages/polaris-generation-core/src/index.ts",
+      "gitBlob": "a32c3d65ab02e20545dadab03051cb831975b157",
+      "sha256": "487f4f7753d5aff4ea75f1811c59ed5fa5f1b24cd23680aad8517f66b3470b96",
+      "bytes": 5999
+    },
+    {
+      "path": "packages/polaris-generation-core/src/local-render.ts",
+      "gitBlob": "1fad0ddda3fd6ad4d0be813ab068559162a02073",
+      "sha256": "04667c37d159bbfa2928ad92ffb7d9bf6bccaab7b50de438f59525e5c02167fb",
+      "bytes": 6885
+    },
+    {
+      "path": "packages/polaris-generation-core/src/parse-json.test.ts",
+      "gitBlob": "b9ae3639fe6d6b0e2c715391b190453e3f3b4804",
+      "sha256": "40985898eda08ceb34e7a27a12fae649565bbc133207fa047304072cbceda612",
+      "bytes": 3979
+    },
+    {
+      "path": "packages/polaris-generation-core/src/parse-json.ts",
+      "gitBlob": "a34fd51a4eaa333851c41e8bf70b9f3f4fc284f0",
+      "sha256": "f56eafe27e3881fb8bb6727b295e03bf946729af4d3c5966d4291aee9a6abe45",
+      "bytes": 4329
+    },
+    {
+      "path": "packages/polaris-generation-core/src/pipeline.test.ts",
+      "gitBlob": "7da133a9e175cd729831069c04c06c6dec675573",
+      "sha256": "d821a9533c6f884ba28967853092a123fe848017c1e25fdaa88babae21a7759f",
+      "bytes": 26811
+    },
+    {
+      "path": "packages/polaris-generation-core/src/pipeline.ts",
+      "gitBlob": "0f93ce522bf5b1d0afb26469af4cd3413a55d1aa",
+      "sha256": "d4fbf19f6d1fa5fa260de2f3c637ae408153a206242053299f2461802475e711",
+      "bytes": 30884
+    },
+    {
+      "path": "packages/polaris-generation-core/src/prompts.test.ts",
+      "gitBlob": "2e6b9c6df8d21c0fcf98ad31d18a13a6f502ffa0",
+      "sha256": "7db43a7ceb9e78509c9ecf39e39f5b4ba3442b0c4e9910809508e6780ec30253",
+      "bytes": 1893
+    },
+    {
+      "path": "packages/polaris-generation-core/src/prompts.ts",
+      "gitBlob": "8bd11e0c817ee76435169524f740350b6bbeaa15",
+      "sha256": "87eb64605fa488626d9c6a5408eb7f7b13a26a7015cc2523796ea4c9a7988ef8",
+      "bytes": 33705
+    },
+    {
+      "path": "packages/polaris-generation-core/src/provider-draft.test.ts",
+      "gitBlob": "cb6b929c481c622edebf09cd3a1e5525a2d941bd",
+      "sha256": "5e49d02c6b2c44810e037bea5c45875ee6fb42aa7679540cecb96c528cacc9a3",
+      "bytes": 24530
+    },
+    {
+      "path": "packages/polaris-generation-core/src/provider-draft.ts",
+      "gitBlob": "4e2e41b7fb178685d8a816d4c6c4d115916c58a2",
+      "sha256": "910b01c8919610026a0568a7f936a3194bbcc0721bec6cdfc22eb2142bd0ba6b",
+      "bytes": 27913
+    },
+    {
+      "path": "packages/polaris-generation-core/src/public-source-classification.test.ts",
+      "gitBlob": "f36720dc9e4b265a97371e43d91dc28f48dbd6c1",
+      "sha256": "b93fcb8435869308b865c204bbdbd7d5cd3231144e51b8f14c669d89e2affc65",
+      "bytes": 17823
+    },
+    {
+      "path": "packages/polaris-generation-core/src/public-source-classification.ts",
+      "gitBlob": "8de309f2cdaac2196f240164dd882140c1638de9",
+      "sha256": "5d3cb7538eec7e90b6a711eb741cb7a59d401029365c72b8c13ec2c56fcba32c",
+      "bytes": 21542
+    },
+    {
+      "path": "packages/polaris-generation-core/src/public-source-exemption.test.ts",
+      "gitBlob": "7bf13bc37915daecd97ba67714353ff1cb0a3047",
+      "sha256": "282a17b86b5e2fac6f48fada7ee92ade3441e3a48e0f2de7219eca49ee4e1c91",
+      "bytes": 10815
+    },
+    {
+      "path": "packages/polaris-generation-core/src/quote-fidelity.test.ts",
+      "gitBlob": "efb6598a868db28320b177b5ffeeb827d4c1c7f6",
+      "sha256": "55b1bafe6a588f5cd7283d6a5662daf94af618fdcc0059d9d50b26b86b956934",
+      "bytes": 21572
+    },
+    {
+      "path": "packages/polaris-generation-core/src/quote-fidelity.ts",
+      "gitBlob": "627bd9457a5038a5782f480ed8ece52c5bfabe3a",
+      "sha256": "ab3711ace84aee46dae600be5ee4772638e3623f98ce68cd267c39f19808fd7d",
+      "bytes": 18904
+    },
+    {
+      "path": "packages/polaris-generation-core/src/quote-locate.test.ts",
+      "gitBlob": "fede9ff8edfb82f8460fdf2d2b5abc0702dd1f65",
+      "sha256": "47795f74716c68e0ad6d8db959e84547d8cfb4fd7c6affc87c0ca598f430ff34",
+      "bytes": 6701
+    },
+    {
+      "path": "packages/polaris-generation-core/src/quote-locate.ts",
+      "gitBlob": "731f4f81a9b60e02fc860f59ff342699b7db001b",
+      "sha256": "d08ea4f434b6e613eaf45b9a048fb0e0abc9395aa543693dfcc6f527d3d623d1",
+      "bytes": 8466
+    },
+    {
+      "path": "packages/polaris-generation-core/src/reader-questions.test.ts",
+      "gitBlob": "1c157488ad0b78f579a9f8962189c37851b5f87c",
+      "sha256": "14ff7a575553fc0e2e303e324fd481136b629885a11e6f7901ccf8d81b8fcf28",
+      "bytes": 1679
+    },
+    {
+      "path": "packages/polaris-generation-core/src/reader-questions.ts",
+      "gitBlob": "b67fec8acdfb45265909f1f1153f7c95c7b22d65",
+      "sha256": "ec59bad9104019f373b70d082091c6dcbf6590089f9b79f00a737aebb769d516",
+      "bytes": 2224
+    },
+    {
+      "path": "packages/polaris-generation-core/src/redacted-generation-source.test.ts",
+      "gitBlob": "99de96f0b91ff9d75eafb94b607d265b0d7eb980",
+      "sha256": "a7dca27b4818aac5e3be4045693690d67aae75c2d93ceb586bb69b1131dad535",
+      "bytes": 10142
+    },
+    {
+      "path": "packages/polaris-generation-core/src/rendered-design.test.ts",
+      "gitBlob": "b7c28cdde863ccb7826329dad3ef8be786979e19",
+      "sha256": "985e0119e1e9575ea4c7f852bf757337b3c1f6d749608c81b5e6c4da08636803",
+      "bytes": 10763
+    },
+    {
+      "path": "packages/polaris-generation-core/src/rendered-design.ts",
+      "gitBlob": "374a0d300d50bd65cc099005e8c13c284e974631",
+      "sha256": "d6f93c139068d9c2d0d67bf8d87757dc310e88baabf491b7665778b7a9f1ea01",
+      "bytes": 9585
+    },
+    {
+      "path": "packages/polaris-generation-core/src/secret-redaction.test.ts",
+      "gitBlob": "2467e7dcb3bdb1abb0040b2c840860fe8bdccb8b",
+      "sha256": "23d59222d12d01f31e0bbf3a51f1e43e7d5419db1af29cdd4f58fadbea0a7d4d",
+      "bytes": 13170
+    },
+    {
+      "path": "packages/polaris-generation-core/src/secret-redaction.ts",
+      "gitBlob": "6af1c3fce2fae3d486fddddd7d5c82b319edaf20",
+      "sha256": "6567b00948e88e5b222d6c734061c473ff16f1a5bf17b0aa117117dfa2d4e1c2",
+      "bytes": 19168
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+      "gitBlob": "4435c52a53aa467cf955523922557fcf5aa62ab2",
+      "sha256": "01fc903901fc09082ce4923bf7bdcf4937b492ef93e62058be5a7c04ca87395e",
+      "bytes": 6712
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/authority-disclosure.ts",
+      "gitBlob": "bcdcaa1dcbe60096771e1010dab2071a83666db8",
+      "sha256": "14be239ef75d8a54ee6fc8f2a05fc397b85c0be446b56d0b473bd2d49c801be9",
+      "bytes": 6150
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/body-read-authority.test.ts",
+      "gitBlob": "2be6c5179e7b2b0aeeeafd8a3d6c6f5cf1fbbe07",
+      "sha256": "12e13bef959fde6411589eaa77bc21e1f0f51c539178e6e82b9aed2cdeb399a9",
+      "bytes": 41722
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/body-read-authority.ts",
+      "gitBlob": "15910e20d2c59d33b3549b78400c661b99289f8e",
+      "sha256": "647a9583590ead29fb7d82ef4689470fdaaac24be0ba58769c2bf2cba361c002",
+      "bytes": 39855
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/code-structure.test.ts",
+      "gitBlob": "7cd942c196e46fd947a6bb58f71dd8c458cbbeab",
+      "sha256": "3dce51f774798f33f4adc3ac0caca17cfbea45afb937c2eed9cc9a4881992e30",
+      "bytes": 5125
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/code-structure.ts",
+      "gitBlob": "3b3f382ee1cc8b3b29aa036ba2c9a172bc45961f",
+      "sha256": "126a454de2d8645cb91cdf643ef5a9de5ae1c32714cbaaf18e0e0a7eed6eb1be",
+      "bytes": 4255
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/content-classification.test.ts",
+      "gitBlob": "ea358752277e087c685bede89026a8bf5dd51605",
+      "sha256": "24552d1391211e6ab04724956e584533c77247621b78ba0785125ec9d4c734e7",
+      "bytes": 42011
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/content-classification.ts",
+      "gitBlob": "a92173f1c027dd931de03de21ffa14029c30f0f1",
+      "sha256": "1a7874ad67b27b55c324065a421f822d1dc864d1fdf648836e326629d4cd5a0d",
+      "bytes": 26759
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/effect-authority.test.ts",
+      "gitBlob": "d00a5ca836edfd307c140d670f04f0b768cf6f16",
+      "sha256": "fa5be4fbfa38f34ffa1166300ce44f9e46e58daefad456f505912bc626b6f3ed",
+      "bytes": 2402
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/effect-authority.ts",
+      "gitBlob": "c10721e9930808009b9815429c934a0ad387c5b9",
+      "sha256": "e32a69aa6a7bda963b9e848035a384424b598bddd3b3c492f52b712a9ee0f153",
+      "bytes": 4310
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/evidence-population.test.ts",
+      "gitBlob": "e4d1874d97dd49d7316982cc1d165e9f339e4534",
+      "sha256": "cd5ea658f97ec27424f35da9c114d28091c2c01655cdf63c6f9c4bc237926685",
+      "bytes": 5848
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/evidence-population.ts",
+      "gitBlob": "0b76e6fce3aa28efbc59f5beaa990c938f0f0ddd",
+      "sha256": "69c3ab66644735d1f164be2af00d83943cadf20db007bad1f8fcfc7c74ae7895",
+      "bytes": 3519
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/fixtures/synthetic-corpora.ts",
+      "gitBlob": "f6b6512e3ae1af0dcccafae34793df279a9a763a",
+      "sha256": "a5bff51c0d50fb1dc508107792c6e4c4249c779e0bf8cadf54fd7ea26f9a95c4",
+      "bytes": 4177
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/git-object-reader.test.ts",
+      "gitBlob": "930f512c65a3cfbad3753b5f9d2641d17406ff67",
+      "sha256": "edd1538f137181821be3bb053a9c5d664e643ab1a0bfdb3f63abfbd05a5affb6",
+      "bytes": 34849
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/git-object-reader.ts",
+      "gitBlob": "298ec05186f2a366bafbbfa9989349184a1fbebc",
+      "sha256": "9d43268faf48b9099f4ffc626be368bd0daf04159b240fa6d7d915e0de7f1abb",
+      "bytes": 19051
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/git-tree.test.ts",
+      "gitBlob": "c77f8dd0a881540f92452386b5b23d1c0bf9f80d",
+      "sha256": "fbda3159ec83a00a7f8efda1dc3c06e4132a8f744c2ad3c5a2ef52cfe2904c0e",
+      "bytes": 3725
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/git-tree.ts",
+      "gitBlob": "169308ccd534096beaa30cd58f65ba24778610c4",
+      "sha256": "990d17dcf904bc28dc7c8336d5111321c80df053841bd7b19a8a665fd01578a3",
+      "bytes": 3812
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/index.ts",
+      "gitBlob": "1d9a14ec8be04161de18eb2b48609d94c5e5225f",
+      "sha256": "90e58a2238e4eab9483c71750507cee5d28e3b6eba633774731328e3b3feb5ad",
+      "bytes": 1447
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+      "gitBlob": "c1bd27dae576cabe301fb981e9b7ee4f6c86d4af",
+      "sha256": "af96c3ea5cf4206def2b052d2282bea2f793aa9fc4162e4bd3b7d4a58747e7c7",
+      "bytes": 5449
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+      "gitBlob": "0a520646fb91321bf17d6c220d5f25c76563b1d5",
+      "sha256": "dc888664f2392a4abd55b68627226e6734ecb7e35a1d22cfa74eaaca76c52a2f",
+      "bytes": 5969
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/materialization.test.ts",
+      "gitBlob": "85371bee69b48deb328d61367f021acd27c1a3e5",
+      "sha256": "9cb3d78bf29e5302e462b35e8bbede1d003ae01d53d91a3384cf6aa6f7e63f6f",
+      "bytes": 14086
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/materialization.ts",
+      "gitBlob": "a1e76687e57c42ca52a4c7a01cd2aaab1d91f777",
+      "sha256": "692d7e5119748974041e01ad419794668f62e99768380975572fe4fc846d3242",
+      "bytes": 17212
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/model-observations.test.ts",
+      "gitBlob": "4df2ea6c43502e64a52f1ae059206fff9e1f7689",
+      "sha256": "1cd715b1b7df320f4959b38efcb2c0537ede6d55ea186f158eed1fff3a54c0aa",
+      "bytes": 10373
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/model.test.ts",
+      "gitBlob": "bb12ed0c8c89fef7f33cae2df6c59d6b89b23b0d",
+      "sha256": "aa92270900146ba4e2fe8cabf8f486c0dbdfed1618b2c7466824b6fbffad2f8e",
+      "bytes": 44757
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/model.ts",
+      "gitBlob": "de21d1f0d4d759f081816d216533cf02283afe3c",
+      "sha256": "72c58ab8f0234c763ece630ae85a52b0871100cf6f33854f42e0eb907210f489",
+      "bytes": 52059
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/orrery-projection.test.ts",
+      "gitBlob": "89b44954834f436f1e1447dee7559b125d2df5ba",
+      "sha256": "6898f4953f703436e722e92f5cb07904bec86918ff1a461402cd7ac1c30bb0d5",
+      "bytes": 2897
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/orrery-projection.ts",
+      "gitBlob": "d3d2ee9d812497191caf0957d8bd628ee34211dd",
+      "sha256": "b2abcda323b9b53902a2eceab14df1d2e48285543dbcdaaa068246e10eba5be4",
+      "bytes": 3978
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/owner-act-drafter.test.ts",
+      "gitBlob": "05118c1309d6066bc5cd404e8bad35ffad6c86e7",
+      "sha256": "1670e2e485510531100d76bd283319c9b2f249dd77e0ef4868f42019c7badbab",
+      "bytes": 4511
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/owner-act-drafter.ts",
+      "gitBlob": "e1eb6c8dfad8f935649ae4639df98bf73bc31be6",
+      "sha256": "1dfea09c97b4b342df776a0978ec494d834cfae7d7533e4a6419e5b92cc162e3",
+      "bytes": 5290
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/owner-act-record.test.ts",
+      "gitBlob": "3ad8a355731cb44a14789c2f326c12a27629b19a",
+      "sha256": "09fd44ef9ef16799c9f619fffaeac2fc1dc63d2e4416c7ed299c1a52e2a31dd9",
+      "bytes": 10471
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/owner-act-record.ts",
+      "gitBlob": "88fdd471dbbf86a1c9fd023451c9b6e5290f220e",
+      "sha256": "656a7ff4b14774a925a1f9514f0d37f95fb450191a1da40ab751ed6346772c3a",
+      "bytes": 10969
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/poc-seeds.ts",
+      "gitBlob": "52b16d9239e687557965effcacc9d8e84102911a",
+      "sha256": "4aebb7ad53b19c2173349f911641f965c7f3e348d71d790f38795d973e86fb41",
+      "bytes": 11092
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/project-shape-coverage.test.ts",
+      "gitBlob": "1f4243c2fc2bb3f06494a192696ed346d29e046b",
+      "sha256": "0ff6574a7eadffceca4e85003bac492def54368f48e1c0e4ea2624e499628796",
+      "bytes": 33299
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/project-shape-coverage.ts",
+      "gitBlob": "e055ed578ee67c540eca6c28a867fab6e864e805",
+      "sha256": "e44268cb7c2e725c684883e87fef263afbf51579959b70b1bd97549d9dc2e16f",
+      "bytes": 28074
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/project-shape-extraction.test.ts",
+      "gitBlob": "d908cdab9795f3b6b26921ae8777e889edf8d1b7",
+      "sha256": "fb71c5294c048b844eb04d7b0d17ac1e614cb5c9354e65c764f0eac6133a6a93",
+      "bytes": 51126
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+      "gitBlob": "93d4f4ae11067271fe0f55d90ef4093d1da50897",
+      "sha256": "baf09d80d52c2c5bf16b1a6036913de0609ca8512976b8fd221a032c7a701219",
+      "bytes": 37356
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/project-shape-manifest.test.ts",
+      "gitBlob": "d5e03c519482ecf4c8553994b91b5d3f2c4ca878",
+      "sha256": "5d074254d867173bf916d36dd7f68fde173cf64fd27893467d984598f419cdf3",
+      "bytes": 29891
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+      "gitBlob": "1d85bb89b679ae2a56db05f16814f80f921b6b20",
+      "sha256": "df5e1122af74643a09c28a450751242fad18f47760901b137a9c8d8fdf2f6ea5",
+      "bytes": 23472
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/project-shape-model.test.ts",
+      "gitBlob": "7d5cf9315416bcdce336832c8ed3fd3961242663",
+      "sha256": "33bb156f847f091ebdf7ae493373315ea4012ab7d878ee11f2c63b630f85d182",
+      "bytes": 57580
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/project-shape-model.ts",
+      "gitBlob": "e036349d32d4da6d82fb8edc732746f00fa31104",
+      "sha256": "be9a7ea24b634be130378b89a735d1830ceb7625b95cc687e5dea9bd8b5daf75",
+      "bytes": 34381
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/project-shape-observation.test.ts",
+      "gitBlob": "bebe0a8b7df9383816d60d4754771718fcedaad4",
+      "sha256": "9a707bb6aa8b1bbae0be4df13de4a2b0a7977c35f3397f3f63e52472bc3b871c",
+      "bytes": 51679
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+      "gitBlob": "098875d28034aa6ee0ae17951d19c3cf84dcb4e1",
+      "sha256": "e9bcfd87e560b5904ee186e3c54bcbf1a1f30d6419e67036a41d6e1da34c2121",
+      "bytes": 29897
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/project-shape-observer.ts",
+      "gitBlob": "96314bf614511db00be60d2302b4b9e58c4bd3bf",
+      "sha256": "9ff2151735897a0f5af295669240af79cdd3b038fcb4dc0a2bab50b5ecef93c6",
+      "bytes": 4109
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/proposed-work.test.ts",
+      "gitBlob": "b0c3e5d2f9cb03914c6e8883b0aea2a08fb85aba",
+      "sha256": "d3ef2f990f3003773f57a1a1b15716c71d1c23a06f4180378637d77a0b5ffb08",
+      "bytes": 4457
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/proposed-work.ts",
+      "gitBlob": "bcf85e2b4b337df62ccfb5272238cde271fe3547",
+      "sha256": "8a8150b7aef2bfada8174f7444f86da73a31b1a1cb892bbfd2a2b849b856156c",
+      "bytes": 6954
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/reevaluation.test.ts",
+      "gitBlob": "341a8d904336ed196e2bc195baa5d4cfe5742fe1",
+      "sha256": "5519432a4d12c0bbbb4700ee21b69140b32378e5d39df859459dca32aa43217d",
+      "bytes": 3783
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/reevaluation.ts",
+      "gitBlob": "3342c45195a4b15f52b4f48dcb4a66b07b3671a4",
+      "sha256": "41cdfb4303066fda4cd926d180515628efdc17ebc1aba5c34e5b0c6e8836b260",
+      "bytes": 4843
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/resource-headroom.test.ts",
+      "gitBlob": "2bc264575d63203f8f9bca52bb7eaeb4dfe3d8a6",
+      "sha256": "c2f27f91173faa2749d253e9f67490a9262f20e7ae9cae8c047b5185e389fe7e",
+      "bytes": 4326
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/resource-headroom.ts",
+      "gitBlob": "05667a800cdf056072f5a8c86b0880a45a03e635",
+      "sha256": "89a1daca3d9cc9e110cf77038a93ee4badc1f3e99f8a46f53e68b82bc2b21015",
+      "bytes": 2839
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/resource-ledger.test.ts",
+      "gitBlob": "1e9bb67e0a4cc6a9eeccf1955743fb7827cfae2e",
+      "sha256": "61941cb140dc6b8e5436c9738f66d87bc0f6961fd581edb639fd380340a1445d",
+      "bytes": 29629
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/resource-ledger.ts",
+      "gitBlob": "d56f1754f5a148a26657bd39ba658535597e51d3",
+      "sha256": "6c66bcc1f2e50ae0b0d1e799c54750960fe410487e143e087f51644ad19eb3e7",
+      "bytes": 19128
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/response-identity.test.ts",
+      "gitBlob": "f4068a456a404edec439448637909ceea5883460",
+      "sha256": "2651263c50ccd75aa1d1893e2df1d3399641792968dc98e7155379b0484d5b3d",
+      "bytes": 5630
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/response-identity.ts",
+      "gitBlob": "1c981c48a3135cf7da563e8a6bebc184f5308ddc",
+      "sha256": "c191332d854d4de7b22bd1e5ece65d6f7994c5275805b681955a9122be8571b1",
+      "bytes": 9473
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/synthetic-corpus-coverage.test.ts",
+      "gitBlob": "e96779899f3f42f5d7332483c0cb3b2f93a00044",
+      "sha256": "529404a94400a2dd36cb9eac0ec94e18a39f167386a085517ca3672a6dbdeb1b",
+      "bytes": 10629
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/synthetic-corpus-coverage.ts",
+      "gitBlob": "2c4d4a64198706814413d61bac0e8e56da8ec865",
+      "sha256": "23293b84f708ec4e23bde45613328fe4d114dada49028383b6432994e070182a",
+      "bytes": 7413
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/test-artifact-verification-live-source.test.ts",
+      "gitBlob": "91044e7bc8999dd222977bb942503e3495c84aec",
+      "sha256": "95f04d5e7f932a29549e20ff4462c6f4badc774ffcd75a993e21c575c8cba023",
+      "bytes": 23892
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/test-artifact-verification.live.test.ts",
+      "gitBlob": "f2336a36502f94ac715dd08b4d04eb12240e24dd",
+      "sha256": "e6c500f3897f9f10784caf9704e17324438fc09103b7153ca567d11d6d21b3c1",
+      "bytes": 6619
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+      "gitBlob": "379fa78bf66f8dd59cff65654d55aeea22a6786e",
+      "sha256": "8900aae03e638249fcbbb4093d37ff3505df170155cead0b7c1e1db2e134d7e4",
+      "bytes": 20525
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/test-artifact-verification.ts",
+      "gitBlob": "a652a116b1fe255c36a8ee3b49a7e80dad6a1c10",
+      "sha256": "3826deea1d92b108397ae2577943d722696b1eef1e2e3b542a21ec92d4311e45",
+      "bytes": 20663
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/test-cleanup.test.ts",
+      "gitBlob": "71ad8571a941111c1eefda10831535d316d22612",
+      "sha256": "c3c5b6948e16eb220e36e689ff270cc7a75d2480e0096f279aab557e22ce8608",
+      "bytes": 1345
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/test-cleanup.ts",
+      "gitBlob": "8b4a37493dd17cf6166dfedbdf6512d31803eb41",
+      "sha256": "b52f8963c9f2a4b6244753779cff3b3e05a7a4a2a92a897bc64b8dcf3c79d459",
+      "bytes": 1154
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/trajectory-projection.test.ts",
+      "gitBlob": "9fa2e80acd03b92f4204ea1acfa4d3c126d82010",
+      "sha256": "a697cbc3282c016f6f2762dc69489998ca22161cafe877a4693c48c529c2c517",
+      "bytes": 7609
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/trajectory-projection.ts",
+      "gitBlob": "9223ded2d7631b9877ad3a8ee138ce5d5e593cf2",
+      "sha256": "f0d2a5b90e8b76e8a7fad815b96c66bbe7cc53b3f671c982ab088c1bcfd91647",
+      "bytes": 5736
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/walkthrough-judgment.test.ts",
+      "gitBlob": "5c1dc26fd0e7dbbc631f5f446019af64459e101a",
+      "sha256": "11b1667d8a841000f6ff664a160ccd2c09cade71beae66e55a666b8ac0d93c5f",
+      "bytes": 30424
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/walkthrough-judgment.ts",
+      "gitBlob": "bbb07b29ae81c62b23f066ed12547383c01bc9f1",
+      "sha256": "81be59320fb352ee6748b679fce1ae7376baaa966e4729ccd4e24393c6a849f1",
+      "bytes": 40882
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/walkthrough-readiness.test.ts",
+      "gitBlob": "4ad3a3d59ec8402e4491c3d1d0fd55a69c58f568",
+      "sha256": "c51e9cb739508cbec4d0b150ad6bc43f1dea10b5a6e7ad3ba38c7d673eb59b5c",
+      "bytes": 22711
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/walkthrough-readiness.ts",
+      "gitBlob": "148127e28ff0566453a1dbd188c1fc87e363fddf",
+      "sha256": "a4012784b6de8994948caf01f10de669fe3689630333a59bb22a0492aabeb319",
+      "bytes": 17610
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/work-items.live.test.ts",
+      "gitBlob": "1f6e8241d26c1dada996430a62521a194cceab7d",
+      "sha256": "5d639ee8432a7ea2a18d47e128d4aa4b63aff3c71cec63a4a1d153499d75d0f0",
+      "bytes": 2684
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/work-items.test.ts",
+      "gitBlob": "9bcbacad78f183b06a616184527df8dd7f44b68e",
+      "sha256": "0fac841172e42c5a446e5e382cf703fae94f4440fb1e2bdbf65f04b523500594",
+      "bytes": 5822
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/work-items.ts",
+      "gitBlob": "38f80882a6c9e694e7f1e84ff231cd4fb892ba1f",
+      "sha256": "002199fca7ebbeea5c77237d830bb2f586c281d606d9c739f0c4f57191d9db6f",
+      "bytes": 9142
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/worker-change-observation.test.ts",
+      "gitBlob": "2df8d4786441c4732d4ac11c5ae45c2808639354",
+      "sha256": "ea63c3b9fcfa00eca2f39d997eb0cb159e8b59dbdd6e12d3e245fd0633766962",
+      "bytes": 9777
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/worker-change-observation.ts",
+      "gitBlob": "a9f2f5d5447b0acf1e9334626e47e8ec9c651d21",
+      "sha256": "cb66a5ff0ddcb16ded19fdb3212f79906de036ea4aeb8340f591f4cfe4e585a7",
+      "bytes": 7873
+    },
+    {
+      "path": "scripts/check_generator_install.mjs",
+      "gitBlob": "33e5bbb152f84c8816800deb2a2d512ef55f3e3b",
+      "sha256": "c5a8f54538dae47d1b7dce2e2026a5d0f663fb5bc7b6f12621cf3c5d542f0819",
+      "bytes": 376
+    },
+    {
+      "path": "scripts/derive_generator_sent_text.mjs",
+      "gitBlob": "4ef63d4b4c4374cf24abf664f4afec6eeb9f444d",
+      "sha256": "af42b4b29912068a22bb18a349c4e1af5c773f9e4636833d09a5bdfb66f7a4f1",
+      "bytes": 15511
+    },
+    {
+      "path": "scripts/dossier_run_evidence.mjs",
+      "gitBlob": "f9c97ba2caacfcd017ab37f328870cca9c117c77",
+      "sha256": "848a2e57c1da337be427d94fbfe3ad7bfa12257de9ea93597cdf463ca4cecf3d",
+      "bytes": 5363
+    },
+    {
+      "path": "scripts/dossier_scale_measure.mjs",
+      "gitBlob": "86d0dbbbcb9f598479db04f212fb7a3249cdf1cb",
+      "sha256": "0cddf01b23fc639c480bfc2e91adc9f8203744f1f1c865fb7572b22c9573289e",
+      "bytes": 20007
+    },
+    {
+      "path": "scripts/read_ts_exported_string_array.mjs",
+      "gitBlob": "984e69d4d291f080b6063ff102a8223ac284b3ad",
+      "sha256": "7a826bbe8c72ad96c74a4bfe9c749468d4ecabd0501cbd7e66eed6e557daf5db",
+      "bytes": 3379
+    },
+    {
+      "path": "scripts/run_m10_conditional_mutations.mjs",
+      "gitBlob": "7e4205c1c5956eebcee2ed55908c2c40bee8011e",
+      "sha256": "6fd253cb4ce3c8be092b103658d03cc84efa9f559417676c073aef32293118a8",
+      "bytes": 5110
+    },
+    {
+      "path": "scripts/run_m13_literal_mutations.mjs",
+      "gitBlob": "d9697c0459671e1fb6397d5b88c474690a59d232",
+      "sha256": "61f5992ce499d1310f8fe070e54a3d4c8066c5b2c70535d5a1b3e5fa50076302",
+      "bytes": 8048
+    },
+    {
+      "path": "scripts/run_m7_literal_mutations.mjs",
+      "gitBlob": "fd5e0bcff4dc87fe477e5578a1370dc357b97ec6",
+      "sha256": "7cf5d3c6d7fb3878184a9c80f6c8164667a81b2965d9234400318befcdc04e8a",
+      "bytes": 6650
+    },
+    {
+      "path": "scripts/run_m9_literal_mutations.mjs",
+      "gitBlob": "c37f474e5d8b7ab357c200870fbacde99c5d8c01",
+      "sha256": "1efd1e8ed98dc3b3708401fc6a938cdcb486b391dc5213011a62d64d8cc6ed95",
+      "bytes": 7295
+    },
+    {
+      "path": "vitest.config.ts",
+      "gitBlob": "aa784c2bfbea54d929dad8b38177b2463d3497d5",
+      "sha256": "98865b214de4ef6524ef913c131fa0e24db4b2585e164699d04c1b83bf6b1e11",
+      "bytes": 2742
+    },
+    {
+      "path": "vitest.setup.ts",
+      "gitBlob": "d0fa902a14180c8a51a54f3cefc3bfd4604eebed",
+      "sha256": "0a2c2be192c909920c756d5fbb2b8273db8d120fa9184398b31cfff9a350d66e",
+      "bytes": 1325
+    }
+  ]
+}

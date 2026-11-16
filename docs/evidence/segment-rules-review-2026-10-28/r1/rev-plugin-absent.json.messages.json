@@ -1,0 +1,9 @@
+{
+ "RP3-imported-plugin-hook-right-target": [],
+ "RP3W-imported-plugin-hook-wrong-target": [
+  [
+   "the tree's own exports load, under the suite, each entry from its source module",
+   "Error: Cannot find module '@syzygy/support' imported from '/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/packages/polaris-generation-core/src/canonical-json.ts'.\n\n- If you rely on tsconfig.json's \"paths\" to resolve modules, please install \"vite-tsconfig-paths\" plugin to handle module resolution.\n- Make sure you don't have relative aliases in"
+  ]
+ ]
+}

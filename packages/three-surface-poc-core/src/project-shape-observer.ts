@@ -37,11 +37,11 @@ export const PWB_ADMISSION_FAILURE_MAPPING = {
 export type AdmissionFailureReason =
   (typeof PWB_ADMISSION_FAILURE_MAPPING)[keyof typeof PWB_ADMISSION_FAILURE_MAPPING];
 
-export interface ProjectShapeReadContext {
+interface ProjectShapeReadContext {
   readonly authority: BodyReadAuthorityEvaluation;
 }
 
-export type ProjectShapeObservation<T> =
+type ProjectShapeObservation<T> =
   | {
       readonly kind: 'unknown';
       readonly reason: AdmissionFailureReason;

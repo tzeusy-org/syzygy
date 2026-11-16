@@ -1,0 +1,12 @@
+{
+ "node": {
+  "exit": 0,
+  "stdout": "file://<tree>/packages/polaris-dossier/dist/index.js\ntrue true",
+  "stderr": ""
+ },
+ "tsc": {
+  "exit": 0,
+  "output": ""
+ },
+ "cleanAfter": true
+}

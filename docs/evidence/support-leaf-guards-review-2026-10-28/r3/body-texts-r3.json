@@ -1,0 +1,60 @@
+{
+  "quotedInRaw": 3,
+  "nbspInBody": 0,
+  "items": [
+    {
+      "name": "F1-replacement",
+      "text": "  - R2 is `import (value)`, with a space and a computed specifier: `value` is on the list, the reader reads only a string-literal specifier, and the `import(` token does not match a call with a space before the parenthesis.",
+      "wholeLineAt": [
+        103
+      ]
+    },
+    {
+      "name": "F1-insertion",
+      "text": "  - R2's space also passes with a literal specifier, which the reader reads and admits: `export const value = () => import ('node:crypto');` (V9) and `import value = require ('node:crypto'); export { value };` (V7, which `tsc` emits through `createRequire` from `module`) each build and export the whole of `node:crypto`, `randomUUID` included, with every row green, \"takes only createHash from node:crypto\" among them (review R-GP-IMPL-SUPPORT-LEAF-GUARDS-2 F1). Without the space, the forbidden-token row kills each.",
+      "wholeLineAt": [
+        106
+      ]
+    },
+    {
+      "name": "N1-residual",
+      "text": "- **The createHash row reads module declarations only.** A local `export { createHash };` in `sha256.ts`, re-exported by `index.ts`, passes every row and builds: the leaf then exports the hash constructor itself (review R-GP-IMPL-SUPPORT-LEAF-GUARDS-2 N1, mutant V8). It reaches nothing but hashing.",
+      "wholeLineAt": [
+        110
+      ]
+    },
+    {
+      "name": "N3-disclosure (repair-r2 item 5)",
+      "text": "- **The no-write row reads assignment expressions only.** A destructuring write to an allowed global, `[Object.freeze] = [(value) => value];` (U4) or `({ value: Object.freeze } = { value: (bytes) => bytes });` (U5), passes every row (review R-GP-IMPL-SUPPORT-LEAF-GUARDS-2 N3). By the visitor's reading, so do a for-in or for-of target, `++`, `--` and `delete` [Inferred].",
+      "wholeLineAt": [
+        111
+      ]
+    }
+  ],
+  "oldR2Present": false,
+  "allFiveCount": 0,
+  "allSevenCount": 1,
+  "appendedAfterResidualsHead": true,
+  "raw-appended-sentence-in-raw": true,
+  "order": {
+    "R2classLine": [
+      105
+    ],
+    "insertionLine": [
+      106
+    ],
+    "insertionFollowsR2class": true,
+    "sevenLine": [
+      107
+    ]
+  },
+  "batteryLines": [
+    [
+      93,
+      "- Battery at `ecea355b`: `commit=ecea355ba96b0082ad8aad11e9799518f87c2e19 commands=114 nonzero=0` (`battery_clone.py`, run in a clone). Hosted node-ci and governance-docs pass at `ecea355b`."
+    ]
+  ],
+  "residualsSection": [
+    99
+  ]
+}

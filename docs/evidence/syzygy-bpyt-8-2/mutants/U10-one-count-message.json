@@ -1,0 +1,11 @@
+{
+ "id": "U10-one-count-message",
+ "command": "TMPDIR=/tmp/la-b82/g CI=1 npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/cli-table.test.ts",
+ "edits": [
+  {
+   "file": "packages/polaris-dossier/src/cli.ts",
+   "old": "return usageError(`${name} takes exactly one argument, ${shape.noun}`);",
+   "new": "return usageError(`${name} takes exactly one positional argument, ${shape.noun}`);"
+  }
+ ]
+}

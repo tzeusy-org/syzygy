@@ -1,0 +1,1115 @@
+{
+ "tree": "head",
+ "commit": "9ebfa92d301de633b7c40a3f2276219330016d33",
+ "results": [
+  {
+   "id": "O1-bearer-separator-space-run",
+   "commit": "9ebfa92d301de633b7c40a3f2276219330016d33",
+   "edits": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "old": "  const match = /^Bearer (.+)$/.exec(header);",
+     "new": "  const match = /^Bearer +(.+)$/.exec(header);"
+    }
+   ],
+   "counts": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "packages/http-host/src/credentials.test.ts",
+    "packages/http-host/src/shutdown.test.ts",
+    "packages/http-host/src/package.test.ts",
+    "packages/cap1-daemon/src/",
+    "packages/cap1-conformance/src/",
+    "apps/three-surface-poc/src/routes.test.ts",
+    "apps/three-surface-poc/src/response-limits.test.ts",
+    "apps/three-surface-poc/src/main.test.ts",
+    "apps/three-surface-poc/src/surface-routes.test.ts",
+    "apps/three-surface-poc/src/reobserve-action.test.ts",
+    "apps/three-surface-poc/src/materialize-action.test.ts",
+    "apps/three-surface-poc/src/browser-origin.test.ts",
+    "apps/three-surface-poc/src/git-observation.test.ts",
+    "apps/three-surface-poc/src/verbatim-route.test.ts",
+    "apps/three-surface-poc/src/polaris-source-route.test.ts",
+    "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+    "apps/three-surface-poc/src/evaluation-footer.test.ts",
+    "apps/three-surface-poc/src/page-size-delta.test.ts",
+    "apps/three-surface-poc/src/tuple-encoding.test.ts"
+   ],
+   "exit": 1,
+   "failedTests": 1,
+   "failedFiles": 1,
+   "totalTests": 580,
+   "outcome": "killed",
+   "seconds": 36.5,
+   "cleanAfter": true,
+   "failed": [
+    {
+     "title": "packages/http-host/src/credentials.test.ts > RT3 — credential verification through core admission the minted token behind any other whitespace refuses, named",
+     "timedOut": false,
+     "message": "AssertionError: \"Bearer  aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\": expected { admitted: true, …(1) } to deeply equal { admitted: false, served: 'nothing' }\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-535/head/packages/h"
+    }
+   ],
+   "reportError": null
+  },
+  {
+   "id": "O2-bearer-separator-any-whitespace",
+   "commit": "9ebfa92d301de633b7c40a3f2276219330016d33",
+   "edits": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "old": "  const match = /^Bearer (.+)$/.exec(header);",
+     "new": "  const match = /^Bearer\\s(.+)$/.exec(header);"
+    }
+   ],
+   "counts": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "packages/http-host/src/credentials.test.ts",
+    "packages/http-host/src/shutdown.test.ts",
+    "packages/http-host/src/package.test.ts",
+    "packages/cap1-daemon/src/",
+    "packages/cap1-conformance/src/",
+    "apps/three-surface-poc/src/routes.test.ts",
+    "apps/three-surface-poc/src/response-limits.test.ts",
+    "apps/three-surface-poc/src/main.test.ts",
+    "apps/three-surface-poc/src/surface-routes.test.ts",
+    "apps/three-surface-poc/src/reobserve-action.test.ts",
+    "apps/three-surface-poc/src/materialize-action.test.ts",
+    "apps/three-surface-poc/src/browser-origin.test.ts",
+    "apps/three-surface-poc/src/git-observation.test.ts",
+    "apps/three-surface-poc/src/verbatim-route.test.ts",
+    "apps/three-surface-poc/src/polaris-source-route.test.ts",
+    "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+    "apps/three-surface-poc/src/evaluation-footer.test.ts",
+    "apps/three-surface-poc/src/page-size-delta.test.ts",
+    "apps/three-surface-poc/src/tuple-encoding.test.ts"
+   ],
+   "exit": 1,
+   "failedTests": 1,
+   "failedFiles": 1,
+   "totalTests": 580,
+   "outcome": "killed",
+   "seconds": 33.8,
+   "cleanAfter": true,
+   "failed": [
+    {
+     "title": "packages/http-host/src/credentials.test.ts > RT3 — credential verification through core admission the minted token behind any other whitespace refuses, named",
+     "timedOut": false,
+     "message": "AssertionError: \"Bearer\\taaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\": expected { admitted: true, …(1) } to deeply equal { admitted: false, served: 'nothing' }\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-535/head/packages/h"
+    }
+   ],
+   "reportError": null
+  },
+  {
+   "id": "O3-bearer-trailing-whitespace-trimmed",
+   "commit": "9ebfa92d301de633b7c40a3f2276219330016d33",
+   "edits": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "old": "  const match = /^Bearer (.+)$/.exec(header);",
+     "new": "  const match = /^Bearer (.+?)\\s*$/.exec(header);"
+    }
+   ],
+   "counts": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "packages/http-host/src/credentials.test.ts",
+    "packages/http-host/src/shutdown.test.ts",
+    "packages/http-host/src/package.test.ts",
+    "packages/cap1-daemon/src/",
+    "packages/cap1-conformance/src/",
+    "apps/three-surface-poc/src/routes.test.ts",
+    "apps/three-surface-poc/src/response-limits.test.ts",
+    "apps/three-surface-poc/src/main.test.ts",
+    "apps/three-surface-poc/src/surface-routes.test.ts",
+    "apps/three-surface-poc/src/reobserve-action.test.ts",
+    "apps/three-surface-poc/src/materialize-action.test.ts",
+    "apps/three-surface-poc/src/browser-origin.test.ts",
+    "apps/three-surface-poc/src/git-observation.test.ts",
+    "apps/three-surface-poc/src/verbatim-route.test.ts",
+    "apps/three-surface-poc/src/polaris-source-route.test.ts",
+    "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+    "apps/three-surface-poc/src/evaluation-footer.test.ts",
+    "apps/three-surface-poc/src/page-size-delta.test.ts",
+    "apps/three-surface-poc/src/tuple-encoding.test.ts"
+   ],
+   "exit": 1,
+   "failedTests": 1,
+   "failedFiles": 1,
+   "totalTests": 580,
+   "outcome": "killed",
+   "seconds": 28.2,
+   "cleanAfter": true,
+   "failed": [
+    {
+     "title": "packages/http-host/src/credentials.test.ts > RT3 — credential verification through core admission the minted token behind any other whitespace refuses, named",
+     "timedOut": false,
+     "message": "AssertionError: \"Bearer aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa \": expected { admitted: true, …(1) } to deeply equal { admitted: false, served: 'nothing' }\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-535/head/packages/h"
+    }
+   ],
+   "reportError": null
+  },
+  {
+   "id": "O4-bearer-end-matches-before-newline",
+   "commit": "9ebfa92d301de633b7c40a3f2276219330016d33",
+   "edits": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "old": "  const match = /^Bearer (.+)$/.exec(header);",
+     "new": "  const match = /^Bearer (.+)$/m.exec(header);"
+    }
+   ],
+   "counts": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "packages/http-host/src/credentials.test.ts",
+    "packages/http-host/src/shutdown.test.ts",
+    "packages/http-host/src/package.test.ts",
+    "packages/cap1-daemon/src/",
+    "packages/cap1-conformance/src/",
+    "apps/three-surface-poc/src/routes.test.ts",
+    "apps/three-surface-poc/src/response-limits.test.ts",
+    "apps/three-surface-poc/src/main.test.ts",
+    "apps/three-surface-poc/src/surface-routes.test.ts",
+    "apps/three-surface-poc/src/reobserve-action.test.ts",
+    "apps/three-surface-poc/src/materialize-action.test.ts",
+    "apps/three-surface-poc/src/browser-origin.test.ts",
+    "apps/three-surface-poc/src/git-observation.test.ts",
+    "apps/three-surface-poc/src/verbatim-route.test.ts",
+    "apps/three-surface-poc/src/polaris-source-route.test.ts",
+    "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+    "apps/three-surface-poc/src/evaluation-footer.test.ts",
+    "apps/three-surface-poc/src/page-size-delta.test.ts",
+    "apps/three-surface-poc/src/tuple-encoding.test.ts"
+   ],
+   "exit": 1,
+   "failedTests": 1,
+   "failedFiles": 1,
+   "totalTests": 580,
+   "outcome": "killed",
+   "seconds": 42.6,
+   "cleanAfter": true,
+   "failed": [
+    {
+     "title": "packages/http-host/src/credentials.test.ts > RT3 — credential verification through core admission the minted token behind any other whitespace refuses, named",
+     "timedOut": false,
+     "message": "AssertionError: \"Bearer aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\\n\": expected { admitted: true, …(1) } to deeply equal { admitted: false, served: 'nothing' }\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-535/head/packages/"
+    }
+   ],
+   "reportError": null
+  },
+  {
+   "id": "O5-presented-token-trimmed-before-compare",
+   "commit": "9ebfa92d301de633b7c40a3f2276219330016d33",
+   "edits": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "old": "  const a = createHash('sha256').update(presented, 'utf8').digest();",
+     "new": "  const a = createHash('sha256').update(presented.trim(), 'utf8').digest();"
+    }
+   ],
+   "counts": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "packages/http-host/src/credentials.test.ts",
+    "packages/http-host/src/shutdown.test.ts",
+    "packages/http-host/src/package.test.ts",
+    "packages/cap1-daemon/src/",
+    "packages/cap1-conformance/src/",
+    "apps/three-surface-poc/src/routes.test.ts",
+    "apps/three-surface-poc/src/response-limits.test.ts",
+    "apps/three-surface-poc/src/main.test.ts",
+    "apps/three-surface-poc/src/surface-routes.test.ts",
+    "apps/three-surface-poc/src/reobserve-action.test.ts",
+    "apps/three-surface-poc/src/materialize-action.test.ts",
+    "apps/three-surface-poc/src/browser-origin.test.ts",
+    "apps/three-surface-poc/src/git-observation.test.ts",
+    "apps/three-surface-poc/src/verbatim-route.test.ts",
+    "apps/three-surface-poc/src/polaris-source-route.test.ts",
+    "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+    "apps/three-surface-poc/src/evaluation-footer.test.ts",
+    "apps/three-surface-poc/src/page-size-delta.test.ts",
+    "apps/three-surface-poc/src/tuple-encoding.test.ts"
+   ],
+   "exit": 1,
+   "failedTests": 1,
+   "failedFiles": 1,
+   "totalTests": 580,
+   "outcome": "killed",
+   "seconds": 31.9,
+   "cleanAfter": true,
+   "failed": [
+    {
+     "title": "packages/http-host/src/credentials.test.ts > RT3 — credential verification through core admission the minted token behind any other whitespace refuses, named",
+     "timedOut": false,
+     "message": "AssertionError: \"Bearer  aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\": expected { admitted: true, …(1) } to deeply equal { admitted: false, served: 'nothing' }\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-535/head/packages/h"
+    }
+   ],
+   "reportError": null
+  },
+  {
+   "id": "O6-lexical-containment-without-separator",
+   "commit": "9ebfa92d301de633b7c40a3f2276219330016d33",
+   "edits": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "old": "  if (!isWithin(root, resolved)) {",
+     "new": "  if (!resolved.startsWith(root)) {"
+    }
+   ],
+   "counts": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "packages/http-host/src/credentials.test.ts",
+    "packages/http-host/src/shutdown.test.ts",
+    "packages/http-host/src/package.test.ts",
+    "packages/cap1-daemon/src/",
+    "packages/cap1-conformance/src/",
+    "apps/three-surface-poc/src/routes.test.ts",
+    "apps/three-surface-poc/src/response-limits.test.ts",
+    "apps/three-surface-poc/src/main.test.ts",
+    "apps/three-surface-poc/src/surface-routes.test.ts",
+    "apps/three-surface-poc/src/reobserve-action.test.ts",
+    "apps/three-surface-poc/src/materialize-action.test.ts",
+    "apps/three-surface-poc/src/browser-origin.test.ts",
+    "apps/three-surface-poc/src/git-observation.test.ts",
+    "apps/three-surface-poc/src/verbatim-route.test.ts",
+    "apps/three-surface-poc/src/polaris-source-route.test.ts",
+    "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+    "apps/three-surface-poc/src/evaluation-footer.test.ts",
+    "apps/three-surface-poc/src/page-size-delta.test.ts",
+    "apps/three-surface-poc/src/tuple-encoding.test.ts"
+   ],
+   "exit": 1,
+   "failedTests": 1,
+   "failedFiles": 1,
+   "totalTests": 580,
+   "outcome": "killed",
+   "seconds": 24.7,
+   "cleanAfter": true,
+   "failed": [
+    {
+     "title": "packages/http-host/src/credentials.test.ts > RT3 — state-write boundary refuses a sibling directory whose name extends the state dir name, as traversal",
+     "timedOut": false,
+     "message": "AssertionError: expected 'symlink-escape' to be 'traversal' // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-535/head/packages/http-host/src/credentials.test.ts:296:34\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297"
+    }
+   ],
+   "reportError": null
+  },
+  {
+   "id": "O7-real-containment-without-separator",
+   "commit": "9ebfa92d301de633b7c40a3f2276219330016d33",
+   "edits": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "old": "  if (!isWithin(realRoot, realTarget) || realTarget === realRoot) {",
+     "new": "  if (!realTarget.startsWith(realRoot) || realTarget === realRoot) {"
+    }
+   ],
+   "counts": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "packages/http-host/src/credentials.test.ts",
+    "packages/http-host/src/shutdown.test.ts",
+    "packages/http-host/src/package.test.ts",
+    "packages/cap1-daemon/src/",
+    "packages/cap1-conformance/src/",
+    "apps/three-surface-poc/src/routes.test.ts",
+    "apps/three-surface-poc/src/response-limits.test.ts",
+    "apps/three-surface-poc/src/main.test.ts",
+    "apps/three-surface-poc/src/surface-routes.test.ts",
+    "apps/three-surface-poc/src/reobserve-action.test.ts",
+    "apps/three-surface-poc/src/materialize-action.test.ts",
+    "apps/three-surface-poc/src/browser-origin.test.ts",
+    "apps/three-surface-poc/src/git-observation.test.ts",
+    "apps/three-surface-poc/src/verbatim-route.test.ts",
+    "apps/three-surface-poc/src/polaris-source-route.test.ts",
+    "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+    "apps/three-surface-poc/src/evaluation-footer.test.ts",
+    "apps/three-surface-poc/src/page-size-delta.test.ts",
+    "apps/three-surface-poc/src/tuple-encoding.test.ts"
+   ],
+   "exit": 1,
+   "failedTests": 1,
+   "failedFiles": 1,
+   "totalTests": 580,
+   "outcome": "killed",
+   "seconds": 25.9,
+   "cleanAfter": true,
+   "failed": [
+    {
+     "title": "packages/http-host/src/credentials.test.ts > RT3 — state-write boundary refuses a symlink into a sibling whose name extends the state dir name, named",
+     "timedOut": false,
+     "message": "AssertionError: expected true to be false // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-535/head/packages/http-host/src/credentials.test.ts:335:33\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a31"
+    }
+   ],
+   "reportError": null
+  },
+  {
+   "id": "O8-not-evaluated-population-dropped",
+   "commit": "9ebfa92d301de633b7c40a3f2276219330016d33",
+   "edits": [
+    {
+     "file": "packages/http-host/src/server.ts",
+     "old": "['project shape not-evaluated', 'project shape not-admitted', 'project shape observation-failed']",
+     "new": "['project shape not-admitted', 'project shape observation-failed']"
+    }
+   ],
+   "counts": [
+    {
+     "file": "packages/http-host/src/server.ts",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "packages/http-host/src/credentials.test.ts",
+    "packages/http-host/src/shutdown.test.ts",
+    "packages/http-host/src/package.test.ts",
+    "packages/cap1-daemon/src/",
+    "packages/cap1-conformance/src/",
+    "apps/three-surface-poc/src/routes.test.ts",
+    "apps/three-surface-poc/src/response-limits.test.ts",
+    "apps/three-surface-poc/src/main.test.ts",
+    "apps/three-surface-poc/src/surface-routes.test.ts",
+    "apps/three-surface-poc/src/reobserve-action.test.ts",
+    "apps/three-surface-poc/src/materialize-action.test.ts",
+    "apps/three-surface-poc/src/browser-origin.test.ts",
+    "apps/three-surface-poc/src/git-observation.test.ts",
+    "apps/three-surface-poc/src/verbatim-route.test.ts",
+    "apps/three-surface-poc/src/polaris-source-route.test.ts",
+    "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+    "apps/three-surface-poc/src/evaluation-footer.test.ts",
+    "apps/three-surface-poc/src/page-size-delta.test.ts",
+    "apps/three-surface-poc/src/tuple-encoding.test.ts"
+   ],
+   "exit": 1,
+   "failedTests": 2,
+   "failedFiles": 2,
+   "totalTests": 580,
+   "outcome": "killed",
+   "seconds": 39.8,
+   "cleanAfter": true,
+   "failed": [
+    {
+     "title": "packages/cap1-daemon/src/server.test.ts > RT3 — credential-classed admission at the transport logs a 503 breach diagnostic for each listed Unknown population and withholds an unlisted one",
+     "timedOut": false,
+     "message": "AssertionError: expected [ Array(4) ] to deeply equal [ { …(12) }, { …(12) }, …(2) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-535/head/packages/cap1-daemon/src/server.test.ts:159:58\n    at processTicksAndRejections (node:internal/process/tas"
+    },
+    {
+     "title": "apps/three-surface-poc/src/response-limits.test.ts > boundedResponse — the ceiling is measured on the final encoded body logs a single safe response-limit outcome per real-socket human and machine 503",
+     "timedOut": false,
+     "message": "AssertionError: expected { kind: 'daemon-http-outcome', …(6) } to match object { …(9) }\n(4 matching properties omitted from actual)\n    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-535/head/node_modules/@vitest/expect/dist/"
+    }
+   ],
+   "reportError": null
+  },
+  {
+   "id": "O9-observation-failed-population-dropped",
+   "commit": "9ebfa92d301de633b7c40a3f2276219330016d33",
+   "edits": [
+    {
+     "file": "packages/http-host/src/server.ts",
+     "old": "['project shape not-evaluated', 'project shape not-admitted', 'project shape observation-failed']",
+     "new": "['project shape not-evaluated', 'project shape not-admitted']"
+    }
+   ],
+   "counts": [
+    {
+     "file": "packages/http-host/src/server.ts",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "packages/http-host/src/credentials.test.ts",
+    "packages/http-host/src/shutdown.test.ts",
+    "packages/http-host/src/package.test.ts",
+    "packages/cap1-daemon/src/",
+    "packages/cap1-conformance/src/",
+    "apps/three-surface-poc/src/routes.test.ts",
+    "apps/three-surface-poc/src/response-limits.test.ts",
+    "apps/three-surface-poc/src/main.test.ts",
+    "apps/three-surface-poc/src/surface-routes.test.ts",
+    "apps/three-surface-poc/src/reobserve-action.test.ts",
+    "apps/three-surface-poc/src/materialize-action.test.ts",
+    "apps/three-surface-poc/src/browser-origin.test.ts",
+    "apps/three-surface-poc/src/git-observation.test.ts",
+    "apps/three-surface-poc/src/verbatim-route.test.ts",
+    "apps/three-surface-poc/src/polaris-source-route.test.ts",
+    "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+    "apps/three-surface-poc/src/evaluation-footer.test.ts",
+    "apps/three-surface-poc/src/page-size-delta.test.ts",
+    "apps/three-surface-poc/src/tuple-encoding.test.ts"
+   ],
+   "exit": 1,
+   "failedTests": 1,
+   "failedFiles": 1,
+   "totalTests": 580,
+   "outcome": "killed",
+   "seconds": 48.9,
+   "cleanAfter": true,
+   "failed": [
+    {
+     "title": "packages/cap1-daemon/src/server.test.ts > RT3 — credential-classed admission at the transport logs a 503 breach diagnostic for each listed Unknown population and withholds an unlisted one",
+     "timedOut": false,
+     "message": "AssertionError: expected [ Array(4) ] to deeply equal [ { …(12) }, { …(12) }, …(2) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-535/head/packages/cap1-daemon/src/server.test.ts:159:58\n    at processTicksAndRejections (node:internal/process/tas"
+    }
+   ],
+   "reportError": null
+  },
+  {
+   "id": "O10-any-project-shape-reason-logged",
+   "commit": "9ebfa92d301de633b7c40a3f2276219330016d33",
+   "edits": [
+    {
+     "file": "packages/http-host/src/server.ts",
+     "old": "population.kind === 'unknown' && ['project shape not-evaluated', 'project shape not-admitted', 'project shape observation-failed'].includes(population.reason)",
+     "new": "population.kind === 'unknown' && population.reason.startsWith('project shape ')"
+    }
+   ],
+   "counts": [
+    {
+     "file": "packages/http-host/src/server.ts",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "packages/http-host/src/credentials.test.ts",
+    "packages/http-host/src/shutdown.test.ts",
+    "packages/http-host/src/package.test.ts",
+    "packages/cap1-daemon/src/",
+    "packages/cap1-conformance/src/",
+    "apps/three-surface-poc/src/routes.test.ts",
+    "apps/three-surface-poc/src/response-limits.test.ts",
+    "apps/three-surface-poc/src/main.test.ts",
+    "apps/three-surface-poc/src/surface-routes.test.ts",
+    "apps/three-surface-poc/src/reobserve-action.test.ts",
+    "apps/three-surface-poc/src/materialize-action.test.ts",
+    "apps/three-surface-poc/src/browser-origin.test.ts",
+    "apps/three-surface-poc/src/git-observation.test.ts",
+    "apps/three-surface-poc/src/verbatim-route.test.ts",
+    "apps/three-surface-poc/src/polaris-source-route.test.ts",
+    "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+    "apps/three-surface-poc/src/evaluation-footer.test.ts",
+    "apps/three-surface-poc/src/page-size-delta.test.ts",
+    "apps/three-surface-poc/src/tuple-encoding.test.ts"
+   ],
+   "exit": 1,
+   "failedTests": 1,
+   "failedFiles": 1,
+   "totalTests": 580,
+   "outcome": "killed",
+   "seconds": 51.1,
+   "cleanAfter": true,
+   "failed": [
+    {
+     "title": "packages/cap1-daemon/src/server.test.ts > RT3 — credential-classed admission at the transport logs a 503 breach diagnostic for each listed Unknown population and withholds an unlisted one",
+     "timedOut": false,
+     "message": "AssertionError: expected [ { …(12) }, { …(12) }, …(2) ] to deeply equal [ { …(12) }, { …(12) }, …(2) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-535/head/packages/cap1-daemon/src/server.test.ts:159:58\n    at processTicksAndRejections (node:in"
+    }
+   ],
+   "reportError": null
+  },
+  {
+   "id": "O11-breach-reason-keyed-by-status",
+   "commit": "9ebfa92d301de633b7c40a3f2276219330016d33",
+   "edits": [
+    {
+     "file": "packages/http-host/src/server.ts",
+     "old": "    reason: diagnostic === undefined ? input.reason : 'response-limit-breached',",
+     "new": "    reason: input.response.status === 503 ? 'response-limit-breached' : input.reason,"
+    }
+   ],
+   "counts": [
+    {
+     "file": "packages/http-host/src/server.ts",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "packages/http-host/src/credentials.test.ts",
+    "packages/http-host/src/shutdown.test.ts",
+    "packages/http-host/src/package.test.ts",
+    "packages/cap1-daemon/src/",
+    "packages/cap1-conformance/src/",
+    "apps/three-surface-poc/src/routes.test.ts",
+    "apps/three-surface-poc/src/response-limits.test.ts",
+    "apps/three-surface-poc/src/main.test.ts",
+    "apps/three-surface-poc/src/surface-routes.test.ts",
+    "apps/three-surface-poc/src/reobserve-action.test.ts",
+    "apps/three-surface-poc/src/materialize-action.test.ts",
+    "apps/three-surface-poc/src/browser-origin.test.ts",
+    "apps/three-surface-poc/src/git-observation.test.ts",
+    "apps/three-surface-poc/src/verbatim-route.test.ts",
+    "apps/three-surface-poc/src/polaris-source-route.test.ts",
+    "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+    "apps/three-surface-poc/src/evaluation-footer.test.ts",
+    "apps/three-surface-poc/src/page-size-delta.test.ts",
+    "apps/three-surface-poc/src/tuple-encoding.test.ts"
+   ],
+   "exit": 1,
+   "failedTests": 1,
+   "failedFiles": 1,
+   "totalTests": 580,
+   "outcome": "killed",
+   "seconds": 74.5,
+   "cleanAfter": true,
+   "failed": [
+    {
+     "title": "packages/cap1-daemon/src/server.test.ts > RT3 — credential-classed admission at the transport logs a 503 breach diagnostic for each listed Unknown population and withholds an unlisted one",
+     "timedOut": false,
+     "message": "AssertionError: expected [ { …(12) }, { …(12) }, …(2) ] to deeply equal [ { …(12) }, { …(12) }, …(2) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-535/head/packages/cap1-daemon/src/server.test.ts:159:58\n    at processTicksAndRejections (node:in"
+    }
+   ],
+   "reportError": null
+  },
+  {
+   "id": "O12-origin-reversed-prefix",
+   "commit": "9ebfa92d301de633b7c40a3f2276219330016d33",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/browser-origin.ts",
+     "old": "  return origin === undefined || origin === expectedOrigin(host);",
+     "new": "  return origin === undefined || expectedOrigin(host).startsWith(origin);"
+    }
+   ],
+   "counts": [
+    {
+     "file": "apps/three-surface-poc/src/browser-origin.ts",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "packages/http-host/src/credentials.test.ts",
+    "packages/http-host/src/shutdown.test.ts",
+    "packages/http-host/src/package.test.ts",
+    "packages/cap1-daemon/src/",
+    "packages/cap1-conformance/src/",
+    "apps/three-surface-poc/src/routes.test.ts",
+    "apps/three-surface-poc/src/response-limits.test.ts",
+    "apps/three-surface-poc/src/main.test.ts",
+    "apps/three-surface-poc/src/surface-routes.test.ts",
+    "apps/three-surface-poc/src/reobserve-action.test.ts",
+    "apps/three-surface-poc/src/materialize-action.test.ts",
+    "apps/three-surface-poc/src/browser-origin.test.ts",
+    "apps/three-surface-poc/src/git-observation.test.ts",
+    "apps/three-surface-poc/src/verbatim-route.test.ts",
+    "apps/three-surface-poc/src/polaris-source-route.test.ts",
+    "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+    "apps/three-surface-poc/src/evaluation-footer.test.ts",
+    "apps/three-surface-poc/src/page-size-delta.test.ts",
+    "apps/three-surface-poc/src/tuple-encoding.test.ts"
+   ],
+   "exit": 1,
+   "failedTests": 1,
+   "failedFiles": 1,
+   "totalTests": 580,
+   "outcome": "killed",
+   "seconds": 60.8,
+   "cleanAfter": true,
+   "failed": [
+    {
+     "title": "apps/three-surface-poc/src/browser-origin.test.ts > browserRequestAllowed — the Origin is compared whole refuses an origin that the host origin only begins with",
+     "timedOut": false,
+     "message": "AssertionError: expected true to be false // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-535/head/apps/three-surface-poc/src/browser-origin.test.ts:23:95\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4a"
+    }
+   ],
+   "reportError": null
+  },
+  {
+   "id": "O13-origin-required",
+   "commit": "9ebfa92d301de633b7c40a3f2276219330016d33",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/browser-origin.ts",
+     "old": "  return origin === undefined || origin === expectedOrigin(host);",
+     "new": "  return origin === expectedOrigin(host);"
+    }
+   ],
+   "counts": [
+    {
+     "file": "apps/three-surface-poc/src/browser-origin.ts",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "packages/http-host/src/credentials.test.ts",
+    "packages/http-host/src/shutdown.test.ts",
+    "packages/http-host/src/package.test.ts",
+    "packages/cap1-daemon/src/",
+    "packages/cap1-conformance/src/",
+    "apps/three-surface-poc/src/routes.test.ts",
+    "apps/three-surface-poc/src/response-limits.test.ts",
+    "apps/three-surface-poc/src/main.test.ts",
+    "apps/three-surface-poc/src/surface-routes.test.ts",
+    "apps/three-surface-poc/src/reobserve-action.test.ts",
+    "apps/three-surface-poc/src/materialize-action.test.ts",
+    "apps/three-surface-poc/src/browser-origin.test.ts",
+    "apps/three-surface-poc/src/git-observation.test.ts",
+    "apps/three-surface-poc/src/verbatim-route.test.ts",
+    "apps/three-surface-poc/src/polaris-source-route.test.ts",
+    "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+    "apps/three-surface-poc/src/evaluation-footer.test.ts",
+    "apps/three-surface-poc/src/page-size-delta.test.ts",
+    "apps/three-surface-poc/src/tuple-encoding.test.ts"
+   ],
+   "exit": 1,
+   "failedTests": 35,
+   "failedFiles": 10,
+   "totalTests": 580,
+   "outcome": "killed",
+   "seconds": 60.9,
+   "cleanAfter": true,
+   "failed": [
+    {
+     "title": "apps/three-surface-poc/src/browser-origin.test.ts > browserRequestAllowed — the Origin is compared whole allows no Origin and the exact origin of each allowed host",
+     "timedOut": false,
+     "message": "AssertionError: expected false to be true // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-535/head/apps/three-surface-poc/src/browser-origin.test.ts:10:63\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4a"
+    },
+    {
+     "title": "apps/three-surface-poc/src/materialize-action.test.ts > renderMaterializePanel matches decoded Trajectory fields to authenticated API dispatch with exact denominators and named machine-only values",
+     "timedOut": false,
+     "message": "AssertionError: expected 403 to be 200 // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-535/head/apps/three-surface-poc/src/materialize-action.test.ts:168:31\n    at processTicksAndRejections (node:internal/process/task_queues:1"
+    },
+    {
+     "title": "apps/three-surface-poc/src/materialize-action.test.ts > materializeRoutes refuses the foreclosed write with a bounded typed refusal and never runs Beads (P-71-Q5)",
+     "timedOut": false,
+     "message": "AssertionError: expected '{\"served\":\"nothing\",\"reason\":\"browser…' to contain 'data-effect-refusal=\"foreclosed\" data…'\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-535/head/apps/three-surface-poc/src/materialize-action.test.ts:313:18\n    at proce"
+    },
+    {
+     "title": "apps/three-surface-poc/src/materialize-action.test.ts > materializeRoutes refuses an effect the registry does not name before any runner is called",
+     "timedOut": false,
+     "message": "AssertionError: expected '{\"served\":\"nothing\",\"reason\":\"browser…' to contain 'data-effect-refusal=\"not-in-write-sur…'\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-535/head/apps/three-surface-poc/src/materialize-action.test.ts:340:18\n    at proce"
+    },
+    {
+     "title": "apps/three-surface-poc/src/materialize-action.test.ts > materializeRoutes creates exactly one Bead on trigger, persists the record, and calls onMaterialized (AC2)",
+     "timedOut": false,
+     "message": "AssertionError: expected 403 to be 200 // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-535/head/apps/three-surface-poc/src/materialize-action.test.ts:368:29\n    at processTicksAndRejections (node:internal/process/task_queues:1"
+    },
+    {
+     "title": "apps/three-surface-poc/src/materialize-action.test.ts > materializeRoutes is idempotent over HTTP: a second POST reuses the same Bead without a second create (AC3)",
+     "timedOut": false,
+     "message": "AssertionError: expected 403 to be 200 // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-535/head/apps/three-surface-poc/src/materialize-action.test.ts:416:26\n    at processTicksAndRejections (node:internal/process/task_queues:1"
+    },
+    {
+     "title": "apps/three-surface-poc/src/materialize-action.test.ts > materializeRoutes renders a named failure over HTTP and leaves no partial record when bd is missing (AC5)",
+     "timedOut": false,
+     "message": "AssertionError: expected 403 to be 502 // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-535/head/apps/three-surface-poc/src/materialize-action.test.ts:437:29\n    at processTicksAndRejections (node:internal/process/task_queues:1"
+    },
+    {
+     "title": "apps/three-surface-poc/src/materialize-action.test.ts > materializeRoutes fails closed without invoking Beads when the actual model has no seed-backed materialization graph",
+     "timedOut": false,
+     "message": "AssertionError: expected 403 to be 502 // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-535/head/apps/three-surface-poc/src/materialize-action.test.ts:468:29\n    at processTicksAndRejections (node:internal/process/task_queues:1"
+    },
+    {
+     "title": "apps/three-surface-poc/src/materialize-action.test.ts > materializeRoutes states the Bead exists when it was created but only the local record write failed, instead of the generic no-Bead suffix (AC5)",
+     "timedOut": false,
+     "message": "AssertionError: expected 403 to be 502 // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-535/head/apps/three-surface-poc/src/materialize-action.test.ts:491:29\n    at processTicksAndRejections (node:internal/process/task_queues:1"
+    },
+    {
+     "title": "apps/three-surface-poc/src/polaris-presentation-route.test.ts > Polaris machine presentation envelope (PWB-REQ-014; RFC7-2, RFC7-3) refuses without the bearer and, with it, serves the narrative of the same render the human page comes from — every anchor cited on the page, no copy of the JSON on the page — marked non-citable",
+     "timedOut": false,
+     "message": "AssertionError: expected [ 'block:project:butlers#a1', …(64) ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-535/head/apps/three-surface-poc/src/polaris-presentation-route.test.ts:87:83\n    at processTicksAndRejections (node:in"
+    },
+    {
+     "title": "apps/three-surface-poc/src/polaris-source-route.test.ts > Polaris exact-source route (PWB-REQ-011 as amended; RFC7-1, RFC7-13) serves the route human-open: direct GET renders the text, the tailnet Host rebinds the back link, a browser origin off the allow-list gets 403 and nothing, a script in the identity is escaped, and the human ceiling fails closed",
+     "timedOut": false,
+     "message": "AssertionError: expected 403 to be 200 // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-535/head/apps/three-surface-poc/src/polaris-source-route.test.ts:239:27\n    at processTicksAndRejections (node:internal/process/task_queues"
+    },
+    {
+     "title": "apps/three-surface-poc/src/reobserve-action.test.ts > human-triggered re-observation route single-flights concurrent requests and swaps only after a complete success",
+     "timedOut": false,
+     "message": "AssertionError: expected +0 to be 1 // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-535/head/apps/three-surface-poc/src/reobserve-action.test.ts:42:19\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "title": "apps/three-surface-poc/src/reobserve-action.test.ts > human-triggered re-observation route preserves a named failure and refuses cross-origin requests",
+     "timedOut": false,
+     "message": "AssertionError: expected { status: 403, …(2) } to match object { status: 502 }\n(2 matching properties omitted from actual)\n    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-535/head/node_modules/@vitest/expect/dist/index.js:"
+    },
+    {
+     "title": "apps/three-surface-poc/src/reobserve-action.test.ts > human-triggered re-observation route names the superseded evaluation, the three clocks and both limbs on the result page (syzygy-u05.2)",
+     "timedOut": false,
+     "message": "AssertionError: expected { status: 403, …(2) } to match object { status: 200 }\n(2 matching properties omitted from actual)\n    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-535/head/node_modules/@vitest/expect/dist/index.js:"
+    },
+    {
+     "title": "apps/three-surface-poc/src/response-limits.test.ts > boundedResponse — the ceiling is measured on the final encoded body logs a single safe response-limit outcome per real-socket human and machine 503",
+     "timedOut": false,
+     "message": "AssertionError: expected 403 to be 503 // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-535/head/apps/three-surface-poc/src/response-limits.test.ts:76:28\n    at processTicksAndRejections (node:internal/process/task_queues:105:5"
+    },
+    {
+     "title": "apps/three-surface-poc/src/response-limits.test.ts > pocRoutes — every human HTML sink is bounded by maxHumanResponseBytes places one compact factual status line before main on each direct and tailnet page",
+     "timedOut": false,
+     "message": "AssertionError: /: expected 403 to be 200 // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-535/head/apps/three-surface-poc/src/response-limits.test.ts:167:37\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-"
+    },
+    {
+     "title": "apps/three-surface-poc/src/response-limits.test.ts > pocRoutes — every human HTML sink is bounded by maxHumanResponseBytes places one resource-ledger entry in the status slot of every direct and tailnet page, Unknown when no block is supplied (syzygy-u05.3)",
+     "timedOut": false,
+     "message": "AssertionError: /: expected [] to have a length of 1 but got +0\n    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-535/head/node_modules/@vitest/expect/dist/index.js:1257:20)\n    at Proxy.<anonymous> (file:///tmp/claude-1000/"
+    },
+    {
+     "title": "apps/three-surface-poc/src/response-limits.test.ts > pocRoutes — every human HTML sink is bounded by maxHumanResponseBytes names the observed-project limb, the observatory limb and the Dolt clock separately, Unknown when not supplied (syzygy-u05.2)",
+     "timedOut": false,
+     "message": "AssertionError: expected undefined to be 'Observed-project limb: Unknown (not s…' // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-535/head/apps/three-surface-poc/src/response-limits.test.ts:220:29\n    at file:///tmp/claude-100"
+    },
+    {
+     "title": "apps/three-surface-poc/src/response-limits.test.ts > pocRoutes — every human HTML sink is bounded by maxHumanResponseBytes /: limit − 1 fails closed, limit and limit + 1 serve the page",
+     "timedOut": false,
+     "message": "AssertionError: expected 403 to be 200 // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-535/head/apps/three-surface-poc/src/response-limits.test.ts:234:30\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4ac"
+    },
+    {
+     "title": "apps/three-surface-poc/src/response-limits.test.ts > pocRoutes — every human HTML sink is bounded by maxHumanResponseBytes /polaris: limit − 1 fails closed, limit and limit + 1 serve the page",
+     "timedOut": false,
+     "message": "AssertionError: expected 403 to be 200 // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-535/head/apps/three-surface-poc/src/response-limits.test.ts:234:30\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4ac"
+    },
+    {
+     "title": "apps/three-surface-poc/src/response-limits.test.ts > pocRoutes — every human HTML sink is bounded by maxHumanResponseBytes /trajectory: limit − 1 fails closed, limit and limit + 1 serve the page",
+     "timedOut": false,
+     "message": "AssertionError: expected 403 to be 200 // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-535/head/apps/three-surface-poc/src/response-limits.test.ts:234:30\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4ac"
+    },
+    {
+     "title": "apps/three-surface-poc/src/response-limits.test.ts > pocRoutes — every human HTML sink is bounded by maxHumanResponseBytes /orrery: limit − 1 fails closed, limit and limit + 1 serve the page",
+     "timedOut": false,
+     "message": "AssertionError: expected 403 to be 200 // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-535/head/apps/three-surface-poc/src/response-limits.test.ts:234:30\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4ac"
+    },
+    {
+     "title": "apps/three-surface-poc/src/response-limits.test.ts > pocRoutes — every human HTML sink is bounded by maxHumanResponseBytes the tailnet mount (selected by Host) is measured on its own rendered body",
+     "timedOut": false,
+     "message": "AssertionError: expected 54 not to be 54 // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-535/head/apps/three-surface-poc/src/response-limits.test.ts:250:22\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4"
+    },
+    {
+     "title": "apps/three-surface-poc/src/response-limits.test.ts > pocRoutes — the machine JSON sink is bounded by maxMachineResponseBytes the human ceiling does not bound the machine sink and vice versa",
+     "timedOut": false,
+     "message": "AssertionError: expected 403 to be 200 // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-535/head/apps/three-surface-poc/src/response-limits.test.ts:297:87\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4ac"
+    },
+    {
+     "title": "apps/three-surface-poc/src/response-limits.test.ts > pocRoutes — the machine JSON sink is bounded by maxMachineResponseBytes the registry values are the default ceilings",
+     "timedOut": false,
+     "message": "AssertionError: expected 403 to be 200 // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-535/head/apps/three-surface-poc/src/response-limits.test.ts:303:74\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4ac"
+    },
+    {
+     "title": "apps/three-surface-poc/src/routes.test.ts > three-surface POC routes serves one model through human and authenticated machine views",
+     "timedOut": false,
+     "message": "AssertionError: expected 403 to be 200 // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-535/head/apps/three-surface-poc/src/routes.test.ts:420:34\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at"
+    },
+    {
+     "title": "apps/three-surface-poc/src/routes.test.ts > three-surface POC routes projects the same mayNot tuples in human Polaris and authenticated machine JSON",
+     "timedOut": false,
+     "message": "AssertionError: expected [] to deeply equal [ [ …(4) ], [ …(4) ], [ …(4) ], …(6) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-535/head/apps/three-surface-poc/src/routes.test.ts:541:19\n    at processTicksAndRejections (node:internal/process/tas"
+    },
+    {
+     "title": "apps/three-surface-poc/src/surface-routes.test.ts > surface routes serves Polaris, Trajectory, and Orrery as human-open, same-origin-guarded pages",
+     "timedOut": false,
+     "message": "AssertionError: expected 403 to be 200 // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-535/head/apps/three-surface-poc/src/surface-routes.test.ts:245:31\n    at processTicksAndRejections (node:internal/process/task_queues:105:5"
+    },
+    {
+     "title": "apps/three-surface-poc/src/surface-routes.test.ts > surface routes 15-link cross-surface exhaustion exhausts 15 runtime cross-surface links over six classes and fetches every direct target",
+     "timedOut": false,
+     "message": "AssertionError: direct /: expected 403 to be 200 // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-535/head/apps/three-surface-poc/src/surface-routes.test.ts:342:52\n    at processTicksAndRejections (node:internal/process/task_qu"
+    },
+    {
+     "title": "apps/three-surface-poc/src/surface-routes.test.ts > surface routes exhausts every served badge, tuple and Unknown disclosure on the three surfaces; Home is a separate diagnostic (POC-REQ-060)",
+     "timedOut": false,
+     "message": "Error: served page has no stylesheet\n    at verifyEncodingPopulation (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-535/head/apps/three-surface-poc/src/surface-routes.test.ts:116:32)\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a31"
+    },
+    {
+     "title": "apps/three-surface-poc/src/surface-routes.test.ts > surface routes counts the post-JavaScript DOM on all three served surfaces and kills an unmarked Orrery region",
+     "timedOut": false,
+     "message": "AssertionError: expected 403 to be 200 // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-535/head/apps/three-surface-poc/src/surface-routes.test.ts:501:35\n    at processTicksAndRejections (node:internal/process/task_queues:105:5"
+    },
+    {
+     "title": "apps/three-surface-poc/src/surface-routes.test.ts > surface routes serves the exact state-(1) authority sentence on Polaris both directly and through the tailnet Host mount (PWB-REQ-005; PWB-RECON-01)",
+     "timedOut": false,
+     "message": "AssertionError: expected [] to deeply equal [ …(3) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-535/head/apps/three-surface-poc/src/surface-routes.test.ts:598:25\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at"
+    },
+    {
+     "title": "apps/three-surface-poc/src/surface-routes.test.ts > surface routes nav links stay inside the current mount — root-relative for direct loopback access, prefixed for the tailnet-Host-headered request `tailscale serve` actually forwards",
+     "timedOut": false,
+     "message": "AssertionError: expected 0 to be greater than 0\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-535/head/apps/three-surface-poc/src/surface-routes.test.ts:628:34\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at file"
+    },
+    {
+     "title": "apps/three-surface-poc/src/tuple-encoding.test.ts > tuple field encoding tables (syzygy-dov.3.2; P-70 M3 slice 5) sweeps the post-JavaScript DOM of the three surfaces, Home apart: every tuple field and glossary row renders its declared symbol and token",
+     "timedOut": false,
+     "message": "AssertionError: expected 403 to be 200 // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-535/head/apps/three-surface-poc/src/tuple-encoding.test.ts:288:35\n    at processTicksAndRejections (node:internal/process/task_queues:105:5"
+    },
+    {
+     "title": "apps/three-surface-poc/src/verbatim-route.test.ts > Polaris route with the verbatim reader serves the selected requirement blocks on the Polaris human route only; the machine channel never carries them",
+     "timedOut": false,
+     "message": "AssertionError: expected '{\"served\":\"nothing\",\"reason\":\"browser…' to contain 'data-verbatim=\"rendered\"'\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-535/head/apps/three-surface-poc/src/verbatim-route.test.ts:224:18\n    at file:///tmp/claude-1000"
+    }
+   ],
+   "reportError": null
+  },
+  {
+   "id": "O14-tailnet-origin-over-http",
+   "commit": "9ebfa92d301de633b7c40a3f2276219330016d33",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/browser-origin.ts",
+     "old": "  return host === TAILNET_HOST ? `https://${host}` : `http://${host}`;",
+     "new": "  return `http://${host}`;"
+    }
+   ],
+   "counts": [
+    {
+     "file": "apps/three-surface-poc/src/browser-origin.ts",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "packages/http-host/src/credentials.test.ts",
+    "packages/http-host/src/shutdown.test.ts",
+    "packages/http-host/src/package.test.ts",
+    "packages/cap1-daemon/src/",
+    "packages/cap1-conformance/src/",
+    "apps/three-surface-poc/src/routes.test.ts",
+    "apps/three-surface-poc/src/response-limits.test.ts",
+    "apps/three-surface-poc/src/main.test.ts",
+    "apps/three-surface-poc/src/surface-routes.test.ts",
+    "apps/three-surface-poc/src/reobserve-action.test.ts",
+    "apps/three-surface-poc/src/materialize-action.test.ts",
+    "apps/three-surface-poc/src/browser-origin.test.ts",
+    "apps/three-surface-poc/src/git-observation.test.ts",
+    "apps/three-surface-poc/src/verbatim-route.test.ts",
+    "apps/three-surface-poc/src/polaris-source-route.test.ts",
+    "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+    "apps/three-surface-poc/src/evaluation-footer.test.ts",
+    "apps/three-surface-poc/src/page-size-delta.test.ts",
+    "apps/three-surface-poc/src/tuple-encoding.test.ts"
+   ],
+   "exit": 1,
+   "failedTests": 7,
+   "failedFiles": 4,
+   "totalTests": 580,
+   "outcome": "killed",
+   "seconds": 57.1,
+   "cleanAfter": true,
+   "failed": [
+    {
+     "title": "apps/three-surface-poc/src/browser-origin.test.ts > browserRequestAllowed — the Origin is compared whole allows no Origin and the exact origin of each allowed host",
+     "timedOut": false,
+     "message": "AssertionError: expected false to be true // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-535/head/apps/three-surface-poc/src/browser-origin.test.ts:13:117\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4"
+    },
+    {
+     "title": "apps/three-surface-poc/src/materialize-action.test.ts > materializeRoutes keeps the result page's back-link under the tailnet mount when the tailnet-Host-headered request `tailscale serve` actually forwards triggers it (AC2)",
+     "timedOut": false,
+     "message": "AssertionError: expected 403 to be 200 // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-535/head/apps/three-surface-poc/src/materialize-action.test.ts:395:29\n    at processTicksAndRejections (node:internal/process/task_queues:1"
+    },
+    {
+     "title": "apps/three-surface-poc/src/surface-routes.test.ts > surface routes 15-link cross-surface exhaustion exhausts 15 runtime cross-surface links over six classes and fetches every tailnet target",
+     "timedOut": false,
+     "message": "AssertionError: tailnet /: expected 403 to be 200 // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-535/head/apps/three-surface-poc/src/surface-routes.test.ts:342:52\n    at processTicksAndRejections (node:internal/process/task_q"
+    },
+    {
+     "title": "apps/three-surface-poc/src/surface-routes.test.ts > surface routes counts the post-JavaScript DOM on all three served surfaces and kills an unmarked Orrery region",
+     "timedOut": false,
+     "message": "AssertionError: expected 403 to be 200 // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-535/head/apps/three-surface-poc/src/surface-routes.test.ts:501:35\n    at processTicksAndRejections (node:internal/process/task_queues:105:5"
+    },
+    {
+     "title": "apps/three-surface-poc/src/surface-routes.test.ts > surface routes serves the exact state-(1) authority sentence on Polaris both directly and through the tailnet Host mount (PWB-REQ-005; PWB-RECON-01)",
+     "timedOut": false,
+     "message": "AssertionError: expected [] to deeply equal [ …(3) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-535/head/apps/three-surface-poc/src/surface-routes.test.ts:598:25\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at"
+    },
+    {
+     "title": "apps/three-surface-poc/src/surface-routes.test.ts > surface routes nav links stay inside the current mount — root-relative for direct loopback access, prefixed for the tailnet-Host-headered request `tailscale serve` actually forwards",
+     "timedOut": false,
+     "message": "AssertionError: expected 0 to be greater than 0\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-535/head/apps/three-surface-poc/src/surface-routes.test.ts:637:35\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at file"
+    },
+    {
+     "title": "apps/three-surface-poc/src/tuple-encoding.test.ts > tuple field encoding tables (syzygy-dov.3.2; P-70 M3 slice 5) sweeps the post-JavaScript DOM of the three surfaces, Home apart: every tuple field and glossary row renders its declared symbol and token",
+     "timedOut": false,
+     "message": "AssertionError: expected 403 to be 200 // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-535/head/apps/three-surface-poc/src/tuple-encoding.test.ts:288:35\n    at processTicksAndRejections (node:internal/process/task_queues:105:5"
+    }
+   ],
+   "reportError": null
+  },
+  {
+   "id": "O15-shim-function-aliased",
+   "commit": "9ebfa92d301de633b7c40a3f2276219330016d33",
+   "edits": [
+    {
+     "file": "packages/cap1-daemon/src/credentials.ts",
+     "old": "  authorizeStateWrite,\n",
+     "new": "  ensureCredential as authorizeStateWrite,\n"
+    }
+   ],
+   "counts": [
+    {
+     "file": "packages/cap1-daemon/src/credentials.ts",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "packages/http-host/src/credentials.test.ts",
+    "packages/http-host/src/shutdown.test.ts",
+    "packages/http-host/src/package.test.ts",
+    "packages/cap1-daemon/src/",
+    "packages/cap1-conformance/src/",
+    "apps/three-surface-poc/src/routes.test.ts",
+    "apps/three-surface-poc/src/response-limits.test.ts",
+    "apps/three-surface-poc/src/main.test.ts",
+    "apps/three-surface-poc/src/surface-routes.test.ts",
+    "apps/three-surface-poc/src/reobserve-action.test.ts",
+    "apps/three-surface-poc/src/materialize-action.test.ts",
+    "apps/three-surface-poc/src/browser-origin.test.ts",
+    "apps/three-surface-poc/src/git-observation.test.ts",
+    "apps/three-surface-poc/src/verbatim-route.test.ts",
+    "apps/three-surface-poc/src/polaris-source-route.test.ts",
+    "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+    "apps/three-surface-poc/src/evaluation-footer.test.ts",
+    "apps/three-surface-poc/src/page-size-delta.test.ts",
+    "apps/three-surface-poc/src/tuple-encoding.test.ts"
+   ],
+   "exit": 1,
+   "failedTests": 1,
+   "failedFiles": 1,
+   "totalTests": 580,
+   "outcome": "killed",
+   "seconds": 68.3,
+   "cleanAfter": true,
+   "failed": [
+    {
+     "title": "packages/cap1-daemon/src/package.test.ts > cap1-daemon package re-exports each host value as the host binding of the same name",
+     "timedOut": false,
+     "message": "AssertionError: authorizeStateWrite: expected [Function ensureCredential] to be [Function authorizeStateWrite] // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-535/head/packages/cap1-daemon/src/package.test.ts:60:34\n    at file"
+    }
+   ],
+   "reportError": null
+  },
+  {
+   "id": "O16-shim-constant-aliased",
+   "commit": "9ebfa92d301de633b7c40a3f2276219330016d33",
+   "edits": [
+    {
+     "file": "packages/cap1-daemon/src/credentials.ts",
+     "old": "  STATE_DIR_MODE,\n",
+     "new": "  CREDENTIAL_FILE_MODE as STATE_DIR_MODE,\n"
+    }
+   ],
+   "counts": [
+    {
+     "file": "packages/cap1-daemon/src/credentials.ts",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "packages/http-host/src/credentials.test.ts",
+    "packages/http-host/src/shutdown.test.ts",
+    "packages/http-host/src/package.test.ts",
+    "packages/cap1-daemon/src/",
+    "packages/cap1-conformance/src/",
+    "apps/three-surface-poc/src/routes.test.ts",
+    "apps/three-surface-poc/src/response-limits.test.ts",
+    "apps/three-surface-poc/src/main.test.ts",
+    "apps/three-surface-poc/src/surface-routes.test.ts",
+    "apps/three-surface-poc/src/reobserve-action.test.ts",
+    "apps/three-surface-poc/src/materialize-action.test.ts",
+    "apps/three-surface-poc/src/browser-origin.test.ts",
+    "apps/three-surface-poc/src/git-observation.test.ts",
+    "apps/three-surface-poc/src/verbatim-route.test.ts",
+    "apps/three-surface-poc/src/polaris-source-route.test.ts",
+    "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+    "apps/three-surface-poc/src/evaluation-footer.test.ts",
+    "apps/three-surface-poc/src/page-size-delta.test.ts",
+    "apps/three-surface-poc/src/tuple-encoding.test.ts"
+   ],
+   "exit": 1,
+   "failedTests": 1,
+   "failedFiles": 1,
+   "totalTests": 580,
+   "outcome": "killed",
+   "seconds": 82.9,
+   "cleanAfter": true,
+   "failed": [
+    {
+     "title": "packages/cap1-daemon/src/package.test.ts > cap1-daemon package re-exports each host value as the host binding of the same name",
+     "timedOut": false,
+     "message": "AssertionError: STATE_DIR_MODE: expected 384 to be 448 // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-535/head/packages/cap1-daemon/src/package.test.ts:60:34\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858"
+    }
+   ],
+   "reportError": null
+  },
+  {
+   "id": "O17-shim-equal-local-constant",
+   "commit": "9ebfa92d301de633b7c40a3f2276219330016d33",
+   "edits": [
+    {
+     "file": "packages/cap1-daemon/src/server.ts",
+     "old": "  DAEMON_HOST,\n",
+     "new": ""
+    },
+    {
+     "file": "packages/cap1-daemon/src/server.ts",
+     "old": "// --- This wave's minimal root route",
+     "new": "export const DAEMON_HOST = '127.0.0.1' as const;\n\n// --- This wave's minimal root route"
+    }
+   ],
+   "counts": [
+    {
+     "file": "packages/cap1-daemon/src/server.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/cap1-daemon/src/server.ts",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "packages/http-host/src/credentials.test.ts",
+    "packages/http-host/src/shutdown.test.ts",
+    "packages/http-host/src/package.test.ts",
+    "packages/cap1-daemon/src/",
+    "packages/cap1-conformance/src/",
+    "apps/three-surface-poc/src/routes.test.ts",
+    "apps/three-surface-poc/src/response-limits.test.ts",
+    "apps/three-surface-poc/src/main.test.ts",
+    "apps/three-surface-poc/src/surface-routes.test.ts",
+    "apps/three-surface-poc/src/reobserve-action.test.ts",
+    "apps/three-surface-poc/src/materialize-action.test.ts",
+    "apps/three-surface-poc/src/browser-origin.test.ts",
+    "apps/three-surface-poc/src/git-observation.test.ts",
+    "apps/three-surface-poc/src/verbatim-route.test.ts",
+    "apps/three-surface-poc/src/polaris-source-route.test.ts",
+    "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+    "apps/three-surface-poc/src/evaluation-footer.test.ts",
+    "apps/three-surface-poc/src/page-size-delta.test.ts",
+    "apps/three-surface-poc/src/tuple-encoding.test.ts"
+   ],
+   "exit": 0,
+   "failedTests": 0,
+   "failedFiles": 0,
+   "totalTests": 580,
+   "outcome": "survived",
+   "seconds": 54.7,
+   "cleanAfter": true,
+   "failed": [],
+   "reportError": null
+  }
+ ]
+}

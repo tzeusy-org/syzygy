@@ -1,0 +1,71 @@
+{
+  "packages/support/src/support-purity.test.ts": {
+    "blocks": {
+      "fix-f1-function.ts.txt": {
+        "bytes": 594,
+        "occursVerbatim": 1,
+        "occursStripped": 1,
+        "inBase": 0,
+        "nbsp": 0
+      },
+      "fix-f1-test.ts.txt": {
+        "bytes": 510,
+        "occursVerbatim": 1,
+        "occursStripped": 1,
+        "inBase": 0,
+        "nbsp": 0
+      },
+      "fix-n-sources.ts.txt": {
+        "bytes": 390,
+        "occursVerbatim": 1,
+        "occursStripped": 1,
+        "inBase": 0,
+        "nbsp": 0
+      },
+      "fix-n-sources-row.ts.txt": {
+        "bytes": 595,
+        "occursVerbatim": 1,
+        "occursStripped": 1,
+        "inBase": 0,
+        "nbsp": 0
+      },
+      "fix-n-literal.ts.txt": {
+        "bytes": 341,
+        "occursVerbatim": 1,
+        "occursStripped": 1,
+        "inBase": 0,
+        "nbsp": 0
+      },
+      "fix-n-writes.ts.txt": {
+        "bytes": 714,
+        "occursVerbatim": 1,
+        "occursStripped": 1,
+        "inBase": 0,
+        "nbsp": 0
+      }
+    },
+    "added": 57,
+    "removed": 2,
+    "unaccountedAdded": [],
+    "unaccountedRemoved": [],
+    "nbspInNew": 0,
+    "nbspInOld": 0
+  },
+  "packages/polaris-dossier/src/no-egress.test.ts": {
+    "blocks": {
+      "fix-n-guard-row.ts.txt": {
+        "bytes": 619,
+        "occursVerbatim": 1,
+        "occursStripped": 1,
+        "inBase": 0,
+        "nbsp": 0
+      }
+    },
+    "added": 13,
+    "removed": 2,
+    "unaccountedAdded": [],
+    "unaccountedRemoved": [],
+    "nbspInNew": 0,
+    "nbspInOld": 0
+  }
+}

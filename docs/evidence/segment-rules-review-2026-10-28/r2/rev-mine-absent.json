@@ -1,0 +1,250 @@
+{
+ "commit": "b218990f1c93e350781a72c42b0700c7b329750d",
+ "dist": "absent",
+ "distDirs": [],
+ "importedTools": {
+  "docs/evidence/syzygy-bpyt-6-14/tools/mutants.py": "133094bce703dad13917d73b4bb1dd29cc8eb43212d2ec9e307656f530f3fe4e",
+  "docs/evidence/syzygy-bpyt-46/tools/mutants.py": "b4728e27e55afbf21caeb275e0f28f0d6b77bb9d368c0d33a347cc80cad02b34"
+ },
+ "node": "v24.6.0",
+ "summary": {
+  "rows": 9,
+  "asExpected": 9,
+  "unexpected": []
+ },
+ "statusAfter": "",
+ "rows": [
+  {
+   "id": "RX0-entries-unmutated",
+   "test": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "edits": [],
+   "expected": [],
+   "failing": [],
+   "asExpected": true,
+   "exit": 0,
+   "passed": 81,
+   "failed": 0,
+   "total": 81,
+   "failedFiles": [],
+   "fileMessages": [],
+   "error": null,
+   "stdout": null
+  },
+  {
+   "id": "RX3-both-rules-drop-encoded-capital-n",
+   "test": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "edits": [
+    {
+     "path": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "export const INVALID_SEGMENT = /(^|\\\\|\\/)((\\.|%2e)(\\.|%2e)?|(n|%6e|%4e)(o|%6f|%4f)(d|%64|%44)(e|%65|%45)(_|%5f)(m|%6d|%4d)(o|%6f|%4f)(d|%64|%44)(u|%75|%55)(l|%6c|%4c)(e|%65|%45)(s|%73|%53))?(\\\\|\\/|$)/i;\n",
+     "new": "export const INVALID_SEGMENT = /(^|\\\\|\\/)((\\.|%2e)(\\.|%2e)?|(n|%6e)(o|%6f|%4f)(d|%64|%44)(e|%65|%45)(_|%5f)(m|%6d|%4d)(o|%6f|%4f)(d|%64|%44)(u|%75|%55)(l|%6c|%4c)(e|%65|%45)(s|%73|%53))?(\\\\|\\/|$)/i;\n"
+    },
+    {
+     "path": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "export const REFUSED_SEGMENT = /(^|\\\\|\\/)((\\.|%2e)(\\.|%2e)?|(n|%6e|%4e)(o|%6f|%4f)(d|%64|%44)(e|%65|%45)(_|%5f)(m|%6d|%4d)(o|%6f|%4f)(d|%64|%44)(u|%75|%55)(l|%6c|%4c)(e|%65|%45)(s|%73|%53))(\\\\|\\/|$)/i;\n",
+     "new": "export const REFUSED_SEGMENT = /(^|\\\\|\\/)((\\.|%2e)(\\.|%2e)?|(n|%6e)(o|%6f|%4f)(d|%64|%44)(e|%65|%45)(_|%5f)(m|%6d|%4d)(o|%6f|%4f)(d|%64|%44)(u|%75|%55)(l|%6c|%4c)(e|%65|%45)(s|%73|%53))(\\\\|\\/|$)/i;\n"
+    }
+   ],
+   "expected": [
+    "the segment rules the entry reader copies from Node 24's exports resolver reads \"./dist/%4Eode_modules/index.js\" as Node does: it refuses"
+   ],
+   "failing": [
+    "the segment rules the entry reader copies from Node 24's exports resolver reads \"./dist/%4Eode_modules/index.js\" as Node does: it refuses"
+   ],
+   "asExpected": true,
+   "exit": 1,
+   "passed": 80,
+   "failed": 1,
+   "total": 81,
+   "failedFiles": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts"
+   ],
+   "fileMessages": [],
+   "error": null,
+   "stdout": null
+  },
+  {
+   "id": "RX4-require-not-a-node-condition",
+   "test": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "edits": [
+    {
+     "path": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "'node', 'import', 'require',",
+     "new": "'node', 'import',"
+    }
+   ],
+   "expected": [
+    "the workspace entry modules throws on such a target under a condition Node does not read, or in a main, and names the one Node refuses first"
+   ],
+   "failing": [
+    "the workspace entry modules throws on such a target under a condition Node does not read, or in a main, and names the one Node refuses first"
+   ],
+   "asExpected": true,
+   "exit": 1,
+   "passed": 80,
+   "failed": 1,
+   "total": 81,
+   "failedFiles": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts"
+   ],
+   "fileMessages": [],
+   "error": null,
+   "stdout": null
+  },
+  {
+   "id": "RK4-key-message-drops-the-path",
+   "test": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "edits": [
+    {
+     "path": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "${conditions.map((condition) => `${condition} > `).join('')}condition key",
+     "new": "condition key"
+    }
+   ],
+   "expected": [
+    "the workspace entry modules throws on a condition key with a /../ segment, at any depth"
+   ],
+   "failing": [
+    "the workspace entry modules throws on a condition key with a /../ segment, at any depth"
+   ],
+   "asExpected": true,
+   "exit": 1,
+   "passed": 80,
+   "failed": 1,
+   "total": 81,
+   "failedFiles": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts"
+   ],
+   "fileMessages": [],
+   "error": null,
+   "stdout": null
+  },
+  {
+   "id": "RK5-key-predicate-widened",
+   "test": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "edits": [
+    {
+     "path": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": ".filter(([, key]) => key.includes('/../'))",
+     "new": ".filter(([, key]) => key.includes('/..'))"
+    }
+   ],
+   "expected": [
+    "the workspace entry modules throws on a condition key with a /../ segment, at any depth"
+   ],
+   "failing": [
+    "the workspace entry modules throws on a condition key with a /../ segment, at any depth"
+   ],
+   "asExpected": true,
+   "exit": 1,
+   "passed": 80,
+   "failed": 1,
+   "total": 81,
+   "failedFiles": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts"
+   ],
+   "fileMessages": [],
+   "error": null,
+   "stdout": null
+  },
+  {
+   "id": "RK3-key-fault-ranked-first",
+   "test": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "edits": [
+    {
+     "path": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "    rank: 2,\n",
+     "new": "    rank: -1,\n"
+    }
+   ],
+   "expected": [],
+   "failing": [],
+   "asExpected": true,
+   "exit": 0,
+   "passed": 81,
+   "failed": 0,
+   "total": 81,
+   "failedFiles": [],
+   "fileMessages": [],
+   "error": null,
+   "stdout": null
+  },
+  {
+   "id": "RK2-key-walk-skips-arrays",
+   "test": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "edits": [
+    {
+     "path": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "  if (Array.isArray(entry)) return entry.flatMap((fallback) => conditionKeysOf(fallback, conditions));\n",
+     "new": "  if (Array.isArray(entry)) return [];\n"
+    }
+   ],
+   "expected": [],
+   "failing": [],
+   "asExpected": true,
+   "exit": 0,
+   "passed": 81,
+   "failed": 0,
+   "total": 81,
+   "failedFiles": [],
+   "fileMessages": [],
+   "error": null,
+   "stdout": null
+  },
+  {
+   "id": "RX7-projects-reordered",
+   "test": "apps/three-surface-poc/src/sync-child-process-guard.test.ts",
+   "edits": [
+    {
+     "path": "vitest.config.ts",
+     "old": "      {\n        extends: true,\n        test: {\n          name: '@syzygy/three-surface-poc-app',\n          include: ['apps/three-surface-poc/src/**/*.test.ts'],\n          // Once per run: removes the fixture directories of killed runs (syzygy-bpyt.4.10).\n          globalSetup: [fileURLToPath(new URL('./apps/three-surface-poc/src/test-fixture-sweep.global-setup.ts', import.meta.url))],\n        },\n      },\n    ],\n",
+     "new": "    ],\n"
+    },
+    {
+     "path": "vitest.config.ts",
+     "old": "    projects: [\n",
+     "new": "    projects: [\n      {\n        extends: true,\n        test: {\n          name: '@syzygy/three-surface-poc-app',\n          include: ['apps/three-surface-poc/src/**/*.test.ts'],\n          // Once per run: removes the fixture directories of killed runs (syzygy-bpyt.4.10).\n          globalSetup: [fileURLToPath(new URL('./apps/three-surface-poc/src/test-fixture-sweep.global-setup.ts', import.meta.url))],\n        },\n      },\n"
+    }
+   ],
+   "expected": [],
+   "failing": [],
+   "asExpected": true,
+   "exit": 0,
+   "passed": 8,
+   "failed": 0,
+   "total": 8,
+   "failedFiles": [],
+   "fileMessages": [],
+   "error": null,
+   "stdout": null
+  },
+  {
+   "id": "RX8-global-setup-removed",
+   "test": "apps/three-surface-poc/src/sync-child-process-guard.test.ts",
+   "edits": [
+    {
+     "path": "vitest.config.ts",
+     "old": "          globalSetup: [fileURLToPath(new URL('./apps/three-surface-poc/src/test-fixture-sweep.global-setup.ts', import.meta.url))],\n",
+     "new": ""
+    }
+   ],
+   "expected": [
+    "suite child processes and the vitest worker RPC loads the vitest config and finds no alias key at any depth"
+   ],
+   "failing": [
+    "suite child processes and the vitest worker RPC loads the vitest config and finds no alias key at any depth"
+   ],
+   "asExpected": true,
+   "exit": 1,
+   "passed": 7,
+   "failed": 1,
+   "total": 8,
+   "failedFiles": [
+    "apps/three-surface-poc/src/sync-child-process-guard.test.ts"
+   ],
+   "fileMessages": [],
+   "error": null,
+   "stdout": null
+  }
+ ]
+}

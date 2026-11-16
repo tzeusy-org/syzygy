@@ -1,0 +1,10 @@
+/** Every import and re-export declaration of a module, `import x = require('m')` included, by its specifier and as written. */
+function moduleDeclarationsOf(name: string, source: string): { specifier: string; text: string }[] {
+  const file = ts.createSourceFile(name, source, ts.ScriptTarget.Latest, false);
+  return file.statements.flatMap((statement) => {
+    const specifier = ts.isImportDeclaration(statement) || ts.isExportDeclaration(statement) ? statement.moduleSpecifier
+      : ts.isImportEqualsDeclaration(statement) && ts.isExternalModuleReference(statement.moduleReference) ? statement.moduleReference.expression
+      : undefined;
+    return specifier !== undefined && ts.isStringLiteral(specifier) ? [{ specifier: specifier.text, text: statement.getText(file) }] : [];
+  });
+}

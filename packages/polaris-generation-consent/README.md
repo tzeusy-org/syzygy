@@ -7,6 +7,18 @@ emit a content-free audit record per check. This package grants nothing: the
 real records are owner acts that do not exist yet, so it is coded against an
 interface and fixtures.
 
+## Entry points
+
+The package root exports everything. `src/consent-ports.ts` is parked egress
+code (owner packet Q8): it takes pipeline types and `digestCanonicalJson` from
+the core root, which re-exports the parked provider island, so only the root
+exports it. `@syzygy/polaris-generation-consent/live` exports everything else:
+the admission records, the in-force rules (`src/in-force.ts`, which
+`consent-ports.ts` re-exports), the package reader and the recorder template.
+A module the `syzygy` CLI reaches imports `/live`, and
+`packages/polaris-generation-core/src/island-boundary.test.ts` fails when one
+reaches the island.
+
 - A record counts only if it is in force (`inForceAt` set and not in the
   future), has no withdrawal marker (dated or not), and is not replaced by a
   successor that took effect. Two records with one id and version but different

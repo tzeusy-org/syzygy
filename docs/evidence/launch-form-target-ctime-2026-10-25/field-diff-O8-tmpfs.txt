@@ -1,0 +1,84 @@
+
+ RUN  v3.2.7 /home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.33
+
+ ❯ |@syzygy/polaris-dossier| packages/polaris-dossier/src/launched.test.ts (43 tests | 1 failed) 156ms
+   ✓ launchedMarkerState > is absent when no file of that name exists, and when the run directory itself is missing 11ms
+   ✓ launchedMarkerState > is launched for the marker Syzygy writes 8ms
+   ✓ launchedMarkerState > is launched for the marker's bytes typed by hand, so the reader and the writer cannot drift together 1ms
+   ✓ launchedMarkerState > is launched for a marker of exactly 4096 bytes, the bound 1ms
+   ✓ launchedMarkerState > is unreadable for an empty file 1ms
+   ✓ launchedMarkerState > is unreadable for invalid JSON 0ms
+   ✓ launchedMarkerState > is unreadable for JSON null 6ms
+   ✓ launchedMarkerState > is unreadable for a JSON array 0ms
+   ✓ launchedMarkerState > is unreadable for a JSON string 0ms
+   ✓ launchedMarkerState > is unreadable for another format 0ms
+   ✓ launchedMarkerState > is unreadable for no format 0ms
+   ✓ launchedMarkerState > is unreadable for a format that is not a string 0ms
+   ✓ launchedMarkerState > is unreadable for a byte-order mark before the marker 0ms
+   ✓ launchedMarkerState > is unreadable for a directory 0ms
+   ✓ launchedMarkerState > is unreadable for a dangling symbolic link 0ms
+   ✓ launchedMarkerState > is unreadable for a symbolic link to the marker Syzygy writes 0ms
+   ✓ launchedMarkerState > is unreadable for a symbolic link to a character device 0ms
+   ✓ launchedMarkerState > is unreadable for a FIFO 12ms
+   ✓ launchedMarkerState > is unreadable for a FIFO holding the marker's bytes 14ms
+   ✓ launchedMarkerState > is unreadable for a marker of 4097 bytes, one past the bound 0ms
+   ✓ launchedMarkerState > is unreadable for a file its reader may not read 0ms
+   ✓ launchedMarkerState > is unreadable when the run directory is a file 0ms
+   ✓ launchedMarkerState > is unreadable for a marker that grows after it is measured into a marker of exactly 4097 bytes, which only the bound on the read refuses 2ms
+   ✓ launchedMarkerState > is unreadable for a marker that shrinks after it is measured from 4097 bytes into the marker, which only the bound on the measured size refuses 1ms
+   ✓ launchedMarkerState > is unreadable for a marker that grows past 4096 bytes between two reads, the first of which held the whole marker 2ms
+   ✓ launch forms in a run whose marker is unreadable > count neither a declared form nor a syzygy-launched one: an empty file 2ms
+   ✓ launch forms in a run whose marker is unreadable > count neither a declared form nor a syzygy-launched one: invalid JSON 1ms
+   ✓ launch forms in a run whose marker is unreadable > count neither a declared form nor a syzygy-launched one: JSON null 1ms
+   ✓ launch forms in a run whose marker is unreadable > count neither a declared form nor a syzygy-launched one: a JSON array 1ms
+   ✓ launch forms in a run whose marker is unreadable > count neither a declared form nor a syzygy-launched one: a JSON string 1ms
+   ✓ launch forms in a run whose marker is unreadable > count neither a declared form nor a syzygy-launched one: another format 1ms
+   ✓ launch forms in a run whose marker is unreadable > count neither a declared form nor a syzygy-launched one: no format 1ms
+   ✓ launch forms in a run whose marker is unreadable > count neither a declared form nor a syzygy-launched one: a format that is not a string 1ms
+   ✓ launch forms in a run whose marker is unreadable > count neither a declared form nor a syzygy-launched one: a byte-order mark before the marker 3ms
+   ✓ launch forms in a run whose marker is unreadable > count neither a declared form nor a syzygy-launched one: a directory 1ms
+   ✓ launch forms in a run whose marker is unreadable > count neither a declared form nor a syzygy-launched one: a dangling symbolic link 1ms
+   × launch forms in a run whose marker is unreadable > count neither a declared form nor a syzygy-launched one: a symbolic link to the marker Syzygy writes 13ms
+     → expected { mode: 41471n, ino: 162293722n, …(5) } to deeply equal { mode: 41471n, ino: 162293722n, …(5) }
+   ✓ launch forms in a run whose marker is unreadable > count neither a declared form nor a syzygy-launched one: a symbolic link to a character device 2ms
+   ✓ launch forms in a run whose marker is unreadable > count neither a declared form nor a syzygy-launched one: a FIFO 28ms
+   ✓ launch forms in a run whose marker is unreadable > count neither a declared form nor a syzygy-launched one: a FIFO holding the marker's bytes 28ms
+   ✓ launch forms in a run whose marker is unreadable > count neither a declared form nor a syzygy-launched one: a marker of 4097 bytes, one past the bound 2ms
+   ✓ launch forms in a run whose marker is unreadable > count neither a declared form nor a syzygy-launched one: a file its reader may not read 3ms
+   ✓ launch forms in a run whose marker is unreadable > name what a counted record must carry, by marker state 0ms
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 42 passed (43)
+   Start at  00:35:06
+   Duration  780ms (transform 108ms, setup 26ms, collect 90ms, tests 156ms, environment 0ms, prepare 115ms)
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |@syzygy/polaris-dossier| packages/polaris-dossier/src/launched.test.ts > launch forms in a run whose marker is unreadable > count neither a declared form nor a syzygy-launched one: a symbolic link to the marker Syzygy writes
+AssertionError: expected { mode: 41471n, ino: 162293722n, …(5) } to deeply equal { mode: 41471n, ino: 162293722n, …(5) }
+
+- Expected
++ Received
+
+@@ -3,7 +3,7 @@
+    "ctimeNs": 1792859706715075614n,
+    "ino": 162293722n,
+    "link": "/tmp/la-b833/fd/polaris-marker-M26Nk6/elsewhere/launched.json",
+    "mode": 41471n,
+    "size": 61n,
+-   "targetCtimeNs": 1792859706715075614n,
++   "targetCtimeNs": 1792859706716238685n,
+  }
+
+ ❯ asked packages/polaris-dossier/src/launched.test.ts:144:35
+    142|       const before = markerSnapshot(dir);
+    143|       const reason = launchFormRefusal(dir, form);
+    144|       expect(markerSnapshot(dir)).toEqual(before);
+       |                                   ^
+    145|       expect(launchedMarkerState(dir)).toBe('unreadable');
+    146|       return reason;
+ ❯ packages/polaris-dossier/src/launched.test.ts:149:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

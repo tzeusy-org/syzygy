@@ -1,0 +1,8 @@
+{
+  "rows": 45,
+  "validated": 45,
+  "test_sha256": "a208069fc8eb76926510c8f24729293dc7253d761352e0652ffb00d7b8549ae0",
+  "source_commit": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+  "proof_script_sha256": "575e9b48519f4f9a4f4c84d110ebbca7c56eeec9ea5916f2ebb31fc8a5735ebb",
+  "extras_script_sha256": "a105a03ea3c5cb1b0f7a2ab6fe0282c042ba7247ba7933b2744b390f6fd1fa22"
+}

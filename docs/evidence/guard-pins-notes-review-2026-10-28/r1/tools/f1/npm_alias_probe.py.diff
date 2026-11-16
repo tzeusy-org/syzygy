@@ -1,0 +1,37 @@
+--- clone/docs/evidence/syzygy-bpyt-8-39/npm_alias_probe.py	2026-10-28 01:38:43.021275066 +0800
++++ tools/f1/npm_alias_probe.py	2026-10-28 02:15:58.068737762 +0800
+@@ -6,19 +6,30 @@
+ The case's one dependency is declared in `app`'s manifest, in the root's (round 2: npm treats the root's differently), or in both
+ (round 3: npm skips the root's and reads `app`'s by its own range). Every npm call, the version call included, runs offline, with a
+ private empty cache, an empty user and global config, an empty scratch HOME, no inherited npm_config_* variable, a registry of
+-http://127.0.0.1:9/ and a working directory inside the scratch directory, so nothing is fetched and the one npmrc outside the scratch
+-directory npm opens is its own builtin `<npm>/npmrc` (absent here). The version calls ran in the caller's directory, and so read
+-its `.npmrc`, until syzygy-bpyt.39 (the round-3 review's N3); docs/evidence/syzygy-bpyt-39/ traces the files npm opens.
++http://127.0.0.1:9/ and a working directory inside the scratch directory, which may have no package.json or node_modules in any
++directory above it (npm would take that directory as the project and read its `.npmrc`; the probe refuses one), so nothing is
++fetched and the one npmrc outside the scratch directory npm opens is its own builtin `<npm>/npmrc` (absent here). The version
++calls ran in the caller's directory, and so read its `.npmrc`, until syzygy-bpyt.39 (the round-3 review's N3);
++docs/evidence/syzygy-bpyt-39/ traces the files npm opens.
+ A registry fetch shows as ENOTCACHED, with the URL npm would have requested. A link shows as a lockfile entry with `link: true`;
+ the case then installs in full, and records where `node_modules/<name>` points and which package.json Node loads for the name from
+ inside `app`. arborist's version is read beside the npm on PATH, found by resolving `npm` itself.
+-Usage: python3 -I npm_alias_probe.py <empty scratch dir> <out.json>
++Usage: python3 -I npm_alias_probe.py <empty scratch dir, outside any npm project> <out.json>
+ """
+ import json, os, re, shutil, subprocess, sys
+ 
+ scratch, out = (os.path.realpath(a) for a in sys.argv[1:3])
+ if os.listdir(scratch):
+     sys.exit(f'{scratch} is not empty')
++# npm takes the nearest directory above its working directory that holds a package.json or node_modules as the project, and
++# reads that directory's .npmrc; the version calls run in the scratch directory itself, so no such directory may be above it.
++up = os.path.dirname(scratch)
++while True:
++    if any(os.path.exists(os.path.join(up, name)) for name in ('package.json', 'node_modules')):
++        sys.exit(f'{up} holds a package.json or node_modules, so npm would read its .npmrc: use a scratch directory outside any npm project')
++    if up == os.path.dirname(up):
++        break
++    up = os.path.dirname(up)
+ WORKSPACES = {'w': 'wlib', 's': '@syzygy/slib'}
+ # (what the case shows, the manifest that declares it or a tuple of the manifests that do, the name it is declared under, its spec)
+ CASES = [

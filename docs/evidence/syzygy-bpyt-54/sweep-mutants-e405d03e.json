@@ -1,0 +1,89 @@
+{
+ "ranAtCommit": "e405d03e5320256581772ed015a7f723ef07ba65",
+ "tool": "docs/evidence/syzygy-bpyt-54/spread_sweep.py",
+ "toolSha256": "808d6225e5d48c6dba773e09c018a3ce62563c57201d472154d99bdf58d52b93",
+ "unmutatedSelftestExit": 0,
+ "unmutatedFailures": [],
+ "mutants": [
+  {
+   "mutant": "strip-disabled",
+   "old": "code = strip_with_depth(raw)",
+   "new": "code = raw",
+   "exit": 1,
+   "outcome": "killed",
+   "selftestFailures": [
+    "false hit comment",
+    "false hit block-comment",
+    "false hit string",
+    "false hit template",
+    "false hit regex"
+   ]
+  },
+  {
+   "mutant": "apply-dropped",
+   "old": "if tok.endswith('.apply('):",
+   "new": "if False:",
+   "exit": 1,
+   "outcome": "killed",
+   "selftestFailures": [
+    "missed apply"
+   ]
+  },
+  {
+   "mutant": "square-not-a-bracket",
+   "old": "if tok in '([{':",
+   "new": "if tok in '({':",
+   "exit": 1,
+   "outcome": "killed",
+   "selftestFailures": [
+    "false hit array-in-call"
+   ]
+  },
+  {
+   "mutant": "optional-call-dropped",
+   "old": " or code[k - 1:k + 1] == '?.'",
+   "new": "",
+   "exit": 1,
+   "outcome": "killed",
+   "selftestFailures": [
+    "missed optional"
+   ]
+  },
+  {
+   "mutant": "any-paren-counts",
+   "old": "if stack and stack[-1][0] == '(' and stack[-1][2]:",
+   "new": "if stack and stack[-1][0] in '([{':",
+   "exit": 1,
+   "outcome": "killed",
+   "selftestFailures": [
+    "false hit array-literal",
+    "false hit object-literal",
+    "false hit array-in-call",
+    "false hit object-in-call",
+    "false hit if"
+   ]
+  },
+  {
+   "mutant": "rest-param-never",
+   "old": "def rest_param(code, pos):\n",
+   "new": "def rest_param(code, pos):\n    return False\n",
+   "exit": 1,
+   "outcome": "killed",
+   "selftestFailures": [
+    "false hit rest-method"
+   ]
+  },
+  {
+   "mutant": "regex-literal-ignored",
+   "old": "if c == '/' and (prev_sig == '' or prev_sig",
+   "new": "if False and (prev_sig == '' or prev_sig",
+   "exit": 1,
+   "outcome": "killed",
+   "selftestFailures": [
+    "false hit regex"
+   ]
+  }
+ ],
+ "killed": 7,
+ "total": 7
+}

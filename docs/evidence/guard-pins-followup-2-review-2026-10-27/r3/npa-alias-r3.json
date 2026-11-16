@@ -1,0 +1,77 @@
+{
+ "npa": "12.0.2",
+ "out": [
+  [
+   "npm:typescript@latest",
+   "alias",
+   "tag",
+   "latest"
+  ],
+  [
+   "npm:@scope/x@1.2.3",
+   "alias",
+   "version",
+   "1.2.3"
+  ],
+  [
+   "npm:typescript@",
+   "alias",
+   "range",
+   "*"
+  ],
+  [
+   "npm:typescript@x",
+   "alias",
+   "range",
+   "x"
+  ],
+  [
+   "npm:github:someone/x",
+   "throws",
+   null,
+   "aliases only work for registry deps"
+  ],
+  [
+   "npm:https://example.com/x.tgz",
+   "throws",
+   null,
+   "aliases only work for registry deps"
+  ],
+  [
+   "npm:git+https://example.com/x.git",
+   "throws",
+   null,
+   "aliases only work for registry deps"
+  ],
+  [
+   "npm:./w",
+   "throws",
+   null,
+   "aliases only work for registry deps"
+  ],
+  [
+   "npm:x.tgz",
+   "throws",
+   null,
+   "aliases only work for registry deps"
+  ],
+  [
+   "npm:workspace:*",
+   "throws",
+   "EUNSUPPORTEDPROTOCOL",
+   "Unsupported URL Type \"workspace:\": workspace:*"
+  ],
+  [
+   "npm:link:../w",
+   "throws",
+   "EUNSUPPORTEDPROTOCOL",
+   "Unsupported URL Type \"link:\": link:../w"
+  ],
+  [
+   "npm:npm:typescript@1",
+   "throws",
+   null,
+   "nested aliases not supported"
+  ]
+ ]
+}

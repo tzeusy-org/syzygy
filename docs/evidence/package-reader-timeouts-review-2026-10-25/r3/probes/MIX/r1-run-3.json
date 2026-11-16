@@ -1,0 +1,89 @@
+{
+ "batch": "MIX",
+ "version": "r1",
+ "param": "run",
+ "n": 3,
+ "scriptSha256": "920c5f120209904b37cfe14320ea00edfa18eafbda12fd7dcb02ec8fcf4f1e97",
+ "command": "python3 -I <tools>/inject.py trace <tools>/r1_measure_vitest_test_durations.py . --file packages/polaris-generation-consent/src/package-reader.test.ts --project @syzygy/polaris-generation-consent --mode alone --runs 1 --out <tmp>/measure-out.json --profile",
+ "sent": [
+  {
+   "t": 1.4588,
+   "signal": "SIGTERM",
+   "to": "pid"
+  },
+  {
+   "t": 1.4589,
+   "signal": "SIGINT",
+   "to": "pid"
+  },
+  {
+   "t": 1.4589,
+   "signal": "SIGHUP",
+   "to": "pid"
+  },
+  {
+   "t": 1.459,
+   "signal": "SIGINT",
+   "to": "pid"
+  },
+  {
+   "t": 1.459,
+   "signal": "SIGTERM",
+   "to": "pid"
+  }
+ ],
+ "events": [
+  {
+   "t": 0.9238,
+   "what": "vitest worker seen"
+  }
+ ],
+ "scriptExitedAtSeconds": 1.758,
+ "exitCode": 143,
+ "claimedExit": 143,
+ "exitAsClaimed": true,
+ "descendantsSeen": 11,
+ "seenOnlyByCwd": 7,
+ "vitestSeen": true,
+ "npxSeen": false,
+ "treeAfterExit": " M packages/polaris-generation-consent/src/package-reader.test.ts\n M packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts\n",
+ "survivors": {
+  "130132": {
+   "cmdline": "node (vitest 1)",
+   "state": "R",
+   "pgid": 129906,
+   "sid": 129906
+  }
+ },
+ "recordWritten": false,
+ "recordRuns": null,
+ "recordTests": null,
+ "recordProfileRows": null,
+ "recordExitCode": null,
+ "marks": [],
+ "scriptWrites": null,
+ "tmpdirLeft": [
+  "RlD2LfbDR799MrCnktB9x",
+  "node-compile-cache",
+  "script.log",
+  "tmpz1lctx48"
+ ],
+ "trace": [
+  "TRACE 0.0222 popen-enter ['git', 'status', '--porcelain'] stopped None",
+  "TRACE 0.0235 popen-return 129881 stopped None",
+  "TRACE 0.0354 popen-enter ['git', 'rev-parse', 'HEAD'] stopped None",
+  "TRACE 0.0368 popen-return 129892 stopped None",
+  "TRACE 0.0393 popen-enter ['git', 'show', 'HEAD:packages/polaris-generation-consent/src/package-reader.test.ts'] stopped None",
+  "TRACE 0.0403 popen-return 129894 stopped None",
+  "TRACE 0.0434 popen-enter ['git', 'show', 'HEAD:packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts'] stopped None",
+  "TRACE 0.0445 popen-return 129896 stopped None",
+  "TRACE 0.0487 popen-enter ['node', '--version'] stopped None",
+  "TRACE 0.0499 popen-return 129899 stopped None",
+  "TRACE 0.0605 popen-enter ['npx', 'vitest', 'run'] stopped None",
+  "TRACE 0.0617 popen-return 129906 stopped None",
+  "TRACE 1.4335 exit 143 stopped None"
+ ],
+ "outputTail": "TRACE 0.0222 popen-enter ['git', 'status', '--porcelain'] stopped None\nTRACE 0.0235 popen-return 129881 stopped None\nTRACE 0.0354 popen-enter ['git', 'rev-parse', 'HEAD'] stopped None\nTRACE 0.0368 popen-return 129892 stopped None\nTRACE 0.0393 popen-enter ['git', 'show', 'HEAD:packages/polaris-generation-consent/src/package-reader.test.ts'] stopped None\nTRACE 0.0403 popen-return 129894 stopped None\nTRACE 0.0434 popen-enter ['git', 'show', 'HEAD:packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts'] stopped None\nTRACE 0.0445 popen-return 129896 stopped None\nTRACE 0.0487 popen-enter ['node', '--version'] stopped None\nTRACE 0.0499 popen-return 129899 stopped None\nTRACE 0.0605 popen-enter ['npx', 'vitest', 'run'] stopped None\nTRACE 0.0617 popen-return 129906 stopped None\nTRACE 1.4335 exit 143 stopped None\n",
+ "exercised": true,
+ "passes": false
+}

@@ -1,0 +1,18 @@
+299 collected, 16 sized (10 from a lower bound), 0 problems
+   50000 ms  worst 16465 ms (lower bound)  carries 50000  the policy port and the strict policy chain agree on every world in the fixture set, at every instant
+   45000 ms  worst 14198 ms (lower bound)  carries 45000  screening scope version 2 policy act counts the version 2 act when the policy carries the version 2 bytes, and
+   45000 ms  worst 14149 ms (lower bound)  carries 45000  package admission reader returns a record only for an instance that an act record names by path and digest
+   45000 ms  worst 13826 ms (lower bound)  carries 45000  egress version 2 record refuses when version 2 did not take effect strictly after version 1: the same instant,
+   40000 ms  worst 12015 ms (lower bound)  carries 40000  strict act reads policy chain: absent without acts; refused for a missing version 1, equal or earlier instants
+   40000 ms  worst 11817 ms (lower bound)  carries 40000  egress version 2 record is read from the recorder's act: version 2 supersedes version 1 once in force
+   40000 ms  worst 11800 ms (lower bound)  carries 40000  egress version 2 record the RFC5-14 class amendment version 2 depends on is required: no record, an edited mod
+   25000 ms  worst 8089 ms (lower bound)  carries 25000  egress version 2 record withdrawal and forgery forms the reader does not define does not refuse the recorders'
+   20000 ms  worst 5040 ms (lower bound)  carries 20000  egress version 2 record leaves version 1 standing before the version 2 act takes effect, and with no version 1
+   20000 ms  worst 5039 ms (lower bound)  carries 20000  screening scope version 2 policy act a version 2 act not yet in force leaves version 1 in force, in both views
+   15000 ms  worst 4808 ms  carries 15000  public-source policy act refuses the recorder's file when its act type, identity, title or provenance is not t
+   15000 ms  worst 4266 ms  carries 15000  round-3 review notes takes a time: a strict read of an act recorded after now is absent (N-4)
+   15000 ms  worst 3866 ms  carries 15000  public-source policy act recognises the recorder's record by its exact path and format, in force from its inst
+   15000 ms  worst 3452 ms  carries 15000  screening scope version 2 policy act refuses an unlisted record that names the policy: another file, a subdire
+   15000 ms  worst 3348 ms  carries 15000  round-3 review notes folds soft hyphens, zero-width spaces, underscores and spaces before matching a withdrawa
+   10000 ms  worst 2564 ms  carries 10000  package admission reader refuses the whole read on unknown shapes instead of guessing
+exit 0

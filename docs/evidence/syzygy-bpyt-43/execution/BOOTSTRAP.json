@@ -1,0 +1,117 @@
+{
+  "at": "2026-11-06T03:26:52.746023+00:00",
+  "task": "WHOLE8 execution after FIRST",
+  "bead": "syzygy-bpyt.43",
+  "actual_process_cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.43",
+  "expected_worktree": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.43",
+  "branch": "agent/syzygy-bpyt.43",
+  "head": "740279435178a882f1c2d526a2a7ea0bf2b52cbc",
+  "clean": true,
+  "canonical_common_git_dir": "/home/orca/orca/projects/syzygy/.git",
+  "origin": "https://github.com/tzeusy-org/syzygy",
+  "live_remote_refs": "740279435178a882f1c2d526a2a7ea0bf2b52cbc\trefs/heads/main",
+  "matching_pull_requests": [],
+  "commands": [
+    {
+      "argv": [
+        "pwd",
+        "-P"
+      ],
+      "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.43",
+      "exit": 0,
+      "stdout": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.43\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "branch",
+        "--show-current"
+      ],
+      "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.43",
+      "exit": 0,
+      "stdout": "agent/syzygy-bpyt.43\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.43",
+      "exit": 0,
+      "stdout": "740279435178a882f1c2d526a2a7ea0bf2b52cbc\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "status",
+        "--porcelain=v1"
+      ],
+      "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.43",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "rev-parse",
+        "--path-format=absolute",
+        "--git-common-dir"
+      ],
+      "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.43",
+      "exit": 0,
+      "stdout": "/home/orca/orca/projects/syzygy/.git\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "remote",
+        "get-url",
+        "origin"
+      ],
+      "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.43",
+      "exit": 0,
+      "stdout": "https://github.com/tzeusy-org/syzygy\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "ls-remote",
+        "origin",
+        "refs/heads/main",
+        "refs/heads/agent/syzygy-bpyt.43"
+      ],
+      "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.43",
+      "exit": 0,
+      "stdout": "740279435178a882f1c2d526a2a7ea0bf2b52cbc\trefs/heads/main\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gh",
+        "pr",
+        "list",
+        "--repo",
+        "tzeusy-org/syzygy",
+        "--state",
+        "all",
+        "--head",
+        "agent/syzygy-bpyt.43",
+        "--limit",
+        "100",
+        "--json",
+        "number,url,state,headRefName,headRefOid,baseRefName,updatedAt"
+      ],
+      "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.43",
+      "exit": 0,
+      "stdout": "[]\n",
+      "stderr": ""
+    }
+  ]
+}

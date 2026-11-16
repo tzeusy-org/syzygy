@@ -1,0 +1,31 @@
+{
+  "cases": [
+    {
+      "id": "P0-unmutated",
+      "exit": 0,
+      "out": "check: summary.json matches its inputs and no check fails"
+    },
+    {
+      "id": "P1-W6-extra-failing-row",
+      "exit": 1,
+      "out": "check: FAIL [\"head-present W6-test-exclusion-broadened-to-any-test-substring: killed by ['@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit', '@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it'], not ['@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit']\"] equal=False"
+    },
+    {
+      "id": "P2-W7-row-dropped",
+      "exit": 1,
+      "out": "check: FAIL ['W7-testkit-exclusion-broadened-to-any-depth: not killed at HEAD in both dist states'] equal=False"
+    },
+    {
+      "id": "P3-W5-survives-as-expected",
+      "exit": 1,
+      "out": "check: FAIL [\"head-absent W5-filter-drops-the-x-forms: killed by [], not ['@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit']\", 'W5-filter-drops-the-x-forms: not killed at HEAD in both dist states'] equal=False"
+    }
+  ],
+  "statusAfter": "",
+  "caught": [
+    "P1-W6-extra-failing-row",
+    "P2-W7-row-dropped",
+    "P3-W5-survives-as-expected"
+  ],
+  "survived": []
+}

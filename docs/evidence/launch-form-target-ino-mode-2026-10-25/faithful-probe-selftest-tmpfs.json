@@ -1,0 +1,144 @@
+{
+ "root": "/tmp/la-b835/fp-selftest",
+ "roundsPerPlant": 300,
+ "plants": {
+  "an empty file": {
+   "rounds": 300,
+   "roundsDifferingByField": {},
+   "targetCtimeNsNull": 300,
+   "targetInoNull": 300,
+   "targetModeNull": 300,
+   "notUnreadable": 0
+  },
+  "invalid JSON": {
+   "rounds": 300,
+   "roundsDifferingByField": {},
+   "targetCtimeNsNull": 300,
+   "targetInoNull": 300,
+   "targetModeNull": 300,
+   "notUnreadable": 0
+  },
+  "JSON null": {
+   "rounds": 300,
+   "roundsDifferingByField": {},
+   "targetCtimeNsNull": 300,
+   "targetInoNull": 300,
+   "targetModeNull": 300,
+   "notUnreadable": 0
+  },
+  "a JSON array": {
+   "rounds": 300,
+   "roundsDifferingByField": {},
+   "targetCtimeNsNull": 300,
+   "targetInoNull": 300,
+   "targetModeNull": 300,
+   "notUnreadable": 0
+  },
+  "a JSON string": {
+   "rounds": 300,
+   "roundsDifferingByField": {},
+   "targetCtimeNsNull": 300,
+   "targetInoNull": 300,
+   "targetModeNull": 300,
+   "notUnreadable": 0
+  },
+  "another format": {
+   "rounds": 300,
+   "roundsDifferingByField": {},
+   "targetCtimeNsNull": 300,
+   "targetInoNull": 300,
+   "targetModeNull": 300,
+   "notUnreadable": 0
+  },
+  "no format": {
+   "rounds": 300,
+   "roundsDifferingByField": {},
+   "targetCtimeNsNull": 300,
+   "targetInoNull": 300,
+   "targetModeNull": 300,
+   "notUnreadable": 0
+  },
+  "a format that is not a string": {
+   "rounds": 300,
+   "roundsDifferingByField": {},
+   "targetCtimeNsNull": 300,
+   "targetInoNull": 300,
+   "targetModeNull": 300,
+   "notUnreadable": 0
+  },
+  "a byte-order mark before the marker": {
+   "rounds": 300,
+   "roundsDifferingByField": {},
+   "targetCtimeNsNull": 300,
+   "targetInoNull": 300,
+   "targetModeNull": 300,
+   "notUnreadable": 0
+  },
+  "a directory": {
+   "rounds": 300,
+   "roundsDifferingByField": {},
+   "targetCtimeNsNull": 300,
+   "targetInoNull": 300,
+   "targetModeNull": 300,
+   "notUnreadable": 0
+  },
+  "a dangling symbolic link": {
+   "rounds": 300,
+   "roundsDifferingByField": {},
+   "targetCtimeNsNull": 300,
+   "targetInoNull": 300,
+   "targetModeNull": 300,
+   "notUnreadable": 0
+  },
+  "a symbolic link to the marker Syzygy writes": {
+   "rounds": 300,
+   "roundsDifferingByField": {
+    "targetCtimeNs": 300
+   },
+   "targetCtimeNsNull": 0,
+   "targetInoNull": 0,
+   "targetModeNull": 0,
+   "notUnreadable": 0
+  },
+  "a symbolic link to a character device": {
+   "rounds": 300,
+   "roundsDifferingByField": {},
+   "targetCtimeNsNull": 300,
+   "targetInoNull": 300,
+   "targetModeNull": 300,
+   "notUnreadable": 0
+  },
+  "a FIFO": {
+   "rounds": 300,
+   "roundsDifferingByField": {},
+   "targetCtimeNsNull": 300,
+   "targetInoNull": 300,
+   "targetModeNull": 300,
+   "notUnreadable": 0
+  },
+  "a FIFO holding the marker's bytes": {
+   "rounds": 300,
+   "roundsDifferingByField": {},
+   "targetCtimeNsNull": 300,
+   "targetInoNull": 300,
+   "targetModeNull": 300,
+   "notUnreadable": 0
+  },
+  "a marker of 4097 bytes, one past the bound": {
+   "rounds": 300,
+   "roundsDifferingByField": {},
+   "targetCtimeNsNull": 300,
+   "targetInoNull": 300,
+   "targetModeNull": 300,
+   "notUnreadable": 0
+  },
+  "a file its reader may not read": {
+   "rounds": 300,
+   "roundsDifferingByField": {},
+   "targetCtimeNsNull": 300,
+   "targetInoNull": 300,
+   "targetModeNull": 300,
+   "notUnreadable": 0
+  }
+ }
+}

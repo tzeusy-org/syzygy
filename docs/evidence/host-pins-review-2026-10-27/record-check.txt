@@ -1,0 +1,2 @@
+summary.json matches ; problems: 0
+selftest: 26/26 mutations make a check fail

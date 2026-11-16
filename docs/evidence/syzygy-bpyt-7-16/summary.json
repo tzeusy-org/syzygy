@@ -1,0 +1,174 @@
+{
+ "bead": "syzygy-bpyt.7.16",
+ "base": "eb8fb6cb523c7d415390ac60c15f7c2c56db2398",
+ "head": "0d7eaf08a19dd64bdeb294d3995861fbfbaad759",
+ "code": {
+  "base": "d38d7a3ce632a34c2a41bdb77ad323ba0b05b777",
+  "commit": "acb92078c6d81e3af25be3600c122ce5174679bc"
+ },
+ "subject": {
+  "what": "git diff eb8fb6cb 0d7eaf08",
+  "sha256": "210dc44da2d4701cbfa183d0090a599a7478023b6948febe3ca406e922f3f083",
+  "files": {
+   "packages/http-host/src/credentials.test.ts": {
+    "base": "41ee07c5d1c3e909f0ebe142f08539ff7631fa0ec91fab17dc727b6fba2c8069",
+    "head": "d66445b939b6272204b582e32614ccbe81dfbe783702be0943b0b3cf217f7c08"
+   },
+   "apps/three-surface-poc/src/browser-origin.test.ts": {
+    "base": "f06ee5f98dcbeda165b1944b73c0b1357fa71c6949b295b3aaab88b7adf762f2",
+    "head": "730d227339064e235a9db38a96137908019e155f94a195ee15974aef938452e1"
+   },
+   "packages/cap1-daemon/src/server.test.ts": {
+    "base": "d7164b734808687db6a8b5e061648da2cb4b7588f224265b938a3a1c141cd4ec",
+    "head": "dc03617a0a5b8f9ead4a2ed00d50a3010ae578e1be64b9934f902216ebd6a776"
+   }
+  }
+ },
+ "productFilesChanged": [],
+ "runnerSha256": "fe8ae4e5456c957435954fa368ff075ec31c783766e95c602e1bda3410144dac",
+ "reviewSpecsSha256": "628fb34ecea806b3c2d53874e96a82057786355066b29d60d89a77485c3e82e3",
+ "targets": {
+  "V2-bearer-leading-whitespace-admitted": {
+   "base": "survived",
+   "head": "killed",
+   "headFailedRows": [
+    "packages/http-host/src/credentials.test.ts > RT3 — credential verification through core admission the minted token behind any other whitespace refuses, named"
+   ]
+  },
+  "V4-containment-case-insensitive": {
+   "base": "survived",
+   "head": "killed",
+   "headFailedRows": [
+    "packages/http-host/src/credentials.test.ts > RT3 — state-write boundary refuses a sibling whose name differs from the state dir name only in case, as traversal"
+   ]
+  },
+  "V6-origin-suffix-match": {
+   "base": "survived",
+   "head": "killed",
+   "headFailedRows": [
+    "apps/three-surface-poc/src/browser-origin.test.ts > browserRequestAllowed — the Origin is compared whole refuses an origin that only ends with the host origin, and the opaque origin null"
+   ]
+  },
+  "V10-listed-reason-matched-case-insensitively": {
+   "base": "survived",
+   "head": "killed",
+   "headFailedRows": [
+    "packages/cap1-daemon/src/server.test.ts > RT3 — credential-classed admission at the transport logs a 503 breach diagnostic for each listed Unknown population and withholds an unlisted one"
+   ]
+  },
+  "V1-token-compare-not-constant-time": {
+   "base": "survived",
+   "head": "survived",
+   "headFailedRows": []
+  },
+  "V7-origin-compared-case-insensitively": {
+   "base": "survived",
+   "head": "survived",
+   "headFailedRows": []
+  },
+  "V8-host-lower-cased-before-check": {
+   "base": "survived",
+   "head": "survived",
+   "headFailedRows": []
+  },
+  "V11-gate-prefix-without-trailing-slash": {
+   "base": "survived",
+   "head": "survived",
+   "headFailedRows": []
+  },
+  "V12-gate-prefix-src-and-manifest-only": {
+   "base": "survived",
+   "head": "survived",
+   "headFailedRows": []
+  }
+ },
+ "otherReviewMutants": {
+  "stronger": [
+   "V5-lexical-check-before-normalising"
+  ],
+  "unchanged": [
+   "V13-shim-local-copy-of-object-export",
+   "V3-bearer-token-first-non-space-run",
+   "V9-withheld-diagnostic-leaks-one-reason-character"
+  ],
+  "weaker": []
+ },
+ "own": {
+  "O1-bearer-no-break-space-admitted": {
+   "base": "survived",
+   "head": "killed",
+   "headFailedRows": [
+    "packages/http-host/src/credentials.test.ts > RT3 — credential verification through core admission the minted token behind any other whitespace refuses, named"
+   ]
+  },
+  "O2-origin-null-allowed": {
+   "base": "survived",
+   "head": "killed",
+   "headFailedRows": [
+    "apps/three-surface-poc/src/browser-origin.test.ts > browserRequestAllowed — the Origin is compared whole refuses an origin that only ends with the host origin, and the opaque origin null"
+   ]
+  }
+ },
+ "titles": {
+  "base": 5374,
+  "head": 5376,
+  "added": 2,
+  "removed": 0,
+  "bodiesChanged": [
+   "packages/http-host/src/credentials.test.ts > RT3 — credential verification through core admission the minted token behind any other whitespace refuses, named",
+   "packages/cap1-daemon/src/server.test.ts > RT3 — credential-classed admission at the transport logs a 503 breach diagnostic for each listed Unknown population and withholds an unlisted one"
+  ],
+  "line": "Tests: +2 ~2 -0"
+ },
+ "repeats": {
+  "runs": 5,
+  "passed": [
+   55,
+   55,
+   55,
+   55,
+   55
+  ],
+  "load1": [
+   61.77,
+   61.77,
+   63.71,
+   61.97,
+   61.97
+  ]
+ },
+ "suite": {
+  "full-1": {
+   "total": 1266,
+   "passed": 1263,
+   "failed": 1,
+   "skipped": 2,
+   "load1Before": 61.66,
+   "load1After": 49.59
+  },
+  "full-2": {
+   "total": 1266,
+   "passed": 1264,
+   "failed": 0,
+   "skipped": 2,
+   "load1Before": 44.54,
+   "load1After": 47.51
+  }
+ },
+ "suiteTimeouts": [
+  "Zero downstream citations of Polaris as authority (PWB-REQ-014) no source/authority/provenance field in the governance, spec, code or docs trees names the Polaris surface"
+ ],
+ "surfaceVersion": {
+  "base": "polaris@ddd7d1721dd8",
+  "head": "polaris@8928d19927d7"
+ },
+ "surfaceVersionCarriers": 0,
+ "tools": {
+  "titles.py": "9a7d7efc6c5a1af78624a70dca6dd50b6868b2d336099cb5c5cafddf10ee5bf7",
+  "repeats.py": "72c1501d1b1f6084be12662c212a4ec61a7566e519f97d4f4bed9c22780f310a",
+  "own_specs.py": "4ecaae097265a4ffec29f92e15d7e5848000b331e91d3496144fc0d495de7ba6",
+  "suite_summary.py": "426634afc68b6f5b66984588dd253465cd870bdf1ed76ad3658b40aaf0cf32c3",
+  "record.py": "3799ab97d73e42a9a07e1d856e7b93c890abee2596ab75ad514579fb5a25b433"
+ },
+ "problems": []
+}

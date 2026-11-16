@@ -1,0 +1,34 @@
+{
+ "batch": "H",
+ "profile": false,
+ "commit": "d6b04c5f03978b2a8fbc87afc61c725d91eca0f4",
+ "tool": {
+  "path": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520d/tools/r3m/probe.py",
+  "sha256": "0861dc65de035da0ec4fd0b6c34f5a4b31588b89aafff76298a7eb487289b140"
+ },
+ "scripts": {
+  "mk2": {
+   "path": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520d/tools/r3m/mk2_measure_vitest_test_durations.py",
+   "sha256": "886448b30f89c84f7ba85ccfef540d1e8340e94403494d58e5829eec77796d39"
+  }
+ },
+ "repeats": 1,
+ "params": [
+  null
+ ],
+ "summary": {
+  "mk2": {
+   "attempts": 1,
+   "passed": 0,
+   "dirty": 0,
+   "withSurvivors": 0,
+   "exitAsClaimed": 1,
+   "exercised": 1
+  }
+ },
+ "loadAtEnd": [
+  46.8974609375,
+  30.8408203125,
+  20.892578125
+ ]
+}

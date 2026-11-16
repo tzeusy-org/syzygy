@@ -1,0 +1,11 @@
+sites 74
+2 ('config', 'no-title-site', 'file')
+1 ('hook', 'commit-only', 'file')
+1 ('hook', 'commit-only', 'test')
+8 ('hook', 'no-title-site', 'file')
+1 ('suite', 'commit-only', 'file')
+2 ('test', 'commit-only', 'None')
+4 ('test', 'commit-only', 'test')
+2 ('test', 'test-without-title-hit', 'file')
+2 ('test', 'test-without-title-hit', 'test')
+51 ('test', 'title-in-record', 'test')

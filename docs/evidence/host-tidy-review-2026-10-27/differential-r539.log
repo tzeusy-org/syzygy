@@ -1,0 +1,84 @@
+{
+ "base": "9dba258992667f62ad503ec76d8a6b99efcc4bac",
+ "head": "f2304fd5d2bfd0e50c48d6ea356ddea3f7be162d",
+ "surfaceEqual": true,
+ "hostEqualThroughCap1Daemon": true,
+ "hostEqualThroughHttpHost": true,
+ "e2eEqual": true,
+ "asExpected": true,
+ "selftest": [
+  {
+   "mutant": "refusal-status",
+   "file": "packages/http-host/dist/server.js",
+   "old": "export const REFUSAL_STATUS = 401;",
+   "new": "export const REFUSAL_STATUS = 403;",
+   "check": "hostEqualThroughHttpHost",
+   "checkHeld": false,
+   "detected": true,
+   "expected": "detected"
+  },
+  {
+   "mutant": "credential-detail",
+   "file": "packages/http-host/dist/credentials.js",
+   "old": "grants group or other access",
+   "new": "grants access to others",
+   "check": "hostEqualThroughCap1Daemon",
+   "checkHeld": false,
+   "detected": true,
+   "expected": "detected"
+  },
+  {
+   "mutant": "shutdown-announcement",
+   "file": "apps/syzygy/dist/main.js",
+   "old": "received, shutting down",
+   "new": "received; shutting down",
+   "check": "e2eEqual",
+   "checkHeld": false,
+   "detected": true,
+   "expected": "detected"
+  },
+  {
+   "mutant": "gate-cap1-daemon-prefix",
+   "file": "apps/three-surface-poc/dist/git-observation.js",
+   "old": "'packages/cap1-daemon/',",
+   "new": "",
+   "check": "gateEqual",
+   "checkHeld": false,
+   "detected": true,
+   "expected": "detected"
+  },
+  {
+   "mutant": "shim-type-dropped",
+   "file": "packages/cap1-daemon/src/server.ts",
+   "old": "  type RouteRequest,\n",
+   "new": "",
+   "check": "surfaceEqual",
+   "checkHeld": false,
+   "detected": true,
+   "expected": "detected"
+  },
+  {
+   "mutant": "shim-binding-swapped",
+   "file": "packages/cap1-daemon/src/server.ts",
+   "old": "  UNKNOWN_ROUTE_STATUS,\n",
+   "new": "  HANDLER_FAILURE_STATUS as UNKNOWN_ROUTE_STATUS,\n",
+   "check": "surfaceEqual",
+   "checkHeld": false,
+   "detected": true,
+   "expected": "detected"
+  },
+  {
+   "mutant": "source-value-changed",
+   "file": "packages/http-host/src/server.ts",
+   "old": "export const UNKNOWN_ROUTE_STATUS = 404;",
+   "new": "export const UNKNOWN_ROUTE_STATUS = 405;",
+   "check": "surfaceEqual",
+   "checkHeld": true,
+   "detected": false,
+   "expected": "held"
+  }
+ ],
+ "selftestPassed": true
+}
+gate differing: 0 gate equal: True
+exit=0

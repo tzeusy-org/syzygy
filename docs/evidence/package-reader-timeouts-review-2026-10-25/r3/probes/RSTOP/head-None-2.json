@@ -1,0 +1,144 @@
+{
+ "batch": "RSTOP",
+ "profile": true,
+ "version": "head",
+ "param": null,
+ "n": 2,
+ "scriptSha256": "72a0fabdd0dd12f85ad35fde4b3ee032125757d5276b85802d76fdf5288f0195",
+ "command": "python3 -I <tools>/inject.py trace scripts/measure_vitest_test_durations.py . --file packages/polaris-generation-consent/src/package-reader.test.ts --project @syzygy/polaris-generation-consent --mode alone --runs 1 --out <tmp>/measure-out.json --profile",
+ "sent": [
+  {
+   "t": 1.4377,
+   "signal": "SIGTERM",
+   "to": "pid"
+  },
+  {
+   "t": 1.843,
+   "signal": "SIGINT",
+   "to": "group"
+  },
+  {
+   "t": 1.9432,
+   "signal": "SIGTERM",
+   "to": "pid"
+  },
+  {
+   "t": 2.0434,
+   "signal": "SIGHUP",
+   "to": "pid"
+  },
+  {
+   "t": 2.1436,
+   "signal": "SIGINT",
+   "to": "pid"
+  },
+  {
+   "t": 2.2438,
+   "signal": "SIGINT",
+   "to": "group"
+  },
+  {
+   "t": 2.3439,
+   "signal": "SIGTERM",
+   "to": "pid"
+  },
+  {
+   "t": 2.4441,
+   "signal": "SIGHUP",
+   "to": "pid"
+  },
+  {
+   "t": 2.5443,
+   "signal": "SIGINT",
+   "to": "pid"
+  },
+  {
+   "t": 2.6445,
+   "signal": "SIGINT",
+   "to": "group"
+  },
+  {
+   "t": 2.7447,
+   "signal": "SIGTERM",
+   "to": "pid"
+  },
+  {
+   "t": 2.8449,
+   "signal": "SIGHUP",
+   "to": "pid"
+  },
+  {
+   "t": 2.9451,
+   "signal": "SIGINT",
+   "to": "pid"
+  }
+ ],
+ "events": [
+  {
+   "t": 0.8286,
+   "what": "vitest worker seen"
+  },
+  {
+   "t": 1.843,
+   "what": "checkout entered"
+  }
+ ],
+ "scriptExitedAtSeconds": 3.288,
+ "exitCode": 143,
+ "claimedExit": 143,
+ "exitAsClaimed": true,
+ "descendantsSeen": 12,
+ "seenOnlyByCwd": 1,
+ "vitestSeen": true,
+ "npxSeen": false,
+ "treeAfterExit": "",
+ "survivors": {},
+ "recordWritten": false,
+ "recordRuns": null,
+ "recordTests": null,
+ "recordProfileRows": null,
+ "recordExitCode": null,
+ "marks": [
+  {
+   "what": "checkout-enter",
+   "pid": 348648,
+   "pgid": 348648,
+   "sid": 348648,
+   "t": 1792866447.564656,
+   "args": [
+    "checkout",
+    "--",
+    "packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts",
+    "packages/polaris-generation-consent/src/package-reader.test.ts"
+   ]
+  }
+ ],
+ "scriptWrites": null,
+ "tmpdirLeft": [
+  "bin",
+  "foYaQANYHthK1mR4IDVIz",
+  "mark.jsonl",
+  "node-compile-cache",
+  "script.log"
+ ],
+ "trace": [
+  "TRACE 0.0215 popen-enter ['git', 'status', '--porcelain'] stopped []",
+  "TRACE 0.0236 popen-return 348078 stopped []",
+  "TRACE 0.0749 popen-enter ['git', 'rev-parse', 'HEAD'] stopped []",
+  "TRACE 0.0766 popen-return 348105 stopped []",
+  "TRACE 0.1055 popen-enter ['git', 'show', 'HEAD:packages/polaris-generation-consent/src/package-reader.test.ts'] stopped []",
+  "TRACE 0.1063 popen-return 348124 stopped []",
+  "TRACE 0.1332 popen-enter ['git', 'show', 'HEAD:packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts'] stopped []",
+  "TRACE 0.1354 popen-return 348135 stopped []",
+  "TRACE 0.1722 popen-enter ['node', '--version'] stopped []",
+  "TRACE 0.1739 popen-return 348152 stopped []",
+  "TRACE 0.1834 popen-enter ['npx', 'vitest', 'run'] stopped []",
+  "TRACE 0.1844 popen-return 348158 stopped []",
+  "TRACE 1.6438 popen-enter ['git', 'checkout', '--'] stopped [15]",
+  "TRACE 1.6508 popen-return 348648 stopped [15]",
+  "TRACE 3.2297 exit 143 stopped [15, 2, 15, 1, 2, 2, 15, 1, 2, 2, 15, 1, 2]"
+ ],
+ "outputTail": "TRACE 0.0215 popen-enter ['git', 'status', '--porcelain'] stopped []\nTRACE 0.0236 popen-return 348078 stopped []\nTRACE 0.0749 popen-enter ['git', 'rev-parse', 'HEAD'] stopped []\nTRACE 0.0766 popen-return 348105 stopped []\nTRACE 0.1055 popen-enter ['git', 'show', 'HEAD:packages/polaris-generation-consent/src/package-reader.test.ts'] stopped []\nTRACE 0.1063 popen-return 348124 stopped []\nTRACE 0.1332 popen-enter ['git', 'show', 'HEAD:packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts'] stopped []\nTRACE 0.1354 popen-return 348135 stopped []\nTRACE 0.1722 popen-enter ['node', '--version'] stopped []\nTRACE 0.1739 popen-return 348152 stopped []\nTRACE 0.1834 popen-enter ['npx', 'vitest', 'run'] stopped []\nTRACE 0.1844 popen-return 348158 stopped []\nTRACE 1.6438 popen-enter ['git', 'checkout', '--'] stopped [15]\nTRACE 1.6508 popen-return 348648 stopped [15]\nstopped by SIGTERM: the run in progress, if any, was ended and restored and is not recorded\nTRACE 3.2297 exit 143 stopped [15, 2, 15, 1, 2, 2, 15, 1, 2, 2, 15, 1, 2]\n",
+ "exercised": true,
+ "passes": true
+}

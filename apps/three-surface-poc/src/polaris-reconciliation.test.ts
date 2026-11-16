@@ -78,7 +78,7 @@ beforeAll(() => {
     MODELS.set(variant, model);
     PAGES.set(variant, renderPolarisPage(model));
   }
-}, 120_000);
+});
 
 afterAll(() => {
   for (const directory of cleanups.splice(0)) rmSync(directory, { recursive: true, force: true });

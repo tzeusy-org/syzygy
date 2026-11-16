@@ -1,0 +1,770 @@
+{
+ "base": "c104771f",
+ "head": "fe3855a1",
+ "files": 59,
+ "filesCompared": 56,
+ "filesWhoseHashArgumentsDiffer": [],
+ "filesWhoseFreezeArgumentsDiffer": [],
+ "globalHashArguments": {
+  "base": 111,
+  "head": 111,
+  "equal": true
+ },
+ "globalFreezeArguments": {
+  "base": 17,
+  "head": 17,
+  "equal": true
+ },
+ "noncanonicalLocalHelpers": [],
+ "baseFreezeBodies": {
+  "apps/three-surface-poc/src/polaris-narrative.ts": "if (value !== null && typeof value === 'object') { for (const inner of Object.values(value as Record<string, unknown>)) deepFreeze(inner); Object.freeze(value); } return value;",
+  "packages/polaris-generation-core/src/prompts.ts": "if (value !== null && typeof value === 'object' && !Object.isFrozen(value)) { Object.freeze(value); for (const child of Object.values(value)) deepFreeze(child); } return value;",
+  "packages/three-surface-poc-core/src/act-fields.ts": "if (typeof value === 'object' && value !== null && !Object.isFrozen(value)) { Object.freeze(value); for (const key of Object.keys(value as object)) { deepFreeze((value as Record<string, unknown>)[key]); } } return value;",
+  "packages/three-surface-poc-core/src/model.ts": "if (typeof value !== 'object' || value === null || Object.isFrozen(value)) return value; Object.freeze(value); for (const child of Object.values(value as Record<string, unknown>)) deepFreeze(child); return value;",
+  "packages/three-surface-poc-core/src/poc-seeds.ts": "if (typeof value !== 'object' || value === null || Object.isFrozen(value)) { return value; } Object.freeze(value); for (const child of Object.values(value as Record<string, unknown>)) { deepFreeze(child); } return value;",
+  "packages/three-surface-poc-core/src/project-shape-manifest.ts": "if (value !== null && typeof value === 'object' && !Object.isFrozen(value)) { Object.freeze(value); for (const inner of Object.values(value as Record<string, unknown>)) deepFreeze(inner); } return value;",
+  "packages/three-surface-poc-core/src/project-shape-observation.ts": "if (value !== null && typeof value === 'object' && !Object.isFrozen(value)) { Object.freeze(value); for (const member of Object.values(value as Record<string, unknown>)) deepFreeze(member); } return value;"
+ },
+ "rows": [
+  {
+   "file": "apps/three-surface-poc/src/capability-detail.ts",
+   "hashSites": {
+    "base": 1,
+    "head": 1,
+    "equal": true
+   },
+   "freezeCalls": {
+    "base": 0,
+    "head": 0,
+    "equal": true
+   }
+  },
+  {
+   "file": "apps/three-surface-poc/src/fresh-checkout-demo-main.ts",
+   "hashSites": {
+    "base": 1,
+    "head": 1,
+    "equal": true
+   },
+   "freezeCalls": {
+    "base": 0,
+    "head": 0,
+    "equal": true
+   }
+  },
+  {
+   "file": "apps/three-surface-poc/src/git-observation.ts",
+   "hashSites": {
+    "base": 1,
+    "head": 1,
+    "equal": true
+   },
+   "freezeCalls": {
+    "base": 0,
+    "head": 0,
+    "equal": true
+   }
+  },
+  {
+   "file": "apps/three-surface-poc/src/poc-main.ts",
+   "hashSites": {
+    "base": 1,
+    "head": 1,
+    "equal": true
+   },
+   "freezeCalls": {
+    "base": 0,
+    "head": 0,
+    "equal": true
+   }
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-accessible-names-main.ts",
+   "hashSites": {
+    "base": 1,
+    "head": 1,
+    "equal": true
+   },
+   "freezeCalls": {
+    "base": 0,
+    "head": 0,
+    "equal": true
+   }
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "hashSites": {
+    "base": 1,
+    "head": 1,
+    "equal": true
+   },
+   "freezeCalls": {
+    "base": 0,
+    "head": 0,
+    "equal": true
+   }
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-generation/draft-preview.ts",
+   "hashSites": {
+    "base": 2,
+    "head": 2,
+    "equal": true
+   },
+   "freezeCalls": {
+    "base": 0,
+    "head": 0,
+    "equal": true
+   }
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.ts",
+   "hashSites": {
+    "base": 2,
+    "head": 2,
+    "equal": true
+   },
+   "freezeCalls": {
+    "base": 0,
+    "head": 0,
+    "equal": true
+   }
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-generation/generation-mutation-run-main.ts",
+   "hashSites": {
+    "base": 3,
+    "head": 3,
+    "equal": true
+   },
+   "freezeCalls": {
+    "base": 0,
+    "head": 0,
+    "equal": true
+   }
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-generation/public-source-screening.ts",
+   "hashSites": {
+    "base": 1,
+    "head": 1,
+    "equal": true
+   },
+   "freezeCalls": {
+    "base": 0,
+    "head": 0,
+    "equal": true
+   }
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-generation/redis-shaped-measure-main.ts",
+   "hashSites": {
+    "base": 1,
+    "head": 1,
+    "equal": true
+   },
+   "freezeCalls": {
+    "base": 0,
+    "head": 0,
+    "equal": true
+   }
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-generation/repo-corpus.ts",
+   "hashSites": {
+    "base": 3,
+    "head": 3,
+    "equal": true
+   },
+   "freezeCalls": {
+    "base": 0,
+    "head": 0,
+    "equal": true
+   }
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-generation/self-corpus.ts",
+   "hashSites": {
+    "base": 3,
+    "head": 3,
+    "equal": true
+   },
+   "freezeCalls": {
+    "base": 0,
+    "head": 0,
+    "equal": true
+   }
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-keyboard-sweep-main.ts",
+   "hashSites": {
+    "base": 1,
+    "head": 1,
+    "equal": true
+   },
+   "freezeCalls": {
+    "base": 0,
+    "head": 0,
+    "equal": true
+   }
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-narrative.ts",
+   "hashSites": {
+    "base": 0,
+    "head": 0,
+    "equal": true
+   },
+   "freezeCalls": {
+    "base": 3,
+    "head": 3,
+    "equal": true
+   }
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-reading.ts",
+   "hashSites": {
+    "base": 1,
+    "head": 1,
+    "equal": true
+   },
+   "freezeCalls": {
+    "base": 0,
+    "head": 0,
+    "equal": true
+   }
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris.ts",
+   "hashSites": {
+    "base": 1,
+    "head": 1,
+    "equal": true
+   },
+   "freezeCalls": {
+    "base": 0,
+    "head": 0,
+    "equal": true
+   }
+  },
+  {
+   "file": "apps/three-surface-poc/src/pwb-mutation-run-main.ts",
+   "hashSites": {
+    "base": 3,
+    "head": 3,
+    "equal": true
+   },
+   "freezeCalls": {
+    "base": 0,
+    "head": 0,
+    "equal": true
+   }
+  },
+  {
+   "file": "apps/three-surface-poc/src/pwb-mutation-sweep-main.ts",
+   "hashSites": {
+    "base": 3,
+    "head": 3,
+    "equal": true
+   },
+   "freezeCalls": {
+    "base": 0,
+    "head": 0,
+    "equal": true
+   }
+  },
+  {
+   "file": "apps/three-surface-poc/src/restart.ts",
+   "hashSites": {
+    "base": 1,
+    "head": 1,
+    "equal": true
+   },
+   "freezeCalls": {
+    "base": 0,
+    "head": 0,
+    "equal": true
+   }
+  },
+  {
+   "file": "apps/three-surface-poc/src/walkthrough-inputs.ts",
+   "hashSites": {
+    "base": 1,
+    "head": 1,
+    "equal": true
+   },
+   "freezeCalls": {
+    "base": 0,
+    "head": 0,
+    "equal": true
+   }
+  },
+  {
+   "file": "packages/polaris-dossier/src/brief.ts",
+   "hashSites": {
+    "base": 2,
+    "head": 2,
+    "equal": true
+   },
+   "freezeCalls": {
+    "base": 0,
+    "head": 0,
+    "equal": true
+   }
+  },
+  {
+   "file": "packages/polaris-dossier/src/check.ts",
+   "hashSites": {
+    "base": 1,
+    "head": 1,
+    "equal": true
+   },
+   "freezeCalls": {
+    "base": 0,
+    "head": 0,
+    "equal": true
+   }
+  },
+  {
+   "file": "packages/polaris-dossier/src/close.ts",
+   "hashSites": {
+    "base": 1,
+    "head": 1,
+    "equal": true
+   },
+   "freezeCalls": {
+    "base": 0,
+    "head": 0,
+    "equal": true
+   }
+  },
+  {
+   "file": "packages/polaris-dossier/src/design-review.ts",
+   "hashSites": {
+    "base": 2,
+    "head": 2,
+    "equal": true
+   },
+   "freezeCalls": {
+    "base": 0,
+    "head": 0,
+    "equal": true
+   }
+  },
+  {
+   "file": "packages/polaris-dossier/src/doctrine-quote.ts",
+   "hashSites": {
+    "base": 1,
+    "head": 1,
+    "equal": true
+   },
+   "freezeCalls": {
+    "base": 0,
+    "head": 0,
+    "equal": true
+   }
+  },
+  {
+   "file": "packages/polaris-dossier/src/inventory.ts",
+   "hashSites": {
+    "base": 3,
+    "head": 3,
+    "equal": true
+   },
+   "freezeCalls": {
+    "base": 0,
+    "head": 0,
+    "equal": true
+   }
+  },
+  {
+   "file": "packages/polaris-dossier/src/launched.ts",
+   "hashSites": {
+    "base": 1,
+    "head": 1,
+    "equal": true
+   },
+   "freezeCalls": {
+    "base": 0,
+    "head": 0,
+    "equal": true
+   }
+  },
+  {
+   "file": "packages/polaris-dossier/src/polaris.ts",
+   "hashSites": {
+    "base": 2,
+    "head": 2,
+    "equal": true
+   },
+   "freezeCalls": {
+    "base": 0,
+    "head": 0,
+    "equal": true
+   }
+  },
+  {
+   "file": "packages/polaris-dossier/src/render.ts",
+   "hashSites": {
+    "base": 1,
+    "head": 1,
+    "equal": true
+   },
+   "freezeCalls": {
+    "base": 0,
+    "head": 0,
+    "equal": true
+   }
+  },
+  {
+   "file": "packages/polaris-dossier/src/review.ts",
+   "hashSites": {
+    "base": 8,
+    "head": 8,
+    "equal": true
+   },
+   "freezeCalls": {
+    "base": 0,
+    "head": 0,
+    "equal": true
+   }
+  },
+  {
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "hashSites": {
+    "base": 2,
+    "head": 2,
+    "equal": true
+   },
+   "freezeCalls": {
+    "base": 0,
+    "head": 0,
+    "equal": true
+   }
+  },
+  {
+   "file": "packages/polaris-dossier/src/session-handover.ts",
+   "hashSites": {
+    "base": 6,
+    "head": 6,
+    "equal": true
+   },
+   "freezeCalls": {
+    "base": 0,
+    "head": 0,
+    "equal": true
+   }
+  },
+  {
+   "file": "packages/polaris-dossier/src/session-view.ts",
+   "hashSites": {
+    "base": 1,
+    "head": 1,
+    "equal": true
+   },
+   "freezeCalls": {
+    "base": 0,
+    "head": 0,
+    "equal": true
+   }
+  },
+  {
+   "file": "packages/polaris-dossier/src/waiting-sessions.ts",
+   "hashSites": {
+    "base": 4,
+    "head": 4,
+    "equal": true
+   },
+   "freezeCalls": {
+    "base": 0,
+    "head": 0,
+    "equal": true
+   }
+  },
+  {
+   "file": "packages/polaris-generation-consent/src/consent-ports.ts",
+   "hashSites": {
+    "base": 2,
+    "head": 2,
+    "equal": true
+   },
+   "freezeCalls": {
+    "base": 0,
+    "head": 0,
+    "equal": true
+   }
+  },
+  {
+   "file": "packages/polaris-generation-consent/src/package-reader.ts",
+   "hashSites": {
+    "base": 10,
+    "head": 10,
+    "equal": true
+   },
+   "freezeCalls": {
+    "base": 0,
+    "head": 0,
+    "equal": true
+   }
+  },
+  {
+   "file": "packages/polaris-generation-core/src/canonical-json.ts",
+   "hashSites": {
+    "base": 1,
+    "head": 1,
+    "equal": true
+   },
+   "freezeCalls": {
+    "base": 0,
+    "head": 0,
+    "equal": true
+   }
+  },
+  {
+   "file": "packages/polaris-generation-core/src/dossier-evaluation.ts",
+   "hashSites": {
+    "base": 4,
+    "head": 4,
+    "equal": true
+   },
+   "freezeCalls": {
+    "base": 0,
+    "head": 0,
+    "equal": true
+   }
+  },
+  {
+   "file": "packages/polaris-generation-core/src/dossier-profile.ts",
+   "hashSites": {
+    "base": 1,
+    "head": 1,
+    "equal": true
+   },
+   "freezeCalls": {
+    "base": 0,
+    "head": 0,
+    "equal": true
+   }
+  },
+  {
+   "file": "packages/polaris-generation-core/src/generation-source.ts",
+   "hashSites": {
+    "base": 4,
+    "head": 4,
+    "equal": true
+   },
+   "freezeCalls": {
+    "base": 0,
+    "head": 0,
+    "equal": true
+   }
+  },
+  {
+   "file": "packages/polaris-generation-core/src/pipeline.ts",
+   "hashSites": {
+    "base": 1,
+    "head": 1,
+    "equal": true
+   },
+   "freezeCalls": {
+    "base": 0,
+    "head": 0,
+    "equal": true
+   }
+  },
+  {
+   "file": "packages/polaris-generation-core/src/prompts.ts",
+   "hashSites": {
+    "base": 0,
+    "head": 0,
+    "equal": true
+   },
+   "freezeCalls": {
+    "base": 3,
+    "head": 3,
+    "equal": true
+   }
+  },
+  {
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "hashSites": {
+    "base": 6,
+    "head": 6,
+    "equal": true
+   },
+   "freezeCalls": {
+    "base": 0,
+    "head": 0,
+    "equal": true
+   }
+  },
+  {
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "hashSites": {
+    "base": 2,
+    "head": 2,
+    "equal": true
+   },
+   "freezeCalls": {
+    "base": 0,
+    "head": 0,
+    "equal": true
+   }
+  },
+  {
+   "file": "packages/support/src/deep-freeze.ts",
+   "note": "added"
+  },
+  {
+   "file": "packages/support/src/index.ts",
+   "note": "added"
+  },
+  {
+   "file": "packages/support/src/sha256.ts",
+   "note": "added"
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/act-fields.ts",
+   "hashSites": {
+    "base": 0,
+    "head": 0,
+    "equal": true
+   },
+   "freezeCalls": {
+    "base": 0,
+    "head": 0,
+    "equal": true
+   }
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/body-read-authority.ts",
+   "hashSites": {
+    "base": 1,
+    "head": 1,
+    "equal": true
+   },
+   "freezeCalls": {
+    "base": 2,
+    "head": 2,
+    "equal": true
+   }
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/git-object-reader.ts",
+   "hashSites": {
+    "base": 1,
+    "head": 1,
+    "equal": true
+   },
+   "freezeCalls": {
+    "base": 0,
+    "head": 0,
+    "equal": true
+   }
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/model.ts",
+   "hashSites": {
+    "base": 3,
+    "head": 3,
+    "equal": true
+   },
+   "freezeCalls": {
+    "base": 4,
+    "head": 4,
+    "equal": true
+   }
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/owner-act-drafter.ts",
+   "hashSites": {
+    "base": 1,
+    "head": 1,
+    "equal": true
+   },
+   "freezeCalls": {
+    "base": 0,
+    "head": 0,
+    "equal": true
+   }
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/poc-seeds.ts",
+   "hashSites": {
+    "base": 0,
+    "head": 0,
+    "equal": true
+   },
+   "freezeCalls": {
+    "base": 1,
+    "head": 1,
+    "equal": true
+   }
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+   "hashSites": {
+    "base": 1,
+    "head": 1,
+    "equal": true
+   },
+   "freezeCalls": {
+    "base": 1,
+    "head": 1,
+    "equal": true
+   }
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+   "hashSites": {
+    "base": 2,
+    "head": 2,
+    "equal": true
+   },
+   "freezeCalls": {
+    "base": 1,
+    "head": 1,
+    "equal": true
+   }
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/response-identity.ts",
+   "hashSites": {
+    "base": 1,
+    "head": 1,
+    "equal": true
+   },
+   "freezeCalls": {
+    "base": 0,
+    "head": 0,
+    "equal": true
+   }
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/walkthrough-judgment.ts",
+   "hashSites": {
+    "base": 2,
+    "head": 2,
+    "equal": true
+   },
+   "freezeCalls": {
+    "base": 2,
+    "head": 2,
+    "equal": true
+   }
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/walkthrough-readiness.ts",
+   "hashSites": {
+    "base": 1,
+    "head": 1,
+    "equal": true
+   },
+   "freezeCalls": {
+    "base": 0,
+    "head": 0,
+    "equal": true
+   }
+  }
+ ]
+}

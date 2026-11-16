@@ -223,7 +223,7 @@ function deepFreeze<T>(value: T): T {
 // protocol is recorded in docs/evidence/poc-test-timeouts-2026-10-03.json.
 beforeAll(() => {
   for (const variant of VARIANTS) VARIANT_MODELS.set(variant, deepFreeze(buildVariant(variant, variantCleanups)));
-}, 60_000);
+}, 60_000); // before this hoist, tests building these models took up to 13.1 s each under parallel load (docs/evidence/poc-test-timeouts-2026-10-03.json)
 
 afterAll(() => {
   for (const directory of variantCleanups.splice(0)) {

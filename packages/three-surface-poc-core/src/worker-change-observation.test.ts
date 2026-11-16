@@ -1,18 +1,10 @@
 import { execFileSync } from 'node:child_process';
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
-import { afterEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
+import { tempDir } from '@syzygy/test-kit';
 
 import { observeWorkerChange, type WorkerChangeSeam } from './worker-change-observation.js';
-
-const cleanups: string[] = [];
-
-afterEach(() => {
-  for (const directory of cleanups.splice(0)) {
-    rmSync(directory, { recursive: true, force: true });
-  }
-});
 
 function git(root: string, args: readonly string[]): string {
   return execFileSync('git', ['-C', root, ...args], {
@@ -41,8 +33,7 @@ function writeSeam(root: string, sourceContents: string): void {
  * remote (`refs/remotes/origin/*`) — no real network remote is required
  * since the observer only ever reads local ref state. */
 function initRepo(): string {
-  const root = mkdtempSync(join(tmpdir(), 'syzygy-poc-worker-change-'));
-  cleanups.push(root);
+  const root = tempDir('syzygy-poc-worker-change-');
   writeSeam(root, 'x = 1\n');
   git(root, ['init', '-q', '-b', 'main']);
   git(root, ['config', 'gc.auto', '0']);
@@ -73,8 +64,7 @@ describe('worker-change observer', () => {
   });
 
   it('returns Unknown when the default branch cannot be resolved', () => {
-    const root = mkdtempSync(join(tmpdir(), 'syzygy-poc-worker-change-noorigin-'));
-    cleanups.push(root);
+    const root = tempDir('syzygy-poc-worker-change-noorigin-');
     writeSeam(root, 'x = 1\n');
     git(root, ['init', '-q', '-b', 'main']);
     git(root, ['config', 'gc.auto', '0']);
@@ -94,6 +84,26 @@ describe('worker-change observer', () => {
       kind: 'unknown',
       reason: 'the Butlers repository default branch could not be resolved',
     });
+  });
+
+  it('keeps Node replacing decode for a non-UTF-8 commit subject and never verifies activity', () => {
+    const root = initRepo();
+    const parent = git(root, ['rev-parse', 'HEAD']);
+    writeSeam(root, 'x = 2\n');
+    git(root, ['add', '-A']);
+    const tree = git(root, ['write-tree']);
+    const commit = execFileSync('git', ['-C', root, '-c', 'i18n.commitEncoding=ISO-8859-1', 'commit-tree', tree, '-p', parent], {
+      input: Buffer.from('subject [bu-1] caf\xff\n', 'latin1'), encoding: 'utf8', stdio: ['pipe', 'pipe', 'ignore'],
+    }).trim();
+    // Request raw log bytes: Git's configured output encoding otherwise repairs this fixture itself.
+    git(root, ['config', 'i18n.logOutputEncoding', 'ISO-8859-1']);
+    git(root, ['update-ref', 'refs/remotes/origin/main', commit]);
+    const result = observeWorkerChange({ repoRoot: root, beadId: 'bu-1', seam: { sourcePath: '.', testPath: '.' }, capturedAt: '2026-08-30T00:00:00Z' });
+    expect(result.kind).toBe('observed');
+    if (result.kind !== 'observed') throw new Error(result.reason);
+    expect(result.state).toBe('changed-or-merged');
+    expect(result.verification).toBe('not-verified');
+    expect(result.commit?.subject).toBe('subject [bu-1] caf\ufffd');
   });
 
   it('renders planned when the Bead exists but no matching git activity is observed', () => {

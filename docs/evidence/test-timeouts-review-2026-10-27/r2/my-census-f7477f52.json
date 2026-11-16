@@ -1,0 +1,1134 @@
+{
+ "commit": "f7477f52",
+ "population": 514,
+ "sites": 140,
+ "files": 41,
+ "byKind": {
+  "test": 118,
+  "hook": 19,
+  "suite": 1,
+  "config": 2
+ },
+ "sitesList": [
+  {
+   "path": "apps/three-surface-poc/src/build-output.test.ts",
+   "line": 62,
+   "kind": "test",
+   "expression": "240_000",
+   "valueMs": 240000,
+   "callLine": 42
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.browser.test.ts",
+   "line": 82,
+   "kind": "test",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "callLine": 63
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.browser.test.ts",
+   "line": 112,
+   "kind": "test",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "callLine": 84
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 335,
+   "kind": "test",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "callLine": 329
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 344,
+   "kind": "test",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "callLine": 337
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 351,
+   "kind": "test",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "callLine": 346
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 364,
+   "kind": "test",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "callLine": 353
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 371,
+   "kind": "test",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "callLine": 366
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 383,
+   "kind": "test",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "callLine": 373
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 401,
+   "kind": "test",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "callLine": 385
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 417,
+   "kind": "test",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "callLine": 403
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 426,
+   "kind": "test",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "callLine": 419
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 439,
+   "kind": "test",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "callLine": 428
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 445,
+   "kind": "test",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "callLine": 441
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 451,
+   "kind": "test",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "callLine": 447
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 458,
+   "kind": "test",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "callLine": 453
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 470,
+   "kind": "test",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "callLine": 460
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 478,
+   "kind": "test",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "callLine": 472
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 489,
+   "kind": "test",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "callLine": 480
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 63,
+   "kind": "test",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "callLine": 57
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 71,
+   "kind": "test",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "callLine": 65
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 94,
+   "kind": "test",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "callLine": 73
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 109,
+   "kind": "test",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "callLine": 96
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 128,
+   "kind": "test",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "callLine": 111
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 142,
+   "kind": "test",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "callLine": 130
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 186,
+   "kind": "test",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "callLine": 145
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 198,
+   "kind": "test",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "callLine": 188
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 212,
+   "kind": "test",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "callLine": 200
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 227,
+   "kind": "test",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "callLine": 214
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 241,
+   "kind": "test",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "callLine": 229
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 256,
+   "kind": "test",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "callLine": 243
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 266,
+   "kind": "test",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "callLine": 258
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 284,
+   "kind": "test",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "callLine": 268
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 296,
+   "kind": "test",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "callLine": 286
+  },
+  {
+   "path": "apps/three-surface-poc/src/git-blob-batch.test.ts",
+   "line": 241,
+   "kind": "test",
+   "expression": "REAL_TREE_TIMEOUT_MS",
+   "valueMs": 120000,
+   "callLine": 206
+  },
+  {
+   "path": "apps/three-surface-poc/src/git-blob-batch.test.ts",
+   "line": 253,
+   "kind": "test",
+   "expression": "REAL_TREE_TIMEOUT_MS",
+   "valueMs": 120000,
+   "callLine": 243
+  },
+  {
+   "path": "apps/three-surface-poc/src/git-blob-batch.test.ts",
+   "line": 286,
+   "kind": "test",
+   "expression": "REAL_TREE_TIMEOUT_MS",
+   "valueMs": 120000,
+   "callLine": 278
+  },
+  {
+   "path": "apps/three-surface-poc/src/governance-inputs.test.ts",
+   "line": 504,
+   "kind": "test",
+   "expression": "REAL_TREE_TIMEOUT_MS",
+   "valueMs": 60000,
+   "callLine": 439
+  },
+  {
+   "path": "apps/three-surface-poc/src/governing-intent-sweep.test.ts",
+   "line": 168,
+   "kind": "hook",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "callLine": 164
+  },
+  {
+   "path": "apps/three-surface-poc/src/keyboard-sweep-record.test.ts",
+   "line": 59,
+   "kind": "test",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "callLine": 44
+  },
+  {
+   "path": "apps/three-surface-poc/src/main.test.ts",
+   "line": 366,
+   "kind": "test",
+   "expression": "TEST_TIMEOUT_MS",
+   "valueMs": 30000,
+   "callLine": 325
+  },
+  {
+   "path": "apps/three-surface-poc/src/main.test.ts",
+   "line": 378,
+   "kind": "test",
+   "expression": "TEST_TIMEOUT_MS",
+   "valueMs": 30000,
+   "callLine": 368
+  },
+  {
+   "path": "apps/three-surface-poc/src/main.test.ts",
+   "line": 389,
+   "kind": "test",
+   "expression": "TEST_TIMEOUT_MS",
+   "valueMs": 30000,
+   "callLine": 380
+  },
+  {
+   "path": "apps/three-surface-poc/src/main.test.ts",
+   "line": 406,
+   "kind": "test",
+   "expression": "TEST_TIMEOUT_MS",
+   "valueMs": 30000,
+   "callLine": 391
+  },
+  {
+   "path": "apps/three-surface-poc/src/main.test.ts",
+   "line": 424,
+   "kind": "test",
+   "expression": "TEST_TIMEOUT_MS",
+   "valueMs": 30000,
+   "callLine": 408
+  },
+  {
+   "path": "apps/three-surface-poc/src/main.test.ts",
+   "line": 478,
+   "kind": "test",
+   "expression": "TEST_TIMEOUT_MS",
+   "valueMs": 30000,
+   "callLine": 439
+  },
+  {
+   "path": "apps/three-surface-poc/src/main.test.ts",
+   "line": 498,
+   "kind": "test",
+   "expression": "TEST_TIMEOUT_MS",
+   "valueMs": 30000,
+   "callLine": 480
+  },
+  {
+   "path": "apps/three-surface-poc/src/main.test.ts",
+   "line": 513,
+   "kind": "test",
+   "expression": "TEST_TIMEOUT_MS",
+   "valueMs": 30000,
+   "callLine": 500
+  },
+  {
+   "path": "apps/three-surface-poc/src/main.test.ts",
+   "line": 538,
+   "kind": "test",
+   "expression": "TEST_TIMEOUT_MS",
+   "valueMs": 30000,
+   "callLine": 517
+  },
+  {
+   "path": "apps/three-surface-poc/src/main.test.ts",
+   "line": 548,
+   "kind": "test",
+   "expression": "TEST_TIMEOUT_MS",
+   "valueMs": 30000,
+   "callLine": 542
+  },
+  {
+   "path": "apps/three-surface-poc/src/main.test.ts",
+   "line": 555,
+   "kind": "test",
+   "expression": "2_000",
+   "valueMs": 2000,
+   "callLine": 550
+  },
+  {
+   "path": "apps/three-surface-poc/src/orrery.browser.test.ts",
+   "line": 24,
+   "kind": "hook",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "callLine": 22
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts",
+   "line": 91,
+   "kind": "hook",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "callLine": 80
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts",
+   "line": 310,
+   "kind": "test",
+   "expression": "240_000",
+   "valueMs": 240000,
+   "callLine": 287
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts",
+   "line": 332,
+   "kind": "test",
+   "expression": "240_000",
+   "valueMs": 240000,
+   "callLine": 313
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+   "line": 187,
+   "kind": "hook",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "callLine": 184
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+   "line": 315,
+   "kind": "test",
+   "expression": "240_000",
+   "valueMs": 240000,
+   "callLine": 298
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+   "line": 329,
+   "kind": "test",
+   "expression": "240_000",
+   "valueMs": 240000,
+   "callLine": 317
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+   "line": 343,
+   "kind": "test",
+   "expression": "240_000",
+   "valueMs": 240000,
+   "callLine": 338
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-copy.test.ts",
+   "line": 226,
+   "kind": "hook",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "callLine": 224
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-first-reading.test.ts",
+   "line": 52,
+   "kind": "hook",
+   "expression": "SHARED_FIXTURE_TIMEOUT_MS",
+   "valueMs": null,
+   "callLine": 52
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/dossier-cap-measure.test.ts",
+   "line": 12,
+   "kind": "hook",
+   "expression": "120_000",
+   "valueMs": 120000,
+   "callLine": 9
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/draft-preview.browser.test.ts",
+   "line": 47,
+   "kind": "test",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "callLine": 12
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts",
+   "line": 45,
+   "kind": "test",
+   "expression": "T",
+   "valueMs": 30000,
+   "callLine": 38
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts",
+   "line": 54,
+   "kind": "test",
+   "expression": "T",
+   "valueMs": 30000,
+   "callLine": 47
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts",
+   "line": 85,
+   "kind": "test",
+   "expression": "T",
+   "valueMs": 30000,
+   "callLine": 75
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts",
+   "line": 103,
+   "kind": "test",
+   "expression": "T",
+   "valueMs": 30000,
+   "callLine": 87
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts",
+   "line": 115,
+   "kind": "test",
+   "expression": "T",
+   "valueMs": 30000,
+   "callLine": 105
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts",
+   "line": 127,
+   "kind": "test",
+   "expression": "T",
+   "valueMs": 30000,
+   "callLine": 117
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts",
+   "line": 55,
+   "kind": "test",
+   "expression": "JOURNAL_TIMEOUT_MS",
+   "valueMs": 30000,
+   "callLine": 42
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts",
+   "line": 79,
+   "kind": "test",
+   "expression": "JOURNAL_TIMEOUT_MS",
+   "valueMs": 30000,
+   "callLine": 57
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts",
+   "line": 96,
+   "kind": "test",
+   "expression": "JOURNAL_TIMEOUT_MS",
+   "valueMs": 30000,
+   "callLine": 81
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts",
+   "line": 116,
+   "kind": "test",
+   "expression": "JOURNAL_TIMEOUT_MS",
+   "valueMs": 30000,
+   "callLine": 98
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/pipeline-demo.test.ts",
+   "line": 73,
+   "kind": "test",
+   "expression": "ONRAMP_TEST_BUDGET_MS",
+   "valueMs": null,
+   "callLine": 50
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/redis-shaped-discovery.test.ts",
+   "line": 16,
+   "kind": "hook",
+   "expression": "120_000",
+   "valueMs": 120000,
+   "callLine": 13
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/redis-shaped-discovery.test.ts",
+   "line": 205,
+   "kind": "test",
+   "expression": "120_000",
+   "valueMs": 120000,
+   "callLine": 197
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/self-corpus.test.ts",
+   "line": 32,
+   "kind": "test",
+   "expression": "PINNED_READ_TIMEOUT_MS",
+   "valueMs": 60000,
+   "callLine": 21
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/self-corpus.test.ts",
+   "line": 46,
+   "kind": "test",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "callLine": 34
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-narrative.test.ts",
+   "line": 59,
+   "kind": "hook",
+   "expression": "SHARED_FIXTURE_TIMEOUT_MS",
+   "valueMs": null,
+   "callLine": 59
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+   "line": 316,
+   "kind": "hook",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "callLine": 313
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+   "line": 352,
+   "kind": "test",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "callLine": 347
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+   "line": 364,
+   "kind": "test",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "callLine": 354
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+   "line": 370,
+   "kind": "test",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "callLine": 366
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+   "line": 408,
+   "kind": "test",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "callLine": 406
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+   "line": 413,
+   "kind": "test",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "callLine": 410
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+   "line": 424,
+   "kind": "test",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "callLine": 418
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+   "line": 443,
+   "kind": "test",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "callLine": 426
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+   "line": 452,
+   "kind": "test",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "callLine": 445
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-reconciliation.test.ts",
+   "line": 81,
+   "kind": "hook",
+   "expression": "120_000",
+   "valueMs": 120000,
+   "callLine": 75
+  },
+  {
+   "path": "apps/three-surface-poc/src/production-reobserve.test.ts",
+   "line": 99,
+   "kind": "test",
+   "expression": "PRODUCTION_BUILD_TIMEOUT_MS",
+   "valueMs": 60000,
+   "callLine": 86
+  },
+  {
+   "path": "apps/three-surface-poc/src/production-reobserve.test.ts",
+   "line": 132,
+   "kind": "test",
+   "expression": "PRODUCTION_BUILD_TIMEOUT_MS",
+   "valueMs": 60000,
+   "callLine": 101
+  },
+  {
+   "path": "apps/three-surface-poc/src/production-reobserve.test.ts",
+   "line": 160,
+   "kind": "test",
+   "expression": "PRODUCTION_BUILD_TIMEOUT_MS",
+   "valueMs": 60000,
+   "callLine": 134
+  },
+  {
+   "path": "apps/three-surface-poc/src/production-reobserve.test.ts",
+   "line": 182,
+   "kind": "test",
+   "expression": "PRODUCTION_BUILD_TIMEOUT_MS",
+   "valueMs": 60000,
+   "callLine": 162
+  },
+  {
+   "path": "apps/three-surface-poc/src/proposal-disclosure.test.ts",
+   "line": 147,
+   "kind": "test",
+   "expression": "45_000",
+   "valueMs": 45000,
+   "callLine": 132
+  },
+  {
+   "path": "apps/three-surface-poc/src/restart.test.ts",
+   "line": 321,
+   "kind": "hook",
+   "expression": "TEST_MS",
+   "valueMs": 180000,
+   "callLine": 303
+  },
+  {
+   "path": "apps/three-surface-poc/src/restart.test.ts",
+   "line": 331,
+   "kind": "suite",
+   "expression": "TEST_MS",
+   "valueMs": 180000,
+   "callLine": 331
+  },
+  {
+   "path": "apps/three-surface-poc/src/surface-routes.test.ts",
+   "line": 313,
+   "kind": "hook",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "callLine": 300
+  },
+  {
+   "path": "apps/three-surface-poc/src/surface-routes.test.ts",
+   "line": 328,
+   "kind": "hook",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "callLine": 315
+  },
+  {
+   "path": "apps/three-surface-poc/src/surface-routes.test.ts",
+   "line": 420,
+   "kind": "test",
+   "expression": "15_000",
+   "valueMs": 15000,
+   "callLine": 330
+  },
+  {
+   "path": "apps/three-surface-poc/src/surface-routes.test.ts",
+   "line": 453,
+   "kind": "test",
+   "expression": "10_000",
+   "valueMs": 10000,
+   "callLine": 439
+  },
+  {
+   "path": "apps/three-surface-poc/src/surface-routes.test.ts",
+   "line": 537,
+   "kind": "test",
+   "expression": "45_000",
+   "valueMs": 45000,
+   "callLine": 482
+  },
+  {
+   "path": "apps/three-surface-poc/src/test-model-fixture.test.ts",
+   "line": 120,
+   "kind": "test",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "callLine": 111
+  },
+  {
+   "path": "apps/three-surface-poc/src/test-model-fixture.test.ts",
+   "line": 131,
+   "kind": "test",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "callLine": 122
+  },
+  {
+   "path": "apps/three-surface-poc/src/trajectory-narrowing.browser.test.ts",
+   "line": 32,
+   "kind": "hook",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "callLine": 30
+  },
+  {
+   "path": "apps/three-surface-poc/src/tuple-encoding.test.ts",
+   "line": 94,
+   "kind": "hook",
+   "expression": "SHARED_FIXTURE_TIMEOUT_MS",
+   "valueMs": null,
+   "callLine": 94
+  },
+  {
+   "path": "apps/three-surface-poc/src/tuple-encoding.test.ts",
+   "line": 312,
+   "kind": "test",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "callLine": 276
+  },
+  {
+   "path": "apps/three-surface-poc/src/unknown-route-sweep.test.ts",
+   "line": 173,
+   "kind": "hook",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "callLine": 126
+  },
+  {
+   "path": "packages/cap1-system/src/fresh-clone.system.test.ts",
+   "line": 117,
+   "kind": "test",
+   "expression": "600_000",
+   "valueMs": 600000,
+   "callLine": 37
+  },
+  {
+   "path": "packages/cap1-system/vitest.config.ts",
+   "line": 18,
+   "kind": "config",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "callLine": null
+  },
+  {
+   "path": "packages/cap1-system/vitest.config.ts",
+   "line": 19,
+   "kind": "config",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "callLine": null
+  },
+  {
+   "path": "packages/polaris-dossier/src/gate-acts.test.ts",
+   "line": 98,
+   "kind": "test",
+   "expression": "TREE_TIMEOUT",
+   "valueMs": 60000,
+   "callLine": 96
+  },
+  {
+   "path": "packages/polaris-dossier/src/gate-acts.test.ts",
+   "line": 106,
+   "kind": "test",
+   "expression": "TREE_TIMEOUT",
+   "valueMs": 60000,
+   "callLine": 99
+  },
+  {
+   "path": "packages/polaris-dossier/src/git-object-reader.test.ts",
+   "line": 582,
+   "kind": "test",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "callLine": 578
+  },
+  {
+   "path": "packages/polaris-dossier/src/git-object-reader.test.ts",
+   "line": 782,
+   "kind": "test",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "callLine": 775
+  },
+  {
+   "path": "packages/polaris-dossier/src/git-object-reader.test.ts",
+   "line": 803,
+   "kind": "test",
+   "expression": "240_000",
+   "valueMs": 240000,
+   "callLine": 797
+  },
+  {
+   "path": "packages/polaris-dossier/src/git-object-reader.test.ts",
+   "line": 812,
+   "kind": "test",
+   "expression": "240_000",
+   "valueMs": 240000,
+   "callLine": 804
+  },
+  {
+   "path": "packages/polaris-dossier/src/no-egress.test.ts",
+   "line": 48,
+   "kind": "hook",
+   "expression": "120_000",
+   "valueMs": 120000,
+   "callLine": 25
+  },
+  {
+   "path": "packages/polaris-dossier/src/no-egress.test.ts",
+   "line": 85,
+   "kind": "test",
+   "expression": "240_000",
+   "valueMs": 240000,
+   "callLine": 67
+  },
+  {
+   "path": "packages/polaris-dossier/src/no-egress.test.ts",
+   "line": 93,
+   "kind": "test",
+   "expression": "240_000",
+   "valueMs": 240000,
+   "callLine": 87
+  },
+  {
+   "path": "packages/polaris-dossier/src/start-gates.test.ts",
+   "line": 1015,
+   "kind": "test",
+   "expression": "TREE_TIMEOUT",
+   "valueMs": 60000,
+   "callLine": 1009
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "line": 111,
+   "kind": "test",
+   "expression": "45_000",
+   "valueMs": 45000,
+   "callLine": 103
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "line": 141,
+   "kind": "test",
+   "expression": "10_000",
+   "valueMs": 10000,
+   "callLine": 121
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "line": 259,
+   "kind": "test",
+   "expression": "15_000",
+   "valueMs": 15000,
+   "callLine": 255
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "line": 327,
+   "kind": "test",
+   "expression": "15_000",
+   "valueMs": 15000,
+   "callLine": 324
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "line": 368,
+   "kind": "test",
+   "expression": "40_000",
+   "valueMs": 40000,
+   "callLine": 361
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "line": 375,
+   "kind": "test",
+   "expression": "20_000",
+   "valueMs": 20000,
+   "callLine": 369
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "line": 381,
+   "kind": "test",
+   "expression": "45_000",
+   "valueMs": 45000,
+   "callLine": 376
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "line": 443,
+   "kind": "test",
+   "expression": "40_000",
+   "valueMs": 40000,
+   "callLine": 425
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "line": 498,
+   "kind": "test",
+   "expression": "25_000",
+   "valueMs": 25000,
+   "callLine": 488
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "line": 541,
+   "kind": "test",
+   "expression": "45_000",
+   "valueMs": 45000,
+   "callLine": 537
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "line": 563,
+   "kind": "test",
+   "expression": "20_000",
+   "valueMs": 20000,
+   "callLine": 557
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "line": 581,
+   "kind": "test",
+   "expression": "15_000",
+   "valueMs": 15000,
+   "callLine": 574
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "line": 710,
+   "kind": "test",
+   "expression": "40_000",
+   "valueMs": 40000,
+   "callLine": 697
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "line": 779,
+   "kind": "test",
+   "expression": "15_000",
+   "valueMs": 15000,
+   "callLine": 771
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "line": 804,
+   "kind": "test",
+   "expression": "15_000",
+   "valueMs": 15000,
+   "callLine": 794
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "line": 947,
+   "kind": "hook",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "callLine": 947
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "line": 1061,
+   "kind": "test",
+   "expression": "50_000",
+   "valueMs": 50000,
+   "callLine": 1050
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/real-tree.test.ts",
+   "line": 50,
+   "kind": "test",
+   "expression": "TIMEOUT",
+   "valueMs": 120000,
+   "callLine": 34
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/real-tree.test.ts",
+   "line": 58,
+   "kind": "test",
+   "expression": "TIMEOUT",
+   "valueMs": 120000,
+   "callLine": 51
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/test-artifact-verification.live.test.ts",
+   "line": 139,
+   "kind": "test",
+   "expression": "120_000",
+   "valueMs": 120000,
+   "callLine": 49
+  }
+ ]
+}

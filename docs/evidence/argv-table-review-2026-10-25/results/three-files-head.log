@@ -1,0 +1,13 @@
+
+[1m[46m RUN [49m[22m [36mv3.2.7 [39m[90m/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-521/clone[39m
+
+ [32m✓[39m [30m[45m @syzygy/polaris-dossier [49m[39m packages/polaris-dossier/src/state-directory.test.ts [2m([22m[2m24 tests[22m[2m)[22m[32m 26[2mms[22m[39m
+ [32m✓[39m [30m[45m @syzygy/polaris-dossier [49m[39m packages/polaris-dossier/src/argv.test.ts [2m([22m[2m65 tests[22m[2m)[22m[32m 28[2mms[22m[39m
+ [32m✓[39m [30m[45m @syzygy/polaris-dossier [49m[39m packages/polaris-dossier/src/subpath-imports.test.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 92[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m3 passed[39m[22m[90m (3)[39m
+[2m      Tests [22m [1m[32m106 passed[39m[22m[90m (106)[39m
+[2m   Start at [22m 00:28:40
+[2m   Duration [22m 1.22s[2m (transform 149ms, setup 51ms, collect 724ms, tests 147ms, environment 1ms, prepare 245ms)[22m
+
+EXIT 0

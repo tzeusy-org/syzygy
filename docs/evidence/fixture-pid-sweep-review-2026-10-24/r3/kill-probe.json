@@ -1,0 +1,90 @@
+{
+ "probe": "rev-509c kill_probe.py",
+ "probeSha256": "7b2e61e91cb8212f1886504ece206bf55f68a13ebb18971c0ee0e38d68f61970",
+ "treeCommit": "a6be88169abd9287de0fe181f83d36d61983cd34",
+ "sha256AtCommit": {
+  "apps/three-surface-poc/src/fixture-directories.ts": "df5a319e02b9bbc3294bf0b0b90a987ecea86bfd219a41d0341855a3e9dc5ada",
+  "apps/three-surface-poc/src/test-fixture-sweep.global-setup.ts": "8f68850a773daf21fde1174532826c5ded2ae372dd89db9ab3b32487e9135317",
+  "apps/three-surface-poc/src/test-model-fixture.ts": "58497e91d23c7244a76ceff055d590dd264c9c09dddbdd647604689b820d413e",
+  "vitest.config.ts": "8e8d698a90f37b1a340e4b9c6500981dda87bb56bd348980a648d1f3d89b625d"
+ },
+ "tmpdir": "/tmp/r509c-7",
+ "command": "npx vitest run --project @syzygy/three-surface-poc-app",
+ "minCopies": 3,
+ "atSignal": {
+  "secondsAfterStart": 7.1,
+  "copies": 3,
+  "finishedBeforeSignal": false,
+  "census": {
+   "deadOwned": [],
+   "liveOwned": [
+    "syzygy-poc-surface-fixture-p2890530-n4026531836-4A7wT4",
+    "syzygy-poc-surface-fixture-p2890546-n4026531836-FWaxEI",
+    "syzygy-poc-surface-fixture-p2890567-n4026531836-4rHGDJ",
+    "syzygy-poc-surface-fixture-template-p2890530-n4026531836-AajsIr",
+    "syzygy-poc-surface-fixture-template-p2890546-n4026531836-8RZY17",
+    "syzygy-poc-surface-fixture-template-p2890567-n4026531836-Gb0zhu"
+   ],
+   "legacy": [],
+   "other": [
+    "AntBdaDVE8o_ptPOxgepn",
+    "node-compile-cache",
+    "syzygy-dossier-src-s5SOsr",
+    "syzygy-public-screen-K2UTEU",
+    "syzygy-public-screen-PlX4gH",
+    "syzygy-trigger-repo-FiNKSj",
+    "syzygy-trigger-webfO6"
+   ]
+  }
+ },
+ "fiveSecondsAfterKill": {
+  "deadOwned": [
+   "syzygy-poc-surface-fixture-p2890530-n4026531836-4A7wT4",
+   "syzygy-poc-surface-fixture-p2890546-n4026531836-FWaxEI",
+   "syzygy-poc-surface-fixture-p2890567-n4026531836-4rHGDJ",
+   "syzygy-poc-surface-fixture-template-p2890530-n4026531836-AajsIr",
+   "syzygy-poc-surface-fixture-template-p2890546-n4026531836-8RZY17",
+   "syzygy-poc-surface-fixture-template-p2890567-n4026531836-Gb0zhu"
+  ],
+  "liveOwned": [],
+  "legacy": [],
+  "other": [
+   "AntBdaDVE8o_ptPOxgepn",
+   "node-compile-cache",
+   "syzygy-dossier-src-s5SOsr",
+   "syzygy-public-screen-K2UTEU",
+   "syzygy-public-screen-PlX4gH",
+   "syzygy-trigger-repo-FiNKSj",
+   "syzygy-trigger-webfO6"
+  ]
+ },
+ "orphansAfterKill": [],
+ "orphansStopped": [],
+ "orphansAfterStop": [],
+ "freshRun": {
+  "exit": 0,
+  "seconds": 220.4,
+  "summary": [
+   "Test Files  89 passed | 1 skipped (90)",
+   "Tests  1113 passed | 2 skipped (1115)",
+   "Duration  218.43s (transform 11.52s, setup 2.47s, collect 66.47s, tests 593.09s, environment 71ms, prepare 22.36s)"
+  ]
+ },
+ "afterFreshRun": {
+  "deadOwned": [],
+  "liveOwned": [],
+  "legacy": [],
+  "other": [
+   ".com.google.Chrome.K9ww1f",
+   ".com.google.Chrome.rFd9ZP",
+   "AntBdaDVE8o_ptPOxgepn",
+   "node-compile-cache",
+   "syzygy-dossier-src-s5SOsr",
+   "syzygy-public-screen-K2UTEU",
+   "syzygy-public-screen-PlX4gH",
+   "syzygy-trigger-repo-FiNKSj",
+   "syzygy-trigger-webfO6"
+  ]
+ },
+ "orphansAfterFreshRun": []
+}

@@ -1,0 +1,56 @@
+{
+ "commit": "f7ea858480b30ffc4407154a84d1d03f3fe4a549",
+ "dist": "present",
+ "distDirs": [
+  "apps/syzygy/dist",
+  "apps/three-surface-poc/dist",
+  "packages/cap1-conformance/dist",
+  "packages/cap1-core/dist",
+  "packages/cap1-daemon/dist",
+  "packages/cap1-system/dist",
+  "packages/http-host/dist",
+  "packages/polaris-dossier/dist",
+  "packages/polaris-generation-consent/dist",
+  "packages/polaris-generation-core/dist",
+  "packages/support/dist",
+  "packages/three-surface-poc-core/dist"
+ ],
+ "summary": {
+  "rows": 1,
+  "asExpected": 1,
+  "unexpected": []
+ },
+ "statusAfter": "",
+ "leftovers": [],
+ "rows": [
+  {
+   "id": "BM4-base-alias-for-support-dropped",
+   "probe": "base only",
+   "tests": [
+    "packages/polaris-dossier/src/no-egress.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/polaris-dossier/src/no-egress.test.ts",
+     "old": "      '@syzygy/support': src('packages/support/src/index.ts'),\n",
+     "new": ""
+    }
+   ],
+   "expected": "survives",
+   "observed": "survives",
+   "loadavg": [
+    "34.88",
+    "37.05",
+    "33.71"
+   ],
+   "exit": 0,
+   "passed": 2,
+   "failed": 0,
+   "pending": 1,
+   "total": 3,
+   "failedFiles": [],
+   "fileMessages": [],
+   "failedTests": []
+  }
+ ]
+}

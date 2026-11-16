@@ -1,0 +1,5 @@
+checks	pass	27m13s	https://github.com/Tzeusy/syzygy/actions/runs/40482201337/job/122115025539	
+node	pass	4m18s	https://github.com/Tzeusy/syzygy/actions/runs/40482201359/job/122115025300	
+{"headRefOid":"7d408fd9ae096d10885475f24e9e8ada177c5ef3","mergeable":"MERGEABLE","state":"OPEN","title":"test: pin the support-leaf digest and freeze predicates; the judgment fixture uses @syzygy/support; install check [syzygy-bpyt.6.13]"}
+governance-docs	governance-docs	7d408fd9ae096d10885475f24e9e8ada177c5ef3	pull_request	success
+node-ci	node-ci	7d408fd9ae096d10885475f24e9e8ada177c5ef3	pull_request	success

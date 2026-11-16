@@ -1,0 +1,133 @@
+ok   evidence commit parent is the code commit
+ok   code commit parent is BASE
+ok   merge base is BASE
+ok   full subject digest
+ok   code subject digest
+ok   evidence commit adds only the evidence directory
+ok   evidence commit changes no apps/ or packages/ byte
+ok   v12-base.json ran at bb05df7e
+ok   v12-base.json V12-gate-prefix-src-and-manifest-only: edits equal the spec
+ok   v12-base.json V12-gate-prefix-src-and-manifest-only: old occurs 1x in apps/three-surface-poc/src/git-observation.ts at bb05df7e
+ok   v12-base.json V12-gate-prefix-src-and-manifest-only: new differs from old
+ok   v12-base.json V12-gate-prefix-src-and-manifest-only: outcome survived agrees with exit 0, failedTests 0
+ok   v12-base.json V12-gate-prefix-src-and-manifest-only: failed rows present iff killed
+ok   v12-base.json V12-gate-prefix-src-and-manifest-only: failedTests 0 = 0 failed rows
+ok   v12-base.json V12-gate-prefix-src-and-manifest-only: clean after, no timeout
+ok   v12-base.json V12-gate-prefix-src-and-manifest-only: runner counted old once
+ok   v12-base.json V12-gate-prefix-src-and-manifest-only: summary row equals the raw record
+ok   v12-head.json ran at f207d758
+ok   v12-head.json V12-gate-prefix-src-and-manifest-only: edits equal the spec
+ok   v12-head.json V12-gate-prefix-src-and-manifest-only: old occurs 1x in apps/three-surface-poc/src/git-observation.ts at f207d758
+ok   v12-head.json V12-gate-prefix-src-and-manifest-only: new differs from old
+ok   v12-head.json V12-gate-prefix-src-and-manifest-only: outcome killed agrees with exit 1, failedTests 2
+ok   v12-head.json V12-gate-prefix-src-and-manifest-only: failed rows present iff killed
+ok   v12-head.json V12-gate-prefix-src-and-manifest-only: failedTests 2 = 2 failed rows
+ok   v12-head.json V12-gate-prefix-src-and-manifest-only: clean after, no timeout
+ok   v12-head.json V12-gate-prefix-src-and-manifest-only: runner counted old once
+ok   v12-head.json V12-gate-prefix-src-and-manifest-only: summary row equals the raw record
+ok   v14-v15-base.json ran at bb05df7e
+ok   v14-v15-base.json V14-gate-cap1-daemon-prefix-narrowed-to-src: edits equal the spec
+ok   v14-v15-base.json V14-gate-cap1-daemon-prefix-narrowed-to-src: old occurs 1x in apps/three-surface-poc/src/git-observation.ts at bb05df7e
+ok   v14-v15-base.json V14-gate-cap1-daemon-prefix-narrowed-to-src: new differs from old
+ok   v14-v15-base.json V14-gate-cap1-daemon-prefix-narrowed-to-src: outcome survived agrees with exit 0, failedTests 0
+ok   v14-v15-base.json V14-gate-cap1-daemon-prefix-narrowed-to-src: failed rows present iff killed
+ok   v14-v15-base.json V14-gate-cap1-daemon-prefix-narrowed-to-src: failedTests 0 = 0 failed rows
+ok   v14-v15-base.json V14-gate-cap1-daemon-prefix-narrowed-to-src: clean after, no timeout
+ok   v14-v15-base.json V14-gate-cap1-daemon-prefix-narrowed-to-src: runner counted old once
+ok   v14-v15-base.json V14-gate-cap1-daemon-prefix-narrowed-to-src: summary row equals the raw record
+ok   v14-v15-base.json V15-gate-three-surface-core-prefix-narrowed-to-src: edits equal the spec
+ok   v14-v15-base.json V15-gate-three-surface-core-prefix-narrowed-to-src: old occurs 1x in apps/three-surface-poc/src/git-observation.ts at bb05df7e
+ok   v14-v15-base.json V15-gate-three-surface-core-prefix-narrowed-to-src: new differs from old
+ok   v14-v15-base.json V15-gate-three-surface-core-prefix-narrowed-to-src: outcome survived agrees with exit 0, failedTests 0
+ok   v14-v15-base.json V15-gate-three-surface-core-prefix-narrowed-to-src: failed rows present iff killed
+ok   v14-v15-base.json V15-gate-three-surface-core-prefix-narrowed-to-src: failedTests 0 = 0 failed rows
+ok   v14-v15-base.json V15-gate-three-surface-core-prefix-narrowed-to-src: clean after, no timeout
+ok   v14-v15-base.json V15-gate-three-surface-core-prefix-narrowed-to-src: runner counted old once
+ok   v14-v15-base.json V15-gate-three-surface-core-prefix-narrowed-to-src: summary row equals the raw record
+ok   v14-v15-head.json ran at f207d758
+ok   v14-v15-head.json V14-gate-cap1-daemon-prefix-narrowed-to-src: edits equal the spec
+ok   v14-v15-head.json V14-gate-cap1-daemon-prefix-narrowed-to-src: old occurs 1x in apps/three-surface-poc/src/git-observation.ts at f207d758
+ok   v14-v15-head.json V14-gate-cap1-daemon-prefix-narrowed-to-src: new differs from old
+ok   v14-v15-head.json V14-gate-cap1-daemon-prefix-narrowed-to-src: outcome killed agrees with exit 1, failedTests 1
+ok   v14-v15-head.json V14-gate-cap1-daemon-prefix-narrowed-to-src: failed rows present iff killed
+ok   v14-v15-head.json V14-gate-cap1-daemon-prefix-narrowed-to-src: failedTests 1 = 1 failed rows
+ok   v14-v15-head.json V14-gate-cap1-daemon-prefix-narrowed-to-src: clean after, no timeout
+ok   v14-v15-head.json V14-gate-cap1-daemon-prefix-narrowed-to-src: runner counted old once
+ok   v14-v15-head.json V14-gate-cap1-daemon-prefix-narrowed-to-src: summary row equals the raw record
+ok   v14-v15-head.json V15-gate-three-surface-core-prefix-narrowed-to-src: edits equal the spec
+ok   v14-v15-head.json V15-gate-three-surface-core-prefix-narrowed-to-src: old occurs 1x in apps/three-surface-poc/src/git-observation.ts at f207d758
+ok   v14-v15-head.json V15-gate-three-surface-core-prefix-narrowed-to-src: new differs from old
+ok   v14-v15-head.json V15-gate-three-surface-core-prefix-narrowed-to-src: outcome killed agrees with exit 1, failedTests 2
+ok   v14-v15-head.json V15-gate-three-surface-core-prefix-narrowed-to-src: failed rows present iff killed
+ok   v14-v15-head.json V15-gate-three-surface-core-prefix-narrowed-to-src: failedTests 2 = 2 failed rows
+ok   v14-v15-head.json V15-gate-three-surface-core-prefix-narrowed-to-src: clean after, no timeout
+ok   v14-v15-head.json V15-gate-three-surface-core-prefix-narrowed-to-src: runner counted old once
+ok   v14-v15-head.json V15-gate-three-surface-core-prefix-narrowed-to-src: summary row equals the raw record
+ok   own-head.json ran at f207d758
+ok   own-head.json O1-support-prefix-dropped: edits equal the spec
+ok   own-head.json O1-support-prefix-dropped: old occurs 1x in apps/three-surface-poc/src/git-observation.ts at f207d758
+ok   own-head.json O1-support-prefix-dropped: new differs from old
+ok   own-head.json O1-support-prefix-dropped: outcome killed agrees with exit 1, failedTests 2
+ok   own-head.json O1-support-prefix-dropped: failed rows present iff killed
+ok   own-head.json O1-support-prefix-dropped: failedTests 2 = 2 failed rows
+ok   own-head.json O1-support-prefix-dropped: clean after, no timeout
+ok   own-head.json O1-support-prefix-dropped: runner counted old once
+ok   own-head.json O1-support-prefix-dropped: summary row equals the raw record
+ok   own-head.json O2-support-prefix-narrowed-to-src: edits equal the spec
+ok   own-head.json O2-support-prefix-narrowed-to-src: old occurs 1x in apps/three-surface-poc/src/git-observation.ts at f207d758
+ok   own-head.json O2-support-prefix-narrowed-to-src: new differs from old
+ok   own-head.json O2-support-prefix-narrowed-to-src: outcome killed agrees with exit 1, failedTests 2
+ok   own-head.json O2-support-prefix-narrowed-to-src: failed rows present iff killed
+ok   own-head.json O2-support-prefix-narrowed-to-src: failedTests 2 = 2 failed rows
+ok   own-head.json O2-support-prefix-narrowed-to-src: clean after, no timeout
+ok   own-head.json O2-support-prefix-narrowed-to-src: runner counted old once
+ok   own-head.json O2-support-prefix-narrowed-to-src: summary row equals the raw record
+ok   own-head.json O3-unprefixed-package-imported-statically: edits equal the spec
+ok   own-head.json O3-unprefixed-package-imported-statically: old occurs 1x in apps/three-surface-poc/src/poc-main.ts at f207d758
+ok   own-head.json O3-unprefixed-package-imported-statically: new differs from old
+ok   own-head.json O3-unprefixed-package-imported-statically: outcome killed agrees with exit 1, failedTests 1
+ok   own-head.json O3-unprefixed-package-imported-statically: failed rows present iff killed
+ok   own-head.json O3-unprefixed-package-imported-statically: failedTests 1 = 1 failed rows
+ok   own-head.json O3-unprefixed-package-imported-statically: clean after, no timeout
+ok   own-head.json O3-unprefixed-package-imported-statically: runner counted old once
+ok   own-head.json O3-unprefixed-package-imported-statically: summary row equals the raw record
+ok   own-head.json O4-unprefixed-package-imported-dynamically-from-core: edits equal the spec
+ok   own-head.json O4-unprefixed-package-imported-dynamically-from-core: old occurs 1x in packages/three-surface-poc-core/src/index.ts at f207d758
+ok   own-head.json O4-unprefixed-package-imported-dynamically-from-core: new differs from old
+ok   own-head.json O4-unprefixed-package-imported-dynamically-from-core: outcome killed agrees with exit 1, failedTests 1
+ok   own-head.json O4-unprefixed-package-imported-dynamically-from-core: failed rows present iff killed
+ok   own-head.json O4-unprefixed-package-imported-dynamically-from-core: failedTests 1 = 1 failed rows
+ok   own-head.json O4-unprefixed-package-imported-dynamically-from-core: clean after, no timeout
+ok   own-head.json O4-unprefixed-package-imported-dynamically-from-core: runner counted old once
+ok   own-head.json O4-unprefixed-package-imported-dynamically-from-core: summary row equals the raw record
+ok   own-head.json O5-unresolvable-workspace-specifier: edits equal the spec
+ok   own-head.json O5-unresolvable-workspace-specifier: old occurs 1x in apps/three-surface-poc/src/poc-main.ts at f207d758
+ok   own-head.json O5-unresolvable-workspace-specifier: new differs from old
+ok   own-head.json O5-unresolvable-workspace-specifier: outcome killed agrees with exit 1, failedTests 1
+ok   own-head.json O5-unresolvable-workspace-specifier: failed rows present iff killed
+ok   own-head.json O5-unresolvable-workspace-specifier: failedTests 1 = 1 failed rows
+ok   own-head.json O5-unresolvable-workspace-specifier: clean after, no timeout
+ok   own-head.json O5-unresolvable-workspace-specifier: runner counted old once
+ok   own-head.json O5-unresolvable-workspace-specifier: summary row equals the raw record
+ok   own-head.json O6-cap1-daemon-prefix-dropped: edits equal the spec
+ok   own-head.json O6-cap1-daemon-prefix-dropped: old occurs 1x in apps/three-surface-poc/src/git-observation.ts at f207d758
+ok   own-head.json O6-cap1-daemon-prefix-dropped: new differs from old
+ok   own-head.json O6-cap1-daemon-prefix-dropped: outcome killed agrees with exit 1, failedTests 2
+ok   own-head.json O6-cap1-daemon-prefix-dropped: failed rows present iff killed
+ok   own-head.json O6-cap1-daemon-prefix-dropped: failedTests 2 = 2 failed rows
+ok   own-head.json O6-cap1-daemon-prefix-dropped: clean after, no timeout
+ok   own-head.json O6-cap1-daemon-prefix-dropped: runner counted old once
+ok   own-head.json O6-cap1-daemon-prefix-dropped: summary row equals the raw record
+ok   every summary mutant has a raw row (12 raw, 12 summary)
+ok   gate-diff is BASE against the code commit
+ok   gate-diff tool digest
+ok   paths 5598 = 5598
+ok   paths digest re-derived from both trees and the probes
+ok   refused 319 -> 328, 9 differing
+ok   surface versions {'base': 'polaris@e4fd613eed56', 'code': 'polaris@3f91047d44cf', 'evidence': 'polaris@3f91047d44cf'}
+ok   core tree unchanged
+ok   titles 1134 -> 1136, +2 -0
+ok   suite 1138/1136/0/2 exit 0
+ok   dist-absent 37/37
+ok   surface-version carriers at EVID: ['docs/evidence/syzygy-bpyt-6-15/summary.json']
+132 ok, 0 problems

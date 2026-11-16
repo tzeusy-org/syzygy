@@ -1,0 +1,73 @@
+{
+ "commit": "9ebfa92d301de633b7c40a3f2276219330016d33",
+ "files": [
+  "apps/three-surface-poc/src/browser-origin.test.ts",
+  "apps/three-surface-poc/src/git-observation.test.ts",
+  "packages/cap1-daemon/src/package.test.ts",
+  "packages/cap1-daemon/src/server.test.ts",
+  "packages/http-host/src/credentials.test.ts"
+ ],
+ "parallel": 3,
+ "runs": [
+  {
+   "run": 1,
+   "exit": 0,
+   "tests": "Tests  68 passed (68)",
+   "failed": [],
+   "load1": 26.41,
+   "tmpLeftovers": [
+    "node-compile-cache"
+   ]
+  },
+  {
+   "run": 2,
+   "exit": 0,
+   "tests": "Tests  68 passed (68)",
+   "failed": [],
+   "load1": 26.41,
+   "tmpLeftovers": [
+    "node-compile-cache"
+   ]
+  },
+  {
+   "run": 3,
+   "exit": 0,
+   "tests": "Tests  68 passed (68)",
+   "failed": [],
+   "load1": 26.41,
+   "tmpLeftovers": [
+    "node-compile-cache"
+   ]
+  },
+  {
+   "run": 4,
+   "exit": 0,
+   "tests": "Tests  68 passed (68)",
+   "failed": [],
+   "load1": 26.06,
+   "tmpLeftovers": [
+    "node-compile-cache"
+   ]
+  },
+  {
+   "run": 5,
+   "exit": 0,
+   "tests": "Tests  68 passed (68)",
+   "failed": [],
+   "load1": 26.06,
+   "tmpLeftovers": [
+    "node-compile-cache"
+   ]
+  },
+  {
+   "run": 6,
+   "exit": 0,
+   "tests": "Tests  68 passed (68)",
+   "failed": [],
+   "load1": 26.06,
+   "tmpLeftovers": [
+    "node-compile-cache"
+   ]
+  }
+ ]
+}

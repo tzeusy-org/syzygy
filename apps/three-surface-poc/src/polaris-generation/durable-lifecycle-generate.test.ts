@@ -1,16 +1,14 @@
-import { existsSync, mkdtempSync, readFileSync, readdirSync, rmSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
-import { afterEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
+import { tempDir } from '@syzygy/test-kit';
 
 import { runGenerationPipeline, type DispatchPermit, type PipelineRequest, type ProviderReply } from '@syzygy/polaris-generation-core';
 
 import { createDurableLifecycle, type DurableLifecycleOptions } from './durable-lifecycle.js';
 import { syntheticGenerationSource } from './synthetic-source.js';
 
-const cleanups: string[] = [];
-afterEach(() => { for (const path of cleanups.splice(0)) rmSync(path, { recursive: true, force: true }); });
-const scratch = (): string => { const path = mkdtempSync(join(tmpdir(), 'syzygy-lifecycle-generate-')); cleanups.push(path); return path; };
+const scratch = (): string => tempDir('syzygy-lifecycle-generate-');
 const request = (overrides: Partial<PipelineRequest['budget']> = {}): PipelineRequest => ({
   requestId: 'live-run', projectId: 'project-one', snapshotId: 'snapshot-one', startedAt: Date.now(),
   routes: { inventory: 'r-inventory', plan: 'r-plan', author: 'r-author', edit: 'r-edit', fidelity: 'r-fidelity', repair: 'r-repair' },
@@ -31,8 +29,6 @@ function lifecycle(stateDir: string, stub: Stub, generate: (stage: string, permi
 const ok = (stage: string, usageUnits = 1): ProviderReply => ({ body: JSON.stringify({ stage }), model: 'stub-live-v1', usageUnits });
 const journal = (stateDir: string): { state: string; permit: DispatchPermit }[] =>
   readdirSync(stateDir).filter(name => name.endsWith('.json')).map(name => JSON.parse(readFileSync(join(stateDir, name), 'utf8')));
-// Each journal write fsyncs; see the budget note in durable-lifecycle.test.ts.
-const T = 30_000;
 
 describe('durable lifecycle with an injected generate port', () => {
   it('runs the pipeline through the injected port with its permit and abort signal', async () => {
@@ -42,7 +38,7 @@ describe('durable lifecycle with an injected generate port', () => {
     expect(stub.calls.map(call => call.stage)).toEqual(['inventory', 'plan', 'author', 'edit', 'fidelity']);
     expect(stub.calls.every(call => call.permit.maxUsageUnits === 5 && call.permit.maxOutputBytes === 10_000 && call.signal instanceof AbortSignal)).toBe(true);
     expect(journal(stateDir).every(entry => entry.state === 'completed')).toBe(true);
-  }, T);
+  });
 
   it('reserves the configured per-attempt ceilings, capped by the request budget', async () => {
     const stateDir = scratch(), stub: Stub = { calls: [] };
@@ -51,7 +47,7 @@ describe('durable lifecycle with an injected generate port', () => {
     const capped: Stub = { calls: [] };
     await runGenerationPipeline(request({ maxUsageUnits: 12, maxOutputBytes: 8_000 }), lifecycle(scratch(), capped, async stage => ok(stage, 1), { maxAttemptUsageUnits: 30, maxAttemptOutputBytes: 50_000 }), new AbortController().signal);
     expect(capped.calls[0]!.permit).toMatchObject({ maxUsageUnits: 12, maxOutputBytes: 8_000 });
-  }, T);
+  });
 
   it('has no default ceilings: a missing or malformed one is refused at construction, before any state', () => {
     const dir = join(scratch(), 'state');
@@ -82,7 +78,7 @@ describe('durable lifecycle with an injected generate port', () => {
     const resumed = await runGenerationPipeline(same, lifecycle(stateDir, second, async stage => ok(stage)), new AbortController().signal);
     expect(resumed).toMatchObject({ status: 'stopped', reason: 'effect-uncertain' });
     expect(second.calls).toEqual([]);
-  }, T);
+  });
 
   it('a crash while a call is in flight leaves a claim that refuses any replay, even by a fresh lifecycle', async () => {
     const stateDir = scratch(), first: Stub = { calls: [] }, same = request();
@@ -100,7 +96,7 @@ describe('durable lifecycle with an injected generate port', () => {
     expect(second.calls).toEqual([]);
     abort.abort();
     void running.catch(() => undefined);
-  }, T);
+  });
 
   it('reuses completed checkpoints after a restart and sends only the missing stage through the new port', async () => {
     const stateDir = scratch(), first: Stub = { calls: [] }, same = request();
@@ -112,7 +108,7 @@ describe('durable lifecycle with an injected generate port', () => {
     expect(done.status).toBe('awaiting-rendered-review');
     expect(second.calls.map(call => call.stage)).toEqual(['fidelity']);
     expect(done.receipts.map(receipt => receipt.reused)).toEqual([true, true, true, true, false]);
-  }, T);
+  });
 
   it('releases an attempt whose per-call permission is withdrawn without calling generate, and only an exact true permits', async () => {
     for (const answer of [false, undefined, 'yes', 1]) {
@@ -124,5 +120,5 @@ describe('durable lifecycle with an injected generate port', () => {
       expect(seen).toHaveLength(1);
       expect(journal(stateDir).map(entry => entry.state)).toEqual(['released']);
     }
-  }, T);
+  });
 });

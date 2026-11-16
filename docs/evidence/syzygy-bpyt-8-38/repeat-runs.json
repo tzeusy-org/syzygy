@@ -1,0 +1,306 @@
+{
+ "tree": "/var/tmp/la-b838/head",
+ "files": [
+  "packages/polaris-dossier/src/argv.test.ts",
+  "packages/polaris-dossier/src/subpath-imports.test.ts",
+  "packages/polaris-generation-core/src/island-boundary.test.ts",
+  "packages/polaris-generation-core/src/workspace-reach.test.ts"
+ ],
+ "runs": [
+  {
+   "run": 1,
+   "exit": 0,
+   "wallSeconds": 13.2,
+   "load1": 55.3,
+   "total": 165,
+   "passed": 165,
+   "failed": [],
+   "slowest": [
+    [
+     "the syzygy CLI and the parked provider island resolves every workspace import the CLI reaches, dynamic ones included",
+     "passed",
+     511.1024269999998
+    ],
+    [
+     "each policy copy above, against the spec its caller passes is the spec of every readArgv call, and no other module names readArgv",
+     "passed",
+     491.07434999999987
+    ],
+    [
+     "the syzygy CLI and the parked provider island reaches no island module from the CLI entry",
+     "passed",
+     486.2504480000007
+    ],
+    [
+     "the daemon path, every module the entry reaches outside its dossier and polaris branches leaves the entry by every edge but the four dynamic imports inside those branches",
+     "passed",
+     278.47018800000023
+    ],
+    [
+     "the subpaths the daemon entry imports are /argv and /state-directory, imported statically, and the barrel only dynamically inside the dossier and polaris branches",
+     "passed",
+     206.42803299999923
+    ],
+    [
+     "each policy copy above, against the spec its caller passes names readArgv only where the lift reads it: its declaration, an import or export of it, and the callee of a call",
+     "passed",
+     161.99984099999983
+    ]
+   ],
+   "fileDurations": [
+    [
+     "island-boundary.test.ts",
+     1053
+    ],
+    [
+     "workspace-reach.test.ts",
+     81
+    ],
+    [
+     "argv.test.ts",
+     975
+    ],
+    [
+     "subpath-imports.test.ts",
+     589
+    ]
+   ]
+  },
+  {
+   "run": 2,
+   "exit": 0,
+   "wallSeconds": 10.3,
+   "load1": 57.2,
+   "total": 165,
+   "passed": 165,
+   "failed": [],
+   "slowest": [
+    [
+     "the daemon path, every module the entry reaches outside its dossier and polaris branches leaves the entry by every edge but the four dynamic imports inside those branches",
+     "passed",
+     597.3531720000001
+    ],
+    [
+     "each policy copy above, against the spec its caller passes is the spec of every readArgv call, and no other module names readArgv",
+     "passed",
+     523.4138199999998
+    ],
+    [
+     "the syzygy CLI and the parked provider island resolves every workspace import the CLI reaches, dynamic ones included",
+     "passed",
+     373.12593800000013
+    ],
+    [
+     "the syzygy CLI and the parked provider island reaches no island module from the CLI entry",
+     "passed",
+     304.4064480000002
+    ],
+    [
+     "each policy copy above, against the spec its caller passes names readArgv only where the lift reads it: its declaration, an import or export of it, and the callee of a call",
+     "passed",
+     245.0956699999997
+    ],
+    [
+     "the subpaths the daemon entry imports are /argv and /state-directory, imported statically, and the barrel only dynamically inside the dossier and polaris branches",
+     "passed",
+     204.34524299999975
+    ]
+   ],
+   "fileDurations": [
+    [
+     "island-boundary.test.ts",
+     822
+    ],
+    [
+     "workspace-reach.test.ts",
+     53
+    ],
+    [
+     "argv.test.ts",
+     826
+    ],
+    [
+     "subpath-imports.test.ts",
+     970
+    ]
+   ]
+  },
+  {
+   "run": 3,
+   "exit": 0,
+   "wallSeconds": 8.6,
+   "load1": 55.2,
+   "total": 165,
+   "passed": 165,
+   "failed": [],
+   "slowest": [
+    [
+     "the syzygy CLI and the parked provider island resolves every workspace import the CLI reaches, dynamic ones included",
+     "passed",
+     697.495218
+    ],
+    [
+     "the daemon path, every module the entry reaches outside its dossier and polaris branches leaves the entry by every edge but the four dynamic imports inside those branches",
+     "passed",
+     661.3869109999996
+    ],
+    [
+     "each policy copy above, against the spec its caller passes is the spec of every readArgv call, and no other module names readArgv",
+     "passed",
+     626.3791549999996
+    ],
+    [
+     "the subpaths the daemon entry imports are /argv and /state-directory, imported statically, and the barrel only dynamically inside the dossier and polaris branches",
+     "passed",
+     279.16548200000034
+    ],
+    [
+     "each policy copy above, against the spec its caller passes names readArgv only where the lift reads it: its declaration, an import or export of it, and the callee of a call",
+     "passed",
+     188.43638699999974
+    ],
+    [
+     "the syzygy CLI and the parked provider island reaches no island module from the CLI entry",
+     "passed",
+     182.59458900000027
+    ]
+   ],
+   "fileDurations": [
+    [
+     "island-boundary.test.ts",
+     1032
+    ],
+    [
+     "workspace-reach.test.ts",
+     38
+    ],
+    [
+     "argv.test.ts",
+     1037
+    ],
+    [
+     "subpath-imports.test.ts",
+     1115
+    ]
+   ]
+  },
+  {
+   "run": 4,
+   "exit": 0,
+   "wallSeconds": 11.1,
+   "load1": 53.1,
+   "total": 165,
+   "passed": 165,
+   "failed": [],
+   "slowest": [
+    [
+     "the syzygy CLI and the parked provider island resolves every workspace import the CLI reaches, dynamic ones included",
+     "passed",
+     771.8250789999993
+    ],
+    [
+     "each policy copy above, against the spec its caller passes is the spec of every readArgv call, and no other module names readArgv",
+     "passed",
+     563.7685060000003
+    ],
+    [
+     "the daemon path, every module the entry reaches outside its dossier and polaris branches leaves the entry by every edge but the four dynamic imports inside those branches",
+     "passed",
+     459.4603010000001
+    ],
+    [
+     "the subpaths the daemon entry imports are /argv and /state-directory, imported statically, and the barrel only dynamically inside the dossier and polaris branches",
+     "passed",
+     370.36311300000034
+    ],
+    [
+     "each policy copy above, against the spec its caller passes names readArgv only where the lift reads it: its declaration, an import or export of it, and the callee of a call",
+     "passed",
+     334.7772729999997
+    ],
+    [
+     "the syzygy CLI and the parked provider island reaches no island module from the CLI entry",
+     "passed",
+     161.03943499999968
+    ]
+   ],
+   "fileDurations": [
+    [
+     "island-boundary.test.ts",
+     1015
+    ],
+    [
+     "workspace-reach.test.ts",
+     38
+    ],
+    [
+     "argv.test.ts",
+     1068
+    ],
+    [
+     "subpath-imports.test.ts",
+     883
+    ]
+   ]
+  },
+  {
+   "run": 5,
+   "exit": 0,
+   "wallSeconds": 9.6,
+   "load1": 54.5,
+   "total": 165,
+   "passed": 165,
+   "failed": [],
+   "slowest": [
+    [
+     "the syzygy CLI and the parked provider island resolves every workspace import the CLI reaches, dynamic ones included",
+     "passed",
+     883.6689540000002
+    ],
+    [
+     "the daemon path, every module the entry reaches outside its dossier and polaris branches leaves the entry by every edge but the four dynamic imports inside those branches",
+     "passed",
+     543.9064230000004
+    ],
+    [
+     "the syzygy CLI and the parked provider island reaches no island module from the CLI entry",
+     "passed",
+     291.5086339999998
+    ],
+    [
+     "each policy copy above, against the spec its caller passes names readArgv only where the lift reads it: its declaration, an import or export of it, and the callee of a call",
+     "passed",
+     260.42974799999956
+    ],
+    [
+     "each policy copy above, against the spec its caller passes is the spec of every readArgv call, and no other module names readArgv",
+     "passed",
+     237.84649999999965
+    ],
+    [
+     "the subpaths the daemon entry imports are /argv and /state-directory, imported statically, and the barrel only dynamically inside the dossier and polaris branches",
+     "passed",
+     154.67343500000015
+    ]
+   ],
+   "fileDurations": [
+    [
+     "island-boundary.test.ts",
+     1300
+    ],
+    [
+     "workspace-reach.test.ts",
+     47
+    ],
+    [
+     "argv.test.ts",
+     743
+    ],
+    [
+     "subpath-imports.test.ts",
+     797
+    ]
+   ]
+  }
+ ]
+}

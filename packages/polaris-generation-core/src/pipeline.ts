@@ -1,7 +1,7 @@
 import { quotableGenerationSources, validateGenerationSources, validateGenerationSourceTransport, type GenerationSource } from './generation-source.js';
 import { CanonicalJsonError, digestCanonicalJson, encodeCanonicalJson, type CanonicalJsonLimits } from './canonical-json.js';
 import { parseBoundedJson } from './parse-json.js';
-import { createHash } from 'node:crypto';
+import { sha256 } from '@syzygy/support';
 
 import { promptForStage, type GenerationStage, type PromptProfile } from './prompts.js';
 import { validateRequestedAssets, type RequestedAsset } from './provider-draft.js';
@@ -303,7 +303,7 @@ export async function runGenerationPipeline(request: PipelineRequest, ports: Pip
       check();
       if (calls >= budget.maxCalls) stop('budget-exhausted');
       const prompt = promptForStage(name, promptProfile);
-      const promptDigest = createHash('sha256').update(prompt.system).digest('hex');
+      const promptDigest = sha256(prompt.system);
       const schema = ports.responseSchema(name);
       const envelope = { promptVersion: prompt.version, system: prompt.system, responseSchemaVersion: schema.version, responseSchema: schema.schema, inputs };
       let encoded: string;

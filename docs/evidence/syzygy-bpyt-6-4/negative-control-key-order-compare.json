@@ -1,0 +1,373 @@
+{
+ "baseFile": {
+  "sha256": "a0fcc7f1631f8bb6005489b68314b47f6097850cfe25667ad99cfc570f1e5d60",
+  "bytes": 535541
+ },
+ "headFile": {
+  "sha256": "27edf81ad9a10c954d4e49579595c7b661fbe196979fd90672d5ad3df7f4b24c",
+  "bytes": 535541
+ },
+ "models": 36,
+ "rowsCompared": 2108,
+ "rowsByKind": {
+  "model": 36,
+  "responseIdentity": 36,
+  "unknownSubjects": 36,
+  "route": 2000
+ },
+ "routeRowsByStatus": {
+  "200": 2000
+ },
+ "errors": [],
+ "rowsThatDiffer": 216,
+ "differences": [
+  {
+   "row": "variant:unevaluated:model",
+   "base": [
+    "656a9a2bfd7388ca003242fbffe99553c8ca82d62fc32b49bbb636a21bff866b",
+    32338
+   ],
+   "head": [
+    "4cd02884f022bc790cdd49c934a501e499e919fa5e66b28c83cd98bc46c5a9d6",
+    32338
+   ]
+  },
+  {
+   "row": "variant:unevaluated:unknownSubjects",
+   "base": [
+    "work-item:bu-blocked1/verification|missing-evidence|852bf933830594f0",
+    "work-item:bu-closed-old/verification|missing-evidence|852bf933830594f0",
+    "work-item:bu-closed-recent/verification|missing-evidence|852bf933830594f0",
+    "work-item:bu-open1/verification|missing-evidence|852bf933830594f0",
+    "work-item:bu-progress1/verification|missing-evidence|852bf933830594f0",
+    "work-item:bu-blocked1/governed-by|source-uncaptured-or-unreachable|4a4426b8676459d1",
+    "work-item:bu-closed-old/governed-by|source-uncaptured-or-unreachable|4a4426b8676459d1",
+    "work-item:bu-closed-recent/governed-by|source-uncaptured-or-unreachable|4a4426b8676459d1",
+    "work-item:bu-open1/governed-by|source-uncaptured-or-unreachable|4a4426b8676459d1",
+    "work-item:bu-progress1/governed-by|source-uncaptured-or-unreachable|4a4426b8676459d1",
+    "region:work-item-governing-intent|source-uncaptured-or-unreachable|4a4426b8676459d1",
+    "region:work-item-titles|excluded-content|f050a9770e9ffb70"
+   ],
+   "head": [
+    "work-item:bu-blocked1/verification|missing-evidence|d57fe4090aa124f4",
+    "work-item:bu-closed-old/verification|missing-evidence|d57fe4090aa124f4",
+    "work-item:bu-closed-recent/verification|missing-evidence|d57fe4090aa124f4",
+    "work-item:bu-open1/verification|missing-evidence|d57fe4090aa124f4",
+    "work-item:bu-progress1/verification|missing-evidence|d57fe4090aa124f4",
+    "work-item:bu-blocked1/governed-by|source-uncaptured-or-unreachable|0c7bc83390e347f2",
+    "work-item:bu-closed-old/governed-by|source-uncaptured-or-unreachable|0c7bc83390e347f2",
+    "work-item:bu-closed-recent/governed-by|source-uncaptured-or-unreachable|0c7bc83390e347f2",
+    "work-item:bu-open1/governed-by|source-uncaptured-or-unreachable|0c7bc83390e347f2",
+    "work-item:bu-progress1/governed-by|source-uncaptured-or-unreachable|0c7bc83390e347f2",
+    "region:work-item-governing-intent|source-uncaptured-or-unreachable|0c7bc83390e347f2",
+    "region:work-item-titles|excluded-content|d158ce27d87e71a2"
+   ]
+  },
+  {
+   "row": "variant:unevaluated:route:/api/poc@direct",
+   "base": {
+    "status": 200,
+    "contentType": "application/json",
+    "sha256": "40c95cdc0926065228c0e94eccd02f28088461a722190f395de66a8c6f2f8c66",
+    "bytes": 33704
+   },
+   "head": {
+    "status": 200,
+    "contentType": "application/json",
+    "sha256": "a0ad6409d0b0c4cf8582c09253818d46b409c03b7052055858087670b22a1fe7",
+    "bytes": 33704
+   }
+  },
+  {
+   "row": "variant:unevaluated:route:/api/poc@tailnet",
+   "base": {
+    "status": 200,
+    "contentType": "application/json",
+    "sha256": "6de0969109c46c70cfac43d88cc34a5b76ff05375d7c5e3ee9b696759f25a668",
+    "bytes": 33704
+   },
+   "head": {
+    "status": 200,
+    "contentType": "application/json",
+    "sha256": "8281d40affc2997df6e74ef84339d8213ebaba9681711868ddd9ce45e1e0e953",
+    "bytes": 33704
+   }
+  },
+  {
+   "row": "variant:unevaluated:route:/butlers-syzygy/api/poc@direct",
+   "base": {
+    "status": 200,
+    "contentType": "application/json",
+    "sha256": "6de0969109c46c70cfac43d88cc34a5b76ff05375d7c5e3ee9b696759f25a668",
+    "bytes": 33704
+   },
+   "head": {
+    "status": 200,
+    "contentType": "application/json",
+    "sha256": "8281d40affc2997df6e74ef84339d8213ebaba9681711868ddd9ce45e1e0e953",
+    "bytes": 33704
+   }
+  },
+  {
+   "row": "variant:unevaluated:route:/butlers-syzygy/api/poc@tailnet",
+   "base": {
+    "status": 200,
+    "contentType": "application/json",
+    "sha256": "6de0969109c46c70cfac43d88cc34a5b76ff05375d7c5e3ee9b696759f25a668",
+    "bytes": 33704
+   },
+   "head": {
+    "status": 200,
+    "contentType": "application/json",
+    "sha256": "8281d40affc2997df6e74ef84339d8213ebaba9681711868ddd9ce45e1e0e953",
+    "bytes": 33704
+   }
+  },
+  {
+   "row": "variant:rejected:model",
+   "base": [
+    "de358a9a1d2d6460e831544c133561132488ee74656e5e9259cb43edf5826c5c",
+    36153
+   ],
+   "head": [
+    "4f10079e3cc091b3c3dabe72fd267124e3d87a412b1ba4dfb452541192f3beed",
+    36153
+   ]
+  },
+  {
+   "row": "variant:rejected:unknownSubjects",
+   "base": [
+    "work-item:bu-blocked1/verification|missing-evidence|852bf933830594f0",
+    "work-item:bu-closed-old/verification|missing-evidence|852bf933830594f0",
+    "work-item:bu-closed-recent/verification|missing-evidence|852bf933830594f0",
+    "work-item:bu-open1/verification|missing-evidence|852bf933830594f0",
+    "work-item:bu-progress1/verification|missing-evidence|852bf933830594f0",
+    "work-item:bu-blocked1/governed-by|source-uncaptured-or-unreachable|4a4426b8676459d1",
+    "work-item:bu-closed-old/governed-by|source-uncaptured-or-unreachable|4a4426b8676459d1",
+    "work-item:bu-closed-recent/governed-by|source-uncaptured-or-unreachable|4a4426b8676459d1",
+    "work-item:bu-open1/governed-by|source-uncaptured-or-unreachable|4a4426b8676459d1",
+    "work-item:bu-progress1/governed-by|source-uncaptured-or-unreachable|4a4426b8676459d1",
+    "region:work-item-governing-intent|source-uncaptured-or-unreachable|4a4426b8676459d1",
+    "region:work-item-titles|excluded-content|f050a9770e9ffb70"
+   ],
+   "head": [
+    "work-item:bu-blocked1/verification|missing-evidence|d57fe4090aa124f4",
+    "work-item:bu-closed-old/verification|missing-evidence|d57fe4090aa124f4",
+    "work-item:bu-closed-recent/verification|missing-evidence|d57fe4090aa124f4",
+    "work-item:bu-open1/verification|missing-evidence|d57fe4090aa124f4",
+    "work-item:bu-progress1/verification|missing-evidence|d57fe4090aa124f4",
+    "work-item:bu-blocked1/governed-by|source-uncaptured-or-unreachable|0c7bc83390e347f2",
+    "work-item:bu-closed-old/governed-by|source-uncaptured-or-unreachable|0c7bc83390e347f2",
+    "work-item:bu-closed-recent/governed-by|source-uncaptured-or-unreachable|0c7bc83390e347f2",
+    "work-item:bu-open1/governed-by|source-uncaptured-or-unreachable|0c7bc83390e347f2",
+    "work-item:bu-progress1/governed-by|source-uncaptured-or-unreachable|0c7bc83390e347f2",
+    "region:work-item-governing-intent|source-uncaptured-or-unreachable|0c7bc83390e347f2",
+    "region:work-item-titles|excluded-content|d158ce27d87e71a2"
+   ]
+  },
+  {
+   "row": "variant:rejected:route:/api/poc@direct",
+   "base": {
+    "status": 200,
+    "contentType": "application/json",
+    "sha256": "16c6782971b12e3d3c51e0372bbba4c94b632a28695ea79eef6959752bce4883",
+    "bytes": 37519
+   },
+   "head": {
+    "status": 200,
+    "contentType": "application/json",
+    "sha256": "9b412618c4168e53eac0f49bfd7e09aaf3cd6c8a6a24df2b1fc5b5b27e4d8511",
+    "bytes": 37519
+   }
+  },
+  {
+   "row": "variant:rejected:route:/api/poc@tailnet",
+   "base": {
+    "status": 200,
+    "contentType": "application/json",
+    "sha256": "56eb3c55653fe2db3b09d1ecef490039e20110f2109ee5f97267d9aadb4249d2",
+    "bytes": 37519
+   },
+   "head": {
+    "status": 200,
+    "contentType": "application/json",
+    "sha256": "c63c12ec0fa74bb82d9936b75e9819a26739f7c218227491075cebdf21e0afd9",
+    "bytes": 37519
+   }
+  },
+  {
+   "row": "variant:rejected:route:/butlers-syzygy/api/poc@direct",
+   "base": {
+    "status": 200,
+    "contentType": "application/json",
+    "sha256": "56eb3c55653fe2db3b09d1ecef490039e20110f2109ee5f97267d9aadb4249d2",
+    "bytes": 37519
+   },
+   "head": {
+    "status": 200,
+    "contentType": "application/json",
+    "sha256": "c63c12ec0fa74bb82d9936b75e9819a26739f7c218227491075cebdf21e0afd9",
+    "bytes": 37519
+   }
+  },
+  {
+   "row": "variant:rejected:route:/butlers-syzygy/api/poc@tailnet",
+   "base": {
+    "status": 200,
+    "contentType": "application/json",
+    "sha256": "56eb3c55653fe2db3b09d1ecef490039e20110f2109ee5f97267d9aadb4249d2",
+    "bytes": 37519
+   },
+   "head": {
+    "status": 200,
+    "contentType": "application/json",
+    "sha256": "c63c12ec0fa74bb82d9936b75e9819a26739f7c218227491075cebdf21e0afd9",
+    "bytes": 37519
+   }
+  },
+  {
+   "row": "variant:observed:model",
+   "base": [
+    "a49c5ee30bfe0d4aa3e9f620f63a4f8da78d22e660797717f59bf750c6b3794b",
+    151024
+   ],
+   "head": [
+    "ae9b17725cec7a6643e523ee9aab1cb0e3844400b4565ad0be5db84e6856e52e",
+    151024
+   ]
+  },
+  {
+   "row": "variant:observed:unknownSubjects",
+   "base": [
+    "work-item:bu-blocked1/verification|missing-evidence|852bf933830594f0",
+    "work-item:bu-closed-old/verification|missing-evidence|852bf933830594f0",
+    "work-item:bu-closed-recent/verification|missing-evidence|852bf933830594f0",
+    "work-item:bu-open1/verification|missing-evidence|852bf933830594f0",
+    "work-item:bu-progress1/verification|missing-evidence|852bf933830594f0",
+    "work-item:bu-blocked1/governed-by|source-uncaptured-or-unreachable|4a4426b8676459d1",
+    "work-item:bu-closed-old/governed-by|source-uncaptured-or-unreachable|4a4426b8676459d1",
+    "work-item:bu-closed-recent/governed-by|source-uncaptured-or-unreachable|4a4426b8676459d1",
+    "work-item:bu-open1/governed-by|source-uncaptured-or-unreachable|4a4426b8676459d1",
+    "work-item:bu-progress1/governed-by|source-uncaptured-or-unreachable|4a4426b8676459d1",
+    "region:work-item-governing-intent|source-uncaptured-or-unreachable|4a4426b8676459d1",
+    "region:work-item-titles|excluded-content|f050a9770e9ffb70"
+   ],
+   "head": [
+    "work-item:bu-blocked1/verification|missing-evidence|d57fe4090aa124f4",
+    "work-item:bu-closed-old/verification|missing-evidence|d57fe4090aa124f4",
+    "work-item:bu-closed-recent/verification|missing-evidence|d57fe4090aa124f4",
+    "work-item:bu-open1/verification|missing-evidence|d57fe4090aa124f4",
+    "work-item:bu-progress1/verification|missing-evidence|d57fe4090aa124f4",
+    "work-item:bu-blocked1/governed-by|source-uncaptured-or-unreachable|0c7bc83390e347f2",
+    "work-item:bu-closed-old/governed-by|source-uncaptured-or-unreachable|0c7bc83390e347f2",
+    "work-item:bu-closed-recent/governed-by|source-uncaptured-or-unreachable|0c7bc83390e347f2",
+    "work-item:bu-open1/governed-by|source-uncaptured-or-unreachable|0c7bc83390e347f2",
+    "work-item:bu-progress1/governed-by|source-uncaptured-or-unreachable|0c7bc83390e347f2",
+    "region:work-item-governing-intent|source-uncaptured-or-unreachable|0c7bc83390e347f2",
+    "region:work-item-titles|excluded-content|d158ce27d87e71a2"
+   ]
+  },
+  {
+   "row": "variant:observed:route:/api/poc@direct",
+   "base": {
+    "status": 200,
+    "contentType": "application/json",
+    "sha256": "1f19b3b923e1aa99648f597129ef6fe988316b7eff5c7a50d5fe1fde8459e588",
+    "bytes": 152406
+   },
+   "head": {
+    "status": 200,
+    "contentType": "application/json",
+    "sha256": "feaaee09f0338de887dac125e2c2c47b5dfbd88f407e9df2d7e0e9a2de9aaf31",
+    "bytes": 152406
+   }
+  },
+  {
+   "row": "variant:observed:route:/api/poc@tailnet",
+   "base": {
+    "status": 200,
+    "contentType": "application/json",
+    "sha256": "2074ccba6c738834a2b97dcfcfbd7722bbe4e26d9b3c1a6fe3c6de2870dd75fd",
+    "bytes": 152406
+   },
+   "head": {
+    "status": 200,
+    "contentType": "application/json",
+    "sha256": "a6ba394170e4abfa25b959768380609808936d529a14b918eb4cd1ca4eff4cdd",
+    "bytes": 152406
+   }
+  },
+  {
+   "row": "variant:observed:route:/butlers-syzygy/api/poc@direct",
+   "base": {
+    "status": 200,
+    "contentType": "application/json",
+    "sha256": "2074ccba6c738834a2b97dcfcfbd7722bbe4e26d9b3c1a6fe3c6de2870dd75fd",
+    "bytes": 152406
+   },
+   "head": {
+    "status": 200,
+    "contentType": "application/json",
+    "sha256": "a6ba394170e4abfa25b959768380609808936d529a14b918eb4cd1ca4eff4cdd",
+    "bytes": 152406
+   }
+  },
+  {
+   "row": "variant:observed:route:/butlers-syzygy/api/poc@tailnet",
+   "base": {
+    "status": 200,
+    "contentType": "application/json",
+    "sha256": "2074ccba6c738834a2b97dcfcfbd7722bbe4e26d9b3c1a6fe3c6de2870dd75fd",
+    "bytes": 152406
+   },
+   "head": {
+    "status": 200,
+    "contentType": "application/json",
+    "sha256": "a6ba394170e4abfa25b959768380609808936d529a14b918eb4cd1ca4eff4cdd",
+    "bytes": 152406
+   }
+  },
+  {
+   "row": "variant:observed-without-precedence:model",
+   "base": [
+    "ba4b6a683e358ba0ba96ee5cc2bf9d8b5a669bddf7c4b7b31945e662fed84dd4",
+    149859
+   ],
+   "head": [
+    "4d7f310b59c716b7337f0c2db3ec517dcbdd48fd1ad3f5de4a360eaa91132c5d",
+    149859
+   ]
+  },
+  {
+   "row": "variant:observed-without-precedence:unknownSubjects",
+   "base": [
+    "work-item:bu-blocked1/verification|missing-evidence|852bf933830594f0",
+    "work-item:bu-closed-old/verification|missing-evidence|852bf933830594f0",
+    "work-item:bu-closed-recent/verification|missing-evidence|852bf933830594f0",
+    "work-item:bu-open1/verification|missing-evidence|852bf933830594f0",
+    "work-item:bu-progress1/verification|missing-evidence|852bf933830594f0",
+    "work-item:bu-blocked1/governed-by|source-uncaptured-or-unreachable|4a4426b8676459d1",
+    "work-item:bu-closed-old/governed-by|source-uncaptured-or-unreachable|4a4426b8676459d1",
+    "work-item:bu-closed-recent/governed-by|source-uncaptured-or-unreachable|4a4426b8676459d1",
+    "work-item:bu-open1/governed-by|source-uncaptured-or-unreachable|4a4426b8676459d1",
+    "work-item:bu-progress1/governed-by|source-uncaptured-or-unreachable|4a4426b8676459d1",
+    "region:work-item-governing-intent|source-uncaptured-or-unreachable|4a4426b8676459d1",
+    "region:work-item-titles|excluded-content|f050a9770e9ffb70"
+   ],
+   "head": [
+    "work-item:bu-blocked1/verification|missing-evidence|d57fe4090aa124f4",
+    "work-item:bu-closed-old/verification|missing-evidence|d57fe4090aa124f4",
+    "work-item:bu-closed-recent/verification|missing-evidence|d57fe4090aa124f4",
+    "work-item:bu-open1/verification|missing-evidence|d57fe4090aa124f4",
+    "work-item:bu-progress1/verification|missing-evidence|d57fe4090aa124f4",
+    "work-item:bu-blocked1/governed-by|source-uncaptured-or-unreachable|0c7bc83390e347f2",
+    "work-item:bu-closed-old/governed-by|source-uncaptured-or-unreachable|0c7bc83390e347f2",
+    "work-item:bu-closed-recent/governed-by|source-uncaptured-or-unreachable|0c7bc83390e347f2",
+    "work-item:bu-open1/governed-by|source-uncaptured-or-unreachable|0c7bc83390e347f2",
+    "work-item:bu-progress1/governed-by|source-uncaptured-or-unreachable|0c7bc83390e347f2",
+    "region:work-item-governing-intent|source-uncaptured-or-unreachable|0c7bc83390e347f2",
+    "region:work-item-titles|excluded-content|d158ce27d87e71a2"
+   ]
+  }
+ ]
+}

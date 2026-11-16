@@ -3,9 +3,9 @@ import { tmpdir } from 'node:os';
 import { join, relative, sep } from 'node:path';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import type { EvaluationIdentity } from '@syzygy/cap1-core';
 
 import { evaluateProject } from './pipeline.js';
+import { DAEMON_CAPTURE_VERSIONS } from './source-snapshot.js';
 import {
   createDaemon,
   minimalRootRoute,
@@ -121,6 +121,59 @@ describe('RT3 — credential-classed admission at the transport', () => {
     }
   });
 
+  // syzygy-bpyt.7.14: each Unknown population the host lists keeps its
+  // breach line and reason; any other reason is free text and withholds
+  // the whole diagnostic.
+  it('logs a 503 breach diagnostic for each listed Unknown population and withholds unlisted ones', async () => {
+    // syzygy-bpyt.7.16: the list is matched exactly, so a case variant of a
+    // listed reason is unlisted too. syzygy-bpyt.32: so is a reason that
+    // merely begins with a listed reason.
+    const reasons = ['project shape not-evaluated', 'project shape not-admitted', 'project shape observation-failed', 'project shape unlisted-sentinel', 'Project shape not-admitted', 'project shape not-admitted unlisted-sentinel'];
+    const routes: Route[] = reasons.map((reason, index) => ({
+      method: 'GET',
+      path: `/breach-${index}`,
+      credentialClass: 'human-open',
+      handle: () => ({
+        status: 503,
+        contentType: 'application/json',
+        body: '{"served":"nothing"}',
+        diagnostic: {
+          kind: 'response-limit-breached',
+          evaluation: { inputsDigest: 'c'.repeat(64), asOf: '2026-10-27T00:00:00Z' },
+          limit: 'maxHumanResponseBytes',
+          declared: 5,
+          observed: 6,
+          population: { kind: 'unknown', reason },
+          sequence: index + 1,
+        },
+      }),
+    }));
+    const daemon = await startDaemon(join(tempDir('rt3-breach-'), 'state'), routes);
+    const lines: string[] = [];
+    const stderr = vi.spyOn(process.stderr, 'write').mockImplementation((chunk) => { lines.push(String(chunk)); return true; });
+    try {
+      for (const index of reasons.keys()) {
+        expect((await fetch(`http://127.0.0.1:${daemon.port}/breach-${index}`)).status).toBe(503);
+      }
+    } finally {
+      stderr.mockRestore();
+    }
+    const events = lines.map(line => JSON.parse(line) as Record<string, unknown>);
+    expect(events.map(({ at: _at, ...event }) => event)).toEqual([
+      ...['project shape not-evaluated', 'project shape not-admitted', 'project shape observation-failed'].map((reason, index) => ({
+        kind: 'daemon-http-outcome', method: 'GET', route: `/breach-${index}`, status: 503, reason: 'response-limit-breached',
+        contentType: 'application/json',
+        evaluation: { inputsDigest: 'c'.repeat(64), asOf: '2026-10-27T00:00:00Z' },
+        limit: 'maxHumanResponseBytes', declared: 5, observed: 6, population: { kind: 'unknown', reason }, sequence: index + 1,
+      })),
+      ...['/breach-3', '/breach-4', '/breach-5'].map(route => ({
+        kind: 'daemon-http-outcome', method: 'GET', route, status: 503, reason: 'route-non-success', contentType: 'application/json',
+      })),
+    ]);
+    expect(lines.join('')).not.toContain('unlisted-sentinel');
+    expect(lines.join('')).not.toContain('Project shape');
+  });
+
   it.each([
     ['missing', undefined],
     ['scheme without separator', 'Bearer'],
@@ -222,11 +275,10 @@ describe('RT3 — startup write boundary (harness-external snapshot diff)', () =
     const stateDir = join(base, 'daemon-state');
 
     const before = snapshotFiles(base);
-    const evaluation: EvaluationIdentity = {
-      snapshot: 'snap-rt3-writes',
+    const projectEvaluation = await evaluateProject(repoRoot, {
       asOf: '2026-08-22T11:00:00Z',
-    };
-    const projectEvaluation = await evaluateProject(repoRoot, { evaluation });
+      versions: DAEMON_CAPTURE_VERSIONS,
+    });
     const daemon = await startDaemon(stateDir, [minimalRootRoute(projectEvaluation)]);
     // Exercise the pipeline-backed root route before judging writes.
     const response = await fetch(`http://127.0.0.1:${daemon.port}/`);
@@ -290,11 +342,10 @@ describe('RT3 — the minimal root route', () => {
       'utf8',
     );
 
-    const evaluation: EvaluationIdentity = {
-      snapshot: 'snap-rt3-root',
+    const projectEvaluation = await evaluateProject(root, {
       asOf: '2026-08-22T12:00:00Z',
-    };
-    const projectEvaluation = await evaluateProject(root, { evaluation });
+      versions: DAEMON_CAPTURE_VERSIONS,
+    });
     const daemon = await startDaemon(join(tempDir('rt3-srv-'), 'state'), [
       minimalRootRoute(projectEvaluation),
     ]);
@@ -304,7 +355,7 @@ describe('RT3 — the minimal root route', () => {
     expect(response.headers.get('content-type')).toContain('text/plain');
     const body = await response.text();
     expect(body).toContain('selection: project:prj-rt3-root');
-    expect(body).toContain('evaluation: snap-rt3-root@2026-08-22T12:00:00Z');
+    expect(body).toMatch(/evaluation: sha256:[0-9a-f]{64}@2026-08-22T12:00:00Z/);
     expect(body).toContain('- Registered: satisfied [Observed]');
     expect(body).toContain(
       '- Mission-ready: not evaluated [Unknown]',
@@ -313,11 +364,10 @@ describe('RT3 — the minimal root route', () => {
 
   it('states a missing declaration honestly, with its verbatim reason', async () => {
     const emptyRoot = tempDir('rt3-srv-empty-');
-    const evaluation: EvaluationIdentity = {
-      snapshot: 'snap-rt3-missing',
+    const projectEvaluation = await evaluateProject(emptyRoot, {
       asOf: '2026-08-22T12:30:00Z',
-    };
-    const projectEvaluation = await evaluateProject(emptyRoot, { evaluation });
+      versions: DAEMON_CAPTURE_VERSIONS,
+    });
     const daemon = await startDaemon(join(tempDir('rt3-srv-'), 'state'), [
       minimalRootRoute(projectEvaluation),
     ]);

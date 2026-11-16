@@ -1,0 +1,213 @@
+// syzygy-bpyt.6.5 follow-up (syzygy-q44o): the capture half of AC 3.
+//
+// Copy to apps/three-surface-poc/src/zz-bpyt65-capture.test.ts, with
+// vitest.differential.config.ts (this directory) at the repository root, and run
+//   BPYT65_CAPTURE_OUT=<file.json> npx vitest run --config vitest.differential.config.ts zz-bpyt65-capture
+// at the base commit and at the head, then compare with compare_capture.py.
+//
+// Two modes.
+//
+// 1. Always: a real Git object database. Each scenario is written to a
+//    scratch directory, committed with `git` (pinned instants, no global
+//    config), and read through the production `gitRunnerFor`, so
+//    `git ls-tree -z` and `git cat-file blob` run as real processes against
+//    real objects. The v1 harness reads only in-memory runners. The corpus is
+//    the same fixture the v1 harness uses, plus one scenario at the size of
+//    the retained Butlers capture (a 270-source evaluation, `scale`). Nothing
+//    here reads a Butlers repository.
+//
+// 2. Only when BPYT65_LIVE_REPO names a repository: the same record taken over
+//    that repository at BPYT65_LIVE_REVISION (default: the reviewed revision
+//    project-shape-discovery.live.test.ts pins), behind the REAL P1 authority
+//    gate (`evaluateBodyReadAuthority` over `loadBodyReadAuthorityInputs`),
+//    never the test authority. This is the operator run: the registered
+//    Butlers checkout is the owner's to point it at. Output: BPYT65_LIVE_OUT.
+//    BPYT65_LIVE_INSTANT (ISO instant, the same value for the base run and
+//    the head run) is both the evaluation instant and `capturedAt`: the gate
+//    admits only from the instant the three effect acts were performed (at the
+//    pinned 2026-09-06T04:00:00Z of the live test it did not admit when this
+//    was written, 2026-11-03), and a differing `capturedAt` would differ the digests.
+import { createHash } from 'node:crypto';
+import { execFileSync } from 'node:child_process';
+import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+import { describe, expect, it } from 'vitest';
+
+import {
+  PWB_REPOSITORY_ID,
+  buildProjectShape,
+  evaluateBodyReadAuthority,
+  gitRunnerFor,
+  type BodyReadAuthorityEvaluation,
+  type GitRunner,
+} from '@syzygy/three-surface-poc-core';
+
+import { loadBodyReadAuthorityInputs } from './governance-inputs.js';
+import { ADMITTING_AUTHORITY, PROJECT_SHAPE_FIXTURE_TEXTS } from './test-project-shape-fixture.js';
+
+const SYZYGY_ROOT = fileURLToPath(new URL('../../../', import.meta.url));
+const CAPTURED_AT = '2026-08-30T12:00:00Z';
+const LIVE_DEFAULT_REVISION = 'ec8b1f6cd529a976700a1360acfac1efc29f9762';
+const sha256 = (data: string): string => createHash('sha256').update(data).digest('hex');
+const encoder = new TextEncoder();
+
+type Files = Record<string, string | Uint8Array>;
+
+function git(root: string, args: readonly string[]): string {
+  return execFileSync('git', ['-C', root, ...args], {
+    env: { ...process.env, GIT_AUTHOR_DATE: '2026-08-24T00:00:00Z', GIT_COMMITTER_DATE: '2026-08-24T00:00:00Z', GIT_CONFIG_GLOBAL: '/dev/null', GIT_CONFIG_NOSYSTEM: '1' },
+    encoding: 'utf8',
+    stdio: ['ignore', 'pipe', 'ignore'],
+  }).trim();
+}
+
+function commitRepository(root: string, files: Files, symlinks: Readonly<Record<string, string>> = {}): string {
+  for (const [relativePath, contents] of Object.entries(files)) {
+    const absolutePath = join(root, relativePath);
+    mkdirSync(dirname(absolutePath), { recursive: true });
+    writeFileSync(absolutePath, contents);
+  }
+  for (const [relativePath, target] of Object.entries(symlinks)) {
+    mkdirSync(dirname(join(root, relativePath)), { recursive: true });
+    symlinkSync(target, join(root, relativePath));
+  }
+  git(root, ['init', '-q']);
+  git(root, ['config', 'gc.auto', '0']);
+  git(root, ['config', 'maintenance.auto', 'false']);
+  git(root, ['config', 'user.email', 'poc-test@example.invalid']);
+  git(root, ['config', 'user.name', 'POC Test']);
+  git(root, ['add', '-A']);
+  git(root, ['commit', '-qm', 'fixture']);
+  return git(root, ['rev-parse', 'HEAD']);
+}
+
+const VISION = 'about/heart-and-soul/vision.md';
+const HS_README = 'about/heart-and-soul/README.md';
+const ROOT = 'about/README.md';
+const base = (): Files => ({ ...PROJECT_SHAPE_FIXTURE_TEXTS });
+const withExtra = (path: string, extra: string): Files => {
+  const files = base();
+  files[path] = `${String(files[path])}${extra}`;
+  return files;
+};
+
+interface Scenario {
+  readonly files: Files;
+  readonly symlinks?: Readonly<Record<string, string>>;
+}
+
+// Sized like the retained Butlers capture: 185 baseline specs and 26 roster
+// sources beside the about/ tree (the live record reads 285 sources).
+function scaleFiles(): Files {
+  const files = base();
+  for (let n = 0; n < 185; n += 1) {
+    const id = `capability-${String(n).padStart(3, '0')}`;
+    files[`openspec/specs/${id}/spec.md`] = `# ${id}\n\n## Purpose\n\nPurpose ${n}.\n\n## Requirements\n\n### Requirement: Behaviour ${n}\n\nThe system SHALL do thing ${n}.\n\n#### Scenario: ${n}\n\n- **WHEN** a ${n}\n- **THEN** b ${n}\n`;
+  }
+  for (let n = 0; n < 13; n += 1) {
+    files[`roster/butler-${n}/MANIFESTO.md`] = `# Butler ${n}\n\nPurpose line ${n}.\n`;
+    files[`roster/butler-${n}/butler.toml`] = `name = "butler-${n}"\nport = ${40000 + n}\n`;
+  }
+  return files;
+}
+
+const SCENARIOS: Readonly<Record<string, Scenario>> = {
+  base: { files: base() },
+  scale: { files: scaleFiles() },
+  'root-secret-key': { files: withExtra(ROOT, '\n-----BEGIN RSA PRIVATE KEY-----\nMIIB\n-----END RSA PRIVATE KEY-----\n') },
+  'hs-readme-active-svg': { files: withExtra(HS_README, '\n<svg onload="x"></svg>\n') },
+  'vision-active-link': { files: withExtra(VISION, '\n[x](javascript:alert(1))\n') },
+  'vision-invalid-utf8': { files: { ...base(), [VISION]: new Uint8Array([...encoder.encode(String(base()[VISION])), 0xc3, 0x28]) } },
+  'vision-nul': { files: withExtra(VISION, '\n\u0000\n') },
+  'vision-altered-prose': { files: { ...base(), [VISION]: String(base()[VISION]).replace('## What Success Looks Like', '## What Success Looks Like, Roughly') } },
+  'vision-symlink': { files: (() => { const files = base(); delete files[VISION]; return files; })(), symlinks: { [VISION]: 'architecture.md' } },
+  'denied-basenames': { files: { ...withExtra(HS_README, '- [Env](.env)\n- [Key](server.key)\n'), 'about/heart-and-soul/.env': 'A=1\n', 'about/heart-and-soul/server.key': 'k\n' } },
+  'vision-removed': { files: (() => { const files = base(); delete files[VISION]; return files; })() },
+};
+
+// Same record shape as the v1 harness (`shapeRecord`), so a reader can hold
+// the two side by side.
+function shapeRecord(shape: ReturnType<typeof buildProjectShape>): unknown {
+  const json = JSON.stringify(shape);
+  if (shape.kind !== 'observed') return { kind: shape.kind, digest: sha256(json), ...(shape.kind === 'observation-failed' ? { failure: shape.failure } : {}) };
+  return {
+    kind: shape.kind,
+    digest: sha256(json),
+    sourceCount: shape.sources.length,
+    itemCount: shape.items.length,
+    limitBreaches: shape.limitBreaches,
+    resourceUse: shape.resourceUse,
+    degradation: shape.degradation,
+    claim: shape.claim.epistemic,
+    counts: shape.counts,
+    reads: shape.sources.map((source) => ({ path: source.path, record: source.record })),
+  };
+}
+
+// The production runner, with its argument list logged. The repository root
+// is not logged: it is a scratch path in mode 1 and the owner's in mode 2.
+function loggedRunner(root: string, log: string[]): GitRunner {
+  const real = gitRunnerFor(root);
+  return (args) => {
+    log.push(args.join(' '));
+    return real(args);
+  };
+}
+
+function capture(root: string, revision: string, authority: BodyReadAuthorityEvaluation, capturedAt: string = CAPTURED_AT): { record: unknown; calls: string[] } {
+  const calls: string[] = [];
+  try {
+    const shape = buildProjectShape({ authority, revision, capturedAt, runGit: loggedRunner(root, calls) });
+    return { record: shapeRecord(shape), calls };
+  } catch (error) {
+    return { record: { threw: error instanceof Error ? `${error.name}: ${error.message}` : String(error) }, calls };
+  }
+}
+
+describe('syzygy-bpyt.6.5 capture differential', () => {
+  it('real Git object database: every scenario through the production runner', () => {
+    const file = process.env.BPYT65_CAPTURE_OUT;
+    expect(file).toBeDefined();
+    const scratch = mkdtempSync(join(process.env.TMPDIR ?? tmpdir(), 'bpyt65-capture-'));
+    const shapes: Record<string, unknown> = {};
+    const gitCalls: Record<string, readonly string[]> = {};
+    const revisions: Record<string, string> = {};
+    try {
+      for (const [name, scenario] of Object.entries(SCENARIOS)) {
+        const root = join(scratch, name);
+        mkdirSync(root);
+        // The commit id is a function of the tree and the pinned instants, so
+        // both sides of the differential read the same objects.
+        const revision = commitRepository(root, scenario.files, scenario.symlinks);
+        revisions[name] = revision;
+        const { record, calls } = capture(root, revision, ADMITTING_AUTHORITY);
+        shapes[name] = record;
+        gitCalls[name] = calls;
+      }
+    } finally {
+      rmSync(scratch, { recursive: true, force: true });
+    }
+    writeFileSync(file as string, `${JSON.stringify({ mode: 'real-git-fixture', scenarios: Object.keys(SCENARIOS).length, revisions, shapes, gitCalls }, null, 1)}\n`);
+  }, 600_000);
+
+  const liveRepo = process.env.BPYT65_LIVE_REPO;
+  (liveRepo === undefined ? it.skip : it)('operator run: the same record over BPYT65_LIVE_REPO behind the real P1 gate', () => {
+    const out = process.env.BPYT65_LIVE_OUT;
+    expect(out).toBeDefined();
+    const revision = process.env.BPYT65_LIVE_REVISION ?? LIVE_DEFAULT_REVISION;
+    expect(revision).toMatch(/^[0-9a-f]{40}$/);
+    const instant = process.env.BPYT65_LIVE_INSTANT;
+    expect(instant).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/);
+    const authority = evaluateBodyReadAuthority(loadBodyReadAuthorityInputs({
+      repoRoot: SYZYGY_ROOT,
+      governanceRevision: git(SYZYGY_ROOT, ['rev-parse', 'HEAD^{commit}']),
+      evaluationId: 'evaluation:bpyt65-capture-differential',
+      evaluationInstant: instant as string,
+    }));
+    const { record, calls } = capture(liveRepo as string, revision, authority, instant as string);
+    writeFileSync(out as string, `${JSON.stringify({ mode: 'live', repositoryId: PWB_REPOSITORY_ID, revision, admits: authority.admits, shapes: { live: record }, gitCalls: { live: calls } }, null, 1)}\n`);
+  }, 600_000);
+});

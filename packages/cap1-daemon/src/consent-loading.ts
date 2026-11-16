@@ -44,6 +44,16 @@ import {
 // consume — and returned facts carry no clock-derived values.
 export const CONSENT_RECORD_EXTENSION = '.yaml';
 
+// The owner-act record beside each artifact: `<reference>.act.yaml`
+// (cap1-owner-act/v1; docs/design/CAP1-CONSENT-RECORD-ENCODING-AND-AUTHORITY-INTERFACE.md §2).
+export const OWNER_ACT_SUFFIX = '.act';
+export const OWNER_ACT_EXTENSION = `${OWNER_ACT_SUFFIX}${CONSENT_RECORD_EXTENSION}`;
+
+// Refuses a reference that is not a bare record name — before any I/O.
+export function consentReferenceFormProblem(reference: string): string | undefined {
+  return invalidReferenceForm(reference);
+}
+
 export const CONSENT_RECORD_FIELDS = [
   'id',
   'project',
@@ -150,6 +160,11 @@ function invalidReferenceForm(reference: string): string | undefined {
   }
   if (reference === '.' || reference === '..') {
     return 'reference is a filesystem traversal segment, not a record name';
+  }
+  if (reference.endsWith(OWNER_ACT_SUFFIX)) {
+    // `<ref>.act.yaml` is `<ref>`'s owner-act record; no reference may name
+    // another reference's act file as its artifact.
+    return 'reference names an owner-act record, not a consent artifact';
   }
   return undefined;
 }
@@ -282,6 +297,18 @@ export function loadConsentReference(
     };
   }
 
+  return consentLoadFromText(reference, path, text);
+}
+
+// The pure half of loading: bytes already read from the exact location
+// become a loaded record or a named failure. Shared by the synchronous
+// loader above and the capture pipeline, which reads through its own
+// reader so it can count and revalidate every read.
+export function consentLoadFromText(
+  reference: string,
+  path: string,
+  text: string,
+): ConsentReferenceLoad {
   const parsed = parseDeclarationSource(text);
   if (!parsed.ok) {
     return {
@@ -318,6 +345,20 @@ export function loadConsentReference(
   }
 
   return { ok: true, reference, path, record: shaped.record };
+}
+
+// For a record that failed to load: the (project, repository) pair its
+// bytes name, when they parse to a mapping whose `project` and `repository`
+// are non-empty strings; otherwise null (the pair cannot be read).
+export function consentPairFromText(
+  text: string,
+): { readonly projectId: ProjectId; readonly repositoryId: RepositoryId } | null {
+  const parsed = parseDeclarationSource(text);
+  if (!parsed.ok || !isPlainObject(parsed.value)) return null;
+  const project = parsed.value['project'];
+  const repository = parsed.value['repository'];
+  if (!isNonEmptyString(project) || !isNonEmptyString(repository)) return null;
+  return { projectId: project as ProjectId, repositoryId: repository as RepositoryId };
 }
 
 // Loads every referenced record for one evaluation. References are

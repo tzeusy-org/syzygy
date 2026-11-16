@@ -1,0 +1,381 @@
+{
+ "tool": "item4-repair-sweep.py at 7d408fd9",
+ "cases": [
+  {
+   "case": "R0-unmutated",
+   "rev": "c7ed9ef2",
+   "edits": [],
+   "exit": 0,
+   "expectExit": 0,
+   "stdout": [
+    "W3-stale-latin1-local-copy {'createHashSha256Sites': 8, 'localSha256Definitions': 2} killed",
+    "W4-equivalent-local-copy {'createHashSha256Sites': 8, 'localSha256Definitions': 2} killed"
+   ],
+   "stderrTail": [],
+   "allKilled": true,
+   "baseline": {
+    "createHashSha256Sites": 7,
+    "localSha256Definitions": 1
+   },
+   "fixtureFileEqualToB214ef10": true,
+   "rows": [
+    {
+     "id": "W3-stale-latin1-local-copy",
+     "createHashSha256Sites": 8,
+     "localSha256Definitions": 2,
+     "killedBySweep": true
+    },
+    {
+     "id": "W4-equivalent-local-copy",
+     "createHashSha256Sites": 8,
+     "localSha256Definitions": 2,
+     "killedBySweep": true
+    }
+   ],
+   "asExpected": true
+  },
+  {
+   "case": "T1-threshold-from-base",
+   "rev": "c7ed9ef2",
+   "edits": [
+    {
+     "file": "item4-repair-sweep.py",
+     "old": "    baseline = counts(clone, repair_full)\n",
+     "new": "    baseline = counts(clone, 'f7477f52c49ee347f96b92703887c31f6be49e07')\n"
+    }
+   ],
+   "exit": 1,
+   "expectExit": 1,
+   "stdout": [
+    "W3-stale-latin1-local-copy {'createHashSha256Sites': 8, 'localSha256Definitions': 2} NOT killed",
+    "W4-equivalent-local-copy {'createHashSha256Sites': 8, 'localSha256Definitions': 2} NOT killed"
+   ],
+   "stderrTail": [],
+   "allKilled": false,
+   "baseline": {
+    "createHashSha256Sites": 8,
+    "localSha256Definitions": 2
+   },
+   "fixtureFileEqualToB214ef10": true,
+   "rows": [
+    {
+     "id": "W3-stale-latin1-local-copy",
+     "createHashSha256Sites": 8,
+     "localSha256Definitions": 2,
+     "killedBySweep": false
+    },
+    {
+     "id": "W4-equivalent-local-copy",
+     "createHashSha256Sites": 8,
+     "localSha256Definitions": 2,
+     "killedBySweep": false
+    }
+   ],
+   "asExpected": true
+  },
+  {
+   "case": "T2-threshold-from-b214ef10",
+   "rev": "c7ed9ef2",
+   "edits": [
+    {
+     "file": "item4-repair-sweep.py",
+     "old": "    baseline = counts(clone, repair_full)\n",
+     "new": "    baseline = counts(clone, 'b214ef1015c134dbc821c4f4dec654a16314c354')\n"
+    }
+   ],
+   "exit": 0,
+   "expectExit": 0,
+   "stdout": [
+    "W3-stale-latin1-local-copy {'createHashSha256Sites': 8, 'localSha256Definitions': 2} killed",
+    "W4-equivalent-local-copy {'createHashSha256Sites': 8, 'localSha256Definitions': 2} killed"
+   ],
+   "stderrTail": [],
+   "allKilled": true,
+   "baseline": {
+    "createHashSha256Sites": 6,
+    "localSha256Definitions": 1
+   },
+   "fixtureFileEqualToB214ef10": true,
+   "rows": [
+    {
+     "id": "W3-stale-latin1-local-copy",
+     "createHashSha256Sites": 8,
+     "localSha256Definitions": 2,
+     "killedBySweep": true
+    },
+    {
+     "id": "W4-equivalent-local-copy",
+     "createHashSha256Sites": 8,
+     "localSha256Definitions": 2,
+     "killedBySweep": true
+    }
+   ],
+   "asExpected": true
+  },
+  {
+   "case": "T3-kill-rule-sites-only",
+   "rev": "c7ed9ef2",
+   "edits": [
+    {
+     "file": "item4-repair-sweep.py",
+     "old": "        killed = got['createHashSha256Sites'] > baseline['createHashSha256Sites'] or got['localSha256Definitions'] > baseline['localSha256Definitions']\n",
+     "new": "        killed = got['createHashSha256Sites'] > baseline['createHashSha256Sites']\n"
+    }
+   ],
+   "exit": 0,
+   "expectExit": 0,
+   "stdout": [
+    "W3-stale-latin1-local-copy {'createHashSha256Sites': 8, 'localSha256Definitions': 2} killed",
+    "W4-equivalent-local-copy {'createHashSha256Sites': 8, 'localSha256Definitions': 2} killed"
+   ],
+   "stderrTail": [],
+   "allKilled": true,
+   "baseline": {
+    "createHashSha256Sites": 7,
+    "localSha256Definitions": 1
+   },
+   "fixtureFileEqualToB214ef10": true,
+   "rows": [
+    {
+     "id": "W3-stale-latin1-local-copy",
+     "createHashSha256Sites": 8,
+     "localSha256Definitions": 2,
+     "killedBySweep": true
+    },
+    {
+     "id": "W4-equivalent-local-copy",
+     "createHashSha256Sites": 8,
+     "localSha256Definitions": 2,
+     "killedBySweep": true
+    }
+   ],
+   "asExpected": true
+  },
+  {
+   "case": "T4-kill-rule-defs-only",
+   "rev": "c7ed9ef2",
+   "edits": [
+    {
+     "file": "item4-repair-sweep.py",
+     "old": "        killed = got['createHashSha256Sites'] > baseline['createHashSha256Sites'] or got['localSha256Definitions'] > baseline['localSha256Definitions']\n",
+     "new": "        killed = got['localSha256Definitions'] > baseline['localSha256Definitions']\n"
+    }
+   ],
+   "exit": 0,
+   "expectExit": 0,
+   "stdout": [
+    "W3-stale-latin1-local-copy {'createHashSha256Sites': 8, 'localSha256Definitions': 2} killed",
+    "W4-equivalent-local-copy {'createHashSha256Sites': 8, 'localSha256Definitions': 2} killed"
+   ],
+   "stderrTail": [],
+   "allKilled": true,
+   "baseline": {
+    "createHashSha256Sites": 7,
+    "localSha256Definitions": 1
+   },
+   "fixtureFileEqualToB214ef10": true,
+   "rows": [
+    {
+     "id": "W3-stale-latin1-local-copy",
+     "createHashSha256Sites": 8,
+     "localSha256Definitions": 2,
+     "killedBySweep": true
+    },
+    {
+     "id": "W4-equivalent-local-copy",
+     "createHashSha256Sites": 8,
+     "localSha256Definitions": 2,
+     "killedBySweep": true
+    }
+   ],
+   "asExpected": true
+  },
+  {
+   "case": "T5-kill-rule-ge",
+   "rev": "c7ed9ef2",
+   "edits": [
+    {
+     "file": "item4-repair-sweep.py",
+     "old": "        killed = got['createHashSha256Sites'] > baseline['createHashSha256Sites'] or got['localSha256Definitions'] > baseline['localSha256Definitions']\n",
+     "new": "        killed = got['createHashSha256Sites'] >= baseline['createHashSha256Sites'] or got['localSha256Definitions'] >= baseline['localSha256Definitions']\n"
+    }
+   ],
+   "exit": 0,
+   "expectExit": 0,
+   "stdout": [
+    "W3-stale-latin1-local-copy {'createHashSha256Sites': 8, 'localSha256Definitions': 2} killed",
+    "W4-equivalent-local-copy {'createHashSha256Sites': 8, 'localSha256Definitions': 2} killed"
+   ],
+   "stderrTail": [],
+   "allKilled": true,
+   "baseline": {
+    "createHashSha256Sites": 7,
+    "localSha256Definitions": 1
+   },
+   "fixtureFileEqualToB214ef10": true,
+   "rows": [
+    {
+     "id": "W3-stale-latin1-local-copy",
+     "createHashSha256Sites": 8,
+     "localSha256Definitions": 2,
+     "killedBySweep": true
+    },
+    {
+     "id": "W4-equivalent-local-copy",
+     "createHashSha256Sites": 8,
+     "localSha256Definitions": 2,
+     "killedBySweep": true
+    }
+   ],
+   "asExpected": true
+  },
+  {
+   "case": "I1-noop-mutant",
+   "rev": "c7ed9ef2",
+   "edits": [
+    {
+     "file": "item4-mutants.py",
+     "old": "    ('W3-stale-latin1-local-copy', 'killed', FIXTURE, FIXTURE_IMPORT, LOCAL_COPY, FIXTURE_TESTS, 'the review\\'s R5 shape: differs on non-ASCII answer text'),\n",
+     "new": "    ('W3-stale-latin1-local-copy', 'killed', FIXTURE, FIXTURE_IMPORT, FIXTURE_IMPORT + '// reviewer no-op\\n', FIXTURE_TESTS, 'the review\\'s R5 shape: differs on non-ASCII answer text'),\n"
+    }
+   ],
+   "exit": 1,
+   "expectExit": 1,
+   "stdout": [
+    "W3-stale-latin1-local-copy {'createHashSha256Sites': 7, 'localSha256Definitions': 1} NOT killed",
+    "W4-equivalent-local-copy {'createHashSha256Sites': 8, 'localSha256Definitions': 2} killed"
+   ],
+   "stderrTail": [],
+   "allKilled": false,
+   "baseline": {
+    "createHashSha256Sites": 7,
+    "localSha256Definitions": 1
+   },
+   "fixtureFileEqualToB214ef10": true,
+   "rows": [
+    {
+     "id": "W3-stale-latin1-local-copy",
+     "createHashSha256Sites": 7,
+     "localSha256Definitions": 1,
+     "killedBySweep": false
+    },
+    {
+     "id": "W4-equivalent-local-copy",
+     "createHashSha256Sites": 8,
+     "localSha256Definitions": 2,
+     "killedBySweep": true
+    }
+   ],
+   "asExpected": true
+  },
+  {
+   "case": "I1-noop-mutant-under-T5",
+   "rev": "c7ed9ef2",
+   "edits": [
+    {
+     "file": "item4-mutants.py",
+     "old": "    ('W3-stale-latin1-local-copy', 'killed', FIXTURE, FIXTURE_IMPORT, LOCAL_COPY, FIXTURE_TESTS, 'the review\\'s R5 shape: differs on non-ASCII answer text'),\n",
+     "new": "    ('W3-stale-latin1-local-copy', 'killed', FIXTURE, FIXTURE_IMPORT, FIXTURE_IMPORT + '// reviewer no-op\\n', FIXTURE_TESTS, 'the review\\'s R5 shape: differs on non-ASCII answer text'),\n"
+    },
+    {
+     "file": "item4-repair-sweep.py",
+     "old": "        killed = got['createHashSha256Sites'] > baseline['createHashSha256Sites'] or got['localSha256Definitions'] > baseline['localSha256Definitions']\n",
+     "new": "        killed = got['createHashSha256Sites'] >= baseline['createHashSha256Sites'] or got['localSha256Definitions'] >= baseline['localSha256Definitions']\n"
+    }
+   ],
+   "exit": 0,
+   "expectExit": 0,
+   "stdout": [
+    "W3-stale-latin1-local-copy {'createHashSha256Sites': 7, 'localSha256Definitions': 1} killed",
+    "W4-equivalent-local-copy {'createHashSha256Sites': 8, 'localSha256Definitions': 2} killed"
+   ],
+   "stderrTail": [],
+   "allKilled": true,
+   "baseline": {
+    "createHashSha256Sites": 7,
+    "localSha256Definitions": 1
+   },
+   "fixtureFileEqualToB214ef10": true,
+   "rows": [
+    {
+     "id": "W3-stale-latin1-local-copy",
+     "createHashSha256Sites": 7,
+     "localSha256Definitions": 1,
+     "killedBySweep": true
+    },
+    {
+     "id": "W4-equivalent-local-copy",
+     "createHashSha256Sites": 8,
+     "localSha256Definitions": 2,
+     "killedBySweep": true
+    }
+   ],
+   "asExpected": true
+  },
+  {
+   "case": "I2-repair-arg-f7477f52",
+   "rev": "f7477f52",
+   "edits": [],
+   "exit": 1,
+   "expectExit": 1,
+   "stdout": [],
+   "stderrTail": [
+    "apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts: old fragment occurs 0 times"
+   ],
+   "allKilled": null,
+   "baseline": null,
+   "fixtureFileEqualToB214ef10": null,
+   "rows": null,
+   "asExpected": true
+  },
+  {
+   "case": "I3-repair-arg-main",
+   "rev": "41932c3b5aba567376fea3b32a80a54f8b6b30ab",
+   "edits": [],
+   "exit": 1,
+   "expectExit": 1,
+   "stdout": [],
+   "stderrTail": [
+    "apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts: old fragment occurs 0 times"
+   ],
+   "allKilled": null,
+   "baseline": null,
+   "fixtureFileEqualToB214ef10": null,
+   "rows": null,
+   "asExpected": true
+  },
+  {
+   "case": "I4-fixture-drift",
+   "rev": "15555cb29c9a997a16e56687262dc8191cfbce0d",
+   "edits": [],
+   "exit": 1,
+   "expectExit": 1,
+   "stdout": [
+    "W3-stale-latin1-local-copy {'createHashSha256Sites': 8, 'localSha256Definitions': 2} killed",
+    "W4-equivalent-local-copy {'createHashSha256Sites': 8, 'localSha256Definitions': 2} killed"
+   ],
+   "stderrTail": [],
+   "allKilled": true,
+   "baseline": {
+    "createHashSha256Sites": 7,
+    "localSha256Definitions": 1
+   },
+   "fixtureFileEqualToB214ef10": false,
+   "rows": [
+    {
+     "id": "W3-stale-latin1-local-copy",
+     "createHashSha256Sites": 8,
+     "localSha256Definitions": 2,
+     "killedBySweep": true
+    },
+    {
+     "id": "W4-equivalent-local-copy",
+     "createHashSha256Sites": 8,
+     "localSha256Definitions": 2,
+     "killedBySweep": true
+    }
+   ],
+   "asExpected": true
+  }
+ ]
+}

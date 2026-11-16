@@ -1,0 +1,4 @@
+T5-sources-filter-selects-nothing old "name.endsWith('.ts') && !name.endsWith('.test.ts')" new "name.endsWith('.mts') && !name.endsWith('.test.ts')" exit 1 failed 2 of 13
+   failed scans the package sources, not an empty list
+   failed imports only node:crypto and its own modules, so no file read, no workspace package and no network
+status after: ''

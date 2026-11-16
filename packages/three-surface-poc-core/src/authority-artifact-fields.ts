@@ -15,20 +15,22 @@
 // validity ("malformed") and semantic agreement with the controlled
 // evaluation input ("wrong but present") are the evaluator's.
 
+import { decodeUtf8, isRecord } from '@syzygy/support';
+
 export type ArtifactField = { readonly kind: 'present'; readonly value: unknown } | { readonly kind: 'missing' };
 
-export interface ConsentArtifactFields {
+interface ConsentArtifactFields {
   readonly observingProject: ArtifactField;
   readonly configuredRepository: ArtifactField;
   readonly contentClass: ArtifactField;
 }
 
-export interface PolicyArtifactFields {
+interface PolicyArtifactFields {
   readonly policyOwningProject: ArtifactField;
   readonly policyVersion: ArtifactField;
 }
 
-export interface RegistryArtifactFields {
+interface RegistryArtifactFields {
   readonly governanceHome: ArtifactField;
   readonly project: ArtifactField;
   readonly repository: ArtifactField;
@@ -36,7 +38,7 @@ export interface RegistryArtifactFields {
   readonly writeSurface: ArtifactField;
 }
 
-export type ArtifactParse<T> =
+type ArtifactParse<T> =
   | { readonly kind: 'parsed'; readonly fields: T }
   | { readonly kind: 'undecodable'; readonly detail: string };
 
@@ -45,20 +47,12 @@ function present(value: unknown): ArtifactField {
   return { kind: 'present', value };
 }
 
-function decode(bytes: Uint8Array): string | undefined {
-  try {
-    return new TextDecoder('utf-8', { fatal: true }).decode(bytes);
-  } catch {
-    return undefined;
-  }
-}
-
 // Consent record head: `Subject: \`(<observing>, <repository>)\`` and
 // `Observation content class: \`<class>\``. A subject with one element
 // yields a present project and a missing repository so the two remain
 // independently decidable.
 export function parseConsentArtifact(bytes: Uint8Array): ArtifactParse<ConsentArtifactFields> {
-  const text = decode(bytes);
+  const text = decodeUtf8(bytes);
   if (text === undefined) return { kind: 'undecodable', detail: 'not strict UTF-8' };
   const lines = text.split(/\r?\n/).map((line) => line.trim());
   const subjectLine = lines.find((line) => line.startsWith('Subject:'));
@@ -88,12 +82,8 @@ export function parseConsentArtifact(bytes: Uint8Array): ArtifactParse<ConsentAr
   return { kind: 'parsed', fields: { observingProject, configuredRepository, contentClass } };
 }
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
-}
-
 function parseJson(bytes: Uint8Array): { readonly ok: true; readonly value: unknown } | { readonly ok: false; readonly detail: string } {
-  const text = decode(bytes);
+  const text = decodeUtf8(bytes);
   if (text === undefined) return { ok: false, detail: 'not strict UTF-8' };
   try {
     return { ok: true, value: JSON.parse(text) as unknown };

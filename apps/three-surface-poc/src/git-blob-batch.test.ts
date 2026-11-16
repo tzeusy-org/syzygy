@@ -5,12 +5,12 @@
 // return the same bytes and the same evaluation as single reads.
 
 import { execFile, execFileSync } from 'node:child_process';
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
-import { afterEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
+import { tempDir } from '@syzygy/test-kit';
 
 import { evaluateBodyReadAuthority } from '@syzygy/three-surface-poc-core';
 
@@ -21,16 +21,15 @@ import { readSelfCorpus } from './polaris-generation/self-corpus.js';
 const REPO_ROOT = fileURLToPath(new URL('../../../', import.meta.url)).replace(/\/$/, '');
 const PINNED_MAIN = '133106eb0f2564f1cefddd19d11985f1b2619397';
 const EVALUATION_INSTANT = '2026-10-03T00:00:00Z';
-// Real-tree reads spawn git; under the parallel-load protocol a hundred
-// single reads took up to 13 s (syzygy-svoj evidence), so these tests carry
-// an explicit budget.
+// Real-tree reads spawn git, once per single read: the three real-tree
+// tests took up to 28.4 s over 5 alone runs at load1 60-88
+// (docs/evidence/syzygy-bpyt-4-31/durations/git-blob-batch.test.tests.json),
+// so they carry an explicit budget.
 const REAL_TREE_TIMEOUT_MS = 120_000;
 
 const bytes = (text: string): Uint8Array => new TextEncoder().encode(text);
 const text = (value: Uint8Array | Error | undefined): string =>
   value instanceof Uint8Array ? new TextDecoder().decode(value) : `error: ${value?.message ?? 'absent'}`;
-const cleanups: string[] = [];
-afterEach(() => { for (const root of cleanups.splice(0)) rmSync(root, { recursive: true, force: true }); });
 const OID_A = 'a'.repeat(40);
 const OID_B = 'b'.repeat(40);
 
@@ -253,8 +252,7 @@ describe('batched reads over the real tree (oracle: one git cat-file blob per ob
   }, REAL_TREE_TIMEOUT_MS);
 
   it('never requests a non-blob entry and refuses it as before', () => {
-    const root = mkdtempSync(join(tmpdir(), 'syzygy-svoj-gitlink-'));
-    cleanups.push(root);
+    const root = tempDir('syzygy-svoj-gitlink-');
     const run = (args: readonly string[]): string => execFileSync('git', ['-C', root, ...args], { encoding: 'utf8' }).trim();
     run(['init', '-q']);
     run(['config', 'gc.auto', '0']);

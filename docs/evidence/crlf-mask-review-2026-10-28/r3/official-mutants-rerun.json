@@ -1,0 +1,354 @@
+{
+ "summary": {
+  "codeCommit": "497515ae38829439aa4faa01196d9e361bce8bd8",
+  "baseCommit": "d621bfa2",
+  "mutants": 6,
+  "killed": 6,
+  "survivedEquivalent": 0,
+  "survived": [],
+  "killedByExpectedKillerOnly": 6,
+  "expectedKillerNotAlone": []
+ },
+ "rows": [
+  {
+   "id": "CONTROL-code-commit",
+   "ranAt": "497515ae38829439aa4faa01196d9e361bce8bd8",
+   "fileSha256": "93b95f6d4eabc440344404d01040ba1f10bdceb65e69ab74c4ea59c1fa5831f7",
+   "detectors": {
+    "unit": {
+     "tests": 44,
+     "failed": 0,
+     "firstFailed": []
+    },
+    "fenceRules": {
+     "tests": 69,
+     "failed": 0,
+     "firstFailed": []
+    },
+    "callSites": {
+     "tests": 278,
+     "failed": 0,
+     "firstFailed": []
+    }
+   }
+  },
+  {
+   "id": "MU17-u2028-is-a-line-end",
+   "ranAt": "497515ae38829439aa4faa01196d9e361bce8bd8",
+   "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+   "replacements": [
+    {
+     "old": "const LINE_END = /\\r\\n|\\r|\\n/g;",
+     "new": "const LINE_END = /\\r\\n|\\r|\\n|\\u2028/g;"
+    }
+   ],
+   "fileSha256": "fc83a936f843db1e27e203a7b0b0fecf05611f0ab29bce8ad519c7a366e7301e",
+   "note": "U+2028 ends a line: changes LF texts that hold one",
+   "outcome": "killed",
+   "detectors": {
+    "unit": {
+     "tests": 44,
+     "failed": 3,
+     "firstFailed": [
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line U+2028, U+2029 and U+0085 are line content, not line ends",
+       "error": "AssertionError: \"\u2028\": expected 'a   \\u2028   d' to be 'a       d' // Object.is equality"
+      },
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line U+2028, U+2029 and U+0085 after a closing fence are line content: the fence stays unclosed",
+       "error": "Error: expected a malformed context"
+      },
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line no code unit but CR and LF ends a line",
+       "error": "AssertionError: expected [ '2028' ] to deeply equal []"
+      }
+     ]
+    },
+    "fenceRules": {
+     "tests": 69,
+     "failed": 0,
+     "firstFailed": []
+    },
+    "callSites": {
+     "tests": 278,
+     "failed": 0,
+     "firstFailed": []
+    }
+   },
+   "expectedKillers": [
+    "U+2028, U+2029 and U+0085 are line content, not line ends",
+    "no code unit but CR and LF ends a line",
+    "U+2028, U+2029 and U+0085 after a closing fence are line content: the fence stays unclosed"
+   ],
+   "failingTests": [
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line U+2028, U+2029 and U+0085 are line content, not line ends",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line U+2028, U+2029 and U+0085 after a closing fence are line content: the fence stays unclosed",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line no code unit but CR and LF ends a line"
+   ],
+   "killedByExpectedKillerOnly": true,
+   "failingPins": [
+    "U+2028, U+2029 and U+0085 are line content, not line ends",
+    "no code unit but CR and LF ends a line",
+    "U+2028, U+2029 and U+0085 after a closing fence are line content: the fence stays unclosed"
+   ]
+  },
+  {
+   "id": "MU18-nel-is-a-line-end",
+   "ranAt": "497515ae38829439aa4faa01196d9e361bce8bd8",
+   "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+   "replacements": [
+    {
+     "old": "const LINE_END = /\\r\\n|\\r|\\n/g;",
+     "new": "const LINE_END = /\\r\\n|\\r|\\n|\\x85/g;"
+    }
+   ],
+   "fileSha256": "0964030efb3dbc43102b8a12e79a582b44e6db8cdce9693837f105ec2d3c5dc3",
+   "note": "U+0085 ends a line: changes LF texts that hold one",
+   "outcome": "killed",
+   "detectors": {
+    "unit": {
+     "tests": 44,
+     "failed": 3,
+     "firstFailed": [
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line U+2028, U+2029 and U+0085 are line content, not line ends",
+       "error": "AssertionError: \"\u0085\": expected 'a   \\u0085   d' to be 'a       d' // Object.is equality"
+      },
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line U+2028, U+2029 and U+0085 after a closing fence are line content: the fence stays unclosed",
+       "error": "Error: expected a malformed context"
+      },
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line no code unit but CR and LF ends a line",
+       "error": "AssertionError: expected [ '85' ] to deeply equal []"
+      }
+     ]
+    },
+    "fenceRules": {
+     "tests": 69,
+     "failed": 0,
+     "firstFailed": []
+    },
+    "callSites": {
+     "tests": 278,
+     "failed": 0,
+     "firstFailed": []
+    }
+   },
+   "expectedKillers": [
+    "U+2028, U+2029 and U+0085 are line content, not line ends",
+    "no code unit but CR and LF ends a line",
+    "U+2028, U+2029 and U+0085 after a closing fence are line content: the fence stays unclosed"
+   ],
+   "failingTests": [
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line U+2028, U+2029 and U+0085 are line content, not line ends",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line U+2028, U+2029 and U+0085 after a closing fence are line content: the fence stays unclosed",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line no code unit but CR and LF ends a line"
+   ],
+   "killedByExpectedKillerOnly": true,
+   "failingPins": [
+    "U+2028, U+2029 and U+0085 are line content, not line ends",
+    "no code unit but CR and LF ends a line",
+    "U+2028, U+2029 and U+0085 after a closing fence are line content: the fence stays unclosed"
+   ]
+  },
+  {
+   "id": "MU19-js-line-terminators",
+   "ranAt": "497515ae38829439aa4faa01196d9e361bce8bd8",
+   "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+   "replacements": [
+    {
+     "old": "const LINE_END = /\\r\\n|\\r|\\n/g;",
+     "new": "const LINE_END = /\\r\\n|[\\r\\n\\u2028\\u2029]/g;"
+    }
+   ],
+   "fileSha256": "143f6ff5c7c129b73a5dfd552ecd0846171a55e1bb1feb0c1032d3be66564f98",
+   "note": "the JavaScript line-terminator set",
+   "outcome": "killed",
+   "detectors": {
+    "unit": {
+     "tests": 44,
+     "failed": 3,
+     "firstFailed": [
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line U+2028, U+2029 and U+0085 are line content, not line ends",
+       "error": "AssertionError: \"\u2028\": expected 'a   \\u2028   d' to be 'a       d' // Object.is equality"
+      },
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line U+2028, U+2029 and U+0085 after a closing fence are line content: the fence stays unclosed",
+       "error": "Error: expected a malformed context"
+      },
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line no code unit but CR and LF ends a line",
+       "error": "AssertionError: expected [ '2028', '2029' ] to deeply equal []"
+      }
+     ]
+    },
+    "fenceRules": {
+     "tests": 69,
+     "failed": 0,
+     "firstFailed": []
+    },
+    "callSites": {
+     "tests": 278,
+     "failed": 0,
+     "firstFailed": []
+    }
+   },
+   "expectedKillers": [
+    "U+2028, U+2029 and U+0085 are line content, not line ends",
+    "no code unit but CR and LF ends a line",
+    "U+2028, U+2029 and U+0085 after a closing fence are line content: the fence stays unclosed"
+   ],
+   "failingTests": [
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line U+2028, U+2029 and U+0085 are line content, not line ends",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line U+2028, U+2029 and U+0085 after a closing fence are line content: the fence stays unclosed",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line no code unit but CR and LF ends a line"
+   ],
+   "killedByExpectedKillerOnly": true,
+   "failingPins": [
+    "U+2028, U+2029 and U+0085 are line content, not line ends",
+    "no code unit but CR and LF ends a line",
+    "U+2028, U+2029 and U+0085 after a closing fence are line content: the fence stays unclosed"
+   ]
+  },
+  {
+   "id": "MU22-vt-ff-are-line-ends",
+   "ranAt": "497515ae38829439aa4faa01196d9e361bce8bd8",
+   "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+   "replacements": [
+    {
+     "old": "const LINE_END = /\\r\\n|\\r|\\n/g;",
+     "new": "const LINE_END = /\\r\\n|[\\r\\n\\v\\f]/g;"
+    }
+   ],
+   "fileSha256": "d69b31fd6a48025dbb79c68bbd337f9775a4d817e80612b964fb0e8e764af7bd",
+   "note": "RW3 of R-GP-IMPL-CRLF-MASK-2: VT and FF end a line, a widening to \"the other vertical whitespace\": changes LF texts that hold one",
+   "outcome": "killed",
+   "detectors": {
+    "unit": {
+     "tests": 44,
+     "failed": 1,
+     "firstFailed": [
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line no code unit but CR and LF ends a line",
+       "error": "AssertionError: expected [ 'b', 'c' ] to deeply equal []"
+      }
+     ]
+    },
+    "fenceRules": {
+     "tests": 69,
+     "failed": 0,
+     "firstFailed": []
+    },
+    "callSites": {
+     "tests": 278,
+     "failed": 0,
+     "firstFailed": []
+    }
+   },
+   "expectedKillers": [
+    "no code unit but CR and LF ends a line"
+   ],
+   "failingTests": [
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line no code unit but CR and LF ends a line"
+   ],
+   "killedByExpectedKillerOnly": true,
+   "failingPins": [
+    "no code unit but CR and LF ends a line"
+   ]
+  },
+  {
+   "id": "MU23-closer-tolerates-separators",
+   "ranAt": "497515ae38829439aa4faa01196d9e361bce8bd8",
+   "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+   "replacements": [
+    {
+     "old": "/^ {0,3}(`{3,}|~{3,}) *$/",
+     "new": "/^ {0,3}(`{3,}|~{3,})[ \\u2028\\u2029\\u0085]*$/"
+    }
+   ],
+   "fileSha256": "1bab121b04fdc7178472a617521b0ca690d48b98cead424534a2d9e04d372353",
+   "note": "RW5 of R-GP-IMPL-CRLF-MASK-2: a closer that tolerates a trailing U+2028, U+2029 or U+0085 (a separator read as a line end at fence positions only): changes LF texts that hold one",
+   "outcome": "killed",
+   "detectors": {
+    "unit": {
+     "tests": 44,
+     "failed": 1,
+     "firstFailed": [
+      {
+       "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line U+2028, U+2029 and U+0085 after a closing fence are line content: the fence stays unclosed",
+       "error": "Error: expected a malformed context"
+      }
+     ]
+    },
+    "fenceRules": {
+     "tests": 69,
+     "failed": 0,
+     "firstFailed": []
+    },
+    "callSites": {
+     "tests": 278,
+     "failed": 0,
+     "firstFailed": []
+    }
+   },
+   "expectedKillers": [
+    "U+2028, U+2029 and U+0085 after a closing fence are line content: the fence stays unclosed"
+   ],
+   "failingTests": [
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line U+2028, U+2029 and U+0085 after a closing fence are line content: the fence stays unclosed"
+   ],
+   "killedByExpectedKillerOnly": true,
+   "failingPins": [
+    "U+2028, U+2029 and U+0085 after a closing fence are line content: the fence stays unclosed"
+   ]
+  },
+  {
+   "id": "MU24-positionOf-counts-u2028",
+   "ranAt": "497515ae38829439aa4faa01196d9e361bce8bd8",
+   "file": "packages/three-surface-poc-core/src/git-object-reader.ts",
+   "replacements": [
+    {
+     "old": "if (text.charCodeAt(i) === 10) {",
+     "new": "if (text.charCodeAt(i) === 10 || text.charCodeAt(i) === 0x2028) {"
+    }
+   ],
+   "fileSha256": "7fda7628637eb39993435ee3fc84573022064d451d86ff38e435de773119bb0c",
+   "note": "RW10 of R-GP-IMPL-CRLF-MASK-2: positionOf counts U+2028 as a line end: moves an LF finding position",
+   "outcome": "killed",
+   "detectors": {
+    "unit": {
+     "tests": 44,
+     "failed": 0,
+     "firstFailed": []
+    },
+    "fenceRules": {
+     "tests": 69,
+     "failed": 0,
+     "firstFailed": []
+    },
+    "callSites": {
+     "tests": 278,
+     "failed": 1,
+     "firstFailed": [
+      {
+       "test": "reported positions in CRLF and bare-CR texts U+2028 is line content: an LF text reports its finding on line 1",
+       "error": "AssertionError: expected [ \u2026(2) ] to deeply equal [ \u2026(2) ]"
+      }
+     ]
+    }
+   },
+   "expectedKillers": [
+    "U+2028 is line content: an LF text reports its finding on line 1"
+   ],
+   "failingTests": [
+    "reported positions in CRLF and bare-CR texts U+2028 is line content: an LF text reports its finding on line 1"
+   ],
+   "killedByExpectedKillerOnly": true,
+   "failingPins": [
+    "U+2028 is line content: an LF text reports its finding on line 1"
+   ]
+  }
+ ]
+}

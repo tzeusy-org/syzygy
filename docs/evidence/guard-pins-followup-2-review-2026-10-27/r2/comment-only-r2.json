@@ -1,0 +1,112 @@
+{
+ "esbuild": "0.28.2",
+ "blobs": [
+  {
+   "file": "testkit-d38d7a3c.ts",
+   "sha256": "ed67106fe74333c97f419f4a52f14f75bfaa34bbfa5b41f33c4f1b6545895731",
+   "strippedSha256": "cf3ed5f1e7936e025543cb89d26d3cd810ea25859b7db0393b712c8de3cf2170"
+  },
+  {
+   "file": "testkit-308a62f4.ts",
+   "sha256": "94c9d93b40cc4f54afc8a6d56d9062b25e27938016edef566d7bd75b6381cbd3",
+   "strippedSha256": "cf3ed5f1e7936e025543cb89d26d3cd810ea25859b7db0393b712c8de3cf2170"
+  },
+  {
+   "file": "testkit-5f0d5547.ts",
+   "sha256": "440209bb6d876b7ae1240a88cd4cf5913b01750a0d9ffa56f90c072be7f76951",
+   "strippedSha256": "cf3ed5f1e7936e025543cb89d26d3cd810ea25859b7db0393b712c8de3cf2170"
+  }
+ ],
+ "pairs": [
+  {
+   "from": "testkit-d38d7a3c.ts",
+   "to": "testkit-308a62f4.ts",
+   "bytesDiffer": true,
+   "strippedEqual": true
+  },
+  {
+   "from": "testkit-308a62f4.ts",
+   "to": "testkit-5f0d5547.ts",
+   "bytesDiffer": true,
+   "strippedEqual": true
+  }
+ ],
+ "lineLevel": [
+  {
+   "from": "testkit-d38d7a3c.ts",
+   "to": "testkit-308a62f4.ts",
+   "removed": [
+    64,
+    66
+   ],
+   "added": [
+    64,
+    65,
+    67,
+    68
+   ],
+   "docComment": {
+    "from": [
+     59,
+     69
+    ],
+    "to": [
+     59,
+     71
+    ]
+   },
+   "outsideOrNotStarLine": [],
+   "localVersionLineEqual": true,
+   "lineCounts": [
+    127,
+    129
+   ]
+  },
+  {
+   "from": "testkit-308a62f4.ts",
+   "to": "testkit-5f0d5547.ts",
+   "removed": [
+    64,
+    65,
+    66,
+    71
+   ],
+   "added": [
+    64,
+    65,
+    66,
+    67,
+    68,
+    73,
+    74,
+    75,
+    76,
+    77
+   ],
+   "docComment": {
+    "from": [
+     59,
+     71
+    ],
+    "to": [
+     59,
+     77
+    ]
+   },
+   "outsideOrNotStarLine": [],
+   "localVersionLineEqual": true,
+   "lineCounts": [
+    129,
+    135
+   ]
+  }
+ ],
+ "selftest": {
+  "regexCharChanged": false,
+  "identifierRenamed": false,
+  "stringLiteralChanged": false,
+  "commentAdded": true,
+  "docCommentLineAdded": true
+ },
+ "selftestOk": true
+}

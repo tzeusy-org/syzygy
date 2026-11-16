@@ -1,0 +1,54 @@
+{
+ "case": "control",
+ "n": 3,
+ "head": "1e444071112522ce1b9eb43a8d3964174c54c477",
+ "command": "npx vitest run --config packages/cap1-system/vitest.config.ts skipped-population --reporter=json --outputFile=<tmp>/report.json",
+ "env": {},
+ "merged": false,
+ "edits": [],
+ "exitCode": 0,
+ "wallSeconds": 4.2,
+ "killedAtDeadline": false,
+ "loadavgStart": [
+  "30.77",
+  "25.34",
+  "24.98"
+ ],
+ "loadavgEnd": [
+  "32.15",
+  "25.71",
+  "25.10"
+ ],
+ "processesSeen": 62,
+ "sessionsSeen": 2,
+ "survivors": {},
+ "counts": {
+  "passed": 1
+ },
+ "numTotalTests": 1,
+ "suites": [
+  {
+   "file": "packages/cap1-system/src/skipped-population.system.test.ts",
+   "status": "passed",
+   "message": ""
+  }
+ ],
+ "checkRow": {
+  "file": "packages/cap1-system/src/skipped-population.system.test.ts",
+  "name": "system tier: the skipped population skips exactly the expected tests, by SYZYGY_FRESH_CLONE and uid",
+  "status": "passed",
+  "durationMs": 2193,
+  "failure": null
+ },
+ "tests": [
+  {
+   "file": "packages/cap1-system/src/skipped-population.system.test.ts",
+   "name": "system tier: the skipped population skips exactly the expected tests, by SYZYGY_FRESH_CLONE and uid",
+   "status": "passed",
+   "durationMs": 2193,
+   "failure": null
+  }
+ ],
+ "stdoutTail": "JSON report written to /tmp/r527-control-3/report.json\n",
+ "treeCleanAfter": true
+}

@@ -1,0 +1,10 @@
+{
+  "at": "2026-11-06T06:35:58.796965+00:00",
+  "subjectCommit": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+  "toolSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+  "M0Sha256": "bf3ca1cc16a7a2d0975c0c569b7a6ea3f1e1f403aad830512c17fcd6cf258205",
+  "worlds": 5403,
+  "answers": 70999,
+  "literalRows": 12,
+  "mutationScoringReleased": true
+}

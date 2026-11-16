@@ -1,0 +1,112 @@
+{
+ "statusAfter": "",
+ "rows": [
+  {
+   "id": "M0-lane-udp4-bind-at-import",
+   "purity": "killed",
+   "exit": 1,
+   "passed": 12,
+   "failed": 1,
+   "total": 13,
+   "failedTests": [
+    "@syzygy/support stays a pure leaf imports only node:crypto and its own modules, so no file read, no workspace package and no network"
+   ]
+  },
+  {
+   "id": "E1-dynamic-import-net-tcp-at-first-call",
+   "purity": "killed",
+   "exit": 1,
+   "passed": 11,
+   "failed": 2,
+   "total": 13,
+   "failedTests": [
+    "@syzygy/support stays a pure leaf imports only node:crypto and its own modules, so no file read, no workspace package and no network",
+    "@syzygy/support stays a pure leaf names no write, process, clock, network or file-system token in any source"
+   ]
+  },
+  {
+   "id": "E2-child-process-that-binds-udp4",
+   "purity": "killed",
+   "exit": 1,
+   "passed": 11,
+   "failed": 2,
+   "total": 13,
+   "failedTests": [
+    "@syzygy/support stays a pure leaf imports only node:crypto and its own modules, so no file read, no workspace package and no network",
+    "@syzygy/support stays a pure leaf names no write, process, clock, network or file-system token in any source"
+   ]
+  },
+  {
+   "id": "E3-udp6-bind-at-import",
+   "purity": "killed",
+   "exit": 1,
+   "passed": 12,
+   "failed": 1,
+   "total": 13,
+   "failedTests": [
+    "@syzygy/support stays a pure leaf imports only node:crypto and its own modules, so no file read, no workspace package and no network"
+   ]
+  },
+  {
+   "id": "E4-global-fetch-at-first-call",
+   "purity": "killed",
+   "exit": 1,
+   "passed": 12,
+   "failed": 1,
+   "total": 13,
+   "failedTests": [
+    "@syzygy/support stays a pure leaf names no write, process, clock, network or file-system token in any source"
+   ]
+  },
+  {
+   "id": "E5-fs-write-at-import",
+   "purity": "killed",
+   "exit": 1,
+   "passed": 11,
+   "failed": 2,
+   "total": 13,
+   "failedTests": [
+    "@syzygy/support stays a pure leaf imports only node:crypto and its own modules, so no file read, no workspace package and no network",
+    "@syzygy/support stays a pure leaf names no write, process, clock, network or file-system token in any source"
+   ]
+  },
+  {
+   "id": "E4b-global-fetch-at-first-call-port-65530",
+   "purity": "killed",
+   "exit": 1,
+   "passed": 12,
+   "failed": 1,
+   "total": 13,
+   "failedTests": [
+    "@syzygy/support stays a pure leaf names no write, process, clock, network or file-system token in any source"
+   ]
+  },
+  {
+   "id": "E6-console-write-at-import",
+   "purity": "survives",
+   "exit": 0,
+   "passed": 13,
+   "failed": 0,
+   "total": 13,
+   "failedTests": []
+  },
+  {
+   "id": "E7-optional-call-fetch-at-import",
+   "purity": "survives",
+   "exit": 0,
+   "passed": 13,
+   "failed": 0,
+   "total": 13,
+   "failedTests": []
+  },
+  {
+   "id": "E8-websocket-at-import",
+   "purity": "survives",
+   "exit": 0,
+   "passed": 13,
+   "failed": 0,
+   "total": 13,
+   "failedTests": []
+  }
+ ]
+}

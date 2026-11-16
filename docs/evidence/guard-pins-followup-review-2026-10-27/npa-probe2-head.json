@@ -1,0 +1,119 @@
+{
+ "node": "v24.6.0",
+ "npaVersion": "12.0.2",
+ "pattern": "/^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu",
+ "rows": [
+  {
+   "spec": "git+https://example.com/lib.tgz",
+   "npa": "git",
+   "local": true
+  },
+  {
+   "spec": "git+ssh://git@example.com/lib.tar",
+   "npa": "git",
+   "local": true
+  },
+  {
+   "spec": "someone/dossier.tgz",
+   "npa": "git",
+   "local": true
+  },
+  {
+   "spec": "github:someone/dossier#v1.tar",
+   "npa": "git",
+   "local": true
+  },
+  {
+   "spec": "http://example.com/lib.tar.gz",
+   "npa": "remote",
+   "local": true
+  },
+  {
+   "spec": "https://example.com/lib",
+   "npa": "remote",
+   "local": false
+  },
+  {
+   "spec": "https://github.com/someone/dossier/archive/v1.0.0.tar.gz",
+   "npa": "remote",
+   "local": true
+  },
+  {
+   "spec": "npm:typescript@^5.5.0",
+   "npa": "alias",
+   "subSpec": "range typescript",
+   "local": true
+  },
+  {
+   "spec": "npm:@syzygy/lib@*",
+   "npa": "alias",
+   "subSpec": "range @syzygy/lib",
+   "local": true
+  },
+  {
+   "spec": "FILE:../x",
+   "npa": "directory",
+   "local": true
+  },
+  {
+   "spec": "file:x.tgz",
+   "npa": "file",
+   "local": true
+  },
+  {
+   "spec": "git+file:../../packages/lib",
+   "npa": "git",
+   "local": false
+  },
+  {
+   "spec": "..",
+   "npa": "directory",
+   "local": true
+  },
+  {
+   "spec": "C:/lib",
+   "npa": "directory",
+   "local": false
+  },
+  {
+   "spec": ".\\lib",
+   "npa": "directory",
+   "local": false
+  },
+  {
+   "spec": "~",
+   "npa": "tag",
+   "local": false
+  },
+  {
+   "spec": "~lib",
+   "npa": "tag",
+   "local": false
+  },
+  {
+   "spec": "lib.TGZ",
+   "npa": "file",
+   "local": true
+  },
+  {
+   "spec": "lib.tarXgz",
+   "npa": "file",
+   "local": false
+  },
+  {
+   "spec": "x.tar.bz2",
+   "npa": "tag",
+   "local": false
+  },
+  {
+   "spec": "packages/polaris-dossier",
+   "npa": "git",
+   "local": false
+  },
+  {
+   "spec": "lib/",
+   "npa": "directory",
+   "local": false
+  }
+ ]
+}

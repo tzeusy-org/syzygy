@@ -1,0 +1,21 @@
+{
+ "mutants": [
+  {
+   "id": "R-X9-node-condition-ahead-of-import-in-the-argv-export",
+   "expect": "survives",
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/subpath-imports.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/package.json",
+     "old": "      \"types\": \"./dist/argv.d.ts\",\n      \"import\": \"./dist/argv.js\",",
+     "new": "      \"types\": \"./dist/argv.d.ts\",\n      \"node\": \"./dist/index.js\",\n      \"import\": \"./dist/argv.js\","
+    }
+   ]
+  }
+ ]
+}

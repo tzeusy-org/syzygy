@@ -1,0 +1,141 @@
+{
+ "fixFiles": {
+  "fix-f2-object-entry-row.ts.txt": {
+   "sha256": "5a70742a7b189bf04621aad6bc0a556a80407d9dd9495889bd5e4a5ff1d9c6cc",
+   "target": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "occurrences": 1,
+   "nbspInFix": 0,
+   "nbspInTarget": 0
+  },
+  "fix-n-write-rows.ts.txt": {
+   "sha256": "2238a3eefdd47ad4e73b2f1e4a45b8f85fd247207b653deb34de3ded59cf763f",
+   "target": "packages/support/src/support-purity.test.ts",
+   "occurrences": 1,
+   "nbspInFix": 0,
+   "nbspInTarget": 0
+  },
+  "fix-n-import-reader.ts.txt": {
+   "sha256": "9affefce2736f093546487349ea641f7507a62eb9481693a7f31aa0cd5734d44",
+   "target": "packages/support/src/support-purity.test.ts",
+   "occurrences": 1,
+   "nbspInFix": 0,
+   "nbspInTarget": 0
+  },
+  "fix-n-import-row.ts.txt": {
+   "sha256": "bec4d557f5d355c0339b8586fd9bb4b22c5c0aede5491a0c1e9b5fb4c4331f70",
+   "target": "packages/support/src/support-purity.test.ts",
+   "occurrences": 1,
+   "nbspInFix": 0,
+   "nbspInTarget": 0
+  },
+  "fix-n-import-reader-rows.ts.txt": {
+   "sha256": "3b755d6956134ae8882ade6c4679e82002b29cdd74b402fff5685256edb5364b",
+   "target": "packages/support/src/support-purity.test.ts",
+   "occurrences": 1,
+   "nbspInFix": 0,
+   "nbspInTarget": 0
+  }
+ },
+ "f1OldTexts": {
+  "a": {
+   "text": "8 test or test-support files",
+   "inR1Body": 1,
+   "inR2Body": 0
+  },
+  "b": {
+   "text": "3. The no-write row now reads destructuring targets: `[Object.freeze] = […]` (U4), `({ value: Object.freeze } = …)` (U5), and property targets inside parentheses, defaults and spreads.",
+   "inR1Body": 1,
+   "inR2Body": 0
+  },
+  "c56": {
+   "text": "5. A workspace package whose `exports` or `main` target contains `/../` now throws. Both root-alias rows fail on it (E4, below). Before, `./dist/x/../index.js` was joined to `src/index.ts` and accepte",
+   "inR1Body": 1,
+   "inR2Body": 0
+  },
+  "d": {
+   "text": "7. A package entry the config does not alias, other than the six listed, fails. That covers a new export added without a root alias, and an existing alias removed.",
+   "inR1Body": 1,
+   "inR2Body": 0
+  },
+  "e": {
+   "text": "and lists the six entries the config leaves to their built dist:",
+   "inR1Body": 1,
+   "inR2Body": 0
+  }
+ },
+ "f1b": {
+  "rawText": "3. The no-write row now reads destructuring targets: `[Object.freeze] = […]` (U4), `({ value: Object.freeze } = …)` (U5), and property targets inside parentheses, spreads and nested patterns. A property target with a default (`[Object.freeze = f] = []`) was already refused at `1a8864d9`, because the default is itself a property assignment.",
+  "inR2Body": 1,
+  "nbsp": 0
+ },
+ "f1c": {
+  "rawText": "5. A workspace package whose `exports` or `main` target contains `/../` now throws, in any condition, `types` included. Before, an entry whose conditions all name `./dist/x/../state-directory.js` was joined to `src/state-directory.ts` and accepted; both root-alias rows and the whole S10 file now fail on it. E4, below, changes the `import` condition alone, so its conditions disagree and the unreadable-entry throw refused it at `1a8864d9` too: it shows the new message, not a new refusal.",
+  "inR2Body": 0,
+  "nbsp": 0
+ },
+ "importers": {
+  "trackedFiles": 7637,
+  "scanned": 780,
+  "byTestkit": {
+   "purity.testkit": [
+    "packages/support/src/support-purity.test.ts",
+    "packages/three-surface-poc-core/src/owner-act-drafter.test.ts"
+   ],
+   "workspace-reach.testkit": [
+    "apps/three-surface-poc/src/git-observation.test.ts",
+    "apps/three-surface-poc/src/product-build.test.ts",
+    "apps/three-surface-poc/src/sync-child-process-guard.test.ts",
+    "packages/polaris-dossier/src/no-egress.test.ts",
+    "packages/polaris-dossier/src/subpath-imports.test.ts",
+    "packages/polaris-generation-core/src/island-boundary.test.ts",
+    "packages/polaris-generation-core/src/workspace-reach.test.ts"
+   ]
+  },
+  "distinct": [
+   "apps/three-surface-poc/src/git-observation.test.ts",
+   "apps/three-surface-poc/src/product-build.test.ts",
+   "apps/three-surface-poc/src/sync-child-process-guard.test.ts",
+   "packages/polaris-dossier/src/no-egress.test.ts",
+   "packages/polaris-dossier/src/subpath-imports.test.ts",
+   "packages/polaris-generation-core/src/island-boundary.test.ts",
+   "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "packages/support/src/support-purity.test.ts",
+   "packages/three-surface-poc-core/src/owner-act-drafter.test.ts"
+  ],
+  "nonTest": [],
+  "distinctCount": 9
+ },
+ "surfaceVersion": {
+  "a15b6a04da2cda0c5871a05c538b72943b1d660c": "polaris@9b6b1620ccc4",
+  "330dd89458801e7a150134efa15f3d4af8215304": "polaris@82c041c8c559",
+  "b87e7a40": "polaris@9b6b1620ccc4"
+ },
+ "changedPaths": [
+  "AGENTS.md",
+  "docs/evidence/syzygy-bpyt-46/alias-shadow-probe.json",
+  "docs/evidence/syzygy-bpyt-46/mutants-head-absent.json",
+  "docs/evidence/syzygy-bpyt-46/mutants-head-absent.log",
+  "docs/evidence/syzygy-bpyt-46/mutants-head-present.json",
+  "docs/evidence/syzygy-bpyt-46/mutants-head-present.log",
+  "docs/evidence/syzygy-bpyt-46/suite-head.json",
+  "docs/evidence/syzygy-bpyt-46/titles.json",
+  "docs/evidence/syzygy-bpyt-46/tools/mutants.py",
+  "packages/polaris-dossier/src/no-egress.test.ts",
+  "packages/polaris-generation-core/src/workspace-reach.test.ts",
+  "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+  "packages/support/src/purity.testkit.ts",
+  "packages/support/src/support-purity.test.ts",
+  "packages/three-surface-poc-core/src/owner-act-drafter.test.ts"
+ ],
+ "nonTestNonDoc": [],
+ "configOrWorkflow": [],
+ "mainChangedPrPaths": {
+  "1a8864d9..a15b6a04": [
+   "AGENTS.md",
+   "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+   "packages/support/src/support-purity.test.ts"
+  ],
+  "a15b6a04..b87e7a40": []
+ }
+}

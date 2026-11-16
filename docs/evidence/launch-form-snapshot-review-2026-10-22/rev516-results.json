@@ -1,0 +1,1087 @@
+{
+ "head": "bddbbf6c3ef2cd3fff2b73946356c57fc5bd5353",
+ "base": "a04069678c02881cd41a25b850e14f79d581c083",
+ "results": [
+  {
+   "mutant": "none",
+   "side": "base",
+   "testSha256": "1243441dfdc7216015d48b1431327d1338d9d54ea71f25439cf69fe6158c1141",
+   "readerSha256": "c7a25b8b45fe12e2add7874f88d46b2bad1eef16ffa4a17e2464d5c671424921",
+   "timedOut": false,
+   "seconds": 17.7,
+   "exitCode": 0,
+   "stdoutTail": "JSON report written to /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/results/none--base.vitest.json\n",
+   "restored": true,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 43,
+    "numFailedTests": 0
+   },
+   "failedTests": [],
+   "outcome": "survived"
+  },
+  {
+   "mutant": "none",
+   "side": "fix",
+   "testSha256": "e01b040a5f74f044169d46adccde476814187b5d44fa7bfcb44ef082ca2fa740",
+   "readerSha256": "c7a25b8b45fe12e2add7874f88d46b2bad1eef16ffa4a17e2464d5c671424921",
+   "timedOut": false,
+   "seconds": 18.1,
+   "exitCode": 0,
+   "stdoutTail": "JSON report written to /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/results/none--fix.vitest.json\n",
+   "restored": true,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 43,
+    "numFailedTests": 0
+   },
+   "failedTests": [],
+   "outcome": "survived"
+  },
+  {
+   "mutant": "D1-with-memoized-reader",
+   "side": "base",
+   "testSha256": "1243441dfdc7216015d48b1431327d1338d9d54ea71f25439cf69fe6158c1141",
+   "readerSha256": "d0507b495958969ece80b4a116dd9ac99817fa1f7a9037de2b9943ab036666d1",
+   "timedOut": false,
+   "seconds": 24.9,
+   "exitCode": 0,
+   "stdoutTail": "JSON report written to /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/results/D1-with-memoized-reader--base.vitest.json\n",
+   "restored": true,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 43,
+    "numFailedTests": 0
+   },
+   "failedTests": [],
+   "outcome": "survived"
+  },
+  {
+   "mutant": "D1-with-memoized-reader",
+   "side": "fix",
+   "testSha256": "e01b040a5f74f044169d46adccde476814187b5d44fa7bfcb44ef082ca2fa740",
+   "readerSha256": "d0507b495958969ece80b4a116dd9ac99817fa1f7a9037de2b9943ab036666d1",
+   "timedOut": false,
+   "seconds": 22.7,
+   "exitCode": 1,
+   "stdoutTail": "JSON report written to /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/results/D1-with-memoized-reader--fix.vitest.json\n",
+   "restored": true,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 26,
+    "numFailedTests": 17
+   },
+   "failedTests": [
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: an empty file",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 152025378, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: invalid JSON",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 152025757, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: JSON null",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 152025790, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a JSON array",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 152025816, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a JSON string",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 152025904, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: another format",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 152025906, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: no format",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 152025986, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a format that is not a string",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 152026061, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a byte-order mark before the marker",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 152026133, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a directory",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 16877, ino: 152026135, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a dangling symbolic link",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 41471, ino: 152026137, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to the marker Syzygy writes",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 41471, ino: 152026196, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to a character device",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 41471, ino: 152026277, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a FIFO",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 4516, ino: 152026795, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a FIFO holding the marker's bytes",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 4516, ino: 152026916, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a marker of 4097 bytes, one past the bound",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 152026919, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a file its reader may not read",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 32768, ino: 152026921, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    }
+   ],
+   "outcome": "killed"
+  },
+  {
+   "mutant": "D4-truncate",
+   "side": "base",
+   "testSha256": "1243441dfdc7216015d48b1431327d1338d9d54ea71f25439cf69fe6158c1141",
+   "readerSha256": "85202efe6011fc4a6aa08d6ce953ea926dce24fa050daa72f522e8178968ff3a",
+   "timedOut": false,
+   "seconds": 23.1,
+   "exitCode": 0,
+   "stdoutTail": "JSON report written to /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/results/D4-truncate--base.vitest.json\n",
+   "restored": true,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 43,
+    "numFailedTests": 0
+   },
+   "failedTests": [],
+   "outcome": "survived"
+  },
+  {
+   "mutant": "D4-truncate",
+   "side": "fix",
+   "testSha256": "e01b040a5f74f044169d46adccde476814187b5d44fa7bfcb44ef082ca2fa740",
+   "readerSha256": "85202efe6011fc4a6aa08d6ce953ea926dce24fa050daa72f522e8178968ff3a",
+   "timedOut": false,
+   "seconds": 18.1,
+   "exitCode": 1,
+   "stdoutTail": "JSON report written to /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/results/D4-truncate--fix.vitest.json\n",
+   "restored": true,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 33,
+    "numFailedTests": 10
+   },
+   "failedTests": [
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: invalid JSON",
+     "firstErrorLine": "AssertionError: expected { mode: 33188, ino: 152043016, \u2026(3) } to deeply equal { mode: 33188, ino: 152043016, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: JSON null",
+     "firstErrorLine": "AssertionError: expected { mode: 33188, ino: 152043142, \u2026(3) } to deeply equal { mode: 33188, ino: 152043142, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a JSON array",
+     "firstErrorLine": "AssertionError: expected { mode: 33188, ino: 152043144, \u2026(3) } to deeply equal { mode: 33188, ino: 152043144, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a JSON string",
+     "firstErrorLine": "AssertionError: expected { mode: 33188, ino: 152043148, \u2026(3) } to deeply equal { mode: 33188, ino: 152043148, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: another format",
+     "firstErrorLine": "AssertionError: expected { mode: 33188, ino: 152043150, \u2026(3) } to deeply equal { mode: 33188, ino: 152043150, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: no format",
+     "firstErrorLine": "AssertionError: expected { mode: 33188, ino: 152043152, \u2026(3) } to deeply equal { mode: 33188, ino: 152043152, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a format that is not a string",
+     "firstErrorLine": "AssertionError: expected { mode: 33188, ino: 152043154, \u2026(3) } to deeply equal { mode: 33188, ino: 152043154, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a byte-order mark before the marker",
+     "firstErrorLine": "AssertionError: expected { mode: 33188, ino: 152043164, \u2026(3) } to deeply equal { mode: 33188, ino: 152043164, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to the marker Syzygy writes",
+     "firstErrorLine": "AssertionError: expected { mode: 41471, ino: 152043188, \u2026(3) } to deeply equal { mode: 41471, ino: 152043188, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a marker of 4097 bytes, one past the bound",
+     "firstErrorLine": "AssertionError: expected { mode: 33188, ino: 152043340, \u2026(3) } to deeply equal { mode: 33188, ino: 152043340, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    }
+   ],
+   "outcome": "killed"
+  },
+  {
+   "mutant": "D1-bang-only",
+   "side": "base",
+   "testSha256": "1243441dfdc7216015d48b1431327d1338d9d54ea71f25439cf69fe6158c1141",
+   "readerSha256": "68308e536a17b8791a2042fd316534a511c3bd8dfca112a93fbea3fc9c8852e0",
+   "timedOut": false,
+   "seconds": 15.5,
+   "exitCode": 1,
+   "stdoutTail": "JSON report written to /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/results/D1-bang-only--base.vitest.json\n",
+   "restored": true,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 26,
+    "numFailedTests": 17
+   },
+   "failedTests": [
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: an empty file",
+     "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:124:40)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: invalid JSON",
+     "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:124:40)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: JSON null",
+     "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:124:40)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a JSON array",
+     "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:124:40)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a JSON string",
+     "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:124:40)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: another format",
+     "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:124:40)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: no format",
+     "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:124:40)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a format that is not a string",
+     "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:124:40)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a byte-order mark before the marker",
+     "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:124:40)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a directory",
+     "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:124:40)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a dangling symbolic link",
+     "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:124:40)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to the marker Syzygy writes",
+     "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:124:40)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to a character device",
+     "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:124:40)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a FIFO",
+     "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:124:40)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a FIFO holding the marker's bytes",
+     "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:124:40)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a marker of 4097 bytes, one past the bound",
+     "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:124:40)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a file its reader may not read",
+     "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:124:40)"
+    }
+   ],
+   "outcome": "killed"
+  },
+  {
+   "mutant": "D1-bang-only",
+   "side": "fix",
+   "testSha256": "e01b040a5f74f044169d46adccde476814187b5d44fa7bfcb44ef082ca2fa740",
+   "readerSha256": "68308e536a17b8791a2042fd316534a511c3bd8dfca112a93fbea3fc9c8852e0",
+   "timedOut": false,
+   "seconds": 26.4,
+   "exitCode": 1,
+   "stdoutTail": "JSON report written to /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/results/D1-bang-only--fix.vitest.json\n",
+   "restored": true,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 26,
+    "numFailedTests": 17
+   },
+   "failedTests": [
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: an empty file",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 152058171, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: invalid JSON",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 152058187, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: JSON null",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 152058211, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a JSON array",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 152058317, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a JSON string",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 152058321, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: another format",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 152058325, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: no format",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 152058329, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a format that is not a string",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 152058333, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a byte-order mark before the marker",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 152058337, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a directory",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 16877, ino: 152058365, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a dangling symbolic link",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 41471, ino: 152058369, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to the marker Syzygy writes",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 41471, ino: 152058380, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to a character device",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 41471, ino: 152058385, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a FIFO",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 4516, ino: 152058432, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a FIFO holding the marker's bytes",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 4516, ino: 152058440, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a marker of 4097 bytes, one past the bound",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 152058444, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a file its reader may not read",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 32768, ino: 152058448, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    }
+   ],
+   "outcome": "killed"
+  },
+  {
+   "mutant": "D1-terminal-only",
+   "side": "base",
+   "testSha256": "1243441dfdc7216015d48b1431327d1338d9d54ea71f25439cf69fe6158c1141",
+   "readerSha256": "443fee4b09a14f65373a8ae30171847e8de4a62895547f3969e7a0ed4af02164",
+   "timedOut": false,
+   "seconds": 21.9,
+   "exitCode": 1,
+   "stdoutTail": "JSON report written to /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/results/D1-terminal-only--base.vitest.json\n",
+   "restored": true,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 26,
+    "numFailedTests": 17
+   },
+   "failedTests": [
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: an empty file",
+     "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:124:40)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: invalid JSON",
+     "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:124:40)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: JSON null",
+     "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:124:40)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a JSON array",
+     "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:124:40)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a JSON string",
+     "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:124:40)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: another format",
+     "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:124:40)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: no format",
+     "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:124:40)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a format that is not a string",
+     "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:124:40)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a byte-order mark before the marker",
+     "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:124:40)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a directory",
+     "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:124:40)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a dangling symbolic link",
+     "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:124:40)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to the marker Syzygy writes",
+     "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:124:40)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to a character device",
+     "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:124:40)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a FIFO",
+     "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:124:40)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a FIFO holding the marker's bytes",
+     "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:124:40)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a marker of 4097 bytes, one past the bound",
+     "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:124:40)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a file its reader may not read",
+     "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:124:40)"
+    }
+   ],
+   "outcome": "killed"
+  },
+  {
+   "mutant": "D1-terminal-only",
+   "side": "fix",
+   "testSha256": "e01b040a5f74f044169d46adccde476814187b5d44fa7bfcb44ef082ca2fa740",
+   "readerSha256": "443fee4b09a14f65373a8ae30171847e8de4a62895547f3969e7a0ed4af02164",
+   "timedOut": false,
+   "seconds": 17.3,
+   "exitCode": 1,
+   "stdoutTail": "JSON report written to /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/results/D1-terminal-only--fix.vitest.json\n",
+   "restored": true,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 26,
+    "numFailedTests": 17
+   },
+   "failedTests": [
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: an empty file",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 152068250, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: invalid JSON",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 152068255, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: JSON null",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 152068257, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a JSON array",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 152068259, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a JSON string",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 152068261, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: another format",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 152068264, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: no format",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 152068266, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a format that is not a string",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 152068268, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a byte-order mark before the marker",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 152068281, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a directory",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 16877, ino: 152068283, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a dangling symbolic link",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 41471, ino: 152068285, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to the marker Syzygy writes",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 41471, ino: 152068289, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to a character device",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 41471, ino: 152068291, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a FIFO",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 4516, ino: 152068293, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a FIFO holding the marker's bytes",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 4516, ino: 152068301, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a marker of 4097 bytes, one past the bound",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 152068303, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a file its reader may not read",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 32768, ino: 152068305, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    }
+   ],
+   "outcome": "killed"
+  },
+  {
+   "mutant": "D1-syzygy-launched-only",
+   "side": "base",
+   "testSha256": "1243441dfdc7216015d48b1431327d1338d9d54ea71f25439cf69fe6158c1141",
+   "readerSha256": "4c7e48675808447766578d2aea437933d158d85d09ae5eed6b9d70e0c1e9119a",
+   "timedOut": false,
+   "seconds": 15.3,
+   "exitCode": 1,
+   "stdoutTail": "JSON report written to /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/results/D1-syzygy-launched-only--base.vitest.json\n",
+   "restored": true,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 26,
+    "numFailedTests": 17
+   },
+   "failedTests": [
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: an empty file",
+     "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:124:40)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: invalid JSON",
+     "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:124:40)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: JSON null",
+     "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:124:40)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a JSON array",
+     "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:124:40)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a JSON string",
+     "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:124:40)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: another format",
+     "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:124:40)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: no format",
+     "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:124:40)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a format that is not a string",
+     "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:124:40)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a byte-order mark before the marker",
+     "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:124:40)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a directory",
+     "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:124:40)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a dangling symbolic link",
+     "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:124:40)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to the marker Syzygy writes",
+     "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:124:40)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to a character device",
+     "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:124:40)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a FIFO",
+     "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:124:40)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a FIFO holding the marker's bytes",
+     "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:124:40)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a marker of 4097 bytes, one past the bound",
+     "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:124:40)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a file its reader may not read",
+     "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:124:40)"
+    }
+   ],
+   "outcome": "killed"
+  },
+  {
+   "mutant": "D1-syzygy-launched-only",
+   "side": "fix",
+   "testSha256": "e01b040a5f74f044169d46adccde476814187b5d44fa7bfcb44ef082ca2fa740",
+   "readerSha256": "4c7e48675808447766578d2aea437933d158d85d09ae5eed6b9d70e0c1e9119a",
+   "timedOut": false,
+   "seconds": 19.9,
+   "exitCode": 1,
+   "stdoutTail": "JSON report written to /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/results/D1-syzygy-launched-only--fix.vitest.json\n",
+   "restored": true,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 26,
+    "numFailedTests": 17
+   },
+   "failedTests": [
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: an empty file",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 152089285, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: invalid JSON",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 152089291, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: JSON null",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 152089297, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a JSON array",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 152089303, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a JSON string",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 152089309, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: another format",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 152089315, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: no format",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 152089321, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a format that is not a string",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 152089327, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a byte-order mark before the marker",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 152089333, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a directory",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 16877, ino: 152089339, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a dangling symbolic link",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 41471, ino: 152089345, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to the marker Syzygy writes",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 41471, ino: 152089357, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to a character device",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 41471, ino: 152089363, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a FIFO",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 4516, ino: 152089402, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a FIFO holding the marker's bytes",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 4516, ino: 152089413, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a marker of 4097 bytes, one past the bound",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 152089420, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a file its reader may not read",
+     "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 32768, ino: 152089427, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    }
+   ],
+   "outcome": "killed"
+  },
+  {
+   "mutant": "R-same-size-rewrite",
+   "side": "base",
+   "testSha256": "1243441dfdc7216015d48b1431327d1338d9d54ea71f25439cf69fe6158c1141",
+   "readerSha256": "fae3db4132e5c03f3d1f4a3c829a815501a0a418dc0a8e98d5c6eaa84bf6c12b",
+   "timedOut": false,
+   "seconds": 21.1,
+   "exitCode": 0,
+   "stdoutTail": "JSON report written to /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/results/R-same-size-rewrite--base.vitest.json\n",
+   "restored": true,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 43,
+    "numFailedTests": 0
+   },
+   "failedTests": [],
+   "outcome": "survived"
+  },
+  {
+   "mutant": "R-same-size-rewrite",
+   "side": "fix",
+   "testSha256": "e01b040a5f74f044169d46adccde476814187b5d44fa7bfcb44ef082ca2fa740",
+   "readerSha256": "fae3db4132e5c03f3d1f4a3c829a815501a0a418dc0a8e98d5c6eaa84bf6c12b",
+   "timedOut": false,
+   "seconds": 18.8,
+   "exitCode": 1,
+   "stdoutTail": "JSON report written to /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/results/R-same-size-rewrite--fix.vitest.json\n",
+   "restored": true,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 33,
+    "numFailedTests": 10
+   },
+   "failedTests": [
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: invalid JSON",
+     "firstErrorLine": "AssertionError: expected { mode: 33188, ino: 152097683, \u2026(3) } to deeply equal { mode: 33188, ino: 152097683, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: JSON null",
+     "firstErrorLine": "AssertionError: expected { mode: 33188, ino: 152097697, \u2026(3) } to deeply equal { mode: 33188, ino: 152097697, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a JSON array",
+     "firstErrorLine": "AssertionError: expected { mode: 33188, ino: 152097699, \u2026(3) } to deeply equal { mode: 33188, ino: 152097699, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a JSON string",
+     "firstErrorLine": "AssertionError: expected { mode: 33188, ino: 152097701, \u2026(3) } to deeply equal { mode: 33188, ino: 152097701, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: another format",
+     "firstErrorLine": "AssertionError: expected { mode: 33188, ino: 152097703, \u2026(3) } to deeply equal { mode: 33188, ino: 152097703, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: no format",
+     "firstErrorLine": "AssertionError: expected { mode: 33188, ino: 152097708, \u2026(3) } to deeply equal { mode: 33188, ino: 152097708, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a format that is not a string",
+     "firstErrorLine": "AssertionError: expected { mode: 33188, ino: 152097718, \u2026(3) } to deeply equal { mode: 33188, ino: 152097718, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a byte-order mark before the marker",
+     "firstErrorLine": "AssertionError: expected { mode: 33188, ino: 152097720, \u2026(3) } to deeply equal { mode: 33188, ino: 152097720, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to the marker Syzygy writes",
+     "firstErrorLine": "AssertionError: expected { mode: 41471, ino: 152097757, \u2026(3) } to deeply equal { mode: 41471, ino: 152097757, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a marker of 4097 bytes, one past the bound",
+     "firstErrorLine": "AssertionError: expected { mode: 33188, ino: 152097856, \u2026(3) } to deeply equal { mode: 33188, ino: 152097856, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    }
+   ],
+   "outcome": "killed"
+  },
+  {
+   "mutant": "R-chmod-cycle-rewrite",
+   "side": "base",
+   "testSha256": "1243441dfdc7216015d48b1431327d1338d9d54ea71f25439cf69fe6158c1141",
+   "readerSha256": "d22812cb12120ce1f3cfe87410009837a415951e879c16787085e4462eec4bcf",
+   "timedOut": false,
+   "seconds": 14.8,
+   "exitCode": 0,
+   "stdoutTail": "JSON report written to /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/results/R-chmod-cycle-rewrite--base.vitest.json\n",
+   "restored": true,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 43,
+    "numFailedTests": 0
+   },
+   "failedTests": [],
+   "outcome": "survived"
+  },
+  {
+   "mutant": "R-chmod-cycle-rewrite",
+   "side": "fix",
+   "testSha256": "e01b040a5f74f044169d46adccde476814187b5d44fa7bfcb44ef082ca2fa740",
+   "readerSha256": "d22812cb12120ce1f3cfe87410009837a415951e879c16787085e4462eec4bcf",
+   "timedOut": false,
+   "seconds": 22.1,
+   "exitCode": 0,
+   "stdoutTail": "JSON report written to /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/results/R-chmod-cycle-rewrite--fix.vitest.json\n",
+   "restored": true,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 43,
+    "numFailedTests": 0
+   },
+   "failedTests": [],
+   "outcome": "survived"
+  },
+  {
+   "mutant": "R-fill-dangling-target",
+   "side": "base",
+   "testSha256": "1243441dfdc7216015d48b1431327d1338d9d54ea71f25439cf69fe6158c1141",
+   "readerSha256": "4725a77f3e36967e433c8ea393df43ccb10aeef16498879e01ab9ce3a0297709",
+   "timedOut": false,
+   "seconds": 20.9,
+   "exitCode": 0,
+   "stdoutTail": "JSON report written to /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/results/R-fill-dangling-target--base.vitest.json\n",
+   "restored": true,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 43,
+    "numFailedTests": 0
+   },
+   "failedTests": [],
+   "outcome": "survived"
+  },
+  {
+   "mutant": "R-fill-dangling-target",
+   "side": "fix",
+   "testSha256": "e01b040a5f74f044169d46adccde476814187b5d44fa7bfcb44ef082ca2fa740",
+   "readerSha256": "4725a77f3e36967e433c8ea393df43ccb10aeef16498879e01ab9ce3a0297709",
+   "timedOut": false,
+   "seconds": 16.6,
+   "exitCode": 1,
+   "stdoutTail": "JSON report written to /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/results/R-fill-dangling-target--fix.vitest.json\n",
+   "restored": true,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 42,
+    "numFailedTests": 1
+   },
+   "failedTests": [
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a dangling symbolic link",
+     "firstErrorLine": "AssertionError: expected { mode: 41471, ino: 152105184, \u2026(3) } to deeply equal { mode: 41471, ino: 152105184, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    }
+   ],
+   "outcome": "killed"
+  },
+  {
+   "mutant": "R-fifo-to-empty-file",
+   "side": "base",
+   "testSha256": "1243441dfdc7216015d48b1431327d1338d9d54ea71f25439cf69fe6158c1141",
+   "readerSha256": "704721821da2139b5d0a9fe2b224732e07be58063ec37d2cab00bb01a8cae85b",
+   "timedOut": false,
+   "seconds": 26.3,
+   "exitCode": 0,
+   "stdoutTail": "JSON report written to /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/results/R-fifo-to-empty-file--base.vitest.json\n",
+   "restored": true,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 43,
+    "numFailedTests": 0
+   },
+   "failedTests": [],
+   "outcome": "survived"
+  },
+  {
+   "mutant": "R-fifo-to-empty-file",
+   "side": "fix",
+   "testSha256": "e01b040a5f74f044169d46adccde476814187b5d44fa7bfcb44ef082ca2fa740",
+   "readerSha256": "704721821da2139b5d0a9fe2b224732e07be58063ec37d2cab00bb01a8cae85b",
+   "timedOut": false,
+   "seconds": 23.4,
+   "exitCode": 1,
+   "stdoutTail": "JSON report written to /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/results/R-fifo-to-empty-file--fix.vitest.json\n",
+   "restored": true,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 41,
+    "numFailedTests": 2
+   },
+   "failedTests": [
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a FIFO",
+     "firstErrorLine": "AssertionError: expected { mode: 33188, ino: 152108154, \u2026(3) } to deeply equal { mode: 4516, ino: 152108153, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a FIFO holding the marker's bytes",
+     "firstErrorLine": "AssertionError: expected { mode: 33188, ino: 152108171, \u2026(3) } to deeply equal { mode: 4516, ino: 152108170, \u2026(3) }",
+     "testFrame": "at asked (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-516/mclone/packages/polaris-dossier/src/launched.test.ts:139:35)"
+    }
+   ],
+   "outcome": "killed"
+  }
+ ]
+}

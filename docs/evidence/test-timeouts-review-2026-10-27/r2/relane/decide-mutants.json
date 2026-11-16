@@ -1,0 +1,238 @@
+{
+ "tool": "decide_mutants.py",
+ "commit": "e54f65c654e59a9c52c848b8e633e9a4ef4942f0",
+ "decideSha256": "aab528425848caca56ab53f64beaeda544833bd120b19546a540f80409a29169",
+ "inputs": {
+  "census": "8215f19d1d230a807fefa29e1948108c3ea1d2f35afdda50c31a5be6c4c0db97",
+  "siteDurations": "61633afde50e3a456f6fc1b7477cf142fc7b9403512513f75286dd5a166acdaf",
+  "ciDurations": "2b1912db24f67edae40d46b6f8e7dc3f3a38dea33d77b2ffac9276f33a6725a1",
+  "cited": "e5876a6988215bb6550ba468875be7139e5ab7f1376b29ae48a94d805e054131"
+ },
+ "baseline": {
+  "testSite": [
+   "apps/three-surface-poc/src/cdp-browser.test.ts:335",
+   "remove",
+   "local worst and every hosted bound at or under the threshold"
+  ],
+  "hookSite": [
+   "apps/three-surface-poc/src/governing-intent-sweep.test.ts:168",
+   "remove",
+   "local worst and every hosted bound at or under the threshold"
+  ],
+  "config": [
+   "packages/cap1-system/vitest.config.ts:18",
+   "keep",
+   "local worst over the threshold"
+  ]
+ },
+ "mutants": [
+  {
+   "id": "D1",
+   "kind": "guard",
+   "change": {
+    "input": "census",
+    "site": "apps/three-surface-poc/src/cdp-browser.test.ts:335",
+    "path": "valueMs",
+    "old": 30000,
+    "new": 4999
+   },
+   "expected": {
+    "decision": "keep",
+    "basisNames": "(ruling 3)"
+   },
+   "got": {
+    "decision": "keep",
+    "basis": "measured at or under the threshold, but below vitest's 5000 ms default: removing it would loosen the test (ruling 3)"
+   },
+   "otherRowsUnchanged": true,
+   "outcome": "killed"
+  },
+  {
+   "id": "D1c",
+   "kind": "control",
+   "change": {
+    "input": "census",
+    "site": "apps/three-surface-poc/src/cdp-browser.test.ts:335",
+    "path": "valueMs",
+    "old": 30000,
+    "new": 5000
+   },
+   "expected": {
+    "decision": "remove",
+    "basisNames": null
+   },
+   "got": {
+    "decision": "remove",
+    "basis": "local worst and every hosted bound at or under the threshold"
+   },
+   "otherRowsUnchanged": true,
+   "outcome": "holds"
+  },
+  {
+   "id": "D2",
+   "kind": "guard",
+   "change": {
+    "input": "census",
+    "site": "apps/three-surface-poc/src/governing-intent-sweep.test.ts:168",
+    "path": "valueMs",
+    "old": 60000,
+    "new": 9999
+   },
+   "expected": {
+    "decision": "keep",
+    "basisNames": "(ruling 3)"
+   },
+   "got": {
+    "decision": "keep",
+    "basis": "measured at or under the threshold, but below vitest's 10000 ms default: removing it would loosen the test (ruling 3)"
+   },
+   "otherRowsUnchanged": true,
+   "outcome": "killed"
+  },
+  {
+   "id": "D2c",
+   "kind": "control",
+   "change": {
+    "input": "census",
+    "site": "apps/three-surface-poc/src/governing-intent-sweep.test.ts:168",
+    "path": "valueMs",
+    "old": 60000,
+    "new": 10000
+   },
+   "expected": {
+    "decision": "remove",
+    "basisNames": null
+   },
+   "got": {
+    "decision": "remove",
+    "basis": "local worst and every hosted bound at or under the threshold"
+   },
+   "otherRowsUnchanged": true,
+   "outcome": "holds"
+  },
+  {
+   "id": "D3",
+   "kind": "guard",
+   "change": {
+    "input": "site-durations",
+    "site": "packages/cap1-system/vitest.config.ts:18",
+    "path": "observations, worstMs, anyFailed",
+    "old": {
+     "observations": 240,
+     "worstMs": 10692,
+     "anyFailed": false
+    },
+    "new": {
+     "observations": 240,
+     "worstMs": 100,
+     "anyFailed": false
+    }
+   },
+   "expected": {
+    "decision": "keep",
+    "basisNames": "(ruling 4)"
+   },
+   "got": {
+    "decision": "keep",
+    "basis": "measured at or under the threshold, but a vitest config timeout bounds its whole tier and stays (ruling 4)"
+   },
+   "otherRowsUnchanged": true,
+   "outcome": "killed"
+  },
+  {
+   "id": "D4",
+   "kind": "guard",
+   "change": {
+    "input": "site-durations",
+    "site": "apps/three-surface-poc/src/governing-intent-sweep.test.ts:168",
+    "path": "observations, worstMs, anyFailed",
+    "old": {
+     "observations": 5,
+     "worstMs": 134,
+     "anyFailed": false
+    },
+    "new": {
+     "observations": 5,
+     "worstMs": 7500,
+     "anyFailed": false
+    }
+   },
+   "expected": {
+    "decision": "keep",
+    "basisNames": "local worst over the threshold"
+   },
+   "got": {
+    "decision": "keep",
+    "basis": "local worst over the threshold"
+   },
+   "otherRowsUnchanged": true,
+   "outcome": "killed"
+  },
+  {
+   "id": "T1",
+   "kind": "source",
+   "predicate": "the test threshold is half the test default",
+   "change": {
+    "file": "decide.py",
+    "old": "TEST_THRESHOLD_MS, HOOK_THRESHOLD_MS = DEFAULT_MS['test'] // 2, DEFAULT_MS['hook'] // 2",
+    "new": "TEST_THRESHOLD_MS, HOOK_THRESHOLD_MS = DEFAULT_MS['test'], DEFAULT_MS['hook'] // 2"
+   },
+   "input": "unmutated",
+   "site": "apps/three-surface-poc/src/fixture-directories.test.ts:296",
+   "siteWorstMs": 2559,
+   "before": {
+    "decision": "keep",
+    "basis": "local worst over the threshold"
+   },
+   "got": {
+    "decision": "remove",
+    "basis": "local worst and every hosted bound at or under the threshold"
+   },
+   "outcome": "killed"
+  },
+  {
+   "id": "T2",
+   "kind": "source",
+   "predicate": "the hook threshold is half the hook default",
+   "change": {
+    "file": "decide.py",
+    "old": "TEST_THRESHOLD_MS, HOOK_THRESHOLD_MS = DEFAULT_MS['test'] // 2, DEFAULT_MS['hook'] // 2",
+    "new": "TEST_THRESHOLD_MS, HOOK_THRESHOLD_MS = DEFAULT_MS['test'] // 2, DEFAULT_MS['hook']"
+   },
+   "input": "D4",
+   "site": "apps/three-surface-poc/src/governing-intent-sweep.test.ts:168",
+   "siteWorstMs": 7500,
+   "before": {
+    "decision": "keep",
+    "basis": "local worst over the threshold"
+   },
+   "got": {
+    "decision": "remove",
+    "basis": "local worst and every hosted bound at or under the threshold"
+   },
+   "outcome": "killed"
+  },
+  {
+   "id": "T3",
+   "kind": "source",
+   "predicate": "a removal needs every hosted run to bound the site",
+   "change": {
+    "file": "decide.py",
+    "old": "hosted_ok = bool(hosted) and all(b['boundMs'] is not None and b['boundMs'] <= threshold for b in hosted)",
+    "new": "hosted_ok = True"
+   },
+   "input": "unmutated",
+   "site": "apps/three-surface-poc/src/surface-routes.test.ts:313",
+   "siteWorstMs": 436,
+   "before": {
+    "decision": "keep",
+    "basis": "a hosted run's hooks together took over the threshold (at least 8973 ms)"
+   },
+   "got": {
+    "decision": "remove",
+    "basis": "local worst and every hosted bound at or under the threshold"
+   },
+   "outcome": "killed"
+  }
+ ]
+}

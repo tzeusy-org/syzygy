@@ -1,0 +1,5 @@
+R3-lexical-containment-case-folded-only: survived exit=0 failed=0/1022 passed=1021 skipped=1 files=105 failedFiles=0 146.4s load=30.07->33.32 clean=True
+R4-bearer-header-trimStart: survived exit=0 failed=0/1022 passed=1021 skipped=1 files=105 failedFiles=0 144.7s load=33.32->33.34 clean=True
+R5-bearer-header-NFKC-normalized: survived exit=0 failed=0/1022 passed=1021 skipped=1 files=105 failedFiles=0 109.7s load=33.34->28.98 clean=True
+killed 0 survived 3 error 0 of 3
+exit=0

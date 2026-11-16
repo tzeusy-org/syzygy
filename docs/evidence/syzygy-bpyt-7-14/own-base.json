@@ -1,0 +1,535 @@
+{
+ "tree": "/var/tmp/la-b714/base",
+ "head": "546f1ff066e2ffef749c757cdb4621336039113b",
+ "results": [
+  {
+   "id": "O1-bearer-separator-space-run",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  571 passed (571)"
+   ],
+   "testFiles": [
+    "Test Files  68 passed (68)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 30.7,
+   "counts": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "old": "  const match = /^Bearer (.+)$/.exec(header);",
+     "new": "  const match = /^Bearer +(.+)$/.exec(header);"
+    }
+   ]
+  },
+  {
+   "id": "O2-bearer-separator-any-whitespace",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  571 passed (571)"
+   ],
+   "testFiles": [
+    "Test Files  68 passed (68)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 31.4,
+   "counts": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "old": "  const match = /^Bearer (.+)$/.exec(header);",
+     "new": "  const match = /^Bearer\\s(.+)$/.exec(header);"
+    }
+   ]
+  },
+  {
+   "id": "O3-bearer-trailing-whitespace-trimmed",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  571 passed (571)"
+   ],
+   "testFiles": [
+    "Test Files  68 passed (68)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 29.9,
+   "counts": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "old": "  const match = /^Bearer (.+)$/.exec(header);",
+     "new": "  const match = /^Bearer (.+?)\\s*$/.exec(header);"
+    }
+   ]
+  },
+  {
+   "id": "O4-bearer-end-matches-before-newline",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  571 passed (571)"
+   ],
+   "testFiles": [
+    "Test Files  68 passed (68)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 34.2,
+   "counts": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "old": "  const match = /^Bearer (.+)$/.exec(header);",
+     "new": "  const match = /^Bearer (.+)$/m.exec(header);"
+    }
+   ]
+  },
+  {
+   "id": "O5-presented-token-trimmed-before-compare",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  571 passed (571)"
+   ],
+   "testFiles": [
+    "Test Files  68 passed (68)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 34.5,
+   "counts": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "old": "  const a = createHash('sha256').update(presented, 'utf8').digest();",
+     "new": "  const a = createHash('sha256').update(presented.trim(), 'utf8').digest();"
+    }
+   ]
+  },
+  {
+   "id": "O6-lexical-containment-without-separator",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  571 passed (571)"
+   ],
+   "testFiles": [
+    "Test Files  68 passed (68)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 35.9,
+   "counts": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "old": "  if (!isWithin(root, resolved)) {",
+     "new": "  if (!resolved.startsWith(root)) {"
+    }
+   ]
+  },
+  {
+   "id": "O7-real-containment-without-separator",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  571 passed (571)"
+   ],
+   "testFiles": [
+    "Test Files  68 passed (68)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 31.5,
+   "counts": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "old": "  if (!isWithin(realRoot, realTarget) || realTarget === realRoot) {",
+     "new": "  if (!realTarget.startsWith(realRoot) || realTarget === realRoot) {"
+    }
+   ]
+  },
+  {
+   "id": "O8-not-evaluated-population-dropped",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 570 passed (571)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed | 67 passed (68)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/response-limits.test.ts > boundedResponse — the ceiling is measured on the final encoded body > logs a single safe response-limit outcome per real-socket human and machine 503"
+   ],
+   "timeouts": 0,
+   "seconds": 28.2,
+   "counts": [
+    {
+     "file": "packages/http-host/src/server.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/http-host/src/server.ts",
+     "old": "['project shape not-evaluated', 'project shape not-admitted', 'project shape observation-failed']",
+     "new": "['project shape not-admitted', 'project shape observation-failed']"
+    }
+   ]
+  },
+  {
+   "id": "O9-observation-failed-population-dropped",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  571 passed (571)"
+   ],
+   "testFiles": [
+    "Test Files  68 passed (68)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 21.1,
+   "counts": [
+    {
+     "file": "packages/http-host/src/server.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/http-host/src/server.ts",
+     "old": "['project shape not-evaluated', 'project shape not-admitted', 'project shape observation-failed']",
+     "new": "['project shape not-evaluated', 'project shape not-admitted']"
+    }
+   ]
+  },
+  {
+   "id": "O10-any-project-shape-reason-logged",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  571 passed (571)"
+   ],
+   "testFiles": [
+    "Test Files  68 passed (68)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 23.4,
+   "counts": [
+    {
+     "file": "packages/http-host/src/server.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/http-host/src/server.ts",
+     "old": "population.kind === 'unknown' && ['project shape not-evaluated', 'project shape not-admitted', 'project shape observation-failed'].includes(population.reason)",
+     "new": "population.kind === 'unknown' && population.reason.startsWith('project shape ')"
+    }
+   ]
+  },
+  {
+   "id": "O11-breach-reason-keyed-by-status",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  571 passed (571)"
+   ],
+   "testFiles": [
+    "Test Files  68 passed (68)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 19.4,
+   "counts": [
+    {
+     "file": "packages/http-host/src/server.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/http-host/src/server.ts",
+     "old": "    reason: diagnostic === undefined ? input.reason : 'response-limit-breached',",
+     "new": "    reason: input.response.status === 503 ? 'response-limit-breached' : input.reason,"
+    }
+   ]
+  },
+  {
+   "id": "O12-origin-reversed-prefix",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  571 passed (571)"
+   ],
+   "testFiles": [
+    "Test Files  68 passed (68)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 21.8,
+   "counts": [
+    {
+     "file": "apps/three-surface-poc/src/browser-origin.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/browser-origin.ts",
+     "old": "  return origin === undefined || origin === expectedOrigin(host);",
+     "new": "  return origin === undefined || expectedOrigin(host).startsWith(origin);"
+    }
+   ]
+  },
+  {
+   "id": "O13-origin-required",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  34 failed | 537 passed (571)"
+   ],
+   "testFiles": [
+    "Test Files  9 failed | 59 passed (68)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/materialize-action.test.ts > materializeRoutes > creates exactly one Bead on trigger, persists the record, and calls onMaterialized (AC2)",
+    "FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/materialize-action.test.ts > materializeRoutes > fails closed without invoking Beads when the actual model has no seed-backed materialization graph",
+    "FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/materialize-action.test.ts > materializeRoutes > is idempotent over HTTP: a second POST reuses the same Bead without a second create (AC3)",
+    "FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/materialize-action.test.ts > materializeRoutes > refuses an effect the registry does not name before any runner is called",
+    "FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/materialize-action.test.ts > materializeRoutes > refuses the foreclosed write with a bounded typed refusal and never runs Beads (P-71-Q5)",
+    "FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/materialize-action.test.ts > materializeRoutes > renders a named failure over HTTP and leaves no partial record when bd is missing (AC5)",
+    "FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/materialize-action.test.ts > materializeRoutes > states the Bead exists when it was created but only the local record write failed, instead of the generic no-Bead suffix (AC5)",
+    "FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/materialize-action.test.ts > renderMaterializePanel > matches decoded Trajectory fields to authenticated API dispatch with exact denominators and named machine-only values",
+    "FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/polaris-presentation-route.test.ts > Polaris machine presentation envelope (PWB-REQ-014; RFC7-2, RFC7-3) > refuses without the bearer and, with it, serves the narrative of the same render the human page comes from — every anchor cited on the page, no copy of the JSON on the page — marked non-citable",
+    "FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/polaris-source-route.test.ts > Polaris exact-source route (PWB-REQ-011 as amended; RFC7-1, RFC7-13) > serves the route human-open: direct GET renders the text, the tailnet Host rebinds the back link, a browser origin off the allow-list gets 403 and nothing, a script in the identity is escaped, and the human ceiling fails closed",
+    "FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/reobserve-action.test.ts > human-triggered re-observation route > names the superseded evaluation, the three clocks and both limbs on the result page (syzygy-u05.2)",
+    "FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/reobserve-action.test.ts > human-triggered re-observation route > preserves a named failure and refuses cross-origin requests",
+    "FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/reobserve-action.test.ts > human-triggered re-observation route > single-flights concurrent requests and swaps only after a complete success",
+    "FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/response-limits.test.ts > boundedResponse — the ceiling is measured on the final encoded body > logs a single safe response-limit outcome per real-socket human and machine 503",
+    "FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/response-limits.test.ts > pocRoutes — every human HTML sink is bounded by maxHumanResponseBytes > /: limit − 1 fails closed, limit and limit + 1 serve the page",
+    "FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/response-limits.test.ts > pocRoutes — every human HTML sink is bounded by maxHumanResponseBytes > /orrery: limit − 1 fails closed, limit and limit + 1 serve the page",
+    "FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/response-limits.test.ts > pocRoutes — every human HTML sink is bounded by maxHumanResponseBytes > /polaris: limit − 1 fails closed, limit and limit + 1 serve the page",
+    "FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/response-limits.test.ts > pocRoutes — every human HTML sink is bounded by maxHumanResponseBytes > /trajectory: limit − 1 fails closed, limit and limit + 1 serve the page",
+    "FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/response-limits.test.ts > pocRoutes — every human HTML sink is bounded by maxHumanResponseBytes > names the observed-project limb, the observatory limb and the Dolt clock separately, Unknown when not supplied (syzygy-u05.2)",
+    "FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/response-limits.test.ts > pocRoutes — every human HTML sink is bounded by maxHumanResponseBytes > places one compact factual status line before main on each direct and tailnet page",
+    "FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/response-limits.test.ts > pocRoutes — every human HTML sink is bounded by maxHumanResponseBytes > places one resource-ledger entry in the status slot of every direct and tailnet page, Unknown when no block is supplied (syzygy-u05.3)",
+    "FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/response-limits.test.ts > pocRoutes — every human HTML sink is bounded by maxHumanResponseBytes > the tailnet mount (selected by Host) is measured on its own rendered body",
+    "FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/response-limits.test.ts > pocRoutes — the machine JSON sink is bounded by maxMachineResponseBytes > the human ceiling does not bound the machine sink and vice versa",
+    "FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/response-limits.test.ts > pocRoutes — the machine JSON sink is bounded by maxMachineResponseBytes > the registry values are the default ceilings",
+    "FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/routes.test.ts > three-surface POC routes > projects the same mayNot tuples in human Polaris and authenticated machine JSON",
+    "FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/routes.test.ts > three-surface POC routes > serves one model through human and authenticated machine views",
+    "FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/surface-routes.test.ts > surface routes > 15-link cross-surface exhaustion > exhausts 15 runtime cross-surface links over six classes and fetches every direct target",
+    "FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/surface-routes.test.ts > surface routes > counts the post-JavaScript DOM on all three served surfaces and kills an unmarked Orrery region",
+    "FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/surface-routes.test.ts > surface routes > exhausts every served badge, tuple and Unknown disclosure on the three surfaces; Home is a separate diagnostic (POC-REQ-060)",
+    "FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/surface-routes.test.ts > surface routes > nav links stay inside the current mount — root-relative for direct loopback access, prefixed for the tailnet-Host-headered request `tailscale serve` actually forwards",
+    "FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/surface-routes.test.ts > surface routes > serves Polaris, Trajectory, and Orrery as human-open, same-origin-guarded pages",
+    "FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/surface-routes.test.ts > surface routes > serves the exact state-(1) authority sentence on Polaris both directly and through the tailnet Host mount (PWB-REQ-005; PWB-RECON-01)",
+    "FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/tuple-encoding.test.ts > tuple field encoding tables (syzygy-dov.3.2; P-70 M3 slice 5) > sweeps the post-JavaScript DOM of the three surfaces, Home apart: every tuple field and glossary row renders its declared symbol and token",
+    "FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/verbatim-route.test.ts > Polaris route with the verbatim reader > serves the selected requirement blocks on the Polaris human route only; the machine channel never carries them"
+   ],
+   "timeouts": 0,
+   "seconds": 23.3,
+   "counts": [
+    {
+     "file": "apps/three-surface-poc/src/browser-origin.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/browser-origin.ts",
+     "old": "  return origin === undefined || origin === expectedOrigin(host);",
+     "new": "  return origin === expectedOrigin(host);"
+    }
+   ]
+  },
+  {
+   "id": "O14-tailnet-origin-over-http",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  6 failed | 565 passed (571)"
+   ],
+   "testFiles": [
+    "Test Files  3 failed | 65 passed (68)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/materialize-action.test.ts > materializeRoutes > keeps the result page's back-link under the tailnet mount when the tailnet-Host-headered request `tailscale serve` actually forwards triggers it (AC2)",
+    "FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/surface-routes.test.ts > surface routes > 15-link cross-surface exhaustion > exhausts 15 runtime cross-surface links over six classes and fetches every tailnet target",
+    "FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/surface-routes.test.ts > surface routes > counts the post-JavaScript DOM on all three served surfaces and kills an unmarked Orrery region",
+    "FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/surface-routes.test.ts > surface routes > nav links stay inside the current mount — root-relative for direct loopback access, prefixed for the tailnet-Host-headered request `tailscale serve` actually forwards",
+    "FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/surface-routes.test.ts > surface routes > serves the exact state-(1) authority sentence on Polaris both directly and through the tailnet Host mount (PWB-REQ-005; PWB-RECON-01)",
+    "FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/tuple-encoding.test.ts > tuple field encoding tables (syzygy-dov.3.2; P-70 M3 slice 5) > sweeps the post-JavaScript DOM of the three surfaces, Home apart: every tuple field and glossary row renders its declared symbol and token"
+   ],
+   "timeouts": 0,
+   "seconds": 16.7,
+   "counts": [
+    {
+     "file": "apps/three-surface-poc/src/browser-origin.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/browser-origin.ts",
+     "old": "  return host === TAILNET_HOST ? `https://${host}` : `http://${host}`;",
+     "new": "  return `http://${host}`;"
+    }
+   ]
+  },
+  {
+   "id": "O15-shim-function-aliased",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  571 passed (571)"
+   ],
+   "testFiles": [
+    "Test Files  68 passed (68)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 18.0,
+   "counts": [
+    {
+     "file": "packages/cap1-daemon/src/credentials.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/cap1-daemon/src/credentials.ts",
+     "old": "  authorizeStateWrite,\n",
+     "new": "  ensureCredential as authorizeStateWrite,\n"
+    }
+   ]
+  },
+  {
+   "id": "O16-shim-constant-aliased",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  571 passed (571)"
+   ],
+   "testFiles": [
+    "Test Files  68 passed (68)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 15.4,
+   "counts": [
+    {
+     "file": "packages/cap1-daemon/src/credentials.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/cap1-daemon/src/credentials.ts",
+     "old": "  STATE_DIR_MODE,\n",
+     "new": "  CREDENTIAL_FILE_MODE as STATE_DIR_MODE,\n"
+    }
+   ]
+  },
+  {
+   "id": "O17-shim-equal-local-constant",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  571 passed (571)"
+   ],
+   "testFiles": [
+    "Test Files  68 passed (68)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 23.4,
+   "counts": [
+    {
+     "file": "packages/cap1-daemon/src/server.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/cap1-daemon/src/server.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/cap1-daemon/src/server.ts",
+     "old": "  DAEMON_HOST,\n",
+     "new": ""
+    },
+    {
+     "file": "packages/cap1-daemon/src/server.ts",
+     "old": "// --- This wave's minimal root route",
+     "new": "export const DAEMON_HOST = '127.0.0.1' as const;\n\n// --- This wave's minimal root route"
+    }
+   ]
+  }
+ ]
+}

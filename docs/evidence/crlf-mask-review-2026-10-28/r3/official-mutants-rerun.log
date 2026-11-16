@@ -1,0 +1,10 @@
+CONTROL {'unit': (44, 0), 'fenceRules': (69, 0), 'callSites': (278, 0)}
+MU17-u2028-is-a-line-end killed {'unit': 3, 'fenceRules': 0, 'callSites': 0}
+MU18-nel-is-a-line-end killed {'unit': 3, 'fenceRules': 0, 'callSites': 0}
+MU19-js-line-terminators killed {'unit': 3, 'fenceRules': 0, 'callSites': 0}
+MU22-vt-ff-are-line-ends killed {'unit': 1, 'fenceRules': 0, 'callSites': 0}
+MU23-closer-tolerates-separators killed {'unit': 1, 'fenceRules': 0, 'callSites': 0}
+MU24-positionOf-counts-u2028 killed {'unit': 0, 'fenceRules': 0, 'callSites': 1}
+{"codeCommit": "497515ae38829439aa4faa01196d9e361bce8bd8", "baseCommit": "d621bfa2", "mutants": 6, "killed": 6, "survivedEquivalent": 0, "survived": [], "killedByExpectedKillerOnly": 6, "expectedKillerNotAlone": []}
+exit 0
+26.43 22.77 23.53 9/9660 3813720

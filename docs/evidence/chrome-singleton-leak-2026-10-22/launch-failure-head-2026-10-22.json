@@ -1,0 +1,21 @@
+{
+ "tool": "launch_failure_probe.py",
+ "treeCommit": "dccd484f4749b55f981f2e5211de4112ab7951de",
+ "mode": "head",
+ "file": "apps/three-surface-poc/src/polaris-generation/draft-preview.browser.test.ts",
+ "sha256AtCommit": "70102033956c5597667ab3fca4bc145fcb2f7787227b1cb82849878c8a73856f",
+ "command": "SYZYGY_POC_BROWSER=/bin/false TMPDIR=<private> npx vitest run apps/three-surface-poc/src/polaris-generation/draft-preview.browser.test.ts --project --project ...",
+ "exit": 1,
+ "testsRun": 1,
+ "failing": [
+  {
+   "test": "renders the pipeline draft with working diagram, source and keyboard deep-dive paths at both widths",
+   "firstErrorLine": "Error: browser exited with 1 before announcing a DevTools endpoint:"
+  }
+ ],
+ "left": [],
+ "draftPreviewDirectoriesLeft": 0,
+ "retainedProfilesLeft": 0,
+ "launchFailedAsExpected": true,
+ "holds": true
+}

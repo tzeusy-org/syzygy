@@ -89,7 +89,11 @@ function soundAnswer(answer: unknown): AdmissionAnswer {
 export interface TriggerPorts {
   readonly lsRemote?: (url: string) => string;
   readonly records?: AdmissionRecordsPort;
-  /** Fetches exactly the pinned commit into `dir`; only called once every record is satisfied. */
+  /** The pair's visibility at the pinned commit (screening scope version 8, `sourceVisibility`), asked before `materialize`. Only a
+   * public decision lets the fetch run; a private one, a refusal, a throw, or no port at all stops with nothing fetched (version 8,
+   * edit 4: for a private repository Syzygy fetches nothing). */
+  readonly visibility?: (subject: { readonly repository: string; readonly commit: string }) => Promise<{ readonly ok: true; readonly visibility: 'public' | 'private' } | { readonly ok: false; readonly why: string }>;
+  /** Fetches exactly the pinned commit into `dir`; only called once every record is satisfied and the pair reads public. */
   readonly materialize?: (target: { readonly url: string; readonly revision: string; readonly dir: string }) => Promise<string>;
   /** Model-assisted discovery. Each call is permitted only while the egress-consent record is still satisfied; there is no override. */
   readonly discovery?: Pick<DiscoveryPorts, 'map' | 'reduce'>;
@@ -121,7 +125,9 @@ export async function runDossierTrigger(rawUrl: string, ports: TriggerPorts = {}
   try { pinned = pinRevision((ports.lsRemote ?? gitLsRemote)(target.url), target.ref); }
   catch (error) { return { state: 'unresolved-revision', reason: error instanceof Error ? error.message : 'ls-remote-failed' }; }
   const records = ports.records ?? noAdmissionRecords;
-  const idPattern = /^[A-Za-z0-9:_-]+$/u;
+  // Every 046 identity (line 15: a-z, 0-9, '.', '_', '-', after `repository:`) is admitted, compared exactly; ':' and upper case stay for the
+  // `github:<owner>:<repo>` form (the owner's ruling of 2026-11-14, "Widen all readers now"; R-PDJA-33-RULINGS-2 finding 1).
+  const idPattern = /^[A-Za-z0-9:._-]+$/u;
   // The port must answer an array of exactly one valid id; anything else (none, several, duplicates, a malformed element, a non-array, a throw) is an unmet gate.
   let answer: unknown;
   try { answer = await records.repositoryIdsFor(target.url); } catch { answer = undefined; }
@@ -148,6 +154,8 @@ export async function runDossierTrigger(rawUrl: string, ports: TriggerPorts = {}
     // Limit: a directory created at runDir after this check (while the checkout and pipeline run) is caught by writeDossierRun, which throws run-directory-exists; the run is then lost, not recorded elsewhere.
     await checkDossierRunDestination(runDir);
     if (ports.materialize === undefined) return { state: 'generation-unavailable', target, revision: pinned.revision, runDir, detail: 'admission is satisfied but no checkout port is wired' };
+    const fetchStop = await visibilityStop(ports, target.repositoryId, pinned.revision);
+    if (fetchStop !== null) return { state: 'generation-unavailable', target, revision: pinned.revision, runDir, detail: fetchStop };
     const checkout = await ports.materialize({ url: target.url, revision: pinned.revision, dir: checkoutDir });
     const permissionIdentity = checked.map(entry => (entry.answer as { record: string }).record).join('+');
     const admission: CorpusAdmissionPort = { decide: async () => ({ allowed: true, permissionIdentity }) };
@@ -203,6 +211,17 @@ export async function runDossierTrigger(rawUrl: string, ports: TriggerPorts = {}
     rmSync(dirname(checkoutDir), { recursive: true, force: true });
     if (defaultOut !== undefined && !existsSync(runDir)) rmSync(defaultOut, { recursive: true, force: true });
   }
+}
+
+/** Why the pinned commit may not be fetched, or null when the pair reads public. Fail closed: no port, a refusal, a throw, or anything
+ * but a public decision stops the fetch. */
+async function visibilityStop(ports: TriggerPorts, repositoryId: string, revision: string): Promise<string | null> {
+  if (ports.visibility === undefined) return `no visibility decision is wired for repository:${repositoryId}, so nothing was fetched`;
+  let decision: Awaited<ReturnType<NonNullable<TriggerPorts['visibility']>>>;
+  try { decision = await ports.visibility({ repository: `repository:${repositoryId}`, commit: revision }); } catch { return `the visibility of repository:${repositoryId} could not be read, so nothing was fetched`; }
+  if (decision.ok !== true) return `the visibility of repository:${repositoryId} cannot be decided (${decision.why}), so nothing was fetched`;
+  if (decision.visibility !== 'public') return `repository:${repositoryId} is private at ${revision}; Syzygy fetches no private repository, so nothing was fetched`;
+  return null;
 }
 
 /** Fetches only the pinned commit's objects into an empty bare repository (no work tree, no template hooks). */

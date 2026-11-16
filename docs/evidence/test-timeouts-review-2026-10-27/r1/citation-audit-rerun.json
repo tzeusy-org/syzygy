@@ -1,0 +1,2166 @@
+{
+ "tool": "citation_audit.py",
+ "census": "d0ccce69fa991f60d62ec59759371bffff9e3e52",
+ "rule": "The coordinator's ruling of 2026-10-27: a kept reason may cite a commit or a retained record, of this bead or another, only\nif it holds a measurement for that specific site, by its test name or its file, and a duration. Every kept site of CENSUS.json\n(a census at the head) outside the files DECISIONS.json marks blocked is audited, over every citation its reason carries.\n\nNames the site. A test match is a string that is the site's title, or ends in it after a space or a `>` (vitest's full name\njoins suites and title with a space, its slow-test lines with ` > `). A file match is a string holding the site's path, file\nname or file stem as a whole token (a config site is named by its package directory). A test match outranks a file match.\n\nA duration. A numeric value, or a list of numbers, under a key that ends `ms`/`Ms`/`MS` or `seconds`/`Seconds`, or holds\n`duration` in any case; a key that names a configured value (timeout, threshold, budget, limit, bound, margin, default) never\ncounts, whatever it ends in.\n\n  record   the JSON file at the census commit measures the site when one of these holds:\n           - an object carries a duration and, directly beside it, a string value that names the site;\n           - an object has a key that names the site, whose value is an object carrying a duration, or is itself a duration\n             value under a duration key somewhere above it;\n           - its top-level `subject` names the site (for a test match the title may sit anywhere in it), and it carries a\n             duration anywhere;\n           - RECORD_READINGS, read by hand, points at a duration value in it, and the record names the site's file.\n  commit   READINGS, read by hand, quotes the text in the commit that measures the site: the quote must occur in its message\n           or its added lines (comment leaders dropped, whitespace folded), carry a duration (`N ms`, `N s`, `N.N s`,\n           `N-M s`), and the commit must change the site's file.\n\nEach reading's `identifies` says how the text is tied to the site. A citation that measures by none of these is unmeasured,\nand a site none of whose citations measures it is a counted residual. `--mutants` runs one input mutant per predicate on the\nreal results and fails unless each is killed for that predicate's reason.",
+ "sites": 74,
+ "citations": 76,
+ "measuredByTest": 58,
+ "measuredByFileOnly": 14,
+ "residuals": [
+  "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts:424",
+  "packages/three-surface-poc-core/src/test-artifact-verification.live.test.ts:139"
+ ],
+ "rows": [
+  {
+   "site": "apps/three-surface-poc/src/build-output.test.ts:62",
+   "kind": "test",
+   "title": "re-emits ignored JavaScript before the launcher executes it",
+   "audits": [
+    {
+     "citation": "docs/evidence/load-timeouts-gb4l-2026-10-03.json",
+     "type": "record",
+     "measured": "test",
+     "matches": 26,
+     "evidence": {
+      "rule": "key",
+      "kind": "test",
+      "at": [
+       "before",
+       "perTest",
+       "build-output.test.ts > re-emits ignored JavaScript before the launcher executes it"
+      ],
+      "name": "build-output.test.ts > re-emits ignored JavaScript before the launcher executes it",
+      "duration": {
+       "worstMs": 69926
+      }
+     }
+    }
+   ],
+   "measured": "test"
+  },
+  {
+   "site": "apps/three-surface-poc/src/cdp-browser.browser.test.ts:82",
+   "kind": "test",
+   "title": "closes and drains even when a helper cannot exit on its own",
+   "audits": [
+    {
+     "citation": "docs/evidence/syzygy-bpyt-4-31/durations/cdp-browser.browser.test.tests.json",
+     "type": "record",
+     "measured": "test",
+     "matches": 10,
+     "evidence": {
+      "rule": "beside",
+      "kind": "test",
+      "at": [
+       "runs",
+       0,
+       "tests",
+       0,
+       "name"
+      ],
+      "name": "disposable Chrome teardown in a real browser closes and drains even when a helper cannot exit on its own",
+      "duration": {
+       "durationMs": 3360
+      }
+     }
+    }
+   ],
+   "measured": "test"
+  },
+  {
+   "site": "apps/three-surface-poc/src/cdp-browser.browser.test.ts:112",
+   "kind": "test",
+   "title": "leaves no Chrome singleton directory behind when the leader is killed",
+   "audits": [
+    {
+     "citation": "docs/evidence/syzygy-bpyt-4-31/durations/cdp-browser.browser.test.tests.json",
+     "type": "record",
+     "measured": "test",
+     "matches": 10,
+     "evidence": {
+      "rule": "beside",
+      "kind": "test",
+      "at": [
+       "runs",
+       0,
+       "tests",
+       1,
+       "name"
+      ],
+      "name": "disposable Chrome teardown in a real browser leaves no Chrome singleton directory behind when the leader is killed",
+      "duration": {
+       "durationMs": 4128
+      }
+     }
+    }
+   ],
+   "measured": "test"
+  },
+  {
+   "site": "apps/three-surface-poc/src/fixture-directories.test.ts:294",
+   "kind": "test",
+   "title": "is registered as a global setup of the app project and of no other project, so it runs once per run",
+   "audits": [
+    {
+     "citation": "3f08143c",
+     "type": "commit",
+     "measured": "test",
+     "evidence": {
+      "quote": "importing the config took more than the 5 s default under a load average of 95",
+      "identifies": "the one test in the file that imports vitest.config.ts (the message calls it \"the config-pin test\")"
+     }
+    }
+   ],
+   "measured": "test"
+  },
+  {
+   "site": "apps/three-surface-poc/src/git-blob-batch.test.ts:242",
+   "kind": "test",
+   "title": "reads the same objects and returns the same inputs and evaluation for the governance load",
+   "audits": [
+    {
+     "citation": "docs/evidence/syzygy-bpyt-4-31/durations/git-blob-batch.test.tests.json",
+     "type": "record",
+     "measured": "test",
+     "matches": 10,
+     "evidence": {
+      "rule": "beside",
+      "kind": "test",
+      "at": [
+       "runs",
+       0,
+       "tests",
+       17,
+       "name"
+      ],
+      "name": "batched reads over the real tree (oracle: one git cat-file blob per object) reads the same objects and returns the same inputs and evaluation for the governance load",
+      "duration": {
+       "durationMs": 20464
+      }
+     }
+    }
+   ],
+   "measured": "test"
+  },
+  {
+   "site": "apps/three-surface-poc/src/git-blob-batch.test.ts:254",
+   "kind": "test",
+   "title": "reads the same blobs with the same bytes for the self-corpus at the pinned commit",
+   "audits": [
+    {
+     "citation": "docs/evidence/syzygy-bpyt-4-31/durations/git-blob-batch.test.tests.json",
+     "type": "record",
+     "measured": "test",
+     "matches": 10,
+     "evidence": {
+      "rule": "beside",
+      "kind": "test",
+      "at": [
+       "runs",
+       0,
+       "tests",
+       18,
+       "name"
+      ],
+      "name": "batched reads over the real tree (oracle: one git cat-file blob per object) reads the same blobs with the same bytes for the self-corpus at the pinned commit",
+      "duration": {
+       "durationMs": 8382
+      }
+     }
+    }
+   ],
+   "measured": "test"
+  },
+  {
+   "site": "apps/three-surface-poc/src/git-blob-batch.test.ts:287",
+   "kind": "test",
+   "title": "fails the self-corpus read on a missing, unread or altered blob",
+   "audits": [
+    {
+     "citation": "docs/evidence/syzygy-bpyt-4-31/durations/git-blob-batch.test.tests.json",
+     "type": "record",
+     "measured": "test",
+     "matches": 10,
+     "evidence": {
+      "rule": "beside",
+      "kind": "test",
+      "at": [
+       "runs",
+       0,
+       "tests",
+       20,
+       "name"
+      ],
+      "name": "batched reads over the real tree (oracle: one git cat-file blob per object) fails the self-corpus read on a missing, unread or altered blob",
+      "duration": {
+       "durationMs": 9020
+      }
+     }
+    }
+   ],
+   "measured": "test"
+  },
+  {
+   "site": "apps/three-surface-poc/src/governance-inputs.test.ts:504",
+   "kind": "test",
+   "title": "evaluates the three real current PWB acts without reading any body",
+   "audits": [
+    {
+     "citation": "docs/evidence/governance-inputs-timeout-2026-10-03.json",
+     "type": "record",
+     "measured": "test",
+     "matches": 1,
+     "evidence": {
+      "rule": "subject",
+      "kind": "test",
+      "at": [
+       "subject"
+      ],
+      "name": "apps/three-surface-poc/src/governance-inputs.test.ts > 'evaluates the three real current PWB acts without reading any body' timing out at the default 5 s under parallel load",
+      "duration": {
+       "at": [
+        "diagnosis",
+        "componentTimingAloneLoad9",
+        "revParseMs"
+       ],
+       "value": 7
+      }
+     }
+    }
+   ],
+   "measured": "test"
+  },
+  {
+   "site": "apps/three-surface-poc/src/keyboard-sweep-record.test.ts:59",
+   "kind": "test",
+   "title": "reads the Butlers revision and evaluation identity a served Polaris page renders, on both mounts",
+   "audits": [
+    {
+     "citation": "docs/evidence/syzygy-bpyt-4-31/durations/keyboard-sweep-record.test.tests.json",
+     "type": "record",
+     "measured": "test",
+     "matches": 10,
+     "evidence": {
+      "rule": "beside",
+      "kind": "test",
+      "at": [
+       "runs",
+       0,
+       "tests",
+       2,
+       "name"
+      ],
+      "name": "the evaluation a swept page names (rule 11; syzygy-buzg) reads the Butlers revision and evaluation identity a served Polaris page renders, on both mounts",
+      "duration": {
+       "durationMs": 4907
+      }
+     }
+    }
+   ],
+   "measured": "test"
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts:91",
+   "kind": "hook",
+   "title": null,
+   "audits": [
+    {
+     "citation": "docs/evidence/syzygy-bpyt-4-31/full-runs.json",
+     "type": "record",
+     "measured": "file",
+     "matches": 10,
+     "evidence": {
+      "rule": "beside",
+      "kind": "file",
+      "at": [
+       "runs",
+       0,
+       "files",
+       36,
+       "file"
+      ],
+      "name": "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts",
+      "duration": {
+       "ms": 257050
+      }
+     }
+    }
+   ],
+   "measured": "file"
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts:310",
+   "kind": "test",
+   "title": "activates more fragment links than Chrome's navigation budget, including a second link to the current hash",
+   "audits": [
+    {
+     "citation": "docs/evidence/syzygy-bpyt-4-31/durations/polaris-accessibility.browser.test.tests.json",
+     "type": "record",
+     "measured": "test",
+     "matches": 10,
+     "evidence": {
+      "rule": "beside",
+      "kind": "test",
+      "at": [
+       "runs",
+       0,
+       "tests",
+       8,
+       "name"
+      ],
+      "name": "Polaris keyboard, non-visual and contrast checks in a real browser activates more fragment links than Chrome's navigation budget, including a second link to the current hash",
+      "duration": {
+       "durationMs": 9020
+      }
+     }
+    }
+   ],
+   "measured": "test"
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts:332",
+   "kind": "test",
+   "title": "`${variant.id}: every distinction is keyboard-operable, named for assistive technology, and AA-contrasting`",
+   "audits": [
+    {
+     "citation": "docs/evidence/syzygy-bpyt-4-31/durations/polaris-accessibility.browser.test.tests.json",
+     "type": "record",
+     "measured": "test",
+     "matches": 35,
+     "evidence": {
+      "rule": "beside",
+      "kind": "test",
+      "at": [
+       "runs",
+       0,
+       "tests",
+       9,
+       "name"
+      ],
+      "name": "Polaris keyboard, non-visual and contrast checks in a real browser observed: every distinction is keyboard-operable, named for assistive technology, and AA-contrasting",
+      "duration": {
+       "durationMs": 13488
+      }
+     }
+    }
+   ],
+   "measured": "test"
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts:315",
+   "kind": "test",
+   "title": "passes every Polaris page one whole-project evaluation serves, the pages listed from the machine answer",
+   "audits": [
+    {
+     "citation": "docs/evidence/syzygy-bpyt-4-31/durations/polaris-accessible-names.browser.test.tests.json",
+     "type": "record",
+     "measured": "test",
+     "matches": 10,
+     "evidence": {
+      "rule": "beside",
+      "kind": "test",
+      "at": [
+       "runs",
+       0,
+       "tests",
+       18,
+       "name"
+      ],
+      "name": "PWB-REQ-016 names and headings in a real browser passes every Polaris page one whole-project evaluation serves, the pages listed from the machine answer",
+      "duration": {
+       "durationMs": 3162
+      }
+     }
+    }
+   ],
+   "measured": "test"
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts:329",
+   "kind": "test",
+   "title": "fails a listed page the daemon does not serve, never skipping it",
+   "audits": [
+    {
+     "citation": "docs/evidence/syzygy-bpyt-4-31/durations/polaris-accessible-names.browser.test.tests.json",
+     "type": "record",
+     "measured": "test",
+     "matches": 10,
+     "evidence": {
+      "rule": "beside",
+      "kind": "test",
+      "at": [
+       "runs",
+       0,
+       "tests",
+       19,
+       "name"
+      ],
+      "name": "PWB-REQ-016 names and headings in a real browser fails a listed page the daemon does not serve, never skipping it",
+      "duration": {
+       "durationMs": 2469
+      }
+     }
+    }
+   ],
+   "measured": "test"
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts:343",
+   "kind": "test",
+   "title": "`${variant.id}: every served Polaris page passes both checks`",
+   "audits": [
+    {
+     "citation": "docs/evidence/syzygy-bpyt-4-31/durations/polaris-accessible-names.browser.test.tests.json",
+     "type": "record",
+     "measured": "test",
+     "matches": 35,
+     "evidence": {
+      "rule": "beside",
+      "kind": "test",
+      "at": [
+       "runs",
+       0,
+       "tests",
+       20,
+       "name"
+      ],
+      "name": "PWB-REQ-016 names and headings in a real browser observed: every served Polaris page passes both checks",
+      "duration": {
+       "durationMs": 3764
+      }
+     }
+    }
+   ],
+   "measured": "test"
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-copy.test.ts:226",
+   "kind": "hook",
+   "title": null,
+   "audits": [
+    {
+     "citation": "docs/evidence/poc-test-timeouts-2026-10-03.json",
+     "type": "record",
+     "measured": "file",
+     "matches": 29,
+     "evidence": {
+      "rule": "key",
+      "kind": "file",
+      "at": [
+       "worstFullRunDurationMsPerTest",
+       "before",
+       "polaris-copy.test.ts > classifies each interpolated source control and preserves exact-source href order and multiplicity"
+      ],
+      "name": "polaris-copy.test.ts > classifies each interpolated source control and preserves exact-source href order and multiplicity",
+      "duration": 803
+     }
+    }
+   ],
+   "measured": "file"
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-first-reading.test.ts:52",
+   "kind": "hook",
+   "title": null,
+   "audits": [
+    {
+     "citation": "docs/evidence/shared-fixture-models-k66p-2026-10-03.json",
+     "type": "record",
+     "measured": "file",
+     "matches": 6,
+     "evidence": {
+      "rule": "key",
+      "kind": "file",
+      "at": [
+       "runs",
+       0,
+       "targetFiles",
+       "polaris-first-reading"
+      ],
+      "name": "polaris-first-reading",
+      "duration": {
+       "fileMs": 12661
+      }
+     }
+    }
+   ],
+   "measured": "file"
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-generation/draft-preview.browser.test.ts:47",
+   "kind": "test",
+   "title": "renders the pipeline draft with working diagram, source and keyboard deep-dive paths at both widths",
+   "audits": [
+    {
+     "citation": "docs/evidence/syzygy-bpyt-4-31/full-runs.json",
+     "type": "record",
+     "measured": "test",
+     "matches": 15,
+     "evidence": {
+      "rule": "beside",
+      "kind": "test",
+      "at": [
+       "runs",
+       0,
+       "files",
+       32,
+       "slowTests",
+       0,
+       "name"
+      ],
+      "name": "renders the pipeline draft with working diagram, source and keyboard deep-dive paths at both widths",
+      "duration": {
+       "ms": 3280
+      }
+     }
+    }
+   ],
+   "measured": "test"
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts:55",
+   "kind": "test",
+   "title": "reuses four verified checkpoints and sends only the missing fidelity stage after restart",
+   "audits": [
+    {
+     "citation": "docs/evidence/load-timeouts-gb4l-2026-10-03.json",
+     "type": "record",
+     "measured": "test",
+     "matches": 32,
+     "evidence": {
+      "rule": "key",
+      "kind": "test",
+      "at": [
+       "before",
+       "perTest",
+       "durable-lifecycle.test.ts > reuses four verified checkpoints and sends only the missing fidelity stage after restart"
+      ],
+      "name": "durable-lifecycle.test.ts > reuses four verified checkpoints and sends only the missing fidelity stage after restart",
+      "duration": {
+       "worstMs": 6271
+      }
+     }
+    }
+   ],
+   "measured": "test"
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts:79",
+   "kind": "test",
+   "title": "refuses changed request, route or current permission and a forged completed artifact",
+   "audits": [
+    {
+     "citation": "docs/evidence/load-timeouts-gb4l-2026-10-03.json",
+     "type": "record",
+     "measured": "test",
+     "matches": 32,
+     "evidence": {
+      "rule": "key",
+      "kind": "test",
+      "at": [
+       "before",
+       "perTest",
+       "durable-lifecycle.test.ts > refuses changed request, route or current permission and a forged completed artifact"
+      ],
+      "name": "durable-lifecycle.test.ts > refuses changed request, route or current permission and a forged completed artifact",
+      "duration": {
+       "worstMs": 3557
+      }
+     }
+    }
+   ],
+   "measured": "test"
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts:96",
+   "kind": "test",
+   "title": "keeps uncertain maximum reserved despite missing receipts and an expired lease field",
+   "audits": [
+    {
+     "citation": "docs/evidence/load-timeouts-gb4l-2026-10-03.json",
+     "type": "record",
+     "measured": "test",
+     "matches": 32,
+     "evidence": {
+      "rule": "key",
+      "kind": "test",
+      "at": [
+       "before",
+       "perTest",
+       "durable-lifecycle.test.ts > keeps uncertain maximum reserved despite missing receipts and an expired lease field"
+      ],
+      "name": "durable-lifecycle.test.ts > keeps uncertain maximum reserved despite missing receipts and an expired lease field",
+      "duration": {
+       "worstMs": 1045
+      }
+     }
+    }
+   ],
+   "measured": "test"
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts:116",
+   "kind": "test",
+   "title": "admits at most one concurrent dispatch and keeps distinct run artifacts separate",
+   "audits": [
+    {
+     "citation": "docs/evidence/load-timeouts-gb4l-2026-10-03.json",
+     "type": "record",
+     "measured": "test",
+     "matches": 32,
+     "evidence": {
+      "rule": "key",
+      "kind": "test",
+      "at": [
+       "before",
+       "perTest",
+       "durable-lifecycle.test.ts > admits at most one concurrent dispatch and keeps distinct run artifacts separate"
+      ],
+      "name": "durable-lifecycle.test.ts > admits at most one concurrent dispatch and keeps distinct run artifacts separate",
+      "duration": {
+       "worstMs": 3871
+      }
+     }
+    }
+   ],
+   "measured": "test"
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-generation/pipeline-demo.test.ts:73",
+   "kind": "test",
+   "title": "runs the README command after a clean install and requires exactly seven synthetic output files",
+   "audits": [
+    {
+     "citation": "docs/evidence/pipeline-demo-onramp-budget-2026-10-15.json",
+     "type": "record",
+     "measured": "file",
+     "matches": 1,
+     "evidence": {
+      "rule": "subject",
+      "kind": "file",
+      "at": [
+       "subject"
+      ],
+      "name": "apps/three-surface-poc/src/polaris-generation/pipeline-demo.test.ts README-onramp test budget (syzygy-128g)",
+      "duration": {
+       "at": [
+        "postChangeVerification",
+        "runs",
+        0,
+        "wallSeconds"
+       ],
+       "value": 183
+      }
+     }
+    }
+   ],
+   "measured": "file"
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-generation/self-corpus.test.ts:32",
+   "kind": "test",
+   "title": "reads only tracked blobs from the pinned commit and independently recounts its denominator",
+   "audits": [
+    {
+     "citation": "docs/evidence/load-timeouts-gb4l-2026-10-03.json",
+     "type": "record",
+     "measured": "test",
+     "matches": 32,
+     "evidence": {
+      "rule": "key",
+      "kind": "test",
+      "at": [
+       "before",
+       "perTest",
+       "self-corpus.test.ts > reads only tracked blobs from the pinned commit and independently recounts its denominator"
+      ],
+      "name": "self-corpus.test.ts > reads only tracked blobs from the pinned commit and independently recounts its denominator",
+      "duration": {
+       "worstMs": 7797
+      }
+     }
+    }
+   ],
+   "measured": "test"
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-generation/self-corpus.test.ts:46",
+   "kind": "test",
+   "title": "refuses a 1 MB corpus budget without truncation or a scripted send, then completes on sufficient budget and isolates one source perturbation",
+   "audits": [
+    {
+     "citation": "docs/evidence/syzygy-bpyt-4-31/full-runs.json",
+     "type": "record",
+     "measured": "test",
+     "matches": 62,
+     "evidence": {
+      "rule": "beside",
+      "kind": "test",
+      "at": [
+       "runs",
+       0,
+       "files",
+       30,
+       "slowTests",
+       1,
+       "name"
+      ],
+      "name": "zero-egress Syzygy self-corpus proof > refuses a 1 MB corpus budget without truncation or a scripted send, then completes on sufficient budget and isolates one source perturbation",
+      "duration": {
+       "ms": 2436
+      }
+     }
+    }
+   ],
+   "measured": "test"
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-narrative.test.ts:59",
+   "kind": "hook",
+   "title": null,
+   "audits": [
+    {
+     "citation": "docs/evidence/shared-fixture-models-k66p-2026-10-03.json",
+     "type": "record",
+     "measured": "file",
+     "matches": 6,
+     "evidence": {
+      "rule": "key",
+      "kind": "file",
+      "at": [
+       "runs",
+       0,
+       "targetFiles",
+       "polaris-narrative"
+      ],
+      "name": "polaris-narrative",
+      "duration": {
+       "fileMs": 20792
+      }
+     }
+    }
+   ],
+   "measured": "file"
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts:316",
+   "kind": "hook",
+   "title": null,
+   "audits": [
+    {
+     "citation": "docs/evidence/syzygy-bpyt-4-31/full-runs.json",
+     "type": "record",
+     "measured": "file",
+     "matches": 10,
+     "evidence": {
+      "rule": "beside",
+      "kind": "file",
+      "at": [
+       "runs",
+       0,
+       "files",
+       8,
+       "file"
+      ],
+      "name": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+      "duration": {
+       "ms": 9953
+      }
+     }
+    }
+   ],
+   "measured": "file"
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts:352",
+   "kind": "test",
+   "title": "`every indexed target renders (${viewport.width}x${viewport.height}): nine routed rows, recounted offsets, one line after the last-beginning target`",
+   "audits": [
+    {
+     "citation": "docs/evidence/syzygy-bpyt-4-31/full-runs.json",
+     "type": "record",
+     "measured": "test",
+     "matches": 20,
+     "evidence": {
+      "rule": "beside",
+      "kind": "test",
+      "at": [
+       "runs",
+       0,
+       "files",
+       8,
+       "slowTests",
+       1,
+       "name"
+      ],
+      "name": "opening index in a real browser (PWB-REQ-010, P-98) > every indexed target renders (1280x900): nine routed rows, recounted offsets, one line after the last-beginning target",
+      "duration": {
+       "ms": 1247
+      }
+     }
+    }
+   ],
+   "measured": "test"
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts:370",
+   "kind": "test",
+   "title": "`an unobserved shape (${viewport.width}x${viewport.height}): only the gaps and claim-strength targets render`",
+   "audits": [
+    {
+     "citation": "docs/evidence/syzygy-bpyt-4-31/full-runs.json",
+     "type": "record",
+     "measured": "test",
+     "matches": 20,
+     "evidence": {
+      "rule": "beside",
+      "kind": "test",
+      "at": [
+       "runs",
+       0,
+       "files",
+       8,
+       "slowTests",
+       3,
+       "name"
+      ],
+      "name": "opening index in a real browser (PWB-REQ-010, P-98) > an unobserved shape (1280x900): only the gaps and claim-strength targets render",
+      "duration": {
+       "ms": 1089
+      }
+     }
+    }
+   ],
+   "measured": "test"
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts:424",
+   "kind": "test",
+   "title": "a captured /polaris page meets the oracle at both viewports",
+   "audits": [
+    {
+     "citation": "da936967",
+     "type": "commit",
+     "measured": null,
+     "evidence": "no reading of this commit holds a measurement"
+    }
+   ],
+   "measured": null
+  },
+  {
+   "site": "apps/three-surface-poc/src/production-reobserve.test.ts:99",
+   "kind": "test",
+   "title": "keeps served bytes and asOf stable when the same capture is rebuilt across wall-clock instants",
+   "audits": [
+    {
+     "citation": "docs/evidence/poc-test-timeouts-2026-10-03.json",
+     "type": "record",
+     "measured": "test",
+     "matches": 40,
+     "evidence": {
+      "rule": "key",
+      "kind": "test",
+      "at": [
+       "worstFullRunDurationMsPerTest",
+       "before",
+       "production-reobserve.test.ts > keeps served bytes and asOf stable when the same capture is rebuilt across wall-clock instants"
+      ],
+      "name": "production-reobserve.test.ts > keeps served bytes and asOf stable when the same capture is rebuilt across wall-clock instants",
+      "duration": 17058
+     }
+    }
+   ],
+   "measured": "test"
+  },
+  {
+   "site": "apps/three-surface-poc/src/production-reobserve.test.ts:132",
+   "kind": "test",
+   "title": "uses the production builder for an atomic successful swap with identity advancement and one in-flight observation",
+   "audits": [
+    {
+     "citation": "docs/evidence/poc-test-timeouts-2026-10-03.json",
+     "type": "record",
+     "measured": "test",
+     "matches": 40,
+     "evidence": {
+      "rule": "key",
+      "kind": "test",
+      "at": [
+       "worstFullRunDurationMsPerTest",
+       "before",
+       "production-reobserve.test.ts > uses the production builder for an atomic successful swap with identity advancement and one in-flight observation"
+      ],
+      "name": "production-reobserve.test.ts > uses the production builder for an atomic successful swap with identity advancement and one in-flight observation",
+      "duration": 15930
+     }
+    }
+   ],
+   "measured": "test"
+  },
+  {
+   "site": "apps/three-surface-poc/src/production-reobserve.test.ts:160",
+   "kind": "test",
+   "title": "re-evaluates an unchanged repository twice: two distinct named identities, the first result unchanged (syzygy-u05.2)",
+   "audits": [
+    {
+     "citation": "docs/evidence/poc-test-timeouts-2026-10-03.json",
+     "type": "record",
+     "measured": "file",
+     "matches": 17,
+     "evidence": {
+      "rule": "key",
+      "kind": "file",
+      "at": [
+       "worstFullRunDurationMsPerTest",
+       "before",
+       "production-reobserve.test.ts > keeps the production probe identity bound to the captured observation instant"
+      ],
+      "name": "production-reobserve.test.ts > keeps the production probe identity bound to the captured observation instant",
+      "duration": 6
+     }
+    }
+   ],
+   "measured": "file"
+  },
+  {
+   "site": "apps/three-surface-poc/src/production-reobserve.test.ts:182",
+   "kind": "test",
+   "title": "retains the prior production model and non-zero drift when the production build fails",
+   "audits": [
+    {
+     "citation": "docs/evidence/poc-test-timeouts-2026-10-03.json",
+     "type": "record",
+     "measured": "test",
+     "matches": 40,
+     "evidence": {
+      "rule": "key",
+      "kind": "test",
+      "at": [
+       "worstFullRunDurationMsPerTest",
+       "before",
+       "production-reobserve.test.ts > retains the prior production model and non-zero drift when the production build fails"
+      ],
+      "name": "production-reobserve.test.ts > retains the prior production model and non-zero drift when the production build fails",
+      "duration": 18033
+     }
+    }
+   ],
+   "measured": "test"
+  },
+  {
+   "site": "apps/three-surface-poc/src/proposal-disclosure.test.ts:147",
+   "kind": "test",
+   "title": "renders every served proposal and the legend row in the declared token and symbol after scripts",
+   "audits": [
+    {
+     "citation": "docs/evidence/syzygy-bpyt-4-31/durations/proposal-disclosure.test.tests.json",
+     "type": "record",
+     "measured": "test",
+     "matches": 10,
+     "evidence": {
+      "rule": "beside",
+      "kind": "test",
+      "at": [
+       "runs",
+       0,
+       "tests",
+       4,
+       "name"
+      ],
+      "name": "proposal disclosure row (syzygy-dov.3.2; P-70 M3 slice 6) renders every served proposal and the legend row in the declared token and symbol after scripts",
+      "duration": {
+       "durationMs": 8257
+      }
+     }
+    }
+   ],
+   "measured": "test"
+  },
+  {
+   "site": "apps/three-surface-poc/src/restart.test.ts:321",
+   "kind": "hook",
+   "title": null,
+   "audits": [
+    {
+     "citation": "b48d86fa",
+     "type": "commit",
+     "measured": "file",
+     "evidence": {
+      "quote": "three restart.test.ts tests failed: two hit vitest's 5 s default",
+      "identifies": "names the file only: the commit set both the per-test budget (the describe) and the afterEach budget, TEST_MS"
+     }
+    }
+   ],
+   "measured": "file"
+  },
+  {
+   "site": "apps/three-surface-poc/src/restart.test.ts:331",
+   "kind": "suite",
+   "title": "one-listener POC restart on private fixture sockets",
+   "audits": [
+    {
+     "citation": "b48d86fa",
+     "type": "commit",
+     "measured": "file",
+     "evidence": {
+      "quote": "three restart.test.ts tests failed: two hit vitest's 5 s default",
+      "identifies": "names the file only: the commit set both the per-test budget (the describe) and the afterEach budget, TEST_MS"
+     }
+    }
+   ],
+   "measured": "file"
+  },
+  {
+   "site": "apps/three-surface-poc/src/surface-routes.test.ts:313",
+   "kind": "hook",
+   "title": null,
+   "audits": [
+    {
+     "citation": "docs/evidence/syzygy-bpyt-4-31/ci-durations.json",
+     "type": "record",
+     "measured": "file",
+     "matches": 10,
+     "evidence": {
+      "rule": "beside",
+      "kind": "file",
+      "at": [
+       "runs",
+       0,
+       "files",
+       6,
+       "file"
+      ],
+      "name": "apps/three-surface-poc/src/surface-routes.test.ts",
+      "duration": {
+       "ms": 17364
+      }
+     }
+    }
+   ],
+   "measured": "file"
+  },
+  {
+   "site": "apps/three-surface-poc/src/surface-routes.test.ts:328",
+   "kind": "hook",
+   "title": null,
+   "audits": [
+    {
+     "citation": "docs/evidence/syzygy-bpyt-4-31/ci-durations.json",
+     "type": "record",
+     "measured": "file",
+     "matches": 10,
+     "evidence": {
+      "rule": "beside",
+      "kind": "file",
+      "at": [
+       "runs",
+       0,
+       "files",
+       6,
+       "file"
+      ],
+      "name": "apps/three-surface-poc/src/surface-routes.test.ts",
+      "duration": {
+       "ms": 17364
+      }
+     }
+    }
+   ],
+   "measured": "file"
+  },
+  {
+   "site": "apps/three-surface-poc/src/surface-routes.test.ts:420",
+   "kind": "test",
+   "title": "exhausts 15 runtime cross-surface links over six classes and fetches every %s target",
+   "audits": [
+    {
+     "citation": "docs/evidence/syzygy-bul-browser-ci-correction-2026-09-23.json",
+     "type": "record",
+     "measured": "test",
+     "matches": 1,
+     "evidence": {
+      "rule": "reading",
+      "kind": "test",
+      "at": [
+       "completeLocalFullSuiteMeasurements",
+       0,
+       "directMs"
+      ],
+      "name": "apps/three-surface-poc/src/surface-routes.test.ts",
+      "duration": 1562,
+      "identifies": "the record's direct and tailnet cases are this it.each's two rows (13 links when measured), and its caseLocalBudgets give them 15000 ms, the value this site carries"
+     }
+    }
+   ],
+   "measured": "test"
+  },
+  {
+   "site": "apps/three-surface-poc/src/surface-routes.test.ts:453",
+   "kind": "test",
+   "title": "withholds the post-script Orrery capability href when that exact capability is absent",
+   "audits": [
+    {
+     "citation": "docs/evidence/syzygy-bul-browser-ci-correction-2026-09-23.json",
+     "type": "record",
+     "measured": "test",
+     "matches": 1,
+     "evidence": {
+      "rule": "reading",
+      "kind": "test",
+      "at": [
+       "completeLocalFullSuiteMeasurements",
+       0,
+       "missingCapabilityMs"
+      ],
+      "name": "apps/three-surface-poc/src/surface-routes.test.ts",
+      "duration": 1832,
+      "identifies": "the record's missing-capability case is this test, and its caseLocalBudgets give it 10000 ms, the value this site carries"
+     }
+    }
+   ],
+   "measured": "test"
+  },
+  {
+   "site": "apps/three-surface-poc/src/surface-routes.test.ts:537",
+   "kind": "test",
+   "title": "counts the post-JavaScript DOM on all three served surfaces and kills an unmarked Orrery region",
+   "audits": [
+    {
+     "citation": "docs/evidence/syzygy-bpyt-4-31/full-runs.json",
+     "type": "record",
+     "measured": "test",
+     "matches": 15,
+     "evidence": {
+      "rule": "beside",
+      "kind": "test",
+      "at": [
+       "runs",
+       0,
+       "files",
+       3,
+       "slowTests",
+       4,
+       "name"
+      ],
+      "name": "surface routes > counts the post-JavaScript DOM on all three served surfaces and kills an unmarked Orrery region",
+      "duration": {
+       "ms": 3611
+      }
+     }
+    },
+    {
+     "citation": "docs/evidence/syzygy-bpyt-4-31/head-durations/surface-routes.test.tests.json",
+     "type": "record",
+     "measured": "test",
+     "matches": 10,
+     "evidence": {
+      "rule": "beside",
+      "kind": "test",
+      "at": [
+       "runs",
+       0,
+       "tests",
+       6,
+       "name"
+      ],
+      "name": "surface routes counts the post-JavaScript DOM on all three served surfaces and kills an unmarked Orrery region",
+      "duration": {
+       "durationMs": 2454
+      }
+     }
+    }
+   ],
+   "measured": "test"
+  },
+  {
+   "site": "apps/three-surface-poc/src/test-model-fixture.test.ts:120",
+   "kind": "test",
+   "title": "names the template and each copy with the pid and PID namespace of the process that made them",
+   "audits": [
+    {
+     "citation": "docs/evidence/syzygy-bpyt-4-31/durations/test-model-fixture.test.tests.json",
+     "type": "record",
+     "measured": "test",
+     "matches": 10,
+     "evidence": {
+      "rule": "beside",
+      "kind": "test",
+      "at": [
+       "runs",
+       0,
+       "tests",
+       3,
+       "name"
+      ],
+      "name": "fixture directory names (syzygy-bpyt.4.10) names the template and each copy with the pid and PID namespace of the process that made them",
+      "duration": {
+       "durationMs": 1187
+      }
+     }
+    }
+   ],
+   "measured": "test"
+  },
+  {
+   "site": "apps/three-surface-poc/src/test-model-fixture.test.ts:131",
+   "kind": "test",
+   "title": "does not sweep when a file makes its template: the sweep is the global setup's, once per run",
+   "audits": [
+    {
+     "citation": "docs/evidence/syzygy-bpyt-4-31/durations/test-model-fixture.test.tests.json",
+     "type": "record",
+     "measured": "test",
+     "matches": 10,
+     "evidence": {
+      "rule": "beside",
+      "kind": "test",
+      "at": [
+       "runs",
+       0,
+       "tests",
+       4,
+       "name"
+      ],
+      "name": "fixture directory names (syzygy-bpyt.4.10) does not sweep when a file makes its template: the sweep is the global setup's, once per run",
+      "duration": {
+       "durationMs": 2990
+      }
+     }
+    }
+   ],
+   "measured": "test"
+  },
+  {
+   "site": "apps/three-surface-poc/src/tuple-encoding.test.ts:94",
+   "kind": "hook",
+   "title": null,
+   "audits": [
+    {
+     "citation": "docs/evidence/shared-fixture-models-k66p-2026-10-03.json",
+     "type": "record",
+     "measured": "file",
+     "matches": 6,
+     "evidence": {
+      "rule": "key",
+      "kind": "file",
+      "at": [
+       "runs",
+       0,
+       "targetFiles",
+       "tuple-encoding"
+      ],
+      "name": "tuple-encoding",
+      "duration": {
+       "fileMs": 14058
+      }
+     }
+    }
+   ],
+   "measured": "file"
+  },
+  {
+   "site": "apps/three-surface-poc/src/tuple-encoding.test.ts:312",
+   "kind": "test",
+   "title": "sweeps the post-JavaScript DOM of the three surfaces, Home apart: every tuple field and glossary row renders its declared symbol and token",
+   "audits": [
+    {
+     "citation": "docs/evidence/syzygy-bpyt-4-31/durations/tuple-encoding.test.tests.json",
+     "type": "record",
+     "measured": "test",
+     "matches": 10,
+     "evidence": {
+      "rule": "beside",
+      "kind": "test",
+      "at": [
+       "runs",
+       0,
+       "tests",
+       5,
+       "name"
+      ],
+      "name": "tuple field encoding tables (syzygy-dov.3.2; P-70 M3 slice 5) sweeps the post-JavaScript DOM of the three surfaces, Home apart: every tuple field and glossary row renders its declared symbol and token",
+      "duration": {
+       "durationMs": 7630
+      }
+     }
+    }
+   ],
+   "measured": "test"
+  },
+  {
+   "site": "packages/cap1-system/src/fresh-clone.system.test.ts:117",
+   "kind": "test",
+   "title": "a fresh clone installs, builds, starts the daemon, and serves the same facts on both channels",
+   "audits": [
+    {
+     "citation": "docs/evidence/syzygy-bpyt-4-31/durations/cap1-system.hooks.json",
+     "type": "record",
+     "measured": "test",
+     "matches": 25,
+     "evidence": {
+      "rule": "beside",
+      "kind": "test",
+      "at": [
+       "runs",
+       0,
+       "tests",
+       36,
+       "name"
+      ],
+      "name": "RT6 — fresh-clone demonstration a fresh clone installs, builds, starts the daemon, and serves the same facts on both channels",
+      "duration": {
+       "durationMs": 62226
+      }
+     }
+    },
+    {
+     "citation": "docs/evidence/syzygy-bpyt-4-31/ci-durations.json",
+     "type": "record",
+     "measured": "test",
+     "matches": 20,
+     "evidence": {
+      "rule": "beside",
+      "kind": "test",
+      "at": [
+       "runs",
+       0,
+       "files",
+       38,
+       "slowTests",
+       0,
+       "name"
+      ],
+      "name": "RT6 — fresh-clone demonstration > a fresh clone installs, builds, starts the daemon, and serves the same facts on both channels",
+      "duration": {
+       "ms": 18861
+      }
+     }
+    }
+   ],
+   "measured": "test"
+  },
+  {
+   "site": "packages/cap1-system/vitest.config.ts:18",
+   "kind": "config",
+   "title": null,
+   "audits": [
+    {
+     "citation": "docs/evidence/syzygy-bpyt-4-31/durations/cap1-system.hooks.json",
+     "type": "record",
+     "measured": "file",
+     "matches": 355,
+     "evidence": {
+      "rule": "beside",
+      "kind": "file",
+      "at": [
+       "runs",
+       0,
+       "command"
+      ],
+      "name": "npx vitest run --config packages/cap1-system/vitest.config.ts packages/cap1-system/src --reporter=<tmp>/hook-reporter.mjs --testTimeout=600000 --hookTimeout=600000",
+      "duration": {
+       "wallSeconds": 67.6
+      }
+     }
+    }
+   ],
+   "measured": "file"
+  },
+  {
+   "site": "packages/cap1-system/vitest.config.ts:19",
+   "kind": "config",
+   "title": null,
+   "audits": [
+    {
+     "citation": "docs/evidence/syzygy-bpyt-4-31/durations/cap1-system.hooks.json",
+     "type": "record",
+     "measured": "file",
+     "matches": 355,
+     "evidence": {
+      "rule": "beside",
+      "kind": "file",
+      "at": [
+       "runs",
+       0,
+       "command"
+      ],
+      "name": "npx vitest run --config packages/cap1-system/vitest.config.ts packages/cap1-system/src --reporter=<tmp>/hook-reporter.mjs --testTimeout=600000 --hookTimeout=600000",
+      "duration": {
+       "wallSeconds": 67.6
+      }
+     }
+    }
+   ],
+   "measured": "file"
+  },
+  {
+   "site": "packages/polaris-dossier/src/gate-acts.test.ts:98",
+   "kind": "test",
+   "title": "follow this checkout's tree: each source absent while its act record is, and established once the sitting records it",
+   "audits": [
+    {
+     "citation": "0a08add9",
+     "type": "commit",
+     "measured": "test",
+     "evidence": {
+      "quote": "These walk the whole real decisions tree, or eight worlds in turn: about 2-5 s unloaded, past vitest's 5 s default under load.",
+      "identifies": "the comment on TREE_TIMEOUT, which the commit adds to exactly the two tests that use it"
+     }
+    }
+   ],
+   "measured": "test"
+  },
+  {
+   "site": "packages/polaris-dossier/src/gate-acts.test.ts:106",
+   "kind": "test",
+   "title": "follow the tree in either state: no records, every record, and each act alone",
+   "audits": [
+    {
+     "citation": "0a08add9",
+     "type": "commit",
+     "measured": "test",
+     "evidence": {
+      "quote": "These walk the whole real decisions tree, or eight worlds in turn: about 2-5 s unloaded, past vitest's 5 s default under load.",
+      "identifies": "the comment on TREE_TIMEOUT, which the commit adds to exactly the two tests that use it"
+     }
+    }
+   ],
+   "measured": "test"
+  },
+  {
+   "site": "packages/polaris-dossier/src/no-egress.test.ts:85",
+   "kind": "test",
+   "title": "creates no Internet-family socket over the whole run, from preflight to close",
+   "audits": [
+    {
+     "citation": "docs/evidence/syzygy-bpyt-4-31/full-runs.json",
+     "type": "record",
+     "measured": "test",
+     "matches": 15,
+     "evidence": {
+      "rule": "beside",
+      "kind": "test",
+      "at": [
+       "runs",
+       0,
+       "files",
+       26,
+       "slowTests",
+       0,
+       "name"
+      ],
+      "name": "no provider call and no transmission (S10): an operating-system capture of a full fixture run > creates no Internet-family socket over the whole run, from preflight to close",
+      "duration": {
+       "ms": 4839
+      }
+     }
+    }
+   ],
+   "measured": "test"
+  },
+  {
+   "site": "packages/polaris-dossier/src/no-egress.test.ts:93",
+   "kind": "test",
+   "title": "sees the canary: one loopback datagram sent before the same run is in the capture",
+   "audits": [
+    {
+     "citation": "docs/evidence/syzygy-bpyt-4-31/full-runs.json",
+     "type": "record",
+     "measured": "test",
+     "matches": 15,
+     "evidence": {
+      "rule": "beside",
+      "kind": "test",
+      "at": [
+       "runs",
+       0,
+       "files",
+       26,
+       "slowTests",
+       1,
+       "name"
+      ],
+      "name": "no provider call and no transmission (S10): an operating-system capture of a full fixture run > sees the canary: one loopback datagram sent before the same run is in the capture",
+      "duration": {
+       "ms": 5040
+      }
+     }
+    }
+   ],
+   "measured": "test"
+  },
+  {
+   "site": "packages/polaris-dossier/src/start-gates.test.ts:1015",
+   "kind": "test",
+   "title": "reports D9 established on this checkout only once an act record binds it, though the doctrine amendment log records its adoption",
+   "audits": [
+    {
+     "citation": "30d2c2c9",
+     "type": "commit",
+     "measured": "test",
+     "evidence": {
+      "quote": "the real-tree preflight reads every act record and sweeps every decisions file (about 4.4 s alone)",
+      "identifies": "the comment on TREE_TIMEOUT, which the commit adds to exactly this preflight test"
+     }
+    }
+   ],
+   "measured": "test"
+  },
+  {
+   "site": "packages/polaris-generation-consent/src/package-reader.test.ts:111",
+   "kind": "test",
+   "title": "returns a record only for an instance that an act record names by path and digest",
+   "audits": [
+    {
+     "citation": "docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json",
+     "type": "record",
+     "measured": "test",
+     "matches": 1,
+     "evidence": {
+      "rule": "beside",
+      "kind": "test",
+      "at": [
+       "tests",
+       2,
+       "name"
+      ],
+      "name": "package admission reader returns a record only for an instance that an act record names by path and digest",
+      "duration": {
+       "worstMs": 14149
+      }
+     }
+    }
+   ],
+   "measured": "test"
+  },
+  {
+   "site": "packages/polaris-generation-consent/src/package-reader.test.ts:141",
+   "kind": "test",
+   "title": "refuses the whole read on unknown shapes instead of guessing",
+   "audits": [
+    {
+     "citation": "docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json",
+     "type": "record",
+     "measured": "test",
+     "matches": 1,
+     "evidence": {
+      "rule": "beside",
+      "kind": "test",
+      "at": [
+       "tests",
+       15,
+       "name"
+      ],
+      "name": "package admission reader refuses the whole read on unknown shapes instead of guessing",
+      "duration": {
+       "worstMs": 2564
+      }
+     }
+    }
+   ],
+   "measured": "test"
+  },
+  {
+   "site": "packages/polaris-generation-consent/src/package-reader.test.ts:259",
+   "kind": "test",
+   "title": "recognises the recorder's record by its exact path and format, in force from its instant",
+   "audits": [
+    {
+     "citation": "docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json",
+     "type": "record",
+     "measured": "test",
+     "matches": 1,
+     "evidence": {
+      "rule": "beside",
+      "kind": "test",
+      "at": [
+       "tests",
+       12,
+       "name"
+      ],
+      "name": "public-source policy act recognises the recorder's record by its exact path and format, in force from its instant",
+      "duration": {
+       "worstMs": 3866
+      }
+     }
+    }
+   ],
+   "measured": "test"
+  },
+  {
+   "site": "packages/polaris-generation-consent/src/package-reader.test.ts:327",
+   "kind": "test",
+   "title": "refuses the recorder's file when its act type, identity, title or provenance is not the recorder's form",
+   "audits": [
+    {
+     "citation": "docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json",
+     "type": "record",
+     "measured": "test",
+     "matches": 1,
+     "evidence": {
+      "rule": "beside",
+      "kind": "test",
+      "at": [
+       "tests",
+       10,
+       "name"
+      ],
+      "name": "public-source policy act refuses the recorder's file when its act type, identity, title or provenance is not the recorder's form",
+      "duration": {
+       "worstMs": 4808
+      }
+     }
+    }
+   ],
+   "measured": "test"
+  },
+  {
+   "site": "packages/polaris-generation-consent/src/package-reader.test.ts:368",
+   "kind": "test",
+   "title": "is read from the recorder's act: version 2 supersedes version 1 once in force",
+   "audits": [
+    {
+     "citation": "docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json",
+     "type": "record",
+     "measured": "test",
+     "matches": 1,
+     "evidence": {
+      "rule": "beside",
+      "kind": "test",
+      "at": [
+       "tests",
+       5,
+       "name"
+      ],
+      "name": "egress version 2 record is read from the recorder's act: version 2 supersedes version 1 once in force",
+      "duration": {
+       "worstMs": 11817
+      }
+     }
+    }
+   ],
+   "measured": "test"
+  },
+  {
+   "site": "packages/polaris-generation-consent/src/package-reader.test.ts:375",
+   "kind": "test",
+   "title": "leaves version 1 standing before the version 2 act takes effect, and with no version 1 act at all",
+   "audits": [
+    {
+     "citation": "docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json",
+     "type": "record",
+     "measured": "test",
+     "matches": 1,
+     "evidence": {
+      "rule": "beside",
+      "kind": "test",
+      "at": [
+       "tests",
+       8,
+       "name"
+      ],
+      "name": "egress version 2 record leaves version 1 standing before the version 2 act takes effect, and with no version 1 act at all",
+      "duration": {
+       "worstMs": 5040
+      }
+     }
+    }
+   ],
+   "measured": "test"
+  },
+  {
+   "site": "packages/polaris-generation-consent/src/package-reader.test.ts:381",
+   "kind": "test",
+   "title": "refuses when version 2 did not take effect strictly after version 1: the same instant, or earlier",
+   "audits": [
+    {
+     "citation": "docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json",
+     "type": "record",
+     "measured": "test",
+     "matches": 1,
+     "evidence": {
+      "rule": "beside",
+      "kind": "test",
+      "at": [
+       "tests",
+       3,
+       "name"
+      ],
+      "name": "egress version 2 record refuses when version 2 did not take effect strictly after version 1: the same instant, or earlier",
+      "duration": {
+       "worstMs": 13826
+      }
+     }
+    }
+   ],
+   "measured": "test"
+  },
+  {
+   "site": "packages/polaris-generation-consent/src/package-reader.test.ts:443",
+   "kind": "test",
+   "title": "is required: no record, an edited module, a wrong form, or an amendment later than version 2 all refuse",
+   "audits": [
+    {
+     "citation": "docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json",
+     "type": "record",
+     "measured": "test",
+     "matches": 1,
+     "evidence": {
+      "rule": "beside",
+      "kind": "test",
+      "at": [
+       "tests",
+       6,
+       "name"
+      ],
+      "name": "egress version 2 record the RFC5-14 class amendment version 2 depends on is required: no record, an edited module, a wrong form, or an amendment later than version 2 all refuse",
+      "duration": {
+       "worstMs": 11800
+      }
+     }
+    }
+   ],
+   "measured": "test"
+  },
+  {
+   "site": "packages/polaris-generation-consent/src/package-reader.test.ts:498",
+   "kind": "test",
+   "title": "does not refuse the recorders' other act records or the aggregate acceptance record they append to",
+   "audits": [
+    {
+     "citation": "docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json",
+     "type": "record",
+     "measured": "test",
+     "matches": 1,
+     "evidence": {
+      "rule": "beside",
+      "kind": "test",
+      "at": [
+       "tests",
+       7,
+       "name"
+      ],
+      "name": "egress version 2 record withdrawal and forgery forms the reader does not define does not refuse the recorders' other act records or the aggregate acceptance record they append to",
+      "duration": {
+       "worstMs": 8089
+      }
+     }
+    }
+   ],
+   "measured": "test"
+  },
+  {
+   "site": "packages/polaris-generation-consent/src/package-reader.test.ts:541",
+   "kind": "test",
+   "title": "counts the version 2 act when the policy carries the version 2 bytes, and the version 1 act goes quiet",
+   "audits": [
+    {
+     "citation": "docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json",
+     "type": "record",
+     "measured": "test",
+     "matches": 1,
+     "evidence": {
+      "rule": "beside",
+      "kind": "test",
+      "at": [
+       "tests",
+       1,
+       "name"
+      ],
+      "name": "screening scope version 2 policy act counts the version 2 act when the policy carries the version 2 bytes, and the version 1 act goes quiet",
+      "duration": {
+       "worstMs": 14198
+      }
+     }
+    }
+   ],
+   "measured": "test"
+  },
+  {
+   "site": "packages/polaris-generation-consent/src/package-reader.test.ts:563",
+   "kind": "test",
+   "title": "a version 2 act not yet in force leaves version 1 in force, in both views",
+   "audits": [
+    {
+     "citation": "docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json",
+     "type": "record",
+     "measured": "test",
+     "matches": 1,
+     "evidence": {
+      "rule": "beside",
+      "kind": "test",
+      "at": [
+       "tests",
+       9,
+       "name"
+      ],
+      "name": "screening scope version 2 policy act a version 2 act not yet in force leaves version 1 in force, in both views",
+      "duration": {
+       "worstMs": 5039
+      }
+     }
+    }
+   ],
+   "measured": "test"
+  },
+  {
+   "site": "packages/polaris-generation-consent/src/package-reader.test.ts:581",
+   "kind": "test",
+   "title": "refuses an unlisted record that names the policy: another file, a subdirectory, a loose field spelling, a Unicode-hyphen identity",
+   "audits": [
+    {
+     "citation": "docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json",
+     "type": "record",
+     "measured": "test",
+     "matches": 1,
+     "evidence": {
+      "rule": "beside",
+      "kind": "test",
+      "at": [
+       "tests",
+       13,
+       "name"
+      ],
+      "name": "screening scope version 2 policy act refuses an unlisted record that names the policy: another file, a subdirectory, a loose field spelling, a Unicode-hyphen identity",
+      "duration": {
+       "worstMs": 3452
+      }
+     }
+    }
+   ],
+   "measured": "test"
+  },
+  {
+   "site": "packages/polaris-generation-consent/src/package-reader.test.ts:710",
+   "kind": "test",
+   "title": "policy chain: absent without acts; refused for a missing version 1, equal or earlier instants, equal arguments, a supersession that does not name version 1, or other policy bytes",
+   "audits": [
+    {
+     "citation": "docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json",
+     "type": "record",
+     "measured": "test",
+     "matches": 1,
+     "evidence": {
+      "rule": "beside",
+      "kind": "test",
+      "at": [
+       "tests",
+       4,
+       "name"
+      ],
+      "name": "strict act reads policy chain: absent without acts; refused for a missing version 1, equal or earlier instants, equal arguments, a supersession that does not name version 1, or other policy bytes",
+      "duration": {
+       "worstMs": 12015
+      }
+     }
+    }
+   ],
+   "measured": "test"
+  },
+  {
+   "site": "packages/polaris-generation-consent/src/package-reader.test.ts:779",
+   "kind": "test",
+   "title": "folds soft hyphens, zero-width spaces, underscores and spaces before matching a withdrawal stem (N-2)",
+   "audits": [
+    {
+     "citation": "docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json",
+     "type": "record",
+     "measured": "test",
+     "matches": 1,
+     "evidence": {
+      "rule": "beside",
+      "kind": "test",
+      "at": [
+       "tests",
+       14,
+       "name"
+      ],
+      "name": "round-3 review notes folds soft hyphens, zero-width spaces, underscores and spaces before matching a withdrawal stem (N-2)",
+      "duration": {
+       "worstMs": 3348
+      }
+     }
+    }
+   ],
+   "measured": "test"
+  },
+  {
+   "site": "packages/polaris-generation-consent/src/package-reader.test.ts:804",
+   "kind": "test",
+   "title": "takes a time: a strict read of an act recorded after now is absent (N-4)",
+   "audits": [
+    {
+     "citation": "docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json",
+     "type": "record",
+     "measured": "test",
+     "matches": 1,
+     "evidence": {
+      "rule": "beside",
+      "kind": "test",
+      "at": [
+       "tests",
+       11,
+       "name"
+      ],
+      "name": "round-3 review notes takes a time: a strict read of an act recorded after now is absent (N-4)",
+      "duration": {
+       "worstMs": 4266
+      }
+     }
+    }
+   ],
+   "measured": "test"
+  },
+  {
+   "site": "packages/polaris-generation-consent/src/package-reader.test.ts:947",
+   "kind": "hook",
+   "title": null,
+   "audits": [
+    {
+     "citation": "6c91e65a",
+     "type": "commit",
+     "measured": "test",
+     "evidence": {
+      "quote": "about 3 s of a cold 4.5 s run, by CPU profile",
+      "identifies": "the comment the commit puts directly above the beforeAll it adds, which is this site"
+     }
+    }
+   ],
+   "measured": "test"
+  },
+  {
+   "site": "packages/polaris-generation-consent/src/package-reader.test.ts:1061",
+   "kind": "test",
+   "title": "on every world in the fixture set, at every instant",
+   "audits": [
+    {
+     "citation": "docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json",
+     "type": "record",
+     "measured": "test",
+     "matches": 1,
+     "evidence": {
+      "rule": "beside",
+      "kind": "test",
+      "at": [
+       "tests",
+       0,
+       "name"
+      ],
+      "name": "the policy port and the strict policy chain agree on every world in the fixture set, at every instant",
+      "duration": {
+       "worstMs": 16465
+      }
+     }
+    }
+   ],
+   "measured": "test"
+  },
+  {
+   "site": "packages/polaris-generation-consent/src/real-tree.test.ts:50",
+   "kind": "test",
+   "title": "refuse nothing: no file in decisions/ trips a sweep or breaks a recorder's form",
+   "audits": [
+    {
+     "citation": "docs/evidence/syzygy-bpyt-4-31/durations/real-tree.test.tests.json",
+     "type": "record",
+     "measured": "test",
+     "matches": 10,
+     "evidence": {
+      "rule": "beside",
+      "kind": "test",
+      "at": [
+       "runs",
+       0,
+       "tests",
+       0,
+       "name"
+      ],
+      "name": "the readers over this checkout's decisions directory refuse nothing: no file in decisions/ trips a sweep or breaks a recorder's form",
+      "duration": {
+       "durationMs": 3563
+      }
+     }
+    }
+   ],
+   "measured": "test"
+  },
+  {
+   "site": "packages/polaris-generation-consent/src/real-tree.test.ts:58",
+   "kind": "test",
+   "title": "do reach that directory: one added file naming a record or the class act refuses the reads that sweep for it",
+   "audits": [
+    {
+     "citation": "docs/evidence/syzygy-bpyt-4-31/durations/real-tree.test.tests.json",
+     "type": "record",
+     "measured": "test",
+     "matches": 10,
+     "evidence": {
+      "rule": "beside",
+      "kind": "test",
+      "at": [
+       "runs",
+       0,
+       "tests",
+       1,
+       "name"
+      ],
+      "name": "the readers over this checkout's decisions directory do reach that directory: one added file naming a record or the class act refuses the reads that sweep for it",
+      "duration": {
+       "durationMs": 2318
+      }
+     }
+    }
+   ],
+   "measured": "test"
+  },
+  {
+   "site": "packages/three-surface-poc-core/src/test-artifact-verification.live.test.ts:139",
+   "kind": "test",
+   "title": "ingests one real, passing operator-reported focused-pytest artifact and resolves it to report-fact, never Verified, through the full model (AC1/AC3, RFC5-19)",
+   "audits": [
+    {
+     "citation": "2c1f8d5a",
+     "type": "commit",
+     "measured": null,
+     "evidence": "no reading of this commit holds a measurement"
+    }
+   ],
+   "measured": null
+  }
+ ],
+ "mutants": [
+  {
+   "id": "A1",
+   "predicate": "a test match needs the title at the end of a name",
+   "site": "apps/three-surface-poc/src/cdp-browser.browser.test.ts:82",
+   "citation": "docs/evidence/syzygy-bpyt-4-31/durations/cdp-browser.browser.test.tests.json",
+   "rule": "beside",
+   "change": {
+    "everyString": {
+     "old": "closes and drains even when a helper cannot exit on its own",
+     "new": "syzygy-mutant closes and drains even when a helper cannot exit on its ow"
+    }
+   },
+   "before": "test",
+   "after": "file",
+   "outcome": "killed"
+  },
+  {
+   "id": "A2",
+   "predicate": "a file match needs the file as a whole token",
+   "site": "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts:91",
+   "citation": "docs/evidence/syzygy-bpyt-4-31/full-runs.json",
+   "rule": "beside",
+   "change": {
+    "everyString": {
+     "old": [
+      "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts",
+      "polaris-accessibility.browser.test.ts",
+      "polaris-accessibility"
+     ],
+     "new": "syzygy-mutant"
+    }
+   },
+   "before": "file",
+   "after": null,
+   "outcome": "killed"
+  },
+  {
+   "id": "A3",
+   "predicate": "a match needs a duration",
+   "site": "apps/three-surface-poc/src/cdp-browser.browser.test.ts:82",
+   "citation": "docs/evidence/syzygy-bpyt-4-31/durations/cdp-browser.browser.test.tests.json",
+   "rule": "beside",
+   "change": {
+    "everyDurationKey": "removed"
+   },
+   "before": "test",
+   "after": null,
+   "outcome": "killed"
+  },
+  {
+   "id": "A4",
+   "predicate": "a configured value is never a duration",
+   "site": "apps/three-surface-poc/src/cdp-browser.browser.test.ts:82",
+   "citation": "docs/evidence/syzygy-bpyt-4-31/durations/cdp-browser.browser.test.tests.json",
+   "rule": "beside",
+   "change": {
+    "everyDurationKey": "prefixed with timeout"
+   },
+   "before": "test",
+   "after": null,
+   "outcome": "killed"
+  },
+  {
+   "id": "A5",
+   "predicate": "a key naming the site needs a duration under it or above it",
+   "site": "apps/three-surface-poc/src/build-output.test.ts:62",
+   "citation": "docs/evidence/load-timeouts-gb4l-2026-10-03.json",
+   "rule": "key",
+   "change": {
+    "everyDurationKey": "removed"
+   },
+   "before": "test",
+   "after": null,
+   "outcome": "killed"
+  },
+  {
+   "id": "A6",
+   "predicate": "the subject rule needs the subject to name the site",
+   "site": "apps/three-surface-poc/src/governance-inputs.test.ts:504",
+   "citation": "docs/evidence/governance-inputs-timeout-2026-10-03.json",
+   "rule": "subject",
+   "change": {
+    "subject": "syzygy-mutant"
+   },
+   "before": "test",
+   "after": null,
+   "outcome": "killed"
+  },
+  {
+   "id": "A7",
+   "predicate": "a record reading's path must end at a duration key",
+   "site": "apps/three-surface-poc/src/surface-routes.test.ts:420",
+   "citation": "docs/evidence/syzygy-bul-browser-ci-correction-2026-09-23.json",
+   "rule": "reading",
+   "change": {
+    "readingKey": "renamed count"
+   },
+   "before": "test",
+   "after": null,
+   "outcome": "killed"
+  },
+  {
+   "id": "A8",
+   "predicate": "the commit must change the site's file",
+   "site": "apps/three-surface-poc/src/fixture-directories.test.ts:294",
+   "citation": "3f08143c",
+   "refusal": "the commit does not change the site's file",
+   "outcome": "killed"
+  },
+  {
+   "id": "A9",
+   "predicate": "the quote must be in the commit",
+   "site": "apps/three-surface-poc/src/fixture-directories.test.ts:294",
+   "citation": "3f08143c",
+   "refusal": "the quote is not in the commit",
+   "outcome": "killed"
+  },
+  {
+   "id": "A10",
+   "predicate": "the quote must carry a duration",
+   "site": "apps/three-surface-poc/src/fixture-directories.test.ts:294",
+   "citation": "3f08143c",
+   "refusal": "the quote carries no duration",
+   "outcome": "killed"
+  },
+  {
+   "id": "A11",
+   "predicate": "a commit with no reading is unmeasured",
+   "site": "apps/three-surface-poc/src/fixture-directories.test.ts:294",
+   "citation": "3f08143c",
+   "refusal": "no reading of this commit holds a measurement",
+   "outcome": "killed"
+  }
+ ]
+}

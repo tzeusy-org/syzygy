@@ -1,0 +1,16 @@
+{
+ "id": "U6-table-out-of-usage-order",
+ "command": "TMPDIR=/tmp/la-b82/g CI=1 npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/cli-table.test.ts",
+ "edits": [
+  {
+   "file": "packages/polaris-dossier/src/cli.ts",
+   "old": "  status: {\n    synopsis: 'status <run>',\n    args: { kind: 'one', noun: RUN },\n    run: ({ positional: [run] }, ctx) => {\n      const result = runStatus(run!, ctx.now);\n      if (!result.ok) return ctx.refused({ command: 'status', outcome: 'refused', reason: result.reason, ...(result.refusals ? { refusals: result.refusals } : {}) });\n      return ctx.report(result.report, EXIT.clean);\n    },\n  },\n",
+   "new": ""
+  },
+  {
+   "file": "packages/polaris-dossier/src/cli.ts",
+   "old": "  preflight: {\n",
+   "new": "  status: {\n    synopsis: 'status <run>',\n    args: { kind: 'one', noun: RUN },\n    run: ({ positional: [run] }, ctx) => {\n      const result = runStatus(run!, ctx.now);\n      if (!result.ok) return ctx.refused({ command: 'status', outcome: 'refused', reason: result.reason, ...(result.refusals ? { refusals: result.refusals } : {}) });\n      return ctx.report(result.report, EXIT.clean);\n    },\n  },\n  preflight: {\n"
+  }
+ ]
+}

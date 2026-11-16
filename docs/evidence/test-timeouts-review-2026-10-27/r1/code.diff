@@ -1,0 +1,1031 @@
+diff --git a/apps/three-surface-poc/src/cdp-browser.browser.test.ts b/apps/three-surface-poc/src/cdp-browser.browser.test.ts
+index bcbbbf6c..6ef50aba 100644
+--- a/apps/three-surface-poc/src/cdp-browser.browser.test.ts
++++ b/apps/three-surface-poc/src/cdp-browser.browser.test.ts
+@@ -79,7 +79,7 @@ describe.skipIf(executable === undefined || process.platform !== 'linux')('dispo
+       // A failure before close() would otherwise leak this browser.
+       if (!closeAttempted) await browser.close().catch(() => undefined);
+     }
+-  }, 60_000);
++  }, 60_000); // a real Chrome launch and forced teardown: worst 15.8 s over 5 alone runs at load1 91-138, the worst run failing not by timeout (docs/evidence/syzygy-bpyt-4-31/durations/cdp-browser.browser.test.tests.json)
+ 
+   it('leaves no Chrome singleton directory behind when the leader is killed', async () => {
+     const browser = await launchBrowser(executable as string);
+@@ -109,5 +109,5 @@ describe.skipIf(executable === undefined || process.platform !== 'linux')('dispo
+       for (const pid of frozen.filter(alive)) process.kill(pid, 'SIGKILL');
+       if (!closeAttempted) await browser.close().catch(() => undefined);
+     }
+-  }, 60_000);
++  }, 60_000); // a real Chrome launch and forced teardown: worst 12.6 s over 5 alone runs at load1 91-138 (docs/evidence/syzygy-bpyt-4-31/durations/cdp-browser.browser.test.tests.json)
+ });
+diff --git a/apps/three-surface-poc/src/cdp-browser.test.ts b/apps/three-surface-poc/src/cdp-browser.test.ts
+index c340dcfe..063927b0 100644
+--- a/apps/three-surface-poc/src/cdp-browser.test.ts
++++ b/apps/three-surface-poc/src/cdp-browser.test.ts
+@@ -332,7 +332,7 @@ describe('Chrome singleton directory (syzygy-bpyt.4.11)', () => {
+     singletonDirectory(root, '.com.google.Chrome.Another');
+     removeBrowserProfile(profile, { singleton: recorded(mine) });
+     expect(entries(root)).toEqual(['.com.google.Chrome.Another']);
+-  }, 30_000);
++  });
+ 
+   it('reads the directory from the profile\'s link when none was read while Chrome ran', () => {
+     const { root, profile } = privateTemp();
+@@ -341,14 +341,14 @@ describe('Chrome singleton directory (syzygy-bpyt.4.11)', () => {
+     symlinkSync(join(mine, 'SingletonSocket'), join(profile, 'SingletonSocket'));
+     removeBrowserProfile(profile);
+     expect(entries(root)).toEqual(['.com.google.Chrome.Another']);
+-  }, 30_000);
++  });
+ 
+   it('removes the Chromium form of the name too', () => {
+     const { root, profile } = privateTemp();
+     const mine = singletonDirectory(root, '.org.chromium.Chromium.MyOwn1');
+     removeBrowserProfile(profile, { singleton: recorded(mine) });
+     expect(entries(root)).toEqual([]);
+-  }, 30_000);
++  });
+ 
+   it('removes the name without a leading dot too, which Chrome 147 to 155 make, whether given or read from the link', () => {
+     const { root, profile } = privateTemp();
+@@ -361,14 +361,14 @@ describe('Chrome singleton directory (syzygy-bpyt.4.11)', () => {
+     symlinkSync(join(read, 'SingletonSocket'), join(profile, 'SingletonSocket'));
+     removeBrowserProfile(profile);
+     expect(entries(root)).toEqual(['com.google.Chrome.Another']);
+-  }, 30_000);
++  });
+ 
+   it('removes the profile and nothing else when Chrome left no singleton directory (a clean exit)', () => {
+     const { root, profile } = privateTemp();
+     singletonDirectory(root, '.com.google.Chrome.Another');
+     removeBrowserProfile(profile);
+     expect(entries(root)).toEqual(['.com.google.Chrome.Another']);
+-  }, 30_000);
++  });
+ 
+   it('keeps a directory that is not directly under the temp directory, whether it was given or read from the link', () => {
+     const { root, profile } = privateTemp();
+@@ -380,7 +380,7 @@ describe('Chrome singleton directory (syzygy-bpyt.4.11)', () => {
+     removeBrowserProfile(profile);
+     expect(existsSync(join(nested, 'SingletonSocket'))).toBe(true);
+     expect(existsSync(profile)).toBe(false);
+-  }, 30_000);
++  });
+ 
+   it('keeps a directory whose name is not exactly Chrome\'s: another prefix, no suffix, a longer name, a symbol in the suffix', () => {
+     const { root, profile } = privateTemp();
+@@ -398,7 +398,7 @@ describe('Chrome singleton directory (syzygy-bpyt.4.11)', () => {
+       mkdirSync(profile);
+     }
+     expect(entries(root)).toEqual([...names, 'syzygy-poc-browser-AbCdEf'].sort());
+-  }, 30_000);
++  });
+ 
+   it('follows no link and removes no file: a link to a directory and a plain file with Chrome\'s name both stay', () => {
+     const { root, profile } = privateTemp();
+@@ -414,7 +414,7 @@ describe('Chrome singleton directory (syzygy-bpyt.4.11)', () => {
+     expect(lstatSync(join(root, '.com.google.Chrome.LinkTo')).isSymbolicLink()).toBe(true);
+     expect(existsSync(join(outside, 'SingletonSocket'))).toBe(true);
+     expect(existsSync(join(root, '.com.google.Chrome.AFile1'))).toBe(true);
+-  }, 30_000);
++  });
+ 
+   it('keeps a directory that belongs to another user, never entering it', () => {
+     const { root, profile } = privateTemp();
+@@ -423,7 +423,7 @@ describe('Chrome singleton directory (syzygy-bpyt.4.11)', () => {
+     vi.spyOn(posix, 'getuid').mockReturnValue(posix.getuid() + 1);
+     removeBrowserProfile(profile, { singleton: recorded(theirs) });
+     expect(existsSync(join(theirs, 'SingletonSocket'))).toBe(true);
+-  }, 30_000);
++  });
+ 
+   it('checks no user where the system has no user ids, and removes the directory', () => {
+     const { root, profile } = privateTemp();
+@@ -436,26 +436,26 @@ describe('Chrome singleton directory (syzygy-bpyt.4.11)', () => {
+       Object.defineProperty(process, 'getuid', { value: original, configurable: true, writable: true });
+     }
+     expect(entries(root)).toEqual([]);
+-  }, 30_000);
++  });
+ 
+   it('removes the directory a profile\'s link names when the profile and the link are the running user\'s, whatever removes the profile', () => {
+     const { profile, victim } = linkedProfile();
+     removeBrowserProfile(profile, { remove: () => undefined });
+     expect(existsSync(victim)).toBe(false);
+-  }, 30_000);
++  });
+ 
+   it('keeps the directory a link names when the profile is not the running user\'s, as in a shared temp directory where another user made it first', () => {
+     const { profile, victim } = linkedProfile();
+     removeBrowserProfile(profile, { remove: () => undefined, lstat: lstatWith(profile, { uid: lstatSync(profile, { bigint: true }).uid + 1n }) });
+     expect(existsSync(join(victim, 'SingletonSocket'))).toBe(true);
+-  }, 30_000);
++  });
+ 
+   it('keeps the directory a link names when the link is not the running user\'s', () => {
+     const { profile, victim } = linkedProfile();
+     const link = join(profile, 'SingletonSocket');
+     removeBrowserProfile(profile, { remove: () => undefined, lstat: lstatWith(link, { uid: lstatSync(link, { bigint: true }).uid + 1n }) });
+     expect(existsSync(join(victim, 'SingletonSocket'))).toBe(true);
+-  }, 30_000);
++  });
+ 
+   it('keeps a directory made under the same name after the one that was read, as when Chrome exits cleanly and another Chrome follows', () => {
+     const { root, profile } = privateTemp();
+@@ -467,7 +467,7 @@ describe('Chrome singleton directory (syzygy-bpyt.4.11)', () => {
+     const later = singletonDirectory(root, '.com.google.Chrome.MyOwn1');
+     removeBrowserProfile(profile, { singleton: atLaunch });
+     expect(existsSync(join(later, 'SingletonSocket'))).toBe(true);
+-  }, 30_000);
++  });
+ 
+   it('keeps a directory with the recorded inode number on another device', () => {
+     const { root, profile } = privateTemp();
+@@ -475,7 +475,7 @@ describe('Chrome singleton directory (syzygy-bpyt.4.11)', () => {
+     const atLaunch = recorded(mine);
+     removeBrowserProfile(profile, { singleton: atLaunch, lstat: lstatWith(mine, { dev: atLaunch.dev + 1n }) });
+     expect(existsSync(join(mine, 'SingletonSocket'))).toBe(true);
+-  }, 30_000);
++  });
+ 
+   it('does not fail the run when the singleton directory cannot be removed', ({ skip }) => {
+     // A process running as root ignores directory permission bits, so the removal below cannot be made to fail.
+@@ -486,5 +486,5 @@ describe('Chrome singleton directory (syzygy-bpyt.4.11)', () => {
+     expect(() => removeBrowserProfile(profile, { singleton: recorded(stuck) })).not.toThrow();
+     expect(existsSync(profile)).toBe(false);
+     expect(existsSync(join(stuck, 'SingletonSocket'))).toBe(true);
+-  }, 30_000);
++  });
+ });
+diff --git a/apps/three-surface-poc/src/fixture-directories.test.ts b/apps/three-surface-poc/src/fixture-directories.test.ts
+index f3973809..4e9ed3e3 100644
+--- a/apps/three-surface-poc/src/fixture-directories.test.ts
++++ b/apps/three-surface-poc/src/fixture-directories.test.ts
+@@ -24,8 +24,6 @@ const OTHER_NS = String(Number(NS) + 1);
+ const sweeping = it.skipIf(ownNamespace() === undefined);
+ 
+ describe('fixture directories a killed run left behind (syzygy-bpyt.4.10)', () => {
+-  // 30 s each, as in test-model-fixture.test.ts: importing the config took more than the 5 s default under a load
+-  // average of 95, and many of these tests wait for a child node process to start and exit.
+   const privateTmp: string[] = [];
+   afterEach(() => {
+     vi.restoreAllMocks();
+@@ -60,7 +58,7 @@ describe('fixture directories a killed run left behind (syzygy-bpyt.4.10)', () =
+     make(tmp, `${FIXTURE_PREFIX}p${dead}-n${NS}-AbCdEf`, `${FIXTURE_PREFIX}template-p${dead}-n${NS}-AbCdEf`);
+     removeFixturesOfDeadProcesses(tmp);
+     expect(entries(tmp)).toEqual([]);
+-  }, 30_000);
++  });
+ 
+   it('keeps the directories of a live process, the current one included', () => {
+     const tmp = newTmp();
+@@ -68,7 +66,7 @@ describe('fixture directories a killed run left behind (syzygy-bpyt.4.10)', () =
+     make(tmp, ...mine);
+     removeFixturesOfDeadProcesses(tmp);
+     expect(entries(tmp)).toEqual([...mine].sort());
+-  }, 30_000);
++  });
+ 
+   it('keeps a name that carries no pid and namespace segment, whatever its suffix', async () => {
+     const tmp = newTmp();
+@@ -91,7 +89,7 @@ describe('fixture directories a killed run left behind (syzygy-bpyt.4.10)', () =
+     make(tmp, ...kept);
+     removeFixturesOfDeadProcesses(tmp);
+     expect(entries(tmp)).toEqual([...kept].sort());
+-  }, 30_000);
++  });
+ 
+   it('keeps a directory whose pid fails with anything but ESRCH', async () => {
+     const tmp = newTmp();
+@@ -106,7 +104,7 @@ describe('fixture directories a killed run left behind (syzygy-bpyt.4.10)', () =
+     });
+     removeFixturesOfDeadProcesses(tmp);
+     expect(entries(tmp)).toEqual([denied, outOfRange].sort());
+-  }, 30_000);
++  });
+ 
+   sweeping('follows no symlink and removes no file: only a directory with a dead pid in its name goes', async () => {
+     const tmp = newTmp();
+@@ -125,7 +123,7 @@ describe('fixture directories a killed run left behind (syzygy-bpyt.4.10)', () =
+     expect(entries(swept)).toEqual([file, link].sort());
+     expect(lstatSync(join(swept, link)).isSymbolicLink()).toBe(true);
+     expect(existsSync(join(outside, 'precious', 'keep.txt'))).toBe(true);
+-  }, 30_000);
++  });
+ 
+   sweeping('keeps the directories of a dead pid that belong to another PID namespace, whatever the neighbouring value', async () => {
+     const tmp = newTmp();
+@@ -139,7 +137,7 @@ describe('fixture directories a killed run left behind (syzygy-bpyt.4.10)', () =
+     make(tmp, ...foreign, `${FIXTURE_PREFIX}p${dead}-n${NS}-Own123`);
+     removeFixturesOfDeadProcesses(tmp);
+     expect(entries(tmp)).toEqual([...foreign].sort());
+-  }, 30_000);
++  });
+ 
+   // A reading that is absent (no /proc, a tmpfs over it) and one that names no inode are the same to the sweep.
+   it.each([
+@@ -183,7 +181,7 @@ describe('fixture directories a killed run left behind (syzygy-bpyt.4.10)', () =
+     }
+     expect(entries(tmp)).toEqual([...unread].sort());
+     expect(listings).toEqual([]);
+-  }, 30_000);
++  });
+ 
+   it('keeps a directory that belongs to another user, the sweep never descending into it', async () => {
+     const tmp = newTmp();
+@@ -195,7 +193,7 @@ describe('fixture directories a killed run left behind (syzygy-bpyt.4.10)', () =
+     removeFixturesOfDeadProcesses(tmp);
+     expect(entries(tmp)).toEqual([theirs]);
+     expect(existsSync(join(tmp, theirs, 'repo', 'README.md'))).toBe(true);
+-  }, 30_000);
++  });
+ 
+   sweeping('checks no user where the system has no user ids, and removes the dead process\'s directory', async () => {
+     const tmp = newTmp();
+@@ -209,7 +207,7 @@ describe('fixture directories a killed run left behind (syzygy-bpyt.4.10)', () =
+       Object.defineProperty(process, 'getuid', { value: original, configurable: true, writable: true });
+     }
+     expect(entries(tmp)).toEqual([]);
+-  }, 30_000);
++  });
+ 
+   it('does not fail the run when the temp directory cannot be listed', async () => {
+     const tmp = newTmp();
+@@ -224,7 +222,7 @@ describe('fixture directories a killed run left behind (syzygy-bpyt.4.10)', () =
+       chmodSync(tmp, 0o755);
+     }
+     expect(entries(tmp)).toEqual([stuck]);
+-  }, 30_000);
++  });
+ 
+   it('lists only the directory it is given: nothing beside it, nothing below a non-fixture entry', async () => {
+     const tmp = newTmp();
+@@ -238,7 +236,7 @@ describe('fixture directories a killed run left behind (syzygy-bpyt.4.10)', () =
+     removeFixturesOfDeadProcesses(swept);
+     expect(existsSync(join(tmp, beside))).toBe(true);
+     expect(existsSync(join(swept, below))).toBe(true);
+-  }, 30_000);
++  });
+ 
+   sweeping('does not fail the run when a dead process\'s directory cannot be removed', async () => {
+     const tmp = newTmp();
+@@ -253,7 +251,7 @@ describe('fixture directories a killed run left behind (syzygy-bpyt.4.10)', () =
+     } finally {
+       chmodSync(join(tmp, stuck), 0o755);
+     }
+-  }, 30_000);
++  });
+ 
+   sweeping('sweeps the temp directory the process runs under when the global setup runs, and keeps the live and the legacy', async () => {
+     const tmp = newTmp();
+@@ -263,7 +261,7 @@ describe('fixture directories a killed run left behind (syzygy-bpyt.4.10)', () =
+     vi.stubEnv('TMPDIR', tmp);
+     removeFixturesOfKilledRuns();
+     expect(entries(tmp)).toEqual([...survivors].sort());
+-  }, 30_000);
++  });
+ 
+   sweeping('asks the operating system for the temp directory, so it sweeps the same directory the copies are made in when TMPDIR is unset', async () => {
+     const tmp = newTmp();
+@@ -281,7 +279,7 @@ describe('fixture directories a killed run left behind (syzygy-bpyt.4.10)', () =
+       vi.resetModules();
+     }
+     expect(entries(tmp)).toEqual([live]);
+-  }, 30_000);
++  });
+ 
+   it('is registered as a global setup of the app project and of no other project, so it runs once per run', async () => {
+     const config = (await import(/* @vite-ignore */ new URL('../../../vitest.config.ts', import.meta.url).href)).default as {
+@@ -293,5 +291,5 @@ describe('fixture directories a killed run left behind (syzygy-bpyt.4.10)', () =
+     const files = withSetup[0]?.test.globalSetup ?? [];
+     expect(files).toHaveLength(1);
+     expect(files[0]?.endsWith('/apps/three-surface-poc/src/test-fixture-sweep.global-setup.ts')).toBe(true);
+-  }, 30_000);
++  }, 30_000); // importing the config timed out at the 5 s default at load 95 (3f08143c)
+ });
+diff --git a/apps/three-surface-poc/src/git-blob-batch.test.ts b/apps/three-surface-poc/src/git-blob-batch.test.ts
+index abbbea6e..197c2ff7 100644
+--- a/apps/three-surface-poc/src/git-blob-batch.test.ts
++++ b/apps/three-surface-poc/src/git-blob-batch.test.ts
+@@ -21,9 +21,10 @@ import { readSelfCorpus } from './polaris-generation/self-corpus.js';
+ const REPO_ROOT = fileURLToPath(new URL('../../../', import.meta.url)).replace(/\/$/, '');
+ const PINNED_MAIN = '133106eb0f2564f1cefddd19d11985f1b2619397';
+ const EVALUATION_INSTANT = '2026-10-03T00:00:00Z';
+-// Real-tree reads spawn git; under the parallel-load protocol a hundred
+-// single reads took up to 13 s (syzygy-svoj evidence), so these tests carry
+-// an explicit budget.
++// Real-tree reads spawn git, once per single read: the three real-tree
++// tests took up to 28.4 s over 5 alone runs at load1 60-88
++// (docs/evidence/syzygy-bpyt-4-31/durations/git-blob-batch.test.tests.json),
++// so they carry an explicit budget.
+ const REAL_TREE_TIMEOUT_MS = 120_000;
+ 
+ const bytes = (text: string): Uint8Array => new TextEncoder().encode(text);
+diff --git a/apps/three-surface-poc/src/governing-intent-sweep.test.ts b/apps/three-surface-poc/src/governing-intent-sweep.test.ts
+index 33c5405f..dffa8ee9 100644
+--- a/apps/three-surface-poc/src/governing-intent-sweep.test.ts
++++ b/apps/three-surface-poc/src/governing-intent-sweep.test.ts
+@@ -165,7 +165,7 @@ beforeAll(() => {
+   model = buildFixtureModel(cleanups, { workItemRows: rows() });
+   answer = JSON.parse(JSON.stringify(model)) as Obj;
+   html = renderTrajectoryPage(model);
+-}, 60_000);
++});
+ 
+ afterAll(() => {
+   for (const directory of cleanups.splice(0)) rmSync(directory, { recursive: true, force: true });
+diff --git a/apps/three-surface-poc/src/keyboard-sweep-record.test.ts b/apps/three-surface-poc/src/keyboard-sweep-record.test.ts
+index 0956decd..9d950761 100644
+--- a/apps/three-surface-poc/src/keyboard-sweep-record.test.ts
++++ b/apps/three-surface-poc/src/keyboard-sweep-record.test.ts
+@@ -56,7 +56,7 @@ describe('the evaluation a swept page names (rule 11; syzygy-buzg)', () => {
+     const other = buildFixtureModel(cleanups, { projectShape: { authority: ADMITTING_AUTHORITY, runGit: projectShapeFixtureGit() }, walkthroughJudgment: walkthroughJudgmentFixture('absent-run-record'), evaluationAsOf: '2026-09-01T00:00:00Z' });
+     expect(servedEvaluationBinding(renderPolarisPage(other))).toEqual({ butlersRevision: other.evaluation.evidence.pinnedRevision, evaluationIdentity: evaluationIdentity(other), walkthroughEvaluationIdentity: expected.walkthroughEvaluationIdentity });
+     expect(evaluationIdentity(other)).not.toBe(expected.evaluationIdentity);
+-  }, 30_000); // two fixture model builds, ~1.5 s each unloaded; the 5 s default failed such tests under suite load (syzygy-k66p)
++  }, 30_000); // two fixture model builds: worst 4.9 s over 5 alone runs at load1 86-114 (docs/evidence/syzygy-bpyt-4-31/durations/keyboard-sweep-record.test.tests.json); the 5 s default failed such tests under suite load (syzygy-k66p)
+ 
+   it('decodes the escaped footer and refuses a page that names no evaluation, two, or an abbreviated revision', () => {
+     expect(servedEvaluationBinding(page(probe(REVISION) + footer('repository:x@y|inputs:a&amp;b', '2026-10-04T00:00:00Z') + expectedBinding(WALKTHROUGH)))).toEqual({
+diff --git a/apps/three-surface-poc/src/orrery.browser.test.ts b/apps/three-surface-poc/src/orrery.browser.test.ts
+index fe8239dd..83ef4791 100644
+--- a/apps/three-surface-poc/src/orrery.browser.test.ts
++++ b/apps/three-surface-poc/src/orrery.browser.test.ts
+@@ -21,7 +21,7 @@ describe.skipIf(executable === undefined)('Orrery rendered geometry', () => {
+ 
+   beforeAll(async () => {
+     browser = await launchBrowser(executable as string);
+-  }, 60_000);
++  });
+ 
+   afterAll(async () => {
+     await browser?.close();
+diff --git a/apps/three-surface-poc/src/polaris-accessibility.browser.test.ts b/apps/three-surface-poc/src/polaris-accessibility.browser.test.ts
+index 29abaea1..23d122d9 100644
+--- a/apps/three-surface-poc/src/polaris-accessibility.browser.test.ts
++++ b/apps/three-surface-poc/src/polaris-accessibility.browser.test.ts
+@@ -88,7 +88,7 @@ describe.skipIf(executable === undefined)('Polaris keyboard, non-visual and cont
+     const warm = await browser.newPage();
+     try { await warm.navigate(pageUrl(ACCESSIBILITY_VARIANTS[0] as AccessibilityVariant).url); }
+     finally { await warm.close(); }
+-  }, 60_000);
++  }, 60_000); // launches Chrome and loads one page: up to 2.8 s in 10 alone runs, but a full-suite run at load1 56-58 left up to 8.0 s of its file's time to its hooks (docs/evidence/syzygy-bpyt-4-31/full-runs.json)
+ 
+   afterAll(async () => {
+     await browser?.close();
+@@ -307,7 +307,7 @@ describe.skipIf(executable === undefined)('Polaris keyboard, non-visual and cont
+       expect(report.activations.filter((activation, index) => index > 0 && activation.href === report.activations[index - 1]?.href)).toHaveLength(6);
+       expect(report.violations).toEqual([]);
+     } finally { await page.close(); }
+-  }, 240_000);
++  }, 240_000); // over two hundred fragment activations in a real browser: worst 74.6 s over 5 alone runs at load1 20-91 (docs/evidence/syzygy-bpyt-4-31/durations/polaris-accessibility.browser.test.tests.json)
+ 
+   for (const variant of ACCESSIBILITY_VARIANTS) {
+     it(`${variant.id}: every distinction is keyboard-operable, named for assistive technology, and AA-contrasting`, async () => {
+@@ -329,6 +329,6 @@ describe.skipIf(executable === undefined)('Polaris keyboard, non-visual and cont
+       expect(expectedTargets.length).toBeGreaterThan(0);
+ 
+       expect(report.violations).toEqual([]);
+-    }, 240_000);
++    }, 240_000); // a full keyboard, accessibility-tree and contrast sweep of one page: worst 77.4 s over 30 alone runs (6 variants) at load1 20-91 (docs/evidence/syzygy-bpyt-4-31/durations/polaris-accessibility.browser.test.tests.json)
+   }
+ });
+diff --git a/apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts b/apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts
+index cb97c881..dfa83bf3 100644
+--- a/apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts
++++ b/apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts
+@@ -184,7 +184,7 @@ describe.skipIf(executable === undefined)('PWB-REQ-016 names and headings in a r
+   beforeAll(async () => {
+     browser = await launchBrowser(executable as string);
+     pages = mkdtempSync(join(tmpdir(), 'syzygy-poc-names-'));
+-  }, 60_000);
++  });
+ 
+   afterAll(async () => {
+     await browser?.close();
+@@ -312,7 +312,7 @@ describe.skipIf(executable === undefined)('PWB-REQ-016 names and headings in a r
+     // one of them carries its source path (the rule is exercised, not vacuous).
+     expect((report.pages[0] as PageNameHeadingReport).sharedLabelGroups).toBeGreaterThan(0);
+     expect(report.violations).toEqual([]);
+-  }, 240_000);
++  }, 240_000); // a fixture model build and a browser sweep of every served page: worst 5.6 s over 5 alone runs at load1 35-42 (docs/evidence/syzygy-bpyt-4-31/durations/polaris-accessible-names.browser.test.tests.json)
+ 
+   it('fails a listed page the daemon does not serve, never skipping it', async () => {
+     const model = buildFixtureModel(cleanups, { projectShape: { authority: ADMITTING_AUTHORITY, runGit: projectShapeFixtureGit(PROJECT_SHAPE_FIXTURE_TEXTS_WITH_BASELINE_SPEC) } });
+@@ -326,7 +326,7 @@ describe.skipIf(executable === undefined)('PWB-REQ-016 names and headings in a r
+       expect({ listed: report.pagesListed, swept: report.pagesSwept }).toEqual({ listed: 17, swept: 16 });
+       expect(report.violations.map((violation) => violation.kind)).toEqual(['page-not-served', 'page-not-swept']);
+     } finally { await tab.close(); }
+-  }, 240_000);
++  }, 240_000); // a fixture model build, a daemon and a browser sweep: worst 4.1 s over 5 alone runs at load1 35-42 (docs/evidence/syzygy-bpyt-4-31/durations/polaris-accessible-names.browser.test.tests.json)
+ 
+   // Every shape and judgment state the task-4.4 variants render, each served
+   // whole: a degraded or refused shape lists fewer sources, never none silently.
+@@ -340,6 +340,6 @@ describe.skipIf(executable === undefined)('PWB-REQ-016 names and headings in a r
+       expect({ listed: report.pagesListed, swept: report.pagesSwept }).toEqual({ listed: EXPECTED_PAGES[variant.id], swept: EXPECTED_PAGES[variant.id] });
+       for (const swept of report.pages) expect(swept.levelOneHeadings, swept.page).toBe(1);
+       expect(report.violations).toEqual([]);
+-    }, 240_000);
++    }, 240_000); // a browser sweep of every served page: worst 5.0 s over 30 alone runs (6 variants) at load1 35-42 (docs/evidence/syzygy-bpyt-4-31/durations/polaris-accessible-names.browser.test.tests.json)
+   }
+ });
+diff --git a/apps/three-surface-poc/src/polaris-copy.test.ts b/apps/three-surface-poc/src/polaris-copy.test.ts
+index 492d5cd0..64ed26b0 100644
+--- a/apps/three-surface-poc/src/polaris-copy.test.ts
++++ b/apps/three-surface-poc/src/polaris-copy.test.ts
+@@ -223,7 +223,7 @@ function deepFreeze<T>(value: T): T {
+ // protocol is recorded in docs/evidence/poc-test-timeouts-2026-10-03.json.
+ beforeAll(() => {
+   for (const variant of VARIANTS) VARIANT_MODELS.set(variant, deepFreeze(buildVariant(variant, variantCleanups)));
+-}, 60_000);
++}, 60_000); // before this hoist, tests building these models took up to 13.1 s each under parallel load (docs/evidence/poc-test-timeouts-2026-10-03.json)
+ 
+ afterAll(() => {
+   for (const directory of variantCleanups.splice(0)) {
+diff --git a/apps/three-surface-poc/src/polaris-generation/dossier-cap-measure.test.ts b/apps/three-surface-poc/src/polaris-generation/dossier-cap-measure.test.ts
+index eb9ee8c5..9de32057 100644
+--- a/apps/three-surface-poc/src/polaris-generation/dossier-cap-measure.test.ts
++++ b/apps/three-surface-poc/src/polaris-generation/dossier-cap-measure.test.ts
+@@ -9,7 +9,7 @@ let scratch = '', measured: DossierCapMeasurement;
+ beforeAll(async () => {
+   scratch = mkdtempSync(join(tmpdir(), 'syzygy-dossier-cap-'));
+   measured = await measureDossierCapSelection(join(scratch, 'repo'));
+-}, 120_000);
++});
+ afterAll(() => rmSync(scratch, { recursive: true, force: true }));
+ 
+ describe('what heuristic discovery reads under the dossier cap on the design-prose fixture (no model)', () => {
+diff --git a/apps/three-surface-poc/src/polaris-generation/draft-preview.browser.test.ts b/apps/three-surface-poc/src/polaris-generation/draft-preview.browser.test.ts
+index 32f9ed6e..f3d9050a 100644
+--- a/apps/three-surface-poc/src/polaris-generation/draft-preview.browser.test.ts
++++ b/apps/three-surface-poc/src/polaris-generation/draft-preview.browser.test.ts
+@@ -44,4 +44,4 @@ it.skipIf(executable === undefined)('renders the pipeline draft with working dia
+     try { await browser?.close(); }
+     finally { await rm(directory, { recursive: true, force: true }); }
+   }
+-}, 30_000);
++}, 30_000); // a pipeline draft in a real browser: timed out at the 5 s default in 1 of 5 full-suite runs at load1 38-71, up to 4.1 s in the others (docs/evidence/syzygy-bpyt-4-31/full-runs.json)
+diff --git a/apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts b/apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts
+index 3bd9e2ea..93231579 100644
+--- a/apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts
++++ b/apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts
+@@ -31,8 +31,6 @@ function lifecycle(stateDir: string, stub: Stub, generate: (stage: string, permi
+ const ok = (stage: string, usageUnits = 1): ProviderReply => ({ body: JSON.stringify({ stage }), model: 'stub-live-v1', usageUnits });
+ const journal = (stateDir: string): { state: string; permit: DispatchPermit }[] =>
+   readdirSync(stateDir).filter(name => name.endsWith('.json')).map(name => JSON.parse(readFileSync(join(stateDir, name), 'utf8')));
+-// Each journal write fsyncs; see the budget note in durable-lifecycle.test.ts.
+-const T = 30_000;
+ 
+ describe('durable lifecycle with an injected generate port', () => {
+   it('runs the pipeline through the injected port with its permit and abort signal', async () => {
+@@ -42,7 +40,7 @@ describe('durable lifecycle with an injected generate port', () => {
+     expect(stub.calls.map(call => call.stage)).toEqual(['inventory', 'plan', 'author', 'edit', 'fidelity']);
+     expect(stub.calls.every(call => call.permit.maxUsageUnits === 5 && call.permit.maxOutputBytes === 10_000 && call.signal instanceof AbortSignal)).toBe(true);
+     expect(journal(stateDir).every(entry => entry.state === 'completed')).toBe(true);
+-  }, T);
++  });
+ 
+   it('reserves the configured per-attempt ceilings, capped by the request budget', async () => {
+     const stateDir = scratch(), stub: Stub = { calls: [] };
+@@ -51,7 +49,7 @@ describe('durable lifecycle with an injected generate port', () => {
+     const capped: Stub = { calls: [] };
+     await runGenerationPipeline(request({ maxUsageUnits: 12, maxOutputBytes: 8_000 }), lifecycle(scratch(), capped, async stage => ok(stage, 1), { maxAttemptUsageUnits: 30, maxAttemptOutputBytes: 50_000 }), new AbortController().signal);
+     expect(capped.calls[0]!.permit).toMatchObject({ maxUsageUnits: 12, maxOutputBytes: 8_000 });
+-  }, T);
++  });
+ 
+   it('has no default ceilings: a missing or malformed one is refused at construction, before any state', () => {
+     const dir = join(scratch(), 'state');
+@@ -82,7 +80,7 @@ describe('durable lifecycle with an injected generate port', () => {
+     const resumed = await runGenerationPipeline(same, lifecycle(stateDir, second, async stage => ok(stage)), new AbortController().signal);
+     expect(resumed).toMatchObject({ status: 'stopped', reason: 'effect-uncertain' });
+     expect(second.calls).toEqual([]);
+-  }, T);
++  });
+ 
+   it('a crash while a call is in flight leaves a claim that refuses any replay, even by a fresh lifecycle', async () => {
+     const stateDir = scratch(), first: Stub = { calls: [] }, same = request();
+@@ -100,7 +98,7 @@ describe('durable lifecycle with an injected generate port', () => {
+     expect(second.calls).toEqual([]);
+     abort.abort();
+     void running.catch(() => undefined);
+-  }, T);
++  });
+ 
+   it('reuses completed checkpoints after a restart and sends only the missing stage through the new port', async () => {
+     const stateDir = scratch(), first: Stub = { calls: [] }, same = request();
+@@ -112,7 +110,7 @@ describe('durable lifecycle with an injected generate port', () => {
+     expect(done.status).toBe('awaiting-rendered-review');
+     expect(second.calls.map(call => call.stage)).toEqual(['fidelity']);
+     expect(done.receipts.map(receipt => receipt.reused)).toEqual([true, true, true, true, false]);
+-  }, T);
++  });
+ 
+   it('releases an attempt whose per-call permission is withdrawn without calling generate, and only an exact true permits', async () => {
+     for (const answer of [false, undefined, 'yes', 1]) {
+@@ -124,5 +122,5 @@ describe('durable lifecycle with an injected generate port', () => {
+       expect(seen).toHaveLength(1);
+       expect(journal(stateDir).map(entry => entry.state)).toEqual(['released']);
+     }
+-  }, T);
++  });
+ });
+diff --git a/apps/three-surface-poc/src/polaris-generation/self-corpus.test.ts b/apps/three-surface-poc/src/polaris-generation/self-corpus.test.ts
+index fddc4aa9..39fb1090 100644
+--- a/apps/three-surface-poc/src/polaris-generation/self-corpus.test.ts
++++ b/apps/three-surface-poc/src/polaris-generation/self-corpus.test.ts
+@@ -43,7 +43,7 @@ describe('zero-egress Syzygy self-corpus proof', () => {
+     expect(report.networkCalls).toBe(0);
+     expect(report.realProjectProof).toBe(false);
+     expect(report.unmetReq014).toContain('two separately admitted real projects');
+-  }, 30_000);
++  }, 30_000); // the self-corpus proof over the real tree: timed out at the 5 s default in 2 of 5 full-suite runs at load1 38-71, up to 4.6 s in the others (docs/evidence/syzygy-bpyt-4-31/full-runs.json)
+ 
+   it('refuses a requested pinned commit that is unavailable rather than substituting HEAD', () => {
+     expect(() => readSelfCorpus(process.cwd(), '0'.repeat(40))).toThrow();
+diff --git a/apps/three-surface-poc/src/polaris-opening-index.browser.test.ts b/apps/three-surface-poc/src/polaris-opening-index.browser.test.ts
+index 4e5076b9..eecffe8f 100644
+--- a/apps/three-surface-poc/src/polaris-opening-index.browser.test.ts
++++ b/apps/three-surface-poc/src/polaris-opening-index.browser.test.ts
+@@ -313,7 +313,7 @@ describe.skipIf(executable === undefined)('opening index in a real browser (PWB-
+   beforeAll(async () => {
+     browser = await launchBrowser(executable as string);
+     pages = mkdtempSync(join(tmpdir(), 'syzygy-poc-opening-index-'));
+-  }, 60_000);
++  }, 60_000); // launches Chrome: under 0.6 s in 10 alone runs, but a full-suite run at load1 56-71 left up to 5.1 s of its file's time to its hooks (docs/evidence/syzygy-bpyt-4-31/full-runs.json)
+ 
+   afterAll(async () => {
+     await browser?.close();
+@@ -349,7 +349,7 @@ describe.skipIf(executable === undefined)('opening index in a real browser (PWB-
+       expect(report.violations).toEqual([]);
+       expect(report.viewport).toEqual(viewport);
+       expect(report.rows.filter((row) => 'offset' in row)).toHaveLength(9);
+-    }, 60_000);
++    }, 60_000); // up to 4.2 s in 5 full-suite runs at load1 38-71 (docs/evidence/syzygy-bpyt-4-31/full-runs.json)
+ 
+     it(`the opening Unknown aggregate is absent (${viewport.width}x${viewport.height}): the gaps row says so and routes nowhere; eight rows route`, async () => {
+       const report = await run('observed', variant('observed'), viewport);
+@@ -361,13 +361,13 @@ describe.skipIf(executable === undefined)('opening index in a real browser (PWB-
+       // closed item population: the line stands after that disclosure.
+       expect(report.setter).toBe('exact-requirement');
+       expect(report.setterInsideClosedDetails).toBe(true);
+-    }, 60_000);
++    });
+ 
+     it(`an unobserved shape (${viewport.width}x${viewport.height}): only the gaps and claim-strength targets render`, async () => {
+       const report = await run('not-admitted', variant('not-admitted'), viewport);
+       expect(report.violations).toEqual([]);
+       expect(report.rows.filter((row) => 'offset' in row).map((row) => row.identity)).toEqual(['unknown-or-contradiction', 'claim-strength']);
+-    }, 60_000);
++    }, 60_000); // up to 2.7 s in 5 full-suite runs at load1 38-71 (docs/evidence/syzygy-bpyt-4-31/full-runs.json)
+   }
+ 
+   /** Follows the exact-requirement row by keyboard (focus, Enter, Tab) and
+@@ -405,12 +405,12 @@ describe.skipIf(executable === undefined)('opening index in a real browser (PWB-
+   // navigation and focuses the link, and Tab continues from it.
+   it('following the exact-requirement row by keyboard lands on its target and Tab continues from it (fixture render)', async () => {
+     expect(await followExactRow(variant('observed'), 'keyboard-exact')).toEqual({ inClosed: true, onTarget: true, open: true, nextInside: false, tabContinued: true });
+-  }, 60_000);
++  });
+ 
+   it('the same holds where a later control shares the target\'s disclosure (synthetic body)', async () => {
+     const body = `<h2>Lead</h2><details><summary>Show items</summary><p><a href="#lead">before</a> <a href="/polaris/source?identity=a">exact</a> <a href="#after">after inside</a></p></details><p><a href="#lead">outside</a></p>`;
+     expect(await followExactRow(syntheticPage(body), 'keyboard-synthetic')).toEqual({ inClosed: true, onTarget: true, open: true, nextInside: true, tabContinued: true });
+-  }, 60_000);
++  });
+ 
+   // A captured page, for the dated live measurement: the served bytes are
+   // written by the operator (`SYZYGY_P98_PAGE`), never fetched here.
+@@ -421,7 +421,7 @@ describe.skipIf(executable === undefined)('opening index in a real browser (PWB-
+       const report = await run('captured', html, viewport);
+       expect(report.violations).toEqual([]);
+     }
+-  }, 60_000);
++  }, 60_000); // unmeasured: it runs only on an operator's capture of a served /polaris page (SYZYGY_P98_PAGE, da936967), which no hosted or local run sets; the commit holds no measurement, so this is an unmeasured residual of syzygy-bpyt.4.31
+ 
+   it('a tie on the largest offset is broken by document order (synthetic body, hand-counted)', async () => {
+     const report = await run('tie', syntheticPage(TIE_BODY), WIDE, false);
+@@ -440,7 +440,7 @@ describe.skipIf(executable === undefined)('opening index in a real browser (PWB-
+     ]);
+     expect(report.setter).toBe('architecture-and-groups');
+     expect(report.line).toBe('4 / 11 words');
+-  }, 60_000);
++  });
+ 
+   it('with no indexed target rendered, the line follows the index and gives only the total (synthetic body, hand-counted)', async () => {
+     const report = await run('none', syntheticPage(NONE_BODY), WIDE, false);
+@@ -449,5 +449,5 @@ describe.skipIf(executable === undefined)('opening index in a real browser (PWB-
+     expect(report.rows.every((row) => !('offset' in row))).toBe(true);
+     expect(report.setter).toBeNull();
+     expect(report.line).toBe('6 words');
+-  }, 60_000);
++  });
+ });
+diff --git a/apps/three-surface-poc/src/polaris-reconciliation.test.ts b/apps/three-surface-poc/src/polaris-reconciliation.test.ts
+index 00452685..7e11420e 100644
+--- a/apps/three-surface-poc/src/polaris-reconciliation.test.ts
++++ b/apps/three-surface-poc/src/polaris-reconciliation.test.ts
+@@ -78,7 +78,7 @@ beforeAll(() => {
+     MODELS.set(variant, model);
+     PAGES.set(variant, renderPolarisPage(model));
+   }
+-}, 120_000);
++});
+ 
+ afterAll(() => {
+   for (const directory of cleanups.splice(0)) rmSync(directory, { recursive: true, force: true });
+diff --git a/apps/three-surface-poc/src/proposal-disclosure.test.ts b/apps/three-surface-poc/src/proposal-disclosure.test.ts
+index 1f5794b1..2f32e5ac 100644
+--- a/apps/three-surface-poc/src/proposal-disclosure.test.ts
++++ b/apps/three-surface-poc/src/proposal-disclosure.test.ts
+@@ -144,7 +144,7 @@ describe('proposal disclosure row (syzygy-dov.3.2; P-70 M3 slice 6)', () => {
+         expect(runtime.legendRows, name).toBe(1);
+       }
+     });
+-  }, 45_000);
++  }, 45_000); // two rendered pages in a real browser: worst 8.3 s over 5 alone runs at load1 59-69 (docs/evidence/syzygy-bpyt-4-31/durations/proposal-disclosure.test.tests.json)
+ });
+ 
+ async function browserProposals(page: BrowserPage): Promise<{ sections: number; walkedSections: number; legendRows: number; failures: string[] }> {
+diff --git a/apps/three-surface-poc/src/restart.test.ts b/apps/three-surface-poc/src/restart.test.ts
+index 66220d54..7ff201b9 100644
+--- a/apps/three-surface-poc/src/restart.test.ts
++++ b/apps/three-surface-poc/src/restart.test.ts
+@@ -31,8 +31,8 @@ const cleanupObservations: CleanupObservation[] = [];
+ // injected reader can never succeed. No scheduling delay can let
+ // any other outcome win there, so no clock injection is needed.
+ //
+-// TEST_MS is vitest's per-test budget: several fixture spawns at LIVENESS_MS
+-// each must fit inside it.
++// TEST_MS is vitest's per-test and afterEach budget: several fixture spawns at LIVENESS_MS
++// each must fit inside it (b48d86fa: two tests hit the 5 s default at load 60-90).
+ const LIVENESS_MS = 30_000;
+ const TEST_MS = 180_000;
+ let startedTests = 0;
+diff --git a/apps/three-surface-poc/src/surface-routes.test.ts b/apps/three-surface-poc/src/surface-routes.test.ts
+index 0769a18a..93bc0dbe 100644
+--- a/apps/three-surface-poc/src/surface-routes.test.ts
++++ b/apps/three-surface-poc/src/surface-routes.test.ts
+@@ -310,7 +310,7 @@ describe('surface routes', () => {
+       localCleanups.push(directory);
+       browser = await launchBrowser(browserExecutable);
+       page = await browser.newPage();
+-    }, 60_000);
++    }, 60_000); // a fixture model, a daemon and Chrome: at most 0.5 s in 5 alone runs, but hosted run 40428762919 spent at least 9.0 s in this beforeAll and the afterAll together (docs/evidence/syzygy-bpyt-4-31/ci-durations.json)
+ 
+     afterAll(async () => {
+       // browser.close() is left to throw: closeDisposableBrowser reports a
+@@ -325,7 +325,7 @@ describe('surface routes', () => {
+           rmSync(directoryToRemove, { recursive: true, force: true });
+         }
+       }
+-    }, 60_000);
++    }, 60_000); // closes Chrome and the daemon: at most 1.1 s in 5 alone runs, but hosted run 40428762919 spent at least 9.0 s in the beforeAll and this afterAll together (docs/evidence/syzygy-bpyt-4-31/ci-durations.json)
+ 
+     it.skipIf(browserExecutable === undefined).each(['direct', 'tailnet'] as const)('exhausts 15 runtime cross-surface links over six classes and fetches every %s target', async (form) => {
+       if (page === undefined) throw new Error('shared browser page not initialized');
+@@ -417,7 +417,7 @@ describe('surface routes', () => {
+       // Readable capture for the dated size evidence, from the same served
+       // evaluation and exactly the three-surface link population above.
+       process.stdout.write(`[M9 cross links] ${JSON.stringify({ form, links: links.length, classes, sizes })}\n`);
+-    }, 15_000);
++    }, 15_000); // hosted runs timed out at the 5 s default (docs/evidence/syzygy-bul-browser-ci-correction-2026-09-23.json)
+   });
+ 
+   it('withholds hrefs and discloses unavailable targets instead of defaulting identities', () => {
+@@ -450,7 +450,7 @@ describe('surface routes', () => {
+       }))()`);
+       expect(result).toEqual({ hrefs: 0, unavailable: 1, exactTableLinks: 1 });
+     });
+-  }, 10_000);
++  }, 10_000); // a hosted run timed out at the 5 s default (docs/evidence/syzygy-bul-browser-ci-correction-2026-09-23.json)
+ 
+   it('exhausts every served badge, tuple and Unknown disclosure on the three surfaces; Home is a separate diagnostic (POC-REQ-060)', async () => {
+     const model = buildFixtureModel(cleanups, { projectShape: { authority: ADMITTING_AUTHORITY, runGit: projectShapeFixtureGit() } });
+@@ -534,7 +534,7 @@ describe('surface routes', () => {
+       }
+       expect(total).toBe(serverTotal + 2);
+     });
+-  }, 45_000);
++  }, 45_000); // timed out at the 5 s default in 4 of 5 full-suite runs at load1 38-71 (docs/evidence/syzygy-bpyt-4-31/full-runs.json), and took up to 5.1 s in 5 alone runs at load1 30-37 (docs/evidence/syzygy-bpyt-4-31/head-durations/surface-routes.test.tests.json)
+ 
+   it.each([
+     ['wrong Unknown token', (html: string) => html.replace('color: var(--unknown);', 'color: var(--observed);')],
+diff --git a/apps/three-surface-poc/src/test-model-fixture.test.ts b/apps/three-surface-poc/src/test-model-fixture.test.ts
+index f755afd8..25c8aa90 100644
+--- a/apps/three-surface-poc/src/test-model-fixture.test.ts
++++ b/apps/three-surface-poc/src/test-model-fixture.test.ts
+@@ -117,7 +117,7 @@ describe('fixture directory names (syzygy-bpyt.4.10)', () => {
+     expect(names.filter((name) => new RegExp(`^${FIXTURE_PREFIX}${owner}-[A-Za-z0-9]{6}$`).test(name))).toHaveLength(2);
+     expect(names).toHaveLength(3);
+     expect(copies.map((copy) => copy.repoRoot.startsWith(join(tmp, `${FIXTURE_PREFIX}${owner}-`)))).toEqual([true, true]);
+-  }, 30_000);
++  }, 30_000); // makes a template and two fixture copies with git: worst 3.5 s over 5 alone runs at load1 107-143 (docs/evidence/syzygy-bpyt-4-31/durations/test-model-fixture.test.tests.json)
+ 
+   it('does not sweep when a file makes its template: the sweep is the global setup\'s, once per run', async () => {
+     const { helper, tmp } = await freshHelper();
+@@ -128,5 +128,5 @@ describe('fixture directory names (syzygy-bpyt.4.10)', () => {
+     helper.fixtureRepoWithGit([]);
+     expect(existsSync(join(tmp, leftover))).toBe(true);
+     expect(readdirSync(tmp)).toHaveLength(3);
+-  }, 30_000);
++  }, 30_000); // makes a template and one fixture copy with git: worst 4.3 s over 5 alone runs at load1 107-143 (docs/evidence/syzygy-bpyt-4-31/durations/test-model-fixture.test.tests.json)
+ });
+diff --git a/apps/three-surface-poc/src/trajectory-narrowing.browser.test.ts b/apps/three-surface-poc/src/trajectory-narrowing.browser.test.ts
+index 426df8b6..7a7975bd 100644
+--- a/apps/three-surface-poc/src/trajectory-narrowing.browser.test.ts
++++ b/apps/three-surface-poc/src/trajectory-narrowing.browser.test.ts
+@@ -29,7 +29,7 @@ describe.skipIf(executable === undefined)('Trajectory narrowing to the governing
+ 
+   beforeAll(async () => {
+     browser = await launchBrowser(executable as string);
+-  }, 60_000);
++  });
+ 
+   afterAll(async () => {
+     await browser?.close();
+diff --git a/apps/three-surface-poc/src/tuple-encoding.test.ts b/apps/three-surface-poc/src/tuple-encoding.test.ts
+index cd555bc2..4538497a 100644
+--- a/apps/three-surface-poc/src/tuple-encoding.test.ts
++++ b/apps/three-surface-poc/src/tuple-encoding.test.ts
+@@ -309,7 +309,7 @@ describe('tuple field encoding tables (syzygy-dov.3.2; P-70 M3 slice 5)', () =>
+         expect((perPage[POLARIS_HUMAN_PATH] as BrowserTupleCensus).glossaryRows).toBe(12);
+       }
+     });
+-  }, 60_000);
++  }, 60_000); // eight served-page loads in a real browser: worst 7.6 s over 5 alone runs at load1 62-71 (docs/evidence/syzygy-bpyt-4-31/durations/tuple-encoding.test.tests.json)
+ });
+ 
+ interface BrowserTupleCensus {
+diff --git a/apps/three-surface-poc/src/unknown-route-sweep.test.ts b/apps/three-surface-poc/src/unknown-route-sweep.test.ts
+index b3ac40a4..f1857c2d 100644
+--- a/apps/three-surface-poc/src/unknown-route-sweep.test.ts
++++ b/apps/three-surface-poc/src/unknown-route-sweep.test.ts
+@@ -170,7 +170,7 @@ beforeAll(() => {
+       runWorkItemQuery: (_root, sql) => sql.includes('WHERE id LIKE') ? JSON.stringify(rows) : JSON.stringify([{ revision: 'dolt-rev-2' }]),
+     }));
+   }
+-}, 60_000);
++});
+ 
+ afterAll(() => {
+   for (const directory of cleanups.splice(0)) rmSync(directory, { recursive: true, force: true });
+diff --git a/packages/cap1-system/src/fresh-clone.system.test.ts b/packages/cap1-system/src/fresh-clone.system.test.ts
+index 804c6e03..5f822bd2 100644
+--- a/packages/cap1-system/src/fresh-clone.system.test.ts
++++ b/packages/cap1-system/src/fresh-clone.system.test.ts
+@@ -114,6 +114,6 @@ describe('RT6 — fresh-clone demonstration', () => {
+       expect(asserted).toBe(jsonFacts.length);
+       expect(jsonFacts.length).toBe(7);
+     },
+-    600_000,
++    600_000, // clones, installs and builds: worst 77.5 s over 5 runs at load1 47-75 (docs/evidence/syzygy-bpyt-4-31/durations/cap1-system.hooks.json); 12-19 s on the hosted runs in docs/evidence/syzygy-bpyt-4-31/ci-durations.json
+   );
+ });
+diff --git a/packages/cap1-system/vitest.config.ts b/packages/cap1-system/vitest.config.ts
+index d1f7b58b..a43cf9a0 100644
+--- a/packages/cap1-system/vitest.config.ts
++++ b/packages/cap1-system/vitest.config.ts
+@@ -15,7 +15,7 @@ export default defineConfig({
+     include: ['src/**/*.system.test.ts'],
+     // Real process spawns and real filesystem fixtures: generous
+     // timeouts. The fresh-clone test raises its own per-test timeout.
+-    testTimeout: 60_000,
+-    hookTimeout: 60_000,
++    testTimeout: 60_000, // every test without its own timeout: worst 10.7 s over 5 runs at load1 47-75 (docs/evidence/syzygy-bpyt-4-31/durations/cap1-system.hooks.json)
++    hookTimeout: 60_000, // also each afterEach, which stops daemons and removes fixture trees inside tests of up to 77.5 s (docs/evidence/syzygy-bpyt-4-31/durations/cap1-system.hooks.json)
+   },
+ });
+diff --git a/packages/polaris-dossier/src/gate-acts.test.ts b/packages/polaris-dossier/src/gate-acts.test.ts
+index 36ad44ce..c7dc1c66 100644
+--- a/packages/polaris-dossier/src/gate-acts.test.ts
++++ b/packages/polaris-dossier/src/gate-acts.test.ts
+@@ -80,7 +80,7 @@ const notEstablished = (what: string) => ({
+ const D9_WHAT = 'the D9 text (SEC-3 amendment)';
+ const RFC720_WHAT = 'the RFC7-20 reading (POLARIS-DOSSIER-LOCAL-AGENT-RULINGS-2026-10-05, item 1)';
+ const UNSTATED = { stated: false, why: 'no admitted project input record (REQ-polaris-generation-001) for this subject exists, so whether a kernel evidence drawer exists is not stated' };
+-/** These walk the whole real decisions tree, or eight worlds in turn: about 2-5 s unloaded, past vitest's 5 s default under load. */
++/** These walk the whole real decisions tree, or eight worlds in turn: about 2-5 s unloaded, past vitest's 5 s default under load (0a08add9). */
+ const TREE_TIMEOUT = 60_000;
+ const CLASSES = ['governance-text', 'code-structure', 'code-content', 'evidence-content', 'derived-composites'];
+ 
+diff --git a/packages/polaris-dossier/src/no-egress.test.ts b/packages/polaris-dossier/src/no-egress.test.ts
+index d3481bcf..b1b28b79 100644
+--- a/packages/polaris-dossier/src/no-egress.test.ts
++++ b/packages/polaris-dossier/src/no-egress.test.ts
+@@ -45,7 +45,7 @@ beforeAll(async () => {
+       '@syzygy/support': src('packages/support/src/index.ts'),
+     },
+   });
+-}, 120_000);
++});
+ afterAll(() => { if (dir !== undefined) fs.rmSync(dir, { recursive: true, force: true }); });
+ 
+ interface Capture { readonly status: number | null; readonly stdout: string; readonly stderr: string; readonly calls: readonly string[]; readonly tasks: number }
+@@ -82,7 +82,7 @@ describe.skipIf(!HAVE_STRACE)('no provider call and no transmission (S10): an op
+     expect(run.calls.filter((line) => INTERNET_FAMILY.test(line))).toEqual([]);
+     // One line in the test log saying the proof ran, and over what population.
+     console.log(`no-egress proof ran under strace: ${run.calls.length} network-class calls, traced calls from ${run.tasks} task(s), 0 Internet-family`);
+-  }, 240_000);
++  }, 240_000); // a full fixture run under strace: timed out at the 5 s default in 1 of 5 full-suite runs at load1 38-71, up to 4.8 s in the others (docs/evidence/syzygy-bpyt-4-31/full-runs.json)
+ 
+   it('sees the canary: one loopback datagram sent before the same run is in the capture', async () => {
+     const run = await captured('canary', true);
+@@ -90,7 +90,7 @@ describe.skipIf(!HAVE_STRACE)('no provider call and no transmission (S10): an op
+     const internet = run.calls.filter((line) => INTERNET_FAMILY.test(line));
+     expect(internet.some((line) => line.startsWith('socket(AF_INET'))).toBe(true);
+     expect(internet.some((line) => /^(sendto|sendmsg)\(.*inet_addr\("127\.0\.0\.1"\)/u.test(line))).toBe(true);
+-  }, 240_000);
++  }, 240_000); // the same run with the canary: timed out at the 5 s default in 3 of 5 full-suite runs at load1 38-71, up to 3.5 s in the others (docs/evidence/syzygy-bpyt-4-31/full-runs.json)
+ });
+ 
+ // Under CI the proof is required: node-ci installs strace, so its absence there is a failure, never a skip.
+diff --git a/packages/polaris-dossier/src/start-gates.test.ts b/packages/polaris-dossier/src/start-gates.test.ts
+index 60f3fcb7..66a11c90 100644
+--- a/packages/polaris-dossier/src/start-gates.test.ts
++++ b/packages/polaris-dossier/src/start-gates.test.ts
+@@ -24,7 +24,7 @@ const sha = (text: string): string => createHash('sha256').update(text, 'utf8').
+ const NOW = Date.UTC(2026, 9, 7, 12, 0, 0);
+ const URL_ = 'https://github.com/redis/redis';
+ const REAL_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
+-// After the sitting the real-tree preflight reads every act record and sweeps every decisions file (about 4.4 s alone), past Vitest's 5 s default under load; gate-acts.test.ts gives its real-tree tests the same budget.
++// After the sitting the real-tree preflight reads every act record and sweeps every decisions file (about 4.4 s alone), past Vitest's 5 s default under load; gate-acts.test.ts gives its real-tree tests the same budget (30d2c2c9).
+ const TREE_TIMEOUT = 60_000;
+ // No automatic gc or maintenance in the fixture repositories (syzygy-y733), through the environment: config would be refused by init.
+ const NO_MAINTENANCE = { GIT_CONFIG_COUNT: '2', GIT_CONFIG_KEY_0: 'gc.auto', GIT_CONFIG_VALUE_0: '0', GIT_CONFIG_KEY_1: 'maintenance.auto', GIT_CONFIG_VALUE_1: 'false' };
+diff --git a/packages/polaris-generation-consent/src/package-reader.test.ts b/packages/polaris-generation-consent/src/package-reader.test.ts
+index b146f010..78781087 100644
+--- a/packages/polaris-generation-consent/src/package-reader.test.ts
++++ b/packages/polaris-generation-consent/src/package-reader.test.ts
+@@ -108,7 +108,7 @@ describe('package admission reader', () => {
+     expect(records.find(r => r.class === 'egress')).toMatchObject({ admittedRepositories: ['psf-requests', 'redis-redis'], contentClasses: ['governance-text', 'code-structure'] });
+     expect(obs.revisionLabels).toEqual(['8.10.2', '7.2.4']);
+     expect(Object.isFrozen(obs) && Object.isFrozen(obs.admittedRevisions) && Object.isFrozen(obs.revisionLabels)).toBe(true);
+-  }, 45_000);
++  }, 45_000); // sized from its worst measured run: docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json
+   it('returns nothing when no act record exists: a candidate instance binds nothing', async () => {
+     const files = world();
+     for (const key of Object.keys(files)) if (key.endsWith('-ACT.md')) delete files[key];
+@@ -138,7 +138,7 @@ describe('package admission reader', () => {
+       ['subject not a pair', (() => { const t = obsText({ subject: '(project:syzygy, repository:*)' }); return { [REDIS_PATH]: t, [act]: actText('consent-observation', REDIS_PATH, t) }; })()],
+     ];
+     for (const [name, over] of cases) await expect(reader(world(over)).read(), name).rejects.toBeInstanceOf(AdmissionRecordError);
+-  }, 10_000);
++  }, 10_000); // sized from its worst measured run: docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json
+   it('refuses when the decisions directory cannot be listed', async () => {
+     await expect(createPackageAdmissionReader({ root: '/missing', fs: memoryFs(world()) }).read()).rejects.toBeInstanceOf(AdmissionRecordError);
+   });
+@@ -256,7 +256,7 @@ describe('public-source policy act', () => {
+     expect(await policyReader(policyWorld()).read()).toEqual([{ actIdentity: 'PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-APPROVAL-2026-10-04', digest: sha(policyText()), inForceAt: AT, until: null }]);
+     expect(await check(policyWorld(), AT)).toEqual({ satisfied: true, record: 'PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-APPROVAL-2026-10-04' });
+     expect(await check(policyWorld(), AT - 1)).toMatchObject({ satisfied: false });
+-  }, 15_000);
++  }, 15_000); // sized from its worst measured run: docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json
+   it('uses the act instant when present', async () => {
+     const files = policyWorld(policyText(), policyAct({ instant: '2026-10-04T09:30:00Z' }));
+     expect(await check(files, Date.UTC(2026, 9, 4, 9, 30, 0))).toMatchObject({ satisfied: true });
+@@ -324,7 +324,7 @@ describe('public-source policy act', () => {
+   it('refuses the recorder\'s file when its act type, identity, title or provenance is not the recorder\'s form', async () => {
+     for (const bad of [policyAct({ type: 'amend-policy' }), policyAct({ type: 'amend-policy', identity: 'PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-APPROVAL-2026-10-04' }), policyAct({ identity: 'something-else' }), policyAct().replace('(public-source screening scope)', ''), policyAct().replace('owner-adopted (bootstrap, uncorrelated)', 'owner-adopted'), policyAct({ date: '2026-10-05' }).replace('2026-10-05', '2026-10-04')])
+       await expect(policyReader(policyWorld(policyText(), bad)).read(), bad).rejects.toBeInstanceOf(AdmissionRecordError);
+-  }, 15_000);
++  }, 15_000); // sized from its worst measured run: docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json
+   it('refuses a malformed recorded-at line in the policy act', async () => {
+     for (const loose of ['  Recorded at (UTC): 2026-10-04T09:30:00Z', 'recorded at (utc): 2026-10-04T09:30:00Z']) {
+       const act = policyAct().replace('Owner: Tzeusy', `${loose}\n\nOwner: Tzeusy`);
+@@ -365,20 +365,20 @@ describe('egress version 2 record', () => {
+     expect(v2.contentClasses).toContain('project-documentation');
+     expect(egressVersions(records, AT)).toEqual(['0.2.0-candidate.1']);
+     expect(await port(v2World(), AT).check(requirement('egress-consent'))).toEqual({ satisfied: true, record: 'PUBLIC-EGRESS-anthropic@0.2.0-candidate.1' });
+-  }, 40_000);
++  }, 40_000); // sized from its worst measured run: docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json
+   it('leaves version 1 standing before the version 2 act takes effect, and with no version 1 act at all', async () => {
+     expect(egressVersions(await reader(v2World()).read(), AT - 1)).toEqual(['0.1.0-candidate.7']);   // version 2 is not in force yet
+     const later = v2World({ [V2_ACT]: actText('consent-egress', EGRESS_V2_INSTANCE, v2Text(), '2026-10-09') });
+     expect(egressVersions(await reader(later).read(), AT)).toEqual(['0.1.0-candidate.7']);
+     const only = v2World(); delete only[V1_ACT];
+     expect(egressVersions(await reader(only).read(), AT)).toEqual(['0.2.0-candidate.1']);
+-  }, 20_000);
++  }, 20_000); // sized from its worst measured run: docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json
+   it('refuses when version 2 did not take effect strictly after version 1: the same instant, or earlier', async () => {
+     await expect(reader(v2World({ [V1_ACT]: actText('consent-egress', EGRESS_PATH, egressText(), '2026-10-04') })).read()).rejects.toBeInstanceOf(AdmissionRecordError);   // same instant
+     await expect(reader(v2World({ [V1_ACT]: actText('consent-egress', EGRESS_PATH, egressText(), '2026-10-04', undefined, '2026-10-04T09:30:01Z') })).read()).rejects.toBeInstanceOf(AdmissionRecordError);   // version 1 a second later
+     await expect(reader(v2World({ [V1_ACT]: actText('consent-egress', EGRESS_PATH, egressText(), '2026-10-05') })).read()).rejects.toBeInstanceOf(AdmissionRecordError);   // version 1 later
+     expect((await reader(v2World({ [V1_ACT]: actText('consent-egress', EGRESS_PATH, egressText(), '2026-10-04', undefined, '2026-10-04T09:29:59Z') })).read()).length).toBe(3);   // one second earlier is enough
+-  }, 45_000);
++  }, 45_000); // sized from its worst measured run: docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json
+   it('binds the exact bytes: an edited record is not in force', async () => {
+     const edited = await reader(v2World({ [EGRESS_V2_INSTANCE]: `${v2Text()}\nedited\n` })).read();
+     expect(edited.find(r => r.version === '0.2.0-candidate.1')!.inForceAt).toBeNull();
+@@ -440,7 +440,7 @@ describe('egress version 2 record', () => {
+       await expect(reader(noRecord).read(), 'no class act record').rejects.toBeInstanceOf(AdmissionRecordError);
+       await expect(reader(noModule).read(), 'no installed module').rejects.toBeInstanceOf(AdmissionRecordError);
+       expect((await reader(v2World({ [CLASS_ACT]: classAct({ date: '2026-10-04', instant: '2026-10-04T09:30:00Z' }) })).read()).length).toBe(3);   // the same instant as version 2 is allowed
+-    }, 40_000);
++    }, 40_000); // sized from its worst measured run: docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json
+     it('is found only at the top of the decisions directory: a copy in a subdirectory is not the recorder\'s file', async () => {
+       const nested = v2World(); const moved = nested[CLASS_ACT]!; delete nested[CLASS_ACT]; nested[`${DECISIONS_DIR}/archive/RFC5-PROJECT-DOCUMENTATION-CLASS-AMENDMENT-ACT.md`] = moved;
+       await expect(reader(nested).read()).rejects.toBeInstanceOf(AdmissionRecordError);
+@@ -495,7 +495,7 @@ describe('egress version 2 record', () => {
+       };
+       expect((await reader(v2World(others)).read()).length).toBe(3);
+       expect(await createPackagePolicyReader({ root: '/r', fs: memoryFs(v2World({ ...others, [POLICY_PATH]: policy })) }).read()).toHaveLength(1);   // only the version 2 act binds these bytes
+-    }, 25_000);
++    }, 25_000); // sized from its worst measured run: docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json
+     it('refuses when a subdirectory cannot be listed or the tree is too deep', async () => {
+       const deep = `${DECISIONS_DIR}/${'d/'.repeat(8)}f.md`;
+       await expect(reader(v2World({ [deep]: 'x' })).read()).rejects.toBeInstanceOf(AdmissionRecordError);
+@@ -538,7 +538,7 @@ describe('screening scope version 2 policy act', () => {
+     const f = files(p2, { [V1]: act(p1, 1, '2026-10-03'), [V2]: act(p2, 2) });
+     expect(await policyReader(f).read()).toEqual([{ actIdentity: 'PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V2-APPROVAL-2026-10-04', digest: sha(p2), inForceAt: AT, until: null }]);
+     expect(await check(f, AT)).toEqual({ satisfied: true, record: 'PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V2-APPROVAL-2026-10-04' });
+-  }, 45_000);
++  }, 45_000); // sized from its worst measured run: docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json
+   it('counts the version 1 act while the policy still carries the version 1 bytes', async () => {
+     const f = files(p1, { [V1]: act(p1, 1, '2026-10-03') });
+     expect((await policyReader(f).read()).map(r => r.actIdentity)).toEqual([V1_ID]);
+@@ -560,7 +560,7 @@ describe('screening scope version 2 policy act', () => {
+     expect(await chainAt(f, AT)).toMatchObject({ state: 'ok', final: { identity: V1_ID } });
+     expect(await check(f, Date.UTC(2027, 0, 2))).toMatchObject({ satisfied: false });
+     expect(await chainAt(f, Date.UTC(2027, 0, 2))).toMatchObject({ state: 'refused' });
+-  }, 20_000);
++  }, 20_000); // sized from its worst measured run: docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json
+   it('counts nothing for version 2 bytes with only the version 1 act, or for an edited policy under the version 2 act', async () => {
+     expect(await policyReader(files(p2, { [V1]: act(p1, 1, '2026-10-03') })).read()).toEqual([]);
+     expect(await policyReader(files(p2 + ' ', { [V1]: act(p1, 1, '2026-10-03'), [V2]: act(p2, 2) })).read()).toEqual([]);
+@@ -578,7 +578,7 @@ describe('screening scope version 2 policy act', () => {
+       await expect(policyReader(files(p1, { [V1]: act(p1, 1), [`${DECISIONS_DIR}/NOTES.md`]: text })).read(), line).rejects.toBeInstanceOf(AdmissionRecordError);
+       await expect(policyReader(files(p1, { [V1]: act(p1, 1), [`${DECISIONS_DIR}/launch-gate/deep/NOTES.md`]: text })).read(), `sub: ${line}`).rejects.toBeInstanceOf(AdmissionRecordError);
+     }
+-  }, 15_000);
++  }, 15_000); // sized from its worst measured run: docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json
+ });
+ 
+ // P-105 (owner act of 2026-10-08, syzygy-fxro): the third form. Version 3 supersedes version 2 as version 2 superseded version 1.
+@@ -707,7 +707,7 @@ describe('strict act reads', () => {
+       ['an unlisted record naming the policy', p1, { [POLICY_V1]: v1(), [`${DECISIONS_DIR}/sub/W.md`]: `Artifact identity: \`${POLICY_PATH}\`\n` }],
+     ];
+     for (const [name, policy, extra] of cases) expect(await chain(policy, extra), name).toMatchObject({ state: 'refused' });
+-  }, 40_000);
++  }, 40_000); // sized from its worst measured run: docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json
+   it('policy reads count a head field only in prose: an HTML comment or fence hides nothing and adds nothing', async () => {
+     for (const hidden of ['<!--\nAct type: `approve-policy`\n-->', '```\nRecorded at (UTC): 2026-10-03T00:00:01Z\n```', '```\nSupersession / revocation: forged\n```', 'Supersession / revocation: forged'])
+       expect(await chain(p1, { [POLICY_V1]: `${v1()}\n${hidden}\n` }), hidden).toMatchObject({ state: 'refused' });
+@@ -776,7 +776,7 @@ describe('round-3 review notes', () => {
+     expect(await createPackagePolicyReader({ root: '/r', fs: memoryFs(files) }).read()).toHaveLength(1);
+     for (const line of ['I retract the public source scope approval.', 'Withdrawn: PWB_SECRET_CLASSIFICATION_POLICY public­source­scope'])
+       await expect(createPackagePolicyReader({ root: '/r', fs: memoryFs({ ...files, [`${DECISIONS_DIR}/OWNER-DIRECTION-X.md`]: `${line}\n` }) }).read(), line).rejects.toBeInstanceOf(AdmissionRecordError);
+-  }, 15_000);
++  }, 15_000); // sized from its worst measured run: docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json
+   it('takes Scope repositories from the one list before the next heading of any level, and refuses a second list (N-3)', async () => {
+     const admitted = async (t: string) => (await reader(egWith(t)).read()).find(r => r.class === 'egress')!.admittedRepositories;
+     expect(await admitted(egressText().replace('repository:redis-redis)`', 'repository:redis-redis)`\n\n### Not admitted\n\n- `(project:syzygy, repository:elsewhere)`'))).toEqual(['psf-requests', 'redis-redis']);
+@@ -801,7 +801,7 @@ describe('round-3 review notes', () => {
+     const p1 = JSON.stringify({ publicSourceScope: {} }) + '\n';
+     const g = seen({ ...world(), [POLICY_PATH]: p1, [`${DECISIONS_DIR}/${POLICY_ACT_FILE}`]: renderPolicyAct(sha(p1), '2027-01-01', '2027-01-01T09:30:00Z', 1) });
+     expect(await readPolicyActChain({ root: '/r', fs: memoryFs(g), now: AT })).toMatchObject({ state: 'absent', why: expect.stringContaining('in force yet') });
+-  }, 15_000);
++  }, 15_000); // sized from its worst measured run: docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json
+   it('refuses labels that differ only in case, in one table and across records (N-5)', async () => {
+     await expect(reader(obsWith(obsText({ rows: `| \`v8.10.2\` | \`${REDIS_REV}\` |\n| \`V8.10.2\` | \`${OTHER_REV}\` |` }))).read()).rejects.toBeInstanceOf(AdmissionRecordError);
+     const records = [['v1', REDIS_REV], ['V1', OTHER_REV]].map(([label, id], i) => ({ recordId: `R${i}`, version: '1', class: 'observation' as const, project: 'project:syzygy', repositoryId: 'redis-redis', providerId: null, upstream: null, digest: '1'.repeat(64), inForceAt: 1, withdrawnAt: null, supersedes: null, supersessionAt: null, admittedRevisions: [id!], revisionLabels: [label!], admittedRepositories: [], contentClasses: [] }));
+@@ -944,7 +944,7 @@ describe('every stem counts wherever it sits, save exact tooling citations in an
+   // syzygy-786c: the first `full` spawns Python five times to render the recorders' acts (about 3 s of a cold 4.5 s run, by CPU
+   // profile), which landed inside this test's 5 s budget. Render them once here, under a budget of their own; the renders are cached.
+   // One case per row then keeps each read (about 20 ms) far from the budget whatever the suite load.
+-  beforeAll(() => { full({}); }, 60_000);
++  beforeAll(() => { full({}); }, 60_000); // five Python renders took about 3 s of a cold 4.5 s run (6c91e65a)
+   it('with no file allowlisted, refuses nothing in the base world, and the table holds every row', async () => {
+     expect(await allReads(full({}))).toEqual([]);
+     expect(STILL_REFUSED.length + PROBE.length).toBe(50 + 147);   // R-361-1's control row is the line above
+@@ -1058,5 +1058,5 @@ describe('the policy port and the strict policy chain agree', () => {
+       if (answer.satisfied) satisfied += 1;
+     }
+     expect(satisfied).toBeGreaterThan(10);   // the comparison is not vacuous
+-  }, 50_000);
++  }, 50_000); // sized from its worst measured run: docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json
+ });
+diff --git a/packages/polaris-generation-consent/src/real-tree.test.ts b/packages/polaris-generation-consent/src/real-tree.test.ts
+index 3a7f604f..d26a12e9 100644
+--- a/packages/polaris-generation-consent/src/real-tree.test.ts
++++ b/packages/polaris-generation-consent/src/real-tree.test.ts
+@@ -28,7 +28,7 @@ const reads = (fs: PackageReaderFs, now = Date.now()) => ({
+ });
+ const exists = async (rel: string): Promise<boolean> => { try { await readFile(path.join(ROOT, rel)); return true; } catch { return false; } };
+ const KINDS = ['observation-consent', 'egress-consent', 'public-source-policy'] as const;
+-const TIMEOUT = 120_000;   // each read walks the whole decisions tree
++const TIMEOUT = 120_000;   // each read walks the whole decisions tree: worst 8.0 s over 5 alone runs at load1 39-47 (docs/evidence/syzygy-bpyt-4-31/durations/real-tree.test.tests.json)
+ 
+ describe('the readers over this checkout\'s decisions directory', () => {
+   it('refuse nothing: no file in decisions/ trips a sweep or breaks a recorder\'s form', async () => {
+diff --git a/packages/three-surface-poc-core/src/test-artifact-verification.live.test.ts b/packages/three-surface-poc-core/src/test-artifact-verification.live.test.ts
+index 88b2a3bf..90f97f23 100644
+--- a/packages/three-surface-poc-core/src/test-artifact-verification.live.test.ts
++++ b/packages/three-surface-poc-core/src/test-artifact-verification.live.test.ts
+@@ -136,5 +136,5 @@ describeLive('live real focused-pytest verification (SYZYGY_POC_BUTLERS_REPO gat
+         disclosure: OPERATOR_REPORTED_DISCLOSURE,
+       });
+     }
+-  }, 120_000);
++  }, 120_000); // unmeasured: it runs only against an operator's real Butlers checkout (SYZYGY_POC_BUTLERS_REPO, 2c1f8d5a), which no hosted or local run sets; the commit holds no measurement, so this is an unmeasured residual of syzygy-bpyt.4.31
+ });

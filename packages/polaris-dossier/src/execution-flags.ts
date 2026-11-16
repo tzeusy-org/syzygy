@@ -1,4 +1,5 @@
 import * as path from 'node:path';
+import { isRecord } from '@syzygy/support';
 
 /** The flags on the agent's reported commands where execution was permitted (REQ-polaris-generation-033 as of v1.1, N6).
  *
@@ -40,7 +41,6 @@ export type ExecutionFlags =
 
 export const EXECUTION_FLAGS_BASIS = 'the agent\'s own report of each command\'s working directory and scope. Whether a command falls within the scope of the owner\'s execution choice is the agent\'s own statement, labelled Inferred; Syzygy does not judge it. Syzygy compares the reported directory with the clone\'s path as text, after resolving `..`, by path component and never by shared string prefix, and cannot observe where or what the agent ran. A flag refuses no step and hides no command.';
 
-const isObj = (value: unknown): value is Readonly<Record<string, unknown>> => value !== null && typeof value === 'object' && !Array.isArray(value);
 const text = (value: unknown): string | undefined => (typeof value === 'string' ? value : undefined);
 
 /** The flags on one reported command. */
@@ -66,7 +66,7 @@ export function flagCommand(entry: Readonly<Record<string, unknown>>, clone: str
 /** The flags on every reported command, or why none apply. `arm` is the rule the stored brief record names; null when it cannot be read. */
 export function executionFlags(executions: unknown, clone: string, arm: 'sec-3' | 'permitting' | null): ExecutionFlags {
   if (arm === 'sec-3') return { applies: false, why: 'the brief carried SEC-3\'s rule and permitted no execution, so no reported command is flagged' };
-  const entries = (Array.isArray(executions) ? executions : []).filter(isObj);
+  const entries = (Array.isArray(executions) ? executions : []).filter(isRecord);
   const commands = entries.map((entry, index): FlaggedCommand => {
     const scope = entry['scope'] === 'within-scope' || entry['scope'] === 'outside-scope' ? entry['scope'] : 'not-stated';
     return { position: index + 1, id: text(entry['id']) ?? null, scope, flags: flagCommand(entry, clone) };

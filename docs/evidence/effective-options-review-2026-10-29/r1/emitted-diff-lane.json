@@ -1,0 +1,130 @@
+{
+ "subject": "the emitted-set models of product-build.test.ts against tsc --listFilesOnly",
+ "commit": "807024b8739608cac26024e0a964e8da92d1e4b4",
+ "tool": {
+  "path": "docs/evidence/syzygy-bpyt-65/tools/emitted_diff.py",
+  "sha256": "923fe25965e3e77ba142e570bf0559a01ebc14f0d276bed9cb0a944f295fa3be",
+  "probeSha256": "92922a3764b605a08cc2c5a72ee8cbaf4ead3fd7cb9395581b4b7e274cabe354"
+ },
+ "loadavg": [
+  "34.93",
+  "33.71",
+  "32.77"
+ ],
+ "vitestExit": 0,
+ "worktreeCleanBefore": true,
+ "worktreeCleanAfter": true,
+ "projects": 10,
+ "rows": [
+  {
+   "project": "apps/syzygy",
+   "before": 1,
+   "after": 1,
+   "tsc": 1,
+   "afterEqualsTsc": true,
+   "addedByAfter": [],
+   "droppedByAfter": [],
+   "tscNotAfter": [],
+   "afterNotTsc": []
+  },
+  {
+   "project": "apps/three-surface-poc",
+   "before": 91,
+   "after": 91,
+   "tsc": 91,
+   "afterEqualsTsc": true,
+   "addedByAfter": [],
+   "droppedByAfter": [],
+   "tscNotAfter": [],
+   "afterNotTsc": []
+  },
+  {
+   "project": "packages/cap1-core",
+   "before": 23,
+   "after": 23,
+   "tsc": 23,
+   "afterEqualsTsc": true,
+   "addedByAfter": [],
+   "droppedByAfter": [],
+   "tscNotAfter": [],
+   "afterNotTsc": []
+  },
+  {
+   "project": "packages/cap1-daemon",
+   "before": 8,
+   "after": 8,
+   "tsc": 8,
+   "afterEqualsTsc": true,
+   "addedByAfter": [],
+   "droppedByAfter": [],
+   "tscNotAfter": [],
+   "afterNotTsc": []
+  },
+  {
+   "project": "packages/http-host",
+   "before": 5,
+   "after": 5,
+   "tsc": 5,
+   "afterEqualsTsc": true,
+   "addedByAfter": [],
+   "droppedByAfter": [],
+   "tscNotAfter": [],
+   "afterNotTsc": []
+  },
+  {
+   "project": "packages/polaris-dossier",
+   "before": 42,
+   "after": 42,
+   "tsc": 42,
+   "afterEqualsTsc": true,
+   "addedByAfter": [],
+   "droppedByAfter": [],
+   "tscNotAfter": [],
+   "afterNotTsc": []
+  },
+  {
+   "project": "packages/polaris-generation-consent",
+   "before": 10,
+   "after": 10,
+   "tsc": 10,
+   "afterEqualsTsc": true,
+   "addedByAfter": [],
+   "droppedByAfter": [],
+   "tscNotAfter": [],
+   "afterNotTsc": []
+  },
+  {
+   "project": "packages/polaris-generation-core",
+   "before": 25,
+   "after": 25,
+   "tsc": 25,
+   "afterEqualsTsc": true,
+   "addedByAfter": [],
+   "droppedByAfter": [],
+   "tscNotAfter": [],
+   "afterNotTsc": []
+  },
+  {
+   "project": "packages/support",
+   "before": 5,
+   "after": 5,
+   "tsc": 5,
+   "afterEqualsTsc": true,
+   "addedByAfter": [],
+   "droppedByAfter": [],
+   "tscNotAfter": [],
+   "afterNotTsc": []
+  },
+  {
+   "project": "packages/three-surface-poc-core",
+   "before": 37,
+   "after": 37,
+   "tsc": 37,
+   "afterEqualsTsc": true,
+   "addedByAfter": [],
+   "droppedByAfter": [],
+   "tscNotAfter": [],
+   "afterNotTsc": []
+  }
+ ]
+}

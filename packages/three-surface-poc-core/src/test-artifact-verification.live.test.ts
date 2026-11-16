@@ -136,5 +136,5 @@ describeLive('live real focused-pytest verification (SYZYGY_POC_BUTLERS_REPO gat
         disclosure: OPERATOR_REPORTED_DISCLOSURE,
       });
     }
-  }, 120_000);
+  }, 120_000); // unmeasured: it runs only against an operator's real Butlers checkout (SYZYGY_POC_BUTLERS_REPO, 2c1f8d5a), which no hosted or local run sets; the commit holds no measurement, so this is an unmeasured residual of syzygy-bpyt.4.31
 });

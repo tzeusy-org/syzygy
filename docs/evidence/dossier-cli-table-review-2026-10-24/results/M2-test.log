@@ -1,0 +1,62 @@
+
+[1m[46m RUN [49m[22m [36mv3.2.7 [39m[90m/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-518/clone[39m
+
+ [31m❯[39m [30m[45m @syzygy/polaris-dossier [49m[39m packages/polaris-dossier/src/state-directory.test.ts [2m([22m[2m24 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[32m 48[2mms[22m[39m
+   [32m✓[39m state root placement[2m > [22maccepts a state root outside the clone[32m 3[2mms[22m[39m
+   [32m✓[39m state root placement[2m > [22mrefuses a state root inside the clone[32m 1[2mms[22m[39m
+   [32m✓[39m state root placement[2m > [22mrefuses the clone itself as the state root[32m 1[2mms[22m[39m
+   [32m✓[39m state root placement[2m > [22mrefuses a state root inside the clone's .git directory[32m 2[2mms[22m[39m
+   [32m✓[39m state root placement[2m > [22mrefuses a state root that contains the clone[32m 1[2mms[22m[39m
+   [32m✓[39m state root placement[2m > [22mrefuses a symbolic link that lands inside the clone, judged by where it resolves[32m 4[2mms[22m[39m
+   [32m✓[39m state root placement[2m > [22mrefuses a relative state root[32m 1[2mms[22m[39m
+   [32m✓[39m state root placement[2m > [22mrefuses a symbolic link cycle[32m 1[2mms[22m[39m
+   [32m✓[39m symbolic-link intent, the one copy the daemon judges its state directory with too[2m > [22mresolves the file system root to itself[32m 4[2mms[22m[39m
+   [32m✓[39m symbolic-link intent, the one copy the daemon judges its state directory with too[2m > [22mresolves a directory with no link to itself[32m 1[2mms[22m[39m
+   [32m✓[39m symbolic-link intent, the one copy the daemon judges its state directory with too[2m > [22mresolves a missing path to itself[32m 4[2mms[22m[39m
+   [32m✓[39m symbolic-link intent, the one copy the daemon judges its state directory with too[2m > [22mresolves a dangling link to where it would land[32m 2[2mms[22m[39m
+   [32m✓[39m symbolic-link intent, the one copy the daemon judges its state directory with too[2m > [22mresolves a relative link target against the link's own directory[32m 1[2mms[22m[39m
+   [32m✓[39m symbolic-link intent, the one copy the daemon judges its state directory with too[2m > [22mfollows a link that lands on another link[32m 1[2mms[22m[39m
+   [32m✓[39m symbolic-link intent, the one copy the daemon judges its state directory with too[2m > [22mrefuses a link to itself as a loop[32m 1[2mms[22m[39m
+   [32m✓[39m symbolic-link intent, the one copy the daemon judges its state directory with too[2m > [22mrefuses two links to each other as a loop[32m 1[2mms[22m[39m
+[31m   [31m×[31m symbolic-link intent, the one copy the daemon judges its state directory with too[2m > [22mrefuses a component below a regular file as unreadable[39m[32m 11[2mms[22m[39m
+[31m     → expected { resolved: true, …(1) } to deeply equal { resolved: false, …(2) }[39m
+   [32m✓[39m symbolic-link intent, the one copy the daemon judges its state directory with too[2m > [22mrefuses a component below a directory it may not search as unreadable[32m 1[2mms[22m[39m
+   [32m✓[39m symbolic-link intent, the one copy the daemon judges its state directory with too[2m > [22mrefuses a link whose target cannot be read as unreadable[32m 1[2mms[22m[39m
+   [32m✓[39m run directory creation[2m > [22mwrites only the run directory and its configuration, owner-only, and nothing in the clone[32m 1[2mms[22m[39m
+   [32m✓[39m run directory creation[2m > [22mdraws a random run id that does not depend on the clone path[32m 1[2mms[22m[39m
+   [32m✓[39m run directory creation[2m > [22mnever reuses an existing run directory[32m 1[2mms[22m[39m
+   [32m✓[39m run directory creation[2m > [22mrefuses a malformed run id[32m 0[2mms[22m[39m
+   [32m✓[39m run directory creation[2m > [22mwrites nothing when the state root is refused[32m 1[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m [30m[45m @syzygy/polaris-dossier [49m[39m packages/polaris-dossier/src/state-directory.test.ts[2m > [22msymbolic-link intent, the one copy the daemon judges its state directory with too[2m > [22mrefuses a component below a regular file as unreadable
+[31m[1mAssertionError[22m: expected { resolved: true, …(1) } to deeply equal { resolved: false, …(2) }[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[2m  {[22m
+[32m-   "detail": "filesystem inspection failed at /tmp/r518-7/dossier-state-nUAhkM/real/file.txt/child (ENOTDIR)",[39m
+[32m-   "reason": "path-unreadable",[39m
+[32m-   "resolved": false,[39m
+[31m+   "realPath": "/tmp/r518-7/dossier-state-nUAhkM/real/file.txt/child",[39m
+[31m+   "resolved": true,[39m
+[2m  }[22m
+
+[36m [2m❯[22m packages/polaris-dossier/src/state-directory.test.ts:[2m114:58[22m[39m
+    [90m112| [39m
+    [90m113| [39m  [34mit[39m([32m'refuses a component below a regular file as unreadable'[39m[33m,[39m () [33m=>[39m {
+    [90m114| [39m    [34mexpect[39m([34mresolvePathIntent[39m([34mat[39m([32m'real/file.txt/child'[39m)))[33m.[39m[34mtoEqual[39m({
+    [90m   | [39m                                                         [31m^[39m
+    [90m115| [39m      resolved: false, reason: 'path-unreadable', detail: `filesystem …
+    [90m116| [39m    })[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m23 passed[39m[22m[90m (24)[39m
+[2m   Start at [22m 22:22:21
+[2m   Duration [22m 877ms[2m (transform 156ms, setup 23ms, collect 105ms, tests 48ms, environment 0ms, prepare 193ms)[22m
+

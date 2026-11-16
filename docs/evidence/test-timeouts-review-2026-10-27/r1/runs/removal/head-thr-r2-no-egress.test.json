@@ -1,0 +1,74 @@
+{
+ "files": [
+  {
+   "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-537/clone/packages/polaris-dossier/src/no-egress.test.ts",
+   "project": "@syzygy/polaris-dossier",
+   "type": "suite",
+   "name": "packages/polaris-dossier/src/no-egress.test.ts",
+   "line": null,
+   "mode": "run",
+   "state": "pass",
+   "durationMs": 4359.693593,
+   "errors": [],
+   "tasks": [
+    {
+     "type": "suite",
+     "name": "no provider call and no transmission (S10): an operating-system capture of a full fixture run",
+     "line": 66,
+     "mode": "run",
+     "state": "pass",
+     "durationMs": 3504.210099,
+     "errors": [],
+     "tasks": [
+      {
+       "type": "test",
+       "name": "creates no Internet-family socket over the whole run, from preflight to close",
+       "line": 67,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 1390.7000419999995,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "sees the canary: one loopback datagram sent before the same run is in the capture",
+       "line": 87,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 2111.334368,
+       "errors": []
+      }
+     ],
+     "hookMs": 2
+    },
+    {
+     "type": "suite",
+     "name": "no provider call and no transmission (S10), without strace",
+     "line": 98,
+     "mode": "skip",
+     "state": "skip",
+     "durationMs": null,
+     "errors": [],
+     "tasks": [
+      {
+       "type": "test",
+       "name": "is not proved on this host: strace is unavailable, so the capture is skipped, never reported as passed",
+       "line": 100,
+       "mode": "skip",
+       "state": null,
+       "durationMs": null,
+       "errors": []
+      }
+     ],
+     "hookMs": null
+    }
+   ],
+   "hookMs": 855,
+   "collectMs": 4615.615498,
+   "setupMs": 46.75460199999998,
+   "prepareMs": 189.39524,
+   "environmentMs": 0.3057680000000005
+  }
+ ],
+ "unhandled": []
+}

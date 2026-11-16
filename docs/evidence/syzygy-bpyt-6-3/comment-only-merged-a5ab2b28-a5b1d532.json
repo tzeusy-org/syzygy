@@ -1,0 +1,151 @@
+{
+ "base": "a5ab2b28",
+ "head": "a5b1d532",
+ "method": "ts.transpileModule, target ES2022, module NodeNext, removeComments, per file, before against after",
+ "typescriptVersion": "5.9.3",
+ "changedFiles": 890,
+ "changedProductionFiles": 15,
+ "commentOnly": 8,
+ "notCommentOnly": [
+  "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+  "packages/support/src/decode-utf8.ts",
+  "packages/support/src/index.ts",
+  "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+  "packages/three-surface-poc-core/src/code-structure.ts",
+  "packages/three-surface-poc-core/src/git-object-reader.ts",
+  "packages/three-surface-poc-core/src/project-shape-observation.ts"
+ ],
+ "rows": [
+  {
+   "path": "apps/three-surface-poc/src/polaris-markdown.ts",
+   "status": "M",
+   "sourceSha256Base": "c0f2395109fd2f25fdc314a5ea7fd3360f58675250b7425b943b3b543fc8373c",
+   "sourceSha256Head": "7e70894ee6e3717ada76026004754c521858427abb14a103f591b31cd3727a21",
+   "emitSha256Base": "91b0edc7829313a17db2c8ffe69f5e82b9b0e1069f447bbe55421eb034ff2f9e",
+   "emitSha256Head": "91b0edc7829313a17db2c8ffe69f5e82b9b0e1069f447bbe55421eb034ff2f9e",
+   "commentOnly": true
+  },
+  {
+   "path": "packages/http-host/src/server.ts",
+   "status": "M",
+   "sourceSha256Base": "84be8923e8a50880f84060221b8cf058e2984202f5b0723b8630c511e406d1c4",
+   "sourceSha256Head": "7934ff7274ca26e33c3c277bd7c4e8985694609459052f01108154ad7c1c0632",
+   "emitSha256Base": "eca5ffaa8b7827257b2937d70d922bf4f3271350a7a5cb19d8894e2517511521",
+   "emitSha256Head": "eca5ffaa8b7827257b2937d70d922bf4f3271350a7a5cb19d8894e2517511521",
+   "commentOnly": true
+  },
+  {
+   "path": "packages/http-host/src/shutdown.ts",
+   "status": "M",
+   "sourceSha256Base": "141ef5e1c973fa7c564dbcb50126104f1d000ae636df29d7f30dee78c1112887",
+   "sourceSha256Head": "88969cdbd489e03018a76ec90187ea7ac58db08962f4b89c2d49795ac13641dd",
+   "emitSha256Base": "d3dd3bba280f1099a28c83a6b8c0db646b24fd5c453eb5398856984d808a3142",
+   "emitSha256Head": "d3dd3bba280f1099a28c83a6b8c0db646b24fd5c453eb5398856984d808a3142",
+   "commentOnly": true
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.ts",
+   "status": "M",
+   "sourceSha256Base": "4804e2e90fd7ab043be1871ec27229955978ba13df345e2fdf84668abfc054b1",
+   "sourceSha256Head": "cb1566140cdf7d02b9991f8564d121e21d90480a791879a74e1889557930f067",
+   "emitSha256Base": "6cfff1b6ac098dc62a6b8527cb72ab9fc683fdb12281299b56b7a0b2011d49f1",
+   "emitSha256Head": "6cfff1b6ac098dc62a6b8527cb72ab9fc683fdb12281299b56b7a0b2011d49f1",
+   "commentOnly": true
+  },
+  {
+   "path": "packages/polaris-generation-core/src/canonical-json.ts",
+   "status": "M",
+   "sourceSha256Base": "4d7e745dc505c0de74666511a90ccda4673a5bc3d3e9deb73f424bce92875608",
+   "sourceSha256Head": "c51a3ca5ec1210e06fb462088c8a9fd541168de9c333b114cb8369621ebce7ed",
+   "emitSha256Base": "7be90db9325aeeb4c6a78224840b1f894593db5e5e5cc6a7ce940ea585ef6b20",
+   "emitSha256Head": "7be90db9325aeeb4c6a78224840b1f894593db5e5e5cc6a7ce940ea585ef6b20",
+   "commentOnly": true
+  },
+  {
+   "path": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+   "status": "M",
+   "sourceSha256Base": "3c05cf32f92d20c691b735cdd5242502ec6dcdfac8c8a8a9883df1f88ccadfb7",
+   "sourceSha256Head": "ed67106fe74333c97f419f4a52f14f75bfaa34bbfa5b41f33c4f1b6545895731",
+   "emitSha256Base": "be3804c2e6c842818f47492541791dc847a89e099f104152225ea59cb045d069",
+   "emitSha256Head": "c4d7687655e311a7e9e9bab30dd95069653473196afea5fa829d79c297beee06",
+   "commentOnly": false
+  },
+  {
+   "path": "packages/support/src/decode-utf8.ts",
+   "status": "A",
+   "commentOnly": false
+  },
+  {
+   "path": "packages/support/src/index.ts",
+   "status": "M",
+   "sourceSha256Base": "9b82aa1f60a468084496a62c2dc22775171c4678f663761e463e3f120a99d1bb",
+   "sourceSha256Head": "a4b3aa184877c9851ee46623e00c33a5ebbf25029d7ca16ff7324a6e7d31ea56",
+   "emitSha256Base": "dbb05f5d470f92f7daece9ce0c10c87b2eb19072e3bd243ee8f00450e8196bdf",
+   "emitSha256Head": "ca3ce9b71e0c394de798c9c7557c2e7c10928e160ddd07ff0529174d5b0d2634",
+   "commentOnly": false
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "status": "M",
+   "sourceSha256Base": "01fc903901fc09082ce4923bf7bdcf4937b492ef93e62058be5a7c04ca87395e",
+   "sourceSha256Head": "6098ed3fdd6d5055cf7952e836c25c9474239f6b2e2ac60d8e03af836be4d8dc",
+   "emitSha256Base": "b34d352b16ad88b0c8cdb8f3e3f7616bf904d97c6554fe18beb917145fdf8e8a",
+   "emitSha256Head": "531380d880632667db7c6a919a46d0165d67da86c29bf86632ec2b85359e1ba4",
+   "commentOnly": false
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/code-structure.ts",
+   "status": "M",
+   "sourceSha256Base": "ef137dafdd666104b9249d5516b0567e8daf9db7a5814c68c29e362f87ca56c1",
+   "sourceSha256Head": "bc56dca9270b397298a578f109ddfee47ccbf9b7b9830eb9f3dfef2c68e241b1",
+   "emitSha256Base": "82530d4f92eb6cab610b0c2e1e44220eb6c5cbe5d6d66541354b97fb54615520",
+   "emitSha256Head": "721199b11ca084eae045fde9eeb8ded83db1de7d391c2b11ba5e4192ffc1c29e",
+   "commentOnly": false
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/git-object-reader.ts",
+   "status": "M",
+   "sourceSha256Base": "19405187526e79585f92b65a926a07492929ea7335dd5a4994b8f204b7a0bf46",
+   "sourceSha256Head": "76ac22aab6091645ea4ed6a562efc4984e7a4e38a7fb1777aa2fe3bd738f7b65",
+   "emitSha256Base": "7fa780fae3279b2fc7bc72cae9e73222593af0fc12b32420c6a54d0cac228343",
+   "emitSha256Head": "8e43560ff172fe605ede8ddb06db80b24cb56e84798fe6e6165d231b03b93e2a",
+   "commentOnly": false
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+   "status": "M",
+   "sourceSha256Base": "dc888664f2392a4abd55b68627226e6734ecb7e35a1d22cfa74eaaca76c52a2f",
+   "sourceSha256Head": "a02c105a483d11a9e90d27aade01ef5ddee6b60b9e165a9a7193c5baaa21f8fe",
+   "emitSha256Base": "ae464baf90c1d54270e6c366d21c2cceadcdf6fd020f2f55c7a1e884b0b8b186",
+   "emitSha256Head": "ae464baf90c1d54270e6c366d21c2cceadcdf6fd020f2f55c7a1e884b0b8b186",
+   "commentOnly": true
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+   "status": "M",
+   "sourceSha256Base": "baf09d80d52c2c5bf16b1a6036913de0609ca8512976b8fd221a032c7a701219",
+   "sourceSha256Head": "642cf156ed37bfc0ced7cb338e640268fc0e02648913dd71be5dc4efe6ed0dbd",
+   "emitSha256Base": "17d56f45f8a8373b6847555023a9c8dce21685b93a2c0e8e6f4e28a47fc10b06",
+   "emitSha256Head": "17d56f45f8a8373b6847555023a9c8dce21685b93a2c0e8e6f4e28a47fc10b06",
+   "commentOnly": true
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+   "status": "M",
+   "sourceSha256Base": "c32ab4e3dbe509413a4d31afc1bb7a68c1a5a8b2b1d21945b72deb9e54617e34",
+   "sourceSha256Head": "a6401c017b2743d11d72b71532372c412a9c91287cecd3ebe60df40b4a37b852",
+   "emitSha256Base": "d4b1ba58de41ac3fa7d665f7a25ac93b77e2d640a08fedb4e42fa9b676ccff30",
+   "emitSha256Head": "d4b1ba58de41ac3fa7d665f7a25ac93b77e2d640a08fedb4e42fa9b676ccff30",
+   "commentOnly": true
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+   "status": "M",
+   "sourceSha256Base": "db2cd5cfb37f45895ca0794169339ca680918d0111c658534e6ede301a8d04a0",
+   "sourceSha256Head": "b57746bb67286dfbe3ed0deaaf844e11d8568936b94c79cc0262ea912b635bff",
+   "emitSha256Base": "830e4d325435b09075abaaab1fed37d236fa0f68c47e7b735787214766fbf015",
+   "emitSha256Head": "572d5de693875e4c3d6cff7afd185b5176326364bfb9e423ed8df88bc995b290",
+   "commentOnly": false
+  }
+ ]
+}

@@ -1,0 +1,12 @@
+ ❯ ModuleLoader.getModuleJobForImport node:internal/modules/esm/loader:310:38
+ ❯ onImport.tracePromise.__proto__ node:internal/modules/esm/loader:663:36
+ ❯ TracingChannel.tracePromise node:diagnostics_channel:344:14
+ ❯ ModuleLoader.import node:internal/modules/esm/loader:662:21
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'ERR_MODULE_NOT_FOUND' }
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+ Test Files   (1)
+      Tests  no tests
+     Errors  1 error
+   Start at  18:59:00
+   Duration  1.03s (transform 47ms, setup 0ms, collect 0ms, tests 0ms, environment 0ms, prepare 0ms)

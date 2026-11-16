@@ -1,0 +1,24 @@
+{
+ "fixEditFiles": [
+  "packages/polaris-generation-core/src/workspace-reach.test.ts"
+ ],
+ "oldCountsAtBase": [
+  1,
+  1
+ ],
+ "appliedEqualsHead": true,
+ "appliedSha256": "5e3ef214af947bc9455ae4d8ebd56c26d01ffe825c5968ce2d9c8625b36a59a4",
+ "headSha256": "5e3ef214af947bc9455ae4d8ebd56c26d01ffe825c5968ce2d9c8625b36a59a4",
+ "opcodes": [
+  "insert",
+  "insert"
+ ],
+ "baseLinesRemovedOrReplaced": 0,
+ "linesAdded": 9,
+ "addedItTitles": [
+  "['a remote http tarball URL dependency', 'dossier', { dependencies: { dossier: 'http://example.com/lib-1.0.0.tar.gz' } }, {}],",
+  "['an npm: alias of a registry package', 'dossier', { dependencies: { dossier: 'npm:typescript@^5.5.0' } }, {}],",
+  "['a dependency on its parent directory', 'dossier', { dependencies: { dossier: '..' } }, {}],",
+  "it(\"reads a bare name the workspace root's manifest declares as a local dependency as naming no module\", () => {"
+ ]
+}

@@ -1,0 +1,33 @@
+{
+ "batch": "PIPEX",
+ "commit": "e7f3c71ef84f93cbdeef26db54fbdc63e05bc164",
+ "tool": {
+  "path": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520c/tools/probe.py",
+  "sha256": "58655c993d05d98df899058a757630d758652b0e336b8edda06f32b356af1162"
+ },
+ "scripts": {
+  "head": {
+   "path": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520c/clone/scripts/measure_vitest_test_durations.py",
+   "sha256": "72a0fabdd0dd12f85ad35fde4b3ee032125757d5276b85802d76fdf5288f0195"
+  }
+ },
+ "repeats": 1,
+ "params": [
+  null
+ ],
+ "summary": {
+  "head": {
+   "attempts": 1,
+   "passed": 1,
+   "dirty": 0,
+   "withSurvivors": 0,
+   "exitAsClaimed": 1,
+   "exercised": 1
+  }
+ },
+ "loadAtEnd": [
+  38.7392578125,
+  42.7353515625,
+  37.1650390625
+ ]
+}

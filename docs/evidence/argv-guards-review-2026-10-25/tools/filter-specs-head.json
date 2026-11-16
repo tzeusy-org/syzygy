@@ -1,0 +1,38 @@
+{
+ "mutants": [
+  {
+   "id": "R-IF1-into-island-never-recorded",
+   "expect": "killed",
+   "projects": [
+    "@syzygy/polaris-generation-core"
+   ],
+   "files": [
+    "packages/polaris-generation-core/src/island-boundary.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/island-boundary.test.ts",
+     "old": "  return { reachable, intoIsland: edges.filter((edge) => island.has(edge.to) && !island.has(edge.from)), unresolved };",
+     "new": "  return { reachable, intoIsland: edges.filter(() => false), unresolved };"
+    }
+   ]
+  },
+  {
+   "id": "R-IF2-into-island-from-island-counted",
+   "expect": "survives",
+   "projects": [
+    "@syzygy/polaris-generation-core"
+   ],
+   "files": [
+    "packages/polaris-generation-core/src/island-boundary.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/island-boundary.test.ts",
+     "old": "  return { reachable, intoIsland: edges.filter((edge) => island.has(edge.to) && !island.has(edge.from)), unresolved };",
+     "new": "  return { reachable, intoIsland: edges.filter((edge) => island.has(edge.to)), unresolved };"
+    }
+   ]
+  }
+ ]
+}

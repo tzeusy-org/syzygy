@@ -1,0 +1,409 @@
+{
+ "tool": "guard_probe.py",
+ "treeCommit": "88dcdf76db2ad6a30df5856361dc3f9cef8757f5",
+ "toolSha256": {
+  "kill_then_fresh_run.py": "0e7af7055406f923901e5c4c4c4e10bfbf532d4fedb39ad7333a9f67fbf181e1",
+  "interrupt_probe.py": "d4c5f77200818a3e0d4c936e108a76bd95491a90730ee9d2cd7618b5e137714d",
+  "cli_sweep_probe.py": "8255871c1e8803115f70abf129239bdf75ef5670078c8ccf75b5344773a29747",
+  "mutate_sweep.py": "175095e8e7468c50689e44321d7a5d459108ee38a5bb2c6f51d56ba032e67ced"
+ },
+ "head": [
+  {
+   "tool": "kill_then_fresh_run.py",
+   "case": "home",
+   "exit": 1,
+   "refused": true,
+   "firstLine": "refusing /tmp/lc410w/gp/home: it is, or contains, the shared directory /tmp/lc410w/gp/home",
+   "canariesSurvive": true,
+   "outputWritten": false,
+   "holds": true
+  },
+  {
+   "tool": "kill_then_fresh_run.py",
+   "case": "temp",
+   "exit": 1,
+   "refused": true,
+   "firstLine": "refusing /tmp/lc410w/gp/tmp: it is, or contains, the shared directory /tmp/lc410w/gp/tmp",
+   "canariesSurvive": true,
+   "outputWritten": false,
+   "holds": true
+  },
+  {
+   "tool": "kill_then_fresh_run.py",
+   "case": "contains-shared",
+   "exit": 1,
+   "refused": true,
+   "firstLine": "refusing /tmp/lc410w/gp: it is, or contains, the shared directory /tmp/lc410w/gp/tmp",
+   "canariesSurvive": true,
+   "outputWritten": false,
+   "holds": true
+  },
+  {
+   "tool": "kill_then_fresh_run.py",
+   "case": "occupied",
+   "exit": 1,
+   "refused": true,
+   "firstLine": "refusing /tmp/lc410w/gp/work/occupied: it exists and is not an empty directory",
+   "canariesSurvive": true,
+   "outputWritten": false,
+   "holds": true
+  },
+  {
+   "tool": "kill_then_fresh_run.py",
+   "case": "home-empty",
+   "exit": 1,
+   "refused": true,
+   "firstLine": "refusing /tmp/lc410w/gp/empty-home: it is, or contains, the shared directory /tmp/lc410w/gp/empty-home",
+   "canariesSurvive": true,
+   "outputWritten": false,
+   "holds": true
+  },
+  {
+   "tool": "kill_then_fresh_run.py",
+   "case": "contains-missing-shared",
+   "exit": 1,
+   "refused": true,
+   "firstLine": "refusing /tmp/lc410w/gp/work/ancestor: it is, or contains, the shared directory /tmp/lc410w/gp/work/ancestor/not-yet-made",
+   "canariesSurvive": true,
+   "outputWritten": false,
+   "holds": true
+  },
+  {
+   "tool": "interrupt_probe.py",
+   "case": "home",
+   "exit": 1,
+   "refused": true,
+   "firstLine": "refusing /tmp/lc410w/gp/home: it is, or contains, the shared directory /tmp/lc410w/gp/home",
+   "canariesSurvive": true,
+   "outputWritten": false,
+   "holds": true
+  },
+  {
+   "tool": "interrupt_probe.py",
+   "case": "temp",
+   "exit": 1,
+   "refused": true,
+   "firstLine": "refusing /tmp/lc410w/gp/tmp: it is, or contains, the shared directory /tmp/lc410w/gp/tmp",
+   "canariesSurvive": true,
+   "outputWritten": false,
+   "holds": true
+  },
+  {
+   "tool": "interrupt_probe.py",
+   "case": "contains-shared",
+   "exit": 1,
+   "refused": true,
+   "firstLine": "refusing /tmp/lc410w/gp: it is, or contains, the shared directory /tmp/lc410w/gp/tmp",
+   "canariesSurvive": true,
+   "outputWritten": false,
+   "holds": true
+  },
+  {
+   "tool": "interrupt_probe.py",
+   "case": "occupied",
+   "exit": 1,
+   "refused": true,
+   "firstLine": "refusing /tmp/lc410w/gp/work/occupied: it exists and is not an empty directory",
+   "canariesSurvive": true,
+   "outputWritten": false,
+   "holds": true
+  },
+  {
+   "tool": "interrupt_probe.py",
+   "case": "home-empty",
+   "exit": 1,
+   "refused": true,
+   "firstLine": "refusing /tmp/lc410w/gp/empty-home: it is, or contains, the shared directory /tmp/lc410w/gp/empty-home",
+   "canariesSurvive": true,
+   "outputWritten": false,
+   "holds": true
+  },
+  {
+   "tool": "interrupt_probe.py",
+   "case": "contains-missing-shared",
+   "exit": 1,
+   "refused": true,
+   "firstLine": "refusing /tmp/lc410w/gp/work/ancestor: it is, or contains, the shared directory /tmp/lc410w/gp/work/ancestor/not-yet-made",
+   "canariesSurvive": true,
+   "outputWritten": false,
+   "holds": true
+  },
+  {
+   "tool": "cli_sweep_probe.py",
+   "case": "home",
+   "exit": 1,
+   "refused": true,
+   "firstLine": "refusing /tmp/lc410w/gp/home: it is, or contains, the shared directory /tmp/lc410w/gp/home",
+   "canariesSurvive": true,
+   "outputWritten": false,
+   "holds": true
+  },
+  {
+   "tool": "cli_sweep_probe.py",
+   "case": "temp",
+   "exit": 1,
+   "refused": true,
+   "firstLine": "refusing /tmp/lc410w/gp/tmp: it is, or contains, the shared directory /tmp/lc410w/gp/tmp",
+   "canariesSurvive": true,
+   "outputWritten": false,
+   "holds": true
+  },
+  {
+   "tool": "cli_sweep_probe.py",
+   "case": "contains-shared",
+   "exit": 1,
+   "refused": true,
+   "firstLine": "refusing /tmp/lc410w/gp: it is, or contains, the shared directory /tmp/lc410w/gp/tmp",
+   "canariesSurvive": true,
+   "outputWritten": false,
+   "holds": true
+  },
+  {
+   "tool": "cli_sweep_probe.py",
+   "case": "occupied",
+   "exit": 1,
+   "refused": true,
+   "firstLine": "refusing /tmp/lc410w/gp/work/occupied: it exists and is not an empty directory",
+   "canariesSurvive": true,
+   "outputWritten": false,
+   "holds": true
+  },
+  {
+   "tool": "cli_sweep_probe.py",
+   "case": "home-empty",
+   "exit": 1,
+   "refused": true,
+   "firstLine": "refusing /tmp/lc410w/gp/empty-home: it is, or contains, the shared directory /tmp/lc410w/gp/empty-home",
+   "canariesSurvive": true,
+   "outputWritten": false,
+   "holds": true
+  },
+  {
+   "tool": "cli_sweep_probe.py",
+   "case": "contains-missing-shared",
+   "exit": 1,
+   "refused": true,
+   "firstLine": "refusing /tmp/lc410w/gp/work/ancestor: it is, or contains, the shared directory /tmp/lc410w/gp/work/ancestor/not-yet-made",
+   "canariesSurvive": true,
+   "outputWritten": false,
+   "holds": true
+  },
+  {
+   "tool": "mutate_sweep.py",
+   "case": "home",
+   "exit": 1,
+   "refused": true,
+   "firstLine": "refusing /tmp/lc410w/gp/home: it is, or contains, the shared directory /tmp/lc410w/gp/home",
+   "canariesSurvive": true,
+   "outputWritten": false,
+   "holds": true
+  },
+  {
+   "tool": "mutate_sweep.py",
+   "case": "temp",
+   "exit": 1,
+   "refused": true,
+   "firstLine": "refusing /tmp/lc410w/gp/tmp: it is, or contains, the shared directory /tmp/lc410w/gp/tmp",
+   "canariesSurvive": true,
+   "outputWritten": false,
+   "holds": true
+  },
+  {
+   "tool": "mutate_sweep.py",
+   "case": "contains-shared",
+   "exit": 1,
+   "refused": true,
+   "firstLine": "refusing /tmp/lc410w/gp: it is, or contains, the shared directory /tmp/lc410w/gp/tmp",
+   "canariesSurvive": true,
+   "outputWritten": false,
+   "holds": true
+  },
+  {
+   "tool": "mutate_sweep.py",
+   "case": "occupied",
+   "exit": 1,
+   "refused": true,
+   "firstLine": "refusing /tmp/lc410w/gp/work/occupied: it exists and is not an empty directory",
+   "canariesSurvive": true,
+   "outputWritten": false,
+   "holds": true
+  },
+  {
+   "tool": "mutate_sweep.py",
+   "case": "home-empty",
+   "exit": 1,
+   "refused": true,
+   "firstLine": "refusing /tmp/lc410w/gp/empty-home: it is, or contains, the shared directory /tmp/lc410w/gp/empty-home",
+   "canariesSurvive": true,
+   "outputWritten": false,
+   "holds": true
+  },
+  {
+   "tool": "mutate_sweep.py",
+   "case": "contains-missing-shared",
+   "exit": 1,
+   "refused": true,
+   "firstLine": "refusing /tmp/lc410w/gp/work/ancestor: it is, or contains, the shared directory /tmp/lc410w/gp/work/ancestor/not-yet-made",
+   "canariesSurvive": true,
+   "outputWritten": false,
+   "holds": true
+  }
+ ],
+ "mutants": [
+  {
+   "tool": "kill_then_fresh_run.py",
+   "mutant": "shared-directory-clause-dropped",
+   "old": "        if resolved == directory or resolved in directory.parents:\n",
+   "new": "        if False:\n",
+   "case": "home-empty",
+   "headRefuses": true,
+   "mutantRefuses": false,
+   "killed": true
+  },
+  {
+   "tool": "kill_then_fresh_run.py",
+   "mutant": "ancestor-clause-dropped",
+   "old": "resolved == directory or resolved in directory.parents",
+   "new": "resolved == directory",
+   "case": "contains-missing-shared",
+   "headRefuses": true,
+   "mutantRefuses": false,
+   "killed": true
+  },
+  {
+   "tool": "kill_then_fresh_run.py",
+   "mutant": "occupied-clause-dropped",
+   "old": "    if resolved.exists() and (not resolved.is_dir() or any(resolved.iterdir())):\n",
+   "new": "    if False:\n",
+   "case": "occupied",
+   "headRefuses": true,
+   "mutantRefuses": false,
+   "killed": true
+  },
+  {
+   "tool": "interrupt_probe.py",
+   "mutant": "shared-directory-clause-dropped",
+   "old": "        if resolved == directory or resolved in directory.parents:\n",
+   "new": "        if False:\n",
+   "case": "home-empty",
+   "headRefuses": true,
+   "mutantRefuses": false,
+   "killed": true
+  },
+  {
+   "tool": "interrupt_probe.py",
+   "mutant": "ancestor-clause-dropped",
+   "old": "resolved == directory or resolved in directory.parents",
+   "new": "resolved == directory",
+   "case": "contains-missing-shared",
+   "headRefuses": true,
+   "mutantRefuses": false,
+   "killed": true
+  },
+  {
+   "tool": "interrupt_probe.py",
+   "mutant": "occupied-clause-dropped",
+   "old": "    if resolved.exists() and (not resolved.is_dir() or any(resolved.iterdir())):\n",
+   "new": "    if False:\n",
+   "case": "occupied",
+   "headRefuses": true,
+   "mutantRefuses": false,
+   "killed": true
+  },
+  {
+   "tool": "cli_sweep_probe.py",
+   "mutant": "shared-directory-clause-dropped",
+   "old": "        if resolved == directory or resolved in directory.parents:\n",
+   "new": "        if False:\n",
+   "case": "home-empty",
+   "headRefuses": true,
+   "mutantRefuses": false,
+   "killed": true
+  },
+  {
+   "tool": "cli_sweep_probe.py",
+   "mutant": "ancestor-clause-dropped",
+   "old": "resolved == directory or resolved in directory.parents",
+   "new": "resolved == directory",
+   "case": "contains-missing-shared",
+   "headRefuses": true,
+   "mutantRefuses": false,
+   "killed": true
+  },
+  {
+   "tool": "cli_sweep_probe.py",
+   "mutant": "occupied-clause-dropped",
+   "old": "    if resolved.exists() and (not resolved.is_dir() or any(resolved.iterdir())):\n",
+   "new": "    if False:\n",
+   "case": "occupied",
+   "headRefuses": true,
+   "mutantRefuses": false,
+   "killed": true
+  },
+  {
+   "tool": "mutate_sweep.py",
+   "mutant": "shared-directory-clause-dropped",
+   "old": "        if resolved == directory or resolved in directory.parents:\n",
+   "new": "        if False:\n",
+   "case": "home-empty",
+   "headRefuses": true,
+   "mutantRefuses": false,
+   "killed": true
+  },
+  {
+   "tool": "mutate_sweep.py",
+   "mutant": "ancestor-clause-dropped",
+   "old": "resolved == directory or resolved in directory.parents",
+   "new": "resolved == directory",
+   "case": "contains-missing-shared",
+   "headRefuses": true,
+   "mutantRefuses": false,
+   "killed": true
+  },
+  {
+   "tool": "mutate_sweep.py",
+   "mutant": "occupied-clause-dropped",
+   "old": "    if resolved.exists() and (not resolved.is_dir() or any(resolved.iterdir())):\n",
+   "new": "    if False:\n",
+   "case": "occupied",
+   "headRefuses": true,
+   "mutantRefuses": false,
+   "killed": true
+  }
+ ],
+ "wiring": [
+  {
+   "tool": "kill_then_fresh_run.py",
+   "old": "TMP = private_directory(TMP)",
+   "new": "TMP = TMP.resolve()",
+   "guardBeforeFirstRemovalOrMkdir": true,
+   "mutantWithoutTheCall": false,
+   "killed": true
+  },
+  {
+   "tool": "interrupt_probe.py",
+   "old": "TMP = private_directory(TMP)",
+   "new": "TMP = TMP.resolve()",
+   "guardBeforeFirstRemovalOrMkdir": true,
+   "mutantWithoutTheCall": false,
+   "killed": true
+  },
+  {
+   "tool": "cli_sweep_probe.py",
+   "old": "TMP = private_directory(TMP)",
+   "new": "TMP = TMP.resolve()",
+   "guardBeforeFirstRemovalOrMkdir": true,
+   "mutantWithoutTheCall": false,
+   "killed": true
+  },
+  {
+   "tool": "mutate_sweep.py",
+   "old": "private_directory(pathlib.Path(sys.argv[3]))",
+   "new": "pathlib.Path(sys.argv[3]).resolve()",
+   "guardBeforeFirstRemovalOrMkdir": true,
+   "mutantWithoutTheCall": false,
+   "killed": true
+  }
+ ],
+ "holds": true
+}

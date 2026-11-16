@@ -1,0 +1,6 @@
+{
+ "id": "GM1-entry-re-exports-the-barrel",
+ "file": "apps/syzygy/src/main.ts",
+ "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+ "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nexport { runDossierCli } from '@syzygy/polaris-dossier';\n"
+}

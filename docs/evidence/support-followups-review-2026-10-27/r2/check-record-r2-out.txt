@@ -1,0 +1,114 @@
+ok   repair.reviewedHead == 663061c4 full: 663061c43f111c162765478c2001ccdba98dd1fa
+ok   mergeOfMain.commit resolves and equals 4b9a4be0: 4b9a4be0e27652905f08469e2657539a3aee80ea
+ok   mergeOfMain.parents equal git: ['663061c43f111c162765478c2001ccdba98dd1fa', 'eb8fb6cb523c7d415390ac60c15f7c2c56db2398']
+ok   mergeOfMain.mainSubject equals the main parent subject: Merge pull request #539 from Tzeusy/agent/syzygy-bpyt.7.15
+ok   repairCodeCommit equals c7ed9ef2 and is a child of the merge
+ok   repairCodeCommitChanges: only the junit file: ['packages/three-surface-poc-core/src/test-artifact-verification.ts']
+ok   junitFileBlob.atBase == git f7477f52: cc0fd70cb4093ef45002471c6b7da7587dcbf2c9
+ok   junitFileBlob.atRepair == git c7ed9ef2
+ok   junitFileBlob.atRoundOneTestedCommit == git b214ef10
+ok   junitFileBlob.equalToBase is true and true
+ok   fixtureFileBlob both equal git
+ok   ownDeltaAtRepair.sha256 re-derived: ef0ceb8ccaf443453cd0c43fc789e81cc127f7fe882d65d2cb7c44382f991db6
+ok   ownDeltaAtRepair.paths == git --name-status: 13 paths
+ok   linesDeletedByFileAtRepair == numstat deletions: {'apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts': 5, 'scripts/check_generator_install.mjs': 1}
+ok   round-1 own delta over main == recorded ownDeltaSha256
+ok   figuresHoldAt names the repair code commit
+ok   c7ed9ef2 is the last commit touching apps/packages/scripts at REV: c7ed9ef256985b87e3d75447bf6671e2ca97fc71
+ok   tools[derive-literals.py] digest: c8762aad7247
+ok   tools[compare-rows.py] digest: c913e50b65ac
+ok   tools[junit-fixture-differential.mjs] digest: f7983e79488d
+ok   tools[pins-mutants.py] digest: 03b0079c94df
+ok   tools[item4-mutants.py] digest: 0459acda4ed1
+ok   tools[item4-repair-sweep.py] digest: b08c15735ad9
+ok   repairFiles junit-fixture-differential-head-c7ed9ef2.json bytes+sha256: 177232 bytes
+ok   repairFiles junit-fixture-differential-compare-c7ed9ef2.json bytes+sha256: 171 bytes
+ok   repairFiles full-suite-c7ed9ef2.log bytes+sha256: 132890 bytes
+ok   repairFiles population-audit-4b9a4be0.json bytes+sha256: 2936 bytes
+ok   repairFiles sweep-4b9a4be0.json bytes+sha256: 1678 bytes
+ok   repairFiles population-audit-c7ed9ef2.json bytes+sha256: 3032 bytes
+ok   repairFiles sweep-c7ed9ef2.json bytes+sha256: 1678 bytes
+ok   repairFiles item4-repair-sweep.py bytes+sha256: 4765 bytes
+ok   repairFiles item4-repair-sweep-c7ed9ef2.json bytes+sha256: 1979 bytes
+ok   repairFiles == files the evidence commit added, less the record itself: added 10 listed 9
+ok   item4.mutants.rows still 9 (none deleted): ['J1-digest-drops-the-first-byte', 'J2-digest-over-the-whole-backing-buffer', 'J3-digest-over-the-decoded-text', 'J4-prefix-dropped', 'J5-equivalent-local-copy', 'W1-run-digest-over-changed-text', 'W2-judgment-digest-drops-the-first-character', 'W3-stale-latin1-local-copy', 'W4-equivalent-local-copy']
+ok   J1-digest-drops-the-first-byte marked NO LONGER APPLICABLE
+ok   J1-digest-drops-the-first-byte old occurs once at b214ef10: 1
+ok   J1-digest-drops-the-first-byte old occurs 0 times at c7ed9ef2 (claim: not in the file any more): 0
+ok   J1-digest-drops-the-first-byte status names the fragment that is in old: '  return `sha256:${sha256(rawJUnit)}`;'
+ok   J1-digest-drops-the-first-byte mutant commit in repo (expected absent, a scratch commit): 6f9af8d96cdd
+ok   J2-digest-over-the-whole-backing-buffer marked NO LONGER APPLICABLE
+ok   J2-digest-over-the-whole-backing-buffer old occurs once at b214ef10: 1
+ok   J2-digest-over-the-whole-backing-buffer old occurs 0 times at c7ed9ef2 (claim: not in the file any more): 0
+ok   J2-digest-over-the-whole-backing-buffer status names the fragment that is in old: '  return `sha256:${sha256(rawJUnit)}`;'
+ok   J2-digest-over-the-whole-backing-buffer mutant commit in repo (expected absent, a scratch commit): d2f958c99b35
+ok   J3-digest-over-the-decoded-text marked NO LONGER APPLICABLE
+ok   J3-digest-over-the-decoded-text old occurs once at b214ef10: 1
+ok   J3-digest-over-the-decoded-text old occurs 0 times at c7ed9ef2 (claim: not in the file any more): 0
+ok   J3-digest-over-the-decoded-text status names the fragment that is in old: '  return `sha256:${sha256(rawJUnit)}`;'
+ok   J3-digest-over-the-decoded-text mutant commit in repo (expected absent, a scratch commit): d6c32c108f3f
+ok   J4-prefix-dropped marked NO LONGER APPLICABLE
+ok   J4-prefix-dropped old occurs once at b214ef10: 1
+ok   J4-prefix-dropped old occurs 0 times at c7ed9ef2 (claim: not in the file any more): 0
+ok   J4-prefix-dropped status names the fragment that is in old: '  return `sha256:${sha256(rawJUnit)}`;'
+ok   J4-prefix-dropped mutant commit in repo (expected absent, a scratch commit): e990550c36a5
+ok   J5-equivalent-local-copy marked NO LONGER APPLICABLE
+ok   J5-equivalent-local-copy old occurs once at b214ef10: 1
+ok   J5-equivalent-local-copy old occurs 0 times at c7ed9ef2 (claim: not in the file any more): 0
+FAIL J5-equivalent-local-copy status names the fragment that is in old: "import { sha256 } from '@syzygy/support';\n"
+ok   J5-equivalent-local-copy mutant commit in repo (expected absent, a scratch commit): 2a11bf9a5cff
+ok   W1-run-digest-over-changed-text marked applies
+ok   W1-run-digest-over-changed-text old occurs once at b214ef10: 1
+ok   W1-run-digest-over-changed-text old occurs once at c7ed9ef2: 1
+ok   W1-run-digest-over-changed-text mutant commit in repo (expected absent, a scratch commit): 261abd938acc
+ok   W2-judgment-digest-drops-the-first-character marked applies
+ok   W2-judgment-digest-drops-the-first-character old occurs once at b214ef10: 1
+ok   W2-judgment-digest-drops-the-first-character old occurs once at c7ed9ef2: 1
+ok   W2-judgment-digest-drops-the-first-character mutant commit in repo (expected absent, a scratch commit): 0bd7990da8dc
+ok   W3-stale-latin1-local-copy marked applies
+ok   W3-stale-latin1-local-copy old occurs once at b214ef10: 1
+ok   W3-stale-latin1-local-copy old occurs once at c7ed9ef2: 1
+ok   W3-stale-latin1-local-copy mutant commit in repo (expected absent, a scratch commit): 4a342501ee95
+ok   W4-equivalent-local-copy marked applies
+ok   W4-equivalent-local-copy old occurs once at b214ef10: 1
+ok   W4-equivalent-local-copy old occurs once at c7ed9ef2: 1
+ok   W4-equivalent-local-copy mutant commit in repo (expected absent, a scratch commit): ee03ed3ec004
+FAIL W1-run-digest-over-changed-text status claim 're-checked by the sweep' agrees with item4.mutants.repair rows: claimed=True inRepairRows=False
+FAIL W2-judgment-digest-drops-the-first-character status claim 're-checked by the sweep' agrees with item4.mutants.repair rows: claimed=True inRepairRows=False
+ok   W3-stale-latin1-local-copy status claim 're-checked by the sweep' agrees with item4.mutants.repair rows: claimed=True inRepairRows=True
+ok   W4-equivalent-local-copy status claim 're-checked by the sweep' agrees with item4.mutants.repair rows: claimed=True inRepairRows=True
+ok   mutants.repair.outputSha256
+ok   mutants.repair.toolSha256
+ok   output.repairCommit == c7ed9ef2
+ok   baselineAtRepair == output baseline: {'createHashSha256Sites': 7, 'localSha256Definitions': 1}
+ok   baseline == population-audit-c7ed9ef2 reach rule
+ok   repair row W3-stale-latin1-local-copy equals output row
+ok   repair row W3-stale-latin1-local-copy old occurs once at c7ed9ef2
+ok   repair row W3-stale-latin1-local-copy old/new equal the b214ef10 row's
+ok   repair row W3-stale-latin1-local-copy killedBySweep follows from counts
+ok   repair row W4-equivalent-local-copy equals output row
+ok   repair row W4-equivalent-local-copy old occurs once at c7ed9ef2
+ok   repair row W4-equivalent-local-copy old/new equal the b214ef10 row's
+ok   repair row W4-equivalent-local-copy killedBySweep follows from counts
+ok   fixture blob fields in the output equal git
+ok   differential.repair.commit == c7ed9ef2
+ok   outputSha256 == head-c7ed9ef2.json
+ok   baseOutputSha256 == base-f7477f52.json
+ok   roundOneHeadOutputSha256 == head-b214ef10.json
+ok   byte-identical claims hold
+ok   compareOutput == compare-c7ed9ef2.json: {'rowsOld': 40, 'rowsNew': 40, 'rowsCompared': 40, 'rowsThatDiffer': 0, 'rowsOnlyInOld': 0, 'rowsOnlyInNew': 0, 'differ': [], 'onlyInOld': [], 'onlyInNew': []}
+ok   head-c7ed9ef2 holds 40 rows; family split: {'A-junitDigest': 15, 'B-walkthrough-judgment-fixture': 25}
+ok   sweep.repair.commit == c7ed9ef2
+ok   sweep.repair.nameRule == population-audit-c7ed9ef2: {'files': 241, 'createHashSha256Sites': 6, 'localSha256Definitions': 1, 'localDeepFreezeDefinitions': 1}
+ok   sweep.repair.reachabilityRule == population-audit-c7ed9ef2: {'files': 245, 'createHashSha256Sites': 7, 'localSha256Definitions': 1, 'localDeepFreezeDefinitions': 1}
+ok   movesWith[base f7477f52] == population-audit-f7477f52: {'createHashSha256Sites': 8, 'localSha256Definitions': 2}
+ok   movesWith[b214ef10 (both sites converted)] == population-audit-b214ef10: {'createHashSha256Sites': 6, 'localSha256Definitions': 1}
+ok   movesWith[merge 4b9a4be0 (main merged, junitDigest still converted)] == population-audit-4b9a4be0: {'createHashSha256Sites': 6, 'localSha256Definitions': 1}
+ok   movesWith[repair c7ed9ef2] == population-audit-c7ed9ef2: {'createHashSha256Sites': 7, 'localSha256Definitions': 1}
+ok   population-audit-c7ed9ef2 and sweep-c7ed9ef2 name the full repair commit
+ok   fullSuiteAtRepair.commit == c7ed9ef2
+ok   full-suite log carries the recorded files line: 245 passed | 3 skipped (248)
+ok   full-suite log carries the recorded tests line: 5393 passed | 5 skipped (5398)
+FAIL full-suite log names its commit inside the file (rule 11): commit is named only by the filename and the record
+ok   evidenceCurrencyAtRepair names three commits: ['4b9a4be0', 'c7ed9ef2', 'eb8fb6cb']
+summary checks=113 ok=109 fail=4

@@ -60,7 +60,7 @@ function expectEncodedPages(files: ReadonlyMap<string, string>): void {
   }
 }
 
-describe('page sinks under the version-3 renderCondition', () => {
+describe('page sinks under the renderCondition', () => {
   it('the dossier renderer writes the canary body entity-encoded, never raw, on every page under the policy CSP', () => {
     expect(renderDossier.pageSinkContract).toBe('polaris/page-sink/escaped-text-under-csp/1');
     expectEncodedPages(renderDossier({ result: run.result, sources: canarySources }).files);
@@ -71,7 +71,7 @@ describe('page sinks under the version-3 renderCondition', () => {
     const { files } = renderLocalDossier({ local: localCanary(), sources: canarySources });
     expectEncodedPages(files);
     const index = files.get('index.html')!;
-    for (const region of ['class="verified-quote"', 'class="run-disclosure"', 'data-review-status-region="review-status"']) expect(index, region).toContain(region);
+    for (const region of ['class="verified-quote"', 'class="run-sentence"', 'data-review-status-region="review-status"']) expect(index, region).toContain(region);
     expect(files.get('glossary.html')!).toContain(`<dt id="term-glossary/canary">${ENCODED}</dt>`);
   });
 

@@ -1,0 +1,11 @@
+{
+ "id": "R10-first-value-kept",
+ "command": "cp $EVIDENCE/dossier-golden-harness.ts packages/polaris-dossier/src/zz-golden.test.ts && GOLDEN_CORPUS=$EVIDENCE/dossier-corpus.json GOLDEN_OUT=$OUT/R10-first-value-kept-dossier.json GOLDEN_CWD=/tmp/la-b82/gcwd TMPDIR=/tmp/la-b82/g CI=1 npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/zz-golden.test.ts; e=$?; rm packages/polaris-dossier/src/zz-golden.test.ts; node $EVIDENCE/parse-golden.mjs $OUT/oracle $EVIDENCE $OUT/R10-first-value-kept-parse.json; exit $e",
+ "edits": [
+  {
+   "file": "packages/polaris-dossier/src/argv.ts",
+   "old": "      values.set(arg, token.value);",
+   "new": "      if (!values.has(arg)) values.set(arg, token.value);"
+  }
+ ]
+}

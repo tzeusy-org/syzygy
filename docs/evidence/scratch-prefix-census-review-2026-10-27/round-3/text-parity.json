@@ -1,0 +1,179 @@
+{
+ "followupsJsonEqualsLaneReportJson": true,
+ "f1": {
+  "recordVsFollowUpJson": [
+   {
+    "op": "insert",
+    "record": "",
+    "other": "(docs/evidence/scratch-prefix-census-2026-10-23/)"
+   },
+   {
+    "op": "replace",
+    "record": "correctly; [Inferred, the harness was not run for this] under that harness a correct F1 still leaves the Chrome singleton directory in place.",
+    "other": "correctly."
+   },
+   {
+    "op": "delete",
+    "record": "F1",
+    "other": ""
+   },
+   {
+    "op": "replace",
+    "record": "bound, see limits).",
+    "other": "bound)."
+   },
+   {
+    "op": "insert",
+    "record": "",
+    "other": "(assemble_census.py --selftest)"
+   }
+  ],
+  "recordVsPrBody": [
+   {
+    "op": "replace",
+    "record": "census_run.py",
+    "other": "`census_run.py`"
+   },
+   {
+    "op": "replace",
+    "record": "this change",
+    "other": "it"
+   },
+   {
+    "op": "replace",
+    "record": "stands: in kill mode it SIGTERMs every process carrying",
+    "other": "stands (it stops"
+   },
+   {
+    "op": "replace",
+    "record": "marker",
+    "other": "orphans"
+   },
+   {
+    "op": "replace",
+    "record": "writes its record, --seed-tmp-from",
+    "other": "records, the seeding"
+   },
+   {
+    "op": "replace",
+    "record": "while any process carries the earlier marker,",
+    "other": "live markers"
+   },
+   {
+    "op": "delete",
+    "record": "seeding",
+    "other": ""
+   },
+   {
+    "op": "replace",
+    "record": "entries into a new TMPDIR, so the profile's SingletonSocket link and every orphan's --user-data-dir argument name a directory that no longer exists",
+    "other": "entries,"
+   },
+   {
+    "op": "replace",
+    "record": "dirname(link)",
+    "other": "`dirname(link)"
+   },
+   {
+    "op": "replace",
+    "record": "tmpdir()",
+    "other": "tmpdir()`"
+   },
+   {
+    "op": "replace",
+    "record": "correctly; [Inferred, the harness was not run for this] under that harness a correct F1 still leaves the Chrome singleton directory in place. Measure F1",
+    "other": "correctly); measure it"
+   },
+   {
+    "op": "replace",
+    "record": "guard: a live decoy carrying",
+    "other": "guard, with"
+   },
+   {
+    "op": "replace",
+    "record": "exact argv element, one carrying it only as a substring, a stopped (T) process, a reused pid, a SingletonSocket link that leaves the temp directory;",
+    "other": "decoys named above,"
+   },
+   {
+    "op": "replace",
+    "record": "change,",
+    "other": "mode,"
+   },
+   {
+    "op": "replace",
+    "record": "runs: a mode",
+    "other": "runs,"
+   },
+   {
+    "op": "replace",
+    "record": "TMPDIR, then reads syzygy-poc-browser- and chrome-singleton-directory stillThere 0 and",
+    "other": "`TMPDIR`. Before"
+   },
+   {
+    "op": "delete",
+    "record": "killed run's marker count 0 after the fresh run's sweep (the marker count is a lower bound, see limits). Before this",
+    "other": ""
+   },
+   {
+    "op": "replace",
+    "record": "this follow-up,",
+    "other": "it,"
+   },
+   {
+    "op": "replace",
+    "record": "a",
+    "other": "the"
+   },
+   {
+    "op": "replace",
+    "record": "leftAfterSIGKILL, afterTheNextFreshRun and leftByTheFreshRunItself values, and a derived name, with the four mutants that round 2",
+    "other": "leftover figures"
+   },
+   {
+    "op": "replace",
+    "record": "the review found surviving (kill-leftover-count-doubled, kill-leftovers-not-reported, seed-entries-counted-as-the-runs-own, mkdtemp-count-includes-derived) killed (round 2, N12).",
+    "other": "N12."
+   }
+  ],
+  "passConditionOfPartTwo": {
+   "record": true,
+   "followUpJson": true,
+   "prBodyFollowUpLine": false,
+   "prBodyRepairLine": false
+  },
+  "inferredSentence": {
+   "record": true,
+   "followUpJson": false,
+   "prBody": false
+  }
+ },
+ "f2": {
+  "nonVacuityBranchInRecordWhat": true,
+  "nonVacuityBranchInFollowUpJson": true,
+  "freshRunWordingRecord": true,
+  "freshRunWordingFollowUpJson": true,
+  "oldWordingGone": {
+   "record": true,
+   "followUpJson": true
+  },
+  "measureCarriedInFollowUpJson": false,
+  "assemblerRuleClause": {
+   "record": true,
+   "followUpJson": true
+  }
+ },
+ "n12": {
+  "record": {
+   "F1": 1,
+   "F2": 1
+  },
+  "followUpJson": {
+   "F1": 1,
+   "F2": 1
+  },
+  "namesTheRound2RawFile": {
+   "record": false,
+   "followUpJson": false
+  }
+ }
+}

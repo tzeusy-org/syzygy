@@ -1,0 +1,19 @@
+{
+  "oldScriptCommit": "740279435178a882f1c2d526a2a7ea0bf2b52cbc",
+  "newScriptCommit": "134a8c5ba16dda1f3e3935aa1b565166f3b3583f",
+  "commandSelection": [
+    "base"
+  ],
+  "oldReportedWorlds": 5402,
+  "oldBaseWorldCount": 4,
+  "oldCountGapReproduced": true,
+  "newGeneratedWorlds": 5403,
+  "newSelectedWorlds": 4,
+  "secondMethodSelectedMembership": 4,
+  "newSelectedCountsAgree": true,
+  "executionNotInvented": true,
+  "stdoutBindings": {
+    "old-count-reproduction.stdout": "8a949d6c9478d630ceac088f4b0c8455cf9d6e403075a1ed30d0835630dde466",
+    "new-count-selected.stdout": "5021795ba38105fbc99f40f1c802817b1f15fd269fc6d4d28b03d4b6ff5497cd"
+  }
+}

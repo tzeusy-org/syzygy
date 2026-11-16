@@ -1,0 +1,14 @@
+== MAIN=d38d7a3c (the record's subject) on the merge tree
+{"rowDelta": "Tests: +2 ~17 -1", "testFiles": 10, "productFilesChanged": [], "mutantTotals": {"cases": 33, "sides": 65, "asExpected": 65}, "ac1": 0, "bounds": {"EDGE_TRIM_CPU_MS": [1900, 29.4, 31.6], 
+exit 0
+0
+== MAIN=41932c3b
+AGENTS.md differs between c104771ff90f47ffd070f2339c36010458679c71 and 41932c3b5aba567376fea3b32a80a54f8b6b30ab
+exit 1
+0
+== MAIN=41932c3b EV=455c60ea (the local merge)
+apps/three-surface-poc/src/main.test.ts differs between c104771ff90f47ffd070f2339c36010458679c71 and 41932c3b5aba567376fea3b32a80a54f8b6b30ab
+0
+== shutdown.ts 2b56a253 vs merge
+ packages/http-host/src/shutdown.ts | 6 ++++++
+ 1 file changed, 6 insertions(+)

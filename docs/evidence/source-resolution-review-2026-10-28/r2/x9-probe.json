@@ -1,0 +1,38 @@
+{
+ "load": [
+  "27.08",
+  "28.13",
+  "27.13"
+ ],
+ "fragment": {
+  "old": "      {\n        extends: true,\n        test: {\n          name: '@syzygy/three-surface-poc-app',",
+  "new": "      {\n        extends: true,\n        plugins: [{ name: \"r2-x9\", enforce: 'pre', resolveId(id: string) { return id === '@syzygy/support' ? fileURLToPath(new URL('./packages/support/dist/index.js', import.meta.url)) : null; } }],\n        test: {\n          name: '@syzygy/three-surface-poc-app',"
+ },
+ "detectionMutated": {
+  "exit": 0,
+  "passed": 67,
+  "failed": 0,
+  "total": 67,
+  "failing": []
+ },
+ "effectUnmutated": {
+  "exit": 0,
+  "passed": 14,
+  "failed": 0,
+  "total": 14,
+  "failing": []
+ },
+ "effectMutated": {
+  "exit": 1,
+  "passed": 0,
+  "failed": 0,
+  "total": 0,
+  "failing": [
+   [
+    "apps/three-surface-poc/src/git-observation.test.ts",
+    "R549B-POISONED-SUPPORT-DIST"
+   ]
+  ]
+ },
+ "restored": true
+}

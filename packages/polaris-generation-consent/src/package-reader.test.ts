@@ -5,12 +5,23 @@ import { fileURLToPath } from 'node:url';
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { AdmissionRecordError } from './admission-record.js';
 import { inForceRecords } from './consent-ports.js';
-import { HEAD_FIELD_ALTERATION, PROSE_ALTERATIONS, renderClassAct, renderPolicyAct, renderRecorderAct } from './recorder-fixtures.testkit.js';
+import { loadRecorderForms, HEAD_FIELD_ALTERATION, PROSE_ALTERATIONS, renderClassAct, renderPolicyAct, renderRecorderAct } from './recorder-fixtures.testkit.js';
 import { DECISIONS_DIR, EGRESS_V2_INSTANCE, INSTANCES_DIR, POLICY_ACT_FILE, POLICY_PATH, createAdmissionRecordsPort, createPackageAdmissionReader, createPackageAdmissionRecordsPort, createPackagePolicyReader, readClassActState, readInForceEgress, readPolicyActChain, type PackageReaderFs } from './package-reader.js';
+
+// The recorder forms render once, before the file collects its tests: some tables render at collection (syzygy-bpyt.4.8).
+await loadRecorderForms();
 
 // The citation allowlist, replaced by a map the allowlist cases fill and clear: every other case reads with no file allowlisted.
 const ALLOWLIST = vi.hoisted(() => new Map<string, { readonly sha256: string; readonly reason: string }>());
 vi.mock('./citation-allowlist.js', () => ({ CITATION_ALLOWLIST: ALLOWLIST }));
+
+// Explicit timeouts: a test whose worst measured duration exceeded 2.5 s carries one, that worst case x 3 rounded up to a whole 5 s
+// (syzygy-bpyt.4.13; scripts/size_vitest_test_timeouts.py). Since syzygy-bpyt.4.8 renders every recorder form once, at the top of
+// this file, no test here waits on a Python spawn: the fifteen tests sized for their renders measured 52 ms at worst over five runs
+// at load1 up to 21 on 12 cores, and keep vitest's default (syzygy-nyir; docs/evidence/syzygy-nyir/timeout-sizing.json). The one
+// timeout left is the port-and-chain agreement sweep's, which is all reads and is syzygy-bpyt.4.23's. It keeps its 50 s from
+// docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json, where a run at load1 127 cut it at 16.5 s: the fresh runs alone give it 15 s,
+// so the sizing --check reports that one test, and no other.
 
 const REDIS_REV = '498ecd0d6d007db11ddb3aea9428552598a78622';
 const OTHER_REV = 'd2c8a4b91e8c0e6aefd1f5bc0bf582cddbe046b7';
@@ -131,8 +142,68 @@ describe('package admission reader', () => {
     ];
     for (const [name, over] of cases) await expect(reader(world(over)).read(), name).rejects.toBeInstanceOf(AdmissionRecordError);
   });
+  it('reads a repository identity by 046\'s grammar (a-z, 0-9, ".", "_", "-"), exactly and with no folding (the owner\'s ruling of 2026-11-14)', async () => {
+    const act = `${DECISIONS_DIR}/PUBLIC-REPO-ADMISSION-REDIS-OBSERVATION-ACT.md`;
+    const observed = async (subject: string) => {
+      const t = obsText({ subject });
+      const records = await reader(world({ [REDIS_PATH]: t, [act]: actText('consent-observation', REDIS_PATH, t) })).read();
+      return records.find(r => r.class === 'observation')!.repositoryId;
+    };
+    for (const id of ['nodejs-node.js', '_a', '-x', '.dotfiles-config', 'a_b.c-d', '9']) expect(await observed(`(project:syzygy, repository:${id})`)).toBe(id);
+    for (const id of ['', 'Redis-redis', 'a/b', 'a b', 'a~b']) {
+      const t = obsText({ subject: `(project:syzygy, repository:${id})` });
+      await expect(reader(world({ [REDIS_PATH]: t, [act]: actText('consent-observation', REDIS_PATH, t) })).read(), id).rejects.toBeInstanceOf(AdmissionRecordError);
+    }
+    const scoped = (line: string) => egressText().replace('- `(project:syzygy, repository:psf-requests)`', line);
+    const egressAct = `${DECISIONS_DIR}/PUBLIC-REPO-ADMISSION-EGRESS-ANTHROPIC-ACT.md`;
+    const scope = async (line: string) => {
+      const t = scoped(line);
+      const records = await reader(world({ [EGRESS_PATH]: t, [egressAct]: actText('consent-egress', EGRESS_PATH, t) })).read();
+      return records.find(r => r.class === 'egress')!.admittedRepositories;
+    };
+    expect(await scope('- `(project:syzygy, repository:nodejs-node.js)`')).toEqual(['nodejs-node.js', 'redis-redis']);
+    // A scope line outside the grammar is not a grant: it is left out, never folded into another identity.
+    expect(await scope('- `(project:syzygy, repository:Nodejs-Node.js)`')).toEqual(['redis-redis']);
+    // A scope line is the bullet and nothing after it (R-PDJA-33-RULINGS-2 mutant O1): trailing text makes it no grant.
+    expect(await scope('- `(project:syzygy, repository:nodejs-node.js)` withdrawn')).toEqual(['redis-redis']);
+    expect(await scope('- `(project:syzygy, repository:nodejs-node.js)`x')).toEqual(['redis-redis']);
+    // Nor is a bullet that only holds a scope line after other text.
+    expect(await scope('- not - `(project:syzygy, repository:nodejs-node.js)`')).toEqual(['redis-redis']);
+    // Nor is an indented line inside the list: it is a continuation, never a scope bullet of its own.
+    expect(await scope('- `(project:syzygy, repository:psf-requests)`\n  - `(project:syzygy, repository:nodejs-node.js)`')).toEqual(['psf-requests', 'redis-redis']);
+  });
   it('refuses when the decisions directory cannot be listed', async () => {
     await expect(createPackageAdmissionReader({ root: '/missing', fs: memoryFs(world()) }).read()).rejects.toBeInstanceOf(AdmissionRecordError);
+  });
+});
+
+/** The reader's own fence rule, `outsideFences` (private; docs/evidence/syzygy-bpyt-6-3/dc3-fence-rules-2026-10-25.json, reader 4). A
+ * field inside a fence is not a field, so a record in which a field counts differently with and without fences is refused. These cases
+ * put a fence-shaped block after the title of an act record: the record stays in force exactly when the block does not open a fence
+ * that swallows the fields below it, which pins the opener's indent limit and the closer's length rule without exporting the function.
+ * On CRLF the function recognizes no fence (its opener ends in `(.*)$` and `.` does not match CR), so a field wholly inside a fence
+ * would pass `one()`; the record is refused anyway, by the title, table and heading checks that compare whole lines against LF. The
+ * two CRLF cases pin that refusal, not the mechanism, and a change that makes those checks CR-tolerant must make the fence guard so too. */
+describe('fence reading of the act records', () => {
+  const ACT_KEY = `${DECISIONS_DIR}/PUBLIC-REPO-ADMISSION-REDIS-OBSERVATION-ACT.md`;
+  const afterTitle = (act: string, block: string): string => act.replace('\n\n', `\n\n${block}\n\n`);
+  const states = async (files: Record<string, string>): Promise<string[]> =>
+    (await reader(files).read()).map(r => `${r.class}:${r.repositoryId ?? r.providerId}:${r.inForceAt === null ? 'not-in-force' : 'in-force'}`).sort();
+  const IN_FORCE = ['egress:anthropic:in-force', 'observation:redis-redis:in-force'];
+
+  it('a line indented four spaces is not a fence opener: the record stays in force', async () => {
+    expect(await states(world())).toEqual(IN_FORCE);
+    expect(await states(world({ [ACT_KEY]: afterTitle(world()[ACT_KEY]!, '    ```') }))).toEqual(IN_FORCE);
+  });
+  it('a closed example fence after the title is blanked, and its closer of the opener\'s length closes it: the record stays in force', async () => {
+    expect(await states(world({ [ACT_KEY]: afterTitle(world()[ACT_KEY]!, '```\nexample\n```') }))).toEqual(IN_FORCE);
+  });
+  it('refuses an act record written with CRLF line ends', async () => {
+    await expect(reader(world({ [ACT_KEY]: world()[ACT_KEY]!.replace(/\n/g, '\r\n') })).read()).rejects.toBeInstanceOf(AdmissionRecordError);
+  });
+  it('refuses an instance written with CRLF line ends, even when its act record binds its digest', async () => {
+    const crlf = obsText().replace(/\n/g, '\r\n');
+    await expect(reader(world({ [REDIS_PATH]: crlf, [ACT_KEY]: actText('consent-observation', REDIS_PATH, crlf) })).read()).rejects.toBeInstanceOf(AdmissionRecordError);
   });
 });
 
@@ -166,6 +237,38 @@ describe('admission records port', () => {
     expect((await p.check(requirement('egress-consent'))).satisfied).toBe(true);
     files[`${DECISIONS_DIR}/PUBLIC-REPO-ADMISSION-EGRESS-ANTHROPIC-WITHDRAWAL.md`] = 'withdrawn';
     expect((await p.check(requirement('egress-consent'))).satisfied).toBe(false);
+  });
+});
+
+describe('every observation record, in any state, for REQ-polaris-generation-046\'s matching of records made by other acts', () => {
+  const port = (files: Record<string, string>, now: number) => createAdmissionRecordsPort({ reader: reader(files), now: () => now });
+  it('lists the record with its subject, Upstream as written (this fixture states none), admitted revisions and state', async () => {
+    const read = await port(world(), AT).observationRecords!();
+    expect(read).toEqual({ ok: true, records: [{ record: 'PUBLIC-OBS-REDIS-2026-10-03@0.1.0-candidate.7', repositoryId: 'redis-redis', upstream: null, admittedRevisions: [REDIS_REV, OTHER_REV], state: 'in force' }] });
+  });
+  it('names a record not yet in force by its state, and refuses when the records cannot be read', async () => {
+    const early = await port(world(), AT - 1).observationRecords!();
+    expect(early.ok && early.records.map(r => r.state)).toEqual(['is not in force yet']);
+    expect(await port(world({ [`${DECISIONS_DIR}/PUBLIC-REPO-ADMISSION-X-WITHDRAWAL.md`]: 'x' }), AT).observationRecords!()).toMatchObject({ ok: false });
+  });
+});
+
+describe('an observation consent naming a revision, for any repository (REQ-polaris-generation-047\'s class rule)', () => {
+  const port = (files: Record<string, string>, now: number) => createAdmissionRecordsPort({ reader: reader(files), now: () => now });
+  it('is satisfied by any observation record in force whose admitted revisions include it, whatever its repository', async () => {
+    expect(await port(world(), AT).observationConsentNaming!(REDIS_REV)).toEqual({ satisfied: true, record: 'PUBLIC-OBS-REDIS-2026-10-03@0.1.0-candidate.7' });
+    expect(await port(world(), AT).observationConsentNaming!(OTHER_REV)).toEqual({ satisfied: true, record: 'PUBLIC-OBS-REDIS-2026-10-03@0.1.0-candidate.7' });
+  });
+  it('is unsatisfied for a revision no record admits, before the act, for stale bytes and when the records cannot be read', async () => {
+    expect(await port(world(), AT).observationConsentNaming!('f'.repeat(40))).toEqual({ satisfied: false, why: `no record found: no owner act puts an observation consent naming ${'f'.repeat(40)} in force` });
+    expect((await port(world(), AT - 1).observationConsentNaming!(REDIS_REV)).satisfied).toBe(false);
+    expect((await port(world({ [REDIS_PATH]: obsText() + 'x' }), AT).observationConsentNaming!(REDIS_REV)).satisfied).toBe(false);
+    expect(await port(world({ [`${DECISIONS_DIR}/PUBLIC-REPO-ADMISSION-X-WITHDRAWAL.md`]: 'x' }), AT).observationConsentNaming!(REDIS_REV))
+      .toEqual({ satisfied: false, why: 'no record found: the admission act records could not be read' });
+  });
+  it('is not satisfied by an egress record that admits the repository', async () => {
+    const records = [{ recordId: 'E', version: '1', class: 'egress' as const, project: 'project:syzygy', repositoryId: null, providerId: 'anthropic', upstream: null, digest: '1'.repeat(64), inForceAt: 1, withdrawnAt: null, supersedes: null, supersessionAt: null, admittedRevisions: [REDIS_REV], revisionLabels: [], admittedRepositories: ['redis-redis'], contentClasses: [] }];
+    expect((await createAdmissionRecordsPort({ reader: { read: async () => records }, now: () => 5 }).observationConsentNaming!(REDIS_REV)).satisfied).toBe(false);
   });
 });
 
@@ -670,6 +773,173 @@ describe('screening scope version 4 policy act', () => {
   });
 });
 
+// P-116 (owner act of 2026-11-03, syzygy-mea.4): the fifth form. Version 5 supersedes version 4 as version 4 superseded version 3.
+describe('screening scope version 5 policy act', () => {
+  const V1 = `${DECISIONS_DIR}/${POLICY_ACT_FILE}`;
+  const V2 = `${DECISIONS_DIR}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V2-ACT.md`;
+  const V3 = `${DECISIONS_DIR}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V3-ACT.md`;
+  const V4 = `${DECISIONS_DIR}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V4-ACT.md`;
+  const V5 = `${DECISIONS_DIR}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V5-ACT.md`;
+  const p1 = JSON.stringify({ policyVersion: '1.2.0-public-source-candidate.1', publicSourceScope: { rules: [] } }, null, 1) + '\n';
+  const p2 = JSON.stringify({ policyVersion: '1.3.0-public-source-candidate.1.none', publicSourceScope: { rules: ['more'] } }, null, 1) + '\n';
+  const p3 = JSON.stringify({ policyVersion: '1.4.0-public-source-candidate.1.none.code-all', publicSourceScope: { rules: ['more'], activeContent: {} } }, null, 1) + '\n';
+  const p4 = JSON.stringify({ policyVersion: '1.5.0-public-source-candidate.1.none.code-all.redact-span', publicSourceScope: { rules: ['more'], activeContent: {}, secretRedaction: {} } }, null, 1) + '\n';
+  const p5 = JSON.stringify({ policyVersion: '1.6.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd', publicSourceScope: { rules: ['more'], activeContent: {}, secretRedaction: {}, scopeDetectors: {} } }, null, 1) + '\n';
+  const V5_AT = Date.UTC(2026, 9, 7, 9, 30, 0);
+  const v1 = (): string => renderPolicyAct(sha(p1), '2026-10-03', '2026-10-03T09:30:00Z', 1);
+  const v2 = (): string => renderPolicyAct(sha(p2), '2026-10-04', '2026-10-04T09:30:00Z', 2, sha(p1));
+  const v3 = (): string => renderPolicyAct(sha(p3), '2026-10-05', '2026-10-05T09:30:00Z', 3, sha(p2));
+  const v4 = (): string => renderPolicyAct(sha(p4), '2026-10-06', '2026-10-06T09:30:00Z', 4, sha(p3));
+  const v5 = (text = p5, date = '2026-10-07', superseded = sha(p4)): string => renderPolicyAct(sha(text), date, `${date}T09:30:00Z`, 5, superseded);
+  const files = (policy: string, extra: Record<string, string>): Record<string, string> => ({ ...world(), [POLICY_PATH]: policy, ...extra });
+  const all = (): Record<string, string> => ({ [V1]: v1(), [V2]: v2(), [V3]: v3(), [V4]: v4(), [V5]: v5() });
+  const chainAt = (f: Record<string, string>, now: number) => readPolicyActChain({ root: '/r', fs: memoryFs(seen(f)), now });
+  const check = (f: Record<string, string>, now: number) => createPackageAdmissionRecordsPort({ root: '/r', now: () => now, fs: memoryFs(seen(f)) }).check(requirement('public-source-policy'));
+  const V4_ID = 'PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V4-APPROVAL-2026-10-06';
+  const V5_ID = 'PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V5-APPROVAL-2026-10-07';
+
+  it('puts version 5 in force from its instant over versions 4 to 1, in both views', async () => {
+    const f = files(p5, all());
+    expect(await chainAt(f, V5_AT)).toMatchObject({ state: 'ok', v4: { digest: sha(p4) }, v5: { digest: sha(p5) }, final: { identity: V5_ID, recordedAt: V5_AT }, policyDigest: sha(p5) });
+    expect(await check(f, V5_AT)).toEqual({ satisfied: true, record: V5_ID });
+    expect(await createPackagePolicyReader({ root: '/r', fs: memoryFs(seen(f)) }).read()).toEqual([{ actIdentity: V5_ID, digest: sha(p5), inForceAt: V5_AT, until: null }]);
+  });
+  it('leaves version 4 in force before version 5\'s instant, and never brings it back after', async () => {
+    const before = files(p4, all());
+    expect(await chainAt(before, V5_AT - 1)).toMatchObject({ state: 'ok', final: { identity: V4_ID } });
+    expect(await check(before, V5_AT - 1)).toEqual({ satisfied: true, record: V4_ID });
+    expect(await chainAt(before, V5_AT)).toMatchObject({ state: 'refused' });
+    expect(await check(before, V5_AT)).toMatchObject({ satisfied: false });
+  });
+  it.each<[string, string, Record<string, string>]>([
+    ['version 5 without version 4', p5, { [V1]: v1(), [V2]: v2(), [V3]: v3(), [V5]: v5() }],
+    ['version 5 alone', p5, { [V5]: v5() }],
+    ['version 5 not later than version 4', p5, { ...all(), [V5]: v5(p5, '2026-10-06') }],
+    ['version 5 over version 4\'s bytes', p4, { ...all(), [V5]: v5(p4) }],
+    ['a supersession naming version 3\'s argument', p5, { ...all(), [V5]: v5(p5, '2026-10-07', sha(p3)) }],
+    ['a supersession naming version 3\'s record', p5, { ...all(), [V5]: v5().replace('PUBLIC-SOURCE-SCOPE-V4-ACT.md', 'PUBLIC-SOURCE-SCOPE-V3-ACT.md') }],
+    ['a version 5 record titled as version 4', p5, { ...all(), [V5]: v5().replace(', version 5)', ', version 4)') }],
+    ['a version 5 record with version 4\'s identity', p5, { ...all(), [V5]: v5().replace('V5-APPROVAL', 'V4-APPROVAL') }],
+    ['other policy bytes', `${p5} `, all()],
+  ])('refuses %s', async (_name, policy, extra) => {
+    expect(await chainAt(files(policy, extra), V5_AT + 1000)).toMatchObject({ state: 'refused' });
+  });
+});
+
+// syzygy-n5jm (owner act of 2026-11-05): the sixth form. Version 6 supersedes version 5 as version 5 superseded version 4.
+describe('screening scope version 6 policy act', () => {
+  const V1 = `${DECISIONS_DIR}/${POLICY_ACT_FILE}`;
+  const V2 = `${DECISIONS_DIR}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V2-ACT.md`;
+  const V3 = `${DECISIONS_DIR}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V3-ACT.md`;
+  const V4 = `${DECISIONS_DIR}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V4-ACT.md`;
+  const V5 = `${DECISIONS_DIR}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V5-ACT.md`;
+  const V6 = `${DECISIONS_DIR}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V6-ACT.md`;
+  const p1 = JSON.stringify({ policyVersion: '1.2.0-public-source-candidate.1', publicSourceScope: { rules: [] } }, null, 1) + '\n';
+  const p2 = JSON.stringify({ policyVersion: '1.3.0-public-source-candidate.1.none', publicSourceScope: { rules: ['more'] } }, null, 1) + '\n';
+  const p3 = JSON.stringify({ policyVersion: '1.4.0-public-source-candidate.1.none.code-all', publicSourceScope: { rules: ['more'], activeContent: {} } }, null, 1) + '\n';
+  const p4 = JSON.stringify({ policyVersion: '1.5.0-public-source-candidate.1.none.code-all.redact-span', publicSourceScope: { rules: ['more'], activeContent: {}, secretRedaction: {} } }, null, 1) + '\n';
+  const p5 = JSON.stringify({ policyVersion: '1.6.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd', publicSourceScope: { rules: ['more'], activeContent: {}, secretRedaction: {}, scopeDetectors: {} } }, null, 1) + '\n';
+  const p6 = JSON.stringify({ policyVersion: '1.7.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd.v6-p', publicSourceScope: { rules: ['more', 'redis.conf'], activeContent: {}, secretRedaction: {}, scopeDetectors: { detectors: 2 } } }, null, 1) + '\n';
+  const V6_AT = Date.UTC(2026, 9, 8, 9, 30, 0);
+  const v1 = (): string => renderPolicyAct(sha(p1), '2026-10-03', '2026-10-03T09:30:00Z', 1);
+  const v2 = (): string => renderPolicyAct(sha(p2), '2026-10-04', '2026-10-04T09:30:00Z', 2, sha(p1));
+  const v3 = (): string => renderPolicyAct(sha(p3), '2026-10-05', '2026-10-05T09:30:00Z', 3, sha(p2));
+  const v4 = (): string => renderPolicyAct(sha(p4), '2026-10-06', '2026-10-06T09:30:00Z', 4, sha(p3));
+  const v5 = (): string => renderPolicyAct(sha(p5), '2026-10-07', '2026-10-07T09:30:00Z', 5, sha(p4));
+  const v6 = (text = p6, date = '2026-10-08', superseded = sha(p5)): string => renderPolicyAct(sha(text), date, `${date}T09:30:00Z`, 6, superseded);
+  const files = (policy: string, extra: Record<string, string>): Record<string, string> => ({ ...world(), [POLICY_PATH]: policy, ...extra });
+  const all = (): Record<string, string> => ({ [V1]: v1(), [V2]: v2(), [V3]: v3(), [V4]: v4(), [V5]: v5(), [V6]: v6() });
+  const chainAt = (f: Record<string, string>, now: number) => readPolicyActChain({ root: '/r', fs: memoryFs(seen(f)), now });
+  const check = (f: Record<string, string>, now: number) => createPackageAdmissionRecordsPort({ root: '/r', now: () => now, fs: memoryFs(seen(f)) }).check(requirement('public-source-policy'));
+  const V5_ID = 'PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V5-APPROVAL-2026-10-07';
+  const V6_ID = 'PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V6-APPROVAL-2026-10-08';
+
+  it('puts version 6 in force from its instant over versions 5 to 1, in both views', async () => {
+    const f = files(p6, all());
+    expect(await chainAt(f, V6_AT)).toMatchObject({ state: 'ok', v5: { digest: sha(p5) }, v6: { digest: sha(p6) }, final: { identity: V6_ID, recordedAt: V6_AT }, policyDigest: sha(p6) });
+    expect(await check(f, V6_AT)).toEqual({ satisfied: true, record: V6_ID });
+    expect(await createPackagePolicyReader({ root: '/r', fs: memoryFs(seen(f)) }).read()).toEqual([{ actIdentity: V6_ID, digest: sha(p6), inForceAt: V6_AT, until: null }]);
+  });
+  it('leaves version 5 in force before version 6\'s instant, and never brings it back after', async () => {
+    const before = files(p5, all());
+    expect(await chainAt(before, V6_AT - 1)).toMatchObject({ state: 'ok', final: { identity: V5_ID } });
+    expect(await check(before, V6_AT - 1)).toEqual({ satisfied: true, record: V5_ID });
+    expect(await chainAt(before, V6_AT)).toMatchObject({ state: 'refused' });
+    expect(await check(before, V6_AT)).toMatchObject({ satisfied: false });
+  });
+  it.each<[string, string, Record<string, string>]>([
+    ['version 6 without version 5', p6, { [V1]: v1(), [V2]: v2(), [V3]: v3(), [V4]: v4(), [V6]: v6() }],
+    ['version 6 alone', p6, { [V6]: v6() }],
+    ['version 6 not later than version 5', p6, { ...all(), [V6]: v6(p6, '2026-10-07') }],
+    ['version 6 over version 5\'s bytes', p5, { ...all(), [V6]: v6(p5) }],
+    ['a supersession naming version 4\'s argument', p6, { ...all(), [V6]: v6(p6, '2026-10-08', sha(p4)) }],
+    ['a supersession naming version 4\'s record', p6, { ...all(), [V6]: v6().replace('PUBLIC-SOURCE-SCOPE-V5-ACT.md', 'PUBLIC-SOURCE-SCOPE-V4-ACT.md') }],
+    ['a version 6 record titled as version 5', p6, { ...all(), [V6]: v6().replace(', version 6)', ', version 5)') }],
+    ['a version 6 record with version 5\'s identity', p6, { ...all(), [V6]: v6().replace('V6-APPROVAL', 'V5-APPROVAL') }],
+    ['other policy bytes', `${p6} `, all()],
+  ])('refuses %s', async (_name, policy, extra) => {
+    expect(await chainAt(files(policy, extra), V6_AT + 1000)).toMatchObject({ state: 'refused' });
+  });
+});
+
+describe('screening scope version 7 policy act', () => {
+  const V1 = `${DECISIONS_DIR}/${POLICY_ACT_FILE}`;
+  const V2 = `${DECISIONS_DIR}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V2-ACT.md`;
+  const V3 = `${DECISIONS_DIR}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V3-ACT.md`;
+  const V4 = `${DECISIONS_DIR}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V4-ACT.md`;
+  const V5 = `${DECISIONS_DIR}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V5-ACT.md`;
+  const V6 = `${DECISIONS_DIR}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V6-ACT.md`;
+  const p1 = JSON.stringify({ policyVersion: '1.2.0-public-source-candidate.1', publicSourceScope: { rules: [] } }, null, 1) + '\n';
+  const p2 = JSON.stringify({ policyVersion: '1.3.0-public-source-candidate.1.none', publicSourceScope: { rules: ['more'] } }, null, 1) + '\n';
+  const p3 = JSON.stringify({ policyVersion: '1.4.0-public-source-candidate.1.none.code-all', publicSourceScope: { rules: ['more'], activeContent: {} } }, null, 1) + '\n';
+  const p4 = JSON.stringify({ policyVersion: '1.5.0-public-source-candidate.1.none.code-all.redact-span', publicSourceScope: { rules: ['more'], activeContent: {}, secretRedaction: {} } }, null, 1) + '\n';
+  const p5 = JSON.stringify({ policyVersion: '1.6.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd', publicSourceScope: { rules: ['more'], activeContent: {}, secretRedaction: {}, scopeDetectors: {} } }, null, 1) + '\n';
+  const p6 = JSON.stringify({ policyVersion: '1.7.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd.v6-p', publicSourceScope: { rules: ['more', 'redis.conf'], activeContent: {}, secretRedaction: {}, scopeDetectors: { detectors: 2 } } }, null, 1) + '\n';
+  const p7 = JSON.stringify({ policyVersion: '1.8.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd.v6-p.v7-s', publicSourceScope: { rules: ['more', 'redis.conf'], activeContent: { renderCondition: 'v7' }, secretRedaction: {}, scopeDetectors: { detectors: 2 } } }, null, 1) + '\n';
+  const V7 = `${DECISIONS_DIR}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V7-ACT.md`;
+  const V7_AT = Date.UTC(2026, 9, 9, 9, 30, 0);
+  const v1 = (): string => renderPolicyAct(sha(p1), '2026-10-03', '2026-10-03T09:30:00Z', 1);
+  const v2 = (): string => renderPolicyAct(sha(p2), '2026-10-04', '2026-10-04T09:30:00Z', 2, sha(p1));
+  const v3 = (): string => renderPolicyAct(sha(p3), '2026-10-05', '2026-10-05T09:30:00Z', 3, sha(p2));
+  const v4 = (): string => renderPolicyAct(sha(p4), '2026-10-06', '2026-10-06T09:30:00Z', 4, sha(p3));
+  const v5 = (): string => renderPolicyAct(sha(p5), '2026-10-07', '2026-10-07T09:30:00Z', 5, sha(p4));
+  const v6 = (): string => renderPolicyAct(sha(p6), '2026-10-08', '2026-10-08T09:30:00Z', 6, sha(p5));
+  const v7 = (text = p7, date = '2026-10-09', superseded = sha(p6)): string => renderPolicyAct(sha(text), date, `${date}T09:30:00Z`, 7, superseded);
+  const files = (policy: string, extra: Record<string, string>): Record<string, string> => ({ ...world(), [POLICY_PATH]: policy, ...extra });
+  const all = (): Record<string, string> => ({ [V1]: v1(), [V2]: v2(), [V3]: v3(), [V4]: v4(), [V5]: v5(), [V6]: v6(), [V7]: v7() });
+  const chainAt = (f: Record<string, string>, now: number) => readPolicyActChain({ root: '/r', fs: memoryFs(seen(f)), now });
+  const check = (f: Record<string, string>, now: number) => createPackageAdmissionRecordsPort({ root: '/r', now: () => now, fs: memoryFs(seen(f)) }).check(requirement('public-source-policy'));
+  const V6_ID = 'PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V6-APPROVAL-2026-10-08';
+  const V7_ID = 'PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V7-APPROVAL-2026-10-09';
+
+  it('puts version 7 in force from its instant over versions 6 to 1, in both views', async () => {
+    const f = files(p7, all());
+    expect(await chainAt(f, V7_AT)).toMatchObject({ state: 'ok', v6: { digest: sha(p6) }, v7: { digest: sha(p7) }, final: { identity: V7_ID, recordedAt: V7_AT }, policyDigest: sha(p7) });
+    expect(await check(f, V7_AT)).toEqual({ satisfied: true, record: V7_ID });
+    expect(await createPackagePolicyReader({ root: '/r', fs: memoryFs(seen(f)) }).read()).toEqual([{ actIdentity: V7_ID, digest: sha(p7), inForceAt: V7_AT, until: null }]);
+  });
+  it('leaves version 6 in force before version 7\'s instant, and never brings it back after', async () => {
+    const before = files(p6, all());
+    expect(await chainAt(before, V7_AT - 1)).toMatchObject({ state: 'ok', final: { identity: V6_ID } });
+    expect(await check(before, V7_AT - 1)).toEqual({ satisfied: true, record: V6_ID });
+    expect(await chainAt(before, V7_AT)).toMatchObject({ state: 'refused' });
+    expect(await check(before, V7_AT)).toMatchObject({ satisfied: false });
+  });
+  it.each<[string, string, Record<string, string>]>([
+    ['version 7 without version 6', p7, { [V1]: v1(), [V2]: v2(), [V3]: v3(), [V4]: v4(), [V5]: v5(), [V7]: v7() }],
+    ['version 7 alone', p7, { [V7]: v7() }],
+    ['version 7 not later than version 6', p7, { ...all(), [V7]: v7(p7, '2026-10-08') }],
+    ['version 7 over version 6\'s bytes', p6, { ...all(), [V7]: v7(p6) }],
+    ['a supersession naming version 5\'s argument', p7, { ...all(), [V7]: v7(p7, '2026-10-09', sha(p5)) }],
+    ['a supersession naming version 5\'s record', p7, { ...all(), [V7]: v7().replace('PUBLIC-SOURCE-SCOPE-V6-ACT.md', 'PUBLIC-SOURCE-SCOPE-V5-ACT.md') }],
+    ['a version 7 record titled as version 6', p7, { ...all(), [V7]: v7().replace(', version 7)', ', version 6)') }],
+    ['a version 7 record with version 6\'s identity', p7, { ...all(), [V7]: v7().replace('V7-APPROVAL', 'V6-APPROVAL') }],
+    ['other policy bytes', `${p7} `, all()],
+  ])('refuses %s', async (_name, policy, extra) => {
+    expect(await chainAt(files(policy, extra), V7_AT + 1000)).toMatchObject({ state: 'refused' });
+  });
+});
+
 describe('strict act reads', () => {
   const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
   const POLICY_V1 = `${DECISIONS_DIR}/${POLICY_ACT_FILE}`;
@@ -936,7 +1206,7 @@ describe('every stem counts wherever it sits, save exact tooling citations in an
   // syzygy-786c: the first `full` spawns Python five times to render the recorders' acts (about 3 s of a cold 4.5 s run, by CPU
   // profile), which landed inside this test's 5 s budget. Render them once here, under a budget of their own; the renders are cached.
   // One case per row then keeps each read (about 20 ms) far from the budget whatever the suite load.
-  beforeAll(() => { full({}); }, 60_000);
+  beforeAll(() => { full({}); }, 60_000); // five Python renders took about 3 s of a cold 4.5 s run (6c91e65a)
   it('with no file allowlisted, refuses nothing in the base world, and the table holds every row', async () => {
     expect(await allReads(full({}))).toEqual([]);
     expect(STILL_REFUSED.length + PROBE.length).toBe(50 + 147);   // R-361-1's control row is the line above
@@ -1050,5 +1320,5 @@ describe('the policy port and the strict policy chain agree', () => {
       if (answer.satisfied) satisfied += 1;
     }
     expect(satisfied).toBeGreaterThan(10);   // the comparison is not vacuous
-  });
+  }, 50_000); // sized from its worst measured run: docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json
 });

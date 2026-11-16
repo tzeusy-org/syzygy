@@ -1,0 +1,36 @@
+{
+ "tree": "/var/tmp/la-b714/head",
+ "head": "01df68eab9ef3f9b6f556c6aa00f28c70ba6e5f1",
+ "results": [
+  {
+   "id": "O5-presented-token-trimmed-before-compare",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 579 passed (580)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed | 68 passed (69)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/http-host  packages/http-host/src/credentials.test.ts > RT3 — credential verification through core admission > the minted token behind any other whitespace refuses, named"
+   ],
+   "timeouts": 0,
+   "seconds": 26.1,
+   "counts": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "old": "  const a = createHash('sha256').update(presented, 'utf8').digest();",
+     "new": "  const a = createHash('sha256').update(presented.trim(), 'utf8').digest();"
+    }
+   ]
+  }
+ ]
+}

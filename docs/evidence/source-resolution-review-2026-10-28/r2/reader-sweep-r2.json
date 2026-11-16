@@ -1,0 +1,515 @@
+{
+ "population": 7343,
+ "undecodable": 11,
+ "tracked": 7354,
+ "distStemHits": [
+  {
+   "module": "packages/polaris-dossier/src/full-run.testkit.ts",
+   "file": "AGENTS.md",
+   "line": 329,
+   "text": "still emits two kits a reader takes from `dist` (`full-run.testkit.ts` for"
+  },
+  {
+   "module": "packages/polaris-dossier/src/full-run.testkit.ts",
+   "file": "apps/three-surface-poc/src/product-build.test.ts",
+   "line": 32,
+   "text": "'packages/polaris-dossier/src/full-run.testkit.ts': 'scripts/dossier_scale_measure.mjs imports its dist',"
+  },
+  {
+   "module": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8322df4f.json",
+   "line": 18,
+   "text": "\"packages/polaris-generation-core/dist/workspace-reach.testkit.js\""
+  },
+  {
+   "module": "apps/three-surface-poc/src/test-deep-dive-markers.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fb78d1b.json",
+   "line": 20,
+   "text": "\"apps/three-surface-poc/dist/test-deep-dive-markers.d.ts.map\","
+  },
+  {
+   "module": "apps/three-surface-poc/src/test-fixture-sweep.global-setup.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fb78d1b.json",
+   "line": 21,
+   "text": "\"apps/three-surface-poc/dist/test-fixture-sweep.global-setup.d.ts.map\","
+  },
+  {
+   "module": "apps/three-surface-poc/src/test-http-client.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fb78d1b.json",
+   "line": 22,
+   "text": "\"apps/three-surface-poc/dist/test-http-client.d.ts.map\","
+  },
+  {
+   "module": "packages/polaris-dossier/src/child-process.testkit.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fb78d1b.json",
+   "line": 26,
+   "text": "\"packages/polaris-dossier/dist/child-process.testkit.d.ts.map\","
+  },
+  {
+   "module": "packages/polaris-dossier/src/fs-patch.testkit.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fb78d1b.json",
+   "line": 27,
+   "text": "\"packages/polaris-dossier/dist/fs-patch.testkit.d.ts.map\","
+  },
+  {
+   "module": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fb78d1b.json",
+   "line": 28,
+   "text": "\"packages/polaris-generation-core/dist/workspace-reach.testkit.d.ts.map\","
+  },
+  {
+   "module": "packages/support/src/purity.testkit.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fb78d1b.json",
+   "line": 29,
+   "text": "\"packages/support/dist/purity.testkit.d.ts.map\","
+  },
+  {
+   "module": "packages/three-surface-poc-core/src/test-cleanup.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fb78d1b.json",
+   "line": 30,
+   "text": "\"packages/three-surface-poc-core/dist/test-cleanup.d.ts.map\","
+  },
+  {
+   "module": "packages/three-surface-poc-core/src/test-frozen.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fb78d1b.json",
+   "line": 31,
+   "text": "\"packages/three-surface-poc-core/dist/test-frozen.d.ts.map\""
+  },
+  {
+   "module": "apps/three-surface-poc/src/test-deep-dive-markers.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fb78d1b.json",
+   "line": 55,
+   "text": "\"apps/three-surface-poc/dist/test-deep-dive-markers.js.map\","
+  },
+  {
+   "module": "apps/three-surface-poc/src/test-fixture-sweep.global-setup.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fb78d1b.json",
+   "line": 56,
+   "text": "\"apps/three-surface-poc/dist/test-fixture-sweep.global-setup.js.map\","
+  },
+  {
+   "module": "apps/three-surface-poc/src/test-http-client.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fb78d1b.json",
+   "line": 57,
+   "text": "\"apps/three-surface-poc/dist/test-http-client.js.map\","
+  },
+  {
+   "module": "packages/polaris-dossier/src/child-process.testkit.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fb78d1b.json",
+   "line": 61,
+   "text": "\"packages/polaris-dossier/dist/child-process.testkit.js.map\","
+  },
+  {
+   "module": "packages/polaris-dossier/src/fs-patch.testkit.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fb78d1b.json",
+   "line": 62,
+   "text": "\"packages/polaris-dossier/dist/fs-patch.testkit.js.map\","
+  },
+  {
+   "module": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fb78d1b.json",
+   "line": 63,
+   "text": "\"packages/polaris-generation-core/dist/workspace-reach.testkit.js.map\","
+  },
+  {
+   "module": "packages/support/src/purity.testkit.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fb78d1b.json",
+   "line": 64,
+   "text": "\"packages/support/dist/purity.testkit.js.map\","
+  },
+  {
+   "module": "packages/three-surface-poc-core/src/test-cleanup.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fb78d1b.json",
+   "line": 65,
+   "text": "\"packages/three-surface-poc-core/dist/test-cleanup.js.map\","
+  },
+  {
+   "module": "packages/three-surface-poc-core/src/test-frozen.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fb78d1b.json",
+   "line": 66,
+   "text": "\"packages/three-surface-poc-core/dist/test-frozen.js.map\""
+  },
+  {
+   "module": "apps/three-surface-poc/src/test-deep-dive-markers.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fb78d1b.json",
+   "line": 91,
+   "text": "\"apps/three-surface-poc/dist/test-deep-dive-markers.d.ts\","
+  },
+  {
+   "module": "apps/three-surface-poc/src/test-fixture-sweep.global-setup.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fb78d1b.json",
+   "line": 92,
+   "text": "\"apps/three-surface-poc/dist/test-fixture-sweep.global-setup.d.ts\","
+  },
+  {
+   "module": "apps/three-surface-poc/src/test-http-client.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fb78d1b.json",
+   "line": 93,
+   "text": "\"apps/three-surface-poc/dist/test-http-client.d.ts\","
+  },
+  {
+   "module": "packages/polaris-dossier/src/child-process.testkit.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fb78d1b.json",
+   "line": 97,
+   "text": "\"packages/polaris-dossier/dist/child-process.testkit.d.ts\","
+  },
+  {
+   "module": "packages/polaris-dossier/src/fs-patch.testkit.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fb78d1b.json",
+   "line": 98,
+   "text": "\"packages/polaris-dossier/dist/fs-patch.testkit.d.ts\","
+  },
+  {
+   "module": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fb78d1b.json",
+   "line": 99,
+   "text": "\"packages/polaris-generation-core/dist/workspace-reach.testkit.d.ts\","
+  },
+  {
+   "module": "packages/support/src/purity.testkit.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fb78d1b.json",
+   "line": 100,
+   "text": "\"packages/support/dist/purity.testkit.d.ts\","
+  },
+  {
+   "module": "packages/three-surface-poc-core/src/test-cleanup.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fb78d1b.json",
+   "line": 101,
+   "text": "\"packages/three-surface-poc-core/dist/test-cleanup.d.ts\","
+  },
+  {
+   "module": "packages/three-surface-poc-core/src/test-frozen.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fb78d1b.json",
+   "line": 102,
+   "text": "\"packages/three-surface-poc-core/dist/test-frozen.d.ts\""
+  },
+  {
+   "module": "apps/three-surface-poc/src/test-deep-dive-markers.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fb78d1b.json",
+   "line": 124,
+   "text": "\"apps/three-surface-poc/dist/test-deep-dive-markers.js\","
+  },
+  {
+   "module": "apps/three-surface-poc/src/test-fixture-sweep.global-setup.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fb78d1b.json",
+   "line": 125,
+   "text": "\"apps/three-surface-poc/dist/test-fixture-sweep.global-setup.js\","
+  },
+  {
+   "module": "apps/three-surface-poc/src/test-http-client.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fb78d1b.json",
+   "line": 126,
+   "text": "\"apps/three-surface-poc/dist/test-http-client.js\","
+  },
+  {
+   "module": "packages/polaris-dossier/src/child-process.testkit.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fb78d1b.json",
+   "line": 130,
+   "text": "\"packages/polaris-dossier/dist/child-process.testkit.js\","
+  },
+  {
+   "module": "packages/polaris-dossier/src/fs-patch.testkit.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fb78d1b.json",
+   "line": 131,
+   "text": "\"packages/polaris-dossier/dist/fs-patch.testkit.js\","
+  },
+  {
+   "module": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fb78d1b.json",
+   "line": 132,
+   "text": "\"packages/polaris-generation-core/dist/workspace-reach.testkit.js\","
+  },
+  {
+   "module": "packages/support/src/purity.testkit.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fb78d1b.json",
+   "line": 133,
+   "text": "\"packages/support/dist/purity.testkit.js\","
+  },
+  {
+   "module": "packages/three-surface-poc-core/src/test-cleanup.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fb78d1b.json",
+   "line": 134,
+   "text": "\"packages/three-surface-poc-core/dist/test-cleanup.js\","
+  },
+  {
+   "module": "packages/three-surface-poc-core/src/test-frozen.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fb78d1b.json",
+   "line": 135,
+   "text": "\"packages/three-surface-poc-core/dist/test-frozen.js\""
+  },
+  {
+   "module": "apps/three-surface-poc/src/test-deep-dive-markers.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fcf409c.json",
+   "line": 20,
+   "text": "\"apps/three-surface-poc/dist/test-deep-dive-markers.d.ts.map\","
+  },
+  {
+   "module": "apps/three-surface-poc/src/test-fixture-sweep.global-setup.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fcf409c.json",
+   "line": 21,
+   "text": "\"apps/three-surface-poc/dist/test-fixture-sweep.global-setup.d.ts.map\","
+  },
+  {
+   "module": "apps/three-surface-poc/src/test-http-client.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fcf409c.json",
+   "line": 22,
+   "text": "\"apps/three-surface-poc/dist/test-http-client.d.ts.map\","
+  },
+  {
+   "module": "packages/polaris-dossier/src/child-process.testkit.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fcf409c.json",
+   "line": 26,
+   "text": "\"packages/polaris-dossier/dist/child-process.testkit.d.ts.map\","
+  },
+  {
+   "module": "packages/polaris-dossier/src/fs-patch.testkit.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fcf409c.json",
+   "line": 27,
+   "text": "\"packages/polaris-dossier/dist/fs-patch.testkit.d.ts.map\","
+  },
+  {
+   "module": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fcf409c.json",
+   "line": 28,
+   "text": "\"packages/polaris-generation-core/dist/workspace-reach.testkit.d.ts.map\","
+  },
+  {
+   "module": "packages/three-surface-poc-core/src/test-cleanup.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fcf409c.json",
+   "line": 29,
+   "text": "\"packages/three-surface-poc-core/dist/test-cleanup.d.ts.map\","
+  },
+  {
+   "module": "packages/three-surface-poc-core/src/test-frozen.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fcf409c.json",
+   "line": 30,
+   "text": "\"packages/three-surface-poc-core/dist/test-frozen.d.ts.map\""
+  },
+  {
+   "module": "apps/three-surface-poc/src/test-deep-dive-markers.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fcf409c.json",
+   "line": 54,
+   "text": "\"apps/three-surface-poc/dist/test-deep-dive-markers.js.map\","
+  },
+  {
+   "module": "apps/three-surface-poc/src/test-fixture-sweep.global-setup.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fcf409c.json",
+   "line": 55,
+   "text": "\"apps/three-surface-poc/dist/test-fixture-sweep.global-setup.js.map\","
+  },
+  {
+   "module": "apps/three-surface-poc/src/test-http-client.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fcf409c.json",
+   "line": 56,
+   "text": "\"apps/three-surface-poc/dist/test-http-client.js.map\","
+  },
+  {
+   "module": "packages/polaris-dossier/src/child-process.testkit.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fcf409c.json",
+   "line": 60,
+   "text": "\"packages/polaris-dossier/dist/child-process.testkit.js.map\","
+  },
+  {
+   "module": "packages/polaris-dossier/src/fs-patch.testkit.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fcf409c.json",
+   "line": 61,
+   "text": "\"packages/polaris-dossier/dist/fs-patch.testkit.js.map\","
+  },
+  {
+   "module": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fcf409c.json",
+   "line": 62,
+   "text": "\"packages/polaris-generation-core/dist/workspace-reach.testkit.js.map\","
+  },
+  {
+   "module": "packages/three-surface-poc-core/src/test-cleanup.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fcf409c.json",
+   "line": 63,
+   "text": "\"packages/three-surface-poc-core/dist/test-cleanup.js.map\","
+  },
+  {
+   "module": "packages/three-surface-poc-core/src/test-frozen.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fcf409c.json",
+   "line": 64,
+   "text": "\"packages/three-surface-poc-core/dist/test-frozen.js.map\""
+  },
+  {
+   "module": "apps/three-surface-poc/src/test-deep-dive-markers.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fcf409c.json",
+   "line": 89,
+   "text": "\"apps/three-surface-poc/dist/test-deep-dive-markers.d.ts\","
+  },
+  {
+   "module": "apps/three-surface-poc/src/test-fixture-sweep.global-setup.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fcf409c.json",
+   "line": 90,
+   "text": "\"apps/three-surface-poc/dist/test-fixture-sweep.global-setup.d.ts\","
+  },
+  {
+   "module": "apps/three-surface-poc/src/test-http-client.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fcf409c.json",
+   "line": 91,
+   "text": "\"apps/three-surface-poc/dist/test-http-client.d.ts\","
+  },
+  {
+   "module": "packages/polaris-dossier/src/child-process.testkit.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fcf409c.json",
+   "line": 95,
+   "text": "\"packages/polaris-dossier/dist/child-process.testkit.d.ts\","
+  },
+  {
+   "module": "packages/polaris-dossier/src/fs-patch.testkit.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fcf409c.json",
+   "line": 96,
+   "text": "\"packages/polaris-dossier/dist/fs-patch.testkit.d.ts\","
+  },
+  {
+   "module": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fcf409c.json",
+   "line": 97,
+   "text": "\"packages/polaris-generation-core/dist/workspace-reach.testkit.d.ts\","
+  },
+  {
+   "module": "packages/three-surface-poc-core/src/test-cleanup.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fcf409c.json",
+   "line": 98,
+   "text": "\"packages/three-surface-poc-core/dist/test-cleanup.d.ts\","
+  },
+  {
+   "module": "packages/three-surface-poc-core/src/test-frozen.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fcf409c.json",
+   "line": 99,
+   "text": "\"packages/three-surface-poc-core/dist/test-frozen.d.ts\""
+  },
+  {
+   "module": "apps/three-surface-poc/src/test-deep-dive-markers.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fcf409c.json",
+   "line": 121,
+   "text": "\"apps/three-surface-poc/dist/test-deep-dive-markers.js\","
+  },
+  {
+   "module": "apps/three-surface-poc/src/test-fixture-sweep.global-setup.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fcf409c.json",
+   "line": 122,
+   "text": "\"apps/three-surface-poc/dist/test-fixture-sweep.global-setup.js\","
+  },
+  {
+   "module": "apps/three-surface-poc/src/test-http-client.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fcf409c.json",
+   "line": 123,
+   "text": "\"apps/three-surface-poc/dist/test-http-client.js\","
+  },
+  {
+   "module": "packages/polaris-dossier/src/child-process.testkit.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fcf409c.json",
+   "line": 127,
+   "text": "\"packages/polaris-dossier/dist/child-process.testkit.js\","
+  },
+  {
+   "module": "packages/polaris-dossier/src/fs-patch.testkit.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fcf409c.json",
+   "line": 128,
+   "text": "\"packages/polaris-dossier/dist/fs-patch.testkit.js\","
+  },
+  {
+   "module": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fcf409c.json",
+   "line": 129,
+   "text": "\"packages/polaris-generation-core/dist/workspace-reach.testkit.js\","
+  },
+  {
+   "module": "packages/three-surface-poc-core/src/test-cleanup.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fcf409c.json",
+   "line": 130,
+   "text": "\"packages/three-surface-poc-core/dist/test-cleanup.js\","
+  },
+  {
+   "module": "packages/three-surface-poc-core/src/test-frozen.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/emit-8fcf409c.json",
+   "line": 131,
+   "text": "\"packages/three-surface-poc-core/dist/test-frozen.js\""
+  },
+  {
+   "module": "packages/polaris-dossier/src/full-run.testkit.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/test-support-readers-8fcf409c.json",
+   "line": 72,
+   "text": "\"scripts/dossier_scale_measure.mjs:32 [dist] const kit = await dist('packages/polaris-dossier/dist/full-run.testkit.js');\""
+  },
+  {
+   "module": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+   "file": "docs/evidence/syzygy-bpyt-4-2/test-support-readers-8fcf409c.json",
+   "line": 141,
+   "text": "\"docs/evidence/syzygy-bpyt-6-15/closure.mjs:17 [dist] const kit = await import(pathToFileURL(join(tree, 'packages/polaris-generation-core/dist/workspace-reach.testkit.js')).href);\","
+  },
+  {
+   "module": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+   "file": "docs/evidence/syzygy-bpyt-6-15/closure.mjs",
+   "line": 17,
+   "text": "const kit = await import(pathToFileURL(join(tree, 'packages/polaris-generation-core/dist/workspace-reach.testkit.js')).href);"
+  },
+  {
+   "module": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+   "file": "docs/reviews/R-GP-IMPL-ARGV-GUARDS-1-RAW.md",
+   "line": 316,
+   "text": "`../../polaris-generation-core/src/workspace-reach.testkit.js`, a path with no `.js` file; no `dist/` test is run (the vitest"
+  },
+  {
+   "module": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-NOTES-1-RAW.md",
+   "line": 245,
+   "text": "- [Observed] The build compiles the kit to `dist/workspace-reach.testkit.js`, and `removeComments` is unset, so the comment change"
+  },
+  {
+   "module": "packages/support/src/purity.testkit.ts",
+   "file": "docs/reviews/R-GP-IMPL-SUPPORT-LEAF-GUARDS-1-RAW.md",
+   "line": 430,
+   "text": "- The one new build output is `packages/support/dist/purity.testkit.{js,d.ts}`. `src` is the package's `include`, as it"
+  },
+  {
+   "module": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+   "file": "packages/polaris-generation-core/src/island-boundary.test.ts",
+   "line": 10,
+   "text": "// `./dist/X.js` is `src/X.ts` (workspace-reach.testkit.ts, which the dossier's"
+  },
+  {
+   "module": "packages/polaris-dossier/src/full-run.testkit.ts",
+   "file": "scripts/dossier_scale_measure.mjs",
+   "line": 32,
+   "text": "const kit = await dist('packages/polaris-dossier/dist/full-run.testkit.js');"
+  }
+ ],
+ "distEnumeratorLines": [
+  "docs/evidence/host-tidy-review-2026-10-27/tools/misc_checks.py:73: for dirpath, _, files in os.walk(os.path.join(t, d, p, 'dist')):",
+  "docs/evidence/host-tidy-review-2026-10-27/tools/mutants.py:81: for d in glob.glob(os.path.join(tree, 'apps', '*', 'dist')) + glob.glob(os.path.join(tree, 'packages', '*', 'dist')):",
+  "docs/evidence/host-tidy-review-2026-10-27/tools/suite.py:16: dists = sorted(subprocess.run(['find', tree, '-path', f'{tree}/node_modules', '-prune', '-o', '-type', 'd', '-name', 'dist', '-print'],",
+  "docs/evidence/poc-core-hygiene-2026-10-22/dist_code_diff.py:32: for path in sorted(dist.rglob('*')):",
+  "docs/evidence/poc-core-hygiene-2026-10-22/route-capture.mjs:137: creation: 'first run only: fixtureRepoWithGit([]) from apps/three-surface-poc/dist/test-model-fixture.js builds a git repository from fixed files with pinned commit instants (GIT_AUTHOR_DATE and GIT_C",
+  "docs/evidence/poc-hygiene-2026-10-22/assemble_records.py:140: 'creation': 'first run only: fixtureRepoWithGit([]) from apps/three-surface-poc/dist/test-model-fixture.js builds a git repository from eight fixed files with pinned commit instants (GIT_AUTHOR_DATE a",
+  "docs/evidence/scratch-prefix-census-2026-10-23/assemble_census.py:765: vitest_dist = sorted((WT / 'node_modules' / 'vitest' / 'dist' / 'chunks').glob('cli-api.*.js'))",
+  "docs/evidence/support-leaf-guards-review-2026-10-28/r1/tools/bundle_diff.py:31: dist = sorted(f'{p}/{d}' for p in ['apps', 'packages'] for d in os.listdir(os.path.join(clone, p))",
+  "docs/evidence/support-leaf-guards-review-2026-10-28/r1/tools/rev_mutants.py:189: present = sorted(f'{p}/{n}/dist' for p in ['apps', 'packages'] for n in os.listdir(os.path.join(clone, p))",
+  "docs/evidence/support-leaf-guards-review-2026-10-28/r3/tools/dist_compare_r3.py:14: return sorted(f'{p}/{n}/dist' for p in ['apps', 'packages'] for n in os.listdir(os.path.join(clone, p))",
+  "docs/evidence/support-leaf-guards-review-2026-10-28/r3/tools/r3_mutants.py:91: return sorted(f'{p}/{n}/dist' for p in ['apps', 'packages'] for n in os.listdir(os.path.join(clone, p))",
+  "docs/evidence/support-leaf-review-2026-10-27/round-1/run/live_diff.mjs:19: const walk = await load('apps/three-surface-poc/dist/walkthrough-inputs.js');",
+  "docs/evidence/support-leaf-review-2026-10-27/round-1/tools/egress_alias_check.py:61: 'distPresent': bool(glob.glob(os.path.join(root, 'packages/support/dist/index.js')))}",
+  "docs/evidence/support-leaf-review-2026-10-27/round-1/tools/egress_alias_check.py:74: for d in glob.glob(os.path.join(root, 'packages/*/dist')) + glob.glob(os.path.join(root, 'apps/*/dist')):",
+  "docs/evidence/support-leaf-review-2026-10-27/round-2/tools/dist_absent_run.py:11: dists = [os.path.join(clone, t, n, 'dist') for t in ('packages', 'apps') for n in sorted(os.listdir(os.path.join(clone, t)))",
+  "docs/evidence/support-leaf-review-2026-10-27/round-2/tools/dist_absent_run.py:17: left = [os.path.join(clone, t, n, 'dist') for t in ('packages', 'apps') for n in os.listdir(os.path.join(clone, t)) if os.path.isdir(os.path.join(clone, t, n, 'dist'))]",
+  "docs/evidence/support-leaf-review-2026-10-27/round-2/tools/egress_arms.py:44: return [os.path.join(clone, top, n, 'dist') for top in ('packages', 'apps') for n in sorted(os.listdir(os.path.join(clone, top)))",
+  "docs/evidence/support-leaf-review-2026-10-27/round-2/tools/entry_drift_probe.py:42: result['restore'] = {'rebuildExit': rb.returncode, 'distFiles': sorted(os.listdir(os.path.join(clone, 'packages/support/dist'))),",
+  "docs/evidence/support-leaf-review-2026-10-27/round-2/tools/live_diff.mjs:19: const walk = await load('apps/three-surface-poc/dist/walkthrough-inputs.js');",
+  "docs/evidence/syzygy-bpyt-4-2/tools/compare_emit.py:24: for directory, _, files in os.walk(os.path.join(root, parent, name, \"dist\")):",
+  "docs/evidence/syzygy-bpyt-4-2/tools/stale_dist_demonstration.py:48: for directory, _, files in sorted(os.walk(os.path.join(project, \"dist\"))):",
+  "docs/evidence/syzygy-bpyt-6-13/junit-fixture-differential.mjs:23: const fixture = await load('apps/three-surface-poc/dist/test-walkthrough-judgment-fixture.js');",
+  "docs/evidence/syzygy-bpyt-6-14/tools/bundle_differential.py:29: dist = sorted(f'{p}/{d}' for p in ['apps', 'packages'] for d in os.listdir(os.path.join(clone, p)) if os.path.isdir(os.path.join(clone, p, d, 'dist')))",
+  "docs/evidence/syzygy-bpyt-6-14/tools/mutants.py:240: return sorted(f'{parent}/{name}/dist' for parent in ['apps', 'packages'] for name in os.listdir(os.path.join(clone, parent))",
+  "docs/evidence/syzygy-bpyt-6-14/tools/suite_run.py:38: dist = sorted(f'{p}/{d}/dist' for p in ['apps', 'packages'] for d in os.listdir(os.path.join(tree, p)) if os.path.isdir(os.path.join(tree, p, d, 'dist')))",
+  "docs/evidence/syzygy-bpyt-6-15/dist_absent.py:1: \"\"\"syzygy-bpyt.6.15: run the gate's two test files with every workspace `dist` removed, so the drift guard's walk and the gate are",
+  "docs/evidence/syzygy-bpyt-6-15/dist_absent.py:13: for dist in glob.glob(os.path.join(tree, top, '*', 'dist')):",
+  "docs/evidence/syzygy-bpyt-6-15/dist_absent.py:15: dists = [os.path.relpath(p, tree) for top in ('apps', 'packages') for p in glob.glob(os.path.join(tree, top, '*', 'dist'))]",
+  "docs/evidence/syzygy-bpyt-6-3/diff-probe.mjs:33: const judg = await load('apps/three-surface-poc/dist/test-walkthrough-judgment-fixture.js');",
+  "docs/evidence/syzygy-bpyt-6-3/diff-probe.mjs:152: const walk = await load('apps/three-surface-poc/dist/walkthrough-inputs.js');",
+  "docs/evidence/syzygy-bpyt-7-15/poc_alone.py:28: return sorted(os.path.relpath(p, clone) for top in ('apps', 'packages') for p in glob.glob(os.path.join(clone, top, '*', 'dist')))",
+  "packages/three-surface-poc-core/src/test-artifact-verification-live-source.test.ts:332: [\"const globbed = import.meta.glob('/node_modules/tinyexec/dist/main.js', { eager: true });\\nvoid globbed;\", 'uses import.meta'],"
+ ]
+}

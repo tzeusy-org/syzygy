@@ -1,0 +1,291 @@
+{
+ "W0-entries-unmutated": [],
+ "N0-no-egress-unmutated": [],
+ "P0-support-unmutated": [],
+ "G0-guard-unmutated": [],
+ "E1-segment-check-dropped": [
+  [
+   "the workspace entry modules throws on a /../ segment that the resolver would join away, since Node refuses the entry",
+   "AssertionError: expected [Function] to throw an error\n    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/node_modules/@vitest/expect/dist/index.js:1420:16)\n    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/node_modules/@vitest/ex"
+  ],
+  [
+   "the workspace entry modules throws on such a target under a condition Node does not read, or in a main, and names the one Node refuses first",
+   "AssertionError: expected [Function] to throw an error\n    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/node_modules/@vitest/expect/dist/index.js:1420:16)\n    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/node_modules/@vitest/ex"
+  ]
+ ],
+ "E5-segment-check-reads-only-a-string-entry": [
+  [
+   "the workspace entry modules throws on a /../ segment that the resolver would join away, since Node refuses the entry",
+   "AssertionError: expected [Function] to throw an error\n    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/node_modules/@vitest/expect/dist/index.js:1420:16)\n    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/node_modules/@vitest/ex"
+  ],
+  [
+   "the workspace entry modules throws on such a target under a condition Node does not read, or in a main, and names the one Node refuses first",
+   "AssertionError: expected [Function] to throw an error\n    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/node_modules/@vitest/expect/dist/index.js:1420:16)\n    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/node_modules/@vitest/ex"
+  ],
+  [
+   "the segment rules the entry reader copies from Node 24's exports resolver reads \"./dist/x/../index.js\" as Node does: it refuses",
+   "AssertionError: expected 'loads' to be 'refuses' // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/packages/polaris-generation-core/src/workspace-reach.test.ts:239:100\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/node_modules/@vitest/runner/dist/"
+  ],
+  [
+   "the segment rules the entry reader copies from Node 24's exports resolver reads \"./dist/./index.js\" as Node does: it refuses",
+   "AssertionError: expected 'loads' to be 'refuses' // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/packages/polaris-generation-core/src/workspace-reach.test.ts:239:100\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/node_modules/@vitest/runner/dist/"
+  ],
+  [
+   "the segment rules the entry reader copies from Node 24's exports resolver reads \"./dist/node_modules/index.js\" as Node does: it refuses",
+   "AssertionError: expected 'loads' to be 'refuses' // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/packages/polaris-generation-core/src/workspace-reach.test.ts:239:100\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/node_modules/@vitest/runner/dist/"
+  ],
+  [
+   "the segment rules the entry reader copies from Node 24's exports resolver reads \"./dist/NODE_MODULES/index.js\" as Node does: it refuses",
+   "AssertionError: expected 'loads' to be 'refuses' // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/packages/polaris-generation-core/src/workspace-reach.test.ts:239:100\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/node_modules/@vitest/runner/dist/"
+  ],
+  [
+   "the segment rules the entry reader copies from Node 24's exports resolver reads \"./dist/%2e%2e/index.js\" as Node does: it refuses",
+   "AssertionError: expected 'loads' to be 'refuses' // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/packages/polaris-generation-core/src/workspace-reach.test.ts:239:100\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/node_modules/@vitest/runner/dist/"
+  ],
+  [
+   "the segment rules the entry reader copies from Node 24's exports resolver reads \"./dist/%2E/index.js\" as Node does: it refuses",
+   "AssertionError: expected 'loads' to be 'refuses' // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/packages/polaris-generation-core/src/workspace-reach.test.ts:239:100\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/node_modules/@vitest/runner/dist/"
+  ],
+  [
+   "the segment rules the entry reader copies from Node 24's exports resolver reads \"./dist/%6eode_modules/index.js\" as Node does: it refuses",
+   "AssertionError: expected 'loads' to be 'refuses' // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/packages/polaris-generation-core/src/workspace-reach.test.ts:239:100\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/node_modules/@vitest/runner/dist/"
+  ],
+  [
+   "the segment rules the entry reader copies from Node 24's exports resolver reads \"./dist/x\\\\..\\\\index.js\" as Node does: it refuses",
+   "AssertionError: expected 'loads' to be 'refuses' // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/packages/polaris-generation-core/src/workspace-reach.test.ts:239:100\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/node_modules/@vitest/runner/dist/"
+  ],
+  [
+   "the segment rules the entry reader copies from Node 24's exports resolver reads \"./dist//index.js\" as Node does: it warns",
+   "AssertionError: expected 'loads' to be 'warns' // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/packages/polaris-generation-core/src/workspace-reach.test.ts:239:100\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/node_modules/@vitest/runner/dist/ch"
+  ]
+ ],
+ "E6-segment-check-reads-one-condition-deep": [
+  [
+   "the workspace entry modules throws on such a target under a condition Node does not read, or in a main, and names the one Node refuses first",
+   "AssertionError: expected [Function] to throw error including '@syzygy/lib: its node > import condit\u2026' but got '@syzygy/lib: its entry is not a ./dis\u2026'\n    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/node_modules/@vitest/expect/dist/index.js:1420:16)\n    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-Gi"
+  ]
+ ],
+ "E7-segment-check-narrowed-to-dotdot": [
+  [
+   "the workspace entry modules throws on such a target under a condition Node does not read, or in a main, and names the one Node refuses first",
+   "AssertionError: expected [Function] to throw error including '@syzygy/lib: its node > import condit\u2026' but got '@syzygy/lib: its entry is not a ./dis\u2026'\n    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/node_modules/@vitest/expect/dist/index.js:1420:16)\n    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-Gi"
+  ],
+  [
+   "the segment rules the entry reader copies from Node 24's exports resolver reads \"./dist/./index.js\" as Node does: it refuses",
+   "AssertionError: expected 'loads' to be 'refuses' // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/packages/polaris-generation-core/src/workspace-reach.test.ts:239:100\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/node_modules/@vitest/runner/dist/"
+  ],
+  [
+   "the segment rules the entry reader copies from Node 24's exports resolver reads \"./dist/node_modules/index.js\" as Node does: it refuses",
+   "AssertionError: expected 'loads' to be 'refuses' // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/packages/polaris-generation-core/src/workspace-reach.test.ts:239:100\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/node_modules/@vitest/runner/dist/"
+  ],
+  [
+   "the segment rules the entry reader copies from Node 24's exports resolver reads \"./dist/NODE_MODULES/index.js\" as Node does: it refuses",
+   "AssertionError: expected 'loads' to be 'refuses' // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/packages/polaris-generation-core/src/workspace-reach.test.ts:239:100\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/node_modules/@vitest/runner/dist/"
+  ],
+  [
+   "the segment rules the entry reader copies from Node 24's exports resolver reads \"./dist/%2e%2e/index.js\" as Node does: it refuses",
+   "AssertionError: expected 'loads' to be 'refuses' // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/packages/polaris-generation-core/src/workspace-reach.test.ts:239:100\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/node_modules/@vitest/runner/dist/"
+  ],
+  [
+   "the segment rules the entry reader copies from Node 24's exports resolver reads \"./dist/%2E/index.js\" as Node does: it refuses",
+   "AssertionError: expected 'loads' to be 'refuses' // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/packages/polaris-generation-core/src/workspace-reach.test.ts:239:100\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/node_modules/@vitest/runner/dist/"
+  ],
+  [
+   "the segment rules the entry reader copies from Node 24's exports resolver reads \"./dist/%6eode_modules/index.js\" as Node does: it refuses",
+   "AssertionError: expected 'loads' to be 'refuses' // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/packages/polaris-generation-core/src/workspace-reach.test.ts:239:100\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/node_modules/@vitest/runner/dist/"
+  ],
+  [
+   "the segment rules the entry reader copies from Node 24's exports resolver reads \"./dist/x\\\\..\\\\index.js\" as Node does: it refuses",
+   "AssertionError: expected 'loads' to be 'refuses' // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/packages/polaris-generation-core/src/workspace-reach.test.ts:239:100\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/node_modules/@vitest/runner/dist/"
+  ],
+  [
+   "the segment rules the entry reader copies from Node 24's exports resolver reads \"./dist//index.js\" as Node does: it warns",
+   "AssertionError: expected 'loads' to be 'warns' // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/packages/polaris-generation-core/src/workspace-reach.test.ts:239:100\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/node_modules/@vitest/runner/dist/ch"
+  ]
+ ],
+ "E8-refused-rule-case-sensitive": [
+  [
+   "the segment rules the entry reader copies from Node 24's exports resolver reads \"./dist/NODE_MODULES/index.js\" as Node does: it refuses",
+   "AssertionError: expected 'warns' to be 'refuses' // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/packages/polaris-generation-core/src/workspace-reach.test.ts:239:100\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/node_modules/@vitest/runner/dist/"
+  ],
+  [
+   "the segment rules the entry reader copies from Node 24's exports resolver reads \"./dist/%2E/index.js\" as Node does: it refuses",
+   "AssertionError: expected 'warns' to be 'refuses' // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/packages/polaris-generation-core/src/workspace-reach.test.ts:239:100\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/node_modules/@vitest/runner/dist/"
+  ]
+ ],
+ "E9-empty-segment-rule-dropped": [
+  [
+   "the segment rules the entry reader copies from Node 24's exports resolver reads \"./dist//index.js\" as Node does: it warns",
+   "AssertionError: expected 'loads' to be 'warns' // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/packages/polaris-generation-core/src/workspace-reach.test.ts:239:100\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/node_modules/@vitest/runner/dist/ch"
+  ]
+ ],
+ "M4-types-condition-exempt": [
+  [
+   "the workspace entry modules throws on such a target under a condition Node does not read, or in a main, and names the one Node refuses first",
+   "AssertionError: expected [Function] to throw an error\n    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/node_modules/@vitest/expect/dist/index.js:1420:16)\n    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/node_modules/@vitest/ex"
+  ]
+ ],
+ "M4b-source-condition-exempt": [
+  [
+   "the workspace entry modules throws on such a target under a condition Node does not read, or in a main, and names the one Node refuses first",
+   "AssertionError: expected [Function] to throw error including '@syzygy/lib: its source condition tar\u2026' but got '@syzygy/lib: its entry is not a ./dis\u2026'\n    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/node_modules/@vitest/expect/dist/index.js:1420:16)\n    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-Gi"
+  ]
+ ],
+ "M6-main-exempt": [
+  [
+   "the workspace entry modules throws on such a target under a condition Node does not read, or in a main, and names the one Node refuses first",
+   "AssertionError: expected [Function] to throw an error\n    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/node_modules/@vitest/expect/dist/index.js:1420:16)\n    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/node_modules/@vitest/ex"
+  ]
+ ],
+ "R1-severity-order-dropped": [
+  [
+   "the workspace entry modules throws on such a target under a condition Node does not read, or in a main, and names the one Node refuses first",
+   "AssertionError: expected [Function] to throw error including '@syzygy/lib: its default condition ta\u2026' but got '@syzygy/lib: its source condition tar\u2026'\n    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/node_modules/@vitest/expect/dist/index.js:1420:16)\n    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-Gi"
+  ]
+ ],
+ "R2-unread-target-claims-node-refuses": [
+  [
+   "the workspace entry modules throws on such a target under a condition Node does not read, or in a main, and names the one Node refuses first",
+   "AssertionError: expected [Function] to throw error including '@syzygy/lib: its types condition targ\u2026' but got '@syzygy/lib: its types condition targ\u2026'\n    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/node_modules/@vitest/expect/dist/index.js:1420:16)\n    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-Gi"
+  ]
+ ],
+ "R3-empty-segment-claims-node-refuses": [
+  [
+   "the workspace entry modules throws on such a target under a condition Node does not read, or in a main, and names the one Node refuses first",
+   "AssertionError: expected [Function] to throw error including '@syzygy/lib: its default condition ta\u2026' but got '@syzygy/lib: its import condition tar\u2026'\n    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/node_modules/@vitest/expect/dist/index.js:1420:16)\n    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-Gi"
+  ],
+  [
+   "the segment rules the entry reader copies from Node 24's exports resolver reads \"./dist//index.js\" as Node does: it warns",
+   "AssertionError: expected 'refuses' to be 'warns' // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/packages/polaris-generation-core/src/workspace-reach.test.ts:239:100\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/node_modules/@vitest/runner/dist/"
+  ]
+ ],
+ "R4-default-not-a-node-condition": [
+  [
+   "the workspace entry modules throws on such a target under a condition Node does not read, or in a main, and names the one Node refuses first",
+   "AssertionError: expected [Function] to throw error including '@syzygy/lib: its default condition ta\u2026' but got '@syzygy/lib: its import condition tar\u2026'\n    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/node_modules/@vitest/expect/dist/index.js:1420:16)\n    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-Gi"
+  ]
+ ],
+ "E4S-uniform-dotdot-entry-source-included": [
+  [
+   "file",
+   "@syzygy/polaris-dossier/state-directory: its import condition target \"./dist/x/../state-directory.js\" has an empty, '.', '..' or 'node_modules' segment, which Node refuses (ERR_INVALID_PACKAGE_TARGET)"
+  ]
+ ],
+ "E1E4S-residual-check-dropped-and-uniform-entry": [],
+ "W4-write-reader-object-rest-arm-dropped": [
+  [
+   "the property-write reader the no-write row stands on reads \"({ ...Object.freeze } = {});\"",
+   "AssertionError: expected [] to deeply equal [ '{ ...Object.freeze } = {}' ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/packages/support/src/support-purity.test.ts:202:49\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/node_modules/@vitest/runner/dist/chunk-hooks.j"
+  ]
+ ],
+ "S2-shorthand-alias-wrong-target": [
+  [
+   "the tree's own exports load, under the suite, each entry from its source module",
+   "Error: Cannot find module '@syzygy/support' imported from '/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/packages/polaris-generation-core/src/canonical-json.ts'.\n\n- If you rely on tsconfig.json's \"paths\" to resolve modules, please install \"vite-tsconfig-paths\" plugin to handle module resolution.\n- Make sure you don't have relative aliases in"
+  ],
+  [
+   "suite child processes and the vitest worker RPC loads the vitest config and finds no alias key at any depth",
+   "AssertionError: expected [ 'resolve.alias' ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/apps/three-surface-poc/src/sync-child-process-guard.test.ts:266:31\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0"
+  ]
+ ],
+ "S3-shorthand-alias-right-target": [
+  [
+   "suite child processes and the vitest worker RPC loads the vitest config and finds no alias key at any depth",
+   "AssertionError: expected [ 'resolve.alias' ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/apps/three-surface-poc/src/sync-child-process-guard.test.ts:266:31\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0"
+  ]
+ ],
+ "S4-key-walk-one-level-deep": [
+  [
+   "suite child processes and the vitest worker RPC loads the vitest config and finds no alias key at any depth",
+   "AssertionError: expected [ 'ssr', 'test' ] to deeply equal ArrayContaining{\u2026}\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/apps/three-surface-poc/src/sync-child-process-guard.test.ts:265:19\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4"
+  ],
+  [
+   "suite child processes and the vitest worker RPC reads an alias key wherever the config holds one, and no other key",
+   "AssertionError: expected [] to deeply equal [ 'resolve.alias' ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/apps/three-surface-poc/src/sync-child-process-guard.test.ts:271:47\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/node_modules/@vitest/runner/dist/chunk-hoo"
+  ]
+ ],
+ "S5-alias-key-matched-by-substring": [
+  [
+   "suite child processes and the vitest worker RPC reads an alias key wherever the config holds one, and no other key",
+   "AssertionError: expected [ 'resolve.aliases', \u2026(3) ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/apps/three-surface-poc/src/sync-child-process-guard.test.ts:274:114\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/node_modules/@vitest/runner/dist/"
+  ]
+ ],
+ "S6-key-walk-skips-arrays": [
+  [
+   "suite child processes and the vitest worker RPC loads the vitest config and finds no alias key at any depth",
+   "AssertionError: expected [ 'ssr', 'ssr.resolve', \u2026(5) ] to deeply equal ArrayContaining{\u2026}\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/apps/three-surface-poc/src/sync-child-process-guard.test.ts:265:19\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/92"
+  ],
+  [
+   "suite child processes and the vitest worker RPC reads an alias key wherever the config holds one, and no other key",
+   "AssertionError: expected [] to deeply equal [ 'test.projects.1.resolve.alias' ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/apps/three-surface-poc/src/sync-child-process-guard.test.ts:272:91\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/node_modules/@vitest/runne"
+  ]
+ ],
+ "RX0-entries-unmutated": [],
+ "RX1-refused-rule-drops-encoded-dot": [
+  [
+   "the segment rules the entry reader copies from Node 24's exports resolver reads \"./dist/%2e%2e/index.js\" as Node does: it refuses",
+   "AssertionError: expected 'warns' to be 'refuses' // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/packages/polaris-generation-core/src/workspace-reach.test.ts:239:100\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/node_modules/@vitest/runner/dist/"
+  ],
+  [
+   "the segment rules the entry reader copies from Node 24's exports resolver reads \"./dist/%2E/index.js\" as Node does: it refuses",
+   "AssertionError: expected 'warns' to be 'refuses' // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/packages/polaris-generation-core/src/workspace-reach.test.ts:239:100\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/node_modules/@vitest/runner/dist/"
+  ]
+ ],
+ "RX2-invalid-rule-case-sensitive": [
+  [
+   "the segment rules the entry reader copies from Node 24's exports resolver reads \"./dist/NODE_MODULES/index.js\" as Node does: it refuses",
+   "AssertionError: expected 'loads' to be 'refuses' // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/packages/polaris-generation-core/src/workspace-reach.test.ts:239:100\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/node_modules/@vitest/runner/dist/"
+  ],
+  [
+   "the segment rules the entry reader copies from Node 24's exports resolver reads \"./dist/%2E/index.js\" as Node does: it refuses",
+   "AssertionError: expected 'loads' to be 'refuses' // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/packages/polaris-generation-core/src/workspace-reach.test.ts:239:100\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/node_modules/@vitest/runner/dist/"
+  ]
+ ],
+ "RX3-both-rules-drop-encoded-capital-n": [],
+ "RX5-refused-rule-drops-encoded-n": [
+  [
+   "the segment rules the entry reader copies from Node 24's exports resolver reads \"./dist/%6eode_modules/index.js\" as Node does: it refuses",
+   "AssertionError: expected 'warns' to be 'refuses' // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/packages/polaris-generation-core/src/workspace-reach.test.ts:239:100\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/node_modules/@vitest/runner/dist/"
+  ]
+ ],
+ "RX4-require-not-a-node-condition": [],
+ "RX6-refused-rule-reads-the-leading-dot": [
+  [
+   "the workspace entry modules throws on such a target under a condition Node does not read, or in a main, and names the one Node refuses first",
+   "AssertionError: expected [Function] to throw error including '@syzygy/lib: its default condition ta\u2026' but got '@syzygy/lib: its import condition tar\u2026'\n    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/node_modules/@vitest/expect/dist/index.js:1420:16)\n    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-Gi"
+  ],
+  [
+   "the segment rules the entry reader copies from Node 24's exports resolver reads \"./dist//index.js\" as Node does: it warns",
+   "AssertionError: expected 'refuses' to be 'warns' // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/packages/polaris-generation-core/src/workspace-reach.test.ts:239:100\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/node_modules/@vitest/runner/dist/"
+  ]
+ ],
+ "RP1-plugin-hook-shorthand-right-target": [
+  [
+   "suite child processes and the vitest worker RPC runs only short local tools synchronously in a suite test file or any module it imports",
+   "Error: vitest.config.ts: 10 projects but 9 recognized single-glob includes\n    at suiteConfig (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/apps/three-surface-poc/src/sync-child-process-guard.test.ts:66:11)\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/apps/three-surface-poc/sr"
+  ]
+ ],
+ "RP1W-plugin-hook-shorthand-wrong-target": [
+  [
+   "the tree's own exports load, under the suite, each entry from its source module",
+   "Error: Cannot find module '@syzygy/support' imported from '/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/packages/polaris-generation-core/src/canonical-json.ts'.\n\n- If you rely on tsconfig.json's \"paths\" to resolve modules, please install \"vite-tsconfig-paths\" plugin to handle module resolution.\n- Make sure you don't have relative aliases in"
+  ],
+  [
+   "suite child processes and the vitest worker RPC runs only short local tools synchronously in a suite test file or any module it imports",
+   "Error: vitest.config.ts: 10 projects but 9 recognized single-glob includes\n    at suiteConfig (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/apps/three-surface-poc/src/sync-child-process-guard.test.ts:66:11)\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/apps/three-surface-poc/sr"
+  ]
+ ],
+ "RP2-plugin-hook-inline-right-target": [
+  [
+   "suite child processes and the vitest worker RPC runs only short local tools synchronously in a suite test file or any module it imports",
+   "Error: vitest.config.ts: 10 projects but 9 recognized single-glob includes\n    at suiteConfig (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/apps/three-surface-poc/src/sync-child-process-guard.test.ts:66:11)\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/apps/three-surface-poc/sr"
+  ]
+ ],
+ "RP3-imported-plugin-hook-right-target": [],
+ "RP3W-imported-plugin-hook-wrong-target": [
+  [
+   "the tree's own exports load, under the suite, each entry from its source module",
+   "Error: Cannot find module '@syzygy/support' imported from '/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-557/clone/packages/polaris-generation-core/src/canonical-json.ts'.\n\n- If you rely on tsconfig.json's \"paths\" to resolve modules, please install \"vite-tsconfig-paths\" plugin to handle module resolution.\n- Make sure you don't have relative aliases in"
+  ]
+ ]
+}

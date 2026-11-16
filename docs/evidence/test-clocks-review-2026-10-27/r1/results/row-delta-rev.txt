@@ -1,0 +1,21 @@
+~ capture-test-artifact-main.test.ts: 'refuses a FIFO without opening it, so a pipe nobody writes cannot hang the ingest'
+~ main.test.ts: 'reports a run that finished first, at once and by name'
+~ redis-shaped-discovery.test.ts: 'keeps the selection inside the cap, with no vendored file, and closes the denominator and the byte totals'
++ daemon-entry-unchanged.system.test.ts: 'the daemon path never loads the POC app, and the `dossier render` branch does'
++ daemon-entry-unchanged.system.test.ts: 'every line of main.ts naming the POC app sits in the `dossier` and `polaris` branches, before the daemon path
+- daemon-entry-unchanged.system.test.ts: 'the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch'
+~ git-object-reader.test.ts: 'a loose object that is a link to a FIFO, a FIFO, a directory or a link to a device refuses at once, never blo
+~ git-object-reader.test.ts: 'a linked objects, pack or fan-out directory refuses: another store is never read as this one (a de facto alte
+~ git-object-reader.test.ts: 'an index offset outside its pack, small or large, refuses instead of throwing out of the read'
+~ git-object-reader.test.ts: 'the reviewer\'s amplification shape, 100 levels over a 64 MiB base, refuses within the default per-call budge
+~ git-object-reader.test.ts: 'a delta chain one past the depth cap refuses, by default (1,000) and as a parameter; at the cap it reads'
+~ git-object-reader.test.ts: 'a reference delta naming itself refuses at the depth cap, quickly'
+~ git-object-reader.test.ts: 'the reviewer\'s padded pack base: 50 offset deltas over a base padded by 4 MiB refuse at once, under any budg
+~ git-object-reader.test.ts: 'the reviewer\'s padded loose base: reference deltas over a loose base padded by 4 MiB refuse at once'
+~ dossier-evaluation.test.ts: 'measures bytes to the close of the last level-0 element and totals per page depth'
+~ dossier-evaluation.test.ts: 'reports each budget bound as within, over, or Unknown when none is declared'
+~ dossier-profile.test.ts: 'counts default-ignorable and zero-width-split text as blank or unknown, and trims a long run of spaces in lin
+~ excerpt.test.ts: `stays linear on one 100k line of spaces after ${name}`
+~ test-artifact-verification.test.ts: 'scans %s at the ceiling in linear time'
+~ test-artifact-verification.test.ts: 'scans one tag body that is a single word run at the ceiling in linear time'
+files 9; Tests: +2 ~17 -1

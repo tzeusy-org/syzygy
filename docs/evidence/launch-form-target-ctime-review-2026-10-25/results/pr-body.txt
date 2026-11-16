@@ -1,0 +1,82 @@
+**Outcome.** The launch-form marker snapshot in `launched.test.ts` now also compares the change time of the regular file a symbolic link leads to. An ask that changes a linked marker's target in place and keeps its bytes and mode now fails the row `a symbolic link to the marker Syzygy writes`. Before this change it passed. The helper's comment now says what moves the change time.
+
+This change carries the PR #519 review's notes N1 and N2, taking option (a) for N2 (`docs/reviews/R-GP-IMPL-LAUNCH-FORM-CTIME-1-RAW.md:177-221`).
+- **N1.** The comment's last sentence is now the raw's proposed text, word for word: "Times are left out except the change time: a read moves only the access time, and any write, truncate, chmod, rename or link of the marker moves the change time, even one that puts back what it changed." The first sentence also names the new field. The `asked` comment at `:134-136` is unchanged.
+- **N2 (a).** `markerSnapshot` takes `followed = fs.statSync(marker, { bigint: true })` for a symbolic link only. It returns `targetCtimeNs: followed?.isFile() ? followed.ctimeNs : null`.
+  - A dangling link, a link to `/dev/zero`, and every marker that is not a link give `null`. The snapshot `stat`s `/dev/zero`, as it did before for `bytes`, but never opens it or compares its change time.
+  - The helper's lines are byte-identical to the review's scratch variant (raw §3 item 7).
+- `launched.ts` is unchanged (sha256 `c7a25b8b45fe12e2add7874f88d46b2bad1eef16ffa4a17e2464d5c671424921` at base and at the fix).
+
+**CC-REV-1 classes: class 4 declared.** The #516 and #519 reviewers ruled class 4 for these rows, because they are the rule-6 kill evidence for the fail-closed launched-marker reader. The independent reviewer rules. The GP-Q0 extras:
+- **Differential:** degenerate, because no product byte changes.
+- **What stands in for it:** the old test against the new test over one mutant corpus, at base and at the fix (Evidence).
+- **Rule-6 mutant per predicate:** the new comparison is killed by O8 (survives at base, killed at the fix) and by O1 on the link row.
+- **Owner notice:** due on `syzygy-bpyt.10` (AC4). I can't write to `bd`, so it is still to post.
+
+**Authority:** bead `syzygy-bpyt.8.33`, from R-GP-IMPL-LAUNCH-FORM-CTIME-1 N1 and N2, under the owner's 2026-10-20 direction as read per GP-Q0 (`OWNER-DIRECTION-GREENFIELD-PARITY-ANSWERS-2026-10-21.md`).
+
+## Every changed output
+
+None. 10 of 3,696 tracked files differ from main `df6046a1`:
+- `packages/polaris-dossier/src/launched.test.ts`, the helper and its comment (+6/−3);
+- 9 new evidence files under `docs/evidence/launch-form-target-ctime-2026-10-25/`.
+
+`git diff --quiet df6046a1 d1742589 -- . ':(exclude)docs/evidence' ':(exclude)packages/polaris-dossier/src/launched.test.ts'` exits 0. No test title changes: 0 changed lines in the diff carry `it(`, `it.each(`, `describe(` or `skipIf`. `vitest list` still gives 43 tests in the file.
+
+## Evidence
+
+All files are under `docs/evidence/launch-form-target-ctime-2026-10-25/`.
+
+**`mutants-tmpfs.json`** (sha256 `3e583fa8cc1f6787d0ce51d85bb3e1dcf431c1f9228f6339eb85ed6cf163b953`) and **`mutants-ext4.json`** (sha256 `0305c69144b5e133814e92231d295a0c721bd8da0352f8e94290b4b43b1ba617`) are the rule-6 records.
+- **Harness:** `mutants.py` (sha256 `ea5c6fdd0068f69bf1a4e79a13cddb36372293270dffddaadda580463ebaf3ef`, which is also each record's `harnessSha256`). It is the syzygy-bpyt.8.30 harness, adapted. It retypes no fragment:
+  - the 13 mutants of the 8.30 record come from that record's fix-side edits;
+  - O1–O8 come from the review's retained run (`launch-form-ctime-review-2026-10-24/results/rev519-mutants-tmpfs.json`, head side).
+  
+  Each record stores both sources' digests.
+- **Run:** at the change's commit `fbe03e304bd9ad13afa861f0bc83e6f900e8814c`, against base `df6046a153fe…` (full sha in each record).
+  - Each side's `launched.test.ts` ran alone: base sha256 `73fd8fe0…`, which is the #519 fix; fix sha256 `5dd0d6c7…`.
+  - Environment: kernel 7.0.0-38-generic.
+  - TMPDIR: `/tmp/la-b833/tmpfs` on tmpfs for one record, and `/var/tmp/la-b833/ext4` on ext4 for the other. `stat -f` prints `ext2/ext3`; `df -T` shows ext4.
+  - Every mutant's bytes were restored and checked by digest. The tracked tree was clean after each run.
+- **Stored per mutant:** the old and new fragments, the command, the exit code, each failed test and its first error line.
+
+The two file systems gave the same result for every row:
+
+| Mutant | Base (`df6046a1`) | Fix (`fbe03e30`) |
+|---|---|---|
+| unmutated | 43/43 pass | 43/43 pass |
+| **O8-link-target-chmod-cycle-rewrite** | **survived**, 43/43 | **killed**, 1 row: the link row |
+| **O1-same-bytes-rewrite** | killed, 10 rows, **link row passes** | killed, **11** rows, **link row fails** |
+| O2–O6 | unchanged, link row passes on both sides | unchanged |
+| O7-rename-away-and-back | killed, 17 rows | killed, 17 rows |
+| D1 ×5, D3-repair-to-launched, T-ask-of-an-unplanted-run | killed, 17 rows each | killed, 17 rows each |
+| D4-truncate | killed, 11 rows | killed, 11 rows |
+| R-chmod-cycle-rewrite | killed, 1 row | killed, 1 row |
+| R-same-size-rewrite, R-fill-dangling-target, R-fifo-to-empty-file | killed, 10, 1 and 2 rows | killed, 10, 1 and 2 rows |
+| M-every-form-drains-then-refuses | survived (the stated limit) | survived (the stated limit) |
+
+- **Against the 8.30 record.** All 13 of its mutants are unchanged or stronger: each fix-side row set is a superset of that record's fix-side rows, and none adds a row. This covers R-chmod-cycle-rewrite, D1, D3, D4 and T (AC3).
+- **O2–O6 never reach the link row.** Each acts only on a marker that `lstat` calls a regular file or a FIFO, or that is not a link.
+
+**Repeats under load (AC2).** On each file system the unmutated fix ran 20 times one after another and then 12 times at once, each run under its own TMPDIR.
+- tmpfs: 20/20 and 12/12 passed 43/43, with load1 15.5–17.1 during the sequential runs and up to 17.4 during the parallel ones.
+- ext4: 20/20 and 12/12 passed 43/43, with load1 18.5–20.4 during the sequential runs and up to 23.0 during the parallel ones.
+
+**Which field fails: `field-diff.json`** (sha256 `86ed6542ed99b39152ac9288e8428ebfaa8be310f8c9244ad801801e57d454ad`), made by `field_diff.py` at `fbe03e30`. It applies O1's or O8's fix-side edits from a record, runs the file with the default reporter, and restores the bytes.
+- [Observed] On the link row's failure block, the only differing snapshot field is `targetCtimeNs`, under O1 and O8 on both file systems. `mode`, `ino`, `size`, `ctimeNs`, `link` and `bytes` are equal.
+- The four full outputs are retained beside it (`field-diff-O{1,8}-{tmpfs,ext4}.txt`).
+
+## Residuals
+
+- **Coarse timestamps.** This is the #519 residual, now also for the target. [Inferred] On a kernel or file system with coarse timestamps, an in-place change to the target within one tick could leave `targetCtimeNs` unchanged, which weakens the kill. It never fails the unmutated row, because a faithful ask moves no time. Hosted CI's kernel and TMPDIR file system are [Unknown: not checked].
+- **A target other than a regular file.** A link to a directory, a FIFO or a device gives `targetCtimeNs: null`, so an in-place change to such a target is not compared. Only the link to `/dev/zero` row exists among them, and option (a) excludes it by design.
+- **The drained pipe.** `M-every-form-drains-then-refuses` survives, as before.
+
+Tests: +0 ~0 -0. The change is to the helper alone: no test title or body changed, and the file still has 43 tests. The link row asserts more through the helper.
+
+Battery: the PROJECT-STATUS canonical battery in a clean clone at `d17425890c0b5211714fce1be90b32a90b5f7747` gave `commands=110 nonzero=0`. Typecheck exits 0. `check_governance` gives 32 OK, 21 WARN and 0 FAIL; `check_quotations` exits 0.
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+https://claude.ai/code/session_01APhWyj6JKsAs6kzgYByHeD
+

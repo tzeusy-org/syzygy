@@ -1,0 +1,11 @@
+premise-base.json rows 7
+r529-base-rest.json rows 12
+r529-head.json rows 19
+own-base.json rows 17 outcomes ['killed', 'survives']
+own-head.json rows 17 outcomes ['killed', 'survives']
+own-head-o5-rerun.json rows 1 outcomes ['killed']
+tsc-base.json rows 15 outcomes ['killed', 'survived']
+tsc-head.json rows 15 outcomes ['killed']
+code diff files 5 ['apps/three-surface-poc/src/browser-origin.test.ts', 'apps/three-surface-poc/src/git-observation.test.ts', 'packages/cap1-daemon/src/package.test.ts', 'packages/cap1-daemon/src/server.test.ts', 'packages/http-host/src/credentials.test.ts']
+evidence commit touches only the evidence dir: True 26
+problems 0

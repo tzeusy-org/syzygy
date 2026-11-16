@@ -1,0 +1,7 @@
+files swept: 513
+('createRequire', 'test') 6
+('import(literal)', 'other') 6
+('import(literal)', 'test') 33
+('import(non-literal)', 'test') 19
+('require(', 'test') 11
+other-file hits (non-literal import, createRequire, require):

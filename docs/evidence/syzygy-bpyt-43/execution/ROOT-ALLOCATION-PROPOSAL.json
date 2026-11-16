@@ -1,0 +1,273 @@
+{
+  "schema": "syzygy-root-allocation-proposal/1",
+  "at": "2026-11-06T03:29:40.990764+00:00",
+  "bead": "syzygy-bpyt.43",
+  "whole_scope": "All 8 canonical original items and all 22 current AC, through proof, current gates, fresh independent review and lawful ROOT landing; no sibling closure.",
+  "worktree": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.43",
+  "branch": "agent/syzygy-bpyt.43",
+  "head": "740279435178a882f1c2d526a2a7ea0bf2b52cbc",
+  "bootstrap_sha256": "f126dc23d27701dbd62467f45fe898a1ab54e2d6a1b6cf4ca25ca78815700973",
+  "canonical_fields_sha256": {
+    "description": "ff43f8609ee86f854037e0177b4f37303161a1a0f364d851cf758dae9841c2be",
+    "design": "40a26ad99f8c5c2d20ac54a9d378c25b9955cd72fad1fdcb421125ff32091277",
+    "acceptance_criteria": "0f32ff55704e597e1dc3d934e7c71a69f76dd1be80a4f057a654d68b5e2e8b8a"
+  },
+  "requested_permanent_paths": [
+    "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts",
+    "docs/evidence/syzygy-bpyt-43/**",
+    "docs/reviews/R-GP-IMPL-TEST-CLOCKS-FOLLOWUPS-1-RAW.md"
+  ],
+  "minimality": {
+    "primary_test": "Extend existing hook and compiler-API rows; retain literal pin unchanged; comments corrected in same file.",
+    "successor_evidence": "New copied/adapted tools, exact subject maps, all four campaign records, census/closure applicability, checker predicate mutants and old/new prose differential, immutable run capture and terminal AC map. Old evidence not modified.",
+    "review_raw": "Independent fresh-context exact-head review; existing R-GP-IMPL-.*-RAW.md campaign pattern already covers this basename, so no shared campaign edit."
+  },
+  "not_requested": [
+    "apps/**",
+    "packages/three-surface-poc-core/**",
+    "packages/polaris-generation-core/src/island-boundary.test.ts",
+    "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+    "scripts/**",
+    "root manifests",
+    "existing evidence/raw/dispositions",
+    "docs/review-campaigns/greenfield-parity-implementation.md"
+  ],
+  "guard_strategy": "Reuse current static island guard unchanged, with computed createRequire/transitive/close-failure witness mutants proved at that predicate; runtime hook expands exact island modules discovered from guard plus fixture-authenticated machine route and allowed POC/island positive controls. A diagnosed required additional permanent path returns for concrete ROOT serial handoff before edit.",
+  "custody": {
+    "at": "2026-11-06T03:28:26.513800+00:00",
+    "open_pr_count": 16,
+    "path_memberships": 161,
+    "two_methods_agree": true,
+    "requested_existing_primary_hits": [],
+    "all_pr_sets": "OPEN-PR-CUSTODY.json",
+    "shared_campaign_current_custody": [
+      717,
+      642
+    ],
+    "preserve": [
+      585,
+      763,
+      761,
+      754,
+      743,
+      652
+    ]
+  },
+  "source_identities": [
+    {
+      "path": "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts",
+      "sha256": "a05821cb1115018c7a92f38b50709f99a9bad344805760da8c5a70a416cb02bd",
+      "git_blob": "c483abf2e6535494d38b78e7debe3b21ae485e7a"
+    },
+    {
+      "path": "packages/polaris-generation-core/src/island-boundary.test.ts",
+      "sha256": "93a4b56edda38cfd7a070f67e0218640367893d5b6048e30b4db19341858f443",
+      "git_blob": "e055c20fcfeb050ba7836004f74dd6683ac2f783"
+    },
+    {
+      "path": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+      "sha256": "3695543f4779dadaa87bb928cdd28c9499a95e3ea97fdd76462890139e0711f5",
+      "git_blob": "90282296a52f8df4747af342fe3c7852fec2797e"
+    },
+    {
+      "path": "apps/syzygy/src/main.ts",
+      "sha256": "4dd828fb30f13f8dd36a6d91e286f445fc4b7cbfccae7cb578a8d6d5934d4297",
+      "git_blob": "a7ef4e456cefbd125ca291df912c2fec453bce03"
+    },
+    {
+      "path": "packages/polaris-dossier/src/state-directory.ts",
+      "sha256": "d7de7e04e24afb4ec6f2f6da8695cb60620ee3fbcef010a0d29d8a761e613db1",
+      "git_blob": "26ad83ea8dded1e7f79f4b05768cbe52f2c4dc8c"
+    },
+    {
+      "path": "packages/http-host/src/shutdown.ts",
+      "sha256": "88969cdbd489e03018a76ec90187ea7ac58db08962f4b89c2d49795ac13641dd",
+      "git_blob": "d83885cdf053ee72177735be8f068bf635a04ea6"
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-4-5/tools/build_record.py",
+      "sha256": "5d38450172e54475d36d2543dc136393cd879d6f1647093d2610cc199cc0cf1c",
+      "git_blob": "34802d1d70329f5dbe039654d421726c04a75e5c"
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-4-5/tools/daemon_entry_probe.py",
+      "sha256": "67978df49b5f825821a9ef759c7eeae434982991be7313af2dd04737e858f803",
+      "git_blob": "8192813dd32c993b2018a1801f2743a9a3a29249"
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-4-5/tools/emit_equal.mjs",
+      "sha256": "dce3e308001a935584451f2f3f6446d1ce5309e77fe37985d4ff303cd12a8663",
+      "git_blob": "910531b8771025de2ff7637fa61d17d03dc8daf0"
+    },
+    {
+      "path": "CONTRIBUTING.md",
+      "sha256": "14bfc42a54c3b75665d8ca5125cb6965e9625a515c7429f23596556b44ca3b1f",
+      "git_blob": "abce4faae755d1fea0c3b7ee69e02080c8480ea7"
+    },
+    {
+      "path": "PROJECT-STATUS.md",
+      "sha256": "7b40588b81651d136d0dbdf5b09db621c03ad36537c47718a05c62f8ee7cf9a2",
+      "git_blob": "923d43d907ec7b80e6294b3ece8cc58038eb5cde"
+    }
+  ],
+  "obligation_map": {
+    "child": "syzygy-bpyt.43",
+    "canonical_description_sha256": "ff43f8609ee86f854037e0177b4f37303161a1a0f364d851cf758dae9841c2be",
+    "numbered_item_population": 8,
+    "mapped_item_population": 8,
+    "original_items": [
+      {
+        "original_item": 1,
+        "canonical_text": "Round 1 N5 (pre-existing): daemon-path loads that neither the old pin nor the new rows catch; a hook row over island prefixes, a machine route and/or a static createRequire refusal.",
+        "acceptance_criteria": [
+          3,
+          4,
+          19
+        ],
+        "implementation_status": "OPEN; static shaping only"
+      },
+      {
+        "original_item": 2,
+        "canonical_text": "Round 1 N6 (pre-existing): the text row fails a type-only import; skip import type lines.",
+        "acceptance_criteria": [
+          5
+        ],
+        "implementation_status": "OPEN; static shaping only"
+      },
+      {
+        "original_item": 3,
+        "canonical_text": "Round 3 N1: a then-block that falls through after the branch's own import (Y1b) passes the new test and the old pin.",
+        "acceptance_criteria": [
+          6
+        ],
+        "implementation_status": "OPEN; static shaping only"
+      },
+      {
+        "original_item": 4,
+        "canonical_text": "Round 3 N2 and round 4 N2: build_record checks neither the >=10 head runs, nor that every timed test line was measured, nor each site's mutant-row population (round 4's M5, a deleted row, builds green). Declare the row list per bound beside UNREACHED, or read cpu_separation.py's SITES with ast, and add M5 as a fail case to build_record_mutants.py.",
+        "acceptance_criteria": [
+          7,
+          8,
+          9,
+          10
+        ],
+        "implementation_status": "OPEN; static shaping only"
+      },
+      {
+        "original_item": 5,
+        "canonical_text": "Round 3 N3: emit_equal.mjs is sound for type-only edits, but the claim it backs is wider than what it compares; state the claim it proves.",
+        "acceptance_criteria": [
+          11,
+          12
+        ],
+        "implementation_status": "OPEN; static shaping only"
+      },
+      {
+        "original_item": 6,
+        "canonical_text": "Round 3 N4: the compiler-API row matches each condition as text, and its failure messages do not name the defect.",
+        "acceptance_criteria": [
+          13
+        ],
+        "implementation_status": "OPEN; static shaping only"
+      },
+      {
+        "original_item": 7,
+        "canonical_text": "Round 4 N1: the test comment's list of the pin's known false refusals (:276) leaves out round 3's G1 (Allman brace, wrapped import) and G2 (block comments around else and in the condition). Reword to 'Among its false refusals' and add them; add G1-G3 to daemon_entry_probe.py as equivalents from docs/evidence/test-clocks-review-2026-10-27/r3/tools/r3_variants.py and extend PIN_FALSE_REFUSALS.",
+        "acceptance_criteria": [
+          14,
+          15,
+          16
+        ],
+        "implementation_status": "OPEN; static shaping only"
+      },
+      {
+        "original_item": 8,
+        "canonical_text": "Round 4 N4: the compiler-API row's comment (:242) opens 'The kept part of the old text pin'; the whole pin is kept below it. Open it 'The compiler-API text row.'",
+        "acceptance_criteria": [
+          15,
+          16
+        ],
+        "implementation_status": "OPEN; static shaping only"
+      }
+    ],
+    "cross_cutting_original_obligations": [
+      {
+        "obligation": "Four campaigns and a new same-PR record whenever the daemon-entry test changes",
+        "acceptance_criteria": [
+          16,
+          17
+        ]
+      },
+      {
+        "obligation": "Historical four-round qualification, tool/raw/disposition immutability",
+        "acceptance_criteria": [
+          1,
+          17,
+          21
+        ]
+      },
+      {
+        "obligation": "R1 N7/R2 N3/R3 N5 stay with .4.40",
+        "acceptance_criteria": [
+          1,
+          19
+        ]
+      },
+      {
+        "obligation": "Test-only; no product gate change",
+        "acceptance_criteria": [
+          2,
+          18,
+          20
+        ]
+      },
+      {
+        "obligation": "All canonical comments and existing AC prefix",
+        "canonical_comment_count": 0,
+        "comments": [],
+        "existing_AC_field_present": false,
+        "acceptance_criteria": [
+          1
+        ]
+      }
+    ],
+    "new_AC_population": 22,
+    "current_observations_are_static_only": true
+  },
+  "classes": {
+    "1": "anticipated boundary evidence",
+    "2": "not anticipated identity",
+    "3": "not anticipated observation/evaluation product seam; evidence checks declared for reviewer contest",
+    "4": "anticipated load/security evidence",
+    "5": "not anticipated migration",
+    "6": "anticipated CLI/machine evidence",
+    "7": "not anticipated certificates"
+  },
+  "floors": [
+    "truth",
+    "evidence",
+    "inference",
+    "write",
+    "sign-off",
+    "security",
+    "identity"
+  ],
+  "proof_plan": [
+    "Finish private runtime adapter and offline exact-lockfile npm ci in assigned checkout before NodeNext.",
+    "Extend same 2 rows; controls and original Y1-Y5/Y1b,L1-L3,G1-G7,type-only,condition-property, island/machine/X1-X3 witnesses with per-row attribution.",
+    "Copy successor builder/probe/emitter tools into new evidence directory; preserve all old tools/records. Enforce head-run >=10 each arm, independently discovered timed source/region denominator, exact per-bound mutant rows before UNREACHED; B6/B9/M5 plus inherited applicable cases.",
+    "Narrow emit claim; current CPU applicability only with actual source/config/pragma/closure proof, otherwise historical/Unknown without new timing claim.",
+    "Rerun current/base/prior/round1 daemon campaigns against common current sources with separate test-copy identities. All attempts retained; no skip-as-kill.",
+    "Collect meaningful predicate mutations with control/restoration and old/new record differential including altered prose; stable new record rebuild twice.",
+    "Current npm run check, focused system file after build, unchanged island guard witness runs; serialize final clean committed fresh npm-ci clone npm run check:all on established lock with emitter-distinct capture.",
+    "Freeze subject and ask ROOT to dispatch independent reviewer using standing prompt+primary+AC. Retain raw verbatim; author repairs trigger fresh review.",
+    "Provide exact actual permanent-test delta, full AC map, hosted gates/PR metadata, nonblocking .10 notice text and lawful landing handoff to ROOT."
+  ],
+  "root_release_required": {
+    "allocation": "Explicit sole-writer assignment of requested permanent paths at committed base above; additional path needs handoff.",
+    "runtime": "Explicit release for installation/product runtime/probes/tests/mutations within copied private fixture boundary. Initial allocation/runtime remain unreleased.",
+    "review": "ROOT dispatches independent exact-head reviewer; no nested agent.",
+    "landing": "ROOT alone owns BD/lifecycle/notice/merge/queue/closure. Both app holds remain if actual final path later requires them; this proposed diff does not touch held subtrees."
+  },
+  "actions_so_far": "Static inspections/read-only bd+gh and OWN metadata only; no install/runtime/probe/test/source edits/commit/push."
+}

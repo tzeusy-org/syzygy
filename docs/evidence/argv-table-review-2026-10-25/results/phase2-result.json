@@ -1,0 +1,258 @@
+{
+ "commit": "e3e6a78b2ae9db8a26e5139ce74213325f3e8d72",
+ "restoredClean": true,
+ "results": [
+  {
+   "id": "C0-daemon",
+   "control": true,
+   "edits": [],
+   "command": "npx tsc -b packages/polaris-dossier apps/syzygy && TMPDIR=/tmp/r521-6 CI=1 npx vitest run --config packages/cap1-system/vitest.config.ts packages/cap1-system/src/daemon-entry-unchanged.system.test.ts",
+   "exit": 0,
+   "tests": [
+    "Tests  15 passed (15)"
+   ],
+   "failed": [],
+   "tail": [
+    "      Tests  15 passed (15)",
+    "   Start at  00:37:15",
+    "   Duration  2.46s (transform 66ms, setup 0ms, collect 58ms, tests 1.87s, environment 0ms, prepare 87ms)"
+   ],
+   "verdict": "passes"
+  },
+  {
+   "id": "OR1-project",
+   "control": false,
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.ts",
+     "old": "      if (spec.repeat === 'refuse' && values.has(arg)) return { fault: 'repeated', arg };\n      if (token.value === undefined || (spec.dashValue === 'refuse' && token.value.startsWith('-'))) return { fault: 'missing-value', arg };\n",
+     "new": "      if (token.value === undefined || (spec.dashValue === 'refuse' && token.value.startsWith('-'))) return { fault: 'missing-value', arg };\n      if (spec.repeat === 'refuse' && values.has(arg)) return { fault: 'repeated', arg };\n"
+    }
+   ],
+   "command": "npx tsc -b packages/polaris-dossier apps/syzygy; TMPDIR=/tmp/r521-6 CI=1 npx vitest run --project @syzygy/polaris-dossier",
+   "exit": 0,
+   "tests": [
+    "Tests  1307 passed | 1 skipped (1308)"
+   ],
+   "failed": [],
+   "tail": [
+    "      Tests  1307 passed | 1 skipped (1308)",
+    "   Start at  00:37:20",
+    "   Duration  29.37s (transform 3.79s, setup 383ms, collect 17.08s, tests 143.46s, environment 7ms, prepare 3.35s)"
+   ],
+   "verdict": "SURVIVED"
+  },
+  {
+   "id": "OR1-golden",
+   "control": false,
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.ts",
+     "old": "      if (spec.repeat === 'refuse' && values.has(arg)) return { fault: 'repeated', arg };\n      if (token.value === undefined || (spec.dashValue === 'refuse' && token.value.startsWith('-'))) return { fault: 'missing-value', arg };\n",
+     "new": "      if (token.value === undefined || (spec.dashValue === 'refuse' && token.value.startsWith('-'))) return { fault: 'missing-value', arg };\n      if (spec.repeat === 'refuse' && values.has(arg)) return { fault: 'repeated', arg };\n"
+    }
+   ],
+   "command": "npx tsc -b packages/polaris-dossier apps/syzygy; b=$?; mkdir -p /tmp/r521-6/cwd-OR1-golden && cd /tmp/r521-6/cwd-OR1-golden && TMPDIR=/tmp/r521-6 node /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-521/clone/docs/evidence/dossier-cli-table-review-2026-10-24/tools/dossier_run.mjs /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-521/clone /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-521/clone/docs/evidence/dossier-cli-table-review-2026-10-24/corpus/dossier.json /tmp/r521-6/OR1-golden.jsonl && d=$(sha256sum < /tmp/r521-6/OR1-golden.jsonl | cut -c1-64) && echo \"golden sha256 $d build $b\" && test \"$d\" = 54983601a3d783ee442719858e6e1d5fecad9f6589c170d71969b7a4e1a4762b",
+   "exit": 0,
+   "tests": [],
+   "failed": [],
+   "tail": [
+    "{\"rows\":1696}",
+    "golden sha256 54983601a3d783ee442719858e6e1d5fecad9f6589c170d71969b7a4e1a4762b build 0"
+   ],
+   "verdict": "SURVIVED"
+  },
+  {
+   "id": "OR2-project",
+   "control": false,
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.ts",
+     "old": "if (token.value === undefined ||",
+     "new": "if (!token.value ||"
+    }
+   ],
+   "command": "npx tsc -b packages/polaris-dossier apps/syzygy; TMPDIR=/tmp/r521-6 CI=1 npx vitest run --project @syzygy/polaris-dossier",
+   "exit": 0,
+   "tests": [
+    "Tests  1307 passed | 1 skipped (1308)"
+   ],
+   "failed": [],
+   "tail": [
+    "      Tests  1307 passed | 1 skipped (1308)",
+    "   Start at  00:37:56",
+    "   Duration  32.69s (transform 4.30s, setup 656ms, collect 19.83s, tests 158.75s, environment 7ms, prepare 3.91s)"
+   ],
+   "verdict": "SURVIVED"
+  },
+  {
+   "id": "OR2-golden",
+   "control": false,
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.ts",
+     "old": "if (token.value === undefined ||",
+     "new": "if (!token.value ||"
+    }
+   ],
+   "command": "npx tsc -b packages/polaris-dossier apps/syzygy; b=$?; mkdir -p /tmp/r521-6/cwd-OR2-golden && cd /tmp/r521-6/cwd-OR2-golden && TMPDIR=/tmp/r521-6 node /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-521/clone/docs/evidence/dossier-cli-table-review-2026-10-24/tools/dossier_run.mjs /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-521/clone /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-521/clone/docs/evidence/dossier-cli-table-review-2026-10-24/corpus/dossier.json /tmp/r521-6/OR2-golden.jsonl && d=$(sha256sum < /tmp/r521-6/OR2-golden.jsonl | cut -c1-64) && echo \"golden sha256 $d build $b\" && test \"$d\" = 54983601a3d783ee442719858e6e1d5fecad9f6589c170d71969b7a4e1a4762b",
+   "exit": 1,
+   "tests": [],
+   "failed": [],
+   "tail": [
+    "{\"rows\":1696}",
+    "golden sha256 e74b93c991dabb50cc64da06ac3f264f9860a0362fee4c0de88700c5e08c534b build 0"
+   ],
+   "verdict": "killed"
+  },
+  {
+   "id": "OR2-daemon",
+   "control": false,
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.ts",
+     "old": "if (token.value === undefined ||",
+     "new": "if (!token.value ||"
+    }
+   ],
+   "command": "npx tsc -b packages/polaris-dossier apps/syzygy && TMPDIR=/tmp/r521-6 CI=1 npx vitest run --config packages/cap1-system/vitest.config.ts packages/cap1-system/src/daemon-entry-unchanged.system.test.ts",
+   "exit": 0,
+   "tests": [
+    "Tests  15 passed (15)"
+   ],
+   "failed": [],
+   "tail": [
+    "      Tests  15 passed (15)",
+    "   Start at  00:38:34",
+    "   Duration  3.11s (transform 108ms, setup 0ms, collect 116ms, tests 2.44s, environment 0ms, prepare 95ms)"
+   ],
+   "verdict": "SURVIVED"
+  },
+  {
+   "id": "D1-polaris-repeat-refused-project",
+   "control": false,
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/polaris.ts",
+     "old": "'-h'], dashValue: 'take', repeat: 'last', positionals: true,",
+     "new": "'-h'], dashValue: 'take', repeat: 'refuse', positionals: true,"
+    }
+   ],
+   "command": "npx tsc -b packages/polaris-dossier apps/syzygy; TMPDIR=/tmp/r521-6 CI=1 npx vitest run --project @syzygy/polaris-dossier",
+   "exit": 0,
+   "tests": [
+    "Tests  1307 passed | 1 skipped (1308)"
+   ],
+   "failed": [],
+   "tail": [
+    "      Tests  1307 passed | 1 skipped (1308)",
+    "   Start at  00:38:41",
+    "   Duration  49.83s (transform 5.95s, setup 973ms, collect 25.45s, tests 246.86s, environment 7ms, prepare 4.12s)"
+   ],
+   "verdict": "SURVIVED"
+  },
+  {
+   "id": "D2-daemon-repeat-refused-project",
+   "control": false,
+   "edits": [
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "    repeat: 'last',\n    positionals: false,\n",
+     "new": "    repeat: 'refuse',\n    positionals: false,\n"
+    }
+   ],
+   "command": "npx tsc -b packages/polaris-dossier apps/syzygy; TMPDIR=/tmp/r521-6 CI=1 npx vitest run --project @syzygy/polaris-dossier",
+   "exit": 0,
+   "tests": [
+    "Tests  1307 passed | 1 skipped (1308)"
+   ],
+   "failed": [],
+   "tail": [
+    "      Tests  1307 passed | 1 skipped (1308)",
+    "   Start at  00:39:35",
+    "   Duration  41.84s (transform 4.85s, setup 646ms, collect 23.17s, tests 206.88s, environment 9ms, prepare 3.59s)"
+   ],
+   "verdict": "SURVIVED"
+  },
+  {
+   "id": "D2-daemon-repeat-refused-daemon",
+   "control": false,
+   "edits": [
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "    repeat: 'last',\n    positionals: false,\n",
+     "new": "    repeat: 'refuse',\n    positionals: false,\n"
+    }
+   ],
+   "command": "npx tsc -b packages/polaris-dossier apps/syzygy && TMPDIR=/tmp/r521-6 CI=1 npx vitest run --config packages/cap1-system/vitest.config.ts packages/cap1-system/src/daemon-entry-unchanged.system.test.ts",
+   "exit": 0,
+   "tests": [
+    "Tests  15 passed (15)"
+   ],
+   "failed": [],
+   "tail": [
+    "      Tests  15 passed (15)",
+    "   Start at  00:40:18",
+    "   Duration  3.16s (transform 65ms, setup 0ms, collect 75ms, tests 2.60s, environment 0ms, prepare 77ms)"
+   ],
+   "verdict": "SURVIVED"
+  },
+  {
+   "id": "D3-dossier-dash-value-taken-project",
+   "control": false,
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/cli.ts",
+     "old": "{ valued: shape.options, dashValue: 'refuse',",
+     "new": "{ valued: shape.options, dashValue: 'take',"
+    }
+   ],
+   "command": "npx tsc -b packages/polaris-dossier apps/syzygy; TMPDIR=/tmp/r521-6 CI=1 npx vitest run --project @syzygy/polaris-dossier",
+   "exit": 0,
+   "tests": [
+    "Tests  1307 passed | 1 skipped (1308)"
+   ],
+   "failed": [],
+   "tail": [
+    "      Tests  1307 passed | 1 skipped (1308)",
+    "   Start at  00:40:25",
+    "   Duration  40.65s (transform 5.35s, setup 856ms, collect 26.87s, tests 191.37s, environment 12ms, prepare 5.73s)"
+   ],
+   "verdict": "SURVIVED"
+  },
+  {
+   "id": "D3-dossier-dash-value-taken-golden",
+   "control": false,
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/cli.ts",
+     "old": "{ valued: shape.options, dashValue: 'refuse',",
+     "new": "{ valued: shape.options, dashValue: 'take',"
+    }
+   ],
+   "command": "npx tsc -b packages/polaris-dossier apps/syzygy; b=$?; mkdir -p /tmp/r521-6/cwd-D3-golden && cd /tmp/r521-6/cwd-D3-golden && TMPDIR=/tmp/r521-6 node /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-521/clone/docs/evidence/dossier-cli-table-review-2026-10-24/tools/dossier_run.mjs /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-521/clone /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-521/clone/docs/evidence/dossier-cli-table-review-2026-10-24/corpus/dossier.json /tmp/r521-6/D3-golden.jsonl && d=$(sha256sum < /tmp/r521-6/D3-golden.jsonl | cut -c1-64) && echo \"golden sha256 $d build $b\" && test \"$d\" = 54983601a3d783ee442719858e6e1d5fecad9f6589c170d71969b7a4e1a4762b",
+   "exit": 1,
+   "tests": [],
+   "failed": [],
+   "tail": [
+    "{\"rows\":1696}",
+    "golden sha256 f8bb9a29b74af8188602aa04fc31b76f099c700ff0acf1c7ef3c6097564c230a build 0"
+   ],
+   "verdict": "killed"
+  },
+  {
+   "id": "C1-rebuilt-head-golden",
+   "control": true,
+   "edits": [],
+   "command": "npx tsc -b packages/polaris-dossier apps/syzygy; b=$?; mkdir -p /tmp/r521-6/cwd-C1-golden && cd /tmp/r521-6/cwd-C1-golden && TMPDIR=/tmp/r521-6 node /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-521/clone/docs/evidence/dossier-cli-table-review-2026-10-24/tools/dossier_run.mjs /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-521/clone /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-521/clone/docs/evidence/dossier-cli-table-review-2026-10-24/corpus/dossier.json /tmp/r521-6/C1-golden.jsonl && d=$(sha256sum < /tmp/r521-6/C1-golden.jsonl | cut -c1-64) && echo \"golden sha256 $d build $b\" && test \"$d\" = 54983601a3d783ee442719858e6e1d5fecad9f6589c170d71969b7a4e1a4762b",
+   "exit": 0,
+   "tests": [],
+   "failed": [],
+   "tail": [
+    "{\"rows\":1696}",
+    "golden sha256 54983601a3d783ee442719858e6e1d5fecad9f6589c170d71969b7a4e1a4762b build 0"
+   ],
+   "verdict": "passes"
+  }
+ ]
+}

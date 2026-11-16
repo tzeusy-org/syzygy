@@ -1,0 +1,2 @@
+T5 exit 0 ['killed | rev541c T5 | ["suite: HEAD differs from REPAIR1 beyond testkit comment lines: [\'packages/polaris-generation-core/src/workspace-reach.testkit.ts\']"]'] selftest: 71/71 mutations make a check fail
+T5+S4 exit 1 ['SURVIVED | rev541c T5 | []'] selftest: 70/71 mutations make a check fail

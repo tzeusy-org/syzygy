@@ -1,0 +1,251 @@
+{
+  "tool": "my_mutants.py",
+  "treeCommit": "490332aa7cc1cdf818ae01bd46e375f8280d8b7d",
+  "sourceSha256AtCommit": "c6c0ac6cc626b76155d870502c5549aa430d7cee35a058b0001d849586842033",
+  "command": "npx vitest run --project @syzygy/three-surface-poc-app apps/three-surface-poc/src/cdp-browser.test.ts apps/three-surface-poc/src/cdp-browser.browser.test.ts",
+  "loadSignatures": [
+    "drain did not verify",
+    "still held by",
+    "timed out",
+    "Test timed out",
+    "STACK_TRACE_ERROR"
+  ],
+  "results": [
+    {
+      "id": "control",
+      "meaning": "no change",
+      "file": "apps/three-surface-poc/src/cdp-browser.ts",
+      "old": null,
+      "new": null,
+      "attempts": [
+        {
+          "attempt": 1,
+          "exit": 0,
+          "testsRun": 26,
+          "passed": 26,
+          "failing": [],
+          "left": []
+        }
+      ],
+      "outcome": "CONTROL-PASS",
+      "restoredSha256": "c6c0ac6cc626b76155d870502c5549aa430d7cee35a058b0001d849586842033",
+      "restored": true
+    },
+    {
+      "id": "leak-singleton-not-read-while-running",
+      "meaning": "restores the leak: launchBrowser never reads the directory while Chrome runs",
+      "file": "apps/three-surface-poc/src/cdp-browser.ts",
+      "old": "  singleton = chromeSingletonDirectory(profile);\n",
+      "new": "",
+      "attempts": [
+        {
+          "attempt": 1,
+          "exit": 1,
+          "testsRun": 26,
+          "passed": 25,
+          "failing": [
+            {
+              "test": "disposable Chrome teardown in a real browser leaves no Chrome singleton directory behind when the leader is killed",
+              "firstErrorLine": "AssertionError: expected true to be false // Object.is equality"
+            }
+          ],
+          "left": [
+            ".com.google.Chrome.I78v4O",
+            ".com.google.Chrome.phSwzN"
+          ]
+        }
+      ],
+      "outcome": "killed",
+      "restoredSha256": "c6c0ac6cc626b76155d870502c5549aa430d7cee35a058b0001d849586842033",
+      "restored": true
+    },
+    {
+      "id": "leak-removal-is-a-no-op",
+      "meaning": "restores the leak: the removal returns before it removes anything",
+      "file": "apps/three-surface-poc/src/cdp-browser.ts",
+      "old": "function removeChromeSingletonDirectory(directory: string): void {\n  if (!isChromeSingletonDirectory(directory)) return;\n",
+      "new": "function removeChromeSingletonDirectory(directory: string): void {\n  if (directory !== '') return;\n",
+      "attempts": [
+        {
+          "attempt": 1,
+          "exit": 1,
+          "testsRun": 26,
+          "passed": 20,
+          "failing": [
+            {
+              "test": "disposable Chrome teardown in a real browser leaves no Chrome singleton directory behind when the leader is killed",
+              "firstErrorLine": "AssertionError: expected true to be false // Object.is equality"
+            },
+            {
+              "test": "Chrome singleton directory (syzygy-bpyt.4.11) removes the singleton directory read while Chrome ran, with the profile, and only that one",
+              "firstErrorLine": "AssertionError: expected [ '.com.google.Chrome.Another', \u2026(1) ] to deeply equal [ '.com.google.Chrome.Another' ]"
+            },
+            {
+              "test": "Chrome singleton directory (syzygy-bpyt.4.11) reads the directory from the profile's link when none was read while Chrome ran",
+              "firstErrorLine": "AssertionError: expected [ '.com.google.Chrome.Another', \u2026(1) ] to deeply equal [ '.com.google.Chrome.Another' ]"
+            },
+            {
+              "test": "Chrome singleton directory (syzygy-bpyt.4.11) removes the Chromium form of the name too",
+              "firstErrorLine": "AssertionError: expected [ '.org.chromium.Chromium.MyOwn1' ] to deeply equal []"
+            },
+            {
+              "test": "Chrome singleton directory (syzygy-bpyt.4.11) removes the name without a leading dot too, which Chrome 147 to 155 make, whether given or read from the link",
+              "firstErrorLine": "AssertionError: expected [ 'com.google.Chrome.Another', \u2026(1) ] to deeply equal [ 'com.google.Chrome.Another' ]"
+            },
+            {
+              "test": "Chrome singleton directory (syzygy-bpyt.4.11) checks no user where the system has no user ids, and removes the directory",
+              "firstErrorLine": "AssertionError: expected [ '.com.google.Chrome.MyOwn1' ] to deeply equal []"
+            }
+          ],
+          "left": [
+            ".com.google.Chrome.Tt5J6p",
+            ".com.google.Chrome.gwtTZB"
+          ]
+        }
+      ],
+      "outcome": "killed",
+      "restoredSha256": "c6c0ac6cc626b76155d870502c5549aa430d7cee35a058b0001d849586842033",
+      "restored": true
+    },
+    {
+      "id": "guard-lstat-becomes-stat",
+      "meaning": "a link with Chrome's name is judged by its target",
+      "file": "apps/three-surface-poc/src/cdp-browser.ts",
+      "old": "const entry = lstatSync(directory);",
+      "new": "const entry = statSync(directory);",
+      "attempts": [
+        {
+          "attempt": 1,
+          "exit": 1,
+          "testsRun": 26,
+          "passed": 25,
+          "failing": [
+            {
+              "test": "Chrome singleton directory (syzygy-bpyt.4.11) follows no link and removes no file: a link to a directory and a plain file with Chrome's name both stay",
+              "firstErrorLine": "Error: ENOENT: no such file or directory, lstat '/tmp/r515-m3-1/syzygy-singleton-yu1YMJ/.com.google.Chrome.LinkTo'"
+            }
+          ],
+          "left": []
+        }
+      ],
+      "outcome": "killed",
+      "restoredSha256": "c6c0ac6cc626b76155d870502c5549aa430d7cee35a058b0001d849586842033",
+      "restored": true
+    },
+    {
+      "id": "guard-parent-not-checked",
+      "meaning": "a Chrome-named directory anywhere is accepted",
+      "file": "apps/three-surface-poc/src/cdp-browser.ts",
+      "old": "return dirname(directory) === tmpdir() && CHROME_SINGLETON_DIRECTORY.test(basename(directory));",
+      "new": "return CHROME_SINGLETON_DIRECTORY.test(basename(directory));",
+      "attempts": [
+        {
+          "attempt": 1,
+          "exit": 1,
+          "testsRun": 26,
+          "passed": 25,
+          "failing": [
+            {
+              "test": "Chrome singleton directory (syzygy-bpyt.4.11) keeps a directory that is not directly under the temp directory, whether it was given or read from the link",
+              "firstErrorLine": "AssertionError: expected false to be true // Object.is equality"
+            }
+          ],
+          "left": []
+        }
+      ],
+      "outcome": "killed",
+      "restoredSha256": "c6c0ac6cc626b76155d870502c5549aa430d7cee35a058b0001d849586842033",
+      "restored": true
+    },
+    {
+      "id": "guard-parent-prefix-comparison",
+      "meaning": "any directory below the temp directory, or beside it with a longer name, is accepted",
+      "file": "apps/three-surface-poc/src/cdp-browser.ts",
+      "old": "return dirname(directory) === tmpdir() && CHROME_SINGLETON_DIRECTORY.test(basename(directory));",
+      "new": "return dirname(directory).startsWith(tmpdir()) && CHROME_SINGLETON_DIRECTORY.test(basename(directory));",
+      "attempts": [
+        {
+          "attempt": 1,
+          "exit": 1,
+          "testsRun": 26,
+          "passed": 24,
+          "failing": [
+            {
+              "test": "disposable browser shutdown waits for private Chrome group members before removal and retains the profile on drain timeout",
+              "firstErrorLine": "Error: private browser profile drain did not verify two empty scans before deadline"
+            },
+            {
+              "test": "Chrome singleton directory (syzygy-bpyt.4.11) keeps a directory that is not directly under the temp directory, whether it was given or read from the link",
+              "firstErrorLine": "AssertionError: expected false to be true // Object.is equality"
+            }
+          ],
+          "left": []
+        }
+      ],
+      "outcome": "killed",
+      "restoredSha256": "c6c0ac6cc626b76155d870502c5549aa430d7cee35a058b0001d849586842033",
+      "restored": true
+    },
+    {
+      "id": "guard-name-case-insensitive",
+      "meaning": "the name is matched without case",
+      "file": "apps/three-surface-poc/src/cdp-browser.ts",
+      "old": "const CHROME_SINGLETON_DIRECTORY = /^\\.?(?:com\\.google\\.Chrome|org\\.chromium\\.Chromium)\\.[A-Za-z0-9]+$/;",
+      "new": "const CHROME_SINGLETON_DIRECTORY = /^\\.?(?:com\\.google\\.Chrome|org\\.chromium\\.Chromium)\\.[A-Za-z0-9]+$/i;",
+      "attempts": [
+        {
+          "attempt": 1,
+          "exit": 0,
+          "testsRun": 26,
+          "passed": 26,
+          "failing": [],
+          "left": []
+        }
+      ],
+      "outcome": "SURVIVED",
+      "restoredSha256": "c6c0ac6cc626b76155d870502c5549aa430d7cee35a058b0001d849586842033",
+      "restored": true
+    },
+    {
+      "id": "readlink-failure-propagates",
+      "meaning": "a profile with no link fails the removal",
+      "file": "apps/three-surface-poc/src/cdp-browser.ts",
+      "old": "  try { directory = dirname(readlinkSync(join(profile, 'SingletonSocket'))); }\n  catch { return undefined; }\n",
+      "new": "  directory = dirname(readlinkSync(join(profile, 'SingletonSocket')));\n",
+      "attempts": [
+        {
+          "attempt": 1,
+          "exit": 1,
+          "testsRun": 26,
+          "passed": 21,
+          "failing": [
+            {
+              "test": "browser profile cleanup retries transient ENOTEMPTY failures and succeeds within the bound",
+              "firstErrorLine": "Error: ENOENT: no such file or directory, readlink '/tmp/syzygy-browser-profile/SingletonSocket'"
+            },
+            {
+              "test": "browser profile cleanup does not retry a permanent profile cleanup failure",
+              "firstErrorLine": "AssertionError: expected [Function] to throw error including 'profile permission denied' but got 'ENOENT: no such file or directory, re\u2026'"
+            },
+            {
+              "test": "browser profile cleanup preserves a retryable failure at the exact total-call bound",
+              "firstErrorLine": "AssertionError: expected a thrown error to be Error: profile remains busy { \u2026(1) }"
+            },
+            {
+              "test": "browser profile cleanup stays bounded across repeated transient profile cleanup races",
+              "firstErrorLine": "Error: ENOENT: no such file or directory, readlink '/tmp/syzygy-browser-profile-0/SingletonSocket'"
+            },
+            {
+              "test": "Chrome singleton directory (syzygy-bpyt.4.11) removes the profile and nothing else when Chrome left no singleton directory (a clean exit)",
+              "firstErrorLine": "Error: ENOENT: no such file or directory, readlink '/tmp/r515-m7-1/syzygy-singleton-iGWRUn/syzygy-poc-browser-AbCdEf/SingletonSocket'"
+            }
+          ],
+          "left": []
+        }
+      ],
+      "outcome": "killed",
+      "restoredSha256": "c6c0ac6cc626b76155d870502c5549aa430d7cee35a058b0001d849586842033",
+      "restored": true
+    }
+  ]
+}

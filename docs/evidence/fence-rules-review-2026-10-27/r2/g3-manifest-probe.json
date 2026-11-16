@@ -1,0 +1,40 @@
+{
+ "plainFence": {
+  "profileReading": "masked",
+  "linkVisibleToProfile": true,
+  "indexLinkTargets": [
+   "vision.md",
+   "lore.md"
+  ],
+  "pillar": {
+   "key": "heart-and-soul",
+   "state": "discovered",
+   "root": "about/heart-and-soul",
+   "indexPath": "about/heart-and-soul/README.md",
+   "namedSources": 2,
+   "ignoredLinks": []
+  },
+  "namedFileSources": [
+   "about/heart-and-soul/lore.md",
+   "about/heart-and-soul/vision.md"
+  ]
+ },
+ "closerShapedLineWithInfo": {
+  "profileReading": "masked",
+  "linkVisibleToProfile": true,
+  "indexLinkTargets": [
+   "vision.md"
+  ],
+  "pillar": {
+   "key": "heart-and-soul",
+   "state": "discovered",
+   "root": "about/heart-and-soul",
+   "indexPath": "about/heart-and-soul/README.md",
+   "namedSources": 1,
+   "ignoredLinks": []
+  },
+  "namedFileSources": [
+   "about/heart-and-soul/vision.md"
+  ]
+ }
+}

@@ -1,4 +1,4 @@
-import { escapeHtml } from '@syzygy/cap1-daemon';
+import { escapeHtml } from '@syzygy/http-host';
 import type { PocEntity, PocModel, PocRelationship } from '@syzygy/three-surface-poc-core';
 
 import { actionRouteLink, unknownMarker, unknownRoute } from './unknown-marker.js';

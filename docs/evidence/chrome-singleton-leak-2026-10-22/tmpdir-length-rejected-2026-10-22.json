@@ -1,0 +1,162 @@
+{
+ "tool": "tmpdir_length_probe.py",
+ "treeCommit": "6f84e689dddc7cf23411da761f8754dd99741d2c",
+ "mode": "rejected",
+ "file": "apps/three-surface-poc/src/cdp-browser.ts",
+ "sha256AtCommit": "c6c0ac6cc626b76155d870502c5549aa430d7cee35a058b0001d849586842033",
+ "mutant": {
+  "id": "chrome-temp-directory-is-profile",
+  "file": "apps/three-surface-poc/src/cdp-browser.ts",
+  "edits": [
+   {
+    "old": "{ stdio: ['ignore', 'ignore', 'pipe'], detached: true },",
+    "new": "{ stdio: ['ignore', 'ignore', 'pipe'], detached: true, env: { ...process.env, TMPDIR: profile } },"
+   }
+  ]
+ },
+ "lengthsTried": [
+  30,
+  36,
+  38,
+  39,
+  40,
+  41,
+  42,
+  44,
+  50,
+  56,
+  62,
+  64,
+  65,
+  66,
+  67,
+  70,
+  80
+ ],
+ "attemptsPerLength": 3,
+ "rows": [
+  {
+   "tmpdirLength": 30,
+   "launched": true,
+   "attempts": 1,
+   "inconclusiveLoad": false,
+   "firstErrorLine": null
+  },
+  {
+   "tmpdirLength": 36,
+   "launched": true,
+   "attempts": 1,
+   "inconclusiveLoad": false,
+   "firstErrorLine": null
+  },
+  {
+   "tmpdirLength": 38,
+   "launched": true,
+   "attempts": 1,
+   "inconclusiveLoad": false,
+   "firstErrorLine": null
+  },
+  {
+   "tmpdirLength": 39,
+   "launched": true,
+   "attempts": 1,
+   "inconclusiveLoad": false,
+   "firstErrorLine": null
+  },
+  {
+   "tmpdirLength": 40,
+   "launched": false,
+   "attempts": 1,
+   "inconclusiveLoad": false,
+   "firstErrorLine": "browser exited with signal before announcing a DevTools endpoint:"
+  },
+  {
+   "tmpdirLength": 41,
+   "launched": false,
+   "attempts": 1,
+   "inconclusiveLoad": false,
+   "firstErrorLine": "browser exited with signal before announcing a DevTools endpoint:"
+  },
+  {
+   "tmpdirLength": 42,
+   "launched": false,
+   "attempts": 1,
+   "inconclusiveLoad": false,
+   "firstErrorLine": "browser exited with signal before announcing a DevTools endpoint:"
+  },
+  {
+   "tmpdirLength": 44,
+   "launched": false,
+   "attempts": 1,
+   "inconclusiveLoad": false,
+   "firstErrorLine": "browser exited with signal before announcing a DevTools endpoint:"
+  },
+  {
+   "tmpdirLength": 50,
+   "launched": false,
+   "attempts": 1,
+   "inconclusiveLoad": false,
+   "firstErrorLine": "browser exited with signal before announcing a DevTools endpoint:"
+  },
+  {
+   "tmpdirLength": 56,
+   "launched": false,
+   "attempts": 1,
+   "inconclusiveLoad": false,
+   "firstErrorLine": "browser exited with signal before announcing a DevTools endpoint:"
+  },
+  {
+   "tmpdirLength": 62,
+   "launched": false,
+   "attempts": 1,
+   "inconclusiveLoad": false,
+   "firstErrorLine": "browser exited with signal before announcing a DevTools endpoint:"
+  },
+  {
+   "tmpdirLength": 64,
+   "launched": false,
+   "attempts": 1,
+   "inconclusiveLoad": false,
+   "firstErrorLine": "browser exited with signal before announcing a DevTools endpoint:"
+  },
+  {
+   "tmpdirLength": 65,
+   "launched": false,
+   "attempts": 1,
+   "inconclusiveLoad": false,
+   "firstErrorLine": "browser exited with signal before announcing a DevTools endpoint:"
+  },
+  {
+   "tmpdirLength": 66,
+   "launched": false,
+   "attempts": 1,
+   "inconclusiveLoad": false,
+   "firstErrorLine": "browser exited with signal before announcing a DevTools endpoint:"
+  },
+  {
+   "tmpdirLength": 67,
+   "launched": false,
+   "attempts": 1,
+   "inconclusiveLoad": false,
+   "firstErrorLine": "browser exited with signal before announcing a DevTools endpoint:"
+  },
+  {
+   "tmpdirLength": 70,
+   "launched": false,
+   "attempts": 1,
+   "inconclusiveLoad": false,
+   "firstErrorLine": "browser exited with signal before announcing a DevTools endpoint:"
+  },
+  {
+   "tmpdirLength": 80,
+   "launched": false,
+   "attempts": 1,
+   "inconclusiveLoad": false,
+   "firstErrorLine": "browser exited with signal before announcing a DevTools endpoint:"
+  }
+ ],
+ "longestLaunched": 39,
+ "shortestFailed": 40,
+ "inconclusiveBecauseOfLoad": [],
+ "monotone": true
+}

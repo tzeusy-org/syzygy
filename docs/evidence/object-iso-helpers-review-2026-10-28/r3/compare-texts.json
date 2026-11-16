@@ -1,0 +1,31 @@
+{
+ "testLines": {
+  "prescribedLines": 3,
+  "foundAtLine": [
+   68
+  ],
+  "equal": true,
+  "replacedOldLines68to70": true
+ },
+ "n8Bullet": {
+  "bodyN8Lines": 1,
+  "equal": true
+ },
+ "reading": {
+  "prefixKept": true,
+  "tailEqual": true,
+  "tailEqualWs": true,
+  "rawHasStraightApostrophes": true,
+  "buildRecordLiteralLines": 1,
+  "literalEvaluatesToRecord": true,
+  "escapesInLiteral": 2
+ },
+ "n2": {
+  "present": true,
+  "occurrences": 1,
+  "hunks": [
+   "@@ -185,2 +185,3 @@ sweep lessons added 2026-09-23; the raw-head digest lesson the same day."
+  ],
+  "minusPlusEqualOutsideN2": true
+ }
+}

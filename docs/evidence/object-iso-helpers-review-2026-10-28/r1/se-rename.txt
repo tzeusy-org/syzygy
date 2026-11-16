@@ -1,0 +1,3 @@
+SE-7 packages/polaris-dossier/src/check.ts: original equal=true; strict equal=false; guard on base emit regex 30 identifiers 29 ok=false; a string literal changed from isObject to isRecord
+SE-8 packages/polaris-dossier/src/check.ts: original equal=false; strict equal=false; guard on base emit regex 30 identifiers 29 ok=false; control: the same string literal on both sides
+unmutated base packages/polaris-dossier/src/check.ts: guard regex 29 identifiers 29 ok=true

@@ -1,0 +1,47 @@
+{"mode": "term-early", "version": "new", "param": 0.0, "inject": null, "exitCode": 143, "scriptExitAt": 0.205, "clean": true, "noSurvivor": true, "descendantsSeen": 0, "recordTests": null, "recordProfileRows": null}
+  events: [(0.0712, 'test file write seen; SIGTERM 0.0 us after', False)]
+{"mode": "term-early", "version": "new", "param": 200.0, "inject": null, "exitCode": 143, "scriptExitAt": 0.22, "clean": true, "noSurvivor": true, "descendantsSeen": 0, "recordTests": null, "recordProfileRows": null}
+  events: [(0.0741, 'test file write seen; SIGTERM 200.0 us after', False)]
+{"mode": "term-early", "version": "new", "param": 500.0, "inject": null, "exitCode": 143, "scriptExitAt": 0.193, "clean": true, "noSurvivor": true, "descendantsSeen": 0, "recordTests": null, "recordProfileRows": null}
+  events: [(0.0727, 'test file write seen; SIGTERM 500.0 us after', False)]
+{"mode": "term-early", "version": "new", "param": 1000.0, "inject": null, "exitCode": 143, "scriptExitAt": 0.218, "clean": true, "noSurvivor": false, "descendantsSeen": 10, "recordTests": null, "recordProfileRows": null}
+Traceback (most recent call last):
+  File "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520b/tools/restore_probe.py", line 166, in <module>
+    if survivors: print('  SURVIVORS:', {p: v['cmdline'][:70] for p, v in survivors.items()})
+  File "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520b/tools/restore_probe.py", line 166, in <dictcomp>
+    if survivors: print('  SURVIVORS:', {p: v['cmdline'][:70] for p, v in survivors.items()})
+TypeError: 'NoneType' object is not subscriptable
+{"mode": "term-early", "version": "new", "param": 1500.0, "inject": null, "exitCode": 143, "scriptExitAt": 0.312, "clean": true, "noSurvivor": true, "descendantsSeen": 2, "recordTests": null, "recordProfileRows": null}
+  events: [(0.0697, 'test file write seen; SIGTERM 1500.0 us after', False)]
+{"mode": "term-early", "version": "new", "param": 2000.0, "inject": null, "exitCode": 143, "scriptExitAt": 0.306, "clean": true, "noSurvivor": true, "descendantsSeen": 2, "recordTests": null, "recordProfileRows": null}
+  events: [(0.0657, 'test file write seen; SIGTERM 2000.0 us after', False)]
+{"mode": "term-early", "version": "new", "param": 3000.0, "inject": null, "exitCode": 143, "scriptExitAt": 0.314, "clean": true, "noSurvivor": true, "descendantsSeen": 2, "recordTests": null, "recordProfileRows": null}
+  events: [(0.0761, 'test file write seen; SIGTERM 3000.0 us after', False)]
+{"mode": "term-early", "version": "new", "param": 5000.0, "inject": null, "exitCode": 143, "scriptExitAt": 0.314, "clean": true, "noSurvivor": true, "descendantsSeen": 2, "recordTests": null, "recordProfileRows": null}
+  events: [(0.0683, 'test file write seen; SIGTERM 5000.0 us after', False)]
+{"mode": "term-early", "version": "new", "param": 10000.0, "inject": null, "exitCode": 143, "scriptExitAt": 0.383, "clean": true, "noSurvivor": true, "descendantsSeen": 2, "recordTests": null, "recordProfileRows": null}
+  events: [(0.0993, 'test file write seen; SIGTERM 10000.0 us after', False)]
+{"mode": "term-early", "version": "new", "param": 0.0, "inject": null, "exitCode": 143, "scriptExitAt": 0.206, "clean": true, "noSurvivor": true, "descendantsSeen": 0, "recordTests": null, "recordProfileRows": null}
+  events: [(0.0732, 'test file write seen; SIGTERM 0.0 us after', False)]
+{"mode": "term-early", "version": "new", "param": 200.0, "inject": null, "exitCode": 143, "scriptExitAt": 0.263, "clean": true, "noSurvivor": true, "descendantsSeen": 0, "recordTests": null, "recordProfileRows": null}
+  events: [(0.1081, 'test file write seen; SIGTERM 200.0 us after', False)]
+{"mode": "term-early", "version": "new", "param": 500.0, "inject": null, "exitCode": 143, "scriptExitAt": 0.334, "clean": true, "noSurvivor": true, "descendantsSeen": 0, "recordTests": null, "recordProfileRows": null}
+  events: [(0.1727, 'test file write seen; SIGTERM 500.0 us after', False)]
+{"mode": "term-early", "version": "new", "param": 1000.0, "inject": null, "exitCode": 143, "scriptExitAt": 0.233, "clean": true, "noSurvivor": true, "descendantsSeen": 0, "recordTests": null, "recordProfileRows": null}
+  events: [(0.079, 'test file write seen; SIGTERM 1000.0 us after', False)]
+{"mode": "term-early", "version": "new", "param": 1500.0, "inject": null, "exitCode": 143, "scriptExitAt": 0.31, "clean": true, "noSurvivor": false, "descendantsSeen": 10, "recordTests": null, "recordProfileRows": null}
+Traceback (most recent call last):
+  File "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520b/tools/restore_probe.py", line 166, in <module>
+    if survivors: print('  SURVIVORS:', {p: v['cmdline'][:70] for p, v in survivors.items()})
+  File "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520b/tools/restore_probe.py", line 166, in <dictcomp>
+    if survivors: print('  SURVIVORS:', {p: v['cmdline'][:70] for p, v in survivors.items()})
+TypeError: 'NoneType' object is not subscriptable
+{"mode": "term-early", "version": "new", "param": 2000.0, "inject": null, "exitCode": 143, "scriptExitAt": 0.29, "clean": true, "noSurvivor": false, "descendantsSeen": 10, "recordTests": null, "recordProfileRows": null}
+  SURVIVORS: {2806824: 'npm exec vitest run --project @syzygy/polaris-generation-consent packa', 2806940: 'sh -c "vitest" run --project @syzygy/polaris-generation-consent packag', 2806942: 'node (vitest)', 2807063: '/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0', 2807112: 'node (vitest 1)', 2807115: 'node (vitest 2)', 2807124: 'node (vitest 3)', 2807126: 'node (vitest 4)', 2807132: 'node (vitest 5)', 2807145: 'node (vitest 6)', 2807862: "python3 -c import sys; sys.path.insert(0, 'scripts'); import record_pu"}
+  events: [(0.1113, 'test file write seen; SIGTERM 2000.0 us after', False)]
+{"mode": "term-early", "version": "new", "param": 3000.0, "inject": null, "exitCode": 143, "scriptExitAt": 0.419, "clean": true, "noSurvivor": true, "descendantsSeen": 2, "recordTests": null, "recordProfileRows": null}
+  events: [(0.101, 'test file write seen; SIGTERM 3000.0 us after', False)]
+{"mode": "term-early", "version": "new", "param": 5000.0, "inject": null, "exitCode": 143, "scriptExitAt": 0.646, "clean": true, "noSurvivor": true, "descendantsSeen": 2, "recordTests": null, "recordProfileRows": null}
+  events: [(0.1857, 'test file write seen; SIGTERM 5000.0 us after', False)]
+{"mode": "term-early", "version": "new", "param": 10000.0, "inject": null, "exitCode": 143, "scriptExitAt": 0.356, "clean": true, "noSurvivor": true, "descendantsSeen": 2, "recordTests": null, "recordProfileRows": null}
+  events: [(0.0832, 'test file write seen; SIGTERM 10000.0 us after', False)]

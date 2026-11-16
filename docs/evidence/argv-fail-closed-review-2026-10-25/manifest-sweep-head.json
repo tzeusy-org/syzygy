@@ -1,0 +1,234 @@
+{
+ "commit": "1447b6bbd3954a271a1716d7866266e0fb908cfb",
+ "trackedPackageJson": [
+  "apps/syzygy/package.json",
+  "apps/three-surface-poc/package.json",
+  "package.json",
+  "packages/cap1-conformance/package.json",
+  "packages/cap1-core/package.json",
+  "packages/cap1-daemon/package.json",
+  "packages/cap1-system/package.json",
+  "packages/polaris-dossier/package.json",
+  "packages/polaris-generation-consent/package.json",
+  "packages/polaris-generation-core/package.json",
+  "packages/three-surface-poc-core/package.json"
+ ],
+ "workspaceManifests": 10,
+ "withImports": [],
+ "exportsEntries": 15,
+ "stringEntries": 3,
+ "objectEntries": [
+  {
+   "entry": "packages/cap1-core/package.json .",
+   "conditions": [
+    "types",
+    "import",
+    "default"
+   ]
+  },
+  {
+   "entry": "packages/cap1-core/package.json ./testing",
+   "conditions": [
+    "types",
+    "import",
+    "default"
+   ]
+  },
+  {
+   "entry": "packages/cap1-daemon/package.json .",
+   "conditions": [
+    "types",
+    "import",
+    "default"
+   ]
+  },
+  {
+   "entry": "packages/polaris-dossier/package.json .",
+   "conditions": [
+    "types",
+    "import",
+    "default"
+   ]
+  },
+  {
+   "entry": "packages/polaris-dossier/package.json ./argv",
+   "conditions": [
+    "types",
+    "import",
+    "default"
+   ]
+  },
+  {
+   "entry": "packages/polaris-dossier/package.json ./state-directory",
+   "conditions": [
+    "types",
+    "import",
+    "default"
+   ]
+  },
+  {
+   "entry": "packages/polaris-generation-consent/package.json .",
+   "conditions": [
+    "types",
+    "import",
+    "default"
+   ]
+  },
+  {
+   "entry": "packages/polaris-generation-consent/package.json ./live",
+   "conditions": [
+    "types",
+    "import",
+    "default"
+   ]
+  },
+  {
+   "entry": "packages/polaris-generation-consent/package.json ./testing",
+   "conditions": [
+    "types",
+    "import",
+    "default"
+   ]
+  },
+  {
+   "entry": "packages/polaris-generation-core/package.json .",
+   "conditions": [
+    "types",
+    "import",
+    "default"
+   ]
+  },
+  {
+   "entry": "packages/polaris-generation-core/package.json ./live",
+   "conditions": [
+    "types",
+    "import",
+    "default"
+   ]
+  },
+  {
+   "entry": "packages/three-surface-poc-core/package.json .",
+   "conditions": [
+    "types",
+    "import",
+    "default"
+   ]
+  }
+ ],
+ "multiRuntime": [
+  {
+   "entry": "packages/cap1-core/package.json .",
+   "conditions": [
+    "import",
+    "default"
+   ],
+   "sameTarget": true
+  },
+  {
+   "entry": "packages/cap1-core/package.json ./testing",
+   "conditions": [
+    "import",
+    "default"
+   ],
+   "sameTarget": true
+  },
+  {
+   "entry": "packages/cap1-daemon/package.json .",
+   "conditions": [
+    "import",
+    "default"
+   ],
+   "sameTarget": true
+  },
+  {
+   "entry": "packages/polaris-dossier/package.json .",
+   "conditions": [
+    "import",
+    "default"
+   ],
+   "sameTarget": true
+  },
+  {
+   "entry": "packages/polaris-dossier/package.json ./argv",
+   "conditions": [
+    "import",
+    "default"
+   ],
+   "sameTarget": true
+  },
+  {
+   "entry": "packages/polaris-dossier/package.json ./state-directory",
+   "conditions": [
+    "import",
+    "default"
+   ],
+   "sameTarget": true
+  },
+  {
+   "entry": "packages/polaris-generation-consent/package.json .",
+   "conditions": [
+    "import",
+    "default"
+   ],
+   "sameTarget": true
+  },
+  {
+   "entry": "packages/polaris-generation-consent/package.json ./live",
+   "conditions": [
+    "import",
+    "default"
+   ],
+   "sameTarget": true
+  },
+  {
+   "entry": "packages/polaris-generation-consent/package.json ./testing",
+   "conditions": [
+    "import",
+    "default"
+   ],
+   "sameTarget": true
+  },
+  {
+   "entry": "packages/polaris-generation-core/package.json .",
+   "conditions": [
+    "import",
+    "default"
+   ],
+   "sameTarget": true
+  },
+  {
+   "entry": "packages/polaris-generation-core/package.json ./live",
+   "conditions": [
+    "import",
+    "default"
+   ],
+   "sameTarget": true
+  },
+  {
+   "entry": "packages/three-surface-poc-core/package.json .",
+   "conditions": [
+    "import",
+    "default"
+   ],
+   "sameTarget": true
+  }
+ ],
+ "disagreeing": [],
+ "arrays": [],
+ "nested": [],
+ "patterns": [],
+ "nulls": [],
+ "exportsNotObject": [],
+ "names": {
+  "apps/syzygy/package.json": "@syzygy/app",
+  "apps/three-surface-poc/package.json": "@syzygy/three-surface-poc-app",
+  "packages/cap1-conformance/package.json": "@syzygy/cap1-conformance",
+  "packages/cap1-core/package.json": "@syzygy/cap1-core",
+  "packages/cap1-daemon/package.json": "@syzygy/cap1-daemon",
+  "packages/cap1-system/package.json": "@syzygy/cap1-system",
+  "packages/polaris-dossier/package.json": "@syzygy/polaris-dossier",
+  "packages/polaris-generation-consent/package.json": "@syzygy/polaris-generation-consent",
+  "packages/polaris-generation-core/package.json": "@syzygy/polaris-generation-core",
+  "packages/three-surface-poc-core/package.json": "@syzygy/three-surface-poc-core"
+ }
+}

@@ -1,0 +1,22 @@
+{
+ "node-compile-cache": {
+  "names": 1,
+  "edgeOnALongGap": 0,
+  "lastSeenAfterTheRunEnd": 1
+ },
+ "nanoid-21": {
+  "names": 7,
+  "edgeOnALongGap": 7,
+  "lastSeenAfterTheRunEnd": 0
+ },
+ "chrome-singleton-directory": {
+  "names": 20,
+  "edgeOnALongGap": 0,
+  "lastSeenAfterTheRunEnd": 1
+ },
+ "other": {
+  "names": 10,
+  "edgeOnALongGap": 0,
+  "lastSeenAfterTheRunEnd": 0
+ }
+}

@@ -1,0 +1,74 @@
+{
+ "script": "build:poc",
+ "buildExit": 0,
+ "buildSeconds": 11.538,
+ "loadavgBefore": [
+  "27.93",
+  "36.54",
+  "37.69"
+ ],
+ "loadavgAfter": [
+  "28.47",
+  "36.21",
+  "37.56"
+ ],
+ "anyEntryMissing": [
+  [
+   0.296,
+   11.227
+  ]
+ ],
+ "anyEntryMissingSeconds": 10.931,
+ "perEntry": {
+  "packages/support/dist/index.js": [
+   [
+    0.296,
+    2.159
+   ]
+  ],
+  "packages/cap1-core/dist/index.js": [
+   [
+    0.296,
+    2.901
+   ]
+  ],
+  "packages/polaris-generation-core/dist/index.js": [
+   [
+    0.301,
+    7.248
+   ]
+  ],
+  "packages/polaris-generation-consent/dist/index.js": [
+   [
+    0.313,
+    7.938
+   ]
+  ],
+  "packages/three-surface-poc-core/dist/index.js": [
+   [
+    0.296,
+    5.503
+   ]
+  ],
+  "packages/polaris-dossier/dist/index.js": [],
+  "apps/three-surface-poc/dist/polaris-generation/dossier-site.js": [
+   [
+    0.306,
+    11.227
+   ]
+  ],
+  "apps/three-surface-poc/dist/main.js": [
+   [
+    0.306,
+    11.043
+   ]
+  ],
+  "apps/syzygy/dist/main.js": []
+ },
+ "concurrentRuns": 61,
+ "concurrentRunsDuringBuild": 54,
+ "concurrentFailedDuringBuild": 53,
+ "concurrentModuleNotFoundDuringBuild": 53,
+ "concurrentFailedOutsideBuild": 0,
+ "firstFailure": "node:internal/modules/esm/resolve:274"
+}

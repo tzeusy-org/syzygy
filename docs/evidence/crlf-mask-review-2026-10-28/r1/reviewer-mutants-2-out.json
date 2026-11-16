@@ -1,0 +1,80 @@
+{
+ "tool": "rev-544/tools/reviewer-mutants.py",
+ "ranAt": "c399eda908a3d549e051f45499557e82356af9ab",
+ "rows": [
+  {
+   "id": "CONTROL",
+   "ranAt": "c399eda908a3d549e051f45499557e82356af9ab",
+   "tests": 386,
+   "failed": 0,
+   "timeouts": 0,
+   "loadavgBefore": "28.79 34.40 33.46 16/9781 2774426",
+   "loadavgAfter": "27.87 33.91 33.31 25/9788 2782696",
+   "failures": [],
+   "failedTests": []
+  },
+  {
+   "id": "RM10-positionOf-counts-every-cr",
+   "ranAt": "c399eda908a3d549e051f45499557e82356af9ab",
+   "file": "packages/three-surface-poc-core/src/git-object-reader.ts",
+   "replacements": [
+    {
+     "old": "if (text.charCodeAt(i) === 10) {",
+     "new": "if (text.charCodeAt(i) === 10 || text.charCodeAt(i) === 13) {"
+    }
+   ],
+   "mutatedSha256": "056f6f546026ddae2ef8d1de36185b43d32a699f7783bfa572fa86eba6c2e3e4",
+   "note": "positionOf counts every CR as a line end (CRLF texts double-count; the C4 property)",
+   "outcome": "SURVIVED",
+   "tests": 386,
+   "failed": 0,
+   "timeouts": 0,
+   "loadavgBefore": "27.87 33.91 33.31 19/9787 2782698",
+   "loadavgAfter": "27.40 33.52 33.19 21/9766 2789745",
+   "failures": [],
+   "failedTests": []
+  },
+  {
+   "id": "RM11-nel-is-a-line-end",
+   "ranAt": "c399eda908a3d549e051f45499557e82356af9ab",
+   "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+   "replacements": [
+    {
+     "old": "const LINE_END = /\\r\\n|\\r|\\n/g;",
+     "new": "const LINE_END = /\\r\\n|\\r|\\n|\\x85/g;"
+    }
+   ],
+   "mutatedSha256": "0964030efb3dbc43102b8a12e79a582b44e6db8cdce9693837f105ec2d3c5dc3",
+   "note": "U+0085 (NEL) ends a line too: changes LF texts that hold one",
+   "outcome": "SURVIVED",
+   "tests": 386,
+   "failed": 0,
+   "timeouts": 0,
+   "loadavgBefore": "27.40 33.52 33.19 13/9766 2789748",
+   "loadavgAfter": "27.60 33.37 33.15 21/9771 2797107",
+   "failures": [],
+   "failedTests": []
+  },
+  {
+   "id": "RM12-multiline-anchor-split",
+   "ranAt": "c399eda908a3d549e051f45499557e82356af9ab",
+   "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+   "replacements": [
+    {
+     "old": "const LINE_END = /\\r\\n|\\r|\\n/g;",
+     "new": "const LINE_END = /\\r\\n|[\\r\\n\\u2028\\u2029]/g;"
+    }
+   ],
+   "mutatedSha256": "143f6ff5c7c129b73a5dfd552ecd0846171a55e1bb1feb0c1032d3be66564f98",
+   "note": "the JavaScript line-terminator set (what ^ and $ under m, and the dot, treat as line ends)",
+   "outcome": "SURVIVED",
+   "tests": 386,
+   "failed": 0,
+   "timeouts": 0,
+   "loadavgBefore": "27.60 33.37 33.15 20/9773 2797111",
+   "loadavgAfter": "29.06 33.40 33.16 13/9772 2805360",
+   "failures": [],
+   "failedTests": []
+  }
+ ]
+}

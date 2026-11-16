@@ -6,5 +6,6 @@
     "tsBuildInfoFile": "dist/.tsbuildinfo"
   },
   "include": ["src"],
-  "references": [{ "path": "../../packages/cap1-daemon" }, { "path": "../../packages/polaris-dossier" }, { "path": "../three-surface-poc" }]
+  "exclude": ["src/**/*.test.ts"],
+  "references": [{ "path": "../../packages/cap1-daemon" }, { "path": "../../packages/http-host" }, { "path": "../../packages/polaris-dossier" }, { "path": "../three-surface-poc" }]
 }

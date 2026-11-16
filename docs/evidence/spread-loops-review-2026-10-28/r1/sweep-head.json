@@ -1,0 +1,226 @@
+{
+ "population": 257,
+ "populationLessTestSupport": 236,
+ "regexHits": 31,
+ "regexHitsLessTestSupport": 31,
+ "literalCount": 31,
+ "hits": [
+  {
+   "path": "apps/three-surface-poc/src/fresh-checkout-demo-main.ts",
+   "line": 445,
+   "match": ".push(...",
+   "text": "routes.push(...sources.routes);",
+   "testSupport": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-accessibility-main.ts",
+   "line": 69,
+   "match": "Math.min(...",
+   "text": "minimumContrast: Math.min(...reports.map((report) => report.contrast.minimumRatio)),",
+   "testSupport": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-accessibility.ts",
+   "line": 523,
+   "match": ".push(...",
+   "text": "targetContrast.push(...(await page.evaluate<readonly TextElement[]>(TARGET_TEXT_SCRIPT)));",
+   "testSupport": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-accessible-names.ts",
+   "line": 336,
+   "match": ".push(...",
+   "text": "violations.push(...report.violations.map((violation) => ({ ...violation, where: `${listed.page}: ${violation.where}` })));",
+   "testSupport": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-accessible-names.ts",
+   "line": 338,
+   "match": ".push(...",
+   "text": "violations.push(...coverageViolations(pages, reports.map((report) => report.page)));",
+   "testSupport": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "line": 85,
+   "match": "Math.max(...",
+   "text": "const layerCount = Math.max(...layer) + 1;",
+   "testSupport": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "line": 99,
+   "match": "Math.max(...",
+   "text": "const maxRows = Math.max(...members.map(m => m.length));",
+   "testSupport": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "line": 190,
+   "match": "Math.max(...",
+   "text": "const widest = Math.max(...lines.map(line => [...line].length));",
+   "testSupport": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "line": 272,
+   "match": ".push(...",
+   "text": "claimsByPage.push(...pending.splice(0).map(entry => ({ page: path, ...entry })));",
+   "testSupport": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/repo-corpus.ts",
+   "line": 246,
+   "match": ".push(...",
+   "text": "sources.push(...retained.map(row => row.exclusion.excluded ? withheld(record, row.exclusion.reason) : row));",
+   "testSupport": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/repo-corpus.ts",
+   "line": 250,
+   "match": ".push(...",
+   "text": "sources.push(...generationSourcesForBody({ ...base, body, oversize: config.oversize }).map(row => !row.exclusion.excluded ? row",
+   "testSupport": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/walkthrough-preflight.ts",
+   "line": 312,
+   "match": "Math.min(...",
+   "text": "return html.slice(start, candidates.length === 0 ? html.length : Math.min(...candidates));",
+   "testSupport": false
+  },
+  {
+   "path": "packages/cap1-core/src/drawer.ts",
+   "line": 324,
+   "match": ".push(...",
+   "text": "secondaryReasons.push(...member.epistemic.reasons.secondary);",
+   "testSupport": false
+  },
+  {
+   "path": "packages/polaris-dossier/src/check.ts",
+   "line": 359,
+   "match": ".push(...",
+   "text": "findings.push(...derived.findings);",
+   "testSupport": false
+  },
+  {
+   "path": "packages/polaris-dossier/src/check.ts",
+   "line": 423,
+   "match": "Math.max(...",
+   "text": "return numbers.length === 0 ? 0 : Math.max(...numbers) + 1;",
+   "testSupport": false
+  },
+  {
+   "path": "packages/polaris-dossier/src/design-review.ts",
+   "line": 45,
+   "match": "Math.max(...",
+   "text": "const number = Math.max(...numbers);",
+   "testSupport": false
+  },
+  {
+   "path": "packages/polaris-dossier/src/draft-schema.ts",
+   "line": 45,
+   "match": "Math.max(...",
+   "text": "const choice = (values: readonly string[]): DraftSchema => ({ type: 'string', minLength: 1, maxLength: Math.max(...values.map((v) => v.length)), enum: values })",
+   "testSupport": false
+  },
+  {
+   "path": "packages/polaris-dossier/src/draft-schema.ts",
+   "line": 305,
+   "match": ".push(...",
+   "text": "if (named.length === 1) { errors.push(...named[0]!.found); return; }",
+   "testSupport": false
+  },
+  {
+   "path": "packages/polaris-dossier/src/inventory.ts",
+   "line": 112,
+   "match": "Math.max(...",
+   "text": "return numbers.length === 0 ? 0 : Math.max(...numbers);",
+   "testSupport": false
+  },
+  {
+   "path": "packages/polaris-dossier/src/inventory.ts",
+   "line": 415,
+   "match": "Math.max(...",
+   "text": "const revision = Math.max(...revisions);",
+   "testSupport": false
+  },
+  {
+   "path": "packages/polaris-dossier/src/polaris.ts",
+   "line": 425,
+   "match": "Math.max(...",
+   "text": "return sites.length === 0 ? null : Math.max(...sites);",
+   "testSupport": false
+  },
+  {
+   "path": "packages/polaris-dossier/src/render.ts",
+   "line": 243,
+   "match": "Math.max(...",
+   "text": "const target = path.join(root, String(taken.length === 0 ? 0 : Math.max(...taken) + 1));",
+   "testSupport": false
+  },
+  {
+   "path": "packages/polaris-dossier/src/render.ts",
+   "line": 305,
+   "match": ".push(...",
+   "text": "sources.push(...own);",
+   "testSupport": false
+  },
+  {
+   "path": "packages/polaris-dossier/src/review.ts",
+   "line": 71,
+   "match": "Math.max(...",
+   "text": "return numbers.length === 0 ? 0 : Math.max(...numbers);",
+   "testSupport": false
+  },
+  {
+   "path": "packages/polaris-dossier/src/review.ts",
+   "line": 506,
+   "match": "Math.max(...",
+   "text": "return numbers.length === 0 ? 0 : Math.max(...numbers) + 1;",
+   "testSupport": false
+  },
+  {
+   "path": "packages/polaris-generation-core/src/discovery.ts",
+   "line": 283,
+   "match": "Math.max(...",
+   "text": "const mapOrder = [...groups].sort((a, b) => Math.max(...b.blobs.map(x => x.heuristic)) - Math.max(...a.blobs.map(x => x.heuristic)) || (a.name < b.name ? -1 : 1",
+   "testSupport": false
+  },
+  {
+   "path": "packages/polaris-generation-core/src/discovery.ts",
+   "line": 283,
+   "match": "Math.max(...",
+   "text": "const mapOrder = [...groups].sort((a, b) => Math.max(...b.blobs.map(x => x.heuristic)) - Math.max(...a.blobs.map(x => x.heuristic)) || (a.name < b.name ? -1 : 1",
+   "testSupport": false
+  },
+  {
+   "path": "packages/polaris-generation-core/src/discovery.ts",
+   "line": 339,
+   "match": ".push(...",
+   "text": "rankedIds.push(...(outcome.reply as { ranked: string[] }).ranked);",
+   "testSupport": false
+  },
+  {
+   "path": "packages/polaris-generation-core/src/dossier-profile.ts",
+   "line": 202,
+   "match": ".push(...",
+   "text": "unresolved.push(...overBudget);",
+   "testSupport": false
+  },
+  {
+   "path": "packages/polaris-generation-core/src/dossier-profile.ts",
+   "line": 218,
+   "match": ".push(...",
+   "text": "unresolved.push(...asked.slice(index));",
+   "testSupport": false
+  },
+  {
+   "path": "packages/polaris-generation-core/src/dossier-profile.ts",
+   "line": 222,
+   "match": ".push(...",
+   "text": "} else unresolved.push(...asked);",
+   "testSupport": false
+  }
+ ]
+}

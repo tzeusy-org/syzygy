@@ -1,0 +1,480 @@
+{
+ "changedFilesExistingAtBase": 72,
+ "trackedFilesScanned": 4938,
+ "distinctHexTokens12to64": 27566,
+ "hits": [
+  {
+   "file": "apps/three-surface-poc/package.json",
+   "kind": "sha256",
+   "token": "32f006927e7a\u2026",
+   "len": 64,
+   "citers": [
+    "docs/evidence/island-decoupling-review-2026-10-22/mutants-lane-rerun.json",
+    "docs/evidence/syzygy-bpyt-8-1/evidence.json",
+    "docs/evidence/syzygy-bpyt-8-1/mutants.json"
+   ]
+  },
+  {
+   "file": "apps/three-surface-poc/src/poc-main.ts",
+   "kind": "sha256",
+   "token": "e09e8f203a18\u2026",
+   "len": 64,
+   "citers": [
+    "docs/evidence/poc-main-wiring-2026-10-22/mutants-main-test-head-2026-10-22.json",
+    "docs/reviews/R-GP-IMPL-POC-MAIN-WIRING-1-RAW.md",
+    "docs/reviews/R-GP-IMPL-POC-MAIN-WIRING-1-REISSUE-RAW.md"
+   ]
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "kind": "sha256",
+   "token": "c1f82e84a0ad\u2026",
+   "len": 64,
+   "citers": [
+    "docs/evidence/island-decoupling-review-2026-10-22/mutants-lane-rerun.json",
+    "docs/evidence/syzygy-bpyt-8-1/evidence.json",
+    "docs/evidence/syzygy-bpyt-8-1/mutants.json",
+    "docs/evidence/syzygy-bpyt-8-1/regen-check.json"
+   ]
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-generation/draft-preview.ts",
+   "kind": "sha256",
+   "token": "2ca88887779e\u2026",
+   "len": 64,
+   "citers": [
+    "docs/evidence/syzygy-bpyt-8-1/evidence.json"
+   ]
+  },
+  {
+   "file": "packages/polaris-dossier/package.json",
+   "kind": "sha256",
+   "token": "ce90b51059d8\u2026",
+   "len": 64,
+   "citers": [
+    "docs/evidence/syzygy-bpyt-8-2/evidence.json",
+    "docs/evidence/syzygy-bpyt-8-2/path-intent.json"
+   ]
+  },
+  {
+   "file": "packages/polaris-dossier/src/brief.ts",
+   "kind": "sha256",
+   "token": "95c279b1f01a\u2026",
+   "len": 64,
+   "citers": [
+    "docs/evidence/syzygy-bpyt-8-2/evidence.json"
+   ]
+  },
+  {
+   "file": "packages/polaris-dossier/src/check.ts",
+   "kind": "sha256",
+   "token": "5aa89525701f\u2026",
+   "len": 64,
+   "citers": [
+    "docs/evidence/syzygy-bpyt-8-2/evidence.json"
+   ]
+  },
+  {
+   "file": "packages/polaris-dossier/src/close.ts",
+   "kind": "sha256",
+   "token": "0303368eae0d\u2026",
+   "len": 64,
+   "citers": [
+    "docs/evidence/syzygy-bpyt-8-2/evidence.json"
+   ]
+  },
+  {
+   "file": "packages/polaris-dossier/src/design-review.ts",
+   "kind": "sha256",
+   "token": "bd6e69a1ca12\u2026",
+   "len": 64,
+   "citers": [
+    "docs/evidence/syzygy-bpyt-8-1/evidence.json"
+   ]
+  },
+  {
+   "file": "packages/polaris-dossier/src/doctrine-quote.ts",
+   "kind": "sha256",
+   "token": "2568b47d6c39\u2026",
+   "len": 64,
+   "citers": [
+    "docs/evidence/polaris-dossier-s5-mutants-2026-10-06.json"
+   ]
+  },
+  {
+   "file": "packages/polaris-dossier/src/inventory.ts",
+   "kind": "sha256",
+   "token": "dc4db3325e31\u2026",
+   "len": 64,
+   "citers": [
+    "docs/evidence/syzygy-bpyt-8-2/evidence.json",
+    "docs/evidence/syzygy-bpyt-8-2/path-intent.json"
+   ]
+  },
+  {
+   "file": "packages/polaris-dossier/src/launched.ts",
+   "kind": "sha256",
+   "token": "c7a25b8b45fe\u2026",
+   "len": 64,
+   "citers": [
+    "docs/evidence/launch-form-ctime-review-2026-10-24/results/check-record-result.txt",
+    "docs/evidence/launch-form-ctime-review-2026-10-24/results/pr-body-live.txt",
+    "docs/evidence/launch-form-ctime-review-2026-10-24/results/rev519-mutants-ext4.json",
+    "docs/evidence/launch-form-ctime-review-2026-10-24/results/rev519-mutants-tmpfs.json",
+    "docs/evidence/launch-form-ctime-review-2026-10-24/results/rev519-record-sample-tmpfs.json",
+    "docs/evidence/launch-form-ctime-review-2026-10-24/results/variant-target-ctime-results.json",
+    "docs/evidence/launch-form-ctime-review-2026-10-24/tools/pr-body-mutated.txt",
+    "docs/evidence/launch-form-postcondition-review-2026-10-22/recorded-rerun.json",
+    "docs/evidence/launch-form-postcondition-review-2026-10-22/rev511-results.json",
+    "docs/evidence/launch-form-postcondition-review-2026-10-22/rev511b-results.json",
+    "docs/evidence/launch-form-postcondition-review-2026-10-22/rev511c-results.json",
+    "docs/evidence/launch-form-snapshot-ctime-mutants-2026-10-23.json",
+    "docs/evidence/launch-form-snapshot-oracle-mutants-2026-10-22.json",
+    "docs/evidence/launch-form-snapshot-review-2026-10-22/rev516-results.json",
+    "docs/evidence/launch-form-snapshot-review-2026-10-22/rev516-results2.json",
+    "docs/evidence/launch-form-snapshot-review-2026-10-22/rev516-results3.json",
+    "docs/evidence/launch-form-snapshot-review-2026-10-22/rev516-results4.json",
+    "docs/evidence/launch-form-target-ctime-2026-10-25/mutants-ext4.json",
+    "docs/evidence/launch-form-target-ctime-2026-10-25/mutants-tmpfs.json",
+    "docs/evidence/launch-form-target-ctime-review-2026-10-25/results/check-record-result.txt",
+    "docs/evidence/launch-form-target-ctime-review-2026-10-25/results/check-record-selftest.txt",
+    "docs/evidence/launch-form-target-ctime-review-2026-10-25/results/pr-body.txt",
+    "docs/evidence/launch-form-target-ino-mode-2026-10-25/summary.json",
+    "docs/evidence/launched-marker-fail-closed-differential-2026-10-21-r3.json",
+    "docs/evidence/launched-marker-fail-closed-mutants-2026-10-21-r3.json",
+    "docs/evidence/launched-marker-test-postcondition-mutants-2026-10-22.json",
+    "docs/evidence/launched-marker-test-refill-mutants-2026-10-22.json",
+    "docs/reviews/R-GP-IMPL-LAUNCH-FORM-CTIME-1-RAW.md",
+    "docs/reviews/R-GP-IMPL-LAUNCH-FORM-POSTCONDITION-1-RAW.md",
+    "docs/reviews/R-GP-IMPL-LAUNCH-FORM-SNAPSHOT-1-RAW.md",
+    "docs/reviews/R-GP-IMPL-LAUNCH-FORM-TARGET-CTIME-1-RAW.md",
+    "docs/reviews/R-GP-IMPL-LAUNCH-FORM-TARGET-INO-MODE-1-RAW.md",
+    "docs/reviews/R-GP-IMPL-LAUNCHED-TEST-REFILL-1-RAW.md"
+   ]
+  },
+  {
+   "file": "packages/polaris-dossier/src/launched.ts",
+   "kind": "blob",
+   "token": "8012623e6918\u2026",
+   "len": 40,
+   "citers": [
+    "docs/reviews/R-GP-IMPL-LAUNCH-FORM-TARGET-INO-MODE-1-RAW.md"
+   ]
+  },
+  {
+   "file": "packages/polaris-dossier/src/polaris.ts",
+   "kind": "sha256",
+   "token": "c75c2d005437\u2026",
+   "len": 64,
+   "citers": [
+    "docs/evidence/syzygy-bpyt-8-2/evidence.json",
+    "docs/evidence/syzygy-bpyt-8-32/goldens-record.json",
+    "docs/evidence/syzygy-bpyt-8-34/mutants-record.json"
+   ]
+  },
+  {
+   "file": "packages/polaris-dossier/src/render.ts",
+   "kind": "sha256",
+   "token": "0b070a56f15b\u2026",
+   "len": 64,
+   "citers": [
+    "docs/evidence/syzygy-bpyt-8-2/evidence.json"
+   ]
+  },
+  {
+   "file": "packages/polaris-dossier/src/review.ts",
+   "kind": "sha256",
+   "token": "a4a4f1284231\u2026",
+   "len": 64,
+   "citers": [
+    "docs/evidence/syzygy-bpyt-8-32/mutants-record.json",
+    "docs/evidence/syzygy-bpyt-8-32/review-type.json"
+   ]
+  },
+  {
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "kind": "sha256",
+   "token": "dfb0cfe77445\u2026",
+   "len": 64,
+   "citers": [
+    "docs/evidence/consent-live-module-review-2026-10-24/diff-sample.json",
+    "docs/evidence/consent-live-module-review-2026-10-24/gp-diff.json",
+    "docs/evidence/consent-live-module-review-2026-10-24/gp-nc2.json",
+    "docs/evidence/syzygy-bpyt-8-19/boundary-mutants.json",
+    "docs/evidence/syzygy-bpyt-8-19/differential.json"
+   ]
+  },
+  {
+   "file": "packages/polaris-dossier/src/session-handover.ts",
+   "kind": "sha256",
+   "token": "ada0c0772d50\u2026",
+   "len": 64,
+   "citers": [
+    "docs/evidence/syzygy-bpyt-8-2/evidence.json"
+   ]
+  },
+  {
+   "file": "packages/polaris-dossier/src/waiting-sessions.ts",
+   "kind": "sha256",
+   "token": "0e63ad275e95\u2026",
+   "len": 64,
+   "citers": [
+    "docs/evidence/syzygy-bpyt-8-2/evidence.json"
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-consent/package.json",
+   "kind": "sha256",
+   "token": "7302b8bc4341\u2026",
+   "len": 64,
+   "citers": [
+    "docs/evidence/consent-live-module-review-2026-10-24/census-mutants-rev.json",
+    "docs/evidence/consent-live-module-review-2026-10-24/reviewer-boundary-mutants.json",
+    "docs/evidence/syzygy-bpyt-8-19/boundary-mutants.json",
+    "docs/evidence/syzygy-bpyt-8-19/census-mutants.json"
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-consent/src/consent-ports.ts",
+   "kind": "sha256",
+   "token": "24d3534a4982\u2026",
+   "len": 64,
+   "citers": [
+    "docs/evidence/consent-live-module-review-2026-10-24/census-after-rev.json",
+    "docs/evidence/consent-live-module-review-2026-10-24/census-mutants-rev.json",
+    "docs/evidence/consent-live-module-review-2026-10-24/diff-sample.json",
+    "docs/evidence/consent-live-module-review-2026-10-24/gp-diff.json",
+    "docs/evidence/consent-live-module-review-2026-10-24/gp-nc1.json",
+    "docs/evidence/consent-live-module-review-2026-10-24/gp-nc2.json",
+    "docs/evidence/consent-live-module-review-2026-10-24/nc-repro.json",
+    "docs/evidence/syzygy-bpyt-8-19/census-after.json",
+    "docs/evidence/syzygy-bpyt-8-19/census-mutants.json",
+    "docs/evidence/syzygy-bpyt-8-19/differential.json",
+    "docs/evidence/syzygy-bpyt-8-19/negative-control.json"
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-consent/src/package-reader.ts",
+   "kind": "sha256",
+   "token": "da42b88df3bc\u2026",
+   "len": 64,
+   "citers": [
+    "docs/evidence/consent-live-module-review-2026-10-24/diff-sample.json",
+    "docs/evidence/consent-live-module-review-2026-10-24/gp-diff.json",
+    "docs/evidence/consent-live-module-review-2026-10-24/gp-nc1.json",
+    "docs/evidence/consent-live-module-review-2026-10-24/gp-nc2.json",
+    "docs/evidence/consent-live-module-review-2026-10-24/nc-repro.json",
+    "docs/evidence/syzygy-bpyt-8-19/boundary-mutants.json",
+    "docs/evidence/syzygy-bpyt-8-19/differential.json",
+    "docs/evidence/syzygy-bpyt-8-19/negative-control.json"
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/package.json",
+   "kind": "sha256",
+   "token": "a25d67046b3a\u2026",
+   "len": 64,
+   "citers": [
+    "docs/evidence/island-decoupling-review-2026-10-22/mutants-reviewer.json",
+    "docs/evidence/syzygy-bpyt-8-1/evidence.json"
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/canonical-json.ts",
+   "kind": "sha256",
+   "token": "35128de621c8\u2026",
+   "len": 64,
+   "citers": [
+    "docs/evidence/polaris-generation-core-mutation-run-2026-09-23.json",
+    "docs/evidence/polaris-pipeline-synthetic-verification-2026-09-13.json"
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/dossier-evaluation.ts",
+   "kind": "sha256",
+   "token": "39f0ad1f13ee\u2026",
+   "len": 64,
+   "citers": [
+    "docs/evidence/syzygy-bpyt-8-1/evidence.json"
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/dossier-profile.ts",
+   "kind": "sha256",
+   "token": "4a316ae452ab\u2026",
+   "len": 64,
+   "citers": [
+    "docs/evidence/syzygy-bpyt-8-1/evidence.json"
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/generation-source.ts",
+   "kind": "sha256",
+   "token": "3ff111820b63\u2026",
+   "len": 64,
+   "citers": [
+    "docs/evidence/syzygy-bpyt-8-1/evidence.json"
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/pipeline.ts",
+   "kind": "sha256",
+   "token": "d4fbf19f6d1f\u2026",
+   "len": 64,
+   "citers": [
+    "docs/evidence/p110-span-install-correction-mutations-2026-10-21.json",
+    "docs/reviews/R-P110-CODE-SECURITY-PROBES-1CDB-1-RAW.md"
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "kind": "sha256",
+   "token": "5d3cb7538eec\u2026",
+   "len": 64,
+   "citers": [
+    "docs/evidence/dossier-blockers-install-n4-mutants-ts-2026-10-08.json"
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "kind": "sha256",
+   "token": "6567b00948e8\u2026",
+   "len": 64,
+   "citers": [
+    "docs/evidence/p110-span-install-correction-mutations-2026-10-21.json"
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/act-fields.ts",
+   "kind": "sha256",
+   "token": "09a7c2e5c051\u2026",
+   "len": 64,
+   "citers": [
+    "docs/evidence/non-human-principal-pins-2026-10-22/mutants-after-2026-10-22.json",
+    "docs/evidence/non-human-principal-pins-2026-10-22/mutants-before-2026-10-22.json",
+    "docs/evidence/non-human-principal-pins-2026-10-22/verification-2026-10-22.json",
+    "docs/evidence/owner-act-live-records-before-after-2026-10-21.json",
+    "docs/evidence/owner-act-non-human-rule-mutants-2026-10-21.json",
+    "docs/reviews/R-GP-IMPL-NON-HUMAN-PINS-1-RAW.md"
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/act-fields.ts",
+   "kind": "blob",
+   "token": "df4f885830ca\u2026",
+   "len": 40,
+   "citers": [
+    "docs/reviews/R-GP-IMPL-NON-HUMAN-PINS-1-RAW.md"
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/body-read-authority.ts",
+   "kind": "sha256",
+   "token": "f612651d1342\u2026",
+   "len": 64,
+   "citers": [
+    "docs/evidence/owner-act-live-records-before-after-2026-10-21.json",
+    "docs/evidence/owner-act-non-human-rule-mutants-2026-10-21.json",
+    "docs/evidence/poc-core-hygiene-2026-10-22/comment-only-check-2026-10-22.json",
+    "docs/evidence/poc-core-hygiene-2026-10-22/dispositions-2026-10-22.json",
+    "docs/evidence/pwb-mutation-run-2026-10-21-bpyt-6-2-r2.json",
+    "docs/evidence/pwb-mutation-run-2026-10-21-bpyt-6-2.json",
+    "docs/reviews/R-GP-IMPL-POC-CORE-HYGIENE-1-RAW.md",
+    "docs/reviews/R-GP-IMPL-POC-CORE-HYGIENE-2-RAW.md"
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/body-read-authority.ts",
+   "kind": "blob",
+   "token": "c1337a19bf8c\u2026",
+   "len": 40,
+   "citers": [
+    "docs/reviews/R-GP-IMPL-NON-HUMAN-PINS-1-RAW.md"
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/model.ts",
+   "kind": "sha256",
+   "token": "7d752be94be2\u2026",
+   "len": 64,
+   "citers": [
+    "docs/evidence/jytt-bead-title-exclusion-rebase-2026-10-21.json"
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/model.ts",
+   "kind": "blob",
+   "token": "c46c38e4730a\u2026",
+   "len": 40,
+   "citers": [
+    "docs/evidence/jytt-bead-title-exclusion-rebase-2026-10-21.json"
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/owner-act-drafter.test.ts",
+   "kind": "sha256",
+   "token": "1670e2e48551\u2026",
+   "len": 64,
+   "citers": [
+    "docs/evidence/syzygy-dov41-unknown-routes-rule6-2026-10-03.json"
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/owner-act-drafter.ts",
+   "kind": "sha256",
+   "token": "1dfea09c97b4\u2026",
+   "len": 64,
+   "citers": [
+    "docs/evidence/syzygy-dov41-unknown-routes-rule6-2026-10-03.json"
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/poc-seeds.ts",
+   "kind": "sha256",
+   "token": "4aebb7ad53b1\u2026",
+   "len": 64,
+   "citers": [
+    "docs/evidence/live-verification-test-no-spawn-mutants-round1-repairs-2026-10-07.json",
+    "docs/evidence/live-verification-test-no-spawn-mutants-round2-repairs-2026-10-07.json",
+    "docs/evidence/live-verification-test-no-spawn-mutants-round3-repairs-2026-10-07.json"
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+   "kind": "sha256",
+   "token": "df5e1122af74\u2026",
+   "len": 64,
+   "citers": [
+    "docs/evidence/pwb-p4-2-mutation-sweep-2026-09-09-named-absent-file-dropped.json"
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification-live-source.test.ts",
+   "kind": "sha256",
+   "token": "95f04d5e7f93\u2026",
+   "len": 64,
+   "citers": [
+    "docs/evidence/live-verification-test-no-spawn-mutants-round3-repairs-2026-10-07.json"
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/walkthrough-judgment.ts",
+   "kind": "sha256",
+   "token": "a64ef4c0d389\u2026",
+   "len": 64,
+   "citers": [
+    "docs/evidence/poc-core-hygiene-2026-10-22/dispositions-2026-10-22.json",
+    "docs/reviews/R-GP-IMPL-POC-CORE-HYGIENE-2-RAW.md"
+   ]
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/walkthrough-readiness.ts",
+   "kind": "sha256",
+   "token": "a4012784b6de\u2026",
+   "len": 64,
+   "citers": [
+    "docs/evidence/pwb-m11-operability-evidence-2026-09-23.json"
+   ]
+  }
+ ]
+}

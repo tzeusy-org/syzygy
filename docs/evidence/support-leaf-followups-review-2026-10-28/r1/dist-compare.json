@@ -1,0 +1,41 @@
+{
+ "base": 2096,
+ "head": 2100,
+ "added": [
+  "packages/polaris-generation-core/dist/root-vitest-aliases.test.d.ts",
+  "packages/polaris-generation-core/dist/root-vitest-aliases.test.d.ts.map",
+  "packages/polaris-generation-core/dist/root-vitest-aliases.test.js",
+  "packages/polaris-generation-core/dist/root-vitest-aliases.test.js.map"
+ ],
+ "removed": [],
+ "changed": [
+  "apps/three-surface-poc/dist/.tsbuildinfo",
+  "packages/polaris-dossier/dist/.tsbuildinfo",
+  "packages/polaris-dossier/dist/no-egress.test.js",
+  "packages/polaris-dossier/dist/no-egress.test.js.map",
+  "packages/polaris-generation-core/dist/.tsbuildinfo",
+  "packages/polaris-generation-core/dist/workspace-reach.test.js",
+  "packages/polaris-generation-core/dist/workspace-reach.test.js.map",
+  "packages/polaris-generation-core/dist/workspace-reach.testkit.d.ts",
+  "packages/polaris-generation-core/dist/workspace-reach.testkit.d.ts.map",
+  "packages/polaris-generation-core/dist/workspace-reach.testkit.js",
+  "packages/polaris-generation-core/dist/workspace-reach.testkit.js.map",
+  "packages/support/dist/.tsbuildinfo",
+  "packages/support/dist/purity.testkit.d.ts",
+  "packages/support/dist/purity.testkit.d.ts.map",
+  "packages/support/dist/purity.testkit.js",
+  "packages/support/dist/purity.testkit.js.map",
+  "packages/support/dist/support-purity.test.js",
+  "packages/support/dist/support-purity.test.js.map",
+  "packages/three-surface-poc-core/dist/.tsbuildinfo",
+  "packages/three-surface-poc-core/dist/owner-act-drafter.test.js",
+  "packages/three-surface-poc-core/dist/owner-act-drafter.test.js.map"
+ ],
+ "nonTest": {
+  "added": [],
+  "removed": [],
+  "changed": [],
+  "identical": 1004,
+  "population": 1004
+ }
+}

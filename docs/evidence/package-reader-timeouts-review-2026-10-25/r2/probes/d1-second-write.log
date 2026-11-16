@@ -1,0 +1,10 @@
+{"mode": "d1", "version": "new", "param": null, "inject": null, "exitCode": 1, "scriptExitAt": 0.123, "clean": true, "noSurvivor": true, "descendantsSeen": 0, "recordTests": null, "recordProfileRows": null}
+  events: []
+{"mode": "inject", "version": "new", "param": null, "inject": "second-write", "exitCode": 1, "scriptExitAt": 0.127, "clean": true, "noSurvivor": true, "descendantsSeen": 1, "recordTests": null, "recordProfileRows": null}
+  events: []
+{"mode": "d1", "version": "old", "param": null, "inject": null, "exitCode": 1, "scriptExitAt": 0.129, "clean": false, "noSurvivor": true, "descendantsSeen": 0, "recordTests": null, "recordProfileRows": null}
+  DIRTY: M packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts
+  events: []
+{"mode": "inject", "version": "old", "param": null, "inject": "second-write", "exitCode": 1, "scriptExitAt": 0.137, "clean": false, "noSurvivor": true, "descendantsSeen": 0, "recordTests": null, "recordProfileRows": null}
+  DIRTY: M packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts
+  events: []

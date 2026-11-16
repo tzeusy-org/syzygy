@@ -1,0 +1,65 @@
+{
+ "holdingNone": 1,
+ "holdingNoneTexts": [
+  "\"a ``b ` c`` d\""
+ ],
+ "holdingEach": {
+  "85": 2026,
+  "2028": 2026,
+  "2029": 2026,
+  "b": 2026,
+  "c": 2026
+ },
+ "cases": {
+  "vet": 36,
+  "fence": 33,
+  "n2": 6
+ },
+ "texts": 10131,
+ "withCr": 0,
+ "sortedDigest": "8817670dc68ba3a65de386fd5982073bb2433a610c92fb60d25208e2ac19872f",
+ "differentialSlice": {
+  "texts": 10131,
+  "sortedDigest": "8817670dc68ba3a65de386fd5982073bb2433a610c92fb60d25208e2ac19872f",
+  "equalSets": true
+ },
+ "excludedByHead": 8044,
+ "perSeparator": {
+  "U+2028": {
+   "texts": 2026,
+   "fence": 370,
+   "span": 198,
+   "outside": 457,
+   "malformedAtHead": 1075
+  },
+  "U+2029": {
+   "texts": 2026,
+   "fence": 370,
+   "span": 198,
+   "outside": 457,
+   "malformedAtHead": 1075
+  },
+  "U+0085": {
+   "texts": 2026,
+   "fence": 572,
+   "span": 123,
+   "outside": 368,
+   "malformedAtHead": 982
+  },
+  "U+000B": {
+   "texts": 2026,
+   "fence": 572,
+   "span": 123,
+   "outside": 368,
+   "malformedAtHead": 982
+  },
+  "U+000C": {
+   "texts": 2026,
+   "fence": 572,
+   "span": 123,
+   "outside": 368,
+   "malformedAtHead": 982
+  }
+ },
+ "note": "fence / span / outside count texts holding at least one occurrence of that separator at such a position (a text can count in more than one); malformedAtHead counts texts with no mask"
+}

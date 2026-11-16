@@ -1,0 +1,480 @@
+[
+ {
+  "id": "N3-control-head",
+  "ranAt": "4d92ac9518dd60cdd124525c3e36c086ccd5e425",
+  "tests": [
+   "packages/polaris-generation-core/src/secret-redaction.test.ts"
+  ],
+  "edits": [],
+  "loadavg": "35.93 31.28 27.14 26/9839 2840260",
+  "exit": 0,
+  "passed": 38,
+  "failed": 0,
+  "total": 38,
+  "failedTests": []
+ },
+ {
+  "id": "N3-O8-at-head",
+  "ranAt": "4d92ac9518dd60cdd124525c3e36c086ccd5e425",
+  "tests": [
+   "packages/polaris-generation-core/src/secret-redaction.test.ts"
+  ],
+  "edits": [
+   {
+    "path": "packages/polaris-generation-core/src/secret-redaction.ts",
+    "old": "if (!isRecord(red)) return refuse('is not an object');",
+    "new": "if (!isRecord(red) && typeof red !== 'function') return refuse('is not an object');"
+   }
+  ],
+  "loadavg": "36.58 31.49 27.23 24/9833 2842254",
+  "exit": 1,
+  "passed": 37,
+  "failed": 1,
+  "total": 38,
+  "failedTests": [
+   {
+    "title": "readSecretRedaction refuses what it does not implement refuses a declaration that is a function that carries every field",
+    "message": "AssertionError: expected { ok: false, \u2026(1) } to deeply equal { ok: false, \u2026(1) }\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-548-r2/clone/packages/polaris-generation-core/src/secret-redaction.test.ts:199:76\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-548-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:861:59\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-548-r2/clone/node_modules/@vitest/runner/dist/chunk-hoo"
+   }
+  ]
+ },
+ {
+  "id": "N3-O8-without-the-function-row",
+  "ranAt": "4d92ac9518dd60cdd124525c3e36c086ccd5e425",
+  "tests": [
+   "packages/polaris-generation-core/src/secret-redaction.test.ts"
+  ],
+  "edits": [
+   {
+    "path": "packages/polaris-generation-core/src/secret-redaction.ts",
+    "old": "if (!isRecord(red)) return refuse('is not an object');",
+    "new": "if (!isRecord(red) && typeof red !== 'function') return refuse('is not an object');"
+   },
+   {
+    "path": "packages/polaris-generation-core/src/secret-redaction.test.ts",
+    "old": "    ['a function that carries every field', () => Object.assign(() => 1, validRedaction())],\n",
+    "new": ""
+   }
+  ],
+  "loadavg": "38.45 31.97 27.41 19/9805 2843898",
+  "exit": 0,
+  "passed": 37,
+  "failed": 0,
+  "total": 37,
+  "failedTests": []
+ },
+ {
+  "id": "AL-control-head",
+  "ranAt": "4d92ac9518dd60cdd124525c3e36c086ccd5e425",
+  "tests": [
+   "packages/support/src/support-purity.test.ts"
+  ],
+  "edits": [],
+  "loadavg": "38.50 32.08 27.47 26/9814 2845425",
+  "exit": 0,
+  "passed": 33,
+  "failed": 0,
+  "total": 33,
+  "failedTests": []
+ },
+ {
+  "id": "AL-remove-Array",
+  "ranAt": "4d92ac9518dd60cdd124525c3e36c086ccd5e425",
+  "tests": [
+   "packages/support/src/support-purity.test.ts"
+  ],
+  "edits": [
+   {
+    "path": "packages/support/src/support-purity.test.ts",
+    "old": "'Array', ",
+    "new": ""
+   }
+  ],
+  "loadavg": "38.78 32.25 27.55 44/9833 2846996",
+  "exit": 1,
+  "passed": 32,
+  "failed": 1,
+  "total": 33,
+  "failedTests": [
+   {
+    "title": "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source",
+    "message": "AssertionError: expected [ 'is-record.ts: Array' ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-548-r2/clone/packages/support/src/support-purity.test.ts:79:155\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-548-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-548-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///t"
+   }
+  ]
+ },
+ {
+  "id": "AL-remove-Readonly",
+  "ranAt": "4d92ac9518dd60cdd124525c3e36c086ccd5e425",
+  "tests": [
+   "packages/support/src/support-purity.test.ts"
+  ],
+  "edits": [
+   {
+    "path": "packages/support/src/support-purity.test.ts",
+    "old": "'Readonly', ",
+    "new": ""
+   }
+  ],
+  "loadavg": "38.78 32.25 27.55 25/9901 2848398",
+  "exit": 1,
+  "passed": 32,
+  "failed": 1,
+  "total": 33,
+  "failedTests": [
+   {
+    "title": "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source",
+    "message": "AssertionError: expected [ 'is-record.ts: Readonly' ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-548-r2/clone/packages/support/src/support-purity.test.ts:79:155\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-548-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-548-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:/"
+   }
+  ]
+ },
+ {
+  "id": "AL-remove-Record",
+  "ranAt": "4d92ac9518dd60cdd124525c3e36c086ccd5e425",
+  "tests": [
+   "packages/support/src/support-purity.test.ts"
+  ],
+  "edits": [
+   {
+    "path": "packages/support/src/support-purity.test.ts",
+    "old": "'Record', ",
+    "new": ""
+   }
+  ],
+  "loadavg": "38.33 32.37 27.64 32/9890 2850438",
+  "exit": 1,
+  "passed": 32,
+  "failed": 1,
+  "total": 33,
+  "failedTests": [
+   {
+    "title": "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source",
+    "message": "AssertionError: expected [ 'is-record.ts: Record' ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-548-r2/clone/packages/support/src/support-purity.test.ts:79:155\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-548-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-548-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///"
+   }
+  ]
+ },
+ {
+  "id": "AL-remove-isArray",
+  "ranAt": "4d92ac9518dd60cdd124525c3e36c086ccd5e425",
+  "tests": [
+   "packages/support/src/support-purity.test.ts"
+  ],
+  "edits": [
+   {
+    "path": "packages/support/src/support-purity.test.ts",
+    "old": "'isArray', ",
+    "new": ""
+   }
+  ],
+  "loadavg": "39.99 32.82 27.81 39/10090 2852408",
+  "exit": 1,
+  "passed": 32,
+  "failed": 1,
+  "total": 33,
+  "failedTests": [
+   {
+    "title": "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source",
+    "message": "AssertionError: expected [ 'is-record.ts: isArray' ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-548-r2/clone/packages/support/src/support-purity.test.ts:79:155\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-548-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-548-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file://"
+   }
+  ]
+ },
+ {
+  "id": "AL-remove-isRecord",
+  "ranAt": "4d92ac9518dd60cdd124525c3e36c086ccd5e425",
+  "tests": [
+   "packages/support/src/support-purity.test.ts"
+  ],
+  "edits": [
+   {
+    "path": "packages/support/src/support-purity.test.ts",
+    "old": "'isRecord', ",
+    "new": ""
+   }
+  ],
+  "loadavg": "39.03 32.74 27.81 20/9782 2854239",
+  "exit": 1,
+  "passed": 32,
+  "failed": 1,
+  "total": 33,
+  "failedTests": [
+   {
+    "title": "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source",
+    "message": "AssertionError: expected [ 'index.ts: isRecord', \u2026(1) ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-548-r2/clone/packages/support/src/support-purity.test.ts:79:155\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-548-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-548-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file"
+   }
+  ]
+ },
+ {
+  "id": "PIN-RP2-globalThis-bracket-read-of-process-env",
+  "ranAt": "4d92ac9518dd60cdd124525c3e36c086ccd5e425",
+  "tests": [
+   "packages/support/src/support-purity.test.ts"
+  ],
+  "edits": [
+   {
+    "path": "packages/support/src/sha256.ts",
+    "old": "import { createHash } from 'node:crypto';\n",
+    "new": "import { createHash } from 'node:crypto';\nexport const HOME = (globalThis as Record<string, any>)['process']['env']['HOME'];\n"
+   }
+  ],
+  "loadavg": "39.03 32.74 27.81 13/9804 2855200",
+  "exit": 1,
+  "passed": 32,
+  "failed": 1,
+  "total": 33,
+  "failedTests": [
+   {
+    "title": "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source",
+    "message": "AssertionError: expected [ 'sha256.ts: HOME', \u2026(1) ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-548-r2/clone/packages/support/src/support-purity.test.ts:79:155\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-548-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-548-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file://"
+   }
+  ]
+ },
+ {
+  "id": "PIN-RP5-WebSocket",
+  "ranAt": "4d92ac9518dd60cdd124525c3e36c086ccd5e425",
+  "tests": [
+   "packages/support/src/support-purity.test.ts"
+  ],
+  "edits": [
+   {
+    "path": "packages/support/src/sha256.ts",
+    "old": "import { createHash } from 'node:crypto';\n",
+    "new": "import { createHash } from 'node:crypto';\nexport const open = (url: string): WebSocket => new WebSocket(url);\n"
+   }
+  ],
+  "loadavg": "38.14 32.66 27.81 17/9785 2855795",
+  "exit": 1,
+  "passed": 32,
+  "failed": 1,
+  "total": 33,
+  "failedTests": [
+   {
+    "title": "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source",
+    "message": "AssertionError: expected [ 'sha256.ts: WebSocket', \u2026(2) ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-548-r2/clone/packages/support/src/support-purity.test.ts:79:155\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-548-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-548-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at fi"
+   }
+  ]
+ },
+ {
+  "id": "PIN-RP7-performance-now",
+  "ranAt": "4d92ac9518dd60cdd124525c3e36c086ccd5e425",
+  "tests": [
+   "packages/support/src/support-purity.test.ts"
+  ],
+  "edits": [
+   {
+    "path": "packages/support/src/sha256.ts",
+    "old": "import { createHash } from 'node:crypto';\n",
+    "new": "import { createHash } from 'node:crypto';\nexport const started = performance.now();\n"
+   }
+  ],
+  "loadavg": "38.14 32.66 27.81 13/9820 2856391",
+  "exit": 1,
+  "passed": 32,
+  "failed": 1,
+  "total": 33,
+  "failedTests": [
+   {
+    "title": "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source",
+    "message": "AssertionError: expected [ 'sha256.ts: now', \u2026(2) ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-548-r2/clone/packages/support/src/support-purity.test.ts:79:155\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-548-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-548-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///"
+   }
+  ]
+ },
+ {
+  "id": "PIN-RP16-optional-chained-process-env-read",
+  "ranAt": "4d92ac9518dd60cdd124525c3e36c086ccd5e425",
+  "tests": [
+   "packages/support/src/support-purity.test.ts"
+  ],
+  "edits": [
+   {
+    "path": "packages/support/src/sha256.ts",
+    "old": "import { createHash } from 'node:crypto';\n",
+    "new": "import { createHash } from 'node:crypto';\nexport const HOME = globalThis.process?.env['HOME'];\n"
+   }
+  ],
+  "loadavg": "37.17 32.55 27.80 33/9822 2857429",
+  "exit": 1,
+  "passed": 32,
+  "failed": 1,
+  "total": 33,
+  "failedTests": [
+   {
+    "title": "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source",
+    "message": "AssertionError: expected [ 'sha256.ts: HOME', \u2026(3) ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-548-r2/clone/packages/support/src/support-purity.test.ts:79:155\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-548-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-548-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file://"
+   }
+  ]
+ },
+ {
+  "id": "PIN-Y1-reflect-get-globalThis-env",
+  "ranAt": "4d92ac9518dd60cdd124525c3e36c086ccd5e425",
+  "tests": [
+   "packages/support/src/support-purity.test.ts"
+  ],
+  "edits": [
+   {
+    "path": "packages/support/src/sha256.ts",
+    "old": "import { createHash } from 'node:crypto';\n",
+    "new": "import { createHash } from 'node:crypto';\nexport const HOME = Reflect.get(globalThis, 'process').env.HOME;\n"
+   }
+  ],
+  "loadavg": "36.92 32.57 27.83 21/9869 2858354",
+  "exit": 1,
+  "passed": 32,
+  "failed": 1,
+  "total": 33,
+  "failedTests": [
+   {
+    "title": "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source",
+    "message": "AssertionError: expected [ 'sha256.ts: HOME', \u2026(4) ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-548-r2/clone/packages/support/src/support-purity.test.ts:79:155\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-548-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-548-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file://"
+   }
+  ]
+ },
+ {
+  "id": "PIN-Y2-eval-under-an-allowed-name",
+  "ranAt": "4d92ac9518dd60cdd124525c3e36c086ccd5e425",
+  "tests": [
+   "packages/support/src/support-purity.test.ts"
+  ],
+  "edits": [
+   {
+    "path": "packages/support/src/sha256.ts",
+    "old": "import { createHash } from 'node:crypto';\n",
+    "new": "import { createHash } from 'node:crypto';\nconst value = eval;\nexport { value };\n"
+   }
+  ],
+  "loadavg": "36.92 32.57 27.83 14/9869 2858990",
+  "exit": 1,
+  "passed": 32,
+  "failed": 1,
+  "total": 33,
+  "failedTests": [
+   {
+    "title": "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source",
+    "message": "AssertionError: expected [ 'sha256.ts: eval' ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-548-r2/clone/packages/support/src/support-purity.test.ts:79:155\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-548-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-548-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/c"
+   }
+  ]
+ },
+ {
+  "id": "PIN-Y4-new-Function",
+  "ranAt": "4d92ac9518dd60cdd124525c3e36c086ccd5e425",
+  "tests": [
+   "packages/support/src/support-purity.test.ts"
+  ],
+  "edits": [
+   {
+    "path": "packages/support/src/sha256.ts",
+    "old": "import { createHash } from 'node:crypto';\n",
+    "new": "import { createHash } from 'node:crypto';\nexport const value = new Function('return 1');\n"
+   }
+  ],
+  "loadavg": "35.64 32.38 27.80 19/9832 2859589",
+  "exit": 1,
+  "passed": 32,
+  "failed": 1,
+  "total": 33,
+  "failedTests": [
+   {
+    "title": "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source",
+    "message": "AssertionError: expected [ 'sha256.ts: Function' ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-548-r2/clone/packages/support/src/support-purity.test.ts:79:155\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-548-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-548-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///t"
+   }
+  ]
+ },
+ {
+  "id": "PIN-Y13-import-meta",
+  "ranAt": "4d92ac9518dd60cdd124525c3e36c086ccd5e425",
+  "tests": [
+   "packages/support/src/support-purity.test.ts"
+  ],
+  "edits": [
+   {
+    "path": "packages/support/src/sha256.ts",
+    "old": "import { createHash } from 'node:crypto';\n",
+    "new": "import { createHash } from 'node:crypto';\nexport const value = import.meta.dirname;\n"
+   }
+  ],
+  "loadavg": "35.35 32.37 27.82 23/9882 2860562",
+  "exit": 1,
+  "passed": 32,
+  "failed": 1,
+  "total": 33,
+  "failedTests": [
+   {
+    "title": "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source",
+    "message": "AssertionError: expected [ 'sha256.ts: dirname', \u2026(1) ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-548-r2/clone/packages/support/src/support-purity.test.ts:79:155\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-548-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-548-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file"
+   }
+  ]
+ },
+ {
+  "id": "OWN-Array-constructor-chain",
+  "ranAt": "4d92ac9518dd60cdd124525c3e36c086ccd5e425",
+  "tests": [
+   "packages/support/src/support-purity.test.ts"
+  ],
+  "edits": [
+   {
+    "path": "packages/support/src/sha256.ts",
+    "old": "import { createHash } from 'node:crypto';\n",
+    "new": "import { createHash } from 'node:crypto';\nexport const F = Array.isArray.constructor('return 1');\n"
+   }
+  ],
+  "loadavg": "35.35 32.37 27.82 15/9830 2861782",
+  "exit": 1,
+  "passed": 32,
+  "failed": 1,
+  "total": 33,
+  "failedTests": [
+   {
+    "title": "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source",
+    "message": "AssertionError: expected [ 'sha256.ts: F', \u2026(1) ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-548-r2/clone/packages/support/src/support-purity.test.ts:79:155\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-548-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-548-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tm"
+   }
+  ]
+ },
+ {
+  "id": "OWN-Array-from-globalThis",
+  "ranAt": "4d92ac9518dd60cdd124525c3e36c086ccd5e425",
+  "tests": [
+   "packages/support/src/support-purity.test.ts"
+  ],
+  "edits": [
+   {
+    "path": "packages/support/src/sha256.ts",
+    "old": "import { createHash } from 'node:crypto';\n",
+    "new": "import { createHash } from 'node:crypto';\nexport const G = Array.from([globalThis]);\n"
+   }
+  ],
+  "loadavg": "34.28 32.20 27.79 22/9851 2862575",
+  "exit": 1,
+  "passed": 32,
+  "failed": 1,
+  "total": 33,
+  "failedTests": [
+   {
+    "title": "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source",
+    "message": "AssertionError: expected [ 'sha256.ts: G', \u2026(2) ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-548-r2/clone/packages/support/src/support-purity.test.ts:79:155\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-548-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-548-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tm"
+   }
+  ]
+ },
+ {
+  "id": "OWN-Record-typed-only",
+  "ranAt": "4d92ac9518dd60cdd124525c3e36c086ccd5e425",
+  "tests": [
+   "packages/support/src/support-purity.test.ts"
+  ],
+  "edits": [
+   {
+    "path": "packages/support/src/sha256.ts",
+    "old": "import { createHash } from 'node:crypto';\n",
+    "new": "import { createHash } from 'node:crypto';\nexport type R = Readonly<Record<string, unknown>>;\nexport const value = Array.isArray([]);\n"
+   }
+  ],
+  "loadavg": "33.22 32.01 27.75 15/9833 2863233",
+  "exit": 1,
+  "passed": 32,
+  "failed": 1,
+  "total": 33,
+  "failedTests": [
+   {
+    "title": "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source",
+    "message": "AssertionError: expected [ 'sha256.ts: R' ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-548-r2/clone/packages/support/src/support-purity.test.ts:79:155\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-548-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-548-r2/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/clau"
+   }
+  ]
+ }
+]

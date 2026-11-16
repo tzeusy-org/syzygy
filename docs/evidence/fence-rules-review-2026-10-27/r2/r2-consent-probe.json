@@ -1,0 +1,38 @@
+{
+ "head": "815d93bb2315bf535ae4a7244eac2efd229fc025",
+ "runs": {
+  "HEAD": {
+   "exit": 0,
+   "rows": {
+    "baseline": "egress:anthropic:in-force,observation:redis-redis:in-force",
+    "crlfEgressInstanceBoundByDigest": "refused:AdmissionRecordError:invalid-records",
+    "lfActDateInsideFence": "refused:AdmissionRecordError:invalid-records",
+    "crlfActDateInsideFence": "refused:AdmissionRecordError:invalid-records",
+    "crlfActPlain": "refused:AdmissionRecordError:invalid-records"
+   }
+  },
+  "N1a-title-check-tolerates-cr (the record's own fragment)": {
+   "exit": 0,
+   "rows": {
+    "baseline": "egress:anthropic:in-force,observation:redis-redis:in-force",
+    "crlfEgressInstanceBoundByDigest": "refused:AdmissionRecordError:invalid-records",
+    "lfActDateInsideFence": "refused:AdmissionRecordError:invalid-records",
+    "crlfActDateInsideFence": "egress:anthropic:in-force,observation:redis-redis:in-force",
+    "crlfActPlain": "egress:anthropic:in-force,observation:redis-redis:in-force"
+   }
+  },
+  "KC4-section-heading-tolerates-cr": {
+   "exit": 0,
+   "rows": {
+    "baseline": "egress:anthropic:in-force,observation:redis-redis:in-force",
+    "crlfEgressInstanceBoundByDigest": "refused:AdmissionRecordError:invalid-records",
+    "lfActDateInsideFence": "refused:AdmissionRecordError:invalid-records",
+    "crlfActDateInsideFence": "refused:AdmissionRecordError:invalid-records",
+    "crlfActPlain": "refused:AdmissionRecordError:invalid-records"
+   }
+  }
+ },
+ "untrackedLeft": [
+  "?? packages/polaris-generation-consent/src/zz-rev533b-consent.test.ts"
+ ]
+}

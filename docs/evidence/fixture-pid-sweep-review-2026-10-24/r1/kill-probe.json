@@ -1,0 +1,69 @@
+{
+ "tool": "my_kill_probe.py",
+ "treeCommit": "c64d28340d0058fade53ab5cb326fb5859751612",
+ "helperSha256": "8cc4f6bea2b7f8486b0609c7e7b58d73e9a7dba335b01f17d698de583ed64e87",
+ "freshFile": "apps/three-surface-poc/src/trajectory.test.ts",
+ "mutant": {
+  "id": "sweep-not-called",
+  "old": "  removeFixturesOfDeadProcesses();\n  const root = mkdtempSync(",
+  "new": "  const root = mkdtempSync("
+ },
+ "killed": {
+  "groupKilled": 3552124,
+  "atKill": {
+   "seconds": 18.4,
+   "listing": {
+    "dead": [],
+    "live": [
+     "syzygy-poc-surface-fixture-p3552564-cOBTye",
+     "syzygy-poc-surface-fixture-p3552576-GUFWjz",
+     "syzygy-poc-surface-fixture-p3552576-snC21v",
+     "syzygy-poc-surface-fixture-template-p3552564-u1ECnU",
+     "syzygy-poc-surface-fixture-template-p3552576-IAb9lz"
+    ],
+    "legacy": []
+   }
+  },
+  "fiveSecondsLater": {
+   "dead": [
+    "syzygy-poc-surface-fixture-p3552564-cOBTye",
+    "syzygy-poc-surface-fixture-p3552576-GUFWjz",
+    "syzygy-poc-surface-fixture-p3552576-snC21v",
+    "syzygy-poc-surface-fixture-template-p3552564-u1ECnU",
+    "syzygy-poc-surface-fixture-template-p3552576-IAb9lz"
+   ],
+   "live": [],
+   "legacy": []
+  }
+ },
+ "mutantFreshRun": {
+  "exit": 0,
+  "summary": [
+   " Test Files  1 passed (1)",
+   "      Tests  15 passed (15)"
+  ],
+  "after": {
+   "dead": [
+    "syzygy-poc-surface-fixture-p3552564-cOBTye",
+    "syzygy-poc-surface-fixture-p3552576-GUFWjz",
+    "syzygy-poc-surface-fixture-p3552576-snC21v",
+    "syzygy-poc-surface-fixture-template-p3552564-u1ECnU",
+    "syzygy-poc-surface-fixture-template-p3552576-IAb9lz"
+   ],
+   "live": [],
+   "legacy": []
+  }
+ },
+ "unmutatedFreshRun": {
+  "exit": 0,
+  "summary": [
+   " Test Files  1 passed (1)",
+   "      Tests  15 passed (15)"
+  ],
+  "after": {
+   "dead": [],
+   "live": [],
+   "legacy": []
+  }
+ }
+}

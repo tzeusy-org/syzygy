@@ -1,0 +1,1027 @@
+{
+ "bead": "syzygy-bpyt.1.18",
+ "title": "The mask and extractor one-call spread pushes become loops",
+ "date": "2026-10-28",
+ "authority": {
+  "ownerRecord": ".syzygy/governance/decisions/OWNER-DIRECTION-GREENFIELD-PARITY-FOLLOWUPS-2026-10-28.md",
+  "ownerRecordSha256": "4cc0390d1e7ddc9095ae7a45b1765fa55d483af73cdabb3467532883714eff3f",
+  "question": "GP-B2 Q1 and its follow-up",
+  "selectedLabels": {
+   "Q1": "A: read it (Recommended)",
+   "followUp": "Land #544 first (Recommended)"
+  },
+  "note": "Labels as recorded by the owner direction record; this record does not restate the record beyond them."
+ },
+ "subject": {
+  "baseCommit": "8d5d4bab",
+  "codeCommit": "0f0ce073046adc10c2eebe35e9867b67ec3f9e49",
+  "testsCommit": "674e443ce17921565d9eb709d4ce7621f9f6795e",
+  "node": "v24.6.0",
+  "files": {
+   "packages/three-surface-poc-core/src/git-object-reader.test.ts": {
+    "baseSha256": "55af28f6e007b98d8e383bad70a6db02f38f7668541206c04e7163b65f07e7d7",
+    "codeSha256": "0a906f2c50b4ec0a21c33bc472fe0902567da4836d22c3f8699d398529f410e8",
+    "added": 50,
+    "removed": 12,
+    "countsAt": "674e443ce17921565d9eb709d4ce7621f9f6795e",
+    "testsCommitSha256": "2506d11933ed3e0efca0bef47432fc65e61a9f4a46d23c444352948fb544ad77"
+   },
+   "packages/three-surface-poc-core/src/markdown-code-context.test.ts": {
+    "baseSha256": "8aa47a4d55f3fe563c8205d2c74fa5302550101fa1608b077bf3952a0d8c851b",
+    "codeSha256": "bdd8b1a2c55c603fcea96bff0ef4a96b0306f0643de2c1a435b29648ef42db5d",
+    "added": 40,
+    "removed": 0,
+    "countsAt": "674e443ce17921565d9eb709d4ce7621f9f6795e",
+    "testsCommitSha256": "3aa5fb8ab103be3586a6a86359d1196a1c817d48d7702cbbc145f5c8b7cc0c6b"
+   },
+   "packages/three-surface-poc-core/src/markdown-code-context.ts": {
+    "baseSha256": "93b95f6d4eabc440344404d01040ba1f10bdceb65e69ab74c4ea59c1fa5831f7",
+    "codeSha256": "6cb28dcef40df4d3957a72dbc4c8da8226d806552f7734bc288a76ab6c45529f",
+    "added": 2,
+    "removed": 1,
+    "countsAt": "0f0ce073046adc10c2eebe35e9867b67ec3f9e49"
+   },
+   "packages/three-surface-poc-core/src/project-shape-extraction.test.ts": {
+    "baseSha256": "fb71c5294c048b844eb04d7b0d17ac1e614cb5c9354e65c764f0eac6133a6a93",
+    "codeSha256": "707c17cd1ac8b2ce34d3204dfc6d43e9d11da5fbbdca3a06d868d2ed81627845",
+    "added": 41,
+    "removed": 0,
+    "countsAt": "674e443ce17921565d9eb709d4ce7621f9f6795e",
+    "testsCommitSha256": "5af3f45f029b8d115cc6cd2b305ec90fd8ac12cf63a406e531a02205933d0c57"
+   },
+   "packages/three-surface-poc-core/src/project-shape-extraction.ts": {
+    "baseSha256": "642cf156ed37bfc0ced7cb338e640268fc0e02648913dd71be5dc4efe6ed0dbd",
+    "codeSha256": "2b2fcd7d79442c6c6ec3774c9af364ce3771bac4f89ba2148fc3db7aec2c4525",
+    "added": 2,
+    "removed": 1,
+    "countsAt": "0f0ce073046adc10c2eebe35e9867b67ec3f9e49"
+   },
+   "packages/three-surface-poc-core/src/project-shape-model.test.ts": {
+    "baseSha256": "33bb156f847f091ebdf7ae493373315ea4012ab7d878ee11f2c63b630f85d182",
+    "codeSha256": "caa771beb8d04338b034758eea7835837adb49f42ff17dcb83a312746e573303",
+    "added": 34,
+    "removed": 0,
+    "countsAt": "674e443ce17921565d9eb709d4ce7621f9f6795e",
+    "testsCommitSha256": "5c5983eff7fe00e1495f00abbb26cec90189fab015a4cbcb8f6a6a0b33a3060b"
+   }
+  },
+  "productionFiles": [
+   "packages/three-surface-poc-core/src/markdown-code-context.ts",
+   "packages/three-surface-poc-core/src/project-shape-extraction.ts"
+  ]
+ },
+ "claims": [
+  {
+   "label": "Observed",
+   "text": "Of the 6 changed files, the production files are ['packages/three-surface-poc-core/src/markdown-code-context.ts', 'packages/three-surface-poc-core/src/project-shape-extraction.ts']; no other non-test file changes in the code commit. The evidence directory is added after it."
+  },
+  {
+   "label": "Observed",
+   "text": "The argument-spread census (spread_sweep.py, its regex verbatim) over 257 tracked files finds 33 calls at the base and 31 at the code commit; removed: [['packages/three-surface-poc-core/src/markdown-code-context.ts', 'out.push(...pending.map(blank));'], ['packages/three-surface-poc-core/src/project-shape-extraction.ts', 'all.push(...result.items);']]; added: []. The other 31 are syzygy-bpyt.54 and are untouched."
+  },
+  {
+   "label": "Observed",
+   "text": "At the base, scanActiveContent and buildProjectShape throw RangeError (Maximum call stack size exceeded) for a closed fence of 200,000 lines in LF, CRLF and CR, in a phase-B source (vision.md) and in the phase-A root index; at the code commit every one of those 12 builds returns an observed shape with the source classified, with the same 14 cat-file calls as the 100,000-line builds."
+  },
+  {
+   "label": "Observed",
+   "text": "At the base, buildProjectShape throws for a success list of 130,000 and of 200,000 bullets (520,272 and 800,272 UTF-8 bytes, under maxBytesPerSource) and returns for 125,000; at the code commit all of 100,000, 125,000, 130,000 and 200,000 return an observed shape with every item."
+  },
+  {
+   "label": "Observed",
+   "text": "The boundary is a measurement of a run, not a constant: the first throwing inner-line count was 125,285 (CR) to 125,287 (LF and CRLF) in a vitest process, 125,457 to 125,465 in a bare node process, and it scales with the V8 stack size (about 62,490 at --stack-size=492, 125,460 at the default 984, 251,409 at 1968)."
+  },
+  {
+   "label": "Observed",
+   "text": "The mask differential of syzygy-bpyt.16, unchanged, run between the base build and the code commit build over its 11,054 synthetic texts, returns 0 refuses, 0 accepts, 0 same-decision-other-findings and 11,054 unchanged, with C1 to C4 at 0 failures. Every output the change alters is therefore a throw that becomes a decision, at a fence or class past the stack boundary."
+  },
+  {
+   "label": "Observed",
+   "text": "Rule 6: eight mutants (two restore a spread, four are off-by-one or order faults of a loop, and two are the review-round-2 order faults R10 and R11) are all killed, and restoring both spreads fails 20 of the new tests; the control run at the tests commit (the code commit's production bytes with the reviewed test files) fails none."
+  },
+  {
+   "label": "Observed",
+   "text": "Four canary tests, one in each of the four test files (one spread call over 200,002 or 130,002 arguments still throws RangeError in the test process), pass under the configured forks pool and are the only failures under vitest --pool=threads with the old lines restored, where a 4 MB worker stack lets the old lines pass the size tests (canary-threads-pool.txt)."
+  },
+  {
+   "label": "Observed",
+   "text": "A 130,000-item success list makes a shape whose JSON is 227,519,062 bytes, against maxMachineResponseBytes 16,777,216 and maxHumanResponseBytes 2,097,152."
+  },
+  {
+   "label": "Inferred",
+   "text": "Because routes.ts serializes the model for the machine routes and bounds each response (a breach answers HTTP 503 with served nothing), a daemon that now starts on such a repository would answer those routes with that 503. Not run: no route or daemon was exercised on a model of that size."
+  },
+  {
+   "label": "Inferred",
+   "text": "Startup: createReobserveSession builds the first model inside serveBoundRepository, so a build that no longer throws lets the daemon start where it exited 1 with an observation failure; re-observation of the same input returns reobserved where it returned failed and kept the prior model (the second is run through createReobserveState; the first is read from the code)."
+  },
+  {
+   "label": "Unknown",
+   "text": "The effect on any real repository: no repository body was read, every text is synthetic. Whether any observed repository holds a fence or a class that large is not measured."
+  }
+ ],
+ "beforeAfter": {
+  "node": "v24.6.0",
+  "pipeline": {
+   "before": {
+    "phase-B vision.md LF 100000 lines (200337 bytes)": {
+     "result": "returned:observed",
+     "sourceRecord": "classified",
+     "catFileCalls": 14
+    },
+    "phase-B vision.md CRLF 100000 lines (300339 bytes)": {
+     "result": "returned:observed",
+     "sourceRecord": "classified",
+     "catFileCalls": 14
+    },
+    "phase-B vision.md CR 100000 lines (200337 bytes)": {
+     "result": "returned:observed",
+     "sourceRecord": "classified",
+     "catFileCalls": 14
+    },
+    "phase-B vision.md LF 200000 lines (400337 bytes)": {
+     "result": "threw:RangeError:Maximum call stack size exceeded",
+     "sourceRecord": null,
+     "catFileCalls": 10
+    },
+    "phase-B vision.md CRLF 200000 lines (600339 bytes)": {
+     "result": "threw:RangeError:Maximum call stack size exceeded",
+     "sourceRecord": null,
+     "catFileCalls": 10
+    },
+    "phase-B vision.md CR 200000 lines (400337 bytes)": {
+     "result": "threw:RangeError:Maximum call stack size exceeded",
+     "sourceRecord": null,
+     "catFileCalls": 10
+    },
+    "phase-A root index LF 100000 lines (200198 bytes)": {
+     "result": "returned:observed",
+     "sourceRecord": "classified",
+     "catFileCalls": 14
+    },
+    "phase-A root index CRLF 100000 lines (300200 bytes)": {
+     "result": "returned:observed",
+     "sourceRecord": "classified",
+     "catFileCalls": 14
+    },
+    "phase-A root index CR 100000 lines (200198 bytes)": {
+     "result": "returned:observed",
+     "sourceRecord": "classified",
+     "catFileCalls": 14
+    },
+    "phase-A root index LF 200000 lines (400198 bytes)": {
+     "result": "threw:RangeError:Maximum call stack size exceeded",
+     "sourceRecord": null,
+     "catFileCalls": 1
+    },
+    "phase-A root index CRLF 200000 lines (600200 bytes)": {
+     "result": "threw:RangeError:Maximum call stack size exceeded",
+     "sourceRecord": null,
+     "catFileCalls": 1
+    },
+    "phase-A root index CR 200000 lines (400198 bytes)": {
+     "result": "threw:RangeError:Maximum call stack size exceeded",
+     "sourceRecord": null,
+     "catFileCalls": 1
+    }
+   },
+   "after": {
+    "phase-B vision.md LF 100000 lines (200337 bytes)": {
+     "result": "returned:observed",
+     "sourceRecord": "classified",
+     "catFileCalls": 14
+    },
+    "phase-B vision.md CRLF 100000 lines (300339 bytes)": {
+     "result": "returned:observed",
+     "sourceRecord": "classified",
+     "catFileCalls": 14
+    },
+    "phase-B vision.md CR 100000 lines (200337 bytes)": {
+     "result": "returned:observed",
+     "sourceRecord": "classified",
+     "catFileCalls": 14
+    },
+    "phase-B vision.md LF 200000 lines (400337 bytes)": {
+     "result": "returned:observed",
+     "sourceRecord": "classified",
+     "catFileCalls": 14
+    },
+    "phase-B vision.md CRLF 200000 lines (600339 bytes)": {
+     "result": "returned:observed",
+     "sourceRecord": "classified",
+     "catFileCalls": 14
+    },
+    "phase-B vision.md CR 200000 lines (400337 bytes)": {
+     "result": "returned:observed",
+     "sourceRecord": "classified",
+     "catFileCalls": 14
+    },
+    "phase-A root index LF 100000 lines (200198 bytes)": {
+     "result": "returned:observed",
+     "sourceRecord": "classified",
+     "catFileCalls": 14
+    },
+    "phase-A root index CRLF 100000 lines (300200 bytes)": {
+     "result": "returned:observed",
+     "sourceRecord": "classified",
+     "catFileCalls": 14
+    },
+    "phase-A root index CR 100000 lines (200198 bytes)": {
+     "result": "returned:observed",
+     "sourceRecord": "classified",
+     "catFileCalls": 14
+    },
+    "phase-A root index LF 200000 lines (400198 bytes)": {
+     "result": "returned:observed",
+     "sourceRecord": "classified",
+     "catFileCalls": 14
+    },
+    "phase-A root index CRLF 200000 lines (600200 bytes)": {
+     "result": "returned:observed",
+     "sourceRecord": "classified",
+     "catFileCalls": 14
+    },
+    "phase-A root index CR 200000 lines (400198 bytes)": {
+     "result": "returned:observed",
+     "sourceRecord": "classified",
+     "catFileCalls": 14
+    }
+   }
+  },
+  "direct": {
+   "before": {
+    "LF-100000": [
+     "ok:masked",
+     "ok:object"
+    ],
+    "CRLF-100000": [
+     "ok:masked",
+     "ok:object"
+    ],
+    "CR-100000": [
+     "ok:masked",
+     "ok:object"
+    ],
+    "LF-150000": [
+     "throw:RangeError:Maximum call stack size exceeded",
+     "throw:RangeError:Maximum call stack size exceeded"
+    ],
+    "CRLF-150000": [
+     "throw:RangeError:Maximum call stack size exceeded",
+     "throw:RangeError:Maximum call stack size exceeded"
+    ],
+    "CR-150000": [
+     "throw:RangeError:Maximum call stack size exceeded",
+     "throw:RangeError:Maximum call stack size exceeded"
+    ],
+    "LF-200000": [
+     "throw:RangeError:Maximum call stack size exceeded",
+     "throw:RangeError:Maximum call stack size exceeded"
+    ],
+    "CRLF-200000": [
+     "throw:RangeError:Maximum call stack size exceeded",
+     "throw:RangeError:Maximum call stack size exceeded"
+    ],
+    "CR-200000": [
+     "throw:RangeError:Maximum call stack size exceeded",
+     "throw:RangeError:Maximum call stack size exceeded"
+    ]
+   },
+   "after": {
+    "LF-100000": [
+     "ok:masked",
+     "ok:object"
+    ],
+    "CRLF-100000": [
+     "ok:masked",
+     "ok:object"
+    ],
+    "CR-100000": [
+     "ok:masked",
+     "ok:object"
+    ],
+    "LF-150000": [
+     "ok:masked",
+     "ok:object"
+    ],
+    "CRLF-150000": [
+     "ok:masked",
+     "ok:object"
+    ],
+    "CR-150000": [
+     "ok:masked",
+     "ok:object"
+    ],
+    "LF-200000": [
+     "ok:masked",
+     "ok:object"
+    ],
+    "CRLF-200000": [
+     "ok:masked",
+     "ok:object"
+    ],
+    "CR-200000": [
+     "ok:masked",
+     "ok:object"
+    ]
+   }
+  },
+  "reobserve": {
+   "before": {
+    "result": "failed",
+    "reason": "Maximum call stack size exceeded",
+    "priorModelStillServed": true,
+    "captureStillC0": true
+   },
+   "after": {
+    "result": "reobserved",
+    "priorModelStillServed": false,
+    "captureStillC0": false
+   }
+  },
+  "extractor": {
+   "before": {
+    "100000 bullets (400268 bytes, under 1048576: true)": {
+     "result": "returned:observed",
+     "sourceRecord": "classified",
+     "successCriterionItems": 100001
+    },
+    "125000 bullets (500268 bytes, under 1048576: true)": {
+     "result": "returned:observed",
+     "sourceRecord": "classified",
+     "successCriterionItems": 125001
+    },
+    "130000 bullets (520268 bytes, under 1048576: true)": {
+     "result": "threw:RangeError:Maximum call stack size exceeded",
+     "sourceRecord": null,
+     "successCriterionItems": null
+    },
+    "200000 bullets (800268 bytes, under 1048576: true)": {
+     "result": "threw:RangeError:Maximum call stack size exceeded",
+     "sourceRecord": null,
+     "successCriterionItems": null
+    }
+   },
+   "after": {
+    "100000 bullets (400268 bytes, under 1048576: true)": {
+     "result": "returned:observed",
+     "sourceRecord": "classified",
+     "successCriterionItems": 100001
+    },
+    "125000 bullets (500268 bytes, under 1048576: true)": {
+     "result": "returned:observed",
+     "sourceRecord": "classified",
+     "successCriterionItems": 125001
+    },
+    "130000 bullets (520268 bytes, under 1048576: true)": {
+     "result": "returned:observed",
+     "sourceRecord": "classified",
+     "successCriterionItems": 130001
+    },
+    "200000 bullets (800268 bytes, under 1048576: true)": {
+     "result": "returned:observed",
+     "sourceRecord": "classified",
+     "successCriterionItems": 200001
+    }
+   }
+  },
+  "startupBefore": "syzygy POC: observation failed (unexpected observation failure (RangeError))",
+  "measuredAt": {
+   "before": "8d5d4bab",
+   "after": "0f0ce073046adc10c2eebe35e9867b67ec3f9e49"
+  }
+ },
+ "stackDependence": {
+  "default stack": {
+   "maskInnerLinesFirstThrowing": {
+    "LF": 125457,
+    "CRLF": 125462,
+    "CR": 125457
+   },
+   "extractorBulletsFirstThrowing": 125459,
+   "failures": [],
+   "maskBeyond": {
+    "LF": [
+     [
+      125457,
+      "masked",
+      "masked",
+      true
+     ],
+     [
+      200000,
+      "RangeError: Maximum call stack size exceeded",
+      "masked",
+      true
+     ],
+     [
+      400000,
+      "RangeError: Maximum call stack size exceeded",
+      "masked",
+      true
+     ]
+    ],
+    "CRLF": [
+     [
+      125462,
+      "masked",
+      "masked",
+      true
+     ],
+     [
+      200000,
+      "RangeError: Maximum call stack size exceeded",
+      "masked",
+      true
+     ],
+     [
+      400000,
+      "RangeError: Maximum call stack size exceeded",
+      "masked",
+      true
+     ]
+    ],
+    "CR": [
+     [
+      125457,
+      "masked",
+      "masked",
+      true
+     ],
+     [
+      200000,
+      "RangeError: Maximum call stack size exceeded",
+      "masked",
+      true
+     ],
+     [
+      400000,
+      "RangeError: Maximum call stack size exceeded",
+      "masked",
+      true
+     ]
+    ]
+   },
+   "extractorBeyond": [
+    [
+     125459,
+     "extracted",
+     "extracted, 125459 items, denominator 125459",
+     true
+    ],
+    [
+     200000,
+     "RangeError: Maximum call stack size exceeded",
+     "extracted, 200000 items, denominator 200000",
+     true
+    ],
+    [
+     400000,
+     "RangeError: Maximum call stack size exceeded",
+     "extracted, 400000 items, denominator 400000",
+     true
+    ]
+   ],
+   "survivorsEqual": true,
+   "survivorCount": 20
+  },
+  "--stack-size=492": {
+   "maskInnerLinesFirstThrowing": {
+    "LF": 62487,
+    "CRLF": 62491,
+    "CR": 62482
+   },
+   "extractorBulletsFirstThrowing": 62483,
+   "failures": [],
+   "maskBeyond": {
+    "LF": [
+     [
+      62487,
+      "masked",
+      "masked",
+      true
+     ],
+     [
+      200000,
+      "RangeError: Maximum call stack size exceeded",
+      "masked",
+      true
+     ],
+     [
+      400000,
+      "RangeError: Maximum call stack size exceeded",
+      "masked",
+      true
+     ]
+    ],
+    "CRLF": [
+     [
+      62491,
+      "masked",
+      "masked",
+      true
+     ],
+     [
+      200000,
+      "RangeError: Maximum call stack size exceeded",
+      "masked",
+      true
+     ],
+     [
+      400000,
+      "RangeError: Maximum call stack size exceeded",
+      "masked",
+      true
+     ]
+    ],
+    "CR": [
+     [
+      62482,
+      "masked",
+      "masked",
+      true
+     ],
+     [
+      200000,
+      "RangeError: Maximum call stack size exceeded",
+      "masked",
+      true
+     ],
+     [
+      400000,
+      "RangeError: Maximum call stack size exceeded",
+      "masked",
+      true
+     ]
+    ]
+   },
+   "extractorBeyond": [
+    [
+     62483,
+     "extracted",
+     "extracted, 62483 items, denominator 62483",
+     true
+    ],
+    [
+     200000,
+     "RangeError: Maximum call stack size exceeded",
+     "extracted, 200000 items, denominator 200000",
+     true
+    ],
+    [
+     400000,
+     "RangeError: Maximum call stack size exceeded",
+     "extracted, 400000 items, denominator 400000",
+     true
+    ]
+   ],
+   "survivorsEqual": true,
+   "survivorCount": 20
+  },
+  "--stack-size=1968": {
+   "maskInnerLinesFirstThrowing": {
+    "LF": 251409,
+    "CRLF": 251409,
+    "CR": 251409
+   },
+   "extractorBulletsFirstThrowing": 251411,
+   "failures": [],
+   "maskBeyond": {
+    "LF": [
+     [
+      251409,
+      "masked",
+      "masked",
+      true
+     ],
+     [
+      200000,
+      "masked",
+      "masked",
+      true
+     ],
+     [
+      400000,
+      "RangeError: Maximum call stack size exceeded",
+      "masked",
+      true
+     ]
+    ],
+    "CRLF": [
+     [
+      251409,
+      "masked",
+      "masked",
+      true
+     ],
+     [
+      200000,
+      "masked",
+      "masked",
+      true
+     ],
+     [
+      400000,
+      "RangeError: Maximum call stack size exceeded",
+      "masked",
+      true
+     ]
+    ],
+    "CR": [
+     [
+      251409,
+      "masked",
+      "masked",
+      true
+     ],
+     [
+      200000,
+      "masked",
+      "masked",
+      true
+     ],
+     [
+      400000,
+      "RangeError: Maximum call stack size exceeded",
+      "masked",
+      true
+     ]
+    ]
+   },
+   "extractorBeyond": [
+    [
+     251411,
+     "extracted",
+     "extracted, 251411 items, denominator 251411",
+     true
+    ],
+    [
+     200000,
+     "extracted",
+     "extracted, 200000 items, denominator 200000",
+     true
+    ],
+    [
+     400000,
+     "RangeError: Maximum call stack size exceeded",
+     "extracted, 400000 items, denominator 400000",
+     true
+    ]
+   ],
+   "survivorsEqual": true,
+   "survivorCount": 20
+  }
+ },
+ "maskDifferential": {
+  "tool": "docs/evidence/syzygy-bpyt-16/crlf-differential.mjs",
+  "output": "mask-differential-output.json",
+  "population": 11054,
+  "checks": {
+   "C1_lfUnchanged": {
+    "texts": 1825,
+    "separatorSliceTexts": 10131,
+    "failures": 0
+   },
+   "C2_renderingEqualsLf": {
+    "texts": 11054,
+    "failures": 0
+   },
+   "C3_maskInvariants": {
+    "maskedTexts": 8345,
+    "failures": 0
+   },
+   "C4_crlfFindingsEqualLfIncludingPositions": {
+    "texts": 1822,
+    "failures": 0
+   }
+  },
+  "failures": 0,
+  "tally": {
+   "rows": 11054,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 11054
+  }
+ },
+ "rule6": {
+  "summary": {
+   "codeCommit": "674e443ce17921565d9eb709d4ce7621f9f6795e",
+   "baseCommit": "8d5d4bab",
+   "controlFailing": 0,
+   "mutants": 8,
+   "killed": 8,
+   "survived": [],
+   "baseFailingTests": 20
+  },
+  "rows": [
+   {
+    "id": "CONTROL-code-commit",
+    "outcome": null,
+    "failingTestCount": 0,
+    "detectors": {
+     "mask": {
+      "tests": 54,
+      "failed": 0
+     },
+     "extractor": {
+      "tests": 89,
+      "failed": 0
+     },
+     "reader": {
+      "tests": 91,
+      "failed": 0
+     },
+     "model": {
+      "tests": 34,
+      "failed": 0
+     }
+    }
+   },
+   {
+    "id": "MU1-mask-spread",
+    "outcome": "killed",
+    "failingTestCount": 18,
+    "detectors": {
+     "mask": {
+      "tests": 54,
+      "failed": 6
+     },
+     "extractor": {
+      "tests": 89,
+      "failed": 0
+     },
+     "reader": {
+      "tests": 91,
+      "failed": 9
+     },
+     "model": {
+      "tests": 34,
+      "failed": 3
+     }
+    }
+   },
+   {
+    "id": "MU2-extractor-spread",
+    "outcome": "killed",
+    "failingTestCount": 2,
+    "detectors": {
+     "mask": {
+      "tests": 54,
+      "failed": 0
+     },
+     "extractor": {
+      "tests": 89,
+      "failed": 1
+     },
+     "reader": {
+      "tests": 91,
+      "failed": 0
+     },
+     "model": {
+      "tests": 34,
+      "failed": 1
+     }
+    }
+   },
+   {
+    "id": "MU3-mask-loop-drops-closer",
+    "outcome": "killed",
+    "failingTestCount": 25,
+    "detectors": {
+     "mask": {
+      "tests": 54,
+      "failed": 24
+     },
+     "extractor": {
+      "tests": 89,
+      "failed": 0
+     },
+     "reader": {
+      "tests": 91,
+      "failed": 1
+     },
+     "model": {
+      "tests": 34,
+      "failed": 0
+     }
+    }
+   },
+   {
+    "id": "MU4-extractor-loop-drops-last-item",
+    "outcome": "killed",
+    "failingTestCount": 24,
+    "detectors": {
+     "mask": {
+      "tests": 54,
+      "failed": 0
+     },
+     "extractor": {
+      "tests": 89,
+      "failed": 13
+     },
+     "reader": {
+      "tests": 91,
+      "failed": 0
+     },
+     "model": {
+      "tests": 34,
+      "failed": 11
+     }
+    }
+   },
+   {
+    "id": "MU5-mask-loop-reversed",
+    "outcome": "killed",
+    "failingTestCount": 7,
+    "detectors": {
+     "mask": {
+      "tests": 54,
+      "failed": 7
+     },
+     "extractor": {
+      "tests": 89,
+      "failed": 0
+     },
+     "reader": {
+      "tests": 91,
+      "failed": 0
+     },
+     "model": {
+      "tests": 34,
+      "failed": 0
+     }
+    }
+   },
+   {
+    "id": "MU6-extractor-loop-reversed",
+    "outcome": "killed",
+    "failingTestCount": 10,
+    "detectors": {
+     "mask": {
+      "tests": 54,
+      "failed": 0
+     },
+     "extractor": {
+      "tests": 89,
+      "failed": 9
+     },
+     "reader": {
+      "tests": 91,
+      "failed": 0
+     },
+     "model": {
+      "tests": 34,
+      "failed": 1
+     }
+    }
+   },
+   {
+    "id": "R10-extractor-size-gated-reversal",
+    "outcome": "killed",
+    "failingTestCount": 1,
+    "detectors": {
+     "mask": {
+      "tests": 54,
+      "failed": 0
+     },
+     "extractor": {
+      "tests": 89,
+      "failed": 1
+     },
+     "reader": {
+      "tests": 91,
+      "failed": 0
+     },
+     "model": {
+      "tests": 34,
+      "failed": 0
+     }
+    }
+   },
+   {
+    "id": "R11-extractor-chunks-last-first",
+    "outcome": "killed",
+    "failingTestCount": 1,
+    "detectors": {
+     "mask": {
+      "tests": 54,
+      "failed": 0
+     },
+     "extractor": {
+      "tests": 89,
+      "failed": 1
+     },
+     "reader": {
+      "tests": 91,
+      "failed": 0
+     },
+     "model": {
+      "tests": 34,
+      "failed": 0
+     }
+    }
+   },
+   {
+    "id": "BASE-both-spreads",
+    "outcome": "killed",
+    "failingTestCount": 20,
+    "detectors": {
+     "mask": {
+      "tests": 54,
+      "failed": 6
+     },
+     "extractor": {
+      "tests": 89,
+      "failed": 1
+     },
+     "reader": {
+      "tests": 91,
+      "failed": 9
+     },
+     "model": {
+      "tests": 34,
+      "failed": 4
+     }
+    }
+   }
+  ],
+  "fullRows": "spread-mutants-output.json",
+  "differentialSelftest": {
+   "killed": 6,
+   "total": 6,
+   "ids": [
+    "S1",
+    "S2",
+    "S3",
+    "S4",
+    "S5",
+    "S6"
+   ],
+   "output": "huge-differential-selftest-output.json"
+  }
+ },
+ "tests": {
+  "line": "Tests: +27 ~6 -0",
+  "baseTests": 241,
+  "headTests": 268,
+  "overFiles": [
+   "packages/three-surface-poc-core/src/git-object-reader.test.ts",
+   "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+   "packages/three-surface-poc-core/src/project-shape-extraction.test.ts",
+   "packages/three-surface-poc-core/src/project-shape-model.test.ts"
+  ],
+  "allBasePassed": true,
+  "allHeadPassed": true,
+  "changedNote": "The ~ count is the generated tests of two it.each calls in git-object-reader.test.ts whose callbacks are unchanged: ENDS, their table, moved from inside the describe to file scope (with readOne) in review round 1, and the inventory counts a table-text difference as a change.",
+  "changedCalls": [
+   {
+    "file": "packages/three-surface-poc-core/src/git-object-reader.test.ts",
+    "call": "a CRLF or CR blob gets the outcome its LF form gets > %s: a backtick opener whose info text holds a backtick is excluded as a malformed code context, with a body-free record",
+    "kind": "each"
+   },
+   {
+    "file": "packages/three-surface-poc-core/src/git-object-reader.test.ts",
+    "call": "a CRLF or CR blob gets the outcome its LF form gets > %s: a script element inside a closed tilde fence reads as text, byte for byte",
+    "kind": "each"
+   }
+  ]
+ },
+ "ceilingProbe": {
+  "kind": "observed",
+  "shapeJsonBytes": 227519062,
+  "shapeJsonUtf16Length": 227519050,
+  "maxHumanResponseBytes": 2097152,
+  "maxMachineResponseBytes": 16777216
+ },
+ "residuals": [
+  "The 31 remaining spread calls are syzygy-bpyt.54; a fix there that turns a crash into a decision returns to the owner.",
+  "The stack boundary is not removed by this change anywhere else: other recursive or argument-bounded code is not swept here.",
+  "Surfaces were not exercised on a model with 130,000 items: the over-ceiling answer is inferred from routes.ts, not run."
+ ],
+ "files": {
+  "build-record.py": "359758e7a3c3d7ed0293b15cb158a93ad7906d0723bf20ddef9c90b3242abade",
+  "canary-threads-pool.txt": "d248267d4ff162e25076e6a646b408891c6d12bca4498e1cdc3fed4f00062cb8",
+  "ceiling-head-0f0ce073.json": "d7add6382267cdf70a6fd67524b7dbbea9036de65b24caa3d28e05ddbba3f4d1",
+  "ceiling-probe.test.ts.txt": "753d2b66b890e003e50a31a4df0a163849831c662cad00ce5d0d090952827bfe",
+  "huge-differential-default.json": "22fb422e74dc5aff1b07a6a35cd1c59fbb50d2dd51635c9748f8da6ed1f6b393",
+  "huge-differential-selftest-output.json": "95f8e1b2b18ed5c8551af2c82f6678001c0c9bdc329908a2af6aa6dac25cb9e6",
+  "huge-differential-selftest.mjs": "75536ee3172a4940a8dcf9fdfbf433d7d791699dbbc24c6162807389551f13f6",
+  "huge-differential-stack-size-1968.json": "3757a92f16ca3a5e501283786db894c6454dfcc9ac8052a7c1a07e5ba3b28958",
+  "huge-differential-stack-size-492.json": "2b590817b69ca6e72d918778412a0af4ad333da3b46af1cc47847b83566c43b0",
+  "huge-differential.mjs": "ab1f97216b733a7b1ff8daccc0efca950b0273b478a5ffb613ea1eb38a9f7a4e",
+  "mask-differential-output.json": "13655eb27aa63184c199f83dd2704ecef72dfe4db65ae1570cae815f4c018308",
+  "spread-mutants-output.json": "3cc34c7f1d36d79dae4b75c7e7182f7dececa973c9f166cd6f3ac56b54a6bca9",
+  "spread-mutants.py": "3a60b7427fed5e188a0b1583403159ee90c3367bbc2d6dec086f87dec08f9a12",
+  "spread-sweep-0f0ce073.json": "a71a6d319a57c71f9219b5a5c70026033de81ff42faef999b66f002ef116c5d5",
+  "spread-sweep-8d5d4bab.json": "4bbe86dbc875d6caa4cf588171435b9de362bb576409e793089436638ca2bc03",
+  "spread_sweep.py": "25ff243179181efcc53b81ca6edcc7b6fc421ae72cab6618d88602824dbe255b",
+  "test-delta-output.json": "c8e82af063cd5817326c087e91a9cc2daefcf81899a15c41f22e9377262d077c",
+  "test-delta.py": "fd9b80a8c6195b0b61aaa707be57d3a2d4890a67d88a952fe42f1e4d2b03d7e8",
+  "trace-base-8d5d4bab-extractor.json": "6f7329245c465abd3b63210dc5ee662f12d135557bd01c3b34ebc28b76401451",
+  "trace-base-8d5d4bab-pipeline.json": "a2bf66e9361c9af1d6b1d7c8b706b257f14f96737dfdaef807aac06dd4b6b54a",
+  "trace-head-0f0ce073-extractor.json": "bc22cebdb7d75ae1155455b5a07af95505d7f7caba953d898e881a3acdf1aeae",
+  "trace-head-0f0ce073-pipeline.json": "8f6f2dcbf6c304a9a41328f3730158ad84e5f8aa1c6adc19ef434a66b921277c",
+  "trace-probe.test.ts.txt": "2501311a018275c985bb2625803c8eaf6f6ec4ee2772a6bdd0e707867140e3ac"
+ }
+}

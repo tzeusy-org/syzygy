@@ -1,0 +1,82 @@
+{
+  "status": "Sealed CC-REV-4 source return; authored/inferred evidence only; no independent semantic confirmation",
+  "recorded_at_utc": "2026-10-20T21:11:59.067676+00:00",
+  "base": "4504514c019ca0ee0cb4a89ed97445a0bad21915",
+  "candidate": "abd3f6ca2e8e99ad59327fdfc7b38d8bf41b07b5",
+  "main_context": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+  "counts": {
+    "specifications": 8,
+    "requirements": 130,
+    "affected": 15,
+    "explicitly_unaffected": 115,
+    "undecidable": 0,
+    "changed_from_c3": 12,
+    "affected_specifications": 4,
+    "normative_block_text_change_identified": 1
+  },
+  "only_normative_block_text_amendment": "POC-REQ-014; this remains an unsigned drafting proposal",
+  "owner_or_companion_conclusion": "Existing purpose/obligations suffice for this bounded candidate design. No new owner preference or limit exception. A newly persisted model-readiness arm or other invalidated obligation would require its owning companion; response-level refusal alone does not add one. Original later review/signature/implementation gates remain.",
+  "artifacts": {
+    "SOURCE-DECISION-RECONCILIATION.md": {
+      "sha256": "cbf669c92b5ca459da0a119af57e329de7dce3aeef846cc33d9528ebeb8cd90e",
+      "bytes": 31566
+    },
+    "SOURCE-CRITERIA.json": {
+      "sha256": "a21bc53376bce98a3ef9f8be5acac644f93cd024a24d27468834ebae4c5f9695",
+      "bytes": 20037
+    },
+    "SOURCE-BINDINGS.json": {
+      "sha256": "68392a146377ed3cf0eb7b037da1790b98d760bca0d8c695e768875830293e59",
+      "bytes": 16299
+    },
+    "FULL-130-ASSESSMENTS.json": {
+      "sha256": "535de5057966801c5e8cc7e1f3258d033b387054d14a920a78b453ff04698b06",
+      "bytes": 590847
+    },
+    "C3-CHANGED-AND-MISSED-EDGES.json": {
+      "sha256": "be6e92dc263deb4a10fd50fd233b9f9c39b7fb69ee05d77150a003ede671ab98",
+      "bytes": 58575
+    },
+    "CONSUMER-EDGE-MAP.json": {
+      "sha256": "af299b0b68c5efdf9c9d676203e53c6041a02c17ed04e081c1989c15742ae55a",
+      "bytes": 23900
+    },
+    "EVIDENCE-EXCERPT-MAP.json": {
+      "sha256": "4e9fefbcb8e4c6b4c5897ebb544be6302b8a0754f4ba3fd262d10dd1d419a861",
+      "bytes": 93766
+    },
+    "POPULATION-AND-PRESERVATION.json": {
+      "sha256": "e87615aefb5c47f2e1eb0405ae91b22782cf64936af7885a5ee9dd1123d09aa7",
+      "bytes": 18563
+    },
+    "VERIFICATION.json": {
+      "sha256": "85b269b5031c07445ea8e684ce51e14764d62fe2d4b691195eeafeb69970c442",
+      "bytes": 1616
+    },
+    "BASE450-REQUIREMENT-BLOCKS.json": {
+      "sha256": "dd2c31504c17062b513f8699e409c441e608f3eda2f22342035ce5b5aa042252",
+      "bytes": 640919
+    }
+  },
+  "preservation": {
+    "c3_core_exact": 39,
+    "adopted_subjects_exact_at_base_c3_main": 6,
+    "r1": "REVISE; raw retained",
+    "r2": "REVISE; raw retained"
+  },
+  "scope_actions": {
+    "repository_writes": false,
+    "old_core_raw_tooling_writes": false,
+    "product_tests_or_serialization_implementation": false,
+    "provider_observed_body_or_daemon": false,
+    "beads_or_review_launch": false,
+    "adoption_or_code_authority": false
+  },
+  "conformance_unknowns": [
+    "Actual encoder/validator/HTTP/cache/identity and bounded failures",
+    "Complete canonical and external/dynamic consumer behavior",
+    "Actual P115 savings/headroom",
+    "Independent adequacy/semantic confirmation of a successor"
+  ],
+  "stop": "Bounded source audit complete. No candidate mutation or review launch. Further corrections require a new artifact or coordinator packet, not edits to this seal."
+}

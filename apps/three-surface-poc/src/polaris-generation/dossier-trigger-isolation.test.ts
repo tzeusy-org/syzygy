@@ -1,11 +1,11 @@
 import { execFileSync as realExecFileSync } from 'node:child_process';
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
+import { beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { gitLsRemote, gitMaterialize } from './dossier-trigger.js';
 import { ISOLATED_GIT_FLAGS, NETWORK_GIT_ENV_KEYS } from './isolated-git.js';
+import { tempDir } from '@syzygy/test-kit';
 
 const spy = vi.hoisted(() => ({ calls: [] as { file: string; args: string[]; env: Record<string, string | undefined> | undefined }[] }));
 vi.mock('node:child_process', async importOriginal => {
@@ -17,20 +17,18 @@ vi.mock('node:child_process', async importOriginal => {
 });
 
 let repo = '', commit = '';
-const scratch: string[] = [];
 beforeAll(() => {
-  repo = mkdtempSync(join(tmpdir(), 'syzygy-trigger-iso-')); scratch.push(repo);
+  repo = tempDir('syzygy-trigger-iso-');
   const run = (...a: string[]): string => realExecFileSync('git', ['-C', repo, ...a], { encoding: 'utf8' }).trim();
   run('init', '-q'); run('config', 'gc.auto', '0'); run('config', 'maintenance.auto', 'false'); run('config', 'user.email', 'f@example.invalid'); run('config', 'user.name', 'F');
   writeFileSync(join(repo, 'a.txt'), 'a\n'); run('add', '-A'); run('commit', '-qm', 'x'); commit = run('rev-parse', 'HEAD');
 });
-afterAll(() => { for (const dir of scratch) rmSync(dir, { recursive: true, force: true }); });
 
 describe('trigger git calls', () => {
   it('pass the isolation flags first and an allowlisted environment to ls-remote, init and fetch', async () => {
     spy.calls.length = 0;
     gitLsRemote(repo, 'file');
-    const dir = join(mkdtempSync(join(tmpdir(), 'syzygy-trigger-iso-dst-')), 'src'); scratch.push(join(dir, '..'));
+    const dir = join(tempDir('syzygy-trigger-iso-dst-'), 'src');
     mkdirSync(join(dir, '..'), { recursive: true });
     await gitMaterialize({ url: repo, revision: commit, dir }, 'file');
     const gits = spy.calls.filter(call => call.file === 'git');

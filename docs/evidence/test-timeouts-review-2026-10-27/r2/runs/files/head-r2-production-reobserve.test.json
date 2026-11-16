@@ -1,0 +1,59 @@
+{
+ "files": [
+  {
+   "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-537b/clone/apps/three-surface-poc/src/production-reobserve.test.ts",
+   "state": "pass",
+   "durationMs": 3461.850604,
+   "collectMs": 1337.288032,
+   "tests": [
+    {
+     "name": "production-owned capture-to-model re-observation seam > keeps the production probe identity bound to the captured observation instant",
+     "state": "pass",
+     "durationMs": 2.6083639999999377,
+     "errors": []
+    },
+    {
+     "name": "production-owned capture-to-model re-observation seam > keeps served bytes and asOf stable when the same capture is rebuilt across wall-clock instants",
+     "state": "pass",
+     "durationMs": 784.408903,
+     "errors": []
+    },
+    {
+     "name": "production-owned capture-to-model re-observation seam > uses the production builder for an atomic successful swap with identity advancement and one in-flight observation",
+     "state": "pass",
+     "durationMs": 671.898201,
+     "errors": []
+    },
+    {
+     "name": "production-owned capture-to-model re-observation seam > re-evaluates an unchanged repository twice: two distinct named identities, the first result unchanged (syzygy-u05.2)",
+     "state": "pass",
+     "durationMs": 1132.3093589999994,
+     "errors": []
+    },
+    {
+     "name": "production-owned capture-to-model re-observation seam > retains the prior production model and non-zero drift when the production build fails",
+     "state": "pass",
+     "durationMs": 866.8773369999999,
+     "errors": []
+    }
+   ],
+   "suites": [
+    {
+     "name": "(file)",
+     "state": "pass",
+     "durationMs": 3461.850604,
+     "hookMs": 3,
+     "errors": []
+    },
+    {
+     "name": "production-owned capture-to-model re-observation seam",
+     "state": "pass",
+     "durationMs": 3458.8520019999996,
+     "hookMs": 1,
+     "errors": []
+    }
+   ]
+  }
+ ],
+ "unhandled": []
+}

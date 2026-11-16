@@ -1,0 +1,305 @@
+{
+ "tool": "rev-544-r3/tools/diff-mutants-r3.mjs",
+ "results": [
+  {
+   "id": "none",
+   "file": null,
+   "old": null,
+   "new": null,
+   "head": {
+    "exit": 0,
+    "failingChecks": [],
+    "failureCount": 0,
+    "c1": 0,
+    "first50ByCorpus": {}
+   },
+   "withoutSlice": {
+    "exit": 0,
+    "failingChecks": [],
+    "failureCount": 0,
+    "c1": 0,
+    "first50ByCorpus": {}
+   }
+  },
+  {
+   "id": "S7-vt-ff",
+   "file": "markdown-code-context.js",
+   "old": "const LINE_END = /\\r\\n|\\r|\\n/g;",
+   "new": "const LINE_END = /\\r\\n|[\\r\\n\\v\\f]/g;",
+   "head": {
+    "exit": 1,
+    "failingChecks": [
+     "C1"
+    ],
+    "failureCount": 2788,
+    "c1": 2788,
+    "first50ByCorpus": {
+     "C1:lf-separators": 50
+    }
+   },
+   "withoutSlice": {
+    "exit": 0,
+    "failingChecks": [],
+    "failureCount": 0,
+    "c1": 0,
+    "first50ByCorpus": {}
+   }
+  },
+  {
+   "id": "VT-only",
+   "file": "markdown-code-context.js",
+   "old": "const LINE_END = /\\r\\n|\\r|\\n/g;",
+   "new": "const LINE_END = /\\r\\n|[\\r\\n\\v]/g;",
+   "head": {
+    "exit": 1,
+    "failingChecks": [
+     "C1"
+    ],
+    "failureCount": 1394,
+    "c1": 1394,
+    "first50ByCorpus": {
+     "C1:lf-separators": 50
+    }
+   },
+   "withoutSlice": {
+    "exit": 0,
+    "failingChecks": [],
+    "failureCount": 0,
+    "c1": 0,
+    "first50ByCorpus": {}
+   }
+  },
+  {
+   "id": "FF-only",
+   "file": "markdown-code-context.js",
+   "old": "const LINE_END = /\\r\\n|\\r|\\n/g;",
+   "new": "const LINE_END = /\\r\\n|[\\r\\n\\f]/g;",
+   "head": {
+    "exit": 1,
+    "failingChecks": [
+     "C1"
+    ],
+    "failureCount": 1394,
+    "c1": 1394,
+    "first50ByCorpus": {
+     "C1:lf-separators": 50
+    }
+   },
+   "withoutSlice": {
+    "exit": 0,
+    "failingChecks": [],
+    "failureCount": 0,
+    "c1": 0,
+    "first50ByCorpus": {}
+   }
+  },
+  {
+   "id": "PX1-closer-tolerates-vt-ff",
+   "file": "markdown-code-context.js",
+   "old": "/^ {0,3}(`{3,}|~{3,}) *$/",
+   "new": "/^ {0,3}(`{3,}|~{3,})[ \\v\\f]*$/",
+   "head": {
+    "exit": 1,
+    "failingChecks": [
+     "C1"
+    ],
+    "failureCount": 216,
+    "c1": 216,
+    "first50ByCorpus": {
+     "C1:lf-separators": 50
+    }
+   },
+   "withoutSlice": {
+    "exit": 0,
+    "failingChecks": [],
+    "failureCount": 0,
+    "c1": 0,
+    "first50ByCorpus": {}
+   }
+  },
+  {
+   "id": "PX2-closer-tolerates-js-whitespace",
+   "file": "markdown-code-context.js",
+   "old": "/^ {0,3}(`{3,}|~{3,}) *$/",
+   "new": "/^ {0,3}(`{3,}|~{3,})\\s*$/",
+   "head": {
+    "exit": 1,
+    "failingChecks": [
+     "C1"
+    ],
+    "failureCount": 944,
+    "c1": 944,
+    "first50ByCorpus": {
+     "C1:lf": 50
+    }
+   },
+   "withoutSlice": {
+    "exit": 1,
+    "failingChecks": [
+     "C1"
+    ],
+    "failureCount": 562,
+    "c1": 562,
+    "first50ByCorpus": {
+     "C1:lf": 50
+    }
+   }
+  },
+  {
+   "id": "PX3-fs-gs-rs-line-ends",
+   "file": "markdown-code-context.js",
+   "old": "const LINE_END = /\\r\\n|\\r|\\n/g;",
+   "new": "const LINE_END = /\\r\\n|[\\r\\n\\x1c-\\x1e]/g;",
+   "head": {
+    "exit": 0,
+    "failingChecks": [],
+    "failureCount": 0,
+    "c1": 0,
+    "first50ByCorpus": {}
+   },
+   "withoutSlice": {
+    "exit": 0,
+    "failingChecks": [],
+    "failureCount": 0,
+    "c1": 0,
+    "first50ByCorpus": {}
+   }
+  },
+  {
+   "id": "PX4-positionOf-counts-u2029",
+   "file": "git-object-reader.js",
+   "old": "if (text.charCodeAt(i) === 10) {",
+   "new": "if (text.charCodeAt(i) === 10 || text.charCodeAt(i) === 0x2029) {",
+   "head": {
+    "exit": 1,
+    "failingChecks": [
+     "C1"
+    ],
+    "failureCount": 261,
+    "c1": 261,
+    "first50ByCorpus": {
+     "C1:lf-separators": 50
+    }
+   },
+   "withoutSlice": {
+    "exit": 1,
+    "failingChecks": [
+     "C1"
+    ],
+    "failureCount": 261,
+    "c1": 261,
+    "first50ByCorpus": {
+     "C1:lf-separators": 50
+    }
+   }
+  },
+  {
+   "id": "PX5-positionOf-counts-vt",
+   "file": "git-object-reader.js",
+   "old": "if (text.charCodeAt(i) === 10) {",
+   "new": "if (text.charCodeAt(i) === 10 || text.charCodeAt(i) === 0x0b) {",
+   "head": {
+    "exit": 1,
+    "failingChecks": [
+     "C1"
+    ],
+    "failureCount": 205,
+    "c1": 205,
+    "first50ByCorpus": {
+     "C1:lf-separators": 50
+    }
+   },
+   "withoutSlice": {
+    "exit": 0,
+    "failingChecks": [],
+    "failureCount": 0,
+    "c1": 0,
+    "first50ByCorpus": {}
+   }
+  },
+  {
+   "id": "PX6-opener-dotall",
+   "file": "markdown-code-context.js",
+   "old": "const FENCE_OPENER = /^ {0,3}(`{3,}|~{3,})(.*)$/;",
+   "new": "const FENCE_OPENER = /^ {0,3}(`{3,}|~{3,})(.*)$/s;",
+   "head": {
+    "exit": 1,
+    "failingChecks": [
+     "C1"
+    ],
+    "failureCount": 772,
+    "c1": 772,
+    "first50ByCorpus": {
+     "C1:lf-separators": 50
+    }
+   },
+   "withoutSlice": {
+    "exit": 1,
+    "failingChecks": [
+     "C1"
+    ],
+    "failureCount": 772,
+    "c1": 772,
+    "first50ByCorpus": {
+     "C1:lf-separators": 50
+    }
+   }
+  },
+  {
+   "id": "MU23-closer-separators",
+   "file": "markdown-code-context.js",
+   "old": "/^ {0,3}(`{3,}|~{3,}) *$/",
+   "new": "/^ {0,3}(`{3,}|~{3,})[ \\u2028\\u2029\\x85]*$/",
+   "head": {
+    "exit": 1,
+    "failingChecks": [
+     "C1"
+    ],
+    "failureCount": 324,
+    "c1": 324,
+    "first50ByCorpus": {
+     "C1:lf-separators": 50
+    }
+   },
+   "withoutSlice": {
+    "exit": 1,
+    "failingChecks": [
+     "C1"
+    ],
+    "failureCount": 324,
+    "c1": 324,
+    "first50ByCorpus": {
+     "C1:lf-separators": 50
+    }
+   }
+  },
+  {
+   "id": "MU24-positionOf-u2028",
+   "file": "git-object-reader.js",
+   "old": "if (text.charCodeAt(i) === 10) {",
+   "new": "if (text.charCodeAt(i) === 10 || text.charCodeAt(i) === 0x2028) {",
+   "head": {
+    "exit": 1,
+    "failingChecks": [
+     "C1"
+    ],
+    "failureCount": 261,
+    "c1": 261,
+    "first50ByCorpus": {
+     "C1:lf-separators": 50
+    }
+   },
+   "withoutSlice": {
+    "exit": 1,
+    "failingChecks": [
+     "C1"
+    ],
+    "failureCount": 261,
+    "c1": 261,
+    "first50ByCorpus": {
+     "C1:lf-separators": 50
+    }
+   }
+  }
+ ]
+}

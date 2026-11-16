@@ -1,0 +1,10 @@
+RX0-entries-unmutated as expected 0 81 0 []
+RX3-both-rules-drop-encoded-capital-n as expected 1 80 1 ['the segment rules the entry reader copies from Node 24\'s exports resolver reads "./dist/%4Eode_modules/index.js" as Node does: it refuses']
+RX4-require-not-a-node-condition as expected 1 80 1 ['the workspace entry modules throws on such a target under a condition Node does not read, or in a main, and names the one Node refuses first']
+RK4-key-message-drops-the-path as expected 1 80 1 ['the workspace entry modules throws on a condition key with a /../ segment, at any depth']
+RK5-key-predicate-widened as expected 1 80 1 ['the workspace entry modules throws on a condition key with a /../ segment, at any depth']
+RK3-key-fault-ranked-first as expected 0 81 0 []
+RK2-key-walk-skips-arrays as expected 0 81 0 []
+RX7-projects-reordered as expected 0 8 0 []
+RX8-global-setup-removed as expected 1 7 1 ['suite child processes and the vitest worker RPC loads the vitest config and finds no alias key at any depth']
+summary {'rows': 9, 'asExpected': 9, 'unexpected': []} status after ''

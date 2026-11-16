@@ -1,0 +1,218 @@
+{
+ "commit": "38fa15966db89bfede725fbde8073aef552daf0b",
+ "trackedBlobs": 6827,
+ "needles": {
+  "old record.py sha256": "e4e27739587babcbb10e2b601b1b356987e824fda747a2dcc856e97f1bcedc1b",
+  "old record.py sha256[:8]": "e4e27739",
+  "old record.py blob": "424f6a18e2a1471cb4321a2343635ca0f1ea770a",
+  "old record.py blob[:8]": "424f6a18",
+  "new record.py sha256": "77e830432fd94637633c08d1fa7393e737890848cf0243bbcd1e60d38a87dfec",
+  "new record.py sha256[:8]": "77e83043",
+  "new record.py blob": "578591477debe63db55a18b942bf89c94c228a84",
+  "new record.py blob[:8]": "57859147",
+  "old npm_alias_probe.py sha256": "55aed20dde5eede39831cb5b698d13ffdd14584a1ad69d4e280b82c9060b4962",
+  "old npm_alias_probe.py sha256[:8]": "55aed20d",
+  "old npm_alias_probe.py blob": "67bff6f664526dae873b8c4484e131cd57f52eed",
+  "old npm_alias_probe.py blob[:8]": "67bff6f6",
+  "new npm_alias_probe.py sha256": "677b0fe2a670d02c2e279144d58a1cb33a2e829538e08b73555850ca6a56d0c6",
+  "new npm_alias_probe.py sha256[:8]": "677b0fe2",
+  "new npm_alias_probe.py blob": "5adb67198751cb0f0fa126b7ed2626c5242b01a3",
+  "new npm_alias_probe.py blob[:8]": "5adb6719",
+  "old summary.json sha256": "57fe89147d9dc3df97ccca309c26945793e646cf26f24b3447e26a783612e28c",
+  "old summary.json sha256[:8]": "57fe8914",
+  "old summary.json blob": "ca71c1829516b71dedbb4c2370bef20e4b3827e0",
+  "old summary.json blob[:8]": "ca71c182",
+  "new summary.json sha256": "9d101dc2ed50fdbafd16c98bb3a1fc13aebc2190f3d041bb613c6c8da87ee99e",
+  "new summary.json sha256[:8]": "9d101dc2",
+  "new summary.json blob": "286e2d7f435b4956a6112bce38a754dc523e5ba9",
+  "new summary.json blob[:8]": "286e2d7f"
+ },
+ "hits": {
+  "old record.py sha256": [],
+  "old record.py sha256[:8]": [],
+  "old record.py blob": [],
+  "old record.py blob[:8]": [],
+  "new record.py sha256": [
+   {
+    "path": "docs/evidence/syzygy-bpyt-39/record-predicate-mutants.json",
+    "line": 4,
+    "insideLongerHex": false
+   },
+   {
+    "path": "docs/evidence/syzygy-bpyt-39/summary.json",
+    "line": 13,
+    "insideLongerHex": false
+   },
+   {
+    "path": "docs/evidence/syzygy-bpyt-8-39/summary.json",
+    "line": 316,
+    "insideLongerHex": false
+   }
+  ],
+  "new record.py sha256[:8]": [
+   {
+    "path": "docs/evidence/syzygy-bpyt-39/record-predicate-mutants.json",
+    "line": 4,
+    "insideLongerHex": true
+   },
+   {
+    "path": "docs/evidence/syzygy-bpyt-39/summary.json",
+    "line": 13,
+    "insideLongerHex": true
+   },
+   {
+    "path": "docs/evidence/syzygy-bpyt-8-39/summary.json",
+    "line": 316,
+    "insideLongerHex": true
+   }
+  ],
+  "new record.py blob": [],
+  "new record.py blob[:8]": [],
+  "old npm_alias_probe.py sha256": [
+   {
+    "path": "docs/evidence/syzygy-bpyt-39/npmrc-trace-lane-probe-before.json",
+    "line": 3,
+    "insideLongerHex": false
+   }
+  ],
+  "old npm_alias_probe.py sha256[:8]": [
+   {
+    "path": "docs/evidence/syzygy-bpyt-39/npmrc-trace-lane-probe-before.json",
+    "line": 3,
+    "insideLongerHex": true
+   }
+  ],
+  "old npm_alias_probe.py blob": [],
+  "old npm_alias_probe.py blob[:8]": [],
+  "new npm_alias_probe.py sha256": [
+   {
+    "path": "docs/evidence/syzygy-bpyt-39/npmrc-trace-lane-probe-after.json",
+    "line": 3,
+    "insideLongerHex": false
+   },
+   {
+    "path": "docs/evidence/syzygy-bpyt-39/summary.json",
+    "line": 12,
+    "insideLongerHex": false
+   },
+   {
+    "path": "docs/evidence/syzygy-bpyt-8-39/summary.json",
+    "line": 314,
+    "insideLongerHex": false
+   }
+  ],
+  "new npm_alias_probe.py sha256[:8]": [
+   {
+    "path": "docs/evidence/syzygy-bpyt-39/npmrc-trace-lane-probe-after.json",
+    "line": 3,
+    "insideLongerHex": true
+   },
+   {
+    "path": "docs/evidence/syzygy-bpyt-39/summary.json",
+    "line": 12,
+    "insideLongerHex": true
+   },
+   {
+    "path": "docs/evidence/syzygy-bpyt-8-39/summary.json",
+    "line": 314,
+    "insideLongerHex": true
+   }
+  ],
+  "new npm_alias_probe.py blob": [],
+  "new npm_alias_probe.py blob[:8]": [],
+  "old summary.json sha256": [],
+  "old summary.json sha256[:8]": [],
+  "old summary.json blob": [],
+  "old summary.json blob[:8]": [],
+  "new summary.json sha256": [
+   {
+    "path": "docs/evidence/syzygy-bpyt-39/summary.json",
+    "line": 14,
+    "insideLongerHex": false
+   }
+  ],
+  "new summary.json sha256[:8]": [
+   {
+    "path": "docs/evidence/syzygy-bpyt-39/summary.json",
+    "line": 14,
+    "insideLongerHex": true
+   }
+  ],
+  "new summary.json blob": [],
+  "new summary.json blob[:8]": []
+ },
+ "locators": [
+  {
+   "path": "docs/evidence/http-host-review-2026-10-27/citations-head.txt",
+   "line": 33,
+   "match": "summary.json:43",
+   "context": "pyt-7-3/own-specs.json:150', 'docs/evidence/syzygy-bpyt-7-3/summary.json:43', 'docs/e"
+  },
+  {
+   "path": "docs/evidence/http-host-review-2026-10-27/citations-head.txt",
+   "line": 33,
+   "match": "summary.json:332",
+   "context": "y-bpyt-7-3/summary.json:43', 'docs/evidence/syzygy-bpyt-7-3/summary.json:332', 'docs/p"
+  },
+  {
+   "path": "docs/evidence/http-host-review-2026-10-27/citations-head.txt",
+   "line": 36,
+   "match": "summary.json:427",
+   "context": "daemon non-path mentions=1: ['docs/evidence/syzygy-bpyt-7-3/summary.json:427']"
+  },
+  {
+   "path": "docs/evidence/http-host-review-2026-10-27/citations-head.txt",
+   "line": 38,
+   "match": "record.py:101",
+   "context": "daemon non-path mentions=1: ['docs/evidence/syzygy-bpyt-7-3/record.py:101']"
+  },
+  {
+   "path": "docs/evidence/http-host-review-2026-10-27/citations-head.txt",
+   "line": 39,
+   "match": "record.py:6",
+   "context": "pyt-7-3/own-specs.json:186', 'docs/evidence/syzygy-bpyt-7-3/record.py:6', 'docs/e"
+  },
+  {
+   "path": "docs/evidence/http-host-review-2026-10-27/citations-head.txt",
+   "line": 39,
+   "match": "record.py:290",
+   "context": "yzygy-bpyt-7-3/record.py:6', 'docs/evidence/syzygy-bpyt-7-3/record.py:290', 'docs/e"
+  },
+  {
+   "path": "docs/evidence/http-host-review-2026-10-27/citations-head.txt",
+   "line": 39,
+   "match": "summary.json:338",
+   "context": "ygy-bpyt-7-3/record.py:290', 'docs/evidence/syzygy-bpyt-7-3/summary.json:338']"
+  },
+  {
+   "path": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-2-RAW.md",
+   "line": 315,
+   "match": "npm_alias_probe.py:74-76",
+   "context": "- [Observed] `npm_alias_probe.py:74-76` and `:78"
+  },
+  {
+   "path": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-2-RAW.md",
+   "line": 401,
+   "match": "npm_alias_probe.py:74-76",
+   "context": "- **Evidence.** [Observed, \u00a73.9] `npm_alias_probe.py:74-76` and `:78"
+  },
+  {
+   "path": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-3-RAW.md",
+   "line": 311,
+   "match": "record.py:387-392",
+   "context": "- **Evidence.** [Observed, \u00a73.5] The check at `record.py:387-392` has thre"
+  },
+  {
+   "path": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-3-RAW.md",
+   "line": 337,
+   "match": "record.py:105",
+   "context": "  version satisfies it\". `F1_RETIRED` (`record.py:105`) holds r"
+  },
+  {
+   "path": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-3-RAW.md",
+   "line": 348,
+   "match": "npm_alias_probe.py:87",
+   "context": "  defined at `npm_alias_probe.py:87` and call"
+  }
+ ]
+}

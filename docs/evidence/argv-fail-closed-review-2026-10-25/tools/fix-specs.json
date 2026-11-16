@@ -1,0 +1,174 @@
+{
+ "what": "rev-528: the N1 rows, alone and with each surviving predicate mutant",
+ "mutants": [
+  {
+   "id": "FIX-rows-alone",
+   "expect": "survives",
+   "projects": [
+    "@syzygy/polaris-generation-core",
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "packages/polaris-dossier/src/argv.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "    ['whose target leaves its package', { '#lib': '../lib/dist/index.js' }, 'apps/app/src/main.ts', '#lib'],\n",
+     "new": "    ['whose target leaves its package', { '#lib': '../lib/dist/index.js' }, 'apps/app/src/main.ts', '#lib'],\n    ['whose target leaves its package for a module that exists', { '#lib': '../../../packages/lib/src/index.js' }, 'apps/app/src/main.ts', '#lib'],\n    ['whose target is a module of its own package outside dist', { '#lib': './src/local.js' }, 'apps/app/src/main.ts', '#lib'],\n    ['whose target names no source module', { '#lib': './dist/missing.js' }, 'apps/app/src/main.ts', '#lib'],\n"
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": "    [\"import { readArgv } from './argv.js';\\nexport const policies = { daemon: readArgv };\", ['module.ts:2 daemon: readArgv']],\n",
+     "new": "    [\"import { readArgv } from './argv.js';\\nexport const policies = { daemon: readArgv };\", ['module.ts:2 daemon: readArgv']],\n    [\"import { readArgv } from './argv.js';\\nvoid [[]].map(readArgv);\", ['module.ts:2 [[]].map(readArgv)']],\n    [\"export function readArgv(): void {}\", ['module.ts:1 export function readArgv(): void {}']],\n"
+    }
+   ]
+  },
+  {
+   "id": "FIX-rows-with-RV-P6",
+   "expect": "killed",
+   "projects": [
+    "@syzygy/polaris-generation-core",
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "packages/polaris-dossier/src/argv.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "    ['whose target leaves its package', { '#lib': '../lib/dist/index.js' }, 'apps/app/src/main.ts', '#lib'],\n",
+     "new": "    ['whose target leaves its package', { '#lib': '../lib/dist/index.js' }, 'apps/app/src/main.ts', '#lib'],\n    ['whose target leaves its package for a module that exists', { '#lib': '../../../packages/lib/src/index.js' }, 'apps/app/src/main.ts', '#lib'],\n    ['whose target is a module of its own package outside dist', { '#lib': './src/local.js' }, 'apps/app/src/main.ts', '#lib'],\n    ['whose target names no source module', { '#lib': './dist/missing.js' }, 'apps/app/src/main.ts', '#lib'],\n"
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": "    [\"import { readArgv } from './argv.js';\\nexport const policies = { daemon: readArgv };\", ['module.ts:2 daemon: readArgv']],\n",
+     "new": "    [\"import { readArgv } from './argv.js';\\nexport const policies = { daemon: readArgv };\", ['module.ts:2 daemon: readArgv']],\n    [\"import { readArgv } from './argv.js';\\nvoid [[]].map(readArgv);\", ['module.ts:2 [[]].map(readArgv)']],\n    [\"export function readArgv(): void {}\", ['module.ts:1 export function readArgv(): void {}']],\n"
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "target.startsWith('#') || target.startsWith('../')) return undefined;",
+     "new": "target.startsWith('#')) return undefined;"
+    }
+   ]
+  },
+  {
+   "id": "FIX-rows-with-RV-P3",
+   "expect": "killed",
+   "projects": [
+    "@syzygy/polaris-generation-core",
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "packages/polaris-dossier/src/argv.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "    ['whose target leaves its package', { '#lib': '../lib/dist/index.js' }, 'apps/app/src/main.ts', '#lib'],\n",
+     "new": "    ['whose target leaves its package', { '#lib': '../lib/dist/index.js' }, 'apps/app/src/main.ts', '#lib'],\n    ['whose target leaves its package for a module that exists', { '#lib': '../../../packages/lib/src/index.js' }, 'apps/app/src/main.ts', '#lib'],\n    ['whose target is a module of its own package outside dist', { '#lib': './src/local.js' }, 'apps/app/src/main.ts', '#lib'],\n    ['whose target names no source module', { '#lib': './dist/missing.js' }, 'apps/app/src/main.ts', '#lib'],\n"
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": "    [\"import { readArgv } from './argv.js';\\nexport const policies = { daemon: readArgv };\", ['module.ts:2 daemon: readArgv']],\n",
+     "new": "    [\"import { readArgv } from './argv.js';\\nexport const policies = { daemon: readArgv };\", ['module.ts:2 daemon: readArgv']],\n    [\"import { readArgv } from './argv.js';\\nvoid [[]].map(readArgv);\", ['module.ts:2 [[]].map(readArgv)']],\n    [\"export function readArgv(): void {}\", ['module.ts:1 export function readArgv(): void {}']],\n"
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "  if (!target.startsWith('./dist/')) return undefined;\n",
+     "new": "  if (!target.startsWith('./dist/')) return null as never;\n"
+    }
+   ]
+  },
+  {
+   "id": "FIX-rows-with-RV-P4",
+   "expect": "killed",
+   "projects": [
+    "@syzygy/polaris-generation-core",
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "packages/polaris-dossier/src/argv.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "    ['whose target leaves its package', { '#lib': '../lib/dist/index.js' }, 'apps/app/src/main.ts', '#lib'],\n",
+     "new": "    ['whose target leaves its package', { '#lib': '../lib/dist/index.js' }, 'apps/app/src/main.ts', '#lib'],\n    ['whose target leaves its package for a module that exists', { '#lib': '../../../packages/lib/src/index.js' }, 'apps/app/src/main.ts', '#lib'],\n    ['whose target is a module of its own package outside dist', { '#lib': './src/local.js' }, 'apps/app/src/main.ts', '#lib'],\n    ['whose target names no source module', { '#lib': './dist/missing.js' }, 'apps/app/src/main.ts', '#lib'],\n"
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": "    [\"import { readArgv } from './argv.js';\\nexport const policies = { daemon: readArgv };\", ['module.ts:2 daemon: readArgv']],\n",
+     "new": "    [\"import { readArgv } from './argv.js';\\nexport const policies = { daemon: readArgv };\", ['module.ts:2 daemon: readArgv']],\n    [\"import { readArgv } from './argv.js';\\nvoid [[]].map(readArgv);\", ['module.ts:2 [[]].map(readArgv)']],\n    [\"export function readArgv(): void {}\", ['module.ts:1 export function readArgv(): void {}']],\n"
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "  return workspace.isFile(module) ? module : undefined;\n",
+     "new": "  return workspace.isFile(module) ? module : (null as never);\n"
+    }
+   ]
+  },
+  {
+   "id": "FIX-rows-with-RV-Q1",
+   "expect": "killed",
+   "projects": [
+    "@syzygy/polaris-generation-core",
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "packages/polaris-dossier/src/argv.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "    ['whose target leaves its package', { '#lib': '../lib/dist/index.js' }, 'apps/app/src/main.ts', '#lib'],\n",
+     "new": "    ['whose target leaves its package', { '#lib': '../lib/dist/index.js' }, 'apps/app/src/main.ts', '#lib'],\n    ['whose target leaves its package for a module that exists', { '#lib': '../../../packages/lib/src/index.js' }, 'apps/app/src/main.ts', '#lib'],\n    ['whose target is a module of its own package outside dist', { '#lib': './src/local.js' }, 'apps/app/src/main.ts', '#lib'],\n    ['whose target names no source module', { '#lib': './dist/missing.js' }, 'apps/app/src/main.ts', '#lib'],\n"
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": "    [\"import { readArgv } from './argv.js';\\nexport const policies = { daemon: readArgv };\", ['module.ts:2 daemon: readArgv']],\n",
+     "new": "    [\"import { readArgv } from './argv.js';\\nexport const policies = { daemon: readArgv };\", ['module.ts:2 daemon: readArgv']],\n    [\"import { readArgv } from './argv.js';\\nvoid [[]].map(readArgv);\", ['module.ts:2 [[]].map(readArgv)']],\n    [\"export function readArgv(): void {}\", ['module.ts:1 export function readArgv(): void {}']],\n"
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": "        || (ts.isCallExpression(parent) && parent.expression === node);\n",
+     "new": "        || ts.isCallExpression(parent);\n"
+    }
+   ]
+  },
+  {
+   "id": "FIX-rows-with-RV-Q2",
+   "expect": "killed",
+   "projects": [
+    "@syzygy/polaris-generation-core",
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "packages/polaris-dossier/src/argv.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "    ['whose target leaves its package', { '#lib': '../lib/dist/index.js' }, 'apps/app/src/main.ts', '#lib'],\n",
+     "new": "    ['whose target leaves its package', { '#lib': '../lib/dist/index.js' }, 'apps/app/src/main.ts', '#lib'],\n    ['whose target leaves its package for a module that exists', { '#lib': '../../../packages/lib/src/index.js' }, 'apps/app/src/main.ts', '#lib'],\n    ['whose target is a module of its own package outside dist', { '#lib': './src/local.js' }, 'apps/app/src/main.ts', '#lib'],\n    ['whose target names no source module', { '#lib': './dist/missing.js' }, 'apps/app/src/main.ts', '#lib'],\n"
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": "    [\"import { readArgv } from './argv.js';\\nexport const policies = { daemon: readArgv };\", ['module.ts:2 daemon: readArgv']],\n",
+     "new": "    [\"import { readArgv } from './argv.js';\\nexport const policies = { daemon: readArgv };\", ['module.ts:2 daemon: readArgv']],\n    [\"import { readArgv } from './argv.js';\\nvoid [[]].map(readArgv);\", ['module.ts:2 [[]].map(readArgv)']],\n    [\"export function readArgv(): void {}\", ['module.ts:1 export function readArgv(): void {}']],\n"
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": " && module === 'packages/polaris-dossier/src/argv.ts')",
+     "new": ")"
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,7 @@
+T9-guard-skips-type-only-edges-alone: survived exit=0 failed=0/13 files=0 timeouts=0 27.3s clean=True
+T9b-guard-skips-type-only-edges-with-E1: survived exit=0 failed=0/13 files=0 timeouts=0 31.7s clean=True
+T10-guard-skips-dynamic-edges-alone: survived exit=0 failed=0/13 files=0 timeouts=0 27.2s clean=True
+T10b-guard-skips-dynamic-edges-with-O4: survived exit=0 failed=0/13 files=0 timeouts=0 27.0s clean=True
+T10c-guard-skips-dynamic-edges-with-E1: killed exit=1 failed=1/13 files=1 timeouts=0 24.6s clean=True
+     apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every module and package the POC daemon imports
+killed 1 survived 4 error 0 of 5

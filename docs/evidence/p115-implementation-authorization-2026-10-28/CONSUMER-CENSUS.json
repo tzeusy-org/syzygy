@@ -1,0 +1,5014 @@
+{
+  "head": "973965a82f82d9b90af05e4b96524aae0d9dbec4",
+  "scope": "tracked code files under apps/packages/scripts only; not external clients, deployment state, runtime captures or dynamically constructed interfaces",
+  "extensions": [
+    ".ts",
+    ".tsx",
+    ".js",
+    ".mjs",
+    ".cjs",
+    ".py",
+    ".sh"
+  ],
+  "patterns": {
+    "governing_value": "governedBy|governedByUnknownCount|GoverningIntentUnknown",
+    "endpoint": "/api/poc|POC_MACHINE_PATH|api-poc\\.json",
+    "logical_as_wire": "JSON\\.parse\\(JSON\\.stringify\\(model\\)\\)|JSON\\.stringify\\(model\\)",
+    "identity": "buildResponseIdentity|responseIdentityPreimage",
+    "body_consumer": "response\\.json\\(|machine\\.body|JSON\\.parse\\([^\\n]*(?:served|response|machine)|json\\.loads\\(raw\\)"
+  },
+  "examined": 649,
+  "secondMethod": 649,
+  "candidateFiles": 59,
+  "perPattern": {
+    "governing_value": 12,
+    "endpoint": 30,
+    "logical_as_wire": 18,
+    "identity": 6,
+    "body_consumer": 17
+  },
+  "population": [
+    {
+      "path": "apps/syzygy/src/main.ts",
+      "sha256": "07404d93c055c83c9334880c062e98687a4c78a99a104049df0e95076c6555e6",
+      "bytes": 11964
+    },
+    {
+      "path": "apps/three-surface-poc/src/block-provenance-sweep.test.ts",
+      "sha256": "16f1b58c30df9daa9431ceb6b735b738b1702de6d23e356a75f68062daacd3db",
+      "bytes": 15348
+    },
+    {
+      "path": "apps/three-surface-poc/src/browser-origin.test.ts",
+      "sha256": "f06ee5f98dcbeda165b1944b73c0b1357fa71c6949b295b3aaab88b7adf762f2",
+      "bytes": 1770
+    },
+    {
+      "path": "apps/three-surface-poc/src/browser-origin.ts",
+      "sha256": "5b1d5e238e86382e5858e8b9041efed0e19f753ef99bd9b5dd0e84d3871718d8",
+      "bytes": 1487
+    },
+    {
+      "path": "apps/three-surface-poc/src/build-output.test.ts",
+      "sha256": "f8ca0ead090dff0dbe5fafd03d8c265cdf597994f186881d161fd2a84257635e",
+      "bytes": 3089
+    },
+    {
+      "path": "apps/three-surface-poc/src/capability-detail.ts",
+      "sha256": "870b43ba23fda2f36840b5da4f9fbdb4967bb8e7a2c7a058751f200825d31be7",
+      "bytes": 15559
+    },
+    {
+      "path": "apps/three-surface-poc/src/capture-test-artifact-main.test.ts",
+      "sha256": "b6b7531a8e65513ed6ae840dac9b96bef46309b5d01497dfa98204393cf3ea69",
+      "bytes": 24722
+    },
+    {
+      "path": "apps/three-surface-poc/src/capture-test-artifact-main.ts",
+      "sha256": "5382e1919a09f154067c0c5c1c3652a80abf69b543282c460ae1927069758f97",
+      "bytes": 5945
+    },
+    {
+      "path": "apps/three-surface-poc/src/capture-test-artifact.test.ts",
+      "sha256": "c979ed3f1a478023add182f453f745b3fc9ba218c59650e632113c2b580f053c",
+      "bytes": 8123
+    },
+    {
+      "path": "apps/three-surface-poc/src/capture-test-artifact.ts",
+      "sha256": "57d92f54edbf7fb6d0a09eaab19cde2d35dfb838c85a7f15f558f86f121179a4",
+      "bytes": 6368
+    },
+    {
+      "path": "apps/three-surface-poc/src/cdp-browser.browser.test.ts",
+      "sha256": "83f58739e428956e51505694008156d3dd6c73fcfa584efe73bf2509fbecc43a",
+      "bytes": 5749
+    },
+    {
+      "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+      "sha256": "aea55cef2293f51a7340ce6bea67b2623698b711d0770a05a0fc6aeb151dd03d",
+      "bytes": 24965
+    },
+    {
+      "path": "apps/three-surface-poc/src/cdp-browser.ts",
+      "sha256": "60a3990726bc196703d66719b8c50c9c87c62c91b601fa51f7edcca23f71d68d",
+      "bytes": 28637
+    },
+    {
+      "path": "apps/three-surface-poc/src/cli.test.ts",
+      "sha256": "c3782d73057fac84ca7e34d21a8991a0d6f7da4256b5dc0bd17851dd7287639f",
+      "bytes": 1706
+    },
+    {
+      "path": "apps/three-surface-poc/src/cli.ts",
+      "sha256": "12824d52a906a89491afa605100ddf6ac10b5afe72f0ecfcebcf5d90e48a76b1",
+      "bytes": 2045
+    },
+    {
+      "path": "apps/three-surface-poc/src/cross-cutting.test.ts",
+      "sha256": "4f113c73f436350e156325740c7ee03475c2964343ba83ec2fe59feb527b9d60",
+      "bytes": 5891
+    },
+    {
+      "path": "apps/three-surface-poc/src/design-tokens.test.ts",
+      "sha256": "f2fa4c2d167b8f6bc9bff2030a2f9c89cc7aadea7c17db22a3f6536f18293b36",
+      "bytes": 7866
+    },
+    {
+      "path": "apps/three-surface-poc/src/design-tokens.ts",
+      "sha256": "97d9b3bcc30f937bc3570cc5c02fb671af1ebf68d7ccc190b10c5681453fbbec",
+      "bytes": 17493
+    },
+    {
+      "path": "apps/three-surface-poc/src/evaluation-footer.test.ts",
+      "sha256": "fe34fc12d3b8b03ab9e7aec9a0fc35282b41f7b60a3cbfc198fd6afa06bb33e4",
+      "bytes": 3894
+    },
+    {
+      "path": "apps/three-surface-poc/src/evaluation-footer.ts",
+      "sha256": "f595cffe0cba72e7bd92e6aae767f34b7e940653d3232b147bb7785915861ae6",
+      "bytes": 3887
+    },
+    {
+      "path": "apps/three-surface-poc/src/exact-tables.ts",
+      "sha256": "e79c6f7425366541082af1b3bcc778461bd5a07cb50e1e6f8608c99cc30ff4b5",
+      "bytes": 4514
+    },
+    {
+      "path": "apps/three-surface-poc/src/fence-rules.test.ts",
+      "sha256": "138152c198f50160f11f646f2a9046f6643bcbc4fbc6eb699aa4b7720f1f20b0",
+      "bytes": 22317
+    },
+    {
+      "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+      "sha256": "18d5b9332622f88fa5b4e47e5b2aeb14e5641a6e0c7ebb0a2dcd47d834c00d33",
+      "bytes": 14440
+    },
+    {
+      "path": "apps/three-surface-poc/src/fixture-directories.ts",
+      "sha256": "df5a319e02b9bbc3294bf0b0b90a987ecea86bfd219a41d0341855a3e9dc5ada",
+      "bytes": 4090
+    },
+    {
+      "path": "apps/three-surface-poc/src/fresh-checkout-demo-main.ts",
+      "sha256": "b59ed25c6faddc6753e6f5708b1243896f475b3105b0e7aeb9daab2b53b1a501",
+      "bytes": 34988
+    },
+    {
+      "path": "apps/three-surface-poc/src/fresh-checkout-verdict.test.ts",
+      "sha256": "3b923f044881a145da1976476b7542c65046d983ab9790c964e9477c74714505",
+      "bytes": 12322
+    },
+    {
+      "path": "apps/three-surface-poc/src/fresh-checkout-verdict.ts",
+      "sha256": "c2ce88b788202ee32b72b12ef0710c99e7f04d6ee96b6d64bd55dcf138f19fa7",
+      "bytes": 9051
+    },
+    {
+      "path": "apps/three-surface-poc/src/git-blob-batch.test.ts",
+      "sha256": "2ebc495f19d18979a91dc87705710414f65b351612ce76776cefbe4de8a652bd",
+      "bytes": 15330
+    },
+    {
+      "path": "apps/three-surface-poc/src/git-blob-batch.ts",
+      "sha256": "74240e99c66ec0ce082bf83ebb5cfbba74e23e7605a65104cb0f1d9d90e23ed2",
+      "bytes": 3467
+    },
+    {
+      "path": "apps/three-surface-poc/src/git-observation.test.ts",
+      "sha256": "9f10eee74a233de42dbfa1bc3eddf17ab69930fdd04b30bc4d9b5bc22d96a48f",
+      "bytes": 11897
+    },
+    {
+      "path": "apps/three-surface-poc/src/git-observation.ts",
+      "sha256": "993783b1045f1027134f59bce6d4cde47fb667702dd6914066c0d25454db9913",
+      "bytes": 7619
+    },
+    {
+      "path": "apps/three-surface-poc/src/governance-inputs.test.ts",
+      "sha256": "331bbb05ec46a6cfdb525408c907978ccbaf68f4e737432a98f3415f6cff27a2",
+      "bytes": 27459
+    },
+    {
+      "path": "apps/three-surface-poc/src/governance-inputs.ts",
+      "sha256": "91ea2a30a3e64303ff6e2dcc44f289ca55f3faa10943ee5c19e12ff62aa4f972",
+      "bytes": 21601
+    },
+    {
+      "path": "apps/three-surface-poc/src/governing-intent-sweep.test.ts",
+      "sha256": "7e653fa37d6b5e4163fce6a055d6c9fa9d5acb1851fdd84b1d4e7604e6e264ec",
+      "bytes": 19558
+    },
+    {
+      "path": "apps/three-surface-poc/src/keyboard-sweep-record.test.ts",
+      "sha256": "e327d38a01ea8be2b45e4b6d1ac219255a864d8e0382e534421aa19d9483a90f",
+      "bytes": 11771
+    },
+    {
+      "path": "apps/three-surface-poc/src/keyboard-sweep-record.ts",
+      "sha256": "abb8f1b8d313259aac61195e4a2d411648d15103a9ebd05ef36fa341dc4fdac3",
+      "bytes": 9324
+    },
+    {
+      "path": "apps/three-surface-poc/src/launcher.test.ts",
+      "sha256": "00c4ba157c3802546c3a4f8195f79fffcf90e8dc7fa1e5f4d4144e22496ed466",
+      "bytes": 767
+    },
+    {
+      "path": "apps/three-surface-poc/src/launcher.ts",
+      "sha256": "cf264e82ca8fd98b026e5ff777b5dd288d27ee421efd1b7bd1275630bd5a4c8f",
+      "bytes": 829
+    },
+    {
+      "path": "apps/three-surface-poc/src/main.test.ts",
+      "sha256": "5d13c69fbb02eccce102ec3399edba1fab4d021e246b1c36e21ec38259ffb6de",
+      "bytes": 27234
+    },
+    {
+      "path": "apps/three-surface-poc/src/main.ts",
+      "sha256": "cfb0a4e6d55a6b74e8da99612cf33b25c955877b09155ae89e4f875638137e3d",
+      "bytes": 552
+    },
+    {
+      "path": "apps/three-surface-poc/src/materialize-action.test.ts",
+      "sha256": "36ef63dc39278257a5e08c679d6e19f4a0b6c93167d38021449641161e376c6b",
+      "bytes": 21342
+    },
+    {
+      "path": "apps/three-surface-poc/src/materialize-action.ts",
+      "sha256": "cc1e518af864d50d82638fc66878369d0e8dd12a945436808c18a055ca8e403a",
+      "bytes": 12303
+    },
+    {
+      "path": "apps/three-surface-poc/src/orrery.browser.test.ts",
+      "sha256": "fae4d0addfa274bd79f88c2789bd7aeaa57b4ed485c4a0b3b2584a07a4d3f43b",
+      "bytes": 3404
+    },
+    {
+      "path": "apps/three-surface-poc/src/orrery.test.ts",
+      "sha256": "7e4fd5ad563c57333327a24e87440a1e7f25d53eb0b77009c41d1462f228dd78",
+      "bytes": 9027
+    },
+    {
+      "path": "apps/three-surface-poc/src/orrery.ts",
+      "sha256": "8cdba628c980a1b9b020ca77ba8c60b0f75299aed6cefc36406df488ce13dc9a",
+      "bytes": 11207
+    },
+    {
+      "path": "apps/three-surface-poc/src/page-shell.ts",
+      "sha256": "7f1753da8f88c0788bc00f5865644c177713742504bd7a7c24cfef8703342b87",
+      "bytes": 9172
+    },
+    {
+      "path": "apps/three-surface-poc/src/page-size-delta.test.ts",
+      "sha256": "a89c13b5b1ffba96d7152190d6704a41df89f67f2570ebee1928a7c3e8631c51",
+      "bytes": 4048
+    },
+    {
+      "path": "apps/three-surface-poc/src/poc-main.ts",
+      "sha256": "419794a51c798bbaed681b42a5c976ac16b0fbc4f1c52db096d2995de264f6ec",
+      "bytes": 10270
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-accessibility-main.ts",
+      "sha256": "5eb9f3ad7eea419601d5f276b31b20eb29ee86c8fae52b4a0820ca8888e6b4db",
+      "bytes": 4461
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-accessibility-variants.ts",
+      "sha256": "aed7ee88a9b67bee125df27b3ecef28ed3f381b032d28d0ce34de52276eb9442",
+      "bytes": 4680
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts",
+      "sha256": "9080589214e7d30e77417e47411faa69500d088ccc268ddf189a15a03042ac32",
+      "bytes": 22374
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-accessibility.ts",
+      "sha256": "e158e3c99ca4a9965c4eeccacb06b9a8adc9c1ed3e51892f647f8d45e0913882",
+      "bytes": 26754
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-accessible-names-main.ts",
+      "sha256": "6312f9c9864221ca1d9bdb400d23832c27452a6a372fbf89dc6dbafb770c858c",
+      "bytes": 6898
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+      "sha256": "32a68c632a1404b4aeb6e9a4fdee2069861abf2e204aaf90a413c2e4f2ee78df",
+      "bytes": 21546
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-accessible-names.ts",
+      "sha256": "b0eca111e5db5157907148bbc4b9a80bf6f8c2601bc97b602e388dcc406bd72d",
+      "bytes": 17617
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+      "sha256": "e971879fcdb0b4af3236514d45ed2b9bf55312470412cf70b35dd0546f2e8b2a",
+      "bytes": 12676
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-capability-detail.test.ts",
+      "sha256": "8d969f077a9d384809a3c155120c83c089cb7f99fa0289ea78aa57ca851e41f8",
+      "bytes": 27635
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-copy.test.ts",
+      "sha256": "8fb2282a9c3e876a0d5e78f8c116c8ffbb19d89d33152f54f3878ac346068dd2",
+      "bytes": 26137
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-copy.ts",
+      "sha256": "87f2fda0b9f1e3538d50c93abb0d4b27841661060cb4fa63ec5ea267f4f055e1",
+      "bytes": 30763
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-epistemic-tuples.test.ts",
+      "sha256": "1ae7743427a0dc769c8b8b11b9572c0d21e344193a0d9048fbf40c1227869ab7",
+      "bytes": 21282
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-first-reading.test.ts",
+      "sha256": "2b8233786aec9c9f6bd6a11c48a2bb4789591bb1ef6f2e190c8a92f145bb8652",
+      "bytes": 28929
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts",
+      "sha256": "8efb5826df02166508affe272cb2be6f170307734ca965f051b28aae8243a2d3",
+      "bytes": 3986
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+      "sha256": "41cb62258b2ecef69b546a0adff2cdc322f49f381a1542b90aa70af7187c0eaf",
+      "bytes": 10604
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/dossier-cap-measure.test.ts",
+      "sha256": "f3168eefea453fd94c56708210c021d6753518945b5c0d48d4879d792bced828",
+      "bytes": 1457
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/dossier-evaluation-main.test.ts",
+      "sha256": "3297b7a46f4679a592fc7c5b30b5280901b43e82ea23f9c1427b27c7feb1255b",
+      "bytes": 6733
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/dossier-evaluation-main.ts",
+      "sha256": "b7c27bdcbc759160f5469cb2a9874e8e134612754916d490c0796fe85d2b88a3",
+      "bytes": 4990
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/dossier-main.ts",
+      "sha256": "4ec9cb847e226dccf7499bdd4868a2b2c7efd904424b0e1724f2da5b708a9674",
+      "bytes": 1899
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/dossier-quote-fidelity.test.ts",
+      "sha256": "1211ff8a46bb86402862d96b4f477608b678cd2caf3d8b73989ea61b39a3a179",
+      "bytes": 9477
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/dossier-render-local.ts",
+      "sha256": "0f0f56681b83e081cf7a4b97d2b5db224235c24bb78cecc66d691493ee5fdac4",
+      "bytes": 3822
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/dossier-render-main.ts",
+      "sha256": "e18c9ee62a33c1b2770a88d158e9a1d28d52356d32340a7c5923ce5087d729a3",
+      "bytes": 5716
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.test.ts",
+      "sha256": "ed4578ea5b1c804a7bf4e4b1700eb30e009fcc3b280312bd1c248739fded4104",
+      "bytes": 2763
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/dossier-render.test.ts",
+      "sha256": "890ced7bf89d7ed93793e16efe1f3d497308eb9854369739c6730b93ae1821c7",
+      "bytes": 37616
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/dossier-render.ts",
+      "sha256": "0232633dad42621d74b8d916abce4cbcbcd565b7d18af10569ed2fe784f5f0d1",
+      "bytes": 7513
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "sha256": "3e644e9cbfb611e2e4868b6ebd02eb26671a6a32931f6a7a55f83da54477085d",
+      "bytes": 38969
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/dossier-trigger-isolation.test.ts",
+      "sha256": "d4a53ad70cd5e7d8a6850b50440e436fa1988a2b5117c03e0928be1c007e2db3",
+      "bytes": 2826
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/dossier-trigger.test.ts",
+      "sha256": "de51ac0b76e09cde66e4d1f0e43a73be28d96eb13967a3a18349c471d9ba8206",
+      "bytes": 36469
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/dossier-trigger.ts",
+      "sha256": "79eab74385db845527bda8c9994c9be4e8086eab63367711a1f3ed443e2f4105",
+      "bytes": 19504
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/draft-preview.browser.test.ts",
+      "sha256": "70102033956c5597667ab3fca4bc145fcb2f7787227b1cb82849878c8a73856f",
+      "bytes": 2961
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/draft-preview.test.ts",
+      "sha256": "4be805986430ccd3f9acf957a780a9c145b8ebef24132931c4ccd98078c153fa",
+      "bytes": 14391
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/draft-preview.ts",
+      "sha256": "6209a83613a6ca2ecc5a29385c75d50cd008172701533cc747ffc69601ecf266",
+      "bytes": 14188
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts",
+      "sha256": "89e44e83f141b5b129a12dad156a4678f2404125a4e62a4e196ff81e9e9ca4bd",
+      "bytes": 10235
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts",
+      "sha256": "e362b0c10d90be4abb1809983433ab80e8edf41722574a09847ed20765c5ef89",
+      "bytes": 8112
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.ts",
+      "sha256": "ecdc858281c3807e01d00069dca37f3e8d082b659df388fe1f17d4e5f38261d5",
+      "bytes": 8894
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/generation-mutation-run-main.ts",
+      "sha256": "658d9e95feae0ce9342161e1d4c4055573c7558c05bd3af74e8e18bdc547b8a8",
+      "bytes": 8261
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts",
+      "sha256": "81b18f4fb331be89f1ad6ce7c28a8f2615400b219e0b507e0d6efe12284da381",
+      "bytes": 7872
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/isolated-git.ts",
+      "sha256": "70c0eed161b449d47bcb6a5c1583366f748176f94a8aa9f626ee949da94bcb6d",
+      "bytes": 2370
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/page-sink.test.ts",
+      "sha256": "59a3e63e976fff6ea52a28768c31a676bd175dabea98df745907d80665f41944",
+      "bytes": 5860
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/pipeline-demo-main.ts",
+      "sha256": "fc3e2b045c37b41510ee853922bceafed6aa2af26f66c25d8a93f3d435a44d18",
+      "bytes": 2382
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/pipeline-demo.test.ts",
+      "sha256": "aea7072e2ac6c39d5b0d3e8a7c9c40956c5ae093cc5fd149e72d3b150d00eb1e",
+      "bytes": 6159
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/pipeline-demo.ts",
+      "sha256": "6d5602486312bcca42d03ec808a104d1e58fd52387483d06c91fffdf71f07ea4",
+      "bytes": 8267
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/public-source-screening.test.ts",
+      "sha256": "16123da9e7086704ff10725390d23233b22331281ef59b3b97f78088cb30982e",
+      "bytes": 45845
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/public-source-screening.ts",
+      "sha256": "91f4633f3f89770f13d9eb2b604d9f7c9a9d322e5e8cf409b40dca2010ba8003",
+      "bytes": 17537
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/redis-shaped-discovery.test.ts",
+      "sha256": "773d09e42861266f35e6efdfa293aa1c5179ac8369eca89067173fd1ea04ab53",
+      "bytes": 14937
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/redis-shaped-fixture.ts",
+      "sha256": "61a22020569dc56b88ac02f815d590f8ffff5ff4ead991f6bdc3fe6b9e4efc18",
+      "bytes": 14134
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/redis-shaped-measure-main.ts",
+      "sha256": "2ce9baa8cf60f5785ae73eb13e5007ce47beb1bf9d43bb0349da9259d3caf7c4",
+      "bytes": 2389
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/redis-shaped-measure.ts",
+      "sha256": "800a8abd0abaf138c543eab103cba4c3d2872274abf0b6d0f538300feeeccb5e",
+      "bytes": 11522
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/repo-corpus-isolation.test.ts",
+      "sha256": "3e00d51d133748d61592d0d21ed6e625882f34ff4afe5c40504d816ec8615602",
+      "bytes": 11564
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/repo-corpus-main.ts",
+      "sha256": "7dab0e54363dc409c561c0e1e4abc1598e6a68c87b7b9e1ff9173c1bc38b6d90",
+      "bytes": 2307
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/repo-corpus.test.ts",
+      "sha256": "4d95e81cb43309ac1cfee55274920b5457080d293b09ea98d5fc1829a5a94d1f",
+      "bytes": 18430
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/repo-corpus.ts",
+      "sha256": "b8d0f8a0bf4f70b22c6d7517e97103c263528908f0754f5d9607b3d70d149203",
+      "bytes": 19945
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/run-key.ts",
+      "sha256": "089f3401e707131c0f8bb348c0901f95d676ff25831d75f30d13a832c444a390",
+      "bytes": 102
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/self-corpus-main.ts",
+      "sha256": "7d134fe4c7c6375a13eb20d28612544d4966c77f1d82c44c3102a07655fbf25d",
+      "bytes": 867
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/self-corpus.test.ts",
+      "sha256": "da34b5859c2968ec107d1a0e3a1d340af05270efa39ff719c7decff6d587a68e",
+      "bytes": 4924
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/self-corpus.ts",
+      "sha256": "3f408302f11ff20a6e70c0e40bf09f651599e85c7a10377a92c2f0151f8e62a8",
+      "bytes": 14085
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/svg-inert.test.ts",
+      "sha256": "9b816c05012dd685894aed4388148894ad3e674f74934ae24609336f0083b828",
+      "bytes": 5301
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/svg-inert.ts",
+      "sha256": "0bcb759a3d1da12a9fab1480f0d52b9dd69c180f6be15bb9078d828311e2fddb",
+      "bytes": 4040
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/synthetic-source.ts",
+      "sha256": "45e02df3ea9bd4a72ed57257a803adefff2595854fcb465240a73fe1a7c3b992",
+      "bytes": 753
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-keyboard-sweep-main.ts",
+      "sha256": "8a94821ad7661cd897e9c9c2145d24da622dced53467879f71c8dcbacf37ec28",
+      "bytes": 6606
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-markdown.test.ts",
+      "sha256": "13fba88b4963a189fc4911d24284570ad6229170c44a13204e0c382fe574c33d",
+      "bytes": 8006
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-markdown.ts",
+      "sha256": "7e70894ee6e3717ada76026004754c521858427abb14a103f591b31cd3727a21",
+      "bytes": 11962
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-narrative.test.ts",
+      "sha256": "14e5043c917a23b43b9ffc958cd1f2077d9d6e1041c186c8d5e5362ed8250508",
+      "bytes": 19878
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-narrative.ts",
+      "sha256": "daced3d4e4390b309f434ea3a959a9b9923029ce51d88e6f4e8bec51a17ecd0b",
+      "bytes": 7710
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+      "sha256": "950abd88d742074781e063ced8efd08e3640550225fc73c52fde3d58593f529c",
+      "bytes": 27431
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-opening-index.ts",
+      "sha256": "156da5627fda509452048f5d49d40e9098dd0fc540220fbc3999a5dd2960010c",
+      "bytes": 10483
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-parity-sweep.test.ts",
+      "sha256": "bc2bb22653b985dcadcfb4577bb104c7110263c4ee3fe7176543ff8f84c1cdd0",
+      "bytes": 48920
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+      "sha256": "f8a237020b0e2c8e5e887fd805dd96983a128aceef948440d120d9bbb8274eeb",
+      "bytes": 7748
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-project-shape.test.ts",
+      "sha256": "912b0eab847f1d75c6723b8e98b8de9b7a01db9dcb04a1146f4b6ddb6b60cf82",
+      "bytes": 34268
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-proposed-work.test.ts",
+      "sha256": "5b7e16cf450919f10353adef1b009f962480608234b3fae29d2445daa5ee8005",
+      "bytes": 9614
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-reachability.test.ts",
+      "sha256": "09a0d613ec9690e44040f2577f771083874499728023cfccc2d0ad945a24bc93",
+      "bytes": 28138
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-reading-plan.ts",
+      "sha256": "732e410c9d364181b89bcc4191e8a59aa29d7130e1292beb46703af535d6acd9",
+      "bytes": 5400
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-reading.test.ts",
+      "sha256": "56166db511b1d497806948c047320234fb2d1d209ba87b12218a6d7a1001664a",
+      "bytes": 7070
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-reading.ts",
+      "sha256": "4fecd9cdb78ce3d3a9449207b1bc0b27bcc91180a322822762cb333dd5125b7f",
+      "bytes": 7328
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-reconciliation.test.ts",
+      "sha256": "5fbabfc22440ef8481fbae837f514ff203b283ee2020e8b54a53ee57c0e69df9",
+      "bytes": 22343
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-reconciliation.ts",
+      "sha256": "310063203b953a45fab4105e9d02e83d4822c07d1dae8d654c4f40b9369bfa17",
+      "bytes": 6455
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-source-route.test.ts",
+      "sha256": "077d83937c5c6de2718bae8a783017091d38d5f15f6c9ed75cd193bbbf43506f",
+      "bytes": 17649
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-source.ts",
+      "sha256": "66ace938b551b5a4f41064a7c5dd77e466ad8254c6bce7679809b2012e3c0483",
+      "bytes": 9178
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-status-boundary.test.ts",
+      "sha256": "bb4afac4a987fd59604d58078570d78c31beb72d0d199da7d85d59fdbfd3f07b",
+      "bytes": 556
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-walkthrough-readiness.test.ts",
+      "sha256": "5b23bac425cf357fff2b132e8470891f58c0eb8c5a1b4243aee9b25885a17e78",
+      "bytes": 18372
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris.test.ts",
+      "sha256": "7f3779045de95f72a76001331842e88debd359dcd1592f5d6cce3950b03bd57d",
+      "bytes": 10388
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris.ts",
+      "sha256": "1377f15ddda36ff0a92f658395b36438b11b1f7fe4bf6ddf81f2b5edac5c5b3d",
+      "bytes": 134690
+    },
+    {
+      "path": "apps/three-surface-poc/src/production-reobserve.test.ts",
+      "sha256": "e5f84517b3d24c087202ad80cc59bceedd396b8c78095fbce02e7cd0e3abdbcd",
+      "bytes": 9398
+    },
+    {
+      "path": "apps/three-surface-poc/src/production-reobserve.ts",
+      "sha256": "509b364a41454bf3e119b8fb4f034b9b51ea2f0ed8e1b6b1d1831c1e38709a8a",
+      "bytes": 5784
+    },
+    {
+      "path": "apps/three-surface-poc/src/project-shape-discovery.live.test.ts",
+      "sha256": "b247d30e4e89051828cf45535bd0e77de9be64753dbe4a4879f5ac988d15c01d",
+      "bytes": 5489
+    },
+    {
+      "path": "apps/three-surface-poc/src/proposal-disclosure.test.ts",
+      "sha256": "f5afa4e74405cee547ad1eff41b8efc664565dc7a589622a263025cc09a15f05",
+      "bytes": 10908
+    },
+    {
+      "path": "apps/three-surface-poc/src/pwb-mutation-run-main.ts",
+      "sha256": "34001c55048e7bf945e6353eba798ff22b5517c454170e60be439fa03aaf4f7e",
+      "bytes": 8573
+    },
+    {
+      "path": "apps/three-surface-poc/src/pwb-mutation-sweep-main.ts",
+      "sha256": "b6af20150245e93df86a1856b66eac0cd64b8273f0d4ff3a620b1930d93fe1ea",
+      "bytes": 11448
+    },
+    {
+      "path": "apps/three-surface-poc/src/pwb-mutation-sweep.test.ts",
+      "sha256": "474da7b901148ced1492f7550427c05a8d0fd693f64006c83415038d266f1d5d",
+      "bytes": 3865
+    },
+    {
+      "path": "apps/three-surface-poc/src/pwb-mutation-sweep.ts",
+      "sha256": "f5a9a44b6fc439893e8f6eb5c04431af936cdec9d49d4b6a22d8da3e24dd74aa",
+      "bytes": 36122
+    },
+    {
+      "path": "apps/three-surface-poc/src/pwb-mutation.test.ts",
+      "sha256": "1df467637fbbcee2c047e22cc8fae255649b445ef6436848326ffa35cdaa5a13",
+      "bytes": 3619
+    },
+    {
+      "path": "apps/three-surface-poc/src/pwb-mutation.ts",
+      "sha256": "160ec17e282b71d10c9f5feef93b2c3c55caa3945f679e3ee80d11c92b6c4aea",
+      "bytes": 9682
+    },
+    {
+      "path": "apps/three-surface-poc/src/pwb-n8-synthetic-corpus-coverage-matrix-main.ts",
+      "sha256": "d772a5be80e6a2e843f7943f0ab5b205d80a3303b08597c4ef2281f4c0940b5f",
+      "bytes": 8851
+    },
+    {
+      "path": "apps/three-surface-poc/src/reevaluation-copy.ts",
+      "sha256": "6cfe32d50e18d5cb3bdd74501e2933230214560b7b3a84488a711ffcee74d6fa",
+      "bytes": 2591
+    },
+    {
+      "path": "apps/three-surface-poc/src/reobserve-action.test.ts",
+      "sha256": "c07a6666f382b831dcdc45dd024ded14bbfd9e4721535507c00e12232310cfb8",
+      "bytes": 4821
+    },
+    {
+      "path": "apps/three-surface-poc/src/reobserve-action.ts",
+      "sha256": "93a22218624369cfe200fa51b352ef0fe48e282f7373210c1b4fc34f960e8a8c",
+      "bytes": 3066
+    },
+    {
+      "path": "apps/three-surface-poc/src/reobserve-session.test.ts",
+      "sha256": "da571828b540b95ff21d725faa0f6df7c7fe3fb7de0802326cb986f1e8d8a8ea",
+      "bytes": 7183
+    },
+    {
+      "path": "apps/three-surface-poc/src/reobserve-session.ts",
+      "sha256": "fd653988b92f1ae00ba80c4b182444792ffb2fa706df20cca88074a7d14f7b6f",
+      "bytes": 4903
+    },
+    {
+      "path": "apps/three-surface-poc/src/reobserve-state.test.ts",
+      "sha256": "f74d02515110512e114c589cb5e92c8c7c70a1a41ea1236903f8b8970550e973",
+      "bytes": 2206
+    },
+    {
+      "path": "apps/three-surface-poc/src/reobserve-state.ts",
+      "sha256": "4ba4de65047df47cecba89f16e34fe16bc87d1e57c241b695dc498775b866247",
+      "bytes": 1693
+    },
+    {
+      "path": "apps/three-surface-poc/src/resource-headroom-line.ts",
+      "sha256": "a887185e0e2a44e9d2f7110e01071bd139f3bc37e88b2b86c372004858698473",
+      "bytes": 3161
+    },
+    {
+      "path": "apps/three-surface-poc/src/response-identity-independent.test.ts",
+      "sha256": "1d0554db4bb1a3ffff6377f1bf959609fcf3bf6d83e25782ab6c8df9ac59f5a1",
+      "bytes": 10638
+    },
+    {
+      "path": "apps/three-surface-poc/src/response-limits.test.ts",
+      "sha256": "b2a87ca689c84becb83dc7d436132a5bef65265c36e4fed9ffe56c6d14805cdb",
+      "bytes": 19653
+    },
+    {
+      "path": "apps/three-surface-poc/src/restart-main.ts",
+      "sha256": "f27c25f6705718f64fda6a8edcc017933c75a5651034198374c4cf5ecd04cf69",
+      "bytes": 1262
+    },
+    {
+      "path": "apps/three-surface-poc/src/restart.test.ts",
+      "sha256": "e021db580c6f423d2bb2d8b55cf3f45a845fb999f1f251253393d578360720af",
+      "bytes": 27854
+    },
+    {
+      "path": "apps/three-surface-poc/src/restart.ts",
+      "sha256": "c2ec7b101a92e344dc03f15ceb7cf72d61ccdac66e8373c9e32e73f988d10841",
+      "bytes": 9086
+    },
+    {
+      "path": "apps/three-surface-poc/src/routes.test.ts",
+      "sha256": "c6b387e33a4ec15dc7ada5381cea6cdd000fb4b08e660025324d453b00972dc3",
+      "bytes": 29098
+    },
+    {
+      "path": "apps/three-surface-poc/src/routes.ts",
+      "sha256": "648a556a49f18a9f0f8345f916cbb7f2a73bdbfc8b700aba5de7a27029ab25e0",
+      "bytes": 18558
+    },
+    {
+      "path": "apps/three-surface-poc/src/served-response-recorder.ts",
+      "sha256": "a4893f9cf6bb6eacb85d1c5237dabc9fabd56ff0ff0ee15ce658e97ec45c00f0",
+      "bytes": 2061
+    },
+    {
+      "path": "apps/three-surface-poc/src/startup-detail.test.ts",
+      "sha256": "24337eb28ef01a59791fc3f83356f12aa8c6556000083be00da295e2ee1e359d",
+      "bytes": 1732
+    },
+    {
+      "path": "apps/three-surface-poc/src/startup-detail.ts",
+      "sha256": "f0f42fcd7b61aa6d1d71fc3371f389a87329b344ef0ffb9393e4595ecff6785a",
+      "bytes": 2143
+    },
+    {
+      "path": "apps/three-surface-poc/src/surface-links.ts",
+      "sha256": "2ddea40a4ff34ac8a71fa46128befc73487acfbd55197c971967df9c9f6a1de1",
+      "bytes": 3208
+    },
+    {
+      "path": "apps/three-surface-poc/src/surface-render-fractions.test.ts",
+      "sha256": "70188c9a730063e71009c5b35877813b95734fc82e4d36989010100905b9ddc9",
+      "bytes": 5861
+    },
+    {
+      "path": "apps/three-surface-poc/src/surface-routes.test.ts",
+      "sha256": "b14bb3c140b08d47c43da96da7139f527ce94ea6c0b1dcdca795833f87e0747e",
+      "bytes": 37368
+    },
+    {
+      "path": "apps/three-surface-poc/src/sync-child-process-guard.test.ts",
+      "sha256": "18da035efc2cdbfda9691b3fe22423fb29e0ea345d43d42a0f78dc1575675c2e",
+      "bytes": 18454
+    },
+    {
+      "path": "apps/three-surface-poc/src/tailnet.ts",
+      "sha256": "1faa833eaf0442da54c0617df12c1e9a2a75e0b078d58777417bcd7671474bd5",
+      "bytes": 1937
+    },
+    {
+      "path": "apps/three-surface-poc/src/temporary-directory.ts",
+      "sha256": "d96620743f61f2e9eae9adc78a50e797554f4352b492776ccde23eb6597e88f1",
+      "bytes": 1458
+    },
+    {
+      "path": "apps/three-surface-poc/src/test-artifact-verification-consumers.test.ts",
+      "sha256": "a66754b0c16bc0ee00693ada0c4ac9fd8830ec2308f2d0707ca27c08595c75c4",
+      "bytes": 5342
+    },
+    {
+      "path": "apps/three-surface-poc/src/test-deep-dive-markers.ts",
+      "sha256": "c68a0ebf9160a89f63f9a9a99d565bbba0d569a20461b360e4008cdbc0e07696",
+      "bytes": 494
+    },
+    {
+      "path": "apps/three-surface-poc/src/test-fixture-sweep.global-setup.ts",
+      "sha256": "8f68850a773daf21fde1174532826c5ded2ae372dd89db9ab3b32487e9135317",
+      "bytes": 411
+    },
+    {
+      "path": "apps/three-surface-poc/src/test-fixtures/restart-listener.mjs",
+      "sha256": "00c783bb7c3303d4d2c493e0ac54ed8a5c42655241b20b044461339b5fb21f47",
+      "bytes": 1907
+    },
+    {
+      "path": "apps/three-surface-poc/src/test-http-client.ts",
+      "sha256": "33e393822a3bb260cac9df204172a0d9cbaf169f6286148aaa943b4aaf5b98dc",
+      "bytes": 1497
+    },
+    {
+      "path": "apps/three-surface-poc/src/test-model-fixture.test.ts",
+      "sha256": "88e13927235530bf7ea1b3eef96d3c88419db2e24068325845461ee433625beb",
+      "bytes": 7198
+    },
+    {
+      "path": "apps/three-surface-poc/src/test-model-fixture.ts",
+      "sha256": "58497e91d23c7244a76ceff055d590dd264c9c09dddbdd647604689b820d413e",
+      "bytes": 10749
+    },
+    {
+      "path": "apps/three-surface-poc/src/test-project-shape-fixture.ts",
+      "sha256": "43b7ee2217f056fd6c83a4b11cf3a1775f576d3c57d0ad83700aeaf6d088deee",
+      "bytes": 12665
+    },
+    {
+      "path": "apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts",
+      "sha256": "8791b234c609b12b408a5c195771a999d0c9ff4e7d852028af774e16e01138e6",
+      "bytes": 9213
+    },
+    {
+      "path": "apps/three-surface-poc/src/trajectory-narrowing.browser.test.ts",
+      "sha256": "eceb35a5c1a583b7aa7cb5e9c49db24cc35d8ef83e81771a56ea8902d9f85a51",
+      "bytes": 5172
+    },
+    {
+      "path": "apps/three-surface-poc/src/trajectory.test.ts",
+      "sha256": "419673bd72be4c00bc79eed4a7d05aff1a05adf0b6287a45d0a51b7e73ebc274",
+      "bytes": 27611
+    },
+    {
+      "path": "apps/three-surface-poc/src/trajectory.ts",
+      "sha256": "7795040f124888a123887b915490ef5e1df1dab48211b6b4c762ebabfb9907f1",
+      "bytes": 17625
+    },
+    {
+      "path": "apps/three-surface-poc/src/tuple-encoding.test.ts",
+      "sha256": "05ce5fd213d8b6b7634027c96f01741158a7a1467dada5b244a7681e79cde5aa",
+      "bytes": 23450
+    },
+    {
+      "path": "apps/three-surface-poc/src/unknown-marker.ts",
+      "sha256": "d3afe03f56f4f7716dc4dd013c62974497f9c264a12846c747e88486e64b14ce",
+      "bytes": 2257
+    },
+    {
+      "path": "apps/three-surface-poc/src/unknown-route-sweep.test.ts",
+      "sha256": "1dcfc331dcfca8eaccb6bafa50526d88bb6216b6a525c21285f7d8fd12d11f1e",
+      "bytes": 17791
+    },
+    {
+      "path": "apps/three-surface-poc/src/verbatim-route.test.ts",
+      "sha256": "6b25a9ce49865bdff4b8e849c9a46ad839f646739e7c843543e1878debc218d3",
+      "bytes": 14530
+    },
+    {
+      "path": "apps/three-surface-poc/src/verbatim-route.ts",
+      "sha256": "e4d20442162dd42631a7ccd8016016a9f232fed8a5ef924ac08f899b389c6016",
+      "bytes": 6910
+    },
+    {
+      "path": "apps/three-surface-poc/src/walkthrough-inputs.test.ts",
+      "sha256": "70e703d56030b7de6d52ec08e08b929482e37b0253f247765ca272a21c605983",
+      "bytes": 21041
+    },
+    {
+      "path": "apps/three-surface-poc/src/walkthrough-inputs.ts",
+      "sha256": "596361b7ef66c9126079a80bc9dfb2628c9d3b0a8c0b41e3f385b88dc39823ad",
+      "bytes": 11564
+    },
+    {
+      "path": "apps/three-surface-poc/src/walkthrough-preflight.test.ts",
+      "sha256": "cbb8e4ea42e52d6c4919ae4ecc101aace672fc8529e2a53043b954c3dee1687a",
+      "bytes": 24159
+    },
+    {
+      "path": "apps/three-surface-poc/src/walkthrough-preflight.ts",
+      "sha256": "6d8f7bb223778be22848b5662f5d4d91165eb4c0e4a63343ffed0dea46842056",
+      "bytes": 22862
+    },
+    {
+      "path": "apps/three-surface-poc/src/watch-mode.test.ts",
+      "sha256": "c2a92f58a55b99311a538e296331ea994b5de2c51a94dc2a76e6a4feba2f3829",
+      "bytes": 5217
+    },
+    {
+      "path": "apps/three-surface-poc/src/watch-mode.ts",
+      "sha256": "1d2034dffdfa015d9e479ac4ee83f147bf91c17e51cc4c53a62bca26f53ed4de",
+      "bytes": 1733
+    },
+    {
+      "path": "packages/cap1-conformance/src/consent-record-convention.conformance.test.ts",
+      "sha256": "7791311205f4fe4c3ceccb162fc5a55d3051dd389729f90d82b34de4b7b0c9ba",
+      "bytes": 6045
+    },
+    {
+      "path": "packages/cap1-conformance/src/fixtures/index.ts",
+      "sha256": "19c2ef8d646097133dbaeffa0fade4bb91635c3b0c1397c845b4376298a3dc81",
+      "bytes": 3229
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-001.conformance.test.ts",
+      "sha256": "8c2c75e3485db1326b8c9da59498c8122517c0a972fd479ea5864306d99d7cae",
+      "bytes": 2737
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-002.conformance.test.ts",
+      "sha256": "aea87753eaf02816e5760776bc352355b090b287634b99181b0f264fa7baabf5",
+      "bytes": 3704
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-003.conformance.test.ts",
+      "sha256": "4e71d5c34e9ac23efe23a90361341cfa7bc5d44d5d49a4af36dd24594f6c11fa",
+      "bytes": 3517
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-004.conformance.test.ts",
+      "sha256": "e7d87050441e562bf9bf67601c475fe8a651b82e137163706b288cc26f9aaeb7",
+      "bytes": 4499
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-005.conformance.test.ts",
+      "sha256": "84b5b42eb6a9787c6a6ba9a6c567ff4bd96b4fe30918201beb3ab105cdad9a10",
+      "bytes": 3572
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-006.conformance.test.ts",
+      "sha256": "7b27afc8a22bf7493132a058bfc2fc480e6e211ad89e0107a75661f904dec84d",
+      "bytes": 3989
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-010.conformance.test.ts",
+      "sha256": "506f4e06e253733c1b44e13b1de6ba3abc602131642b4937c09453d7a4966372",
+      "bytes": 4659
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-011.conformance.test.ts",
+      "sha256": "36ccd4aa9097f7d03b9a124e6a7a367504efdff2c79368e8854db565918853b8",
+      "bytes": 13135
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-012.conformance.test.ts",
+      "sha256": "bec95a3d7ba87b9e929070f870a5334a24118892c06c72ecea77b97449c8d30c",
+      "bytes": 4509
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-013.conformance.test.ts",
+      "sha256": "2f8cefbd97677448be8141f683c797faf19050c8539f589cc07f52c3ff3c196e",
+      "bytes": 7055
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-014.conformance.test.ts",
+      "sha256": "fac62f15fd849f523a89f927f3537db7d88e68169b7ea7bf8659cb042754f83b",
+      "bytes": 5069
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-015.conformance.test.ts",
+      "sha256": "002e5a27bfea0f6bf88ba1381baed495c6688cd93ffc96ce26f1c74a60d8b797",
+      "bytes": 5574
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-016.conformance.test.ts",
+      "sha256": "78291e7edab9bfd2bd8a3a76bf9ca4707213b2cb4a55cca402f34922d634933e",
+      "bytes": 7074
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-020.conformance.test.ts",
+      "sha256": "e213318d4992da65d07884f3237147e16b8250c2e47be12d94f417568e588a9b",
+      "bytes": 1287
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-021.conformance.test.ts",
+      "sha256": "aa4180656c0a169c056a29b3deb6492b2831363fa4f6bdf1c6bf6ffc1994fb34",
+      "bytes": 2268
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-022.conformance.test.ts",
+      "sha256": "235d7fc15ebbde9a779e214b7b84f95b558c4845431ef5ca0114192685aab43e",
+      "bytes": 2565
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-023.conformance.test.ts",
+      "sha256": "489d0038c3b4cebb43de1e5db1bd7f225244b6bb05699b9ad06771b3a876c406",
+      "bytes": 2154
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-030.conformance.test.ts",
+      "sha256": "2bc9f91e096fd63129918337b68a4352ff065dc9579528e84503b4842cb25645",
+      "bytes": 6250
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-031.conformance.test.ts",
+      "sha256": "37ed1432c1791d8796d5e417bf45e5b34ec17104e4d743e56cedb1defccbf176",
+      "bytes": 6247
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-032.conformance.test.ts",
+      "sha256": "f42746e89790aa3716898895f2203cff626d9b08740e41238db31255e28f5970",
+      "bytes": 9767
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-033.conformance.test.ts",
+      "sha256": "8c1252f8f16e3e2c1bec8687d1127d35a9b5becf7e6caec3259420165025206c",
+      "bytes": 6792
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-034.conformance.test.ts",
+      "sha256": "a635c035796061a6011657ce639d7c345568f5cebd4f27af541bb29be0e1be01",
+      "bytes": 7302
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-035.conformance.test.ts",
+      "sha256": "7c34a2fd4e6d4bc8dc44ed3ddf2d3aaa1277a11099718b356e6776503a326df1",
+      "bytes": 5972
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-036.conformance.test.ts",
+      "sha256": "79c7788e49b7bb9bf0b9b5c11cb321b0325e8b0307ae61f039b9f9eab8578252",
+      "bytes": 6117
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-037.conformance.test.ts",
+      "sha256": "10166f4f6ad499589cb153eac077f8ad9409dfa10024f36c88071e444cc340cf",
+      "bytes": 5040
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-038.conformance.test.ts",
+      "sha256": "481ddc061e00418c5f13170482a021340856b0b878b0ee439fd893f97b779d2b",
+      "bytes": 4371
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-040.conformance.test.ts",
+      "sha256": "e271494648fd8426ed58c66476758bac6f1ccf80d176ed6fd993ead0af9639ac",
+      "bytes": 10073
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-041.conformance.test.ts",
+      "sha256": "a97ec218f45f529abfd3884f0c11a84a70c7f0eac120277ab70342553ecd29dc",
+      "bytes": 13947
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-042.conformance.test.ts",
+      "sha256": "48c8bc4a353aedd5c183b7ef596731aef08b10a9e381b1541d623d38d3dfca3f",
+      "bytes": 7618
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-043.conformance.test.ts",
+      "sha256": "1c897a716d6bd0ed10e7789925db21f9adfe38a6fcfa81ce5d95ab3f84766b1c",
+      "bytes": 9544
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-044.conformance.test.ts",
+      "sha256": "a273938c5e741af96dd7a333053827ccb5d37d585d3adf288ae942bb34605886",
+      "bytes": 6043
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-045.conformance.test.ts",
+      "sha256": "13f367a614a571d4f6222a786b7aa56625df277ecac38c28ced295b3d53b03aa",
+      "bytes": 7325
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-046.conformance.test.ts",
+      "sha256": "4555d07f31c8dcf71d36dc7768d7c31748503cc22dac3728ff7f404691252a09",
+      "bytes": 6355
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-050.conformance.test.ts",
+      "sha256": "09980928242adce1b91d8d7869042bb7634884d2435ba258c885214a0a364d90",
+      "bytes": 1652
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-051.conformance.test.ts",
+      "sha256": "f8ec964bcfba356776246deb6f83ed3a4c89ff72b1d642c8295c11bab48f7dfd",
+      "bytes": 2583
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-052.conformance.test.ts",
+      "sha256": "a7276c64319a54d78922b979b7994188fe3dc5f855aedd8d455a495a8c29c330",
+      "bytes": 1852
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-053.conformance.test.ts",
+      "sha256": "d891856462d3af09cab9574a1656b4e31e79b9ae69f3a8d25bb698f971d609b3",
+      "bytes": 2415
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-060.conformance.test.ts",
+      "sha256": "6263c91ac4b6bb449e22c340ff2ddf8aac4726be811a28b500ca9312e1ac2d39",
+      "bytes": 5996
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-061.conformance.test.ts",
+      "sha256": "b02c564f88983d83f5a39a3ad349588d896a45f5e25120fea4fceaed16d0e5c1",
+      "bytes": 5895
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-062.conformance.test.ts",
+      "sha256": "93ab249c042ae3b67864512181d32189632587276aeed9f5d8622d1030fff482",
+      "bytes": 7156
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-063.conformance.test.ts",
+      "sha256": "7fd1921b8f90c4a7b9a824f7c8a92eb307d0d941eef5572357cc8d96d3421197",
+      "bytes": 6440
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-064.conformance.test.ts",
+      "sha256": "95c3da67c3e6a5c65b4974cfbd78da44dffd52d2f7a8825baec39e8858b0addf",
+      "bytes": 10688
+    },
+    {
+      "path": "packages/cap1-conformance/src/req-integration.conformance.test.ts",
+      "sha256": "943be06415b5016bcda36887f1cb83d17cc5a4fa0a42356d15905565f3b1f40d",
+      "bytes": 10557
+    },
+    {
+      "path": "packages/cap1-conformance/src/vocabulary.conformance.test.ts",
+      "sha256": "b1bcc91b5bf2065880a31a1d59e7b4973f3f0a9730150e148c53a701023a9618",
+      "bytes": 3212
+    },
+    {
+      "path": "packages/cap1-core/src/admission.ts",
+      "sha256": "d0ef0989a524cde9d94430f3c1469a192d0a0cc9f56104c1248906a39d7495b6",
+      "bytes": 4035
+    },
+    {
+      "path": "packages/cap1-core/src/authority.ts",
+      "sha256": "c0ffa70ac1bf32049bec408d614b3a4c8771ce826621d58524d492ba1e69608c",
+      "bytes": 6716
+    },
+    {
+      "path": "packages/cap1-core/src/consent.ts",
+      "sha256": "91db8cd0be0390007a3fbac1ec4c269fd38949f535701743d13b70ddc40e9b9d",
+      "bytes": 5196
+    },
+    {
+      "path": "packages/cap1-core/src/coverage.ts",
+      "sha256": "ff649d9a227ec16f41a5a56b5f7988ea3a15e76bc4b0d881ae2ebca62796df07",
+      "bytes": 12057
+    },
+    {
+      "path": "packages/cap1-core/src/declaration.ts",
+      "sha256": "8e6d757d5c523cce80eec0ef32876d22099a7085ae2fb450646e3198f4c1238e",
+      "bytes": 14261
+    },
+    {
+      "path": "packages/cap1-core/src/discoverability.ts",
+      "sha256": "cf36dd2753eacd59626d879a15d957d050f7f3b41b6887581b43b7614f295611",
+      "bytes": 3936
+    },
+    {
+      "path": "packages/cap1-core/src/distinction.ts",
+      "sha256": "f8226c8871fb556c90154078332b34bf3e22081fd27855c72fc5de576d30a05e",
+      "bytes": 5531
+    },
+    {
+      "path": "packages/cap1-core/src/drawer.ts",
+      "sha256": "5e281ca094deb4f4f9507bae9d938455600d0820a21a010cf5a4d0f87e1ccac2",
+      "bytes": 14505
+    },
+    {
+      "path": "packages/cap1-core/src/entry.ts",
+      "sha256": "287f28e9c5d778a24a935e55b8abf70ce793ec5c0306e20d406610ff78dfe56a",
+      "bytes": 4261
+    },
+    {
+      "path": "packages/cap1-core/src/epistemic.ts",
+      "sha256": "d8d6417fa4675ac2a927dd5e300f5f1e164ff0c7bc3eb69757e6dea4ef07f99c",
+      "bytes": 5844
+    },
+    {
+      "path": "packages/cap1-core/src/evaluation.ts",
+      "sha256": "4628e23d38bb365aa79ed4217e38a9301eca984a9c15d24d2f79f6554a113bf0",
+      "bytes": 4432
+    },
+    {
+      "path": "packages/cap1-core/src/facets.ts",
+      "sha256": "ef4437388079de96ae76fa3451d21ef04006a2866469460323a477a3592f02dd",
+      "bytes": 26686
+    },
+    {
+      "path": "packages/cap1-core/src/identity.ts",
+      "sha256": "33912949ae028c29070016860fbd2468fb346275ec8e50dee11af1b37025734a",
+      "bytes": 512
+    },
+    {
+      "path": "packages/cap1-core/src/index.ts",
+      "sha256": "dc4f9da11da71a304e0d9685838589ad07c2a39f8f5d60f8dee07d8a11af253e",
+      "bytes": 611
+    },
+    {
+      "path": "packages/cap1-core/src/parity-oracle.ts",
+      "sha256": "e5ad23d9e3aa06fd776e92f2527c19f4f923ec0ed7dadca410905a527a860167",
+      "bytes": 11719
+    },
+    {
+      "path": "packages/cap1-core/src/parity.ts",
+      "sha256": "5ee3e595ac79e0b8284dbbf3c62fb883462e7553724ceb705158e08dbe772646",
+      "bytes": 5694
+    },
+    {
+      "path": "packages/cap1-core/src/proposal.ts",
+      "sha256": "821060a306dc6f3257ff25dda8f3785b00956430524447ff105450bfa0a396df",
+      "bytes": 3481
+    },
+    {
+      "path": "packages/cap1-core/src/stable-identity.ts",
+      "sha256": "04b1942f8bf4aa544f093b3c24aab90b499cc071b85e11878f6b6a778abdab75",
+      "bytes": 4219
+    },
+    {
+      "path": "packages/cap1-core/src/staleness.ts",
+      "sha256": "520305502eed72a3ac0c0bf3c2e05ca4ae81a031ac41b60e8f02739e7ad2b31d",
+      "bytes": 6599
+    },
+    {
+      "path": "packages/cap1-core/src/testing.ts",
+      "sha256": "7a318ecc22fec7abc7974ce5e386bc8636711b95908c1bc78757cd5445256ede",
+      "bytes": 537
+    },
+    {
+      "path": "packages/cap1-core/src/vocabulary.ts",
+      "sha256": "88f56e68c301c77bfaad78d4082ed4ebc96a19443299ff2bf6e74e985ea84e1c",
+      "bytes": 2478
+    },
+    {
+      "path": "packages/cap1-core/src/write-boundary.ts",
+      "sha256": "ebba822aa889b540f5aec7b2ef596e516b9ffca90218c127e0aea2f451d00326",
+      "bytes": 3140
+    },
+    {
+      "path": "packages/cap1-core/src/yaml-dialect.ts",
+      "sha256": "ce2d0eece0eb6169aec036b36e9f2275c0fac0e76793f70b7ad5a59ca5dd68cc",
+      "bytes": 875
+    },
+    {
+      "path": "packages/cap1-daemon/src/consent-loading.test.ts",
+      "sha256": "bd790a8ffa2404bac8b4b5102f0b4e8ac2e22a17736a9239a1363e50a501f7ed",
+      "bytes": 14701
+    },
+    {
+      "path": "packages/cap1-daemon/src/consent-loading.ts",
+      "sha256": "8026edd16d705efcb950653154a54a3ad8d7eb0d4f666969ca271db0c8692074",
+      "bytes": 12617
+    },
+    {
+      "path": "packages/cap1-daemon/src/credentials.ts",
+      "sha256": "0f9d6a2617c2d064c557a4e7d810887cf297b61bf5b0f346c17398493f92d069",
+      "bytes": 604
+    },
+    {
+      "path": "packages/cap1-daemon/src/index.ts",
+      "sha256": "05c65b80d580992604dcf900b9d93356600b0186287c0715fad9291d57db0ced",
+      "bytes": 238
+    },
+    {
+      "path": "packages/cap1-daemon/src/observation.test.ts",
+      "sha256": "37426f0dcd2c18ff9fcd720ff6c0c63e7a4b1e2080c372f29422ebb9928923fc",
+      "bytes": 14968
+    },
+    {
+      "path": "packages/cap1-daemon/src/observation.ts",
+      "sha256": "ed9b9b6ed03ace75784126d077289eee809822e7a993a1504f4d9f38e27f27f1",
+      "bytes": 12660
+    },
+    {
+      "path": "packages/cap1-daemon/src/package.test.ts",
+      "sha256": "66cdab6e58f5e3ff914ebecf686054e7fb922d3d260634adc5952947acb68226",
+      "bytes": 4524
+    },
+    {
+      "path": "packages/cap1-daemon/src/pipeline.test.ts",
+      "sha256": "552140eb4bb6e5d7474cb8d8f25a23a902d27bf2986e79f687c8079336a758a3",
+      "bytes": 9227
+    },
+    {
+      "path": "packages/cap1-daemon/src/pipeline.ts",
+      "sha256": "c43e7cbdfc4463ba51eb420404f312085a17c1fb9c167edb73728ec08ca2f221",
+      "bytes": 9628
+    },
+    {
+      "path": "packages/cap1-daemon/src/routes-human.test.ts",
+      "sha256": "48dba4282817442a9b9d7d42b3b4faa435c1b4183d919cc215b0babb5cd87eab",
+      "bytes": 21424
+    },
+    {
+      "path": "packages/cap1-daemon/src/routes-human.ts",
+      "sha256": "209f3e7df4e72941535ead0e6aac9e76494dcfe8042051d6a0bb8e75ba63601b",
+      "bytes": 35137
+    },
+    {
+      "path": "packages/cap1-daemon/src/routes-machine.test.ts",
+      "sha256": "fe57a2862707c9fefb0dd7152f8891a37cb3c7951590d0e31b979db1ecd1038a",
+      "bytes": 21677
+    },
+    {
+      "path": "packages/cap1-daemon/src/routes-machine.ts",
+      "sha256": "b11cba867dc03de58ae7da4eb0ceae776b24c2a86a16422d9d06450b5c131d7c",
+      "bytes": 10423
+    },
+    {
+      "path": "packages/cap1-daemon/src/server.test.ts",
+      "sha256": "d7164b734808687db6a8b5e061648da2cb4b7588f224265b938a3a1c141cd4ec",
+      "bytes": 17083
+    },
+    {
+      "path": "packages/cap1-daemon/src/server.ts",
+      "sha256": "a92b88acb6611f2ea041f37d50cb19e8f2c3c50fb8fa0d3fa6a182f3b6115aae",
+      "bytes": 2786
+    },
+    {
+      "path": "packages/cap1-system/src/credentials.system.test.ts",
+      "sha256": "e9e4f84a41e95a8461363abbd7a4105f88fecdaca8d65b2e2976a8c83e113ebe",
+      "bytes": 3152
+    },
+    {
+      "path": "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts",
+      "sha256": "c1ff7e4d915b10fb1185241bfe61425f2bea99b64b9593926611edaf2be4821d",
+      "bytes": 11846
+    },
+    {
+      "path": "packages/cap1-system/src/degradation.system.test.ts",
+      "sha256": "e4d9ee320c3fa831d857b721e624b92396b147d9fcccaa8f05c3ad8034f4a687",
+      "bytes": 4987
+    },
+    {
+      "path": "packages/cap1-system/src/effect-observer.system.test.ts",
+      "sha256": "597ab82dff6bdbb7b4f850392812f9dc9d4d0f0775cb164a9189c68529692777",
+      "bytes": 6205
+    },
+    {
+      "path": "packages/cap1-system/src/effect-observer.ts",
+      "sha256": "1f94a908e1cbd9a6b746d1b8ba127d3e3421bd14d6f8a78aa0ae99bc86bc40f6",
+      "bytes": 7500
+    },
+    {
+      "path": "packages/cap1-system/src/fresh-clone.system.test.ts",
+      "sha256": "13ff76965cd899867dee06f3927c242342065503b9299c3e2c6e27402fcd8244",
+      "bytes": 4452
+    },
+    {
+      "path": "packages/cap1-system/src/full-facts.system.test.ts",
+      "sha256": "e3db4f3715812e38c0b77350df746f5d5f3e7700508329f05aab2d69247c2e77",
+      "bytes": 5004
+    },
+    {
+      "path": "packages/cap1-system/src/harness.ts",
+      "sha256": "8a7833572f54efd4838458bb7e00f45ce98631696b35f6cb4154cd9a0804ba01",
+      "bytes": 10410
+    },
+    {
+      "path": "packages/cap1-system/src/process.system.test.ts",
+      "sha256": "8623addb97acad170d41efbdfd748b12dd4541e215fb0b48fecc53239ac008e0",
+      "bytes": 1483
+    },
+    {
+      "path": "packages/cap1-system/src/skipped-population.system.test.ts",
+      "sha256": "8cbef569aa1b701368c51d49ff17b34e6e0507056fe5f7ed3a127c85be683aa3",
+      "bytes": 5076
+    },
+    {
+      "path": "packages/cap1-system/src/state-dir.system.test.ts",
+      "sha256": "4f5eceae08f3bc3d95456381dd207cb96061ba65b94397847b0556d38d8ff372",
+      "bytes": 12973
+    },
+    {
+      "path": "packages/cap1-system/src/write-boundary.system.test.ts",
+      "sha256": "b50feaafc9fb72b65ed1c3cedc0b7baa784819c58facea4d0f5af1f9f8e3c68d",
+      "bytes": 4948
+    },
+    {
+      "path": "packages/cap1-system/vitest.config.ts",
+      "sha256": "6e7702d9b7c2cbaa68d3c5fa3103d18d778f9c83d1882e39275547a73db703fc",
+      "bytes": 935
+    },
+    {
+      "path": "packages/http-host/src/credentials.test.ts",
+      "sha256": "41ee07c5d1c3e909f0ebe142f08539ff7631fa0ec91fab17dc727b6fba2c8069",
+      "bytes": 14774
+    },
+    {
+      "path": "packages/http-host/src/credentials.ts",
+      "sha256": "5311cf12b007b0f092e8ff53bae6aecdc96d0bf0a60cb75e6ba6b9ab66314f5f",
+      "bytes": 14394
+    },
+    {
+      "path": "packages/http-host/src/escape-html.ts",
+      "sha256": "51694be58420478e434bf67aa5d0d459669e35b864229d32fd2f143df57c8924",
+      "bytes": 427
+    },
+    {
+      "path": "packages/http-host/src/index.ts",
+      "sha256": "d105369f33404d21e61a97164b545bf0ab36e8762b9a21939f2c6dbbec6b8ba6",
+      "bytes": 377
+    },
+    {
+      "path": "packages/http-host/src/package.test.ts",
+      "sha256": "f84868d4a46ddb9a3f2f17fccbe8445f63703e32369575f5c61ead0ab317d87e",
+      "bytes": 1430
+    },
+    {
+      "path": "packages/http-host/src/server.ts",
+      "sha256": "7934ff7274ca26e33c3c277bd7c4e8985694609459052f01108154ad7c1c0632",
+      "bytes": 13238
+    },
+    {
+      "path": "packages/http-host/src/shutdown.test.ts",
+      "sha256": "edf4f112ac1e0d7ef0acfcfe43a2d9ffec62b23381e7630be91396f0242a9504",
+      "bytes": 2572
+    },
+    {
+      "path": "packages/http-host/src/shutdown.ts",
+      "sha256": "88969cdbd489e03018a76ec90187ea7ac58db08962f4b89c2d49795ac13641dd",
+      "bytes": 1682
+    },
+    {
+      "path": "packages/polaris-dossier/src/agent-texts.test.ts",
+      "sha256": "d064d168cde380d9321e398926805de4300d9fdc0568739ee7b15f8003fa684e",
+      "bytes": 17879
+    },
+    {
+      "path": "packages/polaris-dossier/src/argv.test.ts",
+      "sha256": "ab93fb1c427b15c4ff7faa71a970375af9c6cf30e1c09cf78235b86ea322aa08",
+      "bytes": 18726
+    },
+    {
+      "path": "packages/polaris-dossier/src/argv.ts",
+      "sha256": "b17b8c397ca5c95ecc8a5abcb293cd32179f98bd63da9213047de1c9baca6dbe",
+      "bytes": 3823
+    },
+    {
+      "path": "packages/polaris-dossier/src/brief.test.ts",
+      "sha256": "e117172021abfc3b55350b43e4d75c6cf67bf025f6dc92634ef2441ac4745f44",
+      "bytes": 26168
+    },
+    {
+      "path": "packages/polaris-dossier/src/brief.ts",
+      "sha256": "24b67a414a4ee5d6952225447b18f10cc67deb9feb7236bae856b4d5d277858e",
+      "bytes": 23008
+    },
+    {
+      "path": "packages/polaris-dossier/src/broker-client.ts",
+      "sha256": "7853bd22cf01d41429678275703476da10b6d7b08b1c941fc6309d50bf3294c7",
+      "bytes": 1948
+    },
+    {
+      "path": "packages/polaris-dossier/src/broker.ts",
+      "sha256": "171fde89df2d70edb765d608e8b73e64cd9e6b8c6a0f8255a3a82dfdce1d0442",
+      "bytes": 4891
+    },
+    {
+      "path": "packages/polaris-dossier/src/check.test.ts",
+      "sha256": "6aa99277f76f6da69ab8099b5c71fa80751848ff6d52b49655cc130bf1747108",
+      "bytes": 42504
+    },
+    {
+      "path": "packages/polaris-dossier/src/check.ts",
+      "sha256": "503bf61de7d4b383db688fe48b6672820e46c2d25d402b434c26ec8a3194f469",
+      "bytes": 48990
+    },
+    {
+      "path": "packages/polaris-dossier/src/child-process.testkit.ts",
+      "sha256": "571a0d547a50d19a8bbb409099f1c519f36bf27d09c977217de0b4a392cb753c",
+      "bytes": 995
+    },
+    {
+      "path": "packages/polaris-dossier/src/class-gate.test.ts",
+      "sha256": "23694e9065b8a2c290bcd0544d833a5993c7947dc4a6c391c9ff0bbb0c03d5ae",
+      "bytes": 1899
+    },
+    {
+      "path": "packages/polaris-dossier/src/class-gate.ts",
+      "sha256": "0ef83b50db6b7db0b7c1d12b9853648c4f390b20a2e754bd488ed3bce1d5b4c3",
+      "bytes": 3598
+    },
+    {
+      "path": "packages/polaris-dossier/src/cli-table.test.ts",
+      "sha256": "fe33b4dfde4e8004bbc3ee5ca9b58fe4cc3cfc35af453b93fda2f667ac4cd0e9",
+      "bytes": 5017
+    },
+    {
+      "path": "packages/polaris-dossier/src/cli.test.ts",
+      "sha256": "11051cc17d08322feb7fb0dcc5153f2d7850c79b071a44129ed8b6d6283e7eb3",
+      "bytes": 8359
+    },
+    {
+      "path": "packages/polaris-dossier/src/cli.ts",
+      "sha256": "abdc66a55622402a6db75154f898d8bcd786b48c94ce4f33338ecc5762af15aa",
+      "bytes": 30542
+    },
+    {
+      "path": "packages/polaris-dossier/src/clone-head.ts",
+      "sha256": "ea3095465fed53ea8c85c2a62a5beeae4d4d16b57ce0a45f6322acaa9707af5b",
+      "bytes": 4338
+    },
+    {
+      "path": "packages/polaris-dossier/src/clone-shape.ts",
+      "sha256": "dec99bd7f8cb719c94da388a7680608faf42c61b5733b83e6d86bd04cdc51c55",
+      "bytes": 16796
+    },
+    {
+      "path": "packages/polaris-dossier/src/close.test.ts",
+      "sha256": "4fab536f900ed66fbdb399ca2a9706ba20991876eaeb2e7e06028f3d5db78ca7",
+      "bytes": 14927
+    },
+    {
+      "path": "packages/polaris-dossier/src/close.ts",
+      "sha256": "bbf74cba11722a4e45417ab7f368180c7be7b56a0f8c191add07e2f21a5ec771",
+      "bytes": 16133
+    },
+    {
+      "path": "packages/polaris-dossier/src/credential-probe.test.ts",
+      "sha256": "569cac86b782371bf38a25ed31408c205e4b5f7aff20f94a6a0c8ecf9c3fe2b1",
+      "bytes": 14895
+    },
+    {
+      "path": "packages/polaris-dossier/src/credential-probe.ts",
+      "sha256": "001a5cdb951d00cc07fef725dcd5fdd024fb99411d19780a381586679af1402d",
+      "bytes": 13097
+    },
+    {
+      "path": "packages/polaris-dossier/src/design-review.test.ts",
+      "sha256": "ed41faa00f79f70e7c73f66a7fb7fd594de466a3103b0f5bb2d965d488027379",
+      "bytes": 7315
+    },
+    {
+      "path": "packages/polaris-dossier/src/design-review.ts",
+      "sha256": "adbfdac8cead133f9806e51a53fca9f1e551d8630f66548b307a39d51b422d2d",
+      "bytes": 13857
+    },
+    {
+      "path": "packages/polaris-dossier/src/doctrine-quote.test.ts",
+      "sha256": "8c19b569b3be36b99b5d498849b0bdba238929614b1d83c129a54cbb157b199d",
+      "bytes": 4454
+    },
+    {
+      "path": "packages/polaris-dossier/src/doctrine-quote.ts",
+      "sha256": "37986e0c3e4a39cd75026a2155799f9198aded1a895042b940a1e9f4e3de2f3c",
+      "bytes": 4452
+    },
+    {
+      "path": "packages/polaris-dossier/src/draft-schema.test.ts",
+      "sha256": "0491cc8ed2419a630e319bd23e3ca8b4236eaaf8f2868cecad3d07ba58e665be",
+      "bytes": 9841
+    },
+    {
+      "path": "packages/polaris-dossier/src/draft-schema.ts",
+      "sha256": "bdd0bc51c008448d902f1673e4793f65ae04b5f893232d7f3d4b59535049de5f",
+      "bytes": 25431
+    },
+    {
+      "path": "packages/polaris-dossier/src/execution-choice.test.ts",
+      "sha256": "2e5ad8d1780aecf0228f1bf67e0c5e10acf02e761a5cc7a1e550c5e6a438b0dc",
+      "bytes": 17065
+    },
+    {
+      "path": "packages/polaris-dossier/src/execution-choice.ts",
+      "sha256": "5e25948f73b8eb55149b597b6a79ac9405881ae21ea076ee9490790ab73281f6",
+      "bytes": 11821
+    },
+    {
+      "path": "packages/polaris-dossier/src/execution-flags.test.ts",
+      "sha256": "a7f7c046d80288e165107df276227c625e3cee5622b7eeb05cd2ee3186f7f96d",
+      "bytes": 13361
+    },
+    {
+      "path": "packages/polaris-dossier/src/execution-flags.ts",
+      "sha256": "f70e08e098e3f21954ccbdfab9d095a89b4f91c1820324837f1a3501c83ad2af",
+      "bytes": 5386
+    },
+    {
+      "path": "packages/polaris-dossier/src/execution-rule.test.ts",
+      "sha256": "25d99209835276326269a4d560202b66a9cc42029a7cfab0d469c3014b1e82bf",
+      "bytes": 10999
+    },
+    {
+      "path": "packages/polaris-dossier/src/execution-rule.ts",
+      "sha256": "5a9163a936cd34256053e06c587a41a6ff211183f8ac702da49d64182ef30b08",
+      "bytes": 12123
+    },
+    {
+      "path": "packages/polaris-dossier/src/fs-patch.testkit.ts",
+      "sha256": "3842e654fe64c678dd35eef7eb6b19279f995344e2c812e52d5d261a7e12f7df",
+      "bytes": 1663
+    },
+    {
+      "path": "packages/polaris-dossier/src/full-run.testkit.ts",
+      "sha256": "fe0307a1723ce290b1b558c524e6b7732a6e1d26cfd24701a757965f3392002f",
+      "bytes": 15899
+    },
+    {
+      "path": "packages/polaris-dossier/src/gate-acts.test.ts",
+      "sha256": "ade93ec661de771cdaa432f66fe30eab0ed9eec194dff4067462c32d2c39a91e",
+      "bytes": 57637
+    },
+    {
+      "path": "packages/polaris-dossier/src/gate-parts.test.ts",
+      "sha256": "ba5f537affe3da9edd14e3bf98641f03dfc257d99dd920c25bf0a349a5540770",
+      "bytes": 13786
+    },
+    {
+      "path": "packages/polaris-dossier/src/gate-sources.ts",
+      "sha256": "1c6e4ab8988e835adbcf23708c154fce6fad5ae14d96afd0d3ae56ad596ff822",
+      "bytes": 37211
+    },
+    {
+      "path": "packages/polaris-dossier/src/git-object-reader.test.ts",
+      "sha256": "985bda088adf1970a8fb99f8d9e941421fc21ba11f6f724fa7765e0d99b4d312",
+      "bytes": 64428
+    },
+    {
+      "path": "packages/polaris-dossier/src/git-object-reader.ts",
+      "sha256": "9f33e5fbbf464b1df28b79c3fcf5016b8ad7db1910041734c5fb8e4a790998f3",
+      "bytes": 35827
+    },
+    {
+      "path": "packages/polaris-dossier/src/github-url.ts",
+      "sha256": "97e5aea7fdaf6e93981ae600b7a7817e600d664a34a12423bf7ead28ec4c303c",
+      "bytes": 2355
+    },
+    {
+      "path": "packages/polaris-dossier/src/governed.ts",
+      "sha256": "82538513c2b3c95561e0802441abe8bb6af99292a6d6f0027b01bf85d637963f",
+      "bytes": 3686
+    },
+    {
+      "path": "packages/polaris-dossier/src/index.ts",
+      "sha256": "9a664c6076f0cb1360bdd01939b07b1e3e60cf2226a88d49d3cbe2ddf135421a",
+      "bytes": 7761
+    },
+    {
+      "path": "packages/polaris-dossier/src/init.ts",
+      "sha256": "62f77616f4e38340b24f19f047476c02b2b223d51659ac37c2043f677353bc5c",
+      "bytes": 10488
+    },
+    {
+      "path": "packages/polaris-dossier/src/inventory.test.ts",
+      "sha256": "66edb7ed1711de82f0b89675b11c8ef213953e998d94ecdaba132bccc9bf12ca",
+      "bytes": 43816
+    },
+    {
+      "path": "packages/polaris-dossier/src/inventory.ts",
+      "sha256": "8e1fd6a5514d13db14a35f1afa2dce44e294c67246d32c7259f25004450b1272",
+      "bytes": 31678
+    },
+    {
+      "path": "packages/polaris-dossier/src/launched.test.ts",
+      "sha256": "f3df92691b8a84a88bf57de2b4067d61d512e1bad6cb3b8f09aa489245488d93",
+      "bytes": 10878
+    },
+    {
+      "path": "packages/polaris-dossier/src/launched.ts",
+      "sha256": "51b7370501ebd411960f83bbc7523605f78347ed2f01ad6cd0f647e306b45185",
+      "bytes": 7557
+    },
+    {
+      "path": "packages/polaris-dossier/src/no-egress.test.ts",
+      "sha256": "f804df529c629c8f687db482e6b93b981ed183774705b37d60a53d3c91aa208b",
+      "bytes": 6943
+    },
+    {
+      "path": "packages/polaris-dossier/src/outcome.ts",
+      "sha256": "368f5b32cfc6f960ab9498ca722da15145a0a87249548a7053358a30219ded77",
+      "bytes": 215
+    },
+    {
+      "path": "packages/polaris-dossier/src/polaris.ts",
+      "sha256": "d739f806f0e0fc7d39a1da7ae8e0dd2bbd65c58c695a21f5b95018aa08a2c7f8",
+      "bytes": 41384
+    },
+    {
+      "path": "packages/polaris-dossier/src/preflight.ts",
+      "sha256": "5b6cb3409f17ccb9af711d7c5bf759aa5317ea5327dbc0edc01d1383be0eb924",
+      "bytes": 5239
+    },
+    {
+      "path": "packages/polaris-dossier/src/render.test.ts",
+      "sha256": "ff3b6991df5fb008aad4e0b12f753a15f2f866112e5b312a42fdc63e2722ff5c",
+      "bytes": 69956
+    },
+    {
+      "path": "packages/polaris-dossier/src/render.ts",
+      "sha256": "75dc0910b51d47155e130be53b642c00443eace47e351791963e6e9699e11521",
+      "bytes": 53492
+    },
+    {
+      "path": "packages/polaris-dossier/src/reverify.ts",
+      "sha256": "a5afec43f0eb0ff680cf87a97c743b77051b08c7313db1a9abffb44fc908dab2",
+      "bytes": 12296
+    },
+    {
+      "path": "packages/polaris-dossier/src/review.test.ts",
+      "sha256": "0a509917e258752bf341e214d80e1c302ad7d3f73484e6015638f29ba13fb037",
+      "bytes": 67574
+    },
+    {
+      "path": "packages/polaris-dossier/src/review.ts",
+      "sha256": "8f770a0e0aff0311765c698583c3eb107d4d471916c2305311826ff64af4980e",
+      "bytes": 61089
+    },
+    {
+      "path": "packages/polaris-dossier/src/run-config.test.ts",
+      "sha256": "ff0c4f9c8f3ea6ceb51852bf9b201e847e4111701fe2151476cdd410bab00763",
+      "bytes": 6880
+    },
+    {
+      "path": "packages/polaris-dossier/src/run-config.ts",
+      "sha256": "65b07347f6364875d6f3e6ac6930d02eb0c084d6bd865fa0c7d3fd00d3abc2b7",
+      "bytes": 11013
+    },
+    {
+      "path": "packages/polaris-dossier/src/run-evidence.test.ts",
+      "sha256": "de42ec199044b33e4b8a118d32cdf9177364bd5907cf202b9b8ae71e57b44894",
+      "bytes": 6455
+    },
+    {
+      "path": "packages/polaris-dossier/src/run-record.ts",
+      "sha256": "20cda92756495f74581812bd679300b0c370fc6b71928e08f1c217445cd35064",
+      "bytes": 12431
+    },
+    {
+      "path": "packages/polaris-dossier/src/screen.test.ts",
+      "sha256": "30fbbab8f3e1f741a00bf02f0242538a83ff7f62acbb8158059c3fadb898dacc",
+      "bytes": 34894
+    },
+    {
+      "path": "packages/polaris-dossier/src/screen.ts",
+      "sha256": "1bf4ec6c347e028a0ca75fbb1efb3ce237748e4010962e1b68592446c8b2b8d3",
+      "bytes": 13563
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-handover.ts",
+      "sha256": "1728d9223bda30c28b597ac81039edb448e3e64f430cbc38720d520fa836d18b",
+      "bytes": 48073
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-statement.ts",
+      "sha256": "7273d0899caba37086df2f5b0a77be49414b73f42320427bb5b873c8def6ff2a",
+      "bytes": 7260
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-view.test.ts",
+      "sha256": "12d1b38b8f14d301b72592cdbdc4b5546e0f1947ae68f9c6a8d7f1ec57514327",
+      "bytes": 8596
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-view.ts",
+      "sha256": "c9d43eb9ac245d47162054cdd9e66af982ab6576d5d4fe7a9d6f69a39136f112",
+      "bytes": 6378
+    },
+    {
+      "path": "packages/polaris-dossier/src/start-gates.test.ts",
+      "sha256": "68b4ab0b931c31a9438782f9384c476c93aedcb15449f3a98d3ec4a1a8706256",
+      "bytes": 82447
+    },
+    {
+      "path": "packages/polaris-dossier/src/state-directory.test.ts",
+      "sha256": "b703f67cc2b62e22ad83f36914f3269cd933c9e978165a29d692e62db1786222",
+      "bytes": 9140
+    },
+    {
+      "path": "packages/polaris-dossier/src/state-directory.ts",
+      "sha256": "d7de7e04e24afb4ec6f2f6da8695cb60620ee3fbcef010a0d29d8a761e613db1",
+      "bytes": 6349
+    },
+    {
+      "path": "packages/polaris-dossier/src/status.test.ts",
+      "sha256": "d60850d9e16b9d4f86840bc0b91723bbbaca2fa44c363a59bc75c2ff4720697e",
+      "bytes": 14879
+    },
+    {
+      "path": "packages/polaris-dossier/src/status.ts",
+      "sha256": "79efcfdd54a264277f5e7a48424a9431c6498a189700c959c38b0a03b4143c48",
+      "bytes": 9883
+    },
+    {
+      "path": "packages/polaris-dossier/src/subpath-imports.test.ts",
+      "sha256": "330afb3895fcb4449f3a4aa6057428fa72597e25387f2fedb9fd9182b31d4376",
+      "bytes": 12771
+    },
+    {
+      "path": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "sha256": "89b2f9c0a19a0568c1dc5abd04f777b54848678ff266e82f5f9d74a379c7e853",
+      "bytes": 78300
+    },
+    {
+      "path": "packages/polaris-dossier/src/waiting-sessions.ts",
+      "sha256": "f06ec3c3bb0351adbe3e29d425f36e796730d1525e93e49617dfbe1708fc36e2",
+      "bytes": 41984
+    },
+    {
+      "path": "packages/polaris-dossier/test-support/no-egress-driver.ts",
+      "sha256": "848e99b2e7dcce4220291cf799f77f6dd74448f933ffffc3dc0bed9f8665c566",
+      "bytes": 1311
+    },
+    {
+      "path": "packages/polaris-generation-consent/src/act-families.test.ts",
+      "sha256": "1c449f3143087e4f27d88b6caf7976130dcfb3a593b59ba29938cc685b284708",
+      "bytes": 21270
+    },
+    {
+      "path": "packages/polaris-generation-consent/src/admission-record.ts",
+      "sha256": "e84f5515e0c5344ee63b58188201683ab5a51967b91a2a5d0d19a55024c0577d",
+      "bytes": 5799
+    },
+    {
+      "path": "packages/polaris-generation-consent/src/citation-allowlist.ts",
+      "sha256": "e434743e90c03cc011e8a636236b89987e12af4cb5af459d74ce044dd321aa2a",
+      "bytes": 786
+    },
+    {
+      "path": "packages/polaris-generation-consent/src/consent-ports.test.ts",
+      "sha256": "544a2986b1b100e60c653fa04cdff2b2d9dfaf5f7fdae7b1b8aed2d562de0697",
+      "bytes": 27701
+    },
+    {
+      "path": "packages/polaris-generation-consent/src/consent-ports.ts",
+      "sha256": "b9713073670b9e69efcd6bc591af92d10ca928e7501ae87f2cf12efebae937ca",
+      "bytes": 12666
+    },
+    {
+      "path": "packages/polaris-generation-consent/src/decisions-sweep.test.ts",
+      "sha256": "f2709a3fc80c362dc2d8db9e6f7d0ac58af7c12b6e3eb98654ca9043d5322e83",
+      "bytes": 7407
+    },
+    {
+      "path": "packages/polaris-generation-consent/src/digest-bound-act.test.ts",
+      "sha256": "846f1195c1bec90197ba0a3dd58fa9a99edbcb94c7a4b82ccffb19189c2d925b",
+      "bytes": 13748
+    },
+    {
+      "path": "packages/polaris-generation-consent/src/in-force.ts",
+      "sha256": "afcf1c2dc0a727460f3ca3a3623fd8a62ac3d739c87f2923187125422ab191dc",
+      "bytes": 2865
+    },
+    {
+      "path": "packages/polaris-generation-consent/src/index.ts",
+      "sha256": "d8eb7907e523490280b5191d3793bf6b15c157d94212449f5628f2e982139ce9",
+      "bytes": 1386
+    },
+    {
+      "path": "packages/polaris-generation-consent/src/live.ts",
+      "sha256": "2aa268d84e4ba20f851e15334da5c792621acd25090b6d36674b41b39e53289c",
+      "bytes": 1688
+    },
+    {
+      "path": "packages/polaris-generation-consent/src/package-reader.test.ts",
+      "sha256": "b4d05acfd1f3f7dae7d0859b6ddc68b187c8c69a41222af0f91ae5dc294557c2",
+      "bytes": 103887
+    },
+    {
+      "path": "packages/polaris-generation-consent/src/package-reader.ts",
+      "sha256": "cb1566140cdf7d02b9991f8564d121e21d90480a791879a74e1889557930f067",
+      "bytes": 74401
+    },
+    {
+      "path": "packages/polaris-generation-consent/src/real-tree.test.ts",
+      "sha256": "77cc8a081cea5ba5aee23c8c79ab5e941413da60951c3b9e0a29db2ee034b55d",
+      "bytes": 5375
+    },
+    {
+      "path": "packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts",
+      "sha256": "3576a99df9c6da7cec515632b362f237d59028069d5f239e983bc337b31e6fc3",
+      "bytes": 11821
+    },
+    {
+      "path": "packages/polaris-generation-consent/src/recorder-template.test.ts",
+      "sha256": "6022b23b1019587dfac2831fda6be51cbea4ffdd04c66dc74baeb1a0e5cfe059",
+      "bytes": 9523
+    },
+    {
+      "path": "packages/polaris-generation-consent/src/recorder-template.ts",
+      "sha256": "070db20252900124a333738c3d894003342efcfe308a65f2a4cb4936ed39208f",
+      "bytes": 3125
+    },
+    {
+      "path": "packages/polaris-generation-consent/src/testing.ts",
+      "sha256": "0d3e654877512d4ebc04817d1279e466950016ed39aa1f28e64e23dba8b59654",
+      "bytes": 366
+    },
+    {
+      "path": "packages/polaris-generation-core/src/admitted-input.test.ts",
+      "sha256": "b277705cc1ecf5d6544c7ac3b85e9592c6c0b31cebe1d68712a47803b250c41b",
+      "bytes": 6820
+    },
+    {
+      "path": "packages/polaris-generation-core/src/admitted-input.ts",
+      "sha256": "02ce622341e5bd789d77c2684002a596600a63ed2ae7850a77a27aaba81d6d8a",
+      "bytes": 6719
+    },
+    {
+      "path": "packages/polaris-generation-core/src/canonical-json.test.ts",
+      "sha256": "11e8ad4b556404bacd052d3fdfa931f441fd9702776bb39fe94759505a056883",
+      "bytes": 4197
+    },
+    {
+      "path": "packages/polaris-generation-core/src/canonical-json.ts",
+      "sha256": "4d7e745dc505c0de74666511a90ccda4673a5bc3d3e9deb73f424bce92875608",
+      "bytes": 4829
+    },
+    {
+      "path": "packages/polaris-generation-core/src/closed-schema.ts",
+      "sha256": "8592fb3e41e312da0da6bb48ac4bfdacb28b4ecbcf2ab929634b3a0cb44fe6fe",
+      "bytes": 4044
+    },
+    {
+      "path": "packages/polaris-generation-core/src/discovery-provider.test.ts",
+      "sha256": "a644155ca3f489c2642a2cecc433fdd332cebab767445217e9d2bf52c48d1775",
+      "bytes": 16671
+    },
+    {
+      "path": "packages/polaris-generation-core/src/discovery-provider.ts",
+      "sha256": "1b90b6ca2430099ab223edbdace7e5bbfe27057a72c78b01c625fd6b9a3b7cda",
+      "bytes": 10631
+    },
+    {
+      "path": "packages/polaris-generation-core/src/discovery.test.ts",
+      "sha256": "047e7f271b6223702685670229f3ba6d86794f9dd9bd93ddffa4284db78fa581",
+      "bytes": 52208
+    },
+    {
+      "path": "packages/polaris-generation-core/src/discovery.ts",
+      "sha256": "71d84d85bd92141d576e8e207ad67af61637cff5effc81911c7fb236556f21e3",
+      "bytes": 31183
+    },
+    {
+      "path": "packages/polaris-generation-core/src/dossier-evaluation.test.ts",
+      "sha256": "7221f3ac696ba586f9200109def1cd9c03f1dee242e56870c3a101760a39f2d4",
+      "bytes": 24355
+    },
+    {
+      "path": "packages/polaris-generation-core/src/dossier-evaluation.ts",
+      "sha256": "5beea0c6b36a4032f11c87e8ef27fd9c3a036dad2824a311e53bbfcb32d316f2",
+      "bytes": 32814
+    },
+    {
+      "path": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+      "sha256": "08142221b69ebd46b640c9ccc0a8f747e204090b67153393b1fddb5fca430c00",
+      "bytes": 17829
+    },
+    {
+      "path": "packages/polaris-generation-core/src/dossier-profile.ts",
+      "sha256": "8550ba40643cfed9f0e72cde31d3afa7938564fc54ba162ecfbbe46c18e9224f",
+      "bytes": 15069
+    },
+    {
+      "path": "packages/polaris-generation-core/src/dossier-prompts.test.ts",
+      "sha256": "6367cf4a8385410fd8faebdc01da04c347795b802bed38c6eec313bc8384834f",
+      "bytes": 21411
+    },
+    {
+      "path": "packages/polaris-generation-core/src/draft-model.ts",
+      "sha256": "0c64dd7330a52676f2ae46e520cc97ee021cfdb1ab50ccf91e39902596c5b42a",
+      "bytes": 10103
+    },
+    {
+      "path": "packages/polaris-generation-core/src/excerpt.test.ts",
+      "sha256": "7174af9e9cb7b72b660b96636ea500490094550abbcc8af3076315094406caac",
+      "bytes": 14176
+    },
+    {
+      "path": "packages/polaris-generation-core/src/excerpt.ts",
+      "sha256": "23273486f2981227dab7d5afe1a9399c2edd984bdba1faf0996ff4bbb2c26e17",
+      "bytes": 9432
+    },
+    {
+      "path": "packages/polaris-generation-core/src/generation-source.test.ts",
+      "sha256": "349671600cff0fdea95816ee2b1b37fc66ee1bcb0221a9b21f9b55f1f0b0569f",
+      "bytes": 13851
+    },
+    {
+      "path": "packages/polaris-generation-core/src/generation-source.ts",
+      "sha256": "c3a392d23c6ab5cf4632b2ecca60cdbedbfbdeff7a0a1b305d688835481bee74",
+      "bytes": 29532
+    },
+    {
+      "path": "packages/polaris-generation-core/src/index.ts",
+      "sha256": "988193e7867bc0295c3751ba212b5f2724cc2c1d62a7e156657946595a3fd027",
+      "bytes": 2320
+    },
+    {
+      "path": "packages/polaris-generation-core/src/island-boundary.test.ts",
+      "sha256": "9c29c24e82c60898e41139b4b75ffd5d5c215d97b8d9897c686f18be9ec0908a",
+      "bytes": 4264
+    },
+    {
+      "path": "packages/polaris-generation-core/src/live.ts",
+      "sha256": "b09f9a109ac8e89d93377e7673b8c5e17da561419b310d5c3b161477c7f69862",
+      "bytes": 4534
+    },
+    {
+      "path": "packages/polaris-generation-core/src/local-render.ts",
+      "sha256": "f08119b4053d297062f78942742b7bbd3681fccaf02f3158cad9f643710a4b6f",
+      "bytes": 6880
+    },
+    {
+      "path": "packages/polaris-generation-core/src/parse-json.test.ts",
+      "sha256": "40985898eda08ceb34e7a27a12fae649565bbc133207fa047304072cbceda612",
+      "bytes": 3979
+    },
+    {
+      "path": "packages/polaris-generation-core/src/parse-json.ts",
+      "sha256": "f56eafe27e3881fb8bb6727b295e03bf946729af4d3c5966d4291aee9a6abe45",
+      "bytes": 4329
+    },
+    {
+      "path": "packages/polaris-generation-core/src/pipeline.test.ts",
+      "sha256": "d821a9533c6f884ba28967853092a123fe848017c1e25fdaa88babae21a7759f",
+      "bytes": 26811
+    },
+    {
+      "path": "packages/polaris-generation-core/src/pipeline.ts",
+      "sha256": "89df81566b51fdcc24376f6b1282fea7d2110132dd7caa7c198bb03b00b45164",
+      "bytes": 30849
+    },
+    {
+      "path": "packages/polaris-generation-core/src/prompts.test.ts",
+      "sha256": "7db43a7ceb9e78509c9ecf39e39f5b4ba3442b0c4e9910809508e6780ec30253",
+      "bytes": 1893
+    },
+    {
+      "path": "packages/polaris-generation-core/src/prompts.ts",
+      "sha256": "5c3387dd012b00a4e7f82803f518a266c67ccf57fa60d7cfcfd8d45b7b7e51d7",
+      "bytes": 33442
+    },
+    {
+      "path": "packages/polaris-generation-core/src/provider-draft.test.ts",
+      "sha256": "5e49d02c6b2c44810e037bea5c45875ee6fb42aa7679540cecb96c528cacc9a3",
+      "bytes": 24530
+    },
+    {
+      "path": "packages/polaris-generation-core/src/provider-draft.ts",
+      "sha256": "9294fd906187fd2abe8012e363beecbb3d9d420f4d272bd8accc2fb6a9d01734",
+      "bytes": 16200
+    },
+    {
+      "path": "packages/polaris-generation-core/src/public-source-classification.test.ts",
+      "sha256": "b93fcb8435869308b865c204bbdbd7d5cd3231144e51b8f14c669d89e2affc65",
+      "bytes": 17823
+    },
+    {
+      "path": "packages/polaris-generation-core/src/public-source-classification.ts",
+      "sha256": "9c2e4ff264c4799a50236e1c2ebff73c80d1ad3ed4fd5a1520a9e607d8b62ee0",
+      "bytes": 21444
+    },
+    {
+      "path": "packages/polaris-generation-core/src/public-source-exemption.test.ts",
+      "sha256": "282a17b86b5e2fac6f48fada7ee92ade3441e3a48e0f2de7219eca49ee4e1c91",
+      "bytes": 10815
+    },
+    {
+      "path": "packages/polaris-generation-core/src/quote-fidelity.test.ts",
+      "sha256": "55b1bafe6a588f5cd7283d6a5662daf94af618fdcc0059d9d50b26b86b956934",
+      "bytes": 21572
+    },
+    {
+      "path": "packages/polaris-generation-core/src/quote-fidelity.ts",
+      "sha256": "ab3711ace84aee46dae600be5ee4772638e3623f98ce68cd267c39f19808fd7d",
+      "bytes": 18904
+    },
+    {
+      "path": "packages/polaris-generation-core/src/quote-locate.test.ts",
+      "sha256": "47795f74716c68e0ad6d8db959e84547d8cfb4fd7c6affc87c0ca598f430ff34",
+      "bytes": 6701
+    },
+    {
+      "path": "packages/polaris-generation-core/src/quote-locate.ts",
+      "sha256": "d08ea4f434b6e613eaf45b9a048fb0e0abc9395aa543693dfcc6f527d3d623d1",
+      "bytes": 8466
+    },
+    {
+      "path": "packages/polaris-generation-core/src/reader-questions.test.ts",
+      "sha256": "14ff7a575553fc0e2e303e324fd481136b629885a11e6f7901ccf8d81b8fcf28",
+      "bytes": 1679
+    },
+    {
+      "path": "packages/polaris-generation-core/src/reader-questions.ts",
+      "sha256": "1c6cab067225d99243d5fff63a16c1f2c0f1af37ca52f6e5f932ee8021ecb1ca",
+      "bytes": 2213
+    },
+    {
+      "path": "packages/polaris-generation-core/src/redacted-generation-source.test.ts",
+      "sha256": "a7dca27b4818aac5e3be4045693690d67aae75c2d93ceb586bb69b1131dad535",
+      "bytes": 10142
+    },
+    {
+      "path": "packages/polaris-generation-core/src/rendered-design.test.ts",
+      "sha256": "985e0119e1e9575ea4c7f852bf757337b3c1f6d749608c81b5e6c4da08636803",
+      "bytes": 10763
+    },
+    {
+      "path": "packages/polaris-generation-core/src/rendered-design.ts",
+      "sha256": "d6f93c139068d9c2d0d67bf8d87757dc310e88baabf491b7665778b7a9f1ea01",
+      "bytes": 9585
+    },
+    {
+      "path": "packages/polaris-generation-core/src/secret-redaction.test.ts",
+      "sha256": "23d59222d12d01f31e0bbf3a51f1e43e7d5419db1af29cdd4f58fadbea0a7d4d",
+      "bytes": 13170
+    },
+    {
+      "path": "packages/polaris-generation-core/src/secret-redaction.ts",
+      "sha256": "cb04ededc98c4557644306a6b60c89507e8850a89403df34b7cb62f865164ed1",
+      "bytes": 19070
+    },
+    {
+      "path": "packages/polaris-generation-core/src/source-model.ts",
+      "sha256": "4929df1ab831a553cd136ce02dee126aff41df8743f8dba4388f50ec5cd5efbe",
+      "bytes": 717
+    },
+    {
+      "path": "packages/polaris-generation-core/src/topics.ts",
+      "sha256": "69c0fb7078bd5b5c2d6abae31ea433340bad3991ae1c40126135d9c798b8f172",
+      "bytes": 583
+    },
+    {
+      "path": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+      "sha256": "a20cdbc84b4e21ee62d6d06eb2abe8c7a21affa03974a35355a812ac89b7cb1e",
+      "bytes": 9349
+    },
+    {
+      "path": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+      "sha256": "ed67106fe74333c97f419f4a52f14f75bfaa34bbfa5b41f33c4f1b6545895731",
+      "bytes": 8411
+    },
+    {
+      "path": "packages/support/src/deep-freeze.test.ts",
+      "sha256": "0bb8750630936601a2a6b62f7ced1df1c5b7cedd80e29af00fcc6b61a83dd79e",
+      "bytes": 1348
+    },
+    {
+      "path": "packages/support/src/deep-freeze.ts",
+      "sha256": "ea3f83d840561f130ec91080d8066359a52d61dad2b089f1fe82677f37d85149",
+      "bytes": 488
+    },
+    {
+      "path": "packages/support/src/index.ts",
+      "sha256": "9b82aa1f60a468084496a62c2dc22775171c4678f663761e463e3f120a99d1bb",
+      "bytes": 531
+    },
+    {
+      "path": "packages/support/src/sha256.test.ts",
+      "sha256": "0b137ae8e51afea3cfbcdb42da56a1140625088b48c3b93e035177abbb73a3b5",
+      "bytes": 1769
+    },
+    {
+      "path": "packages/support/src/sha256.ts",
+      "sha256": "9fb34e4cf7b60fa9ba45ac06bab0a95fbb3a0c1c629a38ad24e1ec05e3c765f1",
+      "bytes": 243
+    },
+    {
+      "path": "packages/support/src/support-purity.test.ts",
+      "sha256": "a7135fe421501983aa058dc12525fd8bdddec4f922eb8e0279381e64413566d2",
+      "bytes": 4027
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/act-fields.ts",
+      "sha256": "dcc451e83fc1ad97ef3cc5b1cf97dd979d1fba9de4588fc841958c03e8243fef",
+      "bytes": 2617
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+      "sha256": "01fc903901fc09082ce4923bf7bdcf4937b492ef93e62058be5a7c04ca87395e",
+      "bytes": 6712
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/authority-disclosure.ts",
+      "sha256": "14be239ef75d8a54ee6fc8f2a05fc397b85c0be446b56d0b473bd2d49c801be9",
+      "bytes": 6150
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/body-read-authority.test.ts",
+      "sha256": "c4eaf2f237665fc914f5b14a1796f43bdbc59006c9c8b27ba57d1a2358d83927",
+      "bytes": 45116
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/body-read-authority.ts",
+      "sha256": "20f767ad97e2b9568c29de8b81f96e33279a737b65646af2c76e58aaeada547d",
+      "bytes": 38556
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/code-structure.test.ts",
+      "sha256": "e8a24275514e38c870fdeb7e5cce7b61082eaa9b264b74f4349d51a274b170d7",
+      "bytes": 12497
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/code-structure.ts",
+      "sha256": "ef137dafdd666104b9249d5516b0567e8daf9db7a5814c68c29e362f87ca56c1",
+      "bytes": 6943
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/content-classification.test.ts",
+      "sha256": "24552d1391211e6ab04724956e584533c77247621b78ba0785125ec9d4c734e7",
+      "bytes": 42011
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/content-classification.ts",
+      "sha256": "1487b110161c948b786ced45d38b1df655bcdb1d7c9c640081248e1848e7d043",
+      "bytes": 26689
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/effect-authority.test.ts",
+      "sha256": "fa5be4fbfa38f34ffa1166300ce44f9e46e58daefad456f505912bc626b6f3ed",
+      "bytes": 2402
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/effect-authority.ts",
+      "sha256": "e32a69aa6a7bda963b9e848035a384424b598bddd3b3c492f52b712a9ee0f153",
+      "bytes": 4310
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/evidence-population.test.ts",
+      "sha256": "cd5ea658f97ec27424f35da9c114d28091c2c01655cdf63c6f9c4bc237926685",
+      "bytes": 5848
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/evidence-population.ts",
+      "sha256": "3b16e65f147ea1f164c7f1cb9f3d5bcf49e23c15dd3cf59c0473ecb4d2a00f8a",
+      "bytes": 4128
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/fixtures/synthetic-corpora.ts",
+      "sha256": "a5bff51c0d50fb1dc508107792c6e4c4249c779e0bf8cadf54fd7ea26f9a95c4",
+      "bytes": 4177
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/git-object-reader.test.ts",
+      "sha256": "edd1538f137181821be3bb053a9c5d664e643ab1a0bfdb3f63abfbd05a5affb6",
+      "bytes": 34849
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/git-object-reader.ts",
+      "sha256": "19405187526e79585f92b65a926a07492929ea7335dd5a4994b8f204b7a0bf46",
+      "bytes": 19016
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/git-tree.test.ts",
+      "sha256": "fbda3159ec83a00a7f8efda1dc3c06e4132a8f744c2ad3c5a2ef52cfe2904c0e",
+      "bytes": 3725
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/git-tree.ts",
+      "sha256": "990d17dcf904bc28dc7c8336d5111321c80df053841bd7b19a8a665fd01578a3",
+      "bytes": 3812
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/index.ts",
+      "sha256": "4825b9b9bd68599f873166d22a0ed95dd73c7e88debfc6a2a4fa24b94fd5e03b",
+      "bytes": 1885
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+      "sha256": "af96c3ea5cf4206def2b052d2282bea2f793aa9fc4162e4bd3b7d4a58747e7c7",
+      "bytes": 5449
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+      "sha256": "a02c105a483d11a9e90d27aade01ef5ddee6b60b9e165a9a7193c5baaa21f8fe",
+      "bytes": 6084
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/materialization.test.ts",
+      "sha256": "9cb3d78bf29e5302e462b35e8bbede1d003ae01d53d91a3384cf6aa6f7e63f6f",
+      "bytes": 14086
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/materialization.ts",
+      "sha256": "c2fbef8f97142000b6fe0eece4ecb9120aa8fdeec5c9c4727bcd780ff1ac3a05",
+      "bytes": 17379
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/model-observations.test.ts",
+      "sha256": "1cd715b1b7df320f4959b38efcb2c0537ede6d55ea186f158eed1fff3a54c0aa",
+      "bytes": 10373
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/model.test.ts",
+      "sha256": "b9a5d094a19d2a947675f232d0a41e3f25f83837e90db0953e23d7b8811d56d7",
+      "bytes": 44763
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/model.ts",
+      "sha256": "9ab58377379c17fa0a09f84fd45441a1eb0f44d1edf82b07c496f9d49a87ce2f",
+      "bytes": 52451
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/orrery-projection.test.ts",
+      "sha256": "6898f4953f703436e722e92f5cb07904bec86918ff1a461402cd7ac1c30bb0d5",
+      "bytes": 2897
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/orrery-projection.ts",
+      "sha256": "b2abcda323b9b53902a2eceab14df1d2e48285543dbcdaaa068246e10eba5be4",
+      "bytes": 3978
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/owner-act-drafter.test.ts",
+      "sha256": "7acdc25fa4faf1ccd9a999f74565936ea19f7ef7e5ccd8c21f3a1ef27e67b173",
+      "bytes": 4515
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/owner-act-drafter.ts",
+      "sha256": "d29e5183e763ad087a8c6ce597a8dfe9633c9b1d11b7361121507a2cd7855570",
+      "bytes": 5246
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/owner-act-record.test.ts",
+      "sha256": "09fd44ef9ef16799c9f619fffaeac2fc1dc63d2e4416c7ed299c1a52e2a31dd9",
+      "bytes": 10471
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/owner-act-record.ts",
+      "sha256": "656a7ff4b14774a925a1f9514f0d37f95fb450191a1da40ab751ed6346772c3a",
+      "bytes": 10969
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/poc-seeds.ts",
+      "sha256": "0e2ee4ab20e65ac4d24d8a81ea655529350c6b1949e98bf51317f835ad7a3152",
+      "bytes": 10856
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/project-shape-coverage.test.ts",
+      "sha256": "0ff6574a7eadffceca4e85003bac492def54368f48e1c0e4ea2624e499628796",
+      "bytes": 33299
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/project-shape-coverage.ts",
+      "sha256": "a48116e64e1247d419d147963d1a3833a95698500b369746704592162c1cb352",
+      "bytes": 28166
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/project-shape-extraction.test.ts",
+      "sha256": "fb71c5294c048b844eb04d7b0d17ac1e614cb5c9354e65c764f0eac6133a6a93",
+      "bytes": 51126
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+      "sha256": "642cf156ed37bfc0ced7cb338e640268fc0e02648913dd71be5dc4efe6ed0dbd",
+      "bytes": 37475
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/project-shape-manifest.test.ts",
+      "sha256": "5d074254d867173bf916d36dd7f68fde173cf64fd27893467d984598f419cdf3",
+      "bytes": 29891
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+      "sha256": "47435438b5d14c944e2c53a510d07b0a3253758d2628f5332123155831494d49",
+      "bytes": 23309
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/project-shape-model.test.ts",
+      "sha256": "33bb156f847f091ebdf7ae493373315ea4012ab7d878ee11f2c63b630f85d182",
+      "bytes": 57580
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/project-shape-model.ts",
+      "sha256": "12a31fc58b6c1d48b3aba0d6b8f897b4e961264ffa2253688b1561ea5e1264d5",
+      "bytes": 34495
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/project-shape-observation.test.ts",
+      "sha256": "9a707bb6aa8b1bbae0be4df13de4a2b0a7977c35f3397f3f63e52472bc3b871c",
+      "bytes": 51679
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+      "sha256": "db2cd5cfb37f45895ca0794169339ca680918d0111c658534e6ede301a8d04a0",
+      "bytes": 29620
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/project-shape-observer.ts",
+      "sha256": "9ff2151735897a0f5af295669240af79cdd3b038fcb4dc0a2bab50b5ecef93c6",
+      "bytes": 4109
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/proposed-work.test.ts",
+      "sha256": "d3ef2f990f3003773f57a1a1b15716c71d1c23a06f4180378637d77a0b5ffb08",
+      "bytes": 4457
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/proposed-work.ts",
+      "sha256": "8a8150b7aef2bfada8174f7444f86da73a31b1a1cb892bbfd2a2b849b856156c",
+      "bytes": 6954
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/reevaluation.test.ts",
+      "sha256": "5519432a4d12c0bbbb4700ee21b69140b32378e5d39df859459dca32aa43217d",
+      "bytes": 3783
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/reevaluation.ts",
+      "sha256": "41cdfb4303066fda4cd926d180515628efdc17ebc1aba5c34e5b0c6e8836b260",
+      "bytes": 4843
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/resource-headroom.test.ts",
+      "sha256": "c2f27f91173faa2749d253e9f67490a9262f20e7ae9cae8c047b5185e389fe7e",
+      "bytes": 4326
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/resource-headroom.ts",
+      "sha256": "89a1daca3d9cc9e110cf77038a93ee4badc1f3e99f8a46f53e68b82bc2b21015",
+      "bytes": 2839
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/resource-ledger.test.ts",
+      "sha256": "61941cb140dc6b8e5436c9738f66d87bc0f6961fd581edb639fd380340a1445d",
+      "bytes": 29629
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/resource-ledger.ts",
+      "sha256": "6c66bcc1f2e50ae0b0d1e799c54750960fe410487e143e087f51644ad19eb3e7",
+      "bytes": 19128
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/response-identity.test.ts",
+      "sha256": "2651263c50ccd75aa1d1893e2df1d3399641792968dc98e7155379b0484d5b3d",
+      "bytes": 5630
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/response-identity.ts",
+      "sha256": "0347e2e9c614efcd386e8636025e4bcf04a2f2bbc748c4e36493be8c8530b506",
+      "bytes": 9438
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/synthetic-corpus-coverage.test.ts",
+      "sha256": "529404a94400a2dd36cb9eac0ec94e18a39f167386a085517ca3672a6dbdeb1b",
+      "bytes": 10629
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/synthetic-corpus-coverage.ts",
+      "sha256": "23293b84f708ec4e23bde45613328fe4d114dada49028383b6432994e070182a",
+      "bytes": 7413
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/test-artifact-verification-live-source.test.ts",
+      "sha256": "0b4e2171d52d354808d0ce3b18227c028e95cb1eaaebaf789cb2bfc9d12b7326",
+      "bytes": 24040
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/test-artifact-verification.live.test.ts",
+      "sha256": "ab30d8290acb004ec2eb4c10cb8d199062d8e56d47a420b21f3fed0614d0ee01",
+      "bytes": 6647
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+      "sha256": "8900aae03e638249fcbbb4093d37ff3505df170155cead0b7c1e1db2e134d7e4",
+      "bytes": 20525
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/test-artifact-verification.ts",
+      "sha256": "095b6f52d59c48741aa4dca053ab86f58d8dc3071f3b9adf70477f9952ac9da8",
+      "bytes": 20820
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/test-cleanup.test.ts",
+      "sha256": "c3c5b6948e16eb220e36e689ff270cc7a75d2480e0096f279aab557e22ce8608",
+      "bytes": 1345
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/test-cleanup.ts",
+      "sha256": "81e09bd89fe0080fb95d77ff3c4562b64b22101b16bcb38c2e5e022065328d63",
+      "bytes": 1392
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/trajectory-projection.test.ts",
+      "sha256": "5cd754141c30eb410aa5ce5d67c9b7b5ad792572c1bc7bcee21a65a62b34249e",
+      "bytes": 7579
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/trajectory-projection.ts",
+      "sha256": "e8a8643b8789da4836e11618e3fbedfc915c279ece107e126dd378bd7e62df26",
+      "bytes": 5687
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/walkthrough-judgment.test.ts",
+      "sha256": "6bdda6913cee4685b63b7757f2adb6e3e0f32c0c631a3d6c17f3034ea2752c16",
+      "bytes": 33708
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/walkthrough-judgment.ts",
+      "sha256": "c9aca29a91547529ad56fec32f7f70c7c959824e73fdc5ac7ee92416ef97cd14",
+      "bytes": 39545
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/walkthrough-readiness.test.ts",
+      "sha256": "c51e9cb739508cbec4d0b150ad6bc43f1dea10b5a6e7ad3ba38c7d673eb59b5c",
+      "bytes": 22711
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/walkthrough-readiness.ts",
+      "sha256": "8e77c7c48df1395195e7dc6eb2b5e13b1f4152ddb8d8bf2d4183ca41024aeaf6",
+      "bytes": 17575
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/work-items.live.test.ts",
+      "sha256": "5d639ee8432a7ea2a18d47e128d4aa4b63aff3c71cec63a4a1d153499d75d0f0",
+      "bytes": 2684
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/work-items.test.ts",
+      "sha256": "632caa16f97ec7472fd07b95720f5fed792f1ab6110e6cf16c51eba0f800300a",
+      "bytes": 8360
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/work-items.ts",
+      "sha256": "5c995c5e8a6705b10af97eed86d19151439b0871f15788b0eebba8c212207347",
+      "bytes": 10967
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/worker-change-observation.test.ts",
+      "sha256": "ea63c3b9fcfa00eca2f39d997eb0cb159e8b59dbdd6e12d3e245fd0633766962",
+      "bytes": 9777
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/worker-change-observation.ts",
+      "sha256": "cb66a5ff0ddcb16ded19fdb3212f79906de036ea4aeb8340f591f4cfe4e585a7",
+      "bytes": 7873
+    },
+    {
+      "path": "scripts/build_cap1_trusted_bootstrap_consent_adoption.py",
+      "sha256": "745e4fc3c92e4fdb3ce2b300a06c752ee60f12de44eb9ba96bb2272de783b58c",
+      "bytes": 29870
+    },
+    {
+      "path": "scripts/build_capability_1_spec_dependencies.py",
+      "sha256": "4d91f47198863ad077a91b5b4e73ec04f35b562a62f3879134eddc8396c5fc05",
+      "bytes": 12490
+    },
+    {
+      "path": "scripts/build_contract_readability_restyle.py",
+      "sha256": "0ef49bf30ceaa5093643b4ddf211aa3e11b4cc555849173451a1590d973db5d8",
+      "bytes": 34920
+    },
+    {
+      "path": "scripts/build_directive_register.py",
+      "sha256": "c91ca047853329f9b8720e9bb195850fa71334c95191aa9f30cb9a21b2cab564",
+      "bytes": 20747
+    },
+    {
+      "path": "scripts/build_dossier_agent_provider_v2.py",
+      "sha256": "f766a95f5cdee915117fa5ed6cda08321e18f1a352114d99792bfd51faebb196",
+      "bytes": 13043
+    },
+    {
+      "path": "scripts/build_dossier_local_agent_acts.py",
+      "sha256": "f30c777b29bae71544b67acf791b64b95e388dda056ed3b968b617fa9ffe2923",
+      "bytes": 11479
+    },
+    {
+      "path": "scripts/build_general_trusted_bootstrap_impact_ledger.py",
+      "sha256": "9ccc2234be56181c6aeca38ec1e4549a59316d036e5afc096efc55b77a0830fd",
+      "bytes": 18836
+    },
+    {
+      "path": "scripts/build_general_trusted_bootstrap_transaction.py",
+      "sha256": "724e32f4735001d23825990712a8072104e30bf53a766b7cd5f4f88a130ddf53",
+      "bytes": 24178
+    },
+    {
+      "path": "scripts/build_polaris_dependency_unions.py",
+      "sha256": "7ca10aef386298c1eed18ff4ecbd7a993dc26ff564b59cdd6b6f849296280f29",
+      "bytes": 20417
+    },
+    {
+      "path": "scripts/build_polaris_dossier_local_agent_mode.py",
+      "sha256": "c0fbf722c27160cee4eee71a7144837c1986fed0b93c48af7625c4d5266eb301",
+      "bytes": 29789
+    },
+    {
+      "path": "scripts/build_polaris_dossier_local_agent_mode_v1_1.py",
+      "sha256": "7bd4fba08b41877dc5b3198cbc62ae87a21c711752aae533255cd971ba09f277",
+      "bytes": 28582
+    },
+    {
+      "path": "scripts/build_polaris_dossier_local_agent_mode_v1_2.py",
+      "sha256": "595092fc6d11ccc5e55d170a51445f4c322e9b16030dc37783280a9787cc7ee4",
+      "bytes": 21113
+    },
+    {
+      "path": "scripts/build_polaris_edit_repair_deletion_scenario.py",
+      "sha256": "c23b86dedbf51a583bb1839f35de5610246b4b5c64280f05f050173449067bca",
+      "bytes": 20401
+    },
+    {
+      "path": "scripts/build_polaris_project_wide_contract_coverage.py",
+      "sha256": "a5cc785c9f948ef8105654b1af9654e37fe1f29e40cb1c217d053954c15623c9",
+      "bytes": 23961
+    },
+    {
+      "path": "scripts/build_polaris_project_wide_spec_dependencies.py",
+      "sha256": "d95404b83f662e14ff11651bab43e6545576e12d03d5e9cbb519a036a2dee147",
+      "bytes": 5071
+    },
+    {
+      "path": "scripts/build_provider_route_messages_api_entry.py",
+      "sha256": "b83f7bc4905fba9cd1c8de0df9a05314c4d282a7b17c5976498fbfab5c636f7d",
+      "bytes": 50811
+    },
+    {
+      "path": "scripts/build_public_admission_registry_entries.py",
+      "sha256": "e552e944d0dab0568eb45b41b6b5e2dea350f79a4c3b57ddc9632626f1e7ddba",
+      "bytes": 28610
+    },
+    {
+      "path": "scripts/build_public_egress_v2.py",
+      "sha256": "645965ed9c26f109a85ee3312ffc4061f43529e355516bc67a16fb1b6a914bf0",
+      "bytes": 21002
+    },
+    {
+      "path": "scripts/build_public_git_source_acquisition_local_agent.py",
+      "sha256": "e72bf915f90e964a571e5af1f3d8befd2d8e34d0dc8dce0b70242c7c5b03d670",
+      "bytes": 21289
+    },
+    {
+      "path": "scripts/build_public_repo_admission.py",
+      "sha256": "5e7f923c7a204b1c1b61de0effca5f12c2cc57ca2d4430e9d240cede838fd152",
+      "bytes": 14103
+    },
+    {
+      "path": "scripts/build_public_source_screening_scope.py",
+      "sha256": "114a4e2370d77e3a8632b760af5df9de0bcbdbe079287e19316d96eeb0a56a1f",
+      "bytes": 43671
+    },
+    {
+      "path": "scripts/build_public_source_screening_scope_v2.py",
+      "sha256": "69f97a5151879c442ae294211528b2cd541e9fd7933346e788483d88343e1d05",
+      "bytes": 59447
+    },
+    {
+      "path": "scripts/build_public_source_screening_scope_v3.py",
+      "sha256": "87e496d46c8428f77256370a04444e51be0f4a16fa7d3c55fd999332eccd5fc3",
+      "bytes": 28717
+    },
+    {
+      "path": "scripts/build_public_source_screening_scope_v4.py",
+      "sha256": "92dd6765b0f7a16b2d1ea9e69df7d55aca2a1c9b03424ca6f003c2d094ea6713",
+      "bytes": 44201
+    },
+    {
+      "path": "scripts/build_pwb_accessible_name_amendment.py",
+      "sha256": "f853ebbbe02f3daf03d6dc7658c6a49b88b2163b8796880484bf2399b6b30196",
+      "bytes": 13773
+    },
+    {
+      "path": "scripts/build_pwb_anchor_resolution_amendment.py",
+      "sha256": "7a1bdd4eb0711d5ec1be404c9059afbb70a209097505282eb7a33326e3f1e0df",
+      "bytes": 49353
+    },
+    {
+      "path": "scripts/build_pwb_behavior_contract_repin.py",
+      "sha256": "2c0168653772fa0b48ba41306ed6fc4bf31b90e1dd51034d89143ae26d8aa57b",
+      "bytes": 45889
+    },
+    {
+      "path": "scripts/build_pwb_behavior_contract_repin_tree_framing.py",
+      "sha256": "a0aab72823bcd44381687cc7aaf70636e64f70379a9b579781b616b9efb71e97",
+      "bytes": 31526
+    },
+    {
+      "path": "scripts/build_pwb_class_granular_extraction_amendment.py",
+      "sha256": "e3e94777bd96666e20dda82e8e886a68bac301da289826d81b4472a15a499eac",
+      "bytes": 57798
+    },
+    {
+      "path": "scripts/build_pwb_container_shape_profile_amendment.py",
+      "sha256": "cc49b45b82b57d2d226019898175a6d6582117de58bce738cb6b0372e13f1e8e",
+      "bytes": 100913
+    },
+    {
+      "path": "scripts/build_pwb_dismissal_expiry_amendment.py",
+      "sha256": "04f48def487b983ac37841a637373320017ea89af0dacb1d24a26d7670108e80",
+      "bytes": 68584
+    },
+    {
+      "path": "scripts/build_pwb_effect_acts_packet.py",
+      "sha256": "027ec44d2daf66f713f5b4a2f8fd32f0d3206e2a5ec13c27a7cbe62a45dcb0d7",
+      "bytes": 22589
+    },
+    {
+      "path": "scripts/build_pwb_exact_source_render_mode_amendment.py",
+      "sha256": "a3b36b2a8d79bdd1efd6e667ff335920a3aad77297fe4c0e7954c6bdd2ee27f2",
+      "bytes": 23810
+    },
+    {
+      "path": "scripts/build_pwb_item_depth_amendment.py",
+      "sha256": "f99f36d4531756b15db36128c87d694adfbd122c4aec5f05c2f2d065b5bad6e5",
+      "bytes": 43737
+    },
+    {
+      "path": "scripts/build_pwb_machine_view_amendment.py",
+      "sha256": "e6d98e107f52edb4e4ab67d2c46b76ddcb827332c12950c4e4adc04bb1f733aa",
+      "bytes": 19011
+    },
+    {
+      "path": "scripts/build_pwb_missing_currency_disclosure_scenario.py",
+      "sha256": "5c1fa72cf0baeaf048f2d06a802d477c8b8664979589f517901836b1bf61ea64",
+      "bytes": 27220
+    },
+    {
+      "path": "scripts/build_pwb_opening_band_scenario.py",
+      "sha256": "700641666039ad5cbc9ded2918999543dac46abaf12a8857682d9c4044f87422",
+      "bytes": 18239
+    },
+    {
+      "path": "scripts/build_pwb_opening_index_amendment.py",
+      "sha256": "09c2e7ab0c89d3f307108132412f4573b0495317654141d78a6f066133d988e5",
+      "bytes": 26490
+    },
+    {
+      "path": "scripts/build_pwb_readability_successor.py",
+      "sha256": "562ae7c37b7085f759cf70cf23d428772c4276f8789d92a26743c38c5ec58719",
+      "bytes": 49674
+    },
+    {
+      "path": "scripts/build_pwb_registry_currency_briefing_amendment.py",
+      "sha256": "5eee1239a6310e3774c424210f37a5609de4d847de54c3419b173adfb4f8e945",
+      "bytes": 26635
+    },
+    {
+      "path": "scripts/build_pwb_registry_loaded_profile_amendment.py",
+      "sha256": "90306da178039065b9ba9b1dece4ff55b366d5cb7858c4cd8e13fa0b31c0c17c",
+      "bytes": 121967
+    },
+    {
+      "path": "scripts/build_pwb_registry_machine_ceiling_amendment.py",
+      "sha256": "180008f761cc0b6a6f67ab3d07704bad4ae65161ad50ac374e630a1cde3addc2",
+      "bytes": 23544
+    },
+    {
+      "path": "scripts/build_pwb_release_label_amendment.py",
+      "sha256": "1a489b5b0af9d8dbfeaecb6ba6d4df3496ee9154a0672d1d54cc634dca0b2cdd",
+      "bytes": 81112
+    },
+    {
+      "path": "scripts/build_pwb_scoped_attributes_amendment.py",
+      "sha256": "bb0f7e2ea260aec57706dd4abce985c8a15ee51ef373ed1c4bbbbe0ab1bc65b9",
+      "bytes": 15348
+    },
+    {
+      "path": "scripts/build_pwb_state1_amendment_manifest.py",
+      "sha256": "cd38d14a6428ae8ca2de16d8d60d27ae75891305bbba8afef019b739eb257a6c",
+      "bytes": 20187
+    },
+    {
+      "path": "scripts/build_pwb_tree_framing_amendment.py",
+      "sha256": "1e4b32ae1d85fa21b3f918d1551e0ecf0dff8b31bbb7f2cc88b489e909698c42",
+      "bytes": 59901
+    },
+    {
+      "path": "scripts/build_pwb_truth_policy_amendment.py",
+      "sha256": "8cfd464cdd47c5aede0eda60ea24e20a3ec0befdb1beb95958431c30d4a3e22e",
+      "bytes": 15838
+    },
+    {
+      "path": "scripts/build_rfc5_project_documentation_class.py",
+      "sha256": "8fd1e93e87454010a7592a63667605af0fdab4c1c78544add82fbfed159a694b",
+      "bytes": 17195
+    },
+    {
+      "path": "scripts/build_rfc7_scoped_values_successor.py",
+      "sha256": "dd0cef9c4001974ad61cc89f89a1fca7284cbe23c44b9304fde4318934a733c0",
+      "bytes": 26346
+    },
+    {
+      "path": "scripts/build_spec_policy_readability_restyle.py",
+      "sha256": "d9e35ec53095207c1f602c497e0e9823804763b88527a4feb1f65f7c0969a648",
+      "bytes": 17334
+    },
+    {
+      "path": "scripts/build_three_surface_poc_block_provenance_amendment.py",
+      "sha256": "be19c80493dd80c7da01d7825f3fbd5b6b9f4b5cd11d5d12854526ea27f3fd49",
+      "bytes": 15119
+    },
+    {
+      "path": "scripts/build_three_surface_poc_governedby_reference_amendment.py",
+      "sha256": "f6f275fb13f50549fb0a4a38efe37b374f4965ffce848b40938cebdf4c43337c",
+      "bytes": 51460
+    },
+    {
+      "path": "scripts/build_three_surface_poc_identity_amendment.py",
+      "sha256": "d36fa4ba9a7eecbca5495e81a4c27288163aa8676270a91d374e89b57733dbb5",
+      "bytes": 48955
+    },
+    {
+      "path": "scripts/build_three_surface_poc_readability_successor.py",
+      "sha256": "c2373f8a6f03f889a13e896198eb78024e37f3b6519e54ca77413c380a0d185a",
+      "bytes": 32373
+    },
+    {
+      "path": "scripts/build_three_surface_poc_spec_dependencies.py",
+      "sha256": "b151c210297a2d1b9acd53acb86f61d8d5e8985e9915eece126ad0867581dd63",
+      "bytes": 5027
+    },
+    {
+      "path": "scripts/build_three_surface_poc_vocabulary_epistemic_amendment.py",
+      "sha256": "6c72ee2d2b5f6f6b054ed4059cbc9be3e6a950103cd9314ab07bfd0684955237",
+      "bytes": 62367
+    },
+    {
+      "path": "scripts/census_consent_exports.mjs",
+      "sha256": "d95c7eb9d2444531655915628ef6af6c4b30ef4adb01a61c13f276fd5639ad09",
+      "bytes": 8308
+    },
+    {
+      "path": "scripts/check_docs_review_campaign_partition.py",
+      "sha256": "64b51345cd68634ce3c06cbaa1a1700b65ab83673240449c2deecca8bf735ff5",
+      "bytes": 37137
+    },
+    {
+      "path": "scripts/check_evidence_currency.py",
+      "sha256": "cb172796309c6b258ed3c315d17a8cff831eab7fa588d29e7afc6e15b41fb9d2",
+      "bytes": 50425
+    },
+    {
+      "path": "scripts/check_generator_install.mjs",
+      "sha256": "c5a8f54538dae47d1b7dce2e2026a5d0f663fb5bc7b6f12621cf3c5d542f0819",
+      "bytes": 376
+    },
+    {
+      "path": "scripts/check_governance.py",
+      "sha256": "e56609bc1f3474f74d665abab4874bc779800c38ac015f8c20da69c68138e8e9",
+      "bytes": 576418
+    },
+    {
+      "path": "scripts/check_p115_compatibility_examples.py",
+      "sha256": "d6cceac03fd6db1f27d784c2e0344641ab65300d2687655f7b9a612eeaf20eb3",
+      "bytes": 24446
+    },
+    {
+      "path": "scripts/check_polaris_response_ceiling_reading.py",
+      "sha256": "4496a411101fc8490d9da2a1193dca23daf1caf5fe56db29100f976f23b2a0cf",
+      "bytes": 34079
+    },
+    {
+      "path": "scripts/check_quotations.py",
+      "sha256": "b20f2e7313269d84c5238cc43b8c0a960fbfcfa7ef77e1a54fc841c0d326bc78",
+      "bytes": 24779
+    },
+    {
+      "path": "scripts/check_spec_reconciliation.py",
+      "sha256": "2219d1b862fc2fa4cad000bc76eb3700f7c429f1dc6ba99909ed086d5ca05b6b",
+      "bytes": 111886
+    },
+    {
+      "path": "scripts/compare_unknown_denominator_withheld.py",
+      "sha256": "0df8e72f28869e0f843a69e9d2607ce50949e855ef74ebaff3eac80c4c088532",
+      "bytes": 1709
+    },
+    {
+      "path": "scripts/count_polaris_effective_scenarios.py",
+      "sha256": "759dcd3b22b2faf93e23957d636b10fb8b5127b1dae666640ed54422d1cf1d1c",
+      "bytes": 36629
+    },
+    {
+      "path": "scripts/derive_generator_sent_text.mjs",
+      "sha256": "af42b4b29912068a22bb18a349c4e1af5c773f9e4636833d09a5bdfb66f7a4f1",
+      "bytes": 15511
+    },
+    {
+      "path": "scripts/differential_consent_act_families.mjs",
+      "sha256": "12cbc7b39fe224a6bf8c5c8077a54d9bdfca45909490ecbe22debd2b671c7738",
+      "bytes": 54711
+    },
+    {
+      "path": "scripts/differential_line_slot.mjs",
+      "sha256": "36a8fba458ddd0c98a75bd5873d7d3be40351b03db52f667fa986ae1d43db14a",
+      "bytes": 20628
+    },
+    {
+      "path": "scripts/dossier_run_evidence.mjs",
+      "sha256": "848a2e57c1da337be427d94fbfe3ad7bfa12257de9ea93597cdf463ca4cecf3d",
+      "bytes": 5363
+    },
+    {
+      "path": "scripts/dossier_scale_measure.mjs",
+      "sha256": "3d37ead5fb61f1b0b045aeba215da644dd7f9ed9c571c04e4f7f0780ae6473b3",
+      "bytes": 20015
+    },
+    {
+      "path": "scripts/estimate_pwb_scoped_attributes_saving.py",
+      "sha256": "647ae59478e86b0327544cc120e1e4adfc1a42d622a9b3d479a5fa804a3fa132",
+      "bytes": 7409
+    },
+    {
+      "path": "scripts/install_redis_local_agent_sitting.py",
+      "sha256": "1db21e7fb43368fa0f83aecb8772aebff43899741a520f360585026b0778e0ee",
+      "bytes": 56267
+    },
+    {
+      "path": "scripts/install_redis_sitting.py",
+      "sha256": "3344c3f1e30ec925fea1db064d0caa83d639b4b6f55efee35350062b7e869682",
+      "bytes": 104332
+    },
+    {
+      "path": "scripts/launch_gate_results.py",
+      "sha256": "6f4960d51af45d4aba3871d8e9f73a30622e075b96c8ee1b628a271056282a18",
+      "bytes": 195921
+    },
+    {
+      "path": "scripts/measure_cli_island_loads.mjs",
+      "sha256": "921952c38848175bfb755b1852436c104ee31291210da34b793ac5702a97d4c1",
+      "bytes": 4346
+    },
+    {
+      "path": "scripts/measure_consent_gate_recognition.mjs",
+      "sha256": "ae33a37eaeba019834436b9fb9253c99ea92b219e0d83785788dbc7a4f5e2cb3",
+      "bytes": 19490
+    },
+    {
+      "path": "scripts/measure_decisions_sweep.mjs",
+      "sha256": "55b91c3734262c34898c739fce509504503d67c8328c93b7546603b9f083b3db",
+      "bytes": 6711
+    },
+    {
+      "path": "scripts/measure_line_slot_reads.mjs",
+      "sha256": "6b804e9c967511b563f7d82ddcc21331a9e53c1921a6b96345107aa3415c379b",
+      "bytes": 10910
+    },
+    {
+      "path": "scripts/measure_machine_channel_provenance.py",
+      "sha256": "84c5047d73ad5386ace516ae331cad79dd61656a14da930b3271866a42480bd4",
+      "bytes": 8726
+    },
+    {
+      "path": "scripts/measure_slot_line_backtracking.mjs",
+      "sha256": "8830c2f490471e020b79dfffae925c1764a78c674202edd1604aaa661d261a31",
+      "bytes": 5259
+    },
+    {
+      "path": "scripts/measure_vitest_test_durations.py",
+      "sha256": "7799aa73bae9a4790b75b85a597c57bf07aab4bb4dab6c67570e69af7535128e",
+      "bytes": 7751
+    },
+    {
+      "path": "scripts/polaris_generator_approval.py",
+      "sha256": "10c265a47501e37efe921f64a3e27e5d9ee410998b22f4251aa86bd940aedb51",
+      "bytes": 22148
+    },
+    {
+      "path": "scripts/polaris_prompt_mutants.py",
+      "sha256": "bd9c33cffc779dd01cb09d200747dc6c40149e25562a9af599060c788b4dbeca",
+      "bytes": 23070
+    },
+    {
+      "path": "scripts/prepare_three_surface_poc_governedby_reference_recording.py",
+      "sha256": "59431850ddabb28f4b03941c0ea55e607f430a1f9cde20c2a8b8575a49165881",
+      "bytes": 180586
+    },
+    {
+      "path": "scripts/probe_pwb_gate_on_altered_policy_act.mjs",
+      "sha256": "83e309076de928da0dca45291b67683e8ec5b75a18ed3a8f1bde995db96211e4",
+      "bytes": 5818
+    },
+    {
+      "path": "scripts/probe_superseded_policy_act_regeneration.py",
+      "sha256": "0fab009ff373c242fc0dce92e0957313d330b7fa2a52e607a675841305823589",
+      "bytes": 7928
+    },
+    {
+      "path": "scripts/pwb_requirement_amendment.py",
+      "sha256": "dd30e113a561ff2b506b211536959e1010bb6fa88d8deaea0d074d219d2a17dc",
+      "bytes": 39308
+    },
+    {
+      "path": "scripts/pwb_signed_selftest.py",
+      "sha256": "168b0151c49c6c2a7bec283d3603fb440d1f870053a346c8695868a81689dc99",
+      "bytes": 8206
+    },
+    {
+      "path": "scripts/read_ts_exported_string_array.mjs",
+      "sha256": "7a826bbe8c72ad96c74a4bfe9c749468d4ecabd0501cbd7e66eed6e557daf5db",
+      "bytes": 3379
+    },
+    {
+      "path": "scripts/readability_successor.py",
+      "sha256": "f9e24b6563eca5bfc274dc19170ed7488e5f4ab4caa33558fe86cfa480e57df7",
+      "bytes": 31205
+    },
+    {
+      "path": "scripts/record_contract_readability_restyle.py",
+      "sha256": "df4db1f21f8fdb2193b775dfd3e52edd1e15a00505a7bbdf36ea982b003644eb",
+      "bytes": 22774
+    },
+    {
+      "path": "scripts/record_dossier_agent_provider_v2_act.py",
+      "sha256": "0853be9e0e49232cfa14c8bc009ff92d1e81da4e567b16756dcbbc9e12d87953",
+      "bytes": 38315
+    },
+    {
+      "path": "scripts/record_dossier_local_agent_acts.py",
+      "sha256": "700bb00e65969431ade822187863a3efa033e8aa3c44ca051a727975fccf4295",
+      "bytes": 36796
+    },
+    {
+      "path": "scripts/record_messages_api_route_registry_act.py",
+      "sha256": "ae9f33509bc978e29ee14dc516d7d7e98d29fe682bcc1e98baee86ef8bd61db0",
+      "bytes": 37121
+    },
+    {
+      "path": "scripts/record_narrative_profile_adoption.py",
+      "sha256": "7fceafc45babf25b734198dbb9f1ad0177d83a2ffd3119ff2c6e6ea8ac0581a1",
+      "bytes": 18197
+    },
+    {
+      "path": "scripts/record_polaris_understanding_adoption.py",
+      "sha256": "b993ec3077a5c04d985a961824b47b2e38ad0cbea0d9ef512bc6619e4392ad0e",
+      "bytes": 95642
+    },
+    {
+      "path": "scripts/record_public_admission_registry_entries_acts.py",
+      "sha256": "4c87f2bad16605bbe2c2e9e88b62b15ac6d7ff39ae138487b8d9958894dd82d5",
+      "bytes": 34492
+    },
+    {
+      "path": "scripts/record_public_egress_v2_act.py",
+      "sha256": "3e7a1527b96bdedb7e09e904e1f7cf5b51a820addd3669886c54101c7d774619",
+      "bytes": 38573
+    },
+    {
+      "path": "scripts/record_public_repo_admission_acts.py",
+      "sha256": "ef1029f523b6cb766323707f5106cb456ff4a7fff1e9c645203f8298354ab4f7",
+      "bytes": 36124
+    },
+    {
+      "path": "scripts/record_public_source_screening_scope_act.py",
+      "sha256": "66eba8b01c8a2414c651cefd0177be8975451e8291c766cb0745f92c26d418fc",
+      "bytes": 34631
+    },
+    {
+      "path": "scripts/record_public_source_screening_scope_v2_act.py",
+      "sha256": "76aa2465d0a4f667407164d58e857623d66c629051ced21c0789d3626e0ad695",
+      "bytes": 53129
+    },
+    {
+      "path": "scripts/record_public_source_screening_scope_v3_act.py",
+      "sha256": "2f8e0a53b3ba1a7278f50420252131c2546acbd8dd9b00930f3896f955af2a0b",
+      "bytes": 45528
+    },
+    {
+      "path": "scripts/record_public_source_screening_scope_v4_act.py",
+      "sha256": "c7d6412599ae93b618306773c2b25d5f62e01a76bfafeeb25d08fb92df62f4e3",
+      "bytes": 57784
+    },
+    {
+      "path": "scripts/record_pwb_behavior_amendment_acts.py",
+      "sha256": "5e205631696a8d6a6aa8b129ce7e7e91dd2834ac35c6a827d1318abd5530c0c9",
+      "bytes": 95722
+    },
+    {
+      "path": "scripts/record_pwb_behavior_contract_repin_acts.py",
+      "sha256": "4cb380885acbfcf8f7eeb6e8724bc1e6ffa525d374d7b6c366989aeae3cbec3a",
+      "bytes": 37650
+    },
+    {
+      "path": "scripts/record_pwb_effect_acts.py",
+      "sha256": "b6bc5d42e0c587f41def1879913ba62d3defa8c6f28657f0e22f103d02d06679",
+      "bytes": 17648
+    },
+    {
+      "path": "scripts/record_pwb_effect_amendment_acts.py",
+      "sha256": "e2d6c364a5a3f9957b1948c8a90ca7b612f8a69c87ec9ea8d69d391abd3df75f",
+      "bytes": 20420
+    },
+    {
+      "path": "scripts/record_pwb_registry_currency_amendment.py",
+      "sha256": "6a3cde127a89e152c3a55a501b2dc5262ce1ee55ce3c510c1fbece36df8d33bc",
+      "bytes": 28196
+    },
+    {
+      "path": "scripts/record_pwb_registry_machine_ceiling_act.py",
+      "sha256": "79f6af07c2dcd113eaa718e7051b1d9d41fee2d583efdbb9ab797643dd44bc0e",
+      "bytes": 37418
+    },
+    {
+      "path": "scripts/record_pwb_state1_amendment.py",
+      "sha256": "07a17d8e039d4a1a13d61e8000355e082f8f390fac2763df2481559219deddb1",
+      "bytes": 11699
+    },
+    {
+      "path": "scripts/record_pwb_truth_amendment.py",
+      "sha256": "3d86e86c5609b6ec96a42e2a27586141ee407831419ce63c798f656eaa9f3a33",
+      "bytes": 14312
+    },
+    {
+      "path": "scripts/record_rfc5_project_documentation_act.py",
+      "sha256": "e0576fda179d3aa1ba6ef24b4c88fb51230b1dd51e6034e76b0bfec77ece6b73",
+      "bytes": 29425
+    },
+    {
+      "path": "scripts/record_rfc7_scoped_values_successor.py",
+      "sha256": "d0630046e0c17b1d55ba42791c99839fe9a2824947253a88aa432c7b31e9c116",
+      "bytes": 23104
+    },
+    {
+      "path": "scripts/record_spec_policy_readability_restyle.py",
+      "sha256": "17b0bde4e6602395376f653ac56a158314f91120107621009a0f91cceb999622",
+      "bytes": 28130
+    },
+    {
+      "path": "scripts/record_three_surface_poc_readability_successor.py",
+      "sha256": "c0f7a60954ee59ed9a7ad131a79d0ae6848a1647dc8607968f92e3ca66c40262",
+      "bytes": 20183
+    },
+    {
+      "path": "scripts/record_versioned_signoff.py",
+      "sha256": "c4eded23e7f3a104bcd364e3a3cc4722b249dfc88f9a3fe0b0494b7fdd0d8310",
+      "bytes": 185787
+    },
+    {
+      "path": "scripts/redis_screening_remeasure.mjs",
+      "sha256": "03ba1a9c83eed6cf05f3ba49ac5e569fb44cdd6cf6f078b66963625e2f1f45ac",
+      "bytes": 45629
+    },
+    {
+      "path": "scripts/render_launch_administration.py",
+      "sha256": "96032a80f345a7e363ddd6b2bcf9f59efc35f3728f62e63999e299fb73eaa18b",
+      "bytes": 43967
+    },
+    {
+      "path": "scripts/rerun_rule6_mutants_selected_tests.py",
+      "sha256": "700452c86f756f0df955cad24cdfe36a222b0138b2af23fc36e797487b3fdc2c",
+      "bytes": 5196
+    },
+    {
+      "path": "scripts/rule6_mutation_runner.py",
+      "sha256": "2bc35be550f0beb6ad355e0fc89719c1ae28320d186f41929af96dd59a376b22",
+      "bytes": 4622
+    },
+    {
+      "path": "scripts/rule6_timeout_rerun.py",
+      "sha256": "89ee529da96ac4bb2c31af16b060809dc7f51171678c428b88f43b8dae58144d",
+      "bytes": 2952
+    },
+    {
+      "path": "scripts/run_consent_census_mutants.py",
+      "sha256": "ee74876a7aed5ba35b3bd7066365416f7bf940ae4dbc1e99c6ce499e1e89ac3b",
+      "bytes": 7433
+    },
+    {
+      "path": "scripts/run_line_slot_rule6_mutants.py",
+      "sha256": "4ce9d52cbb0bec04edb5e3b7716a9af4b9ed047706191bd2abccb1e71eba7ea5",
+      "bytes": 6329
+    },
+    {
+      "path": "scripts/run_m10_conditional_mutations.mjs",
+      "sha256": "bff84256c1608b6d9cd49f54fed49fd3ea8e3ffbac7afe6804b7cf20d6cbc490",
+      "bytes": 5108
+    },
+    {
+      "path": "scripts/run_m13_literal_mutations.mjs",
+      "sha256": "61f5992ce499d1310f8fe070e54a3d4c8066c5b2c70535d5a1b3e5fa50076302",
+      "bytes": 8048
+    },
+    {
+      "path": "scripts/run_m7_literal_mutations.mjs",
+      "sha256": "7cf5d3c6d7fb3878184a9c80f6c8164667a81b2965d9234400318befcdc04e8a",
+      "bytes": 6650
+    },
+    {
+      "path": "scripts/run_m9_literal_mutations.mjs",
+      "sha256": "1efd1e8ed98dc3b3708401fc6a938cdcb486b391dc5213011a62d64d8cc6ed95",
+      "bytes": 7295
+    },
+    {
+      "path": "scripts/simulate_public_source_screening_scope_act.py",
+      "sha256": "df1f23a51c16764d199d35fb649d9e7380c076928b2504db25ce6b54544a67c3",
+      "bytes": 7844
+    },
+    {
+      "path": "scripts/simulate_redis_local_agent_sitting.py",
+      "sha256": "e4c1d4ab1933d0b2b628d99b4cc5646bdfb1c69072817537d8da023ea7c3b638",
+      "bytes": 16927
+    },
+    {
+      "path": "scripts/simulate_redis_sitting.py",
+      "sha256": "33773fdef3b4162a076ef7675c839c470e23925f8984e7078fdec96e32e2781f",
+      "bytes": 51743
+    },
+    {
+      "path": "scripts/size_vitest_test_timeouts.py",
+      "sha256": "40bf70b5fec3f4349754c0e1f736fb438237bcfa51d5a464db7e81015dfb5629",
+      "bytes": 9881
+    },
+    {
+      "path": "scripts/sweep_consent_act_record_readers.py",
+      "sha256": "ebe90d9ccd97447b8cc5f30e97a740c42095b7034044c8f7c0d2fa6fd1054870",
+      "bytes": 7825
+    },
+    {
+      "path": "scripts/validate_launch_administration.py",
+      "sha256": "ed559d98bcd3e29dc0b80ec06ac790e41eb0091af32746ad9f34d2e35689e16d",
+      "bytes": 153801
+    }
+  ],
+  "candidates": [
+    {
+      "path": "apps/three-surface-poc/src/block-provenance-sweep.test.ts",
+      "sha256": "16f1b58c30df9daa9431ceb6b735b738b1702de6d23e356a75f68062daacd3db",
+      "bytes": 15348,
+      "matches": {
+        "governing_value": [
+          {
+            "line": 204,
+            "text": "expect(Object.keys(block(answer, 'workItems')).sort()).toEqual(['beadPrefix', 'capturedAt', 'governedByUnknownCount', 'items', 'kind', 'provenance', 'titles']);"
+          },
+          {
+            "line": 221,
+            "text": "governedBy: {"
+          }
+        ],
+        "endpoint": [
+          {
+            "line": 4,
+            "text": "// The machine answer is `GET /api/poc`'s body, `JSON.stringify(model)`"
+          }
+        ],
+        "logical_as_wire": [
+          {
+            "line": 4,
+            "text": "// The machine answer is `GET /api/poc`'s body, `JSON.stringify(model)`"
+          },
+          {
+            "line": 116,
+            "text": "const answer = JSON.parse(JSON.stringify(model)) as Obj;"
+          }
+        ]
+      }
+    },
+    {
+      "path": "apps/three-surface-poc/src/fresh-checkout-demo-main.ts",
+      "sha256": "b59ed25c6faddc6753e6f5708b1243896f475b3105b0e7aeb9daab2b53b1a501",
+      "bytes": 34988,
+      "matches": {
+        "endpoint": [
+          {
+            "line": 402,
+            "text": "const refused = await fetchRoute(daemon.baseUrl, '/api/poc');"
+          },
+          {
+            "line": 403,
+            "text": "expectedDaemonDiagnostics.push({ method: 'GET', route: '/api/poc', status: 401 });"
+          },
+          {
+            "line": 404,
+            "text": "routes.push({ path: '/api/poc', authenticated: false, status: refused.status, bytes: refused.body.byteLength });"
+          },
+          {
+            "line": 405,
+            "text": "const machine = await fetchRoute(daemon.baseUrl, '/api/poc', token);"
+          },
+          {
+            "line": 406,
+            "text": "routes.push({ path: '/api/poc', authenticated: true, status: machine.status, contentType: machine.contentType, bytes: machine.body.byteLength, sha256: retain('api-poc.json', machine.body), retainedAs: 'api-poc.json' });"
+          }
+        ],
+        "body_consumer": [
+          {
+            "line": 406,
+            "text": "routes.push({ path: '/api/poc', authenticated: true, status: machine.status, contentType: machine.contentType, bytes: machine.body.byteLength, sha256: retain('api-poc.json', machine.body), retainedAs: 'api-poc.json' });"
+          },
+          {
+            "line": 407,
+            "text": "const model = JSON.parse(new TextDecoder().decode(machine.body)) as PocModel;"
+          }
+        ]
+      }
+    },
+    {
+      "path": "apps/three-surface-poc/src/fresh-checkout-verdict.test.ts",
+      "sha256": "3b923f044881a145da1976476b7542c65046d983ab9790c964e9477c74714505",
+      "bytes": 12322,
+      "matches": {
+        "endpoint": [
+          {
+            "line": 15,
+            "text": "const LINE_API_POC = '{\"kind\":\"daemon-http-outcome\",\"at\":\"2026-10-02T18:50:02.188Z\",\"method\":\"GET\",\"route\":\"/api/poc\",\"status\":401,\"reason\":\"credential-refused\",\"contentType\":\"application/json\"}';"
+          },
+          {
+            "line": 16,
+            "text": "const LINE_PRESENTATION = '{\"kind\":\"daemon-http-outcome\",\"at\":\"2026-10-02T18:50:02.506Z\",\"method\":\"GET\",\"route\":\"/api/poc/polaris\",\"status\":401,\"reason\":\"credential-refused\",\"contentType\":\"application/json\"}';"
+          },
+          {
+            "line": 50,
+            "text": "{ method: 'GET', route: '/api/poc', status: 401 },"
+          },
+          {
+            "line": 51,
+            "text": "{ method: 'GET', route: '/api/poc/polaris', status: 401 },"
+          }
+        ]
+      }
+    },
+    {
+      "path": "apps/three-surface-poc/src/governing-intent-sweep.test.ts",
+      "sha256": "7e653fa37d6b5e4163fce6a055d6c9fa9d5acb1851fdd84b1d4e7604e6e264ec",
+      "bytes": 19558,
+      "matches": {
+        "governing_value": [
+          {
+            "line": 22,
+            "text": "import { BUTLERS_POC_SEEDS, buildPocModel, countGoverningIntentUnknown, governingIntentUnknown, type PocModel, type WorkItemFact } from '@syzygy/three-surface-poc-core';"
+          },
+          {
+            "line": 53,
+            "text": "interface Card { readonly id: string; readonly governedBy: string | undefined; readonly body: string }"
+          },
+          {
+            "line": 64,
+            "text": "out.push({ id, governedBy: /\\sdata-governed-by=\"([^\"]*)\"/.exec(attrs)?.[1], body: html.slice(start, end) });"
+          },
+          {
+            "line": 71,
+            "text": "return cards(html).filter((card) => card.governedBy === 'Unknown').map((card) => card.id);"
+          },
+          {
+            "line": 91,
+            "text": "const governedBy = item.governedBy;"
+          },
+          {
+            "line": 93,
+            "text": "if (!isObj(governedBy)) { found.push(`${id}: no governedBy`); continue; }"
+          },
+          {
+            "line": 94,
+            "text": "const routes = Array.isArray(governedBy.resolutionRoutes) ? governedBy.resolutionRoutes.filter(isObj) : [];"
+          },
+          {
+            "line": 95,
+            "text": "const isUnknown = governedBy.label === 'Unknown' && governedBy.closedReason === REASON;"
+          },
+          {
+            "line": 96,
+            "text": "if (governedBy.label !== 'Unknown') found.push(`${id}: governedBy is ${String(governedBy.label)}, not Unknown`);"
+          },
+          {
+            "line": 97,
+            "text": "if (governedBy.closedReason !== REASON) found.push(`${id}: reason ${String(governedBy.closedReason)}`);"
+          },
+          {
+            "line": 103,
+            "text": "if (JSON.stringify(governedBy).includes(identifier)) found.push(`${id}: governedBy names ${identifier} from its title`);"
+          },
+          {
+            "line": 108,
+            "text": "if (work.governedByUnknownCount !== unknowns) found.push(`machine count ${String(work.governedByUnknownCount)} differs from the enumerated ${unknowns}`);"
+          },
+          {
+            "line": 122,
+            "text": "if (count !== work.governedByUnknownCount) found.push(`the channels serve different counts: ${String(count)} and ${String(work.governedByUnknownCount)}`);"
+          },
+          {
+            "line": 198,
+            "text": "it('each served governedBy is the Unknown with RFC2-24\\'s reason and route', () => {"
+          },
+          {
+            "line": 200,
+            "text": "expect(item.governedBy).toEqual({"
+          },
+          {
+            "line": 215,
+            "text": "expect(titled?.governedBy).toEqual(items(answer).find((item) => item.id === 'bu-open2')?.governedBy);"
+          },
+          {
+            "line": 237,
+            "text": "expect(countGoverningIntentUnknown(facts)).toBe(3);"
+          },
+          {
+            "line": 238,
+            "text": "const observed: WorkItemFact = { ...facts[0]!, governedBy: { ...governingIntentUnknown(), label: 'Observed' } as unknown as WorkItemFact['governedBy'] };"
+          },
+          {
+            "line": 239,
+            "text": "expect(countGoverningIntentUnknown([observed, facts[1]!, facts[2]!])).toBe(2);"
+          },
+          {
+            "line": 240,
+            "text": "const otherReason: WorkItemFact = { ...facts[0]!, governedBy: { ...governingIntentUnknown(), closedReason: 'missing-evidence' } };"
+          },
+          {
+            "line": 241,
+            "text": "expect(countGoverningIntentUnknown([otherReason, facts[1]!])).toBe(1);"
+          },
+          {
+            "line": 258,
+            "text": "expect.soft(leaves(served).filter(([path]) => /governedBy/.test(path))).toEqual([]);"
+          },
+          {
+            "line": 268,
+            "text": "['a served item with no governedBy', (t) => { delete items(t)[0]!.governedBy; return t; }, /: no governedBy$/],"
+          },
+          {
+            "line": 269,
+            "text": "['a governedBy that is not Unknown (green)', (t) => { (items(t)[0]!.governedBy as Obj).label = 'Observed'; return t; }, /governedBy is Observed, not Unknown/],"
+          },
+          {
+            "line": 270,
+            "text": "['an identifier from the title', (t) => { const g = items(t).find((item) => item.id === TITLED_ITEM)!.governedBy as Obj; g.reason = 'Governed by POC-REQ-010'; return t; }, /governedBy names POC-REQ-010 from its title/],"
+          },
+          {
+            "line": 271,
+            "text": "['another reason', (t) => { (items(t)[1]!.governedBy as Obj).closedReason = 'missing-declaration'; return t; }, /reason missing-declaration/],"
+          },
+          {
+            "line": 272,
+            "text": "['another route', (t) => { (((items(t)[1]!.governedBy as Obj).resolutionRoutes as Obj[])[0]!).route = 'Repair the observer or source; new snapshot'; return t; }, /route is not RFC2-24's/],"
+          },
+          {
+            "line": 273,
+            "text": "['a machine miscount', (t) => { (t.workItems as Obj).governedByUnknownCount = 53; return t; }, /machine count 53 differs/],"
+          }
+        ],
+        "endpoint": [
+          {
+            "line": 4,
+            "text": "// The machine answer is `GET /api/poc`'s body, `JSON.stringify(model)`"
+          }
+        ],
+        "logical_as_wire": [
+          {
+            "line": 4,
+            "text": "// The machine answer is `GET /api/poc`'s body, `JSON.stringify(model)`"
+          },
+          {
+            "line": 166,
+            "text": "answer = JSON.parse(JSON.stringify(model)) as Obj;"
+          }
+        ]
+      }
+    },
+    {
+      "path": "apps/three-surface-poc/src/main.test.ts",
+      "sha256": "5d13c69fbb02eccce102ec3399edba1fab4d021e246b1c36e21ec38259ffb6de",
+      "bytes": 27234,
+      "matches": {
+        "endpoint": [
+          {
+            "line": 338,
+            "text": "'Machine endpoint: http://127.0.0.1:7478/api/poc',"
+          },
+          {
+            "line": 346,
+            "text": "for (const expected of ['GET /polaris', 'GET /trajectory', 'GET /orrery', 'GET /api/poc', 'POST /trajectory/materialize', 'POST /polaris/reobserve']) {"
+          },
+          {
+            "line": 491,
+            "text": "const response = await get(routeOf(h, 'GET', '/api/poc/polaris'));"
+          }
+        ]
+      }
+    },
+    {
+      "path": "apps/three-surface-poc/src/materialize-action.test.ts",
+      "sha256": "36ef63dc39278257a5e08c679d6e19f4a0b6c93167d38021449641161e376c6b",
+      "bytes": 21342,
+      "matches": {
+        "endpoint": [
+          {
+            "line": 22,
+            "text": "import { POC_MACHINE_PATH, pocRoutes } from './routes.js';"
+          },
+          {
+            "line": 165,
+            "text": "const machineResponse = await fetch(`${baseUrl}${POC_MACHINE_PATH}`, {"
+          }
+        ]
+      }
+    },
+    {
+      "path": "apps/three-surface-poc/src/orrery.ts",
+      "sha256": "8cdba628c980a1b9b020ca77ba8c60b0f75299aed6cefc36406df488ce13dc9a",
+      "bytes": 11207,
+      "matches": {
+        "endpoint": [
+          {
+            "line": 71,
+            "text": "* itself the same `model.orrery` object served at `GET /api/poc` \u2014 no"
+          }
+        ]
+      }
+    },
+    {
+      "path": "apps/three-surface-poc/src/poc-main.ts",
+      "sha256": "419794a51c798bbaed681b42a5c976ac16b0fbc4f1c52db096d2995de264f6ec",
+      "bytes": 10270,
+      "matches": {
+        "endpoint": [
+          {
+            "line": 218,
+            "text": "`Machine endpoint: http://${daemon.host}:${daemon.port}/api/poc`,"
+          }
+        ]
+      }
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-accessible-names-main.ts",
+      "sha256": "6312f9c9864221ca1d9bdb400d23832c27452a6a372fbf89dc6dbafb770c858c",
+      "bytes": 6898,
+      "matches": {
+        "endpoint": [
+          {
+            "line": 6,
+            "text": "// It reads the machine answer (`GET /api/poc`, bearer credential) of a"
+          },
+          {
+            "line": 27,
+            "text": "import { POC_MACHINE_PATH } from './routes.js';"
+          },
+          {
+            "line": 64,
+            "text": "pageListSource: `machine answer ${POC_MACHINE_PATH}: entry page plus one ${POLARIS_SOURCE_PATH} response per projectShape.sources entry`,"
+          },
+          {
+            "line": 101,
+            "text": "const response = await fetch(new URL(POC_MACHINE_PATH, baseUrl), { headers: { authorization: `Bearer ${token}` } });"
+          },
+          {
+            "line": 103,
+            "text": "process.stderr.write(`${POC_MACHINE_PATH} answered ${response.status}; nothing swept.\\n`);"
+          }
+        ],
+        "body_consumer": [
+          {
+            "line": 106,
+            "text": "const answer = await response.json() as MachineAnswer;"
+          }
+        ]
+      }
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+      "sha256": "32a68c632a1404b4aeb6e9a4fdee2069861abf2e204aaf90a413c2e4f2ee78df",
+      "bytes": 21546,
+      "matches": {
+        "endpoint": [
+          {
+            "line": 8,
+            "text": "// the machine answer (`GET /api/poc`), never from the rendered links."
+          },
+          {
+            "line": 40,
+            "text": "import { POC_MACHINE_PATH, pocRoutes } from './routes.js';"
+          },
+          {
+            "line": 213,
+            "text": "const answer = await fetch(`${baseUrl}${POC_MACHINE_PATH}`, { headers: { authorization: `Bearer ${token}` } }).then(async (response) => response.json() as Promise<PocModel>);"
+          },
+          {
+            "line": 320,
+            "text": "const answer = await fetch(`${baseUrl}${POC_MACHINE_PATH}`, { headers: { authorization: `Bearer ${token}` } }).then(async (response) => response.json() as Promise<PocModel>);"
+          }
+        ],
+        "body_consumer": [
+          {
+            "line": 213,
+            "text": "const answer = await fetch(`${baseUrl}${POC_MACHINE_PATH}`, { headers: { authorization: `Bearer ${token}` } }).then(async (response) => response.json() as Promise<PocModel>);"
+          },
+          {
+            "line": 320,
+            "text": "const answer = await fetch(`${baseUrl}${POC_MACHINE_PATH}`, { headers: { authorization: `Bearer ${token}` } }).then(async (response) => response.json() as Promise<PocModel>);"
+          }
+        ]
+      }
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+      "sha256": "e971879fcdb0b4af3236514d45ed2b9bf55312470412cf70b35dd0546f2e8b2a",
+      "bytes": 12676,
+      "matches": {
+        "endpoint": [
+          {
+            "line": 179,
+            "text": "for (const value of ['polaris', '/polaris', '/api/poc', 'polaris.ts', 'REQ-polaris-generation-1', 'REQ-polaris-generation-001/preview']) {"
+          }
+        ]
+      }
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-capability-detail.test.ts",
+      "sha256": "8d969f077a9d384809a3c155120c83c089cb7f99fa0289ea78aa57ca851e41f8",
+      "bytes": 27635,
+      "matches": {
+        "logical_as_wire": [
+          {
+            "line": 205,
+            "text": "const before = JSON.stringify(model);"
+          },
+          {
+            "line": 271,
+            "text": "expect(JSON.stringify(model)).toBe(before);"
+          },
+          {
+            "line": 319,
+            "text": "const machine = JSON.parse(JSON.stringify(model)) as PocModel;"
+          }
+        ]
+      }
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-copy.test.ts",
+      "sha256": "8fb2282a9c3e876a0d5e78f8c116c8ffbb19d89d33152f54f3878ac346068dd2",
+      "bytes": 26137,
+      "matches": {
+        "logical_as_wire": [
+          {
+            "line": 270,
+            "text": "const clone = JSON.parse(JSON.stringify(model)) as unknown;"
+          }
+        ]
+      }
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-epistemic-tuples.test.ts",
+      "sha256": "1ae7743427a0dc769c8b8b11b9572c0d21e344193a0d9048fbf40c1227869ab7",
+      "bytes": 21282,
+      "matches": {
+        "logical_as_wire": [
+          {
+            "line": 174,
+            "text": "const machine = JSON.parse(JSON.stringify(model)) as PocModel;"
+          },
+          {
+            "line": 237,
+            "text": "const machine = JSON.parse(JSON.stringify(model)) as PocModel;"
+          }
+        ]
+      }
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-narrative.test.ts",
+      "sha256": "14e5043c917a23b43b9ffc958cd1f2077d9d6e1041c186c8d5e5362ed8250508",
+      "bytes": 19878,
+      "matches": {
+        "logical_as_wire": [
+          {
+            "line": 194,
+            "text": "const machine = JSON.parse(JSON.stringify(model)) as PocModel;"
+          },
+          {
+            "line": 302,
+            "text": "const truthBefore = JSON.stringify(model);"
+          },
+          {
+            "line": 307,
+            "text": "expect(JSON.stringify(model)).toBe(truthBefore);"
+          }
+        ]
+      }
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-narrative.ts",
+      "sha256": "daced3d4e4390b309f434ea3a959a9b9923029ce51d88e6f4e8bec51a17ecd0b",
+      "bytes": 7710,
+      "matches": {
+        "endpoint": [
+          {
+            "line": 9,
+            "text": "* structure is a presentation artifact: deleting it leaves `/api/poc`"
+          },
+          {
+            "line": 187,
+            "text": "// `/api/poc/polaris` serves it. It is not `/api/poc` and never becomes part"
+          }
+        ]
+      }
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-parity-sweep.test.ts",
+      "sha256": "bc2bb22653b985dcadcfb4577bb104c7110263c4ee3fe7176543ff8f84c1cdd0",
+      "bytes": 48920,
+      "matches": {
+        "endpoint": [
+          {
+            "line": 5,
+            "text": "// and hand-written projections over the machine answer (`/api/poc` is"
+          },
+          {
+            "line": 22,
+            "text": "import { POC_MACHINE_PATH, POLARIS_PRESENTATION_PATH, pocRoutes } from './routes.js';"
+          },
+          {
+            "line": 301,
+            "text": "const machine = served(POC_MACHINE_PATH) as unknown as PocModel;"
+          },
+          {
+            "line": 644,
+            "text": "const machine = JSON.parse(serve(POC_MACHINE_PATH, {})) as { resourceHeadroom: { entries: { id: string; declared: number; observed: { state: string; value?: number }; remaining: { state: string; value?: number } }[]; cost: { id: string; state: string; bodiesRead?: number; bytes?: number; parsePasses"
+          }
+        ],
+        "logical_as_wire": [
+          {
+            "line": 6,
+            "text": "// `JSON.stringify(model)` verbatim, so the machine channel here is that"
+          },
+          {
+            "line": 679,
+            "text": "const machineBody = JSON.stringify(model);"
+          }
+        ],
+        "identity": [
+          {
+            "line": 19,
+            "text": "import { responseIdentityPreimage } from '@syzygy/three-surface-poc-core';"
+          },
+          {
+            "line": 712,
+            "text": "const preimage = responseIdentityPreimage(model);"
+          }
+        ],
+        "body_consumer": [
+          {
+            "line": 644,
+            "text": "const machine = JSON.parse(serve(POC_MACHINE_PATH, {})) as { resourceHeadroom: { entries: { id: string; declared: number; observed: { state: string; value?: number }; remaining: { state: string; value?: number } }[]; cost: { id: string; state: string; bodiesRead?: number; bytes?: number; parsePasses"
+          }
+        ]
+      }
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+      "sha256": "f8a237020b0e2c8e5e887fd805dd96983a128aceef948440d120d9bbb8274eeb",
+      "bytes": 7748,
+      "matches": {
+        "endpoint": [
+          {
+            "line": 2,
+            "text": "// RFC7-3): `/api/poc/polaris` serves the narrative registry the human page"
+          },
+          {
+            "line": 5,
+            "text": "// the machine response ceiling. `/api/poc` is unchanged by it."
+          },
+          {
+            "line": 19,
+            "text": "import { POC_MACHINE_PATH, POLARIS_PRESENTATION_KIND, POLARIS_PRESENTATION_PATH, pocRoutes, type PolarisPresentationEnvelope } from './routes.js';"
+          },
+          {
+            "line": 103,
+            "text": "const truth = (await (await fetch(`${baseUrl}${POC_MACHINE_PATH}`, { headers: { authorization: `Bearer ${token}` } })).json()) as PocModel & { narrative?: unknown };"
+          }
+        ],
+        "logical_as_wire": [
+          {
+            "line": 104,
+            "text": "expect({ ...truth, links: undefined, responseIdentity: model.responseIdentity }).toEqual({ ...JSON.parse(JSON.stringify(model)), links: undefined });"
+          }
+        ],
+        "body_consumer": [
+          {
+            "line": 114,
+            "text": "expect(JSON.parse(body)).toMatchObject({ served: 'nothing', failure: 'response-limit-breached', limit: 'maxMachineResponseBytes', declared: 64 });"
+          }
+        ]
+      }
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-project-shape.test.ts",
+      "sha256": "912b0eab847f1d75c6723b8e98b8de9b7a01db9dcb04a1146f4b6ddb6b60cf82",
+      "bytes": 34268,
+      "matches": {
+        "logical_as_wire": [
+          {
+            "line": 224,
+            "text": "const machine = JSON.parse(JSON.stringify(model)) as PocModel;"
+          },
+          {
+            "line": 536,
+            "text": "const copy = JSON.parse(JSON.stringify(model)) as PocModel;"
+          }
+        ]
+      }
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-proposed-work.test.ts",
+      "sha256": "5b7e16cf450919f10353adef1b009f962480608234b3fae29d2445daa5ee8005",
+      "bytes": 9614,
+      "matches": {
+        "logical_as_wire": [
+          {
+            "line": 136,
+            "text": "const machine = JSON.parse(JSON.stringify(model)) as PocModel;"
+          },
+          {
+            "line": 153,
+            "text": "const machine = JSON.parse(JSON.stringify(model)) as PocModel;"
+          }
+        ]
+      }
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-reachability.test.ts",
+      "sha256": "09a0d613ec9690e44040f2577f771083874499728023cfccc2d0ad945a24bc93",
+      "bytes": 28138,
+      "matches": {
+        "logical_as_wire": [
+          {
+            "line": 84,
+            "text": "const shape = (JSON.parse(JSON.stringify(model)) as PocModel).projectShape;"
+          },
+          {
+            "line": 343,
+            "text": "const machine = (JSON.parse(JSON.stringify(model)) as PocModel).projectShape;"
+          }
+        ]
+      }
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-walkthrough-readiness.test.ts",
+      "sha256": "5b23bac425cf357fff2b132e8470891f58c0eb8c5a1b4243aee9b25885a17e78",
+      "bytes": 18372,
+      "matches": {
+        "endpoint": [
+          {
+            "line": 86,
+            "text": "for (const other of ['/', '/trajectory', '/orrery', '/trajectory/materialize', '/polaris/', '/api/poc']) {"
+          }
+        ],
+        "logical_as_wire": [
+          {
+            "line": 7,
+            "text": "// served HTML and compared with the machine answer (`JSON.stringify(model)`"
+          },
+          {
+            "line": 71,
+            "text": "const machine = (JSON.parse(JSON.stringify(model)) as PocModel).walkthroughReadiness;"
+          }
+        ]
+      }
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris.ts",
+      "sha256": "1377f15ddda36ff0a92f658395b36438b11b1f7fe4bf6ddf81f2b5edac5c5b3d",
+      "bytes": 134690,
+      "matches": {
+        "endpoint": [
+          {
+            "line": 1725,
+            "text": "* human page and the envelope `/api/poc/polaris` serves derive from the"
+          }
+        ]
+      }
+    },
+    {
+      "path": "apps/three-surface-poc/src/response-limits.test.ts",
+      "sha256": "b2a87ca689c84becb83dc7d436132a5bef65265c36e4fed9ffe56c6d14805cdb",
+      "bytes": 19653,
+      "matches": {
+        "endpoint": [
+          {
+            "line": 17,
+            "text": "import { boundedResponse, POC_HUMAN_PATH, POC_MACHINE_PATH, pocRoutes, type ResponseLimitFailure } from './routes.js';"
+          },
+          {
+            "line": 75,
+            "text": "const machine = await fetch(`${base}${POC_MACHINE_PATH}`, { headers: { authorization: `Bearer ${token}` } });"
+          },
+          {
+            "line": 90,
+            "text": "expect(records.map(record => record.route)).toEqual(['/', POC_MACHINE_PATH]);"
+          },
+          {
+            "line": 264,
+            "text": "const full = route(POC_MACHINE_PATH).handle(context(POC_MACHINE_PATH));"
+          },
+          {
+            "line": 271,
+            "text": ".find((entry) => entry.path === POC_MACHINE_PATH);"
+          },
+          {
+            "line": 273,
+            "text": "const result = candidate.handle(context(POC_MACHINE_PATH, { 'if-none-match': etag as string }));"
+          },
+          {
+            "line": 280,
+            "text": "it.each([POC_MACHINE_PATH, `${TAILNET_MOUNT_PREFIX}${POC_MACHINE_PATH}`])('%s: limit \u2212 1 fails closed, limit and limit + 1 serve the model', (path) => {"
+          },
+          {
+            "line": 295,
+            "text": "expect(route(POC_MACHINE_PATH, humanOnly).handle(context(POC_MACHINE_PATH, {})).status).toBe(200);"
+          },
+          {
+            "line": 304,
+            "text": "expect(route(POC_MACHINE_PATH).handle(context(POC_MACHINE_PATH, {})).status).toBe(200);"
+          }
+        ]
+      }
+    },
+    {
+      "path": "apps/three-surface-poc/src/routes.test.ts",
+      "sha256": "c6b387e33a4ec15dc7ada5381cea6cdd000fb4b08e660025324d453b00972dc3",
+      "bytes": 29098,
+      "matches": {
+        "endpoint": [
+          {
+            "line": 11,
+            "text": "import { POC_MACHINE_PATH, POLARIS_PRESENTATION_PATH, pocRoutes, renderPocPage } from './routes.js';"
+          },
+          {
+            "line": 287,
+            "text": "{ path: POC_MACHINE_PATH, host: undefined, self: POC_MACHINE_PATH },"
+          },
+          {
+            "line": 288,
+            "text": "{ path: POC_MACHINE_PATH, host: 'tzeusy.parrot-hen.ts.net', self: `${TAILNET_MOUNT_PREFIX}${POC_MACHINE_PATH}` },"
+          },
+          {
+            "line": 289,
+            "text": "{ path: `${TAILNET_MOUNT_PREFIX}${POC_MACHINE_PATH}`, host: undefined, self: `${TAILNET_MOUNT_PREFIX}${POC_MACHINE_PATH}` },"
+          },
+          {
+            "line": 310,
+            "text": "if (form.path.endsWith(POC_MACHINE_PATH)) truthKeys.push((JSON.parse(served.body) as PocModel).responseIdentity.contentKey);"
+          },
+          {
+            "line": 327,
+            "text": "const response = await fetch(`http://${start.daemon.host}:${start.daemon.port}${POC_MACHINE_PATH}`, { headers: { authorization: `Bearer ${token}` } });"
+          },
+          {
+            "line": 338,
+            "text": "it('revalidates only the complete bounded /api/poc representation, after credential admission', async () => {"
+          },
+          {
+            "line": 348,
+            "text": "const url = `${base}${POC_MACHINE_PATH}`;"
+          },
+          {
+            "line": 404,
+            "text": "const url = `http://${started.daemon.host}:${started.daemon.port}${POC_MACHINE_PATH}`;"
+          },
+          {
+            "line": 457,
+            "text": "const refused = await fetch(`${baseUrl}${POC_MACHINE_PATH}`);"
+          },
+          {
+            "line": 461,
+            "text": "const machineResponse = await fetch(`${baseUrl}${POC_MACHINE_PATH}`, {"
+          },
+          {
+            "line": 475,
+            "text": "const response = await fetch(`http://${daemon.host}:${daemon.port}${POC_MACHINE_PATH}`, {"
+          },
+          {
+            "line": 493,
+            "text": "const url = `http://${daemon.host}:${daemon.port}${POC_MACHINE_PATH}`;"
+          },
+          {
+            "line": 532,
+            "text": "const machine = JSON.parse(await (await fetch(`http://${daemon.host}:${daemon.port}${POC_MACHINE_PATH}`, { headers: { authorization: `Bearer ${token}` } })).text()) as PocModel;"
+          },
+          {
+            "line": 579,
+            "text": "const machineResponse = await fetch(`${baseUrl}${POC_MACHINE_PATH}`, { headers: { authorization: `Bearer ${token}` } });"
+          }
+        ],
+        "logical_as_wire": [
+          {
+            "line": 467,
+            "text": "expect({ ...wireModel, links: undefined, responseIdentity: model.responseIdentity }).toEqual({ ...JSON.parse(JSON.stringify(model)), links: undefined });"
+          },
+          {
+            "line": 511,
+            "text": "const dispatched = JSON.parse(JSON.stringify(model)) as any;"
+          },
+          {
+            "line": 521,
+            "text": "const constrained = JSON.parse(JSON.stringify(model)) as any;"
+          }
+        ],
+        "identity": [
+          {
+            "line": 9,
+            "text": "import { BUTLERS_POC_SEEDS, buildPocModel, buildResponseIdentity, type PocModel } from '@syzygy/three-surface-poc-core';"
+          },
+          {
+            "line": 519,
+            "text": "expect(buildResponseIdentity(dispatched).contentKey).not.toBe(model.responseIdentity.contentKey);"
+          },
+          {
+            "line": 525,
+            "text": "expect(buildResponseIdentity(constrained).contentKey).not.toBe(model.responseIdentity.contentKey);"
+          }
+        ],
+        "body_consumer": [
+          {
+            "line": 307,
+            "text": "const body = JSON.parse(served.body) as { links: NonNullable<PocModel['links']> };"
+          },
+          {
+            "line": 310,
+            "text": "if (form.path.endsWith(POC_MACHINE_PATH)) truthKeys.push((JSON.parse(served.body) as PocModel).responseIdentity.contentKey);"
+          },
+          {
+            "line": 329,
+            "text": "const served = JSON.parse(await response.text()) as PocModel & { links: NonNullable<PocModel['links']> };"
+          },
+          {
+            "line": 335,
+            "text": "expect(independentResponseKey(JSON.parse(JSON.stringify(served)) as Record<string, unknown>)).toBe(served.responseIdentity.contentKey);"
+          },
+          {
+            "line": 354,
+            "text": "expect(etag).toBe(`W/\"${(JSON.parse(firstBody) as PocModel).responseIdentity.contentKey}\"`);"
+          },
+          {
+            "line": 365,
+            "text": "for (const condition of [etag as string, `\"other\", \"${(JSON.parse(firstBody) as PocModel).responseIdentity.contentKey}\"`, '*']) {"
+          },
+          {
+            "line": 479,
+            "text": "const served = JSON.parse(await response.text()) as Record<string, unknown>;"
+          },
+          {
+            "line": 501,
+            "text": "const etag = `W/\"${(JSON.parse(sequential[0] as string) as PocModel).responseIdentity.contentKey}\"`;"
+          }
+        ]
+      }
+    },
+    {
+      "path": "apps/three-surface-poc/src/routes.ts",
+      "sha256": "648a556a49f18a9f0f8345f916cbb7f2a73bdbfc8b700aba5de7a27029ab25e0",
+      "bytes": 18558,
+      "matches": {
+        "endpoint": [
+          {
+            "line": 18,
+            "text": "export const POC_MACHINE_PATH = '/api/poc' as const;"
+          },
+          {
+            "line": 22,
+            "text": "* It is a presentation artifact, never citable, and never part of `/api/poc`. */"
+          },
+          {
+            "line": 23,
+            "text": "export const POLARIS_PRESENTATION_PATH = '/api/poc/polaris' as const;"
+          },
+          {
+            "line": 124,
+            "text": "footer: `Evaluation <code>${escapeHtml(model.evaluation.snapshot)}</code> as of <code>${escapeHtml(model.evaluation.asOf)}</code>. Machine facts: authenticated <code>GET ${POC_MACHINE_PATH}</code>.`,"
+          },
+          {
+            "line": 313,
+            "text": "path: POC_MACHINE_PATH,"
+          },
+          {
+            "line": 319,
+            "text": "path: `${TAILNET_MOUNT_PREFIX}${POC_MACHINE_PATH}`,"
+          }
+        ],
+        "logical_as_wire": [
+          {
+            "line": 239,
+            "text": "const full = boundedResponse(model, limits, 'maxMachineResponseBytes', 'application/json', JSON.stringify(model), recorder);"
+          }
+        ],
+        "identity": [
+          {
+            "line": 2,
+            "text": "import { PWB_RESOURCE_LIMITS, buildResponseIdentity, withServedResourceBreaches, type PocEntity, type PocModel, type PocSurface, type PwbResourceLimits, type Reevaluation } from '@syzygy/three-surface-poc-core';"
+          },
+          {
+            "line": 196,
+            "text": "return { ...projected, responseIdentity: buildResponseIdentity(projected) };"
+          },
+          {
+            "line": 238,
+            "text": "const model: PocModel = { ...projected, responseIdentity: buildResponseIdentity(projected) };"
+          }
+        ]
+      }
+    },
+    {
+      "path": "apps/three-surface-poc/src/surface-render-fractions.test.ts",
+      "sha256": "70188c9a730063e71009c5b35877813b95734fc82e4d36989010100905b9ddc9",
+      "bytes": 5861,
+      "matches": {
+        "endpoint": [
+          {
+            "line": 5,
+            "text": "// The machine side is `GET /api/poc`'s body, which is `JSON.stringify(model)`"
+          }
+        ],
+        "logical_as_wire": [
+          {
+            "line": 5,
+            "text": "// The machine side is `GET /api/poc`'s body, which is `JSON.stringify(model)`"
+          },
+          {
+            "line": 34,
+            "text": "return JSON.parse(JSON.stringify(model)) as MachineAnswer;"
+          }
+        ]
+      }
+    },
+    {
+      "path": "apps/three-surface-poc/src/test-artifact-verification-consumers.test.ts",
+      "sha256": "a66754b0c16bc0ee00693ada0c4ac9fd8830ec2308f2d0707ca27c08595c75c4",
+      "bytes": 5342,
+      "matches": {
+        "endpoint": [
+          {
+            "line": 20,
+            "text": "//   channel at `/api/poc`, which carries the verification verbatim."
+          },
+          {
+            "line": 65,
+            "text": "'serves the model verbatim at /api/poc; the value names its own kind, tier and disclosure, and no `verified` kind exists to serve',"
+          }
+        ],
+        "logical_as_wire": [
+          {
+            "line": 19,
+            "text": "// - a whole-model serializer written `JSON.stringify(model)`, the machine"
+          }
+        ]
+      }
+    },
+    {
+      "path": "apps/three-surface-poc/src/trajectory.test.ts",
+      "sha256": "419673bd72be4c00bc79eed4a7d05aff1a05adf0b6287a45d0a51b7e73ebc274",
+      "bytes": 27611,
+      "matches": {
+        "endpoint": [
+          {
+            "line": 72,
+            "text": "const machineRoute = pocRoutes(() => model).find((route) => route.path === '/api/poc')!;"
+          },
+          {
+            "line": 73,
+            "text": "const response = await machineRoute.handle({ request: { method: 'GET', path: '/api/poc', query: new URLSearchParams(), headers: {} } });"
+          }
+        ],
+        "body_consumer": [
+          {
+            "line": 75,
+            "text": "const served = JSON.parse(response.body) as PocModel;"
+          }
+        ]
+      }
+    },
+    {
+      "path": "apps/three-surface-poc/src/trajectory.ts",
+      "sha256": "7795040f124888a123887b915490ef5e1df1dab48211b6b4c762ebabfb9907f1",
+      "bytes": 17625,
+      "matches": {
+        "governing_value": [
+          {
+            "line": 148,
+            "text": "const count = model.workItems.governedByUnknownCount;"
+          },
+          {
+            "line": 151,
+            "text": "const governedBy = subjects.get(workItemGoverningIntentId(item.id));"
+          },
+          {
+            "line": 152,
+            "text": "return governedBy?.label === 'Unknown' && governedBy.closedReason === 'source-uncaptured-or-unreachable';"
+          },
+          {
+            "line": 191,
+            "text": "const governedBy = unknownSubject(model, workItemGoverningIntentId(item.id));"
+          },
+          {
+            "line": 192,
+            "text": "return `<li class=\"wi-card${demonstrated ? ' wi-card-demonstrated' : ''}\" id=\"workitem-${escapeHtml(item.id)}\" data-governed-by=\"${escapeHtml(governedBy.label)}\" data-work-item-id=\"${escapeHtml(item.id)}\">"
+          },
+          {
+            "line": 197,
+            "text": "${itemGoverningIntent(item.id, governedBy)}"
+          }
+        ]
+      }
+    },
+    {
+      "path": "apps/three-surface-poc/src/verbatim-route.test.ts",
+      "sha256": "6b25a9ce49865bdff4b8e849c9a46ad839f646739e7c843543e1878debc218d3",
+      "bytes": 14530,
+      "matches": {
+        "endpoint": [
+          {
+            "line": 15,
+            "text": "import { POC_MACHINE_PATH, pocRoutes } from './routes.js';"
+          },
+          {
+            "line": 229,
+            "text": "const machineBody = bodyOf(routeAt(routes, POC_MACHINE_PATH).handle(context(POC_MACHINE_PATH)));"
+          }
+        ],
+        "logical_as_wire": [
+          {
+            "line": 183,
+            "text": "const excluded: PocModel = JSON.parse(JSON.stringify(model)) as PocModel;"
+          },
+          {
+            "line": 244,
+            "text": "const before = JSON.stringify(model);"
+          },
+          {
+            "line": 248,
+            "text": "expect(JSON.stringify(model)).toBe(before);"
+          }
+        ]
+      }
+    },
+    {
+      "path": "apps/three-surface-poc/src/walkthrough-inputs.test.ts",
+      "sha256": "70e703d56030b7de6d52ec08e08b929482e37b0253f247765ca272a21c605983",
+      "bytes": 21041,
+      "matches": {
+        "endpoint": [
+          {
+            "line": 212,
+            "text": "for (const other of ['/', '/trajectory', '/orrery', '/trajectory/materialize', '/api/poc']) {"
+          }
+        ]
+      }
+    },
+    {
+      "path": "packages/cap1-daemon/src/routes-machine.test.ts",
+      "sha256": "fe57a2862707c9fefb0dd7152f8891a37cb3c7951590d0e31b979db1ecd1038a",
+      "bytes": 21677,
+      "matches": {
+        "body_consumer": [
+          {
+            "line": 173,
+            "text": "return response.json();"
+          }
+        ]
+      }
+    },
+    {
+      "path": "packages/cap1-daemon/src/server.test.ts",
+      "sha256": "d7164b734808687db6a8b5e061648da2cb4b7588f224265b938a3a1c141cd4ec",
+      "bytes": 17083,
+      "matches": {
+        "body_consumer": [
+          {
+            "line": 203,
+            "text": "expect(await response.json()).toEqual({ served: 'machine-facts' });"
+          },
+          {
+            "line": 225,
+            "text": "expect(await response.json()).toEqual({"
+          }
+        ]
+      }
+    },
+    {
+      "path": "packages/cap1-system/src/credentials.system.test.ts",
+      "sha256": "e9e4f84a41e95a8461363abbd7a4105f88fecdaca8d65b2e2976a8c83e113ebe",
+      "bytes": 3152,
+      "matches": {
+        "body_consumer": [
+          {
+            "line": 67,
+            "text": "const body = (await response.json()) as { kind: string };"
+          }
+        ]
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/close.test.ts",
+      "sha256": "4fab536f900ed66fbdb399ca2a9706ba20991876eaeb2e7e06028f3d5db78ca7",
+      "bytes": 14927,
+      "matches": {
+        "body_consumer": [
+          {
+            "line": 53,
+            "text": "expect(JSON.parse(status.stdout).limitsSpent.agentUsage).toBe('48213 tokens and 37 turns, as the operator declared at close; not observed by Syzygy and not a provider receipt');"
+          }
+        ]
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/design-review.test.ts",
+      "sha256": "ed41faa00f79f70e7c73f66a7fb7fd594de466a3103b0f5bb2d965d488027379",
+      "bytes": 7315,
+      "matches": {
+        "body_consumer": [
+          {
+            "line": 67,
+            "text": "compact.set('machine.json', `${JSON.stringify(JSON.parse(machine([])))}\\n`);"
+          }
+        ]
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/render.test.ts",
+      "sha256": "ff3b6991df5fb008aad4e0b12f753a15f2f866112e5b312a42fdc63e2722ff5c",
+      "bytes": 69956,
+      "matches": {
+        "body_consumer": [
+          {
+            "line": 298,
+            "text": "const machine = JSON.parse(files.get('machine.json')!);"
+          },
+          {
+            "line": 326,
+            "text": "const machine = JSON.parse(files.get('machine.json')!);"
+          },
+          {
+            "line": 359,
+            "text": "expect(JSON.parse(files.get('machine.json')!).draftLayer.state).toBe('unknown');"
+          },
+          {
+            "line": 510,
+            "text": "const machine = JSON.parse(readSite(result.report.site).get('machine.json')!);"
+          },
+          {
+            "line": 662,
+            "text": "expect(JSON.parse(after.get('machine.json')!).reviewStatus[1]).toMatchObject({ id: 'review-status/design', label: 'Inferred' });"
+          },
+          {
+            "line": 843,
+            "text": "expect(JSON.parse(c.out.stdout).designReview).toEqual({ counts: true, packetSha256, label: 'Observed' });"
+          }
+        ]
+      }
+    },
+    {
+      "path": "packages/polaris-generation-core/src/pipeline.ts",
+      "sha256": "89df81566b51fdcc24376f6b1282fea7d2110132dd7caa7c198bb03b00b45164",
+      "bytes": 30849,
+      "matches": {
+        "body_consumer": [
+          {
+            "line": 380,
+            "text": "return ports.generate({ permit: permit, stage: name, system: prompt.system, input: encoded, responseSchema: JSON.parse(encoded).responseSchema, signal: controller.signal });"
+          }
+        ]
+      }
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/authority-disclosure.ts",
+      "sha256": "14be239ef75d8a54ee6fc8f2a05fc397b85c0be446b56d0b473bd2d49c801be9",
+      "bytes": 6150,
+      "matches": {
+        "endpoint": [
+          {
+            "line": 7,
+            "text": "// Polaris, the home page and `/api/poc` all carry these strings from"
+          }
+        ]
+      }
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/evidence-population.ts",
+      "sha256": "3b16e65f147ea1f164c7f1cb9f3d5bcf49e23c15dd3cf59c0473ecb4d2a00f8a",
+      "bytes": 4128,
+      "matches": {
+        "endpoint": [
+          {
+            "line": 47,
+            "text": "// The `projectShape` field of the parsed JSON body of GET /api/poc (or"
+          }
+        ]
+      }
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/model-observations.test.ts",
+      "sha256": "1cd715b1b7df320f4959b38efcb2c0537ede6d55ea186f158eed1fff3a54c0aa",
+      "bytes": 10373,
+      "matches": {
+        "logical_as_wire": [
+          {
+            "line": 225,
+            "text": "expect(JSON.parse(JSON.stringify(model))).toEqual(model);"
+          }
+        ]
+      }
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/model.test.ts",
+      "sha256": "b9a5d094a19d2a947675f232d0a41e3f25f83837e90db0953e23d7b8811d56d7",
+      "bytes": 44763,
+      "matches": {
+        "body_consumer": [
+          {
+            "line": 417,
+            "text": "const wire = JSON.parse(JSON.stringify(observed)) as { projectShape: { kind: string } };"
+          }
+        ]
+      }
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/model.ts",
+      "sha256": "9ab58377379c17fa0a09f84fd45441a1eb0f44d1edf82b07c496f9d49a87ce2f",
+      "bytes": 52451,
+      "matches": {
+        "governing_value": [
+          {
+            "line": 573,
+            "text": "// item's own `governedBy` with its basis sentence, and the count"
+          },
+          {
+            "line": 575,
+            "text": "const served = new Map(input.workItems.items.map((item) => [item.id, item.governedBy]));"
+          },
+          {
+            "line": 577,
+            "text": "const governedBy = served.get(item.id);"
+          },
+          {
+            "line": 578,
+            "text": "if (governedBy !== undefined) subjects.push({ id: workItemGoverningIntentId(item.id), epistemic: governingIntentDisclosure(governedBy) });"
+          }
+        ],
+        "identity": [
+          {
+            "line": 43,
+            "text": "buildResponseIdentity,"
+          },
+          {
+            "line": 1307,
+            "text": "const responseIdentity = buildResponseIdentity(modelWithoutResponseIdentity);"
+          }
+        ]
+      }
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/response-identity.test.ts",
+      "sha256": "2651263c50ccd75aa1d1893e2df1d3399641792968dc98e7155379b0484d5b3d",
+      "bytes": 5630,
+      "matches": {
+        "identity": [
+          {
+            "line": 7,
+            "text": "buildResponseIdentity,"
+          },
+          {
+            "line": 9,
+            "text": "responseIdentityPreimage,"
+          },
+          {
+            "line": 29,
+            "text": "const identity = buildResponseIdentity(model());"
+          },
+          {
+            "line": 40,
+            "text": "const first = buildResponseIdentity(model());"
+          },
+          {
+            "line": 41,
+            "text": "const restarted = buildResponseIdentity(model({ evaluation: { asOf: '2026-09-24T00:00:00.000Z', label: 'same-evaluation' } }));"
+          },
+          {
+            "line": 44,
+            "text": "const undeclared = buildResponseIdentity(model({ runtime: { capturedAt: '2026-09-24T00:00:00.000Z' } }));"
+          },
+          {
+            "line": 45,
+            "text": "const changed = buildResponseIdentity(model({ runtime: { capturedAt: '2026-09-25T00:00:00.000Z' } }));"
+          },
+          {
+            "line": 53,
+            "text": "expect(buildResponseIdentity(first).contentKey).not.toBe(buildResponseIdentity(changed).contentKey);"
+          },
+          {
+            "line": 59,
+            "text": "expect(buildResponseIdentity(first).contentKey).toBe(buildResponseIdentity(reordered).contentKey);"
+          },
+          {
+            "line": 62,
+            "text": "expect(buildResponseIdentity(first).contentKey).not.toBe(buildResponseIdentity(arrayReordered).contentKey);"
+          },
+          {
+            "line": 64,
+            "text": "const withKey = { ...first, responseIdentity: buildResponseIdentity(first) };"
+          },
+          {
+            "line": 65,
+            "text": "expect(buildResponseIdentity(withKey).contentKey).toBe(buildResponseIdentity(first).contentKey);"
+          },
+          {
+            "line": 70,
+            "text": "const identity = buildResponseIdentity(original);"
+          },
+          {
+            "line": 75,
+            "text": "expect(buildResponseIdentity(tampered).contentKey).not.toBe(identity.contentKey);"
+          },
+          {
+            "line": 80,
+            "text": "const first = buildResponseIdentity(input);"
+          },
+          {
+            "line": 82,
+            "text": "const second = buildResponseIdentity(model());"
+          },
+          {
+            "line": 88,
+            "text": "const identity = buildResponseIdentity(value);"
+          },
+          {
+            "line": 89,
+            "text": "const preimage = responseIdentityPreimage(value).value;"
+          },
+          {
+            "line": 95,
+            "text": "const absent = buildResponseIdentity("
+          },
+          {
+            "line": 101,
+            "text": "expect(() => buildResponseIdentity(model(), declaration(['rows[].id', 'rows[].id']))).toThrow(/duplicated/);"
+          },
+          {
+            "line": 102,
+            "text": "expect(() => buildResponseIdentity(model(), declaration(['rows[].id', 'evaluation.asOf']))).toThrow(/lexical/);"
+          },
+          {
+            "line": 103,
+            "text": "expect(() => buildResponseIdentity(model(), declaration(['rows[0].id']))).toThrow(/malformed/);"
+          },
+          {
+            "line": 104,
+            "text": "expect(() => buildResponseIdentity(model({ rows: { id: 'not-an-array' } }), declaration(['rows[].id']))).toThrow(/array/);"
+          },
+          {
+            "line": 105,
+            "text": "expect(() => buildResponseIdentity({ ...model(), responseIdentity: undefined })).toThrow(/metadata/);"
+          },
+          {
+            "line": 109,
+            "text": "expect(() => buildResponseIdentity(model({ impossible: BigInt(1) }))).toThrow(/canonicalization failed/);"
+          }
+        ]
+      }
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/response-identity.ts",
+      "sha256": "0347e2e9c614efcd386e8636025e4bcf04a2f2bbc748c4e36493be8c8530b506",
+      "bytes": 9438,
+      "matches": {
+        "identity": [
+          {
+            "line": 204,
+            "text": "export function responseIdentityPreimage("
+          },
+          {
+            "line": 219,
+            "text": "export function buildResponseIdentity("
+          },
+          {
+            "line": 224,
+            "text": "const preimage = responseIdentityPreimage(model, activeDeclaration);"
+          }
+        ]
+      }
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/trajectory-projection.test.ts",
+      "sha256": "5cd754141c30eb410aa5ce5d67c9b7b5ad792572c1bc7bcee21a65a62b34249e",
+      "bytes": 7579,
+      "matches": {
+        "governing_value": [
+          {
+            "line": 13,
+            "text": "{ id: 'bu-1', status: 'open', issueType: 'task', priority: 1, createdAt: '2026-08-01T00:00:00Z', updatedAt: '2026-08-02T00:00:00Z', closedAt: null, governedBy: governingIntentUnknown() },"
+          },
+          {
+            "line": 14,
+            "text": "{ id: 'bu-2', status: 'in_progress', issueType: 'task', priority: 1, createdAt: '2026-08-03T00:00:00Z', updatedAt: '2026-08-04T00:00:00Z', closedAt: null, governedBy: governingIntentUnknown() },"
+          },
+          {
+            "line": 15,
+            "text": "{ id: 'bu-3', status: 'closed', issueType: 'task', priority: 1, createdAt: '2026-08-05T00:00:00Z', updatedAt: '2026-08-06T00:00:00Z', closedAt: '2026-08-06T00:00:00Z', governedBy: governingIntentUnknown() },"
+          },
+          {
+            "line": 16,
+            "text": "{ id: 'bu-4', status: 'closed', issueType: 'task', priority: 1, createdAt: '2026-07-01T00:00:00Z', updatedAt: '2026-07-02T00:00:00Z', closedAt: '2026-07-02T00:00:00Z', governedBy: governingIntentUnknown() },"
+          },
+          {
+            "line": 18,
+            "text": "governedByUnknownCount: 4,"
+          }
+        ]
+      }
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/work-items.test.ts",
+      "sha256": "632caa16f97ec7472fd07b95720f5fed792f1ab6110e6cf16c51eba0f800300a",
+      "bytes": 8360,
+      "matches": {
+        "governing_value": [
+          {
+            "line": 203,
+            "text": "expect(Object.keys(titled.items[0] ?? {}).sort()).toEqual(['closedAt', 'createdAt', 'governedBy', 'id', 'issueType', 'priority', 'status', 'updatedAt']);"
+          }
+        ]
+      }
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/work-items.ts",
+      "sha256": "5c995c5e8a6705b10af97eed86d19151439b0871f15788b0eebba8c212207347",
+      "bytes": 10967,
+      "matches": {
+        "governing_value": [
+          {
+            "line": 34,
+            "text": "readonly governedBy: GoverningIntentUnknown;"
+          },
+          {
+            "line": 43,
+            "text": "export interface GoverningIntentUnknown {"
+          },
+          {
+            "line": 55,
+            "text": "export function governingIntentUnknown(): GoverningIntentUnknown {"
+          },
+          {
+            "line": 65,
+            "text": "export function governingIntentDisclosure(governedBy: GoverningIntentUnknown): PocUnknown {"
+          },
+          {
+            "line": 66,
+            "text": "return { label: governedBy.label, reason: GOVERNING_INTENT_UNKNOWN_BASIS, closedReason: governedBy.closedReason, resolutionRoutes: governedBy.resolutionRoutes };"
+          },
+          {
+            "line": 99,
+            "text": "export function countGoverningIntentUnknown(items: readonly WorkItemFact[]): number {"
+          },
+          {
+            "line": 101,
+            "text": "(item) => item.governedBy.label === 'Unknown' && item.governedBy.closedReason === 'source-uncaptured-or-unreachable',"
+          },
+          {
+            "line": 118,
+            "text": "/** POC-REQ-014: the served items whose `governedBy` is the Unknown. */"
+          },
+          {
+            "line": 119,
+            "text": "readonly governedByUnknownCount: number;"
+          },
+          {
+            "line": 230,
+            "text": "governedByUnknownCount: 0,"
+          },
+          {
+            "line": 264,
+            "text": "governedBy: governingIntentUnknown(),"
+          },
+          {
+            "line": 274,
+            "text": "governedByUnknownCount: countGoverningIntentUnknown(items),"
+          }
+        ]
+      }
+    },
+    {
+      "path": "scripts/build_three_surface_poc_governedby_reference_amendment.py",
+      "sha256": "f6f275fb13f50549fb0a4a38efe37b374f4965ffce848b40938cebdf4c43337c",
+      "bytes": 51460,
+      "matches": {
+        "governing_value": [
+          {
+            "line": 42,
+            "text": "CITER_PATTERN = r\"POC-REQ-014|governedBy|GoverningIntentUnknown|governing.intent.amendment\""
+          },
+          {
+            "line": 150,
+            "text": "additions = [s for s in remaining if \"Amendment row (observation-local governedBy wire value)\" in s]"
+          },
+          {
+            "line": 226,
+            "text": "or any(k in work for k in (\"items\", \"governedBy\", \"governedByUnknownCount\"))):"
+          },
+          {
+            "line": 238,
+            "text": "if work.get(\"kind\") != \"observed\" or work.get(\"governedBy\") != CLOSED_VALUE:"
+          },
+          {
+            "line": 241,
+            "text": "if not isinstance(items, list) or any(not isinstance(i, dict) or i.get(\"governedBy\") != {\"ref\": \"observation\"} for i in items):"
+          },
+          {
+            "line": 246,
+            "text": "if type(work.get(\"governedByUnknownCount\")) is not int or work[\"governedByUnknownCount\"] != len(items):"
+          },
+          {
+            "line": 250,
+            "text": "if complete_value_carriers(body) != [[\"workItems\", \"governedBy\"]]:"
+          },
+          {
+            "line": 254,
+            "text": "\"itemId\": item_id, \"field\": \"governedBy\"} for item_id in ids]"
+          },
+          {
+            "line": 473,
+            "text": "r\"POC-REQ-014|governedBy|machine answer|machine response|wire|work.item|epistemic|provenance\","
+          }
+        ]
+      }
+    },
+    {
+      "path": "scripts/check_docs_review_campaign_partition.py",
+      "sha256": "64b51345cd68634ce3c06cbaa1a1700b65ab83673240449c2deecca8bf735ff5",
+      "bytes": 37137,
+      "matches": {
+        "governing_value": [
+          {
+            "line": 470,
+            "text": "\"P-115 governedBy reference amendment\","
+          }
+        ]
+      }
+    },
+    {
+      "path": "scripts/check_p115_compatibility_examples.py",
+      "sha256": "d6cceac03fd6db1f27d784c2e0344641ab65300d2687655f7b9a612eeaf20eb3",
+      "bytes": 24446,
+      "matches": {
+        "governing_value": [
+          {
+            "line": 94,
+            "text": "wi.get(\"governedBy\") == expected_tuple(),"
+          },
+          {
+            "line": 105,
+            "text": "item.get(\"governedBy\") == {\"ref\": \"observation\"},"
+          },
+          {
+            "line": 110,
+            "text": "shared = resolved[\"workItems\"].pop(\"governedBy\")"
+          },
+          {
+            "line": 113,
+            "text": "item[\"governedBy\"] = copy.deepcopy(shared)"
+          },
+          {
+            "line": 216,
+            "text": "\"one per-item governedBy marker\","
+          },
+          {
+            "line": 307,
+            "text": "v = item[\"governedBy\"]"
+          },
+          {
+            "line": 335,
+            "text": "i[\"governedBy\"][\"label\"] == \"Unknown\""
+          },
+          {
+            "line": 336,
+            "text": "and i[\"governedBy\"][\"closedReason\"] == \"source-uncaptured-or-unreachable\""
+          },
+          {
+            "line": 340,
+            "text": "wi[\"governedByUnknownCount\"] == measured,"
+          },
+          {
+            "line": 344,
+            "text": "out[\"count/unknown\"] = wi[\"governedByUnknownCount\"]"
+          },
+          {
+            "line": 347,
+            "text": "out[\"count/outside\"] = wi[\"governedByUnknownCount\"] - inside"
+          },
+          {
+            "line": 365,
+            "text": "[{k: v for k, v in item.items() if k != \"governedBy\"} for item in a[\"items\"]]"
+          },
+          {
+            "line": 367,
+            "text": "{k: v for k, v in item.items() if k != \"governedBy\"} for item in b[\"items\"]"
+          },
+          {
+            "line": 446,
+            "text": "reference[\"workItems\"][\"items\"][0][\"governedBy\"].get(\"label\") is None,"
+          },
+          {
+            "line": 452,
+            "text": "\"governedBy\""
+          },
+          {
+            "line": 454,
+            "text": "\"referenceInlineLabel\": reference[\"workItems\"][\"items\"][0][\"governedBy\"].get("
+          },
+          {
+            "line": 473,
+            "text": "and empty_x[\"workItems\"][\"governedByUnknownCount\"] == 0"
+          },
+          {
+            "line": 484,
+            "text": "and \"governedByUnknownCount\" not in unknown_x[\"workItems\"],"
+          },
+          {
+            "line": 542,
+            "text": "missing_b[\"workItems\"].pop(\"governedBy\")"
+          },
+          {
+            "line": 559,
+            "text": "\"old\": b[\"workItems\"][\"governedBy\"],"
+          },
+          {
+            "line": 570,
+            "text": "for key in [\"governedBy\", \"ref\"]:"
+          },
+          {
+            "line": 572,
+            "text": "'{\"workItems\":{\"governedBy\":{},\"governedBy\":{}}}'"
+          },
+          {
+            "line": 573,
+            "text": "if key == \"governedBy\""
+          },
+          {
+            "line": 574,
+            "text": "else '{\"governedBy\":{\"ref\":\"observation\",\"ref\":\"other\"}}'"
+          }
+        ]
+      }
+    },
+    {
+      "path": "scripts/compare_unknown_denominator_withheld.py",
+      "sha256": "0df8e72f28869e0f843a69e9d2607ce50949e855ef74ebaff3eac80c4c088532",
+      "bytes": 1709,
+      "matches": {
+        "endpoint": [
+          {
+            "line": 4,
+            "text": "Reads one retained /api/poc capture (never a repository body). Identity is"
+          },
+          {
+            "line": 31,
+            "text": "\"measuredOn\": {\"capture\": \"api-poc.json\", \"sha256\": hashlib.sha256(raw).hexdigest()},"
+          }
+        ],
+        "body_consumer": [
+          {
+            "line": 20,
+            "text": "shape = json.loads(raw)[\"projectShape\"]"
+          }
+        ]
+      }
+    },
+    {
+      "path": "scripts/measure_machine_channel_provenance.py",
+      "sha256": "84c5047d73ad5386ace516ae331cad79dd61656a14da930b3271866a42480bd4",
+      "bytes": 8726,
+      "matches": {
+        "endpoint": [
+          {
+            "line": 4,
+            "text": "Read-only. Takes a captured ``GET /api/poc`` body and a captured"
+          },
+          {
+            "line": 5,
+            "text": "``GET /api/poc/polaris`` body from the same evaluation and prints the figures"
+          },
+          {
+            "line": 14,
+            "text": "- every population in the ``/api/poc`` body where a record in a list repeats,"
+          },
+          {
+            "line": 24,
+            "text": "occurs as a whole string value anywhere in the ``/api/poc`` body;"
+          },
+          {
+            "line": 169,
+            "text": "\"predicate\": \"exactly one object in the /api/poc body with a string `identity` field whose whole value equals the anchor's targetId\","
+          },
+          {
+            "line": 176,
+            "text": "\"predicate\": \"the unresolved anchor's targetId occurs as a whole string value anywhere in the /api/poc body\","
+          }
+        ]
+      }
+    },
+    {
+      "path": "scripts/prepare_three_surface_poc_governedby_reference_recording.py",
+      "sha256": "59431850ddabb28f4b03941c0ea55e607f430a1f9cde20c2a8b8575a49165881",
+      "bytes": 180586,
+      "matches": {
+        "governing_value": [
+          {
+            "line": 2366,
+            "text": "expected_record = \"\"\"# Three-Surface POC governedBy reference amendment \u2014 version-tagged sign-off v1.0"
+          }
+        ]
+      }
+    },
+    {
+      "path": "scripts/record_pwb_behavior_amendment_acts.py",
+      "sha256": "5e205631696a8d6a6aa8b129ce7e7e91dd2834ac35c6a827d1318abd5530c0c9",
+      "bytes": 95722,
+      "matches": {
+        "endpoint": [
+          {
+            "line": 476,
+            "text": "`GET /api/poc/polaris` and the prospective `GET /api/poc/briefing`, and the"
+          }
+        ]
+      }
+    },
+    {
+      "path": "scripts/record_versioned_signoff.py",
+      "sha256": "c4eded23e7f3a104bcd364e3a3cc4722b249dfc88f9a3fe0b0494b7fdd0d8310",
+      "bytes": 185787,
+      "matches": {
+        "governing_value": [
+          {
+            "line": 1380,
+            "text": "\"Three-Surface POC governedBy reference amendment\","
+          }
+        ]
+      }
+    },
+    {
+      "path": "scripts/rerun_rule6_mutants_selected_tests.py",
+      "sha256": "700452c86f756f0df955cad24cdfe36a222b0138b2af23fc36e797487b3fdc2c",
+      "bytes": 5196,
+      "matches": {
+        "body_consumer": [
+          {
+            "line": 46,
+            "text": "record = json.loads(raw)"
+          }
+        ]
+      }
+    },
+    {
+      "path": "scripts/run_m10_conditional_mutations.mjs",
+      "sha256": "bff84256c1608b6d9cd49f54fed49fd3ea8e3ffbac7afe6804b7cf20d6cbc490",
+      "bytes": 5108,
+      "matches": {
+        "endpoint": [
+          {
+            "line": 15,
+            "text": "replacement: \"const links = routes.filter((route) => route.path !== '/butlers-syzygy/api/poc').map(({ path, method, credentialClass }) =>\","
+          }
+        ]
+      }
+    }
+  ]
+}

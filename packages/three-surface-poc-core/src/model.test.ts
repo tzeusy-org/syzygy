@@ -9,12 +9,14 @@ import {
   PocObservationError,
   type PocEntity,
   type PocRelationship,
+  walkthroughAcceptance,
 } from './model.js';
 import { BUTLERS_POC_SEEDS } from './poc-seeds.js';
 import type { BodyReadAuthorityEvaluation } from './body-read-authority.js';
 import type { OperatorReportedTestArtifactRecord } from './test-artifact-verification.js';
 import { walkthroughEvaluationIdentity } from './walkthrough-readiness.js';
 import { removeFixtureDirectory } from './test-cleanup.js';
+import { frozenCensus } from './test-frozen.js';
 
 const cleanups: string[] = [];
 
@@ -28,7 +30,7 @@ function butlersFixture(): string {
   const root = mkdtempSync(join(tmpdir(), 'syzygy-poc-butlers-'));
   cleanups.push(root);
   const files: Readonly<Record<string, string>> = {
-    'docs/superpowers/specs/2026-08-24-whatsapp-identity-reconciliation-design.md':
+    'docs/plans/2026-08-24-whatsapp-identity-reconciliation-design.md':
       '# WhatsApp identity design\nStatus: Approved for implementation\n',
     'openspec/changes/repair-whatsapp-identity-reconciliation/proposal.md':
       '# Repair WhatsApp identity reconciliation\n- Sign-off: owner approved the design and end-to-end implementation on 2026-08-24.\nowner-approved-intent-marker\n',
@@ -106,7 +108,7 @@ afterAll(() => {
 function committedButlersGitFixture(): ButlersGitFixture {
   const root = mkdtempSync(join(tmpdir(), 'syzygy-poc-butlers-git-template-'));
   const files: Readonly<Record<string, string>> = {
-    'docs/superpowers/specs/2026-08-24-whatsapp-identity-reconciliation-design.md':
+    'docs/plans/2026-08-24-whatsapp-identity-reconciliation-design.md':
       '# WhatsApp identity design\nStatus: Approved for implementation\n',
     'openspec/changes/repair-whatsapp-identity-reconciliation/proposal.md':
       '# Repair WhatsApp identity reconciliation\n- Sign-off: owner approved the design and end-to-end implementation on 2026-08-24.\n',
@@ -239,6 +241,10 @@ describe('three-surface Butlers POC model', () => {
     ]);
 
     const entities = byId(first.entities);
+    expect(entities.get('capability:whatsapp-transport-identity')?.provenance.map((provenance) => provenance.source)).toEqual([
+      'docs/plans/2026-08-24-whatsapp-identity-reconciliation-design.md',
+      'openspec/changes/repair-whatsapp-identity-reconciliation/specs/switchboard-identity/spec.md',
+    ]);
     expect(entities.get('intent:req-switchboard-identity-001')?.epistemic.label).toBe(
       'Observed',
     );
@@ -247,7 +253,7 @@ describe('three-surface Butlers POC model', () => {
         .get('intent:req-switchboard-identity-001')
         ?.provenance.map((provenance) => provenance.source),
     ).toEqual([
-      'docs/superpowers/specs/2026-08-24-whatsapp-identity-reconciliation-design.md',
+      'docs/plans/2026-08-24-whatsapp-identity-reconciliation-design.md',
       'openspec/changes/repair-whatsapp-identity-reconciliation/proposal.md',
       'openspec/changes/repair-whatsapp-identity-reconciliation/specs/switchboard-identity/spec.md',
     ]);
@@ -325,6 +331,45 @@ describe('three-surface Butlers POC model', () => {
     expect(changedBytes.evaluation.snapshot).not.toBe(first.evaluation.snapshot);
   });
 
+  // Expected values are SHA-256 of the five fixture files' bytes above, taken with hashlib and agreeing with `sha256sum` over the same
+  // bytes (docs/evidence/syzygy-bpyt-6-13/derive-literals.py), never read back from the model (review R-GP-IMPL-SUPPORT-LEAF-1 N2).
+  it('records each required artifact under the SHA-256 of its own bytes', () => {
+    const model = buildPocModel({
+      seeds: BUTLERS_POC_SEEDS,
+      repoRoot: butlersFixture(),
+      repositoryRevision: 'c13894238989d3bebb24094730992970b31fe546',
+      observerRevision: 'bfdb7963e4ff5628d0d1ec0f59e831d7e8209abe',
+      evaluation: { snapshot: 'butlers@c1389423', asOf: '2026-08-29T12:00:00Z' },
+    });
+    const digestsBySource = new Map<string, Set<string>>();
+    for (const entity of model.entities) {
+      for (const provenance of entity.provenance) {
+        if (provenance.kind === 'repository-file') digestsBySource.set(provenance.source, (digestsBySource.get(provenance.source) ?? new Set<string>()).add(provenance.digest ?? '(no digest)'));
+      }
+    }
+    expect(Object.fromEntries([...digestsBySource].map(([source, digests]) => [source, [...digests]]))).toEqual({
+      'docs/plans/2026-08-24-whatsapp-identity-reconciliation-design.md': ['sha256:2479e75d520a16460f9e3e1d01e16211d93d9e5d7f05a1f79792466bd7159c48'],
+      'openspec/changes/repair-whatsapp-identity-reconciliation/proposal.md': ['sha256:964230e52c4cba3cc029e7f984d5230a1c3502ad5ae5a421d7126e4ef3c7aaea'],
+      'openspec/changes/repair-whatsapp-identity-reconciliation/specs/switchboard-identity/spec.md': ['sha256:6eb3621053cab988df848b46e269a9e6dbd7779703a19404d6eb5a8762dd8ce9'],
+      'src/butlers/identity.py': ['sha256:c17f6c25cbb53eba69017e09605aa474a8ce296313d13aceee622e753d950981'],
+      'tests/core/test_identity.py': ['sha256:2c40033f352b040a0193ee8b2856e93a63cf0ae1c057a84a75f9887de42bc5e9'],
+    });
+  });
+
+  it('hands out the resource headroom block frozen all the way down', () => {
+    const model = buildPocModel({
+      seeds: BUTLERS_POC_SEEDS,
+      repoRoot: butlersFixture(),
+      repositoryRevision: 'c13894238989d3bebb24094730992970b31fe546',
+      observerRevision: 'bfdb7963e4ff5628d0d1ec0f59e831d7e8209abe',
+      evaluation: { snapshot: 'butlers@c1389423', asOf: '2026-08-29T12:00:00Z' },
+    });
+    const { visited, unfrozen } = frozenCensus(model.resourceHeadroom);
+    expect(unfrozen).toEqual([]);
+    // The block, its entries list and one entry per declared limit (seven) at least; a census of nothing would also report no path.
+    expect(visited).toBeGreaterThanOrEqual(9);
+  });
+
   it('carries the project shape on the one model: not-evaluated without an authority evaluation, observed with an admitting one (PWB 2.7)', () => {
     const repoRoot = butlersFixture();
     const baseInput = {
@@ -397,11 +442,13 @@ describe('three-surface Butlers POC model', () => {
     buildPocModel({
       ...baseInput,
       projectShape: { authority: admitting, runGit },
-      walkthroughJudgment: (binding) => {
-        seen.push(binding.evaluationIdentity);
-        throw new Error('stop here');
-      },
-      walkthroughReadiness: { traversal: { polarisRoutes: ['/polaris'], isExactSourceRoute: () => false } },
+      acceptance: walkthroughAcceptance({
+        judgment: (binding) => {
+          seen.push(binding.evaluationIdentity);
+          throw new Error('stop here');
+        },
+        traversal: { polarisRoutes: ['/polaris'], isExactSourceRoute: () => false },
+      }),
     });
     expect(seen).toEqual([walkthroughEvaluationIdentity(observed.projectShape)]);
     expect(seen[0]).toMatch(/^pwb-eval-[0-9a-f]{24}$/);
@@ -435,11 +482,13 @@ describe('three-surface Butlers POC model', () => {
     const seen: string[] = [];
     const throwing = buildPocModel({
       ...baseInput,
-      walkthroughJudgment: (binding) => {
-        seen.push(binding.evaluationIdentity);
-        throw new Error('governance tree unreadable');
-      },
-      walkthroughReadiness: { traversal: { polarisRoutes: ['/polaris'], isExactSourceRoute: () => false } },
+      acceptance: walkthroughAcceptance({
+        judgment: (binding) => {
+          seen.push(binding.evaluationIdentity);
+          throw new Error('governance tree unreadable');
+        },
+        traversal: { polarisRoutes: ['/polaris'], isExactSourceRoute: () => false },
+      }),
     });
     // No shape was evaluated, so the identity names that state rather than
     // an evaluation; the loader saw exactly that identity.
@@ -627,7 +676,7 @@ describe('three-surface Butlers POC model', () => {
   it('fails closed when the selected intent no longer carries its approval contract', () => {
     const mutations = [
       {
-        path: 'docs/superpowers/specs/2026-08-24-whatsapp-identity-reconciliation-design.md',
+        path: 'docs/plans/2026-08-24-whatsapp-identity-reconciliation-design.md',
         contents: '# WhatsApp identity design\nStatus: Draft\n',
       },
       {
@@ -727,62 +776,6 @@ describe('three-surface Butlers POC model', () => {
     expect(failed.testArtifactVerification.kind).toBe('unknown');
   });
 
-  it('builds an explicit Unknown model with no seeds and performs no seeded reads', () => {
-    const repoRoot = mkdtempSync(join(tmpdir(), 'syzygy-poc-empty-seeds-'));
-    cleanups.push(repoRoot);
-    const gitCalls: string[][] = [];
-    const runGit = (_root: string, args: readonly string[]): string => {
-      gitCalls.push([...args]);
-      if (args[0] === 'ls-tree') {
-        return `100644 blob ${'1'.repeat(40)} 1\tREADME.md\0`;
-      }
-      throw new Error(`unexpected non-structure read: ${args.join(' ')}`);
-    };
-
-    const model = buildPocModel({
-      repoRoot,
-      repositoryRevision: 'empty-seed-revision',
-      observerRevision: 'empty-seed-observer',
-      evaluation: { snapshot: 'empty-seed', asOf: '2026-09-22T00:00:00Z' },
-      runGit,
-    });
-
-    expect(model.entities).toEqual([]);
-    expect(model.relationships).toEqual([]);
-    expect(model.surfaces).toEqual([]);
-    expect(model.project.name).toBe('Unknown project');
-    expect(model.capabilityId).toBe('capability:unknown');
-    expect(model.trajectory).toMatchObject({ kind: 'unknown' });
-    if (model.trajectory.kind !== 'unknown') throw new Error('unreachable');
-    expect(model.trajectory.observedItemCount).toBeUndefined();
-    expect(model.orrery).toMatchObject({
-      kind: 'unknown',
-      observedFileCount: 1,
-      mappedFileCount: 0,
-      unmappedFileCount: 1,
-      totalFileCount: 1,
-    });
-    expect(gitCalls).toEqual([['ls-tree', '-r', '-z', '-l', 'empty-seed-revision']]);
-  });
-
-  it('keeps an unobserved empty-seed Orrery denominator Unknown instead of inventing zero', () => {
-    const { repoRoot } = butlersGitFixture();
-    const model = buildPocModel({
-      repoRoot,
-      repositoryRevision: 'missing-code-structure-revision',
-      observerRevision: 'empty-seed-observer',
-      evaluation: { snapshot: 'empty-seed-unobserved', asOf: '2026-09-22T00:00:00Z' },
-      runGit: () => {
-        throw new Error('code structure unavailable');
-      },
-    });
-
-    expect(model.orrery).toEqual({
-      kind: 'unknown',
-      reason: 'No seed-backed capability-to-path mappings were supplied to this evaluation.',
-    });
-  });
-
   it('owns returned surface membership arrays and keeps the exported seed graph isolated', () => {
     const repoRoot = butlersFixture();
     const input = {
@@ -795,6 +788,11 @@ describe('three-surface Butlers POC model', () => {
     const first = buildPocModel(input);
     const firstPolaris = first.surfaces.find((surface) => surface.id === 'polaris');
     if (firstPolaris === undefined) throw new Error('missing Polaris surface');
+    // Orrery holds the whole graph; the other two keep their seeded members.
+    expect(first.surfaces.find((surface) => surface.id === 'orrery')?.entityIds).toEqual(first.entities.map((entity) => entity.id));
+    expect(first.surfaces.find((surface) => surface.id === 'orrery')?.relationshipIds).toEqual(first.relationships.map((relationship) => relationship.id));
+    expect(firstPolaris.entityIds).toEqual(BUTLERS_POC_SEEDS.surfaces.find((surface) => surface.id === 'polaris')?.entityIds);
+    expect(firstPolaris.entityIds.length).toBeLessThan(first.entities.length);
     expect(Object.isFrozen(firstPolaris.entityIds)).toBe(true);
     expect(Object.isFrozen(BUTLERS_POC_SEEDS.surfaces[0]?.entityIds)).toBe(true);
     expect(() => (firstPolaris.entityIds as string[]).push('entity:mutated-only-in-first-build')).toThrow();
@@ -959,6 +957,29 @@ describe('three-surface Butlers POC model', () => {
         expect.objectContaining({ kind: 'invalid-seed-graph' }),
       );
     }
+  });
+
+  it('names a seed role the role tables do not carry', () => {
+    const baseInput = {
+      repoRoot: butlersFixture(),
+      repositoryRevision: 'c13894238989d3bebb24094730992970b31fe546',
+      observerRevision: 'bfdb7963e4ff5628d0d1ec0f59e831d7e8209abe',
+      evaluation: { snapshot: 'butlers@unsupported-role', asOf: '2026-09-22T00:00:00Z' },
+    } as const;
+    const entityRole = {
+      ...BUTLERS_POC_SEEDS,
+      entities: BUTLERS_POC_SEEDS.entities.map((entity) =>
+        entity.role === 'runtime' ? { ...entity, role: 'oracle' as unknown as 'runtime' } : entity,
+      ),
+    };
+    const relationshipRole = {
+      ...BUTLERS_POC_SEEDS,
+      relationships: BUTLERS_POC_SEEDS.relationships.map((relationship) =>
+        relationship.role === 'code-to-runtime' ? { ...relationship, role: 'oracle' as unknown as 'code-to-runtime' } : relationship,
+      ),
+    };
+    expect(() => buildPocModel({ ...baseInput, seeds: entityRole })).toThrowError(/entity [^ ]+ has unsupported role oracle/);
+    expect(() => buildPocModel({ ...baseInput, seeds: relationshipRole })).toThrowError(/relationship [^ ]+ has unsupported role oracle/);
   });
 
   it('rejects a seeded Orrery mapping that is absent from the observed inventory', () => {

@@ -1,0 +1,6 @@
+full vitest suite at 561e4f775da54a478567457e34b640d7509d619f, TMPDIR /tmp/r544b-2
+start 21:43:25 loadavg 28.62 27.01 26.45 47/9791 2555808
+exit 1 21:49:12 loadavg 42.98 43.46 34.41 21/9836 2676386
+files 253 suites 894 tests 5560 passed 5554 failed 1 pending 5 todo 0 success False
+FAILED packages/polaris-dossier/src/start-gates.test.ts :: init: the clone holds the consented commit alone (syzygy-qkea.24) refuses config naming a remote, a promisor, an include or a command the agent's git would run (R-POLARIS-DOSSIER-CLONE-SHAPE-2 finding 1) | duration 5204 ms | Error: STACK_TRACE_ERROR
+re-run alone (TMPDIR /tmp/r544b-4, loadavg 33.13 -> 30.36): tests 104 passed 104 failed 0 success True; the failed test passed in 2422 ms

@@ -1,0 +1,21 @@
+unmutated base {'numTotalTests': 43, 'numPassedTests': 43, 'numFailedTests': 0}
+R-chmod-cycle-rewrite (from the record) base survived {'numTotalTests': 43, 'numPassedTests': 43, 'numFailedTests': 0} 0 []
+O1-same-bytes-rewrite base survived {'numTotalTests': 43, 'numPassedTests': 43, 'numFailedTests': 0} 0 []
+O2-same-bytes-rewrite-utimes-restored base survived {'numTotalTests': 43, 'numPassedTests': 43, 'numFailedTests': 0} 0 []
+O3-truncate-then-refill base survived {'numTotalTests': 43, 'numPassedTests': 43, 'numFailedTests': 0} 0 []
+O4-replace-with-new-inode base killed {'numTotalTests': 43, 'numPassedTests': 31, 'numFailedTests': 12} 12 []
+O5-fifo-drain-and-refill base survived {'numTotalTests': 43, 'numPassedTests': 43, 'numFailedTests': 0} 0 []
+O6-chmod-to-the-same-mode base survived {'numTotalTests': 43, 'numPassedTests': 43, 'numFailedTests': 0} 0 []
+O7-rename-away-and-back base survived {'numTotalTests': 43, 'numPassedTests': 43, 'numFailedTests': 0} 0 []
+O8-link-target-chmod-cycle-rewrite base survived {'numTotalTests': 43, 'numPassedTests': 43, 'numFailedTests': 0} 0 []
+unmutated head {'numTotalTests': 43, 'numPassedTests': 43, 'numFailedTests': 0}
+R-chmod-cycle-rewrite (from the record) head killed {'numTotalTests': 43, 'numPassedTests': 42, 'numFailedTests': 1} 1 []
+O1-same-bytes-rewrite head killed {'numTotalTests': 43, 'numPassedTests': 33, 'numFailedTests': 10} 10 []
+O2-same-bytes-rewrite-utimes-restored head killed {'numTotalTests': 43, 'numPassedTests': 32, 'numFailedTests': 11} 11 []
+O3-truncate-then-refill head killed {'numTotalTests': 43, 'numPassedTests': 32, 'numFailedTests': 11} 11 []
+O4-replace-with-new-inode head killed {'numTotalTests': 43, 'numPassedTests': 31, 'numFailedTests': 12} 12 []
+O5-fifo-drain-and-refill head killed {'numTotalTests': 43, 'numPassedTests': 42, 'numFailedTests': 1} 1 []
+O6-chmod-to-the-same-mode head killed {'numTotalTests': 43, 'numPassedTests': 29, 'numFailedTests': 14} 14 []
+O7-rename-away-and-back head killed {'numTotalTests': 43, 'numPassedTests': 26, 'numFailedTests': 17} 17 []
+O8-link-target-chmod-cycle-rewrite head survived {'numTotalTests': 43, 'numPassedTests': 43, 'numFailedTests': 0} 0 []
+clean after True

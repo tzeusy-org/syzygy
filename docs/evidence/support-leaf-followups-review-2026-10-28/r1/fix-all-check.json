@@ -1,0 +1,17 @@
+{
+ "tscExit": 0,
+ "tscOut": "",
+ "vitestExit": 0,
+ "files": 3,
+ "passed": 111,
+ "failed": 0,
+ "statusAfter": "",
+ "fixSha256": {
+  "fix-f2-object-entry-row.ts.txt": "5a70742a7b189bf04621aad6bc0a556a80407d9dd9495889bd5e4a5ff1d9c6cc",
+  "fix-f3-root-vitest-aliases.test.ts.txt": "a10cf20a9f37dda22b1d150a273cb1c190b4fd2bce0eb65084eadfbe12e179c9",
+  "fix-n-import-reader-rows.ts.txt": "3b755d6956134ae8882ade6c4679e82002b29cdd74b402fff5685256edb5364b",
+  "fix-n-import-reader.ts.txt": "9affefce2736f093546487349ea641f7507a62eb9481693a7f31aa0cd5734d44",
+  "fix-n-import-row.ts.txt": "bec4d557f5d355c0339b8586fd9bb4b22c5c0aede5491a0c1e9b5fb4c4331f70",
+  "fix-n-write-rows.ts.txt": "2238a3eefdd47ad4e73b2f1e4a45b8f85fd247207b653deb34de3ded59cf763f"
+ }
+}

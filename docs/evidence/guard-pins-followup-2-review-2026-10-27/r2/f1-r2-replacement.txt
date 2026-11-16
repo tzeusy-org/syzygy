@@ -1,0 +1,6 @@
+ * - `npm:`: an alias. npm-package-arg 12.0.2 accepts only a registry spec after `npm:`, and npm 11.5.1 fetches that spec from
+ *   the registry unless the alias is declared under a workspace's own name and either the root's manifest declares it or the
+ *   alias's range is `*`, absent or one that workspace's version satisfies; then npm links the workspace, as for a plain range
+ *   declared under a workspace's name (npm skips any root declaration under a workspace's name, whatever its version). Every
+ *   workspace here is `@syzygy/`-scoped, and the `@syzygy/*` branch reads such a name before this pattern. Its target may carry
+ *   a workspace package's name, which other package managers can link locally; every alias is refused, failing closed.

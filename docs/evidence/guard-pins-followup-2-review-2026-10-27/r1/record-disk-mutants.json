@@ -1,0 +1,83 @@
+[
+ {
+  "mutant": "M8 at head reported as surviving",
+  "outcome": "killed",
+  "exit": 1,
+  "tail": [
+   "summary.json DIFFERS ; problems: 2"
+  ],
+  "cleanAfter": true
+ },
+ {
+  "mutant": "M9 at head fails a second row",
+  "outcome": "killed",
+  "exit": 1,
+  "tail": [
+   "summary.json DIFFERS ; problems: 1"
+  ],
+  "cleanAfter": true
+ },
+ {
+  "mutant": "M2 at base reported as killed",
+  "outcome": "killed",
+  "exit": 1,
+  "tail": [
+   "summary.json DIFFERS ; problems: 2"
+  ],
+  "cleanAfter": true
+ },
+ {
+  "mutant": "M7 old fragment edited",
+  "outcome": "killed",
+  "exit": 1,
+  "tail": [
+   "summary.json DIFFERS ; problems: 1"
+  ],
+  "cleanAfter": true
+ },
+ {
+  "mutant": "run head commit changed",
+  "outcome": "killed",
+  "exit": 1,
+  "tail": [
+   "summary.json DIFFERS ; problems: 1"
+  ],
+  "cleanAfter": true
+ },
+ {
+  "mutant": "island answers one fewer equal",
+  "outcome": "killed",
+  "exit": 1,
+  "tail": [
+   "summary.json DIFFERS ; problems: 1"
+  ],
+  "cleanAfter": true
+ },
+ {
+  "mutant": "island old-testkit digest changed",
+  "outcome": "survives",
+  "exit": 0,
+  "tail": [
+   "summary.json matches ; problems: 0"
+  ],
+  "cleanAfter": true
+ },
+ {
+  "mutant": "summary.json gains a key",
+  "outcome": "killed",
+  "exit": 1,
+  "tail": [
+   "summary.json DIFFERS ; problems: 0"
+  ],
+  "cleanAfter": true
+ },
+ {
+  "mutant": "npa probe pattern line altered",
+  "outcome": "killed",
+  "exit": 1,
+  "tail": [
+   "summary.json DIFFERS ; problems: 1"
+  ],
+  "cleanAfter": true
+ }
+]

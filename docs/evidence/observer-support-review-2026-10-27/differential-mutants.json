@@ -1,0 +1,97 @@
+{
+ "D1-extra-prefix-polaris-generation-core": {
+  "old": "        'packages/support/',\n",
+  "new": "        'packages/support/',\n        'packages/polaris-generation-core/',\n",
+  "refused": {
+   "base": 319,
+   "head": 380
+  },
+  "differingCount": 61,
+  "differingOutsideSupport": [
+   [
+    "packages/polaris-generation-core/README.md",
+    "accepted",
+    "refused"
+   ],
+   [
+    "packages/polaris-generation-core/package.json",
+    "accepted",
+    "refused"
+   ],
+   [
+    "packages/polaris-generation-core/src/admitted-input.test.ts",
+    "accepted",
+    "refused"
+   ],
+   [
+    "packages/polaris-generation-core/src/admitted-input.ts",
+    "accepted",
+    "refused"
+   ],
+   [
+    "packages/polaris-generation-core/src/canonical-json.test.ts",
+    "accepted",
+    "refused"
+   ],
+   [
+    "packages/polaris-generation-core/src/canonical-json.ts",
+    "accepted",
+    "refused"
+   ]
+  ],
+  "onlySupportDiffers": false,
+  "everySupportPathDiffers": false
+ },
+ "D2-support-prefix-dropped": {
+  "old": "        'packages/support/',\n",
+  "new": "",
+  "refused": {
+   "base": 319,
+   "head": 319
+  },
+  "differingCount": 0,
+  "differingOutsideSupport": [],
+  "onlySupportDiffers": false,
+  "everySupportPathDiffers": false
+ },
+ "D3-support-prefix-without-trailing-slash": {
+  "old": "        'packages/support/',\n",
+  "new": "        'packages/support',\n",
+  "refused": {
+   "base": 319,
+   "head": 331
+  },
+  "differingCount": 12,
+  "differingOutsideSupport": [
+   [
+    "packages/support",
+    "accepted",
+    "refused"
+   ],
+   [
+    "packages/support-x/src/a.ts",
+    "accepted",
+    "refused"
+   ],
+   [
+    "packages/supportive/x.ts",
+    "accepted",
+    "refused"
+   ]
+  ],
+  "onlySupportDiffers": false,
+  "everySupportPathDiffers": false
+ },
+ "D0-control-unmutated": {
+  "old": "        'packages/support/',\n",
+  "new": "        'packages/support/',\n",
+  "refused": {
+   "base": 319,
+   "head": 328
+  },
+  "differingCount": 9,
+  "differingOutsideSupport": [],
+  "onlySupportDiffers": true,
+  "everySupportPathDiffers": true
+ }
+}

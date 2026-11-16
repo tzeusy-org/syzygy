@@ -1,0 +1,18 @@
+# npm run typecheck with the predicate merged at all 20 in-scope sites (apply-is-record.mjs before the three below were dropped)
+# base 81862261; run 2026-10-28; exit status 2; 8 errors, all in the three files that were then kept local
+# response-identity.ts deletes keys from the narrowed value; the two sweep tests narrow Json | undefined to their own Obj
+
+> typecheck
+> tsc -b packages/support packages/cap1-core packages/http-host packages/cap1-daemon packages/cap1-conformance packages/three-surface-poc-core apps/syzygy apps/three-surface-poc packages/cap1-system packages/polaris-gene
+
+packages/three-surface-poc-core/src/response-identity.ts(155,14): error TS2542: Index signature in type 'Readonly<Record<string, unknown>>' only permits reading.
+packages/three-surface-poc-core/src/response-identity.ts(158,12): error TS2542: Index signature in type 'Readonly<Record<string, unknown>>' only permits reading.
+packages/three-surface-poc-core/src/response-identity.ts(191,10): error TS2542: Index signature in type 'Readonly<Record<string, unknown>>' only permits reading.
+apps/three-surface-poc/src/block-provenance-sweep.test.ts(54,79): error TS2345: Argument of type 'Json' is not assignable to parameter of type 'Obj'.
+  Type 'null' is not assignable to type 'Obj'.
+apps/three-surface-poc/src/governing-intent-sweep.test.ts(88,24): error TS18047: 'item' is possibly 'null'.
+apps/three-surface-poc/src/governing-intent-sweep.test.ts(88,29): error TS2339: Property 'governedBy' does not exist on type 'string | number | boolean | Json[] | { [key: string]: Json; }'.
+  Property 'governedBy' does not exist on type 'string'.
+apps/three-surface-poc/src/governing-intent-sweep.test.ts(89,23): error TS18047: 'item' is possibly 'null'.
+apps/three-surface-poc/src/governing-intent-sweep.test.ts(89,28): error TS2339: Property 'id' does not exist on type 'string | number | boolean | Json[] | { [key: string]: Json; }'.
+  Property 'id' does not exist on type 'string'.

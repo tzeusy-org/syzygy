@@ -1,0 +1,1680 @@
+{
+  "title": "syzygy-bpyt.8.24 rule-6 mutants: each launch-form ask leaves the marker as the test saw it, by an oracle that asks no reader",
+  "bead": "syzygy-bpyt.8.24",
+  "subject": [
+    "packages/polaris-dossier/src/launched.test.ts"
+  ],
+  "testSha256": {
+    "base": "1243441dfdc7216015d48b1431327d1338d9d54ea71f25439cf69fe6158c1141",
+    "fix": "e01b040a5f74f044169d46adccde476814187b5d44fa7bfcb44ef082ca2fa740"
+  },
+  "readerSha256": "c7a25b8b45fe12e2add7874f88d46b2bad1eef16ffa4a17e2464d5c671424921",
+  "base": "a04069678c02881cd41a25b850e14f79d581c083",
+  "commit": "5c2b34daad45588d1f54e31baee4a962f0abade7",
+  "command": "npx vitest run --project @syzygy/polaris-dossier --reporter=json --outputFile=<scratch>/mutant-vitest.json packages/polaris-dossier/src/launched.test.ts",
+  "timeoutSeconds": 300,
+  "node": "v24.6.0",
+  "unmutated": {
+    "base": {
+      "testSha256": "1243441dfdc7216015d48b1431327d1338d9d54ea71f25439cf69fe6158c1141",
+      "exitCode": 0,
+      "counts": {
+        "numTotalTests": 43,
+        "numPassedTests": 43,
+        "numFailedTests": 0
+      },
+      "failedTests": []
+    },
+    "fix": {
+      "testSha256": "e01b040a5f74f044169d46adccde476814187b5d44fa7bfcb44ef082ca2fa740",
+      "exitCode": 0,
+      "counts": {
+        "numTotalTests": 43,
+        "numPassedTests": 43,
+        "numFailedTests": 0
+      },
+      "failedTests": []
+    }
+  },
+  "mutants": [
+    {
+      "id": "D1-with-memoized-reader",
+      "kind": "acceptance",
+      "tests": "base",
+      "edits": [
+        {
+          "file": "packages/polaris-dossier/src/launched.ts",
+          "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+          "new": "  if (state === 'unreadable') { try { fs.rmSync(path.join(runDir, RUN_LAYOUT.launched), { recursive: true, force: true }); } catch { /* reviewer mutant */ } try { fs.unlinkSync(path.join(runDir, RUN_LAYOUT.launched)); } catch { /* reviewer mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+        },
+        {
+          "file": "packages/polaris-dossier/src/launched.ts",
+          "old": "export function launchedMarkerState(runDir: string): LaunchedMarkerState {\n  const file = path.join(runDir, RUN_LAYOUT.launched);",
+          "new": "const REMEMBERED = new Map<string, LaunchedMarkerState>();\nexport function launchedMarkerState(runDir: string): LaunchedMarkerState {\n  const hit = REMEMBERED.get(runDir); if (hit) return hit;\n  const state = launchedMarkerStateOnce(runDir); REMEMBERED.set(runDir, state); return state;\n}\n\nfunction launchedMarkerStateOnce(runDir: string): LaunchedMarkerState {\n  const file = path.join(runDir, RUN_LAYOUT.launched);"
+        }
+      ],
+      "exitCode": 0,
+      "counts": {
+        "numTotalTests": 43,
+        "numPassedTests": 43,
+        "numFailedTests": 0
+      },
+      "failedTests": [],
+      "failedRows": [],
+      "blocked": false,
+      "outcome": "survived",
+      "restored": true
+    },
+    {
+      "id": "D1-terminal-only",
+      "kind": "acceptance",
+      "tests": "base",
+      "edits": [
+        {
+          "file": "packages/polaris-dossier/src/launched.ts",
+          "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+          "new": "  if (state === 'unreadable') { if (form['value'] === 'terminal') { try { fs.rmSync(path.join(runDir, RUN_LAYOUT.launched), { recursive: true, force: true }); } catch { /* reviewer mutant */ } try { fs.unlinkSync(path.join(runDir, RUN_LAYOUT.launched)); } catch { /* reviewer mutant */ } }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+        }
+      ],
+      "exitCode": 1,
+      "counts": {
+        "numTotalTests": 43,
+        "numPassedTests": 26,
+        "numFailedTests": 17
+      },
+      "failedTests": [
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: an empty file",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: invalid JSON",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: JSON null",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a JSON array",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a JSON string",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: another format",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: no format",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a format that is not a string",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a byte-order mark before the marker",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a directory",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a dangling symbolic link",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to the marker Syzygy writes",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to a character device",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a FIFO",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a FIFO holding the marker's bytes",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a marker of 4097 bytes, one past the bound",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a file its reader may not read",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        }
+      ],
+      "failedRows": [
+        "JSON null",
+        "a FIFO",
+        "a FIFO holding the marker's bytes",
+        "a JSON array",
+        "a JSON string",
+        "a byte-order mark before the marker",
+        "a dangling symbolic link",
+        "a directory",
+        "a file its reader may not read",
+        "a format that is not a string",
+        "a marker of 4097 bytes, one past the bound",
+        "a symbolic link to a character device",
+        "a symbolic link to the marker Syzygy writes",
+        "an empty file",
+        "another format",
+        "invalid JSON",
+        "no format"
+      ],
+      "blocked": false,
+      "outcome": "killed",
+      "restored": true
+    },
+    {
+      "id": "D1-bang-only",
+      "kind": "acceptance",
+      "tests": "base",
+      "edits": [
+        {
+          "file": "packages/polaris-dossier/src/launched.ts",
+          "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+          "new": "  if (state === 'unreadable') { if (form['value'] === 'bang') { try { fs.rmSync(path.join(runDir, RUN_LAYOUT.launched), { recursive: true, force: true }); } catch { /* reviewer mutant */ } try { fs.unlinkSync(path.join(runDir, RUN_LAYOUT.launched)); } catch { /* reviewer mutant */ } }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+        }
+      ],
+      "exitCode": 1,
+      "counts": {
+        "numTotalTests": 43,
+        "numPassedTests": 26,
+        "numFailedTests": 17
+      },
+      "failedTests": [
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: an empty file",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: invalid JSON",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: JSON null",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a JSON array",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a JSON string",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: another format",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: no format",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a format that is not a string",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a byte-order mark before the marker",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a directory",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a dangling symbolic link",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to the marker Syzygy writes",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to a character device",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a FIFO",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a FIFO holding the marker's bytes",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a marker of 4097 bytes, one past the bound",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a file its reader may not read",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        }
+      ],
+      "failedRows": [
+        "JSON null",
+        "a FIFO",
+        "a FIFO holding the marker's bytes",
+        "a JSON array",
+        "a JSON string",
+        "a byte-order mark before the marker",
+        "a dangling symbolic link",
+        "a directory",
+        "a file its reader may not read",
+        "a format that is not a string",
+        "a marker of 4097 bytes, one past the bound",
+        "a symbolic link to a character device",
+        "a symbolic link to the marker Syzygy writes",
+        "an empty file",
+        "another format",
+        "invalid JSON",
+        "no format"
+      ],
+      "blocked": false,
+      "outcome": "killed",
+      "restored": true
+    },
+    {
+      "id": "D1-syzygy-launched-only",
+      "kind": "acceptance",
+      "tests": "base",
+      "edits": [
+        {
+          "file": "packages/polaris-dossier/src/launched.ts",
+          "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+          "new": "  if (state === 'unreadable') { if (form['value'] === SYZYGY_LAUNCHED) { try { fs.rmSync(path.join(runDir, RUN_LAYOUT.launched), { recursive: true, force: true }); } catch { /* reviewer mutant */ } try { fs.unlinkSync(path.join(runDir, RUN_LAYOUT.launched)); } catch { /* reviewer mutant */ } }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+        }
+      ],
+      "exitCode": 1,
+      "counts": {
+        "numTotalTests": 43,
+        "numPassedTests": 26,
+        "numFailedTests": 17
+      },
+      "failedTests": [
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: an empty file",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: invalid JSON",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: JSON null",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a JSON array",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a JSON string",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: another format",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: no format",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a format that is not a string",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a byte-order mark before the marker",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a directory",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a dangling symbolic link",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to the marker Syzygy writes",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to a character device",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a FIFO",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a FIFO holding the marker's bytes",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a marker of 4097 bytes, one past the bound",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a file its reader may not read",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        }
+      ],
+      "failedRows": [
+        "JSON null",
+        "a FIFO",
+        "a FIFO holding the marker's bytes",
+        "a JSON array",
+        "a JSON string",
+        "a byte-order mark before the marker",
+        "a dangling symbolic link",
+        "a directory",
+        "a file its reader may not read",
+        "a format that is not a string",
+        "a marker of 4097 bytes, one past the bound",
+        "a symbolic link to a character device",
+        "a symbolic link to the marker Syzygy writes",
+        "an empty file",
+        "another format",
+        "invalid JSON",
+        "no format"
+      ],
+      "blocked": false,
+      "outcome": "killed",
+      "restored": true
+    },
+    {
+      "id": "D1-any-remover",
+      "kind": "acceptance",
+      "tests": "base",
+      "edits": [
+        {
+          "file": "packages/polaris-dossier/src/launched.ts",
+          "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+          "new": "  if (state === 'unreadable') { try { fs.rmSync(path.join(runDir, RUN_LAYOUT.launched), { recursive: true, force: true }); } catch { /* reviewer mutant */ } try { fs.unlinkSync(path.join(runDir, RUN_LAYOUT.launched)); } catch { /* reviewer mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+        }
+      ],
+      "exitCode": 1,
+      "counts": {
+        "numTotalTests": 43,
+        "numPassedTests": 26,
+        "numFailedTests": 17
+      },
+      "failedTests": [
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: an empty file",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: invalid JSON",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: JSON null",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a JSON array",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a JSON string",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: another format",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: no format",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a format that is not a string",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a byte-order mark before the marker",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a directory",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a dangling symbolic link",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to the marker Syzygy writes",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to a character device",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a FIFO",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a FIFO holding the marker's bytes",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a marker of 4097 bytes, one past the bound",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a file its reader may not read",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        }
+      ],
+      "failedRows": [
+        "JSON null",
+        "a FIFO",
+        "a FIFO holding the marker's bytes",
+        "a JSON array",
+        "a JSON string",
+        "a byte-order mark before the marker",
+        "a dangling symbolic link",
+        "a directory",
+        "a file its reader may not read",
+        "a format that is not a string",
+        "a marker of 4097 bytes, one past the bound",
+        "a symbolic link to a character device",
+        "a symbolic link to the marker Syzygy writes",
+        "an empty file",
+        "another format",
+        "invalid JSON",
+        "no format"
+      ],
+      "blocked": false,
+      "outcome": "killed",
+      "restored": true
+    },
+    {
+      "id": "D3-repair-to-launched",
+      "kind": "extra",
+      "tests": "base",
+      "edits": [
+        {
+          "file": "packages/polaris-dossier/src/launched.ts",
+          "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+          "new": "  if (state === 'unreadable') { try { fs.rmSync(path.join(runDir, RUN_LAYOUT.launched), { recursive: true, force: true }); } catch { /* reviewer mutant */ } try { fs.unlinkSync(path.join(runDir, RUN_LAYOUT.launched)); } catch { /* reviewer mutant */ } try { writeLaunchedMarker(runDir, 'run-x', 0); } catch { /* reviewer mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+        }
+      ],
+      "exitCode": 1,
+      "counts": {
+        "numTotalTests": 43,
+        "numPassedTests": 26,
+        "numFailedTests": 17
+      },
+      "failedTests": [
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: an empty file",
+          "firstErrorLine": "AssertionError: expected 'launched' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: invalid JSON",
+          "firstErrorLine": "AssertionError: expected 'launched' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: JSON null",
+          "firstErrorLine": "AssertionError: expected 'launched' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a JSON array",
+          "firstErrorLine": "AssertionError: expected 'launched' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a JSON string",
+          "firstErrorLine": "AssertionError: expected 'launched' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: another format",
+          "firstErrorLine": "AssertionError: expected 'launched' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: no format",
+          "firstErrorLine": "AssertionError: expected 'launched' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a format that is not a string",
+          "firstErrorLine": "AssertionError: expected 'launched' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a byte-order mark before the marker",
+          "firstErrorLine": "AssertionError: expected 'launched' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a directory",
+          "firstErrorLine": "AssertionError: expected 'launched' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a dangling symbolic link",
+          "firstErrorLine": "AssertionError: expected 'launched' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to the marker Syzygy writes",
+          "firstErrorLine": "AssertionError: expected 'launched' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to a character device",
+          "firstErrorLine": "AssertionError: expected 'launched' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a FIFO",
+          "firstErrorLine": "AssertionError: expected 'launched' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a FIFO holding the marker's bytes",
+          "firstErrorLine": "AssertionError: expected 'launched' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a marker of 4097 bytes, one past the bound",
+          "firstErrorLine": "AssertionError: expected 'launched' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a file its reader may not read",
+          "firstErrorLine": "AssertionError: expected 'launched' to be 'unreadable' // Object.is equality"
+        }
+      ],
+      "failedRows": [
+        "JSON null",
+        "a FIFO",
+        "a FIFO holding the marker's bytes",
+        "a JSON array",
+        "a JSON string",
+        "a byte-order mark before the marker",
+        "a dangling symbolic link",
+        "a directory",
+        "a file its reader may not read",
+        "a format that is not a string",
+        "a marker of 4097 bytes, one past the bound",
+        "a symbolic link to a character device",
+        "a symbolic link to the marker Syzygy writes",
+        "an empty file",
+        "another format",
+        "invalid JSON",
+        "no format"
+      ],
+      "blocked": false,
+      "outcome": "killed",
+      "restored": true
+    },
+    {
+      "id": "D4-truncate",
+      "kind": "extra",
+      "tests": "base",
+      "edits": [
+        {
+          "file": "packages/polaris-dossier/src/launched.ts",
+          "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+          "new": "  if (state === 'unreadable') { try { fs.truncateSync(path.join(runDir, RUN_LAYOUT.launched), 0); } catch { /* reviewer mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+        }
+      ],
+      "exitCode": 0,
+      "counts": {
+        "numTotalTests": 43,
+        "numPassedTests": 43,
+        "numFailedTests": 0
+      },
+      "failedTests": [],
+      "failedRows": [],
+      "blocked": false,
+      "outcome": "survived",
+      "restored": true
+    },
+    {
+      "id": "M-every-form-drains-then-refuses",
+      "kind": "extra",
+      "tests": "base",
+      "edits": [
+        {
+          "file": "packages/polaris-dossier/src/launched.ts",
+          "old": "    if (!stat.isFile() || stat.size > MARKER_BYTES_MAX) return 'unreadable';",
+          "new": "    if (stat.size > MARKER_BYTES_MAX) return 'unreadable';"
+        },
+        {
+          "file": "packages/polaris-dossier/src/launched.ts",
+          "old": "    if (length > MARKER_BYTES_MAX) return 'unreadable';",
+          "new": "    if (length > MARKER_BYTES_MAX || !stat.isFile()) return 'unreadable';"
+        }
+      ],
+      "exitCode": 0,
+      "counts": {
+        "numTotalTests": 43,
+        "numPassedTests": 43,
+        "numFailedTests": 0
+      },
+      "failedTests": [],
+      "failedRows": [],
+      "blocked": false,
+      "outcome": "survived",
+      "restored": true
+    },
+    {
+      "id": "T-ask-of-an-unplanted-run",
+      "kind": "extra",
+      "tests": "base",
+      "edits": [
+        {
+          "file": "packages/polaris-dossier/src/launched.test.ts",
+          "old": "      const dir = planted();",
+          "new": "      const dir = runDir();"
+        }
+      ],
+      "exitCode": 1,
+      "counts": {
+        "numTotalTests": 43,
+        "numPassedTests": 26,
+        "numFailedTests": 17
+      },
+      "failedTests": [
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: an empty file",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: invalid JSON",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: JSON null",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a JSON array",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a JSON string",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: another format",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: no format",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a format that is not a string",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a byte-order mark before the marker",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a directory",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a dangling symbolic link",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to the marker Syzygy writes",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to a character device",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a FIFO",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a FIFO holding the marker's bytes",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a marker of 4097 bytes, one past the bound",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a file its reader may not read",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        }
+      ],
+      "failedRows": [
+        "JSON null",
+        "a FIFO",
+        "a FIFO holding the marker's bytes",
+        "a JSON array",
+        "a JSON string",
+        "a byte-order mark before the marker",
+        "a dangling symbolic link",
+        "a directory",
+        "a file its reader may not read",
+        "a format that is not a string",
+        "a marker of 4097 bytes, one past the bound",
+        "a symbolic link to a character device",
+        "a symbolic link to the marker Syzygy writes",
+        "an empty file",
+        "another format",
+        "invalid JSON",
+        "no format"
+      ],
+      "blocked": false,
+      "outcome": "killed",
+      "restored": true
+    },
+    {
+      "id": "D1-with-memoized-reader",
+      "kind": "acceptance",
+      "tests": "fix",
+      "edits": [
+        {
+          "file": "packages/polaris-dossier/src/launched.ts",
+          "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+          "new": "  if (state === 'unreadable') { try { fs.rmSync(path.join(runDir, RUN_LAYOUT.launched), { recursive: true, force: true }); } catch { /* reviewer mutant */ } try { fs.unlinkSync(path.join(runDir, RUN_LAYOUT.launched)); } catch { /* reviewer mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+        },
+        {
+          "file": "packages/polaris-dossier/src/launched.ts",
+          "old": "export function launchedMarkerState(runDir: string): LaunchedMarkerState {\n  const file = path.join(runDir, RUN_LAYOUT.launched);",
+          "new": "const REMEMBERED = new Map<string, LaunchedMarkerState>();\nexport function launchedMarkerState(runDir: string): LaunchedMarkerState {\n  const hit = REMEMBERED.get(runDir); if (hit) return hit;\n  const state = launchedMarkerStateOnce(runDir); REMEMBERED.set(runDir, state); return state;\n}\n\nfunction launchedMarkerStateOnce(runDir: string): LaunchedMarkerState {\n  const file = path.join(runDir, RUN_LAYOUT.launched);"
+        }
+      ],
+      "exitCode": 1,
+      "counts": {
+        "numTotalTests": 43,
+        "numPassedTests": 26,
+        "numFailedTests": 17
+      },
+      "failedTests": [
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: an empty file",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 146625232, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: invalid JSON",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 146625341, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: JSON null",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 146625427, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a JSON array",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 146625438, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a JSON string",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 146625485, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: another format",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 146625516, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: no format",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 146625523, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a format that is not a string",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 146625537, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a byte-order mark before the marker",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 146625539, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a directory",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 16877, ino: 146625541, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a dangling symbolic link",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 41471, ino: 146625544, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to the marker Syzygy writes",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 41471, ino: 146625548, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to a character device",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 41471, ino: 146625550, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a FIFO",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 4516, ino: 146625565, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a FIFO holding the marker's bytes",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 4516, ino: 146625597, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a marker of 4097 bytes, one past the bound",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 146625632, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a file its reader may not read",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 32768, ino: 146625641, \u2026(3) }"
+        }
+      ],
+      "failedRows": [
+        "JSON null",
+        "a FIFO",
+        "a FIFO holding the marker's bytes",
+        "a JSON array",
+        "a JSON string",
+        "a byte-order mark before the marker",
+        "a dangling symbolic link",
+        "a directory",
+        "a file its reader may not read",
+        "a format that is not a string",
+        "a marker of 4097 bytes, one past the bound",
+        "a symbolic link to a character device",
+        "a symbolic link to the marker Syzygy writes",
+        "an empty file",
+        "another format",
+        "invalid JSON",
+        "no format"
+      ],
+      "blocked": false,
+      "outcome": "killed",
+      "restored": true
+    },
+    {
+      "id": "D1-terminal-only",
+      "kind": "acceptance",
+      "tests": "fix",
+      "edits": [
+        {
+          "file": "packages/polaris-dossier/src/launched.ts",
+          "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+          "new": "  if (state === 'unreadable') { if (form['value'] === 'terminal') { try { fs.rmSync(path.join(runDir, RUN_LAYOUT.launched), { recursive: true, force: true }); } catch { /* reviewer mutant */ } try { fs.unlinkSync(path.join(runDir, RUN_LAYOUT.launched)); } catch { /* reviewer mutant */ } }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+        }
+      ],
+      "exitCode": 1,
+      "counts": {
+        "numTotalTests": 43,
+        "numPassedTests": 26,
+        "numFailedTests": 17
+      },
+      "failedTests": [
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: an empty file",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 146631595, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: invalid JSON",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 146631618, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: JSON null",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 146631638, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a JSON array",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 146631641, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a JSON string",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 146631655, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: another format",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 146631657, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: no format",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 146631659, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a format that is not a string",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 146631661, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a byte-order mark before the marker",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 146631677, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a directory",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 16877, ino: 146631680, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a dangling symbolic link",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 41471, ino: 146631682, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to the marker Syzygy writes",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 41471, ino: 146631693, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to a character device",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 41471, ino: 146631695, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a FIFO",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 4516, ino: 146631712, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a FIFO holding the marker's bytes",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 4516, ino: 146631739, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a marker of 4097 bytes, one past the bound",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 146631749, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a file its reader may not read",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 32768, ino: 146631752, \u2026(3) }"
+        }
+      ],
+      "failedRows": [
+        "JSON null",
+        "a FIFO",
+        "a FIFO holding the marker's bytes",
+        "a JSON array",
+        "a JSON string",
+        "a byte-order mark before the marker",
+        "a dangling symbolic link",
+        "a directory",
+        "a file its reader may not read",
+        "a format that is not a string",
+        "a marker of 4097 bytes, one past the bound",
+        "a symbolic link to a character device",
+        "a symbolic link to the marker Syzygy writes",
+        "an empty file",
+        "another format",
+        "invalid JSON",
+        "no format"
+      ],
+      "blocked": false,
+      "outcome": "killed",
+      "restored": true
+    },
+    {
+      "id": "D1-bang-only",
+      "kind": "acceptance",
+      "tests": "fix",
+      "edits": [
+        {
+          "file": "packages/polaris-dossier/src/launched.ts",
+          "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+          "new": "  if (state === 'unreadable') { if (form['value'] === 'bang') { try { fs.rmSync(path.join(runDir, RUN_LAYOUT.launched), { recursive: true, force: true }); } catch { /* reviewer mutant */ } try { fs.unlinkSync(path.join(runDir, RUN_LAYOUT.launched)); } catch { /* reviewer mutant */ } }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+        }
+      ],
+      "exitCode": 1,
+      "counts": {
+        "numTotalTests": 43,
+        "numPassedTests": 26,
+        "numFailedTests": 17
+      },
+      "failedTests": [
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: an empty file",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 146636403, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: invalid JSON",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 146636428, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: JSON null",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 146636432, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a JSON array",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 146636443, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a JSON string",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 146636448, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: another format",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 146636458, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: no format",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 146636463, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a format that is not a string",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 146636467, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a byte-order mark before the marker",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 146636471, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a directory",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 16877, ino: 146636480, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a dangling symbolic link",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 41471, ino: 146636484, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to the marker Syzygy writes",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 41471, ino: 146636493, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to a character device",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 41471, ino: 146636499, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a FIFO",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 4516, ino: 146636539, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a FIFO holding the marker's bytes",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 4516, ino: 146636607, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a marker of 4097 bytes, one past the bound",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 146636640, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a file its reader may not read",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 32768, ino: 146636644, \u2026(3) }"
+        }
+      ],
+      "failedRows": [
+        "JSON null",
+        "a FIFO",
+        "a FIFO holding the marker's bytes",
+        "a JSON array",
+        "a JSON string",
+        "a byte-order mark before the marker",
+        "a dangling symbolic link",
+        "a directory",
+        "a file its reader may not read",
+        "a format that is not a string",
+        "a marker of 4097 bytes, one past the bound",
+        "a symbolic link to a character device",
+        "a symbolic link to the marker Syzygy writes",
+        "an empty file",
+        "another format",
+        "invalid JSON",
+        "no format"
+      ],
+      "blocked": false,
+      "outcome": "killed",
+      "restored": true
+    },
+    {
+      "id": "D1-syzygy-launched-only",
+      "kind": "acceptance",
+      "tests": "fix",
+      "edits": [
+        {
+          "file": "packages/polaris-dossier/src/launched.ts",
+          "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+          "new": "  if (state === 'unreadable') { if (form['value'] === SYZYGY_LAUNCHED) { try { fs.rmSync(path.join(runDir, RUN_LAYOUT.launched), { recursive: true, force: true }); } catch { /* reviewer mutant */ } try { fs.unlinkSync(path.join(runDir, RUN_LAYOUT.launched)); } catch { /* reviewer mutant */ } }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+        }
+      ],
+      "exitCode": 1,
+      "counts": {
+        "numTotalTests": 43,
+        "numPassedTests": 26,
+        "numFailedTests": 17
+      },
+      "failedTests": [
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: an empty file",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 146640354, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: invalid JSON",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 146640360, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: JSON null",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 146640366, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a JSON array",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 146640372, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a JSON string",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 146640378, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: another format",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 146640384, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: no format",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 146640391, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a format that is not a string",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 146640397, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a byte-order mark before the marker",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 146640403, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a directory",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 16877, ino: 146640409, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a dangling symbolic link",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 41471, ino: 146640415, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to the marker Syzygy writes",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 41471, ino: 146640430, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to a character device",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 41471, ino: 146640446, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a FIFO",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 4516, ino: 146640465, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a FIFO holding the marker's bytes",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 4516, ino: 146640486, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a marker of 4097 bytes, one past the bound",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 146640574, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a file its reader may not read",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 32768, ino: 146640639, \u2026(3) }"
+        }
+      ],
+      "failedRows": [
+        "JSON null",
+        "a FIFO",
+        "a FIFO holding the marker's bytes",
+        "a JSON array",
+        "a JSON string",
+        "a byte-order mark before the marker",
+        "a dangling symbolic link",
+        "a directory",
+        "a file its reader may not read",
+        "a format that is not a string",
+        "a marker of 4097 bytes, one past the bound",
+        "a symbolic link to a character device",
+        "a symbolic link to the marker Syzygy writes",
+        "an empty file",
+        "another format",
+        "invalid JSON",
+        "no format"
+      ],
+      "blocked": false,
+      "outcome": "killed",
+      "restored": true
+    },
+    {
+      "id": "D1-any-remover",
+      "kind": "acceptance",
+      "tests": "fix",
+      "edits": [
+        {
+          "file": "packages/polaris-dossier/src/launched.ts",
+          "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+          "new": "  if (state === 'unreadable') { try { fs.rmSync(path.join(runDir, RUN_LAYOUT.launched), { recursive: true, force: true }); } catch { /* reviewer mutant */ } try { fs.unlinkSync(path.join(runDir, RUN_LAYOUT.launched)); } catch { /* reviewer mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+        }
+      ],
+      "exitCode": 1,
+      "counts": {
+        "numTotalTests": 43,
+        "numPassedTests": 26,
+        "numFailedTests": 17
+      },
+      "failedTests": [
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: an empty file",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 146645497, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: invalid JSON",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 146645521, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: JSON null",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 146645523, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a JSON array",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 146645525, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a JSON string",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 146645528, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: another format",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 146645530, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: no format",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 146645532, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a format that is not a string",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 146645534, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a byte-order mark before the marker",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 146645544, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a directory",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 16877, ino: 146645546, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a dangling symbolic link",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 41471, ino: 146645548, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to the marker Syzygy writes",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 41471, ino: 146645552, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to a character device",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 41471, ino: 146645554, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a FIFO",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 4516, ino: 146645557, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a FIFO holding the marker's bytes",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 4516, ino: 146645561, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a marker of 4097 bytes, one past the bound",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 33188, ino: 146645574, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a file its reader may not read",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { mode: 32768, ino: 146645576, \u2026(3) }"
+        }
+      ],
+      "failedRows": [
+        "JSON null",
+        "a FIFO",
+        "a FIFO holding the marker's bytes",
+        "a JSON array",
+        "a JSON string",
+        "a byte-order mark before the marker",
+        "a dangling symbolic link",
+        "a directory",
+        "a file its reader may not read",
+        "a format that is not a string",
+        "a marker of 4097 bytes, one past the bound",
+        "a symbolic link to a character device",
+        "a symbolic link to the marker Syzygy writes",
+        "an empty file",
+        "another format",
+        "invalid JSON",
+        "no format"
+      ],
+      "blocked": false,
+      "outcome": "killed",
+      "restored": true
+    },
+    {
+      "id": "D3-repair-to-launched",
+      "kind": "extra",
+      "tests": "fix",
+      "edits": [
+        {
+          "file": "packages/polaris-dossier/src/launched.ts",
+          "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+          "new": "  if (state === 'unreadable') { try { fs.rmSync(path.join(runDir, RUN_LAYOUT.launched), { recursive: true, force: true }); } catch { /* reviewer mutant */ } try { fs.unlinkSync(path.join(runDir, RUN_LAYOUT.launched)); } catch { /* reviewer mutant */ } try { writeLaunchedMarker(runDir, 'run-x', 0); } catch { /* reviewer mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+        }
+      ],
+      "exitCode": 1,
+      "counts": {
+        "numTotalTests": 43,
+        "numPassedTests": 26,
+        "numFailedTests": 17
+      },
+      "failedTests": [
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: an empty file",
+          "firstErrorLine": "AssertionError: expected { mode: 33152, ino: 146647351, \u2026(3) } to deeply equal { mode: 33188, ino: 146647342, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: invalid JSON",
+          "firstErrorLine": "AssertionError: expected { mode: 33152, ino: 146647367, \u2026(3) } to deeply equal { mode: 33188, ino: 146647366, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: JSON null",
+          "firstErrorLine": "AssertionError: expected { mode: 33152, ino: 146647370, \u2026(3) } to deeply equal { mode: 33188, ino: 146647369, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a JSON array",
+          "firstErrorLine": "AssertionError: expected { mode: 33152, ino: 146647373, \u2026(3) } to deeply equal { mode: 33188, ino: 146647372, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a JSON string",
+          "firstErrorLine": "AssertionError: expected { mode: 33152, ino: 146647376, \u2026(3) } to deeply equal { mode: 33188, ino: 146647375, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: another format",
+          "firstErrorLine": "AssertionError: expected { mode: 33152, ino: 146647379, \u2026(3) } to deeply equal { mode: 33188, ino: 146647378, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: no format",
+          "firstErrorLine": "AssertionError: expected { mode: 33152, ino: 146647394, \u2026(3) } to deeply equal { mode: 33188, ino: 146647393, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a format that is not a string",
+          "firstErrorLine": "AssertionError: expected { mode: 33152, ino: 146647397, \u2026(3) } to deeply equal { mode: 33188, ino: 146647396, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a byte-order mark before the marker",
+          "firstErrorLine": "AssertionError: expected { mode: 33152, ino: 146647400, \u2026(3) } to deeply equal { mode: 33188, ino: 146647399, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a directory",
+          "firstErrorLine": "AssertionError: expected { mode: 33152, ino: 146647403, \u2026(3) } to deeply equal { mode: 16877, ino: 146647402, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a dangling symbolic link",
+          "firstErrorLine": "AssertionError: expected { mode: 33152, ino: 146647406, \u2026(3) } to deeply equal { mode: 41471, ino: 146647405, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to the marker Syzygy writes",
+          "firstErrorLine": "AssertionError: expected { mode: 33152, ino: 146647411, \u2026(3) } to deeply equal { mode: 41471, ino: 146647410, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to a character device",
+          "firstErrorLine": "AssertionError: expected { mode: 33152, ino: 146647414, \u2026(3) } to deeply equal { mode: 41471, ino: 146647413, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a FIFO",
+          "firstErrorLine": "AssertionError: expected { mode: 33152, ino: 146647417, \u2026(3) } to deeply equal { mode: 4516, ino: 146647416, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a FIFO holding the marker's bytes",
+          "firstErrorLine": "AssertionError: expected { mode: 33152, ino: 146647429, \u2026(3) } to deeply equal { mode: 4516, ino: 146647428, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a marker of 4097 bytes, one past the bound",
+          "firstErrorLine": "AssertionError: expected { mode: 33152, ino: 146647444, \u2026(3) } to deeply equal { mode: 33188, ino: 146647443, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a file its reader may not read",
+          "firstErrorLine": "AssertionError: expected { mode: 33152, ino: 146647447, \u2026(3) } to deeply equal { mode: 32768, ino: 146647446, \u2026(3) }"
+        }
+      ],
+      "failedRows": [
+        "JSON null",
+        "a FIFO",
+        "a FIFO holding the marker's bytes",
+        "a JSON array",
+        "a JSON string",
+        "a byte-order mark before the marker",
+        "a dangling symbolic link",
+        "a directory",
+        "a file its reader may not read",
+        "a format that is not a string",
+        "a marker of 4097 bytes, one past the bound",
+        "a symbolic link to a character device",
+        "a symbolic link to the marker Syzygy writes",
+        "an empty file",
+        "another format",
+        "invalid JSON",
+        "no format"
+      ],
+      "blocked": false,
+      "outcome": "killed",
+      "restored": true
+    },
+    {
+      "id": "D4-truncate",
+      "kind": "extra",
+      "tests": "fix",
+      "edits": [
+        {
+          "file": "packages/polaris-dossier/src/launched.ts",
+          "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+          "new": "  if (state === 'unreadable') { try { fs.truncateSync(path.join(runDir, RUN_LAYOUT.launched), 0); } catch { /* reviewer mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+        }
+      ],
+      "exitCode": 1,
+      "counts": {
+        "numTotalTests": 43,
+        "numPassedTests": 33,
+        "numFailedTests": 10
+      },
+      "failedTests": [
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: invalid JSON",
+          "firstErrorLine": "AssertionError: expected { mode: 33188, ino: 146649392, \u2026(3) } to deeply equal { mode: 33188, ino: 146649392, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: JSON null",
+          "firstErrorLine": "AssertionError: expected { mode: 33188, ino: 146649395, \u2026(3) } to deeply equal { mode: 33188, ino: 146649395, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a JSON array",
+          "firstErrorLine": "AssertionError: expected { mode: 33188, ino: 146649397, \u2026(3) } to deeply equal { mode: 33188, ino: 146649397, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a JSON string",
+          "firstErrorLine": "AssertionError: expected { mode: 33188, ino: 146649399, \u2026(3) } to deeply equal { mode: 33188, ino: 146649399, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: another format",
+          "firstErrorLine": "AssertionError: expected { mode: 33188, ino: 146649401, \u2026(3) } to deeply equal { mode: 33188, ino: 146649401, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: no format",
+          "firstErrorLine": "AssertionError: expected { mode: 33188, ino: 146649403, \u2026(3) } to deeply equal { mode: 33188, ino: 146649403, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a format that is not a string",
+          "firstErrorLine": "AssertionError: expected { mode: 33188, ino: 146649405, \u2026(3) } to deeply equal { mode: 33188, ino: 146649405, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a byte-order mark before the marker",
+          "firstErrorLine": "AssertionError: expected { mode: 33188, ino: 146649407, \u2026(3) } to deeply equal { mode: 33188, ino: 146649407, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to the marker Syzygy writes",
+          "firstErrorLine": "AssertionError: expected { mode: 41471, ino: 146649423, \u2026(3) } to deeply equal { mode: 41471, ino: 146649423, \u2026(3) }"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a marker of 4097 bytes, one past the bound",
+          "firstErrorLine": "AssertionError: expected { mode: 33188, ino: 146649490, \u2026(3) } to deeply equal { mode: 33188, ino: 146649490, \u2026(3) }"
+        }
+      ],
+      "failedRows": [
+        "JSON null",
+        "a JSON array",
+        "a JSON string",
+        "a byte-order mark before the marker",
+        "a format that is not a string",
+        "a marker of 4097 bytes, one past the bound",
+        "a symbolic link to the marker Syzygy writes",
+        "another format",
+        "invalid JSON",
+        "no format"
+      ],
+      "blocked": false,
+      "outcome": "killed",
+      "restored": true
+    },
+    {
+      "id": "M-every-form-drains-then-refuses",
+      "kind": "extra",
+      "tests": "fix",
+      "edits": [
+        {
+          "file": "packages/polaris-dossier/src/launched.ts",
+          "old": "    if (!stat.isFile() || stat.size > MARKER_BYTES_MAX) return 'unreadable';",
+          "new": "    if (stat.size > MARKER_BYTES_MAX) return 'unreadable';"
+        },
+        {
+          "file": "packages/polaris-dossier/src/launched.ts",
+          "old": "    if (length > MARKER_BYTES_MAX) return 'unreadable';",
+          "new": "    if (length > MARKER_BYTES_MAX || !stat.isFile()) return 'unreadable';"
+        }
+      ],
+      "exitCode": 0,
+      "counts": {
+        "numTotalTests": 43,
+        "numPassedTests": 43,
+        "numFailedTests": 0
+      },
+      "failedTests": [],
+      "failedRows": [],
+      "blocked": false,
+      "outcome": "survived",
+      "restored": true
+    },
+    {
+      "id": "T-ask-of-an-unplanted-run",
+      "kind": "extra",
+      "tests": "fix",
+      "edits": [
+        {
+          "file": "packages/polaris-dossier/src/launched.test.ts",
+          "old": "      const dir = planted();",
+          "new": "      const dir = runDir();"
+        }
+      ],
+      "exitCode": 1,
+      "counts": {
+        "numTotalTests": 43,
+        "numPassedTests": 26,
+        "numFailedTests": 17
+      },
+      "failedTests": [
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: an empty file",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: invalid JSON",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: JSON null",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a JSON array",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a JSON string",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: another format",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: no format",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a format that is not a string",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a byte-order mark before the marker",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a directory",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a dangling symbolic link",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to the marker Syzygy writes",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to a character device",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a FIFO",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a FIFO holding the marker's bytes",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a marker of 4097 bytes, one past the bound",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        },
+        {
+          "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a file its reader may not read",
+          "firstErrorLine": "AssertionError: expected 'absent' to be 'unreadable' // Object.is equality"
+        }
+      ],
+      "failedRows": [
+        "JSON null",
+        "a FIFO",
+        "a FIFO holding the marker's bytes",
+        "a JSON array",
+        "a JSON string",
+        "a byte-order mark before the marker",
+        "a dangling symbolic link",
+        "a directory",
+        "a file its reader may not read",
+        "a format that is not a string",
+        "a marker of 4097 bytes, one past the bound",
+        "a symbolic link to a character device",
+        "a symbolic link to the marker Syzygy writes",
+        "an empty file",
+        "another format",
+        "invalid JSON",
+        "no format"
+      ],
+      "blocked": false,
+      "outcome": "killed",
+      "restored": true
+    }
+  ],
+  "trackedTreeCleanAfter": true,
+  "summary": {
+    "D1-with-memoized-reader (acceptance) / base tests": "survived, 0 of 17 rows",
+    "D1-with-memoized-reader (acceptance) / fix tests": "killed, 17 of 17 rows",
+    "D1-terminal-only (acceptance) / base tests": "killed, 17 of 17 rows",
+    "D1-terminal-only (acceptance) / fix tests": "killed, 17 of 17 rows",
+    "D1-bang-only (acceptance) / base tests": "killed, 17 of 17 rows",
+    "D1-bang-only (acceptance) / fix tests": "killed, 17 of 17 rows",
+    "D1-syzygy-launched-only (acceptance) / base tests": "killed, 17 of 17 rows",
+    "D1-syzygy-launched-only (acceptance) / fix tests": "killed, 17 of 17 rows",
+    "D1-any-remover (acceptance) / base tests": "killed, 17 of 17 rows",
+    "D1-any-remover (acceptance) / fix tests": "killed, 17 of 17 rows",
+    "D3-repair-to-launched (extra) / base tests": "killed, 17 of 17 rows",
+    "D3-repair-to-launched (extra) / fix tests": "killed, 17 of 17 rows",
+    "D4-truncate (extra) / base tests": "survived, 0 of 17 rows",
+    "D4-truncate (extra) / fix tests": "killed, 10 of 17 rows",
+    "M-every-form-drains-then-refuses (extra) / base tests": "survived, 0 of 17 rows",
+    "M-every-form-drains-then-refuses (extra) / fix tests": "survived, 0 of 17 rows",
+    "T-ask-of-an-unplanted-run (extra) / base tests": "killed, 17 of 17 rows",
+    "T-ask-of-an-unplanted-run (extra) / fix tests": "killed, 17 of 17 rows"
+  },
+  "harnessSource": "\"\"\"Rule-6 mutants for syzygy-bpyt.8.24, a test-only change to launched.test.ts: each launch-form ask in the unreadable-marker row now\nsnapshots the marker before the ask without asking the reader (its lstat, a link's target, and the bytes of a regular file the test can\nread) and asserts the snapshot unchanged afterwards, before the existing `unreadable` assertion (PR #511 review N1, option b).\n\nEach mutant is run against launched.test.ts at this change's base (`base`, PR #511's post-condition through the reader alone) and at\nthe fix (`fix`). The five acceptance mutants are the raw's Appendix A D1 family, with the unlink fallback in the removal (N2):\nD1-with-memoized-reader, D1-terminal-only, D1-bang-only, D1-syzygy-launched-only and D1-any-remover. The extras record what the snapshot\nadds and where it stops: D3-repair-to-launched, D4-truncate, M-every-form-drains-then-refuses (a drained FIFO is invisible to lstat, and\nthe snapshot reads no FIFO's bytes) and the test-side T-ask-of-an-unplanted-run.\n\nEach mutant replaces exact fragments (each must occur exactly once), runs the test file alone in its own process group with vitest's\nJSON reporter, restores the bytes and verifies their digests. Killed: at least one test failed, or the run did not finish within the\ntimeout. Each failed test is stored with the first line of its first failure message.\nUsage: python3 mutants.py <worktree> <base commit> <scratch dir> <out.json>\n\"\"\"\nimport hashlib, json, os, signal, subprocess, sys\nfrom pathlib import Path\n\nROOT, BASE, SCRATCH, OUT = Path(sys.argv[1]).resolve(), sys.argv[2], Path(sys.argv[3]).resolve(), Path(sys.argv[4])\nTIMEOUT = 300\nREADER = 'packages/polaris-dossier/src/launched.ts'\nTEST = 'packages/polaris-dossier/src/launched.test.ts'\nREPORT = SCRATCH / 'mutant-vitest.json'\nCOMMAND = ['npx', 'vitest', 'run', '--project', '@syzygy/polaris-dossier', '--reporter=json', f'--outputFile={REPORT}', TEST]\nROW = 'launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: '\n\nMESSAGE = (\"'the run\\\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or \"\n           \"syzygy-launched'\")\nREFUSAL_LINE = f\"  if (state === 'unreadable') return {MESSAGE};\"\nREFUSAL_WITH = lambda body: f\"  if (state === 'unreadable') {{ {body}\\n    return {MESSAGE}; }}\"\nREMOVE_ANY = (\"try { fs.rmSync(path.join(runDir, RUN_LAYOUT.launched), { recursive: true, force: true }); } catch { /* reviewer mutant */ } \"\n              \"try { fs.unlinkSync(path.join(runDir, RUN_LAYOUT.launched)); } catch { /* reviewer mutant */ }\")\nREMOVER = lambda body: [(READER, REFUSAL_LINE, REFUSAL_WITH(body))]\nMEMO = (READER, \"export function launchedMarkerState(runDir: string): LaunchedMarkerState {\\n  const file = path.join(runDir, RUN_LAYOUT.launched);\",\n        \"const REMEMBERED = new Map<string, LaunchedMarkerState>();\\nexport function launchedMarkerState(runDir: string): LaunchedMarkerState {\\n\"\n        \"  const hit = REMEMBERED.get(runDir); if (hit) return hit;\\n  const state = launchedMarkerStateOnce(runDir); REMEMBERED.set(runDir, state); return state;\\n}\\n\\n\"\n        \"function launchedMarkerStateOnce(runDir: string): LaunchedMarkerState {\\n  const file = path.join(runDir, RUN_LAYOUT.launched);\")\n\nMUTANTS = [\n    ('D1-with-memoized-reader', 'acceptance', [*REMOVER(REMOVE_ANY), MEMO]),\n    ('D1-terminal-only', 'acceptance', REMOVER(f\"if (form['value'] === 'terminal') {{ {REMOVE_ANY} }}\")),\n    ('D1-bang-only', 'acceptance', REMOVER(f\"if (form['value'] === 'bang') {{ {REMOVE_ANY} }}\")),\n    ('D1-syzygy-launched-only', 'acceptance', REMOVER(f\"if (form['value'] === SYZYGY_LAUNCHED) {{ {REMOVE_ANY} }}\")),\n    ('D1-any-remover', 'acceptance', REMOVER(REMOVE_ANY)),\n    ('D3-repair-to-launched', 'extra', REMOVER(f\"{REMOVE_ANY} try {{ writeLaunchedMarker(runDir, 'run-x', 0); }} catch {{ /* reviewer mutant */ }}\")),\n    ('D4-truncate', 'extra', REMOVER(\"try { fs.truncateSync(path.join(runDir, RUN_LAYOUT.launched), 0); } catch { /* reviewer mutant */ }\")),\n    ('M-every-form-drains-then-refuses', 'extra', [\n        (READER, \"    if (!stat.isFile() || stat.size > MARKER_BYTES_MAX) return 'unreadable';\", \"    if (stat.size > MARKER_BYTES_MAX) return 'unreadable';\"),\n        (READER, \"    if (length > MARKER_BYTES_MAX) return 'unreadable';\", \"    if (length > MARKER_BYTES_MAX || !stat.isFile()) return 'unreadable';\")]),\n    ('T-ask-of-an-unplanted-run', 'extra', [(TEST, \"      const dir = planted();\", \"      const dir = runDir();\")]),\n]\n\n\ndef sha(data):\n    return hashlib.sha256(data).hexdigest()\n\n\ndef git(*args):\n    return subprocess.run(['git', '-C', str(ROOT), *args], capture_output=True, text=True, check=True).stdout\n\n\ndef run_suite():\n    REPORT.unlink(missing_ok=True)\n    proc = subprocess.Popen(COMMAND, cwd=ROOT, env={**os.environ, 'CI': '1'}, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, start_new_session=True)\n    try:\n        proc.communicate(timeout=TIMEOUT)\n    except subprocess.TimeoutExpired:\n        os.killpg(proc.pid, signal.SIGKILL)\n        proc.communicate()\n        return None, None, []\n    if not REPORT.exists():\n        return proc.returncode, None, []\n    report = json.loads(REPORT.read_text())\n    failed = [{'test': test['fullName'],\n               'firstErrorLine': next((line for message in test['failureMessages'] for line in message.splitlines() if line.strip()), None)}\n              for file in report['testResults'] for test in file['assertionResults'] if test['status'] == 'failed']\n    return proc.returncode, {k: report[k] for k in ('numTotalTests', 'numPassedTests', 'numFailedTests')}, failed\n\n\ndef rows(failed):\n    return sorted(t['test'][len(ROW):] for t in failed if t['test'].startswith(ROW))\n\n\ndef main():\n    assert git('status', '--porcelain', '--untracked-files=no') == ''\n    head_test = (ROOT / TEST).read_bytes()\n    tests = {'base': git('show', f'{BASE}:{TEST}').encode('utf8'), 'fix': head_test}\n    originals = {READER: (ROOT / READER).read_bytes(), TEST: head_test}\n    assert git('show', f'{BASE}:{READER}').encode('utf8') == originals[READER], 'the reader differs between the base and the fix'\n    results, unmutated = [], {}\n    try:\n        for side, test_bytes in tests.items():\n            (ROOT / TEST).write_bytes(test_bytes)\n            code, counts, failed = run_suite()\n            unmutated[side] = {'testSha256': sha(test_bytes), 'exitCode': code, 'counts': counts, 'failedTests': failed}\n            print('unmutated', side, counts, flush=True)\n            for mutant_id, kind, edits in MUTANTS:\n                current = {READER: originals[READER].decode('utf8'), TEST: test_bytes.decode('utf8')}\n                applicable = all(current[file].count(old) == 1 for file, old, _ in edits)\n                if not applicable:\n                    results.append({'id': mutant_id, 'kind': kind, 'tests': side, 'edits': [{'file': f, 'old': o, 'new': n} for f, o, n in edits],\n                                    'outcome': 'not-applicable', 'reason': 'an old fragment does not occur exactly once in this side'})\n                    print(mutant_id, side, 'not-applicable', flush=True)\n                    continue\n                for file, old, new in edits:\n                    current[file] = current[file].replace(old, new)\n                for file in current:\n                    (ROOT / file).write_bytes(current[file].encode('utf8'))\n                try:\n                    code, counts, failed = run_suite()\n                finally:\n                    (ROOT / READER).write_bytes(originals[READER])\n                    (ROOT / TEST).write_bytes(test_bytes)\n                blocked = code is None\n                results.append({'id': mutant_id, 'kind': kind, 'tests': side, 'edits': [{'file': f, 'old': o, 'new': n} for f, o, n in edits],\n                                'exitCode': code, 'counts': counts, 'failedTests': failed, 'failedRows': rows(failed), 'blocked': blocked,\n                                'outcome': 'killed' if blocked or (code != 0 and failed) else 'survived',\n                                'restored': sha((ROOT / READER).read_bytes()) == sha(originals[READER]) and sha((ROOT / TEST).read_bytes()) == sha(test_bytes)})\n                print(mutant_id, side, results[-1]['outcome'], counts, len(results[-1]['failedRows']), flush=True)\n    finally:\n        for file, data in originals.items():\n            (ROOT / file).write_bytes(data)\n    record = {\n        'title': 'syzygy-bpyt.8.24 rule-6 mutants: each launch-form ask leaves the marker as the test saw it, by an oracle that asks no reader',\n        'bead': 'syzygy-bpyt.8.24', 'subject': [TEST], 'testSha256': {side: sha(data) for side, data in tests.items()},\n        'readerSha256': sha(originals[READER]), 'base': git('rev-parse', BASE).strip(), 'commit': git('rev-parse', 'HEAD').strip(),\n        'command': ' '.join(COMMAND).replace(str(REPORT), '<scratch>/mutant-vitest.json'), 'timeoutSeconds': TIMEOUT,\n        'node': subprocess.run(['node', '--version'], capture_output=True, text=True).stdout.strip(),\n        'unmutated': unmutated, 'mutants': results,\n        'trackedTreeCleanAfter': git('status', '--porcelain', '--untracked-files=no') == '',\n        'summary': {f'{m} ({kind}) / {side} tests': next(f\"{r['outcome']}\" + (f\", {len(r['failedRows'])} of 17 rows\" if r['outcome'] != 'not-applicable' else '')\n                                                         for r in results if r['id'] == m and r['tests'] == side)\n                    for m, kind, _ in MUTANTS for side in tests},\n        'harnessSource': Path(__file__).read_text(),\n    }\n    OUT.write_text(json.dumps(record, indent=2) + '\\n')\n    print('summary', json.dumps(record['summary'], indent=1))\n\n\nmain()\n"
+}

@@ -1,0 +1,499 @@
+{
+ "tool": "browser_files_run.py",
+ "treeCommit": "dccd484f4749b55f981f2e5211de4112ab7951de",
+ "sha256AtCommit": {
+  "apps/three-surface-poc/src/cdp-browser.ts": "c6c0ac6cc626b76155d870502c5549aa430d7cee35a058b0001d849586842033",
+  "apps/three-surface-poc/src/cdp-browser.test.ts": "a655dd3f2c20612700096c6951778ac8910ededb84fedf215efa61dbe31e265e",
+  "apps/three-surface-poc/src/cdp-browser.browser.test.ts": "2f659ee95d45b3b834cff94b893bd7f17eab8a1292316c89345b63a2de699a1e",
+  "apps/three-surface-poc/src/polaris-generation/draft-preview.browser.test.ts": "70102033956c5597667ab3fca4bc145fcb2f7787227b1cb82849878c8a73856f"
+ },
+ "label": "head",
+ "browserExecutable": "google-chrome",
+ "browserVersion": "Google Chrome 120.0.6099.224",
+ "project": "@syzygy/three-surface-poc-app",
+ "attemptsPerFile": 3,
+ "listA": [
+  "apps/three-surface-poc/src/cdp-browser.browser.test.ts",
+  "apps/three-surface-poc/src/cdp-browser.test.ts",
+  "apps/three-surface-poc/src/orrery.browser.test.ts",
+  "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts",
+  "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+  "apps/three-surface-poc/src/polaris-generation/draft-preview.browser.test.ts",
+  "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+  "apps/three-surface-poc/src/proposal-disclosure.test.ts",
+  "apps/three-surface-poc/src/surface-routes.test.ts",
+  "apps/three-surface-poc/src/trajectory-narrowing.browser.test.ts",
+  "apps/three-surface-poc/src/tuple-encoding.test.ts"
+ ],
+ "listB": [
+  "apps/three-surface-poc/src/cdp-browser.browser.test.ts",
+  "apps/three-surface-poc/src/orrery.browser.test.ts",
+  "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts",
+  "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+  "apps/three-surface-poc/src/polaris-generation/draft-preview.browser.test.ts",
+  "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+  "apps/three-surface-poc/src/trajectory-narrowing.browser.test.ts"
+ ],
+ "perFile": [
+  {
+   "file": "apps/three-surface-poc/src/cdp-browser.browser.test.ts",
+   "attempts": [
+    {
+     "exit": 1,
+     "tests": 2,
+     "passed": 1,
+     "skipped": 0,
+     "failing": [
+      {
+       "test": "disposable Chrome teardown in a real browser closes and drains even when a helper cannot exit on its own",
+       "firstErrorLine": "Error: promise rejected \"Error: private browser profile drain did \u2026\" instead of resolving"
+      }
+     ],
+     "suiteFailures": [],
+     "left": {
+      "entries": [
+       ".com.google.Chrome.D8AwOH",
+       "syzygy-poc-browser-uyDmvB"
+      ],
+      "chromeSingletonDirectories": 1,
+      "draftPreviewDirectories": 0,
+      "browserProfiles": 1,
+      "other": []
+     },
+     "attempt": 1
+    },
+    {
+     "exit": 1,
+     "tests": 2,
+     "passed": 1,
+     "skipped": 0,
+     "failing": [
+      {
+       "test": "disposable Chrome teardown in a real browser leaves no Chrome singleton directory behind when the leader is killed",
+       "firstErrorLine": "Error: promise rejected \"Error: private browser profile drain did \u2026\" instead of resolving"
+      }
+     ],
+     "suiteFailures": [],
+     "left": {
+      "entries": [
+       ".com.google.Chrome.iySQTT",
+       "syzygy-poc-browser-DHKeYK"
+      ],
+      "chromeSingletonDirectories": 1,
+      "draftPreviewDirectories": 0,
+      "browserProfiles": 1,
+      "other": []
+     },
+     "attempt": 2
+    },
+    {
+     "exit": 0,
+     "tests": 2,
+     "passed": 2,
+     "skipped": 0,
+     "failing": [],
+     "suiteFailures": [],
+     "left": {
+      "entries": [],
+      "chromeSingletonDirectories": 0,
+      "draftPreviewDirectories": 0,
+      "browserProfiles": 0,
+      "other": []
+     },
+     "attempt": 3
+    }
+   ],
+   "passed": true,
+   "testsOnPassingAttempt": 2,
+   "skippedOnPassingAttempt": 0
+  },
+  {
+   "file": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "attempts": [
+    {
+     "exit": 0,
+     "tests": 24,
+     "passed": 24,
+     "skipped": 0,
+     "failing": [],
+     "suiteFailures": [],
+     "left": {
+      "entries": [],
+      "chromeSingletonDirectories": 0,
+      "draftPreviewDirectories": 0,
+      "browserProfiles": 0,
+      "other": []
+     },
+     "attempt": 1
+    }
+   ],
+   "passed": true,
+   "testsOnPassingAttempt": 24,
+   "skippedOnPassingAttempt": 0
+  },
+  {
+   "file": "apps/three-surface-poc/src/orrery.browser.test.ts",
+   "attempts": [
+    {
+     "exit": 0,
+     "tests": 1,
+     "passed": 1,
+     "skipped": 0,
+     "failing": [],
+     "suiteFailures": [],
+     "left": {
+      "entries": [],
+      "chromeSingletonDirectories": 0,
+      "draftPreviewDirectories": 0,
+      "browserProfiles": 0,
+      "other": []
+     },
+     "attempt": 1
+    }
+   ],
+   "passed": true,
+   "testsOnPassingAttempt": 1,
+   "skippedOnPassingAttempt": 0
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts",
+   "attempts": [
+    {
+     "exit": 1,
+     "tests": 15,
+     "passed": 11,
+     "skipped": 0,
+     "failing": [
+      {
+       "test": "Polaris keyboard, non-visual and contrast checks in a real browser keeps diagram labels legible and flow order unambiguous across widths",
+       "firstErrorLine": "Error: STACK_TRACE_ERROR"
+      },
+      {
+       "test": "Polaris keyboard, non-visual and contrast checks in a real browser opens a linked component guide and can reveal the complete declaration",
+       "firstErrorLine": "Error: STACK_TRACE_ERROR"
+      },
+      {
+       "test": "Polaris keyboard, non-visual and contrast checks in a real browser keeps complete source columns visible while citation targets remain keyboard-reachable",
+       "firstErrorLine": "Error: STACK_TRACE_ERROR"
+      },
+      {
+       "test": "Polaris keyboard, non-visual and contrast checks in a real browser observed-degraded-unlawful: every distinction is keyboard-operable, named for assistive technology, and AA-contrasting",
+       "firstErrorLine": "Error: STACK_TRACE_ERROR"
+      }
+     ],
+     "suiteFailures": [],
+     "left": {
+      "entries": [],
+      "chromeSingletonDirectories": 0,
+      "draftPreviewDirectories": 0,
+      "browserProfiles": 0,
+      "other": []
+     },
+     "attempt": 1
+    },
+    {
+     "exit": 1,
+     "tests": 15,
+     "passed": 8,
+     "skipped": 0,
+     "failing": [
+      {
+       "test": "Polaris keyboard, non-visual and contrast checks in a real browser keeps a separate desktop section rail and an in-flow mobile drawer",
+       "firstErrorLine": "Error: STACK_TRACE_ERROR"
+      },
+      {
+       "test": "Polaris keyboard, non-visual and contrast checks in a real browser keeps diagram labels legible and flow order unambiguous across widths",
+       "firstErrorLine": "Error: STACK_TRACE_ERROR"
+      },
+      {
+       "test": "Polaris keyboard, non-visual and contrast checks in a real browser opens a linked component guide and can reveal the complete declaration",
+       "firstErrorLine": "Error: STACK_TRACE_ERROR"
+      },
+      {
+       "test": "Polaris keyboard, non-visual and contrast checks in a real browser keeps complete source columns visible while citation targets remain keyboard-reachable",
+       "firstErrorLine": "Error: STACK_TRACE_ERROR"
+      },
+      {
+       "test": "Polaris keyboard, non-visual and contrast checks in a real browser gives seven early native shortcuts and a complete no-script outline with a truthful live hidden count",
+       "firstErrorLine": "Error: STACK_TRACE_ERROR"
+      },
+      {
+       "test": "Polaris keyboard, non-visual and contrast checks in a real browser activates more fragment links than Chrome's navigation budget, including a second link to the current hash",
+       "firstErrorLine": "Error: STACK_TRACE_ERROR"
+      },
+      {
+       "test": "Polaris keyboard, non-visual and contrast checks in a real browser observed: every distinction is keyboard-operable, named for assistive technology, and AA-contrasting",
+       "firstErrorLine": "Error: STACK_TRACE_ERROR"
+      }
+     ],
+     "suiteFailures": [],
+     "left": {
+      "entries": [],
+      "chromeSingletonDirectories": 0,
+      "draftPreviewDirectories": 0,
+      "browserProfiles": 0,
+      "other": []
+     },
+     "attempt": 2
+    },
+    {
+     "exit": 1,
+     "tests": 15,
+     "passed": 10,
+     "skipped": 0,
+     "failing": [
+      {
+       "test": "Polaris keyboard, non-visual and contrast checks in a real browser keeps a separate desktop section rail and an in-flow mobile drawer",
+       "firstErrorLine": "Error: STACK_TRACE_ERROR"
+      },
+      {
+       "test": "Polaris keyboard, non-visual and contrast checks in a real browser keeps diagram labels legible and flow order unambiguous across widths",
+       "firstErrorLine": "Error: STACK_TRACE_ERROR"
+      },
+      {
+       "test": "Polaris keyboard, non-visual and contrast checks in a real browser opens a linked component guide and can reveal the complete declaration",
+       "firstErrorLine": "Error: STACK_TRACE_ERROR"
+      },
+      {
+       "test": "Polaris keyboard, non-visual and contrast checks in a real browser keeps complete source columns visible while citation targets remain keyboard-reachable",
+       "firstErrorLine": "Error: STACK_TRACE_ERROR"
+      },
+      {
+       "test": "Polaris keyboard, non-visual and contrast checks in a real browser gives seven early native shortcuts and a complete no-script outline with a truthful live hidden count",
+       "firstErrorLine": "Error: STACK_TRACE_ERROR"
+      }
+     ],
+     "suiteFailures": [],
+     "left": {
+      "entries": [],
+      "chromeSingletonDirectories": 0,
+      "draftPreviewDirectories": 0,
+      "browserProfiles": 0,
+      "other": []
+     },
+     "attempt": 3
+    }
+   ],
+   "passed": false,
+   "testsOnPassingAttempt": null,
+   "skippedOnPassingAttempt": null
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+   "attempts": [
+    {
+     "exit": 0,
+     "tests": 26,
+     "passed": 26,
+     "skipped": 0,
+     "failing": [],
+     "suiteFailures": [],
+     "left": {
+      "entries": [],
+      "chromeSingletonDirectories": 0,
+      "draftPreviewDirectories": 0,
+      "browserProfiles": 0,
+      "other": []
+     },
+     "attempt": 1
+    }
+   ],
+   "passed": true,
+   "testsOnPassingAttempt": 26,
+   "skippedOnPassingAttempt": 0
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-generation/draft-preview.browser.test.ts",
+   "attempts": [
+    {
+     "exit": 0,
+     "tests": 1,
+     "passed": 1,
+     "skipped": 0,
+     "failing": [],
+     "suiteFailures": [],
+     "left": {
+      "entries": [],
+      "chromeSingletonDirectories": 0,
+      "draftPreviewDirectories": 0,
+      "browserProfiles": 0,
+      "other": []
+     },
+     "attempt": 1
+    }
+   ],
+   "passed": true,
+   "testsOnPassingAttempt": 1,
+   "skippedOnPassingAttempt": 0
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+   "attempts": [
+    {
+     "exit": 0,
+     "tests": 14,
+     "passed": 13,
+     "skipped": 1,
+     "failing": [],
+     "suiteFailures": [],
+     "left": {
+      "entries": [],
+      "chromeSingletonDirectories": 0,
+      "draftPreviewDirectories": 0,
+      "browserProfiles": 0,
+      "other": []
+     },
+     "attempt": 1
+    }
+   ],
+   "passed": true,
+   "testsOnPassingAttempt": 14,
+   "skippedOnPassingAttempt": 1
+  },
+  {
+   "file": "apps/three-surface-poc/src/proposal-disclosure.test.ts",
+   "attempts": [
+    {
+     "exit": 0,
+     "tests": 5,
+     "passed": 5,
+     "skipped": 0,
+     "failing": [],
+     "suiteFailures": [],
+     "left": {
+      "entries": [],
+      "chromeSingletonDirectories": 0,
+      "draftPreviewDirectories": 0,
+      "browserProfiles": 0,
+      "other": []
+     },
+     "attempt": 1
+    }
+   ],
+   "passed": true,
+   "testsOnPassingAttempt": 5,
+   "skippedOnPassingAttempt": 0
+  },
+  {
+   "file": "apps/three-surface-poc/src/surface-routes.test.ts",
+   "attempts": [
+    {
+     "exit": 0,
+     "tests": 18,
+     "passed": 18,
+     "skipped": 0,
+     "failing": [],
+     "suiteFailures": [],
+     "left": {
+      "entries": [],
+      "chromeSingletonDirectories": 0,
+      "draftPreviewDirectories": 0,
+      "browserProfiles": 0,
+      "other": []
+     },
+     "attempt": 1
+    }
+   ],
+   "passed": true,
+   "testsOnPassingAttempt": 18,
+   "skippedOnPassingAttempt": 0
+  },
+  {
+   "file": "apps/three-surface-poc/src/trajectory-narrowing.browser.test.ts",
+   "attempts": [
+    {
+     "exit": 0,
+     "tests": 2,
+     "passed": 2,
+     "skipped": 0,
+     "failing": [],
+     "suiteFailures": [],
+     "left": {
+      "entries": [],
+      "chromeSingletonDirectories": 0,
+      "draftPreviewDirectories": 0,
+      "browserProfiles": 0,
+      "other": []
+     },
+     "attempt": 1
+    }
+   ],
+   "passed": true,
+   "testsOnPassingAttempt": 2,
+   "skippedOnPassingAttempt": 0
+  },
+  {
+   "file": "apps/three-surface-poc/src/tuple-encoding.test.ts",
+   "attempts": [
+    {
+     "exit": 0,
+     "tests": 6,
+     "passed": 6,
+     "skipped": 0,
+     "failing": [],
+     "suiteFailures": [],
+     "left": {
+      "entries": [],
+      "chromeSingletonDirectories": 0,
+      "draftPreviewDirectories": 0,
+      "browserProfiles": 0,
+      "other": []
+     },
+     "attempt": 1
+    }
+   ],
+   "passed": true,
+   "testsOnPassingAttempt": 6,
+   "skippedOnPassingAttempt": 0
+  }
+ ],
+ "combinedRun": {
+  "exit": 1,
+  "tests": 114,
+  "passed": 110,
+  "skipped": 1,
+  "failing": [
+   {
+    "test": "Polaris keyboard, non-visual and contrast checks in a real browser keeps a separate desktop section rail and an in-flow mobile drawer",
+    "firstErrorLine": "Error: STACK_TRACE_ERROR"
+   },
+   {
+    "test": "Polaris keyboard, non-visual and contrast checks in a real browser keeps complete source columns visible while citation targets remain keyboard-reachable",
+    "firstErrorLine": "Error: STACK_TRACE_ERROR"
+   },
+   {
+    "test": "surface routes withholds the post-script Orrery capability href when that exact capability is absent",
+    "firstErrorLine": "Error: private browser profile drain did not verify two empty scans before deadline"
+   }
+  ],
+  "suiteFailures": [],
+  "left": {
+   "entries": [
+    ".com.google.Chrome.mar1rA",
+    "syzygy-poc-browser-tigNFB"
+   ],
+   "chromeSingletonDirectories": 1,
+   "draftPreviewDirectories": 0,
+   "browserProfiles": 1,
+   "other": []
+  }
+ },
+ "summary": {
+  "filesInListA": 11,
+  "filesInListB": 7,
+  "inAButNotB": [
+   "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "apps/three-surface-poc/src/proposal-disclosure.test.ts",
+   "apps/three-surface-poc/src/surface-routes.test.ts",
+   "apps/three-surface-poc/src/tuple-encoding.test.ts"
+  ],
+  "inBButNotA": [],
+  "filesWithAPassingAttempt": 10,
+  "chromeSingletonDirectoriesLeftOnPassingAttempts": 0,
+  "draftPreviewDirectoriesLeftOnPassingAttempts": 0,
+  "combinedRunExit": 1,
+  "combinedRunChromeSingletonDirectoriesLeft": 1,
+  "combinedRunDraftPreviewDirectoriesLeft": 0,
+  "everyFilePassedAloneAndLeftNone": false
+ }
+}

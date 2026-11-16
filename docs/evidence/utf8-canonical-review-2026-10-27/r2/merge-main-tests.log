@@ -1,0 +1,13 @@
+local merge fb282fd7b09f1db5dd68b66ef2bd7dc111c12fb1 = abc40c9a + origin/main 973965a8, tree efb625c0a16987f1bbaf7999a3e062cf6fbd3243
+loadavg-before 29.72 30.54 26.81 28/9548 3446699
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/authority-artifact-fields.test.ts (5 tests) 20ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/project-shape-git-text.test.ts (4 tests) 40ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/git-object-reader.test.ts (73 tests) 172ms
+ ✓ |@syzygy/support| packages/support/src/decode-utf8.test.ts (6 tests) 17ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/project-shape-observation.test.ts (41 tests) 138ms
+ ✓ |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/code-structure.test.ts (12 tests) 1202ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/canonical-json-divergence.test.ts (21 tests) 110ms
+ Test Files  7 passed (7)
+      Tests  162 passed (162)
+exit=0
+loadavg-after 30.06 30.59 26.85 19/9615 3449999

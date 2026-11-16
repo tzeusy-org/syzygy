@@ -1,0 +1,13 @@
+f7477f52 vs e54f65c6:
+apps/three-surface-poc/src/polaris-generation/dossier-cap-measure.test.ts tokens 238 238 IDENTICAL
+apps/three-surface-poc/src/production-reobserve.test.ts tokens 1736 1736 IDENTICAL
+f44cd65d vs e54f65c6:
+apps/three-surface-poc/src/polaris-generation/dossier-cap-measure.test.ts tokens 236 238 differ at 94: ["22:)","27:;","80:afterAll"] | ["28:,","9:120_000","22:)"]
+apps/three-surface-poc/src/production-reobserve.test.ts tokens 1736 1736 IDENTICAL
+control f7477f52 vs f44cd65d (F1 removal expected to differ):
+apps/three-surface-poc/src/polaris-generation/dossier-cap-measure.test.ts tokens 238 236 differ at 94: ["28:,","9:120_000","22:)"] | ["22:)","27:;","80:afterAll"]
+dossier-cap-measure.test.ts 12 base '}, 120_000);' | head starts with base line: True | remainder starts with " //": True
+production-reobserve.test.ts 160 base '  }, PRODUCTION_BUILD_TIMEOUT_MS);' | head starts with base line: True | remainder starts with " //": True
+f7477f52 ['const PRODUCTION_BUILD_TIMEOUT_MS = 60_000;']
+f44cd65d ['const PRODUCTION_BUILD_TIMEOUT_MS = 60_000;']
+e54f65c6 ['const PRODUCTION_BUILD_TIMEOUT_MS = 60_000;']

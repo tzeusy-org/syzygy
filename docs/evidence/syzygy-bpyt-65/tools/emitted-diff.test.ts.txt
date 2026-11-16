@@ -1,0 +1,53 @@
+// syzygy-bpyt.65, E3: the emitted-set models of product-build.test.ts against what tsc lists, per workspace project.
+// Run by emitted_diff.py, which copies this file to apps/three-surface-poc/src/zz-emitted-diff.test.ts, runs it alone, and removes
+// it. `before` is the model at 7dfad65a (the tsconfig's files and every module of the project they import, transitively);
+// `after` is the program's source files; `tsc` is `tsc -p <project>/tsconfig.json --listFilesOnly`. Each is filtered to the
+// project's src/ and to files that are not declarations.
+import { execFileSync } from 'node:child_process';
+import { writeFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
+import { dirname, join } from 'node:path';
+import ts from 'typescript';
+import { expect, it } from 'vitest';
+
+import { ROOT, readModule, resolve } from '../../../packages/polaris-generation-core/src/workspace-reach.testkit.js';
+
+const importsOf = (from: string): string[] => ts.preProcessFile(readModule(from), true, true).importedFiles.map(({ fileName }) => fileName);
+const parse = (project: string) => {
+  const path = join(ROOT, project, 'tsconfig.json');
+  return ts.parseJsonConfigFileContent(ts.readConfigFile(path, ts.sys.readFile).config, ts.sys, dirname(path));
+};
+function before(project: string): string[] {
+  const parsed = parse(project);
+  const seen = new Set(parsed.fileNames.map((file) => file.slice(ROOT.length)));
+  const queue = [...seen];
+  for (let from = queue.shift(); from !== undefined; from = queue.shift()) {
+    for (const specifier of importsOf(from)) {
+      const to = resolve(from, specifier);
+      if (typeof to === 'string' && to.startsWith(`${project}/src/`) && !seen.has(to)) { seen.add(to); queue.push(to); }
+    }
+  }
+  return [...seen].sort();
+}
+const own = (project: string) => (file: string): boolean => file.startsWith(`${ROOT}${project}/src/`) && !file.endsWith('.d.ts');
+function after(project: string): string[] {
+  const parsed = parse(project);
+  const program = ts.createProgram({ rootNames: parsed.fileNames, options: parsed.options, projectReferences: parsed.projectReferences });
+  return program.getSourceFiles().map(({ fileName }) => fileName).filter(own(project)).map((file) => file.slice(ROOT.length)).sort();
+}
+const TSC = createRequire(import.meta.url).resolve('typescript/bin/tsc');
+const listed = (project: string): string[] => execFileSync(process.execPath, [TSC, '-p', join(ROOT, project, 'tsconfig.json'), '--listFilesOnly'], { encoding: 'utf8', maxBuffer: 1 << 26 })
+  .split('\n').filter(own(project)).map((file) => file.slice(ROOT.length)).sort();
+const projects = execFileSync('git', ['-C', ROOT, 'ls-files', '-z', '--', 'apps', 'packages'], { encoding: 'utf8' }).split('\0')
+  .filter((path) => /^(?:apps|packages)\/[^/]+\/tsconfig\.json$/u.test(path)).map((path) => path.slice(0, -'/tsconfig.json'.length)).sort();
+
+it('compares the emitted-set models with tsc', () => {
+  const rows = projects.map((project) => {
+    const b = before(project), a = after(project), t = listed(project);
+    return { project, before: b.length, after: a.length, tsc: t.length, afterEqualsTsc: JSON.stringify(a) === JSON.stringify(t),
+      addedByAfter: a.filter((file) => !b.includes(file)), droppedByAfter: b.filter((file) => !a.includes(file)),
+      tscNotAfter: t.filter((file) => !a.includes(file)), afterNotTsc: a.filter((file) => !t.includes(file)) };
+  });
+  writeFileSync(process.env['EMITTED_DIFF_OUT']!, `${JSON.stringify({ projects: rows.length, rows }, null, 1)}\n`);
+  expect(rows.length).toBe(10);
+}, 300_000);

@@ -6,10 +6,11 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { PWB_RESOURCE_LIMITS, type PwbResourceLimits } from './project-shape-observation.js';
+import { PWB_RESOURCE_LIMITS } from './project-shape-observation.js';
+import type { PwbResourceLimits } from './pwb-types.js';
+import { createTransientBodies } from './transient-bodies.js';
 import {
   PARSE_PASS_IDENTITIES,
-  ParsePassBudgetExceeded,
   SECRET_DETECTOR_PASSES,
   createResourceLedger,
   isParsePassIdentity,
@@ -110,22 +111,16 @@ describe('maxParsePassesPerSource — one budget per source, wall-clock never an
     expect(ledger.summary().sourcesTraversed).toBe(2);
   });
 
-  it('chargeFor throws ParsePassBudgetExceeded carrying the breach and the pass that never ran', () => {
+  it('chargeFor returns the recorded breach, never throws, and leaves the pass that never ran uncounted', () => {
     const ledger = createResourceLedger(limits({ maxParsePassesPerSource: 1 }));
     const charge = ledger.chargeFor('p');
-    charge('utf8-and-nul-validation');
-    let caught: unknown;
-    try {
-      charge('active-html-svg-script-handler');
-    } catch (error) {
-      caught = error;
-    }
-    expect(caught).toBeInstanceOf(ParsePassBudgetExceeded);
-    const error = caught as ParsePassBudgetExceeded;
-    expect(error.name).toBe('ParsePassBudgetExceeded');
-    expect(error.pass).toBe('active-html-svg-script-handler');
-    expect(error.breach).toEqual({ limit: 'maxParsePassesPerSource', declared: 1, observed: 2, path: 'p' });
-    expect(error.message).toBe('parse pass budget exceeded on p at active-html-svg-script-handler: 2 > 1');
+    expect(charge('utf8-and-nul-validation')).toBeUndefined();
+    const breach = charge('active-html-svg-script-handler');
+    expect(breach).toEqual({ limit: 'maxParsePassesPerSource', declared: 1, observed: 2, path: 'p' });
+    expect(ledger.breaches).toEqual([breach]);
+    expect(ledger.passesFor('p')).toBe(1);
+    expect(ledger.summary().passesByIdentity['active-html-svg-script-handler']).toBe(0);
+    expect(() => charge('not-a-pass' as ParsePassIdentity)).toThrow(/unregistered parse pass/);
   });
 });
 
@@ -190,14 +185,14 @@ describe('maxTotalBytes — one cumulative counter across both phases', () => {
 
 describe('transient phase-A bodies', () => {
   it('a remembered body is recalled by (path, object id) until release', () => {
-    const ledger = createResourceLedger(PWB_RESOURCE_LIMITS);
+    const bodies = createTransientBodies();
     const body = { bytes: new Uint8Array([104, 105]), text: 'hi' };
-    ledger.remember('p', OID_A, body);
-    expect(ledger.recall('p', OID_A)).toBe(body);
-    expect(ledger.recall('p', OID_B)).toBeUndefined();
-    expect(ledger.recall('q', OID_A)).toBeUndefined();
-    ledger.release();
-    expect(ledger.recall('p', OID_A)).toBeUndefined();
+    bodies.remember('p', OID_A, body);
+    expect(bodies.recall('p', OID_A)).toBe(body);
+    expect(bodies.recall('p', OID_B)).toBeUndefined();
+    expect(bodies.recall('q', OID_A)).toBeUndefined();
+    bodies.release();
+    expect(bodies.recall('p', OID_A)).toBeUndefined();
   });
 });
 

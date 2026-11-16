@@ -1077,6 +1077,13 @@ def main(argv: list[str]) -> int:
     parser.add_argument("--at-adoption", action="store_true")
     args = parser.parse_args(argv)
     if args.selftest:
+        import pwb_signed_selftest
+        rerun = pwb_signed_selftest.rerun_before_signoff(
+            __file__,
+            ".syzygy/governance/decisions/THREE-SURFACE-POC-VOCABULARY-EPISTEMIC-AMENDMENT-SIGNOFF-v1.0.md",
+            "a4a864e657d586e783fb3f5febc1ad9a990a34bd")
+        if rerun is not None:
+            return rerun
         return selftest()
     if args.diff:
         for patch in patch_files():

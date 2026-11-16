@@ -1,0 +1,12 @@
+dcm base 1 exit 0 wall 3.7 load1 23.10 23.10
+dcm head 1 exit 0 wall 3.6 load1 23.10 23.01
+dcm head 2 exit 0 wall 2.8 load1 23.01 22.53
+dcm base 2 exit 0 wall 3.0 load1 22.53 22.53
+dcm base 3 exit 0 wall 3.0 load1 22.53 23.37
+dcm head 3 exit 0 wall 2.8 load1 23.37 23.37
+dcm head 4 exit 0 wall 3.1 load1 23.37 23.18
+dcm base 4 exit 0 wall 3.7 load1 23.18 23.65
+dcm base 5 exit 0 wall 4.5 load1 23.65 23.19
+dcm head 5 exit 0 wall 3.1 load1 23.19 23.19
+dcm head 6 exit 0 wall 3.7 load1 23.19 22.70
+dcm base 6 exit 0 wall 3.8 load1 22.70 22.64

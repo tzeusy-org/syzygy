@@ -1,0 +1,167 @@
+{
+ "bead": "syzygy-bpyt.7.15",
+ "base": "9dba258992667f62ad503ec76d8a6b99efcc4bac",
+ "head": "f2304fd5d2bfd0e50c48d6ea356ddea3f7be162d",
+ "subject": [
+  "apps/three-surface-poc/package.json",
+  "apps/three-surface-poc/src/evaluation-footer.test.ts",
+  "apps/three-surface-poc/src/main.test.ts",
+  "apps/three-surface-poc/src/materialize-action.test.ts",
+  "apps/three-surface-poc/src/page-size-delta.test.ts",
+  "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+  "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+  "apps/three-surface-poc/src/polaris-source-route.test.ts",
+  "apps/three-surface-poc/src/reobserve-action.test.ts",
+  "apps/three-surface-poc/src/response-limits.test.ts",
+  "apps/three-surface-poc/src/routes.test.ts",
+  "apps/three-surface-poc/src/surface-routes.test.ts",
+  "apps/three-surface-poc/src/tuple-encoding.test.ts",
+  "apps/three-surface-poc/src/verbatim-route.test.ts",
+  "apps/three-surface-poc/tsconfig.json",
+  "package-lock.json",
+  "packages/http-host/src/server.ts",
+  "packages/http-host/src/shutdown.ts"
+ ],
+ "subjectSha256": {
+  "apps/three-surface-poc/package.json": "a13724f4e2dc5a8c8c7306d3828e67184c3c0cdb0d555bee174c6e8e68a7ed28",
+  "apps/three-surface-poc/src/evaluation-footer.test.ts": "fe34fc12d3b8b03ab9e7aec9a0fc35282b41f7b60a3cbfc198fd6afa06bb33e4",
+  "apps/three-surface-poc/src/main.test.ts": "5d13c69fbb02eccce102ec3399edba1fab4d021e246b1c36e21ec38259ffb6de",
+  "apps/three-surface-poc/src/materialize-action.test.ts": "36ef63dc39278257a5e08c679d6e19f4a0b6c93167d38021449641161e376c6b",
+  "apps/three-surface-poc/src/page-size-delta.test.ts": "a89c13b5b1ffba96d7152190d6704a41df89f67f2570ebee1928a7c3e8631c51",
+  "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts": "32a68c632a1404b4aeb6e9a4fdee2069861abf2e204aaf90a413c2e4f2ee78df",
+  "apps/three-surface-poc/src/polaris-presentation-route.test.ts": "f8a237020b0e2c8e5e887fd805dd96983a128aceef948440d120d9bbb8274eeb",
+  "apps/three-surface-poc/src/polaris-source-route.test.ts": "077d83937c5c6de2718bae8a783017091d38d5f15f6c9ed75cd193bbbf43506f",
+  "apps/three-surface-poc/src/reobserve-action.test.ts": "c07a6666f382b831dcdc45dd024ded14bbfd9e4721535507c00e12232310cfb8",
+  "apps/three-surface-poc/src/response-limits.test.ts": "b2a87ca689c84becb83dc7d436132a5bef65265c36e4fed9ffe56c6d14805cdb",
+  "apps/three-surface-poc/src/routes.test.ts": "c6b387e33a4ec15dc7ada5381cea6cdd000fb4b08e660025324d453b00972dc3",
+  "apps/three-surface-poc/src/surface-routes.test.ts": "b14bb3c140b08d47c43da96da7139f527ce94ea6c0b1dcdca795833f87e0747e",
+  "apps/three-surface-poc/src/tuple-encoding.test.ts": "05ce5fd213d8b6b7634027c96f01741158a7a1467dada5b244a7681e79cde5aa",
+  "apps/three-surface-poc/src/verbatim-route.test.ts": "6b25a9ce49865bdff4b8e849c9a46ad839f646739e7c843543e1878debc218d3",
+  "apps/three-surface-poc/tsconfig.json": "aad92244b34a7bbbfec37249eaa990eda7f0590464b44049660bac9b9165cdae",
+  "package-lock.json": "45c442a1060f6d2875cd09fd28821798f63828e2140cf8168a34461f4088b760",
+  "packages/http-host/src/server.ts": "7934ff7274ca26e33c3c277bd7c4e8985694609459052f01108154ad7c1c0632",
+  "packages/http-host/src/shutdown.ts": "88969cdbd489e03018a76ec90187ea7ac58db08962f4b89c2d49795ac13641dd"
+ },
+ "serverLinesChanged": [
+  11,
+  12,
+  13,
+  14,
+  15,
+  17,
+  18,
+  19,
+  20,
+  21,
+  22,
+  23,
+  24,
+  25,
+  76
+ ],
+ "pocCap1DaemonNames": {
+  "base": [
+   "apps/three-surface-poc/package.json",
+   "apps/three-surface-poc/src/evaluation-footer.test.ts",
+   "apps/three-surface-poc/src/main.test.ts",
+   "apps/three-surface-poc/src/materialize-action.test.ts",
+   "apps/three-surface-poc/src/page-size-delta.test.ts",
+   "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+   "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+   "apps/three-surface-poc/src/polaris-source-route.test.ts",
+   "apps/three-surface-poc/src/reobserve-action.test.ts",
+   "apps/three-surface-poc/src/response-limits.test.ts",
+   "apps/three-surface-poc/src/routes.test.ts",
+   "apps/three-surface-poc/src/surface-routes.test.ts",
+   "apps/three-surface-poc/src/tuple-encoding.test.ts",
+   "apps/three-surface-poc/src/verbatim-route.test.ts"
+  ],
+  "head": []
+ },
+ "pocAlone": {
+  "base": {
+   "references": [
+    "../../packages/cap1-daemon",
+    "../../packages/http-host",
+    "../../packages/three-surface-poc-core",
+    "../../packages/polaris-generation-core",
+    "../../packages/polaris-generation-consent",
+    "../../packages/support"
+   ],
+   "plainExit": 0,
+   "buildsCap1Daemon": true,
+   "mutantExit": 0
+  },
+  "head": {
+   "references": [
+    "../../packages/http-host",
+    "../../packages/three-surface-poc-core",
+    "../../packages/polaris-generation-core",
+    "../../packages/polaris-generation-consent",
+    "../../packages/support"
+   ],
+   "plainExit": 0,
+   "buildsCap1Daemon": false,
+   "mutantExit": 2
+  }
+ },
+ "tests": {
+  "titles": 1262,
+  "files": 100,
+  "added": 0,
+  "removed": 0,
+  "run": {
+   "total": 1264,
+   "passed": 1262,
+   "failed": 0,
+   "skipped": 2,
+   "files": 101,
+   "load1": 28.8
+  },
+  "authoritySweepAlone": {
+   "base": {
+    "total": 5,
+    "passed": 5,
+    "load1": 31.3
+   },
+   "head": {
+    "total": 5,
+    "passed": 5,
+    "load1": 32.3
+   }
+  }
+ },
+ "differential": {
+  "surfaceEqual": true,
+  "hostEqualThroughCap1Daemon": true,
+  "hostEqualThroughHttpHost": true,
+  "e2eEqual": true,
+  "gatePaths": 5528,
+  "gateDiffering": 0,
+  "refused": 321,
+  "selftest": {
+   "credential-detail": "detected",
+   "gate-cap1-daemon-prefix": "detected",
+   "refusal-status": "detected",
+   "shim-binding-swapped": "detected",
+   "shim-type-dropped": "detected",
+   "shutdown-announcement": "detected",
+   "source-value-changed": "held"
+  }
+ },
+ "surfaceVersion": {
+  "base": "polaris@e4fd613eed56",
+  "head": "polaris@2bb1f43332fd",
+  "moves": true,
+  "why": "apps/three-surface-poc/src holds the 13 test files N12 changes; the core tree is unchanged"
+ },
+ "toolsSha256": {
+  "code_equal.cjs": "6eaa3d51da7b58e53818ac31ed69a8adab5647bd4dfcab673c670cfc1f832c13",
+  "poc_alone.py": "46230a7c5254a26b2b4eded017d9d35cfa68dfd908dbb40c72acceab7d7fc79a",
+  "record.py": "8a0899a4ce4fd2a16540882e756dcad195680f17c8b1b1a11ac4bffb58181678",
+  "rerun_alone.py": "efcec7b5625839a47699b7772162cc17339f112194bfc20558c8aa8e153b0da3",
+  "suite_run.py": "6a37431ae595abf011ac38c1258892bc8daac8730f7648d45a2671022ee7bbfa",
+  "titles.py": "7c81e0c67d3e94827a87598688cea95c8cf352919b193ea9e10aa9183b0758b3"
+ },
+ "problems": []
+}

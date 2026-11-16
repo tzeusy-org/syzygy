@@ -1,0 +1,134 @@
+# G5 Git transport inventory
+
+[Observed] This is implementation evidence for `syzygy-bpyt.6.20`, audit keys
+`greenfield:reconciliation:R4a:G5` and
+`greenfield:reconciliation:R4a:git-runner-options`. The original reconciliation is
+`docs/evidence/syzygy-bpyt-6-6/reconciliation-gen1.json` (PR #728). PR #595 disclosed
+the retained string seam. The G2 dependency is closed `.6.17`, PR #729; its bound,
+size-before-body ordering and captured-stderr behavior remain the oracle.
+
+[Observed] The frozen source is named in `baseline-manifest.json`. The bounded baseline
+census is six production files with six direct `execFileSync('git', …)` calls,
+plus code-structure's already shared adapter: seven profiles, five original
+logical G5 seams. This is not an inventory of other Git commands in the repository.
+The adjacent batch exception is listed separately. Injected test lambdas are
+not production transports. `gitRunnerFor` remains in project-shape-observation;
+`GitRunner` remains an import-free raw-byte callable in pwb-types. Registry tooling
+still parses the resource constants from project-shape-observation.
+
+[Inferred] GP-Q0 Part 1 permits this behavior-preserving implementation refactor.
+Part 3 says “Any change not listed here to what a gate accepts or refuses stops
+and returns to the owner.” The PWB implementation authorization and continuation
+retain the repository/content-class, envelope, consent and security boundaries.
+Proposed CC-REV-1 classes are 1, 3 and 4; the fresh independent reviewer determines
+classification. Floors touched: truth, evidence, security and identity; none are
+intended to change. No authoritative artifact is amended.
+
+## Exact profiles
+
+[Observed] “Omitted” preserves omission. Each row names the caller's options;
+the factory chooses no policy and returns Node's native Buffer/string. The three byte-returning wrappers retain their original Uint8Array copy; governance text retains its direct Buffer decode. `prefix + args` preserves ordering and copies the
+argument array. No profile sets timeout, input or shell. Environment values are
+never retained in evidence; synthetic sentinels alone are logged by the harness.
+
+| Row | Caller / delegation | argv prefix; cwd | encoding / result | maxBuffer | stdin/stdout/stderr | environment |
+|---|---|---|---|---|---|---|
+| 1 | core worker-change-observation `defaultRunGit` → factory | `--no-optional-locks -C root`; cwd omitted | Node `utf8`, string with replacement decoding | 67,108,864 | ignore/pipe/pipe | omitted, inherited |
+| 2 | app governance-inputs `defaultRunGit` → factory, then fatal TextDecoder | same prefix; cwd omitted | native Buffer then strict UTF-8 text | omitted | ignore/pipe/ignore | omitted, inherited |
+| 3 | app governance-inputs `defaultReadGitBlob` → factory | same prefix, then `cat-file blob object`; cwd omitted | raw Uint8Array | omitted | ignore/pipe/ignore | omitted, inherited |
+| 4, exception | app git-observation `readGit`, retained direct adapter | same prefix; cwd omitted | Node `utf8`, replacement string | omitted | ignore/pipe/ignore | per-invocation `{...process.env, GIT_OPTIONAL_LOCKS:'0'}` |
+| 5 | core code-structure `defaultRunGit` → `gitRunnerFor` → factory | same prefix; cwd omitted | raw view; gitlinks removed before strict decoder | 268,435,456 via row 6 | ignore/pipe/ignore | omitted, inherited |
+| 6 | core project-shape-observation `gitRunnerFor` → factory | same prefix; cwd omitted | raw Uint8Array | 268,435,456 | ignore/pipe/ignore | omitted, inherited |
+| 7, exception | app verbatim-route `gitBlobReaderFor`, retained direct adapter | empty prefix, original args only; cwd=root | raw Uint8Array | `limits.maxBytesPerSource` | ignore/pipe/pipe | omitted, inherited |
+| 8, exception | app governance-inputs `batchReaderFor` → git-blob-batch → isolatedGit | isolated config/no-replace flags, `-C root`; cwd omitted | raw batch framing | 512,000,000 | pipe/pipe/ignore | isolated allowlist, constructed per call |
+
+[Observed] Rows 4 and 7 retain local one-line reasons: the unchanged core live-verification source guard permits only literal `encoding`, `maxBuffer` and `stdio` keys throughout its import closure. It forbids `env` and `cwd`, including unused branches. Therefore those exact app-only profiles stay outside that closure. The factory spells four literal branches to retain raw/text mode and omitted/explicit buffer options without weakening the checker. Their integration suites and every differential profile remain in scope.
+
+[Observed] Row 8 retains a local one-line rationale. Its config flags, allowlisted
+environment, stdin payload and batch protocol differ from these single-command
+transports. An injected single reader still disables default batch reads; an
+explicit batch reader still wins. Existing batch tests exercise this path.
+
+[Inferred] These option differences are load-bearing and retained:
+
+- Replacement decoding accepts malformed UTF-8 and retains a BOM; fatal decoding
+  refuses malformed input and strips an initial BOM. Raw bytes retain both. Node's
+  `encoding:'utf8'` also changes stdout/stderr representation on thrown errors,
+  so text profiles continue to ask Node for text, including on failure.
+- An omitted buffer uses the tested Node runtime's default; it is not replaced
+  with either explicit larger buffer. Each bound applies to captured output,
+  including captured stderr. Row 7 also retains its independent declaration and
+  byte limits before serving a body.
+- Piped stderr stays on the thrown error. Ignored stderr is absent there. Neither
+  reaches parent stderr. `cwd=root` differs observably from `-C root`, including
+  command logs and the child working directory; row 7 receives no extra flags.
+- Omitted env inherits the environment at invocation. Row 4 clones it each call
+  and overrides exactly the existing lock key. Row 8 instead retains isolation.
+  No equivalence or new security approval is inferred for ambient Git variables.
+- Row 5's byteOffset/byteLength, allocation/decode catch, NonUtf8GitOutput reason,
+  malformed and unterminated-record refusals, gitlink-before-decode filtering and
+  public string injection seam stay local. Its independent unresolved-revision
+  metadata listing stays outside the P1 body gate.
+
+[Unknown] Equivalence outside the executed synthetic corpus is unassessed. The
+inventory is review evidence, not a second source-scan guard. The behavior suite
+owns the invariant checks. No retry, cache, persistent state, background worker,
+new dependency or package subpath is added. Rollback is the cohesive code/test/
+evidence diff; no stored data requires migration.
+
+## Reproduce and interpret evidence
+
+Run `node docs/evidence/syzygy-bpyt-6-20/differential.mjs <artifact-dir>` from this
+checkout after `npm ci`. The script reads the exact baseline Git objects, bundles
+both source versions with source digests, and executes only synthetic local Git
+fixtures. Its fake Git logs argv/cwd and known sentinels, never actual env values.
+It records bytes by type, length and SHA-256 (small payloads also retain literal
+text/base64), consumed error attributes, parent stderr and exact command logs.
+The same root/time/revision is used on both sides. The named Node runtime and
+harness digest are part of each record. Failure attempts are retained, not retried
+until green without an identified correction.
+
+[Observed] Tests: +8 collected cases, ~3 existing suites extended, -0 removed:
+five executable factory rows in one new unit family (the complete table also retains the two direct-exception profiles) and one focused integration case in each
+of the three existing caller suites. The departure from the earlier seven-row estimate follows the existing source guard: the two retained adapters stay exercised by their existing integration oracles, without duplicate unit simulations. The added table covers transport behavior
+that had no shared boundary before; the three cases protect decoder/env/selection
+semantics while retaining the existing lifecycle, authority and observation
+oracles. No test tier is changed; the new file is hermetic unit by default.
+
+[Observed] Source merging remains held by questionnaire item 4 until actual owner
+judgment and the cycle report. Branch preparation and test evidence do not grant
+landing authority. The non-blocking owner notice is `cycle-notice.md`. Independent
+exact-head review and canonical full checks are separate recorded gates; this
+inventory alone is not a completion claim.
+
+[Observed] The original source-subject records at `6da656b508cef84b96674181f7b8df69c7c72354` remain verbatim as prior evidence. The first clean-clone full check at `e6dc955da03af3b42fff2e622f6c09df13442b8b` failed the unchanged live-source guard because the initial factory used dynamic/spread options. One of 3,779 unit tests failed. This is directly attributable to this change. The old-head battery was interrupted after the source repair became necessary; its partial output, interruption record and cleanup proof remain in the external worker artifact directory. It is not a successful battery result.
+
+[Observed] The repaired placement retains the complete original outcome: no option, decoding, error, gate, envelope or ordering change is introduced. The core factory supports the five compatible profiles; rows 4, 7 and 8 have explicit load-bearing exception reasons. The full seven-profile differential, altered-record corpus, per-tuple parity oracle, predicate mutations and final gates are refreshed at the repaired source. The `*-repaired.json` records and repaired evidence index are current; earlier unsuffixed records describe the predecessor subject only.
+
+[Unknown] The full gate and independent final-head review remain separate from source-subject differential results. Their exact final commit, outcomes and source merge hold are reconciled in the terminal worker report. A worker-captured record is a report fact; it is not an emitter-distinct certification.
+
+[Observed] Repaired source subject `1675b3967b36812ee05775a6f2bb31627f247f04`: 248 tests across ten targeted files passed, including the unchanged live-source security guard. The refreshed differential matched 69 transport and 93 caller cases. The 27 refreshed literal mutants were caught (eight factory predicates and nineteen caller predicates, including the retained environment adapter's freshness). The repaired census finds two direct app exceptions and four factory call sites across six files, with code-structure still delegating via the canonical runner; five option profiles use the factory. `evidence-index-repaired.json` binds the current records. The final clean-clone check and independent review remain separate gates.
+
+[Observed] Limitation of the original 93-case caller corpus: its six model cases
+compare direct-render human HTML, but their human route calls omit Host and
+therefore compare status-403 browser-origin refusals. Those original records
+remain unchanged; they do not establish successful human-route byte equality.
+
+[Observed] `served-route-supplement.mjs` closes that bounded gap on the same
+synthetic fixtures: 18 admitted/refused × text-corpus × request-header cases,
+72 successful status-200 route pairs (54 HTML and 18 machine), compared directly
+byte for byte and by response metadata. It covers loopback Host, matching
+loopback Origin and matching tailnet Origin. `served-route-supplement.json`
+records per-case outputs; `served-route-source-manifest.json` binds all 239
+old/new source rows, fixture inputs, exact baseline/source subject and bundle
+hashes; `served-route-evidence-index.json` binds these durable records and the
+portable harness. Raw body files remain in the external worker evidence
+directory named by the manifest, and the harness reproduces them. This is
+operator verification, with no product source or test-case delta. The original
+403 results are retained as refusal coverage.
+
+[Unknown] Publishing these additional evidence bytes creates a new review/gate
+subject. The passed cb25772f98b763c81714da46580ff8921bed989e full check remains
+evidence for that predecessor only. The new exact-head differential, checks,
+per-check output capture and independent review are reconciled in the terminal
+worker report; publication alone supplies none of those outcomes.

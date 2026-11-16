@@ -1,0 +1,60 @@
+{
+ "commits": [
+  "9dba258992667f62ad503ec76d8a6b99efcc4bac",
+  "f2304fd5d2bfd0e50c48d6ea356ddea3f7be162d",
+  "561c80b38d447a56e4c1542e0a8fbbdb2dd1d845",
+  "bb05df7ea409039c5a6465e7179f9d0c66931ad3"
+ ],
+ "population": 5731,
+ "tracked": 5624,
+ "probes": 110,
+ "builds": {
+  "base": {
+   "distSha256": "bfc59f7bacdf9676211e2ccf014cf0a886c7abb30e701ee4b8c4765ef1810ea4",
+   "refused": 339,
+   "pairs": {
+    "empty": true,
+    "cleanClean": true,
+    "cleanDirty": false,
+    "dirtyClean": false
+   }
+  },
+  "head": {
+   "distSha256": "bfc59f7bacdf9676211e2ccf014cf0a886c7abb30e701ee4b8c4765ef1810ea4",
+   "refused": 339,
+   "pairs": {
+    "empty": true,
+    "cleanClean": true,
+    "cleanDirty": false,
+    "dirtyClean": false
+   }
+  },
+  "merge": {
+   "distSha256": "bfc59f7bacdf9676211e2ccf014cf0a886c7abb30e701ee4b8c4765ef1810ea4",
+   "refused": 339,
+   "pairs": {
+    "empty": true,
+    "cleanClean": true,
+    "cleanDirty": false,
+    "dirtyClean": false
+   }
+  }
+ },
+ "refusedEqual": true,
+ "differing": [],
+ "refusedByPrefix": {
+  "apps/three-surface-poc/": 193,
+  "packages/three-surface-poc-core/": 79,
+  "packages/cap1-daemon/": 21,
+  "packages/http-host/": 14,
+  "packages/cap1-core/": 29,
+  "(exact)": 3,
+  "(other)": 0
+ },
+ "refusedOther": [],
+ "refusedExact": [
+  "package-lock.json",
+  "package.json",
+  "tsconfig.base.json"
+ ]
+}

@@ -1,0 +1,11 @@
+{
+ "id": "U4-command-reads-the-other-shape",
+ "command": "TMPDIR=/tmp/la-b82/g CI=1 npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/cli-table.test.ts",
+ "edits": [
+  {
+   "file": "packages/polaris-dossier/src/cli.ts",
+   "old": "    args: { kind: 'options', options: ['--draft'], noun: RUN },",
+   "new": "    args: { kind: 'one', noun: RUN },"
+  }
+ ]
+}

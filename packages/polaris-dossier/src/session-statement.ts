@@ -1,5 +1,6 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
+import { isRecord } from '@syzygy/support';
 import { providerStatementGate, statementContentClasses, type GateSources } from './gate-sources.js';
 import { AGENT_TOOLS } from './run-config.js';
 import { readRunRecord } from './run-record.js';
@@ -28,8 +29,6 @@ export interface SessionStatementCitation { readonly record: string; readonly ag
  * cites, or null when the record predates citations (Unknown). */
 export interface SessionStatementOfRecord { readonly record: string; readonly cited: string | null; readonly label: 'Inferred' }
 
-const isObj = (value: unknown): value is Readonly<Record<string, unknown>> => value !== null && typeof value === 'object' && !Array.isArray(value);
-
 export type SessionStatementRecheck = { readonly ok: true; readonly statement: SessionStatementOfRecord | null } | { readonly ok: false; readonly why: string };
 
 /** Re-check the statement the session `noun` (for example "inventory session 2") was handed over under, from its prompt record, at `now`.
@@ -49,14 +48,14 @@ export async function recheckSessionStatement(
   const { subject, declared } = read.record;
   if (subject.providerStatement === null) return { ok: true, statement: null };
 
-  const context = isObj(prompt['context']) ? prompt['context'] : {};
+  const context = isRecord(prompt['context']) ? prompt['context'] : {};
   const tool = context['agentTool'];
   if (typeof tool !== 'string' || !(AGENT_TOOLS as readonly string[]).includes(tool)) return noThen(`the prompt record of ${noun} names no agent tool, so the statement it was handed over under cannot be checked again`);
   const provider = declared.agentProvider;
   let cited: string | null = null;
   if ('providerStatement' in context) {
     const citation = context['providerStatement'];
-    if (!isObj(citation) || typeof citation['record'] !== 'string') return noThen(`the prompt record of ${noun} cites no per-project statement, but the run relies on one`);
+    if (!isRecord(citation) || typeof citation['record'] !== 'string') return noThen(`the prompt record of ${noun} cites no per-project statement, but the run relies on one`);
     if (citation['agentTool'] !== tool || citation['provider'] !== provider) {
       return noThen(`the prompt record of ${noun} cites the statement ${citation['record']} for another pair than its agent tool ${tool} with the run's provider ${provider}`);
     }

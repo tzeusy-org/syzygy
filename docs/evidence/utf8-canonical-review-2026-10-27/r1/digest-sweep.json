@@ -1,0 +1,590 @@
+{
+ "tool": "digest_sweep.py",
+ "population": "2d3f9375",
+ "filesInPopulation": 5125,
+ "needles": [
+  {
+   "path": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "side": "base",
+   "commit": "a5ab2b28",
+   "bytes": 6712,
+   "sha256": "01fc903901fc09082ce4923bf7bdcf4937b492ef93e62058be5a7c04ca87395e",
+   "gitBlob": "4435c52a53aa467cf955523922557fcf5aa62ab2"
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "side": "head",
+   "commit": "2d3f9375",
+   "bytes": 6593,
+   "sha256": "6098ed3fdd6d5055cf7952e836c25c9474239f6b2e2ac60d8e03af836be4d8dc",
+   "gitBlob": "82494cbd10999a1825e703aefe51daaf0337c1ef"
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/code-structure.ts",
+   "side": "base",
+   "commit": "a5ab2b28",
+   "bytes": 6943,
+   "sha256": "ef137dafdd666104b9249d5516b0567e8daf9db7a5814c68c29e362f87ca56c1",
+   "gitBlob": "adb48b93859e51ed02fa370a06c71574c678e6f4"
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/code-structure.ts",
+   "side": "head",
+   "commit": "2d3f9375",
+   "bytes": 6936,
+   "sha256": "d8a4d39c34a2b149fc3f172a35cf91f398cb1c42edc21d1885be9ca34857bfa3",
+   "gitBlob": "78333fc050dcb1b53d1110f2bb2f42db3ca027ab"
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/git-object-reader.ts",
+   "side": "base",
+   "commit": "a5ab2b28",
+   "bytes": 19016,
+   "sha256": "19405187526e79585f92b65a926a07492929ea7335dd5a4994b8f204b7a0bf46",
+   "gitBlob": "637769ce407210155130e0581791676bcac0a2bd"
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/git-object-reader.ts",
+   "side": "head",
+   "commit": "2d3f9375",
+   "bytes": 18816,
+   "sha256": "76ac22aab6091645ea4ed6a562efc4984e7a4e38a7fb1777aa2fe3bd738f7b65",
+   "gitBlob": "26d231faabbce957d4d8d70f379d0925220c04a8"
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+   "side": "base",
+   "commit": "a5ab2b28",
+   "bytes": 23190,
+   "sha256": "c32ab4e3dbe509413a4d31afc1bb7a68c1a5a8b2b1d21945b72deb9e54617e34",
+   "gitBlob": "c2d2d95640a96bf4232c64330332f3dc7cad5517"
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+   "side": "head",
+   "commit": "2d3f9375",
+   "bytes": 23331,
+   "sha256": "a70be15e9c6d1af6325c234c83e389adf7291140e9a3dccbb1847e8210b3299f",
+   "gitBlob": "10558b07b9c0ee973ea8dd16ac3ba589838a90b5"
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+   "side": "base",
+   "commit": "a5ab2b28",
+   "bytes": 29620,
+   "sha256": "db2cd5cfb37f45895ca0794169339ca680918d0111c658534e6ede301a8d04a0",
+   "gitBlob": "1aeafc325cab69e22e795872bea5b81e27a64240"
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+   "side": "head",
+   "commit": "2d3f9375",
+   "bytes": 29420,
+   "sha256": "b57746bb67286dfbe3ed0deaaf844e11d8568936b94c79cc0262ea912b635bff",
+   "gitBlob": "3b6d754b7a30e9a67c893fa0215d2c646109dcce"
+  },
+  {
+   "path": "packages/polaris-generation-core/src/canonical-json.ts",
+   "side": "base",
+   "commit": "a5ab2b28",
+   "bytes": 4829,
+   "sha256": "4d7e745dc505c0de74666511a90ccda4673a5bc3d3e9deb73f424bce92875608",
+   "gitBlob": "4925daed61da1c21d34ba6335f5cb16863312f1e"
+  },
+  {
+   "path": "packages/polaris-generation-core/src/canonical-json.ts",
+   "side": "head",
+   "commit": "2d3f9375",
+   "bytes": 4971,
+   "sha256": "c51a3ca5ec1210e06fb462088c8a9fd541168de9c333b114cb8369621ebce7ed",
+   "gitBlob": "a2324fcc59e90bd791a07646042880f0fe781889"
+  },
+  {
+   "path": "packages/support/src/index.ts",
+   "side": "base",
+   "commit": "a5ab2b28",
+   "bytes": 531,
+   "sha256": "9b82aa1f60a468084496a62c2dc22775171c4678f663761e463e3f120a99d1bb",
+   "gitBlob": "11bd1b83b741d61264e31db01b86e019ff5ee4ac"
+  },
+  {
+   "path": "packages/support/src/index.ts",
+   "side": "head",
+   "commit": "2d3f9375",
+   "bytes": 578,
+   "sha256": "a4b3aa184877c9851ee46623e00c33a5ebbf25029d7ca16ff7324a6e7d31ea56",
+   "gitBlob": "41a9a88a9a2b771a4709f5d8dc450f296fb4815d"
+  },
+  {
+   "path": "packages/support/src/decode-utf8.ts",
+   "side": "head",
+   "commit": "2d3f9375",
+   "bytes": 433,
+   "sha256": "f57863901787c528672976af4efd285d6daf8d3895df9d332c28724ac435ca27",
+   "gitBlob": "953a049f8b1453e5ab04d61f9a33725f40c48e8d"
+  }
+ ],
+ "needleCount": 30,
+ "hits": [
+  {
+   "needle": "packages/three-surface-poc-core/src/authority-artifact-fields.ts@base:sha256",
+   "file": "docs/evidence/live-verification-test-no-spawn-mutants-2026-10-07.json",
+   "offset": 916,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/authority-artifact-fields.ts@base:sha256",
+   "file": "docs/evidence/live-verification-test-no-spawn-mutants-round1-repairs-2026-10-07.json",
+   "offset": 1018,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/authority-artifact-fields.ts@base:sha256",
+   "file": "docs/evidence/live-verification-test-no-spawn-mutants-round2-repairs-2026-10-07.json",
+   "offset": 1131,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/authority-artifact-fields.ts@base:sha256",
+   "file": "docs/evidence/live-verification-test-no-spawn-mutants-round3-repairs-2026-10-07.json",
+   "offset": 1241,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/authority-artifact-fields.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "offset": 1530,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/authority-artifact-fields.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json",
+   "offset": 1789,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/authority-artifact-fields.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json",
+   "offset": 3631,
+   "matchedHex": 12,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/authority-artifact-fields.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json",
+   "offset": 4074,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/authority-artifact-fields.ts@base:sha256",
+   "file": "docs/reviews/R-LIVE-TEST-NO-SPAWN-1-RAW.md",
+   "offset": 11634,
+   "matchedHex": 8,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/authority-artifact-fields.ts@base:sha256",
+   "file": "docs/reviews/R-P110-EXPLICIT-SELECTION-PROBES-EFCBB78F-1-RAW.md",
+   "offset": 5417,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/authority-artifact-fields.ts@head:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "offset": 1616,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/authority-artifact-fields.ts@head:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json",
+   "offset": 1974,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/code-structure.ts@base:sha256",
+   "file": "docs/evidence/code-structure-ls-tree-z-differential-2026-10-21-r3.json",
+   "offset": 812,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/code-structure.ts@base:sha256",
+   "file": "docs/evidence/code-structure-ls-tree-z-differential-2026-10-21-r3.json",
+   "offset": 28897,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/code-structure.ts@base:sha256",
+   "file": "docs/evidence/code-structure-ls-tree-z-mutants-2026-10-21-r3.json",
+   "offset": 257,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/code-structure.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "offset": 1781,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/code-structure.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json",
+   "offset": 2148,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/code-structure.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json",
+   "offset": 4569,
+   "matchedHex": 12,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/code-structure.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json",
+   "offset": 4795,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/code-structure.ts@base:sha256",
+   "file": "docs/reviews/R-GP-IMPL-CODE-STRUCTURE-3-RAW.md",
+   "offset": 3391,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/code-structure.ts@head:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "offset": 1867,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/code-structure.ts@head:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json",
+   "offset": 2322,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/git-object-reader.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "offset": 2035,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/git-object-reader.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json",
+   "offset": 2499,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/git-object-reader.ts@head:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "offset": 2121,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/git-object-reader.ts@head:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json",
+   "offset": 2676,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-manifest.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/comment-only-stack2-a.json",
+   "offset": 956,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-manifest.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/comment-only-stack2-b.json",
+   "offset": 957,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-manifest.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "offset": 2294,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-manifest.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json",
+   "offset": 2858,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-manifest.ts@head:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/comment-only-stack2-a.json",
+   "offset": 1047,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-manifest.ts@head:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/comment-only-stack2-b.json",
+   "offset": 1048,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-manifest.ts@head:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "offset": 2380,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-manifest.ts@head:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json",
+   "offset": 3040,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-observation.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "offset": 2556,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-observation.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json",
+   "offset": 3225,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-observation.ts@head:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "offset": 2642,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-observation.ts@head:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json",
+   "offset": 3410,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/polaris-generation-core/src/canonical-json.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/comment-only-stack2-a.json",
+   "offset": 470,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/polaris-generation-core/src/canonical-json.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/comment-only-stack2-b.json",
+   "offset": 471,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/polaris-generation-core/src/canonical-json.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "offset": 870,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/polaris-generation-core/src/canonical-json.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json",
+   "offset": 973,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/polaris-generation-core/src/canonical-json.ts@head:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/comment-only-stack2-a.json",
+   "offset": 561,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/polaris-generation-core/src/canonical-json.ts@head:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/comment-only-stack2-b.json",
+   "offset": 562,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/polaris-generation-core/src/canonical-json.ts@head:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "offset": 956,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/polaris-generation-core/src/canonical-json.ts@head:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json",
+   "offset": 1148,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/support/src/index.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "offset": 1268,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/support/src/index.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json",
+   "offset": 1454,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/support/src/index.ts@head:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "offset": 1354,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/support/src/index.ts@head:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json",
+   "offset": 1604,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/support/src/decode-utf8.ts@head:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "offset": 1127,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/support/src/decode-utf8.ts@head:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json",
+   "offset": 1304,
+   "matchedHex": 64,
+   "governedTree": false
+  }
+ ],
+ "hitsInGovernedTrees": [],
+ "method2FileSets": {
+  "packages/three-surface-poc-core/src/authority-artifact-fields.ts@base:sha256": [
+   "docs/evidence/live-verification-test-no-spawn-mutants-2026-10-07.json",
+   "docs/evidence/live-verification-test-no-spawn-mutants-round1-repairs-2026-10-07.json",
+   "docs/evidence/live-verification-test-no-spawn-mutants-round2-repairs-2026-10-07.json",
+   "docs/evidence/live-verification-test-no-spawn-mutants-round3-repairs-2026-10-07.json",
+   "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json",
+   "docs/reviews/R-LIVE-TEST-NO-SPAWN-1-RAW.md",
+   "docs/reviews/R-P110-EXPLICIT-SELECTION-PROBES-EFCBB78F-1-RAW.md"
+  ],
+  "packages/three-surface-poc-core/src/authority-artifact-fields.ts@base:gitBlob": [],
+  "packages/three-surface-poc-core/src/authority-artifact-fields.ts@head:sha256": [
+   "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json"
+  ],
+  "packages/three-surface-poc-core/src/authority-artifact-fields.ts@head:gitBlob": [],
+  "packages/three-surface-poc-core/src/code-structure.ts@base:sha256": [
+   "docs/evidence/code-structure-ls-tree-z-differential-2026-10-21-r3.json",
+   "docs/evidence/code-structure-ls-tree-z-mutants-2026-10-21-r3.json",
+   "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json",
+   "docs/reviews/R-GP-IMPL-CODE-STRUCTURE-3-RAW.md"
+  ],
+  "packages/three-surface-poc-core/src/code-structure.ts@base:gitBlob": [],
+  "packages/three-surface-poc-core/src/code-structure.ts@head:sha256": [
+   "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json"
+  ],
+  "packages/three-surface-poc-core/src/code-structure.ts@head:gitBlob": [],
+  "packages/three-surface-poc-core/src/git-object-reader.ts@base:sha256": [
+   "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json"
+  ],
+  "packages/three-surface-poc-core/src/git-object-reader.ts@base:gitBlob": [],
+  "packages/three-surface-poc-core/src/git-object-reader.ts@head:sha256": [
+   "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json"
+  ],
+  "packages/three-surface-poc-core/src/git-object-reader.ts@head:gitBlob": [],
+  "packages/three-surface-poc-core/src/project-shape-manifest.ts@base:sha256": [
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-stack2-a.json",
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-stack2-b.json",
+   "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json"
+  ],
+  "packages/three-surface-poc-core/src/project-shape-manifest.ts@base:gitBlob": [],
+  "packages/three-surface-poc-core/src/project-shape-manifest.ts@head:sha256": [
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-stack2-a.json",
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-stack2-b.json",
+   "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json"
+  ],
+  "packages/three-surface-poc-core/src/project-shape-manifest.ts@head:gitBlob": [],
+  "packages/three-surface-poc-core/src/project-shape-observation.ts@base:sha256": [
+   "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json"
+  ],
+  "packages/three-surface-poc-core/src/project-shape-observation.ts@base:gitBlob": [],
+  "packages/three-surface-poc-core/src/project-shape-observation.ts@head:sha256": [
+   "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json"
+  ],
+  "packages/three-surface-poc-core/src/project-shape-observation.ts@head:gitBlob": [],
+  "packages/polaris-generation-core/src/canonical-json.ts@base:sha256": [
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-stack2-a.json",
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-stack2-b.json",
+   "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json"
+  ],
+  "packages/polaris-generation-core/src/canonical-json.ts@base:gitBlob": [],
+  "packages/polaris-generation-core/src/canonical-json.ts@head:sha256": [
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-stack2-a.json",
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-stack2-b.json",
+   "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json"
+  ],
+  "packages/polaris-generation-core/src/canonical-json.ts@head:gitBlob": [],
+  "packages/support/src/index.ts@base:sha256": [
+   "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json"
+  ],
+  "packages/support/src/index.ts@base:gitBlob": [],
+  "packages/support/src/index.ts@head:sha256": [
+   "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json"
+  ],
+  "packages/support/src/index.ts@head:gitBlob": [],
+  "packages/support/src/decode-utf8.ts@head:sha256": [
+   "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json"
+  ],
+  "packages/support/src/decode-utf8.ts@head:gitBlob": []
+ },
+ "methodsAgree": true
+}

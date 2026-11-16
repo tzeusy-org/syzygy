@@ -1,0 +1,84 @@
+{
+ "tool": "rev-525/tools/probe.py",
+ "toolSha256": "0d82288a92a49bfe8af739ee1f15a61ed3b208b672b07e4c85cb2d18b076cfa6",
+ "case": "base-R5-hang",
+ "commit": "f7bbb93a005b45c2866d8a9993afbca44cd1a34f",
+ "files": {
+  "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts": "3ec6929951080613b3c5cb7205fe303c5449be58"
+ },
+ "edits": [
+  {
+   "file": "packages/polaris-dossier/src/argv.ts",
+   "old": "if (!spec.positionals || arg.startsWith('-')) return",
+   "new": "if (arg.startsWith('-')) return"
+  }
+ ],
+ "env": {},
+ "filters": [
+  "daemon-entry-unchanged"
+ ],
+ "t": null,
+ "editChecks": [
+  {
+   "file": "packages/polaris-dossier/src/argv.ts",
+   "old": "if (!spec.positionals || arg.startsWith('-')) return",
+   "new": "if (arg.startsWith('-')) return",
+   "occurrences": 1
+  }
+ ],
+ "build": {
+  "exitCode": 0,
+  "typeErrors": []
+ },
+ "distCarries": [
+  {
+   "dist": "packages/polaris-dossier/dist/argv.js",
+   "carries": true
+  }
+ ],
+ "run": {
+  "command": "npx vitest run --config packages/cap1-system/vitest.config.ts daemon-entry-unchanged --reporter=json --outputFile=<tmp>/report.json",
+  "exitCode": -9,
+  "wallSeconds": 120.1,
+  "deadlineHit": true,
+  "samples": 282,
+  "port7477Before": [],
+  "port7477Seen": [],
+  "killedOn7477": [],
+  "unstuck": [],
+  "ownListeningPorts": [
+   "41437"
+  ],
+  "processesSeen": 16,
+  "survivors": {},
+  "tmpLeftoversBeforeRemoval": [
+   "0-XMfD0Abd4KPKZjGLA_e",
+   "node-compile-cache",
+   "syz-entry-Kv3Utj",
+   "vitest.log"
+  ],
+  "logTail": "",
+  "tests": []
+ },
+ "rebuild": {
+  "exitCode": 0,
+  "typeErrors": []
+ },
+ "treeCleanAfter": true,
+ "summary": {
+  "exitCode": -9,
+  "wallSeconds": 120.1,
+  "deadlineHit": true,
+  "statuses": {},
+  "failed": [],
+  "port7477Seen": 0,
+  "samples": 282,
+  "killedOn7477": 0,
+  "unstuck": 0,
+  "ownListeningPorts": [
+   "41437"
+  ],
+  "survivors": 0,
+  "slowestMs": null
+ }
+}

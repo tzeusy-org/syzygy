@@ -1,0 +1,180 @@
+{
+ "record": "docs/evidence/syzygy-bpyt-49/record.py",
+ "recordSha256": "fe1b8c236c22cf6dc756fe76de17d0087b708fdca3d270968cf1a5e02758a19e",
+ "sites": 16,
+ "exercised": 16,
+ "rows": [
+  {
+   "line": 73,
+   "old": "        problems.append('mutants: not run at CODE')",
+   "new": "        (lambda *a: None)('mutants: not run at CODE')",
+   "exit": 1,
+   "survived": [
+    "mutants run at another commit"
+   ],
+   "exercised": true
+  },
+  {
+   "line": 75,
+   "old": "        problems.append('mutants: the rows are not the ones named here, in order')",
+   "new": "        (lambda *a: None)('mutants: the rows are not the ones named here, in order')",
+   "exit": 1,
+   "survived": [
+    "a mutants row missing"
+   ],
+   "exercised": true
+  },
+  {
+   "line": 80,
+   "old": "            problems.append(f\"mutants {r['id']}: not CODE's {r['record']}\")",
+   "new": "            (lambda *a: None)(f\"mutants {r['id']}: not CODE's {r['record']}\")",
+   "exit": 1,
+   "survived": [
+    "a mutant of another record.py"
+   ],
+   "exercised": true
+  },
+  {
+   "line": 82,
+   "old": "            problems.append(f\"mutants {r['id']}: the edit is not one change to one fragment of CODE's record\")",
+   "new": "            (lambda *a: None)(f\"mutants {r['id']}: the edit is not one change to one fragment of CODE's record\")",
+   "exit": 1,
+   "survived": [
+    "a mutant whose fragment is not in the record",
+    "a mutant that changes nothing",
+    "an unmutated row carrying an edit"
+   ],
+   "exercised": true
+  },
+  {
+   "line": 84,
+   "old": "            problems.append(f\"mutants {r['id']}: check exit {r['check']['exit']}, survived {r['selftest']['survived']}, not {want}\")",
+   "new": "            (lambda *a: None)(f\"mutants {r['id']}: check exit {r['check']['exit']}, survived {r['selftest']['survived']}, not {want}\")",
+   "exit": 1,
+   "survived": [
+    "a widened filter that no entry sees",
+    "a mutant whose check no longer matches",
+    "a mutant that survives but exits 0"
+   ],
+   "exercised": true
+  },
+  {
+   "line": 86,
+   "old": "            problems.append(f\"mutants {r['id']}: {r['selftest']['tally']}, not {TALLIES[r['id']]}\")",
+   "new": "            (lambda *a: None)(f\"mutants {r['id']}: {r['selftest']['tally']}, not {TALLIES[r['id']]}\")",
+   "exit": 1,
+   "survived": [
+    "an unmutated selftest of another size"
+   ],
+   "exercised": true
+  },
+  {
+   "line": 89,
+   "old": "        problems.append('guard: not run at CODE')",
+   "new": "        (lambda *a: None)('guard: not run at CODE')",
+   "exit": 1,
+   "survived": [
+    "a guard run at another commit"
+   ],
+   "exercised": true
+  },
+  {
+   "line": 91,
+   "old": "        problems.append('guard: the rows are not each guard mutant of each probe, in order')",
+   "new": "        (lambda *a: None)('guard: the rows are not each guard mutant of each probe, in order')",
+   "exit": 1,
+   "survived": [
+    "a guard row missing"
+   ],
+   "exercised": true
+  },
+  {
+   "line": 95,
+   "old": "            problems.append(f\"guard {r['probe']} {r['id']}: not one edit of CODE's probe\")",
+   "new": "            (lambda *a: None)(f\"guard {r['probe']} {r['id']}: not one edit of CODE's probe\")",
+   "exit": 1,
+   "survived": [
+    "a guard row of another probe",
+    "a guard mutant whose fragment is not in the probe"
+   ],
+   "exercised": true
+  },
+  {
+   "line": 97,
+   "old": "            problems.append(f\"guard {r['probe']} {r['id']}: the cases are not the three named here\")",
+   "new": "            (lambda *a: None)(f\"guard {r['probe']} {r['id']}: the cases are not the three named here\")",
+   "exit": 1,
+   "survived": [
+    "a guard case missing"
+   ],
+   "exercised": true
+  },
+  {
+   "line": 101,
+   "old": "                problems.append(f\"guard {r['probe']} {r['id']} {case}: refused {c['refused']}, record {c['recordWritten']}, exit {c['exit']}\")",
+   "new": "                (lambda *a: None)(f\"guard {r['probe']} {r['id']} {case}: refused {c['refused']}, record {c['recordWritten']}, exit {c['exit']}\")",
+   "exit": 1,
+   "survived": [
+    "a guard that lets a node_modules parent through",
+    "a guard mutant that still refuses its case",
+    "a refused case that wrote a record",
+    "a refused case that exits 0"
+   ],
+   "exercised": true
+  },
+  {
+   "line": 104,
+   "old": "        problems.append('guard: the root-exception probe re-run did not write the committed record')",
+   "new": "        (lambda *a: None)('guard: the root-exception probe re-run did not write the committed record')",
+   "exit": 1,
+   "survived": [
+    "a root-exception re-run that differs",
+    "a root-exception re-run of another record"
+   ],
+   "exercised": true
+  },
+  {
+   "line": 108,
+   "old": "        problems.append(\"npmrc-trace: not a passing run of CODE's npm_alias_probe.py\")",
+   "new": "        (lambda *a: None)(\"npmrc-trace: not a passing run of CODE's npm_alias_probe.py\")",
+   "exit": 1,
+   "survived": [
+    "a lane trace of another probe"
+   ],
+   "exercised": true
+  },
+  {
+   "line": 110,
+   "old": "        problems.append(\"npmrc-trace: opens an npmrc outside the scratch directory other than npm's absent builtin one\")",
+   "new": "        (lambda *a: None)(\"npmrc-trace: opens an npmrc outside the scratch directory other than npm's absent builtin one\")",
+   "exit": 1,
+   "survived": [
+    "a lane trace that read the caller's npmrc",
+    "a lane trace that read an ancestor npmrc",
+    "a lane trace whose builtin npmrc was present"
+   ],
+   "exercised": true
+  },
+  {
+   "line": 112,
+   "old": "        problems.append('npmrc-trace: the record is not the committed npm-alias-probe.json')",
+   "new": "        (lambda *a: None)('npmrc-trace: the record is not the committed npm-alias-probe.json')",
+   "exit": 1,
+   "survived": [
+    "a lane trace whose record changed",
+    "a lane trace compared with another record"
+   ],
+   "exercised": true
+  },
+  {
+   "line": 115,
+   "old": "        problems.append(f'subject: {changed}')",
+   "new": "        (lambda *a: None)(f'subject: {changed}')",
+   "exit": 1,
+   "survived": [
+    "a product file in the subject"
+   ],
+   "exercised": true
+  }
+ ]
+}

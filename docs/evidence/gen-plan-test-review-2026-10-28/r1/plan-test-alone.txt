@@ -1,0 +1,12 @@
+
+[1m[46m RUN [49m[22m [36mv3.2.7 [39m[90m/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-546/clone[39m
+
+ [32m✓[39m [30m[45m @syzygy/three-surface-poc-app [49m[39m apps/three-surface-poc/src/polaris-generation/generation-mutation.test.ts [2m([22m[2m13 tests[22m[2m)[22m[33m 2034[2mms[22m[39m
+   [33m[2m✓[22m[39m generation mutation plan[2m > [22mcanonical-json-sorted-keys-disabled: names a non-test file under polaris-generation-core/src, holds its fragment once there, changes the emit and names must-fail tests the runner runs [33m 362[2mms[22m[39m
+   [33m[2m✓[22m[39m generation mutation plan[2m > [22mpipeline-repair-cycle-cap-disabled: names a non-test file under polaris-generation-core/src, holds its fragment once there, changes the emit and names must-fail tests the runner runs [33m 306[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m13 passed[39m[22m[90m (13)[39m
+[2m   Start at [22m 01:13:50
+[2m   Duration [22m 4.08s[2m (transform 139ms, setup 24ms, collect 1.13s, tests 2.03s, environment 0ms, prepare 220ms)[22m
+

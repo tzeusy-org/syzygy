@@ -1,0 +1,20 @@
+{
+ "what": "the fence probe run at the PR base and at the code head, compared case by case with compare-fence-probe.py",
+ "baseCommit": "fe3855a1b4f2164da3274e02d868399236c45c9c",
+ "codeHeadCommit": "7e58cd1f9e1be0c4d79ebff298cc97261a79f6ce",
+ "baseOutput": "docs/evidence/syzygy-bpyt-6-3/fence-probe-output-base.json",
+ "baseOutputSha256": "08cb10741da79a033248c04e49e1582d414e135a7e6b3054d3d8c1afbd52821c",
+ "headOutput": "docs/evidence/syzygy-bpyt-6-3/fence-probe-output.json",
+ "headOutputSha256": "95ed7f664f202d723b151842acbb9906ed4978e20c1f70971a8bf07ac5c30902",
+ "probeToolSha256": "10b6d88b528a6f967959842bb350d21700f097f1ea0e420f174f347cf8afb680",
+ "compareToolSha256": "eb498c1a5c23a542f4b31a6d4fa32515523ec352135332514b545334a66e4d51",
+ "compareExitStatus": 0,
+ "compare": {
+  "casesCompared": 66,
+  "casesThatDiffer": 0,
+  "differing": [],
+  "casesOnlyInActual": [],
+  "inlineCasesThatDiffer": [],
+  "consentFunctionTextDiffers": false
+ }
+}

@@ -1,0 +1,147 @@
+{
+ "tool": "chrome_matrix.py",
+ "treeCommit": "0410e3cdac48e810ef4fab9781b3bad8f85a8b20",
+ "mode": "head",
+ "sha256AtCommit": {
+  "apps/three-surface-poc/src/cdp-browser.ts": "60a3990726bc196703d66719b8c50c9c87c62c91b601fa51f7edcca23f71d68d",
+  "apps/three-surface-poc/src/cdp-browser.browser.test.ts": "83f58739e428956e51505694008156d3dd6c73fcfa584efe73bf2509fbecc43a"
+ },
+ "project": "@syzygy/three-surface-poc-app",
+ "testFile": "apps/three-surface-poc/src/cdp-browser.browser.test.ts",
+ "command": "SYZYGY_POC_BROWSER=<chrome> TMPDIR=<private> npx vitest run apps/three-surface-poc/src/cdp-browser.browser.test.ts --project @syzygy/three-surface-poc-app",
+ "loadSignatures": [
+  "drain did not verify",
+  "still held by",
+  "timed out",
+  "STACK_TRACE_ERROR"
+ ],
+ "rows": [
+  {
+   "executable": "/usr/bin/google-chrome",
+   "version": "Google Chrome 120.0.6099.224",
+   "status": "passed",
+   "exit": 0,
+   "testsRun": 2,
+   "failing": [],
+   "failingOnTheNameAssertion": 0,
+   "left": [],
+   "singletonShapedLeft": [],
+   "attempts": [
+    {
+     "attempt": 1,
+     "exit": 0,
+     "status": "passed",
+     "testsRun": 2,
+     "failing": [],
+     "left": []
+    }
+   ]
+  },
+  {
+   "executable": "/home/tze/.cache/ms-playwright/chromium-1208/chrome-linux64/chrome",
+   "version": "Google Chrome for Testing 145.0.7632.6",
+   "status": "passed",
+   "exit": 0,
+   "testsRun": 2,
+   "failing": [],
+   "failingOnTheNameAssertion": 0,
+   "left": [],
+   "singletonShapedLeft": [],
+   "attempts": [
+    {
+     "attempt": 1,
+     "exit": 0,
+     "status": "passed",
+     "testsRun": 2,
+     "failing": [],
+     "left": []
+    }
+   ]
+  },
+  {
+   "executable": "/home/tze/.cache/puppeteer/chrome/linux-147.0.7727.57/chrome-linux64/chrome",
+   "version": "Google Chrome for Testing 147.0.7727.57",
+   "status": "passed",
+   "exit": 0,
+   "testsRun": 2,
+   "failing": [],
+   "failingOnTheNameAssertion": 0,
+   "left": [],
+   "singletonShapedLeft": [],
+   "attempts": [
+    {
+     "attempt": 1,
+     "exit": 0,
+     "status": "passed",
+     "testsRun": 2,
+     "failing": [],
+     "left": []
+    }
+   ]
+  },
+  {
+   "executable": "/home/tze/.cache/puppeteer/chrome/linux-149.0.7827.22/chrome-linux64/chrome",
+   "version": "Google Chrome for Testing 149.0.7827.22",
+   "status": "passed",
+   "exit": 0,
+   "testsRun": 2,
+   "failing": [],
+   "failingOnTheNameAssertion": 0,
+   "left": [],
+   "singletonShapedLeft": [],
+   "attempts": [
+    {
+     "attempt": 1,
+     "exit": 0,
+     "status": "passed",
+     "testsRun": 2,
+     "failing": [],
+     "left": []
+    }
+   ]
+  },
+  {
+   "executable": "/home/tze/.cache/puppeteer/chrome/linux-151.0.7922.47/chrome-linux64/chrome",
+   "version": "Google Chrome for Testing 151.0.7922.47",
+   "status": "passed",
+   "exit": 0,
+   "testsRun": 2,
+   "failing": [],
+   "failingOnTheNameAssertion": 0,
+   "left": [],
+   "singletonShapedLeft": [],
+   "attempts": [
+    {
+     "attempt": 1,
+     "exit": 0,
+     "status": "passed",
+     "testsRun": 2,
+     "failing": [],
+     "left": []
+    }
+   ]
+  },
+  {
+   "executable": "/home/tze/.cache/puppeteer/chrome/linux-154.0.8037.57/chrome-linux64/chrome",
+   "version": "Google Chrome for Testing 154.0.8037.57",
+   "status": "passed",
+   "exit": 0,
+   "testsRun": 2,
+   "failing": [],
+   "failingOnTheNameAssertion": 0,
+   "left": [],
+   "singletonShapedLeft": [],
+   "attempts": [
+    {
+     "attempt": 1,
+     "exit": 0,
+     "status": "passed",
+     "testsRun": 2,
+     "failing": [],
+     "left": []
+    }
+   ]
+  }
+ ],
+ "holds": true
+}

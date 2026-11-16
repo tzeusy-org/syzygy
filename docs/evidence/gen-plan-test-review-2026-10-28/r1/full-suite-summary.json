@@ -1,0 +1,22 @@
+{
+ "numTotalTests": 5523,
+ "numPassedTests": 5518,
+ "numFailedTests": 0,
+ "numPendingTests": 5,
+ "numTodoTests": 0,
+ "numTotalTestSuites": 891,
+ "numFailedTestSuites": 0,
+ "success": true,
+ "files": 254,
+ "fileStatuses": [
+  "passed"
+ ],
+ "skippedTests": [
+  "no provider call and no transmission (S10), without strace is not proved on this host: strace is unavailable, so the capture is skipped, never reported as passed",
+  "live real focused-pytest verification (SYZYGY_POC_BUTLERS_REPO gated) ingests one real, passing operator-reported focused-pytest artifact and resolves it to report-fact, never Verified, through the full model (AC1/AC3, RFC5-19)",
+  "live Butlers observation (SYZYGY_POC_BUTLERS_REPO gated) matches `git rev-parse HEAD` and a direct Dolt read (POC-REQ-001, POC-REQ-010 oracles)",
+  "opening index in a real browser (PWB-REQ-010, P-98) a captured /polaris page meets the oracle at both viewports",
+  "live Butlers project-shape discovery at the reviewed revision matches the independent five-root, seven-Heart, baseline and total populations"
+ ],
+ "commit": "02eb444f22a673748567620c5f0d45877a27f2ff"
+}

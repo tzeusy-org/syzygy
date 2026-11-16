@@ -1,0 +1,61 @@
+{
+ "bead": "syzygy-bpyt.76",
+ "base": "e5667689",
+ "commit": "ef9d41443248f606723d7c960bc67a45c52c91cc",
+ "finding": "the PR 557 round-1 review's N4 (docs/reviews/R-GP-IMPL-SEGMENT-RULES-1-RAW.md): node-ci floats within Node 24 and nothing ran the pin tool",
+ "subjects": {
+  "scripts/check_node_segment_rules.mjs": "dde81cff110da5314cdbf4782f5f5b326a713b7666774d28c85a4258cfa54dfa",
+  ".github/workflows/node-ci.yml": "1b41449b5212e5244ca5916655d5e40071c0d88502d35f2d0287b01f8881bfd7"
+ },
+ "workflowBase": "703e83737c033a6c7581baa746d3a8b2ebb6961a2427c052e111f7a026f31331",
+ "copiedFrom": {
+  "path": "docs/evidence/syzygy-bpyt-70/tools/node_segments.mjs",
+  "sha256": "5757233336b365fa8c516353ee01f2897ad1b4e645239feeb37338292c455f64",
+  "why": "syzygy-bpyt-70/record.json names its sha256, so it stays unedited"
+ },
+ "step": {
+  "name": "Node segment rules (scripts/check_node_segment_rules.mjs)",
+  "command": "node scripts/check_node_segment_rules.mjs",
+  "after": "install (npm ci)"
+ },
+ "newRefusals": [
+  "node-ci fails (exit 1) when either regex copy in workspace-reach.testkit.ts differs from the job Node's, or when any case row of workspace-reach.test.ts differs from the job Node's outcome or the reader's",
+  "node-ci fails (exit 2, with the reason) when the job Node's resolver source cannot be read: process.binding missing or throwing, no internal/modules/esm/resolve in process.binding('natives'), or either literal missing from it"
+ ],
+ "mutants": {
+  "rows": 12,
+  "asExpected": 12,
+  "unexpected": []
+ },
+ "node": "v24.6.0",
+ "suite": {
+  "commit": "ef9d41443248f606723d7c960bc67a45c52c91cc",
+  "distDirs": [],
+  "exit": 0,
+  "files": 256,
+  "total": 5843,
+  "passed": 5838,
+  "failed": 0,
+  "skipped": 5,
+  "load1": 41.1,
+  "wallSeconds": 286.5,
+  "cleanAfter": true
+ },
+ "titles": {
+  "base": "e5667689ed296274360b05f5e4d77a83e53f1410",
+  "head": "ef9d41443248f606723d7c960bc67a45c52c91cc",
+  "baseTitles": 5838,
+  "headTitles": 5838,
+  "delta": 0,
+  "addedByFile": {},
+  "removed": 0
+ },
+ "files": {
+  "mutants.json": "250242766826e0f6ae64487366edf382e13af5da7a7a7d89d7ac242ce3ea5f40",
+  "suite-absent.json": "f2b07066cf0c99589d00da0d822778beef2e6d17691110ac9fd635e53fc68d4e",
+  "titles.json": "4ebcf3491122fd11370400f65a75e2bb509d1edace76b924cc587a52501971e2",
+  "tools/build_record.py": "d45d737cc03d591cb7680760179516b85fa0129b53dc21e79313a53a58a8b0c3",
+  "tools/mutants.py": "b19d6c792258f340f6342e290506d396583f23eb7169d2cbda60fda342cc825f",
+  "tools/titles.py": "10e723c97334e75735a8b6733823a8092d8bb99ddb191497c3d6d41477674666"
+ }
+}

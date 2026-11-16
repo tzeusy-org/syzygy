@@ -1,0 +1,257 @@
+f44cd65dfacd12c58776cca65cc40766fdfca6b1
+OPEN
+MERGEABLE
+Closes the work of `syzygy-bpyt.4.31` over the 123 workable sites, built to the coordinator's rulings of 2026-10-27.
+
+Every explicit Vitest timeout outside the files #532 changes now carries a reason that cites a commit or a retained record. 49 timeouts are removed: they measured at or under half the default they fall back to. Only test files change, plus a comment-only edit to one vitest config (ruling 4) and the evidence under `docs/evidence/syzygy-bpyt-4-31/`.
+
+## The rulings, and where each is met
+
+| Ruling | Met by |
+|---|---|
+| Defer the 17 sites in #532's files; do the 123 | The 17 are untouched and listed under "Deferred" |
+| Measure alone (`--runs 5`) and in 5 full runs under the host's usual load, recording load1 and host | Each run records its own load1. `host.json` is the separate host record: one machine for every local run, 12 logical CPUs, Node v24.6.0 |
+| Keep only when the worst exceeds half the default (2x headroom) | 2500 ms for a test (testTimeout 5000), 5000 ms for a hook (hookTimeout 10000); the root `vitest.config.ts` sets neither. Both figures and the rule are written into `decisions-546f1ff0.json` |
+| Never remove a timeout below vitest's default | **0** of the 123 are below their default. The only such site, `main.test.ts:555` (2000 ms), is deferred |
+| Leave the two cap1-system config timeouts, with reasons citing a measurement | Both are kept and cite `durations/cap1-system.hooks.json` |
+| No kept value resized; a citation must hold a measurement of that site | 0 of the 74 kept sites changed value. All 76 citations are audited (below); **2 counted residuals** |
+| A rule-6 selftest per census predicate, and 0 unreasoned over the 123 | `census-mutants.json` (21 of 21 killed); the census at the head is below |
+| Test-only, no product byte | 30 test files, 1 config comment, 84 evidence files |
+
+Rulings 3 and 4 are also guards on removal in `decide.py`. No population site reaches either guard, so `decide_mutants.py` is the evidence that they act: 3 mutants are killed, and both boundary controls hold.
+
+## Deferred
+
+These 17 sites are in the three files #532 changes, and are untouched until it merges. Line numbers are at the base `546f1ff0`.
+
+- `apps/three-surface-poc/src/main.test.ts` (11): :366, :378, :389, :406, :424, :478, :498, :513, :538, :548, :555
+- `apps/three-surface-poc/src/polaris-generation/redis-shaped-discovery.test.ts` (2): :16, :205
+- `packages/polaris-dossier/src/git-object-reader.test.ts` (4): :582, :782, :803, :812
+
+## Population
+
+[Observed] The census tool is `tools/timeout_census.mjs`. It reads git objects at one commit and parses each file with the repository's TypeScript compiler API. Its header publishes the predicate in full:
+
+- **Population:** every tracked `.ts`/`.mts`/`.js`/`.mjs` under `apps/` or `packages/` (no `.d.ts`, nothing under `dist/` or `node_modules/`), plus the root `vitest.config.ts` and `vitest.setup.ts`.
+- **A site** is one of:
+  - a test or suite registration carrying a timeout, in either form, through any modifier chain or `const` alias;
+  - a hook with a second argument;
+  - a `vi.setConfig` timeout;
+  - a config `testTimeout`/`hookTimeout`/`teardownTimeout`.
+- **Reason:** a comment at the timeout expression, at its own line, or at its constant's declaration.
+- **Citation:** a commit hex that resolves, or an existing `docs/evidence/` path.
+- **Second method** (rule 2): #4.5's line regexes. The record lists every line that only one method finds.
+
+| Commit | Sites | No reason | No citation | Regex lines / matched / regex-only / AST-only |
+|---|---|---|---|---|
+| `546f1ff0` (base) | 140 (118 test, 19 hook, 1 suite, 2 config) in 41 files | 95 in 25 files | 125 in 34 files | 163 / 133 / 30 / 5 |
+| `d38d7a3c` (main now) | the same 140 (0 added, 0 gone) | 95 in 25 files | 125 in 34 files | 163 / 133 / 30 / 5 |
+| `a088f1ca` (the bead's) | 124 in 41 files | 79 in 25 files | 109 in 34 files | 145 / 117 / — / — |
+| `d0ccce69` (head code) | **91** (77 test, 11 hook, 1 suite, 2 config) in 33 files | **6, all deferred** | **17, all deferred** | 114 / 84 / 30 / 5 |
+
+**The bead's "93 sites in 28 files" came from the older regex predicate**, #4.5's line regexes, not from this census. At `a088f1ca`, the commit the bead was written at, this census finds the 124 sites shown.
+
+**The preliminary 96/126 in 26 was a miscount.** The final predicate gives 95 without a reason (in 25 files) and 125 without a citation (in 34 files) at the base. The same preliminary report also said "135 matched, 28 other". At the base the figures are 133 matched and 30 regex-only; 28 is the figure at `a088f1ca`.
+
+## The census at the head (ruling 6)
+
+[Observed] Denominator: the **123** workable base sites, which are the 140 less the 17 deferred.
+
+- **49** are absent at the head. They are exactly the 49 removals `removal-check.json` says hold.
+- **74** are present. Each head site is matched to its base site by path, kind, callee, title and suites: all 91 match, and 0 are new.
+- **0 of the 74** lack a reason, and **0** lack a citation.
+
+As a second method, the census's own summary at `d0ccce69` counts 6 sites without a reason and 17 without a citation. Those are exactly deferred sites:
+
+- the 6: `redis-shaped-discovery` :16 and :205, and `git-object-reader` :582, :782, :803 and :812;
+- the 17: all of the deferred sites.
+
+So none falls among the 123.
+
+The rule-6 selftest per census predicate is `census-mutants.json`. It holds 21 mutants of `timeout_census.mjs`, each replacing one fragment and run against `--selftest`, and all 21 are killed. The tool is byte-identical (sha256 `6e503285…`) at the commit the record ran at.
+
+| Predicate | Mutants |
+|---|---|
+| alias resolution | M3 (`const` aliases resolve) |
+| curried chains | M2 (curried forms are unwrapped), with M1 (modifiers stripped) |
+| group rule | M13 (reason above a declaration group), M20 (config reason on a group) |
+| citation resolution | M14 (a cited hex run must be a commit), M15 (a cited evidence path must exist) |
+| own-line form | M21 (reason above an own-line timeout) |
+
+## Rule
+
+`tools/decide.py` records the whole rule in `decisions-546f1ff0.json`. The threshold is **half the default a site falls back to** once its timeout is removed. A site is:
+
+- **cited** when a commit or record already measured it above the threshold, or saw it time out at the default; its reason now cites that source;
+- **blocked** when #532 changes its file;
+- **remove** only when all of these hold:
+  - 5 fresh alone runs of its file at the base, each passing and at or under the threshold;
+  - each of five hosted CI runs (40428762919, 40135749180, 40134387608, 40133085774, 40131600549) bounds it there too;
+  - it is neither below its default nor a config's own timeout;
+- **keep** otherwise, with a reason citing the measurement that exceeded the threshold.
+
+A removal then has to hold at the head. `tools/check_removals.py` requires:
+
+- **alone:** 5 runs of each changed file at `1785a905`, every one passing and at or under the threshold;
+- **full:** 5 local full-suite runs (`npx vitest run`, load1 38–71, in `full-runs.json`). In every run the site is bounded at or under its threshold: a test by its own line, a hook by its file's time less the tests listed under it.
+
+`check_removals_mutants.py` makes one mutant per predicate: 9 of 9 are killed, and both boundary controls hold.
+
+### An observed stop the tooling caught
+
+At `1785a905`, where all 58 decided removals were in place, `check_removals.py` refused 9 of them. Each had reached the default, or run past its threshold, in the full runs under load. Each got its base value back, with a reason citing the run that refuted it (`0e513a9b`). This is ruling 7's stop condition, met before the first push and caught by the check it exists for. No removal at the head makes a test fail.
+
+| Site | Value | Why it was restored |
+|---|---|---|
+| `polaris-accessibility:91` (hook) | 60 s | its file left up to 8.0 s to its hooks |
+| `draft-preview:47` | 30 s | timed out in 1 of 5 full runs |
+| `self-corpus:46` | 30 s | timed out in 2 of 5 |
+| `opening-index:316` (hook) | 60 s | its file left up to 5.1 s to its hooks |
+| `opening-index:352` | 60 s | 4.2 s |
+| `opening-index:370` | 60 s | 2.7 s |
+| `surface-routes:537` | 45 s | timed out in 4 of 5 full runs; 5.1 s alone |
+| `no-egress:84` | 240 s | timed out in 1 of 5 |
+| `no-egress:92` | 240 s | timed out in 3 of 5 |
+
+## Outcome
+
+[Observed]
+
+| | Sites |
+|---|---|
+| Workable sites (140 less 17 deferred) | 123 |
+| Cited: a reason already citing a measurement | 40 |
+| Kept by the rule | 25 |
+| Decided remove | 58 |
+| …held alone and in all 5 full runs, and **removed** | **49** (41 test, 8 hook) |
+| …refuted by the full runs and restored (above) | 9 |
+| Kept at the head (40 + 25 + 9) | 74 |
+| Deferred, untouched | 17 |
+| Head sites (74 + 17) | 91 |
+
+**The 49 removals:**
+
+- **tests:**
+  - `cdp-browser` 16;
+  - `fixture-directories` 14;
+  - `durable-lifecycle-generate` 6, with its `const T = 30_000`;
+  - `polaris-opening-index` :364, :408, :413, :443 and :452.
+  - Their worst is 815 ms alone and 2108 ms in a full run.
+- **hooks:** `governing-intent-sweep:168`, `orrery:24`, `accessible-names:187`, `dossier-cap-measure:12`, `polaris-reconciliation:81`, `trajectory-narrowing:32`, `unknown-route-sweep:173` and `no-egress:47`.
+  - Their worst is 933 ms alone.
+  - Each one's worst full-run bound lies between 2018 and 4750 ms, under the 5000 ms hook threshold.
+
+## Citation audit (ruling 6)
+
+[Observed] `tools/citation_audit.py` audits every citation of the 74 kept sites: 76 citations in all. A cited record or commit counts only if it holds a measurement for that specific site, by its test name or its file, and a duration. The tool's header gives the predicate in full.
+
+**Records** are matched mechanically. A string naming the site must sit beside a duration, or be a key over one, or be the record's `subject`. A key naming a configured value (timeout, threshold, budget and the like) never counts as a duration.
+
+**Hand readings** cover two kinds of citation:
+
+- **Commits.** The tool checks that each quote is in the commit, carries a duration, and that the commit changes the site's file.
+- **The one record that labels its cases.** The tool checks that the reading's path ends at a duration, and that the record names the site's file.
+
+| Outcome | Sites |
+|---|---|
+| Measured by its test name | 58 |
+| Measured by its file only | 14 |
+| **Counted residual** | **2** |
+
+**The 14 measured by file only:**
+
+- 12 have no test name of their own: 9 hooks, the `restart` suite and the two cap1-system configs. One of the hooks, `restart:321`, is measured through the commit that set its budget.
+- 2 are tests:
+  - `pipeline-demo:73`: its record's subject names the file and the onramp test's budget.
+  - `production-reobserve:160`: [Observed] `poc-test-timeouts-2026-10-03.json` names four of the file's tests, with durations, and not this one. [Inferred] The record predates this `u05.2` test.
+
+**The 2 residuals** run only on an operator's own inputs, and their introducing commits hold no measurement:
+
+- `polaris-opening-index.browser.test.ts:424` (`SYZYGY_P98_PAGE`, `da936967`);
+- `test-artifact-verification.live.test.ts:139` (`SYZYGY_POC_BUTLERS_REPO`, `2c1f8d5a`).
+
+Each reason says it is an unmeasured residual of this bead.
+
+The commit citations are read as follows:
+
+- `0a08add9`, `3f08143c`, `30d2c2c9` and `6c91e65a` each name their test, through the comment the commit puts on it.
+- `b48d86fa` names `restart.test.ts` only.
+
+`citation-audit.json` records the evidence for every citation: the path, the naming string and the duration. It also carries the audit's 11 input mutants, one per predicate. Each is killed for that predicate's reason.
+
+**Tests: +0 ~0 -0.**
+
+- [Observed] `collect-timeouts.json` collects every test at `f7477f52` (the merge base) and at `d0ccce69`, over the root config and the system tier: 5,411 tests on each side, 0 present on one side only.
+  - 5,359 keep their resolved timeout.
+  - 43 move from 30 s or 60 s to the 5000 ms default. These are the 41 removed test sites; one viewport loop and one `it.each` register two tests each.
+- Strip comments and the trailing numeric timeout argument, and 30 of the 31 changed source files are byte-identical to the merge base. The 31st, `durable-lifecycle-generate.test.ts`, differs only by its deleted `const T = 30_000;` and its six `}, T)` uses. No title or assertion changed.
+
+## Change class
+
+Proposed: **none**, since only test timeouts and comments change. This is contestable, and the reviewer rules on it.
+
+[Observed] `git diff --name-only f7477f52 HEAD` gives 115 files:
+
+- 30 `*.test.ts` files;
+- 84 files under `docs/evidence/syzygy-bpyt-4-31/`;
+- `packages/cap1-system/vitest.config.ts`. This is the one file outside tests and evidence. It gains the two reason comments ruling 4 asks for, and it is byte-identical to the base without `//` comments.
+
+The two contested places:
+
+- `no-egress.test.ts:47`: the hook timeout on the egress test's esbuild bundle is removed.
+- The consent-gate tests (`package-reader`, `real-tree`, `gate-acts`, `start-gates`): comment-only edits.
+
+## Verification
+
+[Observed] At `f44cd65d`, in a clean clone:
+
+- `npm ci` and `npm run typecheck`: both 0.
+- Battery (`PROJECT-STATUS.md` §"How to verify this page", run in its own clone): commands=110, nonzero=0. This includes `check_governance` (32 OK, 21 WARN, 0 FAIL) and `check_quotations` (0).
+- **Full local `npx vitest run`: exit 1, at load1 67–72.** The host was shared with other lanes' runs.
+  - 5,351 tests passed, 5 were skipped, and 6 timed out at the 5 s default:
+    - `gate-acts` 1 and `start-gates` 3: comment-only edits here;
+    - `polaris-accessibility.browser` 1 ("keeps diagram labels legible…");
+    - `polaris-authority-sweep` 1: untouched.
+  - None of the six had its timeout changed by this PR: `collect-timeouts.json` lists 0 changed tests in those four files. None carries an explicit timeout at the base or the head, so this is not a removal making a test fail. They are the load failures under follow-ups.
+- Hosted node-ci: run 40465393936, **success** at headSha `f44cd65d`. This runs the full suite on a hosted runner.
+
+Main has moved to `d38d7a3c` since the merge base. It touches none of this PR's 115 files, and its census is the base's 140 sites.
+
+## Evidence
+
+Everything is in `docs/evidence/syzygy-bpyt-4-31/`.
+
+| Record | What it holds |
+|---|---|
+| `census-546f1ff0.json`, `census-a088f1ca.json`, `census-head.json` (at `d0ccce69`), `census-mutants.json` | The censuses and the census tool's mutants |
+| `citation-audit.json` | Every kept site's citations, audited, with the audit's mutants |
+| `introducing-546f1ff0.json` | The commit that introduced each base site |
+| `cited.json` | 25 hand-cited sites and the 3 blocked files |
+| `ci-durations.json` | The five hosted runs, filtered to the census files |
+| `durations/`, `site-durations-546f1ff0.json` | 33 alone records at the base, and per-site durations |
+| `decisions-546f1ff0.json`, `decide-mutants.json` | Each base site's decision, and the guard mutants |
+| `head-durations/`, `site-durations-head.json` | 18 alone records at `1785a905`, and per-site durations |
+| `full-runs.json` | The five local full-suite runs, each with its load1 |
+| `removal-check.json`, `removal-check-mutants.json` | Whether each removal held, and that check's mutants |
+| `collect-timeouts.json` | Every test's timeout at the merge base and at the head |
+| `host.json` | The one machine every local run used |
+| `hook-tool-validation/` | The hook-timing tool checked against a fixture |
+| `tools/` | Every tool above; each header gives its usage |
+
+## Follow-ups
+
+These are not done here; the coordinator files them at landing:
+
+- Once #532 lands, the 17 deferred sites in its three files.
+- The two unmeasured operator-only timeouts.
+- `production-reobserve:160`, which only its file's other tests measure.
+- Removals that sit close to the threshold under load: the hooks' worst full-run bound is 4750 ms.
+- Default-timeout failures in full runs at load1 of about 50–72, in tests with no explicit timeout: `gate-acts`, `start-gates`, the `restart` hook, `polaris-accessibility.browser` and `polaris-authority-sweep`.
+- The `cdp-browser.test.ts` drain flake.
+- The `cdp-browser.browser.test.ts` run failures under load, which leak Chrome profile directories.
+- The system tier's `[vitest-worker]: Timeout calling onTaskUpdate`, which exits 1 with every test passing; it reproduces at the base.
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+https://claude.ai/code/session_01APhWyj6JKsAs6kzgYByHeD
+

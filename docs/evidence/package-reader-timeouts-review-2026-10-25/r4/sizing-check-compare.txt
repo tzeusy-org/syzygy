@@ -1,0 +1,2 @@
+keys equal True
+subject {'commit': ('d6b04c5f03978b2a8fbc87afc61c725d91eca0f4', '48ee832a84335b9f3a260a4375f449358d481f5d')}

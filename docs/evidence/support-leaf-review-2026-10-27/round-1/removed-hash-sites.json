@@ -1,0 +1,1699 @@
+[
+ {
+  "file": "apps/three-surface-poc/src/capability-detail.ts",
+  "kind": "import",
+  "text": "import { createHash } from 'node:crypto';"
+ },
+ {
+  "file": "apps/three-surface-poc/src/capability-detail.ts",
+  "kind": "chain",
+  "alg": "'sha256'",
+  "calls": [
+   [
+    "update",
+    "bytes"
+   ],
+   [
+    "digest",
+    "'hex'"
+   ]
+  ],
+  "complete": true,
+  "text": "return createHash('sha256').update(bytes).digest('hex') === identity.slice('sha256:'.length);",
+  "updates": [
+   [
+    "bytes"
+   ]
+  ],
+  "digestArg": [
+   "'hex'"
+  ]
+ },
+ {
+  "file": "apps/three-surface-poc/src/fresh-checkout-demo-main.ts",
+  "kind": "import",
+  "text": "import { createHash } from 'node:crypto';"
+ },
+ {
+  "file": "apps/three-surface-poc/src/fresh-checkout-demo-main.ts",
+  "kind": "chain",
+  "alg": "'sha256'",
+  "calls": [
+   [
+    "update",
+    "bytes"
+   ],
+   [
+    "digest",
+    "'hex'"
+   ]
+  ],
+  "complete": true,
+  "text": "return createHash('sha256').update(bytes).digest('hex');",
+  "updates": [
+   [
+    "bytes"
+   ]
+  ],
+  "digestArg": [
+   "'hex'"
+  ]
+ },
+ {
+  "file": "apps/three-surface-poc/src/git-observation.ts",
+  "kind": "import",
+  "text": "import { createHash } from 'node:crypto';"
+ },
+ {
+  "file": "apps/three-surface-poc/src/git-observation.ts",
+  "kind": "chain",
+  "alg": "'sha256'",
+  "calls": [
+   [
+    "update",
+    "worktreeRecord"
+   ],
+   [
+    "digest",
+    "'hex'"
+   ]
+  ],
+  "complete": true,
+  "text": "worktreeMetadataDigest: `sha256:${createHash('sha256').update(worktreeRecord).digest('hex')}`,",
+  "updates": [
+   [
+    "worktreeRecord"
+   ]
+  ],
+  "digestArg": [
+   "'hex'"
+  ]
+ },
+ {
+  "file": "apps/three-surface-poc/src/poc-main.ts",
+  "kind": "import",
+  "text": "import { createHash } from 'node:crypto';"
+ },
+ {
+  "file": "apps/three-surface-poc/src/poc-main.ts",
+  "kind": "chain",
+  "alg": "'sha256'",
+  "calls": [
+   [
+    "update",
+    "repoRoot"
+   ],
+   [
+    "digest",
+    "'hex'"
+   ],
+   [
+    "slice",
+    "0, 16"
+   ]
+  ],
+  "complete": false,
+  "text": "createHash('sha256').update(repoRoot).digest('hex').slice(0, 16),",
+  "updates": [
+   [
+    "repoRoot"
+   ]
+  ],
+  "digestArg": [
+   "'hex'"
+  ]
+ },
+ {
+  "file": "apps/three-surface-poc/src/polaris-accessible-names-main.ts",
+  "kind": "import",
+  "text": "import { createHash } from 'node:crypto';"
+ },
+ {
+  "file": "apps/three-surface-poc/src/polaris-accessible-names-main.ts",
+  "kind": "chain",
+  "alg": "'sha256'",
+  "calls": [
+   [
+    "update",
+    "text"
+   ],
+   [
+    "digest",
+    "'hex'"
+   ]
+  ],
+  "complete": true,
+  "text": "return createHash('sha256').update(text).digest('hex');",
+  "updates": [
+   [
+    "text"
+   ]
+  ],
+  "digestArg": [
+   "'hex'"
+  ]
+ },
+ {
+  "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+  "kind": "import",
+  "text": "import { createHash } from 'node:crypto';"
+ },
+ {
+  "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+  "kind": "chain",
+  "alg": "'sha256'",
+  "calls": [
+   [
+    "update",
+    "value"
+   ],
+   [
+    "digest",
+    "'hex'"
+   ]
+  ],
+  "complete": true,
+  "text": "const digest = (value: string): string => createHash('sha256').update(value).digest('hex');",
+  "updates": [
+   [
+    "value"
+   ]
+  ],
+  "digestArg": [
+   "'hex'"
+  ]
+ },
+ {
+  "file": "apps/three-surface-poc/src/polaris-generation/draft-preview.ts",
+  "kind": "import",
+  "text": "import { createHash } from 'node:crypto';"
+ },
+ {
+  "file": "apps/three-surface-poc/src/polaris-generation/draft-preview.ts",
+  "kind": "chain",
+  "alg": "'sha256'",
+  "calls": [
+   [
+    "update",
+    "anchorId"
+   ],
+   [
+    "digest",
+    "'hex'"
+   ],
+   [
+    "slice",
+    "0, 24"
+   ]
+  ],
+  "complete": false,
+  "text": "const localAnchor = (anchorId: string): string => `source-${createHash('sha256').update(anchorId).digest('hex').slice(0, 24)}`;",
+  "updates": [
+   [
+    "anchorId"
+   ]
+  ],
+  "digestArg": [
+   "'hex'"
+  ]
+ },
+ {
+  "file": "apps/three-surface-poc/src/polaris-generation/draft-preview.ts",
+  "kind": "chain",
+  "alg": "'sha256'",
+  "calls": [
+   [
+    "update",
+    "source.sourceId"
+   ],
+   [
+    "digest",
+    "'hex'"
+   ],
+   [
+    "slice",
+    "0, 24"
+   ]
+  ],
+  "complete": false,
+  "text": "const id = quotable ? localAnchor(source.spans[0]!.anchorId) : `source-unavailable-${createHash('sha256').update(source.sourceId).digest('hex').slice(0, 24)}`;",
+  "updates": [
+   [
+    "source.sourceId"
+   ]
+  ],
+  "digestArg": [
+   "'hex'"
+  ]
+ },
+ {
+  "file": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.ts",
+  "kind": "import",
+  "text": "import { createHash, randomUUID } from 'node:crypto';"
+ },
+ {
+  "file": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.ts",
+  "kind": "chain",
+  "alg": "'sha256'",
+  "calls": [
+   [
+    "update",
+    "value"
+   ],
+   [
+    "digest",
+    "'hex'"
+   ]
+  ],
+  "complete": true,
+  "text": "const digest = (value: string): string => createHash('sha256').update(value).digest('hex');",
+  "updates": [
+   [
+    "value"
+   ]
+  ],
+  "digestArg": [
+   "'hex'"
+  ]
+ },
+ {
+  "file": "apps/three-surface-poc/src/polaris-generation/generation-mutation-run-main.ts",
+  "kind": "import",
+  "text": "import { createHash } from 'node:crypto';"
+ },
+ {
+  "file": "apps/three-surface-poc/src/polaris-generation/generation-mutation-run-main.ts",
+  "kind": "chain",
+  "alg": "'sha256'",
+  "calls": [
+   [
+    "update",
+    "bytes"
+   ],
+   [
+    "digest",
+    "'hex'"
+   ]
+  ],
+  "complete": true,
+  "text": "return createHash('sha256').update(bytes).digest('hex');",
+  "updates": [
+   [
+    "bytes"
+   ]
+  ],
+  "digestArg": [
+   "'hex'"
+  ]
+ },
+ {
+  "file": "apps/three-surface-poc/src/polaris-generation/public-source-screening.ts",
+  "kind": "import",
+  "text": "import { createHash } from 'node:crypto';"
+ },
+ {
+  "file": "apps/three-surface-poc/src/polaris-generation/public-source-screening.ts",
+  "kind": "chain",
+  "alg": "'sha256'",
+  "calls": [
+   [
+    "update",
+    "policy!"
+   ],
+   [
+    "digest",
+    "'hex'"
+   ]
+  ],
+  "complete": true,
+  "text": "const policySha256 = createHash('sha256').update(policy!).digest('hex');",
+  "updates": [
+   [
+    "policy!"
+   ]
+  ],
+  "digestArg": [
+   "'hex'"
+  ]
+ },
+ {
+  "file": "apps/three-surface-poc/src/polaris-generation/redis-shaped-measure-main.ts",
+  "kind": "import",
+  "text": "import { createHash } from 'node:crypto';"
+ },
+ {
+  "file": "apps/three-surface-poc/src/polaris-generation/redis-shaped-measure-main.ts",
+  "kind": "chain",
+  "alg": "'sha256'",
+  "calls": [
+   [
+    "update",
+    "readFileSync(join(root, path))"
+   ],
+   [
+    "digest",
+    "'hex'"
+   ]
+  ],
+  "complete": true,
+  "text": "return { commit, sha256: Object.fromEntries(SUBJECTS.map(path => [path, createHash('sha256').update(readFileSync(join(root, path))).digest('hex')])) };",
+  "updates": [
+   [
+    "readFileSync(join(root, path))"
+   ]
+  ],
+  "digestArg": [
+   "'hex'"
+  ]
+ },
+ {
+  "file": "apps/three-surface-poc/src/polaris-generation/repo-corpus.ts",
+  "kind": "import",
+  "text": "import { createHash } from 'node:crypto';"
+ },
+ {
+  "file": "apps/three-surface-poc/src/polaris-generation/repo-corpus.ts",
+  "kind": "chain",
+  "alg": "'sha256'",
+  "calls": [
+   [
+    "update",
+    "value"
+   ],
+   [
+    "digest",
+    "'hex'"
+   ]
+  ],
+  "complete": true,
+  "text": "const sha256 = (value: string): string => createHash('sha256').update(value).digest('hex');",
+  "updates": [
+   [
+    "value"
+   ]
+  ],
+  "digestArg": [
+   "'hex'"
+  ]
+ },
+ {
+  "file": "apps/three-surface-poc/src/polaris-generation/self-corpus.ts",
+  "kind": "import",
+  "text": "import { createHash } from 'node:crypto';"
+ },
+ {
+  "file": "apps/three-surface-poc/src/polaris-generation/self-corpus.ts",
+  "kind": "chain",
+  "alg": "'sha256'",
+  "calls": [
+   [
+    "update",
+    "value"
+   ],
+   [
+    "digest",
+    "'hex'"
+   ]
+  ],
+  "complete": true,
+  "text": "const sha256 = (value: string): string => createHash('sha256').update(value).digest('hex');",
+  "updates": [
+   [
+    "value"
+   ]
+  ],
+  "digestArg": [
+   "'hex'"
+  ]
+ },
+ {
+  "file": "apps/three-surface-poc/src/polaris-keyboard-sweep-main.ts",
+  "kind": "import",
+  "text": "import { createHash } from 'node:crypto';"
+ },
+ {
+  "file": "apps/three-surface-poc/src/polaris-keyboard-sweep-main.ts",
+  "kind": "chain",
+  "alg": "'sha256'",
+  "calls": [
+   [
+    "update",
+    "target.body"
+   ],
+   [
+    "digest",
+    "'hex'"
+   ]
+  ],
+  "complete": true,
+  "text": "sweeps.push({ mount: target.mount, measuredOn: target.measuredOn, bytes: target.body.byteLength, sha256: createHash('sha256').update(target.body).digest('hex'), report });",
+  "updates": [
+   [
+    "target.body"
+   ]
+  ],
+  "digestArg": [
+   "'hex'"
+  ]
+ },
+ {
+  "file": "apps/three-surface-poc/src/polaris-reading.ts",
+  "kind": "import",
+  "text": "import { createHash } from 'node:crypto';"
+ },
+ {
+  "file": "apps/three-surface-poc/src/polaris-reading.ts",
+  "kind": "chain",
+  "alg": "'sha256'",
+  "calls": [
+   [
+    "update",
+    "text, 'utf8'"
+   ],
+   [
+    "digest",
+    "'hex'"
+   ]
+  ],
+  "complete": true,
+  "text": "if (createHash('sha256').update(text, 'utf8').digest('hex') !== plan.statementSha256) return failed('digest-mismatch');",
+  "updates": [
+   [
+    "text",
+    "'utf8'"
+   ]
+  ],
+  "digestArg": [
+   "'hex'"
+  ]
+ },
+ {
+  "file": "apps/three-surface-poc/src/polaris.ts",
+  "kind": "import",
+  "text": "import { createHash } from 'node:crypto';"
+ },
+ {
+  "file": "apps/three-surface-poc/src/polaris.ts",
+  "kind": "chain",
+  "alg": "'sha256'",
+  "calls": [
+   [
+    "update",
+    "context"
+   ],
+   [
+    "digest",
+    "'hex'"
+   ],
+   [
+    "slice",
+    "0, 12"
+   ]
+  ],
+  "complete": false,
+  "text": "const guideId = `polaris-guide-context-${sourceSlug(context)}-${createHash('sha256').update(context).digest('hex').slice(0, 12)}`;",
+  "updates": [
+   [
+    "context"
+   ]
+  ],
+  "digestArg": [
+   "'hex'"
+  ]
+ },
+ {
+  "file": "apps/three-surface-poc/src/pwb-mutation-run-main.ts",
+  "kind": "import",
+  "text": "import { createHash } from 'node:crypto';"
+ },
+ {
+  "file": "apps/three-surface-poc/src/pwb-mutation-run-main.ts",
+  "kind": "chain",
+  "alg": "'sha256'",
+  "calls": [
+   [
+    "update",
+    "bytes"
+   ],
+   [
+    "digest",
+    "'hex'"
+   ]
+  ],
+  "complete": true,
+  "text": "return createHash('sha256').update(bytes).digest('hex');",
+  "updates": [
+   [
+    "bytes"
+   ]
+  ],
+  "digestArg": [
+   "'hex'"
+  ]
+ },
+ {
+  "file": "apps/three-surface-poc/src/pwb-mutation-sweep-main.ts",
+  "kind": "import",
+  "text": "import { createHash } from 'node:crypto';"
+ },
+ {
+  "file": "apps/three-surface-poc/src/pwb-mutation-sweep-main.ts",
+  "kind": "chain",
+  "alg": "'sha256'",
+  "calls": [
+   [
+    "update",
+    "bytes"
+   ],
+   [
+    "digest",
+    "'hex'"
+   ]
+  ],
+  "complete": true,
+  "text": "return createHash('sha256').update(bytes).digest('hex');",
+  "updates": [
+   [
+    "bytes"
+   ]
+  ],
+  "digestArg": [
+   "'hex'"
+  ]
+ },
+ {
+  "file": "apps/three-surface-poc/src/restart.ts",
+  "kind": "import",
+  "text": "import { createHash } from 'node:crypto';"
+ },
+ {
+  "file": "apps/three-surface-poc/src/restart.ts",
+  "kind": "chain",
+  "alg": "'sha256'",
+  "calls": [
+   [
+    "update",
+    "readFileSync(path)"
+   ],
+   [
+    "digest",
+    "'hex'"
+   ]
+  ],
+  "complete": true,
+  "text": "try { return createHash('sha256').update(readFileSync(path)).digest('hex'); }",
+  "updates": [
+   [
+    "readFileSync(path)"
+   ]
+  ],
+  "digestArg": [
+   "'hex'"
+  ]
+ },
+ {
+  "file": "apps/three-surface-poc/src/walkthrough-inputs.ts",
+  "kind": "import",
+  "text": "import { createHash } from 'node:crypto';"
+ },
+ {
+  "file": "apps/three-surface-poc/src/walkthrough-inputs.ts",
+  "kind": "chain",
+  "alg": "'sha256'",
+  "calls": [
+   [
+    "update",
+    "trees.join('\\n')"
+   ],
+   [
+    "digest",
+    "'hex'"
+   ],
+   [
+    "slice",
+    "0, 12"
+   ]
+  ],
+  "complete": false,
+  "text": "return `${POLARIS_SURFACE_NAME}@${createHash('sha256').update(trees.join('\\n')).digest('hex').slice(0, 12)}`;",
+  "updates": [
+   [
+    "trees.join('\\n')"
+   ]
+  ],
+  "digestArg": [
+   "'hex'"
+  ]
+ },
+ {
+  "file": "packages/polaris-dossier/src/brief.ts",
+  "kind": "import",
+  "text": "import { createHash } from 'node:crypto';"
+ },
+ {
+  "file": "packages/polaris-dossier/src/brief.ts",
+  "kind": "chain",
+  "alg": "'sha256'",
+  "calls": [
+   [
+    "update",
+    "text, 'utf8'"
+   ],
+   [
+    "digest",
+    "'hex'"
+   ]
+  ],
+  "complete": true,
+  "text": "const sha256 = (text: string): string => createHash('sha256').update(text, 'utf8').digest('hex');",
+  "updates": [
+   [
+    "text",
+    "'utf8'"
+   ]
+  ],
+  "digestArg": [
+   "'hex'"
+  ]
+ },
+ {
+  "file": "packages/polaris-dossier/src/check.ts",
+  "kind": "import",
+  "text": "import { createHash } from 'node:crypto';"
+ },
+ {
+  "file": "packages/polaris-dossier/src/check.ts",
+  "kind": "chain",
+  "alg": "'sha256'",
+  "calls": [
+   [
+    "update",
+    "bytes"
+   ],
+   [
+    "digest",
+    "'hex'"
+   ]
+  ],
+  "complete": true,
+  "text": "const sha256 = (bytes: Uint8Array): string => createHash('sha256').update(bytes).digest('hex');",
+  "updates": [
+   [
+    "bytes"
+   ]
+  ],
+  "digestArg": [
+   "'hex'"
+  ]
+ },
+ {
+  "file": "packages/polaris-dossier/src/close.ts",
+  "kind": "import",
+  "text": "import { createHash } from 'node:crypto';"
+ },
+ {
+  "file": "packages/polaris-dossier/src/close.ts",
+  "kind": "chain",
+  "alg": "'sha256'",
+  "calls": [
+   [
+    "update",
+    "bytes"
+   ],
+   [
+    "digest",
+    "'hex'"
+   ]
+  ],
+  "complete": true,
+  "text": "const sha256 = (bytes: string | Uint8Array): string => createHash('sha256').update(bytes).digest('hex');",
+  "updates": [
+   [
+    "bytes"
+   ]
+  ],
+  "digestArg": [
+   "'hex'"
+  ]
+ },
+ {
+  "file": "packages/polaris-dossier/src/design-review.ts",
+  "kind": "import",
+  "text": "import { createHash } from 'node:crypto';"
+ },
+ {
+  "file": "packages/polaris-dossier/src/design-review.ts",
+  "kind": "chain",
+  "alg": "'sha256'",
+  "calls": [
+   [
+    "update",
+    "bytes"
+   ],
+   [
+    "digest",
+    "'hex'"
+   ]
+  ],
+  "complete": true,
+  "text": "const sha256 = (bytes: string | Uint8Array): string => createHash('sha256').update(bytes).digest('hex');",
+  "updates": [
+   [
+    "bytes"
+   ]
+  ],
+  "digestArg": [
+   "'hex'"
+  ]
+ },
+ {
+  "file": "packages/polaris-dossier/src/doctrine-quote.ts",
+  "kind": "import",
+  "text": "import { createHash } from 'node:crypto';"
+ },
+ {
+  "file": "packages/polaris-dossier/src/doctrine-quote.ts",
+  "kind": "chain",
+  "alg": "'sha256'",
+  "calls": [
+   [
+    "update",
+    "bytes"
+   ],
+   [
+    "digest",
+    "'hex'"
+   ]
+  ],
+  "complete": true,
+  "text": "return { ok: true, sec3: { path: SECURITY_DOCTRINE_PATH, sha256: createHash('sha256').update(bytes).digest('hex'), ...cut } };",
+  "updates": [
+   [
+    "bytes"
+   ]
+  ],
+  "digestArg": [
+   "'hex'"
+  ]
+ },
+ {
+  "file": "packages/polaris-dossier/src/inventory.ts",
+  "kind": "import",
+  "text": "import { createHash } from 'node:crypto';"
+ },
+ {
+  "file": "packages/polaris-dossier/src/inventory.ts",
+  "kind": "chain",
+  "alg": "'sha256'",
+  "calls": [
+   [
+    "update",
+    "bytes"
+   ],
+   [
+    "digest",
+    "'hex'"
+   ]
+  ],
+  "complete": true,
+  "text": "const sha256 = (bytes: string | Uint8Array): string => createHash('sha256').update(bytes).digest('hex');",
+  "updates": [
+   [
+    "bytes"
+   ]
+  ],
+  "digestArg": [
+   "'hex'"
+  ]
+ },
+ {
+  "file": "packages/polaris-dossier/src/launched.ts",
+  "kind": "import",
+  "text": "import { createHash } from 'node:crypto';"
+ },
+ {
+  "file": "packages/polaris-dossier/src/launched.ts",
+  "kind": "chain",
+  "alg": "'sha256'",
+  "calls": [
+   [
+    "update",
+    "text, 'utf8'"
+   ],
+   [
+    "digest",
+    "'hex'"
+   ]
+  ],
+  "complete": true,
+  "text": "const sha256 = (text: string): string => createHash('sha256').update(text, 'utf8').digest('hex');",
+  "updates": [
+   [
+    "text",
+    "'utf8'"
+   ]
+  ],
+  "digestArg": [
+   "'hex'"
+  ]
+ },
+ {
+  "file": "packages/polaris-dossier/src/polaris.ts",
+  "kind": "import",
+  "text": "import { createHash } from 'node:crypto';"
+ },
+ {
+  "file": "packages/polaris-dossier/src/polaris.ts",
+  "kind": "chain",
+  "alg": "'sha256'",
+  "calls": [
+   [
+    "update",
+    "text, 'utf8'"
+   ],
+   [
+    "digest",
+    "'hex'"
+   ]
+  ],
+  "complete": true,
+  "text": "const sha256 = (text: string): string => createHash('sha256').update(text, 'utf8').digest('hex');",
+  "updates": [
+   [
+    "text",
+    "'utf8'"
+   ]
+  ],
+  "digestArg": [
+   "'hex'"
+  ]
+ },
+ {
+  "file": "packages/polaris-dossier/src/render.ts",
+  "kind": "chain",
+  "alg": "'sha256'",
+  "calls": [
+   [
+    "update",
+    "value"
+   ],
+   [
+    "digest",
+    "'hex'"
+   ]
+  ],
+  "complete": true,
+  "text": "const sha256 = (value: string | Uint8Array): string => createHash('sha256').update(value).digest('hex');",
+  "updates": [
+   [
+    "value"
+   ]
+  ],
+  "digestArg": [
+   "'hex'"
+  ]
+ },
+ {
+  "file": "packages/polaris-dossier/src/review.ts",
+  "kind": "import",
+  "text": "import { createHash } from 'node:crypto';"
+ },
+ {
+  "file": "packages/polaris-dossier/src/review.ts",
+  "kind": "chain",
+  "alg": "'sha256'",
+  "calls": [
+   [
+    "update",
+    "bytes"
+   ],
+   [
+    "digest",
+    "'hex'"
+   ]
+  ],
+  "complete": true,
+  "text": "const sha256 = (bytes: string | Uint8Array): string => createHash('sha256').update(bytes).digest('hex');",
+  "updates": [
+   [
+    "bytes"
+   ]
+  ],
+  "digestArg": [
+   "'hex'"
+  ]
+ },
+ {
+  "file": "packages/polaris-dossier/src/screen.ts",
+  "kind": "import",
+  "text": "import { createHash } from 'node:crypto';"
+ },
+ {
+  "file": "packages/polaris-dossier/src/screen.ts",
+  "kind": "chain",
+  "alg": "'sha256'",
+  "calls": [
+   [
+    "update",
+    "policy"
+   ],
+   [
+    "digest",
+    "'hex'"
+   ]
+  ],
+  "complete": true,
+  "text": "policyId: doc['policyId'], policyVersion: doc['policyVersion'], policySha256: createHash('sha256').update(policy).digest('hex'),",
+  "updates": [
+   [
+    "policy"
+   ]
+  ],
+  "digestArg": [
+   "'hex'"
+  ]
+ },
+ {
+  "file": "packages/polaris-dossier/src/screen.ts",
+  "kind": "chain",
+  "alg": "'sha256'",
+  "calls": [
+   [
+    "update",
+    "bytes"
+   ],
+   [
+    "digest",
+    "'hex'"
+   ]
+  ],
+  "complete": true,
+  "text": "if (createHash('sha256').update(bytes).digest('hex') !== chain.final.digest) return { ok: false, why: 'the screening policy changed after its act was checked; its bytes differ from the act\\'s argument",
+  "updates": [
+   [
+    "bytes"
+   ]
+  ],
+  "digestArg": [
+   "'hex'"
+  ]
+ },
+ {
+  "file": "packages/polaris-dossier/src/session-handover.ts",
+  "kind": "import",
+  "text": "import { createHash } from 'node:crypto';"
+ },
+ {
+  "file": "packages/polaris-dossier/src/session-handover.ts",
+  "kind": "chain",
+  "alg": "'sha256'",
+  "calls": [
+   [
+    "update",
+    "text, 'utf8'"
+   ],
+   [
+    "digest",
+    "'hex'"
+   ]
+  ],
+  "complete": true,
+  "text": "const sha256 = (text: string): string => createHash('sha256').update(text, 'utf8').digest('hex');",
+  "updates": [
+   [
+    "text",
+    "'utf8'"
+   ]
+  ],
+  "digestArg": [
+   "'hex'"
+  ]
+ },
+ {
+  "file": "packages/polaris-dossier/src/session-view.ts",
+  "kind": "import",
+  "text": "import { createHash } from 'node:crypto';"
+ },
+ {
+  "file": "packages/polaris-dossier/src/session-view.ts",
+  "kind": "chain",
+  "alg": "'sha256'",
+  "calls": [
+   [
+    "update",
+    "JSON.stringify(spec), 'utf8'"
+   ],
+   [
+    "digest",
+    "'hex'"
+   ]
+  ],
+  "complete": true,
+  "text": "export const viewSha256 = (spec: ViewSpec): string => createHash('sha256').update(JSON.stringify(spec), 'utf8').digest('hex');",
+  "updates": [
+   [
+    "JSON.stringify(spec)",
+    "'utf8'"
+   ]
+  ],
+  "digestArg": [
+   "'hex'"
+  ]
+ },
+ {
+  "file": "packages/polaris-dossier/src/waiting-sessions.ts",
+  "kind": "import",
+  "text": "import { createHash } from 'node:crypto';"
+ },
+ {
+  "file": "packages/polaris-dossier/src/waiting-sessions.ts",
+  "kind": "chain",
+  "alg": "'sha256'",
+  "calls": [
+   [
+    "update",
+    "bytes"
+   ],
+   [
+    "digest",
+    "'hex'"
+   ]
+  ],
+  "complete": true,
+  "text": "const sha256 = (bytes: string | Uint8Array): string => createHash('sha256').update(bytes).digest('hex');",
+  "updates": [
+   [
+    "bytes"
+   ]
+  ],
+  "digestArg": [
+   "'hex'"
+  ]
+ },
+ {
+  "file": "packages/polaris-generation-consent/src/consent-ports.ts",
+  "kind": "import",
+  "text": "import { createHash } from 'node:crypto';"
+ },
+ {
+  "file": "packages/polaris-generation-consent/src/consent-ports.ts",
+  "kind": "chain",
+  "alg": "'sha256'",
+  "calls": [
+   [
+    "update",
+    "text, 'utf8'"
+   ],
+   [
+    "digest",
+    "'hex'"
+   ]
+  ],
+  "complete": true,
+  "text": "const sha256 = (text: string): string => createHash('sha256').update(text, 'utf8').digest('hex');",
+  "updates": [
+   [
+    "text",
+    "'utf8'"
+   ]
+  ],
+  "digestArg": [
+   "'hex'"
+  ]
+ },
+ {
+  "file": "packages/polaris-generation-consent/src/package-reader.ts",
+  "kind": "import",
+  "text": "import { createHash } from 'node:crypto';"
+ },
+ {
+  "file": "packages/polaris-generation-consent/src/package-reader.ts",
+  "kind": "chain",
+  "alg": "'sha256'",
+  "calls": [
+   [
+    "update",
+    "text, 'utf8'"
+   ],
+   [
+    "digest",
+    "'hex'"
+   ]
+  ],
+  "complete": true,
+  "text": "const sha256 = (text: string): string => createHash('sha256').update(text, 'utf8').digest('hex');",
+  "updates": [
+   [
+    "text",
+    "'utf8'"
+   ]
+  ],
+  "digestArg": [
+   "'hex'"
+  ]
+ },
+ {
+  "file": "packages/polaris-generation-core/src/canonical-json.ts",
+  "kind": "import",
+  "text": "import { createHash } from 'node:crypto';"
+ },
+ {
+  "file": "packages/polaris-generation-core/src/canonical-json.ts",
+  "kind": "chain",
+  "alg": "'sha256'",
+  "calls": [
+   [
+    "update",
+    "encodeCanonicalJson(value, limits), 'utf8'"
+   ],
+   [
+    "digest",
+    "'hex'"
+   ]
+  ],
+  "complete": true,
+  "text": "digest: createHash('sha256').update(encodeCanonicalJson(value, limits), 'utf8').digest('hex'),",
+  "updates": [
+   [
+    "encodeCanonicalJson(value, limits)",
+    "'utf8'"
+   ]
+  ],
+  "digestArg": [
+   "'hex'"
+  ]
+ },
+ {
+  "file": "packages/polaris-generation-core/src/dossier-evaluation.ts",
+  "kind": "import",
+  "text": "import { createHash } from 'node:crypto';"
+ },
+ {
+  "file": "packages/polaris-generation-core/src/dossier-evaluation.ts",
+  "kind": "chain",
+  "alg": "'sha256'",
+  "calls": [
+   [
+    "update",
+    "bytes"
+   ],
+   [
+    "digest",
+    "'hex'"
+   ]
+  ],
+  "complete": true,
+  "text": "const sha256 = (bytes: Uint8Array | string): string => createHash('sha256').update(bytes).digest('hex');",
+  "updates": [
+   [
+    "bytes"
+   ]
+  ],
+  "digestArg": [
+   "'hex'"
+  ]
+ },
+ {
+  "file": "packages/polaris-generation-core/src/dossier-profile.ts",
+  "kind": "import",
+  "text": "import { createHash } from 'node:crypto';"
+ },
+ {
+  "file": "packages/polaris-generation-core/src/dossier-profile.ts",
+  "kind": "chain",
+  "alg": "'sha256'",
+  "calls": [
+   [
+    "update",
+    "JSON.stringify([q.id, q.question, q.scope, q.reason])"
+   ],
+   [
+    "digest",
+    "'hex'"
+   ]
+  ],
+  "complete": true,
+  "text": "createHash('sha256').update(JSON.stringify([q.id, q.question, q.scope, q.reason])).digest('hex');",
+  "updates": [
+   [
+    "JSON.stringify([q.id, q.question, q.scope, q.reason])"
+   ]
+  ],
+  "digestArg": [
+   "'hex'"
+  ]
+ },
+ {
+  "file": "packages/polaris-generation-core/src/generation-source.ts",
+  "kind": "chain",
+  "alg": "'sha256'",
+  "calls": [
+   [
+    "update",
+    "body"
+   ],
+   [
+    "digest",
+    "'hex'"
+   ]
+  ],
+  "complete": true,
+  "text": "if (createHash('sha256').update(body).digest('hex') !== redaction.retainedSha256) fail('body-mismatch');",
+  "updates": [
+   [
+    "body"
+   ]
+  ],
+  "digestArg": [
+   "'hex'"
+  ]
+ },
+ {
+  "file": "packages/polaris-generation-core/src/generation-source.ts",
+  "kind": "chain",
+  "alg": "'sha256'",
+  "calls": [
+   [
+    "update",
+    "blob.bodies.sort((a, b) => a.index - b.index).map(piece => piece.body).join('')"
+   ],
+   [
+    "digest",
+    "'hex'"
+   ]
+  ],
+  "complete": true,
+  "text": "&& createHash('sha256').update(blob.bodies.sort((a, b) => a.index - b.index).map(piece => piece.body).join('')).digest('hex') !== blob.redaction.retainedSha256) fail('body-mismatch');",
+  "updates": [
+   [
+    "blob.bodies.sort((a, b) => a.index - b.index).map(piece => piece.body).join('')"
+   ]
+  ],
+  "digestArg": [
+   "'hex'"
+  ]
+ },
+ {
+  "file": "packages/polaris-generation-core/src/generation-source.ts",
+  "kind": "chain",
+  "alg": "'sha256'",
+  "calls": [
+   [
+    "update",
+    "body"
+   ],
+   [
+    "digest",
+    "'hex'"
+   ]
+  ],
+  "complete": true,
+  "text": "if (screened.originalBytes !== Buffer.byteLength(body) || screened.contentSha256 !== createHash('sha256').update(body).digest('hex')",
+  "updates": [
+   [
+    "body"
+   ]
+  ],
+  "digestArg": [
+   "'hex'"
+  ]
+ },
+ {
+  "file": "packages/polaris-generation-core/src/generation-source.ts",
+  "kind": "chain",
+  "alg": "'sha256'",
+  "calls": [
+   [
+    "update",
+    "safe"
+   ],
+   [
+    "digest",
+    "'hex'"
+   ]
+  ],
+  "complete": true,
+  "text": "originalBytes, contentSha256, retainedSha256: createHash('sha256').update(safe).digest('hex'), policySha256 };",
+  "updates": [
+   [
+    "safe"
+   ]
+  ],
+  "digestArg": [
+   "'hex'"
+  ]
+ },
+ {
+  "file": "packages/polaris-generation-core/src/pipeline.ts",
+  "kind": "import",
+  "text": "import { createHash } from 'node:crypto';"
+ },
+ {
+  "file": "packages/polaris-generation-core/src/pipeline.ts",
+  "kind": "chain",
+  "alg": "'sha256'",
+  "calls": [
+   [
+    "update",
+    "prompt.system"
+   ],
+   [
+    "digest",
+    "'hex'"
+   ]
+  ],
+  "complete": true,
+  "text": "const promptDigest = createHash('sha256').update(prompt.system).digest('hex');",
+  "updates": [
+   [
+    "prompt.system"
+   ]
+  ],
+  "digestArg": [
+   "'hex'"
+  ]
+ },
+ {
+  "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+  "kind": "import",
+  "text": "import { createHash } from 'node:crypto';"
+ },
+ {
+  "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+  "kind": "chain",
+  "alg": "'sha256'",
+  "calls": [
+   [
+    "update",
+    "text, 'utf8'"
+   ],
+   [
+    "digest",
+    "'hex'"
+   ]
+  ],
+  "complete": true,
+  "text": "const sha256 = (text: string): string => createHash('sha256').update(text, 'utf8').digest('hex');",
+  "updates": [
+   [
+    "text",
+    "'utf8'"
+   ]
+  ],
+  "digestArg": [
+   "'hex'"
+  ]
+ },
+ {
+  "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+  "kind": "import",
+  "text": "import { createHash } from 'node:crypto';"
+ },
+ {
+  "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+  "kind": "chain",
+  "alg": "'sha256'",
+  "calls": [
+   [
+    "update",
+    "text, 'utf8'"
+   ],
+   [
+    "digest",
+    "'hex'"
+   ]
+  ],
+  "complete": true,
+  "text": "const sha256 = (text: string): string => createHash('sha256').update(text, 'utf8').digest('hex');",
+  "updates": [
+   [
+    "text",
+    "'utf8'"
+   ]
+  ],
+  "digestArg": [
+   "'hex'"
+  ]
+ },
+ {
+  "file": "packages/three-surface-poc-core/src/act-fields.ts",
+  "kind": "import",
+  "text": "import { createHash } from 'node:crypto';"
+ },
+ {
+  "file": "packages/three-surface-poc-core/src/act-fields.ts",
+  "kind": "chain",
+  "alg": "'sha256'",
+  "calls": [
+   [
+    "update",
+    "bytes"
+   ],
+   [
+    "digest",
+    "'hex'"
+   ]
+  ],
+  "complete": true,
+  "text": "return createHash('sha256').update(bytes).digest('hex');",
+  "updates": [
+   [
+    "bytes"
+   ]
+  ],
+  "digestArg": [
+   "'hex'"
+  ]
+ },
+ {
+  "file": "packages/three-surface-poc-core/src/git-object-reader.ts",
+  "kind": "import",
+  "text": "import { createHash } from 'node:crypto';"
+ },
+ {
+  "file": "packages/three-surface-poc-core/src/git-object-reader.ts",
+  "kind": "chain",
+  "alg": "'sha256'",
+  "calls": [
+   [
+    "update",
+    "bytes"
+   ],
+   [
+    "digest",
+    "'hex'"
+   ]
+  ],
+  "complete": true,
+  "text": "return `sha256:${createHash('sha256').update(bytes).digest('hex')}`;",
+  "updates": [
+   [
+    "bytes"
+   ]
+  ],
+  "digestArg": [
+   "'hex'"
+  ]
+ },
+ {
+  "file": "packages/three-surface-poc-core/src/model.ts",
+  "kind": "import",
+  "text": "import { createHash } from 'node:crypto';"
+ },
+ {
+  "file": "packages/three-surface-poc-core/src/model.ts",
+  "kind": "chain",
+  "alg": "'sha256'",
+  "calls": [
+   [
+    "update",
+    "bytes"
+   ],
+   [
+    "digest",
+    "'hex'"
+   ]
+  ],
+  "complete": true,
+  "text": "return createHash('sha256').update(bytes).digest('hex');",
+  "updates": [
+   [
+    "bytes"
+   ]
+  ],
+  "digestArg": [
+   "'hex'"
+  ]
+ },
+ {
+  "file": "packages/three-surface-poc-core/src/owner-act-drafter.ts",
+  "kind": "import",
+  "text": "import { createHash } from 'node:crypto';"
+ },
+ {
+  "file": "packages/three-surface-poc-core/src/owner-act-drafter.ts",
+  "kind": "chain",
+  "alg": "'sha256'",
+  "calls": [
+   [
+    "update",
+    "input.artifact.bytes, 'utf8'"
+   ],
+   [
+    "digest",
+    "'hex'"
+   ]
+  ],
+  "complete": true,
+  "text": "const frozenDigest = createHash('sha256').update(input.artifact.bytes, 'utf8').digest('hex');",
+  "updates": [
+   [
+    "input.artifact.bytes",
+    "'utf8'"
+   ]
+  ],
+  "digestArg": [
+   "'hex'"
+  ]
+ },
+ {
+  "file": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+  "kind": "import",
+  "text": "import { createHash } from 'node:crypto';"
+ },
+ {
+  "file": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+  "kind": "chain",
+  "alg": "'sha256'",
+  "calls": [
+   [
+    "update",
+    "canonicalManifestJson(manifest)"
+   ],
+   [
+    "digest",
+    "'hex'"
+   ]
+  ],
+  "complete": true,
+  "text": "return `sha256:${createHash('sha256').update(canonicalManifestJson(manifest)).digest('hex')}`;",
+  "updates": [
+   [
+    "canonicalManifestJson(manifest)"
+   ]
+  ],
+  "digestArg": [
+   "'hex'"
+  ]
+ },
+ {
+  "file": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+  "kind": "chain",
+  "alg": "'sha256'",
+  "calls": [
+   [
+    "update",
+    "canonicalJson(limits)"
+   ],
+   [
+    "digest",
+    "'hex'"
+   ]
+  ],
+  "complete": true,
+  "text": "return `sha256:${createHash('sha256').update(canonicalJson(limits)).digest('hex')}`;",
+  "updates": [
+   [
+    "canonicalJson(limits)"
+   ]
+  ],
+  "digestArg": [
+   "'hex'"
+  ]
+ },
+ {
+  "file": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+  "kind": "chain",
+  "alg": "'sha256'",
+  "calls": [
+   [
+    "update",
+    "canonicalJson(stripCaptureInstant(stable))"
+   ],
+   [
+    "digest",
+    "'hex'"
+   ]
+  ],
+  "complete": true,
+  "text": "const observationDigest = `sha256:${createHash('sha256').update(canonicalJson(stripCaptureInstant(stable))).digest('hex')}`;",
+  "updates": [
+   [
+    "canonicalJson(stripCaptureInstant(stable))"
+   ]
+  ],
+  "digestArg": [
+   "'hex'"
+  ]
+ },
+ {
+  "file": "packages/three-surface-poc-core/src/response-identity.ts",
+  "kind": "import",
+  "text": "import { createHash } from 'node:crypto';"
+ },
+ {
+  "file": "packages/three-surface-poc-core/src/response-identity.ts",
+  "kind": "chain",
+  "alg": "'sha256'",
+  "calls": [
+   [
+    "update",
+    "serialized"
+   ],
+   [
+    "digest",
+    "'hex'"
+   ]
+  ],
+  "complete": true,
+  "text": "const contentKey = `sha256:${createHash('sha256').update(serialized).digest('hex')}`;",
+  "updates": [
+   [
+    "serialized"
+   ]
+  ],
+  "digestArg": [
+   "'hex'"
+  ]
+ },
+ {
+  "file": "packages/three-surface-poc-core/src/walkthrough-readiness.ts",
+  "kind": "import",
+  "text": "import { createHash } from 'node:crypto';"
+ },
+ {
+  "file": "packages/three-surface-poc-core/src/walkthrough-readiness.ts",
+  "kind": "chain",
+  "alg": "'sha256'",
+  "calls": [
+   [
+    "update",
+    "canonicalJson(stable)"
+   ],
+   [
+    "digest",
+    "'hex'"
+   ]
+  ],
+  "complete": true,
+  "text": "const digest = createHash('sha256').update(canonicalJson(stable)).digest('hex');",
+  "updates": [
+   [
+    "canonicalJson(stable)"
+   ]
+  ],
+  "digestArg": [
+   "'hex'"
+  ]
+ }
+]

@@ -1,0 +1,45 @@
+base 5411 tests, head 5411; 5359 unchanged, 43 changed, 0 only at base, 0 only at head
+  30000 -> 5000  apps/three-surface-poc/src/cdp-browser.test.ts :: Chrome singleton directory (syzygy-bpyt.4.11) > checks no user where the system has no user ids, and
+  30000 -> 5000  apps/three-surface-poc/src/cdp-browser.test.ts :: Chrome singleton directory (syzygy-bpyt.4.11) > does not fail the run when the singleton directory c
+  30000 -> 5000  apps/three-surface-poc/src/cdp-browser.test.ts :: Chrome singleton directory (syzygy-bpyt.4.11) > follows no link and removes no file: a link to a dir
+  30000 -> 5000  apps/three-surface-poc/src/cdp-browser.test.ts :: Chrome singleton directory (syzygy-bpyt.4.11) > keeps a directory made under the same name after the
+  30000 -> 5000  apps/three-surface-poc/src/cdp-browser.test.ts :: Chrome singleton directory (syzygy-bpyt.4.11) > keeps a directory that belongs to another user, neve
+  30000 -> 5000  apps/three-surface-poc/src/cdp-browser.test.ts :: Chrome singleton directory (syzygy-bpyt.4.11) > keeps a directory that is not directly under the tem
+  30000 -> 5000  apps/three-surface-poc/src/cdp-browser.test.ts :: Chrome singleton directory (syzygy-bpyt.4.11) > keeps a directory whose name is not exactly Chrome's
+  30000 -> 5000  apps/three-surface-poc/src/cdp-browser.test.ts :: Chrome singleton directory (syzygy-bpyt.4.11) > keeps a directory with the recorded inode number on 
+  30000 -> 5000  apps/three-surface-poc/src/cdp-browser.test.ts :: Chrome singleton directory (syzygy-bpyt.4.11) > keeps the directory a link names when the link is no
+  30000 -> 5000  apps/three-surface-poc/src/cdp-browser.test.ts :: Chrome singleton directory (syzygy-bpyt.4.11) > keeps the directory a link names when the profile is
+  30000 -> 5000  apps/three-surface-poc/src/cdp-browser.test.ts :: Chrome singleton directory (syzygy-bpyt.4.11) > reads the directory from the profile's link when non
+  30000 -> 5000  apps/three-surface-poc/src/cdp-browser.test.ts :: Chrome singleton directory (syzygy-bpyt.4.11) > removes the Chromium form of the name too
+  30000 -> 5000  apps/three-surface-poc/src/cdp-browser.test.ts :: Chrome singleton directory (syzygy-bpyt.4.11) > removes the directory a profile's link names when th
+  30000 -> 5000  apps/three-surface-poc/src/cdp-browser.test.ts :: Chrome singleton directory (syzygy-bpyt.4.11) > removes the name without a leading dot too, which Ch
+  30000 -> 5000  apps/three-surface-poc/src/cdp-browser.test.ts :: Chrome singleton directory (syzygy-bpyt.4.11) > removes the profile and nothing else when Chrome lef
+  30000 -> 5000  apps/three-surface-poc/src/cdp-browser.test.ts :: Chrome singleton directory (syzygy-bpyt.4.11) > removes the singleton directory read while Chrome ra
+  30000 -> 5000  apps/three-surface-poc/src/fixture-directories.test.ts :: fixture directories a killed run left behind (syzygy-bpyt.4.10) > asks the operating system 
+  30000 -> 5000  apps/three-surface-poc/src/fixture-directories.test.ts :: fixture directories a killed run left behind (syzygy-bpyt.4.10) > checks no user where the s
+  30000 -> 5000  apps/three-surface-poc/src/fixture-directories.test.ts :: fixture directories a killed run left behind (syzygy-bpyt.4.10) > does not fail the run when
+  30000 -> 5000  apps/three-surface-poc/src/fixture-directories.test.ts :: fixture directories a killed run left behind (syzygy-bpyt.4.10) > does not fail the run when
+  30000 -> 5000  apps/three-surface-poc/src/fixture-directories.test.ts :: fixture directories a killed run left behind (syzygy-bpyt.4.10) > follows no symlink and rem
+  30000 -> 5000  apps/three-surface-poc/src/fixture-directories.test.ts :: fixture directories a killed run left behind (syzygy-bpyt.4.10) > keeps a directory that bel
+  30000 -> 5000  apps/three-surface-poc/src/fixture-directories.test.ts :: fixture directories a killed run left behind (syzygy-bpyt.4.10) > keeps a directory whose pi
+  30000 -> 5000  apps/three-surface-poc/src/fixture-directories.test.ts :: fixture directories a killed run left behind (syzygy-bpyt.4.10) > keeps a name that carries 
+  30000 -> 5000  apps/three-surface-poc/src/fixture-directories.test.ts :: fixture directories a killed run left behind (syzygy-bpyt.4.10) > keeps the directories of a
+  30000 -> 5000  apps/three-surface-poc/src/fixture-directories.test.ts :: fixture directories a killed run left behind (syzygy-bpyt.4.10) > keeps the directories of a
+  30000 -> 5000  apps/three-surface-poc/src/fixture-directories.test.ts :: fixture directories a killed run left behind (syzygy-bpyt.4.10) > lists only the directory i
+  30000 -> 5000  apps/three-surface-poc/src/fixture-directories.test.ts :: fixture directories a killed run left behind (syzygy-bpyt.4.10) > removes nothing, and lists
+  30000 -> 5000  apps/three-surface-poc/src/fixture-directories.test.ts :: fixture directories a killed run left behind (syzygy-bpyt.4.10) > removes nothing, and lists
+  30000 -> 5000  apps/three-surface-poc/src/fixture-directories.test.ts :: fixture directories a killed run left behind (syzygy-bpyt.4.10) > removes the copy and the t
+  30000 -> 5000  apps/three-surface-poc/src/fixture-directories.test.ts :: fixture directories a killed run left behind (syzygy-bpyt.4.10) > sweeps the temp directory 
+  30000 -> 5000  apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts :: durable lifecycle with an injected generate port > a crash while a
+  30000 -> 5000  apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts :: durable lifecycle with an injected generate port > a generate fail
+  30000 -> 5000  apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts :: durable lifecycle with an injected generate port > releases an att
+  30000 -> 5000  apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts :: durable lifecycle with an injected generate port > reserves the co
+  30000 -> 5000  apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts :: durable lifecycle with an injected generate port > reuses complete
+  30000 -> 5000  apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts :: durable lifecycle with an injected generate port > runs the pipeli
+  60000 -> 5000  apps/three-surface-poc/src/polaris-opening-index.browser.test.ts :: opening index in a real browser (PWB-REQ-010, P-98) > a tie on the largest offset 
+  60000 -> 5000  apps/three-surface-poc/src/polaris-opening-index.browser.test.ts :: opening index in a real browser (PWB-REQ-010, P-98) > following the exact-requirem
+  60000 -> 5000  apps/three-surface-poc/src/polaris-opening-index.browser.test.ts :: opening index in a real browser (PWB-REQ-010, P-98) > the opening Unknown aggregat
+  60000 -> 5000  apps/three-surface-poc/src/polaris-opening-index.browser.test.ts :: opening index in a real browser (PWB-REQ-010, P-98) > the opening Unknown aggregat
+  60000 -> 5000  apps/three-surface-poc/src/polaris-opening-index.browser.test.ts :: opening index in a real browser (PWB-REQ-010, P-98) > the same holds where a later
+  60000 -> 5000  apps/three-surface-poc/src/polaris-opening-index.browser.test.ts :: opening index in a real browser (PWB-REQ-010, P-98) > with no indexed target rende
+exit 0

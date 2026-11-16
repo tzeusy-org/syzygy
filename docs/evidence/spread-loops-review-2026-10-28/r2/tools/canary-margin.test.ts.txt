@@ -1,0 +1,30 @@
+// Reviewer's probe (R-GP-IMPL-SPREAD-LOOPS-2): the largest argument count one `sink.push(...new Array(n))` call survives at a test
+// body's depth in this vitest process, measured five times by bisection, to compare with the canaries' 200,002 and 130,002.
+// Copy to packages/three-surface-poc-core/src/zz-canary-margin.test.ts and run it alone (default pool, then --pool=threads).
+import { it } from 'vitest';
+
+function survives(n: number): boolean {
+  const sink: unknown[] = [];
+  try {
+    sink.push(...new Array<unknown>(n));
+    return true;
+  } catch (error) {
+    if (error instanceof RangeError) return false;
+    throw error;
+  }
+}
+
+it('measures the spread boundary at test-body depth', () => {
+  const runs: number[] = [];
+  for (let r = 0; r < 5; r += 1) {
+    let lo = 1;
+    let hi = 2_000_000;
+    while (hi - lo > 1) {
+      const mid = Math.floor((lo + hi) / 2);
+      if (survives(mid)) lo = mid;
+      else hi = mid;
+    }
+    runs.push(lo);
+  }
+  console.log(`MARGIN ${JSON.stringify({ largestSurviving: runs, canaryMask: 200_002, canaryExtractor: 130_002 })}`);
+});

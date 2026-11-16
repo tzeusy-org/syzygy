@@ -1,0 +1,38 @@
+{
+ "mutants": [
+  {
+   "id": "R-IF1b-into-island-never-recorded",
+   "expect": "killed",
+   "projects": [
+    "@syzygy/polaris-generation-core"
+   ],
+   "files": [
+    "packages/polaris-generation-core/src/island-boundary.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/island-boundary.test.ts",
+     "old": "      if (island.has(to) && !island.has(file)) intoIsland.push({ from: file, specifier, to });",
+     "new": "      if (false) intoIsland.push({ from: file, specifier, to });"
+    }
+   ]
+  },
+  {
+   "id": "R-IF2b-into-island-from-island-counted",
+   "expect": "survives",
+   "projects": [
+    "@syzygy/polaris-generation-core"
+   ],
+   "files": [
+    "packages/polaris-generation-core/src/island-boundary.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/island-boundary.test.ts",
+     "old": "      if (island.has(to) && !island.has(file)) intoIsland.push({ from: file, specifier, to });",
+     "new": "      if (island.has(to)) intoIsland.push({ from: file, specifier, to });"
+    }
+   ]
+  }
+ ]
+}

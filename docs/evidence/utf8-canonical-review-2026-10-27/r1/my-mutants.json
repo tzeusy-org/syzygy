@@ -1,0 +1,866 @@
+{
+ "head": "2d3f93759a28d35e7b04facb5aaebbcc29697d09",
+ "expectedProbeOutput": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-534/clone/docs/evidence/syzygy-bpyt-6-3/utf8-probe-output-base.json",
+ "mutants": [
+  {
+   "id": "R1-decoder-keeps-bom",
+   "file": "packages/support/src/decode-utf8.ts",
+   "old": "{ fatal: true }",
+   "new": "{ fatal: true, ignoreBOM: true }",
+   "head": "2d3f93759a28d35e7b04facb5aaebbcc29697d09",
+   "oldCount": 1,
+   "detectors": {
+    "tests": {
+     "command": "npx vitest run --project @syzygy/support --project @syzygy/three-surface-poc-core",
+     "exit": 1,
+     "summary": [
+      "Test Files  2 failed | 37 passed | 2 skipped (41)",
+      "Tests  2 failed | 1145 passed | 2 skipped (1149)"
+     ],
+     "failing": [
+      "FAIL  |@syzygy/support| packages/support/src/decode-utf8.test.ts > decodeUtf8 > drops one leading byte-order mark and keeps a second",
+      "FAIL  |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/authority-artifact-fields.test.ts > parsePolicyArtifact and parseRegistryArtifact decoding > parse well-formed JSON, with or ",
+      "\u00d7 decodeUtf8 > drops one leading byte-order mark and keeps a second 58ms",
+      "\u00d7 parsePolicyArtifact and parseRegistryArtifact decoding > parse well-formed JSON, with or without a leading byte-order mark 73ms"
+     ],
+     "failingCount": 4,
+     "killed": true
+    },
+    "probe": {
+     "exit": 1,
+     "rowsDiffer": 552,
+     "differPerDriver": {
+      "authority-policy": 4,
+      "authority-registry": 4,
+      "object-reader": 176,
+      "observe-ls-tree": 192,
+      "seed-reader": 176
+     },
+     "firstDiffering": [
+      [
+       "authority-policy",
+       "policy+bom"
+      ],
+      [
+       "authority-policy",
+       "random-1331"
+      ],
+      [
+       "authority-policy",
+       "registry+bom"
+      ],
+      [
+       "authority-policy",
+       "revision+bom"
+      ]
+     ],
+     "killed": true
+    }
+   },
+   "verdict": "killed by tests, probe"
+  },
+  {
+   "id": "R2-decoder-not-fatal",
+   "file": "packages/support/src/decode-utf8.ts",
+   "old": "new TextDecoder('utf-8', { fatal: true })",
+   "new": "new TextDecoder('utf-8')",
+   "head": "2d3f93759a28d35e7b04facb5aaebbcc29697d09",
+   "oldCount": 1,
+   "detectors": {
+    "tests": {
+     "command": "npx vitest run --project @syzygy/support --project @syzygy/three-surface-poc-core",
+     "exit": 1,
+     "summary": [
+      "Test Files  7 failed | 32 passed | 2 skipped (41)",
+      "Tests  13 failed | 1134 passed | 2 skipped (1149)"
+     ],
+     "failing": [
+      "FAIL  |@syzygy/support| packages/support/src/decode-utf8.test.ts > decodeUtf8 > carries no state from a refused call into the next",
+      "FAIL  |@syzygy/support| packages/support/src/decode-utf8.test.ts > decodeUtf8 > reads only the view, not the buffer behind it",
+      "FAIL  |@syzygy/support| packages/support/src/decode-utf8.test.ts > decodeUtf8 > refuses every malformed class instead of replacing it",
+      "FAIL  |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/authority-artifact-fields.test.ts > parseConsentArtifact decoding > refuses bytes that are not UTF-8 instead of parsing a rep",
+      "FAIL  |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/authority-artifact-fields.test.ts > parsePolicyArtifact and parseRegistryArtifact decoding > refuse bytes that are not UTF-8,",
+      "FAIL  |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/code-structure.test.ts > code-structure observer > makes the inventory Unknown for a committed path that is not valid UTF-8, ",
+      "FAIL  |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/content-classification.test.ts > PWB-REQ-003 \u2014 the population survives every fault > counts add up to the source denominator ",
+      "FAIL  |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/content-classification.test.ts > PWB-REQ-003 \u2014 the population survives every fault > hands a body only to the consumer, and o",
+      "FAIL  |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/content-classification.test.ts > PWB-REQ-003 \u2014 the population survives every fault > no secret, active or body byte reaches t",
+      "FAIL  |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/content-classification.test.ts > PWB-REQ-003 \u2014 the population survives every fault > returns exactly one result per manifest ",
+      "FAIL  |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/git-object-reader.test.ts > exact object reads > rejects NUL bytes and invalid UTF-8 after the identity check",
+      "FAIL  |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/project-shape-git-text.test.ts > observeProjectShapeSources decoding of git output > stops at the first command whose output "
+     ],
+     "failingCount": 26,
+     "killed": true
+    },
+    "probe": {
+     "exit": 1,
+     "rowsDiffer": 6866,
+     "differPerDriver": {
+      "authority-consent": 890,
+      "authority-policy": 890,
+      "authority-registry": 890,
+      "code-structure": 4,
+      "object-reader": 761,
+      "observe-ls-tree": 890,
+      "observe-rev-parse": 890,
+      "observe-show": 890,
+      "seed-reader": 761
+     },
+     "firstDiffering": [
+      [
+       "authority-consent",
+       "bad-then-good"
+      ],
+      [
+       "authority-consent",
+       "consent+bad-head"
+      ],
+      [
+       "authority-consent",
+       "consent+bad-tail"
+      ],
+      [
+       "authority-consent",
+       "consent+overlong-tail"
+      ]
+     ],
+     "killed": true
+    }
+   },
+   "verdict": "killed by tests, probe"
+  },
+  {
+   "id": "R3-refusal-returns-empty-text",
+   "file": "packages/support/src/decode-utf8.ts",
+   "old": "return undefined;",
+   "new": "return '';",
+   "head": "2d3f93759a28d35e7b04facb5aaebbcc29697d09",
+   "oldCount": 1,
+   "detectors": {
+    "tests": {
+     "command": "npx vitest run --project @syzygy/support --project @syzygy/three-surface-poc-core",
+     "exit": 1,
+     "summary": [
+      "Test Files  7 failed | 32 passed | 2 skipped (41)",
+      "Tests  13 failed | 1134 passed | 2 skipped (1149)"
+     ],
+     "failing": [
+      "FAIL  |@syzygy/support| packages/support/src/decode-utf8.test.ts > decodeUtf8 > carries no state from a refused call into the next",
+      "FAIL  |@syzygy/support| packages/support/src/decode-utf8.test.ts > decodeUtf8 > reads only the view, not the buffer behind it",
+      "FAIL  |@syzygy/support| packages/support/src/decode-utf8.test.ts > decodeUtf8 > refuses every malformed class instead of replacing it",
+      "FAIL  |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/authority-artifact-fields.test.ts > parseConsentArtifact decoding > refuses bytes that are not UTF-8 instead of parsing a rep",
+      "FAIL  |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/authority-artifact-fields.test.ts > parsePolicyArtifact and parseRegistryArtifact decoding > refuse bytes that are not UTF-8,",
+      "FAIL  |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/code-structure.test.ts > code-structure observer > makes the inventory Unknown for a committed path that is not valid UTF-8, ",
+      "FAIL  |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/content-classification.test.ts > PWB-REQ-003 \u2014 the population survives every fault > counts add up to the source denominator ",
+      "FAIL  |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/content-classification.test.ts > PWB-REQ-003 \u2014 the population survives every fault > hands a body only to the consumer, and o",
+      "FAIL  |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/content-classification.test.ts > PWB-REQ-003 \u2014 the population survives every fault > no secret, active or body byte reaches t",
+      "FAIL  |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/content-classification.test.ts > PWB-REQ-003 \u2014 the population survives every fault > returns exactly one result per manifest ",
+      "FAIL  |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/git-object-reader.test.ts > exact object reads > rejects NUL bytes and invalid UTF-8 after the identity check",
+      "FAIL  |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/project-shape-git-text.test.ts > observeProjectShapeSources decoding of git output > stops at the first command whose output "
+     ],
+     "failingCount": 26,
+     "killed": true
+    },
+    "probe": {
+     "exit": 1,
+     "rowsDiffer": 6866,
+     "differPerDriver": {
+      "authority-consent": 890,
+      "authority-policy": 890,
+      "authority-registry": 890,
+      "code-structure": 4,
+      "object-reader": 761,
+      "observe-ls-tree": 890,
+      "observe-rev-parse": 890,
+      "observe-show": 890,
+      "seed-reader": 761
+     },
+     "firstDiffering": [
+      [
+       "authority-consent",
+       "bad-then-good"
+      ],
+      [
+       "authority-consent",
+       "consent+bad-head"
+      ],
+      [
+       "authority-consent",
+       "consent+bad-tail"
+      ],
+      [
+       "authority-consent",
+       "consent+overlong-tail"
+      ]
+     ],
+     "killed": true
+    }
+   },
+   "verdict": "killed by tests, probe"
+  },
+  {
+   "id": "M1-decoder-strips-every-bom",
+   "file": "packages/support/src/decode-utf8.ts",
+   "old": "return STRICT_UTF8.decode(bytes);",
+   "new": "return STRICT_UTF8.decode(bytes).replace(/\\uFEFF/g, '');",
+   "head": "2d3f93759a28d35e7b04facb5aaebbcc29697d09",
+   "oldCount": 1,
+   "detectors": {
+    "tests": {
+     "command": "npx vitest run --project @syzygy/support --project @syzygy/three-surface-poc-core",
+     "exit": 1,
+     "summary": [
+      "Test Files  1 failed | 38 passed | 2 skipped (41)",
+      "Tests  1 failed | 1146 passed | 2 skipped (1149)"
+     ],
+     "failing": [
+      "FAIL  |@syzygy/support| packages/support/src/decode-utf8.test.ts > decodeUtf8 > drops one leading byte-order mark and keeps a second",
+      "\u00d7 decodeUtf8 > drops one leading byte-order mark and keeps a second 42ms"
+     ],
+     "failingCount": 2,
+     "killed": true
+    },
+    "probe": {
+     "exit": 1,
+     "rowsDiffer": 32,
+     "differPerDriver": {
+      "authority-policy": 3,
+      "authority-registry": 3,
+      "code-structure": 1,
+      "object-reader": 8,
+      "observe-ls-tree": 9,
+      "seed-reader": 8
+     },
+     "firstDiffering": [
+      [
+       "authority-policy",
+       "policy+bom-bom"
+      ],
+      [
+       "authority-policy",
+       "registry+bom-bom"
+      ],
+      [
+       "authority-policy",
+       "revision+bom-bom"
+      ],
+      [
+       "authority-registry",
+       "policy+bom-bom"
+      ]
+     ],
+     "killed": true
+    }
+   },
+   "verdict": "killed by tests, probe"
+  },
+  {
+   "id": "M2-decoder-refuses-empty-input",
+   "file": "packages/support/src/decode-utf8.ts",
+   "old": "  try {\n    return STRICT_UTF8.decode(bytes);",
+   "new": "  if (bytes.byteLength === 0) return undefined;\n  try {\n    return STRICT_UTF8.decode(bytes);",
+   "head": "2d3f93759a28d35e7b04facb5aaebbcc29697d09",
+   "oldCount": 1,
+   "detectors": {
+    "tests": {
+     "command": "npx vitest run --project @syzygy/support --project @syzygy/three-surface-poc-core",
+     "exit": 1,
+     "summary": [
+      "Test Files  2 failed | 37 passed | 2 skipped (41)",
+      "Tests  2 failed | 1145 passed | 2 skipped (1149)"
+     ],
+     "failing": [
+      "FAIL  |@syzygy/support| packages/support/src/decode-utf8.test.ts > decodeUtf8 > decodes well-formed text of every sequence length",
+      "FAIL  |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/model.test.ts > three-surface Butlers POC model > carries the project shape on the one model: not-evaluated without an author",
+      "\u00d7 decodeUtf8 > decodes well-formed text of every sequence length 134ms",
+      "\u00d7 three-surface Butlers POC model > carries the project shape on the one model: not-evaluated without an authority evaluation, observed with an admitting one (PWB 2.7) 508ms"
+     ],
+     "failingCount": 4,
+     "killed": true
+    },
+    "probe": {
+     "exit": 1,
+     "rowsDiffer": 497,
+     "differPerDriver": {
+      "authority-consent": 62,
+      "authority-policy": 62,
+      "authority-registry": 62,
+      "code-structure": 1,
+      "object-reader": 62,
+      "observe-ls-tree": 62,
+      "observe-rev-parse": 62,
+      "observe-show": 62,
+      "seed-reader": 62
+     },
+     "firstDiffering": [
+      [
+       "authority-consent",
+       "empty"
+      ],
+      [
+       "authority-consent",
+       "random-1"
+      ],
+      [
+       "authority-consent",
+       "random-1020"
+      ],
+      [
+       "authority-consent",
+       "random-1022"
+      ]
+     ],
+     "killed": true
+    }
+   },
+   "verdict": "killed by tests, probe"
+  },
+  {
+   "id": "M3-decoder-reads-whole-buffer",
+   "file": "packages/support/src/decode-utf8.ts",
+   "old": "return STRICT_UTF8.decode(bytes);",
+   "new": "return STRICT_UTF8.decode(bytes.buffer);",
+   "head": "2d3f93759a28d35e7b04facb5aaebbcc29697d09",
+   "oldCount": 1,
+   "detectors": {
+    "tests": {
+     "command": "npx vitest run --project @syzygy/support --project @syzygy/three-surface-poc-core",
+     "exit": 1,
+     "summary": [
+      "Test Files  3 failed | 36 passed | 2 skipped (41)",
+      "Tests  8 failed | 1139 passed | 2 skipped (1149)"
+     ],
+     "failing": [
+      "FAIL  |@syzygy/support| packages/support/src/decode-utf8.test.ts > decodeUtf8 > accepts a Buffer",
+      "FAIL  |@syzygy/support| packages/support/src/decode-utf8.test.ts > decodeUtf8 > reads only the view, not the buffer behind it",
+      "FAIL  |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/code-structure.test.ts > code-structure observer > binds every inventory entry to the exact revision observed (POC-REQ-001)",
+      "FAIL  |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/code-structure.test.ts > code-structure observer > keeps an unterminated tail from git for the NUL check to refuse, never dro",
+      "FAIL  |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/code-structure.test.ts > code-structure observer > produces identical facts across two observations of one revision, excludin",
+      "FAIL  |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/code-structure.test.ts > code-structure observer > records a path with a space, a tab, a double quote or a non-ASCII UTF-8 na",
+      "FAIL  |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/code-structure.test.ts > code-structure observer > skips every submodule gitlink, whatever its path, and keeps the files besi",
+      "FAIL  |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/model-observations.test.ts > shared model observation wiring > folds code-structure and work-item observations into the one s",
+      "\u00d7 code-structure observer > binds every inventory entry to the exact revision observed (POC-REQ-001) 470ms",
+      "\u00d7 code-structure observer > keeps an unterminated tail from git for the NUL check to refuse, never dropping it as a record 88ms",
+      "\u00d7 code-structure observer > produces identical facts across two observations of one revision, excluding capture instant (POC-REQ-004) 801ms",
+      "\u00d7 code-structure observer > records a path with a space, a tab, a double quote or a non-ASCII UTF-8 name exactly as committed (syzygy-bpyt.6.1) 1467ms"
+     ],
+     "failingCount": 16,
+     "killed": true
+    },
+    "probe": {
+     "exit": 1,
+     "rowsDiffer": 4,
+     "differPerDriver": {
+      "code-structure": 4
+     },
+     "firstDiffering": [
+      [
+       "code-structure",
+       "bom-like-name"
+      ],
+      [
+       "code-structure",
+       "gitlink-bad-path"
+      ],
+      [
+       "code-structure",
+       "gitlink-valid-path"
+      ],
+      [
+       "code-structure",
+       "valid-names"
+      ]
+     ],
+     "killed": true
+    }
+   },
+   "verdict": "killed by tests, probe"
+  },
+  {
+   "id": "S1-object-reader-keeps-bom",
+   "file": "packages/three-surface-poc-core/src/git-object-reader.ts",
+   "old": "const text = decodeUtf8(bytes);\n      if (text === undefined) return unavailable({ ...taken, outcome: 'not-utf-8' });",
+   "new": "const text = ((): string | undefined => { try { return new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(bytes); } catch { return undefined; } })();\n      if (text === undefined) return unavailable({ ...taken, outcome: 'not-utf-8' });",
+   "head": "2d3f93759a28d35e7b04facb5aaebbcc29697d09",
+   "oldCount": 1,
+   "detectors": {
+    "tests": {
+     "command": "npx vitest run --project @syzygy/support --project @syzygy/three-surface-poc-core",
+     "exit": 1,
+     "summary": [
+      "Test Files  1 failed | 38 passed | 2 skipped (41)",
+      "Tests  1 failed | 1146 passed | 2 skipped (1149)"
+     ],
+     "failing": [
+      "FAIL  |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/test-artifact-verification-live-source.test.ts > the live verification test, and every module it imports, runs no observed co",
+      "\u00d7 the live verification test, and every module it imports, runs no observed code > the tree check refuses void import.meta.globEager('/x.js'); 5022ms"
+     ],
+     "failingCount": 2,
+     "killed": true
+    },
+    "probe": {
+     "exit": 1,
+     "rowsDiffer": 176,
+     "differPerDriver": {
+      "object-reader": 176
+     },
+     "firstDiffering": [
+      [
+       "object-reader",
+       "bom-bom-text"
+      ],
+      [
+       "object-reader",
+       "bom-only"
+      ],
+      [
+       "object-reader",
+       "bom-text"
+      ],
+      [
+       "object-reader",
+       "consent+bom"
+      ]
+     ],
+     "killed": true
+    }
+   },
+   "verdict": "killed by tests, probe"
+  },
+  {
+   "id": "S2-seed-reader-keeps-bom",
+   "file": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+   "old": "const text = decodeUtf8(bytes);\n    if (text === undefined) {\n      reads.push(",
+   "new": "const text = ((): string | undefined => { try { return new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(bytes); } catch { return undefined; } })();\n    if (text === undefined) {\n      reads.push(",
+   "head": "2d3f93759a28d35e7b04facb5aaebbcc29697d09",
+   "oldCount": 1,
+   "detectors": {
+    "tests": {
+     "command": "npx vitest run --project @syzygy/support --project @syzygy/three-surface-poc-core",
+     "exit": 1,
+     "summary": [
+      "Test Files  1 failed | 38 passed | 2 skipped (41)",
+      "Tests  1 failed | 1146 passed | 2 skipped (1149)"
+     ],
+     "failing": [
+      "FAIL  |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/test-artifact-verification-live-source.test.ts > the live verification test, and every module it imports, runs no observed co",
+      "\u00d7 the live verification test, and every module it imports, runs no observed code > reaches the model, its observers and the verification module, and no file in that closure can start anything but git "
+     ],
+     "failingCount": 2,
+     "killed": true
+    },
+    "probe": {
+     "exit": 1,
+     "rowsDiffer": 176,
+     "differPerDriver": {
+      "seed-reader": 176
+     },
+     "firstDiffering": [
+      [
+       "seed-reader",
+       "bom-bom-text"
+      ],
+      [
+       "seed-reader",
+       "bom-only"
+      ],
+      [
+       "seed-reader",
+       "bom-text"
+      ],
+      [
+       "seed-reader",
+       "consent+bom"
+      ]
+     ],
+     "killed": true
+    }
+   },
+   "verdict": "killed by tests, probe"
+  },
+  {
+   "id": "S3-object-reader-refusal-labelled-nul",
+   "file": "packages/three-surface-poc-core/src/git-object-reader.ts",
+   "old": "if (text === undefined) return unavailable({ ...taken, outcome: 'not-utf-8' });",
+   "new": "if (text === undefined) return unavailable({ ...taken, outcome: 'contains-nul' });",
+   "head": "2d3f93759a28d35e7b04facb5aaebbcc29697d09",
+   "oldCount": 1,
+   "detectors": {
+    "tests": {
+     "command": "npx vitest run --project @syzygy/support --project @syzygy/three-surface-poc-core",
+     "exit": 1,
+     "summary": [
+      "Test Files  2 failed | 37 passed | 2 skipped (41)",
+      "Tests  2 failed | 1145 passed | 2 skipped (1149)"
+     ],
+     "failing": [
+      "FAIL  |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/content-classification.test.ts > PWB-REQ-003 \u2014 the population survives every fault > returns exactly one result per manifest ",
+      "FAIL  |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/git-object-reader.test.ts > exact object reads > rejects NUL bytes and invalid UTF-8 after the identity check",
+      "\u00d7 PWB-REQ-003 \u2014 the population survives every fault > returns exactly one result per manifest source, in manifest order, with the hand-typed outcome 38ms",
+      "\u00d7 exact object reads > rejects NUL bytes and invalid UTF-8 after the identity check 30ms"
+     ],
+     "failingCount": 4,
+     "killed": true
+    },
+    "probe": {
+     "exit": 1,
+     "rowsDiffer": 761,
+     "differPerDriver": {
+      "object-reader": 761
+     },
+     "firstDiffering": [
+      [
+       "object-reader",
+       "bad-then-good"
+      ],
+      [
+       "object-reader",
+       "consent+bad-head"
+      ],
+      [
+       "object-reader",
+       "consent+bad-tail"
+      ],
+      [
+       "object-reader",
+       "consent+overlong-tail"
+      ]
+     ],
+     "killed": true
+    }
+   },
+   "verdict": "killed by tests, probe"
+  },
+  {
+   "id": "S4-seed-reader-refusal-reason",
+   "file": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+   "old": "return { kind: 'unavailable', reason: 'seed is not valid UTF-8' };",
+   "new": "return { kind: 'unavailable', reason: 'seed is not readable' };",
+   "head": "2d3f93759a28d35e7b04facb5aaebbcc29697d09",
+   "oldCount": 1,
+   "detectors": {
+    "tests": {
+     "command": "npx vitest run --project @syzygy/support --project @syzygy/three-surface-poc-core",
+     "exit": 0,
+     "summary": [
+      "Test Files  39 passed | 2 skipped (41)",
+      "Tests  1147 passed | 2 skipped (1149)"
+     ],
+     "failing": [],
+     "failingCount": 0,
+     "killed": false
+    },
+    "probe": {
+     "exit": 1,
+     "rowsDiffer": 761,
+     "differPerDriver": {
+      "seed-reader": 761
+     },
+     "firstDiffering": [
+      [
+       "seed-reader",
+       "bad-then-good"
+      ],
+      [
+       "seed-reader",
+       "consent+bad-head"
+      ],
+      [
+       "seed-reader",
+       "consent+bad-tail"
+      ],
+      [
+       "seed-reader",
+       "consent+overlong-tail"
+      ]
+     ],
+     "killed": true
+    }
+   },
+   "verdict": "killed by probe"
+  },
+  {
+   "id": "S5-code-structure-generic-error",
+   "file": "packages/three-surface-poc-core/src/code-structure.ts",
+   "old": "if (text === undefined) throw new NonUtf8GitOutput();",
+   "new": "if (text === undefined) throw new Error('not utf-8');",
+   "head": "2d3f93759a28d35e7b04facb5aaebbcc29697d09",
+   "oldCount": 1,
+   "detectors": {
+    "tests": {
+     "command": "npx vitest run --project @syzygy/support --project @syzygy/three-surface-poc-core",
+     "exit": 1,
+     "summary": [
+      "Test Files  1 failed | 38 passed | 2 skipped (41)",
+      "Tests  1 failed | 1146 passed | 2 skipped (1149)"
+     ],
+     "failing": [
+      "FAIL  |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/code-structure.test.ts > code-structure observer > makes the inventory Unknown for a committed path that is not valid UTF-8, ",
+      "\u00d7 code-structure observer > makes the inventory Unknown for a committed path that is not valid UTF-8, never a lossy or colliding path 826ms"
+     ],
+     "failingCount": 2,
+     "killed": true
+    },
+    "probe": {
+     "exit": 1,
+     "rowsDiffer": 4,
+     "differPerDriver": {
+      "code-structure": 4
+     },
+     "firstDiffering": [
+      [
+       "code-structure",
+       "bad-name-valid-name"
+      ],
+      [
+       "code-structure",
+       "latin1-pair"
+      ],
+      [
+       "code-structure",
+       "one-bad-byte"
+      ],
+      [
+       "code-structure",
+       "overlong-name"
+      ]
+     ],
+     "killed": true
+    }
+   },
+   "verdict": "killed by tests, probe"
+  },
+  {
+   "id": "S6-consent-falls-back-to-lenient",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "old": "const text = decodeUtf8(bytes);\n  if (text === undefined) return { kind: 'undecodable', detail: 'not strict UTF-8' };",
+   "new": "const text = (decodeUtf8(bytes) ?? new TextDecoder().decode(bytes)) as string | undefined;\n  if (text === undefined) return { kind: 'undecodable', detail: 'not strict UTF-8' };",
+   "head": "2d3f93759a28d35e7b04facb5aaebbcc29697d09",
+   "oldCount": 1,
+   "detectors": {
+    "tests": {
+     "command": "npx vitest run --project @syzygy/support --project @syzygy/three-surface-poc-core",
+     "exit": 1,
+     "summary": [
+      "Test Files  1 failed | 38 passed | 2 skipped (41)",
+      "Tests  1 failed | 1146 passed | 2 skipped (1149)"
+     ],
+     "failing": [
+      "FAIL  |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/authority-artifact-fields.test.ts > parseConsentArtifact decoding > refuses bytes that are not UTF-8 instead of parsing a rep",
+      "\u00d7 parseConsentArtifact decoding > refuses bytes that are not UTF-8 instead of parsing a replaced text 24ms"
+     ],
+     "failingCount": 2,
+     "killed": true
+    },
+    "probe": {
+     "exit": 1,
+     "rowsDiffer": 890,
+     "differPerDriver": {
+      "authority-consent": 890
+     },
+     "firstDiffering": [
+      [
+       "authority-consent",
+       "bad-then-good"
+      ],
+      [
+       "authority-consent",
+       "consent+bad-head"
+      ],
+      [
+       "authority-consent",
+       "consent+bad-tail"
+      ],
+      [
+       "authority-consent",
+       "consent+overlong-tail"
+      ]
+     ],
+     "killed": true
+    }
+   },
+   "verdict": "killed by tests, probe"
+  },
+  {
+   "id": "S7-json-artifact-refusal-detail",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "old": "if (text === undefined) return { ok: false, detail: 'not strict UTF-8' };",
+   "new": "if (text === undefined) return { ok: false, detail: 'not JSON' };",
+   "head": "2d3f93759a28d35e7b04facb5aaebbcc29697d09",
+   "oldCount": 1,
+   "detectors": {
+    "tests": {
+     "command": "npx vitest run --project @syzygy/support --project @syzygy/three-surface-poc-core",
+     "exit": 1,
+     "summary": [
+      "Test Files  1 failed | 38 passed | 2 skipped (41)",
+      "Tests  1 failed | 1146 passed | 2 skipped (1149)"
+     ],
+     "failing": [
+      "FAIL  |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/authority-artifact-fields.test.ts > parsePolicyArtifact and parseRegistryArtifact decoding > refuse bytes that are not UTF-8,",
+      "\u00d7 parsePolicyArtifact and parseRegistryArtifact decoding > refuse bytes that are not UTF-8, naming the decoding and not the JSON 41ms"
+     ],
+     "failingCount": 2,
+     "killed": true
+    },
+    "probe": {
+     "exit": 1,
+     "rowsDiffer": 1780,
+     "differPerDriver": {
+      "authority-policy": 890,
+      "authority-registry": 890
+     },
+     "firstDiffering": [
+      [
+       "authority-policy",
+       "bad-then-good"
+      ],
+      [
+       "authority-policy",
+       "consent+bad-head"
+      ],
+      [
+       "authority-policy",
+       "consent+bad-tail"
+      ],
+      [
+       "authority-policy",
+       "consent+overlong-tail"
+      ]
+     ],
+     "killed": true
+    }
+   },
+   "verdict": "killed by tests, probe"
+  },
+  {
+   "id": "S8-git-text-refusal-detail",
+   "file": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+   "old": "produced non-UTF-8 output",
+   "new": "produced output that is not UTF-8",
+   "head": "2d3f93759a28d35e7b04facb5aaebbcc29697d09",
+   "oldCount": 1,
+   "detectors": {
+    "tests": {
+     "command": "npx vitest run --project @syzygy/support --project @syzygy/three-surface-poc-core",
+     "exit": 1,
+     "summary": [
+      "Test Files  1 failed | 38 passed | 2 skipped (41)",
+      "Tests  1 failed | 1146 passed | 2 skipped (1149)"
+     ],
+     "failing": [
+      "FAIL  |@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/project-shape-git-text.test.ts > observeProjectShapeSources decoding of git output > stops at the first command whose output ",
+      "\u00d7 observeProjectShapeSources decoding of git output > stops at the first command whose output is not UTF-8 and names it 72ms"
+     ],
+     "failingCount": 2,
+     "killed": true
+    },
+    "probe": {
+     "exit": 1,
+     "rowsDiffer": 2670,
+     "differPerDriver": {
+      "observe-ls-tree": 890,
+      "observe-rev-parse": 890,
+      "observe-show": 890
+     },
+     "firstDiffering": [
+      [
+       "observe-ls-tree",
+       "bad-then-good"
+      ],
+      [
+       "observe-ls-tree",
+       "consent+bad-head"
+      ],
+      [
+       "observe-ls-tree",
+       "consent+bad-tail"
+      ],
+      [
+       "observe-ls-tree",
+       "consent+overlong-tail"
+      ]
+     ],
+     "killed": true
+    }
+   },
+   "verdict": "killed by tests, probe"
+  },
+  {
+   "id": "S9-git-text-keeps-bom",
+   "file": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+   "old": "const text = decodeUtf8(bytes);\n  return text === undefined ? { kind: 'failed'",
+   "new": "const text = ((): string | undefined => { try { return new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(bytes); } catch { return undefined; } })();\n  return text === undefined ? { kind: 'failed'",
+   "head": "2d3f93759a28d35e7b04facb5aaebbcc29697d09",
+   "oldCount": 1,
+   "detectors": {
+    "tests": {
+     "command": "npx vitest run --project @syzygy/support --project @syzygy/three-surface-poc-core",
+     "exit": 0,
+     "summary": [
+      "Test Files  39 passed | 2 skipped (41)",
+      "Tests  1147 passed | 2 skipped (1149)"
+     ],
+     "failing": [],
+     "failingCount": 0,
+     "killed": false
+    },
+    "probe": {
+     "exit": 1,
+     "rowsDiffer": 192,
+     "differPerDriver": {
+      "observe-ls-tree": 192
+     },
+     "firstDiffering": [
+      [
+       "observe-ls-tree",
+       "bom-bom-text"
+      ],
+      [
+       "observe-ls-tree",
+       "bom-only"
+      ],
+      [
+       "observe-ls-tree",
+       "bom-text"
+      ],
+      [
+       "observe-ls-tree",
+       "consent+bom"
+      ]
+     ],
+     "killed": true
+    }
+   },
+   "verdict": "killed by probe"
+  },
+  {
+   "id": "S10-code-structure-keeps-bom",
+   "file": "packages/three-surface-poc-core/src/code-structure.ts",
+   "old": "const text = decodeUtf8(withoutGitlinkRecords(bytes));",
+   "new": "const text = ((b: Buffer): string | undefined => { try { return new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(b); } catch { return undefined; } })(withoutGitlinkRecords(bytes));",
+   "head": "2d3f93759a28d35e7b04facb5aaebbcc29697d09",
+   "oldCount": 1,
+   "detectors": {
+    "tests": {
+     "command": "npx vitest run --project @syzygy/support --project @syzygy/three-surface-poc-core",
+     "exit": 0,
+     "summary": [
+      "Test Files  39 passed | 2 skipped (41)",
+      "Tests  1147 passed | 2 skipped (1149)"
+     ],
+     "failing": [],
+     "failingCount": 0,
+     "killed": false
+    },
+    "probe": {
+     "exit": 0,
+     "rowsDiffer": 0,
+     "differPerDriver": {},
+     "firstDiffering": [],
+     "killed": false
+    }
+   },
+   "verdict": "SURVIVED"
+  }
+ ]
+}

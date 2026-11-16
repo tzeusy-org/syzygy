@@ -1,0 +1,12 @@
+start 15:44:18
+CONTROL 386 0
+RM1-closer-sees-cr-of-crlf killed 15 timeouts 0
+RM2-drop-final-terminator killed 45 timeouts 0
+RM3-opener-sees-bare-cr killed 21 timeouts 0
+RM4-cr-blanked-length-kept killed 16 timeouts 0
+RM5-span-reset-at-bare-cr killed 8 timeouts 0
+RM6-malformed-line-counts-lf-only killed 4 timeouts 0
+RM7-u2028-is-a-line-end SURVIVED 0 timeouts 0
+RM8-positionOf-counts-bare-cr SURVIVED 0 timeouts 0
+RM9-crlf-re-emitted-as-lfcr killed 11 timeouts 0
+exit 0 15:47:38

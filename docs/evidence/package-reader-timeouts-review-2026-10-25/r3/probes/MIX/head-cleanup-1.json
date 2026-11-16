@@ -1,0 +1,132 @@
+{
+ "batch": "MIX",
+ "version": "head",
+ "param": "cleanup",
+ "n": 1,
+ "scriptSha256": "72a0fabdd0dd12f85ad35fde4b3ee032125757d5276b85802d76fdf5288f0195",
+ "command": "python3 -I <tools>/inject.py trace scripts/measure_vitest_test_durations.py . --file packages/polaris-generation-consent/src/package-reader.test.ts --project @syzygy/polaris-generation-consent --mode alone --runs 1 --out <tmp>/measure-out.json --profile",
+ "sent": [
+  {
+   "t": 1.8263,
+   "signal": "SIGINT",
+   "to": "pid"
+  },
+  {
+   "t": 1.8264,
+   "signal": "SIGTERM",
+   "to": "pid"
+  },
+  {
+   "t": 1.8486,
+   "signal": "SIGHUP",
+   "to": "pid"
+  },
+  {
+   "t": 1.8723,
+   "signal": "SIGINT",
+   "to": "pid"
+  },
+  {
+   "t": 1.8936,
+   "signal": "SIGINT",
+   "to": "group"
+  },
+  {
+   "t": 1.9138,
+   "signal": "SIGTERM",
+   "to": "pid"
+  },
+  {
+   "t": 1.9427,
+   "signal": "SIGHUP",
+   "to": "pid"
+  },
+  {
+   "t": 1.9632,
+   "signal": "SIGINT",
+   "to": "pid"
+  },
+  {
+   "t": 1.984,
+   "signal": "SIGINT",
+   "to": "group"
+  },
+  {
+   "t": 2.0072,
+   "signal": "SIGTERM",
+   "to": "pid"
+  },
+  {
+   "t": 2.0274,
+   "signal": "SIGHUP",
+   "to": "pid"
+  },
+  {
+   "t": 2.0486,
+   "signal": "SIGINT",
+   "to": "pid"
+  },
+  {
+   "t": 2.0688,
+   "signal": "SIGINT",
+   "to": "group"
+  },
+  {
+   "t": 2.0889,
+   "signal": "SIGTERM",
+   "to": "pid"
+  },
+  {
+   "t": 2.1109,
+   "signal": "SIGHUP",
+   "to": "pid"
+  }
+ ],
+ "events": [
+  {
+   "t": 1.2726,
+   "what": "vitest worker seen"
+  }
+ ],
+ "scriptExitedAtSeconds": 2.131,
+ "exitCode": -15,
+ "claimedExit": 130,
+ "exitAsClaimed": false,
+ "descendantsSeen": 4,
+ "seenOnlyByCwd": 1,
+ "vitestSeen": true,
+ "npxSeen": false,
+ "treeAfterExit": "",
+ "survivors": {},
+ "recordWritten": false,
+ "recordRuns": null,
+ "recordTests": null,
+ "recordProfileRows": null,
+ "recordExitCode": null,
+ "marks": [],
+ "scriptWrites": null,
+ "tmpdirLeft": [
+  "node-compile-cache",
+  "script.log"
+ ],
+ "trace": [
+  "TRACE 0.0233 popen-enter ['git', 'status', '--porcelain'] stopped []",
+  "TRACE 0.0262 popen-return 115831 stopped []",
+  "TRACE 0.0407 popen-enter ['git', 'rev-parse', 'HEAD'] stopped []",
+  "TRACE 0.0434 popen-return 115839 stopped []",
+  "TRACE 0.0469 popen-enter ['git', 'show', 'HEAD:packages/polaris-generation-consent/src/package-reader.test.ts'] stopped []",
+  "TRACE 0.0483 popen-return 115840 stopped []",
+  "TRACE 0.0561 popen-enter ['git', 'show', 'HEAD:packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts'] stopped []",
+  "TRACE 0.0586 popen-return 115841 stopped []",
+  "TRACE 0.0648 popen-enter ['node', '--version'] stopped []",
+  "TRACE 0.0667 popen-return 115842 stopped []",
+  "TRACE 0.0740 popen-enter ['npx', 'vitest', 'run'] stopped []",
+  "TRACE 0.0814 popen-return 115844 stopped []",
+  "TRACE 1.9931 popen-enter ['git', 'checkout', '--'] stopped [2, 15, 1, 2, 2, 15, 1, 2, 2, 15, 1]",
+  "TRACE 1.9943 popen-return 116115 stopped [2, 15, 1, 2, 2, 15, 1, 2, 2, 15, 1]",
+  "TRACE 2.0191 exit 130 stopped [2, 15, 1, 2, 2, 15, 1, 2, 2, 15, 1, 2, 2]"
+ ],
+ "outputTail": "TRACE 0.0233 popen-enter ['git', 'status', '--porcelain'] stopped []\nTRACE 0.0262 popen-return 115831 stopped []\nTRACE 0.0407 popen-enter ['git', 'rev-parse', 'HEAD'] stopped []\nTRACE 0.0434 popen-return 115839 stopped []\nTRACE 0.0469 popen-enter ['git', 'show', 'HEAD:packages/polaris-generation-consent/src/package-reader.test.ts'] stopped []\nTRACE 0.0483 popen-return 115840 stopped []\nTRACE 0.0561 popen-enter ['git', 'show', 'HEAD:packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts'] stopped []\nTRACE 0.0586 popen-return 115841 stopped []\nTRACE 0.0648 popen-enter ['node', '--version'] stopped []\nTRACE 0.0667 popen-return 115842 stopped []\nTRACE 0.0740 popen-enter ['npx', 'vitest', 'run'] stopped []\nTRACE 0.0814 popen-return 115844 stopped []\nTRACE 1.9931 popen-enter ['git', 'checkout', '--'] stopped [2, 15, 1, 2, 2, 15, 1, 2, 2, 15, 1]\nTRACE 1.9943 popen-return 116115 stopped [2, 15, 1, 2, 2, 15, 1, 2, 2, 15, 1]\nstopped by SIGINT: the run in progress, if any, was ended and restored and is not recorded\nTRACE 2.0191 exit 130 stopped [2, 15, 1, 2, 2, 15, 1, 2, 2, 15, 1, 2, 2]\n",
+ "exercised": true,
+ "passes": true
+}

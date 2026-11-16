@@ -1,0 +1,6 @@
+{"mode": "timeout", "version": "old", "param": 3.0, "inject": null, "exitCode": 124, "scriptExitAt": 3.148, "clean": false, "noSurvivor": true, "descendantsSeen": 12, "recordTests": null, "recordProfileRows": null}
+  DIRTY: M packages/polaris-generation-consent/src/package-reader.test.ts |  M packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts
+  events: []
+{"mode": "timeout", "version": "old", "param": 3.0, "inject": null, "exitCode": 124, "scriptExitAt": 3.113, "clean": false, "noSurvivor": true, "descendantsSeen": 12, "recordTests": null, "recordProfileRows": null}
+  DIRTY: M packages/polaris-generation-consent/src/package-reader.test.ts |  M packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts
+  events: []

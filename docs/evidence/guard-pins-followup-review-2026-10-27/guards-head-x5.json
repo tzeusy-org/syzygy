@@ -1,0 +1,77 @@
+{
+ "tree": "clone",
+ "head": "c12276679a8ed4d3b6b9642215115b77dbfc49d4",
+ "cleanAfter": true,
+ "results": [
+  {
+   "run": 1,
+   "exit": 0,
+   "tests": [
+    "Tests  165 passed (165)"
+   ],
+   "testFiles": [
+    "Test Files  4 passed (4)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "load1": 43.1,
+   "seconds": 8.6
+  },
+  {
+   "run": 2,
+   "exit": 0,
+   "tests": [
+    "Tests  165 passed (165)"
+   ],
+   "testFiles": [
+    "Test Files  4 passed (4)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "load1": 47.1,
+   "seconds": 9.5
+  },
+  {
+   "run": 3,
+   "exit": 0,
+   "tests": [
+    "Tests  165 passed (165)"
+   ],
+   "testFiles": [
+    "Test Files  4 passed (4)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "load1": 48.2,
+   "seconds": 8.0
+  },
+  {
+   "run": 4,
+   "exit": 0,
+   "tests": [
+    "Tests  165 passed (165)"
+   ],
+   "testFiles": [
+    "Test Files  4 passed (4)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "load1": 49.8,
+   "seconds": 9.7
+  },
+  {
+   "run": 5,
+   "exit": 0,
+   "tests": [
+    "Tests  165 passed (165)"
+   ],
+   "testFiles": [
+    "Test Files  4 passed (4)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "load1": 51.9,
+   "seconds": 10.4
+  }
+ ]
+}

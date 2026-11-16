@@ -1,0 +1,40 @@
+{
+ "baseCommit": "4d92ac9518dd60cdd124525c3e36c086ccd5e425",
+ "codeHeadCommit": "094a3b34ce1b12faa5b977ac967cc61f1af6a3fd",
+ "populationCommit": "094a3b34ce1b12faa5b977ac967cc61f1af6a3fd",
+ "population": "7338 tracked files at the population commit, excluding docs/evidence/syzygy-bpyt-6-3-iso/",
+ "editedFiles": [
+  "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts",
+  "AGENTS.md"
+ ],
+ "digests": [
+  {
+   "path": "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts",
+   "at": "base",
+   "sha256": "02173e7a2e7f64db1f5306cdf42800b439734550f31ceaa65f3319076307bea0",
+   "gitBlob": "6aaba0c728ec6c351e9169d29551e19f5210cc70"
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts",
+   "at": "head",
+   "sha256": "77c73dc1a9323a15aef1ac71212a622510014e3f846e900af73dff88e6c54f31",
+   "gitBlob": "81676b957eb1511d39054eb57260d921b7ddab19"
+  },
+  {
+   "path": "AGENTS.md",
+   "at": "base",
+   "sha256": "55aed3051b380e5c90b504c6ec7214820f6a6f0319aeb43759879a21c9329bb1",
+   "gitBlob": "86a1f3f555d1174ec41b9a3f5abb535566cab158"
+  },
+  {
+   "path": "AGENTS.md",
+   "at": "head",
+   "sha256": "cd35b63db42a57d0992096a571476905604512bd3c36c7175cc68ebe17018761",
+   "gitBlob": "6232685b7be61c3010eb5f2048daf42440356f62"
+  }
+ ],
+ "needles": 16,
+ "methods": "one: Python bytes.find over every blob; two: git grep -F -l per needle",
+ "methodsAgree": true,
+ "needlesCited": {}
+}

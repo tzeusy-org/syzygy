@@ -1,0 +1,33 @@
+denominator (my head runs): 299 distinct: 299 runs: 6
+  before-alone.json run 1: 299 tests, 299 distinct, same set as mine: True
+  before-alone.json run 2: 299 tests, 299 distinct, same set as mine: True
+  before-alone.json run 3: 299 tests, 299 distinct, same set as mine: True
+  before-full-1.json run 1: 299 tests, 299 distinct, same set as mine: True
+  before-full-1.json run 2: 299 tests, 299 distinct, same set as mine: True
+  before-full-2.json run 1: 299 tests, 299 distinct, same set as mine: True
+  before-full-2.json run 2: 299 tests, 299 distinct, same set as mine: True
+  extract: 299 tests, 299 distinct, same set as mine: True
+names observed but not in my denominator: []
+names in my denominator never observed: []
+expected sized: 16 lower bounds: 10 from load-127: 16
+source carries: 16
+expected == source (names and timeouts): True
+largest unsized worst case: (530, 'screening scope version 2 policy act never brings back the superseded version 1 act when the policy bytes revert to its argument (B-4)')
+   50000 worst  16465 LB load-127  | worst outside load-127  6890 (before-alone.json#2) | the policy port and the strict policy chain agree on every world in the fixture 
+   45000 worst  14198 LB load-127  | worst outside load-127   916 (before-full-2.json#1) | screening scope version 2 policy act counts the version 2 act when the policy ca
+   45000 worst  14149 LB load-127  | worst outside load-127   934 (before-full-2.json#1) | package admission reader returns a record only for an instance that an act recor
+   45000 worst  13826 LB load-127  | worst outside load-127  1190 (before-full-2.json#2) | egress version 2 record refuses when version 2 did not take effect strictly afte
+   40000 worst  12015 LB load-127  | worst outside load-127  1897 (before-alone.json#2) | strict act reads policy chain: absent without acts; refused for a missing versio
+   40000 worst  11817 LB load-127  | worst outside load-127  1976 (before-full-2.json#1) | egress version 2 record is read from the recorder's act: version 2 supersedes ve
+   40000 worst  11800 LB load-127  | worst outside load-127  1875 (before-full-2.json#2) | egress version 2 record the RFC5-14 class amendment version 2 depends on is requ
+   25000 worst   8089 LB load-127  | worst outside load-127   764 (before-full-2.json#1) | egress version 2 record withdrawal and forgery forms the reader does not define 
+   20000 worst   5040 LB load-127  | worst outside load-127   651 (before-alone.json#1) | egress version 2 record leaves version 1 standing before the version 2 act takes
+   20000 worst   5039 LB load-127  | worst outside load-127   705 (before-alone.json#3) | screening scope version 2 policy act a version 2 act not yet in force leaves ver
+   15000 worst   4808    load-127  | worst outside load-127   485 (before-alone.json#3) | public-source policy act refuses the recorder's file when its act type, identity
+   15000 worst   4266    load-127  | worst outside load-127  1099 (before-alone.json#2) | round-3 review notes takes a time: a strict read of an act recorded after now is
+   15000 worst   3866    load-127  | worst outside load-127   502 (before-alone.json#1) | public-source policy act recognises the recorder's record by its exact path and 
+   15000 worst   3452    load-127  | worst outside load-127   356 (before-full-1.json#1) | screening scope version 2 policy act refuses an unlisted record that names the p
+   15000 worst   3348    load-127  | worst outside load-127   838 (before-full-2.json#1) | round-3 review notes folds soft hyphens, zero-width spaces, underscores and spac
+   10000 worst   2564    load-127  | worst outside load-127   753 (before-full-2.json#1) | package admission reader refuses the whole read on unknown shapes instead of gue
+committed sizing rows: 299 sized: 16
+committed rows agree with mine (timeout, worst, lower bound): True

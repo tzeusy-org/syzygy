@@ -1,0 +1,14 @@
+[
+ {
+  "commit": "7dfad65a",
+  "exit": 1,
+  "message": "Error: Cannot find module 'typescript/bin/tsc'",
+  "sentinelKept": false
+ },
+ {
+  "commit": "687c5e13",
+  "exit": 1,
+  "message": "Error: Cannot find module 'typescript'",
+  "sentinelKept": true
+ }
+]

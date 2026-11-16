@@ -1,0 +1,9 @@
+{"mode": "inject", "version": "new", "param": null, "inject": "killpg-log", "exitCode": 0, "scriptExitAt": 13.964, "clean": true, "noSurvivor": true, "descendantsSeen": 20, "recordTests": 299, "recordProfileRows": 299}
+  events: []
+['KILLPG 2762020 0 -> ESRCH', "run 1: exit 0, 13.7 s, load1 {'start': 15.86, 'end': 19.39, 'min': 15.86, 'max': 18.27, 'samples': 3}, 299 tests of the file, 0 failed"]
+{"mode": "inject", "version": "new", "param": null, "inject": "killpg-log", "exitCode": 0, "scriptExitAt": 12.35, "clean": true, "noSurvivor": true, "descendantsSeen": 23, "recordTests": 299, "recordProfileRows": 299}
+  events: []
+['KILLPG 2768717 0 -> ESRCH', "run 1: exit 0, 12.0 s, load1 {'start': 19.52, 'end': 20.05, 'min': 19.52, 'max': 20.05, 'samples': 3}, 299 tests of the file, 0 failed"]
+{"mode": "inject", "version": "new", "param": null, "inject": "killpg-log", "exitCode": 0, "scriptExitAt": 10.96, "clean": true, "noSurvivor": true, "descendantsSeen": 20, "recordTests": 299, "recordProfileRows": 299}
+  events: []
+['KILLPG 2775033 0 -> ESRCH', "run 1: exit 0, 10.7 s, load1 {'start': 19.4, 'end': 18.34, 'min': 18.34, 'max': 19.4, 'samples': 3}, 299 tests of the file, 0 failed"]

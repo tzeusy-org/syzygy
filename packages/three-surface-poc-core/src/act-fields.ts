@@ -12,8 +12,6 @@
 //
 // Pure: no file, process or clock.
 
-import { createHash } from 'node:crypto';
-
 // RFC3-16(c)'s two provenance states, by the labels the act records use.
 export const STATE_1_LABEL = 'owner-adopted (bootstrap, uncorrelated)' as const;
 export const STATE_2_LABEL = 'Syzygy-verified' as const;
@@ -39,25 +37,15 @@ export function isGovernancePath(value: string): boolean {
   return value.split('/').every((segment) => segment !== '' && segment !== '.' && segment !== '..');
 }
 export function isIsoDate(value: string): boolean {
-  return ISO_DATE.test(value) && !Number.isNaN(Date.parse(`${value}T00:00:00Z`));
+  if (!ISO_DATE.test(value)) return false;
+  const instant = Date.parse(`${value}T00:00:00Z`);
+  return Number.isFinite(instant) && new Date(instant).toISOString().slice(0, 10) === value;
 }
 export function isHumanName(value: string): boolean {
   return value.length > 0 && value.length <= 200 && !/[`*\n]/.test(value);
-}
-export function sha256(bytes: Uint8Array): string {
-  return createHash('sha256').update(bytes).digest('hex');
 }
 export function provenanceFromLabel(label: string): ProvenanceLabel | undefined {
   if (label === STATE_1_LABEL) return 'state-1';
   if (label === STATE_2_LABEL) return 'state-2';
   return undefined;
-}
-export function deepFreeze<T>(value: T): T {
-  if (typeof value === 'object' && value !== null && !Object.isFrozen(value)) {
-    Object.freeze(value);
-    for (const key of Object.keys(value as object)) {
-      deepFreeze((value as Record<string, unknown>)[key]);
-    }
-  }
-  return value;
 }

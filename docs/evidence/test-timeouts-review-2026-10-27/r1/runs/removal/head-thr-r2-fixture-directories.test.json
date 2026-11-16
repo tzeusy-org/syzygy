@@ -1,0 +1,179 @@
+{
+ "files": [
+  {
+   "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-537/clone/apps/three-surface-poc/src/fixture-directories.test.ts",
+   "project": "@syzygy/three-surface-poc-app",
+   "type": "suite",
+   "name": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": null,
+   "mode": "run",
+   "state": "pass",
+   "durationMs": 981.3422579999999,
+   "errors": [],
+   "tasks": [
+    {
+     "type": "suite",
+     "name": "fixture directories a killed run left behind (syzygy-bpyt.4.10)",
+     "line": 26,
+     "mode": "run",
+     "state": "pass",
+     "durationMs": 980.6557310000001,
+     "errors": [],
+     "tasks": [
+      {
+       "type": "test",
+       "name": "removes the copy and the template of a process that is gone",
+       "line": 55,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 69.28573199999994,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "keeps the directories of a live process, the current one included",
+       "line": 63,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 0.9237550000000283,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "keeps a name that carries no pid and namespace segment, whatever its suffix",
+       "line": 71,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 53.78002200000003,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "keeps a directory whose pid fails with anything but ESRCH",
+       "line": 94,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 38.33890299999996,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "follows no symlink and removes no file: only a directory with a dead pid in its name goes",
+       "line": 109,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 72.48210100000006,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "keeps the directories of a dead pid that belong to another PID namespace, whatever the neighbouring value",
+       "line": 128,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 68.27636499999994,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "removes nothing, and lists nothing, where the PID namespace cannot be read, so a sandbox without /proc never sweeps another sandbox's live directories",
+       "line": 146,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 53.48538500000018,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "removes nothing, and lists nothing, where the PID namespace names no inode, so a sandbox without /proc never sweeps another sandbox's live directories",
+       "line": 146,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 54.41178500000001,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "keeps a directory that belongs to another user, the sweep never descending into it",
+       "line": 186,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 44.757067000000006,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "checks no user where the system has no user ids, and removes the dead process's directory",
+       "line": 198,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 52.87739600000009,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "does not fail the run when the temp directory cannot be listed",
+       "line": 212,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 48.20157399999994,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "lists only the directory it is given: nothing beside it, nothing below a non-fixture entry",
+       "line": 227,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 64.87547100000006,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "does not fail the run when a dead process's directory cannot be removed",
+       "line": 241,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 42.89209400000004,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "sweeps the temp directory the process runs under when the global setup runs, and keeps the live and the legacy",
+       "line": 256,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 67.34708,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "asks the operating system for the temp directory, so it sweeps the same directory the copies are made in when TMPDIR is unset",
+       "line": 266,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 47.83505100000002,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "is registered as a global setup of the app project and of no other project, so it runs once per run",
+       "line": 284,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 199.2199210000001,
+       "errors": []
+      }
+     ],
+     "hookMs": 2
+    }
+   ],
+   "hookMs": 1,
+   "collectMs": 147.3147009999999,
+   "setupMs": 18.41460600000005,
+   "prepareMs": 192.246168,
+   "environmentMs": 0.2096559999999954
+  }
+ ],
+ "unhandled": []
+}

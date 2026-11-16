@@ -1,0 +1,266 @@
+{
+ "tool": "census_run.py",
+ "treeCommit": "a864e999645a071dda40325b2235976590e02973",
+ "mode": "clean",
+ "command": [
+  "npx",
+  "vitest",
+  "run"
+ ],
+ "privateDirectory": "/tmp/lc418/f3",
+ "tmpdir": "/tmp/lc418/f3/tmp",
+ "sha256": {
+  "census_run.py": "6039545e993610ef67dff1fc60103ade0fe197ab55638c1f9cdec7504b16fe8d",
+  "scratch_trace.cjs": "c9ff0cbbd2c9162c8483082f24202e18fa52f414c9c18a648723285de2ec2688",
+  "tmp_sampler.py": "3e34f06abe672f405ae7107b9e55472e22299dddef2634b167c9373008c2125d"
+ },
+ "loadAverageAtStart": [
+  11.69970703125,
+  14.7509765625,
+  17.52734375
+ ],
+ "killAfterSeconds": null,
+ "seededFrom": {
+  "privateDirectory": "/tmp/lc418/k3",
+  "entriesMovedIn": [
+   ".com.google.Chrome.KqGvjD",
+   ".com.google.Chrome.gSRiGG",
+   "31LMLm7i8voojUSnJtO8r",
+   "Sc1zrJ-L-QV33e48HXNOd",
+   "node-compile-cache",
+   "nwO6aHIa9g96joRaFjyfX",
+   "syzygy-poc-a11y-adrlEW",
+   "syzygy-poc-browser-nYnwab",
+   "syzygy-poc-surface-fixture-p2179332-n4026531836-sMxgAh",
+   "syzygy-poc-surface-fixture-p2206865-n4026531836-8s9ra8",
+   "syzygy-poc-surface-fixture-template-p2179332-n4026531836-TdL8vS",
+   "syzygy-poc-surface-fixture-template-p2206865-n4026531836-TScTIP",
+   "syzygy-repo-corpus-zBxoSO",
+   "syzygy-repo-hostile-NF9s0a",
+   "w4zgGDO75iJn-35RHMpzR"
+  ]
+ },
+ "leader": {
+  "pid": 2274604,
+  "pgid": 2274604
+ },
+ "exit": 0,
+ "seconds": 137.1,
+ "listingAtEnd": [
+  {
+   "name": ".com.google.Chrome.A0sHbr",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792857025.6,
+   "bytes": 0
+  },
+  {
+   "name": ".com.google.Chrome.KqGvjD",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792856455.3,
+   "bytes": 0
+  },
+  {
+   "name": ".com.google.Chrome.LWkRQM",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792857026.7,
+   "bytes": 0
+  },
+  {
+   "name": ".com.google.Chrome.cmf3K1",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792857025.0,
+   "bytes": 0
+  },
+  {
+   "name": ".com.google.Chrome.gSRiGG",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792856352.6,
+   "bytes": 0
+  },
+  {
+   "name": "31LMLm7i8voojUSnJtO8r",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792856350.0,
+   "bytes": 7131136
+  },
+  {
+   "name": "Sc1zrJ-L-QV33e48HXNOd",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792856350.0,
+   "bytes": 7507968
+  },
+  {
+   "name": "node-compile-cache",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792856349.0,
+   "bytes": 8392704
+  },
+  {
+   "name": "nwO6aHIa9g96joRaFjyfX",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792856350.0,
+   "bytes": 131072
+  },
+  {
+   "name": "syzygy-poc-a11y-adrlEW",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792856426.6,
+   "bytes": 1486848
+  },
+  {
+   "name": "syzygy-poc-browser-nYnwab",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792856544.5,
+   "bytes": 40460288
+  },
+  {
+   "name": "syzygy-repo-corpus-zBxoSO",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792856463.8,
+   "bytes": 299008
+  },
+  {
+   "name": "syzygy-repo-hostile-NF9s0a",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792856464.0,
+   "bytes": 159744
+  },
+  {
+   "name": "w4zgGDO75iJn-35RHMpzR",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792856414.0,
+   "bytes": 1699840
+  }
+ ],
+ "processesCarryingTheMarker": {
+  "marker": "--user-data-dir=<private-directory>/tmp/ in the arguments",
+  "count": 0,
+  "byKind": {},
+  "pids": []
+ },
+ "groupMembersAliveAtEnd": 0,
+ "stoppedByPid": {
+  "signal": "SIGTERM",
+  "rounds": 0,
+  "remaining": 0
+ },
+ "listingAfterStopping": [
+  {
+   "name": ".com.google.Chrome.A0sHbr",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792857025.6,
+   "bytes": 0
+  },
+  {
+   "name": ".com.google.Chrome.KqGvjD",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792856455.3,
+   "bytes": 0
+  },
+  {
+   "name": ".com.google.Chrome.LWkRQM",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792857026.7,
+   "bytes": 0
+  },
+  {
+   "name": ".com.google.Chrome.cmf3K1",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792857025.0,
+   "bytes": 0
+  },
+  {
+   "name": ".com.google.Chrome.gSRiGG",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792856352.6,
+   "bytes": 0
+  },
+  {
+   "name": "31LMLm7i8voojUSnJtO8r",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792856350.0,
+   "bytes": 7131136
+  },
+  {
+   "name": "Sc1zrJ-L-QV33e48HXNOd",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792856350.0,
+   "bytes": 7507968
+  },
+  {
+   "name": "node-compile-cache",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792856349.0,
+   "bytes": 8392704
+  },
+  {
+   "name": "nwO6aHIa9g96joRaFjyfX",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792856350.0,
+   "bytes": 131072
+  },
+  {
+   "name": "syzygy-poc-a11y-adrlEW",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792856426.6,
+   "bytes": 1486848
+  },
+  {
+   "name": "syzygy-poc-browser-nYnwab",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792856544.5,
+   "bytes": 40460288
+  },
+  {
+   "name": "syzygy-repo-corpus-zBxoSO",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792856463.8,
+   "bytes": 299008
+  },
+  {
+   "name": "syzygy-repo-hostile-NF9s0a",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792856464.0,
+   "bytes": 159744
+  },
+  {
+   "name": "w4zgGDO75iJn-35RHMpzR",
+   "kind": "dir",
+   "uid": 1000,
+   "mtime": 1792856414.0,
+   "bytes": 1699840
+  }
+ ],
+ "samplerRecord": "/tmp/lc418/f3/samples.json",
+ "trace": {
+  "lines": 2605,
+  "sha256": "c69b06d7409d39e73414ffe606866d11fee88a7ee0212f9568cc573aa48985de"
+ }
+}

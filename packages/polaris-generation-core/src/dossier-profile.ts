@@ -5,7 +5,7 @@
  * instead the questions it would have asked and the limitation each leaves.
  */
 
-import { createHash } from 'node:crypto';
+import { sha256 } from '@syzygy/support';
 
 import type { RequestedAsset } from './draft-model.js';
 import type { GenerationSource } from './generation-source.js';
@@ -108,7 +108,7 @@ export interface ClarificationRecord {
 
 const PURPOSE_DOC = /(^|\/)(readme|overview|about|intro(duction)?|manifesto|vision|why|philosophy)[^/]*$/iu;
 const digestOf = (q: Omit<ClarificationQuestion, 'contentDigest'>): string =>
-  createHash('sha256').update(JSON.stringify([q.id, q.question, q.scope, q.reason])).digest('hex');
+  sha256(JSON.stringify([q.id, q.question, q.scope, q.reason]));
 const withDigest = (q: Omit<ClarificationQuestion, 'contentDigest'>): ClarificationQuestion => ({ ...q, contentDigest: digestOf(q) });
 
 /** Which consequential questions the population leaves open, in priority order. */

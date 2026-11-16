@@ -1,0 +1,173 @@
+{
+  "subject": "generation-mutation.test.ts, by mutating the plan it checks",
+  "commit": "e40af0ea2129cad9337082774fb7569f3b40fcad",
+  "uncommittedChanges": [],
+  "plan": "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts",
+  "planSha256": "45df0eb031499ee5431922f5ddcb7366e2bcd3e7d601902ae00cd0252eca9635",
+  "test": "apps/three-surface-poc/src/polaris-generation/generation-mutation.test.ts",
+  "control": {
+    "exit": 0,
+    "total": 1,
+    "failed": 0,
+    "failureMessages": []
+  },
+  "controlPassed": true,
+  "mutants": [
+    {
+      "id": "T1",
+      "predicate": "fragment occurs once: the repair-cycle cap's pre-5955f8c0 one-line fragment",
+      "edits": [
+        {
+          "old": "from: \"if (repairs >= budget.maxRepairCycles) {\\n        if (verdict.reviewerBlocking) stop('repair-exhausted');\",",
+          "new": "from: \"if (repairs >= budget.maxRepairCycles) stop('repair-exhausted');\","
+        }
+      ],
+      "expectedMessage": "pipeline-repair-cycle-cap-disabled: expected +0 to be 1",
+      "observed": {
+        "exit": 1,
+        "total": 1,
+        "failed": 1,
+        "failureMessages": [
+          "AssertionError: pipeline-repair-cycle-cap-disabled: expected +0 to be 1 // Object.is equality"
+        ]
+      },
+      "killed": true,
+      "restored": true
+    },
+    {
+      "id": "T2",
+      "predicate": "fragment occurs once: the duplicate-handle check's pre-69995614 file",
+      "edits": [
+        {
+          "old": "    file: DRAFT_MODEL_SOURCE,",
+          "new": "    file: PROVIDER_DRAFT_SOURCE,"
+        }
+      ],
+      "expectedMessage": "provider-draft-duplicate-handle-check-disabled: expected +0 to be 1",
+      "observed": {
+        "exit": 1,
+        "total": 1,
+        "failed": 1,
+        "failureMessages": [
+          "AssertionError: provider-draft-duplicate-handle-check-disabled: expected +0 to be 1 // Object.is equality"
+        ]
+      },
+      "killed": true,
+      "restored": true
+    },
+    {
+      "id": "T3",
+      "predicate": "fragment occurs once: a fragment that occurs twice",
+      "edits": [
+        {
+          "old": "from: \"if (Array.isArray(record.sourceIds) && record.sourceIds.some(id => !sources.has(id))) throw new Error('unknown-source');\",",
+          "new": "from: \"throw new Error('unknown-source');\","
+        }
+      ],
+      "expectedMessage": "provider-draft-unknown-source-check-disabled: expected 2 to be 1",
+      "observed": {
+        "exit": 1,
+        "total": 1,
+        "failed": 1,
+        "failureMessages": [
+          "AssertionError: provider-draft-unknown-source-check-disabled: expected 2 to be 1 // Object.is equality"
+        ]
+      },
+      "killed": true,
+      "restored": true
+    },
+    {
+      "id": "T4",
+      "predicate": "the mutation changes the source",
+      "edits": [
+        {
+          "old": "to: 'const sorted = (keys as string[]);',",
+          "new": "to: 'const sorted = (keys as string[]).sort();',"
+        }
+      ],
+      "expectedMessage": "not to be",
+      "observed": {
+        "exit": 1,
+        "total": 1,
+        "failed": 1,
+        "failureMessages": [
+          "AssertionError: expected 'import { types } from \\'node:util\\';\\…' not to be 'import { types } from \\'node:util\\';\\…' // Object.is equality"
+        ]
+      },
+      "killed": true,
+      "restored": true
+    },
+    {
+      "id": "T5",
+      "predicate": "every mutant names a must-fail test",
+      "edits": [
+        {
+          "old": "mustFail: ['requires declared review coverage of inventory and every claim-bearing block'],",
+          "new": "mustFail: [],"
+        }
+      ],
+      "expectedMessage": "expected 0 to be greater than 0",
+      "observed": {
+        "exit": 1,
+        "total": 1,
+        "failed": 1,
+        "failureMessages": [
+          "AssertionError: expected 0 to be greater than 0"
+        ]
+      },
+      "killed": true,
+      "restored": true
+    },
+    {
+      "id": "T6",
+      "predicate": "ids are distinct",
+      "edits": [
+        {
+          "old": "id: 'canonical-json-cycle-check-disabled',",
+          "new": "id: 'canonical-json-sorted-keys-disabled',"
+        }
+      ],
+      "expectedMessage": "expected 11 to be 12",
+      "observed": {
+        "exit": 1,
+        "total": 1,
+        "failed": 1,
+        "failureMessages": [
+          "AssertionError: expected 11 to be 12 // Object.is equality"
+        ]
+      },
+      "killed": true,
+      "restored": true
+    },
+    {
+      "id": "T7",
+      "predicate": "the plan holds twelve mutants",
+      "edits": [
+        {
+          "old": "export const GENERATION_LITERAL_MUTATIONS: readonly LiteralMutation[] = [",
+          "new": "export const GENERATION_LITERAL_MUTATIONS: readonly LiteralMutation[] = (["
+        },
+        {
+          "old": "\n];\n",
+          "new": "\n] as LiteralMutation[]).slice(1);\n"
+        }
+      ],
+      "expectedMessage": "expected 11 to be 12",
+      "observed": {
+        "exit": 1,
+        "total": 1,
+        "failed": 1,
+        "failureMessages": [
+          "AssertionError: expected 11 to be 12 // Object.is equality"
+        ]
+      },
+      "killed": true,
+      "restored": true
+    }
+  ],
+  "summary": {
+    "mutants": 7,
+    "killed": 7,
+    "restored": 7
+  }
+}

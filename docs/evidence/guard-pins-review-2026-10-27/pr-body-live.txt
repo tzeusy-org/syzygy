@@ -1,0 +1,135 @@
+**Outcome.** This change carries the PR #528 review's notes N1–N3 (`docs/reviews/R-GP-IMPL-ARGV-FAIL-CLOSED-1-RAW.md:342-422`). It is test-only: three files, no product byte.
+- **N1: six predicates that no row killed now have killing rows.** Each of RV-P3, RV-P4, RV-P6, RV-Q1, RV-Q2 and RV-Q3 survives at `8ff50172` (main after #528) and is killed at `c90cd732`. Each was run unchanged from the reviewer's retained spec.
+  - `workspace-reach.test.ts` gains the reviewer's three `#` alias rows:
+    - a target that leaves its package for a module that exists;
+    - a target outside `./dist/`;
+    - a `./dist/` target that names no source module.
+  - `argv.test.ts` gains the reviewer's two census self rows: `[[]].map(readArgv)`, and a `readArgv` declared outside `argv.ts`.
+  - For RV-Q3, `readArgvCallers` now takes its files and a reader as arguments, defaulting to the tree. A new row feeds it two modules, and the namespace call in one of them must reach `unlifted`.
+  - RV-P8 (`Array.isArray` dropped) is equivalent, as the review says, and survives at both commits.
+- **N2: a workspace package under another name now fails both guards.** In `workspace-reach.testkit.ts`, the shared resolver reads a bare specifier as naming no module when its package name is a local dependency of some manifest. The workspace root's manifest counts.
+  - A local dependency is any of `dependencies`, `devDependencies`, `optionalDependencies` or `peerDependencies` whose version matches `/^(?:file:|link:|workspace:|npm:|\.\.?(?:\/|$)|\/|~\/)|\.(?:tgz|tar|tar\.gz)$/iu`.
+  - Before this change, the resolver returned null ("outside the workspace") for such a specifier, so both guards' "resolves every" rows passed it.
+  - One row per form and field: `file:` (also `FILE:` with a scoped name, and a subpath), `link:`, `workspace:`, `npm:`, a `../` path, a `~/` path, an absolute path, a tarball, and a dependency declared by another package.
+  - Controls stay outside: a registry version, a range, a git dependency, an undeclared name, and a name longer than a local one.
+  - A row pins the root manifest among the workspace's manifests.
+- **N3: the `readArgv` census covers every compiled module type.** Its population is now every `.ts`, `.mts`, `.cts` and `.tsx` module under a package's `src`, with test modules of each kind excluded. Before, it was `.ts` only. A row feeds it one module per extension, plus test modules and non-TypeScript files.
+
+**CC-REV-1 classes: 1, 4 and 6 declared**, as for 8.34 and 8.36. No endpoint is removed. The independent reviewer rules.
+- The resolver is the island guard's mechanism, and that guard is the rule-6 kill evidence for the 8.1 ruling's class-1 and class-4 claims.
+- The census and the daemon-path guard pin the `./argv` export the daemon imports (class 6).
+
+The GP-Q0 extras:
+- **Differential:** degenerate for the product, because no product byte changes. The stand-in is the old resolver against the new over one tree (Evidence).
+- **Rule-6 mutant per predicate:** 36 of 36 own mutants are killed. 8 of 8 reviewer targets go from survives to killed.
+- **Owner notice:** due on `syzygy-bpyt.10` at landing.
+
+**For the ruling: the guards refuse two forms beyond the bead's literal list.** Both are refusals only, and no tree today carries either.
+- Path and tarball versions. npm reads both as `file:`: `npm-package-arg` gives `../x`, `./x`, `/x` and `~/x` the type `directory`, and `x.tgz` the type `file`.
+- The root manifest. It is a workspace manifest, and npm installs its dependencies where every workspace module resolves them.
+
+Over 11 tracked manifests at the code head (the root, 2 under `apps/`, 8 under `packages/`), 0 dependencies match the local pattern. 0 tracked `.mts`, `.cts` or `.tsx` modules sit under any `src`. If the reviewer reads either form as a change GP-Q0 does not list, it goes to the owner before merge.
+
+**Authority:** bead `syzygy-bpyt.8.37`, from R-GP-IMPL-ARGV-FAIL-CLOSED-1 N1–N3, under the owner's 2026-10-20 direction as read per GP-Q0 (`OWNER-DIRECTION-GREENFIELD-PARITY-ANSWERS-2026-10-21.md`). This bead is a precondition of `syzygy-bpyt.8.5`.
+
+## Every changed output
+
+None. The code commit is `c90cd7327a24fee44d0e7135872a3b08277c73b0`, over base `8ff50172b127cba676ff32ce62c12c91b2b0d924`: 3 files, +106/−17, and `git diff 8ff50172 c90cd732` has sha256 `615db956261b0a5b28d548486fc48282fa0a9ec51e0fe8c928f9f84d0e132fee`. The three files:
+- `packages/polaris-generation-core/src/workspace-reach.testkit.ts`
+- `packages/polaris-generation-core/src/workspace-reach.test.ts`
+- `packages/polaris-dossier/src/argv.test.ts`
+
+The evidence commit `138010d5` adds 21 files under `docs/evidence/syzygy-bpyt-8-37/` and changes nothing else. Main has not moved since the branch point.
+
+## Evidence
+
+All files are under `docs/evidence/syzygy-bpyt-8-37/`. **`summary.json`** (sha256 `641ea1d8214dad89b306a9dbaa8747fc7e8c7bfd66c39631028da8eabd6e48cc`) is derived by **`record.py`** (sha256 `6f1a80e44e4527f04ad5cf27fb033dcd22c5ab5eef084777748a812d333074b5`). It checks every record against the git objects at `8ff50172` and `c90cd732`:
+- each run's commit;
+- each mutant's edits against its spec, and each `old` fragment, which must occur exactly once at the commit it ran;
+- each outcome against its exit code and failed rows, and a clean tree after each run;
+- every retained spec against its source row as committed;
+- the island diff's tool digest;
+- the title arithmetic;
+- the subject's file list.
+
+`--check` regenerates it byte for byte and reports 0 problems. `--selftest` makes 18 in-memory mutations, and each one makes a check fail (18/18).
+
+Every mutant ran under the PR 524 reviewer's `mut.py` (`docs/evidence/argv-guards-review-2026-10-25/tools/mut.py`, sha256 `ca2b8eadc503305bb3767b7220b02775429164ef6c183ac9854acf9d8ed9b6a5`), in clean clones of each commit.
+
+**The review's mutants: `premise-base.json` and `targets-head.json`.** They ran unchanged from `docs/evidence/argv-fail-closed-review-2026-10-25/tools/own-specs-head.json`.
+
+| Mutant | Base `8ff50172` | Head `c90cd732` |
+|---|---|---|
+| RV-P3 `moduleIn` outside `./dist/` → null | survives 52/52 | killed, 1 row |
+| RV-P4 `moduleIn` missing file → null | survives 52/52 | killed, 1 row |
+| RV-P6 `../` target check dropped | survives 52/52 | killed, 1 row |
+| RV-Q1 callee conjunct dropped | survives 81/81 | killed, 1 row |
+| RV-Q2 declaration allowed anywhere | survives 81/81 | killed, 1 row |
+| RV-Q3 census never fed | survives 81/81 | killed, 1 row |
+| RV-T18 `file:` alias `dossier` imported by `main.ts` | survives 27/27 | killed, 1 row |
+| RV-C6 a reader in `extra-reader.mts` | survives 81/81 | killed, 1 row |
+| RV-P8 `Array.isArray` dropped (equivalent) | survives | survives |
+
+**Own mutants: `own-specs.json`** is written by `own_specs.py`, which checks every fragment against the head tree.
+- **At head, `own-head.json`:** 36 of 36 are killed.
+- **At base, `own-base-tree.json`:** the 9 tree forms all survive, so each is a new kill.
+- **The resolver (L1–L20), one per predicate:**
+  - L1, the local check dropped (11 rows fail);
+  - L2–L4, the package-name extraction: the whole specifier compared, a scope ignored, a prefix match;
+  - L5–L10, the manifests read: only the first manifest; `dependencies`, `devDependencies`, `optionalDependencies` and `peerDependencies` each left unread; the root manifest left out;
+  - L11–L20, the version pattern: each alternative dropped, the `i` flag dropped, the `^` anchor dropped.
+- **The census (K1–K7):**
+  - the given files ignored, and the given reader ignored;
+  - `.mts`/`.cts` left out, and `.tsx` left out;
+  - only `.test.ts` excluded, and tests not excluded at all;
+  - the population left unsorted.
+- **Tree forms:**
+  - `link:`, `workspace:`, `npm:` and path aliases imported by `apps/syzygy/src/main.ts`;
+  - a `file:` alias's `/argv` subpath;
+  - a `file:` dev dependency of the workspace root;
+  - a `file:` alias of `polaris-generation-consent` imported by a module the CLI reaches (the island guard);
+  - `.cts` and `.tsx` readers.
+
+**Every retained reviewer spec: `retained-specs.json`.** This is all 123 specs the PR 524 and PR 528 reviewers retained, gathered unchanged, with the 7 duplicated ids merged after a check that their rows are identical. `retained-{base,head}.json` hold the runs:
+
+| | Base | Head |
+|---|---|---|
+| killed | 99 | 107 |
+| survive | 24 | 16 |
+| weaker at head | | 0 |
+| stronger at head | | 9: the 8 targets above, and RV-P2 (6 → 7 failing rows) |
+
+The 16 survivors at head all survive at base too, unchanged: `C0-argv`, `C0-both-guards`, `C0-guard`, `OB3-shadowed-argv-replaces-the-polaris-branch-import`, `R-IF2-into-island-from-island-counted`, `R-X8-get-builtin-module-create-require`, `R-Y8-another-options-command-gains-a-valued-option`, `RV-C5-concatenated-name`, `RV-P8-array-guard-dropped`, `RV-T19-node-modules-relative-path`, `consen:R3`, `consen:R5`, `island:R1`, `island:R5`, `island:R6` and `island:R9`. Among them:
+- R-X8 and RV-C5 are residuals the #528 PR names;
+- RV-P8 is equivalent;
+- RV-T19 names no module Node can load, by the #528 review's finding.
+
+**Island differential: `island-diff.json`.** The #528 lane's `docs/evidence/syzygy-bpyt-8-36/island_diff.py` (sha256 `131206846b062bc60ba7efeb67bf6ecf81802a54921d94979f2bc7428b8afc04`) ran the testkit at `8ff50172` against the one at `c90cd732` over the tree.
+- **Walks:** 246 of 246 are equal. The answers' sha256 is `e297b289a9f722bdfe5840064f27e1454df131795eecb5b6c1546f30a1cae777`, the digest the #528 dispositions record.
+- **Resolver answers:** 2,612 of 2,612 are equal, over 496 modules: 1,547 resolve to a module, 1,065 are null, and 0 are undefined.
+- **Selftest:** `island-diff-selftest.json` drops the `.js`-to-`.ts` candidate. 186 walks and 1,286 answers then differ.
+
+**Repeats: `repeat-runs.json`.** The four guard files (`workspace-reach`, `island-boundary`, `subpath-imports`, `argv`) gave `Tests  157 passed (157)` in each of 5 runs, at load1 22.7–27.3.
+
+**Titles: `titles.json`** is `vitest list --json` in clean clones. It lists 5,301 titles at base and 5,325 at head.
+- 24 are added: 20 in `workspace-reach.test.ts` and 4 in `argv.test.ts`.
+- 0 are removed.
+- The duplicated parametrized keys are the same at both commits.
+
+**Also run at `c90cd732`:** `npm run typecheck` exits 0, which covers the test files under each package's `include: ["src"]`. `check_governance.py` gives `32 OK, 21 WARN, 0 FAIL`.
+
+## Residuals
+
+- **Version forms the resolver still reads as outside.** A git dependency (`github:`, `git+file:`) or a remote tarball URL still reads as outside the workspace. npm installs either from a repository or a URL, not from a workspace directory, so neither names a workspace module.
+- **A bare name declared nowhere** still reads as outside, so a module could import a package the walk cannot follow. The bead's stricter option, refusing every such name, would refuse every `node_modules` dependency that is imported without being declared.
+- **`readArgvCallers`'s defaults widen its tree population.** `treeFiles()` returns every path under `src`, and the extension filter now sits inside the function. On today's tree the population is unchanged, because 0 modules there are `.mts`, `.cts` or `.tsx`.
+- **Unchanged from #528:** `getBuiltinModule`, `eval` and `data:` URLs (R-X8); a `readArgv` reference that never spells the name (RV-C5); and `*` patterns and fallback arrays read as unresolved.
+
+`Tests: +24 ~0 -0`. The bodies of the two tree census rows and of every guard row are byte-unchanged. The helpers behind them changed, and the island diff shows every walk and resolver answer over today's tree unchanged.
+
+Battery: `commit=138010d5beda4a1d39945265388fda0b35d34194 commands=110 nonzero=0` in a clean clone of the evidence head.
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+https://claude.ai/code/session_01APhWyj6JKsAs6kzgYByHeD
+

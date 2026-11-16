@@ -1,0 +1,191 @@
+{
+  "epistemic": "Observed",
+  "recordedAtUtc": "2026-10-20T20:16:11.036089+00:00",
+  "sourceCommit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+  "retainedCoreCommit": "ddf1dc69b724df72a5e3c4f224500aa51d344ef0",
+  "activeCandidateCommit": "662b4b49505776c21856791abc52cda72346c5d9",
+  "bindingNote": "All candidate-snapshot bytes are Git objects from retainedCoreCommit; procedural-successor/REVIEW-BRIEF.md is from activeCandidateCommit. Only that brief changes between these commits.",
+  "manifestFileSha256": "77e53d37ac42c5db4edb4f99d76d937629df5a80d370ac47751c0e62f27270bd",
+  "subjectPopulation": 6,
+  "subjects": [
+    {
+      "path": "openspec/changes/three-surface-poc-experience/.openspec.yaml",
+      "adoptedCommit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+      "adoptedBlob": "88ea4823207ba553f4e7a37819adf3b18c678627",
+      "adoptedSha256": "9187547d8cc17017ebd44132527d2d5e096d1ef9705de80cc4f1cf34531f6976",
+      "proposedSha256": "9187547d8cc17017ebd44132527d2d5e096d1ef9705de80cc4f1cf34531f6976",
+      "manifestMatch": true,
+      "exactHunks": 0,
+      "adoptedSnapshot": "adopted-subjects/openspec/changes/three-surface-poc-experience/.openspec.yaml",
+      "proposedSnapshot": "proposed-subjects/openspec/changes/three-surface-poc-experience/.openspec.yaml"
+    },
+    {
+      "path": "openspec/changes/three-surface-poc-experience/CONTRACT-COVERAGE.md",
+      "adoptedCommit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+      "adoptedBlob": "12844ed1211a8a1837e9088050ff46f56447057f",
+      "adoptedSha256": "f6ecbc2040779f6d12de74b2fb6ce8b83d9b66a28aa5e3f72a8f22add4067ffc",
+      "proposedSha256": "0fd62d8004107715af992aa259394bd9cfaaa09cfaa19b7776f8864b08d5deed",
+      "manifestMatch": true,
+      "exactHunks": 3,
+      "adoptedSnapshot": "adopted-subjects/openspec/changes/three-surface-poc-experience/CONTRACT-COVERAGE.md",
+      "proposedSnapshot": "proposed-subjects/openspec/changes/three-surface-poc-experience/CONTRACT-COVERAGE.md"
+    },
+    {
+      "path": "openspec/changes/three-surface-poc-experience/GOVERNING-DEPENDENCIES.md",
+      "adoptedCommit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+      "adoptedBlob": "7fa566b7a812f45a18f4d025b866c5e6b4d0008f",
+      "adoptedSha256": "2badee3cd053074182d3de24777a75991d2265b609c580094e2b87e49e91aac5",
+      "proposedSha256": "b6a09da09414b24ee225d5d92701dfbad4e59ca12a0b6ef7b3ad3d8c8ffe1df3",
+      "manifestMatch": true,
+      "exactHunks": 7,
+      "adoptedSnapshot": "adopted-subjects/openspec/changes/three-surface-poc-experience/GOVERNING-DEPENDENCIES.md",
+      "proposedSnapshot": "proposed-subjects/openspec/changes/three-surface-poc-experience/GOVERNING-DEPENDENCIES.md"
+    },
+    {
+      "path": "openspec/changes/three-surface-poc-experience/design.md",
+      "adoptedCommit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+      "adoptedBlob": "66ce8d3da25f1b0ee54965a8a89484500c715bc2",
+      "adoptedSha256": "6d39ea6f6111abaea32c74ce96c975ae53e077485f0ed8f7c97545e64d7ba295",
+      "proposedSha256": "160c813f747887200e6656fba99395e37a76892d4370da8bdd82d1d40e47e6ac",
+      "manifestMatch": true,
+      "exactHunks": 1,
+      "adoptedSnapshot": "adopted-subjects/openspec/changes/three-surface-poc-experience/design.md",
+      "proposedSnapshot": "proposed-subjects/openspec/changes/three-surface-poc-experience/design.md"
+    },
+    {
+      "path": "openspec/changes/three-surface-poc-experience/proposal.md",
+      "adoptedCommit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+      "adoptedBlob": "f13217fed4d1620f913103771f5be424c816bede",
+      "adoptedSha256": "fe3fc6d6ee5461794c6b0fa7297bba52cb7695f5abbf384312bf111748ea8282",
+      "proposedSha256": "7eeb404916b6568009db5cef33d4370840970146706ab8ab45d93797ae30776c",
+      "manifestMatch": true,
+      "exactHunks": 1,
+      "adoptedSnapshot": "adopted-subjects/openspec/changes/three-surface-poc-experience/proposal.md",
+      "proposedSnapshot": "proposed-subjects/openspec/changes/three-surface-poc-experience/proposal.md"
+    },
+    {
+      "path": "openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md",
+      "adoptedCommit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+      "adoptedBlob": "df6a14e4accaec50b78e7498a76212b8ca67b9a7",
+      "adoptedSha256": "3a2e5a2be8fc69f0fb70f32b0fce1b2b6ca9589db16224090a0351112385b691",
+      "proposedSha256": "01209cce451cbab62a9f39fce1e6a78d9dcd6b56f3e32e0dc9bf0d5534534c37",
+      "manifestMatch": true,
+      "exactHunks": 10,
+      "adoptedSnapshot": "adopted-subjects/openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md",
+      "proposedSnapshot": "proposed-subjects/openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md"
+    }
+  ],
+  "candidateFilePopulation": 18,
+  "candidateFiles": [
+    {
+      "path": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/CAPABILITY-COVERAGE.md",
+      "frozenCoreSha256": "88ed1e60a4f7e823e00723df0fd317e9ea8c127bfdc25c5d899fef6ab3e7cfaf",
+      "activeSha256": "88ed1e60a4f7e823e00723df0fd317e9ea8c127bfdc25c5d899fef6ab3e7cfaf",
+      "unchanged": true
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/DESIGN.md",
+      "frozenCoreSha256": "4f436cba70c7fba6a0ac05018872c4849ae5a478f3a9b43f2e20adc9041bcc1f",
+      "activeSha256": "4f436cba70c7fba6a0ac05018872c4849ae5a478f3a9b43f2e20adc9041bcc1f",
+      "unchanged": true
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/IMPACT-LEDGER.md",
+      "frozenCoreSha256": "c814c9d61dbaf4e14cc48a149a23aec11ff1fcc47aaf066817dc2a5aee23d72d",
+      "activeSha256": "c814c9d61dbaf4e14cc48a149a23aec11ff1fcc47aaf066817dc2a5aee23d72d",
+      "unchanged": true
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/IMPACT-SWEEP.json",
+      "frozenCoreSha256": "e665237be119fb90287afb41d791757a5aeb415addc8ee7acf4be1900048ca25",
+      "activeSha256": "e665237be119fb90287afb41d791757a5aeb415addc8ee7acf4be1900048ca25",
+      "unchanged": true
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/OWNER-DECISION-PACKET.md",
+      "frozenCoreSha256": "19d33a233e0ba88fefbb92f5fb4273c9d44ec2ecc9fe8b1bc24affbdb03d5689",
+      "activeSha256": "19d33a233e0ba88fefbb92f5fb4273c9d44ec2ecc9fe8b1bc24affbdb03d5689",
+      "unchanged": true
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/RECORDING-PREPARATION.md",
+      "frozenCoreSha256": "12fbd0c7ae1340915cf1fc1374362dcecd021a758e7f5cabd3b60e1d9a7b1535",
+      "activeSha256": "12fbd0c7ae1340915cf1fc1374362dcecd021a758e7f5cabd3b60e1d9a7b1535",
+      "unchanged": true
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/REQUIREMENT-CONSUMPTION.json",
+      "frozenCoreSha256": "31ec23458cca8f28b235594a943942a3c23d09ab1fb5e10364fa2e49d9315c4d",
+      "activeSha256": "31ec23458cca8f28b235594a943942a3c23d09ab1fb5e10364fa2e49d9315c4d",
+      "unchanged": true
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/REVIEW-BRIEF.md",
+      "frozenCoreSha256": "7f8108620a6c59f21a4e352d8287d817f6adc0c9cb67c3b42ea34fbc85ee94a7",
+      "activeSha256": "6d63f9998cf5138d74e251b4602b1dd6e2506d3c9d7860fcbe3b90590eb67df2",
+      "unchanged": false
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/ROUND-1-DISPOSITIONS.md",
+      "frozenCoreSha256": "42341aa042a1e3ace9068905805314d1930a68a8e425dd931ef84b921c54ad30",
+      "activeSha256": "42341aa042a1e3ace9068905805314d1930a68a8e425dd931ef84b921c54ad30",
+      "unchanged": true
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/SEMANTIC-DELTA.md",
+      "frozenCoreSha256": "3f3d253fc3acc6650dcf142ef422a6e9ce3ba98b7e386b0aea1fa6d83ac0ff15",
+      "activeSha256": "3f3d253fc3acc6650dcf142ef422a6e9ce3ba98b7e386b0aea1fa6d83ac0ff15",
+      "unchanged": true
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/THREE-SURFACE-POC-GOVERNEDBY-REFERENCE-AMENDMENT-MANIFEST.txt",
+      "frozenCoreSha256": "77e53d37ac42c5db4edb4f99d76d937629df5a80d370ac47751c0e62f27270bd",
+      "activeSha256": "77e53d37ac42c5db4edb4f99d76d937629df5a80d370ac47751c0e62f27270bd",
+      "unchanged": true
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/fixtures/round-1-counterexamples.json",
+      "frozenCoreSha256": "ef5f299226362bb8ef1cc0402a664a21a5509707b17c3fb93be0cf8e2dc12db2",
+      "activeSha256": "ef5f299226362bb8ef1cc0402a664a21a5509707b17c3fb93be0cf8e2dc12db2",
+      "unchanged": true
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/fixtures/wire-cases.json",
+      "frozenCoreSha256": "7be86c331e9b0f39efff42427059ba7eb80ae40f4fcdc98af7597aeb45ce3552",
+      "activeSha256": "7be86c331e9b0f39efff42427059ba7eb80ae40f4fcdc98af7597aeb45ce3552",
+      "unchanged": true
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/proposed/CONTRACT-COVERAGE.md.patch",
+      "frozenCoreSha256": "28a75da84626d8af0d10befbabe25b979b56f3103918ff9f6361fee76f1d0d4e",
+      "activeSha256": "28a75da84626d8af0d10befbabe25b979b56f3103918ff9f6361fee76f1d0d4e",
+      "unchanged": true
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/proposed/GOVERNING-DEPENDENCIES.md.patch",
+      "frozenCoreSha256": "aa86ee32f898dee6cb288e47194b0109b201b8c5e57ec12a9e6718e0d6f11843",
+      "activeSha256": "aa86ee32f898dee6cb288e47194b0109b201b8c5e57ec12a9e6718e0d6f11843",
+      "unchanged": true
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/proposed/design.md.patch",
+      "frozenCoreSha256": "19b66e6a0d7473faa97e754699279187ef2ee7ca0bc98586e3695d1eb83e2286",
+      "activeSha256": "19b66e6a0d7473faa97e754699279187ef2ee7ca0bc98586e3695d1eb83e2286",
+      "unchanged": true
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/proposed/proposal.md.patch",
+      "frozenCoreSha256": "55ba54a21a010d5df9d5d9be628a7dfedd43711d9edb6fc1e580f79c353e60c3",
+      "activeSha256": "55ba54a21a010d5df9d5d9be628a7dfedd43711d9edb6fc1e580f79c353e60c3",
+      "unchanged": true
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/proposed/spec.md.patch",
+      "frozenCoreSha256": "9e025c78e38a482fa43e3b7ff6a326dce9dce0f0346848340f60c031c7c934aa",
+      "activeSha256": "9e025c78e38a482fa43e3b7ff6a326dce9dce0f0346848340f60c031c7c934aa",
+      "unchanged": true
+    }
+  ],
+  "sourcePopulation": 36,
+  "sourceSnapshotIdentity": "Each SOURCE-MAP snapshot equals its named main Git object; SHA256 checked."
+}

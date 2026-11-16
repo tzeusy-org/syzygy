@@ -1,0 +1,14 @@
+{"case": "self-reference", "named": ["packages/d"], "exit": 1, "message": "Error: packages/d -> packages/b -> packages/a -> packages/a: project references form a cycle", "sentinelsGone": []}
+{"case": "two-node cycle not through the named project", "named": ["packages/d"], "exit": 1, "message": "Error: packages/d -> packages/b -> packages/a -> packages/b: project references form a cycle", "sentinelsGone": []}
+{"case": "reference written as a tsconfig file path", "named": ["packages/d"], "exit": 1, "message": "Error: packages/a/tsconfig.json: not a workspace project with a tsconfig.json", "sentinelsGone": []}
+{"case": "reference with a trailing slash", "named": ["packages/d"], "exit": 1, "message": "Error: packages/a/: not a workspace project with a tsconfig.json", "sentinelsGone": []}
+{"case": "compilerOptions a string", "named": ["packages/d"], "exit": 1, "message": "Error: packages/a/tsconfig.json: its outputs and incremental state are not both under dist", "sentinelsGone": []}
+{"case": "tsconfig is JSON null", "named": ["packages/d"], "exit": 1, "message": "TypeError: Cannot read properties of null (reading 'compilerOptions')", "sentinelsGone": []}
+{"case": "references an object, not a list", "named": ["packages/d"], "exit": 1, "message": "TypeError: object is not iterable (cannot read property Symbol(Symbol.iterator))", "sentinelsGone": []}
+{"case": "declarationDir under dist", "named": ["packages/d"], "exit": 1, "message": "Error: packages/a/tsconfig.json: its outputs and incremental state are not both under dist", "sentinelsGone": []}
+{"case": "outDir './dist'", "named": ["packages/d"], "exit": 1, "message": "Error: packages/a/tsconfig.json: its outputs and incremental state are not both under dist", "sentinelsGone": []}
+{"case": "outFile undefined-valued key via null", "named": ["packages/d"], "exit": 1, "message": "Error: packages/a/tsconfig.json: its outputs and incremental state are not both under dist", "sentinelsGone": []}
+{"case": "named project via ..", "named": ["packages/c/../d"], "exit": 0, "message": "", "sentinelsGone": ["packages/a/dist/a.js", "packages/b/dist/b.js", "packages/d/dist/d.js"]}
+{"case": "named project a symlink to another project inside the checkout", "named": ["packages/alias"], "exit": 0, "message": "", "sentinelsGone": ["packages/a/dist/a.js"]}
+{"case": "reference to a non-composite project (tsc's refusal, after the script)", "named": ["packages/d"], "exit": 2, "message": "packages/b/tsconfig.json(1,237): error TS6306: Referenced project '/tmp/r549b-ref/cb-qomheytf/packages/a' must have setting \"composite\": true.", "sentinelsGone": ["packages/a/dist/a.js", "packages/b/dist/b.js", "packages/d/dist/d.js"]}
+{"case": "inherited declarationDir through extends (declared not read)", "named": ["packages/d"], "exit": 0, "message": "", "sentinelsGone": ["packages/a/dist/a.js", "packages/b/dist/b.js", "packages/d/dist/d.js"]}

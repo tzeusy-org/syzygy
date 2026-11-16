@@ -1,0 +1,16 @@
+{
+ "commit": "f2304fd5d2bfd0e50c48d6ea356ddea3f7be162d",
+ "project": "@syzygy/three-surface-poc-app",
+ "rows": [
+  {
+   "file": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+   "command": "npx vitest run --project @syzygy/three-surface-poc-app apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+   "exit": 0,
+   "total": 5,
+   "passed": 5,
+   "failed": 0,
+   "load1": 32.3
+  }
+ ],
+ "cleanAfter": true
+}

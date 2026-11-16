@@ -1,0 +1,740 @@
+{
+ "tree": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-524/base",
+ "head": "3ec6929951080613b3c5cb7205fe303c5449be58",
+ "results": [
+  {
+   "id": "island:R1-non-literal-dynamic-import-of-core-root-in-render-step",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  4 passed (4)"
+   ],
+   "testFiles": [
+    "Test Files  1 passed (1)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 6.0,
+   "counts": [
+    {
+     "file": "packages/polaris-dossier/src/render.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/render.ts",
+     "old": "import { UNDERSTANDING_ITEMS } from './draft-schema.js';\n",
+     "new": "import { UNDERSTANDING_ITEMS } from './draft-schema.js';\nconst ISLAND_SPECIFIER = '@syzygy/polaris-generation-core';\nexport const loadIsland = (): Promise<unknown> => import(ISLAND_SPECIFIER);\n"
+    }
+   ]
+  },
+  {
+   "id": "island:R2-template-literal-dynamic-import-of-core-root-in-render-step",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 3 passed (4)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > reaches no island module from the CLI entry"
+   ],
+   "timeouts": 0,
+   "seconds": 5.4,
+   "counts": [
+    {
+     "file": "packages/polaris-dossier/src/render.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/render.ts",
+     "old": "import { UNDERSTANDING_ITEMS } from './draft-schema.js';\n",
+     "new": "import { UNDERSTANDING_ITEMS } from './draft-schema.js';\nexport const loadIsland = (): Promise<unknown> => import(`@syzygy/polaris-generation-core`);\n"
+    }
+   ]
+  },
+  {
+   "id": "island:R3-export-star-of-core-root-in-class-gate",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 3 passed (4)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > reaches no island module from the CLI entry"
+   ],
+   "timeouts": 0,
+   "seconds": 4.3,
+   "counts": [
+    {
+     "file": "packages/polaris-dossier/src/class-gate.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/class-gate.ts",
+     "old": "import type { PublicSourceContentClass } from '@syzygy/polaris-generation-core/live';\n",
+     "new": "import type { PublicSourceContentClass } from '@syzygy/polaris-generation-core/live';\nexport * from '@syzygy/polaris-generation-core';\n"
+    }
+   ]
+  },
+  {
+   "id": "island:R4-live-subpath-node-condition-resolves-to-core-root",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  4 passed (4)"
+   ],
+   "testFiles": [
+    "Test Files  1 passed (1)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 3.6,
+   "counts": [
+    {
+     "file": "packages/polaris-generation-core/package.json",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/package.json",
+     "old": "    \"./live\": {\n      \"types\": \"./dist/live.d.ts\",\n      \"import\": \"./dist/live.js\",",
+     "new": "    \"./live\": {\n      \"types\": \"./dist/live.d.ts\",\n      \"node\": \"./dist/index.js\",\n      \"import\": \"./dist/live.js\","
+    }
+   ]
+  },
+  {
+   "id": "island:R5-broker-client-entry-imports-core-root",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  4 passed (4)"
+   ],
+   "testFiles": [
+    "Test Files  1 passed (1)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 5.0,
+   "counts": [
+    {
+     "file": "packages/polaris-dossier/src/broker-client.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/broker-client.ts",
+     "old": "import * as net from 'node:net';\n",
+     "new": "import * as net from 'node:net';\nimport '@syzygy/polaris-generation-core';\n"
+    }
+   ]
+  },
+  {
+   "id": "island:R6-create-require-of-core-root-in-render-step",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  4 passed (4)"
+   ],
+   "testFiles": [
+    "Test Files  1 passed (1)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 5.0,
+   "counts": [
+    {
+     "file": "packages/polaris-dossier/src/render.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/render.ts",
+     "old": "import { UNDERSTANDING_ITEMS } from './draft-schema.js';\n",
+     "new": "import { UNDERSTANDING_ITEMS } from './draft-schema.js';\nimport { createRequire } from 'node:module';\nconst load = createRequire(import.meta.url);\nexport const loadIsland = (): unknown => load('@syzygy/polaris-generation-core');\n"
+    }
+   ]
+  },
+  {
+   "id": "island:R7-import-type-node-of-core-root-in-class-gate",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 3 passed (4)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > reaches no island module from the CLI entry"
+   ],
+   "timeouts": 0,
+   "seconds": 6.0,
+   "counts": [
+    {
+     "file": "packages/polaris-dossier/src/class-gate.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/class-gate.ts",
+     "old": "import type { PublicSourceContentClass } from '@syzygy/polaris-generation-core/live';\n",
+     "new": "import type { PublicSourceContentClass } from '@syzygy/polaris-generation-core/live';\nexport type IslandResult = import('@syzygy/polaris-generation-core').PipelineResult;\n"
+    }
+   ]
+  },
+  {
+   "id": "island:R8-relative-cross-package-island-import-in-screen",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 3 passed (4)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > reaches no island module from the CLI entry"
+   ],
+   "timeouts": 0,
+   "seconds": 5.7,
+   "counts": [
+    {
+     "file": "packages/polaris-dossier/src/screen.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/screen.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nimport '../../polaris-generation-core/src/pipeline.js';\n"
+    }
+   ]
+  },
+  {
+   "id": "island:R9-island-import-hidden-inside-the-exception",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  4 passed (4)"
+   ],
+   "testFiles": [
+    "Test Files  1 passed (1)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 4.9,
+   "counts": [
+    {
+     "file": "packages/polaris-generation-consent/src/consent-ports.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-consent/src/consent-ports.ts",
+     "old": "import { COMMIT_OBJECT_ID, parseAdmissionRecords, type AdmissionRecord, type AdmissionRecordReader } from './admission-record.js';\n",
+     "new": "import { COMMIT_OBJECT_ID, parseAdmissionRecords, type AdmissionRecord, type AdmissionRecordReader } from './admission-record.js';\nimport '../../polaris-generation-core/src/pipeline.js';\n"
+    }
+   ]
+  },
+  {
+   "id": "island:B1-type-import-of-core-root-in-dossier-site",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 3 passed (4)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > reaches no island module from the CLI entry"
+   ],
+   "timeouts": 0,
+   "seconds": 4.5,
+   "counts": [
+    {
+     "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+     "old": "import { assertInertSvg } from './svg-inert.js';\n",
+     "new": "import { assertInertSvg } from './svg-inert.js';\nimport type { PipelineResult } from '@syzygy/polaris-generation-core';\n"
+    }
+   ]
+  },
+  {
+   "id": "island:B2-relative-island-import-in-live",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 3 passed (4)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > reaches no island module from the CLI entry"
+   ],
+   "timeouts": 0,
+   "seconds": 5.0,
+   "counts": [
+    {
+     "file": "packages/polaris-generation-core/src/live.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/live.ts",
+     "old": "} from './canonical-json.js';\n",
+     "new": "} from './canonical-json.js';\nimport './excerpt.js';\n"
+    }
+   ]
+  },
+  {
+   "id": "island:B3-dynamic-core-root-import-in-dossier-render-step",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 3 passed (4)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > reaches no island module from the CLI entry"
+   ],
+   "timeouts": 0,
+   "seconds": 5.4,
+   "counts": [
+    {
+     "file": "packages/polaris-dossier/src/render.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/render.ts",
+     "old": "import { collectBlocks, deriveFindings, draftRules, type Derived } from './check.js';\n",
+     "new": "import { collectBlocks, deriveFindings, draftRules, type Derived } from './check.js';\nexport const loadPipeline = (): Promise<unknown> => import('@syzygy/polaris-generation-core');\n"
+    }
+   ]
+  },
+  {
+   "id": "island:B4-cli-subpath-resolves-to-provider-adapter",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 3 passed (4)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > reaches no island module from the CLI entry"
+   ],
+   "timeouts": 0,
+   "seconds": 6.5,
+   "counts": [
+    {
+     "file": "apps/three-surface-poc/package.json",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/package.json",
+     "old": "\"./dossier-site\": \"./dist/polaris-generation/dossier-site.js\"",
+     "new": "\"./dossier-site\": \"./dist/polaris-generation/dossier-render.js\""
+    }
+   ]
+  },
+  {
+   "id": "island:B5-cli-imports-the-kept-provider-renderer-subpath",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 3 passed (4)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > reaches no island module from the CLI entry"
+   ],
+   "timeouts": 0,
+   "seconds": 6.4,
+   "counts": [
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "    }, { renderer: renderLocalDossier });\n",
+     "new": "    }, { renderer: (await import('@syzygy/three-surface-poc-app/dossier-render')).renderDossier });\n"
+    }
+   ]
+  },
+  {
+   "id": "island:B5b-cli-imports-a-subpath-the-app-does-not-export",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 3 passed (4)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > resolves every workspace import the CLI reaches, dynamic ones included"
+   ],
+   "timeouts": 0,
+   "seconds": 7.9,
+   "counts": [
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "    }, { renderer: renderLocalDossier });\n",
+     "new": "    }, { renderer: (await import('@syzygy/three-surface-poc-app/no-such-entry')).renderDossier });\n"
+    }
+   ]
+  },
+  {
+   "id": "island:B7-exception-outlives-its-reason",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 3 passed (4)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > reaches the island from the consent package root, which the CLI does not import"
+   ],
+   "timeouts": 0,
+   "seconds": 6.5,
+   "counts": [
+    {
+     "file": "packages/polaris-generation-consent/src/consent-ports.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-consent/src/consent-ports.ts",
+     "old": "type PipelineRequest } from '@syzygy/polaris-generation-core';",
+     "new": "type PipelineRequest } from '@syzygy/polaris-generation-core/live';"
+    }
+   ]
+  },
+  {
+   "id": "island:B8-island-entry-names-no-file",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 3 passed (4)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > lists twenty island modules, each a file in the tree"
+   ],
+   "timeouts": 0,
+   "seconds": 6.3,
+   "counts": [
+    {
+     "file": "packages/polaris-generation-core/src/island-boundary.test.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/island-boundary.test.ts",
+     "old": "  'packages/polaris-generation-core/src/excerpt.ts',\n",
+     "new": "  'packages/polaris-generation-core/src/excerpts.ts',\n"
+    }
+   ]
+  },
+  {
+   "id": "island:B9-island-entry-dropped",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 3 passed (4)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > lists twenty island modules, each a file in the tree"
+   ],
+   "timeouts": 0,
+   "seconds": 5.7,
+   "counts": [
+    {
+     "file": "packages/polaris-generation-core/src/island-boundary.test.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/island-boundary.test.ts",
+     "old": "  'packages/polaris-generation-core/src/pipeline.ts',\n",
+     "new": ""
+    }
+   ]
+  },
+  {
+   "id": "consen:B1-core-root-import-in-in-force",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 3 passed (4)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > reaches no island module from the CLI entry"
+   ],
+   "timeouts": 0,
+   "seconds": 6.1,
+   "counts": [
+    {
+     "file": "packages/polaris-generation-consent/src/in-force.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-consent/src/in-force.ts",
+     "old": "import type { AdmissionRecord } from './admission-record.js';\n",
+     "new": "import type { AdmissionRecord } from './admission-record.js';\nimport { digestCanonicalJson } from '@syzygy/polaris-generation-core';\n"
+    }
+   ]
+  },
+  {
+   "id": "consen:B4-consent-ports-reexport-in-live",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 3 passed (4)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > reaches no island module from the CLI entry"
+   ],
+   "timeouts": 0,
+   "seconds": 8.7,
+   "counts": [
+    {
+     "file": "packages/polaris-generation-consent/src/live.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-consent/src/live.ts",
+     "old": "export { inForceRecords, notInForceRecords, type NotInForce } from './in-force.js';\n",
+     "new": "export { inForceRecords, notInForceRecords, type NotInForce } from './in-force.js';\nexport { UNCONSENTED } from './consent-ports.js';\n"
+    }
+   ]
+  },
+  {
+   "id": "consen:R1-literal-dynamic-import-of-core-root-in-in-force",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 3 passed (4)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > reaches no island module from the CLI entry"
+   ],
+   "timeouts": 0,
+   "seconds": 6.4,
+   "counts": [
+    {
+     "file": "packages/polaris-generation-consent/src/in-force.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-consent/src/in-force.ts",
+     "old": "import type { AdmissionRecord } from './admission-record.js';\n",
+     "new": "import type { AdmissionRecord } from './admission-record.js';\nexport const loadCore = () => import('@syzygy/polaris-generation-core');\n"
+    }
+   ]
+  },
+  {
+   "id": "consen:R2-export-star-consent-ports-in-live",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 3 passed (4)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > reaches no island module from the CLI entry"
+   ],
+   "timeouts": 0,
+   "seconds": 5.3,
+   "counts": [
+    {
+     "file": "packages/polaris-generation-consent/src/live.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-consent/src/live.ts",
+     "old": "export { inForceRecords, notInForceRecords, type NotInForce } from './in-force.js';\n",
+     "new": "export { inForceRecords, notInForceRecords, type NotInForce } from './in-force.js';\nexport * from './consent-ports.js';\n"
+    }
+   ]
+  },
+  {
+   "id": "consen:R3-computed-dynamic-import-of-core-root-in-in-force",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  4 passed (4)"
+   ],
+   "testFiles": [
+    "Test Files  1 passed (1)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 4.4,
+   "counts": [
+    {
+     "file": "packages/polaris-generation-consent/src/in-force.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-consent/src/in-force.ts",
+     "old": "import type { AdmissionRecord } from './admission-record.js';\n",
+     "new": "import type { AdmissionRecord } from './admission-record.js';\nconst CORE = ['@syzygy', 'polaris-generation-core'].join('/');\nexport const loadCore = () => import(CORE);\n"
+    }
+   ]
+  },
+  {
+   "id": "consen:R4-node-condition-ahead-of-import-in-live-subpath",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  4 passed (4)"
+   ],
+   "testFiles": [
+    "Test Files  1 passed (1)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 3.6,
+   "counts": [
+    {
+     "file": "packages/polaris-generation-consent/package.json",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-consent/package.json",
+     "old": "      \"types\": \"./dist/live.d.ts\",\n      \"import\": \"./dist/live.js\",",
+     "new": "      \"types\": \"./dist/live.d.ts\",\n      \"node\": \"./dist/index.js\",\n      \"import\": \"./dist/live.js\","
+    }
+   ]
+  },
+  {
+   "id": "consen:R5-vitest-alias-for-live-points-at-root",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  4 passed (4)"
+   ],
+   "testFiles": [
+    "Test Files  1 passed (1)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 4.1,
+   "counts": [
+    {
+     "file": "vitest.config.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "vitest.config.ts",
+     "old": "'@syzygy/polaris-generation-consent/live': fileURLToPath(new URL('./packages/polaris-generation-consent/src/live.ts', import.meta.url)),",
+     "new": "'@syzygy/polaris-generation-consent/live': fileURLToPath(new URL('./packages/polaris-generation-consent/src/index.ts', import.meta.url)),"
+    }
+   ]
+  }
+ ]
+}

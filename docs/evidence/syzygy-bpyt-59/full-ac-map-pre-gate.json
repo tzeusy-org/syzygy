@@ -1,0 +1,163 @@
+{
+  "subjectImplementation": "edd92ae4c5c41859ecdb94829e144ad49c7290f5",
+  "acceptanceCriteria": [
+    {
+      "id": 1,
+      "status": "Observed: preserved",
+      "evidence": "CANONICAL-PRESERVATION.json; FIRST-PACKET-VERIFICATION.json; ROOT one-time application enrollment"
+    },
+    {
+      "id": 2,
+      "status": "Observed: existing authority retained",
+      "evidence": "CLASS-FLOOR-ASSESSMENT.json primary Q6/RFC3-16(b)6/8/PWB005/022 references; predecessor exact bytes checked"
+    },
+    {
+      "id": 3,
+      "status": "Observed: implemented",
+      "evidence": "act-fields.ts; SUBJECT-base/candidate.json; Number.isFinite before toISOString; source threepath diff"
+    },
+    {
+      "id": 4,
+      "status": "Observed: verified",
+      "evidence": "469 focused tests; full575record differential; field reason/Unknown/read-spy/disclosure/native judgment outputs; original closed vocabularies"
+    },
+    {
+      "id": 5,
+      "status": "Observed: verified",
+      "evidence": "two canonical-factory test functions; 7negative+4valid dates xbothfields x4contexts; explicit nonstale/nonfuture clocks and8baseline admissions"
+    },
+    {
+      "id": 6,
+      "status": "Observed: verified",
+      "evidence": "DIFFERENTIAL-REPORT.json dateRows88:32newlyrefused+24alreadyrefused+32validunchanged; MUTANT-ATTRIBUTION.json; TEST delta+2~0-0"
+    },
+    {
+      "id": 7,
+      "status": "Observed: verified",
+      "evidence": "FULL-FIXTURE-STATIC-INVENTORY.json (19+18inputs callsites); FULL-CORPUS-COVERAGE.json 468originalevaluationcalls+7histories; fullsourceprefix preserved; four explicit valid prose controls"
+    },
+    {
+      "id": 8,
+      "status": "Observed: verified",
+      "evidence": "DIFFERENTIAL-REPORT.json complete full575row comparison by semanticfixtureidentity, no unmatched/missing/duplicate IDs or unexpected changes; DETERMINISTIC-REPEAT.json logical freshness/provenance"
+    },
+    {
+      "id": 9,
+      "status": "Observed: verified",
+      "evidence": "MUTANT-RECORD.json exactuniqueold/new fragments/subject/source digests; 296 semantic failures on32intendedrows bothgates/bothfields; validcontrolfailures[]; restored2/2pass"
+    },
+    {
+      "id": 10,
+      "status": "Observed: allocated and preserved",
+      "evidence": "ROOT enrollment SUCCESS/config; verified flat bootstrap; code diff confinedthreepaths; evidence directory; source826/PR766/PR640 read-only allocation"
+    },
+    {
+      "id": 11,
+      "status": "Observed: author declaration complete; independent review pending",
+      "evidence": "CLASS-FLOOR-ASSESSMENT.json every7classes/every7floors; initial1/3/4/6yes; ROOT freshindependentreview still required"
+    },
+    {
+      "id": 12,
+      "status": "Observed: focused/build/install/private controls retained; final gate pending",
+      "evidence": "logs and SUBJECT-base/candidate.json; PRIVATE-PREFLIGHT.json; exact105cache/SRI; one sequential build target; current CONTRIBUTING/PROJECT-STATUS native gate pending sameexecutioncapture"
+    },
+    {
+      "id": 13,
+      "status": "Unknown until ROOT review/notice",
+      "evidence": "Author evidence complete; ROOT freshdefaultmodelreview and exactrawverdict/dispositions and GPQ0notice remain pending; no author certification"
+    },
+    {
+      "id": 14,
+      "status": "Observed: draft preparation; landing held",
+      "evidence": "Own PR body and terminal report prepared; final exact head and DRAFT PR publication after gate; no ready/queue/merge/close; both actual1z3.22judgment+1z3.25report required"
+    }
+  ],
+  "originalObligations": [
+    {
+      "id": "O1",
+      "originalOutcome": "Existing Q6 A on .1.21, current .59 implementation identity",
+      "acceptanceCriteria": [
+        1,
+        2
+      ],
+      "status": "Technical evidence above; review/notice/landing constraints retained wherever mapped"
+    },
+    {
+      "id": "O2",
+      "originalOutcome": "Read-back in isIsoDate, respecting consent-reader reference",
+      "acceptanceCriteria": [
+        3
+      ],
+      "status": "Technical evidence above; review/notice/landing constraints retained wherever mapped"
+    },
+    {
+      "id": "O3",
+      "originalOutcome": "Four impossible calendar dates refused with current field reasons, both evaluators",
+      "acceptanceCriteria": [
+        4,
+        5,
+        6
+      ],
+      "status": "Technical evidence above; review/notice/landing constraints retained wherever mapped"
+    },
+    {
+      "id": "O4",
+      "originalOutcome": "Seven packet dates and valid calendar controls, no accidental temporal refusal",
+      "acceptanceCriteria": [
+        5,
+        6
+      ],
+      "status": "Technical evidence above; review/notice/landing constraints retained wherever mapped"
+    },
+    {
+      "id": "O5",
+      "originalOutcome": "Full act-record fixture differential with mutated/altered prose",
+      "acceptanceCriteria": [
+        7,
+        8
+      ],
+      "status": "Technical evidence above; review/notice/landing constraints retained wherever mapped"
+    },
+    {
+      "id": "O6",
+      "originalOutcome": "Effective read-back mutant with per-predicate controls",
+      "acceptanceCriteria": [
+        9
+      ],
+      "status": "Technical evidence above; review/notice/landing constraints retained wherever mapped"
+    },
+    {
+      "id": "O7",
+      "originalOutcome": "Class-1 floor, actual complete class/floor assessment and fresh review",
+      "acceptanceCriteria": [
+        11,
+        13
+      ],
+      "status": "Technical evidence above; review/notice/landing constraints retained wherever mapped"
+    },
+    {
+      "id": "O8",
+      "originalOutcome": "GP-Q0 differential/mutants/non-blocking owner notice",
+      "acceptanceCriteria": [
+        7,
+        8,
+        9,
+        13
+      ],
+      "status": "Technical evidence above; review/notice/landing constraints retained wherever mapped"
+    },
+    {
+      "id": "O9",
+      "originalOutcome": "Scope preservation, exact custody, verification and lawful landing",
+      "acceptanceCriteria": [
+        1,
+        2,
+        10,
+        12,
+        14
+      ],
+      "status": "Technical evidence above; review/notice/landing constraints retained wherever mapped"
+    }
+  ],
+  "wholeOutcome": "Technically implemented/proof preparation in progress; whole original outcome OPEN pending exact final gate, ROOT independent review/notice and lawful held landing."
+}

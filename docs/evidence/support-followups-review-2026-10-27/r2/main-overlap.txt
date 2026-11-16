@@ -1,0 +1,7 @@
+main 41932c3b5aba567376fea3b32a80a54f8b6b30ab
+merge-base(7d408fd9, main) eb8fb6cb523c7d415390ac60c15f7c2c56db2398
+  main first-parent: 41932c3b Merge pull request #533 from Tzeusy/agent/syzygy-bpyt.6.3-fence
+pr paths=40 main paths=134 main by top dir={'AGENTS.md': 1, 'apps': 2, 'docs': 126, 'packages': 5}
+method 1 (set intersection): 0
+method 2 (PR paths whose blob main changed): 0 of 40
+merge-tree 7d408fd9 gh/main: exit=0 tree=a94114995f81044d76750716f1d3f73621143eb2

@@ -10,7 +10,7 @@ import {
   type Proposal,
   type RepositoryId,
 } from '@syzygy/cap1-core';
-import { projectYaml } from './fixtures/index.js';
+import { corrupt, decisionsFor, projectYaml } from './fixtures/index.js';
 
 // CAP1-REQ-063 — Proposed material never renders as current state
 // (prohibition).
@@ -81,7 +81,7 @@ function currentCoverage() {
   if (!read.ok) throw new Error('fixture must parse');
   // No consent record handed in — the repository renders unconsented,
   // an unfavourable state.
-  return computeCoverage(read.declaration, [], []);
+  return computeCoverage(read.declaration, decisionsFor(read.declaration, []), []);
 }
 
 describe('CAP1-REQ-063 — proposed material never renders as current state', () => {
@@ -125,7 +125,7 @@ describe('CAP1-REQ-063 — proposed material never renders as current state', ()
 
   it('falsifier: an unfavourable answer is never improved by an open proposal', () => {
     const registration = registerProject(
-      readDeclaration(SOURCE.replace('owner: uniquosity@gmail.com', 'owner: ""')),
+      readDeclaration(corrupt(SOURCE, 'owner: uniquosity@gmail.com', 'owner: ""')),
       'rev-1',
     );
     expect(registration.status).toBe('failed');

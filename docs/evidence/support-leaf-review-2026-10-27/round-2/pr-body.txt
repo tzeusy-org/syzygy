@@ -1,0 +1,88 @@
+## Outcome
+
+[Observed] DC-3, first of three stacked PRs (bead `syzygy-bpyt.6.3`; finding DC-3 in `docs/plans/2026-10-21-greenfield-parity-audit.md`). A new private leaf package, `@syzygy/support`, holds the one `sha256` and the one `deepFreeze`. At the base the audited population (233 production `.ts` files under `packages/*/src` and `apps/*/src`) had 25 file-local `sha256` definitions and 7 `deepFreeze` definitions; it now has 1 and 1, both in the package. `createHash('sha256')` sites go from 62 to 6 under the sweep's name rule (every `test-*.ts` basename is test support): the helper itself, `cap1-system`'s independent oracle, three raw-`.digest()` sites and one streaming reduce, all left on purpose. [Observed] That rule sets aside four `test-*.ts` files that production imports; counting them the sites go from 64 to 8 and the local `sha256` definitions from 26 to 2; the two extra sites are named under Residuals. 55 files import the package. Behaviour-preserving only (GP-Q0).
+
+- **Placement by import graph.** `polaris-generation-core` and `polaris-generation-consent` need `sha256`, and neither may import `cap1-core` or `three-surface-poc-core`, so the home is a new leaf with no workspace dependency. The cap1 packages never import it (`cap1-system` is an independent oracle; `cap1-daemon` takes raw digests).
+- **Counts re-made.** The audit said sha256 x26 and deepFreeze x8; counted from committed bytes at `a088f1ca` they are 25 and 7 (the audit predates DC-2, which left `isIsoDate` with one definition). `isIsoDate` needs nothing here.
+- **Not in this PR.** `decodeUtf8` (three definitions) and the `canonicalJson` divergence record come in PR 2; the fence-rule finding with its spec citations comes in PR 3. Both stack on this branch.
+- **After merge, run `npm ci` in every checkout that builds or serves from it.** Until `node_modules/@syzygy/support` exists the package does not resolve. `AGENTS.md` now says so.
+
+## CC-REV-1 classes
+
+Proposed by the author, never final (CC-REV-1: the agent performing the change does not decide them). A reviewer or the owner may reclassify.
+
+- **1 authority boundaries.** `body-read-authority.ts`, `walkthrough-judgment.ts` and `act-fields.ts` (the owner-act gates) now take `sha256` and `deepFreeze` from the package.
+- **3 deterministic observation.** Evaluation identity and observation digests: `project-shape-manifest.ts`, `project-shape-observation.ts`, `model.ts` (`inputsDigest`), `response-identity.ts`, `git-object-reader.ts` (`contentDigestOf`).
+- **4 security.** `secret-redaction.ts`, `public-source-classification.ts`, `generation-source.ts`, the consent `package-reader.ts` digest bindings; and the SEC-3 closure guard `test-artifact-verification-live-source.test.ts`, whose workspace-package map now admits `@syzygy/support` (the closure walker follows into it and finds only `node:crypto`).
+- **6 public interface: additive only.** One new workspace entry point. Of the 12 existing entry points (862 exported names) none changed a name; the new one exports `deepFreeze` and `sha256`. No endpoint or export is removed.
+- **2, 5, 7: none.**
+
+Classes 1, 3 and 4 carry the three extra obligations; this PR meets each: an old-versus-new differential over a mutated-record corpus including altered-prose records (below), a rule-6 mutant per predicate with stored fragments (below), and a non-blocking owner notice for the cycle report (the coordinator's, not filed here).
+
+## Authority
+
+- GP-Q0, `.syzygy/governance/decisions/OWNER-DIRECTION-GREENFIELD-PARITY-ANSWERS-2026-10-21.md`: behaviour-preserving changes only; the bead's four acceptance criteria are the scope.
+- Implementation plane only. Nothing under `.syzygy/**` or `openspec/**` is edited, no act is needed or taken.
+- **The registry-bound files are untouched.** `packages/polaris-dossier/src/git-object-reader.ts` and `packages/three-surface-poc-core/src/project-shape-observer.ts` hash identically at the base and the head (digests in the evidence record). Of the 58 changed `.ts` files that exist at the base, none has its base digest cited in the 1,479 tracked files under `.syzygy/`, `openspec/`, `scripts/` and `.github/` (767 distinct 64-hex tokens scanned).
+
+## Every changed output
+
+[Observed] None, on the corpora below. `git diff origin/main HEAD` is byte-identical to the diff the evidence measured (`git diff a088f1ca c6bf39f2`, sha256 `37a1799393b122c18bdd8ecf1a314c53e9a6bdda7e646f1dd88b7e48b980d2d2` both); main moved to `c104771f` before this PR opened, and the branch took it as a merge, not a rebase.
+
+| Output | Method | Result |
+|---|---|---|
+| Argument text of every hash and freeze call | `site-equivalence.py`, static, over committed blobs | 111 hash-call arguments and 17 freeze-call arguments, equal per file in all 56 compared files and as a global multiset; 0 non-canonical local helpers |
+| Every SHA-256 the full suite makes | `hash-trace.cjs` preload on `node:crypto`, base twice and head once, same checkout path | 108 repository site/algorithm pairs compared; only `act-fields.ts` (1,512 calls) moved, to `body-read-authority.ts` (1,074) plus `walkthrough-judgment.ts` (438); of 10,101 deterministic input keys, 48 differ in count and all 48 are explained (44 are the content of a file the change edited, 1 is the surface tree-id pair, 3 are infrastructure frames); 0 left over |
+| 24 models, `responseIdentity`, deep-freeze census, 6 rendered pages each, both gate evaluations, helper digests | `diff-probe.mjs` + `compare-probe.py`, built base and head | 68 rows, 0 differ; the two base runs are byte-identical to each other |
+| The 12 Polaris variants plus 10 prose-altered project-shape texts and 2 altered-with-judgment models | same | included in the 68 rows |
+| Both owner-act gates over the three live act records, 8 prose mutations x 20 owner values | the 6.2 `live_diff.mjs`, reused unchanged (digest in the record) | 483 rows, 0 differ |
+| Public interface | `exports-probe.mjs` | 12 entry points unchanged, 1 added |
+
+Changed repository artifacts that are not outputs of the above: `package-lock.json` (+17 lines, the workspace entry, no external dependency), `package.json` build/typecheck lists, `vitest.config.ts` alias and project, the workspace dependency and tsconfig reference in five packages, `AGENTS.md` (one architecture bullet), and two test expectations that name the new import (below).
+
+## Round 1 repair
+
+[Observed] Review R-GP-IMPL-SUPPORT-LEAF-1, round 1, `Verdict: REVISE` over `fe3855a1` (the verdict word copied from the raw's second line). The repair is two test files (`8bd514d7`), the evidence (`094cc542`, `a5ab2b28`) and a merge of main (`767588d4`); no production file changes. Each item below is in the record's `roundOneRepair` section with its tool output.
+
+- **F1, blocking: fixed.** The alias map of `no-egress.test.ts` gains `'@syzygy/support': src('packages/support/src/index.ts')`. `egress-alias-check.py` runs the proof in four arms of one built clone: a support source that binds a loopback UDP socket (`AF_INET`) at import. At `fe3855a1`: the mutant passes with every `dist/` present (the proof read the clean dist), and with every `dist/` absent the proof cannot run (`Build failed with 32 errors`, `Could not resolve "@syzygy/support"`). At `8bd514d7`: the mutant is killed by the capture assertion with every `dist/` present and with every `dist/` absent, and the unmutated tree passes in both. The optional `onResolve` hardening is not in this repair.
+- **N3, included.** `packages/support/src/support-purity.test.ts` (13 tests): every non-test source of the package imports only `node:crypto` or a module of its own, names none of the drafter's forbidden tokens, and the package declares no dependency and references no project; the specifier reader it stands on has nine fixture cases. `support-purity-mutants.py`: 14 mutants, all killed, including the review's R8 (a `node:fs` read) and R6 (`node:http`); 3 controls pass (the unmutated tree and two harmless additions).
+- **N1, text.** The sweep's population rule is the name rule above; `population-audit.py` lists the eight `test-*.ts` files it sets aside, their importers and their sites. The production site it missed is `junitDigest` (`test-artifact-verification.ts:309`, imported by `index.ts` and `model.ts`); a second, a fixture's local `sha256` (`test-walkthrough-judgment-fixture.ts:42-44`), is imported by `polaris-accessibility-variants.ts`. Both are left in place by this repair, not left on purpose by the sweep: replacing them edits two more production-reachable files, which needs its own differential and review round. The restated figures are in Outcome.
+- **N6, text and a reproduction.** `diff-probe.mjs` puts its fixture repository at `<TMPDIR>/probe-fixed-fixture-repo`, and that path enters every model row. The committed `probe-output.json` was made under `TMPDIR=/tmp/lc63x`; re-run there at `8bd514d7` it is byte-identical (the same sha256). Under another TMPDIR of the same length, 24 of the 68 rows differ, all 24 model rows and none of the 44 helper rows. Both tool headers were corrected (comment lines only; their digests in the record are the committed bytes, with the digest of the bytes that ran kept in `toolsEditedAfterTheRuns`).
+- **N7, text.** A third `polaris-narrative.ts` difference is in Residuals.
+- **Not in this repair:** N2, N4 and N5, which the coordinator filed as `syzygy-bpyt.6.13`.
+- **Merge of main (#529, `@syzygy/http-host`).** Merge commit `767588d4`. Ten paths were changed by both sides. `merge-resolution-check.py` compares the merge with `git merge-tree` of its parents: 5,097 of 5,098 paths are equal blobs, and the one that is not is `package.json`, which conflicted in two regions (the `build`/`build:poc` lines and the `typecheck` line) and is resolved by hand as the union: main's list with `packages/support` before `packages/cap1-core`. The record lists both sides and the resolution text of each region. A mutated copy of the merge (one dependency line removed from `apps/three-surface-poc/package.json`) is reported by the check. The sweep at the merge has the same figures as at the measured head; the population grows from 236 to 241 files (five `http-host` files, none with a hash or freeze site).
+
+## Evidence files
+
+`docs/evidence/syzygy-bpyt-6-3/`: `dc3-support-module-differential-2026-10-25.json` (the record: subject commits, tool digests, every figure above, the 24 mutants with `old`/`new` fragments), `probe-output.json`, and the tools `sweep.py`, `site-equivalence.py`, `hash-trace.cjs`, `compare-hash-trace.py`, `diff-probe.mjs`, `compare-probe.py`, `exports-probe.mjs`, `mutants.py`; from the round-1 repair, `egress-alias-check.py`, `support-purity-mutants.py`, `population-audit.py`, `narrative-freeze-probe.mjs` and `merge-resolution-check.py`. Each tool has a selftest or a determinism control where it can (sweep 7 cases, site-equivalence 13, population-audit 8, merge-resolution-check 8, probe determinism on the base, purity mutants 14 with 3 controls).
+
+Rule-6 mutants: 24, all killed. 8 mutate the package (algorithm, encoding, update encoding, stringified update, no descent, no freeze, no cycle guard, a forbidden token in the SEC-3 closure) and 16 mutate a call site (a changed argument at 12 hash sites, a dropped `deepFreeze(` at 4). Static equivalence kills all 16 call-site mutants, the probe kills 18, the project tests kill 18. [Observed] **The project tests alone miss six** (a changed manifest digest, observation digest, model artifact digest and dossier-evaluation question digest, and two dropped freezes); the static check and the differential are what pin them.
+
+## Residuals
+
+- [Observed] `polaris-narrative.ts` had a variant `deepFreeze` (children first, no skip of frozen nodes). The package's is pre-order with an `isFrozen` guard, like the other six. They differ for a cyclic input (the old one throws `RangeError`, the new one terminates), for a frozen shell around unfrozen children, and, third, for a non-empty typed-array member (both throw `TypeError` from `Object.freeze`, and they leave different partial states: old 1 of 3 objects frozen, package 2 of 3; an empty typed array freezes in both; `narrative-freeze-probe.mjs`, [Observed]). None is reachable there [Inferred for the third: the file names no typed-array type]: the call sites freeze a `structuredClone`, fresh literals, and `narrative()`'s array of blocks that registration already froze deeply. **Reviewer focus.**
+- [Observed] Hash-trace limits: records whose every frame is inside node or `node_modules` (3,823 and 3,802 records in the base runs, 3,862 at the head) are set aside as infrastructure, not claimed. Keys that vary run to run (temporary paths, instants) are compared by same-site, same-length bucket, 5,306 head records; a same-length changed input at a repository site could hide in a bucket. The deterministic probe, the static check and the equal per-site counts are what close it.
+- [Observed] Reach: 52 files held a replaceable site at the base; the suite reaches 43 at the base and 42 at the head (`act-fields.ts` no longer hashes). Eight changed files are not reached by the suite and rest on the static check alone: six CLI mains (`fresh-checkout-demo-main`, `polaris-accessible-names-main`, `generation-mutation-run-main`, `polaris-keyboard-sweep-main`, `pwb-mutation-run-main`, `pwb-mutation-sweep-main`), `polaris-dossier/launched.ts` and `polaris-dossier/polaris.ts`.
+- [Observed] Left in place, outside the sweep's population (N1): `junitDigest` (`packages/three-surface-poc-core/src/test-artifact-verification.ts:309`, production) and a fixture's local `sha256` (`apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts:42-44`). Both could use the package; neither is changed here.
+- [Observed] Left on purpose, each with a reason in the sweep: `cap1-system/src/harness.ts` (independent oracle), `cap1-daemon/src/credentials.ts` x2 and `polaris-dossier/src/render.ts` (raw `.digest()`), `redis-shaped-measure.ts` (streaming), `createHash(algorithm)` sites, the dossier `git-object-reader.ts` (registry-bound), 41 test files (13 local helpers, 60 `createHash('sha256')` sites) and 17 scripts under `scripts/`. A test that builds its own digest is an independent check; a script has no workspace import.
+- [Observed] `owner-act-drafter.test.ts`'s purity test now expects the specifier `@syzygy/support` where it expected `node:crypto`; the drafter still imports nothing with I/O because the package imports only `node:crypto`, and `support-purity.test.ts` now pins that (the review's R8 passed the closure guard and the drafter test before it).
+- [Unknown] Whether hosted CI's timing matches this host's: 8 tests timed out once in a full run under load (five files; all 656 tests of those files pass in isolation). Since then the head has passed 5 full runs (one untraced, two under the hash tracer, two in clean clones) and the base 2.
+- Not covered by this PR: `canonicalJson` (two implementations, differing by design), `decodeUtf8`, the fence rules.
+
+Tests: +22 ~2 -0 (9 package tests from the first round, 13 purity tests from this repair; the alias line in `no-egress.test.ts` changes no assertion and is not counted)
+
+## Battery
+
+[Observed] Clean clone at the PR head `a5ab2b287266e9be6b8e96b381d014cb8e73d9d4`: the whole `PROJECT-STATUS.md` "How to verify this page" block, `commands=110 nonzero=0` and `check_governance.py` 32 OK, 21 WARN, 0 FAIL (53 checks); `check_quotations.py` exit 0; `npm run typecheck` exit 0 (in a built clone at the same head, which differs from the merge commit `767588d4` by evidence files only). The three tool selftests of this repair pass (population-audit 8 cases, merge-resolution-check 8, sweep 7).
+
+[Observed] Full suite at that head, `npx vitest run --testTimeout=120000 --hookTimeout=120000` under host load 70 to 134: 245 files, 5,338 tests, 5,247 passed, 2 failed, 89 skipped. Five files failed on load (a linear-time bound at 2,103.6 ms against 2,000 in `test-artifact-verification.test.ts`; a private-browser drain in `cdp-browser.browser.test.ts`; 10 s hook timeouts in `act-families.test.ts`, `decisions-sweep.test.ts` and `trajectory-narrowing.browser.test.ts`); re-run alone with the same flags, all five pass, 125 of 125 tests. None is a file this repair changes.
+
+[Observed] Test delta against main `546f1ff0`, by `vitest list` title and file on both trees: 242 files / 5,333 collected tests at the head against 239 / 5,311 at main; the head adds 22 and removes 0 (`support-purity.test.ts` 13, `sha256.test.ts` 4, `deep-freeze.test.ts` 5). The run counts 5 more tests than the list in five files that register tests conditionally (`*.live.test.ts` x3, `polaris-opening-index.browser.test.ts`, `no-egress.test.ts`); all five files are identical at main except `no-egress.test.ts`, whose one alias line changes its bundle and no assertion.
+
+[Observed] Hosted `checks` (1m59s) and `node` (2m57s) both pass at `a5ab2b287266e9be6b8e96b381d014cb8e73d9d4` with the default timeouts.
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+https://claude.ai/code/session_01APhWyj6JKsAs6kzgYByHeD
+
+

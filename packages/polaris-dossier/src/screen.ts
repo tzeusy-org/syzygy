@@ -1,9 +1,10 @@
-import { createHash } from 'node:crypto';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-import { POLICY_PATH, readClassActState, readPolicyActChain } from '@syzygy/polaris-generation-consent';
-import { codeContentExempt, compileEveryOffsetMatcher, publicSourceContentClass, readCodeContentExemption, readProjectDocumentationRule, readSecretRedaction, redactBody, type PublicSourceContentClass, type RedactionDetector } from '@syzygy/polaris-generation-core/live';
+import { POLICY_PATH, readClassActState, readPolicyActChain } from '@syzygy/polaris-generation-consent/live';
+import { codeContentExempt, compileEveryOffsetMatcher, documentationExempt, publicSourceContentClass, readCodeContentExemption, readGovernanceTextRule, readProjectDocumentationExemption, readProjectDocumentationRule, readScopeDetectors, readSecretRedaction, readSourceVisibility, redactBody, redactionFor, type PlacementSubject, type SourceVisibility, type PublicSourceContentClass, type RedactionDetector } from '@syzygy/polaris-generation-core/live';
 import { compileDetectors, deniedPathReason, detectSecrets, scanActiveContent, type DeniedPathRules, type SecretDetector } from '@syzygy/three-surface-poc-core';
+import { isRecord, sha256 } from '@syzygy/support';
+import { pairVisibilityAt, type VisibilityDecision } from './source-visibility-gate.js';
 
 /** Classification and screening of every blob Syzygy reads for a check (REQ-polaris-generation-033: "every object SHALL be classified
  * and screened under the observing project's effective policies (REQ-polaris-generation-025) before its content is used in a check").
@@ -31,6 +32,25 @@ import { compileDetectors, deniedPathReason, detectSecrets, scanActiveContent, t
  * excluded whole as before. `screenBody` stays whole-text: it screens agent-written text, and a consumer not taught the redacted form
  * keeps whole-file exclusion. A withheld line is never handed out: `screenTargetBody` returns only the retained text.
  *
+ * Under version 5 (variant `bcd`, approved 2026-11-03): the scope's `scopeDetectors` run beside the policy's detectors everywhere this
+ * screen runs them (paths, `screenBody`, `screenTargetBody`'s every-offset scan and its re-screen of the retained text); root SECURITY and
+ * MANIFESTO names are `governance-text` (data, never policy; any detector match excludes such a body whole, and it is scanned for active
+ * content as before); the owner's placements put named paths in project-documentation for one repository at listed commits only, which
+ * is why a screen is built for its run's `PlacementSubject` (one built without it places nothing); and a project-documentation body skips
+ * the active-content scan when `screenBody` or `screenTargetBody` is given its path (`projectDocumentationExemption`), under the same
+ * render condition `render.ts` confirms for the code-content exemption. Agent text, given no path, is still scanned whole.
+ *
+ * Under version 6 (variant `p`, approved 2026-11-05): the owner's placements add `redis.conf` (same repository, same commit), and the
+ * scope adds a fourth detector, `config-secret-directive`, which runs wherever the other scope detectors run. It is not a whole-artifact
+ * detector, so a project-documentation body it matches has the matched and guard lines withheld, and a body of any other class (code
+ * content included) is excluded whole; agent text quoting a line that opens with such a directive is refused (`screenBody`).
+ *
+ * Under version 8 (variant `pv`): a screen is built for its subject's visibility (`sourceVisibility`, decided per commit by
+ * `source-visibility-gate.ts`). A public repository is screened exactly as under version 7. A private one is screened under the same
+ * rules except that no body is retained as redacted-span: a detector match excludes the body whole in every class. A policy without
+ * `sourceVisibility` (versions 1 to 7) admits public repositories only, so a screen built for a private one is refused. The screen
+ * carries the visibility so that the render keeps a private excluded or withheld blob's object id off every page.
+ *
  * TODO(syzygy-qkea.17): these rules are a copy of the app's; move them into one shared package that both import. Until then
  * `screen.test.ts` builds both screens from the same policy and fails if they disagree on any path or body of its population. */
 
@@ -48,15 +68,28 @@ export interface DossierScreen {
   readonly contentClass: (repositoryPath: string) => PublicSourceContentClass | undefined;
   /** Whether the policy declares the version-3 code-content exemption. */
   readonly codeContentExemption: boolean;
+  /** Whether the policy classifies the version-5 governance-text class (root SECURITY and MANIFESTO names). */
+  readonly governanceText: boolean;
+  /** Whether the policy declares the version-5 project-documentation exemption from the active-content scan. */
+  readonly documentationExemption: boolean;
+  /** How many detectors the scope adds to the policy's own (version 5's `scopeDetectors`; 0 before it). */
+  readonly scopeDetectors: number;
   /** Why a read body is excluded, or undefined when it is admitted. With the blob's `repositoryPath`, a body the code-content exemption
-   * names skips the active-content scan; without one (agent text, or a page that cannot meet the render condition) every body is
-   * scanned. */
+   * or (version 5) the project-documentation exemption names skips the active-content scan; without one (agent text, or a page that
+   * cannot meet the render condition) every body is scanned. */
   readonly screenBody: (body: string, repositoryPath?: string) => ScreenExclusion | undefined;
   /** Whether the policy declares the version-4 secret redaction. */
   readonly secretRedaction: boolean;
   /** A target body read at `repositoryPath`, screened under the policy's secret redaction (version 4) where it applies: every detector over
    * the complete body from every offset, the active-content scan over the complete body exactly as `screenBody` runs it. */
   readonly screenTargetBody: (body: string, repositoryPath: string) => TargetBodyScreen;
+  /** Whether `body`, scanned for active content as before (no exemption applied), holds any: the scan a page that cannot be confirmed to
+   * meet the renderCondition applies to an exempt body. It runs over the complete body, so a redacted body (version 4) that an exemption
+   * admitted (version 5's project-documentation exemption) is checked on its withheld lines too; the answer carries no text. */
+  readonly activeContentAsBefore: (body: string) => boolean;
+  /** The visibility this screen was built for (version 8): `private` excludes every detector-matched body whole, and the render shows no
+   * object id of a blob excluded or withheld on any ground. Always `public` under versions 1 to 7. */
+  readonly visibility: SourceVisibility;
 }
 
 /** A target body as `screenTargetBody` screens it: admitted whole, retained as `redacted-span` (only `retained`, never the withheld
@@ -68,54 +101,89 @@ export type TargetBodyScreen =
   | { readonly kind: 'excluded'; readonly outcome: ScreenExclusion };
 
 export type ScreenLoad = { readonly ok: true; readonly screen: DossierScreen } | { readonly ok: false; readonly why: string };
+/** How a step loads its screen: for the run's placement subject (`placementSubjectOf`), which the version-5 owner placements compare. */
+export type ScreenLoader = (subject?: PlacementSubject) => Promise<ScreenLoad>;
 
 const stringList = (value: unknown): value is readonly string[] => Array.isArray(value) && value.every((item) => typeof item === 'string' && item.length > 0);
-const isObject = (value: unknown): value is Readonly<Record<string, unknown>> => value !== null && typeof value === 'object' && !Array.isArray(value);
+
+/** The run's repository and pinned commit as the owner-placement rule compares them: `repository:<id>`, the consent subject form. */
+/** A step's screen loader: the one injected, or else the checkout's own policy in force at `now`, loaded for the placement subject the
+ * step calls it with. One function for every step, so no step's own default can drop the subject. `visibilityOf`, when given, is the
+ * version-8 visibility decision `loadDossierScreen` asks (by default `pairVisibilityAt`, which reads the launch consent records). */
+export const screenLoaderOf = (injected: ScreenLoader | undefined, recordsRoot: string, now: number,
+  visibilityOf?: (subject: PlacementSubject) => Promise<VisibilityDecision>): ScreenLoader =>
+  injected ?? ((placement) => loadDossierScreen(recordsRoot, now, undefined, placement, visibilityOf));
+
+export const placementSubjectOf = (subject: { readonly repository: { readonly repositoryId: string }; readonly pinnedRevision: { readonly commit: string } }): PlacementSubject =>
+  ({ repository: `repository:${subject.repository.repositoryId}`, commit: subject.pinnedRevision.commit });
 
 /** Build the screen from the policy's bytes. Every field the rules need must be present and well formed, or the screen is refused.
  * `classActInForce` says whether the RFC5-14 project-documentation class amendment is confirmed in force; when it is not, the class's
- * rule is still read (a malformed one refuses) but classifies nothing, so its paths are indeterminate. */
-export function buildDossierScreen(policy: Uint8Array, classActInForce = false): ScreenLoad {
+ * rule is still read (a malformed one refuses) but classifies nothing, so its paths are indeterminate. `subject` is the repository the
+ * blobs are read from and the admitted commit they are read at, which the version-5 owner placements compare; null places nothing. */
+export function buildDossierScreen(policy: Uint8Array, classActInForce = false, subject: PlacementSubject | null = null, given?: SourceVisibility): ScreenLoad {
   const refuse = (why: string): ScreenLoad => ({ ok: false, why: `the screening policy cannot be applied: ${why}` });
   let doc: unknown;
   try { doc = JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(policy)); } catch { return refuse('it is not UTF-8 JSON'); }
-  if (!isObject(doc) || typeof doc['policyId'] !== 'string' || typeof doc['policyVersion'] !== 'string') return refuse('its identity is unreadable');
+  if (!isRecord(doc) || typeof doc['policyId'] !== 'string' || typeof doc['policyVersion'] !== 'string') return refuse('its identity is unreadable');
   const scope = doc['publicSourceScope'], admission = doc['sourceAdmission'];
-  if (!isObject(scope)) return refuse('it carries no publicSourceScope');
-  if (!isObject(admission) || !stringList(admission['deniedPathBasenames']) || !stringList(admission['deniedPathPrefixes']) || !stringList(admission['deniedPathSuffixes'])) {
+  if (!isRecord(scope)) return refuse('it carries no publicSourceScope');
+  const visibilityRead = readSourceVisibility(scope);
+  if (!visibilityRead.ok) return refuse(visibilityRead.why);
+  // No visibility given: a policy without `sourceVisibility` admits public repositories only, so public; a version-8 policy, the
+  // stricter private, so a caller that forgets the decision never gets partial redaction or a rendered object id.
+  const visibility: SourceVisibility = given ?? (visibilityRead.declared ? 'private' : 'public');
+  if (visibility === 'private' && !visibilityRead.admitsPrivate) return refuse('the repository is not public at this commit (no effective observation consent record of its pair states public through its carrier for every record), and this policy admits public repositories only');
+  if (!isRecord(admission) || !stringList(admission['deniedPathBasenames']) || !stringList(admission['deniedPathPrefixes']) || !stringList(admission['deniedPathSuffixes'])) {
     return refuse('its denied-path rules are unreadable');
   }
   const classification = scope['contentClassification'];
-  const rules = isObject(classification) && Array.isArray(classification['rules']) ? classification['rules'] : [];
-  const codeContent = rules.filter((rule: unknown) => isObject(rule) && rule['class'] === 'code-content');
-  const extensions = isObject(codeContent[0]) ? codeContent[0]['sourceExtensions'] : undefined;
+  const rules = isRecord(classification) && Array.isArray(classification['rules']) ? classification['rules'] : [];
+  const codeContent = rules.filter((rule: unknown) => isRecord(rule) && rule['class'] === 'code-content');
+  const extensions = isRecord(codeContent[0]) ? codeContent[0]['sourceExtensions'] : undefined;
   if (codeContent.length !== 1 || !stringList(extensions) || extensions.length === 0 || extensions.some((extension) => !/^\.[^/\s]+$/u.test(extension) || extension.includes('..'))) {
     return refuse('its code-content sourceExtensions are unreadable');
   }
   const documentationRead = readProjectDocumentationRule(rules, extensions);
   if (!documentationRead.ok) return refuse(documentationRead.why);
   const documentation = classActInForce ? documentationRead.rule : null;
+  const governanceRead = readGovernanceTextRule(classification);
+  if (!governanceRead.ok) return refuse(governanceRead.why);
+  const governanceTextPaths = governanceRead.paths;
   const exemptionRead = readCodeContentExemption(scope, extensions);
   if (!exemptionRead.ok) return refuse(exemptionRead.why);
   const exemption = exemptionRead.exemption;
-  const detectorIds = Array.isArray(doc['detectors']) ? doc['detectors'].flatMap((d: unknown) => (isObject(d) && typeof d['id'] === 'string' ? [d['id']] : [])) : [];
+  const documentationExemptionRead = readProjectDocumentationExemption(scope);
+  if (!documentationExemptionRead.ok) return refuse(documentationExemptionRead.why);
+  const documentationExemption = documentationExemptionRead.declared;
+  const policyDetectorIds = Array.isArray(doc['detectors']) ? doc['detectors'].flatMap((d: unknown) => (isRecord(d) && typeof d['id'] === 'string' ? [d['id']] : [])) : [];
+  const scopeRead = readScopeDetectors(scope, policyDetectorIds);
+  if (!scopeRead.ok) return refuse(scopeRead.why);
+  // The scope's detectors join the policy's for this scope only (version 5); before version 5 the list is the policy's alone.
+  const allDetectors = Array.isArray(doc['detectors']) ? [...doc['detectors'] as unknown[], ...scopeRead.detectors] : doc['detectors'];
+  const detectorIds = [...policyDetectorIds, ...scopeRead.detectors.map((detector) => detector.id)];
   const redactionRead = readSecretRedaction(scope, detectorIds);
   if (!redactionRead.ok) return refuse(redactionRead.why);
   const redaction = redactionRead.redaction;
   const denied: DeniedPathRules = { basenames: admission['deniedPathBasenames'], prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };
   let detectors: ReturnType<typeof compileDetectors>;
-  try { detectors = compileDetectors({ detectors: doc['detectors'] as readonly SecretDetector[] }); } catch (error) { return refuse(`its detectors do not compile (${error instanceof Error ? error.message : 'invalid'})`); }
-  const everyOffset = compileEveryOffsetMatcher(doc['detectors'] as readonly RedactionDetector[]);
+  try { detectors = compileDetectors({ detectors: allDetectors as readonly SecretDetector[] }); } catch (error) { return refuse(`its detectors do not compile (${error instanceof Error ? error.message : 'invalid'})`); }
+  const everyOffset = compileEveryOffsetMatcher(allDetectors as readonly RedactionDetector[]);
+  const context = { governanceTextPaths, subject };
+  const classOf = (repositoryPath: string): PublicSourceContentClass | undefined => publicSourceContentClass(repositoryPath, extensions, documentation, context);
   const screenPath = (repositoryPath: string): ScreenExclusion | undefined => deniedPathReason(repositoryPath, denied) !== undefined ? 'denied-path'
     : detectSecrets(detectors, repositoryPath) !== undefined ? 'secret-detector-match'
-      : publicSourceContentClass(repositoryPath, extensions, documentation) !== undefined ? undefined : 'unknown-extraction-class';
-  const contentClass = (repositoryPath: string): PublicSourceContentClass | undefined =>
-    (screenPath(repositoryPath) === undefined ? publicSourceContentClass(repositoryPath, extensions, documentation) : undefined);
-  const exempt = (repositoryPath: string | undefined): boolean => repositoryPath !== undefined && codeContentExempt(repositoryPath, contentClass(repositoryPath), exemption);
+      : classOf(repositoryPath) !== undefined ? undefined : 'unknown-extraction-class';
+  const contentClass = (repositoryPath: string): PublicSourceContentClass | undefined => (screenPath(repositoryPath) === undefined ? classOf(repositoryPath) : undefined);
+  const exempt = (repositoryPath: string | undefined): boolean => {
+    if (repositoryPath === undefined) return false;
+    const found = contentClass(repositoryPath);
+    return codeContentExempt(repositoryPath, found, exemption) || documentationExempt(found, documentationExemption);
+  };
   const active = (body: string, repositoryPath: string): boolean => !exempt(repositoryPath) && scanActiveContent(body).length > 0;
   // The detectors first (from every offset, over the complete body), then the active-content scan over the complete body, as before.
   const screenTargetBody = (body: string, repositoryPath: string): TargetBodyScreen => {
-    const redacted = redactBody(body, contentClass(repositoryPath), everyOffset, redaction);
+    const redacted = redactBody(body, contentClass(repositoryPath), everyOffset, redactionFor(redaction, visibility));
     if (redacted.kind === 'excluded') return { kind: 'excluded', outcome: 'secret-detector-match' };
     if (active(body, repositoryPath)) return { kind: 'excluded', outcome: 'active-content' };
     return redacted.kind === 'clean' ? { kind: 'admitted' } : redacted;
@@ -123,15 +191,20 @@ export function buildDossierScreen(policy: Uint8Array, classActInForce = false):
   return {
     ok: true,
     screen: {
-      policyId: doc['policyId'], policyVersion: doc['policyVersion'], policySha256: createHash('sha256').update(policy).digest('hex'),
+      policyId: doc['policyId'], policyVersion: doc['policyVersion'], policySha256: sha256(policy),
       projectDocumentation: documentation !== null,
       codeContentExemption: exemption !== null,
+      governanceText: governanceTextPaths !== null,
+      documentationExemption,
+      scopeDetectors: scopeRead.detectors.length,
       screenPath,
       contentClass,
       screenBody: (body, repositoryPath) => detectSecrets(detectors, body) !== undefined ? 'secret-detector-match'
         : !exempt(repositoryPath) && scanActiveContent(body).length > 0 ? 'active-content' : undefined,
       secretRedaction: redaction !== null,
       screenTargetBody,
+      activeContentAsBefore: (body) => scanActiveContent(body).length > 0,
+      visibility,
     },
   };
 }
@@ -140,7 +213,8 @@ export function buildDossierScreen(policy: Uint8Array, classActInForce = false):
  * policy's current bytes, and the bytes read for the screen must hash to that argument. The project-documentation class is classified
  * only when the RFC5-14 class amendment act is in force at `now` and the installed RFC-0005 module hashes to its argument; an absent
  * or refused class act leaves the class's paths indeterminate and the rest of the screen unchanged. */
-export async function loadDossierScreen(root: string, now: number, readBytes: (file: string) => Buffer = (file) => fs.readFileSync(file)): Promise<ScreenLoad> {
+export async function loadDossierScreen(root: string, now: number, readBytes: (file: string) => Buffer = (file) => fs.readFileSync(file), subject: PlacementSubject | null = null,
+  visibilityOf: (subject: PlacementSubject) => Promise<VisibilityDecision> = (placed) => pairVisibilityAt(placed, { root, now })): Promise<ScreenLoad> {
   const chain = await readPolicyActChain({ root, now });
   if (chain.state !== 'ok') return { ok: false, why: `no screening policy is in force: ${chain.why}` };
   // The chain read the policy once; this is a second read, so a change between the two is caught here.
@@ -148,7 +222,27 @@ export async function loadDossierScreen(root: string, now: number, readBytes: (f
   try { bytes = readBytes(path.join(root, POLICY_PATH)); } catch (cause) {
     return { ok: false, why: `the screening policy cannot be read (${(cause as NodeJS.ErrnoException).code ?? 'unknown-error'})` };
   }
-  if (createHash('sha256').update(bytes).digest('hex') !== chain.final.digest) return { ok: false, why: 'the screening policy changed after its act was checked; its bytes differ from the act\'s argument' };
+  if (sha256(bytes) !== chain.final.digest) return { ok: false, why: 'the screening policy changed after its act was checked; its bytes differ from the act\'s argument' };
   const classAct = await readClassActState({ root, now });
-  return buildDossierScreen(new Uint8Array(bytes), classAct.state === 'ok');
+  // Version 8: the subject's visibility at its commit, from every effective observation consent record of its pair; a record that cannot
+  // be read refuses the screen, and so every read. A screen built for no subject is built private, the stricter reading. Before
+  // version 8 every admitted repository is public, and no record is read for it.
+  let visibility: SourceVisibility = 'public';
+  if (declaresSourceVisibility(bytes)) {
+    if (subject === null) visibility = 'private';
+    else {
+      const decided = await visibilityOf(subject);
+      if (!decided.ok) return { ok: false, why: `the screening policy cannot be applied: ${decided.why}` };
+      visibility = decided.visibility;
+    }
+  }
+  return buildDossierScreen(new Uint8Array(bytes), classAct.state === 'ok', subject, visibility);
+}
+
+/** Whether the policy's scope declares `sourceVisibility` (version 8); bytes that do not parse say no here and refuse in the build. */
+function declaresSourceVisibility(bytes: Buffer): boolean {
+  try {
+    const doc: unknown = JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(bytes));
+    return isRecord(doc) && isRecord(doc['publicSourceScope']) && Object.hasOwn(doc['publicSourceScope'], 'sourceVisibility');
+  } catch { return false; }
 }

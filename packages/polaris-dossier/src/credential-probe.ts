@@ -3,6 +3,7 @@ import * as path from 'node:path';
 import { parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import type { CredentialProbe } from './execution-rule.js';
 import { RUN_LAYOUT } from './state-directory.js';
+import { isoOf } from './iso-of.js';
 
 /** The adapter-credential check of D9's credential condition (REQ-polaris-generation-033; R3-F1).
  *
@@ -120,8 +121,8 @@ export interface AdapterCredentialDeclaration {
 
 /** The typed adapters configured in this repository that declare a credential, each with the paths it declares. The probe refuses
  * when any declared path is missing from `CONFIGURED_ADAPTER_CREDENTIALS`, so that hand-kept list cannot fall silently behind an
- * adapter (owner direction GP-Q7, 2026-10-21). A sweep on 2026-10-22 found none: neither adapter-registry entry declares a credential,
- * and no implementation source in `packages/` or `apps/` holds a typed-adapter credential path. */
+ * adapter (owner direction GP-Q7, 2026-10-21). The 2026-10-22 sweep classifies polaris.ts's Claude Code login copy as the session's
+ * own login, not a typed-adapter credential [Inferred]; the owner ruling is pending in syzygy-bpyt.1.6. */
 export const CONFIGURED_ADAPTER_DECLARATIONS: readonly AdapterCredentialDeclaration[] = Object.freeze([]);
 
 export const NO_ADAPTER_CREDENTIAL_DECLARED = 'no adapter credential declared; list operator-declared, Inferred';
@@ -188,7 +189,7 @@ export async function credentialStepCheck(runDir: string, step: CredentialStep, 
   const result = await probe.probe();
   if (result.passed) return { required: true, passed: true, checked: result.checked, source: result.source };
   const finding: CredentialBreachFinding = {
-    kind: 'adapter-credential-readable', step, at: new Date(now).toISOString(), why: result.why,
+    kind: 'adapter-credential-readable', step, at: isoOf(now), why: result.why,
     instruction: 'Run no further observed code: the permission to build and run the observed project has lapsed for this run.',
   };
   fs.appendFileSync(path.join(run, RUN_LAYOUT.credentialBreaches), `${JSON.stringify(finding)}\n`, { mode: 0o600 });

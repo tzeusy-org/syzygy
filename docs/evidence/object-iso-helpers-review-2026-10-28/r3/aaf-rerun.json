@@ -1,0 +1,708 @@
+[
+ {
+  "id": "control-unmutated",
+  "line": null,
+  "old": null,
+  "new": null,
+  "ranAt": "2df14d7d2580f453da5b61b5681097d1bfc902c3",
+  "testFileAt": "2df14d7d2580f453da5b61b5681097d1bfc902c3",
+  "loadavg": "23.43 23.89 25.55 11/9694 973590",
+  "exit": 0,
+  "total": 32,
+  "failed": 0,
+  "failedTests": [],
+  "killed": false
+ },
+ {
+  "id": "control-comment",
+  "line": 1,
+  "old": null,
+  "new": "// harmless\n",
+  "ranAt": "2df14d7d2580f453da5b61b5681097d1bfc902c3",
+  "testFileAt": "2df14d7d2580f453da5b61b5681097d1bfc902c3",
+  "loadavg": "23.87 23.98 25.57 23/9694 974274",
+  "exit": 0,
+  "total": 32,
+  "failed": 0,
+  "failedTests": [],
+  "killed": false
+ },
+ {
+  "id": "C-authority-artifact-fields-L102n0-A",
+  "line": 102,
+  "old": "isRecord(json.value)",
+  "new": "(typeof json.value === 'object' && json.value !== null)",
+  "ranAt": "2df14d7d2580f453da5b61b5681097d1bfc902c3",
+  "testFileAt": "2df14d7d2580f453da5b61b5681097d1bfc902c3",
+  "loadavg": "23.87 23.98 25.57 10/9672 974762",
+  "exit": 1,
+  "total": 32,
+  "failed": 1,
+  "failedTests": [
+   "the parsers read a JSON container as an object only when it is one refuse a policy document that is an array"
+  ],
+  "killed": true,
+  "recorded": {
+   "killed": true,
+   "failedTests": [
+    "the parsers read a JSON container as an object only when it is one refuse a policy document that is an array"
+   ],
+   "ranAt": "28024ade30ac30ffeac3bb09fe0833fe63a43981"
+  },
+  "sameOutcome": true,
+  "newFailures": [],
+  "lostFailures": []
+ },
+ {
+  "id": "C-authority-artifact-fields-L102n0-B",
+  "line": 102,
+  "old": "isRecord(json.value)",
+  "new": "(typeof json.value === 'object' && !Array.isArray(json.value))",
+  "ranAt": "2df14d7d2580f453da5b61b5681097d1bfc902c3",
+  "testFileAt": "2df14d7d2580f453da5b61b5681097d1bfc902c3",
+  "loadavg": "24.28 24.06 25.59 17/9685 975314",
+  "exit": 1,
+  "total": 32,
+  "failed": 1,
+  "failedTests": [
+   "the parsers read a JSON container as an object only when it is one refuse a policy document that is null"
+  ],
+  "killed": true,
+  "recorded": {
+   "killed": true,
+   "failedTests": [
+    "the parsers read a JSON container as an object only when it is one refuse a policy document that is null"
+   ],
+   "ranAt": "28024ade30ac30ffeac3bb09fe0833fe63a43981"
+  },
+  "sameOutcome": true,
+  "newFailures": [],
+  "lostFailures": []
+ },
+ {
+  "id": "C-authority-artifact-fields-L102n0-D",
+  "line": 102,
+  "old": "isRecord(json.value)",
+  "new": "true",
+  "ranAt": "2df14d7d2580f453da5b61b5681097d1bfc902c3",
+  "testFileAt": "2df14d7d2580f453da5b61b5681097d1bfc902c3",
+  "loadavg": "24.28 24.06 25.59 16/9683 976212",
+  "exit": 1,
+  "total": 32,
+  "failed": 5,
+  "failedTests": [
+   "the parsers read a JSON container as an object only when it is one refuse a policy document that is an array",
+   "the parsers read a JSON container as an object only when it is one refuse a policy document that is null",
+   "the parsers read a JSON container as an object only when it is one refuse a policy document that is a string",
+   "the parsers read a JSON container as an object only when it is one refuse a policy document that is a number",
+   "the parsers read a JSON container as an object only when it is one refuse a policy document that is true"
+  ],
+  "killed": true,
+  "recorded": {
+   "killed": true,
+   "failedTests": [
+    "the parsers read a JSON container as an object only when it is one refuse a policy document that is an array",
+    "the parsers read a JSON container as an object only when it is one refuse a policy document that is null",
+    "the parsers read a JSON container as an object only when it is one refuse a policy document that is a string"
+   ],
+   "ranAt": "28024ade30ac30ffeac3bb09fe0833fe63a43981"
+  },
+  "sameOutcome": true,
+  "newFailures": [
+   "the parsers read a JSON container as an object only when it is one refuse a policy document that is a number",
+   "the parsers read a JSON container as an object only when it is one refuse a policy document that is true"
+  ],
+  "lostFailures": []
+ },
+ {
+  "id": "C-authority-artifact-fields-L121n1-A",
+  "line": 121,
+  "old": "isRecord(json.value)",
+  "new": "(typeof json.value === 'object' && json.value !== null)",
+  "ranAt": "2df14d7d2580f453da5b61b5681097d1bfc902c3",
+  "testFileAt": "2df14d7d2580f453da5b61b5681097d1bfc902c3",
+  "loadavg": "24.02 24.01 25.57 22/9674 977544",
+  "exit": 1,
+  "total": 32,
+  "failed": 1,
+  "failedTests": [
+   "the parsers read a JSON container as an object only when it is one refuse a registry document that is an array"
+  ],
+  "killed": true,
+  "recorded": {
+   "killed": true,
+   "failedTests": [
+    "the parsers read a JSON container as an object only when it is one refuse a registry document that is an array"
+   ],
+   "ranAt": "28024ade30ac30ffeac3bb09fe0833fe63a43981"
+  },
+  "sameOutcome": true,
+  "newFailures": [],
+  "lostFailures": []
+ },
+ {
+  "id": "C-authority-artifact-fields-L121n1-B",
+  "line": 121,
+  "old": "isRecord(json.value)",
+  "new": "(typeof json.value === 'object' && !Array.isArray(json.value))",
+  "ranAt": "2df14d7d2580f453da5b61b5681097d1bfc902c3",
+  "testFileAt": "2df14d7d2580f453da5b61b5681097d1bfc902c3",
+  "loadavg": "24.02 24.01 25.57 19/9682 978537",
+  "exit": 1,
+  "total": 32,
+  "failed": 1,
+  "failedTests": [
+   "the parsers read a JSON container as an object only when it is one refuse a registry document that is null"
+  ],
+  "killed": true,
+  "recorded": {
+   "killed": true,
+   "failedTests": [
+    "the parsers read a JSON container as an object only when it is one refuse a registry document that is null"
+   ],
+   "ranAt": "28024ade30ac30ffeac3bb09fe0833fe63a43981"
+  },
+  "sameOutcome": true,
+  "newFailures": [],
+  "lostFailures": []
+ },
+ {
+  "id": "C-authority-artifact-fields-L121n1-D",
+  "line": 121,
+  "old": "isRecord(json.value)",
+  "new": "true",
+  "ranAt": "2df14d7d2580f453da5b61b5681097d1bfc902c3",
+  "testFileAt": "2df14d7d2580f453da5b61b5681097d1bfc902c3",
+  "loadavg": "24.02 24.01 25.57 8/9676 979168",
+  "exit": 1,
+  "total": 32,
+  "failed": 5,
+  "failedTests": [
+   "the parsers read a JSON container as an object only when it is one refuse a registry document that is an array",
+   "the parsers read a JSON container as an object only when it is one refuse a registry document that is null",
+   "the parsers read a JSON container as an object only when it is one refuse a registry document that is a string",
+   "the parsers read a JSON container as an object only when it is one refuse a registry document that is a number",
+   "the parsers read a JSON container as an object only when it is one refuse a registry document that is true"
+  ],
+  "killed": true,
+  "recorded": {
+   "killed": true,
+   "failedTests": [
+    "the parsers read a JSON container as an object only when it is one refuse a registry document that is an array",
+    "the parsers read a JSON container as an object only when it is one refuse a registry document that is null",
+    "the parsers read a JSON container as an object only when it is one refuse a registry document that is a string"
+   ],
+   "ranAt": "28024ade30ac30ffeac3bb09fe0833fe63a43981"
+  },
+  "sameOutcome": true,
+  "newFailures": [
+   "the parsers read a JSON container as an object only when it is one refuse a registry document that is a number",
+   "the parsers read a JSON container as an object only when it is one refuse a registry document that is true"
+  ],
+  "lostFailures": []
+ },
+ {
+  "id": "C-authority-artifact-fields-L132n2-A",
+  "line": 132,
+  "old": "isRecord(entry)",
+  "new": "(typeof entry === 'object' && entry !== null)",
+  "ranAt": "2df14d7d2580f453da5b61b5681097d1bfc902c3",
+  "testFileAt": "2df14d7d2580f453da5b61b5681097d1bfc902c3",
+  "loadavg": "23.30 23.86 25.51 12/9680 979817",
+  "exit": 1,
+  "total": 32,
+  "failed": 1,
+  "failedTests": [
+   "the parsers read a JSON container as an object only when it is one surface a first registry entry that is an array as the malformed entries list"
+  ],
+  "killed": true,
+  "recorded": {
+   "killed": true,
+   "failedTests": [
+    "the parsers read a JSON container as an object only when it is one surface a first registry entry that is an array as the malformed entries list"
+   ],
+   "ranAt": "28024ade30ac30ffeac3bb09fe0833fe63a43981"
+  },
+  "sameOutcome": true,
+  "newFailures": [],
+  "lostFailures": []
+ },
+ {
+  "id": "C-authority-artifact-fields-L132n2-B",
+  "line": 132,
+  "old": "isRecord(entry)",
+  "new": "(typeof entry === 'object' && !Array.isArray(entry))",
+  "ranAt": "2df14d7d2580f453da5b61b5681097d1bfc902c3",
+  "testFileAt": "2df14d7d2580f453da5b61b5681097d1bfc902c3",
+  "loadavg": "23.30 23.86 25.51 13/9681 980515",
+  "exit": 1,
+  "total": 32,
+  "failed": 1,
+  "failedTests": [
+   "the parsers read a JSON container as an object only when it is one surface a first registry entry that is null as the malformed entries list"
+  ],
+  "killed": true,
+  "recorded": {
+   "killed": true,
+   "failedTests": [
+    "the parsers read a JSON container as an object only when it is one surface a first registry entry that is null as the malformed entries list"
+   ],
+   "ranAt": "28024ade30ac30ffeac3bb09fe0833fe63a43981"
+  },
+  "sameOutcome": true,
+  "newFailures": [],
+  "lostFailures": []
+ },
+ {
+  "id": "C-authority-artifact-fields-L132n2-D",
+  "line": 132,
+  "old": "isRecord(entry)",
+  "new": "true",
+  "ranAt": "2df14d7d2580f453da5b61b5681097d1bfc902c3",
+  "testFileAt": "2df14d7d2580f453da5b61b5681097d1bfc902c3",
+  "loadavg": "23.30 23.86 25.51 21/9632 981202",
+  "exit": 1,
+  "total": 32,
+  "failed": 5,
+  "failedTests": [
+   "the parsers read a JSON container as an object only when it is one surface a first registry entry that is an array as the malformed entries list",
+   "the parsers read a JSON container as an object only when it is one surface a first registry entry that is null as the malformed entries list",
+   "the parsers read a JSON container as an object only when it is one surface a first registry entry that is a string as the malformed entries list",
+   "the parsers read a JSON container as an object only when it is one surface a first registry entry that is a number as the malformed entries list",
+   "the parsers read a JSON container as an object only when it is one surface a first registry entry that is true as the malformed entries list"
+  ],
+  "killed": true,
+  "recorded": {
+   "killed": true,
+   "failedTests": [
+    "the parsers read a JSON container as an object only when it is one surface a first registry entry that is an array as the malformed entries list",
+    "the parsers read a JSON container as an object only when it is one surface a first registry entry that is null as the malformed entries list",
+    "the parsers read a JSON container as an object only when it is one surface a first registry entry that is a string as the malformed entries list"
+   ],
+   "ranAt": "28024ade30ac30ffeac3bb09fe0833fe63a43981"
+  },
+  "sameOutcome": true,
+  "newFailures": [
+   "the parsers read a JSON container as an object only when it is one surface a first registry entry that is a number as the malformed entries list",
+   "the parsers read a JSON container as an object only when it is one surface a first registry entry that is true as the malformed entries list"
+  ],
+  "lostFailures": []
+ },
+ {
+  "id": "C-authority-artifact-fields-L136n3-A",
+  "line": 136,
+  "old": "isRecord(subject)",
+  "new": "(typeof subject === 'object' && subject !== null)",
+  "ranAt": "2df14d7d2580f453da5b61b5681097d1bfc902c3",
+  "testFileAt": "2df14d7d2580f453da5b61b5681097d1bfc902c3",
+  "loadavg": "23.76 23.94 25.53 12/9639 981875",
+  "exit": 1,
+  "total": 32,
+  "failed": 1,
+  "failedTests": [
+   "the parsers read a JSON container as an object only when it is one surface an entry subject that is an array as the repository field"
+  ],
+  "killed": true,
+  "recorded": {
+   "killed": true,
+   "failedTests": [
+    "the parsers read a JSON container as an object only when it is one surface an entry subject that is an array as the repository field"
+   ],
+   "ranAt": "28024ade30ac30ffeac3bb09fe0833fe63a43981"
+  },
+  "sameOutcome": true,
+  "newFailures": [],
+  "lostFailures": []
+ },
+ {
+  "id": "C-authority-artifact-fields-L136n3-B",
+  "line": 136,
+  "old": "isRecord(subject)",
+  "new": "(typeof subject === 'object' && !Array.isArray(subject))",
+  "ranAt": "2df14d7d2580f453da5b61b5681097d1bfc902c3",
+  "testFileAt": "2df14d7d2580f453da5b61b5681097d1bfc902c3",
+  "loadavg": "23.76 23.94 25.53 8/9644 982397",
+  "exit": 1,
+  "total": 32,
+  "failed": 1,
+  "failedTests": [
+   "the parsers read a JSON container as an object only when it is one surface an entry subject that is null as the repository field"
+  ],
+  "killed": true,
+  "recorded": {
+   "killed": true,
+   "failedTests": [
+    "the parsers read a JSON container as an object only when it is one surface an entry subject that is null as the repository field"
+   ],
+   "ranAt": "28024ade30ac30ffeac3bb09fe0833fe63a43981"
+  },
+  "sameOutcome": true,
+  "newFailures": [],
+  "lostFailures": []
+ },
+ {
+  "id": "C-authority-artifact-fields-L136n3-D",
+  "line": 136,
+  "old": "isRecord(subject)",
+  "new": "true",
+  "ranAt": "2df14d7d2580f453da5b61b5681097d1bfc902c3",
+  "testFileAt": "2df14d7d2580f453da5b61b5681097d1bfc902c3",
+  "loadavg": "23.76 23.94 25.53 17/9666 982887",
+  "exit": 1,
+  "total": 32,
+  "failed": 12,
+  "failedTests": [
+   "the parsers read a JSON container as an object only when it is one surface an entry subject that is an array as the repository field",
+   "the parsers read a JSON container as an object only when it is one surface an entry subject that is null as the repository field",
+   "the parsers read a JSON container as an object only when it is one surface an entry subject that is a string as the repository field",
+   "the parsers read a JSON container as an object only when it is one surface an entry subject that is a number as the repository field",
+   "the parsers read a JSON container as an object only when it is one surface an entry subject that is true as the repository field",
+   "the parsers read a JSON container as an object only when it is one read the observed repository of an entry subject that is an object, and none from one without a subject",
+   "the parsers read a JSON container as an object only when it is one surface typed authority that is an array as present, with no write surface",
+   "the parsers read a JSON container as an object only when it is one surface typed authority that is null as present, with no write surface",
+   "the parsers read a JSON container as an object only when it is one surface typed authority that is a string as present, with no write surface",
+   "the parsers read a JSON container as an object only when it is one surface typed authority that is a number as present, with no write surface",
+   "the parsers read a JSON container as an object only when it is one surface typed authority that is true as present, with no write surface",
+   "the parsers read a JSON container as an object only when it is one read the write surface of typed authority that is an object"
+  ],
+  "killed": true,
+  "recorded": {
+   "killed": true,
+   "failedTests": [
+    "the parsers read a JSON container as an object only when it is one surface an entry subject that is an array as the repository field",
+    "the parsers read a JSON container as an object only when it is one surface an entry subject that is null as the repository field",
+    "the parsers read a JSON container as an object only when it is one surface an entry subject that is a string as the repository field"
+   ],
+   "ranAt": "28024ade30ac30ffeac3bb09fe0833fe63a43981"
+  },
+  "sameOutcome": true,
+  "newFailures": [
+   "the parsers read a JSON container as an object only when it is one read the observed repository of an entry subject that is an object, and none from one without a subject",
+   "the parsers read a JSON container as an object only when it is one read the write surface of typed authority that is an object",
+   "the parsers read a JSON container as an object only when it is one surface an entry subject that is a number as the repository field",
+   "the parsers read a JSON container as an object only when it is one surface an entry subject that is true as the repository field",
+   "the parsers read a JSON container as an object only when it is one surface typed authority that is a number as present, with no write surface",
+   "the parsers read a JSON container as an object only when it is one surface typed authority that is a string as present, with no write surface",
+   "the parsers read a JSON container as an object only when it is one surface typed authority that is an array as present, with no write surface",
+   "the parsers read a JSON container as an object only when it is one surface typed authority that is null as present, with no write surface",
+   "the parsers read a JSON container as an object only when it is one surface typed authority that is true as present, with no write surface"
+  ],
+  "lostFailures": []
+ },
+ {
+  "id": "C-authority-artifact-fields-L141n4-A",
+  "line": 141,
+  "old": "isRecord(authority)",
+  "new": "(typeof authority === 'object' && authority !== null)",
+  "ranAt": "2df14d7d2580f453da5b61b5681097d1bfc902c3",
+  "testFileAt": "2df14d7d2580f453da5b61b5681097d1bfc902c3",
+  "loadavg": "23.61 23.91 25.51 16/9707 983536",
+  "exit": 0,
+  "total": 32,
+  "failed": 0,
+  "failedTests": [],
+  "killed": false,
+  "recorded": {
+   "killed": false,
+   "failedTests": [],
+   "ranAt": "28024ade30ac30ffeac3bb09fe0833fe63a43981"
+  },
+  "sameOutcome": true,
+  "newFailures": [],
+  "lostFailures": []
+ },
+ {
+  "id": "C-authority-artifact-fields-L141n4-B",
+  "line": 141,
+  "old": "isRecord(authority)",
+  "new": "(typeof authority === 'object' && !Array.isArray(authority))",
+  "ranAt": "2df14d7d2580f453da5b61b5681097d1bfc902c3",
+  "testFileAt": "2df14d7d2580f453da5b61b5681097d1bfc902c3",
+  "loadavg": "23.61 23.91 25.51 17/9721 984129",
+  "exit": 1,
+  "total": 32,
+  "failed": 1,
+  "failedTests": [
+   "the parsers read a JSON container as an object only when it is one surface typed authority that is null as present, with no write surface"
+  ],
+  "killed": true,
+  "recorded": {
+   "killed": true,
+   "failedTests": [
+    "the parsers read a JSON container as an object only when it is one surface typed authority that is null as present, with no write surface"
+   ],
+   "ranAt": "28024ade30ac30ffeac3bb09fe0833fe63a43981"
+  },
+  "sameOutcome": true,
+  "newFailures": [],
+  "lostFailures": []
+ },
+ {
+  "id": "C-authority-artifact-fields-L141n4-D",
+  "line": 141,
+  "old": "isRecord(authority)",
+  "new": "true",
+  "ranAt": "2df14d7d2580f453da5b61b5681097d1bfc902c3",
+  "testFileAt": "2df14d7d2580f453da5b61b5681097d1bfc902c3",
+  "loadavg": "24.37 24.06 25.55 18/9729 984782",
+  "exit": 1,
+  "total": 32,
+  "failed": 1,
+  "failedTests": [
+   "the parsers read a JSON container as an object only when it is one surface typed authority that is null as present, with no write surface"
+  ],
+  "killed": true,
+  "recorded": {
+   "killed": true,
+   "failedTests": [
+    "the parsers read a JSON container as an object only when it is one surface typed authority that is null as present, with no write surface"
+   ],
+   "ranAt": "28024ade30ac30ffeac3bb09fe0833fe63a43981"
+  },
+  "sameOutcome": true,
+  "newFailures": [],
+  "lostFailures": []
+ },
+ {
+  "id": "N-authority-artifact-fields-L102n0-E",
+  "line": 102,
+  "old": "isRecord(json.value)",
+  "new": "(json.value !== null && typeof json.value !== 'string' && !Array.isArray(json.value))",
+  "ranAt": "2df14d7d2580f453da5b61b5681097d1bfc902c3",
+  "testFileAt": "2df14d7d2580f453da5b61b5681097d1bfc902c3",
+  "loadavg": "24.37 24.06 25.55 17/9720 985312",
+  "exit": 1,
+  "total": 32,
+  "failed": 2,
+  "failedTests": [
+   "the parsers read a JSON container as an object only when it is one refuse a policy document that is a number",
+   "the parsers read a JSON container as an object only when it is one refuse a policy document that is true"
+  ],
+  "killed": true,
+  "recorded": {
+   "killed": true,
+   "failedTests": [
+    "the parsers read a JSON container as an object only when it is one refuse a policy document that is a number"
+   ],
+   "ranAt": "28024ade30ac30ffeac3bb09fe0833fe63a43981"
+  },
+  "sameOutcome": true,
+  "newFailures": [
+   "the parsers read a JSON container as an object only when it is one refuse a policy document that is true"
+  ],
+  "lostFailures": []
+ },
+ {
+  "id": "N-authority-artifact-fields-L121n1-E",
+  "line": 121,
+  "old": "isRecord(json.value)",
+  "new": "(json.value !== null && typeof json.value !== 'string' && !Array.isArray(json.value))",
+  "ranAt": "2df14d7d2580f453da5b61b5681097d1bfc902c3",
+  "testFileAt": "2df14d7d2580f453da5b61b5681097d1bfc902c3",
+  "loadavg": "24.42 24.08 25.55 14/9732 985923",
+  "exit": 1,
+  "total": 32,
+  "failed": 2,
+  "failedTests": [
+   "the parsers read a JSON container as an object only when it is one refuse a registry document that is a number",
+   "the parsers read a JSON container as an object only when it is one refuse a registry document that is true"
+  ],
+  "killed": true,
+  "recorded": {
+   "killed": true,
+   "failedTests": [
+    "the parsers read a JSON container as an object only when it is one refuse a registry document that is a number"
+   ],
+   "ranAt": "28024ade30ac30ffeac3bb09fe0833fe63a43981"
+  },
+  "sameOutcome": true,
+  "newFailures": [
+   "the parsers read a JSON container as an object only when it is one refuse a registry document that is true"
+  ],
+  "lostFailures": []
+ },
+ {
+  "id": "N-authority-artifact-fields-L132n2-E",
+  "line": 132,
+  "old": "isRecord(entry)",
+  "new": "(entry !== null && typeof entry !== 'string' && !Array.isArray(entry))",
+  "ranAt": "2df14d7d2580f453da5b61b5681097d1bfc902c3",
+  "testFileAt": "2df14d7d2580f453da5b61b5681097d1bfc902c3",
+  "loadavg": "24.42 24.08 25.55 8/9729 986450",
+  "exit": 1,
+  "total": 32,
+  "failed": 2,
+  "failedTests": [
+   "the parsers read a JSON container as an object only when it is one surface a first registry entry that is a number as the malformed entries list",
+   "the parsers read a JSON container as an object only when it is one surface a first registry entry that is true as the malformed entries list"
+  ],
+  "killed": true,
+  "recorded": {
+   "killed": true,
+   "failedTests": [
+    "the parsers read a JSON container as an object only when it is one surface a first registry entry that is a number as the malformed entries list"
+   ],
+   "ranAt": "28024ade30ac30ffeac3bb09fe0833fe63a43981"
+  },
+  "sameOutcome": true,
+  "newFailures": [
+   "the parsers read a JSON container as an object only when it is one surface a first registry entry that is true as the malformed entries list"
+  ],
+  "lostFailures": []
+ },
+ {
+  "id": "N-authority-artifact-fields-L136n3-E",
+  "line": 136,
+  "old": "isRecord(subject)",
+  "new": "(subject !== null && typeof subject !== 'string' && !Array.isArray(subject))",
+  "ranAt": "2df14d7d2580f453da5b61b5681097d1bfc902c3",
+  "testFileAt": "2df14d7d2580f453da5b61b5681097d1bfc902c3",
+  "loadavg": "24.42 24.08 25.55 16/9748 987038",
+  "exit": 1,
+  "total": 32,
+  "failed": 9,
+  "failedTests": [
+   "the parsers read a JSON container as an object only when it is one surface an entry subject that is a number as the repository field",
+   "the parsers read a JSON container as an object only when it is one surface an entry subject that is true as the repository field",
+   "the parsers read a JSON container as an object only when it is one read the observed repository of an entry subject that is an object, and none from one without a subject",
+   "the parsers read a JSON container as an object only when it is one surface typed authority that is an array as present, with no write surface",
+   "the parsers read a JSON container as an object only when it is one surface typed authority that is null as present, with no write surface",
+   "the parsers read a JSON container as an object only when it is one surface typed authority that is a string as present, with no write surface",
+   "the parsers read a JSON container as an object only when it is one surface typed authority that is a number as present, with no write surface",
+   "the parsers read a JSON container as an object only when it is one surface typed authority that is true as present, with no write surface",
+   "the parsers read a JSON container as an object only when it is one read the write surface of typed authority that is an object"
+  ],
+  "killed": true,
+  "recorded": {
+   "killed": true,
+   "failedTests": [
+    "the parsers read a JSON container as an object only when it is one surface an entry subject that is a number as the repository field",
+    "the parsers read a JSON container as an object only when it is one read the observed repository of an entry subject that is an object, and none from one without a subject",
+    "the parsers read a JSON container as an object only when it is one surface typed authority that is an array as present, with no write surface",
+    "the parsers read a JSON container as an object only when it is one surface typed authority that is null as present, with no write surface",
+    "the parsers read a JSON container as an object only when it is one surface typed authority that is a string as present, with no write surface",
+    "the parsers read a JSON container as an object only when it is one surface typed authority that is a number as present, with no write surface",
+    "the parsers read a JSON container as an object only when it is one read the write surface of typed authority that is an object"
+   ],
+   "ranAt": "28024ade30ac30ffeac3bb09fe0833fe63a43981"
+  },
+  "sameOutcome": true,
+  "newFailures": [
+   "the parsers read a JSON container as an object only when it is one surface an entry subject that is true as the repository field",
+   "the parsers read a JSON container as an object only when it is one surface typed authority that is true as present, with no write surface"
+  ],
+  "lostFailures": []
+ },
+ {
+  "id": "N-authority-artifact-fields-L141n4-E",
+  "line": 141,
+  "old": "isRecord(authority)",
+  "new": "(authority !== null && typeof authority !== 'string' && !Array.isArray(authority))",
+  "ranAt": "2df14d7d2580f453da5b61b5681097d1bfc902c3",
+  "testFileAt": "2df14d7d2580f453da5b61b5681097d1bfc902c3",
+  "loadavg": "24.86 24.18 25.57 8/9715 987681",
+  "exit": 0,
+  "total": 32,
+  "failed": 0,
+  "failedTests": [],
+  "killed": false,
+  "recorded": {
+   "killed": false,
+   "failedTests": [],
+   "ranAt": "28024ade30ac30ffeac3bb09fe0833fe63a43981"
+  },
+  "sameOutcome": true,
+  "newFailures": [],
+  "lostFailures": []
+ },
+ {
+  "id": "F-L102-tests-at-2df14d7d",
+  "line": 102,
+  "old": "isRecord(json.value)",
+  "new": "(json.value !== null && typeof json.value !== 'string' && typeof json.value !== 'number' && !Array.isArray(json.value))",
+  "ranAt": "2df14d7d2580f453da5b61b5681097d1bfc902c3",
+  "testFileAt": "2df14d7d2580f453da5b61b5681097d1bfc902c3",
+  "loadavg": "24.86 24.18 25.57 12/9697 988228",
+  "exit": 1,
+  "total": 32,
+  "failed": 1,
+  "failedTests": [
+   "the parsers read a JSON container as an object only when it is one refuse a policy document that is true"
+  ],
+  "killed": true
+ },
+ {
+  "id": "F-L102-tests-at-4d92ac95",
+  "line": 102,
+  "old": "isRecord(json.value)",
+  "new": "(json.value !== null && typeof json.value !== 'string' && typeof json.value !== 'number' && !Array.isArray(json.value))",
+  "ranAt": "2df14d7d2580f453da5b61b5681097d1bfc902c3",
+  "testFileAt": "4d92ac9518dd60cdd124525c3e36c086ccd5e425",
+  "loadavg": "24.86 24.18 25.57 18/9708 988822",
+  "exit": 0,
+  "total": 27,
+  "failed": 0,
+  "failedTests": [],
+  "killed": false
+ },
+ {
+  "id": "F-L121-tests-at-2df14d7d",
+  "line": 121,
+  "old": "isRecord(json.value)",
+  "new": "(json.value !== null && typeof json.value !== 'string' && typeof json.value !== 'number' && !Array.isArray(json.value))",
+  "ranAt": "2df14d7d2580f453da5b61b5681097d1bfc902c3",
+  "testFileAt": "2df14d7d2580f453da5b61b5681097d1bfc902c3",
+  "loadavg": "24.39 24.09 25.54 13/9692 989337",
+  "exit": 1,
+  "total": 32,
+  "failed": 1,
+  "failedTests": [
+   "the parsers read a JSON container as an object only when it is one refuse a registry document that is true"
+  ],
+  "killed": true
+ },
+ {
+  "id": "F-L121-tests-at-4d92ac95",
+  "line": 121,
+  "old": "isRecord(json.value)",
+  "new": "(json.value !== null && typeof json.value !== 'string' && typeof json.value !== 'number' && !Array.isArray(json.value))",
+  "ranAt": "2df14d7d2580f453da5b61b5681097d1bfc902c3",
+  "testFileAt": "4d92ac9518dd60cdd124525c3e36c086ccd5e425",
+  "loadavg": "24.39 24.09 25.54 26/9724 990148",
+  "exit": 0,
+  "total": 27,
+  "failed": 0,
+  "failedTests": [],
+  "killed": false
+ },
+ {
+  "id": "F-L132-tests-at-2df14d7d",
+  "line": 132,
+  "old": "isRecord(entry)",
+  "new": "(entry !== null && typeof entry !== 'string' && typeof entry !== 'number' && !Array.isArray(entry))",
+  "ranAt": "2df14d7d2580f453da5b61b5681097d1bfc902c3",
+  "testFileAt": "2df14d7d2580f453da5b61b5681097d1bfc902c3",
+  "loadavg": "25.97 24.42 25.63 14/9721 991507",
+  "exit": 1,
+  "total": 32,
+  "failed": 1,
+  "failedTests": [
+   "the parsers read a JSON container as an object only when it is one surface a first registry entry that is true as the malformed entries list"
+  ],
+  "killed": true
+ },
+ {
+  "id": "F-L132-tests-at-4d92ac95",
+  "line": 132,
+  "old": "isRecord(entry)",
+  "new": "(entry !== null && typeof entry !== 'string' && typeof entry !== 'number' && !Array.isArray(entry))",
+  "ranAt": "2df14d7d2580f453da5b61b5681097d1bfc902c3",
+  "testFileAt": "4d92ac9518dd60cdd124525c3e36c086ccd5e425",
+  "loadavg": "25.97 24.42 25.63 11/9775 992059",
+  "exit": 0,
+  "total": 27,
+  "failed": 0,
+  "failedTests": [],
+  "killed": false
+ }
+]

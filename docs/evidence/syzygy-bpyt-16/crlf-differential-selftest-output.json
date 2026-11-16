@@ -1,0 +1,122 @@
+{
+ "mutants": [
+  {
+   "id": "S1",
+   "predicate": "C1 LF unchanged",
+   "file": "markdown-code-context.js",
+   "old": "return run[0] === char && run.length >= length;",
+   "new": "return run[0] === char && run.length > length;",
+   "exit": 1,
+   "failingChecks": [
+    "C1"
+   ],
+   "targetChecks": [
+    "C1"
+   ],
+   "killed": true,
+   "exact": true
+  },
+  {
+   "id": "S2",
+   "predicate": "C2 rendering equals LF",
+   "file": "markdown-code-context.js",
+   "old": "const LINE_END = /\\r\\n|\\r|\\n/g;",
+   "new": "const LINE_END = /\\n/g;",
+   "exit": 1,
+   "failingChecks": [
+    "C2",
+    "C3",
+    "C4"
+   ],
+   "targetChecks": [
+    "C2"
+   ],
+   "killed": true,
+   "exact": false
+  },
+  {
+   "id": "S3",
+   "predicate": "C3 mask invariants",
+   "file": "markdown-code-context.js",
+   "old": "line + (terminators[index] ?? '')",
+   "new": "line + (terminators[index] === '\\r\\n' ? '\\r ' : (terminators[index] ?? ''))",
+   "exit": 1,
+   "failingChecks": [
+    "C2",
+    "C3",
+    "C4"
+   ],
+   "targetChecks": [
+    "C3"
+   ],
+   "killed": true,
+   "exact": false
+  },
+  {
+   "id": "S4",
+   "predicate": "C4 CRLF positions",
+   "file": "git-object-reader.js",
+   "old": "if (text.charCodeAt(i) === 10) {",
+   "new": "if (text.charCodeAt(i) === 10 || text.charCodeAt(i) === 13) {",
+   "exit": 1,
+   "failingChecks": [
+    "C4"
+   ],
+   "targetChecks": [
+    "C4"
+   ],
+   "killed": true,
+   "exact": true
+  },
+  {
+   "id": "S5",
+   "predicate": "C1 LF unchanged (separator slice)",
+   "file": "markdown-code-context.js",
+   "old": "const LINE_END = /\\r\\n|\\r|\\n/g;",
+   "new": "const LINE_END = /\\r\\n|[\\r\\n\\u2028\\u2029]/g;",
+   "exit": 1,
+   "failingChecks": [
+    "C1"
+   ],
+   "targetChecks": [
+    "C1"
+   ],
+   "killed": true,
+   "exact": true
+  },
+  {
+   "id": "S6",
+   "predicate": "C1 LF unchanged (separator slice)",
+   "file": "markdown-code-context.js",
+   "old": "const LINE_END = /\\r\\n|\\r|\\n/g;",
+   "new": "const LINE_END = /\\r\\n|\\r|\\n|\\x85/g;",
+   "exit": 1,
+   "failingChecks": [
+    "C1"
+   ],
+   "targetChecks": [
+    "C1"
+   ],
+   "killed": true,
+   "exact": true
+  },
+  {
+   "id": "S7",
+   "predicate": "C1 LF unchanged (separator slice)",
+   "file": "markdown-code-context.js",
+   "old": "const LINE_END = /\\r\\n|\\r|\\n/g;",
+   "new": "const LINE_END = /\\r\\n|[\\r\\n\\v\\f]/g;",
+   "exit": 1,
+   "failingChecks": [
+    "C1"
+   ],
+   "targetChecks": [
+    "C1"
+   ],
+   "killed": true,
+   "exact": true
+  }
+ ],
+ "killed": 7,
+ "total": 7
+}

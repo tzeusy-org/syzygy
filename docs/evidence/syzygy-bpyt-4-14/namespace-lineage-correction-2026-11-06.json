@@ -1,0 +1,2099 @@
+{
+  "schema": "namespace-lineage-correction/1",
+  "subjectCommit": "2f991b581ca2230d429ac9f9a015d6c3603819bf",
+  "sourceBindings": {
+    "subject": "2f991b581ca2230d429ac9f9a015d6c3603819bf",
+    "files": [
+      {
+        "path": "scripts/poc_browser_lifetime.py",
+        "sha256": "8394578a66bebb69e512c921b1705bb333413a7a0ff6c30da59f2d7130b087e7",
+        "bytes": 5438
+      },
+      {
+        "path": "apps/three-surface-poc/src/test-fixtures/browser-parent-death.py",
+        "sha256": "59a8d763d9f113b09c608a8831ff7814360a59243ffbbf100c0678b5dd6cb670",
+        "bytes": 13872
+      },
+      {
+        "path": "apps/three-surface-poc/src/cdp-browser.browser.test.ts",
+        "sha256": "f3f3786865a71103fb1ab3784e5f7aff1b61681961d7839eb368e57035bef6e6",
+        "bytes": 12772
+      },
+      {
+        "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+        "sha256": "092b9e5393cc58bac560c95580806c84b74f12fe77f6e17ae2ef1d22f5899f46",
+        "bytes": 30418
+      },
+      {
+        "path": "apps/three-surface-poc/src/cdp-browser.ts",
+        "sha256": "95bfe958c392bd156dbfdcb7a991c0936a9b5f9a4eb5308c35c4a005b0a5ae3c",
+        "bytes": 33174
+      }
+    ]
+  },
+  "predecessorHead": "7d3919c343d2f31a3da646ceb53a2f3389581c40",
+  "reviewManifestSha256": "70c8ed6ab33d465a0d541c73f1717cd344b0096368f90227e3b78073711a552d",
+  "originalAuthorManifestSha256": "915537ad72c4a162be5c818216f86fcdb0744832d0d735734c41ca5b5772496f",
+  "scope": "Original complete8AC retained; F1 current-outcome correction, not a narrowed new task",
+  "tests": {
+    "wholePR": "+3 ~4 -0",
+    "correctionNewTests": 0,
+    "correction": "Existing shared helper extends three added lifetime scenarios; all original bodies and browser assertions retained"
+  },
+  "classFloor": 4,
+  "riskFloors": "all seven CC-BAR-5; independent classification pending",
+  "controls": {
+    "original-clean": {
+      "guardianExit": 143,
+      "ack": "closed\n",
+      "survivingChild": null,
+      "recovery": [],
+      "observerExit": 0,
+      "siblingSurvived": true,
+      "artifactSha256": "26749f93817134ad3d6a1a6c89169fd46eec3ba5a9933f501b64a94a3ccf21d9"
+    },
+    "original-denied": {
+      "guardianExit": 70,
+      "ack": "",
+      "survivingChild": {
+        "pid": 5,
+        "start": "41182286",
+        "ppid": 2,
+        "pgid": 4,
+        "sid": 4,
+        "state": "S",
+        "uid": 996
+      },
+      "recovery": [
+        {
+          "pid": 5,
+          "status": 9,
+          "stableHandle": true
+        }
+      ],
+      "observerExit": 70,
+      "siblingSurvived": true,
+      "artifactSha256": "c4ccbe8ad98c96a7cfcfa30cc86671c030ca4937fbbf293dfc512683a64144b2"
+    },
+    "corrected-clean": {
+      "guardianExit": 143,
+      "ack": "closed\n",
+      "survivingChild": null,
+      "recovery": [],
+      "observerExit": 0,
+      "siblingSurvived": true,
+      "artifactSha256": "a26d740781c0e635ced0eb57297b637ad9ed795d879510b376b7a43e180d8b89"
+    },
+    "corrected-denied": {
+      "guardianExit": 143,
+      "ack": "closed\n",
+      "survivingChild": null,
+      "recovery": [],
+      "observerExit": 0,
+      "siblingSurvived": true,
+      "artifactSha256": "e249d2b62eed8a71a4072cc04e8ed3be49b346aadb2f89bd555991751f7134b0"
+    },
+    "corrected-owned-denied": {
+      "guardianExit": 70,
+      "ack": "",
+      "survivingChild": {
+        "pid": 5,
+        "start": "41186635",
+        "ppid": 2,
+        "pgid": 4,
+        "sid": 4,
+        "state": "S",
+        "uid": 996
+      },
+      "recovery": [
+        {
+          "pid": 5,
+          "status": 9,
+          "stableHandle": true
+        }
+      ],
+      "observerExit": 0,
+      "siblingSurvived": true,
+      "artifactSha256": "812b484dadaf45b1f9f42ca71cb62cbc1ae5fb28b5cf22078520a12fb9ad6475"
+    }
+  },
+  "experiments": {
+    "SIGTERM": {
+      "milestoneCount": 1,
+      "stopped": {
+        "identity": {
+          "pid": 710,
+          "ppid": 602,
+          "pgid": 593,
+          "sid": 593,
+          "state": "S",
+          "start": "41224992",
+          "uid": 996,
+          "namespace": "pid:[4026538704]",
+          "argv": "/opt/google/chrome/chrome --type=utility --utility-sub-type=network.mojom.NetworkService --lang=en-US --service-sandbox-type=none --no-sandbox --use-angle=swiftshader-webgl --crashpad-handler-pid=641 --enable-crash-reporter=, --noerrdialogs --user-data-dir=/tmp/SIGTERM-old/syzygy-poc-browser-hTIivj --change-stack-guard-on-fork=enable --shared-files=v8_context_snapshot_data:100 --field-trial-handle=0,i,15179631519331904187,12301504790754980728,262144 --disable-features=PaintHolding --variations-seed-version "
+        },
+        "outcome": "sent"
+      },
+      "interruptedReturncode": 143,
+      "fresh": {
+        "actualFiles": 99,
+        "passed": 1481,
+        "skipped": 1,
+        "failed": 0,
+        "rawSha256": "a34c18b90d291dc68d813eb3dbb6e35f20bc303ff1f16f857828fa73fdcccc52"
+      },
+      "decoySurvived": true,
+      "recoverySignals": [],
+      "passiveInitReaps": [
+        {
+          "pid": 799,
+          "status": 0,
+          "identity": {
+            "pid": 799,
+            "ppid": 2,
+            "pgid": 5,
+            "sid": 5,
+            "state": "Z",
+            "start": "41225002",
+            "uid": 996,
+            "namespace": "pid:[4026538704]"
+          }
+        },
+        {
+          "pid": 796,
+          "status": 0,
+          "identity": {
+            "pid": 796,
+            "ppid": 2,
+            "pgid": 5,
+            "sid": 5,
+            "state": "Z",
+            "start": "41225001",
+            "uid": 996,
+            "namespace": "pid:[4026538704]"
+          }
+        },
+        {
+          "pid": 54,
+          "status": 15,
+          "identity": {
+            "pid": 54,
+            "ppid": 2,
+            "pgid": 5,
+            "sid": 5,
+            "state": "Z",
+            "start": "41224692",
+            "uid": 996,
+            "namespace": "pid:[4026538704]"
+          }
+        },
+        {
+          "pid": 68,
+          "status": 15,
+          "identity": {
+            "pid": 68,
+            "ppid": 2,
+            "pgid": 5,
+            "sid": 5,
+            "state": "Z",
+            "start": "41224714",
+            "uid": 996,
+            "namespace": "pid:[4026538704]"
+          }
+        },
+        {
+          "pid": 69,
+          "status": 15,
+          "identity": {
+            "pid": 69,
+            "ppid": 2,
+            "pgid": 5,
+            "sid": 5,
+            "state": "Z",
+            "start": "41224714",
+            "uid": 996,
+            "namespace": "pid:[4026538704]"
+          }
+        },
+        {
+          "pid": 76,
+          "status": 15,
+          "identity": {
+            "pid": 76,
+            "ppid": 2,
+            "pgid": 5,
+            "sid": 5,
+            "state": "Z",
+            "start": "41224715",
+            "uid": 996,
+            "namespace": "pid:[4026538704]"
+          }
+        },
+        {
+          "pid": 88,
+          "status": 15,
+          "identity": {
+            "pid": 88,
+            "ppid": 2,
+            "pgid": 5,
+            "sid": 5,
+            "state": "Z",
+            "start": "41224715",
+            "uid": 996,
+            "namespace": "pid:[4026538704]"
+          }
+        },
+        {
+          "pid": 409,
+          "status": 15,
+          "identity": {
+            "pid": 409,
+            "ppid": 2,
+            "pgid": 5,
+            "sid": 5,
+            "state": "Z",
+            "start": "41224924",
+            "uid": 996,
+            "namespace": "pid:[4026538704]"
+          }
+        },
+        {
+          "pid": 584,
+          "status": 15,
+          "identity": {
+            "pid": 584,
+            "ppid": 2,
+            "pgid": 5,
+            "sid": 5,
+            "state": "Z",
+            "start": "41224975",
+            "uid": 996,
+            "namespace": "pid:[4026538704]"
+          }
+        },
+        {
+          "pid": 593,
+          "status": 0,
+          "identity": {
+            "pid": 593,
+            "ppid": 2,
+            "pgid": 593,
+            "sid": 593,
+            "state": "Z",
+            "start": "41224976",
+            "uid": 996,
+            "namespace": "pid:[4026538704]"
+          }
+        },
+        {
+          "pid": 1747,
+          "status": 0,
+          "identity": {
+            "pid": 1747,
+            "ppid": 2,
+            "pgid": 1747,
+            "sid": 1747,
+            "state": "Z",
+            "start": "41225510",
+            "uid": 996,
+            "namespace": "pid:[4026538704]"
+          }
+        },
+        {
+          "pid": 1810,
+          "status": 0,
+          "identity": {
+            "pid": 1810,
+            "ppid": 2,
+            "pgid": 1810,
+            "sid": 1810,
+            "state": "Z",
+            "start": "41225521",
+            "uid": 996,
+            "namespace": "pid:[4026538704]"
+          }
+        },
+        {
+          "pid": 6296,
+          "status": 0,
+          "identity": {
+            "pid": 6296,
+            "ppid": 2,
+            "pgid": 823,
+            "sid": 823,
+            "state": "Z",
+            "start": "41227121",
+            "uid": 996,
+            "namespace": "pid:[4026538704]"
+          }
+        },
+        {
+          "pid": 9929,
+          "status": 0,
+          "identity": {
+            "pid": 9929,
+            "ppid": 2,
+            "pgid": 823,
+            "sid": 823,
+            "state": "Z",
+            "start": "41228427",
+            "uid": 996,
+            "namespace": "pid:[4026538704]"
+          }
+        },
+        {
+          "pid": 10787,
+          "status": 0,
+          "identity": {
+            "pid": 10787,
+            "ppid": 2,
+            "pgid": 823,
+            "sid": 823,
+            "state": "Z",
+            "start": "41228547",
+            "uid": 996,
+            "namespace": "pid:[4026538704]"
+          }
+        },
+        {
+          "pid": 12093,
+          "status": 0,
+          "identity": {
+            "pid": 12093,
+            "ppid": 2,
+            "pgid": 823,
+            "sid": 823,
+            "state": "Z",
+            "start": "41228741",
+            "uid": 996,
+            "namespace": "pid:[4026538704]"
+          }
+        },
+        {
+          "pid": 13252,
+          "status": 0,
+          "identity": {
+            "pid": 13252,
+            "ppid": 2,
+            "pgid": 13252,
+            "sid": 13252,
+            "state": "Z",
+            "start": "41228924",
+            "uid": 996,
+            "namespace": "pid:[4026538704]"
+          }
+        },
+        {
+          "pid": 13102,
+          "status": 0,
+          "identity": {
+            "pid": 13102,
+            "ppid": 2,
+            "pgid": 823,
+            "sid": 823,
+            "state": "Z",
+            "start": "41228881",
+            "uid": 996,
+            "namespace": "pid:[4026538704]"
+          }
+        },
+        {
+          "pid": 14049,
+          "status": 0,
+          "identity": {
+            "pid": 14049,
+            "ppid": 2,
+            "pgid": 823,
+            "sid": 823,
+            "state": "Z",
+            "start": "41229041",
+            "uid": 996,
+            "namespace": "pid:[4026538704]"
+          }
+        },
+        {
+          "pid": 14737,
+          "status": 0,
+          "identity": {
+            "pid": 14737,
+            "ppid": 2,
+            "pgid": 823,
+            "sid": 823,
+            "state": "Z",
+            "start": "41229156",
+            "uid": 996,
+            "namespace": "pid:[4026538704]"
+          }
+        },
+        {
+          "pid": 15334,
+          "status": 0,
+          "identity": {
+            "pid": 15334,
+            "ppid": 2,
+            "pgid": 823,
+            "sid": 823,
+            "state": "Z",
+            "start": "41229260",
+            "uid": 996,
+            "namespace": "pid:[4026538704]"
+          }
+        },
+        {
+          "pid": 872,
+          "status": 0,
+          "identity": {
+            "pid": 872,
+            "ppid": 2,
+            "pgid": 823,
+            "sid": 823,
+            "state": "Z",
+            "start": "41225234",
+            "uid": 996,
+            "namespace": "pid:[4026538704]"
+          }
+        }
+      ],
+      "censuses": {
+        "atSignal": {
+          "procDenominator": 24,
+          "psDenominator": 25,
+          "procRows": [
+            {
+              "pid": 1,
+              "ppid": 0,
+              "pgid": 1,
+              "sid": 1,
+              "state": "S",
+              "start": "41224649",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 2,
+              "ppid": 1,
+              "pgid": 1,
+              "sid": 1,
+              "state": "R",
+              "start": "41224664",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 4,
+              "ppid": 2,
+              "pgid": 4,
+              "sid": 4,
+              "state": "S",
+              "start": "41224668",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 5,
+              "ppid": 2,
+              "pgid": 5,
+              "sid": 5,
+              "state": "R",
+              "start": "41224668",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 54,
+              "ppid": 5,
+              "pgid": 5,
+              "sid": 5,
+              "state": "S",
+              "start": "41224692",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 68,
+              "ppid": 5,
+              "pgid": 5,
+              "sid": 5,
+              "state": "S",
+              "start": "41224714",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 69,
+              "ppid": 5,
+              "pgid": 5,
+              "sid": 5,
+              "state": "R",
+              "start": "41224714",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 76,
+              "ppid": 5,
+              "pgid": 5,
+              "sid": 5,
+              "state": "S",
+              "start": "41224715",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 88,
+              "ppid": 5,
+              "pgid": 5,
+              "sid": 5,
+              "state": "R",
+              "start": "41224715",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 409,
+              "ppid": 5,
+              "pgid": 5,
+              "sid": 5,
+              "state": "S",
+              "start": "41224924",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 584,
+              "ppid": 5,
+              "pgid": 5,
+              "sid": 5,
+              "state": "S",
+              "start": "41224975",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 593,
+              "ppid": 76,
+              "pgid": 593,
+              "sid": 593,
+              "state": "S",
+              "start": "41224976",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 602,
+              "ppid": 593,
+              "pgid": 593,
+              "sid": 593,
+              "state": "R",
+              "start": "41224979",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 611,
+              "ppid": 602,
+              "pgid": 593,
+              "sid": 593,
+              "state": "S",
+              "start": "41224981",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 613,
+              "ppid": 602,
+              "pgid": 593,
+              "sid": 593,
+              "state": "S",
+              "start": "41224981",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 641,
+              "ppid": 593,
+              "pgid": 639,
+              "sid": 639,
+              "state": "S",
+              "start": "41224984",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 650,
+              "ppid": 593,
+              "pgid": 648,
+              "sid": 648,
+              "state": "S",
+              "start": "41224984",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 668,
+              "ppid": 602,
+              "pgid": 593,
+              "sid": 593,
+              "state": "S",
+              "start": "41224985",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 669,
+              "ppid": 602,
+              "pgid": 593,
+              "sid": 593,
+              "state": "S",
+              "start": "41224985",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 678,
+              "ppid": 669,
+              "pgid": 593,
+              "sid": 593,
+              "state": "S",
+              "start": "41224988",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 709,
+              "ppid": 668,
+              "pgid": 593,
+              "sid": 593,
+              "state": "R",
+              "start": "41224991",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 710,
+              "ppid": 602,
+              "pgid": 593,
+              "sid": 593,
+              "state": "S",
+              "start": "41224992",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 713,
+              "ppid": 669,
+              "pgid": 593,
+              "sid": 593,
+              "state": "S",
+              "start": "41224993",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 757,
+              "ppid": 68,
+              "pgid": 5,
+              "sid": 5,
+              "state": "R",
+              "start": "41224997",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            }
+          ],
+          "unknown": [],
+          "psObserverPid": 759,
+          "reconciled": false,
+          "procOnly": [
+            757
+          ],
+          "psOnly": [
+            761
+          ],
+          "directories": {
+            "old": [
+              ".com.google.Chrome.C4fYaS",
+              "9BGkpqL4q_uHvp6vl5WFy",
+              "syzygy-cross-links-pages-KNGOn1",
+              "syzygy-cross-links-state-9UXi78",
+              "syzygy-dossier-src-fGWpvL",
+              "syzygy-poc-browser-hTIivj",
+              "syzygy-poc-surface-fixture-p69-n4026538704-3or79i",
+              "syzygy-poc-surface-fixture-p76-n4026538704-JLH3jm",
+              "syzygy-poc-surface-fixture-p88-n4026538704-C3PXFe",
+              "syzygy-poc-surface-fixture-template-p69-n4026538704-4NOHQz",
+              "syzygy-poc-surface-fixture-template-p76-n4026538704-wl36Nh",
+              "syzygy-poc-surface-fixture-template-p88-n4026538704-n6MVh3",
+              "syzygy-poc-surface-state-UAS6zw",
+              "syzygy-public-screen-3FUenI",
+              "syzygy-public-screen-5eD2Ge",
+              "syzygy-public-screen-CfcxTb",
+              "syzygy-public-screen-DoENZL",
+              "syzygy-public-screen-HSf1PW",
+              "syzygy-public-screen-yczbvx",
+              "syzygy-trigger-16hCuz",
+              "syzygy-trigger-5JmCCT",
+              "syzygy-trigger-6cp47j",
+              "syzygy-trigger-8dN4AH",
+              "syzygy-trigger-BjBHiP",
+              "syzygy-trigger-EoFey8",
+              "syzygy-trigger-MrQSoY",
+              "syzygy-trigger-SbMu4N",
+              "syzygy-trigger-ZiuecZ",
+              "syzygy-trigger-hD5Sw5",
+              "syzygy-trigger-rSGufv",
+              "syzygy-trigger-repo-inSoPk",
+              "syzygy-trigger-wmvwYB",
+              "tzP3iVojPSH42rcHcvJrC"
+            ],
+            "fresh": []
+          }
+        },
+        "afterInterruption": {
+          "procDenominator": 3,
+          "psDenominator": 4,
+          "procRows": [
+            {
+              "pid": 1,
+              "ppid": 0,
+              "pgid": 1,
+              "sid": 1,
+              "state": "S",
+              "start": "41224649",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 2,
+              "ppid": 1,
+              "pgid": 1,
+              "sid": 1,
+              "state": "R",
+              "start": "41224664",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 4,
+              "ppid": 2,
+              "pgid": 4,
+              "sid": 4,
+              "state": "S",
+              "start": "41224668",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            }
+          ],
+          "unknown": [],
+          "psObserverPid": 821,
+          "reconciled": true,
+          "procOnly": [],
+          "psOnly": [],
+          "directories": {
+            "old": [
+              ".com.google.Chrome.C4fYaS",
+              "9BGkpqL4q_uHvp6vl5WFy",
+              "syzygy-cross-links-pages-KNGOn1",
+              "syzygy-cross-links-state-9UXi78",
+              "syzygy-dossier-src-xAAgVF",
+              "syzygy-poc-browser-hTIivj",
+              "syzygy-poc-surface-fixture-p69-n4026538704-W70Wjo",
+              "syzygy-poc-surface-fixture-p76-n4026538704-JLH3jm",
+              "syzygy-poc-surface-fixture-p88-n4026538704-rJOEG5",
+              "syzygy-poc-surface-fixture-template-p69-n4026538704-4NOHQz",
+              "syzygy-poc-surface-fixture-template-p76-n4026538704-wl36Nh",
+              "syzygy-poc-surface-fixture-template-p88-n4026538704-n6MVh3",
+              "syzygy-poc-surface-state-UAS6zw",
+              "syzygy-public-screen-3FUenI",
+              "syzygy-public-screen-5eD2Ge",
+              "syzygy-public-screen-CfcxTb",
+              "syzygy-public-screen-DoENZL",
+              "syzygy-public-screen-HSf1PW",
+              "syzygy-public-screen-UrMMva",
+              "syzygy-public-screen-yczbvx",
+              "syzygy-trigger-16hCuz",
+              "syzygy-trigger-5JmCCT",
+              "syzygy-trigger-6cp47j",
+              "syzygy-trigger-8dN4AH",
+              "syzygy-trigger-903Q9B",
+              "syzygy-trigger-BjBHiP",
+              "syzygy-trigger-EoFey8",
+              "syzygy-trigger-MrQSoY",
+              "syzygy-trigger-SbMu4N",
+              "syzygy-trigger-ZiuecZ",
+              "syzygy-trigger-hD5Sw5",
+              "syzygy-trigger-rSGufv",
+              "syzygy-trigger-repo-inSoPk",
+              "syzygy-trigger-wmvwYB",
+              "tzP3iVojPSH42rcHcvJrC"
+            ],
+            "fresh": []
+          }
+        },
+        "afterFresh": {
+          "procDenominator": 3,
+          "psDenominator": 4,
+          "procRows": [
+            {
+              "pid": 1,
+              "ppid": 0,
+              "pgid": 1,
+              "sid": 1,
+              "state": "S",
+              "start": "41224649",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 2,
+              "ppid": 1,
+              "pgid": 1,
+              "sid": 1,
+              "state": "R",
+              "start": "41224664",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 4,
+              "ppid": 2,
+              "pgid": 4,
+              "sid": 4,
+              "state": "S",
+              "start": "41224668",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            }
+          ],
+          "unknown": [],
+          "psObserverPid": 16117,
+          "reconciled": true,
+          "procOnly": [],
+          "psOnly": [],
+          "directories": {
+            "old": [
+              ".com.google.Chrome.C4fYaS",
+              "9BGkpqL4q_uHvp6vl5WFy",
+              "syzygy-cross-links-pages-KNGOn1",
+              "syzygy-cross-links-state-9UXi78",
+              "syzygy-dossier-src-xAAgVF",
+              "syzygy-poc-browser-hTIivj",
+              "syzygy-poc-surface-fixture-p69-n4026538704-W70Wjo",
+              "syzygy-poc-surface-fixture-p76-n4026538704-JLH3jm",
+              "syzygy-poc-surface-fixture-p88-n4026538704-rJOEG5",
+              "syzygy-poc-surface-fixture-template-p69-n4026538704-4NOHQz",
+              "syzygy-poc-surface-fixture-template-p76-n4026538704-wl36Nh",
+              "syzygy-poc-surface-fixture-template-p88-n4026538704-n6MVh3",
+              "syzygy-poc-surface-state-UAS6zw",
+              "syzygy-public-screen-3FUenI",
+              "syzygy-public-screen-5eD2Ge",
+              "syzygy-public-screen-CfcxTb",
+              "syzygy-public-screen-DoENZL",
+              "syzygy-public-screen-HSf1PW",
+              "syzygy-public-screen-UrMMva",
+              "syzygy-public-screen-yczbvx",
+              "syzygy-trigger-16hCuz",
+              "syzygy-trigger-5JmCCT",
+              "syzygy-trigger-6cp47j",
+              "syzygy-trigger-8dN4AH",
+              "syzygy-trigger-903Q9B",
+              "syzygy-trigger-BjBHiP",
+              "syzygy-trigger-EoFey8",
+              "syzygy-trigger-MrQSoY",
+              "syzygy-trigger-SbMu4N",
+              "syzygy-trigger-ZiuecZ",
+              "syzygy-trigger-hD5Sw5",
+              "syzygy-trigger-rSGufv",
+              "syzygy-trigger-repo-inSoPk",
+              "syzygy-trigger-wmvwYB",
+              "tzP3iVojPSH42rcHcvJrC"
+            ],
+            "fresh": [
+              ".com.google.Chrome.GdAFzA",
+              ".com.google.Chrome.mM2rBq",
+              "node-compile-cache",
+              "syzygy-poc-browser-DOlNzC",
+              "syzygy-poc-browser-UH6sFP"
+            ]
+          }
+        },
+        "final": {
+          "procDenominator": 2,
+          "psDenominator": 3,
+          "procRows": [
+            {
+              "pid": 1,
+              "ppid": 0,
+              "pgid": 1,
+              "sid": 1,
+              "state": "S",
+              "start": "41224649",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 2,
+              "ppid": 1,
+              "pgid": 1,
+              "sid": 1,
+              "state": "R",
+              "start": "41224664",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            }
+          ],
+          "unknown": [],
+          "psObserverPid": 16119,
+          "reconciled": true,
+          "procOnly": [],
+          "psOnly": [],
+          "directories": {
+            "old": [
+              ".com.google.Chrome.C4fYaS",
+              "9BGkpqL4q_uHvp6vl5WFy",
+              "syzygy-cross-links-pages-KNGOn1",
+              "syzygy-cross-links-state-9UXi78",
+              "syzygy-dossier-src-xAAgVF",
+              "syzygy-poc-browser-hTIivj",
+              "syzygy-poc-surface-fixture-p69-n4026538704-W70Wjo",
+              "syzygy-poc-surface-fixture-p76-n4026538704-JLH3jm",
+              "syzygy-poc-surface-fixture-p88-n4026538704-rJOEG5",
+              "syzygy-poc-surface-fixture-template-p69-n4026538704-4NOHQz",
+              "syzygy-poc-surface-fixture-template-p76-n4026538704-wl36Nh",
+              "syzygy-poc-surface-fixture-template-p88-n4026538704-n6MVh3",
+              "syzygy-poc-surface-state-UAS6zw",
+              "syzygy-public-screen-3FUenI",
+              "syzygy-public-screen-5eD2Ge",
+              "syzygy-public-screen-CfcxTb",
+              "syzygy-public-screen-DoENZL",
+              "syzygy-public-screen-HSf1PW",
+              "syzygy-public-screen-UrMMva",
+              "syzygy-public-screen-yczbvx",
+              "syzygy-trigger-16hCuz",
+              "syzygy-trigger-5JmCCT",
+              "syzygy-trigger-6cp47j",
+              "syzygy-trigger-8dN4AH",
+              "syzygy-trigger-903Q9B",
+              "syzygy-trigger-BjBHiP",
+              "syzygy-trigger-EoFey8",
+              "syzygy-trigger-MrQSoY",
+              "syzygy-trigger-SbMu4N",
+              "syzygy-trigger-ZiuecZ",
+              "syzygy-trigger-hD5Sw5",
+              "syzygy-trigger-rSGufv",
+              "syzygy-trigger-repo-inSoPk",
+              "syzygy-trigger-wmvwYB",
+              "tzP3iVojPSH42rcHcvJrC"
+            ],
+            "fresh": [
+              ".com.google.Chrome.GdAFzA",
+              ".com.google.Chrome.mM2rBq",
+              "node-compile-cache",
+              "syzygy-poc-browser-DOlNzC",
+              "syzygy-poc-browser-UH6sFP"
+            ]
+          }
+        }
+      },
+      "atSignalQualification": "Concurrent active snapshots are sequential; discrepancies retained, no empty-family claim at this phase."
+    },
+    "SIGKILL": {
+      "milestoneCount": 1,
+      "stopped": {
+        "identity": {
+          "pid": 2649,
+          "ppid": 2596,
+          "pgid": 2589,
+          "sid": 2589,
+          "state": "R",
+          "start": "41232311",
+          "uid": 996,
+          "namespace": "pid:[4026538704]",
+          "argv": "/proc/self/exe --type=utility --utility-sub-type=network.mojom.NetworkService --lang=en-US --service-sandbox-type=none --no-sandbox --use-angle=swiftshader-webgl --crashpad-handler-pid=2605 --enable-crash-reporter=, --noerrdialogs --user-data-dir=/tmp/SIGKILL-old/syzygy-poc-browser-JVgEXn --change-stack-guard-on-fork=enable --shared-files=v8_context_snapshot_data:100 --field-trial-handle=0,i,10298747084466288898,17275375953206088005,262144 --disable-features=PaintHolding --variations-seed-version "
+        },
+        "outcome": "sent"
+      },
+      "interruptedReturncode": -9,
+      "fresh": {
+        "actualFiles": 99,
+        "passed": 1481,
+        "skipped": 1,
+        "failed": 0,
+        "rawSha256": "840840056fbe7032f6dc6020692d06287b6c36c9775e13fb35781c7038bf5dfb"
+      },
+      "decoySurvived": true,
+      "recoverySignals": [],
+      "passiveInitReaps": [
+        {
+          "pid": 388,
+          "status": 0,
+          "identity": {
+            "pid": 388,
+            "ppid": 2,
+            "pgid": 5,
+            "sid": 5,
+            "state": "Z",
+            "start": "41231936",
+            "uid": 996,
+            "namespace": "pid:[4026538704]"
+          }
+        },
+        {
+          "pid": 987,
+          "status": 0,
+          "identity": {
+            "pid": 987,
+            "ppid": 2,
+            "pgid": 5,
+            "sid": 5,
+            "state": "Z",
+            "start": "41232046",
+            "uid": 996,
+            "namespace": "pid:[4026538704]"
+          }
+        },
+        {
+          "pid": 2040,
+          "status": 0,
+          "identity": {
+            "pid": 2040,
+            "ppid": 2,
+            "pgid": 5,
+            "sid": 5,
+            "state": "Z",
+            "start": "41232200",
+            "uid": 996,
+            "namespace": "pid:[4026538704]"
+          }
+        },
+        {
+          "pid": 54,
+          "status": 9,
+          "identity": {
+            "pid": 54,
+            "ppid": 2,
+            "pgid": 5,
+            "sid": 5,
+            "state": "Z",
+            "start": "41231848",
+            "uid": 996,
+            "namespace": "pid:[4026538704]"
+          }
+        },
+        {
+          "pid": 69,
+          "status": 9,
+          "identity": {
+            "pid": 69,
+            "ppid": 2,
+            "pgid": 5,
+            "sid": 5,
+            "state": "Z",
+            "start": "41231870",
+            "uid": 996,
+            "namespace": "pid:[4026538704]"
+          }
+        },
+        {
+          "pid": 70,
+          "status": 9,
+          "identity": {
+            "pid": 70,
+            "ppid": 2,
+            "pgid": 5,
+            "sid": 5,
+            "state": "Z",
+            "start": "41231871",
+            "uid": 996,
+            "namespace": "pid:[4026538704]"
+          }
+        },
+        {
+          "pid": 76,
+          "status": 9,
+          "identity": {
+            "pid": 76,
+            "ppid": 2,
+            "pgid": 5,
+            "sid": 5,
+            "state": "Z",
+            "start": "41231871",
+            "uid": 996,
+            "namespace": "pid:[4026538704]"
+          }
+        },
+        {
+          "pid": 82,
+          "status": 9,
+          "identity": {
+            "pid": 82,
+            "ppid": 2,
+            "pgid": 5,
+            "sid": 5,
+            "state": "Z",
+            "start": "41231871",
+            "uid": 996,
+            "namespace": "pid:[4026538704]"
+          }
+        },
+        {
+          "pid": 88,
+          "status": 9,
+          "identity": {
+            "pid": 88,
+            "ppid": 2,
+            "pgid": 5,
+            "sid": 5,
+            "state": "Z",
+            "start": "41231872",
+            "uid": 996,
+            "namespace": "pid:[4026538704]"
+          }
+        },
+        {
+          "pid": 95,
+          "status": 9,
+          "identity": {
+            "pid": 95,
+            "ppid": 2,
+            "pgid": 5,
+            "sid": 5,
+            "state": "Z",
+            "start": "41231872",
+            "uid": 996,
+            "namespace": "pid:[4026538704]"
+          }
+        },
+        {
+          "pid": 1995,
+          "status": 9,
+          "identity": {
+            "pid": 1995,
+            "ppid": 2,
+            "pgid": 5,
+            "sid": 5,
+            "state": "Z",
+            "start": "41232173",
+            "uid": 996,
+            "namespace": "pid:[4026538704]"
+          }
+        },
+        {
+          "pid": 2590,
+          "status": 9,
+          "identity": {
+            "pid": 2590,
+            "ppid": 2,
+            "pgid": 5,
+            "sid": 5,
+            "state": "Z",
+            "start": "41232293",
+            "uid": 996,
+            "namespace": "pid:[4026538704]"
+          }
+        },
+        {
+          "pid": 2752,
+          "status": 0,
+          "identity": {
+            "pid": 2752,
+            "ppid": 2,
+            "pgid": 5,
+            "sid": 5,
+            "state": "Z",
+            "start": "41232329",
+            "uid": 996,
+            "namespace": "pid:[4026538704]"
+          }
+        },
+        {
+          "pid": 2603,
+          "status": 36608,
+          "identity": {
+            "pid": 2603,
+            "ppid": 2,
+            "pgid": 2603,
+            "sid": 2603,
+            "state": "Z",
+            "start": "41232300",
+            "uid": 996,
+            "namespace": "pid:[4026538704]"
+          }
+        },
+        {
+          "pid": 2589,
+          "status": 0,
+          "identity": {
+            "pid": 2589,
+            "ppid": 2,
+            "pgid": 2589,
+            "sid": 2589,
+            "state": "Z",
+            "start": "41232292",
+            "uid": 996,
+            "namespace": "pid:[4026538704]"
+          }
+        },
+        {
+          "pid": 3174,
+          "status": 0,
+          "identity": {
+            "pid": 3174,
+            "ppid": 2,
+            "pgid": 2791,
+            "sid": 2791,
+            "state": "Z",
+            "start": "41232648",
+            "uid": 996,
+            "namespace": "pid:[4026538704]"
+          }
+        },
+        {
+          "pid": 3776,
+          "status": 0,
+          "identity": {
+            "pid": 3776,
+            "ppid": 2,
+            "pgid": 2791,
+            "sid": 2791,
+            "state": "Z",
+            "start": "41232750",
+            "uid": 996,
+            "namespace": "pid:[4026538704]"
+          }
+        },
+        {
+          "pid": 5164,
+          "status": 0,
+          "identity": {
+            "pid": 5164,
+            "ppid": 2,
+            "pgid": 2791,
+            "sid": 2791,
+            "state": "Z",
+            "start": "41232899",
+            "uid": 996,
+            "namespace": "pid:[4026538704]"
+          }
+        },
+        {
+          "pid": 5984,
+          "status": 0,
+          "identity": {
+            "pid": 5984,
+            "ppid": 2,
+            "pgid": 2791,
+            "sid": 2791,
+            "state": "Z",
+            "start": "41233007",
+            "uid": 996,
+            "namespace": "pid:[4026538704]"
+          }
+        },
+        {
+          "pid": 6704,
+          "status": 0,
+          "identity": {
+            "pid": 6704,
+            "ppid": 2,
+            "pgid": 2791,
+            "sid": 2791,
+            "state": "Z",
+            "start": "41233118",
+            "uid": 996,
+            "namespace": "pid:[4026538704]"
+          }
+        },
+        {
+          "pid": 7390,
+          "status": 0,
+          "identity": {
+            "pid": 7390,
+            "ppid": 2,
+            "pgid": 2791,
+            "sid": 2791,
+            "state": "Z",
+            "start": "41233257",
+            "uid": 996,
+            "namespace": "pid:[4026538704]"
+          }
+        },
+        {
+          "pid": 7994,
+          "status": 0,
+          "identity": {
+            "pid": 7994,
+            "ppid": 2,
+            "pgid": 2791,
+            "sid": 2791,
+            "state": "Z",
+            "start": "41233381",
+            "uid": 996,
+            "namespace": "pid:[4026538704]"
+          }
+        },
+        {
+          "pid": 8602,
+          "status": 0,
+          "identity": {
+            "pid": 8602,
+            "ppid": 2,
+            "pgid": 2791,
+            "sid": 2791,
+            "state": "Z",
+            "start": "41233496",
+            "uid": 996,
+            "namespace": "pid:[4026538704]"
+          }
+        },
+        {
+          "pid": 13601,
+          "status": 0,
+          "identity": {
+            "pid": 13601,
+            "ppid": 2,
+            "pgid": 13601,
+            "sid": 13601,
+            "state": "Z",
+            "start": "41235570",
+            "uid": 996,
+            "namespace": "pid:[4026538704]"
+          }
+        },
+        {
+          "pid": 13646,
+          "status": 0,
+          "identity": {
+            "pid": 13646,
+            "ppid": 2,
+            "pgid": 13646,
+            "sid": 13646,
+            "state": "Z",
+            "start": "41235584",
+            "uid": 996,
+            "namespace": "pid:[4026538704]"
+          }
+        },
+        {
+          "pid": 16242,
+          "status": 0,
+          "identity": {
+            "pid": 16242,
+            "ppid": 2,
+            "pgid": 16242,
+            "sid": 16242,
+            "state": "Z",
+            "start": "41236448",
+            "uid": 996,
+            "namespace": "pid:[4026538704]"
+          }
+        },
+        {
+          "pid": 2840,
+          "status": 0,
+          "identity": {
+            "pid": 2840,
+            "ppid": 2,
+            "pgid": 2791,
+            "sid": 2791,
+            "state": "Z",
+            "start": "41232560",
+            "uid": 996,
+            "namespace": "pid:[4026538704]"
+          }
+        }
+      ],
+      "censuses": {
+        "atSignal": {
+          "procDenominator": 36,
+          "psDenominator": 37,
+          "procRows": [
+            {
+              "pid": 1,
+              "ppid": 0,
+              "pgid": 1,
+              "sid": 1,
+              "state": "S",
+              "start": "41231805",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 2,
+              "ppid": 1,
+              "pgid": 1,
+              "sid": 1,
+              "state": "R",
+              "start": "41231821",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 4,
+              "ppid": 2,
+              "pgid": 4,
+              "sid": 4,
+              "state": "S",
+              "start": "41231825",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 5,
+              "ppid": 2,
+              "pgid": 5,
+              "sid": 5,
+              "state": "S",
+              "start": "41231825",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 54,
+              "ppid": 5,
+              "pgid": 5,
+              "sid": 5,
+              "state": "S",
+              "start": "41231848",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 69,
+              "ppid": 5,
+              "pgid": 5,
+              "sid": 5,
+              "state": "S",
+              "start": "41231870",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 70,
+              "ppid": 5,
+              "pgid": 5,
+              "sid": 5,
+              "state": "R",
+              "start": "41231871",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 76,
+              "ppid": 5,
+              "pgid": 5,
+              "sid": 5,
+              "state": "S",
+              "start": "41231871",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 82,
+              "ppid": 5,
+              "pgid": 5,
+              "sid": 5,
+              "state": "S",
+              "start": "41231871",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 88,
+              "ppid": 5,
+              "pgid": 5,
+              "sid": 5,
+              "state": "S",
+              "start": "41231872",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 95,
+              "ppid": 5,
+              "pgid": 5,
+              "sid": 5,
+              "state": "S",
+              "start": "41231872",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 388,
+              "ppid": 2,
+              "pgid": 5,
+              "sid": 5,
+              "state": "Z",
+              "start": "41231936",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 987,
+              "ppid": 2,
+              "pgid": 5,
+              "sid": 5,
+              "state": "Z",
+              "start": "41232046",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 1995,
+              "ppid": 76,
+              "pgid": 5,
+              "sid": 5,
+              "state": "R",
+              "start": "41232173",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 2040,
+              "ppid": 2,
+              "pgid": 5,
+              "sid": 5,
+              "state": "Z",
+              "start": "41232200",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 2589,
+              "ppid": 69,
+              "pgid": 2589,
+              "sid": 2589,
+              "state": "S",
+              "start": "41232292",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 2590,
+              "ppid": 95,
+              "pgid": 5,
+              "sid": 5,
+              "state": "R",
+              "start": "41232293",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 2596,
+              "ppid": 2589,
+              "pgid": 2589,
+              "sid": 2589,
+              "state": "R",
+              "start": "41232296",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 2601,
+              "ppid": 2596,
+              "pgid": 2589,
+              "sid": 2589,
+              "state": "S",
+              "start": "41232297",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 2602,
+              "ppid": 2596,
+              "pgid": 2589,
+              "sid": 2589,
+              "state": "S",
+              "start": "41232297",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 2603,
+              "ppid": 82,
+              "pgid": 2603,
+              "sid": 2603,
+              "state": "S",
+              "start": "41232300",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 2605,
+              "ppid": 2589,
+              "pgid": 2604,
+              "sid": 2604,
+              "state": "S",
+              "start": "41232300",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 2607,
+              "ppid": 2589,
+              "pgid": 2606,
+              "sid": 2606,
+              "state": "S",
+              "start": "41232301",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 2612,
+              "ppid": 2596,
+              "pgid": 2589,
+              "sid": 2589,
+              "state": "S",
+              "start": "41232302",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 2613,
+              "ppid": 2596,
+              "pgid": 2589,
+              "sid": 2589,
+              "state": "S",
+              "start": "41232303",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 2614,
+              "ppid": 2603,
+              "pgid": 2603,
+              "sid": 2603,
+              "state": "S",
+              "start": "41232304",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 2618,
+              "ppid": 2613,
+              "pgid": 2589,
+              "sid": 2589,
+              "state": "S",
+              "start": "41232306",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 2619,
+              "ppid": 2614,
+              "pgid": 2603,
+              "sid": 2603,
+              "state": "S",
+              "start": "41232306",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 2620,
+              "ppid": 2614,
+              "pgid": 2603,
+              "sid": 2603,
+              "state": "S",
+              "start": "41232306",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 2634,
+              "ppid": 2603,
+              "pgid": 2631,
+              "sid": 2631,
+              "state": "S",
+              "start": "41232309",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 2636,
+              "ppid": 2603,
+              "pgid": 2635,
+              "sid": 2635,
+              "state": "S",
+              "start": "41232309",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 2645,
+              "ppid": 2614,
+              "pgid": 2603,
+              "sid": 2603,
+              "state": "R",
+              "start": "41232310",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 2646,
+              "ppid": 2614,
+              "pgid": 2603,
+              "sid": 2603,
+              "state": "R",
+              "start": "41232310",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 2647,
+              "ppid": 2612,
+              "pgid": 2589,
+              "sid": 2589,
+              "state": "R",
+              "start": "41232310",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 2649,
+              "ppid": 2596,
+              "pgid": 2589,
+              "sid": 2589,
+              "state": "R",
+              "start": "41232311",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 2650,
+              "ppid": 2613,
+              "pgid": 2589,
+              "sid": 2589,
+              "state": "S",
+              "start": "41232312",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            }
+          ],
+          "unknown": [],
+          "psObserverPid": 2665,
+          "reconciled": true,
+          "procOnly": [],
+          "psOnly": [],
+          "directories": {
+            "old": [
+              ".com.google.Chrome.9UTI0W",
+              "BXPbrTPSBmkDv3s4tkOcs",
+              "dNRkq7po9_PrrhU1FfHHy",
+              "syzygy-generator-onramp-Vq2mdf",
+              "syzygy-poc-browser-5t3v2y",
+              "syzygy-poc-browser-JVgEXn"
+            ],
+            "fresh": []
+          }
+        },
+        "afterInterruption": {
+          "procDenominator": 3,
+          "psDenominator": 4,
+          "procRows": [
+            {
+              "pid": 1,
+              "ppid": 0,
+              "pgid": 1,
+              "sid": 1,
+              "state": "S",
+              "start": "41231805",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 2,
+              "ppid": 1,
+              "pgid": 1,
+              "sid": 1,
+              "state": "R",
+              "start": "41231821",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 4,
+              "ppid": 2,
+              "pgid": 4,
+              "sid": 4,
+              "state": "S",
+              "start": "41231825",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            }
+          ],
+          "unknown": [],
+          "psObserverPid": 2789,
+          "reconciled": true,
+          "procOnly": [],
+          "psOnly": [],
+          "directories": {
+            "old": [
+              ".com.google.Chrome.9UTI0W",
+              ".com.google.Chrome.nTiQR4",
+              "BXPbrTPSBmkDv3s4tkOcs",
+              "dNRkq7po9_PrrhU1FfHHy",
+              "syzygy-generator-onramp-Vq2mdf",
+              "syzygy-poc-browser-5t3v2y",
+              "syzygy-poc-browser-JVgEXn"
+            ],
+            "fresh": []
+          }
+        },
+        "afterFresh": {
+          "procDenominator": 3,
+          "psDenominator": 4,
+          "procRows": [
+            {
+              "pid": 1,
+              "ppid": 0,
+              "pgid": 1,
+              "sid": 1,
+              "state": "S",
+              "start": "41231805",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 2,
+              "ppid": 1,
+              "pgid": 1,
+              "sid": 1,
+              "state": "R",
+              "start": "41231821",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 4,
+              "ppid": 2,
+              "pgid": 4,
+              "sid": 4,
+              "state": "S",
+              "start": "41231825",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            }
+          ],
+          "unknown": [],
+          "psObserverPid": 18063,
+          "reconciled": true,
+          "procOnly": [],
+          "psOnly": [],
+          "directories": {
+            "old": [
+              ".com.google.Chrome.9UTI0W",
+              ".com.google.Chrome.nTiQR4",
+              "BXPbrTPSBmkDv3s4tkOcs",
+              "dNRkq7po9_PrrhU1FfHHy",
+              "syzygy-generator-onramp-Vq2mdf",
+              "syzygy-poc-browser-5t3v2y",
+              "syzygy-poc-browser-JVgEXn"
+            ],
+            "fresh": [
+              ".com.google.Chrome.VRNzHY",
+              ".com.google.Chrome.e6GNxT",
+              "node-compile-cache",
+              "syzygy-poc-browser-uZZ7ci",
+              "syzygy-poc-browser-xXhQ5h"
+            ]
+          }
+        },
+        "final": {
+          "procDenominator": 2,
+          "psDenominator": 3,
+          "procRows": [
+            {
+              "pid": 1,
+              "ppid": 0,
+              "pgid": 1,
+              "sid": 1,
+              "state": "S",
+              "start": "41231805",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            },
+            {
+              "pid": 2,
+              "ppid": 1,
+              "pgid": 1,
+              "sid": 1,
+              "state": "R",
+              "start": "41231821",
+              "uid": 996,
+              "namespace": "pid:[4026538704]"
+            }
+          ],
+          "unknown": [],
+          "psObserverPid": 18065,
+          "reconciled": true,
+          "procOnly": [],
+          "psOnly": [],
+          "directories": {
+            "old": [
+              ".com.google.Chrome.9UTI0W",
+              ".com.google.Chrome.nTiQR4",
+              "BXPbrTPSBmkDv3s4tkOcs",
+              "dNRkq7po9_PrrhU1FfHHy",
+              "syzygy-generator-onramp-Vq2mdf",
+              "syzygy-poc-browser-5t3v2y",
+              "syzygy-poc-browser-JVgEXn"
+            ],
+            "fresh": [
+              ".com.google.Chrome.VRNzHY",
+              ".com.google.Chrome.e6GNxT",
+              "node-compile-cache",
+              "syzygy-poc-browser-uZZ7ci",
+              "syzygy-poc-browser-xXhQ5h"
+            ]
+          }
+        }
+      },
+      "atSignalQualification": "Concurrent active snapshots are sequential; discrepancies retained, no empty-family claim at this phase."
+    }
+  },
+  "remainingGates": [
+    "fresh independent exact-head full8AC review",
+    "exact-head hosted node/governance",
+    "merge-group exact landing tree",
+    "coordinator GP-Q0 notice and lifecycle",
+    "actual owner judgment syzygy-1z3.22 AND cycle report syzygy-1z3.25 MERGE HOLD; keep DRAFT"
+  ],
+  "preservedLimitations": [
+    "Prior32author attempt groups,12reviewer attempts, initial hosted node/e2e failure and two-harness EOF distinction retained verbatim in predecessor payloads. No infrastructure waiver.",
+    "Owned unreadable target explicitly refuses with70/noack and requires separately recorded observer recovery; no success claim.",
+    "Broad-probe passive init reaps are disclosed; browser-specific canary separately forbids hiding missing guardian reaps.",
+    "Directory leftovers are named; no directory-clear claim.",
+    "Differential compares14literal executed outcomes, not independent record-output byte capture."
+  ],
+  "counterexamples": {
+    "prior20": "Retained at their exact7e619839 execution subject in predecessor packet; not relabeled as rerun",
+    "currentFinal6": [
+      {
+        "id": "F-G-lineage",
+        "commit": "e34258339f24d6137bf7d25e1634fecdfc169ac2",
+        "file": "scripts/poc_browser_lifetime.py",
+        "old": "row = identity(int(directory.name), with_namespace=False)",
+        "new": "row = identity(int(directory.name), with_namespace=True)",
+        "failedCount": 1,
+        "failure": "AssertionError: Traceback (most recent call last):\n  File \"/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.4.14/apps/three-surface-poc/src/test-fixtures/browser-parent-death.py\", line 198, in <module>\n    operation()\n    ~~~~~~~~~^^\n  File \"/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.4.14/scripts/poc_browser_lifetime.py\", line 46, in descendants\n    row = identity(int(directory.name), with_namespace=True)\n  File \"/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.4.14/scripts/poc_browser_lifetime.py\", line 34, in identity\n    namespace = os.readlink(directory / 'ns/pid') if with_namespace and owner == UID else None\n                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^\nPermissionError: [Errno 13] Permission denied: '/proc/331/ns/pid'\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.4.14/apps/three-surface-poc/src/test-fixtures/browser-parent-death.py\", line 200, in <module>\n    assert error.filename == f'/proc/{unreadable.pid}/ns/pid', 'namespace refusal came from outside the owned control'\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: namespace refusal came from outside the owned control\n: expected 1 to be +0 // Object.is equality\n    at runLifetimeScenario (/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.4.14/apps/three-surface-poc/src/cdp-browser.browser.test.ts:118:28)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.4.14/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20"
+      },
+      {
+        "id": "F-O-lineage",
+        "commit": "12cc91de864662b6f851cfe0b48256e2d35b1d51",
+        "file": "apps/three-surface-poc/src/test-fixtures/browser-parent-death.py",
+        "old": "rows = [identity(int(p.name), with_namespace=False)",
+        "new": "rows = [identity(int(p.name), with_namespace=True)",
+        "failedCount": 1,
+        "failure": "AssertionError: Traceback (most recent call last):\n  File \"/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.4.14/apps/three-surface-poc/src/test-fixtures/browser-parent-death.py\", line 198, in <module>\n    operation()\n    ~~~~~~~~~^^\n  File \"/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.4.14/apps/three-surface-poc/src/test-fixtures/browser-parent-death.py\", line 35, in family\n    rows = [identity(int(p.name), with_namespace=True) for p in Path('/proc').iterdir() if p.name.isdigit()]\n            ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.4.14/apps/three-surface-poc/src/test-fixtures/browser-parent-death.py\", line 29, in identity\n    'namespace': os.readlink(p / 'ns/pid') if with_namespace and owner == UID else None}\n                 ~~~~~~~~~~~^^^^^^^^^^^^^^\nPermissionError: [Errno 13] Permission denied: '/proc/332/ns/pid'\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.4.14/apps/three-surface-poc/src/test-fixtures/browser-parent-death.py\", line 200, in <module>\n    assert error.filename == f'/proc/{unreadable.pid}/ns/pid', 'namespace refusal came from outside the owned control'\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: namespace refusal came from outside the owned control\n: expected 1 to be +0 // Object.is equality\n    at runLifetimeScenario (/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.4.14/apps/three-surface-poc/src/cdp-browser.browser.test.ts:118:28)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.4.14/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20"
+      },
+      {
+        "id": "F-G-owned-namespace",
+        "commit": "3f329776c3cbc6285cf203f9460b135e55d2adc3",
+        "file": "scripts/poc_browser_lifetime.py",
+        "old": "current = identity(pid)",
+        "new": "current = identity(pid, with_namespace=False)",
+        "failedCount": 1,
+        "failure": "AssertionError: Traceback (most recent call last):\n  File \"/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.4.14/apps/three-surface-poc/src/test-fixtures/browser-parent-death.py\", line 203, in <module>\n    raise AssertionError(f'{label} silently accepted an unreadable owned identity')\nAssertionError: guardian-scan silently accepted an unreadable owned identity\n: expected 1 to be +0 // Object.is equality\n    at runLifetimeScenario (/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.4.14/apps/three-surface-poc/src/cdp-browser.browser.test.ts:118:28)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.4.14/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20"
+      },
+      {
+        "id": "F-O-owned-namespace",
+        "commit": "e9f3f485a48d194d8db114d20d462e71819796c5",
+        "file": "apps/three-surface-poc/src/test-fixtures/browser-parent-death.py",
+        "old": "current = identity(pid)",
+        "new": "current = identity(pid, with_namespace=False)",
+        "failedCount": 1,
+        "failure": "AssertionError: Traceback (most recent call last):\n  File \"/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.4.14/apps/three-surface-poc/src/test-fixtures/browser-parent-death.py\", line 203, in <module>\n    raise AssertionError(f'{label} silently accepted an unreadable owned identity')\nAssertionError: observer-scan silently accepted an unreadable owned identity\n: expected 1 to be +0 // Object.is equality\n    at runLifetimeScenario (/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.4.14/apps/three-surface-poc/src/cdp-browser.browser.test.ts:118:28)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.4.14/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20"
+      },
+      {
+        "id": "F-G-start-reused",
+        "commit": "0bad792a5146da2da2be7f25d1d2f135929affbb",
+        "file": "scripts/poc_browser_lifetime.py",
+        "old": "if current[:2] != row[:2]:",
+        "new": "if False:",
+        "failedCount": 1,
+        "failure": "AssertionError: Traceback (most recent call last):\n  File \"/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.4.14/apps/three-surface-poc/src/test-fixtures/browser-parent-death.py\", line 230, in <module>\n    raise AssertionError(f'{label} accepted a reused owned PID')\nAssertionError: guardian-scan-reused accepted a reused owned PID\n: expected 1 to be +0 // Object.is equality\n    at runLifetimeScenario (/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.4.14/apps/three-surface-poc/src/cdp-browser.browser.test.ts:118:28)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.4.14/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20"
+      },
+      {
+        "id": "F-O-start-reused",
+        "commit": "d8fa9db36a24965d4098cd2ba78cc7e608404c2f",
+        "file": "apps/three-surface-poc/src/test-fixtures/browser-parent-death.py",
+        "old": "assert current['start'] == row['start'], 'owned identity changed during scan'",
+        "new": "assert True, 'owned identity changed during scan'",
+        "failedCount": 1,
+        "failure": "AssertionError: Traceback (most recent call last):\n  File \"/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.4.14/apps/three-surface-poc/src/test-fixtures/browser-parent-death.py\", line 230, in <module>\n    raise AssertionError(f'{label} accepted a reused owned PID')\nAssertionError: observer-scan-reused accepted a reused owned PID\n: expected 1 to be +0 // Object.is equality\n    at runLifetimeScenario (/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.4.14/apps/three-surface-poc/src/cdp-browser.browser.test.ts:118:28)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.4.14/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20"
+      }
+    ]
+  },
+  "preCommitScoped": {
+    "unit": 32,
+    "browserFocusedBeforeFinalTargetOriginStrengthening": 5,
+    "afterStrengtheningStartupSelected": 1,
+    "fullFreshAppBothContainsAll5BrowserCases": true,
+    "differential": {
+      "old": "a5afce5c623f6a2d704d3b203e7f0db646d6ffd9",
+      "current": "2f991b581ca2230d429ac9f9a015d6c3603819bf",
+      "executed": 14,
+      "collected": 503,
+      "skipped": 489,
+      "equal": true,
+      "rows": [
+        [
+          "altered prose in a byte-exact act record (characterization, syzygy-bpyt.8.10) a sitting act (D9): refused once its Effect or limits change or a withdrawal is appended; its selection label is a slot, so other words count",
+          "passed"
+        ],
+        [
+          "altered prose in a byte-exact act record (characterization, syzygy-bpyt.8.10) the registry sign-off: refused once its What-this-records paragraph or its limits change, a withdrawal is appended or its selection drops the Scope A words; other words that keep them count",
+          "passed"
+        ],
+        [
+          "altered prose in a byte-exact act record (characterization, syzygy-bpyt.8.10) version 2 of the statement: the same verdicts, read by its own form",
+          "passed"
+        ],
+        [
+          "altered prose in a field-parsed act record (characterization, syzygy-bpyt.8.10) the admission reader (parseAct) counts the recorder's record, and still counts it with each prose alteration",
+          "passed"
+        ],
+        [
+          "altered prose in a field-parsed act record (characterization, syzygy-bpyt.8.10) the admission reader (parseAct) refuses the record with a head field altered (the control)",
+          "passed"
+        ],
+        [
+          "altered prose in a field-parsed act record (characterization, syzygy-bpyt.8.10) the class act (readClassAct) counts the recorder's record, and still counts it with each prose alteration",
+          "passed"
+        ],
+        [
+          "altered prose in a field-parsed act record (characterization, syzygy-bpyt.8.10) the class act (readClassAct) refuses the record with a head field altered (the control)",
+          "passed"
+        ],
+        [
+          "altered prose in a field-parsed act record (characterization, syzygy-bpyt.8.10) the policy chain (parsePolicyAct) counts the recorder's record, and still counts it with each prose alteration",
+          "passed"
+        ],
+        [
+          "altered prose in a field-parsed act record (characterization, syzygy-bpyt.8.10) the policy chain (parsePolicyAct) refuses the record with a head field altered (the control)",
+          "passed"
+        ],
+        [
+          "digest-bound act cross-check (RFC3-16(a)) refuses the recorder's record with a head field altered (the control, syzygy-bpyt.8.10)",
+          "passed"
+        ],
+        [
+          "digest-bound act cross-check (RFC3-16(a)) still counts the recorder's record with effect-widened (characterization, syzygy-bpyt.8.10)",
+          "passed"
+        ],
+        [
+          "digest-bound act cross-check (RFC3-16(a)) still counts the recorder's record with limits-removed (characterization, syzygy-bpyt.8.10)",
+          "passed"
+        ],
+        [
+          "digest-bound act cross-check (RFC3-16(a)) still counts the recorder's record with selection-replaced (characterization, syzygy-bpyt.8.10)",
+          "passed"
+        ],
+        [
+          "digest-bound act cross-check (RFC3-16(a)) still counts the recorder's record with withdrawal-appended (characterization, syzygy-bpyt.8.10)",
+          "passed"
+        ]
+      ],
+      "limit": "Literal executed outcomes; no independent raw-record byte capture. Old execution retained from original packet. Attempt1 wrongly selected unit tier and collected0; retained as failed command; no infrastructure waiver."
+    }
+  }
+}

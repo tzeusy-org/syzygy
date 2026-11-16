@@ -1,0 +1,8 @@
+mutated: True plugin name quote: double
+exit 0
+  ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/sync-child-process-guard.test.ts (6 tests) 276ms
+  ✓ |@syzygy/polaris-generation-core| packages/polaris-generation-core/src/workspace-reach.test.ts (61 tests) 3779ms
+  ✓ the tree's own exports > load, under the suite, each entry from its source module  3740ms
+  Test Files  2 passed (2)
+  Tests  67 passed (67)
+config restored: True

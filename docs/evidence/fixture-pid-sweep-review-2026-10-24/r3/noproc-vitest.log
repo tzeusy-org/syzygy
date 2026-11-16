@@ -1,0 +1,23 @@
+
+ RUN  v3.2.7 /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-509c/clone
+
+ ❯ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/fixture-directories.test.ts (16 tests | 2 failed | 7 skipped) 464ms
+   ↓ fixture directories a killed run left behind (syzygy-bpyt.4.10) > removes the copy and the template of a process that is gone
+   ✓ fixture directories a killed run left behind (syzygy-bpyt.4.10) > keeps the directories of a live process, the current one included 3ms
+   ✓ fixture directories a killed run left behind (syzygy-bpyt.4.10) > keeps a name that carries no pid and namespace segment, whatever its suffix 35ms
+   ✓ fixture directories a killed run left behind (syzygy-bpyt.4.10) > keeps a directory whose pid fails with anything but ESRCH 37ms
+   ↓ fixture directories a killed run left behind (syzygy-bpyt.4.10) > follows no symlink and removes no file: only a directory with a dead pid in its name goes
+   ↓ fixture directories a killed run left behind (syzygy-bpyt.4.10) > keeps the directories of a dead pid that belong to another PID namespace, whatever the neighbouring value
+   × fixture directories a killed run left behind (syzygy-bpyt.4.10) > removes nothing, and lists nothing, where the PID namespace cannot be read, so a sandbox without /proc never sweeps another sandbox's live directories 47ms
+     → expected [ …(2) ] to deeply equal [ …(3) ]
+   × fixture directories a killed run left behind (syzygy-bpyt.4.10) > removes nothing, and lists nothing, where the PID namespace names no inode, so a sandbox without /proc never sweeps another sandbox's live directories 28ms
+     → expected [ …(2) ] to deeply equal [ …(3) ]
+   ✓ fixture directories a killed run left behind (syzygy-bpyt.4.10) > keeps a directory that belongs to another user, the sweep never descending into it 30ms
+   ↓ fixture directories a killed run left behind (syzygy-bpyt.4.10) > checks no user where the system has no user ids, and removes the dead process's directory
+   ✓ fixture directories a killed run left behind (syzygy-bpyt.4.10) > does not fail the run when the temp directory cannot be listed 32ms
+   ✓ fixture directories a killed run left behind (syzygy-bpyt.4.10) > lists only the directory it is given: nothing beside it, nothing below a non-fixture entry 28ms
+   ↓ fixture directories a killed run left behind (syzygy-bpyt.4.10) > does not fail the run when a dead process's directory cannot be removed
+   ↓ fixture directories a killed run left behind (syzygy-bpyt.4.10) > sweeps the temp directory the process runs under when the global setup runs, and keeps the live and the legacy
+   ↓ fixture directories a killed run left behind (syzygy-bpyt.4.10) > asks the operating system for the temp directory, so it sweeps the same directory the copies are made in when TMPDIR is unset
+   ✓ fixture directories a killed run left behind (syzygy-bpyt.4.10) > is registered as a global setup of the app project and of no other project, so it runs once per run 222ms
+EXIT 124

@@ -2,7 +2,7 @@
 
 import { createHash } from 'node:crypto';
 
-import { itemClaim, type BodyReadAuthorityEvaluation, type GitRunner, type PocModel } from '@syzygy/three-surface-poc-core';
+import { itemClaim, type BodyReadAuthorityEvaluation, type GitRunner, type PocModel, type UnknownReason } from '@syzygy/three-surface-poc-core';
 
 /**
  * An in-memory Butlers-shaped tree for surface tests that need the shared
@@ -208,7 +208,7 @@ export function projectShapeItemStateFixture(model: PocModel, state: 'unknown' |
   const anchors = state === 'unknown'
     ? [{ path: 'about/heart-and-soul/missing-source.md', line: 1 }]
     : [...item.anchors, { path: 'about/heart-and-soul/competing-source.md', line: 1 }];
-  const unknownReason = state === 'unknown' ? 'source-uncaptured-or-unreachable' : 'contradicted-pending-adjudication';
+  const unknownReason: UnknownReason = state === 'unknown' ? 'source-uncaptured-or-unreachable' : 'contradicted-pending-adjudication';
   const changed = { ...item, state, anchors, unknownReason, claim: itemClaim({ ...item, state, anchors, unknownReason }, new Map(), item.claim.evaluationId) };
   return { ...model, projectShape: { ...shape, items: shape.items.map((candidate) => candidate === item ? changed : candidate) } };
 }
@@ -221,7 +221,7 @@ function sha1Blob(bytes: Uint8Array): string {
 
 /** A byte-level Git runner over the fixture texts: resolves every revision
  * to the fixture commit, lists the tree only at that commit and serves
- * blobs by object id. Anything else throws. */
+ * blobs and their sizes by object id. Anything else throws. */
 export function projectShapeFixtureGit(texts: Readonly<Record<string, string>> = PROJECT_SHAPE_FIXTURE_TEXTS): GitRunner {
   const entries = Object.entries(texts).map(([path, text]) => {
     const body = encoder.encode(text);
@@ -241,6 +241,8 @@ export function projectShapeFixtureGit(texts: Readonly<Record<string, string>> =
       case 'cat-file': {
         const body = byOid.get(args[2] ?? '');
         if (body === undefined) throw new Error(`fixture has no object ${args[2] ?? ''}`);
+        if (args[1] === '-s') return encoder.encode(`${body.byteLength}\n`);
+        if (args[1] !== 'blob') throw new Error(`unexpected git command ${args.join(' ')}`);
         return body;
       }
       default:
@@ -248,6 +250,17 @@ export function projectShapeFixtureGit(texts: Readonly<Record<string, string>> =
     }
   };
 }
+
+/** A Git runner that answers `cat-file` for any object id with `body` (its
+ * size, or the bytes themselves): a forged object, whatever was asked for. */
+export function forgedBlobGit(body: Uint8Array): GitRunner {
+  return (args) => (args[0] === 'cat-file' && args[1] === '-s' ? encoder.encode(`${body.byteLength}\n`) : body);
+}
+
+/** A Git runner that can serve nothing. */
+export const UNREADABLE_GIT: GitRunner = (args) => {
+  throw new Error(`fixture: git cannot run ${args.join(' ')}`);
+};
 
 /** A valid state-(1) evaluation of all three effect acts, for tests only. */
 export const ADMITTING_AUTHORITY: BodyReadAuthorityEvaluation = {

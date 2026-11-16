@@ -1,0 +1,43 @@
+3a4,5
+> import { effective, ref } from './in-force.js';
+> export { inForceRecords, notInForceRecords } from './in-force.js';
+20d21
+< const ref = (r) => `${r.recordId}@${r.version}`;
+22,58d22
+< /** Records that are plainly effective at `now`, plus why each other record is dead.
+<  * Candidate, future-dated, withdrawn and superseded records never count; two
+<  * records claiming the same id and version with different bytes void both. */
+< function effective(records, now) {
+<     const byRef = new Map();
+<     for (const r of records)
+<         byRef.set(ref(r), [...(byRef.get(ref(r)) ?? []), r]);
+<     const ambiguous = new Set([...byRef].filter(([, list]) => new Set(list.map(r => r.digest)).size > 1).map(([key]) => key));
+<     const dead = new Map();
+<     const live = records.filter(r => {
+<         const why = ambiguous.has(ref(r)) ? 'ambiguous-records'
+<             : r.withdrawnAt !== null ? 'withdrawn' // dated or not: withdrawal defeats grant
+<                 : r.inForceAt === null ? 'not-in-force'
+<                     : r.inForceAt > now ? 'future-dated' : null;
+<         if (why !== null)
+<             dead.set(r, why);
+<         return why === null;
+<     });
+<     // A successor that took effect replaces its predecessor for good, whether the successor is later withdrawn or is itself ambiguous
+<     // (two byte-different claims of one id and version): neither leaves the old version standing.
+<     const replaced = new Set(records.flatMap(r => r.supersedes === null || r.supersessionAt === null || r.supersessionAt > now ? [] : [r.supersedes]));
+<     return { live: live.filter(r => !replaced.has(ref(r))), dead };
+< }
+< /** The records that are plainly in force at `now` (same polarity as the ports). */
+< export function inForceRecords(records, now) {
+<     return effective(records, now).live;
+< }
+< /** Why each record that is not in force at `now` is not, by the same rules as `inForceRecords`: for reporting only, never a grant. */
+< export function notInForceRecords(records, now) {
+<     const { live, dead } = effective(records, now);
+<     const out = new Map(dead);
+<     const kept = new Set(live);
+<     for (const r of records)
+<         if (!kept.has(r) && !out.has(r))
+<             out.set(r, 'superseded');
+<     return out;
+< }

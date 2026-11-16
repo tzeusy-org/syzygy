@@ -1,0 +1,26 @@
+{
+  "decisionId": "SHARED-MUTATION-RUNNER-20261028-R1",
+  "kind": "retained-harness-source-evidence",
+  "recoveredAtUtc": "2026-10-29T01:32:51.063642+00:00",
+  "sessionId": "01a159b6-462b-7342-afc0-fadd1ce6bc90",
+  "sourcePath": "/home/tze/.codex/sessions/2026/10/20/rollout-2026-10-20T22-28-00-01a159b6-462b-7342-afc0-fadd1ce6bc90.jsonl",
+  "scope": "The same already-recorded owner selection; no new grant or amendment.",
+  "provenance": "Owner-attended source evidence, not independently correlated A1 evidence; structural/hash checks do not authenticate a human.",
+  "offeredPacket": "RUNNER-QUESTIONNAIRE-REVIEW-READY.txt",
+  "offeredPacketSha256": "c171122e77f11522a67126e9620bfb3a1bd6c18dc1eecfa71dce73ee26a10201",
+  "question": {
+    "file": "OWNER-QUESTION-HARNESS-RECORD.json",
+    "sourceLine": 48057,
+    "sourceTimestamp": "2026-10-28T00:30:32.863Z",
+    "sha256": "0df0b4086bbeaa2dccd93823c7b4fab85eb180bbe4f842680f7ab1c015f16f6b"
+  },
+  "answer": {
+    "file": "OWNER-ANSWER-HARNESS-RECORD.json",
+    "sourceLine": 48585,
+    "sourceTimestamp": "2026-10-29T00:21:31.700Z",
+    "sha256": "5d998dd5a0e2b6c5e19b777957235382e940850c6b7d925759caca0363ef2b0e",
+    "verbatim": "A"
+  },
+  "timeMeaning": "sourceTimestamp is the harness timestamp of the owner-message event; recoveredAtUtc and the original recording time are separate transcription/recovery instants. No device-keystroke time or independently verified ceremony time is claimed.",
+  "preservation": "Original direction, OWNER-ANSWER.json, RETENTION.json and reviewed scope/review bytes are unchanged."
+}

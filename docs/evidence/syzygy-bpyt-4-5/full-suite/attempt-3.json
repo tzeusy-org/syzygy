@@ -1,0 +1,174 @@
+{
+ "tool": "suite_summary.py",
+ "attempt": "attempt 3: the head beside the base, concurrently",
+ "cpus": 12,
+ "changedFilesBetween": [
+  "c104771ff90f47ffd070f2339c36010458679c71",
+  "0a6645ae7d59230b261f27c3c05ef9a9f384ebd1"
+ ],
+ "runs": [
+  {
+   "name": "head",
+   "commit": "0a6645ae7d59230b261f27c3c05ef9a9f384ebd1",
+   "start": "2026-10-25T06:48:45+08:00",
+   "load1Start": 54.16,
+   "exit": 1,
+   "end": "2026-10-25T06:57:53+08:00",
+   "load1End": 89.67,
+   "success": false,
+   "totals": {
+    "numTotalTestSuites": 854,
+    "numFailedTestSuites": 13,
+    "numTotalTests": 5278,
+    "numPassedTests": 5201,
+    "numFailedTests": 7,
+    "numPendingTests": 70,
+    "numTodoTests": 0
+   },
+   "failedTests": [
+    {
+     "file": "packages/polaris-dossier/src/execution-flags.test.ts",
+     "test": "check, render and close disclose the flags beside each command and refuse nothing (scenario \"Reported command outside the named scope\") under SEC-3's rule: the same commands are disclosed and nothing is flagged",
+     "first": "Error: STACK_TRACE_ERROR",
+     "durationMs": 5137,
+     "inChangedFile": false
+    },
+    {
+     "file": "packages/polaris-dossier/src/gate-acts.test.ts",
+     "test": "the sitting's acts fail closed refuse an in-force record whose table binds other files than the form names, even when an act binds its bytes",
+     "first": "Error: STACK_TRACE_ERROR",
+     "durationMs": 6725,
+     "inChangedFile": false
+    },
+    {
+     "file": "packages/polaris-dossier/src/review.test.ts",
+     "test": "review-check does not count a verdict whose launch record is altered to another form, role or prompt",
+     "first": "Error: STACK_TRACE_ERROR",
+     "durationMs": 5092,
+     "inChangedFile": false
+    },
+    {
+     "file": "packages/polaris-dossier/src/start-gates.test.ts",
+     "test": "init: a run that passes every start gate pins the consented HEAD, records the subject and writes only run.json under the state root",
+     "first": "Error: STACK_TRACE_ERROR",
+     "durationMs": 7305,
+     "inChangedFile": false
+    },
+    {
+     "file": "packages/polaris-dossier/src/start-gates.test.ts",
+     "test": "init: every refusal arm (REQ-polaris-generation-033 scenarios \"Clone at an unconsented revision\" and the governed arms) refuses when the signed registry entry names another implementation or no implementation version",
+     "first": "Error: STACK_TRACE_ERROR",
+     "durationMs": 6750,
+     "inChangedFile": false
+    },
+    {
+     "file": "packages/polaris-dossier/src/start-gates.test.ts",
+     "test": "preflight reports D9 and the RFC7-20 reading established once the sitting's acts bind their records, and only while the bound bytes hold",
+     "first": "Error: STACK_TRACE_ERROR",
+     "durationMs": 5607,
+     "inChangedFile": false
+    },
+    {
+     "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+     "test": "a rendered-design reviewer's continuity, disclosed in the review-status region discloses a design reviewer that continued to round 2 (mutant: drop the design continuity sentence)",
+     "first": "Error: STACK_TRACE_ERROR",
+     "durationMs": 5270,
+     "inChangedFile": false
+    }
+   ],
+   "failedFilesWithoutFailedTest": [
+    {
+     "file": "packages/polaris-generation-consent/src/act-families.test.ts",
+     "first": "Hook timed out in 10000ms.",
+     "inChangedFile": false
+    }
+   ],
+   "failuresInChangedFiles": 0
+  },
+  {
+   "name": "base",
+   "commit": "c104771ff90f47ffd070f2339c36010458679c71",
+   "start": "2026-10-25T06:48:45+08:00",
+   "load1Start": 54.16,
+   "exit": 1,
+   "end": "2026-10-25T06:58:45+08:00",
+   "load1End": 76.81,
+   "success": false,
+   "totals": {
+    "numTotalTestSuites": 854,
+    "numFailedTestSuites": 12,
+    "numTotalTests": 5278,
+    "numPassedTests": 5200,
+    "numFailedTests": 8,
+    "numPendingTests": 70,
+    "numTodoTests": 0
+   },
+   "failedTests": [
+    {
+     "file": "packages/polaris-dossier/src/gate-acts.test.ts",
+     "test": "the sitting's acts fail closed refuse an in-force record whose table binds other files than the form names, even when an act binds its bytes",
+     "first": "Error: STACK_TRACE_ERROR",
+     "durationMs": 5772,
+     "inChangedFile": false
+    },
+    {
+     "file": "packages/polaris-dossier/src/gate-acts.test.ts",
+     "test": "the gate forms against the recorders render the sign-off record byte for byte as render_record does, from the same fields: CONFIRM",
+     "first": "Error: STACK_TRACE_ERROR",
+     "durationMs": 5074,
+     "inChangedFile": false
+    },
+    {
+     "file": "packages/polaris-dossier/src/run-evidence.test.ts",
+     "test": "dossier run evidence record (S12) lists a symbolic link without following it",
+     "first": "Error: STACK_TRACE_ERROR",
+     "durationMs": 5278,
+     "inChangedFile": false
+    },
+    {
+     "file": "packages/polaris-dossier/src/run-evidence.test.ts",
+     "test": "dossier run evidence record (S12) reports an open run as not closed, and refuses anything but one run directory",
+     "first": "Error: STACK_TRACE_ERROR",
+     "durationMs": 5011,
+     "inChangedFile": false
+    },
+    {
+     "file": "packages/polaris-dossier/src/start-gates.test.ts",
+     "test": "init: a run that passes every start gate pins the consented HEAD, records the subject and writes only run.json under the state root",
+     "first": "Error: STACK_TRACE_ERROR",
+     "durationMs": 8485,
+     "inChangedFile": false
+    },
+    {
+     "file": "packages/polaris-dossier/src/start-gates.test.ts",
+     "test": "init: the clone holds the consented commit alone (syzygy-qkea.24) refuses config naming a remote, a promisor, an include or a command the agent's git would run (R-POLARIS-DOSSIER-CLONE-SHAPE-2 finding 1)",
+     "first": "Error: STACK_TRACE_ERROR",
+     "durationMs": 5061,
+     "inChangedFile": false
+    },
+    {
+     "file": "packages/polaris-dossier/src/start-gates.test.ts",
+     "test": "init: every refusal arm (REQ-polaris-generation-033 scenarios \"Clone at an unconsented revision\" and the governed arms) counts a gitlink entry named openspec in the pinned tree as governing",
+     "first": "Error: STACK_TRACE_ERROR",
+     "durationMs": 5017,
+     "inChangedFile": false
+    },
+    {
+     "file": "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts",
+     "test": "Polaris keyboard, non-visual and contrast checks in a real browser keeps complete source columns visible while citation targets remain keyboard-reachable",
+     "first": "Error: STACK_TRACE_ERROR",
+     "durationMs": 5039,
+     "inChangedFile": false
+    }
+   ],
+   "failedFilesWithoutFailedTest": [
+    {
+     "file": "packages/polaris-generation-consent/src/act-families.test.ts",
+     "first": "Hook timed out in 10000ms.",
+     "inChangedFile": false
+    }
+   ],
+   "failuresInChangedFiles": 0
+  }
+ ]
+}

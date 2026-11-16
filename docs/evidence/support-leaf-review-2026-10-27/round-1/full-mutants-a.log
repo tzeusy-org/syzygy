@@ -1,0 +1,4 @@
+C1-manifest-digest exit 1 {'numTotalTests': 5287, 'numPassedTests': 5281, 'numFailedTests': 1, 'numPendingTests': 5, 'numFailedTestSuites': 2, 'numTotalTestSuites': 858} failed 1 suiteErrors 0
+C2-observation-digest exit 0 {'numTotalTests': 5287, 'numPassedTests': 5282, 'numFailedTests': 0, 'numPendingTests': 5, 'numFailedTestSuites': 0, 'numTotalTestSuites': 858} failed 0 suiteErrors 0
+C3-model-artifact-digest exit 0 {'numTotalTests': 5287, 'numPassedTests': 5282, 'numFailedTests': 0, 'numPendingTests': 5, 'numFailedTestSuites': 0, 'numTotalTestSuites': 858} failed 0 suiteErrors 0
+exit 0

@@ -1,0 +1,7 @@
+# PUBLIC-SOURCE SCREENING SCOPE VERSION 6 MANIFEST
+# Candidate; this file and its row bind nothing by themselves.
+# 1 row, variant p (redis.conf placed with config-secret-directive). The row hashes
+# the PROPOSED bytes (the version-5 policy, variant bcd, with
+# proposed/<name>.p.patch applied). The row is the argument of one
+# superseding approve-policy act, or of none.
+c44058c02c244e8460c1e33ab01f0343ed0612043d7bf53e0d36410c9f9ebfa2  .syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json  [variant: p]

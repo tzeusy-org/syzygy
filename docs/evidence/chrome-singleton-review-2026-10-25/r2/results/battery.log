@@ -1,0 +1,111 @@
+1 0 python3 scripts/check_governance.py
+2 0 python3 scripts/check_governance.py --selftest
+3 0 python3 scripts/record_polaris_understanding_adoption.py --check
+4 0 python3 scripts/record_polaris_understanding_adoption.py --selftest
+5 0 python3 scripts/launch_gate_results.py --selftest            # historical Markdown records
+6 0 python3 scripts/validate_launch_administration.py --selftest # the structured record path
+7 0 python3 scripts/render_launch_administration.py --selftest
+9 0 python3 $CS/verify_final_prespec.py
+10 0 python3 $CS/build_contract_index.py --check
+11 0 python3 $CS/build_contract_index.py --selftest   # needs PyYAML (test-only); without it the YAML cas
+12 0 python3 $CS/build_dependency_index.py --check
+13 0 python3 $CS/build_budget_report.py --check
+14 0 python3 $CS/build_active_manifest.py --check
+15 0 python3 $CS/build_task_router.py --check
+16 0 python3 $CS/build_task_router.py --selftest
+17 0 python3 $CS/build_capability_1_views.py --check      # capability 1: charter -> views
+18 0 python3 $CS/build_capability_1_views.py --selftest
+19 0 python3 scripts/build_capability_1_spec_dependencies.py --check  # capability 1 spec: warrants -> ge
+20 0 python3 scripts/build_capability_1_spec_dependencies.py --selftest
+21 0 python3 scripts/build_cap1_trusted_bootstrap_consent_adoption.py --check   # CAP1 consent overlay: r
+22 0 python3 scripts/build_cap1_trusted_bootstrap_consent_adoption.py --selftest
+23 0 python3 scripts/build_general_trusted_bootstrap_impact_ledger.py --check
+24 0 python3 scripts/build_general_trusted_bootstrap_transaction.py --check
+25 0 python3 scripts/build_polaris_project_wide_contract_coverage.py --check
+26 0 python3 scripts/build_polaris_project_wide_spec_dependencies.py --check
+27 0 python3 scripts/build_pwb_truth_policy_amendment.py --check
+28 0 python3 scripts/record_versioned_signoff.py --check pwb-missing-currency-disclosure-scenario --versi
+29 0 python3 scripts/record_versioned_signoff.py --check pwb-dismissal-expiry-amendment --version 1.0   #
+30 0 python3 scripts/record_versioned_signoff.py --check pwb-container-shape-profile-amendment --version 
+31 0 python3 scripts/record_versioned_signoff.py --check pwb-item-depth-amendment --version 1.0   # item-
+32 0 python3 scripts/record_versioned_signoff.py --check pwb-readability-successor --version 1.0   # PWB 
+33 0 python3 scripts/record_versioned_signoff.py --check pwb-tree-framing-amendment --version 1.0   # tre
+34 0 python3 scripts/record_versioned_signoff.py --check pwb-anchor-resolution-amendment --version 1.0   
+35 0 python3 scripts/record_versioned_signoff.py --check three-surface-poc-block-provenance-amendment --v
+36 0 python3 scripts/record_versioned_signoff.py --check pwb-class-granular-extraction-amendment --versio
+37 0 python3 scripts/record_versioned_signoff.py --check pwb-accessible-name-amendment --version 1.0   # 
+38 0 python3 scripts/record_versioned_signoff.py --check pwb-opening-index-amendment --version 1.0   # op
+39 0 python3 scripts/record_versioned_signoff.py --check three-surface-poc-governing-intent-amendment --v
+40 0 python3 scripts/record_versioned_signoff.py --check three-surface-poc-vocabulary-epistemic-amendment
+41 0 python3 scripts/record_versioned_signoff.py --check cap1-trusted-bootstrap-consent --version 1.0   #
+42 0 python3 scripts/record_versioned_signoff.py --check polaris-dossier-local-agent-mode --version 1.0  
+43 0 python3 scripts/record_versioned_signoff.py --check polaris-dossier-local-agent-mode --version 1.1  
+44 0 python3 scripts/record_versioned_signoff.py --check polaris-dossier-local-agent-mode --version 1.2  
+46 0 python3 scripts/record_pwb_behavior_amendment_acts.py --check render-mode 527be5ac3732619608355ae965
+47 0 python3 scripts/record_pwb_behavior_amendment_acts.py --check machine-view acabc7915e4461186b5878ce4
+48 0 python3 scripts/record_versioned_signoff.py --selftest   # version-tagged sign-off recorder (Scope A
+49 0 python3 scripts/pwb_signed_selftest.py --selftest   # reruns a signed builder's fixtures against its
+50 0 python3 scripts/build_pwb_missing_currency_disclosure_scenario.py --selftest   # missing-currency bu
+51 0 python3 scripts/build_pwb_dismissal_expiry_amendment.py --selftest   # dismissal-expiry builder fixt
+52 0 python3 scripts/build_pwb_container_shape_profile_amendment.py --selftest   # container-shape builde
+53 0 python3 scripts/build_pwb_item_depth_amendment.py --selftest   # item-depth builder fixtures, at its
+54 0 python3 scripts/build_pwb_readability_successor.py --selftest   # PWB readability successor builder 
+55 0 python3 scripts/build_pwb_tree_framing_amendment.py --selftest   # tree-framing builder fixtures, at
+56 0 python3 scripts/build_polaris_dossier_local_agent_mode.py --check   # dossier local-agent package: a
+57 0 python3 scripts/build_polaris_dossier_local_agent_mode.py --selftest   # dossier local-agent builder
+58 0 python3 scripts/build_polaris_dossier_local_agent_mode_v1_1.py --check   # dossier v1.1 package: abs
+59 0 python3 scripts/build_polaris_dossier_local_agent_mode_v1_1.py --selftest   # dossier v1.1 builder f
+60 0 python3 scripts/build_polaris_dossier_local_agent_mode_v1_2.py --check   # dossier v1.2 package: abs
+61 0 python3 scripts/build_polaris_dossier_local_agent_mode_v1_2.py --selftest   # dossier v1.2 builder f
+62 0 python3 scripts/record_pwb_behavior_amendment_acts.py --check opening-band 7f80cb05f644dd1e4f49e7b21
+63 0 python3 scripts/build_pwb_registry_currency_briefing_amendment.py --check   # registry amendment, pe
+64 0 python3 scripts/build_pwb_registry_currency_briefing_amendment.py --selftest
+65 0 python3 scripts/record_pwb_registry_currency_amendment.py --check 2356b9ed3235b3dff79caeb352803a30c4
+66 0 python3 scripts/record_pwb_registry_currency_amendment.py --selftest
+67 0 python3 scripts/build_pwb_behavior_contract_repin.py --selftest
+68 0 python3 scripts/record_pwb_behavior_contract_repin_acts.py --check registry ad9cd6769bffbb1a3ef94625
+69 0 python3 scripts/record_pwb_behavior_contract_repin_acts.py --selftest
+70 0 python3 scripts/build_pwb_registry_machine_ceiling_amendment.py --check   # P-114 approved registry 
+71 0 python3 scripts/record_pwb_registry_machine_ceiling_act.py --builder-selftest   # P-114 frozen build
+72 0 python3 scripts/record_pwb_registry_machine_ceiling_act.py --check   # P-114 paired version/Ask-2 ac
+73 0 python3 scripts/record_pwb_registry_machine_ceiling_act.py --selftest   # P-114 recorder predicates 
+74 0 python3 scripts/record_public_source_screening_scope_v4_act.py --check 319e404ee413220550d65644f6c93
+75 0 python3 scripts/record_public_source_screening_scope_v4_act.py --selftest
+76 0 python3 scripts/check_polaris_response_ceiling_reading.py --check   # P-77 Q2 reading: quotes intact
+77 0 python3 scripts/check_polaris_response_ceiling_reading.py --selftest
+78 0 python3 scripts/build_contract_readability_restyle.py --check   # restyle package: manifest = exact 
+79 0 python3 scripts/build_contract_readability_restyle.py --selftest
+80 0 python3 scripts/record_contract_readability_restyle.py --check  # restyle act, performed 2026-09-28:
+81 0 python3 scripts/record_contract_readability_restyle.py --selftest
+82 0 python3 scripts/build_spec_policy_readability_restyle.py --check   # spec-policy restyle: installed 
+83 0 python3 scripts/build_spec_policy_readability_restyle.py --selftest
+84 0 python3 scripts/record_spec_policy_readability_restyle.py --check  # spec-policy restyle act: perfor
+85 0 python3 scripts/record_spec_policy_readability_restyle.py --selftest
+86 0 python3 scripts/build_three_surface_poc_readability_successor.py --check   # POC readability success
+87 0 python3 scripts/build_three_surface_poc_readability_successor.py --selftest
+88 0 python3 scripts/record_three_surface_poc_readability_successor.py --check  # POC successor sign-off:
+89 0 python3 scripts/record_three_surface_poc_readability_successor.py --selftest
+90 0 python3 scripts/readability_successor.py --all --check   # readability successors (Capability 1, Pol
+91 0 python3 scripts/readability_successor.py --selftest
+92 0 python3 scripts/build_polaris_dependency_unions.py --check   # both Polaris dependency unions, and e
+93 0 python3 scripts/build_polaris_dependency_unions.py --selftest
+94 0 python3 scripts/check_spec_reconciliation.py --check   # five readability outcomes terminal and bind
+95 0 python3 scripts/check_spec_reconciliation.py --selftest
+96 0 python3 scripts/build_three_surface_poc_spec_dependencies.py --check
+97 0 python3 scripts/build_directive_register.py --check     # every identifier -> its definition site
+98 0 python3 scripts/build_directive_register.py --selftest
+99 0 python3 scripts/check_quotations.py     # a quotation beside a path:line locator was said by that fi
+100 0 python3 scripts/check_quotations.py --selftest
+102 0 python3 scripts/validate_launch_administration.py $DR
+103 0 python3 scripts/render_launch_administration.py $DR --check
+104 0 git tag --list 'doctrine-*'
+105 0 python3 scripts/record_rfc5_project_documentation_act.py --check a69a606cc7c14da5de03ec26aaec435af2f
+106 0 python3 scripts/record_versioned_signoff.py --check public-git-source-acquisition-local-agent --vers
+107 0 python3 scripts/record_dossier_local_agent_acts.py --check redis-agent-anthropic fbbcd3c0e3d49aab338
+108 0 python3 scripts/record_dossier_agent_provider_v2_act.py --check b7a8d099ce108bfd70133b729327534f2980
+109 0 python3 scripts/record_dossier_agent_provider_v2_act.py --selftest   # agent-provider statement vers
+110 0 python3 scripts/record_dossier_local_agent_acts.py --check d9-in-force 41fdfaea8cbde4cd8220910113fb5
+111 0 python3 scripts/record_dossier_local_agent_acts.py --check rfc7-20-reading-in-force f0725a204b6e6ccb
+112 0 python3 scripts/record_narrative_profile_adoption.py --check --date 2026-10-07 --question-opening 'D
+113 0 python3 scripts/record_rfc5_project_documentation_act.py --selftest   # rfc5 --selftest
+commit=6dcf94906b2989345f5b03dfeaa2d64c56632886 commands=110 nonzero=0

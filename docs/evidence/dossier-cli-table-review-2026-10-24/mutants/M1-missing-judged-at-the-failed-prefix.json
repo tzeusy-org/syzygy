@@ -1,0 +1,6 @@
+{
+ "id": "M1-missing-judged-at-the-failed-prefix",
+ "file": "packages/polaris-dossier/dist/state-directory.js (copy)",
+ "old": "if (code === 'ENOENT')\n                    return { resolved: true, realPath: candidate };",
+ "new": "if (code === 'ENOENT')\n                    return { resolved: true, realPath: current };"
+}

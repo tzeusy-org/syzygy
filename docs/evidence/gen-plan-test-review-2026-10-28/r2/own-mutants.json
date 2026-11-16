@@ -1,0 +1,617 @@
+{
+  "commit": "5cf4223a184baab1a748566b2f46053dcda72e58",
+  "tool": {
+    "sha256": "460a8affd1d56df1c6cebcfebdd31e99ca34c8f186b47c8a2e3177249cb0b582"
+  },
+  "prTool": {
+    "path": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-550/clone/docs/evidence/syzygy-bpyt-47/test_mutants.py",
+    "sha256": "677682a9f9ccfdc5bbbb32ba31f98d3ae6488d6bd13f5bb176a518306c8dd0eb"
+  },
+  "files": [
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/generation-mutation-run-main.ts",
+      "sha256": "24bf40d8c529e5229b2887e506475ed9422dcb1a4814d149001518b7c8af5d34"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/generation-mutation.test.ts",
+      "sha256": "92b266e25d6c34dcf849b928bb64ac4244168365a9a9b9fbe839323beda149b8"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts",
+      "sha256": "b383c956eb0e7c15c2842b6a86ba3fbc886cc9dfa0c3edd234af9b9a3ec735aa"
+    },
+    {
+      "path": "packages/polaris-generation-core/src/parse-json.test.ts",
+      "sha256": "40985898eda08ceb34e7a27a12fae649565bbc133207fa047304072cbceda612"
+    }
+  ],
+  "control": {
+    "exit": 0,
+    "total": 13,
+    "failed": 0,
+    "failureMessages": [],
+    "fileErrors": []
+  },
+  "mutants": [
+    {
+      "id": "O1a",
+      "aim": "input: the right file spelled with a doubled slash, reviewed test",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "    file: DRAFT_MODEL_SOURCE,",
+            "new": "    file: 'packages/polaris-generation-core/src//draft-model.ts',"
+          }
+        ]
+      },
+      "expect": "killed",
+      "expectedFailedTests": 1,
+      "expectedMessages": [
+        "provider-draft-duplicate-handle-check-disabled: packages/polaris-generation-core/src//draft-model.ts is a normalized non-test .ts file under packages/polaris-generation-core/src/"
+      ],
+      "observed": {
+        "exit": 1,
+        "total": 13,
+        "failed": 1,
+        "failureMessages": [
+          "AssertionError: provider-draft-duplicate-handle-check-disabled: packages/polaris-generation-core/src//draft-model.ts is a normalized non-test .ts file under packages/polaris-generation-core/src/: expected false to be true // Object.is equality"
+        ],
+        "fileErrors": []
+      },
+      "outcome": "killed",
+      "matchesPrediction": true,
+      "restored": true,
+      "loadBefore": [
+        "36.23",
+        "35.63",
+        "40.46"
+      ],
+      "loadAfter": [
+        "34.78",
+        "35.35",
+        "40.32"
+      ]
+    },
+    {
+      "id": "O1b",
+      "aim": "O1a's input, path check normalizes before comparing",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "    file: DRAFT_MODEL_SOURCE,",
+            "new": "    file: 'packages/polaris-generation-core/src//draft-model.ts',"
+          }
+        ],
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.test.ts": [
+          {
+            "old": "posix.normalize(file) === file && file.startsWith(SUBJECT_ROOT) && file.endsWith('.ts') && !/\\.(test|spec|testkit|d)\\.ts$/.test(file)",
+            "new": "posix.normalize(file).startsWith(SUBJECT_ROOT) && posix.normalize(file).endsWith('.ts') && !/\\.(test|spec|testkit|d)\\.ts$/.test(posix.normalize(file))"
+          }
+        ]
+      },
+      "expect": "survived",
+      "expectedFailedTests": null,
+      "expectedMessages": [],
+      "observed": {
+        "exit": 0,
+        "total": 13,
+        "failed": 0,
+        "failureMessages": [],
+        "fileErrors": []
+      },
+      "outcome": "survived",
+      "matchesPrediction": true,
+      "restored": true,
+      "loadBefore": [
+        "34.78",
+        "35.35",
+        "40.32"
+      ],
+      "loadAfter": [
+        "34.64",
+        "35.31",
+        "40.28"
+      ]
+    },
+    {
+      "id": "O2a",
+      "aim": "input: a must-fail name in the wrong case, reviewed test",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "mustFail: ['rejects pollution keys'],",
+            "new": "mustFail: ['Rejects Pollution Keys'],"
+          }
+        ]
+      },
+      "expect": "killed",
+      "expectedFailedTests": 1,
+      "expectedMessages": [
+        "parse-json-pollution-key-check-disabled: test titles holding must-fail \"Rejects Pollution Keys\": expected +0 to be 1"
+      ],
+      "observed": {
+        "exit": 1,
+        "total": 13,
+        "failed": 1,
+        "failureMessages": [
+          "AssertionError: parse-json-pollution-key-check-disabled: test titles holding must-fail \"Rejects Pollution Keys\": expected +0 to be 1 // Object.is equality"
+        ],
+        "fileErrors": []
+      },
+      "outcome": "killed",
+      "matchesPrediction": true,
+      "restored": true,
+      "loadBefore": [
+        "34.64",
+        "35.31",
+        "40.28"
+      ],
+      "loadAfter": [
+        "34.43",
+        "35.25",
+        "40.23"
+      ]
+    },
+    {
+      "id": "O2b",
+      "aim": "O2a's input, title count case-insensitive",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "mustFail: ['rejects pollution keys'],",
+            "new": "mustFail: ['Rejects Pollution Keys'],"
+          }
+        ],
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.test.ts": [
+          {
+            "old": "titles.filter((title) => title.includes(name)).length",
+            "new": "titles.filter((title) => title.toLowerCase().includes(name.toLowerCase())).length"
+          }
+        ]
+      },
+      "expect": "survived",
+      "expectedFailedTests": null,
+      "expectedMessages": [],
+      "observed": {
+        "exit": 0,
+        "total": 13,
+        "failed": 0,
+        "failureMessages": [],
+        "fileErrors": []
+      },
+      "outcome": "survived",
+      "matchesPrediction": true,
+      "restored": true,
+      "loadBefore": [
+        "34.43",
+        "35.25",
+        "40.23"
+      ],
+      "loadAfter": [
+        "35.27",
+        "35.41",
+        "40.26"
+      ]
+    },
+    {
+      "id": "O3",
+      "aim": "W6's second declaration, reader keeps only the first declaration",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation-run-main.ts": [
+          {
+            "old": "",
+            "new": "\nexport function shadowed(): readonly string[] {\n  const TEST_FILES = ['packages/polaris-generation-core/src/canonical-json.test.ts'];\n  return TEST_FILES;\n}\n"
+          }
+        ],
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.test.ts": [
+          {
+            "old": "return lists;",
+            "new": "return lists.slice(0, 1);"
+          }
+        ]
+      },
+      "expect": "survived",
+      "expectedFailedTests": null,
+      "expectedMessages": [],
+      "observed": {
+        "exit": 0,
+        "total": 13,
+        "failed": 0,
+        "failureMessages": [],
+        "fileErrors": []
+      },
+      "outcome": "survived",
+      "matchesPrediction": true,
+      "restored": true,
+      "loadBefore": [
+        "35.27",
+        "35.41",
+        "40.26"
+      ],
+      "loadAfter": [
+        "35.59",
+        "35.48",
+        "40.23"
+      ]
+    },
+    {
+      "id": "O4a",
+      "aim": "T6's duplicate id, reviewed test",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "id: 'canonical-json-cycle-check-disabled',",
+            "new": "id: 'canonical-json-sorted-keys-disabled',"
+          }
+        ]
+      },
+      "expect": "killed",
+      "expectedFailedTests": 1,
+      "expectedMessages": [
+        "duplicate mutation ids: expected 'canonical-json-sorted-keys-disabled' to be ''"
+      ],
+      "observed": {
+        "exit": 1,
+        "total": 13,
+        "failed": 1,
+        "failureMessages": [
+          "AssertionError: duplicate mutation ids: expected 'canonical-json-sorted-keys-disabled' to be '' // Object.is equality"
+        ],
+        "fileErrors": []
+      },
+      "outcome": "killed",
+      "matchesPrediction": true,
+      "restored": true,
+      "loadBefore": [
+        "35.59",
+        "35.48",
+        "40.23"
+      ],
+      "loadAfter": [
+        "35.79",
+        "35.52",
+        "40.22"
+      ]
+    },
+    {
+      "id": "O4b",
+      "aim": "T6's duplicate id, duplicate check over a Set",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "id: 'canonical-json-cycle-check-disabled',",
+            "new": "id: 'canonical-json-sorted-keys-disabled',"
+          }
+        ],
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.test.ts": [
+          {
+            "old": "ids.filter((id, index) => ids.indexOf(id) !== index).join(', ')",
+            "new": "[...new Set(ids)].filter((id, index, unique) => unique.indexOf(id) !== index).join(', ')"
+          }
+        ]
+      },
+      "expect": "survived",
+      "expectedFailedTests": null,
+      "expectedMessages": [],
+      "observed": {
+        "exit": 0,
+        "total": 13,
+        "failed": 0,
+        "failureMessages": [],
+        "fileErrors": []
+      },
+      "outcome": "survived",
+      "matchesPrediction": true,
+      "restored": true,
+      "loadBefore": [
+        "35.79",
+        "35.52",
+        "40.22"
+      ],
+      "loadAfter": [
+        "36.90",
+        "35.77",
+        "40.25"
+      ]
+    },
+    {
+      "id": "O5a",
+      "aim": "input: a `%%` title and name (vitest prints `%`), reviewed test",
+      "edits": {
+        "packages/polaris-generation-core/src/parse-json.test.ts": [
+          {
+            "old": "('rejects pollution keys: %s', (key) => {",
+            "new": "('rejects pollution keys %%: %s', (key) => {"
+          }
+        ],
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "mustFail: ['rejects pollution keys'],",
+            "new": "mustFail: ['rejects pollution keys %%'],"
+          }
+        ]
+      },
+      "expect": "killed",
+      "expectedFailedTests": 1,
+      "expectedMessages": [
+        "parse-json-pollution-key-check-disabled: must-fail \"rejects pollution keys %%\" is a literal title fragment: expected false to be true"
+      ],
+      "observed": {
+        "exit": 1,
+        "total": 13,
+        "failed": 1,
+        "failureMessages": [
+          "AssertionError: parse-json-pollution-key-check-disabled: must-fail \"rejects pollution keys %%\" is a literal title fragment: expected false to be true // Object.is equality"
+        ],
+        "fileErrors": []
+      },
+      "outcome": "killed",
+      "matchesPrediction": true,
+      "restored": true,
+      "loadBefore": [
+        "36.90",
+        "35.77",
+        "40.25"
+      ],
+      "loadAfter": [
+        "37.22",
+        "35.86",
+        "40.25"
+      ]
+    },
+    {
+      "id": "O5b",
+      "aim": "O5a's input, `%` arm matches only `%` before a letter",
+      "edits": {
+        "packages/polaris-generation-core/src/parse-json.test.ts": [
+          {
+            "old": "('rejects pollution keys: %s', (key) => {",
+            "new": "('rejects pollution keys %%: %s', (key) => {"
+          }
+        ],
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "mustFail: ['rejects pollution keys'],",
+            "new": "mustFail: ['rejects pollution keys %%'],"
+          }
+        ],
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.test.ts": [
+          {
+            "old": "!/%|\\$/.test(name)",
+            "new": "!/%[a-z]|\\$/.test(name)"
+          }
+        ]
+      },
+      "expect": "survived",
+      "expectedFailedTests": null,
+      "expectedMessages": [],
+      "observed": {
+        "exit": 0,
+        "total": 13,
+        "failed": 0,
+        "failureMessages": [],
+        "fileErrors": []
+      },
+      "outcome": "survived",
+      "matchesPrediction": true,
+      "restored": true,
+      "loadBefore": [
+        "37.22",
+        "35.86",
+        "40.25"
+      ],
+      "loadAfter": [
+        "36.73",
+        "35.78",
+        "40.20"
+      ]
+    },
+    {
+      "id": "O6",
+      "aim": "W7's spread element, reader drops non-literal elements (the probe's reader)",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation-run-main.ts": [
+          {
+            "old": "  'packages/polaris-generation-core/src/provider-draft.test.ts',\n] as const;",
+            "new": "  'packages/polaris-generation-core/src/provider-draft.test.ts',\n  ...['packages/polaris-generation-core/src/island-boundary.test.ts'],\n] as const;"
+          }
+        ],
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.test.ts": [
+          {
+            "old": "init.elements.map((element) => (ts.isStringLiteralLike(element) ? element.text : element.getText()))",
+            "new": "init.elements.filter(ts.isStringLiteralLike).map((element) => element.text)"
+          }
+        ]
+      },
+      "expect": "survived",
+      "expectedFailedTests": null,
+      "expectedMessages": [],
+      "observed": {
+        "exit": 0,
+        "total": 13,
+        "failed": 0,
+        "failureMessages": [],
+        "fileErrors": []
+      },
+      "outcome": "survived",
+      "matchesPrediction": true,
+      "restored": true,
+      "loadBefore": [
+        "36.73",
+        "35.78",
+        "40.20"
+      ],
+      "loadAfter": [
+        "35.86",
+        "35.62",
+        "40.10"
+      ]
+    },
+    {
+      "id": "O7",
+      "aim": "finding hunt: a name held by one it title and by a describe title (21 runner fullNames)",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "mustFail: ['refuses missing admitted sources, unknown support and duplicate local identities'],",
+            "new": "mustFail: ['validation'],"
+          }
+        ]
+      },
+      "expect": "survived",
+      "expectedFailedTests": null,
+      "expectedMessages": [],
+      "observed": {
+        "exit": 0,
+        "total": 13,
+        "failed": 0,
+        "failureMessages": [],
+        "fileErrors": []
+      },
+      "outcome": "survived",
+      "matchesPrediction": true,
+      "restored": true,
+      "loadBefore": [
+        "35.86",
+        "35.62",
+        "40.10"
+      ],
+      "loadAfter": [
+        "37.64",
+        "35.99",
+        "40.20"
+      ]
+    },
+    {
+      "id": "O8",
+      "aim": "finding hunt: the runner runs TEST_FILES.slice(1); the declaration is unchanged",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation-run-main.ts": [
+          {
+            "old": "'run', ...TEST_FILES, '--reporter=json'",
+            "new": "'run', ...TEST_FILES.slice(1), '--reporter=json'"
+          }
+        ]
+      },
+      "expect": "survived",
+      "expectedFailedTests": null,
+      "expectedMessages": [],
+      "observed": {
+        "exit": 0,
+        "total": 13,
+        "failed": 0,
+        "failureMessages": [],
+        "fileErrors": []
+      },
+      "outcome": "survived",
+      "matchesPrediction": true,
+      "restored": true,
+      "loadBefore": [
+        "37.64",
+        "35.99",
+        "40.20"
+      ],
+      "loadAfter": [
+        "38.16",
+        "36.14",
+        "40.20"
+      ]
+    },
+    {
+      "id": "O9a",
+      "aim": "deviation N5: two mutations with the empty id, reviewed test (join of [''] is '')",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "id: 'canonical-json-sorted-keys-disabled',",
+            "new": "id: '',"
+          },
+          {
+            "old": "id: 'canonical-json-cycle-check-disabled',",
+            "new": "id: '',"
+          }
+        ]
+      },
+      "expect": "survived",
+      "expectedFailedTests": null,
+      "expectedMessages": [],
+      "observed": {
+        "exit": 0,
+        "total": 13,
+        "failed": 0,
+        "failureMessages": [],
+        "fileErrors": []
+      },
+      "outcome": "survived",
+      "matchesPrediction": true,
+      "restored": true,
+      "loadBefore": [
+        "38.16",
+        "36.14",
+        "40.20"
+      ],
+      "loadAfter": [
+        "36.36",
+        "35.82",
+        "40.05"
+      ]
+    },
+    {
+      "id": "O9b",
+      "aim": "O9a's input, the probe's array form of the duplicate check",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "id: 'canonical-json-sorted-keys-disabled',",
+            "new": "id: '',"
+          },
+          {
+            "old": "id: 'canonical-json-cycle-check-disabled',",
+            "new": "id: '',"
+          }
+        ],
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.test.ts": [
+          {
+            "old": "expect(ids.filter((id, index) => ids.indexOf(id) !== index).join(', '), 'duplicate mutation ids').toBe('');",
+            "new": "expect(ids.filter((id, index) => ids.indexOf(id) !== index), 'duplicate mutation ids').toEqual([]);"
+          }
+        ]
+      },
+      "expect": "killed",
+      "expectedFailedTests": 1,
+      "expectedMessages": [
+        "duplicate mutation ids: expected"
+      ],
+      "observed": {
+        "exit": 1,
+        "total": 13,
+        "failed": 1,
+        "failureMessages": [
+          "AssertionError: duplicate mutation ids: expected [ '' ] to deeply equal []"
+        ],
+        "fileErrors": []
+      },
+      "outcome": "killed",
+      "matchesPrediction": true,
+      "restored": true,
+      "loadBefore": [
+        "36.36",
+        "35.82",
+        "40.05"
+      ],
+      "loadAfter": [
+        "36.25",
+        "35.81",
+        "40.03"
+      ]
+    }
+  ],
+  "treeCleanAfter": true,
+  "summary": {
+    "mutants": 14,
+    "killed": 5,
+    "survived": 9,
+    "matchesPrediction": 14,
+    "restored": 14
+  }
+}

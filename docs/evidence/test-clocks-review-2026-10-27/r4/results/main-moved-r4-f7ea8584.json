@@ -1,0 +1,118 @@
+{
+ "from": "d38d7a3ce632a34c2a41bdb77ad323ba0b05b777",
+ "to": "f7ea858480b30ffc4407154a84d1d03f3fe4a549",
+ "prHead": "23af2d080108aabf878845dfe41007fbb77f2c52",
+ "mainChangedPaths": 1043,
+ "prPaths": 43,
+ "closureFiles": 13,
+ "prPathsMoved": [
+  {
+   "path": "apps/three-surface-poc/src/main.test.ts",
+   "movedOnMain": true,
+   "blob": {
+    "d38d7a3c": "a815251b07ba655b61f6a402fbea6ae89b28aa41",
+    "gh/main": "a99a124ab804fe2854d01d2dc12977f803598fc3",
+    "23af2d08": "d2aaf098a3a9a50484ed9ae2a25441f898b42bd3"
+   },
+   "commits": [
+    "3fa4817c test: reach the host through @syzygy/http-host in the POC tests, and drop the POC's cap1-daemon edge [syzygy-bpyt.7.15]"
+   ]
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/self-corpus.test.ts",
+   "movedOnMain": true,
+   "blob": {
+    "d38d7a3c": "fddc4aa9589dd54b695a2f8f86d90b7487322d11",
+    "gh/main": "39fb10905a5acc56d8c918210f92d5ff784734f7",
+    "23af2d08": "2758fda65d7be7855db02c9155dd2e191c96eda9"
+   },
+   "commits": [
+    "0e513a9b test: restore the nine removals five full-suite runs refuted, with their measurements [syzygy-bpyt.4.31]",
+    "1785a905 test: give each kept explicit timeout a measured reason and remove 58 the measurements do not need [syzygy-bpyt.4.31]"
+   ]
+  },
+  {
+   "path": "packages/polaris-generation-core/src/dossier-evaluation.test.ts",
+   "movedOnMain": true,
+   "blob": {
+    "d38d7a3c": "17ce4471633b0f2b1938e149400f64694530f2e0",
+    "gh/main": "77b3d3bd6160faa16f12500d66ac1ceeb3652553",
+    "23af2d08": "5901a209b855f9e539e06bc05c6c2ad396492099"
+   },
+   "commits": [
+    "b214ef10 test: pin the digest and freeze predicates the support-leaf lane's tools caught and the suite missed [syzygy-bpyt.6.13]"
+   ]
+  },
+  {
+   "path": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+   "movedOnMain": true,
+   "blob": {
+    "d38d7a3c": "156ace6f304042614115397b0aa71ddf52260e46",
+    "gh/main": "fb0e968e7402fce0645ff90c9535d795274a737c",
+    "23af2d08": "411e61fe148bed218efd6e71ca023a41cb5332c9"
+   },
+   "commits": [
+    "b214ef10 test: pin the digest and freeze predicates the support-leaf lane's tools caught and the suite missed [syzygy-bpyt.6.13]"
+   ]
+  }
+ ],
+ "boundInputs": [
+  {
+   "path": "apps/syzygy/src/main.ts",
+   "movedOnMain": false,
+   "blob": {
+    "d38d7a3c": "0c03e8bfdf55a678e29a7838c399dd640b39111e",
+    "gh/main": "0c03e8bfdf55a678e29a7838c399dd640b39111e",
+    "23af2d08": "0c03e8bfdf55a678e29a7838c399dd640b39111e"
+   },
+   "commits": []
+  },
+  {
+   "path": "packages/polaris-dossier/src/state-directory.ts",
+   "movedOnMain": false,
+   "blob": {
+    "d38d7a3c": "26ad83ea8dded1e7f79f4b05768cbe52f2c4dc8c",
+    "gh/main": "26ad83ea8dded1e7f79f4b05768cbe52f2c4dc8c",
+    "23af2d08": "26ad83ea8dded1e7f79f4b05768cbe52f2c4dc8c"
+   },
+   "commits": []
+  },
+  {
+   "path": "packages/http-host/src/shutdown.ts",
+   "movedOnMain": true,
+   "blob": {
+    "d38d7a3c": "409e32474232b8f974672bc611d4e0a57dce0903",
+    "gh/main": "d83885cdf053ee72177735be8f068bf635a04ea6",
+    "23af2d08": "409e32474232b8f974672bc611d4e0a57dce0903"
+   },
+   "commits": [
+    "adf908c6 docs: describe the generic host in server.ts, and say why only shutdown is shared [syzygy-bpyt.7.15]"
+   ]
+  },
+  {
+   "path": "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts",
+   "movedOnMain": false,
+   "blob": {
+    "d38d7a3c": "12e984039cf06579d6f96d1352eaa1c5445c3c05",
+    "gh/main": "12e984039cf06579d6f96d1352eaa1c5445c3c05",
+    "23af2d08": "c483abf2e6535494d38b78e7debe3b21ae485e7a"
+   },
+   "commits": []
+  }
+ ],
+ "closureMoved": [
+  {
+   "path": "packages/support/src/index.ts",
+   "movedOnMain": true,
+   "blob": {
+    "d38d7a3c": "11bd1b83b741d61264e31db01b86e019ff5ee4ac",
+    "gh/main": "41a9a88a9a2b771a4709f5d8dc450f296fb4815d",
+    "23af2d08": "11bd1b83b741d61264e31db01b86e019ff5ee4ac"
+   },
+   "commits": [
+    "0e2640e9 refactor: one strict decodeUtf8 in @syzygy/support [syzygy-bpyt.6.3]",
+    "6cbb3186 Merge origin/main 8ff50172 into agent/syzygy-bpyt.6.3-utf8 [syzygy-bpyt.6.3]"
+   ]
+  }
+ ]
+}

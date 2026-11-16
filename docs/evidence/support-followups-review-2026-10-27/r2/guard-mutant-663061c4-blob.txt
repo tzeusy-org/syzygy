@@ -1,0 +1,8 @@
+loadavg 26.97 30.33 28.93 20/9408 145967
+   × capture-test-artifact never starts the observed project (source check) > names no other way to start a process, in the tool or the core module it calls 100ms
+     → test-artifact-verification.ts: expected [ 'imports @syzygy/support' ] to deeply equal []
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/capture-test-artifact-main.test.ts > capture-test-artifact never starts the observed project (source check) > names no other way to start a process, in the tool or the core module it calls
+AssertionError: test-artifact-verification.ts: expected [ 'imports @syzygy/support' ] to deeply equal []
+ Test Files  1 failed (1)
+      Tests  1 failed | 51 passed (52)

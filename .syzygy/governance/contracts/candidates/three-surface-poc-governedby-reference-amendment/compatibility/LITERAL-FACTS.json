@@ -1,0 +1,87 @@
+{
+  "epistemic": "Observed",
+  "subject": {
+    "sourceCommit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+    "activeCandidateCommit": "662b4b49505776c21856791abc52cda72346c5d9",
+    "retainedCoreCommit": "ddf1dc69b724df72a5e3c4f224500aa51d344ef0",
+    "manifestFileSha256": "77e53d37ac42c5db4edb4f99d76d937629df5a80d370ac47751c0e62f27270bd",
+    "proposedPocSpecSha256": "01209cce451cbab62a9f39fce1e6a78d9dcd6b56f3e32e0dc9bf0d5534534c37"
+  },
+  "scope": "Synthetic literal bounded projections; not generated runtime evidence.",
+  "humanFixture": "literal-fixtures/human-body-A.html",
+  "machineFixtures": [
+    "literal-fixtures/inline-body-A.json",
+    "literal-fixtures/reference-body-A.json"
+  ],
+  "expectedFacts": "literal-fixtures/expected-effective-facts.json",
+  "sampledScalarFactPopulation": 40,
+  "literalHumanInstructionPopulation": 1,
+  "sampledMarkerPopulation": 13,
+  "completeSampleMarkerFamilies": {
+    "work-item-governed-by-count": 1,
+    "governed-by-unknown-count": 1,
+    "governed-by-unknown-inside": 1,
+    "governed-by-unknown-outside": 1,
+    "work-item-title": 2,
+    "work-item-id": 2,
+    "work-item-status": 2,
+    "work-item-governed-by": 2,
+    "surface-substrate-revision": 1
+  },
+  "observationIdentityFields": [
+    "workItems.provenance (complete object)",
+    "workItems.capturedAt"
+  ],
+  "evaluationIdentity": "Complete E object equality, not revision substitution",
+  "itemIdentity": "Distinct item IDs, membership, order and all non-pooled metadata",
+  "subjectIdentity": "Three separately served governing-intent subject records remain distinct and unchanged",
+  "rawPhysicalPropertyControl": {
+    "inlineLabel": "Unknown",
+    "referenceInlineLabel": null,
+    "rawPropertyEquality": false,
+    "expandedEffectiveEquality": true
+  },
+  "fixtureHashes": [
+    {
+      "path": "literal-fixtures/EXPECTED-REFUSAL.json",
+      "sha256": "7663f9c5bc9e59c120f16ee6f1a6449bfa48e86a95ec74c29916fc723024cb01"
+    },
+    {
+      "path": "literal-fixtures/FIXTURE-NOTES.json",
+      "sha256": "57c446e9f8be89592a11d0c57562e0c729b44a7b25b5cf1a2626b60ceffd8201"
+    },
+    {
+      "path": "literal-fixtures/expected-effective-facts.json",
+      "sha256": "33238ce833a771867dc9b34fee6cb96fffcb865f9738be68b954cb017e38bca8"
+    },
+    {
+      "path": "literal-fixtures/human-body-A.html",
+      "sha256": "a2568bfe228c4cee75c060aa12f5ee9b3ad83be2f0296aa05c3995f50d471ed3"
+    },
+    {
+      "path": "literal-fixtures/inline-body-A.json",
+      "sha256": "6648e7c17ea5b8f0317d4905d72292b8594e7800fc648154c42dfde28565b39b"
+    },
+    {
+      "path": "literal-fixtures/reference-body-A.json",
+      "sha256": "281cdf84ceda4b30e3418eb478b62ce64b71d9151732e1a36a34120d3751ceb9"
+    },
+    {
+      "path": "literal-fixtures/reference-body-B.json",
+      "sha256": "031878b4ef49162dfb4d4c979c479d8cf1ffd032298376b6a6aca9fececa54dd"
+    },
+    {
+      "path": "literal-fixtures/reference-empty.json",
+      "sha256": "2a17732c3692730fd04f9df0a21ed2282a1eca77bc11d620af798c18d24bb074"
+    },
+    {
+      "path": "literal-fixtures/unknown-observation.json",
+      "sha256": "69cad1e90114f8d49accb8902cbf59bf7ab2c798cebeea8e9c40eb2cd5558efc"
+    }
+  ],
+  "executableProof": {
+    "retention": "Outside Git: /home/tze/.cache/syzygy-post-ceiling-2026-10-21/p115/compatibility-settlement/check-literal-pairs.py",
+    "sha256": "043627863e8f9dfcfb1b5564d6c75dd0d353271a1257bac2591dbe13db27152a",
+    "resultSha256": "d548400c3c3abedb46dcfadd6a862ec68798fc48a649108172e07de4ca122fbc"
+  }
+}

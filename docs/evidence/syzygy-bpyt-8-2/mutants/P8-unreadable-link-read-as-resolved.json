@@ -1,0 +1,11 @@
+{
+ "id": "P8-unreadable-link-read-as-resolved",
+ "command": "TMPDIR=/tmp/la-b82/g CI=1 npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/state-directory.test.ts",
+ "edits": [
+  {
+   "file": "packages/polaris-dossier/src/state-directory.ts",
+   "old": "return { resolved: false, reason: 'path-unreadable', detail: `symbolic link target could not be read",
+   "new": "return { resolved: true, realPath: candidate, detail: `symbolic link target could not be read"
+  }
+ ]
+}

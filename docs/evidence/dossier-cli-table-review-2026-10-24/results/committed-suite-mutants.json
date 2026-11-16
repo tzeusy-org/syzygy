@@ -1,0 +1,281 @@
+{
+ "tree": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-518/clone",
+ "dossierFiles": [
+  "packages/polaris-dossier/src/waiting-sessions.test.ts",
+  "packages/polaris-dossier/src/render.test.ts",
+  "packages/polaris-dossier/src/inventory.test.ts",
+  "packages/polaris-dossier/src/cli.test.ts",
+  "packages/polaris-dossier/src/cli-table.test.ts",
+  "packages/polaris-dossier/src/brief.test.ts",
+  "packages/polaris-dossier/src/status.test.ts",
+  "packages/polaris-dossier/src/start-gates.test.ts",
+  "packages/polaris-dossier/src/review.test.ts",
+  "packages/polaris-dossier/src/execution-choice.test.ts",
+  "packages/polaris-dossier/src/check.test.ts"
+ ],
+ "results": [
+  {
+   "id": "R0-unmutated",
+   "edits": [],
+   "build": 0,
+   "dossierTests": {
+    "exit": 0,
+    "tests": "591 passed (591)",
+    "failed": []
+   },
+   "daemonSystemTest": {
+    "exit": 0,
+    "tests": "15 passed (15)",
+    "failed": []
+   },
+   "killed": false,
+   "restoredClean": true
+  },
+  {
+   "id": "R1-terminator-skipped",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.ts",
+     "old": "  for (const token of tokens) {\n    const arg = args[token.index]!;\n",
+     "new": "  for (const token of tokens) {\n    if (token.kind === 'option-terminator') continue;\n    const arg = args[token.index]!;\n"
+    }
+   ],
+   "build": 0,
+   "dossierTests": {
+    "exit": 0,
+    "tests": "591 passed (591)",
+    "failed": []
+   },
+   "daemonSystemTest": {
+    "exit": 0,
+    "tests": "15 passed (15)",
+    "failed": []
+   },
+   "killed": false,
+   "restoredClean": true
+  },
+  {
+   "id": "R10-first-value-kept",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.ts",
+     "old": "      values.set(arg, token.value);",
+     "new": "      if (!values.has(arg)) values.set(arg, token.value);"
+    }
+   ],
+   "build": 0,
+   "dossierTests": {
+    "exit": 0,
+    "tests": "591 passed (591)",
+    "failed": []
+   },
+   "daemonSystemTest": {
+    "exit": 0,
+    "tests": "15 passed (15)",
+    "failed": []
+   },
+   "killed": false,
+   "restoredClean": true
+  },
+  {
+   "id": "R2b-group-read-by-its-first-option",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.ts",
+     "old": "} else if (spec.stopAt?.includes(arg)) {",
+     "new": "} else if (spec.stopAt?.includes(token.kind === 'option' ? token.rawName : arg)) {"
+    }
+   ],
+   "build": 0,
+   "dossierTests": {
+    "exit": 0,
+    "tests": "591 passed (591)",
+    "failed": []
+   },
+   "daemonSystemTest": {
+    "exit": 0,
+    "tests": "15 passed (15)",
+    "failed": []
+   },
+   "killed": false,
+   "restoredClean": true
+  },
+  {
+   "id": "R3-dash-value-taken-when-refused",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.ts",
+     "old": "(spec.dashValue === 'refuse' && token.value.startsWith('-'))",
+     "new": "(false && token.value.startsWith('-'))"
+    }
+   ],
+   "build": 1,
+   "dossierTests": {
+    "exit": 0,
+    "tests": "591 passed (591)",
+    "failed": []
+   },
+   "daemonSystemTest": {
+    "exit": 0,
+    "tests": "15 passed (15)",
+    "failed": []
+   },
+   "killed": false,
+   "restoredClean": true
+  },
+  {
+   "id": "R4-repeat-taken-when-refused",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.ts",
+     "old": "if (spec.repeat === 'refuse' && values.has(arg)) return",
+     "new": "if (false && values.has(arg)) return"
+    }
+   ],
+   "build": 0,
+   "dossierTests": {
+    "exit": 1,
+    "tests": "2 failed | 589 passed (591)",
+    "failed": [
+     "init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses config naming a remote, a promisor, an include or a command the agent's git would run (R-POLARIS-DOSSIER-CLONE-SHAPE-2 finding 1)",
+     "the CLI: preflight and init > exits 2 for [\"init\",\"/c\",\"--url\",\"u\",\"--url\",\"v\"]"
+    ]
+   },
+   "daemonSystemTest": {
+    "exit": 0,
+    "tests": "15 passed (15)",
+    "failed": []
+   },
+   "killed": true,
+   "restoredClean": true
+  },
+  {
+   "id": "R5-positional-taken-when-refused",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.ts",
+     "old": "if (!spec.positionals || arg.startsWith('-')) return",
+     "new": "if (arg.startsWith('-')) return"
+    }
+   ],
+   "build": 0,
+   "dossierTests": {
+    "exit": 0,
+    "tests": "591 passed (591)",
+    "failed": []
+   },
+   "daemonSystemTest": {
+    "exit": 1,
+    "tests": "2 failed | 13 passed (15)",
+    "failed": [
+     "daemon entry: every invocation but `dossier` is unchanged > [\"--port\",\"0\",\"dossier\"] is refused with exit 1 and the same message",
+     "daemon entry: every invocation but `dossier` is unchanged > [\"Dossier\"] is refused with exit 1 and the same message"
+    ]
+   },
+   "killed": true,
+   "restoredClean": true
+  },
+  {
+   "id": "R6-stop-option-ignored",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.ts",
+     "old": "} else if (spec.stopAt?.includes(arg)) {",
+     "new": "} else if (false) {"
+    }
+   ],
+   "build": 0,
+   "dossierTests": {
+    "exit": 0,
+    "tests": "591 passed (591)",
+    "failed": []
+   },
+   "daemonSystemTest": {
+    "exit": 1,
+    "tests": "3 failed | 12 passed (15)",
+    "failed": [
+     "daemon entry: every invocation but `dossier` is unchanged > [\"--help\",\"dossier\"] prints the usage and exits 0",
+     "daemon entry: every invocation but `dossier` is unchanged > [\"--help\"] prints the usage and exits 0",
+     "daemon entry: every invocation but `dossier` is unchanged > [\"-h\"] prints the usage and exits 0"
+    ]
+   },
+   "killed": true,
+   "restoredClean": true
+  },
+  {
+   "id": "R7-dash-positional-taken",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.ts",
+     "old": "if (!spec.positionals || arg.startsWith('-')) return",
+     "new": "if (!spec.positionals) return"
+    }
+   ],
+   "build": 0,
+   "dossierTests": {
+    "exit": 0,
+    "tests": "591 passed (591)",
+    "failed": []
+   },
+   "daemonSystemTest": {
+    "exit": 0,
+    "tests": "15 passed (15)",
+    "failed": []
+   },
+   "killed": false,
+   "restoredClean": true
+  },
+  {
+   "id": "R8-boolean-option-ignored",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.ts",
+     "old": "} else if (spec.booleans?.includes(arg)) {",
+     "new": "} else if (false) {"
+    }
+   ],
+   "build": 0,
+   "dossierTests": {
+    "exit": 0,
+    "tests": "591 passed (591)",
+    "failed": []
+   },
+   "daemonSystemTest": {
+    "exit": 0,
+    "tests": "15 passed (15)",
+    "failed": []
+   },
+   "killed": false,
+   "restoredClean": true
+  },
+  {
+   "id": "R9-missing-value-unchecked",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.ts",
+     "old": "if (token.value === undefined || (spec.dashValue",
+     "new": "if ((spec.dashValue"
+    }
+   ],
+   "build": 1,
+   "dossierTests": {
+    "exit": 1,
+    "tests": "2 failed | 589 passed (591)",
+    "failed": [
+     "check: the command > is a usage error: [\"check\",\"/tmp/x\",\"--draft\"]",
+     "the CLI: preflight and init > exits 2 for [\"init\",\"/c\",\"--url\"]"
+    ]
+   },
+   "daemonSystemTest": {
+    "exit": 1,
+    "tests": "2 failed | 13 passed (15)",
+    "failed": [
+     "daemon entry: every invocation but `dossier` is unchanged > [\"--help\",\"dossier\"] prints the usage and exits 0",
+     "daemon entry: every invocation but `dossier` is unchanged > [\"--port\"] is refused with exit 1 and the same message"
+    ]
+   },
+   "killed": true,
+   "restoredClean": true
+  }
+ ]
+}

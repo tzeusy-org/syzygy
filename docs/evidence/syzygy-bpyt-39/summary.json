@@ -1,0 +1,122 @@
+{
+ "bead": "syzygy-bpyt.39",
+ "base": "81862261ddbc2b3c8e8481851f3c27129217d477",
+ "head": "fafe3669a5901c28a1058dc1c12790b788a66649",
+ "subject": [
+  "docs/evidence/syzygy-bpyt-8-39/npm_alias_probe.py",
+  "docs/evidence/syzygy-bpyt-8-39/record.py",
+  "docs/evidence/syzygy-bpyt-8-39/summary.json",
+  "packages/polaris-generation-core/src/workspace-reach.testkit.ts"
+ ],
+ "subjectSha256": {
+  "docs/evidence/syzygy-bpyt-8-39/npm_alias_probe.py": "677b0fe2a670d02c2e279144d58a1cb33a2e829538e08b73555850ca6a56d0c6",
+  "docs/evidence/syzygy-bpyt-8-39/record.py": "77e830432fd94637633c08d1fa7393e737890848cf0243bbcd1e60d38a87dfec",
+  "docs/evidence/syzygy-bpyt-8-39/summary.json": "9d101dc2ed50fdbafd16c98bb3a1fc13aebc2190f3d041bb613c6c8da87ee99e",
+  "packages/polaris-generation-core/src/workspace-reach.testkit.ts": "ae226f8e0dad991e9403e560bb1db2596b99747cd886db2802e35bea402b5144"
+ },
+ "rootException": {
+  "A1": [
+   "link",
+   "app/nowhere"
+  ],
+  "A2": [
+   "link",
+   "app/nowhere"
+  ],
+  "A3": [
+   "refused",
+   "ENOENT"
+  ],
+  "A4": [
+   "refused",
+   "EUNSUPPORTEDPROTOCOL"
+  ],
+  "A5": [
+   "refused",
+   "EUNSUPPORTEDPROTOCOL"
+  ],
+  "N1": [
+   "link",
+   "nowhere"
+  ],
+  "N2": [
+   "link",
+   "nowhere"
+  ],
+  "N3": [
+   "refused",
+   "ENOENT"
+  ],
+  "N4": [
+   "refused",
+   "EUNSUPPORTEDPROTOCOL"
+  ],
+  "N5": [
+   "refused",
+   "EUNSUPPORTEDPROTOCOL"
+  ],
+  "R1": [
+   "link",
+   "w"
+  ],
+  "R2": [
+   "link",
+   "w"
+  ],
+  "R3": [
+   "link",
+   "w"
+  ],
+  "R4": [
+   "link",
+   "w"
+  ],
+  "R5": [
+   "link",
+   "w"
+  ]
+ },
+ "npmrcTraces": {
+  "lane-probe-before": {
+   "callerNpmrc": [
+    "ok"
+   ],
+   "builtinOpens": 24,
+   "otherOutside": 0
+  },
+  "lane-probe-after": {
+   "callerNpmrc": [],
+   "builtinOpens": 24,
+   "otherOutside": 0
+  },
+  "root-exception-probe": {
+   "callerNpmrc": [],
+   "builtinOpens": 25,
+   "otherOutside": 0
+  }
+ },
+ "commentOnly": {
+  "emitEqual": true,
+  "printEqual": true,
+  "typescript": "5.9.3"
+ },
+ "predicateMutants": {
+  "S0-unmutated": [],
+  "S5-path-test-dropped": [
+   "a non-evidence path changed since the suite ran"
+  ],
+  "S4-prefix-test-dropped": [
+   "a non-comment line inside the span since the suite ran"
+  ],
+  "S6-span-test-dropped": [
+   "a comment line changed since the suite ran on the LOCAL_VERSION line"
+  ]
+ },
+ "tools": {
+  "root_exception_probe.py": "d7b29a5401027f1c1da70c349872b6aca915f662b9c80811f4f9138cc55b9b17",
+  "npmrc_trace.py": "451699e63d773633ef4f28d85ad994031cbb1107ba1eb10c5deec975005ee991",
+  "record_predicate_mutants.py": "938ca2308e6cd73ef3081a4360240520f21801223507811aa3501aeb2ad0cb8e",
+  "record.py": "9e17f4e32cd548425a2628ffd59a4f47814404c2172da79fd5d5453a09335bb1"
+ },
+ "problems": []
+}

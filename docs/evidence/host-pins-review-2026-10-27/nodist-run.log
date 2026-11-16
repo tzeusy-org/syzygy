@@ -1,0 +1,6 @@
+dist dirs before: 0
+load: 28.69 33.54 40.78 14/9644 2639369
+ Test Files  100 passed | 1 skipped (101)
+      Tests  1262 passed | 2 skipped (1264)
+   Duration  163.80s (transform 10.63s, setup 2.08s, collect 53.91s, tests 444.75s, environment 38ms, prepare 19.95s)
+dist dirs after: 0

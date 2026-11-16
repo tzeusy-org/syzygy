@@ -1,0 +1,80 @@
+[
+ {
+  "id": "L0",
+  "mutant": "unmutated",
+  "toolExit": 0,
+  "holding": 48,
+  "dossier": "refuses",
+  "laterSitesListed": [
+   "apps/three-surface-poc/src/polaris-generation/dossier-cap-measure.test.ts:12"
+  ],
+  "absentEqualsHolding": true,
+  "holdingNotAbsent": []
+ },
+ {
+  "id": "L1",
+  "mutant": "row dropped",
+  "toolExit": 0,
+  "holding": 49,
+  "dossier": "accepts",
+  "laterSitesListed": [],
+  "absentEqualsHolding": false,
+  "holdingNotAbsent": [
+   "apps/three-surface-poc/src/polaris-generation/dossier-cap-measure.test.ts:12"
+  ]
+ },
+ {
+  "id": "L2",
+  "mutant": "worstMs at threshold 5000",
+  "toolExit": 0,
+  "holding": 49,
+  "dossier": "accepts",
+  "laterSitesListed": [
+   "apps/three-surface-poc/src/polaris-generation/dossier-cap-measure.test.ts:12"
+  ],
+  "absentEqualsHolding": false,
+  "holdingNotAbsent": [
+   "apps/three-surface-poc/src/polaris-generation/dossier-cap-measure.test.ts:12"
+  ]
+ },
+ {
+  "id": "L3",
+  "mutant": "worstMs 5001",
+  "toolExit": 0,
+  "holding": 48,
+  "dossier": "refuses",
+  "laterSitesListed": [
+   "apps/three-surface-poc/src/polaris-generation/dossier-cap-measure.test.ts:12"
+  ],
+  "absentEqualsHolding": true,
+  "holdingNotAbsent": []
+ },
+ {
+  "id": "L4",
+  "mutant": "site key names line 13 (no such removal)",
+  "toolExit": 0,
+  "holding": 49,
+  "dossier": "accepts",
+  "laterSitesListed": [
+   "apps/three-surface-poc/src/polaris-generation/dossier-cap-measure.test.ts:13"
+  ],
+  "absentEqualsHolding": false,
+  "holdingNotAbsent": [
+   "apps/three-surface-poc/src/polaris-generation/dossier-cap-measure.test.ts:12"
+  ]
+ },
+ {
+  "id": "L5",
+  "mutant": "a second row for the same site with worstMs 100, appended",
+  "toolExit": 0,
+  "holding": 49,
+  "dossier": "accepts",
+  "laterSitesListed": [
+   "apps/three-surface-poc/src/polaris-generation/dossier-cap-measure.test.ts:12"
+  ],
+  "absentEqualsHolding": false,
+  "holdingNotAbsent": [
+   "apps/three-surface-poc/src/polaris-generation/dossier-cap-measure.test.ts:12"
+  ]
+ }
+]

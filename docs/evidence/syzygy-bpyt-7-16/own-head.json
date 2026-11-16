@@ -1,0 +1,112 @@
+{
+ "tree": "/var/tmp/la-b716/head",
+ "commit": "0d7eaf08a19dd64bdeb294d3995861fbfbaad759",
+ "results": [
+  {
+   "id": "O1-bearer-no-break-space-admitted",
+   "commit": "0d7eaf08a19dd64bdeb294d3995861fbfbaad759",
+   "edits": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "old": "  const match = /^Bearer (.+)$/.exec(header);",
+     "new": "  const match = /^Bearer[ \\u00a0](.+)$/.exec(header);"
+    }
+   ],
+   "counts": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "packages/http-host/src/credentials.test.ts",
+    "packages/http-host/src/shutdown.test.ts",
+    "packages/http-host/src/package.test.ts",
+    "packages/cap1-daemon/src/",
+    "packages/cap1-conformance/src/",
+    "apps/three-surface-poc/src/routes.test.ts",
+    "apps/three-surface-poc/src/response-limits.test.ts",
+    "apps/three-surface-poc/src/main.test.ts",
+    "apps/three-surface-poc/src/surface-routes.test.ts",
+    "apps/three-surface-poc/src/reobserve-action.test.ts",
+    "apps/three-surface-poc/src/materialize-action.test.ts",
+    "apps/three-surface-poc/src/browser-origin.test.ts",
+    "apps/three-surface-poc/src/git-observation.test.ts",
+    "apps/three-surface-poc/src/verbatim-route.test.ts",
+    "apps/three-surface-poc/src/polaris-source-route.test.ts",
+    "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+    "apps/three-surface-poc/src/evaluation-footer.test.ts",
+    "apps/three-surface-poc/src/page-size-delta.test.ts",
+    "apps/three-surface-poc/src/tuple-encoding.test.ts"
+   ],
+   "exit": 1,
+   "failedTests": 1,
+   "failedFiles": 1,
+   "totalTests": 582,
+   "outcome": "killed",
+   "seconds": 25.7,
+   "cleanAfter": true,
+   "failed": [
+    {
+     "title": "packages/http-host/src/credentials.test.ts > RT3 — credential verification through core admission the minted token behind any other whitespace refuses, named",
+     "timedOut": false,
+     "message": "AssertionError: \"Bearer aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\": expected { admitted: true, …(1) } to deeply equal { admitted: false, served: 'nothing' }\n    at /var/tmp/la-b716/head/packages/http-host/src/credentials.test.ts:393:75\n    at file:///var/tmp/la-b716/head/node_"
+    }
+   ],
+   "reportError": null
+  },
+  {
+   "id": "O2-origin-null-allowed",
+   "commit": "0d7eaf08a19dd64bdeb294d3995861fbfbaad759",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/browser-origin.ts",
+     "old": "  return origin === undefined || origin === expectedOrigin(host);",
+     "new": "  return origin === undefined || origin === 'null' || origin === expectedOrigin(host);"
+    }
+   ],
+   "counts": [
+    {
+     "file": "apps/three-surface-poc/src/browser-origin.ts",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "packages/http-host/src/credentials.test.ts",
+    "packages/http-host/src/shutdown.test.ts",
+    "packages/http-host/src/package.test.ts",
+    "packages/cap1-daemon/src/",
+    "packages/cap1-conformance/src/",
+    "apps/three-surface-poc/src/routes.test.ts",
+    "apps/three-surface-poc/src/response-limits.test.ts",
+    "apps/three-surface-poc/src/main.test.ts",
+    "apps/three-surface-poc/src/surface-routes.test.ts",
+    "apps/three-surface-poc/src/reobserve-action.test.ts",
+    "apps/three-surface-poc/src/materialize-action.test.ts",
+    "apps/three-surface-poc/src/browser-origin.test.ts",
+    "apps/three-surface-poc/src/git-observation.test.ts",
+    "apps/three-surface-poc/src/verbatim-route.test.ts",
+    "apps/three-surface-poc/src/polaris-source-route.test.ts",
+    "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+    "apps/three-surface-poc/src/evaluation-footer.test.ts",
+    "apps/three-surface-poc/src/page-size-delta.test.ts",
+    "apps/three-surface-poc/src/tuple-encoding.test.ts"
+   ],
+   "exit": 1,
+   "failedTests": 1,
+   "failedFiles": 1,
+   "totalTests": 582,
+   "outcome": "killed",
+   "seconds": 25.8,
+   "cleanAfter": true,
+   "failed": [
+    {
+     "title": "apps/three-surface-poc/src/browser-origin.test.ts > browserRequestAllowed — the Origin is compared whole refuses an origin that only ends with the host origin, and the opaque origin null",
+     "timedOut": false,
+     "message": "AssertionError: expected true to be false // Object.is equality\n    at /var/tmp/la-b716/head/apps/three-surface-poc/src/browser-origin.test.ts:33:79\n    at file:///var/tmp/la-b716/head/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///var/tmp/la-b716/head/node_modules/@vitest/run"
+    }
+   ],
+   "reportError": null
+  }
+ ]
+}

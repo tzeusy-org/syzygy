@@ -1,0 +1,72 @@
+{
+ "tree": "clone",
+ "head": "c90cd7327a24fee44d0e7135872a3b08277c73b0",
+ "results": [
+  {
+   "id": "RV531-R9-every-version-local",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  6 failed | 151 passed (157)"
+   ],
+   "testFiles": [
+    "Test Files  3 failed | 1 passed (4)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > resolves every workspace specifier on it, and reaches past the entry's own imports",
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > resolves every workspace import the CLI reaches, dynamic ones included",
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > leaves a bare name declared as a git dependency outside the workspace",
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > leaves a bare name declared as a registry range outside the workspace",
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > leaves a bare name declared as a registry version outside the workspace",
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > resolves a subpath export, a relative module and the barrel by name, and leaves a built-in and a dependency outside"
+   ],
+   "timeouts": 0,
+   "seconds": 12.8,
+   "counts": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^|(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    }
+   ]
+  },
+  {
+   "id": "RV531-R10-any-bare-name-local",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  2 failed | 155 passed (157)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed | 3 passed (4)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > leaves a bare name declared as a longer name than a local dependency outside the workspace",
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > leaves a bare name declared as a name no local dependency declares outside the workspace"
+   ],
+   "timeouts": 0,
+   "seconds": 13.4,
+   "counts": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "localNames(workspace).has(/^(?:@[^/]+\\/)?[^/]+/u.exec(specifier)![0])",
+     "new": "(localNames(workspace).size > 0 && /^(?:@[^/]+\\/)?[^/]+/u.exec(specifier)![0] !== '')"
+    }
+   ]
+  }
+ ]
+}

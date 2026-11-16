@@ -1,0 +1,177 @@
+--- a/openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md
++++ b/openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md
+@@ -447 +447,2 @@
+-field (`governedBy`) whose value is `Unknown` with the primary reason
++field (`governedBy`) whose effective value, after the observation-local
++reference below is expanded, is `Unknown` with the primary reason
+@@ -449 +450,3 @@
+-route. Both channels SHALL serve how many served items carry that Unknown,
++route. The machine answer SHALL serve that identical complete value once
++per identified work-item observation, with each item referencing it. Both
++channels SHALL serve how many served items carry that Unknown,
+@@ -459,0 +463,45 @@
++- **Machine-wire contract.** In an observed `workItems` result, the single
++  shared value SHALL be `workItems.governedBy`, exactly
++  `{"label":"Unknown","closedReason":"source-uncaptured-or-unreachable","resolutionRoutes":[{"reason":"source-uncaptured-or-unreachable","route":"Repair the observer/source; new snapshot","actor":"operator","verb":"repair","target":"evaluation"}]}`.
++  The route object's `reason`, literal `route` and action metadata
++  (`actor: "operator"`, `verb: "repair"`, `target: "evaluation"`) SHALL all
++  be retained; none may be dropped to make values compare equal. Carrying
++  action metadata authorizes no operation and does not replace the required
++  statement that supplying its warrant resolves an item.
++  Every element of `workItems.items` SHALL carry `governedBy` exactly
++  `{"ref":"observation"}`. This one-key object is a closed reference form:
++  it means only the `governedBy` value of its own enclosing `workItems`
++  observation in this same machine-answer body. It is not a URI, JSON
++  pointer, claim identifier or reference to another item. The observation
++  retains its existing source revision and capture instant, and the answer
++  retains its evaluation identity. Resolution SHALL take one local hop,
++  require no lookup or cache, and neither borrow a value from another body
++  or observation nor fall back to an inline, previous or default value.
++  There SHALL be one shared value, no per-item copy of that value and no
++  second reference form. Unknown subject/claim identities, including any
++  separately served per-item epistemic records, SHALL remain distinct;
++  this shared value is not an aggregate claim and creates no new identity.
++  This requirement pools only this identical three-field value; it SHALL
++  NOT pool entity or relationship records, or differently valued claims.
++- **Validation and failure.** A producer SHALL validate this closed form
++  before serving a successful machine answer, including before responding
++  with a cache revalidation success. A missing, malformed or differently
++  valued shared value; a missing, inline, extra-key or otherwise nonliteral
++  item reference; a reference that would require a recursive, external or
++  cross-observation lookup; or a per-item effective value that differs from
++  the complete shared value SHALL prevent a successful machine answer.
++  The endpoint SHALL instead return HTTP 503 with a bounded JSON failure
++  carrying `served: "nothing"`, `failure:
++  "invalid-governing-intent-reference"`, `resolution: "Repair the governedBy wire encoding; request a new answer"`,
++  the unchanged evaluation identity, and `readiness: false`; it SHALL serve no success-shaped model, partial
++  item population or numeric replacement counts. This failure identifier
++  is a wire-validation fault, not a new RFC2-24 Unknown reason. A consumer
++  encountering an invalid form SHALL reject it with that explicit fault
++  and SHALL NOT derive claims or totals from it. Unknown is never replaced
++  by Observed, green, a zero, a guessed warrant or a value from another
++  observation. A valid, explicitly observed empty item set still carries
++  the one shared value and a measured count of zero; it instantiates no
++  governing-intent claims. A failed/Unknown work-item observation SHALL
++  retain its existing Unknown result and reason, without a fabricated
++  shared value, item set or zero count. The original resource ceilings,
++  authentication and response-limit refusal remain in force.
+@@ -473 +521,5 @@
+-  item set (POC-REQ-011) — and reads each item's `governedBy`. It then
++  item set (POC-REQ-011) — and expands each item's `governedBy` from only
++  its enclosing observation. It checks the exact shared value/reference
++  shapes, independently keys every effective claim by the evaluation,
++  observation pair and existing item identity, and reads its state, reason
++  and route. It then
+@@ -478,2 +530,11 @@
+-  example "Implement POC-REQ-010", and observes that item.
+-- **Observable**: each served item's `governedBy` value, reason and route;
++  example "Implement POC-REQ-010", and observes that item. Independently
++  constructed wire fixtures exercise empty/one/many items, distinct item
++  identities with equal values, different rendered selections, failed
++  observation, two observations and repeated identical inputs. Separate
++  fixtures remove or alter each required shared field, alter/remove/add to
++  the reference, insert an inline/recursive/external/cross-observation
++  reference, supply a differing item value, and try to reuse a previously
++  valid observation after its successor's shared value is removed.
++- **Observable**: the single shared value, each item's reference and its
++  effective `governedBy` value, reason and route; the HTTP status and typed
++  failure for an invalid form;
+@@ -485 +546,7 @@
+-  - Every enumerated served item's `governedBy` is `Unknown` with the reason
++  - Exactly one shared value has the literal three-field shape above and
++    every item has the literal one-key reference above. One local expansion
++    per item yields one effective claim for that same item and observation;
++    distinct item identities stay distinct. No other body contributes a
++    value, including when an earlier body was valid. The expansion changes
++    no served item identity, membership, observation or evaluation.
++  - Every enumerated served item's effective `governedBy` is `Unknown` with the reason
+@@ -500,2 +567,10 @@
+-  - The fixture item's `governedBy` is that same Unknown, naming no
+-    identifier.
++  - The fixture item's effective `governedBy` is that same Unknown, naming
++    no identifier. Repeated identical declared inputs produce the same
++    reference/value facts and membership; expansion preserves their order.
++  - Every invalid-form producer fixture returns the specified HTTP 503
++    failure with its own evaluation and no success model/counts; a consumer
++    rejects the same fixture explicitly. In particular a missing value in
++    a second observation cannot resolve using a first observation's value.
++    A non-identical value is refused, never coerced or pooled. For a valid
++    empty observation the enumerated count is zero, with no claim instances;
++    a failed observation remains Unknown and has no numeric count.
+@@ -505,2 +580,12 @@
+-  fixture title is the checker's own.
+-- **Falsifier**: a served item with no `governedBy`; a `governedBy` holding
++  fixture title and invalid wire inputs are the checker's own; the
++  reference expander is independently written from this closed contract,
++  imports no producer/serializer/model helper and uses literal expected
++  values, subject sets, counts and failure outcomes. The checker enumerates
++  separately served per-item epistemic identities and confirms they have
++  not been merged. It checks the wire occurrence/shape population rather
++  than trusting a served claim that the value is shared once.
++- **Falsifier**: any duplicate/inline complete value, nonliteral reference,
++  dangling/mismatched/cross-observation resolution or silent fallback; a
++  successful response to an invalid form; a dropped/merged subject, changed
++  evaluation/observation or reduced served population; a failed observation
++  converted to an empty one; or a served item with no `governedBy`; a `governedBy` holding
+@@ -526,0 +612,52 @@
++#### Scenario: One value, separate item claims
++
++- **WHEN** one observed work-item result serves items A and B in the same
++  evaluation and identified observation, and Trajectory renders only A
++- **THEN** the machine body carries one complete shared Unknown and exactly
++  one local reference for each item, expansion yields distinct A and B
++  Unknown claims, both channels count two, Trajectory reports one inside
++  and one outside and still renders A with the original Unknown treatment
++
++#### Scenario: Invalid references fail explicitly
++
++- **WHEN** a producer would serialize a missing/altered shared value or an
++  absent, inline, extra-key, recursive, external or otherwise nonliteral
++  item reference, or a consumer receives such a body
++- **THEN** the producer returns the specified bounded HTTP 503 failure
++  before any success or cache-revalidation answer, and the consumer rejects
++  that body explicitly without claims, partial populations, totals or
++  optimistic fallback
++
++#### Scenario: Observations cannot lend values to each other
++
++- **WHEN** observation A has a valid shared value and a later observation B
++  has item references but no valid shared value of its own, even if their
++  source revisions coincide or a client still holds A
++- **THEN** B fails explicitly with B's evaluation and never resolves its
++  items using A's value; a valid B resolves only within B
++
++#### Scenario: Only identical complete values are shareable
++
++- **WHEN** any proposed item value differs in label, reason, route or field
++  set from the literal shared Unknown, even if another item's value matches
++- **THEN** serialization is refused by the specified typed failure; no
++  value is selected, overwritten, normalized or optimistically reused
++
++#### Scenario: Observed empty is distinct from an Unknown observation
++
++- **WHEN** a completed identified observation explicitly contains no items,
++  and a separate fixture instead fails to observe the work-item set
++- **THEN** the first serves one shared value, an empty items list and zero
++  measured item/Unknown counts without any item claim, while the failed
++  fixture retains its Unknown result/reason and supplies no empty population
++  or replacement zero
++
++#### Scenario: Repetition preserves effective facts
++
++- **WHEN** the same declared observation inputs are serialized twice and
++  independently expanded, and its rendered selection is narrowed
++- **THEN** both expanded answers have identical ordered item identities,
++  effective state/reason/route, observation and evaluation; every served
++  count and the rendered/inside/outside populations reconcile as above, and
++  the narrowed board contains exactly its original rendered Unknown items
++
+@@ -536,4 +673,4 @@
+-  doctrine: [VIS-1, VIS-2, VIS-6]
+-  contracts: [RFC2-24, RFC4-15, RFC8-22, RFC8-23, RFC8-24]
+-  policies: []
+-  decisions: []
++  doctrine: [VIS-1, VIS-2, VIS-6, VIS-7]
++  contracts: [RFC2-24, RFC4-15, RFC6-14, RFC6-15, RFC6-18, RFC6-22, RFC6-23, RFC8-22, RFC8-23, RFC8-24]
++  policies: []
++  decisions: [OWNER-DIRECTION-MACHINE-CEILING-2026-10-15]

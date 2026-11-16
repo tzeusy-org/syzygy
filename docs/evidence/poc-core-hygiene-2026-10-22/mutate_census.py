@@ -28,6 +28,9 @@ MUTANTS = [
     ('lexer-regex-class-ignored', "in_class = True", "in_class = False"),
     ('lexer-template-brace-depth-ignored', "        if c == '{' and tpl:\n            tpl[-1] += 1", "        if c == '{' and tpl:\n            pass"),
     ('lexer-division-after-paren-read-as-regex', "REGEX_PRECEDERS = set('(,=:[!&|?{};+-*%<>~^')", "REGEX_PRECEDERS = set('(,=:[!&|?{};+-*%<>~^)')"),
+    # The two predicates review R-GP-IMPL-POC-CORE-HYGIENE-2 (N9) found no selftest case pinning.
+    ('lexer-nested-template-not-entered', "        if c == '`':\n            out.append(c); i += 1; in_template = True; continue", "        if c == '`' and not tpl:\n            out.append(c); i += 1; in_template = True; continue"),
+    ('lexer-expression-close-stays-in-code', "tpl.pop(); out.append(c); i += 1; in_template = True; continue", "tpl.pop(); out.append(c); i += 1; in_template = False; continue"),
     ('class-public-off', "            if prod_outside:\n                cls = 'public'", "            if False:\n                cls = 'public'"),
     ('class-internal-off', "            elif prod_inside:\n                cls = 'internal'", "            elif False:\n                cls = 'internal'"),
     ('class-test-only-off', "            elif tests:\n                cls = 'test-only'", "            elif False:\n                cls = 'test-only'"),

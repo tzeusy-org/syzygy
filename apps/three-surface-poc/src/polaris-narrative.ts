@@ -15,8 +15,10 @@ import type {
   ProjectShapeSupport,
   ProposedWork,
 } from '@syzygy/three-surface-poc-core';
+import { deepFreeze } from '@syzygy/support';
 
 import type { DeepDiveMachineForm } from './capability-detail.js';
+import { resolveAnchors, type AnchorsResolved } from './polaris-anchor-resolution.js';
 
 const NARRATIVE_CLAIM_ROLES = ['anchored-project-fact', 'non-normative-framing', 'epistemic-claim'] as const;
 export type NarrativeClaimRole = (typeof NARRATIVE_CLAIM_ROLES)[number];
@@ -46,7 +48,9 @@ export interface NarrativeAnchor {
   readonly locator: string;
 }
 
-interface NarrativeBlock {
+/** A block as registered: its anchors are fixed at registration, its
+ * `anchorsResolved` pair only once the machine answer is known. */
+interface RegisteredBlock {
   readonly kind: 'narrative-block';
   readonly blockId: string;
   readonly role: NarrativeClaimRole;
@@ -54,6 +58,13 @@ interface NarrativeBlock {
   readonly citable: false;
   readonly claims: readonly string[];
   readonly anchors: readonly NarrativeAnchor[];
+}
+
+/** The served block: the registered block plus its counted pair (PWB-REQ-014
+ * `anchorsResolved`). The pair is presentation, never authority: `citable`
+ * stays false whatever it reads. */
+interface NarrativeBlock extends RegisteredBlock {
+  readonly anchorsResolved: AnchorsResolved;
 }
 
 // Test seam: exported type the tests name; production code uses it only inside this file.
@@ -64,6 +75,8 @@ export interface PolarisNarrative {
   readonly roles: readonly NarrativeClaimRole[];
   readonly anchorTargetClasses: readonly AnchorTargetClass[];
   readonly blocks: readonly NarrativeBlock[];
+  /** The sum of the blocks' pairs, or Unknown where each of theirs is. */
+  readonly anchorsResolved: AnchorsResolved;
   /** Capability deep dives: band composition, verbatim state and the
    * proposals' non-anchorable, non-status-bearing futures (PWB-REQ-015). */
   readonly deepDives: readonly DeepDiveMachineForm[];
@@ -129,19 +142,11 @@ export function capturedStateOf(claim: ProjectShapeClaim): CapturedTargetState {
   return { label: epistemic.label, tier: epistemic.tier ?? 'unstated', reason };
 }
 
-function deepFreeze<T>(value: T): T {
-  if (value !== null && typeof value === 'object') {
-    for (const inner of Object.values(value as Record<string, unknown>)) deepFreeze(inner);
-    Object.freeze(value);
-  }
-  return value;
-}
-
 /** Collects the blocks one render emits. Blocks are cloned and deep-frozen at
  * registration: a later mutation of the model cannot rewrite a captured
  * target state (PWB-REQ-014 later-read mutation case). */
 export class NarrativeRegistry {
-  private readonly blocks: NarrativeBlock[] = [];
+  private readonly blocks: RegisteredBlock[] = [];
   private readonly deepDives: DeepDiveMachineForm[] = [];
   private readonly seen = new Set<string>();
 
@@ -150,11 +155,11 @@ export class NarrativeRegistry {
     this.deepDives.push(deepFreeze(structuredClone(form)));
   }
 
-  registerAnchored(blockId: string, claims: readonly string[], anchors: readonly (AnchorInput & { readonly supports: readonly string[]; readonly captured: CapturedTargetState })[]): NarrativeBlock {
+  registerAnchored(blockId: string, claims: readonly string[], anchors: readonly (AnchorInput & { readonly supports: readonly string[]; readonly captured: CapturedTargetState })[]): RegisteredBlock {
     if (this.seen.has(blockId)) throw new Error(`narrative block registered twice: ${blockId}`);
     for (const claimId of claims) if (claimId.includes('\t')) throw new Error(`claim id carries a tab: ${claimId}`);
     this.seen.add(blockId);
-    const block: NarrativeBlock = deepFreeze({
+    const block: RegisteredBlock = deepFreeze({
       kind: 'narrative-block',
       blockId,
       role: 'anchored-project-fact',
@@ -175,14 +180,18 @@ export class NarrativeRegistry {
     return block;
   }
 
-  narrative(): PolarisNarrative {
+  /** `answer` is the machine answer of this evaluation (`/api/poc`'s model):
+   * every anchor is counted against it, and nothing else. */
+  narrative(answer: unknown): PolarisNarrative {
+    const pairs = resolveAnchors(this.blocks, answer);
     return deepFreeze({
       kind: 'polaris-narrative',
       presentation: 'presentation-artifact',
       citable: false,
       roles: [...NARRATIVE_CLAIM_ROLES],
       anchorTargetClasses: [...ANCHOR_TARGET_CLASSES],
-      blocks: [...this.blocks],
+      blocks: this.blocks.map((block, index) => ({ ...block, anchorsResolved: pairs.blocks[index] as AnchorsResolved })),
+      anchorsResolved: pairs.narrative,
       deepDives: [...this.deepDives],
     });
   }

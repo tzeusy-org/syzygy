@@ -1,0 +1,67 @@
+{
+ "problems": [],
+ "notes": [
+  "evidence commit adds 18 files, all under docs/evidence/syzygy-bpyt-8-38",
+  "code commit paths: ['packages/polaris-dossier/src/argv.test.ts', 'packages/polaris-generation-core/src/workspace-reach.test.ts', 'packages/polaris-generation-core/src/workspace-reach.testkit.ts']",
+  "premise-base.json: 18/18 equal to rev531-at-base.json",
+  "targets-head.json: 18/18 equal to rev531-at-code.json",
+  "island-diff.json: walks 251/251, resolves 2628/2628, byAnswer {'module': 1559, 'null': 1069, 'undefined': 0}",
+  "island-diff-selftest.json: walks 61/251, resolves 1338/2628, byAnswer {'module': 269, 'null': 1069, 'undefined': 1290}",
+  "repeat-runs: [(0, 165, 165, 55.3), (0, 165, 165, 57.2), (0, 165, 165, 55.2), (0, 165, 165, 53.1), (0, 165, 165, 54.5)]",
+  "titles: base 157 head 165 added 8 removed 0 perFile {'packages/polaris-dossier/src/argv.test.ts': {'base': 85, 'head': 86}, 'packages/polaris-dossier/src/subpath-imports.test.ts': {'base': 27, 'head': 27}, 'packages/polaris-generation-core/src/island-boundary.test.ts': {'base': 4, 'head': 4}, 'packages/polaris-generation-core/src/workspace-reach.test.ts': {'base': 41, 'head': 48}}"
+ ],
+ "digests": {
+  "subject (BASE..EVID)": "916b42679b39f9ee2c74fb90585d6f9d4fd82d0b62c5088d748943170be6f50a",
+  "code (BASE..CODE)": "37718512521253cbf50178a4dd0290cf1205f6214fd9875c45084eeefcf5ac8b",
+  "docs/evidence/guard-pins-review-2026-10-27/tools/mut.py": {
+   "e5080f4d": "ca2b8eadc503305bb3767b7220b02775429164ef6c183ac9854acf9d8ed9b6a5",
+   "831f40c1": "ca2b8eadc503305bb3767b7220b02775429164ef6c183ac9854acf9d8ed9b6a5",
+   "c1227667": "ca2b8eadc503305bb3767b7220b02775429164ef6c183ac9854acf9d8ed9b6a5"
+  },
+  "docs/evidence/argv-guards-review-2026-10-25/tools/mut.py": {
+   "e5080f4d": "ca2b8eadc503305bb3767b7220b02775429164ef6c183ac9854acf9d8ed9b6a5",
+   "831f40c1": "ca2b8eadc503305bb3767b7220b02775429164ef6c183ac9854acf9d8ed9b6a5",
+   "c1227667": "ca2b8eadc503305bb3767b7220b02775429164ef6c183ac9854acf9d8ed9b6a5"
+  },
+  "docs/evidence/syzygy-bpyt-8-36/island_diff.py": {
+   "e5080f4d": "131206846b062bc60ba7efeb67bf6ecf81802a54921d94979f2bc7428b8afc04",
+   "831f40c1": "131206846b062bc60ba7efeb67bf6ecf81802a54921d94979f2bc7428b8afc04",
+   "c1227667": "131206846b062bc60ba7efeb67bf6ecf81802a54921d94979f2bc7428b8afc04"
+  },
+  "docs/evidence/syzygy-bpyt-8-38/npa_probe.cjs": {
+   "e5080f4d": null,
+   "831f40c1": null,
+   "c1227667": "61da250ff658e7c75e876e5586d4576dca97141adcd94e49a701df6a54670053"
+  },
+  "docs/evidence/syzygy-bpyt-8-38/record.py": {
+   "e5080f4d": null,
+   "831f40c1": null,
+   "c1227667": "b71fde367eacb4111cf84a6e4123d35c161ed5839c39b1cf91fa7894896a5357"
+  },
+  "docs/evidence/syzygy-bpyt-8-38/summary.json": {
+   "e5080f4d": null,
+   "831f40c1": null,
+   "c1227667": "516a87e429e28953626e37bff3af42617947a5bf67811e22a9a0792541b57882"
+  },
+  "docs/evidence/syzygy-bpyt-8-38/own_specs.py": {
+   "e5080f4d": null,
+   "831f40c1": null,
+   "c1227667": "c1c6b529fa6438df165886a679a33588e8650a2e5e2d9231c633d3bcac5f12e3"
+  },
+  "docs/evidence/guard-pins-review-2026-10-27/rev-specs-head.json": {
+   "e5080f4d": "75e48a1b998d817b76f463667848c7e51b7f57a255ff3801d1b4cb52878b2aaa",
+   "831f40c1": "75e48a1b998d817b76f463667848c7e51b7f57a255ff3801d1b4cb52878b2aaa",
+   "c1227667": "75e48a1b998d817b76f463667848c7e51b7f57a255ff3801d1b4cb52878b2aaa"
+  },
+  "docs/evidence/syzygy-bpyt-8-36/repeat.py": {
+   "e5080f4d": "1c87146329e02d971d45eedc8da090c1fd7805dfa8869d0d4cacda99b63572af",
+   "831f40c1": "1c87146329e02d971d45eedc8da090c1fd7805dfa8869d0d4cacda99b63572af",
+   "c1227667": "1c87146329e02d971d45eedc8da090c1fd7805dfa8869d0d4cacda99b63572af"
+  },
+  "docs/evidence/syzygy-bpyt-8-36/titles.py": {
+   "e5080f4d": "f93af94f73fc70a5e9de768b146cca579c73eb8663e3285d574c8ad7193697e5",
+   "831f40c1": "f93af94f73fc70a5e9de768b146cca579c73eb8663e3285d574c8ad7193697e5",
+   "c1227667": "f93af94f73fc70a5e9de768b146cca579c73eb8663e3285d574c8ad7193697e5"
+  }
+ }
+}

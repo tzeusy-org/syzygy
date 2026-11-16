@@ -1,4 +1,4 @@
-import type { DaemonStart } from '@syzygy/cap1-daemon';
+import type { DaemonStart } from '@syzygy/http-host';
 
 type StartFailure = Extract<DaemonStart, { readonly started: false }>['failure'];
 

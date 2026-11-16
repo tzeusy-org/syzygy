@@ -1,0 +1,223 @@
+{
+ "commit": "9d9c98a6",
+ "population": 835,
+ "unreadable": 0,
+ "filesWithAHit": 57,
+ "hits": {
+  ".syzygy/governance/contracts/candidates/CONTEXT-BUDGET-REPORT.md": [
+   "230: printed without code spans, because an earlier revision printed the"
+  ],
+  ".syzygy/governance/contracts/candidates/DOCTRINE-AMENDMENT-D8-D2-RECONCILIATION-BRIEF.md": [
+   "92: in a code span)."
+  ],
+  ".syzygy/governance/contracts/candidates/DOCTRINE-AMENDMENT-D9-REVIEW-NOTES.md": [
+   "54: not written as a code span here."
+  ],
+  ".syzygy/governance/contracts/candidates/POLARIS-DOSSIER-LOCAL-AGENT-MODE-REVIEW-NOTES.md": [
+   "22: written as a code span here.",
+   "151: `proposed/\u2026` code spans it unquotes, keeping their words"
+  ],
+  ".syzygy/governance/contracts/candidates/ROUND-ESTATE.md": [
+   "157: | **248** | Present on disk now. The one that left was the first round's own PROCESS-LESSONS.md \u2014 no code span, because a path that no longer resolves may not carry one (CG-1b) \u2014 moved out to [`decisi"
+  ],
+  ".syzygy/governance/contracts/candidates/SURFACE-CLAUSE-ROUTING-MATRIX.md": [
+   "591: | RFC8-12 | OS | `spec/work-surface` (two-field carriage also binds `spec/map-lenses`) | The closure at thirteen values in three partitions; the state is a per-evaluation derived projection and not a ",
+   "607: | RFC8-28 | OS | `spec/work-surface` (carriage also binds `spec/map-lenses`) | The four post-merge answers never share a rendering; the chain state is a field of its own, orthogonal to the normalized ",
+   "656: required-carriage rule. All three route OS, and their spec entries must own"
+  ],
+  ".syzygy/governance/contracts/candidates/contract-readability-restyle/OWNER-DECISION-PACKET.md": [
+   "53: parenthetical; every link and code span; every epistemic label's span.",
+   "54: - **Three code spans change whitespace only.** Each was broken across a"
+  ],
+  ".syzygy/governance/contracts/candidates/contract-readability-restyle/REVIEW-NOTES.md": [
+   "20: - **N3. \"Every link and code span\" is stated more absolutely than the",
+   "21: evidence.** The modules have no Markdown links. Every original code span"
+  ],
+  ".syzygy/governance/contracts/candidates/contract-readability-restyle/proposed/RFC-0008/state-vocabulary-and-cost.md.patch": [
+   "488: -verbatim state carriage on every machine answer (RFC6-14); evaluation stamping",
+   "546: +  - label parity and verbatim state carriage on every machine answer"
+  ],
+  ".syzygy/governance/contracts/candidates/doctrine-amendment-held-derived-computation-d7/REVIEW-BRIEF.md": [
+   "158: creates; left out of code span so the path check does not ask it to exist",
+   "252: creates; left out of code span so the path check does not ask it to exist"
+  ],
+  ".syzygy/governance/contracts/candidates/doctrine-amendment-held-derived-computation-d7/ROUND-3-DISPOSITIONS.md": [
+   "84: | 5 | note | The cycle-2 repair left two unwrapped lines (at the reviewed commit, packet line 515, 128 columns; ledger line 153, 123 columns; the status marks above shift both) | 206 | **Open.** Rewra",
+   "110: | 5 | Packet Q2 arm B's long line and the ledger \u00a73 closing paragraph's long line are rewrapped. Every prose line the repair wrote in the packet, ledger and delta is at most 80 columns outside table r"
+  ],
+  ".syzygy/governance/contracts/candidates/doctrine-amendment-inferred-first-class-d8/IMPACT-LEDGER.md": [
+   "91: matched. Single-word literals cannot wrap. A code span broken across lines"
+  ],
+  ".syzygy/governance/contracts/candidates/fixtures/context-selection-9-evidence-adapter.md": [
+   "147: RFC2-1/2/6]\"*. That is carriage, not citation. RFC2-17/2-19/2-20 govern"
+  ],
+  ".syzygy/governance/contracts/candidates/launch-gate-v2.5/launch-gate-pre-specifications.md": [
+   "1109: CommonMark line ending, and the RD-47 f2 forgery reproduced verbatim",
+   "1720: `<details>` and `<summary>`, decrementable by an inline code span.",
+   "1731: code spans are removed before any tag is read, and self-closing and",
+   "1839: read it as the record's own, and an inline `` `</details>` `` code span",
+   "1862: its own verdict readable; code spans are removed before any tag is",
+   "1870: `` `<summary>` `` in a code span, a `<details>` in a table cell \u2014",
+   "1983: blocks, backslash escapes and code spans are literal text \u2014 and tags"
+  ],
+  ".syzygy/governance/contracts/candidates/public-repo-admission/templates/PUBLIC-SOURCE-POLICY-SCOPE-TEMPLATE.md": [
+   "25: HTML attributes) wherever they occur outside a Markdown inline code span"
+  ],
+  ".syzygy/governance/contracts/candidates/public-source-screening-scope-v4/SEMANTIC-DELTA.md": [
+   "142: excluded whole. Lines are split at LF, CRLF or CR, as the generator counts"
+  ],
+  ".syzygy/governance/contracts/candidates/public-source-screening-scope-v4/proposed/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json.span-guides.patch": [
+   "76: +      \"rule\": \"every detector runs over the complete transient body exactly as before, including inert code contexts. Here a detector's matches are every match it makes starting at any offset of the "
+  ],
+  ".syzygy/governance/contracts/candidates/public-source-screening-scope-v4/proposed/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json.span.patch": [
+   "33: +      \"rule\": \"every detector runs over the complete transient body exactly as before, including inert code contexts. Here a detector's matches are every match it makes starting at any offset of the "
+  ],
+  ".syzygy/governance/contracts/candidates/public-source-screening-scope/OWNER-DECISION-PACKET.md": [
+   "66: run (an unclosed inline span) excludes the whole artifact, so shell scripts with"
+  ],
+  ".syzygy/governance/contracts/candidates/pwb-container-shape-profile-amendment/proposed/spec.md.patch": [
+   "95: +    code span, NFC-normalized with whitespace runs collapsed; the span must be"
+  ],
+  ".syzygy/governance/contracts/candidates/pwb-item-depth-amendment/SEMANTIC-DELTA.md": [
+   "425: directory names and catalog-entry keys are literal bold or code spans, so"
+  ],
+  ".syzygy/governance/contracts/candidates/pwb-m2-slice5-implementation-continuation/REVIEW-BRIEF.md": [
+   "157: argument copied; no observed-repository path in a code span; no code"
+  ],
+  ".syzygy/governance/contracts/candidates/pwb-opening-band-scenario/IMPACT-LEDGER.md": [
+   "84: break inside a code span is invisible to a literal sweep. The identifiers"
+  ],
+  ".syzygy/governance/contracts/candidates/pwb-opening-band-scenario/REVIEW-BRIEF.md": [
+   "151: No observed-repository path is set in a code span (CG-1b). Every file"
+  ],
+  ".syzygy/governance/contracts/candidates/pwb-opening-band-scenario/SEMANTIC-DELTA.md": [
+   "1284: two non-finding observations in the raw (one wrapped code span in the",
+   "1328: 48. **The round-9 section located the wrapped code span \"at the finding-36"
+  ],
+  ".syzygy/governance/contracts/candidates/pwb-readability-successor/proposed/design.md.patch": [
+   "118: -outer ASCII whitespace and unwraps only complete inline code spans in `Owns`",
+   "262: -context-encoded at every sink. Inline code spans and fenced code blocks are",
+   "274: -backtick. Outside fences, an inline span closes only on the next backtick run",
+   "465: +    ASCII whitespace and unwraps only complete inline code spans in `Owns` and",
+   "622: +  - Inline code spans and fenced code blocks are inert contexts: markup-like",
+   "635: +  - Outside fences, an inline span closes only on the next backtick run of"
+  ],
+  ".syzygy/governance/contracts/candidates/pwb-readability-successor/proposed/proposal.md.patch": [
+   "50: -  Inline code spans and fenced code blocks are inert Markdown contexts, not",
+   "128: +  - Inline code spans and fenced code blocks are inert Markdown contexts:"
+  ],
+  ".syzygy/governance/contracts/candidates/pwb-readability-successor/proposed/spec.md.patch": [
+   "241: -    code span, NFC-normalized with whitespace runs collapsed; the span must be",
+   "273: +      leading code span, NFC-normalized with whitespace runs collapsed; the",
+   "394: leading bold or code span before the first dash is the literal key.",
+   "566: -handlers or unsafe URL schemes. Inline code spans and fenced code blocks SHALL",
+   "581: -source. Outside fences, an inline code span starts with a run of one or more",
+   "609: +- **Inert code contexts.** Inline code spans and fenced code blocks SHALL be",
+   "629: +  - Outside fences, an inline code span starts with a run of one or more",
+   "870: -code spans, preserving case, punctuation and internal whitespace; no other",
+   "927: +    inline code spans, preserving case, punctuation and internal whitespace;"
+  ],
+  ".syzygy/governance/contracts/candidates/pwb-registry-currency-briefing-amendment/IMPACT-LEDGER.md": [
+   "64: - A citation hard-wrapped across a line break inside a code span is"
+  ],
+  ".syzygy/governance/contracts/candidates/pwb-registry-loaded-profile-amendment/IMPACT-LEDGER.md": [
+   "114: **Error term.** A name hard-wrapped inside a code span is invisible to both"
+  ],
+  ".syzygy/governance/contracts/candidates/pwb-registry-loaded-profile-amendment/proposed/POLARIS-BUTLERS-PROJECT-SHAPE-OBSERVER-CANDIDATE.json.patch": [
+   "23: \"cellSyntax\": \"Layer raw cell is exactly one complete bold span; compare its content and Owns/Home after trimming outer ASCII whitespace and unwrapping only complete inline code spans; preserve case, ",
+   "267: +            \"itemKey\": \"the item's leading bold span, or else its leading code span, NFC-normalized with whitespace runs collapsed; the span must be non-empty and followed, after optional whitespace,",
+   "316: +          \"sharedReadingRules\": \"these rules are the same for every project, stay in code and are set by no profile: fenced code blocks, opened by three or more backticks or tildes, hide headings, li"
+  ],
+  ".syzygy/governance/contracts/candidates/pwb-tree-framing-amendment/IMPACT-LEDGER.md": [
+   "65: as SVG text content, so a markup-like code span in a label stays text."
+  ],
+  ".syzygy/governance/contracts/candidates/pwb-tree-framing-amendment/ROUND-1-DISPOSITIONS.md": [
+   "110: sinks, so a markup-like code span in a label stays inert text. The oracle"
+  ],
+  ".syzygy/governance/contracts/candidates/pwb-tree-framing-amendment/SEMANTIC-DELTA.md": [
+   "182: text content, so a markup-like code span in a label stays inert text."
+  ],
+  ".syzygy/governance/contracts/candidates/pwb-truth-policy-amendment/SEMANTIC-DELTA.md": [
+   "64: delimiter length/character, closer and backtick-info rules; inline spans close",
+   "68: inside a valid inline code span or fenced code block do not alone exclude a"
+  ],
+  ".syzygy/governance/contracts/candidates/rfcs/RFC-0007/rendering-and-surface.md": [
+   "495: carriage (RFC2-24) behind RFC7-40's Unknown branch, including reason **#6**"
+  ],
+  ".syzygy/governance/contracts/candidates/rfcs/RFC-0008/accounting-reconciliation-and-release.md": [
+   "381: board lane alone. This is RFC6-14's verbatim-carriage rule made a rendering"
+  ],
+  ".syzygy/governance/contracts/candidates/rfcs/RFC-0008/state-vocabulary-and-cost.md": [
+   "459: - label parity and verbatim state carriage on every machine answer"
+  ],
+  ".syzygy/governance/contracts/candidates/scripts/build_budget_report.py": [
+   "428: a(\"printed without code spans, because an earlier revision printed the\")"
+  ],
+  ".syzygy/governance/contracts/candidates/three-surface-poc-governing-intent-amendment/REVIEW-BRIEF.md": [
+   "194: creates; left out of a code span so the path check does not ask it to exist"
+  ],
+  ".syzygy/governance/contracts/candidates/three-surface-poc-identity-amendment/REVIEW-BRIEF.md": [
+   "171: creates; left out of code span so the path check does not ask it to exist"
+  ],
+  ".syzygy/governance/contracts/candidates/three-surface-poc-vocabulary-epistemic-amendment/REVIEW-BRIEF.md": [
+   "135: round creates; it is left out of code span so the path check does not ask",
+   "221: round creates; it is left out of code span so the path check does not ask"
+  ],
+  ".syzygy/governance/contracts/candidates/three-surface-poc-vocabulary-epistemic-amendment/ROUND-1-DISPOSITIONS.md": [
+   "21: committed verbatim by a separate records lane (left out of code span so"
+  ],
+  ".syzygy/governance/contracts/rfcs/RFC-0007/rendering-and-surface.md": [
+   "495: carriage (RFC2-24) behind RFC7-40's Unknown branch, including reason **#6**"
+  ],
+  ".syzygy/governance/contracts/rfcs/RFC-0008/accounting-reconciliation-and-release.md": [
+   "381: board lane alone. This is RFC6-14's verbatim-carriage rule made a rendering"
+  ],
+  ".syzygy/governance/contracts/rfcs/RFC-0008/state-vocabulary-and-cost.md": [
+   "459: - label parity and verbatim state carriage on every machine answer"
+  ],
+  ".syzygy/governance/declarations/adapter-registry/POLARIS-BUTLERS-PROJECT-SHAPE-OBSERVER-CANDIDATE.json": [
+   "260: \"cellSyntax\": \"Layer raw cell is exactly one complete bold span; compare its content and Owns/Home after trimming outer ASCII whitespace and unwrapping only complete inline code spans; preserve case, "
+  ],
+  ".syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json": [
+   "315: \"rule\": \"every detector runs over the complete transient body exactly as before, including inert code contexts. Here a detector's matches are every match it makes starting at any offset of the text, o",
+   "429: \"inertContextRule\": \"markup-like bytes wholly inside a syntactically closed inline code span or fenced code block do not by themselves match an active-content form; they remain untrusted text, are sca"
+  ],
+  "docs/PWB-IMPLEMENTATION-PLAN.md": [
+   "132: outside fenced blocks and code spans; a pillar root is a root-index link",
+   "166: wholly inside a closed inline code span or fenced code block are inert for",
+   "232: masked, CRLF is tolerated, and nothing is rendered or resolved; (b) identity",
+   "293: cell syntax (trim, unwrap complete code spans, one bold Layer span). Fact"
+  ],
+  "docs/polaris-generation/LEARNING-LOG.md": [
+   "156: Markdown code span or fence [Observed, round-2 review]. That is right for a"
+  ],
+  "docs/polaris-generation/TRACKER.md": [
+   "240: CRLF and mixed endings. The map prompt describes the excerpt and is"
+  ],
+  "openspec/changes/polaris-manifesto-generation/SCHEMA-CONTRACT.md": [
+   "106: Content is an inert tree of paragraphs, text spans, emphasis, inline code, lists"
+  ],
+  "openspec/changes/polaris-project-wide-butlers-model/contract-coverage-matrix/RFC-0007-0009.md": [
+   "150: | RFC8-28.c1 | RFC8-28 | RFC-0008/accounting-reconciliation-and-release.md:217-254 | Closed chain vocabulary, non-color separation and two-field carriage | no | No reconciliation state | believed-not-"
+  ],
+  "openspec/changes/polaris-project-wide-butlers-model/contract-coverage-parts/RFC-0007-0009.md": [
+   "148: | RFC8-28 | R8A:217-254 | Closed reconciliation-chain vocabulary, non-color separation and two-field carriage | no | PWB does not render chain state | believed not applicable |"
+  ],
+  "openspec/changes/polaris-project-wide-butlers-model/design.md": [
+   "178: ASCII whitespace and unwraps only complete inline code spans in `Owns` and",
+   "335: - Inline code spans and fenced code blocks are inert contexts: markup-like",
+   "348: - Outside fences, an inline span closes only on the next backtick run of"
+  ],
+  "openspec/changes/polaris-project-wide-butlers-model/proposal.md": [
+   "65: - Inline code spans and fenced code blocks are inert Markdown contexts:"
+  ],
+  "openspec/changes/polaris-project-wide-butlers-model/specs/polaris-project-wide-butlers-model/spec.md": [
+   "221: leading code span, NFC-normalized with whitespace runs collapsed; the",
+   "334: leading bold or code span before the first dash is the literal key.",
+   "798: - **Inert code contexts.** Inline code spans and fenced code blocks SHALL be",
+   "818: - Outside fences, an inline code span starts with a run of one or more",
+   "880: event-handler or unsafe-URL examples only inside valid inline code spans or",
+   "1160: inline code spans, preserving case, punctuation and internal whitespace;"
+  ]
+ }
+}

@@ -1,0 +1,40 @@
+E1-type-only-import-of-unprefixed-package: killed exit=1 failed=1/13 files=1 timeouts=0 17.6s clean=True
+     apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every module and package the POC daemon imports
+E2-type-only-reexport-of-unprefixed-package: killed exit=1 failed=1/13 files=1 timeouts=0 16.5s clean=True
+     apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every module and package the POC daemon imports
+E3-value-reexport-from-cap1-core-of-unprefixed-package: killed exit=1 failed=1/13 files=1 timeouts=0 13.6s clean=True
+     apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every module and package the POC daemon imports
+E4-subpath-import-of-unprefixed-package: killed exit=1 failed=1/13 files=1 timeouts=0 11.3s clean=True
+     apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every module and package the POC daemon imports
+E5-relative-import-across-into-unprefixed-package: killed exit=1 failed=1/13 files=1 timeouts=0 11.6s clean=True
+     apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every module and package the POC daemon imports
+E6-relative-import-of-a-non-package-file: killed exit=1 failed=1/13 files=1 timeouts=0 13.5s clean=True
+     apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every module and package the POC daemon imports
+E7-dynamic-import-template-literal: killed exit=1 failed=1/13 files=1 timeouts=0 15.3s clean=True
+     apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every module and package the POC daemon imports
+E8-dynamic-import-computed-specifier: survived exit=0 failed=0/13 files=0 timeouts=0 18.7s clean=True
+E9-createRequire-of-unprefixed-package: survived exit=0 failed=0/13 files=0 timeouts=0 15.0s clean=True
+E10-triple-slash-reference-into-unprefixed-package: survived exit=0 failed=0/13 files=0 timeouts=0 14.1s clean=True
+E11-manifest-only-dependency-no-import: survived exit=0 failed=0/13 files=0 timeouts=0 14.0s clean=True
+G1-support-prefix-without-trailing-slash: survived exit=0 failed=0/13 files=0 timeouts=0 16.0s clean=True
+G2-support-prefix-wrong-case: killed exit=1 failed=2/13 files=1 timeouts=0 15.6s clean=True
+     apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every file of each protected package, its manifest and tsconfig among them
+     apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every module and package the POC daemon imports
+G3-exact-input-package-lock-dropped: survived exit=0 failed=0/13 files=0 timeouts=0 23.8s clean=True
+G4-exact-input-tsconfig-base-dropped: survived exit=0 failed=0/13 files=0 timeouts=0 15.8s clean=True
+G5-cap1-daemon-src-and-manifest-only: killed exit=1 failed=1/13 files=1 timeouts=0 15.8s clean=True
+     apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every file of each protected package, its manifest and tsconfig among them
+T1-table-package-json-alone-with-cap1-daemon-src-and-manifest: survived exit=0 failed=0/13 files=0 timeouts=0 15.9s clean=True
+T2-table-package-json-alone-with-http-host-src-and-manifest: killed exit=1 failed=1/13 files=1 timeouts=0 14.7s clean=True
+     apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every module and package the POC daemon imports
+T3-guard-modules-only-with-http-host-src-and-manifest: killed exit=1 failed=1/13 files=1 timeouts=0 17.0s clean=True
+     apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every file of each protected package, its manifest and tsconfig among them
+T4-guard-modules-only-alone: survived exit=0 failed=0/13 files=0 timeouts=0 15.8s clean=True
+T5-guard-no-js-import-detection-with-dynamic-import: killed exit=1 failed=1/13 files=1 timeouts=0 14.3s clean=True
+     apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every module and package the POC daemon imports
+T6-guard-unresolved-assertion-dropped-with-unknown-package: survived exit=0 failed=0/13 files=0 timeouts=0 12.4s clean=True
+T7-guard-sha256-pin-dropped-with-support-prefix-dropped: killed exit=1 failed=2/13 files=1 timeouts=0 11.3s clean=True
+     apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every file of each protected package, its manifest and tsconfig among them
+     apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects every module and package the POC daemon imports
+CONTROL: survived exit=0 failed=0/13 files=0 timeouts=0 10.0s clean=True
+killed 13 survived 11 error 0 of 24

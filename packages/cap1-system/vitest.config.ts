@@ -15,7 +15,7 @@ export default defineConfig({
     include: ['src/**/*.system.test.ts'],
     // Real process spawns and real filesystem fixtures: generous
     // timeouts. The fresh-clone test raises its own per-test timeout.
-    testTimeout: 60_000,
-    hookTimeout: 60_000,
+    testTimeout: 60_000, // every test without its own timeout: worst 10.7 s over 5 runs at load1 47-75 (docs/evidence/syzygy-bpyt-4-31/durations/cap1-system.hooks.json)
+    hookTimeout: 60_000, // also each afterEach, which stops daemons and removes fixture trees inside tests of up to 77.5 s (docs/evidence/syzygy-bpyt-4-31/durations/cap1-system.hooks.json)
   },
 });

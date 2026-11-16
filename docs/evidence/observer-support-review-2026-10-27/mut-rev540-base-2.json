@@ -1,0 +1,93 @@
+{
+ "tree": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-540/base",
+ "commit": "bb05df7ea409039c5a6465e7179f9d0c66931ad3",
+ "results": [
+  {
+   "id": "G3-exact-input-package-lock-dropped@base",
+   "commit": "bb05df7ea409039c5a6465e7179f9d0c66931ad3",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "old": "  const exactInputs = new Set(['package.json', 'package-lock.json', 'tsconfig.base.json']);\n",
+     "new": "  const exactInputs = new Set(['package.json', 'tsconfig.base.json']);\n"
+    }
+   ],
+   "counts": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "exit": 0,
+   "failedTests": 0,
+   "failedFiles": 0,
+   "totalTests": 11,
+   "outcome": "survived",
+   "seconds": 8.5,
+   "cleanAfter": true,
+   "failed": [],
+   "reportError": null
+  },
+  {
+   "id": "G4-exact-input-tsconfig-base-dropped@base",
+   "commit": "bb05df7ea409039c5a6465e7179f9d0c66931ad3",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "old": "  const exactInputs = new Set(['package.json', 'package-lock.json', 'tsconfig.base.json']);\n",
+     "new": "  const exactInputs = new Set(['package.json', 'package-lock.json']);\n"
+    }
+   ],
+   "counts": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "exit": 0,
+   "failedTests": 0,
+   "failedFiles": 0,
+   "totalTests": 11,
+   "outcome": "survived",
+   "seconds": 11.6,
+   "cleanAfter": true,
+   "failed": [],
+   "reportError": null
+  },
+  {
+   "id": "G6-http-host-prefix-without-trailing-slash@base",
+   "commit": "bb05df7ea409039c5a6465e7179f9d0c66931ad3",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "old": "    'packages/http-host/',\n",
+     "new": "    'packages/http-host',\n"
+    }
+   ],
+   "counts": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "oldCount": 1
+    }
+   ],
+   "files": [
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "exit": 0,
+   "failedTests": 0,
+   "failedFiles": 0,
+   "totalTests": 11,
+   "outcome": "survived",
+   "seconds": 10.6,
+   "cleanAfter": true,
+   "failed": [],
+   "reportError": null
+  }
+ ]
+}

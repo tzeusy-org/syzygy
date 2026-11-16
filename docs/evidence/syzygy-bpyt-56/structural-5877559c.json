@@ -1,0 +1,30 @@
+{
+ "base": "29db2b11153990f465c0b86fb3341865ae6459ac",
+ "head": "5877559c597b1abb7c34c942bede8e8b85ae5fd4",
+ "exactInputsIdentical": true,
+ "returnIdentical": true,
+ "basePrefixes": [
+  "apps/three-surface-poc/",
+  "packages/three-surface-poc-core/",
+  "packages/cap1-daemon/",
+  "packages/http-host/",
+  "packages/cap1-core/",
+  "packages/support/"
+ ],
+ "headPrefixes": [
+  "apps/three-surface-poc/",
+  "packages/three-surface-poc-core/",
+  "packages/cap1-daemon/",
+  "packages/http-host/",
+  "packages/cap1-core/",
+  "packages/support/",
+  "packages/polaris-generation-core/",
+  "packages/polaris-generation-consent/"
+ ],
+ "removed": [],
+ "added": [
+  "packages/polaris-generation-core/",
+  "packages/polaris-generation-consent/"
+ ],
+ "rootFilesAndTsconfigsChanged": []
+}

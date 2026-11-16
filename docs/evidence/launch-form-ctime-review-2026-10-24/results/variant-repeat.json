@@ -1,0 +1,80 @@
+{
+ "testSha256": "9815465501909b50279ab600e405f8f399d4b7b3165acc3dbe50cff314e283ec",
+ "head": "3fb7380945bd8ac0374e38792a814aed070bd8c6",
+ "tmpRoot": "/tmp/r519-7",
+ "filesystem": "tmpfs",
+ "runs": 8,
+ "parallel": 4,
+ "allPassed43": true,
+ "loadavgAtEnd": [
+  32.66845703125,
+  23.58154296875,
+  25.71923828125
+ ],
+ "results": [
+  {
+   "run": 0,
+   "exit": 0,
+   "total": 43,
+   "passed": 43,
+   "failed": [],
+   "tmpdirLeftovers": 1
+  },
+  {
+   "run": 1,
+   "exit": 0,
+   "total": 43,
+   "passed": 43,
+   "failed": [],
+   "tmpdirLeftovers": 1
+  },
+  {
+   "run": 2,
+   "exit": 0,
+   "total": 43,
+   "passed": 43,
+   "failed": [],
+   "tmpdirLeftovers": 1
+  },
+  {
+   "run": 3,
+   "exit": 0,
+   "total": 43,
+   "passed": 43,
+   "failed": [],
+   "tmpdirLeftovers": 1
+  },
+  {
+   "run": 4,
+   "exit": 0,
+   "total": 43,
+   "passed": 43,
+   "failed": [],
+   "tmpdirLeftovers": 1
+  },
+  {
+   "run": 5,
+   "exit": 0,
+   "total": 43,
+   "passed": 43,
+   "failed": [],
+   "tmpdirLeftovers": 1
+  },
+  {
+   "run": 6,
+   "exit": 0,
+   "total": 43,
+   "passed": 43,
+   "failed": [],
+   "tmpdirLeftovers": 1
+  },
+  {
+   "run": 7,
+   "exit": 0,
+   "total": 43,
+   "passed": 43,
+   "failed": [],
+   "tmpdirLeftovers": 1
+  }
+ ]
+}

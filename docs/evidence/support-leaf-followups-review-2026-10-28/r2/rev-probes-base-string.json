@@ -1,0 +1,50 @@
+{
+ "commit": "a15b6a04da2cda0c5871a05c538b72943b1d660c",
+ "dists": [],
+ "node": "v24.6.0",
+ "rows": [
+  {
+   "id": "B-string-export",
+   "tests": [
+    "packages/polaris-dossier/src/no-egress.test.ts",
+    "packages/polaris-dossier/src/subpath-imports.test.ts",
+    "packages/polaris-generation-core/src/island-boundary.test.ts",
+    "packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "apps/three-surface-poc/src/sync-child-process-guard.test.ts",
+    "apps/three-surface-poc/src/product-build.test.ts",
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/polaris-dossier/package.json",
+     "old": "\"./state-directory\": {\n      \"source\": \"./src/state-directory.ts\",\n      \"types\": \"./dist/state-directory.d.ts\",\n      \"import\": \"./dist/state-directory.js\",\n      \"default\": \"./dist/state-directory.js\"\n    }",
+     "new": "\"./state-directory\": \"./dist/x/../state-directory.js\""
+    }
+   ],
+   "prediction": "base: the exports row refuses an entry with no source condition first",
+   "load1": "21.48",
+   "failing": [
+    "the subpaths the daemon entry imports ./state-directory is packages/polaris-dossier/src/state-directory.ts, which imports exactly [\"node:crypto\",\"node:fs\",\"node:path\"]",
+    "the tree's own exports load, under the suite, each entry from its source module",
+    "the tree's own exports put a source condition first in every entry, naming the module the built target is read as"
+   ],
+   "messages": {
+    "the tree's own exports put a source condition first in every entry, naming the module the built target is read as": "AssertionError: expected [ Array(1) ] to deeply equal []",
+    "the tree's own exports load, under the suite, each entry from its source module": "TypeError: The \"path\" argument must be of type string. Received undefined",
+    "the subpaths the daemon entry imports ./state-directory is packages/polaris-dossier/src/state-directory.ts, which imports exactly [\"node:crypto\",\"node:fs\",\"node:path\"]": "AssertionError: expected 'packages/polaris-dossier' to be 'packages/polaris-dossier/src/state-di\u2026' // Object.is equality"
+   },
+   "exit": 1,
+   "passed": 130,
+   "failed": 3,
+   "pending": 1,
+   "total": 134,
+   "failedFiles": [
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-554-r2/packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-554-r2/packages/polaris-dossier/src/subpath-imports.test.ts"
+   ],
+   "error": null,
+   "stderrTail": null
+  }
+ ],
+ "statusAfter": ""
+}

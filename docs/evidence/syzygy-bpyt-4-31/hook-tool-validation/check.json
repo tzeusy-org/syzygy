@@ -1,0 +1,72 @@
+{
+ "schema": "syzygy-bpyt.4.31/hook-tool-validation/1",
+ "text": "Evidence record, not authority. measure_vitest_hook_durations.py, at the sha256 its record names, run 3 times on fixture.test.ts.txt (committed as apps/three-surface-poc/src/zz-hook-fixture.test.ts in a scratch commit on 546f1ff0, reachable from no ref; the fixture bytes are retained here and record.json names their sha256). Each hook sleeps a known time; the tool must report at least that and not much more.",
+ "scratchCommit": "9c8130701fd4075acf8b7f62890ea27ee9462d21",
+ "base": "546f1ff066e2ffef749c757cdb4621336039113b",
+ "fixtureSha256": "63ee62b280594d744710e2202ff6a9de73df9f8779b5e720da2c77f62d7c0fc7",
+ "scriptSha256": "f5a73f9d0218fb432a5d4399db5a29a7a9e51ec79f0f8ef1067715b7770c79cd",
+ "rows": [
+  {
+   "suite": "(file)",
+   "field": "beforeAllMs",
+   "sleptMs": 1500,
+   "measuredMs": [
+    1504,
+    1504,
+    1505
+   ],
+   "excessMs": [
+    4,
+    4,
+    5
+   ]
+  },
+  {
+   "suite": "(file)",
+   "field": "afterAllMs",
+   "sleptMs": 700,
+   "measuredMs": [
+    700,
+    704,
+    701
+   ],
+   "excessMs": [
+    0,
+    4,
+    1
+   ]
+  },
+  {
+   "suite": "inner",
+   "field": "beforeAllMs",
+   "sleptMs": 400,
+   "measuredMs": [
+    402,
+    406,
+    402
+   ],
+   "excessMs": [
+    2,
+    6,
+    2
+   ]
+  },
+  {
+   "suite": "inner",
+   "field": "afterAllMs",
+   "sleptMs": 0,
+   "measuredMs": [
+    0,
+    1,
+    1
+   ],
+   "excessMs": [
+    0,
+    1,
+    1
+   ]
+  }
+ ],
+ "verdict": "pass",
+ "predicate": "every measured hook time is at least its sleep and at most 50 ms over it"
+}

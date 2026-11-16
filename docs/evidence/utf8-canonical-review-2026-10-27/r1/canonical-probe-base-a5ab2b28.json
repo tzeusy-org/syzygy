@@ -1,0 +1,296 @@
+{
+ "encoders": {
+  "lenient": "canonicalJson",
+  "strict": "encodeCanonicalJson (limits 1e9 bytes, 1e8 nodes, depth 256)",
+  "cap1": "deterministicLayer"
+ },
+ "rows": [
+  {
+   "label": "plain object",
+   "lenient": {
+    "ok": "{\"a\":[2,{\"c\":4,\"d\":3}],\"b\":1}"
+   },
+   "strict": {
+    "ok": "{\"a\":[2,{\"c\":4,\"d\":3}],\"b\":1}"
+   },
+   "cap1": {
+    "ok": "{\"a\":[2,{\"c\":4,\"d\":3}],\"b\":1}"
+   }
+  },
+  {
+   "label": "array-index keys beside names",
+   "lenient": {
+    "ok": "{\"2\":4,\"10\":2,\"a\":3,\"b\":1}"
+   },
+   "strict": {
+    "ok": "{\"10\":2,\"2\":4,\"a\":3,\"b\":1}"
+   },
+   "cap1": {
+    "ok": "{\"2\":4,\"10\":2,\"a\":3,\"b\":1}"
+   }
+  },
+  {
+   "label": "array-index keys only",
+   "lenient": {
+    "ok": "{\"0\":\"y\",\"1\":\"x\"}"
+   },
+   "strict": {
+    "ok": "{\"0\":\"y\",\"1\":\"x\"}"
+   },
+   "cap1": {
+    "ok": "{\"0\":\"y\",\"1\":\"x\"}"
+   }
+  },
+  {
+   "label": "undefined member",
+   "lenient": {
+    "ok": "{\"b\":1}"
+   },
+   "strict": {
+    "error": "unsupported-value"
+   },
+   "cap1": {
+    "ok": "{\"b\":1}"
+   }
+  },
+  {
+   "label": "undefined array element",
+   "lenient": {
+    "ok": "[null]"
+   },
+   "strict": {
+    "error": "unsupported-value"
+   },
+   "cap1": {
+    "ok": "[null]"
+   }
+  },
+  {
+   "label": "top-level undefined",
+   "lenient": {
+    "returns": "undefined"
+   },
+   "strict": {
+    "error": "unsupported-value"
+   },
+   "cap1": {
+    "returns": "undefined"
+   }
+  },
+  {
+   "label": "NaN",
+   "lenient": {
+    "ok": "null"
+   },
+   "strict": {
+    "error": "unsupported-value"
+   },
+   "cap1": {
+    "ok": "null"
+   }
+  },
+  {
+   "label": "Date",
+   "lenient": {
+    "ok": "{}"
+   },
+   "strict": {
+    "error": "unsupported-object"
+   },
+   "cap1": {
+    "ok": "{}"
+   }
+  },
+  {
+   "label": "Map",
+   "lenient": {
+    "ok": "{}"
+   },
+   "strict": {
+    "error": "unsupported-object"
+   },
+   "cap1": {
+    "ok": "{}"
+   }
+  },
+  {
+   "label": "class instance",
+   "lenient": {
+    "ok": "{\"x\":1}"
+   },
+   "strict": {
+    "error": "unsupported-object"
+   },
+   "cap1": {
+    "ok": "{\"x\":1}"
+   }
+  },
+  {
+   "label": "getter",
+   "lenient": {
+    "ok": "{\"a\":1}"
+   },
+   "strict": {
+    "error": "unsupported-property"
+   },
+   "cap1": {
+    "ok": "{\"a\":1}"
+   }
+  },
+  {
+   "label": "sparse array",
+   "lenient": {
+    "ok": "[1,null,3]"
+   },
+   "strict": {
+    "error": "unsupported-property"
+   },
+   "cap1": {
+    "ok": "[1,null,3]"
+   }
+  },
+  {
+   "label": "symbol key",
+   "lenient": {
+    "ok": "{\"a\":1}"
+   },
+   "strict": {
+    "error": "unsupported-property"
+   },
+   "cap1": {
+    "ok": "{\"a\":1}"
+   }
+  },
+  {
+   "label": "own key __proto__",
+   "lenient": {
+    "ok": "{\"__proto__\":1}"
+   },
+   "strict": {
+    "error": "unsupported-property"
+   },
+   "cap1": {
+    "ok": "{}"
+   }
+  },
+  {
+   "label": "own key __proto__ holding an object",
+   "lenient": {
+    "ok": "{\"__proto__\":{\"a\":1},\"b\":2}"
+   },
+   "strict": {
+    "error": "unsupported-property"
+   },
+   "cap1": {
+    "ok": "{\"b\":2}"
+   }
+  },
+  {
+   "label": "own key constructor",
+   "lenient": {
+    "ok": "{\"constructor\":1}"
+   },
+   "strict": {
+    "error": "unsupported-property"
+   },
+   "cap1": {
+    "ok": "{\"constructor\":1}"
+   }
+  },
+  {
+   "label": "BigInt",
+   "lenient": {
+    "error": "TypeError"
+   },
+   "strict": {
+    "error": "unsupported-value"
+   },
+   "cap1": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "label": "Proxy",
+   "lenient": {
+    "ok": "{\"a\":1}"
+   },
+   "strict": {
+    "error": "unsupported-object"
+   },
+   "cap1": {
+    "ok": "{\"a\":1}"
+   }
+  },
+  {
+   "label": "cycle",
+   "lenient": {
+    "error": "RangeError"
+   },
+   "strict": {
+    "error": "cycle"
+   },
+   "cap1": {
+    "error": "RangeError"
+   }
+  },
+  {
+   "label": "null-prototype object",
+   "lenient": {
+    "ok": "{\"a\":2,\"b\":1}"
+   },
+   "strict": {
+    "ok": "{\"a\":2,\"b\":1}"
+   },
+   "cap1": {
+    "ok": "{\"a\":2,\"b\":1}"
+   }
+  },
+  {
+   "label": "negative zero",
+   "lenient": {
+    "ok": "{\"z\":0}"
+   },
+   "strict": {
+    "ok": "{\"z\":0}"
+   },
+   "cap1": {
+    "ok": "{\"z\":0}"
+   }
+  },
+  {
+   "label": "lone surrogate",
+   "lenient": {
+    "ok": "[\"\\ud800\"]"
+   },
+   "strict": {
+    "ok": "[\"\\ud800\"]"
+   },
+   "cap1": {
+    "ok": "[\"\\ud800\"]"
+   }
+  }
+ ],
+ "populations": {
+  "A_noArrayIndexKeys": {
+   "values": 600,
+   "lenientEqualsStrict": 600,
+   "lenientEqualsCap1": 600,
+   "strictEqualsCap1": 600,
+   "allThree": 600,
+   "strictRefused": 0,
+   "lenientDiffersFromStrictAndStrictAccepted": 0,
+   "valuesWithAnIndexKeyBesideAnotherKey": 0
+  },
+  "B_arrayIndexKeysIncluded": {
+   "values": 600,
+   "lenientEqualsStrict": 569,
+   "lenientEqualsCap1": 600,
+   "strictEqualsCap1": 569,
+   "allThree": 569,
+   "strictRefused": 0,
+   "lenientDiffersFromStrictAndStrictAccepted": 31,
+   "valuesWithAnIndexKeyBesideAnotherKey": 97
+  }
+ },
+ "rowsSha256": "a817f4ff3438a8c55bdabe421fcae7ad0ff1231cee69c511788f2faac082cfc8"
+}

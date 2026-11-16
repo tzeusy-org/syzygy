@@ -1,0 +1,40 @@
+{
+ "tally": {
+  "S": {
+   "rows": 9,
+   "killed": 9,
+   "oldOnceInFile": 9,
+   "oldOnceOnLine": 9,
+   "outcomeConsistent": 9,
+   "commit": "6ab7a12bd09695c636c990e806d52d1a73f80041",
+   "occurrenceIsCallIndex": 0,
+   "controls": 2
+  },
+  "I": {
+   "rows": 5,
+   "killed": 5,
+   "oldOnceInFile": 5,
+   "oldOnceOnLine": 5,
+   "outcomeConsistent": 5,
+   "commit": "6ab7a12bd09695c636c990e806d52d1a73f80041",
+   "occurrenceIsCallIndex": 0,
+   "controls": 2
+  },
+  "C": {
+   "rows": 60,
+   "killed": 52,
+   "oldOnceInFile": 54,
+   "oldOnceOnLine": 60,
+   "outcomeConsistent": 60,
+   "commit": "22142d9f8731f1494258bfaa6b58ab0c24a2e607",
+   "occurrenceIsCallIndex": 60,
+   "controls": 8
+  }
+ },
+ "notes": [
+  "merge base of reviewed commit with gh/main: 81862261ddbc2b3c8e8481851f3c27129217d477; record base 81862261ddbc2b3c8e8481851f3c27129217d477; equal True",
+  "digests checked: 11 tools + 15 outputs",
+  "changedFiles 30 vs git diff base..code 30"
+ ],
+ "problems": []
+}

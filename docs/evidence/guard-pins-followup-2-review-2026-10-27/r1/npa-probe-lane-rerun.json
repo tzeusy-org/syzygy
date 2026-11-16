@@ -1,0 +1,243 @@
+{
+ "node": "v24.6.0",
+ "npaVersion": "12.0.2",
+ "pattern": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+ "comment": [
+  {
+   "spec": "file:../x",
+   "npa": "directory",
+   "local": true
+  },
+  {
+   "spec": ".",
+   "npa": "directory",
+   "local": true
+  },
+  {
+   "spec": "..",
+   "npa": "directory",
+   "local": true
+  },
+  {
+   "spec": "./x",
+   "npa": "directory",
+   "local": true
+  },
+  {
+   "spec": "../x",
+   "npa": "directory",
+   "local": true
+  },
+  {
+   "spec": "/x",
+   "npa": "directory",
+   "local": true
+  },
+  {
+   "spec": "~/x",
+   "npa": "directory",
+   "local": true
+  },
+  {
+   "spec": "x.tgz",
+   "npa": "file",
+   "local": true
+  },
+  {
+   "spec": "x.tar",
+   "npa": "file",
+   "local": true
+  },
+  {
+   "spec": "x.tar.gz",
+   "npa": "file",
+   "local": true
+  },
+  {
+   "spec": "link:../x",
+   "npa": "throws EUNSUPPORTEDPROTOCOL",
+   "local": true
+  },
+  {
+   "spec": "workspace:*",
+   "npa": "throws EUNSUPPORTEDPROTOCOL",
+   "local": true
+  },
+  {
+   "spec": "npm:@syzygy/lib@*",
+   "npa": "alias",
+   "aliasOf": "range",
+   "local": true
+  },
+  {
+   "spec": "https://example.com/x.tgz",
+   "npa": "remote",
+   "local": true
+  },
+  {
+   "spec": "packages/polaris-dossier/",
+   "npa": "directory",
+   "local": false
+  },
+  {
+   "spec": ".hidden-lib",
+   "npa": "directory",
+   "local": false
+  },
+  {
+   "spec": "a/b/c",
+   "npa": "directory",
+   "local": false
+  },
+  {
+   "spec": "npm:typescript@^5.5.0",
+   "npa": "alias",
+   "aliasOf": "range",
+   "local": true
+  },
+  {
+   "spec": "npm:./lib",
+   "npa": "throws aliases only work for registry deps",
+   "local": true
+  },
+  {
+   "spec": "npm:file:../lib",
+   "npa": "throws aliases only work for registry deps",
+   "local": true
+  },
+  {
+   "spec": "github:someone/dossier#v1.tar",
+   "npa": "git",
+   "local": true
+  },
+  {
+   "spec": "git+https://example.com/lib.tgz",
+   "npa": "git",
+   "local": true
+  },
+  {
+   "spec": "http://example.com/x.tgz",
+   "npa": "remote",
+   "local": true
+  }
+ ],
+ "rows": [
+  {
+   "spec": "file:../../packages/lib",
+   "npa": "directory",
+   "local": true
+  },
+  {
+   "spec": "FILE:../../packages/lib",
+   "npa": "directory",
+   "local": true
+  },
+  {
+   "spec": "link:../../packages/lib",
+   "npa": "throws EUNSUPPORTEDPROTOCOL",
+   "local": true
+  },
+  {
+   "spec": "workspace:*",
+   "npa": "throws EUNSUPPORTEDPROTOCOL",
+   "local": true
+  },
+  {
+   "spec": "npm:@syzygy/lib@*",
+   "npa": "alias",
+   "aliasOf": "range",
+   "local": true
+  },
+  {
+   "spec": "../../packages/lib",
+   "npa": "directory",
+   "local": true
+  },
+  {
+   "spec": "~/lib",
+   "npa": "directory",
+   "local": true
+  },
+  {
+   "spec": "/srv/lib",
+   "npa": "directory",
+   "local": true
+  },
+  {
+   "spec": "lib-0.0.0.tgz",
+   "npa": "file",
+   "local": true
+  },
+  {
+   "spec": "./lib",
+   "npa": "directory",
+   "local": true
+  },
+  {
+   "spec": ".",
+   "npa": "directory",
+   "local": true
+  },
+  {
+   "spec": "lib-0.0.0.tar",
+   "npa": "file",
+   "local": true
+  },
+  {
+   "spec": "lib-0.0.0.tar.gz",
+   "npa": "file",
+   "local": true
+  },
+  {
+   "spec": "https://example.com/lib-1.0.0.tgz",
+   "npa": "remote",
+   "local": true
+  },
+  {
+   "spec": "file:../../apps/app",
+   "npa": "directory",
+   "local": true
+  },
+  {
+   "spec": "2.9.0",
+   "npa": "version",
+   "local": false
+  },
+  {
+   "spec": "^1.0.0",
+   "npa": "range",
+   "local": false
+  },
+  {
+   "spec": "github:someone/dossier",
+   "npa": "git",
+   "local": false
+  },
+  {
+   "spec": "~1.2.3",
+   "npa": "range",
+   "local": false
+  },
+  {
+   "spec": "git+https://example.com/lib.tgz.git",
+   "npa": "git",
+   "local": false
+  },
+  {
+   "spec": "http://example.com/lib-1.0.0.tar.gz",
+   "npa": "remote",
+   "local": true
+  },
+  {
+   "spec": "npm:typescript@^5.5.0",
+   "npa": "alias",
+   "aliasOf": "range",
+   "local": true
+  },
+  {
+   "spec": "..",
+   "npa": "directory",
+   "local": true
+  }
+ ]
+}

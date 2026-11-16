@@ -1,0 +1,371 @@
+{
+ "rows": [
+  {
+   "id": "lane S1-admits-null",
+   "file": "packages/support/src/is-record.ts",
+   "line": 8,
+   "old": "return value !== null && typeof value === 'object' && !Array.isArray(value);",
+   "new": "return typeof value === 'object' && !Array.isArray(value);",
+   "tests": [
+    "packages/support/src/is-record.test.ts"
+   ],
+   "laneKilled": true
+  },
+  {
+   "id": "lane S2-admits-primitives",
+   "file": "packages/support/src/is-record.ts",
+   "line": 8,
+   "old": "return value !== null && typeof value === 'object' && !Array.isArray(value);",
+   "new": "return value !== null && !Array.isArray(value);",
+   "tests": [
+    "packages/support/src/is-record.test.ts"
+   ],
+   "laneKilled": true
+  },
+  {
+   "id": "lane S3-admits-arrays",
+   "file": "packages/support/src/is-record.ts",
+   "line": 8,
+   "old": "return value !== null && typeof value === 'object' && !Array.isArray(value);",
+   "new": "return value !== null && typeof value === 'object';",
+   "tests": [
+    "packages/support/src/is-record.test.ts"
+   ],
+   "laneKilled": true
+  },
+  {
+   "id": "lane S4-admits-functions",
+   "file": "packages/support/src/is-record.ts",
+   "line": 8,
+   "old": "return value !== null && typeof value === 'object' && !Array.isArray(value);",
+   "new": "return value !== null && (typeof value === 'object' || typeof value === 'function') && !Array.isArray(value);",
+   "tests": [
+    "packages/support/src/is-record.test.ts"
+   ],
+   "laneKilled": true
+  },
+  {
+   "id": "lane S5-instanceof-array-for-array-is-array",
+   "file": "packages/support/src/is-record.ts",
+   "line": 8,
+   "old": "return value !== null && typeof value === 'object' && !Array.isArray(value);",
+   "new": "return value !== null && typeof value === 'object' && !(value instanceof Array);",
+   "tests": [
+    "packages/support/src/is-record.test.ts"
+   ],
+   "laneKilled": true
+  },
+  {
+   "id": "lane S6-plain-objects-only",
+   "file": "packages/support/src/is-record.ts",
+   "line": 8,
+   "old": "return value !== null && typeof value === 'object' && !Array.isArray(value);",
+   "new": "return value !== null && typeof value === 'object' && !Array.isArray(value) && [Object.prototype, null].includes(Object.getPrototypeOf(value) as object | null);",
+   "tests": [
+    "packages/support/src/is-record.test.ts"
+   ],
+   "laneKilled": true
+  },
+  {
+   "id": "lane S7-swallows-the-revoked-proxy-throw",
+   "file": "packages/support/src/is-record.ts",
+   "line": 8,
+   "old": "return value !== null && typeof value === 'object' && !Array.isArray(value);",
+   "new": "try { return value !== null && typeof value === 'object' && !Array.isArray(value); } catch { return false; }",
+   "tests": [
+    "packages/support/src/is-record.test.ts"
+   ],
+   "laneKilled": true
+  },
+  {
+   "id": "lane S8-always-true",
+   "file": "packages/support/src/is-record.ts",
+   "line": 8,
+   "old": "return value !== null && typeof value === 'object' && !Array.isArray(value);",
+   "new": "return true;",
+   "tests": [
+    "packages/support/src/is-record.test.ts"
+   ],
+   "laneKilled": true
+  },
+  {
+   "id": "lane S9-always-false",
+   "file": "packages/support/src/is-record.ts",
+   "line": 8,
+   "old": "return value !== null && typeof value === 'object' && !Array.isArray(value);",
+   "new": "return false;",
+   "tests": [
+    "packages/support/src/is-record.test.ts"
+   ],
+   "laneKilled": true
+  },
+  {
+   "id": "lane I1-http-date-form",
+   "file": "packages/polaris-dossier/src/iso-of.ts",
+   "line": 9,
+   "old": "new Date(instant).toISOString();",
+   "new": "new Date(instant).toUTCString();",
+   "tests": [
+    "packages/polaris-dossier/src/iso-of.test.ts"
+   ],
+   "laneKilled": true
+  },
+  {
+   "id": "lane I2-drops-the-milliseconds",
+   "file": "packages/polaris-dossier/src/iso-of.ts",
+   "line": 9,
+   "old": "new Date(instant).toISOString();",
+   "new": "new Date(instant).toISOString().slice(0, 19) + 'Z';",
+   "tests": [
+    "packages/polaris-dossier/src/iso-of.test.ts"
+   ],
+   "laneKilled": true
+  },
+  {
+   "id": "lane I3-absolute-value",
+   "file": "packages/polaris-dossier/src/iso-of.ts",
+   "line": 9,
+   "old": "new Date(instant).toISOString();",
+   "new": "new Date(Math.abs(instant)).toISOString();",
+   "tests": [
+    "packages/polaris-dossier/src/iso-of.test.ts"
+   ],
+   "laneKilled": true
+  },
+  {
+   "id": "lane I4-swallows-the-range-error",
+   "file": "packages/polaris-dossier/src/iso-of.ts",
+   "line": 9,
+   "old": "export const isoOf = (instant: number): string => new Date(instant).toISOString();",
+   "new": "export const isoOf = (instant: number): string => { try { return new Date(instant).toISOString(); } catch { return ''; } };",
+   "tests": [
+    "packages/polaris-dossier/src/iso-of.test.ts"
+   ],
+   "laneKilled": true
+  },
+  {
+   "id": "lane I5-local-time-form",
+   "file": "packages/polaris-dossier/src/iso-of.ts",
+   "line": 9,
+   "old": "new Date(instant).toISOString();",
+   "new": "new Date(instant).toString();",
+   "tests": [
+    "packages/polaris-dossier/src/iso-of.test.ts"
+   ],
+   "laneKilled": true
+  },
+  {
+   "id": "lane C-authority-artifact-fields-L132n2-A",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 132,
+   "old": "isRecord(entry)",
+   "new": "(typeof entry === 'object' && entry !== null)",
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ],
+   "laneKilled": true
+  },
+  {
+   "id": "lane C-authority-artifact-fields-L136n3-B",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 136,
+   "old": "isRecord(subject)",
+   "new": "(typeof subject === 'object' && !Array.isArray(subject))",
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ],
+   "laneKilled": true
+  },
+  {
+   "id": "lane C-authority-artifact-fields-L141n4-A",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 141,
+   "old": "isRecord(authority)",
+   "new": "(typeof authority === 'object' && authority !== null)",
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ],
+   "laneKilled": false
+  },
+  {
+   "id": "lane C-authority-artifact-fields-L141n4-D",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 141,
+   "old": "isRecord(authority)",
+   "new": "true",
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ],
+   "laneKilled": true
+  },
+  {
+   "id": "lane C-secret-redaction-L71n0-A",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "line": 71,
+   "old": "isRecord(scope)",
+   "new": "(typeof scope === 'object' && scope !== null)",
+   "tests": [
+    "packages/polaris-generation-core/src/secret-redaction.test.ts"
+   ],
+   "laneKilled": true
+  },
+  {
+   "id": "lane C-secret-redaction-L73n1-B",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "line": 73,
+   "old": "isRecord(red)",
+   "new": "(typeof red === 'object' && !Array.isArray(red))",
+   "tests": [
+    "packages/polaris-generation-core/src/secret-redaction.test.ts"
+   ],
+   "laneKilled": true
+  },
+  {
+   "id": "lane C-public-source-classification-L68n0-A",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 68,
+   "old": "isRecord(rule)",
+   "new": "(typeof rule === 'object' && rule !== null)",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "laneKilled": true
+  },
+  {
+   "id": "lane C-public-source-classification-L83n2-D",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 83,
+   "old": "isRecord(prefix)",
+   "new": "true",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "laneKilled": true
+  },
+  {
+   "id": "lane C-public-source-classification-L205n4-B",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 205,
+   "old": "isRecord(active)",
+   "new": "(typeof active === 'object' && !Array.isArray(active))",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "laneKilled": true
+  },
+  {
+   "id": "lane C-public-source-classification-L207n5-A",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 207,
+   "old": "isRecord(exemption)",
+   "new": "(typeof exemption === 'object' && exemption !== null)",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "laneKilled": true
+  },
+  {
+   "id": "lane C-screen-L81n0-A",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 81,
+   "old": "isRecord(doc)",
+   "new": "(typeof doc === 'object' && doc !== null)",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "laneKilled": false
+  },
+  {
+   "id": "lane C-screen-L83n1-D",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 83,
+   "old": "isRecord(scope)",
+   "new": "true",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "laneKilled": true
+  },
+  {
+   "id": "lane C-screen-L84n2-A",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 84,
+   "old": "isRecord(admission)",
+   "new": "(typeof admission === 'object' && admission !== null)",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "laneKilled": false
+  },
+  {
+   "id": "lane C-screen-L88n3-A",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 88,
+   "old": "isRecord(classification)",
+   "new": "(typeof classification === 'object' && classification !== null)",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "laneKilled": false
+  },
+  {
+   "id": "lane C-screen-L89n4-A",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 89,
+   "old": "isRecord(rule)",
+   "new": "(typeof rule === 'object' && rule !== null)",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "laneKilled": false
+  },
+  {
+   "id": "lane C-screen-L89n4-B",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 89,
+   "old": "isRecord(rule)",
+   "new": "(typeof rule === 'object' && !Array.isArray(rule))",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "laneKilled": true
+  },
+  {
+   "id": "lane C-screen-L90n5-A",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 90,
+   "old": "isRecord(codeContent[0])",
+   "new": "(typeof codeContent[0] === 'object' && codeContent[0] !== null)",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "laneKilled": false
+  },
+  {
+   "id": "lane C-screen-L90n5-B",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 90,
+   "old": "isRecord(codeContent[0])",
+   "new": "(typeof codeContent[0] === 'object' && !Array.isArray(codeContent[0]))",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "laneKilled": false
+  },
+  {
+   "id": "lane C-screen-L100n6-A",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 100,
+   "old": "isRecord(d)",
+   "new": "(typeof d === 'object' && d !== null)",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "laneKilled": false
+  }
+ ]
+}

@@ -1,0 +1,141 @@
+{
+ "base": 105,
+ "head": 133,
+ "added": 28,
+ "removed": 0,
+ "perFile": {
+  "packages/polaris-dossier/src/argv.test.ts": {
+   "base": 74,
+   "head": 81
+  },
+  "packages/polaris-dossier/src/subpath-imports.test.ts": {
+   "base": 27,
+   "head": 27
+  },
+  "packages/polaris-generation-core/src/island-boundary.test.ts": {
+   "base": 4,
+   "head": 4
+  },
+  "packages/polaris-generation-core/src/workspace-reach.test.ts": {
+   "base": 0,
+   "head": 21
+  }
+ },
+ "duplicatesBase": [],
+ "duplicatesHead": [],
+ "addedNames": [
+  [
+   "packages/polaris-dossier/src/argv.test.ts",
+   "each policy copy above, against the spec its caller passes > names readArgv only where the lift reads it: its declaration, an import or export of it, and the callee of a call"
+  ],
+  [
+   "packages/polaris-dossier/src/argv.test.ts",
+   "each policy copy above, against the spec its caller passes > the census sees a reading the lift does not in \"import * as argvNs from './argv.js';\\nvoid argvNs.readArgv([], { valued: [] });\" (its own mutant)"
+  ],
+  [
+   "packages/polaris-dossier/src/argv.test.ts",
+   "each policy copy above, against the spec its caller passes > the census sees a reading the lift does not in \"import * as argvNs from './argv.js';\\nvoid argvNs['readArgv']([], { valued: [] });\" (its own mutant)"
+  ],
+  [
+   "packages/polaris-dossier/src/argv.test.ts",
+   "each policy copy above, against the spec its caller passes > the census sees a reading the lift does not in \"import { readArgv as readArgs } from './argv.js';\\nvoid readArgs([], { valued: [] });\" (its own mutant)"
+  ],
+  [
+   "packages/polaris-dossier/src/argv.test.ts",
+   "each policy copy above, against the spec its caller passes > the census sees a reading the lift does not in \"import { readArgv } from './argv.js';\\n[[]].map((args) => readArgv.call(undefined, args, { valued: [] }));\" (its own mutant)"
+  ],
+  [
+   "packages/polaris-dossier/src/argv.test.ts",
+   "each policy copy above, against the spec its caller passes > the census sees a reading the lift does not in \"import { readArgv } from './argv.js';\\nconst readArgs = readArgv;\\nvoid readArgs([], { valued: [] });\" (its own mutant)"
+  ],
+  [
+   "packages/polaris-dossier/src/argv.test.ts",
+   "each policy copy above, against the spec its caller passes > the census sees a reading the lift does not in \"import { readArgv } from './argv.js';\\nexport const policies = { daemon: readArgv };\" (its own mutant)"
+  ],
+  [
+   "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "the shared workspace resolver > follows a # alias its package declares for a module of its own package"
+  ],
+  [
+   "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "the shared workspace resolver > follows a # alias its package declares for a package by name"
+  ],
+  [
+   "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "the shared workspace resolver > follows a # alias its package declares for a subpath by name"
+  ],
+  [
+   "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "the shared workspace resolver > follows a # alias its package declares for agreeing conditions"
+  ],
+  [
+   "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "the shared workspace resolver > reads a # alias from a module of another package as naming no module"
+  ],
+  [
+   "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "the shared workspace resolver > reads a # alias its package does not declare as naming no module"
+  ],
+  [
+   "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "the shared workspace resolver > reads a # alias under a name its package does not declare as naming no module"
+  ],
+  [
+   "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "the shared workspace resolver > reads a # alias whose conditions disagree as naming no module"
+  ],
+  [
+   "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "the shared workspace resolver > reads a # alias whose target is an absolute path as naming no module"
+  ],
+  [
+   "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "the shared workspace resolver > reads a # alias whose target is another alias as naming no module"
+  ],
+  [
+   "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "the shared workspace resolver > reads a # alias whose target leaves its package as naming no module"
+  ],
+  [
+   "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "the shared workspace resolver > reads a FILE: URL of the barrel as naming no module"
+  ],
+  [
+   "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "the shared workspace resolver > reads a file: URL of the barrel as naming no module"
+  ],
+  [
+   "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "the shared workspace resolver > reads an absolute path to the barrel as naming no module"
+  ],
+  [
+   "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "the shared workspace resolver > reads an export whose condition holds further conditions as naming no module"
+  ],
+  [
+   "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "the shared workspace resolver > reads an export whose default condition names another target as naming no module"
+  ],
+  [
+   "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "the shared workspace resolver > reads an export whose module-sync condition names another target as naming no module"
+  ],
+  [
+   "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "the shared workspace resolver > reads an export whose node condition names another target as naming no module"
+  ],
+  [
+   "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "the shared workspace resolver > reads an export whose require condition names another target as naming no module"
+  ],
+  [
+   "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "the shared workspace resolver > resolves a subpath export, a relative module and the barrel by name, and leaves a built-in and a dependency outside"
+  ],
+  [
+   "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "the shared workspace resolver > resolves an export whose conditions other than types all name one target"
+  ]
+ ],
+ "removedNames": []
+}

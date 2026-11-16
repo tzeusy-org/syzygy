@@ -1,0 +1,62 @@
+diff --git a/apps/three-surface-poc/src/polaris-generation/generation-mutation.test.ts b/apps/three-surface-poc/src/polaris-generation/generation-mutation.test.ts
+index 91a95f4b..54896af4 100644
+--- a/apps/three-surface-poc/src/polaris-generation/generation-mutation.test.ts
++++ b/apps/three-surface-poc/src/polaris-generation/generation-mutation.test.ts
+@@ -16,7 +16,7 @@
+ // (generation-mutation-run-main.ts).
+ 
+ import { readFileSync } from 'node:fs';
+-import { join } from 'node:path';
++import { join, posix } from 'node:path';
+ import { fileURLToPath } from 'node:url';
+ import ts from 'typescript';
+ import { describe, expect, it } from 'vitest';
+@@ -47,6 +47,19 @@ const isTestCallee = (callee: ts.Expression): boolean =>
+   (ts.isIdentifier(callee) && ['it', 'test'].includes(callee.text)) ||
+   (ts.isCallExpression(callee) && ts.isPropertyAccessExpression(callee.expression) && callee.expression.name.text === 'each' &&
+     ts.isIdentifier(callee.expression.expression) && ['it', 'test'].includes(callee.expression.expression.text));
++// The runner's TEST_FILES, read from its source rather than its text.
++function runnerTestFiles(): string[] {
++  let files: string[] = [];
++  const visit = (node: ts.Node): void => {
++    if (ts.isVariableDeclaration(node) && ts.isIdentifier(node.name) && node.name.text === 'TEST_FILES' && node.initializer !== undefined) {
++      const list = ts.isAsExpression(node.initializer) ? node.initializer.expression : node.initializer;
++      if (ts.isArrayLiteralExpression(list)) files = list.elements.filter(ts.isStringLiteralLike).map((element) => element.text);
++    }
++    ts.forEachChild(node, visit);
++  };
++  visit(ts.createSourceFile(RUNNER, read(RUNNER), ts.ScriptTarget.Latest, true));
++  return files;
++}
+ function testTitles(file: string): string[] {
+   const titles: string[] = [];
+   const visit = (node: ts.Node): void => {
+@@ -64,20 +77,24 @@ describe('generation mutation plan', () => {
+   it('holds twelve mutations with distinct ids, and the runner runs the test files their must-fail names are read from', () => {
+     expect(GENERATION_LITERAL_MUTATIONS.length).toBe(12);
+     expect(new Set(GENERATION_LITERAL_MUTATIONS.map((mutation) => mutation.id)).size).toBe(GENERATION_LITERAL_MUTATIONS.length);
+-    const runner = read(RUNNER);
+-    for (const file of RUNNER_TEST_FILES) expect(runner, file).toContain(`'${file}'`);
++    expect(runnerTestFiles(), 'the runner\'s TEST_FILES').toEqual(RUNNER_TEST_FILES);
+   });
+ 
+   it.each(GENERATION_LITERAL_MUTATIONS.map((mutation): [string, LiteralMutation] => [mutation.id, mutation]))(
+     '%s: names a non-test file under polaris-generation-core/src, holds its fragment once there, changes the emit and names must-fail tests the runner runs',
+     (id, mutation) => {
+-      expect(mutation.file.startsWith(SUBJECT_ROOT) && !mutation.file.endsWith('.test.ts'), `${id}: ${mutation.file} is a non-test file under ${SUBJECT_ROOT}`).toBe(true);
++      const { file } = mutation;
++      expect(posix.normalize(file) === file && file.startsWith(SUBJECT_ROOT) && file.endsWith('.ts') && !/\.(test|spec|testkit|d)\.ts$/.test(file),
++        `${id}: ${file} is a normalized non-test .ts file under ${SUBJECT_ROOT}`).toBe(true);
+       const source = read(mutation.file);
+       expect(source.split(mutation.from).length - 1, `${id}: occurrences of the fragment in ${mutation.file}`).toBe(1);
+       expect(emit(mutation.file, applyLiteralMutation(source, mutation)), `${id}: the mutation changes the emitted JavaScript`).not.toBe(emit(mutation.file, source));
+       expect(mutation.mustFail.length, `${id}: must-fail names`).toBeGreaterThan(0);
+       const titles = RUNNER_TEST_FILES.flatMap(testTitles);
+-      for (const name of mutation.mustFail) expect(titles.some((title) => title.includes(name)), `${id}: must-fail "${name}" is in a test title`).toBe(true);
++      for (const name of mutation.mustFail) {
++        expect(name.trim() !== '' && !/%|\$/.test(name), `${id}: must-fail "${name}" is a literal title fragment`).toBe(true);
++        expect(titles.filter((title) => title.includes(name)).length, `${id}: test titles holding must-fail "${name}"`).toBe(1);
++      }
+     },
+   );
+ });

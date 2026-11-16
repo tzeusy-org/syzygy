@@ -1,4 +1,4 @@
-import { escapeHtml } from '@syzygy/cap1-daemon';
+import { escapeHtml } from '@syzygy/http-host';
 import type { PocModel, PocSurface } from '@syzygy/three-surface-poc-core';
 
 import { sourceSlug } from './polaris-source.js';

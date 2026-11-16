@@ -1,0 +1,8 @@
+R1-V7-origin-case-insensitive: survived exit=0 failed=0/1024 passed=1023 skipped=1 files=105 failedFiles=0 146.2s load=34.43->32.79 clean=True
+R2-V8-host-lower-cased: survived exit=0 failed=0/1024 passed=1023 skipped=1 files=105 failedFiles=0 212.5s load=32.79->47.19 clean=True
+R6-real-location-containment-case-folded-only: survived exit=0 failed=0/1024 passed=1023 skipped=1 files=105 failedFiles=0 201.4s load=47.19->36.79 clean=True
+R7-origin-url-normalized: survived exit=0 failed=0/1024 passed=1023 skipped=1 files=105 failedFiles=0 195.3s load=36.79->39.09 clean=True
+R8-breach-list-prefix-match: survived exit=0 failed=0/1024 passed=1023 skipped=1 files=105 failedFiles=0 203.3s load=39.09->42.17 clean=True
+R9-breach-list-trimmed-match: survived exit=0 failed=0/1024 passed=1023 skipped=1 files=105 failedFiles=0 292.4s load=42.17->64.85 clean=True
+killed 0 survived 6 error 0 of 6
+exit=0

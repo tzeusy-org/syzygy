@@ -18,12 +18,12 @@
 // It reads no Butlers repository itself; the daemon (`main.ts`) never
 // imports it. Exits 0 only when every swept page has zero violations.
 import { execFileSync } from 'node:child_process';
-import { createHash } from 'node:crypto';
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import * as http from 'node:http';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { sha256 } from '@syzygy/support';
 
 import { TAILNET_HOST } from './browser-origin.js';
 import { findBrowserExecutable, launchBrowser } from './cdp-browser.js';
@@ -93,7 +93,7 @@ async function main(): Promise<number> {
         const page = await browser.newPage();
         try {
           const report = await checkPolarisAccessibility(page, pathToFileURL(file).href, target.mount);
-          sweeps.push({ mount: target.mount, measuredOn: target.measuredOn, bytes: target.body.byteLength, sha256: createHash('sha256').update(target.body).digest('hex'), report });
+          sweeps.push({ mount: target.mount, measuredOn: target.measuredOn, bytes: target.body.byteLength, sha256: sha256(target.body), report });
           process.stdout.write(`${target.mount}: focusables ${report.focusTrace.reached}/${report.focusTrace.population}, activations ${report.activations.length}, violations ${report.violations.length} ${JSON.stringify(violationsByKind(report))}\n`);
         } finally {
           await page.close();

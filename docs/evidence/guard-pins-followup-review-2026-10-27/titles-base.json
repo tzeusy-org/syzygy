@@ -1,0 +1,787 @@
+[
+  {
+    "name": "the subpaths the daemon entry imports > are /argv and /state-directory, imported statically, and the barrel only dynamically inside the dossier and polaris branches",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/subpath-imports.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "the subpaths the daemon entry imports > ./argv is packages/polaris-dossier/src/argv.ts, which imports exactly [\"node:util\"]",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/subpath-imports.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "the subpaths the daemon entry imports > ./state-directory is packages/polaris-dossier/src/state-directory.ts, which imports exactly [\"node:crypto\",\"node:fs\",\"node:path\"]",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/subpath-imports.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "the subpaths the daemon entry imports > the check sees a forbidden import in import { DOSSIER_USAGE } from './cli.js'; (its own mutant)",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/subpath-imports.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "the subpaths the daemon entry imports > the check sees a forbidden import in import type { CliPorts } from './index.js'; (its own mutant)",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/subpath-imports.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "the subpaths the daemon entry imports > the check sees a forbidden import in export * from '@syzygy/cap1-core'; (its own mutant)",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/subpath-imports.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "the subpaths the daemon entry imports > the check sees a forbidden import in const lazy = await import('typescript'); (its own mutant)",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/subpath-imports.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "the subpaths the daemon entry imports > the check sees a forbidden import in const fs = require('fs'); (its own mutant)",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/subpath-imports.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "the subpaths the daemon entry imports > the check sees a forbidden import in import { createRequire } from 'node:module'; (its own mutant)",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/subpath-imports.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "the subpaths the daemon entry imports > the entry check sees export { runDossierCli } from '@syzygy/polaris-dossier'; (its own mutant)",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/subpath-imports.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "the subpaths the daemon entry imports > the entry check sees import type { CliPorts } from '@syzygy/polaris-dossier'; (its own mutant)",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/subpath-imports.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "the subpaths the daemon entry imports > the entry check sees const lazy = await import('@syzygy/polaris-dossier'); (its own mutant)",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/subpath-imports.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "the subpaths the daemon entry imports > the entry check sees type Barrel = typeof import('@syzygy/polaris-dossier'); (its own mutant)",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/subpath-imports.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "the subpaths the daemon entry imports > the entry check sees if (argv[0] !== 'dossier') require('@syzygy/polaris-dossier'); (its own mutant)",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/subpath-imports.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "the subpaths the daemon entry imports > the entry check sees if (argv[0] === 'dossier') {} else await import('@syzygy/polaris-dossier'); (its own mutant)",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/subpath-imports.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "the subpaths the daemon entry imports > the entry check sees import cli = require('../../../packages/polaris-dossier/src/cli.js'); (its own mutant)",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/subpath-imports.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "the subpaths the daemon entry imports > the entry check sees if (a) {} else if (argv[0] === 'dossier') { await import('@syzygy/polaris-dossier'); } (its own mutant)",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/subpath-imports.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "the subpaths the daemon entry imports > the entry check sees switch (argv[0]) { case 'dossier': await import('@syzygy/polaris-dossier'); } (its own mutant)",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/subpath-imports.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "the subpaths the daemon entry imports > the entry check sees if (await import('@syzygy/polaris-dossier')) {} (its own mutant)",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/subpath-imports.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "the subpaths the daemon entry imports > fails on a form the preprocessor misses rather than passing it unseen",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/subpath-imports.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "the subpaths the daemon entry imports > fails on a form only the preprocessor reports rather than passing it unseen",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/subpath-imports.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "the subpaths the daemon entry imports > the walk returns a computed specifier in \"const barrel = '@syzygy/polaris-dossier';\\nawait import(barrel);\" as its own edge (its own mutant)",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/subpath-imports.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "the subpaths the daemon entry imports > the walk returns a computed specifier in \"const name = '@syzygy/polaris-dossier';\\nif (argv[0] === 'dossier') require(name);\" as its own edge (its own mutant)",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/subpath-imports.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "the daemon path, every module the entry reaches outside its dossier and polaris branches > leaves the entry by every edge but the four dynamic imports inside those branches",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/subpath-imports.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "the daemon path, every module the entry reaches outside its dossier and polaris branches > resolves every workspace specifier on it, and reaches past the entry's own imports",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/subpath-imports.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "the daemon path, every module the entry reaches outside its dossier and polaris branches > reaches this package through argv.ts and state-directory.ts alone",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/subpath-imports.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "the daemon path, every module the entry reaches outside its dossier and polaris branches > has no node:module edge, and no import() or require of a computed name",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/subpath-imports.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "the syzygy CLI and the parked provider island > lists twenty island modules, each a file in the tree",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-generation-core/src/island-boundary.test.ts",
+    "projectName": "@syzygy/polaris-generation-core"
+  },
+  {
+    "name": "the syzygy CLI and the parked provider island > resolves every workspace import the CLI reaches, dynamic ones included",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-generation-core/src/island-boundary.test.ts",
+    "projectName": "@syzygy/polaris-generation-core"
+  },
+  {
+    "name": "the syzygy CLI and the parked provider island > reaches no island module from the CLI entry",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-generation-core/src/island-boundary.test.ts",
+    "projectName": "@syzygy/polaris-generation-core"
+  },
+  {
+    "name": "the syzygy CLI and the parked provider island > reaches the island from the consent package root, which the CLI does not import",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-generation-core/src/island-boundary.test.ts",
+    "projectName": "@syzygy/polaris-generation-core"
+  },
+  {
+    "name": "readArgv under the daemon policy: values taken whatever they start with, the last of a repeat, no positionals, stop at help > [] reads as {\"values\":{},\"flags\":[],\"positional\":[]}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "readArgv under the daemon policy: values taken whatever they start with, the last of a repeat, no positionals, stop at help > [\"--root\",\"/r\",\"--state-dir\",\"/s\",\"--port\",\"0\"] reads as {\"values\":{\"--root\":\"/r\",\"--state-dir\":\"/s\",\"--port\":\"0\"},\"flags\":[],\"positional\":[]}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "readArgv under the daemon policy: values taken whatever they start with, the last of a repeat, no positionals, stop at help > [\"--port\",\"1\",\"--port\",\"2\"] reads as {\"values\":{\"--port\":\"2\"},\"flags\":[],\"positional\":[]}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "readArgv under the daemon policy: values taken whatever they start with, the last of a repeat, no positionals, stop at help > [\"--root\",\"-x\"] reads as {\"values\":{\"--root\":\"-x\"},\"flags\":[],\"positional\":[]}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "readArgv under the daemon policy: values taken whatever they start with, the last of a repeat, no positionals, stop at help > [\"--port\",\"--help\"] reads as {\"values\":{\"--port\":\"--help\"},\"flags\":[],\"positional\":[]}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "readArgv under the daemon policy: values taken whatever they start with, the last of a repeat, no positionals, stop at help > [\"--port\"] reads as {\"fault\":\"missing-value\",\"arg\":\"--port\"}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "readArgv under the daemon policy: values taken whatever they start with, the last of a repeat, no positionals, stop at help > [\"--root\",\"\"] reads as {\"values\":{\"--root\":\"\"},\"flags\":[],\"positional\":[]}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "readArgv under the daemon policy: values taken whatever they start with, the last of a repeat, no positionals, stop at help > [\"--help\",\"--bogus\",\"x\"] reads as {\"values\":{},\"flags\":[],\"positional\":[],\"stoppedAt\":\"--help\"}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "readArgv under the daemon policy: values taken whatever they start with, the last of a repeat, no positionals, stop at help > [\"--port\",\"1\",\"-h\",\"--root\"] reads as {\"values\":{\"--port\":\"1\"},\"flags\":[],\"positional\":[],\"stoppedAt\":\"-h\"}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "readArgv under the daemon policy: values taken whatever they start with, the last of a repeat, no positionals, stop at help > [\"dossier\"] reads as {\"fault\":\"unknown\",\"arg\":\"dossier\"}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "readArgv under the daemon policy: values taken whatever they start with, the last of a repeat, no positionals, stop at help > [\"--\",\"--help\"] reads as {\"fault\":\"unknown\",\"arg\":\"--\"}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "readArgv under the daemon policy: values taken whatever they start with, the last of a repeat, no positionals, stop at help > [\"-hx\"] reads as {\"fault\":\"unknown\",\"arg\":\"-hx\"}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "readArgv under the daemon policy: values taken whatever they start with, the last of a repeat, no positionals, stop at help > [\"--help=1\"] reads as {\"fault\":\"unknown\",\"arg\":\"--help=1\"}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "readArgv under the daemon policy: values taken whatever they start with, the last of a repeat, no positionals, stop at help > [\"--port=5\"] reads as {\"fault\":\"unknown\",\"arg\":\"--port=5\"}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "readArgv under the daemon policy: values taken whatever they start with, the last of a repeat, no positionals, stop at help > [\"-abc\"] reads as {\"fault\":\"unknown\",\"arg\":\"-abc\"}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "readArgv under the daemon policy: values taken whatever they start with, the last of a repeat, no positionals, stop at help > [\"-\"] reads as {\"fault\":\"unknown\",\"arg\":\"-\"}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "readArgv under the daemon policy: values taken whatever they start with, the last of a repeat, no positionals, stop at help > [\"-5\"] reads as {\"fault\":\"unknown\",\"arg\":\"-5\"}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "readArgv under the daemon policy: values taken whatever they start with, the last of a repeat, no positionals, stop at help > [\"--bogus\"] reads as {\"fault\":\"unknown\",\"arg\":\"--bogus\"}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "readArgv under the dossier one-argument policy: positionals only > [\"run\"] reads as {\"values\":{},\"flags\":[],\"positional\":[\"run\"]}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "readArgv under the dossier one-argument policy: positionals only > [\"a\",\"b\"] reads as {\"values\":{},\"flags\":[],\"positional\":[\"a\",\"b\"]}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "readArgv under the dossier one-argument policy: positionals only > [\"--\",\"run\"] reads as {\"fault\":\"unknown\",\"arg\":\"--\"}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "readArgv under the dossier one-argument policy: positionals only > [\"run\",\"-\"] reads as {\"fault\":\"unknown\",\"arg\":\"-\"}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "readArgv under the dossier one-argument policy: positionals only > [\"-5\"] reads as {\"fault\":\"unknown\",\"arg\":\"-5\"}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "readArgv under the dossier one-argument policy: positionals only > [\"-abc\"] reads as {\"fault\":\"unknown\",\"arg\":\"-abc\"}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "readArgv under the dossier one-argument policy: positionals only > [\"-hx\"] reads as {\"fault\":\"unknown\",\"arg\":\"-hx\"}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "readArgv under the dossier one-argument policy: positionals only > [\"--x=v\"] reads as {\"fault\":\"unknown\",\"arg\":\"--x=v\"}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "readArgv under the dossier one-argument policy: positionals only > [\"run\",\"--draft\",\"d\"] reads as {\"fault\":\"unknown\",\"arg\":\"--draft\"}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "readArgv under the dossier one-argument policy: positionals only > [\"--help\"] reads as {\"fault\":\"unknown\",\"arg\":\"--help\"}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "readArgv under the dossier options policy: a dash-led value and a repeat refused > [\"run\",\"--revision\",\"abc\",\"--declare\",\"d\"] reads as {\"values\":{\"--revision\":\"abc\",\"--declare\":\"d\"},\"flags\":[],\"positional\":[\"run\"]}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "readArgv under the dossier options policy: a dash-led value and a repeat refused > [\"run\",\"--revision\",\"-x\"] reads as {\"fault\":\"missing-value\",\"arg\":\"--revision\"}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "readArgv under the dossier options policy: a dash-led value and a repeat refused > [\"--revision\",\"--declare\",\"d\"] reads as {\"fault\":\"missing-value\",\"arg\":\"--revision\"}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "readArgv under the dossier options policy: a dash-led value and a repeat refused > [\"--revision\",\"-\"] reads as {\"fault\":\"missing-value\",\"arg\":\"--revision\"}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "readArgv under the dossier options policy: a dash-led value and a repeat refused > [\"--revision\",\"a\",\"--revision\",\"b\"] reads as {\"fault\":\"repeated\",\"arg\":\"--revision\"}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "readArgv under the dossier options policy: a dash-led value and a repeat refused > [\"run\",\"--revision\",\"a\",\"--revision\"] reads as {\"fault\":\"repeated\",\"arg\":\"--revision\"}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "readArgv under the dossier options policy: a dash-led value and a repeat refused > [\"run\",\"--revision\",\"a\",\"--revision\",\"-x\"] reads as {\"fault\":\"repeated\",\"arg\":\"--revision\"}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "readArgv under the dossier options policy: a dash-led value and a repeat refused > [\"run\",\"--revision\",\"\"] reads as {\"values\":{\"--revision\":\"\"},\"flags\":[],\"positional\":[\"run\"]}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "readArgv under the dossier options policy: a dash-led value and a repeat refused > [\"run\",\"--revision\"] reads as {\"fault\":\"missing-value\",\"arg\":\"--revision\"}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "readArgv under the dossier options policy: a dash-led value and a repeat refused > [\"--revision=abc\"] reads as {\"fault\":\"unknown\",\"arg\":\"--revision=abc\"}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "readArgv under the dossier options policy: a dash-led value and a repeat refused > [\"run\",\"--\",\"--revision\",\"x\"] reads as {\"fault\":\"unknown\",\"arg\":\"--\"}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "readArgv under the dossier options policy: a dash-led value and a repeat refused > [\"--revision\",\"a\",\"-\"] reads as {\"fault\":\"unknown\",\"arg\":\"-\"}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "readArgv under the dossier options policy: a dash-led value and a repeat refused > [\"-5\"] reads as {\"fault\":\"unknown\",\"arg\":\"-5\"}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "readArgv under the dossier options policy: a dash-led value and a repeat refused > [\"-rd\"] reads as {\"fault\":\"unknown\",\"arg\":\"-rd\"}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "readArgv under the dossier options policy: a dash-led value and a repeat refused > [\"-hx\"] reads as {\"fault\":\"unknown\",\"arg\":\"-hx\"}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "readArgv under the dossier options policy: a dash-led value and a repeat refused > [\"run\",\"--kind\",\"k\"] reads as {\"fault\":\"unknown\",\"arg\":\"--kind\"}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "readArgv under the polaris policy: boolean options, values taken whatever they start with, the last of a repeat > [\"https://github.com/o/r\"] reads as {\"values\":{},\"flags\":[],\"positional\":[\"https://github.com/o/r\"]}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "readArgv under the polaris policy: boolean options, values taken whatever they start with, the last of a repeat > [\"--supervise\",\"--no-attach\"] reads as {\"values\":{},\"flags\":[\"--supervise\",\"--no-attach\"],\"positional\":[]}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "readArgv under the polaris policy: boolean options, values taken whatever they start with, the last of a repeat > [\"url\",\"-h\"] reads as {\"values\":{},\"flags\":[\"-h\"],\"positional\":[\"url\"]}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "readArgv under the polaris policy: boolean options, values taken whatever they start with, the last of a repeat > [\"--model\",\"a\",\"--model\",\"b\",\"url\"] reads as {\"values\":{\"--model\":\"b\"},\"flags\":[],\"positional\":[\"url\"]}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "readArgv under the polaris policy: boolean options, values taken whatever they start with, the last of a repeat > [\"--operator\",\"-x\",\"url\"] reads as {\"values\":{\"--operator\":\"-x\"},\"flags\":[],\"positional\":[\"url\"]}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "readArgv under the polaris policy: boolean options, values taken whatever they start with, the last of a repeat > [\"--model\",\"--help\"] reads as {\"values\":{\"--model\":\"--help\"},\"flags\":[],\"positional\":[]}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "readArgv under the polaris policy: boolean options, values taken whatever they start with, the last of a repeat > [\"url\",\"--deadline\"] reads as {\"fault\":\"missing-value\",\"arg\":\"--deadline\"}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "readArgv under the polaris policy: boolean options, values taken whatever they start with, the last of a repeat > [\"--model\",\"\",\"url\"] reads as {\"values\":{\"--model\":\"\"},\"flags\":[],\"positional\":[\"url\"]}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "readArgv under the polaris policy: boolean options, values taken whatever they start with, the last of a repeat > [\"--\",\"url\"] reads as {\"fault\":\"unknown\",\"arg\":\"--\"}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "readArgv under the polaris policy: boolean options, values taken whatever they start with, the last of a repeat > [\"-\"] reads as {\"fault\":\"unknown\",\"arg\":\"-\"}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "readArgv under the polaris policy: boolean options, values taken whatever they start with, the last of a repeat > [\"-hx\"] reads as {\"fault\":\"unknown\",\"arg\":\"-hx\"}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "readArgv under the polaris policy: boolean options, values taken whatever they start with, the last of a repeat > [\"-abc\"] reads as {\"fault\":\"unknown\",\"arg\":\"-abc\"}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "readArgv under the polaris policy: boolean options, values taken whatever they start with, the last of a repeat > [\"--supervise=1\"] reads as {\"fault\":\"unknown\",\"arg\":\"--supervise=1\"}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "readArgv under the polaris policy: boolean options, values taken whatever they start with, the last of a repeat > [\"-5\"] reads as {\"fault\":\"unknown\",\"arg\":\"-5\"}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "readArgv under the polaris policy: boolean options, values taken whatever they start with, the last of a repeat > [\"--bogus\"] reads as {\"fault\":\"unknown\",\"arg\":\"--bogus\"}",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "a spec naming an option readArgv could never see > throws for {\"valued\":[\"-o\"],\"dashValue\":\"refuse\",\"repeat\":\"refuse\",\"positionals\":true}, before reading anything",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "a spec naming an option readArgv could never see > throws for {\"valued\":[\"--\"],\"dashValue\":\"refuse\",\"repeat\":\"refuse\",\"positionals\":true}, before reading anything",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "a spec naming an option readArgv could never see > throws for {\"valued\":[\"---out\"],\"dashValue\":\"refuse\",\"repeat\":\"refuse\",\"positionals\":true}, before reading anything",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "a spec naming an option readArgv could never see > throws for {\"valued\":[\"--out=x\"],\"dashValue\":\"refuse\",\"repeat\":\"refuse\",\"positionals\":true}, before reading anything",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "a spec naming an option readArgv could never see > throws for {\"valued\":[\"--out=\"],\"dashValue\":\"refuse\",\"repeat\":\"refuse\",\"positionals\":true}, before reading anything",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "a spec naming an option readArgv could never see > throws for {\"valued\":[\"out\"],\"dashValue\":\"refuse\",\"repeat\":\"refuse\",\"positionals\":true}, before reading anything",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "a spec naming an option readArgv could never see > throws for {\"valued\":[],\"dashValue\":\"refuse\",\"repeat\":\"refuse\",\"positionals\":true,\"booleans\":[\"json\"]}, before reading anything",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "a spec naming an option readArgv could never see > throws for {\"valued\":[],\"dashValue\":\"refuse\",\"repeat\":\"refuse\",\"positionals\":true,\"booleans\":[\"-\"]}, before reading anything",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "a spec naming an option readArgv could never see > throws for {\"valued\":[],\"dashValue\":\"refuse\",\"repeat\":\"refuse\",\"positionals\":true,\"booleans\":[\"-vv\"]}, before reading anything",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "a spec naming an option readArgv could never see > throws for {\"valued\":[],\"dashValue\":\"refuse\",\"repeat\":\"refuse\",\"positionals\":true,\"stopAt\":[\"help\"]}, before reading anything",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "a spec naming an option readArgv could never see > throws for {\"valued\":[],\"dashValue\":\"refuse\",\"repeat\":\"refuse\",\"positionals\":true,\"stopAt\":[\"--\"]}, before reading anything",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "a spec naming an option readArgv could never see > throws for such a spec even when the arguments would fault first",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "a spec naming an option readArgv could never see > reads a short boolean option and a short stop option, which are judged by the whole argument",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "each policy copy above, against the spec its caller passes > is the spec of every readArgv call, and no other module names readArgv",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "each policy copy above, against the spec its caller passes > names readArgv only where the lift reads it: its declaration, an import or export of it, and the callee of a call",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "each policy copy above, against the spec its caller passes > the census sees a reading the lift does not in \"import * as argvNs from './argv.js';\\nvoid argvNs.readArgv([], { valued: [] });\" (its own mutant)",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "each policy copy above, against the spec its caller passes > the census sees a reading the lift does not in \"import * as argvNs from './argv.js';\\nvoid argvNs['readArgv']([], { valued: [] });\" (its own mutant)",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "each policy copy above, against the spec its caller passes > the census sees a reading the lift does not in \"import { readArgv } from './argv.js';\\nconst readArgs = readArgv;\\nvoid readArgs([], { valued: [] });\" (its own mutant)",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "each policy copy above, against the spec its caller passes > the census sees a reading the lift does not in \"import { readArgv as readArgs } from './argv.js';\\nvoid readArgs([], { valued: [] });\" (its own mutant)",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "each policy copy above, against the spec its caller passes > the census sees a reading the lift does not in \"import { readArgv } from './argv.js';\\n[[]].map((args) => readArgv.call(undefined, args, { valued: [] }));\" (its own mutant)",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "each policy copy above, against the spec its caller passes > the census sees a reading the lift does not in \"import { readArgv } from './argv.js';\\nexport const policies = { daemon: readArgv };\" (its own mutant)",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "each policy copy above, against the spec its caller passes > the census sees a reading the lift does not in \"import { readArgv } from './argv.js';\\nvoid [[]].map(readArgv);\" (its own mutant)",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "each policy copy above, against the spec its caller passes > the census sees a reading the lift does not in \"export function readArgv(): void {}\" (its own mutant)",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "each policy copy above, against the spec its caller passes > adds each module's census to what it reports unlifted",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "each policy copy above, against the spec its caller passes > reads every module TypeScript compiles under src, .mts, .cts and .tsx among them, and no test module",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "each policy copy above, against the spec its caller passes > names allow-execution's options as the dossier options policy's",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-dossier/src/argv.test.ts",
+    "projectName": "@syzygy/polaris-dossier"
+  },
+  {
+    "name": "the shared workspace resolver > resolves a subpath export, a relative module and the barrel by name, and leaves a built-in and a dependency outside",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "projectName": "@syzygy/polaris-generation-core"
+  },
+  {
+    "name": "the shared workspace resolver > reads an absolute path to the barrel as naming no module",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "projectName": "@syzygy/polaris-generation-core"
+  },
+  {
+    "name": "the shared workspace resolver > reads a file: URL of the barrel as naming no module",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "projectName": "@syzygy/polaris-generation-core"
+  },
+  {
+    "name": "the shared workspace resolver > reads a FILE: URL of the barrel as naming no module",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "projectName": "@syzygy/polaris-generation-core"
+  },
+  {
+    "name": "the shared workspace resolver > reads a # alias its package does not declare as naming no module",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "projectName": "@syzygy/polaris-generation-core"
+  },
+  {
+    "name": "the shared workspace resolver > follows a # alias its package declares for a package by name",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "projectName": "@syzygy/polaris-generation-core"
+  },
+  {
+    "name": "the shared workspace resolver > follows a # alias its package declares for a subpath by name",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "projectName": "@syzygy/polaris-generation-core"
+  },
+  {
+    "name": "the shared workspace resolver > follows a # alias its package declares for a module of its own package",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "projectName": "@syzygy/polaris-generation-core"
+  },
+  {
+    "name": "the shared workspace resolver > follows a # alias its package declares for agreeing conditions",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "projectName": "@syzygy/polaris-generation-core"
+  },
+  {
+    "name": "the shared workspace resolver > reads a # alias from a module of another package as naming no module",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "projectName": "@syzygy/polaris-generation-core"
+  },
+  {
+    "name": "the shared workspace resolver > reads a # alias whose target is another alias as naming no module",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "projectName": "@syzygy/polaris-generation-core"
+  },
+  {
+    "name": "the shared workspace resolver > reads a # alias whose target leaves its package as naming no module",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "projectName": "@syzygy/polaris-generation-core"
+  },
+  {
+    "name": "the shared workspace resolver > reads a # alias whose target leaves its package for a module that exists as naming no module",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "projectName": "@syzygy/polaris-generation-core"
+  },
+  {
+    "name": "the shared workspace resolver > reads a # alias whose target is a module of its own package outside dist as naming no module",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "projectName": "@syzygy/polaris-generation-core"
+  },
+  {
+    "name": "the shared workspace resolver > reads a # alias whose target names no source module as naming no module",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "projectName": "@syzygy/polaris-generation-core"
+  },
+  {
+    "name": "the shared workspace resolver > reads a # alias whose target is an absolute path as naming no module",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "projectName": "@syzygy/polaris-generation-core"
+  },
+  {
+    "name": "the shared workspace resolver > reads a # alias whose conditions disagree as naming no module",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "projectName": "@syzygy/polaris-generation-core"
+  },
+  {
+    "name": "the shared workspace resolver > reads a # alias under a name its package does not declare as naming no module",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "projectName": "@syzygy/polaris-generation-core"
+  },
+  {
+    "name": "the shared workspace resolver > reads an export whose node condition names another target as naming no module",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "projectName": "@syzygy/polaris-generation-core"
+  },
+  {
+    "name": "the shared workspace resolver > reads an export whose module-sync condition names another target as naming no module",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "projectName": "@syzygy/polaris-generation-core"
+  },
+  {
+    "name": "the shared workspace resolver > reads an export whose require condition names another target as naming no module",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "projectName": "@syzygy/polaris-generation-core"
+  },
+  {
+    "name": "the shared workspace resolver > reads an export whose default condition names another target as naming no module",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "projectName": "@syzygy/polaris-generation-core"
+  },
+  {
+    "name": "the shared workspace resolver > reads an export whose condition holds further conditions as naming no module",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "projectName": "@syzygy/polaris-generation-core"
+  },
+  {
+    "name": "the shared workspace resolver > reads a bare name declared as a file: dependency as naming no module",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "projectName": "@syzygy/polaris-generation-core"
+  },
+  {
+    "name": "the shared workspace resolver > reads a bare name declared as a FILE: dependency of a scoped name as naming no module",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "projectName": "@syzygy/polaris-generation-core"
+  },
+  {
+    "name": "the shared workspace resolver > reads a bare name declared as a subpath of a file: dependency as naming no module",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "projectName": "@syzygy/polaris-generation-core"
+  },
+  {
+    "name": "the shared workspace resolver > reads a bare name declared as a link: dev dependency as naming no module",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "projectName": "@syzygy/polaris-generation-core"
+  },
+  {
+    "name": "the shared workspace resolver > reads a bare name declared as a workspace: optional dependency as naming no module",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "projectName": "@syzygy/polaris-generation-core"
+  },
+  {
+    "name": "the shared workspace resolver > reads a bare name declared as an npm: alias peer dependency as naming no module",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "projectName": "@syzygy/polaris-generation-core"
+  },
+  {
+    "name": "the shared workspace resolver > reads a bare name declared as a path dependency as naming no module",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "projectName": "@syzygy/polaris-generation-core"
+  },
+  {
+    "name": "the shared workspace resolver > reads a bare name declared as a home-relative path dependency as naming no module",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "projectName": "@syzygy/polaris-generation-core"
+  },
+  {
+    "name": "the shared workspace resolver > reads a bare name declared as an absolute path dependency as naming no module",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "projectName": "@syzygy/polaris-generation-core"
+  },
+  {
+    "name": "the shared workspace resolver > reads a bare name declared as a tarball dependency as naming no module",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "projectName": "@syzygy/polaris-generation-core"
+  },
+  {
+    "name": "the shared workspace resolver > reads a bare name declared as a file: dependency of another package as naming no module",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "projectName": "@syzygy/polaris-generation-core"
+  },
+  {
+    "name": "the shared workspace resolver > leaves a bare name declared as a registry version outside the workspace",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "projectName": "@syzygy/polaris-generation-core"
+  },
+  {
+    "name": "the shared workspace resolver > leaves a bare name declared as a registry range outside the workspace",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "projectName": "@syzygy/polaris-generation-core"
+  },
+  {
+    "name": "the shared workspace resolver > leaves a bare name declared as a name no local dependency declares outside the workspace",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "projectName": "@syzygy/polaris-generation-core"
+  },
+  {
+    "name": "the shared workspace resolver > leaves a bare name declared as a longer name than a local dependency outside the workspace",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "projectName": "@syzygy/polaris-generation-core"
+  },
+  {
+    "name": "the shared workspace resolver > leaves a bare name declared as a git dependency outside the workspace",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "projectName": "@syzygy/polaris-generation-core"
+  },
+  {
+    "name": "the shared workspace resolver > reads the workspace root's manifest beside the packages'",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "projectName": "@syzygy/polaris-generation-core"
+  },
+  {
+    "name": "the shared workspace resolver > resolves an export whose conditions other than types all name one target",
+    "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-536/base/packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "projectName": "@syzygy/polaris-generation-core"
+  }
+]

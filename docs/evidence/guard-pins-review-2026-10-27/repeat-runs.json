@@ -1,0 +1,166 @@
+{
+ "tree": "clone-rep",
+ "head": "138010d5beda4a1d39945265388fda0b35d34194",
+ "cleanAfter": true,
+ "runs": [
+  {
+   "kind": "guards",
+   "i": 1,
+   "exit": 0,
+   "load1": 75.67,
+   "seconds": 14.8,
+   "tests": [
+    "Tests  157 passed (157)"
+   ],
+   "testFiles": [
+    "Test Files  4 passed (4)"
+   ],
+   "failed": []
+  },
+  {
+   "kind": "guards",
+   "i": 2,
+   "exit": 0,
+   "load1": 78.08,
+   "seconds": 15.6,
+   "tests": [
+    "Tests  157 passed (157)"
+   ],
+   "testFiles": [
+    "Test Files  4 passed (4)"
+   ],
+   "failed": []
+  },
+  {
+   "kind": "guards",
+   "i": 3,
+   "exit": 0,
+   "load1": 78.69,
+   "seconds": 15.4,
+   "tests": [
+    "Tests  157 passed (157)"
+   ],
+   "testFiles": [
+    "Test Files  4 passed (4)"
+   ],
+   "failed": []
+  },
+  {
+   "kind": "guards",
+   "i": 4,
+   "exit": 0,
+   "load1": 80.64,
+   "seconds": 19.6,
+   "tests": [
+    "Tests  157 passed (157)"
+   ],
+   "testFiles": [
+    "Test Files  4 passed (4)"
+   ],
+   "failed": []
+  },
+  {
+   "kind": "guards",
+   "i": 5,
+   "exit": 0,
+   "load1": 80.86,
+   "seconds": 21.7,
+   "tests": [
+    "Tests  157 passed (157)"
+   ],
+   "testFiles": [
+    "Test Files  4 passed (4)"
+   ],
+   "failed": []
+  },
+  {
+   "kind": "projects",
+   "i": 1,
+   "exit": 1,
+   "load1": 89.88,
+   "seconds": 145.4,
+   "tests": [
+    "Tests  1 failed | 2155 passed | 1 skipped (2157)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed | 54 passed (55)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/start-gates.test.ts > init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses config naming a remote, a promisor, an include or a command the agent's git would run (R-POLARIS-DOSSIER-CLONE-SHAPE-2 finding 1)",
+    "\u00d7 init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses config naming a remote, a promisor, an include or a command the agent's git would run (R-POLARIS-DOSSIER-CLONE-SHAPE-2 finding 1) 5358ms"
+   ]
+  },
+  {
+   "kind": "projects",
+   "i": 2,
+   "exit": 1,
+   "load1": 70.93,
+   "seconds": 144.1,
+   "tests": [
+    "Tests  4 failed | 2152 passed | 1 skipped (2157)"
+   ],
+   "testFiles": [
+    "Test Files  3 failed | 52 passed (55)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/review.test.ts > review-check > retires a counted verdict when the draft is revised, the stored frozen draft is altered or the frozen verdict changes",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/run-evidence.test.ts > dossier run evidence record (S12) > lists a symbolic link without following it",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/start-gates.test.ts > init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses config naming a remote, a promisor, an include or a command the agent's git would run (R-POLARIS-DOSSIER-CLONE-SHAPE-2 finding 1)",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/start-gates.test.ts > init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses every top-level name the consented form never leaves: commondir, modules, worktrees, pseudo-refs, bisect and rebase state",
+    "\u00d7 dossier run evidence record (S12) > lists a symbolic link without following it 5041ms",
+    "\u00d7 init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses config naming a remote, a promisor, an include or a command the agent's git would run (R-POLARIS-DOSSIER-CLONE-SHAPE-2 finding 1) 5391ms",
+    "\u00d7 init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses every top-level name the consented form never leaves: commondir, modules, worktrees, pseudo-refs, bisect and rebase state 5173ms",
+    "\u00d7 review-check > retires a counted verdict when the draft is revised, the stored frozen draft is altered or the frozen verdict changes 5206ms"
+   ]
+  },
+  {
+   "kind": "projects",
+   "i": 3,
+   "exit": 0,
+   "load1": 64.15,
+   "seconds": 66.4,
+   "tests": [
+    "Tests  2156 passed | 1 skipped (2157)"
+   ],
+   "testFiles": [
+    "Test Files  55 passed (55)"
+   ],
+   "failed": []
+  },
+  {
+   "kind": "projects",
+   "i": 4,
+   "exit": 1,
+   "load1": 53.38,
+   "seconds": 89.3,
+   "tests": [
+    "Tests  3 failed | 2153 passed | 1 skipped (2157)"
+   ],
+   "testFiles": [
+    "Test Files  3 failed | 52 passed (55)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/git-object-reader.test.ts > each call is bounded: bytes inflated, delta depth, objects visited (finding 4) > a delta chain one past the depth cap refuses, by default (1,000) and as a parameter; at the cap it reads",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/review.test.ts > review-check > retires a counted verdict when the draft is revised, the stored frozen draft is altered or the frozen verdict changes",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/start-gates.test.ts > init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses config naming a remote, a promisor, an include or a command the agent's git would run (R-POLARIS-DOSSIER-CLONE-SHAPE-2 finding 1)",
+    "\u00d7 each call is bounded: bytes inflated, delta depth, objects visited (finding 4) > a delta chain one past the depth cap refuses, by default (1,000) and as a parameter; at the cap it reads 5037ms",
+    "\u00d7 init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses config naming a remote, a promisor, an include or a command the agent's git would run (R-POLARIS-DOSSIER-CLONE-SHAPE-2 finding 1) 5680ms",
+    "\u00d7 review-check > retires a counted verdict when the draft is revised, the stored frozen draft is altered or the frozen verdict changes 5088ms"
+   ]
+  },
+  {
+   "kind": "projects",
+   "i": 5,
+   "exit": 0,
+   "load1": 51.19,
+   "seconds": 79.8,
+   "tests": [
+    "Tests  2156 passed | 1 skipped (2157)"
+   ],
+   "testFiles": [
+    "Test Files  55 passed (55)"
+   ],
+   "failed": []
+  }
+ ]
+}

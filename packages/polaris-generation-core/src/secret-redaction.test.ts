@@ -31,7 +31,10 @@ print(json.dumps({'body': [{'name': n, 'body': body, 'expected': srt(w), 'oracle
 
 const policyDoc = (): Record<string, unknown> => JSON.parse(readFileSync(`${ROOT}${POLICY_PATH}`, 'utf8')) as Record<string, unknown>;
 const scopeOf = (doc: Record<string, unknown>): Record<string, unknown> => doc['publicSourceScope'] as Record<string, unknown>;
-const idsOf = (doc: Record<string, unknown>): string[] => (doc['detectors'] as { id: string }[]).map(d => d.id);
+// The detectors this scope runs: the policy's, then (version 5) the scope's own, which wholeArtifactDetectors may name.
+const detectorsOf = (doc: Record<string, unknown>): RedactionDetector[] => [...doc['detectors'] as RedactionDetector[],
+  ...((scopeOf(doc)['scopeDetectors'] as { detectors?: RedactionDetector[] } | undefined)?.detectors ?? [])];
+const idsOf = (doc: Record<string, unknown>): string[] => detectorsOf(doc).map(d => d.id);
 const TOKEN = 'tok' + 'en=' + 'abcdefgh12345678';
 
 describe('secretRedaction (policy version 4): the builder fixtures through the TypeScript reading', () => {
@@ -44,12 +47,12 @@ describe('secretRedaction (policy version 4): the builder fixtures through the T
     const read = readSecretRedaction(scopeOf(doc), idsOf(doc));
     if (!read.ok || read.redaction === null) throw new Error('the policy on disk declares no readable secretRedaction');
     redaction = read.redaction;
-    matcher = compileEveryOffsetMatcher(doc['detectors'] as RedactionDetector[]);
+    matcher = compileEveryOffsetMatcher(detectorsOf(doc));
   });
 
   it('reads the parameters of the approved bytes', () => {
     expect(redaction.redactedClasses).toEqual(['project-documentation']);
-    expect(redaction.wholeArtifactDetectors).toEqual(['private-key-material', 'known-token-formats']);
+    expect(redaction.wholeArtifactDetectors).toEqual(['private-key-material', 'known-token-formats', 'private-key-header', 'known-token-formats-extended']);
     expect(redaction.wholeArtifactFragments).toEqual(['-----BEGIN ', '---- BEGIN ', 'LS0tLS1CRUdJT', 'LS0tLSBCRUdJT']);
     expect(redaction.guardLines).toBe(1);
   });
@@ -175,6 +178,29 @@ describe('readSecretRedaction refuses what it does not implement', () => {
   it('reads null for a scope without the object', () => {
     expect(readSecretRedaction({ activeContent: {} }, ['a'])).toEqual({ ok: true, redaction: null });
   });
+  // The object test in @syzygy/support decides at both reads (syzygy-bpyt.6.3 stack 4): a scope that is not an object declares nothing, and
+  // a declaration that is not an object is refused in its own words. An array that carries the field by name is still an array.
+  const validRedaction = (): Record<string, unknown> => structuredClone(scopeOf(policyDoc())['secretRedaction']) as Record<string, unknown>;
+  it.each<[string, () => unknown]>([
+    ['null', () => null],
+    ['undefined', () => undefined],
+    ['a string', () => 'x'],
+    ['a number', () => 1],
+    ['an array', () => []],
+    ['an array that carries the field', () => Object.assign([], { secretRedaction: validRedaction() })],
+  ])('reads null for a scope that is %s', (_name, scope) => {
+    expect(readSecretRedaction(scope(), ['a'])).toEqual({ ok: true, redaction: null });
+  });
+  it.each<[string, () => unknown]>([
+    ['an array', () => []],
+    ['null', () => null],
+    ['a string', () => 'x'],
+    ['a number', () => 1],
+    ['an array that carries every field', () => Object.assign([], validRedaction())],
+    ['a function that carries every field', () => Object.assign(() => 1, validRedaction())],
+  ])('refuses a declaration that is %s', (_name, declaration) => {
+    expect(readSecretRedaction({ secretRedaction: declaration() }, ['a'])).toEqual({ ok: false, why: 'its secret redaction is not an object' });
+  });
   it.each<[string, (red: Record<string, unknown>) => void]>([
     ['an edited rule text', red => { red['rule'] = `${String(red['rule'])} `; }],
     ['an edited cited-span rule', red => { red['citedSpanRule'] = 'a span shows its surviving lines'; }],
@@ -189,5 +215,39 @@ describe('readSecretRedaction refuses what it does not implement', () => {
     ['a fractional guard', red => { red['guardLines'] = 1.5; }],
   ])('refuses %s', (_name, mutate) => {
     expect(read(mutate).ok).toBe(false);
+  });
+});
+
+// syzygy-n5jm (screening scope version 6, variant p): the header's linear-scan claim covers config-secret-directive. Each of the
+// builder's adversarial lines (scripts/build_public_source_screening_scope_v6.py, linear_time_findings, at its node length) is scanned
+// from every offset and searched once by the shipped matcher, with the detector read from the policy on disk.
+describe('config-secret-directive (policy version 6): linear every-offset scanning', () => {
+  const detector = (detectorsOf(policyDoc()) as RedactionDetector[]).find(d => d.id === 'config-secret-directive');
+  const LINES: readonly (readonly [string, string])[] = [
+    ['blanks', ' '.repeat(80_000)], ['hashes', '#'.repeat(80_000)], ['hash-blank', '# '.repeat(40_000)], ['acl', `user ${'a '.repeat(40_000)}`],
+    ['tabs', '\t'.repeat(80_000)], ['vertical tabs', '\v'.repeat(80_000)], ['hash-vt', '#\v'.repeat(40_000)], ['quotes', '"'.repeat(80_000)],
+    ['acl hashes', `user ${' #'.repeat(40_000)}`], ['acl quotes', `user ${' "'.repeat(40_000)}`], ['acl near-hash', `user ${` #${'a'.repeat(63)}`.repeat(1_200)}`],
+    ['quoted acl bangs', `"user" ${' !'.repeat(40_000)}`], ['quoted acl near-bang', `'user' ${` !${'a'.repeat(63)}`.repeat(1_200)}`],
+  ];
+
+  it('is declared, as a regular expression with flags gi', () => {
+    expect(detector).toMatchObject({ kind: 'regular-expression', flags: 'gi' });
+  });
+
+  it.each(LINES)('scans a long %s line from every offset within the bound', (_name, line) => {
+    const matcher = compileEveryOffsetMatcher([detector!]);
+    const started = performance.now();
+    matcher.all(line, 10_000);
+    matcher.first(line);
+    matcher.all(`x\n${line}\n`, 10_000);
+    expect(performance.now() - started).toBeLessThan(1_500);
+  });
+
+  it('still matches at a line start, after a bare CR, and never mid-line', () => {
+    const matcher = compileEveryOffsetMatcher([detector!]);
+    const spans = (text: string) => matcher.all(text, 100).matches.map(m => text.slice(m.start, m.end));
+    expect(spans('# requirepass s3cr3tvalue\nport 6379\n')).toEqual(['# requirepass s3cr3tvalue']);
+    expect(spans('a\rmasterauth s3cr3tvalue\r')).toEqual(['masterauth s3cr3tvalue']);
+    expect(spans('config set requirepass s3cr3tvalue\n')).toEqual([]);
   });
 });

@@ -1,0 +1,22 @@
+FIX-alone survives 0 ['Tests  164 passed (164)'] 11.5 clean
+FIX+R1-dot-slash-dropped killed 1 ['Tests  2 failed | 162 passed (164)'] 10.5 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a ./ path dependency as naming no module
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a dependency on its own directory as naming no module
+FIX+R2-bare-dot-dropped killed 1 ['Tests  1 failed | 163 passed (164)'] 16.3 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a dependency on its own directory as naming no module
+FIX+R3-tar-forms-dropped killed 1 ['Tests  2 failed | 162 passed (164)'] 18.0 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a .tar dependency as naming no module
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a .tar.gz dependency as naming no module
+FIX+R4-tilde-loosened killed 1 ['Tests  1 failed | 163 passed (164)'] 18.1 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > leaves a bare name declared as a registry tilde range outside the workspace
+FIX+R5-tarball-end-anchor-dropped killed 1 ['Tests  1 failed | 163 passed (164)'] 14.3 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > leaves a bare name declared as a git dependency whose path holds .tgz outside the workspace
+FIX+R6-root-dependencies-dropped killed 1 ['Tests  1 failed | 163 passed (164)'] 16.6 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads the workspace root's manifest beside the packages'
+FIX+C1-extension-end-anchor-dropped killed 1 ['Tests  1 failed | 163 passed (164)'] 15.9 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > reads every module TypeScript compiles under src, .mts, .cts and .tsx among them, and no test module
+FIX+C4-test-dot-dropped killed 1 ['Tests  1 failed | 163 passed (164)'] 16.1 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > reads every module TypeScript compiles under src, .mts, .cts and .tsx among them, and no test module
+FIX+S2-tree-not-recursive killed 1 ['Tests  1 failed | 163 passed (164)'] 17.0 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > reads every src directory to its depth
+wrote fix-head.json 10

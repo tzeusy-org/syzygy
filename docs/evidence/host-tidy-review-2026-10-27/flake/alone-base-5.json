@@ -1,0 +1,65 @@
+{
+ "tree": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-539/clone-base",
+ "commit": "9dba258992667f62ad503ec76d8a6b99efcc4bac",
+ "treeId": "44ce5c699600450e4d56aff0125b5c5ec40ff2bd",
+ "command": "npx vitest run apps/three-surface-poc/src/polaris-authority-sweep.test.ts --project @syzygy/three-surface-poc-app",
+ "distDirsBefore": [
+  "apps/syzygy/dist",
+  "apps/three-surface-poc/dist",
+  "packages/cap1-conformance/dist",
+  "packages/cap1-core/dist",
+  "packages/cap1-daemon/dist",
+  "packages/cap1-system/dist",
+  "packages/http-host/dist",
+  "packages/polaris-dossier/dist",
+  "packages/polaris-generation-consent/dist",
+  "packages/polaris-generation-core/dist",
+  "packages/support/dist",
+  "packages/three-surface-poc-core/dist"
+ ],
+ "exit": 0,
+ "files": 1,
+ "total": 5,
+ "passed": 5,
+ "failed": 0,
+ "skipped": 0,
+ "failures": [],
+ "failedFilesWithoutTest": [],
+ "load1": 33.5,
+ "load1After": 32.1,
+ "wallSeconds": 11.9,
+ "cleanAfter": true,
+ "sweep": [
+  {
+   "name": "no machine reference on the model or its narrative anchors targets the Polaris s",
+   "status": "passed",
+   "ms": 360
+  },
+  {
+   "name": "every OpenSpec warrant entry belongs to a known id family and none targets Polar",
+   "status": "passed",
+   "ms": 108
+  },
+  {
+   "name": "recognizes dossier decision identity syntax without accepting presentation refer",
+   "status": "passed",
+   "ms": 1
+  },
+  {
+   "name": "recognizes generator requirement identity syntax without accepting presentation ",
+   "status": "passed",
+   "ms": 0
+  },
+  {
+   "name": "no source/authority/provenance field in the governance, spec, code or docs trees",
+   "status": "passed",
+   "ms": 1025
+  }
+ ],
+ "perFile": {
+  "apps/three-surface-poc/src/polaris-authority-sweep.test.ts": [
+   5,
+   5
+  ]
+ }
+}

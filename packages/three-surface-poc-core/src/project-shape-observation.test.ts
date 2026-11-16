@@ -17,20 +17,21 @@ import { PWB_SECRET_POLICY, classifyPhaseASeed, compileDetectors } from './conte
 import { indexGitTree, type GitTreeEntry } from './git-tree.js';
 import { observeProjectShape } from './project-shape-observer.js';
 import { createResourceLedger, type ParsePassCharge } from './resource-ledger.js';
+import { createTransientBodies } from './transient-bodies.js';
 import {
   PWB_CONTENT_CLASS,
   PWB_FAILURE_STATES,
   PWB_OBSERVER_IDENTITY,
-  PWB_RESOURCE_LIMITS,
   admitPhaseARead,
   createPhaseASeedReader,
-  gitBlobObjectId,
   observeProjectShapeSources,
   resourceLimitsDigest,
   sourceIdentityOf,
   type ProjectShapeSourceObservation,
-  type PwbResourceLimits,
 } from './project-shape-observation.js';
+import { gitBlobObjectId } from './git-object-reader.js';
+import { PWB_RESOURCE_LIMITS } from './project-shape-observation.js';
+import type { PwbResourceLimits } from './pwb-types.js';
 
 const REPO_ROOT = fileURLToPath(new URL('../../../', import.meta.url));
 const REPOSITORY = 'repository:butlers-configured-poc';
@@ -518,6 +519,14 @@ describe('observeProjectShapeSources — determinism', () => {
     expect(reordered.observationDigest).toBe(first.observationDigest);
   });
 
+  // Expected value derived outside this module: Python's json.dumps(sort_keys=True, separators=(',', ':'), ensure_ascii=False) over the
+  // observation without `observationDigest`, its top-level `capturedAt` and each source stamp's `capturedAt`, then SHA-256
+  // (docs/evidence/syzygy-bpyt-6-13/derive-literals.py). A change to the fixture, the observer identity, the limits or the
+  // observation shape moves it, on purpose: the observation digest is an identity (class 3).
+  it('digests the observation without its capture instants: the fixture observation has this digest', () => {
+    expect(observed().observation.observationDigest).toBe('sha256:adeac2c5388357ea3b14ab865f65cb6864753a95f98553fe5fdce0b1f03cb428');
+  });
+
   it('a changed seed body, revision or limit changes the digest', () => {
     const base = observed().observation;
     const changedBody = encoder.encode('- [Vision](vision.md)\n- [Missing](missing.md)\n\n');
@@ -668,6 +677,42 @@ describe('the seed reader widens phase A only after a validated root index (syzy
     expect(read({ path: 'about/README.md', objectId })).toEqual({ kind: 'unavailable', reason: 'phase A source excluded: secret-matched' });
     expect(read(seedOf('about/heart-and-soul/README.md', tree))).toEqual({ kind: 'unavailable', reason: 'phase A read refused: not-a-phase-a-seed-path' });
     expect(reads.map((record) => record.outcome)).toEqual(['secret-matched', 'refused']);
+  });
+
+  // syzygy-bpyt.55 (D1): the recognizer recovers from a malformed context so that its ranges are total, but the profile's decision is to
+  // exclude the whole artifact, and no reader behind the gate is handed such a text. A root index with an unclosed fence, with a backtick
+  // opener whose info string holds a backtick, or with a span open at a fence opener declares nothing, whatever its recovered ranges would show.
+  it.each([
+    ['an unclosed fence', ['# Butlers', '', '[Heart and Soul](heart-and-soul/)', '', '```', '[Lore](legends-and-lore/)', '']],
+    ['a backtick opener with a backtick in its info string', ['# Butlers', '```a`b', '[Heart and Soul](heart-and-soul/)', '```', '']],
+    ['a span open at a fence opener', ['# Butlers', '`open', '```', '[Heart and Soul](heart-and-soul/)', '```', '']],
+  ] as const)('a root index with %s declares nothing: its pillar index stays refused', (_name, lines) => {
+    const bytes = encoder.encode(lines.join('\n'));
+    const objectId = sha1Blob(bytes);
+    const tree = TREE.map((entry) => entry.path === 'about/README.md' ? { ...entry, objectId, sizeBytes: bytes.byteLength } : entry);
+    const { read, reads } = reader({ tree, blobOverrides: { [objectId]: bytes } });
+    expect(read({ path: 'about/README.md', objectId })).toEqual({ kind: 'unavailable', reason: 'phase A source excluded: active-content' });
+    expect(read(seedOf('about/heart-and-soul/README.md', tree))).toEqual({ kind: 'unavailable', reason: 'phase A read refused: not-a-phase-a-seed-path' });
+    expect(reads.map((record) => record.outcome)).toEqual(['active-content', 'refused']);
+  });
+
+  it('a seed with a leading byte-order mark is read without it', () => {
+    // EF BB BF is the UTF-8 byte-order mark; the decoded text starts at the byte after it.
+    const bytes = Uint8Array.from([0xef, 0xbb, 0xbf, 0x61, 0x0a]);
+    const objectId = sha1Blob(bytes);
+    const tree = TREE.map((entry) => entry.path === 'about/README.md' ? { ...entry, objectId, sizeBytes: bytes.byteLength } : entry);
+    const { read, reads } = reader({ tree, blobOverrides: { [objectId]: bytes } });
+    expect(read({ path: 'about/README.md', objectId })).toMatchObject({ kind: 'text', text: 'a\n' });
+    expect(reads).toEqual([{ path: 'about/README.md', objectId, outcome: 'read', bytes: 5 }]);
+  });
+
+  it('a seed whose bytes are not UTF-8 is refused with its reason and a not-utf-8 read record', () => {
+    const bytes = Uint8Array.from([0x23, 0x20, 0xff, 0xfe, 0x0a]);
+    const objectId = sha1Blob(bytes);
+    const tree = TREE.map((entry) => entry.path === 'about/README.md' ? { ...entry, objectId, sizeBytes: bytes.byteLength } : entry);
+    const { read, reads } = reader({ tree, blobOverrides: { [objectId]: bytes } });
+    expect(read({ path: 'about/README.md', objectId })).toEqual({ kind: 'unavailable', reason: 'seed is not valid UTF-8' });
+    expect(reads).toEqual([{ path: 'about/README.md', objectId, outcome: 'not-utf-8', bytes: 5 }]);
   });
 
   it('a root index that fails NUL validation declares nothing either', () => {
@@ -827,14 +872,15 @@ describe('phase A charges one shared resource ledger', () => {
 
   function observeWith(limits: Partial<PwbResourceLimits>) {
     const ledger = createResourceLedger({ ...PWB_RESOURCE_LIMITS, ...limits });
+    const bodies = createTransientBodies();
     const git = runner({});
-    const result = observeProjectShapeSources({ repositoryId: REPOSITORY, revision: 'main', capturedAt: CAPTURED_AT, runGit: git.runGit, classifyPhaseA: chargingClassifier, ledger });
+    const result = observeProjectShapeSources({ repositoryId: REPOSITORY, revision: 'main', capturedAt: CAPTURED_AT, runGit: git.runGit, classifyPhaseA: chargingClassifier, ledger, bodies });
     if (result.kind !== 'observed') throw new Error(`expected observed, got ${result.kind}`);
-    return { observation: result, ledger, calls: git.calls };
+    return { observation: result, ledger, bodies, calls: git.calls };
   }
 
   it('a safe seed costs exactly nine registry passes, each identity once, and its body counts once', () => {
-    const { observation, ledger } = observeWith({});
+    const { observation, ledger, bodies } = observeWith({});
     for (const path of PHASE_A) expect(ledger.passesFor(path), path).toBe(9);
     const summary = ledger.summary();
     expect(summary.passesByIdentity).toEqual({
@@ -857,7 +903,7 @@ describe('phase A charges one shared resource ledger', () => {
     expect(summary.totalBytes).toBe(PHASE_A.reduce((sum, path) => sum + (BYTES.get(path)?.byteLength ?? 0), 0));
     expect(observation.limitBreaches).toEqual([]);
     for (const path of PHASE_A) {
-      const held = ledger.recall(path, oidOf(path));
+      const held = bodies.recall(path, oidOf(path));
       expect(held?.text, path).toBe(TEXTS[path]);
     }
   });
@@ -876,7 +922,7 @@ describe('phase A charges one shared resource ledger', () => {
     // Nothing was discovered from a seed that never reached link discovery;
     // the root itself stays in the population.
     expect(under.observation.manifest.sources.map((source) => source.path).filter((path) => path.startsWith('about/'))).toEqual([root]);
-    expect(under.ledger.recall(root, oidOf(root))).toBeUndefined();
+    expect(under.bodies.recall(root, oidOf(root))).toBeUndefined();
     const at = observeWith({ maxParsePassesPerSource: 9 });
     expect(at.observation.reads.every((read) => read.outcome === 'read')).toBe(true);
     expect(at.observation.limitBreaches).toEqual([]);

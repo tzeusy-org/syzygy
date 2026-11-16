@@ -1,0 +1,30 @@
+{
+ "commit": "bb05df7ea409039c5a6465e7179f9d0c66931ad3",
+ "entry": "apps/three-surface-poc/src/main.ts",
+ "typescript": "5.9.3",
+ "reachable": 106,
+ "unresolved": [],
+ "walkPackages": [
+  "apps/three-surface-poc",
+  "packages/cap1-core",
+  "packages/http-host",
+  "packages/support",
+  "packages/three-surface-poc-core"
+ ],
+ "programPackages": [
+  "apps/three-surface-poc",
+  "packages/cap1-core",
+  "packages/http-host",
+  "packages/support",
+  "packages/three-surface-poc-core"
+ ],
+ "methodsAgree": true,
+ "inputs": 116,
+ "unprotected": [
+  "packages/support/src/deep-freeze.ts",
+  "packages/support/src/index.ts",
+  "packages/support/src/sha256.ts",
+  "packages/support/package.json",
+  "packages/support/tsconfig.json"
+ ]
+}

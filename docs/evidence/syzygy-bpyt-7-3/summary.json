@@ -1,0 +1,446 @@
+{
+ "bead": "syzygy-bpyt.7.3",
+ "base": "9b539e5f64241ed4ccb119753e9f4786a15be2f7",
+ "head": "9d55188734e5d7d315591a55daf3a7bb5970c5aa",
+ "subject": {
+  "what": "git diff 9b539e5f 9d551887",
+  "sha256": "e2cdf2cef3fbc375a12a63a32ed8ac9c045a481ea4df89afca2386debb0d4a8b",
+  "files": 44,
+  "nameStatus": [
+   "M\tAGENTS.md",
+   "M\tSECURITY.md",
+   "M\tapps/syzygy/package.json",
+   "M\tapps/syzygy/src/main.ts",
+   "M\tapps/syzygy/tsconfig.json",
+   "M\tapps/three-surface-poc/package.json",
+   "M\tapps/three-surface-poc/src/exact-tables.ts",
+   "M\tapps/three-surface-poc/src/git-observation.test.ts",
+   "M\tapps/three-surface-poc/src/git-observation.ts",
+   "M\tapps/three-surface-poc/src/materialize-action.ts",
+   "M\tapps/three-surface-poc/src/orrery.ts",
+   "M\tapps/three-surface-poc/src/poc-main.ts",
+   "M\tapps/three-surface-poc/src/polaris-reconciliation.ts",
+   "M\tapps/three-surface-poc/src/polaris-source.ts",
+   "M\tapps/three-surface-poc/src/polaris.ts",
+   "M\tapps/three-surface-poc/src/reobserve-action.ts",
+   "M\tapps/three-surface-poc/src/routes.ts",
+   "M\tapps/three-surface-poc/src/startup-detail.ts",
+   "M\tapps/three-surface-poc/src/surface-links.ts",
+   "M\tapps/three-surface-poc/src/trajectory.ts",
+   "M\tapps/three-surface-poc/src/unknown-marker.ts",
+   "M\tapps/three-surface-poc/tsconfig.json",
+   "M\tpackage-lock.json",
+   "M\tpackage.json",
+   "M\tpackages/cap1-daemon/package.json",
+   "M\tpackages/cap1-daemon/src/credentials.ts",
+   "M\tpackages/cap1-daemon/src/package.test.ts",
+   "M\tpackages/cap1-daemon/src/routes-human.ts",
+   "M\tpackages/cap1-daemon/src/routes-machine.ts",
+   "M\tpackages/cap1-daemon/src/server.ts",
+   "M\tpackages/cap1-daemon/tsconfig.json",
+   "A\tpackages/http-host/package.json",
+   "R100\tpackages/cap1-daemon/src/credentials.test.ts\tpackages/http-host/src/credentials.test.ts",
+   "A\tpackages/http-host/src/credentials.ts",
+   "A\tpackages/http-host/src/escape-html.ts",
+   "A\tpackages/http-host/src/index.ts",
+   "A\tpackages/http-host/src/package.test.ts",
+   "A\tpackages/http-host/src/server.ts",
+   "A\tpackages/http-host/src/shutdown.test.ts",
+   "A\tpackages/http-host/src/shutdown.ts",
+   "A\tpackages/http-host/tsconfig.json",
+   "M\tpackages/polaris-dossier/src/no-egress.test.ts",
+   "M\tscripts/run_m10_conditional_mutations.mjs",
+   "M\tvitest.config.ts"
+  ]
+ },
+ "moved": {
+  "packages/http-host/src/credentials.ts": {
+   "from": "packages/cap1-daemon/src/credentials.ts",
+   "blob": "cba78cd5b44ec1322285a1663da6aa18b586930d",
+   "sameBlob": true
+  },
+  "packages/http-host/src/credentials.test.ts": {
+   "from": "packages/cap1-daemon/src/credentials.test.ts",
+   "blob": "3ba6d3b05ddb00c53479ecd6390c39c9e86d1655",
+   "sameBlob": true
+  },
+  "packages/http-host/src/escape-html.ts": {
+   "from": "packages/cap1-daemon/src/routes-human.ts (the escapeHtml block)",
+   "sha256": "51694be58420478e434bf67aa5d0d459669e35b864229d32fd2f143df57c8924"
+  },
+  "packages/http-host/src/server.ts": {
+   "from": "packages/cap1-daemon/src/server.ts",
+   "edits": [
+    [
+     "import { evaluationId, type AdmissionResult } from '@syzygy/cap1-core';\n",
+     "import type { AdmissionResult } from '@syzygy/cap1-core';\n"
+    ],
+    [
+     "import type { ProjectEvaluation } from './pipeline.js';\n",
+     ""
+    ],
+    [
+     "the root route and rootStatement, from // --- This wave's minimal root route --- on",
+     ""
+    ]
+   ],
+   "sha256": "84be8923e8a50880f84060221b8cf058e2984202f5b0723b8630c511e406d1c4"
+  }
+ },
+ "keptTests": {
+  "predicate": "credential|origin|ceiling|bearer|authorization (case-insensitive) over base test files",
+  "baseTestFiles": 251,
+  "matching": 88,
+  "unchanged": 88,
+  "movedUnchanged": {
+   "packages/cap1-daemon/src/credentials.test.ts": "packages/http-host/src/credentials.test.ts"
+  },
+  "changed": [],
+  "filesSha256": "50260728d3d5ac8a87546e7943b66cab10da1729148548aede332ec58bfd1792"
+ },
+ "governed": {
+  "governedFilesChanged": [],
+  "filesSwept": 1345,
+  "citing": {
+   ".syzygy/governance/contracts/candidates/pwb-scoped-attributes-amendment/IMPACT-LEDGER.md": [
+    "cap1-daemon/src/routes-human.ts",
+    "cap1-daemon/src/routes-machine.ts"
+   ],
+   ".syzygy/governance/decisions/OWNER-DIRECTION-MACHINE-CEILING-2026-10-15.md": [
+    "cap1-daemon/src/server.ts"
+   ],
+   ".syzygy/governance/decisions/POLARIS-RESPONSE-CEILING-READING-DECISION-PACKET.md": [
+    "cap1-daemon/src/server.ts"
+   ],
+   "openspec/changes/polaris-manifesto-generation/SECURITY-CONTRACT.md": [
+    "cap1-daemon/src/credentials.ts"
+   ]
+  },
+  "citedPathsResolve": {
+   "cap1-daemon/src/credentials.ts": true,
+   "cap1-daemon/src/routes-human.ts": true,
+   "cap1-daemon/src/routes-machine.ts": true,
+   "cap1-daemon/src/server.ts": true
+  },
+  "reexports": {
+   "packages/cap1-daemon/src/server.ts": {
+    "values": [
+     "DAEMON_HOST",
+     "HANDLER_FAILURE_REASON",
+     "HANDLER_FAILURE_STATUS",
+     "REFUSAL_BODY",
+     "REFUSAL_STATUS",
+     "UNKNOWN_ROUTE_REASON",
+     "UNKNOWN_ROUTE_STATUS",
+     "createDaemon"
+    ],
+    "types": [
+     "CredentialClass",
+     "DaemonOptions",
+     "DaemonStart",
+     "Route",
+     "RouteContext",
+     "RouteRequest",
+     "RouteResponse",
+     "RunningDaemon"
+    ]
+   },
+   "packages/cap1-daemon/src/credentials.ts": {
+    "values": [
+     "CREDENTIAL_FILE_MODE",
+     "CREDENTIAL_FILE_NAME",
+     "CREDENTIAL_TOKEN_BYTES",
+     "STATE_DIR_MODE",
+     "STATE_WRITE_REFUSALS",
+     "authorizeStateWrite",
+     "credentialFromAuthorizationHeader",
+     "ensureCredential",
+     "verifyCredential"
+    ],
+    "types": [
+     "CredentialInspection",
+     "CredentialProvision",
+     "CredentialStat",
+     "StateWriteAuthorization",
+     "StateWriteRefusalName"
+    ]
+   }
+  }
+ },
+ "differential": {
+  "surfaceEqual": true,
+  "hostEqualThroughCap1Daemon": true,
+  "hostEqualThroughHttpHost": true,
+  "e2eEqual": true,
+  "hostRequests": 1296,
+  "e2eRuns": 3,
+  "e2eRequests": 72,
+  "e2eInvocations": 3,
+  "gate": {
+   "paths": 4072,
+   "refusedAtBase": 310,
+   "refusedAtHead": 321,
+   "differing": [
+    [
+     "packages/http-host/package.json",
+     "accepted",
+     "refused"
+    ],
+    [
+     "packages/http-host/src/credentials.test.ts",
+     "accepted",
+     "refused"
+    ],
+    [
+     "packages/http-host/src/credentials.ts",
+     "accepted",
+     "refused"
+    ],
+    [
+     "packages/http-host/src/escape-html.ts",
+     "accepted",
+     "refused"
+    ],
+    [
+     "packages/http-host/src/index.ts",
+     "accepted",
+     "refused"
+    ],
+    [
+     "packages/http-host/src/new.ts",
+     "accepted",
+     "refused"
+    ],
+    [
+     "packages/http-host/src/package.test.ts",
+     "accepted",
+     "refused"
+    ],
+    [
+     "packages/http-host/src/server.ts",
+     "accepted",
+     "refused"
+    ],
+    [
+     "packages/http-host/src/shutdown.test.ts",
+     "accepted",
+     "refused"
+    ],
+    [
+     "packages/http-host/src/shutdown.ts",
+     "accepted",
+     "refused"
+    ],
+    [
+     "packages/http-host/tsconfig.json",
+     "accepted",
+     "refused"
+    ]
+   ]
+  },
+  "selftest": [
+   [
+    "refusal-status",
+    "hostEqualThroughHttpHost",
+    true
+   ],
+   [
+    "credential-detail",
+    "hostEqualThroughCap1Daemon",
+    true
+   ],
+   [
+    "shutdown-announcement",
+    "e2eEqual",
+    true
+   ],
+   [
+    "gate-host-prefix",
+    "onlyHostPathsDiffer",
+    true
+   ]
+  ],
+  "records": {
+   "e2e-base.json": "ddbb9620316489a933e5968538b0736360379e2cb44c6904fd03fd21df495656",
+   "e2e-head.json": "ddbb9620316489a933e5968538b0736360379e2cb44c6904fd03fd21df495656",
+   "host-base.json": "2c4e8c40406ba6a5ec078efd062b820a2c0e76fc67b1254f3d87fe4e58777681",
+   "host-head-cap1-daemon.json": "2c4e8c40406ba6a5ec078efd062b820a2c0e76fc67b1254f3d87fe4e58777681",
+   "host-head-http-host.json": "8e7144fcea1d05b7e837775acf82016a804b971c7fbda08c991c91eb2105012e",
+   "surface-base.json": "55e954f1aa364605e22ca77e58928a92c169f93a088c0b25f292ebf95f600102",
+   "surface-head.json": "bae6755e47d7ef1a88cdb202f5c46f53567b4d44c6581ab2af93eaa92d76c5d7"
+  },
+  "tools": {
+   "differential.py": "427bdbb4c6a23645f1c397e7936109041018a52259374a5fb843a7be12593d2d",
+   "e2e-diff.mjs": "76d81afa79e3cd9d7e1e3cdf20d9c53240b198726db82b621ee6141c32b06d3b",
+   "gate-diff.mjs": "f27ab213f847ca84bea71d0a9c3d37c9eb267204acfe4ec83d4e68e2e9959e17",
+   "host-diff.mjs": "8df4a0a50e5803e10076ab921e034aeb5e3ad00eba52b1cd71882dcac35b2a92",
+   "surface.mjs": "b4735f1a73227e8af7c22c0cbe2d6e9407faf5269d7f0bd757d1115f5483e907"
+  }
+ },
+ "mutants": {
+  "runnerSha256": "ca2b8eadc503305bb3767b7220b02775429164ef6c183ac9854acf9d8ed9b6a5",
+  "own": {
+   "S1-second-signal-closes-again": {
+    "what": "closeOnSignal: the closing guard is gone, so a later signal announces and closes again",
+    "file": "packages/http-host/src/shutdown.ts",
+    "outcome": "killed",
+    "failedRows": 1
+   },
+   "S2-announce-after-close-starts": {
+    "what": "closeOnSignal: the announcement comes after the close has started",
+    "file": "packages/http-host/src/shutdown.ts",
+    "outcome": "killed",
+    "failedRows": 5
+   },
+   "S3-close-failure-unreported": {
+    "what": "closeOnSignal: a failed close is never told to closeFailed",
+    "file": "packages/http-host/src/shutdown.ts",
+    "outcome": "killed",
+    "failedRows": 1
+   },
+   "S4-close-failure-never-resolves": {
+    "what": "closeOnSignal: a failed close leaves the promise pending",
+    "file": "packages/http-host/src/shutdown.ts",
+    "outcome": "killed",
+    "failedRows": 2
+   },
+   "S5-sigterm-not-handled": {
+    "what": "closeOnSignal: no SIGTERM listener",
+    "file": "packages/http-host/src/shutdown.ts",
+    "outcome": "killed",
+    "failedRows": 6
+   },
+   "S6-sigterm-announced-as-sigint": {
+    "what": "closeOnSignal: SIGTERM is announced as SIGINT",
+    "file": "packages/http-host/src/shutdown.ts",
+    "outcome": "killed",
+    "failedRows": 2
+   },
+   "G1-observer-gate-leaves-out-the-host": {
+    "what": "the POC observer-input prefixes leave out packages/http-host/",
+    "file": "apps/three-surface-poc/src/git-observation.ts",
+    "outcome": "killed",
+    "failedRows": 1
+   },
+   "B1-cap1-barrel-loses-escapeHtml": {
+    "what": "cap1-daemon's routes-human no longer re-exports escapeHtml",
+    "file": "packages/cap1-daemon/src/routes-human.ts",
+    "outcome": "killed",
+    "failedRows": 1
+   },
+   "B2-credentials-shim-loses-verifyCredential": {
+    "what": "cap1-daemon's credentials.ts shim drops verifyCredential",
+    "file": "packages/cap1-daemon/src/credentials.ts",
+    "outcome": "killed",
+    "failedRows": 1
+   },
+   "B3-server-shim-loses-createDaemon": {
+    "what": "cap1-daemon's server.ts shim drops createDaemon",
+    "file": "packages/cap1-daemon/src/server.ts",
+    "outcome": "killed",
+    "failedRows": 1
+   },
+   "B4-server-shim-gains-closeOnSignal": {
+    "what": "cap1-daemon's server.ts shim also re-exports closeOnSignal",
+    "file": "packages/cap1-daemon/src/server.ts",
+    "outcome": "killed",
+    "failedRows": 1
+   },
+   "B5-host-barrel-drops-escape-html": {
+    "what": "the http-host barrel no longer exports escape-html",
+    "file": "packages/http-host/src/index.ts",
+    "outcome": "killed",
+    "failedRows": 1
+   },
+   "B6-host-barrel-gains-a-cap1-name": {
+    "what": "the http-host barrel also exports a Capability 1 name",
+    "file": "packages/http-host/src/index.ts",
+    "outcome": "killed",
+    "failedRows": 1
+   },
+   "C1-any-presented-token-admitted": {
+    "what": "the moved verifyCredential admits any presented token",
+    "file": "packages/http-host/src/credentials.ts",
+    "outcome": "killed",
+    "failedRows": 1
+   },
+   "C2-group-readable-file-reused": {
+    "what": "the moved reuse inspection lets a group-readable credential file pass",
+    "file": "packages/http-host/src/credentials.ts",
+    "outcome": "killed",
+    "failedRows": 2
+   },
+   "C3-auth-order-bypass": {
+    "what": "the moved server runs a machine-credentialed handler without admission (run_m10's auth-order-bypass)",
+    "file": "packages/http-host/src/server.ts",
+    "outcome": "killed",
+    "failedRows": 9
+   },
+   "E1-apostrophe-left-unescaped": {
+    "what": "the moved escapeHtml leaves ' unescaped",
+    "file": "packages/http-host/src/escape-html.ts",
+    "outcome": "killed",
+    "failedRows": 5
+   }
+  },
+  "ownKilled": 17,
+  "ownTotal": 17,
+  "m10": {
+   "omitted-route": {
+    "file": "apps/three-surface-poc/src/routes.ts",
+    "failingTests": 5
+   },
+   "wrong-self": {
+    "file": "apps/three-surface-poc/src/routes.ts",
+    "failingTests": 15
+   },
+   "inputs-digest-validator": {
+    "file": "apps/three-surface-poc/src/routes.ts",
+    "failingTests": 4
+   },
+   "strong-validator": {
+    "file": "apps/three-surface-poc/src/routes.ts",
+    "failingTests": 2
+   },
+   "ceiling-bypass": {
+    "file": "apps/three-surface-poc/src/routes.ts",
+    "failingTests": 1
+   },
+   "false-presentation-304": {
+    "file": "apps/three-surface-poc/src/routes.ts",
+    "failingTests": 1
+   },
+   "auth-order-bypass": {
+    "file": "packages/http-host/src/server.ts",
+    "failingTests": 2
+   }
+  },
+  "m10Baseline": "Tests  29 passed (29)"
+ },
+ "titles": {
+  "base": 5273,
+  "head": 5283,
+  "new": 10,
+  "newPerFile": {
+   "apps/three-surface-poc/src/git-observation.test.ts": 1,
+   "packages/cap1-daemon/src/package.test.ts": 1,
+   "packages/http-host/src/package.test.ts": 2,
+   "packages/http-host/src/shutdown.test.ts": 6
+  },
+  "removed": 0,
+  "moved": 26,
+  "duplicatedKeys": {
+   "base": 9,
+   "head": 9
+  },
+  "line": "Tests: +10 ~0 -0"
+ },
+ "system": {
+  "files": "Test Files  9 passed (9)",
+  "tests": "Tests  48 passed (48)",
+  "freshClone": true,
+  "clone": "/var/tmp/la-b73/head/packages/cap1-system",
+  "logSha256": "24a6fd2a7b96926d856fa90bbea67e73c313ae38c9d33aabee50e15f0ff7da53"
+ },
+ "problems": []
+}

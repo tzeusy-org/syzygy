@@ -1,0 +1,11 @@
+{
+ "id": "P9c-link-target-reason-swapped",
+ "command": "TMPDIR=/tmp/la-b82/g CI=1 npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/state-directory.test.ts",
+ "edits": [
+  {
+   "file": "packages/polaris-dossier/src/state-directory.ts",
+   "old": "reason: 'path-unreadable', detail: `symbolic link target",
+   "new": "reason: 'symlink-loop', detail: `symbolic link target"
+  }
+ ]
+}

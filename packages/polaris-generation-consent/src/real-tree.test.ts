@@ -28,7 +28,7 @@ const reads = (fs: PackageReaderFs, now = Date.now()) => ({
 });
 const exists = async (rel: string): Promise<boolean> => { try { await readFile(path.join(ROOT, rel)); return true; } catch { return false; } };
 const KINDS = ['observation-consent', 'egress-consent', 'public-source-policy'] as const;
-const TIMEOUT = 120_000;   // each read walks the whole decisions tree
+const TIMEOUT = 120_000;   // each read walks the whole decisions tree: worst 8.0 s over 5 alone runs at load1 39-47 (docs/evidence/syzygy-bpyt-4-31/durations/real-tree.test.tests.json)
 
 describe('the readers over this checkout\'s decisions directory', () => {
   it('refuse nothing: no file in decisions/ trips a sweep or breaks a recorder\'s form', async () => {
@@ -41,7 +41,7 @@ describe('the readers over this checkout\'s decisions directory', () => {
     }
     // The registry sign-off follows the tree: absent while its record is, in force once the sitting records it.
     const signoff = await r.signoff(), record = `${DECISIONS_DIR}/${LOCAL_AGENT_GIT_SOURCE_SIGNOFF_FORM.file}`;
-    if (await exists(record)) expect(signoff, 'registry sign-off').toMatchObject({ state: 'ok', act: { identity: 'public-git-source-acquisition-local-agent-v1.0' } });
+    if (await exists(record)) expect(signoff, 'registry sign-off').toMatchObject({ state: 'ok', act: { identity: 'public-git-source-acquisition-local-agent-v1.1' } });
     else expect(signoff, 'registry sign-off').toEqual({ state: 'absent', why: `no owner-act record ${record} exists` });
     for (const kind of KINDS) {
       const answer = await r.port.check({ kind, repositoryId: 'redis-redis', revision: '0'.repeat(40) });
@@ -52,7 +52,7 @@ describe('the readers over this checkout\'s decisions directory', () => {
     await expect(reads(withExtra('ZZ-PROBE.md', 'Withdrawn: PUBLIC-OBS-REDIS-2026-10-03\n')).admission()).rejects.toThrow();
     await expect(reads(withExtra('ZZ-PROBE.md', 'Revokes the public source scope approval.\n')).policy()).rejects.toThrow();
     expect((await reads(withExtra('ZZ-PROBE.md', 'Revokes RFC5-PROJECT-DOCUMENTATION-AMEND-2026-10-03.\n')).classAct()).state).toBe('refused');
-    expect((await reads(withExtra('ZZ-PROBE.md', 'Withdrawn: public-git-source-acquisition-local-agent-v1.0\n')).signoff()).state).toBe('refused');
+    expect((await reads(withExtra('ZZ-PROBE.md', 'Withdrawn: public-git-source-acquisition-local-agent-v1.1\n')).signoff()).state).toBe('refused');
     const port = reads(withExtra('ZZ-PROBE.md', 'Withdrawn: PUBLIC-EGRESS-anthropic\n')).port;
     expect(await port.check({ kind: 'egress-consent', repositoryId: 'redis-redis', revision: '0'.repeat(40) })).toMatchObject({ satisfied: false, why: expect.stringContaining('could not be read') });
   }, TIMEOUT);

@@ -1,0 +1,617 @@
+{
+ "commit": "815d93bb",
+ "checks": [
+  {
+   "check": "subject.baseCommit resolves",
+   "ok": true,
+   "detail": "fe3855a1b4f2164da3274e02d868399236c45c9c"
+  },
+  {
+   "check": "subject.codeCommit resolves",
+   "ok": true,
+   "detail": "7e58cd1f9e1be0c4d79ebff298cc97261a79f6ce"
+  },
+  {
+   "check": "subject.reviewedHead resolves",
+   "ok": true,
+   "detail": "9d9c98a6f265393fcb46dae6e1484eea097aad20"
+  },
+  {
+   "check": "subject.testedCommit resolves",
+   "ok": true,
+   "detail": "ba7fce369ebfbd605be4a8da76dbdb4351ab9f25"
+  },
+  {
+   "check": "mergeOfMain parents",
+   "ok": true,
+   "detail": [
+    "9d9c98a6f265393fcb46dae6e1484eea097aad20",
+    "f7477f52c49ee347f96b92703887c31f6be49e07"
+   ]
+  },
+  {
+   "check": "mergeOfMain 5,462 paths",
+   "ok": true,
+   "detail": 5462
+  },
+  {
+   "check": "testedCommit is the reviewed commit's parent",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "check": "review.rawSha256 equals the round-1 raw",
+   "ok": true,
+   "detail": "4fba7d5e195e742915d001164ae69d3f2e7ec5dc3fcd25ef7ba45fa64846deb9"
+  },
+  {
+   "check": "sha256 of docs/evidence/syzygy-bpyt-6-3/repair1-comment-only-f7477f52-ba7fce36.json",
+   "ok": true,
+   "detail": {
+    "want": "355dcb60db64b5b88e7d7c68e66d69f5744c574c10301a22bb111cbfeaeac024",
+    "got": "355dcb60db64b5b88e7d7c68e66d69f5744c574c10301a22bb111cbfeaeac024"
+   }
+  },
+  {
+   "check": "sha256 of docs/evidence/syzygy-bpyt-6-3/line-level-check.mjs",
+   "ok": true,
+   "detail": {
+    "want": "43ed6091355824ec8d7b089d1c4ef426f8bc8c1c84193070f13a08c0e8b73953",
+    "got": "43ed6091355824ec8d7b089d1c4ef426f8bc8c1c84193070f13a08c0e8b73953"
+   }
+  },
+  {
+   "check": "sha256 of docs/evidence/syzygy-bpyt-6-3/repair1-line-level-f7477f52-ba7fce36.json",
+   "ok": true,
+   "detail": {
+    "want": "41f1ea885f4fb064ab134f279710e4e9ce2481dcc80dd84feab9e4cbdd50ed3d",
+    "got": "41f1ea885f4fb064ab134f279710e4e9ce2481dcc80dd84feab9e4cbdd50ed3d"
+   }
+  },
+  {
+   "check": "sha256 of docs/evidence/syzygy-bpyt-6-3/fence-probe-output.json",
+   "ok": true,
+   "detail": {
+    "want": "95ed7f664f202d723b151842acbb9906ed4978e20c1f70971a8bf07ac5c30902",
+    "got": "95ed7f664f202d723b151842acbb9906ed4978e20c1f70971a8bf07ac5c30902"
+   }
+  },
+  {
+   "check": "sha256 of docs/evidence/syzygy-bpyt-6-3/repair1-probe-base-vs-head.json",
+   "ok": true,
+   "detail": {
+    "want": "171683d8e34a86a696b5d642368e52605ce4ddf5630f643d678eccfbefc26cb1",
+    "got": "171683d8e34a86a696b5d642368e52605ce4ddf5630f643d678eccfbefc26cb1"
+   }
+  },
+  {
+   "check": "blob unchanged by the repair: packages/three-surface-poc-core/src/markdown-code-context.ts",
+   "ok": true,
+   "detail": {
+    "9d9c98a6": "895c195118a7a8c748b2c94cbcb33c310c4f1b9e",
+    "af534d6e": "895c195118a7a8c748b2c94cbcb33c310c4f1b9e",
+    "ba7fce36": "895c195118a7a8c748b2c94cbcb33c310c4f1b9e",
+    "815d93bb": "895c195118a7a8c748b2c94cbcb33c310c4f1b9e"
+   }
+  },
+  {
+   "check": "blob unchanged by the repair: apps/three-surface-poc/src/polaris-markdown.ts",
+   "ok": true,
+   "detail": {
+    "9d9c98a6": "b1a52833fd25dba6b4cf78ef3e1f70275842f130",
+    "af534d6e": "b1a52833fd25dba6b4cf78ef3e1f70275842f130",
+    "ba7fce36": "b1a52833fd25dba6b4cf78ef3e1f70275842f130",
+    "815d93bb": "b1a52833fd25dba6b4cf78ef3e1f70275842f130"
+   }
+  },
+  {
+   "check": "blob unchanged by the repair: packages/three-surface-poc-core/src/project-shape-extraction.ts",
+   "ok": true,
+   "detail": {
+    "9d9c98a6": "95b08f3205833ff235627f603f958a1a36fa553f",
+    "af534d6e": "95b08f3205833ff235627f603f958a1a36fa553f",
+    "ba7fce36": "95b08f3205833ff235627f603f958a1a36fa553f",
+    "815d93bb": "95b08f3205833ff235627f603f958a1a36fa553f"
+   }
+  },
+  {
+   "check": "blob unchanged by the repair: packages/three-surface-poc-core/src/project-shape-manifest.ts",
+   "ok": true,
+   "detail": {
+    "9d9c98a6": "79399a394a9adc44bf38d7dc5229abc1208dba64",
+    "af534d6e": "79399a394a9adc44bf38d7dc5229abc1208dba64",
+    "ba7fce36": "79399a394a9adc44bf38d7dc5229abc1208dba64",
+    "815d93bb": "79399a394a9adc44bf38d7dc5229abc1208dba64"
+   }
+  },
+  {
+   "check": "blob unchanged by the repair: packages/polaris-generation-consent/src/package-reader.ts",
+   "ok": true,
+   "detail": {
+    "9d9c98a6": "835cce2580f65978c634b27c74c8315334e302a8",
+    "af534d6e": "835cce2580f65978c634b27c74c8315334e302a8",
+    "ba7fce36": "835cce2580f65978c634b27c74c8315334e302a8",
+    "815d93bb": "835cce2580f65978c634b27c74c8315334e302a8"
+   }
+  },
+  {
+   "check": "mutant rows = 26",
+   "ok": true,
+   "detail": 26
+  },
+  {
+   "check": "every mutant row is internally consistent and its old occurs once at head",
+   "ok": true,
+   "detail": []
+  },
+  {
+   "check": "no mutant commit resolves (commitNote: discarded scratch commits)",
+   "ok": true,
+   "detail": []
+  },
+  {
+   "check": "summary.killedByATest",
+   "ok": true,
+   "detail": 26
+  },
+  {
+   "check": "summary.survived empty",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "check": "summary.killedByTheProbeOnly",
+   "ok": true,
+   "detail": []
+  },
+  {
+   "check": "summary.newlyKilledByTheRepair = prior passed, a test kills",
+   "ok": true,
+   "detail": [
+    "K1-consent-opener-indent4",
+    "K2-consent-closer-strictly-longer",
+    "RV7-renderer-tab-indented-fence-ends-paragraph",
+    "RV11-profile-fence-opener-drops-open-span",
+    "N1a-consent-act-title-check-tolerates-crlf",
+    "N1b-consent-instance-table-check-tolerates-crlf"
+   ]
+  }
+ ],
+ "mutants": [
+  {
+   "id": "PR1-profile-opener-indent4",
+   "oldOnceAtHead": true,
+   "commitResolves": false,
+   "testFailedCountConsistent": true,
+   "testFailedListUncapped": true,
+   "newRowsFailedCountConsistent": true,
+   "newRowsFailedListUncapped": true,
+   "probeKilledConsistent": true,
+   "existingFailedCountConsistent": true,
+   "existingFailedListUncapped": true,
+   "verdictNamesExactlyTheKillers": true,
+   "verdict": "killed by test, probe, existing",
+   "killedByATest": true,
+   "priorKilled": null
+  },
+  {
+   "id": "PR2-profile-closer-any-whitespace",
+   "oldOnceAtHead": true,
+   "commitResolves": false,
+   "testFailedCountConsistent": true,
+   "testFailedListUncapped": true,
+   "newRowsFailedCountConsistent": true,
+   "newRowsFailedListUncapped": true,
+   "probeKilledConsistent": true,
+   "existingFailedCountConsistent": true,
+   "existingFailedListUncapped": true,
+   "verdictNamesExactlyTheKillers": true,
+   "verdict": "killed by test, newRows, probe",
+   "killedByATest": true,
+   "priorKilled": null
+  },
+  {
+   "id": "PR3-profile-closer-strictly-longer",
+   "oldOnceAtHead": true,
+   "commitResolves": false,
+   "testFailedCountConsistent": true,
+   "testFailedListUncapped": true,
+   "newRowsFailedCountConsistent": true,
+   "newRowsFailedListUncapped": true,
+   "probeKilledConsistent": true,
+   "existingFailedCountConsistent": true,
+   "existingFailedListUncapped": true,
+   "verdictNamesExactlyTheKillers": true,
+   "verdict": "killed by test, newRows, probe, existing",
+   "killedByATest": true,
+   "priorKilled": null
+  },
+  {
+   "id": "PR4-profile-backtick-info-allowed",
+   "oldOnceAtHead": true,
+   "commitResolves": false,
+   "testFailedCountConsistent": true,
+   "testFailedListUncapped": true,
+   "newRowsFailedCountConsistent": true,
+   "newRowsFailedListUncapped": true,
+   "probeKilledConsistent": true,
+   "existingFailedCountConsistent": true,
+   "existingFailedListUncapped": true,
+   "verdictNamesExactlyTheKillers": true,
+   "verdict": "killed by test, probe, existing",
+   "killedByATest": true,
+   "priorKilled": null
+  },
+  {
+   "id": "PR5-profile-opener-tolerates-CR",
+   "oldOnceAtHead": true,
+   "commitResolves": false,
+   "testFailedCountConsistent": true,
+   "testFailedListUncapped": true,
+   "newRowsFailedCountConsistent": true,
+   "newRowsFailedListUncapped": true,
+   "probeKilledConsistent": true,
+   "existingFailedCountConsistent": true,
+   "existingFailedListUncapped": true,
+   "verdictNamesExactlyTheKillers": true,
+   "verdict": "killed by test, probe",
+   "killedByATest": true,
+   "priorKilled": null
+  },
+  {
+   "id": "L1-links-opener-spaces-only",
+   "oldOnceAtHead": true,
+   "commitResolves": false,
+   "testFailedCountConsistent": true,
+   "testFailedListUncapped": true,
+   "newRowsFailedCountConsistent": true,
+   "newRowsFailedListUncapped": true,
+   "probeKilledConsistent": true,
+   "existingFailedCountConsistent": true,
+   "existingFailedListUncapped": true,
+   "verdictNamesExactlyTheKillers": true,
+   "verdict": "killed by test, probe",
+   "killedByATest": true,
+   "priorKilled": null
+  },
+  {
+   "id": "L2-links-closer-any-length",
+   "oldOnceAtHead": true,
+   "commitResolves": false,
+   "testFailedCountConsistent": true,
+   "testFailedListUncapped": true,
+   "newRowsFailedCountConsistent": true,
+   "newRowsFailedListUncapped": true,
+   "probeKilledConsistent": true,
+   "existingFailedCountConsistent": true,
+   "existingFailedListUncapped": true,
+   "verdictNamesExactlyTheKillers": true,
+   "verdict": "killed by test, probe",
+   "killedByATest": true,
+   "priorKilled": null
+  },
+  {
+   "id": "L3-links-closer-any-fence-char",
+   "oldOnceAtHead": true,
+   "commitResolves": false,
+   "testFailedCountConsistent": true,
+   "testFailedListUncapped": true,
+   "newRowsFailedCountConsistent": true,
+   "newRowsFailedListUncapped": true,
+   "probeKilledConsistent": true,
+   "existingFailedCountConsistent": true,
+   "existingFailedListUncapped": true,
+   "verdictNamesExactlyTheKillers": true,
+   "verdict": "killed by test, probe",
+   "killedByATest": true,
+   "priorKilled": null
+  },
+  {
+   "id": "L4-links-inline-span-needs-content",
+   "oldOnceAtHead": true,
+   "commitResolves": false,
+   "testFailedCountConsistent": true,
+   "testFailedListUncapped": true,
+   "newRowsFailedCountConsistent": true,
+   "newRowsFailedListUncapped": true,
+   "probeKilledConsistent": true,
+   "existingFailedCountConsistent": true,
+   "existingFailedListUncapped": true,
+   "verdictNamesExactlyTheKillers": true,
+   "verdict": "killed by test, probe",
+   "killedByATest": true,
+   "priorKilled": null
+  },
+  {
+   "id": "E1-extraction-opener-indent3",
+   "oldOnceAtHead": true,
+   "commitResolves": false,
+   "testFailedCountConsistent": true,
+   "testFailedListUncapped": true,
+   "newRowsFailedCountConsistent": true,
+   "newRowsFailedListUncapped": true,
+   "probeKilledConsistent": true,
+   "existingFailedCountConsistent": true,
+   "existingFailedListUncapped": true,
+   "verdictNamesExactlyTheKillers": true,
+   "verdict": "killed by test, probe",
+   "killedByATest": true,
+   "priorKilled": null
+  },
+  {
+   "id": "E2-extraction-closer-trim-both-sides",
+   "oldOnceAtHead": true,
+   "commitResolves": false,
+   "testFailedCountConsistent": true,
+   "testFailedListUncapped": true,
+   "newRowsFailedCountConsistent": true,
+   "newRowsFailedListUncapped": true,
+   "probeKilledConsistent": true,
+   "existingFailedCountConsistent": true,
+   "existingFailedListUncapped": true,
+   "verdictNamesExactlyTheKillers": true,
+   "verdict": "killed by test, newRows, probe",
+   "killedByATest": true,
+   "priorKilled": null
+  },
+  {
+   "id": "E3-extraction-closer-any-text",
+   "oldOnceAtHead": true,
+   "commitResolves": false,
+   "testFailedCountConsistent": true,
+   "testFailedListUncapped": true,
+   "newRowsFailedCountConsistent": true,
+   "newRowsFailedListUncapped": true,
+   "probeKilledConsistent": true,
+   "existingFailedCountConsistent": true,
+   "existingFailedListUncapped": true,
+   "verdictNamesExactlyTheKillers": true,
+   "verdict": "killed by test, probe",
+   "killedByATest": true,
+   "priorKilled": null
+  },
+  {
+   "id": "R1-renderer-opener-indent4",
+   "oldOnceAtHead": true,
+   "commitResolves": false,
+   "testFailedCountConsistent": true,
+   "testFailedListUncapped": true,
+   "newRowsFailedCountConsistent": true,
+   "newRowsFailedListUncapped": true,
+   "probeKilledConsistent": true,
+   "existingFailedCountConsistent": true,
+   "existingFailedListUncapped": true,
+   "verdictNamesExactlyTheKillers": true,
+   "verdict": "killed by test",
+   "killedByATest": true,
+   "priorKilled": null
+  },
+  {
+   "id": "R2-renderer-closer-longer-than-opener",
+   "oldOnceAtHead": true,
+   "commitResolves": false,
+   "testFailedCountConsistent": true,
+   "testFailedListUncapped": true,
+   "newRowsFailedCountConsistent": true,
+   "newRowsFailedListUncapped": true,
+   "probeKilledConsistent": true,
+   "existingFailedCountConsistent": true,
+   "existingFailedListUncapped": true,
+   "verdictNamesExactlyTheKillers": true,
+   "verdict": "killed by test, probe, existing",
+   "killedByATest": true,
+   "priorKilled": null
+  },
+  {
+   "id": "R3-renderer-heading-depth-closer-longer",
+   "oldOnceAtHead": true,
+   "commitResolves": false,
+   "testFailedCountConsistent": true,
+   "testFailedListUncapped": true,
+   "newRowsFailedCountConsistent": true,
+   "newRowsFailedListUncapped": true,
+   "probeKilledConsistent": true,
+   "existingFailedCountConsistent": true,
+   "existingFailedListUncapped": true,
+   "verdictNamesExactlyTheKillers": true,
+   "verdict": "killed by test",
+   "killedByATest": true,
+   "priorKilled": null
+  },
+  {
+   "id": "K1-consent-opener-indent4",
+   "oldOnceAtHead": true,
+   "commitResolves": false,
+   "testFailedCountConsistent": true,
+   "testFailedListUncapped": true,
+   "consentNewFailedCountConsistent": true,
+   "consentNewFailedListUncapped": true,
+   "probeKilledConsistent": true,
+   "existingFailedCountConsistent": true,
+   "existingFailedListUncapped": true,
+   "priorFailedCountConsistent": true,
+   "priorFailedListUncapped": true,
+   "verdictNamesExactlyTheKillers": true,
+   "verdict": "killed by consentNew, probe",
+   "killedByATest": true,
+   "priorKilled": false
+  },
+  {
+   "id": "K2-consent-closer-strictly-longer",
+   "oldOnceAtHead": true,
+   "commitResolves": false,
+   "testFailedCountConsistent": true,
+   "testFailedListUncapped": true,
+   "consentNewFailedCountConsistent": true,
+   "consentNewFailedListUncapped": true,
+   "probeKilledConsistent": true,
+   "existingFailedCountConsistent": true,
+   "existingFailedListUncapped": true,
+   "priorFailedCountConsistent": true,
+   "priorFailedListUncapped": true,
+   "verdictNamesExactlyTheKillers": true,
+   "verdict": "killed by consentNew, probe",
+   "killedByATest": true,
+   "priorKilled": false
+  },
+  {
+   "id": "K3-consent-closer-any-text",
+   "oldOnceAtHead": true,
+   "commitResolves": false,
+   "testFailedCountConsistent": true,
+   "testFailedListUncapped": true,
+   "consentNewFailedCountConsistent": true,
+   "consentNewFailedListUncapped": true,
+   "probeKilledConsistent": true,
+   "existingFailedCountConsistent": true,
+   "existingFailedListUncapped": true,
+   "verdictNamesExactlyTheKillers": true,
+   "verdict": "killed by probe, existing",
+   "killedByATest": true,
+   "priorKilled": null
+  },
+  {
+   "id": "K4-consent-backtick-info-opens",
+   "oldOnceAtHead": true,
+   "commitResolves": false,
+   "testFailedCountConsistent": true,
+   "testFailedListUncapped": true,
+   "consentNewFailedCountConsistent": true,
+   "consentNewFailedListUncapped": true,
+   "probeKilledConsistent": true,
+   "existingFailedCountConsistent": true,
+   "existingFailedListUncapped": true,
+   "verdictNamesExactlyTheKillers": true,
+   "verdict": "killed by probe, existing",
+   "killedByATest": true,
+   "priorKilled": null
+  },
+  {
+   "id": "RV7-renderer-tab-indented-fence-ends-paragraph",
+   "oldOnceAtHead": true,
+   "commitResolves": false,
+   "testFailedCountConsistent": true,
+   "testFailedListUncapped": true,
+   "newRowsFailedCountConsistent": true,
+   "newRowsFailedListUncapped": true,
+   "probeKilledConsistent": true,
+   "existingFailedCountConsistent": true,
+   "existingFailedListUncapped": true,
+   "priorFailedCountConsistent": true,
+   "priorFailedListUncapped": true,
+   "verdictNamesExactlyTheKillers": true,
+   "verdict": "killed by test, newRows",
+   "killedByATest": true,
+   "priorKilled": false
+  },
+  {
+   "id": "RV11-profile-fence-opener-drops-open-span",
+   "oldOnceAtHead": true,
+   "commitResolves": false,
+   "testFailedCountConsistent": true,
+   "testFailedListUncapped": true,
+   "newRowsFailedCountConsistent": true,
+   "newRowsFailedListUncapped": true,
+   "probeKilledConsistent": true,
+   "existingFailedCountConsistent": true,
+   "existingFailedListUncapped": true,
+   "priorFailedCountConsistent": true,
+   "priorFailedListUncapped": true,
+   "verdictNamesExactlyTheKillers": true,
+   "verdict": "killed by test, probe, existing",
+   "killedByATest": true,
+   "priorKilled": false
+  },
+  {
+   "id": "E4-extraction-closer-is-the-profile-closer",
+   "oldOnceAtHead": true,
+   "commitResolves": false,
+   "testFailedCountConsistent": true,
+   "testFailedListUncapped": true,
+   "newRowsFailedCountConsistent": true,
+   "newRowsFailedListUncapped": true,
+   "probeKilledConsistent": true,
+   "existingFailedCountConsistent": true,
+   "existingFailedListUncapped": true,
+   "priorFailedCountConsistent": true,
+   "priorFailedListUncapped": true,
+   "verdictNamesExactlyTheKillers": true,
+   "verdict": "killed by test, newRows, probe, prior",
+   "killedByATest": true,
+   "priorKilled": true
+  },
+  {
+   "id": "L5-links-closer-is-the-profile-closer",
+   "oldOnceAtHead": true,
+   "commitResolves": false,
+   "testFailedCountConsistent": true,
+   "testFailedListUncapped": true,
+   "newRowsFailedCountConsistent": true,
+   "newRowsFailedListUncapped": true,
+   "probeKilledConsistent": true,
+   "existingFailedCountConsistent": true,
+   "existingFailedListUncapped": true,
+   "priorFailedCountConsistent": true,
+   "priorFailedListUncapped": true,
+   "verdictNamesExactlyTheKillers": true,
+   "verdict": "killed by test, newRows, probe, prior",
+   "killedByATest": true,
+   "priorKilled": true
+  },
+  {
+   "id": "L6-links-strip-spans-across-lines",
+   "oldOnceAtHead": true,
+   "commitResolves": false,
+   "testFailedCountConsistent": true,
+   "testFailedListUncapped": true,
+   "newRowsFailedCountConsistent": true,
+   "newRowsFailedListUncapped": true,
+   "probeKilledConsistent": true,
+   "existingFailedCountConsistent": true,
+   "existingFailedListUncapped": true,
+   "priorFailedCountConsistent": true,
+   "priorFailedListUncapped": true,
+   "verdictNamesExactlyTheKillers": true,
+   "verdict": "killed by test, newRows, probe, prior",
+   "killedByATest": true,
+   "priorKilled": true
+  },
+  {
+   "id": "N1a-consent-act-title-check-tolerates-crlf",
+   "oldOnceAtHead": true,
+   "commitResolves": false,
+   "testFailedCountConsistent": true,
+   "testFailedListUncapped": true,
+   "consentNewFailedCountConsistent": true,
+   "consentNewFailedListUncapped": true,
+   "probeKilledConsistent": true,
+   "existingFailedCountConsistent": true,
+   "existingFailedListUncapped": true,
+   "priorFailedCountConsistent": true,
+   "priorFailedListUncapped": true,
+   "verdictNamesExactlyTheKillers": true,
+   "verdict": "killed by consentNew",
+   "killedByATest": true,
+   "priorKilled": false
+  },
+  {
+   "id": "N1b-consent-instance-table-check-tolerates-crlf",
+   "oldOnceAtHead": true,
+   "commitResolves": false,
+   "testFailedCountConsistent": true,
+   "testFailedListUncapped": true,
+   "consentNewFailedCountConsistent": true,
+   "consentNewFailedListUncapped": true,
+   "probeKilledConsistent": true,
+   "existingFailedCountConsistent": true,
+   "existingFailedListUncapped": true,
+   "priorFailedCountConsistent": true,
+   "priorFailedListUncapped": true,
+   "verdictNamesExactlyTheKillers": true,
+   "verdict": "killed by consentNew",
+   "killedByATest": true,
+   "priorKilled": false
+  }
+ ],
+ "pass": true
+}

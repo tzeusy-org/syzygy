@@ -1,0 +1,3 @@
+== test-walkthrough-judgment-fixture: apps/three-surface-poc/src/keyboard-sweep-record.test.ts apps/three-surface-poc/src/polaris-accessibility-variants.ts apps/three-surface-poc/src/polaris-copy.test.ts apps/three-surface-poc/src/polaris-parity-sweep.test.ts apps/three-surface-poc/src/polaris-walkthrough-readiness.test.ts apps/three-surface-poc/src/response-identity-independent.test.ts 
+== test-frozen: packages/three-surface-poc-core/src/body-read-authority.test.ts packages/three-surface-poc-core/src/model.test.ts packages/three-surface-poc-core/src/test-frozen.test.ts packages/three-surface-poc-core/src/test-frozen.ts 
+== check_generator_install: apps/three-surface-poc/src/polaris-generation/generator-install-check.test.ts package.json 

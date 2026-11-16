@@ -1,0 +1,53 @@
+{
+ "batch": "BADUTF8",
+ "profile": false,
+ "version": "head",
+ "param": null,
+ "n": 1,
+ "scriptSha256": "7799aa73bae9a4790b75b85a597c57bf07aab4bb4dab6c67570e69af7535128e",
+ "command": "python3 -I scripts/measure_vitest_test_durations.py . --file packages/polaris-generation-consent/src/package-reader.test.ts --project @syzygy/polaris-generation-consent --mode alone --runs 1 --out <tmp>/measure-out.json",
+ "sent": [],
+ "events": [],
+ "scriptExitedAtSeconds": 1.14,
+ "exitCode": 0,
+ "claimedExit": 0,
+ "exitAsClaimed": true,
+ "descendantsSeen": 2,
+ "seenOnlyByCwd": 1,
+ "vitestSeen": false,
+ "npxSeen": false,
+ "treeAfterExit": "",
+ "survivors": {},
+ "recordWritten": true,
+ "recordRuns": 1,
+ "recordTests": 0,
+ "recordProfileRows": 0,
+ "recordExitCode": 0,
+ "marks": [
+  {
+   "what": "start",
+   "pid": 1457480,
+   "pgid": 1457480,
+   "sid": 1457480,
+   "t": 1792872774.9184446,
+   "mode": "badutf8"
+  },
+  {
+   "what": "badutf8-done",
+   "pid": 1457480,
+   "pgid": 1457480,
+   "sid": 1457480,
+   "t": 1792872774.918573
+  }
+ ],
+ "scriptWrites": null,
+ "tmpdirLeft": [
+  "bin",
+  "mark.jsonl",
+  "measure-out.json",
+  "script.log"
+ ],
+ "trace": [],
+ "outputTail": "Exception in thread Thread-2 (<lambda>):\nTraceback (most recent call last):\n  File \"/home/tze/.pyenv/versions/3.10.12/lib/python3.10/threading.py\", line 1016, in _bootstrap_inner\n    self.run()\n  File \"/home/tze/.pyenv/versions/3.10.12/lib/python3.10/threading.py\", line 953, in run\n    self._target(*self._args, **self._kwargs)\n  File \"/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520d/clone/scripts/measure_vitest_test_durations.py\", line 83, in <lambda>\n    reader = threading.Thread(target=lambda: output.append(proc.stdout.read()), daemon=True)\n  File \"/home/tze/.pyenv/versions/3.10.12/lib/python3.10/codecs.py\", line 322, in decode\n    (result, consumed) = self._buffer_decode(data, self.errors, final)\nUnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 23: invalid start byte\nrun 1: exit 0, 0.4 s, load1 {'start': 60.45, 'end': 60.45, 'min': 60.45, 'max': 60.45, 'samples': 1}, 0 tests of the file, 0 failed\n",
+ "passes": true
+}

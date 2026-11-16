@@ -1,0 +1,8 @@
+R541B-ANSWER ["U1 unscoped workspace, nothing declared","plainlib","null"]
+R541B-ANSWER ["U2 unscoped workspace, app declares it file:","plainlib","undefined"]
+R541B-ANSWER ["U3 unscoped workspace, root declares it npm:","plainlib","undefined"]
+R541B-ANSWER ["U4 unscoped workspace, app declares a registry version","plainlib","null"]
+R541B-ANSWER ["U5 unscoped workspace subpath, nothing declared","plainlib/x","null"]
+R541B-ANSWER ["U6 @syzygy workspace name declared as an alias npm does not link","@syzygy/slib","packages/slib/src/index.ts"]
+R541B-ANSWER ["U7 @syzygy workspace, nothing declared (control)","@syzygy/slib","packages/slib/src/index.ts"]
+      Tests  1 passed (1)

@@ -1,0 +1,182 @@
+{
+ "tree": "clone-base",
+ "head": "8ff50172b127cba676ff32ce62c12c91b2b0d924",
+ "results": [
+  {
+   "id": "RV531-S2-tree-not-recursive",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  133 passed (133)"
+   ],
+   "testFiles": [
+    "Test Files  4 passed (4)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 10.7,
+   "counts": [
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": "fs.readdirSync(path.join(ROOT, dir), { recursive: true, encoding: 'utf8' })",
+     "new": "fs.readdirSync(path.join(ROOT, dir), { encoding: 'utf8' })"
+    }
+   ]
+  },
+  {
+   "id": "RV531-T1-root-dot-slash-alias",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  133 passed (133)"
+   ],
+   "testFiles": [
+    "Test Files  4 passed (4)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 11.6,
+   "counts": [
+    {
+     "file": "package.json",
+     "oldCount": 1
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "package.json",
+     "old": "  \"devDependencies\": {\n",
+     "new": "  \"devDependencies\": {\n    \"dossier\": \"./packages/polaris-dossier\",\n"
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nimport 'dossier';\n"
+    }
+   ]
+  },
+  {
+   "id": "RV531-T2-remote-tarball-faithful",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  133 passed (133)"
+   ],
+   "testFiles": [
+    "Test Files  4 passed (4)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 12.9,
+   "counts": [
+    {
+     "file": "apps/syzygy/package.json",
+     "oldCount": 1
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "apps/syzygy/package.json",
+     "old": "  \"dependencies\": {\n",
+     "new": "  \"dependencies\": {\n    \"remote-lib\": \"https://example.com/remote-lib-1.0.0.tgz\",\n"
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nimport 'remote-lib';\n"
+    }
+   ]
+  },
+  {
+   "id": "RV531-T3-root-bare-path-alias",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  133 passed (133)"
+   ],
+   "testFiles": [
+    "Test Files  4 passed (4)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 17.8,
+   "counts": [
+    {
+     "file": "package.json",
+     "oldCount": 1
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "package.json",
+     "old": "  \"devDependencies\": {\n",
+     "new": "  \"devDependencies\": {\n    \"dossier\": \"packages/polaris-dossier/\",\n"
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nimport 'dossier';\n"
+    }
+   ]
+  },
+  {
+   "id": "RV531-T4-npm-alias-registry-faithful",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  133 passed (133)"
+   ],
+   "testFiles": [
+    "Test Files  4 passed (4)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 14.5,
+   "counts": [
+    {
+     "file": "package.json",
+     "oldCount": 1
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "package.json",
+     "old": "  \"devDependencies\": {\n",
+     "new": "  \"devDependencies\": {\n    \"ts5\": \"npm:typescript@^5.5.0\",\n"
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nimport 'ts5';\n"
+    }
+   ]
+  }
+ ]
+}

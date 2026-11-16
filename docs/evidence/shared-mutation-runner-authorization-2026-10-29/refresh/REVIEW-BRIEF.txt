@@ -1,0 +1,20 @@
+# Independent review brief: runner R2 plus freshness addendum
+
+Review the exact ADDENDUM.md composition with the frozen R2 offering/direction and R2 raw review. Read-only, fresh context. Do not ask the owner, mutate tracker/source/PRs, execute mutation runners or read any observed repository content. Local Syzygy Git source objects and retained snapshot files are permitted. Write only your independent raw output to the reviewer output directory provided by root, with exact subject hashes and verdicts.
+
+Inputs:
+- /home/tze/.cache/syzygy-v1-drive-20261027/runner-authorization-r2/{OFFERING.md,DRAFT-DIRECTION.md,BEHAVIOR-AND-CONSUMERS.md,FREEZE-r2.json,consumer-sweep.json}
+- /home/tze/.cache/syzygy-v1-drive-20261027/runner-authorization-review-r2/RAW.md (follow predecessor raw if its stated scope is necessary)
+- This directory's ADDENDUM.md, MANIFEST.json, SOURCE-REFRESH.json, source.diff, plan-and-guard.diff, generation-plan-identities.json, source-identities.json, retained source/, tracker-selected.json, PR snapshots/files, consumer-sweep-current.json, prior-shape-candidate-refresh.json, shape-reader-explicit-census.json and new-ordinary-shape-candidates.json.
+- Governing GP-Q0 record is retained in source/. No broad context or historical corpus loading required.
+
+Questions/acceptance:
+1. Do the retained source identities, PR543/546 merge status, new guard/PR550 behavior and canonical ownership support the stated refresh?
+2. Does preserving the legacy guard while independently verifying new actual command/plan mappings avoid false migration proof and stay inside the R2 proposed scope?
+3. Are vsqr items5/6 correctly left distinct, with no silent historical-runner edit, extra mutant authorization or closure?
+4. Is the exact new broad locator method honestly distinguished from R2's prose-only predicate, and are new ordinary candidates/retained-tool limits adequately dispositioned without claiming exhaustive external compatibility?
+5. Does this composition require a change to the proposed owner authority wording, or can the exact R2 A/B choice be offered with this evidence/consumer addendum after it clears review?
+6. Are remaining owner selection, source ownership, exact-head proof and actual implementation gates explicit? P115 approval must not count as runner approval.
+7. Does the recommendation preserve R2's initial-all-groups control cost/early-refusal tradeoff and later-prefix evidence distinction without changing it?
+
+Return separate `Scope verdict: Pass` or `Revise`, `Recommendation verdict: Pass` or `Revise`, an explicit authority-wording-change determination, required corrections if any, and remaining limits. Review clearance never grants authority. Do not turn a reasonable implementation choice into an unnecessary new owner decision; require authority extension only for an actual new authorized outcome.

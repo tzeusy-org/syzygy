@@ -1,0 +1,9 @@
+{"id":"cli-read-path-readBoundedRegularFile","byteOffset":0,"byteLength":134,"backing":4194305,"kind":"built","baseEqualsHead":true,"headDigestEqualsSha256sum":true}
+{"id":"pooled-small-buffer","byteOffset":4304,"byteLength":21,"backing":8192,"kind":"built","baseEqualsHead":true,"headDigestEqualsSha256sum":true}
+{"id":"buffer-subarray-offset-31","byteOffset":4151,"byteLength":134,"backing":8192,"kind":"built","baseEqualsHead":true,"headDigestEqualsSha256sum":true}
+{"id":"uint8array-view-offset-31","byteOffset":4151,"byteLength":134,"backing":8192,"kind":"built","baseEqualsHead":true,"headDigestEqualsSha256sum":true}
+{"id":"shared-array-buffer-view-offset-7","byteOffset":7,"byteLength":134,"backing":145,"kind":"built","baseEqualsHead":true,"headDigestEqualsSha256sum":true}
+{"id":"uint8array-subclass","byteOffset":0,"byteLength":134,"backing":134,"kind":"built","baseEqualsHead":true,"headDigestEqualsSha256sum":true}
+{"id":"invalid-utf8-bytes","byteOffset":4336,"byteLength":137,"backing":8192,"kind":"built","baseEqualsHead":true,"headDigestEqualsSha256sum":true}
+{"id":"empty-array","byteOffset":0,"byteLength":0,"backing":0,"kind":"unparseable","baseEqualsHead":true,"headDigestEqualsSha256sum":null}
+{"rows":8,"bad":0}

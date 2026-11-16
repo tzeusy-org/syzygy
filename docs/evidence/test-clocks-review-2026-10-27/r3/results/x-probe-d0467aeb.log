@@ -1,0 +1,4 @@
+{"id": "control", "exit": 0, "passed": 16, "failed": [], "load1": "43.07"}
+{"id": "X1-close-failed-callback-in-main", "exit": 1, "passed": 15, "failed": ["daemon entry: the one changed input, `dossier` as the first argument every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, whose only else is the other, before the daemon path"], "load1": "40.89"}
+{"id": "X2-close-failure-in-http-host", "exit": 0, "passed": 16, "failed": [], "load1": "42.78"}
+{"id": "X3-shutdown-in-http-host", "exit": 1, "passed": 15, "failed": ["daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app, and the `dossier render` branch does"], "load1": "42.92"}

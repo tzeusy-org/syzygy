@@ -1,0 +1,521 @@
+{
+ "commit": "d0467aeb",
+ "rows": [
+  {
+   "id": "control",
+   "new": {
+    "exit": 0,
+    "passed": 16,
+    "failedRows": [],
+    "failedCount": 0
+   },
+   "old": {
+    "exit": 0,
+    "passed": 15,
+    "failedRows": [],
+    "failedCount": 0
+   },
+   "prior": {
+    "exit": 0,
+    "passed": 16,
+    "failedRows": [],
+    "failedCount": 0
+   },
+   "round1": {
+    "exit": 0,
+    "passed": 16,
+    "failedRows": [],
+    "failedCount": 0
+   },
+   "rev532c": {
+    "newTextRow": "passed",
+    "oldPin": "passed"
+   }
+  },
+  {
+   "id": "S1-else-if-flag-after-dossier",
+   "new": {
+    "exit": 1,
+    "passed": 15,
+    "failedRows": [
+     "text"
+    ],
+    "failedCount": 1
+   },
+   "old": {
+    "exit": 1,
+    "passed": 14,
+    "failedRows": [
+     "pin"
+    ],
+    "failedCount": 1
+   },
+   "prior": {
+    "exit": 0,
+    "passed": 16,
+    "failedRows": [],
+    "failedCount": 0
+   },
+   "round1": {
+    "exit": 0,
+    "passed": 16,
+    "failedRows": [],
+    "failedCount": 0
+   },
+   "rev532c": {
+    "newTextRow": "failed",
+    "oldPin": "failed"
+   }
+  },
+  {
+   "id": "S2-same-line-if-after-dossier",
+   "new": {
+    "exit": 1,
+    "passed": 15,
+    "failedRows": [
+     "text"
+    ],
+    "failedCount": 1
+   },
+   "old": {
+    "exit": 1,
+    "passed": 14,
+    "failedRows": [
+     "pin"
+    ],
+    "failedCount": 1
+   },
+   "prior": {
+    "exit": 0,
+    "passed": 16,
+    "failedRows": [],
+    "failedCount": 0
+   },
+   "round1": {
+    "exit": 0,
+    "passed": 16,
+    "failedRows": [],
+    "failedCount": 0
+   },
+   "rev532c": {
+    "newTextRow": "failed",
+    "oldPin": "failed"
+   }
+  },
+  {
+   "id": "S3-else-if-flag-after-polaris",
+   "new": {
+    "exit": 1,
+    "passed": 15,
+    "failedRows": [
+     "text"
+    ],
+    "failedCount": 1
+   },
+   "old": {
+    "exit": 1,
+    "passed": 14,
+    "failedRows": [
+     "pin"
+    ],
+    "failedCount": 1
+   },
+   "prior": {
+    "exit": 0,
+    "passed": 16,
+    "failedRows": [],
+    "failedCount": 0
+   },
+   "round1": {
+    "exit": 0,
+    "passed": 16,
+    "failedRows": [],
+    "failedCount": 0
+   },
+   "rev532c": {
+    "newTextRow": "failed",
+    "oldPin": "failed"
+   }
+  },
+  {
+   "id": "S4-else-runtime-hook-after-dossier",
+   "new": {
+    "exit": 1,
+    "passed": 15,
+    "failedRows": [
+     "text"
+    ],
+    "failedCount": 1
+   },
+   "old": {
+    "exit": 1,
+    "passed": 14,
+    "failedRows": [
+     "pin"
+    ],
+    "failedCount": 1
+   },
+   "prior": {
+    "exit": 0,
+    "passed": 16,
+    "failedRows": [],
+    "failedCount": 0
+   },
+   "round1": {
+    "exit": 0,
+    "passed": 16,
+    "failedRows": [],
+    "failedCount": 0
+   },
+   "rev532c": {
+    "newTextRow": "failed",
+    "oldPin": "failed"
+   }
+  },
+  {
+   "id": "S5-else-createRequire-flag-after-polaris",
+   "new": {
+    "exit": 1,
+    "passed": 15,
+    "failedRows": [
+     "text"
+    ],
+    "failedCount": 1
+   },
+   "old": {
+    "exit": 1,
+    "passed": 14,
+    "failedRows": [
+     "pin"
+    ],
+    "failedCount": 1
+   },
+   "prior": {
+    "exit": 0,
+    "passed": 16,
+    "failedRows": [],
+    "failedCount": 0
+   },
+   "round1": {
+    "exit": 0,
+    "passed": 16,
+    "failedRows": [],
+    "failedCount": 0
+   },
+   "rev532c": {
+    "newTextRow": "failed",
+    "oldPin": "failed"
+   }
+  },
+  {
+   "id": "S6-misindented-close-after-dossier",
+   "new": {
+    "exit": 1,
+    "passed": 15,
+    "failedRows": [
+     "text"
+    ],
+    "failedCount": 1
+   },
+   "old": {
+    "exit": 1,
+    "passed": 14,
+    "failedRows": [
+     "pin"
+    ],
+    "failedCount": 1
+   },
+   "prior": {
+    "exit": 0,
+    "passed": 16,
+    "failedRows": [],
+    "failedCount": 0
+   },
+   "round1": {
+    "exit": 0,
+    "passed": 16,
+    "failedRows": [],
+    "failedCount": 0
+   },
+   "rev532c": {
+    "newTextRow": "failed",
+    "oldPin": "failed"
+   }
+  },
+  {
+   "id": "S7-else-split-specifier-after-dossier",
+   "new": {
+    "exit": 1,
+    "passed": 15,
+    "failedRows": [
+     "text"
+    ],
+    "failedCount": 1
+   },
+   "old": {
+    "exit": 0,
+    "passed": 15,
+    "failedRows": [],
+    "failedCount": 0
+   },
+   "prior": {
+    "exit": 0,
+    "passed": 16,
+    "failedRows": [],
+    "failedCount": 0
+   },
+   "round1": {
+    "exit": 0,
+    "passed": 16,
+    "failedRows": [],
+    "failedCount": 0
+   },
+   "rev532c": {
+    "newTextRow": "failed",
+    "oldPin": "passed"
+   }
+  },
+  {
+   "id": "L1-else-if-chain",
+   "new": {
+    "exit": 0,
+    "passed": 16,
+    "failedRows": [],
+    "failedCount": 0
+   },
+   "old": {
+    "exit": 0,
+    "passed": 15,
+    "failedRows": [],
+    "failedCount": 0
+   },
+   "prior": {
+    "exit": 1,
+    "passed": 15,
+    "failedRows": [],
+    "failedCount": 1
+   },
+   "round1": {
+    "exit": 1,
+    "passed": 15,
+    "failedRows": [
+     "r1text"
+    ],
+    "failedCount": 1
+   },
+   "rev532c": {
+    "newTextRow": "passed",
+    "oldPin": "passed"
+   }
+  },
+  {
+   "id": "L2-nested-function-in-dossier",
+   "new": {
+    "exit": 0,
+    "passed": 16,
+    "failedRows": [],
+    "failedCount": 0
+   },
+   "old": {
+    "exit": 1,
+    "passed": 14,
+    "failedRows": [
+     "pin"
+    ],
+    "failedCount": 1
+   },
+   "prior": {
+    "exit": 0,
+    "passed": 16,
+    "failedRows": [],
+    "failedCount": 0
+   },
+   "round1": {
+    "exit": 0,
+    "passed": 16,
+    "failedRows": [],
+    "failedCount": 0
+   },
+   "rev532c": {
+    "newTextRow": "passed",
+    "oldPin": "failed"
+   }
+  },
+  {
+   "id": "L3-nested-try-in-polaris",
+   "new": {
+    "exit": 0,
+    "passed": 16,
+    "failedRows": [],
+    "failedCount": 0
+   },
+   "old": {
+    "exit": 1,
+    "passed": 14,
+    "failedRows": [
+     "pin"
+    ],
+    "failedCount": 1
+   },
+   "prior": {
+    "exit": 0,
+    "passed": 16,
+    "failedRows": [],
+    "failedCount": 0
+   },
+   "round1": {
+    "exit": 0,
+    "passed": 16,
+    "failedRows": [],
+    "failedCount": 0
+   },
+   "rev532c": {
+    "newTextRow": "passed",
+    "oldPin": "failed"
+   }
+  },
+  {
+   "id": "C1-comment-outside-branches",
+   "new": {
+    "exit": 1,
+    "passed": 15,
+    "failedRows": [
+     "text"
+    ],
+    "failedCount": 1
+   },
+   "old": {
+    "exit": 1,
+    "passed": 14,
+    "failedRows": [
+     "pin"
+    ],
+    "failedCount": 1
+   },
+   "prior": {
+    "exit": 1,
+    "passed": 15,
+    "failedRows": [],
+    "failedCount": 1
+   },
+   "round1": {
+    "exit": 1,
+    "passed": 15,
+    "failedRows": [
+     "r1text"
+    ],
+    "failedCount": 1
+   },
+   "rev532c": {
+    "newTextRow": "failed",
+    "oldPin": "failed"
+   }
+  },
+  {
+   "id": "X1-close-failed-callback-in-main",
+   "new": {
+    "exit": 1,
+    "passed": 15,
+    "failedRows": [
+     "text"
+    ],
+    "failedCount": 1
+   },
+   "old": {
+    "exit": 1,
+    "passed": 14,
+    "failedRows": [
+     "pin"
+    ],
+    "failedCount": 1
+   },
+   "prior": {
+    "exit": 1,
+    "passed": 15,
+    "failedRows": [],
+    "failedCount": 1
+   },
+   "round1": {
+    "exit": 1,
+    "passed": 15,
+    "failedRows": [
+     "r1text"
+    ],
+    "failedCount": 1
+   }
+  },
+  {
+   "id": "X2-close-failure-in-http-host",
+   "new": {
+    "exit": 0,
+    "passed": 16,
+    "failedRows": [],
+    "failedCount": 0
+   },
+   "old": {
+    "exit": 0,
+    "passed": 15,
+    "failedRows": [],
+    "failedCount": 0
+   },
+   "prior": {
+    "exit": 0,
+    "passed": 16,
+    "failedRows": [],
+    "failedCount": 0
+   },
+   "round1": {
+    "exit": 0,
+    "passed": 16,
+    "failedRows": [],
+    "failedCount": 0
+   }
+  },
+  {
+   "id": "X3-shutdown-in-http-host",
+   "new": {
+    "exit": 1,
+    "passed": 15,
+    "failedRows": [
+     "hook"
+    ],
+    "failedCount": 1
+   },
+   "old": {
+    "exit": 0,
+    "passed": 15,
+    "failedRows": [],
+    "failedCount": 0
+   },
+   "prior": {
+    "exit": 1,
+    "passed": 15,
+    "failedRows": [
+     "hook"
+    ],
+    "failedCount": 1
+   },
+   "round1": {
+    "exit": 1,
+    "passed": 15,
+    "failedRows": [
+     "hook"
+    ],
+    "failedCount": 1
+   }
+  }
+ ],
+ "disagreeWithRev532c": [],
+ "recordCommits": {
+  "new": "2b56a253f81bb4e6d71b46556f0d675a07dfb7c2",
+  "old": "2b56a253f81bb4e6d71b46556f0d675a07dfb7c2",
+  "prior": "2b56a253f81bb4e6d71b46556f0d675a07dfb7c2",
+  "round1": "2b56a253f81bb4e6d71b46556f0d675a07dfb7c2"
+ },
+ "testFrom": {
+  "new": "the tree",
+  "old": "c104771ff90f47ffd070f2339c36010458679c71",
+  "prior": "447d9f083fb120c14ddd8da646c03675f3ce7bc7",
+  "round1": "9e00252ae134accc4a42604445a4db66f68d5100"
+ }
+}

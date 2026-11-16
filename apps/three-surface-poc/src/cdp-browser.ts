@@ -10,9 +10,10 @@
 // ever opens the `file://` pages the caller writes.
 
 import { spawn, spawnSync, type ChildProcess } from 'node:child_process';
-import { existsSync, mkdtempSync, readFileSync, readdirSync, statSync } from 'node:fs';
+import { existsSync, lstatSync, mkdtempSync, readFileSync, readdirSync, readlinkSync, rmSync, statSync, type BigIntStats } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { basename, dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import { removeTemporaryDirectory, type TemporaryDirectoryCleanupOptions } from './temporary-directory.js';
 
@@ -34,6 +35,7 @@ export interface BrowserPage {
   evaluate<T>(expression: string): Promise<T>;
   /** Dispatches a real key press (down + up) through the browser's input pipeline. */
   press(key: KeyName, modifiers?: { readonly shift?: boolean }): Promise<void>;
+  mouseMove(x: number, y: number): Promise<void>;
   axTree(): Promise<readonly AxNode[]>;
   /** The browser-computed accessible name of each element of the array
    * `expression` evaluates to, in order (PWB-REQ-016 distinct names). The
@@ -211,6 +213,10 @@ class CdpPage implements BrowserPage {
     await this.connection.send('Input.dispatchKeyEvent', { type: 'keyUp', ...base }, this.sessionId);
   }
 
+  async mouseMove(x: number, y: number): Promise<void> {
+    await this.connection.send('Input.dispatchMouseEvent', { type: 'mouseMoved', x, y }, this.sessionId);
+  }
+
   async axTree(): Promise<readonly AxNode[]> {
     const tree = await this.connection.send<{ readonly nodes: readonly RawAxNode[] }>('Accessibility.getFullAXTree', {}, this.sessionId);
     return tree.nodes.map((node) => ({
@@ -262,13 +268,114 @@ function waitForDevToolsUrl(child: ChildProcess): Promise<string> {
   });
 }
 
+/** Chrome keeps its process singleton's socket outside the profile, in a directory of its
+ * own directly under the temp directory, and links `<profile>/SingletonSocket` to the
+ * socket in it. The name is `<product>.<random>`, with a leading dot in Chrome 120
+ * (`.com.google.Chrome.<random>`) and none in Chrome 155 (`com.google.Chrome.<random>`)
+ * or the Chrome for Testing builds 145 to 154 (`org.chromium.Chromium.<random>`); where
+ * the dot went between 120 and 145 is not known.
+ * A Chrome that exits cleanly removes the directory. One that is killed, as
+ * closeDisposableBrowser does when the leader misses its close grace, leaves it behind the
+ * profile (syzygy-bpyt.4.11). Chrome unlinks the profile's link as it starts to shut down,
+ * so the directory is read from the link while Chrome runs, and again at removal for a
+ * Chrome that was killed before it announced itself. */
+const CHROME_SINGLETON_DIRECTORY = /^\.?(?:com\.google\.Chrome|org\.chromium\.Chromium)\.[A-Za-z0-9]+$/;
+
+function isChromeSingletonDirectory(directory: string): boolean {
+  return dirname(directory) === tmpdir() && CHROME_SINGLETON_DIRECTORY.test(basename(directory));
+}
+
+/** A singleton directory as it was when it was read: its path and the identity of the
+ * directory (device and inode). Chrome removes the directory itself on a clean exit, and
+ * another Chrome in the same temp directory can then make one under the same name before
+ * this one is removed. The identity makes a mistaken removal unlikely, not impossible: a file
+ * system may reuse an inode number, so a directory made under the same name that happens to
+ * take the freed device and inode passes for the one that was read. */
+export interface ChromeSingletonDirectory {
+  readonly path: string;
+  readonly dev: bigint;
+  readonly ino: bigint;
+}
+
+/** How an entry is read: without following a link, and with exact numbers (an inode can
+ * exceed what a number holds exactly, and a neighbouring inode is the likely one to clash). */
+type ReadEntry = (path: string) => BigIntStats;
+const readEntry: ReadEntry = (path) => lstatSync(path, { bigint: true });
+
+/** Whether an entry is the running user's; where the system has no user ids there is no
+ * user to check. */
+function ownedByRunningUser(entry: BigIntStats): boolean {
+  const user = process.getuid?.();
+  return user === undefined || entry.uid === BigInt(user);
+}
+
+/** The singleton directory the profile's Chrome made, if the profile's link names a socket
+ * in a directory of that name directly under the temp directory. The link is read only if
+ * the profile and the link are the running user's: in a shared temp directory another user
+ * can make a profile path first and link it to a directory of ours.
+ *
+ * Scope of the guarantee: it is for a private profile (`mkdtemp`, mode 0700) in a sticky or
+ * private temp directory. Each owner check holds at the instant of its `lstat`, and the
+ * profile is judged as the entry itself (a symlink another user made is theirs, whatever it
+ * points at), never after resolving it. The owner check covers the final path component
+ * only, not its mode. A window for a same-user racer stays open between the owner `lstat`
+ * and `readlink` of the link; the window before `rmSync` is in
+ * removeChromeSingletonDirectory. [Inferred from permission semantics: the link lives in a
+ * 0700 profile, so only the running user or root can swap it.]
+ *
+ * Refusing a group- or world-writable profile is not done (syzygy-bpyt.4.28 item 3). That
+ * holds because `launchBrowser`'s `mkdtempSync` (mode 0700, even under umask 0) is the sole
+ * creator of a profile: every path reaching here from production code was made by it. A
+ * caller of the exported `removeBrowserProfile` or `closeDisposableBrowser` that passes a
+ * profile made any other way (a shared, non-sticky scratch directory, say) is outside the
+ * guarantee and must add the mode refusal first. A test pins the callers and the one creator. */
+function chromeSingletonDirectory(profile: string, lstat: ReadEntry = readEntry, readLink: (path: string) => string = readlinkSync): ChromeSingletonDirectory | undefined {
+  const link = join(profile, 'SingletonSocket');
+  try {
+    if (!ownedByRunningUser(lstat(profile)) || !ownedByRunningUser(lstat(link))) return undefined;
+    const path = dirname(readLink(link));
+    if (!isChromeSingletonDirectory(path)) return undefined;
+    const { dev, ino } = lstat(path);
+    return { path, dev, ino };
+  } catch { return undefined; }
+}
+
+/** Removes the directory only if it is named like Chrome's, directly under the temp
+ * directory, a real directory (never a link), the running user's and the very directory that
+ * was read. A failure leaves it: tidying must not fail the run.
+ *
+ * Window for a same-user racer: between the identity `lstat` below and the `rmSync`, the
+ * entry can be replaced; measured, a same-user racer removed the replacement in 12 of 1000
+ * trials. [Inferred from permission semantics: another account cannot rename or remove the
+ * directory in a sticky or private temp directory, so only a same-user racer reaches it.] */
+function removeChromeSingletonDirectory(recorded: ChromeSingletonDirectory, lstat: ReadEntry = readEntry): void {
+  if (!isChromeSingletonDirectory(recorded.path)) return;
+  try {
+    const entry = lstat(recorded.path);
+    if (entry.isDirectory() && ownedByRunningUser(entry) && entry.dev === recorded.dev && entry.ino === recorded.ino) rmSync(recorded.path, { recursive: true, force: true });
+  } catch { /* left for the temp directory's owner */ }
+}
+
+export interface BrowserProfileRemoval extends TemporaryDirectoryCleanupOptions {
+  /** The singleton directory read while Chrome ran; read from the profile's link if absent. */
+  readonly singleton?: ChromeSingletonDirectory;
+  /** How entries are read, `lstatSync` with exact numbers by default. A test answers another
+   * owner or device for one path, which a file system cannot be made to do without privilege. */
+  readonly lstat?: (path: string) => BigIntStats;
+  /** How the profile's link is read, `readlinkSync` by default. A test counts the reads. */
+  readonly readLink?: (path: string) => string;
+}
+
 // Test seam: exported for the tests; production code reaches it only inside this file.
-/** Removes the throwaway profile after Chrome has released its files. */
+/** Removes the throwaway profile after Chrome has released its files, and the Chrome
+ * singleton directory that profile's Chrome made beside it. */
 export function removeBrowserProfile(
   profile: string,
-  options?: TemporaryDirectoryCleanupOptions,
+  options: BrowserProfileRemoval = {},
 ): void {
+  const singleton = options.singleton ?? chromeSingletonDirectory(profile, options.lstat, options.readLink);
   removeTemporaryDirectory(profile, options);
+  if (singleton !== undefined) removeChromeSingletonDirectory(singleton, options.lstat);
 }
 
 interface DisposableBrowserProcess {
@@ -383,6 +490,10 @@ interface BrowserCleanupOptions {
   readonly groupProcesses?: (group: PrivateBrowserGroup) => readonly number[];
   /** Signals live members; defaults to a real kill only with the real scan. */
   readonly stopMembers?: (group: PrivateBrowserGroup, live: readonly number[]) => void;
+  /** A Vitest guardian must survive until its adopted descendants are reaped. */
+  readonly stopChild?: () => void;
+  /** Verifies that the guardian reaped its complete private descendant family. */
+  readonly verifyChildCleanup?: () => void | Promise<void>;
   readonly now?: () => number;
 }
 
@@ -417,8 +528,18 @@ export async function closeDisposableBrowser(
     if (timer !== undefined) clearTimeout(timer);
   }
   connection.close();
-  if (child.exitCode === null && child.signalCode === null) child.kill('SIGKILL');
+  if (child.exitCode === null && child.signalCode === null) {
+    if (options.stopChild === undefined) child.kill('SIGKILL');
+    else options.stopChild();
+  }
   await exited;
+  if (options.verifyChildCleanup !== undefined) {
+    await options.verifyChildCleanup();
+    // The guardian owns and reaps the whole family, including escaped
+    // sessions. Its now-released group id is no longer signal authority.
+    (options.removeProfile ?? removeBrowserProfile)(profile);
+    return;
+  }
   const now = options.now ?? Date.now;
   const drainDeadline = now() + (options.profileDrainMs ?? BROWSER_PROFILE_DRAIN_MS);
   const groupProcesses = options.groupProcesses ?? livePrivateBrowserMembers;
@@ -443,9 +564,8 @@ export async function closeDisposableBrowser(
 /** Launches `executable` headless with a throwaway profile and connects. */
 export async function launchBrowser(executable: string): Promise<Browser> {
   const profile = mkdtempSync(join(tmpdir(), 'syzygy-poc-browser-'));
-  const child = spawn(
-    executable,
-    [
+  let singleton: ChromeSingletonDirectory | undefined;
+  const args = [
       '--headless=new',
       '--no-sandbox',
       '--disable-gpu',
@@ -463,9 +583,38 @@ export async function launchBrowser(executable: string): Promise<Browser> {
       '--remote-debugging-port=0',
       '--window-size=1280,2000',
       'about:blank',
-    ],
-    { stdio: ['ignore', 'ignore', 'pipe'], detached: true },
-  );
+    ];
+  // Only Vitest needs a parent that outlives a killed test worker. Python
+  // is already a prerequisite of the integration/e2e tiers. Operator
+  // commands retain the existing direct Chrome launch and dependencies.
+  const guarded = process.env['VITEST'] === 'true';
+  const child = guarded
+    ? spawn('python3', [fileURLToPath(new URL('../../../scripts/poc_browser_lifetime.py', import.meta.url)), executable, ...args],
+      { stdio: ['pipe', 'ignore', 'pipe', 'pipe'], detached: true })
+    : spawn(executable, args, { stdio: ['ignore', 'ignore', 'pipe'], detached: true });
+  let childCleanupVerified = false;
+  let acknowledgement = '';
+  child.stdio[3]?.on('data', (chunk: Buffer) => {
+    acknowledgement += chunk.toString('utf8');
+    childCleanupVerified = acknowledgement === 'closed\n';
+  });
+  const childCleanup = new Promise<void>((resolve, reject) => {
+    if (!guarded) resolve();
+    else child.stdio[3]?.once('end', resolve).once('error', reject);
+  });
+  // EPIPE can mean the guardian already exited. Its separate acknowledgement,
+  // checked after exit, determines whether cleanup actually completed.
+  if (guarded) child.stdin?.on('error', () => undefined);
+  const cleanup: BrowserCleanupOptions = {
+    removeProfile: (path) => removeBrowserProfile(path, { singleton }),
+    ...(guarded ? {
+      stopChild: () => { child.stdin?.end('stop\n'); },
+      verifyChildCleanup: async () => {
+        await childCleanup;
+        if (!childCleanupVerified) throw new Error('private browser guardian did not verify descendant cleanup');
+      },
+    } : {}),
+  };
   let group: PrivateBrowserGroup;
   try { group = privateBrowserGroup(child); }
   catch (error) {
@@ -473,16 +622,22 @@ export async function launchBrowser(executable: string): Promise<Browser> {
     // The launched group's identity was not established. Retain its profile.
     throw error;
   }
+  if (guarded) child.stdin?.write('start\n');
   let connection: CdpConnection;
   try {
     connection = await CdpConnection.open(await waitForDevToolsUrl(child));
   } catch (error) {
-    await closeDisposableBrowser({ close: () => undefined, send: async () => { throw new Error('CDP unavailable'); } }, child, profile, group);
+    await closeDisposableBrowser({ close: () => undefined, send: async () => { throw new Error('CDP unavailable'); } }, child, profile, group, cleanup);
     throw error;
   }
+  singleton = chromeSingletonDirectory(profile);
   let versionInfo: { readonly product: string };
   try { versionInfo = await connection.send<{ readonly product: string }>('Browser.getVersion'); }
-  catch (error) { await closeDisposableBrowser(connection, child, profile, group); throw error; }
+  catch (error) { await closeDisposableBrowser(connection, child, profile, group, cleanup); throw error; }
+  let closing: Promise<void> | undefined;
+  const dispose = (): Promise<void> => {
+    return closeDisposableBrowser(connection, child, profile, group, cleanup);
+  };
   return {
     executable,
     version: versionInfo.product,
@@ -499,7 +654,14 @@ export async function launchBrowser(executable: string): Promise<Browser> {
       return new CdpPage(connection, sessionId, targetId);
     },
     async close(): Promise<void> {
-      await closeDisposableBrowser(connection, child, profile, group);
+      if (!guarded) {
+        await dispose();
+        return;
+      }
+      // The profile and process identities have been relinquished after a
+      // completed close. Repeating it must not adopt a replacement at either
+      // identity, nor turn a failed cleanup into an implicit retry.
+      await (closing ??= dispose());
     },
   };
 }

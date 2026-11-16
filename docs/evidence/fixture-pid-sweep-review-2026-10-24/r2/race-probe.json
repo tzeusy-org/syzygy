@@ -1,0 +1,76 @@
+{
+ "probe": "race_probe.mjs",
+ "namespace": "4026531836",
+ "pid": 3505680,
+ "rounds": [
+  {
+   "round": 0,
+   "deadMade": 150,
+   "liveMade": [
+    "syzygy-poc-surface-fixture-p3505680-n4026531836-fjnPCy",
+    "syzygy-poc-surface-fixture-p3505680-n4026531836-is5137",
+    "syzygy-poc-surface-fixture-template-p3505680-n4026531836-jG8EGS"
+   ],
+   "exits": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "stderr": [
+    "",
+    "",
+    "",
+    ""
+   ],
+   "deadLeft": 0,
+   "liveKept": true
+  },
+  {
+   "round": 1,
+   "deadMade": 150,
+   "liveMade": [
+    "syzygy-poc-surface-fixture-p3505680-n4026531836-tomEdi",
+    "syzygy-poc-surface-fixture-p3505680-n4026531836-T6xnSH",
+    "syzygy-poc-surface-fixture-template-p3505680-n4026531836-vKXAjX"
+   ],
+   "exits": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "stderr": [
+    "",
+    "",
+    "",
+    ""
+   ],
+   "deadLeft": 0,
+   "liveKept": true
+  },
+  {
+   "round": 2,
+   "deadMade": 150,
+   "liveMade": [
+    "syzygy-poc-surface-fixture-p3505680-n4026531836-72M4Ab",
+    "syzygy-poc-surface-fixture-p3505680-n4026531836-d21Ltq",
+    "syzygy-poc-surface-fixture-template-p3505680-n4026531836-RYP7pK"
+   ],
+   "exits": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "stderr": [
+    "",
+    "",
+    "",
+    ""
+   ],
+   "deadLeft": 0,
+   "liveKept": true
+  }
+ ]
+}

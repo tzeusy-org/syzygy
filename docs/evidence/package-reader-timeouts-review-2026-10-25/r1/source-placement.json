@@ -1,0 +1,114 @@
+[
+ {
+  "line": 108,
+  "timeout": 45000,
+  "openerLine": 100,
+  "kind": "it",
+  "fullName": "package admission reader returns a record only for an instance that an act record names by path and digest"
+ },
+ {
+  "line": 138,
+  "timeout": 10000,
+  "openerLine": 118,
+  "kind": "it",
+  "fullName": "package admission reader refuses the whole read on unknown shapes instead of guessing"
+ },
+ {
+  "line": 256,
+  "timeout": 15000,
+  "openerLine": 252,
+  "kind": "it",
+  "fullName": "public-source policy act recognises the recorder's record by its exact path and format, in force from its instant"
+ },
+ {
+  "line": 324,
+  "timeout": 15000,
+  "openerLine": 321,
+  "kind": "it",
+  "fullName": "public-source policy act refuses the recorder's file when its act type, identity, title or provenance is not the recorder's form"
+ },
+ {
+  "line": 365,
+  "timeout": 40000,
+  "openerLine": 358,
+  "kind": "it",
+  "fullName": "egress version 2 record is read from the recorder's act: version 2 supersedes version 1 once in force"
+ },
+ {
+  "line": 372,
+  "timeout": 20000,
+  "openerLine": 366,
+  "kind": "it",
+  "fullName": "egress version 2 record leaves version 1 standing before the version 2 act takes effect, and with no version 1 act at all"
+ },
+ {
+  "line": 378,
+  "timeout": 45000,
+  "openerLine": 373,
+  "kind": "it",
+  "fullName": "egress version 2 record refuses when version 2 did not take effect strictly after version 1: the same instant, or earlier"
+ },
+ {
+  "line": 440,
+  "timeout": 40000,
+  "openerLine": 422,
+  "kind": "it",
+  "fullName": "egress version 2 record the RFC5-14 class amendment version 2 depends on is required: no record, an edited module, a wrong form, or an amendment later than version 2 all refuse"
+ },
+ {
+  "line": 495,
+  "timeout": 25000,
+  "openerLine": 485,
+  "kind": "it",
+  "fullName": "egress version 2 record withdrawal and forgery forms the reader does not define does not refuse the recorders' other act records or the aggregate acceptance record they append to"
+ },
+ {
+  "line": 538,
+  "timeout": 45000,
+  "openerLine": 534,
+  "kind": "it",
+  "fullName": "screening scope version 2 policy act counts the version 2 act when the policy carries the version 2 bytes, and the version 1 act goes quiet"
+ },
+ {
+  "line": 560,
+  "timeout": 20000,
+  "openerLine": 554,
+  "kind": "it",
+  "fullName": "screening scope version 2 policy act a version 2 act not yet in force leaves version 1 in force, in both views"
+ },
+ {
+  "line": 578,
+  "timeout": 15000,
+  "openerLine": 571,
+  "kind": "it",
+  "fullName": "screening scope version 2 policy act refuses an unlisted record that names the policy: another file, a subdirectory, a loose field spelling, a Unicode-hyphen identity"
+ },
+ {
+  "line": 707,
+  "timeout": 40000,
+  "openerLine": 694,
+  "kind": "it",
+  "fullName": "strict act reads policy chain: absent without acts; refused for a missing version 1, equal or earlier instants, equal arguments, a supersession that does not name version 1, or other policy bytes"
+ },
+ {
+  "line": 776,
+  "timeout": 15000,
+  "openerLine": 768,
+  "kind": "it",
+  "fullName": "round-3 review notes folds soft hyphens, zero-width spaces, underscores and spaces before matching a withdrawal stem (N-2)"
+ },
+ {
+  "line": 801,
+  "timeout": 15000,
+  "openerLine": 791,
+  "kind": "it",
+  "fullName": "round-3 review notes takes a time: a strict read of an act recorded after now is absent (N-4)"
+ },
+ {
+  "line": 1058,
+  "timeout": 50000,
+  "openerLine": 1047,
+  "kind": "it",
+  "fullName": "the policy port and the strict policy chain agree on every world in the fixture set, at every instant"
+ }
+]

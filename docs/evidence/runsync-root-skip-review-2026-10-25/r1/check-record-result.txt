@@ -1,0 +1,56 @@
+OK   record commit resolves: be2b2dc6171b63f2dbba2142a08a603c5e2b9283
+OK   record commit is an ancestor of the reviewed commit
+OK   baseCommit is the merge base of reviewed and main 71334012: 3ec6929951080613b3c5cb7205fe303c5449be58
+OK   files changed between the record commit and the reviewed commit: docs/evidence/syzygy-bpyt-4-22/runsync-and-root-probe.json
+OK   tool path
+OK   tool sha256 at be2b2dc6: 30097a29bcf4
+OK   tool sha256 at f7bbb93a: 30097a29bcf4
+OK   daemon-entry-unchanged.system.test.ts base sha256
+OK   daemon-entry-unchanged.system.test.ts head sha256 at record commit
+OK   daemon-entry-unchanged.system.test.ts head sha256 at reviewed commit
+OK   state-dir.system.test.ts base sha256
+OK   state-dir.system.test.ts head sha256 at record commit
+OK   state-dir.system.test.ts head sha256 at reviewed commit
+OK   R5 mutant record sha256: docs/evidence/syzygy-bpyt-8-2/mutants/R5-positional-taken-when-refused.json
+OK   R5 stored edits equal the 8.2 record edits
+OK   R5 old occurs once in packages/polaris-dossier/src/argv.ts at record commit: 1
+OK   R5 old occurs once in packages/polaris-dossier/src/argv.ts at reviewed commit: 1
+OK   R5 old occurs once in packages/polaris-dossier/src/argv.ts at base: 1
+OK   R5 exit non-zero: 1
+OK   R5 failedRows recomputed: 2 vs 2
+OK   R5 timedOutRows recomputed: 2 vs 2
+OK   R5 every failed row timed out
+OK   R5 every failed row under timeout + 5 s: 20034, 20030
+OK   R5 no 7477 listener seen, none before: samples 107
+OK   R5 no survivors
+OK   R5 not killed at deadline
+OK   R5 distCarriesMutant
+     R5: exit 1, wall 43.7 s, samples 107, own ports ['38677', '46629'], build exit 0, type errors 0, failed [('["--port","0","dossier"] is re', 20034), ('["Dossier"] is refused with ex', 20030)]
+OK   R9 mutant record sha256: docs/evidence/syzygy-bpyt-8-2/mutants/R9-missing-value-unchecked.json
+OK   R9 stored edits equal the 8.2 record edits
+OK   R9 old occurs once in packages/polaris-dossier/src/argv.ts at record commit: 1
+OK   R9 old occurs once in packages/polaris-dossier/src/argv.ts at reviewed commit: 1
+OK   R9 old occurs once in packages/polaris-dossier/src/argv.ts at base: 1
+OK   R9 exit non-zero: 1
+OK   R9 failedRows recomputed: 1 vs 1
+OK   R9 timedOutRows recomputed: 1 vs 1
+OK   R9 every failed row timed out
+OK   R9 every failed row under timeout + 5 s: 20035
+OK   R9 no 7477 listener seen, none before: samples 56
+OK   R9 no survivors
+OK   R9 not killed at deadline
+OK   R9 distCarriesMutant
+     R9: exit 1, wall 23.7 s, samples 56, own ports ['45143'], build exit 2, type errors 2, failed [('["--port"] is refused with exi', 20035)]
+OK   unmutated base: exit 0, no failed, 21 tests
+OK   unmutated head: exit 0, no failed, 21 tests
+OK   populations recomputed: {'baseTests': 21, 'headTests': 21, 'sameTitlesAndStatuses': True}
+OK   root-shim: row skipped, others ['skipped'], exit 0
+OK   root-shim-base: row passed, others ['skipped'], exit 0
+OK   root-control: row passed, others ['skipped'], exit 0
+OK   allPass recomputed
+     unmutated base: 12 runSync rows, slowest 230 ms (hes the run with the renderer injected, and starts no daemon)
+     unmutated head: 12 runSync rows, slowest 249 ms (hes the run with the renderer injected, and starts no daemon)
+     R5: mean sample interval 0.41 s over 107 samples
+     R9: mean sample interval 0.42 s over 56 samples
+     record mentions '341': False; mentions a load average (load1/loadavg/load average): False
+48 OK, 0 FAIL, of 48 checks

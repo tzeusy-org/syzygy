@@ -1,0 +1,1781 @@
+{
+ "tool": "de_rows_r4.py",
+ "commit": "23af2d080108aabf878845dfe41007fbb77f2c52",
+ "results": [
+  {
+   "id": "control",
+   "source": null,
+   "file": null,
+   "edits": [],
+   "build": 0,
+   "exit": 0,
+   "killed": false,
+   "seconds": 8.2,
+   "load1": [
+    "26.98",
+    "26.54"
+   ],
+   "rows": [
+    {
+     "title": "[\"--help\"] prints the usage and exits 0",
+     "status": "passed",
+     "durationMs": 240.17186200000015,
+     "failure": ""
+    },
+    {
+     "title": "[\"-h\"] prints the usage and exits 0",
+     "status": "passed",
+     "durationMs": 257.8754899999997,
+     "failure": ""
+    },
+    {
+     "title": "[\"--help\",\"dossier\"] prints the usage and exits 0",
+     "status": "passed",
+     "durationMs": 286.82328800000005,
+     "failure": ""
+    },
+    {
+     "title": "[\"--bogus\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 249.1777320000001,
+     "failure": ""
+    },
+    {
+     "title": "[\"--port\",\"0\",\"dossier\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 165.86729100000002,
+     "failure": ""
+    },
+    {
+     "title": "[\"Dossier\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 174.50438399999985,
+     "failure": ""
+    },
+    {
+     "title": "[\"--port\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 188.59211000000005,
+     "failure": ""
+    },
+    {
+     "title": "[\"--port\",\"70000\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 282.5967350000001,
+     "failure": ""
+    },
+    {
+     "title": "a state directory inside the governed plane is refused with the same message",
+     "status": "passed",
+     "durationMs": 216.40598899999986,
+     "failure": ""
+    },
+    {
+     "title": "with no arguments it serves from the working directory, writes the same state and shuts down the same way",
+     "status": "passed",
+     "durationMs": 253.1877760000002,
+     "failure": ""
+    },
+    {
+     "title": "with explicit flags it serves, writes the same state and shuts down the same way",
+     "status": "passed",
+     "durationMs": 245.47802300000012,
+     "failure": ""
+    },
+    {
+     "title": "`dossier` alone is a dossier usage error (exit 2), not the daemon's refusal",
+     "status": "passed",
+     "durationMs": 335.56656099999964,
+     "failure": ""
+    },
+    {
+     "title": "`dossier status <missing>` is a dossier refusal (exit 1) and starts no daemon",
+     "status": "passed",
+     "durationMs": 367.38856099999975,
+     "failure": ""
+    },
+    {
+     "title": "`dossier render <missing>` reaches the run with the renderer injected, and starts no daemon",
+     "status": "passed",
+     "durationMs": 325.4327430000003,
+     "failure": ""
+    },
+    {
+     "title": "the daemon path never loads the POC app, and the `dossier render` branch does",
+     "status": "passed",
+     "durationMs": 1284.6305940000002,
+     "failure": ""
+    },
+    {
+     "title": "every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, whose only else is the other, before the daemon path",
+     "status": "passed",
+     "durationMs": 63.728210999999646,
+     "failure": ""
+    },
+    {
+     "title": "the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch",
+     "status": "passed",
+     "durationMs": 1.3646950000002107,
+     "failure": ""
+    }
+   ],
+   "passed": 17,
+   "failed": []
+  },
+  {
+   "id": "Y1-dossier-serve-falls-through",
+   "source": "lane",
+   "file": "apps/syzygy/src/main.ts",
+   "edits": [
+    [
+     "    return runDossierCli(argv.slice(1), {\n",
+     "    if (argv[1] === 'serve') {\n      // `syzygy dossier serve …` serves the daemon below, with the renderer loaded for its routes.\n      await import('@syzygy/three-surface-poc-app/dossier-site');\n      process.argv.splice(2, 2);\n    } else return runDossierCli(argv.slice(1), {\n"
+    ]
+   ],
+   "build": 0,
+   "exit": 1,
+   "killed": false,
+   "seconds": 8.5,
+   "load1": [
+    "26.54",
+    "28.09"
+   ],
+   "rows": [
+    {
+     "title": "[\"--help\"] prints the usage and exits 0",
+     "status": "passed",
+     "durationMs": 166.8347550000001,
+     "failure": ""
+    },
+    {
+     "title": "[\"-h\"] prints the usage and exits 0",
+     "status": "passed",
+     "durationMs": 185.5225899999998,
+     "failure": ""
+    },
+    {
+     "title": "[\"--help\",\"dossier\"] prints the usage and exits 0",
+     "status": "passed",
+     "durationMs": 204.22175500000003,
+     "failure": ""
+    },
+    {
+     "title": "[\"--bogus\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 175.04597599999988,
+     "failure": ""
+    },
+    {
+     "title": "[\"--port\",\"0\",\"dossier\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 160.1283739999999,
+     "failure": ""
+    },
+    {
+     "title": "[\"Dossier\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 156.68728299999975,
+     "failure": ""
+    },
+    {
+     "title": "[\"--port\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 223.40641499999992,
+     "failure": ""
+    },
+    {
+     "title": "[\"--port\",\"70000\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 238.76404700000012,
+     "failure": ""
+    },
+    {
+     "title": "a state directory inside the governed plane is refused with the same message",
+     "status": "passed",
+     "durationMs": 382.0603979999996,
+     "failure": ""
+    },
+    {
+     "title": "with no arguments it serves from the working directory, writes the same state and shuts down the same way",
+     "status": "passed",
+     "durationMs": 394.84043699999984,
+     "failure": ""
+    },
+    {
+     "title": "with explicit flags it serves, writes the same state and shuts down the same way",
+     "status": "passed",
+     "durationMs": 424.28853000000026,
+     "failure": ""
+    },
+    {
+     "title": "`dossier` alone is a dossier usage error (exit 2), not the daemon's refusal",
+     "status": "passed",
+     "durationMs": 483.49949900000047,
+     "failure": ""
+    },
+    {
+     "title": "`dossier status <missing>` is a dossier refusal (exit 1) and starts no daemon",
+     "status": "passed",
+     "durationMs": 334.82871800000066,
+     "failure": ""
+    },
+    {
+     "title": "`dossier render <missing>` reaches the run with the renderer injected, and starts no daemon",
+     "status": "passed",
+     "durationMs": 314.48724500000026,
+     "failure": ""
+    },
+    {
+     "title": "the daemon path never loads the POC app, and the `dossier render` branch does",
+     "status": "passed",
+     "durationMs": 1437.1595129999996,
+     "failure": ""
+    },
+    {
+     "title": "every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, whose only else is the other, before the daemon path",
+     "status": "passed",
+     "durationMs": 39.317008999999416,
+     "failure": ""
+    },
+    {
+     "title": "the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch",
+     "status": "failed",
+     "durationMs": 9.735606000000189,
+     "failure": "AssertionError: expected [ …(3) ] to deeply equal [ …(2) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532d/clone/packages/cap1-system/src/daemon-entry-unchanged.system.test.ts:284:22\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532d/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532d/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file://"
+    }
+   ],
+   "passed": 16,
+   "failed": [
+    "the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+   ]
+  },
+  {
+   "id": "Y2-dossier-serve-reenters-main",
+   "source": "lane",
+   "file": "apps/syzygy/src/main.ts",
+   "edits": [
+    [
+     "  if (argv[0] === 'dossier') {\n",
+     "  if (argv[0] === 'dossier') {\n    if (argv[1] === 'serve') {\n      // `syzygy dossier serve …`: load the renderer, then serve the daemon with the rest of argv.\n      await import('@syzygy/three-surface-poc-app/dossier-site');\n      process.argv.splice(2, 2);\n      return main();\n    }\n"
+    ]
+   ],
+   "build": 0,
+   "exit": 1,
+   "killed": false,
+   "seconds": 11.2,
+   "load1": [
+    "27.76",
+    "27.96"
+   ],
+   "rows": [
+    {
+     "title": "[\"--help\"] prints the usage and exits 0",
+     "status": "passed",
+     "durationMs": 258.93792399999984,
+     "failure": ""
+    },
+    {
+     "title": "[\"-h\"] prints the usage and exits 0",
+     "status": "passed",
+     "durationMs": 164.20719899999995,
+     "failure": ""
+    },
+    {
+     "title": "[\"--help\",\"dossier\"] prints the usage and exits 0",
+     "status": "passed",
+     "durationMs": 344.74944400000004,
+     "failure": ""
+    },
+    {
+     "title": "[\"--bogus\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 266.263324,
+     "failure": ""
+    },
+    {
+     "title": "[\"--port\",\"0\",\"dossier\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 544.9013409999998,
+     "failure": ""
+    },
+    {
+     "title": "[\"Dossier\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 272.1602270000003,
+     "failure": ""
+    },
+    {
+     "title": "[\"--port\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 189.58012400000007,
+     "failure": ""
+    },
+    {
+     "title": "[\"--port\",\"70000\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 215.62248100000033,
+     "failure": ""
+    },
+    {
+     "title": "a state directory inside the governed plane is refused with the same message",
+     "status": "passed",
+     "durationMs": 305.8800879999999,
+     "failure": ""
+    },
+    {
+     "title": "with no arguments it serves from the working directory, writes the same state and shuts down the same way",
+     "status": "passed",
+     "durationMs": 424.9590760000001,
+     "failure": ""
+    },
+    {
+     "title": "with explicit flags it serves, writes the same state and shuts down the same way",
+     "status": "passed",
+     "durationMs": 334.57217500000024,
+     "failure": ""
+    },
+    {
+     "title": "`dossier` alone is a dossier usage error (exit 2), not the daemon's refusal",
+     "status": "passed",
+     "durationMs": 589.572631,
+     "failure": ""
+    },
+    {
+     "title": "`dossier status <missing>` is a dossier refusal (exit 1) and starts no daemon",
+     "status": "passed",
+     "durationMs": 484.7797039999996,
+     "failure": ""
+    },
+    {
+     "title": "`dossier render <missing>` reaches the run with the renderer injected, and starts no daemon",
+     "status": "passed",
+     "durationMs": 463.96920500000033,
+     "failure": ""
+    },
+    {
+     "title": "the daemon path never loads the POC app, and the `dossier render` branch does",
+     "status": "passed",
+     "durationMs": 2185.0309179999995,
+     "failure": ""
+    },
+    {
+     "title": "every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, whose only else is the other, before the daemon path",
+     "status": "passed",
+     "durationMs": 102.55589700000019,
+     "failure": ""
+    },
+    {
+     "title": "the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch",
+     "status": "failed",
+     "durationMs": 21.778333999998722,
+     "failure": "AssertionError: expected [ …(3) ] to deeply equal [ …(2) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532d/clone/packages/cap1-system/src/daemon-entry-unchanged.system.test.ts:284:22\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532d/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532d/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file://"
+    }
+   ],
+   "passed": 16,
+   "failed": [
+    "the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+   ]
+  },
+  {
+   "id": "Y3-flag-rewrites-argv-into-dossier",
+   "source": "lane",
+   "file": "apps/syzygy/src/main.ts",
+   "edits": [
+    [
+     "  const argv = process.argv.slice(2);\n  if (argv[0] === 'dossier') {\n",
+     "  const argv = process.env.SYZYGY_PRELOAD_RENDERER === '1' ? ['dossier', '--preload'] : process.argv.slice(2);\n  if (argv[0] === 'dossier') {\n    if (argv[1] === '--preload') {\n      // SYZYGY_PRELOAD_RENDERER=1 warms the renderer, then serves the daemon as asked.\n      await import('@syzygy/three-surface-poc-app/dossier-site');\n      delete process.env.SYZYGY_PRELOAD_RENDERER;\n      return main();\n    }\n"
+    ]
+   ],
+   "build": 0,
+   "exit": 1,
+   "killed": false,
+   "seconds": 8.0,
+   "load1": [
+    "27.96",
+    "27.84"
+   ],
+   "rows": [
+    {
+     "title": "[\"--help\"] prints the usage and exits 0",
+     "status": "passed",
+     "durationMs": 162.72304999999983,
+     "failure": ""
+    },
+    {
+     "title": "[\"-h\"] prints the usage and exits 0",
+     "status": "passed",
+     "durationMs": 161.31962199999998,
+     "failure": ""
+    },
+    {
+     "title": "[\"--help\",\"dossier\"] prints the usage and exits 0",
+     "status": "passed",
+     "durationMs": 145.68521800000008,
+     "failure": ""
+    },
+    {
+     "title": "[\"--bogus\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 198.00466600000004,
+     "failure": ""
+    },
+    {
+     "title": "[\"--port\",\"0\",\"dossier\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 216.96076600000015,
+     "failure": ""
+    },
+    {
+     "title": "[\"Dossier\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 152.15686700000015,
+     "failure": ""
+    },
+    {
+     "title": "[\"--port\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 161.50161500000013,
+     "failure": ""
+    },
+    {
+     "title": "[\"--port\",\"70000\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 191.85240000000022,
+     "failure": ""
+    },
+    {
+     "title": "a state directory inside the governed plane is refused with the same message",
+     "status": "passed",
+     "durationMs": 175.10647999999992,
+     "failure": ""
+    },
+    {
+     "title": "with no arguments it serves from the working directory, writes the same state and shuts down the same way",
+     "status": "passed",
+     "durationMs": 254.66347099999984,
+     "failure": ""
+    },
+    {
+     "title": "with explicit flags it serves, writes the same state and shuts down the same way",
+     "status": "passed",
+     "durationMs": 234.95437999999967,
+     "failure": ""
+    },
+    {
+     "title": "`dossier` alone is a dossier usage error (exit 2), not the daemon's refusal",
+     "status": "passed",
+     "durationMs": 277.0081130000003,
+     "failure": ""
+    },
+    {
+     "title": "`dossier status <missing>` is a dossier refusal (exit 1) and starts no daemon",
+     "status": "passed",
+     "durationMs": 300.26095799999985,
+     "failure": ""
+    },
+    {
+     "title": "`dossier render <missing>` reaches the run with the renderer injected, and starts no daemon",
+     "status": "passed",
+     "durationMs": 366.1945090000004,
+     "failure": ""
+    },
+    {
+     "title": "the daemon path never loads the POC app, and the `dossier render` branch does",
+     "status": "passed",
+     "durationMs": 1791.660143,
+     "failure": ""
+    },
+    {
+     "title": "every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, whose only else is the other, before the daemon path",
+     "status": "passed",
+     "durationMs": 51.580463999999665,
+     "failure": ""
+    },
+    {
+     "title": "the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch",
+     "status": "failed",
+     "durationMs": 14.06481199999962,
+     "failure": "AssertionError: expected [ …(3) ] to deeply equal [ …(2) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532d/clone/packages/cap1-system/src/daemon-entry-unchanged.system.test.ts:284:22\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532d/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532d/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file://"
+    }
+   ],
+   "passed": 16,
+   "failed": [
+    "the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+   ]
+  },
+  {
+   "id": "Y4-polaris-labelled-break",
+   "source": "lane",
+   "file": "apps/syzygy/src/main.ts",
+   "edits": [
+    [
+     "    const { runPolarisCli } = await import('@syzygy/polaris-dossier');\n    const { renderLocalDossier } = await import('@syzygy/three-surface-poc-app/dossier-site');\n    return runPolarisCli(argv.slice(1), { renderer: renderLocalDossier });\n  }\n",
+     "    polaris: {\n      if (argv[1] === '--serve') {\n        // `syzygy polaris --serve …`: the daemon below, with the renderer loaded for its routes.\n        await import('@syzygy/three-surface-poc-app/dossier-site');\n        process.argv.splice(2, 2);\n        break polaris;\n      }\n      const { runPolarisCli } = await import('@syzygy/polaris-dossier');\n      const { renderLocalDossier } = await import('@syzygy/three-surface-poc-app/dossier-site');\n      return runPolarisCli(argv.slice(1), { renderer: renderLocalDossier });\n    }\n  }\n"
+    ]
+   ],
+   "build": 0,
+   "exit": 1,
+   "killed": false,
+   "seconds": 8.7,
+   "load1": [
+    "27.84",
+    "27.03"
+   ],
+   "rows": [
+    {
+     "title": "[\"--help\"] prints the usage and exits 0",
+     "status": "passed",
+     "durationMs": 202.09389999999985,
+     "failure": ""
+    },
+    {
+     "title": "[\"-h\"] prints the usage and exits 0",
+     "status": "passed",
+     "durationMs": 159.60566900000003,
+     "failure": ""
+    },
+    {
+     "title": "[\"--help\",\"dossier\"] prints the usage and exits 0",
+     "status": "passed",
+     "durationMs": 196.5416670000002,
+     "failure": ""
+    },
+    {
+     "title": "[\"--bogus\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 208.6813669999999,
+     "failure": ""
+    },
+    {
+     "title": "[\"--port\",\"0\",\"dossier\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 215.42630199999985,
+     "failure": ""
+    },
+    {
+     "title": "[\"Dossier\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 286.63107599999967,
+     "failure": ""
+    },
+    {
+     "title": "[\"--port\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 230.02579300000025,
+     "failure": ""
+    },
+    {
+     "title": "[\"--port\",\"70000\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 380.34875999999986,
+     "failure": ""
+    },
+    {
+     "title": "a state directory inside the governed plane is refused with the same message",
+     "status": "passed",
+     "durationMs": 274.68085299999984,
+     "failure": ""
+    },
+    {
+     "title": "with no arguments it serves from the working directory, writes the same state and shuts down the same way",
+     "status": "passed",
+     "durationMs": 418.2856660000002,
+     "failure": ""
+    },
+    {
+     "title": "with explicit flags it serves, writes the same state and shuts down the same way",
+     "status": "passed",
+     "durationMs": 290.744917,
+     "failure": ""
+    },
+    {
+     "title": "`dossier` alone is a dossier usage error (exit 2), not the daemon's refusal",
+     "status": "passed",
+     "durationMs": 426.8812710000002,
+     "failure": ""
+    },
+    {
+     "title": "`dossier status <missing>` is a dossier refusal (exit 1) and starts no daemon",
+     "status": "passed",
+     "durationMs": 353.2714100000003,
+     "failure": ""
+    },
+    {
+     "title": "`dossier render <missing>` reaches the run with the renderer injected, and starts no daemon",
+     "status": "passed",
+     "durationMs": 337.2686020000001,
+     "failure": ""
+    },
+    {
+     "title": "the daemon path never loads the POC app, and the `dossier render` branch does",
+     "status": "passed",
+     "durationMs": 2071.7504209999997,
+     "failure": ""
+    },
+    {
+     "title": "every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, whose only else is the other, before the daemon path",
+     "status": "passed",
+     "durationMs": 41.94506799999999,
+     "failure": ""
+    },
+    {
+     "title": "the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch",
+     "status": "failed",
+     "durationMs": 10.341849999999795,
+     "failure": "AssertionError: expected [ …(3) ] to deeply equal [ …(2) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532d/clone/packages/cap1-system/src/daemon-entry-unchanged.system.test.ts:284:22\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532d/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532d/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file://"
+    }
+   ],
+   "passed": 16,
+   "failed": [
+    "the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+   ]
+  },
+  {
+   "id": "Y5-dossier-serve-callback-after-branch",
+   "source": "lane",
+   "file": "apps/syzygy/src/main.ts",
+   "edits": [
+    [
+     "    return runDossierCli(argv.slice(1), {\n",
+     "    if (argv[1] === 'serve') {\n      // `syzygy dossier serve …` serves the daemon below; the renderer loads once it is up.\n      setImmediate(() => void import('@syzygy/three-surface-poc-app/dossier-site'));\n      process.argv.splice(2, 2);\n    } else return runDossierCli(argv.slice(1), {\n"
+    ]
+   ],
+   "build": 0,
+   "exit": 1,
+   "killed": false,
+   "seconds": 7.1,
+   "load1": [
+    "27.19",
+    "27.73"
+   ],
+   "rows": [
+    {
+     "title": "[\"--help\"] prints the usage and exits 0",
+     "status": "passed",
+     "durationMs": 140.70926099999997,
+     "failure": ""
+    },
+    {
+     "title": "[\"-h\"] prints the usage and exits 0",
+     "status": "passed",
+     "durationMs": 174.44940100000008,
+     "failure": ""
+    },
+    {
+     "title": "[\"--help\",\"dossier\"] prints the usage and exits 0",
+     "status": "passed",
+     "durationMs": 194.9721360000001,
+     "failure": ""
+    },
+    {
+     "title": "[\"--bogus\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 172.33514300000002,
+     "failure": ""
+    },
+    {
+     "title": "[\"--port\",\"0\",\"dossier\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 177.0556570000001,
+     "failure": ""
+    },
+    {
+     "title": "[\"Dossier\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 161.94056299999966,
+     "failure": ""
+    },
+    {
+     "title": "[\"--port\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 171.25987300000043,
+     "failure": ""
+    },
+    {
+     "title": "[\"--port\",\"70000\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 195.27769200000012,
+     "failure": ""
+    },
+    {
+     "title": "a state directory inside the governed plane is refused with the same message",
+     "status": "passed",
+     "durationMs": 191.8314919999998,
+     "failure": ""
+    },
+    {
+     "title": "with no arguments it serves from the working directory, writes the same state and shuts down the same way",
+     "status": "passed",
+     "durationMs": 313.68456100000003,
+     "failure": ""
+    },
+    {
+     "title": "with explicit flags it serves, writes the same state and shuts down the same way",
+     "status": "passed",
+     "durationMs": 255.2481640000001,
+     "failure": ""
+    },
+    {
+     "title": "`dossier` alone is a dossier usage error (exit 2), not the daemon's refusal",
+     "status": "passed",
+     "durationMs": 336.74235899999985,
+     "failure": ""
+    },
+    {
+     "title": "`dossier status <missing>` is a dossier refusal (exit 1) and starts no daemon",
+     "status": "passed",
+     "durationMs": 343.3880850000005,
+     "failure": ""
+    },
+    {
+     "title": "`dossier render <missing>` reaches the run with the renderer injected, and starts no daemon",
+     "status": "passed",
+     "durationMs": 284.8317820000002,
+     "failure": ""
+    },
+    {
+     "title": "the daemon path never loads the POC app, and the `dossier render` branch does",
+     "status": "passed",
+     "durationMs": 1336.0274440000003,
+     "failure": ""
+    },
+    {
+     "title": "every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, whose only else is the other, before the daemon path",
+     "status": "passed",
+     "durationMs": 38.66109200000028,
+     "failure": ""
+    },
+    {
+     "title": "the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch",
+     "status": "failed",
+     "durationMs": 9.233468000000357,
+     "failure": "AssertionError: expected [ …(3) ] to deeply equal [ …(2) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532d/clone/packages/cap1-system/src/daemon-entry-unchanged.system.test.ts:284:22\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532d/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532d/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file://"
+    }
+   ],
+   "passed": 16,
+   "failed": [
+    "the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+   ]
+  },
+  {
+   "id": "E-comment-in-branch",
+   "source": "lane",
+   "file": "apps/syzygy/src/main.ts",
+   "edits": [
+    [
+     "  if (argv[0] === 'dossier') {\n",
+     "  if (argv[0] === 'dossier') {\n    // renders through @syzygy/three-surface-poc-app/dossier-site\n"
+    ]
+   ],
+   "build": 0,
+   "exit": 1,
+   "killed": false,
+   "seconds": 9.4,
+   "load1": [
+    "27.68",
+    "27.46"
+   ],
+   "rows": [
+    {
+     "title": "[\"--help\"] prints the usage and exits 0",
+     "status": "passed",
+     "durationMs": 224.13090199999988,
+     "failure": ""
+    },
+    {
+     "title": "[\"-h\"] prints the usage and exits 0",
+     "status": "passed",
+     "durationMs": 292.2665579999998,
+     "failure": ""
+    },
+    {
+     "title": "[\"--help\",\"dossier\"] prints the usage and exits 0",
+     "status": "passed",
+     "durationMs": 234.01447699999972,
+     "failure": ""
+    },
+    {
+     "title": "[\"--bogus\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 186.1274309999999,
+     "failure": ""
+    },
+    {
+     "title": "[\"--port\",\"0\",\"dossier\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 228.44785599999977,
+     "failure": ""
+    },
+    {
+     "title": "[\"Dossier\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 300.4084869999997,
+     "failure": ""
+    },
+    {
+     "title": "[\"--port\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 181.75999199999978,
+     "failure": ""
+    },
+    {
+     "title": "[\"--port\",\"70000\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 170.23084299999982,
+     "failure": ""
+    },
+    {
+     "title": "a state directory inside the governed plane is refused with the same message",
+     "status": "passed",
+     "durationMs": 195.31208699999934,
+     "failure": ""
+    },
+    {
+     "title": "with no arguments it serves from the working directory, writes the same state and shuts down the same way",
+     "status": "passed",
+     "durationMs": 260.3369440000006,
+     "failure": ""
+    },
+    {
+     "title": "with explicit flags it serves, writes the same state and shuts down the same way",
+     "status": "passed",
+     "durationMs": 255.39130399999976,
+     "failure": ""
+    },
+    {
+     "title": "`dossier` alone is a dossier usage error (exit 2), not the daemon's refusal",
+     "status": "passed",
+     "durationMs": 417.070154,
+     "failure": ""
+    },
+    {
+     "title": "`dossier status <missing>` is a dossier refusal (exit 1) and starts no daemon",
+     "status": "passed",
+     "durationMs": 441.2260320000005,
+     "failure": ""
+    },
+    {
+     "title": "`dossier render <missing>` reaches the run with the renderer injected, and starts no daemon",
+     "status": "passed",
+     "durationMs": 348.1793239999997,
+     "failure": ""
+    },
+    {
+     "title": "the daemon path never loads the POC app, and the `dossier render` branch does",
+     "status": "passed",
+     "durationMs": 1765.6512699999994,
+     "failure": ""
+    },
+    {
+     "title": "every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, whose only else is the other, before the daemon path",
+     "status": "passed",
+     "durationMs": 43.70226199999979,
+     "failure": ""
+    },
+    {
+     "title": "the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch",
+     "status": "failed",
+     "durationMs": 8.236767999999756,
+     "failure": "AssertionError: expected [ …(3) ] to deeply equal [ …(2) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532d/clone/packages/cap1-system/src/daemon-entry-unchanged.system.test.ts:284:22\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532d/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532d/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file://"
+    }
+   ],
+   "passed": 16,
+   "failed": [
+    "the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+   ]
+  },
+  {
+   "id": "E-renamed-binding",
+   "source": "lane",
+   "file": "apps/syzygy/src/main.ts",
+   "edits": [
+    [
+     "    const { runPolarisCli } = await import('@syzygy/polaris-dossier');\n    const { renderLocalDossier } = await import('@syzygy/three-surface-poc-app/dossier-site');\n    return runPolarisCli(argv.slice(1), { renderer: renderLocalDossier });\n",
+     "    const { runPolarisCli } = await import('@syzygy/polaris-dossier');\n    const { renderLocalDossier: render } = await import('@syzygy/three-surface-poc-app/dossier-site');\n    return runPolarisCli(argv.slice(1), { renderer: render });\n"
+    ]
+   ],
+   "build": 0,
+   "exit": 1,
+   "killed": false,
+   "seconds": 8.5,
+   "load1": [
+    "27.58",
+    "28.62"
+   ],
+   "rows": [
+    {
+     "title": "[\"--help\"] prints the usage and exits 0",
+     "status": "passed",
+     "durationMs": 210.40173400000003,
+     "failure": ""
+    },
+    {
+     "title": "[\"-h\"] prints the usage and exits 0",
+     "status": "passed",
+     "durationMs": 153.02445399999988,
+     "failure": ""
+    },
+    {
+     "title": "[\"--help\",\"dossier\"] prints the usage and exits 0",
+     "status": "passed",
+     "durationMs": 153.9676629999999,
+     "failure": ""
+    },
+    {
+     "title": "[\"--bogus\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 192.31530500000008,
+     "failure": ""
+    },
+    {
+     "title": "[\"--port\",\"0\",\"dossier\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 216.12699399999974,
+     "failure": ""
+    },
+    {
+     "title": "[\"Dossier\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 194.00516200000038,
+     "failure": ""
+    },
+    {
+     "title": "[\"--port\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 186.69517199999973,
+     "failure": ""
+    },
+    {
+     "title": "[\"--port\",\"70000\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 184.97498700000006,
+     "failure": ""
+    },
+    {
+     "title": "a state directory inside the governed plane is refused with the same message",
+     "status": "passed",
+     "durationMs": 201.01289199999974,
+     "failure": ""
+    },
+    {
+     "title": "with no arguments it serves from the working directory, writes the same state and shuts down the same way",
+     "status": "passed",
+     "durationMs": 346.26960199999985,
+     "failure": ""
+    },
+    {
+     "title": "with explicit flags it serves, writes the same state and shuts down the same way",
+     "status": "passed",
+     "durationMs": 240.0898990000005,
+     "failure": ""
+    },
+    {
+     "title": "`dossier` alone is a dossier usage error (exit 2), not the daemon's refusal",
+     "status": "passed",
+     "durationMs": 432.8204560000004,
+     "failure": ""
+    },
+    {
+     "title": "`dossier status <missing>` is a dossier refusal (exit 1) and starts no daemon",
+     "status": "passed",
+     "durationMs": 362.47925099999975,
+     "failure": ""
+    },
+    {
+     "title": "`dossier render <missing>` reaches the run with the renderer injected, and starts no daemon",
+     "status": "passed",
+     "durationMs": 285.0720259999998,
+     "failure": ""
+    },
+    {
+     "title": "the daemon path never loads the POC app, and the `dossier render` branch does",
+     "status": "passed",
+     "durationMs": 1532.6565769999997,
+     "failure": ""
+    },
+    {
+     "title": "every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, whose only else is the other, before the daemon path",
+     "status": "passed",
+     "durationMs": 39.250003000000106,
+     "failure": ""
+    },
+    {
+     "title": "the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch",
+     "status": "failed",
+     "durationMs": 10.167459999999664,
+     "failure": "AssertionError: expected [ …(2) ] to deeply equal [ …(2) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532d/clone/packages/cap1-system/src/daemon-entry-unchanged.system.test.ts:284:22\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532d/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532d/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file://"
+    }
+   ],
+   "passed": 16,
+   "failed": [
+    "the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+   ]
+  },
+  {
+   "id": "E-branch-swap",
+   "source": "lane",
+   "file": "apps/syzygy/src/main.ts",
+   "edits": [
+    [
+     "  if (argv[0] === 'dossier') {\n    const { runDossierCli } = await import('@syzygy/polaris-dossier');\n    // `render` draws through the existing multi-page dossier renderer, injected\n    // here and loaded only on this branch, so the daemon path never loads the\n    // POC app. Its operator-agent entry imports nothing from the parked\n    // provider island (island-boundary.test.ts in polaris-generation-core).\n    // TODO(syzygy-qkea.19): import it from a renderer package once\n    // the renderer stack moves out of apps/three-surface-poc.\n    const { renderLocalDossier } = await import('@syzygy/three-surface-poc-app/dossier-site');\n    return runDossierCli(argv.slice(1), {\n      stdout: (text) => process.stdout.write(text),\n      stderr: (text) => process.stderr.write(text),\n    }, { renderer: renderLocalDossier });\n  }\n\n  // `syzygy polaris <url>` is the one-command launched run (prototype under\n  // owner direction POLARIS-DOSSIER-ONE-COMMAND-RUN-2026-10-14): it runs the\n  // `dossier` steps in process and starts the agent sessions in views.\n  if (argv[0] === 'polaris') {\n    const { runPolarisCli } = await import('@syzygy/polaris-dossier');\n    const { renderLocalDossier } = await import('@syzygy/three-surface-poc-app/dossier-site');\n    return runPolarisCli(argv.slice(1), { renderer: renderLocalDossier });\n  }\n\n",
+     "  // `syzygy polaris <url>` is the one-command launched run (prototype under\n  // owner direction POLARIS-DOSSIER-ONE-COMMAND-RUN-2026-10-14): it runs the\n  // `dossier` steps in process and starts the agent sessions in views.\n  if (argv[0] === 'polaris') {\n    const { runPolarisCli } = await import('@syzygy/polaris-dossier');\n    const { renderLocalDossier } = await import('@syzygy/three-surface-poc-app/dossier-site');\n    return runPolarisCli(argv.slice(1), { renderer: renderLocalDossier });\n  }\n\n  if (argv[0] === 'dossier') {\n    const { runDossierCli } = await import('@syzygy/polaris-dossier');\n    // `render` draws through the existing multi-page dossier renderer, injected\n    // here and loaded only on this branch, so the daemon path never loads the\n    // POC app. Its operator-agent entry imports nothing from the parked\n    // provider island (island-boundary.test.ts in polaris-generation-core).\n    // TODO(syzygy-qkea.19): import it from a renderer package once\n    // the renderer stack moves out of apps/three-surface-poc.\n    const { renderLocalDossier } = await import('@syzygy/three-surface-poc-app/dossier-site');\n    return runDossierCli(argv.slice(1), {\n      stdout: (text) => process.stdout.write(text),\n      stderr: (text) => process.stderr.write(text),\n    }, { renderer: renderLocalDossier });\n  }\n\n"
+    ]
+   ],
+   "build": 0,
+   "exit": 1,
+   "killed": false,
+   "seconds": 10.2,
+   "load1": [
+    "28.62",
+    "30.68"
+   ],
+   "rows": [
+    {
+     "title": "[\"--help\"] prints the usage and exits 0",
+     "status": "passed",
+     "durationMs": 261.7754380000001,
+     "failure": ""
+    },
+    {
+     "title": "[\"-h\"] prints the usage and exits 0",
+     "status": "passed",
+     "durationMs": 303.18820000000005,
+     "failure": ""
+    },
+    {
+     "title": "[\"--help\",\"dossier\"] prints the usage and exits 0",
+     "status": "passed",
+     "durationMs": 257.7942069999999,
+     "failure": ""
+    },
+    {
+     "title": "[\"--bogus\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 452.0598110000001,
+     "failure": ""
+    },
+    {
+     "title": "[\"--port\",\"0\",\"dossier\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 612.0397350000003,
+     "failure": ""
+    },
+    {
+     "title": "[\"Dossier\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 365.2819279999994,
+     "failure": ""
+    },
+    {
+     "title": "[\"--port\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 259.6745140000003,
+     "failure": ""
+    },
+    {
+     "title": "[\"--port\",\"70000\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 487.3939970000001,
+     "failure": ""
+    },
+    {
+     "title": "a state directory inside the governed plane is refused with the same message",
+     "status": "passed",
+     "durationMs": 269.4589620000006,
+     "failure": ""
+    },
+    {
+     "title": "with no arguments it serves from the working directory, writes the same state and shuts down the same way",
+     "status": "passed",
+     "durationMs": 276.5995929999999,
+     "failure": ""
+    },
+    {
+     "title": "with explicit flags it serves, writes the same state and shuts down the same way",
+     "status": "passed",
+     "durationMs": 232.28823199999988,
+     "failure": ""
+    },
+    {
+     "title": "`dossier` alone is a dossier usage error (exit 2), not the daemon's refusal",
+     "status": "passed",
+     "durationMs": 322.398811,
+     "failure": ""
+    },
+    {
+     "title": "`dossier status <missing>` is a dossier refusal (exit 1) and starts no daemon",
+     "status": "passed",
+     "durationMs": 363.67455599999994,
+     "failure": ""
+    },
+    {
+     "title": "`dossier render <missing>` reaches the run with the renderer injected, and starts no daemon",
+     "status": "passed",
+     "durationMs": 408.08659699999953,
+     "failure": ""
+    },
+    {
+     "title": "the daemon path never loads the POC app, and the `dossier render` branch does",
+     "status": "passed",
+     "durationMs": 1479.0464950000005,
+     "failure": ""
+    },
+    {
+     "title": "every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, whose only else is the other, before the daemon path",
+     "status": "passed",
+     "durationMs": 66.01290999999947,
+     "failure": ""
+    },
+    {
+     "title": "the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch",
+     "status": "failed",
+     "durationMs": 21.42605899999944,
+     "failure": "AssertionError: expected 7481 to be greater than 7758\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532d/clone/packages/cap1-system/src/daemon-entry-unchanged.system.test.ts:289:21\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532d/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532d/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/"
+    }
+   ],
+   "passed": 16,
+   "failed": [
+    "the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+   ]
+  },
+  {
+   "id": "L2-nested-function-in-dossier",
+   "source": "lane",
+   "file": "apps/syzygy/src/main.ts",
+   "edits": [
+    [
+     "    const { renderLocalDossier } = await import('@syzygy/three-surface-poc-app/dossier-site');\n    return runDossierCli(",
+     "    const renderLocalDossier = await (async () => {\n      const site = await import('@syzygy/three-surface-poc-app/dossier-site');\n      return site.renderLocalDossier;\n    })();\n    return runDossierCli("
+    ]
+   ],
+   "build": 0,
+   "exit": 1,
+   "killed": false,
+   "seconds": 8.4,
+   "load1": [
+    "31.66",
+    "30.73"
+   ],
+   "rows": [
+    {
+     "title": "[\"--help\"] prints the usage and exits 0",
+     "status": "passed",
+     "durationMs": 185.8970260000001,
+     "failure": ""
+    },
+    {
+     "title": "[\"-h\"] prints the usage and exits 0",
+     "status": "passed",
+     "durationMs": 157.02539100000013,
+     "failure": ""
+    },
+    {
+     "title": "[\"--help\",\"dossier\"] prints the usage and exits 0",
+     "status": "passed",
+     "durationMs": 250.064486,
+     "failure": ""
+    },
+    {
+     "title": "[\"--bogus\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 269.4105099999997,
+     "failure": ""
+    },
+    {
+     "title": "[\"--port\",\"0\",\"dossier\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 193.16633899999988,
+     "failure": ""
+    },
+    {
+     "title": "[\"Dossier\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 150.22008400000004,
+     "failure": ""
+    },
+    {
+     "title": "[\"--port\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 168.31668200000013,
+     "failure": ""
+    },
+    {
+     "title": "[\"--port\",\"70000\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 140.60298199999988,
+     "failure": ""
+    },
+    {
+     "title": "a state directory inside the governed plane is refused with the same message",
+     "status": "passed",
+     "durationMs": 221.46444299999985,
+     "failure": ""
+    },
+    {
+     "title": "with no arguments it serves from the working directory, writes the same state and shuts down the same way",
+     "status": "passed",
+     "durationMs": 367.02437499999996,
+     "failure": ""
+    },
+    {
+     "title": "with explicit flags it serves, writes the same state and shuts down the same way",
+     "status": "passed",
+     "durationMs": 263.7378899999999,
+     "failure": ""
+    },
+    {
+     "title": "`dossier` alone is a dossier usage error (exit 2), not the daemon's refusal",
+     "status": "passed",
+     "durationMs": 490.475179,
+     "failure": ""
+    },
+    {
+     "title": "`dossier status <missing>` is a dossier refusal (exit 1) and starts no daemon",
+     "status": "passed",
+     "durationMs": 328.2737139999999,
+     "failure": ""
+    },
+    {
+     "title": "`dossier render <missing>` reaches the run with the renderer injected, and starts no daemon",
+     "status": "passed",
+     "durationMs": 308.79039900000043,
+     "failure": ""
+    },
+    {
+     "title": "the daemon path never loads the POC app, and the `dossier render` branch does",
+     "status": "passed",
+     "durationMs": 1303.1027750000003,
+     "failure": ""
+    },
+    {
+     "title": "every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, whose only else is the other, before the daemon path",
+     "status": "passed",
+     "durationMs": 187.0975010000002,
+     "failure": ""
+    },
+    {
+     "title": "the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch",
+     "status": "failed",
+     "durationMs": 40.19151899999997,
+     "failure": "AssertionError: expected [ …(2) ] to deeply equal [ …(2) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532d/clone/packages/cap1-system/src/daemon-entry-unchanged.system.test.ts:284:22\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532d/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532d/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file://"
+    }
+   ],
+   "passed": 16,
+   "failed": [
+    "the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+   ]
+  },
+  {
+   "id": "L3-nested-try-in-polaris",
+   "source": "lane",
+   "file": "apps/syzygy/src/main.ts",
+   "edits": [
+    [
+     "    const { runPolarisCli } = await import('@syzygy/polaris-dossier');\n    const { renderLocalDossier } = await import('@syzygy/three-surface-poc-app/dossier-site');\n    return runPolarisCli(argv.slice(1), { renderer: renderLocalDossier });\n",
+     "    const { runPolarisCli } = await import('@syzygy/polaris-dossier');\n    try {\n      const { renderLocalDossier } = await import('@syzygy/three-surface-poc-app/dossier-site');\n      return runPolarisCli(argv.slice(1), { renderer: renderLocalDossier });\n    } catch (cause: unknown) {\n      throw cause;\n    }\n"
+    ]
+   ],
+   "build": 0,
+   "exit": 1,
+   "killed": false,
+   "seconds": 10.2,
+   "load1": [
+    "31.31",
+    "31.07"
+   ],
+   "rows": [
+    {
+     "title": "[\"--help\"] prints the usage and exits 0",
+     "status": "passed",
+     "durationMs": 271.6962630000003,
+     "failure": ""
+    },
+    {
+     "title": "[\"-h\"] prints the usage and exits 0",
+     "status": "passed",
+     "durationMs": 277.78465800000004,
+     "failure": ""
+    },
+    {
+     "title": "[\"--help\",\"dossier\"] prints the usage and exits 0",
+     "status": "passed",
+     "durationMs": 258.4141169999998,
+     "failure": ""
+    },
+    {
+     "title": "[\"--bogus\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 229.18745200000012,
+     "failure": ""
+    },
+    {
+     "title": "[\"--port\",\"0\",\"dossier\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 180.42032500000005,
+     "failure": ""
+    },
+    {
+     "title": "[\"Dossier\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 275.4744810000002,
+     "failure": ""
+    },
+    {
+     "title": "[\"--port\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 216.666201,
+     "failure": ""
+    },
+    {
+     "title": "[\"--port\",\"70000\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 265.2474280000001,
+     "failure": ""
+    },
+    {
+     "title": "a state directory inside the governed plane is refused with the same message",
+     "status": "passed",
+     "durationMs": 238.00141900000017,
+     "failure": ""
+    },
+    {
+     "title": "with no arguments it serves from the working directory, writes the same state and shuts down the same way",
+     "status": "passed",
+     "durationMs": 315.54407999999967,
+     "failure": ""
+    },
+    {
+     "title": "with explicit flags it serves, writes the same state and shuts down the same way",
+     "status": "passed",
+     "durationMs": 270.6547279999995,
+     "failure": ""
+    },
+    {
+     "title": "`dossier` alone is a dossier usage error (exit 2), not the daemon's refusal",
+     "status": "passed",
+     "durationMs": 414.521256,
+     "failure": ""
+    },
+    {
+     "title": "`dossier status <missing>` is a dossier refusal (exit 1) and starts no daemon",
+     "status": "passed",
+     "durationMs": 661.4920659999998,
+     "failure": ""
+    },
+    {
+     "title": "`dossier render <missing>` reaches the run with the renderer injected, and starts no daemon",
+     "status": "passed",
+     "durationMs": 554.8964679999999,
+     "failure": ""
+    },
+    {
+     "title": "the daemon path never loads the POC app, and the `dossier render` branch does",
+     "status": "passed",
+     "durationMs": 1485.9972769999995,
+     "failure": ""
+    },
+    {
+     "title": "every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, whose only else is the other, before the daemon path",
+     "status": "passed",
+     "durationMs": 60.05139500000041,
+     "failure": ""
+    },
+    {
+     "title": "the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch",
+     "status": "failed",
+     "durationMs": 34.61120200000005,
+     "failure": "AssertionError: expected [ …(2) ] to deeply equal [ …(2) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532d/clone/packages/cap1-system/src/daemon-entry-unchanged.system.test.ts:284:22\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532d/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532d/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file://"
+    }
+   ],
+   "passed": 16,
+   "failed": [
+    "the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+   ]
+  },
+  {
+   "id": "G1-allman-brace-and-wrapped-import",
+   "source": "rev-532c",
+   "file": "apps/syzygy/src/main.ts",
+   "edits": [
+    [
+     "  if (argv[0] === 'dossier') {\n",
+     "  if (argv[0] === 'dossier')\n  {\n"
+    ],
+    [
+     "    const { renderLocalDossier } = await import('@syzygy/three-surface-poc-app/dossier-site');\n    return runDossierCli(argv.slice(1), {\n",
+     "    const { renderLocalDossier } = await import(\n      '@syzygy/three-surface-poc-app/dossier-site'\n    );\n    return runDossierCli(argv.slice(1), {\n"
+    ]
+   ],
+   "build": 0,
+   "exit": 1,
+   "killed": false,
+   "seconds": 10.3,
+   "load1": [
+    "31.07",
+    "32.64"
+   ],
+   "rows": [
+    {
+     "title": "[\"--help\"] prints the usage and exits 0",
+     "status": "passed",
+     "durationMs": 319.340993,
+     "failure": ""
+    },
+    {
+     "title": "[\"-h\"] prints the usage and exits 0",
+     "status": "passed",
+     "durationMs": 222.10035199999993,
+     "failure": ""
+    },
+    {
+     "title": "[\"--help\",\"dossier\"] prints the usage and exits 0",
+     "status": "passed",
+     "durationMs": 162.94520899999998,
+     "failure": ""
+    },
+    {
+     "title": "[\"--bogus\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 176.34727099999964,
+     "failure": ""
+    },
+    {
+     "title": "[\"--port\",\"0\",\"dossier\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 214.32852200000025,
+     "failure": ""
+    },
+    {
+     "title": "[\"Dossier\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 241.645493,
+     "failure": ""
+    },
+    {
+     "title": "[\"--port\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 274.7352759999999,
+     "failure": ""
+    },
+    {
+     "title": "[\"--port\",\"70000\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 184.3059949999997,
+     "failure": ""
+    },
+    {
+     "title": "a state directory inside the governed plane is refused with the same message",
+     "status": "passed",
+     "durationMs": 266.2744550000002,
+     "failure": ""
+    },
+    {
+     "title": "with no arguments it serves from the working directory, writes the same state and shuts down the same way",
+     "status": "passed",
+     "durationMs": 328.45494599999984,
+     "failure": ""
+    },
+    {
+     "title": "with explicit flags it serves, writes the same state and shuts down the same way",
+     "status": "passed",
+     "durationMs": 403.2729769999996,
+     "failure": ""
+    },
+    {
+     "title": "`dossier` alone is a dossier usage error (exit 2), not the daemon's refusal",
+     "status": "passed",
+     "durationMs": 423.7476919999999,
+     "failure": ""
+    },
+    {
+     "title": "`dossier status <missing>` is a dossier refusal (exit 1) and starts no daemon",
+     "status": "passed",
+     "durationMs": 344.11476800000037,
+     "failure": ""
+    },
+    {
+     "title": "`dossier render <missing>` reaches the run with the renderer injected, and starts no daemon",
+     "status": "passed",
+     "durationMs": 458.18270200000006,
+     "failure": ""
+    },
+    {
+     "title": "the daemon path never loads the POC app, and the `dossier render` branch does",
+     "status": "passed",
+     "durationMs": 2240.219876,
+     "failure": ""
+    },
+    {
+     "title": "every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, whose only else is the other, before the daemon path",
+     "status": "passed",
+     "durationMs": 36.35733599999912,
+     "failure": ""
+    },
+    {
+     "title": "the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch",
+     "status": "failed",
+     "durationMs": 11.446794000001319,
+     "failure": "AssertionError: expected [ …(2) ] to deeply equal [ …(2) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532d/clone/packages/cap1-system/src/daemon-entry-unchanged.system.test.ts:284:22\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532d/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532d/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file://"
+    }
+   ],
+   "passed": 16,
+   "failed": [
+    "the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+   ]
+  },
+  {
+   "id": "G2-commented-else-if-chain",
+   "source": "rev-532c",
+   "file": "apps/syzygy/src/main.ts",
+   "edits": [
+    [
+     "  }\n\n  // `syzygy polaris <url>` is the one-command launched run (prototype under\n  // owner direction POLARIS-DOSSIER-ONE-COMMAND-RUN-2026-10-14): it runs the\n  // `dossier` steps in process and starts the agent sessions in views.\n  if (argv[0] === 'polaris') {\n",
+     "  } /* else: the one-command launched run */ else if (/* exact */ argv[0] === 'polaris' /* only */) {\n    // `syzygy polaris <url>` is the one-command launched run (prototype under\n    // owner direction POLARIS-DOSSIER-ONE-COMMAND-RUN-2026-10-14): it runs the\n    // `dossier` steps in process and starts the agent sessions in views.\n"
+    ]
+   ],
+   "build": 0,
+   "exit": 1,
+   "killed": false,
+   "seconds": 9.7,
+   "load1": [
+    "32.34",
+    "32.54"
+   ],
+   "rows": [
+    {
+     "title": "[\"--help\"] prints the usage and exits 0",
+     "status": "passed",
+     "durationMs": 184.42037100000016,
+     "failure": ""
+    },
+    {
+     "title": "[\"-h\"] prints the usage and exits 0",
+     "status": "passed",
+     "durationMs": 219.07697899999994,
+     "failure": ""
+    },
+    {
+     "title": "[\"--help\",\"dossier\"] prints the usage and exits 0",
+     "status": "passed",
+     "durationMs": 192.7362489999996,
+     "failure": ""
+    },
+    {
+     "title": "[\"--bogus\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 163.89507099999992,
+     "failure": ""
+    },
+    {
+     "title": "[\"--port\",\"0\",\"dossier\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 198.61430700000028,
+     "failure": ""
+    },
+    {
+     "title": "[\"Dossier\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 157.97816899999998,
+     "failure": ""
+    },
+    {
+     "title": "[\"--port\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 363.03074100000003,
+     "failure": ""
+    },
+    {
+     "title": "[\"--port\",\"70000\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 239.64996900000006,
+     "failure": ""
+    },
+    {
+     "title": "a state directory inside the governed plane is refused with the same message",
+     "status": "passed",
+     "durationMs": 229.5343069999999,
+     "failure": ""
+    },
+    {
+     "title": "with no arguments it serves from the working directory, writes the same state and shuts down the same way",
+     "status": "passed",
+     "durationMs": 350.08597200000077,
+     "failure": ""
+    },
+    {
+     "title": "with explicit flags it serves, writes the same state and shuts down the same way",
+     "status": "passed",
+     "durationMs": 289.7892750000001,
+     "failure": ""
+    },
+    {
+     "title": "`dossier` alone is a dossier usage error (exit 2), not the daemon's refusal",
+     "status": "passed",
+     "durationMs": 358.3748880000003,
+     "failure": ""
+    },
+    {
+     "title": "`dossier status <missing>` is a dossier refusal (exit 1) and starts no daemon",
+     "status": "passed",
+     "durationMs": 369.05554699999993,
+     "failure": ""
+    },
+    {
+     "title": "`dossier render <missing>` reaches the run with the renderer injected, and starts no daemon",
+     "status": "passed",
+     "durationMs": 600.7333170000002,
+     "failure": ""
+    },
+    {
+     "title": "the daemon path never loads the POC app, and the `dossier render` branch does",
+     "status": "passed",
+     "durationMs": 1831.274649,
+     "failure": ""
+    },
+    {
+     "title": "every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, whose only else is the other, before the daemon path",
+     "status": "passed",
+     "durationMs": 43.028290999999626,
+     "failure": ""
+    },
+    {
+     "title": "the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch",
+     "status": "failed",
+     "durationMs": 6.217208999999457,
+     "failure": "AssertionError: expected -1 to be greater than 7254\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532d/clone/packages/cap1-system/src/daemon-entry-unchanged.system.test.ts:289:21\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532d/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532d/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/cl"
+    }
+   ],
+   "passed": 16,
+   "failed": [
+    "the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+   ]
+  },
+  {
+   "id": "G3-else-if-order-swap",
+   "source": "rev-532c",
+   "file": "apps/syzygy/src/main.ts",
+   "edits": [
+    [
+     "  if (argv[0] === 'dossier') {\n    const { runDossierCli } = await import('@syzygy/polaris-dossier');\n    // `render` draws through the existing multi-page dossier renderer, injected\n    // here and loaded only on this branch, so the daemon path never loads the\n    // POC app. Its operator-agent entry imports nothing from the parked\n    // provider island (island-boundary.test.ts in polaris-generation-core).\n    // TODO(syzygy-qkea.19): import it from a renderer package once\n    // the renderer stack moves out of apps/three-surface-poc.\n    const { renderLocalDossier } = await import('@syzygy/three-surface-poc-app/dossier-site');\n    return runDossierCli(argv.slice(1), {\n      stdout: (text) => process.stdout.write(text),\n      stderr: (text) => process.stderr.write(text),\n    }, { renderer: renderLocalDossier });\n  }\n\n  // `syzygy polaris <url>` is the one-command launched run (prototype under\n  // owner direction POLARIS-DOSSIER-ONE-COMMAND-RUN-2026-10-14): it runs the\n  // `dossier` steps in process and starts the agent sessions in views.\n  if (argv[0] === 'polaris') {\n    const { runPolarisCli } = await import('@syzygy/polaris-dossier');\n    const { renderLocalDossier } = await import('@syzygy/three-surface-poc-app/dossier-site');\n    return runPolarisCli(argv.slice(1), { renderer: renderLocalDossier });\n  }\n\n",
+     "  // `syzygy polaris <url>` is the one-command launched run (prototype under\n  // owner direction POLARIS-DOSSIER-ONE-COMMAND-RUN-2026-10-14): it runs the\n  // `dossier` steps in process and starts the agent sessions in views.\n  if (argv[0] === 'polaris') {\n    const { runPolarisCli } = await import('@syzygy/polaris-dossier');\n    const { renderLocalDossier } = await import('@syzygy/three-surface-poc-app/dossier-site');\n    return runPolarisCli(argv.slice(1), { renderer: renderLocalDossier });\n  } else if (argv[0] === 'dossier') {\n    const { runDossierCli } = await import('@syzygy/polaris-dossier');\n    // `render` draws through the existing multi-page dossier renderer, injected\n    // here and loaded only on this branch, so the daemon path never loads the\n    // POC app. Its operator-agent entry imports nothing from the parked\n    // provider island (island-boundary.test.ts in polaris-generation-core).\n    // TODO(syzygy-qkea.19): import it from a renderer package once\n    // the renderer stack moves out of apps/three-surface-poc.\n    const { renderLocalDossier } = await import('@syzygy/three-surface-poc-app/dossier-site');\n    return runDossierCli(argv.slice(1), {\n      stdout: (text) => process.stdout.write(text),\n      stderr: (text) => process.stderr.write(text),\n    }, { renderer: renderLocalDossier });\n  }\n\n"
+    ]
+   ],
+   "build": 0,
+   "exit": 1,
+   "killed": false,
+   "seconds": 9.5,
+   "load1": [
+    "32.54",
+    "31.87"
+   ],
+   "rows": [
+    {
+     "title": "[\"--help\"] prints the usage and exits 0",
+     "status": "passed",
+     "durationMs": 209.58103499999993,
+     "failure": ""
+    },
+    {
+     "title": "[\"-h\"] prints the usage and exits 0",
+     "status": "passed",
+     "durationMs": 202.4345840000001,
+     "failure": ""
+    },
+    {
+     "title": "[\"--help\",\"dossier\"] prints the usage and exits 0",
+     "status": "passed",
+     "durationMs": 134.9783809999999,
+     "failure": ""
+    },
+    {
+     "title": "[\"--bogus\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 211.34480200000007,
+     "failure": ""
+    },
+    {
+     "title": "[\"--port\",\"0\",\"dossier\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 217.45063100000016,
+     "failure": ""
+    },
+    {
+     "title": "[\"Dossier\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 285.17442900000015,
+     "failure": ""
+    },
+    {
+     "title": "[\"--port\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 199.84495900000002,
+     "failure": ""
+    },
+    {
+     "title": "[\"--port\",\"70000\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 195.53717199999983,
+     "failure": ""
+    },
+    {
+     "title": "a state directory inside the governed plane is refused with the same message",
+     "status": "passed",
+     "durationMs": 204.53233099999989,
+     "failure": ""
+    },
+    {
+     "title": "with no arguments it serves from the working directory, writes the same state and shuts down the same way",
+     "status": "passed",
+     "durationMs": 504.31967799999984,
+     "failure": ""
+    },
+    {
+     "title": "with explicit flags it serves, writes the same state and shuts down the same way",
+     "status": "passed",
+     "durationMs": 518.029059,
+     "failure": ""
+    },
+    {
+     "title": "`dossier` alone is a dossier usage error (exit 2), not the daemon's refusal",
+     "status": "passed",
+     "durationMs": 440.6710669999993,
+     "failure": ""
+    },
+    {
+     "title": "`dossier status <missing>` is a dossier refusal (exit 1) and starts no daemon",
+     "status": "passed",
+     "durationMs": 493.9978860000001,
+     "failure": ""
+    },
+    {
+     "title": "`dossier render <missing>` reaches the run with the renderer injected, and starts no daemon",
+     "status": "passed",
+     "durationMs": 418.532964,
+     "failure": ""
+    },
+    {
+     "title": "the daemon path never loads the POC app, and the `dossier render` branch does",
+     "status": "passed",
+     "durationMs": 1609.1803489999993,
+     "failure": ""
+    },
+    {
+     "title": "every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, whose only else is the other, before the daemon path",
+     "status": "passed",
+     "durationMs": 149.47597999999925,
+     "failure": ""
+    },
+    {
+     "title": "the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch",
+     "status": "failed",
+     "durationMs": 15.62163899999996,
+     "failure": "AssertionError: expected 7481 to be greater than 7760\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532d/clone/packages/cap1-system/src/daemon-entry-unchanged.system.test.ts:289:21\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532d/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532d/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/"
+    }
+   ],
+   "passed": 16,
+   "failed": [
+    "the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+   ]
+  }
+ ]
+}

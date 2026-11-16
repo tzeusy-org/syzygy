@@ -1,0 +1,304 @@
+{
+ "clone": {
+  "commit": "a5ab2b287266e9be6b8e96b381d014cb8e73d9d4",
+  "aliasForSupportPresent": true,
+  "distDirs": 12,
+  "statusAfter": ""
+ },
+ "mutants": [
+  {
+   "id": "E4b-global-fetch-at-first-call-port-65530",
+   "kind": "global fetch() of http://127.0.0.1:65530/ on the first deepFreeze() call, no import",
+   "edits": [
+    {
+     "path": "packages/support/src/deep-freeze.ts",
+     "old": "export function deepFreeze<T>(value: T): T {\n",
+     "new": "let fetched = false;\nexport function deepFreeze<T>(value: T): T {\n  if (!fetched) { fetched = true; void fetch('http://127.0.0.1:65530/').catch(() => {}); }\n"
+    }
+   ]
+  },
+  {
+   "id": "E6-console-write-at-import",
+   "kind": "console.log at import (the purity test's survivor RP3)",
+   "edits": [
+    {
+     "path": "packages/support/src/deep-freeze.ts",
+     "old": "/**\n * Freezes the value",
+     "new": "console.log('support loaded');\n/**\n * Freezes the value"
+    }
+   ]
+  },
+  {
+   "id": "E7-optional-call-fetch-at-import",
+   "kind": "globalThis.fetch?.() at import (the purity test's survivor RP15)",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nvoid globalThis.fetch?.('http://127.0.0.1:65530/').catch(() => {});\n"
+    }
+   ]
+  },
+  {
+   "id": "E8-websocket-at-import",
+   "kind": "new WebSocket() at import (the purity test's survivor RP5, called)",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\ntry { const ws = new WebSocket('ws://127.0.0.1:65530/'); ws.onerror = () => {}; } catch { /* reviewer mutant */ }\n"
+    }
+   ]
+  }
+ ],
+ "rows": [
+  {
+   "id": "E4b-global-fetch-at-first-call-port-65530",
+   "kind": "global fetch() of http://127.0.0.1:65530/ on the first deepFreeze() call, no import",
+   "distAbsent": false,
+   "exit": 1,
+   "seconds": 13.0,
+   "tests": {
+    "passed": 1,
+    "failed": 1,
+    "pending": 1,
+    "total": 3
+   },
+   "perTest": [
+    {
+     "title": "creates no Internet-family socket over the whole run, from preflight to close",
+     "status": "failed",
+     "failure": "AssertionError: expected [ \u2026(2) ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-530b/clone/packages/polaris-dossier/src/no-egress.test.ts:82:68\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-530b/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20"
+    },
+    {
+     "title": "sees the canary: one loopback datagram sent before the same run is in the capture",
+     "status": "passed",
+     "failure": ""
+    },
+    {
+     "title": "is not proved on this host: strace is unavailable, so the capture is skipped, never reported as passed",
+     "status": "skipped",
+     "failure": ""
+    }
+   ],
+   "suiteFailure": []
+  },
+  {
+   "id": "E4b-global-fetch-at-first-call-port-65530",
+   "kind": "global fetch() of http://127.0.0.1:65530/ on the first deepFreeze() call, no import",
+   "distAbsent": true,
+   "exit": 1,
+   "seconds": 17.0,
+   "tests": {
+    "passed": 1,
+    "failed": 1,
+    "pending": 1,
+    "total": 3
+   },
+   "perTest": [
+    {
+     "title": "creates no Internet-family socket over the whole run, from preflight to close",
+     "status": "failed",
+     "failure": "AssertionError: expected [ \u2026(2) ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-530b/clone/packages/polaris-dossier/src/no-egress.test.ts:82:68\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-530b/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20"
+    },
+    {
+     "title": "sees the canary: one loopback datagram sent before the same run is in the capture",
+     "status": "passed",
+     "failure": ""
+    },
+    {
+     "title": "is not proved on this host: strace is unavailable, so the capture is skipped, never reported as passed",
+     "status": "skipped",
+     "failure": ""
+    }
+   ],
+   "suiteFailure": []
+  },
+  {
+   "id": "E6-console-write-at-import",
+   "kind": "console.log at import (the purity test's survivor RP3)",
+   "distAbsent": false,
+   "exit": 1,
+   "seconds": 16.6,
+   "tests": {
+    "passed": 1,
+    "failed": 1,
+    "pending": 1,
+    "total": 3
+   },
+   "perTest": [
+    {
+     "title": "creates no Internet-family socket over the whole run, from preflight to close",
+     "status": "failed",
+     "failure": "SyntaxError: Unexpected token 's', \"support lo\"... is not valid JSON\n    at JSON.parse (<anonymous>)\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-530b/clone/packages/polaris-dossier/src/no-egress.test.ts:71:26\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-530b/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20"
+    },
+    {
+     "title": "sees the canary: one loopback datagram sent before the same run is in the capture",
+     "status": "passed",
+     "failure": ""
+    },
+    {
+     "title": "is not proved on this host: strace is unavailable, so the capture is skipped, never reported as passed",
+     "status": "skipped",
+     "failure": ""
+    }
+   ],
+   "suiteFailure": []
+  },
+  {
+   "id": "E6-console-write-at-import",
+   "kind": "console.log at import (the purity test's survivor RP3)",
+   "distAbsent": true,
+   "exit": 1,
+   "seconds": 11.4,
+   "tests": {
+    "passed": 1,
+    "failed": 1,
+    "pending": 1,
+    "total": 3
+   },
+   "perTest": [
+    {
+     "title": "creates no Internet-family socket over the whole run, from preflight to close",
+     "status": "failed",
+     "failure": "SyntaxError: Unexpected token 's', \"support lo\"... is not valid JSON\n    at JSON.parse (<anonymous>)\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-530b/clone/packages/polaris-dossier/src/no-egress.test.ts:71:26\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-530b/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20"
+    },
+    {
+     "title": "sees the canary: one loopback datagram sent before the same run is in the capture",
+     "status": "passed",
+     "failure": ""
+    },
+    {
+     "title": "is not proved on this host: strace is unavailable, so the capture is skipped, never reported as passed",
+     "status": "skipped",
+     "failure": ""
+    }
+   ],
+   "suiteFailure": []
+  },
+  {
+   "id": "E7-optional-call-fetch-at-import",
+   "kind": "globalThis.fetch?.() at import (the purity test's survivor RP15)",
+   "distAbsent": false,
+   "exit": 1,
+   "seconds": 11.9,
+   "tests": {
+    "passed": 1,
+    "failed": 1,
+    "pending": 1,
+    "total": 3
+   },
+   "perTest": [
+    {
+     "title": "creates no Internet-family socket over the whole run, from preflight to close",
+     "status": "failed",
+     "failure": "AssertionError: expected [ \u2026(2) ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-530b/clone/packages/polaris-dossier/src/no-egress.test.ts:82:68\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-530b/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20"
+    },
+    {
+     "title": "sees the canary: one loopback datagram sent before the same run is in the capture",
+     "status": "passed",
+     "failure": ""
+    },
+    {
+     "title": "is not proved on this host: strace is unavailable, so the capture is skipped, never reported as passed",
+     "status": "skipped",
+     "failure": ""
+    }
+   ],
+   "suiteFailure": []
+  },
+  {
+   "id": "E7-optional-call-fetch-at-import",
+   "kind": "globalThis.fetch?.() at import (the purity test's survivor RP15)",
+   "distAbsent": true,
+   "exit": 1,
+   "seconds": 10.3,
+   "tests": {
+    "passed": 1,
+    "failed": 1,
+    "pending": 1,
+    "total": 3
+   },
+   "perTest": [
+    {
+     "title": "creates no Internet-family socket over the whole run, from preflight to close",
+     "status": "failed",
+     "failure": "AssertionError: expected [ \u2026(2) ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-530b/clone/packages/polaris-dossier/src/no-egress.test.ts:82:68\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-530b/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20"
+    },
+    {
+     "title": "sees the canary: one loopback datagram sent before the same run is in the capture",
+     "status": "passed",
+     "failure": ""
+    },
+    {
+     "title": "is not proved on this host: strace is unavailable, so the capture is skipped, never reported as passed",
+     "status": "skipped",
+     "failure": ""
+    }
+   ],
+   "suiteFailure": []
+  },
+  {
+   "id": "E8-websocket-at-import",
+   "kind": "new WebSocket() at import (the purity test's survivor RP5, called)",
+   "distAbsent": false,
+   "exit": 1,
+   "seconds": 10.1,
+   "tests": {
+    "passed": 1,
+    "failed": 1,
+    "pending": 1,
+    "total": 3
+   },
+   "perTest": [
+    {
+     "title": "creates no Internet-family socket over the whole run, from preflight to close",
+     "status": "failed",
+     "failure": "AssertionError: expected [ \u2026(2) ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-530b/clone/packages/polaris-dossier/src/no-egress.test.ts:82:68\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-530b/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20"
+    },
+    {
+     "title": "sees the canary: one loopback datagram sent before the same run is in the capture",
+     "status": "passed",
+     "failure": ""
+    },
+    {
+     "title": "is not proved on this host: strace is unavailable, so the capture is skipped, never reported as passed",
+     "status": "skipped",
+     "failure": ""
+    }
+   ],
+   "suiteFailure": []
+  },
+  {
+   "id": "E8-websocket-at-import",
+   "kind": "new WebSocket() at import (the purity test's survivor RP5, called)",
+   "distAbsent": true,
+   "exit": 1,
+   "seconds": 14.4,
+   "tests": {
+    "passed": 1,
+    "failed": 1,
+    "pending": 1,
+    "total": 3
+   },
+   "perTest": [
+    {
+     "title": "creates no Internet-family socket over the whole run, from preflight to close",
+     "status": "failed",
+     "failure": "AssertionError: expected [ \u2026(2) ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-530b/clone/packages/polaris-dossier/src/no-egress.test.ts:82:68\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-530b/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20"
+    },
+    {
+     "title": "sees the canary: one loopback datagram sent before the same run is in the capture",
+     "status": "passed",
+     "failure": ""
+    },
+    {
+     "title": "is not proved on this host: strace is unavailable, so the capture is skipped, never reported as passed",
+     "status": "skipped",
+     "failure": ""
+    }
+   ],
+   "suiteFailure": []
+  }
+ ]
+}

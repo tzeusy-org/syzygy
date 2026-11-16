@@ -1,0 +1,18 @@
+{
+ "note": "Facts the assembler read once from directories that no longer exist. They are carried, not re-read.",
+ "vitestProjectDirectory": {
+  "topLevelChildren": [
+   "ssr"
+  ],
+  "readOn": "2026-10-24",
+  "readBy": "assemble_census.py children_of(), listing one vitest project directory in a killed run's private temp directory while it still existed",
+  "carriedFrom": {
+   "record": "docs/evidence/scratch-prefix-census-2026-10-23/census-2026-10-24.json",
+   "atCommit": "e2aae62efc5a4c7d346f03a2c581c852b5ea8802",
+   "path": "leftBySIGKILL[26].topLevelChildrenOfOneObserved (class nanoid-21)",
+   "blobSha256": "39e107b0594b5996277c0cf300bf15d460b9496dcfac1578cebad53ce0ef8bdb"
+  },
+  "canBeReRead": false,
+  "whyNot": "the runs' private directories (the privateDirectory of each run record, under /tmp/lc418) no longer exist; checked 2026-10-25"
+ }
+}

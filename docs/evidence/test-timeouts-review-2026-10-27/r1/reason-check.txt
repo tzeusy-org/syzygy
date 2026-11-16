@@ -1,0 +1,9 @@
+$ reason_check.py <repo> f44cd65d rev-census-f44cd65d.json <3 deferred files>
+kept sites checked 74 without a reason 0 without a citation 0
+exit 0
+$ reason_check.py <repo> f7477f52 rev-census-f7477f52.json <3 deferred files>   (positive control)
+kept sites checked 123 without a reason 88 without a citation 20
+  NO REASON apps/three-surface-poc/src/cdp-browser.browser.test.ts:82
+  NO REASON apps/three-surface-poc/src/cdp-browser.browser.test.ts:112
+Exception ignored in: <_io.TextIOWrapper name='<stdout>' mode='w' encoding='utf-8'>
+BrokenPipeError: [Errno 32] Broken pipe

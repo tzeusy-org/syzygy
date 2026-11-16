@@ -1,0 +1,476 @@
+{
+ "tool": "leak_by_file.py",
+ "treeCommit": "0d4d5098",
+ "project": "@syzygy/three-surface-poc-app",
+ "testFilesInDirectory": 89,
+ "fixtureUsingTestFiles": 42,
+ "filesWithCopiesLeft": 0,
+ "filesWithTemplatesLeft": 0,
+ "copiesLeftTotal": 0,
+ "templatesLeftTotal": 0,
+ "nonzeroExits": [],
+ "results": [
+  {
+   "file": "apps/three-surface-poc/src/block-provenance-sweep.test.ts",
+   "exit": 0,
+   "summary": [
+    "Test Files  1 passed (1)",
+    "Tests  18 passed (18)"
+   ],
+   "templatesLeft": 0,
+   "copiesLeft": 0,
+   "otherEntriesLeft": 1
+  },
+  {
+   "file": "apps/three-surface-poc/src/cross-cutting.test.ts",
+   "exit": 0,
+   "summary": [
+    "Test Files  1 passed (1)",
+    "Tests  6 passed (6)"
+   ],
+   "templatesLeft": 0,
+   "copiesLeft": 0,
+   "otherEntriesLeft": 1
+  },
+  {
+   "file": "apps/three-surface-poc/src/evaluation-footer.test.ts",
+   "exit": 0,
+   "summary": [
+    "Test Files  1 passed (1)",
+    "Tests  6 passed (6)"
+   ],
+   "templatesLeft": 0,
+   "copiesLeft": 0,
+   "otherEntriesLeft": 1
+  },
+  {
+   "file": "apps/three-surface-poc/src/governing-intent-sweep.test.ts",
+   "exit": 0,
+   "summary": [
+    "Test Files  1 passed (1)",
+    "Tests  28 passed (28)"
+   ],
+   "templatesLeft": 0,
+   "copiesLeft": 0,
+   "otherEntriesLeft": 1
+  },
+  {
+   "file": "apps/three-surface-poc/src/keyboard-sweep-record.test.ts",
+   "exit": 0,
+   "summary": [
+    "Test Files  1 passed (1)",
+    "Tests  8 passed (8)"
+   ],
+   "templatesLeft": 0,
+   "copiesLeft": 0,
+   "otherEntriesLeft": 1
+  },
+  {
+   "file": "apps/three-surface-poc/src/materialize-action.test.ts",
+   "exit": 0,
+   "summary": [
+    "Test Files  1 passed (1)",
+    "Tests  16 passed (16)"
+   ],
+   "templatesLeft": 0,
+   "copiesLeft": 0,
+   "otherEntriesLeft": 1
+  },
+  {
+   "file": "apps/three-surface-poc/src/orrery.browser.test.ts",
+   "exit": 0,
+   "summary": [
+    "Test Files  1 passed (1)",
+    "Tests  1 passed (1)"
+   ],
+   "templatesLeft": 0,
+   "copiesLeft": 0,
+   "otherEntriesLeft": 1
+  },
+  {
+   "file": "apps/three-surface-poc/src/orrery.test.ts",
+   "exit": 0,
+   "summary": [
+    "Test Files  1 passed (1)",
+    "Tests  11 passed (11)"
+   ],
+   "templatesLeft": 0,
+   "copiesLeft": 0,
+   "otherEntriesLeft": 1
+  },
+  {
+   "file": "apps/three-surface-poc/src/page-size-delta.test.ts",
+   "exit": 0,
+   "summary": [
+    "Test Files  1 passed (1)",
+    "Tests  2 passed (2)"
+   ],
+   "templatesLeft": 0,
+   "copiesLeft": 0,
+   "otherEntriesLeft": 1
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts",
+   "exit": 0,
+   "summary": [
+    "Test Files  1 passed (1)",
+    "Tests  15 passed (15)"
+   ],
+   "templatesLeft": 0,
+   "copiesLeft": 0,
+   "otherEntriesLeft": 1
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+   "exit": 0,
+   "summary": [
+    "Test Files  1 passed (1)",
+    "Tests  26 passed (26)"
+   ],
+   "templatesLeft": 0,
+   "copiesLeft": 0,
+   "otherEntriesLeft": 1
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+   "exit": 0,
+   "summary": [
+    "Test Files  1 passed (1)",
+    "Tests  5 passed (5)"
+   ],
+   "templatesLeft": 0,
+   "copiesLeft": 0,
+   "otherEntriesLeft": 1
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-capability-detail.test.ts",
+   "exit": 0,
+   "summary": [
+    "Test Files  1 passed (1)",
+    "Tests  7 passed (7)"
+   ],
+   "templatesLeft": 0,
+   "copiesLeft": 0,
+   "otherEntriesLeft": 1
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-copy.test.ts",
+   "exit": 0,
+   "summary": [
+    "Test Files  1 passed (1)",
+    "Tests  7 passed (7)"
+   ],
+   "templatesLeft": 0,
+   "copiesLeft": 0,
+   "otherEntriesLeft": 1
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-epistemic-tuples.test.ts",
+   "exit": 0,
+   "summary": [
+    "Test Files  1 passed (1)",
+    "Tests  8 passed (8)"
+   ],
+   "templatesLeft": 0,
+   "copiesLeft": 0,
+   "otherEntriesLeft": 1
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-first-reading.test.ts",
+   "exit": 0,
+   "summary": [
+    "Test Files  1 passed (1)",
+    "Tests  14 passed (14)"
+   ],
+   "templatesLeft": 0,
+   "copiesLeft": 0,
+   "otherEntriesLeft": 1
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-narrative.test.ts",
+   "exit": 0,
+   "summary": [
+    "Test Files  1 passed (1)",
+    "Tests  6 passed (6)"
+   ],
+   "templatesLeft": 0,
+   "copiesLeft": 0,
+   "otherEntriesLeft": 1
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+   "exit": 0,
+   "summary": [
+    "Test Files  1 passed (1)",
+    "Tests  13 passed | 1 skipped (14)"
+   ],
+   "templatesLeft": 0,
+   "copiesLeft": 0,
+   "otherEntriesLeft": 1
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-parity-sweep.test.ts",
+   "exit": 0,
+   "summary": [
+    "Test Files  1 passed (1)",
+    "Tests  56 passed (56)"
+   ],
+   "templatesLeft": 0,
+   "copiesLeft": 0,
+   "otherEntriesLeft": 1
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+   "exit": 0,
+   "summary": [
+    "Test Files  1 passed (1)",
+    "Tests  2 passed (2)"
+   ],
+   "templatesLeft": 0,
+   "copiesLeft": 0,
+   "otherEntriesLeft": 1
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-project-shape.test.ts",
+   "exit": 0,
+   "summary": [
+    "Test Files  1 passed (1)",
+    "Tests  24 passed (24)"
+   ],
+   "templatesLeft": 0,
+   "copiesLeft": 0,
+   "otherEntriesLeft": 1
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-proposed-work.test.ts",
+   "exit": 0,
+   "summary": [
+    "Test Files  1 passed (1)",
+    "Tests  4 passed (4)"
+   ],
+   "templatesLeft": 0,
+   "copiesLeft": 0,
+   "otherEntriesLeft": 1
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-reachability.test.ts",
+   "exit": 0,
+   "summary": [
+    "Test Files  1 passed (1)",
+    "Tests  9 passed (9)"
+   ],
+   "templatesLeft": 0,
+   "copiesLeft": 0,
+   "otherEntriesLeft": 1
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-reconciliation.test.ts",
+   "exit": 0,
+   "summary": [
+    "Test Files  1 passed (1)",
+    "Tests  13 passed (13)"
+   ],
+   "templatesLeft": 0,
+   "copiesLeft": 0,
+   "otherEntriesLeft": 1
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-source-route.test.ts",
+   "exit": 0,
+   "summary": [
+    "Test Files  1 passed (1)",
+    "Tests  6 passed (6)"
+   ],
+   "templatesLeft": 0,
+   "copiesLeft": 0,
+   "otherEntriesLeft": 1
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-walkthrough-readiness.test.ts",
+   "exit": 0,
+   "summary": [
+    "Test Files  1 passed (1)",
+    "Tests  12 passed (12)"
+   ],
+   "templatesLeft": 0,
+   "copiesLeft": 0,
+   "otherEntriesLeft": 1
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris.test.ts",
+   "exit": 0,
+   "summary": [
+    "Test Files  1 passed (1)",
+    "Tests  6 passed (6)"
+   ],
+   "templatesLeft": 0,
+   "copiesLeft": 0,
+   "otherEntriesLeft": 1
+  },
+  {
+   "file": "apps/three-surface-poc/src/production-reobserve.test.ts",
+   "exit": 0,
+   "summary": [
+    "Test Files  1 passed (1)",
+    "Tests  5 passed (5)"
+   ],
+   "templatesLeft": 0,
+   "copiesLeft": 0,
+   "otherEntriesLeft": 1
+  },
+  {
+   "file": "apps/three-surface-poc/src/proposal-disclosure.test.ts",
+   "exit": 0,
+   "summary": [
+    "Test Files  1 passed (1)",
+    "Tests  5 passed (5)"
+   ],
+   "templatesLeft": 0,
+   "copiesLeft": 0,
+   "otherEntriesLeft": 1
+  },
+  {
+   "file": "apps/three-surface-poc/src/response-identity-independent.test.ts",
+   "exit": 0,
+   "summary": [
+    "Test Files  1 passed (1)",
+    "Tests  3 passed (3)"
+   ],
+   "templatesLeft": 0,
+   "copiesLeft": 0,
+   "otherEntriesLeft": 1
+  },
+  {
+   "file": "apps/three-surface-poc/src/response-limits.test.ts",
+   "exit": 0,
+   "summary": [
+    "Test Files  1 passed (1)",
+    "Tests  18 passed (18)"
+   ],
+   "templatesLeft": 0,
+   "copiesLeft": 0,
+   "otherEntriesLeft": 1
+  },
+  {
+   "file": "apps/three-surface-poc/src/routes.test.ts",
+   "exit": 0,
+   "summary": [
+    "Test Files  1 passed (1)",
+    "Tests  11 passed (11)"
+   ],
+   "templatesLeft": 0,
+   "copiesLeft": 0,
+   "otherEntriesLeft": 1
+  },
+  {
+   "file": "apps/three-surface-poc/src/surface-render-fractions.test.ts",
+   "exit": 0,
+   "summary": [
+    "Test Files  1 passed (1)",
+    "Tests  3 passed (3)"
+   ],
+   "templatesLeft": 0,
+   "copiesLeft": 0,
+   "otherEntriesLeft": 1
+  },
+  {
+   "file": "apps/three-surface-poc/src/surface-routes.test.ts",
+   "exit": 0,
+   "summary": [
+    "Test Files  1 passed (1)",
+    "Tests  18 passed (18)"
+   ],
+   "templatesLeft": 0,
+   "copiesLeft": 0,
+   "otherEntriesLeft": 1
+  },
+  {
+   "file": "apps/three-surface-poc/src/sync-child-process-guard.test.ts",
+   "exit": 0,
+   "summary": [
+    "Test Files  1 passed (1)",
+    "Tests  6 passed (6)"
+   ],
+   "templatesLeft": 0,
+   "copiesLeft": 0,
+   "otherEntriesLeft": 1
+  },
+  {
+   "file": "apps/three-surface-poc/src/test-model-fixture.test.ts",
+   "exit": 0,
+   "summary": [
+    "Test Files  1 passed (1)",
+    "Tests  3 passed (3)"
+   ],
+   "templatesLeft": 0,
+   "copiesLeft": 0,
+   "otherEntriesLeft": 1
+  },
+  {
+   "file": "apps/three-surface-poc/src/trajectory-narrowing.browser.test.ts",
+   "exit": 0,
+   "summary": [
+    "Test Files  1 passed (1)",
+    "Tests  2 passed (2)"
+   ],
+   "templatesLeft": 0,
+   "copiesLeft": 0,
+   "otherEntriesLeft": 1
+  },
+  {
+   "file": "apps/three-surface-poc/src/trajectory.test.ts",
+   "exit": 0,
+   "summary": [
+    "Test Files  1 passed (1)",
+    "Tests  15 passed (15)"
+   ],
+   "templatesLeft": 0,
+   "copiesLeft": 0,
+   "otherEntriesLeft": 1
+  },
+  {
+   "file": "apps/three-surface-poc/src/tuple-encoding.test.ts",
+   "exit": 0,
+   "summary": [
+    "Test Files  1 passed (1)",
+    "Tests  6 passed (6)"
+   ],
+   "templatesLeft": 0,
+   "copiesLeft": 0,
+   "otherEntriesLeft": 1
+  },
+  {
+   "file": "apps/three-surface-poc/src/unknown-route-sweep.test.ts",
+   "exit": 0,
+   "summary": [
+    "Test Files  1 passed (1)",
+    "Tests  14 passed (14)"
+   ],
+   "templatesLeft": 0,
+   "copiesLeft": 0,
+   "otherEntriesLeft": 1
+  },
+  {
+   "file": "apps/three-surface-poc/src/verbatim-route.test.ts",
+   "exit": 0,
+   "summary": [
+    "Test Files  1 passed (1)",
+    "Tests  13 passed (13)"
+   ],
+   "templatesLeft": 0,
+   "copiesLeft": 0,
+   "otherEntriesLeft": 1
+  },
+  {
+   "file": "apps/three-surface-poc/src/walkthrough-preflight.test.ts",
+   "exit": 0,
+   "summary": [
+    "Test Files  1 passed (1)",
+    "Tests  43 passed (43)"
+   ],
+   "templatesLeft": 0,
+   "copiesLeft": 0,
+   "otherEntriesLeft": 1
+  }
+ ]
+}

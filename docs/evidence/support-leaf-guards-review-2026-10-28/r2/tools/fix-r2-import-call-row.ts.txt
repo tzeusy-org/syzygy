@@ -1,0 +1,13 @@
+  it('calls no import() in any source, however it is spaced or commented', () => {
+    const calls: string[] = [];
+    for (const file of SOURCES) {
+      const source = ts.createSourceFile(file, read(file), ts.ScriptTarget.Latest, false);
+      const visit = (node: ts.Node): void => {
+        if (ts.isCallExpression(node) && node.expression.kind === ts.SyntaxKind.ImportKeyword) calls.push(`${file}: ${node.getText(source)}`);
+        ts.forEachChild(node, visit);
+      };
+      visit(source);
+    }
+    expect(calls).toEqual([]);
+  });
+

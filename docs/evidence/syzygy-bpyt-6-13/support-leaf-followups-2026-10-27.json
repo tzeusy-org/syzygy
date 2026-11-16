@@ -1,0 +1,1298 @@
+{
+ "kind": "support-leaf-followups-evidence",
+ "bead": "syzygy-bpyt.6.13",
+ "date": "2026-10-27",
+ "scope": "Items 1, 3, 4 and 6 of the bead. Items 2, 5 and 7 apply on a tool's next reuse and are not in this change. Round-1 repair (after the hosted node check failed at 663061c4): item 4 is half done. The walkthrough-judgment fixture takes sha256 from @syzygy/support; junitDigest keeps its local node:crypto digest, because a class-4 source check pins that file's imports. See item4.repair and subject.repair.",
+ "subject": {
+  "baseCommit": "f7477f52c49ee347f96b92703887c31f6be49e07",
+  "testedCommit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+  "ownDeltaCommand": "git diff <baseCommit> <testedCommit> -- apps packages scripts",
+  "ownDeltaSha256": "7eb6c896dd4f49ce23af62319d2407e5c286b4ad10dd27b2771b1c3bf2c70688",
+  "ownDeltaFiles": 14,
+  "ownDeltaPaths": [
+   "M\tapps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts",
+   "A\tapps/three-surface-poc/src/polaris-generation/generator-install-check.test.ts",
+   "M\tapps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts",
+   "M\tpackages/polaris-generation-core/src/dossier-evaluation.test.ts",
+   "M\tpackages/polaris-generation-core/src/dossier-profile.test.ts",
+   "M\tpackages/support/src/deep-freeze.test.ts",
+   "M\tpackages/three-surface-poc-core/src/body-read-authority.test.ts",
+   "M\tpackages/three-surface-poc-core/src/model.test.ts",
+   "M\tpackages/three-surface-poc-core/src/project-shape-manifest.test.ts",
+   "M\tpackages/three-surface-poc-core/src/project-shape-observation.test.ts",
+   "M\tpackages/three-surface-poc-core/src/test-artifact-verification.ts",
+   "A\tpackages/three-surface-poc-core/src/test-frozen.test.ts",
+   "A\tpackages/three-surface-poc-core/src/test-frozen.ts",
+   "M\tscripts/check_generator_install.mjs"
+  ],
+  "docsOnlyCommitsMayFollow": "The tested commit is the last one that touches apps/, packages/ or scripts/; commits after it add evidence and the PR record only. At the repair the last such commit is c7ed9ef2.",
+  "repair": {
+   "reviewedHead": "663061c43f111c162765478c2001ccdba98dd1fa",
+   "mergeOfMain": {
+    "commit": "4b9a4be0e27652905f08469e2657539a3aee80ea",
+    "parents": [
+     "663061c43f111c162765478c2001ccdba98dd1fa",
+     "eb8fb6cb523c7d415390ac60c15f7c2c56db2398"
+    ],
+    "mainSubject": "Merge pull request #539 from Tzeusy/agent/syzygy-bpyt.7.15",
+    "note": "made as its own commit before the repair, with no conflict; npm ci was needed (a package.json line was removed on main)"
+   },
+   "repairCodeCommit": "c7ed9ef256985b87e3d75447bf6671e2ca97fc71",
+   "repairCodeCommitChanges": "packages/three-surface-poc-core/src/test-artifact-verification.ts only: restored to its f7477f52 bytes",
+   "junitFileBlob": {
+    "atBase": "cc0fd70cb4093ef45002471c6b7da7587dcbf2c9",
+    "atRepair": "cc0fd70cb4093ef45002471c6b7da7587dcbf2c9",
+    "atRoundOneTestedCommit": "3bbe8aaed9344f5603a11885afb5f6d5cb3fdb81",
+    "equalToBase": true
+   },
+   "fixtureFileBlob": {
+    "atRoundOneTestedCommit": "6ea9b5dd7b1974c1addb86c6cf6cf1c941504599",
+    "atRepair": "6ea9b5dd7b1974c1addb86c6cf6cf1c941504599",
+    "equal": true
+   },
+   "ownDeltaAtRepair": {
+    "command": "git diff <main eb8fb6cb> <repair code commit> -- apps packages scripts",
+    "sha256": "ef0ceb8ccaf443453cd0c43fc789e81cc127f7fe882d65d2cb7c44382f991db6",
+    "files": 13,
+    "paths": [
+     "M\tapps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts",
+     "A\tapps/three-surface-poc/src/polaris-generation/generator-install-check.test.ts",
+     "M\tapps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts",
+     "M\tpackages/polaris-generation-core/src/dossier-evaluation.test.ts",
+     "M\tpackages/polaris-generation-core/src/dossier-profile.test.ts",
+     "M\tpackages/support/src/deep-freeze.test.ts",
+     "M\tpackages/three-surface-poc-core/src/body-read-authority.test.ts",
+     "M\tpackages/three-surface-poc-core/src/model.test.ts",
+     "M\tpackages/three-surface-poc-core/src/project-shape-manifest.test.ts",
+     "M\tpackages/three-surface-poc-core/src/project-shape-observation.test.ts",
+     "A\tpackages/three-surface-poc-core/src/test-frozen.test.ts",
+     "A\tpackages/three-surface-poc-core/src/test-frozen.ts",
+     "M\tscripts/check_generator_install.mjs"
+    ],
+    "note": "over main, because main has moved; the round-1 own delta over main (git diff main merge-commit) is the recorded ownDeltaSha256 again, so the merge moved none of the PR's files"
+   },
+   "linesDeletedByFileAtRepair": {
+    "apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts": 5,
+    "scripts/check_generator_install.mjs": 1
+   },
+   "figuresHoldAt": "c7ed9ef256985b87e3d75447bf6671e2ca97fc71 unless a row says otherwise; rows that concern junitDigest hold at b214ef1015c134dbc821c4f4dec654a16314c354 and are marked"
+  }
+ },
+ "linesDeletedByFile": {
+  "apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts": 5,
+  "packages/three-surface-poc-core/src/test-artifact-verification.ts": 2,
+  "scripts/check_generator_install.mjs": 1
+ },
+ "tools": {
+  "derive-literals.py": "c8762aad72476bc54355ae194cdc347928515920c1d903533065eb19241ef358",
+  "compare-rows.py": "c913e50b65acc239ec8d9135e0d224dd7015a3a602d1eba5a9abed840b1a96ec",
+  "junit-fixture-differential.mjs": "f7983e79488d560d086bd5dc40da3cc910b5109f95ec321947ec71b8e079e086",
+  "pins-mutants.py": "03b0079c94df645162f2987d9792c0559e303e7f3114b0d48b8dbfeff6ef6ac3",
+  "item4-mutants.py": "0459acda4ed1449fb493386e55cdc471afec14a845b1b4fcabf3a65ce38dd803",
+  "item4-repair-sweep.py": "b08c15735ad9cce21cc623f7e848c9865387947880343fa4d42c478b87ef2c84"
+ },
+ "item1": {
+  "finding": "R-GP-IMPL-SUPPORT-LEAF-1 N2",
+  "pins": [
+   {
+    "predicate": "manifest digest",
+    "laneOrReviewerId": "C1",
+    "testFile": "packages/three-surface-poc-core/src/project-shape-manifest.test.ts",
+    "test": "digests the canonical manifest JSON: the fixture manifest has this digest",
+    "assertion": "literal digest",
+    "literalDerivedBy": {
+     "method": "derive-literals.py manifest over derivation-inputs/manifest-dump.json",
+     "derived": "sha256:ef8f9f0a722c28406e434ffe3d0706565c02dd5b9f56c4a5d05aead1fffc1373",
+     "moduleOwn": "sha256:ef8f9f0a722c28406e434ffe3d0706565c02dd5b9f56c4a5d05aead1fffc1373",
+     "equal": true
+    },
+    "mutants": [
+     {
+      "mutantId": "C1-manifest-digest",
+      "file": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+      "old": "sha256(canonicalManifestJson(manifest))",
+      "new": "sha256(canonicalManifestJson(manifest) + ' ')",
+      "survivesAtBase": {
+       "commit": "f7477f52c49ee347f96b92703887c31f6be49e07",
+       "exit": 0,
+       "testsRun": 1113,
+       "failed": 0
+      },
+      "killedAtTested": {
+       "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+       "exit": 1,
+       "testsRun": 1122,
+       "failedTests": [
+        "project-shape-manifest.test.ts > deriveProjectShapeManifest \u2014 determinism and identity digests the canonical manifest JSON: the fixture manifest has this digest",
+        "project-shape-observation.test.ts > observeProjectShapeSources \u2014 determinism digests the observation without its capture instants: the fixture observation has this digest"
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "predicate": "observation digest",
+    "laneOrReviewerId": "C2",
+    "testFile": "packages/three-surface-poc-core/src/project-shape-observation.test.ts",
+    "test": "digests the observation without its capture instants: the fixture observation has this digest",
+    "assertion": "literal digest",
+    "literalDerivedBy": {
+     "method": "derive-literals.py observation over derivation-inputs/observation-dump.json",
+     "derived": "sha256:adeac2c5388357ea3b14ab865f65cb6864753a95f98553fe5fdce0b1f03cb428",
+     "moduleOwn": "sha256:adeac2c5388357ea3b14ab865f65cb6864753a95f98553fe5fdce0b1f03cb428",
+     "equal": true
+    },
+    "mutants": [
+     {
+      "mutantId": "C2-observation-digest",
+      "file": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+      "old": "sha256(canonicalJson(stripCaptureInstant(stable)))",
+      "new": "sha256(canonicalJson(stripCaptureInstant(stable)) + ' ')",
+      "survivesAtBase": {
+       "commit": "f7477f52c49ee347f96b92703887c31f6be49e07",
+       "exit": 0,
+       "testsRun": 1113,
+       "failed": 0
+      },
+      "killedAtTested": {
+       "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+       "exit": 1,
+       "testsRun": 1122,
+       "failedTests": [
+        "project-shape-observation.test.ts > observeProjectShapeSources \u2014 determinism digests the observation without its capture instants: the fixture observation has this digest"
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "predicate": "model artifact digest",
+    "laneOrReviewerId": "C3",
+    "testFile": "packages/three-surface-poc-core/src/model.test.ts",
+    "test": "records each required artifact under the SHA-256 of its own bytes",
+    "assertion": "five literal digests, by source path",
+    "literalDerivedBy": {
+     "method": "derive-literals.py strings, hashlib over the five typed fixture texts; sha256sum over a file of the same bytes agrees (--selftest)",
+     "values": {
+      "docs/superpowers/specs/2026-08-24-whatsapp-identity-reconciliation-design.md": "sha256:2479e75d520a16460f9e3e1d01e16211d93d9e5d7f05a1f79792466bd7159c48",
+      "openspec/changes/repair-whatsapp-identity-reconciliation/proposal.md": "sha256:964230e52c4cba3cc029e7f984d5230a1c3502ad5ae5a421d7126e4ef3c7aaea",
+      "openspec/changes/repair-whatsapp-identity-reconciliation/specs/switchboard-identity/spec.md": "sha256:6eb3621053cab988df848b46e269a9e6dbd7779703a19404d6eb5a8762dd8ce9",
+      "src/butlers/identity.py": "sha256:c17f6c25cbb53eba69017e09605aa474a8ce296313d13aceee622e753d950981",
+      "tests/core/test_identity.py": "sha256:2c40033f352b040a0193ee8b2856e93a63cf0ae1c057a84a75f9887de42bc5e9"
+     }
+    },
+    "mutants": [
+     {
+      "mutantId": "C3-model-artifact-digest",
+      "file": "packages/three-surface-poc-core/src/model.ts",
+      "old": "return { path: artifactPath, digest: sha256(bytes) };",
+      "new": "return { path: artifactPath, digest: sha256(bytes.slice(1)) };",
+      "survivesAtBase": {
+       "commit": "f7477f52c49ee347f96b92703887c31f6be49e07",
+       "exit": 0,
+       "testsRun": 1113,
+       "failed": 0
+      },
+      "killedAtTested": {
+       "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+       "exit": 1,
+       "testsRun": 1122,
+       "failedTests": [
+        "model.test.ts > three-surface Butlers POC model records each required artifact under the SHA-256 of its own bytes"
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "predicate": "dossier-evaluation questionsSha256",
+    "laneOrReviewerId": "C11",
+    "testFile": "packages/polaris-generation-core/src/dossier-evaluation.test.ts",
+    "test": "binds the questions file by the SHA-256 of its own text, and takes that digest as the freeze",
+    "assertion": "literal digest, and the same digest accepted as the freeze",
+    "literalDerivedBy": {
+     "method": "derive-literals.py strings",
+     "value": "84d2e0366720f81cad6963e2c7777701dfa0bf37835a812b9ea0b768af675eeb"
+    },
+    "mutants": [
+     {
+      "mutantId": "C11-dossier-evaluation-questions",
+      "file": "packages/polaris-generation-core/src/dossier-evaluation.ts",
+      "old": "const questionsSha256 = sha256(input.questionsText);",
+      "new": "const questionsSha256 = sha256(input.questionsText + ' ');",
+      "survivesAtBase": {
+       "commit": "f7477f52c49ee347f96b92703887c31f6be49e07",
+       "exit": 0,
+       "testsRun": 2157,
+       "failed": 0
+      },
+      "killedAtTested": {
+       "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+       "exit": 1,
+       "testsRun": 2159,
+       "failedTests": [
+        "dossier-evaluation.test.ts > report subject (rule 11) binds the questions file by the SHA-256 of its own text, and takes that digest as the freeze"
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "predicate": "resourceHeadroom frozen",
+    "laneOrReviewerId": "F1",
+    "testFile": "packages/three-surface-poc-core/src/model.test.ts",
+    "test": "hands out the resource headroom block frozen all the way down",
+    "assertion": "frozen census: no unfrozen path, at least 9 objects walked",
+    "literalDerivedBy": null,
+    "mutants": [
+     {
+      "mutantId": "F1-headroom-not-frozen",
+      "file": "packages/three-surface-poc-core/src/model.ts",
+      "old": "resourceHeadroom: deepFreeze(deriveResourceHeadroom(projectShape, input.projectShape?.resourceLimits)),",
+      "new": "resourceHeadroom: (deriveResourceHeadroom(projectShape, input.projectShape?.resourceLimits)),",
+      "survivesAtBase": {
+       "commit": "f7477f52c49ee347f96b92703887c31f6be49e07",
+       "exit": 0,
+       "testsRun": 1113,
+       "failed": 0
+      },
+      "killedAtTested": {
+       "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+       "exit": 1,
+       "testsRun": 1122,
+       "failedTests": [
+        "model.test.ts > three-surface Butlers POC model hands out the resource headroom block frozen all the way down"
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "predicate": "body-read-authority evaluation frozen",
+    "laneOrReviewerId": "F3",
+    "testFile": "packages/three-surface-poc-core/src/body-read-authority.test.ts",
+    "test": "hands out an evaluation frozen all the way down, admitting or rejecting, before any history appends it",
+    "assertion": "frozen census over an admitting and a rejecting evaluation: no unfrozen path, at least 4 objects each",
+    "literalDerivedBy": null,
+    "mutants": [
+     {
+      "mutantId": "F3-body-authority-not-frozen",
+      "file": "packages/three-surface-poc-core/src/body-read-authority.ts",
+      "old": "  return deepFreeze({\n    evaluationId: inputs.evaluationId,",
+      "new": "  return ({\n    evaluationId: inputs.evaluationId,",
+      "survivesAtBase": {
+       "commit": "f7477f52c49ee347f96b92703887c31f6be49e07",
+       "exit": 0,
+       "testsRun": 1113,
+       "failed": 0
+      },
+      "killedAtTested": {
+       "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+       "exit": 1,
+       "testsRun": 1122,
+       "failedTests": [
+        "body-read-authority.test.ts > PWB-REQ-005 absence and mechanics hands out an evaluation frozen all the way down, admitting or rejecting, before any history appends it"
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "predicate": "dossier-profile question digests",
+    "laneOrReviewerId": "R3",
+    "testFile": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+    "test": "digests each question by the exact tuple of its id, text, scope and reason",
+    "assertion": "three literal digests (purpose, audience, scope with two deferred files)",
+    "literalDerivedBy": {
+     "method": "derive-literals.py strings",
+     "values": {
+      "purpose": "57dd4d0707afa807a435bea0758bd4ac0a6e95c854b636b8b562556eba6ec2c6",
+      "audience": "a3e9d7308d9fb44eaabca2d484b5a9a5e58ac6bbe6435f31d9dc231510f37e5e",
+      "scope-2-deferred": "8c1a2eaa83b70cdc42cb42559da868f6737aef974fe248f3c64a11dd9335a5b2"
+     }
+    },
+    "mutants": [
+     {
+      "mutantId": "R3-equal-length-reordered-question-digest",
+      "file": "packages/polaris-generation-core/src/dossier-profile.ts",
+      "old": "sha256(JSON.stringify([q.id, q.question, q.scope, q.reason]))",
+      "new": "sha256(JSON.stringify([q.id, q.scope, q.question, q.reason]))",
+      "survivesAtBase": {
+       "commit": "f7477f52c49ee347f96b92703887c31f6be49e07",
+       "exit": 0,
+       "testsRun": 2157,
+       "failed": 0
+      },
+      "killedAtTested": {
+       "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+       "exit": 1,
+       "testsRun": 2159,
+       "failedTests": [
+        "dossier-profile.test.ts > REQ-031 clarification digests each question by the exact tuple of its id, text, scope and reason"
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "predicate": "durable-lifecycle attempt identities",
+    "laneOrReviewerId": "R9",
+    "testFile": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts",
+    "test": "names each dispatch claim by the SHA-256 of its request, stage and ordinal",
+    "assertion": "five literal journal file names, in stage order",
+    "literalDerivedBy": {
+     "method": "derive-literals.py strings; the ordinal is pipeline.ts call count so far",
+     "values": {
+      "inventory@0": "attempt-2d73d341dd806d637cda3d16ea17971e3eb0b3df269be93af23b0195e4e9083b",
+      "plan@1": "attempt-4b08f68df0a8e991bfd9d15524d628b465673ec61326ff8347668c60f7f76b19",
+      "author@2": "attempt-34c4e90aa2d760f16dccf424cac01292deaa4a5edec50ade7213a18ca710e039",
+      "edit@3": "attempt-ffd130e87e2d4fcd4b436d3fb65d4a7f2135e6179a3b1a6598ecd2389735b697",
+      "fidelity@4": "attempt-ce7b75ceb155b4a2460d6953f938c8d2674bb3ed6245a0d3e5e57a9c066cec88"
+     }
+    },
+    "mutants": [
+     {
+      "mutantId": "R9-equal-length-reordered-attempt-id",
+      "file": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.ts",
+      "old": "`${input.requestId}\\0${input.stage}\\0${input.ordinal}`",
+      "new": "`${input.stage}\\0${input.requestId}\\0${input.ordinal}`",
+      "survivesAtBase": {
+       "commit": "f7477f52c49ee347f96b92703887c31f6be49e07",
+       "exit": 0,
+       "testsRun": 40,
+       "failed": 0
+      },
+      "killedAtTested": {
+       "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+       "exit": 1,
+       "testsRun": 41,
+       "failedTests": [
+        "durable-lifecycle.test.ts > durable scripted lifecycle port names each dispatch claim by the SHA-256 of its request, stage and ordinal"
+       ]
+      }
+     }
+    ]
+   }
+  ],
+  "censusHelper": {
+   "file": "packages/three-surface-poc-core/src/test-frozen.ts",
+   "own test": "packages/three-surface-poc-core/src/test-frozen.test.ts (4 tests)",
+   "mutants": [
+    {
+     "mutantId": "H1-census-never-reports",
+     "file": "packages/three-surface-poc-core/src/test-frozen.ts",
+     "old": "    if (!Object.isFrozen(node)) unfrozen.push(path);\n",
+     "new": "",
+     "survivesAtBase": null,
+     "killedAtTested": {
+      "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+      "exit": 1,
+      "testsRun": 4,
+      "failedTests": [
+       "test-frozen.test.ts > frozenCensus names the path of an unfrozen root, an unfrozen array and an unfrozen leaf below a frozen shell",
+       "test-frozen.test.ts > frozenCensus terminates on a cycle and counts each object once"
+      ]
+     }
+    },
+    {
+     "mutantId": "H2-census-stops-at-a-frozen-shell",
+     "file": "packages/three-surface-poc-core/src/test-frozen.ts",
+     "old": "    for (const [key, member] of Object.entries(node)) walk(member, `${path}.${key}`);\n",
+     "new": "    if (Object.isFrozen(node)) return;\n    for (const [key, member] of Object.entries(node)) walk(member, `${path}.${key}`);\n",
+     "survivesAtBase": null,
+     "killedAtTested": {
+      "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+      "exit": 1,
+      "testsRun": 4,
+      "failedTests": [
+       "test-frozen.test.ts > frozenCensus reports nothing unfrozen for a value frozen all the way down, and counts the objects it walked",
+       "test-frozen.test.ts > frozenCensus names the path of an unfrozen root, an unfrozen array and an unfrozen leaf below a frozen shell"
+      ]
+     }
+    },
+    {
+     "mutantId": "H3-census-counts-nothing",
+     "file": "packages/three-surface-poc-core/src/test-frozen.ts",
+     "old": "  return { visited: seen.size, unfrozen };",
+     "new": "  return { visited: 0, unfrozen };",
+     "survivesAtBase": null,
+     "killedAtTested": {
+      "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+      "exit": 1,
+      "testsRun": 4,
+      "failedTests": [
+       "test-frozen.test.ts > frozenCensus reports nothing unfrozen for a value frozen all the way down, and counts the objects it walked",
+       "test-frozen.test.ts > frozenCensus terminates on a cycle and counts each object once",
+       "test-frozen.test.ts > frozenCensus walks nothing for a primitive, null or undefined, and skips typed-array views"
+      ]
+     }
+    }
+   ]
+  },
+  "canonicalForm": "Python json.dumps(sort_keys=True, separators=(',', ':'), ensure_ascii=False); equals the module's canonicalJson only while object keys are ASCII, which the fixtures' are. The module's own digest equals the derived one for the manifest and the observation (equal: true above).",
+  "wholeSuiteSurvivalRecord": "The lane's whole-suite runs that first showed C1, C2, C3, C11, F1 and F3 surviving are docs/evidence/support-leaf-review-2026-10-27/round-1/full-mutants-a.json and full-mutants-b.json; R3 and R9 are in rev-mutants.json beside them. This record re-ran each at the base over the owning Vitest project (or, for R9, the three files the review ran), not over the whole suite."
+ },
+ "item3": {
+  "finding": "R-GP-IMPL-SUPPORT-LEAF-1 N5",
+  "change": "scripts/check_generator_install.mjs also requires node_modules/@syzygy/support",
+  "test": "apps/three-surface-poc/src/polaris-generation/generator-install-check.test.ts (6 tests)",
+  "testsAtBase": "none: git grep -F check_generator_install over tracked test files returns 0 at the base",
+  "mutants": [
+   {
+    "mutantId": "I1-support-not-required",
+    "file": "scripts/check_generator_install.mjs",
+    "old": "\n  || !existsSync(join(process.cwd(), 'node_modules', '@syzygy', 'support'))",
+    "new": "",
+    "survivesAtBase": null,
+    "killedAtTested": {
+     "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+     "exit": 1,
+     "testsRun": 6,
+     "failedTests": [
+      "generator-install-check.test.ts > the generator install check refuses a checkout without support, with the instruction to run npm ci"
+     ]
+    }
+   },
+   {
+    "mutantId": "I2-generation-core-not-required",
+    "file": "scripts/check_generator_install.mjs",
+    "old": "\n  || !existsSync(join(process.cwd(), 'node_modules', '@syzygy', 'polaris-generation-core'))",
+    "new": "",
+    "survivesAtBase": null,
+    "killedAtTested": {
+     "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+     "exit": 1,
+     "testsRun": 6,
+     "failedTests": [
+      "generator-install-check.test.ts > the generator install check refuses a checkout without polaris-generation-core, with the instruction to run npm ci"
+     ]
+    }
+   },
+   {
+    "mutantId": "I3-tsc-not-required",
+    "file": "scripts/check_generator_install.mjs",
+    "old": "if (!existsSync(join(process.cwd(), 'node_modules', '.bin', 'tsc'))\n  || !existsSync(join(process.cwd(), 'node_modules', '@syzygy', 'polaris-generation-core'))",
+    "new": "if (!existsSync(join(process.cwd(), 'node_modules', '@syzygy', 'polaris-generation-core'))",
+    "survivesAtBase": null,
+    "killedAtTested": {
+     "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+     "exit": 1,
+     "testsRun": 6,
+     "failedTests": [
+      "generator-install-check.test.ts > the generator install check refuses a checkout without tsc, with the instruction to run npm ci"
+     ]
+    }
+   },
+   {
+    "mutantId": "I4-refusal-exits-zero",
+    "file": "scripts/check_generator_install.mjs",
+    "old": "process.exitCode = 1;",
+    "new": "process.exitCode = 0;",
+    "survivesAtBase": null,
+    "killedAtTested": {
+     "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+     "exit": 1,
+     "testsRun": 6,
+     "failedTests": [
+      "generator-install-check.test.ts > the generator install check refuses a checkout without support, with the instruction to run npm ci",
+      "generator-install-check.test.ts > the generator install check refuses a checkout without polaris-generation-core, with the instruction to run npm ci",
+      "generator-install-check.test.ts > the generator install check refuses a checkout without tsc, with the instruction to run npm ci",
+      "generator-install-check.test.ts > the generator install check refuses a checkout without every entry, with the instruction to run npm ci"
+     ]
+    }
+   },
+   {
+    "mutantId": "I5-wrong-entry-name-for-support",
+    "file": "scripts/check_generator_install.mjs",
+    "old": "'@syzygy', 'support'))",
+    "new": "'@syzygy', 'supports'))",
+    "survivesAtBase": null,
+    "killedAtTested": {
+     "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+     "exit": 1,
+     "testsRun": 6,
+     "failedTests": [
+      "generator-install-check.test.ts > the generator install check passes a checkout holding tsc, the generation core and the support package",
+      "generator-install-check.test.ts > the generator install check passes this checkout, so the fixture entries are the ones a real install has"
+     ]
+    }
+   },
+   {
+    "mutantId": "I6-refusal-says-nothing",
+    "file": "scripts/check_generator_install.mjs",
+    "old": "process.stderr.write('Generator dependencies are missing. Run npm ci from the repository root, then retry.\\n');",
+    "new": "process.stderr.write('');",
+    "survivesAtBase": null,
+    "killedAtTested": {
+     "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+     "exit": 1,
+     "testsRun": 6,
+     "failedTests": [
+      "generator-install-check.test.ts > the generator install check refuses a checkout without support, with the instruction to run npm ci",
+      "generator-install-check.test.ts > the generator install check refuses a checkout without polaris-generation-core, with the instruction to run npm ci",
+      "generator-install-check.test.ts > the generator install check refuses a checkout without tsc, with the instruction to run npm ci",
+      "generator-install-check.test.ts > the generator install check refuses a checkout without every entry, with the instruction to run npm ci"
+     ]
+    }
+   }
+  ],
+  "negativeControl": {
+   "mutantId": "N1-support-checked-first",
+   "file": "scripts/check_generator_install.mjs",
+   "old": "if (!existsSync(join(process.cwd(), 'node_modules', '.bin', 'tsc'))\n  || !existsSync(join(process.cwd(), 'node_modules', '@syzygy', 'polaris-generation-core'))\n  || !existsSync(join(process.cwd(), 'node_modules', '@syzygy', 'support'))) {",
+   "new": "if (!existsSync(join(process.cwd(), 'node_modules', '@syzygy', 'support'))\n  || !existsSync(join(process.cwd(), 'node_modules', '.bin', 'tsc'))\n  || !existsSync(join(process.cwd(), 'node_modules', '@syzygy', 'polaris-generation-core'))) {",
+   "survivesAtBase": null,
+   "killedAtTested": {
+    "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+    "exit": 0,
+    "testsRun": 6,
+    "failedTests": []
+   }
+  }
+ },
+ "item4": {
+  "finding": "R-GP-IMPL-SUPPORT-LEAF-1 N1, round 2",
+  "sites": [
+   "packages/three-surface-poc-core/src/test-artifact-verification.ts: junitDigest",
+   "apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts: the local sha256"
+  ],
+  "differential": {
+   "tool": "junit-fixture-differential.mjs (built clones of the base and the tested commit, one build command: npm run build:poc)",
+   "node": "v24.6.0",
+   "rowsCompared": 40,
+   "rowsThatDiffer": 0,
+   "rowsOnlyInOneSide": 0,
+   "familyA_junitDigest": 15,
+   "familyB_walkthroughJudgmentFixture": 25,
+   "junitBuiltRows": 11,
+   "junitBuiltRowsEqualToNodeCryptoOracle": 11,
+   "viewsOfLargerBuffers": 11,
+   "evaluatorOutcomeKinds": {
+    "absent": 10,
+    "lawful": 10,
+    "unlawful": 5
+   },
+   "noiseControl": {
+    "what": "the base probed twice",
+    "rowsCompared": 40,
+    "rowsThatDiffer": 0
+   },
+   "familyA_junitDigest_status": "no longer applicable at the repair commit: packages/three-surface-poc-core/src/test-artifact-verification.ts is byte-equal to its base, so the 15 junitDigest rows cannot differ and no longer test a change; they stand as run at b214ef10",
+   "repair": {
+    "what": "the head probe run again at the repair commit (one build, npm run build:poc, a scratch clone) and compared with the stored base output by compare-rows.py",
+    "commit": "c7ed9ef256985b87e3d75447bf6671e2ca97fc71",
+    "rowsCompared": 40,
+    "rowsThatDiffer": 0,
+    "rowsOnlyInOneSide": 0,
+    "outputSha256": "8f58818c4a978473e4a8463f56701248f0d8c3ad8b6d13dc8b852f71074750bb",
+    "baseOutputSha256": "8f58818c4a978473e4a8463f56701248f0d8c3ad8b6d13dc8b852f71074750bb",
+    "roundOneHeadOutputSha256": "8f58818c4a978473e4a8463f56701248f0d8c3ad8b6d13dc8b852f71074750bb",
+    "byteIdenticalToBase": true,
+    "byteIdenticalToRoundOneHead": true,
+    "reading": "the fixture family (25 rows) is the part that still tests a change; it is equal to the base on every row at the repair commit. Family A (15 rows) is trivially equal now.",
+    "compareOutput": {
+     "rowsOld": 40,
+     "rowsNew": 40,
+     "rowsCompared": 40,
+     "rowsThatDiffer": 0,
+     "rowsOnlyInOld": 0,
+     "rowsOnlyInNew": 0,
+     "differ": [],
+     "onlyInOld": [],
+     "onlyInNew": []
+    }
+   }
+  },
+  "sweep": {
+   "tool": "docs/evidence/syzygy-bpyt-6-3/population-audit.py and sweep.py, run read-only at each commit",
+   "nameRule": {
+    "base": {
+     "files": 241,
+     "createHashSha256Sites": 6,
+     "localSha256Definitions": 1,
+     "localDeepFreezeDefinitions": 1
+    },
+    "tested": {
+     "files": 241,
+     "createHashSha256Sites": 6,
+     "localSha256Definitions": 1,
+     "localDeepFreezeDefinitions": 1
+    }
+   },
+   "reachabilityRule": {
+    "base": {
+     "files": 245,
+     "createHashSha256Sites": 8,
+     "localSha256Definitions": 2,
+     "localDeepFreezeDefinitions": 1
+    },
+    "tested": {
+     "files": 245,
+     "createHashSha256Sites": 6,
+     "localSha256Definitions": 1,
+     "localDeepFreezeDefinitions": 1
+    },
+    "testedNote": "\"tested\" is b214ef10, where both sites were converted; the figures at the repair are in repair"
+   },
+   "sweepPy": {
+    "base": {
+     "sites": 6,
+     "localCopies": 2
+    },
+    "tested": {
+     "sites": 6,
+     "localCopies": 2
+    },
+    "populationNamesSha256Equal": true
+   },
+   "remainingSitesAtTested": [
+    {
+     "file": "apps/three-surface-poc/src/polaris-generation/redis-shaped-measure.ts",
+     "line": 91,
+     "form": "no .update( directly after the constructor"
+    },
+    {
+     "file": "packages/cap1-system/src/harness.ts",
+     "line": 246,
+     "form": "replaceable"
+    },
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "line": 379,
+     "form": "digest is not hex"
+    },
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "line": 380,
+     "form": "digest is not hex"
+    },
+    {
+     "file": "packages/polaris-dossier/src/render.ts",
+     "line": 310,
+     "form": "digest is not hex"
+    },
+    {
+     "file": "packages/support/src/sha256.ts",
+     "line": 5,
+     "form": "replaceable"
+    }
+   ],
+   "remainingLocalDefinitionsAtTested": [
+    {
+     "file": "packages/support/src/deep-freeze.ts",
+     "line": 7,
+     "name": "deepFreeze"
+    },
+    {
+     "file": "packages/support/src/sha256.ts",
+     "line": 4,
+     "name": "sha256"
+    }
+   ],
+   "secondMethod": {
+    "base": {
+     "sha256-single-quoted": 6,
+     "deepFreeze-definitions": 1
+    },
+    "tested": {
+     "sha256-single-quoted": 6,
+     "deepFreeze-definitions": 1
+    }
+   },
+   "repair": {
+    "commit": "c7ed9ef256985b87e3d75447bf6671e2ca97fc71",
+    "tool": "docs/evidence/syzygy-bpyt-6-3/population-audit.py and sweep.py, run read-only at each commit; run with the full commit as the argument (the round-1 files carry the 8-hex argument; the only difference between a re-run at b214ef10 and the stored files is that label, checked byte for byte)",
+    "outputs": {
+     "populationAudit": "docs/evidence/syzygy-bpyt-6-13/population-audit-c7ed9ef2.json",
+     "sweep": "docs/evidence/syzygy-bpyt-6-13/sweep-c7ed9ef2.json"
+    },
+    "nameRule": {
+     "files": 241,
+     "createHashSha256Sites": 6,
+     "localSha256Definitions": 1,
+     "localDeepFreezeDefinitions": 1
+    },
+    "reachabilityRule": {
+     "files": 245,
+     "createHashSha256Sites": 7,
+     "localSha256Definitions": 1,
+     "localDeepFreezeDefinitions": 1
+    },
+    "reachabilitySitesBeyondTheNameRule": [
+     {
+      "file": "packages/three-surface-poc-core/src/test-artifact-verification.ts",
+      "kind": "createHash(sha256)",
+      "line": 309,
+      "form": "replaceable"
+     }
+    ],
+    "sweepPy": {
+     "sites": 6,
+     "localCopies": 2,
+     "populationNamesSha256": "094b7823facd8256be46e2e343291cc0a77a9f368278900dafe7d92c16c8da47"
+    },
+    "secondMethod": {
+     "sha256-single-quoted": 6,
+     "deepFreeze-definitions": 1,
+     "createHashSha256PerBasenameOnlyFile(test-artifact-verification.ts)": 1
+    },
+    "remainingSitesUnderTheReachabilityRule": [
+     {
+      "file": "apps/three-surface-poc/src/polaris-generation/redis-shaped-measure.ts",
+      "line": 91,
+      "form": "no .update( directly after the constructor"
+     },
+     {
+      "file": "packages/cap1-system/src/harness.ts",
+      "line": 246,
+      "form": "replaceable"
+     },
+     {
+      "file": "packages/http-host/src/credentials.ts",
+      "line": 379,
+      "form": "digest is not hex"
+     },
+     {
+      "file": "packages/http-host/src/credentials.ts",
+      "line": 380,
+      "form": "digest is not hex"
+     },
+     {
+      "file": "packages/polaris-dossier/src/render.ts",
+      "line": 310,
+      "form": "digest is not hex"
+     },
+     {
+      "file": "packages/support/src/sha256.ts",
+      "line": 5,
+      "form": "replaceable"
+     },
+     {
+      "file": "packages/three-surface-poc-core/src/test-artifact-verification.ts",
+      "kind": "createHash(sha256)",
+      "line": 309,
+      "form": "replaceable"
+     }
+    ],
+    "remainingLocalDefinitions": [
+     {
+      "file": "packages/support/src/deep-freeze.ts",
+      "line": 7,
+      "name": "deepFreeze"
+     },
+     {
+      "file": "packages/support/src/sha256.ts",
+      "line": 4,
+      "name": "sha256"
+     }
+    ],
+    "movesWith": {
+     "base f7477f52": {
+      "createHashSha256Sites": 8,
+      "localSha256Definitions": 2
+     },
+     "b214ef10 (both sites converted)": {
+      "createHashSha256Sites": 6,
+      "localSha256Definitions": 1
+     },
+     "merge 4b9a4be0 (main merged, junitDigest still converted)": {
+      "createHashSha256Sites": 6,
+      "localSha256Definitions": 1
+     },
+     "repair c7ed9ef2": {
+      "createHashSha256Sites": 7,
+      "localSha256Definitions": 1
+     }
+    },
+    "reading": "the merge of main moved none of the figures; the revert moves the reachability sites 6 to 7 and leaves the local sha256 definitions at 1 (the package's own). The name rule is 6, 1, 1 at every commit above."
+   }
+  },
+  "mutants": {
+   "record": "item4-mutants-2026-10-27.json",
+   "summary": {
+    "mutants": 9,
+    "rowsOk": 9,
+    "rowsNotOk": [],
+    "controlKilledByNothing": true,
+    "killedByProbe": [
+     "J1-digest-drops-the-first-byte",
+     "J2-digest-over-the-whole-backing-buffer",
+     "J3-digest-over-the-decoded-text",
+     "J4-prefix-dropped",
+     "W1-run-digest-over-changed-text",
+     "W2-judgment-digest-drops-the-first-character",
+     "W3-stale-latin1-local-copy"
+    ],
+    "killedByTests": [
+     "J1-digest-drops-the-first-byte",
+     "J2-digest-over-the-whole-backing-buffer",
+     "J3-digest-over-the-decoded-text",
+     "J4-prefix-dropped",
+     "W1-run-digest-over-changed-text",
+     "W2-judgment-digest-drops-the-first-character",
+     "W3-stale-latin1-local-copy"
+    ],
+    "killedBySweep": [
+     "J5-equivalent-local-copy",
+     "W3-stale-latin1-local-copy",
+     "W4-equivalent-local-copy"
+    ]
+   },
+   "node": "v24.6.0",
+   "buildCommand": "npm run build:poc",
+   "rows": [
+    {
+     "id": "J1-digest-drops-the-first-byte",
+     "expect": "killed",
+     "file": "packages/three-surface-poc-core/src/test-artifact-verification.ts",
+     "old": "  return `sha256:${sha256(rawJUnit)}`;",
+     "new": "  return `sha256:${sha256(rawJUnit.subarray(1))}`;",
+     "commit": "6f9af8d96cddabb403307d46d38bd99f11ccdb16",
+     "killedBy": [
+      "probe",
+      "tests"
+     ],
+     "sweep": {
+      "createHashSha256Sites": 6,
+      "localSha256Definitions": 1,
+      "killed": false
+     },
+     "probeRowsThatDiffer": 11,
+     "testsFailed": 1,
+     "testsRun": 41,
+     "status": "NO LONGER APPLICABLE at c7ed9ef2: the mutated fragment `sha256(rawJUnit)` is not in the file any more; the row stands as run at b214ef10"
+    },
+    {
+     "id": "J2-digest-over-the-whole-backing-buffer",
+     "expect": "killed",
+     "file": "packages/three-surface-poc-core/src/test-artifact-verification.ts",
+     "old": "  return `sha256:${sha256(rawJUnit)}`;",
+     "new": "  return `sha256:${sha256(Buffer.from(rawJUnit.buffer))}`;",
+     "commit": "d2f958c99b3556e2d5504cb687251e96c16ac85c",
+     "killedBy": [
+      "probe",
+      "tests"
+     ],
+     "sweep": {
+      "createHashSha256Sites": 6,
+      "localSha256Definitions": 1,
+      "killed": false
+     },
+     "probeRowsThatDiffer": 9,
+     "testsFailed": 1,
+     "testsRun": 41,
+     "status": "NO LONGER APPLICABLE at c7ed9ef2: the mutated fragment `sha256(rawJUnit)` is not in the file any more; the row stands as run at b214ef10"
+    },
+    {
+     "id": "J3-digest-over-the-decoded-text",
+     "expect": "killed",
+     "file": "packages/three-surface-poc-core/src/test-artifact-verification.ts",
+     "old": "  return `sha256:${sha256(rawJUnit)}`;",
+     "new": "  return `sha256:${sha256(new TextDecoder().decode(rawJUnit))}`;",
+     "commit": "d6c32c108f3f10da13b62abff64aa4fbeef76b73",
+     "killedBy": [
+      "probe",
+      "tests"
+     ],
+     "sweep": {
+      "createHashSha256Sites": 6,
+      "localSha256Definitions": 1,
+      "killed": false
+     },
+     "probeRowsThatDiffer": 2,
+     "testsFailed": 1,
+     "testsRun": 41,
+     "status": "NO LONGER APPLICABLE at c7ed9ef2: the mutated fragment `sha256(rawJUnit)` is not in the file any more; the row stands as run at b214ef10"
+    },
+    {
+     "id": "J4-prefix-dropped",
+     "expect": "killed",
+     "file": "packages/three-surface-poc-core/src/test-artifact-verification.ts",
+     "old": "  return `sha256:${sha256(rawJUnit)}`;",
+     "new": "  return `${sha256(rawJUnit)}`;",
+     "commit": "e990550c36a5904e33476773503351400cc180e3",
+     "killedBy": [
+      "probe",
+      "tests"
+     ],
+     "sweep": {
+      "createHashSha256Sites": 6,
+      "localSha256Definitions": 1,
+      "killed": false
+     },
+     "probeRowsThatDiffer": 11,
+     "testsFailed": 1,
+     "testsRun": 41,
+     "status": "NO LONGER APPLICABLE at c7ed9ef2: the mutated fragment `sha256(rawJUnit)` is not in the file any more; the row stands as run at b214ef10"
+    },
+    {
+     "id": "J5-equivalent-local-copy",
+     "expect": "sweep-only",
+     "file": "packages/three-surface-poc-core/src/test-artifact-verification.ts",
+     "old": "import { sha256 } from '@syzygy/support';\n",
+     "new": "import { createHash } from 'node:crypto';\nconst sha256 = (value: Uint8Array): string => createHash('sha256').update(value).digest('hex');\n",
+     "commit": "2a11bf9a5cff27dbe55530e503194c3349809d07",
+     "killedBy": [
+      "sweep"
+     ],
+     "sweep": {
+      "createHashSha256Sites": 7,
+      "localSha256Definitions": 2,
+      "killed": true
+     },
+     "probeRowsThatDiffer": 0,
+     "testsFailed": 0,
+     "testsRun": 41,
+     "status": "NO LONGER APPLICABLE at c7ed9ef2: the mutated fragment `sha256(rawJUnit)` is not in the file any more; the row stands as run at b214ef10"
+    },
+    {
+     "id": "W1-run-digest-over-changed-text",
+     "expect": "killed",
+     "file": "apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts",
+     "old": "  const runDigest = sha256(runText);",
+     "new": "  const runDigest = sha256(runText + ' ');",
+     "commit": "261abd938acc227fe2bd719bd53573f69b52b909",
+     "killedBy": [
+      "probe",
+      "tests"
+     ],
+     "sweep": {
+      "createHashSha256Sites": 6,
+      "localSha256Definitions": 1,
+      "killed": false
+     },
+     "probeRowsThatDiffer": 25,
+     "testsFailed": 5,
+     "testsRun": 86,
+     "status": "applies: the fixture file is byte-equal at b214ef10 and c7ed9ef2; re-checked by the sweep detector alone in i4.mutants.repair"
+    },
+    {
+     "id": "W2-judgment-digest-drops-the-first-character",
+     "expect": "killed",
+     "file": "apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts",
+     "old": "  const judgmentDigest = sha256(judgmentText);",
+     "new": "  const judgmentDigest = sha256(judgmentText.slice(1));",
+     "commit": "0bd7990da8dcb0b3841c41e5f8dfc83734b7a911",
+     "killedBy": [
+      "probe",
+      "tests"
+     ],
+     "sweep": {
+      "createHashSha256Sites": 6,
+      "localSha256Definitions": 1,
+      "killed": false
+     },
+     "probeRowsThatDiffer": 25,
+     "testsFailed": 5,
+     "testsRun": 86,
+     "status": "applies: the fixture file is byte-equal at b214ef10 and c7ed9ef2; re-checked by the sweep detector alone in i4.mutants.repair"
+    },
+    {
+     "id": "W3-stale-latin1-local-copy",
+     "expect": "killed",
+     "file": "apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts",
+     "old": "import { sha256 } from '@syzygy/support';\n",
+     "new": "import { createHash } from 'node:crypto';\nconst sha256 = (text: string): string => createHash('sha256').update(text, 'latin1').digest('hex');\n",
+     "commit": "4a342501ee95b6d83f247d765ef363b046a9da13",
+     "killedBy": [
+      "probe",
+      "tests",
+      "sweep"
+     ],
+     "sweep": {
+      "createHashSha256Sites": 7,
+      "localSha256Definitions": 2,
+      "killed": true
+     },
+     "probeRowsThatDiffer": 25,
+     "testsFailed": 5,
+     "testsRun": 86,
+     "status": "applies: the fixture file is byte-equal at b214ef10 and c7ed9ef2; re-checked by the sweep detector alone in i4.mutants.repair"
+    },
+    {
+     "id": "W4-equivalent-local-copy",
+     "expect": "sweep-only",
+     "file": "apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts",
+     "old": "import { sha256 } from '@syzygy/support';\n",
+     "new": "import { createHash } from 'node:crypto';\nconst sha256 = (text: string): string => createHash('sha256').update(text).digest('hex');\n",
+     "commit": "ee03ed3ec004254abf1ec70922d183910721cc5c",
+     "killedBy": [
+      "sweep"
+     ],
+     "sweep": {
+      "createHashSha256Sites": 7,
+      "localSha256Definitions": 2,
+      "killed": true
+     },
+     "probeRowsThatDiffer": 0,
+     "testsFailed": 0,
+     "testsRun": 86,
+     "status": "applies: the fixture file is byte-equal at b214ef10 and c7ed9ef2; re-checked by the sweep detector alone in i4.mutants.repair"
+    }
+   ],
+   "control": {
+    "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+    "killedBy": []
+   },
+   "repair": {
+    "tool": "docs/evidence/syzygy-bpyt-6-13/item4-repair-sweep.py",
+    "toolSha256": "b08c15735ad9cce21cc623f7e848c9865387947880343fa4d42c478b87ef2c84",
+    "output": "docs/evidence/syzygy-bpyt-6-13/item4-repair-sweep-c7ed9ef2.json",
+    "outputSha256": "9f4b5eed3dbb17e624c60bf7e6a81984b12325a1d4c66d55ad94cd2e8a9120a5",
+    "why": "item4-mutants.py kills by sweep when the reachability rule reads more than 6 sites or more than 1 local definition; those are the counts at b214ef10. At the repair the unmutated tree reads 7 and 1, so that runner would call its own control killed; it is left as it was and not re-run.",
+    "rule": "killed when the reachability-rule createHash sites or local sha256 definitions exceed the repair commit's own counts",
+    "baselineAtRepair": {
+     "createHashSha256Sites": 7,
+     "localSha256Definitions": 1
+    },
+    "rows": [
+     {
+      "id": "W3-stale-latin1-local-copy",
+      "old": "import { sha256 } from '@syzygy/support';\n",
+      "new": "import { createHash } from 'node:crypto';\nconst sha256 = (text: string): string => createHash('sha256').update(text, 'latin1').digest('hex');\n",
+      "commit": "4dc89e9ebd73ffa0077a5c89ac600811331582a6",
+      "createHashSha256Sites": 8,
+      "localSha256Definitions": 2,
+      "killedBySweep": true
+     },
+     {
+      "id": "W4-equivalent-local-copy",
+      "old": "import { sha256 } from '@syzygy/support';\n",
+      "new": "import { createHash } from 'node:crypto';\nconst sha256 = (text: string): string => createHash('sha256').update(text).digest('hex');\n",
+      "commit": "42f7e80a6aa958b588bafe12889cc732d1f299bf",
+      "createHashSha256Sites": 8,
+      "localSha256Definitions": 2,
+      "killedBySweep": true
+     }
+    ],
+    "control": {
+     "commit": "c7ed9ef256985b87e3d75447bf6671e2ca97fc71",
+     "createHashSha256Sites": 7,
+     "localSha256Definitions": 1,
+     "killedBySweep": false,
+     "note": "the unmutated repair commit defines the threshold, so it cannot be killed by it"
+    },
+    "scope": "sweep detector only for W3 and W4; the probe and test detectors of the other fixture rows (W1, W2) are not re-run: the fixture file blob is the same at b214ef10 and at the repair, and the differential was re-run (differential.repair)"
+   }
+  },
+  "status": "HALF DONE at the repair commit c7ed9ef2: the walkthrough-judgment fixture takes sha256 from @syzygy/support; junitDigest does not. The fields below describe the state at b214ef10, where both sites were converted, and are marked where the repair makes them no longer apply.",
+  "sitesAtRepair": [
+   {
+    "site": "packages/three-surface-poc-core/src/test-artifact-verification.ts: junitDigest",
+    "state": "reverted to the f7477f52 bytes; createHash('sha256') stays at line 309 of the file",
+    "reason": "guard"
+   },
+   {
+    "site": "apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts: the local sha256",
+    "state": "converted, unchanged since b214ef10"
+   }
+  ],
+  "repair": {
+   "why": "The hosted node check failed at 663061c4 (observed by the coordinator, and reproduced here in a scratch clone): apps/three-surface-poc/src/capture-test-artifact-main.test.ts, \"names no other way to start a process, in the tool or the core module it calls\", failed with \"test-artifact-verification.ts: expected [ 'imports @syzygy/support' ] to deeply equal []\" (1 failed, 51 passed of 52). ALLOWED_IMPORTS pins that file's imports to node:crypto, node:fs and node:path (line 90 at that commit). The check is the live-verification no-spawn source guard, a class-4 guard; adding @syzygy/support to its accept set changes what a gate accepts, which GP-Q0's stop clause sends to the owner. The canonical battery (PROJECT-STATUS \"How to verify this page\") does not run npm test, so it never covered the guard.",
+   "ruling": "the coordinator reverted the junitDigest half of item 4 and kept the fixture half; the allowlist is not widened",
+   "guardTest": {
+    "file": "apps/three-surface-poc/src/capture-test-artifact-main.test.ts",
+    "test": "capture-test-artifact never starts the observed project (source check) > names no other way to start a process, in the tool or the core module it calls",
+    "atReviewedHead": {
+     "commit": "663061c43f111c162765478c2001ccdba98dd1fa",
+     "result": "1 failed | 51 passed (52)",
+     "message": "test-artifact-verification.ts: expected [ 'imports @syzygy/support' ] to deeply equal []"
+    },
+    "atRepair": {
+     "commit": "c7ed9ef256985b87e3d75447bf6671e2ca97fc71",
+     "result": "52 tests passed in the full-suite run"
+    }
+   },
+   "residual": "[Observed] junitDigest in packages/three-surface-poc-core/src/test-artifact-verification.ts keeps its local createHash('sha256') digest. It is a replaceable site by the sweep's own predicate, left in place on purpose; a guard pins that file's imports, and widening the guard is the owner's.",
+   "fullSuiteAtRepair": {
+    "commit": "c7ed9ef256985b87e3d75447bf6671e2ca97fc71",
+    "command": "npx vitest run --testTimeout=60000 --hookTimeout=60000, in a scratch clone after npm ci and npm run build:poc, a private TMPDIR",
+    "files": "245 passed | 3 skipped (248)",
+    "tests": "5393 passed | 5 skipped (5398)",
+    "exit": 0
+   }
+  }
+ },
+ "item6": {
+  "finding": "R-GP-IMPL-SUPPORT-LEAF-2 N12 (optional)",
+  "test": "packages/support/src/deep-freeze.test.ts: leaves the owner frozen, and the members reached so far, when a member throws mid-walk",
+  "states pinned": "a throwing getter beside a sibling: owner frozen, sibling not (1 of 2); a Proxy whose ownKeys trap throws beside a sibling: owner and sibling frozen (2 of 2)",
+  "mutants": [
+   {
+    "mutantId": "D1-freeze-after-the-walk",
+    "file": "packages/support/src/deep-freeze.ts",
+    "old": "  if (value !== null && typeof value === 'object' && !Object.isFrozen(value)) {\n    Object.freeze(value);\n    for (const member of Object.values(value)) deepFreeze(member);\n  }",
+    "new": "  if (value !== null && typeof value === 'object' && !Object.isFrozen(value)) {\n    for (const member of Object.values(value)) deepFreeze(member);\n    Object.freeze(value);\n  }",
+    "survivesAtBase": {
+     "commit": "f7477f52c49ee347f96b92703887c31f6be49e07",
+     "exit": 1,
+     "testsRun": 22,
+     "failed": 1
+    },
+    "killedAtTested": {
+     "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+     "exit": 1,
+     "testsRun": 23,
+     "failedTests": [
+      "deep-freeze.test.ts > deepFreeze terminates on a cycle",
+      "deep-freeze.test.ts > deepFreeze leaves the owner frozen, and the members reached so far, when a member throws mid-walk"
+     ]
+    }
+   },
+   {
+    "mutantId": "D3-members-read-before-the-owner-is-frozen",
+    "file": "packages/support/src/deep-freeze.ts",
+    "old": "  if (value !== null && typeof value === 'object' && !Object.isFrozen(value)) {\n    Object.freeze(value);\n    for (const member of Object.values(value)) deepFreeze(member);\n  }",
+    "new": "  if (value !== null && typeof value === 'object' && !Object.isFrozen(value)) {\n    const members = Object.values(value);\n    Object.freeze(value);\n    for (const member of members) deepFreeze(member);\n  }",
+    "survivesAtBase": {
+     "commit": "f7477f52c49ee347f96b92703887c31f6be49e07",
+     "exit": 0,
+     "testsRun": 22,
+     "failed": 0
+    },
+    "killedAtTested": {
+     "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+     "exit": 1,
+     "testsRun": 23,
+     "failedTests": [
+      "deep-freeze.test.ts > deepFreeze leaves the owner frozen, and the members reached so far, when a member throws mid-walk"
+     ]
+    }
+   }
+  ],
+  "note": "D1 is also killed at the base by the existing cycle test; D3 survives at the base and only the new row kills it."
+ },
+ "tests": {
+  "perProject": [
+   {
+    "selection": "project @syzygy/three-surface-poc-core",
+    "base": 1113,
+    "tested": 1122
+   },
+   {
+    "selection": "projects @syzygy/polaris-generation-core and @syzygy/polaris-dossier",
+    "base": 2157,
+    "tested": 2159
+   },
+   {
+    "selection": "three durable-lifecycle files",
+    "base": 40,
+    "tested": 41
+   },
+   {
+    "selection": "project @syzygy/support",
+    "base": 22,
+    "tested": 23
+   },
+   {
+    "selection": "generator-install-check.test.ts (new file)",
+    "base": 0,
+    "tested": 6
+   }
+  ],
+  "added": 19,
+  "modified": 0,
+  "removed": 0,
+  "note": "Counted over the owning selections only; every added test sits in one of them. No existing test was edited or removed (git diff --numstat shows additions only in the test files)."
+ },
+ "controls": {
+  "unmutatedProjectsAtTested": 6,
+  "of": 6,
+  "negativeControlsPassing": 3,
+  "of_negativeControls": 3
+ },
+ "limits": [
+  "[Observed] Survival at the base is measured over the owning Vitest project (or the three files the review ran for R9), not over the whole suite; the whole-suite survival of C1, C2, C3, C11, F1, F3, R3 and R9 is the lane's and the review's earlier record, cited above, not re-run here.",
+  "[Observed] The literals for the manifest and observation digests are a golden of the fixture: they move when the fixture, the observer identity, the resource limits or the record shape moves. That is the point (class 3 identities); the comment above each says how to re-derive.",
+  "[Unknown] Whether other digest or freeze sites outside N2's eight are pinned. N2 named eight; this change does not sweep the rest.",
+  "[Observed] The probe corpus is 15 junit rows and 25 fixture rows; a Uint8Array subclass other than Buffer and a SharedArrayBuffer-backed view are not in it.",
+  "[Observed] item4-mutants.py's sweep detector sees only the reachability rule's counts; a local copy added under a test-class basename that production does not import is outside both rules by construction.",
+  "[Observed] junitDigest keeps its local node:crypto sha256: capture-test-artifact-main.test.ts pins test-artifact-verification.ts's imports (class 4, GP-Q0 stop clause for widening it). The reachability sweep reads 7 sites at the repair, not 6.",
+  "[Observed] item4-mutants.py's sweep threshold (6 sites, 1 definition) is the b214ef10 baseline and is not valid at the repair commit; item4-repair-sweep.py takes the threshold from the repair commit.",
+  "[Observed] The four historical evidence records that drift under check_evidence_currency.py --rev (current 21 to 20, drift 209 to 210, actionable 202 to 203) are the same four at main eb8fb6cb, at the merge 4b9a4be0 and at the repair c7ed9ef2; the revert changes none of them (none names test-artifact-verification.ts).",
+  "[Observed] The canonical battery does not run npm test. The full suite was run at the repair commit (item4.repair.fullSuiteAtRepair) and the hosted node check is the check at the head."
+ ],
+ "evidenceCurrencyAtRepair": {
+  "command": "python3 scripts/check_evidence_currency.py --json --rev <commit>, populationB_evidenceRecords",
+  "counts": {
+   "eb8fb6cb": {
+    "denominator": 378,
+    "current": 21,
+    "drift": 209,
+    "driftRecordsWithActionableDrift": 202,
+    "driftRecordsHistoricalOnly": 7,
+    "unknown": 148
+   },
+   "4b9a4be0": {
+    "denominator": 378,
+    "current": 20,
+    "drift": 210,
+    "driftRecordsWithActionableDrift": 203,
+    "driftRecordsHistoricalOnly": 7,
+    "unknown": 148
+   },
+   "c7ed9ef2": {
+    "denominator": 378,
+    "current": 20,
+    "drift": 210,
+    "driftRecordsWithActionableDrift": 203,
+    "driftRecordsHistoricalOnly": 7,
+    "unknown": 148
+   }
+  },
+  "recordsWhoseRowDiffersBetweenMainAndRepair": [
+   "docs/evidence/code-structure-ls-tree-z-mutants-2026-10-21-r2.json",
+   "docs/evidence/code-structure-ls-tree-z-mutants-2026-10-21-r3.json",
+   "docs/evidence/polaris-generator-m6-review-correction-evidence-2026-09-23.json",
+   "docs/evidence/quote-fidelity-mutants-2026-10-04.json"
+  ],
+  "note": "taken before the evidence of this repair was committed, so it does not count the files added by it"
+ },
+ "repairFiles": [
+  {
+   "path": "docs/evidence/syzygy-bpyt-6-13/junit-fixture-differential-head-c7ed9ef2.json",
+   "bytes": 177232,
+   "sha256": "8f58818c4a978473e4a8463f56701248f0d8c3ad8b6d13dc8b852f71074750bb"
+  },
+  {
+   "path": "docs/evidence/syzygy-bpyt-6-13/junit-fixture-differential-compare-c7ed9ef2.json",
+   "bytes": 171,
+   "sha256": "ef828483e9a4254f17ada5631085a7ca5e825ef310f972b3760cdecae65b0569"
+  },
+  {
+   "path": "docs/evidence/syzygy-bpyt-6-13/full-suite-c7ed9ef2.log",
+   "bytes": 132890,
+   "sha256": "7fd2e440c96048aeacaaaf99c875d64b581944831409d15351a4c8d3e77d948f"
+  },
+  {
+   "path": "docs/evidence/syzygy-bpyt-6-13/population-audit-4b9a4be0.json",
+   "bytes": 2936,
+   "sha256": "b123bb66a3dd1dfdb739bf2674ff7034120d12873ec3df96d6d16c5cfed55eff"
+  },
+  {
+   "path": "docs/evidence/syzygy-bpyt-6-13/sweep-4b9a4be0.json",
+   "bytes": 1678,
+   "sha256": "4177fecb5f00fcdcc3bd9f4fa81d4a822accd77fe938a2b940a90117ddd5fc91"
+  },
+  {
+   "path": "docs/evidence/syzygy-bpyt-6-13/population-audit-c7ed9ef2.json",
+   "bytes": 3032,
+   "sha256": "8a6d3ff40ef0c10e46f0c180f1af209e17a2269302a7b5979b77b855fcbf4f58"
+  },
+  {
+   "path": "docs/evidence/syzygy-bpyt-6-13/sweep-c7ed9ef2.json",
+   "bytes": 1678,
+   "sha256": "1bc7c4e26e82d261ff148f72265c18a00c2fd1fa8ccea03502f19677d7257da0"
+  },
+  {
+   "path": "docs/evidence/syzygy-bpyt-6-13/item4-repair-sweep.py",
+   "bytes": 4765,
+   "sha256": "b08c15735ad9cce21cc623f7e848c9865387947880343fa4d42c478b87ef2c84"
+  },
+  {
+   "path": "docs/evidence/syzygy-bpyt-6-13/item4-repair-sweep-c7ed9ef2.json",
+   "bytes": 1979,
+   "sha256": "9f4b5eed3dbb17e624c60bf7e6a81984b12325a1d4c66d55ad94cd2e8a9120a5"
+  }
+ ]
+}

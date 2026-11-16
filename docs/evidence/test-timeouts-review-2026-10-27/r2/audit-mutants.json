@@ -1,0 +1,137 @@
+{
+ "tool": "audit_mutants.py",
+ "censusCommit": "d627a6b415b21644b9a07769b9328933ca748d1c",
+ "auditSha256": "8b5575830a9be21c8582c179daabd29fce241baef4349e4cb3c387c323735c99",
+ "rows": [
+  {
+   "id": "R1",
+   "predicate": "a stem match does not name the file",
+   "site": "apps/three-surface-poc/src/polaris-copy.test.ts:226",
+   "before": "file",
+   "after": null,
+   "expected": "killed",
+   "outcome": "killed",
+   "audits": [
+    {
+     "citation": "docs/evidence/poc-test-timeouts-2026-10-03.json",
+     "measured": null,
+     "evidence": "nothing in it names the site beside a duration"
+    }
+   ]
+  },
+  {
+   "id": "R2",
+   "predicate": "a different file with the same basename does not name the file",
+   "site": "apps/three-surface-poc/src/polaris-copy.test.ts:226",
+   "before": "file",
+   "after": "file",
+   "expected": "killed",
+   "outcome": "SURVIVED",
+   "audits": [
+    {
+     "citation": "docs/evidence/poc-test-timeouts-2026-10-03.json",
+     "measured": "file",
+     "evidence": {
+      "rule": "key",
+      "kind": "file",
+      "name": "packages/elsewhere/src/polaris-copy.test.ts > classifies each interpolated source control and preserves exact-source href order and multiplicity",
+      "duration": 803
+     }
+    }
+   ]
+  },
+  {
+   "id": "R3",
+   "predicate": "a titled test matched by file only is a residual",
+   "site": "apps/three-surface-poc/src/production-reobserve.test.ts:160",
+   "before": "test",
+   "after": null,
+   "expected": "killed",
+   "outcome": "killed",
+   "audits": [
+    {
+     "citation": "docs/evidence/syzygy-bpyt-4-31/full-runs.json",
+     "measured": null,
+     "evidence": {
+      "rule": "beside",
+      "kind": "file",
+      "name": "apps/three-surface-poc/src/production-reobserve.test.ts",
+      "duration": {
+       "ms": 14214
+      }
+     },
+     "refused": "names only the site's file, and the site is a test with a name of its own, which needs a test match"
+    },
+    {
+     "citation": "docs/evidence/syzygy-bpyt-4-31/repair-durations/production-reobserve.test.tests.json",
+     "measured": null,
+     "evidence": {
+      "rule": "beside",
+      "kind": "file",
+      "name": "npx vitest run --project @syzygy/three-surface-poc-app apps/three-surface-poc/src/production-reobserve.test.ts --reporter=json --outputFile=<tmp> --testTimeout=600000 --hookTimeout=600000",
+      "duration": {
+       "wallSeconds": 9.8
+      }
+     },
+     "refused": "names only the site's file, and the site is a test with a name of its own, which needs a test match"
+    }
+   ]
+  },
+  {
+   "id": "R4",
+   "predicate": "a same-titled test in a different file with the same basename does not name the test",
+   "site": "apps/three-surface-poc/src/production-reobserve.test.ts:160",
+   "before": "test",
+   "after": "test",
+   "expected": "killed",
+   "outcome": "SURVIVED",
+   "audits": [
+    {
+     "citation": "docs/evidence/syzygy-bpyt-4-31/full-runs.json",
+     "measured": "test",
+     "evidence": {
+      "rule": "beside",
+      "kind": "test",
+      "name": "production-owned capture-to-model re-observation seam > re-evaluates an unchanged repository twice: two distinct named identities, the first result unchanged (syzygy-u05.2)",
+      "duration": {
+       "ms": 3929
+      }
+     }
+    },
+    {
+     "citation": "docs/evidence/syzygy-bpyt-4-31/repair-durations/production-reobserve.test.tests.json",
+     "measured": "test",
+     "evidence": {
+      "rule": "beside",
+      "kind": "test",
+      "name": "production-owned capture-to-model re-observation seam re-evaluates an unchanged repository twice: two distinct named identities, the first result unchanged (syzygy-u05.2)",
+      "duration": {
+       "durationMs": 1569
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "C1",
+   "predicate": "control: the site's own path written in full still names it",
+   "site": "apps/three-surface-poc/src/polaris-copy.test.ts:226",
+   "before": "file",
+   "after": "file",
+   "expected": "held",
+   "outcome": "held",
+   "audits": [
+    {
+     "citation": "docs/evidence/poc-test-timeouts-2026-10-03.json",
+     "measured": "file",
+     "evidence": {
+      "rule": "key",
+      "kind": "file",
+      "name": "apps/three-surface-poc/src/polaris-copy.test.ts > classifies each interpolated source control and preserves exact-source href order and multiplicity",
+      "duration": 803
+     }
+    }
+   ]
+  }
+ ]
+}

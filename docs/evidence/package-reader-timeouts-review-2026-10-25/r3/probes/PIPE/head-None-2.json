@@ -1,0 +1,58 @@
+{
+ "batch": "PIPE",
+ "version": "head",
+ "param": null,
+ "n": 2,
+ "scriptSha256": "72a0fabdd0dd12f85ad35fde4b3ee032125757d5276b85802d76fdf5288f0195",
+ "command": "python3 -I scripts/measure_vitest_test_durations.py . --file packages/polaris-generation-consent/src/package-reader.test.ts --project @syzygy/polaris-generation-consent --mode alone --runs 1 --out <tmp>/measure-out.json --profile",
+ "sent": [
+  {
+   "t": 1.5415,
+   "signal": "SIGTERM",
+   "to": "pid"
+  }
+ ],
+ "events": [],
+ "scriptExitedAtSeconds": 3.062,
+ "exitCode": 143,
+ "claimedExit": 143,
+ "exitAsClaimed": true,
+ "descendantsSeen": 2,
+ "seenOnlyByCwd": 1,
+ "vitestSeen": true,
+ "npxSeen": true,
+ "treeAfterExit": "",
+ "survivors": {},
+ "recordWritten": false,
+ "recordRuns": null,
+ "recordTests": null,
+ "recordProfileRows": null,
+ "recordExitCode": null,
+ "marks": [
+  {
+   "what": "start",
+   "pid": 157710,
+   "pgid": 157710,
+   "sid": 157710,
+   "t": 1792865662.3555768,
+   "mode": "pipe"
+  },
+  {
+   "what": "wrote-4MiB",
+   "pid": 157710,
+   "pgid": 157710,
+   "sid": 157710,
+   "t": 1792865662.3637285
+  }
+ ],
+ "scriptWrites": null,
+ "tmpdirLeft": [
+  "bin",
+  "mark.jsonl",
+  "script.log"
+ ],
+ "trace": [],
+ "outputTail": "stopped by SIGTERM: the run in progress, if any, was ended and restored and is not recorded\n",
+ "exercised": true,
+ "passes": true
+}

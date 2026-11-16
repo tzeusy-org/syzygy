@@ -1,3 +1,4 @@
+import { deepFreeze } from '@syzygy/support';
 import type { OrreryDeclaredMapping } from './orrery-projection.js';
 import type { PocEntity, PocRelationship, PocSurface } from './model.js';
 import type { WorkerChangeSeam } from './worker-change-observation.js';
@@ -9,7 +10,7 @@ import type { WorkerChangeSeam } from './worker-change-observation.js';
  * the graph names.  Observation facts still come from the builder's explicit
  * inputs and observers.
  */
-export type PocSeedEntityRole =
+type PocSeedEntityRole =
   | 'project'
   | 'capability'
   | 'intent'
@@ -20,7 +21,7 @@ export type PocSeedEntityRole =
   | 'runtime'
   | 'unknown-region';
 
-export type PocSeedRelationshipRole =
+type PocSeedRelationshipRole =
   | 'project-to-capability'
   | 'capability-to-intent'
   | 'capability-to-code'
@@ -51,7 +52,7 @@ export interface PocSeedRelationship {
   readonly statement: string;
 }
 
-export interface PocSeedArtifacts {
+interface PocSeedArtifacts {
   readonly design: string;
   readonly proposal: string;
   readonly requirement: string;
@@ -59,7 +60,7 @@ export interface PocSeedArtifacts {
   readonly test: string;
 }
 
-export interface PocSeedIntentMarkers {
+interface PocSeedIntentMarkers {
   readonly design: readonly string[];
   readonly proposal: readonly string[];
   readonly requirement: readonly string[];
@@ -84,17 +85,6 @@ export interface PocSeedInput {
   readonly orreryMappings: readonly OrreryDeclaredMapping[];
 }
 
-function deepFreeze<T>(value: T): T {
-  if (typeof value !== 'object' || value === null || Object.isFrozen(value)) {
-    return value;
-  }
-  Object.freeze(value);
-  for (const child of Object.values(value as Record<string, unknown>)) {
-    deepFreeze(child);
-  }
-  return value;
-}
-
 /**
  * The current Butlers proving-case seed.  It is the only default supplied by
  * the application; the model builder has no implicit fallback to it.
@@ -106,7 +96,7 @@ export const BUTLERS_POC_SEEDS: PocSeedInput = deepFreeze({
     provenanceSource: 'Butlers repository',
   },
   artifacts: {
-    design: 'docs/superpowers/specs/2026-08-24-whatsapp-identity-reconciliation-design.md',
+    design: 'docs/plans/2026-08-24-whatsapp-identity-reconciliation-design.md',
     proposal: 'openspec/changes/repair-whatsapp-identity-reconciliation/proposal.md',
     requirement:
       'openspec/changes/repair-whatsapp-identity-reconciliation/specs/switchboard-identity/spec.md',

@@ -1,0 +1,540 @@
+{
+ "subject": "the lane mutants re-run with failure messages, R-GP-IMPL-SOURCE-RESOLUTION-1",
+ "commit": "2f249d2c4d0fc7756c8581c78c733a305336e705",
+ "worktreeClean": true,
+ "distsPresent": [
+  "cap1-core",
+  "cap1-daemon",
+  "http-host",
+  "polaris-dossier",
+  "polaris-generation-consent",
+  "polaris-generation-core",
+  "support",
+  "syzygy",
+  "three-surface-poc",
+  "three-surface-poc-core"
+ ],
+ "loadavgBefore": [
+  "27.69",
+  "34.69",
+  "36.94"
+ ],
+ "unmutated": {
+  "exit": 0,
+  "failed": 0,
+  "passed": 77,
+  "failedSuites": 0,
+  "total": 77,
+  "failing": []
+ },
+ "mutants": [
+  {
+   "id": "M1",
+   "mutation": "the resolver reads a source condition as a target that must agree with the others",
+   "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+   "fileSha256": "c6caec48c57c0f7e004cfff8595a5b342ff66c46956fdd0b87040b4e21cdd63b",
+   "old": "filter(([condition]) => condition !== 'types' && condition !== 'source')",
+   "new": "filter(([condition]) => condition !== 'types')",
+   "tests": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts"
+   ],
+   "loadavg": [
+    "27.38",
+    "34.27",
+    "36.76"
+   ],
+   "exit": 1,
+   "failed": 3,
+   "passed": 57,
+   "failedSuites": 3,
+   "total": 60,
+   "failing": [
+    {
+     "test": "the shared workspace resolver resolves a subpath export, a relative module and the barrel by name, and leaves a built-in and a dependency outside",
+     "message": "AssertionError: expected undefined to be 'packages/polaris-dossier/src/argv.ts' // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-549/head/packages/polaris-generation-core/src/workspace-reach.test.ts:28:80\n    at file:///tmp/cla"
+    },
+    {
+     "test": "the shared workspace resolver resolves an export whose source condition names the module its other conditions build to",
+     "message": "AssertionError: expected undefined to be 'packages/lib/src/argv.ts' // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-549/head/packages/polaris-generation-core/src/workspace-reach.test.ts:141:8\n    at file:///tmp/claude-1000/-ho"
+    },
+    {
+     "test": "the tree's own exports put a source condition first in every entry, naming the module the built target is read as",
+     "message": "AssertionError: expected [ \u2026(17) ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-549/head/packages/polaris-generation-core/src/workspace-reach.test.ts:167:81\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-"
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "M2",
+   "mutation": "the resolver accepts a source condition naming any module",
+   "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+   "fileSha256": "c6caec48c57c0f7e004cfff8595a5b342ff66c46956fdd0b87040b4e21cdd63b",
+   "old": "return source === first.replace(/^\\.\\/dist\\//u, './src/').replace(/\\.js$/u, '.ts') ? first : undefined;",
+   "new": "return first;",
+   "tests": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts"
+   ],
+   "loadavg": [
+    "27.38",
+    "34.27",
+    "36.76"
+   ],
+   "exit": 1,
+   "failed": 4,
+   "passed": 56,
+   "failedSuites": 2,
+   "total": 60,
+   "failing": [
+    {
+     "test": "the shared workspace resolver reads an export whose source condition names another module as naming no module",
+     "message": "AssertionError: expected 'packages/lib/src/argv.ts' to be undefined\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-549/head/packages/polaris-generation-core/src/workspace-reach.test.ts:151:8\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9"
+    },
+    {
+     "test": "the shared workspace resolver reads an export whose source condition names the built target as naming no module",
+     "message": "AssertionError: expected 'packages/lib/src/argv.ts' to be undefined\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-549/head/packages/polaris-generation-core/src/workspace-reach.test.ts:151:8\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9"
+    },
+    {
+     "test": "the shared workspace resolver reads an export whose source condition names a module outside src as naming no module",
+     "message": "AssertionError: expected 'packages/lib/src/argv.ts' to be undefined\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-549/head/packages/polaris-generation-core/src/workspace-reach.test.ts:151:8\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9"
+    },
+    {
+     "test": "the shared workspace resolver reads an export whose source condition names further conditions as naming no module",
+     "message": "AssertionError: expected 'packages/lib/src/argv.ts' to be undefined\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-549/head/packages/polaris-generation-core/src/workspace-reach.test.ts:151:8\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9"
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "M3",
+   "mutation": "an export's source condition names another module",
+   "file": "packages/support/package.json",
+   "fileSha256": "b2ba695890a09af6ce9ad5a319e6ed9499e7bf4814a63969245b3a50180444e5",
+   "old": "\"source\": \"./src/index.ts\",",
+   "new": "\"source\": \"./src/sha256.ts\",",
+   "tests": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts"
+   ],
+   "loadavg": [
+    "27.27",
+    "34.13",
+    "36.71"
+   ],
+   "exit": 1,
+   "failed": 1,
+   "passed": 59,
+   "failedSuites": 2,
+   "total": 60,
+   "failing": [
+    {
+     "test": "the tree's own exports put a source condition first in every entry, naming the module the built target is read as",
+     "message": "AssertionError: expected [ '@syzygy/support .' ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-549/head/packages/polaris-generation-core/src/workspace-reach.test.ts:167:81\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/"
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "M4",
+   "mutation": "an export lists its source condition after types",
+   "file": "packages/http-host/package.json",
+   "fileSha256": "3a2e90f059a1dbc73d2ebedcefe42c28a6c8968ff136c45c8140c98a811da09d",
+   "old": "\"source\": \"./src/index.ts\",\n      \"types\": \"./dist/index.d.ts\",",
+   "new": "\"types\": \"./dist/index.d.ts\",\n      \"source\": \"./src/index.ts\",",
+   "tests": [
+    "packages/http-host/src/package.test.ts",
+    "packages/polaris-generation-core/src/workspace-reach.test.ts"
+   ],
+   "loadavg": [
+    "27.27",
+    "34.13",
+    "36.71"
+   ],
+   "exit": 1,
+   "failed": 2,
+   "passed": 60,
+   "failedSuites": 4,
+   "total": 62,
+   "failing": [
+    {
+     "test": "the tree's own exports put a source condition first in every entry, naming the module the built target is read as",
+     "message": "AssertionError: expected [ '@syzygy/http-host .' ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-549/head/packages/polaris-generation-core/src/workspace-reach.test.ts:167:81\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzyg"
+    },
+    {
+     "test": "http-host package is importable with source, built runtime and declaration entries",
+     "message": "AssertionError: expected [ 'types', 'source', 'import', \u2026(1) ] to deeply equal [ 'source', 'types', 'import', \u2026(1) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-549/head/packages/http-host/src/package.test.ts:31:56\n    at file:///tmp/claude-100"
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "M5",
+   "mutation": "a project's build includes its tests",
+   "file": "packages/support/tsconfig.json",
+   "fileSha256": "4920180153b5dd45529370bff3c286adc528e6b56690abeeecc3836eb63a4913",
+   "old": ",\n  \"exclude\": [\"src/**/*.test.ts\"]",
+   "new": "",
+   "tests": [
+    "apps/three-surface-poc/src/product-build.test.ts"
+   ],
+   "loadavg": [
+    "26.92",
+    "33.95",
+    "36.63"
+   ],
+   "exit": 1,
+   "failed": 1,
+   "passed": 8,
+   "failedSuites": 2,
+   "total": 9,
+   "failing": [
+    {
+     "test": "the product build builds every workspace project with a tsconfig, each excluding its tests and keeping its outputs under dist",
+     "message": "AssertionError: packages/support: expected [ [ 'src' ], undefined ] to deeply equal [ [ 'src' ], [ 'src/**/*.test.ts' ] ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-549/head/apps/three-surface-poc/src/product-build.test.ts:35:57\n    at file://"
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "M6",
+   "mutation": "a built module imports a test",
+   "file": "packages/support/src/index.ts",
+   "fileSha256": "a4b3aa184877c9851ee46623e00c33a5ebbf25029d7ca16ff7324a6e7d31ea56",
+   "old": "export { sha256 } from './sha256.js';\n",
+   "new": "export { sha256 } from './sha256.js';\nexport type {} from './support-purity.test.js';\n",
+   "tests": [
+    "apps/three-surface-poc/src/product-build.test.ts"
+   ],
+   "loadavg": [
+    "29.89",
+    "34.30",
+    "36.71"
+   ],
+   "exit": 1,
+   "failed": 1,
+   "passed": 8,
+   "failedSuites": 2,
+   "total": 9,
+   "failing": [
+    {
+     "test": "the product build imports no test from any module it builds",
+     "message": "AssertionError: expected [ Array(1) ] to deeply equal []\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-549/head/apps/three-surface-poc/src/product-build.test.ts:57:126\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313"
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "M7",
+   "mutation": "the build leaves a project out",
+   "file": "package.json",
+   "fileSha256": "cb4ef3e3922ae05b7af2334c3b5ed4df033d4832ec7829402737b75f8d784dd1",
+   "old": " packages/polaris-generation-consent packages/polaris-dossier\"",
+   "new": " packages/polaris-generation-consent\"",
+   "tests": [
+    "apps/three-surface-poc/src/product-build.test.ts"
+   ],
+   "loadavg": [
+    "28.67",
+    "33.89",
+    "36.55"
+   ],
+   "exit": 1,
+   "failed": 1,
+   "passed": 8,
+   "failedSuites": 2,
+   "total": 9,
+   "failing": [
+    {
+     "test": "the product build builds every workspace project with a tsconfig, each excluding its tests and keeping its outputs under dist",
+     "message": "AssertionError: expected [ 'apps/syzygy', \u2026(8) ] to deeply equal [ 'apps/syzygy', \u2026(9) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-549/head/apps/three-surface-poc/src/product-build.test.ts:31:67\n    at file:///tmp/claude-1000/-home-tze-GitHub"
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "M8",
+   "mutation": "the clean build removes nothing",
+   "file": "scripts/clean_build.mjs",
+   "fileSha256": "406df4b1b4de696541e0b53f96a486d43f667a84f165023397ada9ca5773324a",
+   "old": "for (const project of built) rmSync(join(project, 'dist'), { recursive: true, force: true });",
+   "new": "",
+   "tests": [
+    "apps/three-surface-poc/src/product-build.test.ts"
+   ],
+   "loadavg": [
+    "27.39",
+    "33.45",
+    "36.37"
+   ],
+   "exit": 1,
+   "failed": 1,
+   "passed": 8,
+   "failedSuites": 2,
+   "total": 9,
+   "failing": [
+    {
+     "test": "the clean build leaves no output it did not just write in any project it builds, and leaves other projects alone",
+     "message": "AssertionError: expected 'throw new Error(\"poisoned output\");\\n' to be 'export const b = \\'b\\';\\n' // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-549/head/apps/three-surface-poc/src/product-build.test.ts:93:70\n    at processT"
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "M9",
+   "mutation": "the clean build removes only the named projects' dist, not their references'",
+   "file": "scripts/clean_build.mjs",
+   "fileSha256": "406df4b1b4de696541e0b53f96a486d43f667a84f165023397ada9ca5773324a",
+   "old": "  for (const reference of config.references ?? []) visit(posix.normalize(posix.join(project, reference.path)));\n",
+   "new": "",
+   "tests": [
+    "apps/three-surface-poc/src/product-build.test.ts"
+   ],
+   "loadavg": [
+    "26.88",
+    "33.24",
+    "36.29"
+   ],
+   "exit": 1,
+   "failed": 2,
+   "passed": 7,
+   "failedSuites": 2,
+   "total": 9,
+   "failing": [
+    {
+     "test": "the clean build leaves no output it did not just write in any project it builds, and leaves other projects alone",
+     "message": "AssertionError: expected true to be false // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-549/head/apps/three-surface-poc/src/product-build.test.ts:94:73\n    at processTicksAndRejections (node:internal/process/task_queues:105:"
+    },
+    {
+     "test": "the clean build refuses, removing nothing, when it reaches a project whose outputs leave dist",
+     "message": "Error: promise resolved \"{ stdout: '', stderr: '' }\" instead of rejecting\n    at _Assertion.__VITEST_REJECTS__ (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-549/head/node_modules/@vitest/expect/dist/index.js:1610:17)\n    at _Assertion.propertyGe"
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "M10",
+   "mutation": "the clean build accepts a project whose outputs leave dist",
+   "file": "scripts/clean_build.mjs",
+   "fileSha256": "406df4b1b4de696541e0b53f96a486d43f667a84f165023397ada9ca5773324a",
+   "old": "config.compilerOptions?.outDir !== 'dist' || ",
+   "new": "",
+   "tests": [
+    "apps/three-surface-poc/src/product-build.test.ts"
+   ],
+   "loadavg": [
+    "27.01",
+    "33.07",
+    "36.20"
+   ],
+   "exit": 1,
+   "failed": 1,
+   "passed": 8,
+   "failedSuites": 2,
+   "total": 9,
+   "failing": [
+    {
+     "test": "the clean build refuses, removing nothing, when it reaches a project whose outputs leave dist",
+     "message": "Error: promise resolved \"{ stdout: '', stderr: '' }\" instead of rejecting\n    at _Assertion.__VITEST_REJECTS__ (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-549/head/node_modules/@vitest/expect/dist/index.js:1610:17)\n    at _Assertion.propertyGe"
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "M11",
+   "mutation": "build:poc forces an incremental build again",
+   "file": "package.json",
+   "fileSha256": "cb4ef3e3922ae05b7af2334c3b5ed4df033d4832ec7829402737b75f8d784dd1",
+   "old": "\"build:poc\": \"node scripts/clean_build.mjs packages/support",
+   "new": "\"build:poc\": \"tsc -b --force packages/support",
+   "tests": [
+    "apps/three-surface-poc/src/product-build.test.ts"
+   ],
+   "loadavg": [
+    "28.39",
+    "32.98",
+    "36.11"
+   ],
+   "exit": 1,
+   "failed": 1,
+   "passed": 8,
+   "failedSuites": 2,
+   "total": 9,
+   "failing": [
+    {
+     "test": "the product build builds through the clean build alone, before every tool that runs a built module",
+     "message": "AssertionError: expected [ 'build:poc', 'typecheck' ] to deeply equal [ 'typecheck' ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-549/head/apps/three-surface-poc/src/product-build.test.ts:42:99\n    at file:///tmp/claude-1000/-home-tze-GitHub-sy"
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "M12",
+   "mutation": "a tool runs a built module without building",
+   "file": "package.json",
+   "fileSha256": "cb4ef3e3922ae05b7af2334c3b5ed4df033d4832ec7829402737b75f8d784dd1",
+   "old": "\"poc:keyboard-sweep\": \"npm run build:poc --silent && node",
+   "new": "\"poc:keyboard-sweep\": \"node",
+   "tests": [
+    "apps/three-surface-poc/src/product-build.test.ts"
+   ],
+   "loadavg": [
+    "28.36",
+    "32.90",
+    "36.06"
+   ],
+   "exit": 1,
+   "failed": 1,
+   "passed": 8,
+   "failedSuites": 2,
+   "total": 9,
+   "failing": [
+    {
+     "test": "the product build builds through the clean build alone, before every tool that runs a built module",
+     "message": "AssertionError: expected [ 'poc:restart', 'poc:keyboard-sweep' ] to deeply equal [ 'poc:restart' ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-549/head/apps/three-surface-poc/src/product-build.test.ts:49:8\n    at file:///tmp/claude-1000/-home-t"
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "M13",
+   "mutation": "the suite scan accepts a config that does not resolve the source condition first",
+   "file": "apps/three-surface-poc/src/sync-child-process-guard.test.ts",
+   "fileSha256": "c06e8f497882f39daf4e89f07b95282245a53118179b25b60708873cc4a472ef",
+   "old": "if (!SOURCE_CONDITION.test(config) || ALIAS_KEY.test(config))",
+   "new": "if (ALIAS_KEY.test(config))",
+   "tests": [
+    "apps/three-surface-poc/src/sync-child-process-guard.test.ts"
+   ],
+   "loadavg": [
+    "27.47",
+    "32.56",
+    "35.92"
+   ],
+   "exit": 1,
+   "failed": 1,
+   "passed": 5,
+   "failedSuites": 2,
+   "total": 6,
+   "failing": [
+    {
+     "test": "suite child processes and the vitest worker RPC reads every project root from the vitest config, and fails closed on a shape it does not recognize",
+     "message": "AssertionError: expected [Function] to throw an error\n    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-549/head/node_modules/@vitest/expect/dist/index.js:1420:16)\n    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-"
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "M14",
+   "mutation": "the suite scan accepts a config with an alias",
+   "file": "apps/three-surface-poc/src/sync-child-process-guard.test.ts",
+   "fileSha256": "c06e8f497882f39daf4e89f07b95282245a53118179b25b60708873cc4a472ef",
+   "old": "if (!SOURCE_CONDITION.test(config) || ALIAS_KEY.test(config))",
+   "new": "if (!SOURCE_CONDITION.test(config))",
+   "tests": [
+    "apps/three-surface-poc/src/sync-child-process-guard.test.ts"
+   ],
+   "loadavg": [
+    "27.03",
+    "32.38",
+    "35.84"
+   ],
+   "exit": 1,
+   "failed": 1,
+   "passed": 5,
+   "failedSuites": 2,
+   "total": 6,
+   "failing": [
+    {
+     "test": "suite child processes and the vitest worker RPC reads every project root from the vitest config, and fails closed on a shape it does not recognize",
+     "message": "AssertionError: expected [Function] to throw an error\n    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-549/head/node_modules/@vitest/expect/dist/index.js:1420:16)\n    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-"
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "M15",
+   "mutation": "the suite resolves workspace packages by their built entries",
+   "file": "vitest.config.ts",
+   "fileSha256": "c54019db1fcec4354bd72610c69396ae5276c51017692d151147eb832d4c6750",
+   "old": "conditions: ['source', 'module', 'node', 'development|production']",
+   "new": "conditions: ['module', 'node', 'development|production']",
+   "tests": [
+    "apps/three-surface-poc/src/sync-child-process-guard.test.ts"
+   ],
+   "loadavg": [
+    "27.03",
+    "32.38",
+    "35.84"
+   ],
+   "exit": 1,
+   "failed": 1,
+   "passed": 5,
+   "failedSuites": 2,
+   "total": 6,
+   "failing": [
+    {
+     "test": "suite child processes and the vitest worker RPC runs only short local tools synchronously in a suite test file or any module it imports",
+     "message": "Error: vitest.config.ts: workspace packages do not load by their source condition alone\n    at suiteConfig (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-549/head/apps/three-surface-poc/src/sync-child-process-guard.test.ts:73:71)\n    at /tmp/claude-1000"
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "M16",
+   "mutation": "the suite scan follows relative imports only",
+   "file": "apps/three-surface-poc/src/sync-child-process-guard.test.ts",
+   "fileSha256": "c06e8f497882f39daf4e89f07b95282245a53118179b25b60708873cc4a472ef",
+   "old": "const target = resolveIn(workspace, path, match[1]!);",
+   "new": "const target = match[1]!.startsWith('.') ? resolveIn(workspace, path, match[1]!) : undefined;",
+   "tests": [
+    "apps/three-surface-poc/src/sync-child-process-guard.test.ts"
+   ],
+   "loadavg": [
+    "27.67",
+    "32.43",
+    "35.84"
+   ],
+   "exit": 1,
+   "failed": 1,
+   "passed": 5,
+   "failedSuites": 2,
+   "total": 6,
+   "failing": [
+    {
+     "test": "suite child processes and the vitest worker RPC scans a helper module a test imports, through relative and workspace imports",
+     "message": "AssertionError: expected [ 'apps/x/src/a.test.ts', \u2026(1) ] to deeply equal [ 'apps/x/src/a.test.ts', \u2026(3) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-549/head/apps/three-surface-poc/src/sync-child-process-guard.test.ts:263:21\n    at file:///tm"
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "M17",
+   "mutation": "the typecheck resolves workspace packages by their built declarations",
+   "file": "tsconfig.json",
+   "fileSha256": "2ec7d1a43ce779e181a00e0a3a24f66e49a847cef59d1f768828d51ece4e1d5d",
+   "old": ",\n    \"customConditions\": [\"source\"]",
+   "new": "",
+   "tests": [
+    "apps/three-surface-poc/src/product-build.test.ts"
+   ],
+   "loadavg": [
+    "27.67",
+    "32.43",
+    "35.84"
+   ],
+   "exit": 1,
+   "failed": 1,
+   "passed": 8,
+   "failedSuites": 2,
+   "total": 9,
+   "failing": [
+    {
+     "test": "the typecheck reads every module of every workspace, tests among them, from source and emits nothing",
+     "message": "AssertionError: expected { composite: false, \u2026(4) } to match object { noEmit: true, \u2026(1) }\n(4 matching properties omitted from actual)\n    at Proxy.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-549/head/node_modules/@vitest/expect/di"
+    }
+   ],
+   "killed": true
+  }
+ ],
+ "killed": 17,
+ "of": 17,
+ "worktreeCleanAfter": true
+}

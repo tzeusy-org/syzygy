@@ -55,7 +55,7 @@ export interface OperatorReportedTestArtifactRecord extends TestArtifactRecordFi
 
 export type TestArtifactRecord = UnmarkedTestArtifactRecord | OperatorReportedTestArtifactRecord;
 
-export function isOperatorReported(record: TestArtifactRecord): record is OperatorReportedTestArtifactRecord {
+function isOperatorReported(record: TestArtifactRecord): record is OperatorReportedTestArtifactRecord {
   return 'provenance' in record && record.provenance === 'operator-reported';
 }
 
@@ -67,11 +67,11 @@ export function isOperatorReported(record: TestArtifactRecord): record is Operat
 // throws, and callers must render that as a named Unknown rather than
 // silently risking a false-negative that masks a tampered record.
 
-export const TEST_ARTIFACT_RECORD_FILE_NAME = 'test-artifact-record.json' as const;
+const TEST_ARTIFACT_RECORD_FILE_NAME = 'test-artifact-record.json' as const;
 const TEST_ARTIFACT_STATE_DIR_MODE = 0o700;
 const TEST_ARTIFACT_RECORD_FILE_MODE = 0o600;
 
-export function testArtifactRecordPath(stateDir: string): string {
+function testArtifactRecordPath(stateDir: string): string {
   return join(stateDir, TEST_ARTIFACT_RECORD_FILE_NAME);
 }
 
@@ -133,7 +133,7 @@ export function clearTestArtifactRecordFile(stateDir: string): void {
 
 // --- Building a safe record from a raw JUnit artifact ---------------------
 
-export interface JUnitRootTotals {
+interface JUnitRootTotals {
   readonly tests: number;
   readonly failures: number;
   readonly errors: number;
@@ -294,7 +294,7 @@ export function parseJUnitRootTotals(rawXml: string): JUnitRootTotals | null {
   return null;
 }
 
-export function summarizeJUnitTotals(totals: JUnitRootTotals): string {
+function summarizeJUnitTotals(totals: JUnitRootTotals): string {
   const passed = totals.tests - totals.failures - totals.errors - totals.skipped;
   const timeText = totals.time === null ? '' : ` in ${totals.time}s`;
   return `${passed} passed, ${totals.failures} failed, ${totals.errors} errored, ${totals.skipped} skipped${timeText}`;
@@ -309,7 +309,7 @@ function junitDigest(rawJUnit: Uint8Array): string {
   return `sha256:${createHash('sha256').update(rawJUnit).digest('hex')}`;
 }
 
-export interface BuildOperatorReportedRecordInput {
+interface BuildOperatorReportedRecordInput {
   /** The result file's bytes, undecoded. */
   readonly rawJUnit: Uint8Array;
   readonly command: readonly string[];
@@ -319,7 +319,7 @@ export interface BuildOperatorReportedRecordInput {
   readonly scope: string;
 }
 
-export type BuildOperatorReportedRecordResult =
+type BuildOperatorReportedRecordResult =
   | { readonly kind: 'built'; readonly record: OperatorReportedTestArtifactRecord }
   | { readonly kind: 'unparseable'; readonly reason: string }
   | { readonly kind: 'inconsistent'; readonly reason: string };
@@ -426,7 +426,7 @@ export type TestArtifactVerificationResult =
 export const UNMARKED_RECORD_REASON =
   'test artifact record carries no provenance (written by the retired spawning capture, or by hand); Syzygy cannot tell who ran it, so it is not verified';
 
-export interface ResolveTestArtifactVerificationInput {
+interface ResolveTestArtifactVerificationInput {
   readonly record: TestArtifactRecord | null;
   readonly expectedScope: string;
   readonly observedCommit: string | null;

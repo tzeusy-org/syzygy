@@ -1,0 +1,30 @@
+[
+ {
+  "id": "K1-consent-opener-indent4",
+  "old": "const m = /^ {0,3}(`{3,}|~{3,})(.*)$/.exec(line);",
+  "new": "const m = /^ {0,4}(`{3,}|~{3,})(.*)$/.exec(line);",
+  "oldCount": 1,
+  "commit": "9d9c98a6f265393fcb46dae6e1484eea097aad20",
+  "exit": 1,
+  "killed": true,
+  "rev533Line": "REV533 {\"baseline\":\"observation:redis-redis:in-force\",\"crlfActRecord\":\"refused:AdmissionRecordError\",\"crlfInstanceBoundByDigest\":\"refused:AdmissionRecordError\",\"indentedFourSpaceFenceLineInAct\":\"refused:AdmissionRecordError\",\"closedExampleFenceInAct\":\"observation:redis-redis:in-force\"}",
+  "summary": [
+   "Test Files  1 failed (1)",
+   "Tests  1 failed (1)"
+  ]
+ },
+ {
+  "id": "K2-consent-closer-strictly-longer",
+  "old": "m[1]!.length >= open.length",
+  "new": "m[1]!.length > open.length",
+  "oldCount": 1,
+  "commit": "9d9c98a6f265393fcb46dae6e1484eea097aad20",
+  "exit": 1,
+  "killed": true,
+  "rev533Line": "REV533 {\"baseline\":\"observation:redis-redis:in-force\",\"crlfActRecord\":\"refused:AdmissionRecordError\",\"crlfInstanceBoundByDigest\":\"refused:AdmissionRecordError\",\"indentedFourSpaceFenceLineInAct\":\"observation:redis-redis:in-force\",\"closedExampleFenceInAct\":\"refused:AdmissionRecordError\"}",
+  "summary": [
+   "Test Files  1 failed (1)",
+   "Tests  1 failed (1)"
+  ]
+ }
+]

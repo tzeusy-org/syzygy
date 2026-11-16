@@ -1,0 +1,57 @@
+{
+ "base": "d38d7a3c",
+ "ours": "e6afa657",
+ "theirs": "41932c3b",
+ "merge": "a5b1d532",
+ "oursEdits": [
+  {
+   "op": "replace",
+   "base": [
+    183,
+    187
+   ],
+   "side": [
+    183,
+    191
+   ],
+   "added": "- `packages/support/` (`@syzygy/support`): the one `sha256`, the one\n  `deepFreeze` and a shared strict `decodeUtf8`, a leaf with no workspace\n  dependency, imported by the PWB core, the Polaris generation packages,\n  the dossier and the POC app. `decodeUtf8` is the one named helper, not\n  the only strict decoder: 20 `fatal: true` `TextDecoder` constructions\n  remain inline or as module constants, converted by no PR yet (the sites\n  are listed in `docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json`).\n  The cap1 packages never import it (`cap1-system` is an independent oracle).\n"
+  },
+  {
+   "op": "insert",
+   "base": [
+    190,
+    190
+   ],
+   "side": [
+    194,
+    203
+   ],
+   "added": "- Three key-sorted JSON encoders are kept apart on purpose: `canonicalJson`\n  (PWB identities) drops `undefined` members and flattens any object;\n  `encodeCanonicalJson` (Polaris generation digests) refuses what it cannot\n  spell and sorts every key by code unit; cap1's own `deterministicLayer`\n  is left out of the divergence test (cap1 imports nothing shared), and\n  only `canonical-json-probe.mjs` compares it. A merge makes one encoder\n  refuse what another spells (an `undefined` member, a BigInt) or reorders\n  array-index keys, so it changes an output or a refusal and goes to the\n  owner (GP-Q0). `canonical-json-divergence.test.ts` pins the first two.\n"
+  }
+ ],
+ "theirsEdits": [
+  {
+   "op": "insert",
+   "base": [
+    190,
+    190
+   ],
+   "side": [
+    190,
+    199
+   ],
+   "added": "- Markdown fences are read by five separate rules, kept apart on purpose:\n  `markdown-code-context.ts` (the PWB-REQ-006 profile, the only one a clause\n  states), the manifest's `stripFences`, the extractor's `parseDoc`, the\n  consent `outsideFences` and the Polaris renderer. `docs/evidence/syzygy-bpyt-6-3/dc3-fence-rules-2026-10-25.json`\n  says which clause governs each and where they differ; `fence-rules.test.ts`\n  pins four of them (the consent reader through the probe and its own tests).\n  Do not merge or \"fix\" one without the owner, since that changes what a gate\n  accepts. G1, the CRLF reading, is ruled by the owner (`syzygy-bpyt.1.14`)\n  and `syzygy-bpyt.16` fixes it; G2 and G3 are open owner questions.\n"
+  }
+ ],
+ "editsOverlap": false,
+ "bothAppliedEqualsMerge": true,
+ "oursAddedBlocksInMerge": [
+  true,
+  true
+ ],
+ "theirsAddedBlocksInMerge": [
+  true
+ ],
+ "mergeLines": 775,
+ "baseLines": 753
+}

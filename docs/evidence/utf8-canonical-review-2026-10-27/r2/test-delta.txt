@@ -1,0 +1,14 @@
+2d3f9375 -> b81010c8: 5359 -> 5365; only-new 8; only-old 2
+   - authority-artifact-fields.test.ts | parseConsentArtifact decoding > reads well-formed text, with or without a leading byte-order mark
+   - project-shape-git-text.test.ts | eSources decoding of git output > goes on past a rev-parse answer that is well-formed, with or without a byte-order mark
+   + authority-artifact-fields.test.ts | rmed text, with or without a leading byte-order mark (the parser trims every line, so the mark cannot change the result)
+   + code-structure.test.ts | code-structure observer > drops one leading byte-order mark from git's listing before parsing it
+   + code-structure.test.ts | code-structure observer > reports a gitlink filter that cannot allocate its copy as it reports bytes it cannot decode
+   + git-object-reader.test.ts | exact object reads > drops one leading byte-order mark from the decoded text and keeps a second
+   + project-shape-git-text.test.ts | veProjectShapeSources decoding of git output > drops one leading byte-order mark from the tree listing before parsing it
+   + project-shape-git-text.test.ts | observeProjectShapeSources decoding of git output > goes on past a rev-parse answer that is well-formed
+   + project-shape-observation.test.ts | t index (syzygy-1z3.29 review) > a seed whose bytes are not UTF-8 is refused with its reason and a not-utf-8 read record
+   + project-shape-observation.test.ts | se A only after a validated root index (syzygy-1z3.29 review) > a seed with a leading byte-order mark is read without it
+   added by file {'authority-artifact-fields.test.ts': 1, 'code-structure.test.ts': 2, 'git-object-reader.test.ts': 1, 'project-shape-git-text.test.ts': 2, 'project-shape-observation.test.ts': 2}
+41932c3b -> abc40c9a: 5426 -> 5467; only-new 41; only-old 0
+   added by file {'canonical-json-divergence.test.ts': 21, 'decode-utf8.test.ts': 6, 'authority-artifact-fields.test.ts': 5, 'code-structure.test.ts': 2, 'git-object-reader.test.ts': 1, 'project-shape-git-text.test.ts': 4, 'project-shape-observation.test.ts': 2}

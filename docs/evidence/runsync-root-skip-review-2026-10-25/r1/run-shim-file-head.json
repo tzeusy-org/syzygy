@@ -1,0 +1,91 @@
+{
+ "tool": "rev-525/tools/probe.py",
+ "toolSha256": "0d82288a92a49bfe8af739ee1f15a61ed3b208b672b07e4c85cb2d18b076cfa6",
+ "case": "shim-file-head",
+ "commit": "f7bbb93a005b45c2866d8a9993afbca44cd1a34f",
+ "files": {},
+ "edits": [],
+ "env": {
+  "NODE_OPTIONS": "shim"
+ },
+ "filters": [
+  "state-dir.system"
+ ],
+ "t": null,
+ "run": {
+  "command": "npx vitest run --config packages/cap1-system/vitest.config.ts state-dir.system --reporter=json --outputFile=<tmp>/report.json",
+  "exitCode": 0,
+  "wallSeconds": 2.6,
+  "deadlineHit": false,
+  "samples": 6,
+  "port7477Before": [],
+  "port7477Seen": [],
+  "killedOn7477": [],
+  "unstuck": [],
+  "ownListeningPorts": [],
+  "processesSeen": 16,
+  "survivors": {},
+  "tmpLeftoversBeforeRemoval": [
+   "node-compile-cache",
+   "report.json",
+   "vitest.log"
+  ],
+  "logTail": "JSON report written to <tmp>/report.json\n",
+  "tests": [
+   {
+    "name": "RTF-1 \u2014 state-dir governed-plane check resolves symlink reality refuses (nonzero exit, named refusal) a --state-dir symlink whose REAL target lies inside .syzygy/, and writes nothing there",
+    "status": "passed",
+    "durationMs": 230,
+    "failure": null
+   },
+   {
+    "name": "RTF-1 \u2014 state-dir governed-plane check resolves symlink reality refuses a dangling --state-dir symlink whose intended target lies inside .syzygy/, before writes or a listener",
+    "status": "passed",
+    "durationMs": 182,
+    "failure": null
+   },
+   {
+    "name": "RTF-1 \u2014 state-dir governed-plane check resolves symlink reality still starts and serves through a --state-dir symlink whose real target is OUTSIDE the governed plane",
+    "status": "passed",
+    "durationMs": 155,
+    "failure": null
+   },
+   {
+    "name": "RTF-1 \u2014 state-dir governed-plane check resolves symlink reality keeps a dangling benign outside target credential-unprovisionable, with no listener or writes",
+    "status": "passed",
+    "durationMs": 249,
+    "failure": null
+   },
+   {
+    "name": "RTF-1 \u2014 state-dir governed-plane check resolves symlink reality rejects a state-dir symlink loop as named invalid before writes or a listener",
+    "status": "passed",
+    "durationMs": 218,
+    "failure": null
+   },
+   {
+    "name": "RTF-1 \u2014 state-dir governed-plane check resolves symlink reality rejects an unreadable state-dir path as named invalid before writes or a listener",
+    "status": "skipped",
+    "durationMs": null,
+    "failure": null
+   }
+  ]
+ },
+ "treeCleanAfter": true,
+ "summary": {
+  "exitCode": 0,
+  "wallSeconds": 2.6,
+  "deadlineHit": false,
+  "statuses": {
+   "passed": 5,
+   "skipped": 1
+  },
+  "failed": [],
+  "port7477Seen": 0,
+  "samples": 6,
+  "killedOn7477": 0,
+  "unstuck": 0,
+  "ownListeningPorts": [],
+  "survivors": 0,
+  "slowestMs": 249
+ }
+}

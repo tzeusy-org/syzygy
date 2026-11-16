@@ -1,0 +1,32 @@
+r4-review.diff: frozen sha256 b7d11dbc9a20dd707e14ae58ed6ddb21001820f1aea260bd5e08c304ef980dc3 brief-match True; derived sha256 b7d11dbc9a20dd707e14ae58ed6ddb21001820f1aea260bd5e08c304ef980dc3 byte-equal True
+r4-delta.diff: frozen sha256 4ce87af134fe3d426db6eae40deded585e4e439e5a468ecc0a1f51445230588b brief-match True; derived sha256 4ce87af134fe3d426db6eae40deded585e4e439e5a468ecc0a1f51445230588b byte-equal True
+review numstat: 13 files, +38032/-16
+    4580	0	docs/evidence/syzygy-bpyt-4-13/after-alone.json
+    3062	0	docs/evidence/syzygy-bpyt-4-13/after-full.json
+    4580	0	docs/evidence/syzygy-bpyt-4-13/before-alone.json
+    3062	0	docs/evidence/syzygy-bpyt-4-13/before-full-1.json
+    3062	0	docs/evidence/syzygy-bpyt-4-13/before-full-2.json
+    3351	0	docs/evidence/syzygy-bpyt-4-13/before-profile.json
+    3352	0	docs/evidence/syzygy-bpyt-4-13/load-127-report-extract.json
+    138	0	docs/evidence/syzygy-bpyt-4-13/sizing-check-mutants.json
+    12508	0	docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json
+    69	0	docs/evidence/syzygy-bpyt-4-13/tools/sizing_check_mutants.py
+    24	16	packages/polaris-generation-consent/src/package-reader.test.ts
+    116	0	scripts/measure_vitest_test_durations.py
+    128	0	scripts/size_vitest_test_timeouts.py
+delta numstat: 3 files, +12/-2741
+    0	2468	docs/evidence/syzygy-bpyt-4-13/measure-restore-probes.json
+    0	222	docs/evidence/syzygy-bpyt-4-13/tools/probe_measure_restore.py
+    12	51	scripts/measure_vitest_test_durations.py
+subject paths 13; main changed paths df6046a1..a088f1ca: 300; intersection []
+merge-base head main: df6046a153fe130202abdf6bd3045a79ba143879
+main changes under packages/polaris-generation-consent/: []
+main changes any vitest.config: []
+main changes scripts/measure_* or size_*: []
+R3..HEAD whole-tree name-status:
+D	docs/evidence/syzygy-bpyt-4-13/measure-restore-probes.json
+D	docs/evidence/syzygy-bpyt-4-13/tools/probe_measure_restore.py
+M	scripts/measure_vitest_test_durations.py
+
+measure script at e7f3c71e: 72a0fabdd0dd12f85ad35fde4b3ee032125757d5276b85802d76fdf5288f0195  155 lines
+measure script at d6b04c5f: 7799aa73bae9a4790b75b85a597c57bf07aab4bb4dab6c67570e69af7535128e  116 lines

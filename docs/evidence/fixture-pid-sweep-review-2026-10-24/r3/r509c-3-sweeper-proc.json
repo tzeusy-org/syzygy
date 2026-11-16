@@ -1,0 +1,29 @@
+{
+ "pid": 2,
+ "nsReading": "pid:[4026539621]",
+ "control": "syzygy-poc-surface-fixture-p9-n4026539621-CTRL01",
+ "reapedAnswer": "ESRCH",
+ "signal0": {
+  "63": "ESRCH",
+  "2749016": "ESRCH"
+ },
+ "moduleListings": [
+  "/tmp/r509c-3"
+ ],
+ "before": [
+  "syzygy-poc-surface-fixture-p2749016-n4026531836-9iGeJ7",
+  "syzygy-poc-surface-fixture-p63-n0-VUveTb",
+  "syzygy-poc-surface-fixture-p63-n4026539611-Sn9LhP",
+  "syzygy-poc-surface-fixture-p9-n0-CTRL01",
+  "syzygy-poc-surface-fixture-p9-n4026539621-CTRL01"
+ ],
+ "after": [
+  "syzygy-poc-surface-fixture-p2749016-n4026531836-9iGeJ7",
+  "syzygy-poc-surface-fixture-p63-n0-VUveTb",
+  "syzygy-poc-surface-fixture-p63-n4026539611-Sn9LhP",
+  "syzygy-poc-surface-fixture-p9-n0-CTRL01"
+ ],
+ "removed": [
+  "syzygy-poc-surface-fixture-p9-n4026539621-CTRL01"
+ ]
+}

@@ -119,12 +119,20 @@ LATER_SIGNOFFS = (
                   "THREE-SURFACE-POC-VOCABULARY-EPISTEMIC-AMENDMENT-MANIFEST.txt"),
      pathlib.Path(".syzygy/governance/contracts/candidates/"
                   "three-surface-poc-vocabulary-epistemic-amendment/proposed")),
+    (pathlib.Path(".syzygy/governance/decisions/"
+                  "THREE-SURFACE-POC-GOVERNEDBY-REFERENCE-AMENDMENT-SIGNOFF-v1.0.md"),
+     pathlib.Path(".syzygy/governance/contracts/candidates/"
+                  "three-surface-poc-governedby-reference-amendment/"
+                  "THREE-SURFACE-POC-GOVERNEDBY-REFERENCE-AMENDMENT-MANIFEST.txt"),
+     pathlib.Path(".syzygy/governance/contracts/candidates/"
+                  "three-surface-poc-governedby-reference-amendment/proposed")),
 )
 
 
-def _reverse(base: pathlib.Path, patch: pathlib.Path) -> None:
+def _reverse(base: pathlib.Path, patch: pathlib.Path, *, zero_context=False) -> None:
+    options = ["--unidiff-zero"] if zero_context else []
     done = subprocess.run(
-        ["git", "apply", "-R", "--whitespace=nowarn", str(patch)],
+        ["git", "apply", "-R", "--whitespace=nowarn", *options, str(patch)],
         cwd=base, capture_output=True, text=True)
     if done.returncode != 0:
         raise ValueError(f"{patch.name} does not reverse: {done.stderr.strip()}")
@@ -146,6 +154,11 @@ def installed_bytes_at(root: pathlib.Path = ROOT) -> dict[pathlib.Path, bytes]:
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_bytes((root / rel).read_bytes())
         for record, manifest, proposed in reversed(LATER_SIGNOFFS):
+            is_reference = record.name == "THREE-SURFACE-POC-GOVERNEDBY-REFERENCE-AMENDMENT-SIGNOFF-v1.0.md"
+            if is_reference:
+                import prepare_three_surface_poc_governedby_reference_recording as reference
+                if not reference.is_signed(root):
+                    continue
             if not (root / record).is_file() or not (root / manifest).is_file():
                 continue
             rows = {path: sha for sha, path in
@@ -155,7 +168,9 @@ def installed_bytes_at(root: pathlib.Path = ROOT) -> dict[pathlib.Path, bytes]:
                     sha256((base / path).read_bytes()) != sha for path, sha in rows.items()):
                 continue
             for patch in sorted((root / proposed).glob("*.patch"), key=lambda p: p.name):
-                _reverse(base, patch)
+                # P115's frozen exact patches use zero-context hunks. Its
+                # signed gate above already binds every current subject byte.
+                _reverse(base, patch, zero_context=is_reference)
         return {rel: (base / rel).read_bytes() for rel in SUBJECTS}
 
 

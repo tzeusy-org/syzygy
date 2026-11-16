@@ -1,0 +1,24 @@
+{
+ "merge": "503980dc = 2f48eefa + 8d5d4bab (main after PR 544)",
+ "earlierMerge": "646ea6d4 = 2f48eefa + e4a3a607: 8 of 8 files, 156 passed, 0 failed, 1 skipped, load1 24.21-24.92",
+ "main": "8d5d4babc7b20c5fe64238b9e538ae1b04e5254d",
+ "dist": "absent",
+ "load1Start": "24.28",
+ "load1End": "25.68",
+ "files": 8,
+ "filesPassed": 8,
+ "total": 157,
+ "passed": 156,
+ "failed": 0,
+ "pending": 1,
+ "perFile": {
+  "packages/support/src/support-purity.test.ts": "passed",
+  "packages/polaris-generation-core/src/island-boundary.test.ts": "passed",
+  "packages/polaris-generation-core/src/root-vitest-aliases.test.ts": "passed",
+  "packages/polaris-generation-core/src/workspace-reach.test.ts": "passed",
+  "packages/polaris-dossier/src/no-egress.test.ts": "passed",
+  "packages/polaris-dossier/src/subpath-imports.test.ts": "passed",
+  "packages/three-surface-poc-core/src/owner-act-drafter.test.ts": "passed",
+  "apps/three-surface-poc/src/git-observation.test.ts": "passed"
+ }
+}

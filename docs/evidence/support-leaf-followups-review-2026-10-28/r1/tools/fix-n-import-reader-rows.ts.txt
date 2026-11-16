@@ -1,0 +1,12 @@
+
+describe('the import() reader the import() row stands on', () => {
+  const CASES: readonly (readonly [string, readonly string[]])[] = [
+    ["export const value = () => import ('node:crypto');", ["import ('node:crypto')"]],
+    ["const value = 'node:f' + 's';\nvoid import (value);", ['import (value)']],
+    ["void import/**/('node:fs');", ["import/**/('node:fs')"]],
+    ['const meta = import.meta.url;', []],
+  ];
+  it.each(CASES)('reads %j', (source, expected) => {
+    expect(importCallsOf('case.ts', source)).toEqual(expected);
+  });
+});

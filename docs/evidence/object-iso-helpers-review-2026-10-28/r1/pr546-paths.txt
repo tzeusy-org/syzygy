@@ -1,0 +1,4 @@
+apps/three-surface-poc/src/polaris-generation/generation-mutation.test.ts
+apps/three-surface-poc/src/polaris-generation/generation-mutation.ts
+docs/evidence/syzygy-vsqr/test-mutants.json
+docs/evidence/syzygy-vsqr/test_mutants.py

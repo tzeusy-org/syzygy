@@ -1,0 +1,64 @@
+{
+ "bead": "syzygy-bpyt.4.26",
+ "base": "eb6183b5",
+ "commit": "a64518bd1563efa194bd95ea1e455d22bd78269a",
+ "subject": "packages/polaris-dossier/src/review.test.ts",
+ "subjectSha256": "3e3c3a74952114a044c0624c73e8a78041f41c79b86d1ce0e46c2bb437dae0f6",
+ "finding": "the PR 524 review's N4 (docs/reviews/R-GP-IMPL-ARGV-GUARDS-1-RAW.md): the observed-only row's leaf check matched the block id 'p1' in a TMPDIR path",
+ "fix": "the leaf check reads each Observed holder with the run path replaced in its string values, and asserts that no os.tmpdir() path is left and that the observed digest still is; a row runs the check under a TMPDIR whose path holds 'p1'",
+ "newTestRefusals": [
+  "an Observed holder that carries a path under os.tmpdir() outside the run directory",
+  "an Observed holder whose JSON, with the run path replaced, no longer carries the packet digest it observes"
+ ],
+ "mutants": {
+  "absent": {
+   "rows": 8,
+   "asExpected": 8,
+   "unexpected": []
+  },
+  "present": {
+   "rows": 8,
+   "asExpected": 8,
+   "unexpected": []
+  }
+ },
+ "suite": {
+  "commit": "a64518bd1563efa194bd95ea1e455d22bd78269a",
+  "distDirs": [],
+  "exit": 0,
+  "files": 256,
+  "total": 5816,
+  "passed": 5811,
+  "failed": 0,
+  "skipped": 5,
+  "load1": 26.4,
+  "wallSeconds": 273.7,
+  "cleanAfter": true
+ },
+ "titles": {
+  "base": "eb6183b58253ef62fa364b78778efda9a77073df",
+  "head": "a64518bd1563efa194bd95ea1e455d22bd78269a",
+  "baseTitles": 5810,
+  "headTitles": 5811,
+  "delta": 1,
+  "addedByFile": {
+   "packages/polaris-dossier/src/review.test.ts": 1
+  },
+  "removed": 0,
+  "added": [
+   {
+    "file": "packages/polaris-dossier/src/review.test.ts",
+    "name": "review-check > observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf"
+   }
+  ]
+ },
+ "files": {
+  "mutants-absent.json": "ab8800a3387266e5be58ed2dd39c983bad26b4f6e772b5a29d29c60fbd0b7a7b",
+  "mutants-present.json": "d31040f43c34a75b9ce6488edec4c96c65c9d027f80ba1c6402a16426a945f55",
+  "suite-absent.json": "89d10514245c0bc10134b9acf21d4703d48a199adab49f8062a26c928b331215",
+  "titles.json": "aaec5fe1055b1c3672a7ae82b575031d369e3d90a91b923b89bc7e64aa699f08",
+  "tools/build_record.py": "8f7829e0a2b9bd2670d32d5db72ad51552aa24cd4c0b5d92e00f0a81f656cb81",
+  "tools/mutants.py": "270b3ebff05553d54a535923b03eec9bddff4bee581e6a470b4fb5689ba932c3",
+  "tools/titles.py": "cac6a9a878b27bf33ff563b0a3c4808b4f3307cae099a1e1c10ead8a2c412c0f"
+ }
+}

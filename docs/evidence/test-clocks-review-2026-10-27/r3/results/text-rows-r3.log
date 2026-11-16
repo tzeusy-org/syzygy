@@ -1,0 +1,38 @@
+26.48 29.19 28.63 28/9458 186610
+{"id": "control", "kind": "control", "new": "passed", "old": "passed", "newFailure": "", "load1": "26.48"}
+{"id": "S1-else-if-flag-after-dossier", "kind": "lane:defect", "new": "failed", "old": "failed", "newFailure": "AssertionError: expected false to be true // Object.is equality", "load1": "36.06"}
+{"id": "S2-same-line-if-after-dossier", "kind": "lane:defect", "new": "failed", "old": "failed", "newFailure": "AssertionError: expected [ Array(1) ] to deeply equal []", "load1": "36.06"}
+{"id": "S3-else-if-flag-after-polaris", "kind": "lane:defect", "new": "failed", "old": "failed", "newFailure": "AssertionError: expected false to be true // Object.is equality", "load1": "36.11"}
+{"id": "S4-else-runtime-hook-after-dossier", "kind": "lane:defect", "new": "failed", "old": "failed", "newFailure": "AssertionError: expected false to be true // Object.is equality", "load1": "36.60"}
+{"id": "S5-else-createRequire-flag-after-polaris", "kind": "lane:defect", "new": "failed", "old": "failed", "newFailure": "AssertionError: expected false to be true // Object.is equality", "load1": "37.41"}
+{"id": "S6-misindented-close-after-dossier", "kind": "lane:defect", "new": "failed", "old": "failed", "newFailure": "AssertionError: expected [ Array(1) ] to deeply equal []", "load1": "36.82"}
+{"id": "S7-else-split-specifier-after-dossier", "kind": "lane:defect", "new": "failed", "old": "passed", "newFailure": "AssertionError: expected false to be true // Object.is equality", "load1": "35.71"}
+{"id": "L1-else-if-chain", "kind": "lane:equivalent", "new": "passed", "old": "passed", "newFailure": "", "load1": "35.25"}
+{"id": "L2-nested-function-in-dossier", "kind": "lane:equivalent", "new": "passed", "old": "failed", "newFailure": "", "load1": "34.11"}
+{"id": "L3-nested-try-in-polaris", "kind": "lane:equivalent", "new": "passed", "old": "failed", "newFailure": "", "load1": "33.37"}
+{"id": "C1-comment-outside-branches", "kind": "lane:equivalent", "new": "failed", "old": "failed", "newFailure": "AssertionError: expected [ Array(1) ] to deeply equal []", "load1": "32.46"}
+{"id": "Y1-dossier-serve-falls-through", "kind": "load", "new": "passed", "old": "failed", "newFailure": "", "load1": "32.42"}
+{"id": "Y1b-dossier-serve-falls-through-no-new-mention", "kind": "load-both", "new": "passed", "old": "passed", "newFailure": "", "load1": "31.51"}
+{"id": "Y2-dossier-serve-reenters-main", "kind": "load", "new": "passed", "old": "failed", "newFailure": "", "load1": "32.70"}
+{"id": "Y3-flag-rewrites-argv-into-dossier", "kind": "load", "new": "passed", "old": "failed", "newFailure": "", "load1": "33.60"}
+{"id": "Y4-polaris-labelled-break", "kind": "load", "new": "passed", "old": "failed", "newFailure": "", "load1": "33.71"}
+{"id": "Y5-dossier-serve-callback-after-branch", "kind": "load", "new": "passed", "old": "failed", "newFailure": "", "load1": "33.42"}
+{"id": "Z1-eager-import-held-in-variable-before-if", "kind": "load", "new": "failed", "old": "failed", "newFailure": "AssertionError: expected [ Array(1) ] to deeply equal []", "load1": "41.08"}
+{"id": "Z2-conditional-expression-between-branches", "kind": "load", "new": "failed", "old": "failed", "newFailure": "AssertionError: expected [ Array(1) ] to deeply equal []", "load1": "39.71"}
+{"id": "Z3-comma-in-polaris-condition", "kind": "load", "new": "failed", "old": "failed", "newFailure": "AssertionError: expected [ 1, +0 ] to deeply equal [ 1, 1 ]", "load1": "41.26"}
+{"id": "Z4-second-if-same-condition", "kind": "load", "new": "failed", "old": "failed", "newFailure": "AssertionError: expected [ 2, 1 ] to deeply equal [ 1, 1 ]", "load1": "40.51"}
+{"id": "Z5-switch-before-daemon", "kind": "load", "new": "failed", "old": "failed", "newFailure": "AssertionError: expected [ Array(1) ] to deeply equal []", "load1": "40.07"}
+{"id": "Z6-shadowed-argv-in-block", "kind": "load", "new": "failed", "old": "failed", "newFailure": "AssertionError: expected [ Array(1) ] to deeply equal []", "load1": "38.22"}
+{"id": "Z7-template-literal-before-daemon", "kind": "load", "new": "failed", "old": "failed", "newFailure": "AssertionError: expected [ Array(1) ] to deeply equal []", "load1": "37.33"}
+{"id": "Z8-concatenated-specifier-between-branches", "kind": "load-both", "new": "passed", "old": "passed", "newFailure": "", "load1": "36.76"}
+{"id": "Z9-function-in-branch-called-later", "kind": "load", "new": "passed", "old": "failed", "newFailure": "", "load1": "36.62"}
+{"id": "Z10-hoisted-var-in-branch-called-later", "kind": "inert", "new": "passed", "old": "failed", "newFailure": "", "load1": "37.13"}
+{"id": "G1-allman-brace-and-wrapped-import", "kind": "shape", "new": "passed", "old": "failed", "newFailure": "", "load1": "37.40"}
+{"id": "G2-commented-else-if-chain", "kind": "shape", "new": "passed", "old": "failed", "newFailure": "", "load1": "37.52"}
+{"id": "G3-else-if-order-swap", "kind": "shape", "new": "passed", "old": "failed", "newFailure": "", "load1": "36.60"}
+{"id": "G4-trailing-comments-and-return-await", "kind": "shape", "new": "passed", "old": "passed", "newFailure": "", "load1": "36.63"}
+{"id": "G5-double-quoted-condition", "kind": "shape", "new": "failed", "old": "failed", "newFailure": "AssertionError: expected [ +0, 1 ] to deeply equal [ 1, 1 ]", "load1": "36.02"}
+{"id": "G6-unspaced-condition", "kind": "shape", "new": "failed", "old": "failed", "newFailure": "AssertionError: expected [ +0, 1 ] to deeply equal [ 1, 1 ]", "load1": "34.66"}
+{"id": "G7-parenthesised-condition", "kind": "shape", "new": "failed", "old": "failed", "newFailure": "AssertionError: expected [ +0, 1 ] to deeply equal [ 1, 1 ]", "load1": "33.48"}
+exit 0
+33.12 33.11 30.49 17/9422 319985

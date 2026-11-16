@@ -1,0 +1,10 @@
+
+ RUN  v3.2.7 /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-523/clone
+
+ ✓ |@syzygy/polaris-dossier| packages/polaris-dossier/src/launched.test.ts (43 tests) 113ms
+
+ Test Files  1 passed (1)
+      Tests  43 passed (43)
+   Start at  01:00:42
+   Duration  1.02s (transform 93ms, setup 18ms, collect 80ms, tests 113ms, environment 0ms, prepare 107ms)
+

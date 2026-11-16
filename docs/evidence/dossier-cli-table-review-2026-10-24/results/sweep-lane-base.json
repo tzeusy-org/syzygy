@@ -1,0 +1,108 @@
+{
+ "tree": "/tmp/r518-10/base",
+ "roots": [
+  "apps/syzygy/src",
+  "packages/polaris-dossier/src"
+ ],
+ "patterns": {
+  "index-loop": "for\\s*\\(\\s*(?:let|var)\\s+\\w+\\s*=\\s*\\d+\\s*;\\s*\\w+\\s*<\\s*\\w*(?:argv|Argv|args|Args)\\w*\\.length",
+  "of-loop": "for\\s*\\(\\s*(?:const|let)\\s+\\w+\\s+of\\s+\\w*(?:argv|Argv|args|Args)\\w*\\s*\\)",
+  "while-loop": "while\\s*\\([^)]*\\w*(?:argv|Argv|args|Args)\\w*\\.length",
+  "next-element": "\\b\\w*(?:argv|Argv|args|Args)\\w*\\s*\\[\\s*\\+\\+\\w+\\s*\\]|\\b\\w*(?:argv|Argv|args|Args)\\w*\\s*\\[\\s*\\w+\\s*\\+\\s*1\\s*\\]|\\b\\w*(?:argv|Argv|args|Args)\\w*\\s*\\[\\s*\\w+\\+\\+\\s*\\]",
+  "shift": "\\b\\w*(?:argv|Argv|args|Args)\\w*\\.shift\\(\\)",
+  "dash-test": "startsWith\\(\\s*['\"]-"
+ },
+ "files": 42,
+ "hits": [
+  {
+   "file": "apps/syzygy/src/main.ts",
+   "line": 71,
+   "kind": "index-loop",
+   "text": "for (let i = 0; i < argv.length; i++) {"
+  },
+  {
+   "file": "apps/syzygy/src/main.ts",
+   "line": 77,
+   "kind": "next-element",
+   "text": "const value = argv[i + 1];"
+  },
+  {
+   "file": "packages/polaris-dossier/src/cli.ts",
+   "line": 212,
+   "kind": "dash-test",
+   "text": "const flag = rest.find((arg) => arg.startsWith('-'));"
+  },
+  {
+   "file": "packages/polaris-dossier/src/cli.ts",
+   "line": 220,
+   "kind": "dash-test",
+   "text": "const flag = rest.find((arg) => arg.startsWith('-'));"
+  },
+  {
+   "file": "packages/polaris-dossier/src/cli.ts",
+   "line": 228,
+   "kind": "dash-test",
+   "text": "const flag = rest.find((arg) => arg.startsWith('-'));"
+  },
+  {
+   "file": "packages/polaris-dossier/src/cli.ts",
+   "line": 304,
+   "kind": "dash-test",
+   "text": "const flag = rest.find((arg) => arg.startsWith('-'));"
+  },
+  {
+   "file": "packages/polaris-dossier/src/cli.ts",
+   "line": 336,
+   "kind": "dash-test",
+   "text": "const flag = rest.find((arg) => arg.startsWith('-'));"
+  },
+  {
+   "file": "packages/polaris-dossier/src/cli.ts",
+   "line": 398,
+   "kind": "index-loop",
+   "text": "for (let index = 0; index < args.length; index++) {"
+  },
+  {
+   "file": "packages/polaris-dossier/src/cli.ts",
+   "line": 400,
+   "kind": "dash-test",
+   "text": "if (!arg.startsWith('-')) { positional.push(arg); continue; }"
+  },
+  {
+   "file": "packages/polaris-dossier/src/cli.ts",
+   "line": 403,
+   "kind": "next-element",
+   "text": "const value = args[index + 1];"
+  },
+  {
+   "file": "packages/polaris-dossier/src/cli.ts",
+   "line": 404,
+   "kind": "dash-test",
+   "text": "if (value === undefined || value.startsWith('-')) return `${arg} requires a value`;"
+  },
+  {
+   "file": "packages/polaris-dossier/src/polaris.ts",
+   "line": 133,
+   "kind": "index-loop",
+   "text": "for (let i = 0; i < argv.length; i++) {"
+  },
+  {
+   "file": "packages/polaris-dossier/src/polaris.ts",
+   "line": 136,
+   "kind": "next-element",
+   "text": "const value = argv[i + 1];"
+  },
+  {
+   "file": "packages/polaris-dossier/src/polaris.ts",
+   "line": 140,
+   "kind": "dash-test",
+   "text": "else if (arg.startsWith('-')) return `unknown option ${arg}`;"
+  },
+  {
+   "file": "packages/polaris-dossier/src/run-config.ts",
+   "line": 182,
+   "kind": "dash-test",
+   "text": "if (value.startsWith('-')) { refuse('negative', 'deadline', 'deadline must not be negative'); return undefined; }"
+  }
+ ]
+}

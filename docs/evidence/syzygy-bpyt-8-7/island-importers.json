@@ -1,0 +1,95 @@
+{
+ "islandListed": 20,
+ "population": 286,
+ "reachingIsland": 11,
+ "rows": [
+  {
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-evaluation-main.ts",
+   "firstIslandReached": "packages/polaris-generation-core/src/discovery.ts",
+   "direct": [
+    "packages/polaris-generation-core/src/index.ts"
+   ]
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-main.ts",
+   "firstIslandReached": "apps/three-surface-poc/src/polaris-generation/dossier-trigger.ts",
+   "direct": [
+    "packages/polaris-generation-core/src/index.ts",
+    "apps/three-surface-poc/src/polaris-generation/dossier-trigger.ts"
+   ]
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-render-main.ts",
+   "firstIslandReached": "packages/polaris-generation-core/src/discovery.ts",
+   "direct": [
+    "packages/polaris-generation-core/src/index.ts"
+   ]
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-render.ts",
+   "firstIslandReached": "packages/polaris-generation-core/src/discovery.ts",
+   "direct": [
+    "packages/polaris-generation-core/src/index.ts"
+   ]
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-generation/public-source-screening.ts",
+   "firstIslandReached": "apps/three-surface-poc/src/polaris-generation/repo-corpus.ts",
+   "direct": [
+    "packages/polaris-generation-consent/src/index.ts",
+    "packages/polaris-generation-core/src/index.ts",
+    "apps/three-surface-poc/src/polaris-generation/repo-corpus.ts"
+   ]
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-generation/run-key.ts",
+   "firstIslandReached": "packages/polaris-generation-core/src/discovery.ts",
+   "direct": [
+    "packages/polaris-generation-core/src/index.ts"
+   ]
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-generation/synthetic-source.ts",
+   "firstIslandReached": "packages/polaris-generation-core/src/discovery.ts",
+   "direct": [
+    "packages/polaris-generation-core/src/index.ts"
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-consent/src/consent-ports.ts",
+   "firstIslandReached": "packages/polaris-generation-core/src/discovery.ts",
+   "direct": [
+    "packages/polaris-generation-core/src/index.ts"
+   ]
+  },
+  {
+   "file": "packages/polaris-generation-consent/src/index.ts",
+   "firstIslandReached": "packages/polaris-generation-core/src/discovery.ts",
+   "direct": []
+  },
+  {
+   "file": "packages/polaris-generation-core/src/index.ts",
+   "firstIslandReached": "packages/polaris-generation-core/src/discovery.ts",
+   "direct": [
+    "packages/polaris-generation-core/src/admitted-input.ts",
+    "packages/polaris-generation-core/src/discovery-provider.ts",
+    "packages/polaris-generation-core/src/pipeline.ts",
+    "packages/polaris-generation-core/src/provider-draft.ts",
+    "packages/polaris-generation-core/src/provider-draft.ts",
+    "packages/polaris-generation-core/src/rendered-design.ts",
+    "packages/polaris-generation-core/src/rendered-design.ts",
+    "packages/polaris-generation-core/src/excerpt.ts",
+    "packages/polaris-generation-core/src/excerpt.ts",
+    "packages/polaris-generation-core/src/discovery.ts",
+    "packages/polaris-generation-core/src/discovery.ts"
+   ]
+  },
+  {
+   "file": "scripts/derive_generator_sent_text.mjs",
+   "firstIslandReached": "packages/polaris-generation-core/src/discovery.ts",
+   "direct": [
+    "packages/polaris-generation-core/src/index.ts"
+   ]
+  }
+ ]
+}

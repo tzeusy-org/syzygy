@@ -1,0 +1,7 @@
+commit=74dc0eb9f3b912b9a89e8db456edd687edbda6ff tracked_files=78 text_scanned=78 mode_literals=87
+literals_without_owner_read=4
+  packages/polaris-dossier/src/credential-probe.test.ts:34 0o000 call_on_line=True :: fs.chmodSync(token, 0o000);
+  packages/polaris-dossier/src/git-object-reader.test.ts:518 0o000 call_on_line=True :: chmodSync(file, 0o000);
+  packages/polaris-dossier/src/launched.test.ts:75 0o000 call_on_line=True :: const MODE_000: readonly [string, (dir: string) => void] = ['a file its reader may not read', (dir) => { fs.writeFileSync(marker(dir), '{"format": "polaris-doss
+  packages/polaris-dossier/src/state-directory.test.ts:123 0o000 call_on_line=True :: fs.chmodSync(at('blocked'), 0o000);
+chmod_calls_without_literal=0

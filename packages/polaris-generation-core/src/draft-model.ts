@@ -8,30 +8,30 @@ import { check, handle, list, object, refs, text, type Schema } from './closed-s
 // executable markup or external link role.
 
 const requestedAssetsSchema = list(object({ id: handle, kind: { ...text, enum: ['section', 'diagram', 'deep-dive'] }, required: { type: 'boolean' } }), 0, 100);
-const paragraph = object({ id: handle, text, sourceIds: refs });
+const paragraph = object({ id: handle, text, sourceIds: refs() });
 // A tree block: the parent summarizes its leaf children, so truncating at either
 // depth leaves a coarser account. Nesting is exactly one level; the Schema type
 // has no recursion. The first block of a section is its answer (prompt-stated).
-const block = object({ id: handle, text, sourceIds: refs, children: list(paragraph, 0, 12) });
+const block = object({ id: handle, text, sourceIds: refs(), children: list(paragraph, 0, 12) });
 const epistemic: Schema = { ...text, enum: ['observed', 'inferred', 'unknown'] };
 export const DIAGRAM_KINDS = ['flow', 'lifecycle', 'state-machine', 'boundary', 'dependency', 'placement'] as const;
 /** Package-internal (with `draft` and `fidelity`): the provider stage schemas in provider-draft.ts embed it. */
 export const disposition: Schema = { oneOf: [
-  object({ kind: { ...text, enum: ['produced'] }, assetIds: refs }),
-  object({ kind: { ...text, enum: ['omitted'] }, reason: text, references: refs }),
-  object({ kind: { ...text, enum: ['unresolved'] }, reason: text, references: refs }),
+  object({ kind: { ...text, enum: ['produced'] }, assetIds: refs() }),
+  object({ kind: { ...text, enum: ['omitted'] }, reason: text, references: refs() }),
+  object({ kind: { ...text, enum: ['unresolved'] }, reason: text, references: refs() }),
 ] };
 export const draft = object({
   title: text, introduction: paragraph,
   sections: list(object({ id: handle, title: text, paragraphs: list(block, 1, 30), disposition }), 1, 30),
   diagrams: list(object({ id: handle, title: text, sectionId: handle,
     kind: { ...text, enum: [...DIAGRAM_KINDS] }, relationship: text,
-    nodes: list(object({ id: handle, label: text, sourceIds: refs, epistemic }), 1, 40),
-    edges: list(object({ id: handle, from: handle, to: handle, label: text, sourceIds: refs, epistemic }), 1, 80),
+    nodes: list(object({ id: handle, label: text, sourceIds: refs(), epistemic }), 1, 40),
+    edges: list(object({ id: handle, from: handle, to: handle, label: text, sourceIds: refs(), epistemic }), 1, 80),
     disposition,
   }), 0, 20),
   deepDives: list(object({ id: handle, title: text, sectionId: handle, paragraphs: list(block, 1, 30), disposition }), 0, 30),
-  unresolved: list(object({ question: text, reason: text, references: refs }), 0, 100),
+  unresolved: list(object({ question: text, reason: text, references: refs() }), 0, 100),
 });
 const inventoryCoverage = list(object({ entryId: handle, disposition: { ...text, enum: ['represented', 'justified-omission', 'unsupported', 'unresolved'] }, blockIds: list(handle, 0, 5000), reason: text }), 1, 5000);
 const blockSupport = list(object({ blockId: handle, verdict: { ...text, enum: ['supported', 'anchor-does-not-support', 'unresolved'] }, sourceIds: list(handle, 0, 200), reason: text }), 1, 5000);
@@ -39,9 +39,23 @@ export const fidelity = object({ inventoryCoverage, blockSupport,
   findings: list(object({ severity: { ...text, enum: ['blocking', 'advisory'] }, message: text, target: handle }), 0, 1000),
 });
 
+import type { LocalSegment } from './local-render.js';
+
 export interface DraftParagraph { id: string; text: string; sourceIds: string[] }
-/** A section or deep-dive block: a parent paragraph and its 0–12 leaf children. */
-export interface DraftBlock extends DraftParagraph { children: DraftParagraph[] }
+/** A section or deep-dive block: a parent paragraph and its 0–12 leaf children. An operator-agent draft's entry may instead be a v1.3
+ * rich element (`element`, syzygy-mea.10.5), whose own id the entry carries with empty text, no sources and no children; the provider
+ * pipeline never sets it. */
+export interface DraftBlock extends DraftParagraph { children: DraftParagraph[]; element?: DraftElement }
+/** A v1.3 rich element. Labels are presentation; every `DraftParagraph` inside is a claim, rendered as a block is. */
+export type DraftElement =
+  | { kind: 'table'; caption: string; columns: string[]; rowHeaders: boolean; rows: { id: string; cells: (DraftParagraph | null)[] }[] }
+  | { kind: 'callout'; tone: 'note' | 'tip' | 'caution' | 'important'; title: string; children: DraftBlock[] }
+  | { kind: 'steps'; items: DraftParagraph[]; repeatsDiagram?: string }
+  | { kind: 'definitions'; entries: { term: string; definition: DraftParagraph }[]; repeatsDiagram?: string }
+  | { kind: 'cards'; items: { label: string; body: DraftParagraph }[]; repeatsDiagram?: string }
+  | { kind: 'details'; summary: string; elements: DraftBlock[] }
+  /** Lines Syzygy read at the pinned revision, as quotation segments (one per source piece), or one withheld segment. */
+  | { kind: 'code'; language: string; path: string; startLine: number; endLine: number; parts: LocalSegment[] };
 export type DiagramKind = typeof DIAGRAM_KINDS[number];
 export type EpistemicMarking = 'observed' | 'inferred' | 'unknown';
 export interface DraftDiagramNode { id: string; label: string; sourceIds: string[]; epistemic: EpistemicMarking }
@@ -81,7 +95,8 @@ export function validateRequestedAssets(value: unknown): RequestedAsset[] {
   return structuredClone(assets);
 }
 
-/** Every block of a tree, parent first: children are blocks everywhere. */
+/** Every block of a tree, parent first: children are blocks everywhere. A provider draft never carries a rich element (its closed schema
+ * refuses `element`); an operator-agent draft's claims are walked by the dossier package's `contentClaims` instead. */
 export function treeBlocks(blocks: readonly DraftBlock[]): DraftParagraph[] {
   return blocks.flatMap(block => [block, ...block.children]);
 }

@@ -1,0 +1,50 @@
+
+> test:system
+> npm run build && vitest run --config packages/cap1-system/vitest.config.ts
+
+
+> build
+> tsc -b packages/cap1-core packages/http-host packages/cap1-daemon packages/cap1-conformance packages/three-surface-poc-core apps/syzygy apps/three-surface-poc packages/cap1-system packages/polaris-generation-core packages/polaris-generation-consent packages/polaris-dossier
+
+
+ RUN  v3.2.7 /var/tmp/la-b73/head/packages/cap1-system
+
+ ✓ src/effect-observer.system.test.ts (8 tests) 86ms
+ ✓ src/write-boundary.system.test.ts (1 test) 441ms
+   ✓ RT6 — write boundary by harness-external filesystem observation > after requests to all routes, the only filesystem additions live under the state dir and the governed tree is untouched  439ms
+ ✓ src/process.system.test.ts (1 test) 592ms
+   ✓ RT6 — process reality > SIGINT exits 0 and the port then refuses connections  591ms
+ ✓ src/degradation.system.test.ts (2 tests) 1196ms
+   ✓ RT6 — honest degradation over real disk state > an empty fixture root serves the named missing-declaration arm on both channels  406ms
+   ✓ RT6 — honest degradation over real disk state > breaking the declaration between runs changes the served facts to the named invalid arms  788ms
+ ✓ src/full-facts.system.test.ts (3 tests) 1325ms
+   ✓ RT6 — full-facts demonstration over the spawned daemon > serves the human page with verbatim facts, labels, and the Why-this-answer drawer  468ms
+   ✓ RT6 — full-facts demonstration over the spawned daemon > serves the fixture overview at /entry  422ms
+   ✓ RT6 — full-facts demonstration over the spawned daemon > serves the JSON facts to an authenticated machine request, and every served JSON fact appears in the HTML (sweep with denominator)  423ms
+ ✓ src/state-dir.system.test.ts (6 tests) 2701ms
+   ✓ RTF-1 — state-dir governed-plane check resolves symlink reality > refuses (nonzero exit, named refusal) a --state-dir symlink whose REAL target lies inside .syzygy/, and writes nothing there  464ms
+   ✓ RTF-1 — state-dir governed-plane check resolves symlink reality > refuses a dangling --state-dir symlink whose intended target lies inside .syzygy/, before writes or a listener  449ms
+   ✓ RTF-1 — state-dir governed-plane check resolves symlink reality > still starts and serves through a --state-dir symlink whose real target is OUTSIDE the governed plane  463ms
+   ✓ RTF-1 — state-dir governed-plane check resolves symlink reality > keeps a dangling benign outside target credential-unprovisionable, with no listener or writes  431ms
+   ✓ RTF-1 — state-dir governed-plane check resolves symlink reality > rejects a state-dir symlink loop as named invalid before writes or a listener  459ms
+   ✓ RTF-1 — state-dir governed-plane check resolves symlink reality > rejects an unreadable state-dir path as named invalid before writes or a listener  432ms
+ ✓ src/credentials.system.test.ts (11 tests) 3618ms
+   ✓ RT6 — credential enforcement from outside the process > refuses missing credentials with no facts served  590ms
+   ✓ RT6 — credential enforcement from outside the process > refuses scheme without separator credentials with no facts served  334ms
+   ✓ RT6 — credential enforcement from outside the process > refuses wrong scheme credentials with no facts served  337ms
+   ✓ RT6 — credential enforcement from outside the process > refuses wrong-length bearer token credentials with no facts served  442ms
+   ✓ RT6 — credential enforcement from outside the process > refuses wrong bearer token credentials with no facts served  361ms
+ ✓ src/daemon-entry-unchanged.system.test.ts (15 tests) 4122ms
+   ✓ daemon entry: every invocation but `dossier` is unchanged > ["--help"] prints the usage and exits 0  449ms
+   ✓ daemon entry: every invocation but `dossier` is unchanged > with no arguments it serves from the working directory, writes the same state and shuts down the same way  345ms
+   ✓ daemon entry: the one changed input, `dossier` as the first argument > `dossier` alone is a dossier usage error (exit 2), not the daemon's refusal  476ms
+   ✓ daemon entry: the one changed input, `dossier` as the first argument > `dossier status <missing>` is a dossier refusal (exit 1) and starts no daemon  377ms
+   ✓ daemon entry: the one changed input, `dossier` as the first argument > `dossier render <missing>` reaches the run with the renderer injected, and starts no daemon  402ms
+ ✓ src/fresh-clone.system.test.ts (1 test) 34869ms
+   ✓ RT6 — fresh-clone demonstration > a fresh clone installs, builds, starts the daemon, and serves the same facts on both channels  34867ms
+
+ Test Files  9 passed (9)
+      Tests  48 passed (48)
+   Start at  05:20:43
+   Duration  36.00s (transform 909ms, setup 0ms, collect 2.20s, tests 48.95s, environment 2ms, prepare 2.23s)
+

@@ -1,0 +1,13 @@
+declarations at base: ['Dead', 'NotInForce', 'effective', 'inForceRecords', 'notInForceRecords', 'ref'] | at main: ['Dead', 'NotInForce', 'effective', 'inForceRecords', 'notInForceRecords', 'ref']
+  Dead: identical=True 
+  NotInForce: identical=True 
+  effective: identical=True 
+  inForceRecords: identical=True 
+  notInForceRecords: identical=True 
+  ref: identical=True 
+ce322e1a package-reader.ts ["import { inForceRecords, notInForceRecords, type NotInForce } from './consent-ports.js';"]
+ce322e1a package-reader.test.ts ["import { inForceRecords } from './consent-ports.js';"]
+ce322e1a consent-ports.ts []
+gh/main package-reader.ts ["import { inForceRecords, notInForceRecords, type NotInForce } from './in-force.js';"]
+gh/main package-reader.test.ts ["import { inForceRecords } from './consent-ports.js';"]
+gh/main consent-ports.ts ["import { effective, ref, type Dead } from './in-force.js';"]

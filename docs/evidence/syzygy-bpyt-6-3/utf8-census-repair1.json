@@ -1,0 +1,770 @@
+{
+ "commit": "b81010c8c5a375ef9fd446ac9ddc0da407ac1c58",
+ "population": "536 tracked .ts/.mjs/.cjs files under packages/, apps/ and scripts/",
+ "filesWithAConstruction": 33,
+ "constructions": 50,
+ "byShape": {
+  "const": 5,
+  "helper": 1,
+  "inline": 40,
+  "test inline": 4
+ },
+ "byOptions": {
+  "fatal=None ignoreBOM=None": 13,
+  "fatal=false ignoreBOM=None": 4,
+  "fatal=true ignoreBOM=None": 21,
+  "fatal=true ignoreBOM=true": 8,
+  "test fatal=None ignoreBOM=None": 2,
+  "test fatal=true ignoreBOM=None": 2
+ },
+ "helperDefinitions": [
+  {
+   "path": "packages/support/src/decode-utf8.ts",
+   "line": 7,
+   "name": "decodeUtf8",
+   "decoder": "STRICT_UTF8",
+   "equivalentToDecodeUtf8": true
+  }
+ ],
+ "secondMethod": "git grep -c -F \"new TextDecoder(\" per file; file set and per-file counts equal to method one",
+ "methodsAgree": true,
+ "files": [
+  {
+   "path": "apps/three-surface-poc/src/capability-detail.ts",
+   "test": false,
+   "constructions": [
+    {
+     "line": 254,
+     "options": {
+      "fatal": "true",
+      "ignoreBOM": null
+     },
+     "equivalent": true,
+     "shape": "inline",
+     "name": null
+    }
+   ],
+   "helperDefinitions": []
+  },
+  {
+   "path": "apps/three-surface-poc/src/fresh-checkout-demo-main.ts",
+   "test": false,
+   "constructions": [
+    {
+     "line": 238,
+     "options": {
+      "fatal": null,
+      "ignoreBOM": null
+     },
+     "equivalent": false,
+     "shape": "inline",
+     "name": null
+    },
+    {
+     "line": 407,
+     "options": {
+      "fatal": null,
+      "ignoreBOM": null
+     },
+     "equivalent": false,
+     "shape": "inline",
+     "name": null
+    },
+    {
+     "line": 413,
+     "options": {
+      "fatal": null,
+      "ignoreBOM": null
+     },
+     "equivalent": false,
+     "shape": "inline",
+     "name": null
+    },
+    {
+     "line": 421,
+     "options": {
+      "fatal": null,
+      "ignoreBOM": null
+     },
+     "equivalent": false,
+     "shape": "inline",
+     "name": null
+    },
+    {
+     "line": 430,
+     "options": {
+      "fatal": null,
+      "ignoreBOM": null
+     },
+     "equivalent": false,
+     "shape": "inline",
+     "name": null
+    },
+    {
+     "line": 439,
+     "options": {
+      "fatal": null,
+      "ignoreBOM": null
+     },
+     "equivalent": false,
+     "shape": "inline",
+     "name": null
+    }
+   ],
+   "helperDefinitions": []
+  },
+  {
+   "path": "apps/three-surface-poc/src/git-blob-batch.test.ts",
+   "test": true,
+   "constructions": [
+    {
+     "line": 31,
+     "options": {
+      "fatal": null,
+      "ignoreBOM": null
+     },
+     "equivalent": false,
+     "shape": "inline",
+     "name": null
+    }
+   ],
+   "helperDefinitions": []
+  },
+  {
+   "path": "apps/three-surface-poc/src/git-blob-batch.ts",
+   "test": false,
+   "constructions": [
+    {
+     "line": 33,
+     "options": {
+      "fatal": "true",
+      "ignoreBOM": null
+     },
+     "equivalent": true,
+     "shape": "const",
+     "name": "decoder"
+    }
+   ],
+   "helperDefinitions": []
+  },
+  {
+   "path": "apps/three-surface-poc/src/governance-inputs.ts",
+   "test": false,
+   "constructions": [
+    {
+     "line": 200,
+     "options": {
+      "fatal": "true",
+      "ignoreBOM": null
+     },
+     "equivalent": true,
+     "shape": "inline",
+     "name": null
+    },
+    {
+     "line": 222,
+     "options": {
+      "fatal": "true",
+      "ignoreBOM": null
+     },
+     "equivalent": true,
+     "shape": "inline",
+     "name": null
+    },
+    {
+     "line": 232,
+     "options": {
+      "fatal": "true",
+      "ignoreBOM": null
+     },
+     "equivalent": true,
+     "shape": "inline",
+     "name": null
+    },
+    {
+     "line": 344,
+     "options": {
+      "fatal": null,
+      "ignoreBOM": null
+     },
+     "equivalent": false,
+     "shape": "inline",
+     "name": null
+    }
+   ],
+   "helperDefinitions": []
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/dossier-evaluation-main.ts",
+   "test": false,
+   "constructions": [
+    {
+     "line": 41,
+     "options": {
+      "fatal": "true",
+      "ignoreBOM": null
+     },
+     "equivalent": true,
+     "shape": "inline",
+     "name": null
+    }
+   ],
+   "helperDefinitions": []
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/generation-mutation-run-main.ts",
+   "test": false,
+   "constructions": [
+    {
+     "line": 124,
+     "options": {
+      "fatal": null,
+      "ignoreBOM": null
+     },
+     "equivalent": false,
+     "shape": "inline",
+     "name": null
+    }
+   ],
+   "helperDefinitions": []
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/public-source-screening.ts",
+   "test": false,
+   "constructions": [
+    {
+     "line": 149,
+     "options": {
+      "fatal": "true",
+      "ignoreBOM": null
+     },
+     "equivalent": true,
+     "shape": "inline",
+     "name": null
+    }
+   ],
+   "helperDefinitions": []
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/repo-corpus.ts",
+   "test": false,
+   "constructions": [
+    {
+     "line": 233,
+     "options": {
+      "fatal": "true",
+      "ignoreBOM": "true"
+     },
+     "equivalent": false,
+     "shape": "inline",
+     "name": null
+    }
+   ],
+   "helperDefinitions": []
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/self-corpus.ts",
+   "test": false,
+   "constructions": [
+    {
+     "line": 59,
+     "options": {
+      "fatal": "true",
+      "ignoreBOM": null
+     },
+     "equivalent": true,
+     "shape": "inline",
+     "name": null
+    }
+   ],
+   "helperDefinitions": []
+  },
+  {
+   "path": "apps/three-surface-poc/src/pwb-mutation-run-main.ts",
+   "test": false,
+   "constructions": [
+    {
+     "line": 106,
+     "options": {
+      "fatal": null,
+      "ignoreBOM": null
+     },
+     "equivalent": false,
+     "shape": "inline",
+     "name": null
+    },
+    {
+     "line": 107,
+     "options": {
+      "fatal": null,
+      "ignoreBOM": null
+     },
+     "equivalent": false,
+     "shape": "inline",
+     "name": null
+    },
+    {
+     "line": 132,
+     "options": {
+      "fatal": null,
+      "ignoreBOM": null
+     },
+     "equivalent": false,
+     "shape": "inline",
+     "name": null
+    }
+   ],
+   "helperDefinitions": []
+  },
+  {
+   "path": "apps/three-surface-poc/src/pwb-mutation-sweep-main.ts",
+   "test": false,
+   "constructions": [
+    {
+     "line": 137,
+     "options": {
+      "fatal": null,
+      "ignoreBOM": null
+     },
+     "equivalent": false,
+     "shape": "inline",
+     "name": null
+    },
+    {
+     "line": 167,
+     "options": {
+      "fatal": null,
+      "ignoreBOM": null
+     },
+     "equivalent": false,
+     "shape": "inline",
+     "name": null
+    }
+   ],
+   "helperDefinitions": []
+  },
+  {
+   "path": "apps/three-surface-poc/src/verbatim-route.test.ts",
+   "test": true,
+   "constructions": [
+    {
+     "line": 106,
+     "options": {
+      "fatal": null,
+      "ignoreBOM": null
+     },
+     "equivalent": false,
+     "shape": "inline",
+     "name": null
+    }
+   ],
+   "helperDefinitions": []
+  },
+  {
+   "path": "apps/three-surface-poc/src/verbatim-route.ts",
+   "test": false,
+   "constructions": [
+    {
+     "line": 117,
+     "options": {
+      "fatal": "true",
+      "ignoreBOM": null
+     },
+     "equivalent": true,
+     "shape": "inline",
+     "name": null
+    }
+   ],
+   "helperDefinitions": []
+  },
+  {
+   "path": "packages/polaris-dossier/src/check.ts",
+   "test": false,
+   "constructions": [
+    {
+     "line": 335,
+     "options": {
+      "fatal": "true",
+      "ignoreBOM": null
+     },
+     "equivalent": true,
+     "shape": "inline",
+     "name": null
+    },
+    {
+     "line": 594,
+     "options": {
+      "fatal": "true",
+      "ignoreBOM": "true"
+     },
+     "equivalent": false,
+     "shape": "const",
+     "name": "decoder"
+    }
+   ],
+   "helperDefinitions": []
+  },
+  {
+   "path": "packages/polaris-dossier/src/close.ts",
+   "test": false,
+   "constructions": [
+    {
+     "line": 186,
+     "options": {
+      "fatal": "true",
+      "ignoreBOM": null
+     },
+     "equivalent": true,
+     "shape": "inline",
+     "name": null
+    }
+   ],
+   "helperDefinitions": []
+  },
+  {
+   "path": "packages/polaris-dossier/src/design-review.ts",
+   "test": false,
+   "constructions": [
+    {
+     "line": 48,
+     "options": {
+      "fatal": "true",
+      "ignoreBOM": null
+     },
+     "equivalent": true,
+     "shape": "const",
+     "name": "decoder"
+    }
+   ],
+   "helperDefinitions": []
+  },
+  {
+   "path": "packages/polaris-dossier/src/doctrine-quote.ts",
+   "test": false,
+   "constructions": [
+    {
+     "line": 47,
+     "options": {
+      "fatal": "false",
+      "ignoreBOM": null
+     },
+     "equivalent": false,
+     "shape": "inline",
+     "name": null
+    }
+   ],
+   "helperDefinitions": []
+  },
+  {
+   "path": "packages/polaris-dossier/src/git-object-reader.ts",
+   "test": false,
+   "constructions": [
+    {
+     "line": 278,
+     "options": {
+      "fatal": "true",
+      "ignoreBOM": "true"
+     },
+     "equivalent": false,
+     "shape": "const",
+     "name": "NAME"
+    }
+   ],
+   "helperDefinitions": []
+  },
+  {
+   "path": "packages/polaris-dossier/src/render.ts",
+   "test": false,
+   "constructions": [
+    {
+     "line": 151,
+     "options": {
+      "fatal": "true",
+      "ignoreBOM": null
+     },
+     "equivalent": true,
+     "shape": "inline",
+     "name": null
+    }
+   ],
+   "helperDefinitions": []
+  },
+  {
+   "path": "packages/polaris-dossier/src/review.ts",
+   "test": false,
+   "constructions": [
+    {
+     "line": 138,
+     "options": {
+      "fatal": "true",
+      "ignoreBOM": null
+     },
+     "equivalent": true,
+     "shape": "inline",
+     "name": null
+    },
+    {
+     "line": 194,
+     "options": {
+      "fatal": "true",
+      "ignoreBOM": "true"
+     },
+     "equivalent": false,
+     "shape": "const",
+     "name": "decoder"
+    }
+   ],
+   "helperDefinitions": []
+  },
+  {
+   "path": "packages/polaris-dossier/src/screen.ts",
+   "test": false,
+   "constructions": [
+    {
+     "line": 81,
+     "options": {
+      "fatal": "true",
+      "ignoreBOM": null
+     },
+     "equivalent": true,
+     "shape": "inline",
+     "name": null
+    }
+   ],
+   "helperDefinitions": []
+  },
+  {
+   "path": "packages/polaris-dossier/src/waiting-sessions.ts",
+   "test": false,
+   "constructions": [
+    {
+     "line": 386,
+     "options": {
+      "fatal": "true",
+      "ignoreBOM": null
+     },
+     "equivalent": true,
+     "shape": "inline",
+     "name": null
+    }
+   ],
+   "helperDefinitions": []
+  },
+  {
+   "path": "packages/polaris-generation-core/src/dossier-evaluation.ts",
+   "test": false,
+   "constructions": [
+    {
+     "line": 352,
+     "options": {
+      "fatal": "true",
+      "ignoreBOM": null
+     },
+     "equivalent": true,
+     "shape": "inline",
+     "name": null
+    },
+    {
+     "line": 534,
+     "options": {
+      "fatal": "false",
+      "ignoreBOM": null
+     },
+     "equivalent": false,
+     "shape": "inline",
+     "name": null
+    }
+   ],
+   "helperDefinitions": []
+  },
+  {
+   "path": "packages/polaris-generation-core/src/generation-source.test.ts",
+   "test": true,
+   "constructions": [
+    {
+     "line": 173,
+     "options": {
+      "fatal": "true",
+      "ignoreBOM": null
+     },
+     "equivalent": true,
+     "shape": "inline",
+     "name": null
+    }
+   ],
+   "helperDefinitions": []
+  },
+  {
+   "path": "packages/polaris-generation-core/src/generation-source.ts",
+   "test": false,
+   "constructions": [
+    {
+     "line": 228,
+     "options": {
+      "fatal": "true",
+      "ignoreBOM": "true"
+     },
+     "equivalent": false,
+     "shape": "inline",
+     "name": null
+    },
+    {
+     "line": 437,
+     "options": {
+      "fatal": "true",
+      "ignoreBOM": "true"
+     },
+     "equivalent": false,
+     "shape": "inline",
+     "name": null
+    },
+    {
+     "line": 443,
+     "options": {
+      "fatal": "true",
+      "ignoreBOM": "true"
+     },
+     "equivalent": false,
+     "shape": "inline",
+     "name": null
+    }
+   ],
+   "helperDefinitions": []
+  },
+  {
+   "path": "packages/support/src/decode-utf8.ts",
+   "test": false,
+   "constructions": [
+    {
+     "line": 1,
+     "options": {
+      "fatal": "true",
+      "ignoreBOM": null
+     },
+     "equivalent": true,
+     "shape": "helper",
+     "name": "decodeUtf8"
+    }
+   ],
+   "helperDefinitions": [
+    {
+     "line": 7,
+     "name": "decodeUtf8",
+     "decoder": "STRICT_UTF8"
+    }
+   ]
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/project-shape-model.ts",
+   "test": false,
+   "constructions": [
+    {
+     "line": 545,
+     "options": {
+      "fatal": "true",
+      "ignoreBOM": null
+     },
+     "equivalent": true,
+     "shape": "inline",
+     "name": null
+    }
+   ],
+   "helperDefinitions": []
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/test-artifact-verification.live.test.ts",
+   "test": true,
+   "constructions": [
+    {
+     "line": 124,
+     "options": {
+      "fatal": "true",
+      "ignoreBOM": null
+     },
+     "equivalent": true,
+     "shape": "inline",
+     "name": null
+    }
+   ],
+   "helperDefinitions": []
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/walkthrough-judgment.ts",
+   "test": false,
+   "constructions": [
+    {
+     "line": 513,
+     "options": {
+      "fatal": "false",
+      "ignoreBOM": null
+     },
+     "equivalent": false,
+     "shape": "inline",
+     "name": null
+    },
+    {
+     "line": 552,
+     "options": {
+      "fatal": "false",
+      "ignoreBOM": null
+     },
+     "equivalent": false,
+     "shape": "inline",
+     "name": null
+    }
+   ],
+   "helperDefinitions": []
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/walkthrough-readiness.ts",
+   "test": false,
+   "constructions": [
+    {
+     "line": 288,
+     "options": {
+      "fatal": "true",
+      "ignoreBOM": null
+     },
+     "equivalent": true,
+     "shape": "inline",
+     "name": null
+    }
+   ],
+   "helperDefinitions": []
+  },
+  {
+   "path": "scripts/probe_pwb_gate_on_altered_policy_act.mjs",
+   "test": false,
+   "constructions": [
+    {
+     "line": 45,
+     "options": {
+      "fatal": "true",
+      "ignoreBOM": null
+     },
+     "equivalent": true,
+     "shape": "inline",
+     "name": null
+    }
+   ],
+   "helperDefinitions": []
+  },
+  {
+   "path": "scripts/redis_screening_remeasure.mjs",
+   "test": false,
+   "constructions": [
+    {
+     "line": 469,
+     "options": {
+      "fatal": "true",
+      "ignoreBOM": "true"
+     },
+     "equivalent": false,
+     "shape": "inline",
+     "name": null
+    }
+   ],
+   "helperDefinitions": []
+  }
+ ]
+}

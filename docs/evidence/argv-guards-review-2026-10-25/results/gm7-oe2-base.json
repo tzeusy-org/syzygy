@@ -1,0 +1,67 @@
+{
+ "tree": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-524/base",
+ "head": "3ec6929951080613b3c5cb7205fe303c5449be58",
+ "results": [
+  {
+   "id": "GM7-entry-re-exports-the-barrel-as-a-namespace",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 16 passed (17)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the subpaths the daemon entry imports > are /argv and /state-directory, imported statically, and the barrel only dynamically inside the dossier and polaris branches"
+   ],
+   "timeouts": 0,
+   "seconds": 4.0,
+   "counts": [
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nexport * as dossier from '@syzygy/polaris-dossier';\n"
+    }
+   ]
+  },
+  {
+   "id": "OE2-walker-drops-require",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  2 failed | 15 passed (17)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the subpaths the daemon entry imports > the check sees a forbidden import in const fs = require('fs'); (its own mutant)",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the subpaths the daemon entry imports > the entry check sees if (argv[0] !== 'dossier') require('@syzygy/polaris-dossier'); (its own mutant)"
+   ],
+   "timeouts": 0,
+   "seconds": 3.5,
+   "counts": [
+    {
+     "file": "packages/polaris-dossier/src/subpath-imports.test.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/subpath-imports.test.ts",
+     "old": "    else if (ts.isCallExpression(node) && ts.isIdentifier(node.expression) && node.expression.text === 'require' && node.arguments[0]) add('require', node.arguments[0]);\n",
+     "new": ""
+    }
+   ]
+  }
+ ]
+}

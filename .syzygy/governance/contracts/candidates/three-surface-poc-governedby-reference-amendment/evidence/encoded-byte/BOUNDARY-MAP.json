@@ -1,0 +1,625 @@
+{
+  "epistemic": "Observed",
+  "sourceCommit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+  "candidateCommit": "abd3f6ca2e8e99ad59327fdfc7b38d8bf41b07b5",
+  "scope": "Named in-repo POC response boundary and direct downstream owners, not a general external/dynamic consumer inventory. No runtime execution.",
+  "finalBodyOwner": {
+    "sources": [
+      {
+        "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+        "path": "apps/three-surface-poc/src/routes.ts",
+        "startLine": 144,
+        "endLine": 179,
+        "fileSha256": "81cd2099b9a162579a87c154137217e97d1e08e11542c07d91d42ad9a8cdd050",
+        "gitBlob": "23a7c2d46689522792653389cfd7f2ba8926c599"
+      },
+      {
+        "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+        "path": "apps/three-surface-poc/src/routes.ts",
+        "startLine": 199,
+        "endLine": 258,
+        "fileSha256": "81cd2099b9a162579a87c154137217e97d1e08e11542c07d91d42ad9a8cdd050",
+        "gitBlob": "23a7c2d46689522792653389cfd7f2ba8926c599"
+      },
+      {
+        "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+        "path": "apps/three-surface-poc/src/routes.ts",
+        "startLine": 264,
+        "endLine": 321,
+        "fileSha256": "81cd2099b9a162579a87c154137217e97d1e08e11542c07d91d42ad9a8cdd050",
+        "gitBlob": "23a7c2d46689522792653389cfd7f2ba8926c599"
+      }
+    ],
+    "inputs": [
+      "final body string",
+      "named maxHumanResponseBytes or maxMachineResponseBytes",
+      "declared limit value",
+      "complete evaluation and projectShape population for failure",
+      "optional ServedResponseRecorder"
+    ],
+    "predicate": "Buffer.byteLength(body, utf8) <= limits[limit]",
+    "success": "200 carrying full body; no truncation",
+    "failure": "503 typed response-limit-breached carrying full evaluation, limit identity, declared/observed values, counted-or-Unknown population and readiness false; optional served-side diagnostic/recorder event",
+    "declaredSourceLimits": {
+      "maxHumanResponseBytes": 2097152,
+      "maxMachineResponseBytes": 16777216
+    },
+    "threeProductionCallSites": [
+      {
+        "path": "apps/three-surface-poc/src/routes.ts",
+        "line": 222,
+        "symbol": "boundedResponse",
+        "kind": "direct-call"
+      },
+      {
+        "path": "apps/three-surface-poc/src/routes.ts",
+        "line": 233,
+        "symbol": "boundedResponse",
+        "kind": "direct-call"
+      },
+      {
+        "path": "apps/three-surface-poc/src/routes.ts",
+        "line": 255,
+        "symbol": "boundedResponse",
+        "kind": "direct-call"
+      }
+    ],
+    "humanRouting": "The html helper applies maxHumanResponseBytes to the home handler, exact-source handler and Polaris/Trajectory/Orrery factory handlers in each declared mount form. Actual HTML byte lengths are Unknown here.",
+    "machineRouting": "The complete /api/poc model and separate /api/poc/polaris envelope both use maxMachineResponseBytes. Only the main model has conditional GET."
+  },
+  "servedBreachOwner": {
+    "sources": [
+      {
+        "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+        "path": "apps/three-surface-poc/src/served-response-recorder.ts",
+        "startLine": 21,
+        "endLine": 54,
+        "fileSha256": "53a9c7f6451eb2bfa6607b97f1b877c387d29c105311fb19558c7132ed32cdc0",
+        "gitBlob": "67fd78a9d543b413c265c21b62bd360ed568b810"
+      },
+      {
+        "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+        "path": "apps/three-surface-poc/src/routes.ts",
+        "startLine": 183,
+        "endLine": 191,
+        "fileSha256": "81cd2099b9a162579a87c154137217e97d1e08e11542c07d91d42ad9a8cdd050",
+        "gitBlob": "23a7c2d46689522792653389cfd7f2ba8926c599"
+      },
+      {
+        "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+        "path": "apps/three-surface-poc/src/routes.ts",
+        "startLine": 207,
+        "endLine": 220,
+        "fileSha256": "81cd2099b9a162579a87c154137217e97d1e08e11542c07d91d42ad9a8cdd050",
+        "gitBlob": "23a7c2d46689522792653389cfd7f2ba8926c599"
+      },
+      {
+        "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+        "path": "packages/three-surface-poc-core/src/walkthrough-readiness.ts",
+        "startLine": 167,
+        "endLine": 186,
+        "fileSha256": "a4012784b6de8994948caf01f10de669fe3689630333a59bb22a0492aabeb319",
+        "gitBlob": "148127e28ff0566453a1dbd188c1fc87e363fddf"
+      }
+    ],
+    "fields": [
+      "evaluation.snapshot + evaluation.asOf recorder key",
+      "count",
+      "latest.limit/declared/observed/population",
+      "readiness.kind/findings/ready"
+    ],
+    "flow": [
+      "boundedResponse records a served breach only after final encoded length exceeds limit",
+      "ServedResponseRecorder retains process-local evaluation-keyed count/latest metadata, no body",
+      "withServedReadiness reads that count for the same evaluation",
+      "withServedResourceBreaches forces evaluated readiness false and adds resource-breach finding",
+      "projected response identity is recomputed; statusFor also exposes served-breach metadata to human rendering"
+    ],
+    "scopeLimit": "A zero served count does not prove readiness true. A non-evaluated readiness is not turned into a positive result. This projection does not alter retained PWB-REQ-022 judgment/act validity."
+  },
+  "cacheIdentityOwner": {
+    "sources": [
+      {
+        "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+        "path": "packages/three-surface-poc-core/src/response-identity.ts",
+        "startLine": 27,
+        "endLine": 66,
+        "fileSha256": "c191332d854d4de7b22bd1e5ece65d6f7994c5275805b681955a9122be8571b1",
+        "gitBlob": "1c981c48a3135cf7da563e8a6bebc184f5308ddc"
+      },
+      {
+        "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+        "path": "packages/three-surface-poc-core/src/response-identity.ts",
+        "startLine": 128,
+        "endLine": 142,
+        "fileSha256": "c191332d854d4de7b22bd1e5ece65d6f7994c5275805b681955a9122be8571b1",
+        "gitBlob": "1c981c48a3135cf7da563e8a6bebc184f5308ddc"
+      },
+      {
+        "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+        "path": "packages/three-surface-poc-core/src/response-identity.ts",
+        "startLine": 190,
+        "endLine": 250,
+        "fileSha256": "c191332d854d4de7b22bd1e5ece65d6f7994c5275805b681955a9122be8571b1",
+        "gitBlob": "1c981c48a3135cf7da563e8a6bebc184f5308ddc"
+      },
+      {
+        "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+        "path": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+        "startLine": 317,
+        "endLine": 335,
+        "fileSha256": "df5e1122af74643a09c28a450751242fad18f47760901b137a9c8d8fdf2f6ea5",
+        "gitBlob": "1d85bb89b679ae2a56db05f16814f80f921b6b20"
+      },
+      {
+        "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+        "path": "apps/three-surface-poc/src/routes.ts",
+        "startLine": 229,
+        "endLine": 239,
+        "fileSha256": "81cd2099b9a162579a87c154137217e97d1e08e11542c07d91d42ad9a8cdd050",
+        "gitBlob": "23a7c2d46689522792653389cfd7f2ba8926c599"
+      }
+    ],
+    "preimage": "clone complete input; omit responseIdentity.contentKey and exactly the declared exclusion paths; canonical key-sorted JSON; SHA256",
+    "exclusionPopulation": 25,
+    "exclusions": [
+      "codeStructure.capturedAt",
+      "evaluation.asOf",
+      "projectShape.authority.evaluationId",
+      "projectShape.authority.evaluationInstant",
+      "projectShape.claim.evaluationId",
+      "projectShape.classes.baseline-spec.claim.evaluationId",
+      "projectShape.classes.catalog-entry.claim.evaluationId",
+      "projectShape.classes.craft-policy.claim.evaluationId",
+      "projectShape.classes.design-contract.claim.evaluationId",
+      "projectShape.classes.principle.claim.evaluationId",
+      "projectShape.classes.project-account-section.claim.evaluationId",
+      "projectShape.classes.roster-identity.claim.evaluationId",
+      "projectShape.classes.success-criterion.claim.evaluationId",
+      "projectShape.classes.topology-component.claim.evaluationId",
+      "projectShape.facts[].claim.evaluationId",
+      "projectShape.identity.capturedAt",
+      "projectShape.identity.deterministicInputs.authority.evaluationId",
+      "projectShape.items[].claim.evaluationId",
+      "projectShape.projectAccount[].claim.evaluationId",
+      "projectShape.sources[].claim.evaluationId",
+      "projectShape.sources[].stamp.capturedAt",
+      "proposedWork.currentAuthority.claim.evaluationId",
+      "walkthroughJudgment.evaluation.evaluationId",
+      "walkthroughJudgment.evaluation.evaluationInstant",
+      "workItems.capturedAt"
+    ],
+    "representationCoupling": {
+      "epistemic": "Inferred",
+      "reason": "The complete preimage retains workItems.governedBy and workItems.items[].governedBy; only workItems.capturedAt is excluded under that subtree. Replacing inline values with references is therefore a representation input to this identity if the wire-projected body is used. No new semantic-normalization rule is established by this evidence.",
+      "runtimeKey": "Unknown; no production contentKey/ETag computed on a complete live model."
+    }
+  },
+  "cacheDecisionOwner": {
+    "sources": [
+      {
+        "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+        "path": "apps/three-surface-poc/src/routes.ts",
+        "startLine": 39,
+        "endLine": 59,
+        "fileSha256": "81cd2099b9a162579a87c154137217e97d1e08e11542c07d91d42ad9a8cdd050",
+        "gitBlob": "23a7c2d46689522792653389cfd7f2ba8926c599"
+      },
+      {
+        "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+        "path": "apps/three-surface-poc/src/routes.ts",
+        "startLine": 229,
+        "endLine": 239,
+        "fileSha256": "81cd2099b9a162579a87c154137217e97d1e08e11542c07d91d42ad9a8cdd050",
+        "gitBlob": "23a7c2d46689522792653389cfd7f2ba8926c599"
+      },
+      {
+        "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+        "path": "packages/cap1-daemon/src/server.ts",
+        "startLine": 136,
+        "endLine": 146,
+        "fileSha256": "03d73e9f01a9f4a8a27c98a97949655b33620bf9b37725ad2c8a7a564a259f29",
+        "gitBlob": "edd86b9dd818b03f3c86e4258bc2959d9ef6177b"
+      }
+    ],
+    "order": [
+      "server credential admission first",
+      "build projected model/response identity and JSON.stringify complete model",
+      "boundedResponse checks the complete final body",
+      "any non-200 response returns before conditional GET",
+      "only fitting full answer gets weak ETag W/<contentKey> and private,no-cache metadata",
+      "matching If-None-Match produces empty 304, otherwise full 200"
+    ],
+    "matching": "Static parser accepts wildcard and valid strong/weak tag members; malformed conditions are ignored. No runtime conditional request was performed.",
+    "representationCoupling": {
+      "epistemic": "Inferred",
+      "reason": "Changing encoded size can change whether the request reaches the 200/304 cache decision at all. An unchanged ETag policy/ceiling is not evidence that this consumer is untied.",
+      "thresholdWitness": "At L=3365 the inline literal takes the breach branch and the reference literal is eligible for the conditional branch; this is source/design arithmetic, not an observed HTTP result."
+    }
+  },
+  "refusalOwner": {
+    "sources": [
+      {
+        "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+        "path": "packages/cap1-daemon/src/server.ts",
+        "startLine": 246,
+        "endLine": 267,
+        "fileSha256": "03d73e9f01a9f4a8a27c98a97949655b33620bf9b37725ad2c8a7a564a259f29",
+        "gitBlob": "edd86b9dd818b03f3c86e4258bc2959d9ef6177b"
+      },
+      {
+        "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+        "path": "packages/cap1-daemon/src/credentials.ts",
+        "startLine": 355,
+        "endLine": 405,
+        "fileSha256": "4d120795e4792898028c4faeb1becebdda392d73b0c4d3d7c3c6ac63f7c5dbdb",
+        "gitBlob": "93f3dcd9c4cf51df2b11386a6ab6b854914b3943"
+      },
+      {
+        "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+        "path": "packages/cap1-core/src/admission.ts",
+        "startLine": 26,
+        "endLine": 43,
+        "fileSha256": "d0ef0989a524cde9d94430f3c1469a192d0a0cc9f56104c1248906a39d7495b6",
+        "gitBlob": "dc138de1cff1885e21b380a5c5796066d157f305"
+      },
+      {
+        "commit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+        "path": "apps/three-surface-poc/src/browser-origin.ts",
+        "startLine": 26,
+        "endLine": 38,
+        "fileSha256": "5b1d5e238e86382e5858e8b9041efed0e19f753ef99bd9b5dd0e84d3871718d8",
+        "gitBlob": "17becffd10f3f89e8829ee9527c02ba39fa8d6af"
+      }
+    ],
+    "positiveScope": "Machine credential verification consumes expected token and presented credential, before route.handle and any model/ETag computation. The browser-origin guard consumes request headers before getModel. These are positive input boundaries, not a global absence claim.",
+    "limbLimit": "This supports separation of credential admission from the governedBy carrier. It does not establish untiedness for every other CAP1-REQ-015 coverage/query limb. The server comment names CAP1-REQ-012; the actual complete admission/query requirement is CAP1-REQ-015 and is retained separately."
+  },
+  "governingConsumption": [
+    {
+      "epistemic": "Inferred",
+      "identity": "PWB-REQ-006",
+      "blockSha256": "b5ad25343860d2052bed14cdfb25885f95c524927cde59151960e044992ef3a8",
+      "edge": "final encoded body -> exact byte count -> own ceiling/breach/verification limbs",
+      "sourceReturnConclusion": "This requirement is tied by direct consumption. Preserve classification vs textual amendment as separate decisions; no changed limit or weakened norm is required merely to recognize affected consumption. The C3 explicitly-unaffected reason does not establish untiedness."
+    },
+    {
+      "epistemic": "Inferred",
+      "identity": "PWB-REQ-021",
+      "blockSha256": "d986e4ccfa86b9f5be9526f115305f37ade19b790319e9be92319c4665e35318",
+      "edge": "PWB-006 final-output breach -> served count -> resource-breach readiness arm",
+      "sourceReturnConclusion": "Its readiness limb is a concrete derived consumer. Unchanged prompts/answers cannot establish untiedness of the whole block; carry this edge into the revised source impact method. The arithmetic witness does not imply reference readiness is true."
+    },
+    {
+      "epistemic": "Inferred",
+      "identity": "PWB-REQ-020",
+      "blockSha256": "c1c991de6d47a2b19d300b2b0311b61305d9a6e69b7af834a87fd9c65d36846f",
+      "edge": "complete machine answer availability, derived-view byte ceilings and recoverability, in addition to projectShape parity multisets",
+      "sourceReturnConclusion": "The whole-block method must assess the machine-answer/derived-view/ceiling and recoverability limbs, not just unchanged tuple membership. This bounded evidence does not supply a fresh whole-block classification verdict."
+    }
+  ],
+  "boundedCensus": {
+    "trackedPaths": 2934,
+    "parsedJsTsBlobs": 483,
+    "parseDiagnostics": 0,
+    "selectedNamedSymbols": 10,
+    "boundedResponseNamedReferences": 12,
+    "boundedResponseDirectCalls": 10,
+    "boundedResponseProductionCalls": 3,
+    "boundedResponseTestCalls": 7,
+    "textMethodRemainders": {
+      "boundedResponse": [
+        "packages/three-surface-poc-core/src/project-shape-model.test.ts",
+        "packages/three-surface-poc-core/src/resource-headroom.test.ts",
+        "packages/three-surface-poc-core/src/resource-ledger.ts",
+        "scripts/run_m10_conditional_mutations.mjs"
+      ],
+      "ServedResponseRecorder": [
+        "apps/three-surface-poc/src/surface-routes.test.ts"
+      ]
+    },
+    "limit": "Named AST references and independent text signals only. Text-only comment/string references are retained, not silently counted as calls. External/dynamic consumers and a complete architecture-wide inventory remain Unknown."
+  },
+  "productionOwners": {
+    "boundedResponse": [
+      {
+        "path": "apps/three-surface-poc/src/routes.ts",
+        "line": 167,
+        "symbol": "boundedResponse",
+        "kind": "definition"
+      },
+      {
+        "path": "apps/three-surface-poc/src/routes.ts",
+        "line": 222,
+        "symbol": "boundedResponse",
+        "kind": "direct-call"
+      },
+      {
+        "path": "apps/three-surface-poc/src/routes.ts",
+        "line": 233,
+        "symbol": "boundedResponse",
+        "kind": "direct-call"
+      },
+      {
+        "path": "apps/three-surface-poc/src/routes.ts",
+        "line": 255,
+        "symbol": "boundedResponse",
+        "kind": "direct-call"
+      }
+    ],
+    "responseLimitFailure": [
+      {
+        "path": "apps/three-surface-poc/src/routes.ts",
+        "line": 162,
+        "symbol": "responseLimitFailure",
+        "kind": "definition"
+      },
+      {
+        "path": "apps/three-surface-poc/src/routes.ts",
+        "line": 171,
+        "symbol": "responseLimitFailure",
+        "kind": "direct-call"
+      }
+    ],
+    "ifNoneMatchMatches": [
+      {
+        "path": "apps/three-surface-poc/src/routes.ts",
+        "line": 39,
+        "symbol": "ifNoneMatchMatches",
+        "kind": "definition"
+      },
+      {
+        "path": "apps/three-surface-poc/src/routes.ts",
+        "line": 237,
+        "symbol": "ifNoneMatchMatches",
+        "kind": "direct-call"
+      }
+    ],
+    "withServedReadiness": [
+      {
+        "path": "apps/three-surface-poc/src/routes.ts",
+        "line": 183,
+        "symbol": "withServedReadiness",
+        "kind": "definition"
+      },
+      {
+        "path": "apps/three-surface-poc/src/routes.ts",
+        "line": 207,
+        "symbol": "withServedReadiness",
+        "kind": "direct-call"
+      }
+    ],
+    "buildResponseIdentity": [
+      {
+        "path": "apps/three-surface-poc/src/routes.ts",
+        "line": 190,
+        "symbol": "buildResponseIdentity",
+        "kind": "direct-call"
+      },
+      {
+        "path": "apps/three-surface-poc/src/routes.ts",
+        "line": 232,
+        "symbol": "buildResponseIdentity",
+        "kind": "direct-call"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/model.ts",
+        "line": 1308,
+        "symbol": "buildResponseIdentity",
+        "kind": "direct-call"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/response-identity.ts",
+        "line": 219,
+        "symbol": "buildResponseIdentity",
+        "kind": "definition"
+      }
+    ],
+    "responseIdentityPreimage": [
+      {
+        "path": "packages/three-surface-poc-core/src/response-identity.ts",
+        "line": 204,
+        "symbol": "responseIdentityPreimage",
+        "kind": "definition"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/response-identity.ts",
+        "line": 224,
+        "symbol": "responseIdentityPreimage",
+        "kind": "direct-call"
+      }
+    ],
+    "withServedResourceBreaches": [
+      {
+        "path": "apps/three-surface-poc/src/routes.ts",
+        "line": 187,
+        "symbol": "withServedResourceBreaches",
+        "kind": "direct-call"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/walkthrough-readiness.ts",
+        "line": 170,
+        "symbol": "withServedResourceBreaches",
+        "kind": "definition"
+      }
+    ],
+    "ServedResponseRecorder": [
+      {
+        "path": "apps/three-surface-poc/src/main.ts",
+        "line": 124,
+        "symbol": "ServedResponseRecorder",
+        "kind": "construction"
+      },
+      {
+        "path": "apps/three-surface-poc/src/routes.ts",
+        "line": 199,
+        "symbol": "ServedResponseRecorder",
+        "kind": "construction"
+      },
+      {
+        "path": "apps/three-surface-poc/src/served-response-recorder.ts",
+        "line": 29,
+        "symbol": "ServedResponseRecorder",
+        "kind": "definition"
+      }
+    ],
+    "credentialFromAuthorizationHeader": [
+      {
+        "path": "packages/cap1-daemon/src/credentials.ts",
+        "line": 360,
+        "symbol": "credentialFromAuthorizationHeader",
+        "kind": "definition"
+      },
+      {
+        "path": "packages/cap1-daemon/src/server.ts",
+        "line": 254,
+        "symbol": "credentialFromAuthorizationHeader",
+        "kind": "direct-call"
+      }
+    ],
+    "verifyCredential": [
+      {
+        "path": "packages/cap1-daemon/src/credentials.ts",
+        "line": 393,
+        "symbol": "verifyCredential",
+        "kind": "definition"
+      },
+      {
+        "path": "packages/cap1-daemon/src/server.ts",
+        "line": 255,
+        "symbol": "verifyCredential",
+        "kind": "direct-call"
+      }
+    ]
+  },
+  "additionalDerivedByteWitnesses": {
+    "epistemic": "Observed",
+    "candidateCommit": "abd3f6ca2e8e99ad59327fdfc7b38d8bf41b07b5",
+    "sourceCommit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+    "method": "Independent Python frozen-input derivation + compact json.dumps + UTF-8 len",
+    "pythonVersion": "3.10.12",
+    "pairs": [
+      {
+        "name": "empty",
+        "N": 0,
+        "epistemic": "Observed",
+        "syntheticDerivation": "C3 reference-empty is unchanged; inline peer differs only by deletion of workItems.governedBy.",
+        "seedPath": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/literal-fixtures/reference-empty.json",
+        "seedSha256": "2a17732c3692730fd04f9df0a21ed2282a1eca77bc11d620af798c18d24bb074",
+        "inline": {
+          "bytes": 1692,
+          "sha256": "71f2cf4ae3fc6e979912f956efe5f8e82e9ad67d8fb8cf2750bd8fc3c0eb2d45",
+          "file": "python-empty-inline.compact.utf8",
+          "derivedInput": "derived-inputs/empty-inline.json"
+        },
+        "reference": {
+          "bytes": 1950,
+          "sha256": "cf27c5bb70d0e3f9fe90c9a189c10a06d77ce41af76ed8edd4a58a00935a302c",
+          "file": "python-empty-reference.compact.utf8",
+          "derivedInput": "derived-inputs/empty-reference.json"
+        },
+        "referenceMinusInlineBytes": 258,
+        "separatingIntervalInclusive": [
+          1692,
+          1949
+        ],
+        "truthTable": [
+          {
+            "limit": 1691,
+            "inlineFits": false,
+            "referenceFits": false
+          },
+          {
+            "limit": 1692,
+            "inlineFits": true,
+            "referenceFits": false
+          },
+          {
+            "limit": 1693,
+            "inlineFits": true,
+            "referenceFits": false
+          },
+          {
+            "limit": 1949,
+            "inlineFits": true,
+            "referenceFits": false
+          },
+          {
+            "limit": 1950,
+            "inlineFits": true,
+            "referenceFits": true
+          },
+          {
+            "limit": 1951,
+            "inlineFits": true,
+            "referenceFits": true
+          }
+        ]
+      },
+      {
+        "name": "one-item",
+        "N": 1,
+        "epistemic": "Observed",
+        "syntheticDerivation": "Both derived from C3 reference-body-A: retain fixture-a, count=1, rendered fixture-a only, retain its governing-intent subject plus region subject. Inline peer replaces that one reference by the complete shared value and removes the shared carrier.",
+        "seedPath": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/literal-fixtures/reference-body-A.json",
+        "seedSha256": "281cdf84ceda4b30e3418eb478b62ce64b71d9151732e1a36a34120d3751ceb9",
+        "inline": {
+          "bytes": 2612,
+          "sha256": "6f6b2c57eb278e62328aac56242cca3b82618ec959ae9337dc3f0f91c5f97df0",
+          "file": "python-one-item-inline.compact.utf8",
+          "derivedInput": "derived-inputs/one-item-inline.json"
+        },
+        "reference": {
+          "bytes": 2647,
+          "sha256": "36d6b9a6396766f33886de54421622a18574636f4764a2bb4550ca133170e364",
+          "file": "python-one-item-reference.compact.utf8",
+          "derivedInput": "derived-inputs/one-item-reference.json"
+        },
+        "referenceMinusInlineBytes": 35,
+        "separatingIntervalInclusive": [
+          2612,
+          2646
+        ],
+        "truthTable": [
+          {
+            "limit": 2611,
+            "inlineFits": false,
+            "referenceFits": false
+          },
+          {
+            "limit": 2612,
+            "inlineFits": true,
+            "referenceFits": false
+          },
+          {
+            "limit": 2613,
+            "inlineFits": true,
+            "referenceFits": false
+          },
+          {
+            "limit": 2646,
+            "inlineFits": true,
+            "referenceFits": false
+          },
+          {
+            "limit": 2647,
+            "inlineFits": true,
+            "referenceFits": true
+          },
+          {
+            "limit": 2648,
+            "inlineFits": true,
+            "referenceFits": true
+          }
+        ]
+      }
+    ],
+    "scope": "Derived synthetic byte-only pairs, not runtime bodies or a general all-N saving claim."
+  },
+  "requiredSourceDecision": {
+    "epistemic": "Inferred",
+    "decision": "Replace the semantics/constant/outcome-based untiedness shortcut with a limb-by-limb consumption method before another candidate is frozen. For every examined requirement, trace owned scope, typed data inputs and final representation/derived decisions; retain each positive edge or a reason plus method proving untiedness. Unknown relationships stay undecidable. Reassess all 130 occurrence dispositions under that method; do not infer their new counts from this bounded corroboration.",
+    "representationOrder": "Explicitly account for the proposed carrier at validation, response-identity preimage, final serialization/byte measurement, conditional-cache decision and served-readiness projection. Do not invent a normalization/compatibility rule or preserve an old contentKey by assertion.",
+    "authority": "This is a required drafting/source-method decision under existing draft scope, not a new owner approval, implementation instruction, semantic verdict or permission to change bound bytes."
+  }
+}

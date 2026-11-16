@@ -1,0 +1,118 @@
+{
+  "subject": "round-6 rebind of public-git-source-acquisition-local-agent v1.1 to #812 at 155f9c49 (syzygy-pdja.29)",
+  "commit_base": "d073db51ab8e870b953e86d2bca67af1dc7c52b3",
+  "note": "run against the uncommitted working tree on top of commit_base",
+  "file_sha256_restored": {
+    ".syzygy/governance/contracts/candidates/public-git-source-acquisition-local-agent-v1-1/proposed/POLARIS-PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-CANDIDATE.json": "384f7b603d49ab953a71deb526cdf43e7e65f6e9a7160c3893500b6bd6385f00",
+    "scripts/build_public_git_source_acquisition_local_agent_v1_1.py": "0c306f902fcab67085f51800674629f94a23c8c550491e4950df78b5043fface"
+  },
+  "mutants": [
+    {
+      "id": "R7-a fetch drops the linked worktrees of the governance home's repository",
+      "file": ".syzygy/governance/contracts/candidates/public-git-source-acquisition-local-agent-v1-1/proposed/POLARIS-PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-CANDIDATE.json",
+      "old": "derived from its path, and never inside any working tree of the governance home's repository, its linked worktrees included, nor",
+      "new": "derived from its path, and never inside the governance home's working tree, nor",
+      "command": "python3 scripts/build_public_git_source_acquisition_local_agent_v1_1.py --check",
+      "exit": 1,
+      "output": [
+        "FAIL fetch does not name \"never inside any working tree of the governance home's repository, its linked worktrees included\"",
+        "FAIL fetch departs from its exact text at the clause \"the copy's directory\"",
+        "FAIL the patch applied to the v1.0 bytes does not give the proposed bytes",
+        "FAIL PROPOSED-SUBJECTS.json does not state the digests the files hash to"
+      ],
+      "killed": true
+    },
+    {
+      "id": "R7-b fetch drops the operator's clone's placement",
+      "file": ".syzygy/governance/contracts/candidates/public-git-source-acquisition-local-agent-v1-1/proposed/POLARIS-PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-CANDIDATE.json",
+      "old": ", and never inside the operator's clone's working tree, Git directory or common Git directory, or any working tree of its repository, its linked worktrees included, a run for which",
+      "new": ", a run for which",
+      "command": "python3 scripts/build_public_git_source_acquisition_local_agent_v1_1.py --check",
+      "exit": 1,
+      "output": [
+        "FAIL fetch does not name 'any working tree of its repository, its linked worktrees included'",
+        "FAIL fetch departs from its exact text at the clause \"the copy's directory\"",
+        "FAIL the patch applied to the v1.0 bytes does not give the proposed bytes",
+        "FAIL PROPOSED-SUBJECTS.json does not state the digests the files hash to"
+      ],
+      "killed": true
+    },
+    {
+      "id": "R7-c stateDirectoryWrites drops the operator's clone's linked worktrees",
+      "file": ".syzygy/governance/contracts/candidates/public-git-source-acquisition-local-agent-v1-1/proposed/POLARIS-PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-CANDIDATE.json",
+      "old": "or any working tree of its repository, its linked worktrees included: ",
+      "new": ": ",
+      "command": "python3 scripts/build_public_git_source_acquisition_local_agent_v1_1.py --check",
+      "exit": 1,
+      "output": [
+        "FAIL stateDirectoryWrites departs from its exact text at the clause \"the copy's directory and where it lies\"",
+        "FAIL the patch applied to the v1.0 bytes does not give the proposed bytes",
+        "FAIL PROPOSED-SUBJECTS.json does not state the digests the files hash to",
+        "public-git-source-acquisition-local-agent v1.1: unapplied, 3 findings"
+      ],
+      "killed": true
+    },
+    {
+      "id": "R7-d stateDirectoryWrites drops keeping the copy where its removal fails",
+      "file": ".syzygy/governance/contracts/candidates/public-git-source-acquisition-local-agent-v1-1/proposed/POLARIS-PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-CANDIDATE.json",
+      "old": ", or, where that removal fails, keeps it, the launch output naming its location and the removal's failure",
+      "new": "",
+      "command": "python3 scripts/build_public_git_source_acquisition_local_agent_v1_1.py --check",
+      "exit": 1,
+      "output": [
+        "FAIL stateDirectoryWrites departs from its exact text at the clause \"Syzygy's own writes to it\"",
+        "FAIL the patch applied to the v1.0 bytes does not give the proposed bytes",
+        "FAIL PROPOSED-SUBJECTS.json does not state the digests the files hash to",
+        "public-git-source-acquisition-local-agent v1.1: unapplied, 3 findings"
+      ],
+      "killed": true
+    },
+    {
+      "id": "R7-e launch read (1) drops the files that locate linked worktrees",
+      "file": ".syzygy/governance/contracts/candidates/public-git-source-acquisition-local-agent-v1-1/proposed/POLARIS-PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-CANDIDATE.json",
+      "old": ", and the files of its common Git directory that locate its linked worktrees; ",
+      "new": "; ",
+      "command": "python3 scripts/build_public_git_source_acquisition_local_agent_v1_1.py --check",
+      "exit": 1,
+      "output": [
+        "FAIL readAuthority departs from its exact text at the clause 'launch read (1)'",
+        "FAIL the patch applied to the v1.0 bytes does not give the proposed bytes",
+        "FAIL PROPOSED-SUBJECTS.json does not state the digests the files hash to",
+        "public-git-source-acquisition-local-agent v1.1: unapplied, 3 findings"
+      ],
+      "killed": true
+    },
+    {
+      "id": "R7-f launch read (3) drops core.bare and core.worktree",
+      "file": ".syzygy/governance/contracts/candidates/public-git-source-acquisition-local-agent-v1-1/proposed/POLARIS-PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-CANDIDATE.json",
+      "old": " and, to locate its repository's working trees, core.bare and core.worktree alone; ",
+      "new": " alone; ",
+      "command": "python3 scripts/build_public_git_source_acquisition_local_agent_v1_1.py --check",
+      "exit": 1,
+      "output": [
+        "FAIL readAuthority departs from its exact text at the clause 'launch read (3)'",
+        "FAIL the patch applied to the v1.0 bytes does not give the proposed bytes",
+        "FAIL PROPOSED-SUBJECTS.json does not state the digests the files hash to",
+        "public-git-source-acquisition-local-agent v1.1: unapplied, 3 findings"
+      ],
+      "killed": true
+    },
+    {
+      "id": "R7-g fetch drops the unsupported-object-format exception",
+      "file": ".syzygy/governance/contracts/candidates/public-git-source-acquisition-local-agent-v1-1/proposed/POLARIS-PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-CANDIDATE.json",
+      "old": ", except that an object format Git does not support fails the copy's init, which refuses as every failure of a Git process for the copy does;",
+      "new": ";",
+      "command": "python3 scripts/build_public_git_source_acquisition_local_agent_v1_1.py --check",
+      "exit": 1,
+      "output": [
+        "FAIL fetch does not name \"an object format Git does not support fails the copy's init\"",
+        "FAIL fetch departs from its exact text at the clause \"the copy's directory\"",
+        "FAIL the patch applied to the v1.0 bytes does not give the proposed bytes",
+        "FAIL PROPOSED-SUBJECTS.json does not state the digests the files hash to"
+      ],
+      "killed": true
+    }
+  ],
+  "killed": 7,
+  "total": 7
+}

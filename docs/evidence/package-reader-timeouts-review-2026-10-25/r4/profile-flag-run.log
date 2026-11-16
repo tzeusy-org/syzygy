@@ -1,0 +1,6 @@
+run 1: exit 0, 27.1 s, load1 {'start': 55.21, 'end': 57.69, 'min': 53.44, 'max': 55.51, 'samples': 6}, 299 tests of the file, 0 failed
+exit 0
+top-level keys ['bead', 'host', 'mode', 'project', 'runs', 'schema', 'script', 'subject', 'text']
+script sha 7799aa73bae9a4790b75b85a597c57bf07aab4bb4dab6c67570e69af7535128e
+run keys ['command', 'exitCode', 'fileTests', 'index', 'load1', 'startedAt', 'suiteTotals', 'tests', 'wallSeconds']
+fileTests 299 exit 0

@@ -167,23 +167,6 @@ describe('Trajectory', () => {
     expect(emptyHtml).not.toContain('role="list"');
   });
 
-  it('renders an explicit denominator-bearing Unknown graph when no seeds are supplied', () => {
-    const { repoRoot, revision } = fixtureRepoWithGit(cleanups);
-    const model = buildPocModel({
-      repoRoot,
-      repositoryRevision: revision,
-      observerRevision: revision,
-      evaluation: { snapshot: 'empty-seed-trajectory', asOf: '2026-09-22T00:00:00Z' },
-    });
-    expect(model.entities).toEqual([]);
-    expect(model.trajectory.kind).toBe('unknown');
-    const html = renderTrajectoryPage(model);
-    expect(html).toContain('data-unknown-disclosure="region:work-items"');
-    expect(html).toContain('Independently observed work-item denominator: Unknown (work items were not independently observed).');
-    expect(html).not.toContain('class="board"');
-    expect(html).toContain('Unknown project');
-  });
-
   it('renders the observed worker-change lifecycle state on the matching card, never as verified (AC3/AC4)', () => {
     const { repoRoot, revision } = fixtureRepoWithGit(cleanups);
     writeWorkerChangeSeam(repoRoot, 'x = 1\n');
@@ -518,5 +501,42 @@ describe('Trajectory', () => {
       expect(html).toContain('Unknown — this surface has no observed substrate revision to name.');
       expect(html).not.toContain('data-parity-field="surface-substrate-revision"');
     });
+  });
+
+  it('never produces an observed item count on the Unknown projection, over every seed and work-item read (syzygy-j67q)', () => {
+    const { repoRoot, revision } = fixtureRepoWithGit(cleanups);
+    const reads: Record<string, (root: string, sql: string) => string> = {
+      throws: () => {
+        throw new Error('refused');
+      },
+      junk: () => 'not json',
+      empty: (_root, sql) => (sql.includes('WHERE id LIKE') ? '[]' : JSON.stringify([{ revision: 'dolt-empty' }])),
+      rows: (_root, sql) =>
+        sql.includes('WHERE id LIKE') ? JSON.stringify([fixtureWorkItemRow('bu-open1', 'open', '2026-08-01T00:00:00Z', '2026-08-02T00:00:00Z', null)]) : JSON.stringify([{ revision: 'dolt-rows' }]),
+    };
+    const seedSets = { butlers: BUTLERS_POC_SEEDS, badPrefix: { ...BUTLERS_POC_SEEDS, beadPrefix: 'Bad Prefix!' } };
+    const kinds = new Set<string>();
+    for (const seeds of Object.values(seedSets)) {
+      for (const run of Object.values(reads)) {
+        const model = buildPocModel({
+          seeds,
+          repoRoot,
+          repositoryRevision: revision,
+          observerRevision: revision,
+          evaluation: { snapshot: 'butlers@matrix', asOf: '2026-08-30T12:00:00Z' },
+          runWorkItemQuery: run,
+        });
+        kinds.add(model.trajectory.kind);
+        if (model.trajectory.kind === 'unknown') {
+          expect(Object.keys(model.trajectory).sort()).toEqual(['kind', 'reason']);
+          expect(renderTrajectoryPage(model)).toContain(
+            'Independently observed work-item denominator: Unknown (work items were not independently observed).',
+          );
+        } else {
+          expect(Object.keys(model.trajectory)).not.toContain('observedItemCount');
+        }
+      }
+    }
+    expect([...kinds].sort()).toEqual(['observed', 'unknown']);
   });
 });

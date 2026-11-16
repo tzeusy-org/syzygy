@@ -1,0 +1,40 @@
+{
+ "X3b": {
+  "unmutated": {
+   "exit": 0,
+   "stderr": "",
+   "staleLeft": []
+  },
+  "mutated": {
+   "exit": 0,
+   "stderr": "",
+   "staleLeft": [
+    "packages/a/dist/stale.js"
+   ]
+  }
+ },
+ "X8": {
+  "unmutated": {
+   "exit": 1,
+   "stderr": "Error: tools/x: not a workspace project with a tsconfig.json",
+   "staleLeft": [
+    "packages/a/dist/stale.js",
+    "tools/x/dist/stale.js"
+   ]
+  },
+  "mutated": {
+   "exit": 0,
+   "stderr": "",
+   "staleLeft": [
+    "packages/a/dist/stale.js"
+   ]
+  }
+ },
+ "X4": {
+  "buildExit": 0,
+  "emittedTest": true,
+  "restoredBuildExit": 0,
+  "emittedTestAfterRestore": false
+ },
+ "worktreeClean": true
+}

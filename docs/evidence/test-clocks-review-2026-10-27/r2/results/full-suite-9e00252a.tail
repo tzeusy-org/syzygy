@@ -1,0 +1,16 @@
+      6      → Test timed out in 5000ms.
+      1  FAIL  |@syzygy/polaris-dossier| packages/polaris-dossier/src/gate-acts.test.ts > the sitting's acts fail closed > refuse an in-force record whose table binds other files than the form names, even when an act binds its bytes
+      1  FAIL  |@syzygy/polaris-dossier| packages/polaris-dossier/src/review.test.ts > review-check > does not count a verdict whose launch record is altered to another form, role or prompt
+      1  FAIL  |@syzygy/polaris-dossier| packages/polaris-dossier/src/start-gates.test.ts > init: a run that passes every start gate > pins the consented HEAD, records the subject and writes only run.json under the state root
+      1  FAIL  |@syzygy/polaris-dossier| packages/polaris-dossier/src/start-gates.test.ts > init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses when the signed registry entry names another implementation or no implementation version
+      1  FAIL  |@syzygy/polaris-dossier| packages/polaris-dossier/src/start-gates.test.ts > init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses config naming a remote, a promisor, an include or a command the agent's git would run (R-POLARIS-DOSSIER-CLONE-SHAPE-2 finding 1)
+      1  FAIL  |@syzygy/polaris-dossier| packages/polaris-dossier/src/start-gates.test.ts > init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses every top-level name the consented form never leaves: commondir, modules, worktrees, pseudo-refs, bisect and rebase state
+      1  FAIL  |@syzygy/polaris-generation-consent| packages/polaris-generation-consent/src/act-families.test.ts [ packages/polaris-generation-consent/src/act-families.test.ts ]
+      1 Error: Hook timed out in 10000ms.
+      6 Error: Test timed out in 5000ms.
+ Test Files  4 failed | 233 passed | 3 skipped (240)
+      Tests  6 failed | 5230 passed | 70 skipped (5306)
+   Start at  14:43:39
+   Duration  542.67s (transform 67.21s, setup 15.05s, collect 333.29s, tests 2113.68s, environment 270ms, prepare 107.12s)
+
+JSON report written to /tmp/r532b-8/full-9e00252a.json

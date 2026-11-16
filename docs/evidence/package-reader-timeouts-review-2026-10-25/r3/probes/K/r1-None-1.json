@@ -1,0 +1,37 @@
+{
+ "batch": "K",
+ "version": "r1",
+ "param": null,
+ "n": 1,
+ "scriptSha256": "920c5f120209904b37cfe14320ea00edfa18eafbda12fd7dcb02ec8fcf4f1e97",
+ "command": "python3 -I <tools>/inject.py killpg-race <tools>/r1_measure_vitest_test_durations.py . --file packages/polaris-generation-consent/src/package-reader.test.ts --project @syzygy/polaris-generation-consent --mode alone --runs 1 --out <tmp>/measure-out.json --profile",
+ "sent": [],
+ "events": [],
+ "scriptExitedAtSeconds": 25.633,
+ "exitCode": 1,
+ "claimedExit": 0,
+ "exitAsClaimed": false,
+ "descendantsSeen": 20,
+ "seenOnlyByCwd": 1,
+ "vitestSeen": true,
+ "npxSeen": true,
+ "treeAfterExit": " M packages/polaris-generation-consent/src/package-reader.test.ts\n M packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts\n",
+ "survivors": {},
+ "recordWritten": false,
+ "recordRuns": null,
+ "recordTests": null,
+ "recordProfileRows": null,
+ "recordExitCode": null,
+ "marks": [],
+ "tmpdirLeft": [
+  "node-compile-cache",
+  "script.log"
+ ],
+ "trace": [
+  "KILLPG 4066554 0 -> ESRCH, answered alive (injected)",
+  "KILLPG 4066554 15 -> ESRCH"
+ ],
+ "outputTail": "554 15 -> ESRCH\nTraceback (most recent call last):\n  File \"/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520c/tools/inject.py\", line 64, in <module>\n    runpy.run_path(script, run_name='__main__')\n  File \"/home/tze/.pyenv/versions/3.10.12/lib/python3.10/runpy.py\", line 289, in run_path\n    return _run_module_code(code, init_globals, run_name,\n  File \"/home/tze/.pyenv/versions/3.10.12/lib/python3.10/runpy.py\", line 96, in _run_module_code\n    _run_code(code, mod_globals, init_globals,\n  File \"/home/tze/.pyenv/versions/3.10.12/lib/python3.10/runpy.py\", line 86, in _run_code\n    exec(code, run_globals)\n  File \"/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520c/tools/r1_measure_vitest_test_durations.py\", line 133, in <module>\n    out['runs'].append(one_run(i))\n  File \"/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520c/tools/r1_measure_vitest_test_durations.py\", line 103, in one_run\n    if proc is not None: end_group(proc)\n  File \"/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520c/tools/r1_measure_vitest_test_durations.py\", line 74, in end_group\n    os.killpg(proc.pid, signal.SIGTERM)\n  File \"/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520c/tools/inject.py\", line 36, in killpg\n    real_killpg(pid, sig)\nProcessLookupError: [Errno 3] No such process\n",
+ "exercised": true,
+ "passes": false
+}

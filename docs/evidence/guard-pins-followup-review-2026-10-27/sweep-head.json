@@ -1,0 +1,61 @@
+{
+ "head": "c12276679a8ed4d3b6b9642215115b77dbfc49d4",
+ "pattern": "/^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu",
+ "manifests": 12,
+ "manifestList": [
+  "package.json",
+  "apps/syzygy/package.json",
+  "apps/three-surface-poc/package.json",
+  "packages/cap1-conformance/package.json",
+  "packages/cap1-core/package.json",
+  "packages/cap1-daemon/package.json",
+  "packages/cap1-system/package.json",
+  "packages/http-host/package.json",
+  "packages/polaris-dossier/package.json",
+  "packages/polaris-generation-consent/package.json",
+  "packages/polaris-generation-core/package.json",
+  "packages/three-surface-poc-core/package.json"
+ ],
+ "trackedPackageJson": 12,
+ "trackedOutsideTestkitPopulation": [],
+ "versions": 24,
+ "byField": {
+  "dependencies": 21,
+  "devDependencies": 3,
+  "optionalDependencies": 0,
+  "peerDependencies": 0
+ },
+ "byNpaType": {
+  "range": 3,
+  "version": 21
+ },
+ "matchLocalPattern": [],
+ "npaDirectoryOrFile": [],
+ "disagreements": [],
+ "versionList": [
+  "package.json devDependencies @types/node@^26.2.0 range",
+  "package.json devDependencies typescript@^5.5.0 range",
+  "package.json devDependencies vitest@^3.2.0 range",
+  "apps/syzygy/package.json dependencies @syzygy/cap1-daemon@0.0.0 version",
+  "apps/syzygy/package.json dependencies @syzygy/http-host@0.0.0 version",
+  "apps/syzygy/package.json dependencies @syzygy/polaris-dossier@0.0.0 version",
+  "apps/syzygy/package.json dependencies @syzygy/three-surface-poc-app@0.0.0 version",
+  "apps/three-surface-poc/package.json dependencies @syzygy/cap1-daemon@0.0.0 version",
+  "apps/three-surface-poc/package.json dependencies @syzygy/http-host@0.0.0 version",
+  "apps/three-surface-poc/package.json dependencies @syzygy/three-surface-poc-core@0.0.0 version",
+  "apps/three-surface-poc/package.json dependencies @syzygy/polaris-generation-consent@0.0.0 version",
+  "apps/three-surface-poc/package.json dependencies @syzygy/polaris-generation-core@0.0.0 version",
+  "packages/cap1-conformance/package.json dependencies @syzygy/cap1-core@0.0.0 version",
+  "packages/cap1-conformance/package.json dependencies @syzygy/cap1-daemon@0.0.0 version",
+  "packages/cap1-core/package.json dependencies yaml@2.9.0 version",
+  "packages/cap1-daemon/package.json dependencies @syzygy/cap1-core@0.0.0 version",
+  "packages/cap1-daemon/package.json dependencies @syzygy/http-host@0.0.0 version",
+  "packages/http-host/package.json dependencies @syzygy/cap1-core@0.0.0 version",
+  "packages/polaris-dossier/package.json dependencies @syzygy/cap1-core@0.0.0 version",
+  "packages/polaris-dossier/package.json dependencies @syzygy/polaris-generation-consent@0.0.0 version",
+  "packages/polaris-dossier/package.json dependencies @syzygy/polaris-generation-core@0.0.0 version",
+  "packages/polaris-dossier/package.json dependencies @syzygy/three-surface-poc-core@0.0.0 version",
+  "packages/polaris-generation-consent/package.json dependencies @syzygy/polaris-generation-core@0.0.0 version",
+  "packages/three-surface-poc-core/package.json dependencies @syzygy/cap1-core@0.0.0 version"
+ ]
+}

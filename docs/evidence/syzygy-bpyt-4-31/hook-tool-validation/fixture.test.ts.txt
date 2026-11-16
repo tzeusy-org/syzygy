@@ -1,0 +1,9 @@
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+const sleep = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms));
+beforeAll(async () => { await sleep(1500); }, 20_000);
+afterAll(async () => { await sleep(700); });
+describe('inner', () => {
+  beforeAll(async () => { await sleep(400); });
+  it('a', async () => { await sleep(100); expect(1).toBe(1); });
+});
+it('b', async () => { await sleep(50); expect(1).toBe(1); });

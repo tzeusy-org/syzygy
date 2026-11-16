@@ -1,0 +1,3 @@
+method 1 (python re over git show): 562 tracked .ts/.mts/.cts/.tsx files; 0 reference directives in 0 files
+  of which reference path: 0
+method 2 (git grep -F '<reference' over the same suffixes): 'a607bb62:docs/evidence/argv-table-review-2026-10-25/tools/guard-probe-tail.ts:1\na607bb62:packages/cap1-conformance/src/consent-record-convention.conformance.test.ts:3\na607bb62:packages/cap1-daemon/src/consent-loading.ts:1'

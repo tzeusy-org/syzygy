@@ -1,0 +1,15 @@
+docs/evidence/syzygy-bpyt-39/comment-only.json
+docs/evidence/syzygy-bpyt-39/npmrc-trace-lane-probe-after.json
+docs/evidence/syzygy-bpyt-39/npmrc-trace-lane-probe-before.json
+docs/evidence/syzygy-bpyt-39/npmrc-trace-root-exception-probe.json
+docs/evidence/syzygy-bpyt-39/npmrc_trace.py
+docs/evidence/syzygy-bpyt-39/record-predicate-mutants.json
+docs/evidence/syzygy-bpyt-39/record.py
+docs/evidence/syzygy-bpyt-39/record_predicate_mutants.py
+docs/evidence/syzygy-bpyt-39/root-exception-probe.json
+docs/evidence/syzygy-bpyt-39/root_exception_probe.py
+docs/evidence/syzygy-bpyt-39/summary.json
+docs/evidence/syzygy-bpyt-8-39/npm_alias_probe.py
+docs/evidence/syzygy-bpyt-8-39/record.py
+docs/evidence/syzygy-bpyt-8-39/summary.json
+packages/polaris-generation-core/src/workspace-reach.testkit.ts

@@ -1,0 +1,1069 @@
+{
+ "node": "v24.6.0",
+ "rows": [
+  {
+   "target": "./dist/index.js",
+   "condition": "import",
+   "how": "import",
+   "node": "loads",
+   "guard": "accepts"
+  },
+  {
+   "target": "./dist/index.js",
+   "condition": "require",
+   "how": "require",
+   "node": "loads",
+   "guard": "accepts"
+  },
+  {
+   "target": "./dist/index.js",
+   "condition": "default",
+   "how": "import",
+   "node": "loads",
+   "guard": "accepts"
+  },
+  {
+   "target": "./dist/index.js",
+   "condition": "default",
+   "how": "require",
+   "node": "loads",
+   "guard": "accepts"
+  },
+  {
+   "target": "./dist/./index.js",
+   "condition": "import",
+   "how": "import",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/./index.js",
+   "condition": "require",
+   "how": "require",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/./index.js",
+   "condition": "default",
+   "how": "import",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/./index.js",
+   "condition": "default",
+   "how": "require",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/.",
+   "condition": "import",
+   "how": "import",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/.",
+   "condition": "require",
+   "how": "require",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/.",
+   "condition": "default",
+   "how": "import",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/.",
+   "condition": "default",
+   "how": "require",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/x/../index.js",
+   "condition": "import",
+   "how": "import",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/x/../index.js",
+   "condition": "require",
+   "how": "require",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/x/../index.js",
+   "condition": "default",
+   "how": "import",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/x/../index.js",
+   "condition": "default",
+   "how": "require",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/x/..",
+   "condition": "import",
+   "how": "import",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/x/..",
+   "condition": "require",
+   "how": "require",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/x/..",
+   "condition": "default",
+   "how": "import",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/x/..",
+   "condition": "default",
+   "how": "require",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/node_modules/index.js",
+   "condition": "import",
+   "how": "import",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/node_modules/index.js",
+   "condition": "require",
+   "how": "require",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/node_modules/index.js",
+   "condition": "default",
+   "how": "import",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/node_modules/index.js",
+   "condition": "default",
+   "how": "require",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/NODE_MODULES/index.js",
+   "condition": "import",
+   "how": "import",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/NODE_MODULES/index.js",
+   "condition": "require",
+   "how": "require",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/NODE_MODULES/index.js",
+   "condition": "default",
+   "how": "import",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/NODE_MODULES/index.js",
+   "condition": "default",
+   "how": "require",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/Node_Modules/index.js",
+   "condition": "import",
+   "how": "import",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/Node_Modules/index.js",
+   "condition": "require",
+   "how": "require",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/Node_Modules/index.js",
+   "condition": "default",
+   "how": "import",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/Node_Modules/index.js",
+   "condition": "default",
+   "how": "require",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/nOdE_mOdUlEs/index.js",
+   "condition": "import",
+   "how": "import",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/nOdE_mOdUlEs/index.js",
+   "condition": "require",
+   "how": "require",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/nOdE_mOdUlEs/index.js",
+   "condition": "default",
+   "how": "import",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/nOdE_mOdUlEs/index.js",
+   "condition": "default",
+   "how": "require",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/%2e/index.js",
+   "condition": "import",
+   "how": "import",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/%2e/index.js",
+   "condition": "require",
+   "how": "require",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/%2e/index.js",
+   "condition": "default",
+   "how": "import",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/%2e/index.js",
+   "condition": "default",
+   "how": "require",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/%2E/index.js",
+   "condition": "import",
+   "how": "import",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/%2E/index.js",
+   "condition": "require",
+   "how": "require",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/%2E/index.js",
+   "condition": "default",
+   "how": "import",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/%2E/index.js",
+   "condition": "default",
+   "how": "require",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/%2e%2e/index.js",
+   "condition": "import",
+   "how": "import",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/%2e%2e/index.js",
+   "condition": "require",
+   "how": "require",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/%2e%2e/index.js",
+   "condition": "default",
+   "how": "import",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/%2e%2e/index.js",
+   "condition": "default",
+   "how": "require",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/%2E%2e/index.js",
+   "condition": "import",
+   "how": "import",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/%2E%2e/index.js",
+   "condition": "require",
+   "how": "require",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/%2E%2e/index.js",
+   "condition": "default",
+   "how": "import",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/%2E%2e/index.js",
+   "condition": "default",
+   "how": "require",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/.%2e/index.js",
+   "condition": "import",
+   "how": "import",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/.%2e/index.js",
+   "condition": "require",
+   "how": "require",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/.%2e/index.js",
+   "condition": "default",
+   "how": "import",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/.%2e/index.js",
+   "condition": "default",
+   "how": "require",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/%6eode_modules/index.js",
+   "condition": "import",
+   "how": "import",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/%6eode_modules/index.js",
+   "condition": "require",
+   "how": "require",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/%6eode_modules/index.js",
+   "condition": "default",
+   "how": "import",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/%6eode_modules/index.js",
+   "condition": "default",
+   "how": "require",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/%4Eode_modules/index.js",
+   "condition": "import",
+   "how": "import",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/%4Eode_modules/index.js",
+   "condition": "require",
+   "how": "require",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/%4Eode_modules/index.js",
+   "condition": "default",
+   "how": "import",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/%4Eode_modules/index.js",
+   "condition": "default",
+   "how": "require",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/node%5Fmodules/index.js",
+   "condition": "import",
+   "how": "import",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/node%5Fmodules/index.js",
+   "condition": "require",
+   "how": "require",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/node%5Fmodules/index.js",
+   "condition": "default",
+   "how": "import",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/node%5Fmodules/index.js",
+   "condition": "default",
+   "how": "require",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/%6E%6F%64%65%5F%6D%6F%64%75%6C%65%73/index.js",
+   "condition": "import",
+   "how": "import",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/%6E%6F%64%65%5F%6D%6F%64%75%6C%65%73/index.js",
+   "condition": "require",
+   "how": "require",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/%6E%6F%64%65%5F%6D%6F%64%75%6C%65%73/index.js",
+   "condition": "default",
+   "how": "import",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/%6E%6F%64%65%5F%6D%6F%64%75%6C%65%73/index.js",
+   "condition": "default",
+   "how": "require",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/x\\..\\index.js",
+   "condition": "import",
+   "how": "import",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/x\\..\\index.js",
+   "condition": "require",
+   "how": "require",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/x\\..\\index.js",
+   "condition": "default",
+   "how": "import",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist/x\\..\\index.js",
+   "condition": "default",
+   "how": "require",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist\\.\\index.js",
+   "condition": "import",
+   "how": "import",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist\\.\\index.js",
+   "condition": "require",
+   "how": "require",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist\\.\\index.js",
+   "condition": "default",
+   "how": "import",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist\\.\\index.js",
+   "condition": "default",
+   "how": "require",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist\\node_modules\\index.js",
+   "condition": "import",
+   "how": "import",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist\\node_modules\\index.js",
+   "condition": "require",
+   "how": "require",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist\\node_modules\\index.js",
+   "condition": "default",
+   "how": "import",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist\\node_modules\\index.js",
+   "condition": "default",
+   "how": "require",
+   "node": "throws ERR_INVALID_PACKAGE_TARGET",
+   "guard": "refuses: says Node refuses"
+  },
+  {
+   "target": "./dist\\index.js",
+   "condition": "import",
+   "how": "import",
+   "node": "throws ERR_MODULE_NOT_FOUND",
+   "guard": "accepts"
+  },
+  {
+   "target": "./dist\\index.js",
+   "condition": "require",
+   "how": "require",
+   "node": "throws MODULE_NOT_FOUND",
+   "guard": "accepts"
+  },
+  {
+   "target": "./dist\\index.js",
+   "condition": "default",
+   "how": "import",
+   "node": "throws ERR_MODULE_NOT_FOUND",
+   "guard": "accepts"
+  },
+  {
+   "target": "./dist\\index.js",
+   "condition": "default",
+   "how": "require",
+   "node": "throws MODULE_NOT_FOUND",
+   "guard": "accepts"
+  },
+  {
+   "target": "./dist//index.js",
+   "condition": "import",
+   "how": "import",
+   "node": "warns",
+   "guard": "refuses: says Node warns"
+  },
+  {
+   "target": "./dist//index.js",
+   "condition": "require",
+   "how": "require",
+   "node": "warns",
+   "guard": "refuses: says Node warns"
+  },
+  {
+   "target": "./dist//index.js",
+   "condition": "default",
+   "how": "import",
+   "node": "warns",
+   "guard": "refuses: says Node warns"
+  },
+  {
+   "target": "./dist//index.js",
+   "condition": "default",
+   "how": "require",
+   "node": "warns",
+   "guard": "refuses: says Node warns"
+  },
+  {
+   "target": "./dist/",
+   "condition": "import",
+   "how": "import",
+   "node": "throws ERR_MODULE_NOT_FOUND",
+   "guard": "refuses: says Node warns"
+  },
+  {
+   "target": "./dist/",
+   "condition": "require",
+   "how": "require",
+   "node": "throws MODULE_NOT_FOUND",
+   "guard": "refuses: says Node warns"
+  },
+  {
+   "target": "./dist/",
+   "condition": "default",
+   "how": "import",
+   "node": "throws ERR_MODULE_NOT_FOUND",
+   "guard": "refuses: says Node warns"
+  },
+  {
+   "target": "./dist/",
+   "condition": "default",
+   "how": "require",
+   "node": "throws MODULE_NOT_FOUND",
+   "guard": "refuses: says Node warns"
+  },
+  {
+   "target": "./dist/x//",
+   "condition": "import",
+   "how": "import",
+   "node": "throws ERR_MODULE_NOT_FOUND",
+   "guard": "refuses: says Node warns"
+  },
+  {
+   "target": "./dist/x//",
+   "condition": "require",
+   "how": "require",
+   "node": "throws MODULE_NOT_FOUND",
+   "guard": "refuses: says Node warns"
+  },
+  {
+   "target": "./dist/x//",
+   "condition": "default",
+   "how": "import",
+   "node": "throws ERR_MODULE_NOT_FOUND",
+   "guard": "refuses: says Node warns"
+  },
+  {
+   "target": "./dist/x//",
+   "condition": "default",
+   "how": "require",
+   "node": "throws MODULE_NOT_FOUND",
+   "guard": "refuses: says Node warns"
+  },
+  {
+   "target": ".//dist/index.js",
+   "condition": "import",
+   "how": "import",
+   "node": "warns",
+   "guard": "refuses: says Node warns"
+  },
+  {
+   "target": ".//dist/index.js",
+   "condition": "require",
+   "how": "require",
+   "node": "warns",
+   "guard": "refuses: says Node warns"
+  },
+  {
+   "target": ".//dist/index.js",
+   "condition": "default",
+   "how": "import",
+   "node": "warns",
+   "guard": "refuses: says Node warns"
+  },
+  {
+   "target": ".//dist/index.js",
+   "condition": "default",
+   "how": "require",
+   "node": "warns",
+   "guard": "refuses: says Node warns"
+  },
+  {
+   "target": "./dist/.hidden/index.js",
+   "condition": "import",
+   "how": "import",
+   "node": "loads",
+   "guard": "accepts"
+  },
+  {
+   "target": "./dist/.hidden/index.js",
+   "condition": "require",
+   "how": "require",
+   "node": "loads",
+   "guard": "accepts"
+  },
+  {
+   "target": "./dist/.hidden/index.js",
+   "condition": "default",
+   "how": "import",
+   "node": "loads",
+   "guard": "accepts"
+  },
+  {
+   "target": "./dist/.hidden/index.js",
+   "condition": "default",
+   "how": "require",
+   "node": "loads",
+   "guard": "accepts"
+  },
+  {
+   "target": "./dist/..x/index.js",
+   "condition": "import",
+   "how": "import",
+   "node": "loads",
+   "guard": "accepts"
+  },
+  {
+   "target": "./dist/..x/index.js",
+   "condition": "require",
+   "how": "require",
+   "node": "loads",
+   "guard": "accepts"
+  },
+  {
+   "target": "./dist/..x/index.js",
+   "condition": "default",
+   "how": "import",
+   "node": "loads",
+   "guard": "accepts"
+  },
+  {
+   "target": "./dist/..x/index.js",
+   "condition": "default",
+   "how": "require",
+   "node": "loads",
+   "guard": "accepts"
+  },
+  {
+   "target": "./dist/node_modules_x/index.js",
+   "condition": "import",
+   "how": "import",
+   "node": "loads",
+   "guard": "accepts"
+  },
+  {
+   "target": "./dist/node_modules_x/index.js",
+   "condition": "require",
+   "how": "require",
+   "node": "loads",
+   "guard": "accepts"
+  },
+  {
+   "target": "./dist/node_modules_x/index.js",
+   "condition": "default",
+   "how": "import",
+   "node": "loads",
+   "guard": "accepts"
+  },
+  {
+   "target": "./dist/node_modules_x/index.js",
+   "condition": "default",
+   "how": "require",
+   "node": "loads",
+   "guard": "accepts"
+  },
+  {
+   "target": "./dist/...x/index.js",
+   "condition": "import",
+   "how": "import",
+   "node": "loads",
+   "guard": "accepts"
+  },
+  {
+   "target": "./dist/...x/index.js",
+   "condition": "require",
+   "how": "require",
+   "node": "loads",
+   "guard": "accepts"
+  },
+  {
+   "target": "./dist/...x/index.js",
+   "condition": "default",
+   "how": "import",
+   "node": "loads",
+   "guard": "accepts"
+  },
+  {
+   "target": "./dist/...x/index.js",
+   "condition": "default",
+   "how": "require",
+   "node": "loads",
+   "guard": "accepts"
+  },
+  {
+   "target": "./dist/%2e%2e%2findex.js",
+   "condition": "import",
+   "how": "import",
+   "node": "throws ERR_INVALID_MODULE_SPECIFIER",
+   "guard": "accepts"
+  },
+  {
+   "target": "./dist/%2e%2e%2findex.js",
+   "condition": "require",
+   "how": "require",
+   "node": "throws ERR_INVALID_MODULE_SPECIFIER",
+   "guard": "accepts"
+  },
+  {
+   "target": "./dist/%2e%2e%2findex.js",
+   "condition": "default",
+   "how": "import",
+   "node": "throws ERR_INVALID_MODULE_SPECIFIER",
+   "guard": "accepts"
+  },
+  {
+   "target": "./dist/%2e%2e%2findex.js",
+   "condition": "default",
+   "how": "require",
+   "node": "throws ERR_INVALID_MODULE_SPECIFIER",
+   "guard": "accepts"
+  },
+  {
+   "target": "./dist/%252e/index.js",
+   "condition": "import",
+   "how": "import",
+   "node": "loads",
+   "guard": "accepts"
+  },
+  {
+   "target": "./dist/%252e/index.js",
+   "condition": "require",
+   "how": "require",
+   "node": "loads",
+   "guard": "accepts"
+  },
+  {
+   "target": "./dist/%252e/index.js",
+   "condition": "default",
+   "how": "import",
+   "node": "loads",
+   "guard": "accepts"
+  },
+  {
+   "target": "./dist/%252e/index.js",
+   "condition": "default",
+   "how": "require",
+   "node": "loads",
+   "guard": "accepts"
+  },
+  {
+   "target": "./",
+   "condition": "import",
+   "how": "import",
+   "node": "throws ERR_UNSUPPORTED_DIR_IMPORT",
+   "guard": "refuses: says Node warns"
+  },
+  {
+   "target": "./",
+   "condition": "require",
+   "how": "require",
+   "node": "throws MODULE_NOT_FOUND",
+   "guard": "refuses: says Node warns"
+  },
+  {
+   "target": "./",
+   "condition": "default",
+   "how": "import",
+   "node": "throws ERR_UNSUPPORTED_DIR_IMPORT",
+   "guard": "refuses: says Node warns"
+  },
+  {
+   "target": "./",
+   "condition": "default",
+   "how": "require",
+   "node": "throws MODULE_NOT_FOUND",
+   "guard": "refuses: says Node warns"
+  },
+  {
+   "target": ".//",
+   "condition": "import",
+   "how": "import",
+   "node": "throws ERR_UNSUPPORTED_DIR_IMPORT",
+   "guard": "refuses: says Node warns"
+  },
+  {
+   "target": ".//",
+   "condition": "require",
+   "how": "require",
+   "node": "throws MODULE_NOT_FOUND",
+   "guard": "refuses: says Node warns"
+  },
+  {
+   "target": ".//",
+   "condition": "default",
+   "how": "import",
+   "node": "throws ERR_UNSUPPORTED_DIR_IMPORT",
+   "guard": "refuses: says Node warns"
+  },
+  {
+   "target": ".//",
+   "condition": "default",
+   "how": "require",
+   "node": "throws MODULE_NOT_FOUND",
+   "guard": "refuses: says Node warns"
+  },
+  {
+   "target": "./dist\\\\index.js",
+   "condition": "import",
+   "how": "import",
+   "node": "throws ERR_MODULE_NOT_FOUND",
+   "guard": "refuses: says Node warns"
+  },
+  {
+   "target": "./dist\\\\index.js",
+   "condition": "require",
+   "how": "require",
+   "node": "throws MODULE_NOT_FOUND",
+   "guard": "refuses: says Node warns"
+  },
+  {
+   "target": "./dist\\\\index.js",
+   "condition": "default",
+   "how": "import",
+   "node": "throws ERR_MODULE_NOT_FOUND",
+   "guard": "refuses: says Node warns"
+  },
+  {
+   "target": "./dist\\\\index.js",
+   "condition": "default",
+   "how": "require",
+   "node": "throws MODULE_NOT_FOUND",
+   "guard": "refuses: says Node warns"
+  },
+  {
+   "target": "./dist/\\index.js",
+   "condition": "import",
+   "how": "import",
+   "node": "throws ERR_MODULE_NOT_FOUND",
+   "guard": "refuses: says Node warns"
+  },
+  {
+   "target": "./dist/\\index.js",
+   "condition": "require",
+   "how": "require",
+   "node": "throws MODULE_NOT_FOUND",
+   "guard": "refuses: says Node warns"
+  },
+  {
+   "target": "./dist/\\index.js",
+   "condition": "default",
+   "how": "import",
+   "node": "throws ERR_MODULE_NOT_FOUND",
+   "guard": "refuses: says Node warns"
+  },
+  {
+   "target": "./dist/\\index.js",
+   "condition": "default",
+   "how": "require",
+   "node": "throws MODULE_NOT_FOUND",
+   "guard": "refuses: says Node warns"
+  },
+  {
+   "target": "./dist\\",
+   "condition": "import",
+   "how": "import",
+   "node": "throws ERR_MODULE_NOT_FOUND",
+   "guard": "refuses: says Node warns"
+  },
+  {
+   "target": "./dist\\",
+   "condition": "require",
+   "how": "require",
+   "node": "throws MODULE_NOT_FOUND",
+   "guard": "refuses: says Node warns"
+  },
+  {
+   "target": "./dist\\",
+   "condition": "default",
+   "how": "import",
+   "node": "throws ERR_MODULE_NOT_FOUND",
+   "guard": "refuses: says Node warns"
+  },
+  {
+   "target": "./dist\\",
+   "condition": "default",
+   "how": "require",
+   "node": "throws MODULE_NOT_FOUND",
+   "guard": "refuses: says Node warns"
+  },
+  {
+   "target": "./dist/x/",
+   "condition": "import",
+   "how": "import",
+   "node": "throws ERR_MODULE_NOT_FOUND",
+   "guard": "refuses: says Node warns"
+  },
+  {
+   "target": "./dist/x/",
+   "condition": "require",
+   "how": "require",
+   "node": "throws MODULE_NOT_FOUND",
+   "guard": "refuses: says Node warns"
+  },
+  {
+   "target": "./dist/x/",
+   "condition": "default",
+   "how": "import",
+   "node": "throws ERR_MODULE_NOT_FOUND",
+   "guard": "refuses: says Node warns"
+  },
+  {
+   "target": "./dist/x/",
+   "condition": "default",
+   "how": "require",
+   "node": "throws MODULE_NOT_FOUND",
+   "guard": "refuses: says Node warns"
+  }
+ ]
+}

@@ -1,0 +1,447 @@
+{
+ "tree": "38fa15966db89bfede725fbde8073aef552daf0b",
+ "record": "docs/evidence/syzygy-bpyt-39/record.py",
+ "recordSha256": "f07d451ad613ff605967544f4a67eb20d66bdd95319ba0906c29e56fb19580a3",
+ "sites": 18,
+ "rows": [
+  {
+   "id": "P1",
+   "line": 80,
+   "old": "        problems.append('root-exception-probe: not npm 11.5.1 and npa 12.0.2, offline against the unreachable registry')\n",
+   "new": "        (lambda *a: None)('root-exception-probe: not npm 11.5.1 and npa 12.0.2, offline against the unreachable registry')\n",
+   "check": {
+    "exit": 0,
+    "last": "summary.json matches ; problems: 0 []",
+    "survived": []
+   },
+   "selftest": {
+    "exit": 1,
+    "last": "selftest: 18/19 mutations make a check fail",
+    "survived": [
+     "a probe against a reachable registry"
+    ]
+   }
+  },
+  {
+   "id": "P2",
+   "line": 83,
+   "old": "        problems.append(f'root-exception-probe: the cases are not the {len(EXPECTED)} named here, each once')\n",
+   "new": "        (lambda *a: None)(f'root-exception-probe: the cases are not the {len(EXPECTED)} named here, each once')\n",
+   "check": {
+    "exit": 0,
+    "last": "summary.json matches ; problems: 0 []",
+    "survived": []
+   },
+   "selftest": {
+    "exit": 1,
+    "last": "selftest: 18/19 mutations make a check fail",
+    "survived": [
+     "a probe missing a case"
+    ]
+   }
+  },
+  {
+   "id": "P3",
+   "line": 91,
+   "old": "            problems.append(f'root-exception-probe {cid}: declares {spec} in {where or \"the root\"}, not the form named')\n",
+   "new": "            (lambda *a: None)(f'root-exception-probe {cid}: declares {spec} in {where or \"the root\"}, not the form named')\n",
+   "check": {
+    "exit": 0,
+    "last": "summary.json matches ; problems: 0 []",
+    "survived": []
+   },
+   "selftest": {
+    "exit": 1,
+    "last": "selftest: 18/19 mutations make a check fail",
+    "survived": [
+     "a case declared in another manifest"
+    ]
+   }
+  },
+  {
+   "id": "P4",
+   "line": 93,
+   "old": "            problems.append(f'root-exception-probe {cid}: {observed(r)}, not {want}')\n",
+   "new": "            (lambda *a: None)(f'root-exception-probe {cid}: {observed(r)}, not {want}')\n",
+   "check": {
+    "exit": 0,
+    "last": "summary.json matches ; problems: 0 []",
+    "survived": []
+   },
+   "selftest": {
+    "exit": 1,
+    "last": "selftest: 16/19 mutations make a check fail",
+    "survived": [
+     "a root case that npm reads as a directory",
+     "a root link: case npm refuses",
+     "an app workspace: case npm installs"
+    ]
+   }
+  },
+  {
+   "id": "P5",
+   "line": 95,
+   "old": "            problems.append(f'root-exception-probe {cid}: app does not load the workspace')\n",
+   "new": "            (lambda *a: None)(f'root-exception-probe {cid}: app does not load the workspace')\n",
+   "check": {
+    "exit": 0,
+    "last": "summary.json matches ; problems: 0 []",
+    "survived": []
+   },
+   "selftest": {
+    "exit": 0,
+    "last": "selftest: 19/19 mutations make a check fail",
+    "survived": []
+   }
+  },
+  {
+   "id": "P6",
+   "line": 103,
+   "old": "            problems.append(f'npmrc-trace {name}: a failed run, another probe, or npm builtin npmrc not seen absent')\n",
+   "new": "            (lambda *a: None)(f'npmrc-trace {name}: a failed run, another probe, or npm builtin npmrc not seen absent')\n",
+   "check": {
+    "exit": 0,
+    "last": "summary.json matches ; problems: 0 []",
+    "survived": []
+   },
+   "selftest": {
+    "exit": 1,
+    "last": "selftest: 18/19 mutations make a check fail",
+    "survived": [
+     "a trace of another probe"
+    ]
+   }
+  },
+  {
+   "id": "P7",
+   "line": 106,
+   "old": "                problems.append(\"npmrc-trace lane-probe-before: the old probe did not read the caller's .npmrc, or read another\")\n",
+   "new": "                (lambda *a: None)(\"npmrc-trace lane-probe-before: the old probe did not read the caller's .npmrc, or read another\")\n",
+   "check": {
+    "exit": 0,
+    "last": "summary.json matches ; problems: 0 []",
+    "survived": []
+   },
+   "selftest": {
+    "exit": 1,
+    "last": "selftest: 18/19 mutations make a check fail",
+    "survived": [
+     "an old probe that never read the caller's npmrc"
+    ]
+   }
+  },
+  {
+   "id": "P8",
+   "line": 108,
+   "old": "            problems.append(f'npmrc-trace {name}: opens an npmrc outside the scratch directory: {outside}')\n",
+   "new": "            (lambda *a: None)(f'npmrc-trace {name}: opens an npmrc outside the scratch directory: {outside}')\n",
+   "check": {
+    "exit": 0,
+    "last": "summary.json matches ; problems: 0 []",
+    "survived": []
+   },
+   "selftest": {
+    "exit": 1,
+    "last": "selftest: 17/19 mutations make a check fail",
+    "survived": [
+     "a fixed probe that still reads the caller's npmrc",
+     "a new probe that reads a home npmrc"
+    ]
+   }
+  },
+  {
+   "id": "P9",
+   "line": 110,
+   "old": "            problems.append(f'npmrc-trace {name}: the record differs from the committed npm-alias-probe.json')\n",
+   "new": "            (lambda *a: None)(f'npmrc-trace {name}: the record differs from the committed npm-alias-probe.json')\n",
+   "check": {
+    "exit": 0,
+    "last": "summary.json matches ; problems: 0 []",
+    "survived": []
+   },
+   "selftest": {
+    "exit": 1,
+    "last": "selftest: 18/19 mutations make a check fail",
+    "survived": [
+     "a fixed probe whose record changed"
+    ]
+   }
+  },
+  {
+   "id": "P10",
+   "line": 112,
+   "old": "            problems.append(f'npmrc-trace {name}: compared with another record')\n",
+   "new": "            (lambda *a: None)(f'npmrc-trace {name}: compared with another record')\n",
+   "check": {
+    "exit": 0,
+    "last": "summary.json matches ; problems: 0 []",
+    "survived": []
+   },
+   "selftest": {
+    "exit": 0,
+    "last": "selftest: 19/19 mutations make a check fail",
+    "survived": []
+   }
+  },
+  {
+   "id": "P11",
+   "line": 118,
+   "old": "        problems.append('comment-only: not BASE to HEAD of the testkit, or not comment-only')\n",
+   "new": "        (lambda *a: None)('comment-only: not BASE to HEAD of the testkit, or not comment-only')\n",
+   "check": {
+    "exit": 0,
+    "last": "summary.json matches ; problems: 0 []",
+    "survived": []
+   },
+   "selftest": {
+    "exit": 1,
+    "last": "selftest: 17/19 mutations make a check fail",
+    "survived": [
+     "a testkit change that is not comment-only",
+     "a comment-only check of another blob"
+    ]
+   }
+  },
+  {
+   "id": "P12",
+   "line": 122,
+   "old": "        problems.append('comment-only: the selftest does not separate a code change from a comment change')\n",
+   "new": "        (lambda *a: None)('comment-only: the selftest does not separate a code change from a comment change')\n",
+   "check": {
+    "exit": 0,
+    "last": "summary.json matches ; problems: 0 []",
+    "survived": []
+   },
+   "selftest": {
+    "exit": 0,
+    "last": "selftest: 19/19 mutations make a check fail",
+    "survived": []
+   }
+  },
+  {
+   "id": "P13",
+   "line": 126,
+   "old": "        problems.append('testkit: LOCAL_VERSION is not at line 79')\n",
+   "new": "        (lambda *a: None)('testkit: LOCAL_VERSION is not at line 79')\n",
+   "check": {
+    "exit": 0,
+    "last": "summary.json matches ; problems: 0 []",
+    "survived": []
+   },
+   "selftest": {
+    "exit": 1,
+    "last": "selftest: 18/19 mutations make a check fail",
+    "survived": [
+     "a testkit whose LOCAL_VERSION moved"
+    ]
+   }
+  },
+  {
+   "id": "P14",
+   "line": 128,
+   "old": "        problems.append('testkit: a hedge or a root exception is missing, or a retired sentence remains')\n",
+   "new": "        (lambda *a: None)('testkit: a hedge or a root exception is missing, or a retired sentence remains')\n",
+   "check": {
+    "exit": 0,
+    "last": "summary.json matches ; problems: 0 []",
+    "survived": []
+   },
+   "selftest": {
+    "exit": 1,
+    "last": "selftest: 17/19 mutations make a check fail",
+    "survived": [
+     "a testkit that keeps the unhedged sentence",
+     "a testkit without the root exception"
+    ]
+   }
+  },
+  {
+   "id": "P15",
+   "line": 132,
+   "old": "        problems.append('record-predicate-mutants: not HEAD\\'s 8.39 record.py')\n",
+   "new": "        (lambda *a: None)('record-predicate-mutants: not HEAD\\'s 8.39 record.py')\n",
+   "check": {
+    "exit": 0,
+    "last": "summary.json matches ; problems: 0 []",
+    "survived": []
+   },
+   "selftest": {
+    "exit": 1,
+    "last": "selftest: 18/19 mutations make a check fail",
+    "survived": [
+     "a predicate mutant of another record.py"
+    ]
+   }
+  },
+  {
+   "id": "P16",
+   "line": 134,
+   "old": "        problems.append('record-predicate-mutants: the unmutated selftest does not pass')\n",
+   "new": "        (lambda *a: None)('record-predicate-mutants: the unmutated selftest does not pass')\n",
+   "check": {
+    "exit": 0,
+    "last": "summary.json matches ; problems: 0 []",
+    "survived": []
+   },
+   "selftest": {
+    "exit": 0,
+    "last": "selftest: 19/19 mutations make a check fail",
+    "survived": []
+   }
+  },
+  {
+   "id": "P17",
+   "line": 138,
+   "old": "            problems.append(f'record-predicate-mutants {mid}: survived {r.get(\"survived\")}, not {want}')\n",
+   "new": "            (lambda *a: None)(f'record-predicate-mutants {mid}: survived {r.get(\"survived\")}, not {want}')\n",
+   "check": {
+    "exit": 0,
+    "last": "summary.json matches ; problems: 0 []",
+    "survived": []
+   },
+   "selftest": {
+    "exit": 1,
+    "last": "selftest: 18/19 mutations make a check fail",
+    "survived": [
+     "a predicate dropped and still unseen"
+    ]
+   }
+  },
+  {
+   "id": "P18",
+   "line": 141,
+   "old": "        problems.append(f'subject: {changed}')\n",
+   "new": "        (lambda *a: None)(f'subject: {changed}')\n",
+   "check": {
+    "exit": 0,
+    "last": "summary.json matches ; problems: 0 []",
+    "survived": []
+   },
+   "selftest": {
+    "exit": 1,
+    "last": "selftest: 18/19 mutations make a check fail",
+    "survived": [
+     "a product file in the subject"
+    ]
+   }
+  },
+  {
+   "id": "E1",
+   "what": "observed(): a lock entry that is not a link is still read as a link",
+   "old": " or not all(e.get('link') for e in entries.values())",
+   "new": "",
+   "check": {
+    "exit": 0,
+    "last": "summary.json matches ; problems: 0 []",
+    "survived": []
+   },
+   "selftest": {
+    "exit": 0,
+    "last": "selftest: 19/19 mutations make a check fail",
+    "survived": []
+   }
+  },
+  {
+   "id": "E2",
+   "what": "observed(): the install exit is not read",
+   "old": "r.get('installExit') != 0 or ",
+   "new": "",
+   "check": {
+    "exit": 0,
+    "last": "summary.json matches ; problems: 0 []",
+    "survived": []
+   },
+   "selftest": {
+    "exit": 0,
+    "last": "selftest: 19/19 mutations make a check fail",
+    "survived": []
+   }
+  },
+  {
+   "id": "E3",
+   "what": "the trace digest check dropped",
+   "old": " or t['probeSha256'] != sha(sha_of)",
+   "new": "",
+   "check": {
+    "exit": 0,
+    "last": "summary.json matches ; problems: 0 []",
+    "survived": []
+   },
+   "selftest": {
+    "exit": 1,
+    "last": "selftest: 18/19 mutations make a check fail",
+    "survived": [
+     "a trace of another probe"
+    ]
+   }
+  },
+  {
+   "id": "E4",
+   "what": "the retired-sentence check dropped",
+   "old": " or any(t in kit for t in TEXT['absent'])",
+   "new": "",
+   "check": {
+    "exit": 0,
+    "last": "summary.json matches ; problems: 0 []",
+    "survived": []
+   },
+   "selftest": {
+    "exit": 1,
+    "last": "selftest: 18/19 mutations make a check fail",
+    "survived": [
+     "a testkit that keeps the unhedged sentence"
+    ]
+   }
+  },
+  {
+   "id": "E5",
+   "what": "the hedge must appear at least once, not exactly once",
+   "old": "kit.count(t) != 1",
+   "new": "kit.count(t) < 1",
+   "check": {
+    "exit": 0,
+    "last": "summary.json matches ; problems: 0 []",
+    "survived": []
+   },
+   "selftest": {
+    "exit": 0,
+    "last": "selftest: 19/19 mutations make a check fail",
+    "survived": []
+   }
+  },
+  {
+   "id": "E6",
+   "what": "the subject may grow",
+   "old": "if changed != SUBJECT:",
+   "new": "if not set(SUBJECT) <= set(changed):",
+   "check": {
+    "exit": 0,
+    "last": "summary.json matches ; problems: 0 []",
+    "survived": []
+   },
+   "selftest": {
+    "exit": 1,
+    "last": "selftest: 18/19 mutations make a check fail",
+    "survived": [
+     "a product file in the subject"
+    ]
+   }
+  },
+  {
+   "id": "E7",
+   "what": "the R-case load check reads w instead of app",
+   "old": ".get('app', {}).get('path') != 'w/package.json'",
+   "new": ".get('w', {}).get('path') != 'w/package.json'",
+   "check": {
+    "exit": 0,
+    "last": "summary.json matches ; problems: 0 []",
+    "survived": []
+   },
+   "selftest": {
+    "exit": 0,
+    "last": "selftest: 19/19 mutations make a check fail",
+    "survived": []
+   }
+  }
+ ]
+}

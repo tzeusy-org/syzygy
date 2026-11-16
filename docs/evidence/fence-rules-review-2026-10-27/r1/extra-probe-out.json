@@ -1,0 +1,182 @@
+{
+ "g1WellFormedLfFailOpen": {
+  "lines": [
+   "~~~",
+   "```",
+   "~~~",
+   "<script>x</script>",
+   "~~~",
+   "```",
+   "~~~"
+  ],
+  "lfMask": "masked",
+  "lf": [
+   "script-element",
+   "script-element"
+  ],
+  "crlf": []
+ },
+ "g1Extra2": {
+  "lines": [
+   "```",
+   "x",
+   "```` ",
+   "<script>x</script>",
+   "```"
+  ],
+  "lf": [
+   "malformed-code-context"
+  ],
+  "crlf": []
+ },
+ "g1Extra3": {
+  "lines": [
+   "```",
+   "x",
+   "``` text",
+   "<script>x</script>",
+   "```"
+  ],
+  "lf": [],
+  "crlf": [
+   "malformed-code-context"
+  ]
+ },
+ "g1ClosingShapedLineAtEnd": {
+  "lines": [
+   "```",
+   "<script>x</script>",
+   "``` text"
+  ],
+  "lf": [
+   "malformed-code-context"
+  ],
+  "crlf": []
+ },
+ "bareCr": {
+  "backtick-info-with-backtick": {
+   "lf": [
+    "malformed-code-context"
+   ],
+   "crlf": [],
+   "cr": [],
+   "crLinesSeenByProfile": 1
+  },
+  "tilde-fence": {
+   "lf": [],
+   "crlf": [
+    "script-element",
+    "script-element"
+   ],
+   "cr": [
+    "script-element",
+    "script-element"
+   ],
+   "crLinesSeenByProfile": 1
+  },
+  "backtick-fence": {
+   "lf": [],
+   "crlf": [],
+   "cr": [],
+   "crLinesSeenByProfile": 1
+  },
+  "closer-trailing-tab": {
+   "lf": [
+    "malformed-code-context"
+   ],
+   "crlf": [],
+   "cr": [],
+   "crLinesSeenByProfile": 1
+  }
+ },
+ "maskOfCrlfFence": {
+  "kind": "masked",
+  "masked": "\"    \\n  \\n   \\r\\n\""
+ },
+ "g3MultiLineSpan": {
+  "two-backtick-span-across-lines": {
+   "profile": "H",
+   "links": "V",
+   "renderer": "<p><code>\n[p](probe.md)\n</code></p>"
+  },
+  "one-backtick-span-across-lines": {
+   "profile": "H",
+   "links": "V",
+   "renderer": "<p><code>\n[p](probe.md)\n</code></p>"
+  },
+  "span-opened-mid-line": {
+   "profile": "H",
+   "links": "V",
+   "renderer": "<p>see <code>a\n[p](probe.md)\nb</code> end</p>"
+  }
+ },
+ "g2IndentedCloserReach": {
+  "closerColumn0": {
+   "kind": "items",
+   "keys": [
+    "First.",
+    "Second.",
+    "Third."
+   ]
+  },
+  "closerIndented1": {
+   "kind": "items",
+   "keys": [
+    "First."
+   ]
+  },
+  "profileOnIndented1": "masked"
+ },
+ "g2TabCloserReach": {
+  "profile": "masked",
+  "extraction": {
+   "kind": "items",
+   "keys": [
+    "First."
+   ]
+  }
+ },
+ "g2IndentedOpenerMints": {
+  "profileHidesFencedItem": true,
+  "extraction": {
+   "kind": "items",
+   "keys": [
+    "First.",
+    "Fenced."
+   ]
+  }
+ },
+ "g3CloserShapedLineHides": {
+  "profile": "V",
+  "links": []
+ },
+ "g4OneRule": {
+  "fieldOnlyInFence": {
+   "lf": {
+    "all": 1,
+    "prose": 0,
+    "accepted": false
+   },
+   "crlf": {
+    "all": 1,
+    "prose": 1,
+    "accepted": true
+   }
+  },
+  "fieldInProseAndInFence": {
+   "lf": {
+    "all": 2,
+    "prose": 1,
+    "accepted": false
+   },
+   "crlf": {
+    "all": 2,
+    "prose": 2,
+    "accepted": false
+   }
+  },
+  "titleCheckOnCrlf": {
+   "startsWithTitleLf": false
+  }
+ }
+}

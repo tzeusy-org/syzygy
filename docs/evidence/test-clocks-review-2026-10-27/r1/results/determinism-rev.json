@@ -1,0 +1,599 @@
+{
+ "tool": "determinism_rev.py",
+ "tree": "447d9f083fb120c14ddd8da646c03675f3ce7bc7",
+ "node": "v24.6.0",
+ "cpus": 12,
+ "treeClean": true,
+ "runs": [
+  {
+   "label": "changed-unit-files #1",
+   "exit": 0,
+   "load1Start": 47.38,
+   "load1End": 44.0,
+   "seconds": 30.6,
+   "numTotalTests": 277,
+   "numPassedTests": 277,
+   "numFailedTests": 0,
+   "numPendingTests": 0,
+   "numTodoTests": 0,
+   "numTotalTestSuites": 52,
+   "numFailedTestSuites": 0,
+   "files": 8,
+   "failed": [],
+   "suiteErrors": []
+  },
+  {
+   "label": "changed-unit-files #2",
+   "exit": 0,
+   "load1Start": 44.0,
+   "load1End": 40.15,
+   "seconds": 20.8,
+   "numTotalTests": 277,
+   "numPassedTests": 277,
+   "numFailedTests": 0,
+   "numPendingTests": 0,
+   "numTodoTests": 0,
+   "numTotalTestSuites": 52,
+   "numFailedTestSuites": 0,
+   "files": 8,
+   "failed": [],
+   "suiteErrors": []
+  },
+  {
+   "label": "changed-unit-files #3",
+   "exit": 0,
+   "load1Start": 40.15,
+   "load1End": 37.48,
+   "seconds": 30.0,
+   "numTotalTests": 277,
+   "numPassedTests": 277,
+   "numFailedTests": 0,
+   "numPendingTests": 0,
+   "numTodoTests": 0,
+   "numTotalTestSuites": 52,
+   "numFailedTestSuites": 0,
+   "files": 8,
+   "failed": [],
+   "suiteErrors": []
+  },
+  {
+   "label": "changed-unit-files #4",
+   "exit": 0,
+   "load1Start": 37.48,
+   "load1End": 36.74,
+   "seconds": 37.2,
+   "numTotalTests": 277,
+   "numPassedTests": 277,
+   "numFailedTests": 0,
+   "numPendingTests": 0,
+   "numTodoTests": 0,
+   "numTotalTestSuites": 52,
+   "numFailedTestSuites": 0,
+   "files": 8,
+   "failed": [],
+   "suiteErrors": []
+  },
+  {
+   "label": "changed-unit-files #5",
+   "exit": 0,
+   "load1Start": 36.74,
+   "load1End": 35.35,
+   "seconds": 17.9,
+   "numTotalTests": 277,
+   "numPassedTests": 277,
+   "numFailedTests": 0,
+   "numPendingTests": 0,
+   "numTodoTests": 0,
+   "numTotalTestSuites": 52,
+   "numFailedTestSuites": 0,
+   "files": 8,
+   "failed": [],
+   "suiteErrors": []
+  },
+  {
+   "label": "changed-system-file #1",
+   "exit": 0,
+   "load1Start": 35.35,
+   "load1End": 34.84,
+   "seconds": 7.5,
+   "numTotalTests": 16,
+   "numPassedTests": 16,
+   "numFailedTests": 0,
+   "numPendingTests": 0,
+   "numTodoTests": 0,
+   "numTotalTestSuites": 3,
+   "numFailedTestSuites": 0,
+   "files": 1,
+   "failed": [],
+   "suiteErrors": []
+  },
+  {
+   "label": "changed-system-file #2",
+   "exit": 0,
+   "load1Start": 34.84,
+   "load1End": 32.55,
+   "seconds": 7.3,
+   "numTotalTests": 16,
+   "numPassedTests": 16,
+   "numFailedTests": 0,
+   "numPendingTests": 0,
+   "numTodoTests": 0,
+   "numTotalTestSuites": 3,
+   "numFailedTestSuites": 0,
+   "files": 1,
+   "failed": [],
+   "suiteErrors": []
+  },
+  {
+   "label": "changed-system-file #3",
+   "exit": 0,
+   "load1Start": 32.55,
+   "load1End": 31.95,
+   "seconds": 6.3,
+   "numTotalTests": 16,
+   "numPassedTests": 16,
+   "numFailedTests": 0,
+   "numPendingTests": 0,
+   "numTodoTests": 0,
+   "numTotalTestSuites": 3,
+   "numFailedTestSuites": 0,
+   "files": 1,
+   "failed": [],
+   "suiteErrors": []
+  },
+  {
+   "label": "changed-system-file #4",
+   "exit": 0,
+   "load1Start": 31.95,
+   "load1End": 36.09,
+   "seconds": 7.7,
+   "numTotalTests": 16,
+   "numPassedTests": 16,
+   "numFailedTests": 0,
+   "numPendingTests": 0,
+   "numTodoTests": 0,
+   "numTotalTestSuites": 3,
+   "numFailedTestSuites": 0,
+   "files": 1,
+   "failed": [],
+   "suiteErrors": []
+  },
+  {
+   "label": "changed-system-file #5",
+   "exit": 0,
+   "load1Start": 36.09,
+   "load1End": 34.48,
+   "seconds": 6.3,
+   "numTotalTests": 16,
+   "numPassedTests": 16,
+   "numFailedTests": 0,
+   "numPendingTests": 0,
+   "numTodoTests": 0,
+   "numTotalTestSuites": 3,
+   "numFailedTestSuites": 0,
+   "files": 1,
+   "failed": [],
+   "suiteErrors": []
+  },
+  {
+   "label": "affected-projects #1",
+   "exit": 1,
+   "load1Start": 34.48,
+   "load1End": 63.39,
+   "seconds": 675.8,
+   "numTotalTests": 4378,
+   "numPassedTests": 4341,
+   "numFailedTests": 32,
+   "numPendingTests": 5,
+   "numTodoTests": 0,
+   "numTotalTestSuites": 669,
+   "numFailedTestSuites": 32,
+   "files": 180,
+   "failed": [
+    {
+     "file": "packages/polaris-dossier/src/check.test.ts",
+     "title": "check: the command loads the policy in force from the records root by default, and refuses at the screen while no screening act is in force there",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "packages/polaris-dossier/src/execution-flags.test.ts",
+     "title": "check, render and close disclose the flags beside each command and refuse nothing (scenario \"Reported command outside the named scope\") under SEC-3's rule: the same commands are disclosed and nothing is flagged",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "packages/polaris-dossier/src/run-evidence.test.ts",
+     "title": "dossier run evidence record (S12) names the subject, the Syzygy commit and the digest of every file the run and its sessions left",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "packages/polaris-dossier/src/run-evidence.test.ts",
+     "title": "dossier run evidence record (S12) copies no file body: a credential-shaped token the draft carries never reaches the record",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "packages/polaris-dossier/src/run-evidence.test.ts",
+     "title": "dossier run evidence record (S12) reports an open run as not closed, and refuses anything but one run directory",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "packages/polaris-dossier/src/screen.test.ts",
+     "title": "parity with the any-repo reader's screen (syzygy-qkea.17) decides the class prerequisite as the app does from the same records at now: in force",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "packages/polaris-dossier/src/screen.test.ts",
+     "title": "the screen of the policy in force builds the screen on this checkout exactly when a screening-scope act is recorded and the policy declares the scope",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "packages/polaris-dossier/src/screen.test.ts",
+     "title": "the screen of the policy in force classifies project documentation on this checkout exactly when the class act is recorded and the policy carries the rule",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "packages/polaris-dossier/src/start-gates.test.ts",
+     "title": "init: the clone holds the consented commit alone (syzygy-qkea.24) refuses config naming a remote, a promisor, an include or a command the agent's git would run (R-POLARIS-DOSSIER-CLONE-SHAPE-2 finding 1)",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+     "title": "the predicates review-408 F4 named refuses a delivery note that names another session, even with the right digest (mutant: drop that field of the note check)",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+     "title": "the predicates review-408 F4 named delivers nothing when the waiting session's record names no agent tool (mutant: drop the recorded-tool check)",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+     "title": "the predicates review-408 F4 named refuses a prompt record that names another directory (mutant: drop the record's directory check)",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+     "title": "the predicates review-408 F4 named verifies the gates again when a packet arrives, and reads nothing past the deadline (mutant: drop the re-check)",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+     "title": "the predicates review-408 F4 named refuses session-prompt all once the run's deadline has passed (mutant: drop that step's gate check)",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+     "title": "the predicates review-408 F4 named refuses session-prompt for all with --kind (mutant: drop that refusal)",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+     "title": "the predicates review-408 F4 named refuses session-prompt for an inventory with --fresh (mutant: drop that refusal)",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+     "title": "await --stdin validates before it writes (review-408 F5) keeps the inventory that passed when the next submission is not UTF-8 (mutant: drop that check)",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "packages/three-surface-poc-core/src/model-observations.test.ts",
+     "title": "shared model observation wiring folds the worker-change lifecycle observation into the one shared model, scoped to the materialized Bead (AC3)",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "packages/three-surface-poc-core/src/test-artifact-verification-live-source.test.ts",
+     "title": "the live verification test, and every module it imports, runs no observed code the tree check refuses const o = {}; execFileSync('git', ['status'], { ...o });",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "packages/three-surface-poc-core/src/test-artifact-verification-live-source.test.ts",
+     "title": "the live verification test, and every module it imports, runs no observed code the tree check refuses import vt from 'vitest';",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "packages/three-surface-poc-core/src/test-artifact-verification-live-source.test.ts",
+     "title": "the live verification test, and every module it imports, runs no observed code the tree check refuses export { vi } from 'vitest';",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "apps/three-surface-poc/src/cdp-browser.test.ts",
+     "title": "disposable browser shutdown waits for private Chrome group members before removal and retains the profile on drain timeout",
+     "msg": "Error: private browser profile drain did not verify two empty scans before deadline\n    at closeDisposableBrowser (/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/apps/three-surface-poc/src/cdp-browser.ts:511:13)\n    at runNextTicks (node:inter"
+    },
+    {
+     "file": "apps/three-surface-poc/src/governance-inputs.test.ts",
+     "title": "loadBodyReadAuthorityInputs (hermetic) preserves production Git blob bytes for tag comparison and lifecycle decoding",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts",
+     "title": "Polaris keyboard, non-visual and contrast checks in a real browser keeps a separate desktop section rail and an in-flow mobile drawer",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts",
+     "title": "Polaris keyboard, non-visual and contrast checks in a real browser keeps diagram labels legible and flow order unambiguous across widths",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts",
+     "title": "Polaris keyboard, non-visual and contrast checks in a real browser opens a linked component guide and can reveal the complete declaration",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "apps/three-surface-poc/src/surface-routes.test.ts",
+     "title": "surface routes withholds the post-script Orrery capability href when that exact capability is absent",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "apps/three-surface-poc/src/trajectory.test.ts",
+     "title": "Trajectory renders a matching operator-reported run as report-fact and an unmarked record as Not verified, never Verified, for governing intent REQ-alternate-governing-intent-007 (AC3/AC4, syzygy-0r9, syzygy-4mbu)",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "apps/three-surface-poc/src/trajectory.test.ts",
+     "title": "Trajectory renders a matching operator-reported run as report-fact and an unmarked record as Not verified, never Verified, for governing intent REQ-alternate-governing-intent-008 (AC3/AC4, syzygy-0r9, syzygy-4mbu)",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "apps/three-surface-poc/src/polaris-generation/dossier-trigger.test.ts",
+     "title": "command exits 0 and writes to --out on a complete run, 5 when generation is unavailable, 6 when the pipeline stops",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "apps/three-surface-poc/src/polaris-generation/repo-corpus-isolation.test.ts",
+     "title": "measured accounting and identity counts raw bytes, batches blob reads by 200, and binds the identity digest to the exact population",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "apps/three-surface-poc/src/polaris-generation/repo-corpus-isolation.test.ts",
+     "title": "measured accounting and identity counts a path whose bytes are not UTF-8 as unquotable instead of reading it",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    }
+   ],
+   "suiteErrors": []
+  },
+  {
+   "label": "affected-projects #2",
+   "exit": 1,
+   "load1Start": 63.39,
+   "load1End": 127.42,
+   "seconds": 733.4,
+   "numTotalTests": 4378,
+   "numPassedTests": 4335,
+   "numFailedTests": 38,
+   "numPendingTests": 5,
+   "numTodoTests": 0,
+   "numTotalTestSuites": 669,
+   "numFailedTestSuites": 42,
+   "files": 180,
+   "failed": [
+    {
+     "file": "packages/polaris-generation-core/src/dossier-prompts.test.ts",
+     "title": "the embedded illustrations are fixed at module load keeps the illustrations out of the package entry point",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "packages/polaris-dossier/src/close.test.ts",
+     "title": "close (S10) records undeclared usage as not recorded, never zero",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "packages/polaris-dossier/src/close.test.ts",
+     "title": "close (S10) closes a run once, and refuses after the deadline",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "packages/polaris-dossier/src/close.test.ts",
+     "title": "close (S10) runs the adapter-credential check at close after a permitting brief: a readable credential is a finding recorded in the record",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "packages/polaris-dossier/src/close.test.ts",
+     "title": "close (S10) never overwrites a record that appears while it closes: a concurrent close loses, and the first record stands",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "packages/polaris-dossier/src/close.test.ts",
+     "title": "close (S10) refuses when the consent no longer names the pinned revision",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "packages/polaris-dossier/src/close.test.ts",
+     "title": "close (S10) carries the agent's reported commands as its report, screened, and copies no prompt, brief or transcript body",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "packages/polaris-dossier/src/close.test.ts",
+     "title": "close (S10) leaves no credential in the state directory: a sweep of every file under the state root, with its denominator",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "packages/polaris-dossier/src/execution-flags.test.ts",
+     "title": "check, render and close disclose the flags beside each command and refuse nothing (scenario \"Reported command outside the named scope\") under SEC-3's rule: the same commands are disclosed and nothing is flagged",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "packages/polaris-dossier/src/gate-acts.test.ts",
+     "title": "the sitting's acts fail closed withdraw what a decisions file names by the drawer record's heading",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "packages/polaris-dossier/src/render.test.ts",
+     "title": "render renders an exempt body only through a renderer that declares the page-sink contract and pages that carry the CSP",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "packages/polaris-dossier/src/render.test.ts",
+     "title": "rendered-design review (S9b) keeps a counted design review through a render that changes only the review-status region",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "packages/polaris-dossier/src/render.test.ts",
+     "title": "rendered-design review (S9b) records and refuses a design verdict with readiness beside a blocking finding, which never counts",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "packages/polaris-dossier/src/render.test.ts",
+     "title": "rendered-design review (S9b) records a validated design verdict, with what it observed and what stays Inferred, and a stored site altered since is a stale packet",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "packages/polaris-dossier/src/review.test.ts",
+     "title": "review-check records and refuses a verdict that omits the accuracy of an inventory entry",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "packages/polaris-dossier/src/review.test.ts",
+     "title": "review-check retires a counted verdict when the draft is revised, the stored frozen draft is altered or the frozen verdict changes",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "packages/polaris-dossier/src/review.test.ts",
+     "title": "review-check does not count a verdict whose launch record is altered to another form, role or prompt",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "packages/polaris-dossier/src/review.test.ts",
+     "title": "session-prompt --tool and the session pair's statement refuses a fidelity, a design and an inventory session when no statement names codex, and writes nothing",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "packages/polaris-dossier/src/run-evidence.test.ts",
+     "title": "dossier run evidence record (S12) lists a symbolic link without following it",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "packages/polaris-dossier/src/run-evidence.test.ts",
+     "title": "dossier run evidence record (S12) reports an open run as not closed, and refuses anything but one run directory",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "packages/polaris-dossier/src/start-gates.test.ts",
+     "title": "init: the clone holds the consented commit alone (syzygy-qkea.24) refuses every top-level name the consented form never leaves: commondir, modules, worktrees, pseudo-refs, bisect and rebase state",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "packages/polaris-dossier/src/start-gates.test.ts",
+     "title": "init: the clone holds the consented commit alone (syzygy-qkea.24) refuses config naming a remote, a promisor, an include or a command the agent's git would run (R-POLARIS-DOSSIER-CLONE-SHAPE-2 finding 1)",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "packages/polaris-dossier/src/start-gates.test.ts",
+     "title": "reverifyPinnedRevision: the guard every later step calls (scenario \"Recorded revision altered\") refuses when the brief record exists but states no agent",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+     "title": "a reviewer that continues across revisions delivers the repaired subject to the same session as round 2 and discloses it on the review page and in the machine view (mutant: never mark continuing)",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+     "title": "a rendered-design reviewer's continuity, disclosed in the review-status region discloses a design reviewer that continued to round 2 (mutant: drop the design continuity sentence)",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+     "title": "the predicates review-408 F4 named hands a packet over at once when the latest session of its kind was not started to wait (mutant: drop the waiting-mode check on delivery)",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+     "title": "the predicates review-408 F4 named delivers nothing when the waiting session's record names no agent tool (mutant: drop the recorded-tool check)",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+     "title": "the predicates review-408 F4 named refuses a delivery once the run's deadline has passed (mutant: drop that step's gate check)",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "packages/three-surface-poc-core/src/worker-change-observation.test.ts",
+     "title": "worker-change observer renders active for a matching commit reachable only from a fetched worker branch, not yet merged (AC3)",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "apps/three-surface-poc/src/git-observation.test.ts",
+     "title": "read-only Git observation retains a protected source path when it is renamed out",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "apps/three-surface-poc/src/orrery.browser.test.ts",
+     "title": "Orrery rendered geometry preserves district size differences and readable labels (C3-3, POC-REQ-050)",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+     "title": "Zero downstream citations of Polaris as authority (PWB-REQ-014) no source/authority/provenance field in the governance, spec, code or docs trees names the Polaris surface",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "apps/three-surface-poc/src/polaris-capability-detail.test.ts",
+     "title": "Polaris capability deep dive bands (PWB-REQ-015; RFC7-17) renders exactly the three bands in order, every block under exactly one band and class, in Base mode with observed reality, over every shape state",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "apps/three-surface-poc/src/polaris-walkthrough-readiness.test.ts",
+     "title": "PWB-REQ-021 readiness on Polaris projects served breaches into the existing resource-breach arm without changing input evidence or judgment",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "apps/three-surface-poc/src/routes.test.ts",
+     "title": "three-surface POC routes keeps empty-seed human and machine responses in parity",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "apps/three-surface-poc/src/test-model-fixture.test.ts",
+     "title": "fixture repositories (syzygy-jsyi) gives each call its own clean copy at the revision a fresh pinned commit mints, and keeps a write in its own copy",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "apps/three-surface-poc/src/polaris-generation/public-source-screening.test.ts",
+     "title": "the policy act gate fails closed the default port reads this checkout's chain: the latest recorded version loads the policy it names",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    },
+    {
+     "file": "apps/three-surface-poc/src/polaris-generation/public-source-screening.test.ts",
+     "title": "the v4 redacted corpus behind the original-object verification boundary binds the complete mixed population through fresh verification and consent before any provider input",
+     "msg": "Error: STACK_TRACE_ERROR\n    at task (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-532/clone3/node_modules/@vitest/runner/dist/chunk-hooks.js:638:27)\n    at Object.<anonymous> (file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a"
+    }
+   ],
+   "suiteErrors": []
+  },
+  {
+   "label": "system-suite #1",
+   "exit": 0,
+   "load1Start": 127.42,
+   "load1End": 103.03,
+   "seconds": 39.6,
+   "numTotalTests": 50,
+   "numPassedTests": 49,
+   "numFailedTests": 0,
+   "numPendingTests": 1,
+   "numTodoTests": 0,
+   "numTotalTestSuites": 21,
+   "numFailedTestSuites": 0,
+   "files": 10,
+   "failed": [],
+   "suiteErrors": []
+  },
+  {
+   "label": "system-suite #2",
+   "exit": 0,
+   "load1Start": 103.03,
+   "load1End": 111.84,
+   "seconds": 54.9,
+   "numTotalTests": 50,
+   "numPassedTests": 49,
+   "numFailedTests": 0,
+   "numPendingTests": 1,
+   "numTodoTests": 0,
+   "numTotalTestSuites": 21,
+   "numFailedTestSuites": 0,
+   "files": 10,
+   "failed": [],
+   "suiteErrors": []
+  }
+ ]
+}

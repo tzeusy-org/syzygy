@@ -1,0 +1,8 @@
+{"case": "cycle", "script": "2f249d2c", "exit": 0, "refusal": [], "removed": ["packages/a", "packages/b"], "tscRan": true}
+{"case": "cycle", "script": "a607bb62", "exit": 1, "refusal": ["Error: packages/a -> packages/b -> packages/a: project references form a cycle"], "removed": [], "tscRan": false}
+{"case": "declarationDir", "script": "2f249d2c", "exit": 0, "refusal": [], "removed": ["packages/a", "packages/b"], "tscRan": true}
+{"case": "declarationDir", "script": "a607bb62", "exit": 1, "refusal": ["Error: packages/a/tsconfig.json: its outputs and incremental state are not both under dist"], "removed": [], "tscRan": false}
+{"case": "outFile", "script": "2f249d2c", "exit": 0, "refusal": [], "removed": ["packages/a", "packages/b"], "tscRan": true}
+{"case": "outFile", "script": "a607bb62", "exit": 1, "refusal": ["Error: packages/a/tsconfig.json: its outputs and incremental state are not both under dist"], "removed": [], "tscRan": false}
+{"case": "outside", "script": "2f249d2c", "exit": 0, "refusal": [], "removed": ["packages/a", "packages/b"], "tscRan": true}
+{"case": "outside", "script": "a607bb62", "exit": 1, "refusal": ["Error: packages/b: resolves outside the checkout"], "removed": [], "tscRan": false}

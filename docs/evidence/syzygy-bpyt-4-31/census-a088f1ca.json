@@ -1,0 +1,3077 @@
+{
+ "tool": {
+  "name": "timeout_census.mjs",
+  "sha256": "6e503285dfe1d3faf64d317f95faf17841991db0901bc1b55822870f96cbbc3a"
+ },
+ "commit": "a088f1caf061c1a2062527ce8521c9b64c3c7fd1",
+ "population": {
+  "files": 499,
+  "parsed": 499,
+  "testFiles": 248
+ },
+ "summary": {
+  "sites": 124,
+  "files": 41,
+  "withoutReason": 79,
+  "filesWithoutReason": 25,
+  "withoutCitation": 109,
+  "filesWithoutCitation": 34,
+  "byKind": {
+   "test": {
+    "sites": 102,
+    "files": 29,
+    "withReason": 38,
+    "cited": 12
+   },
+   "hook": {
+    "sites": 19,
+    "files": 18,
+    "withReason": 4,
+    "cited": 3
+   },
+   "suite": {
+    "sites": 1,
+    "files": 1,
+    "withReason": 1,
+    "cited": 0
+   },
+   "config": {
+    "sites": 2,
+    "files": 1,
+    "withReason": 2,
+    "cited": 0
+   }
+  }
+ },
+ "sites": [
+  {
+   "path": "apps/three-surface-poc/src/build-output.test.ts",
+   "line": 62,
+   "callLine": 42,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "240_000",
+   "valueMs": 240000,
+   "constant": null,
+   "title": "re-emits ignored JavaScript before the launcher executes it",
+   "suites": [
+    "POC build output integrity"
+   ],
+   "reason": {
+    "where": "apps/three-surface-poc/src/build-output.test.ts:61",
+    "text": "// A private copy and `npm ci` (a few seconds from a warm cache), then two // sequential `tsc -b --force` builds (~7.5s each on an unloaded machine). // The forced rebuild itself is the trust boundary and must stay. 15s // (syzygy-gk9) and then 60s timed out under load: the two builds alone // measured 69.9s at worst under the parallel-load protocol (syzygy-gb4l, // docs/evidence/load-timeouts-gb4l-2026-10-03.json)."
+   },
+   "citations": {
+    "commits": [],
+    "measurements": [
+     "docs/evidence/load-timeouts-gb4l-2026-10-03.json"
+    ]
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.browser.test.ts",
+   "line": 82,
+   "callLine": 63,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "constant": null,
+   "title": "closes and drains even when a helper cannot exit on its own",
+   "suites": [
+    "disposable Chrome teardown in a real browser"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.browser.test.ts",
+   "line": 112,
+   "callLine": 84,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "constant": null,
+   "title": "leaves no Chrome singleton directory behind when the leader is killed",
+   "suites": [
+    "disposable Chrome teardown in a real browser"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 335,
+   "callLine": 329,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "constant": null,
+   "title": "removes the singleton directory read while Chrome ran, with the profile, and only that one",
+   "suites": [
+    "Chrome singleton directory (syzygy-bpyt.4.11)"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 344,
+   "callLine": 337,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "constant": null,
+   "title": "reads the directory from the profile's link when none was read while Chrome ran",
+   "suites": [
+    "Chrome singleton directory (syzygy-bpyt.4.11)"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 351,
+   "callLine": 346,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "constant": null,
+   "title": "removes the Chromium form of the name too",
+   "suites": [
+    "Chrome singleton directory (syzygy-bpyt.4.11)"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 364,
+   "callLine": 353,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "constant": null,
+   "title": "removes the name without a leading dot too, which Chrome 147 to 155 make, whether given or read from the link",
+   "suites": [
+    "Chrome singleton directory (syzygy-bpyt.4.11)"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 371,
+   "callLine": 366,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "constant": null,
+   "title": "removes the profile and nothing else when Chrome left no singleton directory (a clean exit)",
+   "suites": [
+    "Chrome singleton directory (syzygy-bpyt.4.11)"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 383,
+   "callLine": 373,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "constant": null,
+   "title": "keeps a directory that is not directly under the temp directory, whether it was given or read from the link",
+   "suites": [
+    "Chrome singleton directory (syzygy-bpyt.4.11)"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 401,
+   "callLine": 385,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "constant": null,
+   "title": "keeps a directory whose name is not exactly Chrome's: another prefix, no suffix, a longer name, a symbol in the suffix",
+   "suites": [
+    "Chrome singleton directory (syzygy-bpyt.4.11)"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 417,
+   "callLine": 403,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "constant": null,
+   "title": "follows no link and removes no file: a link to a directory and a plain file with Chrome's name both stay",
+   "suites": [
+    "Chrome singleton directory (syzygy-bpyt.4.11)"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 426,
+   "callLine": 419,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "constant": null,
+   "title": "keeps a directory that belongs to another user, never entering it",
+   "suites": [
+    "Chrome singleton directory (syzygy-bpyt.4.11)"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 439,
+   "callLine": 428,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "constant": null,
+   "title": "checks no user where the system has no user ids, and removes the directory",
+   "suites": [
+    "Chrome singleton directory (syzygy-bpyt.4.11)"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 445,
+   "callLine": 441,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "constant": null,
+   "title": "removes the directory a profile's link names when the profile and the link are the running user's, whatever removes the profile",
+   "suites": [
+    "Chrome singleton directory (syzygy-bpyt.4.11)"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 451,
+   "callLine": 447,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "constant": null,
+   "title": "keeps the directory a link names when the profile is not the running user's, as in a shared temp directory where another user made it first",
+   "suites": [
+    "Chrome singleton directory (syzygy-bpyt.4.11)"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 458,
+   "callLine": 453,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "constant": null,
+   "title": "keeps the directory a link names when the link is not the running user's",
+   "suites": [
+    "Chrome singleton directory (syzygy-bpyt.4.11)"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 470,
+   "callLine": 460,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "constant": null,
+   "title": "keeps a directory made under the same name after the one that was read, as when Chrome exits cleanly and another Chrome follows",
+   "suites": [
+    "Chrome singleton directory (syzygy-bpyt.4.11)"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 478,
+   "callLine": 472,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "constant": null,
+   "title": "keeps a directory with the recorded inode number on another device",
+   "suites": [
+    "Chrome singleton directory (syzygy-bpyt.4.11)"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": 489,
+   "callLine": 480,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "constant": null,
+   "title": "does not fail the run when the singleton directory cannot be removed",
+   "suites": [
+    "Chrome singleton directory (syzygy-bpyt.4.11)"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 63,
+   "callLine": 57,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "constant": null,
+   "title": "removes the copy and the template of a process that is gone",
+   "suites": [
+    "fixture directories a killed run left behind (syzygy-bpyt.4.10)"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 71,
+   "callLine": 65,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "constant": null,
+   "title": "keeps the directories of a live process, the current one included",
+   "suites": [
+    "fixture directories a killed run left behind (syzygy-bpyt.4.10)"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 94,
+   "callLine": 73,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "constant": null,
+   "title": "keeps a name that carries no pid and namespace segment, whatever its suffix",
+   "suites": [
+    "fixture directories a killed run left behind (syzygy-bpyt.4.10)"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 109,
+   "callLine": 96,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "constant": null,
+   "title": "keeps a directory whose pid fails with anything but ESRCH",
+   "suites": [
+    "fixture directories a killed run left behind (syzygy-bpyt.4.10)"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 128,
+   "callLine": 111,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "constant": null,
+   "title": "follows no symlink and removes no file: only a directory with a dead pid in its name goes",
+   "suites": [
+    "fixture directories a killed run left behind (syzygy-bpyt.4.10)"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 142,
+   "callLine": 130,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "constant": null,
+   "title": "keeps the directories of a dead pid that belong to another PID namespace, whatever the neighbouring value",
+   "suites": [
+    "fixture directories a killed run left behind (syzygy-bpyt.4.10)"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 186,
+   "callLine": 145,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "constant": null,
+   "title": "removes nothing, and lists nothing, where the PID namespace %s, so a sandbox without /proc never sweeps another sandbox's live directories",
+   "suites": [
+    "fixture directories a killed run left behind (syzygy-bpyt.4.10)"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": "// A reading that is absent (no /proc, a tmpfs over it) and one that names no inode are the same to the sweep."
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 198,
+   "callLine": 188,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "constant": null,
+   "title": "keeps a directory that belongs to another user, the sweep never descending into it",
+   "suites": [
+    "fixture directories a killed run left behind (syzygy-bpyt.4.10)"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 212,
+   "callLine": 200,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "constant": null,
+   "title": "checks no user where the system has no user ids, and removes the dead process's directory",
+   "suites": [
+    "fixture directories a killed run left behind (syzygy-bpyt.4.10)"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 227,
+   "callLine": 214,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "constant": null,
+   "title": "does not fail the run when the temp directory cannot be listed",
+   "suites": [
+    "fixture directories a killed run left behind (syzygy-bpyt.4.10)"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 241,
+   "callLine": 229,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "constant": null,
+   "title": "lists only the directory it is given: nothing beside it, nothing below a non-fixture entry",
+   "suites": [
+    "fixture directories a killed run left behind (syzygy-bpyt.4.10)"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 256,
+   "callLine": 243,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "constant": null,
+   "title": "does not fail the run when a dead process's directory cannot be removed",
+   "suites": [
+    "fixture directories a killed run left behind (syzygy-bpyt.4.10)"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 266,
+   "callLine": 258,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "constant": null,
+   "title": "sweeps the temp directory the process runs under when the global setup runs, and keeps the live and the legacy",
+   "suites": [
+    "fixture directories a killed run left behind (syzygy-bpyt.4.10)"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 284,
+   "callLine": 268,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "constant": null,
+   "title": "asks the operating system for the temp directory, so it sweeps the same directory the copies are made in when TMPDIR is unset",
+   "suites": [
+    "fixture directories a killed run left behind (syzygy-bpyt.4.10)"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "line": 296,
+   "callLine": 286,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "constant": null,
+   "title": "is registered as a global setup of the app project and of no other project, so it runs once per run",
+   "suites": [
+    "fixture directories a killed run left behind (syzygy-bpyt.4.10)"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/git-blob-batch.test.ts",
+   "line": 241,
+   "callLine": 206,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "REAL_TREE_TIMEOUT_MS",
+   "valueMs": 120000,
+   "constant": {
+    "name": "REAL_TREE_TIMEOUT_MS",
+    "at": "apps/three-surface-poc/src/git-blob-batch.test.ts:27"
+   },
+   "title": "reads the same objects and returns the same inputs and evaluation for the governance load",
+   "suites": [
+    "batched reads over the real tree (oracle: one git cat-file blob per object)"
+   ],
+   "reason": {
+    "where": "apps/three-surface-poc/src/git-blob-batch.test.ts:26",
+    "text": "// Real-tree reads spawn git; under the parallel-load protocol a hundred // single reads took up to 13 s (syzygy-svoj evidence), so these tests carry // an explicit budget."
+   },
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/git-blob-batch.test.ts",
+   "line": 253,
+   "callLine": 243,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "REAL_TREE_TIMEOUT_MS",
+   "valueMs": 120000,
+   "constant": {
+    "name": "REAL_TREE_TIMEOUT_MS",
+    "at": "apps/three-surface-poc/src/git-blob-batch.test.ts:27"
+   },
+   "title": "reads the same blobs with the same bytes for the self-corpus at the pinned commit",
+   "suites": [
+    "batched reads over the real tree (oracle: one git cat-file blob per object)"
+   ],
+   "reason": {
+    "where": "apps/three-surface-poc/src/git-blob-batch.test.ts:26",
+    "text": "// Real-tree reads spawn git; under the parallel-load protocol a hundred // single reads took up to 13 s (syzygy-svoj evidence), so these tests carry // an explicit budget."
+   },
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/git-blob-batch.test.ts",
+   "line": 286,
+   "callLine": 278,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "REAL_TREE_TIMEOUT_MS",
+   "valueMs": 120000,
+   "constant": {
+    "name": "REAL_TREE_TIMEOUT_MS",
+    "at": "apps/three-surface-poc/src/git-blob-batch.test.ts:27"
+   },
+   "title": "fails the self-corpus read on a missing, unread or altered blob",
+   "suites": [
+    "batched reads over the real tree (oracle: one git cat-file blob per object)"
+   ],
+   "reason": {
+    "where": "apps/three-surface-poc/src/git-blob-batch.test.ts:26",
+    "text": "// Real-tree reads spawn git; under the parallel-load protocol a hundred // single reads took up to 13 s (syzygy-svoj evidence), so these tests carry // an explicit budget."
+   },
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/governance-inputs.test.ts",
+   "line": 504,
+   "callLine": 439,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "REAL_TREE_TIMEOUT_MS",
+   "valueMs": 60000,
+   "constant": {
+    "name": "REAL_TREE_TIMEOUT_MS",
+    "at": "apps/three-surface-poc/src/governance-inputs.test.ts:436"
+   },
+   "title": "evaluates the three real current PWB acts without reading any body",
+   "suites": [
+    "loadBodyReadAuthorityInputs (real Syzygy governance tree)"
+   ],
+   "reason": {
+    "where": "apps/three-surface-poc/src/governance-inputs.test.ts:435",
+    "text": "// The production reader spawns one `git cat-file` per blob: 123 over the real // tree (about 1 s alone), the cost this test exists to exercise. Measured // worst case 8.5 s under the parallel-load protocol (syzygy-pln3, // docs/evidence/governance-inputs-timeout-2026-10-03.json)."
+   },
+   "citations": {
+    "commits": [],
+    "measurements": [
+     "docs/evidence/governance-inputs-timeout-2026-10-03.json"
+    ]
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/governing-intent-sweep.test.ts",
+   "line": 168,
+   "callLine": 164,
+   "kind": "hook",
+   "callee": "beforeAll",
+   "form": "second-argument",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "constant": null,
+   "suites": [],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/keyboard-sweep-record.test.ts",
+   "line": 59,
+   "callLine": 44,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "constant": null,
+   "title": "reads the Butlers revision and evaluation identity a served Polaris page renders, on both mounts",
+   "suites": [
+    "the evaluation a swept page names (rule 11; syzygy-buzg)"
+   ],
+   "reason": {
+    "where": "apps/three-surface-poc/src/keyboard-sweep-record.test.ts:59",
+    "text": "two fixture model builds, ~1.5 s each unloaded; the 5 s default failed such tests under suite load (syzygy-k66p)"
+   },
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/main.test.ts",
+   "line": 366,
+   "callLine": 325,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "TEST_TIMEOUT_MS",
+   "valueMs": 30000,
+   "constant": {
+    "name": "TEST_TIMEOUT_MS",
+    "at": "apps/three-surface-poc/src/main.test.ts:48"
+   },
+   "title": "prints the banner, registers the three route groups, and closes once on the first signal",
+   "suites": [
+    "main(argv, io): serving"
+   ],
+   "reason": {
+    "where": "apps/three-surface-poc/src/main.test.ts:48",
+    "text": "// Every wait in this file is bounded by WAIT_MS, and every test that waits // has a timeout above two of them, so a slow host fails on the unmet // expectation instead of on \"Test timed out\" (vitest's default is 5000 ms).",
+    "group": true
+   },
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/main.test.ts",
+   "line": 378,
+   "callLine": 368,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "TEST_TIMEOUT_MS",
+   "valueMs": 30000,
+   "constant": {
+    "name": "TEST_TIMEOUT_MS",
+    "at": "apps/three-surface-poc/src/main.test.ts:48"
+   },
+   "title": "prints no walkthrough binding while readiness is not evaluated",
+   "suites": [
+    "main(argv, io): serving"
+   ],
+   "reason": {
+    "where": "apps/three-surface-poc/src/main.test.ts:48",
+    "text": "// Every wait in this file is bounded by WAIT_MS, and every test that waits // has a timeout above two of them, so a slow host fails on the unmet // expectation instead of on \"Test timed out\" (vitest's default is 5000 ms).",
+    "group": true
+   },
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/main.test.ts",
+   "line": 389,
+   "callLine": 380,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "TEST_TIMEOUT_MS",
+   "valueMs": 30000,
+   "constant": {
+    "name": "TEST_TIMEOUT_MS",
+    "at": "apps/three-surface-poc/src/main.test.ts:48"
+   },
+   "title": "defaults the state directory to a per-repository directory under the OS temp directory",
+   "suites": [
+    "main(argv, io): serving"
+   ],
+   "reason": {
+    "where": "apps/three-surface-poc/src/main.test.ts:48",
+    "text": "// Every wait in this file is bounded by WAIT_MS, and every test that waits // has a timeout above two of them, so a slow host fails on the unmet // expectation instead of on \"Test timed out\" (vitest's default is 5000 ms).",
+    "group": true
+   },
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/main.test.ts",
+   "line": 406,
+   "callLine": 391,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "TEST_TIMEOUT_MS",
+   "valueMs": 30000,
+   "constant": {
+    "name": "TEST_TIMEOUT_MS",
+    "at": "apps/three-surface-poc/src/main.test.ts:48"
+   },
+   "title": "attaches the Enter console to io only with --watch, and a dirty re-observation keeps the prior evaluation",
+   "suites": [
+    "main(argv, io): serving"
+   ],
+   "reason": {
+    "where": "apps/three-surface-poc/src/main.test.ts:48",
+    "text": "// Every wait in this file is bounded by WAIT_MS, and every test that waits // has a timeout above two of them, so a slow host fails on the unmet // expectation instead of on \"Test timed out\" (vitest's default is 5000 ms).",
+    "group": true
+   },
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/main.test.ts",
+   "line": 424,
+   "callLine": 408,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "TEST_TIMEOUT_MS",
+   "valueMs": 30000,
+   "constant": {
+    "name": "TEST_TIMEOUT_MS",
+    "at": "apps/three-surface-poc/src/main.test.ts:48"
+   },
+   "title": "prints no console prompt and ignores Enter without --watch",
+   "suites": [
+    "main(argv, io): serving"
+   ],
+   "reason": {
+    "where": "apps/three-surface-poc/src/main.test.ts:48",
+    "text": "// Every wait in this file is bounded by WAIT_MS, and every test that waits // has a timeout above two of them, so a slow host fails on the unmet // expectation instead of on \"Test timed out\" (vitest's default is 5000 ms).",
+    "group": true
+   },
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/main.test.ts",
+   "line": 478,
+   "callLine": 439,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "TEST_TIMEOUT_MS",
+   "valueMs": 30000,
+   "constant": {
+    "name": "TEST_TIMEOUT_MS",
+    "at": "apps/three-surface-poc/src/main.test.ts:48"
+   },
+   "title": "observes, builds, names, materializes and re-evaluates against the bound locator",
+   "suites": [
+    "main(argv, io): the bound locator reaches every repository-rooted argument"
+   ],
+   "reason": {
+    "where": "apps/three-surface-poc/src/main.test.ts:48",
+    "text": "// Every wait in this file is bounded by WAIT_MS, and every test that waits // has a timeout above two of them, so a slow host fails on the unmet // expectation instead of on \"Test timed out\" (vitest's default is 5000 ms).",
+    "group": true
+   },
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/main.test.ts",
+   "line": 498,
+   "callLine": 480,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "TEST_TIMEOUT_MS",
+   "valueMs": 30000,
+   "constant": {
+    "name": "TEST_TIMEOUT_MS",
+    "at": "apps/three-surface-poc/src/main.test.ts:48"
+   },
+   "title": "reads the exact requirement text from the bound repository",
+   "suites": [
+    "main(argv, io): the bound locator reaches every repository-rooted argument"
+   ],
+   "reason": {
+    "where": "apps/three-surface-poc/src/main.test.ts:48",
+    "text": "// Every wait in this file is bounded by WAIT_MS, and every test that waits // has a timeout above two of them, so a slow host fails on the unmet // expectation instead of on \"Test timed out\" (vitest's default is 5000 ms).",
+    "group": true
+   },
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/main.test.ts",
+   "line": 513,
+   "callLine": 500,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "TEST_TIMEOUT_MS",
+   "valueMs": 30000,
+   "constant": {
+    "name": "TEST_TIMEOUT_MS",
+    "at": "apps/three-surface-poc/src/main.test.ts:48"
+   },
+   "title": "resolves a relative --state-dir for the daemon and for the materialize action alike",
+   "suites": [
+    "main(argv, io): the bound locator reaches every repository-rooted argument"
+   ],
+   "reason": {
+    "where": "apps/three-surface-poc/src/main.test.ts:48",
+    "text": "// Every wait in this file is bounded by WAIT_MS, and every test that waits // has a timeout above two of them, so a slow host fails on the unmet // expectation instead of on \"Test timed out\" (vitest's default is 5000 ms).",
+    "group": true
+   },
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/main.test.ts",
+   "line": 538,
+   "callLine": 517,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "TEST_TIMEOUT_MS",
+   "valueMs": 30000,
+   "constant": {
+    "name": "TEST_TIMEOUT_MS",
+    "at": "apps/three-surface-poc/src/main.test.ts:48"
+   },
+   "title": "names the credential provision and the latest named re-evaluation, before and after a materialize",
+   "suites": [
+    "main(argv, io): the human pages carry what the daemon and the session know"
+   ],
+   "reason": {
+    "where": "apps/three-surface-poc/src/main.test.ts:48",
+    "text": "// Every wait in this file is bounded by WAIT_MS, and every test that waits // has a timeout above two of them, so a slow host fails on the unmet // expectation instead of on \"Test timed out\" (vitest's default is 5000 ms).",
+    "group": true
+   },
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/main.test.ts",
+   "line": 548,
+   "callLine": 542,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "TEST_TIMEOUT_MS",
+   "valueMs": 30000,
+   "constant": {
+    "name": "TEST_TIMEOUT_MS",
+    "at": "apps/three-surface-poc/src/main.test.ts:48"
+   },
+   "title": "reports a run that finished first, at once and by name",
+   "suites": [
+    "started(): the wait for main to serve"
+   ],
+   "reason": {
+    "where": "apps/three-surface-poc/src/main.test.ts:48",
+    "text": "// Every wait in this file is bounded by WAIT_MS, and every test that waits // has a timeout above two of them, so a slow host fails on the unmet // expectation instead of on \"Test timed out\" (vitest's default is 5000 ms).",
+    "group": true
+   },
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/main.test.ts",
+   "line": 555,
+   "callLine": 550,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "2_000",
+   "valueMs": 2000,
+   "constant": null,
+   "title": "gives up after its bound on a run that neither serves nor finishes",
+   "suites": [
+    "started(): the wait for main to serve"
+   ],
+   "reason": {
+    "where": "apps/three-surface-poc/src/main.test.ts:555",
+    "text": "its own bound is 50 ms"
+   },
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/orrery.browser.test.ts",
+   "line": 24,
+   "callLine": 22,
+   "kind": "hook",
+   "callee": "beforeAll",
+   "form": "second-argument",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "constant": null,
+   "suites": [
+    "Orrery rendered geometry"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts",
+   "line": 91,
+   "callLine": 80,
+   "kind": "hook",
+   "callee": "beforeAll",
+   "form": "second-argument",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "constant": null,
+   "suites": [
+    "Polaris keyboard, non-visual and contrast checks in a real browser"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts",
+   "line": 310,
+   "callLine": 287,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "240_000",
+   "valueMs": 240000,
+   "constant": null,
+   "title": "activates more fragment links than Chrome's navigation budget, including a second link to the current hash",
+   "suites": [
+    "Polaris keyboard, non-visual and contrast checks in a real browser"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts",
+   "line": 332,
+   "callLine": 313,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "240_000",
+   "valueMs": 240000,
+   "constant": null,
+   "title": "`${variant.id}: every distinction is keyboard-operable, named for assistive technology, and AA-contrasting`",
+   "suites": [
+    "Polaris keyboard, non-visual and contrast checks in a real browser"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+   "line": 187,
+   "callLine": 184,
+   "kind": "hook",
+   "callee": "beforeAll",
+   "form": "second-argument",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "constant": null,
+   "suites": [
+    "PWB-REQ-016 names and headings in a real browser"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+   "line": 315,
+   "callLine": 298,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "240_000",
+   "valueMs": 240000,
+   "constant": null,
+   "title": "passes every Polaris page one whole-project evaluation serves, the pages listed from the machine answer",
+   "suites": [
+    "PWB-REQ-016 names and headings in a real browser"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+   "line": 329,
+   "callLine": 317,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "240_000",
+   "valueMs": 240000,
+   "constant": null,
+   "title": "fails a listed page the daemon does not serve, never skipping it",
+   "suites": [
+    "PWB-REQ-016 names and headings in a real browser"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+   "line": 343,
+   "callLine": 338,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "240_000",
+   "valueMs": 240000,
+   "constant": null,
+   "title": "`${variant.id}: every served Polaris page passes both checks`",
+   "suites": [
+    "PWB-REQ-016 names and headings in a real browser"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-copy.test.ts",
+   "line": 226,
+   "callLine": 224,
+   "kind": "hook",
+   "callee": "beforeAll",
+   "form": "second-argument",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "constant": null,
+   "suites": [],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": "// Measured worst case for the twelve builds under the parallel-load // protocol is recorded in docs/evidence/poc-test-timeouts-2026-10-03.json."
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-first-reading.test.ts",
+   "line": 52,
+   "callLine": 52,
+   "kind": "hook",
+   "callee": "beforeAll",
+   "form": "second-argument",
+   "expression": "SHARED_FIXTURE_TIMEOUT_MS",
+   "valueMs": 60000,
+   "constant": {
+    "name": "SHARED_FIXTURE_TIMEOUT_MS",
+    "at": "apps/three-surface-poc/src/test-model-fixture.ts:248"
+   },
+   "suites": [],
+   "reason": {
+    "where": "apps/three-surface-poc/src/test-model-fixture.ts:247",
+    "text": "/** * Budget for building a file's shared fixture models once. Five or six * builds took 4.1-10.9 s across five full-suite runs under eight CPU burners * (docs/evidence/shared-fixture-models-k66p-2026-10-03.json), past the 10 s * hook default at the top. */"
+   },
+   "citations": {
+    "commits": [],
+    "measurements": [
+     "docs/evidence/shared-fixture-models-k66p-2026-10-03.json"
+    ]
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/dossier-cap-measure.test.ts",
+   "line": 12,
+   "callLine": 9,
+   "kind": "hook",
+   "callee": "beforeAll",
+   "form": "second-argument",
+   "expression": "120_000",
+   "valueMs": 120000,
+   "constant": null,
+   "suites": [],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/draft-preview.browser.test.ts",
+   "line": 47,
+   "callLine": 12,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "constant": null,
+   "title": "renders the pipeline draft with working diagram, source and keyboard deep-dive paths at both widths",
+   "suites": [],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts",
+   "line": 45,
+   "callLine": 38,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "T",
+   "valueMs": 30000,
+   "constant": {
+    "name": "T",
+    "at": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts:35"
+   },
+   "title": "runs the pipeline through the injected port with its permit and abort signal",
+   "suites": [
+    "durable lifecycle with an injected generate port"
+   ],
+   "reason": {
+    "where": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts:34",
+    "text": "// Each journal write fsyncs; see the budget note in durable-lifecycle.test.ts."
+   },
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts",
+   "line": 54,
+   "callLine": 47,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "T",
+   "valueMs": 30000,
+   "constant": {
+    "name": "T",
+    "at": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts:35"
+   },
+   "title": "reserves the configured per-attempt ceilings, capped by the request budget",
+   "suites": [
+    "durable lifecycle with an injected generate port"
+   ],
+   "reason": {
+    "where": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts:34",
+    "text": "// Each journal write fsyncs; see the budget note in durable-lifecycle.test.ts."
+   },
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts",
+   "line": 85,
+   "callLine": 75,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "T",
+   "valueMs": 30000,
+   "constant": {
+    "name": "T",
+    "at": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts:35"
+   },
+   "title": "a generate failure after the claim leaves an uncertain record that a restart never replays",
+   "suites": [
+    "durable lifecycle with an injected generate port"
+   ],
+   "reason": {
+    "where": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts:34",
+    "text": "// Each journal write fsyncs; see the budget note in durable-lifecycle.test.ts."
+   },
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts",
+   "line": 103,
+   "callLine": 87,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "T",
+   "valueMs": 30000,
+   "constant": {
+    "name": "T",
+    "at": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts:35"
+   },
+   "title": "a crash while a call is in flight leaves a claim that refuses any replay, even by a fresh lifecycle",
+   "suites": [
+    "durable lifecycle with an injected generate port"
+   ],
+   "reason": {
+    "where": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts:34",
+    "text": "// Each journal write fsyncs; see the budget note in durable-lifecycle.test.ts."
+   },
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts",
+   "line": 115,
+   "callLine": 105,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "T",
+   "valueMs": 30000,
+   "constant": {
+    "name": "T",
+    "at": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts:35"
+   },
+   "title": "reuses completed checkpoints after a restart and sends only the missing stage through the new port",
+   "suites": [
+    "durable lifecycle with an injected generate port"
+   ],
+   "reason": {
+    "where": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts:34",
+    "text": "// Each journal write fsyncs; see the budget note in durable-lifecycle.test.ts."
+   },
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts",
+   "line": 127,
+   "callLine": 117,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "T",
+   "valueMs": 30000,
+   "constant": {
+    "name": "T",
+    "at": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts:35"
+   },
+   "title": "releases an attempt whose per-call permission is withdrawn without calling generate, and only an exact true permits",
+   "suites": [
+    "durable lifecycle with an injected generate port"
+   ],
+   "reason": {
+    "where": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts:34",
+    "text": "// Each journal write fsyncs; see the budget note in durable-lifecycle.test.ts."
+   },
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts",
+   "line": 55,
+   "callLine": 42,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "JOURNAL_TIMEOUT_MS",
+   "valueMs": 30000,
+   "constant": {
+    "name": "JOURNAL_TIMEOUT_MS",
+    "at": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts:39"
+   },
+   "title": "reuses four verified checkpoints and sends only the missing fidelity stage after restart",
+   "suites": [
+    "durable scripted lifecycle port"
+   ],
+   "reason": {
+    "where": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts:38",
+    "text": "// Each test runs scripted pipelines over a journal that fsyncs every write // (2-20 fsyncs, about 0.3 s alone); a loaded host stalled one to 6.3 s under // the parallel-load protocol (syzygy-gb4l, // docs/evidence/load-timeouts-gb4l-2026-10-03.json)."
+   },
+   "citations": {
+    "commits": [],
+    "measurements": [
+     "docs/evidence/load-timeouts-gb4l-2026-10-03.json"
+    ]
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts",
+   "line": 79,
+   "callLine": 57,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "JOURNAL_TIMEOUT_MS",
+   "valueMs": 30000,
+   "constant": {
+    "name": "JOURNAL_TIMEOUT_MS",
+    "at": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts:39"
+   },
+   "title": "refuses changed request, route or current permission and a forged completed artifact",
+   "suites": [
+    "durable scripted lifecycle port"
+   ],
+   "reason": {
+    "where": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts:38",
+    "text": "// Each test runs scripted pipelines over a journal that fsyncs every write // (2-20 fsyncs, about 0.3 s alone); a loaded host stalled one to 6.3 s under // the parallel-load protocol (syzygy-gb4l, // docs/evidence/load-timeouts-gb4l-2026-10-03.json)."
+   },
+   "citations": {
+    "commits": [],
+    "measurements": [
+     "docs/evidence/load-timeouts-gb4l-2026-10-03.json"
+    ]
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts",
+   "line": 96,
+   "callLine": 81,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "JOURNAL_TIMEOUT_MS",
+   "valueMs": 30000,
+   "constant": {
+    "name": "JOURNAL_TIMEOUT_MS",
+    "at": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts:39"
+   },
+   "title": "keeps uncertain maximum reserved despite missing receipts and an expired lease field",
+   "suites": [
+    "durable scripted lifecycle port"
+   ],
+   "reason": {
+    "where": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts:38",
+    "text": "// Each test runs scripted pipelines over a journal that fsyncs every write // (2-20 fsyncs, about 0.3 s alone); a loaded host stalled one to 6.3 s under // the parallel-load protocol (syzygy-gb4l, // docs/evidence/load-timeouts-gb4l-2026-10-03.json)."
+   },
+   "citations": {
+    "commits": [],
+    "measurements": [
+     "docs/evidence/load-timeouts-gb4l-2026-10-03.json"
+    ]
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts",
+   "line": 116,
+   "callLine": 98,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "JOURNAL_TIMEOUT_MS",
+   "valueMs": 30000,
+   "constant": {
+    "name": "JOURNAL_TIMEOUT_MS",
+    "at": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts:39"
+   },
+   "title": "admits at most one concurrent dispatch and keeps distinct run artifacts separate",
+   "suites": [
+    "durable scripted lifecycle port"
+   ],
+   "reason": {
+    "where": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts:38",
+    "text": "// Each test runs scripted pipelines over a journal that fsyncs every write // (2-20 fsyncs, about 0.3 s alone); a loaded host stalled one to 6.3 s under // the parallel-load protocol (syzygy-gb4l, // docs/evidence/load-timeouts-gb4l-2026-10-03.json)."
+   },
+   "citations": {
+    "commits": [],
+    "measurements": [
+     "docs/evidence/load-timeouts-gb4l-2026-10-03.json"
+    ]
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/pipeline-demo.test.ts",
+   "line": 73,
+   "callLine": 50,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "ONRAMP_TEST_BUDGET_MS",
+   "valueMs": null,
+   "constant": {
+    "name": "ONRAMP_TEST_BUDGET_MS",
+    "at": "apps/three-surface-poc/src/polaris-generation/pipeline-demo.test.ts:19"
+   },
+   "title": "runs the README command after a clean install and requires exactly seven synthetic output files",
+   "suites": [
+    "concrete source-to-draft pipeline exercise"
+   ],
+   "reason": {
+    "where": "apps/three-surface-poc/src/polaris-generation/pipeline-demo.test.ts:19",
+    "text": "// Onramp step budgets (syzygy-128g). The test budget is the sum of the inner // timeouts so no step can outlive the test; the figures come from // docs/evidence/pipeline-demo-onramp-budget-2026-10-15.json (max measured // total 225 s at load1 55-90, about 2x margin). The documented command runs // build:poc itself, so the onramp test does not build separately.",
+    "group": true
+   },
+   "citations": {
+    "commits": [],
+    "measurements": [
+     "docs/evidence/pipeline-demo-onramp-budget-2026-10-15.json"
+    ]
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/redis-shaped-discovery.test.ts",
+   "line": 16,
+   "callLine": 13,
+   "kind": "hook",
+   "callee": "beforeAll",
+   "form": "second-argument",
+   "expression": "120_000",
+   "valueMs": 120000,
+   "constant": null,
+   "suites": [],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/redis-shaped-discovery.test.ts",
+   "line": 205,
+   "callLine": 197,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "120_000",
+   "valueMs": 120000,
+   "constant": null,
+   "title": "writes the measurement through the command and refuses to overwrite it",
+   "suites": [
+    "discovery on a synthetic tree shaped like a large C key-value server"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/self-corpus.test.ts",
+   "line": 32,
+   "callLine": 21,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "PINNED_READ_TIMEOUT_MS",
+   "valueMs": 60000,
+   "constant": {
+    "name": "PINNED_READ_TIMEOUT_MS",
+    "at": "apps/three-surface-poc/src/polaris-generation/self-corpus.test.ts:17"
+   },
+   "title": "reads only tracked blobs from the pinned commit and independently recounts its denominator",
+   "suites": [
+    "zero-egress Syzygy self-corpus proof"
+   ],
+   "reason": {
+    "where": "apps/three-surface-poc/src/polaris-generation/self-corpus.test.ts:16",
+    "text": "// readSelfCorpus spawns one `git cat-file` per selected blob, over a hundred // at the pinned commit (about 1-2 s alone). Measured worst case 7.8 s under // the parallel-load protocol (syzygy-gb4l, // docs/evidence/load-timeouts-gb4l-2026-10-03.json)."
+   },
+   "citations": {
+    "commits": [],
+    "measurements": [
+     "docs/evidence/load-timeouts-gb4l-2026-10-03.json"
+    ]
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/self-corpus.test.ts",
+   "line": 46,
+   "callLine": 34,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "constant": null,
+   "title": "refuses a 1 MB corpus budget without truncation or a scripted send, then completes on sufficient budget and isolates one source perturbation",
+   "suites": [
+    "zero-egress Syzygy self-corpus proof"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-narrative.test.ts",
+   "line": 59,
+   "callLine": 59,
+   "kind": "hook",
+   "callee": "beforeAll",
+   "form": "second-argument",
+   "expression": "SHARED_FIXTURE_TIMEOUT_MS",
+   "valueMs": 60000,
+   "constant": {
+    "name": "SHARED_FIXTURE_TIMEOUT_MS",
+    "at": "apps/three-surface-poc/src/test-model-fixture.ts:248"
+   },
+   "suites": [],
+   "reason": {
+    "where": "apps/three-surface-poc/src/test-model-fixture.ts:247",
+    "text": "/** * Budget for building a file's shared fixture models once. Five or six * builds took 4.1-10.9 s across five full-suite runs under eight CPU burners * (docs/evidence/shared-fixture-models-k66p-2026-10-03.json), past the 10 s * hook default at the top. */"
+   },
+   "citations": {
+    "commits": [],
+    "measurements": [
+     "docs/evidence/shared-fixture-models-k66p-2026-10-03.json"
+    ]
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+   "line": 316,
+   "callLine": 313,
+   "kind": "hook",
+   "callee": "beforeAll",
+   "form": "second-argument",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "constant": null,
+   "suites": [
+    "opening index in a real browser (PWB-REQ-010, P-98)"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+   "line": 352,
+   "callLine": 347,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "constant": null,
+   "title": "`every indexed target renders (${viewport.width}x${viewport.height}): nine routed rows, recounted offsets, one line after the last-beginning target`",
+   "suites": [
+    "opening index in a real browser (PWB-REQ-010, P-98)"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+   "line": 364,
+   "callLine": 354,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "constant": null,
+   "title": "`the opening Unknown aggregate is absent (${viewport.width}x${viewport.height}): the gaps row says so and routes nowhere; eight rows route`",
+   "suites": [
+    "opening index in a real browser (PWB-REQ-010, P-98)"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+   "line": 370,
+   "callLine": 366,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "constant": null,
+   "title": "`an unobserved shape (${viewport.width}x${viewport.height}): only the gaps and claim-strength targets render`",
+   "suites": [
+    "opening index in a real browser (PWB-REQ-010, P-98)"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+   "line": 408,
+   "callLine": 406,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "constant": null,
+   "title": "following the exact-requirement row by keyboard lands on its target and Tab continues from it (fixture render)",
+   "suites": [
+    "opening index in a real browser (PWB-REQ-010, P-98)"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": "// Review finding 1 (R-PWB-OPENING-INDEX-IMPL-1): the target begins inside // a disclosure closed on load. Chrome opens the disclosure on fragment // navigation and focuses the link, and Tab continues from it."
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+   "line": 413,
+   "callLine": 410,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "constant": null,
+   "title": "the same holds where a later control shares the target's disclosure (synthetic body)",
+   "suites": [
+    "opening index in a real browser (PWB-REQ-010, P-98)"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+   "line": 424,
+   "callLine": 418,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "constant": null,
+   "title": "a captured /polaris page meets the oracle at both viewports",
+   "suites": [
+    "opening index in a real browser (PWB-REQ-010, P-98)"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+   "line": 443,
+   "callLine": 426,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "constant": null,
+   "title": "a tie on the largest offset is broken by document order (synthetic body, hand-counted)",
+   "suites": [
+    "opening index in a real browser (PWB-REQ-010, P-98)"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+   "line": 452,
+   "callLine": 445,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "constant": null,
+   "title": "with no indexed target rendered, the line follows the index and gives only the total (synthetic body, hand-counted)",
+   "suites": [
+    "opening index in a real browser (PWB-REQ-010, P-98)"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-reconciliation.test.ts",
+   "line": 81,
+   "callLine": 75,
+   "kind": "hook",
+   "callee": "beforeAll",
+   "form": "second-argument",
+   "expression": "120_000",
+   "valueMs": 120000,
+   "constant": null,
+   "suites": [],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/production-reobserve.test.ts",
+   "line": 99,
+   "callLine": 86,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "PRODUCTION_BUILD_TIMEOUT_MS",
+   "valueMs": 60000,
+   "constant": {
+    "name": "PRODUCTION_BUILD_TIMEOUT_MS",
+    "at": "apps/three-surface-poc/src/production-reobserve.test.ts:71"
+   },
+   "title": "keeps served bytes and asOf stable when the same capture is rebuilt across wall-clock instants",
+   "suites": [
+    "production-owned capture-to-model re-observation seam"
+   ],
+   "reason": {
+    "where": "apps/three-surface-poc/src/production-reobserve.test.ts:70",
+    "text": "// Each test below runs two full production builds (about 1.4 s each alone; // the observer root is the real tree), so no cheaper fixture keeps what they // test. Measured worst case 18.0 s under the parallel-load protocol // (syzygy-4d15, docs/evidence/poc-test-timeouts-2026-10-03.json)."
+   },
+   "citations": {
+    "commits": [],
+    "measurements": [
+     "docs/evidence/poc-test-timeouts-2026-10-03.json"
+    ]
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/production-reobserve.test.ts",
+   "line": 132,
+   "callLine": 101,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "PRODUCTION_BUILD_TIMEOUT_MS",
+   "valueMs": 60000,
+   "constant": {
+    "name": "PRODUCTION_BUILD_TIMEOUT_MS",
+    "at": "apps/three-surface-poc/src/production-reobserve.test.ts:71"
+   },
+   "title": "uses the production builder for an atomic successful swap with identity advancement and one in-flight observation",
+   "suites": [
+    "production-owned capture-to-model re-observation seam"
+   ],
+   "reason": {
+    "where": "apps/three-surface-poc/src/production-reobserve.test.ts:70",
+    "text": "// Each test below runs two full production builds (about 1.4 s each alone; // the observer root is the real tree), so no cheaper fixture keeps what they // test. Measured worst case 18.0 s under the parallel-load protocol // (syzygy-4d15, docs/evidence/poc-test-timeouts-2026-10-03.json)."
+   },
+   "citations": {
+    "commits": [],
+    "measurements": [
+     "docs/evidence/poc-test-timeouts-2026-10-03.json"
+    ]
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/production-reobserve.test.ts",
+   "line": 160,
+   "callLine": 134,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "PRODUCTION_BUILD_TIMEOUT_MS",
+   "valueMs": 60000,
+   "constant": {
+    "name": "PRODUCTION_BUILD_TIMEOUT_MS",
+    "at": "apps/three-surface-poc/src/production-reobserve.test.ts:71"
+   },
+   "title": "re-evaluates an unchanged repository twice: two distinct named identities, the first result unchanged (syzygy-u05.2)",
+   "suites": [
+    "production-owned capture-to-model re-observation seam"
+   ],
+   "reason": {
+    "where": "apps/three-surface-poc/src/production-reobserve.test.ts:70",
+    "text": "// Each test below runs two full production builds (about 1.4 s each alone; // the observer root is the real tree), so no cheaper fixture keeps what they // test. Measured worst case 18.0 s under the parallel-load protocol // (syzygy-4d15, docs/evidence/poc-test-timeouts-2026-10-03.json)."
+   },
+   "citations": {
+    "commits": [],
+    "measurements": [
+     "docs/evidence/poc-test-timeouts-2026-10-03.json"
+    ]
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/production-reobserve.test.ts",
+   "line": 182,
+   "callLine": 162,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "PRODUCTION_BUILD_TIMEOUT_MS",
+   "valueMs": 60000,
+   "constant": {
+    "name": "PRODUCTION_BUILD_TIMEOUT_MS",
+    "at": "apps/three-surface-poc/src/production-reobserve.test.ts:71"
+   },
+   "title": "retains the prior production model and non-zero drift when the production build fails",
+   "suites": [
+    "production-owned capture-to-model re-observation seam"
+   ],
+   "reason": {
+    "where": "apps/three-surface-poc/src/production-reobserve.test.ts:70",
+    "text": "// Each test below runs two full production builds (about 1.4 s each alone; // the observer root is the real tree), so no cheaper fixture keeps what they // test. Measured worst case 18.0 s under the parallel-load protocol // (syzygy-4d15, docs/evidence/poc-test-timeouts-2026-10-03.json)."
+   },
+   "citations": {
+    "commits": [],
+    "measurements": [
+     "docs/evidence/poc-test-timeouts-2026-10-03.json"
+    ]
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/proposal-disclosure.test.ts",
+   "line": 147,
+   "callLine": 132,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "45_000",
+   "valueMs": 45000,
+   "constant": null,
+   "title": "renders every served proposal and the legend row in the declared token and symbol after scripts",
+   "suites": [
+    "proposal disclosure row (syzygy-dov.3.2; P-70 M3 slice 6)"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/restart.test.ts",
+   "line": 321,
+   "callLine": 303,
+   "kind": "hook",
+   "callee": "afterEach",
+   "form": "second-argument",
+   "expression": "TEST_MS",
+   "valueMs": 180000,
+   "constant": {
+    "name": "TEST_MS",
+    "at": "apps/three-surface-poc/src/restart.test.ts:37"
+   },
+   "suites": [],
+   "reason": {
+    "where": "apps/three-surface-poc/src/restart.test.ts:37",
+    "text": "// Two kinds of wall-clock bound live in this file, and they are kept apart // (syzygy-ve8n: three tests failed under a full suite at load average 60-90). // // LIVENESS_MS bounds a wait for a state the test goes on to assert: a fixture // binding, a marker file, a process exit, a successor listener. It never // decides an outcome, so it is generous; under load it only waits longer. // The same budget is passed as `timeoutMs` wherever the restart is expected // to finish before its deadline (30 s is restart.ts's own ceiling). // // An outcome deadline (100 ms, 150 ms) is kept short only where the test makes // the deadline the sole possible exit: a held listener that cannot close, an // inspection that never reports socket absence, or a cleanup scan whose // injected reader can never succeed. No scheduling delay can let // any other outcome win there, so no clock injection is needed. // // TEST_MS is vitest's per-test budget: several fixture spawns at LIVENESS_MS // each must fit inside it.",
+    "group": true
+   },
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/restart.test.ts",
+   "line": 331,
+   "callLine": 331,
+   "kind": "suite",
+   "callee": "describe",
+   "form": "options-first",
+   "expression": "TEST_MS",
+   "valueMs": 180000,
+   "constant": {
+    "name": "TEST_MS",
+    "at": "apps/three-surface-poc/src/restart.test.ts:37"
+   },
+   "title": "one-listener POC restart on private fixture sockets",
+   "suites": [],
+   "reason": {
+    "where": "apps/three-surface-poc/src/restart.test.ts:37",
+    "text": "// Two kinds of wall-clock bound live in this file, and they are kept apart // (syzygy-ve8n: three tests failed under a full suite at load average 60-90). // // LIVENESS_MS bounds a wait for a state the test goes on to assert: a fixture // binding, a marker file, a process exit, a successor listener. It never // decides an outcome, so it is generous; under load it only waits longer. // The same budget is passed as `timeoutMs` wherever the restart is expected // to finish before its deadline (30 s is restart.ts's own ceiling). // // An outcome deadline (100 ms, 150 ms) is kept short only where the test makes // the deadline the sole possible exit: a held listener that cannot close, an // inspection that never reports socket absence, or a cleanup scan whose // injected reader can never succeed. No scheduling delay can let // any other outcome win there, so no clock injection is needed. // // TEST_MS is vitest's per-test budget: several fixture spawns at LIVENESS_MS // each must fit inside it.",
+    "group": true
+   },
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/surface-routes.test.ts",
+   "line": 313,
+   "callLine": 300,
+   "kind": "hook",
+   "callee": "beforeAll",
+   "form": "second-argument",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "constant": null,
+   "suites": [
+    "surface routes",
+    "15-link cross-surface exhaustion"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/surface-routes.test.ts",
+   "line": 328,
+   "callLine": 315,
+   "kind": "hook",
+   "callee": "afterAll",
+   "form": "second-argument",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "constant": null,
+   "suites": [
+    "surface routes",
+    "15-link cross-surface exhaustion"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/surface-routes.test.ts",
+   "line": 420,
+   "callLine": 330,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "15_000",
+   "valueMs": 15000,
+   "constant": null,
+   "title": "exhausts 15 runtime cross-surface links over six classes and fetches every %s target",
+   "suites": [
+    "surface routes",
+    "15-link cross-surface exhaustion"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/surface-routes.test.ts",
+   "line": 453,
+   "callLine": 439,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "10_000",
+   "valueMs": 10000,
+   "constant": null,
+   "title": "withholds the post-script Orrery capability href when that exact capability is absent",
+   "suites": [
+    "surface routes"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/surface-routes.test.ts",
+   "line": 537,
+   "callLine": 482,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "45_000",
+   "valueMs": 45000,
+   "constant": null,
+   "title": "counts the post-JavaScript DOM on all three served surfaces and kills an unmarked Orrery region",
+   "suites": [
+    "surface routes"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/test-model-fixture.test.ts",
+   "line": 120,
+   "callLine": 111,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "constant": null,
+   "title": "names the template and each copy with the pid and PID namespace of the process that made them",
+   "suites": [
+    "fixture directory names (syzygy-bpyt.4.10)"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/test-model-fixture.test.ts",
+   "line": 131,
+   "callLine": 122,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "30_000",
+   "valueMs": 30000,
+   "constant": null,
+   "title": "does not sweep when a file makes its template: the sweep is the global setup's, once per run",
+   "suites": [
+    "fixture directory names (syzygy-bpyt.4.10)"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/trajectory-narrowing.browser.test.ts",
+   "line": 32,
+   "callLine": 30,
+   "kind": "hook",
+   "callee": "beforeAll",
+   "form": "second-argument",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "constant": null,
+   "suites": [
+    "Trajectory narrowing to the governing-intent Unknown (POC-REQ-014)"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/tuple-encoding.test.ts",
+   "line": 94,
+   "callLine": 94,
+   "kind": "hook",
+   "callee": "beforeAll",
+   "form": "second-argument",
+   "expression": "SHARED_FIXTURE_TIMEOUT_MS",
+   "valueMs": 60000,
+   "constant": {
+    "name": "SHARED_FIXTURE_TIMEOUT_MS",
+    "at": "apps/three-surface-poc/src/test-model-fixture.ts:248"
+   },
+   "suites": [],
+   "reason": {
+    "where": "apps/three-surface-poc/src/test-model-fixture.ts:247",
+    "text": "/** * Budget for building a file's shared fixture models once. Five or six * builds took 4.1-10.9 s across five full-suite runs under eight CPU burners * (docs/evidence/shared-fixture-models-k66p-2026-10-03.json), past the 10 s * hook default at the top. */"
+   },
+   "citations": {
+    "commits": [],
+    "measurements": [
+     "docs/evidence/shared-fixture-models-k66p-2026-10-03.json"
+    ]
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/tuple-encoding.test.ts",
+   "line": 312,
+   "callLine": 276,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "constant": null,
+   "title": "sweeps the post-JavaScript DOM of the three surfaces, Home apart: every tuple field and glossary row renders its declared symbol and token",
+   "suites": [
+    "tuple field encoding tables (syzygy-dov.3.2; P-70 M3 slice 5)"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/three-surface-poc/src/unknown-route-sweep.test.ts",
+   "line": 173,
+   "callLine": 126,
+   "kind": "hook",
+   "callee": "beforeAll",
+   "form": "second-argument",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "constant": null,
+   "suites": [],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "packages/cap1-system/src/fresh-clone.system.test.ts",
+   "line": 117,
+   "callLine": 37,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "600_000",
+   "valueMs": 600000,
+   "constant": null,
+   "title": "a fresh clone installs, builds, starts the daemon, and serves the same facts on both channels",
+   "suites": [
+    "RT6 — fresh-clone demonstration"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "packages/cap1-system/vitest.config.ts",
+   "line": 18,
+   "callLine": null,
+   "kind": "config",
+   "callee": "testTimeout",
+   "form": "config-property",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "constant": null,
+   "reason": {
+    "where": "packages/cap1-system/vitest.config.ts:17",
+    "text": "// Real process spawns and real filesystem fixtures: generous // timeouts. The fresh-clone test raises its own per-test timeout."
+   },
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "packages/cap1-system/vitest.config.ts",
+   "line": 19,
+   "callLine": null,
+   "kind": "config",
+   "callee": "hookTimeout",
+   "form": "config-property",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "constant": null,
+   "reason": {
+    "where": "packages/cap1-system/vitest.config.ts:19",
+    "text": "// Real process spawns and real filesystem fixtures: generous // timeouts. The fresh-clone test raises its own per-test timeout.",
+    "group": true
+   },
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "packages/polaris-dossier/src/gate-acts.test.ts",
+   "line": 98,
+   "callLine": 96,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "TREE_TIMEOUT",
+   "valueMs": 60000,
+   "constant": {
+    "name": "TREE_TIMEOUT",
+    "at": "packages/polaris-dossier/src/gate-acts.test.ts:84"
+   },
+   "title": "follow this checkout's tree: each source absent while its act record is, and established once the sitting records it",
+   "suites": [
+    "the sitting's acts as gate sources, with no act recorded"
+   ],
+   "reason": {
+    "where": "packages/polaris-dossier/src/gate-acts.test.ts:83",
+    "text": "/** These walk the whole real decisions tree, or eight worlds in turn: about 2-5 s unloaded, past vitest's 5 s default under load. */"
+   },
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "packages/polaris-dossier/src/gate-acts.test.ts",
+   "line": 106,
+   "callLine": 99,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "TREE_TIMEOUT",
+   "valueMs": 60000,
+   "constant": {
+    "name": "TREE_TIMEOUT",
+    "at": "packages/polaris-dossier/src/gate-acts.test.ts:84"
+   },
+   "title": "follow the tree in either state: no records, every record, and each act alone",
+   "suites": [
+    "the sitting's acts as gate sources, with no act recorded"
+   ],
+   "reason": {
+    "where": "packages/polaris-dossier/src/gate-acts.test.ts:83",
+    "text": "/** These walk the whole real decisions tree, or eight worlds in turn: about 2-5 s unloaded, past vitest's 5 s default under load. */"
+   },
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "packages/polaris-dossier/src/git-object-reader.test.ts",
+   "line": 582,
+   "callLine": 578,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "constant": null,
+   "title": "the reviewer's amplification shape, 100 levels over a 64 MiB base, refuses within the default per-call budget",
+   "suites": [
+    "each call is bounded: bytes inflated, delta depth, objects visited (finding 4)"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "packages/polaris-dossier/src/git-object-reader.test.ts",
+   "line": 782,
+   "callLine": 775,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "constant": null,
+   "title": "a subdirectory of 200,000 entries lists: a subtree is never spread into call arguments",
+   "suites": [
+    "a large valid store lists, and a reader defect is not blamed on the store (R-POLARIS-DOSSIER-S2-READER-2 finding 2, note 6)"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "packages/polaris-dossier/src/git-object-reader.test.ts",
+   "line": 803,
+   "callLine": 797,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "240_000",
+   "valueMs": 240000,
+   "constant": null,
+   "title": "a path of 4,096 segments reads and lists; a missing path below names its full prefix",
+   "suites": [
+    "paths are at most git's core.maxTreeDepth (4,096) segments deep (R-POLARIS-DOSSIER-S2-READER-3 note 1)"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "packages/polaris-dossier/src/git-object-reader.test.ts",
+   "line": 812,
+   "callLine": 804,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "240_000",
+   "valueMs": 240000,
+   "constant": null,
+   "title": "a path of 4,097 segments refuses before any read, and listTree refuses the tree nested past the cap",
+   "suites": [
+    "paths are at most git's core.maxTreeDepth (4,096) segments deep (R-POLARIS-DOSSIER-S2-READER-3 note 1)"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "packages/polaris-dossier/src/no-egress.test.ts",
+   "line": 46,
+   "callLine": 25,
+   "kind": "hook",
+   "callee": "beforeAll",
+   "form": "second-argument",
+   "expression": "120_000",
+   "valueMs": 120000,
+   "constant": null,
+   "suites": [],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "packages/polaris-dossier/src/no-egress.test.ts",
+   "line": 83,
+   "callLine": 65,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "240_000",
+   "valueMs": 240000,
+   "constant": null,
+   "title": "creates no Internet-family socket over the whole run, from preflight to close",
+   "suites": [
+    "no provider call and no transmission (S10): an operating-system capture of a full fixture run"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "packages/polaris-dossier/src/no-egress.test.ts",
+   "line": 91,
+   "callLine": 85,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "240_000",
+   "valueMs": 240000,
+   "constant": null,
+   "title": "sees the canary: one loopback datagram sent before the same run is in the capture",
+   "suites": [
+    "no provider call and no transmission (S10): an operating-system capture of a full fixture run"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "packages/polaris-dossier/src/start-gates.test.ts",
+   "line": 1015,
+   "callLine": 1009,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "TREE_TIMEOUT",
+   "valueMs": 60000,
+   "constant": {
+    "name": "TREE_TIMEOUT",
+    "at": "packages/polaris-dossier/src/start-gates.test.ts:28"
+   },
+   "title": "reports D9 established on this checkout only once an act record binds it, though the doctrine amendment log records its adoption",
+   "suites": [
+    "preflight"
+   ],
+   "reason": {
+    "where": "packages/polaris-dossier/src/start-gates.test.ts:27",
+    "text": "// After the sitting the real-tree preflight reads every act record and sweeps every decisions file (about 4.4 s alone), past Vitest's 5 s default under load; gate-acts.test.ts gives its real-tree tests the same budget."
+   },
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "line": 939,
+   "callLine": 939,
+   "kind": "hook",
+   "callee": "beforeAll",
+   "form": "second-argument",
+   "expression": "60_000",
+   "valueMs": 60000,
+   "constant": null,
+   "suites": [
+    "every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)"
+   ],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": "// syzygy-786c: the first `full` spawns Python five times to render the recorders' acts (about 3 s of a cold 4.5 s run, by CPU // profile), which landed inside this test's 5 s budget. Render them once here, under a budget of their own; the renders are cached. // One case per row then keeps each read (about 20 ms) far from the budget whatever the suite load."
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/real-tree.test.ts",
+   "line": 50,
+   "callLine": 34,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "TIMEOUT",
+   "valueMs": 120000,
+   "constant": {
+    "name": "TIMEOUT",
+    "at": "packages/polaris-generation-consent/src/real-tree.test.ts:31"
+   },
+   "title": "refuse nothing: no file in decisions/ trips a sweep or breaks a recorder's form",
+   "suites": [
+    "the readers over this checkout's decisions directory"
+   ],
+   "reason": {
+    "where": "packages/polaris-generation-consent/src/real-tree.test.ts:31",
+    "text": "each read walks the whole decisions tree"
+   },
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/real-tree.test.ts",
+   "line": 58,
+   "callLine": 51,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "TIMEOUT",
+   "valueMs": 120000,
+   "constant": {
+    "name": "TIMEOUT",
+    "at": "packages/polaris-generation-consent/src/real-tree.test.ts:31"
+   },
+   "title": "do reach that directory: one added file naming a record or the class act refuses the reads that sweep for it",
+   "suites": [
+    "the readers over this checkout's decisions directory"
+   ],
+   "reason": {
+    "where": "packages/polaris-generation-consent/src/real-tree.test.ts:31",
+    "text": "each read walks the whole decisions tree"
+   },
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/test-artifact-verification.live.test.ts",
+   "line": 139,
+   "callLine": 49,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "120_000",
+   "valueMs": 120000,
+   "constant": null,
+   "title": "ingests one real, passing operator-reported focused-pytest artifact and resolves it to report-fact, never Verified, through the full model (AC1/AC3, RFC5-19)",
+   "suites": [],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  }
+ ],
+ "secondMethod": {
+  "regexLines": 145,
+  "matched": 117,
+  "onlyByRegex": [
+   {
+    "path": "apps/three-surface-poc/src/main.test.ts",
+    "line": 402,
+    "text": "await vi.waitFor(() => expect(fake.out().slice(before)).toContain(refusal), { timeout: WAIT_MS });"
+   },
+   {
+    "path": "apps/three-surface-poc/src/polaris-generation/pipeline-demo.test.ts",
+    "line": 59,
+    "text": "await run('git', ['clone', '--quiet', '--local', '--no-hardlinks', process.cwd(), checkout], { timeout: ONRAMP_STEP_TIMEOUT_MS.clone });"
+   },
+   {
+    "path": "apps/three-surface-poc/src/polaris-generation/pipeline-demo.test.ts",
+    "line": 64,
+    "text": "await run(documented[0]!, documented.slice(1), { cwd: checkout, timeout: ONRAMP_STEP_TIMEOUT_MS.refusedRun });"
+   },
+   {
+    "path": "apps/three-surface-poc/src/polaris-generation/pipeline-demo.test.ts",
+    "line": 70,
+    "text": "await run('npm', commands[1].split(' ').slice(1), { cwd: checkout, timeout: ONRAMP_STEP_TIMEOUT_MS.install });"
+   },
+   {
+    "path": "apps/three-surface-poc/src/polaris-generation/pipeline-demo.test.ts",
+    "line": 71,
+    "text": "await run(documented[0]!, documented.slice(1), { cwd: checkout, timeout: ONRAMP_STEP_TIMEOUT_MS.documented });"
+   },
+   {
+    "path": "apps/three-surface-poc/src/polaris-generation/public-source-screening.test.ts",
+    "line": 339,
+    "text": "const request = buildPipelineRequest(corpus, { ...cfg(only.commit), readerQuestions: [{ id: 'core-ideas', topics: ['core-ideas'], text: 'What is it?' }], reques"
+   },
+   {
+    "path": "packages/polaris-dossier/src/execution-flags.test.ts",
+    "line": 63,
+    "text": "const relative = flagCommand({ command: 'ls', workingDirectory: 'the clone' }, CLONE);"
+   },
+   {
+    "path": "packages/polaris-dossier/src/no-egress.test.ts",
+    "line": 56,
+    "text": "env: { PATH: process.env['PATH'] ?? '/usr/bin:/bin', HOME: dir, [FULL_RUN_ROOT_ENV]: REAL_ROOT }, timeout: 240_000,"
+   },
+   {
+    "path": "packages/polaris-dossier/src/review.test.ts",
+    "line": 852,
+    "text": "['no agent tool', () => recheck({ ...record.context, agentTool: 'no-such-tool' }, DELIVERED)],"
+   },
+   {
+    "path": "packages/polaris-dossier/src/review.test.ts",
+    "line": 853,
+    "text": "['cites none', () => recheck({ ...record.context, providerStatement: null }, DELIVERED)],"
+   },
+   {
+    "path": "packages/polaris-dossier/src/review.test.ts",
+    "line": 854,
+    "text": "['another pair', () => recheck({ ...record.context, providerStatement: { ...CITATION, agentTool: 'claude-code' } }, DELIVERED)],"
+   },
+   {
+    "path": "packages/polaris-dossier/src/start-gates.test.ts",
+    "line": 866,
+    "text": "const afterWithdrawal = statements({ ...STATEMENT, withdrawn: true }, OPENAI);"
+   },
+   {
+    "path": "packages/polaris-generation-core/src/quote-fidelity.test.ts",
+    "line": 80,
+    "text": "const [finding] = checkBlockQuotes({ id: 'long-block', text: `\"${'x'.repeat(500)}\"`, sourceIds: ['src-readme'] }, SOURCES);"
+   },
+   {
+    "path": "packages/three-surface-poc-core/src/effect-authority.test.ts",
+    "line": 27,
+    "text": "const verdict = effectAuthority({ writeSurface: ['butlers:.beads'] }, BUTLERS_TRACKER_WRITE);"
+   },
+   {
+    "path": "packages/three-surface-poc-core/src/effect-authority.test.ts",
+    "line": 32,
+    "text": "expect(effectAuthority({ writeSurface: [] }, OTHER)).toMatchObject({"
+   },
+   {
+    "path": "packages/three-surface-poc-core/src/effect-authority.test.ts",
+    "line": 37,
+    "text": "expect(effectAuthority({ writeSurface: ['synthetic:other'] }, OTHER)).toMatchObject({"
+   },
+   {
+    "path": "packages/three-surface-poc-core/src/effect-authority.test.ts",
+    "line": 52,
+    "text": "expect(effectAuthority({ writeSurface }, OTHER)).toMatchObject({"
+   },
+   {
+    "path": "packages/three-surface-poc-core/src/effect-authority.test.ts",
+    "line": 60,
+    "text": "expect(effectAuthority({ writeSurface: ['synthetic:surface'] }, OTHER)).toEqual({"
+   },
+   {
+    "path": "packages/three-surface-poc-core/src/project-shape-extraction.test.ts",
+    "line": 804,
+    "text": "const r = extractSource({ path: 'heart-and-soul/v1.md', extractionClasses: ['catalog-entry'] }, V1);"
+   },
+   {
+    "path": "packages/three-surface-poc-core/src/project-shape-extraction.test.ts",
+    "line": 852,
+    "text": "const r = extractSource({ path: 'heart-and-soul/vision.md', extractionClasses: ['project-account-section'] }, VISION);"
+   },
+   {
+    "path": "packages/three-surface-poc-core/src/project-shape-observation.test.ts",
+    "line": 555,
+    "text": "expect(admitPhaseARead(tree, { path: 'about/README.md', objectId: root }, DECLARED_HOMES)).toEqual({ kind: 'admitted', entry: TREE[1] });"
+   },
+   {
+    "path": "packages/three-surface-poc-core/src/project-shape-observation.test.ts",
+    "line": 556,
+    "text": "expect(admitPhaseARead(tree, { path: 'about/heart-and-soul/README.md', objectId: oidOf('about/heart-and-soul/README.md') }, DECLARED_HOMES)).toEqual({ kind: 'ad"
+   },
+   {
+    "path": "packages/three-surface-poc-core/src/project-shape-observation.test.ts",
+    "line": 557,
+    "text": "expect(admitPhaseARead(tree, { path: 'about/heart-and-soul/vision.md', objectId: oidOf('about/heart-and-soul/vision.md') }, DECLARED_HOMES)).toEqual({ kind: 're"
+   },
+   {
+    "path": "packages/three-surface-poc-core/src/project-shape-observation.test.ts",
+    "line": 558,
+    "text": "expect(admitPhaseARead(tree, { path: 'roster/atlas/butler.toml', objectId: oidOf('roster/atlas/butler.toml') }, DECLARED_HOMES)).toEqual({ kind: 'refused', reas"
+   },
+   {
+    "path": "packages/three-surface-poc-core/src/project-shape-observation.test.ts",
+    "line": 559,
+    "text": "expect(admitPhaseARead(tree, { path: 'README.md', objectId: oidOf('README.md') }, DECLARED_HOMES)).toEqual({ kind: 'refused', reason: 'not-a-phase-a-seed-path' "
+   },
+   {
+    "path": "packages/three-surface-poc-core/src/project-shape-observation.test.ts",
+    "line": 561,
+    "text": "expect(admitPhaseARead(tree, { path: 'about/README.md', objectId: 'f'.repeat(40) }, DECLARED_HOMES)).toEqual({ kind: 'refused', reason: 'object-id-differs-from-"
+   },
+   {
+    "path": "packages/three-surface-poc-core/src/project-shape-observation.test.ts",
+    "line": 563,
+    "text": "expect(admitPhaseARead(symlinked, { path: 'about/README.md', objectId: root }, DECLARED_HOMES)).toEqual({ kind: 'refused', reason: 'not-a-regular-blob' });"
+   },
+   {
+    "path": "packages/three-surface-poc-core/src/project-shape-observation.test.ts",
+    "line": 565,
+    "text": "expect(admitPhaseARead(submodule, { path: 'about/README.md', objectId: root }, DECLARED_HOMES)).toEqual({ kind: 'refused', reason: 'not-a-regular-blob' });"
+   }
+  ],
+  "onlyByAst": [
+   {
+    "path": "apps/three-surface-poc/src/build-output.test.ts",
+    "line": 62,
+    "expression": "240_000",
+    "form": "third-argument"
+   },
+   {
+    "path": "apps/three-surface-poc/src/polaris-first-reading.test.ts",
+    "line": 52,
+    "expression": "SHARED_FIXTURE_TIMEOUT_MS",
+    "form": "second-argument"
+   },
+   {
+    "path": "apps/three-surface-poc/src/polaris-narrative.test.ts",
+    "line": 59,
+    "expression": "SHARED_FIXTURE_TIMEOUT_MS",
+    "form": "second-argument"
+   },
+   {
+    "path": "apps/three-surface-poc/src/tuple-encoding.test.ts",
+    "line": 94,
+    "expression": "SHARED_FIXTURE_TIMEOUT_MS",
+    "form": "second-argument"
+   },
+   {
+    "path": "packages/cap1-system/src/fresh-clone.system.test.ts",
+    "line": 117,
+    "expression": "600_000",
+    "form": "third-argument"
+   }
+  ]
+ }
+}

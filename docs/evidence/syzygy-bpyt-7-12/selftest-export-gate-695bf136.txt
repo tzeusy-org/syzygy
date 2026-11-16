@@ -1,0 +1,17 @@
+# tool sha256: 304ee0aada125b20f9493ff115488a782b2ac31e1e82b07639e72f886287ce60
+# tree commit: 695bf136da35dc9d94bf4abf80c709f3d4244adb
+# command: python3 export_gate.py --selftest (exit 0)
+ok  a name cited by a doc is an exception
+ok  uncited, machine-record-only and unused names are violations
+ok  a machine-record citer is counted apart
+ok  a public export is not held
+ok  the gate fails with violations
+ok  a statement declaring several names is a cross-check mismatch
+ok  the two citer methods agree on the fixture
+ok  verdict holds when nothing is wrong
+ok  verdict fails when the citer methods disagree
+ok  verdict fails on a violation
+ok  verdict fails on a name only the census has
+ok  verdict fails on a name only the parse tree has
+ok  a tree whose only held name is cited by a doc passes
+selftest: 13 of 13 cases hold

@@ -35,7 +35,10 @@ whose first slice is the body-read gate.
   `packages/three-surface-poc-core/src/project-shape-observer.ts` inside the
   existing `three-surface-poc-core` package, so no `tsc -b` project list or
   Vitest project entry changes. TypeScript on Node ≥22.15, Vitest,
-  `tsc -b --force` for `build:poc`, exactly as today.
+  `tsc -b --force` for `build:poc`, exactly as today. (Stale since
+  2026-10-28, `syzygy-bpyt.4.2`: `build:poc` now runs
+  `scripts/clean_build.mjs`, which removes every dist it builds and then runs
+  `tsc -b`, with no `--force`.)
 
 - **Markdown and TOML are parsed by small, inert, purpose-built line
   parsers** in this repository rather than a third-party Markdown library.

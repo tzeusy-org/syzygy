@@ -7,6 +7,7 @@
  * `ReaderQuestion`), which the dossier evaluator shares.
  */
 
+import { isRecord } from '@syzygy/support';
 import { OWNER_TOPICS, type OwnerTopic, type ReaderQuestion } from './topics.js';
 
 export const READER_QUESTION_TOPICS = OWNER_TOPICS;
@@ -19,7 +20,6 @@ export class ReaderQuestionsError extends Error {
 }
 
 const handle = /^[A-Za-z0-9][A-Za-z0-9_.:-]{0,99}$/u;
-const isRecord = (value: unknown): value is Record<string, unknown> => value !== null && typeof value === 'object' && !Array.isArray(value);
 
 /** A closed shape: ids unique handles, topics from the list without repeats,
  * text non-blank and bounded, no extra keys. Fails closed on anything else. */

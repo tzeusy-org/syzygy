@@ -1,0 +1,561 @@
+{
+ "head": "9d9c98a6f265393fcb46dae6e1484eea097aad20",
+ "mutants": [
+  {
+   "id": "RV1-profile-closer-trailing-text",
+   "reader": "profile",
+   "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+   "old": "const match = /^ {0,3}(`{3,}|~{3,}) *$/.exec(line);",
+   "new": "const match = /^ {0,3}(`{3,}|~{3,}).*$/.exec(line);",
+   "commit": "9d9c98a6f265393fcb46dae6e1484eea097aad20",
+   "oldCount": 1,
+   "newTest": {
+    "exit": 1,
+    "killed": true,
+    "summary": [
+     "Test Files  1 failed (1)",
+     "Tests  5 failed | 41 passed (46)"
+    ],
+    "failed": [
+     "Markdown fence recognizers: what each reader treats as inside a fence > 'closer-longer-with-info'",
+     "Markdown fence recognizers: what each reader treats as inside a fence > 'closer-trailing-tab'",
+     "Markdown fence recognizers: what each reader treats as inside a fence > 'closer-trailing-tab-then-closer'",
+     "Markdown fence recognizers: what each reader treats as inside a fence > 'closer-with-info'",
+     "Markdown fence recognizers: what each reader treats as inside a fence > 'closer-with-text'",
+     "|@syzygy/three-surface-poc-app| apps/three-surface-poc/src/fence-rules.test.ts > Markdown fence recognizers: what each reader treats as inside a fence > 'closer-longer-with-info'",
+     "|@syzygy/three-surface-poc-app| apps/three-surface-poc/src/fence-rules.test.ts > Markdown fence recognizers: what each reader treats as inside a fence > 'closer-trailing-tab'",
+     "|@syzygy/three-surface-poc-app| apps/three-surface-poc/src/fence-rules.test.ts > Markdown fence recognizers: what each reader treats as inside a fence > 'closer-trailing-tab-then-closer'",
+     "|@syzygy/three-surface-poc-app| apps/three-surface-poc/src/fence-rules.test.ts > Markdown fence recognizers: what each reader treats as inside a fence > 'closer-with-info'",
+     "|@syzygy/three-surface-poc-app| apps/three-surface-poc/src/fence-rules.test.ts > Markdown fence recognizers: what each reader treats as inside a fence > 'closer-with-text'"
+    ]
+   },
+   "existing": {
+    "exit": 1,
+    "killed": true,
+    "summary": [
+     "Test Files  1 failed | 1 passed (2)",
+     "Tests  1 failed | 88 passed (89)"
+    ],
+    "failed": [
+     "closed-pwb-code-context-v1 \u2014 fenced code blocks > a closer must repeat the opener character at least the opener length, then spaces only",
+     "|@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/markdown-code-context.test.ts > closed-pwb-code-context-v1 \u2014 fenced code blocks > a closer must repeat the opener character at least the opener length, then spaces only"
+    ]
+   },
+   "probe": {
+    "buildExit": 0,
+    "probeExit": 0,
+    "compareExit": 1,
+    "killed": true,
+    "casesThatDiffer": 5,
+    "inlineCasesThatDiffer": [],
+    "consentFunctionTextDiffers": false,
+    "differing": [
+     "closer-trailing-tab",
+     "closer-trailing-tab-then-closer",
+     "closer-with-info",
+     "closer-longer-with-info",
+     "closer-with-text"
+    ]
+   },
+   "verdict": "killed by newTest, existing, probe"
+  },
+  {
+   "id": "RV2-links-opener-indent4",
+   "reader": "links",
+   "file": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+   "old": "const opener = /^\\s{0,3}(`{3,}|~{3,})/.exec(line);",
+   "new": "const opener = /^\\s{0,4}(`{3,}|~{3,})/.exec(line);",
+   "commit": "9d9c98a6f265393fcb46dae6e1484eea097aad20",
+   "oldCount": 1,
+   "newTest": {
+    "exit": 1,
+    "killed": true,
+    "summary": [
+     "Test Files  1 failed (1)",
+     "Tests  4 failed | 42 passed (46)"
+    ],
+    "failed": [
+     "Markdown fence recognizers: what each reader treats as inside a fence > 'backtick-indent4'",
+     "Markdown fence recognizers: what each reader treats as inside a fence > 'closer-indent4'",
+     "Markdown fence recognizers: what each reader treats as inside a fence > 'tilde-indent4'",
+     "Markdown fence recognizers: what each reader treats as inside a fence > links, extraction and the renderer read CRLF exactly as they read LF; only the profile does not",
+     "|@syzygy/three-surface-poc-app| apps/three-surface-poc/src/fence-rules.test.ts > Markdown fence recognizers: what each reader treats as inside a fence > 'backtick-indent4'",
+     "|@syzygy/three-surface-poc-app| apps/three-surface-poc/src/fence-rules.test.ts > Markdown fence recognizers: what each reader treats as inside a fence > 'closer-indent4'",
+     "|@syzygy/three-surface-poc-app| apps/three-surface-poc/src/fence-rules.test.ts > Markdown fence recognizers: what each reader treats as inside a fence > 'tilde-indent4'",
+     "|@syzygy/three-surface-poc-app| apps/three-surface-poc/src/fence-rules.test.ts > Markdown fence recognizers: what each reader treats as inside a fence > links, extraction and the renderer read CRLF exactly as they read LF; only the profile does not"
+    ]
+   },
+   "existing": {
+    "exit": 0,
+    "killed": false,
+    "summary": [
+     "Test Files  1 passed (1)",
+     "Tests  24 passed (24)"
+    ],
+    "failed": []
+   },
+   "probe": {
+    "buildExit": 0,
+    "probeExit": 0,
+    "compareExit": 1,
+    "killed": true,
+    "casesThatDiffer": 6,
+    "inlineCasesThatDiffer": [],
+    "consentFunctionTextDiffers": false,
+    "differing": [
+     "backtick-indent4",
+     "backtick-indent4@crlf",
+     "tilde-indent4",
+     "tilde-indent4@crlf",
+     "closer-indent4",
+     "closer-indent4@crlf"
+    ]
+   },
+   "verdict": "killed by newTest, probe"
+  },
+  {
+   "id": "RV3-profile-tilde-closed-by-backticks",
+   "reader": "profile",
+   "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+   "old": "return run[0] === char && run.length >= length;",
+   "new": "return run.length >= length;",
+   "commit": "9d9c98a6f265393fcb46dae6e1484eea097aad20",
+   "oldCount": 1,
+   "newTest": {
+    "exit": 1,
+    "killed": true,
+    "summary": [
+     "Test Files  1 failed (1)",
+     "Tests  2 failed | 44 passed (46)"
+    ],
+    "failed": [
+     "Markdown fence recognizers: what each reader treats as inside a fence > 'closer-other-char'",
+     "Markdown fence recognizers: what each reader treats as inside a fence > 'tilde-fence-backtick-line'",
+     "|@syzygy/three-surface-poc-app| apps/three-surface-poc/src/fence-rules.test.ts > Markdown fence recognizers: what each reader treats as inside a fence > 'closer-other-char'",
+     "|@syzygy/three-surface-poc-app| apps/three-surface-poc/src/fence-rules.test.ts > Markdown fence recognizers: what each reader treats as inside a fence > 'tilde-fence-backtick-line'"
+    ]
+   },
+   "existing": {
+    "exit": 1,
+    "killed": true,
+    "summary": [
+     "Test Files  1 failed | 1 passed (2)",
+     "Tests  2 failed | 87 passed (89)"
+    ],
+    "failed": [
+     "closed-pwb-code-context-v1 \u2014 fenced code blocks > a closer must repeat the opener character at least the opener length, then spaces only",
+     "closed-pwb-code-context-v1 \u2014 fenced code blocks > a fence opener line inside a fence is content, never a nested opener",
+     "|@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/markdown-code-context.test.ts > closed-pwb-code-context-v1 \u2014 fenced code blocks > a closer must repeat the opener character at least the opener length, then spaces only",
+     "|@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/markdown-code-context.test.ts > closed-pwb-code-context-v1 \u2014 fenced code blocks > a fence opener line inside a fence is content, never a nested opener"
+    ]
+   },
+   "probe": {
+    "buildExit": 0,
+    "probeExit": 0,
+    "compareExit": 1,
+    "killed": true,
+    "casesThatDiffer": 2,
+    "inlineCasesThatDiffer": [],
+    "consentFunctionTextDiffers": false,
+    "differing": [
+     "closer-other-char",
+     "tilde-fence-backtick-line"
+    ]
+   },
+   "verdict": "killed by newTest, existing, probe"
+  },
+  {
+   "id": "RV4-profile-cr-stripped-before-read",
+   "reader": "profile",
+   "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+   "old": "const lines = text.split('\\n');",
+   "new": "const lines = text.split('\\n').map((l) => (l.endsWith('\\r') ? l.slice(0, -1) : l));",
+   "commit": "9d9c98a6f265393fcb46dae6e1484eea097aad20",
+   "oldCount": 1,
+   "newTest": {
+    "exit": 1,
+    "killed": true,
+    "summary": [
+     "Test Files  1 failed (1)",
+     "Tests  15 failed | 31 passed (46)"
+    ],
+    "failed": [
+     "Markdown fence recognizers: what each reader treats as inside a fence > 'backtick-info-with-backtick'",
+     "Markdown fence recognizers: what each reader treats as inside a fence > 'closer-indent4'",
+     "Markdown fence recognizers: what each reader treats as inside a fence > 'closer-longer'",
+     "Markdown fence recognizers: what each reader treats as inside a fence > 'closer-trailing-tab'",
+     "Markdown fence recognizers: what each reader treats as inside a fence > 'closer-trailing-tab-then-closer'",
+     "Markdown fence recognizers: what each reader treats as inside a fence > 'closer-with-info'",
+     "Markdown fence recognizers: what each reader treats as inside a fence > 'closer-with-text'",
+     "Markdown fence recognizers: what each reader treats as inside a fence > 'list-item'",
+     "Markdown fence recognizers: what each reader treats as inside a fence > 'tilde-col0'",
+     "Markdown fence recognizers: what each reader treats as inside a fence > 'tilde-fence-backtick-line'",
+     "Markdown fence recognizers: what each reader treats as inside a fence > 'tilde-indent3'",
+     "Markdown fence recognizers: what each reader treats as inside a fence > 'tilde-info-with-backtick'"
+    ]
+   },
+   "existing": {
+    "exit": 0,
+    "killed": false,
+    "summary": [
+     "Test Files  2 passed (2)",
+     "Tests  89 passed (89)"
+    ],
+    "failed": []
+   },
+   "probe": {
+    "buildExit": 0,
+    "probeExit": 0,
+    "compareExit": 1,
+    "killed": true,
+    "casesThatDiffer": 28,
+    "inlineCasesThatDiffer": [],
+    "consentFunctionTextDiffers": false,
+    "differing": [
+     "backtick-col0@crlf",
+     "backtick-indent1@crlf",
+     "backtick-indent2@crlf",
+     "backtick-indent3@crlf",
+     "tilde-col0@crlf",
+     "tilde-indent3@crlf",
+     "opener-four-closer-three@crlf",
+     "closer-longer@crlf",
+     "closer-indent1@crlf",
+     "closer-indent3@crlf",
+     "closer-indent4@crlf",
+     "closer-trailing-space@crlf"
+    ]
+   },
+   "verdict": "killed by newTest, probe"
+  },
+  {
+   "id": "RV5-profile-span-closed-by-shorter-run",
+   "reader": "profile",
+   "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+   "old": "} else if (runLength === span.length) {",
+   "new": "} else if (runLength <= span.length) {",
+   "commit": "9d9c98a6f265393fcb46dae6e1484eea097aad20",
+   "oldCount": 1,
+   "newTest": {
+    "exit": 1,
+    "killed": true,
+    "summary": [
+     "Test Files  1 failed (1)",
+     "Tests  5 failed | 41 passed (46)"
+    ],
+    "failed": [
+     "Markdown fence recognizers: what each reader treats as inside a fence > 'backtick-info-with-backtick'",
+     "Markdown fence recognizers: what each reader treats as inside a fence > 'opener-four-closer-three'",
+     "Markdown fence recognizers: what each reader treats as inside a fence > GAP: a CRLF source is admitted where the same LF source is excluded as a malformed code context",
+     "Markdown fence recognizers: what each reader treats as inside a fence > inline span: 'double-span-with-inner-backtick-aroun\u2026'",
+     "Markdown fence recognizers: what each reader treats as inside a fence > inline span: 'double-span-with-inner-backtick-befor\u2026'",
+     "|@syzygy/three-surface-poc-app| apps/three-surface-poc/src/fence-rules.test.ts > Markdown fence recognizers: what each reader treats as inside a fence > 'backtick-info-with-backtick'",
+     "|@syzygy/three-surface-poc-app| apps/three-surface-poc/src/fence-rules.test.ts > Markdown fence recognizers: what each reader treats as inside a fence > 'opener-four-closer-three'",
+     "|@syzygy/three-surface-poc-app| apps/three-surface-poc/src/fence-rules.test.ts > Markdown fence recognizers: what each reader treats as inside a fence > GAP: a CRLF source is admitted where the same LF source is excluded as a malformed code context",
+     "|@syzygy/three-surface-poc-app| apps/three-surface-poc/src/fence-rules.test.ts > Markdown fence recognizers: what each reader treats as inside a fence > inline span: 'double-span-with-inner-backtick-aroun\u2026'",
+     "|@syzygy/three-surface-poc-app| apps/three-surface-poc/src/fence-rules.test.ts > Markdown fence recognizers: what each reader treats as inside a fence > inline span: 'double-span-with-inner-backtick-befor\u2026'"
+    ]
+   },
+   "existing": {
+    "exit": 1,
+    "killed": true,
+    "summary": [
+     "Test Files  2 failed (2)",
+     "Tests  2 failed | 87 passed (89)"
+    ],
+    "failed": [
+     "active content is rejected and never reaches a sink > a malformed code context is itself a finding that excludes the source",
+     "closed-pwb-code-context-v1 \u2014 inline code spans > the closer is exactly the opener length; other runs are content",
+     "|@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/git-object-reader.test.ts > active content is rejected and never reaches a sink > a malformed code context is itself a finding that excludes the source",
+     "|@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/markdown-code-context.test.ts > closed-pwb-code-context-v1 \u2014 inline code spans > the closer is exactly the opener length; other runs are content"
+    ]
+   },
+   "probe": {
+    "buildExit": 0,
+    "probeExit": 0,
+    "compareExit": 1,
+    "killed": true,
+    "casesThatDiffer": 2,
+    "inlineCasesThatDiffer": [
+     "double-span-with-inner-backtick-before-link",
+     "double-span-with-inner-backtick-around-link"
+    ],
+    "consentFunctionTextDiffers": false,
+    "differing": [
+     "opener-four-closer-three@crlf",
+     "backtick-info-with-backtick@crlf"
+    ]
+   },
+   "verdict": "killed by newTest, existing, probe"
+  },
+  {
+   "id": "RV6-extraction-backtick-fences-only",
+   "reader": "extraction",
+   "file": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+   "old": "const FENCE = /^(`{3,}|~{3,})/;",
+   "new": "const FENCE = /^(`{3,})/;",
+   "commit": "9d9c98a6f265393fcb46dae6e1484eea097aad20",
+   "oldCount": 1,
+   "newTest": {
+    "exit": 1,
+    "killed": true,
+    "summary": [
+     "Test Files  1 failed (1)",
+     "Tests  6 failed | 40 passed (46)"
+    ],
+    "failed": [
+     "Markdown fence recognizers: what each reader treats as inside a fence > 'tilde-col0'",
+     "Markdown fence recognizers: what each reader treats as inside a fence > 'tilde-fence-backtick-line'",
+     "Markdown fence recognizers: what each reader treats as inside a fence > 'tilde-info-with-backtick'",
+     "Markdown fence recognizers: what each reader treats as inside a fence > 'tilde-opener-four-closer-three'",
+     "Markdown fence recognizers: what each reader treats as inside a fence > 'two-fences'",
+     "Markdown fence recognizers: what each reader treats as inside a fence > links, extraction and the renderer read CRLF exactly as they read LF; only the profile does not",
+     "|@syzygy/three-surface-poc-app| apps/three-surface-poc/src/fence-rules.test.ts > Markdown fence recognizers: what each reader treats as inside a fence > 'tilde-col0'",
+     "|@syzygy/three-surface-poc-app| apps/three-surface-poc/src/fence-rules.test.ts > Markdown fence recognizers: what each reader treats as inside a fence > 'tilde-fence-backtick-line'",
+     "|@syzygy/three-surface-poc-app| apps/three-surface-poc/src/fence-rules.test.ts > Markdown fence recognizers: what each reader treats as inside a fence > 'tilde-info-with-backtick'",
+     "|@syzygy/three-surface-poc-app| apps/three-surface-poc/src/fence-rules.test.ts > Markdown fence recognizers: what each reader treats as inside a fence > 'tilde-opener-four-closer-three'",
+     "|@syzygy/three-surface-poc-app| apps/three-surface-poc/src/fence-rules.test.ts > Markdown fence recognizers: what each reader treats as inside a fence > 'two-fences'",
+     "|@syzygy/three-surface-poc-app| apps/three-surface-poc/src/fence-rules.test.ts > Markdown fence recognizers: what each reader treats as inside a fence > links, extraction and the renderer read CRLF exactly as they read LF; only the profile does not"
+    ]
+   },
+   "existing": {
+    "exit": 0,
+    "killed": false,
+    "summary": [
+     "Test Files  2 passed (2)",
+     "Tests  119 passed (119)"
+    ],
+    "failed": []
+   },
+   "probe": {
+    "buildExit": 0,
+    "probeExit": 0,
+    "compareExit": 1,
+    "killed": true,
+    "casesThatDiffer": 10,
+    "inlineCasesThatDiffer": [],
+    "consentFunctionTextDiffers": false,
+    "differing": [
+     "tilde-col0",
+     "tilde-col0@crlf",
+     "tilde-fence-backtick-line",
+     "tilde-fence-backtick-line@crlf",
+     "tilde-opener-four-closer-three",
+     "tilde-opener-four-closer-three@crlf",
+     "tilde-info-with-backtick",
+     "tilde-info-with-backtick@crlf",
+     "two-fences",
+     "two-fences@crlf"
+    ]
+   },
+   "verdict": "killed by newTest, probe"
+  },
+  {
+   "id": "RV7-renderer-tab-indented-fence-ends-paragraph",
+   "reader": "renderer",
+   "file": "apps/three-surface-poc/src/polaris-markdown.ts",
+   "old": "const fenceStart = /^ {0,3}(`{3,}|~{3,})(.*)$/;",
+   "new": "const fenceStart = /^[ \\t]{0,3}(`{3,}|~{3,})(.*)$/;",
+   "commit": "9d9c98a6f265393fcb46dae6e1484eea097aad20",
+   "oldCount": 1,
+   "newTest": {
+    "exit": 0,
+    "killed": false,
+    "summary": [
+     "Test Files  1 passed (1)",
+     "Tests  46 passed (46)"
+    ],
+    "failed": []
+   },
+   "existing": {
+    "exit": 0,
+    "killed": false,
+    "summary": [
+     "Test Files  1 passed (1)",
+     "Tests  20 passed (20)"
+    ],
+    "failed": []
+   },
+   "probe": {
+    "buildExit": 0,
+    "probeExit": 0,
+    "compareExit": 0,
+    "killed": false,
+    "casesThatDiffer": 0,
+    "inlineCasesThatDiffer": [],
+    "consentFunctionTextDiffers": false,
+    "differing": []
+   },
+   "verdict": "SURVIVED"
+  },
+  {
+   "id": "RV8-consent-closer-any-fence-char",
+   "reader": "consent",
+   "file": "packages/polaris-generation-consent/src/package-reader.ts",
+   "old": "if (m !== null && m[1]![0] === open[0] && m[1]!.length >= open.length",
+   "new": "if (m !== null && m[1]!.length >= open.length",
+   "commit": "9d9c98a6f265393fcb46dae6e1484eea097aad20",
+   "oldCount": 1,
+   "newTest": {
+    "exit": 0,
+    "killed": false,
+    "summary": [
+     "Test Files  1 passed (1)",
+     "Tests  46 passed (46)"
+    ],
+    "failed": []
+   },
+   "existing": {
+    "exit": 1,
+    "killed": true,
+    "summary": [
+     "Test Files  1 failed | 2 passed (3)",
+     "Tests  1 failed | 408 passed (409)"
+    ],
+    "failed": [
+     "round-3 review notes > closes a fence as CommonMark does: a field a renderer shows inside a code block is not in the prose (N-1)",
+     "|@syzygy/polaris-generation-consent| packages/polaris-generation-consent/src/package-reader.test.ts > round-3 review notes > closes a fence as CommonMark does: a field a renderer shows inside a code block is not in the prose (N-1)"
+    ]
+   },
+   "probe": {
+    "buildExit": 0,
+    "probeExit": 0,
+    "compareExit": 1,
+    "killed": true,
+    "casesThatDiffer": 2,
+    "inlineCasesThatDiffer": [],
+    "consentFunctionTextDiffers": true,
+    "differing": [
+     "closer-other-char",
+     "tilde-fence-backtick-line"
+    ]
+   },
+   "verdict": "killed by existing, probe"
+  },
+  {
+   "id": "RV9-links-inline-span-pairs-runs",
+   "reader": "links",
+   "file": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+   "old": "line.replace(/`[^`]*`/g, '')",
+   "new": "line.replace(/(`+)[^`]*?\\1/g, '')",
+   "commit": "9d9c98a6f265393fcb46dae6e1484eea097aad20",
+   "oldCount": 1,
+   "newTest": {
+    "exit": 1,
+    "killed": true,
+    "summary": [
+     "Test Files  1 failed (1)",
+     "Tests  1 failed | 45 passed (46)"
+    ],
+    "failed": [
+     "Markdown fence recognizers: what each reader treats as inside a fence > inline span: 'inside-double-span'",
+     "|@syzygy/three-surface-poc-app| apps/three-surface-poc/src/fence-rules.test.ts > Markdown fence recognizers: what each reader treats as inside a fence > inline span: 'inside-double-span'"
+    ]
+   },
+   "existing": {
+    "exit": 0,
+    "killed": false,
+    "summary": [
+     "Test Files  1 passed (1)",
+     "Tests  24 passed (24)"
+    ],
+    "failed": []
+   },
+   "probe": {
+    "buildExit": 0,
+    "probeExit": 0,
+    "compareExit": 1,
+    "killed": true,
+    "casesThatDiffer": 0,
+    "inlineCasesThatDiffer": [
+     "inside-double-span"
+    ],
+    "consentFunctionTextDiffers": false,
+    "differing": []
+   },
+   "verdict": "killed by newTest, probe"
+  },
+  {
+   "id": "RV10-profile-closer-tolerates-cr",
+   "reader": "profile",
+   "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+   "old": "const match = /^ {0,3}(`{3,}|~{3,}) *$/.exec(line);",
+   "new": "const match = /^ {0,3}(`{3,}|~{3,})[ \\r]*$/.exec(line);",
+   "commit": "9d9c98a6f265393fcb46dae6e1484eea097aad20",
+   "oldCount": 1,
+   "newTest": {
+    "exit": 0,
+    "killed": false,
+    "summary": [
+     "Test Files  1 passed (1)",
+     "Tests  46 passed (46)"
+    ],
+    "failed": []
+   },
+   "existing": {
+    "exit": 0,
+    "killed": false,
+    "summary": [
+     "Test Files  2 passed (2)",
+     "Tests  89 passed (89)"
+    ],
+    "failed": []
+   },
+   "probe": {
+    "buildExit": 0,
+    "probeExit": 0,
+    "compareExit": 0,
+    "killed": false,
+    "casesThatDiffer": 0,
+    "inlineCasesThatDiffer": [],
+    "consentFunctionTextDiffers": false,
+    "differing": []
+   },
+   "verdict": "SURVIVED"
+  },
+  {
+   "id": "RV11-profile-fence-opener-drops-open-span",
+   "reader": "profile",
+   "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+   "old": "if (opener !== null) {\n      if (span !== undefined) return { kind: 'malformed', reason: 'unclosed-inline-span', line: span.line };",
+   "new": "if (opener !== null) {\n      if (span !== undefined) span = undefined;",
+   "commit": "9d9c98a6f265393fcb46dae6e1484eea097aad20",
+   "oldCount": 1,
+   "newTest": {
+    "exit": 0,
+    "killed": false,
+    "summary": [
+     "Test Files  1 passed (1)",
+     "Tests  46 passed (46)"
+    ],
+    "failed": []
+   },
+   "existing": {
+    "exit": 1,
+    "killed": true,
+    "summary": [
+     "Test Files  1 failed | 1 passed (2)",
+     "Tests  1 failed | 88 passed (89)"
+    ],
+    "failed": [
+     "closed-pwb-code-context-v1 \u2014 inline code spans > a fence opener line is recognized before an open inline span, which then never closes",
+     "|@syzygy/three-surface-poc-core| packages/three-surface-poc-core/src/markdown-code-context.test.ts > closed-pwb-code-context-v1 \u2014 inline code spans > a fence opener line is recognized before an open inline span, which then never closes"
+    ]
+   },
+   "probe": {
+    "buildExit": 0,
+    "probeExit": 0,
+    "compareExit": 1,
+    "killed": true,
+    "casesThatDiffer": 1,
+    "inlineCasesThatDiffer": [],
+    "consentFunctionTextDiffers": false,
+    "differing": [
+     "list-item"
+    ]
+   },
+   "verdict": "killed by existing, probe"
+  }
+ ],
+ "treeCleanAfter": true
+}

@@ -1,0 +1,51 @@
+{
+ "base": "9dba258992667f62ad503ec76d8a6b99efcc4bac",
+ "head": "f2304fd5d2bfd0e50c48d6ea356ddea3f7be162d",
+ "typescript": "5.9.3",
+ "rows": [
+  {
+   "file": "packages/http-host/src/server.ts",
+   "base": "84be8923e8a50880f84060221b8cf058e2984202f5b0723b8630c511e406d1c4",
+   "head": "7934ff7274ca26e33c3c277bd7c4e8985694609459052f01108154ad7c1c0632",
+   "bytesDiffer": true,
+   "printBase": "e95b415df21ce9aab61a7b452bdaad726a672fc95901d36f8a28e80ae2aac3c3",
+   "printHead": "e95b415df21ce9aab61a7b452bdaad726a672fc95901d36f8a28e80ae2aac3c3",
+   "codeEqual": true,
+   "selftest": {
+    "identifierRenamed": {
+     "what": "DAEMON_HOST",
+     "equal": false
+    },
+    "literalChanged": {
+     "what": "'node:http'",
+     "equal": false
+    },
+    "commentAdded": {
+     "equal": true
+    }
+   }
+  },
+  {
+   "file": "packages/http-host/src/shutdown.ts",
+   "base": "141ef5e1c973fa7c564dbcb50126104f1d000ae636df29d7f30dee78c1112887",
+   "head": "88969cdbd489e03018a76ec90187ea7ac58db08962f4b89c2d49795ac13641dd",
+   "bytesDiffer": true,
+   "printBase": "ad3ac8caa23f94e920886803f3ae5cddfed4244883b0a62dfaede9a88ab5b5e0",
+   "printHead": "ad3ac8caa23f94e920886803f3ae5cddfed4244883b0a62dfaede9a88ab5b5e0",
+   "codeEqual": true,
+   "selftest": {
+    "identifierRenamed": {
+     "what": "ShutdownSignal",
+     "equal": false
+    },
+    "literalChanged": {
+     "what": "'./server.js'",
+     "equal": false
+    },
+    "commentAdded": {
+     "equal": true
+    }
+   }
+  }
+ ]
+}

@@ -1,0 +1,31 @@
+packages/polaris-dossier/src/screen.ts: 23 consent/core inputs
+  packages/polaris-generation-consent/src/admission-record.ts
+  packages/polaris-generation-consent/src/citation-allowlist.ts
+  packages/polaris-generation-consent/src/in-force.ts
+  packages/polaris-generation-consent/src/live.ts
+  packages/polaris-generation-consent/src/package-reader.ts
+  packages/polaris-generation-consent/src/recorder-template.ts
+  packages/polaris-generation-core/src/canonical-json.ts
+  packages/polaris-generation-core/src/closed-schema.ts
+  packages/polaris-generation-core/src/dossier-evaluation.ts
+  packages/polaris-generation-core/src/dossier-profile.ts
+  packages/polaris-generation-core/src/draft-model.ts
+  packages/polaris-generation-core/src/generation-source.ts
+  packages/polaris-generation-core/src/live.ts
+  packages/polaris-generation-core/src/local-render.ts
+  packages/polaris-generation-core/src/parse-json.ts
+  packages/polaris-generation-core/src/prompts.ts
+  packages/polaris-generation-core/src/public-source-classification.ts
+  packages/polaris-generation-core/src/quote-fidelity.ts
+  packages/polaris-generation-core/src/quote-locate.ts
+  packages/polaris-generation-core/src/reader-questions.ts
+  packages/polaris-generation-core/src/secret-redaction.ts
+  packages/polaris-generation-core/src/source-model.ts
+  packages/polaris-generation-core/src/topics.ts
+packages/polaris-dossier/src/gate-sources.ts: 6 consent/core inputs
+  packages/polaris-generation-consent/src/admission-record.ts
+  packages/polaris-generation-consent/src/citation-allowlist.ts
+  packages/polaris-generation-consent/src/in-force.ts
+  packages/polaris-generation-consent/src/live.ts
+  packages/polaris-generation-consent/src/package-reader.ts
+  packages/polaris-generation-consent/src/recorder-template.ts

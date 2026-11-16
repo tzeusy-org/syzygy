@@ -1,0 +1,60 @@
+{
+ "tool": "name_probe.py",
+ "command": "TMPDIR=<private>/<n> <chrome> --headless=new --no-sandbox --user-data-dir=<private>/<n>/profile --remote-debugging-port=0 about:blank",
+ "chromes": [
+  {
+   "executable": "/usr/bin/google-chrome",
+   "executableSha256": "95c17503ee00f3bcf8acb7d11c44058d85c205b56af86fd8e8fa80855fb55aa9",
+   "version": "Google Chrome 120.0.6099.224",
+   "singletonDirectoryNameMasked": ".com.google.Chrome.<random>",
+   "shape": ".com.google.Chrome.<random>",
+   "leadingDot": true,
+   "directoryStillThereAfterKill": true
+  },
+  {
+   "executable": "/home/tze/.cache/ms-playwright/chromium-1208/chrome-linux64/chrome",
+   "executableSha256": "481fea1516a1f2b76454664272f12cd9dd1f20117b21e1f1498e08bc7f872c00",
+   "version": "Google Chrome for Testing 145.0.7632.6",
+   "singletonDirectoryNameMasked": "org.chromium.Chromium.<random>",
+   "shape": "org.chromium.Chromium.<random>",
+   "leadingDot": false,
+   "directoryStillThereAfterKill": true
+  },
+  {
+   "executable": "/home/tze/.cache/puppeteer/chrome/linux-147.0.7727.57/chrome-linux64/chrome",
+   "executableSha256": "d4940e716d79ad437057efa767d5c0011cd7b319611d76c7349d669a9fa90e5c",
+   "version": "Google Chrome for Testing 147.0.7727.57",
+   "singletonDirectoryNameMasked": "org.chromium.Chromium.<random>",
+   "shape": "org.chromium.Chromium.<random>",
+   "leadingDot": false,
+   "directoryStillThereAfterKill": true
+  },
+  {
+   "executable": "/home/tze/.cache/puppeteer/chrome/linux-149.0.7827.22/chrome-linux64/chrome",
+   "executableSha256": "5c8e7acf070574dc019b1f6351e522444dd98ad6b6748500613b41c765366289",
+   "version": "Google Chrome for Testing 149.0.7827.22",
+   "singletonDirectoryNameMasked": "org.chromium.Chromium.<random>",
+   "shape": "org.chromium.Chromium.<random>",
+   "leadingDot": false,
+   "directoryStillThereAfterKill": true
+  },
+  {
+   "executable": "/home/tze/.cache/puppeteer/chrome/linux-151.0.7922.47/chrome-linux64/chrome",
+   "executableSha256": "3b0be9872ea937893cb1e1523fde071d38c1ed4ef866b3f7976240094a868c93",
+   "version": "Google Chrome for Testing 151.0.7922.47",
+   "singletonDirectoryNameMasked": "org.chromium.Chromium.<random>",
+   "shape": "org.chromium.Chromium.<random>",
+   "leadingDot": false,
+   "directoryStillThereAfterKill": true
+  },
+  {
+   "executable": "/home/tze/.cache/puppeteer/chrome/linux-154.0.8037.57/chrome-linux64/chrome",
+   "executableSha256": "e528b77a8b250c48a5bbd7aeeabbc2813940c0a2fe39b1b11fbaf1f01fb04f18",
+   "version": "Google Chrome for Testing 154.0.8037.57",
+   "singletonDirectoryNameMasked": "org.chromium.Chromium.<random>",
+   "shape": "org.chromium.Chromium.<random>",
+   "leadingDot": false,
+   "directoryStillThereAfterKill": true
+  }
+ ]
+}

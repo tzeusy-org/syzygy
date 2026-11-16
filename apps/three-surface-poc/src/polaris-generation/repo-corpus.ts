@@ -1,13 +1,11 @@
-import { createHash } from 'node:crypto';
-
 import { DOSSIER_READER_QUESTIONS, DOSSIER_REQUESTED_ASSETS, SOURCE_TEXT_MAX_LENGTH, generationSourceIdentity, generationSourcesForBody, generationSourcesForRedactedBody, gitBlobObjectId, validateGenerationSources, verifiedRedactedBody, validateReaderQuestions, validateRequestedAssets,
   type GenerationBudget, type GenerationExclusionReason, type ReaderQuestion, type GenerationSource, type GenerationStage, type PipelineRequest, type RequestedAsset } from '@syzygy/polaris-generation-core';
+import { sha256 } from '@syzygy/support';
 
 import { isolatedGit } from './isolated-git.js';
 import { excludedSourceId, keyedDigest, newGenerationRunKey } from './run-key.js';
 import { readGitBlobsBatch, type ReadGitBlobs } from '../git-blob-batch.js';
 
-const sha256 = (value: string): string => createHash('sha256').update(value).digest('hex');
 const git = isolatedGit;
 const BLOB_BATCH = 200;
 const STAGES: readonly GenerationStage[] = ['inventory', 'plan', 'author', 'edit', 'fidelity', 'repair'];
@@ -82,7 +80,9 @@ export function parseReaderConfig(text: string, overrides: Partial<Pick<ReaderCo
 }
 
 function assertIdentity(repositoryId: string, revision: string): void {
-  if (!/^[A-Za-z0-9:_-]+$/u.test(repositoryId)) throw new Error('invalid-repository-id');
+  // Every 046 identity (line 15: a-z, 0-9, '.', '_', '-', after `repository:`) is admitted, compared exactly; ':' and upper case stay for the
+  // `github:<owner>:<repo>` form (the owner's ruling of 2026-11-14, "Widen all readers now"; R-PDJA-33-RULINGS-2 finding 1).
+  if (!/^[A-Za-z0-9:._-]+$/u.test(repositoryId)) throw new Error('invalid-repository-id');
   if (!/^(?:[0-9a-f]{40}|[0-9a-f]{64})$/u.test(revision)) throw new Error('invalid-pinned-commit');
 }
 

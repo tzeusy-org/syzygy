@@ -1,0 +1,3419 @@
+{
+  "schema": "consent-port-corrected-semantic-controls/1",
+  "M0Sha256": "bf3ca1cc16a7a2d0975c0c569b7a6ea3f1e1f403aad830512c17fcd6cf258205",
+  "controls": [
+    {
+      "id": "supersession-inforce",
+      "plan": {
+        "id": "supersession-inforce",
+        "temporary_product_file": "packages/polaris-generation-consent/src/in-force.ts",
+        "old": "live: live.filter(r => !replaced.has(ref(r)))",
+        "new": "live: live",
+        "required_reader_mismatches": [
+          "successor-record-port",
+          "successor-gate-port"
+        ],
+        "selection": [
+          "observation-successor"
+        ],
+        "m0_requirement": "Fresh normal new tool M0 over literal expected successor behavior first. Old baseline literal expectations remain checked in control; mutant new literal violations retained as expected sensitivity, never accepted as normal equivalence."
+      },
+      "subjectCommit": "68a10f29d49f209c6431c6510b89addec2804b04",
+      "originalSha256": "afcf1c2dc0a727460f3ca3a3623fd8a62ac3d739c87f2923187125422ab191dc",
+      "mutatedSha256": "fd771822cd20fed61b0058d44df56810d5f4a63cc8f92a520467d5ad28ef0f07",
+      "metadata": [
+        {
+          "argv": [
+            "git",
+            "clone",
+            "--quiet",
+            "--no-hardlinks",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/supersession-inforce"
+          ],
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106",
+          "exit": 0,
+          "stdout": "",
+          "stderr": "Note: switching to '6c6e22bcde6e63d841e548adad418e50eaef7454'.\n\nYou are in 'detached HEAD' state. You can look around, make experimental\nchanges and commit them, and you can discard any commits you make in this\nstate without impacting any branches by switching back to a branch.\n\nIf you want to create a new branch to retain commits you create, you may\ndo so (now or later) by using -c with the switch command. Example:\n\n  git switch -c <new-branch-name>\n\nOr undo this operation with:\n\n  git switch -\n\nTurn off this advice by setting config variable advice.detachedHead to false\n\n"
+        },
+        {
+          "argv": [
+            "git",
+            "checkout",
+            "-b",
+            "mutant/supersession-inforce"
+          ],
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/supersession-inforce",
+          "exit": 0,
+          "stdout": "",
+          "stderr": "Switched to a new branch 'mutant/supersession-inforce'\n"
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "packages/polaris-generation-consent/src/in-force.ts"
+          ],
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/supersession-inforce",
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "git",
+            "-c",
+            "core.hooksPath=/dev/null",
+            "commit",
+            "-m",
+            "test: private supersession-inforce sensitivity control"
+          ],
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/supersession-inforce",
+          "exit": 0,
+          "stdout": "[mutant/supersession-inforce 68a10f29] test: private supersession-inforce sensitivity control\n 1 file changed, 1 insertion(+), 1 deletion(-)\n",
+          "stderr": ""
+        }
+      ],
+      "build": {
+        "wrapper": {
+          "argv": [
+            "/usr/bin/python3",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/capture.py",
+            "build-control-supersession-inforce",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/supersession-inforce",
+            "node",
+            "scripts/clean_build.mjs",
+            "packages/polaris-generation-consent",
+            "packages/polaris-dossier"
+          ],
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+          "exit": 0,
+          "stdout": "{\"name\": \"build-control-supersession-inforce\", \"startedAt\": \"2026-11-06T06:37:24.912316+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/supersession-inforce\", \"argv\": [\"node\", \"scripts/clean_build.mjs\", \"packages/polaris-generation-consent\", \"packages/polaris-dossier\"], \"head\": \"68a10f29d49f209c6431c6510b89addec2804b04\", \"exitCode\": 0, \"finishedAt\": \"2026-11-06T06:37:30.306577+00:00\", \"elapsedSeconds\": 5.39135205099592, \"streams\": {\"build-control-supersession-inforce.stdout\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}, \"build-control-supersession-inforce.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+          "stderr": ""
+        },
+        "receipt": {
+          "name": "build-control-supersession-inforce",
+          "startedAt": "2026-11-06T06:37:24.912316+00:00",
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/supersession-inforce",
+          "argv": [
+            "node",
+            "scripts/clean_build.mjs",
+            "packages/polaris-generation-consent",
+            "packages/polaris-dossier"
+          ],
+          "head": "68a10f29d49f209c6431c6510b89addec2804b04",
+          "exitCode": 0,
+          "finishedAt": "2026-11-06T06:37:30.306577+00:00",
+          "elapsedSeconds": 5.39135205099592,
+          "streams": {
+            "build-control-supersession-inforce.stdout": {
+              "bytes": 0,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            },
+            "build-control-supersession-inforce.stderr": {
+              "bytes": 0,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            }
+          }
+        }
+      },
+      "execution": {
+        "wrapper": {
+          "argv": [
+            "/usr/bin/python3",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/capture.py",
+            "NC-supersession-inforce",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+            "node",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new/scripts/differential_consent_act_families.mjs",
+            "--old",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old",
+            "--new",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/supersession-inforce",
+            "--out",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-supersession-inforce.json",
+            "--bead",
+            "syzygy-bpyt.8.26",
+            "--kinds",
+            "observation-successor",
+            "--workers",
+            "2",
+            "--time-limit-ms",
+            "600000",
+            "--expect-mismatches",
+            "--expect-reader-mismatches",
+            "successor-record-port,successor-gate-port",
+            "--control-note",
+            "supersession-inforce: required readers successor-record-port,successor-gate-port must differ"
+          ],
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+          "exit": 0,
+          "stdout": "{\"name\": \"NC-supersession-inforce\", \"startedAt\": \"2026-11-06T06:37:30.338700+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"node\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new/scripts/differential_consent_act_families.mjs\", \"--old\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old\", \"--new\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/supersession-inforce\", \"--out\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-supersession-inforce.json\", \"--bead\", \"syzygy-bpyt.8.26\", \"--kinds\", \"observation-successor\", \"--workers\", \"2\", \"--time-limit-ms\", \"600000\", \"--expect-mismatches\", \"--expect-reader-mismatches\", \"successor-record-port,successor-gate-port\", \"--control-note\", \"supersession-inforce: required readers successor-record-port,successor-gate-port must differ\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 0, \"finishedAt\": \"2026-11-06T06:37:32.855950+00:00\", \"elapsedSeconds\": 2.5151184030110016, \"streams\": {\"NC-supersession-inforce.stdout\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}, \"NC-supersession-inforce.stderr\": {\"bytes\": 94, \"sha256\": \"99aec597d926529e2bacdd3d844415d7cb39d7c5f393df7ded2e367d2eacf33e\"}}}\n",
+          "stderr": ""
+        },
+        "receipt": {
+          "name": "NC-supersession-inforce",
+          "startedAt": "2026-11-06T06:37:30.338700+00:00",
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+          "argv": [
+            "node",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new/scripts/differential_consent_act_families.mjs",
+            "--old",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old",
+            "--new",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/supersession-inforce",
+            "--out",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-supersession-inforce.json",
+            "--bead",
+            "syzygy-bpyt.8.26",
+            "--kinds",
+            "observation-successor",
+            "--workers",
+            "2",
+            "--time-limit-ms",
+            "600000",
+            "--expect-mismatches",
+            "--expect-reader-mismatches",
+            "successor-record-port,successor-gate-port",
+            "--control-note",
+            "supersession-inforce: required readers successor-record-port,successor-gate-port must differ"
+          ],
+          "head": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+          "exitCode": 0,
+          "finishedAt": "2026-11-06T06:37:32.855950+00:00",
+          "elapsedSeconds": 2.5151184030110016,
+          "streams": {
+            "NC-supersession-inforce.stdout": {
+              "bytes": 0,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            },
+            "NC-supersession-inforce.stderr": {
+              "bytes": 94,
+              "sha256": "99aec597d926529e2bacdd3d844415d7cb39d7c5f393df7ded2e367d2eacf33e"
+            }
+          }
+        }
+      },
+      "recount": {
+        "wrapper": {
+          "argv": [
+            "/usr/bin/python3",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/capture.py",
+            "NC-supersession-inforce-recount",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+            "python3",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/recount.py",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-supersession-inforce.json",
+            "--tree",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old",
+            "--new-tree",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/supersession-inforce",
+            "--out",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-supersession-inforce-recount.json"
+          ],
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+          "exit": 0,
+          "stdout": "{\"name\": \"NC-supersession-inforce-recount\", \"startedAt\": \"2026-11-06T06:37:32.955225+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"python3\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/recount.py\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-supersession-inforce.json\", \"--tree\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old\", \"--new-tree\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/supersession-inforce\", \"--out\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-supersession-inforce-recount.json\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 0, \"finishedAt\": \"2026-11-06T06:37:33.410859+00:00\", \"elapsedSeconds\": 0.45298647100571543, \"streams\": {\"NC-supersession-inforce-recount.stdout\": {\"bytes\": 551, \"sha256\": \"db49f778532e213bb42a5c1cebe51ca9962a0c7be9d55c7b16cc442992ee5b9c\"}, \"NC-supersession-inforce-recount.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+          "stderr": ""
+        },
+        "receipt": {
+          "name": "NC-supersession-inforce-recount",
+          "startedAt": "2026-11-06T06:37:32.955225+00:00",
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+          "argv": [
+            "python3",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/recount.py",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-supersession-inforce.json",
+            "--tree",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old",
+            "--new-tree",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/supersession-inforce",
+            "--out",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-supersession-inforce-recount.json"
+          ],
+          "head": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+          "exitCode": 0,
+          "finishedAt": "2026-11-06T06:37:33.410859+00:00",
+          "elapsedSeconds": 0.45298647100571543,
+          "streams": {
+            "NC-supersession-inforce-recount.stdout": {
+              "bytes": 551,
+              "sha256": "db49f778532e213bb42a5c1cebe51ca9962a0c7be9d55c7b16cc442992ee5b9c"
+            },
+            "NC-supersession-inforce-recount.stderr": {
+              "bytes": 0,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            }
+          }
+        }
+      },
+      "perLogicalReader": {
+        "successor-record-port": {
+          "worlds": 1,
+          "steps": 1,
+          "answers": 3,
+          "mismatches": 2,
+          "byInstant": {
+            "2026-10-08T09:29:59.999Z": 1,
+            "2026-10-08T09:30:00.000Z": 1,
+            "2026-10-08T09:30:00.001Z": 1
+          },
+          "byStep": {
+            "1": 3
+          }
+        },
+        "successor-gate-port": {
+          "worlds": 1,
+          "steps": 1,
+          "answers": 3,
+          "mismatches": 2,
+          "byInstant": {
+            "2026-10-08T09:29:59.999Z": 1,
+            "2026-10-08T09:30:00.000Z": 1,
+            "2026-10-08T09:30:00.001Z": 1
+          },
+          "byStep": {
+            "1": 3
+          }
+        }
+      },
+      "success": true
+    },
+    {
+      "id": "blunt-inforce",
+      "plan": {
+        "id": "blunt-inforce",
+        "temporary_product_file": "packages/polaris-generation-consent/src/in-force.ts",
+        "old": "return effective(records, now).live;",
+        "new": "return records;",
+        "required_reader_mismatches": [
+          "port",
+          "gate-port"
+        ],
+        "selection": [
+          "base",
+          "base-reduced"
+        ],
+        "factory_boundary": "Actual file-backed normal factories, no fixture adapter used to establish file gate sensitivity."
+      },
+      "subjectCommit": "6c31d830dc9eb011e736aa579d3e11df0f029ebd",
+      "originalSha256": "afcf1c2dc0a727460f3ca3a3623fd8a62ac3d739c87f2923187125422ab191dc",
+      "mutatedSha256": "fef316c430fb51c991d7827debf1037c97195f145b2193f2a6bf1d539a4d531e",
+      "metadata": [
+        {
+          "argv": [
+            "git",
+            "clone",
+            "--quiet",
+            "--no-hardlinks",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/blunt-inforce"
+          ],
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106",
+          "exit": 0,
+          "stdout": "",
+          "stderr": "Note: switching to '6c6e22bcde6e63d841e548adad418e50eaef7454'.\n\nYou are in 'detached HEAD' state. You can look around, make experimental\nchanges and commit them, and you can discard any commits you make in this\nstate without impacting any branches by switching back to a branch.\n\nIf you want to create a new branch to retain commits you create, you may\ndo so (now or later) by using -c with the switch command. Example:\n\n  git switch -c <new-branch-name>\n\nOr undo this operation with:\n\n  git switch -\n\nTurn off this advice by setting config variable advice.detachedHead to false\n\n"
+        },
+        {
+          "argv": [
+            "git",
+            "checkout",
+            "-b",
+            "mutant/blunt-inforce"
+          ],
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/blunt-inforce",
+          "exit": 0,
+          "stdout": "",
+          "stderr": "Switched to a new branch 'mutant/blunt-inforce'\n"
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "packages/polaris-generation-consent/src/in-force.ts"
+          ],
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/blunt-inforce",
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "git",
+            "-c",
+            "core.hooksPath=/dev/null",
+            "commit",
+            "-m",
+            "test: private blunt-inforce sensitivity control"
+          ],
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/blunt-inforce",
+          "exit": 0,
+          "stdout": "[mutant/blunt-inforce 6c31d830] test: private blunt-inforce sensitivity control\n 1 file changed, 1 insertion(+), 1 deletion(-)\n",
+          "stderr": ""
+        }
+      ],
+      "build": {
+        "wrapper": {
+          "argv": [
+            "/usr/bin/python3",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/capture.py",
+            "build-control-blunt-inforce",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/blunt-inforce",
+            "node",
+            "scripts/clean_build.mjs",
+            "packages/polaris-generation-consent",
+            "packages/polaris-dossier"
+          ],
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+          "exit": 0,
+          "stdout": "{\"name\": \"build-control-blunt-inforce\", \"startedAt\": \"2026-11-06T06:37:35.766228+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/blunt-inforce\", \"argv\": [\"node\", \"scripts/clean_build.mjs\", \"packages/polaris-generation-consent\", \"packages/polaris-dossier\"], \"head\": \"6c31d830dc9eb011e736aa579d3e11df0f029ebd\", \"exitCode\": 0, \"finishedAt\": \"2026-11-06T06:37:40.847636+00:00\", \"elapsedSeconds\": 5.079358615970705, \"streams\": {\"build-control-blunt-inforce.stdout\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}, \"build-control-blunt-inforce.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+          "stderr": ""
+        },
+        "receipt": {
+          "name": "build-control-blunt-inforce",
+          "startedAt": "2026-11-06T06:37:35.766228+00:00",
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/blunt-inforce",
+          "argv": [
+            "node",
+            "scripts/clean_build.mjs",
+            "packages/polaris-generation-consent",
+            "packages/polaris-dossier"
+          ],
+          "head": "6c31d830dc9eb011e736aa579d3e11df0f029ebd",
+          "exitCode": 0,
+          "finishedAt": "2026-11-06T06:37:40.847636+00:00",
+          "elapsedSeconds": 5.079358615970705,
+          "streams": {
+            "build-control-blunt-inforce.stdout": {
+              "bytes": 0,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            },
+            "build-control-blunt-inforce.stderr": {
+              "bytes": 0,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            }
+          }
+        }
+      },
+      "execution": {
+        "wrapper": {
+          "argv": [
+            "/usr/bin/python3",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/capture.py",
+            "NC-blunt-inforce",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+            "node",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new/scripts/differential_consent_act_families.mjs",
+            "--old",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old",
+            "--new",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/blunt-inforce",
+            "--out",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-blunt-inforce.json",
+            "--bead",
+            "syzygy-bpyt.8.26",
+            "--kinds",
+            "base,base-reduced",
+            "--workers",
+            "2",
+            "--time-limit-ms",
+            "600000",
+            "--expect-mismatches",
+            "--expect-reader-mismatches",
+            "port,gate-port",
+            "--control-note",
+            "blunt-inforce: required readers port,gate-port must differ"
+          ],
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+          "exit": 0,
+          "stdout": "{\"name\": \"NC-blunt-inforce\", \"startedAt\": \"2026-11-06T06:37:40.883234+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"node\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new/scripts/differential_consent_act_families.mjs\", \"--old\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old\", \"--new\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/blunt-inforce\", \"--out\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-blunt-inforce.json\", \"--bead\", \"syzygy-bpyt.8.26\", \"--kinds\", \"base,base-reduced\", \"--workers\", \"2\", \"--time-limit-ms\", \"600000\", \"--expect-mismatches\", \"--expect-reader-mismatches\", \"port,gate-port\", \"--control-note\", \"blunt-inforce: required readers port,gate-port must differ\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 0, \"finishedAt\": \"2026-11-06T06:38:58.142588+00:00\", \"elapsedSeconds\": 77.25700026901904, \"streams\": {\"NC-blunt-inforce.stdout\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}, \"NC-blunt-inforce.stderr\": {\"bytes\": 98, \"sha256\": \"77b7c5d4be199c94669b51e1f8917b9219c6936b109edec7c5bae68d3b527668\"}}}\n",
+          "stderr": ""
+        },
+        "receipt": {
+          "name": "NC-blunt-inforce",
+          "startedAt": "2026-11-06T06:37:40.883234+00:00",
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+          "argv": [
+            "node",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new/scripts/differential_consent_act_families.mjs",
+            "--old",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old",
+            "--new",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/blunt-inforce",
+            "--out",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-blunt-inforce.json",
+            "--bead",
+            "syzygy-bpyt.8.26",
+            "--kinds",
+            "base,base-reduced",
+            "--workers",
+            "2",
+            "--time-limit-ms",
+            "600000",
+            "--expect-mismatches",
+            "--expect-reader-mismatches",
+            "port,gate-port",
+            "--control-note",
+            "blunt-inforce: required readers port,gate-port must differ"
+          ],
+          "head": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+          "exitCode": 0,
+          "finishedAt": "2026-11-06T06:38:58.142588+00:00",
+          "elapsedSeconds": 77.25700026901904,
+          "streams": {
+            "NC-blunt-inforce.stdout": {
+              "bytes": 0,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            },
+            "NC-blunt-inforce.stderr": {
+              "bytes": 98,
+              "sha256": "77b7c5d4be199c94669b51e1f8917b9219c6936b109edec7c5bae68d3b527668"
+            }
+          }
+        }
+      },
+      "recount": {
+        "wrapper": {
+          "argv": [
+            "/usr/bin/python3",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/capture.py",
+            "NC-blunt-inforce-recount",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+            "python3",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/recount.py",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-blunt-inforce.json",
+            "--tree",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old",
+            "--new-tree",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/blunt-inforce",
+            "--out",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-blunt-inforce-recount.json"
+          ],
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+          "exit": 0,
+          "stdout": "{\"name\": \"NC-blunt-inforce-recount\", \"startedAt\": \"2026-11-06T06:38:58.287306+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"python3\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/recount.py\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-blunt-inforce.json\", \"--tree\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old\", \"--new-tree\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/blunt-inforce\", \"--out\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-blunt-inforce-recount.json\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 0, \"finishedAt\": \"2026-11-06T06:38:58.786793+00:00\", \"elapsedSeconds\": 0.4966494949767366, \"streams\": {\"NC-blunt-inforce-recount.stdout\": {\"bytes\": 558, \"sha256\": \"318640a5c92a2b09602eca0a6a09b8000fc355471ebafb9202fc2d33ba79977d\"}, \"NC-blunt-inforce-recount.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+          "stderr": ""
+        },
+        "receipt": {
+          "name": "NC-blunt-inforce-recount",
+          "startedAt": "2026-11-06T06:38:58.287306+00:00",
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+          "argv": [
+            "python3",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/recount.py",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-blunt-inforce.json",
+            "--tree",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old",
+            "--new-tree",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/blunt-inforce",
+            "--out",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-blunt-inforce-recount.json"
+          ],
+          "head": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+          "exitCode": 0,
+          "finishedAt": "2026-11-06T06:38:58.786793+00:00",
+          "elapsedSeconds": 0.4966494949767366,
+          "streams": {
+            "NC-blunt-inforce-recount.stdout": {
+              "bytes": 558,
+              "sha256": "318640a5c92a2b09602eca0a6a09b8000fc355471ebafb9202fc2d33ba79977d"
+            },
+            "NC-blunt-inforce-recount.stderr": {
+              "bytes": 0,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            }
+          }
+        }
+      },
+      "perLogicalReader": {
+        "admission": {
+          "worlds": 8,
+          "steps": 8,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "untimed": 8
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "policy-reader": {
+          "worlds": 8,
+          "steps": 8,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "untimed": 8
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "policy-chain": {
+          "worlds": 8,
+          "steps": 8,
+          "answers": 16,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 8,
+            "2026-10-22T12:00:00Z": 8
+          },
+          "byStep": {
+            "1": 16
+          }
+        },
+        "class-act": {
+          "worlds": 8,
+          "steps": 8,
+          "answers": 16,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 8,
+            "2026-10-22T12:00:00Z": 8
+          },
+          "byStep": {
+            "1": 16
+          }
+        },
+        "in-force-egress": {
+          "worlds": 8,
+          "steps": 8,
+          "answers": 16,
+          "mismatches": 8,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 8,
+            "2026-10-22T12:00:00Z": 8
+          },
+          "byStep": {
+            "1": 16
+          }
+        },
+        "registry-git-source": {
+          "worlds": 8,
+          "steps": 8,
+          "answers": 16,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 8,
+            "2026-10-22T12:00:00Z": 8
+          },
+          "byStep": {
+            "1": 16
+          }
+        },
+        "local-agent-signoff": {
+          "worlds": 8,
+          "steps": 8,
+          "answers": 16,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 8,
+            "2026-10-22T12:00:00Z": 8
+          },
+          "byStep": {
+            "1": 16
+          }
+        },
+        "dossier-d9": {
+          "worlds": 8,
+          "steps": 8,
+          "answers": 16,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 8,
+            "2026-10-22T12:00:00Z": 8
+          },
+          "byStep": {
+            "1": 16
+          }
+        },
+        "dossier-rfc7-20": {
+          "worlds": 8,
+          "steps": 8,
+          "answers": 16,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 8,
+            "2026-10-22T12:00:00Z": 8
+          },
+          "byStep": {
+            "1": 16
+          }
+        },
+        "dossier-drawer": {
+          "worlds": 8,
+          "steps": 8,
+          "answers": 16,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 8,
+            "2026-10-22T12:00:00Z": 8
+          },
+          "byStep": {
+            "1": 16
+          }
+        },
+        "dossier-statement-v1": {
+          "worlds": 8,
+          "steps": 8,
+          "answers": 16,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 8,
+            "2026-10-22T12:00:00Z": 8
+          },
+          "byStep": {
+            "1": 16
+          }
+        },
+        "dossier-provider-v2": {
+          "worlds": 8,
+          "steps": 8,
+          "answers": 16,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 8,
+            "2026-10-22T12:00:00Z": 8
+          },
+          "byStep": {
+            "1": 16
+          }
+        },
+        "port": {
+          "worlds": 8,
+          "steps": 8,
+          "answers": 16,
+          "mismatches": 4,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 8,
+            "2026-10-22T12:00:00Z": 8
+          },
+          "byStep": {
+            "1": 16
+          }
+        },
+        "gate-port": {
+          "worlds": 8,
+          "steps": 8,
+          "answers": 16,
+          "mismatches": 4,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 8,
+            "2026-10-22T12:00:00Z": 8
+          },
+          "byStep": {
+            "1": 16
+          }
+        },
+        "gate-d9": {
+          "worlds": 8,
+          "steps": 8,
+          "answers": 16,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 8,
+            "2026-10-22T12:00:00Z": 8
+          },
+          "byStep": {
+            "1": 16
+          }
+        },
+        "gate-rfc7-20": {
+          "worlds": 8,
+          "steps": 8,
+          "answers": 16,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 8,
+            "2026-10-22T12:00:00Z": 8
+          },
+          "byStep": {
+            "1": 16
+          }
+        },
+        "gate-registry-entry": {
+          "worlds": 8,
+          "steps": 8,
+          "answers": 16,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 8,
+            "2026-10-22T12:00:00Z": 8
+          },
+          "byStep": {
+            "1": 16
+          }
+        },
+        "gate-drawer:redis-redis": {
+          "worlds": 8,
+          "steps": 8,
+          "answers": 16,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 8,
+            "2026-10-22T12:00:00Z": 8
+          },
+          "byStep": {
+            "1": 16
+          }
+        },
+        "gate-statements:redis-redis": {
+          "worlds": 8,
+          "steps": 8,
+          "answers": 16,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 8,
+            "2026-10-22T12:00:00Z": 8
+          },
+          "byStep": {
+            "1": 16
+          }
+        },
+        "in-force": {
+          "worlds": 8,
+          "steps": 8,
+          "answers": 16,
+          "mismatches": 8,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 8,
+            "2026-10-22T12:00:00Z": 8
+          },
+          "byStep": {
+            "1": 16
+          }
+        },
+        "consent-ports": {
+          "worlds": 8,
+          "steps": 8,
+          "answers": 16,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 8,
+            "2026-10-22T12:00:00Z": 8
+          },
+          "byStep": {
+            "1": 16
+          }
+        },
+        "screen": {
+          "worlds": 8,
+          "steps": 8,
+          "answers": 16,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 8,
+            "2026-10-22T12:00:00Z": 8
+          },
+          "byStep": {
+            "1": 16
+          }
+        },
+        "policy-chain-disk": {
+          "worlds": 8,
+          "steps": 8,
+          "answers": 16,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 8,
+            "2026-10-22T12:00:00Z": 8
+          },
+          "byStep": {
+            "1": 16
+          }
+        },
+        "class-act-disk": {
+          "worlds": 8,
+          "steps": 8,
+          "answers": 16,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 8,
+            "2026-10-22T12:00:00Z": 8
+          },
+          "byStep": {
+            "1": 16
+          }
+        }
+      },
+      "success": true
+    },
+    {
+      "id": "unrelated-reader-cannot-satisfy-port",
+      "plan": {
+        "id": "unrelated-reader-cannot-satisfy-port",
+        "temporary_product_file": "packages/polaris-dossier/src/gate-sources.ts",
+        "old": "d9: () => crossCheck(options.d9Form === undefined ? D9_ACT_FORM : options.d9Form, 'the D9 text (SEC-3 amendment)'),",
+        "new": "d9: async () => ({ state: 'absent', why: 'unrelated-reader-control' }),",
+        "required_reader_mismatches": [
+          "port"
+        ],
+        "selection": [
+          "base"
+        ],
+        "expected_tool_exit": "nonzero with unmet port expectation even though gate-d9 answers differ",
+        "old_tool_reproduction": "Old exact script accepts negative control globally despite controlNote demanding port sensitivity, with port mismatch count zero."
+      },
+      "subjectCommit": "489f821beb03fa4773778f5f7a20c84c5f52fbd8",
+      "originalSha256": "1c6e4ab8988e835adbcf23708c154fce6fad5ae14d96afd0d3ae56ad596ff822",
+      "mutatedSha256": "0c1bb6c25f7bb85751233d2d532eb1b1a3915a3b608d35f594ad3947764e90c7",
+      "metadata": [
+        {
+          "argv": [
+            "git",
+            "clone",
+            "--quiet",
+            "--no-hardlinks",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/unrelated-reader-cannot-satisfy-port"
+          ],
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106",
+          "exit": 0,
+          "stdout": "",
+          "stderr": "Note: switching to '6c6e22bcde6e63d841e548adad418e50eaef7454'.\n\nYou are in 'detached HEAD' state. You can look around, make experimental\nchanges and commit them, and you can discard any commits you make in this\nstate without impacting any branches by switching back to a branch.\n\nIf you want to create a new branch to retain commits you create, you may\ndo so (now or later) by using -c with the switch command. Example:\n\n  git switch -c <new-branch-name>\n\nOr undo this operation with:\n\n  git switch -\n\nTurn off this advice by setting config variable advice.detachedHead to false\n\n"
+        },
+        {
+          "argv": [
+            "git",
+            "checkout",
+            "-b",
+            "mutant/unrelated-reader-cannot-satisfy-port"
+          ],
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/unrelated-reader-cannot-satisfy-port",
+          "exit": 0,
+          "stdout": "",
+          "stderr": "Switched to a new branch 'mutant/unrelated-reader-cannot-satisfy-port'\n"
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "packages/polaris-dossier/src/gate-sources.ts"
+          ],
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/unrelated-reader-cannot-satisfy-port",
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "git",
+            "-c",
+            "core.hooksPath=/dev/null",
+            "commit",
+            "-m",
+            "test: private unrelated-reader-cannot-satisfy-port sensitivity control"
+          ],
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/unrelated-reader-cannot-satisfy-port",
+          "exit": 0,
+          "stdout": "[mutant/unrelated-reader-cannot-satisfy-port 489f821b] test: private unrelated-reader-cannot-satisfy-port sensitivity control\n 1 file changed, 1 insertion(+), 1 deletion(-)\n",
+          "stderr": ""
+        }
+      ],
+      "build": {
+        "wrapper": {
+          "argv": [
+            "/usr/bin/python3",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/capture.py",
+            "build-control-unrelated-reader-cannot-satisfy-port",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/unrelated-reader-cannot-satisfy-port",
+            "node",
+            "scripts/clean_build.mjs",
+            "packages/polaris-generation-consent",
+            "packages/polaris-dossier"
+          ],
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+          "exit": 0,
+          "stdout": "{\"name\": \"build-control-unrelated-reader-cannot-satisfy-port\", \"startedAt\": \"2026-11-06T06:39:01.530302+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/unrelated-reader-cannot-satisfy-port\", \"argv\": [\"node\", \"scripts/clean_build.mjs\", \"packages/polaris-generation-consent\", \"packages/polaris-dossier\"], \"head\": \"489f821beb03fa4773778f5f7a20c84c5f52fbd8\", \"exitCode\": 0, \"finishedAt\": \"2026-11-06T06:39:06.767997+00:00\", \"elapsedSeconds\": 5.235119514982216, \"streams\": {\"build-control-unrelated-reader-cannot-satisfy-port.stdout\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}, \"build-control-unrelated-reader-cannot-satisfy-port.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+          "stderr": ""
+        },
+        "receipt": {
+          "name": "build-control-unrelated-reader-cannot-satisfy-port",
+          "startedAt": "2026-11-06T06:39:01.530302+00:00",
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/unrelated-reader-cannot-satisfy-port",
+          "argv": [
+            "node",
+            "scripts/clean_build.mjs",
+            "packages/polaris-generation-consent",
+            "packages/polaris-dossier"
+          ],
+          "head": "489f821beb03fa4773778f5f7a20c84c5f52fbd8",
+          "exitCode": 0,
+          "finishedAt": "2026-11-06T06:39:06.767997+00:00",
+          "elapsedSeconds": 5.235119514982216,
+          "streams": {
+            "build-control-unrelated-reader-cannot-satisfy-port.stdout": {
+              "bytes": 0,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            },
+            "build-control-unrelated-reader-cannot-satisfy-port.stderr": {
+              "bytes": 0,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            }
+          }
+        }
+      },
+      "execution": {
+        "wrapper": {
+          "argv": [
+            "/usr/bin/python3",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/capture.py",
+            "NC-unrelated-reader-cannot-satisfy-port",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+            "node",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new/scripts/differential_consent_act_families.mjs",
+            "--old",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old",
+            "--new",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/unrelated-reader-cannot-satisfy-port",
+            "--out",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-unrelated-reader-cannot-satisfy-port.json",
+            "--bead",
+            "syzygy-bpyt.8.26",
+            "--kinds",
+            "base",
+            "--workers",
+            "2",
+            "--time-limit-ms",
+            "600000",
+            "--expect-mismatches",
+            "--expect-reader-mismatches",
+            "port",
+            "--control-note",
+            "unrelated-reader-cannot-satisfy-port: required readers port must differ"
+          ],
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+          "exit": 1,
+          "stdout": "{\"name\": \"NC-unrelated-reader-cannot-satisfy-port\", \"startedAt\": \"2026-11-06T06:39:06.799751+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"node\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new/scripts/differential_consent_act_families.mjs\", \"--old\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old\", \"--new\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/unrelated-reader-cannot-satisfy-port\", \"--out\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-unrelated-reader-cannot-satisfy-port.json\", \"--bead\", \"syzygy-bpyt.8.26\", \"--kinds\", \"base\", \"--workers\", \"2\", \"--time-limit-ms\", \"600000\", \"--expect-mismatches\", \"--expect-reader-mismatches\", \"port\", \"--control-note\", \"unrelated-reader-cannot-satisfy-port: required readers port must differ\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T06:40:16.904993+00:00\", \"elapsedSeconds\": 70.10281508497428, \"streams\": {\"NC-unrelated-reader-cannot-satisfy-port.stdout\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}, \"NC-unrelated-reader-cannot-satisfy-port.stderr\": {\"bytes\": 131, \"sha256\": \"49337e43521e4b287c65e624dd95cf2781b66a8a77ec4363db9159053ab6c587\"}}}\n",
+          "stderr": ""
+        },
+        "receipt": {
+          "name": "NC-unrelated-reader-cannot-satisfy-port",
+          "startedAt": "2026-11-06T06:39:06.799751+00:00",
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+          "argv": [
+            "node",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new/scripts/differential_consent_act_families.mjs",
+            "--old",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old",
+            "--new",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/unrelated-reader-cannot-satisfy-port",
+            "--out",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-unrelated-reader-cannot-satisfy-port.json",
+            "--bead",
+            "syzygy-bpyt.8.26",
+            "--kinds",
+            "base",
+            "--workers",
+            "2",
+            "--time-limit-ms",
+            "600000",
+            "--expect-mismatches",
+            "--expect-reader-mismatches",
+            "port",
+            "--control-note",
+            "unrelated-reader-cannot-satisfy-port: required readers port must differ"
+          ],
+          "head": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+          "exitCode": 1,
+          "finishedAt": "2026-11-06T06:40:16.904993+00:00",
+          "elapsedSeconds": 70.10281508497428,
+          "streams": {
+            "NC-unrelated-reader-cannot-satisfy-port.stdout": {
+              "bytes": 0,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            },
+            "NC-unrelated-reader-cannot-satisfy-port.stderr": {
+              "bytes": 131,
+              "sha256": "49337e43521e4b287c65e624dd95cf2781b66a8a77ec4363db9159053ab6c587"
+            }
+          }
+        }
+      },
+      "recount": {
+        "wrapper": {
+          "argv": [
+            "/usr/bin/python3",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/capture.py",
+            "NC-unrelated-reader-cannot-satisfy-port-recount",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+            "python3",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/recount.py",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-unrelated-reader-cannot-satisfy-port.json",
+            "--tree",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old",
+            "--new-tree",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/unrelated-reader-cannot-satisfy-port",
+            "--out",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-unrelated-reader-cannot-satisfy-port-recount.json"
+          ],
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+          "exit": 0,
+          "stdout": "{\"name\": \"NC-unrelated-reader-cannot-satisfy-port-recount\", \"startedAt\": \"2026-11-06T06:40:17.026016+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"python3\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/recount.py\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-unrelated-reader-cannot-satisfy-port.json\", \"--tree\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old\", \"--new-tree\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/unrelated-reader-cannot-satisfy-port\", \"--out\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-unrelated-reader-cannot-satisfy-port-recount.json\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 0, \"finishedAt\": \"2026-11-06T06:40:17.521114+00:00\", \"elapsedSeconds\": 0.4912889290135354, \"streams\": {\"NC-unrelated-reader-cannot-satisfy-port-recount.stdout\": {\"bytes\": 538, \"sha256\": \"1a3f3a87c6dd114900221a0e2aa68f4a8767a30e787e42556e4c77428d907e09\"}, \"NC-unrelated-reader-cannot-satisfy-port-recount.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+          "stderr": ""
+        },
+        "receipt": {
+          "name": "NC-unrelated-reader-cannot-satisfy-port-recount",
+          "startedAt": "2026-11-06T06:40:17.026016+00:00",
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+          "argv": [
+            "python3",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/recount.py",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-unrelated-reader-cannot-satisfy-port.json",
+            "--tree",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old",
+            "--new-tree",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/unrelated-reader-cannot-satisfy-port",
+            "--out",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-unrelated-reader-cannot-satisfy-port-recount.json"
+          ],
+          "head": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+          "exitCode": 0,
+          "finishedAt": "2026-11-06T06:40:17.521114+00:00",
+          "elapsedSeconds": 0.4912889290135354,
+          "streams": {
+            "NC-unrelated-reader-cannot-satisfy-port-recount.stdout": {
+              "bytes": 538,
+              "sha256": "1a3f3a87c6dd114900221a0e2aa68f4a8767a30e787e42556e4c77428d907e09"
+            },
+            "NC-unrelated-reader-cannot-satisfy-port-recount.stderr": {
+              "bytes": 0,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            }
+          }
+        }
+      },
+      "perLogicalReader": {
+        "admission": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 4,
+          "mismatches": 0,
+          "byInstant": {
+            "untimed": 4
+          },
+          "byStep": {
+            "1": 4
+          }
+        },
+        "policy-reader": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 4,
+          "mismatches": 0,
+          "byInstant": {
+            "untimed": 4
+          },
+          "byStep": {
+            "1": 4
+          }
+        },
+        "policy-chain": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "class-act": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "in-force-egress": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "registry-git-source": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "local-agent-signoff": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "dossier-d9": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "dossier-rfc7-20": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "dossier-drawer": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "dossier-statement-v1": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "dossier-provider-v2": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "port": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "gate-port": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "gate-d9": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 8,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "gate-rfc7-20": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "gate-registry-entry": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "gate-drawer:redis-redis": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "gate-statements:redis-redis": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "in-force": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "consent-ports": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "screen": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "policy-chain-disk": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "class-act-disk": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        }
+      },
+      "success": true,
+      "oldUncheckedReaderReproduced": {
+        "execution": {
+          "wrapper": {
+            "argv": [
+              "/usr/bin/python3",
+              "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/capture.py",
+              "OLD-unchecked-reader-reproduction",
+              "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+              "node",
+              "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old/scripts/differential_consent_act_families.mjs",
+              "--old",
+              "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old",
+              "--new",
+              "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/unrelated-reader-cannot-satisfy-port",
+              "--out",
+              "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/OLD-unchecked-reader-reproduction.json",
+              "--bead",
+              "syzygy-bpyt.8.26",
+              "--kinds",
+              "base",
+              "--workers",
+              "2",
+              "--expect-mismatches",
+              "--control-note",
+              "port must have mismatches > 0"
+            ],
+            "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+            "exit": 0,
+            "stdout": "{\"name\": \"OLD-unchecked-reader-reproduction\", \"startedAt\": \"2026-11-06T06:40:17.555354+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"node\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old/scripts/differential_consent_act_families.mjs\", \"--old\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old\", \"--new\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/unrelated-reader-cannot-satisfy-port\", \"--out\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/OLD-unchecked-reader-reproduction.json\", \"--bead\", \"syzygy-bpyt.8.26\", \"--kinds\", \"base\", \"--workers\", \"2\", \"--expect-mismatches\", \"--control-note\", \"port must have mismatches > 0\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 0, \"finishedAt\": \"2026-11-06T06:41:14.252920+00:00\", \"elapsedSeconds\": 56.695054164971225, \"streams\": {\"OLD-unchecked-reader-reproduction.stdout\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}, \"OLD-unchecked-reader-reproduction.stderr\": {\"bytes\": 139, \"sha256\": \"6435a7b76898c22b0c91516fdb58e7053a1eb40e9bcc35f69b666c4a2256f0c6\"}}}\n",
+            "stderr": ""
+          },
+          "receipt": {
+            "name": "OLD-unchecked-reader-reproduction",
+            "startedAt": "2026-11-06T06:40:17.555354+00:00",
+            "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+            "argv": [
+              "node",
+              "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old/scripts/differential_consent_act_families.mjs",
+              "--old",
+              "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old",
+              "--new",
+              "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/unrelated-reader-cannot-satisfy-port",
+              "--out",
+              "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/OLD-unchecked-reader-reproduction.json",
+              "--bead",
+              "syzygy-bpyt.8.26",
+              "--kinds",
+              "base",
+              "--workers",
+              "2",
+              "--expect-mismatches",
+              "--control-note",
+              "port must have mismatches > 0"
+            ],
+            "head": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+            "exitCode": 0,
+            "finishedAt": "2026-11-06T06:41:14.252920+00:00",
+            "elapsedSeconds": 56.695054164971225,
+            "streams": {
+              "OLD-unchecked-reader-reproduction.stdout": {
+                "bytes": 0,
+                "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+              },
+              "OLD-unchecked-reader-reproduction.stderr": {
+                "bytes": 139,
+                "sha256": "6435a7b76898c22b0c91516fdb58e7053a1eb40e9bcc35f69b666c4a2256f0c6"
+              }
+            }
+          }
+        },
+        "totalMismatches": 8,
+        "portMismatches": 0
+      }
+    },
+    {
+      "id": "requests-ids",
+      "plan": {
+        "id": "requests-ids",
+        "temporary_product_file": "packages/polaris-dossier/src/gate-sources.ts",
+        "old": "repositoryIdsFor: url => port.repositoryIdsFor(url),",
+        "new": "repositoryIdsFor: url => url === \"https://github.com/psf/requests\" ? Promise.reject(new TypeError('Requests-only ids control')) : port.repositoryIdsFor(url),",
+        "required_reader_mismatches": [
+          "gate-port"
+        ],
+        "selection": [
+          "base"
+        ],
+        "requestsOnly": true
+      },
+      "subjectCommit": "8112fd7d4e1d95464a2a10ae100171c644cdeeae",
+      "originalSha256": "1c6e4ab8988e835adbcf23708c154fce6fad5ae14d96afd0d3ae56ad596ff822",
+      "mutatedSha256": "e39b61e1877b2684b90efb4c7d0af952291a2ad73dac432815655f3a62cd9383",
+      "metadata": [
+        {
+          "argv": [
+            "git",
+            "clone",
+            "--quiet",
+            "--no-hardlinks",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/requests-ids"
+          ],
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106",
+          "exit": 0,
+          "stdout": "",
+          "stderr": "Note: switching to '6c6e22bcde6e63d841e548adad418e50eaef7454'.\n\nYou are in 'detached HEAD' state. You can look around, make experimental\nchanges and commit them, and you can discard any commits you make in this\nstate without impacting any branches by switching back to a branch.\n\nIf you want to create a new branch to retain commits you create, you may\ndo so (now or later) by using -c with the switch command. Example:\n\n  git switch -c <new-branch-name>\n\nOr undo this operation with:\n\n  git switch -\n\nTurn off this advice by setting config variable advice.detachedHead to false\n\n"
+        },
+        {
+          "argv": [
+            "git",
+            "checkout",
+            "-b",
+            "mutant/requests-ids"
+          ],
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/requests-ids",
+          "exit": 0,
+          "stdout": "",
+          "stderr": "Switched to a new branch 'mutant/requests-ids'\n"
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "packages/polaris-dossier/src/gate-sources.ts"
+          ],
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/requests-ids",
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "git",
+            "-c",
+            "core.hooksPath=/dev/null",
+            "commit",
+            "-m",
+            "test: private requests-ids sensitivity control"
+          ],
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/requests-ids",
+          "exit": 0,
+          "stdout": "[mutant/requests-ids 8112fd7d] test: private requests-ids sensitivity control\n 1 file changed, 1 insertion(+), 1 deletion(-)\n",
+          "stderr": ""
+        }
+      ],
+      "build": {
+        "wrapper": {
+          "argv": [
+            "/usr/bin/python3",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/capture.py",
+            "build-control-requests-ids",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/requests-ids",
+            "node",
+            "scripts/clean_build.mjs",
+            "packages/polaris-generation-consent",
+            "packages/polaris-dossier"
+          ],
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+          "exit": 0,
+          "stdout": "{\"name\": \"build-control-requests-ids\", \"startedAt\": \"2026-11-06T06:41:17.530267+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/requests-ids\", \"argv\": [\"node\", \"scripts/clean_build.mjs\", \"packages/polaris-generation-consent\", \"packages/polaris-dossier\"], \"head\": \"8112fd7d4e1d95464a2a10ae100171c644cdeeae\", \"exitCode\": 0, \"finishedAt\": \"2026-11-06T06:41:22.955952+00:00\", \"elapsedSeconds\": 5.423107312992215, \"streams\": {\"build-control-requests-ids.stdout\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}, \"build-control-requests-ids.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+          "stderr": ""
+        },
+        "receipt": {
+          "name": "build-control-requests-ids",
+          "startedAt": "2026-11-06T06:41:17.530267+00:00",
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/requests-ids",
+          "argv": [
+            "node",
+            "scripts/clean_build.mjs",
+            "packages/polaris-generation-consent",
+            "packages/polaris-dossier"
+          ],
+          "head": "8112fd7d4e1d95464a2a10ae100171c644cdeeae",
+          "exitCode": 0,
+          "finishedAt": "2026-11-06T06:41:22.955952+00:00",
+          "elapsedSeconds": 5.423107312992215,
+          "streams": {
+            "build-control-requests-ids.stdout": {
+              "bytes": 0,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            },
+            "build-control-requests-ids.stderr": {
+              "bytes": 0,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            }
+          }
+        }
+      },
+      "execution": {
+        "wrapper": {
+          "argv": [
+            "/usr/bin/python3",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/capture.py",
+            "NC-requests-ids",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+            "node",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new/scripts/differential_consent_act_families.mjs",
+            "--old",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old",
+            "--new",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/requests-ids",
+            "--out",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-requests-ids.json",
+            "--bead",
+            "syzygy-bpyt.8.26",
+            "--kinds",
+            "base",
+            "--workers",
+            "2",
+            "--time-limit-ms",
+            "600000",
+            "--expect-mismatches",
+            "--expect-reader-mismatches",
+            "gate-port",
+            "--control-note",
+            "requests-ids: required readers gate-port must differ"
+          ],
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+          "exit": 0,
+          "stdout": "{\"name\": \"NC-requests-ids\", \"startedAt\": \"2026-11-06T06:41:22.988535+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"node\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new/scripts/differential_consent_act_families.mjs\", \"--old\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old\", \"--new\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/requests-ids\", \"--out\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-requests-ids.json\", \"--bead\", \"syzygy-bpyt.8.26\", \"--kinds\", \"base\", \"--workers\", \"2\", \"--time-limit-ms\", \"600000\", \"--expect-mismatches\", \"--expect-reader-mismatches\", \"gate-port\", \"--control-note\", \"requests-ids: required readers gate-port must differ\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 0, \"finishedAt\": \"2026-11-06T06:42:28.836820+00:00\", \"elapsedSeconds\": 65.8460198380053, \"streams\": {\"NC-requests-ids.stdout\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}, \"NC-requests-ids.stderr\": {\"bytes\": 97, \"sha256\": \"bcf5ca0872beaddc0a877d0df1281b16eedbe239b78305b75dadd60b4dca49dc\"}}}\n",
+          "stderr": ""
+        },
+        "receipt": {
+          "name": "NC-requests-ids",
+          "startedAt": "2026-11-06T06:41:22.988535+00:00",
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+          "argv": [
+            "node",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new/scripts/differential_consent_act_families.mjs",
+            "--old",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old",
+            "--new",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/requests-ids",
+            "--out",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-requests-ids.json",
+            "--bead",
+            "syzygy-bpyt.8.26",
+            "--kinds",
+            "base",
+            "--workers",
+            "2",
+            "--time-limit-ms",
+            "600000",
+            "--expect-mismatches",
+            "--expect-reader-mismatches",
+            "gate-port",
+            "--control-note",
+            "requests-ids: required readers gate-port must differ"
+          ],
+          "head": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+          "exitCode": 0,
+          "finishedAt": "2026-11-06T06:42:28.836820+00:00",
+          "elapsedSeconds": 65.8460198380053,
+          "streams": {
+            "NC-requests-ids.stdout": {
+              "bytes": 0,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            },
+            "NC-requests-ids.stderr": {
+              "bytes": 97,
+              "sha256": "bcf5ca0872beaddc0a877d0df1281b16eedbe239b78305b75dadd60b4dca49dc"
+            }
+          }
+        }
+      },
+      "recount": {
+        "wrapper": {
+          "argv": [
+            "/usr/bin/python3",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/capture.py",
+            "NC-requests-ids-recount",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+            "python3",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/recount.py",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-requests-ids.json",
+            "--tree",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old",
+            "--new-tree",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/requests-ids",
+            "--out",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-requests-ids-recount.json"
+          ],
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+          "exit": 0,
+          "stdout": "{\"name\": \"NC-requests-ids-recount\", \"startedAt\": \"2026-11-06T06:42:28.964492+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"python3\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/recount.py\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-requests-ids.json\", \"--tree\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old\", \"--new-tree\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/requests-ids\", \"--out\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-requests-ids-recount.json\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 0, \"finishedAt\": \"2026-11-06T06:42:29.473369+00:00\", \"elapsedSeconds\": 0.5065761459991336, \"streams\": {\"NC-requests-ids-recount.stdout\": {\"bytes\": 538, \"sha256\": \"1a3f3a87c6dd114900221a0e2aa68f4a8767a30e787e42556e4c77428d907e09\"}, \"NC-requests-ids-recount.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+          "stderr": ""
+        },
+        "receipt": {
+          "name": "NC-requests-ids-recount",
+          "startedAt": "2026-11-06T06:42:28.964492+00:00",
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+          "argv": [
+            "python3",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/recount.py",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-requests-ids.json",
+            "--tree",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old",
+            "--new-tree",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/requests-ids",
+            "--out",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-requests-ids-recount.json"
+          ],
+          "head": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+          "exitCode": 0,
+          "finishedAt": "2026-11-06T06:42:29.473369+00:00",
+          "elapsedSeconds": 0.5065761459991336,
+          "streams": {
+            "NC-requests-ids-recount.stdout": {
+              "bytes": 538,
+              "sha256": "1a3f3a87c6dd114900221a0e2aa68f4a8767a30e787e42556e4c77428d907e09"
+            },
+            "NC-requests-ids-recount.stderr": {
+              "bytes": 0,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            }
+          }
+        }
+      },
+      "perLogicalReader": {
+        "admission": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 4,
+          "mismatches": 0,
+          "byInstant": {
+            "untimed": 4
+          },
+          "byStep": {
+            "1": 4
+          }
+        },
+        "policy-reader": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 4,
+          "mismatches": 0,
+          "byInstant": {
+            "untimed": 4
+          },
+          "byStep": {
+            "1": 4
+          }
+        },
+        "policy-chain": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "class-act": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "in-force-egress": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "registry-git-source": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "local-agent-signoff": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "dossier-d9": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "dossier-rfc7-20": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "dossier-drawer": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "dossier-statement-v1": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "dossier-provider-v2": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "port": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "gate-port": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 8,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "gate-d9": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "gate-rfc7-20": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "gate-registry-entry": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "gate-drawer:redis-redis": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "gate-statements:redis-redis": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "in-force": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "consent-ports": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "screen": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "policy-chain-disk": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "class-act-disk": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        }
+      },
+      "success": true,
+      "oldToolOmissionReproduced": {
+        "execution": {
+          "wrapper": {
+            "argv": [
+              "/usr/bin/python3",
+              "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/capture.py",
+              "OLD-F1-requests-ids",
+              "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+              "node",
+              "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/ORIGINAL-F1-TOOL.mjs",
+              "--old",
+              "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old",
+              "--new",
+              "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/requests-ids",
+              "--out",
+              "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/OLD-F1-requests-ids.json",
+              "--bead",
+              "syzygy-bpyt.8.26",
+              "--kinds",
+              "base",
+              "--workers",
+              "2",
+              "--time-limit-ms",
+              "600000"
+            ],
+            "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+            "exit": 0,
+            "stdout": "{\"name\": \"OLD-F1-requests-ids\", \"startedAt\": \"2026-11-06T06:42:29.505198+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"node\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/ORIGINAL-F1-TOOL.mjs\", \"--old\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old\", \"--new\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/requests-ids\", \"--out\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/OLD-F1-requests-ids.json\", \"--bead\", \"syzygy-bpyt.8.26\", \"--kinds\", \"base\", \"--workers\", \"2\", \"--time-limit-ms\", \"600000\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 0, \"finishedAt\": \"2026-11-06T06:43:34.983361+00:00\", \"elapsedSeconds\": 65.47501689201454, \"streams\": {\"OLD-F1-requests-ids.stdout\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}, \"OLD-F1-requests-ids.stderr\": {\"bytes\": 97, \"sha256\": \"eb6777759b5056f4f6c1892a55c89d6fde515da3dba2aca892ee703d661d3af7\"}}}\n",
+            "stderr": ""
+          },
+          "receipt": {
+            "name": "OLD-F1-requests-ids",
+            "startedAt": "2026-11-06T06:42:29.505198+00:00",
+            "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+            "argv": [
+              "node",
+              "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/ORIGINAL-F1-TOOL.mjs",
+              "--old",
+              "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old",
+              "--new",
+              "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/requests-ids",
+              "--out",
+              "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/OLD-F1-requests-ids.json",
+              "--bead",
+              "syzygy-bpyt.8.26",
+              "--kinds",
+              "base",
+              "--workers",
+              "2",
+              "--time-limit-ms",
+              "600000"
+            ],
+            "head": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+            "exitCode": 0,
+            "finishedAt": "2026-11-06T06:43:34.983361+00:00",
+            "elapsedSeconds": 65.47501689201454,
+            "streams": {
+              "OLD-F1-requests-ids.stdout": {
+                "bytes": 0,
+                "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+              },
+              "OLD-F1-requests-ids.stderr": {
+                "bytes": 97,
+                "sha256": "eb6777759b5056f4f6c1892a55c89d6fde515da3dba2aca892ee703d661d3af7"
+              }
+            }
+          }
+        },
+        "scriptSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+        "gateAnswers": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "missedRequestsOnlyFault": true
+      }
+    },
+    {
+      "id": "requests-absence",
+      "plan": {
+        "id": "requests-absence",
+        "temporary_product_file": "packages/polaris-dossier/src/gate-sources.ts",
+        "old": "{ consentAbsenceFor: port.consentAbsenceFor }",
+        "new": "{ consentAbsenceFor: (url: string) => url === \"https://github.com/psf/requests\" ? Promise.reject(new TypeError('Requests-only absence control')) : port.consentAbsenceFor!(url) }",
+        "required_reader_mismatches": [
+          "gate-port"
+        ],
+        "selection": [
+          "base"
+        ],
+        "requestsOnly": true
+      },
+      "subjectCommit": "1310cc818cc8573574f3a7ea49addca683ed1cae",
+      "originalSha256": "1c6e4ab8988e835adbcf23708c154fce6fad5ae14d96afd0d3ae56ad596ff822",
+      "mutatedSha256": "a3ab93cab594fed9f916420bbf9428abee8b4d45b47375a78bd6aaf38a9c1021",
+      "metadata": [
+        {
+          "argv": [
+            "git",
+            "clone",
+            "--quiet",
+            "--no-hardlinks",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/requests-absence"
+          ],
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106",
+          "exit": 0,
+          "stdout": "",
+          "stderr": "Note: switching to '6c6e22bcde6e63d841e548adad418e50eaef7454'.\n\nYou are in 'detached HEAD' state. You can look around, make experimental\nchanges and commit them, and you can discard any commits you make in this\nstate without impacting any branches by switching back to a branch.\n\nIf you want to create a new branch to retain commits you create, you may\ndo so (now or later) by using -c with the switch command. Example:\n\n  git switch -c <new-branch-name>\n\nOr undo this operation with:\n\n  git switch -\n\nTurn off this advice by setting config variable advice.detachedHead to false\n\n"
+        },
+        {
+          "argv": [
+            "git",
+            "checkout",
+            "-b",
+            "mutant/requests-absence"
+          ],
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/requests-absence",
+          "exit": 0,
+          "stdout": "",
+          "stderr": "Switched to a new branch 'mutant/requests-absence'\n"
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "packages/polaris-dossier/src/gate-sources.ts"
+          ],
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/requests-absence",
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "git",
+            "-c",
+            "core.hooksPath=/dev/null",
+            "commit",
+            "-m",
+            "test: private requests-absence sensitivity control"
+          ],
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/requests-absence",
+          "exit": 0,
+          "stdout": "[mutant/requests-absence 1310cc81] test: private requests-absence sensitivity control\n 1 file changed, 1 insertion(+), 1 deletion(-)\n",
+          "stderr": ""
+        }
+      ],
+      "build": {
+        "wrapper": {
+          "argv": [
+            "/usr/bin/python3",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/capture.py",
+            "build-control-requests-absence",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/requests-absence",
+            "node",
+            "scripts/clean_build.mjs",
+            "packages/polaris-generation-consent",
+            "packages/polaris-dossier"
+          ],
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+          "exit": 0,
+          "stdout": "{\"name\": \"build-control-requests-absence\", \"startedAt\": \"2026-11-06T06:43:37.743761+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/requests-absence\", \"argv\": [\"node\", \"scripts/clean_build.mjs\", \"packages/polaris-generation-consent\", \"packages/polaris-dossier\"], \"head\": \"1310cc818cc8573574f3a7ea49addca683ed1cae\", \"exitCode\": 0, \"finishedAt\": \"2026-11-06T06:43:42.990942+00:00\", \"elapsedSeconds\": 5.245027308992576, \"streams\": {\"build-control-requests-absence.stdout\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}, \"build-control-requests-absence.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+          "stderr": ""
+        },
+        "receipt": {
+          "name": "build-control-requests-absence",
+          "startedAt": "2026-11-06T06:43:37.743761+00:00",
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/requests-absence",
+          "argv": [
+            "node",
+            "scripts/clean_build.mjs",
+            "packages/polaris-generation-consent",
+            "packages/polaris-dossier"
+          ],
+          "head": "1310cc818cc8573574f3a7ea49addca683ed1cae",
+          "exitCode": 0,
+          "finishedAt": "2026-11-06T06:43:42.990942+00:00",
+          "elapsedSeconds": 5.245027308992576,
+          "streams": {
+            "build-control-requests-absence.stdout": {
+              "bytes": 0,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            },
+            "build-control-requests-absence.stderr": {
+              "bytes": 0,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            }
+          }
+        }
+      },
+      "execution": {
+        "wrapper": {
+          "argv": [
+            "/usr/bin/python3",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/capture.py",
+            "NC-requests-absence",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+            "node",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new/scripts/differential_consent_act_families.mjs",
+            "--old",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old",
+            "--new",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/requests-absence",
+            "--out",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-requests-absence.json",
+            "--bead",
+            "syzygy-bpyt.8.26",
+            "--kinds",
+            "base",
+            "--workers",
+            "2",
+            "--time-limit-ms",
+            "600000",
+            "--expect-mismatches",
+            "--expect-reader-mismatches",
+            "gate-port",
+            "--control-note",
+            "requests-absence: required readers gate-port must differ"
+          ],
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+          "exit": 0,
+          "stdout": "{\"name\": \"NC-requests-absence\", \"startedAt\": \"2026-11-06T06:43:43.023024+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"node\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new/scripts/differential_consent_act_families.mjs\", \"--old\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old\", \"--new\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/requests-absence\", \"--out\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-requests-absence.json\", \"--bead\", \"syzygy-bpyt.8.26\", \"--kinds\", \"base\", \"--workers\", \"2\", \"--time-limit-ms\", \"600000\", \"--expect-mismatches\", \"--expect-reader-mismatches\", \"gate-port\", \"--control-note\", \"requests-absence: required readers gate-port must differ\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 0, \"finishedAt\": \"2026-11-06T06:44:55.254797+00:00\", \"elapsedSeconds\": 72.2294460000121, \"streams\": {\"NC-requests-absence.stdout\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}, \"NC-requests-absence.stderr\": {\"bytes\": 97, \"sha256\": \"bcf5ca0872beaddc0a877d0df1281b16eedbe239b78305b75dadd60b4dca49dc\"}}}\n",
+          "stderr": ""
+        },
+        "receipt": {
+          "name": "NC-requests-absence",
+          "startedAt": "2026-11-06T06:43:43.023024+00:00",
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+          "argv": [
+            "node",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new/scripts/differential_consent_act_families.mjs",
+            "--old",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old",
+            "--new",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/requests-absence",
+            "--out",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-requests-absence.json",
+            "--bead",
+            "syzygy-bpyt.8.26",
+            "--kinds",
+            "base",
+            "--workers",
+            "2",
+            "--time-limit-ms",
+            "600000",
+            "--expect-mismatches",
+            "--expect-reader-mismatches",
+            "gate-port",
+            "--control-note",
+            "requests-absence: required readers gate-port must differ"
+          ],
+          "head": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+          "exitCode": 0,
+          "finishedAt": "2026-11-06T06:44:55.254797+00:00",
+          "elapsedSeconds": 72.2294460000121,
+          "streams": {
+            "NC-requests-absence.stdout": {
+              "bytes": 0,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            },
+            "NC-requests-absence.stderr": {
+              "bytes": 97,
+              "sha256": "bcf5ca0872beaddc0a877d0df1281b16eedbe239b78305b75dadd60b4dca49dc"
+            }
+          }
+        }
+      },
+      "recount": {
+        "wrapper": {
+          "argv": [
+            "/usr/bin/python3",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/capture.py",
+            "NC-requests-absence-recount",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+            "python3",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/recount.py",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-requests-absence.json",
+            "--tree",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old",
+            "--new-tree",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/requests-absence",
+            "--out",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-requests-absence-recount.json"
+          ],
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+          "exit": 0,
+          "stdout": "{\"name\": \"NC-requests-absence-recount\", \"startedAt\": \"2026-11-06T06:44:55.379260+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"python3\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/recount.py\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-requests-absence.json\", \"--tree\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old\", \"--new-tree\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/requests-absence\", \"--out\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-requests-absence-recount.json\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 0, \"finishedAt\": \"2026-11-06T06:44:55.883350+00:00\", \"elapsedSeconds\": 0.5014845129917376, \"streams\": {\"NC-requests-absence-recount.stdout\": {\"bytes\": 538, \"sha256\": \"1a3f3a87c6dd114900221a0e2aa68f4a8767a30e787e42556e4c77428d907e09\"}, \"NC-requests-absence-recount.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+          "stderr": ""
+        },
+        "receipt": {
+          "name": "NC-requests-absence-recount",
+          "startedAt": "2026-11-06T06:44:55.379260+00:00",
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+          "argv": [
+            "python3",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/recount.py",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-requests-absence.json",
+            "--tree",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old",
+            "--new-tree",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/requests-absence",
+            "--out",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-requests-absence-recount.json"
+          ],
+          "head": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+          "exitCode": 0,
+          "finishedAt": "2026-11-06T06:44:55.883350+00:00",
+          "elapsedSeconds": 0.5014845129917376,
+          "streams": {
+            "NC-requests-absence-recount.stdout": {
+              "bytes": 538,
+              "sha256": "1a3f3a87c6dd114900221a0e2aa68f4a8767a30e787e42556e4c77428d907e09"
+            },
+            "NC-requests-absence-recount.stderr": {
+              "bytes": 0,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            }
+          }
+        }
+      },
+      "perLogicalReader": {
+        "admission": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 4,
+          "mismatches": 0,
+          "byInstant": {
+            "untimed": 4
+          },
+          "byStep": {
+            "1": 4
+          }
+        },
+        "policy-reader": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 4,
+          "mismatches": 0,
+          "byInstant": {
+            "untimed": 4
+          },
+          "byStep": {
+            "1": 4
+          }
+        },
+        "policy-chain": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "class-act": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "in-force-egress": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "registry-git-source": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "local-agent-signoff": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "dossier-d9": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "dossier-rfc7-20": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "dossier-drawer": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "dossier-statement-v1": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "dossier-provider-v2": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "port": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "gate-port": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 8,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "gate-d9": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "gate-rfc7-20": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "gate-registry-entry": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "gate-drawer:redis-redis": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "gate-statements:redis-redis": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "in-force": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "consent-ports": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "screen": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "policy-chain-disk": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "class-act-disk": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        }
+      },
+      "success": true,
+      "oldToolOmissionReproduced": {
+        "execution": {
+          "wrapper": {
+            "argv": [
+              "/usr/bin/python3",
+              "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/capture.py",
+              "OLD-F1-requests-absence",
+              "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+              "node",
+              "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/ORIGINAL-F1-TOOL.mjs",
+              "--old",
+              "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old",
+              "--new",
+              "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/requests-absence",
+              "--out",
+              "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/OLD-F1-requests-absence.json",
+              "--bead",
+              "syzygy-bpyt.8.26",
+              "--kinds",
+              "base",
+              "--workers",
+              "2",
+              "--time-limit-ms",
+              "600000"
+            ],
+            "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+            "exit": 0,
+            "stdout": "{\"name\": \"OLD-F1-requests-absence\", \"startedAt\": \"2026-11-06T06:44:55.919761+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"node\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/ORIGINAL-F1-TOOL.mjs\", \"--old\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old\", \"--new\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/requests-absence\", \"--out\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/OLD-F1-requests-absence.json\", \"--bead\", \"syzygy-bpyt.8.26\", \"--kinds\", \"base\", \"--workers\", \"2\", \"--time-limit-ms\", \"600000\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 0, \"finishedAt\": \"2026-11-06T06:46:08.588235+00:00\", \"elapsedSeconds\": 72.66604363400256, \"streams\": {\"OLD-F1-requests-absence.stdout\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}, \"OLD-F1-requests-absence.stderr\": {\"bytes\": 97, \"sha256\": \"eb6777759b5056f4f6c1892a55c89d6fde515da3dba2aca892ee703d661d3af7\"}}}\n",
+            "stderr": ""
+          },
+          "receipt": {
+            "name": "OLD-F1-requests-absence",
+            "startedAt": "2026-11-06T06:44:55.919761+00:00",
+            "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+            "argv": [
+              "node",
+              "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/ORIGINAL-F1-TOOL.mjs",
+              "--old",
+              "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old",
+              "--new",
+              "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/requests-absence",
+              "--out",
+              "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/OLD-F1-requests-absence.json",
+              "--bead",
+              "syzygy-bpyt.8.26",
+              "--kinds",
+              "base",
+              "--workers",
+              "2",
+              "--time-limit-ms",
+              "600000"
+            ],
+            "head": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+            "exitCode": 0,
+            "finishedAt": "2026-11-06T06:46:08.588235+00:00",
+            "elapsedSeconds": 72.66604363400256,
+            "streams": {
+              "OLD-F1-requests-absence.stdout": {
+                "bytes": 0,
+                "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+              },
+              "OLD-F1-requests-absence.stderr": {
+                "bytes": 97,
+                "sha256": "eb6777759b5056f4f6c1892a55c89d6fde515da3dba2aca892ee703d661d3af7"
+              }
+            }
+          }
+        },
+        "scriptSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+        "gateAnswers": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "missedRequestsOnlyFault": true
+      }
+    },
+    {
+      "id": "requests-revisions",
+      "plan": {
+        "id": "requests-revisions",
+        "temporary_product_file": "packages/polaris-dossier/src/gate-sources.ts",
+        "old": "consentedRevisionsFor: repositoryId => port.consentedRevisionsFor(repositoryId),",
+        "new": "consentedRevisionsFor: repositoryId => repositoryId === \"psf-requests\" ? Promise.reject(new TypeError('Requests-only revisions control')) : port.consentedRevisionsFor(repositoryId),",
+        "required_reader_mismatches": [
+          "gate-port"
+        ],
+        "selection": [
+          "base"
+        ],
+        "requestsOnly": true
+      },
+      "subjectCommit": "e06e88bbab49eacd8bbfe3242bf64f3f9731bd9c",
+      "originalSha256": "1c6e4ab8988e835adbcf23708c154fce6fad5ae14d96afd0d3ae56ad596ff822",
+      "mutatedSha256": "6509356af4915abab880589c2cca6c8f5104fad824eb5f0c10d03f5ab2985abc",
+      "metadata": [
+        {
+          "argv": [
+            "git",
+            "clone",
+            "--quiet",
+            "--no-hardlinks",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/requests-revisions"
+          ],
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106",
+          "exit": 0,
+          "stdout": "",
+          "stderr": "Note: switching to '6c6e22bcde6e63d841e548adad418e50eaef7454'.\n\nYou are in 'detached HEAD' state. You can look around, make experimental\nchanges and commit them, and you can discard any commits you make in this\nstate without impacting any branches by switching back to a branch.\n\nIf you want to create a new branch to retain commits you create, you may\ndo so (now or later) by using -c with the switch command. Example:\n\n  git switch -c <new-branch-name>\n\nOr undo this operation with:\n\n  git switch -\n\nTurn off this advice by setting config variable advice.detachedHead to false\n\n"
+        },
+        {
+          "argv": [
+            "git",
+            "checkout",
+            "-b",
+            "mutant/requests-revisions"
+          ],
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/requests-revisions",
+          "exit": 0,
+          "stdout": "",
+          "stderr": "Switched to a new branch 'mutant/requests-revisions'\n"
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "packages/polaris-dossier/src/gate-sources.ts"
+          ],
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/requests-revisions",
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "git",
+            "-c",
+            "core.hooksPath=/dev/null",
+            "commit",
+            "-m",
+            "test: private requests-revisions sensitivity control"
+          ],
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/requests-revisions",
+          "exit": 0,
+          "stdout": "[mutant/requests-revisions e06e88bb] test: private requests-revisions sensitivity control\n 1 file changed, 1 insertion(+), 1 deletion(-)\n",
+          "stderr": ""
+        }
+      ],
+      "build": {
+        "wrapper": {
+          "argv": [
+            "/usr/bin/python3",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/capture.py",
+            "build-control-requests-revisions",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/requests-revisions",
+            "node",
+            "scripts/clean_build.mjs",
+            "packages/polaris-generation-consent",
+            "packages/polaris-dossier"
+          ],
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+          "exit": 0,
+          "stdout": "{\"name\": \"build-control-requests-revisions\", \"startedAt\": \"2026-11-06T06:46:11.244649+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/requests-revisions\", \"argv\": [\"node\", \"scripts/clean_build.mjs\", \"packages/polaris-generation-consent\", \"packages/polaris-dossier\"], \"head\": \"e06e88bbab49eacd8bbfe3242bf64f3f9731bd9c\", \"exitCode\": 0, \"finishedAt\": \"2026-11-06T06:46:16.649851+00:00\", \"elapsedSeconds\": 5.402961837011389, \"streams\": {\"build-control-requests-revisions.stdout\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}, \"build-control-requests-revisions.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+          "stderr": ""
+        },
+        "receipt": {
+          "name": "build-control-requests-revisions",
+          "startedAt": "2026-11-06T06:46:11.244649+00:00",
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/requests-revisions",
+          "argv": [
+            "node",
+            "scripts/clean_build.mjs",
+            "packages/polaris-generation-consent",
+            "packages/polaris-dossier"
+          ],
+          "head": "e06e88bbab49eacd8bbfe3242bf64f3f9731bd9c",
+          "exitCode": 0,
+          "finishedAt": "2026-11-06T06:46:16.649851+00:00",
+          "elapsedSeconds": 5.402961837011389,
+          "streams": {
+            "build-control-requests-revisions.stdout": {
+              "bytes": 0,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            },
+            "build-control-requests-revisions.stderr": {
+              "bytes": 0,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            }
+          }
+        }
+      },
+      "execution": {
+        "wrapper": {
+          "argv": [
+            "/usr/bin/python3",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/capture.py",
+            "NC-requests-revisions",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+            "node",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new/scripts/differential_consent_act_families.mjs",
+            "--old",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old",
+            "--new",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/requests-revisions",
+            "--out",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-requests-revisions.json",
+            "--bead",
+            "syzygy-bpyt.8.26",
+            "--kinds",
+            "base",
+            "--workers",
+            "2",
+            "--time-limit-ms",
+            "600000",
+            "--expect-mismatches",
+            "--expect-reader-mismatches",
+            "gate-port",
+            "--control-note",
+            "requests-revisions: required readers gate-port must differ"
+          ],
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+          "exit": 0,
+          "stdout": "{\"name\": \"NC-requests-revisions\", \"startedAt\": \"2026-11-06T06:46:16.681781+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"node\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new/scripts/differential_consent_act_families.mjs\", \"--old\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old\", \"--new\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/requests-revisions\", \"--out\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-requests-revisions.json\", \"--bead\", \"syzygy-bpyt.8.26\", \"--kinds\", \"base\", \"--workers\", \"2\", \"--time-limit-ms\", \"600000\", \"--expect-mismatches\", \"--expect-reader-mismatches\", \"gate-port\", \"--control-note\", \"requests-revisions: required readers gate-port must differ\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 0, \"finishedAt\": \"2026-11-06T06:47:34.202506+00:00\", \"elapsedSeconds\": 77.51813434797805, \"streams\": {\"NC-requests-revisions.stdout\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}, \"NC-requests-revisions.stderr\": {\"bytes\": 97, \"sha256\": \"bcf5ca0872beaddc0a877d0df1281b16eedbe239b78305b75dadd60b4dca49dc\"}}}\n",
+          "stderr": ""
+        },
+        "receipt": {
+          "name": "NC-requests-revisions",
+          "startedAt": "2026-11-06T06:46:16.681781+00:00",
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+          "argv": [
+            "node",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new/scripts/differential_consent_act_families.mjs",
+            "--old",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old",
+            "--new",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/requests-revisions",
+            "--out",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-requests-revisions.json",
+            "--bead",
+            "syzygy-bpyt.8.26",
+            "--kinds",
+            "base",
+            "--workers",
+            "2",
+            "--time-limit-ms",
+            "600000",
+            "--expect-mismatches",
+            "--expect-reader-mismatches",
+            "gate-port",
+            "--control-note",
+            "requests-revisions: required readers gate-port must differ"
+          ],
+          "head": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+          "exitCode": 0,
+          "finishedAt": "2026-11-06T06:47:34.202506+00:00",
+          "elapsedSeconds": 77.51813434797805,
+          "streams": {
+            "NC-requests-revisions.stdout": {
+              "bytes": 0,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            },
+            "NC-requests-revisions.stderr": {
+              "bytes": 97,
+              "sha256": "bcf5ca0872beaddc0a877d0df1281b16eedbe239b78305b75dadd60b4dca49dc"
+            }
+          }
+        }
+      },
+      "recount": {
+        "wrapper": {
+          "argv": [
+            "/usr/bin/python3",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/capture.py",
+            "NC-requests-revisions-recount",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+            "python3",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/recount.py",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-requests-revisions.json",
+            "--tree",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old",
+            "--new-tree",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/requests-revisions",
+            "--out",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-requests-revisions-recount.json"
+          ],
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+          "exit": 0,
+          "stdout": "{\"name\": \"NC-requests-revisions-recount\", \"startedAt\": \"2026-11-06T06:47:34.341475+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"python3\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/recount.py\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-requests-revisions.json\", \"--tree\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old\", \"--new-tree\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/requests-revisions\", \"--out\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-requests-revisions-recount.json\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 0, \"finishedAt\": \"2026-11-06T06:47:34.929570+00:00\", \"elapsedSeconds\": 0.58477385295555, \"streams\": {\"NC-requests-revisions-recount.stdout\": {\"bytes\": 538, \"sha256\": \"1a3f3a87c6dd114900221a0e2aa68f4a8767a30e787e42556e4c77428d907e09\"}, \"NC-requests-revisions-recount.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+          "stderr": ""
+        },
+        "receipt": {
+          "name": "NC-requests-revisions-recount",
+          "startedAt": "2026-11-06T06:47:34.341475+00:00",
+          "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+          "argv": [
+            "python3",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/recount.py",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-requests-revisions.json",
+            "--tree",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old",
+            "--new-tree",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/requests-revisions",
+            "--out",
+            "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-requests-revisions-recount.json"
+          ],
+          "head": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+          "exitCode": 0,
+          "finishedAt": "2026-11-06T06:47:34.929570+00:00",
+          "elapsedSeconds": 0.58477385295555,
+          "streams": {
+            "NC-requests-revisions-recount.stdout": {
+              "bytes": 538,
+              "sha256": "1a3f3a87c6dd114900221a0e2aa68f4a8767a30e787e42556e4c77428d907e09"
+            },
+            "NC-requests-revisions-recount.stderr": {
+              "bytes": 0,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            }
+          }
+        }
+      },
+      "perLogicalReader": {
+        "admission": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 4,
+          "mismatches": 0,
+          "byInstant": {
+            "untimed": 4
+          },
+          "byStep": {
+            "1": 4
+          }
+        },
+        "policy-reader": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 4,
+          "mismatches": 0,
+          "byInstant": {
+            "untimed": 4
+          },
+          "byStep": {
+            "1": 4
+          }
+        },
+        "policy-chain": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "class-act": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "in-force-egress": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "registry-git-source": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "local-agent-signoff": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "dossier-d9": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "dossier-rfc7-20": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "dossier-drawer": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "dossier-statement-v1": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "dossier-provider-v2": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "port": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "gate-port": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 8,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "gate-d9": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "gate-rfc7-20": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "gate-registry-entry": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "gate-drawer:redis-redis": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "gate-statements:redis-redis": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "in-force": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "consent-ports": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "screen": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "policy-chain-disk": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "class-act-disk": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        }
+      },
+      "success": true,
+      "oldToolOmissionReproduced": {
+        "execution": {
+          "wrapper": {
+            "argv": [
+              "/usr/bin/python3",
+              "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/capture.py",
+              "OLD-F1-requests-revisions",
+              "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+              "node",
+              "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/ORIGINAL-F1-TOOL.mjs",
+              "--old",
+              "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old",
+              "--new",
+              "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/requests-revisions",
+              "--out",
+              "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/OLD-F1-requests-revisions.json",
+              "--bead",
+              "syzygy-bpyt.8.26",
+              "--kinds",
+              "base",
+              "--workers",
+              "2",
+              "--time-limit-ms",
+              "600000"
+            ],
+            "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+            "exit": 0,
+            "stdout": "{\"name\": \"OLD-F1-requests-revisions\", \"startedAt\": \"2026-11-06T06:47:34.962253+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new\", \"argv\": [\"node\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/ORIGINAL-F1-TOOL.mjs\", \"--old\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old\", \"--new\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/requests-revisions\", \"--out\", \"/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/OLD-F1-requests-revisions.json\", \"--bead\", \"syzygy-bpyt.8.26\", \"--kinds\", \"base\", \"--workers\", \"2\", \"--time-limit-ms\", \"600000\"], \"head\": \"6c6e22bcde6e63d841e548adad418e50eaef7454\", \"exitCode\": 0, \"finishedAt\": \"2026-11-06T06:48:48.760080+00:00\", \"elapsedSeconds\": 73.79527940205298, \"streams\": {\"OLD-F1-requests-revisions.stdout\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}, \"OLD-F1-requests-revisions.stderr\": {\"bytes\": 97, \"sha256\": \"eb6777759b5056f4f6c1892a55c89d6fde515da3dba2aca892ee703d661d3af7\"}}}\n",
+            "stderr": ""
+          },
+          "receipt": {
+            "name": "OLD-F1-requests-revisions",
+            "startedAt": "2026-11-06T06:47:34.962253+00:00",
+            "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+            "argv": [
+              "node",
+              "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/ORIGINAL-F1-TOOL.mjs",
+              "--old",
+              "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/old",
+              "--new",
+              "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/controls/requests-revisions",
+              "--out",
+              "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/OLD-F1-requests-revisions.json",
+              "--bead",
+              "syzygy-bpyt.8.26",
+              "--kinds",
+              "base",
+              "--workers",
+              "2",
+              "--time-limit-ms",
+              "600000"
+            ],
+            "head": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+            "exitCode": 0,
+            "finishedAt": "2026-11-06T06:48:48.760080+00:00",
+            "elapsedSeconds": 73.79527940205298,
+            "streams": {
+              "OLD-F1-requests-revisions.stdout": {
+                "bytes": 0,
+                "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+              },
+              "OLD-F1-requests-revisions.stderr": {
+                "bytes": 97,
+                "sha256": "eb6777759b5056f4f6c1892a55c89d6fde515da3dba2aca892ee703d661d3af7"
+              }
+            }
+          }
+        },
+        "scriptSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+        "gateAnswers": {
+          "worlds": 4,
+          "steps": 4,
+          "answers": 8,
+          "mismatches": 0,
+          "byInstant": {
+            "2026-10-08T09:30:00Z": 4,
+            "2026-10-22T12:00:00Z": 4
+          },
+          "byStep": {
+            "1": 8
+          }
+        },
+        "missedRequestsOnlyFault": true
+      }
+    }
+  ],
+  "bundle": {
+    "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/semantic-mutants.bundle",
+    "bytes": 3453,
+    "sha256": "42ce056fb60c0208e242a7848938c596951ca299d7f662336c693bff14194108",
+    "verification": {
+      "argv": [
+        "git",
+        "bundle",
+        "verify",
+        "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/semantic-mutants.bundle"
+      ],
+      "cwd": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/new",
+      "exit": 0,
+      "stdout": "The bundle contains these 6 refs:\n68a10f29d49f209c6431c6510b89addec2804b04 refs/heads/mutant/supersession-inforce\n6c31d830dc9eb011e736aa579d3e11df0f029ebd refs/heads/evidence/blunt-inforce\n489f821beb03fa4773778f5f7a20c84c5f52fbd8 refs/heads/evidence/unrelated-reader-cannot-satisfy-port\n8112fd7d4e1d95464a2a10ae100171c644cdeeae refs/heads/evidence/requests-ids\n1310cc818cc8573574f3a7ea49addca683ed1cae refs/heads/evidence/requests-absence\ne06e88bbab49eacd8bbfe3242bf64f3f9731bd9c refs/heads/evidence/requests-revisions\nThe bundle requires this ref:\n6c6e22bcde6e63d841e548adad418e50eaef7454 \nThe bundle uses this hash algorithm: sha1\n",
+      "stderr": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/semantic-mutants.bundle is okay\n"
+    }
+  },
+  "success": true
+}

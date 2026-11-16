@@ -1,0 +1,53 @@
+{
+ "commit": "f2304fd5d2bfd0e50c48d6ea356ddea3f7be162d",
+ "command": "npx tsc -b apps/three-surface-poc",
+ "references": [
+  "../../packages/http-host",
+  "../../packages/three-surface-poc-core",
+  "../../packages/polaris-generation-core",
+  "../../packages/polaris-generation-consent",
+  "../../packages/support"
+ ],
+ "builds": [
+  {
+   "label": "plain",
+   "distBefore": [],
+   "exit": 0,
+   "distAfter": [
+    "apps/three-surface-poc/dist",
+    "packages/cap1-core/dist",
+    "packages/http-host/dist",
+    "packages/polaris-generation-consent/dist",
+    "packages/polaris-generation-core/dist",
+    "packages/support/dist",
+    "packages/three-surface-poc-core/dist"
+   ],
+   "errors": [],
+   "outputLines": 0
+  },
+  {
+   "label": "mutant",
+   "distBefore": [],
+   "exit": 2,
+   "distAfter": [
+    "apps/three-surface-poc/dist",
+    "packages/cap1-core/dist",
+    "packages/http-host/dist",
+    "packages/polaris-generation-consent/dist",
+    "packages/polaris-generation-core/dist",
+    "packages/support/dist",
+    "packages/three-surface-poc-core/dist"
+   ],
+   "errors": [
+    "apps/three-surface-poc/src/routes.test.ts(7,55): error TS2307: Cannot find module '@syzygy/cap1-daemon' or its corresponding type declarations."
+   ],
+   "outputLines": 1,
+   "mutant": {
+    "file": "apps/three-surface-poc/src/routes.test.ts",
+    "old": "import { afterEach, describe, expect, it, vi } from 'vitest';\n",
+    "new": "import { afterEach, describe, expect, it, vi } from 'vitest';\nimport type { RouteContext as Cap1RouteContext } from '@syzygy/cap1-daemon';\nexport type Cap1Context = Cap1RouteContext;\n"
+   }
+  }
+ ],
+ "cleanAfter": true
+}

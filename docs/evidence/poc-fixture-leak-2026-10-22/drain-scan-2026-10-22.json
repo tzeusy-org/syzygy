@@ -1,0 +1,939 @@
+{
+ "tool": "drain_scan.py",
+ "treeCommit": "3f08143c5e0c78ca42288d16589f36673c9ba854",
+ "filesNamingTheHelper": 46,
+ "helperFilesExcluded": [
+  "apps/three-surface-poc/src/test-model-fixture.test.ts"
+ ],
+ "callers": 43,
+ "filesNamingTheHelperButCreatingNothing": [
+  "apps/three-surface-poc/src/fixture-directories.test.ts",
+  "apps/three-surface-poc/src/sync-child-process-guard.test.ts"
+ ],
+ "noDrainFound": [
+  "apps/three-surface-poc/src/polaris-accessibility-main.ts",
+  "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts"
+ ],
+ "filesWithADelegatedArray": [
+  "apps/three-surface-poc/src/polaris-accessibility-variants.ts",
+  "apps/three-surface-poc/src/polaris-copy.test.ts",
+  "apps/three-surface-poc/src/polaris-first-reading.test.ts",
+  "apps/three-surface-poc/src/polaris-narrative.test.ts"
+ ],
+ "rows": [
+  {
+   "file": "apps/three-surface-poc/src/block-provenance-sweep.test.ts",
+   "isTest": true,
+   "createsRepositories": true,
+   "calls": {
+    "fixtureRepoWithGit": 1,
+    "buildFixtureModel": 1,
+    "variantModel": 0,
+    "renderVariant": 0
+   },
+   "cleanupArrays": [
+    "cleanups"
+   ],
+   "delegatedArrays": [],
+   "arrayDrains": {
+    "cleanups": "afterEach"
+   },
+   "sharedFixtures": {},
+   "noDrainFound": false
+  },
+  {
+   "file": "apps/three-surface-poc/src/cross-cutting.test.ts",
+   "isTest": true,
+   "createsRepositories": true,
+   "calls": {
+    "fixtureRepoWithGit": 0,
+    "buildFixtureModel": 6,
+    "variantModel": 0,
+    "renderVariant": 0
+   },
+   "cleanupArrays": [
+    "cleanups"
+   ],
+   "delegatedArrays": [],
+   "arrayDrains": {
+    "cleanups": "afterEach"
+   },
+   "sharedFixtures": {},
+   "noDrainFound": false
+  },
+  {
+   "file": "apps/three-surface-poc/src/evaluation-footer.test.ts",
+   "isTest": true,
+   "createsRepositories": true,
+   "calls": {
+    "fixtureRepoWithGit": 0,
+    "buildFixtureModel": 6,
+    "variantModel": 0,
+    "renderVariant": 0
+   },
+   "cleanupArrays": [
+    "cleanups"
+   ],
+   "delegatedArrays": [],
+   "arrayDrains": {
+    "cleanups": "afterEach"
+   },
+   "sharedFixtures": {},
+   "noDrainFound": false
+  },
+  {
+   "file": "apps/three-surface-poc/src/fixture-directories.test.ts",
+   "isTest": true,
+   "createsRepositories": false,
+   "calls": {
+    "fixtureRepoWithGit": 0,
+    "buildFixtureModel": 0,
+    "variantModel": 0,
+    "renderVariant": 0
+   },
+   "cleanupArrays": [],
+   "delegatedArrays": [],
+   "arrayDrains": {},
+   "sharedFixtures": {},
+   "noDrainFound": false
+  },
+  {
+   "file": "apps/three-surface-poc/src/governing-intent-sweep.test.ts",
+   "isTest": true,
+   "createsRepositories": true,
+   "calls": {
+    "fixtureRepoWithGit": 1,
+    "buildFixtureModel": 1,
+    "variantModel": 0,
+    "renderVariant": 0
+   },
+   "cleanupArrays": [
+    "cleanups"
+   ],
+   "delegatedArrays": [],
+   "arrayDrains": {
+    "cleanups": "afterAll"
+   },
+   "sharedFixtures": {},
+   "noDrainFound": false
+  },
+  {
+   "file": "apps/three-surface-poc/src/keyboard-sweep-record.test.ts",
+   "isTest": true,
+   "createsRepositories": true,
+   "calls": {
+    "fixtureRepoWithGit": 0,
+    "buildFixtureModel": 2,
+    "variantModel": 0,
+    "renderVariant": 0
+   },
+   "cleanupArrays": [
+    "cleanups"
+   ],
+   "delegatedArrays": [],
+   "arrayDrains": {
+    "cleanups": "afterAll"
+   },
+   "sharedFixtures": {},
+   "noDrainFound": false
+  },
+  {
+   "file": "apps/three-surface-poc/src/main.test.ts",
+   "isTest": true,
+   "createsRepositories": true,
+   "calls": {
+    "fixtureRepoWithGit": 0,
+    "buildFixtureModel": 2,
+    "variantModel": 0,
+    "renderVariant": 0
+   },
+   "cleanupArrays": [
+    "fixtureDirectories"
+   ],
+   "delegatedArrays": [],
+   "arrayDrains": {
+    "fixtureDirectories": "afterAll"
+   },
+   "sharedFixtures": {},
+   "noDrainFound": false
+  },
+  {
+   "file": "apps/three-surface-poc/src/materialize-action.test.ts",
+   "isTest": true,
+   "createsRepositories": true,
+   "calls": {
+    "fixtureRepoWithGit": 2,
+    "buildFixtureModel": 8,
+    "variantModel": 0,
+    "renderVariant": 0
+   },
+   "cleanupArrays": [
+    "cleanups"
+   ],
+   "delegatedArrays": [],
+   "arrayDrains": {
+    "cleanups": "afterEach"
+   },
+   "sharedFixtures": {},
+   "noDrainFound": false
+  },
+  {
+   "file": "apps/three-surface-poc/src/orrery.browser.test.ts",
+   "isTest": true,
+   "createsRepositories": true,
+   "calls": {
+    "fixtureRepoWithGit": 0,
+    "buildFixtureModel": 1,
+    "variantModel": 0,
+    "renderVariant": 0
+   },
+   "cleanupArrays": [
+    "cleanups"
+   ],
+   "delegatedArrays": [],
+   "arrayDrains": {
+    "cleanups": "afterEach"
+   },
+   "sharedFixtures": {},
+   "noDrainFound": false
+  },
+  {
+   "file": "apps/three-surface-poc/src/orrery.test.ts",
+   "isTest": true,
+   "createsRepositories": true,
+   "calls": {
+    "fixtureRepoWithGit": 3,
+    "buildFixtureModel": 8,
+    "variantModel": 0,
+    "renderVariant": 0
+   },
+   "cleanupArrays": [
+    "cleanups"
+   ],
+   "delegatedArrays": [],
+   "arrayDrains": {
+    "cleanups": "afterEach"
+   },
+   "sharedFixtures": {},
+   "noDrainFound": false
+  },
+  {
+   "file": "apps/three-surface-poc/src/page-size-delta.test.ts",
+   "isTest": true,
+   "createsRepositories": true,
+   "calls": {
+    "fixtureRepoWithGit": 0,
+    "buildFixtureModel": 2,
+    "variantModel": 0,
+    "renderVariant": 0
+   },
+   "cleanupArrays": [
+    "cleanups"
+   ],
+   "delegatedArrays": [],
+   "arrayDrains": {
+    "cleanups": "afterEach"
+   },
+   "sharedFixtures": {},
+   "noDrainFound": false
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-accessibility-main.ts",
+   "isTest": false,
+   "createsRepositories": true,
+   "calls": {
+    "fixtureRepoWithGit": 0,
+    "buildFixtureModel": 0,
+    "variantModel": 0,
+    "renderVariant": 1
+   },
+   "cleanupArrays": [
+    "cleanups"
+   ],
+   "delegatedArrays": [],
+   "arrayDrains": {
+    "cleanups": "none"
+   },
+   "sharedFixtures": {},
+   "noDrainFound": true
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-accessibility-variants.ts",
+   "isTest": false,
+   "createsRepositories": true,
+   "calls": {
+    "fixtureRepoWithGit": 0,
+    "buildFixtureModel": 5,
+    "variantModel": 2,
+    "renderVariant": 1
+   },
+   "cleanupArrays": [
+    "cleanups"
+   ],
+   "delegatedArrays": [
+    "cleanups"
+   ],
+   "arrayDrains": {
+    "cleanups": "delegated"
+   },
+   "sharedFixtures": {},
+   "noDrainFound": false
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts",
+   "isTest": true,
+   "createsRepositories": true,
+   "calls": {
+    "fixtureRepoWithGit": 0,
+    "buildFixtureModel": 0,
+    "variantModel": 0,
+    "renderVariant": 4
+   },
+   "cleanupArrays": [
+    "cleanups"
+   ],
+   "delegatedArrays": [],
+   "arrayDrains": {
+    "cleanups": "afterEach"
+   },
+   "sharedFixtures": {},
+   "noDrainFound": false
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+   "isTest": true,
+   "createsRepositories": true,
+   "calls": {
+    "fixtureRepoWithGit": 0,
+    "buildFixtureModel": 2,
+    "variantModel": 1,
+    "renderVariant": 0
+   },
+   "cleanupArrays": [
+    "cleanups"
+   ],
+   "delegatedArrays": [],
+   "arrayDrains": {
+    "cleanups": "afterAll"
+   },
+   "sharedFixtures": {},
+   "noDrainFound": false
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+   "isTest": true,
+   "createsRepositories": true,
+   "calls": {
+    "fixtureRepoWithGit": 0,
+    "buildFixtureModel": 1,
+    "variantModel": 0,
+    "renderVariant": 0
+   },
+   "cleanupArrays": [
+    "cleanups"
+   ],
+   "delegatedArrays": [],
+   "arrayDrains": {
+    "cleanups": "afterEach"
+   },
+   "sharedFixtures": {},
+   "noDrainFound": false
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-capability-detail.test.ts",
+   "isTest": true,
+   "createsRepositories": true,
+   "calls": {
+    "fixtureRepoWithGit": 0,
+    "buildFixtureModel": 3,
+    "variantModel": 0,
+    "renderVariant": 0
+   },
+   "cleanupArrays": [
+    "cleanups"
+   ],
+   "delegatedArrays": [],
+   "arrayDrains": {
+    "cleanups": "afterEach"
+   },
+   "sharedFixtures": {},
+   "noDrainFound": false
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-copy.test.ts",
+   "isTest": true,
+   "createsRepositories": true,
+   "calls": {
+    "fixtureRepoWithGit": 0,
+    "buildFixtureModel": 13,
+    "variantModel": 0,
+    "renderVariant": 0
+   },
+   "cleanupArrays": [
+    "cleanups",
+    "owned"
+   ],
+   "delegatedArrays": [
+    "owned"
+   ],
+   "arrayDrains": {
+    "cleanups": "afterEach",
+    "owned": "delegated"
+   },
+   "sharedFixtures": {},
+   "noDrainFound": false
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-epistemic-tuples.test.ts",
+   "isTest": true,
+   "createsRepositories": true,
+   "calls": {
+    "fixtureRepoWithGit": 0,
+    "buildFixtureModel": 5,
+    "variantModel": 0,
+    "renderVariant": 0
+   },
+   "cleanupArrays": [
+    "cleanups"
+   ],
+   "delegatedArrays": [],
+   "arrayDrains": {
+    "cleanups": "afterEach"
+   },
+   "sharedFixtures": {},
+   "noDrainFound": false
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-first-reading.test.ts",
+   "isTest": true,
+   "createsRepositories": true,
+   "calls": {
+    "fixtureRepoWithGit": 0,
+    "buildFixtureModel": 4,
+    "variantModel": 0,
+    "renderVariant": 0
+   },
+   "cleanupArrays": [
+    "cleanupList",
+    "cleanups"
+   ],
+   "delegatedArrays": [
+    "cleanupList"
+   ],
+   "arrayDrains": {
+    "cleanupList": "delegated",
+    "cleanups": "afterEach"
+   },
+   "sharedFixtures": {
+    "shared": "passed:afterAll"
+   },
+   "noDrainFound": false
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-narrative.test.ts",
+   "isTest": true,
+   "createsRepositories": true,
+   "calls": {
+    "fixtureRepoWithGit": 0,
+    "buildFixtureModel": 6,
+    "variantModel": 0,
+    "renderVariant": 0
+   },
+   "cleanupArrays": [
+    "cleanupList",
+    "cleanups"
+   ],
+   "delegatedArrays": [
+    "cleanupList"
+   ],
+   "arrayDrains": {
+    "cleanupList": "delegated",
+    "cleanups": "afterEach"
+   },
+   "sharedFixtures": {
+    "shared": "passed:afterAll"
+   },
+   "noDrainFound": false
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+   "isTest": true,
+   "createsRepositories": true,
+   "calls": {
+    "fixtureRepoWithGit": 0,
+    "buildFixtureModel": 0,
+    "variantModel": 2,
+    "renderVariant": 0
+   },
+   "cleanupArrays": [
+    "cleanups"
+   ],
+   "delegatedArrays": [],
+   "arrayDrains": {
+    "cleanups": "none"
+   },
+   "sharedFixtures": {},
+   "noDrainFound": true
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-parity-sweep.test.ts",
+   "isTest": true,
+   "createsRepositories": true,
+   "calls": {
+    "fixtureRepoWithGit": 2,
+    "buildFixtureModel": 12,
+    "variantModel": 0,
+    "renderVariant": 0
+   },
+   "cleanupArrays": [
+    "cleanups"
+   ],
+   "delegatedArrays": [],
+   "arrayDrains": {
+    "cleanups": "afterEach"
+   },
+   "sharedFixtures": {},
+   "noDrainFound": false
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+   "isTest": true,
+   "createsRepositories": true,
+   "calls": {
+    "fixtureRepoWithGit": 0,
+    "buildFixtureModel": 2,
+    "variantModel": 0,
+    "renderVariant": 0
+   },
+   "cleanupArrays": [
+    "cleanups"
+   ],
+   "delegatedArrays": [],
+   "arrayDrains": {
+    "cleanups": "afterEach"
+   },
+   "sharedFixtures": {},
+   "noDrainFound": false
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-project-shape.test.ts",
+   "isTest": true,
+   "createsRepositories": true,
+   "calls": {
+    "fixtureRepoWithGit": 0,
+    "buildFixtureModel": 3,
+    "variantModel": 0,
+    "renderVariant": 0
+   },
+   "cleanupArrays": [
+    "cleanups"
+   ],
+   "delegatedArrays": [],
+   "arrayDrains": {
+    "cleanups": "afterEach"
+   },
+   "sharedFixtures": {},
+   "noDrainFound": false
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-proposed-work.test.ts",
+   "isTest": true,
+   "createsRepositories": true,
+   "calls": {
+    "fixtureRepoWithGit": 0,
+    "buildFixtureModel": 3,
+    "variantModel": 0,
+    "renderVariant": 0
+   },
+   "cleanupArrays": [
+    "cleanups"
+   ],
+   "delegatedArrays": [],
+   "arrayDrains": {
+    "cleanups": "afterEach"
+   },
+   "sharedFixtures": {},
+   "noDrainFound": false
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-reachability.test.ts",
+   "isTest": true,
+   "createsRepositories": true,
+   "calls": {
+    "fixtureRepoWithGit": 0,
+    "buildFixtureModel": 5,
+    "variantModel": 0,
+    "renderVariant": 0
+   },
+   "cleanupArrays": [
+    "cleanups"
+   ],
+   "delegatedArrays": [],
+   "arrayDrains": {
+    "cleanups": "afterEach"
+   },
+   "sharedFixtures": {},
+   "noDrainFound": false
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-reconciliation.test.ts",
+   "isTest": true,
+   "createsRepositories": true,
+   "calls": {
+    "fixtureRepoWithGit": 0,
+    "buildFixtureModel": 3,
+    "variantModel": 0,
+    "renderVariant": 0
+   },
+   "cleanupArrays": [
+    "cleanups"
+   ],
+   "delegatedArrays": [],
+   "arrayDrains": {
+    "cleanups": "afterAll"
+   },
+   "sharedFixtures": {},
+   "noDrainFound": false
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-source-route.test.ts",
+   "isTest": true,
+   "createsRepositories": true,
+   "calls": {
+    "fixtureRepoWithGit": 0,
+    "buildFixtureModel": 3,
+    "variantModel": 0,
+    "renderVariant": 0
+   },
+   "cleanupArrays": [
+    "cleanups"
+   ],
+   "delegatedArrays": [],
+   "arrayDrains": {
+    "cleanups": "afterEach"
+   },
+   "sharedFixtures": {},
+   "noDrainFound": false
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris-walkthrough-readiness.test.ts",
+   "isTest": true,
+   "createsRepositories": true,
+   "calls": {
+    "fixtureRepoWithGit": 0,
+    "buildFixtureModel": 4,
+    "variantModel": 0,
+    "renderVariant": 0
+   },
+   "cleanupArrays": [
+    "cleanups"
+   ],
+   "delegatedArrays": [],
+   "arrayDrains": {
+    "cleanups": "afterEach"
+   },
+   "sharedFixtures": {},
+   "noDrainFound": false
+  },
+  {
+   "file": "apps/three-surface-poc/src/polaris.test.ts",
+   "isTest": true,
+   "createsRepositories": true,
+   "calls": {
+    "fixtureRepoWithGit": 0,
+    "buildFixtureModel": 7,
+    "variantModel": 0,
+    "renderVariant": 0
+   },
+   "cleanupArrays": [
+    "cleanups"
+   ],
+   "delegatedArrays": [],
+   "arrayDrains": {
+    "cleanups": "afterEach"
+   },
+   "sharedFixtures": {},
+   "noDrainFound": false
+  },
+  {
+   "file": "apps/three-surface-poc/src/production-reobserve.test.ts",
+   "isTest": true,
+   "createsRepositories": true,
+   "calls": {
+    "fixtureRepoWithGit": 4,
+    "buildFixtureModel": 0,
+    "variantModel": 0,
+    "renderVariant": 0
+   },
+   "cleanupArrays": [
+    "cleanups"
+   ],
+   "delegatedArrays": [],
+   "arrayDrains": {
+    "cleanups": "afterEach"
+   },
+   "sharedFixtures": {},
+   "noDrainFound": false
+  },
+  {
+   "file": "apps/three-surface-poc/src/proposal-disclosure.test.ts",
+   "isTest": true,
+   "createsRepositories": true,
+   "calls": {
+    "fixtureRepoWithGit": 0,
+    "buildFixtureModel": 1,
+    "variantModel": 0,
+    "renderVariant": 0
+   },
+   "cleanupArrays": [
+    "cleanups"
+   ],
+   "delegatedArrays": [],
+   "arrayDrains": {
+    "cleanups": "afterEach"
+   },
+   "sharedFixtures": {},
+   "noDrainFound": false
+  },
+  {
+   "file": "apps/three-surface-poc/src/response-identity-independent.test.ts",
+   "isTest": true,
+   "createsRepositories": true,
+   "calls": {
+    "fixtureRepoWithGit": 1,
+    "buildFixtureModel": 2,
+    "variantModel": 0,
+    "renderVariant": 0
+   },
+   "cleanupArrays": [
+    "cleanups"
+   ],
+   "delegatedArrays": [],
+   "arrayDrains": {
+    "cleanups": "afterEach"
+   },
+   "sharedFixtures": {},
+   "noDrainFound": false
+  },
+  {
+   "file": "apps/three-surface-poc/src/response-limits.test.ts",
+   "isTest": true,
+   "createsRepositories": true,
+   "calls": {
+    "fixtureRepoWithGit": 0,
+    "buildFixtureModel": 1,
+    "variantModel": 0,
+    "renderVariant": 0
+   },
+   "cleanupArrays": [
+    "cleanups"
+   ],
+   "delegatedArrays": [],
+   "arrayDrains": {
+    "cleanups": "afterAll"
+   },
+   "sharedFixtures": {},
+   "noDrainFound": false
+  },
+  {
+   "file": "apps/three-surface-poc/src/routes.test.ts",
+   "isTest": true,
+   "createsRepositories": true,
+   "calls": {
+    "fixtureRepoWithGit": 0,
+    "buildFixtureModel": 3,
+    "variantModel": 0,
+    "renderVariant": 0
+   },
+   "cleanupArrays": [
+    "cleanups"
+   ],
+   "delegatedArrays": [],
+   "arrayDrains": {
+    "cleanups": "afterEach"
+   },
+   "sharedFixtures": {},
+   "noDrainFound": false
+  },
+  {
+   "file": "apps/three-surface-poc/src/surface-render-fractions.test.ts",
+   "isTest": true,
+   "createsRepositories": true,
+   "calls": {
+    "fixtureRepoWithGit": 0,
+    "buildFixtureModel": 3,
+    "variantModel": 0,
+    "renderVariant": 0
+   },
+   "cleanupArrays": [
+    "cleanups"
+   ],
+   "delegatedArrays": [],
+   "arrayDrains": {
+    "cleanups": "afterEach"
+   },
+   "sharedFixtures": {},
+   "noDrainFound": false
+  },
+  {
+   "file": "apps/three-surface-poc/src/surface-routes.test.ts",
+   "isTest": true,
+   "createsRepositories": true,
+   "calls": {
+    "fixtureRepoWithGit": 0,
+    "buildFixtureModel": 11,
+    "variantModel": 0,
+    "renderVariant": 0
+   },
+   "cleanupArrays": [
+    "cleanups",
+    "localCleanups"
+   ],
+   "delegatedArrays": [],
+   "arrayDrains": {
+    "cleanups": "afterEach",
+    "localCleanups": "afterAll"
+   },
+   "sharedFixtures": {},
+   "noDrainFound": false
+  },
+  {
+   "file": "apps/three-surface-poc/src/sync-child-process-guard.test.ts",
+   "isTest": true,
+   "createsRepositories": false,
+   "calls": {
+    "fixtureRepoWithGit": 0,
+    "buildFixtureModel": 0,
+    "variantModel": 0,
+    "renderVariant": 0
+   },
+   "cleanupArrays": [],
+   "delegatedArrays": [],
+   "arrayDrains": {},
+   "sharedFixtures": {},
+   "noDrainFound": false
+  },
+  {
+   "file": "apps/three-surface-poc/src/trajectory-narrowing.browser.test.ts",
+   "isTest": true,
+   "createsRepositories": true,
+   "calls": {
+    "fixtureRepoWithGit": 0,
+    "buildFixtureModel": 2,
+    "variantModel": 0,
+    "renderVariant": 0
+   },
+   "cleanupArrays": [
+    "cleanups"
+   ],
+   "delegatedArrays": [],
+   "arrayDrains": {
+    "cleanups": "afterEach"
+   },
+   "sharedFixtures": {},
+   "noDrainFound": false
+  },
+  {
+   "file": "apps/three-surface-poc/src/trajectory.test.ts",
+   "isTest": true,
+   "createsRepositories": true,
+   "calls": {
+    "fixtureRepoWithGit": 7,
+    "buildFixtureModel": 6,
+    "variantModel": 0,
+    "renderVariant": 0
+   },
+   "cleanupArrays": [
+    "cleanups"
+   ],
+   "delegatedArrays": [],
+   "arrayDrains": {
+    "cleanups": "afterEach"
+   },
+   "sharedFixtures": {},
+   "noDrainFound": false
+  },
+  {
+   "file": "apps/three-surface-poc/src/tuple-encoding.test.ts",
+   "isTest": true,
+   "createsRepositories": true,
+   "calls": {
+    "fixtureRepoWithGit": 0,
+    "buildFixtureModel": 5,
+    "variantModel": 0,
+    "renderVariant": 0
+   },
+   "cleanupArrays": [
+    "cleanups"
+   ],
+   "delegatedArrays": [],
+   "arrayDrains": {
+    "cleanups": "afterEach"
+   },
+   "sharedFixtures": {
+    "shared": "passed:afterAll"
+   },
+   "noDrainFound": false
+  },
+  {
+   "file": "apps/three-surface-poc/src/unknown-route-sweep.test.ts",
+   "isTest": true,
+   "createsRepositories": true,
+   "calls": {
+    "fixtureRepoWithGit": 2,
+    "buildFixtureModel": 2,
+    "variantModel": 0,
+    "renderVariant": 0
+   },
+   "cleanupArrays": [
+    "cleanups"
+   ],
+   "delegatedArrays": [],
+   "arrayDrains": {
+    "cleanups": "afterAll"
+   },
+   "sharedFixtures": {},
+   "noDrainFound": false
+  },
+  {
+   "file": "apps/three-surface-poc/src/verbatim-route.test.ts",
+   "isTest": true,
+   "createsRepositories": true,
+   "calls": {
+    "fixtureRepoWithGit": 0,
+    "buildFixtureModel": 3,
+    "variantModel": 0,
+    "renderVariant": 0
+   },
+   "cleanupArrays": [
+    "cleanups"
+   ],
+   "delegatedArrays": [],
+   "arrayDrains": {
+    "cleanups": "afterEach"
+   },
+   "sharedFixtures": {},
+   "noDrainFound": false
+  },
+  {
+   "file": "apps/three-surface-poc/src/walkthrough-preflight.test.ts",
+   "isTest": true,
+   "createsRepositories": true,
+   "calls": {
+    "fixtureRepoWithGit": 0,
+    "buildFixtureModel": 1,
+    "variantModel": 0,
+    "renderVariant": 0
+   },
+   "cleanupArrays": [
+    "cleanups"
+   ],
+   "delegatedArrays": [],
+   "arrayDrains": {
+    "cleanups": "afterAll"
+   },
+   "sharedFixtures": {},
+   "noDrainFound": false
+  }
+ ]
+}

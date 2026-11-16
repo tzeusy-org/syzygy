@@ -1,0 +1,952 @@
+{
+ "tool": "assemble_census.py --selftest",
+ "sha256": "ffbc0f974967a1899e4d1b4f18b580b04e088e1cf01d6489f42a9432c2d501f8",
+ "expected": {
+  "classify": {
+   "dossier-records-AAAAAA": [
+    "mkdtemp",
+    "dossier-records-",
+    "R9-test-file",
+    "test-kit temp root"
+   ],
+   "syzygy-poc-surface-fixture-p123-n4567-BBBBBB": [
+    "mkdtemp",
+    "syzygy-poc-surface-fixture-p<pid>-n<ns>-",
+    "R1-fixture-sweep-landed",
+    "owner-pid name and sweep"
+   ],
+   "syzygy-poc-surface-fixture-EEEEEE": [
+    "mkdtemp",
+    "syzygy-poc-surface-fixture-",
+    "R6-non-test-module",
+    "test-kit temp root"
+   ],
+   "syzygy-dossier-src-CCCCCC": [
+    "mkdtemp",
+    "syzygy-dossier-src-",
+    "R6-non-test-module",
+    "test-kit temp root"
+   ],
+   "syzygy-poc-browser-DDDDDD": [
+    "mkdtemp",
+    "syzygy-poc-browser-",
+    "R3-browser-profile",
+    "owner-pid name and sweep"
+   ],
+   "dossier-records-AAAAAA-outside-RAW.md": [
+    "derived",
+    "dossier-records-<random>-outside-RAW.md",
+    "R9-test-file",
+    "test-kit temp root"
+   ],
+   "fixed-dir": [
+    "fixed",
+    "fixed-dir",
+    "R9-test-file",
+    "test-kit temp root"
+   ],
+   "thirdparty-FFFFFF": [
+    "mkdtemp",
+    "thirdparty-",
+    "R8-creator-unknown",
+    "stated residual"
+   ],
+   ".com.google.Chrome.b7S2hn": [
+    "chrome-singleton",
+    "chrome-singleton-directory",
+    "R2-chrome-singleton",
+    "stated residual"
+   ],
+   "com.google.Chrome.CCtKIQ": [
+    "chrome-singleton",
+    "chrome-singleton-directory",
+    "R2-chrome-singleton",
+    "stated residual"
+   ],
+   "org.chromium.Chromium.x1y2z3": [
+    "chrome-singleton",
+    "chrome-singleton-directory",
+    "R2-chrome-singleton",
+    "stated residual"
+   ],
+   ".com.google.Chrome.b7S2hn.bak": [
+    "unattributed",
+    ".com.google.Chrome.b7S2hn.bak",
+    "R8-creator-unknown",
+    "stated residual"
+   ],
+   "syzygy-poc-restart-1000-39331.lock": [
+    "unattributed",
+    "syzygy-poc-restart-<n>-<n>.lock",
+    "R7-stale-lock-by-design",
+    "stated residual"
+   ],
+   "5dlMwwEPs6llimFC5iPYz": [
+    "vitest-project-directory",
+    "nanoid-21",
+    "R4-vitest-project-directory",
+    "stated residual"
+   ],
+   "5dlMwwEPs6llimFC5iPY": [
+    "unattributed",
+    "5dlMwwEPs6llimFC5iPY",
+    "R8-creator-unknown",
+    "stated residual"
+   ],
+   "polaris-marker-KE28cb": [
+    "unattributed",
+    "polaris-marker-KE28cb",
+    "R8-creator-unknown",
+    "stated residual"
+   ],
+   "node-compile-cache": [
+    "npm-compile-cache",
+    "node-compile-cache",
+    "R5-npm-compile-cache",
+    "stated residual"
+   ],
+   "mystery": [
+    "unattributed",
+    "mystery",
+    "R8-creator-unknown",
+    "stated residual"
+   ],
+   "kit-HHHHHH": [
+    "mkdtemp",
+    "kit-",
+    "R9-test-file",
+    "test-kit temp root"
+   ],
+   "rows-GGGGGG": [
+    "mkdtemp",
+    "rows-",
+    "R9-test-file",
+    "test-kit temp root"
+   ]
+  },
+  "aggregate": {
+   "gap": {
+    "gapSeconds": 0.6,
+    "sightingInstants": 9,
+    "gapsBetweenSightings": 8,
+    "gapsUnderTwoIntervals": 2,
+    "gapsOfTwoIntervalsOrMore": 6,
+    "smallestGapOfTwoIntervalsOrMore": 1.0
+   },
+   "byRule": {
+    "R1-fixture-sweep-landed": 1,
+    "R2-chrome-singleton": 1,
+    "R3-browser-profile": 1,
+    "R6-non-test-module": 2,
+    "R9-test-file": 2
+   },
+   "creatingFilesOfTwoRows": {
+    "packages/q/src/first.test.ts": 1
+   },
+   "partition": "The two runs together put 7 classes of entries directly in the temp directory (6 by mkdtemp): 1 by test-model-fixture.ts (PR 509 sweeps them); 1 by Chrome itself (its singleton directory); 1 by cdp-browser.ts (the browser profile); 0 by vitest itself (its project directory); 0 by npm itself (its compile cache); 2 by other non-test modules; 0 as a lock file (attributed to restart.ts by its name); 0 with no known creator; and 2 by test files.",
+   "exposure": {
+    "chrome-singleton-directory": {
+     "run": "c",
+     "namesSampled": 1,
+     "namesNeverSampled": 0,
+     "expectedNamesPresentAtARandomMoment": {
+      "lowerBound": 0.6,
+      "upperBound": 0.72
+     }
+    },
+    "nt-": {
+     "run": "c",
+     "namesSampled": 1,
+     "namesNeverSampled": 0,
+     "expectedNamesPresentAtARandomMoment": {
+      "lowerBound": 0.06,
+      "upperBound": 0.18
+     }
+    },
+    "op-": {
+     "run": "c",
+     "namesSampled": 0,
+     "namesNeverSampled": 1,
+     "expectedNamesPresentAtARandomMoment": {
+      "lowerBound": 0.0,
+      "upperBound": 0.06
+     }
+    },
+    "syzygy-poc-browser-": {
+     "run": "c",
+     "namesSampled": 1,
+     "namesNeverSampled": 0,
+     "expectedNamesPresentAtARandomMoment": {
+      "lowerBound": 0.9,
+      "upperBound": 1.02
+     }
+    },
+    "syzygy-poc-surface-fixture-p<pid>-n<ns>-": {
+     "run": "c",
+     "namesSampled": 1,
+     "namesNeverSampled": 0,
+     "expectedNamesPresentAtARandomMoment": {
+      "lowerBound": 0.2,
+      "upperBound": 0.32
+     }
+    },
+    "tk-": {
+     "run": "c",
+     "namesSampled": 0,
+     "namesNeverSampled": 1,
+     "expectedNamesPresentAtARandomMoment": {
+      "lowerBound": 0.0,
+      "upperBound": 0.06
+     }
+    },
+    "two-": {
+     "run": "c",
+     "namesSampled": 1,
+     "namesNeverSampled": 0,
+     "expectedNamesPresentAtARandomMoment": {
+      "lowerBound": 0.0,
+      "upperBound": 0.12
+     }
+    }
+   },
+   "longGaps": {
+    "clockOffsetSeconds": 0.2,
+    "clockOffsetWindowSeconds": 0.4,
+    "tracedNames": 7,
+    "tracedNamesTheSamplerSaw": 3,
+    "tracedNamesCreatedInNoGap": 0,
+    "gapsOfTwoIntervalsOrMore": {
+     "gaps": 2,
+     "seconds": 4.0,
+     "namesCreatedInside": 3,
+     "ofThemEverSampled": 1,
+     "perGap": [
+      {
+       "from": 1.0,
+       "to": 3.0,
+       "seconds": 2.0,
+       "namesCreatedInside": 2,
+       "ofThemEverSampled": 1
+      },
+      {
+       "from": 4.0,
+       "to": 6.0,
+       "seconds": 2.0,
+       "namesCreatedInside": 1,
+       "ofThemEverSampled": 0
+      }
+     ]
+    },
+    "shorterGaps": {
+     "gaps": 4,
+     "seconds": 2.0,
+     "namesCreatedInside": 4,
+     "ofThemEverSampled": 2
+    },
+    "publishedClasses": 5,
+    "publishedClassesThatDependOnThem": {
+     "chrome-singleton-directory": {
+      "names": 1,
+      "neverSampledCreatedInALongGap": 0,
+      "sampledWithALongGapBesideItsSightings": 1
+     },
+     "p-": {
+      "names": 2,
+      "neverSampledCreatedInALongGap": 0,
+      "sampledWithALongGapBesideItsSightings": 2
+     },
+     "r-": {
+      "names": 3,
+      "neverSampledCreatedInALongGap": 2,
+      "sampledWithALongGapBesideItsSightings": 0
+     }
+    },
+    "publishedClassesThatDoNot": [
+     "q-",
+     "s-"
+    ]
+   },
+   "mixedClassStops": "no disposition rule for mkdtemp 'mix-' (files ['packages/q/src/a.test.ts', 'packages/q/src/b.ts'])",
+   "partitionStopsOnARuleNobodyListed": "the parts of the partition sum to 0, the table has 1 classes (a rule that RULES does not list: ['R0-unlisted'])"
+  }
+ },
+ "unmutated": {
+  "got": {
+   "classify": {
+    "dossier-records-AAAAAA": [
+     "mkdtemp",
+     "dossier-records-",
+     "R9-test-file",
+     "test-kit temp root"
+    ],
+    "syzygy-poc-surface-fixture-p123-n4567-BBBBBB": [
+     "mkdtemp",
+     "syzygy-poc-surface-fixture-p<pid>-n<ns>-",
+     "R1-fixture-sweep-landed",
+     "owner-pid name and sweep"
+    ],
+    "syzygy-poc-surface-fixture-EEEEEE": [
+     "mkdtemp",
+     "syzygy-poc-surface-fixture-",
+     "R6-non-test-module",
+     "test-kit temp root"
+    ],
+    "syzygy-dossier-src-CCCCCC": [
+     "mkdtemp",
+     "syzygy-dossier-src-",
+     "R6-non-test-module",
+     "test-kit temp root"
+    ],
+    "syzygy-poc-browser-DDDDDD": [
+     "mkdtemp",
+     "syzygy-poc-browser-",
+     "R3-browser-profile",
+     "owner-pid name and sweep"
+    ],
+    "dossier-records-AAAAAA-outside-RAW.md": [
+     "derived",
+     "dossier-records-<random>-outside-RAW.md",
+     "R9-test-file",
+     "test-kit temp root"
+    ],
+    "fixed-dir": [
+     "fixed",
+     "fixed-dir",
+     "R9-test-file",
+     "test-kit temp root"
+    ],
+    "thirdparty-FFFFFF": [
+     "mkdtemp",
+     "thirdparty-",
+     "R8-creator-unknown",
+     "stated residual"
+    ],
+    ".com.google.Chrome.b7S2hn": [
+     "chrome-singleton",
+     "chrome-singleton-directory",
+     "R2-chrome-singleton",
+     "stated residual"
+    ],
+    "com.google.Chrome.CCtKIQ": [
+     "chrome-singleton",
+     "chrome-singleton-directory",
+     "R2-chrome-singleton",
+     "stated residual"
+    ],
+    "org.chromium.Chromium.x1y2z3": [
+     "chrome-singleton",
+     "chrome-singleton-directory",
+     "R2-chrome-singleton",
+     "stated residual"
+    ],
+    ".com.google.Chrome.b7S2hn.bak": [
+     "unattributed",
+     ".com.google.Chrome.b7S2hn.bak",
+     "R8-creator-unknown",
+     "stated residual"
+    ],
+    "syzygy-poc-restart-1000-39331.lock": [
+     "unattributed",
+     "syzygy-poc-restart-<n>-<n>.lock",
+     "R7-stale-lock-by-design",
+     "stated residual"
+    ],
+    "5dlMwwEPs6llimFC5iPYz": [
+     "vitest-project-directory",
+     "nanoid-21",
+     "R4-vitest-project-directory",
+     "stated residual"
+    ],
+    "5dlMwwEPs6llimFC5iPY": [
+     "unattributed",
+     "5dlMwwEPs6llimFC5iPY",
+     "R8-creator-unknown",
+     "stated residual"
+    ],
+    "polaris-marker-KE28cb": [
+     "unattributed",
+     "polaris-marker-KE28cb",
+     "R8-creator-unknown",
+     "stated residual"
+    ],
+    "node-compile-cache": [
+     "npm-compile-cache",
+     "node-compile-cache",
+     "R5-npm-compile-cache",
+     "stated residual"
+    ],
+    "mystery": [
+     "unattributed",
+     "mystery",
+     "R8-creator-unknown",
+     "stated residual"
+    ],
+    "kit-HHHHHH": [
+     "mkdtemp",
+     "kit-",
+     "R9-test-file",
+     "test-kit temp root"
+    ],
+    "rows-GGGGGG": [
+     "mkdtemp",
+     "rows-",
+     "R9-test-file",
+     "test-kit temp root"
+    ]
+   },
+   "aggregate": {
+    "gap": {
+     "gapSeconds": 0.6,
+     "sightingInstants": 9,
+     "gapsBetweenSightings": 8,
+     "gapsUnderTwoIntervals": 2,
+     "gapsOfTwoIntervalsOrMore": 6,
+     "smallestGapOfTwoIntervalsOrMore": 1.0
+    },
+    "byRule": {
+     "R1-fixture-sweep-landed": 1,
+     "R2-chrome-singleton": 1,
+     "R3-browser-profile": 1,
+     "R6-non-test-module": 2,
+     "R9-test-file": 2
+    },
+    "creatingFilesOfTwoRows": {
+     "packages/q/src/first.test.ts": 1
+    },
+    "partition": "The two runs together put 7 classes of entries directly in the temp directory (6 by mkdtemp): 1 by test-model-fixture.ts (PR 509 sweeps them); 1 by Chrome itself (its singleton directory); 1 by cdp-browser.ts (the browser profile); 0 by vitest itself (its project directory); 0 by npm itself (its compile cache); 2 by other non-test modules; 0 as a lock file (attributed to restart.ts by its name); 0 with no known creator; and 2 by test files.",
+    "exposure": {
+     "chrome-singleton-directory": {
+      "run": "c",
+      "namesSampled": 1,
+      "namesNeverSampled": 0,
+      "expectedNamesPresentAtARandomMoment": {
+       "lowerBound": 0.6,
+       "upperBound": 0.72
+      }
+     },
+     "nt-": {
+      "run": "c",
+      "namesSampled": 1,
+      "namesNeverSampled": 0,
+      "expectedNamesPresentAtARandomMoment": {
+       "lowerBound": 0.06,
+       "upperBound": 0.18
+      }
+     },
+     "op-": {
+      "run": "c",
+      "namesSampled": 0,
+      "namesNeverSampled": 1,
+      "expectedNamesPresentAtARandomMoment": {
+       "lowerBound": 0.0,
+       "upperBound": 0.06
+      }
+     },
+     "syzygy-poc-browser-": {
+      "run": "c",
+      "namesSampled": 1,
+      "namesNeverSampled": 0,
+      "expectedNamesPresentAtARandomMoment": {
+       "lowerBound": 0.9,
+       "upperBound": 1.02
+      }
+     },
+     "syzygy-poc-surface-fixture-p<pid>-n<ns>-": {
+      "run": "c",
+      "namesSampled": 1,
+      "namesNeverSampled": 0,
+      "expectedNamesPresentAtARandomMoment": {
+       "lowerBound": 0.2,
+       "upperBound": 0.32
+      }
+     },
+     "tk-": {
+      "run": "c",
+      "namesSampled": 0,
+      "namesNeverSampled": 1,
+      "expectedNamesPresentAtARandomMoment": {
+       "lowerBound": 0.0,
+       "upperBound": 0.06
+      }
+     },
+     "two-": {
+      "run": "c",
+      "namesSampled": 1,
+      "namesNeverSampled": 0,
+      "expectedNamesPresentAtARandomMoment": {
+       "lowerBound": 0.0,
+       "upperBound": 0.12
+      }
+     }
+    },
+    "longGaps": {
+     "clockOffsetSeconds": 0.2,
+     "clockOffsetWindowSeconds": 0.4,
+     "tracedNames": 7,
+     "tracedNamesTheSamplerSaw": 3,
+     "tracedNamesCreatedInNoGap": 0,
+     "gapsOfTwoIntervalsOrMore": {
+      "gaps": 2,
+      "seconds": 4.0,
+      "namesCreatedInside": 3,
+      "ofThemEverSampled": 1,
+      "perGap": [
+       {
+        "from": 1.0,
+        "to": 3.0,
+        "seconds": 2.0,
+        "namesCreatedInside": 2,
+        "ofThemEverSampled": 1
+       },
+       {
+        "from": 4.0,
+        "to": 6.0,
+        "seconds": 2.0,
+        "namesCreatedInside": 1,
+        "ofThemEverSampled": 0
+       }
+      ]
+     },
+     "shorterGaps": {
+      "gaps": 4,
+      "seconds": 2.0,
+      "namesCreatedInside": 4,
+      "ofThemEverSampled": 2
+     },
+     "publishedClasses": 5,
+     "publishedClassesThatDependOnThem": {
+      "chrome-singleton-directory": {
+       "names": 1,
+       "neverSampledCreatedInALongGap": 0,
+       "sampledWithALongGapBesideItsSightings": 1
+      },
+      "p-": {
+       "names": 2,
+       "neverSampledCreatedInALongGap": 0,
+       "sampledWithALongGapBesideItsSightings": 2
+      },
+      "r-": {
+       "names": 3,
+       "neverSampledCreatedInALongGap": 2,
+       "sampledWithALongGapBesideItsSightings": 0
+      }
+     },
+     "publishedClassesThatDoNot": [
+      "q-",
+      "s-"
+     ]
+    },
+    "mixedClassStops": "no disposition rule for mkdtemp 'mix-' (files ['packages/q/src/a.test.ts', 'packages/q/src/b.ts'])",
+    "partitionStopsOnARuleNobodyListed": "the parts of the partition sum to 0, the table has 1 classes (a rule that RULES does not list: ['R0-unlisted'])"
+   }
+  },
+  "meets": true
+ },
+ "mutants": {
+  "owner-pid-digits-not-normalised": {
+   "old": "OWNER_PID = re.compile(r'-p\\d+-n\\d+-')",
+   "new": "OWNER_PID = re.compile(r'-q\\d+-n\\d+-')",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "aggregate: byRule",
+    "aggregate: exposure",
+    "aggregate: partition",
+    "classify: syzygy-poc-surface-fixture-p123-n4567-BBBBBB"
+   ]
+  },
+  "derived-names-not-recognised": {
+   "old": "if name.startswith(made) and name != made:",
+   "new": "if False:",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "classify: dossier-records-AAAAAA-outside-RAW.md"
+   ]
+  },
+  "chrome-dotted-form-only": {
+   "old": "CHROME = re.compile(r'^\\.?(?:",
+   "new": "CHROME = re.compile(r'^\\.(?:",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "classify: com.google.Chrome.CCtKIQ",
+    "classify: org.chromium.Chromium.x1y2z3"
+   ]
+  },
+  "chromium-form-dropped": {
+   "old": "(?:com\\.google\\.Chrome|org\\.chromium\\.Chromium)\\.[A-Za-z0-9]+$')\nNANOID",
+   "new": "(?:com\\.google\\.Chrome)\\.[A-Za-z0-9]+$')\nNANOID",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "classify: org.chromium.Chromium.x1y2z3"
+   ]
+  },
+  "chrome-suffix-unanchored": {
+   "old": "\\.[A-Za-z0-9]+$')\nNANOID",
+   "new": "\\.[A-Za-z0-9]*')\nNANOID",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "classify: .com.google.Chrome.b7S2hn.bak"
+   ]
+  },
+  "nanoid-length-one-more": {
+   "old": "NANOID = re.compile(r'^[A-Za-z0-9_-]{21}$')",
+   "new": "NANOID = re.compile(r'^[A-Za-z0-9_-]{22}$')",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "classify: 5dlMwwEPs6llimFC5iPYz"
+   ]
+  },
+  "nanoid-length-any-near": {
+   "old": "NANOID = re.compile(r'^[A-Za-z0-9_-]{21}$')",
+   "new": "NANOID = re.compile(r'^[A-Za-z0-9_-]{20,22}$')",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "classify: 5dlMwwEPs6llimFC5iPY"
+   ]
+  },
+  "vitest-shape-takes-a-word-stem-name": {
+   "old": "if NANOID.match(name) and not WORD_STEM.match(name):",
+   "new": "if NANOID.match(name):",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "classify: polaris-marker-KE28cb"
+   ]
+  },
+  "word-stem-suffix-one-shorter": {
+   "old": "-[A-Za-z0-9]{6}$')  # a 21-character mkdtemp name",
+   "new": "-[A-Za-z0-9]{5}$')  # a 21-character mkdtemp name",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "classify: polaris-marker-KE28cb"
+   ]
+  },
+  "fixture-rule-matches-every-surface-prefix": {
+   "old": "and '<pid>' in label,",
+   "new": ",",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "classify: syzygy-poc-surface-fixture-EEEEEE"
+   ]
+  },
+  "operator-rule-matches-test-files": {
+   "old": "not any(TEST_FILE.search(f) for f in files)\n     and all(",
+   "new": "all(",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "aggregate: byRule",
+    "aggregate: mixedClassStops",
+    "aggregate: partition",
+    "classify: dossier-records-AAAAAA",
+    "classify: dossier-records-AAAAAA-outside-RAW.md",
+    "classify: fixed-dir",
+    "classify: kit-HHHHHH",
+    "classify: rows-GGGGGG"
+   ]
+  },
+  "operator-code-given-the-wrong-disposition": {
+   "old": "('R6-non-test-module', TEST_KIT_ROOT,",
+   "new": "('R6-non-test-module', RESIDUAL,",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "classify: syzygy-dossier-src-CCCCCC",
+    "classify: syzygy-poc-surface-fixture-EEEEEE"
+   ]
+  },
+  "test-file-rule-accepts-a-mixed-class": {
+   "old": "and files and all(TEST_FILE.search(f) for f in files),",
+   "new": "and files and any(TEST_FILE.search(f) for f in files),",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "aggregate: mixedClassStops"
+   ]
+  },
+  "testkit-suffix-not-a-test-file": {
+   "old": "|\\.testkit\\.ts$')",
+   "new": "')",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "aggregate: byRule",
+    "aggregate: partition",
+    "classify: kit-HHHHHH"
+   ]
+  },
+  "stale-lock-rule-dropped": {
+   "old": "lambda family, label, files: family == 'unattributed' and label.startswith('syzygy-poc-restart-'),",
+   "new": "lambda family, label, files: False,",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "classify: syzygy-poc-restart-1000-39331.lock"
+   ]
+  },
+  "unknown-creator-rule-dropped": {
+   "old": "lambda family, label, files: family == 'unattributed' or files == {NO_FRAME},",
+   "new": "lambda family, label, files: False,",
+   "killed": true,
+   "exit": 1,
+   "diverges": "the mutant stopped with an error"
+  },
+  "no-frame-not-treated-as-unknown": {
+   "old": "or files == {NO_FRAME},",
+   "new": ",",
+   "killed": true,
+   "exit": 1,
+   "diverges": "the mutant stopped with an error"
+  },
+  "creating-frame-ignores-calledFrom": {
+   "old": "return row['calledFrom'] if 'calledFrom' in row else row['frames']",
+   "new": "return row['frames']",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "classify: syzygy-dossier-src-CCCCCC"
+   ]
+  },
+  "creating-file-of-a-name-from-its-last-row": {
+   "old": "return {innermost_file(rows[:1])} if rows else set()",
+   "new": "return {innermost_file(rows[-1:])} if rows else set()",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "classify: rows-GGGGGG"
+   ]
+  },
+  "creating-file-of-a-class-from-its-last-row": {
+   "old": "item['filesCreating'][innermost_file(rows[:1])] += 1",
+   "new": "item['filesCreating'][innermost_file(rows[-1:])] += 1",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "aggregate: byRule",
+    "aggregate: creatingFilesOfTwoRows",
+    "aggregate: partition"
+   ]
+  },
+  "unattributed-name-given-a-class": {
+   "old": "return ('unattributed', NUMERIC.sub('<n>', name))",
+   "new": "return ('npm-compile-cache', 'node-compile-cache')",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "classify: .com.google.Chrome.b7S2hn.bak",
+    "classify: 5dlMwwEPs6llimFC5iPY",
+    "classify: mystery",
+    "classify: polaris-marker-KE28cb",
+    "classify: syzygy-poc-restart-1000-39331.lock"
+   ]
+  },
+  "numeric-segments-not-normalised": {
+   "old": "NUMERIC = re.compile(r'(?<![A-Za-z0-9])\\d+(?![A-Za-z0-9])')",
+   "new": "NUMERIC = re.compile(r'(?<![A-Za-z0-9])\\d+(?![A-Za-z0-9])x')",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "classify: syzygy-poc-restart-1000-39331.lock"
+   ]
+  },
+  "digits-inside-words-normalised": {
+   "old": "NUMERIC = re.compile(r'(?<![A-Za-z0-9])\\d+(?![A-Za-z0-9])')",
+   "new": "NUMERIC = re.compile(r'\\d+')",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "classify: .com.google.Chrome.b7S2hn.bak",
+    "classify: 5dlMwwEPs6llimFC5iPY",
+    "classify: polaris-marker-KE28cb"
+   ]
+  },
+  "sampled-name-adds-one-gap-not-two": {
+   "old": "slot['upper'] += seen['last'] - seen['first'] + 2 * gap",
+   "new": "slot['upper'] += seen['last'] - seen['first'] + gap",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "aggregate: exposure"
+   ]
+  },
+  "sampled-name-adds-no-gap": {
+   "old": "slot['upper'] += seen['last'] - seen['first'] + 2 * gap",
+   "new": "slot['upper'] += seen['last'] - seen['first']",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "aggregate: exposure"
+   ]
+  },
+  "never-sampled-name-adds-no-gap": {
+   "old": "slot['neverSampled'] += 1\n            slot['upper'] += gap",
+   "new": "slot['neverSampled'] += 1\n            slot['upper'] += 0",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "aggregate: exposure"
+   ]
+  },
+  "never-sampled-name-adds-two-gaps": {
+   "old": "slot['neverSampled'] += 1\n            slot['upper'] += gap",
+   "new": "slot['neverSampled'] += 1\n            slot['upper'] += 2 * gap",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "aggregate: exposure"
+   ]
+  },
+  "lower-bound-counts-a-gap": {
+   "old": "slot['lower'] += seen['last'] - seen['first']",
+   "new": "slot['lower'] += seen['last'] - seen['first'] + gap",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "aggregate: exposure"
+   ]
+  },
+  "gap-is-the-interval": {
+   "old": "return {'gapSeconds': max(single, default=interval),",
+   "new": "return {'gapSeconds': interval,",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "aggregate: exposure",
+    "aggregate: gap"
+   ]
+  },
+  "gap-of-two-intervals-counts-as-one-gap": {
+   "old": "single = [gap for gap in gaps if gap < 2 * interval]",
+   "new": "single = [gap for gap in gaps if gap <= 2 * interval]",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "aggregate: exposure",
+    "aggregate: gap"
+   ]
+  },
+  "gap-of-a-quiet-stretch-counts-as-one-gap": {
+   "old": "single = [gap for gap in gaps if gap < 2 * interval]",
+   "new": "single = gaps",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "aggregate: exposure",
+    "aggregate: gap"
+   ]
+  },
+  "bound-divided-by-the-wrong-duration": {
+   "old": "round(slot['upper'] / duration, 3)",
+   "new": "round(slot['upper'] / (duration + 1), 3)",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "aggregate: exposure"
+   ]
+  },
+  "partition-leaves-a-rule-out": {
+   "old": "parts = [(rule_id, counts.get(rule_id, 0)) for rule_id, _, _, _ in RULES]",
+   "new": "parts = [(rule_id, counts.get(rule_id, 0)) for rule_id, _, _, _ in RULES if rule_id != 'R1-fixture-sweep-landed']",
+   "killed": true,
+   "exit": 1,
+   "diverges": "the mutant stopped with an error"
+  },
+  "partition-sum-not-checked": {
+   "old": "if sum(n for _, n in parts) != len(table):",
+   "new": "if False:",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "aggregate: partitionStopsOnARuleNobodyListed"
+   ]
+  },
+  "partition-counts-the-wrong-rule": {
+   "old": "parts = [(rule_id, counts.get(rule_id, 0)) for rule_id, _, _, _ in RULES]",
+   "new": "parts = [(rule_id, counts.get('R6-non-test-module' if rule_id == 'R1-fixture-sweep-landed' else rule_id, 0)) for rule_id, _, _, _ in RULES]",
+   "killed": true,
+   "exit": 1,
+   "diverges": "the mutant stopped with an error"
+  },
+  "partition-names-no-creating-file": {
+   "old": "PARTITION_PHRASE[rule_id].format(files=', '.join(creators) or 'the named file')",
+   "new": "PARTITION_PHRASE[rule_id].format(files='the named file')",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "aggregate: partition"
+   ]
+  },
+  "partition-mkdtemp-count-from-the-wrong-family": {
+   "old": "sum(1 for r in table if r['family'] == 'mkdtemp')",
+   "new": "sum(1 for r in table if r['family'] == 'derived')",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "aggregate: partition"
+   ]
+  },
+  "long-gap-is-one-interval": {
+   "old": "is_long = lambda earlier, later: round(later - earlier, 2) >= 2 * interval",
+   "new": "is_long = lambda earlier, later: round(later - earlier, 2) >= interval",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "aggregate: longGaps"
+   ]
+  },
+  "trace-clock-not-aligned": {
+   "old": "offset = (lower + upper) / 2",
+   "new": "offset = 0.0",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "aggregate: longGaps"
+   ]
+  },
+  "sampled-traced-names-not-counted": {
+   "old": "total['ofThemEverSampled'] += sampled",
+   "new": "total['ofThemEverSampled'] += 0",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "aggregate: longGaps"
+   ]
+  },
+  "never-sampled-name-in-a-short-gap-counts-as-dependent": {
+   "old": "elif in_a_long_gap(created[name]):",
+   "new": "elif name in created:",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "aggregate: longGaps"
+   ]
+  },
+  "long-gap-after-the-last-sighting-ignored": {
+   "old": "return is_long(before, first) or (after < len(known) and is_long(last, known[after]))",
+   "new": "return is_long(before, first)",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "aggregate: longGaps"
+   ]
+  },
+  "long-gap-before-the-first-sighting-ignored": {
+   "old": "return is_long(before, first) or (after < len(known) and is_long(last, known[after]))",
+   "new": "return after < len(known) and is_long(last, known[after])",
+   "killed": true,
+   "exit": 0,
+   "diverges": [
+    "aggregate: longGaps"
+   ]
+  }
+ },
+ "holds": true
+}

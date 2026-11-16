@@ -1,0 +1,166 @@
+{
+ "subject": "every file `npm run build` emits under apps/*/dist and packages/*/dist, by suffix",
+ "bySuffix": {
+  ".d.ts.map": {
+   "base": {
+    "commit": "a1b9bde272f21dd5f110498c39e95f9f827344f4",
+    "files": 521,
+    "tests": 264,
+    "sha256": "0101e752a3056397a16585c56ae2c55cb0518999b2bc3870797a5a981891b827"
+   },
+   "head": {
+    "commit": "8fb78d1bbd9e835bcae4fa56160114beae1b2e2e",
+    "files": 245,
+    "tests": 0,
+    "sha256": "469127beda86441a2bd98ba5557b245c5f2bfa9fd0dc6c7d86b19fdf2a8b988e"
+   },
+   "common": 245,
+   "onlyInBaseTests": 264,
+   "onlyInBaseOther": [
+    "apps/three-surface-poc/dist/test-deep-dive-markers.d.ts.map",
+    "apps/three-surface-poc/dist/test-fixture-sweep.global-setup.d.ts.map",
+    "apps/three-surface-poc/dist/test-http-client.d.ts.map",
+    "packages/cap1-conformance/dist/fixtures/index.d.ts.map",
+    "packages/cap1-system/dist/effect-observer.d.ts.map",
+    "packages/cap1-system/dist/harness.d.ts.map",
+    "packages/polaris-dossier/dist/child-process.testkit.d.ts.map",
+    "packages/polaris-dossier/dist/fs-patch.testkit.d.ts.map",
+    "packages/polaris-generation-core/dist/workspace-reach.testkit.d.ts.map",
+    "packages/support/dist/purity.testkit.d.ts.map",
+    "packages/three-surface-poc-core/dist/test-cleanup.d.ts.map",
+    "packages/three-surface-poc-core/dist/test-frozen.d.ts.map"
+   ],
+   "onlyInHead": [],
+   "byteIdentical": 244,
+   "differ": [
+    "apps/three-surface-poc/dist/git-observation.d.ts.map"
+   ]
+  },
+  ".js.map": {
+   "base": {
+    "commit": "a1b9bde272f21dd5f110498c39e95f9f827344f4",
+    "files": 521,
+    "tests": 264,
+    "sha256": "bc3d1d6fde97de7438c27beafb7e3637badc39eff56c74660a815c1722b878c7"
+   },
+   "head": {
+    "commit": "8fb78d1bbd9e835bcae4fa56160114beae1b2e2e",
+    "files": 245,
+    "tests": 0,
+    "sha256": "2fe728cbe7a250daae0b7f199a329b673147542907e26c3d38f36a3e954f59db"
+   },
+   "common": 245,
+   "onlyInBaseTests": 264,
+   "onlyInBaseOther": [
+    "apps/three-surface-poc/dist/test-deep-dive-markers.js.map",
+    "apps/three-surface-poc/dist/test-fixture-sweep.global-setup.js.map",
+    "apps/three-surface-poc/dist/test-http-client.js.map",
+    "packages/cap1-conformance/dist/fixtures/index.js.map",
+    "packages/cap1-system/dist/effect-observer.js.map",
+    "packages/cap1-system/dist/harness.js.map",
+    "packages/polaris-dossier/dist/child-process.testkit.js.map",
+    "packages/polaris-dossier/dist/fs-patch.testkit.js.map",
+    "packages/polaris-generation-core/dist/workspace-reach.testkit.js.map",
+    "packages/support/dist/purity.testkit.js.map",
+    "packages/three-surface-poc-core/dist/test-cleanup.js.map",
+    "packages/three-surface-poc-core/dist/test-frozen.js.map"
+   ],
+   "onlyInHead": [],
+   "byteIdentical": 243,
+   "differ": [
+    "apps/three-surface-poc/dist/git-observation.js.map",
+    "packages/polaris-dossier/dist/cli.js.map"
+   ]
+  },
+  ".d.ts": {
+   "base": {
+    "commit": "a1b9bde272f21dd5f110498c39e95f9f827344f4",
+    "files": 521,
+    "tests": 264,
+    "sha256": "77d47f13cd70d00fa9b18fceb20110279de6165e06bbedb2622c52014d5cb320"
+   },
+   "head": {
+    "commit": "8fb78d1bbd9e835bcae4fa56160114beae1b2e2e",
+    "files": 245,
+    "tests": 0,
+    "sha256": "127b840bcb382f3fe5582264ca9a561b44c48a0e2bf2e1fbd18aa57a3ae1b9ce"
+   },
+   "common": 245,
+   "onlyInBaseTests": 264,
+   "onlyInBaseOther": [
+    "apps/three-surface-poc/dist/test-deep-dive-markers.d.ts",
+    "apps/three-surface-poc/dist/test-fixture-sweep.global-setup.d.ts",
+    "apps/three-surface-poc/dist/test-http-client.d.ts",
+    "packages/cap1-conformance/dist/fixtures/index.d.ts",
+    "packages/cap1-system/dist/effect-observer.d.ts",
+    "packages/cap1-system/dist/harness.d.ts",
+    "packages/polaris-dossier/dist/child-process.testkit.d.ts",
+    "packages/polaris-dossier/dist/fs-patch.testkit.d.ts",
+    "packages/polaris-generation-core/dist/workspace-reach.testkit.d.ts",
+    "packages/support/dist/purity.testkit.d.ts",
+    "packages/three-surface-poc-core/dist/test-cleanup.d.ts",
+    "packages/three-surface-poc-core/dist/test-frozen.d.ts"
+   ],
+   "onlyInHead": [],
+   "byteIdentical": 245,
+   "differ": []
+  },
+  ".js": {
+   "base": {
+    "commit": "a1b9bde272f21dd5f110498c39e95f9f827344f4",
+    "files": 521,
+    "tests": 264,
+    "sha256": "106f82957459ce62ebb69bd6a33bdf085cd0e1d8d776660c7b5b941f4a062e66"
+   },
+   "head": {
+    "commit": "8fb78d1bbd9e835bcae4fa56160114beae1b2e2e",
+    "files": 245,
+    "tests": 0,
+    "sha256": "bd7595165538dbdd59bccdf205b39a10eb2023abb3a30f896834516228c974d3"
+   },
+   "common": 245,
+   "onlyInBaseTests": 264,
+   "onlyInBaseOther": [
+    "apps/three-surface-poc/dist/test-deep-dive-markers.js",
+    "apps/three-surface-poc/dist/test-fixture-sweep.global-setup.js",
+    "apps/three-surface-poc/dist/test-http-client.js",
+    "packages/cap1-conformance/dist/fixtures/index.js",
+    "packages/cap1-system/dist/effect-observer.js",
+    "packages/cap1-system/dist/harness.js",
+    "packages/polaris-dossier/dist/child-process.testkit.js",
+    "packages/polaris-dossier/dist/fs-patch.testkit.js",
+    "packages/polaris-generation-core/dist/workspace-reach.testkit.js",
+    "packages/support/dist/purity.testkit.js",
+    "packages/three-surface-poc-core/dist/test-cleanup.js",
+    "packages/three-surface-poc-core/dist/test-frozen.js"
+   ],
+   "onlyInHead": [],
+   "byteIdentical": 244,
+   "differ": [
+    "apps/three-surface-poc/dist/git-observation.js"
+   ]
+  },
+  "other": {
+   "base": {
+    "commit": "a1b9bde272f21dd5f110498c39e95f9f827344f4",
+    "files": 12,
+    "tests": 0,
+    "sha256": "87b2acec5b6d284a2512a661f2567830beae7a97effa0555b2ad7452f303cf2f"
+   },
+   "head": {
+    "commit": "8fb78d1bbd9e835bcae4fa56160114beae1b2e2e",
+    "files": 10,
+    "tests": 0,
+    "sha256": "3147a73551981b92d5017cd8a2e2c7f8c8084fadf5ab02d545484bc654c0bc72"
+   },
+   "common": 10,
+   "onlyInBaseTests": 0,
+   "onlyInBaseOther": [
+    "packages/cap1-conformance/dist/.tsbuildinfo",
+    "packages/cap1-system/dist/.tsbuildinfo"
+   ],
+   "onlyInHead": [],
+   "compared": false
+  }
+ }
+}

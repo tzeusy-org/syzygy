@@ -1,0 +1,544 @@
+{
+ "control": {
+  "failing": 0,
+  "timeouts": 0,
+  "messages": {},
+  "rows": []
+ },
+ "MU1": {
+  "failing": 18,
+  "timeouts": 0,
+  "messages": {
+   "RangeError: Maximum call stack size exceeded": 18
+  },
+  "rows": [
+   {
+    "test": "a 200,000-line closed fence under the read limit (GP-B2 Q1) LF: a 200,000-line closed fence holding a script element reads as text, under th",
+    "message": "RangeError: Maximum call stack size exceeded"
+   },
+   {
+    "test": "a 200,000-line closed fence under the read limit (GP-B2 Q1) CRLF: a 200,000-line closed fence holding a script element reads as text, under ",
+    "message": "RangeError: Maximum call stack size exceeded"
+   },
+   {
+    "test": "a 200,000-line closed fence under the read limit (GP-B2 Q1) CR: a 200,000-line closed fence holding a script element reads as text, under th",
+    "message": "RangeError: Maximum call stack size exceeded"
+   },
+   {
+    "test": "a 200,000-line closed fence under the read limit (GP-B2 Q1) LF: a script element after a 200,000-line closed fence is found, with a body-fre",
+    "message": "RangeError: Maximum call stack size exceeded"
+   },
+   {
+    "test": "a 200,000-line closed fence under the read limit (GP-B2 Q1) CRLF: a script element after a 200,000-line closed fence is found, with a body-f",
+    "message": "RangeError: Maximum call stack size exceeded"
+   },
+   {
+    "test": "a 200,000-line closed fence under the read limit (GP-B2 Q1) CR: a script element after a 200,000-line closed fence is found, with a body-fre",
+    "message": "RangeError: Maximum call stack size exceeded"
+   },
+   {
+    "test": "a 200,000-line closed fence under the read limit (GP-B2 Q1) LF: scanActiveContent over a 200,000-line closed fence finds nothing inside it",
+    "message": "RangeError: Maximum call stack size exceeded"
+   },
+   {
+    "test": "a 200,000-line closed fence under the read limit (GP-B2 Q1) CRLF: scanActiveContent over a 200,000-line closed fence finds nothing inside it",
+    "message": "RangeError: Maximum call stack size exceeded"
+   },
+   {
+    "test": "a 200,000-line closed fence under the read limit (GP-B2 Q1) CR: scanActiveContent over a 200,000-line closed fence finds nothing inside it",
+    "message": "RangeError: Maximum call stack size exceeded"
+   },
+   {
+    "test": "a very long closed fence LF: 200,000 lines are blanked, every line end and the text after the fence kept",
+    "message": "RangeError: Maximum call stack size exceeded"
+   },
+   {
+    "test": "a very long closed fence CRLF: 200,000 lines are blanked, every line end and the text after the fence kept",
+    "message": "RangeError: Maximum call stack size exceeded"
+   },
+   {
+    "test": "a very long closed fence CR: 200,000 lines are blanked, every line end and the text after the fence kept",
+    "message": "RangeError: Maximum call stack size exceeded"
+   },
+   {
+    "test": "a very long closed fence LF: a script element inside the fence is blanked, and the line after the fence keeps its own",
+    "message": "RangeError: Maximum call stack size exceeded"
+   },
+   {
+    "test": "a very long closed fence CRLF: a script element inside the fence is blanked, and the line after the fence keeps its own",
+    "message": "RangeError: Maximum call stack size exceeded"
+   },
+   {
+    "test": "a very long closed fence CR: a script element inside the fence is blanked, and the line after the fence keeps its own",
+    "message": "RangeError: Maximum call stack size exceeded"
+   },
+   {
+    "test": "a very long fence or list does not abort the observation LF: a 200,000-line closed fence at the end of vision.md is classified as a 10-line ",
+    "message": "RangeError: Maximum call stack size exceeded"
+   },
+   {
+    "test": "a very long fence or list does not abort the observation CRLF: a 200,000-line closed fence at the end of vision.md is classified as a 10-lin",
+    "message": "RangeError: Maximum call stack size exceeded"
+   },
+   {
+    "test": "a very long fence or list does not abort the observation CR: a 200,000-line closed fence at the end of vision.md is classified as a 10-line ",
+    "message": "RangeError: Maximum call stack size exceeded"
+   }
+  ]
+ },
+ "MU2": {
+  "failing": 2,
+  "timeouts": 0,
+  "messages": {
+   "RangeError: Maximum call stack size exceeded": 2
+  },
+  "rows": [
+   {
+    "test": "a source whose class holds 130,000 items is extracted, every item kept in class order",
+    "message": "RangeError: Maximum call stack size exceeded"
+   },
+   {
+    "test": "a very long fence or list does not abort the observation a 130,000-item success list is extracted whole",
+    "message": "RangeError: Maximum call stack size exceeded"
+   }
+  ]
+ },
+ "MU3": {
+  "failing": 25,
+  "timeouts": 0,
+  "messages": {
+   "AssertionError: expected [ { form: 'script-element', \u2026(2) } ] to deeply equal [ { form: 'script-element', \u2026(2) } ]": 1,
+   "AssertionError: expected 'before\\n       \\n     \\nafter\\n' to be 'before\\n       \\n     \\n   \\nafter' // Object.is equality": 1,
+   "AssertionError: expected '      \\n   \\n' to be '      \\n   \\n      ' // Object.is equality": 1,
+   "AssertionError: expected '       \\n   \\n' to be '       \\n   \\n   ' // Object.is equality": 1,
+   "AssertionError: expected '    \\n   \\n   \\n' to be '    \\n   \\n   \\n       ' // Object.is equality": 1,
+   "AssertionError: expected '   \\n   \\n<b>\\n   \\n   \\n' to be '   \\n   \\n   \\n<b>\\n   \\n   \\n   ' // Object.is equality": 1,
+   "AssertionError: expected '   \\n   \\n   \\n' to be '   \\n   \\n   \\n   ' // Object.is equality": 1,
+   "AssertionError: expected '   \\n   \\r\\nafter\\r\\n' to be '   \\n   \\r\\n   \\r\\nafter' // Object.is equality": 1,
+   "AssertionError: expected { kind: 'masked', \u2026(3) } to deeply equal { kind: 'masked', \u2026(3) }": 4,
+   "AssertionError: expected '   \\n   \\n' to be '   \\n   \\n   ' // Object.is equality": 1,
+   "AssertionError: expected '   \\r\\n   \\r\\n' to be '   \\r\\n   \\r\\n   ' // Object.is equality": 1,
+   "AssertionError: expected '   \\r   \\r' to be '   \\r   \\r   ' // Object.is equality": 1,
+   "AssertionError: expected '   \\n   \\nafter\\n\\n' to be '   \\n   \\n   \\nafter\\n' // Object.is equality": 1,
+   "AssertionError: expected '   \\r\\n   \\r\\nafter\\r\\n\\r\\n' to be '   \\r\\n   \\r\\n   \\r\\nafter\\r\\n' // Object.is equality": 1,
+   "AssertionError: expected '   \\r   \\rafter\\r\\r' to be '   \\r   \\r   \\rafter\\r' // Object.is equality": 1,
+   "AssertionError: expected '...\\n..................\\n.....\\n\\n' to be '...\\n..................\\n...\\n.....\\n' // Object.is equality": 1,
+   "AssertionError: the masked text differs from every non-terminator byte blanked: expected false to be true // Object.is equality": 3,
+   "AssertionError: expected false to be true // Object.is equality": 3
+  },
+  "rows": [
+   {
+    "test": "active content is rejected and never reaches a sink the same sentinel outside the context still excludes, at its raw position",
+    "message": "AssertionError: expected [ { form: 'script-element', \u2026(2) } ] to deeply equal [ { form: 'script-element', \u2026(2) } ]"
+   },
+   {
+    "test": "closed-pwb-code-context-v1 \u2014 fenced code blocks a closed backtick fence is blanked, delimiters included, keeping every newline and length",
+    "message": "AssertionError: expected 'before\\n       \\n     \\nafter\\n' to be 'before\\n       \\n     \\n   \\nafter' // Object.is equality"
+   },
+   {
+    "test": "closed-pwb-code-context-v1 \u2014 fenced code blocks an opener may be indented zero to three spaces; at four the backticks are inline runs, not a",
+    "message": "AssertionError: expected '      \\n   \\n' to be '      \\n   \\n      ' // Object.is equality"
+   },
+   {
+    "test": "closed-pwb-code-context-v1 \u2014 fenced code blocks tildes fence too, and a tilde opener info string may contain a backtick",
+    "message": "AssertionError: expected '       \\n   \\n' to be '       \\n   \\n   ' // Object.is equality"
+   },
+   {
+    "test": "closed-pwb-code-context-v1 \u2014 fenced code blocks a closer must repeat the opener character at least the opener length, then spaces only",
+    "message": "AssertionError: expected '    \\n   \\n   \\n' to be '    \\n   \\n   \\n       ' // Object.is equality"
+   },
+   {
+    "test": "closed-pwb-code-context-v1 \u2014 fenced code blocks the first qualifying closer ends the fence; text after it is scanned again",
+    "message": "AssertionError: expected '   \\n   \\n<b>\\n   \\n   \\n' to be '   \\n   \\n   \\n<b>\\n   \\n   \\n   ' // Object.is equality"
+   },
+   {
+    "test": "closed-pwb-code-context-v1 \u2014 fenced code blocks a fence opener line inside a fence is content, never a nested opener",
+    "message": "AssertionError: expected '   \\n   \\n   \\n' to be '   \\n   \\n   \\n   ' // Object.is equality"
+   },
+   {
+    "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line mixed terminators: each one ends one line, whichever kind it is",
+    "message": "AssertionError: expected '   \\n   \\r\\nafter\\r\\n' to be '   \\n   \\r\\n   \\r\\nafter' // Object.is equality"
+   },
+   {
+    "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line the mask keeps the length and every CR and LF at its offset (a CR is never bl",
+    "message": "AssertionError: expected { kind: 'masked', \u2026(3) } to deeply equal { kind: 'masked', \u2026(3) }"
+   },
+   {
+    "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line LF: a fence closed on the last line, with no final line end, is closed",
+    "message": "AssertionError: expected '   \\n   \\n' to be '   \\n   \\n   ' // Object.is equality"
+   },
+   {
+    "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CRLF: a fence closed on the last line, with no final line end, is closed",
+    "message": "AssertionError: expected '   \\r\\n   \\r\\n' to be '   \\r\\n   \\r\\n   ' // Object.is equality"
+   },
+   {
+    "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CR: a fence closed on the last line, with no final line end, is closed",
+    "message": "AssertionError: expected '   \\r   \\r' to be '   \\r   \\r   ' // Object.is equality"
+   },
+   {
+    "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line LF: a tilde fence, a closer with trailing spaces and a span across lines",
+    "message": "AssertionError: expected '   \\n   \\nafter\\n\\n' to be '   \\n   \\n   \\nafter\\n' // Object.is equality"
+   },
+   {
+    "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CRLF: a tilde fence, a closer with trailing spaces and a span across lines",
+    "message": "AssertionError: expected '   \\r\\n   \\r\\nafter\\r\\n\\r\\n' to be '   \\r\\n   \\r\\n   \\r\\nafter\\r\\n' // Object.is equality"
+   },
+   {
+    "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CR: a tilde fence, a closer with trailing spaces and a span across lines",
+    "message": "AssertionError: expected '   \\r   \\rafter\\r\\r' to be '   \\r   \\r   \\rafter\\r' // Object.is equality"
+   },
+   {
+    "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line LF: a script element between two tilde fences that each show a backtick-fence",
+    "message": "AssertionError: expected { kind: 'masked', \u2026(3) } to deeply equal { kind: 'masked', \u2026(3) }"
+   },
+   {
+    "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CRLF: a script element between two tilde fences that each show a backtick-fen",
+    "message": "AssertionError: expected { kind: 'masked', \u2026(3) } to deeply equal { kind: 'masked', \u2026(3) }"
+   },
+   {
+    "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CR: a script element between two tilde fences that each show a backtick-fence",
+    "message": "AssertionError: expected { kind: 'masked', \u2026(3) } to deeply equal { kind: 'masked', \u2026(3) }"
+   },
+   {
+    "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line a CRLF or CR text gets the structure its LF form gets, for every case here",
+    "message": "AssertionError: expected '...\\n..................\\n.....\\n\\n' to be '...\\n..................\\n...\\n.....\\n' // Object.is equality"
+   },
+   {
+    "test": "a very long closed fence LF: 200,000 lines are blanked, every line end and the text after the fence kept",
+    "message": "AssertionError: the masked text differs from every non-terminator byte blanked: expected false to be true // Object.is equality"
+   },
+   {
+    "test": "a very long closed fence CRLF: 200,000 lines are blanked, every line end and the text after the fence kept",
+    "message": "AssertionError: the masked text differs from every non-terminator byte blanked: expected false to be true // Object.is equality"
+   },
+   {
+    "test": "a very long closed fence CR: 200,000 lines are blanked, every line end and the text after the fence kept",
+    "message": "AssertionError: the masked text differs from every non-terminator byte blanked: expected false to be true // Object.is equality"
+   },
+   {
+    "test": "a very long closed fence LF: a script element inside the fence is blanked, and the line after the fence keeps its own",
+    "message": "AssertionError: expected false to be true // Object.is equality"
+   },
+   {
+    "test": "a very long closed fence CRLF: a script element inside the fence is blanked, and the line after the fence keeps its own",
+    "message": "AssertionError: expected false to be true // Object.is equality"
+   },
+   {
+    "test": "a very long closed fence CR: a script element inside the fence is blanked, and the line after the fence keeps its own",
+    "message": "AssertionError: expected false to be true // Object.is equality"
+   }
+  ]
+ },
+ "MU4": {
+  "failing": 24,
+  "timeouts": 0,
+  "messages": {
+   "AssertionError: expected [ 'purpose', 'promises' ] to deeply equal [ 'purpose', 'promises', 'refusals' ]": 1,
+   "AssertionError: expected [] to deeply equal [ 'architecture' ]": 1,
+   "AssertionError: expected [ 'v1-scope' ] to deeply equal [ 'v1-scope', 'v1-success' ]": 1,
+   "AssertionError: expected [ 'RFC 0001' ] to deeply equal [ 'RFC 0001', 'RFC 0002' ]": 1,
+   "AssertionError: expected [ '1:Daemon', '1:Store', '2a:Daemon' ] to deeply equal [ '1:Daemon', '1:Store', \u2026(2) ]": 1,
+   "AssertionError: expected [ 'cc-spec.md' ] to deeply equal [ 'cc-spec.md', 'cc-impact.md' ]": 1,
+   "AssertionError: expected [] to deeply equal [ 'alfred' ]": 1,
+   "AssertionError: expected [] to deeply equal [ 'identity' ]": 1,
+   "AssertionError: expected [ 'promises', 'purpose', 'v1-scope' ] to deeply equal [ 'architecture', 'promises', \u2026(4) ]": 1,
+   "AssertionError: expected [ 'Fail closed', 'Cite or stay quiet' ] to deeply equal [ 'Fail closed', \u2026(2) ]": 1,
+   "AssertionError: expected [ 'Bus', 'scheduler', \u2026(4) ] to deeply equal [ 'Bus', 'scheduler', \u2026(5) ]": 1,
+   "AssertionError: expected undefined to be 'Caf\u00e9 rule' // Object.is equality": 1,
+   "AssertionError: expected [ { \u2026(5) }, { \u2026(5) }, \u2026(130001) ] to have a length of 130006 but got 130003": 1,
+   "AssertionError: expected { kind: 'known', value: 4 } to deeply equal { kind: 'known', value: 7 }": 2,
+   "AssertionError: expected [ [ \u2026(2) ], \u2026(7) ] to deeply equal [ \u2026(20) ]": 1,
+   "AssertionError: expected undefined to be 'Not a chat toy.' // Object.is equality": 1,
+   "AssertionError: expected [ [ \u2026(4) ], \u2026(8) ] to deeply equal [ [ \u2026(4) ], \u2026(8) ]": 1,
+   "AssertionError: expected 68 to be 95 // Object.is equality": 1,
+   "AssertionError: expected 8 to be 19 // Object.is equality": 1,
+   "AssertionError: expected 3 to be 5 // Object.is equality": 1,
+   "AssertionError: expected [ [ 'derived-count', '1' ], \u2026(1) ] to deeply equal [ [ 'derived-count', '2' ], \u2026(1) ]": 1,
+   "AssertionError: expected '1' to be '2' // Object.is equality": 1,
+   "AssertionError: expected [ { \u2026(6) }, { \u2026(6) }, \u2026(129997) ] to have a length of 130000 but got 129999": 1
+  },
+  "rows": [
+   {
+    "test": "PWB-REQ-002 \u2014 two independent extractors agree on every fixture heart-and-soul/vision.md mints the oracle's identities and denominators",
+    "message": "AssertionError: expected [ 'purpose', 'promises' ] to deeply equal [ 'purpose', 'promises', 'refusals' ]"
+   },
+   {
+    "test": "PWB-REQ-002 \u2014 two independent extractors agree on every fixture heart-and-soul/architecture.md mints the oracle's identities and denominator",
+    "message": "AssertionError: expected [] to deeply equal [ 'architecture' ]"
+   },
+   {
+    "test": "PWB-REQ-002 \u2014 two independent extractors agree on every fixture heart-and-soul/v1.md mints the oracle's identities and denominators",
+    "message": "AssertionError: expected [ 'v1-scope' ] to deeply equal [ 'v1-scope', 'v1-success' ]"
+   },
+   {
+    "test": "PWB-REQ-002 \u2014 two independent extractors agree on every fixture legends-and-lore/README.md mints the oracle's identities and denominators",
+    "message": "AssertionError: expected [ 'RFC 0001' ] to deeply equal [ 'RFC 0001', 'RFC 0002' ]"
+   },
+   {
+    "test": "PWB-REQ-002 \u2014 two independent extractors agree on every fixture lay-and-land/components.md mints the oracle's identities and denominators",
+    "message": "AssertionError: expected [ '1:Daemon', '1:Store', '2a:Daemon' ] to deeply equal [ '1:Daemon', '1:Store', \u2026(2) ]"
+   },
+   {
+    "test": "PWB-REQ-002 \u2014 two independent extractors agree on every fixture craft-and-care/README.md mints the oracle's identities and denominators",
+    "message": "AssertionError: expected [ 'cc-spec.md' ] to deeply equal [ 'cc-spec.md', 'cc-impact.md' ]"
+   },
+   {
+    "test": "PWB-REQ-002 \u2014 two independent extractors agree on every fixture roster/alfred/butler.toml mints the oracle's identities and denominators",
+    "message": "AssertionError: expected [] to deeply equal [ 'alfred' ]"
+   },
+   {
+    "test": "PWB-REQ-002 \u2014 two independent extractors agree on every fixture openspec/specs/identity/spec.md mints the oracle's identities and denominato",
+    "message": "AssertionError: expected [] to deeply equal [ 'identity' ]"
+   },
+   {
+    "test": "PWB-REQ-002 \u2014 two independent extractors agree on every fixture the six project-account keys are minted exactly once across the three accoun",
+    "message": "AssertionError: expected [ 'promises', 'purpose', 'v1-scope' ] to deeply equal [ 'architecture', 'promises', \u2026(4) ]"
+   },
+   {
+    "test": "PWB-REQ-002 \u2014 two independent extractors agree on every fixture hand-typed expectations pin the grammar on the vision fixture",
+    "message": "AssertionError: expected [ 'Fail closed', 'Cite or stay quiet' ] to deeply equal [ 'Fail closed', \u2026(2) ]"
+   },
+   {
+    "test": "PWB-REQ-002 \u2014 two independent extractors agree on every fixture hand-typed expectations pin the grammar on the v1, lore, components, craft a",
+    "message": "AssertionError: expected [ 'Bus', 'scheduler', \u2026(4) ] to deeply equal [ 'Bus', 'scheduler', \u2026(5) ]"
+   },
+   {
+    "test": "PWB-REQ-002 \u2014 the grammar is literal keys are NFC-normalized and nothing else",
+    "message": "AssertionError: expected undefined to be 'Caf\u00e9 rule' // Object.is equality"
+   },
+   {
+    "test": "a source whose class holds 130,000 items is extracted, every item kept in class order",
+    "message": "AssertionError: expected [ { \u2026(5) }, { \u2026(5) }, \u2026(130001) ] to have a length of 130006 but got 130003"
+   },
+   {
+    "test": "an admitted, fully readable fixture carries the complete source population with stamps, identities and Observed claims",
+    "message": "AssertionError: expected { kind: 'known', value: 4 } to deeply equal { kind: 'known', value: 7 }"
+   },
+   {
+    "test": "an admitted, fully readable fixture accounts for every declared identity, all modeled",
+    "message": "AssertionError: expected [ [ \u2026(2) ], \u2026(7) ] to deeply equal [ \u2026(20) ]"
+   },
+   {
+    "test": "an admitted, fully readable fixture renders the six project-account statements with their sections and claims",
+    "message": "AssertionError: expected undefined to be 'Not a chat toy.' // Object.is equality"
+   },
+   {
+    "test": "an admitted, fully readable fixture aggregates per class with known denominators, Observed claims and zero reason counts",
+    "message": "AssertionError: expected [ [ \u2026(4) ], \u2026(8) ] to deeply equal [ [ \u2026(4) ], \u2026(8) ]"
+   },
+   {
+    "test": "an admitted, fully readable fixture every claim is a complete tuple from the closed vocabularies",
+    "message": "AssertionError: expected 68 to be 95 // Object.is equality"
+   },
+   {
+    "test": "faults never shrink the population (PWB-REQ-003) a secret-bearing index is excluded hash-not-body before child derivation; its class denomin",
+    "message": "AssertionError: expected 8 to be 19 // Object.is equality"
+   },
+   {
+    "test": "faults never shrink the population (PWB-REQ-003) a named-but-absent source stays counted as Unknown and its account statement is Unknown wit",
+    "message": "AssertionError: expected 3 to be 5 // Object.is equality"
+   },
+   {
+    "test": "contradictions are disclosed, resolved only by a root-declared layer rule (PWB-REQ-004) a stated summary disagreeing with the derived count ",
+    "message": "AssertionError: expected [ [ 'derived-count', '1' ], \u2026(1) ] to deeply equal [ [ 'derived-count', '2' ], \u2026(1) ]"
+   },
+   {
+    "test": "contradictions are disclosed, resolved only by a root-declared layer rule (PWB-REQ-004) with the root precedence table, row 1 makes the deri",
+    "message": "AssertionError: expected '1' to be '2' // Object.is equality"
+   },
+   {
+    "test": "one resource envelope across both phases (PWB-REQ-006, amended) maxParsePassesPerSource counts phase B against a seed already validated in p",
+    "message": "AssertionError: expected { kind: 'known', value: 4 } to deeply equal { kind: 'known', value: 7 }"
+   },
+   {
+    "test": "a very long fence or list does not abort the observation a 130,000-item success list is extracted whole",
+    "message": "AssertionError: expected [ { \u2026(6) }, { \u2026(6) }, \u2026(129997) ] to have a length of 130000 but got 129999"
+   }
+  ]
+ },
+ "MU5": {
+  "failing": 7,
+  "timeouts": 0,
+  "messages": {
+   "AssertionError: expected 'before\\n   \\n     \\n       \\nafter' to be 'before\\n       \\n     \\n   \\nafter' // Object.is equality": 1,
+   "AssertionError: expected '   \\n   \\n       ' to be '       \\n   \\n   ' // Object.is equality": 1,
+   "AssertionError: expected '       \\n   \\n   \\n    ' to be '    \\n   \\n   \\n       ' // Object.is equality": 1,
+   "AssertionError: expected '      \\n   \\n   \\nafter\\n' to be '   \\n   \\n      \\nafter\\n' // Object.is equality": 1,
+   "AssertionError: expected '      \\r\\n   \\r\\n   \\r\\nafter\\r\\n' to be '   \\r\\n   \\r\\n      \\r\\nafter\\r\\n' // Object.is equality": 1,
+   "AssertionError: expected '      \\r   \\r   \\rafter\\r' to be '   \\r   \\r      \\rafter\\r' // Object.is equality": 1,
+   "AssertionError: expected '...\\n..................\\n.......\\n' to be '.......\\n..................\\n...\\n' // Object.is equality": 1
+  },
+  "rows": [
+   {
+    "test": "closed-pwb-code-context-v1 \u2014 fenced code blocks a closed backtick fence is blanked, delimiters included, keeping every newline and length",
+    "message": "AssertionError: expected 'before\\n   \\n     \\n       \\nafter' to be 'before\\n       \\n     \\n   \\nafter' // Object.is equality"
+   },
+   {
+    "test": "closed-pwb-code-context-v1 \u2014 fenced code blocks tildes fence too, and a tilde opener info string may contain a backtick",
+    "message": "AssertionError: expected '   \\n   \\n       ' to be '       \\n   \\n   ' // Object.is equality"
+   },
+   {
+    "test": "closed-pwb-code-context-v1 \u2014 fenced code blocks a closer must repeat the opener character at least the opener length, then spaces only",
+    "message": "AssertionError: expected '       \\n   \\n   \\n    ' to be '    \\n   \\n   \\n       ' // Object.is equality"
+   },
+   {
+    "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line LF: a tilde fence, a closer with trailing spaces and a span across lines",
+    "message": "AssertionError: expected '      \\n   \\n   \\nafter\\n' to be '   \\n   \\n      \\nafter\\n' // Object.is equality"
+   },
+   {
+    "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CRLF: a tilde fence, a closer with trailing spaces and a span across lines",
+    "message": "AssertionError: expected '      \\r\\n   \\r\\n   \\r\\nafter\\r\\n' to be '   \\r\\n   \\r\\n      \\r\\nafter\\r\\n' // Object.is equality"
+   },
+   {
+    "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CR: a tilde fence, a closer with trailing spaces and a span across lines",
+    "message": "AssertionError: expected '      \\r   \\r   \\rafter\\r' to be '   \\r   \\r      \\rafter\\r' // Object.is equality"
+   },
+   {
+    "test": "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line a CRLF or CR text gets the structure its LF form gets, for every case here",
+    "message": "AssertionError: expected '...\\n..................\\n.......\\n' to be '.......\\n..................\\n...\\n' // Object.is equality"
+   }
+  ]
+ },
+ "MU6": {
+  "failing": 9,
+  "timeouts": 0,
+  "messages": {
+   "AssertionError: expected [ 'refusals', 'promises', 'purpose' ] to deeply equal [ 'purpose', 'promises', 'refusals' ]": 1,
+   "AssertionError: expected [ 'v1-success', 'v1-scope' ] to deeply equal [ 'v1-scope', 'v1-success' ]": 1,
+   "AssertionError: expected [ 'RFC 0002', 'RFC 0001' ] to deeply equal [ 'RFC 0001', 'RFC 0002' ]": 1,
+   "AssertionError: expected [ '12:cli', '2a:Daemon', \u2026(2) ] to deeply equal [ '1:Daemon', '1:Store', \u2026(2) ]": 1,
+   "AssertionError: expected [ 'cc-impact.md', 'cc-spec.md' ] to deeply equal [ 'cc-spec.md', 'cc-impact.md' ]": 1,
+   "AssertionError: expected [ 'Caf\u00e9 rule', \u2026(2) ] to deeply equal [ 'Fail closed', \u2026(2) ]": 1,
+   "AssertionError: expected [ 'Tracing', 'Identity', \u2026(5) ] to deeply equal [ 'Bus', 'scheduler', \u2026(5) ]": 1,
+   "AssertionError: expected 'Fail closed' to be 'Caf\u00e9 rule' // Object.is equality": 1,
+   "AssertionError: expected [ \u2026(20) ] to deeply equal [ \u2026(20) ]": 1
+  },
+  "rows": [
+   {
+    "test": "PWB-REQ-002 \u2014 two independent extractors agree on every fixture heart-and-soul/vision.md mints the oracle's identities and denominators",
+    "message": "AssertionError: expected [ 'refusals', 'promises', 'purpose' ] to deeply equal [ 'purpose', 'promises', 'refusals' ]"
+   },
+   {
+    "test": "PWB-REQ-002 \u2014 two independent extractors agree on every fixture heart-and-soul/v1.md mints the oracle's identities and denominators",
+    "message": "AssertionError: expected [ 'v1-success', 'v1-scope' ] to deeply equal [ 'v1-scope', 'v1-success' ]"
+   },
+   {
+    "test": "PWB-REQ-002 \u2014 two independent extractors agree on every fixture legends-and-lore/README.md mints the oracle's identities and denominators",
+    "message": "AssertionError: expected [ 'RFC 0002', 'RFC 0001' ] to deeply equal [ 'RFC 0001', 'RFC 0002' ]"
+   },
+   {
+    "test": "PWB-REQ-002 \u2014 two independent extractors agree on every fixture lay-and-land/components.md mints the oracle's identities and denominators",
+    "message": "AssertionError: expected [ '12:cli', '2a:Daemon', \u2026(2) ] to deeply equal [ '1:Daemon', '1:Store', \u2026(2) ]"
+   },
+   {
+    "test": "PWB-REQ-002 \u2014 two independent extractors agree on every fixture craft-and-care/README.md mints the oracle's identities and denominators",
+    "message": "AssertionError: expected [ 'cc-impact.md', 'cc-spec.md' ] to deeply equal [ 'cc-spec.md', 'cc-impact.md' ]"
+   },
+   {
+    "test": "PWB-REQ-002 \u2014 two independent extractors agree on every fixture hand-typed expectations pin the grammar on the vision fixture",
+    "message": "AssertionError: expected [ 'Caf\u00e9 rule', \u2026(2) ] to deeply equal [ 'Fail closed', \u2026(2) ]"
+   },
+   {
+    "test": "PWB-REQ-002 \u2014 two independent extractors agree on every fixture hand-typed expectations pin the grammar on the v1, lore, components, craft a",
+    "message": "AssertionError: expected [ 'Tracing', 'Identity', \u2026(5) ] to deeply equal [ 'Bus', 'scheduler', \u2026(5) ]"
+   },
+   {
+    "test": "PWB-REQ-002 \u2014 the grammar is literal keys are NFC-normalized and nothing else",
+    "message": "AssertionError: expected 'Fail closed' to be 'Caf\u00e9 rule' // Object.is equality"
+   },
+   {
+    "test": "an admitted, fully readable fixture accounts for every declared identity, all modeled",
+    "message": "AssertionError: expected [ \u2026(20) ] to deeply equal [ \u2026(20) ]"
+   }
+  ]
+ },
+ "BASE": {
+  "failing": 20,
+  "timeouts": 0,
+  "messages": {
+   "RangeError: Maximum call stack size exceeded": 20
+  },
+  "rows": [
+   {
+    "test": "a 200,000-line closed fence under the read limit (GP-B2 Q1) LF: a 200,000-line closed fence holding a script element reads as text, under th",
+    "message": "RangeError: Maximum call stack size exceeded"
+   },
+   {
+    "test": "a 200,000-line closed fence under the read limit (GP-B2 Q1) CRLF: a 200,000-line closed fence holding a script element reads as text, under ",
+    "message": "RangeError: Maximum call stack size exceeded"
+   },
+   {
+    "test": "a 200,000-line closed fence under the read limit (GP-B2 Q1) CR: a 200,000-line closed fence holding a script element reads as text, under th",
+    "message": "RangeError: Maximum call stack size exceeded"
+   },
+   {
+    "test": "a 200,000-line closed fence under the read limit (GP-B2 Q1) LF: a script element after a 200,000-line closed fence is found, with a body-fre",
+    "message": "RangeError: Maximum call stack size exceeded"
+   },
+   {
+    "test": "a 200,000-line closed fence under the read limit (GP-B2 Q1) CRLF: a script element after a 200,000-line closed fence is found, with a body-f",
+    "message": "RangeError: Maximum call stack size exceeded"
+   },
+   {
+    "test": "a 200,000-line closed fence under the read limit (GP-B2 Q1) CR: a script element after a 200,000-line closed fence is found, with a body-fre",
+    "message": "RangeError: Maximum call stack size exceeded"
+   },
+   {
+    "test": "a 200,000-line closed fence under the read limit (GP-B2 Q1) LF: scanActiveContent over a 200,000-line closed fence finds nothing inside it",
+    "message": "RangeError: Maximum call stack size exceeded"
+   },
+   {
+    "test": "a 200,000-line closed fence under the read limit (GP-B2 Q1) CRLF: scanActiveContent over a 200,000-line closed fence finds nothing inside it",
+    "message": "RangeError: Maximum call stack size exceeded"
+   },
+   {
+    "test": "a 200,000-line closed fence under the read limit (GP-B2 Q1) CR: scanActiveContent over a 200,000-line closed fence finds nothing inside it",
+    "message": "RangeError: Maximum call stack size exceeded"
+   },
+   {
+    "test": "a very long closed fence LF: 200,000 lines are blanked, every line end and the text after the fence kept",
+    "message": "RangeError: Maximum call stack size exceeded"
+   },
+   {
+    "test": "a very long closed fence CRLF: 200,000 lines are blanked, every line end and the text after the fence kept",
+    "message": "RangeError: Maximum call stack size exceeded"
+   },
+   {
+    "test": "a very long closed fence CR: 200,000 lines are blanked, every line end and the text after the fence kept",
+    "message": "RangeError: Maximum call stack size exceeded"
+   },
+   {
+    "test": "a very long closed fence LF: a script element inside the fence is blanked, and the line after the fence keeps its own",
+    "message": "RangeError: Maximum call stack size exceeded"
+   },
+   {
+    "test": "a very long closed fence CRLF: a script element inside the fence is blanked, and the line after the fence keeps its own",
+    "message": "RangeError: Maximum call stack size exceeded"
+   },
+   {
+    "test": "a very long closed fence CR: a script element inside the fence is blanked, and the line after the fence keeps its own",
+    "message": "RangeError: Maximum call stack size exceeded"
+   },
+   {
+    "test": "a source whose class holds 130,000 items is extracted, every item kept in class order",
+    "message": "RangeError: Maximum call stack size exceeded"
+   },
+   {
+    "test": "a very long fence or list does not abort the observation LF: a 200,000-line closed fence at the end of vision.md is classified as a 10-line ",
+    "message": "RangeError: Maximum call stack size exceeded"
+   },
+   {
+    "test": "a very long fence or list does not abort the observation CRLF: a 200,000-line closed fence at the end of vision.md is classified as a 10-lin",
+    "message": "RangeError: Maximum call stack size exceeded"
+   },
+   {
+    "test": "a very long fence or list does not abort the observation CR: a 200,000-line closed fence at the end of vision.md is classified as a 10-line ",
+    "message": "RangeError: Maximum call stack size exceeded"
+   },
+   {
+    "test": "a very long fence or list does not abort the observation a 130,000-item success list is extracted whole",
+    "message": "RangeError: Maximum call stack size exceeded"
+   }
+  ]
+ }
+}

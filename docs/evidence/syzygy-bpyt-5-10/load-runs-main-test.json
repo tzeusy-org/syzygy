@@ -1,0 +1,69 @@
+{
+  "head": "62d82c11fbbcd8a56c46ece4bd6de9a9186c7c56",
+  "burnerProcesses": 24,
+  "loadavg1Before": 14.240234375,
+  "loadavg1After": 41.880859375,
+  "runs": [
+    {
+      "run": 1,
+      "exit": 0,
+      "passed": 26,
+      "failed": 0
+    },
+    {
+      "run": 2,
+      "exit": 0,
+      "passed": 26,
+      "failed": 0
+    },
+    {
+      "run": 3,
+      "exit": 0,
+      "passed": 26,
+      "failed": 0
+    },
+    {
+      "run": 4,
+      "exit": 0,
+      "passed": 26,
+      "failed": 0
+    },
+    {
+      "run": 5,
+      "exit": 0,
+      "passed": 26,
+      "failed": 0
+    },
+    {
+      "run": 6,
+      "exit": 0,
+      "passed": 26,
+      "failed": 0
+    },
+    {
+      "run": 7,
+      "exit": 0,
+      "passed": 26,
+      "failed": 0
+    },
+    {
+      "run": 8,
+      "exit": 0,
+      "passed": 26,
+      "failed": 0
+    },
+    {
+      "run": 9,
+      "exit": 0,
+      "passed": 26,
+      "failed": 0
+    },
+    {
+      "run": 10,
+      "exit": 0,
+      "passed": 26,
+      "failed": 0
+    }
+  ],
+  "allPassed": true
+}

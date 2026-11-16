@@ -1,0 +1,9 @@
+control CONTROL-PASS [0] []
+leak-singleton-not-read-while-running killed [1] ['.com.google.Chrome.I78v4O', '.com.google.Chrome.phSwzN']
+leak-removal-is-a-no-op killed [1] ['.com.google.Chrome.Tt5J6p', '.com.google.Chrome.gwtTZB']
+guard-lstat-becomes-stat killed [1] []
+guard-parent-not-checked killed [1] []
+guard-parent-prefix-comparison killed [1] []
+guard-name-case-insensitive SURVIVED [0] []
+readlink-failure-propagates killed [1] []
+exit 0

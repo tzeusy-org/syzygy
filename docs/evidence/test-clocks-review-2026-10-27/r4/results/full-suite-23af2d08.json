@@ -1,0 +1,23 @@
+{
+ "tool": "suite_r4.py",
+ "commit": "23af2d080108aabf878845dfe41007fbb77f2c52",
+ "command": [
+  "npx",
+  "vitest",
+  "run",
+  "--reporter=json"
+ ],
+ "loadavgStart": "23.87 28.04 29.66 13/9741 4021625",
+ "loadavgEnd": "32.41 30.82 30.46 24/9807 4091030",
+ "seconds": 207.3,
+ "exit": 0,
+ "files": 869,
+ "testFiles": 246,
+ "total": 5379,
+ "passed": 5374,
+ "failed": 0,
+ "pending": 5,
+ "todo": 0,
+ "failedRows": [],
+ "suiteErrors": []
+}

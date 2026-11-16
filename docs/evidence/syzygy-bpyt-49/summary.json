@@ -1,0 +1,153 @@
+{
+ "bead": "syzygy-bpyt.49",
+ "base": "a1b9bde272f21dd5f110498c39e95f9f827344f4",
+ "code": "e8cd624ecb58e24f763c35276eb7764373f5746e",
+ "subject": [
+  "docs/evidence/syzygy-bpyt-39/npmrc-trace-root-exception-probe.json",
+  "docs/evidence/syzygy-bpyt-39/record.py",
+  "docs/evidence/syzygy-bpyt-39/root-exception-probe.json",
+  "docs/evidence/syzygy-bpyt-39/root_exception_probe.py",
+  "docs/evidence/syzygy-bpyt-39/summary.json",
+  "docs/evidence/syzygy-bpyt-8-39/npm_alias_probe.py",
+  "docs/evidence/syzygy-bpyt-8-39/record.py",
+  "docs/evidence/syzygy-bpyt-8-39/summary.json"
+ ],
+ "subjectSha256": {
+  "docs/evidence/syzygy-bpyt-39/npmrc-trace-root-exception-probe.json": "f125c7edf2356007f30e26c26817ce4bad3a68ebe934c77fe4b5ad652d33c340",
+  "docs/evidence/syzygy-bpyt-39/record.py": "9e17f4e32cd548425a2628ffd59a4f47814404c2172da79fd5d5453a09335bb1",
+  "docs/evidence/syzygy-bpyt-39/root-exception-probe.json": "cea10b3c635d0239f6dbe0796d0b0c6bf48080bd4609586720ef454e69872ab9",
+  "docs/evidence/syzygy-bpyt-39/root_exception_probe.py": "d7b29a5401027f1c1da70c349872b6aca915f662b9c80811f4f9138cc55b9b17",
+  "docs/evidence/syzygy-bpyt-39/summary.json": "c8725e84e676931fbbc8b5a683c791459fd2c6a79ab20a70858ef7dcb2afddce",
+  "docs/evidence/syzygy-bpyt-8-39/npm_alias_probe.py": "d0681b01b953b0dcff793cb4c6331245ee3c0c101d0977909df30cd0c6444812",
+  "docs/evidence/syzygy-bpyt-8-39/record.py": "b3e8d599cdfd96e1fe048e8d7944d347f6a7cc58d374222f60f0c670e8f83f60",
+  "docs/evidence/syzygy-bpyt-8-39/summary.json": "89c3545bf791cf9aad8fef752e8a3fc54ad205d0299e696654d6f11d42eb40d4"
+ },
+ "mutants": {
+  "N2-0-unmutated": {
+   "tally": "selftest: 77/77",
+   "survived": []
+  },
+  "N2-H1-hook-bypassed": {
+   "tally": "selftest: 75/77",
+   "survived": [
+    "a non-evidence path changed since the suite ran",
+    "another bead's evidence path changed since the suite ran"
+   ]
+  },
+  "N2-H3-exclusion-widened-to-docs": {
+   "tally": "selftest: 76/77",
+   "survived": [
+    "another bead's evidence path changed since the suite ran"
+   ]
+  },
+  "N2-H4-every-path-but-the-testkit-excluded": {
+   "tally": "selftest: 75/77",
+   "survived": [
+    "a non-evidence path changed since the suite ran",
+    "another bead's evidence path changed since the suite ran"
+   ]
+  },
+  "N2-S5-path-test-dropped": {
+   "tally": "selftest: 75/77",
+   "survived": [
+    "a non-evidence path changed since the suite ran",
+    "another bead's evidence path changed since the suite ran"
+   ]
+  },
+  "N3-0-unmutated": {
+   "tally": "selftest: 27/27",
+   "survived": []
+  },
+  "N3-P5": {
+   "tally": "selftest: 26/27",
+   "survived": [
+    "a root case app does not load from the workspace"
+   ]
+  },
+  "N3-P10": {
+   "tally": "selftest: 26/27",
+   "survived": [
+    "a lane trace compared with another record"
+   ]
+  },
+  "N3-P12": {
+   "tally": "selftest: 26/27",
+   "survived": [
+    "a comment-only selftest that misses a rename"
+   ]
+  },
+  "N3-P16": {
+   "tally": "selftest: 26/27",
+   "survived": [
+    "an unmutated predicate run that fails"
+   ]
+  },
+  "N3-E1": {
+   "tally": "selftest: 26/27",
+   "survived": [
+    "a root case npm installs as a copy"
+   ]
+  },
+  "N3-E2": {
+   "tally": "selftest: 26/27",
+   "survived": [
+    "a root case whose install fails"
+   ]
+  },
+  "N3-E5": {
+   "tally": "selftest: 26/27",
+   "survived": [
+    "a testkit that states a root exception twice"
+   ]
+  },
+  "N3-E7": {
+   "tally": "selftest: 26/27",
+   "survived": [
+    "a root case app does not load from the workspace"
+   ]
+  },
+  "N3-C1-trace-record-check-dropped": {
+   "tally": "selftest: 26/27",
+   "survived": [
+    "a root-exception trace of another run"
+   ]
+  }
+ },
+ "guard": {
+  "npm_alias_probe.py G0-unmutated": [],
+  "npm_alias_probe.py G1-node-modules-not-looked-for": [
+   "parent-node-modules"
+  ],
+  "npm_alias_probe.py G2-package-json-not-looked-for": [
+   "grandparent-package-json",
+   "parent-package-json"
+  ],
+  "npm_alias_probe.py G3-only-the-parent-looked-at": [
+   "grandparent-package-json"
+  ],
+  "root_exception_probe.py G0-unmutated": [],
+  "root_exception_probe.py G1-node-modules-not-looked-for": [
+   "parent-node-modules"
+  ],
+  "root_exception_probe.py G2-package-json-not-looked-for": [
+   "grandparent-package-json",
+   "parent-package-json"
+  ],
+  "root_exception_probe.py G3-only-the-parent-looked-at": [
+   "grandparent-package-json"
+  ]
+ },
+ "rootExceptionRerunEqual": true,
+ "laneTrace": {
+  "callerNpmrc": [],
+  "builtinOpens": 24,
+  "recordEqualsReference": true
+ },
+ "tools": {
+  "mutants.py": "c6efaa1597f4b5d0cb42e63ac27dbfe4f193d6bf067033f06318abad34358c30",
+  "guard_probe.py": "ce802c5a2fdd28dc614651d53ab9f97324f8a6e145eaff1a28c453bf6d179171",
+  "site_drop.py": "72e77db62af353c19bd5e97e3afd84b8e20794571360e5012ce641221e17bb1e",
+  "record.py": "fe1b8c236c22cf6dc756fe76de17d0087b708fdca3d270968cf1a5e02758a19e"
+ },
+ "problems": []
+}

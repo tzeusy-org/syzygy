@@ -1695,3 +1695,318 @@ ADOPT POLARIS BUTLERS PROJECT-SHAPE OBSERVER REGISTRY ENTRY: f2b3573cfe35169f449
 
 [Observed] The bounded owner selection is recorded. Implementation, gate
 admission and private response measurement require their separate evidence.
+
+<!-- versioned-signoff:three-surface-poc-governedby-reference-amendment:v1.0 -->
+## Versioned sign-off — three-surface-poc-governedby-reference-amendment — v1.0 — recorded 2026-10-27
+
+The owner signed off version 1.0 by selecting an option in a structured
+question naming this package and version (quoted in the dedicated record).
+
+| | |
+|---|---|
+| Project / owner | `project:syzygy` / Tzeusy |
+| Kind | specification amendment |
+| Review outcome | `docs/reviews/R-P115-GOVERNEDBY-REFERENCE-4-RAW.md`: `CONFIRM WITH EXCEPTIONS`; disposition: `.syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/ROUND-4-DISPOSITIONS.md` |
+| Recording | `.syzygy/governance/decisions/THREE-SURFACE-POC-GOVERNEDBY-REFERENCE-AMENDMENT-SIGNOFF-v1.0.md`; annotated tag `three-surface-poc-governedby-reference-amendment-v1.0` on the commit carrying these records and the applied result |
+| Direction | `.syzygy/governance/decisions/OWNER-DIRECTION-VERSIONED-SIGNOFF-SCOPE-A-2026-10-02.md`, extended by `.syzygy/governance/decisions/OWNER-DIRECTION-SCOPE-A-POC-AMENDMENTS-2026-10-14.md` |
+
+This sign-off authorizes no implementation, widens no consent, read, write or
+egress, and a later version of the package is signed separately.
+<!-- /versioned-signoff:three-surface-poc-governedby-reference-amendment:v1.0 -->
+
+<!-- PWB-POLICY-SCOPE-V5:BEGIN -->
+## Public-source screening scope version 5 act — approve-policy — performed 2026-11-03
+
+**Phrase the act takes (given 2026-11-03 by the owner's words, not typed as a
+phrase; see the dedicated record):**
+
+```text
+APPROVE POLARIS BUTLERS SECRET-CLASSIFICATION POLICY: e8a2f4f375fcf3ce1db753a5a30f77dbf961fab2115185946e8067f64ae5fe2b
+```
+
+| | |
+|---|---|
+| Project / owner | `project:syzygy` / Tzeusy |
+| Act type / artifact | `approve-policy` / `.syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json` |
+| Argument | SHA-256 of the artifact itself: the chosen row (variant `bcd`) of the package manifest, recomputed at recording |
+| Provenance state | `owner-adopted (bootstrap, uncorrelated)` — a state-(1) human act, owner-trusted and never independently verified |
+| A1 audit-record identity | explicitly absent, satisfying RFC3-16(b) item 9 for state (1) |
+| Frozen subject | `9daf9e0480b96d3cf09efebc7a357f6e21acda45` |
+| Manifest | `.syzygy/governance/contracts/candidates/public-source-screening-scope-v5/PUBLIC-SOURCE-SCREENING-SCOPE-V5-MANIFEST.txt`, SHA-256 `b9fdbc164952af642bb50aa2b82a21481a0322cccbb65fd0b4be35b73190a80f` |
+| Review outcome | `docs/reviews/R-HA5B-SCREENING-SCOPE-V5-2-RAW.md`: `CONFIRM WITH EXCEPTIONS`, its head bound to the manifest file |
+| Owner's words given (UTC) | `2026-11-03T06:17:55Z` |
+| Recorded at (UTC) | `2026-11-03T06:58:26Z` |
+| Recording | `.syzygy/governance/decisions/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V5-ACT.md`; annotated tag `pwb-approve-policy-public-source-scope-v5-signed-2026-11-03` on the commit carrying these records |
+
+Effective status: this one record is **effective owner authority —
+owner-adopted (bootstrap, uncorrelated)** for its own role only. It grants no
+consent, read or egress, and the read gates are re-pointed by a separate change.
+<!-- PWB-POLICY-SCOPE-V5:END -->
+
+<!-- versioned-signoff:polaris-dossier-local-agent-mode:v1.3 -->
+## Versioned sign-off — polaris-dossier-local-agent-mode — v1.3 — recorded 2026-11-04
+
+The owner signed off version 1.3 by selecting an option in the
+Claude Code CLI (quoted in the dedicated record).
+
+| | |
+|---|---|
+| Project / owner | `project:syzygy` / Tzeusy |
+| Kind | specification delta |
+| Review outcome | `docs/reviews/R-DOSSIER-LOCAL-AGENT-V1-3-92a6-2-RAW.md`: `CONFIRM WITH EXCEPTIONS`; disposition: `.syzygy/governance/contracts/candidates/POLARIS-DOSSIER-LOCAL-AGENT-MODE-V1-3-REVIEW-NOTES.md` |
+| Recording | `.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.3.md`; annotated tag `polaris-dossier-local-agent-mode-v1.3` on the commit carrying these records and the applied result |
+| Direction | `.syzygy/governance/decisions/OWNER-DIRECTION-VERSIONED-SIGNOFF-SCOPE-A-2026-10-02.md` |
+
+This sign-off authorizes no implementation, widens no consent, read, write or
+egress, and a later version of the package is signed separately.
+<!-- /versioned-signoff:polaris-dossier-local-agent-mode:v1.3 -->
+
+<!-- PWB-POLICY-SCOPE-V6:BEGIN -->
+## Public-source screening scope version 6 act — approve-policy — performed 2026-11-05
+
+**Phrase the act takes (given 2026-11-05 by the owner's words, not typed as a
+phrase; see the dedicated record):**
+
+```text
+APPROVE POLARIS BUTLERS SECRET-CLASSIFICATION POLICY: c44058c02c244e8460c1e33ab01f0343ed0612043d7bf53e0d36410c9f9ebfa2
+```
+
+| | |
+|---|---|
+| Project / owner | `project:syzygy` / Tzeusy |
+| Act type / artifact | `approve-policy` / `.syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json` |
+| Argument | SHA-256 of the artifact itself: the one row (variant `p`) of the package manifest, recomputed at recording |
+| Provenance state | `owner-adopted (bootstrap, uncorrelated)` — a state-(1) human act, owner-trusted and never independently verified |
+| A1 audit-record identity | explicitly absent, satisfying RFC3-16(b) item 9 for state (1) |
+| Frozen subject | `b64c6769fd2fa928ae946dc27cdb729267f153fb` |
+| Manifest | `.syzygy/governance/contracts/candidates/public-source-screening-scope-v6/PUBLIC-SOURCE-SCREENING-SCOPE-V6-MANIFEST.txt`, SHA-256 `76b2b6b0ac9eb185d8816e6014f86bc8a66c13501a8727a83fa6f8b8c1a18986` |
+| Review outcome | `docs/reviews/R-SCREENING-SCOPE-V6-b64c-4-RAW.md`: `CONFIRM WITH EXCEPTIONS`, its head bound to the manifest file |
+| Owner's words given (UTC) | `2026-11-05T09:43:08Z` |
+| Recorded at (UTC) | `2026-11-05T09:43:08Z` |
+| Recording | `.syzygy/governance/decisions/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V6-ACT.md`; annotated tag `pwb-approve-policy-public-source-scope-v6-signed-2026-11-05` on the commit carrying these records |
+
+Effective status: this one record is **effective owner authority —
+owner-adopted (bootstrap, uncorrelated)** for its own role only. It grants no
+consent, read or egress, and the read gates are re-pointed by a separate change.
+<!-- PWB-POLICY-SCOPE-V6:END -->
+
+<!-- versioned-signoff:polaris-dossier-local-agent-mode:v1.4 -->
+## Versioned sign-off — polaris-dossier-local-agent-mode — v1.4 — recorded 2026-11-06
+
+The owner signed off version 1.4 by selecting an option in the
+Claude Code CLI (quoted in the dedicated record).
+
+| | |
+|---|---|
+| Project / owner | `project:syzygy` / Tzeusy |
+| Kind | specification delta |
+| Review outcome | `docs/reviews/R-MEA10-10-V14-59768e6f-FINAL-RAW.md`: `CONFIRM WITH EXCEPTIONS`; disposition: `docs/reviews/R-MEA10-10-V14-59768e6f-FINAL-NOTES.md` |
+| Recording | `.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.4.md`; annotated tag `polaris-dossier-local-agent-mode-v1.4` on the commit carrying these records and the applied result |
+| Direction | `.syzygy/governance/decisions/OWNER-DIRECTION-VERSIONED-SIGNOFF-SCOPE-A-2026-10-02.md` |
+
+This sign-off authorizes no implementation, widens no consent, read, write or
+egress, and a later version of the package is signed separately.
+<!-- /versioned-signoff:polaris-dossier-local-agent-mode:v1.4 -->
+
+<!-- PWB-POLICY-SCOPE-V7:BEGIN -->
+## Public-source screening scope version 7 act — approve-policy — performed 2026-11-06
+
+**Phrase the act takes (given 2026-11-06 by the owner's words, not typed as a
+phrase; see the dedicated record):**
+
+```text
+APPROVE POLARIS BUTLERS SECRET-CLASSIFICATION POLICY: 626be0cadc248b9ca9b3165d51f97d39aec552eb3a97b8b7df21d2446fc233da
+```
+
+| | |
+|---|---|
+| Project / owner | `project:syzygy` / Tzeusy |
+| Act type / artifact | `approve-policy` / `.syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json` |
+| Argument | SHA-256 of the artifact itself: the one row (variant `s`) of the package manifest, recomputed at recording |
+| Provenance state | `owner-adopted (bootstrap, uncorrelated)` — a state-(1) human act, owner-trusted and never independently verified |
+| A1 audit-record identity | explicitly absent, satisfying RFC3-16(b) item 9 for state (1) |
+| Frozen subject | `7f98407d4257115a1cb890f8d15e7ad3c42a00ff` |
+| Manifest | `.syzygy/governance/contracts/candidates/public-source-screening-scope-v7/PUBLIC-SOURCE-SCREENING-SCOPE-V7-MANIFEST.txt`, SHA-256 `b187ba86f5020e55c299db5ed39a6141dea951643911c44a77c82627bd7edcd7` |
+| Review outcome | `docs/reviews/R-SCREENING-SCOPE-V7-3-RAW.md`: `CONFIRM WITH EXCEPTIONS`, its head bound to the manifest file |
+| Owner's words given (UTC) | `2026-11-06T14:04:40Z` |
+| Recorded at (UTC) | `2026-11-06T14:11:19Z` |
+| Recording | `.syzygy/governance/decisions/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V7-ACT.md`; annotated tag `pwb-approve-policy-public-source-scope-v7-signed-2026-11-06` on the commit carrying these records |
+
+Effective status: this one record is **effective owner authority —
+owner-adopted (bootstrap, uncorrelated)** for its own role only. It grants no
+consent, read or egress and adds no script.
+<!-- PWB-POLICY-SCOPE-V7:END -->
+
+<!-- versioned-signoff:polaris-dossier-local-agent-mode:v1.5 -->
+## Versioned sign-off — polaris-dossier-local-agent-mode — v1.5 — recorded 2026-11-07
+
+The owner signed off version 1.5 by selecting an option in the
+Claude Code CLI (quoted in the dedicated record).
+
+| | |
+|---|---|
+| Project / owner | `project:syzygy` / Tzeusy |
+| Kind | specification delta |
+| Review outcome | `docs/reviews/R-DOSSIER-LOCAL-AGENT-V1-5-7-RAW.md`: `CONFIRM WITH EXCEPTIONS`; disposition: `docs/reviews/R-DOSSIER-LOCAL-AGENT-V1-5-7-NOTES.md` |
+| Recording | `.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.5.md`; annotated tag `polaris-dossier-local-agent-mode-v1.5` on the commit carrying these records and the applied result |
+| Direction | `.syzygy/governance/decisions/OWNER-DIRECTION-VERSIONED-SIGNOFF-SCOPE-A-2026-10-02.md` |
+
+This sign-off authorizes no implementation, widens no consent, read, write or
+egress, and a later version of the package is signed separately.
+<!-- /versioned-signoff:polaris-dossier-local-agent-mode:v1.5 -->
+
+<!-- versioned-signoff:polaris-dossier-launch-consent:v1.0 -->
+## Versioned sign-off — polaris-dossier-launch-consent — v1.0 — recorded 2026-11-08
+
+The owner signed off version 1.0 by selecting an option in the
+Claude Code CLI (quoted in the dedicated record).
+
+| | |
+|---|---|
+| Project / owner | `project:syzygy` / Tzeusy |
+| Kind | specification delta |
+| Review outcome | `docs/reviews/R-POLARIS-LAUNCH-CONSENT-SIGNOFF-2-RAW.md`: `CONFIRM WITH EXCEPTIONS`; disposition: `.syzygy/governance/contracts/candidates/polaris-dossier-launch-consent/ROUND-2-DISPOSITIONS.md` |
+| Recording | `.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.0.md`; annotated tag `polaris-dossier-launch-consent-v1.0` on the commit carrying these records and the applied result |
+| Direction | `.syzygy/governance/decisions/OWNER-DIRECTION-VERSIONED-SIGNOFF-SCOPE-A-2026-10-02.md` |
+
+This sign-off authorizes no implementation, widens no consent, read, write or
+egress, and a later version of the package is signed separately.
+<!-- /versioned-signoff:polaris-dossier-launch-consent:v1.0 -->
+
+<!-- versioned-signoff:polaris-dossier-launch-consent:v1.1 -->
+## Versioned sign-off — polaris-dossier-launch-consent — v1.1 — recorded 2026-11-08
+
+The owner signed off version 1.1 by selecting an option in the
+Claude Code CLI (quoted in the dedicated record).
+
+| | |
+|---|---|
+| Project / owner | `project:syzygy` / Tzeusy |
+| Kind | specification delta |
+| Review outcome | `docs/reviews/R-POLARIS-LAUNCH-CONSENT-V1-1-1-RAW.md`: `CONFIRM WITH EXCEPTIONS`; disposition: `.syzygy/governance/contracts/candidates/polaris-dossier-launch-consent-v1-1/ROUND-1-DISPOSITIONS.md` |
+| Recording | `.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.1.md`; annotated tag `polaris-dossier-launch-consent-v1.1` on the commit carrying these records and the applied result |
+| Direction | `.syzygy/governance/decisions/OWNER-DIRECTION-VERSIONED-SIGNOFF-SCOPE-A-2026-10-02.md` |
+
+This sign-off authorizes no implementation, widens no consent, read, write or
+egress, and a later version of the package is signed separately.
+<!-- /versioned-signoff:polaris-dossier-launch-consent:v1.1 -->
+
+<!-- LAUNCH-CONSENT-WRITE-CONSENT:BEGIN -->
+## Launch-record write consent act — consent-write — performed 2026-11-08
+
+Act instant: 2026-11-09T03:37:56Z
+
+**Phrase the act takes (given 2026-11-08 by option selection, not typed; see the
+dedicated record):**
+
+```text
+CONSENT TO WRITE LAUNCH CONSENT RECORDS ON THE DEDICATED BRANCH: 53efd343b0ed5302628374fbb503758d2bfe56bf1b27715f0ec616f33b5aa092
+```
+
+| | |
+|---|---|
+| Project / owner | `project:syzygy` / Tzeusy |
+| Act type / artifact | `consent-write` / `.syzygy/governance/contracts/candidates/launch-consent-write-consent/instances/syzygy/WRITE-CONSENT-LAUNCH-RECORDS.md` |
+| Scope | launch consent records only, as new files only, on `refs/heads/launch-consent-records`; nothing else |
+| Argument | SHA-256 of the artifact itself: the one row of the package manifest, recomputed at recording |
+| Provenance state | `owner-adopted (bootstrap, uncorrelated)` — a state-(1) human act, owner-trusted and never independently verified |
+| A1 audit-record identity | explicitly absent, satisfying RFC3-16(b) item 9 for state (1) |
+| Frozen subject | `3ea65c5327988d656fa2408cf631cd5216fd69d9` |
+| Manifest | `.syzygy/governance/contracts/candidates/launch-consent-write-consent/LAUNCH-CONSENT-WRITE-CONSENT-MANIFEST.txt`, SHA-256 `7e56696ea4ec8f85c4472febbdb90f122b8b03dfca3f60ced829771638b972bf` |
+| Review outcome | `docs/reviews/R-LAUNCH-WRITE-CONSENT-2-RAW.md`: `CONFIRM WITH EXCEPTIONS`, its head bound to the manifest file |
+| Recorded at (UTC) | `2026-11-09T03:37:56Z` |
+| Recording | `.syzygy/governance/decisions/LAUNCH-CONSENT-WRITE-CONSENT-ACT.md` |
+
+Effective status: this one record is **effective owner authority —
+owner-adopted (bootstrap, uncorrelated)** for its own role only: a write
+consent. It authorizes no implementation.
+<!-- LAUNCH-CONSENT-WRITE-CONSENT:END -->
+
+<!-- versioned-signoff:polaris-dossier-local-agent-mode:v1.6 -->
+## Versioned sign-off — polaris-dossier-local-agent-mode — v1.6 — recorded 2026-11-09
+
+The owner signed off version 1.6 by selecting an option in the
+Claude Code CLI (quoted in the dedicated record).
+
+| | |
+|---|---|
+| Project / owner | `project:syzygy` / Tzeusy |
+| Kind | specification delta |
+| Review outcome | `docs/reviews/R-DOSSIER-LOCAL-AGENT-V1-6-7-RAW.md`: `CONFIRM WITH EXCEPTIONS`; disposition: `docs/reviews/R-DOSSIER-LOCAL-AGENT-V1-6-7-NOTES.md` |
+| Recording | `.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.6.md`; annotated tag `polaris-dossier-local-agent-mode-v1.6` on the commit carrying these records and the applied result |
+| Direction | `.syzygy/governance/decisions/OWNER-DIRECTION-VERSIONED-SIGNOFF-SCOPE-A-2026-10-02.md` |
+
+This sign-off authorizes no implementation, widens no consent, read, write or
+egress, and a later version of the package is signed separately.
+<!-- /versioned-signoff:polaris-dossier-local-agent-mode:v1.6 -->
+
+<!-- PWB-POLICY-SCOPE-V8:BEGIN -->
+## Public-source screening scope version 8 act — approve-policy — performed 2026-11-09
+
+**Phrase the act takes (given by the owner's selected words, not typed as a
+phrase; see the dedicated record):**
+
+```text
+APPROVE POLARIS BUTLERS SECRET-CLASSIFICATION POLICY: 44153bbe210c7a724f224f2bc1c9255db43cf0887b6ad22dd24884514f21bbe8
+```
+
+| | |
+|---|---|
+| Project / owner | `project:syzygy` / Tzeusy |
+| Act type / artifact | `approve-policy` / `.syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json` |
+| Argument | SHA-256 of the artifact itself: the one row (variant `pv`) of the package manifest, recomputed at recording |
+| Provenance state | `owner-adopted (bootstrap, uncorrelated)` — a state-(1) human act, owner-trusted and never independently verified |
+| A1 audit-record identity | explicitly absent, satisfying RFC3-16(b) item 9 for state (1) |
+| Frozen subject | `f5bfaed7d7f232f040fcabcf95dc99ba33cc0d8d` |
+| Manifest | `.syzygy/governance/contracts/candidates/public-source-screening-scope-v8/PUBLIC-SOURCE-SCREENING-SCOPE-V8-MANIFEST.txt`, SHA-256 `3da4502006c942524287b4a6831a65aac2a8df0f8ce59edb0b753a44cdc94a00` |
+| Review outcome | `docs/reviews/R-SCREENING-SCOPE-V8-6-RAW.md`: `CONFIRM WITH EXCEPTIONS`, its head bound to the manifest file |
+| Owner's words given (UTC date) | `2026-11-08` |
+| Recorded at (UTC) | `2026-11-09T09:27:14Z` |
+| Recording | `.syzygy/governance/decisions/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V8-ACT.md`; annotated tag `pwb-approve-policy-public-source-scope-v8-signed-2026-11-09` on the commit carrying these records |
+
+Effective status: this one record is **effective owner authority —
+owner-adopted (bootstrap, uncorrelated)** for its own role only. It grants no
+consent, read or egress.
+<!-- PWB-POLICY-SCOPE-V8:END -->
+
+<!-- versioned-signoff:polaris-dossier-launch-consent:v1.2 -->
+## Versioned sign-off — polaris-dossier-launch-consent — v1.2 — recorded 2026-11-11
+
+The owner signed off version 1.2 by selecting an option in the
+Claude Code CLI (quoted in the dedicated record).
+
+| | |
+|---|---|
+| Project / owner | `project:syzygy` / Tzeusy |
+| Kind | specification delta |
+| Review outcome | `docs/reviews/R-POLARIS-LAUNCH-CONSENT-V1-2-17-RAW.md`: `CONFIRM WITH EXCEPTIONS`; disposition: `docs/reviews/R-POLARIS-LAUNCH-CONSENT-V1-2-17-NOTES.md` |
+| Recording | `.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.2.md`; annotated tag `polaris-dossier-launch-consent-v1.2` on the commit carrying these records and the applied result |
+| Direction | `.syzygy/governance/decisions/OWNER-DIRECTION-VERSIONED-SIGNOFF-SCOPE-A-2026-10-02.md` |
+
+This sign-off authorizes no implementation, widens no consent, read, write or
+egress, and a later version of the package is signed separately.
+<!-- /versioned-signoff:polaris-dossier-launch-consent:v1.2 -->
+
+<!-- versioned-signoff:public-git-source-acquisition-local-agent:v1.1 -->
+## Versioned sign-off — public-git-source-acquisition-local-agent — v1.1 — recorded 2026-11-11
+
+The owner signed off version 1.1 by selecting an option in the
+Claude Code CLI (quoted in the dedicated record).
+
+| | |
+|---|---|
+| Project / owner | `project:syzygy` / Tzeusy |
+| Kind | registry entry |
+| Review outcome | `docs/reviews/R-GIT-SOURCE-LOCAL-AGENT-V1-1-6-RAW.md`: `CONFIRM WITH EXCEPTIONS`; disposition: `docs/reviews/R-GIT-SOURCE-LOCAL-AGENT-V1-1-6-NOTES.md` |
+| Recording | `.syzygy/governance/decisions/PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-SIGNOFF-v1.1.md`; annotated tag `public-git-source-acquisition-local-agent-v1.1` on the commit carrying these records and the applied result |
+| Direction | `.syzygy/governance/decisions/OWNER-DIRECTION-VERSIONED-SIGNOFF-SCOPE-A-2026-10-02.md` |
+
+This sign-off approves the registry entry its dedicated record names, at the
+SHA-256 recorded there, under the Scope A extension the owner's selection
+names, and supersedes version 1.0. That is one of the separate acts a read
+needs. It gives no observation consent and widens no network egress; against
+version 1.0 it widens, in a copy-class run alone, local execution and a local
+write, and reads that copy in place of the operator's clone, as its record
+says. It authorizes no implementation, and a later version of the package is
+signed separately.
+<!-- /versioned-signoff:public-git-source-acquisition-local-agent:v1.1 -->

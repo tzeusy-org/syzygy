@@ -1,0 +1,32 @@
+{
+ "rowsText": "    }, 'packages/a/tsconfig.json: a referenced project is not composite'],\n    ['reaches a project whose declarations sit in a sibling of dist through extends', ['packages/d'], (root) => inherit(root, 'packages/a', { declarationDir: 'dist-x' }),\n      'packages/a/tsconfig.json: its outputs and incremental state are not both under dist'],\n  ])('refuses, removing nothing, when it %s'",
+ "row2Text": "  }, 30_000);\n\n  // TypeScript reads a backslash in a path as a separator, so it resolves this project's outDir to packages/x/y/dist, outside its\n  // own dist, while the tsconfig's own outDir is 'dist' (R6).\n  it('refuses, removing nothing, when it names a project whose directory name holds a backslash', async () => {\n    const root = scratchTree();\n    plant(root, 'packages/x\\\\y/src/m.ts', \"export const m = 'm';\\n\");\n    plant(root, 'packages/x\\\\y/tsconfig.json', readFileSync(join(root, 'packages/c/tsconfig.json'), 'utf8'));\n    plant(root, 'packages/x\\\\y/dist/m.js', 'kept\\n');\n    await expect(cleanBuild(root, 'packages/x\\\\y')).rejects\n      .toMatchObject({ stderr: expect.stringContaining('packages/x\\\\y/tsconfig.json: its outputs and incremental state are not both under dist') });\n    expect(readFileSync(join(root, 'packages/x\\\\y/dist/m.js'), 'utf8')).toBe('kept\\n');\n  }, 30_000);\n\n  // tsc -b requires composite only of a referenced project",
+ "head": {
+  "exit": 0,
+  "passed": 25,
+  "failed": 0,
+  "failing": []
+ },
+ "E1": {
+  "exit": 1,
+  "passed": 24,
+  "failed": 1,
+  "failing": [
+   [
+    "refuses, removing nothing, when it names a project whose directory name holds a backslash",
+    "AssertionError: expected Error: Command failed: /home/tze/.nvm/ver\u2026 { \u2026(6) } to match object { stderr: StringContaining{\u2026} }"
+   ]
+  ]
+ },
+ "C10": {
+  "exit": 1,
+  "passed": 24,
+  "failed": 1,
+  "failing": [
+   [
+    "refuses, removing nothing, when it reaches a project whose declarations sit in a sibling of dist through extends",
+    "Error: promise resolved \"{ stdout: '', stderr: '' }\" instead of rejecting"
+   ]
+  ]
+ }
+}

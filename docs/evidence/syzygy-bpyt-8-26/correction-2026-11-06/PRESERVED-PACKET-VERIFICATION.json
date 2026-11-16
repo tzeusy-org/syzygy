@@ -1,0 +1,25 @@
+{
+  "records": [
+    {
+      "archive": "RAW-PACKET.tar.gz",
+      "sha256": "d9e600f89e930c2918cd6236d278a7715646c5cd46951f8f78877119b10769a4",
+      "members": 492,
+      "memberBytes": 247717446,
+      "pythonNativePathSetsEqual": true,
+      "completeMemberHashesVerified": true
+    },
+    {
+      "archive": "FINAL-SUPPLEMENT.tar.gz",
+      "sha256": "825ec7e4cf5926ede51545d18387406ee38a830584d6142d06691fc2142f7e18",
+      "members": 202,
+      "memberBytes": 11111048,
+      "pythonNativePathSetsEqual": true,
+      "completeMemberHashesVerified": true
+    }
+  ],
+  "unchangedHistoricalOnly": true,
+  "initialComparisonAttempt": {
+    "exit": 1,
+    "reason": "Supplement index has an additional previousFrozenBinding provenance field; initial whole-object equality compared it against tar member bytes. Corrected comparison binds exact member/bytes/hash triples while preserving all provenance metadata."
+  }
+}

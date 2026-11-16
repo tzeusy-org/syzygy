@@ -1,0 +1,2 @@
+// not a config file: a property named testTimeout elsewhere
+export const opts = { testTimeout: 3001 };

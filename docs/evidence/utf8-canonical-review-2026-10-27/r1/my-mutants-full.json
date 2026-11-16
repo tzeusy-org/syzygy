@@ -1,0 +1,137 @@
+{
+ "head": "2d3f93759a28d35e7b04facb5aaebbcc29697d09",
+ "expectedProbeOutput": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-534/clone/docs/evidence/syzygy-bpyt-6-3/utf8-probe-output-base.json",
+ "mutants": [
+  {
+   "id": "S4-seed-reader-refusal-reason",
+   "file": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+   "old": "return { kind: 'unavailable', reason: 'seed is not valid UTF-8' };",
+   "new": "return { kind: 'unavailable', reason: 'seed is not readable' };",
+   "head": "2d3f93759a28d35e7b04facb5aaebbcc29697d09",
+   "oldCount": 1,
+   "detectors": {
+    "tests": {
+     "command": "npx vitest run",
+     "exit": 1,
+     "summary": [
+      "Test Files  1 failed | 245 passed | 3 skipped (249)",
+      "Tests  1 failed | 5367 passed | 5 skipped (5373)"
+     ],
+     "failing": [
+      "FAIL  |@syzygy/polaris-dossier| packages/polaris-dossier/src/start-gates.test.ts > init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses config naming a remote, a promisor, an in",
+      "\u00d7 init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses config naming a remote, a promisor, an include or a command the agent's git would run (R-POLARIS-DOSSIER-CLONE-SHAPE-2 fin"
+     ],
+     "failingCount": 2,
+     "killed": true
+    },
+    "probe": {
+     "exit": 1,
+     "rowsDiffer": 761,
+     "differPerDriver": {
+      "seed-reader": 761
+     },
+     "firstDiffering": [
+      [
+       "seed-reader",
+       "bad-then-good"
+      ],
+      [
+       "seed-reader",
+       "consent+bad-head"
+      ],
+      [
+       "seed-reader",
+       "consent+bad-tail"
+      ],
+      [
+       "seed-reader",
+       "consent+overlong-tail"
+      ]
+     ],
+     "killed": true
+    }
+   },
+   "verdict": "killed by tests, probe"
+  },
+  {
+   "id": "S9-git-text-keeps-bom",
+   "file": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+   "old": "const text = decodeUtf8(bytes);\n  return text === undefined ? { kind: 'failed'",
+   "new": "const text = ((): string | undefined => { try { return new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(bytes); } catch { return undefined; } })();\n  return text === undefined ? { kind: 'failed'",
+   "head": "2d3f93759a28d35e7b04facb5aaebbcc29697d09",
+   "oldCount": 1,
+   "detectors": {
+    "tests": {
+     "command": "npx vitest run",
+     "exit": 1,
+     "summary": [
+      "Test Files  1 failed | 245 passed | 3 skipped (249)",
+      "Tests  1 failed | 5367 passed | 5 skipped (5373)"
+     ],
+     "failing": [
+      "FAIL  |@syzygy/polaris-dossier| packages/polaris-dossier/src/start-gates.test.ts > init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses config naming a remote, a promisor, an in",
+      "\u00d7 init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses config naming a remote, a promisor, an include or a command the agent's git would run (R-POLARIS-DOSSIER-CLONE-SHAPE-2 fin"
+     ],
+     "failingCount": 2,
+     "killed": true
+    },
+    "probe": {
+     "exit": 1,
+     "rowsDiffer": 192,
+     "differPerDriver": {
+      "observe-ls-tree": 192
+     },
+     "firstDiffering": [
+      [
+       "observe-ls-tree",
+       "bom-bom-text"
+      ],
+      [
+       "observe-ls-tree",
+       "bom-only"
+      ],
+      [
+       "observe-ls-tree",
+       "bom-text"
+      ],
+      [
+       "observe-ls-tree",
+       "consent+bom"
+      ]
+     ],
+     "killed": true
+    }
+   },
+   "verdict": "killed by tests, probe"
+  },
+  {
+   "id": "S10-code-structure-keeps-bom",
+   "file": "packages/three-surface-poc-core/src/code-structure.ts",
+   "old": "const text = decodeUtf8(withoutGitlinkRecords(bytes));",
+   "new": "const text = ((b: Buffer): string | undefined => { try { return new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(b); } catch { return undefined; } })(withoutGitlinkRecords(bytes));",
+   "head": "2d3f93759a28d35e7b04facb5aaebbcc29697d09",
+   "oldCount": 1,
+   "detectors": {
+    "tests": {
+     "command": "npx vitest run",
+     "exit": 0,
+     "summary": [
+      "Test Files  246 passed | 3 skipped (249)",
+      "Tests  5368 passed | 5 skipped (5373)"
+     ],
+     "failing": [],
+     "failingCount": 0,
+     "killed": false
+    },
+    "probe": {
+     "exit": 0,
+     "rowsDiffer": 0,
+     "differPerDriver": {},
+     "firstDiffering": [],
+     "killed": false
+    }
+   },
+   "verdict": "SURVIVED"
+  }
+ ]
+}

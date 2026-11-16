@@ -1,0 +1,17 @@
+
+ RUN  v3.2.7 /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-547/clone
+
+ ✓ |@syzygy/polaris-generation-core| packages/polaris-generation-core/src/workspace-reach.test.ts (54 tests) 70ms
+ ✓ |@syzygy/polaris-dossier| packages/polaris-dossier/src/subpath-imports.test.ts (27 tests) 548ms
+   ✓ the daemon path, every module the entry reaches outside its dossier and polaris branches > leaves the entry by every edge but the four dynamic imports inside those branches  402ms
+ ✓ |@syzygy/polaris-generation-core| packages/polaris-generation-core/src/island-boundary.test.ts (4 tests) 500ms
+   ✓ the syzygy CLI and the parked provider island > resolves every workspace import the CLI reaches, dynamic ones included  314ms
+ ✓ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/git-observation.test.ts (13 tests) 1876ms
+   ✓ read-only Git observation > identifies clean and dirty states without refreshing the index  463ms
+   ✓ read-only Git observation > retains a protected source path when it is renamed out  494ms
+
+ Test Files  4 passed (4)
+      Tests  98 passed (98)
+   Start at  02:14:34
+   Duration  4.39s (transform 780ms, setup 566ms, collect 3.91s, tests 2.99s, environment 7ms, prepare 778ms)
+

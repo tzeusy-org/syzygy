@@ -1,0 +1,21 @@
+original sha256 c383659e032f3bf9e832684cde946b1d6a781ab53249d8adc293392c53467e22 bytes 756210
+extract declares {'path': 'scratchpad/lane-b/suite821.json (session scratch, not retained)', 'sha256': 'c383659e032f3bf9e832684cde946b1d6a781ab53249d8adc293392c53467e22', 'bytes': 756210}
+original suites for the file: 1 extract suites: 1
+suite entry equal (deep): True
+startTime extract 1792661270553 original 1792661270553 equal True
+numTotalTests extract 1729 original 1729 equal True
+numFailedTests extract 50 original 50 equal True
+assertions 299 distinct fullNames 299
+status counts {'failed': 10, 'passed': 289}
+non-passed in this file: 10
+   16465 the policy port and the strict policy chain agree on every world in the fixture set, at every instant
+   14198 screening scope version 2 policy act counts the version 2 act when the policy carries the version 2 bytes, and the versi
+   14149 package admission reader returns a record only for an instance that an act record names by path and digest
+   13826 egress version 2 record refuses when version 2 did not take effect strictly after version 1: the same instant, or earlie
+   12015 strict act reads policy chain: absent without acts; refused for a missing version 1, equal or earlier instants, equal ar
+   11817 egress version 2 record is read from the recorder's act: version 2 supersedes version 1 once in force
+   11800 egress version 2 record the RFC5-14 class amendment version 2 depends on is required: no record, an edited module, a wro
+   8089 egress version 2 record withdrawal and forgery forms the reader does not define does not refuse the recorders' other act
+   5040 egress version 2 record leaves version 1 standing before the version 2 act takes effect, and with no version 1 act at al
+   5039 screening scope version 2 policy act a version 2 act not yet in force leaves version 1 in force, in both views
+failure message heads {'Error: STACK_TRACE_ERROR': 10}

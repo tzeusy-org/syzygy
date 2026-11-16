@@ -1,0 +1,45 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject
+
+ ❯ |unit| packages/polaris-generation-core/src/island-boundary.test.ts (9 tests | 1 failed) 3250ms
+   ✓ the live Node entries and the parked provider island > lists twenty-four island modules, each a file in the tree 3ms
+   × the live Node entries and the parked provider island > admits transitive island ingress only from the island and exact parked remainder 1791ms
+     → 281 production sources: unresolved workspace edges: expected [ Array(1) ] to deeply equal []
+   ✓ the live Node entries and the parked provider island > resolves every workspace import both entries reach, dynamic ones included  646ms
+   ✓ the live Node entries and the parked provider island > reaches no island module from either live entry  644ms
+   ✓ the live Node entries and the parked provider island > reaches the island from the consent package root, which neither live entry imports 157ms
+   ✓ the live Node entries and the parked provider island > refuses computed import arguments, including template expressions 3ms
+   ✓ the live Node entries and the parked provider island > refuses require calls and import-equals loaders 2ms
+   ✓ the live Node entries and the parked provider island > refuses createRequire calls, including imported aliases and module properties 3ms
+   ✓ the live Node entries and the parked provider island > follows a no-substitution template and the existing static, type and literal dynamic forms 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |unit| packages/polaris-generation-core/src/island-boundary.test.ts > the live Node entries and the parked provider island > admits transitive island ingress only from the island and exact parked remainder
+AssertionError: 281 production sources: unresolved workspace edges: expected [ Array(1) ] to deeply equal []
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- [][39m
+[31m+ [[39m
+[31m+   "apps/syzygy/src/bpyt-island-fixture.ts: apps/syzygy/src/bpyt-island-fixture.ts imports @syzygy/bpyt-missing",[39m
+[31m+ ][39m
+
+ ❯ packages/polaris-generation-core/src/island-boundary.test.ts:189:109
+    187|     expect(population.length, 'production-source enumeration must not …
+    188|     expect([...new Set(unsupported)], `${population.length} production…
+    189|     expect([...new Set(unresolved)], `${population.length} production …
+       |                                                                                                             ^
+    190|     expect(violations, `${population.length} production sources: unlis…
+    191|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 8 passed (9)
+   Start at  16:09:49
+   Duration  4.09s (transform 76ms, setup 25ms, collect 469ms, tests 3.25s, environment 0ms, prepare 60ms)
+
+JSON report written to /home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-disconnected-unresolved-new.vitest.json

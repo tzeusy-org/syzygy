@@ -1,0 +1,10 @@
+batch         version  att pass dirty surv asClaimed  exit codes / stop runs recorded
+G-np          mk6        9    8     0    1         9  {143: 9} / 0
+H-np          mk2        1    0     0    0         1  {129: 1} / 0
+K-np          mk3        1    0     0    0         0  {1: 1} / 0
+totals {('mk6', 'attempts'): 9, ('mk6', 'passed'): 8, ('mk6', 'dirty'): 0, ('mk6', 'withSurvivors'): 1, ('mk2', 'attempts'): 1, ('mk2', 'passed'): 0, ('mk2', 'dirty'): 0, ('mk2', 'withSurvivors'): 0, ('mk3', 'attempts'): 1, ('mk3', 'passed'): 0, ('mk3', 'dirty'): 0, ('mk3', 'withSurvivors'): 0}
+head attempts 0 dirty 0 with survivors 0
+head dirty batches []
+head survivor batches []
+head stop attempts with a record written 0
+head stop attempts whose exit is not 128 + first signal sent 0 Counter()

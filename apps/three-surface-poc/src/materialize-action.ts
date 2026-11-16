@@ -1,4 +1,4 @@
-import { escapeHtml, type Route } from '@syzygy/cap1-daemon';
+import { escapeHtml, type Route } from '@syzygy/http-host';
 import {
   clearMaterializationRecordFile,
   dispatchAuthorization,

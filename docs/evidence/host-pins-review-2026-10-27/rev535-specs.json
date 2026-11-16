@@ -1,0 +1,164 @@
+{
+ "files": [
+  "packages/http-host/src/credentials.test.ts",
+  "packages/http-host/src/shutdown.test.ts",
+  "packages/http-host/src/package.test.ts",
+  "packages/cap1-daemon/src/",
+  "packages/cap1-conformance/src/",
+  "apps/three-surface-poc/src/routes.test.ts",
+  "apps/three-surface-poc/src/response-limits.test.ts",
+  "apps/three-surface-poc/src/main.test.ts",
+  "apps/three-surface-poc/src/surface-routes.test.ts",
+  "apps/three-surface-poc/src/reobserve-action.test.ts",
+  "apps/three-surface-poc/src/materialize-action.test.ts",
+  "apps/three-surface-poc/src/browser-origin.test.ts",
+  "apps/three-surface-poc/src/git-observation.test.ts",
+  "apps/three-surface-poc/src/verbatim-route.test.ts",
+  "apps/three-surface-poc/src/polaris-source-route.test.ts",
+  "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+  "apps/three-surface-poc/src/evaluation-footer.test.ts",
+  "apps/three-surface-poc/src/page-size-delta.test.ts",
+  "apps/three-surface-poc/src/tuple-encoding.test.ts"
+ ],
+ "mutants": [
+  {
+   "id": "CONTROL",
+   "edits": []
+  },
+  {
+   "id": "V1-token-compare-not-constant-time",
+   "edits": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "old": "  return timingSafeEqual(a, b);",
+     "new": "  return presented === expected;"
+    }
+   ]
+  },
+  {
+   "id": "V2-bearer-leading-whitespace-admitted",
+   "edits": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "old": "  const match = /^Bearer (.+)$/.exec(header);",
+     "new": "  const match = /^\\s*Bearer (.+)$/.exec(header);"
+    }
+   ]
+  },
+  {
+   "id": "V3-bearer-token-first-non-space-run",
+   "edits": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "old": "  const match = /^Bearer (.+)$/.exec(header);",
+     "new": "  const match = /^Bearer (\\S+)/.exec(header);"
+    }
+   ]
+  },
+  {
+   "id": "V4-containment-case-insensitive",
+   "edits": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "old": "  return candidate === root || candidate.startsWith(root + path.sep);",
+     "new": "  return candidate.toLowerCase() === root.toLowerCase() || candidate.toLowerCase().startsWith(root.toLowerCase() + path.sep);"
+    }
+   ]
+  },
+  {
+   "id": "V5-lexical-check-before-normalising",
+   "edits": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "old": "  if (!isWithin(root, resolved)) {",
+     "new": "  if (!isWithin(root, root + path.sep + candidatePath)) {"
+    }
+   ]
+  },
+  {
+   "id": "V6-origin-suffix-match",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/browser-origin.ts",
+     "old": "  return origin === undefined || origin === expectedOrigin(host);",
+     "new": "  return origin === undefined || origin.endsWith(expectedOrigin(host));"
+    }
+   ]
+  },
+  {
+   "id": "V7-origin-compared-case-insensitively",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/browser-origin.ts",
+     "old": "  return origin === undefined || origin === expectedOrigin(host);",
+     "new": "  return origin === undefined || origin.toLowerCase() === expectedOrigin(host).toLowerCase();"
+    }
+   ]
+  },
+  {
+   "id": "V8-host-lower-cased-before-check",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/browser-origin.ts",
+     "old": "    (/^(?:127\\.0\\.0\\.1|localhost):[0-9]+$/.test(host) || host === TAILNET_HOST);",
+     "new": "    (/^(?:127\\.0\\.0\\.1|localhost):[0-9]+$/.test(host.toLowerCase()) || host.toLowerCase() === TAILNET_HOST);"
+    }
+   ]
+  },
+  {
+   "id": "V9-withheld-diagnostic-leaks-one-reason-character",
+   "edits": [
+    {
+     "file": "packages/http-host/src/server.ts",
+     "old": "    ...(diagnostic === undefined ? {} : diagnostic),",
+     "new": "    ...(diagnostic === undefined ? (input.response.diagnostic?.population.kind === 'unknown' ? { hint: input.response.diagnostic.population.reason.slice(-1) } : {}) : diagnostic),"
+    }
+   ]
+  },
+  {
+   "id": "V10-listed-reason-matched-case-insensitively",
+   "edits": [
+    {
+     "file": "packages/http-host/src/server.ts",
+     "old": "['project shape not-evaluated', 'project shape not-admitted', 'project shape observation-failed'].includes(population.reason)",
+     "new": "['project shape not-evaluated', 'project shape not-admitted', 'project shape observation-failed'].includes(population.reason.toLowerCase())"
+    }
+   ]
+  },
+  {
+   "id": "V11-gate-prefix-without-trailing-slash",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "old": "    'packages/http-host/',\n",
+     "new": "    'packages/http-host',\n"
+    }
+   ]
+  },
+  {
+   "id": "V12-gate-prefix-src-and-manifest-only",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "old": "    'packages/http-host/',\n",
+     "new": "    'packages/http-host/src/',\n    'packages/http-host/package.json',\n"
+    }
+   ]
+  },
+  {
+   "id": "V13-shim-local-copy-of-object-export",
+   "edits": [
+    {
+     "file": "packages/cap1-daemon/src/server.ts",
+     "old": "  REFUSAL_BODY,\n",
+     "new": ""
+    },
+    {
+     "file": "packages/cap1-daemon/src/server.ts",
+     "old": "// --- This wave's minimal root route",
+     "new": "export const REFUSAL_BODY = { admitted: false, served: 'nothing' } as const;\n\n// --- This wave's minimal root route"
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,31 @@
+{
+ "plain": {
+  "target": "./dist/index.js",
+  "node": "loaded",
+  "stderr": ""
+ },
+ "dotdot": {
+  "target": "./dist/x/../index.js",
+  "node": "ERR_INVALID_PACKAGE_TARGET",
+  "stderr": ""
+ },
+ "dot": {
+  "target": "./dist/./index.js",
+  "node": "ERR_INVALID_PACKAGE_TARGET",
+  "stderr": ""
+ },
+ "empty-segment": {
+  "target": "./dist//index.js",
+  "node": "loaded",
+  "stderr": "(node:1057020) [DEP0166] DeprecationWarning: Use of deprecated double slash resolving \"./dist//index.js\" for module request \".\" in the \"exports\" field module resolution of the package at /tmp/r554-pro"
+ },
+ "types-dotdot": {
+  "target": {
+   "types": "./dist/x/../index.d.ts",
+   "import": "./dist/index.js",
+   "default": "./dist/index.js"
+  },
+  "node": "loaded",
+  "stderr": ""
+ }
+}

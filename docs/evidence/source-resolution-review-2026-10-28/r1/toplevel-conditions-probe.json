@@ -1,0 +1,24 @@
+{
+ "old": "  ssr: { resolve: { conditions: ['source', 'module', 'node', 'development|production'] } },\n",
+ "new": "  resolve: { conditions: ['source', 'module', 'node', 'development|production'] },\n",
+ "loadavg": [
+  "38.84",
+  "34.21",
+  "35.66"
+ ],
+ "topLevelConditions": {
+  "exit": 1,
+  "passed": 0,
+  "total": 0,
+  "suiteMessages": [
+   "R549-POISONED-DIST support"
+  ]
+ },
+ "ssrConditions": {
+  "exit": 0,
+  "passed": 3,
+  "total": 3,
+  "suiteMessages": []
+ },
+ "worktreeClean": true
+}

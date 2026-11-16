@@ -1,11 +1,11 @@
 import { createHash } from 'node:crypto';
-import { lstatSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
+import { lstatSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { request as httpRequest } from 'node:http';
-import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { createDaemon, type Route, type RunningDaemon } from '@syzygy/cap1-daemon';
+import { createDaemon, type Route, type RunningDaemon } from '@syzygy/http-host';
+import { tempDir } from '@syzygy/test-kit';
 import { BUTLERS_POC_SEEDS, buildPocModel, buildResponseIdentity, type PocModel } from '@syzygy/three-surface-poc-core';
 
 import { POC_MACHINE_PATH, POLARIS_PRESENTATION_PATH, pocRoutes, renderPocPage } from './routes.js';
@@ -24,12 +24,6 @@ afterEach(async () => {
     rmSync(directory, { recursive: true, force: true });
   }
 });
-
-function tempDir(prefix: string): string {
-  const directory = mkdtempSync(join(tmpdir(), prefix));
-  cleanups.push(directory);
-  return directory;
-}
 
 function stateDirectorySnapshot(root: string): readonly { path: string; kind: string; bytes?: string; mtimeNs: string }[] {
   const entries: { path: string; kind: string; bytes?: string; mtimeNs: string }[] = [];
@@ -54,7 +48,7 @@ function stateDirectorySnapshot(root: string): readonly { path: string; kind: st
 function modelFixture(): PocModel {
   const repoRoot = tempDir('syzygy-poc-route-butlers-');
   const files: Readonly<Record<string, string>> = {
-    'docs/superpowers/specs/2026-08-24-whatsapp-identity-reconciliation-design.md':
+    'docs/plans/2026-08-24-whatsapp-identity-reconciliation-design.md':
       '# design\nStatus: Approved for implementation\n',
     'openspec/changes/repair-whatsapp-identity-reconciliation/proposal.md':
       '# proposal\n- Sign-off: owner approved the design and end-to-end implementation on 2026-08-24.\n',

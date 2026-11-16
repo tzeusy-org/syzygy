@@ -1,0 +1,1327 @@
+{
+ "tool": "docs/evidence/syzygy-bpyt-16/crlf-differential.mjs",
+ "baseDistModule": "6e22d480bcbf855ecc174c1a8fe4c1701806ab7adfa0aee97b01ddf61af8a38a",
+ "headDistModule": "24323f6ea54a3184769976173b84ee4a325ceed7c057dbb734548b34c4b0f142",
+ "corpusFiles": {
+  "vetCorpus": {
+   "path": "docs/evidence/syzygy-bpyt-16/vet-v-crlf-mask-1/tools/corpus.mjs",
+   "sha256": "6a3f990fc85006ba3387d68f31e8160987343f58855c6b318eba2648f180af62"
+  },
+  "fenceProbe": {
+   "path": "docs/evidence/syzygy-bpyt-6-3/fence-probe.mjs",
+   "sha256": "10b6d88b528a6f967959842bb350d21700f097f1ea0e420f174f347cf8afb680"
+  }
+ },
+ "population": {
+  "texts": 11054,
+  "distinctTexts": 10159,
+  "distinctLfForms": 1825,
+  "vet": {
+   "cases": 36,
+   "variants": 15,
+   "rows": 904
+  },
+  "fence": {
+   "cases": 33
+  },
+  "n2": {
+   "cases": 6
+  },
+  "renderings": [
+   "lf",
+   "crlf",
+   "cr",
+   "firstCrlf",
+   "lastCrlf",
+   "firstCr",
+   "cycle"
+  ],
+  "separatorSlice": {
+   "separators": [
+    "U+2028",
+    "U+2029",
+    "U+0085",
+    "U+000B",
+    "U+000C"
+   ],
+   "texts": 10131,
+   "holdingEach": {
+    "U+2028": 2026,
+    "U+2029": 2026,
+    "U+0085": 2026,
+    "U+000B": 2026,
+    "U+000C": 2026
+   },
+   "holdingNone": 1,
+   "excludedByHead": 8044
+  }
+ },
+ "checks": {
+  "C1_lfUnchanged": {
+   "texts": 1825,
+   "separatorSliceTexts": 10131,
+   "failures": 0
+  },
+  "C2_renderingEqualsLf": {
+   "texts": 11054,
+   "failures": 0
+  },
+  "C3_maskInvariants": {
+   "maskedTexts": 8345,
+   "failures": 0
+  },
+  "C4_crlfFindingsEqualLfIncludingPositions": {
+   "texts": 1822,
+   "failures": 0
+  }
+ },
+ "positionOf": {
+  "note": "positionOf counts LF only (unchanged by the fix): rows whose non-malformed findings sit at another line or column than the LF form, mixed and bare-CR renderings",
+  "rows": 532
+ },
+ "vetSelection": {
+  "CRLF": {
+   "payload": {
+    "rows": 336,
+    "refuses": 0,
+    "accepts": 0,
+    "sameDecisionOtherFindings": 0,
+    "unchanged": 336
+   },
+   "control": {
+    "rows": 36,
+    "refuses": 0,
+    "accepts": 0,
+    "sameDecisionOtherFindings": 0,
+    "unchanged": 36
+   }
+  },
+  "CR": {
+   "payload": {
+    "rows": 336,
+    "refuses": 0,
+    "accepts": 0,
+    "sameDecisionOtherFindings": 0,
+    "unchanged": 336
+   },
+   "control": {
+    "rows": 36,
+    "refuses": 0,
+    "accepts": 0,
+    "sameDecisionOtherFindings": 0,
+    "unchanged": 36
+   }
+  },
+  "variants": {
+   "payload": {
+    "rows": 145,
+    "refuses": 0,
+    "accepts": 0,
+    "sameDecisionOtherFindings": 0,
+    "unchanged": 145
+   },
+   "control": {
+    "rows": 15,
+    "refuses": 0,
+    "accepts": 0,
+    "sameDecisionOtherFindings": 0,
+    "unchanged": 15
+   }
+  }
+ },
+ "delta": {
+  "fence/all": {
+   "rows": 8050,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 8050
+  },
+  "fence/cr-nofinal/control": {
+   "rows": 33,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 33
+  },
+  "fence/cr-nofinal/placed": {
+   "rows": 542,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 542
+  },
+  "fence/cr/control": {
+   "rows": 33,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 33
+  },
+  "fence/cr/placed": {
+   "rows": 542,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 542
+  },
+  "fence/crlf-nofinal/control": {
+   "rows": 33,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 33
+  },
+  "fence/crlf-nofinal/placed": {
+   "rows": 542,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 542
+  },
+  "fence/crlf/control": {
+   "rows": 33,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 33
+  },
+  "fence/crlf/placed": {
+   "rows": 542,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 542
+  },
+  "fence/cycle-nofinal/control": {
+   "rows": 33,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 33
+  },
+  "fence/cycle-nofinal/placed": {
+   "rows": 542,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 542
+  },
+  "fence/cycle/control": {
+   "rows": 33,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 33
+  },
+  "fence/cycle/placed": {
+   "rows": 542,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 542
+  },
+  "fence/firstCr-nofinal/control": {
+   "rows": 33,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 33
+  },
+  "fence/firstCr-nofinal/placed": {
+   "rows": 542,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 542
+  },
+  "fence/firstCr/control": {
+   "rows": 33,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 33
+  },
+  "fence/firstCr/placed": {
+   "rows": 542,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 542
+  },
+  "fence/firstCrlf-nofinal/control": {
+   "rows": 33,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 33
+  },
+  "fence/firstCrlf-nofinal/placed": {
+   "rows": 542,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 542
+  },
+  "fence/firstCrlf/control": {
+   "rows": 33,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 33
+  },
+  "fence/firstCrlf/placed": {
+   "rows": 542,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 542
+  },
+  "fence/lastCrlf-nofinal/control": {
+   "rows": 33,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 33
+  },
+  "fence/lastCrlf-nofinal/placed": {
+   "rows": 542,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 542
+  },
+  "fence/lastCrlf/control": {
+   "rows": 33,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 33
+  },
+  "fence/lastCrlf/placed": {
+   "rows": 542,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 542
+  },
+  "fence/lf-nofinal/control": {
+   "rows": 33,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 33
+  },
+  "fence/lf-nofinal/placed": {
+   "rows": 542,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 542
+  },
+  "fence/lf/control": {
+   "rows": 33,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 33
+  },
+  "fence/lf/placed": {
+   "rows": 542,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 542
+  },
+  "n2/all": {
+   "rows": 2100,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 2100
+  },
+  "n2/cr-nofinal/control": {
+   "rows": 6,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 6
+  },
+  "n2/cr-nofinal/placed": {
+   "rows": 144,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 144
+  },
+  "n2/cr/control": {
+   "rows": 6,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 6
+  },
+  "n2/cr/placed": {
+   "rows": 144,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 144
+  },
+  "n2/crlf-nofinal/control": {
+   "rows": 6,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 6
+  },
+  "n2/crlf-nofinal/placed": {
+   "rows": 144,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 144
+  },
+  "n2/crlf/control": {
+   "rows": 6,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 6
+  },
+  "n2/crlf/placed": {
+   "rows": 144,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 144
+  },
+  "n2/cycle-nofinal/control": {
+   "rows": 6,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 6
+  },
+  "n2/cycle-nofinal/placed": {
+   "rows": 144,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 144
+  },
+  "n2/cycle/control": {
+   "rows": 6,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 6
+  },
+  "n2/cycle/placed": {
+   "rows": 144,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 144
+  },
+  "n2/firstCr-nofinal/control": {
+   "rows": 6,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 6
+  },
+  "n2/firstCr-nofinal/placed": {
+   "rows": 144,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 144
+  },
+  "n2/firstCr/control": {
+   "rows": 6,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 6
+  },
+  "n2/firstCr/placed": {
+   "rows": 144,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 144
+  },
+  "n2/firstCrlf-nofinal/control": {
+   "rows": 6,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 6
+  },
+  "n2/firstCrlf-nofinal/placed": {
+   "rows": 144,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 144
+  },
+  "n2/firstCrlf/control": {
+   "rows": 6,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 6
+  },
+  "n2/firstCrlf/placed": {
+   "rows": 144,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 144
+  },
+  "n2/lastCrlf-nofinal/control": {
+   "rows": 6,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 6
+  },
+  "n2/lastCrlf-nofinal/placed": {
+   "rows": 144,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 144
+  },
+  "n2/lastCrlf/control": {
+   "rows": 6,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 6
+  },
+  "n2/lastCrlf/placed": {
+   "rows": 144,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 144
+  },
+  "n2/lf-nofinal/control": {
+   "rows": 6,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 6
+  },
+  "n2/lf-nofinal/placed": {
+   "rows": 144,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 144
+  },
+  "n2/lf/control": {
+   "rows": 6,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 6
+  },
+  "n2/lf/placed": {
+   "rows": 144,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 144
+  },
+  "vet/CR/control": {
+   "rows": 36,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 36
+  },
+  "vet/CR/placed": {
+   "rows": 336,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 336
+  },
+  "vet/CRLF/control": {
+   "rows": 36,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 36
+  },
+  "vet/CRLF/placed": {
+   "rows": 336,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 336
+  },
+  "vet/M1/control": {
+   "rows": 1,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 1
+  },
+  "vet/M1/placed": {
+   "rows": 11,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 11
+  },
+  "vet/M2/control": {
+   "rows": 1,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 1
+  },
+  "vet/M2/placed": {
+   "rows": 11,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 11
+  },
+  "vet/M3/control": {
+   "rows": 1,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 1
+  },
+  "vet/M3/placed": {
+   "rows": 9,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 9
+  },
+  "vet/M4/control": {
+   "rows": 1,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 1
+  },
+  "vet/M4/placed": {
+   "rows": 9,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 9
+  },
+  "vet/M5/control": {
+   "rows": 1,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 1
+  },
+  "vet/M5/placed": {
+   "rows": 11,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 11
+  },
+  "vet/M6/control": {
+   "rows": 1,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 1
+  },
+  "vet/M6/placed": {
+   "rows": 11,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 11
+  },
+  "vet/M7/control": {
+   "rows": 1,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 1
+  },
+  "vet/M7/placed": {
+   "rows": 13,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 13
+  },
+  "vet/R1/control": {
+   "rows": 1,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 1
+  },
+  "vet/R1/placed": {
+   "rows": 11,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 11
+  },
+  "vet/R2/control": {
+   "rows": 1,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 1
+  },
+  "vet/R2/placed": {
+   "rows": 9,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 9
+  },
+  "vet/R3/control": {
+   "rows": 1,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 1
+  },
+  "vet/R3/placed": {
+   "rows": 11,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 11
+  },
+  "vet/R4/control": {
+   "rows": 1,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 1
+  },
+  "vet/R4/placed": {
+   "rows": 11,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 11
+  },
+  "vet/T1/control": {
+   "rows": 1,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 1
+  },
+  "vet/T1/placed": {
+   "rows": 7,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 7
+  },
+  "vet/T2/control": {
+   "rows": 1,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 1
+  },
+  "vet/T2/placed": {
+   "rows": 7,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 7
+  },
+  "vet/T3/control": {
+   "rows": 1,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 1
+  },
+  "vet/T3/placed": {
+   "rows": 7,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 7
+  },
+  "vet/T4/control": {
+   "rows": 1,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 1
+  },
+  "vet/T4/placed": {
+   "rows": 7,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 7
+  },
+  "vet/all": {
+   "rows": 904,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 904
+  }
+ },
+ "deltaByCase": {
+  "fence/backtick-col0": {
+   "rows": 210,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 210
+  },
+  "fence/backtick-indent1": {
+   "rows": 210,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 210
+  },
+  "fence/backtick-indent2": {
+   "rows": 210,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 210
+  },
+  "fence/backtick-indent3": {
+   "rows": 210,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 210
+  },
+  "fence/backtick-indent4": {
+   "rows": 210,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 210
+  },
+  "fence/backtick-info-with-backtick": {
+   "rows": 210,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 210
+  },
+  "fence/backtick-tab": {
+   "rows": 210,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 210
+  },
+  "fence/blockquote": {
+   "rows": 210,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 210
+  },
+  "fence/closer-indent1": {
+   "rows": 266,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 266
+  },
+  "fence/closer-indent3": {
+   "rows": 266,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 266
+  },
+  "fence/closer-indent4": {
+   "rows": 322,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 322
+  },
+  "fence/closer-longer": {
+   "rows": 210,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 210
+  },
+  "fence/closer-longer-with-info": {
+   "rows": 266,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 266
+  },
+  "fence/closer-other-char": {
+   "rows": 322,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 322
+  },
+  "fence/closer-trailing-space": {
+   "rows": 210,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 210
+  },
+  "fence/closer-trailing-tab": {
+   "rows": 210,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 210
+  },
+  "fence/closer-trailing-tab-then-closer": {
+   "rows": 322,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 322
+  },
+  "fence/closer-with-info": {
+   "rows": 322,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 322
+  },
+  "fence/closer-with-text": {
+   "rows": 322,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 322
+  },
+  "fence/empty-fence": {
+   "rows": 154,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 154
+  },
+  "fence/info-string": {
+   "rows": 210,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 210
+  },
+  "fence/info-string-space": {
+   "rows": 210,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 210
+  },
+  "fence/list-item": {
+   "rows": 210,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 210
+  },
+  "fence/opener-four-closer-three": {
+   "rows": 322,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 322
+  },
+  "fence/tilde-col0": {
+   "rows": 210,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 210
+  },
+  "fence/tilde-fence-backtick-line": {
+   "rows": 322,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 322
+  },
+  "fence/tilde-indent3": {
+   "rows": 210,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 210
+  },
+  "fence/tilde-indent4": {
+   "rows": 210,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 210
+  },
+  "fence/tilde-info-with-backtick": {
+   "rows": 210,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 210
+  },
+  "fence/tilde-opener-four-closer-three": {
+   "rows": 322,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 322
+  },
+  "fence/two-backticks": {
+   "rows": 210,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 210
+  },
+  "fence/two-fences": {
+   "rows": 378,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 378
+  },
+  "fence/unclosed": {
+   "rows": 154,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 154
+  },
+  "n2/n2-backtick-script-closer-with-text": {
+   "rows": 210,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 210
+  },
+  "n2/n2-closer-trailing-tab-script": {
+   "rows": 434,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 434
+  },
+  "n2/n2-closer-with-text-then-closer": {
+   "rows": 322,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 322
+  },
+  "n2/n2-tilde-backtick-tilde-script-tilde-backtick-tilde": {
+   "rows": 434,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 434
+  },
+  "n2/n2-tilde-script-closer-with-text": {
+   "rows": 210,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 210
+  },
+  "n2/n2-two-tilde-fences-one-backtick-line-each": {
+   "rows": 490,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 490
+  },
+  "vet/K01": {
+   "rows": 84,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 84
+  },
+  "vet/K02": {
+   "rows": 20,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 20
+  },
+  "vet/K03": {
+   "rows": 48,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 48
+  },
+  "vet/K04": {
+   "rows": 20,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 20
+  },
+  "vet/K05": {
+   "rows": 24,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 24
+  },
+  "vet/K06": {
+   "rows": 50,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 50
+  },
+  "vet/K07": {
+   "rows": 20,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 20
+  },
+  "vet/K08": {
+   "rows": 20,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 20
+  },
+  "vet/K09": {
+   "rows": 20,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 20
+  },
+  "vet/K10": {
+   "rows": 20,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 20
+  },
+  "vet/K11": {
+   "rows": 20,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 20
+  },
+  "vet/K12": {
+   "rows": 20,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 20
+  },
+  "vet/K13": {
+   "rows": 20,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 20
+  },
+  "vet/K14": {
+   "rows": 28,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 28
+  },
+  "vet/K15": {
+   "rows": 42,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 42
+  },
+  "vet/K16": {
+   "rows": 32,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 32
+  },
+  "vet/K17": {
+   "rows": 24,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 24
+  },
+  "vet/K18": {
+   "rows": 12,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 12
+  },
+  "vet/K19": {
+   "rows": 12,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 12
+  },
+  "vet/K20": {
+   "rows": 12,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 12
+  },
+  "vet/K21": {
+   "rows": 12,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 12
+  },
+  "vet/K22": {
+   "rows": 8,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 8
+  },
+  "vet/K23": {
+   "rows": 12,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 12
+  },
+  "vet/K24": {
+   "rows": 20,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 20
+  },
+  "vet/K25": {
+   "rows": 24,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 24
+  },
+  "vet/K26": {
+   "rows": 32,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 32
+  },
+  "vet/K27": {
+   "rows": 20,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 20
+  },
+  "vet/K28": {
+   "rows": 20,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 20
+  },
+  "vet/K29": {
+   "rows": 20,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 20
+  },
+  "vet/K30": {
+   "rows": 20,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 20
+  },
+  "vet/K31": {
+   "rows": 28,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 28
+  },
+  "vet/K32": {
+   "rows": 20,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 20
+  },
+  "vet/K33": {
+   "rows": 20,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 20
+  },
+  "vet/K34": {
+   "rows": 32,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 32
+  },
+  "vet/K35": {
+   "rows": 32,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 32
+  },
+  "vet/K36": {
+   "rows": 36,
+   "refuses": 0,
+   "accepts": 0,
+   "sameDecisionOtherFindings": 0,
+   "unchanged": 36
+  }
+ },
+ "transitions": {},
+ "vetChangedDecisions": {
+  "fields": [
+   "case",
+   "variant",
+   "slot",
+   "change",
+   "base",
+   "head"
+  ],
+  "rows": []
+ },
+ "failingChecks": [],
+ "failureCount": 0,
+ "failures": []
+}

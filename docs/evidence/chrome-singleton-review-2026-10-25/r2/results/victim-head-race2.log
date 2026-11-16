@@ -1,0 +1,21 @@
+tree 6dcf94906b2989345f5b03dfeaa2d64c56632886 mode race
+== four-cases before: victim=present sentinel=present planted-old=0
+  vitest:    × browser profile cleanup > retries transient ENOTEMPTY failures and succeeds within the bound 23ms
+  vitest: ⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+  vitest:  FAIL  |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/cdp-browser.test.ts > browser profile cleanup > retries transient ENOTEMPTY failures and succeeds within the bound
+  vitest: Error: ENOTEMPTY, Directory not empty: /tmp/syzygy-profile-gdCri0 '/tmp/syzygy-profile-gdCri0'
+  vitest:  Test Files  1 failed (1)
+  vitest:       Tests  1 failed | 3 passed | 25 skipped (29)
+  vitest exit 1
+  racer: {"roots":4,"plantedTotal":299,"seen":[{"root":"/tmp/syzygy-profile-gdCri0","mode":"700","planted":128,"errors":{"ENOENT":1}},{"root":"/tmp/syzygy-profile-TTK38P","mode":null,"planted":0,"errors":{"stat":"ENOENT","ENOENT":129}},{"root":"/tmp/syzygy-profile-9MalrL","mode":"700","planted":42,"errors":{"ENOENT":87}},{"root":"/tmp/syzygy-profile-04M9E3","mode":"700","planted":129,"errors":{}}]}
+== four-cases after: victim=absent sentinel=absent
+== whole-file before: victim=present sentinel=present planted-old=0
+  vitest:    × browser profile cleanup > retries transient ENOTEMPTY failures and succeeds within the bound 23ms
+  vitest: ⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+  vitest:  FAIL  |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/cdp-browser.test.ts > browser profile cleanup > retries transient ENOTEMPTY failures and succeeds within the bound
+  vitest: Error: ENOTEMPTY, Directory not empty: /tmp/syzygy-profile-xGW9Si '/tmp/syzygy-profile-xGW9Si'
+  vitest:  Test Files  1 failed (1)
+  vitest:       Tests  1 failed | 28 passed (29)
+  vitest exit 1
+  racer: {"roots":4,"plantedTotal":129,"seen":[{"root":"/tmp/syzygy-profile-xGW9Si","mode":"700","planted":129,"errors":{}},{"root":"/tmp/syzygy-profile-0mUmBY","mode":null,"planted":0,"errors":{"stat":"ENOENT","ENOENT":129}},{"root":"/tmp/syzygy-profile-r7duFC","mode":null,"planted":0,"errors":{"stat":"ENOENT","ENOENT":129}},{"root":"/tmp/syzygy-profile-DR9glr","mode":null,"planted":0,"errors":{"stat":"ENOENT","ENOENT":129}}]}
+== whole-file after: victim=absent sentinel=absent

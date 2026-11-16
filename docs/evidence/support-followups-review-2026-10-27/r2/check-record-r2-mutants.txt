@@ -1,0 +1,6 @@
+check-record-r2.py rule-6 run: each mutation is one scratch commit on 7d408fd9 in the reviewer clone (never pushed; clone deleted),
+editing docs/evidence/syzygy-bpyt-6-13/support-leaf-followups-2026-10-27.json; the unmutated record gives 4 FAIL lines (J5 label,
+W1 and W2 claims, log names no commit), so a mutation is caught when it adds a FAIL line of its own.
+M-a repairFiles sha256 off by one: exit=1 summary checks=113 ok=108 fail=5 new FAIL lines: repairFiles junit-fixture-differential-head-c7ed9ef2.json bytes+sha256: 177232 bytes
+M-b J1 status dropped: exit=1 summary checks=113 ok=108 fail=5 new FAIL lines: J1-digest-drops-the-first-byte marked NO LONGER APPLICABLE
+M-c repair baseline 7 -> 6: exit=1 summary checks=113 ok=108 fail=5 new FAIL lines: baselineAtRepair == output baseline: {'createHashSha256Sites': 7, 'localSha256Definit

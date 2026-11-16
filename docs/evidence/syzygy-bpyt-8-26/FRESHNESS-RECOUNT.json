@@ -1,0 +1,119 @@
+{
+  "schema": "consent-port-freshness-recount/1",
+  "nativeSha256": "cfe9e4c7dc36a5212f7357e0dce692897c2930fe554a4968ca09e968b567bc7e",
+  "worlds": [
+    {
+      "id": "863e7c14da01d84919f1ec5227b6f7b226843976d61373615786d3d953841fbf",
+      "comparisons": 72,
+      "quietRestored": true,
+      "middleChangedReaders": [
+        "admission",
+        "consent-ports",
+        "gate-port",
+        "in-force",
+        "in-force-egress",
+        "port"
+      ]
+    },
+    {
+      "id": "5a4dab97f7411313292b0988b1b1e5818f0c8078bca5908bd5cb94f6ddbb66e5",
+      "comparisons": 72,
+      "quietRestored": true,
+      "middleChangedReaders": [
+        "gate-port",
+        "policy-chain",
+        "policy-chain-disk",
+        "policy-reader",
+        "port",
+        "screen"
+      ]
+    },
+    {
+      "id": "0ff23e72ba417d20aaa9345ff961e9e824dc2064ad5ced96ae8797fce1438365",
+      "comparisons": 72,
+      "quietRestored": true,
+      "middleChangedReaders": [
+        "admission",
+        "class-act",
+        "class-act-disk",
+        "consent-ports",
+        "gate-port",
+        "in-force",
+        "in-force-egress",
+        "port"
+      ]
+    },
+    {
+      "id": "595a964e544e2ff9aa951d63f160f4ea348c3e3cfafab764af25308a3c4295c8",
+      "comparisons": 72,
+      "quietRestored": true,
+      "middleChangedReaders": [
+        "registry-git-source"
+      ]
+    },
+    {
+      "id": "c8056b2d7a3639842869165fe74672831a923af385b1a96c0eefde7d43260379",
+      "comparisons": 72,
+      "quietRestored": true,
+      "middleChangedReaders": [
+        "dossier-d9",
+        "gate-d9"
+      ]
+    },
+    {
+      "id": "1dd738fe9989f25907c39c3782962d4be31aa54db43e1665cabe76020e99641b",
+      "comparisons": 72,
+      "quietRestored": true,
+      "middleChangedReaders": [
+        "dossier-rfc7-20",
+        "gate-rfc7-20"
+      ]
+    },
+    {
+      "id": "6d36811a4514b43f09d123337835e2c1fe6ffe2d0b38060034ab673f42b46f27",
+      "comparisons": 72,
+      "quietRestored": true,
+      "middleChangedReaders": [
+        "dossier-drawer",
+        "gate-drawer:redis-redis"
+      ]
+    },
+    {
+      "id": "9f79043871e9425e37c2239e4d651625e53393bfd6778ed1a30de19aa953c6ab",
+      "comparisons": 72,
+      "quietRestored": true,
+      "middleChangedReaders": [
+        "dossier-statement-v1"
+      ]
+    },
+    {
+      "id": "da3a085e88f785fa2cb26981be0c211fb842edcbb7bb662f82660d845c94c4d0",
+      "comparisons": 72,
+      "quietRestored": true,
+      "middleChangedReaders": [
+        "dossier-provider-v2",
+        "gate-statements:redis-redis"
+      ]
+    },
+    {
+      "id": "64aece2f03284e406361c2d13044261a591e1651c17e61ed5785f233a2d5fbfc",
+      "comparisons": 72,
+      "quietRestored": true,
+      "middleChangedReaders": [
+        "gate-statements:redis-redis"
+      ]
+    },
+    {
+      "id": "5bcd17e2b21a409507e4a0cab6e76efe8b22ce9498f3a528287ee85d2ee71737",
+      "comparisons": 72,
+      "quietRestored": true,
+      "middleChangedReaders": [
+        "gate-registry-entry",
+        "local-agent-signoff"
+      ]
+    }
+  ],
+  "quietRestored": 11,
+  "changedMiddle": 11,
+  "denominator": 11
+}

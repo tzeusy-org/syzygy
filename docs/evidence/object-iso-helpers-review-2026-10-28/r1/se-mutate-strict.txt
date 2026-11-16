@@ -1,0 +1,7 @@
+token census over 22 files: regex matches 128, identifier nodes 128
+SE-1 packages/polaris-dossier/src/brief.ts: equal=false -> reported; a blank line removed inside the DOSSIER_GUIDANCE template literal (the brief text changes)
+SE-2 packages/polaris-dossier/src/brief.ts: equal=false -> reported; whitespace-only lines added inside the DOSSIER_GUIDANCE template literal
+SE-3 packages/polaris-dossier/src/check.ts: equal=false -> as expected; control: a changed fallback object at a call site
+SE-4 packages/polaris-generation-core/src/secret-redaction.ts: equal=false -> as expected; control: an array admitted at a class-4 call site
+SE-5 packages/three-surface-poc-core/src/authority-artifact-fields.ts: equal=false -> reported; parenthesised callee at the first call (same value; emit may differ)
+SE-6 packages/polaris-dossier/src/screen.ts: equal=true -> as expected; control: blank lines outside any literal (no behaviour change)

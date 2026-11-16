@@ -6,8 +6,11 @@
 // per-class denominators over every fixture, and the module must yield no
 // partial set on any malformed fixture.
 
+import { isDeepStrictEqual } from 'node:util';
+
 import { describe, expect, it } from 'vitest';
 
+import { maskMarkdownCodeContexts } from './markdown-code-context.js';
 import { EXTRACTION_CLASSES, type ExtractionClass } from './project-shape-manifest.js';
 import {
   CATALOG_HEADINGS,
@@ -21,7 +24,7 @@ import {
   type RootIndexExtraction,
   type SourceExtraction,
 } from './project-shape-extraction.js';
-import { ParsePassBudgetExceeded, type ParsePassIdentity } from './resource-ledger.js';
+import type { ParsePassIdentity } from './resource-ledger.js';
 
 // ---------------------------------------------------------------------
 // Fixtures — hand-written in the literal grammar. Composed characters use
@@ -214,6 +217,8 @@ const FIXTURES: readonly Fixture[] = [
 
 const N = (s: string): string => s.normalize('NFC');
 
+// It reads plain column-0 fences, which is every fence in the fixtures above; the module reads the PWB-REQ-006 profile's fences (indent, closer
+// shapes, recovery), which the describe at the end of this file pins.
 function stripFences(text: string): string {
   return text.replace(/^(```|~~~)[^\n]*\n[\s\S]*?^\1[ \t]*$/gm, '');
 }
@@ -334,7 +339,7 @@ function oracle(fixture: Fixture): ReadonlyMap<ExtractionClass, readonly string[
 
 const extracted = (f: Fixture): SourceExtraction & { kind: 'extracted' } => {
   const r = extractSource({ path: f.path, extractionClasses: f.classes }, f.text);
-  if (r.kind !== 'extracted') throw new Error(`${f.path}: ${JSON.stringify(r.kind === 'unknown' ? r.failure : r.breach)}`);
+  if (r.kind !== 'extracted') throw new Error(`${f.path}: ${JSON.stringify(r.kind === 'unknown' ? r.failure : r.kind === 'partial' ? r.failures : r.breach)}`);
   return r;
 };
 
@@ -433,7 +438,7 @@ describe('PWB-REQ-002 — two independent extractors agree on every fixture', ()
 });
 
 // ---------------------------------------------------------------------
-// Malformed fixtures: the whole source is Unknown, never a partial set.
+// Malformed fixtures: the failing class is Unknown, never a partial set.
 
 interface Malformed {
   readonly name: string;
@@ -757,32 +762,50 @@ const MALFORMED: readonly Malformed[] = [
   },
 ];
 
-describe('PWB-REQ-002 — any grammar failure makes the whole source Unknown', () => {
+describe('PWB-REQ-002 — any grammar failure makes that class Unknown, never a partial set', () => {
   for (const m of MALFORMED) {
     it(`${m.name} → ${m.reason}`, () => {
       const r = extractSource({ path: m.path, extractionClasses: m.classes }, m.text);
-      expect(r.kind).toBe('unknown');
-      if (r.kind !== 'unknown') return;
+      // The same classes read alone: the source is `unknown` only when none reads.
+      const alone = m.classes.map((cls) => extractClass(cls, m.path, m.text));
+      const failedClasses = m.classes.filter((_, i) => (alone[i] as { kind: string }).kind === 'failed');
+      expect(r.kind).toBe(failedClasses.length === m.classes.length ? 'unknown' : 'partial');
+      if (r.kind !== 'unknown' && r.kind !== 'partial') return;
       expect(r.path).toBe(m.path);
       expect(r.classes).toEqual(m.classes);
-      expect(r.failure.reason).toBe(m.reason);
-      expect(r.failure.class).toBe(m.class);
-      if (m.line !== undefined) expect(r.failure.line).toBe(m.line);
-      if (m.detail !== undefined) expect(r.failure.detail).toBe(m.detail);
-      // No partial set: nothing item-shaped survives on the Unknown arm.
-      expect('items' in r).toBe(false);
-      expect('denominators' in r).toBe(false);
-      expect(EXTRACTION_FAILURES).toContain(r.failure.reason);
+      const failures = r.kind === 'unknown' ? r.failures : r.failures;
+      expect(failures.map((f) => f.class)).toEqual(failedClasses);
+      const first = failures[0] as (typeof failures)[number];
+      expect(first.reason).toBe(m.reason);
+      expect(first.class).toBe(m.class);
+      if (m.line !== undefined) expect(first.line).toBe(m.line);
+      if (m.detail !== undefined) expect(first.detail).toBe(m.detail);
+      expect(EXTRACTION_FAILURES).toContain(first.reason);
+      // No failed class yields an item, whatever its siblings did.
+      if (r.kind === 'unknown') {
+        expect(r.failure).toEqual(first);
+        expect('items' in r).toBe(false);
+        expect('denominators' in r).toBe(false);
+      } else {
+        for (const cls of failedClasses) {
+          expect(r.items.some((item) => item.class === cls)).toBe(false);
+          expect(cls in r.denominators).toBe(false);
+        }
+      }
     });
   }
 
-  it('a failing class withholds the items of the classes that succeeded', () => {
-    // principle fails; project-account-section and success-criterion would succeed alone.
+  it('a failing class keeps the items of the classes that succeeded', () => {
+    // principle fails; project-account-section and success-criterion read.
     const text = VISION.replace('2. **Cite or stay quiet**', '2. Cite or stay quiet');
-    expect(extractClass('project-account-section', 'heart-and-soul/vision.md', text).kind).toBe('items');
-    expect(extractClass('success-criterion', 'heart-and-soul/vision.md', text).kind).toBe('items');
+    const read = ['project-account-section', 'success-criterion'] as const;
+    for (const cls of read) expect(extractClass(cls, 'heart-and-soul/vision.md', text).kind).toBe('items');
     const r = extractSource({ path: 'heart-and-soul/vision.md', extractionClasses: ['project-account-section', 'principle', 'success-criterion'] }, text);
-    expect(r.kind).toBe('unknown');
+    expect(r.kind).toBe('partial');
+    if (r.kind !== 'partial') return;
+    expect(r.failures).toEqual([{ reason: 'ambiguous-leading-label', class: 'principle', line: 29 }]);
+    expect(r.denominators).toEqual({ 'project-account-section': 3, 'success-criterion': 3 });
+    expect(r.items.map((item) => item.class)).toEqual(['project-account-section', 'project-account-section', 'project-account-section', 'success-criterion', 'success-criterion', 'success-criterion']);
   });
 
   it('the fixture set exercises every closed failure reason', () => {
@@ -818,8 +841,9 @@ describe('PWB-REQ-002 — the grammar is literal', () => {
   const vision = (text: string): SourceExtraction => extractSource({ path: 'heart-and-soul/vision.md', extractionClasses: ['principle', 'success-criterion'] }, text);
 
   it('heading matches are exact: no case folding, no trailing punctuation rewriting', () => {
-    expect(vision(VISION.replace('## Non-Negotiable Rules', '## non-negotiable rules')).kind).toBe('unknown');
-    expect(vision(VISION.replace('## Non-Negotiable Rules', '## Non-Negotiable Rules:')).kind).toBe('unknown');
+    // The principle class fails; success-criterion still reads, so the source is partial.
+    expect(vision(VISION.replace('## Non-Negotiable Rules', '## non-negotiable rules')).kind).toBe('partial');
+    expect(vision(VISION.replace('## Non-Negotiable Rules', '## Non-Negotiable Rules:')).kind).toBe('partial');
     // Trailing closing hashes and surrounding whitespace are ATX syntax, not text.
     expect(vision(VISION.replace('## Non-Negotiable Rules', '##   Non-Negotiable Rules ##')).kind).toBe('extracted');
   });
@@ -893,6 +917,7 @@ describe('PWB-REQ-006 (amended) — extraction charges one registry pass per cla
     const charged: ParsePassIdentity[] = [];
     const r = extractSource(source, VISION, (pass) => {
       charged.push(pass);
+      return undefined;
     });
     expect(r.kind).toBe('extracted');
     expect(charged).toEqual(['project-account-extraction', 'declared-item-extraction', 'declared-item-extraction']);
@@ -903,7 +928,7 @@ describe('PWB-REQ-006 (amended) — extraction charges one registry pass per cla
     let calls = 0;
     const r = extractSource(source, VISION, (pass) => {
       calls += 1;
-      if (calls === 2) throw new ParsePassBudgetExceeded(breach, pass);
+      return calls === 2 && pass === 'declared-item-extraction' ? breach : undefined;
     });
     expect(r).toEqual({ kind: 'over-limit', path: source.path, classes: [...source.extractionClasses], pass: 'declared-item-extraction', class: 'principle', breach });
     expect('items' in r).toBe(false);
@@ -1102,6 +1127,7 @@ describe('PWB-REQ-006 (amended) — the root index charges one fact-and-preceden
     const charged: ParsePassIdentity[] = [];
     const r = extractSource(root, ROOT, (pass) => {
       charged.push(pass);
+      return undefined;
     });
     expect(charged).toEqual(['fact-and-precedence-extraction']);
     expect(r.kind).toBe('extracted');
@@ -1112,6 +1138,7 @@ describe('PWB-REQ-006 (amended) — the root index charges one fact-and-preceden
     }
     const notRoot = extractSource({ ...root, rule: 'pillar-index' }, ROOT, (pass) => {
       charged.push(pass);
+      return undefined;
     });
     expect(charged).toEqual(['fact-and-precedence-extraction']);
     expect(notRoot.kind === 'extracted' && 'rootIndex' in notRoot).toBe(false);
@@ -1119,10 +1146,103 @@ describe('PWB-REQ-006 (amended) — the root index charges one fact-and-preceden
 
   it('a spent budget yields over-limit naming the root pass with no class and no grammar result', () => {
     const breach = { limit: 'maxParsePassesPerSource' as const, declared: 13, observed: 14, path: root.path };
-    const r = extractSource(root, ROOT, (pass) => {
-      throw new ParsePassBudgetExceeded(breach, pass);
-    });
+    const r = extractSource(root, ROOT, () => breach);
     expect(r).toEqual({ kind: 'over-limit', path: root.path, classes: [], pass: 'fact-and-precedence-extraction', breach });
     expect('rootIndex' in r).toBe(false);
+  });
+});
+
+// GP-B2 Q1 (syzygy-bpyt.1.18): the class results are appended one item at a time, not by one spread call whose argument count is the
+// class's item count. A call spreading 130,000 items or more overflows the stack on node 24 with the default stack.
+describe('a source whose class holds 130,000 items', () => {
+  const BULLETS = 130_000;
+  const CLASSES = ['project-account-section', 'principle', 'success-criterion'] as const;
+  const section = ['## What Success Looks Like', '', ...Array.from({ length: BULLETS }, () => '- x'), ''].join('\n');
+  const long = VISION.replace(/## What Success Looks Like[\s\S]*?(?=## What Butlers Is Not)/, `${section}\n`);
+
+  // These sizes pin the fix only where one spread call over them overflows: a larger stack (a worker-thread pool runs at
+  // 4 MB) lets the old line pass every test here. This canary fails first if the test process stops overflowing.
+  it('one spread call over 130,002 arguments still overflows the stack in this test process', () => {
+    const sink: unknown[] = [];
+    expect(() => sink.push(...new Array<unknown>(BULLETS + 2))).toThrow(RangeError);
+  });
+
+  it('is extracted, every item kept in class order', () => {
+    const r = extractSource({ path: 'heart-and-soul/vision.md', extractionClasses: [...CLASSES] }, long);
+    expect(r.kind).toBe('extracted');
+    if (r.kind !== 'extracted') return;
+    expect(r.denominators['success-criterion']).toBe(BULLETS);
+    // Class order with the text as the oracle, not the module: the bullets sit on consecutive lines, so their items must too.
+    const success = r.items.filter((item) => item.class === 'success-criterion');
+    const first = success[0]?.line ?? 0;
+    expect(success.every((item, at) => item.line === first + at), 'the success-criterion items are not in line order').toBe(true);
+    expect(r.items).toHaveLength(Object.values(r.denominators).reduce((sum, n) => sum + n, 0));
+    // One class alone gives the same items as its slice of the three-class result.
+    let offset = 0;
+    for (const cls of CLASSES) {
+      const alone = extractSource({ path: 'heart-and-soul/vision.md', extractionClasses: [cls] }, long);
+      expect(alone.kind).toBe('extracted');
+      if (alone.kind !== 'extracted') return;
+      expect(r.denominators[cls]).toBe(alone.items.length);
+      expect(isDeepStrictEqual(r.items.slice(offset, offset + alone.items.length), alone.items), `${cls} items differ from its one-class result`).toBe(true);
+      offset += alone.items.length;
+    }
+    expect(offset).toBe(r.items.length);
+  }, 30_000);
+});
+
+// syzygy-bpyt.55 (the owner's GP-B2 Q2 answer C, G2): which lines sit inside a fence is the PWB-REQ-006 profile's rule. Expected values are
+// literals; the same cases are read by the profile's mask in apps/three-surface-poc/src/fence-rules.test.ts.
+describe('the extractor reads the profile\'s fences', () => {
+  const FENCE = '```';
+  const principles = (fence: readonly string[], eol = '\n'): { readonly kind: string; readonly keys: readonly string[]; readonly denominator: number | undefined } => {
+    const text = ['# Vision', '', '## Non-Negotiable Rules', '', '1. **First.** one', '', ...fence, '', '2. **Second.** two', '', '3. **Third.** three', ''].join(eol);
+    const r = extractSource({ path: 'heart-and-soul/vision.md', extractionClasses: ['principle'] }, text);
+    return r.kind === 'extracted' ? { kind: r.kind, keys: r.items.map((item) => item.key), denominator: r.denominators['principle'] } : { kind: r.kind, keys: [], denominator: undefined };
+  };
+  const ALL = { kind: 'extracted', keys: ['First.', 'Second.', 'Third.'], denominator: 3 };
+
+  it.each([['LF', '\n'], ['CRLF', '\r\n']])('%s: a fence closes at a closer indented one to three spaces', (_name, eol) => {
+    expect(principles([FENCE, 'code', ' ' + FENCE], eol)).toEqual(ALL);
+    expect(principles([FENCE, 'code', '   ' + FENCE], eol)).toEqual(ALL);
+  });
+
+  it.each([['LF', '\n'], ['CRLF', '\r\n']])('%s: an opener indented one to three spaces is a fence, and one indented four spaces is not', (_name, eol) => {
+    expect(principles(['  ' + FENCE, '9. **Hidden.** inside', '  ' + FENCE], eol)).toEqual(ALL);
+    // Four spaces: indented code in CommonMark, and nothing the profile recognizes, so the line is ordinary text and mints nothing here.
+    expect(principles(['    ' + FENCE, 'code', '    ' + FENCE], eol)).toEqual(ALL);
+    for (const separator of ['\u2028', '\u2029']) {
+      for (const delimiter of ['```', '~~~']) {
+        for (const indent of ['', ' ', '  ', '   ']) {
+          expect(principles([indent + delimiter + separator, '## Hidden heading', '9. **Hidden.** inside', delimiter], eol)).toEqual(ALL);
+        }
+        const text = ['# Vision', '## Non-Negotiable Rules', '1. **Outside.** visible', delimiter + separator,
+          '## Hidden heading', '9. **Hidden.** inside', delimiter, '2. **After.** visible'].join(eol);
+        const passes: ParsePassIdentity[] = [];
+        const result = extractSource({ path: 'heart-and-soul/vision.md', extractionClasses: ['principle'] }, text,
+          (pass) => { passes.push(pass); return undefined; });
+        expect(result.kind).toBe('extracted');
+        if (result.kind !== 'extracted') throw new Error('expected extracted source');
+        expect(result.items.map(({ key, path, line }) => ({ key, path, line }))).toEqual([
+          { key: 'Outside.', path: 'heart-and-soul/vision.md', line: 3 },
+          { key: 'After.', path: 'heart-and-soul/vision.md', line: 8 },
+        ]);
+        expect(result.denominators['principle']).toBe(2);
+        expect(passes).toEqual(['declared-item-extraction']);
+      }
+    }
+  });
+
+  it.each([['LF', '\n'], ['CRLF', '\r\n']])('%s: a closer-shaped line with an info string or a trailing tab does not close the fence', (_name, eol) => {
+    expect(principles([FENCE, 'x', FENCE + 'js', 'y', FENCE], eol)).toEqual(ALL);
+    expect(principles([FENCE, 'x', FENCE + '\t', 'y', FENCE], eol)).toEqual(ALL);
+    // Longer than the opener closes; shorter does not.
+    expect(principles([FENCE, 'x', '````'], eol)).toEqual(ALL);
+    expect(principles(['````', 'x', FENCE, 'y', '````'], eol)).toEqual(ALL);
+  });
+
+  it('a fence that never closes runs to the end of the text (recovery; the reader excludes such a source before it gets here)', () => {
+    expect(principles([FENCE, 'code'])).toEqual({ kind: 'extracted', keys: ['First.'], denominator: 1 });
+    expect(maskMarkdownCodeContexts(['# Vision', '', FENCE, 'code', ''].join('\n')).kind).toBe('malformed');
   });
 });

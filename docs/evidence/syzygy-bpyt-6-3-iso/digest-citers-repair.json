@@ -1,0 +1,79 @@
+{
+ "baseCommit": "2e7ab2ecfdd44b3b7a6276d333660ae5843ca308",
+ "codeHeadCommit": "28024ade30ac30ffeac3bb09fe0833fe63a43981",
+ "populationCommit": "28024ade30ac30ffeac3bb09fe0833fe63a43981",
+ "population": "6820 tracked files at the population commit, excluding docs/evidence/syzygy-bpyt-6-3-iso/",
+ "editedFiles": [
+  "packages/polaris-dossier/src/screen.test.ts",
+  "packages/polaris-generation-core/src/secret-redaction.test.ts",
+  "packages/support/src/is-record.ts",
+  "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts",
+  "AGENTS.md"
+ ],
+ "digests": [
+  {
+   "path": "packages/polaris-dossier/src/screen.test.ts",
+   "at": "base",
+   "sha256": "90d0b63a8b245f72364d72d9d6e57eac8b6a49ffa364afed03518a5f46778aa7",
+   "gitBlob": "86858a528536fad960474722dbb7496b616e26fe"
+  },
+  {
+   "path": "packages/polaris-dossier/src/screen.test.ts",
+   "at": "head",
+   "sha256": "7c7998bfa95fc8bd947715bf0f59eb2210815635bb61ae70feff97b6f2c51c9f",
+   "gitBlob": "aae84801fb06cff4791ed54f94c0d4a43d603f15"
+  },
+  {
+   "path": "packages/polaris-generation-core/src/secret-redaction.test.ts",
+   "at": "base",
+   "sha256": "b3c282fa41965b19294db5058f24fec1882cd9e440fed742e4a4ac0c1918e353",
+   "gitBlob": "38a5d90765148bdcbd9e2bd692c21256029258da"
+  },
+  {
+   "path": "packages/polaris-generation-core/src/secret-redaction.test.ts",
+   "at": "head",
+   "sha256": "12fbd07059e9339bdb23ab385dd84f9db5321e9d85468628b471d12eea903b7e",
+   "gitBlob": "30eba944c89c00e46db11420ce24e7b16ad62d30"
+  },
+  {
+   "path": "packages/support/src/is-record.ts",
+   "at": "base",
+   "sha256": "6df2d49aaf52ffc7890004bda4307b241c926c457605704d53676c1e12a3d8d1",
+   "gitBlob": "6119ce78592ce569456ab56b351d67b58ea7f147"
+  },
+  {
+   "path": "packages/support/src/is-record.ts",
+   "at": "head",
+   "sha256": "c0474de8efc9374f8707a40dcc62af68ddddf7d10e6bd94fedb6c7c7134d1e97",
+   "gitBlob": "edda36995ab80ba63f3f9930b0f42c183d86d1e2"
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts",
+   "at": "base",
+   "sha256": "69b4aab4c21d19778dbaca7818b54f04c11e7b7a3a50807d547fca738ce76455",
+   "gitBlob": "dc2bbd8a5487ad68fabfa8d58e1940c6313f747d"
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts",
+   "at": "head",
+   "sha256": "02173e7a2e7f64db1f5306cdf42800b439734550f31ceaa65f3319076307bea0",
+   "gitBlob": "6aaba0c728ec6c351e9169d29551e19f5210cc70"
+  },
+  {
+   "path": "AGENTS.md",
+   "at": "base",
+   "sha256": "e6af9ed76016f9b3aa1e2c616f77c6d53e295b5d18e1deef793eaafae23b074a",
+   "gitBlob": "f79d8dc85e0a657eccb3a490119129704b9514f5"
+  },
+  {
+   "path": "AGENTS.md",
+   "at": "head",
+   "sha256": "55aed3051b380e5c90b504c6ec7214820f6a6f0319aeb43759879a21c9329bb1",
+   "gitBlob": "86a1f3f555d1174ec41b9a3f5abb535566cab158"
+  }
+ ],
+ "needles": 40,
+ "methods": "one: Python bytes.find over every blob; two: git grep -F -l per needle",
+ "methodsAgree": true,
+ "needlesCited": {}
+}

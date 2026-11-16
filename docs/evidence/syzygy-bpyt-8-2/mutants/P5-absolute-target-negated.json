@@ -1,0 +1,11 @@
+{
+ "id": "P5-absolute-target-negated",
+ "command": "TMPDIR=/tmp/la-b82/g CI=1 npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/state-directory.test.ts",
+ "edits": [
+  {
+   "file": "packages/polaris-dossier/src/state-directory.ts",
+   "old": "path.isAbsolute(target) ? target :",
+   "new": "!path.isAbsolute(target) ? target :"
+  }
+ ]
+}

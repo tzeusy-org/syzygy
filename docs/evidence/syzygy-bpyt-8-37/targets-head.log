@@ -1,0 +1,18 @@
+RV-T18-dependency-alias killed 1 ['Tests  1 failed | 26 passed (27)'] 3.2 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > resolves every workspace specifier on it, and reaches past the entry's own imports
+RV-C6-mts-caller killed 1 ['Tests  1 failed | 84 passed (85)'] 2.3 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > is the spec of every readArgv call, and no other module names readArgv
+RV-P3-moduleIn-prefix-null killed 1 ['Tests  1 failed | 71 passed (72)'] 2.5 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a # alias whose target is a module of its own package outside dist as naming no module
+RV-P4-moduleIn-missing-file-null killed 1 ['Tests  1 failed | 71 passed (72)'] 2.1 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a # alias whose target names no source module as naming no module
+RV-P6-leaves-package-check-dropped killed 1 ['Tests  1 failed | 71 passed (72)'] 2.3 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a # alias whose target leaves its package for a module that exists as naming no module
+RV-P8-array-guard-dropped survives 0 ['Tests  72 passed (72)'] 2.5 clean
+RV-Q1-callee-conjunct-dropped killed 1 ['Tests  1 failed | 84 passed (85)'] 2.1 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > the census sees a reading the lift does not in "import { readArgv } from './argv.js';\nvoid [[]].map(readArgv);" (its own m
+RV-Q2-declaration-anywhere killed 1 ['Tests  1 failed | 84 passed (85)'] 2.1 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > the census sees a reading the lift does not in "export function readArgv(): void {}" (its own mutant)
+RV-Q3-census-never-fed killed 1 ['Tests  1 failed | 84 passed (85)'] 2.1 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > adds each module's census to what it reports unlifted
+wrote /tmp/la-b837/targets-head.json 9

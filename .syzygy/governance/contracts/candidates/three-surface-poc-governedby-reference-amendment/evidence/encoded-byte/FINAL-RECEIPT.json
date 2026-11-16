@@ -1,0 +1,231 @@
+{
+  "epistemic": "Observed",
+  "recordedAtUtc": "2026-10-20T20:55:23.832228+00:00",
+  "sourceCommit": "eba011dfbe254c09a88ccc374b3efe5ff5df1762",
+  "candidateCommit": "abd3f6ca2e8e99ad59327fdfc7b38d8bf41b07b5",
+  "purpose": "CC-REV-4 read-only source/design corroboration; no new semantic verdict or repair",
+  "artifactHashes": {
+    "SOURCE-RETURN-EVIDENCE.md": "a02fab430dc4d252b8730f867c29efc4bf1ff1f575ebae837293dabbaa38eecf",
+    "BOUNDARY-MAP.json": "cb1fd91ad124b3eef9d8599c51b749c4516d9f905e68d42e2b93837b76b2df52",
+    "GOVERNING-BLOCKS.json": "d91d16a796988fde54db7c937cad702b03a52fff5de992698957b62bc5a2350a",
+    "OWNER-CENSUS.json": "11503d4bffc6a36d26c81523eb3cd773642d3ea40058d29ca9fa47bae04879e1",
+    "FROZEN-INPUTS.json": "ee7c44f82318d3a2218fdd83b9fda2ee77e30d17241a52c92ca0ccc902ea4874",
+    "VERIFICATION.json": "ac86df6d428af81cabe395315ed2e48e810d36e852f1756081cbbc61207563b0",
+    "PYTHON-COUNTS.json": "345b6ce1624f0cbf54a806e3ecc688878cf7e31f9bf3ef0e4c18904603673158",
+    "NODE-COUNTS.json": "b99c56b6ff9a1c1023e9581587c67babfa527e19b887edcbd021899a019f11ff",
+    "SMALL-N-PYTHON.json": "a6f5b001820d03ec8a5c2e1baf9e9a8ef9b402efa30b977d2a94367dc915c962",
+    "SMALL-N-NODE.json": "36c009c6343d757f84e679d5612e6b6dcd10281224be6993f47d55dad4c76112"
+  },
+  "measurementMethods": [
+    "Independent Python compact JSON + UTF-8 len",
+    "Independent Node JSON.stringify + Buffer.byteLength(utf8)"
+  ],
+  "pairPopulation": 3,
+  "twoMethodByteAndHashAgreement": true,
+  "completeBoundaryTableRows": 18,
+  "pairs": [
+    {
+      "name": "empty",
+      "N": 0,
+      "scope": "Derived synthetic pair: C3 reference-empty is unchanged; inline peer differs only by deletion of workItems.governedBy.",
+      "seedPath": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/literal-fixtures/reference-empty.json",
+      "seedSha256": "2a17732c3692730fd04f9df0a21ed2282a1eca77bc11d620af798c18d24bb074",
+      "inlineBytes": 1692,
+      "referenceBytes": 1950,
+      "referenceMinusInlineBytes": 258,
+      "inlineCompactSha256": "71f2cf4ae3fc6e979912f956efe5f8e82e9ad67d8fb8cf2750bd8fc3c0eb2d45",
+      "referenceCompactSha256": "cf27c5bb70d0e3f9fe90c9a189c10a06d77ce41af76ed8edd4a58a00935a302c",
+      "separatingIntervalInclusive": [
+        1692,
+        1949
+      ],
+      "truthTable": [
+        {
+          "limit": 1691,
+          "inlineFits": false,
+          "referenceFits": false
+        },
+        {
+          "limit": 1692,
+          "inlineFits": true,
+          "referenceFits": false
+        },
+        {
+          "limit": 1693,
+          "inlineFits": true,
+          "referenceFits": false
+        },
+        {
+          "limit": 1949,
+          "inlineFits": true,
+          "referenceFits": false
+        },
+        {
+          "limit": 1950,
+          "inlineFits": true,
+          "referenceFits": true
+        },
+        {
+          "limit": 1951,
+          "inlineFits": true,
+          "referenceFits": true
+        }
+      ]
+    },
+    {
+      "name": "one-item",
+      "N": 1,
+      "scope": "Derived synthetic pair: Both derived from C3 reference-body-A: retain fixture-a, count=1, rendered fixture-a only, retain its governing-intent subject plus region subject. Inline peer replaces that one reference by the complete shared value and removes the shared carrier.",
+      "seedPath": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/literal-fixtures/reference-body-A.json",
+      "seedSha256": "281cdf84ceda4b30e3418eb478b62ce64b71d9151732e1a36a34120d3751ceb9",
+      "inlineBytes": 2612,
+      "referenceBytes": 2647,
+      "referenceMinusInlineBytes": 35,
+      "inlineCompactSha256": "6f6b2c57eb278e62328aac56242cca3b82618ec959ae9337dc3f0f91c5f97df0",
+      "referenceCompactSha256": "36d6b9a6396766f33886de54421622a18574636f4764a2bb4550ca133170e364",
+      "separatingIntervalInclusive": [
+        2612,
+        2646
+      ],
+      "truthTable": [
+        {
+          "limit": 2611,
+          "inlineFits": false,
+          "referenceFits": false
+        },
+        {
+          "limit": 2612,
+          "inlineFits": true,
+          "referenceFits": false
+        },
+        {
+          "limit": 2613,
+          "inlineFits": true,
+          "referenceFits": false
+        },
+        {
+          "limit": 2646,
+          "inlineFits": true,
+          "referenceFits": false
+        },
+        {
+          "limit": 2647,
+          "inlineFits": true,
+          "referenceFits": true
+        },
+        {
+          "limit": 2648,
+          "inlineFits": true,
+          "referenceFits": true
+        }
+      ]
+    },
+    {
+      "name": "C3-body-A",
+      "N": 2,
+      "scope": "Exact frozen C3 inline/reference fixtures",
+      "inputs": [
+        {
+          "path": "inline-body-A.json",
+          "sha256": "6648e7c17ea5b8f0317d4905d72292b8594e7800fc648154c42dfde28565b39b"
+        },
+        {
+          "path": "reference-body-A.json",
+          "sha256": "281cdf84ceda4b30e3418eb478b62ce64b71d9151732e1a36a34120d3751ceb9"
+        }
+      ],
+      "inlineBytes": 3553,
+      "referenceBytes": 3365,
+      "referenceMinusInlineBytes": -188,
+      "inlineCompactSha256": "b04439af1711cb1d35a76332f979878b67274a8f92ff1809571ebe1bd0a97b5a",
+      "referenceCompactSha256": "06579bc5f5abb28028615f2e2f698c289a30cfa6c0efb1e13097821d44735fd9",
+      "separatingIntervalInclusive": [
+        3365,
+        3552
+      ],
+      "truthTable": [
+        {
+          "limit": 3364,
+          "inlineBytes": 3553,
+          "referenceBytes": 3365,
+          "inlineFits": false,
+          "referenceFits": false,
+          "inlineDecision": "final-output-breach",
+          "referenceDecision": "final-output-breach"
+        },
+        {
+          "limit": 3365,
+          "inlineBytes": 3553,
+          "referenceBytes": 3365,
+          "inlineFits": false,
+          "referenceFits": true,
+          "inlineDecision": "final-output-breach",
+          "referenceDecision": "success-eligible"
+        },
+        {
+          "limit": 3366,
+          "inlineBytes": 3553,
+          "referenceBytes": 3365,
+          "inlineFits": false,
+          "referenceFits": true,
+          "inlineDecision": "final-output-breach",
+          "referenceDecision": "success-eligible"
+        },
+        {
+          "limit": 3552,
+          "inlineBytes": 3553,
+          "referenceBytes": 3365,
+          "inlineFits": false,
+          "referenceFits": true,
+          "inlineDecision": "final-output-breach",
+          "referenceDecision": "success-eligible"
+        },
+        {
+          "limit": 3553,
+          "inlineBytes": 3553,
+          "referenceBytes": 3365,
+          "inlineFits": true,
+          "referenceFits": true,
+          "inlineDecision": "success-eligible",
+          "referenceDecision": "success-eligible"
+        },
+        {
+          "limit": 3554,
+          "inlineBytes": 3553,
+          "referenceBytes": 3365,
+          "inlineFits": true,
+          "referenceFits": true,
+          "inlineDecision": "success-eligible",
+          "referenceDecision": "success-eligible"
+        }
+      ]
+    }
+  ],
+  "wholePwb006BlockSha256": "b5ad25343860d2052bed14cdfb25885f95c524927cde59151960e044992ef3a8",
+  "completeCcImpact3BlockSha256": "498b6f34643dd7a1de980df03bec72105ae21c80c020162b27e6886c9eef9def",
+  "byteDecisionDownstreamTrace": [
+    "complete final encoded human/machine body -> boundedResponse comparison",
+    "breach -> recorder -> evaluated PWB-021 resource-breach readiness false",
+    "full machine 200 required before weak ETag/If-None-Match/empty 304",
+    "complete-model response identity retains governedBy carriers after 25 time exclusions",
+    "credential refusal precedes handler/body/cache decisions"
+  ],
+  "sourceScriptHashes": {
+    "measure-python.py": "43a1d315d6a0f56e02b57f6cc2dc4a537d26c31a76ba75e8e8e8b0bb50f1c7ff",
+    "measure-node.cjs": "236961f2a2ef99bbeff1010eea4a1e40fd167268a7fefff2b494adaa81930b46",
+    "measure-small-n-python.py": "85e066dcc394197925fc044e8beb6796f4f7cd3f02320fde6d133f1e0d7e66e8",
+    "measure-small-n-node.cjs": "f0e0f4a8fecd61db5b45608d2dec2364095b38f8362a53d8e86ab58aaecbad69",
+    "trace-owners.cjs": "c9cbe984a8910d9a772a4aabe806afc22a21eb7b8c5982fe245849f0ad11eaaa",
+    "assemble-evidence.py": "2b666e2f1eb6ff3c560694ca8e995d6bb59938e4867499c198d2c65ad3d2fa01",
+    "seal-evidence.py": "93a6e290785882bbebc7596fc39f09d2626582edbcb1e46a3ff5e710a72c4429"
+  },
+  "runtimeConformance": "Unknown; no product/test/observed code, daemon or provider executed.",
+  "externalDynamicConsumerInventory": "Unknown; named static in-repo census is bounded.",
+  "requiredNextSourceDecision": {
+    "epistemic": "Inferred",
+    "decision": "Replace the semantics/constant/outcome-based untiedness shortcut with a limb-by-limb consumption method before another candidate is frozen. For every examined requirement, trace owned scope, typed data inputs and final representation/derived decisions; retain each positive edge or a reason plus method proving untiedness. Unknown relationships stay undecidable. Reassess all 130 occurrence dispositions under that method; do not infer their new counts from this bounded corroboration.",
+    "representationOrder": "Explicitly account for the proposed carrier at validation, response-identity preimage, final serialization/byte measurement, conditional-cache decision and served-readiness projection. Do not invent a normalization/compatibility rule or preserve an old contentKey by assertion.",
+    "authority": "This is a required drafting/source-method decision under existing draft scope, not a new owner approval, implementation instruction, semantic verdict or permission to change bound bytes."
+  },
+  "repositoryWritesPerformed": false
+}

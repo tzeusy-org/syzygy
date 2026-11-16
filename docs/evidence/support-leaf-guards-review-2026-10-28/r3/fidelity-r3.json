@@ -1,0 +1,64 @@
+{
+  "fixFiles": {
+    "list": {
+      "sha256": "8d6917d59071f8cafe92378ecb2436176677d115cf444dd584055449b912ffb3",
+      "bytes": 165,
+      "nbsp": 0,
+      "endsNewline": true
+    },
+    "expect": {
+      "sha256": "dcac436a1b37cda314fa595e1ef251a2cd74fcb0030478ae56b60c8e9cfb77b7",
+      "bytes": 156,
+      "nbsp": 0,
+      "endsNewline": true
+    }
+  },
+  "191d8277": {
+    "lineCountBase": 170,
+    "lineCountNew": 170,
+    "line60EqualsFix": true,
+    "line64EqualsFix": true,
+    "fileEqualsBaseWithTwoLinesReplaced": true,
+    "linesDifferingFromBase": [
+      60,
+      64
+    ],
+    "nbspInFile": false,
+    "sha256": "5a923028b13c1496d0917084e08d3748d186cd83a18269980aa3061783bec51a"
+  },
+  "12d70cf0": {
+    "lineCountBase": 170,
+    "lineCountNew": 170,
+    "line60EqualsFix": true,
+    "line64EqualsFix": true,
+    "fileEqualsBaseWithTwoLinesReplaced": true,
+    "linesDifferingFromBase": [
+      60,
+      64
+    ],
+    "nbspInFile": false,
+    "sha256": "5a923028b13c1496d0917084e08d3748d186cd83a18269980aa3061783bec51a"
+  },
+  "implPathsChanged_191d8277": [
+    "packages/support/src/support-purity.test.ts"
+  ],
+  "implPathsChanged_12d70cf0": [
+    "packages/support/src/support-purity.test.ts"
+  ],
+  "paths_191d8277_to_12d70cf0": [
+    "docs/evidence/syzygy-bpyt-6-14/bundle-differential.json",
+    "docs/evidence/syzygy-bpyt-6-14/bundle-test-durations.json",
+    "docs/evidence/syzygy-bpyt-6-14/mutants-head-absent.json",
+    "docs/evidence/syzygy-bpyt-6-14/mutants-head-absent.log",
+    "docs/evidence/syzygy-bpyt-6-14/mutants-head-present.json",
+    "docs/evidence/syzygy-bpyt-6-14/mutants-head-present.log",
+    "docs/evidence/syzygy-bpyt-6-14/no-egress-hook-durations.json",
+    "docs/evidence/syzygy-bpyt-6-14/residuals-head.json",
+    "docs/evidence/syzygy-bpyt-6-14/shared-reader-identity.json",
+    "docs/evidence/syzygy-bpyt-6-14/suite-head.json",
+    "docs/evidence/syzygy-bpyt-6-14/suite-head.log",
+    "docs/evidence/syzygy-bpyt-6-14/summary.json",
+    "docs/evidence/syzygy-bpyt-6-14/titles.json",
+    "docs/evidence/syzygy-bpyt-6-14/tools/summary.py"
+  ]
+}

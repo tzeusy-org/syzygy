@@ -1,0 +1,671 @@
+{
+ "commit": "d6b04c5f03978b2a8fbc87afc61c725d91eca0f4",
+ "blockLines": 114,
+ "skipped": 2,
+ "assignments": 2,
+ "commands": 110,
+ "nonzero": 0,
+ "treeDirtyAfter": "",
+ "results": [
+  {
+   "command": "python3 scripts/check_governance.py",
+   "exitCode": 0,
+   "seconds": 36.1,
+   "lastLine": "32 OK, 21 WARN, 0 FAIL (53 checks) \u2014 counts derived, not asserted"
+  },
+  {
+   "command": "python3 scripts/check_governance.py --selftest",
+   "exitCode": 0,
+   "seconds": 4.5,
+   "lastLine": "406 fixtures, 0 failing \u2014 a check that cannot fail is not a check"
+  },
+  {
+   "command": "python3 scripts/record_polaris_understanding_adoption.py --check",
+   "exitCode": 0,
+   "seconds": 15.1,
+   "lastLine": "PASS owner direction observed; exact digest reconciled: 8 historical rows, 7 unchanged, REQ-004 adoption/current bytes; 31 requirements/182 scenarios; C1 9322656dcfcc00b436868e93f2754f812dfa9db9. Technical evidence does not perform adoption or grant permission."
+  },
+  {
+   "command": "python3 scripts/record_polaris_understanding_adoption.py --selftest",
+   "exitCode": 0,
+   "seconds": 29.3,
+   "lastLine": "PASS successor rows selftest: absent tool, unperformed, performed, malformed, deeply nested and wrongly typed siblings, edited tool, chained, forked and drifted packages; a refused performed package contests its paths after a step back and at an instant tie, and still does after its act record is ed"
+  },
+  {
+   "command": "python3 scripts/launch_gate_results.py --selftest            # historical Markdown records",
+   "exitCode": 0,
+   "seconds": 4.1,
+   "lastLine": "329 fixtures, 0 failing \u2014 a check that cannot fail is not a check"
+  },
+  {
+   "command": "python3 scripts/validate_launch_administration.py --selftest # the structured record path",
+   "exitCode": 0,
+   "seconds": 53.5,
+   "lastLine": "126 fixtures, 0 failing \u2014 a check that cannot fail is not a check"
+  },
+  {
+   "command": "python3 scripts/render_launch_administration.py --selftest",
+   "exitCode": 0,
+   "seconds": 15.5,
+   "lastLine": "38 fixtures, 0 failing \u2014 a check that cannot fail is not a check"
+  },
+  {
+   "command": "python3 $CS/verify_final_prespec.py",
+   "exitCode": 0,
+   "seconds": 1.4,
+   "lastLine": "PASS \u2014 all checks clean"
+  },
+  {
+   "command": "python3 $CS/build_contract_index.py --check",
+   "exitCode": 0,
+   "seconds": 0.7,
+   "lastLine": "index matches regeneration \u2014 no drift over 11 contract(s), 39 of 39 module(s) carry a front-matter id, 367 clause(s), 11 implementation-boundary declaration(s), 11 phase-rule clause(s) over 11 shared rule(s), status_source projected for 11 of 11"
+  },
+  {
+   "command": "python3 $CS/build_contract_index.py --selftest   # needs PyYAML (test-only); without it the YAML cases fail, never skip",
+   "exitCode": 0,
+   "seconds": 14.9,
+   "lastLine": "SELFTEST OK: an [Unknown] status_source row still parses, as a string"
+  },
+  {
+   "command": "python3 $CS/build_dependency_index.py --check",
+   "exitCode": 0,
+   "seconds": 0.2,
+   "lastLine": "dependency index matches regeneration \u2014 no drift over 39 of 39 module(s) carry a front-matter id, 11 contract(s), 176 authored `depends_on` edge(s), 8 `constrains` edge(s)"
+  },
+  {
+   "command": "python3 $CS/build_budget_report.py --check",
+   "exitCode": 0,
+   "seconds": 0.3,
+   "lastLine": "fixture anchors and the generated report match regeneration"
+  },
+  {
+   "command": "python3 $CS/build_active_manifest.py --check",
+   "exitCode": 0,
+   "seconds": 0.1,
+   "lastLine": "current manifests match regeneration and performed wave arguments verify \u2014 5 current manifest(s) regenerated over 39 module(s), 2 performed wave manifest(s) preserved, 6 wave path sets checked"
+  },
+  {
+   "command": "python3 $CS/build_task_router.py --check",
+   "exitCode": 0,
+   "seconds": 0.3,
+   "lastLine": "task router matches regeneration \u2014 13 task classes validated"
+  },
+  {
+   "command": "python3 $CS/build_task_router.py --selftest",
+   "exitCode": 0,
+   "seconds": 1.4,
+   "lastLine": "11 fixtures, 0 failing \u2014 a check that cannot fail is not a check"
+  },
+  {
+   "command": "python3 $CS/build_capability_1_views.py --check      # capability 1: charter -> views",
+   "exitCode": 0,
+   "seconds": 0.1,
+   "lastLine": "capability 1 views match regeneration \u2014 6 behaviour row(s), 29 clause(s), 0 blocking decision(s)"
+  },
+  {
+   "command": "python3 $CS/build_capability_1_views.py --selftest",
+   "exitCode": 0,
+   "seconds": 0.2,
+   "lastLine": "21 fixtures, 0 failing \u2014 a check that cannot fail is not a check"
+  },
+  {
+   "command": "python3 scripts/build_capability_1_spec_dependencies.py --check  # capability 1 spec: warrants -> generated union",
+   "exitCode": 0,
+   "seconds": 0.1,
+   "lastLine": "capability 1 spec dependencies match regeneration \u2014 42 requirement(s), 50 distinct authorities"
+  },
+  {
+   "command": "python3 scripts/build_capability_1_spec_dependencies.py --selftest",
+   "exitCode": 0,
+   "seconds": 0.1,
+   "lastLine": "selftest: 13/13 fixtures behave (1 clean, 10 mutations rejected, drift + determinism hold)"
+  },
+  {
+   "command": "python3 scripts/build_cap1_trusted_bootstrap_consent_adoption.py --check   # CAP1 consent overlay: reviewed subject, composition, superseded surfaces, applied overlay",
+   "exitCode": 0,
+   "seconds": 1.1,
+   "lastLine": "CAP1 trusted-bootstrap consent adoption: applied; reviewed subject, 15 protected predecessors, composition (42 requirements, 57 scenarios, contracts 38 -> 40) and 10 superseded surfaces verify"
+  },
+  {
+   "command": "python3 scripts/build_cap1_trusted_bootstrap_consent_adoption.py --selftest",
+   "exitCode": 0,
+   "seconds": 1.9,
+   "lastLine": "18 fixtures, 0 failing"
+  },
+  {
+   "command": "python3 scripts/build_general_trusted_bootstrap_impact_ledger.py --check",
+   "exitCode": 0,
+   "seconds": 1.9,
+   "lastLine": "performed impact ledger frozen and valid \u2014 .syzygy/governance/contracts/candidates/general-trusted-bootstrap-authorization/IMPACT-LEDGER.md; 204 baseline files"
+  },
+  {
+   "command": "python3 scripts/build_general_trusted_bootstrap_transaction.py --check",
+   "exitCode": 0,
+   "seconds": 0.2,
+   "lastLine": "performed general trusted-bootstrap transaction frozen and valid \u2014 30 contract paths, 5 historical PWB paths, 5 owner-act rows"
+  },
+  {
+   "command": "python3 scripts/build_polaris_project_wide_contract_coverage.py --check",
+   "exitCode": 0,
+   "seconds": 0.3,
+   "lastLine": "Polaris consequence matrix matches regeneration \u2014 324 clauses represented"
+  },
+  {
+   "command": "python3 scripts/build_polaris_project_wide_spec_dependencies.py --check",
+   "exitCode": 0,
+   "seconds": 0.2,
+   "lastLine": "Polaris dependencies match regeneration \u2014 17 requirement(s)"
+  },
+  {
+   "command": "python3 scripts/build_pwb_truth_policy_amendment.py --check",
+   "exitCode": 0,
+   "seconds": 0.2,
+   "lastLine": "PWB amendment manifests match 11 behavior and 2 separate effect subjects"
+  },
+  {
+   "command": "python3 scripts/record_versioned_signoff.py --check pwb-missing-currency-disclosure-scenario --version 1.0   # missing-currency sign-off, v1.0 2026-10-02: record, aggregate block and applied tree",
+   "exitCode": 0,
+   "seconds": 0.3,
+   "lastLine": "recorded pwb-missing-currency-disclosure-scenario v1.0 sign-off regenerates exactly; applied tree verified"
+  },
+  {
+   "command": "python3 scripts/record_versioned_signoff.py --check pwb-dismissal-expiry-amendment --version 1.0   # dismissal-expiry sign-off, v1.0 2026-10-02: record, aggregate block and applied tree",
+   "exitCode": 0,
+   "seconds": 0.8,
+   "lastLine": "recorded pwb-dismissal-expiry-amendment v1.0 sign-off regenerates exactly; applied tree verified"
+  },
+  {
+   "command": "python3 scripts/record_versioned_signoff.py --check pwb-container-shape-profile-amendment --version 1.0   # container-shape sign-off, v1.0 2026-10-02: record, aggregate block and applied tree",
+   "exitCode": 0,
+   "seconds": 0.4,
+   "lastLine": "recorded pwb-container-shape-profile-amendment v1.0 sign-off regenerates exactly; applied tree verified"
+  },
+  {
+   "command": "python3 scripts/record_versioned_signoff.py --check pwb-item-depth-amendment --version 1.0   # item-depth sign-off, v1.0 2026-10-02: record, aggregate block and applied tree",
+   "exitCode": 0,
+   "seconds": 0.5,
+   "lastLine": "recorded pwb-item-depth-amendment v1.0 sign-off regenerates exactly; applied tree verified"
+  },
+  {
+   "command": "python3 scripts/record_versioned_signoff.py --check pwb-readability-successor --version 1.0   # PWB readability sign-off, v1.0 2026-10-02: record, aggregate block and applied tree",
+   "exitCode": 0,
+   "seconds": 0.6,
+   "lastLine": "recorded pwb-readability-successor v1.0 sign-off regenerates exactly; applied tree verified"
+  },
+  {
+   "command": "python3 scripts/record_versioned_signoff.py --check pwb-tree-framing-amendment --version 1.0   # tree-framing sign-off, v1.0 2026-10-03: record, aggregate block and applied tree",
+   "exitCode": 0,
+   "seconds": 0.5,
+   "lastLine": "recorded pwb-tree-framing-amendment v1.0 sign-off regenerates exactly; applied tree verified"
+  },
+  {
+   "command": "python3 scripts/record_versioned_signoff.py --check pwb-anchor-resolution-amendment --version 1.0   # anchor-resolution sign-off, v1.0 2026-10-14: record, aggregate block and applied tree",
+   "exitCode": 0,
+   "seconds": 0.7,
+   "lastLine": "recorded pwb-anchor-resolution-amendment v1.0 sign-off regenerates exactly; applied tree verified"
+  },
+  {
+   "command": "python3 scripts/record_versioned_signoff.py --check three-surface-poc-block-provenance-amendment --version 1.0   # POC block-provenance sign-off, v1.0 2026-10-14: record, aggregate block and applied tree",
+   "exitCode": 0,
+   "seconds": 0.5,
+   "lastLine": "recorded three-surface-poc-block-provenance-amendment v1.0 sign-off regenerates exactly; applied tree verified"
+  },
+  {
+   "command": "python3 scripts/record_versioned_signoff.py --check pwb-class-granular-extraction-amendment --version 1.0   # class-granular sign-off, v1.0 2026-10-14: record, aggregate block and applied tree",
+   "exitCode": 0,
+   "seconds": 0.3,
+   "lastLine": "recorded pwb-class-granular-extraction-amendment v1.0 sign-off regenerates exactly; applied tree verified"
+  },
+  {
+   "command": "python3 scripts/record_versioned_signoff.py --check pwb-accessible-name-amendment --version 1.0   # accessible-name sign-off, v1.0 2026-10-15: record, aggregate block and applied tree",
+   "exitCode": 0,
+   "seconds": 0.3,
+   "lastLine": "recorded pwb-accessible-name-amendment v1.0 sign-off regenerates exactly; applied tree verified"
+  },
+  {
+   "command": "python3 scripts/record_versioned_signoff.py --check pwb-opening-index-amendment --version 1.0   # opening-index sign-off, v1.0 2026-10-15: record, aggregate block and applied tree",
+   "exitCode": 0,
+   "seconds": 0.4,
+   "lastLine": "recorded pwb-opening-index-amendment v1.0 sign-off regenerates exactly; applied tree verified"
+  },
+  {
+   "command": "python3 scripts/record_versioned_signoff.py --check three-surface-poc-governing-intent-amendment --version 1.0   # POC governing-intent sign-off, v1.0 2026-10-14: record, applied rows, aggregate block and applied tree",
+   "exitCode": 0,
+   "seconds": 0.4,
+   "lastLine": "recorded three-surface-poc-governing-intent-amendment v1.0 sign-off regenerates exactly; applied tree verified"
+  },
+  {
+   "command": "python3 scripts/record_versioned_signoff.py --check three-surface-poc-vocabulary-epistemic-amendment --version 1.0   # POC vocabulary/epistemic sign-off, v1.0 2026-10-15: record, aggregate block and applied tree",
+   "exitCode": 0,
+   "seconds": 0.3,
+   "lastLine": "recorded three-surface-poc-vocabulary-epistemic-amendment v1.0 sign-off regenerates exactly; applied tree verified"
+  },
+  {
+   "command": "python3 scripts/record_versioned_signoff.py --check cap1-trusted-bootstrap-consent --version 1.0   # CAP1 consent adoption, v1.0 2026-10-15: record, aggregate block and applied overlay",
+   "exitCode": 0,
+   "seconds": 0.4,
+   "lastLine": "recorded cap1-trusted-bootstrap-consent v1.0 sign-off regenerates exactly; applied tree verified"
+  },
+  {
+   "command": "python3 scripts/record_versioned_signoff.py --check polaris-dossier-local-agent-mode --version 1.0   # dossier local-agent sign-off, v1.0 2026-10-06: record, aggregate block and applied tree",
+   "exitCode": 0,
+   "seconds": 0.2,
+   "lastLine": "recorded polaris-dossier-local-agent-mode v1.0 sign-off regenerates exactly; superseded by a later version"
+  },
+  {
+   "command": "python3 scripts/record_versioned_signoff.py --check polaris-dossier-local-agent-mode --version 1.1   # dossier local-agent sign-off, v1.1 2026-10-07: record, options, aggregate block and applied tree",
+   "exitCode": 0,
+   "seconds": 0.5,
+   "lastLine": "recorded polaris-dossier-local-agent-mode v1.1 sign-off regenerates exactly; superseded by a later version"
+  },
+  {
+   "command": "python3 scripts/record_versioned_signoff.py --check polaris-dossier-local-agent-mode --version 1.2   # dossier local-agent sign-off, v1.2 2026-10-14 (waiting sessions): record, aggregate block and applied tree",
+   "exitCode": 0,
+   "seconds": 2.8,
+   "lastLine": "recorded polaris-dossier-local-agent-mode v1.2 sign-off regenerates exactly; applied tree verified"
+  },
+  {
+   "command": "python3 scripts/record_pwb_behavior_amendment_acts.py --check render-mode 527be5ac3732619608355ae9658c92cee45341e831521bc526398481dd915785 --date 2026-10-02   # render-mode act, performed 2026-10-02: record, aggregate block and applied tree",
+   "exitCode": 0,
+   "seconds": 0.6,
+   "lastLine": "recorded PWB render-mode behavior amendment act matches exact owner argument; 11 of 11 rows hash the tree"
+  },
+  {
+   "command": "python3 scripts/record_pwb_behavior_amendment_acts.py --check machine-view acabc7915e4461186b5878ce40cc0c62ed7cf91eadd7eead1cb179c80f672e72 --date 2026-10-02   # machine-view act, performed 2026-10-02: record, aggregate block and applied tree",
+   "exitCode": 0,
+   "seconds": 0.3,
+   "lastLine": "recorded PWB machine-view behavior amendment act matches exact owner argument; 11 of 11 rows hash the tree"
+  },
+  {
+   "command": "python3 scripts/record_versioned_signoff.py --selftest   # version-tagged sign-off recorder (Scope A); per-package --check lines join the battery with each sign-off",
+   "exitCode": 0,
+   "seconds": 27.1,
+   "lastLine": "169 fixtures, 0 failing"
+  },
+  {
+   "command": "python3 scripts/pwb_signed_selftest.py --selftest   # reruns a signed builder's fixtures against its pre-adoption tree (git archive; needs full history)",
+   "exitCode": 0,
+   "seconds": 1.3,
+   "lastLine": "selftest: 6 cases pass"
+  },
+  {
+   "command": "python3 scripts/build_pwb_missing_currency_disclosure_scenario.py --selftest   # missing-currency builder fixtures, at its pre-adoption tree",
+   "exitCode": 0,
+   "seconds": 3.4,
+   "lastLine": "selftest: missing/duplicate scenario, placement, fabricated freshness, aggregate absorption, stale manifest, path order, patch drift, dependency drift, contract-coverage drift, sibling orders and generated-patch collision all fail closed"
+  },
+  {
+   "command": "python3 scripts/build_pwb_dismissal_expiry_amendment.py --selftest   # dismissal-expiry builder fixtures, at its pre-adoption tree",
+   "exitCode": 0,
+   "seconds": 10.2,
+   "lastLine": "selftest: 166 mutants killed \u2014 stale manifest, path order, patch population, 35 paragraph rules, paragraph missing/duplicate/placement, 3 scenarios x missing/duplicate/placement, 17 scenario-body rules, 12 forbidden wordings x paragraph/scenario, 2 once-only scenario phrases, a dropped fact, the sce"
+  },
+  {
+   "command": "python3 scripts/build_pwb_container_shape_profile_amendment.py --selftest   # container-shape builder fixtures, at its pre-adoption tree",
+   "exitCode": 0,
+   "seconds": 3.6,
+   "lastLine": "selftest: 184 mutants killed \u2014 stale manifest, path order, a corrupted row digest, patch population, an undeclared subject change, 9 shape and 8 key-form sentences, entry dropped/added/moved and closure for each vocabulary, the duplicate-key rule, 8 vocabulary, 3 key-form, 8 profile and 13 loaded-pr"
+  },
+  {
+   "command": "python3 scripts/build_pwb_item_depth_amendment.py --selftest   # item-depth builder fixtures, at its pre-adoption tree",
+   "exitCode": 0,
+   "seconds": 6.3,
+   "lastLine": "selftest: 63 package predicates fail closed"
+  },
+  {
+   "command": "python3 scripts/build_pwb_readability_successor.py --selftest   # PWB readability successor builder fixtures, at its pre-adoption tree",
+   "exitCode": 0,
+   "seconds": 12.4,
+   "lastLine": "selftest: 52 package predicates fail closed"
+  },
+  {
+   "command": "python3 scripts/build_pwb_tree_framing_amendment.py --selftest   # tree-framing builder fixtures, at its pre-adoption tree",
+   "exitCode": 0,
+   "seconds": 7.7,
+   "lastLine": "selftest: 117 package predicates fail closed"
+  },
+  {
+   "command": "python3 scripts/build_polaris_dossier_local_agent_mode.py --check   # dossier local-agent package: absent, unapplied or applied, and its status figure",
+   "exitCode": 0,
+   "seconds": 0.6,
+   "lastLine": "OK: the package verifies (applied)"
+  },
+  {
+   "command": "python3 scripts/build_polaris_dossier_local_agent_mode.py --selftest   # dossier local-agent builder fixtures, before and after its sign-off",
+   "exitCode": 0,
+   "seconds": 0.4,
+   "lastLine": "36 fixtures, 0 failing"
+  },
+  {
+   "command": "python3 scripts/build_polaris_dossier_local_agent_mode_v1_1.py --check   # dossier v1.1 package: absent, unapplied or applied over the signed v1.0 bytes, and signed or not",
+   "exitCode": 0,
+   "seconds": 1.0,
+   "lastLine": "OK: the v1.1 package verifies (applied, options ['n6'])"
+  },
+  {
+   "command": "python3 scripts/build_polaris_dossier_local_agent_mode_v1_1.py --selftest   # dossier v1.1 builder fixtures, including the signed-bytes check",
+   "exitCode": 0,
+   "seconds": 9.9,
+   "lastLine": "32 fixtures, 0 failing"
+  },
+  {
+   "command": "python3 scripts/build_polaris_dossier_local_agent_mode_v1_2.py --check   # dossier v1.2 package: absent, unapplied or applied over the signed v1.1 bytes, and signed or not",
+   "exitCode": 0,
+   "seconds": 1.6,
+   "lastLine": "OK: the v1.2 package verifies (applied)"
+  },
+  {
+   "command": "python3 scripts/build_polaris_dossier_local_agent_mode_v1_2.py --selftest   # dossier v1.2 builder fixtures, including the signed-bytes check",
+   "exitCode": 0,
+   "seconds": 40.6,
+   "lastLine": "39 fixtures, 0 failing"
+  },
+  {
+   "command": "python3 scripts/record_pwb_behavior_amendment_acts.py --check opening-band 7f80cb05f644dd1e4f49e7b212d6972ee4754e40682450e59a6c3245546d5c46 --date 2026-10-01   # opening-band act, performed 2026-10-01: record, aggregate block and applied subjects regenerate exactly",
+   "exitCode": 0,
+   "seconds": 0.2,
+   "lastLine": "recorded PWB opening-band behavior amendment act matches exact owner argument; 11 of 11 rows hash the tree"
+  },
+  {
+   "command": "python3 scripts/build_pwb_registry_currency_briefing_amendment.py --check   # registry amendment, performed 2026-09-30, superseded 2026-10-02: the re-pinned subject reverses to its proposed bytes",
+   "exitCode": 0,
+   "seconds": 0.4,
+   "lastLine": "PWB registry currency-and-briefing amendment manifest matches the 1 proposed subject (13 currency bounds, 1 new response ceiling); performed and superseded 2026-10-02: the re-pinned subject reverses to the proposed bytes"
+  },
+  {
+   "command": "python3 scripts/build_pwb_registry_currency_briefing_amendment.py --selftest",
+   "exitCode": 0,
+   "seconds": 0.4,
+   "lastLine": "selftest: 24 predicates \u2014 subject drift, patch corruption, patch population, a no-op patch, manifest digest, path mutation and absence, both version bumps, limit semantics, the briefing ceiling's value and exact single-claim scope, claim-class population, duplication, row shape and bound value, the "
+  },
+  {
+   "command": "python3 scripts/record_pwb_registry_currency_amendment.py --check 2356b9ed3235b3dff79caeb352803a30c446b7365a2a7ea74df302b9fa51386a --date 2026-09-30  # registry act record and aggregate block regenerate exactly",
+   "exitCode": 0,
+   "seconds": 0.3,
+   "lastLine": "recorded superseding adopt-registry-entry act matches exact owner argument; the subject hashes to it once the 2026-10-02 re-pin that superseded it is reversed"
+  },
+  {
+   "command": "python3 scripts/record_pwb_registry_currency_amendment.py --selftest",
+   "exitCode": 0,
+   "seconds": 0.5,
+   "lastLine": "16 recording fixtures, 0 failing"
+  },
+  {
+   "command": "python3 scripts/build_pwb_behavior_contract_repin.py --selftest",
+   "exitCode": 0,
+   "seconds": 3.7,
+   "lastLine": "66 fixtures, 0 failing"
+  },
+  {
+   "command": "python3 scripts/record_pwb_behavior_contract_repin_acts.py --check registry ad9cd6769bffbb1a3ef94625c73226dec133fb7c9f1e0bc40186b09b15e165fa --date 2026-10-02   # registry re-pin act: record, aggregate block and applied subject",
+   "exitCode": 0,
+   "seconds": 0.5,
+   "lastLine": "recorded adopt-registry-entry re-pin act matches the exact owner argument; the subject hashes to it and the package verifies in its performed state"
+  },
+  {
+   "command": "python3 scripts/record_pwb_behavior_contract_repin_acts.py --selftest",
+   "exitCode": 0,
+   "seconds": 0.6,
+   "lastLine": "38 recording fixtures, 0 failing"
+  },
+  {
+   "command": "python3 scripts/build_pwb_registry_machine_ceiling_amendment.py --check   # P-114 approved registry row and current applied constant/gate guard",
+   "exitCode": 0,
+   "seconds": 0.3,
+   "lastLine": "pwb-registry-machine-ceiling-amendment: applied, verifies"
+  },
+  {
+   "command": "python3 scripts/record_pwb_registry_machine_ceiling_act.py --builder-selftest   # P-114 frozen builder: actual 22 predicates in pre-install tree with v4 installed",
+   "exitCode": 0,
+   "seconds": 3.3,
+   "lastLine": "selftest: 22 of 22 predicates held"
+  },
+  {
+   "command": "python3 scripts/record_pwb_registry_machine_ceiling_act.py --check   # P-114 paired version/Ask-2 act, exact registry row and aggregate block",
+   "exitCode": 0,
+   "seconds": 0.3,
+   "lastLine": "P-114 record, approved registry row, retained review/selection and one aggregate block regenerate exactly."
+  },
+  {
+   "command": "python3 scripts/record_pwb_registry_machine_ceiling_act.py --selftest   # P-114 recorder predicates and filesystem rollback fixtures",
+   "exitCode": 0,
+   "seconds": 1.3,
+   "lastLine": "80 P-114 recorder fixtures, 0 failing"
+  },
+  {
+   "command": "python3 scripts/record_public_source_screening_scope_v4_act.py --check 319e404ee413220550d65644f6c93db096ed1cda431760baec70a1e190adb0bd --date 2026-10-20 --owner-words 'Sign screening scope version 4, variant span'   # screening-scope v4 policy act: record, aggregate block and applied subject",
+   "exitCode": 0,
+   "seconds": 0.3,
+   "lastLine": "recorded policy act matches the exact owner argument"
+  },
+  {
+   "command": "python3 scripts/record_public_source_screening_scope_v4_act.py --selftest",
+   "exitCode": 0,
+   "seconds": 2.9,
+   "lastLine": "selftest: 91 of 91 predicates held"
+  },
+  {
+   "command": "python3 scripts/check_polaris_response_ceiling_reading.py --check   # P-77 Q2 reading: quotes intact, compression only under the 2026-09-30 direction",
+   "exitCode": 0,
+   "seconds": 2.2,
+   "lastLine": "OK"
+  },
+  {
+   "command": "python3 scripts/check_polaris_response_ceiling_reading.py --selftest",
+   "exitCode": 0,
+   "seconds": 43.6,
+   "lastLine": "selftest: 41/41 passed"
+  },
+  {
+   "command": "python3 scripts/build_contract_readability_restyle.py --check   # restyle package: manifest = exact regeneration, applied",
+   "exitCode": 0,
+   "seconds": 0.4,
+   "lastLine": "contract readability-restyle package applied: all 29 manifest rows equal both current mirrors (1 through a later contract act's row: rfcs/RFC-0005/consent-egress-secrets.md)"
+  },
+  {
+   "command": "python3 scripts/build_contract_readability_restyle.py --selftest",
+   "exitCode": 0,
+   "seconds": 29.0,
+   "lastLine": "23 fixtures, 0 failing"
+  },
+  {
+   "command": "python3 scripts/record_contract_readability_restyle.py --check  # restyle act, performed 2026-09-28: record and aggregate block intact",
+   "exitCode": 0,
+   "seconds": 0.2,
+   "lastLine": "PASS exact restyle manifest, pinned review and dedicated/aggregate adoption records"
+  },
+  {
+   "command": "python3 scripts/record_contract_readability_restyle.py --selftest",
+   "exitCode": 0,
+   "seconds": 11.7,
+   "lastLine": "33 fixtures, 0 failing"
+  },
+  {
+   "command": "python3 scripts/build_spec_policy_readability_restyle.py --check   # spec-policy restyle: installed bytes = manifest rows",
+   "exitCode": 0,
+   "seconds": 0.2,
+   "lastLine": "applied \u2014 both policies carry the manifest's bytes"
+  },
+  {
+   "command": "python3 scripts/build_spec_policy_readability_restyle.py --selftest",
+   "exitCode": 0,
+   "seconds": 0.1,
+   "lastLine": "applied \u2014 the fixtures need the unapplied package; nothing run"
+  },
+  {
+   "command": "python3 scripts/record_spec_policy_readability_restyle.py --check  # spec-policy restyle act: performed 2026-09-28; records regenerate exactly",
+   "exitCode": 0,
+   "seconds": 0.2,
+   "lastLine": "PASS exact restyle manifest, pinned review and dedicated, aggregate and install records"
+  },
+  {
+   "command": "python3 scripts/record_spec_policy_readability_restyle.py --selftest",
+   "exitCode": 0,
+   "seconds": 0.2,
+   "lastLine": "34 fixtures, 0 failing"
+  },
+  {
+   "command": "python3 scripts/build_three_surface_poc_readability_successor.py --check   # POC readability successor: candidate = exact regeneration, or installed rows",
+   "exitCode": 0,
+   "seconds": 0.3,
+   "lastLine": "three-surface POC readability successor installed: all 6 signed subjects carry their manifest rows"
+  },
+  {
+   "command": "python3 scripts/build_three_surface_poc_readability_successor.py --selftest",
+   "exitCode": 0,
+   "seconds": 7.3,
+   "lastLine": "selftest: 11 candidate predicates fail closed"
+  },
+  {
+   "command": "python3 scripts/record_three_surface_poc_readability_successor.py --check  # POC successor sign-off: performed 2026-09-29; record and aggregate block intact",
+   "exitCode": 0,
+   "seconds": 0.3,
+   "lastLine": "PASS performed-exact: POC readability successor performed; both records exact, every subject at its successor row"
+  },
+  {
+   "command": "python3 scripts/record_three_surface_poc_readability_successor.py --selftest",
+   "exitCode": 0,
+   "seconds": 3.5,
+   "lastLine": "Turn off this advice by setting config variable advice.detachedHead to false"
+  },
+  {
+   "command": "python3 scripts/readability_successor.py --all --check   # readability successors (Capability 1, Polaris base and understanding) performed 2026-09-29, the understanding dependency-union successor 2026-10-02: installed bytes = rows, or a later act's row over them",
+   "exitCode": 0,
+   "seconds": 0.2,
+   "lastLine": "4 successor package(s) checked"
+  },
+  {
+   "command": "python3 scripts/readability_successor.py --selftest",
+   "exitCode": 0,
+   "seconds": 0.4,
+   "lastLine": "40 fixtures, 0 failing"
+  },
+  {
+   "command": "python3 scripts/build_polaris_dependency_unions.py --check   # both Polaris dependency unions, and each signed addition's, = their regeneration from the warrants blocks",
+   "exitCode": 0,
+   "seconds": 0.4,
+   "lastLine": "4 Polaris dependency unions match their warrants"
+  },
+  {
+   "command": "python3 scripts/build_polaris_dependency_unions.py --selftest",
+   "exitCode": 0,
+   "seconds": 0.3,
+   "lastLine": "22 fixtures, 0 failing"
+  },
+  {
+   "command": "python3 scripts/check_spec_reconciliation.py --check   # five readability outcomes terminal and binding; populations by two methods; routes and generated rows",
+   "exitCode": 0,
+   "seconds": 1.3,
+   "lastLine": "7 of 7 predicates without FAIL; PASS \u2014 counts derived, not asserted"
+  },
+  {
+   "command": "python3 scripts/check_spec_reconciliation.py --selftest",
+   "exitCode": 0,
+   "seconds": 75.7,
+   "lastLine": "SELFTEST PASS: clean scratch copy and its signed- and adopted-addition variants pass; 85 of 85 mutants killed by their expected predicate (commit d6b04c5f0397)"
+  },
+  {
+   "command": "python3 scripts/build_three_surface_poc_spec_dependencies.py --check",
+   "exitCode": 0,
+   "seconds": 0.0,
+   "lastLine": "three-surface POC spec dependencies match regeneration \u2014 26 requirement(s), 90 distinct authorities"
+  },
+  {
+   "command": "python3 scripts/build_directive_register.py --check     # every identifier -> its definition site",
+   "exitCode": 0,
+   "seconds": 0.8,
+   "lastLine": "OK: DIRECTIVE-REGISTER.md matches the tree"
+  },
+  {
+   "command": "python3 scripts/build_directive_register.py --selftest",
+   "exitCode": 0,
+   "seconds": 0.9,
+   "lastLine": "21 checks, 0 failing \u2014 a check that cannot fail is not a check"
+  },
+  {
+   "command": "python3 scripts/check_quotations.py     # a quotation beside a path:line locator was said by that file (RD-6, syzygy-0wf)",
+   "exitCode": 0,
+   "seconds": 10.5,
+   "lastLine": "note  QC-1  excluded verbatim records, round directory: 139 .md files, 10 quotations, 4 not in their source now; history not searched"
+  },
+  {
+   "command": "python3 scripts/check_quotations.py --selftest",
+   "exitCode": 0,
+   "seconds": 0.2,
+   "lastLine": "selftest: 20 of 20 passed"
+  },
+  {
+   "command": "python3 scripts/validate_launch_administration.py $DR",
+   "exitCode": 0,
+   "seconds": 0.1,
+   "lastLine": "record valid \u2014 the verdict above is computed from the rows"
+  },
+  {
+   "command": "python3 scripts/render_launch_administration.py $DR --check",
+   "exitCode": 0,
+   "seconds": 0.1,
+   "lastLine": "--check: .syzygy/governance/contracts/candidates/round-2026-08f/fixtures/DRY-RUN-ADMINISTRATION.md matches the record's rendering"
+  },
+  {
+   "command": "git tag --list 'doctrine-*'",
+   "exitCode": 0,
+   "seconds": 0.0,
+   "lastLine": "doctrine-d5-2026-09-27"
+  },
+  {
+   "command": "python3 scripts/record_rfc5_project_documentation_act.py --check a69a606cc7c14da5de03ec26aaec435af2fee3fa4c7bfb8a92fc30deefa40c91 --date 2026-10-07 --question-opening 'Do you sign the RFC5-14 project-documentation class amendment at its row of the contract amendment manifest?' --selection-label 'Sign it, at the manifest row; direct the SOURCE-POLICY.md readability successor' --selection-description 'Act form 1, which makes screening scope version 2 performable; the six-class sentence in SOURCE-POLICY.md gets a readability successor.'   # rfc5 --check",
+   "exitCode": 0,
+   "seconds": 0.2,
+   "lastLine": "recorded act matches the exact owner argument"
+  },
+  {
+   "command": "python3 scripts/record_versioned_signoff.py --check public-git-source-acquisition-local-agent --version 1.0   # public-git-source-acquisition-local-agent v1.0 --check",
+   "exitCode": 0,
+   "seconds": 0.1,
+   "lastLine": "recorded public-git-source-acquisition-local-agent v1.0 sign-off regenerates exactly; applied tree verified"
+  },
+  {
+   "command": "python3 scripts/record_dossier_local_agent_acts.py --check redis-agent-anthropic fbbcd3c0e3d49aab3384a4ab18bf35816dbd8fb952e658d1edbac3d1c50e48a7 --date 2026-10-07 --question-opening 'Which statement do you sign for Redis at its row of the dossier local-agent acts manifest?' --selection-label 'Anthropic provider statement' --selection-description 'Claude Code may receive Redis content even if Redis counts as governed.'   # redis-agent-anthropic --check",
+   "exitCode": 0,
+   "seconds": 0.1,
+   "lastLine": "recorded redis-agent-anthropic act matches the exact owner argument"
+  },
+  {
+   "command": "python3 scripts/record_dossier_agent_provider_v2_act.py --check b7a8d099ce108bfd70133b729327534f29806cb0118ee0b3e0f9ca077a946df3 --date 2026-10-08 --question-opening 'Decision 2 (P-106):'' your Redis Anthropic provider statement predates the README/docs class, so Syzygy withholds docs text from the packets it gives your own Claude Code sessions, and README-based claims render Unknown. Version 2 adds `project-documentation` and changes nothing else. Sign it?' --selection-label 'Sign version 2 (Recommended)' --selection-description 'Docs text goes to your own Claude Code sessions, which can already read the whole clone. Phrase:'' \"Sign the Redis Anthropic provider statement, version 2\".' --packet-words 'Sign the Redis Anthropic provider statement, version 2'   # agent-provider statement version 2 --check",
+   "exitCode": 0,
+   "seconds": 0.1,
+   "lastLine": "recorded provider statement version-2 act matches the exact owner argument"
+  },
+  {
+   "command": "python3 scripts/record_dossier_agent_provider_v2_act.py --selftest   # agent-provider statement version 2 --selftest",
+   "exitCode": 0,
+   "seconds": 0.2,
+   "lastLine": "selftest: 43 of 43 predicates held"
+  },
+  {
+   "command": "python3 scripts/record_dossier_local_agent_acts.py --check d9-in-force 41fdfaea8cbde4cd8220910113fb5b376c7834a470d8c2d9badd9ab0fec9ac66 --date 2026-10-07 --question-opening 'Do you sign the D9 in-force record at its row of the dossier local-agent acts manifest?' --selection-label 'Sign it' --selection-description 'Binds D9 to the current security.md and v1.md bytes; it runs nothing until a choice for one run is recorded.'   # d9-in-force --check",
+   "exitCode": 0,
+   "seconds": 0.1,
+   "lastLine": "recorded d9-in-force act matches the exact owner argument"
+  },
+  {
+   "command": "python3 scripts/record_dossier_local_agent_acts.py --check rfc7-20-reading-in-force f0725a204b6e6ccbccb211441e26e139502ef42a6447d0f4a40df2d09062f3d9 --date 2026-10-07 --question-opening 'Do you sign the RFC7-20 reading in-force record at its row of the dossier local-agent acts manifest?' --selection-label 'Sign it' --selection-description 'The agent draft renders as an editorial draft; it binds item 1 of the direction, whole-file.'   # rfc7-20-reading-in-force --check",
+   "exitCode": 0,
+   "seconds": 0.1,
+   "lastLine": "recorded rfc7-20-reading-in-force act matches the exact owner argument"
+  },
+  {
+   "command": "python3 scripts/record_narrative_profile_adoption.py --check --date 2026-10-07 --question-opening 'Do you adopt the non-governed narrative profile, requirement 032, at its row of the profile manifest?' --selection-label 'Adopt as recommended' --selection-description 'O1 to O7 as the packet recommends; Scope A is not read to cover it; the two known limitations stand.'   # narrative profile --check",
+   "exitCode": 0,
+   "seconds": 0.1,
+   "lastLine": "recorded adoption matches the live bytes"
+  },
+  {
+   "command": "python3 scripts/record_rfc5_project_documentation_act.py --selftest   # rfc5 --selftest",
+   "exitCode": 0,
+   "seconds": 0.2,
+   "lastLine": "selftest: 34 of 34 predicates held"
+  }
+ ]
+}

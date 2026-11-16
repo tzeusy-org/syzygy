@@ -1,0 +1,2858 @@
+diff --git a/docs/evidence/syzygy-bpyt-8-39/comment-only.json b/docs/evidence/syzygy-bpyt-8-39/comment-only.json
+index a5d2304c..a713445d 100644
+--- a/docs/evidence/syzygy-bpyt-8-39/comment-only.json
++++ b/docs/evidence/syzygy-bpyt-8-39/comment-only.json
+@@ -1,10 +1,10 @@
+ {
+  "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+  "base": "d38d7a3ce632a34c2a41bdb77ad323ba0b05b777",
+- "head": "308a62f4a48e47b625aeff9cc718b1b2c37161f8",
++ "head": "5f0d5547dfe7f89adf3e86310f819ddeebfaae90",
+  "typescript": "5.9.3",
+  "baseSha256": "ed67106fe74333c97f419f4a52f14f75bfaa34bbfa5b41f33c4f1b6545895731",
+- "headSha256": "94c9d93b40cc4f54afc8a6d56d9062b25e27938016edef566d7bd75b6381cbd3",
++ "headSha256": "440209bb6d876b7ae1240a88cd4cf5913b01750a0d9ffa56f90c072be7f76951",
+  "bytesDiffer": true,
+  "emitEqual": true,
+  "printEqual": true,
+diff --git a/docs/evidence/syzygy-bpyt-8-39/island-diff-selftest.json b/docs/evidence/syzygy-bpyt-8-39/island-diff-selftest.json
+index 71a01570..e10c8bb9 100644
+--- a/docs/evidence/syzygy-bpyt-8-39/island-diff-selftest.json
++++ b/docs/evidence/syzygy-bpyt-8-39/island-diff-selftest.json
+@@ -1,6 +1,6 @@
+ {
+  "base": "d38d7a3ce632a34c2a41bdb77ad323ba0b05b777",
+- "head": "308a62f4a48e47b625aeff9cc718b1b2c37161f8",
++ "head": "5f0d5547dfe7f89adf3e86310f819ddeebfaae90",
+  "selftest": true,
+  "vitestExit": 0,
+  "walks": {
+@@ -1536,6 +1536,6 @@
+   "packages/polaris-generation-core/src/zz-836-old-testkit.ts": "ed67106fe74333c97f419f4a52f14f75bfaa34bbfa5b41f33c4f1b6545895731",
+   "packages/polaris-generation-core/src/zz-836-old-reach.ts": "869eeb312427ce65ffe0404795b9ac41a1431d929339eda09a0d5d77966ceb7c",
+   "packages/polaris-generation-core/src/zz-836-new-reach.ts": "d35dbec4de42c65aad4f0e0d9c1f91fde539e2948435599b5108507315642dee",
+-  "packages/polaris-generation-core/src/zz-836-diff.test.ts": "ba8e85b916fd8685be0e3580ff15dadbcc885b95291837b4533feee13e1691b5"
++  "packages/polaris-generation-core/src/zz-836-diff.test.ts": "92181d72bfdd1c569f513b3b48d3c5e8395274dcceb6f6fa06610f6ff6e68244"
+  }
+ }
+\ No newline at end of file
+diff --git a/docs/evidence/syzygy-bpyt-8-39/island-diff.json b/docs/evidence/syzygy-bpyt-8-39/island-diff.json
+index 1b82f923..254a68ba 100644
+--- a/docs/evidence/syzygy-bpyt-8-39/island-diff.json
++++ b/docs/evidence/syzygy-bpyt-8-39/island-diff.json
+@@ -1,6 +1,6 @@
+ {
+  "base": "d38d7a3ce632a34c2a41bdb77ad323ba0b05b777",
+- "head": "308a62f4a48e47b625aeff9cc718b1b2c37161f8",
++ "head": "5f0d5547dfe7f89adf3e86310f819ddeebfaae90",
+  "selftest": false,
+  "vitestExit": 0,
+  "walks": {
+@@ -41,6 +41,6 @@
+   "packages/polaris-generation-core/src/zz-836-old-testkit.ts": "ed67106fe74333c97f419f4a52f14f75bfaa34bbfa5b41f33c4f1b6545895731",
+   "packages/polaris-generation-core/src/zz-836-old-reach.ts": "869eeb312427ce65ffe0404795b9ac41a1431d929339eda09a0d5d77966ceb7c",
+   "packages/polaris-generation-core/src/zz-836-new-reach.ts": "d35dbec4de42c65aad4f0e0d9c1f91fde539e2948435599b5108507315642dee",
+-  "packages/polaris-generation-core/src/zz-836-diff.test.ts": "53979811c07756462b2153d86bfd35b75386f07e1db1515edf3634a7008ca0e6"
++  "packages/polaris-generation-core/src/zz-836-diff.test.ts": "92181d72bfdd1c569f513b3b48d3c5e8395274dcceb6f6fa06610f6ff6e68244"
+  }
+ }
+\ No newline at end of file
+diff --git a/docs/evidence/syzygy-bpyt-8-39/npa-probe.json b/docs/evidence/syzygy-bpyt-8-39/npa-probe.json
+index 64574f43..884023dd 100644
+--- a/docs/evidence/syzygy-bpyt-8-39/npa-probe.json
++++ b/docs/evidence/syzygy-bpyt-8-39/npa-probe.json
+@@ -238,6 +238,17 @@
+    "spec": "..",
+    "npa": "directory",
+    "local": true
++  },
++  {
++   "spec": "github:someone/dossier#v1.tar",
++   "npa": "git",
++   "local": true
++  },
++  {
++   "spec": "npm:typescript",
++   "npa": "alias",
++   "aliasOf": "range",
++   "local": true
+   }
+  ]
+ }
+diff --git a/docs/evidence/syzygy-bpyt-8-39/npa_probe.cjs b/docs/evidence/syzygy-bpyt-8-39/npa_probe.cjs
+index d049df9e..5423ba5a 100644
+--- a/docs/evidence/syzygy-bpyt-8-39/npa_probe.cjs
++++ b/docs/evidence/syzygy-bpyt-8-39/npa_probe.cjs
+@@ -1,6 +1,7 @@
+ // syzygy-bpyt.8.39: classify every version form the testkit comment and the resolver rows name with npm's own npm-package-arg, beside
+ // the tree's LOCAL_VERSION pattern, read from the tree's testkit rather than copied. syzygy-bpyt.8.38's npa_probe.cjs, with the forms
+ // this bead's comment and rows add, and for an `npm:` alias the type of the spec after `npm:` (N4: npm accepts only a registry spec).
++// The rows include the two the review of 8.39 added (N1). What npm installs for an alias is npm_alias_probe.py's, not this probe's.
+ // Usage: node npa_probe.cjs <tree>
+ const fs = require('node:fs');
+ const path = require('node:path');
+@@ -19,7 +20,7 @@ const forms = {
+   rows: ['file:../../packages/lib', 'FILE:../../packages/lib', 'link:../../packages/lib', 'workspace:*', 'npm:@syzygy/lib@*', '../../packages/lib',
+     '~/lib', '/srv/lib', 'lib-0.0.0.tgz', './lib', '.', 'lib-0.0.0.tar', 'lib-0.0.0.tar.gz', 'https://example.com/lib-1.0.0.tgz', 'file:../../apps/app',
+     '2.9.0', '^1.0.0', 'github:someone/dossier', '~1.2.3', 'git+https://example.com/lib.tgz.git',
+-    'http://example.com/lib-1.0.0.tar.gz', 'npm:typescript@^5.5.0', '..'],
++    'http://example.com/lib-1.0.0.tar.gz', 'npm:typescript@^5.5.0', '..', 'github:someone/dossier#v1.tar', 'npm:typescript'],
+ };
+ const classify = (spec) => {
+   let type;
+diff --git a/docs/evidence/syzygy-bpyt-8-39/npm-alias-probe.json b/docs/evidence/syzygy-bpyt-8-39/npm-alias-probe.json
+new file mode 100644
+index 00000000..757b1f76
+--- /dev/null
++++ b/docs/evidence/syzygy-bpyt-8-39/npm-alias-probe.json
+@@ -0,0 +1,158 @@
++{
++ "npm": "11.5.1",
++ "arborist": "9.1.3",
++ "node": "v24.6.0",
++ "registry": "http://127.0.0.1:9/",
++ "offline": true,
++ "workspaces": {
++  "w": "wlib",
++  "s": "@syzygy/slib"
++ },
++ "results": [
++  {
++   "shows": "an alias under a name no workspace has, its target a registry package",
++   "declared": {
++    "dossier": "npm:typescript@^5.5.0"
++   },
++   "lockExit": 1,
++   "errorCode": "ENOTCACHED",
++   "wouldRequest": "http://127.0.0.1:9/typescript",
++   "lockEntry": null,
++   "installExit": null,
++   "installedLink": null,
++   "appLoads": null
++  },
++  {
++   "shows": "an alias under a name no workspace has, its target a workspace's name",
++   "declared": {
++    "dossier": "npm:wlib@*"
++   },
++   "lockExit": 1,
++   "errorCode": "ENOTCACHED",
++   "wouldRequest": "http://127.0.0.1:9/wlib",
++   "lockEntry": null,
++   "installExit": null,
++   "installedLink": null,
++   "appLoads": null
++  },
++  {
++   "shows": "an alias under a name no workspace has, no version",
++   "declared": {
++    "dossier": "npm:typescript"
++   },
++   "lockExit": 1,
++   "errorCode": "ENOTCACHED",
++   "wouldRequest": "http://127.0.0.1:9/typescript",
++   "lockEntry": null,
++   "installExit": null,
++   "installedLink": null,
++   "appLoads": null
++  },
++  {
++   "shows": "an alias under a workspace's name, a range its version satisfies",
++   "declared": {
++    "wlib": "npm:typescript@*"
++   },
++   "lockExit": 0,
++   "errorCode": null,
++   "wouldRequest": null,
++   "lockEntry": {
++    "resolved": "w",
++    "link": true
++   },
++   "installExit": 0,
++   "installedLink": "../w",
++   "appLoads": {
++    "packageJson": "w/package.json",
++    "name": "wlib",
++    "version": "1.0.0"
++   }
++  },
++  {
++   "shows": "an alias under a workspace's name, the target's range satisfied by the workspace's version",
++   "declared": {
++    "wlib": "npm:typescript@^1.0.0"
++   },
++   "lockExit": 0,
++   "errorCode": null,
++   "wouldRequest": null,
++   "lockEntry": {
++    "resolved": "w",
++    "link": true
++   },
++   "installExit": 0,
++   "installedLink": "../w",
++   "appLoads": {
++    "packageJson": "w/package.json",
++    "name": "wlib",
++    "version": "1.0.0"
++   }
++  },
++  {
++   "shows": "an alias under a workspace's name, a range its version does not satisfy",
++   "declared": {
++    "wlib": "npm:typescript@^5.5.0"
++   },
++   "lockExit": 1,
++   "errorCode": "ENOTCACHED",
++   "wouldRequest": "http://127.0.0.1:9/typescript",
++   "lockEntry": null,
++   "installExit": null,
++   "installedLink": null,
++   "appLoads": null
++  },
++  {
++   "shows": "an alias under a scoped workspace's name, a range its version satisfies",
++   "declared": {
++    "@syzygy/slib": "npm:typescript@*"
++   },
++   "lockExit": 0,
++   "errorCode": null,
++   "wouldRequest": null,
++   "lockEntry": {
++    "resolved": "s",
++    "link": true
++   },
++   "installExit": 0,
++   "installedLink": "../../s",
++   "appLoads": {
++    "packageJson": "s/package.json",
++    "name": "@syzygy/slib",
++    "version": "1.0.0"
++   }
++  },
++  {
++   "shows": "control: a plain range under a workspace's name, satisfied",
++   "declared": {
++    "wlib": "^1.0.0"
++   },
++   "lockExit": 0,
++   "errorCode": null,
++   "wouldRequest": null,
++   "lockEntry": {
++    "resolved": "w",
++    "link": true
++   },
++   "installExit": 0,
++   "installedLink": "../w",
++   "appLoads": {
++    "packageJson": "w/package.json",
++    "name": "wlib",
++    "version": "1.0.0"
++   }
++  },
++  {
++   "shows": "control: a plain range under a workspace's name, not satisfied",
++   "declared": {
++    "wlib": "^5.5.0"
++   },
++   "lockExit": 1,
++   "errorCode": "ENOTCACHED",
++   "wouldRequest": "http://127.0.0.1:9/wlib",
++   "lockEntry": null,
++   "installExit": null,
++   "installedLink": null,
++   "appLoads": null
++  }
++ ]
++}
+diff --git a/docs/evidence/syzygy-bpyt-8-39/npm_alias_probe.py b/docs/evidence/syzygy-bpyt-8-39/npm_alias_probe.py
+new file mode 100644
+index 00000000..301455e5
+--- /dev/null
++++ b/docs/evidence/syzygy-bpyt-8-39/npm_alias_probe.py
+@@ -0,0 +1,81 @@
++"""syzygy-bpyt.8.39: what npm installs for an `npm:` alias, the evidence for the testkit's `npm:` clause as the review of 8.39 (F1)
++corrected it. npa_probe.cjs reads how npm-package-arg parses a spec; this observes what npm then installs.
++
++Each case is a fresh project of three workspaces: `w` named `wlib` and `s` named `@syzygy/slib`, both at version 1.0.0, and `app`,
++which declares the case's one dependency. npm runs offline, with a private empty cache, an empty user and global config, and a
++registry of http://127.0.0.1:9/, so nothing is fetched and no npmrc of the host is read. A registry fetch shows as ENOTCACHED, with
++the URL npm would have requested. A link shows as a lockfile entry with `link: true`; the case then installs in full, and records
++where `node_modules/<name>` points and which package.json Node loads for the name from inside `app`.
++Usage: python3 -I npm_alias_probe.py <empty scratch dir> <out.json>
++"""
++import json, os, re, subprocess, sys
++
++scratch, out = (os.path.realpath(a) for a in sys.argv[1:3])
++if os.listdir(scratch):
++    sys.exit(f'{scratch} is not empty')
++WORKSPACES = {'w': 'wlib', 's': '@syzygy/slib'}
++# (what the case shows, the name the dependency is declared under, its spec)
++CASES = [
++    ('an alias under a name no workspace has, its target a registry package', 'dossier', 'npm:typescript@^5.5.0'),
++    ("an alias under a name no workspace has, its target a workspace's name", 'dossier', 'npm:wlib@*'),
++    ('an alias under a name no workspace has, no version', 'dossier', 'npm:typescript'),
++    ("an alias under a workspace's name, a range its version satisfies", 'wlib', 'npm:typescript@*'),
++    ("an alias under a workspace's name, the target's range satisfied by the workspace's version", 'wlib', 'npm:typescript@^1.0.0'),
++    ("an alias under a workspace's name, a range its version does not satisfy", 'wlib', 'npm:typescript@^5.5.0'),
++    ("an alias under a scoped workspace's name, a range its version satisfies", '@syzygy/slib', 'npm:typescript@*'),
++    ("control: a plain range under a workspace's name, satisfied", 'wlib', '^1.0.0'),
++    ("control: a plain range under a workspace's name, not satisfied", 'wlib', '^5.5.0'),
++]
++user, globalrc = (os.path.join(scratch, name) for name in ('empty-user-npmrc', 'empty-global-npmrc'))
++open(user, 'w').close()
++open(globalrc, 'w').close()
++os.makedirs(os.path.join(scratch, 'tmp'))
++ENV = {**os.environ, 'npm_config_userconfig': user, 'npm_config_globalconfig': globalrc, 'npm_config_cache': os.path.join(scratch, 'cache'),
++       'npm_config_offline': 'true', 'npm_config_registry': 'http://127.0.0.1:9/', 'npm_config_audit': 'false', 'npm_config_fund': 'false',
++       'npm_config_update_notifier': 'false', 'TMPDIR': os.path.join(scratch, 'tmp')}
++
++
++def npm(root, *args):
++    return subprocess.run(['npm', *args, '--ignore-scripts'], cwd=root, capture_output=True, text=True, env=ENV, timeout=300)
++
++
++def write(path, data):
++    os.makedirs(os.path.dirname(path), exist_ok=True)
++    with open(path, 'w') as fh:
++        json.dump(data, fh)
++
++
++results = []
++for index, (shows, name, spec) in enumerate(CASES):
++    root = os.path.join(scratch, f'case{index}')
++    write(os.path.join(root, 'package.json'), {'name': 'probe-root', 'version': '0.0.0', 'private': True, 'workspaces': [*WORKSPACES, 'app']})
++    for directory, workspace in WORKSPACES.items():
++        write(os.path.join(root, directory, 'package.json'), {'name': workspace, 'version': '1.0.0'})
++    write(os.path.join(root, 'app', 'package.json'), {'name': 'app', 'version': '0.0.0', 'dependencies': {name: spec}})
++    lock = npm(root, 'install', '--package-lock-only')
++    errors = [line for line in lock.stderr.splitlines() if line.startswith('npm error')]
++    code = next((m.group(1) for m in map(re.compile(r'npm error code (\S+)').match, errors) if m), None)
++    request = next((m.group(1) for m in map(re.compile(r'npm error .*request to (\S+) failed').match, errors) if m), None)
++    entry, install, link, loads = None, None, None, None
++    if lock.returncode == 0:
++        packages = json.load(open(os.path.join(root, 'package-lock.json')))['packages']
++        entry = {k: v for k, v in packages.get(f'node_modules/{name}', {}).items() if k in ('resolved', 'link', 'version', 'name')}
++        install = npm(root, 'install').returncode
++        installed = os.path.join(root, 'node_modules', name)
++        link = os.readlink(installed) if os.path.islink(installed) else None
++        node = subprocess.run(['node', '-e', f'const p = require.resolve({json.dumps(name + "/package.json")}); const m = require(p);'
++                               ' console.log(JSON.stringify([require("node:fs").realpathSync(p), m.name, m.version]))'],
++                              cwd=os.path.join(root, 'app'), capture_output=True, text=True)
++        path, loaded, version = json.loads(node.stdout)
++        loads = {'packageJson': os.path.relpath(path, root), 'name': loaded, 'version': version}
++    results.append({'shows': shows, 'declared': {name: spec}, 'lockExit': lock.returncode, 'errorCode': code,
++                    'wouldRequest': request, 'lockEntry': entry, 'installExit': install, 'installedLink': link, 'appLoads': loads})
++    print(index, shows, '|', lock.returncode, code, request, entry, link, loads, flush=True)
++version = lambda *args: subprocess.run(args, capture_output=True, text=True).stdout.strip()
++prefix = version('npm', 'prefix', '-g')
++arborist = json.load(open(os.path.join(prefix, 'lib', 'node_modules', 'npm', 'node_modules', '@npmcli', 'arborist', 'package.json')))['version']
++with open(out, 'w') as fh:
++    fh.write(json.dumps({'npm': version('npm', '--version'), 'arborist': arborist, 'node': version('node', '--version'),
++                         'registry': ENV['npm_config_registry'], 'offline': True, 'workspaces': WORKSPACES, 'results': results},
++                        indent=1).replace(scratch, '<scratch>') + '\n')
++print('wrote', out)
+diff --git a/docs/evidence/syzygy-bpyt-8-39/record.py b/docs/evidence/syzygy-bpyt-8-39/record.py
+index f6a8afab..7292caa6 100644
+--- a/docs/evidence/syzygy-bpyt-8-39/record.py
++++ b/docs/evidence/syzygy-bpyt-8-39/record.py
+@@ -1,62 +1,83 @@
+ """syzygy-bpyt.8.39: derive summary.json from the raw outputs beside it, checking each against the git objects of the tree given.
+ 
+-The subject is the code commit HEAD over BASE (main after PR 487): the PR 536 review's notes N1, N2 and N4, and N3's optional comment
+-clause. Inputs (all in this directory):
++The subject is the code commits over BASE (main after PR 487), ending at HEAD: FIRST, the PR 536 review's notes N1, N2 and N4, and
++N3's optional comment clause; then HEAD, the repair of round 1 of this bead's own review (R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-1): F1's
++`npm:` clause, N1's two rows and N2's residual. Inputs (all in this directory):
+   rev536-at-base.json, rev536-at-head.json  all 11 of the PR 536 reviewer's mutants, run unchanged from
+                        docs/evidence/guard-pins-followup-review-2026-10-27/rev536-specs.json at BASE and at HEAD, with that
+                        reviewer's copy of mut.py (the PR 524 reviewer's runner);
++  rev541-at-base.json, rev541-at-head.json  all 7 of the round-1 reviewer's own mutants, from rev541-specs.json here (that reviewer's
++                       file, kept unchanged), at BASE and at HEAD, with the same mut.py;
+   island-diff.json, island-diff-selftest.json  docs/evidence/syzygy-bpyt-8-36/island_diff.py, old testkit (BASE) against new (HEAD);
+   repeat-runs.json, titles.json  docs/evidence/syzygy-bpyt-8-36/repeat.py (the four guard files five times at HEAD) and titles.py
+                        (their Vitest titles at both commits);
+   comment-only.json    comment_only.cjs here: the testkit's comment-free emit and comment-free print at BASE and HEAD, with its selftest;
+   npa-probe.json       npa_probe.cjs here: npm-package-arg's type for every version form the testkit comment and the rows name;
+-  suite.json           suite_summary.py here, over Vitest JSON reports of both packages' suites in a clean clone at HEAD;
+-  start-gates-default-reporter.log  the one file that failed by timeout in suite.json, run alone with the default reporter.
+-The test diff must be exactly the PR 536 reviewer's FIX-rows-only edits (rev536-fix-specs.json) applied to BASE.
+-repeat-runs.json, titles.json and npa-probe.json carry no commit of their own; each is tied to HEAD by its content: the repeat total is
+-HEAD's title count, every added title's row is in HEAD's blob and not BASE's, and the probe's pattern line is HEAD's.
++  npm-alias-probe.json  npm_alias_probe.py here: what npm installs, offline, for an `npm:` alias under a workspace's name or another;
++  suite.json           suite_summary.py here, over Vitest JSON reports of the whole suite in a clean clone at HEAD.
++The test diff must be exactly the PR 536 reviewer's FIX-rows-only edits (rev536-fix-specs.json), then the round-1 reviewer's
++FIX541-rows-only edits (rev541-fix-specs.json here, kept unchanged), applied to BASE.
++repeat-runs.json, titles.json, npa-probe.json and npm-alias-probe.json carry no commit of their own; each is tied to HEAD by its
++content: the repeat total is HEAD's title count, every added title's row is in HEAD's blob and not BASE's, the npa probe's pattern
++line is HEAD's, and the npm probe's outcomes are the ones HEAD's `npm:` clause states.
+ Usage: python3 -I record.py <tree> [--check | --selftest]
+   --check: exit 1 unless summary.json equals what the inputs give and no check fails.
+   --selftest: mutate one input at a time in memory (rule 6) and exit 1 unless every mutation makes a check fail.
+ """
+-import copy, hashlib, json, re, subprocess, sys
++import copy, hashlib, json, posixpath, re, subprocess, sys
+ from pathlib import Path
+ 
+ TREE = Path(sys.argv[1]).resolve()
+ HERE_REL = 'docs/evidence/syzygy-bpyt-8-39'
+ HERE = TREE / HERE_REL
+ BASE = 'd38d7a3ce632a34c2a41bdb77ad323ba0b05b777'
+-HEAD = '308a62f4a48e47b625aeff9cc718b1b2c37161f8'
++FIRST = '308a62f4a48e47b625aeff9cc718b1b2c37161f8'
++HEAD = '5f0d5547dfe7f89adf3e86310f819ddeebfaae90'
+ REACH = 'packages/polaris-generation-core/src/workspace-reach.test.ts'
+ KIT = 'packages/polaris-generation-core/src/workspace-reach.testkit.ts'
++OLD_KIT = 'packages/polaris-generation-core/src/zz-836-old-testkit.ts'  # island_diff.py's scratch copy of BASE's testkit
+ CODE = [REACH, KIT]
+ GUARDS = ['packages/polaris-dossier/src/subpath-imports.test.ts', 'packages/polaris-generation-core/src/island-boundary.test.ts', REACH]
+-START_GATES = 'packages/polaris-dossier/src/start-gates.test.ts'
+ REVIEW_DIR = 'docs/evidence/guard-pins-followup-review-2026-10-27'
+ RUNNER = f'{REVIEW_DIR}/tools/mut.py'
+ RUNNER_524 = 'docs/evidence/argv-guards-review-2026-10-25/tools/mut.py'
+ REVIEW_SPECS = f'{REVIEW_DIR}/rev536-specs.json'
+ FIX_SPECS = f'{REVIEW_DIR}/rev536-fix-specs.json'
++# The round-1 reviewer's spec files, kept here unchanged: their sha256 as that review's raw lists them (its section 8).
++SPECS_541 = {'rev541-specs.json': '3f9d1900546b54413766d95a3790db1114ac10f51a79313fcae0d678509d63e7',
++             'rev541-fix-specs.json': '50d59d9550e333892885ef3f8c082bf472f9c772d765cb3991a3377a99fe0f20'}
+ TOOLS = {name: f'docs/evidence/syzygy-bpyt-8-36/{name}' for name in ('island_diff.py', 'titles.py', 'repeat.py')}
+-OWN_TOOLS = ['comment_only.cjs', 'npa_probe.cjs', 'suite_summary.py', 'record.py']
++OWN_TOOLS = ['comment_only.cjs', 'npa_probe.cjs', 'npm_alias_probe.py', 'suite_summary.py', 'record.py']
+ WS = f'{REACH} > the shared workspace resolver > '
+ NAMING = lambda label: f'{WS}reads a bare name declared as {label} as naming no module'
+ ROOT_DECLARES = f"{WS}reads a bare name the workspace root's manifest declares as a local dependency as naming no module"
+-# Each of the review's N1 and N2 targets, and the one new row that must be its only failure at HEAD.
++# Each of the PR 536 review's N1 and N2 targets, and the new rows that must be its only failures at HEAD. M7 has two: the round-1
++# repair's unversioned alias row kills it too.
+ TARGETS = {
+     'RV536-M2-http-url-reads-outside': [NAMING('a remote http tarball URL dependency')],
+-    'RV536-M7-npm-alias-workspace-scope-only': [NAMING('an npm: alias of a registry package')],
++    'RV536-M7-npm-alias-workspace-scope-only': [NAMING('an npm: alias of a registry package'), NAMING('an npm: alias with no version')],
+     'RV536-M8-root-declarations-unread': [ROOT_DECLARES],
+     'RV536-M9-dotdot-alone-outside': [NAMING('a dependency on its parent directory')],
+ }
+ # Survivors at both commits, as the review ruled them: M5 and M10 equivalent on the tree, M11 the named 8.38 residual.
+ RESIDUAL = ['RV536-M5-tree-depth-two', 'RV536-M10-test-exclusion-end-anchor-dropped', 'RV536-M11-residual-widened']
+-# The 4 titles this bead adds, each with the row literal that must be in HEAD's blob and not in BASE's.
++# The round-1 reviewer's mutants: all 7 survive at BASE; at HEAD, each target is killed by these rows alone (X3 and X5 by N1's rows),
++# and X1 and X4 survive, as that review ruled them (its section 7).
++TARGETS_541 = {
++    'R541-X2-root-devDependencies-unread': [ROOT_DECLARES],
++    'R541-X3-npm-alias-needs-version': [NAMING('an npm: alias with no version')],
++    'R541-X5-tarball-arm-skips-hash': [NAMING('a git dependency whose spec ends in a tarball extension')],
++    'R541-X6-unscoped-manifests-unread': [ROOT_DECLARES],
++    'R541-X7-http-url-tgz-only': [NAMING('a remote http tarball URL dependency')],
++}
++RESIDUAL_541 = ['R541-X1-root-reads-devDependencies-only', 'R541-X4-npm-arm-case-sensitive']
++# The 6 titles this bead adds, each with the row literal that must be in HEAD's blob and not in BASE's.
+ ADDED = {
+     ROOT_DECLARES: (REACH, '''  it("reads a bare name the workspace root's manifest declares as a local dependency as naming no module", () => {\n'''),
+     **{NAMING(label): (REACH, f"    ['{label}', 'dossier', {{ dependencies: {{ dossier: '{version}' }} }}, {{}}],\n") for label, version in (
+         ('a remote http tarball URL dependency', 'http://example.com/lib-1.0.0.tar.gz'), ('an npm: alias of a registry package', 'npm:typescript@^5.5.0'),
+-        ('a dependency on its parent directory', '..'))},
++        ('a dependency on its parent directory', '..'), ('a git dependency whose spec ends in a tarball extension', 'github:someone/dossier#v1.tar'),
++        ('an npm: alias with no version', 'npm:typescript'))},
+ }
+ # npm-package-arg's type for each form the testkit comment names, as the comment states it.
+ CLAIMS = {**{f: 'directory' for f in ('file:../x', '.', '..', './x', '../x', '/x', '~/x')}, **{f: 'file' for f in ('x.tgz', 'x.tar', 'x.tar.gz')},
+@@ -66,11 +87,33 @@ CLAIMS = {**{f: 'directory' for f in ('file:../x', '.', '..', './x', '../x', '/x
+ # The comment's N4 premise: npm takes only a registry spec after `npm:`, and refuses any other.
+ REGISTRY_TYPES = {'range', 'version', 'tag'}
+ NOT_REGISTRY_ALIASES = ['npm:./lib', 'npm:file:../lib']
+-NAMED_IN_COMMENT = ['`npm:`', '`github:someone/dossier#v1.tar`', '`https://…/x.tgz`', 'npm-package-arg 12.0.2 accepts only a registry spec after `npm:`']
++NAMED_IN_COMMENT = ['`npm:`', '`github:someone/dossier#v1.tar`', '`https://…/x.tgz`', 'npm-package-arg 12.0.2 accepts only a registry spec after `npm:`',
++                    'Residual (the review of 8.39, N2): a workspace whose name is not `@syzygy/`-scoped is read by its bare name as outside the',
++                    '0 of the 12 workspaces are unscoped today']
++# The round-1 reviewer's text for the `npm:` clause (F1), which HEAD's testkit must carry verbatim, and the sentence it replaced.
++F1_CLAUSE = (' * - `npm:`: an alias. npm-package-arg 12.0.2 accepts only a registry spec after `npm:`, and npm fetches that spec from the\n'
++          " *   registry unless the alias is declared under a workspace's own name and that workspace's version satisfies it; then npm links\n"
++          " *   the workspace, as for any dependency declared under a workspace's name (every workspace here is `@syzygy/`-scoped, and the\n"
++          " *   `@syzygy/*` branch reads such a name before this pattern). Its target may carry a workspace package's name, which other\n"
++          ' *   package managers can link locally; every alias is refused, failing closed.\n')
++F1_FALSE = 'npm installs it from the registry'
++# What npm_alias_probe.py must observe for each case, as HEAD's `npm:` clause states it: a link to the workspace's directory, or a
++# registry request for the name given (offline, so ENOTCACHED).
++NPM_EXPECTED = {
++    ('dossier', 'npm:typescript@^5.5.0'): ('registry', 'typescript'), ('dossier', 'npm:wlib@*'): ('registry', 'wlib'),
++    ('dossier', 'npm:typescript'): ('registry', 'typescript'), ('wlib', 'npm:typescript@*'): ('link', 'w'),
++    ('wlib', 'npm:typescript@^1.0.0'): ('link', 'w'), ('wlib', 'npm:typescript@^5.5.0'): ('registry', 'typescript'),
++    ('@syzygy/slib', 'npm:typescript@*'): ('link', 's'), ('wlib', '^1.0.0'): ('link', 'w'), ('wlib', '^5.5.0'): ('registry', 'wlib'),
++}
++NPM_REGISTRY = 'http://127.0.0.1:9/'
+ RESIDUAL_FORMS = ['packages/polaris-dossier/', '.hidden-lib', 'a/b/c']
+ OUTSIDE_VERSIONS = ['2.9.0', '^1.0.0', 'github:someone/dossier', '~1.2.3', 'git+https://example.com/lib.tgz.git']
+ LOCAL_VERSION = re.compile(r'^(?:file:|link:|workspace:|npm:|\.\.?(?:/|$)|/|~/)|\.(?:tgz|tar|tar\.gz)$', re.I)
+-STRACE_SKIP = 'no provider call and no transmission (S10), without strace is not proved on this host'
++# The whole suite's five skips: the strace capture this host cannot run, and four tests gated on a live Butlers checkout or a browser.
++SKIPS = ['apps/three-surface-poc/src/polaris-opening-index.browser.test.ts', 'apps/three-surface-poc/src/project-shape-discovery.live.test.ts',
++         'packages/polaris-dossier/src/no-egress.test.ts', 'packages/three-surface-poc-core/src/test-artifact-verification.live.test.ts',
++         'packages/three-surface-poc-core/src/work-items.live.test.ts']
++WHOLE = 'npx vitest run --reporter=json'
+ MUTATE = {}
+ 
+ 
+@@ -170,7 +213,7 @@ def doc_comment_span(text):
+ def apply_fix(text, edits, problems):
+     for e in edits:
+         if e['file'] != REACH or text.count(e['old']) != 1:
+-            problems.append(f'fix: an edit is not to {REACH} or its old text does not occur once at BASE')
++            problems.append(f'fix: an edit is not to {REACH} or its old text does not occur once where it applies')
+             continue
+         text = text.replace(e['old'], e['new'])
+     return text
+@@ -178,6 +221,8 @@ def apply_fix(text, edits, problems):
+ 
+ def main_summary():
+     problems = []
++    tracked = [p for p in git('ls-tree', '-r', '--name-only', '-z', HEAD).split('\0') if p]
++    manifests = [p for p in tracked if p == 'package.json' or re.fullmatch(r'(?:apps|packages)/[^/]+/package\.json', p)]
+     review = {m['id']: m for m in json.loads(blob(HEAD, REVIEW_SPECS) or '{"mutants": []}')['mutants']}
+     if blob(BASE, REVIEW_SPECS) != blob(HEAD, REVIEW_SPECS) or len(review) != 11:
+         problems.append('the reviewer specs differ between BASE and HEAD, or are not 11')
+@@ -187,8 +232,8 @@ def main_summary():
+         b, h = base.get(i, {}), head.get(i, {})
+         if (b.get('outcome'), h.get('outcome')) != ('survives', 'killed'):
+             problems.append(f'{i}: {b.get("outcome")} at base, {h.get("outcome")} at head')
+-        if h.get('failedRows') != own_rows:
+-            problems.append(f'{i}: killed at head by {h.get("failedRows")}, not by its own row alone')
++        if h.get('failedRows') != sorted(own_rows):
++            problems.append(f'{i}: killed at head by {h.get("failedRows")}, not by its own rows alone')
+     for i in RESIDUAL:
+         if (base.get(i, {}).get('outcome'), head.get(i, {}).get('outcome')) != ('survives', 'survives'):
+             problems.append(f'{i}: the residual is not a survivor at both commits')
+@@ -204,17 +249,37 @@ def main_summary():
+     if compare['weaker']:
+         problems.append(f'weaker at head, or not killed at base: {compare["weaker"]}')
+ 
++    for name, digest in SPECS_541.items():
++        if hooked(f'sha {name}', sha((HERE / name).read_text())) != digest:
++            problems.append(f"{name}: not the round-1 reviewer's file, by the sha256 its raw lists")
++    review541 = {m['id']: m for m in load('rev541-specs.json')['mutants']}
++    if sorted(review541) != sorted([*TARGETS_541, *RESIDUAL_541]):
++        problems.append(f'rev541-specs.json: the mutants are not the 7 named here: {sorted(review541)}')
++    base541 = check_runs('rev541-at-base.json', BASE, review541, problems)
++    head541 = check_runs('rev541-at-head.json', HEAD, review541, problems)
++    for i in review541:
++        if base541.get(i, {}).get('outcome') != 'survives':
++            problems.append(f'{i}: {base541.get(i, {}).get("outcome")} at base, not a survivor')
++    for i, own_rows in TARGETS_541.items():
++        if (head541.get(i, {}).get('outcome'), head541.get(i, {}).get('failedRows')) != ('killed', sorted(own_rows)):
++            problems.append(f'{i}: {head541.get(i, {}).get("outcome")} at head by {head541.get(i, {}).get("failedRows")}, not by its own row alone')
++    for i in RESIDUAL_541:
++        if head541.get(i, {}).get('outcome') != 'survives':
++            problems.append(f'{i}: the named survivor is {head541.get(i, {}).get("outcome")} at head')
++
+     fix = {m['id']: m for m in json.loads(blob(HEAD, FIX_SPECS) or '{"mutants": []}')['mutants']}.get('FIX-rows-only', {'edits': []})
+-    fixed = hooked('fixed', apply_fix(blob(BASE, REACH) or '', fix['edits'], problems))
+-    if not fix['edits'] or fixed != blob(HEAD, REACH):
+-        problems.append("fix: HEAD's test file is not the reviewer's FIX-rows-only edits applied to BASE")
++    fix541 = {m['id']: m for m in load('rev541-fix-specs.json')['mutants']}.get('FIX541-rows-only', {'edits': []})
++    first_fixed = apply_fix(blob(BASE, REACH) or '', fix['edits'], problems)
++    fixed = hooked('fixed', apply_fix(first_fixed, fix541['edits'], problems))
++    if not fix['edits'] or not fix541['edits'] or first_fixed != blob(FIRST, REACH) or fixed != blob(HEAD, REACH):
++        problems.append("fix: FIRST's test file is not FIX-rows-only applied to BASE, or HEAD's is not FIX541-rows-only applied to FIRST's")
+     reach_lines = diff_lines(REACH)
+     if any(sign == '-' for sign, _, _ in reach_lines):
+         problems.append(f'{REACH}: the subject removes a line')
+ 
+     kit_lines = diff_lines(KIT)
+     spans = {'-': doc_comment_span(blob(BASE, KIT) or ''), '+': doc_comment_span(blob(HEAD, KIT) or '')}
+-    outside = [line for line in kit_lines if spans[line[0]] is None or not spans[line[0]][0] < line[1] < spans[line[0]][1]
++    outside = [line for line in kit_lines if spans[line[0]] is None or not spans[line[0]][0] < line[1] <= spans[line[0]][1]
+                or not re.match(r' \* ', line[2])]
+     if not kit_lines or outside:
+         problems.append(f'testkit: a changed line is not a ` * ` line inside the LOCAL_VERSION doc comment: {outside[:1]}')
+@@ -232,6 +297,8 @@ def main_summary():
+     for d, label in ((diff, 'island-diff'), (selftest, 'island-diff-selftest')):
+         if (d['base'], d['head'], d['cleanAfter'], d['vitestExit'], d['toolSha256']) != (BASE, HEAD, True, 0, tool):
+             problems.append(f'{label}: base, head, clean tree, exit or tool digest is not as required')
++        if d.get('scratchSha256', {}).get(OLD_KIT) != sha(blob(BASE, KIT) or ''):
++            problems.append(f"{label}: the old testkit it compared is not BASE's testkit blob")
+     if diff['selftest'] or diff['walks']['equal'] != diff['walks']['entries'] or diff['resolves']['equal'] != diff['resolves']['specifiers'] \
+             or diff['walks']['unequal'] or diff['resolves']['unequal']:
+         problems.append('island-diff: an answer differs')
+@@ -246,7 +313,7 @@ def main_summary():
+             or titles['duplicatesBase'] or titles['duplicatesHead']:
+         problems.append('titles: a title was removed, the arithmetic does not close, or a title is duplicated')
+     if sorted(added) != sorted(ADDED):
+-        problems.append(f'titles: added {sorted(set(added) ^ set(ADDED))[:2]} beyond or short of the 4 rows this bead adds')
++        problems.append(f'titles: added {sorted(set(added) ^ set(ADDED))[:2]} beyond or short of the {len(ADDED)} titles this bead adds')
+     for title, (path, fragment) in ADDED.items():
+         if (blob(HEAD, path) or '').count(fragment) != 1 or fragment in (blob(BASE, path) or ''):
+             problems.append(f'titles: the row of {title.rsplit(" > ", 1)[-1]!r} is not new at HEAD')
+@@ -267,11 +334,18 @@ def main_summary():
+     if not aliases or any(r.get('aliasOf') not in REGISTRY_TYPES for r in aliases) \
+             or any(comment.get(form, {}).get('npa') != 'throws aliases only work for registry deps' for form in NOT_REGISTRY_ALIASES):
+         problems.append('npa-probe: npm takes an alias of a spec that is not a registry spec')
++    kit = hooked('kit', blob(HEAD, KIT) or '')
+     for words in NAMED_IN_COMMENT:
+-        if words not in (blob(HEAD, KIT) or ''):
++        if words not in kit:
+             problems.append(f'testkit comment: does not name {words}')
++    if kit.count(F1_CLAUSE) != 1 or F1_FALSE in kit:
++        problems.append("testkit comment: the `npm:` clause is not the round-1 reviewer's text, or the false sentence remains")
++    workspaces = hooked('workspaces', {p: json.loads(blob(HEAD, p))['name'] for p in manifests if p != 'package.json'})
++    if json.loads(blob(HEAD, 'package.json')).get('workspaces') != ['packages/*', 'apps/*'] or len(workspaces) != 12 \
++            or [name for name in workspaces.values() if not name.startswith('@syzygy/')]:
++        problems.append(f'workspaces: not the 12 `@syzygy/`-scoped ones the N2 residual counts: {sorted(workspaces.values())}')
+     for form in RESIDUAL_FORMS:
+-        if (comment.get(form, {}).get('npa'), comment.get(form, {}).get('local')) != ('directory', False) or f'`{form}`' not in (blob(HEAD, KIT) or ''):
++        if (comment.get(form, {}).get('npa'), comment.get(form, {}).get('local')) != ('directory', False) or f'`{form}`' not in kit:
+             problems.append(f'npa-probe: the residual {form} is not a directory npm reads that the pattern leaves outside, named in the comment')
+     for r in probe['rows']:
+         if f": '{r['spec']}' }}" not in (blob(HEAD, REACH) or '') or r['local'] != (r['spec'] not in OUTSIDE_VERSIONS):
+@@ -279,71 +353,78 @@ def main_summary():
+     if sorted(r['spec'] for r in probe['rows'] if not r['local']) != sorted(OUTSIDE_VERSIONS):
+         problems.append('npa-probe: the outside rows are not the five controls')
+ 
++    npm = load('npm-alias-probe.json')
++    if (npm['npm'], npm['registry'], npm['offline'], npm['workspaces']) != ('11.5.1', NPM_REGISTRY, True, {'w': 'wlib', 's': '@syzygy/slib'}):
++        problems.append('npm-alias-probe: not npm 11.5.1, offline against the unreachable registry, over the two workspaces')
++    declared = [next(iter(r['declared'].items())) for r in npm['results'] if len(r['declared']) == 1]
++    if sorted(declared) != sorted(NPM_EXPECTED) or len(declared) != len(npm['results']):
++        problems.append('npm-alias-probe: the cases are not the nine named here, each once')
++    for r, (name, spec) in zip(npm['results'], declared):
++        kind, what = NPM_EXPECTED.get((name, spec), (None, None))
++        link = r['installedLink'] and posixpath.normpath(posixpath.join(posixpath.dirname(f'node_modules/{name}'), r['installedLink']))
++        observed = ('link', what) if (r['lockExit'], r['lockEntry'], r['installExit'], link, r['appLoads']) == (
++            0, {'resolved': what, 'link': True}, 0, what, {'packageJson': f'{what}/package.json', 'name': npm['workspaces'].get(what), 'version': '1.0.0'}) \
++            else ('registry', r['wouldRequest'][len(NPM_REGISTRY):]) if r['lockExit'] and r['errorCode'] == 'ENOTCACHED' and (r['wouldRequest'] or '').startswith(NPM_REGISTRY) \
++            and (r['lockEntry'], r['installExit'], r['installedLink'], r['appLoads']) == (None, None, None, None) else None
++        if observed != (kind, what):
++            problems.append(f'npm-alias-probe: {name}: {spec} gives {observed}, not {(kind, what)} as the `npm:` clause states')
++
+     suite = load('suite.json')
+-    runs = {r['label']: r for r in suite['runs']}
+-    full, lifted, alone, alone_lifted = (runs.get(k, {}) for k in ('full', 'full-timeout-60s', 'start-gates-alone', 'start-gates-timeout-60s'))
+-    if suite['commit'] != HEAD or not suite['cleanAfter'] or sorted(runs) != ['full', 'full-timeout-60s', 'start-gates-alone', 'start-gates-timeout-60s']:
+-        problems.append('suite: not a clean tree at HEAD, or not the four runs')
+-    skips = lambda r: [t for t in r.get('notPassed', []) if t['status'] != 'failed']
+-    for r in (full, lifted):
+-        if r.get('files') != 55 or r.get('total') != r.get('passed', 0) + r.get('failed', 0) + r.get('skipped', 0) \
+-                or len(skips(r)) != 1 or not skips(r)[0]['name'].startswith(STRACE_SKIP) or skips(r)[0]['status'] != 'skipped':
+-            problems.append(f'suite {r.get("label")}: totals do not close, or a test other than the strace capture did not run')
+-    if not lifted.get('success') or lifted.get('failed') or lifted.get('total') != full.get('total'):
+-        problems.append('suite: the run with a 60 s test timeout failed, or ran another population')
+-    timed_out = sorted(t['name'] for t in full.get('notPassed', []) if t['status'] == 'failed')
+-    if any(t['file'] != START_GATES or t['ms'] < 5000 for t in full.get('notPassed', []) if t['status'] == 'failed'):
+-        problems.append(f'suite: the full run failed outside {START_GATES}, or before the 5 s timeout')
+-    if not timed_out or not set(timed_out) <= {t['name'] for t in alone.get('notPassed', []) if t['status'] == 'failed'} \
+-            or any(t['ms'] < 5000 for t in alone.get('notPassed', [])) or not alone_lifted.get('success') or alone_lifted.get('notPassed') \
+-            or alone_lifted.get('total') != alone.get('total'):
+-        problems.append('suite: the full run\'s failures do not recur alone by timeout, or the file fails with a 60 s timeout')
+-    log = (HERE / 'start-gates-default-reporter.log').read_text()
+-    if HEAD not in log.splitlines()[0] or log.count('Error: Test timed out in 5000ms.') != len([t for t in alone.get('notPassed', []) if t['status'] == 'failed']) \
+-            or 'Tests  2 failed | 102 passed (104)' not in log:
+-        problems.append('start-gates log: not at HEAD, or its failures are not the timeouts of the run alone')
+-    gates = hooked('start-gates', blob(HEAD, START_GATES) or '')
+-    if 'workspace-reach' in gates:
+-        problems.append(f'{START_GATES}: imports a file the subject changes')
++    whole = {r['label']: r for r in suite['runs']}.get('whole', {})
++    if suite['commit'] != HEAD or not suite['cleanAfter'] or [r['label'] for r in suite['runs']] != ['whole'] or whole.get('command') != WHOLE:
++        problems.append('suite: not one run of the whole suite in a clean tree at HEAD')
++    not_passed = whole.get('notPassed', [])
++    if not whole.get('success') or whole.get('failed') or whole.get('total') != whole.get('passed', 0) + whole.get('skipped', 0) \
++            or whole.get('skipped') != len(not_passed) or sorted(t['file'] for t in not_passed) != SKIPS or any(t['status'] != 'skipped' for t in not_passed):
++        problems.append('suite: a test failed, the totals do not close, or a test other than the five known skips did not run')
++    if whole.get('files', 0) < 246:
++        problems.append(f'suite: {whole.get("files")} files, fewer than the whole suite')
+ 
+     runner = sha(blob(HEAD, RUNNER) or '')
+     if runner != sha(blob(HEAD, RUNNER_524) or 'x'):
+         problems.append("the mutant runner is not the PR 524 reviewer's mut.py")
+-    changed = hooked('names', git('diff', '--name-only', BASE, HEAD).split())
++    # Round 1's evidence commit sits between FIRST and HEAD, so the commits also touch this directory; nothing else may change.
++    changed = hooked('names', [p for p in git('diff', '--name-only', BASE, HEAD).split() if not p.startswith(f'{HERE_REL}/')])
+     if sorted(changed) != sorted(CODE):
+         problems.append(f'the subject touches {changed}, not the two files')
+     importers = hooked('importers', sorted(line.split(':', 1)[1] for line in git('grep', '-l', '-F', 'workspace-reach.testkit', HEAD, '--',
+                                                                                  'apps', 'packages', 'scripts').split()))
+     if importers != sorted(GUARDS):
+         problems.append(f'the testkit is imported by {importers}, not the three guard tests')
+-    tracked = [p for p in git('ls-tree', '-r', '--name-only', '-z', HEAD).split('\0') if p]
+-    manifests = [p for p in tracked if p == 'package.json' or re.fullmatch(r'(?:apps|packages)/[^/]+/package\.json', p)]
+     versions = [[p, field, name, version] for p in manifests for field in ('dependencies', 'devDependencies', 'optionalDependencies', 'peerDependencies')
+                 for name, version in json.loads(blob(HEAD, p)).get(field, {}).items()]
+     return {
+-        'bead': 'syzygy-bpyt.8.39', 'base': BASE, 'head': HEAD,
+-        'subject': {'what': f'git diff {BASE[:8]} {HEAD[:8]}', 'sha256': sha(git('diff', BASE, HEAD)),
++        'bead': 'syzygy-bpyt.8.39', 'base': BASE, 'first': FIRST, 'head': HEAD,
++        'subject': {'what': f'git diff {BASE[:8]} {HEAD[:8]} -- {" ".join(CODE)}', 'sha256': sha(git('diff', BASE, HEAD, '--', *CODE)),
+                     'files': {f: {'base': sha(blob(BASE, f)), 'head': sha(blob(HEAD, f))} for f in CODE}},
++        'repair': {'what': f'git diff {FIRST[:8]} {HEAD[:8]} -- {" ".join(CODE)}', 'sha256': sha(git('diff', FIRST, HEAD, '--', *CODE))},
+         'productFilesChanged': [f for f in changed if f not in CODE],
+         'testkitImporters': importers,
+         'mutRunnerSha256': runner,
+         'targets': {i: {'base': base.get(i, {}).get('outcome'), 'head': head.get(i, {}).get('outcome'),
+                         'headFailedRows': head.get(i, {}).get('failedRows')} for i in [*TARGETS, *RESIDUAL]},
+         'otherReviewMutants': compare,
+-        'fix': {'specs': FIX_SPECS, 'specsSha256': sha(blob(HEAD, FIX_SPECS) or ''), 'edits': len(fix['edits']), 'headEqualsBaseWithFix': fixed == blob(HEAD, REACH),
++        'round1Mutants': {i: {'base': base541.get(i, {}).get('outcome'), 'head': head541.get(i, {}).get('outcome'),
++                              'headFailedRows': head541.get(i, {}).get('failedRows')} for i in [*TARGETS_541, *RESIDUAL_541]},
++        'fix': {'specs': [FIX_SPECS, f'{HERE_REL}/rev541-fix-specs.json'], 'specsSha256': [sha(blob(HEAD, FIX_SPECS) or ''), SPECS_541['rev541-fix-specs.json']],
++                'edits': [len(fix['edits']), len(fix541['edits'])], 'headEqualsBaseWithFixes': fixed == blob(HEAD, REACH),
+                 'linesAdded': len(reach_lines), 'linesRemoved': 0},
+         'testkit': {'changedLines': {'-': sum(1 for l in kit_lines if l[0] == '-'), '+': sum(1 for l in kit_lines if l[0] == '+')},
+                     'docCommentLines': {'base': spans['-'], 'head': spans['+']},
+                     'emitEqual': only['emitEqual'], 'printEqual': only['printEqual'], 'typescript': only['typescript'], 'selftest': st},
+         'islandDiff': {'walks': {k: diff['walks'][k] for k in ('entries', 'equal', 'answersSha256')},
+                        'resolves': {k: diff['resolves'][k] for k in ('files', 'specifiers', 'equal', 'byAnswer', 'answersSha256')},
+-                       'selftest': {'walksEqual': selftest['walks']['equal'], 'resolvesEqual': selftest['resolves']['equal']}, 'toolSha256': tool},
++                       'selftest': {'walksEqual': selftest['walks']['equal'], 'resolvesEqual': selftest['resolves']['equal']}, 'toolSha256': tool,
++                       'oldTestkitSha256': diff.get('scratchSha256', {}).get(OLD_KIT)},
+         'repeats': {'runs': len(repeat['runs']), 'passed': [r['passed'] for r in repeat['runs']], 'load1': [r['load1'] for r in repeat['runs']]},
+         'titles': {'base': titles['base'], 'head': titles['head'], 'added': len(added), 'removed': titles['removed'], 'perFile': per_file,
+                    'line': f'Tests: +{len(added)} ~0 -{titles["removed"]}'},
+         'npaProbe': {'npaVersion': probe['npaVersion'], 'node': probe['node'], 'forms': len(probe['comment']) + len(probe['rows'])},
+-        'suite': {r['label']: {k: r[k] for k in ('total', 'passed', 'failed', 'skipped', 'load1Before', 'load1After')} for r in suite['runs']},
+-        'suiteTimeouts': timed_out,
++        'npmAliasProbe': {'npm': npm['npm'], 'arborist': npm['arborist'], 'node': npm['node'], 'cases': len(npm['results']),
++                          'links': sorted(f'{n}: {s}' for (n, s), (k, _) in NPM_EXPECTED.items() if k == 'link'),
++                          'registry': sorted(f'{n}: {s}' for (n, s), (k, _) in NPM_EXPECTED.items() if k == 'registry')},
++        'workspaces': {'count': len(workspaces), 'unscoped': [n for n in workspaces.values() if not n.startswith('@syzygy/')]},
++        'suite': {r['label']: {k: r[k] for k in ('command', 'files', 'total', 'passed', 'failed', 'skipped', 'load1Before', 'load1After')} for r in suite['runs']},
+         'tools': {**{name: sha(blob(HEAD, path) or '') for name, path in TOOLS.items()},
+                   **{name: sha((HERE / name).read_text()) for name in OWN_TOOLS}},
+         'faithfulTree': {'manifests': len(manifests), 'dependencyVersions': len(versions),
+@@ -365,6 +446,10 @@ def run(d, label):
+     return next(r for r in d['runs'] if r['label'] == label)
+ 
+ 
++def case(d, name, spec):
++    return next(r for r in d['results'] if r['declared'] == {name: spec})
++
++
+ SELFTEST = {
+     'a target that survives at head': {'rev536-at-head.json': lambda d: (first(d, 'RV536-M8-root-declarations-unread').update(outcome='survives', exit=0, failed=[]), d)[1]},
+     'a target killed at base': {'rev536-at-base.json': lambda d: (kill(first(d, 'RV536-M2-http-url-reads-outside')), d)[1]},
+@@ -378,15 +463,32 @@ SELFTEST = {
+     'an outcome that disagrees with its exit': {'rev536-at-base.json': lambda d: (first(d, 'RV536-M4-census-takes-ts-md').update(exit=0), d)[1]},
+     'a run whose edits are not its spec': {'rev536-at-base.json': lambda d: (first(d, 'RV536-M2-http-url-reads-outside')['edits'][0].update(new='x'), d)[1]},
+     'a tree left dirty': {'rev536-at-head.json': lambda d: (first(d, 'RV536-M10-test-exclusion-end-anchor-dropped').update(cleanAfter=False), d)[1]},
++    'a round-1 target that survives at head': {'rev541-at-head.json': lambda d: (first(d, 'R541-X3-npm-alias-needs-version').update(outcome='survives', exit=0, failed=[]), d)[1]},
++    'a round-1 target killed at base': {'rev541-at-base.json': lambda d: (kill(first(d, 'R541-X5-tarball-arm-skips-hash')), d)[1]},
++    'a round-1 target killed by another row too': {'rev541-at-head.json': lambda d: (first(d, 'R541-X5-tarball-arm-skips-hash')['failed'].append('FAIL   @syzygy/x  ' + ROOT_DECLARES), d)[1]},
++    'a round-1 survivor killed at head': {'rev541-at-head.json': lambda d: (kill(first(d, 'R541-X1-root-reads-devDependencies-only')), d)[1]},
++    'a round-1 run at another commit': {'rev541-at-base.json': lambda d: (d.update(head=HEAD), d)[1]},
++    'a round-1 run missing a mutant': {'rev541-at-head.json': lambda d: (d.update(results=[r for r in d['results'] if r['id'] != 'R541-X4-npm-arm-case-sensitive']), d)[1]},
++    "a round-1 spec file that is not the reviewer's": {'@sha rev541-specs.json': lambda digest: '0' * 64},
++    "a round-1 fix spec file that is not the reviewer's": {'@sha rev541-fix-specs.json': lambda digest: '0' * 64},
++    'a round-1 spec set short of a mutant': {'rev541-specs.json': lambda d: (d.update(mutants=d['mutants'][:-1]), d)[1]},
++    'a round-1 fix with no edits': {'rev541-fix-specs.json': lambda d: (next(m for m in d['mutants'] if m['id'] == 'FIX541-rows-only').update(edits=[]), d)[1]},
+     "a test file that is not the reviewer's fix": {'@fixed': lambda text: text.replace("'..'", "'../'", 1)},
+     'a line removed from the test file': {f'@lines {REACH}': lambda lines: [*lines, ['-', 90, "    ['a ./ path dependency', ..."]]},
+     'a code line changed in the testkit': {f'@lines {KIT}': lambda lines: [*lines, ['+', 70, 'const LOCAL_VERSION = /^file:/iu;']]},
+     'a comment line changed outside the doc comment': {f'@lines {KIT}': lambda lines: [*lines, ['+', 3, ' * x']]},
++    'a changed line on the LOCAL_VERSION line itself': {f'@lines {KIT}': lambda lines: [*lines, ['+', 78, ' * x']]},
++    "a testkit without the reviewer's npm: text": {'@kit': lambda kit: kit.replace('then npm links', 'then npm fetches', 1)},
++    'a testkit that keeps the false sentence': {'@kit': lambda kit: kit + '// npm installs it from the registry\n'},
++    'a testkit without the N2 residual count': {'@kit': lambda kit: kit.replace('0 of the 12 workspaces are unscoped today', '', 1)},
++    'an unscoped workspace': {'@workspaces': lambda names: {**names, 'packages/plainlib/package.json': 'plainlib'}},
+     'a comment-free emit that differs': {'comment-only.json': lambda d: (d.update(emitEqual=False), d)[1]},
+     'a comment-only check of another blob': {'comment-only.json': lambda d: (d.update(headSha256='0' * 64), d)[1]},
+     'a comment-only selftest that misses a rename': {'comment-only.json': lambda d: (d['selftest']['identifierRenamed'].update(printEqual=True), d)[1]},
+     'a walk that differs': {'island-diff.json': lambda d: (d['walks'].update(equal=d['walks']['equal'] - 1), d)[1]},
+     'an island diff by another tool': {'island-diff.json': lambda d: (d.update(toolSha256='0' * 64), d)[1]},
++    'an island diff over another old testkit': {'island-diff.json': lambda d: (d['scratchSha256'].update({OLD_KIT: '0' * 64}), d)[1]},
++    'an island selftest over another old testkit': {'island-diff-selftest.json': lambda d: (d['scratchSha256'].pop(OLD_KIT), d)[1]},
+     'a differential selftest that changes nothing': {'island-diff-selftest.json': lambda d: (d['resolves'].update(equal=d['resolves']['specifiers']), d['walks'].update(equal=d['walks']['entries']), d)[2]},
+     'a repeat run that fails': {'repeat-runs.json': lambda d: (d['runs'][2].update(failed=['x'], passed=d['runs'][2]['passed'] - 1), d)[1]},
+     "a repeat run of BASE's population": {'repeat-runs.json': lambda d: ([r.update(total=165, passed=165) for r in d['runs']], d)[1]},
+@@ -398,13 +500,23 @@ SELFTEST = {
+     'an alias of a non-registry spec': {'npa-probe.json': lambda d: (next(r for r in d['rows'] if r['spec'] == 'npm:typescript@^5.5.0').update(aliasOf='git'), d)[1]},
+     'a residual the pattern refuses': {'npa-probe.json': lambda d: (next(r for r in d['comment'] if r['spec'] == 'a/b/c').update(local=True), d)[1]},
+     'a row version on the wrong side': {'npa-probe.json': lambda d: (next(r for r in d['rows'] if r['spec'] == '..').update(local=False), d)[1]},
++    'an npm case that links where the clause says registry': {'npm-alias-probe.json': lambda d: (case(d, 'wlib', 'npm:typescript@^5.5.0').update(
++        lockExit=0, errorCode=None, wouldRequest=None, lockEntry={'resolved': 'w', 'link': True}, installExit=0, installedLink='../w',
++        appLoads={'packageJson': 'w/package.json', 'name': 'wlib', 'version': '1.0.0'}), d)[1]},
++    'an npm case that fetches where the clause says link': {'npm-alias-probe.json': lambda d: (case(d, 'wlib', 'npm:typescript@*').update(
++        lockExit=1, errorCode='ENOTCACHED', wouldRequest='http://127.0.0.1:9/typescript', lockEntry=None, installExit=None, installedLink=None, appLoads=None), d)[1]},
++    'an npm registry case that requests another name': {'npm-alias-probe.json': lambda d: (case(d, 'dossier', 'npm:wlib@*').update(wouldRequest='http://127.0.0.1:9/typescript'), d)[1]},
++    'an npm link to another workspace': {'npm-alias-probe.json': lambda d: (case(d, '@syzygy/slib', 'npm:typescript@*').update(installedLink='../../w'), d)[1]},
++    'an npm case where Node loads another package': {'npm-alias-probe.json': lambda d: (case(d, 'wlib', '^1.0.0')['appLoads'].update(name='typescript'), d)[1]},
++    'an npm probe against a reachable registry': {'npm-alias-probe.json': lambda d: (d.update(registry='https://registry.npmjs.org/'), d)[1]},
++    'an npm probe missing a case': {'npm-alias-probe.json': lambda d: (d.update(results=d['results'][:-1]), d)[1]},
+     'a suite at another commit': {'suite.json': lambda d: (d.update(commit=BASE), d)[1]},
+-    'a lifted-timeout suite with a failure': {'suite.json': lambda d: (run(d, 'full-timeout-60s').update(success=False, failed=1, passed=run(d, 'full-timeout-60s')['passed'] - 1), d)[1]},
+-    'a full-suite failure in another file': {'suite.json': lambda d: (run(d, 'full')['notPassed'].append({'file': REACH, 'name': 'x', 'status': 'failed', 'ms': 9000, 'error': ''}), d)[1]},
+-    'a full-suite failure before the timeout': {'suite.json': lambda d: (next(t for t in run(d, 'full')['notPassed'] if t['status'] == 'failed').update(ms=40), d)[1]},
+-    'a start-gates file that fails with a 60 s timeout': {'suite.json': lambda d: (run(d, 'start-gates-timeout-60s').update(success=False), d)[1]},
+-    'a full suite that skips another test': {'suite.json': lambda d: (run(d, 'full')['notPassed'].append({'file': REACH, 'name': 'y', 'status': 'skipped', 'ms': None, 'error': ''}), d)[1]},
+-    'a start-gates file that imports the testkit': {'@start-gates': lambda text: text + "\nimport './workspace-reach.testkit.js';\n"},
++    'a whole suite with a failure': {'suite.json': lambda d: (run(d, 'whole').update(success=False, failed=1, passed=run(d, 'whole')['passed'] - 1), d)[1]},
++    'a whole suite that skips another test': {'suite.json': lambda d: (run(d, 'whole')['notPassed'].append({'file': REACH, 'name': 'y', 'status': 'skipped', 'ms': None, 'error': ''}),
++                                                                  run(d, 'whole').update(skipped=6, passed=run(d, 'whole')['passed'] - 1), d)[2]},
++    'a suite of two packages only': {'suite.json': lambda d: (run(d, 'whole').update(command=WHOLE + ' --project @syzygy/polaris-dossier'), d)[1]},
++    'a whole suite whose totals do not close': {'suite.json': lambda d: (run(d, 'whole').update(total=run(d, 'whole')['total'] + 1), d)[1]},
++    'a whole suite over fewer files': {'suite.json': lambda d: (run(d, 'whole').update(files=55), d)[1]},
+     'a product file in the subject': {'@names': lambda names: [*names, 'packages/polaris-dossier/src/argv.ts']},
+     'a product module importing the testkit': {'@importers': lambda names: sorted([*names, 'apps/syzygy/src/main.ts'])},
+ }
+diff --git a/docs/evidence/syzygy-bpyt-8-39/repeat-runs.json b/docs/evidence/syzygy-bpyt-8-39/repeat-runs.json
+index ff43b805..699d5cb8 100644
+--- a/docs/evidence/syzygy-bpyt-8-39/repeat-runs.json
++++ b/docs/evidence/syzygy-bpyt-8-39/repeat-runs.json
+@@ -1,5 +1,5 @@
+ {
+- "tree": "/var/tmp/la-b839/head",
++ "tree": "/tmp/la-r541/head",
+  "files": [
+   "packages/polaris-dossier/src/argv.test.ts",
+   "packages/polaris-dossier/src/subpath-imports.test.ts",
+@@ -10,295 +10,295 @@
+   {
+    "run": 1,
+    "exit": 0,
+-   "wallSeconds": 8.4,
+-   "load1": 51.3,
+-   "total": 169,
+-   "passed": 169,
++   "wallSeconds": 3.3,
++   "load1": 22.0,
++   "total": 171,
++   "passed": 171,
+    "failed": [],
+    "slowest": [
+     [
+      "the syzygy CLI and the parked provider island resolves every workspace import the CLI reaches, dynamic ones included",
+      "passed",
+-     409.7828880000002
++     347.269368
+     ],
+     [
+      "each policy copy above, against the spec its caller passes is the spec of every readArgv call, and no other module names readArgv",
+      "passed",
+-     347.3232509999998
++     273.14127400000007
+     ],
+     [
+      "the daemon path, every module the entry reaches outside its dossier and polaris branches leaves the entry by every edge but the four dynamic imports inside those branches",
+      "passed",
+-     275.399641
++     183.73530800000003
+     ],
+     [
+      "each policy copy above, against the spec its caller passes names readArgv only where the lift reads it: its declaration, an import or export of it, and the callee of a call",
+      "passed",
+-     222.50432700000056
++     132.60485700000004
+     ],
+     [
+-     "the subpaths the daemon entry imports are /argv and /state-directory, imported statically, and the barrel only dynamically inside the dossier and polaris branches",
++     "the syzygy CLI and the parked provider island reaches no island module from the CLI entry",
+      "passed",
+-     176.32043199999998
++     102.42071400000009
+     ],
+     [
+-     "the syzygy CLI and the parked provider island reaches no island module from the CLI entry",
++     "the subpaths the daemon entry imports are /argv and /state-directory, imported statically, and the barrel only dynamically inside the dossier and polaris branches",
+      "passed",
+-     123.8515639999996
++     96.95740799999999
+     ]
+    ],
+    "fileDurations": [
+     [
+      "island-boundary.test.ts",
+-     648
++     486
+     ],
+     [
+      "workspace-reach.test.ts",
+-     19
++     15
+     ],
+     [
+      "argv.test.ts",
+-     711
++     506
+     ],
+     [
+      "subpath-imports.test.ts",
+-     609
++     380
+     ]
+    ]
+   },
+   {
+    "run": 2,
+    "exit": 0,
+-   "wallSeconds": 8.1,
+-   "load1": 51.3,
+-   "total": 169,
+-   "passed": 169,
++   "wallSeconds": 4.0,
++   "load1": 22.0,
++   "total": 171,
++   "passed": 171,
+    "failed": [],
+    "slowest": [
+     [
+-     "the syzygy CLI and the parked provider island resolves every workspace import the CLI reaches, dynamic ones included",
++     "the daemon path, every module the entry reaches outside its dossier and polaris branches leaves the entry by every edge but the four dynamic imports inside those branches",
+      "passed",
+-     363.29149000000007
++     417.2719360000001
+     ],
+     [
+-     "each policy copy above, against the spec its caller passes is the spec of every readArgv call, and no other module names readArgv",
++     "the syzygy CLI and the parked provider island resolves every workspace import the CLI reaches, dynamic ones included",
+      "passed",
+-     289.0607289999998
++     331.954442
+     ],
+     [
+-     "the daemon path, every module the entry reaches outside its dossier and polaris branches leaves the entry by every edge but the four dynamic imports inside those branches",
++     "each policy copy above, against the spec its caller passes is the spec of every readArgv call, and no other module names readArgv",
+      "passed",
+-     267.146608
++     294.1559
+     ],
+     [
+-     "each policy copy above, against the spec its caller passes names readArgv only where the lift reads it: its declaration, an import or export of it, and the callee of a call",
++     "the syzygy CLI and the parked provider island reaches no island module from the CLI entry",
+      "passed",
+-     231.34239700000035
++     246.40159199999994
+     ],
+     [
+-     "the syzygy CLI and the parked provider island reaches no island module from the CLI entry",
++     "each policy copy above, against the spec its caller passes names readArgv only where the lift reads it: its declaration, an import or export of it, and the callee of a call",
+      "passed",
+-     229.10809299999983
++     205.98187600000006
+     ],
+     [
+      "the subpaths the daemon entry imports are /argv and /state-directory, imported statically, and the barrel only dynamically inside the dossier and polaris branches",
+      "passed",
+-     140.79772299999968
++     90.13277300000004
+     ]
+    ],
+    "fileDurations": [
+     [
+      "island-boundary.test.ts",
+-     648
++     637
+     ],
+     [
+      "workspace-reach.test.ts",
+-     84
++     23
+     ],
+     [
+      "argv.test.ts",
+-     664
++     590
+     ],
+     [
+      "subpath-imports.test.ts",
+-     497
++     584
+     ]
+    ]
+   },
+   {
+    "run": 3,
+    "exit": 0,
+-   "wallSeconds": 6.0,
+-   "load1": 51.2,
+-   "total": 169,
+-   "passed": 169,
++   "wallSeconds": 4.3,
++   "load1": 22.3,
++   "total": 171,
++   "passed": 171,
+    "failed": [],
+    "slowest": [
+     [
+-     "the syzygy CLI and the parked provider island resolves every workspace import the CLI reaches, dynamic ones included",
++     "the daemon path, every module the entry reaches outside its dossier and polaris branches leaves the entry by every edge but the four dynamic imports inside those branches",
+      "passed",
+-     455.4206610000001
++     544.5542949999999
+     ],
+     [
+-     "each policy copy above, against the spec its caller passes is the spec of every readArgv call, and no other module names readArgv",
++     "the syzygy CLI and the parked provider island resolves every workspace import the CLI reaches, dynamic ones included",
+      "passed",
+-     435.67208400000027
++     396.3677240000002
+     ],
+     [
+-     "the daemon path, every module the entry reaches outside its dossier and polaris branches leaves the entry by every edge but the four dynamic imports inside those branches",
++     "each policy copy above, against the spec its caller passes is the spec of every readArgv call, and no other module names readArgv",
+      "passed",
+-     407.08728199999996
++     281.2883489999999
+     ],
+     [
+-     "each policy copy above, against the spec its caller passes names readArgv only where the lift reads it: its declaration, an import or export of it, and the callee of a call",
++     "the syzygy CLI and the parked provider island reaches no island module from the CLI entry",
+      "passed",
+-     181.87732899999992
++     195.32131600000002
+     ],
+     [
+-     "the syzygy CLI and the parked provider island reaches no island module from the CLI entry",
++     "each policy copy above, against the spec its caller passes names readArgv only where the lift reads it: its declaration, an import or export of it, and the callee of a call",
+      "passed",
+-     171.99381300000005
++     185.11148100000014
+     ],
+     [
+      "the subpaths the daemon entry imports are /argv and /state-directory, imported statically, and the barrel only dynamically inside the dossier and polaris branches",
+      "passed",
+-     121.09690599999976
++     101.93999200000007
+     ]
+    ],
+    "fileDurations": [
+     [
+      "island-boundary.test.ts",
+-     677
++     657
+     ],
+     [
+      "workspace-reach.test.ts",
+-     58
++     25
+     ],
+     [
+      "argv.test.ts",
+-     779
++     555
+     ],
+     [
+      "subpath-imports.test.ts",
+-     662
++     687
+     ]
+    ]
+   },
+   {
+    "run": 4,
+    "exit": 0,
+-   "wallSeconds": 7.4,
+-   "load1": 50.5,
+-   "total": 169,
+-   "passed": 169,
++   "wallSeconds": 4.1,
++   "load1": 22.1,
++   "total": 171,
++   "passed": 171,
+    "failed": [],
+    "slowest": [
+     [
+      "the syzygy CLI and the parked provider island resolves every workspace import the CLI reaches, dynamic ones included",
+      "passed",
+-     779.6477989999998
++     319.87560099999996
+     ],
+     [
+-     "the daemon path, every module the entry reaches outside its dossier and polaris branches leaves the entry by every edge but the four dynamic imports inside those branches",
++     "each policy copy above, against the spec its caller passes is the spec of every readArgv call, and no other module names readArgv",
+      "passed",
+-     607.306959
++     224.46376299999997
+     ],
+     [
+-     "each policy copy above, against the spec its caller passes is the spec of every readArgv call, and no other module names readArgv",
++     "the daemon path, every module the entry reaches outside its dossier and polaris branches leaves the entry by every edge but the four dynamic imports inside those branches",
+      "passed",
+-     399.54649599999993
++     193.82796599999983
+     ],
+     [
+      "each policy copy above, against the spec its caller passes names readArgv only where the lift reads it: its declaration, an import or export of it, and the callee of a call",
+      "passed",
+-     206.76639400000022
++     136.40201400000024
+     ],
+     [
+-     "the subpaths the daemon entry imports are /argv and /state-directory, imported statically, and the barrel only dynamically inside the dossier and polaris branches",
++     "the syzygy CLI and the parked provider island reaches no island module from the CLI entry",
+      "passed",
+-     126.10713900000019
++     118.20618499999978
+     ],
+     [
+-     "the syzygy CLI and the parked provider island reaches no island module from the CLI entry",
++     "the subpaths the daemon entry imports are /argv and /state-directory, imported statically, and the barrel only dynamically inside the dossier and polaris branches",
+      "passed",
+-     100.4815410000001
++     88.15818200000012
+     ]
+    ],
+    "fileDurations": [
+     [
+      "island-boundary.test.ts",
+-     930
++     499
+     ],
+     [
+      "workspace-reach.test.ts",
+-     44
++     33
+     ],
+     [
+      "argv.test.ts",
+-     701
++     462
+     ],
+     [
+      "subpath-imports.test.ts",
+-     925
++     388
+     ]
+    ]
+   },
+   {
+    "run": 5,
+    "exit": 0,
+-   "wallSeconds": 5.2,
+-   "load1": 48.9,
+-   "total": 169,
+-   "passed": 169,
++   "wallSeconds": 4.1,
++   "load1": 22.1,
++   "total": 171,
++   "passed": 171,
+    "failed": [],
+    "slowest": [
+     [
+      "the syzygy CLI and the parked provider island resolves every workspace import the CLI reaches, dynamic ones included",
+      "passed",
+-     474.056114
++     512.3320150000002
+     ],
+     [
+-     "the daemon path, every module the entry reaches outside its dossier and polaris branches leaves the entry by every edge but the four dynamic imports inside those branches",
++     "each policy copy above, against the spec its caller passes names readArgv only where the lift reads it: its declaration, an import or export of it, and the callee of a call",
+      "passed",
+-     275.76633600000014
++     217.71430899999996
+     ],
+     [
+-     "each policy copy above, against the spec its caller passes is the spec of every readArgv call, and no other module names readArgv",
++     "the daemon path, every module the entry reaches outside its dossier and polaris branches leaves the entry by every edge but the four dynamic imports inside those branches",
+      "passed",
+-     207.8798200000001
++     215.77770099999998
+     ],
+     [
+-     "the syzygy CLI and the parked provider island reaches no island module from the CLI entry",
++     "each policy copy above, against the spec its caller passes is the spec of every readArgv call, and no other module names readArgv",
+      "passed",
+-     175.24435799999992
++     212.35781499999985
+     ],
+     [
+-     "each policy copy above, against the spec its caller passes names readArgv only where the lift reads it: its declaration, an import or export of it, and the callee of a call",
++     "the syzygy CLI and the parked provider island reaches no island module from the CLI entry",
+      "passed",
+-     173.90969600000017
++     180.100457
+     ],
+     [
+      "the subpaths the daemon entry imports are /argv and /state-directory, imported statically, and the barrel only dynamically inside the dossier and polaris branches",
+      "passed",
+-     57.933370000000195
++     86.7981450000002
+     ]
+    ],
+    "fileDurations": [
+     [
+      "island-boundary.test.ts",
+-     708
++     807
+     ],
+     [
+      "workspace-reach.test.ts",
+-     87
++     35
+     ],
+     [
+      "argv.test.ts",
+-     451
++     511
+     ],
+     [
+      "subpath-imports.test.ts",
+-     428
++     405
+     ]
+    ]
+   }
+diff --git a/docs/evidence/syzygy-bpyt-8-39/rev536-at-head.json b/docs/evidence/syzygy-bpyt-8-39/rev536-at-head.json
+index 38a89027..5b707369 100644
+--- a/docs/evidence/syzygy-bpyt-8-39/rev536-at-head.json
++++ b/docs/evidence/syzygy-bpyt-8-39/rev536-at-head.json
+@@ -1,13 +1,13 @@
+ {
+- "tree": "/var/tmp/la-b839/head",
+- "head": "308a62f4a48e47b625aeff9cc718b1b2c37161f8",
++ "tree": "/tmp/la-r541/head",
++ "head": "5f0d5547dfe7f89adf3e86310f819ddeebfaae90",
+  "results": [
+   {
+    "id": "RV536-M1-https-url-reads-outside",
+    "outcome": "killed",
+    "exit": 1,
+    "tests": [
+-    "Tests  1 failed | 168 passed (169)"
++    "Tests  1 failed | 170 passed (171)"
+    ],
+    "testFiles": [
+     "Test Files  1 failed | 3 passed (4)"
+@@ -16,7 +16,7 @@
+     "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a remote tarball URL dependency as naming no module"
+    ],
+    "timeouts": 0,
+-   "seconds": 9.3,
++   "seconds": 3.6,
+    "counts": [
+     {
+      "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+@@ -37,7 +37,7 @@
+    "outcome": "killed",
+    "exit": 1,
+    "tests": [
+-    "Tests  1 failed | 168 passed (169)"
++    "Tests  1 failed | 170 passed (171)"
+    ],
+    "testFiles": [
+     "Test Files  1 failed | 3 passed (4)"
+@@ -46,7 +46,7 @@
+     "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a remote http tarball URL dependency as naming no module"
+    ],
+    "timeouts": 0,
+-   "seconds": 12.0,
++   "seconds": 3.9,
+    "counts": [
+     {
+      "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+@@ -67,7 +67,7 @@
+    "outcome": "killed",
+    "exit": 1,
+    "tests": [
+-    "Tests  5 failed | 164 passed (169)"
++    "Tests  6 failed | 165 passed (171)"
+    ],
+    "testFiles": [
+     "Test Files  1 failed | 3 passed (4)"
+@@ -75,12 +75,13 @@
+    "failed": [
+     "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a .tar dependency as naming no module",
+     "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a .tar.gz dependency as naming no module",
++    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a git dependency whose spec ends in a tarball extension as naming no module",
+     "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a remote http tarball URL dependency as naming no module",
+     "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a remote tarball URL dependency as naming no module",
+     "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a tarball dependency as naming no module"
+    ],
+    "timeouts": 0,
+-   "seconds": 8.5,
++   "seconds": 4.4,
+    "counts": [
+     {
+      "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+@@ -101,7 +102,7 @@
+    "outcome": "killed",
+    "exit": 1,
+    "tests": [
+-    "Tests  1 failed | 168 passed (169)"
++    "Tests  1 failed | 170 passed (171)"
+    ],
+    "testFiles": [
+     "Test Files  1 failed | 3 passed (4)"
+@@ -110,7 +111,7 @@
+     "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > reads every module TypeScript compiles under src, .mts, .cts and .tsx among them, and no test module"
+    ],
+    "timeouts": 0,
+-   "seconds": 11.1,
++   "seconds": 4.2,
+    "counts": [
+     {
+      "file": "packages/polaris-dossier/src/argv.test.ts",
+@@ -131,14 +132,14 @@
+    "outcome": "survives",
+    "exit": 0,
+    "tests": [
+-    "Tests  169 passed (169)"
++    "Tests  171 passed (171)"
+    ],
+    "testFiles": [
+     "Test Files  4 passed (4)"
+    ],
+    "failed": [],
+    "timeouts": 0,
+-   "seconds": 12.1,
++   "seconds": 4.5,
+    "counts": [
+     {
+      "file": "packages/polaris-dossier/src/argv.test.ts",
+@@ -159,7 +160,7 @@
+    "outcome": "killed",
+    "exit": 1,
+    "tests": [
+-    "Tests  1 failed | 168 passed (169)"
++    "Tests  1 failed | 170 passed (171)"
+    ],
+    "testFiles": [
+     "Test Files  1 failed | 3 passed (4)"
+@@ -168,7 +169,7 @@
+     "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads the workspace root's manifest beside the packages'"
+    ],
+    "timeouts": 0,
+-   "seconds": 10.0,
++   "seconds": 4.1,
+    "counts": [
+     {
+      "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+@@ -189,16 +190,17 @@
+    "outcome": "killed",
+    "exit": 1,
+    "tests": [
+-    "Tests  1 failed | 168 passed (169)"
++    "Tests  2 failed | 169 passed (171)"
+    ],
+    "testFiles": [
+     "Test Files  1 failed | 3 passed (4)"
+    ],
+    "failed": [
+-    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as an npm: alias of a registry package as naming no module"
++    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as an npm: alias of a registry package as naming no module",
++    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as an npm: alias with no version as naming no module"
+    ],
+    "timeouts": 0,
+-   "seconds": 10.5,
++   "seconds": 4.7,
+    "counts": [
+     {
+      "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+@@ -219,7 +221,7 @@
+    "outcome": "killed",
+    "exit": 1,
+    "tests": [
+-    "Tests  1 failed | 168 passed (169)"
++    "Tests  1 failed | 170 passed (171)"
+    ],
+    "testFiles": [
+     "Test Files  1 failed | 3 passed (4)"
+@@ -228,7 +230,7 @@
+     "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name the workspace root's manifest declares as a local dependency as naming no module"
+    ],
+    "timeouts": 0,
+-   "seconds": 13.8,
++   "seconds": 3.9,
+    "counts": [
+     {
+      "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+@@ -249,7 +251,7 @@
+    "outcome": "killed",
+    "exit": 1,
+    "tests": [
+-    "Tests  1 failed | 168 passed (169)"
++    "Tests  1 failed | 170 passed (171)"
+    ],
+    "testFiles": [
+     "Test Files  1 failed | 3 passed (4)"
+@@ -258,7 +260,7 @@
+     "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a dependency on its parent directory as naming no module"
+    ],
+    "timeouts": 0,
+-   "seconds": 9.9,
++   "seconds": 3.3,
+    "counts": [
+     {
+      "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+@@ -279,14 +281,14 @@
+    "outcome": "survives",
+    "exit": 0,
+    "tests": [
+-    "Tests  169 passed (169)"
++    "Tests  171 passed (171)"
+    ],
+    "testFiles": [
+     "Test Files  4 passed (4)"
+    ],
+    "failed": [],
+    "timeouts": 0,
+-   "seconds": 6.6,
++   "seconds": 3.3,
+    "counts": [
+     {
+      "file": "packages/polaris-dossier/src/argv.test.ts",
+@@ -307,14 +309,14 @@
+    "outcome": "survives",
+    "exit": 0,
+    "tests": [
+-    "Tests  169 passed (169)"
++    "Tests  171 passed (171)"
+    ],
+    "testFiles": [
+     "Test Files  4 passed (4)"
+    ],
+    "failed": [],
+    "timeouts": 0,
+-   "seconds": 8.1,
++   "seconds": 3.6,
+    "counts": [
+     {
+      "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+diff --git a/docs/evidence/syzygy-bpyt-8-39/rev536-at-head.log b/docs/evidence/syzygy-bpyt-8-39/rev536-at-head.log
+index e2813a8a..051fb4f5 100644
+--- a/docs/evidence/syzygy-bpyt-8-39/rev536-at-head.log
++++ b/docs/evidence/syzygy-bpyt-8-39/rev536-at-head.log
+@@ -1,24 +1,26 @@
+-RV536-M1-https-url-reads-outside killed 1 ['Tests  1 failed | 168 passed (169)'] 9.3 clean
++RV536-M1-https-url-reads-outside killed 1 ['Tests  1 failed | 170 passed (171)'] 3.6 clean
+     FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a remote tarball URL dependency as naming no module
+-RV536-M2-http-url-reads-outside killed 1 ['Tests  1 failed | 168 passed (169)'] 12.0 clean
++RV536-M2-http-url-reads-outside killed 1 ['Tests  1 failed | 170 passed (171)'] 3.9 clean
+     FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a remote http tarball URL dependency as naming no module
+-RV536-M3-tarball-needs-dot-slash killed 1 ['Tests  5 failed | 164 passed (169)'] 8.5 clean
++RV536-M3-tarball-needs-dot-slash killed 1 ['Tests  6 failed | 165 passed (171)'] 4.4 clean
+     FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a .tar dependency as naming no module
+     FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a .tar.gz dependency as naming no module
++    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a git dependency whose spec ends in a tarball extension as naming no module
+     FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a remote http tarball URL dependency as naming no module
+     FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a remote tarball URL dependency as naming no module
+     FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a tarball dependency as naming no module
+-RV536-M4-census-takes-ts-md killed 1 ['Tests  1 failed | 168 passed (169)'] 11.1 clean
++RV536-M4-census-takes-ts-md killed 1 ['Tests  1 failed | 170 passed (171)'] 4.2 clean
+     FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > reads every module TypeScript compiles under src, .mts, .cts and .tsx among them, and no test module
+-RV536-M5-tree-depth-two survives 0 ['Tests  169 passed (169)'] 12.1 clean
+-RV536-M6-root-keeps-only-dependencies killed 1 ['Tests  1 failed | 168 passed (169)'] 10.0 clean
++RV536-M5-tree-depth-two survives 0 ['Tests  171 passed (171)'] 4.5 clean
++RV536-M6-root-keeps-only-dependencies killed 1 ['Tests  1 failed | 170 passed (171)'] 4.1 clean
+     FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads the workspace root's manifest beside the packages'
+-RV536-M7-npm-alias-workspace-scope-only killed 1 ['Tests  1 failed | 168 passed (169)'] 10.5 clean
++RV536-M7-npm-alias-workspace-scope-only killed 1 ['Tests  2 failed | 169 passed (171)'] 4.7 clean
+     FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as an npm: alias of a registry package as naming no module
+-RV536-M8-root-declarations-unread killed 1 ['Tests  1 failed | 168 passed (169)'] 13.8 clean
++    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as an npm: alias with no version as naming no module
++RV536-M8-root-declarations-unread killed 1 ['Tests  1 failed | 170 passed (171)'] 3.9 clean
+     FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name the workspace root's manifest declares as a local dependency as naming no module
+-RV536-M9-dotdot-alone-outside killed 1 ['Tests  1 failed | 168 passed (169)'] 9.9 clean
++RV536-M9-dotdot-alone-outside killed 1 ['Tests  1 failed | 170 passed (171)'] 3.3 clean
+     FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a dependency on its parent directory as naming no module
+-RV536-M10-test-exclusion-end-anchor-dropped survives 0 ['Tests  169 passed (169)'] 6.6 clean
+-RV536-M11-residual-widened survives 0 ['Tests  169 passed (169)'] 8.1 clean
+-wrote /var/tmp/la-b839/rev536-at-head.json 11
++RV536-M10-test-exclusion-end-anchor-dropped survives 0 ['Tests  171 passed (171)'] 3.3 clean
++RV536-M11-residual-widened survives 0 ['Tests  171 passed (171)'] 3.6 clean
++wrote /home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.39/docs/evidence/syzygy-bpyt-8-39/rev536-at-head.json 11
+diff --git a/docs/evidence/syzygy-bpyt-8-39/rev541-at-base.json b/docs/evidence/syzygy-bpyt-8-39/rev541-at-base.json
+new file mode 100644
+index 00000000..1cb794dc
+--- /dev/null
++++ b/docs/evidence/syzygy-bpyt-8-39/rev541-at-base.json
+@@ -0,0 +1,202 @@
++{
++ "tree": "/tmp/la-r541/base",
++ "head": "d38d7a3ce632a34c2a41bdb77ad323ba0b05b777",
++ "results": [
++  {
++   "id": "R541-X1-root-reads-devDependencies-only",
++   "outcome": "survives",
++   "exit": 0,
++   "tests": [
++    "Tests  165 passed (165)"
++   ],
++   "testFiles": [
++    "Test Files  4 passed (4)"
++   ],
++   "failed": [],
++   "timeouts": 0,
++   "seconds": 4.0,
++   "counts": [
++    {
++     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
++     "oldCount": 1
++    }
++   ],
++   "cleanAfter": true,
++   "edits": [
++    {
++     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
++     "old": "    for (const field of [manifest.dependencies, manifest.devDependencies, manifest.optionalDependencies, manifest.peerDependencies]) {",
++     "new": "    for (const field of manifest.dir === '.' ? [manifest.devDependencies] : [manifest.dependencies, manifest.devDependencies, manifest.optionalDependencies, manifest.peerDependencies]) {"
++    }
++   ]
++  },
++  {
++   "id": "R541-X2-root-devDependencies-unread",
++   "outcome": "survives",
++   "exit": 0,
++   "tests": [
++    "Tests  165 passed (165)"
++   ],
++   "testFiles": [
++    "Test Files  4 passed (4)"
++   ],
++   "failed": [],
++   "timeouts": 0,
++   "seconds": 3.6,
++   "counts": [
++    {
++     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
++     "oldCount": 1
++    }
++   ],
++   "cleanAfter": true,
++   "edits": [
++    {
++     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
++     "old": "    for (const field of [manifest.dependencies, manifest.devDependencies, manifest.optionalDependencies, manifest.peerDependencies]) {",
++     "new": "    for (const field of manifest.dir === '.' ? [manifest.dependencies, manifest.optionalDependencies, manifest.peerDependencies] : [manifest.dependencies, manifest.devDependencies, manifest.optionalDependencies, manifest.peerDependencies]) {"
++    }
++   ]
++  },
++  {
++   "id": "R541-X3-npm-alias-needs-version",
++   "outcome": "survives",
++   "exit": 0,
++   "tests": [
++    "Tests  165 passed (165)"
++   ],
++   "testFiles": [
++    "Test Files  4 passed (4)"
++   ],
++   "failed": [],
++   "timeouts": 0,
++   "seconds": 3.3,
++   "counts": [
++    {
++     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
++     "oldCount": 1
++    }
++   ],
++   "cleanAfter": true,
++   "edits": [
++    {
++     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
++     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
++     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:(?:@[^/@]+\\/)?[^@]+@|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;"
++    }
++   ]
++  },
++  {
++   "id": "R541-X4-npm-arm-case-sensitive",
++   "outcome": "survives",
++   "exit": 0,
++   "tests": [
++    "Tests  165 passed (165)"
++   ],
++   "testFiles": [
++    "Test Files  4 passed (4)"
++   ],
++   "failed": [],
++   "timeouts": 0,
++   "seconds": 3.0,
++   "counts": [
++    {
++     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
++     "oldCount": 1
++    }
++   ],
++   "cleanAfter": true,
++   "edits": [
++    {
++     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
++     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
++     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|(?-i:npm:)|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;"
++    }
++   ]
++  },
++  {
++   "id": "R541-X5-tarball-arm-skips-hash",
++   "outcome": "survives",
++   "exit": 0,
++   "tests": [
++    "Tests  165 passed (165)"
++   ],
++   "testFiles": [
++    "Test Files  4 passed (4)"
++   ],
++   "failed": [],
++   "timeouts": 0,
++   "seconds": 3.5,
++   "counts": [
++    {
++     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
++     "oldCount": 1
++    }
++   ],
++   "cleanAfter": true,
++   "edits": [
++    {
++     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
++     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
++     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|^[^#]*\\.(?:tgz|tar|tar\\.gz)$/iu;"
++    }
++   ]
++  },
++  {
++   "id": "R541-X6-unscoped-manifests-unread",
++   "outcome": "survives",
++   "exit": 0,
++   "tests": [
++    "Tests  165 passed (165)"
++   ],
++   "testFiles": [
++    "Test Files  4 passed (4)"
++   ],
++   "failed": [],
++   "timeouts": 0,
++   "seconds": 3.1,
++   "counts": [
++    {
++     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
++     "oldCount": 1
++    }
++   ],
++   "cleanAfter": true,
++   "edits": [
++    {
++     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
++     "old": "  for (const manifest of workspace.manifests.values()) {",
++     "new": "  for (const manifest of [...workspace.manifests.values()].filter((manifest) => manifest.name.startsWith('@'))) {"
++    }
++   ]
++  },
++  {
++   "id": "R541-X7-http-url-tgz-only",
++   "outcome": "survives",
++   "exit": 0,
++   "tests": [
++    "Tests  165 passed (165)"
++   ],
++   "testFiles": [
++    "Test Files  4 passed (4)"
++   ],
++   "failed": [],
++   "timeouts": 0,
++   "seconds": 3.9,
++   "counts": [
++    {
++     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
++     "oldCount": 1
++    }
++   ],
++   "cleanAfter": true,
++   "edits": [
++    {
++     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
++     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
++     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|^(?!https?:.*\\.tar(?:\\.gz)?$).*\\.(?:tgz|tar|tar\\.gz)$/iu;"
++    }
++   ]
++  }
++ ]
++}
+\ No newline at end of file
+diff --git a/docs/evidence/syzygy-bpyt-8-39/rev541-at-base.log b/docs/evidence/syzygy-bpyt-8-39/rev541-at-base.log
+new file mode 100644
+index 00000000..f27dea2d
+--- /dev/null
++++ b/docs/evidence/syzygy-bpyt-8-39/rev541-at-base.log
+@@ -0,0 +1,8 @@
++R541-X1-root-reads-devDependencies-only survives 0 ['Tests  165 passed (165)'] 4.0 clean
++R541-X2-root-devDependencies-unread survives 0 ['Tests  165 passed (165)'] 3.6 clean
++R541-X3-npm-alias-needs-version survives 0 ['Tests  165 passed (165)'] 3.3 clean
++R541-X4-npm-arm-case-sensitive survives 0 ['Tests  165 passed (165)'] 3.0 clean
++R541-X5-tarball-arm-skips-hash survives 0 ['Tests  165 passed (165)'] 3.5 clean
++R541-X6-unscoped-manifests-unread survives 0 ['Tests  165 passed (165)'] 3.1 clean
++R541-X7-http-url-tgz-only survives 0 ['Tests  165 passed (165)'] 3.9 clean
++wrote /home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.39/docs/evidence/syzygy-bpyt-8-39/rev541-at-base.json 7
+diff --git a/docs/evidence/syzygy-bpyt-8-39/rev541-at-head.json b/docs/evidence/syzygy-bpyt-8-39/rev541-at-head.json
+new file mode 100644
+index 00000000..a1e9c492
+--- /dev/null
++++ b/docs/evidence/syzygy-bpyt-8-39/rev541-at-head.json
+@@ -0,0 +1,212 @@
++{
++ "tree": "/tmp/la-r541/head",
++ "head": "5f0d5547dfe7f89adf3e86310f819ddeebfaae90",
++ "results": [
++  {
++   "id": "R541-X1-root-reads-devDependencies-only",
++   "outcome": "survives",
++   "exit": 0,
++   "tests": [
++    "Tests  171 passed (171)"
++   ],
++   "testFiles": [
++    "Test Files  4 passed (4)"
++   ],
++   "failed": [],
++   "timeouts": 0,
++   "seconds": 4.0,
++   "counts": [
++    {
++     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
++     "oldCount": 1
++    }
++   ],
++   "cleanAfter": true,
++   "edits": [
++    {
++     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
++     "old": "    for (const field of [manifest.dependencies, manifest.devDependencies, manifest.optionalDependencies, manifest.peerDependencies]) {",
++     "new": "    for (const field of manifest.dir === '.' ? [manifest.devDependencies] : [manifest.dependencies, manifest.devDependencies, manifest.optionalDependencies, manifest.peerDependencies]) {"
++    }
++   ]
++  },
++  {
++   "id": "R541-X2-root-devDependencies-unread",
++   "outcome": "killed",
++   "exit": 1,
++   "tests": [
++    "Tests  1 failed | 170 passed (171)"
++   ],
++   "testFiles": [
++    "Test Files  1 failed | 3 passed (4)"
++   ],
++   "failed": [
++    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name the workspace root's manifest declares as a local dependency as naming no module"
++   ],
++   "timeouts": 0,
++   "seconds": 4.1,
++   "counts": [
++    {
++     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
++     "oldCount": 1
++    }
++   ],
++   "cleanAfter": true,
++   "edits": [
++    {
++     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
++     "old": "    for (const field of [manifest.dependencies, manifest.devDependencies, manifest.optionalDependencies, manifest.peerDependencies]) {",
++     "new": "    for (const field of manifest.dir === '.' ? [manifest.dependencies, manifest.optionalDependencies, manifest.peerDependencies] : [manifest.dependencies, manifest.devDependencies, manifest.optionalDependencies, manifest.peerDependencies]) {"
++    }
++   ]
++  },
++  {
++   "id": "R541-X3-npm-alias-needs-version",
++   "outcome": "killed",
++   "exit": 1,
++   "tests": [
++    "Tests  1 failed | 170 passed (171)"
++   ],
++   "testFiles": [
++    "Test Files  1 failed | 3 passed (4)"
++   ],
++   "failed": [
++    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as an npm: alias with no version as naming no module"
++   ],
++   "timeouts": 0,
++   "seconds": 4.8,
++   "counts": [
++    {
++     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
++     "oldCount": 1
++    }
++   ],
++   "cleanAfter": true,
++   "edits": [
++    {
++     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
++     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
++     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:(?:@[^/@]+\\/)?[^@]+@|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;"
++    }
++   ]
++  },
++  {
++   "id": "R541-X4-npm-arm-case-sensitive",
++   "outcome": "survives",
++   "exit": 0,
++   "tests": [
++    "Tests  171 passed (171)"
++   ],
++   "testFiles": [
++    "Test Files  4 passed (4)"
++   ],
++   "failed": [],
++   "timeouts": 0,
++   "seconds": 4.8,
++   "counts": [
++    {
++     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
++     "oldCount": 1
++    }
++   ],
++   "cleanAfter": true,
++   "edits": [
++    {
++     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
++     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
++     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|(?-i:npm:)|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;"
++    }
++   ]
++  },
++  {
++   "id": "R541-X5-tarball-arm-skips-hash",
++   "outcome": "killed",
++   "exit": 1,
++   "tests": [
++    "Tests  1 failed | 170 passed (171)"
++   ],
++   "testFiles": [
++    "Test Files  1 failed | 3 passed (4)"
++   ],
++   "failed": [
++    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a git dependency whose spec ends in a tarball extension as naming no module"
++   ],
++   "timeouts": 0,
++   "seconds": 5.0,
++   "counts": [
++    {
++     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
++     "oldCount": 1
++    }
++   ],
++   "cleanAfter": true,
++   "edits": [
++    {
++     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
++     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
++     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|^[^#]*\\.(?:tgz|tar|tar\\.gz)$/iu;"
++    }
++   ]
++  },
++  {
++   "id": "R541-X6-unscoped-manifests-unread",
++   "outcome": "killed",
++   "exit": 1,
++   "tests": [
++    "Tests  1 failed | 170 passed (171)"
++   ],
++   "testFiles": [
++    "Test Files  1 failed | 3 passed (4)"
++   ],
++   "failed": [
++    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name the workspace root's manifest declares as a local dependency as naming no module"
++   ],
++   "timeouts": 0,
++   "seconds": 4.2,
++   "counts": [
++    {
++     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
++     "oldCount": 1
++    }
++   ],
++   "cleanAfter": true,
++   "edits": [
++    {
++     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
++     "old": "  for (const manifest of workspace.manifests.values()) {",
++     "new": "  for (const manifest of [...workspace.manifests.values()].filter((manifest) => manifest.name.startsWith('@'))) {"
++    }
++   ]
++  },
++  {
++   "id": "R541-X7-http-url-tgz-only",
++   "outcome": "killed",
++   "exit": 1,
++   "tests": [
++    "Tests  1 failed | 170 passed (171)"
++   ],
++   "testFiles": [
++    "Test Files  1 failed | 3 passed (4)"
++   ],
++   "failed": [
++    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a remote http tarball URL dependency as naming no module"
++   ],
++   "timeouts": 0,
++   "seconds": 4.2,
++   "counts": [
++    {
++     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
++     "oldCount": 1
++    }
++   ],
++   "cleanAfter": true,
++   "edits": [
++    {
++     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
++     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
++     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|^(?!https?:.*\\.tar(?:\\.gz)?$).*\\.(?:tgz|tar|tar\\.gz)$/iu;"
++    }
++   ]
++  }
++ ]
++}
+\ No newline at end of file
+diff --git a/docs/evidence/syzygy-bpyt-8-39/rev541-at-head.log b/docs/evidence/syzygy-bpyt-8-39/rev541-at-head.log
+new file mode 100644
+index 00000000..57f4a5df
+--- /dev/null
++++ b/docs/evidence/syzygy-bpyt-8-39/rev541-at-head.log
+@@ -0,0 +1,13 @@
++R541-X1-root-reads-devDependencies-only survives 0 ['Tests  171 passed (171)'] 4.0 clean
++R541-X2-root-devDependencies-unread killed 1 ['Tests  1 failed | 170 passed (171)'] 4.1 clean
++    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name the workspace root's manifest declares as a local dependency as naming no module
++R541-X3-npm-alias-needs-version killed 1 ['Tests  1 failed | 170 passed (171)'] 4.8 clean
++    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as an npm: alias with no version as naming no module
++R541-X4-npm-arm-case-sensitive survives 0 ['Tests  171 passed (171)'] 4.8 clean
++R541-X5-tarball-arm-skips-hash killed 1 ['Tests  1 failed | 170 passed (171)'] 5.0 clean
++    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a git dependency whose spec ends in a tarball extension as naming no module
++R541-X6-unscoped-manifests-unread killed 1 ['Tests  1 failed | 170 passed (171)'] 4.2 clean
++    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name the workspace root's manifest declares as a local dependency as naming no module
++R541-X7-http-url-tgz-only killed 1 ['Tests  1 failed | 170 passed (171)'] 4.2 clean
++    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a remote http tarball URL dependency as naming no module
++wrote /home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.39/docs/evidence/syzygy-bpyt-8-39/rev541-at-head.json 7
+diff --git a/docs/evidence/syzygy-bpyt-8-39/rev541-fix-specs.json b/docs/evidence/syzygy-bpyt-8-39/rev541-fix-specs.json
+new file mode 100644
+index 00000000..29b4c06a
+--- /dev/null
++++ b/docs/evidence/syzygy-bpyt-8-39/rev541-fix-specs.json
+@@ -0,0 +1,125 @@
++{
++ "what": "rev-541 proposed rows (N1), alone and with each surviving own mutant",
++ "mutants": [
++  {
++   "id": "FIX541-rows-only",
++   "edits": [
++    {
++     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
++     "old": "    ['a dependency on its parent directory', 'dossier', { dependencies: { dossier: '..' } }, {}],\n",
++     "new": "    ['a dependency on its parent directory', 'dossier', { dependencies: { dossier: '..' } }, {}],\n    ['a git dependency whose spec ends in a tarball extension', 'dossier', { dependencies: { dossier: 'github:someone/dossier#v1.tar' } }, {}],\n    ['an npm: alias with no version', 'dossier', { dependencies: { dossier: 'npm:typescript' } }, {}],\n"
++    }
++   ],
++   "projects": [
++    "@syzygy/polaris-generation-core",
++    "@syzygy/polaris-dossier"
++   ],
++   "files": [
++    "packages/polaris-generation-core/src/workspace-reach.test.ts",
++    "packages/polaris-generation-core/src/island-boundary.test.ts",
++    "packages/polaris-dossier/src/subpath-imports.test.ts",
++    "packages/polaris-dossier/src/argv.test.ts"
++   ]
++  },
++  {
++   "id": "FIX541+R541-X5-tarball-arm-skips-hash",
++   "edits": [
++    {
++     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
++     "old": "    ['a dependency on its parent directory', 'dossier', { dependencies: { dossier: '..' } }, {}],\n",
++     "new": "    ['a dependency on its parent directory', 'dossier', { dependencies: { dossier: '..' } }, {}],\n    ['a git dependency whose spec ends in a tarball extension', 'dossier', { dependencies: { dossier: 'github:someone/dossier#v1.tar' } }, {}],\n    ['an npm: alias with no version', 'dossier', { dependencies: { dossier: 'npm:typescript' } }, {}],\n"
++    },
++    {
++     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
++     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
++     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|^[^#]*\\.(?:tgz|tar|tar\\.gz)$/iu;"
++    }
++   ],
++   "projects": [
++    "@syzygy/polaris-generation-core",
++    "@syzygy/polaris-dossier"
++   ],
++   "files": [
++    "packages/polaris-generation-core/src/workspace-reach.test.ts",
++    "packages/polaris-generation-core/src/island-boundary.test.ts",
++    "packages/polaris-dossier/src/subpath-imports.test.ts",
++    "packages/polaris-dossier/src/argv.test.ts"
++   ]
++  },
++  {
++   "id": "FIX541+R541-X3-npm-alias-needs-version",
++   "edits": [
++    {
++     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
++     "old": "    ['a dependency on its parent directory', 'dossier', { dependencies: { dossier: '..' } }, {}],\n",
++     "new": "    ['a dependency on its parent directory', 'dossier', { dependencies: { dossier: '..' } }, {}],\n    ['a git dependency whose spec ends in a tarball extension', 'dossier', { dependencies: { dossier: 'github:someone/dossier#v1.tar' } }, {}],\n    ['an npm: alias with no version', 'dossier', { dependencies: { dossier: 'npm:typescript' } }, {}],\n"
++    },
++    {
++     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
++     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
++     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:(?:@[^/@]+\\/)?[^@]+@|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;"
++    }
++   ],
++   "projects": [
++    "@syzygy/polaris-generation-core",
++    "@syzygy/polaris-dossier"
++   ],
++   "files": [
++    "packages/polaris-generation-core/src/workspace-reach.test.ts",
++    "packages/polaris-generation-core/src/island-boundary.test.ts",
++    "packages/polaris-dossier/src/subpath-imports.test.ts",
++    "packages/polaris-dossier/src/argv.test.ts"
++   ]
++  },
++  {
++   "id": "FIX541+R541-X4-npm-arm-case-sensitive",
++   "edits": [
++    {
++     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
++     "old": "    ['a dependency on its parent directory', 'dossier', { dependencies: { dossier: '..' } }, {}],\n",
++     "new": "    ['a dependency on its parent directory', 'dossier', { dependencies: { dossier: '..' } }, {}],\n    ['a git dependency whose spec ends in a tarball extension', 'dossier', { dependencies: { dossier: 'github:someone/dossier#v1.tar' } }, {}],\n    ['an npm: alias with no version', 'dossier', { dependencies: { dossier: 'npm:typescript' } }, {}],\n"
++    },
++    {
++     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
++     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
++     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|(?-i:npm:)|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;"
++    }
++   ],
++   "projects": [
++    "@syzygy/polaris-generation-core",
++    "@syzygy/polaris-dossier"
++   ],
++   "files": [
++    "packages/polaris-generation-core/src/workspace-reach.test.ts",
++    "packages/polaris-generation-core/src/island-boundary.test.ts",
++    "packages/polaris-dossier/src/subpath-imports.test.ts",
++    "packages/polaris-dossier/src/argv.test.ts"
++   ]
++  },
++  {
++   "id": "FIX541+R541-X1-root-reads-devDependencies-only",
++   "edits": [
++    {
++     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
++     "old": "    ['a dependency on its parent directory', 'dossier', { dependencies: { dossier: '..' } }, {}],\n",
++     "new": "    ['a dependency on its parent directory', 'dossier', { dependencies: { dossier: '..' } }, {}],\n    ['a git dependency whose spec ends in a tarball extension', 'dossier', { dependencies: { dossier: 'github:someone/dossier#v1.tar' } }, {}],\n    ['an npm: alias with no version', 'dossier', { dependencies: { dossier: 'npm:typescript' } }, {}],\n"
++    },
++    {
++     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
++     "old": "    for (const field of [manifest.dependencies, manifest.devDependencies, manifest.optionalDependencies, manifest.peerDependencies]) {",
++     "new": "    for (const field of manifest.dir === '.' ? [manifest.devDependencies] : [manifest.dependencies, manifest.devDependencies, manifest.optionalDependencies, manifest.peerDependencies]) {"
++    }
++   ],
++   "projects": [
++    "@syzygy/polaris-generation-core",
++    "@syzygy/polaris-dossier"
++   ],
++   "files": [
++    "packages/polaris-generation-core/src/workspace-reach.test.ts",
++    "packages/polaris-generation-core/src/island-boundary.test.ts",
++    "packages/polaris-dossier/src/subpath-imports.test.ts",
++    "packages/polaris-dossier/src/argv.test.ts"
++   ]
++  }
++ ]
++}
+\ No newline at end of file
+diff --git a/docs/evidence/syzygy-bpyt-8-39/rev541-specs.json b/docs/evidence/syzygy-bpyt-8-39/rev541-specs.json
+new file mode 100644
+index 00000000..65c061f4
+--- /dev/null
++++ b/docs/evidence/syzygy-bpyt-8-39/rev541-specs.json
+@@ -0,0 +1,152 @@
++{
++ "what": "rev-541 own mutants against the predicates the new rows cover",
++ "mutants": [
++  {
++   "id": "R541-X1-root-reads-devDependencies-only",
++   "what": "the root manifest's dependencies, optionalDependencies and peerDependencies unread",
++   "edits": [
++    {
++     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
++     "old": "    for (const field of [manifest.dependencies, manifest.devDependencies, manifest.optionalDependencies, manifest.peerDependencies]) {",
++     "new": "    for (const field of manifest.dir === '.' ? [manifest.devDependencies] : [manifest.dependencies, manifest.devDependencies, manifest.optionalDependencies, manifest.peerDependencies]) {"
++    }
++   ],
++   "projects": [
++    "@syzygy/polaris-generation-core",
++    "@syzygy/polaris-dossier"
++   ],
++   "files": [
++    "packages/polaris-generation-core/src/workspace-reach.test.ts",
++    "packages/polaris-generation-core/src/island-boundary.test.ts",
++    "packages/polaris-dossier/src/subpath-imports.test.ts",
++    "packages/polaris-dossier/src/argv.test.ts"
++   ]
++  },
++  {
++   "id": "R541-X2-root-devDependencies-unread",
++   "what": "the root manifest's devDependencies unread, its other fields read",
++   "edits": [
++    {
++     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
++     "old": "    for (const field of [manifest.dependencies, manifest.devDependencies, manifest.optionalDependencies, manifest.peerDependencies]) {",
++     "new": "    for (const field of manifest.dir === '.' ? [manifest.dependencies, manifest.optionalDependencies, manifest.peerDependencies] : [manifest.dependencies, manifest.devDependencies, manifest.optionalDependencies, manifest.peerDependencies]) {"
++    }
++   ],
++   "projects": [
++    "@syzygy/polaris-generation-core",
++    "@syzygy/polaris-dossier"
++   ],
++   "files": [
++    "packages/polaris-generation-core/src/workspace-reach.test.ts",
++    "packages/polaris-generation-core/src/island-boundary.test.ts",
++    "packages/polaris-dossier/src/subpath-imports.test.ts",
++    "packages/polaris-dossier/src/argv.test.ts"
++   ]
++  },
++  {
++   "id": "R541-X3-npm-alias-needs-version",
++   "what": "the npm: arm refuses only an alias with an explicit @version",
++   "edits": [
++    {
++     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
++     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
++     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:(?:@[^/@]+\\/)?[^@]+@|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;"
++    }
++   ],
++   "projects": [
++    "@syzygy/polaris-generation-core",
++    "@syzygy/polaris-dossier"
++   ],
++   "files": [
++    "packages/polaris-generation-core/src/workspace-reach.test.ts",
++    "packages/polaris-generation-core/src/island-boundary.test.ts",
++    "packages/polaris-dossier/src/subpath-imports.test.ts",
++    "packages/polaris-dossier/src/argv.test.ts"
++   ]
++  },
++  {
++   "id": "R541-X4-npm-arm-case-sensitive",
++   "what": "the npm: arm is case-sensitive, so NPM:x reads outside",
++   "edits": [
++    {
++     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
++     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
++     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|(?-i:npm:)|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;"
++    }
++   ],
++   "projects": [
++    "@syzygy/polaris-generation-core",
++    "@syzygy/polaris-dossier"
++   ],
++   "files": [
++    "packages/polaris-generation-core/src/workspace-reach.test.ts",
++    "packages/polaris-generation-core/src/island-boundary.test.ts",
++    "packages/polaris-dossier/src/subpath-imports.test.ts",
++    "packages/polaris-dossier/src/argv.test.ts"
++   ]
++  },
++  {
++   "id": "R541-X5-tarball-arm-skips-hash",
++   "what": "the tarball arm skips a spec holding #, so a git spec ending in a tarball extension reads outside",
++   "edits": [
++    {
++     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
++     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
++     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|^[^#]*\\.(?:tgz|tar|tar\\.gz)$/iu;"
++    }
++   ],
++   "projects": [
++    "@syzygy/polaris-generation-core",
++    "@syzygy/polaris-dossier"
++   ],
++   "files": [
++    "packages/polaris-generation-core/src/workspace-reach.test.ts",
++    "packages/polaris-generation-core/src/island-boundary.test.ts",
++    "packages/polaris-dossier/src/subpath-imports.test.ts",
++    "packages/polaris-dossier/src/argv.test.ts"
++   ]
++  },
++  {
++   "id": "R541-X6-unscoped-manifests-unread",
++   "what": "localNames skips a manifest whose name is not scoped (the root, syzygy-workspace)",
++   "edits": [
++    {
++     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
++     "old": "  for (const manifest of workspace.manifests.values()) {",
++     "new": "  for (const manifest of [...workspace.manifests.values()].filter((manifest) => manifest.name.startsWith('@'))) {"
++    }
++   ],
++   "projects": [
++    "@syzygy/polaris-generation-core",
++    "@syzygy/polaris-dossier"
++   ],
++   "files": [
++    "packages/polaris-generation-core/src/workspace-reach.test.ts",
++    "packages/polaris-generation-core/src/island-boundary.test.ts",
++    "packages/polaris-dossier/src/subpath-imports.test.ts",
++    "packages/polaris-dossier/src/argv.test.ts"
++   ]
++  },
++  {
++   "id": "R541-X7-http-url-tgz-only",
++   "what": "the tarball arm skips an http(s) URL unless it ends in .tgz",
++   "edits": [
++    {
++     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
++     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
++     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|^(?!https?:.*\\.tar(?:\\.gz)?$).*\\.(?:tgz|tar|tar\\.gz)$/iu;"
++    }
++   ],
++   "projects": [
++    "@syzygy/polaris-generation-core",
++    "@syzygy/polaris-dossier"
++   ],
++   "files": [
++    "packages/polaris-generation-core/src/workspace-reach.test.ts",
++    "packages/polaris-generation-core/src/island-boundary.test.ts",
++    "packages/polaris-dossier/src/subpath-imports.test.ts",
++    "packages/polaris-dossier/src/argv.test.ts"
++   ]
++  }
++ ]
++}
+\ No newline at end of file
+diff --git a/docs/evidence/syzygy-bpyt-8-39/start-gates-default-reporter.log b/docs/evidence/syzygy-bpyt-8-39/start-gates-default-reporter.log
+deleted file mode 100644
+index d401e6b3..00000000
+--- a/docs/evidence/syzygy-bpyt-8-39/start-gates-default-reporter.log
++++ /dev/null
+@@ -1,148 +0,0 @@
+-# syzygy-bpyt.8.39: npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/start-gates.test.ts (default reporter, ANSI codes stripped), in a clean clone at 308a62f4a48e47b625aeff9cc718b1b2c37161f8; /proc/loadavg load1 71.48 before, 83.34 after.
+-
+- RUN  v3.2.7 /var/tmp/la-b839/head
+-
+- ❯  @syzygy/polaris-dossier  packages/polaris-dossier/src/start-gates.test.ts (104 tests | 2 failed) 104030ms
+-   × init: a run that passes every start gate > pins the consented HEAD, records the subject and writes only run.json under the state root 5057ms
+-     → Test timed out in 5000ms.
+-If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+-   ✓ init: a run that passes every start gate > records the clone by its real path, not the path typed: a symlink or a `..` segment is resolved (R-POLARIS-DOSSIER-S3-GATES-2 note 12)  1171ms
+-   ✓ init: a run that passes every start gate > records the clone by its real path when the operator names it through a symbolic link  711ms
+-   ✓ init: a run that passes every start gate > starts from a clone of a commit with a parent, shallow at exactly that commit  858ms
+-   ✓ init: a run that passes every start gate > starts from a clone of a root commit shallow at it, or with no shallow file: a root commit has no parent to cut  1031ms
+-   ✓ init: the clone holds the consented commit alone (syzygy-qkea.24) > leaves in .git exactly the entries the allowlist names, as the header derives them  330ms
+-   ✓ init: the clone holds the consented commit alone (syzygy-qkea.24) > starts from a clone whose objects are packed, with a reverse index  930ms
+-   ✓ init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses a full clone, before reading any object  335ms
+-   ✓ init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses HEAD on a branch at the consented commit: the branch is a ref  599ms
+-   ✓ init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses an extra ref, loose or packed  820ms
+-   ✓ init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses FETCH_HEAD naming another commit, and passes it naming the pinned commit alone  1006ms
+-   ✓ init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses every top-level name the consented form never leaves: commondir, modules, worktrees, pseudo-refs, bisect and rebase state  3593ms
+-   ✓ init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses objects/info/alternates and http-alternates, as a file or a link, and whatever they name  2587ms
+-   ✓ init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses in the object store anything but loose objects, an empty info/ and paired packs  3338ms
+-   ✓ init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses unknown files under the allowed directories: hooks that run, grafts, other logs  1218ms
+-   ✓ init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses logs/HEAD naming any commit but the pinned one or the zero identifier  328ms
+-   ✓ init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses a symbolic link anywhere under .git, never following it  2989ms
+-   ✓ init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses an allowed name of the wrong kind  507ms
+-   ✓ init: the clone holds the consented commit alone (syzygy-qkea.24) > reads shallow without following a link, and only as a regular file  688ms
+-   ✓ init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses a file over its bound, and a .git with more entries than the walk's bound  415ms
+-   ✓ init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses a two-commit shallow clone, and a clone shallow at another commit or not shallow  1028ms
+-   ✓ init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses an object store that names an object beyond the pinned commit and its tree  664ms
+-   ✓ init: the clone holds the consented commit alone (syzygy-qkea.24) > reads config bounded and without following a link, and admits the [core] keys git init writes on each mainstream platform  1573ms
+-   × init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses config naming a remote, a promisor, an include or a command the agent's git would run (R-POLARIS-DOSSIER-CLONE-SHAPE-2 finding 1) 5279ms
+-     → Test timed out in 5000ms.
+-If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+-   ✓ init: the clone holds the consented commit alone (syzygy-qkea.24) > starts from a clone made with an older git's template, which leaves an empty branches/, or an empty one; refuses anything in branches/  735ms
+-   ✓ init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses an identifier in FETCH_HEAD or logs/HEAD in upper case or run on, even the pinned commit's  1298ms
+-   ✓ init: the clone holds the consented commit alone (syzygy-qkea.24) > never reads the working tree: an uncommitted change, or a nested repository, does not change the listing or the decision  912ms
+-   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses before any object read when the observation consent is absent: no act record, naming why 252ms
+-   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses before any object read when the observation consent is ineffective: the consent bytes changed after the act, naming why  475ms
+-   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses before any object read when the observation consent is not in force yet, naming why  376ms
+-   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses before any object read when the observation consent is withdrawn: another decisions file names the record, naming why  320ms
+-   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses before any object read when the observation consent is present only as status words in the record, no act (F8), naming why 201ms
+-   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses before any object read when the registry entry is absent 126ms
+-   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses before any object read when the registry entry is ineffective: the entry changed after the sign-off 145ms
+-   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses before any object read when the registry entry is withdrawn: another decisions file names it 258ms
+-   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses before any object read when the registry entry is present only as a status word in the entry, no act (F8)  349ms
+-   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses when the signed registry entry names another implementation or no implementation version  3329ms
+-   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses before any object read when the classification and screening policy is absent  373ms
+-   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses before any object read when the classification and screening policy is ineffective: the policy changed after the act  322ms
+-   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > names both the registry entry and the policy when both fail, not only the first  323ms
+-   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses a HEAD the consent does not name, before any object read, listing the consented revisions  947ms
+-   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses a clone whose .git is a gitdir pointer 297ms
+-   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses a listing whose object no longer hashes to its identifier (scenario "Object store altered after pinning")  404ms
+-   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses a subject with a .syzygy/ path, not adopted and no per-project statement, after listing the pinned tree  851ms
+-   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses a subject with an openspec/ path and no per-project statement, after listing the pinned tree  757ms
+-   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses a subject with a recorded kernel evidence drawer and no per-project statement, after listing the pinned tree  419ms
+-   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses a subject with a project input that does not say and no per-project statement, after listing the pinned tree  495ms
+-   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > counts a symlink entry named .syzygy in the pinned tree as governing  2753ms
+-   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > counts a gitlink entry named openspec in the pinned tree as governing  2496ms
+-   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > treats the production project input as silent: with no statement every subject is refused  375ms
+-   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses a governed subject whose only statement names another provider  360ms
+-   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses a governed subject whose only statement names the provider for another agent tool  367ms
+-   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses a governed subject whose only statement is withdrawn  542ms
+-   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses a governed subject whose only statement has no act  522ms
+-   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses a Codex run with Anthropic against the Claude Code statement: consent is to the declared tool and provider pair  630ms
+-   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > starts a governed or unstated run that relies on an in-force statement, and cites it  1084ms
+-   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses a URL with a ref before reading anything 269ms
+-   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses a URL on another host before reading anything  312ms
+-   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses a configuration with an unlimited limit before reading anything 168ms
+-   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses a relative state root before reading anything 194ms
+-   ✓ init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone at an unconsented revision" and the governed arms) > refuses a state root inside the clone, or one that contains it 298ms
+-   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > passes while every gate stays in force, listing the pinned tree from the recorded clone and deciding the subject again  360ms
+-   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > reads no object when a gate fails  605ms
+-   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > shows the label and consent record the live consent gives, never the run record's (R-POLARIS-DOSSIER-S3-GATES-1 finding 2)  2966ms
+-   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > refuses when the pinned tree cannot be listed from the recorded clone  704ms
+-   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > refuses when the recorded pin is changed to a commit in the clone the consent does not name  903ms
+-   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > refuses when the consent stops naming the recorded revision  2314ms
+-   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > refuses every later step when the observation consent is withdrawn  830ms
+-   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > refuses every later step when the registry entry is withdrawn  781ms
+-   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > refuses every later step when the policy changes after its act  709ms
+-   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > names why the consent is gone when a withdrawal in a form the reader does not define refuses the whole read  635ms
+-   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > names why the consent is gone when the consent bytes changed after the act  548ms
+-   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > names why the consent is gone when the act record removed  640ms
+-   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > refuses when the statement a governed run relies on is withdrawn mid-run  452ms
+-   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > re-checks the statement against the run's declared tool: a Codex run with OpenAI keeps its Codex statement, and no Claude Code one stands in  967ms
+-   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > before the brief, selects the statement by the provider the run record declares, and discloses that the provider is Inferred  837ms
+-   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > after the brief, refuses a provider or tool that differs from the one the brief record states, reading no object  1076ms
+-   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > passes when the brief record states the tool and provider the run record declares; a coordinated edit of both is the disclosed residual  1084ms
+-   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > refuses when the brief record exists but states no agent  314ms
+-   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > refuses when the brief record exists but states a provider that is not a string  653ms
+-   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > refuses when the brief record exists but is not JSON  492ms
+-   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > refuses a run record altered into an invalid shape  568ms
+-   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > refuses a pin moved from a non-governed to a governed consented revision  1004ms
+-   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > refuses a governed run whose record was downgraded to non-governed, before and after the statement is withdrawn  990ms
+-   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > refuses when the project input in force now records a drawer the run did not start under  602ms
+-   ✓ reverifyPinnedRevision: the guard every later step calls (scenario "Recorded revision altered") > passes a pin moved between non-governed consented revisions, and shows the live label of the revision now pinned  3087ms
+-   ✓ preflight > reports a ready repository, its consented revisions and the clone commands, reading no object 279ms
+-   ✓ preflight > prints clone commands that leave the consented commit alone in the clone  1524ms
+-   ✓ preflight > names each missing record and is not ready 24ms
+-   ✓ preflight > reports D9 and the RFC7-20 reading as not established: no owner-act record binds their digests 50ms
+-   ✓ preflight > reports D9 established on this checkout only once an act record binds it, though the doctrine amendment log records its adoption  10782ms
+-   ✓ preflight > reports D9 and the RFC7-20 reading established once the sitting's acts bind their records, and only while the bound bytes hold  3309ms
+-   ✓ preflight > refuses a URL it cannot parse, and never fetches 1ms
+-   ✓ the CLI: preflight and init > init refuses with no state root, there being no default 272ms
+-   ✓ the CLI: preflight and init > init takes the state root from the environment when no flag is given, and the flag over the environment  1145ms
+-   ✓ the CLI: preflight and init > init refuses a missing configuration file and prints the refusal in both forms 178ms
+-   ✓ the CLI: preflight and init > exits 2 for ["init"] 6ms
+-   ✓ the CLI: preflight and init > exits 2 for ["init","/c"] 2ms
+-   ✓ the CLI: preflight and init > exits 2 for ["init","/c","--url"] 1ms
+-   ✓ the CLI: preflight and init > exits 2 for ["init","/c","--url","u","--url","v"] 6ms
+-   ✓ the CLI: preflight and init > exits 2 for ["init","/c","--force"] 1ms
+-   ✓ the CLI: preflight and init > exits 2 for ["preflight"] 13ms
+-   ✓ the CLI: preflight and init > exits 2 for ["preflight","https://github.com/redis/redis","--provider"] 7ms
+-   ✓ the CLI: preflight and init > preflight exits 0 when ready and 1 when a record is missing, printing the report on stdout both times 146ms
+-
+-⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+-
+- FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/start-gates.test.ts > init: a run that passes every start gate > pins the consented HEAD, records the subject and writes only run.json under the state root
+-Error: Test timed out in 5000ms.
+-If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+- ❯ packages/polaris-dossier/src/start-gates.test.ts:185:3
+-    183| 
+-    184| describe('init: a run that passes every start gate', () => {
+-    185|   it('pins the consented HEAD, records the subject and writes only run…
+-       |   ^
+-    186|     const { result, stateRoot, clone } = await init();
+-    187|     expect(result.ok).toBe(true);
+-
+-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+-
+- FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/start-gates.test.ts > init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses config naming a remote, a promisor, an include or a command the agent's git would run (R-POLARIS-DOSSIER-CLONE-SHAPE-2 finding 1)
+-Error: Test timed out in 5000ms.
+-If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+- ❯ packages/polaris-dossier/src/start-gates.test.ts:482:3
+-    480|   });
+-    481| 
+-    482|   it('refuses config naming a remote, a promisor, an include or a comm…
+-       |   ^
+-    483|     const cases: [string, (clone: string) => void][] = [
+-    484|       // Probe 03b: a promisor remote lets a plain read fetch any obje…
+-
+-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+-
+-
+- Test Files  1 failed (1)
+-      Tests  2 failed | 102 passed (104)
+-   Start at  14:27:10
+-   Duration  114.51s (transform 6.56s, setup 64ms, collect 9.37s, tests 104.03s, environment 0ms, prepare 190ms)
+-
+diff --git a/docs/evidence/syzygy-bpyt-8-39/suite.json b/docs/evidence/syzygy-bpyt-8-39/suite.json
+index 778a211b..472f8b62 100644
+--- a/docs/evidence/syzygy-bpyt-8-39/suite.json
++++ b/docs/evidence/syzygy-bpyt-8-39/suite.json
+@@ -1,19 +1,19 @@
+ {
+  "tree": "a clone at HEAD",
+- "commit": "308a62f4a48e47b625aeff9cc718b1b2c37161f8",
++ "commit": "5f0d5547dfe7f89adf3e86310f819ddeebfaae90",
+  "cleanAfter": true,
+  "runs": [
+   {
+-   "label": "full",
+-   "command": "npx vitest run --project @syzygy/polaris-generation-core --project @syzygy/polaris-dossier --reporter=json",
+-   "load1Before": 47.93,
+-   "load1After": 56.62,
+-   "success": false,
+-   "files": 55,
+-   "total": 2169,
+-   "passed": 2167,
+-   "failed": 1,
+-   "skipped": 1,
++   "label": "whole",
++   "command": "npx vitest run --reporter=json",
++   "load1Before": 21.18,
++   "load1After": 48.85,
++   "success": true,
++   "files": 246,
++   "total": 5385,
++   "passed": 5380,
++   "failed": 0,
++   "skipped": 5,
+    "notPassed": [
+     {
+      "file": "packages/polaris-dossier/src/no-egress.test.ts",
+@@ -23,70 +23,29 @@
+      "error": ""
+     },
+     {
+-     "file": "packages/polaris-dossier/src/start-gates.test.ts",
+-     "name": "init: the clone holds the consented commit alone (syzygy-qkea.24) refuses config naming a remote, a promisor, an include or a command the agent's git would run (R-POLARIS-DOSSIER-CLONE-SHAPE-2 finding 1)",
+-     "status": "failed",
+-     "ms": 5195,
+-     "error": "Error: STACK_TRACE_ERROR"
+-    }
+-   ]
+-  },
+-  {
+-   "label": "start-gates-alone",
+-   "command": "npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/start-gates.test.ts --reporter=json",
+-   "load1Before": 57.8,
+-   "load1After": 74.85,
+-   "success": false,
+-   "files": 1,
+-   "total": 104,
+-   "passed": 102,
+-   "failed": 2,
+-   "skipped": 0,
+-   "notPassed": [
++     "file": "packages/three-surface-poc-core/src/test-artifact-verification.live.test.ts",
++     "name": "live real focused-pytest verification (SYZYGY_POC_BUTLERS_REPO gated) ingests one real, passing operator-reported focused-pytest artifact and resolves it to report-fact, never Verified, through the full model (AC1/AC3, RFC5-19)",
++     "status": "skipped",
++     "ms": null,
++     "error": ""
++    },
+     {
+-     "file": "packages/polaris-dossier/src/start-gates.test.ts",
+-     "name": "init: a run that passes every start gate pins the consented HEAD, records the subject and writes only run.json under the state root",
+-     "status": "failed",
+-     "ms": 5644,
+-     "error": "Error: STACK_TRACE_ERROR"
++     "file": "packages/three-surface-poc-core/src/work-items.live.test.ts",
++     "name": "live Butlers observation (SYZYGY_POC_BUTLERS_REPO gated) matches `git rev-parse HEAD` and a direct Dolt read (POC-REQ-001, POC-REQ-010 oracles)",
++     "status": "skipped",
++     "ms": null,
++     "error": ""
+     },
+     {
+-     "file": "packages/polaris-dossier/src/start-gates.test.ts",
+-     "name": "init: the clone holds the consented commit alone (syzygy-qkea.24) refuses config naming a remote, a promisor, an include or a command the agent's git would run (R-POLARIS-DOSSIER-CLONE-SHAPE-2 finding 1)",
+-     "status": "failed",
+-     "ms": 5074,
+-     "error": "Error: STACK_TRACE_ERROR"
+-    }
+-   ]
+-  },
+-  {
+-   "label": "start-gates-timeout-60s",
+-   "command": "npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/start-gates.test.ts --testTimeout=60000 --reporter=json",
+-   "load1Before": 83.34,
+-   "load1After": 80.03,
+-   "success": true,
+-   "files": 1,
+-   "total": 104,
+-   "passed": 104,
+-   "failed": 0,
+-   "skipped": 0,
+-   "notPassed": []
+-  },
+-  {
+-   "label": "full-timeout-60s",
+-   "command": "npx vitest run --project @syzygy/polaris-generation-core --project @syzygy/polaris-dossier --testTimeout=60000 --reporter=json",
+-   "load1Before": 65.53,
+-   "load1After": 77.63,
+-   "success": true,
+-   "files": 55,
+-   "total": 2169,
+-   "passed": 2168,
+-   "failed": 0,
+-   "skipped": 1,
+-   "notPassed": [
++     "file": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
++     "name": "opening index in a real browser (PWB-REQ-010, P-98) a captured /polaris page meets the oracle at both viewports",
++     "status": "skipped",
++     "ms": null,
++     "error": ""
++    },
+     {
+-     "file": "packages/polaris-dossier/src/no-egress.test.ts",
+-     "name": "no provider call and no transmission (S10), without strace is not proved on this host: strace is unavailable, so the capture is skipped, never reported as passed",
++     "file": "apps/three-surface-poc/src/project-shape-discovery.live.test.ts",
++     "name": "live Butlers project-shape discovery at the reviewed revision matches the independent five-root, seven-Heart, baseline and total populations",
+      "status": "skipped",
+      "ms": null,
+      "error": ""
+diff --git a/docs/evidence/syzygy-bpyt-8-39/suite_summary.py b/docs/evidence/syzygy-bpyt-8-39/suite_summary.py
+index 673f6945..67a73510 100644
+--- a/docs/evidence/syzygy-bpyt-8-39/suite_summary.py
++++ b/docs/evidence/syzygy-bpyt-8-39/suite_summary.py
+@@ -1,6 +1,6 @@
+-"""syzygy-bpyt.8.39: summarize Vitest JSON reports of the two packages' suites at HEAD into suite.json (the reports, about 750 KB
+-each, are not kept). Each run names its tree's commit, its command, the host load printed before and after it, its totals and every
+-test that did not pass, with its duration and the first line of its error.
++"""syzygy-bpyt.8.39: summarize Vitest JSON reports of the whole suite at HEAD into suite.json (the reports, about 2 MB each, are not
++kept). Each run names its tree's commit, its command, the host load printed before and after it, its totals and every test that did
++not pass, with its duration and the first line of its error.
+ Usage: python3 -I suite_summary.py <tree> <out.json> <label>=<report.json>=<load before>=<load after>=<command> ...
+ """
+ import json, subprocess, sys
+diff --git a/docs/evidence/syzygy-bpyt-8-39/summary.json b/docs/evidence/syzygy-bpyt-8-39/summary.json
+index 3395b3de..f4da23c7 100644
+--- a/docs/evidence/syzygy-bpyt-8-39/summary.json
++++ b/docs/evidence/syzygy-bpyt-8-39/summary.json
+@@ -1,21 +1,26 @@
+ {
+  "bead": "syzygy-bpyt.8.39",
+  "base": "d38d7a3ce632a34c2a41bdb77ad323ba0b05b777",
+- "head": "308a62f4a48e47b625aeff9cc718b1b2c37161f8",
++ "first": "308a62f4a48e47b625aeff9cc718b1b2c37161f8",
++ "head": "5f0d5547dfe7f89adf3e86310f819ddeebfaae90",
+  "subject": {
+-  "what": "git diff d38d7a3c 308a62f4",
+-  "sha256": "23161e16390ce20f76bf1bcec4e06850c1249bb60b742ef9e1ff0f8a8d3defb4",
++  "what": "git diff d38d7a3c 5f0d5547 -- packages/polaris-generation-core/src/workspace-reach.test.ts packages/polaris-generation-core/src/workspace-reach.testkit.ts",
++  "sha256": "4a0291695ff094172f09f21ceaf5caf6eb2c844e9d32c799bff9465e4509feb1",
+   "files": {
+    "packages/polaris-generation-core/src/workspace-reach.test.ts": {
+     "base": "a20cdbc84b4e21ee62d6d06eb2abe8c7a21affa03974a35355a812ac89b7cb1e",
+-    "head": "5e3ef214af947bc9455ae4d8ebd56c26d01ffe825c5968ce2d9c8625b36a59a4"
++    "head": "15c395c9e23686d605f39f2bd4ea5f9f52fe3e45cbbce244f752486282758519"
+    },
+    "packages/polaris-generation-core/src/workspace-reach.testkit.ts": {
+     "base": "ed67106fe74333c97f419f4a52f14f75bfaa34bbfa5b41f33c4f1b6545895731",
+-    "head": "94c9d93b40cc4f54afc8a6d56d9062b25e27938016edef566d7bd75b6381cbd3"
++    "head": "440209bb6d876b7ae1240a88cd4cf5913b01750a0d9ffa56f90c072be7f76951"
+    }
+   }
+  },
++ "repair": {
++  "what": "git diff 308a62f4 5f0d5547 -- packages/polaris-generation-core/src/workspace-reach.test.ts packages/polaris-generation-core/src/workspace-reach.testkit.ts",
++  "sha256": "a825177271320866bddbe9ab688d7f0c791b3e4584ee43c4b2add7dd9afefca6"
++ },
+  "productFilesChanged": [],
+  "testkitImporters": [
+   "packages/polaris-dossier/src/subpath-imports.test.ts",
+@@ -35,7 +40,8 @@
+    "base": "survives",
+    "head": "killed",
+    "headFailedRows": [
+-    "packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as an npm: alias of a registry package as naming no module"
++    "packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as an npm: alias of a registry package as naming no module",
++    "packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as an npm: alias with no version as naming no module"
+    ]
+   },
+   "RV536-M8-root-declarations-unread": {
+@@ -79,18 +85,74 @@
+   ],
+   "weaker": []
+  },
++ "round1Mutants": {
++  "R541-X2-root-devDependencies-unread": {
++   "base": "survives",
++   "head": "killed",
++   "headFailedRows": [
++    "packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name the workspace root's manifest declares as a local dependency as naming no module"
++   ]
++  },
++  "R541-X3-npm-alias-needs-version": {
++   "base": "survives",
++   "head": "killed",
++   "headFailedRows": [
++    "packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as an npm: alias with no version as naming no module"
++   ]
++  },
++  "R541-X5-tarball-arm-skips-hash": {
++   "base": "survives",
++   "head": "killed",
++   "headFailedRows": [
++    "packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a git dependency whose spec ends in a tarball extension as naming no module"
++   ]
++  },
++  "R541-X6-unscoped-manifests-unread": {
++   "base": "survives",
++   "head": "killed",
++   "headFailedRows": [
++    "packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name the workspace root's manifest declares as a local dependency as naming no module"
++   ]
++  },
++  "R541-X7-http-url-tgz-only": {
++   "base": "survives",
++   "head": "killed",
++   "headFailedRows": [
++    "packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a remote http tarball URL dependency as naming no module"
++   ]
++  },
++  "R541-X1-root-reads-devDependencies-only": {
++   "base": "survives",
++   "head": "survives",
++   "headFailedRows": []
++  },
++  "R541-X4-npm-arm-case-sensitive": {
++   "base": "survives",
++   "head": "survives",
++   "headFailedRows": []
++  }
++ },
+  "fix": {
+-  "specs": "docs/evidence/guard-pins-followup-review-2026-10-27/rev536-fix-specs.json",
+-  "specsSha256": "db6be993471cd37d6a690a35c88b22d43f2a135606bd038f2631cc84f2b2273b",
+-  "edits": 2,
+-  "headEqualsBaseWithFix": true,
+-  "linesAdded": 9,
++  "specs": [
++   "docs/evidence/guard-pins-followup-review-2026-10-27/rev536-fix-specs.json",
++   "docs/evidence/syzygy-bpyt-8-39/rev541-fix-specs.json"
++  ],
++  "specsSha256": [
++   "db6be993471cd37d6a690a35c88b22d43f2a135606bd038f2631cc84f2b2273b",
++   "50d59d9550e333892885ef3f8c082bf472f9c772d765cb3991a3377a99fe0f20"
++  ],
++  "edits": [
++   2,
++   1
++  ],
++  "headEqualsBaseWithFixes": true,
++  "linesAdded": 11,
+   "linesRemoved": 0
+  },
+  "testkit": {
+   "changedLines": {
+-   "-": 2,
+-   "+": 4
++   "-": 4,
++   "+": 12
+   },
+   "docCommentLines": {
+    "base": [
+@@ -99,7 +161,7 @@
+    ],
+    "head": [
+     59,
+-    71
++    77
+    ]
+   },
+   "emitEqual": true,
+@@ -141,29 +203,30 @@
+    "walksEqual": 56,
+    "resolvesEqual": 1353
+   },
+-  "toolSha256": "131206846b062bc60ba7efeb67bf6ecf81802a54921d94979f2bc7428b8afc04"
++  "toolSha256": "131206846b062bc60ba7efeb67bf6ecf81802a54921d94979f2bc7428b8afc04",
++  "oldTestkitSha256": "ed67106fe74333c97f419f4a52f14f75bfaa34bbfa5b41f33c4f1b6545895731"
+  },
+  "repeats": {
+   "runs": 5,
+   "passed": [
+-   169,
+-   169,
+-   169,
+-   169,
+-   169
++   171,
++   171,
++   171,
++   171,
++   171
+   ],
+   "load1": [
+-   51.3,
+-   51.3,
+-   51.2,
+-   50.5,
+-   48.9
++   22.0,
++   22.0,
++   22.3,
++   22.1,
++   22.1
+   ]
+  },
+  "titles": {
+   "base": 165,
+-  "head": 169,
+-  "added": 4,
++  "head": 171,
++  "added": 6,
+   "removed": 0,
+   "perFile": {
+    "packages/polaris-dossier/src/argv.test.ts": {
+@@ -180,61 +243,60 @@
+    },
+    "packages/polaris-generation-core/src/workspace-reach.test.ts": {
+     "base": 48,
+-    "head": 52
++    "head": 54
+    }
+   },
+-  "line": "Tests: +4 ~0 -0"
++  "line": "Tests: +6 ~0 -0"
+  },
+  "npaProbe": {
+   "npaVersion": "12.0.2",
+   "node": "v24.6.0",
+-  "forms": 46
++  "forms": 48
++ },
++ "npmAliasProbe": {
++  "npm": "11.5.1",
++  "arborist": "9.1.3",
++  "node": "v24.6.0",
++  "cases": 9,
++  "links": [
++   "@syzygy/slib: npm:typescript@*",
++   "wlib: ^1.0.0",
++   "wlib: npm:typescript@*",
++   "wlib: npm:typescript@^1.0.0"
++  ],
++  "registry": [
++   "dossier: npm:typescript",
++   "dossier: npm:typescript@^5.5.0",
++   "dossier: npm:wlib@*",
++   "wlib: ^5.5.0",
++   "wlib: npm:typescript@^5.5.0"
++  ]
++ },
++ "workspaces": {
++  "count": 12,
++  "unscoped": []
+  },
+  "suite": {
+-  "full": {
+-   "total": 2169,
+-   "passed": 2167,
+-   "failed": 1,
+-   "skipped": 1,
+-   "load1Before": 47.93,
+-   "load1After": 56.62
+-  },
+-  "start-gates-alone": {
+-   "total": 104,
+-   "passed": 102,
+-   "failed": 2,
+-   "skipped": 0,
+-   "load1Before": 57.8,
+-   "load1After": 74.85
+-  },
+-  "start-gates-timeout-60s": {
+-   "total": 104,
+-   "passed": 104,
++  "whole": {
++   "command": "npx vitest run --reporter=json",
++   "files": 246,
++   "total": 5385,
++   "passed": 5380,
+    "failed": 0,
+-   "skipped": 0,
+-   "load1Before": 83.34,
+-   "load1After": 80.03
+-  },
+-  "full-timeout-60s": {
+-   "total": 2169,
+-   "passed": 2168,
+-   "failed": 0,
+-   "skipped": 1,
+-   "load1Before": 65.53,
+-   "load1After": 77.63
++   "skipped": 5,
++   "load1Before": 21.18,
++   "load1After": 48.85
+   }
+  },
+- "suiteTimeouts": [
+-  "init: the clone holds the consented commit alone (syzygy-qkea.24) refuses config naming a remote, a promisor, an include or a command the agent's git would run (R-POLARIS-DOSSIER-CLONE-SHAPE-2 finding 1)"
+- ],
+  "tools": {
+   "island_diff.py": "131206846b062bc60ba7efeb67bf6ecf81802a54921d94979f2bc7428b8afc04",
+   "titles.py": "f93af94f73fc70a5e9de768b146cca579c73eb8663e3285d574c8ad7193697e5",
+   "repeat.py": "1c87146329e02d971d45eedc8da090c1fd7805dfa8869d0d4cacda99b63572af",
+   "comment_only.cjs": "e987f080a7c873907ce5c3bc409bc2752b9c9a1a1d470f502a992a530f86dd8d",
+-  "npa_probe.cjs": "689a192f550955781e4941ea4d87d1fcda8199ddf88e9ff78e7022ecb014cd37",
+-  "suite_summary.py": "7dff7d8b9433ba61815ac8f23719e1e2ea6d41593a874f0c7ee30727a5db0c65",
+-  "record.py": "f21da6bb693b67654c0742a784cdfe39f35ff045346d189ef9d2c46c8d69025b"
++  "npa_probe.cjs": "fd2e2741433b26255e92f42f4b2522f7957570d312617e7057d2926754a695cf",
++  "npm_alias_probe.py": "5960693079918531475f034732be4615a52eef42537dfe73e3c46a3e39123cd9",
++  "suite_summary.py": "fab8e5251fd7b2560a2e8cb7cdcfd00d3d63b19cdb7cb91d555b479bce7eae8a",
++  "record.py": "c46565eec2c9a5d6fbf26ec106acb281e2f1e8cb487aeef9d1ac25c751429958"
+  },
+  "faithfulTree": {
+   "manifests": 13,
+diff --git a/docs/evidence/syzygy-bpyt-8-39/titles.json b/docs/evidence/syzygy-bpyt-8-39/titles.json
+index 78558b6a..9e8faa11 100644
+--- a/docs/evidence/syzygy-bpyt-8-39/titles.json
++++ b/docs/evidence/syzygy-bpyt-8-39/titles.json
+@@ -1,7 +1,7 @@
+ {
+  "base": 165,
+- "head": 169,
+- "added": 4,
++ "head": 171,
++ "added": 6,
+  "removed": 0,
+  "perFile": {
+   "packages/polaris-dossier/src/argv.test.ts": {
+@@ -18,7 +18,7 @@
+   },
+   "packages/polaris-generation-core/src/workspace-reach.test.ts": {
+    "base": 48,
+-   "head": 52
++   "head": 54
+   }
+  },
+  "duplicatesBase": [],
+@@ -28,6 +28,10 @@
+    "packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "the shared workspace resolver > reads a bare name declared as a dependency on its parent directory as naming no module"
+   ],
++  [
++   "packages/polaris-generation-core/src/workspace-reach.test.ts",
++   "the shared workspace resolver > reads a bare name declared as a git dependency whose spec ends in a tarball extension as naming no module"
++  ],
+   [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "the shared workspace resolver > reads a bare name declared as a remote http tarball URL dependency as naming no module"
+@@ -36,6 +40,10 @@
+    "packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "the shared workspace resolver > reads a bare name declared as an npm: alias of a registry package as naming no module"
+   ],
++  [
++   "packages/polaris-generation-core/src/workspace-reach.test.ts",
++   "the shared workspace resolver > reads a bare name declared as an npm: alias with no version as naming no module"
++  ],
+   [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "the shared workspace resolver > reads a bare name the workspace root's manifest declares as a local dependency as naming no module"
+diff --git a/packages/polaris-generation-core/src/workspace-reach.test.ts b/packages/polaris-generation-core/src/workspace-reach.test.ts
+index b3cf44e0..d3754b93 100644
+--- a/packages/polaris-generation-core/src/workspace-reach.test.ts
++++ b/packages/polaris-generation-core/src/workspace-reach.test.ts
+@@ -100,6 +100,8 @@ describe('the shared workspace resolver', () => {
+     ['a remote http tarball URL dependency', 'dossier', { dependencies: { dossier: 'http://example.com/lib-1.0.0.tar.gz' } }, {}],
+     ['an npm: alias of a registry package', 'dossier', { dependencies: { dossier: 'npm:typescript@^5.5.0' } }, {}],
+     ['a dependency on its parent directory', 'dossier', { dependencies: { dossier: '..' } }, {}],
++    ['a git dependency whose spec ends in a tarball extension', 'dossier', { dependencies: { dossier: 'github:someone/dossier#v1.tar' } }, {}],
++    ['an npm: alias with no version', 'dossier', { dependencies: { dossier: 'npm:typescript' } }, {}],
+     ['a file: dependency of another package', 'dossier', {}, { dependencies: { dossier: 'file:../../apps/app' } }],
+   ])('reads a bare name declared as %s as naming no module', (_form, specifier, app, lib) => {
+     expect(resolveIn(workspace({}, undefined, app, lib), 'apps/app/src/main.ts', specifier)).toBeUndefined();
+diff --git a/packages/polaris-generation-core/src/workspace-reach.testkit.ts b/packages/polaris-generation-core/src/workspace-reach.testkit.ts
+index 23e4d4eb..5ace9395 100644
+--- a/packages/polaris-generation-core/src/workspace-reach.testkit.ts
++++ b/packages/polaris-generation-core/src/workspace-reach.testkit.ts
+@@ -61,14 +61,20 @@ function moduleIn(workspace: Workspace, dir: string, target: string): string | u
+  *   as a directory or a file;
+  * - `link:` and `workspace:`: npm does not install them at all (npm-package-arg 12.0.2 throws EUNSUPPORTEDPROTOCOL), and other
+  *   package managers link them locally;
+- * - `npm:`: an alias. npm installs it from the registry (npm-package-arg 12.0.2 accepts only a registry spec after `npm:`), but
+- *   its target may carry a workspace package's name, which other package managers can link locally; every alias is refused,
+- *   failing closed.
++ * - `npm:`: an alias. npm-package-arg 12.0.2 accepts only a registry spec after `npm:`, and npm fetches that spec from the
++ *   registry unless the alias is declared under a workspace's own name and that workspace's version satisfies it; then npm links
++ *   the workspace, as for any dependency declared under a workspace's name (every workspace here is `@syzygy/`-scoped, and the
++ *   `@syzygy/*` branch reads such a name before this pattern). Its target may carry a workspace package's name, which other
++ *   package managers can link locally; every alias is refused, failing closed.
+  * The tarball arm also matches a tarball URL (`https://…/x.tgz`), which npm types as `remote`, and a git spec whose text ends in a
+  * tarball extension (`github:someone/dossier#v1.tar`), which npm types as `git`; both are refused too, failing closed.
+  * Residual (syzygy-bpyt.8.38): npm also reads a directory spec with no leading `./`, `../`, `/` or `~/` (`packages/polaris-dossier/`,
+  * `.hidden-lib`, `a/b/c`) as a directory. Those still read as outside the workspace; widening the pattern to them changes what the
+- * guards refuse and needs a GP-Q0 ruling first. */
++ * guards refuse and needs a GP-Q0 ruling first.
++ * Residual (the review of 8.39, N2): a workspace whose name is not `@syzygy/`-scoped is read by its bare name as outside the
++ * workspace (unless some manifest declares that name with a version this pattern matches), while npm links it under that name
++ * and Node loads it from there. 0 of the 12 workspaces are unscoped today; closing it changes what the guards refuse and needs a
++ * GP-Q0 ruling first. */
+ const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\.\.?(?:\/|$)|\/|~\/)|\.(?:tgz|tar|tar\.gz)$/iu;
+ 
+ /** Every name any manifest declares a local dependency under. npm installs a dependency where every workspace module resolves it. */

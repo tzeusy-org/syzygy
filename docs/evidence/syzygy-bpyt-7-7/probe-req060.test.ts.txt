@@ -1,0 +1,43 @@
+// Runtime probe for CAP1-REQ-060 (syzygy-bpyt.7.7). Not part of the suite:
+// copy to packages/cap1-conformance/src/zz-b77-probe.test.ts, run
+//   npx vitest run packages/cap1-conformance/src/zz-b77-probe.test.ts
+// read the PROBE-REQ060 line from stdout, then delete the copy.
+import { describe, expect, it } from 'vitest';
+import {
+  isLocatorShaped,
+  readDeclaration,
+  registerProject,
+  registrationIdentityFields,
+  type ProjectId,
+  type RepositoryId,
+} from '@syzygy/cap1-core';
+import { projectYaml } from './fixtures/index.js';
+
+describe('REQ-060 probe', () => {
+  it('records whether production admission refuses locator-shaped identities', () => {
+    const projectId = 'https://example.com/acme/project';
+    const repositoryId = '/srv/repos/shared';
+    const read = readDeclaration(
+      projectYaml({
+        id: projectId,
+        name: 'Probe',
+        repositories: [{ id: repositoryId, role: 'observed-source', consent: 'consent-probe' }],
+        consents: ['consent-probe'],
+      }),
+    );
+    const registered = registerProject(read, 'rev-probe');
+    const record = {
+      candidateProjectId: projectId,
+      candidateRepositoryId: repositoryId,
+      isLocatorShapedProjectId: isLocatorShaped(projectId),
+      isLocatorShapedRepositoryId: isLocatorShaped(repositoryId),
+      declarationReadOk: read.ok,
+      registrationStatus: registered.status,
+      servedIdentityFields: registrationIdentityFields(registered),
+    };
+    console.log('PROBE-REQ060 ' + JSON.stringify(record));
+    expect(record.isLocatorShapedProjectId).toBe(true);
+    void (projectId as ProjectId);
+    void (repositoryId as RepositoryId);
+  });
+});

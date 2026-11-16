@@ -1,0 +1,9 @@
+{
+ "root": {
+  "built": true
+ },
+ "subpath": {
+  "built": false,
+  "error": "Build failed with 2 errors: | error: Cannot read directory \"packages/support/src/index.ts\": not a directory"
+ }
+}

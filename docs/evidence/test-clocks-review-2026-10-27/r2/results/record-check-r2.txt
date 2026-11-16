@@ -1,0 +1,93 @@
+OK   evidence commit bb5df680 is an ancestor of 9e00252a
+OK   10 test-file digests equal the files at 9e00252a
+OK   testDiffSha256 recomputed over main..COMMIT
+OK   record `files` covers 24 tracked evidence files, digests equal (mismatches [])
+INFO bounds at COMMIT {'EDGE_TRIM_CPU_MS': 1900, 'HOSTILE_LINE_CPU_MS': 140, 'TAG_SCAN_CPU_MS': 1500, 'ATTRIBUTE_SCAN_CPU_MS': 3000}
+OK   mutant-cases.json unchanged from the evidence commit to 9e00252a (80a34aae115f)
+OK   cpu-separation.json: cases digest is the retained file
+OK   cpu-separation.json: tool digest equals tools/cpu_separation.py at 9e00252a
+OK   cpu-separation.json EDGE_TRIM_CPU_MS: 10 head runs, each exit 0
+OK   cpu-separation.json EDGE_TRIM_CPU_MS: head max 64.686 and mutant min 60066.3 re-derived from runs equal the recorded figures
+OK   cpu-separation.json EDGE_TRIM_CPU_MS: at the held bound 1900, bound/head 29.37x and mutant/bound 31.61x (both >= 10)
+OK   cpu-separation.json EDGE_TRIM_CPU_MS: fileBound ratios 29.4, 31.6 at 1900 re-derived
+INFO cpu-separation.json EDGE_TRIM_CPU_MS: node v24.6.0 cpu thread tree 722231fe headLoad1 29.31-32.31 mutant rows [('trims a long run of spaces in linear time', 60066.3, 3, 3)] geometricMeanNow 1900
+OK   record EDGE_TRIM_CPU_MS (thread): 29.4x and 31.6x as re-derived
+OK   cpu-separation.json HOSTILE_LINE_CPU_MS: 10 head runs, each exit 0
+OK   cpu-separation.json HOSTILE_LINE_CPU_MS: head max 2.042 and mutant min 15327.977 re-derived from runs equal the recorded figures
+OK   cpu-separation.json HOSTILE_LINE_CPU_MS: at the held bound 140, bound/head 68.56x and mutant/bound 109.49x (both >= 10)
+OK   cpu-separation.json HOSTILE_LINE_CPU_MS: fileBound ratios 68.6, 109.5 at 140 re-derived
+INFO cpu-separation.json HOSTILE_LINE_CPU_MS: node v24.6.0 cpu thread tree 722231fe headLoad1 25.44-26.85 mutant rows [('stays linear on one 100k line of spaces after an identifier', 15327.977, 10, 0)] geometricMeanNow 170
+OK   record HOSTILE_LINE_CPU_MS (thread): 68.6x and 109.5x as re-derived
+OK   cpu-separation.json TAG_SCAN_CPU_MS: 10 head runs, each exit 0
+OK   cpu-separation.json TAG_SCAN_CPU_MS: head max 66.144 and mutant min 60021.3 re-derived from runs equal the recorded figures
+OK   cpu-separation.json TAG_SCAN_CPU_MS: at the held bound 1500, bound/head 22.68x and mutant/bound 40.01x (both >= 10)
+OK   cpu-separation.json TAG_SCAN_CPU_MS: fileBound ratios 22.7, 40.0 at 1500 re-derived
+INFO cpu-separation.json TAG_SCAN_CPU_MS: node v24.6.0 cpu thread tree 722231fe headLoad1 37.15-42.58 mutant rows [('scans unterminated opening tags at the ceiling', 60021.3, 3, 3), ('scans unterminated plural tags at the ceiling', 60038.6, 3, 3), ('scans near-miss tag names at the ceiling', 16.378, 10, 0)] geometricMeanNow 1900
+OK   record TAG_SCAN_CPU_MS (thread): 22.7x and 40.0x as re-derived
+OK   cpu-separation.json ATTRIBUTE_SCAN_CPU_MS: 10 head runs, each exit 0
+OK   cpu-separation.json ATTRIBUTE_SCAN_CPU_MS: head max 148.918 and mutant min 60001.8 re-derived from runs equal the recorded figures
+OK   cpu-separation.json ATTRIBUTE_SCAN_CPU_MS: at the held bound 3000, bound/head 20.15x and mutant/bound 20.00x (both >= 10)
+OK   cpu-separation.json ATTRIBUTE_SCAN_CPU_MS: fileBound ratios 20.1, 20.0 at 3000 re-derived
+INFO cpu-separation.json ATTRIBUTE_SCAN_CPU_MS: node v24.6.0 cpu thread tree 722231fe headLoad1 23.25-26.44 mutant rows [('scans one tag body that is a single word run at the ceiling', 60001.8, 3, 3)] geometricMeanNow 2900
+OK   record ATTRIBUTE_SCAN_CPU_MS (thread): 20.1x and 20.0x as re-derived
+OK   cpu-separation-node22.json: cases digest is the retained file
+OK   cpu-separation-node22.json: tool digest equals tools/cpu_separation.py at 9e00252a
+OK   cpu-separation-node22.json EDGE_TRIM_CPU_MS: 10 head runs, each exit 0
+OK   cpu-separation-node22.json EDGE_TRIM_CPU_MS: head max 88.331 and mutant min 60019.1 re-derived from runs equal the recorded figures
+OK   cpu-separation-node22.json EDGE_TRIM_CPU_MS: at the held bound 1900, bound/head 21.51x and mutant/bound 31.59x (both >= 10)
+OK   cpu-separation-node22.json EDGE_TRIM_CPU_MS: fileBound ratios 21.5, 31.6 at 1900 re-derived
+INFO cpu-separation-node22.json EDGE_TRIM_CPU_MS: node v22.18.0 cpu process tree bb5df680 headLoad1 26.44-29.12 mutant rows [('trims a long run of spaces in linear time', 60019.1, 3, 3)] geometricMeanNow 2300
+OK   record EDGE_TRIM_CPU_MS (fallback): 21.5x and 31.6x as re-derived
+OK   cpu-separation-node22.json HOSTILE_LINE_CPU_MS: 10 head runs, each exit 0
+OK   cpu-separation-node22.json HOSTILE_LINE_CPU_MS: head max 1.631 and mutant min 17314.492 re-derived from runs equal the recorded figures
+OK   cpu-separation-node22.json HOSTILE_LINE_CPU_MS: at the held bound 140, bound/head 85.84x and mutant/bound 123.67x (both >= 10)
+OK   cpu-separation-node22.json HOSTILE_LINE_CPU_MS: fileBound ratios 85.8, 123.7 at 140 re-derived
+INFO cpu-separation-node22.json HOSTILE_LINE_CPU_MS: node v22.18.0 cpu process tree bb5df680 headLoad1 35.57-39.03 mutant rows [('stays linear on one 100k line of spaces after an identifier', 17314.492, 10, 0)] geometricMeanNow 160
+OK   record HOSTILE_LINE_CPU_MS (fallback): 85.8x and 123.7x as re-derived
+OK   cpu-separation-node22.json TAG_SCAN_CPU_MS: 10 head runs, each exit 0
+OK   cpu-separation-node22.json TAG_SCAN_CPU_MS: head max 64.521 and mutant min 60007.8 re-derived from runs equal the recorded figures
+OK   cpu-separation-node22.json TAG_SCAN_CPU_MS: at the held bound 1500, bound/head 23.25x and mutant/bound 40.01x (both >= 10)
+OK   cpu-separation-node22.json TAG_SCAN_CPU_MS: fileBound ratios 23.2, 40.0 at 1500 re-derived
+INFO cpu-separation-node22.json TAG_SCAN_CPU_MS: node v22.18.0 cpu process tree bb5df680 headLoad1 34.15-38.56 mutant rows [('scans unterminated opening tags at the ceiling', 60042.7, 3, 3), ('scans unterminated plural tags at the ceiling', 60007.8, 3, 3), ('scans near-miss tag names at the ceiling', 20.723, 10, 0)] geometricMeanNow 1900
+OK   record TAG_SCAN_CPU_MS (fallback): 23.2x and 40.0x as re-derived
+OK   cpu-separation-node22.json ATTRIBUTE_SCAN_CPU_MS: 10 head runs, each exit 0
+OK   cpu-separation-node22.json ATTRIBUTE_SCAN_CPU_MS: head max 191.092 and mutant min 60008.8 re-derived from runs equal the recorded figures
+OK   cpu-separation-node22.json ATTRIBUTE_SCAN_CPU_MS: at the held bound 3000, bound/head 15.70x and mutant/bound 20.00x (both >= 10)
+OK   cpu-separation-node22.json ATTRIBUTE_SCAN_CPU_MS: fileBound ratios 15.7, 20.0 at 3000 re-derived
+INFO cpu-separation-node22.json ATTRIBUTE_SCAN_CPU_MS: node v22.18.0 cpu process tree bb5df680 headLoad1 42.18-48.13 mutant rows [('scans one tag body that is a single word run at the ceiling', 60008.8, 3, 3)] geometricMeanNow 3300
+OK   record ATTRIBUTE_SCAN_CPU_MS (fallback): 15.7x and 20.0x as re-derived
+INFO table {"cpu-separation.json:EDGE_TRIM_CPU_MS": [64.7, 60066.3, 29.4, 31.6], "cpu-separation.json:HOSTILE_LINE_CPU_MS": [2.0, 15327.977, 68.6, 109.5], "cpu-separation.json:TAG_SCAN_CPU_MS": [66.1, 60021.3, 22.7, 40.0], "cpu-separation.json:ATTRIBUTE_SCAN_CPU_MS": [148.9, 60001.8, 20.1, 20.0], "cpu-separation-node22.json:EDGE_TRIM_CPU_MS": [88.3, 60019.1, 21.5, 31.6], "cpu-separation-node22.json:HOSTILE_LINE_CPU_MS": [1.6, 17314.492, 85.8, 123.7], "cpu-separation-node22.json:TAG_SCAN_CPU_MS": [64.5, 60007.8, 23.2, 40.0], "cpu-separation-node22.json:ATTRIBUTE_SCAN_CPU_MS": [191.1, 60008.8, 15.7, 20.0]}
+OK   daemon-entry-head.json: tool digest equals the tool at 9e00252a
+INFO daemon-entry-head.json control: exit 0 passed 16 skipped None failed []
+INFO daemon-entry-head.json R1-flag-between-branches: exit 1 passed 15 skipped None failed ['OC app sits inside the `dossier` or the `polaris` branch, before the daemon path']
+INFO daemon-entry-head.json R2-flag-createRequire-before-daemon: exit 1 passed 15 skipped None failed ['OC app sits inside the `dossier` or the `polaris` branch, before the daemon path']
+INFO daemon-entry-head.json R3-runtime-hook: exit 1 passed 15 skipped None failed ['OC app sits inside the `dossier` or the `polaris` branch, before the daemon path']
+INFO daemon-entry-head.json E-comment-in-branch: exit 0 passed 16 skipped None failed []
+INFO daemon-entry-head.json E-renamed-binding: exit 0 passed 16 skipped None failed []
+INFO daemon-entry-head.json E-branch-swap: exit 0 passed 16 skipped None failed []
+INFO daemon-entry-head.json E-type-only-import: exit 1 passed 15 skipped None failed ['OC app sits inside the `dossier` or the `polaris` branch, before the daemon path']
+INFO daemon-entry-head.json: 20 results, testFileFrom the tree, commit 722231fe
+OK   daemon-entry-base-test.json: tool digest equals the tool at 9e00252a
+INFO daemon-entry-base-test.json control: exit 0 passed 15 skipped None failed []
+INFO daemon-entry-base-test.json R1-flag-between-branches: exit 1 passed 14 skipped None failed ['the POC app: each import is dynamic and inside the `dossier` or `polaris` branch']
+INFO daemon-entry-base-test.json R2-flag-createRequire-before-daemon: exit 1 passed 14 skipped None failed ['the POC app: each import is dynamic and inside the `dossier` or `polaris` branch']
+INFO daemon-entry-base-test.json R3-runtime-hook: exit 1 passed 14 skipped None failed ['the POC app: each import is dynamic and inside the `dossier` or `polaris` branch']
+INFO daemon-entry-base-test.json E-comment-in-branch: exit 1 passed 14 skipped None failed ['the POC app: each import is dynamic and inside the `dossier` or `polaris` branch']
+INFO daemon-entry-base-test.json E-renamed-binding: exit 1 passed 14 skipped None failed ['the POC app: each import is dynamic and inside the `dossier` or `polaris` branch']
+INFO daemon-entry-base-test.json E-branch-swap: exit 1 passed 14 skipped None failed ['the POC app: each import is dynamic and inside the `dossier` or `polaris` branch']
+INFO daemon-entry-base-test.json E-type-only-import: exit 1 passed 14 skipped None failed ['the POC app: each import is dynamic and inside the `dossier` or `polaris` branch']
+INFO daemon-entry-base-test.json: 20 results, testFileFrom c104771f, commit 722231fe
+OK   daemon-entry-prior-test.json: tool digest equals the tool at 9e00252a
+INFO daemon-entry-prior-test.json control: exit 0 passed 16 skipped None failed []
+INFO daemon-entry-prior-test.json R1-flag-between-branches: exit 0 passed 16 skipped None failed []
+INFO daemon-entry-prior-test.json R2-flag-createRequire-before-daemon: exit 0 passed 16 skipped None failed []
+INFO daemon-entry-prior-test.json R3-runtime-hook: exit 0 passed 16 skipped None failed []
+INFO daemon-entry-prior-test.json E-comment-in-branch: exit 0 passed 16 skipped None failed []
+INFO daemon-entry-prior-test.json E-renamed-binding: exit 0 passed 16 skipped None failed []
+INFO daemon-entry-prior-test.json E-branch-swap: exit 0 passed 16 skipped None failed []
+INFO daemon-entry-prior-test.json E-type-only-import: exit 1 passed 15 skipped None failed ['the POC app sits in the `dossier` and `polaris` branches, before the daemon path']
+INFO daemon-entry-prior-test.json: 20 results, testFileFrom 447d9f08, commit 722231fe
+INFO record sides said "fail (by the test timeout)": ['reader-blocking-open/head', 'reader-no-depth-cap/base', 'reader-no-depth-cap/head', 'started-waits-for-bound/head'] ; sides with a byTimeout row: ['reader-blocking-open/head', 'reader-no-depth-cap/base', 'reader-no-depth-cap/head', 'started-waits-for-bound/head']
+OK   bound-and-pin-mutants.json: cases digest is the retained file
+INFO N2 kept dispositions: ['apps/three-surface-poc/src/polaris-generation/self-corpus.test.ts:11 (base), PINNED_MAIN', 'apps/three-surface-poc/src/polaris-generation/redis-shaped-discovery.test.ts:152,159 (base), the two [Observed] rows']
+TOTAL FAIL 0

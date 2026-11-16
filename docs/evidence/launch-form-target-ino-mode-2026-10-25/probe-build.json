@@ -1,0 +1,12 @@
+{
+ "what": "the build faithful_probe.mjs imported: launched.js compiled by tsc -b packages/polaris-dossier in the bead worktree at the fix commit, packages/ clean",
+ "fixCommit": "2a21f2b0e95e3731a3f975a0cbad8aaccd3a9b3b",
+ "distLaunchedJsSha256": "46b0c23e3d460e9bc6f844334adef8b35f1359ec3c21983656e3f3d9315e6756",
+ "probeSha256": "5cb93cb3639a5ed4e7249f2a0362201aba759e903149336e77784e03d70aa2c6",
+ "roundsPerPlant": 300,
+ "roots": {
+  "tmpfs": "/tmp/la-b835/fp-<arm>",
+  "ext4": "/var/tmp/la-b835/fp-<arm>"
+ },
+ "command": "node faithful_probe.mjs packages/polaris-dossier/dist <root> 300 [--selftest|--selftest-rename|--selftest-unlink-0644]"
+}

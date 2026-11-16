@@ -1,0 +1,5 @@
+{"label":"module-sync ahead of import","specifier":"conds","resolved":"file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-528/probe/node_modules/conds/sync.js"}
+{"label":"an imports target that starts with ../","specifier":"#up","error":"ERR_INVALID_PACKAGE_TARGET"}
+{"label":"an imports subpath pattern","specifier":"#pat/x","resolved":"file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-528/probe/app/lib/x.js"}
+{"label":"a dependency alias to the dossier package","specifier":"dossier","resolved":"file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-528/d/packages/polaris-dossier/dist/index.js"}
+{"node":"v24.6.0"}

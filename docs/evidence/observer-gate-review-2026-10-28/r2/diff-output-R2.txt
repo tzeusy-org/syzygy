@@ -1,0 +1,58 @@
+
+ RUN  v3.2.7 /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-556-r2/clone
+
+ ❯ |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/git-observation.test.ts (16 tests | 1 failed | 15 skipped) 275ms
+   ↓ read-only Git observation > binds only the approved resolved locator and its exact Git common directory
+   ↓ read-only Git observation > keeps the approved locator byte-equal to the act-bound consent mapping
+   ↓ read-only Git observation > rejects a second Butlers-shaped repository before any repository observation
+   ↓ read-only Git observation > rejects a mismatched Git common directory
+   ↓ read-only Git observation > allows unrelated dirty files while protecting POC runtime inputs
+   ↓ read-only Git observation > protects the HTTP host package the POC serves through
+   ↓ read-only Git observation > protects the clean-build script that build:poc runs
+   × read-only Git observation > refuses exactly the projects the POC start compiles or loads, and the files that define its build 271ms
+     → expected [ …(8) ] to deeply equal []
+   ↓ read-only Git observation > reads every protected project from tsconfig.base.json through its own extends chain
+   ↓ read-only Git observation > refuses a tree that builds packages/polaris-generation-core into another package's dist
+   ↓ read-only Git observation > refuses a tree that builds packages/cap1-daemon into another package's dist
+   ↓ read-only Git observation > identifies clean and dirty states without refreshing the index
+   ↓ read-only Git observation > retains a protected source path when it is renamed out
+   ↓ read-only Git observation > computes a metadata-only changed/added horizon between revisions
+   ↓ read-only Git observation > reads the observed-project limb between two evaluated revisions, and Unknown when the comparison fails (syzygy-u05.2)
+   ↓ read-only Git observation > counts Syzygy commits since the build revision for the observatory limb, Unknown when unreadable (syzygy-u05.2)
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 15 skipped (16)
+   Start at  23:15:38
+   Duration  2.68s (transform 283ms, setup 16ms, collect 1.16s, tests 275ms, environment 0ms, prepare 93ms)
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation > refuses exactly the projects the POC start compiles or loads, and the files that define its build
+AssertionError: expected [ …(8) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "docs/apps/three-surface-poc/a.ts: refused",
++   "docs/packages/cap1-core/a.ts: refused",
++   "docs/packages/cap1-daemon/a.ts: refused",
++   "docs/packages/http-host/a.ts: refused",
++   "docs/packages/polaris-generation-consent/a.ts: refused",
++   "docs/packages/polaris-generation-core/a.ts: refused",
++   "docs/packages/support/a.ts: refused",
++   "docs/packages/three-surface-poc-core/a.ts: refused",
++ ]
+
+ ❯ apps/three-surface-poc/src/git-observation.test.ts:208:77
+    206|     const isInput = (path: string): boolean => exact.includes(path) ||…
+    207|     expect(population.filter((path) => pocObserverInputsAreClean({ cha…
+    208|       .map((path) => `${path}: ${isInput(path) ? 'accepted' : 'refused…
+       |                                                                             ^
+    209|     expect(tracked.filter(isInput).length).toBeGreaterThan(0);
+    210|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

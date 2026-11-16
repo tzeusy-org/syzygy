@@ -1,0 +1,8 @@
+{"mode": "term", "version": "new", "param": null, "inject": null, "exitCode": 143, "scriptExitAt": 3.549, "clean": true, "noSurvivor": true, "descendantsSeen": 15, "recordTests": null, "recordProfileRows": null}
+  events: [(0.1982, 'vitest worker seen', True), (3.2898, "tree at signal: ' M packages/polaris-generation-consent/src/", True), (3.29, 'sent SIGTERM to pid', True)]
+{"mode": "hup", "version": "new", "param": null, "inject": null, "exitCode": 129, "scriptExitAt": 3.542, "clean": true, "noSurvivor": true, "descendantsSeen": 13, "recordTests": null, "recordProfileRows": null}
+  events: [(0.1972, 'vitest worker seen', True), (3.2801, "tree at signal: ' M packages/polaris-generation-consent/src/", True), (3.2803, 'sent SIGHUP to pid', True)]
+{"mode": "int-group", "version": "new", "param": null, "inject": null, "exitCode": -2, "scriptExitAt": 3.962, "clean": true, "noSurvivor": true, "descendantsSeen": 15, "recordTests": null, "recordProfileRows": null}
+  events: [(0.2144, 'vitest worker seen', True), (3.3652, "tree at signal: ' M packages/polaris-generation-consent/src/", True), (3.3654, 'sent SIGINT to group', True)]
+{"mode": "term-twice", "version": "new", "param": null, "inject": null, "exitCode": 143, "scriptExitAt": 3.645, "clean": true, "noSurvivor": true, "descendantsSeen": 15, "recordTests": null, "recordProfileRows": null}
+  events: [(0.2455, 'vitest worker seen', True), (3.3162, "tree at signal: ' M packages/polaris-generation-consent/src/", True), (3.3164, 'sent SIGTERM to pid', True), (3.505, 'sent SIGTERM to pid', True)]

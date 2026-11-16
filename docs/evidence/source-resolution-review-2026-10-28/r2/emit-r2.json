@@ -1,0 +1,296 @@
+{
+ "headFiles": 990,
+ "b10e4da9": {
+  ".d.ts.map": {
+   "ref": 520,
+   "refTests": 264,
+   "head": 245,
+   "headTests": 0,
+   "identical": 244,
+   "differ": [
+    {
+     "path": "apps/three-surface-poc/dist/git-observation.d.ts.map",
+     "fields": [
+      "mappings"
+     ]
+    }
+   ],
+   "onlyRefNonTest": [
+    "apps/three-surface-poc/dist/test-deep-dive-markers.d.ts.map",
+    "apps/three-surface-poc/dist/test-fixture-sweep.global-setup.d.ts.map",
+    "apps/three-surface-poc/dist/test-http-client.d.ts.map",
+    "packages/cap1-conformance/dist/fixtures/index.d.ts.map",
+    "packages/cap1-system/dist/effect-observer.d.ts.map",
+    "packages/cap1-system/dist/harness.d.ts.map",
+    "packages/polaris-dossier/dist/child-process.testkit.d.ts.map",
+    "packages/polaris-dossier/dist/fs-patch.testkit.d.ts.map",
+    "packages/polaris-generation-core/dist/workspace-reach.testkit.d.ts.map",
+    "packages/three-surface-poc-core/dist/test-cleanup.d.ts.map",
+    "packages/three-surface-poc-core/dist/test-frozen.d.ts.map"
+   ],
+   "onlyRefTests": 264,
+   "onlyHead": []
+  },
+  ".js.map": {
+   "ref": 520,
+   "refTests": 264,
+   "head": 245,
+   "headTests": 0,
+   "identical": 242,
+   "differ": [
+    {
+     "path": "apps/three-surface-poc/dist/git-observation.js.map",
+     "fields": [
+      "mappings"
+     ]
+    },
+    {
+     "path": "apps/three-surface-poc/dist/polaris-generation/generation-mutation.js.map",
+     "fields": [
+      "mappings"
+     ]
+    },
+    {
+     "path": "packages/polaris-dossier/dist/cli.js.map",
+     "fields": [
+      "mappings"
+     ]
+    }
+   ],
+   "onlyRefNonTest": [
+    "apps/three-surface-poc/dist/test-deep-dive-markers.js.map",
+    "apps/three-surface-poc/dist/test-fixture-sweep.global-setup.js.map",
+    "apps/three-surface-poc/dist/test-http-client.js.map",
+    "packages/cap1-conformance/dist/fixtures/index.js.map",
+    "packages/cap1-system/dist/effect-observer.js.map",
+    "packages/cap1-system/dist/harness.js.map",
+    "packages/polaris-dossier/dist/child-process.testkit.js.map",
+    "packages/polaris-dossier/dist/fs-patch.testkit.js.map",
+    "packages/polaris-generation-core/dist/workspace-reach.testkit.js.map",
+    "packages/three-surface-poc-core/dist/test-cleanup.js.map",
+    "packages/three-surface-poc-core/dist/test-frozen.js.map"
+   ],
+   "onlyRefTests": 264,
+   "onlyHead": []
+  },
+  ".d.ts": {
+   "ref": 520,
+   "refTests": 264,
+   "head": 245,
+   "headTests": 0,
+   "identical": 245,
+   "differ": [],
+   "onlyRefNonTest": [
+    "apps/three-surface-poc/dist/test-deep-dive-markers.d.ts",
+    "apps/three-surface-poc/dist/test-fixture-sweep.global-setup.d.ts",
+    "apps/three-surface-poc/dist/test-http-client.d.ts",
+    "packages/cap1-conformance/dist/fixtures/index.d.ts",
+    "packages/cap1-system/dist/effect-observer.d.ts",
+    "packages/cap1-system/dist/harness.d.ts",
+    "packages/polaris-dossier/dist/child-process.testkit.d.ts",
+    "packages/polaris-dossier/dist/fs-patch.testkit.d.ts",
+    "packages/polaris-generation-core/dist/workspace-reach.testkit.d.ts",
+    "packages/three-surface-poc-core/dist/test-cleanup.d.ts",
+    "packages/three-surface-poc-core/dist/test-frozen.d.ts"
+   ],
+   "onlyRefTests": 264,
+   "onlyHead": []
+  },
+  ".js": {
+   "ref": 520,
+   "refTests": 264,
+   "head": 245,
+   "headTests": 0,
+   "identical": 243,
+   "differ": [
+    {
+     "path": "apps/three-surface-poc/dist/git-observation.js",
+     "changedLines": [
+      "-    const exactInputs = new Set(['package.json', 'package-lock.json', 'tsconfig.base.json']);",
+      "+    // scripts/clean_build.mjs holds what `build:poc` removes and how it runs tsc (syzygy-bpyt.4.2).",
+      "+    const exactInputs = new Set(['package.json', 'package-lock.json', 'tsconfig.base.json', 'scripts/clean_build.mjs']);"
+     ]
+    },
+    {
+     "path": "apps/three-surface-poc/dist/polaris-generation/generation-mutation.js",
+     "changedLines": [
+      "-// Hand-listed semantic mutations, three per subject file, each disabling one",
+      "-// fail-closed guard the existing test suites already exercise.",
+      "+// Hand-listed semantic mutations, grouped by the file they target, each",
+      "+// disabling one fail-closed guard the existing test suites already exercise."
+     ]
+    }
+   ],
+   "onlyRefNonTest": [
+    "apps/three-surface-poc/dist/test-deep-dive-markers.js",
+    "apps/three-surface-poc/dist/test-fixture-sweep.global-setup.js",
+    "apps/three-surface-poc/dist/test-http-client.js",
+    "packages/cap1-conformance/dist/fixtures/index.js",
+    "packages/cap1-system/dist/effect-observer.js",
+    "packages/cap1-system/dist/harness.js",
+    "packages/polaris-dossier/dist/child-process.testkit.js",
+    "packages/polaris-dossier/dist/fs-patch.testkit.js",
+    "packages/polaris-generation-core/dist/workspace-reach.testkit.js",
+    "packages/three-surface-poc-core/dist/test-cleanup.js",
+    "packages/three-surface-poc-core/dist/test-frozen.js"
+   ],
+   "onlyRefTests": 264,
+   "onlyHead": []
+  },
+  "other": {
+   "ref": 12,
+   "refTests": 0,
+   "head": 10,
+   "headTests": 0,
+   "identical": 2,
+   "differ": [],
+   "onlyRefNonTest": [
+    "packages/cap1-conformance/dist/.tsbuildinfo",
+    "packages/cap1-system/dist/.tsbuildinfo"
+   ],
+   "onlyRefTests": 0,
+   "onlyHead": []
+  }
+ },
+ "a1b9bde2": {
+  ".d.ts.map": {
+   "ref": 521,
+   "refTests": 264,
+   "head": 245,
+   "headTests": 0,
+   "identical": 244,
+   "differ": [
+    {
+     "path": "apps/three-surface-poc/dist/git-observation.d.ts.map",
+     "fields": [
+      "mappings"
+     ]
+    }
+   ],
+   "onlyRefNonTest": [
+    "apps/three-surface-poc/dist/test-deep-dive-markers.d.ts.map",
+    "apps/three-surface-poc/dist/test-fixture-sweep.global-setup.d.ts.map",
+    "apps/three-surface-poc/dist/test-http-client.d.ts.map",
+    "packages/cap1-conformance/dist/fixtures/index.d.ts.map",
+    "packages/cap1-system/dist/effect-observer.d.ts.map",
+    "packages/cap1-system/dist/harness.d.ts.map",
+    "packages/polaris-dossier/dist/child-process.testkit.d.ts.map",
+    "packages/polaris-dossier/dist/fs-patch.testkit.d.ts.map",
+    "packages/polaris-generation-core/dist/workspace-reach.testkit.d.ts.map",
+    "packages/support/dist/purity.testkit.d.ts.map",
+    "packages/three-surface-poc-core/dist/test-cleanup.d.ts.map",
+    "packages/three-surface-poc-core/dist/test-frozen.d.ts.map"
+   ],
+   "onlyRefTests": 264,
+   "onlyHead": []
+  },
+  ".js.map": {
+   "ref": 521,
+   "refTests": 264,
+   "head": 245,
+   "headTests": 0,
+   "identical": 243,
+   "differ": [
+    {
+     "path": "apps/three-surface-poc/dist/git-observation.js.map",
+     "fields": [
+      "mappings"
+     ]
+    },
+    {
+     "path": "packages/polaris-dossier/dist/cli.js.map",
+     "fields": [
+      "mappings"
+     ]
+    }
+   ],
+   "onlyRefNonTest": [
+    "apps/three-surface-poc/dist/test-deep-dive-markers.js.map",
+    "apps/three-surface-poc/dist/test-fixture-sweep.global-setup.js.map",
+    "apps/three-surface-poc/dist/test-http-client.js.map",
+    "packages/cap1-conformance/dist/fixtures/index.js.map",
+    "packages/cap1-system/dist/effect-observer.js.map",
+    "packages/cap1-system/dist/harness.js.map",
+    "packages/polaris-dossier/dist/child-process.testkit.js.map",
+    "packages/polaris-dossier/dist/fs-patch.testkit.js.map",
+    "packages/polaris-generation-core/dist/workspace-reach.testkit.js.map",
+    "packages/support/dist/purity.testkit.js.map",
+    "packages/three-surface-poc-core/dist/test-cleanup.js.map",
+    "packages/three-surface-poc-core/dist/test-frozen.js.map"
+   ],
+   "onlyRefTests": 264,
+   "onlyHead": []
+  },
+  ".d.ts": {
+   "ref": 521,
+   "refTests": 264,
+   "head": 245,
+   "headTests": 0,
+   "identical": 245,
+   "differ": [],
+   "onlyRefNonTest": [
+    "apps/three-surface-poc/dist/test-deep-dive-markers.d.ts",
+    "apps/three-surface-poc/dist/test-fixture-sweep.global-setup.d.ts",
+    "apps/three-surface-poc/dist/test-http-client.d.ts",
+    "packages/cap1-conformance/dist/fixtures/index.d.ts",
+    "packages/cap1-system/dist/effect-observer.d.ts",
+    "packages/cap1-system/dist/harness.d.ts",
+    "packages/polaris-dossier/dist/child-process.testkit.d.ts",
+    "packages/polaris-dossier/dist/fs-patch.testkit.d.ts",
+    "packages/polaris-generation-core/dist/workspace-reach.testkit.d.ts",
+    "packages/support/dist/purity.testkit.d.ts",
+    "packages/three-surface-poc-core/dist/test-cleanup.d.ts",
+    "packages/three-surface-poc-core/dist/test-frozen.d.ts"
+   ],
+   "onlyRefTests": 264,
+   "onlyHead": []
+  },
+  ".js": {
+   "ref": 521,
+   "refTests": 264,
+   "head": 245,
+   "headTests": 0,
+   "identical": 244,
+   "differ": [
+    {
+     "path": "apps/three-surface-poc/dist/git-observation.js",
+     "changedLines": [
+      "-    const exactInputs = new Set(['package.json', 'package-lock.json', 'tsconfig.base.json']);",
+      "+    // scripts/clean_build.mjs holds what `build:poc` removes and how it runs tsc (syzygy-bpyt.4.2).",
+      "+    const exactInputs = new Set(['package.json', 'package-lock.json', 'tsconfig.base.json', 'scripts/clean_build.mjs']);"
+     ]
+    }
+   ],
+   "onlyRefNonTest": [
+    "apps/three-surface-poc/dist/test-deep-dive-markers.js",
+    "apps/three-surface-poc/dist/test-fixture-sweep.global-setup.js",
+    "apps/three-surface-poc/dist/test-http-client.js",
+    "packages/cap1-conformance/dist/fixtures/index.js",
+    "packages/cap1-system/dist/effect-observer.js",
+    "packages/cap1-system/dist/harness.js",
+    "packages/polaris-dossier/dist/child-process.testkit.js",
+    "packages/polaris-dossier/dist/fs-patch.testkit.js",
+    "packages/polaris-generation-core/dist/workspace-reach.testkit.js",
+    "packages/support/dist/purity.testkit.js",
+    "packages/three-surface-poc-core/dist/test-cleanup.js",
+    "packages/three-surface-poc-core/dist/test-frozen.js"
+   ],
+   "onlyRefTests": 264,
+   "onlyHead": []
+  },
+  "other": {
+   "ref": 12,
+   "refTests": 0,
+   "head": 10,
+   "headTests": 0,
+   "identical": 2,
+   "differ": [],
+   "onlyRefNonTest": [
+    "packages/cap1-conformance/dist/.tsbuildinfo",
+    "packages/cap1-system/dist/.tsbuildinfo"
+   ],
+   "onlyRefTests": 0,
+   "onlyHead": []
+  }
+ }
+}

@@ -1,0 +1,122 @@
+{
+ "subject": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+ "subjectSha256": "85c6ff80c4135d49c84637dc00146e1112524db235cb46102e07babd5e4b8cc4",
+ "baseCommit": "9070f7a05ccc88f492a63f527ed0dd25ec0b9a2e",
+ "note": "each mutant applied to the subject bytes named by subjectSha256 (working tree on baseCommit, committed unchanged next), then restored",
+ "tests": [
+  "packages/polaris-dossier/src/render.test.ts",
+  "apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.test.ts",
+  "apps/three-surface-poc/src/polaris-generation/dossier-quote-fidelity.test.ts"
+ ],
+ "mutants": [
+  {
+   "id": "number-not-reused",
+   "old": "    if (n === undefined) { n = onPage.size + 1; onPage.set(id, n); }",
+   "new": "    n = onPage.size + 1; onPage.set(id, n);",
+   "outcome": "killed"
+  },
+  {
+   "id": "number-global",
+   "old": "    let onPage = numbering.get(from);",
+   "new": "    let onPage = numbering.get('');",
+   "outcome": "killed"
+  },
+  {
+   "id": "cite-shows-id",
+   "old": "[${citeNumber(from, id)}]</a>${note}`;",
+   "new": "[${escape(id)}]</a>${note}`;",
+   "outcome": "killed"
+  },
+  {
+   "id": "cite-no-data-id",
+   "old": "<a class=\"cite\" href=\"${escape(href(from, target, 'exact-text'))}\" data-source-id=\"${escape(id)}\"",
+   "new": "<a class=\"cite\" href=\"${escape(href(from, target, 'exact-text'))}\"",
+   "outcome": "killed"
+  },
+  {
+   "id": "anchor-shows-digest",
+   "old": "${anchorAttributes(part.anchor, escape)}>[${citeNumber(from, part.sourceId)}]</a>",
+   "new": "${anchorAttributes(part.anchor, escape)}>[${escape(part.anchor.algorithm)}:${escape(part.anchor.identifier.slice(0, 12))}]</a>",
+   "outcome": "killed"
+  },
+  {
+   "id": "label-no-path",
+   "old": "`Source ${citeNumber(from, id)}: ${sources.get(id)!.path}`",
+   "new": "`Source ${citeNumber(from, id)}`",
+   "outcome": "killed"
+  },
+  {
+   "id": "prose-no-code",
+   "old": "escape(text).replace(/`([^`\\n]+)`/gu, '<code>$1</code>')",
+   "new": "escape(text)",
+   "outcome": "killed"
+  },
+  {
+   "id": "prose-greedy",
+   "old": "escape(text).replace(/`([^`\\n]+)`/gu, '<code>$1</code>')",
+   "new": "escape(text).replace(/`([^\\n]*)/gu, '<code>$1</code>')",
+   "outcome": "killed"
+  },
+  {
+   "id": "segment-escape",
+   "old": "    if (part.kind === 'prose') return prose(part.text);",
+   "new": "    if (part.kind === 'prose') return escape(part.text);",
+   "outcome": "killed"
+  },
+  {
+   "id": "theme-dropped",
+   "old": "`${LOCAL_CSS}${DOSSIER_THEME_CSS}`",
+   "new": "LOCAL_CSS",
+   "outcome": "killed"
+  },
+  {
+   "id": "theme-everywhere",
+   "old": "${chrome === undefined ? '' : `${LOCAL_CSS}${DOSSIER_THEME_CSS}`}",
+   "new": "${DOSSIER_THEME_CSS}${chrome === undefined ? '' : LOCAL_CSS}",
+   "outcome": "killed"
+  },
+  {
+   "id": "p1-table-bg-dropped",
+   "old": "margin:1rem 0;background:var(--panel)}",
+   "new": "margin:1rem 0}",
+   "outcome": "killed"
+  },
+  {
+   "id": "p2-light-amber-old",
+   "old": "--amber:#8f5300;--unknown:#8f5300;",
+   "new": "--amber:#a35f00;--unknown:#a35f00;",
+   "outcome": "killed"
+  },
+  {
+   "id": "p3-focus-is-proposed",
+   "old": "--proposed:#8fb0f0;--focus:#d0a8ff;",
+   "new": "--proposed:#8fb0f0;--focus:#8fb0f0;",
+   "outcome": "killed"
+  },
+  {
+   "id": "provider-numbered",
+   "old": "    if (local === undefined) return `<a href=",
+   "new": "    if (false) return `<a href=",
+   "outcome": "killed"
+  }
+ ],
+ "scannerSubject": {
+  "path": "packages/polaris-generation-core/src/dossier-page-scan.ts",
+  "sha256": "8042d76997e207417d81863fe777e2b3ad80401f155fce6271713509128fe5c3",
+  "test": "packages/polaris-generation-core/src/dossier-evaluation.test.ts",
+  "mutants": [
+   {
+    "id": "scan-data-id-ignored",
+    "old": "attrs.get('data-source-id') ?? /^Read source",
+    "new": "/^Read source",
+    "outcome": "killed"
+   },
+   {
+    "id": "scan-label-ignored",
+    "old": "attrs.get('data-source-id') ?? /^Read source (.+)$/u.exec(attrs.get('aria-label') ?? '')?.[1] ?? null",
+    "new": "attrs.get('data-source-id') ?? null",
+    "outcome": "killed"
+   }
+  ]
+ }
+}

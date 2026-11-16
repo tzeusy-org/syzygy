@@ -1,0 +1,927 @@
+{
+ "tree": "clone",
+ "head": "c90cd7327a24fee44d0e7135872a3b08277c73b0",
+ "results": [
+  {
+   "id": "FIX-alone",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  164 passed (164)"
+   ],
+   "testFiles": [
+    "Test Files  4 passed (4)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 11.5,
+   "counts": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "import { join } from 'node:path';\n",
+     "new": "import { readFileSync } from 'node:fs';\nimport { join } from 'node:path';\n"
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "    ['a tarball dependency', 'dossier', { dependencies: { dossier: 'lib-0.0.0.tgz' } }, {}],\n",
+     "new": "    ['a tarball dependency', 'dossier', { dependencies: { dossier: 'lib-0.0.0.tgz' } }, {}],\n    ['a ./ path dependency', 'dossier', { dependencies: { dossier: './lib' } }, {}],\n    ['a dependency on its own directory', 'dossier', { dependencies: { dossier: '.' } }, {}],\n    ['a .tar dependency', 'dossier', { dependencies: { dossier: 'lib-0.0.0.tar' } }, {}],\n    ['a .tar.gz dependency', 'dossier', { dependencies: { dossier: 'lib-0.0.0.tar.gz' } }, {}],\n"
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "    ['a git dependency', 'dossier', { dependencies: { dossier: 'github:someone/dossier' } }],\n",
+     "new": "    ['a git dependency', 'dossier', { dependencies: { dossier: 'github:someone/dossier' } }],\n    ['a registry tilde range', 'dossier', { dependencies: { dossier: '~1.2.3' } }],\n    ['a git dependency whose path holds .tgz', 'dossier', { dependencies: { dossier: 'git+https://example.com/lib.tgz.git' } }],\n"
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "    expect(WORKSPACE.manifests.get('syzygy-workspace')?.dir).toBe('.');\n",
+     "new": "    expect(WORKSPACE.manifests.get('syzygy-workspace')).toEqual({ dir: '.', ...JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8')) });\n"
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": "['main.ts', 'reader.mts', 'reader.cts', 'view.tsx', 'main.test.ts',",
+     "new": "['latest.ts', 'main.ts', 'reader.mts', 'reader.cts', 'view.tsx', 'notes.ts.md', 'main.test.ts',"
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": ".calls).toEqual(['main.ts', 'reader.cts', 'reader.mts', 'view.tsx']",
+     "new": ".calls).toEqual(['latest.ts', 'main.ts', 'reader.cts', 'reader.mts', 'view.tsx']"
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": "  it(\"names allow-execution's options as the dossier options policy's\", () => {\n",
+     "new": "  it('reads every src directory to its depth', () => {\n    expect(treeFiles()).toContain('apps/three-surface-poc/src/polaris-generation/self-corpus.ts');\n  });\n\n  it(\"names allow-execution's options as the dossier options policy's\", () => {\n"
+    }
+   ]
+  },
+  {
+   "id": "FIX+R1-dot-slash-dropped",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  2 failed | 162 passed (164)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed | 3 passed (4)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a ./ path dependency as naming no module",
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a dependency on its own directory as naming no module"
+   ],
+   "timeouts": 0,
+   "seconds": 10.5,
+   "counts": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "import { join } from 'node:path';\n",
+     "new": "import { readFileSync } from 'node:fs';\nimport { join } from 'node:path';\n"
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "    ['a tarball dependency', 'dossier', { dependencies: { dossier: 'lib-0.0.0.tgz' } }, {}],\n",
+     "new": "    ['a tarball dependency', 'dossier', { dependencies: { dossier: 'lib-0.0.0.tgz' } }, {}],\n    ['a ./ path dependency', 'dossier', { dependencies: { dossier: './lib' } }, {}],\n    ['a dependency on its own directory', 'dossier', { dependencies: { dossier: '.' } }, {}],\n    ['a .tar dependency', 'dossier', { dependencies: { dossier: 'lib-0.0.0.tar' } }, {}],\n    ['a .tar.gz dependency', 'dossier', { dependencies: { dossier: 'lib-0.0.0.tar.gz' } }, {}],\n"
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "    ['a git dependency', 'dossier', { dependencies: { dossier: 'github:someone/dossier' } }],\n",
+     "new": "    ['a git dependency', 'dossier', { dependencies: { dossier: 'github:someone/dossier' } }],\n    ['a registry tilde range', 'dossier', { dependencies: { dossier: '~1.2.3' } }],\n    ['a git dependency whose path holds .tgz', 'dossier', { dependencies: { dossier: 'git+https://example.com/lib.tgz.git' } }],\n"
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "    expect(WORKSPACE.manifests.get('syzygy-workspace')?.dir).toBe('.');\n",
+     "new": "    expect(WORKSPACE.manifests.get('syzygy-workspace')).toEqual({ dir: '.', ...JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8')) });\n"
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": "['main.ts', 'reader.mts', 'reader.cts', 'view.tsx', 'main.test.ts',",
+     "new": "['latest.ts', 'main.ts', 'reader.mts', 'reader.cts', 'view.tsx', 'notes.ts.md', 'main.test.ts',"
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": ".calls).toEqual(['main.ts', 'reader.cts', 'reader.mts', 'view.tsx']",
+     "new": ".calls).toEqual(['latest.ts', 'main.ts', 'reader.cts', 'reader.mts', 'view.tsx']"
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": "  it(\"names allow-execution's options as the dossier options policy's\", () => {\n",
+     "new": "  it('reads every src directory to its depth', () => {\n    expect(treeFiles()).toContain('apps/three-surface-poc/src/polaris-generation/self-corpus.ts');\n  });\n\n  it(\"names allow-execution's options as the dossier options policy's\", () => {\n"
+    }
+   ]
+  },
+  {
+   "id": "FIX+R2-bare-dot-dropped",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 163 passed (164)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed | 3 passed (4)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a dependency on its own directory as naming no module"
+   ],
+   "timeouts": 0,
+   "seconds": 16.3,
+   "counts": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?\\/|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "import { join } from 'node:path';\n",
+     "new": "import { readFileSync } from 'node:fs';\nimport { join } from 'node:path';\n"
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "    ['a tarball dependency', 'dossier', { dependencies: { dossier: 'lib-0.0.0.tgz' } }, {}],\n",
+     "new": "    ['a tarball dependency', 'dossier', { dependencies: { dossier: 'lib-0.0.0.tgz' } }, {}],\n    ['a ./ path dependency', 'dossier', { dependencies: { dossier: './lib' } }, {}],\n    ['a dependency on its own directory', 'dossier', { dependencies: { dossier: '.' } }, {}],\n    ['a .tar dependency', 'dossier', { dependencies: { dossier: 'lib-0.0.0.tar' } }, {}],\n    ['a .tar.gz dependency', 'dossier', { dependencies: { dossier: 'lib-0.0.0.tar.gz' } }, {}],\n"
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "    ['a git dependency', 'dossier', { dependencies: { dossier: 'github:someone/dossier' } }],\n",
+     "new": "    ['a git dependency', 'dossier', { dependencies: { dossier: 'github:someone/dossier' } }],\n    ['a registry tilde range', 'dossier', { dependencies: { dossier: '~1.2.3' } }],\n    ['a git dependency whose path holds .tgz', 'dossier', { dependencies: { dossier: 'git+https://example.com/lib.tgz.git' } }],\n"
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "    expect(WORKSPACE.manifests.get('syzygy-workspace')?.dir).toBe('.');\n",
+     "new": "    expect(WORKSPACE.manifests.get('syzygy-workspace')).toEqual({ dir: '.', ...JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8')) });\n"
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": "['main.ts', 'reader.mts', 'reader.cts', 'view.tsx', 'main.test.ts',",
+     "new": "['latest.ts', 'main.ts', 'reader.mts', 'reader.cts', 'view.tsx', 'notes.ts.md', 'main.test.ts',"
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": ".calls).toEqual(['main.ts', 'reader.cts', 'reader.mts', 'view.tsx']",
+     "new": ".calls).toEqual(['latest.ts', 'main.ts', 'reader.cts', 'reader.mts', 'view.tsx']"
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": "  it(\"names allow-execution's options as the dossier options policy's\", () => {\n",
+     "new": "  it('reads every src directory to its depth', () => {\n    expect(treeFiles()).toContain('apps/three-surface-poc/src/polaris-generation/self-corpus.ts');\n  });\n\n  it(\"names allow-execution's options as the dossier options policy's\", () => {\n"
+    }
+   ]
+  },
+  {
+   "id": "FIX+R3-tar-forms-dropped",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  2 failed | 162 passed (164)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed | 3 passed (4)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a .tar dependency as naming no module",
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a .tar.gz dependency as naming no module"
+   ],
+   "timeouts": 0,
+   "seconds": 18.0,
+   "counts": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.tgz$/iu;"
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "import { join } from 'node:path';\n",
+     "new": "import { readFileSync } from 'node:fs';\nimport { join } from 'node:path';\n"
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "    ['a tarball dependency', 'dossier', { dependencies: { dossier: 'lib-0.0.0.tgz' } }, {}],\n",
+     "new": "    ['a tarball dependency', 'dossier', { dependencies: { dossier: 'lib-0.0.0.tgz' } }, {}],\n    ['a ./ path dependency', 'dossier', { dependencies: { dossier: './lib' } }, {}],\n    ['a dependency on its own directory', 'dossier', { dependencies: { dossier: '.' } }, {}],\n    ['a .tar dependency', 'dossier', { dependencies: { dossier: 'lib-0.0.0.tar' } }, {}],\n    ['a .tar.gz dependency', 'dossier', { dependencies: { dossier: 'lib-0.0.0.tar.gz' } }, {}],\n"
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "    ['a git dependency', 'dossier', { dependencies: { dossier: 'github:someone/dossier' } }],\n",
+     "new": "    ['a git dependency', 'dossier', { dependencies: { dossier: 'github:someone/dossier' } }],\n    ['a registry tilde range', 'dossier', { dependencies: { dossier: '~1.2.3' } }],\n    ['a git dependency whose path holds .tgz', 'dossier', { dependencies: { dossier: 'git+https://example.com/lib.tgz.git' } }],\n"
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "    expect(WORKSPACE.manifests.get('syzygy-workspace')?.dir).toBe('.');\n",
+     "new": "    expect(WORKSPACE.manifests.get('syzygy-workspace')).toEqual({ dir: '.', ...JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8')) });\n"
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": "['main.ts', 'reader.mts', 'reader.cts', 'view.tsx', 'main.test.ts',",
+     "new": "['latest.ts', 'main.ts', 'reader.mts', 'reader.cts', 'view.tsx', 'notes.ts.md', 'main.test.ts',"
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": ".calls).toEqual(['main.ts', 'reader.cts', 'reader.mts', 'view.tsx']",
+     "new": ".calls).toEqual(['latest.ts', 'main.ts', 'reader.cts', 'reader.mts', 'view.tsx']"
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": "  it(\"names allow-execution's options as the dossier options policy's\", () => {\n",
+     "new": "  it('reads every src directory to its depth', () => {\n    expect(treeFiles()).toContain('apps/three-surface-poc/src/polaris-generation/self-corpus.ts');\n  });\n\n  it(\"names allow-execution's options as the dossier options policy's\", () => {\n"
+    }
+   ]
+  },
+  {
+   "id": "FIX+R4-tilde-loosened",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 163 passed (164)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed | 3 passed (4)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > leaves a bare name declared as a registry tilde range outside the workspace"
+   ],
+   "timeouts": 0,
+   "seconds": 18.1,
+   "counts": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~)|\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "import { join } from 'node:path';\n",
+     "new": "import { readFileSync } from 'node:fs';\nimport { join } from 'node:path';\n"
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "    ['a tarball dependency', 'dossier', { dependencies: { dossier: 'lib-0.0.0.tgz' } }, {}],\n",
+     "new": "    ['a tarball dependency', 'dossier', { dependencies: { dossier: 'lib-0.0.0.tgz' } }, {}],\n    ['a ./ path dependency', 'dossier', { dependencies: { dossier: './lib' } }, {}],\n    ['a dependency on its own directory', 'dossier', { dependencies: { dossier: '.' } }, {}],\n    ['a .tar dependency', 'dossier', { dependencies: { dossier: 'lib-0.0.0.tar' } }, {}],\n    ['a .tar.gz dependency', 'dossier', { dependencies: { dossier: 'lib-0.0.0.tar.gz' } }, {}],\n"
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "    ['a git dependency', 'dossier', { dependencies: { dossier: 'github:someone/dossier' } }],\n",
+     "new": "    ['a git dependency', 'dossier', { dependencies: { dossier: 'github:someone/dossier' } }],\n    ['a registry tilde range', 'dossier', { dependencies: { dossier: '~1.2.3' } }],\n    ['a git dependency whose path holds .tgz', 'dossier', { dependencies: { dossier: 'git+https://example.com/lib.tgz.git' } }],\n"
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "    expect(WORKSPACE.manifests.get('syzygy-workspace')?.dir).toBe('.');\n",
+     "new": "    expect(WORKSPACE.manifests.get('syzygy-workspace')).toEqual({ dir: '.', ...JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8')) });\n"
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": "['main.ts', 'reader.mts', 'reader.cts', 'view.tsx', 'main.test.ts',",
+     "new": "['latest.ts', 'main.ts', 'reader.mts', 'reader.cts', 'view.tsx', 'notes.ts.md', 'main.test.ts',"
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": ".calls).toEqual(['main.ts', 'reader.cts', 'reader.mts', 'view.tsx']",
+     "new": ".calls).toEqual(['latest.ts', 'main.ts', 'reader.cts', 'reader.mts', 'view.tsx']"
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": "  it(\"names allow-execution's options as the dossier options policy's\", () => {\n",
+     "new": "  it('reads every src directory to its depth', () => {\n    expect(treeFiles()).toContain('apps/three-surface-poc/src/polaris-generation/self-corpus.ts');\n  });\n\n  it(\"names allow-execution's options as the dossier options policy's\", () => {\n"
+    }
+   ]
+  },
+  {
+   "id": "FIX+R5-tarball-end-anchor-dropped",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 163 passed (164)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed | 3 passed (4)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > leaves a bare name declared as a git dependency whose path holds .tgz outside the workspace"
+   ],
+   "timeouts": 0,
+   "seconds": 14.3,
+   "counts": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)/iu;"
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "import { join } from 'node:path';\n",
+     "new": "import { readFileSync } from 'node:fs';\nimport { join } from 'node:path';\n"
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "    ['a tarball dependency', 'dossier', { dependencies: { dossier: 'lib-0.0.0.tgz' } }, {}],\n",
+     "new": "    ['a tarball dependency', 'dossier', { dependencies: { dossier: 'lib-0.0.0.tgz' } }, {}],\n    ['a ./ path dependency', 'dossier', { dependencies: { dossier: './lib' } }, {}],\n    ['a dependency on its own directory', 'dossier', { dependencies: { dossier: '.' } }, {}],\n    ['a .tar dependency', 'dossier', { dependencies: { dossier: 'lib-0.0.0.tar' } }, {}],\n    ['a .tar.gz dependency', 'dossier', { dependencies: { dossier: 'lib-0.0.0.tar.gz' } }, {}],\n"
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "    ['a git dependency', 'dossier', { dependencies: { dossier: 'github:someone/dossier' } }],\n",
+     "new": "    ['a git dependency', 'dossier', { dependencies: { dossier: 'github:someone/dossier' } }],\n    ['a registry tilde range', 'dossier', { dependencies: { dossier: '~1.2.3' } }],\n    ['a git dependency whose path holds .tgz', 'dossier', { dependencies: { dossier: 'git+https://example.com/lib.tgz.git' } }],\n"
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "    expect(WORKSPACE.manifests.get('syzygy-workspace')?.dir).toBe('.');\n",
+     "new": "    expect(WORKSPACE.manifests.get('syzygy-workspace')).toEqual({ dir: '.', ...JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8')) });\n"
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": "['main.ts', 'reader.mts', 'reader.cts', 'view.tsx', 'main.test.ts',",
+     "new": "['latest.ts', 'main.ts', 'reader.mts', 'reader.cts', 'view.tsx', 'notes.ts.md', 'main.test.ts',"
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": ".calls).toEqual(['main.ts', 'reader.cts', 'reader.mts', 'view.tsx']",
+     "new": ".calls).toEqual(['latest.ts', 'main.ts', 'reader.cts', 'reader.mts', 'view.tsx']"
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": "  it(\"names allow-execution's options as the dossier options policy's\", () => {\n",
+     "new": "  it('reads every src directory to its depth', () => {\n    expect(treeFiles()).toContain('apps/three-surface-poc/src/polaris-generation/self-corpus.ts');\n  });\n\n  it(\"names allow-execution's options as the dossier options policy's\", () => {\n"
+    }
+   ]
+  },
+  {
+   "id": "FIX+R6-root-dependencies-dropped",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 163 passed (164)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed | 3 passed (4)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads the workspace root's manifest beside the packages'"
+   ],
+   "timeouts": 0,
+   "seconds": 16.6,
+   "counts": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "manifests.set(root.name, { dir: '.', ...root });",
+     "new": "manifests.set(root.name, { dir: '.', name: root.name });"
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "import { join } from 'node:path';\n",
+     "new": "import { readFileSync } from 'node:fs';\nimport { join } from 'node:path';\n"
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "    ['a tarball dependency', 'dossier', { dependencies: { dossier: 'lib-0.0.0.tgz' } }, {}],\n",
+     "new": "    ['a tarball dependency', 'dossier', { dependencies: { dossier: 'lib-0.0.0.tgz' } }, {}],\n    ['a ./ path dependency', 'dossier', { dependencies: { dossier: './lib' } }, {}],\n    ['a dependency on its own directory', 'dossier', { dependencies: { dossier: '.' } }, {}],\n    ['a .tar dependency', 'dossier', { dependencies: { dossier: 'lib-0.0.0.tar' } }, {}],\n    ['a .tar.gz dependency', 'dossier', { dependencies: { dossier: 'lib-0.0.0.tar.gz' } }, {}],\n"
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "    ['a git dependency', 'dossier', { dependencies: { dossier: 'github:someone/dossier' } }],\n",
+     "new": "    ['a git dependency', 'dossier', { dependencies: { dossier: 'github:someone/dossier' } }],\n    ['a registry tilde range', 'dossier', { dependencies: { dossier: '~1.2.3' } }],\n    ['a git dependency whose path holds .tgz', 'dossier', { dependencies: { dossier: 'git+https://example.com/lib.tgz.git' } }],\n"
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "    expect(WORKSPACE.manifests.get('syzygy-workspace')?.dir).toBe('.');\n",
+     "new": "    expect(WORKSPACE.manifests.get('syzygy-workspace')).toEqual({ dir: '.', ...JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8')) });\n"
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": "['main.ts', 'reader.mts', 'reader.cts', 'view.tsx', 'main.test.ts',",
+     "new": "['latest.ts', 'main.ts', 'reader.mts', 'reader.cts', 'view.tsx', 'notes.ts.md', 'main.test.ts',"
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": ".calls).toEqual(['main.ts', 'reader.cts', 'reader.mts', 'view.tsx']",
+     "new": ".calls).toEqual(['latest.ts', 'main.ts', 'reader.cts', 'reader.mts', 'view.tsx']"
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": "  it(\"names allow-execution's options as the dossier options policy's\", () => {\n",
+     "new": "  it('reads every src directory to its depth', () => {\n    expect(treeFiles()).toContain('apps/three-surface-poc/src/polaris-generation/self-corpus.ts');\n  });\n\n  it(\"names allow-execution's options as the dossier options policy's\", () => {\n"
+    }
+   ]
+  },
+  {
+   "id": "FIX+C1-extension-end-anchor-dropped",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 163 passed (164)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed | 3 passed (4)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > reads every module TypeScript compiles under src, .mts, .cts and .tsx among them, and no test module"
+   ],
+   "timeouts": 0,
+   "seconds": 15.9,
+   "counts": [
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": "files.filter((module) => /\\.[cm]?tsx?$/u.test(module)",
+     "new": "files.filter((module) => /\\.[cm]?tsx?/u.test(module)"
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "import { join } from 'node:path';\n",
+     "new": "import { readFileSync } from 'node:fs';\nimport { join } from 'node:path';\n"
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "    ['a tarball dependency', 'dossier', { dependencies: { dossier: 'lib-0.0.0.tgz' } }, {}],\n",
+     "new": "    ['a tarball dependency', 'dossier', { dependencies: { dossier: 'lib-0.0.0.tgz' } }, {}],\n    ['a ./ path dependency', 'dossier', { dependencies: { dossier: './lib' } }, {}],\n    ['a dependency on its own directory', 'dossier', { dependencies: { dossier: '.' } }, {}],\n    ['a .tar dependency', 'dossier', { dependencies: { dossier: 'lib-0.0.0.tar' } }, {}],\n    ['a .tar.gz dependency', 'dossier', { dependencies: { dossier: 'lib-0.0.0.tar.gz' } }, {}],\n"
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "    ['a git dependency', 'dossier', { dependencies: { dossier: 'github:someone/dossier' } }],\n",
+     "new": "    ['a git dependency', 'dossier', { dependencies: { dossier: 'github:someone/dossier' } }],\n    ['a registry tilde range', 'dossier', { dependencies: { dossier: '~1.2.3' } }],\n    ['a git dependency whose path holds .tgz', 'dossier', { dependencies: { dossier: 'git+https://example.com/lib.tgz.git' } }],\n"
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "    expect(WORKSPACE.manifests.get('syzygy-workspace')?.dir).toBe('.');\n",
+     "new": "    expect(WORKSPACE.manifests.get('syzygy-workspace')).toEqual({ dir: '.', ...JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8')) });\n"
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": "['main.ts', 'reader.mts', 'reader.cts', 'view.tsx', 'main.test.ts',",
+     "new": "['latest.ts', 'main.ts', 'reader.mts', 'reader.cts', 'view.tsx', 'notes.ts.md', 'main.test.ts',"
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": ".calls).toEqual(['main.ts', 'reader.cts', 'reader.mts', 'view.tsx']",
+     "new": ".calls).toEqual(['latest.ts', 'main.ts', 'reader.cts', 'reader.mts', 'view.tsx']"
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": "  it(\"names allow-execution's options as the dossier options policy's\", () => {\n",
+     "new": "  it('reads every src directory to its depth', () => {\n    expect(treeFiles()).toContain('apps/three-surface-poc/src/polaris-generation/self-corpus.ts');\n  });\n\n  it(\"names allow-execution's options as the dossier options policy's\", () => {\n"
+    }
+   ]
+  },
+  {
+   "id": "FIX+C4-test-dot-dropped",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 163 passed (164)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed | 3 passed (4)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > reads every module TypeScript compiles under src, .mts, .cts and .tsx among them, and no test module"
+   ],
+   "timeouts": 0,
+   "seconds": 16.1,
+   "counts": [
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": "!/\\.test\\.[cm]?tsx?$/u.test(module)",
+     "new": "!/test\\.[cm]?tsx?$/u.test(module)"
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "import { join } from 'node:path';\n",
+     "new": "import { readFileSync } from 'node:fs';\nimport { join } from 'node:path';\n"
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "    ['a tarball dependency', 'dossier', { dependencies: { dossier: 'lib-0.0.0.tgz' } }, {}],\n",
+     "new": "    ['a tarball dependency', 'dossier', { dependencies: { dossier: 'lib-0.0.0.tgz' } }, {}],\n    ['a ./ path dependency', 'dossier', { dependencies: { dossier: './lib' } }, {}],\n    ['a dependency on its own directory', 'dossier', { dependencies: { dossier: '.' } }, {}],\n    ['a .tar dependency', 'dossier', { dependencies: { dossier: 'lib-0.0.0.tar' } }, {}],\n    ['a .tar.gz dependency', 'dossier', { dependencies: { dossier: 'lib-0.0.0.tar.gz' } }, {}],\n"
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "    ['a git dependency', 'dossier', { dependencies: { dossier: 'github:someone/dossier' } }],\n",
+     "new": "    ['a git dependency', 'dossier', { dependencies: { dossier: 'github:someone/dossier' } }],\n    ['a registry tilde range', 'dossier', { dependencies: { dossier: '~1.2.3' } }],\n    ['a git dependency whose path holds .tgz', 'dossier', { dependencies: { dossier: 'git+https://example.com/lib.tgz.git' } }],\n"
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "    expect(WORKSPACE.manifests.get('syzygy-workspace')?.dir).toBe('.');\n",
+     "new": "    expect(WORKSPACE.manifests.get('syzygy-workspace')).toEqual({ dir: '.', ...JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8')) });\n"
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": "['main.ts', 'reader.mts', 'reader.cts', 'view.tsx', 'main.test.ts',",
+     "new": "['latest.ts', 'main.ts', 'reader.mts', 'reader.cts', 'view.tsx', 'notes.ts.md', 'main.test.ts',"
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": ".calls).toEqual(['main.ts', 'reader.cts', 'reader.mts', 'view.tsx']",
+     "new": ".calls).toEqual(['latest.ts', 'main.ts', 'reader.cts', 'reader.mts', 'view.tsx']"
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": "  it(\"names allow-execution's options as the dossier options policy's\", () => {\n",
+     "new": "  it('reads every src directory to its depth', () => {\n    expect(treeFiles()).toContain('apps/three-surface-poc/src/polaris-generation/self-corpus.ts');\n  });\n\n  it(\"names allow-execution's options as the dossier options policy's\", () => {\n"
+    }
+   ]
+  },
+  {
+   "id": "FIX+S2-tree-not-recursive",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 163 passed (164)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed | 3 passed (4)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > reads every src directory to its depth"
+   ],
+   "timeouts": 0,
+   "seconds": 17.0,
+   "counts": [
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "oldCount": 1
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": "fs.readdirSync(path.join(ROOT, dir), { recursive: true, encoding: 'utf8' })",
+     "new": "fs.readdirSync(path.join(ROOT, dir), { encoding: 'utf8' })"
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "import { join } from 'node:path';\n",
+     "new": "import { readFileSync } from 'node:fs';\nimport { join } from 'node:path';\n"
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "    ['a tarball dependency', 'dossier', { dependencies: { dossier: 'lib-0.0.0.tgz' } }, {}],\n",
+     "new": "    ['a tarball dependency', 'dossier', { dependencies: { dossier: 'lib-0.0.0.tgz' } }, {}],\n    ['a ./ path dependency', 'dossier', { dependencies: { dossier: './lib' } }, {}],\n    ['a dependency on its own directory', 'dossier', { dependencies: { dossier: '.' } }, {}],\n    ['a .tar dependency', 'dossier', { dependencies: { dossier: 'lib-0.0.0.tar' } }, {}],\n    ['a .tar.gz dependency', 'dossier', { dependencies: { dossier: 'lib-0.0.0.tar.gz' } }, {}],\n"
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "    ['a git dependency', 'dossier', { dependencies: { dossier: 'github:someone/dossier' } }],\n",
+     "new": "    ['a git dependency', 'dossier', { dependencies: { dossier: 'github:someone/dossier' } }],\n    ['a registry tilde range', 'dossier', { dependencies: { dossier: '~1.2.3' } }],\n    ['a git dependency whose path holds .tgz', 'dossier', { dependencies: { dossier: 'git+https://example.com/lib.tgz.git' } }],\n"
+    },
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "    expect(WORKSPACE.manifests.get('syzygy-workspace')?.dir).toBe('.');\n",
+     "new": "    expect(WORKSPACE.manifests.get('syzygy-workspace')).toEqual({ dir: '.', ...JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8')) });\n"
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": "['main.ts', 'reader.mts', 'reader.cts', 'view.tsx', 'main.test.ts',",
+     "new": "['latest.ts', 'main.ts', 'reader.mts', 'reader.cts', 'view.tsx', 'notes.ts.md', 'main.test.ts',"
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": ".calls).toEqual(['main.ts', 'reader.cts', 'reader.mts', 'view.tsx']",
+     "new": ".calls).toEqual(['latest.ts', 'main.ts', 'reader.cts', 'reader.mts', 'view.tsx']"
+    },
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": "  it(\"names allow-execution's options as the dossier options policy's\", () => {\n",
+     "new": "  it('reads every src directory to its depth', () => {\n    expect(treeFiles()).toContain('apps/three-surface-poc/src/polaris-generation/self-corpus.ts');\n  });\n\n  it(\"names allow-execution's options as the dossier options policy's\", () => {\n"
+    }
+   ]
+  }
+ ]
+}

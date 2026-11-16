@@ -1,0 +1,268 @@
+{
+ "mutants": 19,
+ "tally": {
+  "test": 15,
+  "probe": 17,
+  "existing": 6
+ },
+ "rows": [
+  {
+   "id": "PR1-profile-opener-indent4",
+   "oldAtCode": 1,
+   "newAtCode": 0,
+   "ownCommit": "71325c81",
+   "ownCommitPresent": false,
+   "oldAtOwnCommit": null,
+   "verdict": "killed by test, probe, existing",
+   "killers": [
+    "test",
+    "probe",
+    "existing"
+   ]
+  },
+  {
+   "id": "PR2-profile-closer-any-whitespace",
+   "oldAtCode": 1,
+   "newAtCode": 0,
+   "ownCommit": "0d6e1ebb",
+   "ownCommitPresent": false,
+   "oldAtOwnCommit": null,
+   "verdict": "killed by test, probe",
+   "killers": [
+    "test",
+    "probe"
+   ]
+  },
+  {
+   "id": "PR3-profile-closer-strictly-longer",
+   "oldAtCode": 1,
+   "newAtCode": 0,
+   "ownCommit": "2174bdae",
+   "ownCommitPresent": false,
+   "oldAtOwnCommit": null,
+   "verdict": "killed by test, probe, existing",
+   "killers": [
+    "test",
+    "probe",
+    "existing"
+   ]
+  },
+  {
+   "id": "PR4-profile-backtick-info-allowed",
+   "oldAtCode": 1,
+   "newAtCode": 0,
+   "ownCommit": "3dbd47e2",
+   "ownCommitPresent": false,
+   "oldAtOwnCommit": null,
+   "verdict": "killed by test, probe, existing",
+   "killers": [
+    "test",
+    "probe",
+    "existing"
+   ]
+  },
+  {
+   "id": "PR5-profile-opener-tolerates-CR",
+   "oldAtCode": 1,
+   "newAtCode": 0,
+   "ownCommit": "a27cd5bf",
+   "ownCommitPresent": false,
+   "oldAtOwnCommit": null,
+   "verdict": "killed by test, probe",
+   "killers": [
+    "test",
+    "probe"
+   ]
+  },
+  {
+   "id": "L1-links-opener-spaces-only",
+   "oldAtCode": 1,
+   "newAtCode": 0,
+   "ownCommit": "f98b23a5",
+   "ownCommitPresent": false,
+   "oldAtOwnCommit": null,
+   "verdict": "killed by test, probe",
+   "killers": [
+    "test",
+    "probe"
+   ]
+  },
+  {
+   "id": "L2-links-closer-any-length",
+   "oldAtCode": 1,
+   "newAtCode": 23290,
+   "ownCommit": "24e196f4",
+   "ownCommitPresent": false,
+   "oldAtOwnCommit": null,
+   "verdict": "killed by test, probe",
+   "killers": [
+    "test",
+    "probe"
+   ]
+  },
+  {
+   "id": "L3-links-closer-any-fence-char",
+   "oldAtCode": 1,
+   "newAtCode": 0,
+   "ownCommit": "84c356da",
+   "ownCommitPresent": false,
+   "oldAtOwnCommit": null,
+   "verdict": "killed by test, probe",
+   "killers": [
+    "test",
+    "probe"
+   ]
+  },
+  {
+   "id": "L4-links-inline-span-needs-content",
+   "oldAtCode": 1,
+   "newAtCode": 0,
+   "ownCommit": "5538a186",
+   "ownCommitPresent": false,
+   "oldAtOwnCommit": null,
+   "verdict": "killed by test, probe",
+   "killers": [
+    "test",
+    "probe"
+   ]
+  },
+  {
+   "id": "E1-extraction-opener-indent3",
+   "oldAtCode": 1,
+   "newAtCode": 0,
+   "ownCommit": "7cb3567e",
+   "ownCommitPresent": false,
+   "oldAtOwnCommit": null,
+   "verdict": "killed by test, probe",
+   "killers": [
+    "test",
+    "probe"
+   ]
+  },
+  {
+   "id": "E2-extraction-closer-trim-both-sides",
+   "oldAtCode": 1,
+   "newAtCode": 0,
+   "ownCommit": "4a4bae3d",
+   "ownCommitPresent": false,
+   "oldAtOwnCommit": null,
+   "verdict": "killed by test, probe",
+   "killers": [
+    "test",
+    "probe"
+   ]
+  },
+  {
+   "id": "E3-extraction-closer-any-text",
+   "oldAtCode": 1,
+   "newAtCode": 1,
+   "ownCommit": "2725f513",
+   "ownCommitPresent": false,
+   "oldAtOwnCommit": null,
+   "verdict": "killed by test, probe",
+   "killers": [
+    "test",
+    "probe"
+   ]
+  },
+  {
+   "id": "R1-renderer-opener-indent4",
+   "oldAtCode": 1,
+   "newAtCode": 0,
+   "ownCommit": "55efd6f2",
+   "ownCommitPresent": false,
+   "oldAtOwnCommit": null,
+   "verdict": "killed by test",
+   "killers": [
+    "test"
+   ]
+  },
+  {
+   "id": "R2-renderer-closer-longer-than-opener",
+   "oldAtCode": 1,
+   "newAtCode": 0,
+   "ownCommit": "e043b9ac",
+   "ownCommitPresent": false,
+   "oldAtOwnCommit": null,
+   "verdict": "killed by test, probe, existing",
+   "killers": [
+    "test",
+    "probe",
+    "existing"
+   ]
+  },
+  {
+   "id": "R3-renderer-heading-depth-closer-longer",
+   "oldAtCode": 1,
+   "newAtCode": 0,
+   "ownCommit": "20ca4d27",
+   "ownCommitPresent": false,
+   "oldAtOwnCommit": null,
+   "verdict": "killed by test",
+   "killers": [
+    "test"
+   ]
+  },
+  {
+   "id": "K1-consent-opener-indent4",
+   "oldAtCode": 1,
+   "newAtCode": 0,
+   "ownCommit": "5eed8e00",
+   "ownCommitPresent": false,
+   "oldAtOwnCommit": null,
+   "verdict": "killed by probe",
+   "killers": [
+    "probe"
+   ]
+  },
+  {
+   "id": "K2-consent-closer-strictly-longer",
+   "oldAtCode": 1,
+   "newAtCode": 0,
+   "ownCommit": "539b4007",
+   "ownCommitPresent": false,
+   "oldAtOwnCommit": null,
+   "verdict": "killed by probe",
+   "killers": [
+    "probe"
+   ]
+  },
+  {
+   "id": "K3-consent-closer-any-text",
+   "oldAtCode": 1,
+   "newAtCode": 1,
+   "ownCommit": "7060c2cd",
+   "ownCommitPresent": false,
+   "oldAtOwnCommit": null,
+   "verdict": "killed by probe, existing",
+   "killers": [
+    "probe",
+    "existing"
+   ]
+  },
+  {
+   "id": "K4-consent-backtick-info-opens",
+   "oldAtCode": 1,
+   "newAtCode": 17,
+   "ownCommit": "df14e0d4",
+   "ownCommitPresent": false,
+   "oldAtOwnCommit": null,
+   "verdict": "killed by probe, existing",
+   "killers": [
+    "probe",
+    "existing"
+   ]
+  }
+ ],
+ "fails": [
+  "PR3-profile-closer-strictly-longer test: failed rows / summary disagree with failedCount",
+  "PR5-profile-opener-tolerates-CR test: failed rows / summary disagree with failedCount",
+  "L2-links-closer-any-length: old x1 new x23290 at 7e58cd1f",
+  "L3-links-closer-any-fence-char test: failed rows / summary disagree with failedCount",
+  "L4-links-inline-span-needs-content probe: killed flag True but evidence says False",
+  "E3-extraction-closer-any-text: old x1 new x1 at 7e58cd1f",
+  "R2-renderer-closer-longer-than-opener test: failed rows / summary disagree with failedCount",
+  "K3-consent-closer-any-text: old x1 new x1 at 7e58cd1f",
+  "K4-consent-backtick-info-opens: old x1 new x17 at 7e58cd1f"
+ ]
+}

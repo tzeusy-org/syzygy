@@ -1,0 +1,36 @@
+{
+ "tool": "suite_r3.py",
+ "commit": "d0467aeb44a1a980572118f20d322be519b72bbe",
+ "args": [
+  "--config",
+  "packages/cap1-system/vitest.config.ts"
+ ],
+ "exit": 0,
+ "seconds": 16,
+ "load": [
+  [
+   "39.89",
+   "38.34",
+   "39.35"
+  ],
+  [
+   "43.91",
+   "39.33",
+   "39.66"
+  ]
+ ],
+ "summary": {
+  "numTotalTests": 50,
+  "numPassedTests": 49,
+  "numFailedTests": 0,
+  "numPendingTests": 1,
+  "numTodoTests": 0,
+  "numTotalTestSuites": 21,
+  "numFailedTestSuites": 0,
+  "success": true
+ },
+ "failed": [],
+ "brokenFiles": [],
+ "stdoutTail": "JSON report written to /tmp/r532c-10/suite.json\n",
+ "stderrTail": ""
+}

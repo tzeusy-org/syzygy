@@ -1,0 +1,16 @@
+R-Y6-extra-namespace-call-in-cli killed 1 ['Tests  1 failed | 80 passed (81)'] 4.8 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > names readArgv only where the lift reads it: its declaration, an import or export of it, and the callee of a call
+R-Y7-extra-aliased-call-in-cli killed 1 ['Tests  1 failed | 80 passed (81)'] 5.2 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > names readArgv only where the lift reads it: its declaration, an import or export of it, and the callee of a call
+R-X6-package-imports-alias-to-the-barrel killed 1 ['Tests  1 failed | 26 passed (27)'] 6.7 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > reaches this package through argv.ts and state-directory.ts alone
+R-X6b-package-imports-alias-in-an-intermediate-module killed 1 ['Tests  1 failed | 26 passed (27)'] 6.7 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > reaches this package through argv.ts and state-directory.ts alone
+R-X6i-island-package-imports-alias-to-consent-root killed 1 ['Tests  1 failed | 3 passed (4)'] 5.5 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > reaches no island module from the CLI entry
+R-X6j-island-control-same-edge-by-name killed 1 ['Tests  1 failed | 3 passed (4)'] 5.1 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > reaches no island module from the CLI entry
+R-X9-node-condition-ahead-of-import-in-the-argv-export killed 1 ['Tests  2 failed | 25 passed (27)'] 6.0 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > reaches this package through argv.ts and state-directory.ts alone
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > resolves every workspace specifier on it, and reaches past the entry's own imports
+wrote named-head.json 7

@@ -1,0 +1,3348 @@
+{
+ "tool": "check_removals.py",
+ "base": "546f1ff066e2ffef749c757cdb4621336039113b",
+ "headRecordCommits": [
+  "1785a9057447c84ceada71ac00d63ee044dae177"
+ ],
+ "fullRuns": [
+  {
+   "run": "full-1.log",
+   "commit": "1785a9057447c84ceada71ac00d63ee044dae177",
+   "conclusion": "exit 1"
+  },
+  {
+   "run": "full-2.log",
+   "commit": "1785a9057447c84ceada71ac00d63ee044dae177",
+   "conclusion": "exit 1"
+  },
+  {
+   "run": "full-3.log",
+   "commit": "1785a9057447c84ceada71ac00d63ee044dae177",
+   "conclusion": "exit 1"
+  },
+  {
+   "run": "full-4.log",
+   "commit": "1785a9057447c84ceada71ac00d63ee044dae177",
+   "conclusion": "exit 1"
+  },
+  {
+   "run": "full-5.log",
+   "commit": "1785a9057447c84ceada71ac00d63ee044dae177",
+   "conclusion": "exit 1"
+  }
+ ],
+ "later": {
+  "path": "docs/evidence/syzygy-bpyt-4-31/later-observations.json",
+  "sites": [
+   "apps/three-surface-poc/src/polaris-generation/dossier-cap-measure.test.ts:12"
+  ]
+ },
+ "rule": "DECISIONS.json is decide.py's output at the base; HEAD-SITE-DURATIONS.json is site_durations.py run over the base census and the\nrecords re-measured at the head (5 alone runs of each file with a removal), which HEAD-RECORDS-DIR holds; FULL-RUNS.json is ci_durations.py --local over saved\nlogs of full `npx vitest run` runs at the head, where every removed timeout has fallen back to vitest's default; LATER.json lists\nobservations of removed sites made after those runs, each with its source. A removal holds when\n\n  alone   the head records observed it at least 5 times, every observation passed, and its worst is at or under its threshold;\n  full    in every full run the site is bounded at or under its threshold: a test by its own line, which must be a pass (in a\n          file that passed, no line means under 300 ms; a file with a failure lists every test, so there no line bounds nothing),\n          and a hook by its file's duration less the tests listed beneath it;\n  later   no observation in LATER.json ran past its threshold.",
+ "removals": 58,
+ "holding": 48,
+ "notHolding": [
+  "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts:91",
+  "apps/three-surface-poc/src/polaris-generation/dossier-cap-measure.test.ts:12",
+  "apps/three-surface-poc/src/polaris-generation/draft-preview.browser.test.ts:47",
+  "apps/three-surface-poc/src/polaris-generation/self-corpus.test.ts:46",
+  "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts:316",
+  "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts:352",
+  "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts:370",
+  "apps/three-surface-poc/src/surface-routes.test.ts:537",
+  "packages/polaris-dossier/src/no-egress.test.ts:84",
+  "packages/polaris-dossier/src/no-egress.test.ts:92"
+ ],
+ "rows": [
+  {
+   "site": "apps/three-surface-poc/src/cdp-browser.test.ts:335",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "title": "removes the singleton directory read while Chrome ran, with the profile, and only that one",
+   "suites": [
+    "Chrome singleton directory (syzygy-bpyt.4.11)"
+   ],
+   "alone": {
+    "holds": true,
+    "record": "cdp-browser.test.tests.json",
+    "recordCommit": "1785a9057447c84ceada71ac00d63ee044dae177",
+    "observations": 5,
+    "worstMs": 2,
+    "anyFailed": false,
+    "loadRange": [
+     41.78,
+     45.27
+    ]
+   },
+   "full": {
+    "holds": true,
+    "bounds": [
+     {
+      "run": "full-1.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-2.log",
+      "boundMs": 1,
+      "why": "own lines [1]"
+     },
+     {
+      "run": "full-3.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-4.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-5.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     }
+    ]
+   },
+   "later": {
+    "holds": true,
+    "observations": "none listed"
+   },
+   "holds": true
+  },
+  {
+   "site": "apps/three-surface-poc/src/cdp-browser.test.ts:344",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "title": "reads the directory from the profile's link when none was read while Chrome ran",
+   "suites": [
+    "Chrome singleton directory (syzygy-bpyt.4.11)"
+   ],
+   "alone": {
+    "holds": true,
+    "record": "cdp-browser.test.tests.json",
+    "recordCommit": "1785a9057447c84ceada71ac00d63ee044dae177",
+    "observations": 5,
+    "worstMs": 1,
+    "anyFailed": false,
+    "loadRange": [
+     41.78,
+     45.27
+    ]
+   },
+   "full": {
+    "holds": true,
+    "bounds": [
+     {
+      "run": "full-1.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-2.log",
+      "boundMs": 1,
+      "why": "own lines [1]"
+     },
+     {
+      "run": "full-3.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-4.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-5.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     }
+    ]
+   },
+   "later": {
+    "holds": true,
+    "observations": "none listed"
+   },
+   "holds": true
+  },
+  {
+   "site": "apps/three-surface-poc/src/cdp-browser.test.ts:351",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "title": "removes the Chromium form of the name too",
+   "suites": [
+    "Chrome singleton directory (syzygy-bpyt.4.11)"
+   ],
+   "alone": {
+    "holds": true,
+    "record": "cdp-browser.test.tests.json",
+    "recordCommit": "1785a9057447c84ceada71ac00d63ee044dae177",
+    "observations": 5,
+    "worstMs": 1,
+    "anyFailed": false,
+    "loadRange": [
+     41.78,
+     45.27
+    ]
+   },
+   "full": {
+    "holds": true,
+    "bounds": [
+     {
+      "run": "full-1.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-2.log",
+      "boundMs": 1,
+      "why": "own lines [1]"
+     },
+     {
+      "run": "full-3.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-4.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-5.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     }
+    ]
+   },
+   "later": {
+    "holds": true,
+    "observations": "none listed"
+   },
+   "holds": true
+  },
+  {
+   "site": "apps/three-surface-poc/src/cdp-browser.test.ts:364",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "title": "removes the name without a leading dot too, which Chrome 147 to 155 make, whether given or read from the link",
+   "suites": [
+    "Chrome singleton directory (syzygy-bpyt.4.11)"
+   ],
+   "alone": {
+    "holds": true,
+    "record": "cdp-browser.test.tests.json",
+    "recordCommit": "1785a9057447c84ceada71ac00d63ee044dae177",
+    "observations": 5,
+    "worstMs": 74,
+    "anyFailed": false,
+    "loadRange": [
+     41.78,
+     45.27
+    ]
+   },
+   "full": {
+    "holds": true,
+    "bounds": [
+     {
+      "run": "full-1.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-2.log",
+      "boundMs": 1,
+      "why": "own lines [1]"
+     },
+     {
+      "run": "full-3.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-4.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-5.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     }
+    ]
+   },
+   "later": {
+    "holds": true,
+    "observations": "none listed"
+   },
+   "holds": true
+  },
+  {
+   "site": "apps/three-surface-poc/src/cdp-browser.test.ts:371",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "title": "removes the profile and nothing else when Chrome left no singleton directory (a clean exit)",
+   "suites": [
+    "Chrome singleton directory (syzygy-bpyt.4.11)"
+   ],
+   "alone": {
+    "holds": true,
+    "record": "cdp-browser.test.tests.json",
+    "recordCommit": "1785a9057447c84ceada71ac00d63ee044dae177",
+    "observations": 5,
+    "worstMs": 1,
+    "anyFailed": false,
+    "loadRange": [
+     41.78,
+     45.27
+    ]
+   },
+   "full": {
+    "holds": true,
+    "bounds": [
+     {
+      "run": "full-1.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-2.log",
+      "boundMs": 1,
+      "why": "own lines [1]"
+     },
+     {
+      "run": "full-3.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-4.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-5.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     }
+    ]
+   },
+   "later": {
+    "holds": true,
+    "observations": "none listed"
+   },
+   "holds": true
+  },
+  {
+   "site": "apps/three-surface-poc/src/cdp-browser.test.ts:383",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "title": "keeps a directory that is not directly under the temp directory, whether it was given or read from the link",
+   "suites": [
+    "Chrome singleton directory (syzygy-bpyt.4.11)"
+   ],
+   "alone": {
+    "holds": true,
+    "record": "cdp-browser.test.tests.json",
+    "recordCommit": "1785a9057447c84ceada71ac00d63ee044dae177",
+    "observations": 5,
+    "worstMs": 1,
+    "anyFailed": false,
+    "loadRange": [
+     41.78,
+     45.27
+    ]
+   },
+   "full": {
+    "holds": true,
+    "bounds": [
+     {
+      "run": "full-1.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-2.log",
+      "boundMs": 1,
+      "why": "own lines [1]"
+     },
+     {
+      "run": "full-3.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-4.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-5.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     }
+    ]
+   },
+   "later": {
+    "holds": true,
+    "observations": "none listed"
+   },
+   "holds": true
+  },
+  {
+   "site": "apps/three-surface-poc/src/cdp-browser.test.ts:401",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "title": "keeps a directory whose name is not exactly Chrome's: another prefix, no suffix, a longer name, a symbol in the suffix",
+   "suites": [
+    "Chrome singleton directory (syzygy-bpyt.4.11)"
+   ],
+   "alone": {
+    "holds": true,
+    "record": "cdp-browser.test.tests.json",
+    "recordCommit": "1785a9057447c84ceada71ac00d63ee044dae177",
+    "observations": 5,
+    "worstMs": 9,
+    "anyFailed": false,
+    "loadRange": [
+     41.78,
+     45.27
+    ]
+   },
+   "full": {
+    "holds": true,
+    "bounds": [
+     {
+      "run": "full-1.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-2.log",
+      "boundMs": 3,
+      "why": "own lines [3]"
+     },
+     {
+      "run": "full-3.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-4.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-5.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     }
+    ]
+   },
+   "later": {
+    "holds": true,
+    "observations": "none listed"
+   },
+   "holds": true
+  },
+  {
+   "site": "apps/three-surface-poc/src/cdp-browser.test.ts:417",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "title": "follows no link and removes no file: a link to a directory and a plain file with Chrome's name both stay",
+   "suites": [
+    "Chrome singleton directory (syzygy-bpyt.4.11)"
+   ],
+   "alone": {
+    "holds": true,
+    "record": "cdp-browser.test.tests.json",
+    "recordCommit": "1785a9057447c84ceada71ac00d63ee044dae177",
+    "observations": 5,
+    "worstMs": 1,
+    "anyFailed": false,
+    "loadRange": [
+     41.78,
+     45.27
+    ]
+   },
+   "full": {
+    "holds": true,
+    "bounds": [
+     {
+      "run": "full-1.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-2.log",
+      "boundMs": 1,
+      "why": "own lines [1]"
+     },
+     {
+      "run": "full-3.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-4.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-5.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     }
+    ]
+   },
+   "later": {
+    "holds": true,
+    "observations": "none listed"
+   },
+   "holds": true
+  },
+  {
+   "site": "apps/three-surface-poc/src/cdp-browser.test.ts:426",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "title": "keeps a directory that belongs to another user, never entering it",
+   "suites": [
+    "Chrome singleton directory (syzygy-bpyt.4.11)"
+   ],
+   "alone": {
+    "holds": true,
+    "record": "cdp-browser.test.tests.json",
+    "recordCommit": "1785a9057447c84ceada71ac00d63ee044dae177",
+    "observations": 5,
+    "worstMs": 4,
+    "anyFailed": false,
+    "loadRange": [
+     41.78,
+     45.27
+    ]
+   },
+   "full": {
+    "holds": true,
+    "bounds": [
+     {
+      "run": "full-1.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-2.log",
+      "boundMs": 2,
+      "why": "own lines [2]"
+     },
+     {
+      "run": "full-3.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-4.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-5.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     }
+    ]
+   },
+   "later": {
+    "holds": true,
+    "observations": "none listed"
+   },
+   "holds": true
+  },
+  {
+   "site": "apps/three-surface-poc/src/cdp-browser.test.ts:439",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "title": "checks no user where the system has no user ids, and removes the directory",
+   "suites": [
+    "Chrome singleton directory (syzygy-bpyt.4.11)"
+   ],
+   "alone": {
+    "holds": true,
+    "record": "cdp-browser.test.tests.json",
+    "recordCommit": "1785a9057447c84ceada71ac00d63ee044dae177",
+    "observations": 5,
+    "worstMs": 1,
+    "anyFailed": false,
+    "loadRange": [
+     41.78,
+     45.27
+    ]
+   },
+   "full": {
+    "holds": true,
+    "bounds": [
+     {
+      "run": "full-1.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-2.log",
+      "boundMs": 1,
+      "why": "own lines [1]"
+     },
+     {
+      "run": "full-3.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-4.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-5.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     }
+    ]
+   },
+   "later": {
+    "holds": true,
+    "observations": "none listed"
+   },
+   "holds": true
+  },
+  {
+   "site": "apps/three-surface-poc/src/cdp-browser.test.ts:445",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "title": "removes the directory a profile's link names when the profile and the link are the running user's, whatever removes the profile",
+   "suites": [
+    "Chrome singleton directory (syzygy-bpyt.4.11)"
+   ],
+   "alone": {
+    "holds": true,
+    "record": "cdp-browser.test.tests.json",
+    "recordCommit": "1785a9057447c84ceada71ac00d63ee044dae177",
+    "observations": 5,
+    "worstMs": 2,
+    "anyFailed": false,
+    "loadRange": [
+     41.78,
+     45.27
+    ]
+   },
+   "full": {
+    "holds": true,
+    "bounds": [
+     {
+      "run": "full-1.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-2.log",
+      "boundMs": 1,
+      "why": "own lines [1]"
+     },
+     {
+      "run": "full-3.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-4.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-5.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     }
+    ]
+   },
+   "later": {
+    "holds": true,
+    "observations": "none listed"
+   },
+   "holds": true
+  },
+  {
+   "site": "apps/three-surface-poc/src/cdp-browser.test.ts:451",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "title": "keeps the directory a link names when the profile is not the running user's, as in a shared temp directory where another user made it first",
+   "suites": [
+    "Chrome singleton directory (syzygy-bpyt.4.11)"
+   ],
+   "alone": {
+    "holds": true,
+    "record": "cdp-browser.test.tests.json",
+    "recordCommit": "1785a9057447c84ceada71ac00d63ee044dae177",
+    "observations": 5,
+    "worstMs": 1,
+    "anyFailed": false,
+    "loadRange": [
+     41.78,
+     45.27
+    ]
+   },
+   "full": {
+    "holds": true,
+    "bounds": [
+     {
+      "run": "full-1.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-2.log",
+      "boundMs": 1,
+      "why": "own lines [1]"
+     },
+     {
+      "run": "full-3.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-4.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-5.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     }
+    ]
+   },
+   "later": {
+    "holds": true,
+    "observations": "none listed"
+   },
+   "holds": true
+  },
+  {
+   "site": "apps/three-surface-poc/src/cdp-browser.test.ts:458",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "title": "keeps the directory a link names when the link is not the running user's",
+   "suites": [
+    "Chrome singleton directory (syzygy-bpyt.4.11)"
+   ],
+   "alone": {
+    "holds": true,
+    "record": "cdp-browser.test.tests.json",
+    "recordCommit": "1785a9057447c84ceada71ac00d63ee044dae177",
+    "observations": 5,
+    "worstMs": 1,
+    "anyFailed": false,
+    "loadRange": [
+     41.78,
+     45.27
+    ]
+   },
+   "full": {
+    "holds": true,
+    "bounds": [
+     {
+      "run": "full-1.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-2.log",
+      "boundMs": 1,
+      "why": "own lines [1]"
+     },
+     {
+      "run": "full-3.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-4.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-5.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     }
+    ]
+   },
+   "later": {
+    "holds": true,
+    "observations": "none listed"
+   },
+   "holds": true
+  },
+  {
+   "site": "apps/three-surface-poc/src/cdp-browser.test.ts:470",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "title": "keeps a directory made under the same name after the one that was read, as when Chrome exits cleanly and another Chrome follows",
+   "suites": [
+    "Chrome singleton directory (syzygy-bpyt.4.11)"
+   ],
+   "alone": {
+    "holds": true,
+    "record": "cdp-browser.test.tests.json",
+    "recordCommit": "1785a9057447c84ceada71ac00d63ee044dae177",
+    "observations": 5,
+    "worstMs": 0,
+    "anyFailed": false,
+    "loadRange": [
+     41.78,
+     45.27
+    ]
+   },
+   "full": {
+    "holds": true,
+    "bounds": [
+     {
+      "run": "full-1.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-2.log",
+      "boundMs": 1,
+      "why": "own lines [1]"
+     },
+     {
+      "run": "full-3.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-4.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-5.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     }
+    ]
+   },
+   "later": {
+    "holds": true,
+    "observations": "none listed"
+   },
+   "holds": true
+  },
+  {
+   "site": "apps/three-surface-poc/src/cdp-browser.test.ts:478",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "title": "keeps a directory with the recorded inode number on another device",
+   "suites": [
+    "Chrome singleton directory (syzygy-bpyt.4.11)"
+   ],
+   "alone": {
+    "holds": true,
+    "record": "cdp-browser.test.tests.json",
+    "recordCommit": "1785a9057447c84ceada71ac00d63ee044dae177",
+    "observations": 5,
+    "worstMs": 0,
+    "anyFailed": false,
+    "loadRange": [
+     41.78,
+     45.27
+    ]
+   },
+   "full": {
+    "holds": true,
+    "bounds": [
+     {
+      "run": "full-1.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-2.log",
+      "boundMs": 0,
+      "why": "own lines [0]"
+     },
+     {
+      "run": "full-3.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-4.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-5.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     }
+    ]
+   },
+   "later": {
+    "holds": true,
+    "observations": "none listed"
+   },
+   "holds": true
+  },
+  {
+   "site": "apps/three-surface-poc/src/cdp-browser.test.ts:489",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "title": "does not fail the run when the singleton directory cannot be removed",
+   "suites": [
+    "Chrome singleton directory (syzygy-bpyt.4.11)"
+   ],
+   "alone": {
+    "holds": true,
+    "record": "cdp-browser.test.tests.json",
+    "recordCommit": "1785a9057447c84ceada71ac00d63ee044dae177",
+    "observations": 5,
+    "worstMs": 1,
+    "anyFailed": false,
+    "loadRange": [
+     41.78,
+     45.27
+    ]
+   },
+   "full": {
+    "holds": true,
+    "bounds": [
+     {
+      "run": "full-1.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-2.log",
+      "boundMs": 1,
+      "why": "own lines [1]"
+     },
+     {
+      "run": "full-3.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-4.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-5.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     }
+    ]
+   },
+   "later": {
+    "holds": true,
+    "observations": "none listed"
+   },
+   "holds": true
+  },
+  {
+   "site": "apps/three-surface-poc/src/fixture-directories.test.ts:63",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "title": "removes the copy and the template of a process that is gone",
+   "suites": [
+    "fixture directories a killed run left behind (syzygy-bpyt.4.10)"
+   ],
+   "alone": {
+    "holds": true,
+    "record": "fixture-directories.test.tests.json",
+    "recordCommit": "1785a9057447c84ceada71ac00d63ee044dae177",
+    "observations": 5,
+    "worstMs": 61,
+    "anyFailed": false,
+    "loadRange": [
+     36.82,
+     40.43
+    ]
+   },
+   "full": {
+    "holds": true,
+    "bounds": [
+     {
+      "run": "full-1.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-2.log",
+      "boundMs": 356,
+      "why": "own lines [356]"
+     },
+     {
+      "run": "full-3.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-4.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-5.log",
+      "boundMs": 467,
+      "why": "own lines [467]"
+     }
+    ]
+   },
+   "later": {
+    "holds": true,
+    "observations": "none listed"
+   },
+   "holds": true
+  },
+  {
+   "site": "apps/three-surface-poc/src/fixture-directories.test.ts:71",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "title": "keeps the directories of a live process, the current one included",
+   "suites": [
+    "fixture directories a killed run left behind (syzygy-bpyt.4.10)"
+   ],
+   "alone": {
+    "holds": true,
+    "record": "fixture-directories.test.tests.json",
+    "recordCommit": "1785a9057447c84ceada71ac00d63ee044dae177",
+    "observations": 5,
+    "worstMs": 1,
+    "anyFailed": false,
+    "loadRange": [
+     36.82,
+     40.43
+    ]
+   },
+   "full": {
+    "holds": true,
+    "bounds": [
+     {
+      "run": "full-1.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-2.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-3.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-4.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-5.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     }
+    ]
+   },
+   "later": {
+    "holds": true,
+    "observations": "none listed"
+   },
+   "holds": true
+  },
+  {
+   "site": "apps/three-surface-poc/src/fixture-directories.test.ts:94",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "title": "keeps a name that carries no pid and namespace segment, whatever its suffix",
+   "suites": [
+    "fixture directories a killed run left behind (syzygy-bpyt.4.10)"
+   ],
+   "alone": {
+    "holds": true,
+    "record": "fixture-directories.test.tests.json",
+    "recordCommit": "1785a9057447c84ceada71ac00d63ee044dae177",
+    "observations": 5,
+    "worstMs": 110,
+    "anyFailed": false,
+    "loadRange": [
+     36.82,
+     40.43
+    ]
+   },
+   "full": {
+    "holds": true,
+    "bounds": [
+     {
+      "run": "full-1.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-2.log",
+      "boundMs": 305,
+      "why": "own lines [305]"
+     },
+     {
+      "run": "full-3.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-4.log",
+      "boundMs": 316,
+      "why": "own lines [316]"
+     },
+     {
+      "run": "full-5.log",
+      "boundMs": 333,
+      "why": "own lines [333]"
+     }
+    ]
+   },
+   "later": {
+    "holds": true,
+    "observations": "none listed"
+   },
+   "holds": true
+  },
+  {
+   "site": "apps/three-surface-poc/src/fixture-directories.test.ts:109",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "title": "keeps a directory whose pid fails with anything but ESRCH",
+   "suites": [
+    "fixture directories a killed run left behind (syzygy-bpyt.4.10)"
+   ],
+   "alone": {
+    "holds": true,
+    "record": "fixture-directories.test.tests.json",
+    "recordCommit": "1785a9057447c84ceada71ac00d63ee044dae177",
+    "observations": 5,
+    "worstMs": 79,
+    "anyFailed": false,
+    "loadRange": [
+     36.82,
+     40.43
+    ]
+   },
+   "full": {
+    "holds": true,
+    "bounds": [
+     {
+      "run": "full-1.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-2.log",
+      "boundMs": 319,
+      "why": "own lines [319]"
+     },
+     {
+      "run": "full-3.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-4.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-5.log",
+      "boundMs": 348,
+      "why": "own lines [348]"
+     }
+    ]
+   },
+   "later": {
+    "holds": true,
+    "observations": "none listed"
+   },
+   "holds": true
+  },
+  {
+   "site": "apps/three-surface-poc/src/fixture-directories.test.ts:128",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "title": "follows no symlink and removes no file: only a directory with a dead pid in its name goes",
+   "suites": [
+    "fixture directories a killed run left behind (syzygy-bpyt.4.10)"
+   ],
+   "alone": {
+    "holds": true,
+    "record": "fixture-directories.test.tests.json",
+    "recordCommit": "1785a9057447c84ceada71ac00d63ee044dae177",
+    "observations": 5,
+    "worstMs": 64,
+    "anyFailed": false,
+    "loadRange": [
+     36.82,
+     40.43
+    ]
+   },
+   "full": {
+    "holds": true,
+    "bounds": [
+     {
+      "run": "full-1.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-2.log",
+      "boundMs": 550,
+      "why": "own lines [550]"
+     },
+     {
+      "run": "full-3.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-4.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-5.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     }
+    ]
+   },
+   "later": {
+    "holds": true,
+    "observations": "none listed"
+   },
+   "holds": true
+  },
+  {
+   "site": "apps/three-surface-poc/src/fixture-directories.test.ts:142",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "title": "keeps the directories of a dead pid that belong to another PID namespace, whatever the neighbouring value",
+   "suites": [
+    "fixture directories a killed run left behind (syzygy-bpyt.4.10)"
+   ],
+   "alone": {
+    "holds": true,
+    "record": "fixture-directories.test.tests.json",
+    "recordCommit": "1785a9057447c84ceada71ac00d63ee044dae177",
+    "observations": 5,
+    "worstMs": 66,
+    "anyFailed": false,
+    "loadRange": [
+     36.82,
+     40.43
+    ]
+   },
+   "full": {
+    "holds": true,
+    "bounds": [
+     {
+      "run": "full-1.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-2.log",
+      "boundMs": 351,
+      "why": "own lines [351]"
+     },
+     {
+      "run": "full-3.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-4.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-5.log",
+      "boundMs": 329,
+      "why": "own lines [329]"
+     }
+    ]
+   },
+   "later": {
+    "holds": true,
+    "observations": "none listed"
+   },
+   "holds": true
+  },
+  {
+   "site": "apps/three-surface-poc/src/fixture-directories.test.ts:186",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "title": "removes nothing, and lists nothing, where the PID namespace %s, so a sandbox without /proc never sweeps another sandbox's live directories",
+   "suites": [
+    "fixture directories a killed run left behind (syzygy-bpyt.4.10)"
+   ],
+   "alone": {
+    "holds": true,
+    "record": "fixture-directories.test.tests.json",
+    "recordCommit": "1785a9057447c84ceada71ac00d63ee044dae177",
+    "observations": 10,
+    "worstMs": 84,
+    "anyFailed": false,
+    "loadRange": [
+     36.82,
+     40.43
+    ]
+   },
+   "full": {
+    "holds": true,
+    "bounds": [
+     {
+      "run": "full-1.log",
+      "boundMs": 362,
+      "why": "own lines [362]"
+     },
+     {
+      "run": "full-2.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-3.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-4.log",
+      "boundMs": 405,
+      "why": "own lines [405]"
+     },
+     {
+      "run": "full-5.log",
+      "boundMs": 340,
+      "why": "own lines [340]"
+     }
+    ]
+   },
+   "later": {
+    "holds": true,
+    "observations": "none listed"
+   },
+   "holds": true
+  },
+  {
+   "site": "apps/three-surface-poc/src/fixture-directories.test.ts:198",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "title": "keeps a directory that belongs to another user, the sweep never descending into it",
+   "suites": [
+    "fixture directories a killed run left behind (syzygy-bpyt.4.10)"
+   ],
+   "alone": {
+    "holds": true,
+    "record": "fixture-directories.test.tests.json",
+    "recordCommit": "1785a9057447c84ceada71ac00d63ee044dae177",
+    "observations": 5,
+    "worstMs": 69,
+    "anyFailed": false,
+    "loadRange": [
+     36.82,
+     40.43
+    ]
+   },
+   "full": {
+    "holds": true,
+    "bounds": [
+     {
+      "run": "full-1.log",
+      "boundMs": 323,
+      "why": "own lines [323]"
+     },
+     {
+      "run": "full-2.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-3.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-4.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-5.log",
+      "boundMs": 348,
+      "why": "own lines [348]"
+     }
+    ]
+   },
+   "later": {
+    "holds": true,
+    "observations": "none listed"
+   },
+   "holds": true
+  },
+  {
+   "site": "apps/three-surface-poc/src/fixture-directories.test.ts:212",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "title": "checks no user where the system has no user ids, and removes the dead process's directory",
+   "suites": [
+    "fixture directories a killed run left behind (syzygy-bpyt.4.10)"
+   ],
+   "alone": {
+    "holds": true,
+    "record": "fixture-directories.test.tests.json",
+    "recordCommit": "1785a9057447c84ceada71ac00d63ee044dae177",
+    "observations": 5,
+    "worstMs": 53,
+    "anyFailed": false,
+    "loadRange": [
+     36.82,
+     40.43
+    ]
+   },
+   "full": {
+    "holds": true,
+    "bounds": [
+     {
+      "run": "full-1.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-2.log",
+      "boundMs": 694,
+      "why": "own lines [694]"
+     },
+     {
+      "run": "full-3.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-4.log",
+      "boundMs": 436,
+      "why": "own lines [436]"
+     },
+     {
+      "run": "full-5.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     }
+    ]
+   },
+   "later": {
+    "holds": true,
+    "observations": "none listed"
+   },
+   "holds": true
+  },
+  {
+   "site": "apps/three-surface-poc/src/fixture-directories.test.ts:227",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "title": "does not fail the run when the temp directory cannot be listed",
+   "suites": [
+    "fixture directories a killed run left behind (syzygy-bpyt.4.10)"
+   ],
+   "alone": {
+    "holds": true,
+    "record": "fixture-directories.test.tests.json",
+    "recordCommit": "1785a9057447c84ceada71ac00d63ee044dae177",
+    "observations": 5,
+    "worstMs": 68,
+    "anyFailed": false,
+    "loadRange": [
+     36.82,
+     40.43
+    ]
+   },
+   "full": {
+    "holds": true,
+    "bounds": [
+     {
+      "run": "full-1.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-2.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-3.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-4.log",
+      "boundMs": 319,
+      "why": "own lines [319]"
+     },
+     {
+      "run": "full-5.log",
+      "boundMs": 615,
+      "why": "own lines [615]"
+     }
+    ]
+   },
+   "later": {
+    "holds": true,
+    "observations": "none listed"
+   },
+   "holds": true
+  },
+  {
+   "site": "apps/three-surface-poc/src/fixture-directories.test.ts:241",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "title": "lists only the directory it is given: nothing beside it, nothing below a non-fixture entry",
+   "suites": [
+    "fixture directories a killed run left behind (syzygy-bpyt.4.10)"
+   ],
+   "alone": {
+    "holds": true,
+    "record": "fixture-directories.test.tests.json",
+    "recordCommit": "1785a9057447c84ceada71ac00d63ee044dae177",
+    "observations": 5,
+    "worstMs": 81,
+    "anyFailed": false,
+    "loadRange": [
+     36.82,
+     40.43
+    ]
+   },
+   "full": {
+    "holds": true,
+    "bounds": [
+     {
+      "run": "full-1.log",
+      "boundMs": 329,
+      "why": "own lines [329]"
+     },
+     {
+      "run": "full-2.log",
+      "boundMs": 309,
+      "why": "own lines [309]"
+     },
+     {
+      "run": "full-3.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-4.log",
+      "boundMs": 304,
+      "why": "own lines [304]"
+     },
+     {
+      "run": "full-5.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     }
+    ]
+   },
+   "later": {
+    "holds": true,
+    "observations": "none listed"
+   },
+   "holds": true
+  },
+  {
+   "site": "apps/three-surface-poc/src/fixture-directories.test.ts:256",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "title": "does not fail the run when a dead process's directory cannot be removed",
+   "suites": [
+    "fixture directories a killed run left behind (syzygy-bpyt.4.10)"
+   ],
+   "alone": {
+    "holds": true,
+    "record": "fixture-directories.test.tests.json",
+    "recordCommit": "1785a9057447c84ceada71ac00d63ee044dae177",
+    "observations": 5,
+    "worstMs": 81,
+    "anyFailed": false,
+    "loadRange": [
+     36.82,
+     40.43
+    ]
+   },
+   "full": {
+    "holds": true,
+    "bounds": [
+     {
+      "run": "full-1.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-2.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-3.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-4.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-5.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     }
+    ]
+   },
+   "later": {
+    "holds": true,
+    "observations": "none listed"
+   },
+   "holds": true
+  },
+  {
+   "site": "apps/three-surface-poc/src/fixture-directories.test.ts:266",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "title": "sweeps the temp directory the process runs under when the global setup runs, and keeps the live and the legacy",
+   "suites": [
+    "fixture directories a killed run left behind (syzygy-bpyt.4.10)"
+   ],
+   "alone": {
+    "holds": true,
+    "record": "fixture-directories.test.tests.json",
+    "recordCommit": "1785a9057447c84ceada71ac00d63ee044dae177",
+    "observations": 5,
+    "worstMs": 69,
+    "anyFailed": false,
+    "loadRange": [
+     36.82,
+     40.43
+    ]
+   },
+   "full": {
+    "holds": true,
+    "bounds": [
+     {
+      "run": "full-1.log",
+      "boundMs": 360,
+      "why": "own lines [360]"
+     },
+     {
+      "run": "full-2.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-3.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-4.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-5.log",
+      "boundMs": 437,
+      "why": "own lines [437]"
+     }
+    ]
+   },
+   "later": {
+    "holds": true,
+    "observations": "none listed"
+   },
+   "holds": true
+  },
+  {
+   "site": "apps/three-surface-poc/src/fixture-directories.test.ts:284",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "title": "asks the operating system for the temp directory, so it sweeps the same directory the copies are made in when TMPDIR is unset",
+   "suites": [
+    "fixture directories a killed run left behind (syzygy-bpyt.4.10)"
+   ],
+   "alone": {
+    "holds": true,
+    "record": "fixture-directories.test.tests.json",
+    "recordCommit": "1785a9057447c84ceada71ac00d63ee044dae177",
+    "observations": 5,
+    "worstMs": 98,
+    "anyFailed": false,
+    "loadRange": [
+     36.82,
+     40.43
+    ]
+   },
+   "full": {
+    "holds": true,
+    "bounds": [
+     {
+      "run": "full-1.log",
+      "boundMs": 338,
+      "why": "own lines [338]"
+     },
+     {
+      "run": "full-2.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-3.log",
+      "boundMs": 361,
+      "why": "own lines [361]"
+     },
+     {
+      "run": "full-4.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-5.log",
+      "boundMs": 420,
+      "why": "own lines [420]"
+     }
+    ]
+   },
+   "later": {
+    "holds": true,
+    "observations": "none listed"
+   },
+   "holds": true
+  },
+  {
+   "site": "apps/three-surface-poc/src/governing-intent-sweep.test.ts:168",
+   "kind": "hook",
+   "thresholdMs": 5000,
+   "title": null,
+   "suites": [],
+   "alone": {
+    "holds": true,
+    "record": "governing-intent-sweep.test.hooks.json",
+    "recordCommit": "1785a9057447c84ceada71ac00d63ee044dae177",
+    "observations": 5,
+    "worstMs": 230,
+    "anyFailed": false,
+    "loadRange": [
+     31.73,
+     36.17
+    ]
+   },
+   "full": {
+    "holds": true,
+    "bounds": [
+     {
+      "run": "full-1.log",
+      "boundMs": 1025,
+      "filePassed": true,
+      "why": "file 1025 ms less 0 tests listed"
+     },
+     {
+      "run": "full-2.log",
+      "boundMs": 840,
+      "filePassed": true,
+      "why": "file 840 ms less 0 tests listed"
+     },
+     {
+      "run": "full-3.log",
+      "boundMs": 1409,
+      "filePassed": true,
+      "why": "file 1409 ms less 0 tests listed"
+     },
+     {
+      "run": "full-4.log",
+      "boundMs": 939,
+      "filePassed": true,
+      "why": "file 939 ms less 0 tests listed"
+     },
+     {
+      "run": "full-5.log",
+      "boundMs": 2018,
+      "filePassed": true,
+      "why": "file 2018 ms less 0 tests listed"
+     }
+    ]
+   },
+   "later": {
+    "holds": true,
+    "observations": "none listed"
+   },
+   "holds": true
+  },
+  {
+   "site": "apps/three-surface-poc/src/orrery.browser.test.ts:24",
+   "kind": "hook",
+   "thresholdMs": 5000,
+   "title": null,
+   "suites": [
+    "Orrery rendered geometry"
+   ],
+   "alone": {
+    "holds": true,
+    "record": "orrery.browser.test.hooks.json",
+    "recordCommit": "1785a9057447c84ceada71ac00d63ee044dae177",
+    "observations": 5,
+    "worstMs": 447,
+    "anyFailed": false,
+    "loadRange": [
+     22.62,
+     24.15
+    ]
+   },
+   "full": {
+    "holds": true,
+    "bounds": [
+     {
+      "run": "full-1.log",
+      "boundMs": 2177,
+      "filePassed": true,
+      "why": "file 3538 ms less 1 tests listed"
+     },
+     {
+      "run": "full-2.log",
+      "boundMs": 3140,
+      "filePassed": true,
+      "why": "file 4408 ms less 1 tests listed"
+     },
+     {
+      "run": "full-3.log",
+      "boundMs": 2301,
+      "filePassed": true,
+      "why": "file 4338 ms less 1 tests listed"
+     },
+     {
+      "run": "full-4.log",
+      "boundMs": 3224,
+      "filePassed": true,
+      "why": "file 4955 ms less 1 tests listed"
+     },
+     {
+      "run": "full-5.log",
+      "boundMs": 3391,
+      "filePassed": true,
+      "why": "file 6327 ms less 1 tests listed"
+     }
+    ]
+   },
+   "later": {
+    "holds": true,
+    "observations": "none listed"
+   },
+   "holds": true
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts:91",
+   "kind": "hook",
+   "thresholdMs": 5000,
+   "title": null,
+   "suites": [
+    "Polaris keyboard, non-visual and contrast checks in a real browser"
+   ],
+   "alone": {
+    "holds": true,
+    "record": "polaris-accessibility.browser.test.hooks.json",
+    "recordCommit": "1785a9057447c84ceada71ac00d63ee044dae177",
+    "observations": 5,
+    "worstMs": 1969,
+    "anyFailed": false,
+    "loadRange": [
+     27.42,
+     36.39
+    ]
+   },
+   "full": {
+    "holds": false,
+    "bounds": [
+     {
+      "run": "full-1.log",
+      "boundMs": 2755,
+      "filePassed": true,
+      "why": "file 257050 ms less 12 tests listed"
+     },
+     {
+      "run": "full-2.log",
+      "boundMs": 3751,
+      "filePassed": true,
+      "why": "file 281911 ms less 12 tests listed"
+     },
+     {
+      "run": "full-3.log",
+      "boundMs": 2979,
+      "filePassed": true,
+      "why": "file 231107 ms less 12 tests listed"
+     },
+     {
+      "run": "full-4.log",
+      "boundMs": 7953,
+      "filePassed": false,
+      "why": "file 426721 ms less 15 tests listed"
+     },
+     {
+      "run": "full-5.log",
+      "boundMs": 4485,
+      "filePassed": true,
+      "why": "file 335259 ms less 12 tests listed"
+     }
+    ]
+   },
+   "later": {
+    "holds": true,
+    "observations": "none listed"
+   },
+   "holds": false
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts:187",
+   "kind": "hook",
+   "thresholdMs": 5000,
+   "title": null,
+   "suites": [
+    "PWB-REQ-016 names and headings in a real browser"
+   ],
+   "alone": {
+    "holds": true,
+    "record": "polaris-accessible-names.browser.test.hooks.json",
+    "recordCommit": "1785a9057447c84ceada71ac00d63ee044dae177",
+    "observations": 5,
+    "worstMs": 766,
+    "anyFailed": false,
+    "loadRange": [
+     24.88,
+     29.75
+    ]
+   },
+   "full": {
+    "holds": true,
+    "bounds": [
+     {
+      "run": "full-1.log",
+      "boundMs": 2763,
+      "filePassed": true,
+      "why": "file 35312 ms less 12 tests listed"
+     },
+     {
+      "run": "full-2.log",
+      "boundMs": 1995,
+      "filePassed": true,
+      "why": "file 27959 ms less 11 tests listed"
+     },
+     {
+      "run": "full-3.log",
+      "boundMs": 2562,
+      "filePassed": true,
+      "why": "file 42368 ms less 14 tests listed"
+     },
+     {
+      "run": "full-4.log",
+      "boundMs": 4750,
+      "filePassed": true,
+      "why": "file 99987 ms less 14 tests listed"
+     },
+     {
+      "run": "full-5.log",
+      "boundMs": 2949,
+      "filePassed": true,
+      "why": "file 47601 ms less 13 tests listed"
+     }
+    ]
+   },
+   "later": {
+    "holds": true,
+    "observations": "none listed"
+   },
+   "holds": true
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-generation/dossier-cap-measure.test.ts:12",
+   "kind": "hook",
+   "thresholdMs": 5000,
+   "title": null,
+   "suites": [],
+   "alone": {
+    "holds": true,
+    "record": "dossier-cap-measure.test.hooks.json",
+    "recordCommit": "1785a9057447c84ceada71ac00d63ee044dae177",
+    "observations": 5,
+    "worstMs": 933,
+    "anyFailed": false,
+    "loadRange": [
+     27.75,
+     28.47
+    ]
+   },
+   "full": {
+    "holds": true,
+    "bounds": [
+     {
+      "run": "full-1.log",
+      "boundMs": 1750,
+      "filePassed": true,
+      "why": "file 1750 ms less 0 tests listed"
+     },
+     {
+      "run": "full-2.log",
+      "boundMs": 1751,
+      "filePassed": true,
+      "why": "file 1751 ms less 0 tests listed"
+     },
+     {
+      "run": "full-3.log",
+      "boundMs": 3313,
+      "filePassed": true,
+      "why": "file 3313 ms less 0 tests listed"
+     },
+     {
+      "run": "full-4.log",
+      "boundMs": 2899,
+      "filePassed": true,
+      "why": "file 2899 ms less 0 tests listed"
+     },
+     {
+      "run": "full-5.log",
+      "boundMs": 3169,
+      "filePassed": true,
+      "why": "file 3169 ms less 0 tests listed"
+     }
+    ]
+   },
+   "later": {
+    "holds": false,
+    "worstMs": 5107,
+    "source": {
+     "path": "docs/reviews/R-GP-IMPL-TEST-TIMEOUTS-1-RAW.md",
+     "section": "3.4 The removal sample",
+     "sha256": "0ca96c9a5c8b8701f7c21605f21b113976aebab61ec0548280be419a7dbb55cf"
+    }
+   },
+   "holds": false
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-generation/draft-preview.browser.test.ts:47",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "title": "renders the pipeline draft with working diagram, source and keyboard deep-dive paths at both widths",
+   "suites": [],
+   "alone": {
+    "holds": false,
+    "record": "draft-preview.browser.test.tests.json",
+    "recordCommit": "1785a9057447c84ceada71ac00d63ee044dae177",
+    "observations": 5,
+    "worstMs": 2955,
+    "anyFailed": false,
+    "loadRange": [
+     29.01,
+     33.19
+    ]
+   },
+   "full": {
+    "holds": false,
+    "bounds": [
+     {
+      "run": "full-1.log",
+      "boundMs": 3280,
+      "why": "own lines [3280]"
+     },
+     {
+      "run": "full-2.log",
+      "boundMs": 4070,
+      "why": "own lines [4070]"
+     },
+     {
+      "run": "full-3.log",
+      "boundMs": 3929,
+      "why": "own lines [3929]"
+     },
+     {
+      "run": "full-4.log",
+      "boundMs": 3966,
+      "why": "own lines [3966]"
+     },
+     {
+      "run": "full-5.log",
+      "boundMs": null,
+      "why": "failed: ['× renders the pipeline draft with working diagram, source and keyboard deep-dive paths at both widths 5059ms']"
+     }
+    ]
+   },
+   "later": {
+    "holds": true,
+    "observations": "none listed"
+   },
+   "holds": false
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts:45",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "title": "runs the pipeline through the injected port with its permit and abort signal",
+   "suites": [
+    "durable lifecycle with an injected generate port"
+   ],
+   "alone": {
+    "holds": true,
+    "record": "durable-lifecycle-generate.test.tests.json",
+    "recordCommit": "1785a9057447c84ceada71ac00d63ee044dae177",
+    "observations": 5,
+    "worstMs": 24,
+    "anyFailed": false,
+    "loadRange": [
+     29.36,
+     30.07
+    ]
+   },
+   "full": {
+    "holds": true,
+    "bounds": [
+     {
+      "run": "full-1.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-2.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-3.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-4.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-5.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     }
+    ]
+   },
+   "later": {
+    "holds": true,
+    "observations": "none listed"
+   },
+   "holds": true
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts:54",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "title": "reserves the configured per-attempt ceilings, capped by the request budget",
+   "suites": [
+    "durable lifecycle with an injected generate port"
+   ],
+   "alone": {
+    "holds": true,
+    "record": "durable-lifecycle-generate.test.tests.json",
+    "recordCommit": "1785a9057447c84ceada71ac00d63ee044dae177",
+    "observations": 5,
+    "worstMs": 23,
+    "anyFailed": false,
+    "loadRange": [
+     29.36,
+     30.07
+    ]
+   },
+   "full": {
+    "holds": true,
+    "bounds": [
+     {
+      "run": "full-1.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-2.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-3.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-4.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-5.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     }
+    ]
+   },
+   "later": {
+    "holds": true,
+    "observations": "none listed"
+   },
+   "holds": true
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts:85",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "title": "a generate failure after the claim leaves an uncertain record that a restart never replays",
+   "suites": [
+    "durable lifecycle with an injected generate port"
+   ],
+   "alone": {
+    "holds": true,
+    "record": "durable-lifecycle-generate.test.tests.json",
+    "recordCommit": "1785a9057447c84ceada71ac00d63ee044dae177",
+    "observations": 5,
+    "worstMs": 13,
+    "anyFailed": false,
+    "loadRange": [
+     29.36,
+     30.07
+    ]
+   },
+   "full": {
+    "holds": true,
+    "bounds": [
+     {
+      "run": "full-1.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-2.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-3.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-4.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-5.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     }
+    ]
+   },
+   "later": {
+    "holds": true,
+    "observations": "none listed"
+   },
+   "holds": true
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts:103",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "title": "a crash while a call is in flight leaves a claim that refuses any replay, even by a fresh lifecycle",
+   "suites": [
+    "durable lifecycle with an injected generate port"
+   ],
+   "alone": {
+    "holds": true,
+    "record": "durable-lifecycle-generate.test.tests.json",
+    "recordCommit": "1785a9057447c84ceada71ac00d63ee044dae177",
+    "observations": 5,
+    "worstMs": 5,
+    "anyFailed": false,
+    "loadRange": [
+     29.36,
+     30.07
+    ]
+   },
+   "full": {
+    "holds": true,
+    "bounds": [
+     {
+      "run": "full-1.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-2.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-3.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-4.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-5.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     }
+    ]
+   },
+   "later": {
+    "holds": true,
+    "observations": "none listed"
+   },
+   "holds": true
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts:115",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "title": "reuses completed checkpoints after a restart and sends only the missing stage through the new port",
+   "suites": [
+    "durable lifecycle with an injected generate port"
+   ],
+   "alone": {
+    "holds": true,
+    "record": "durable-lifecycle-generate.test.tests.json",
+    "recordCommit": "1785a9057447c84ceada71ac00d63ee044dae177",
+    "observations": 5,
+    "worstMs": 14,
+    "anyFailed": false,
+    "loadRange": [
+     29.36,
+     30.07
+    ]
+   },
+   "full": {
+    "holds": true,
+    "bounds": [
+     {
+      "run": "full-1.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-2.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-3.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-4.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-5.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     }
+    ]
+   },
+   "later": {
+    "holds": true,
+    "observations": "none listed"
+   },
+   "holds": true
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts:127",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "title": "releases an attempt whose per-call permission is withdrawn without calling generate, and only an exact true permits",
+   "suites": [
+    "durable lifecycle with an injected generate port"
+   ],
+   "alone": {
+    "holds": true,
+    "record": "durable-lifecycle-generate.test.tests.json",
+    "recordCommit": "1785a9057447c84ceada71ac00d63ee044dae177",
+    "observations": 5,
+    "worstMs": 13,
+    "anyFailed": false,
+    "loadRange": [
+     29.36,
+     30.07
+    ]
+   },
+   "full": {
+    "holds": true,
+    "bounds": [
+     {
+      "run": "full-1.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-2.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-3.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-4.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-5.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     }
+    ]
+   },
+   "later": {
+    "holds": true,
+    "observations": "none listed"
+   },
+   "holds": true
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-generation/self-corpus.test.ts:46",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "title": "refuses a 1 MB corpus budget without truncation or a scripted send, then completes on sufficient budget and isolates one source perturbation",
+   "suites": [
+    "zero-egress Syzygy self-corpus proof"
+   ],
+   "alone": {
+    "holds": true,
+    "record": "self-corpus.test.tests.json",
+    "recordCommit": "1785a9057447c84ceada71ac00d63ee044dae177",
+    "observations": 5,
+    "worstMs": 2379,
+    "anyFailed": false,
+    "loadRange": [
+     31.38,
+     36.84
+    ]
+   },
+   "full": {
+    "holds": false,
+    "bounds": [
+     {
+      "run": "full-1.log",
+      "boundMs": 2436,
+      "why": "own lines [2436]"
+     },
+     {
+      "run": "full-2.log",
+      "boundMs": 4628,
+      "why": "own lines [4628]"
+     },
+     {
+      "run": "full-3.log",
+      "boundMs": null,
+      "why": "failed: ['× zero-egress Syzygy self-corpus proof > refuses a 1 MB corpus budget without truncation or a scripted send, then completes on sufficient budget and isolates one source perturbation 5610ms']"
+     },
+     {
+      "run": "full-4.log",
+      "boundMs": 4601,
+      "why": "own lines [4601]"
+     },
+     {
+      "run": "full-5.log",
+      "boundMs": null,
+      "why": "failed: ['× zero-egress Syzygy self-corpus proof > refuses a 1 MB corpus budget without truncation or a scripted send, then completes on sufficient budget and isolates one source perturbation 5893ms']"
+     }
+    ]
+   },
+   "later": {
+    "holds": true,
+    "observations": "none listed"
+   },
+   "holds": false
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts:316",
+   "kind": "hook",
+   "thresholdMs": 5000,
+   "title": null,
+   "suites": [
+    "opening index in a real browser (PWB-REQ-010, P-98)"
+   ],
+   "alone": {
+    "holds": true,
+    "record": "polaris-opening-index.browser.test.hooks.json",
+    "recordCommit": "1785a9057447c84ceada71ac00d63ee044dae177",
+    "observations": 5,
+    "worstMs": 547,
+    "anyFailed": false,
+    "loadRange": [
+     24.15,
+     28.57
+    ]
+   },
+   "full": {
+    "holds": false,
+    "bounds": [
+     {
+      "run": "full-1.log",
+      "boundMs": 2144,
+      "filePassed": true,
+      "why": "file 9953 ms less 9 tests listed"
+     },
+     {
+      "run": "full-2.log",
+      "boundMs": 2655,
+      "filePassed": true,
+      "why": "file 15649 ms less 11 tests listed"
+     },
+     {
+      "run": "full-3.log",
+      "boundMs": 2956,
+      "filePassed": true,
+      "why": "file 17705 ms less 10 tests listed"
+     },
+     {
+      "run": "full-4.log",
+      "boundMs": 3738,
+      "filePassed": true,
+      "why": "file 22685 ms less 11 tests listed"
+     },
+     {
+      "run": "full-5.log",
+      "boundMs": 5069,
+      "filePassed": true,
+      "why": "file 21177 ms less 11 tests listed"
+     }
+    ]
+   },
+   "later": {
+    "holds": true,
+    "observations": "none listed"
+   },
+   "holds": false
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts:352",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "title": "`every indexed target renders (${viewport.width}x${viewport.height}): nine routed rows, recounted offsets, one line after the last-beginning target`",
+   "suites": [
+    "opening index in a real browser (PWB-REQ-010, P-98)"
+   ],
+   "alone": {
+    "holds": true,
+    "record": "polaris-opening-index.browser.test.tests.json",
+    "recordCommit": "1785a9057447c84ceada71ac00d63ee044dae177",
+    "observations": 10,
+    "worstMs": 788,
+    "anyFailed": false,
+    "loadRange": [
+     32.51,
+     35.4
+    ]
+   },
+   "full": {
+    "holds": false,
+    "bounds": [
+     {
+      "run": "full-1.log",
+      "boundMs": 1247,
+      "why": "own lines [1247, 1082]"
+     },
+     {
+      "run": "full-2.log",
+      "boundMs": 2320,
+      "why": "own lines [2320, 1000]"
+     },
+     {
+      "run": "full-3.log",
+      "boundMs": 2781,
+      "why": "own lines [1546, 2781]"
+     },
+     {
+      "run": "full-4.log",
+      "boundMs": 4248,
+      "why": "own lines [4248, 2226]"
+     },
+     {
+      "run": "full-5.log",
+      "boundMs": 2105,
+      "why": "own lines [2105, 1727]"
+     }
+    ]
+   },
+   "later": {
+    "holds": true,
+    "observations": "none listed"
+   },
+   "holds": false
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts:364",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "title": "`the opening Unknown aggregate is absent (${viewport.width}x${viewport.height}): the gaps row says so and routes nowhere; eight rows route`",
+   "suites": [
+    "opening index in a real browser (PWB-REQ-010, P-98)"
+   ],
+   "alone": {
+    "holds": true,
+    "record": "polaris-opening-index.browser.test.tests.json",
+    "recordCommit": "1785a9057447c84ceada71ac00d63ee044dae177",
+    "observations": 10,
+    "worstMs": 688,
+    "anyFailed": false,
+    "loadRange": [
+     32.51,
+     35.4
+    ]
+   },
+   "full": {
+    "holds": true,
+    "bounds": [
+     {
+      "run": "full-1.log",
+      "boundMs": 862,
+      "why": "own lines [643, 862]"
+     },
+     {
+      "run": "full-2.log",
+      "boundMs": 2108,
+      "why": "own lines [2108, 889]"
+     },
+     {
+      "run": "full-3.log",
+      "boundMs": 1685,
+      "why": "own lines [1685, 1488]"
+     },
+     {
+      "run": "full-4.log",
+      "boundMs": 2081,
+      "why": "own lines [1158, 2081]"
+     },
+     {
+      "run": "full-5.log",
+      "boundMs": 1484,
+      "why": "own lines [1484, 1112]"
+     }
+    ]
+   },
+   "later": {
+    "holds": true,
+    "observations": "none listed"
+   },
+   "holds": true
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts:370",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "title": "`an unobserved shape (${viewport.width}x${viewport.height}): only the gaps and claim-strength targets render`",
+   "suites": [
+    "opening index in a real browser (PWB-REQ-010, P-98)"
+   ],
+   "alone": {
+    "holds": true,
+    "record": "polaris-opening-index.browser.test.tests.json",
+    "recordCommit": "1785a9057447c84ceada71ac00d63ee044dae177",
+    "observations": 10,
+    "worstMs": 379,
+    "anyFailed": false,
+    "loadRange": [
+     32.51,
+     35.4
+    ]
+   },
+   "full": {
+    "holds": false,
+    "bounds": [
+     {
+      "run": "full-1.log",
+      "boundMs": 1089,
+      "why": "own lines [1089, 474]"
+     },
+     {
+      "run": "full-2.log",
+      "boundMs": 950,
+      "why": "own lines [875, 950]"
+     },
+     {
+      "run": "full-3.log",
+      "boundMs": 1304,
+      "why": "own lines [1304, 1019]"
+     },
+     {
+      "run": "full-4.log",
+      "boundMs": 1885,
+      "why": "own lines [1735, 1885]"
+     },
+     {
+      "run": "full-5.log",
+      "boundMs": 2650,
+      "why": "own lines [2650, 971]"
+     }
+    ]
+   },
+   "later": {
+    "holds": true,
+    "observations": "none listed"
+   },
+   "holds": false
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts:408",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "title": "following the exact-requirement row by keyboard lands on its target and Tab continues from it (fixture render)",
+   "suites": [
+    "opening index in a real browser (PWB-REQ-010, P-98)"
+   ],
+   "alone": {
+    "holds": true,
+    "record": "polaris-opening-index.browser.test.tests.json",
+    "recordCommit": "1785a9057447c84ceada71ac00d63ee044dae177",
+    "observations": 5,
+    "worstMs": 815,
+    "anyFailed": false,
+    "loadRange": [
+     32.51,
+     35.4
+    ]
+   },
+   "full": {
+    "holds": true,
+    "bounds": [
+     {
+      "run": "full-1.log",
+      "boundMs": 1125,
+      "why": "own lines [1125]"
+     },
+     {
+      "run": "full-2.log",
+      "boundMs": 1573,
+      "why": "own lines [1573]"
+     },
+     {
+      "run": "full-3.log",
+      "boundMs": 1886,
+      "why": "own lines [1886]"
+     },
+     {
+      "run": "full-4.log",
+      "boundMs": 1421,
+      "why": "own lines [1421]"
+     },
+     {
+      "run": "full-5.log",
+      "boundMs": 1458,
+      "why": "own lines [1458]"
+     }
+    ]
+   },
+   "later": {
+    "holds": true,
+    "observations": "none listed"
+   },
+   "holds": true
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts:413",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "title": "the same holds where a later control shares the target's disclosure (synthetic body)",
+   "suites": [
+    "opening index in a real browser (PWB-REQ-010, P-98)"
+   ],
+   "alone": {
+    "holds": true,
+    "record": "polaris-opening-index.browser.test.tests.json",
+    "recordCommit": "1785a9057447c84ceada71ac00d63ee044dae177",
+    "observations": 5,
+    "worstMs": 321,
+    "anyFailed": false,
+    "loadRange": [
+     32.51,
+     35.4
+    ]
+   },
+   "full": {
+    "holds": true,
+    "bounds": [
+     {
+      "run": "full-1.log",
+      "boundMs": 565,
+      "why": "own lines [565]"
+     },
+     {
+      "run": "full-2.log",
+      "boundMs": 522,
+      "why": "own lines [522]"
+     },
+     {
+      "run": "full-3.log",
+      "boundMs": 1521,
+      "why": "own lines [1521]"
+     },
+     {
+      "run": "full-4.log",
+      "boundMs": 740,
+      "why": "own lines [740]"
+     },
+     {
+      "run": "full-5.log",
+      "boundMs": 828,
+      "why": "own lines [828]"
+     }
+    ]
+   },
+   "later": {
+    "holds": true,
+    "observations": "none listed"
+   },
+   "holds": true
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts:443",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "title": "a tie on the largest offset is broken by document order (synthetic body, hand-counted)",
+   "suites": [
+    "opening index in a real browser (PWB-REQ-010, P-98)"
+   ],
+   "alone": {
+    "holds": true,
+    "record": "polaris-opening-index.browser.test.tests.json",
+    "recordCommit": "1785a9057447c84ceada71ac00d63ee044dae177",
+    "observations": 5,
+    "worstMs": 335,
+    "anyFailed": false,
+    "loadRange": [
+     32.51,
+     35.4
+    ]
+   },
+   "full": {
+    "holds": true,
+    "bounds": [
+     {
+      "run": "full-1.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-2.log",
+      "boundMs": 685,
+      "why": "own lines [685]"
+     },
+     {
+      "run": "full-3.log",
+      "boundMs": 310,
+      "why": "own lines [310]"
+     },
+     {
+      "run": "full-4.log",
+      "boundMs": 842,
+      "why": "own lines [842]"
+     },
+     {
+      "run": "full-5.log",
+      "boundMs": 419,
+      "why": "own lines [419]"
+     }
+    ]
+   },
+   "later": {
+    "holds": true,
+    "observations": "none listed"
+   },
+   "holds": true
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts:452",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "title": "with no indexed target rendered, the line follows the index and gives only the total (synthetic body, hand-counted)",
+   "suites": [
+    "opening index in a real browser (PWB-REQ-010, P-98)"
+   ],
+   "alone": {
+    "holds": true,
+    "record": "polaris-opening-index.browser.test.tests.json",
+    "recordCommit": "1785a9057447c84ceada71ac00d63ee044dae177",
+    "observations": 5,
+    "worstMs": 356,
+    "anyFailed": false,
+    "loadRange": [
+     32.51,
+     35.4
+    ]
+   },
+   "full": {
+    "holds": true,
+    "bounds": [
+     {
+      "run": "full-1.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-2.log",
+      "boundMs": 579,
+      "why": "own lines [579]"
+     },
+     {
+      "run": "full-3.log",
+      "boundMs": 300,
+      "why": "no line in a passing file: under 300 ms"
+     },
+     {
+      "run": "full-4.log",
+      "boundMs": 805,
+      "why": "own lines [805]"
+     },
+     {
+      "run": "full-5.log",
+      "boundMs": 720,
+      "why": "own lines [720]"
+     }
+    ]
+   },
+   "later": {
+    "holds": true,
+    "observations": "none listed"
+   },
+   "holds": true
+  },
+  {
+   "site": "apps/three-surface-poc/src/polaris-reconciliation.test.ts:81",
+   "kind": "hook",
+   "thresholdMs": 5000,
+   "title": null,
+   "suites": [],
+   "alone": {
+    "holds": true,
+    "record": "polaris-reconciliation.test.hooks.json",
+    "recordCommit": "1785a9057447c84ceada71ac00d63ee044dae177",
+    "observations": 5,
+    "worstMs": 793,
+    "anyFailed": false,
+    "loadRange": [
+     24.9,
+     27.75
+    ]
+   },
+   "full": {
+    "holds": true,
+    "bounds": [
+     {
+      "run": "full-1.log",
+      "boundMs": 1200,
+      "filePassed": true,
+      "why": "file 1200 ms less 0 tests listed"
+     },
+     {
+      "run": "full-2.log",
+      "boundMs": 1979,
+      "filePassed": true,
+      "why": "file 1979 ms less 0 tests listed"
+     },
+     {
+      "run": "full-3.log",
+      "boundMs": 2064,
+      "filePassed": true,
+      "why": "file 2064 ms less 0 tests listed"
+     },
+     {
+      "run": "full-4.log",
+      "boundMs": 1316,
+      "filePassed": true,
+      "why": "file 1316 ms less 0 tests listed"
+     },
+     {
+      "run": "full-5.log",
+      "boundMs": 2630,
+      "filePassed": true,
+      "why": "file 2630 ms less 0 tests listed"
+     }
+    ]
+   },
+   "later": {
+    "holds": true,
+    "observations": "none listed"
+   },
+   "holds": true
+  },
+  {
+   "site": "apps/three-surface-poc/src/surface-routes.test.ts:537",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "title": "counts the post-JavaScript DOM on all three served surfaces and kills an unmarked Orrery region",
+   "suites": [
+    "surface routes"
+   ],
+   "alone": {
+    "holds": false,
+    "record": "surface-routes.test.tests.json",
+    "recordCommit": "1785a9057447c84ceada71ac00d63ee044dae177",
+    "observations": 5,
+    "worstMs": 5060,
+    "anyFailed": false,
+    "loadRange": [
+     29.91,
+     37.07
+    ]
+   },
+   "full": {
+    "holds": false,
+    "bounds": [
+     {
+      "run": "full-1.log",
+      "boundMs": 3611,
+      "why": "own lines [3611]"
+     },
+     {
+      "run": "full-2.log",
+      "boundMs": null,
+      "why": "failed: ['× surface routes > counts the post-JavaScript DOM on all three served surfaces and kills an unmarked Orrery region 5074ms']"
+     },
+     {
+      "run": "full-3.log",
+      "boundMs": null,
+      "why": "failed: ['× surface routes > counts the post-JavaScript DOM on all three served surfaces and kills an unmarked Orrery region 5094ms']"
+     },
+     {
+      "run": "full-4.log",
+      "boundMs": null,
+      "why": "failed: ['× surface routes > counts the post-JavaScript DOM on all three served surfaces and kills an unmarked Orrery region 5241ms']"
+     },
+     {
+      "run": "full-5.log",
+      "boundMs": null,
+      "why": "failed: ['× surface routes > counts the post-JavaScript DOM on all three served surfaces and kills an unmarked Orrery region 5026ms']"
+     }
+    ]
+   },
+   "later": {
+    "holds": true,
+    "observations": "none listed"
+   },
+   "holds": false
+  },
+  {
+   "site": "apps/three-surface-poc/src/trajectory-narrowing.browser.test.ts:32",
+   "kind": "hook",
+   "thresholdMs": 5000,
+   "title": null,
+   "suites": [
+    "Trajectory narrowing to the governing-intent Unknown (POC-REQ-014)"
+   ],
+   "alone": {
+    "holds": true,
+    "record": "trajectory-narrowing.browser.test.hooks.json",
+    "recordCommit": "1785a9057447c84ceada71ac00d63ee044dae177",
+    "observations": 5,
+    "worstMs": 572,
+    "anyFailed": false,
+    "loadRange": [
+     22.07,
+     22.23
+    ]
+   },
+   "full": {
+    "holds": true,
+    "bounds": [
+     {
+      "run": "full-1.log",
+      "boundMs": 1328,
+      "filePassed": true,
+      "why": "file 2923 ms less 2 tests listed"
+     },
+     {
+      "run": "full-2.log",
+      "boundMs": 4180,
+      "filePassed": true,
+      "why": "file 5980 ms less 2 tests listed"
+     },
+     {
+      "run": "full-3.log",
+      "boundMs": 2157,
+      "filePassed": true,
+      "why": "file 5322 ms less 2 tests listed"
+     },
+     {
+      "run": "full-4.log",
+      "boundMs": 3585,
+      "filePassed": true,
+      "why": "file 6768 ms less 2 tests listed"
+     },
+     {
+      "run": "full-5.log",
+      "boundMs": 3994,
+      "filePassed": true,
+      "why": "file 8772 ms less 2 tests listed"
+     }
+    ]
+   },
+   "later": {
+    "holds": true,
+    "observations": "none listed"
+   },
+   "holds": true
+  },
+  {
+   "site": "apps/three-surface-poc/src/unknown-route-sweep.test.ts:173",
+   "kind": "hook",
+   "thresholdMs": 5000,
+   "title": null,
+   "suites": [],
+   "alone": {
+    "holds": true,
+    "record": "unknown-route-sweep.test.hooks.json",
+    "recordCommit": "1785a9057447c84ceada71ac00d63ee044dae177",
+    "observations": 5,
+    "worstMs": 533,
+    "anyFailed": false,
+    "loadRange": [
+     22.92,
+     25.56
+    ]
+   },
+   "full": {
+    "holds": true,
+    "bounds": [
+     {
+      "run": "full-1.log",
+      "boundMs": 2516,
+      "filePassed": true,
+      "why": "file 2516 ms less 0 tests listed"
+     },
+     {
+      "run": "full-2.log",
+      "boundMs": 2254,
+      "filePassed": true,
+      "why": "file 2254 ms less 0 tests listed"
+     },
+     {
+      "run": "full-3.log",
+      "boundMs": 2362,
+      "filePassed": true,
+      "why": "file 2362 ms less 0 tests listed"
+     },
+     {
+      "run": "full-4.log",
+      "boundMs": 1941,
+      "filePassed": true,
+      "why": "file 2633 ms less 2 tests listed"
+     },
+     {
+      "run": "full-5.log",
+      "boundMs": 2171,
+      "filePassed": true,
+      "why": "file 2493 ms less 1 tests listed"
+     }
+    ]
+   },
+   "later": {
+    "holds": true,
+    "observations": "none listed"
+   },
+   "holds": true
+  },
+  {
+   "site": "packages/polaris-dossier/src/no-egress.test.ts:47",
+   "kind": "hook",
+   "thresholdMs": 5000,
+   "title": null,
+   "suites": [],
+   "alone": {
+    "holds": true,
+    "record": "no-egress.test.hooks.json",
+    "recordCommit": "1785a9057447c84ceada71ac00d63ee044dae177",
+    "observations": 5,
+    "worstMs": 736,
+    "anyFailed": false,
+    "loadRange": [
+     23.9,
+     27.23
+    ]
+   },
+   "full": {
+    "holds": true,
+    "bounds": [
+     {
+      "run": "full-1.log",
+      "boundMs": 1474,
+      "filePassed": false,
+      "why": "file 11353 ms less 2 tests listed"
+     },
+     {
+      "run": "full-2.log",
+      "boundMs": 1112,
+      "filePassed": true,
+      "why": "file 7536 ms less 2 tests listed"
+     },
+     {
+      "run": "full-3.log",
+      "boundMs": 1050,
+      "filePassed": true,
+      "why": "file 7388 ms less 2 tests listed"
+     },
+     {
+      "run": "full-4.log",
+      "boundMs": 2761,
+      "filePassed": false,
+      "why": "file 12837 ms less 2 tests listed"
+     },
+     {
+      "run": "full-5.log",
+      "boundMs": 907,
+      "filePassed": false,
+      "why": "file 8903 ms less 2 tests listed"
+     }
+    ]
+   },
+   "later": {
+    "holds": true,
+    "observations": "none listed"
+   },
+   "holds": true
+  },
+  {
+   "site": "packages/polaris-dossier/src/no-egress.test.ts:84",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "title": "creates no Internet-family socket over the whole run, from preflight to close",
+   "suites": [
+    "no provider call and no transmission (S10): an operating-system capture of a full fixture run"
+   ],
+   "alone": {
+    "holds": false,
+    "record": "no-egress.test.tests.json",
+    "recordCommit": "1785a9057447c84ceada71ac00d63ee044dae177",
+    "observations": 5,
+    "worstMs": 2651,
+    "anyFailed": false,
+    "loadRange": [
+     32.23,
+     35.18
+    ]
+   },
+   "full": {
+    "holds": false,
+    "bounds": [
+     {
+      "run": "full-1.log",
+      "boundMs": 4839,
+      "why": "own lines [4839]"
+     },
+     {
+      "run": "full-2.log",
+      "boundMs": 2894,
+      "why": "own lines [2894]"
+     },
+     {
+      "run": "full-3.log",
+      "boundMs": 3380,
+      "why": "own lines [3380]"
+     },
+     {
+      "run": "full-4.log",
+      "boundMs": null,
+      "why": "failed: ['× no provider call and no transmission (S10): an operating-system capture of a full fixture run > creates no Internet-family socket over the whole run, from preflight to close 5041ms']"
+     },
+     {
+      "run": "full-5.log",
+      "boundMs": 2958,
+      "why": "own lines [2958]"
+     }
+    ]
+   },
+   "later": {
+    "holds": true,
+    "observations": "none listed"
+   },
+   "holds": false
+  },
+  {
+   "site": "packages/polaris-dossier/src/no-egress.test.ts:92",
+   "kind": "test",
+   "thresholdMs": 2500,
+   "title": "sees the canary: one loopback datagram sent before the same run is in the capture",
+   "suites": [
+    "no provider call and no transmission (S10): an operating-system capture of a full fixture run"
+   ],
+   "alone": {
+    "holds": true,
+    "record": "no-egress.test.tests.json",
+    "recordCommit": "1785a9057447c84ceada71ac00d63ee044dae177",
+    "observations": 5,
+    "worstMs": 2418,
+    "anyFailed": false,
+    "loadRange": [
+     32.23,
+     35.18
+    ]
+   },
+   "full": {
+    "holds": false,
+    "bounds": [
+     {
+      "run": "full-1.log",
+      "boundMs": null,
+      "why": "failed: ['× no provider call and no transmission (S10): an operating-system capture of a full fixture run > sees the canary: one loopback datagram sent before the same run is in the capture 5040ms']"
+     },
+     {
+      "run": "full-2.log",
+      "boundMs": 3530,
+      "why": "own lines [3530]"
+     },
+     {
+      "run": "full-3.log",
+      "boundMs": 2958,
+      "why": "own lines [2958]"
+     },
+     {
+      "run": "full-4.log",
+      "boundMs": null,
+      "why": "failed: ['× no provider call and no transmission (S10): an operating-system capture of a full fixture run > sees the canary: one loopback datagram sent before the same run is in the capture 5035ms']"
+     },
+     {
+      "run": "full-5.log",
+      "boundMs": null,
+      "why": "failed: ['× no provider call and no transmission (S10): an operating-system capture of a full fixture run > sees the canary: one loopback datagram sent before the same run is in the capture 5038ms']"
+     }
+    ]
+   },
+   "later": {
+    "holds": true,
+    "observations": "none listed"
+   },
+   "holds": false
+  }
+ ]
+}

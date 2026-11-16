@@ -1,0 +1,95 @@
+{
+ "base": "c672492caace634905b4f285434211436bb7fe24",
+ "head": "52d8b96f6ad91c765a6b4675d5eea72ea2067732",
+ "baseTitles": 5781,
+ "headTitles": 5801,
+ "delta": 20,
+ "added": [
+  {
+   "file": "apps/three-surface-poc/src/sync-child-process-guard.test.ts",
+   "name": "suite child processes and the vitest worker RPC > loads the vitest config and finds no alias key at any depth"
+  },
+  {
+   "file": "apps/three-surface-poc/src/sync-child-process-guard.test.ts",
+   "name": "suite child processes and the vitest worker RPC > reads an alias key wherever the config holds one, and no other key"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "name": "the segment rules the entry reader copies from Node 24's exports resolver > reads \"./dist/\" as Node does: it warns"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "name": "the segment rules the entry reader copies from Node 24's exports resolver > reads \"./dist/%2E/index.js\" as Node does: it refuses"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "name": "the segment rules the entry reader copies from Node 24's exports resolver > reads \"./dist/%2e%2e/index.js\" as Node does: it refuses"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "name": "the segment rules the entry reader copies from Node 24's exports resolver > reads \"./dist/%4Eode_modules/index.js\" as Node does: it refuses"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "name": "the segment rules the entry reader copies from Node 24's exports resolver > reads \"./dist/%6eode_modules/index.js\" as Node does: it refuses"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "name": "the segment rules the entry reader copies from Node 24's exports resolver > reads \"./dist/..x/index.js\" as Node does: it loads"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "name": "the segment rules the entry reader copies from Node 24's exports resolver > reads \"./dist/./index.js\" as Node does: it refuses"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "name": "the segment rules the entry reader copies from Node 24's exports resolver > reads \"./dist/.hidden/index.js\" as Node does: it loads"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "name": "the segment rules the entry reader copies from Node 24's exports resolver > reads \"./dist//index.js\" as Node does: it warns"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "name": "the segment rules the entry reader copies from Node 24's exports resolver > reads \"./dist/NODE_MODULES/index.js\" as Node does: it refuses"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "name": "the segment rules the entry reader copies from Node 24's exports resolver > reads \"./dist/index.js\" as Node does: it loads"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "name": "the segment rules the entry reader copies from Node 24's exports resolver > reads \"./dist/node_modules/index.js\" as Node does: it refuses"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "name": "the segment rules the entry reader copies from Node 24's exports resolver > reads \"./dist/node_modules_x/index.js\" as Node does: it loads"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "name": "the segment rules the entry reader copies from Node 24's exports resolver > reads \"./dist/x/../index.js\" as Node does: it refuses"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "name": "the segment rules the entry reader copies from Node 24's exports resolver > reads \"./dist/x\\\\..\\\\index.js\" as Node does: it refuses"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "name": "the workspace entry modules > throws on a condition key with a /../ segment, at any depth"
+  },
+  {
+   "file": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "name": "the workspace entry modules > throws on such a target under a condition Node does not read, or in a main, and names the one Node refuses first"
+  },
+  {
+   "file": "packages/support/src/support-purity.test.ts",
+   "name": "the property-write reader the no-write row stands on > reads \"({ ...Object.freeze } = {});\""
+  }
+ ],
+ "removed": [],
+ "addedByFile": {
+  "apps/three-surface-poc/src/sync-child-process-guard.test.ts": 2,
+  "packages/polaris-generation-core/src/workspace-reach.test.ts": 17,
+  "packages/support/src/support-purity.test.ts": 1
+ }
+}

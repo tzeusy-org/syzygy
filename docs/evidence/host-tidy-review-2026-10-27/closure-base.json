@@ -1,0 +1,98 @@
+{
+ "tree": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-539/clone-base",
+ "commit": "9dba258992667f62ad503ec76d8a6b99efcc4bac",
+ "sources": {
+  "entries": 95,
+  "reached": 192,
+  "packagesNamed": [
+   "@syzygy/cap1-core",
+   "@syzygy/http-host",
+   "@syzygy/polaris-generation-consent",
+   "@syzygy/polaris-generation-core",
+   "@syzygy/support",
+   "@syzygy/three-surface-poc-core"
+  ],
+  "packageDirsReached": [
+   "apps/three-surface-poc",
+   "packages/cap1-core",
+   "packages/http-host",
+   "packages/polaris-generation-consent",
+   "packages/polaris-generation-core",
+   "packages/support",
+   "packages/three-surface-poc-core"
+  ],
+  "cap1DaemonFilesReached": 0,
+  "firstChainToCap1Daemon": [],
+  "unresolved": []
+ },
+ "tests": {
+  "entries": 91,
+  "reached": 277,
+  "packagesNamed": [
+   "@syzygy/cap1-core",
+   "@syzygy/cap1-daemon",
+   "@syzygy/http-host",
+   "@syzygy/polaris-generation-consent",
+   "@syzygy/polaris-generation-core",
+   "@syzygy/support",
+   "@syzygy/three-surface-poc-core"
+  ],
+  "packageDirsReached": [
+   "apps/three-surface-poc",
+   "packages/cap1-core",
+   "packages/cap1-daemon",
+   "packages/http-host",
+   "packages/polaris-generation-consent",
+   "packages/polaris-generation-core",
+   "packages/support",
+   "packages/three-surface-poc-core"
+  ],
+  "cap1DaemonFilesReached": 8,
+  "firstChainToCap1Daemon": [
+   "apps/three-surface-poc/src/evaluation-footer.test.ts -[@syzygy/cap1-daemon]-> packages/cap1-daemon/src/index.ts",
+   "packages/cap1-daemon/src/index.ts -[./consent-loading.js]-> packages/cap1-daemon/src/consent-loading.ts"
+  ],
+  "unresolved": []
+ },
+ "daemon": {
+  "entries": 1,
+  "reached": 106,
+  "packagesNamed": [
+   "@syzygy/cap1-core",
+   "@syzygy/http-host",
+   "@syzygy/support",
+   "@syzygy/three-surface-poc-core"
+  ],
+  "packageDirsReached": [
+   "apps/three-surface-poc",
+   "packages/cap1-core",
+   "packages/http-host",
+   "packages/support",
+   "packages/three-surface-poc-core"
+  ],
+  "cap1DaemonFilesReached": 0,
+  "firstChainToCap1Daemon": [],
+  "unresolved": []
+ },
+ "cap1DaemonMentions": [
+  "apps/three-surface-poc/src/evaluation-footer.test.ts:4: import { escapeHtml } from '@syzygy/cap1-daemon';",
+  "apps/three-surface-poc/src/git-observation.test.ts:109: pocObserverInputsAreClean({ changedPaths: ['packages/cap1-daemon/src/server.ts'] }),",
+  "apps/three-surface-poc/src/git-observation.test.ts:114: // syzygy-bpyt.7.3: the host the POC serves through moved out of cap1-daemon; its bytes are still a runtime input.",
+  "apps/three-surface-poc/src/git-observation.ts:183: 'packages/cap1-daemon/',",
+  "apps/three-surface-poc/src/main.test.ts:9: import type { DaemonOptions, DaemonStart, Route } from '@syzygy/cap1-daemon';",
+  "apps/three-surface-poc/src/main.test.ts:399: h.setObserver(observation('observer-rev', ['packages/cap1-daemon/src/server.ts']));",
+  "apps/three-surface-poc/src/materialize-action.test.ts:6: import { createDaemon, type RunningDaemon } from '@syzygy/cap1-daemon';",
+  "apps/three-surface-poc/src/page-size-delta.test.ts:4: import { escapeHtml } from '@syzygy/cap1-daemon';",
+  "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts:19: import { createDaemon, type RunningDaemon } from '@syzygy/cap1-daemon';",
+  "apps/three-surface-poc/src/polaris-presentation-route.test.ts:14: import { createDaemon, type RunningDaemon } from '@syzygy/cap1-daemon';",
+  "apps/three-surface-poc/src/polaris-source-route.test.ts:17: import { createDaemon, escapeHtml, type RunningDaemon } from '@syzygy/cap1-daemon';",
+  "apps/three-surface-poc/src/reobserve-action.test.ts:2: import type { RouteContext } from '@syzygy/cap1-daemon';",
+  "apps/three-surface-poc/src/response-limits.test.ts:11: import { createDaemon, type RouteContext, type RouteResponse } from '@syzygy/cap1-daemon';",
+  "apps/three-surface-poc/src/routes.test.ts:8: import { createDaemon, type Route, type RunningDaemon } from '@syzygy/cap1-daemon';",
+  "apps/three-surface-poc/src/surface-routes.test.ts:8: import { createDaemon, type RunningDaemon } from '@syzygy/cap1-daemon';",
+  "apps/three-surface-poc/src/tuple-encoding.test.ts:7: import { createDaemon, type RunningDaemon } from '@syzygy/cap1-daemon';",
+  "apps/three-surface-poc/src/verbatim-route.test.ts:10: import type { Route, RouteContext, RouteResponse } from '@syzygy/cap1-daemon';",
+  "apps/three-surface-poc/package.json:13: \"@syzygy/cap1-daemon\": \"0.0.0\",",
+  "apps/three-surface-poc/tsconfig.json:13: \"path\": \"../../packages/cap1-daemon\""
+ ]
+}

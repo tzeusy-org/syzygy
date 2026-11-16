@@ -1,0 +1,53 @@
+{
+  "subject_commit": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+  "npm_count": 13,
+  "npm_paths": [
+    "apps/syzygy",
+    "apps/three-surface-poc",
+    "packages/cap1-conformance",
+    "packages/cap1-core",
+    "packages/cap1-daemon",
+    "packages/cap1-system",
+    "packages/http-host",
+    "packages/polaris-dossier",
+    "packages/polaris-generation-consent",
+    "packages/polaris-generation-core",
+    "packages/support",
+    "packages/test-kit",
+    "packages/three-surface-poc-core"
+  ],
+  "root_glob_paths": [
+    "apps/syzygy",
+    "apps/three-surface-poc",
+    "packages/cap1-conformance",
+    "packages/cap1-core",
+    "packages/cap1-daemon",
+    "packages/cap1-system",
+    "packages/http-host",
+    "packages/polaris-dossier",
+    "packages/polaris-generation-consent",
+    "packages/polaris-generation-core",
+    "packages/support",
+    "packages/test-kit",
+    "packages/three-surface-poc-core"
+  ],
+  "independent_path_iteration": [
+    "apps/syzygy",
+    "apps/three-surface-poc",
+    "packages/cap1-conformance",
+    "packages/cap1-core",
+    "packages/cap1-daemon",
+    "packages/cap1-system",
+    "packages/http-host",
+    "packages/polaris-dossier",
+    "packages/polaris-generation-consent",
+    "packages/polaris-generation-core",
+    "packages/support",
+    "packages/test-kit",
+    "packages/three-surface-poc-core"
+  ],
+  "all_methods_equal": true,
+  "root_not_a_workspace": true,
+  "npm_raw_sha256": "dd74d6443b5cede3e3afdf13c40f47694f6740c1605b910f1de109dd8570b3c2",
+  "current_receipt": "logs/npm-workspace-query-current.json"
+}

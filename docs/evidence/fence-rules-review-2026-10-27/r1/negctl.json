@@ -1,0 +1,591 @@
+{
+ "base": "a088f1caf061c1a2062527ce8521c9b64c3c7fd1",
+ "head": "9029e1cfb7a5ca1b02dbddaa450ac61349639bd7",
+ "method": "ts.transpileModule, target ES2022, module NodeNext, removeComments, per file, before against after",
+ "typescriptVersion": "5.9.3",
+ "changedFiles": 81,
+ "changedProductionFiles": 59,
+ "commentOnly": 0,
+ "notCommentOnly": [
+  "apps/three-surface-poc/src/capability-detail.ts",
+  "apps/three-surface-poc/src/fresh-checkout-demo-main.ts",
+  "apps/three-surface-poc/src/git-observation.ts",
+  "apps/three-surface-poc/src/poc-main.ts",
+  "apps/three-surface-poc/src/polaris-accessible-names-main.ts",
+  "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+  "apps/three-surface-poc/src/polaris-generation/draft-preview.ts",
+  "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.ts",
+  "apps/three-surface-poc/src/polaris-generation/generation-mutation-run-main.ts",
+  "apps/three-surface-poc/src/polaris-generation/public-source-screening.ts",
+  "apps/three-surface-poc/src/polaris-generation/redis-shaped-measure-main.ts",
+  "apps/three-surface-poc/src/polaris-generation/repo-corpus.ts",
+  "apps/three-surface-poc/src/polaris-generation/self-corpus.ts",
+  "apps/three-surface-poc/src/polaris-keyboard-sweep-main.ts",
+  "apps/three-surface-poc/src/polaris-narrative.ts",
+  "apps/three-surface-poc/src/polaris-reading.ts",
+  "apps/three-surface-poc/src/polaris.ts",
+  "apps/three-surface-poc/src/pwb-mutation-run-main.ts",
+  "apps/three-surface-poc/src/pwb-mutation-sweep-main.ts",
+  "apps/three-surface-poc/src/restart.ts",
+  "apps/three-surface-poc/src/walkthrough-inputs.ts",
+  "packages/polaris-dossier/src/brief.ts",
+  "packages/polaris-dossier/src/check.ts",
+  "packages/polaris-dossier/src/close.ts",
+  "packages/polaris-dossier/src/design-review.ts",
+  "packages/polaris-dossier/src/doctrine-quote.ts",
+  "packages/polaris-dossier/src/inventory.ts",
+  "packages/polaris-dossier/src/launched.ts",
+  "packages/polaris-dossier/src/polaris.ts",
+  "packages/polaris-dossier/src/render.ts",
+  "packages/polaris-dossier/src/review.ts",
+  "packages/polaris-dossier/src/screen.ts",
+  "packages/polaris-dossier/src/session-handover.ts",
+  "packages/polaris-dossier/src/session-view.ts",
+  "packages/polaris-dossier/src/waiting-sessions.ts",
+  "packages/polaris-generation-consent/src/consent-ports.ts",
+  "packages/polaris-generation-consent/src/package-reader.ts",
+  "packages/polaris-generation-core/src/canonical-json.ts",
+  "packages/polaris-generation-core/src/dossier-evaluation.ts",
+  "packages/polaris-generation-core/src/dossier-profile.ts",
+  "packages/polaris-generation-core/src/generation-source.ts",
+  "packages/polaris-generation-core/src/pipeline.ts",
+  "packages/polaris-generation-core/src/prompts.ts",
+  "packages/polaris-generation-core/src/public-source-classification.ts",
+  "packages/polaris-generation-core/src/secret-redaction.ts",
+  "packages/support/src/deep-freeze.ts",
+  "packages/support/src/index.ts",
+  "packages/support/src/sha256.ts",
+  "packages/three-surface-poc-core/src/act-fields.ts",
+  "packages/three-surface-poc-core/src/body-read-authority.ts",
+  "packages/three-surface-poc-core/src/git-object-reader.ts",
+  "packages/three-surface-poc-core/src/model.ts",
+  "packages/three-surface-poc-core/src/owner-act-drafter.ts",
+  "packages/three-surface-poc-core/src/poc-seeds.ts",
+  "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+  "packages/three-surface-poc-core/src/project-shape-observation.ts",
+  "packages/three-surface-poc-core/src/response-identity.ts",
+  "packages/three-surface-poc-core/src/walkthrough-judgment.ts",
+  "packages/three-surface-poc-core/src/walkthrough-readiness.ts"
+ ],
+ "rows": [
+  {
+   "path": "apps/three-surface-poc/src/capability-detail.ts",
+   "status": "M",
+   "sourceSha256Base": "38fb8752beeceb3539029e77e62e61f2b7401c6628fbcca9e6c34b7f58531189",
+   "sourceSha256Head": "870b43ba23fda2f36840b5da4f9fbdb4967bb8e7a2c7a058751f200825d31be7",
+   "emitSha256Base": "70ebc4373504f4a2c30b49dacfc21f65388e82f21a6fdb7b60a7e0ad9b98050b",
+   "emitSha256Head": "39c528828a9687ff17d44bb144aa9e9f521042bb3b50264b5165366255f160c9",
+   "commentOnly": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/fresh-checkout-demo-main.ts",
+   "status": "M",
+   "sourceSha256Base": "afcca52b645b756d4e01182a34047251d22c9e5b4bf2ceea9146a8cba450d427",
+   "sourceSha256Head": "b59ed25c6faddc6753e6f5708b1243896f475b3105b0e7aeb9daab2b53b1a501",
+   "emitSha256Base": "055a32b595858d2f23e9a066a41901fb53cbb66b3c9ba3b5e862ce716ee2d830",
+   "emitSha256Head": "b5f423b333054e469e32f4eb3e6285d8f79a2b271b2bea03466ec6049536acf4",
+   "commentOnly": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/git-observation.ts",
+   "status": "M",
+   "sourceSha256Base": "0e52e4969a8f356c3450469ad783f3cedd906d0e0c50d685cb18f9039f158cb7",
+   "sourceSha256Head": "41266a93df8b7df94563c6e1a0d3276ebac309a66b1c5a8c3a2e4221595bf92c",
+   "emitSha256Base": "d536ace29239691017acb7c854aa1c5dc0e05d0ba61195780942f39f3dc13fc3",
+   "emitSha256Head": "6bd19a1aed9d8fae449ef76a3cd04aced3060d54b1fe7dad84d69f1ef7c007b3",
+   "commentOnly": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/poc-main.ts",
+   "status": "M",
+   "sourceSha256Base": "e09e8f203a186b41b2b5ba554fa2fc7f7018a02d7ca85085bff273ba7617bdc0",
+   "sourceSha256Head": "2e87695b4450a92eb8e404eaa16c108def55770d49f7158d4cd08c9e3d7ae0df",
+   "emitSha256Base": "ab21ce44f5eaa83fb43405e6e8e8f10f5f23d4a5a761af6d856f08ec28c62152",
+   "emitSha256Head": "e8578be351ef381c3c630d5f93dd9749d246395d364f5dfc2e1a70533a01659e",
+   "commentOnly": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-accessible-names-main.ts",
+   "status": "M",
+   "sourceSha256Base": "087b4d1c880ef272c1fb3af9fbea300dd5f232d4ef9b94d87bcdd7a69d45ae97",
+   "sourceSha256Head": "6312f9c9864221ca1d9bdb400d23832c27452a6a372fbf89dc6dbafb770c858c",
+   "emitSha256Base": "fe057a3865d2855dc927d63613c088369dda307a3e96860c4e7f55dbe9f1448c",
+   "emitSha256Head": "02bdd0d88409a47146ea07674c2797f04db8e81826428d359ce11273a5ff01b9",
+   "commentOnly": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "status": "M",
+   "sourceSha256Base": "c1f82e84a0ad7d398fcc617c19b0de9b4deff3affd2d2e3f757e0a73560bb8f9",
+   "sourceSha256Head": "3e644e9cbfb611e2e4868b6ebd02eb26671a6a32931f6a7a55f83da54477085d",
+   "emitSha256Base": "1cb3f8e86d3579fd21cce4010d307be5272383a960571df22791b02380791d36",
+   "emitSha256Head": "0c043d9cdd0c9432ef342e0d03a1b24b3b7b35a21002626b3eb64e567c25eebf",
+   "commentOnly": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/draft-preview.ts",
+   "status": "M",
+   "sourceSha256Base": "2ca88887779eba1c7d503fd3358ca5e3e12283065e835800539bc080e3b64bfa",
+   "sourceSha256Head": "6209a83613a6ca2ecc5a29385c75d50cd008172701533cc747ffc69601ecf266",
+   "emitSha256Base": "c8de9cd64e279dc0191b9cc3ea72ac29d5c95de3519f9da4bf997476fe7b0d0a",
+   "emitSha256Head": "e474763f0155e0ff6e5d8ea87890d6009149a7f4804c306b615ff62ff6245d13",
+   "commentOnly": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.ts",
+   "status": "M",
+   "sourceSha256Base": "49aa728a967d561919627987f9081b713416ea0816e5e7f30e9374e77da995d2",
+   "sourceSha256Head": "ecdc858281c3807e01d00069dca37f3e8d082b659df388fe1f17d4e5f38261d5",
+   "emitSha256Base": "d8cf7a06d874da39ba2161bbc3e6ed3167fff5107b9152b7412a20229e0b1661",
+   "emitSha256Head": "cd66374b5c3100ac161c717d8ee7b3a1d10af74893b39a583e3e57ccf10dba8c",
+   "commentOnly": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/generation-mutation-run-main.ts",
+   "status": "M",
+   "sourceSha256Base": "6903b35e4e389ba310235b2b8a38420bddb1e4e81313cfa357b0165c0236d2f7",
+   "sourceSha256Head": "658d9e95feae0ce9342161e1d4c4055573c7558c05bd3af74e8e18bdc547b8a8",
+   "emitSha256Base": "45c89eb6d5a073a3d157f0e56be1bb32139dfeb99248b6eec648aab3dbba3471",
+   "emitSha256Head": "fe65e22ce4f70e34ee8f8118da8c3245a1ce732fc579ff943abd83c142bc8db8",
+   "commentOnly": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/public-source-screening.ts",
+   "status": "M",
+   "sourceSha256Base": "4c6ce26946e3791774be4a9a8b21e2a734618cc7f0387587969a16f6baa8f625",
+   "sourceSha256Head": "91f4633f3f89770f13d9eb2b604d9f7c9a9d322e5e8cf409b40dca2010ba8003",
+   "emitSha256Base": "034add0be1a2e13945da778736e8ed3f799043a8cd78b0db06e2161974b0baa3",
+   "emitSha256Head": "8482e2514c52f81702f4566bb16e2eb69e2fe1e53b0d330253e16ccd43de87d4",
+   "commentOnly": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/redis-shaped-measure-main.ts",
+   "status": "M",
+   "sourceSha256Base": "5c8c53cf1f58923001c884206806cc720a527daffbb7aed9045e435af2a3fb77",
+   "sourceSha256Head": "2ce9baa8cf60f5785ae73eb13e5007ce47beb1bf9d43bb0349da9259d3caf7c4",
+   "emitSha256Base": "a26fbd823a1465d0e984c1c7f35e087a99838d8bd646527d2413376ee2122d48",
+   "emitSha256Head": "1ec49fc7bffba75ee8a5e8f825d9606275ec4f139e07c57441d3a2748417b010",
+   "commentOnly": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/repo-corpus.ts",
+   "status": "M",
+   "sourceSha256Base": "86009ee555f3787e61d053fe8cdd4710cf34e4249f0c524fa210daf4334b938c",
+   "sourceSha256Head": "b8d0f8a0bf4f70b22c6d7517e97103c263528908f0754f5d9607b3d70d149203",
+   "emitSha256Base": "b4c328d4e09ca62ae7b31e287aafaa198fa0b813c0e4f13b18afef2e0951bb28",
+   "emitSha256Head": "f344de5c5fc606e1b14210d4e34d68894d6caa45eba8423ee212384a7a58ae7e",
+   "commentOnly": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/self-corpus.ts",
+   "status": "M",
+   "sourceSha256Base": "f92d400199df264d88defef90a309d670ff8210a03e77703f71e82023139f68c",
+   "sourceSha256Head": "3f408302f11ff20a6e70c0e40bf09f651599e85c7a10377a92c2f0151f8e62a8",
+   "emitSha256Base": "cb284716bedd15b1b348e7e4d127901a12e3012336feff5b2add2542d4dd61f0",
+   "emitSha256Head": "fffe7f35a77bc74442807442a3f8ce5db9acf736cbe16da11a6529a870bd12ad",
+   "commentOnly": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-keyboard-sweep-main.ts",
+   "status": "M",
+   "sourceSha256Base": "9fab3c963088465ae5051bb5a0fbfc0a8de2769e84c0f0ae4558cadf8159e699",
+   "sourceSha256Head": "8a94821ad7661cd897e9c9c2145d24da622dced53467879f71c8dcbacf37ec28",
+   "emitSha256Base": "85aa30e0f86669e8c4e89e23775e552729c1f1e864a0d7e30a88ff72bb7bfa0c",
+   "emitSha256Head": "82618f294400019d40bb014bfb6106f64318419cead05d928d8540f8558b1db5",
+   "commentOnly": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-narrative.ts",
+   "status": "M",
+   "sourceSha256Base": "b8e2f77cefcdee10e1ad16cf67140bbe66e2aa9cd1023c45faa7e0751150172f",
+   "sourceSha256Head": "daced3d4e4390b309f434ea3a959a9b9923029ce51d88e6f4e8bec51a17ecd0b",
+   "emitSha256Base": "bc83235409e1cb2404a8ca1e19668d6fdf25ea0567ad66eb296a3bc718f3c6b9",
+   "emitSha256Head": "4716dafbc1bde19bd56266da4495c66a32c1251c45cb19856b402440f7ef5246",
+   "commentOnly": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-reading.ts",
+   "status": "M",
+   "sourceSha256Base": "494b7e747a52b6038751a82b1cf4fc9d92e4ce2c8afc74e2097d7d77bccc9b31",
+   "sourceSha256Head": "4fecd9cdb78ce3d3a9449207b1bc0b27bcc91180a322822762cb333dd5125b7f",
+   "emitSha256Base": "cc67ca21cf6be3ebce5f37867f64aae17f015d16caabae2ba28171fb348e631c",
+   "emitSha256Head": "ec751a77dbcb887b201cde1040689ef49637decd59ffae6916b77ecae99a6fa4",
+   "commentOnly": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris.ts",
+   "status": "M",
+   "sourceSha256Base": "029d439f1d41584b803cc84d5688b89d826e6797ac4926daa95c59b0504bd563",
+   "sourceSha256Head": "53b360b12649cd933d53045712dccd10359a27afe5db711baac46db2ba4c9ffe",
+   "emitSha256Base": "267f5e72e864733c62710024e61853e3e5e2f1009396cf24958636fd0069887e",
+   "emitSha256Head": "3cf46e0fad7da240c241daf91636d5fe2bebcf8ca31429f4daa7abd7b31079b8",
+   "commentOnly": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/pwb-mutation-run-main.ts",
+   "status": "M",
+   "sourceSha256Base": "5fb6f68ca834e8f4b4b024a840128d78729bc223ebb5e046a061d123a6b52475",
+   "sourceSha256Head": "34001c55048e7bf945e6353eba798ff22b5517c454170e60be439fa03aaf4f7e",
+   "emitSha256Base": "9f971defccc036e27d3338b80d08a0d3c967081002d16aea47d403d6b804772d",
+   "emitSha256Head": "5e457e75a6c58c3c8e45da5d689a77737bf3bbd185eb3f70a7c53347bbd38da8",
+   "commentOnly": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/pwb-mutation-sweep-main.ts",
+   "status": "M",
+   "sourceSha256Base": "c14d30d8d797bcb65b9f8076cf4b77f95656d3e37ef108f9b637a44ac1a25443",
+   "sourceSha256Head": "b6af20150245e93df86a1856b66eac0cd64b8273f0d4ff3a620b1930d93fe1ea",
+   "emitSha256Base": "baffd3773a4a193d20f21cdd4a6f5caf738b45a0dfe3833c8e576e8c3404f2c7",
+   "emitSha256Head": "f0821f9282143aca99f1648979fb049cf82c627e36e388cb44ef402dbf318bc9",
+   "commentOnly": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/restart.ts",
+   "status": "M",
+   "sourceSha256Base": "3e0067aa2ca87eae0acffaf5ad7c6fe062dadf5fed1c1f87dc28f4d87d057c57",
+   "sourceSha256Head": "c2ec7b101a92e344dc03f15ceb7cf72d61ccdac66e8373c9e32e73f988d10841",
+   "emitSha256Base": "c1010a53f27a262a41763fdaccf04c64910b5748c087a910e45873e053427922",
+   "emitSha256Head": "6c2175b3981433ae967597b2640ae0db94ce7024cc3f4952c59b14415716108d",
+   "commentOnly": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/walkthrough-inputs.ts",
+   "status": "M",
+   "sourceSha256Base": "281c5ed93772843430127e3137bd69c967cd30f59991928277ce2addebffdb0d",
+   "sourceSha256Head": "596361b7ef66c9126079a80bc9dfb2628c9d3b0a8c0b41e3f385b88dc39823ad",
+   "emitSha256Base": "1719e15cfb409a884d96dc4b2aeabc64d02bb86ee8d4b152518f2e02bde22880",
+   "emitSha256Head": "3cfd854619a52b2587b8f94ae6fee9d7fef2dcb89a59804ababaee64887c3de7",
+   "commentOnly": false
+  },
+  {
+   "path": "packages/polaris-dossier/src/brief.ts",
+   "status": "M",
+   "sourceSha256Base": "95c279b1f01a8a138b1b904b457c871315efc58281e5ee52dcf67c679ea30da2",
+   "sourceSha256Head": "24b67a414a4ee5d6952225447b18f10cc67deb9feb7236bae856b4d5d277858e",
+   "emitSha256Base": "4cf6005d095ce1679843f28eadbfb77b8cf1af6d4bb7e89a017f549fe2c0e597",
+   "emitSha256Head": "82ee903a2804412deef91176b00272ed4eacd62bdb74c4c7b9063f611efe3fd0",
+   "commentOnly": false
+  },
+  {
+   "path": "packages/polaris-dossier/src/check.ts",
+   "status": "M",
+   "sourceSha256Base": "5aa89525701f2fdafc69954fdf8dbc9060e54f3b803a7906152812a40d173bd7",
+   "sourceSha256Head": "503bf61de7d4b383db688fe48b6672820e46c2d25d402b434c26ec8a3194f469",
+   "emitSha256Base": "4a543a6ef2e4bc33a86801305f082c65be0f9dbf8c1fda042d581211184619bb",
+   "emitSha256Head": "368206f53cab5cc48144a573c379cd7cf5905bc6b32e297c178caa739cfcde83",
+   "commentOnly": false
+  },
+  {
+   "path": "packages/polaris-dossier/src/close.ts",
+   "status": "M",
+   "sourceSha256Base": "0303368eae0dc8f1c03adba31e0666d9e21f52a346eaddcaa20d7b26662f9598",
+   "sourceSha256Head": "bbf74cba11722a4e45417ab7f368180c7be7b56a0f8c191add07e2f21a5ec771",
+   "emitSha256Base": "987181abbb50e78ce68a88c4dece304fb130728d23c2ea4d3f0686e0ad2151e0",
+   "emitSha256Head": "09a5d58acd03e0bc5400adc722b7ee8acd1134ff2aed9836883c2863a1684064",
+   "commentOnly": false
+  },
+  {
+   "path": "packages/polaris-dossier/src/design-review.ts",
+   "status": "M",
+   "sourceSha256Base": "bd6e69a1ca12830b91e125b3f9bb49e0ce67855a38c4b78d49104f0970a27f7d",
+   "sourceSha256Head": "adbfdac8cead133f9806e51a53fca9f1e551d8630f66548b307a39d51b422d2d",
+   "emitSha256Base": "67aae3e1087ffcde66abf024332cb8dbb4b01c9e85afec7aa2aeb87130e99c30",
+   "emitSha256Head": "6b406104f3b6716cdb3e5c2b7a7c5fded9a7e78edfa3b35a7a7363902706d32d",
+   "commentOnly": false
+  },
+  {
+   "path": "packages/polaris-dossier/src/doctrine-quote.ts",
+   "status": "M",
+   "sourceSha256Base": "2568b47d6c39eb520fa184b8b48bc934d61baf242c5f6252cf571bb85f240bd5",
+   "sourceSha256Head": "37986e0c3e4a39cd75026a2155799f9198aded1a895042b940a1e9f4e3de2f3c",
+   "emitSha256Base": "616cff7bc38a6080dcd2b215e4de654a7f1d1f192f36360c759c67b096a9dc72",
+   "emitSha256Head": "643281f25d333ddb83d18e1f3ca3152a3e0bd7e5005492b84d9c11ddd9089069",
+   "commentOnly": false
+  },
+  {
+   "path": "packages/polaris-dossier/src/inventory.ts",
+   "status": "M",
+   "sourceSha256Base": "dc4db3325e313ca214cc047882f8bd8ba34105eda84caeeb744f3c4d73e8d019",
+   "sourceSha256Head": "8e1fd6a5514d13db14a35f1afa2dce44e294c67246d32c7259f25004450b1272",
+   "emitSha256Base": "9557323cf4fbeca5b44781ca63d785731bec86a5483af6a8a9908d995f41500f",
+   "emitSha256Head": "4fa8386b5a3117f2beabe4d05d8db9813a0f4b24f618a0962756fadd2af4c3f3",
+   "commentOnly": false
+  },
+  {
+   "path": "packages/polaris-dossier/src/launched.ts",
+   "status": "M",
+   "sourceSha256Base": "c7a25b8b45fe12e2add7874f88d46b2bad1eef16ffa4a17e2464d5c671424921",
+   "sourceSha256Head": "51b7370501ebd411960f83bbc7523605f78347ed2f01ad6cd0f647e306b45185",
+   "emitSha256Base": "621075193b1023b564e3e13f84055ab74c3285983e9bc69f36403d0dedeea9c0",
+   "emitSha256Head": "0fad1d4826c8ba8d4690611069402c9fdb742f7f899abab469fe9458996bf7b8",
+   "commentOnly": false
+  },
+  {
+   "path": "packages/polaris-dossier/src/polaris.ts",
+   "status": "M",
+   "sourceSha256Base": "c75c2d005437d24af820ec6e83cfcdd2572e9820930fba7f26a5dc45db402c12",
+   "sourceSha256Head": "d739f806f0e0fc7d39a1da7ae8e0dd2bbd65c58c695a21f5b95018aa08a2c7f8",
+   "emitSha256Base": "12ab04a6694ef7cde4d0566d866ee13ea89d7a2ccac99083d720bc4cf4fe9291",
+   "emitSha256Head": "a2a4776ee5ed88f7e46c53f2cbf7ebd9906c8e3b69cfc207906676f8a7374d1e",
+   "commentOnly": false
+  },
+  {
+   "path": "packages/polaris-dossier/src/render.ts",
+   "status": "M",
+   "sourceSha256Base": "0b070a56f15b85ec4198d42f1eef2782b07c9cef2bb7803e97b0b061bec11f73",
+   "sourceSha256Head": "75dc0910b51d47155e130be53b642c00443eace47e351791963e6e9699e11521",
+   "emitSha256Base": "ce50dee1c1588daa83f71b752291ec1d88843ab59cd93c074ed921cce0bb13b8",
+   "emitSha256Head": "eae92036c512723aa70b6dfd5ff203b407a879e81aa5c8952cb8a4453378bee0",
+   "commentOnly": false
+  },
+  {
+   "path": "packages/polaris-dossier/src/review.ts",
+   "status": "M",
+   "sourceSha256Base": "a4a4f1284231e2fa9e563b10b353f93ef7577f649fbb0ad0f4ba411f9607093b",
+   "sourceSha256Head": "8f770a0e0aff0311765c698583c3eb107d4d471916c2305311826ff64af4980e",
+   "emitSha256Base": "5a147cfb78f6b11d4e73845ecd329eb90b536a64e7baaedd1d0d62f628a6ac52",
+   "emitSha256Head": "ab1639c3361032746f30a9ba42f3acca0fce0821d8e066cf3f81fb44c6c6ecbd",
+   "commentOnly": false
+  },
+  {
+   "path": "packages/polaris-dossier/src/screen.ts",
+   "status": "M",
+   "sourceSha256Base": "dfb0cfe774454494584f4798f4e6355f49d3a99ec26826eebb0f93caee92d4ec",
+   "sourceSha256Head": "1bf4ec6c347e028a0ca75fbb1efb3ce237748e4010962e1b68592446c8b2b8d3",
+   "emitSha256Base": "e819d02868c27f59859c1f7df186670a2fb50c9246d9336e51b727d7ebed6d5f",
+   "emitSha256Head": "0b741422d23be5e906e84455ab76851c9ca6ea2f3770fa4411e33fc5ba00fe05",
+   "commentOnly": false
+  },
+  {
+   "path": "packages/polaris-dossier/src/session-handover.ts",
+   "status": "M",
+   "sourceSha256Base": "ada0c0772d5001cdc90ac2b42cea46d7525b69ece8156d13d8b7ef51da8803b7",
+   "sourceSha256Head": "1728d9223bda30c28b597ac81039edb448e3e64f430cbc38720d520fa836d18b",
+   "emitSha256Base": "488d85ab5688b1004b81163246de040619b0f6cbd542ceb5432cc05f26597967",
+   "emitSha256Head": "66e26a07c3c055a2d91933222ee9c44c2276301f227e2d49a29b9df9c5ddfe3b",
+   "commentOnly": false
+  },
+  {
+   "path": "packages/polaris-dossier/src/session-view.ts",
+   "status": "M",
+   "sourceSha256Base": "bf224d0cd8d83b22feae3d7cf36a5459d51d1efcc96667c5e55844c1e6b40d0e",
+   "sourceSha256Head": "c9d43eb9ac245d47162054cdd9e66af982ab6576d5d4fe7a9d6f69a39136f112",
+   "emitSha256Base": "a4d9a0bf08cdb13c98d3d55e7a45a940c8835eb8d96008624eafa4cbf121e8ce",
+   "emitSha256Head": "929a5769667eb6734feec999212d526186b06c013f87a4064d7afb6eb5ef53d9",
+   "commentOnly": false
+  },
+  {
+   "path": "packages/polaris-dossier/src/waiting-sessions.ts",
+   "status": "M",
+   "sourceSha256Base": "0e63ad275e9513d538851ef5c6825813d31fe198161c0b1f88fa1e19667c0420",
+   "sourceSha256Head": "f06ec3c3bb0351adbe3e29d425f36e796730d1525e93e49617dfbe1708fc36e2",
+   "emitSha256Base": "c1573ae8b3352ed44212cd5440164b4147d7255d943becfcf6205c29f73175ae",
+   "emitSha256Head": "0502c7e43daca4afc6a6e1ed3c5b71e59a378c2e17e0eea4e6da25189575606d",
+   "commentOnly": false
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/consent-ports.ts",
+   "status": "M",
+   "sourceSha256Base": "24d3534a49821453ae193e5fbec09b86e60789d508f1c45b4dd999394efce9f1",
+   "sourceSha256Head": "b9713073670b9e69efcd6bc591af92d10ca928e7501ae87f2cf12efebae937ca",
+   "emitSha256Base": "79ecc066aac202c584f74dda8084eaa2870062d9ddc85f541ce7e6c58ddf9aa4",
+   "emitSha256Head": "c31c2f7a53c6cd95efe088cf68fa6782dea22e508e2c1f39cc46253f800b2e55",
+   "commentOnly": false
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.ts",
+   "status": "M",
+   "sourceSha256Base": "da42b88df3bc9309685b5f141144edff2d99fee843d84920f5606d934fc15176",
+   "sourceSha256Head": "4804e2e90fd7ab043be1871ec27229955978ba13df345e2fdf84668abfc054b1",
+   "emitSha256Base": "6bd48f0d9f4f64ad75db8693e007aeb8550216f6f4575f505d756425c9c1575c",
+   "emitSha256Head": "6cfff1b6ac098dc62a6b8527cb72ab9fc683fdb12281299b56b7a0b2011d49f1",
+   "commentOnly": false
+  },
+  {
+   "path": "packages/polaris-generation-core/src/canonical-json.ts",
+   "status": "M",
+   "sourceSha256Base": "35128de621c8afc44ed51f911415568843b87da28b3b4322a7f97ce9f55a44e7",
+   "sourceSha256Head": "4d7e745dc505c0de74666511a90ccda4673a5bc3d3e9deb73f424bce92875608",
+   "emitSha256Base": "fcf6ecf1ff34e9b72be1b68630127133e066188416e049dc09d4bfb4740078c8",
+   "emitSha256Head": "7be90db9325aeeb4c6a78224840b1f894593db5e5e5cc6a7ce940ea585ef6b20",
+   "commentOnly": false
+  },
+  {
+   "path": "packages/polaris-generation-core/src/dossier-evaluation.ts",
+   "status": "M",
+   "sourceSha256Base": "39f0ad1f13eed182f31b3ccb67b7b44ec6f8e3c34553cabd0b5943f77d0ca5d8",
+   "sourceSha256Head": "5beea0c6b36a4032f11c87e8ef27fd9c3a036dad2824a311e53bbfcb32d316f2",
+   "emitSha256Base": "6aba405c2af2eaff350a9c757f835399edd0c64e6bdb456c3c4cb0e17cdd4d24",
+   "emitSha256Head": "99850b6d71fe30e52327354873571b9fb005f30067dbc8522924adb0633eaabf",
+   "commentOnly": false
+  },
+  {
+   "path": "packages/polaris-generation-core/src/dossier-profile.ts",
+   "status": "M",
+   "sourceSha256Base": "4a316ae452ab16a5cec6051810ce562af2ab988af63ff1212c237b19e5f356df",
+   "sourceSha256Head": "8550ba40643cfed9f0e72cde31d3afa7938564fc54ba162ecfbbe46c18e9224f",
+   "emitSha256Base": "3bc37891c8a60d2a46ef864253b70b8879eeb37e5380055fcd02f6f8c98d372a",
+   "emitSha256Head": "daff65b30be34816ad75160917cd7fb5b6297bf14f60b48b493924861d61889a",
+   "commentOnly": false
+  },
+  {
+   "path": "packages/polaris-generation-core/src/generation-source.ts",
+   "status": "M",
+   "sourceSha256Base": "3ff111820b63f4f198f8cef20d0cd88312881ef5c73d10a0ca7a471aea25a069",
+   "sourceSha256Head": "c3a392d23c6ab5cf4632b2ecca60cdbedbfbdeff7a0a1b305d688835481bee74",
+   "emitSha256Base": "cf43657f241217f42a560ec48b9db7bb950924e39531368081251cc0757f655d",
+   "emitSha256Head": "f4a296caa2cac9b28db45024aeb70c8a4828b70cc1de2b8cd0968960b8b135a0",
+   "commentOnly": false
+  },
+  {
+   "path": "packages/polaris-generation-core/src/pipeline.ts",
+   "status": "M",
+   "sourceSha256Base": "d4fbf19f6d1fa5fa260de2f3c637ae408153a206242053299f2461802475e711",
+   "sourceSha256Head": "89df81566b51fdcc24376f6b1282fea7d2110132dd7caa7c198bb03b00b45164",
+   "emitSha256Base": "4d6cba83bb9574382e61cdf2677aec2e6082194d639c04435558a3a19fe48451",
+   "emitSha256Head": "1b13bf9d31db407764e99a8a4351929cf411ba990baadf0e0ef30c1efe3d8fe3",
+   "commentOnly": false
+  },
+  {
+   "path": "packages/polaris-generation-core/src/prompts.ts",
+   "status": "M",
+   "sourceSha256Base": "87eb64605fa488626d9c6a5408eb7f7b13a26a7015cc2523796ea4c9a7988ef8",
+   "sourceSha256Head": "5c3387dd012b00a4e7f82803f518a266c67ccf57fa60d7cfcfd8d45b7b7e51d7",
+   "emitSha256Base": "4f36ed6ab028c5aa7035779dfc6ee93a40f069ac007f3fb97d488f882bf6642a",
+   "emitSha256Head": "eebd75f7a0b37767e536f9c6aaf734bfd86e348d0c4da4e31629a4755129224a",
+   "commentOnly": false
+  },
+  {
+   "path": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "status": "M",
+   "sourceSha256Base": "5d3cb7538eec7e90b6a711eb741cb7a59d401029365c72b8c13ec2c56fcba32c",
+   "sourceSha256Head": "9c2e4ff264c4799a50236e1c2ebff73c80d1ad3ed4fd5a1520a9e607d8b62ee0",
+   "emitSha256Base": "1b11c6949228fe038277621e27d215648e86bef8592ebc8191bae0b1bc2bc5f9",
+   "emitSha256Head": "1e81d5cc6d94c5283e33969812d0e36d334892e9ccebedc24d905fcb967e8988",
+   "commentOnly": false
+  },
+  {
+   "path": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "status": "M",
+   "sourceSha256Base": "6567b00948e88e5b222d6c734061c473ff16f1a5bf17b0aa117117dfa2d4e1c2",
+   "sourceSha256Head": "cb04ededc98c4557644306a6b60c89507e8850a89403df34b7cb62f865164ed1",
+   "emitSha256Base": "249e404d693a7f82ade2c3ff26e98052bf01b443014b0d6e189f50b05c496098",
+   "emitSha256Head": "0a49f4e00dfff915931c040ebf2e852df939dbc0e904ecee091d5382ef8482ee",
+   "commentOnly": false
+  },
+  {
+   "path": "packages/support/src/deep-freeze.ts",
+   "status": "A",
+   "commentOnly": false
+  },
+  {
+   "path": "packages/support/src/index.ts",
+   "status": "A",
+   "commentOnly": false
+  },
+  {
+   "path": "packages/support/src/sha256.ts",
+   "status": "A",
+   "commentOnly": false
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/act-fields.ts",
+   "status": "M",
+   "sourceSha256Base": "09a7c2e5c0514349e10b2b82a0aaf55aee9f3fac261385716ec3f70672552986",
+   "sourceSha256Head": "dcc451e83fc1ad97ef3cc5b1cf97dd979d1fba9de4588fc841958c03e8243fef",
+   "emitSha256Base": "9b6d8313f9197b9ccd5ea25e3d5f21c7b407ac0b6965c73255f78fdfe0e08bcd",
+   "emitSha256Head": "0a92b28e1dfa648dd2fd494aacd478036447ddd1b9c7a81421c9718b83d3e3a1",
+   "commentOnly": false
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/body-read-authority.ts",
+   "status": "M",
+   "sourceSha256Base": "f612651d13421c0ffcba0d8db9f5240dcb521aa2c0315b5316b92c52a7cb7b77",
+   "sourceSha256Head": "20f767ad97e2b9568c29de8b81f96e33279a737b65646af2c76e58aaeada547d",
+   "emitSha256Base": "1b02ff5c4025bd5ba6470b909bffd8ffc041a346e0c19c71f3de4b6745ad320d",
+   "emitSha256Head": "a297f4f1df5e2547e9a02f307c2c9fa61578d540c491dbe11c0283347a1f7637",
+   "commentOnly": false
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/git-object-reader.ts",
+   "status": "M",
+   "sourceSha256Base": "9d43268faf48b9099f4ffc626be368bd0daf04159b240fa6d7d915e0de7f1abb",
+   "sourceSha256Head": "19405187526e79585f92b65a926a07492929ea7335dd5a4994b8f204b7a0bf46",
+   "emitSha256Base": "e65a64ab6e5d385d09a17c99e6d452b16050cb072790d5f16fe29b4d7e327290",
+   "emitSha256Head": "7fa780fae3279b2fc7bc72cae9e73222593af0fc12b32420c6a54d0cac228343",
+   "commentOnly": false
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/model.ts",
+   "status": "M",
+   "sourceSha256Base": "7d752be94be204f917a679f05d99ea133536fdac4c0d0071688d78ef242499d4",
+   "sourceSha256Head": "9ab58377379c17fa0a09f84fd45441a1eb0f44d1edf82b07c496f9d49a87ce2f",
+   "emitSha256Base": "c280f712ab07e311ec331e8fde2f38f3f9b51a40a45cb86aa83e4cfb23a4c96c",
+   "emitSha256Head": "c3bcf7373e39bdc85d7744cba86bfef6e9d3864dd33e249cd514e958b078863e",
+   "commentOnly": false
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/owner-act-drafter.ts",
+   "status": "M",
+   "sourceSha256Base": "1dfea09c97b4b342df776a0978ec494d834cfae7d7533e4a6419e5b92cc162e3",
+   "sourceSha256Head": "d29e5183e763ad087a8c6ce597a8dfe9633c9b1d11b7361121507a2cd7855570",
+   "emitSha256Base": "95a3ec473db95b15b942a9740fb4034f62a2ad01f0b51d1effaa73e8cc258003",
+   "emitSha256Head": "1a051a637e665348182b9801b8b906bc11c13d6996b60029d864bee6aa9799cf",
+   "commentOnly": false
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/poc-seeds.ts",
+   "status": "M",
+   "sourceSha256Base": "4aebb7ad53b19c2173349f911641f965c7f3e348d71d790f38795d973e86fb41",
+   "sourceSha256Head": "0e2ee4ab20e65ac4d24d8a81ea655529350c6b1949e98bf51317f835ad7a3152",
+   "emitSha256Base": "d52672bffa59dfa3df295ac2b8a7b6444de6bb207833a3d60b4ba418224afe5f",
+   "emitSha256Head": "5157673bfecf934212a196b7719e678eebc33ad48190e98e31e74a6dabee63ff",
+   "commentOnly": false
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+   "status": "M",
+   "sourceSha256Base": "df5e1122af74643a09c28a450751242fad18f47760901b137a9c8d8fdf2f6ea5",
+   "sourceSha256Head": "c32ab4e3dbe509413a4d31afc1bb7a68c1a5a8b2b1d21945b72deb9e54617e34",
+   "emitSha256Base": "963b8cbebebf9a022c193bc636a50664146d7fa093deae45ee767024d3ad75bc",
+   "emitSha256Head": "d4b1ba58de41ac3fa7d665f7a25ac93b77e2d640a08fedb4e42fa9b676ccff30",
+   "commentOnly": false
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+   "status": "M",
+   "sourceSha256Base": "e9bcfd87e560b5904ee186e3c54bcbf1a1f30d6419e67036a41d6e1da34c2121",
+   "sourceSha256Head": "db2cd5cfb37f45895ca0794169339ca680918d0111c658534e6ede301a8d04a0",
+   "emitSha256Base": "040e8ed656d187f85ee714cb349749d74f4a5b133739e8064dd36759fe07166a",
+   "emitSha256Head": "830e4d325435b09075abaaab1fed37d236fa0f68c47e7b735787214766fbf015",
+   "commentOnly": false
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/response-identity.ts",
+   "status": "M",
+   "sourceSha256Base": "c191332d854d4de7b22bd1e5ece65d6f7994c5275805b681955a9122be8571b1",
+   "sourceSha256Head": "0347e2e9c614efcd386e8636025e4bcf04a2f2bbc748c4e36493be8c8530b506",
+   "emitSha256Base": "a75ffa67f396df8b3c9aa98d8a0c9d58a91229dfedd14bc68aa32fbf20b8b7d9",
+   "emitSha256Head": "31163654725c357add71e1214fce649d403ff0443501c2e8858617a6631a72a7",
+   "commentOnly": false
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/walkthrough-judgment.ts",
+   "status": "M",
+   "sourceSha256Base": "a64ef4c0d3891a5e5e7073ef63d14b9c19d0c50bd40a1f96ed1a3341a24e808e",
+   "sourceSha256Head": "c9aca29a91547529ad56fec32f7f70c7c959824e73fdc5ac7ee92416ef97cd14",
+   "emitSha256Base": "c22727baf0c4fb34a92d58cb8fd2a75cc3a2498acfeb5feb48e3cf340c2ac45d",
+   "emitSha256Head": "b24b415d8a5dc33138361dde9d4134dfc7d2fda6fde231bd08c40ec384955b7d",
+   "commentOnly": false
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/walkthrough-readiness.ts",
+   "status": "M",
+   "sourceSha256Base": "a4012784b6de8994948caf01f10de669fe3689630333a59bb22a0492aabeb319",
+   "sourceSha256Head": "8e77c7c48df1395195e7dc6eb2b5e13b1f4152ddb8d8bf2d4183ca41024aeaf6",
+   "emitSha256Base": "be6c6f3620b58bccc0e90e5357f28d253aafbe3ced46c96809d2db69d823eaa3",
+   "emitSha256Head": "458524cec3d55558292c378996b05c1627814f51ceea6971d37a9259793aecb3",
+   "commentOnly": false
+  }
+ ]
+}

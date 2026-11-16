@@ -1,0 +1,53 @@
+{
+ "files": [
+  {
+   "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-537/clone/apps/three-surface-poc/src/trajectory-narrowing.browser.test.ts",
+   "project": "@syzygy/three-surface-poc-app",
+   "type": "suite",
+   "name": "apps/three-surface-poc/src/trajectory-narrowing.browser.test.ts",
+   "line": null,
+   "mode": "run",
+   "state": "pass",
+   "durationMs": 1420.1780130000002,
+   "errors": [],
+   "tasks": [
+    {
+     "type": "suite",
+     "name": "Trajectory narrowing to the governing-intent Unknown (POC-REQ-014)",
+     "line": 27,
+     "mode": "run",
+     "state": "pass",
+     "durationMs": 1417.000923,
+     "errors": [],
+     "tasks": [
+      {
+       "type": "test",
+       "name": "the narrowed board lists exactly the cards the board renders, and hides an unmarked one",
+       "line": 38,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 347.99149499999976,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "with items outside the selection, Space on the focused toggle keeps exactly the inside figure's cards",
+       "line": 64,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 233.0765690000003,
+       "errors": []
+      }
+     ],
+     "hookMs": 836
+    }
+   ],
+   "hookMs": 3,
+   "collectMs": 1718.2936979999997,
+   "setupMs": 17.066913999999997,
+   "prepareMs": 141.50504800000004,
+   "environmentMs": 0.21373599999998305
+  }
+ ],
+ "unhandled": []
+}

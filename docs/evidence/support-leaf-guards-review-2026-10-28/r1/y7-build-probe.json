@@ -1,0 +1,27 @@
+[
+ {
+  "argv": "npx tsc -b packages/support packages/three-surface-poc-core",
+  "exit": 0,
+  "out": ""
+ },
+ {
+  "argv": "node --input-type=module -e const s = await import('./packages/support/dist/index.js'); const d = await import('./packages/three-surface-poc-core/dist/owner-act-drafter.js'); console.log(JSON.stringify({ randomBytes: typeof s.randomBytes, randomUUID: typeof s.randomUUID, setEngine: typeof s.setEngine, nonceLooksRandom: /^[0-9a-f-]{36}$/.test(d.nonce()), twoNoncesDiffer: d.nonce() !== d.nonce() }));",
+  "exit": 0,
+  "out": "{\"randomBytes\":\"function\",\"randomUUID\":\"function\",\"setEngine\":\"function\",\"nonceLooksRandom\":true,\"twoNoncesDiffer\":true}\n"
+ },
+ {
+  "argv": "git checkout -- packages/support/src/index.ts packages/three-surface-poc-core/src/owner-act-drafter.ts",
+  "exit": 0,
+  "out": ""
+ },
+ {
+  "argv": "npx tsc -b packages/support packages/three-surface-poc-core",
+  "exit": 0,
+  "out": ""
+ },
+ {
+  "argv": "git status --porcelain",
+  "exit": 0,
+  "out": ""
+ }
+]

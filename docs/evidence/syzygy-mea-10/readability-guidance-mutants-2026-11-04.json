@@ -1,0 +1,107 @@
+{
+ "subjects": {
+  "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": "384b3eec0dd372d4127e13071a93bf4b28320b4f1f47624f881c994eebdbc805",
+  "packages/polaris-dossier/src/design-review.ts": "4e29f9a58a16d5ab4ab854cd69729545a2e19e785d62a7f72f53985caa080a99",
+  "packages/polaris-dossier/src/brief.ts": "6476be8a4d1109c409cc9fbf9338996cb3ebe1674ba5d26046f86dbcfd20a0ab"
+ },
+ "baseCommit": "cf84aea563a27d733adbcf9c86408f9776784691",
+ "note": "each mutant applied to the subject bytes named by subjects (working tree on baseCommit, committed unchanged next), then restored",
+ "tests": [
+  "packages/polaris-dossier/src/render.test.ts",
+  "packages/polaris-dossier/src/brief.test.ts",
+  "apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.test.ts"
+ ],
+ "mutants": [
+  {
+   "id": "g-dropped-from-brief",
+   "file": "packages/polaris-dossier/src/brief.ts",
+   "old": "    READABILITY_GUIDANCE,\n    '',\n  ].join",
+   "new": "    '',\n  ].join",
+   "outcome": "killed"
+  },
+  {
+   "id": "g-reader-rule",
+   "file": "packages/polaris-dossier/src/brief.ts",
+   "old": "'1. Reader. Write for a software engineer new to this project and its domain, such as a recent graduate.",
+   "new": "'1. Reader. Write for a reader.",
+   "outcome": "killed"
+  },
+  {
+   "id": "g-diagram-rule",
+   "file": "packages/polaris-dossier/src/brief.ts",
+   "old": "carries at least one diagram with that section\\'s `sectionId`",
+   "new": "may carry a diagram",
+   "outcome": "killed"
+  },
+  {
+   "id": "g-list-rule",
+   "file": "packages/polaris-dossier/src/brief.ts",
+   "old": "give each item its own child block, which renders as a bulleted list.",
+   "new": "list them.",
+   "outcome": "killed"
+  },
+  {
+   "id": "g-twelve-dropped",
+   "file": "packages/polaris-dossier/src/brief.ts",
+   "old": " A block holds at most twelve children, so group a longer enumeration under several lead blocks.",
+   "new": "",
+   "outcome": "killed"
+  },
+  {
+   "id": "g-sourced-why",
+   "file": "packages/polaris-dossier/src/brief.ts",
+   "old": ", as its sources state.",
+   "new": ".",
+   "outcome": "killed"
+  },
+  {
+   "id": "g-sourced-example",
+   "file": "packages/polaris-dossier/src/brief.ts",
+   "old": "a concrete example from the sources",
+   "new": "a concrete example",
+   "outcome": "killed"
+  },
+  {
+   "id": "g-code-rule",
+   "file": "packages/polaris-dossier/src/brief.ts",
+   "old": "they render as inline code.",
+   "new": "they look like code.",
+   "outcome": "killed"
+  },
+  {
+   "id": "d-advisory-acceptable",
+   "file": "packages/polaris-dossier/src/design-review.ts",
+   "old": " An advisory finding alone does not make a page deficient.",
+   "new": "",
+   "outcome": "killed"
+  },
+  {
+   "id": "g-version",
+   "file": "packages/polaris-dossier/src/brief.ts",
+   "old": "'polaris-dossier-readability-v1'",
+   "new": "'polaris-dossier-readability-v0'",
+   "outcome": "killed"
+  },
+  {
+   "id": "d-criterion-dropped",
+   "file": "packages/polaris-dossier/src/design-review.ts",
+   "old": "    'Judge too whether a software engineer new to the project could follow each page on one reading:",
+   "new": "    'Judge too whether each page reads well:",
+   "outcome": "killed"
+  },
+  {
+   "id": "r-figures-after",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": "${local === undefined ? `${body}${figures}` : `${figures}${body}`}",
+   "new": "${body}${figures}",
+   "outcome": "killed"
+  },
+  {
+   "id": "r-figures-first-provider",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": "${local === undefined ? `${body}${figures}` : `${figures}${body}`}",
+   "new": "${figures}${body}",
+   "outcome": "killed"
+  }
+ ]
+}

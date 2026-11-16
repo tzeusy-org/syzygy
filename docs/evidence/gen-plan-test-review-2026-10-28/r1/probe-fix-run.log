@@ -1,0 +1,16 @@
+29.12 30.38 34.62 24/9760 1212241
+Q8 killed predicted=killed restored=True 1/13 ['AssertionError: parse-json-pollution-key-check-disabled: test titles holding must-fail "bounded provider JSON parsing": expected +0 to be 1 // Object.is equality']
+Q9 survived predicted=survived restored=True 0/13 []
+Q10 killed predicted=killed restored=True 1/13 ['AssertionError: parse-json-pollution-key-check-disabled: test titles holding must-fail "reaches no island module from the CLI entry": expected +0 to be 1 // Object.is equality']
+Q11 killed predicted=survived restored=True 1/13 ['AssertionError: parse-json-pollution-key-check-disabled: must-fail "rejects pollution keys: %s" is a literal title fragment: expected false to be true // Object.is equality']
+Q12 killed predicted=killed restored=True 1/13 ['AssertionError: parse-json-pollution-key-check-disabled: test titles holding must-fail "rejects pollution keys: __proto__": expected +0 to be 1 // Object.is equality']
+Q13 killed predicted=killed restored=True 1/13 ['AssertionError: parse-json-pollution-key-check-disabled: test titles holding must-fail "bounded provider JSON parsing rejects pollution keys": expected +0 to be 1 // Object.is equality']
+Q14 killed predicted=survived restored=True 1/13 ['AssertionError: parse-json-pollution-key-check-disabled: must-fail "" is a literal title fragment: expected false to be true // Object.is equality']
+Q15 killed predicted=survived restored=True 1/13 ["AssertionError: the runner's TEST_FILES: expected [ …(3) ] to deeply equal [ …(4) ]"]
+Q16 killed predicted=survived restored=True 1/13 ['AssertionError: provider-draft-duplicate-handle-check-disabled: packages/polaris-generation-core/src/../../../apps/three-surface-poc/src/polaris-generation/generation-mutation.ts is a normalized non-test .ts file under packages/polaris-generation-core/src/: expected false to be true // Object.is equality']
+Q17 killed predicted=survived restored=True 1/13 ['AssertionError: provider-draft-duplicate-handle-check-disabled: packages/polaris-generation-core/src/draft-model.spec.ts is a normalized non-test .ts file under packages/polaris-generation-core/src/: expected false to be true // Object.is equality']
+Q18 killed predicted=survived restored=True 1/13 ['AssertionError: provider-draft-duplicate-handle-check-disabled: packages/polaris-generation-core/src/draft-model.test.tsx is a normalized non-test .ts file under packages/polaris-generation-core/src/: expected false to be true // Object.is equality']
+Q19 killed predicted=unknown restored=True 1/13 ['AssertionError: provider-draft-duplicate-handle-check-disabled: packages/polaris-generation-core/src/draft-model.d.ts is a normalized non-test .ts file under packages/polaris-generation-core/src/: expected false to be true // Object.is equality']
+control passed; {'mutants': 12, 'killed': 11, 'survived': 1, 'matchesPrediction': 6, 'restored': 12}; tree clean True
+exit=0
+32.20 31.17 34.57 26/9755 1245322

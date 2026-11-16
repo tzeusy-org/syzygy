@@ -5,12 +5,17 @@
   "type": "module",
   "exports": {
     ".": {
+      "source": "./src/index.ts",
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "default": "./dist/index.js"
     }
   },
   "dependencies": {
-    "@syzygy/cap1-core": "0.0.0"
+    "@syzygy/cap1-core": "0.0.0",
+    "@syzygy/support": "0.0.0"
+  },
+  "devDependencies": {
+    "@syzygy/test-kit": "0.0.0"
   }
 }

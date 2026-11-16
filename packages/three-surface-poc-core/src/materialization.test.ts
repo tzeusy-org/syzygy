@@ -1,7 +1,7 @@
-import { mkdtempSync, readFileSync, rmSync, statSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
-import { afterEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
+import { tempDir } from '@syzygy/test-kit';
 
 import {
   buildMaterializationPacket,
@@ -15,16 +15,8 @@ import {
   type MaterializationRecord,
 } from './materialization.js';
 
-const cleanups: string[] = [];
-afterEach(() => {
-  for (const directory of cleanups.splice(0)) {
-    rmSync(directory, { recursive: true, force: true });
-  }
-});
-
 function stateDir(): string {
-  const directory = mkdtempSync(join(tmpdir(), 'syzygy-poc-materialize-state-'));
-  cleanups.push(directory);
+  const directory = tempDir('syzygy-poc-materialize-state-');
   return join(directory, 'state');
 }
 
@@ -32,7 +24,7 @@ const NOW = '2026-08-30T12:00:00Z';
 const PACKET = buildMaterializationPacket({
   targetRepoRoot: '/repo/butlers',
   proposalPath: 'openspec/changes/repair-whatsapp-identity-reconciliation/proposal.md',
-  designPath: 'docs/superpowers/specs/2026-08-24-whatsapp-identity-reconciliation-design.md',
+  designPath: 'docs/plans/2026-08-24-whatsapp-identity-reconciliation-design.md',
 });
 
 function recordIo(dir: string) {

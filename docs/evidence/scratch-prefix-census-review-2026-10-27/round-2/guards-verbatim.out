@@ -1,0 +1,14 @@
+raw guards 8 record guards 8
+1 equal 
+2 equal 
+3 equal 
+4 equal 
+5 equal 
+6 equal 
+7 equal 
+8 equal 
+each raw guard inside the report F1 description: [True, True, True, True, True, True, True, True]
+marker in record what: True  any "<profile>/" in F1 what/guards/R3: []
+F1 measure (record): census_run.py kill run then --seed-tmp-from fresh run: classes syzygy-poc-browser- and chrome-singleton-directory must read stillThere 0 and the marker count 0 (the marker count is a lower bound, see limits).
+F1 measure (report): Measure with docs/evidence/scratch-prefix-census-2026-10-23/census_run.py: a kill run, then a --seed-tmp-from fresh run; classes syzygy-poc-browser- and chrome-singleton-directory must read stillThere 0 and the marker count 0 (a lower bound).
+F2 report criterion: Criterion: after a SIGKILLed full run and one fresh run in the same private TMPDIR, no entry remains except the classes of rules R2, R4, R5 and R7 (and R3 until F1 lands, unless F1's guards cover the browser profile inside the root sweep) in docs/evidence/scratch-prefix-census-2026-10-23/census-2026-10-24.json. Non-vacuity: the kill must leave at least one R9 and one R6 entry, or dead-owner roots are seeded as PR 509's tests do. 

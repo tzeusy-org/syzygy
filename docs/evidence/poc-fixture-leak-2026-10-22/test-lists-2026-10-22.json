@@ -1,0 +1,19 @@
+{
+ "tool": "compare_test_lists.py",
+ "baseTree": "001fbfc85d3972720d89bd612195df3d4a0f6780 with test-model-fixture.test.ts as at 9a30237ed700e6579f3fcc1c6292e6c759861c3f and fixture-directories.test.ts absent",
+ "headTree": "001fbfc85d3972720d89bd612195df3d4a0f6780",
+ "command": "npx vitest list",
+ "note": "the base list is the head with those two test files put back to origin/main (one reverted, one set aside) and restored afterwards: they are the only test files under apps/ and packages/ that differ",
+ "baseLines": 5115,
+ "headLines": 5133,
+ "baseDistinctNames": 5106,
+ "headDistinctNames": 5124,
+ "added": 18,
+ "removed": 0,
+ "addedByFile": {
+  "[@syzygy/three-surface-poc-app] apps/three-surface-poc/src/fixture-directories.test.ts": 16,
+  "[@syzygy/three-surface-poc-app] apps/three-surface-poc/src/test-model-fixture.test.ts": 2
+ },
+ "removedByFile": {},
+ "testsLine": "Tests: +18 ~0 -0"
+}

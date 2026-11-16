@@ -557,4 +557,34 @@ describe('Polaris authority disclosure and discovery (gen-2 repairs PWB-RECON-01
     expect(markers(cleanHtml, 'shape-degradation-state')).toEqual([]);
     expect(cleanHtml).toContain('No degradation state was recorded for this evaluation.');
   });
+
+  it('says which class failed and which read, surfaces each unenumerated heading, and qualifies counts made without a read root index (PWB-REQ-002)', () => {
+    const base = PROJECT_SHAPE_FIXTURE_TEXTS;
+    const spliced = { ...base, 'about/heart-and-soul/v1.md': (base['about/heart-and-soul/v1.md'] as string).replace('### Observability', '### Gateways\n\n### Observability') };
+    const a = observedModel(spliced);
+    const html = renderPolarisPage(a.model);
+    expect(a.shape.unenumeratedHeadings.map((h) => h.text)).toEqual(['Gateways']);
+    expect(html).toContain('data-polaris-unenumerated="1"');
+    expect(html).toContain('Unenumerated heading <code>### Gateways</code> (catalog-entry)');
+    expect(html).toContain('route: First-pass drafting for owner sign-off');
+    expect(html).toContain('catalog-entry: Unknown — unenumerated-heading (1 unenumerated heading(s))');
+    expect(html).toContain('denominator Unknown (missing-declaration, unenumerated-heading: 1)');
+    expect(html).toContain('Source item denominator Unknown — unenumerated-heading (1). project-account-section: 2 item(s)');
+    expect(html).not.toContain('Partially extracted.');
+    // The count is the number of headings, not a flag: three in one source.
+    const three = { ...base, 'about/heart-and-soul/v1.md': (base['about/heart-and-soul/v1.md'] as string).replace('### Observability', '### Gateways\n\n### Plugins\n\n### Relays\n\n### Observability') };
+    const b = observedModel(three);
+    const threeHtml = renderPolarisPage(b.model);
+    expect(b.shape.unenumeratedHeadings.map((h) => h.text)).toEqual(['Gateways', 'Plugins', 'Relays']);
+    expect(threeHtml).toContain('data-polaris-unenumerated="3"');
+    expect(threeHtml).toContain('catalog-entry: Unknown — unenumerated-heading (3 unenumerated heading(s))');
+    expect(threeHtml).toContain('denominator Unknown (missing-declaration, unenumerated-heading: 3)');
+    expect(threeHtml).toContain('Source item denominator Unknown — unenumerated-heading (3). project-account-section: 2 item(s)');
+    const clean = renderPolarisPage(observedModel().model);
+    expect(clean).not.toContain('data-polaris-unenumerated');
+    expect(clean).not.toContain('Derived without a read root index.');
+    const { 'about/README.md': _root, ...unread } = base;
+    const unreadHtml = renderPolarisPage(observedModel(unread).model);
+    expect(unreadHtml).toContain('Derived without a read root index.');
+  });
 });

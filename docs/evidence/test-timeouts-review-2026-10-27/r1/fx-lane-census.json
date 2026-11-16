@@ -1,0 +1,444 @@
+{
+ "tool": {
+  "name": "timeout_census.mjs",
+  "sha256": "6e503285dfe1d3faf64d317f95faf17841991db0901bc1b55822870f96cbbc3a"
+ },
+ "commit": "5bae86e558a30db2bc2a1f6733ad2a89ed528a23",
+ "population": {
+  "files": 3,
+  "parsed": 3,
+  "testFiles": 1
+ },
+ "summary": {
+  "sites": 19,
+  "files": 2,
+  "withoutReason": 19,
+  "filesWithoutReason": 2,
+  "withoutCitation": 19,
+  "filesWithoutCitation": 2,
+  "byKind": {
+   "hook": {
+    "sites": 3,
+    "files": 1,
+    "withReason": 0,
+    "cited": 0
+   },
+   "test": {
+    "sites": 11,
+    "files": 1,
+    "withReason": 0,
+    "cited": 0
+   },
+   "suite": {
+    "sites": 1,
+    "files": 1,
+    "withReason": 0,
+    "cited": 0
+   },
+   "setConfig": {
+    "sites": 1,
+    "files": 1,
+    "withReason": 0,
+    "cited": 0
+   },
+   "config": {
+    "sites": 3,
+    "files": 1,
+    "withReason": 0,
+    "cited": 0
+   }
+  }
+ },
+ "sites": [
+  {
+   "path": "apps/x/src/forms.test.ts",
+   "line": 7,
+   "callLine": 7,
+   "kind": "hook",
+   "callee": "beforeAll",
+   "form": "second-argument",
+   "expression": "1001",
+   "valueMs": 1001,
+   "constant": null,
+   "suites": [],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/x/src/forms.test.ts",
+   "line": 8,
+   "callLine": 8,
+   "kind": "hook",
+   "callee": "beforeEach",
+   "form": "second-argument",
+   "expression": "{ timeout: 1002 } as never",
+   "valueMs": null,
+   "constant": null,
+   "suites": [],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/x/src/forms.test.ts",
+   "line": 9,
+   "callLine": 9,
+   "kind": "hook",
+   "callee": "afterAll",
+   "form": "second-argument",
+   "expression": "T",
+   "valueMs": 1000,
+   "constant": {
+    "name": "T",
+    "at": "apps/x/src/forms.test.ts:2"
+   },
+   "suites": [],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/x/src/forms.test.ts",
+   "line": 10,
+   "callLine": 10,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "1003",
+   "valueMs": 1003,
+   "constant": null,
+   "title": "third arg",
+   "suites": [],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/x/src/forms.test.ts",
+   "line": 11,
+   "callLine": 11,
+   "kind": "test",
+   "callee": "it",
+   "form": "options-first",
+   "expression": "1004",
+   "valueMs": 1004,
+   "constant": null,
+   "title": "options first",
+   "suites": [],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/x/src/forms.test.ts",
+   "line": 12,
+   "callLine": 12,
+   "kind": "test",
+   "callee": "it",
+   "form": "options-last",
+   "expression": "1005",
+   "valueMs": 1005,
+   "constant": null,
+   "title": "options last",
+   "suites": [],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/x/src/forms.test.ts",
+   "line": 13,
+   "callLine": 13,
+   "kind": "test",
+   "callee": "it",
+   "form": "options-first",
+   "expression": "T",
+   "valueMs": 1000,
+   "constant": {
+    "name": "T",
+    "at": "apps/x/src/forms.test.ts:2"
+   },
+   "title": "shorthand options",
+   "suites": [],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/x/src/forms.test.ts",
+   "line": 16,
+   "callLine": 16,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "1007",
+   "valueMs": 1007,
+   "constant": null,
+   "title": "modifier",
+   "suites": [],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/x/src/forms.test.ts",
+   "line": 17,
+   "callLine": 17,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "1008",
+   "valueMs": 1008,
+   "constant": null,
+   "title": "curried",
+   "suites": [],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/x/src/forms.test.ts",
+   "line": 18,
+   "callLine": 18,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "1009",
+   "valueMs": 1009,
+   "constant": null,
+   "title": "each %s",
+   "suites": [],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/x/src/forms.test.ts",
+   "line": 19,
+   "callLine": 19,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "1010",
+   "valueMs": 1010,
+   "constant": null,
+   "title": "for %s",
+   "suites": [],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/x/src/forms.test.ts",
+   "line": 20,
+   "callLine": 20,
+   "kind": "test",
+   "callee": "test",
+   "form": "third-argument",
+   "expression": "1011",
+   "valueMs": 1011,
+   "constant": null,
+   "title": "test root",
+   "suites": [],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/x/src/forms.test.ts",
+   "line": 21,
+   "callLine": 21,
+   "kind": "suite",
+   "callee": "describe",
+   "form": "third-argument",
+   "expression": "1012",
+   "valueMs": 1012,
+   "constant": null,
+   "title": "suite",
+   "suites": [],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/x/src/forms.test.ts",
+   "line": 25,
+   "callLine": 25,
+   "kind": "test",
+   "callee": "it",
+   "form": "third-argument",
+   "expression": "1016",
+   "valueMs": 1016,
+   "constant": null,
+   "title": "const curried alias %s",
+   "suites": [],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/x/src/forms.test.ts",
+   "line": 28,
+   "callLine": null,
+   "kind": "setConfig",
+   "callee": "vi.setConfig",
+   "form": "testTimeout",
+   "expression": "1018",
+   "valueMs": 1018,
+   "constant": null,
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "apps/x/src/forms.test.ts",
+   "line": 29,
+   "callLine": 29,
+   "kind": "test",
+   "callee": "test",
+   "form": "third-argument",
+   "expression": "1019",
+   "valueMs": 1019,
+   "constant": null,
+   "title": "extend",
+   "suites": [],
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "packages/y/vitest.config.ts",
+   "line": 1,
+   "callLine": null,
+   "kind": "config",
+   "callee": "testTimeout",
+   "form": "config-property",
+   "expression": "2001",
+   "valueMs": 2001,
+   "constant": null,
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "packages/y/vitest.config.ts",
+   "line": 1,
+   "callLine": null,
+   "kind": "config",
+   "callee": "hookTimeout",
+   "form": "config-property",
+   "expression": "2002",
+   "valueMs": 2002,
+   "constant": null,
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  },
+  {
+   "path": "packages/y/vitest.config.ts",
+   "line": 1,
+   "callLine": null,
+   "kind": "config",
+   "callee": "teardownTimeout",
+   "form": "config-property",
+   "expression": "2003",
+   "valueMs": 2003,
+   "constant": null,
+   "reason": null,
+   "citations": {
+    "commits": [],
+    "measurements": []
+   },
+   "precedingComment": null
+  }
+ ],
+ "secondMethod": {
+  "regexLines": 19,
+  "matched": 15,
+  "onlyByRegex": [
+   {
+    "path": "apps/x/src/forms.test.ts",
+    "line": 22,
+    "text": "live('cond alias suite', () => {}, 1013);"
+   },
+   {
+    "path": "apps/x/src/forms.test.ts",
+    "line": 23,
+    "text": "liveIt('cond alias test', () => {}, 1014);"
+   },
+   {
+    "path": "apps/x/src/forms.test.ts",
+    "line": 24,
+    "text": "letAlias('let alias', () => {}, 1015);"
+   },
+   {
+    "path": "apps/x/src/forms.test.ts",
+    "line": 26,
+    "text": "it['skip']('element access', () => {}, 1017);"
+   }
+  ],
+  "onlyByAst": [
+   {
+    "path": "apps/x/src/forms.test.ts",
+    "line": 28,
+    "expression": "1018",
+    "form": "testTimeout"
+   }
+  ]
+ }
+}

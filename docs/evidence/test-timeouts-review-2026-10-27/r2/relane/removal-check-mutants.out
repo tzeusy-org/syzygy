@@ -1,0 +1,14 @@
+M1 killed: alone: worst at or under the threshold
+M2 killed: alone: at least 5 observations
+M3 killed: alone: every observation passed
+M4 killed: alone: a hook is held to its own threshold
+M5 killed: full: a test's own line at or under the threshold
+M6 killed: full: a test's own line is a pass
+M7 killed: full: no line bounds nothing in a file with a failure
+M8 killed: full: a hook's file time less its tests at or under the threshold
+M9 killed: full: a file missing from a run bounds nothing
+C1 control held: control: an alone worst exactly at the threshold holds
+M10 killed: later: an observation past the threshold refutes the removal
+C2 control held: control: a hook's file time less its tests exactly at the threshold holds
+C3 control held: control: a later observation exactly at the threshold holds
+10 of 10 killed, 3 of 3 controls held

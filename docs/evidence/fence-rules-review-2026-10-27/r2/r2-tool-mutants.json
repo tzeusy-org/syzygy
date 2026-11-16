@@ -1,0 +1,254 @@
+{
+ "tool": "docs/evidence/syzygy-bpyt-6-3/line-level-check.mjs",
+ "mutants": [
+  {
+   "id": "T0-none",
+   "old": null,
+   "new": null,
+   "selftest": {
+    "exit": 0,
+    "failingCases": []
+   },
+   "prRange": {
+    "exit": 0,
+    "stdout": "production files changed 5, comment-only (print and lines) 5, not 0",
+    "changedProductionFiles": 5,
+    "commentOnly": 5
+   },
+   "probes": [
+    {
+     "name": "statement reflowed across two lines",
+     "want": false,
+     "got": false,
+     "printEqual": true,
+     "linesOk": false
+    },
+    {
+     "name": "code after an inline block comment edited",
+     "want": false,
+     "got": false,
+     "printEqual": false,
+     "linesOk": false
+    }
+   ],
+   "selftestKills": false
+  },
+  {
+   "id": "T1-lines-equal-count-check-off",
+   "old": "ok = ok && same;",
+   "new": "ok = ok;",
+   "oldCount": 1,
+   "selftest": {
+    "exit": 1,
+    "failingCases": [
+     "whitespace-only change (print-equal, not comment-only)"
+    ]
+   },
+   "prRange": {
+    "exit": 0,
+    "stdout": "production files changed 5, comment-only (print and lines) 5, not 0",
+    "changedProductionFiles": 5,
+    "commentOnly": 5
+   },
+   "probes": [
+    {
+     "name": "statement reflowed across two lines",
+     "want": false,
+     "got": false,
+     "printEqual": true,
+     "linesOk": false
+    },
+    {
+     "name": "code after an inline block comment edited",
+     "want": false,
+     "got": false,
+     "printEqual": false,
+     "linesOk": true
+    }
+   ],
+   "selftestKills": true
+  },
+  {
+   "id": "T2-print-predicate-off",
+   "old": "const printEqual = printed(before, path) === printed(after, path);",
+   "new": "const printEqual = true;",
+   "oldCount": 1,
+   "selftest": {
+    "exit": 0,
+    "failingCases": []
+   },
+   "prRange": {
+    "exit": 0,
+    "stdout": "production files changed 5, comment-only (print and lines) 5, not 0",
+    "changedProductionFiles": 5,
+    "commentOnly": 5
+   },
+   "probes": [
+    {
+     "name": "statement reflowed across two lines",
+     "want": false,
+     "got": false,
+     "printEqual": true,
+     "linesOk": false
+    },
+    {
+     "name": "code after an inline block comment edited",
+     "want": false,
+     "got": false,
+     "printEqual": true,
+     "linesOk": false
+    }
+   ],
+   "selftestKills": false
+  },
+  {
+   "id": "T3-unequal-hunk-accepts-code",
+   "old": "ok = ok && onlyComment;",
+   "new": "ok = ok;",
+   "oldCount": 1,
+   "selftest": {
+    "exit": 0,
+    "failingCases": []
+   },
+   "prRange": {
+    "exit": 0,
+    "stdout": "production files changed 5, comment-only (print and lines) 5, not 0",
+    "changedProductionFiles": 5,
+    "commentOnly": 5
+   },
+   "probes": [
+    {
+     "name": "statement reflowed across two lines",
+     "want": false,
+     "got": true,
+     "printEqual": true,
+     "linesOk": true
+    },
+    {
+     "name": "code after an inline block comment edited",
+     "want": false,
+     "got": false,
+     "printEqual": false,
+     "linesOk": false
+    }
+   ],
+   "selftestKills": false
+  },
+  {
+   "id": "T4-comment-range-end-inclusive",
+   "old": "pos <= from + k && from + k < end",
+   "new": "pos <= from + k && from + k <= end",
+   "oldCount": 1,
+   "selftest": {
+    "exit": 0,
+    "failingCases": []
+   },
+   "prRange": {
+    "exit": 0,
+    "stdout": "production files changed 5, comment-only (print and lines) 5, not 0",
+    "changedProductionFiles": 5,
+    "commentOnly": 5
+   },
+   "probes": [
+    {
+     "name": "statement reflowed across two lines",
+     "want": false,
+     "got": false,
+     "printEqual": true,
+     "linesOk": false
+    },
+    {
+     "name": "code after an inline block comment edited",
+     "want": false,
+     "got": false,
+     "printEqual": false,
+     "linesOk": true
+    }
+   ],
+   "selftestKills": false
+  },
+  {
+   "id": "T5-trailing-space-not-trimmed",
+   "old": "return out.trimEnd();",
+   "new": "return out;",
+   "oldCount": 1,
+   "selftest": {
+    "exit": 1,
+    "failingCases": [
+     "trailing comment added"
+    ]
+   },
+   "prRange": {
+    "exit": 1,
+    "stdout": "production files changed 5, comment-only (print and lines) 1, not 4",
+    "changedProductionFiles": 5,
+    "commentOnly": 1
+   },
+   "probes": [
+    {
+     "name": "statement reflowed across two lines",
+     "want": false,
+     "got": false,
+     "printEqual": true,
+     "linesOk": false
+    },
+    {
+     "name": "code after an inline block comment edited",
+     "want": false,
+     "got": false,
+     "printEqual": false,
+     "linesOk": false
+    }
+   ],
+   "selftestKills": true
+  },
+  {
+   "id": "T6-production-filter-drops-apps",
+   "old": "/^(packages|apps)\\/[^/]+\\/src\\/.*\\.ts$/",
+   "new": "/^(packages)\\/[^/]+\\/src\\/.*\\.ts$/",
+   "oldCount": 1,
+   "selftest": {
+    "exit": 0,
+    "failingCases": []
+   },
+   "prRange": {
+    "exit": 0,
+    "stdout": "production files changed 4, comment-only (print and lines) 4, not 0",
+    "changedProductionFiles": 4,
+    "commentOnly": 4
+   },
+   "probes": [
+    {
+     "name": "statement reflowed across two lines",
+     "want": false,
+     "got": false,
+     "printEqual": true,
+     "linesOk": false
+    },
+    {
+     "name": "code after an inline block comment edited",
+     "want": false,
+     "got": false,
+     "printEqual": false,
+     "linesOk": false
+    }
+   ],
+   "selftestKills": false
+  }
+ ],
+ "probes": [
+  [
+   "statement reflowed across two lines",
+   "export function f(a: number, b: number): number {\n  return g(a, b);\n}\nfunction g(a: number, b: number): number { return a + b; }\n",
+   "export function f(a: number, b: number): number {\n  return g(a,\n    b);\n}\nfunction g(a: number, b: number): number { return a + b; }\n",
+   false
+  ],
+  [
+   "code after an inline block comment edited",
+   "const x = 1 /* c */+ 2;\n",
+   "const x = 1 /* c */- 2;\n",
+   false
+  ]
+ ],
+ "treeCleanAfter": true
+}

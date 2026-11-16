@@ -1,0 +1,7 @@
+root resolves to packages/polaris-generation-consent/dist/index.js
+live resolves to packages/polaris-generation-consent/dist/live.js
+live values 25; root values 28; live values === root value: 25
+live values not on root or not the same object: []
+root values not on live: [ 'UNCONSENTED', 'createConsentPorts', 'withConsent' ]
+parseAdmissionRecords via live threw: AdmissionRecordError ; instanceof root.AdmissionRecordError: true ; instanceof live.AdmissionRecordError: true
+screen module loaded: function

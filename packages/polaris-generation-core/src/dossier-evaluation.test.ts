@@ -7,7 +7,8 @@ import {
 import { generationAnchorId, generationSourcesForBody, gitBlobObjectId, type GenerationSource } from './generation-source.js';
 
 // Synthetic dossier: a two-page "Kv" store. Every expected value below is a
-// hand-counted literal, never derived from the module under test.
+// hand-counted literal or a byte count taken from the fixture text itself,
+// never derived from the module under test.
 
 const REVISION = 'a'.repeat(40);
 function bodySource(sourceId: string, path: string, body: string): GenerationSource {
@@ -38,6 +39,10 @@ const INDEX = [
   '<footer>Draft notice here</footer><script>var a = "not words at all";</script></body></html>',
 ].join('\n');
 const DEEP = '<!doctype html><html><body><main data-reading-level="0"><section id="storage" data-topics="mechanisms"><h2>Storage</h2><p data-claim-id="storage-1" data-epistemic="observed">Pages are copied on write.</p></section></main></body></html>';
+// The pages' UTF-8 lengths, and INDEX's through the close of its last level-0 element: the `ideas` section, closed
+// right after its level-1 details.
+const INDEX_BYTES = Buffer.byteLength(INDEX), DEEP_BYTES = Buffer.byteLength(DEEP);
+const INDEX_FIRST_LEVEL_BYTES = Buffer.byteLength(INDEX.slice(0, INDEX.indexOf('</details></section>') + '</details></section>'.length));
 const MANIFEST = JSON.stringify({ format: 'polaris-dossier-v1', title: 'Kv', entryPage: 'index.html', pages: [{ path: 'index.html', depth: 0 }, { path: 'deep-dives/storage.html', depth: 1 }] });
 const QUESTIONS = JSON.stringify({
   format: 'polaris-reader-questions-v1',
@@ -104,13 +109,13 @@ describe('(a) reader cost', () => {
 
   it('measures bytes to the close of the last level-0 element and totals per page depth', () => {
     const scan = scanDossierPage(INDEX);
-    expect(scan.bytes).toBe(1038);
-    expect(scan.bytesThroughFirstLevel).toBe(670);
+    expect(scan.bytes).toBe(INDEX_BYTES);
+    expect(scan.bytesThroughFirstLevel).toBe(INDEX_FIRST_LEVEL_BYTES);
     const manifest = parseDossierManifest(MANIFEST);
     const cost = readerCost(manifest, new Map([['index.html', scan], ['deep-dives/storage.html', scanDossierPage(DEEP)]]));
-    expect(cost.perPageDepth).toEqual([{ depth: 0, pages: 1, bytes: 1038, words: 30 }, { depth: 1, pages: 1, bytes: 235, words: 6 }]);
+    expect(cost.perPageDepth).toEqual([{ depth: 0, pages: 1, bytes: INDEX_BYTES, words: 30 }, { depth: 1, pages: 1, bytes: DEEP_BYTES, words: 6 }]);
     expect(cost.perReadingLevel).toEqual({ 0: 22, 1: 4 });
-    expect(cost.totalBytes).toBe(1273);
+    expect(cost.totalBytes).toBe(INDEX_BYTES + DEEP_BYTES);
   });
 
   it('reports each budget bound as within, over, or Unknown when none is declared', () => {
@@ -119,11 +124,11 @@ describe('(a) reader cost', () => {
     const none = readerCost(manifest, scanned);
     expect(none.firstReadingLevel.wordBudget).toEqual({ outcome: 'unknown', reason: 'no-budget-declared' });
     expect(none.totalBudget).toEqual({ outcome: 'unknown', reason: 'no-budget-declared' });
-    const set = readerCost(manifest, scanned, { maxFirstLevelWords: 16, maxFirstLevelBytes: 669, maxPageBytes: 1000, maxTotalBytes: 2000 });
+    const set = readerCost(manifest, scanned, { maxFirstLevelWords: 16, maxFirstLevelBytes: INDEX_FIRST_LEVEL_BYTES - 1, maxPageBytes: 1000, maxTotalBytes: 2000 });
     expect(set.firstReadingLevel.wordBudget).toEqual({ bound: 16, observed: 16, outcome: 'within' });
-    expect(set.firstReadingLevel.byteBudget).toEqual({ bound: 669, observed: 670, outcome: 'over' });
+    expect(set.firstReadingLevel.byteBudget).toEqual({ bound: INDEX_FIRST_LEVEL_BYTES - 1, observed: INDEX_FIRST_LEVEL_BYTES, outcome: 'over' });
     expect(set.pages.map(page => page.pageBudget.outcome)).toEqual(['over', 'within']);
-    expect(set.totalBudget).toEqual({ bound: 2000, observed: 1273, outcome: 'within' });
+    expect(set.totalBudget).toEqual({ bound: 2000, observed: INDEX_BYTES + DEEP_BYTES, outcome: 'within' });
   });
 
   it('reports first-level words as null and its bounds as Unknown when the entry page marks no level 0', () => {
@@ -322,6 +327,14 @@ describe('report subject (rule 11)', () => {
     expect(sameIdentity.sha256).not.toBe(base.sources.sha256);
   });
 
+  // Expected value: SHA-256 of the QUESTIONS text above, taken with hashlib and agreeing with `sha256sum` over the same bytes
+  // (docs/evidence/syzygy-bpyt-6-13/derive-literals.py), never read back from the module (review R-GP-IMPL-SUPPORT-LEAF-1 N2).
+  it('binds the questions file by the SHA-256 of its own text, and takes that digest as the freeze', async () => {
+    const questionsSha256 = '84d2e0366720f81cad6963e2c7777701dfa0bf37835a812b9ea0b768af675eeb';
+    expect((await evaluateDossier(input(), signal)).subject.questionsSha256).toBe(questionsSha256);
+    expect((await evaluateDossier({ ...input(), expectedQuestionsSha256: questionsSha256 }, signal)).subject.questionsSha256).toBe(questionsSha256);
+  });
+
   it('binds the budget and the scripted answers, and records neither when absent', async () => {
     const none = (await evaluateDossier(input(), signal)).subject;
     expect(none.budgetSha256).toBeNull();
@@ -342,6 +355,13 @@ describe('report subject (rule 11)', () => {
     expect(scan.claims).toEqual([
       { id: 'c1', epistemic: 'inferred', hasQuote: false, text: 'He said "a & b" [Inferred] [src-a] [src-b]', citedSourceIds: ['src-a', 'src-b'] },
       { id: 'c2', epistemic: 'unknown', hasQuote: false, text: 'No links here. [g]', citedSourceIds: [] },
+    ]);
+  });
+  it('reads a numbered citation\'s source from data-source-id, before any Read source label (R-MEA10-RENDER-READABILITY-9070-1 P6)', () => {
+    const html = '<main><p data-claim-id="c1" data-epistemic="inferred">A claim. <a class="cite" href="x" data-source-id="src-a" aria-label="Source 1: README.md">[1]</a>'
+      + ' <a class="cite" href="y" data-source-id="src-b" aria-label="Read source src-z">[2]</a> <a href="z" aria-label="Read source src-c">[src-c]</a></p></main>';
+    expect(scanDossierPage(html).claims).toEqual([
+      { id: 'c1', epistemic: 'inferred', hasQuote: false, text: 'A claim. [1] [2] [src-c]', citedSourceIds: ['src-a', 'src-b', 'src-c'] },
     ]);
   });
 });

@@ -1,0 +1,98 @@
+{
+  "subject": {
+    "commit": "d1ac9bd05c87d0402e77f69326607a8f1b98bb97",
+    "branch": "agent/syzygy-dov.15.2",
+    "fileSha256": {
+      "apps/three-surface-poc/src/polaris.ts": "144bb92f9d714f35143ca1cc9b00ef41c3d7dfacbbca03a26e8992589a16e568",
+      "packages/three-surface-poc-core/src/project-shape-coverage.ts": "f7995e6ba90d01a4fe4ed78f5599b27cfabaa0d7a5204118d1bca0ef09317cb3",
+      "packages/three-surface-poc-core/src/project-shape-extraction.ts": "4ffe1348978d0d38adb5c3cb3bc248c795865ad18d9d95d2a497e75b43517b31"
+    },
+    "testFileSha256": {
+      "apps/three-surface-poc/src/polaris-project-shape.test.ts": "1231bedcbf861737cbf979fc040fa279ea796f50711de36d6f57684fe6aeccbc",
+      "packages/three-surface-poc-core/src/project-shape-class-granular.test.ts": "797c4e31a70dd4c96f301e56216fd263bdf262efd2e84deab25404888a797547"
+    }
+  },
+  "runnerPath": "scripts/rule6_mutation_runner.py",
+  "runnerSha256": "2bc35be550f0beb6ad355e0fc89719c1ae28320d186f41929af96dd59a376b22",
+  "runner": "single-occurrence textual replacement of `old` by `new` in `file`, then `npx vitest run --project <project> <testFiles>` in the tree; killed = at least one failed test; file restored from git after each run",
+  "project": "@syzygy/three-surface-poc-core",
+  "ranAt": "2026-11-02T06:36:38+00:00",
+  "mutants": [
+    {
+      "id": "class-aggregate-drops-unenumerated-reason",
+      "file": "packages/three-surface-poc-core/src/project-shape-coverage.ts",
+      "old": "...(unenumeratedCount === 0 ? {} : { unenumerated: { reason: 'unenumerated-heading' as const, headings: unenumeratedCount } })",
+      "new": "",
+      "tests": [
+        "packages/three-surface-poc-core/src/project-shape-class-granular.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-core packages/three-surface-poc-core/src/project-shape-class-granular.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 30,
+      "failures": [
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 an unenumerated heading in the composed answer leaves the catalog-entry class D and the source D Unknown with the reason, not partial",
+          "firstErrorLine": "AssertionError: expected { kind: 'unknown', \u2026(1) } to deeply equal { kind: 'unknown', \u2026(2) }"
+        }
+      ]
+    },
+    {
+      "id": "whole-file-fallback-skipped-when-no-catalog-heading",
+      "file": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+      "old": "const unenumeratedHeadings = unenumeratedHeadingsOf(doc, cls, 3, rowHeadings, V1_DECLARED_HEADINGS);",
+      "new": "const unenumeratedHeadings = rowHeadings.length > 0 ? unenumeratedHeadingsOf(doc, cls, 3, rowHeadings, V1_DECLARED_HEADINGS) : [];",
+      "tests": [
+        "packages/three-surface-poc-core/src/project-shape-class-granular.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-core packages/three-surface-poc-core/src/project-shape-class-granular.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 30,
+      "failures": [
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 an unenumerated heading is surfaced, counted and mints nothing falls back to the whole file when none of the nine headings is found",
+          "firstErrorLine": "AssertionError: expected [] to deeply equal [ { text: 'Alpha', line: 5 }, \u2026(1) ]"
+        }
+      ]
+    },
+    {
+      "id": "polaris-class-denominator-drops-unenumerated-word",
+      "file": "apps/three-surface-poc/src/polaris.ts",
+      "old": "...(aggregate.denominator.unenumerated === undefined ? [] : [`${aggregate.denominator.unenumerated.reason}: ${aggregate.denominator.unenumerated.headings}`])",
+      "new": "",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-project-shape.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-app apps/three-surface-poc/src/polaris-project-shape.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 25,
+      "failures": [
+        {
+          "test": "Polaris authority disclosure and discovery (gen-2 repairs PWB-RECON-01/02) says which class failed and which read, surfaces each unenumerated heading, and qualifies counts made without a read root index (PWB-REQ-002)",
+          "firstErrorLine": "AssertionError: expected '<!doctype html>\\n<html lang=\"en\">\\n<h\u2026' to contain 'denominator Unknown (missing-declarat\u2026'"
+        }
+      ]
+    },
+    {
+      "id": "polaris-source-denominator-drops-unenumerated-word",
+      "file": "apps/three-surface-poc/src/polaris.ts",
+      "old": "? `Source item denominator Unknown \u2014 unenumerated-heading (${source.itemDenominator.unenumeratedHeadings}). `",
+      "new": "? ''",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-project-shape.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-app apps/three-surface-poc/src/polaris-project-shape.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 25,
+      "failures": [
+        {
+          "test": "Polaris authority disclosure and discovery (gen-2 repairs PWB-RECON-01/02) says which class failed and which read, surfaces each unenumerated heading, and qualifies counts made without a read root index (PWB-REQ-002)",
+          "firstErrorLine": "AssertionError: expected '<!doctype html>\\n<html lang=\"en\">\\n<h\u2026' to contain 'Source item denominator Unknown \u2014 une\u2026'"
+        }
+      ]
+    }
+  ]
+}

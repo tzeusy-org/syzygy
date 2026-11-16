@@ -1,0 +1,197 @@
+{
+ "tool": "rev-544-r3/tools/candidate-pins.py",
+ "rows": [
+  {
+   "id": "head",
+   "replacements": [],
+   "tests": 2,
+   "failed": 0,
+   "failures": [],
+   "loadBefore": "23.84 23.17 23.44 13/9681 3857666",
+   "loadAfter": "23.61 23.13 23.43 14/9673 3858409"
+  },
+  {
+   "id": "MU22",
+   "replacements": [
+    {
+     "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+     "old": "const LINE_END = /\\r\\n|\\r|\\n/g;",
+     "new": "const LINE_END = /\\r\\n|[\\r\\n\\v\\f]/g;"
+    }
+   ],
+   "tests": 2,
+   "failed": 1,
+   "failures": [
+    {
+     "file": "packages/three-surface-poc-core/src/r3-candidate-pins.test.ts",
+     "test": "round-3 candidates no code unit but a space after a closing fence leaves it closed",
+     "error": "AssertionError: expected [ 'b', 'c' ] to deeply equal []"
+    }
+   ],
+   "loadBefore": "23.61 23.13 23.43 16/9673 3858409",
+   "loadAfter": "23.61 23.13 23.43 14/9685 3859043"
+  },
+  {
+   "id": "MU23",
+   "replacements": [
+    {
+     "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+     "old": "/^ {0,3}(`{3,}|~{3,}) *$/",
+     "new": "/^ {0,3}(`{3,}|~{3,})[ \\u2028\\u2029\\u0085]*$/"
+    }
+   ],
+   "tests": 2,
+   "failed": 1,
+   "failures": [
+    {
+     "file": "packages/three-surface-poc-core/src/r3-candidate-pins.test.ts",
+     "test": "round-3 candidates no code unit but a space after a closing fence leaves it closed",
+     "error": "AssertionError: expected [ '85', '2028', '2029' ] to deeply equal []"
+    }
+   ],
+   "loadBefore": "23.61 23.13 23.43 16/9685 3859043",
+   "loadAfter": "23.40 23.10 23.41 16/9695 3859698"
+  },
+  {
+   "id": "MU24",
+   "replacements": [
+    {
+     "file": "packages/three-surface-poc-core/src/git-object-reader.ts",
+     "old": "if (text.charCodeAt(i) === 10) {",
+     "new": "if (text.charCodeAt(i) === 10 || text.charCodeAt(i) === 0x2028) {"
+    }
+   ],
+   "tests": 2,
+   "failed": 1,
+   "failures": [
+    {
+     "file": "packages/three-surface-poc-core/src/r3-candidate-pins.test.ts",
+     "test": "round-3 candidates no code unit but LF moves a reported position to another line",
+     "error": "AssertionError: expected [ '2028' ] to deeply equal []"
+    }
+   ],
+   "loadBefore": "23.40 23.10 23.41 16/9695 3859698",
+   "loadAfter": "23.40 23.10 23.41 12/9690 3860436"
+  },
+  {
+   "id": "PX1-closer-tolerates-vt-ff",
+   "replacements": [
+    {
+     "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+     "old": "/^ {0,3}(`{3,}|~{3,}) *$/",
+     "new": "/^ {0,3}(`{3,}|~{3,})[ \\v\\f]*$/"
+    }
+   ],
+   "tests": 2,
+   "failed": 1,
+   "failures": [
+    {
+     "file": "packages/three-surface-poc-core/src/r3-candidate-pins.test.ts",
+     "test": "round-3 candidates no code unit but a space after a closing fence leaves it closed",
+     "error": "AssertionError: expected [ 'b', 'c' ] to deeply equal []"
+    }
+   ],
+   "loadBefore": "23.40 23.10 23.41 14/9690 3860436",
+   "loadAfter": "22.49 22.91 23.35 10/9690 3861094"
+  },
+  {
+   "id": "PX2-closer-tolerates-js-whitespace",
+   "replacements": [
+    {
+     "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+     "old": "/^ {0,3}(`{3,}|~{3,}) *$/",
+     "new": "/^ {0,3}(`{3,}|~{3,})\\s*$/"
+    }
+   ],
+   "tests": 2,
+   "failed": 1,
+   "failures": [
+    {
+     "file": "packages/three-surface-poc-core/src/r3-candidate-pins.test.ts",
+     "test": "round-3 candidates no code unit but a space after a closing fence leaves it closed",
+     "error": "AssertionError: expected [ '9', 'b', 'c', 'a0', '1680', \u2026(17) ] to deeply equal []"
+    }
+   ],
+   "loadBefore": "22.49 22.91 23.35 11/9690 3861094",
+   "loadAfter": "22.49 22.91 23.35 10/9677 3861974"
+  },
+  {
+   "id": "PX3-fs-gs-rs-are-line-ends",
+   "replacements": [
+    {
+     "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+     "old": "const LINE_END = /\\r\\n|\\r|\\n/g;",
+     "new": "const LINE_END = /\\r\\n|[\\r\\n\\x1c-\\x1e]/g;"
+    }
+   ],
+   "tests": 2,
+   "failed": 1,
+   "failures": [
+    {
+     "file": "packages/three-surface-poc-core/src/r3-candidate-pins.test.ts",
+     "test": "round-3 candidates no code unit but a space after a closing fence leaves it closed",
+     "error": "AssertionError: expected [ '1c', '1d', '1e' ] to deeply equal []"
+    }
+   ],
+   "loadBefore": "22.49 22.91 23.35 12/9677 3861974",
+   "loadAfter": "22.13 22.83 23.32 11/9679 3863013"
+  },
+  {
+   "id": "PX4-positionOf-counts-u2029",
+   "replacements": [
+    {
+     "file": "packages/three-surface-poc-core/src/git-object-reader.ts",
+     "old": "if (text.charCodeAt(i) === 10) {",
+     "new": "if (text.charCodeAt(i) === 10 || text.charCodeAt(i) === 0x2029) {"
+    }
+   ],
+   "tests": 2,
+   "failed": 1,
+   "failures": [
+    {
+     "file": "packages/three-surface-poc-core/src/r3-candidate-pins.test.ts",
+     "test": "round-3 candidates no code unit but LF moves a reported position to another line",
+     "error": "AssertionError: expected [ '2029' ] to deeply equal []"
+    }
+   ],
+   "loadBefore": "22.13 22.83 23.32 13/9679 3863013",
+   "loadAfter": "22.12 22.81 23.32 17/9696 3864120"
+  },
+  {
+   "id": "PX5-positionOf-counts-vt",
+   "replacements": [
+    {
+     "file": "packages/three-surface-poc-core/src/git-object-reader.ts",
+     "old": "if (text.charCodeAt(i) === 10) {",
+     "new": "if (text.charCodeAt(i) === 10 || text.charCodeAt(i) === 0x0b) {"
+    }
+   ],
+   "tests": 2,
+   "failed": 1,
+   "failures": [
+    {
+     "file": "packages/three-surface-poc-core/src/r3-candidate-pins.test.ts",
+     "test": "round-3 candidates no code unit but LF moves a reported position to another line",
+     "error": "AssertionError: expected [ 'b' ] to deeply equal []"
+    }
+   ],
+   "loadBefore": "22.12 22.81 23.32 18/9696 3864120",
+   "loadAfter": "22.12 22.81 23.32 20/9671 3865152"
+  },
+  {
+   "id": "PX6-opener-dotall",
+   "replacements": [
+    {
+     "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+     "old": "const FENCE_OPENER = /^ {0,3}(`{3,}|~{3,})(.*)$/;",
+     "new": "const FENCE_OPENER = /^ {0,3}(`{3,}|~{3,})(.*)$/s;"
+    }
+   ],
+   "tests": 2,
+   "failed": 0,
+   "failures": [],
+   "loadBefore": "22.12 22.81 23.32 19/9671 3865152",
+   "loadAfter": "21.71 22.72 23.28 11/9699 3865957"
+  }
+ ]
+}

@@ -1,18 +1,11 @@
 import { execFileSync } from 'node:child_process';
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
-import { afterEach, describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it, vi } from 'vitest';
+import { tempDir } from '@syzygy/test-kit';
 
 import { observeCodeStructure } from './code-structure.js';
-
-const cleanups: string[] = [];
-
-afterEach(() => {
-  for (const directory of cleanups.splice(0)) {
-    rmSync(directory, { recursive: true, force: true });
-  }
-});
 
 function git(root: string, args: readonly string[]): string {
   return execFileSync('git', ['-C', root, ...args], {
@@ -22,8 +15,7 @@ function git(root: string, args: readonly string[]): string {
 }
 
 function fixtureRepo(sentinel: string): { root: string; revision: string } {
-  const root = mkdtempSync(join(tmpdir(), 'syzygy-poc-code-structure-'));
-  cleanups.push(root);
+  const root = tempDir('syzygy-poc-code-structure-');
   const files: Readonly<Record<string, string>> = {
     'src/app.ts': `export const value = 1; // ${sentinel}\n`,
     'src/nested/lib.py': `def value():\n    return "${sentinel}"\n`,
@@ -113,6 +105,46 @@ describe('code-structure observer', () => {
     expect(result.files.find((file) => file.path === 'dir \u00e9/x.ts')?.digest).toBe(`git-blob-sha1:${git(root, ['rev-parse', `${revision}:dir \u00e9/x.ts`])}`);
   });
 
+  describe('a committed path that begins with a quote or holds a newline (syzygy-bpyt.6.7)', () => {
+    // Real git, so the records are the ones `ls-tree -r -z -l` emits; built here, not at describe time (AGENTS.md).
+    const names = ['"lead-quote.md', '"vendor/a.ts', 'line\nbreak.md', 'dir\nname/"inner.py', 'trailing\n'];
+    let root = '';
+    let revision = '';
+    beforeAll(() => {
+      ({ root } = fixtureRepo('sentinel-quote-newline'));
+      for (const name of names) {
+        mkdirSync(dirname(join(root, name)), { recursive: true });
+        writeFileSync(join(root, name), 'x\n', 'utf8');
+      }
+      git(root, ['add', '-A']);
+      git(root, ['commit', '-qm', 'quote and newline paths']);
+      revision = git(root, ['rev-parse', 'HEAD']);
+    });
+
+    it('records each such path exactly as committed in an Observed inventory', () => {
+      const result = observeCodeStructure({ repoRoot: root, revision, capturedAt: '2026-11-04T00:00:00Z' });
+      if (result.kind !== 'observed') throw new Error(`expected observed, got ${JSON.stringify(result)}`);
+      expect(result.files.map((file) => file.path)).toEqual([
+        '"lead-quote.md', '"vendor/a.ts', 'README.md', 'data.json', 'dir\nname/"inner.py', 'line\nbreak.md',
+        'src/app.ts', 'src/nested/lib.py', 'trailing\n',
+      ]);
+      for (const name of names) {
+        const entry = result.files.find((file) => file.path === name);
+        expect(entry?.digest, JSON.stringify(name)).toBe(`git-blob-sha1:${git(root, ['rev-parse', `${revision}:${name}`])}`);
+        expect(entry?.sizeBytes, JSON.stringify(name)).toBe(2);
+      }
+      expect(result.files.find((file) => file.path === '"vendor/a.ts')?.language).toBe('typescript');
+      expect(result.files.find((file) => file.path === 'line\nbreak.md')?.language).toBe('markdown');
+    });
+
+    it('still makes the inventory Unknown for the same listing in the newline format', () => {
+      const listing = execFileSync('git', ['-C', root, 'ls-tree', '-r', '-l', revision], { encoding: 'utf8' });
+      expect(listing).toContain('"\\"lead-quote.md"');
+      expect(observeCodeStructure({ repoRoot: root, revision, capturedAt: '2026-11-04T00:00:00Z', runGit: () => listing }))
+        .toEqual({ kind: 'unknown', reason: 'code-structure observation produced a malformed inventory entry' });
+    });
+  });
+
   it('asks git for NUL-terminated records and turns any record it cannot read into Unknown, never a skip', () => {
     const blob = (path: string, id = '1'.repeat(40), size = '12'): string => `100644 blob ${id} ${size}\t${path}\0`;
     const observe = (listing: string, calls: string[][] = []) => observeCodeStructure({
@@ -129,17 +161,37 @@ describe('code-structure observer', () => {
     // A gitlink at a path the parser cannot read is skipped from an injected runner too.
     expect(observe(`${blob('a.ts')}160000 commit ${'2'.repeat(40)}       -\t"sub\x00160000 commit ${'2'.repeat(40)}       -\tsu\nb\0`))
       .toMatchObject({ kind: 'observed', files: [{ path: 'a.ts' }] });
+    // A record that merely starts `160000` is not a gitlink head: it reaches the parser and is refused, never dropped (syzygy-bpyt.6.9).
+    const unknownMalformed = { kind: 'unknown', reason: 'code-structure observation produced a malformed inventory entry' };
+    expect(observe(`${blob('a.ts')}160000 garbage\0`)).toEqual(unknownMalformed);
+    // Each part of the head is load-bearing: a record that breaks one is refused, not dropped as a gitlink.
+    const id = '2'.repeat(40);
+    for (const head of [
+      `160000 blob ${id}       -\ta.ts`, `160000 commit ${'2'.repeat(39)}       -\ta.ts`, `160000 commit ${id}  zz\ta.ts`,
+      `160000 commit ${id}-\ta.ts`, `160000 commit ${id}       - a.ts`, `160000 commit ${id}`, '160000 ',
+    ]) {
+      expect(observe(`${blob('a.ts')}${head}\0`), head).toEqual(unknownMalformed);
+    }
+    // A `160000 blob` record is a well-formed tree record, not a gitlink: the parser reads it as the base did (a.ts recorded, not dropped).
+    expect(observe(`160000 blob ${'1'.repeat(40)}      12\ta.ts\0`)).toMatchObject({ kind: 'observed', files: [{ path: 'a.ts', sizeBytes: 12 }] });
+    expect(observe(`${blob('a.ts')}160000  commit ${'2'.repeat(40)}       -\tvendor/sub\0`)).toEqual(unknownMalformed);
     // Only blobs are files: a tree record, which `ls-tree -r -t` would emit, is skipped, not refused for its missing size.
     expect(observe(`${blob('a.ts')}040000 tree ${'5'.repeat(40)}       -\tdir\0`)).toMatchObject({ kind: 'observed', files: [{ path: 'a.ts' }] });
     const unknown ={ kind: 'unknown', reason: 'code-structure observation produced a malformed inventory entry' };
     expect(observe(`${blob('a.ts')}not a tree record\0`)).toEqual(unknown);
-    expect(observe(`${blob('a.ts')}100644 blob ${'1'.repeat(40)} 12\t"\\303\\261.md"\0`)).toEqual(unknown);
+    // Under `-z` a record whose path begins with a quote is well formed: the path is the committed name, backslashes and all (syzygy-bpyt.6.7).
+    expect(observe(`${blob('a.ts')}100644 blob ${'1'.repeat(40)} 12\t"\\303\\261.md"\0`))
+      .toMatchObject({ kind: 'observed', files: [{ path: '"\\303\\261.md"' }, { path: 'a.ts' }] });
+    expect(observe(`${blob('a.ts')}100644 blob ${'1'.repeat(40)} 12\tline\nbreak.md\0`))
+      .toMatchObject({ kind: 'observed', files: [{ path: 'a.ts' }, { path: 'line\nbreak.md' }] });
     expect(observe(blob('a.ts', '4'.repeat(64)))).toEqual(unknown);
     expect(observe(blob('a.ts', '1'.repeat(40), '-'))).toEqual(unknown);
     // A listing in the newline format, or one whose last record lacks its NUL, is not what `-z` returns.
     expect(observe(`100644 blob ${'1'.repeat(40)} 12\ta.ts\n`)).toEqual(unknown);
     expect(observe(`${blob('a.ts')}100644 blob ${'3'.repeat(40)} 7\tb.md`)).toEqual(unknown);
     expect(observe('')).toMatchObject({ kind: 'observed', files: [] });
+    // Only gitlinks remain after the filter, but the listing still lacks its final NUL: the observer's own check refuses it, not the parser's (R4).
+    expect(observe(`160000 commit ${'2'.repeat(40)}       -\tsub`)).toEqual(unknown);
   });
 
   it('makes the inventory Unknown for a committed path that is not valid UTF-8, never a lossy or colliding path', () => {
@@ -158,8 +210,7 @@ describe('code-structure observer', () => {
 
   it('keeps an unterminated tail from git for the NUL check to refuse, never dropping it as a record', () => {
     // A `git` on PATH that answers with one record and no final NUL, which real git never emits.
-    const bin = mkdtempSync(join(tmpdir(), 'syzygy-poc-fake-git-'));
-    cleanups.push(bin);
+    const bin = tempDir('syzygy-poc-fake-git-');
     writeFileSync(join(bin, 'git'), `#!/bin/sh\nprintf '100644 blob ${'1'.repeat(40)}      12\\tok.ts'\n`, { mode: 0o755 });
     const path = process.env['PATH'];
     process.env['PATH'] = `${bin}:${path ?? ''}`;
@@ -169,6 +220,46 @@ describe('code-structure observer', () => {
     } finally {
       process.env['PATH'] = path;
     }
+  });
+
+  // A `git` on PATH that prints `printfFormat` (a printf format, so a byte is written as an octal escape), for the default runner.
+  function observeWithFakeGit(printfFormat: string) {
+    const bin = tempDir('syzygy-poc-fake-git-');
+    writeFileSync(join(bin, 'git'), `#!/bin/sh\nprintf '${printfFormat}'\n`, { mode: 0o755 });
+    const path = process.env['PATH'];
+    process.env['PATH'] = `${bin}:${path ?? ''}`;
+    try {
+      return observeCodeStructure({ repoRoot: '/unused', revision: 'r', capturedAt: '2026-10-21T00:00:00Z' });
+    } finally {
+      process.env['PATH'] = path;
+    }
+  }
+  const OK_RECORD = `100644 blob ${'1'.repeat(40)}      12\\tok.ts\\000`;
+
+  it('drops one leading byte-order mark from git\'s listing before parsing it', () => {
+    // EF BB BF as octal escapes. Real git never starts a listing with one; this pins the decode, not git.
+    expect(observeWithFakeGit(`\\357\\273\\277${OK_RECORD}`)).toMatchObject({ kind: 'observed', files: [{ path: 'ok.ts' }] });
+  });
+
+  it('reports a gitlink filter that cannot allocate its copy as it reports bytes it cannot decode', () => {
+    // Control: the same listing observes. The filter's only way to throw is a failed Buffer.concat (it copies the kept records);
+    // this injects that failure on the one concat that holds a blob record, with the message V8 gives a failed allocation.
+    expect(observeWithFakeGit(OK_RECORD)).toMatchObject({ kind: 'observed', files: [{ path: 'ok.ts' }] });
+    const concat = Buffer.concat.bind(Buffer);
+    let injected = 0;
+    const spy = vi.spyOn(Buffer, 'concat').mockImplementation(((list: readonly Uint8Array[], length?: number) => {
+      if (list.some((part) => Buffer.from(part.buffer, part.byteOffset, Math.min(part.byteLength, 7)).toString('latin1') === '100644 ')) {
+        injected += 1;
+        throw new RangeError('Array buffer allocation failed');
+      }
+      return concat(list, length);
+    }) as typeof Buffer.concat);
+    try {
+      expect(observeWithFakeGit(OK_RECORD)).toEqual({ kind: 'unknown', reason: 'code-structure observation produced a path that is not valid UTF-8' });
+    } finally {
+      spy.mockRestore();
+    }
+    expect(injected).toBe(1);
   });
 
   it('skips every submodule gitlink, whatever its path, and keeps the files beside it (R-GP-IMPL-CODE-STRUCTURE-2 N2)', () => {
@@ -195,6 +286,31 @@ describe('code-structure observer', () => {
     expect(result.kind).toBe('observed');
     if (result.kind !== 'observed') throw new Error('unreachable');
     expect(result.files.map((file) => file.path)).toEqual(['ok.ts', 'vendor/ok.ts']);
+  });
+
+  it('records a real blob whose path starts like a gitlink head, beside gitlinks (syzygy-bpyt.6.9)', () => {
+    const { root } = fixtureRepo('sentinel-gitlink-lookalike');
+    writeFileSync(join(root, 'blob.txt'), 'x\n', 'utf8');
+    const blob = git(root, ['hash-object', '-w', 'blob.txt']);
+    const commit = '1'.repeat(40);
+    const record = (head: string, name: string): Buffer => Buffer.from(`${head}\t${name}\0`);
+    const mktree = (records: readonly Buffer[]): string => execFileSync('git', ['-C', root, 'mktree', '-z', '--missing'], {
+      input: Buffer.concat(records),
+      stdio: ['pipe', 'pipe', 'ignore'],
+    }).toString('utf8').trim();
+    const dir = mktree([record(`100644 blob ${blob}`, 'a.ts')]);
+    const tree = mktree([
+        record(`100644 blob ${blob}`, '160000 x.ts'),
+        record(`040000 tree ${dir}`, '160000 commit'),
+        record(`160000 commit ${commit}`, 'sub'),
+        record(`160000 commit ${commit}`, 'sub2'),
+        // A path that holds a whole gitlink head after its own head: only a head at the start of the record is a gitlink.
+        record(`100644 blob ${blob}`, `160000 commit ${commit} -\tz.ts`),
+    ]);
+    const revision = git(root, ['commit-tree', tree, '-m', 'lookalike']);
+    const result = observeCodeStructure({ repoRoot: root, revision, capturedAt: '2026-11-03T00:00:00Z' });
+    if (result.kind !== 'observed') throw new Error(`expected observed, got ${JSON.stringify(result)}`);
+    expect(result.files.map((file) => file.path)).toEqual([`160000 commit ${'1'.repeat(40)} -\tz.ts`, '160000 commit/a.ts', '160000 x.ts']);
   });
 
   it('produces identical facts across two observations of one revision, excluding capture instant (POC-REQ-004)', () => {

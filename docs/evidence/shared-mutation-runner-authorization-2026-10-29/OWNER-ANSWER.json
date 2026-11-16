@@ -1,0 +1,12 @@
+{
+  "decisionId": "SHARED-MUTATION-RUNNER-20261028-R1",
+  "answer": "A",
+  "option": "A \u2014 Authorize the bounded runner change (Recommended)",
+  "source": "Authenticated owner message in this attended conversation",
+  "approvalDate": "2026-10-29",
+  "recordedAtUtc": "2026-10-29T00:21:57.283256+00:00",
+  "messageTimestamp": "Not separately supplied; recordedAtUtc is transcription time",
+  "offeredPacket": "/home/tze/.cache/syzygy-p115-authorization-20261028/RUNNER-QUESTIONNAIRE-REVIEW-READY.md",
+  "offeredSha256": "c171122e77f11522a67126e9620bfb3a1bd6c18dc1eecfa71dce73ee26a10201",
+  "question": "Authorize the reviewed shared mutation test-runner change: faithful test-project replay, preserved baseline checks, explicit failed/incomplete evidence, nonzero failure exits and scratch-copy execution? A also authorizes recording the direction and updating its existing Beads handoff; current ownership and verification gates remain. I recommend A; the extra preflight costs runtime and refuses the selected run if any initial test group is invalid."
+}

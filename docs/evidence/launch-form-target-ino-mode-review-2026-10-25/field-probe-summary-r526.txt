@@ -1,0 +1,24 @@
+tmpfs /tmp/r526-fp roundsPerArm 300
+  none                           differ={} sole={} nothing=300 notUnreadable=0 err=0
+  X3c-rename-over-same-mode      differ={'targetCtimeNs': 300, 'targetIno': 300} sole={} nothing=0 notUnreadable=0 err=0
+  X3d-rename-over-0644           differ={'targetCtimeNs': 300, 'targetIno': 300, 'targetMode': 300} sole={} nothing=0 notUnreadable=0 err=0
+  X5-unlink-rewrite-same-mode    differ={'targetCtimeNs': 300, 'targetIno': 300} sole={} nothing=0 notUnreadable=0 err=0
+  Y1-copyfile-rename-over        differ={'targetCtimeNs': 300, 'targetIno': 300} sole={} nothing=0 notUnreadable=0 err=0
+  Y2-chmod-current-mode          differ={'targetCtimeNs': 300} sole={'targetCtimeNs': 300} nothing=0 notUnreadable=0 err=0
+  Y3-unlink-rewrite-0644         differ={'targetCtimeNs': 300, 'targetIno': 300, 'targetMode': 300} sole={} nothing=0 notUnreadable=0 err=0
+  Y4-hard-link-left              differ={'targetCtimeNs': 300} sole={'targetCtimeNs': 300} nothing=0 notUnreadable=0 err=0
+  Y5-link-rename-unlink          differ={'targetCtimeNs': 300} sole={'targetCtimeNs': 300} nothing=0 notUnreadable=0 err=0
+  N3-zero-byte-write             differ={} sole={} nothing=300 notUnreadable=0 err=0
+  N3-self-rename                 differ={} sole={} nothing=300 notUnreadable=0 err=0
+ext4 /var/tmp/r526-ext4/fp roundsPerArm 300
+  none                           differ={} sole={} nothing=300 notUnreadable=0 err=0
+  X3c-rename-over-same-mode      differ={'targetIno': 300, 'targetCtimeNs': 40} sole={'targetIno': 260} nothing=0 notUnreadable=0 err=0
+  X3d-rename-over-0644           differ={'targetIno': 300, 'targetMode': 300, 'targetCtimeNs': 31} sole={} nothing=0 notUnreadable=0 err=0
+  X5-unlink-rewrite-same-mode    differ={'targetCtimeNs': 300} sole={'targetCtimeNs': 300} nothing=0 notUnreadable=0 err=0
+  Y1-copyfile-rename-over        differ={'targetCtimeNs': 300, 'targetIno': 300} sole={} nothing=0 notUnreadable=0 err=0
+  Y2-chmod-current-mode          differ={'targetCtimeNs': 300} sole={'targetCtimeNs': 300} nothing=0 notUnreadable=0 err=0
+  Y3-unlink-rewrite-0644         differ={'targetCtimeNs': 300, 'targetMode': 300} sole={} nothing=0 notUnreadable=0 err=0
+  Y4-hard-link-left              differ={'targetCtimeNs': 300} sole={'targetCtimeNs': 300} nothing=0 notUnreadable=0 err=0
+  Y5-link-rename-unlink          differ={'targetCtimeNs': 300} sole={'targetCtimeNs': 300} nothing=0 notUnreadable=0 err=0
+  N3-zero-byte-write             differ={} sole={} nothing=300 notUnreadable=0 err=0
+  N3-self-rename                 differ={} sole={} nothing=300 notUnreadable=0 err=0

@@ -1,0 +1,162 @@
+{
+ "head": "5db78a26699a07716edd303484c0f7241df02e9e",
+ "specs": "rev541b-specs-noPin.json",
+ "results": [
+  {
+   "id": "BASELINE",
+   "oldCounts": [],
+   "exit": 0,
+   "outcome": "survives",
+   "tests": 169,
+   "passed": 169,
+   "failing": [],
+   "timeouts": 0,
+   "filesFailedWithoutRows": [],
+   "load1": "26.39",
+   "seconds": 3.9,
+   "edits": []
+  },
+  {
+   "id": "R541B-Y1-npm-alias-unversioned-only",
+   "oldCounts": [
+    1
+   ],
+   "exit": 1,
+   "outcome": "killed",
+   "tests": 169,
+   "passed": 167,
+   "failing": [
+    "the shared workspace resolver reads a bare name declared as an npm: alias of a registry package as naming no module",
+    "the shared workspace resolver reads a bare name declared as an npm: alias peer dependency as naming no module"
+   ],
+   "timeouts": 0,
+   "filesFailedWithoutRows": [],
+   "load1": "25.56",
+   "seconds": 4.8,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:(?:@[^/@]+\\/)?[^@]*$|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    }
+   ]
+  },
+  {
+   "id": "R541B-Y2-tarball-skips-github-shorthand",
+   "oldCounts": [
+    1
+   ],
+   "exit": 0,
+   "outcome": "survives",
+   "tests": 169,
+   "passed": 169,
+   "failing": [],
+   "timeouts": 0,
+   "filesFailedWithoutRows": [],
+   "load1": "25.36",
+   "seconds": 4.1,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|^(?!github:).*\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    }
+   ]
+  },
+  {
+   "id": "R541B-Y3-tarball-path-like-only",
+   "oldCounts": [
+    1
+   ],
+   "exit": 1,
+   "outcome": "killed",
+   "tests": 169,
+   "passed": 167,
+   "failing": [
+    "the shared workspace resolver reads a bare name declared as a remote http tarball URL dependency as naming no module",
+    "the shared workspace resolver reads a bare name declared as a remote tarball URL dependency as naming no module"
+   ],
+   "timeouts": 0,
+   "filesFailedWithoutRows": [],
+   "load1": "26.13",
+   "seconds": 4.3,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|^[^:]*\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    }
+   ]
+  },
+  {
+   "id": "R541B-Y4-tarball-tar-dropped",
+   "oldCounts": [
+    1
+   ],
+   "exit": 1,
+   "outcome": "killed",
+   "tests": 169,
+   "passed": 168,
+   "failing": [
+    "the shared workspace resolver reads a bare name declared as a .tar dependency as naming no module"
+   ],
+   "timeouts": 0,
+   "filesFailedWithoutRows": [],
+   "load1": "27.08",
+   "seconds": 3.7,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar\\.gz)$/iu;"
+    }
+   ]
+  },
+  {
+   "id": "R541B-Y5-npm-arm-needs-target-char",
+   "oldCounts": [
+    1
+   ],
+   "exit": 0,
+   "outcome": "survives",
+   "tests": 169,
+   "passed": 169,
+   "failing": [],
+   "timeouts": 0,
+   "filesFailedWithoutRows": [],
+   "load1": "27.08",
+   "seconds": 3.6,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:(?=@|[^@]*@)|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    }
+   ]
+  },
+  {
+   "id": "R541B-Y6-npm-alias-scoped-or-unversioned-only",
+   "oldCounts": [
+    1
+   ],
+   "exit": 1,
+   "outcome": "killed",
+   "tests": 169,
+   "passed": 168,
+   "failing": [
+    "the shared workspace resolver reads a bare name declared as an npm: alias of a registry package as naming no module"
+   ],
+   "timeouts": 0,
+   "filesFailedWithoutRows": [],
+   "load1": "26.51",
+   "seconds": 3.5,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;",
+     "new": "const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:(?=@|[^@]*$)|\\.\\.?(?:\\/|$)|\\/|~\\/)|\\.(?:tgz|tar|tar\\.gz)$/iu;"
+    }
+   ]
+  }
+ ]
+}

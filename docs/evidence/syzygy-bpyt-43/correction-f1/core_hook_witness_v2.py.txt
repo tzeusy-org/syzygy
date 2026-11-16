@@ -1,0 +1,27 @@
+"""F1 successor proof: unique before/mutant/restored directories; predecessor untouched."""
+import hashlib,json,sys
+from pathlib import Path
+OWN=Path(__file__).resolve().parent;tree=OWN/'subject';probe=tree/'docs/evidence/syzygy-bpyt-43/tools/daemon_entry_probe.py';output=OWN/'hook-core-positive-control-v2.json'
+assert not output.exists()
+source=probe.read_text();prefix=source.split('\nresults=[]\nfor mutant in MUTANTS:',1)[0]
+assert len(prefix)<len(source)
+sys.argv=[str(probe),str(tree),str(output)]
+ns={'__name__':'one_off_probe_functions','__file__':str(probe)};exec(compile(prefix,str(probe),'exec'),ns)
+mutant={'id':'H-core-island-blind','kind':'hook','file':ns['TEST'],'old':'ISLAND_URLS: JSON.stringify(core)','new':'ISLAND_URLS: JSON.stringify([])','note':'Disable only core-island URL observation while retaining actual imports and POC-app observation.'}
+results=[]
+for phase,change in [('before',None),('mutant',mutant),('restored',None)]:
+ raw=output.with_suffix('')/phase;raw.mkdir(exist_ok=False);ns['raw']=raw
+ test=(tree/ns['TEST']).read_bytes();assert hashlib.sha256(test).hexdigest()=='b629e399a2c4b72e00c3a764181f1b938985d6a992c44ffcb320af3bebebec69'
+ actual=test.decode()
+ if change:
+  assert actual.count(change['old'])==1;actual=actual.replace(change['old'],change['new'])
+ row=ns['run'](change);row['phase']=phase;row['executedTestSha256']=hashlib.sha256(actual.encode()).hexdigest()
+ row['artifacts']=[{'path':str(f),'bytes':f.stat().st_size,'sha256':hashlib.sha256(f.read_bytes()).hexdigest()} for f in sorted(raw.iterdir())]
+ assert len(row['artifacts'])==3
+ results.append(row)
+ print(json.dumps({'phase':phase,'exit':row.get('exit'),'passed':row['passed'],'failed':row['failed'],'rows':len(row['rows'])}),flush=True)
+record={'schema':'syzygy-bpyt-43-core-hook-correction/2','subject':ns['subject'],'sourceInputs':ns['original_inputs'],'producer':{'path':str(probe.relative_to(tree)),'sha256':hashlib.sha256(probe.read_bytes()).hexdigest()},'oneOffScriptSha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),'results':results,'predecessorQualification':'First original control raw was overwritten and is absent; this is a new witness, never recovery of the original.'}
+if ns['build']('final-restoration'):raise SystemExit('restoration build failed')
+if ns['git']('status','--porcelain').strip():raise SystemExit('tree not restored')
+record['restorationBuild']={'path':str(ns['raw']/'final-restoration-build.log'),'sha256':hashlib.sha256((ns['raw']/'final-restoration-build.log').read_bytes()).hexdigest()}
+output.write_text(json.dumps(record,indent=2)+'\n')

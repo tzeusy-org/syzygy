@@ -1,0 +1,33 @@
+control 2d3f9375:core exit 0 failed 0 of 1149 pending 2 | load 16.94 20.78
+control 2d3f9375:four exit 0 failed 0 of 124 pending 0 | load 22.52 22.52
+control b81010c8:four exit 0 failed 0 of 130 pending 0 | load 24.71 24.71
+control b81010c8:core exit 0 failed 0 of 1155 pending 2 | load 21.01 20.81
+S1 2d3f9375 core oldCount 1 restored True exit 0 failed 0 of 1149 | load ['20.78'] ['22.68']
+S2 2d3f9375 core oldCount 1 restored True exit 0 failed 0 of 1149 | load ['22.68'] ['22.52']
+S1 2d3f9375 four oldCount 1 restored True exit 0 failed 0 of 124 | load ['22.52'] ['23.12']
+S2 2d3f9375 four oldCount 1 restored True exit 0 failed 0 of 124 | load ['23.12'] ['24.71']
+S1 b81010c8 four oldCount 1 restored True exit 1 failed 1 of 130 | load ['24.71'] ['24.17']
+      git-object-reader.test.ts | exact object reads drops one leading byte-order mark from the decoded text and keeps a second | AssertionError: expected { kind: 'text', …(2) } to match object { kind: 'text', text: 'a\n', …(1) }
+S2 b81010c8 four oldCount 1 restored True exit 1 failed 1 of 130 | load ['24.17'] ['24.40']
+      project-shape-observation.test.ts | validated root index (syzygy-1z3.29 review) a seed with a leading byte-order mark is read without it | AssertionError: expected { kind: 'text', …(2) } to match object { kind: 'text', text: 'a\n' }
+F2 b81010c8 four oldCount 1 restored True exit 1 failed 1 of 130 | load ['24.40'] ['24.40']
+      code-structure.test.ts | observer reports a gitlink filter that cannot allocate its copy as it reports bytes it cannot decode | AssertionError: expected { kind: 'unknown', …(1) } to deeply equal { kind: 'unknown', …(1) }
+X1 b81010c8 four oldCount 1 restored True exit 1 failed 1 of 130 | load ['24.40'] ['24.21']
+      git-object-reader.test.ts | exact object reads drops one leading byte-order mark from the decoded text and keeps a second | AssertionError: expected { kind: 'text', text: 'a', …(1) } to match object { kind: 'text', text: '\ufeffa', …(1) }
+X2 b81010c8 four oldCount 1 restored True exit 0 failed 0 of 130 | load ['24.21'] ['23.71']
+X3 b81010c8 four oldCount 1 restored True exit 1 failed 1 of 130 | load ['23.71'] ['23.71']
+      code-structure.test.ts | observer reports a gitlink filter that cannot allocate its copy as it reports bytes it cannot decode | AssertionError: expected { kind: 'unknown', …(1) } to deeply equal { kind: 'unknown', …(1) }
+X4 b81010c8 four oldCount 1 restored True exit 1 failed 1 of 130 | load ['23.71'] ['23.49']
+      code-structure.test.ts | observer reports a gitlink filter that cannot allocate its copy as it reports bytes it cannot decode | AssertionError: expected { kind: 'observed', …(3) } to deeply equal { kind: 'unknown', …(1) }
+X5 b81010c8 four oldCount 1 restored True exit 1 failed 2 of 130 | load ['23.49'] ['23.49']
+      project-shape-observation.test.ts |  A allowlist rejects bytes that are not the tree-named object, NUL-bearing bytes and non-UTF-8 bytes | AssertionError: expected { …(4) } to match object { outcome: 'not-utf-8' }
+      project-shape-observation.test.ts | 3.29 review) a seed whose bytes are not UTF-8 is refused with its reason and a not-utf-8 read record | AssertionError: expected [ { path: 'about/README.md', …(3) } ] to deeply equal [ { path: 'about/README.md', …(3) } ]
+S10 b81010c8 four oldCount 1 restored True exit 1 failed 1 of 130 | load ['23.49'] ['23.45']
+      code-structure.test.ts | code-structure observer drops one leading byte-order mark from git's listing before parsing it | AssertionError: expected { kind: 'unknown', …(1) } to match object { kind: 'observed', …(1) }
+S9 b81010c8 four oldCount 1 restored True exit 1 failed 1 of 130 | load ['23.45'] ['23.45']
+      project-shape-git-text.test.ts | ces decoding of git output drops one leading byte-order mark from the tree listing before parsing it | AssertionError: expected 'unknown' to be 'observed' // Object.is equality
+X6 b81010c8 four oldCount 1 restored True exit 0 failed 0 of 130 | load ['23.45'] ['23.25']
+X7 b81010c8 four oldCount 1 restored True exit 1 failed 1 of 130 | load ['23.25'] ['23.25']
+      code-structure.test.ts | observer reports a gitlink filter that cannot allocate its copy as it reports bytes it cannot decode | AssertionError: expected { kind: 'observed', …(3) } to deeply equal { kind: 'unknown', …(1) }
+X2 b81010c8 core oldCount 1 restored True exit 0 failed 0 of 1155 | load ['20.81'] ['20.72']
+X6 b81010c8 core oldCount 1 restored True exit 0 failed 0 of 1155 | load ['20.72'] ['19.82']

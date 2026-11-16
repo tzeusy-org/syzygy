@@ -1,0 +1,445 @@
+{
+ "commit": "b81010c8",
+ "population": 536,
+ "constructions": 50,
+ "filesWithAConstruction": 33,
+ "grepLinesAgree": true,
+ "grepOnly": [],
+ "mineOnly": [],
+ "productionConstructions": 46,
+ "productionStrictOutsideHelper": 20,
+ "productionStrictOutsideHelperSites": [
+  {
+   "path": "apps/three-surface-poc/src/capability-detail.ts",
+   "line": 254
+  },
+  {
+   "path": "apps/three-surface-poc/src/git-blob-batch.ts",
+   "line": 33
+  },
+  {
+   "path": "apps/three-surface-poc/src/governance-inputs.ts",
+   "line": 200
+  },
+  {
+   "path": "apps/three-surface-poc/src/governance-inputs.ts",
+   "line": 222
+  },
+  {
+   "path": "apps/three-surface-poc/src/governance-inputs.ts",
+   "line": 232
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/dossier-evaluation-main.ts",
+   "line": 41
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/public-source-screening.ts",
+   "line": 149
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/self-corpus.ts",
+   "line": 59
+  },
+  {
+   "path": "apps/three-surface-poc/src/verbatim-route.ts",
+   "line": 117
+  },
+  {
+   "path": "packages/polaris-dossier/src/check.ts",
+   "line": 335
+  },
+  {
+   "path": "packages/polaris-dossier/src/close.ts",
+   "line": 186
+  },
+  {
+   "path": "packages/polaris-dossier/src/design-review.ts",
+   "line": 48
+  },
+  {
+   "path": "packages/polaris-dossier/src/render.ts",
+   "line": 151
+  },
+  {
+   "path": "packages/polaris-dossier/src/review.ts",
+   "line": 138
+  },
+  {
+   "path": "packages/polaris-dossier/src/screen.ts",
+   "line": 81
+  },
+  {
+   "path": "packages/polaris-dossier/src/waiting-sessions.ts",
+   "line": 386
+  },
+  {
+   "path": "packages/polaris-generation-core/src/dossier-evaluation.ts",
+   "line": 352
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/project-shape-model.ts",
+   "line": 545
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/walkthrough-readiness.ts",
+   "line": 288
+  },
+  {
+   "path": "scripts/probe_pwb_gate_on_altered_policy_act.mjs",
+   "line": 45
+  }
+ ],
+ "sites": [
+  {
+   "path": "apps/three-surface-poc/src/capability-detail.ts",
+   "line": 254,
+   "args": "'utf-8', { fatal: true }",
+   "strict": true,
+   "test": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/fresh-checkout-demo-main.ts",
+   "line": 238,
+   "args": "",
+   "strict": false,
+   "test": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/fresh-checkout-demo-main.ts",
+   "line": 407,
+   "args": "",
+   "strict": false,
+   "test": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/fresh-checkout-demo-main.ts",
+   "line": 413,
+   "args": "",
+   "strict": false,
+   "test": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/fresh-checkout-demo-main.ts",
+   "line": 421,
+   "args": "",
+   "strict": false,
+   "test": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/fresh-checkout-demo-main.ts",
+   "line": 430,
+   "args": "",
+   "strict": false,
+   "test": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/fresh-checkout-demo-main.ts",
+   "line": 439,
+   "args": "",
+   "strict": false,
+   "test": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/git-blob-batch.test.ts",
+   "line": 31,
+   "args": "",
+   "strict": false,
+   "test": true
+  },
+  {
+   "path": "apps/three-surface-poc/src/git-blob-batch.ts",
+   "line": 33,
+   "args": "'utf-8', { fatal: true }",
+   "strict": true,
+   "test": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/governance-inputs.ts",
+   "line": 200,
+   "args": "'utf-8', { fatal: true }",
+   "strict": true,
+   "test": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/governance-inputs.ts",
+   "line": 222,
+   "args": "'utf-8', { fatal: true }",
+   "strict": true,
+   "test": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/governance-inputs.ts",
+   "line": 232,
+   "args": "'utf-8', { fatal: true }",
+   "strict": true,
+   "test": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/governance-inputs.ts",
+   "line": 344,
+   "args": "'utf-8'",
+   "strict": false,
+   "test": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/dossier-evaluation-main.ts",
+   "line": 41,
+   "args": "'utf-8', { fatal: true }",
+   "strict": true,
+   "test": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/generation-mutation-run-main.ts",
+   "line": 124,
+   "args": "",
+   "strict": false,
+   "test": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/public-source-screening.ts",
+   "line": 149,
+   "args": "'utf-8', { fatal: true }",
+   "strict": true,
+   "test": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/repo-corpus.ts",
+   "line": 233,
+   "args": "'utf-8', { fatal: true, ignoreBOM: true }",
+   "strict": false,
+   "test": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-generation/self-corpus.ts",
+   "line": 59,
+   "args": "'utf-8', { fatal: true }",
+   "strict": true,
+   "test": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/pwb-mutation-run-main.ts",
+   "line": 106,
+   "args": "",
+   "strict": false,
+   "test": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/pwb-mutation-run-main.ts",
+   "line": 107,
+   "args": "",
+   "strict": false,
+   "test": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/pwb-mutation-run-main.ts",
+   "line": 132,
+   "args": "",
+   "strict": false,
+   "test": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/pwb-mutation-sweep-main.ts",
+   "line": 137,
+   "args": "",
+   "strict": false,
+   "test": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/pwb-mutation-sweep-main.ts",
+   "line": 167,
+   "args": "",
+   "strict": false,
+   "test": false
+  },
+  {
+   "path": "apps/three-surface-poc/src/verbatim-route.test.ts",
+   "line": 106,
+   "args": "",
+   "strict": false,
+   "test": true
+  },
+  {
+   "path": "apps/three-surface-poc/src/verbatim-route.ts",
+   "line": 117,
+   "args": "'utf-8', { fatal: true }",
+   "strict": true,
+   "test": false
+  },
+  {
+   "path": "packages/polaris-dossier/src/check.ts",
+   "line": 335,
+   "args": "'utf-8', { fatal: true }",
+   "strict": true,
+   "test": false
+  },
+  {
+   "path": "packages/polaris-dossier/src/check.ts",
+   "line": 594,
+   "args": "'utf-8', { fatal: true, ignoreBOM: true }",
+   "strict": false,
+   "test": false
+  },
+  {
+   "path": "packages/polaris-dossier/src/close.ts",
+   "line": 186,
+   "args": "'utf-8', { fatal: true }",
+   "strict": true,
+   "test": false
+  },
+  {
+   "path": "packages/polaris-dossier/src/design-review.ts",
+   "line": 48,
+   "args": "'utf-8', { fatal: true }",
+   "strict": true,
+   "test": false
+  },
+  {
+   "path": "packages/polaris-dossier/src/doctrine-quote.ts",
+   "line": 47,
+   "args": "'utf-8', { fatal: false }",
+   "strict": false,
+   "test": false
+  },
+  {
+   "path": "packages/polaris-dossier/src/git-object-reader.ts",
+   "line": 278,
+   "args": "'utf-8', { fatal: true, ignoreBOM: true }",
+   "strict": false,
+   "test": false
+  },
+  {
+   "path": "packages/polaris-dossier/src/render.ts",
+   "line": 151,
+   "args": "'utf-8', { fatal: true }",
+   "strict": true,
+   "test": false
+  },
+  {
+   "path": "packages/polaris-dossier/src/review.ts",
+   "line": 138,
+   "args": "'utf-8', { fatal: true }",
+   "strict": true,
+   "test": false
+  },
+  {
+   "path": "packages/polaris-dossier/src/review.ts",
+   "line": 194,
+   "args": "'utf-8', { fatal: true, ignoreBOM: true }",
+   "strict": false,
+   "test": false
+  },
+  {
+   "path": "packages/polaris-dossier/src/screen.ts",
+   "line": 81,
+   "args": "'utf-8', { fatal: true }",
+   "strict": true,
+   "test": false
+  },
+  {
+   "path": "packages/polaris-dossier/src/waiting-sessions.ts",
+   "line": 386,
+   "args": "'utf-8', { fatal: true }",
+   "strict": true,
+   "test": false
+  },
+  {
+   "path": "packages/polaris-generation-core/src/dossier-evaluation.ts",
+   "line": 352,
+   "args": "'utf-8', { fatal: true }",
+   "strict": true,
+   "test": false
+  },
+  {
+   "path": "packages/polaris-generation-core/src/dossier-evaluation.ts",
+   "line": 534,
+   "args": "'utf-8', { fatal: false }",
+   "strict": false,
+   "test": false
+  },
+  {
+   "path": "packages/polaris-generation-core/src/generation-source.test.ts",
+   "line": 173,
+   "args": "'utf-8', { fatal: true }",
+   "strict": true,
+   "test": true
+  },
+  {
+   "path": "packages/polaris-generation-core/src/generation-source.ts",
+   "line": 228,
+   "args": "'utf-8', { fatal: true, ignoreBOM: true }",
+   "strict": false,
+   "test": false
+  },
+  {
+   "path": "packages/polaris-generation-core/src/generation-source.ts",
+   "line": 437,
+   "args": "'utf-8', { fatal: true, ignoreBOM: true }",
+   "strict": false,
+   "test": false
+  },
+  {
+   "path": "packages/polaris-generation-core/src/generation-source.ts",
+   "line": 443,
+   "args": "'utf-8', { fatal: true, ignoreBOM: true }",
+   "strict": false,
+   "test": false
+  },
+  {
+   "path": "packages/support/src/decode-utf8.ts",
+   "line": 1,
+   "args": "'utf-8', { fatal: true }",
+   "strict": true,
+   "test": false
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/project-shape-model.ts",
+   "line": 545,
+   "args": "'utf-8', { fatal: true }",
+   "strict": true,
+   "test": false
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/test-artifact-verification.live.test.ts",
+   "line": 124,
+   "args": "'utf-8', { fatal: true }",
+   "strict": true,
+   "test": true
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/walkthrough-judgment.ts",
+   "line": 513,
+   "args": "'utf-8', { fatal: false }",
+   "strict": false,
+   "test": false
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/walkthrough-judgment.ts",
+   "line": 552,
+   "args": "'utf-8', { fatal: false }",
+   "strict": false,
+   "test": false
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/walkthrough-readiness.ts",
+   "line": 288,
+   "args": "'utf-8', { fatal: true }",
+   "strict": true,
+   "test": false
+  },
+  {
+   "path": "scripts/probe_pwb_gate_on_altered_policy_act.mjs",
+   "line": 45,
+   "args": "'utf-8', { fatal: true }",
+   "strict": true,
+   "test": false
+  },
+  {
+   "path": "scripts/redis_screening_remeasure.mjs",
+   "line": 469,
+   "args": "'utf-8', { fatal: true, ignoreBOM: true }",
+   "strict": false,
+   "test": false
+  }
+ ]
+}

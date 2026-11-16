@@ -1,0 +1,28 @@
+== f7477f52: closure files=54 missing=[] supportInClosure=True
+   importers of @syzygy/support in the closure (9):
+      packages/three-surface-poc-core/src/body-read-authority.ts
+      packages/three-surface-poc-core/src/git-object-reader.ts
+      packages/three-surface-poc-core/src/model.ts
+      packages/three-surface-poc-core/src/poc-seeds.ts
+      packages/three-surface-poc-core/src/project-shape-manifest.ts
+      packages/three-surface-poc-core/src/project-shape-observation.ts
+      packages/three-surface-poc-core/src/response-identity.ts
+      packages/three-surface-poc-core/src/walkthrough-judgment.ts
+      packages/three-surface-poc-core/src/walkthrough-readiness.ts
+   shortest path: packages/three-surface-poc-core/src/test-artifact-verification.live.test.ts -> packages/three-surface-poc-core/src/model.ts -> packages/support/src/index.ts
+== 663061c4: closure files=54 missing=[] supportInClosure=True
+   importers of @syzygy/support in the closure (10):
+      packages/three-surface-poc-core/src/body-read-authority.ts
+      packages/three-surface-poc-core/src/git-object-reader.ts
+      packages/three-surface-poc-core/src/model.ts
+      packages/three-surface-poc-core/src/poc-seeds.ts
+      packages/three-surface-poc-core/src/project-shape-manifest.ts
+      packages/three-surface-poc-core/src/project-shape-observation.ts
+      packages/three-surface-poc-core/src/response-identity.ts
+      packages/three-surface-poc-core/src/test-artifact-verification.ts
+      packages/three-surface-poc-core/src/walkthrough-judgment.ts
+      packages/three-surface-poc-core/src/walkthrough-readiness.ts
+   shortest path: packages/three-surface-poc-core/src/test-artifact-verification.live.test.ts -> packages/three-surface-poc-core/src/model.ts -> packages/support/src/index.ts
+== f7477f52^1: closure files=51 missing=[] supportInClosure=False
+   importers of @syzygy/support in the closure (0):
+   shortest path: 

@@ -1,0 +1,19 @@
+S-155 code unchanged: True | old message 'tree not restored' | new message 'tracked files changed while the script ran'
+paragraph "Stopping:" equals the list applied (normalised): True
+paragraph "Cleanup,"  equals the list applied (normalised): True
+docstring line width, max: e7f3c71e lines 2-29 147 | d6b04c5f lines 2-21 140
+expected lines 112, actual lines 112; differences beyond the list: none
+old lines removed or changed: 51 -> [4, 12, 13, 14, 15, 16, 19, 20, 21, 24, 25, 26, 28, 29, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 57, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 76, 109, 112, 120, 121, 122, 123, 131, 132, 137, 147, 148, 155]
+of them on neither list: none
+stays, present byte-equal in head: True  handlers (33-35)
+stays, present byte-equal in head: True  leave_if_stopped (74-75)
+stays, present byte-equal in head: True  leave_if_stopped (77-78)
+stays, present byte-equal in head: True  end_group (80-96)
+stays, present byte-equal in head: True  Popen, poll loop and finally (113-119)
+stays, present byte-equal in head: True  end_group call of line 121 (dedented one level)
+stays, present byte-equal in head: True  line 61's clean-tree check
+stays, present byte-equal in head: True  TESTKIT (38)
+stays, present byte-equal in head: True  subject names TESTKIT (146)
+stays, present byte-equal in head: True  reader thread (115-116)
+stays, present byte-equal in head: True  line 127 `stdout = ...` (on neither list)
+leave_if_stopped message, head: ["print(f'stopped by {signal.Signals(stopped_by[0]).name}: the run in progress, if any, was ended and is not recorded',"]

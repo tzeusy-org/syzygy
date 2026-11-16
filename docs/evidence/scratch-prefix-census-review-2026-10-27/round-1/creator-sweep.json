@@ -1,0 +1,5057 @@
+{
+ "commit": "a864e999645a071dda40325b2235976590e02973",
+ "blobs": 618,
+ "filesNamingTemp": 194,
+ "byKind": {
+  "appendFile": {
+   "candidateFiles": 6,
+   "lines": 33,
+   "hits": {
+    "packages/polaris-dossier/src/gate-acts.test.ts": [
+     [
+      161,
+      "fs.appendFileSync(path.join(root, V2_RECORD), ' ');"
+     ],
+     [
+      182,
+      "fs.appendFileSync(path.join(root, ACTS['redis-agent-anthropic'].file), '\\nedit\\n');"
+     ],
+     [
+      281,
+      "fs.appendFileSync(path.join(root, file), '\\nedit\\n');"
+     ],
+     [
+      287,
+      "fs.appendFileSync(path.join(root, DIRECTION), '\\nedit\\n');"
+     ],
+     [
+      311,
+      "for (const key of KEYS) fs.appendFileSync(path.join(root, ACTS[key].record), ' ');"
+     ],
+     [
+      562,
+      "fs.appendFileSync(path.join(root, INSTALLED_ENTRY), ' ');"
+     ]
+    ],
+    "packages/polaris-dossier/src/inventory.test.ts": [
+     [
+      431,
+      "fs.appendFileSync(path.join(run, 'inventory', 'rev-0.json'), ' ');"
+     ],
+     [
+      540,
+      "fs.appendFileSync(path.join(dir, 'inventory-brief.md'), '\\nRead the drafts too.\\n');"
+     ]
+    ],
+    "packages/polaris-dossier/src/render.test.ts": [
+     [
+      492,
+      "fs.appendFileSync(path.join(run, 'drafts', 'rev-0.json'), ' ');"
+     ],
+     [
+      786,
+      "fs.appendFileSync(path.join(rendered.report.site, 'glossary.html'), ' ');"
+     ]
+    ],
+    "packages/polaris-dossier/src/review.test.ts": [
+     [
+      316,
+      "['when the frozen draft changed after its check', (run) => fs.appendFileSync(path.join(run, 'drafts', 'rev-0.json'), ' '), 'draft', 'the frozen draft drafts/rev-0.json is not the bytes its check recor"
+     ],
+     [
+      443,
+      "(run: string) => { fs.appendFileSync(path.join(run, 'drafts', 'rev-0.json'), ' '); },"
+     ],
+     [
+      444,
+      "(run: string) => { fs.appendFileSync(path.join(run, 'reviews', 'fidelity-verdict-0.json'), ' '); },"
+     ]
+    ],
+    "packages/polaris-dossier/src/start-gates.test.ts": [
+     [
+      426,
+      "fs.appendFileSync(dotGit(big, 'FETCH_HEAD'), ' '.repeat(1024 * 1024));"
+     ],
+     [
+      474,
+      "fs.appendFileSync(dotGit(big, 'config'), `# ${'x'.repeat(1024 * 1024)}\\n`);"
+     ],
+     [
+      501,
+      "['config sets core.constructor, which git init never writes', clone => fs.appendFileSync(dotGit(clone, 'config'), '\\tconstructor = true\\n')],"
+     ],
+     [
+      502,
+      "['config sets core.FileMode more than once', clone => fs.appendFileSync(dotGit(clone, 'config'), '\\tFileMode = true\\n')],"
+     ],
+     [
+      503,
+      "['config line 6 continues onto the next line, which the config git init writes never does', clone => fs.appendFileSync(dotGit(clone, 'config'), '\\tsymlinks = tr\\\\\\nue\\n')],"
+     ],
+     [
+      505,
+      "['config line 6 is not a [core] key = value line the config git init writes', clone => fs.appendFileSync(dotGit(clone, 'config'), '\\tsymlinks\\n')],"
+     ],
+     [
+      544,
+      "fs.appendFileSync(dotGit(log, 'logs', 'HEAD'), `${commits.A} ${commits.B.toUpperCase()} t <t@example.invalid> 1791330124 +0000\\tcheckout: moving\\n`);"
+     ],
+     [
+      832,
+      "['the consent bytes changed after the act', (root: string) => fs.appendFileSync(path.join(root, CONSENT_PATH), '\\n<!-- edited -->\\n'),"
+     ],
+     [
+      1029,
+      "fs.appendFileSync(path.join(root, '.syzygy/governance/doctrine/security.md'), '\\nedit\\n');"
+     ]
+    ],
+    "packages/polaris-dossier/src/waiting-sessions.test.ts": [
+     [
+      157,
+      "fs.appendFileSync(path.join(decisions, 'ACCEPTANCE-ACT-RECORD.md'),"
+     ],
+     [
+      189,
+      "fs.appendFileSync(path.join(decisions, 'ACCEPTANCE-ACT-RECORD.md'),"
+     ],
+     [
+      218,
+      "['only the opening marker', (aggregate) => fs.appendFileSync(aggregate, '<!-- versioned-signoff:polaris-dossier-local-agent-mode:v1.2 -->\\n')],"
+     ],
+     [
+      219,
+      "['the closing marker before the opening one', (aggregate) => fs.appendFileSync(aggregate,"
+     ],
+     [
+      221,
+      "['two opening markers and one closing marker', (aggregate) => fs.appendFileSync(aggregate,"
+     ],
+     [
+      223,
+      "['one opening marker and two closing markers', (aggregate) => fs.appendFileSync(aggregate,"
+     ],
+     [
+      228,
+      "fs.appendFileSync(aggregate, block + block);"
+     ],
+     [
+      250,
+      "fs.appendFileSync(path.join(decisions, 'ACCEPTANCE-ACT-RECORD.md'),"
+     ],
+     [
+      258,
+      "fs.appendFileSync(path.join(root, SPEC_REL), 'edited\\n');"
+     ],
+     [
+      416,
+      "fs.appendFileSync(path.join(inv, 'inventory-brief.md'), '\\nAlso run the tests.\\n');"
+     ],
+     [
+      622,
+      "['the packet', (fid) => fs.appendFileSync(path.join(fid, 'round-1', 'packet.json'), ' ')],"
+     ]
+    ]
+   }
+  },
+  "open": {
+   "candidateFiles": 23,
+   "lines": 139,
+   "hits": {
+    "apps/three-surface-poc/src/cdp-browser.ts": [
+     [
+      100,
+      "static open(url: string): Promise<CdpConnection> {"
+     ],
+     [
+      478,
+      "connection = await CdpConnection.open(await waitForDevToolsUrl(child));"
+     ]
+    ],
+    "apps/three-surface-poc/src/restart.ts": [
+     [
+      107,
+      "const fd = openSync(lockPath, constants.O_CREAT | constants.O_EXCL | constants.O_WRONLY | constants.O_NOFOLLOW, 0o600);"
+     ]
+    ],
+    "packages/polaris-dossier/src/git-object-reader.test.ts": [
+     [
+      445,
+      "try { closeSync(openSync(fifo, fsConstants.O_WRONLY | fsConstants.O_NONBLOCK)); } catch { /* no reader waiting */ }"
+     ]
+    ],
+    "packages/polaris-dossier/src/launched.test.ts": [
+     [
+      28,
+      "const keep = fs.openSync(marker(dir), fs.constants.O_RDONLY | fs.constants.O_NONBLOCK);"
+     ],
+     [
+      30,
+      "const writer = fs.openSync(marker(dir), fs.constants.O_WRONLY | fs.constants.O_NONBLOCK);"
+     ]
+    ],
+    "packages/polaris-dossier/src/screen.test.ts": [
+     [
+      341,
+      "policy = open(str(b.ROOT / b.POLICY)).read()"
+     ]
+    ],
+    "scripts/build_general_trusted_bootstrap_impact_ledger.py": [
+     [
+      102,
+      "with tarfile.open(fileobj=io.BytesIO(archive), mode=\"r:\") as bundle:"
+     ]
+    ],
+    "scripts/check_governance.py": [
+     [
+      400,
+      "with open(os.path.join(ROOT, rel), encoding=\"utf-8\", errors=\"replace\") as fh:"
+     ],
+     [
+      2127,
+      "with open(path, encoding=\"utf-8\") as stream:"
+     ],
+     [
+      2270,
+      "with open(abspath, \"rb\") as fh:"
+     ],
+     [
+      6032,
+      "data = open(path, \"rb\").read()"
+     ],
+     [
+      7446,
+      "with open(_m21, \"w\", encoding=\"utf-8\") as _f21:"
+     ],
+     [
+      8420,
+      "with open(os.path.join(_dec, \"PWB-MISSING-CURRENCY-DISCLOSURE-SCENARIO-SIGNOFF-v1.0.md\"), \"w\") as _fh:"
+     ],
+     [
+      8422,
+      "with open(os.path.join(_dec, \"PWB-MISSING-CURRENCY-DISCLOSURE-SCENARIO-SIGNOFF-v1.x.md\"), \"w\") as _fh:"
+     ],
+     [
+      8457,
+      "open(pkt, \"w\").close()"
+     ],
+     [
+      8461,
+      "open(act_file, \"w\").close()"
+     ],
+     [
+      8638,
+      "open(os.path.join(scratch, rel), \"w\").close()"
+     ],
+     [
+      8647,
+      "open(os.path.join(scratch, SPEC_POLICY_RESTYLE_ACT), \"w\").close()"
+     ],
+     [
+      8670,
+      "open(os.path.join(scratch, rel), \"w\").close()"
+     ],
+     [
+      8679,
+      "open(os.path.join(scratch, POC_READABILITY_ACT), \"w\").close()"
+     ],
+     [
+      8692,
+      "with open(os.path.join(scratch, package, \"SUCCESSOR.json\"), \"w\") as stream:"
+     ],
+     [
+      8700,
+      "open(os.path.join(scratch, package, \"OWNER-DECISION-PACKET.md\"), \"w\").close()"
+     ],
+     [
+      8706,
+      "open(os.path.join(scratch, act), \"w\").close()"
+     ],
+     [
+      9106,
+      "with open(full, \"w\", encoding=\"utf-8\") as fh:"
+     ],
+     [
+      9144,
+      "with open(os.path.join(d, rel), \"w\", encoding=\"utf-8\") as fh:"
+     ],
+     [
+      9184,
+      "with open(full, \"w\", encoding=\"utf-8\") as fh:"
+     ],
+     [
+      9225,
+      "with open(full, \"w\", encoding=\"utf-8\") as fh:"
+     ],
+     [
+      9235,
+      "with open(os.path.join(d, \"f.md\"), \"w\", encoding=\"utf-8\") as fh:"
+     ],
+     [
+      9305,
+      "with open(full, \"w\", encoding=\"utf-8\") as fh:"
+     ],
+     [
+      9311,
+      "with open(record, \"w\", encoding=\"utf-8\") as fh:"
+     ],
+     [
+      9315,
+      "with open(os.path.join(d, copy_path), \"w\", encoding=\"utf-8\") as fh:"
+     ],
+     [
+      9366,
+      "with open(packet, \"w\", encoding=\"utf-8\") as fh:"
+     ],
+     [
+      9385,
+      "with open(packet, \"w\", encoding=\"utf-8\") as fh:"
+     ],
+     [
+      9388,
+      "with open(os.path.join(d, POLARIS_EDIT_REPAIR_SUBJECT),"
+     ],
+     [
+      9459,
+      "with open(manifest, \"w\", encoding=\"utf-8\") as fh:"
+     ],
+     [
+      9467,
+      "with open(aggregate, \"w\", encoding=\"utf-8\") as fh:"
+     ],
+     [
+      9469,
+      "with open(dedicated, \"w\", encoding=\"utf-8\") as fh:"
+     ],
+     [
+      9552,
+      "with open(path, \"w\", encoding=\"utf-8\") as fh:"
+     ],
+     [
+      9593,
+      "with open(packet, \"w\", encoding=\"utf-8\") as fh:"
+     ],
+     [
+      9674,
+      "with open(subject_path, \"w\", encoding=\"utf-8\") as fh:"
+     ],
+     [
+      9700,
+      "with open(os.path.join(d, packet), \"w\", encoding=\"utf-8\") as fh:"
+     ],
+     [
+      9716,
+      "with open(record, \"w\", encoding=\"utf-8\") as fh:"
+     ],
+     [
+      9725,
+      "with open(os.path.join(d, other), \"w\", encoding=\"utf-8\") as fh:"
+     ],
+     [
+      9792,
+      "with open(os.path.join(d, subject), \"w\", encoding=\"utf-8\") as fh:"
+     ],
+     [
+      9803,
+      "with open(record, \"w\", encoding=\"utf-8\") as fh:"
+     ],
+     [
+      9808,
+      "with open(os.path.join(d, own), \"w\", encoding=\"utf-8\") as fh:"
+     ],
+     [
+      9814,
+      "with open(os.path.join(d, foreign), \"w\", encoding=\"utf-8\") as fh:"
+     ],
+     [
+      9874,
+      "with open(subject_path, \"w\", encoding=\"utf-8\") as fh:"
+     ],
+     [
+      9883,
+      "with open(aggregate, \"w\", encoding=\"utf-8\") as fh:"
+     ],
+     [
+      9886,
+      "with open(dedicated, \"w\", encoding=\"utf-8\") as fh:"
+     ],
+     [
+      9937,
+      "with open(full, \"w\", encoding=\"utf-8\") as fh:"
+     ],
+     [
+      10590,
+      "with open(full, \"w\", encoding=\"utf-8\") as fh:"
+     ],
+     [
+      10600,
+      "with open(p, \"w\", encoding=\"utf-8\") as fh:"
+     ],
+     [
+      10609,
+      "with open(os.path.join(cand, a_rel), \"a\", encoding=\"utf-8\") as fh:"
+     ],
+     [
+      10614,
+      "with open(os.path.join(cand, \"rfcs/orphan.md\"), \"w\") as fh:"
+     ],
+     [
+      10618,
+      "with open(os.path.join(cand, \"ACTIVE-CONTRACT-MANIFEST.txt\"), \"w\") as fh:"
+     ],
+     [
+      10634,
+      "with open(os.path.join(cand, os.path.basename(ACCEPTANCE_RECORD)),"
+     ],
+     [
+      10641,
+      "with open(performed_full, \"w\", encoding=\"utf-8\") as fh:"
+     ],
+     [
+      10648,
+      "with open(os.path.join("
+     ],
+     [
+      10678,
+      "with open(os.path.join(d, rel), \"w\") as fh:"
+     ]
+    ],
+    "scripts/check_polaris_response_ceiling_reading.py": [
+     [
+      154,
+      "with open(path, encoding=\"utf-8\") as fh:"
+     ],
+     [
+      184,
+      "with open(dest, \"w\", encoding=\"utf-8\") as fh:"
+     ],
+     [
+      192,
+      "with open(dest, encoding=\"utf-8\") as fh:"
+     ],
+     [
+      278,
+      "with open(path, encoding=\"utf-8\") as fh:"
+     ],
+     [
+      320,
+      "with open(dest, \"w\", encoding=\"utf-8\") as fh:"
+     ],
+     [
+      329,
+      "with open(dest, encoding=\"utf-8\") as fh:"
+     ],
+     [
+      418,
+      "with open(path, encoding=\"utf-8\") as fh:"
+     ],
+     [
+      422,
+      "with open(path, \"w\", encoding=\"utf-8\") as fh:"
+     ],
+     [
+      429,
+      "with open(path, encoding=\"utf-8\") as fh:"
+     ],
+     [
+      435,
+      "with open(path, \"w\", encoding=\"utf-8\") as fh:"
+     ],
+     [
+      441,
+      "with open(os.path.join(root, rel), encoding=\"utf-8\") as fh:"
+     ],
+     [
+      449,
+      "with open(dest, \"w\", encoding=\"utf-8\") as fh:"
+     ],
+     [
+      468,
+      "with open(path, \"w\", encoding=\"utf-8\") as fh:"
+     ],
+     [
+      478,
+      "with open(os.path.join(root, DIRECTION), \"w\", encoding=\"utf-8\") as fh:"
+     ],
+     [
+      491,
+      "with open(dest, \"w\", encoding=\"utf-8\") as fh:"
+     ],
+     [
+      546,
+      "(\"C3 a withdrawal record reopens the sweep\", \"C3\", lambda r: (_land_compression(r), _issue_direction(r), open(os.path.join(r, DECISIONS, \"SELFTEST-WITHDRAWAL.md\"), \"w\").write(\"The owner withdrew POLAR"
+     ]
+    ],
+    "scripts/check_quotations.py": [
+     [
+      393,
+      "with open(os.path.join(root, rel), encoding=\"utf-8\") as fh:"
+     ],
+     [
+      560,
+      "with open(os.path.join(tmp, \"OLD.md\"), \"w\") as fh:"
+     ],
+     [
+      565,
+      "with open(os.path.join(tmp, \"NEW.md\"), \"w\") as fh:"
+     ]
+    ],
+    "scripts/check_spec_reconciliation.py": [
+     [
+      1755,
+      "with open(tree / OPENSPEC_README, \"a\", encoding=\"utf-8\") as fh:"
+     ],
+     [
+      1780,
+      "with open(tree / AGGREGATE, \"a\", encoding=\"utf-8\") as fh:"
+     ],
+     [
+      1796,
+      "with open(tree / OPENSPEC_README, \"a\", encoding=\"utf-8\") as fh:"
+     ]
+    ],
+    "scripts/polaris_generator_approval.py": [
+     [
+      277,
+      "with (root / (DECISIONS + f\"POLARIS-GENERATOR-{kind}-ACT.md\")).open(\"x\") as stream:"
+     ],
+     [
+      279,
+      "with (root / AGGREGATE).open(\"ab\") as stream:"
+     ],
+     [
+      346,
+      "with (root / AGGREGATE).open(\"a\") as stream:"
+     ],
+     [
+      350,
+      "with (root / AGGREGATE).open(\"a\") as stream:"
+     ],
+     [
+      412,
+      "with args.offer.open(\"xb\") as stream:"
+     ]
+    ],
+    "scripts/pwb_signed_selftest.py": [
+     [
+      62,
+      "with tarfile.open(fileobj=proc.stdout, mode=\"r|\") as archive:"
+     ]
+    ],
+    "scripts/readability_successor.py": [
+     [
+      329,
+      "with (self.root / self.act).open(\"x\", encoding=\"utf-8\") as stream:"
+     ],
+     [
+      331,
+      "with (self.root / AGGREGATE).open(\"ab\") as stream:"
+     ]
+    ],
+    "scripts/record_contract_readability_restyle.py": [
+     [
+      261,
+      "with (root / ACT).open(\"x\", encoding=\"utf-8\") as stream:"
+     ],
+     [
+      263,
+      "with (root / AGGREGATE).open(\"ab\") as stream:"
+     ],
+     [
+      389,
+      "with (root / AGGREGATE).open(\"a\") as stream:"
+     ],
+     [
+      398,
+      "with (root / AGGREGATE).open(\"a\") as stream:"
+     ],
+     [
+      403,
+      "with (root / AGGREGATE).open(\"a\") as stream:"
+     ]
+    ],
+    "scripts/record_polaris_understanding_adoption.py": [
+     [
+      179,
+      "with (root / ACT).open(\"x\") as stream:"
+     ],
+     [
+      181,
+      "with (root / AGGREGATE).open(\"ab\") as stream:"
+     ],
+     [
+      209,
+      "with (root / AGGREGATE).open(\"a\") as stream: stream.write(\"\\nLater unrelated record.\\n\")"
+     ],
+     [
+      211,
+      "with (root / AGGREGATE).open(\"a\") as stream: stream.write(block(read(root, ACT).decode()))"
+     ],
+     [
+      1423,
+      "with (root / SUPPLEMENT).open('xb') as stream:"
+     ],
+     [
+      1474,
+      "with (root / refused[0].act).open('a', encoding='utf-8') as stream:"
+     ],
+     [
+      1643,
+      "with (ROOT / MANIFEST).open('xb') as stream: stream.write(canonical(current_subject(ROOT)))"
+     ]
+    ],
+    "scripts/record_rfc7_scoped_values_successor.py": [
+     [
+      269,
+      "with (root / ACT).open(\"x\", encoding=\"utf-8\") as stream:"
+     ],
+     [
+      271,
+      "with (root / AGGREGATE).open(\"ab\") as stream:"
+     ],
+     [
+      395,
+      "with (root / AGGREGATE).open(\"a\") as stream:"
+     ],
+     [
+      404,
+      "with (root / AGGREGATE).open(\"a\") as stream:"
+     ],
+     [
+      409,
+      "with (root / AGGREGATE).open(\"a\") as stream:"
+     ]
+    ],
+    "scripts/record_spec_policy_readability_restyle.py": [
+     [
+      317,
+      "with (root / ACT).open(\"x\", encoding=\"utf-8\") as stream:"
+     ],
+     [
+      319,
+      "with (root / AGGREGATE).open(\"ab\") as stream:"
+     ],
+     [
+      321,
+      "with (root / INSTALL).open(\"ab\") as stream:"
+     ],
+     [
+      452,
+      "with (root / rel).open(\"a\") as stream:"
+     ],
+     [
+      463,
+      "with (root / rel).open(\"a\") as stream:"
+     ],
+     [
+      469,
+      "with (root / AGGREGATE).open(\"a\") as stream:"
+     ],
+     [
+      503,
+      "with (root / target).open(\"a\") as stream:"
+     ]
+    ],
+    "scripts/record_three_surface_poc_readability_successor.py": [
+     [
+      275,
+      "with (root / ACT).open(\"x\", encoding=\"utf-8\") as stream:"
+     ],
+     [
+      277,
+      "with (root / AGGREGATE).open(\"ab\") as stream:"
+     ]
+    ],
+    "scripts/redis_screening_remeasure.mjs": [
+     [
+      188,
+      "const opened = await open();"
+     ]
+    ],
+    "scripts/rerun_rule6_mutants_selected_tests.py": [
+     [
+      34,
+      "data = json.load(open(report))"
+     ],
+     [
+      45,
+      "raw = open(record_path, 'rb').read()"
+     ],
+     [
+      56,
+      "orig = open(target, encoding='utf8').read()"
+     ],
+     [
+      58,
+      "open(target, 'w', encoding='utf8').write(orig.replace(m['old'], m['new'], 1))"
+     ],
+     [
+      70,
+      "json.dump(out, open(out_path, 'w'), indent=2); open(out_path, 'a').write('\\n')"
+     ]
+    ],
+    "scripts/rule6_mutation_runner.py": [
+     [
+      12,
+      "spec = json.load(open(args[0]))"
+     ],
+     [
+      34,
+      "orig = open(target, encoding='utf8').read()"
+     ],
+     [
+      36,
+      "open(target, 'w', encoding='utf8').write(orig.replace(m['old'], m['new'], 1))"
+     ],
+     [
+      44,
+      "try: report = json.load(open(report_path))"
+     ],
+     [
+      55,
+      "json.dump(out, open(args[1], 'w'), indent=2); open(args[1], 'a').write('\\n')"
+     ]
+    ],
+    "scripts/rule6_timeout_rerun.py": [
+     [
+      8,
+      "spec = json.load(open(record))"
+     ],
+     [
+      13,
+      "out = {'subject': {'commit': head}, 'script': {'path': 'scripts/rule6_timeout_rerun.py', 'sha256': hashlib.sha256(open(me, 'rb').read()).hexdigest()},"
+     ],
+     [
+      14,
+      "'record': os.path.basename(record), 'recordSha256': hashlib.sha256(open(record, 'rb').read()).hexdigest(), 'testTimeoutMs': timeout, 'watchedTest': watched,"
+     ],
+     [
+      19,
+      "orig = open(target, encoding='utf8').read()"
+     ],
+     [
+      21,
+      "open(target, 'w', encoding='utf8').write(orig.replace(m['old'], m['new'], 1))"
+     ],
+     [
+      30,
+      "report = json.load(open(rp))"
+     ],
+     [
+      38,
+      "json.dump(out, open(out_path, 'w'), indent=1); open(out_path, 'a').write('\\n')"
+     ]
+    ],
+    "scripts/run_line_slot_rule6_mutants.py": [
+     [
+      52,
+      "data = json.load(open(report)) if os.path.exists(report) else {}"
+     ],
+     [
+      59,
+      "text = open(os.path.join(tree, FILE), encoding='utf8').read()"
+     ],
+     [
+      73,
+      "open(target, 'w', encoding='utf8').write(text.replace(SLOT, new, 1))"
+     ],
+     [
+      88,
+      "with open(out_path, 'w', encoding='utf8') as f: f.write(json.dumps(out, indent=1) + '\\n')"
+     ]
+    ]
+   }
+  },
+  "stream": {
+   "candidateFiles": 0,
+   "lines": 0,
+   "hits": {}
+  },
+  "copyFile": {
+   "candidateFiles": 4,
+   "lines": 5,
+   "hits": {
+    "apps/three-surface-poc/src/build-output.test.ts": [
+     [
+      31,
+      "copyFileSync(source, join(root, path));"
+     ]
+    ],
+    "packages/polaris-dossier/src/execution-choice.test.ts": [
+     [
+      112,
+      "fs.copyFileSync(path.join(earlier, 'execution-choice.json'), path.join(run, 'execution-choice.json'));"
+     ]
+    ],
+    "packages/polaris-dossier/src/polaris.ts": [
+     [
+      344,
+      "if (fs.existsSync(credentials) && !fs.existsSync(path.join(config, '.credentials.json'))) fs.copyFileSync(credentials, path.join(config, '.credentials.json'));"
+     ]
+    ],
+    "packages/polaris-dossier/src/start-gates.test.ts": [
+     [
+      453,
+      "fs.copyFileSync(loose(origin, commits.U), loose(clone, commits.U));"
+     ],
+     [
+      641,
+      "fs.copyFileSync(looseOf(origin, commits.B), looseOf(clone, commits.A));"
+     ]
+    ]
+   }
+  },
+  "cp": {
+   "candidateFiles": 4,
+   "lines": 6,
+   "hits": {
+    "apps/three-surface-poc/src/test-model-fixture.ts": [
+     [
+      48,
+      "cpSync(template.repoRoot, root, { recursive: true });"
+     ]
+    ],
+    "packages/polaris-dossier/src/git-object-reader.test.ts": [
+     [
+      50,
+      "const copy = (from: string, name: string): string => { const to = path.join(T, name); cpSync(from, to, { recursive: true, verbatimSymlinks: true }); return to; };"
+     ]
+    ],
+    "packages/polaris-dossier/src/start-gates.test.ts": [
+     [
+      316,
+      "['modules', clone => fs.cpSync(dotGit(fullCloneAt(commits.A)), dotGit(clone, 'modules', 'deps'), { recursive: true })],"
+     ],
+     [
+      339,
+      "fs.cpSync(dotGit(fullCloneAt(commits.A), 'objects'), dotGit(relative, 'extra-objects'), { recursive: true });"
+     ],
+     [
+      554,
+      "fs.cpSync(fullCloneAt(commits.A), path.join(clone, 'nested'), { recursive: true });"
+     ]
+    ],
+    "packages/three-surface-poc-core/src/model.test.ts": [
+     [
+      97,
+      "cpSync(butlersGitTemplate.repoRoot, root, { recursive: true });"
+     ]
+    ]
+   }
+  },
+  "rename": {
+   "candidateFiles": 10,
+   "lines": 21,
+   "hits": {
+    "apps/three-surface-poc/src/git-observation.test.ts": [
+     [
+      144,
+      "renameSync(join(root, protectedPath), join(root, 'notes/main.ts'));"
+     ]
+    ],
+    "packages/polaris-dossier/src/waiting-sessions.test.ts": [
+     [
+      840,
+      "fs.renameSync(inv, elsewhere);"
+     ],
+     [
+      873,
+      "fs.renameSync(fid, elsewhere);"
+     ],
+     [
+      910,
+      "fs.renameSync(h.sessions, elsewhere);"
+     ],
+     [
+      1098,
+      "fs.renameSync(path.join(fid, 'round-1'), path.join(fid, 'hidden'));"
+     ],
+     [
+      1100,
+      "h.world.onSleep = () => { if (fs.existsSync(path.join(fid, 'hidden'))) fs.renameSync(path.join(fid, 'hidden'), path.join(fid, 'round-1')); };"
+     ]
+    ],
+    "scripts/build_provider_route_messages_api_entry.py": [
+     [
+      622,
+      "victim.rename(victim.with_suffix(\".moved\"))"
+     ],
+     [
+      624,
+      "victim.with_suffix(\".moved\").rename(victim)"
+     ]
+    ],
+    "scripts/build_public_admission_registry_entries.py": [
+     [
+      426,
+      "victim.rename(victim.with_suffix(\".moved\"))"
+     ],
+     [
+      428,
+      "victim.with_suffix(\".moved\").rename(victim)"
+     ]
+    ],
+    "scripts/record_contract_readability_restyle.py": [
+     [
+      372,
+      "manifest_file.rename(root / \"moved\")"
+     ],
+     [
+      375,
+      "(root / \"moved\").rename(manifest_file)"
+     ]
+    ],
+    "scripts/record_public_source_screening_scope_v2_act.py": [
+     [
+      807,
+      "(root / act.record).rename(root / (act.record.name + \".moved\"))"
+     ],
+     [
+      809,
+      "(root / (act.record.name + \".moved\")).rename(root / act.record)"
+     ]
+    ],
+    "scripts/record_public_source_screening_scope_v3_act.py": [
+     [
+      744,
+      "(root / act.record).rename(root / (act.record.name + \".moved\"))"
+     ],
+     [
+      747,
+      "(root / (act.record.name + \".moved\")).rename(root / act.record)"
+     ]
+    ],
+    "scripts/record_public_source_screening_scope_v4_act.py": [
+     [
+      861,
+      "(root / act.record).rename(root / (act.record.name + \".moved\"))"
+     ],
+     [
+      863,
+      "(root / (act.record.name + \".moved\")).rename(root / act.record)"
+     ]
+    ],
+    "scripts/record_rfc7_scoped_values_successor.py": [
+     [
+      378,
+      "manifest_file.rename(root / \"moved\")"
+     ],
+     [
+      381,
+      "(root / \"moved\").rename(manifest_file)"
+     ]
+    ],
+    "scripts/redis_screening_remeasure.mjs": [
+     [
+      582,
+      "fs.renameSync(temporary, out);"
+     ]
+    ]
+   }
+  },
+  "link": {
+   "candidateFiles": 2,
+   "lines": 33,
+   "hits": {
+    "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts": [
+     [
+      58,
+      "link(1, 'http://h/x', 'Overview', 'Overview'),"
+     ],
+     [
+      59,
+      "link(2, 'http://h/y', 'Catalog', 'Catalog'),"
+     ],
+     [
+      60,
+      "link(3, 'http://h/x', 'Overview again', 'Overview'),"
+     ],
+     [
+      66,
+      "const result = distinctNameViolations([link(1, 'http://h/x', 'Open', 'Open'), link(2, 'http://h/y', 'Go', 'Open')], PATHS);"
+     ],
+     [
+      80,
+      "link(1, 'http://h/x', 'Read', 'Read the overview'),"
+     ],
+     [
+      81,
+      "link(2, 'http://h/y', 'Read', 'Open the catalog'),"
+     ],
+     [
+      87,
+      "link(1, 'http://h/x', 'Read', 'Read the overview'),"
+     ],
+     [
+      88,
+      "link(2, 'http://h/y', 'Read', 'Then Read the catalog'),"
+     ],
+     [
+      95,
+      "link(1, routeHref(SOURCE_A), 'Source', 'Source docs/a.md'),"
+     ],
+     [
+      96,
+      "link(2, routeHref(SOURCE_B), 'Source', 'Source \u2014 docs/b.md'),"
+     ],
+     [
+      100,
+      "link(1, routeHref(SOURCE_A), 'Source', 'Source docs/a.md'),"
+     ],
+     [
+      101,
+      "link(2, routeHref(SOURCE_B), 'Source', 'Source second'),"
+     ],
+     [
+      106,
+      "link(1, routeHref(SOURCE_A), 'docs/a.md', 'docs/a.md'),"
+     ],
+     [
+      107,
+      "link(2, routeHref(SOURCE_B), 'docs/a.md', 'docs/a.md docs/b.md'),"
+     ],
+     [
+      113,
+      "expect(distinctNameViolations([link(1, routeHref(SOURCE_A), 'Only', 'Unrelated name')], PATHS).violations).toEqual([]);"
+     ]
+    ],
+    "scripts/check_governance.py": [
+     [
+      4942,
+      "f\"link(s) {', '.join(f'`{b}`' for b in broken)} have records \""
+     ],
+     [
+      4952,
+      "f\"recorded after later chain link(s) \""
+     ],
+     [
+      4970,
+      "f\"chain link(s) \""
+     ],
+     [
+      4978,
+      "f\"chain link(s) {', '.join(f'`{b}`' for b in same_instant)}; \""
+     ],
+     [
+      8955,
+      "\"shadow\": f\"`{POLARIS_NO_SIGNAL_LABEL}` is recorded after later chain link(s) `{CONTRACT_RESTYLE_LABEL}`\","
+     ],
+     [
+      8956,
+      "\"shadow-nsbytes\": f\"`{POLARIS_NO_SIGNAL_LABEL}` is recorded after later chain link(s)\","
+     ],
+     [
+      8961,
+      "\"after-invalid-no-signal\": \"earlier chain link(s)\","
+     ],
+     [
+      8963,
+      "f\"2026-09-25T00:00:00Z is after later chain link(s) \""
+     ],
+     [
+      8965,
+      "\"inserted-same-instant\": (f\"equals later chain link(s) \""
+     ],
+     [
+      8986,
+      "f\"while earlier chain link(s) \""
+     ],
+     [
+      10186,
+      "# Contract successor chain links. `link()` builds one link's inputs and"
+     ],
+     [
+      10197,
+      "def link(label, rows, records=\"both\", set_current=True, recorded=None,"
+     ],
+     [
+      10333,
+      "link(POLARIS_NO_SIGNAL_LABEL, no_signal_rows,"
+     ],
+     [
+      10362,
+      "restyle_phrase, _b, _d = link("
+     ],
+     [
+      10409,
+      "ns_phrase, _b, _d = link("
+     ],
+     [
+      10423,
+      "link(POLARIS_NO_SIGNAL_LABEL, no_signal_rows, set_current=ns_bytes,"
+     ],
+     [
+      10437,
+      "link(POLARIS_NO_SIGNAL_LABEL, no_signal_rows,"
+     ],
+     [
+      10444,
+      "link(THIRD_LINK[0], [(digest(\"third\"), POLARIS_NO_SIGNAL_PATHS[0])],"
+     ]
+    ]
+   }
+  },
+  "recursive-mkdir": {
+   "candidateFiles": 97,
+   "lines": 255,
+   "hits": {
+    "apps/three-surface-poc/src/build-output.test.ts": [
+     [
+      30,
+      "mkdirSync(dirname(join(root, path)), { recursive: true });"
+     ],
+     [
+      53,
+      "rmSync(root, { recursive: true, force: true });"
+     ]
+    ],
+    "apps/three-surface-poc/src/capture-test-artifact-main.test.ts": [
+     [
+      40,
+      "afterEach(() => { for (const path of cleanups.splice(0)) rmSync(path, { recursive: true, force: true }); });"
+     ]
+    ],
+    "apps/three-surface-poc/src/fixture-directories.test.ts": [
+     [
+      33,
+      "for (const directory of privateTmp.splice(0)) rmSync(directory, { recursive: true, force: true });"
+     ],
+     [
+      52,
+      "mkdirSync(join(tmp, name, 'repo'), { recursive: true });"
+     ],
+     [
+      115,
+      "mkdirSync(join(outside, 'precious'), { recursive: true });"
+     ]
+    ],
+    "apps/three-surface-poc/src/fixture-directories.ts": [
+     [
+      71,
+      "if (stat.isDirectory() && (user === undefined || stat.uid === user)) rmSync(entry, { recursive: true, force: true });"
+     ]
+    ],
+    "apps/three-surface-poc/src/fresh-checkout-demo-main.ts": [
+     [
+      348,
+      "mkdirSync(retainDir, { recursive: true });"
+     ],
+     [
+      540,
+      "mkdirSync(join(sourceRoot, 'docs', 'evidence'), { recursive: true });"
+     ],
+     [
+      554,
+      "rmSync(base, { recursive: true, force: true });"
+     ]
+    ],
+    "apps/three-surface-poc/src/git-blob-batch.test.ts": [
+     [
+      33,
+      "afterEach(() => { for (const root of cleanups.splice(0)) rmSync(root, { recursive: true, force: true }); });"
+     ],
+     [
+      265,
+      "mkdirSync(dirname(join(root, tracked)), { recursive: true });"
+     ]
+    ],
+    "apps/three-surface-poc/src/git-observation.test.ts": [
+     [
+      31,
+      "rmSync(directory, { recursive: true, force: true });"
+     ],
+     [
+      46,
+      "mkdirSync(dirname(absolutePath), { recursive: true });"
+     ],
+     [
+      140,
+      "mkdirSync(join(root, 'notes'), { recursive: true });"
+     ],
+     [
+      156,
+      "mkdirSync(join(root, 'src', 'new'), { recursive: true });"
+     ]
+    ],
+    "apps/three-surface-poc/src/governance-inputs.test.ts": [
+     [
+      40,
+      "for (const root of cleanups.splice(0)) rmSync(root, { recursive: true, force: true });"
+     ],
+     [
+      57,
+      "mkdirSync(dirname(target), { recursive: true });"
+     ]
+    ],
+    "apps/three-surface-poc/src/keyboard-sweep-record.test.ts": [
+     [
+      14,
+      "afterAll(() => { for (const directory of cleanups.splice(0)) rmSync(directory, { recursive: true, force: true }); });"
+     ]
+    ],
+    "apps/three-surface-poc/src/main.test.ts": [
+     [
+      59,
+      "rmSync(scratch, { recursive: true, force: true });"
+     ],
+     [
+      60,
+      "for (const directory of fixtureDirectories) rmSync(directory, { recursive: true, force: true });"
+     ],
+     [
+      165,
+      "if (options.daemonMakesStateDir === true) mkdirSync(daemonStartOptions.stateDir, { recursive: true });"
+     ]
+    ],
+    "apps/three-surface-poc/src/materialize-action.test.ts": [
+     [
+      36,
+      "rmSync(directory, { recursive: true, force: true });"
+     ]
+    ],
+    "apps/three-surface-poc/src/orrery.browser.test.ts": [
+     [
+      16,
+      "for (const directory of cleanups.splice(0)) rmSync(directory, { recursive: true, force: true });"
+     ]
+    ],
+    "apps/three-surface-poc/src/polaris-accessibility-main.ts": [
+     [
+      53,
+      "rmSync(pages, { recursive: true, force: true });"
+     ],
+     [
+      54,
+      "for (const directory of cleanups) rmSync(directory, { recursive: true, force: true });"
+     ],
+     [
+      73,
+      "mkdirSync(join('docs', 'evidence'), { recursive: true });"
+     ]
+    ],
+    "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts": [
+     [
+      26,
+      "for (const directory of cleanups.splice(0)) rmSync(directory, { recursive: true, force: true });"
+     ],
+     [
+      95,
+      "if (pages !== undefined) rmSync(pages, { recursive: true, force: true });"
+     ]
+    ],
+    "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts": [
+     [
+      192,
+      "if (pages !== undefined) rmSync(pages, { recursive: true, force: true });"
+     ],
+     [
+      193,
+      "for (const directory of cleanups.splice(0)) rmSync(directory, { recursive: true, force: true });"
+     ]
+    ],
+    "apps/three-surface-poc/src/polaris-generation/dossier-cap-measure.test.ts": [
+     [
+      13,
+      "afterAll(() => rmSync(scratch, { recursive: true, force: true }));"
+     ]
+    ],
+    "apps/three-surface-poc/src/polaris-generation/dossier-evaluation-main.test.ts": [
+     [
+      23,
+      "afterEach(() => { for (const path of cleanups.splice(0)) rmSync(path, { recursive: true, force: true }); });"
+     ],
+     [
+      29,
+      "mkdirSync(join(dossier, 'deep-dives'), { recursive: true });"
+     ],
+     [
+      73,
+      "rmSync(join(run.dossier, 'deep-dives'), { recursive: true });"
+     ]
+    ],
+    "apps/three-surface-poc/src/polaris-generation/dossier-render.test.ts": [
+     [
+      26,
+      "afterEach(() => { for (const path of cleanups.splice(0)) rmSync(path, { recursive: true, force: true }); });"
+     ]
+    ],
+    "apps/three-surface-poc/src/polaris-generation/dossier-trigger-isolation.test.ts": [
+     [
+      27,
+      "afterAll(() => { for (const dir of scratch) rmSync(dir, { recursive: true, force: true }); });"
+     ],
+     [
+      34,
+      "mkdirSync(join(dir, '..'), { recursive: true });"
+     ]
+    ],
+    "apps/three-surface-poc/src/polaris-generation/dossier-trigger.test.ts": [
+     [
+      16,
+      "afterEach(() => { for (const path of cleanups.splice(0)) rmSync(path, { recursive: true, force: true }); });"
+     ],
+     [
+      92,
+      "mkdirSync(dirname(join(repo, p)), { recursive: true }); writeFileSync(join(repo, p), body);"
+     ],
+     [
+      96,
+      "afterAll(() => rmSync(repo, { recursive: true, force: true }));"
+     ],
+     [
+      368,
+      "afterAll(() => rmSync(repo, { recursive: true, force: true }));"
+     ]
+    ],
+    "apps/three-surface-poc/src/polaris-generation/dossier-trigger.ts": [
+     [
+      46,
+      "} finally { rmSync(home, { recursive: true, force: true }); }"
+     ],
+     [
+      203,
+      "rmSync(dirname(checkoutDir), { recursive: true, force: true });"
+     ],
+     [
+      204,
+      "if (defaultOut !== undefined && !existsSync(runDir)) rmSync(defaultOut, { recursive: true, force: true });"
+     ],
+     [
+      213,
+      "mkdirSync(dirname(target.dir), { recursive: true });"
+     ],
+     [
+      216,
+      "} finally { rmSync(home, { recursive: true, force: true }); }"
+     ]
+    ],
+    "apps/three-surface-poc/src/polaris-generation/draft-preview.browser.test.ts": [
+     [
+      41,
+      "} finally { await browser.close(); await rm(directory, { recursive: true, force: true }); }"
+     ]
+    ],
+    "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts": [
+     [
+      12,
+      "afterEach(() => { for (const path of cleanups.splice(0)) rmSync(path, { recursive: true, force: true }); });"
+     ]
+    ],
+    "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts": [
+     [
+      12,
+      "afterEach(() => { for (const path of cleanups.splice(0)) rmSync(path, { recursive: true, force: true }); });"
+     ]
+    ],
+    "apps/three-surface-poc/src/polaris-generation/generation-mutation-run-main.ts": [
+     [
+      182,
+      "mkdirSync(evidenceDir, { recursive: true });"
+     ],
+     [
+      193,
+      "rmSync(scratch, { recursive: true, force: true });"
+     ]
+    ],
+    "apps/three-surface-poc/src/polaris-generation/pipeline-demo.test.ts": [
+     [
+      21,
+      "afterEach(() => { for (const directory of cleanups.splice(0)) rmSync(directory, { recursive: true, force: true }); });"
+     ]
+    ],
+    "apps/three-surface-poc/src/polaris-generation/public-source-screening.test.ts": [
+     [
+      92,
+      "for (const [path, body] of Object.entries(files)) { mkdirSync(dirname(join(dir, path)), { recursive: true }); writeFileSync(join(dir, path), body); }"
+     ],
+     [
+      100,
+      "afterAll(() => { for (const dir of scratch) rmSync(dir, { recursive: true, force: true }); });"
+     ]
+    ],
+    "apps/three-surface-poc/src/polaris-generation/redis-shaped-discovery.test.ts": [
+     [
+      17,
+      "afterAll(() => rmSync(scratch, { recursive: true, force: true }));"
+     ]
+    ],
+    "apps/three-surface-poc/src/polaris-generation/redis-shaped-measure-main.ts": [
+     [
+      28,
+      "} finally { rmSync(scratch, { recursive: true, force: true }); }"
+     ]
+    ],
+    "apps/three-surface-poc/src/polaris-generation/repo-corpus-isolation.test.ts": [
+     [
+      22,
+      "afterAll(() => { for (const dir of scratch.splice(0)) rmSync(dir, { recursive: true, force: true }); });"
+     ],
+     [
+      29,
+      "for (const [path, body] of Object.entries(files)) { mkdirSync(dirname(join(dir, path)), { recursive: true }); writeFileSync(join(dir, path), body); }"
+     ]
+    ],
+    "apps/three-surface-poc/src/polaris-generation/repo-corpus.test.ts": [
+     [
+      20,
+      "afterAll(() => rmSync(root, { recursive: true, force: true }));"
+     ],
+     [
+      21,
+      "afterEach(() => { for (const path of cleanups.splice(0)) rmSync(path, { recursive: true, force: true }); });"
+     ],
+     [
+      32,
+      "for (const [path, body] of Object.entries(files)) { mkdirSync(dirname(join(root, path)), { recursive: true }); writeFileSync(join(root, path), body); }"
+     ],
+     [
+      56,
+      "for (const [path, body] of Object.entries(files)) { mkdirSync(dirname(join(hostile, path)), { recursive: true }); writeFileSync(join(hostile, path), body); }"
+     ],
+     [
+      66,
+      "afterAll(() => { rmSync(sentinel, { force: true }); rmSync(hostile, { recursive: true, force: true }); });"
+     ]
+    ],
+    "apps/three-surface-poc/src/polaris-generation/self-corpus.test.ts": [
+     [
+      18,
+      "afterEach(() => { for (const path of cleanups.splice(0)) rmSync(path, { recursive: true, force: true }); });"
+     ],
+     [
+      63,
+      "mkdirSync(dirname(join(root, path)), { recursive: true });"
+     ]
+    ],
+    "apps/three-surface-poc/src/polaris-generation/self-corpus.ts": [
+     [
+      143,
+      "} finally { rmSync(stateDir, { recursive: true, force: true }); }"
+     ]
+    ],
+    "apps/three-surface-poc/src/polaris-keyboard-sweep-main.ts": [
+     [
+      116,
+      "mkdirSync(output.directory, { recursive: true });"
+     ],
+     [
+      121,
+      "rmSync(pages, { recursive: true, force: true });"
+     ]
+    ],
+    "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts": [
+     [
+      290,
+      "for (const directory of cleanups) rmSync(directory, { recursive: true, force: true });"
+     ],
+     [
+      320,
+      "if (pages !== undefined) rmSync(pages, { recursive: true, force: true });"
+     ],
+     [
+      321,
+      "for (const directory of cleanups.splice(0)) rmSync(directory, { recursive: true, force: true });"
+     ]
+    ],
+    "apps/three-surface-poc/src/polaris-presentation-route.test.ts": [
+     [
+      29,
+      "for (const directory of cleanups.splice(0)) rmSync(directory, { recursive: true, force: true });"
+     ]
+    ],
+    "apps/three-surface-poc/src/polaris-source-route.test.ts": [
+     [
+      44,
+      "for (const directory of cleanups.splice(0)) rmSync(directory, { recursive: true, force: true });"
+     ]
+    ],
+    "apps/three-surface-poc/src/production-reobserve.test.ts": [
+     [
+      17,
+      "for (const directory of cleanups.splice(0)) rmSync(directory, { recursive: true, force: true });"
+     ]
+    ],
+    "apps/three-surface-poc/src/proposal-disclosure.test.ts": [
+     [
+      27,
+      "for (const directory of cleanups.splice(0)) rmSync(directory, { recursive: true, force: true });"
+     ]
+    ],
+    "apps/three-surface-poc/src/pwb-mutation-run-main.ts": [
+     [
+      193,
+      "mkdirSync(evidenceDir, { recursive: true });"
+     ],
+     [
+      201,
+      "rmSync(scratch, { recursive: true, force: true });"
+     ]
+    ],
+    "apps/three-surface-poc/src/pwb-mutation-sweep-main.ts": [
+     [
+      239,
+      "mkdirSync(evidenceDir, { recursive: true });"
+     ],
+     [
+      248,
+      "rmSync(scratch, { recursive: true, force: true });"
+     ]
+    ],
+    "apps/three-surface-poc/src/response-limits.test.ts": [
+     [
+      32,
+      "for (const path of cleanups.splice(0)) rmSync(path, { recursive: true, force: true });"
+     ]
+    ],
+    "apps/three-surface-poc/src/restart.test.ts": [
+     [
+      320,
+      "for (const root of roots) rmSync(root, { recursive: true, force: true });"
+     ]
+    ],
+    "apps/three-surface-poc/src/routes.test.ts": [
+     [
+      24,
+      "rmSync(directory, { recursive: true, force: true });"
+     ],
+     [
+      68,
+      "mkdirSync(dirname(absolutePath), { recursive: true });"
+     ]
+    ],
+    "apps/three-surface-poc/src/surface-routes.test.ts": [
+     [
+      33,
+      "rmSync(directory, { recursive: true, force: true });"
+     ],
+     [
+      325,
+      "rmSync(directoryToRemove, { recursive: true, force: true });"
+     ]
+    ],
+    "apps/three-surface-poc/src/test-model-fixture.test.ts": [
+     [
+      51,
+      "rmSync(first.repoRoot, { recursive: true, force: true });"
+     ],
+     [
+      56,
+      "for (const directory of cleanups) rmSync(directory, { recursive: true, force: true });"
+     ],
+     [
+      98,
+      "for (const directory of privateTmp.splice(0)) rmSync(directory, { recursive: true, force: true });"
+     ]
+    ],
+    "apps/three-surface-poc/src/test-model-fixture.ts": [
+     [
+      48,
+      "cpSync(template.repoRoot, root, { recursive: true });"
+     ],
+     [
+      59,
+      "rmSync(root, { recursive: true, force: true });"
+     ],
+     [
+      85,
+      "mkdirSync(dirname(absolutePath), { recursive: true });"
+     ],
+     [
+      263,
+      "for (const directory of cleanups.splice(0)) rmSync(directory, { recursive: true, force: true });"
+     ]
+    ],
+    "apps/three-surface-poc/src/trajectory-narrowing.browser.test.ts": [
+     [
+      22,
+      "for (const directory of cleanups.splice(0)) rmSync(directory, { recursive: true, force: true });"
+     ]
+    ],
+    "apps/three-surface-poc/src/tuple-encoding.test.ts": [
+     [
+      69,
+      "for (const directory of cleanups.splice(0)) rmSync(directory, { recursive: true, force: true });"
+     ]
+    ],
+    "packages/cap1-conformance/src/consent-record-convention.conformance.test.ts": [
+     [
+      32,
+      "rmSync(dir, { recursive: true, force: true });"
+     ]
+    ],
+    "packages/cap1-daemon/src/consent-loading.test.ts": [
+     [
+      42,
+      "rmSync(dir, { recursive: true, force: true });"
+     ]
+    ],
+    "packages/cap1-daemon/src/credentials.test.ts": [
+     [
+      40,
+      "rmSync(dir, { recursive: true, force: true });"
+     ],
+     [
+      302,
+      "mkdirSync(stateDir, { recursive: true });"
+     ],
+     [
+      303,
+      "mkdirSync(outside, { recursive: true });"
+     ]
+    ],
+    "packages/cap1-daemon/src/observation.test.ts": [
+     [
+      80,
+      "rmSync(path, { recursive: true, force: true });"
+     ],
+     [
+      85,
+      "mkdirSync(join(root, '.syzygy'), { recursive: true });"
+     ]
+    ],
+    "packages/cap1-daemon/src/pipeline.test.ts": [
+     [
+      35,
+      "rmSync(dir, { recursive: true, force: true });"
+     ],
+     [
+      91,
+      "mkdirSync(decisionsDir, { recursive: true });"
+     ],
+     [
+      235,
+      "mkdirSync(join(root, '.syzygy'), { recursive: true });"
+     ]
+    ],
+    "packages/cap1-daemon/src/routes-human.test.ts": [
+     [
+      59,
+      "rmSync(dir, { recursive: true, force: true });"
+     ],
+     [
+      116,
+      "mkdirSync(decisionsDir, { recursive: true });"
+     ],
+     [
+      121,
+      "mkdirSync(join(root, '.syzygy', 'intent'), { recursive: true });"
+     ],
+     [
+      365,
+      "mkdirSync(join(root, '.syzygy'), { recursive: true });"
+     ],
+     [
+      496,
+      "mkdirSync(join(root, '.syzygy', 'intent', 'OVERVIEW.md'), { recursive: true });"
+     ]
+    ],
+    "packages/cap1-daemon/src/routes-machine.test.ts": [
+     [
+      56,
+      "rmSync(dir, { recursive: true, force: true });"
+     ],
+     [
+      109,
+      "mkdirSync(decisionsDir, { recursive: true });"
+     ],
+     [
+      402,
+      "mkdirSync(join(root, '.syzygy'), { recursive: true });"
+     ],
+     [
+      493,
+      "mkdirSync(decisionsDir, { recursive: true });"
+     ]
+    ],
+    "packages/cap1-daemon/src/server.test.ts": [
+     [
+      44,
+      "rmSync(dir, { recursive: true, force: true });"
+     ],
+     [
+      84,
+      "return readdirSync(base, { recursive: true, withFileTypes: false })"
+     ],
+     [
+      216,
+      "mkdirSync(join(repoRoot, '.syzygy'), { recursive: true });"
+     ],
+     [
+      256,
+      "mkdirSync(decisionsDir, { recursive: true });"
+     ]
+    ],
+    "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts": [
+     [
+      57,
+      "cleanups.push(() => rmSync(dir, { recursive: true, force: true }));"
+     ],
+     [
+      59,
+      "mkdirSync(path.join(root, '.syzygy', 'governance', 'decisions'), { recursive: true });"
+     ],
+     [
+      60,
+      "mkdirSync(path.join(root, '.syzygy', 'intent'), { recursive: true });"
+     ],
+     [
+      61,
+      "mkdirSync(path.join(root, 'openspec'), { recursive: true });"
+     ]
+    ],
+    "packages/cap1-system/src/effect-observer.ts": [
+     [
+      76,
+      "removeTraceDir: (traceDir) => rmSync(traceDir, { recursive: true, force: true }),"
+     ]
+    ],
+    "packages/cap1-system/src/harness.ts": [
+     [
+      74,
+      "mkdirSync(decisionsDir, { recursive: true });"
+     ],
+     [
+      75,
+      "mkdirSync(intentDir, { recursive: true });"
+     ],
+     [
+      76,
+      "mkdirSync(openspecDir, { recursive: true });"
+     ]
+    ],
+    "packages/polaris-dossier/src/brief.test.ts": [
+     [
+      54,
+      "cleanups.push(() => fs.rmSync(root, { recursive: true, force: true }));"
+     ],
+     [
+      296,
+      "cleanups.push(() => fs.rmSync(empty, { recursive: true, force: true }));"
+     ]
+    ],
+    "packages/polaris-dossier/src/check.test.ts": [
+     [
+      69,
+      "fs.mkdirSync(path.dirname(path.join(origin, file)), { recursive: true });"
+     ],
+     [
+      79,
+      "afterAll(() => fs.rmSync(origin, { recursive: true, force: true }));"
+     ],
+     [
+      85,
+      "cleanups.push(() => fs.rmSync(dir, { recursive: true, force: true }));"
+     ],
+     [
+      171,
+      "fs.mkdirSync(path.join(run, 'drafts'), { recursive: true });"
+     ]
+    ],
+    "packages/polaris-dossier/src/cli.test.ts": [
+     [
+      39,
+      "afterEach(() => fs.rmSync(runDir, { recursive: true, force: true }));"
+     ]
+    ],
+    "packages/polaris-dossier/src/close.test.ts": [
+     [
+      27,
+      "cleanups.push(() => fs.rmSync(dir, { recursive: true, force: true }));"
+     ]
+    ],
+    "packages/polaris-dossier/src/credential-probe.test.ts": [
+     [
+      16,
+      "cleanups.push(() => { fs.chmodSync(dir, 0o700); for (const name of fs.readdirSync(dir)) { try { fs.chmodSync(path.join(dir, name), 0o700); } catch { /* gone */ } } fs.rmSync(dir, { recursive: true, fo"
+     ]
+    ],
+    "packages/polaris-dossier/src/design-review.test.ts": [
+     [
+      79,
+      "cleanups.push(() => fs.rmSync(dir, { recursive: true, force: true }));"
+     ],
+     [
+      82,
+      "const write = (file: string, text: string | Uint8Array): void => { fs.mkdirSync(path.dirname(file), { recursive: true }); fs.writeFileSync(file, text); };"
+     ]
+    ],
+    "packages/polaris-dossier/src/doctrine-quote.test.ts": [
+     [
+      68,
+      "fs.mkdirSync(path.join(root, '.syzygy/governance/doctrine'), { recursive: true });"
+     ],
+     [
+      72,
+      "fs.rmSync(root, { recursive: true, force: true });"
+     ]
+    ],
+    "packages/polaris-dossier/src/execution-choice.test.ts": [
+     [
+      38,
+      "cleanups.push(() => fs.rmSync(dir, { recursive: true, force: true }));"
+     ],
+     [
+      217,
+      "fs.mkdirSync(path.join(records, '.syzygy/governance/doctrine'), { recursive: true });"
+     ],
+     [
+      220,
+      "expect(fs.readdirSync(records, { recursive: true }).map(String).sort()).toEqual(['.syzygy', '.syzygy/governance', '.syzygy/governance/doctrine']);"
+     ]
+    ],
+    "packages/polaris-dossier/src/execution-flags.test.ts": [
+     [
+      26,
+      "cleanups.push(() => fs.rmSync(dir, { recursive: true, force: true }));"
+     ]
+    ],
+    "packages/polaris-dossier/src/full-run.testkit.ts": [
+     [
+      52,
+      "fs.mkdirSync(origin, { recursive: true });"
+     ],
+     [
+      56,
+      "fs.mkdirSync(path.dirname(path.join(origin, file)), { recursive: true });"
+     ],
+     [
+      207,
+      "fs.mkdirSync(stateRoot, { recursive: true });"
+     ],
+     [
+      220,
+      "fs.mkdirSync(path.join(run, 'drafts'), { recursive: true });"
+     ]
+    ],
+    "packages/polaris-dossier/src/gate-acts.test.ts": [
+     [
+      50,
+      "cleanups.push(() => fs.rmSync(dir, { recursive: true, force: true }));"
+     ],
+     [
+      54,
+      "fs.mkdirSync(path.dirname(path.join(root, rel)), { recursive: true });"
+     ]
+    ],
+    "packages/polaris-dossier/src/gate-parts.test.ts": [
+     [
+      18,
+      "cleanups.push(() => fs.rmSync(dir, { recursive: true, force: true }));"
+     ],
+     [
+      50,
+      "fs.mkdirSync(path.dirname(path.join(dir, '.git', name)), { recursive: true });"
+     ]
+    ],
+    "packages/polaris-dossier/src/git-object-reader.test.ts": [
+     [
+      34,
+      "mkdirSync(dir, { recursive: true });"
+     ],
+     [
+      50,
+      "const copy = (from: string, name: string): string => { const to = path.join(T, name); cpSync(from, to, { recursive: true, verbatimSymlinks: true }); return to; };"
+     ],
+     [
+      91,
+      "afterAll(() => { if (T !== '') rmSync(T, { recursive: true, force: true }); });"
+     ],
+     [
+      236,
+      "mkdirSync(path.join(repo, 'hooks'), { recursive: true });"
+     ],
+     [
+      314,
+      "mkdirSync(path.join(objects, 'pack'), { recursive: true });"
+     ],
+     [
+      316,
+      "mkdirSync(path.join(objects, o.id.slice(0, 2)), { recursive: true });"
+     ],
+     [
+      373,
+      "rmSync(repo, { recursive: true });"
+     ],
+     [
+      437,
+      "mkdirSync(path.dirname(at), { recursive: true });"
+     ],
+     [
+      453,
+      "mkdirSync(objects, { recursive: true });"
+     ],
+     [
+      457,
+      "rmSync(path.join(pack, '.git/objects/pack'), { recursive: true });"
+     ],
+     [
+      753,
+      "mkdirSync(path.dirname(file), { recursive: true });"
+     ]
+    ],
+    "packages/polaris-dossier/src/inventory.test.ts": [
+     [
+      55,
+      "fs.mkdirSync(path.dirname(path.join(origin, file)), { recursive: true });"
+     ],
+     [
+      62,
+      "afterAll(() => fs.rmSync(origin, { recursive: true, force: true }));"
+     ],
+     [
+      68,
+      "cleanups.push(() => fs.rmSync(dir, { recursive: true, force: true }));"
+     ],
+     [
+      146,
+      "const listAll = (dir: string): string[] => fs.readdirSync(dir, { recursive: true, encoding: 'utf8' }).sort();"
+     ]
+    ],
+    "packages/polaris-dossier/src/launched.test.ts": [
+     [
+      16,
+      "cleanups.push(() => fs.rmSync(dir, { recursive: true, force: true }));"
+     ]
+    ],
+    "packages/polaris-dossier/src/no-egress.test.ts": [
+     [
+      46,
+      "afterAll(() => { if (dir !== undefined) fs.rmSync(dir, { recursive: true, force: true }); });"
+     ]
+    ],
+    "packages/polaris-dossier/src/polaris.ts": [
+     [
+      281,
+      "fs.mkdirSync(path.dirname(clone), { recursive: true });"
+     ],
+     [
+      294,
+      "fs.mkdirSync(options.stateRoot, { recursive: true, mode: 0o700 });"
+     ],
+     [
+      304,
+      "for (const dir of [RUN_LAYOUT.drafts, RUN_LAYOUT.inventory, RUN_LAYOUT.reviews, RUN_LAYOUT.checks]) fs.mkdirSync(path.join(run, dir), { recursive: true, mode: 0o700 });"
+     ],
+     [
+      342,
+      "fs.mkdirSync(config, { recursive: true, mode: 0o700 });"
+     ],
+     [
+      354,
+      "fs.mkdirSync(dir, { recursive: true, mode: 0o700 });"
+     ],
+     [
+      381,
+      "fs.mkdirSync(socketDir, { recursive: true, mode: 0o700 });"
+     ]
+    ],
+    "packages/polaris-dossier/src/render.test.ts": [
+     [
+      65,
+      "fs.mkdirSync(path.dirname(path.join(origin, file)), { recursive: true });"
+     ],
+     [
+      73,
+      "afterAll(() => fs.rmSync(origin, { recursive: true, force: true }));"
+     ],
+     [
+      79,
+      "cleanups.push(() => fs.rmSync(dir, { recursive: true, force: true }));"
+     ],
+     [
+      198,
+      "fs.mkdirSync(path.join(run, 'drafts'), { recursive: true });"
+     ],
+     [
+      423,
+      "const empty = (): void => { fs.rmSync(path.join(clone, '.git', 'objects'), { recursive: true, force: true }); fs.mkdirSync(path.join(clone, '.git', 'objects')); };"
+     ]
+    ],
+    "packages/polaris-dossier/src/review.test.ts": [
+     [
+      66,
+      "fs.mkdirSync(path.dirname(path.join(origin, file)), { recursive: true });"
+     ],
+     [
+      74,
+      "afterAll(() => fs.rmSync(origin, { recursive: true, force: true }));"
+     ],
+     [
+      80,
+      "cleanups.push(() => fs.rmSync(dir, { recursive: true, force: true }));"
+     ],
+     [
+      188,
+      "fs.mkdirSync(path.join(run, 'drafts'), { recursive: true });"
+     ],
+     [
+      703,
+      "return Object.fromEntries(fs.readdirSync(root, { recursive: true, encoding: 'utf8' }).sort().map((entry) => {"
+     ]
+    ],
+    "packages/polaris-dossier/src/run-evidence.test.ts": [
+     [
+      27,
+      "cleanups.push(() => fs.rmSync(dir, { recursive: true, force: true }));"
+     ],
+     [
+      35,
+      "return (fs.readdirSync(root, { recursive: true }) as string[])"
+     ]
+    ],
+    "packages/polaris-dossier/src/screen.test.ts": [
+     [
+      39,
+      "cleanups.push(() => fs.rmSync(root, { recursive: true, force: true }));"
+     ],
+     [
+      44,
+      "fs.mkdirSync(path.dirname(path.join(root, rel)), { recursive: true });"
+     ]
+    ],
+    "packages/polaris-dossier/src/session-view.test.ts": [
+     [
+      23,
+      "fs.mkdirSync(dirs[name]!, { recursive: true });"
+     ],
+     [
+      29,
+      "afterAll(() => fs.rmSync(base, { recursive: true, force: true }));"
+     ],
+     [
+      100,
+      "afterAll(() => fs.rmSync(run, { recursive: true, force: true }));"
+     ],
+     [
+      128,
+      "} finally { fs.rmSync(run, { recursive: true, force: true }); }"
+     ]
+    ],
+    "packages/polaris-dossier/src/session-view.ts": [
+     [
+      113,
+      "fs.rmSync(base, { recursive: true, force: true });"
+     ]
+    ],
+    "packages/polaris-dossier/src/start-gates.test.ts": [
+     [
+      37,
+      "cleanups.push(() => fs.rmSync(dir, { recursive: true, force: true }));"
+     ],
+     [
+      49,
+      "fs.mkdirSync(path.dirname(path.join(origin, file)), { recursive: true });"
+     ],
+     [
+      73,
+      "afterAll(() => fs.rmSync(origin, { recursive: true, force: true }));"
+     ],
+     [
+      127,
+      "fs.mkdirSync(path.dirname(path.join(scratch, ENTRY_PATH)), { recursive: true });"
+     ],
+     [
+      149,
+      "fs.mkdirSync(path.dirname(path.join(root, rel)), { recursive: true });"
+     ],
+     [
+      316,
+      "['modules', clone => fs.cpSync(dotGit(fullCloneAt(commits.A)), dotGit(clone, 'modules', 'deps'), { recursive: true })],"
+     ],
+     [
+      317,
+      "['worktrees', clone => fs.mkdirSync(dotGit(clone, 'worktrees', 'other'), { recursive: true })],"
+     ],
+     [
+      339,
+      "fs.cpSync(dotGit(fullCloneAt(commits.A), 'objects'), dotGit(relative, 'extra-objects'), { recursive: true });"
+     ],
+     [
+      345,
+      "const write = (clone: string, rel: string, text = ''): void => { fs.mkdirSync(path.dirname(dotGit(clone, rel)), { recursive: true }); fs.writeFileSync(dotGit(clone, rel), text); };"
+     ],
+     [
+      374,
+      "fs.mkdirSync(dotGit(logs, 'logs', 'refs', 'heads'), { recursive: true });"
+     ],
+     [
+      391,
+      "['refs/heads', clone => { fs.rmSync(dotGit(clone, 'refs', 'heads'), { recursive: true }); fs.symlinkSync(dotGit(fullCloneAt(commits.A), 'refs', 'heads'), dotGit(clone, 'refs', 'heads')); }],"
+     ],
+     [
+      403,
+      "fs.rmSync(dotGit(hooks, 'hooks'), { recursive: true });"
+     ],
+     [
+      429,
+      "const entries = fs.readdirSync(dotGit(clone), { recursive: true }).length;"
+     ],
+     [
+      452,
+      "fs.mkdirSync(path.dirname(loose(clone, commits.U)), { recursive: true });"
+     ],
+     [
+      554,
+      "fs.cpSync(fullCloneAt(commits.A), path.join(clone, 'nested'), { recursive: true });"
+     ],
+     [
+      792,
+      "fs.rmSync(path.join(clone, '.git', 'objects'), { recursive: true, force: true });"
+     ]
+    ],
+    "packages/polaris-dossier/src/state-directory.test.ts": [
+     [
+      14,
+      "fs.mkdirSync(path.join(clone, '.git'), { recursive: true });"
+     ],
+     [
+      17,
+      "afterEach(() => fs.rmSync(base, { recursive: true, force: true }));"
+     ],
+     [
+      20,
+      "const sweep = (dir: string): string[] => fs.readdirSync(dir, { recursive: true, withFileTypes: true })"
+     ]
+    ],
+    "packages/polaris-dossier/src/status.test.ts": [
+     [
+      33,
+      "afterEach(() => fs.rmSync(runDir, { recursive: true, force: true }));"
+     ],
+     [
+      35,
+      "const snapshot = (dir: string): string[] => fs.readdirSync(dir, { recursive: true, withFileTypes: true })"
+     ]
+    ],
+    "packages/polaris-dossier/src/waiting-sessions.test.ts": [
+     [
+      29,
+      "cleanups.push(() => fs.rmSync(dir, { recursive: true, force: true }));"
+     ],
+     [
+      59,
+      "fs.mkdirSync(stateRoot, { recursive: true });"
+     ],
+     [
+      99,
+      "fs.mkdirSync(path.join(h.run, 'drafts'), { recursive: true });"
+     ],
+     [
+      146,
+      "fs.mkdirSync(path.dirname(path.join(root, SPEC_REL)), { recursive: true });"
+     ],
+     [
+      148,
+      "fs.mkdirSync(path.join(root, 'docs', 'reviews'), { recursive: true });"
+     ],
+     [
+      163,
+      "fs.mkdirSync(decisions, { recursive: true });"
+     ],
+     [
+      473,
+      "fs.mkdirSync(path.join(h.run, 'drafts'), { recursive: true });"
+     ],
+     [
+      504,
+      "fs.mkdirSync(path.join(h.run, 'drafts'), { recursive: true });"
+     ],
+     [
+      521,
+      "fs.mkdirSync(path.join(h.run, 'drafts'), { recursive: true });"
+     ],
+     [
+      535,
+      "fs.mkdirSync(path.join(h.run, 'drafts'), { recursive: true });"
+     ],
+     [
+      560,
+      "const before = fs.readdirSync(dir, { recursive: true }).map(String).sort();"
+     ],
+     [
+      565,
+      "expect(fs.readdirSync(dir, { recursive: true }).map(String).sort()).toEqual(before);"
+     ],
+     [
+      647,
+      "fs.mkdirSync(path.join(h.run, 'drafts'), { recursive: true });"
+     ],
+     [
+      666,
+      "fs.mkdirSync(path.join(h.run, 'drafts'), { recursive: true });"
+     ],
+     [
+      684,
+      "fs.mkdirSync(path.join(h.run, 'drafts'), { recursive: true });"
+     ],
+     [
+      835,
+      "fs.mkdirSync(path.join(h.run, 'drafts'), { recursive: true });"
+     ],
+     [
+      852,
+      "fs.rmSync(inv, { recursive: true });"
+     ],
+     [
+      918,
+      "fs.mkdirSync(path.join(h.run, 'drafts'), { recursive: true });"
+     ],
+     [
+      957,
+      "fs.mkdirSync(path.join(real, 'fidelity-1'), { recursive: true });"
+     ],
+     [
+      1073,
+      "fs.mkdirSync(path.join(h.run, 'drafts'), { recursive: true });"
+     ],
+     [
+      1148,
+      "fs.mkdirSync(path.join(h.run, 'drafts'), { recursive: true });"
+     ]
+    ],
+    "packages/three-surface-poc-core/src/code-structure.test.ts": [
+     [
+      13,
+      "rmSync(directory, { recursive: true, force: true });"
+     ],
+     [
+      35,
+      "mkdirSync(dirname(absolutePath), { recursive: true });"
+     ],
+     [
+      101,
+      "mkdirSync(dirname(join(root, name)), { recursive: true });"
+     ]
+    ],
+    "packages/three-surface-poc-core/src/materialization.test.ts": [
+     [
+      21,
+      "rmSync(directory, { recursive: true, force: true });"
+     ]
+    ],
+    "packages/three-surface-poc-core/src/model-observations.test.ts": [
+     [
+      14,
+      "rmSync(directory, { recursive: true, force: true });"
+     ],
+     [
+      41,
+      "mkdirSync(dirname(absolutePath), { recursive: true });"
+     ],
+     [
+      64,
+      "mkdirSync(dirname(absolute), { recursive: true });"
+     ]
+    ],
+    "packages/three-surface-poc-core/src/model.test.ts": [
+     [
+      42,
+      "mkdirSync(dirname(absolutePath), { recursive: true });"
+     ],
+     [
+      97,
+      "cpSync(butlersGitTemplate.repoRoot, root, { recursive: true });"
+     ],
+     [
+      122,
+      "mkdirSync(dirname(absolutePath), { recursive: true });"
+     ]
+    ],
+    "packages/three-surface-poc-core/src/test-artifact-verification.test.ts": [
+     [
+      26,
+      "rmSync(directory, { recursive: true, force: true });"
+     ]
+    ],
+    "packages/three-surface-poc-core/src/worker-change-observation.test.ts": [
+     [
+      13,
+      "rmSync(directory, { recursive: true, force: true });"
+     ],
+     [
+      35,
+      "mkdirSync(dirname(absolute), { recursive: true });"
+     ]
+    ],
+    "scripts/redis_screening_remeasure.mjs": [
+     [
+      275,
+      "try { check('P13 another tree', rootAllowed(elsewhere, own), false); } finally { fs.rmSync(elsewhere, { recursive: true, force: true }); }"
+     ],
+     [
+      316,
+      "} finally { fs.rmSync(dir, { recursive: true, force: true }); }"
+     ],
+     [
+      334,
+      "fs.mkdirSync(view, { recursive: true });"
+     ],
+     [
+      535,
+      "} finally { fs.rmSync(base, { recursive: true, force: true }); }"
+     ]
+    ],
+    "scripts/run_m13_literal_mutations.mjs": [
+     [
+      125,
+      "rmSync(scratch, { recursive: true, force: true });"
+     ]
+    ],
+    "scripts/run_m7_literal_mutations.mjs": [
+     [
+      95,
+      "rmSync(scratch, { recursive: true, force: true });"
+     ]
+    ],
+    "scripts/run_m9_literal_mutations.mjs": [
+     [
+      107,
+      "rmSync(scratch, { recursive: true, force: true });"
+     ]
+    ]
+   }
+  },
+  "socket-listen": {
+   "candidateFiles": 0,
+   "lines": 0,
+   "hits": {}
+  },
+  "mkdtempDisposable": {
+   "candidateFiles": 0,
+   "lines": 0,
+   "hits": {}
+  },
+  "shell-out": {
+   "candidateFiles": 63,
+   "lines": 212,
+   "hits": {
+    "apps/three-surface-poc/src/build-output.test.ts": [
+     [
+      25,
+      "const listed = execFileSync('git', ['-C', REPO_ROOT, 'ls-files', '-z', '--cached', '--others', '--exclude-standard'], { encoding: 'utf8' });"
+     ]
+    ],
+    "apps/three-surface-poc/src/capture-test-artifact-main.test.ts": [
+     [
+      64,
+      "execFileSync('git', ['init', '-q', repo]);"
+     ],
+     [
+      65,
+      "execFileSync('git', ['-C', repo, 'config', 'gc.auto', '0']);"
+     ],
+     [
+      66,
+      "execFileSync('git', ['-C', repo, 'config', 'maintenance.auto', 'false']);"
+     ],
+     [
+      68,
+      "execFileSync('git', ['-C', repo, 'add', 'a.txt']);"
+     ],
+     [
+      69,
+      "execFileSync('git', ['-C', repo, '-c', 'user.name=t', '-c', 'user.email=t@t', 'commit', '-q', '-m', 'a']);"
+     ],
+     [
+      70,
+      "const commit = execFileSync('git', ['-C', repo, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();"
+     ],
+     [
+      378,
+      "execFileSync('mkfifo', [fifo]);"
+     ]
+    ],
+    "apps/three-surface-poc/src/cdp-browser.ts": [
+     [
+      63,
+      "const probe = spawnSync('which', [candidate], { encoding: 'utf8' });"
+     ],
+     [
+      252,
+      "const match = /DevTools listening on (ws:\\/\\/\\S+)/.exec(buffered);"
+     ],
+     [
+      446,
+      "const child = spawn("
+     ]
+    ],
+    "apps/three-surface-poc/src/fixture-directories.test.ts": [
+     [
+      14,
+      "return /\\[(\\d+)\\]$/.exec(readlinkSync('/proc/self/ns/pid'))?.[1];"
+     ],
+     [
+      43,
+      "const child = spawn(process.execPath, ['-e', '']);"
+     ]
+    ],
+    "apps/three-surface-poc/src/fixture-directories.ts": [
+     [
+      26,
+      "return /\\[(\\d+)\\]$/.exec(readlinkSync('/proc/self/ns/pid'))?.[1];"
+     ],
+     [
+      66,
+      "const owner = FIXTURE_NAME_WITH_OWNER.exec(name);"
+     ]
+    ],
+    "apps/three-surface-poc/src/fresh-checkout-demo-main.ts": [
+     [
+      57,
+      "return execFileSync('git', args, { cwd, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();"
+     ],
+     [
+      69,
+      "execFileSync(command, args, { cwd, stdio: ['ignore', 'pipe', 'pipe'], maxBuffer: 64 * 1024 * 1024 });"
+     ],
+     [
+      80,
+      "const root = /<testsuites\\b([^>]*)>/.exec(xml) ?? /<testsuite\\b([^>]*)>/.exec(xml);"
+     ],
+     [
+      98,
+      "const child = spawn(process.execPath, [join(cloneDir, 'apps', 'three-surface-poc', 'dist', 'main.js'), '--repo', butlersRepo, '--state-dir', stateDir, '--port', '0'], {"
+     ],
+     [
+      119,
+      "const url = /Syzygy Three-Surface POC: (http:\\/\\/127\\.0\\.0\\.1:\\d+)\\//.exec(out);"
+     ],
+     [
+      120,
+      "const credential = /Machine credential \\((?:minted|reused)\\) at: (.+)/.exec(out);"
+     ],
+     [
+      121,
+      "const revision = /Observed revision: (\\S+)/.exec(out);"
+     ],
+     [
+      124,
+      "const surface = /Walkthrough surface version: (\\S+)/.exec(out);"
+     ],
+     [
+      125,
+      "const evaluation = /Walkthrough evaluation identity: (\\S+)/.exec(out);"
+     ],
+     [
+      202,
+      "const attr = (span: string, name: string): string => decodeAttr(new RegExp(`${name}=\"([^\"]*)\"`).exec(span)?.[1] ?? '');"
+     ],
+     [
+      243,
+      "const verbatim = /data-polaris-source-route data-verbatim=\"([^\"]*)\"/.exec(body)?.[1];"
+     ],
+     [
+      247,
+      "else outcome = { state: 'not-rendered', reason: decodeAttr(/data-unknown-reason=\"([^\"]*)\"/.exec(body)?.[1] ?? 'unstated') };"
+     ]
+    ],
+    "apps/three-surface-poc/src/git-blob-batch.test.ts": [
+     [
+      38,
+      "return new Uint8Array(execFileSync('git', ['-C', REPO_ROOT, 'cat-file', 'blob', object], { maxBuffer: 64 * 1024 * 1024 }));"
+     ],
+     [
+      207,
+      "const governanceRevision = execFileSync('git', ['-C', REPO_ROOT, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();"
+     ],
+     [
+      258,
+      "const run = (args: readonly string[]): string => execFileSync('git', ['-C', root, ...args], { encoding: 'utf8' }).trim();"
+     ]
+    ],
+    "apps/three-surface-poc/src/git-observation.test.ts": [
+     [
+      36,
+      "return execFileSync('git', ['-C', root, ...args], {"
+     ]
+    ],
+    "apps/three-surface-poc/src/governance-inputs.test.ts": [
+     [
+      44,
+      "return execFileSync('git', ['-C', root, ...args], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim();"
+     ],
+     [
+      128,
+      "const tag = /^refs\\/tags\\/(.+)\\^\\{commit\\}$/.exec(args[3] ?? '')?.[1] ?? '';"
+     ],
+     [
+      404,
+      "function localTagsPresent(runGit = (args: readonly string[]): string => execFileSync('git', ['-C', REPO_ROOT, ...args], { encoding: 'utf8' }).trim()): boolean {"
+     ],
+     [
+      440,
+      "const governanceRevision = execFileSync('git', ['-C', REPO_ROOT, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();"
+     ]
+    ],
+    "apps/three-surface-poc/src/materialize-action.test.ts": [
+     [
+      61,
+      "const match = new RegExp(`data-parity-field=\"${field}\">([\\\\s\\\\S]*?)<\\\\/dd>`).exec(html);"
+     ],
+     [
+      75,
+      "const governing = /^(\\S+) \\((.+)\\)$/.exec(parityField(html, 'materialize-governing-intent'));"
+     ],
+     [
+      77,
+      "const typePriority = /^(.+) \\/ P(\\d+)$/.exec(parityField(html, 'materialize-type-priority'));"
+     ],
+     [
+      118,
+      "const beadId = /data-parity-field=\"materialize-status\">Already materialized as <code>([^<]+)<\\/code>/.exec(html)?.[1];"
+     ]
+    ],
+    "apps/three-surface-poc/src/polaris-accessibility-main.ts": [
+     [
+      35,
+      "const commit = execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();"
+     ]
+    ],
+    "apps/three-surface-poc/src/polaris-generation/dossier-evaluation-main.test.ts": [
+     [
+      81,
+      "execFileSync('mkfifo', [join(run.dossier, 'deep-dives', 'adapters.html')]);"
+     ]
+    ],
+    "apps/three-surface-poc/src/polaris-generation/dossier-render.test.ts": [
+     [
+      241,
+      "const pre = /<pre>([^<]*)<\\/pre>/u.exec(files.get('index.html')!)![1]!;"
+     ],
+     [
+      301,
+      "execFileSync('git', ['init', '-q', repo]);"
+     ],
+     [
+      313,
+      "execFileSync('git', ['init', '-q', repo]);"
+     ],
+     [
+      327,
+      "execFileSync('git', ['init', '-q', repo]);"
+     ],
+     [
+      361,
+      "execFileSync('git', ['init', '-q', parent]);"
+     ],
+     [
+      425,
+      "expect(asides(index, 'unresolved-asset').map(tag => /not-generated\\/([^\"]+)/u.exec(tag)![1])).toEqual(['how', 'architecture', 'component-depth']);"
+     ],
+     [
+      434,
+      "expect(asides(files.get('index.html')!, 'unresolved-asset').map(tag => /not-generated\\/([^\"]+)/u.exec(tag)![1])).toEqual(['how', 'architecture', 'component-depth']);"
+     ]
+    ],
+    "apps/three-surface-poc/src/polaris-generation/dossier-trigger.test.ts": [
+     [
+      89,
+      "const run = (...a: string[]): string => execFileSync('git', ['-C', repo, ...a], { encoding: 'utf8' }).trim();"
+     ],
+     [
+      310,
+      "expect(execFileSync('git', ['-C', dir, 'cat-file', '-t', commit], { encoding: 'utf8' }).trim()).toBe('commit');"
+     ],
+     [
+      311,
+      "expect(execFileSync('git', ['-C', dir, 'rev-parse', '--is-bare-repository'], { encoding: 'utf8' }).trim()).toBe('true');"
+     ],
+     [
+      319,
+      "execFileSync('git', ['-C', other, 'init', '-q']); execFileSync('git', ['-C', other, 'config', 'gc.auto', '0']); execFileSync('git', ['-C', other, 'config', 'maintenance.auto', 'false']); writeFileSync"
+     ],
+     [
+      320,
+      "execFileSync('git', ['-C', other, 'add', '-A']); execFileSync('git', ['-C', other, '-c', 'user.email=o@example.invalid', '-c', 'user.name=O', 'commit', '-qm', 'o']);"
+     ],
+     [
+      347,
+      "expect(execFileSync('git', ['-C', dir, 'cat-file', '-t', commit], { encoding: 'utf8', env: { PATH: process.env.PATH!, HOME: scratch() } }).trim()).toBe('commit');"
+     ],
+     [
+      363,
+      "const run = (...a: string[]): string => execFileSync('git', ['-C', repo, ...a], { encoding: 'utf8' }).trim();"
+     ]
+    ],
+    "apps/three-surface-poc/src/polaris-generation/dossier-trigger.ts": [
+     [
+      18,
+      "const match = /^https:\\/\\/github\\.com\\/([A-Za-z0-9][A-Za-z0-9-]{0,38})\\/([A-Za-z0-9._-]{1,100}?)(?:\\.git)?(?:\\/tree\\/([A-Za-z0-9._\\/-]{1,200}))?\\/?$/u.exec(input);"
+     ],
+     [
+      28,
+      "const m = /^([0-9a-f]{40}|[0-9a-f]{64})\\t(\\S+)$/u.exec(line);"
+     ],
+     [
+      44,
+      "return execFileSync('git', [...ISOLATED_GIT_FLAGS, ...fileOverride(allowProtocol), 'ls-remote', '--', url], { encoding: 'utf8', timeout: 30_000, maxBuffer: 16_000_000,"
+     ],
+     [
+      214,
+      "execFileSync('git', [...ISOLATED_GIT_FLAGS, 'init', '-q', '--bare', '--template=', target.dir], { env, cwd: home });"
+     ],
+     [
+      215,
+      "execFileSync('git', [...ISOLATED_GIT_FLAGS, ...fileOverride(allowProtocol), '-C', target.dir, 'fetch', '-q', '--depth', '1', '--no-tags', '--', target.url, target.revision], { env, cwd: home, timeout:"
+     ]
+    ],
+    "apps/three-surface-poc/src/polaris-generation/generation-mutation-run-main.ts": [
+     [
+      59,
+      "spawnSync('npx', ['vitest', 'run', ...TEST_FILES, '--reporter=json', `--outputFile=${outputFile}`], {"
+     ],
+     [
+      73,
+      "return execFileSync('git', ['-C', REPO_ROOT, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();"
+     ],
+     [
+      79,
+      "return execFileSync('git', ['-C', REPO_ROOT, 'status', '--porcelain', '--', ...files], { encoding: 'utf8' })"
+     ]
+    ],
+    "apps/three-surface-poc/src/polaris-generation/pipeline-demo.test.ts": [
+     [
+      53,
+      "const commands = /```sh\\n(npm ci)\\n(npm run poc:generator-demo -- --out [^\\n]+)\\n```/.exec(readme);"
+     ]
+    ],
+    "apps/three-surface-poc/src/polaris-generation/public-source-screening.test.ts": [
+     [
+      90,
+      "const run = (...args: string[]): string => execFileSync('git', ['-C', dir, ...args], { encoding: 'utf8' }).trim();"
+     ],
+     [
+      104,
+      "const objectIdOf = (path: string, repo = root, revision = commit): string => execFileSync('git', ['-C', repo, 'rev-parse', `${revision}:${path}`], { encoding: 'utf8' }).trim();"
+     ],
+     [
+      154,
+      "execFileSync('git', ['-C', only.root, 'add', '-A']); execFileSync('git', ['-C', only.root, 'commit', '-qm', 'odd names']);"
+     ],
+     [
+      155,
+      "const revision = execFileSync('git', ['-C', only.root, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();"
+     ],
+     [
+      156,
+      "const ids = execFileSync('git', ['-C', only.root, 'ls-tree', '-r', '-z', revision], { encoding: 'utf8' }).split('\\0').filter(Boolean)"
+     ],
+     [
+      191,
+      "const cleanId = execFileSync('git', ['-C', root, 'rev-parse', `${commit}:src/clean.c`], { encoding: 'utf8' }).trim();"
+     ],
+     [
+      323,
+      "const argument = /^Exact digest \\(SHA-256\\): `([0-9a-f]{64})`$/mu.exec(fs.readFileSync(latest, 'utf8'))?.[1];"
+     ]
+    ],
+    "apps/three-surface-poc/src/polaris-generation/redis-shaped-measure-main.ts": [
+     [
+      13,
+      "const root = execFileSync('git', ['rev-parse', '--show-toplevel'], { encoding: 'utf8' }).trim();"
+     ],
+     [
+      14,
+      "const commit = execFileSync('git', ['-C', root, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();"
+     ]
+    ],
+    "apps/three-surface-poc/src/polaris-generation/repo-corpus.test.ts": [
+     [
+      28,
+      "const run = (...args: string[]): string => execFileSync('git', ['-C', root, ...args], { encoding: 'utf8' }).trim();"
+     ],
+     [
+      53,
+      "const run = (...args: string[]): string => execFileSync('git', ['-C', hostile, ...args], { encoding: 'utf8' }).trim();"
+     ],
+     [
+      99,
+      "expect(execFileSync('git', ['-C', hostile, 'config', '--get', 'core.fsmonitor'], { encoding: 'utf8' }).trim()).toContain('fsmonitor.sh');"
+     ]
+    ],
+    "apps/three-surface-poc/src/polaris-generation/self-corpus.test.ts": [
+     [
+      23,
+      "const names = execFileSync('git', ['ls-tree', '-r', '--name-only', PINNED_MAIN, '--',"
+     ],
+     [
+      55,
+      "execFileSync('git', ['init', '-q', root]);"
+     ],
+     [
+      56,
+      "execFileSync('git', ['-C', root, 'config', 'gc.auto', '0']);"
+     ],
+     [
+      57,
+      "execFileSync('git', ['-C', root, 'config', 'maintenance.auto', 'false']);"
+     ],
+     [
+      58,
+      "execFileSync('git', ['-C', root, 'config', 'user.email', 'fixture@example.invalid']);"
+     ],
+     [
+      59,
+      "execFileSync('git', ['-C', root, 'config', 'user.name', 'Fixture']);"
+     ],
+     [
+      66,
+      "execFileSync('git', ['-C', root, 'add', tracked]);"
+     ],
+     [
+      67,
+      "execFileSync('git', ['-C', root, 'commit', '-qm', 'fixture']);"
+     ],
+     [
+      68,
+      "const commit = execFileSync('git', ['-C', root, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();"
+     ]
+    ],
+    "apps/three-surface-poc/src/polaris-generation/self-corpus.ts": [
+     [
+      17,
+      "const git = (repoRoot: string, args: readonly string[]): Buffer => execFileSync('git', ['-C', repoRoot, ...args], { maxBuffer: 12_000_000 });"
+     ],
+     [
+      45,
+      "const match = /^(\\d{6}) (blob|tree|commit) ([0-9a-f]{40})\\t(.+)$/u.exec(row);"
+     ]
+    ],
+    "apps/three-surface-poc/src/polaris-keyboard-sweep-main.ts": [
+     [
+      64,
+      "const head = execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();"
+     ]
+    ],
+    "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts": [
+     [
+      282,
+      "const index = /<nav\\b[^>]*aria-label=\"Opening index\"[^>]*>([\\s\\S]*?)<\\/nav>/.exec(html)?.[1] ?? '';"
+     ]
+    ],
+    "apps/three-surface-poc/src/production-reobserve.test.ts": [
+     [
+      21,
+      "const observerRevision = execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();"
+     ]
+    ],
+    "apps/three-surface-poc/src/proposal-disclosure.test.ts": [
+     [
+      63,
+      "const legend = /<li class=\"([^\"]*)\" data-disclosure-legend=\"proposed\" data-disclosure-served=\"(\\d+)\"[^>]*>([^<]*)<\\/li>/.exec(body);"
+     ],
+     [
+      94,
+      "const css = (/<style>([\\s\\S]*?)<\\/style>/.exec(renderPolarisPage(populated()))?.[1] ?? '').replace(/\\/\\*[\\s\\S]*?\\*\\//g, '');"
+     ],
+     [
+      114,
+      "const block = /<details id=\"polaris-claim-states\"[^>]*>([\\s\\S]*?)<\\/details>/.exec(html)?.[1] as string;"
+     ]
+    ],
+    "apps/three-surface-poc/src/pwb-mutation-run-main.ts": [
+     [
+      64,
+      "spawnSync('npx', ['vitest', 'run', ...TEST_FILES, '--reporter=json', `--outputFile=${outputFile}`], {"
+     ],
+     [
+      78,
+      "return execFileSync('git', ['-C', REPO_ROOT, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();"
+     ],
+     [
+      84,
+      "return execFileSync('git', ['-C', REPO_ROOT, 'status', '--porcelain', '--', ...files], { encoding: 'utf8' })"
+     ]
+    ],
+    "apps/three-surface-poc/src/pwb-mutation-sweep-main.ts": [
+     [
+      54,
+      "spawnSync('npx', ['vitest', 'run', ...testFiles, '--reporter=json', `--outputFile=${outputFile}`], {"
+     ],
+     [
+      68,
+      "return execFileSync('git', ['-C', REPO_ROOT, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();"
+     ],
+     [
+      72,
+      "return execFileSync('git', ['-C', REPO_ROOT, 'status', '--porcelain', '--', ...files], { encoding: 'utf8' })"
+     ]
+    ],
+    "apps/three-surface-poc/src/response-limits.test.ts": [
+     [
+      185,
+      "const statusLine = /<p class=\"operability-status\"[^>]*>[^<]*<\\/p>/.exec(served.body)?.[0];"
+     ],
+     [
+      212,
+      "const limbsOf = (body: string): string | undefined => /<p class=\"operability-limbs\"[^>]*>([^<]*)<\\/p>/.exec(body)?.[1];"
+     ]
+    ],
+    "apps/three-surface-poc/src/restart.test.ts": [
+     [
+      129,
+      "const child = spawn(process.execPath, [fixture, '--repo', repo, '--state-dir', stateDir, '--port', String(port)], {"
+     ]
+    ],
+    "apps/three-surface-poc/src/restart.ts": [
+     [
+      59,
+      "output = execFileSync('ss', ['-H', '-ltnp', `sport = :${port}`], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });"
+     ],
+     [
+      142,
+      "try { child = spawn(first.argv[0] as string, first.argv.slice(1), { cwd: first.cwd, env: process.env, detached: true, stdio: 'ignore' }); }"
+     ]
+    ],
+    "apps/three-surface-poc/src/routes.test.ts": [
+     [
+      124,
+      "const match = new RegExp(`data-parity-field=\"${field}\"[^>]*>([^<]*)</`).exec(row);"
+     ],
+     [
+      135,
+      "const digestMatch = /data-parity-field=\"provenance-digest\">([^<]*)</.exec(item);"
+     ],
+     [
+      157,
+      "const closedReason = /\\sdata-unknown-disclosure=\"[^\"]*\" data-unknown-reason=\"([^\"]*)\"/.exec(row)?.[1];"
+     ],
+     [
+      161,
+      "const action = /<a href=\"[^\"#]*\\/(trajectory)#([^\"]*)\"[^>]*data-cross-surface-class=\"action-route\"/.exec(row);"
+     ],
+     [
+      536,
+      "const statement = /data-parity-field=\"authority-may-not-statement\">([^<]*)</.exec(row)?.[1] ?? '';"
+     ],
+     [
+      537,
+      "const act = /data-parity-field=\"authority-may-not-act\">([^<]*)</.exec(row)?.[1];"
+     ],
+     [
+      538,
+      "const digest = /data-parity-field=\"authority-may-not-digest\">([^<]*)</.exec(row)?.[1];"
+     ]
+    ],
+    "apps/three-surface-poc/src/surface-routes.test.ts": [
+     [
+      90,
+      "const attribute = (key: string): string | undefined => new RegExp(`(?:^|\\\\s)${key}=\"([^\"]*)\"`).exec(attrs)?.[1];"
+     ],
+     [
+      115,
+      "const css = /<style>([\\s\\S]*?)<\\/style>/.exec(html)?.[1];"
+     ]
+    ],
+    "apps/three-surface-poc/src/test-model-fixture.test.ts": [
+     [
+      14,
+      "return /\\[(\\d+)\\]$/.exec(readlinkSync('/proc/self/ns/pid'))?.[1] ?? '0';"
+     ],
+     [
+      21,
+      "const git = (root: string, args: readonly string[]): string => execFileSync('git', ['-C', root, ...args], { encoding: 'utf8' }).trim();"
+     ]
+    ],
+    "apps/three-surface-poc/src/test-model-fixture.ts": [
+     [
+      14,
+      "return execFileSync('git', ['-C', root, ...args], {"
+     ]
+    ],
+    "apps/three-surface-poc/src/tuple-encoding.test.ts": [
+     [
+      79,
+      "return new RegExp(`\\\\s${name}=\"([^\"]*)\"`).exec(tag)?.[1];"
+     ],
+     [
+      138,
+      "const css = (/<style>([\\s\\S]*?)<\\/style>/.exec(html)?.[1] ?? '').replace(/\\/\\*[\\s\\S]*?\\*\\//g, '');"
+     ],
+     [
+      201,
+      "const css = (/<style>([\\s\\S]*?)<\\/style>/.exec(html)?.[1] ?? '').replace(/\\/\\*[\\s\\S]*?\\*\\//g, '');"
+     ],
+     [
+      218,
+      "const block = /<details id=\"polaris-claim-states\"[^>]*>([\\s\\S]*?)<\\/details>/.exec(html)?.[1] as string;"
+     ]
+    ],
+    "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts": [
+     [
+      76,
+      "const result = spawnSync(process.execPath, [ENTRY, ...args], { cwd, env: ENV, encoding: 'utf8' });"
+     ],
+     [
+      84,
+      "const child = spawn(process.execPath, [ENTRY, ...args], { cwd, env: { ...ENV, ...env }, stdio: ['ignore', 'pipe', 'pipe'] });"
+     ],
+     [
+      92,
+      "while ((port = /listening at http:\\/\\/127\\.0\\.0\\.1:(\\d+)\\//.exec(out)?.[1]) === undefined) {"
+     ]
+    ],
+    "packages/cap1-system/src/harness.ts": [
+     [
+      128,
+      "const child = spawn("
+     ],
+     [
+      172,
+      "const portMatch = /listening at http:\\/\\/127\\.0\\.0\\.1:(\\d+)\\//.exec(out);"
+     ],
+     [
+      173,
+      "const credentialMatch = /machine credential \\((?:minted|reused)\\) at: (.+)/.exec(out);"
+     ]
+    ],
+    "packages/polaris-dossier/src/brief.test.ts": [
+     [
+      245,
+      "['a FIFO at the marker', (run: string) => execFileSync('mkfifo', [path.join(run, 'launched.json')])],"
+     ]
+    ],
+    "packages/polaris-dossier/src/check.test.ts": [
+     [
+      64,
+      "const git = (...args: string[]): string => execFileSync('git', ['-C', origin, ...args], { encoding: 'utf8', env: GIT_ENV }).trim();"
+     ],
+     [
+      92,
+      "execFileSync('git', ['clone', '-q', '--no-hardlinks', origin, dir], { env: GIT_ENV });"
+     ],
+     [
+      93,
+      "execFileSync('git', ['-C', dir, 'checkout', '-q', '--detach', commit], { env: GIT_ENV });"
+     ],
+     [
+      195,
+      "const blobId = (file: string): string => execFileSync('git', ['-C', origin, 'rev-parse', `${commit}:${file}`], { encoding: 'utf8', env: GIT_ENV }).trim();"
+     ],
+     [
+      549,
+      "const instant = (file: string): number => Date.parse(/^Recorded at \\(UTC\\): (\\S+)$/m.exec(fs.readFileSync(file, 'utf8'))?.[1] ?? '');"
+     ]
+    ],
+    "packages/polaris-dossier/src/full-run.testkit.ts": [
+     [
+      42,
+      "execFileSync('git', ['-C', origin, 'config', 'uploadpack.allowAnySHA1InWant', 'true'], { env: GIT_ENV });"
+     ],
+     [
+      43,
+      "execFileSync('git', ['init', '-q', clone], { env: GIT_ENV });"
+     ],
+     [
+      44,
+      "execFileSync('git', ['-C', clone, 'fetch', '-q', '--depth=1', `file://${origin}`, commit], { env: GIT_ENV });"
+     ],
+     [
+      45,
+      "execFileSync('git', ['-C', clone, 'checkout', '-q', '--detach', 'FETCH_HEAD'], { env: GIT_ENV });"
+     ],
+     [
+      53,
+      "const git = (...args: string[]): string => execFileSync('git', ['-C', origin, ...args], { encoding: 'utf8', env: GIT_ENV }).trim();"
+     ]
+    ],
+    "packages/polaris-dossier/src/gate-acts.test.ts": [
+     [
+      202,
+      "expect(PROVIDER_V2_FORM.stems).toContain(/^# (.+)$/m.exec(real(V2_RECORD))![1]!);"
+     ],
+     [
+      624,
+      "const heading = /^# (.+)$/m.exec(real(ACTS[key].record))![1]!;"
+     ]
+    ],
+    "packages/polaris-dossier/src/gate-parts.test.ts": [
+     [
+      84,
+      "const git = (...args: string[]): string => execFileSync('git', ['-C', dir, ...args], { encoding: 'utf8', env: { ...process.env, GIT_CONFIG_GLOBAL: '/dev/null', GIT_CONFIG_SYSTEM: '/dev/null' } }).trim"
+     ]
+    ],
+    "packages/polaris-dossier/src/git-object-reader.test.ts": [
+     [
+      29,
+      "execFileSync('git', args, { cwd, env: { ...env, ...extra }, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();"
+     ],
+     [
+      69,
+      "const m = /^([0-9a-f]{40,64}) (\\w+) +(\\d+) (\\d+) (\\d+)( \\d+ [0-9a-f]+)?$/.exec(line);"
+     ],
+     [
+      302,
+      "expect(source).not.toMatch(/child_process|\\bspawn(Sync)?\\(|(?<![.\\w])exec(File)?(Sync)?\\(|\\bimport\\(|\\brequire\\(|\\bprocess\\./);"
+     ],
+     [
+      427,
+      "execFileSync('mkfifo', [fifo]);"
+     ],
+     [
+      431,
+      "['fifo', (at: string) => execFileSync('mkfifo', [at]), 'is not a regular file'],"
+     ]
+    ],
+    "packages/polaris-dossier/src/inventory.test.ts": [
+     [
+      50,
+      "const git = (...args: string[]): string => execFileSync('git', ['-C', origin, ...args], { encoding: 'utf8', env: GIT_ENV }).trim();"
+     ],
+     [
+      99,
+      "execFileSync('git', ['clone', '-q', '--no-hardlinks', origin, clone], { env: GIT_ENV });"
+     ]
+    ],
+    "packages/polaris-dossier/src/launched.test.ts": [
+     [
+      27,
+      "execFileSync('mkfifo', [marker(dir)]);"
+     ],
+     [
+      61,
+      "['a FIFO', (dir) => execFileSync('mkfifo', [marker(dir)])],"
+     ]
+    ],
+    "packages/polaris-dossier/src/polaris.ts": [
+     [
+      88,
+      "const tmux = spawnSync('tmux', ['-V'], { encoding: 'utf8' });"
+     ],
+     [
+      113,
+      "const started = spawnSync('tmux', ['new-session', '-d', '-s', name, '-n', 'run', '-x', '220', '-y', '50', ...envArgs, '--', process.execPath, MAIN, 'polaris', ...forward], { stdio: 'inherit' });"
+     ],
+     [
+      115,
+      "spawnSync('tmux', ['set-option', '-t', name, 'remain-on-exit', 'on'], { stdio: 'ignore' });"
+     ],
+     [
+      179,
+      "const tmuxHas = (name: string): boolean => spawnSync('tmux', ['has-session', '-t', name], { stdio: 'ignore' }).status === 0;"
+     ],
+     [
+      191,
+      "return spawnSync('tmux', inside ? ['switch-client', '-t', name] : ['attach', '-t', name], { stdio: 'inherit' }).status ?? 0;"
+     ],
+     [
+      197,
+      "if (tmuxHas(state.tmuxSession)) spawnSync('tmux', ['kill-session', '-t', state.tmuxSession], { stdio: 'ignore' });"
+     ],
+     [
+      276,
+      "const head = spawnSync('git', ['-C', clone, 'rev-parse', 'HEAD'], { encoding: 'utf8' });"
+     ],
+     [
+      283,
+      "const r = spawnSync('git', args, { encoding: 'utf8' });"
+     ],
+     [
+      288,
+      "const version = spawnSync(claudeExecutable(), ['--version'], { encoding: 'utf8' }).stdout.trim().split(/\\s+/)[0] ?? 'unknown';"
+     ],
+     [
+      323,
+      "const m = /^P(?:(\\d+)D)?(?:T(?:(\\d+)H)?(?:(\\d+)M)?(?:(\\d+)S)?)?$/.exec(duration);"
+     ],
+     [
+      334,
+      "const which = spawnSync('sh', ['-c', 'command -v claude'], { encoding: 'utf8' }).stdout.trim();"
+     ],
+     [
+      403,
+      "spawnSync('tmux', ['kill-window', '-t', window], { stdio: 'ignore' });"
+     ],
+     [
+      405,
+      "const r = spawnSync('tmux', ['new-window', '-d', '-t', state.tmuxSession, '-n', plan.role, '--', ...argv], { encoding: 'utf8' });"
+     ],
+     [
+      407,
+      "const pidText = spawnSync('tmux', ['list-panes', '-t', window, '-F', '#{pane_pid}'], { encoding: 'utf8' }).stdout.trim();"
+     ],
+     [
+      426,
+      "for (const name of names) { const m = pattern.exec(name); if (m && (best === null || Number(m[m.length - 1]) > best.n)) best = { n: Number(m[m.length - 1]), name }; }"
+     ],
+     [
+      439,
+      "const out = spawnSync('tmux', ['list-panes', '-t', `${state.tmuxSession}:${role}`, '-F', '#{pane_dead} #{pane_dead_status}'], { encoding: 'utf8' });"
+     ],
+     [
+      446,
+      "spawnSync('tmux', ['send-keys', '-t', `${state.tmuxSession}:${role}`, '-l', message], { stdio: 'ignore' });"
+     ],
+     [
+      447,
+      "spawnSync('tmux', ['send-keys', '-t', `${state.tmuxSession}:${role}`, 'Enter'], { stdio: 'ignore' });"
+     ],
+     [
+      557,
+      "for (const role of ['author', 'inventory', 'fidelity', 'design'] as const) spawnSync('tmux', ['kill-window', '-t', `${state.tmuxSession}:${role}`], { stdio: 'ignore' });"
+     ]
+    ],
+    "packages/polaris-dossier/src/render.test.ts": [
+     [
+      60,
+      "const git = (...args: string[]): string => execFileSync('git', ['-C', origin, ...args], { encoding: 'utf8', env: GIT_ENV }).trim();"
+     ],
+     [
+      187,
+      "execFileSync('git', ['clone', '-q', '--no-hardlinks', origin, clone], { env: GIT_ENV });"
+     ]
+    ],
+    "packages/polaris-dossier/src/review.test.ts": [
+     [
+      61,
+      "const git = (...args: string[]): string => execFileSync('git', ['-C', origin, ...args], { encoding: 'utf8', env: GIT_ENV }).trim();"
+     ],
+     [
+      166,
+      "execFileSync('git', ['clone', '-q', '--no-hardlinks', origin, clone], { env: GIT_ENV });"
+     ]
+    ],
+    "packages/polaris-dossier/src/run-evidence.test.ts": [
+     [
+      56,
+      "expect(record.measuredOn.syzygyCommit).toBe(execFileSync('git', ['-C', REAL_ROOT, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).trim());"
+     ]
+    ],
+    "packages/polaris-dossier/src/screen.test.ts": [
+     [
+      176,
+      "const tracked = execFileSync('git', ['-C', REAL_ROOT, 'ls-files', '-z'], { encoding: 'utf8' }).split('\\0').filter(Boolean);"
+     ]
+    ],
+    "packages/polaris-dossier/src/session-view.ts": [
+     [
+      97,
+      "const which = spawnSync('bwrap', ['--version'], { encoding: 'utf8' });"
+     ],
+     [
+      106,
+      "const result = spawnSync('bwrap', [...bwrapArgs(spec), '/bin/sh', '-c', script], { encoding: 'utf8' });"
+     ]
+    ],
+    "packages/polaris-dossier/src/start-gates.test.ts": [
+     [
+      47,
+      "const git = (...args: string[]): string => execFileSync('git', ['-C', origin, ...args], { encoding: 'utf8', env: GIT_ENV }).trim();"
+     ],
+     [
+      79,
+      "execFileSync('git', ['-C', origin, 'config', 'uploadpack.allowAnySHA1InWant', 'true'], { env: GIT_ENV });"
+     ],
+     [
+      80,
+      "execFileSync('git', ['init', '-q', ...initArgs, dir], { env: GIT_ENV });"
+     ],
+     [
+      82,
+      "execFileSync('git', ['-C', dir, 'checkout', '-q', '--detach', 'FETCH_HEAD'], { env: GIT_ENV });"
+     ],
+     [
+      87,
+      "execFileSync('git', ['-C', clone, 'fetch', '-q', `--depth=${depth}`, `file://${origin}`, commit], { env: GIT_ENV });"
+     ],
+     [
+      92,
+      "execFileSync('git', ['clone', '-q', '--no-hardlinks', origin, dir], { env: GIT_ENV });"
+     ],
+     [
+      93,
+      "execFileSync('git', ['-C', dir, 'checkout', '-q', '--detach', commit], { env: GIT_ENV });"
+     ],
+     [
+      201,
+      "expect(execFileSync('git', ['-C', clone, 'status', '--porcelain', '--ignored'], { encoding: 'utf8', env: GIT_ENV })).toBe('');"
+     ],
+     [
+      250,
+      "const git = (clone: string, ...args: string[]): string => execFileSync('git', ['-C', clone, ...args], { encoding: 'utf8', env: GIT_ENV }).trim();"
+     ],
+     [
+      437,
+      "execFileSync('git', ['init', '-q', two], { env: GIT_ENV });"
+     ],
+     [
+      458,
+      "execFileSync('git', ['-C', origin, 'pack-objects', '-q', path.join(packed, '.git', 'objects', 'pack', 'pack')], { input: `${commits.U}\\n`, env: GIT_ENV });"
+     ],
+     [
+      982,
+      "execFileSync('git', ['clone', '-q', '--bare', '--no-local', origin, upstream], { env: GIT_ENV });"
+     ],
+     [
+      983,
+      "execFileSync('git', ['-C', upstream, 'config', 'uploadpack.allowAnySHA1InWant', 'true'], { env: GIT_ENV });"
+     ],
+     [
+      987,
+      "execFileSync('git', argv.slice(1), { env: GIT_ENV, stdio: 'pipe' });"
+     ],
+     [
+      989,
+      "expect(execFileSync('git', ['-C', dir, 'rev-parse', 'HEAD'], { encoding: 'utf8', env: GIT_ENV }).trim()).toBe(commits.B);"
+     ],
+     [
+      990,
+      "expect(execFileSync('git', ['-C', dir, 'rev-list', '--all'], { encoding: 'utf8', env: GIT_ENV }).trim().split('\\n')).toEqual([commits.B]);"
+     ]
+    ],
+    "packages/three-surface-poc-core/src/code-structure.test.ts": [
+     [
+      18,
+      "return execFileSync('git', ['-C', root, ...args], {"
+     ],
+     [
+      150,
+      "const tree = execFileSync('git', ['-C', root, 'mktree', '-z'], {"
+     ],
+     [
+      179,
+      "const mktree = (records: readonly Buffer[]): string => execFileSync('git', ['-C', root, 'mktree', '-z', '--missing'], {"
+     ]
+    ],
+    "packages/three-surface-poc-core/src/model-observations.test.ts": [
+     [
+      19,
+      "return execFileSync('git', ['-C', root, ...args], {"
+     ]
+    ],
+    "packages/three-surface-poc-core/src/model.test.ts": [
+     [
+      70,
+      "return execFileSync('git', ['-C', root, ...args], {"
+     ]
+    ],
+    "packages/three-surface-poc-core/src/test-artifact-verification-live-source.test.ts": [
+     [
+      306,
+      "[`import m = require('node:module');\\n(m.createRequire(import.meta.url)(['node:child', 'process'].join('_')) as { spawnSync: (c: string, a: string[]) => unknown }).spawnSync('sh', ['-c', 'touch x']);`"
+     ],
+     [
+      338,
+      "[`import { vi } from 'vitest';\\nconst cp = await vi.importActual<{ spawnSync: (c: string, a: string[]) => unknown }>(['node:child', 'process'].join('_'));\\ncp.spawnSync('touch', ['x']);`, 'imports vi "
+     ]
+    ],
+    "packages/three-surface-poc-core/src/worker-change-observation.test.ts": [
+     [
+      18,
+      "return execFileSync('git', ['-C', root, ...args], {"
+     ],
+     [
+      219,
+      "return execFileSync('git', ['--no-optional-locks', '-C', repoRoot, ...args], {"
+     ],
+     [
+      241,
+      "return execFileSync('git', ['--no-optional-locks', '-C', repoRoot, ...args], {"
+     ]
+    ],
+    "scripts/record_polaris_understanding_adoption.py": [
+     [
+      51,
+      "exec(compile(source, module.__file__, 'exec'), module.__dict__)"
+     ]
+    ],
+    "scripts/redis_screening_remeasure.mjs": [
+     [
+      311,
+      "const run = spawnSync(process.execPath, [file, '--selftest'], { encoding: 'utf8' });"
+     ],
+     [
+      323,
+      "const git = (...args) => execFileSync('git', ['-C', ROOT, ...args], { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 });"
+     ],
+     [
+      324,
+      "const gitBytes = (...args) => execFileSync('git', ['-C', ROOT, ...args], { maxBuffer: 64 * 1024 * 1024 });"
+     ]
+    ],
+    "scripts/run_m13_literal_mutations.mjs": [
+     [
+      80,
+      "const git = args => execFileSync('git', args, { cwd: root, encoding: 'utf8' }).trim();"
+     ],
+     [
+      90,
+      "const result = spawnSync('npx', args, { cwd: root, env: { ...process.env, CI: '1' }, encoding: 'utf8' });"
+     ]
+    ],
+    "scripts/run_m7_literal_mutations.mjs": [
+     [
+      53,
+      "const runGit = args => execFileSync('git', args, { cwd: root, encoding: 'utf8' }).trim();"
+     ],
+     [
+      63,
+      "const result = spawnSync('npx', command, { cwd: root, env: { ...process.env, CI: '1' }, encoding: 'utf8' });"
+     ]
+    ],
+    "scripts/run_m9_literal_mutations.mjs": [
+     [
+      61,
+      "const git = args => execFileSync('git', args, { cwd: root, encoding: 'utf8' }).trim();"
+     ],
+     [
+      71,
+      "const process = spawnSync('npx', args, { cwd: root, env: { ...globalThis.process.env, CI: '1' }, encoding: 'utf8' });"
+     ]
+    ]
+   }
+  },
+  "env-object": {
+   "candidateFiles": 19,
+   "lines": 20,
+   "hits": {
+    "apps/three-surface-poc/src/capture-test-artifact-main.test.ts": [
+     [
+      292,
+      "[`${RUN_GIT}('git', ['rev-parse', 'HEAD'], { encoding: 'utf8', env: { GIT_CONFIG_COUNT: '1' } });`, 'runs git other than'],"
+     ],
+     [
+      293,
+      "[`${RUN_GIT}('git', ['rev-parse', 'HEAD'], { ...{ env: {} }, encoding: 'utf8' });`, 'runs git other than'],"
+     ]
+    ],
+    "apps/three-surface-poc/src/polaris-generation/dossier-trigger.test.ts": [
+     [
+      347,
+      "expect(execFileSync('git', ['-C', dir, 'cat-file', '-t', commit], { encoding: 'utf8', env: { PATH: process.env.PATH!, HOME: scratch() } }).trim()).toBe('commit');"
+     ]
+    ],
+    "apps/three-surface-poc/src/polaris-generation/generation-mutation-run-main.ts": [
+     [
+      62,
+      "env: { ...process.env, CI: '1' },"
+     ]
+    ],
+    "apps/three-surface-poc/src/pwb-mutation-run-main.ts": [
+     [
+      67,
+      "env: { ...process.env, CI: '1' },"
+     ]
+    ],
+    "apps/three-surface-poc/src/pwb-mutation-sweep-main.ts": [
+     [
+      57,
+      "env: { ...process.env, CI: '1' },"
+     ]
+    ],
+    "apps/three-surface-poc/src/test-model-fixture.ts": [
+     [
+      21,
+      "env: { ...process.env, GIT_AUTHOR_DATE: '2026-08-24T00:00:00Z', GIT_COMMITTER_DATE: '2026-08-24T00:00:00Z', GIT_CONFIG_GLOBAL: '/dev/null', GIT_CONFIG_NOSYSTEM: '1' },"
+     ]
+    ],
+    "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts": [
+     [
+      84,
+      "const child = spawn(process.execPath, [ENTRY, ...args], { cwd, env: { ...ENV, ...env }, stdio: ['ignore', 'pipe', 'pipe'] });"
+     ]
+    ],
+    "packages/polaris-dossier/src/close.test.ts": [
+     [
+      183,
+      "const { stateRoot } = await fullRun({ closeArgs: ['--usage-turns', '9'], env: { ...sentinels, SYZYGY_DOSSIER_CREDENTIAL_LIST: list } });"
+     ]
+    ],
+    "packages/polaris-dossier/src/execution-flags.test.ts": [
+     [
+      133,
+      "const result = await fullFixtureRun({ clone, commit, stateRoot: path.join(dir, 'state'), renderer, permitted, executions, env: { [CREDENTIAL_LIST_ENV]: list }, closeArgs: ['--usage-turns', '9'] });"
+     ]
+    ],
+    "packages/polaris-dossier/src/gate-parts.test.ts": [
+     [
+      84,
+      "const git = (...args: string[]): string => execFileSync('git', ['-C', dir, ...args], { encoding: 'utf8', env: { ...process.env, GIT_CONFIG_GLOBAL: '/dev/null', GIT_CONFIG_SYSTEM: '/dev/null' } }).trim"
+     ]
+    ],
+    "packages/polaris-dossier/src/git-object-reader.test.ts": [
+     [
+      29,
+      "execFileSync('git', args, { cwd, env: { ...env, ...extra }, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();"
+     ]
+    ],
+    "packages/polaris-dossier/src/inventory.test.ts": [
+     [
+      584,
+      "const ports = { sources: sources(), now: () => LATER, loadScreen: async () => SCREEN, env: {} };"
+     ]
+    ],
+    "packages/polaris-dossier/src/no-egress.test.ts": [
+     [
+      55,
+      "env: { PATH: process.env['PATH'] ?? '/usr/bin:/bin', HOME: dir, [FULL_RUN_ROOT_ENV]: REAL_ROOT }, timeout: 240_000,"
+     ]
+    ],
+    "packages/polaris-dossier/src/session-view.ts": [
+     [
+      104,
+      "const spec: ViewSpec = { role: 'inventory', readOnly: [ro], readWrite: [rw], readOnlyOver: [], cwd: rw, env: { PATH: '/usr/bin:/bin' } };"
+     ]
+    ],
+    "packages/polaris-dossier/src/waiting-sessions.test.ts": [
+     [
+      69,
+      "env: {}, now: () => clock.now, sources, loadScreen: async () => FIXTURE_SCREEN, renderer,"
+     ]
+    ],
+    "packages/three-surface-poc-core/src/test-artifact-verification-live-source.test.ts": [
+     [
+      323,
+      "[`${RUN_GIT}('git', ['probe'], { env: { GIT_CONFIG_GLOBAL: '/tmp/cfg' }, encoding: 'utf8' });`, `passes ${RUN_GIT} the option env,`],"
+     ]
+    ],
+    "scripts/run_m13_literal_mutations.mjs": [
+     [
+      90,
+      "const result = spawnSync('npx', args, { cwd: root, env: { ...process.env, CI: '1' }, encoding: 'utf8' });"
+     ]
+    ],
+    "scripts/run_m7_literal_mutations.mjs": [
+     [
+      63,
+      "const result = spawnSync('npx', command, { cwd: root, env: { ...process.env, CI: '1' }, encoding: 'utf8' });"
+     ]
+    ],
+    "scripts/run_m9_literal_mutations.mjs": [
+     [
+      71,
+      "const process = spawnSync('npx', args, { cwd: root, env: { ...globalThis.process.env, CI: '1' }, encoding: 'utf8' });"
+     ]
+    ]
+   }
+  },
+  "py-tempfile": {
+   "candidateFiles": 89,
+   "lines": 319,
+   "hits": {
+    "scripts/build_cap1_trusted_bootstrap_consent_adoption.py": [
+     [
+      440,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      476,
+      "with tempfile.TemporaryDirectory() as m:"
+     ],
+     [
+      484,
+      "with tempfile.TemporaryDirectory() as m:"
+     ],
+     [
+      506,
+      "with tempfile.TemporaryDirectory() as m:"
+     ]
+    ],
+    "scripts/build_contract_readability_restyle.py": [
+     [
+      177,
+      "with tempfile.TemporaryDirectory() as scratch:"
+     ],
+     [
+      275,
+      "with tempfile.TemporaryDirectory() as scratch:"
+     ],
+     [
+      513,
+      "with tempfile.TemporaryDirectory() as directory:"
+     ]
+    ],
+    "scripts/build_dossier_agent_provider_v2.py": [
+     [
+      182,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      188,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      242,
+      "with tempfile.TemporaryDirectory() as t:"
+     ]
+    ],
+    "scripts/build_dossier_local_agent_acts.py": [
+     [
+      161,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      167,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      216,
+      "with tempfile.TemporaryDirectory() as t:"
+     ]
+    ],
+    "scripts/build_general_trusted_bootstrap_impact_ledger.py": [
+     [
+      451,
+      "with tempfile.TemporaryDirectory(prefix=\"general-bootstrap-impact-\") as temp:"
+     ]
+    ],
+    "scripts/build_general_trusted_bootstrap_transaction.py": [
+     [
+      429,
+      "with tempfile.TemporaryDirectory(prefix=\"general-bootstrap-tx-\") as temp:"
+     ]
+    ],
+    "scripts/build_polaris_dependency_unions.py": [
+     [
+      282,
+      "with tempfile.TemporaryDirectory() as tmp:"
+     ]
+    ],
+    "scripts/build_polaris_dossier_local_agent_mode.py": [
+     [
+      144,
+      "with tempfile.TemporaryDirectory(prefix=\"dossier-recount-\") as tmp:"
+     ],
+     [
+      368,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      387,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      433,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      463,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      485,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      493,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      507,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      518,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      527,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      534,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      541,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      549,
+      "with tempfile.TemporaryDirectory() as t:"
+     ]
+    ],
+    "scripts/build_polaris_dossier_local_agent_mode_v1_1.py": [
+     [
+      198,
+      "with tempfile.TemporaryDirectory(prefix=\"dossier-v11-\") as tmp:"
+     ],
+     [
+      210,
+      "with tempfile.TemporaryDirectory(prefix=\"dossier-v11-\") as tmp:"
+     ],
+     [
+      356,
+      "with tempfile.TemporaryDirectory(prefix=\"dossier-v11-\") as tmp:"
+     ],
+     [
+      473,
+      "tmp = tempfile.TemporaryDirectory()"
+     ]
+    ],
+    "scripts/build_polaris_dossier_local_agent_mode_v1_2.py": [
+     [
+      116,
+      "with tempfile.TemporaryDirectory(prefix=\"dossier-v12-\") as tmp:"
+     ],
+     [
+      304,
+      "tmp = tempfile.TemporaryDirectory()"
+     ]
+    ],
+    "scripts/build_polaris_edit_repair_deletion_scenario.py": [
+     [
+      128,
+      "with tempfile.TemporaryDirectory(prefix=\"polaris-edit-repair-deletion-\") as tmp:"
+     ],
+     [
+      362,
+      "with tempfile.TemporaryDirectory(prefix=\"polaris-edit-repair-deletion-selftest-\") as tmp:"
+     ]
+    ],
+    "scripts/build_provider_route_messages_api_entry.py": [
+     [
+      606,
+      "with tempfile.TemporaryDirectory() as t:"
+     ]
+    ],
+    "scripts/build_public_admission_registry_entries.py": [
+     [
+      412,
+      "with tempfile.TemporaryDirectory() as t:"
+     ]
+    ],
+    "scripts/build_public_egress_v2.py": [
+     [
+      215,
+      "with tempfile.TemporaryDirectory() as d:"
+     ]
+    ],
+    "scripts/build_public_git_source_acquisition_local_agent.py": [
+     [
+      271,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      277,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      332,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      353,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      362,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      371,
+      "with tempfile.TemporaryDirectory() as t:"
+     ]
+    ],
+    "scripts/build_public_repo_admission.py": [
+     [
+      130,
+      "with tempfile.TemporaryDirectory() as d:"
+     ],
+     [
+      169,
+      "with tempfile.TemporaryDirectory() as d:"
+     ],
+     [
+      210,
+      "with tempfile.TemporaryDirectory() as d:"
+     ],
+     [
+      222,
+      "with tempfile.TemporaryDirectory() as d:"
+     ]
+    ],
+    "scripts/build_public_source_screening_scope.py": [
+     [
+      272,
+      "with tempfile.TemporaryDirectory() as d:"
+     ],
+     [
+      398,
+      "with tempfile.TemporaryDirectory() as d:"
+     ],
+     [
+      471,
+      "with tempfile.TemporaryDirectory() as d:"
+     ],
+     [
+      524,
+      "with tempfile.TemporaryDirectory() as d:"
+     ],
+     [
+      562,
+      "scratch = pathlib.Path(tempfile.mkdtemp(prefix=\"reader-mutant-\", dir=d))"
+     ]
+    ],
+    "scripts/build_public_source_screening_scope_v2.py": [
+     [
+      349,
+      "with tempfile.TemporaryDirectory() as d:"
+     ],
+     [
+      645,
+      "with tempfile.TemporaryDirectory() as d:"
+     ],
+     [
+      704,
+      "with tempfile.TemporaryDirectory() as d2:"
+     ],
+     [
+      878,
+      "with tempfile.TemporaryDirectory() as d3:"
+     ],
+     [
+      896,
+      "with tempfile.TemporaryDirectory() as d4:"
+     ]
+    ],
+    "scripts/build_public_source_screening_scope_v3.py": [
+     [
+      369,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      375,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      408,
+      "with tempfile.TemporaryDirectory() as t:"
+     ]
+    ],
+    "scripts/build_public_source_screening_scope_v4.py": [
+     [
+      576,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      581,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      613,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      663,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      717,
+      "with tempfile.TemporaryDirectory() as t:"
+     ]
+    ],
+    "scripts/build_pwb_anchor_resolution_amendment.py": [
+     [
+      155,
+      "with tempfile.TemporaryDirectory() as temp:"
+     ],
+     [
+      505,
+      "with tempfile.TemporaryDirectory() as temp:"
+     ],
+     [
+      823,
+      "with tempfile.TemporaryDirectory() as temp:"
+     ]
+    ],
+    "scripts/build_pwb_behavior_contract_repin.py": [
+     [
+      250,
+      "with tempfile.TemporaryDirectory() as scratch:"
+     ],
+     [
+      550,
+      "with tempfile.TemporaryDirectory() as tmp:"
+     ],
+     [
+      620,
+      "with tempfile.TemporaryDirectory() as tmp:"
+     ]
+    ],
+    "scripts/build_pwb_behavior_contract_repin_tree_framing.py": [
+     [
+      380,
+      "with tempfile.TemporaryDirectory() as tmp:"
+     ]
+    ],
+    "scripts/build_pwb_class_granular_extraction_amendment.py": [
+     [
+      322,
+      "with tempfile.TemporaryDirectory() as temp:"
+     ],
+     [
+      495,
+      "with tempfile.TemporaryDirectory() as temp:"
+     ],
+     [
+      892,
+      "with tempfile.TemporaryDirectory() as temp:"
+     ]
+    ],
+    "scripts/build_pwb_container_shape_profile_amendment.py": [
+     [
+      915,
+      "with tempfile.TemporaryDirectory() as scratch:"
+     ],
+     [
+      1361,
+      "with tempfile.TemporaryDirectory() as scratch:"
+     ],
+     [
+      1666,
+      "with tempfile.TemporaryDirectory() as scratch:"
+     ],
+     [
+      1786,
+      "with tempfile.TemporaryDirectory() as scratch:"
+     ],
+     [
+      1814,
+      "with tempfile.TemporaryDirectory() as scratch:"
+     ]
+    ],
+    "scripts/build_pwb_dismissal_expiry_amendment.py": [
+     [
+      606,
+      "with tempfile.TemporaryDirectory() as scratch:"
+     ],
+     [
+      1267,
+      "with tempfile.TemporaryDirectory() as scratch:"
+     ],
+     [
+      1318,
+      "with tempfile.TemporaryDirectory() as scratch:"
+     ]
+    ],
+    "scripts/build_pwb_exact_source_render_mode_amendment.py": [
+     [
+      139,
+      "with tempfile.TemporaryDirectory() as scratch:"
+     ],
+     [
+      191,
+      "with tempfile.TemporaryDirectory() as scratch:"
+     ],
+     [
+      248,
+      "with tempfile.TemporaryDirectory() as scratch:"
+     ],
+     [
+      392,
+      "with tempfile.TemporaryDirectory() as scratch:"
+     ],
+     [
+      432,
+      "with tempfile.TemporaryDirectory() as scratch:"
+     ],
+     [
+      472,
+      "with tempfile.TemporaryDirectory() as scratch:"
+     ]
+    ],
+    "scripts/build_pwb_item_depth_amendment.py": [
+     [
+      142,
+      "with tempfile.TemporaryDirectory() as temp:"
+     ],
+     [
+      216,
+      "with tempfile.TemporaryDirectory() as temp:"
+     ],
+     [
+      229,
+      "with tempfile.TemporaryDirectory() as temp:"
+     ],
+     [
+      621,
+      "with tempfile.TemporaryDirectory() as temp:"
+     ]
+    ],
+    "scripts/build_pwb_machine_view_amendment.py": [
+     [
+      130,
+      "with tempfile.TemporaryDirectory() as scratch:"
+     ],
+     [
+      152,
+      "with tempfile.TemporaryDirectory() as scratch:"
+     ],
+     [
+      309,
+      "with tempfile.TemporaryDirectory() as scratch:"
+     ],
+     [
+      374,
+      "with tempfile.TemporaryDirectory() as scratch:"
+     ]
+    ],
+    "scripts/build_pwb_missing_currency_disclosure_scenario.py": [
+     [
+      169,
+      "with tempfile.TemporaryDirectory() as scratch:"
+     ],
+     [
+      269,
+      "with tempfile.TemporaryDirectory() as scratch:"
+     ],
+     [
+      283,
+      "with tempfile.TemporaryDirectory() as scratch:"
+     ],
+     [
+      503,
+      "with tempfile.TemporaryDirectory() as scratch:"
+     ],
+     [
+      536,
+      "with tempfile.TemporaryDirectory() as scratch:"
+     ]
+    ],
+    "scripts/build_pwb_opening_band_scenario.py": [
+     [
+      137,
+      "with tempfile.TemporaryDirectory() as scratch:"
+     ],
+     [
+      173,
+      "with tempfile.TemporaryDirectory() as scratch:"
+     ],
+     [
+      207,
+      "with tempfile.TemporaryDirectory() as scratch:"
+     ],
+     [
+      315,
+      "with tempfile.TemporaryDirectory() as scratch:"
+     ],
+     [
+      361,
+      "with tempfile.TemporaryDirectory() as scratch:"
+     ]
+    ],
+    "scripts/build_pwb_readability_successor.py": [
+     [
+      222,
+      "with tempfile.TemporaryDirectory() as temp:"
+     ],
+     [
+      454,
+      "with tempfile.TemporaryDirectory() as temp:"
+     ],
+     [
+      800,
+      "with tempfile.TemporaryDirectory() as temp:"
+     ]
+    ],
+    "scripts/build_pwb_registry_currency_briefing_amendment.py": [
+     [
+      186,
+      "with tempfile.TemporaryDirectory() as scratch:"
+     ],
+     [
+      379,
+      "with tempfile.TemporaryDirectory() as scratch:"
+     ]
+    ],
+    "scripts/build_pwb_registry_loaded_profile_amendment.py": [
+     [
+      312,
+      "with tempfile.TemporaryDirectory() as scratch:"
+     ],
+     [
+      875,
+      "with tempfile.TemporaryDirectory() as scratch:"
+     ],
+     [
+      1826,
+      "with tempfile.TemporaryDirectory() as scratch:"
+     ],
+     [
+      1853,
+      "with tempfile.TemporaryDirectory() as scratch:"
+     ]
+    ],
+    "scripts/build_pwb_registry_machine_ceiling_amendment.py": [
+     [
+      167,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      337,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      446,
+      "with tempfile.TemporaryDirectory() as t:"
+     ]
+    ],
+    "scripts/build_pwb_release_label_amendment.py": [
+     [
+      377,
+      "with tempfile.TemporaryDirectory() as temp:"
+     ],
+     [
+      587,
+      "with tempfile.TemporaryDirectory() as temp:"
+     ],
+     [
+      1157,
+      "with tempfile.TemporaryDirectory() as temp:"
+     ]
+    ],
+    "scripts/build_pwb_scoped_attributes_amendment.py": [
+     [
+      114,
+      "with tempfile.TemporaryDirectory() as scratch:"
+     ],
+     [
+      136,
+      "with tempfile.TemporaryDirectory() as scratch:"
+     ],
+     [
+      269,
+      "with tempfile.TemporaryDirectory() as scratch:"
+     ],
+     [
+      291,
+      "with tempfile.TemporaryDirectory() as scratch:"
+     ]
+    ],
+    "scripts/build_pwb_tree_framing_amendment.py": [
+     [
+      176,
+      "with tempfile.TemporaryDirectory() as temp:"
+     ],
+     [
+      250,
+      "with tempfile.TemporaryDirectory() as temp:"
+     ],
+     [
+      263,
+      "with tempfile.TemporaryDirectory() as temp:"
+     ],
+     [
+      788,
+      "with tempfile.TemporaryDirectory() as temp:"
+     ]
+    ],
+    "scripts/build_pwb_truth_policy_amendment.py": [
+     [
+      308,
+      "with tempfile.TemporaryDirectory() as temp:"
+     ]
+    ],
+    "scripts/build_rfc5_project_documentation_class.py": [
+     [
+      254,
+      "with tempfile.TemporaryDirectory() as directory:"
+     ]
+    ],
+    "scripts/build_rfc7_scoped_values_successor.py": [
+     [
+      172,
+      "with tempfile.TemporaryDirectory() as scratch:"
+     ],
+     [
+      350,
+      "with tempfile.TemporaryDirectory() as directory:"
+     ]
+    ],
+    "scripts/build_spec_policy_readability_restyle.py": [
+     [
+      109,
+      "with tempfile.TemporaryDirectory() as scratch:"
+     ],
+     [
+      320,
+      "with tempfile.TemporaryDirectory() as scratch:"
+     ]
+    ],
+    "scripts/build_three_surface_poc_identity_amendment.py": [
+     [
+      245,
+      "with tempfile.TemporaryDirectory() as scratch:"
+     ],
+     [
+      863,
+      "with tempfile.TemporaryDirectory() as scratch:"
+     ]
+    ],
+    "scripts/build_three_surface_poc_readability_successor.py": [
+     [
+      142,
+      "with tempfile.TemporaryDirectory() as directory:"
+     ],
+     [
+      169,
+      "with tempfile.TemporaryDirectory() as directory:"
+     ],
+     [
+      211,
+      "with tempfile.TemporaryDirectory() as directory:"
+     ],
+     [
+      518,
+      "with tempfile.TemporaryDirectory() as directory:"
+     ]
+    ],
+    "scripts/build_three_surface_poc_vocabulary_epistemic_amendment.py": [
+     [
+      255,
+      "with tempfile.TemporaryDirectory() as scratch:"
+     ],
+     [
+      1015,
+      "with tempfile.TemporaryDirectory() as scratch:"
+     ]
+    ],
+    "scripts/check_docs_review_campaign_partition.py": [
+     [
+      991,
+      "with tempfile.TemporaryDirectory(prefix=\"review-partition-selftest-\") as scratch:"
+     ]
+    ],
+    "scripts/check_evidence_currency.py": [
+     [
+      781,
+      "with tempfile.TemporaryDirectory(prefix=\"check-evidence-currency-selftest-\") as tmp:"
+     ]
+    ],
+    "scripts/check_governance.py": [
+     [
+      8630,
+      "with tempfile.TemporaryDirectory() as scratch:"
+     ],
+     [
+      8662,
+      "with tempfile.TemporaryDirectory() as scratch:"
+     ],
+     [
+      8688,
+      "with tempfile.TemporaryDirectory() as scratch:"
+     ],
+     [
+      9098,
+      "d = tempfile.mkdtemp(prefix=\"cg1g-selftest-\")"
+     ],
+     [
+      9138,
+      "d = tempfile.mkdtemp(prefix=\"cg1a-selftest-\")"
+     ],
+     [
+      9169,
+      "d = tempfile.mkdtemp(prefix=\"cg1i-selftest-\")"
+     ],
+     [
+      9209,
+      "d = tempfile.mkdtemp(prefix=\"cg7d-selftest-\")"
+     ],
+     [
+      9295,
+      "d = tempfile.mkdtemp(prefix=\"cg7e-history-selftest-\")"
+     ],
+     [
+      9361,
+      "with tempfile.TemporaryDirectory(prefix=\"cg7-restyle-packet-\") as d:"
+     ],
+     [
+      9379,
+      "with tempfile.TemporaryDirectory(prefix=\"cg7-edit-repair-candidate-\") as d:"
+     ],
+     [
+      9412,
+      "d = tempfile.mkdtemp(prefix=\"cg7e-pwb-absent-selftest-\")"
+     ],
+     [
+      9447,
+      "d = tempfile.mkdtemp(prefix=\"cg7e-pwb-act-selftest-\")"
+     ],
+     [
+      9542,
+      "d = tempfile.mkdtemp(prefix=\"cg7e-bare-manifest-selftest-\")"
+     ],
+     [
+      9666,
+      "d = tempfile.mkdtemp(prefix=\"cg7e-near-miss-selftest-\")"
+     ],
+     [
+      9783,
+      "d = tempfile.mkdtemp(prefix=\"cg7e-pinned-copy-selftest-\")"
+     ],
+     [
+      9859,
+      "d = tempfile.mkdtemp(prefix=\"cg7e-pwb-effect-act-selftest-\")"
+     ],
+     [
+      9925,
+      "d = tempfile.mkdtemp(prefix=\"cg7e-pwb-effect-amendment-selftest-\")"
+     ],
+     [
+      10579,
+      "d = tempfile.mkdtemp(prefix=\"cg7-selftest-\")"
+     ],
+     [
+      10674,
+      "with tempfile.TemporaryDirectory() as d:"
+     ]
+    ],
+    "scripts/check_polaris_response_ceiling_reading.py": [
+     [
+      181,
+      "with tempfile.TemporaryDirectory() as tmp:"
+     ],
+     [
+      317,
+      "with tempfile.TemporaryDirectory() as tmp:"
+     ],
+     [
+      566,
+      "with tempfile.TemporaryDirectory() as tmp:"
+     ]
+    ],
+    "scripts/check_quotations.py": [
+     [
+      550,
+      "with tempfile.TemporaryDirectory() as tmp:"
+     ]
+    ],
+    "scripts/check_spec_reconciliation.py": [
+     [
+      543,
+      "with tempfile.TemporaryDirectory() as tmp:"
+     ],
+     [
+      1980,
+      "with tempfile.TemporaryDirectory() as tmp:"
+     ]
+    ],
+    "scripts/count_polaris_effective_scenarios.py": [
+     [
+      485,
+      "with tempfile.TemporaryDirectory(prefix=\"polaris-scenario-recount-\") as tmp:"
+     ],
+     [
+      678,
+      "with tempfile.TemporaryDirectory(prefix=\"polaris-scenario-count-selftest-\") as tmp:"
+     ]
+    ],
+    "scripts/install_redis_local_agent_sitting.py": [
+     [
+      907,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      991,
+      "with tempfile.TemporaryDirectory() as t:"
+     ]
+    ],
+    "scripts/install_redis_sitting.py": [
+     [
+      1278,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      1282,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      1287,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      1292,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      1315,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      1318,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      1502,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      1538,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      1596,
+      "with tempfile.TemporaryDirectory() as t0:"
+     ],
+     [
+      1624,
+      "with tempfile.TemporaryDirectory() as t0:"
+     ],
+     [
+      1658,
+      "with tempfile.TemporaryDirectory() as t0:"
+     ],
+     [
+      1747,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      1774,
+      "with tempfile.TemporaryDirectory() as t:"
+     ]
+    ],
+    "scripts/launch_gate_results.py": [
+     [
+      1884,
+      "with tempfile.NamedTemporaryFile(\"w\", suffix=\".md\","
+     ],
+     [
+      2466,
+      "with tempfile.NamedTemporaryFile(\"w\", suffix=\".md\", delete=False) as f:"
+     ],
+     [
+      2469,
+      "with tempfile.NamedTemporaryFile(\"w\", suffix=\".md\", delete=False) as f:"
+     ],
+     [
+      2492,
+      "with tempfile.NamedTemporaryFile(\"w\", suffix=\".md\", delete=False) as f:"
+     ],
+     [
+      2495,
+      "with tempfile.NamedTemporaryFile(\"w\", suffix=\".md\", delete=False) as f:"
+     ],
+     [
+      2515,
+      "with tempfile.NamedTemporaryFile(\"w\", suffix=\".md\", delete=False) as f:"
+     ],
+     [
+      2518,
+      "with tempfile.NamedTemporaryFile(\"w\", suffix=\".md\", delete=False) as f:"
+     ],
+     [
+      2700,
+      "with tempfile.NamedTemporaryFile(\"w\", suffix=\".md\","
+     ],
+     [
+      2704,
+      "with tempfile.NamedTemporaryFile(\"w\", suffix=\".md\","
+     ]
+    ],
+    "scripts/polaris_generator_approval.py": [
+     [
+      285,
+      "with tempfile.TemporaryDirectory() as tmp:"
+     ],
+     [
+      353,
+      "with tempfile.TemporaryDirectory() as tmp:"
+     ]
+    ],
+    "scripts/probe_superseded_policy_act_regeneration.py": [
+     [
+      136,
+      "scratch = pathlib.Path(tempfile.mkdtemp(prefix=\"probe-superseded-policy-acts-\"))"
+     ]
+    ],
+    "scripts/pwb_requirement_amendment.py": [
+     [
+      193,
+      "with tempfile.TemporaryDirectory() as temp:"
+     ],
+     [
+      336,
+      "with tempfile.TemporaryDirectory() as temp:"
+     ],
+     [
+      408,
+      "with tempfile.TemporaryDirectory() as temp:"
+     ],
+     [
+      458,
+      "with tempfile.TemporaryDirectory() as temp:"
+     ],
+     [
+      723,
+      "with tempfile.TemporaryDirectory() as temp:"
+     ]
+    ],
+    "scripts/pwb_signed_selftest.py": [
+     [
+      56,
+      "with tempfile.TemporaryDirectory() as temp:"
+     ],
+     [
+      108,
+      "with tempfile.TemporaryDirectory() as temp:"
+     ]
+    ],
+    "scripts/readability_successor.py": [
+     [
+      454,
+      "directory = tempfile.mkdtemp()"
+     ]
+    ],
+    "scripts/record_contract_readability_restyle.py": [
+     [
+      308,
+      "with tempfile.TemporaryDirectory() as directory:"
+     ],
+     [
+      417,
+      "with tempfile.TemporaryDirectory() as directory:"
+     ]
+    ],
+    "scripts/record_dossier_agent_provider_v2_act.py": [
+     [
+      640,
+      "with tempfile.TemporaryDirectory() as d:"
+     ]
+    ],
+    "scripts/record_dossier_local_agent_acts.py": [
+     [
+      663,
+      "with tempfile.TemporaryDirectory() as d:"
+     ]
+    ],
+    "scripts/record_messages_api_route_registry_act.py": [
+     [
+      550,
+      "with tempfile.TemporaryDirectory() as d:"
+     ],
+     [
+      669,
+      "with tempfile.TemporaryDirectory() as d:"
+     ]
+    ],
+    "scripts/record_narrative_profile_adoption.py": [
+     [
+      321,
+      "with tempfile.TemporaryDirectory() as d:"
+     ]
+    ],
+    "scripts/record_polaris_understanding_adoption.py": [
+     [
+      188,
+      "with tempfile.TemporaryDirectory() as directory:"
+     ],
+     [
+      782,
+      "with tempfile.TemporaryDirectory() as directory:"
+     ],
+     [
+      1248,
+      "with tempfile.TemporaryDirectory() as directory:"
+     ],
+     [
+      1324,
+      "with tempfile.TemporaryDirectory() as directory:"
+     ],
+     [
+      1340,
+      "with tempfile.TemporaryDirectory() as directory:"
+     ],
+     [
+      1370,
+      "with tempfile.TemporaryDirectory() as directory:"
+     ],
+     [
+      1401,
+      "with tempfile.TemporaryDirectory() as directory:"
+     ],
+     [
+      1442,
+      "with tempfile.TemporaryDirectory() as directory:"
+     ],
+     [
+      1486,
+      "with tempfile.TemporaryDirectory() as directory:"
+     ]
+    ],
+    "scripts/record_public_admission_registry_entries_acts.py": [
+     [
+      524,
+      "with tempfile.TemporaryDirectory() as d:"
+     ],
+     [
+      633,
+      "with tempfile.TemporaryDirectory() as d:"
+     ]
+    ],
+    "scripts/record_public_egress_v2_act.py": [
+     [
+      550,
+      "with tempfile.TemporaryDirectory() as d:"
+     ],
+     [
+      684,
+      "with tempfile.TemporaryDirectory() as d:"
+     ]
+    ],
+    "scripts/record_public_repo_admission_acts.py": [
+     [
+      538,
+      "with tempfile.TemporaryDirectory() as d:"
+     ],
+     [
+      636,
+      "with tempfile.TemporaryDirectory() as d:"
+     ],
+     [
+      670,
+      "with tempfile.TemporaryDirectory() as d:"
+     ]
+    ],
+    "scripts/record_public_source_screening_scope_act.py": [
+     [
+      540,
+      "with tempfile.TemporaryDirectory() as d:"
+     ],
+     [
+      626,
+      "with tempfile.TemporaryDirectory() as d:"
+     ]
+    ],
+    "scripts/record_public_source_screening_scope_v2_act.py": [
+     [
+      631,
+      "with tempfile.TemporaryDirectory() as d:"
+     ],
+     [
+      769,
+      "with tempfile.TemporaryDirectory() as d:"
+     ]
+    ],
+    "scripts/record_public_source_screening_scope_v3_act.py": [
+     [
+      661,
+      "with tempfile.TemporaryDirectory() as d:"
+     ],
+     [
+      725,
+      "with tempfile.TemporaryDirectory() as d:"
+     ]
+    ],
+    "scripts/record_public_source_screening_scope_v4_act.py": [
+     [
+      722,
+      "with tempfile.TemporaryDirectory() as d:"
+     ],
+     [
+      766,
+      "with tempfile.TemporaryDirectory() as d:"
+     ],
+     [
+      838,
+      "with tempfile.TemporaryDirectory() as d:"
+     ]
+    ],
+    "scripts/record_pwb_behavior_amendment_acts.py": [
+     [
+      1110,
+      "with tempfile.TemporaryDirectory() as tmp:"
+     ],
+     [
+      1767,
+      "with tempfile.TemporaryDirectory() as tmp:"
+     ]
+    ],
+    "scripts/record_pwb_behavior_contract_repin_acts.py": [
+     [
+      675,
+      "with tempfile.TemporaryDirectory() as tmp:"
+     ]
+    ],
+    "scripts/record_pwb_registry_machine_ceiling_act.py": [
+     [
+      304,
+      "fd, name = tempfile.mkstemp(prefix='.p114-', dir=path.parent)"
+     ],
+     [
+      481,
+      "with tempfile.TemporaryDirectory() as temp:"
+     ]
+    ],
+    "scripts/record_rfc7_scoped_values_successor.py": [
+     [
+      316,
+      "with tempfile.TemporaryDirectory() as directory:"
+     ],
+     [
+      423,
+      "with tempfile.TemporaryDirectory() as directory:"
+     ]
+    ],
+    "scripts/record_spec_policy_readability_restyle.py": [
+     [
+      372,
+      "with tempfile.TemporaryDirectory() as directory:"
+     ],
+     [
+      501,
+      "with tempfile.TemporaryDirectory() as directory:"
+     ],
+     [
+      508,
+      "with tempfile.TemporaryDirectory() as directory:"
+     ],
+     [
+      524,
+      "with tempfile.TemporaryDirectory() as directory:"
+     ],
+     [
+      542,
+      "with tempfile.TemporaryDirectory() as directory:"
+     ]
+    ],
+    "scripts/record_three_surface_poc_readability_successor.py": [
+     [
+      291,
+      "with tempfile.TemporaryDirectory() as directory:"
+     ]
+    ],
+    "scripts/record_versioned_signoff.py": [
+     [
+      289,
+      "with tempfile.TemporaryDirectory() as directory:"
+     ],
+     [
+      1566,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      1573,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      1593,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      1628,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      1661,
+      "t = tempfile.TemporaryDirectory()"
+     ],
+     [
+      1761,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      1771,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      1807,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      1829,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      1874,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      1880,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      1951,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      1959,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      1999,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      2015,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      2071,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      2123,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      2144,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      2208,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      2218,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      2224,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      2229,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      2234,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      2242,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      2255,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      2259,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      2264,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      2277,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      2283,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      2289,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      2324,
+      "with tempfile.TemporaryDirectory() as t:"
+     ]
+    ],
+    "scripts/render_launch_administration.py": [
+     [
+      487,
+      "with tempfile.NamedTemporaryFile(\"w\", suffix=\".json\","
+     ],
+     [
+      553,
+      "with tempfile.NamedTemporaryFile(\"w\", suffix=\".json\","
+     ],
+     [
+      576,
+      "with tempfile.NamedTemporaryFile(\"w\", suffix=\".json\","
+     ],
+     [
+      619,
+      "with tempfile.NamedTemporaryFile(\"w\", suffix=\".json\","
+     ],
+     [
+      662,
+      "with tempfile.NamedTemporaryFile(\"w\", suffix=\".json\","
+     ],
+     [
+      728,
+      "with tempfile.NamedTemporaryFile(\"w\", suffix=\".json\","
+     ],
+     [
+      781,
+      "with tempfile.NamedTemporaryFile(\"w\", suffix=\".json\","
+     ],
+     [
+      804,
+      "with tempfile.NamedTemporaryFile(\"w\", suffix=\".json\","
+     ],
+     [
+      836,
+      "with tempfile.NamedTemporaryFile(\"w\", suffix=\".json\","
+     ],
+     [
+      862,
+      "with tempfile.NamedTemporaryFile(\"w\", suffix=\".json\","
+     ],
+     [
+      887,
+      "with tempfile.NamedTemporaryFile(\"w\", suffix=\".json\","
+     ],
+     [
+      902,
+      "with tempfile.NamedTemporaryFile(\"w\", suffix=\".md\","
+     ]
+    ],
+    "scripts/rerun_rule6_mutants_selected_tests.py": [
+     [
+      30,
+      "with tempfile.TemporaryDirectory() as tmp:"
+     ]
+    ],
+    "scripts/rule6_mutation_runner.py": [
+     [
+      38,
+      "with tempfile.TemporaryDirectory() as tmp:"
+     ]
+    ],
+    "scripts/rule6_timeout_rerun.py": [
+     [
+      24,
+      "with tempfile.TemporaryDirectory() as tmp:"
+     ]
+    ],
+    "scripts/run_line_slot_rule6_mutants.py": [
+     [
+      47,
+      "with tempfile.TemporaryDirectory() as tmp:"
+     ]
+    ],
+    "scripts/simulate_public_source_screening_scope_act.py": [
+     [
+      98,
+      "tmp = tempfile.mkdtemp(prefix=\"screening-scope-sim-\")"
+     ]
+    ],
+    "scripts/simulate_redis_local_agent_sitting.py": [
+     [
+      249,
+      "tmp = tempfile.mkdtemp(prefix=\"local-agent-sitting-\")"
+     ]
+    ],
+    "scripts/simulate_redis_sitting.py": [
+     [
+      790,
+      "tmp = tempfile.mkdtemp(prefix=\"sitting-sim-\")"
+     ],
+     [
+      892,
+      "with tempfile.TemporaryDirectory() as t:"
+     ],
+     [
+      918,
+      "with tempfile.TemporaryDirectory() as t:"
+     ]
+    ],
+    "scripts/validate_launch_administration.py": [
+     [
+      1715,
+      "with tempfile.NamedTemporaryFile(\"w\", suffix=\".json\","
+     ],
+     [
+      2019,
+      "with tempfile.NamedTemporaryFile(\"w\", suffix=\".json\","
+     ],
+     [
+      2324,
+      "with tempfile.TemporaryDirectory() as td:"
+     ],
+     [
+      2351,
+      "with tempfile.NamedTemporaryFile("
+     ],
+     [
+      2394,
+      "with tempfile.TemporaryDirectory() as td:"
+     ],
+     [
+      2436,
+      "with tempfile.NamedTemporaryFile("
+     ],
+     [
+      2519,
+      "with tempfile.TemporaryDirectory() as td2:"
+     ],
+     [
+      2570,
+      "with tempfile.NamedTemporaryFile("
+     ],
+     [
+      2728,
+      "with tempfile.NamedTemporaryFile(\"w\", suffix=\".json\","
+     ],
+     [
+      2887,
+      "with tempfile.TemporaryDirectory() as td:"
+     ]
+    ]
+   }
+  },
+  "sh-mktemp": {
+   "candidateFiles": 0,
+   "lines": 0,
+   "hits": {}
+  },
+  "literal-tmp": {
+   "candidateFiles": 11,
+   "lines": 34,
+   "hits": {
+    "apps/three-surface-poc/src/capture-test-artifact.test.ts": [
+     [
+      23,
+      "junitPath: '/tmp/artifact.xml',"
+     ],
+     [
+      40,
+      "repoRoot: '/home/op/butlers', scope: SCOPE, python: '.venv/bin/python', junitPath: '/tmp/out dir/a.xml', stateDir: '/tmp/state',"
+     ],
+     [
+      49,
+      "`${SCOPE} --python .venv/bin/python --junit '/tmp/out dir/a.xml' --state-dir /tmp/state`,"
+     ],
+     [
+      55,
+      "const text = operatorInstructions({ repoRoot: '-repo', scope: SCOPE, python: 'python', junitPath: '/tmp/a.xml', stateDir: '/tmp/state' });"
+     ]
+    ],
+    "apps/three-surface-poc/src/cdp-browser.test.ts": [
+     [
+      31,
+      "await closeDisposableBrowser(connection, child, '/tmp/private-browser-profile', privateGroup, {"
+     ],
+     [
+      56,
+      "await closeDisposableBrowser(connection, child, '/tmp/private-browser-profile', privateGroup, {"
+     ],
+     [
+      71,
+      "'/tmp/private-browser-profile', privateGroup, { removeProfile: () => { events.push('profile-removed'); }, groupProcesses: () => [] });"
+     ],
+     [
+      84,
+      "await closeDisposableBrowser(connection, exited, '/tmp/private-browser-profile', privateGroup, {"
+     ],
+     [
+      92,
+      "await expect(closeDisposableBrowser(connection, exited, '/tmp/private-browser-profile', privateGroup, {"
+     ],
+     [
+      101,
+      "await expect(closeDisposableBrowser(connection, exited, '/tmp/private-browser-profile', privateGroup, {"
+     ],
+     [
+      109,
+      "await expect(closeDisposableBrowser(connection, exited, '/tmp/private-browser-profile', privateGroup, {"
+     ],
+     [
+      126,
+      "'/tmp/private-browser-profile', privateGroup, {"
+     ],
+     [
+      150,
+      "'/tmp/private-browser-profile', privateGroup, {"
+     ],
+     [
+      207,
+      "removeBrowserProfile('/tmp/syzygy-browser-profile', {"
+     ],
+     [
+      218,
+      "expect(() => removeBrowserProfile('/tmp/syzygy-browser-profile', {"
+     ],
+     [
+      231,
+      "expect(() => removeBrowserProfile('/tmp/syzygy-browser-profile', {"
+     ],
+     [
+      247,
+      "removeBrowserProfile(`/tmp/syzygy-browser-profile-${run}`, {"
+     ]
+    ],
+    "apps/three-surface-poc/src/cli.test.ts": [
+     [
+      12,
+      "'/tmp/syzygy-poc',"
+     ],
+     [
+      20,
+      "stateDir: '/tmp/syzygy-poc',"
+     ]
+    ],
+    "apps/three-surface-poc/src/keyboard-sweep-record.test.ts": [
+     [
+      36,
+      "expect(keyboardSweepOutput({ date: undefined, out: '/tmp/x/sweep.json' }, '2026-10-04')).toEqual({ file: '/tmp/x/sweep.json', directory: '/tmp/x' });"
+     ]
+    ],
+    "apps/three-surface-poc/src/restart.test.ts": [
+     [
+      492,
+      "argv: [process.execPath, fixture, '--repo', '/tmp/private-repo', '--state-dir', '/tmp/private-state', '--port', '4242'],"
+     ]
+    ],
+    "packages/polaris-dossier/src/check.test.ts": [
+     [
+      567,
+      "[['check', '/tmp/x', '--draft'], '--draft requires a value'],"
+     ],
+     [
+      568,
+      "[['check', '/tmp/x', '--clone', '/c'], 'unknown option: --clone'],"
+     ],
+     [
+      569,
+      "[['check', '/tmp/x', '--revision', 'r'], 'unknown option: --revision'],"
+     ]
+    ],
+    "packages/polaris-dossier/src/close.test.ts": [
+     [
+      144,
+      "['x-3', 'ls', `/tmp/${PLANTED_SECRET}`],"
+     ]
+    ],
+    "packages/polaris-dossier/src/full-run.testkit.ts": [
+     [
+      113,
+      "{ id: 'x-3', command: 'ls', workingDirectory: `/tmp/${PLANTED_SECRET}`, purpose: 'A command whose working directory carries a token.' }] : []),"
+     ]
+    ],
+    "packages/three-surface-poc-core/src/test-artifact-verification-live-source.test.ts": [
+     [
+      323,
+      "[`${RUN_GIT}('git', ['probe'], { env: { GIT_CONFIG_GLOBAL: '/tmp/cfg' }, encoding: 'utf8' });`, `passes ${RUN_GIT} the option env,`],"
+     ],
+     [
+      327,
+      "[`${RUN_GIT}('git', ['--version;', 'touch', '/tmp/x'], { shell: true, encoding: 'utf8' });`, `passes ${RUN_GIT} the option shell,`],"
+     ]
+    ],
+    "packages/three-surface-poc-core/src/test-artifact-verification.test.ts": [
+     [
+      431,
+      "const text = liveTestOperatorInstructions(\"/tmp/my repo/it's\", \"/opt/py 3/bin/python'\", 'tests/a b.py');"
+     ],
+     [
+      432,
+      "expect(text).toContain(\"\\n  git -C '/tmp/my repo/it'\\\\''s' rev-parse HEAD\\n\");"
+     ],
+     [
+      433,
+      "expect(text).toContain(\"\\n  cd -- '/tmp/my repo/it'\\\\''s' && '/opt/py 3/bin/python'\\\\''' -m pytest 'tests/a b.py' -q --junitxml=<file>; echo \\\"exit $?\\\"\\n\");"
+     ]
+    ],
+    "packages/three-surface-poc-core/src/test-cleanup.test.ts": [
+     [
+      8,
+      "removeFixtureDirectory('/tmp/fixture', {"
+     ],
+     [
+      19,
+      "expect(() => removeFixtureDirectory('/tmp/fixture', {"
+     ],
+     [
+      32,
+      "expect(() => removeFixtureDirectory('/tmp/fixture', {"
+     ]
+    ]
+   }
+  }
+ }
+}

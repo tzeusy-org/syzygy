@@ -1,0 +1,22 @@
+M1 killed: modifiers are stripped
+M2 killed: curried forms are unwrapped
+M3 killed: const aliases resolve
+M4 killed: options-first object
+M5 killed: options-last object
+M6 killed: a function third argument is not a timeout
+M7 killed: hooks
+M8 killed: vi.setConfig
+M9 killed: config properties
+M10 killed: population excludes docs/
+M11 killed: reason on the timeout line
+M12 killed: reason above a declaration
+M13 killed: reason above a declaration group
+M14 killed: a cited hex run must be a commit
+M15 killed: a cited evidence path must exist
+M16 killed: relative imports are followed
+M17 killed: arithmetic is evaluated
+M18 killed: a comment above the call is never a reason
+M19 killed: second method: the closing regex
+M20 killed: config reason on a group
+M21 killed: reason above an own-line timeout
+21 of 21 killed

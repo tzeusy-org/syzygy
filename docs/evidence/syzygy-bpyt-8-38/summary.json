@@ -1,0 +1,228 @@
+{
+ "bead": "syzygy-bpyt.8.38",
+ "base": "e5080f4dcdcc208127ae5dc0b915acf413df9764",
+ "head": "831f40c1ab98e4c9b40d98322109506b15ac8b97",
+ "subject": {
+  "what": "git diff e5080f4d 831f40c1",
+  "sha256": "37718512521253cbf50178a4dd0290cf1205f6214fd9875c45084eeefcf5ac8b",
+  "files": {
+   "packages/polaris-dossier/src/argv.test.ts": {
+    "base": "e854ce8380d78285807b1aa066b100870754e5005d61826ba5874f5e0db7f5db",
+    "head": "ab93fb1c427b15c4ff7faa71a970375af9c6cf30e1c09cf78235b86ea322aa08"
+   },
+   "packages/polaris-generation-core/src/workspace-reach.test.ts": {
+    "base": "8e9db68616b20552ff838de7469cce3b7dca7eb5119b4c7396720f395570e621",
+    "head": "a20cdbc84b4e21ee62d6d06eb2abe8c7a21affa03974a35355a812ac89b7cb1e"
+   },
+   "packages/polaris-generation-core/src/workspace-reach.testkit.ts": {
+    "base": "2eb284dc55d5426575eb07946a5771b187d425cca3b672b99984d4434bd2066e",
+    "head": "ed67106fe74333c97f419f4a52f14f75bfaa34bbfa5b41f33c4f1b6545895731"
+   }
+  }
+ },
+ "productFilesChanged": [],
+ "mutRunnerSha256": "ca2b8eadc503305bb3767b7220b02775429164ef6c183ac9854acf9d8ed9b6a5",
+ "targets": {
+  "RV531-R1-dot-slash-dropped": {
+   "base": "survives",
+   "head": "killed",
+   "headFailedRows": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a ./ path dependency as naming no module",
+    "packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a dependency on its own directory as naming no module"
+   ]
+  },
+  "RV531-R2-bare-dot-dropped": {
+   "base": "survives",
+   "head": "killed",
+   "headFailedRows": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a dependency on its own directory as naming no module"
+   ]
+  },
+  "RV531-R3-tar-forms-dropped": {
+   "base": "survives",
+   "head": "killed",
+   "headFailedRows": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a .tar dependency as naming no module",
+    "packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a .tar.gz dependency as naming no module"
+   ]
+  },
+  "RV531-R4-tilde-loosened": {
+   "base": "survives",
+   "head": "killed",
+   "headFailedRows": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > leaves a bare name declared as a registry tilde range outside the workspace"
+   ]
+  },
+  "RV531-R5-tarball-end-anchor-dropped": {
+   "base": "survives",
+   "head": "killed",
+   "headFailedRows": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > leaves a bare name declared as a git dependency whose path holds .tgz outside the workspace"
+   ]
+  },
+  "RV531-R6-root-dependencies-dropped": {
+   "base": "survives",
+   "head": "killed",
+   "headFailedRows": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads the workspace root's manifest beside the packages'"
+   ]
+  },
+  "RV531-C1-extension-end-anchor-dropped": {
+   "base": "survives",
+   "head": "killed",
+   "headFailedRows": [
+    "packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > reads every module TypeScript compiles under src, .mts, .cts and .tsx among them, and no test module"
+   ]
+  },
+  "RV531-C4-test-dot-dropped": {
+   "base": "survives",
+   "head": "killed",
+   "headFailedRows": [
+    "packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > reads every module TypeScript compiles under src, .mts, .cts and .tsx among them, and no test module"
+   ]
+  },
+  "RV531-S2-tree-not-recursive": {
+   "base": "survives",
+   "head": "killed",
+   "headFailedRows": [
+    "packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > reads every src directory to its depth"
+   ]
+  },
+  "RV531-T3-root-bare-path-alias": {
+   "base": "survives",
+   "head": "survives",
+   "headFailedRows": []
+  }
+ },
+ "otherReviewMutants": {
+  "stronger": [
+   "RV531-R8-git-reads-local"
+  ],
+  "unchanged": [
+   "RV531-C2-cts-dropped",
+   "RV531-C3-tsx-tests-kept",
+   "RV531-R7-own-package-only",
+   "RV531-S1-parse-rereads-tree",
+   "RV531-T1-root-dot-slash-alias",
+   "RV531-T2-remote-tarball-faithful",
+   "RV531-T4-npm-alias-registry-faithful"
+  ],
+  "weaker": []
+ },
+ "own": {
+  "O1-tarball-url-reads-outside": {
+   "what": "the tarball arm matches only a version with no colon, so a tarball URL reads as outside again",
+   "base": "survives",
+   "head": "killed",
+   "headFailedRows": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a remote tarball URL dependency as naming no module"
+   ]
+  },
+  "O2-tar-unread": {
+   "what": "a .tar name is not local; .tgz and .tar.gz still are",
+   "base": "survives",
+   "head": "killed",
+   "headFailedRows": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a .tar dependency as naming no module"
+   ]
+  },
+  "O3-tar-gz-unread": {
+   "what": "a .tar.gz name is not local; .tgz and .tar still are",
+   "base": "survives",
+   "head": "killed",
+   "headFailedRows": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a .tar.gz dependency as naming no module"
+   ]
+  },
+  "O4-root-dev-dependencies-dropped": {
+   "what": "the workspace root's entry keeps every field but its devDependencies",
+   "base": "survives",
+   "head": "killed",
+   "headFailedRows": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads the workspace root's manifest beside the packages'"
+   ]
+  }
+ },
+ "islandDiff": {
+  "walks": {
+   "entries": 251,
+   "equal": 251,
+   "answersSha256": "2e84163f9d33a00c93b6d2d90f79a5ae64b7ff182cab0cccee93d14fdaec7985"
+  },
+  "resolves": {
+   "files": 503,
+   "specifiers": 2628,
+   "equal": 2628,
+   "byAnswer": {
+    "module": 1559,
+    "null": 1069,
+    "undefined": 0
+   },
+   "answersSha256": "65d99f1803c1187288d6a08a8b302fec123ca8529c1a329460efe457ada1fc16"
+  },
+  "selftest": {
+   "walksEqual": 61,
+   "resolvesEqual": 1338
+  },
+  "toolSha256": "131206846b062bc60ba7efeb67bf6ecf81802a54921d94979f2bc7428b8afc04"
+ },
+ "repeats": {
+  "runs": 5,
+  "passed": [
+   165,
+   165,
+   165,
+   165,
+   165
+  ],
+  "load1": [
+   55.3,
+   57.2,
+   55.2,
+   53.1,
+   54.5
+  ]
+ },
+ "titles": {
+  "base": 157,
+  "head": 165,
+  "added": 8,
+  "removed": 0,
+  "bodiesChanged": [
+   "packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads the workspace root's manifest beside the packages'",
+   "packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > reads every module TypeScript compiles under src, .mts, .cts and .tsx among them, and no test module"
+  ],
+  "perFile": {
+   "packages/polaris-dossier/src/argv.test.ts": {
+    "base": 85,
+    "head": 86
+   },
+   "packages/polaris-dossier/src/subpath-imports.test.ts": {
+    "base": 27,
+    "head": 27
+   },
+   "packages/polaris-generation-core/src/island-boundary.test.ts": {
+    "base": 4,
+    "head": 4
+   },
+   "packages/polaris-generation-core/src/workspace-reach.test.ts": {
+    "base": 41,
+    "head": 48
+   }
+  },
+  "line": "Tests: +8 ~2 -0"
+ },
+ "npaProbe": {
+  "npaVersion": "12.0.2",
+  "node": "v24.6.0",
+  "forms": 37,
+  "toolSha256": "61da250ff658e7c75e876e5586d4576dca97141adcd94e49a701df6a54670053"
+ },
+ "faithfulTree": {
+  "manifests": 12,
+  "dependencyVersions": 24,
+  "local": [],
+  "bareDirectoryShaped": []
+ },
+ "problems": []
+}

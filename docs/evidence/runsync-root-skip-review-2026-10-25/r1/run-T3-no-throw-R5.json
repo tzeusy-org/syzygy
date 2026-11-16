@@ -1,0 +1,203 @@
+{
+ "tool": "rev-525/tools/probe.py",
+ "toolSha256": "0d82288a92a49bfe8af739ee1f15a61ed3b208b672b07e4c85cb2d18b076cfa6",
+ "case": "T3-no-throw-R5",
+ "commit": "f7bbb93a005b45c2866d8a9993afbca44cd1a34f",
+ "files": {},
+ "edits": [
+  {
+   "file": "packages/polaris-dossier/src/argv.ts",
+   "old": "if (!spec.positionals || arg.startsWith('-')) return",
+   "new": "if (arg.startsWith('-')) return"
+  },
+  {
+   "file": "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts",
+   "old": "  if (result.error) throw new Error(",
+   "new": "  if (false) throw new Error("
+  }
+ ],
+ "env": {},
+ "filters": [
+  "daemon-entry-unchanged"
+ ],
+ "t": null,
+ "editChecks": [
+  {
+   "file": "packages/polaris-dossier/src/argv.ts",
+   "old": "if (!spec.positionals || arg.startsWith('-')) return",
+   "new": "if (arg.startsWith('-')) return",
+   "occurrences": 1
+  },
+  {
+   "file": "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts",
+   "old": "  if (result.error) throw new Error(",
+   "new": "  if (false) throw new Error(",
+   "occurrences": 1
+  }
+ ],
+ "build": {
+  "exitCode": 2,
+  "typeErrors": [
+   "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts(84,58): error TS18048: 'result.error' is possibly 'undefined'."
+  ]
+ },
+ "distCarries": [
+  {
+   "dist": "packages/polaris-dossier/dist/argv.js",
+   "carries": true
+  }
+ ],
+ "run": {
+  "command": "npx vitest run --config packages/cap1-system/vitest.config.ts daemon-entry-unchanged --reporter=json --outputFile=<tmp>/report.json",
+  "exitCode": 1,
+  "wallSeconds": 43.8,
+  "deadlineHit": false,
+  "samples": 108,
+  "port7477Before": [],
+  "port7477Seen": [],
+  "killedOn7477": [],
+  "unstuck": [],
+  "ownListeningPorts": [
+   "35565",
+   "45833"
+  ],
+  "processesSeen": 27,
+  "survivors": {},
+  "tmpLeftoversBeforeRemoval": [
+   "node-compile-cache",
+   "report.json",
+   "vitest.log"
+  ],
+  "logTail": "JSON report written to <tmp>/report.json\n",
+  "tests": [
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged [\"--help\"] prints the usage and exits 0",
+    "status": "passed",
+    "durationMs": 120,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged [\"-h\"] prints the usage and exits 0",
+    "status": "passed",
+    "durationMs": 121,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged [\"--help\",\"dossier\"] prints the usage and exits 0",
+    "status": "passed",
+    "durationMs": 112,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged [\"--bogus\"] is refused with exit 1 and the same message",
+    "status": "passed",
+    "durationMs": 104,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged [\"--port\",\"0\",\"dossier\"] is refused with exit 1 and the same message",
+    "status": "failed",
+    "durationMs": 20037,
+    "failure": "AssertionError: expected { status: null, \u2026(2) } to deeply equal { status: 1, stdout: '', \u2026(1) }\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-525/clone/packages/cap1-system/src/daemon-entry-unchanged.system.test.ts:129:32\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-525/clone/node_mo"
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged [\"Dossier\"] is refused with exit 1 and the same message",
+    "status": "failed",
+    "durationMs": 20031,
+    "failure": "AssertionError: expected { status: null, \u2026(2) } to deeply equal { status: 1, stdout: '', \u2026(1) }\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-525/clone/packages/cap1-system/src/daemon-entry-unchanged.system.test.ts:129:32\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-525/clone/node_mo"
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged [\"--port\"] is refused with exit 1 and the same message",
+    "status": "passed",
+    "durationMs": 118,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged [\"--port\",\"70000\"] is refused with exit 1 and the same message",
+    "status": "passed",
+    "durationMs": 114,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged a state directory inside the governed plane is refused with the same message",
+    "status": "passed",
+    "durationMs": 122,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged with no arguments it serves from the working directory, writes the same state and shuts down the same way",
+    "status": "passed",
+    "durationMs": 131,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: every invocation but `dossier` is unchanged with explicit flags it serves, writes the same state and shuts down the same way",
+    "status": "passed",
+    "durationMs": 121,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: the one changed input, `dossier` as the first argument `dossier` alone is a dossier usage error (exit 2), not the daemon's refusal",
+    "status": "passed",
+    "durationMs": 210,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: the one changed input, `dossier` as the first argument `dossier status <missing>` is a dossier refusal (exit 1) and starts no daemon",
+    "status": "passed",
+    "durationMs": 186,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: the one changed input, `dossier` as the first argument `dossier render <missing>` reaches the run with the renderer injected, and starts no daemon",
+    "status": "passed",
+    "durationMs": 219,
+    "failure": null
+   },
+   {
+    "name": "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch",
+    "status": "passed",
+    "durationMs": 1,
+    "failure": null
+   }
+  ]
+ },
+ "rebuild": {
+  "exitCode": 0,
+  "typeErrors": []
+ },
+ "treeCleanAfter": true,
+ "summary": {
+  "exitCode": 1,
+  "wallSeconds": 43.8,
+  "deadlineHit": false,
+  "statuses": {
+   "failed": 2,
+   "passed": 13
+  },
+  "failed": [
+   {
+    "name": "dossier` is unchanged [\"--port\",\"0\",\"dossier\"] is refused with exit 1 and the same message",
+    "ms": 20037,
+    "etimedout": false,
+    "head": "AssertionError: expected { status: null, \u2026(2) } to deeply equal { status: 1, stdout: '', \u2026(1) }\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4a"
+   },
+   {
+    "name": "ocation but `dossier` is unchanged [\"Dossier\"] is refused with exit 1 and the same message",
+    "ms": 20031,
+    "etimedout": false,
+    "head": "AssertionError: expected { status: null, \u2026(2) } to deeply equal { status: 1, stdout: '', \u2026(1) }\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4a"
+   }
+  ],
+  "port7477Seen": 0,
+  "samples": 108,
+  "killedOn7477": 0,
+  "unstuck": 0,
+  "ownListeningPorts": [
+   "35565",
+   "45833"
+  ],
+  "survivors": 0,
+  "slowestMs": 20037
+ }
+}

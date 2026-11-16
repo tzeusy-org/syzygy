@@ -1,0 +1,10 @@
+{
+ "unmutated": "file://<tree>/packages/polaris-dossier/dist/argv.js",
+ "mutated": "file://<tree>/packages/polaris-dossier/dist/index.js",
+ "exits": [
+  0,
+  0
+ ],
+ "stderr": "",
+ "cleanAfter": true
+}

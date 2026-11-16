@@ -1,0 +1,23 @@
+{
+ "note": "Review round 2, N9. These three records, made in round 1, name their tree commit by a short hash. They are left as recorded (a record is not rewritten after the fact); this note carries the full hash each short one resolves to in this repository, read by git rev-parse when this note was written. Records made from round 2 on carry the full 40-hex commit, and the tools assert the worktree is at the commit they are given.",
+ "entries": [
+  {
+   "record": "interrupt-kill-base-2026-10-22.json",
+   "recorded": "0d4d5098",
+   "full": "0d4d50984f6aa501217fe7109b6aec1b9679e4c9",
+   "resolvedBy": "git rev-parse 0d4d5098^{commit}"
+  },
+  {
+   "record": "leak-by-file-base-2026-10-22.json",
+   "recorded": "0d4d5098",
+   "full": "0d4d50984f6aa501217fe7109b6aec1b9679e4c9",
+   "resolvedBy": "git rev-parse 0d4d5098^{commit}"
+  },
+  {
+   "record": "tmpdir-length-probe-2026-10-22.json",
+   "recorded": "d8532f1a",
+   "full": "d8532f1afdf965439c70ee6f6f3f1836b3c81bc9",
+   "resolvedBy": "git rev-parse d8532f1a^{commit}"
+  }
+ ]
+}

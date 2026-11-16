@@ -1,0 +1,62 @@
+{
+ "commit": "9fd03a8ea3e8f2ff5ad5519f06a7a8843073567d",
+ "dist": "present",
+ "distDirs": [
+  "apps/syzygy/dist",
+  "apps/three-surface-poc/dist",
+  "packages/cap1-core/dist",
+  "packages/cap1-daemon/dist",
+  "packages/http-host/dist",
+  "packages/polaris-dossier/dist",
+  "packages/polaris-generation-consent/dist",
+  "packages/polaris-generation-core/dist",
+  "packages/support/dist",
+  "packages/three-surface-poc-core/dist"
+ ],
+ "importedTools": {
+  "docs/evidence/syzygy-bpyt-6-14/tools/mutants.py": "133094bce703dad13917d73b4bb1dd29cc8eb43212d2ec9e307656f530f3fe4e",
+  "docs/evidence/syzygy-bpyt-46/tools/mutants.py": "b4728e27e55afbf21caeb275e0f28f0d6b77bb9d368c0d33a347cc80cad02b34"
+ },
+ "node": "v24.6.0",
+ "summary": {
+  "rows": 1,
+  "asExpected": 1,
+  "unexpected": []
+ },
+ "statusAfter": "",
+ "rows": [
+  {
+   "id": "RX7-projects-reordered",
+   "test": "apps/three-surface-poc/src/sync-child-process-guard.test.ts",
+   "edits": [
+    {
+     "path": "vitest.config.ts",
+     "old": "      {\n        extends: true,\n        test: {\n          name: '@syzygy/three-surface-poc-app',\n          include: ['apps/three-surface-poc/src/**/*.test.ts'],\n          // Once per run: removes the fixture directories of killed runs (syzygy-bpyt.4.10).\n          globalSetup: [fileURLToPath(new URL('./apps/three-surface-poc/src/test-fixture-sweep.global-setup.ts', import.meta.url))],\n        },\n      },\n    ],\n",
+     "new": "    ],\n"
+    },
+    {
+     "path": "vitest.config.ts",
+     "old": "    projects: [\n",
+     "new": "    projects: [\n      {\n        extends: true,\n        test: {\n          name: '@syzygy/three-surface-poc-app',\n          include: ['apps/three-surface-poc/src/**/*.test.ts'],\n          // Once per run: removes the fixture directories of killed runs (syzygy-bpyt.4.10).\n          globalSetup: [fileURLToPath(new URL('./apps/three-surface-poc/src/test-fixture-sweep.global-setup.ts', import.meta.url))],\n        },\n      },\n"
+    }
+   ],
+   "expected": [
+    "suite child processes and the vitest worker RPC loads the vitest config and finds no alias key at any depth"
+   ],
+   "failing": [
+    "suite child processes and the vitest worker RPC loads the vitest config and finds no alias key at any depth"
+   ],
+   "asExpected": true,
+   "exit": 1,
+   "passed": 7,
+   "failed": 1,
+   "total": 8,
+   "failedFiles": [
+    "apps/three-surface-poc/src/sync-child-process-guard.test.ts"
+   ],
+   "fileMessages": [],
+   "error": null,
+   "stdout": null
+  }
+ ]
+}

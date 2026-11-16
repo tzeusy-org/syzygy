@@ -1,0 +1,8 @@
+R3-bearer-token-whitespace-trimmed: survived exit=0 failed=0/571 files=0 clean=True
+R8-not-admitted-population-dropped: survived exit=0 failed=0/571 files=0 clean=True
+R13-shim-unknown-route-status-swapped: survived exit=0 failed=0/571 files=0 clean=True
+R14-credentials-shim-drops-a-type: survived exit=0 failed=0/571 files=0 clean=True
+R17-gate-host-prefix-narrowed-to-src: survived exit=0 failed=0/35 files=0 clean=True
+R18-origin-prefix-match: survived exit=0 failed=0/571 files=0 clean=True
+R19-state-write-containment-without-separator: survived exit=0 failed=0/571 files=0 clean=True
+killed 0 survived 7 error 0 of 7

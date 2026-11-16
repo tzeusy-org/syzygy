@@ -1,0 +1,3750 @@
+{
+ "population": 2283,
+ "hits": [
+  {
+   "file": ".claude/skills/th-engineering/SKILL.md",
+   "line": 57,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "| Finish same-repo refactors/renames/migrations: delete lingering aliases, wrappers, fallbacks, dead flags. | [subskills/cruft-cleanup/SKILL.md](subskills/cruft-cleanup/SKILL.md) | \"clean up this refactor\", \"old path still works\" |"
+  },
+  {
+   "file": ".claude/skills/th-engineering/subskills/engineering-bar/SKILL.md",
+   "line": 54,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "retired wrappers, aliases, fallback branches, dead flags, and unused paths"
+  },
+  {
+   "file": ".codex/skills/th-engineering/SKILL.md",
+   "line": 57,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "| Finish same-repo refactors/renames/migrations: delete lingering aliases, wrappers, fallbacks, dead flags. | [subskills/cruft-cleanup/SKILL.md](subskills/cruft-cleanup/SKILL.md) | \"clean up this refactor\", \"old path still works\" |"
+  },
+  {
+   "file": ".codex/skills/th-engineering/subskills/engineering-bar/SKILL.md",
+   "line": 54,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "retired wrappers, aliases, fallback branches, dead flags, and unused paths"
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/history/RFC-0004-history.md",
+   "line": 69,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "supporting the substrate-qualified-alias rule."
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/history/rev9-rfcs/RFC-0004-observation-sources-evidence-adapters.md",
+   "line": 210,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "aliases of the substrate-neutral identity, never as the primary key"
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/history/rev9-rfcs/RFC-0004-observation-sources-evidence-adapters.md",
+   "line": 248,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "substrate-native aliases into the new substrate's namespace."
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/history/rev9-rfcs/RFC-0004-observation-sources-evidence-adapters.md",
+   "line": 495,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "`bead_id` as its substrate-qualified alias, RFC4-6); **the status vocabulary"
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/history/rev9-rfcs/RFC-0004-observation-sources-evidence-adapters.md",
+   "line": 598,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "| work item identity + substrate alias | R | Substrate-neutral identity primary; `bead_id` as alias (RFC4-6). Unattributable runs are admissible only rendered as unattributed execution noise, never dropped [Observed: vision.md anchoring mandate via `04` \u00a73.1] "
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/history/rev9-rfcs/RFC-0008-trajectory-work-surface.md",
+   "line": 134,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "| Work item (substrate alias \"bead\"), incl. epics | Work item, scheduler-issued, mirrored never minted (RFC1-5; RFC4-15) |"
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode/SEMANTIC-DELTA.md",
+   "line": 176,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "> | work item identity + substrate alias | R | Substrate-neutral identity primary; `bead_id` as alias (RFC4-6). Unattributable runs are admissible only rendered as unattributed execution noise, never dropped [Observed: vision.md anchoring mandate] |"
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/policy-candidates/TERM-REGISTRY.md",
+   "line": 365,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "**Permitted aliases.** *governed project* (doctrine's own phrasing in"
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/policy-candidates/TERM-REGISTRY.md",
+   "line": 422,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "**Permitted aliases.** none. Use the full phrase."
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/policy-candidates/TERM-REGISTRY.md",
+   "line": 460,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "**Permitted aliases.** *Genome* (after first use in a document)."
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/policy-candidates/TERM-REGISTRY.md",
+   "line": 495,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "**Permitted aliases.** none."
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/policy-candidates/TERM-REGISTRY.md",
+   "line": 529,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "**Permitted aliases.** *requirement reference* (the precise kernel term);"
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/policy-candidates/TERM-REGISTRY.md",
+   "line": 570,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "**Permitted aliases.** *plane* (after first use)."
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/policy-candidates/TERM-REGISTRY.md",
+   "line": 600,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "**Permitted aliases.** *the Desired plane*, *intent* (in presentation prose,"
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/policy-candidates/TERM-REGISTRY.md",
+   "line": 634,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "**Permitted aliases.** *the Proposed plane*."
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/policy-candidates/TERM-REGISTRY.md",
+   "line": 662,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "**Permitted aliases.** *the Observed plane*; **observed implementation"
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/policy-candidates/TERM-REGISTRY.md",
+   "line": 696,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "**Permitted aliases.** *the Inferred plane*; *the inferred layer* (doctrine's"
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/policy-candidates/TERM-REGISTRY.md",
+   "line": 728,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "**Permitted aliases.** *the Execution plane*."
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/policy-candidates/TERM-REGISTRY.md",
+   "line": 762,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "**Permitted aliases.** *the Historical plane*."
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/policy-candidates/TERM-REGISTRY.md",
+   "line": 813,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "**Permitted aliases.** *status claim* (the sub-class with the evidence"
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/policy-candidates/TERM-REGISTRY.md",
+   "line": 850,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "**Permitted aliases.** *evidence artifact* (the kernel entity class)."
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/policy-candidates/TERM-REGISTRY.md",
+   "line": 887,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "**Permitted aliases.** *epistemic label*, *the three-label rule*."
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/policy-candidates/TERM-REGISTRY.md",
+   "line": 934,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "**Permitted aliases.** none. Write `Unknown`."
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/policy-candidates/TERM-REGISTRY.md",
+   "line": 1010,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "**Permitted aliases.** *evidence tier* \u2014 the minority name, which this entry's"
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/policy-candidates/TERM-REGISTRY.md",
+   "line": 1012,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "tier* here, which is this entry's **own heading**: a term cannot be an alias of"
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/policy-candidates/TERM-REGISTRY.md",
+   "line": 1052,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "**Permitted aliases.** *work warrant* for the work-authorizing class."
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/policy-candidates/TERM-REGISTRY.md",
+   "line": 1091,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "**Permitted aliases.** none."
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/policy-candidates/TERM-REGISTRY.md",
+   "line": 1125,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "**Permitted aliases.** none."
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/policy-candidates/TERM-REGISTRY.md",
+   "line": 1164,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "**Permitted aliases.** none."
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/policy-candidates/TERM-REGISTRY.md",
+   "line": 1226,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "**Permitted aliases.** **snapshot** \u2014 permitted where no other snapshot sense"
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/policy-candidates/TERM-REGISTRY.md",
+   "line": 1269,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "**Permitted aliases.** *status evaluation* (doctrine's fuller phrasing)."
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/policy-candidates/TERM-REGISTRY.md",
+   "line": 1307,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "**Permitted aliases.** none."
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/policy-candidates/TERM-REGISTRY.md",
+   "line": 1346,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "**Permitted aliases.** none."
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/policy-candidates/TERM-REGISTRY.md",
+   "line": 1384,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "**Permitted aliases.** none."
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/policy-candidates/TERM-REGISTRY.md",
+   "line": 1424,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "**Permitted aliases.** *the reconciliation chain*; *chain state* for the field."
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/policy-candidates/TERM-REGISTRY.md",
+   "line": 1481,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "**Permitted aliases.** *bounded mission*."
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/policy-candidates/TERM-REGISTRY.md",
+   "line": 1530,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "**Permitted aliases.** *envelope* (after first use)."
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/policy-candidates/TERM-REGISTRY.md",
+   "line": 1569,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "**Permitted aliases.** *attention queue* for the collection."
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/policy-candidates/TERM-REGISTRY.md",
+   "line": 1617,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "**Permitted aliases.** *packet* (after first use); *governed context packet*."
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/provider-route-messages-api-entry/SEMANTIC-DELTA.md",
+   "line": 41,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "aliases into the new substrate's namespace.\" The entry therefore keeps PR"
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/provider-route-messages-api-entry/reviews/R-PROVIDER-ROUTE-MESSAGES-API-ENTRY-2-RAW.md",
+   "line": 202,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "aliases into the new substrate's namespace.\" (general-contract.md:231-235)."
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/rfcs/RFC-0004/execution-record.md",
+   "line": 102,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "| work item identity + substrate alias | R | Substrate-neutral identity primary; `bead_id` as alias (RFC4-6). Unattributable runs are admissible only rendered as unattributed execution noise, never dropped [Observed: vision.md anchoring mandate] |"
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/rfcs/RFC-0004/general-contract.md",
+   "line": 176,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "substrate-qualified aliases of the substrate-neutral identity, never as the"
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/rfcs/RFC-0004/general-contract.md",
+   "line": 235,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "substrate-native aliases into the new substrate's namespace."
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/rfcs/RFC-0004/named-adapters.md",
+   "line": 372,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "`bead_id` as its substrate-qualified alias, RFC4-6);"
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/rfcs/RFC-0008/identity-authority-materialization.md",
+   "line": 112,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "| Work item (substrate alias \"bead\"), incl. epics | Work item, scheduler-issued, mirrored never minted (RFC1-5; RFC4-15) |"
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/round-2026-08/OWNER-ROUND-CHARTER.md",
+   "line": 677,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "permitted aliases"
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/round-2026-08/TERM-MIGRATION-REPORT.md",
+   "line": 376,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "**permitted aliases of one another** (recorded at registry T-16) rather than"
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/round-2026-08/TERM-MIGRATION-REPORT.md",
+   "line": 523,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "aliases rather than resolved, because RFC2-25 is digest-bound."
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/round-2026-08/reviews/RB-3-anti-rot-RAW.md",
+   "line": 531,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "authority, Permitted aliases, Deprecated synonyms, Related but distinct,"
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/round-2026-08b/reviews/RC-3-vocabulary-RAW.md",
+   "line": 461,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "`:689-690` demotes the other spelling: \"**Permitted aliases.** *rendering"
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/round-2026-08b/reviews/RC-3-vocabulary-RAW.md",
+   "line": 473,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "authority's spelling an alias. This contradicts the registry's own banner"
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/round-2026-08b/reviews/RC-3-vocabulary-RAW.md",
+   "line": 479,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "**C3 \u2014 the same seam is simultaneously \"settled by alias\" and \"an open owner"
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/round-2026-08b/reviews/RC-3-vocabulary-RAW.md",
+   "line": 710,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "*rendering tier* to an alias, while the owning authority is RFC2-25 in"
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/round-2026-08b/reviews/RC-3-vocabulary-RAW.md",
+   "line": 718,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "alias, and add one sentence recording P-18(c) as open."
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/round-2026-08c/PUBLIC-VOCABULARY-COMPREHENSION-REPORT.md",
+   "line": 77,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "alias of itself (RD-3 finding **F-1**), which hid which of the two competing"
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/round-2026-08c/reviews/RD-3-vocabulary-RAW.md",
+   "line": 532,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "**Finding F-1 \u2014 T-16 lists its own title as a permitted alias.** [Observed] `:900`: *\"**Permitted"
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/round-2026-08c/reviews/RD-3-vocabulary-RAW.md",
+   "line": 533,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "aliases.** *rendering tier* (the corpus's own term \u2014 see the migration report; both spellings are in"
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/round-2026-08c/reviews/RD-3-vocabulary-RAW.md",
+   "line": 534,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "use).\"* The entry is titled *Rendering tier*. An entry cannot be an alias of itself. This is the"
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/round-2026-08c/reviews/RD-3-vocabulary-RAW.md",
+   "line": 535,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "mechanical residue of the rename: the heading was changed to the majority name and the alias field,"
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/round-2026-08c/reviews/RD-3-vocabulary-RAW.md",
+   "line": 536,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "which previously listed the majority name as an alias of an *evidence tier* head, was not."
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/round-2026-08c/reviews/RD-3-vocabulary-RAW.md",
+   "line": 709,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "T-31's absence from \u00a75 (A-3); and T-16's self-alias at `:900` (F-1)."
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/round-2026-08d/reviews/RD-16-vocabulary-RAW.md",
+   "line": 116,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "**(a) CG-23 misses inflected and line-wrapped forms.** Its matcher is `re.compile(r\"\\b\" + re.escape(name) + r\"\\b\", re.I)` over the pre-drawer body. Running it myself against `OVERVIEW.md`'s default-path body: `\\bProject Genome\\b` \u2192 **False**, `\\bProject\\s+Geno"
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/round-2026-08d/reviews/RD-16-vocabulary-RAW.md",
+   "line": 161,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "**Repair.** Apply the ruling: *rendering tier* in \u00a71's table, the rule, and all three cross-references; keep *evidence tier* only in T-16's parenthetical, alias line, and conflict note."
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/round-2026-08e/VOCAB-OVERVIEW-DELTA.md",
+   "line": 44,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "| **RD-16 f7** | T-16's own ruling applied: **rendering tier** leads in \u00a71's table, \u00a71's rule, and all three cross-references (T-06, T-14, T-15) and T-27's example; *evidence tier* survives only in T-16's heading parenthetical, conflict note, and alias line | "
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/round-2026-08e/VOCAB-OVERVIEW-DELTA.md",
+   "line": 184,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "| H-4 | **What a widened CG-23 would find in `OVERVIEW.md`: nothing.** [Observed] A whitespace-flexible, stem-tolerant sweep of the repaired file over all **20** advanced terms returns **zero** hits \u2014 the three the current matcher misses at baseline (`Project "
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/REVIEW-BRIEF.md",
+   "line": 98,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "Use evidence/EVIDENCE-SELECTION.json for exact copied-file/alias mappings"
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/COMPATIBILITY-SETTLEMENT.md",
+   "line": 23,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "selected source/byte evidence and alias mapping are in ../evidence/."
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/evidence/README.md",
+   "line": 51,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "adoption act by path and routes the byte receipt to its included alias."
+  },
+  {
+   "file": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/evidence/source-return/SOURCE-DECISION-RECONCILIATION-CURATED.md",
+   "line": 4,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "> act path; the byte-receipt route now names the included alias. No source"
+  },
+  {
+   "file": ".syzygy/governance/contracts/rfcs/RFC-0004/execution-record.md",
+   "line": 102,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "| work item identity + substrate alias | R | Substrate-neutral identity primary; `bead_id` as alias (RFC4-6). Unattributable runs are admissible only rendered as unattributed execution noise, never dropped [Observed: vision.md anchoring mandate] |"
+  },
+  {
+   "file": ".syzygy/governance/contracts/rfcs/RFC-0004/general-contract.md",
+   "line": 176,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "substrate-qualified aliases of the substrate-neutral identity, never as the"
+  },
+  {
+   "file": ".syzygy/governance/contracts/rfcs/RFC-0004/general-contract.md",
+   "line": 235,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "substrate-native aliases into the new substrate's namespace."
+  },
+  {
+   "file": ".syzygy/governance/contracts/rfcs/RFC-0004/named-adapters.md",
+   "line": 372,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "`bead_id` as its substrate-qualified alias, RFC4-6);"
+  },
+  {
+   "file": ".syzygy/governance/contracts/rfcs/RFC-0008/identity-authority-materialization.md",
+   "line": 112,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "| Work item (substrate alias \"bead\"), incl. epics | Work item, scheduler-issued, mirrored never minted (RFC1-5; RFC4-15) |"
+  },
+  {
+   "file": ".syzygy/governance/decisions/PROCESS-LESSONS.md",
+   "line": 18,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "- **Interactive aliases hang agents.** `cp`, `mv`, and `rm` are aliased to"
+  },
+  {
+   "file": ".syzygy/governance/decisions/SURFACE-DECISION-RECORD.md",
+   "line": 215,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "Materialization record (immutable, one-way) \u00b7 Work item (substrate alias"
+  },
+  {
+   "file": ".syzygy/governance/policies/craft-and-care/interfaces-and-dependencies.md",
+   "line": 80,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "qualified aliases, never primary keys (e.g. the abstract work identity"
+  },
+  {
+   "file": ".syzygy/governance/policies/craft-and-care/interfaces-and-dependencies.md",
+   "line": 82,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "substrate-qualified alias) [Inferred \u2014 from the typed-adapter model;"
+  },
+  {
+   "file": ".syzygy/map/topology-candidates/08-adapter-external-systems.md",
+   "line": 81,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "- `bead_id` and PR numbers are substrate-qualified aliases, never primary"
+  },
+  {
+   "file": "AGENTS.md",
+   "line": 219,
+   "predicate": "FORCE",
+   "retained": false,
+   "text": "`--force` keeps an output whose source is gone."
+  },
+  {
+   "file": "docs/PWB-IMPLEMENTATION-PLAN.md",
+   "line": 38,
+   "predicate": "FORCE",
+   "retained": false,
+   "text": "`tsc -b --force` for `build:poc`, exactly as today. (Stale since"
+  },
+  {
+   "file": "docs/PWB-IMPLEMENTATION-PLAN.md",
+   "line": 41,
+   "predicate": "FORCE",
+   "retained": false,
+   "text": "`tsc -b`, with no `--force`.)"
+  },
+  {
+   "file": "docs/README.md",
+   "line": 134,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "| Live test no-spawn | 3 | 2026-10-07 | Pre-merge review of the live verification test reading an operator-reported JUnit file instead of running pytest, its import-closure source check, and the `syzygy-z774` repairs (PR #386, `syzygy-hjuz`); implementation, b"
+  },
+  {
+   "file": "docs/README.md",
+   "line": 155,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "| Greenfield-parity implementation | 74 | 2026-10-21 \u2192 2026-10-27 | Pre-merge CC-REV-1 reviews of greenfield-parity beads under GP-Q0 of `decisions/OWNER-DIRECTION-GREENFIELD-PARITY-ANSWERS-2026-10-21.md`: the output-changing beads the owner approved in part 3"
+  },
+  {
+   "file": "docs/design/POLARIS-M12-RETAINED-EVALUATIONS-FUNNEL.md",
+   "line": 1827,
+   "predicate": "APP_TC",
+   "retained": false,
+   "text": "`tsc --noEmit -p apps/three-surface-poc`, or the app reports phantom errors;"
+  },
+  {
+   "file": "docs/design/POLARIS-M12-RETAINED-EVALUATIONS-FUNNEL.md",
+   "line": 1828,
+   "predicate": "FORCE",
+   "retained": false,
+   "text": "`build:poc` keeps `tsc -b --force`. Slice 2's page measurement needs a"
+  },
+  {
+   "file": "docs/design/POLARIS-M6-GENERATOR-HONESTY-FUNNEL.md",
+   "line": 255,
+   "predicate": "FORCE",
+   "retained": false,
+   "text": "`build:poc` (`package.json` line 15) is `tsc -b --force` over four projects,"
+  },
+  {
+   "file": "docs/design/POLARIS-M6-GENERATOR-HONESTY-FUNNEL.md",
+   "line": 677,
+   "predicate": "FORCE",
+   "retained": false,
+   "text": "`packages/polaris-generation-core` in its `tsc -b --force` list. This changes"
+  },
+  {
+   "file": "docs/design/POLARIS-M9-ONE-IDENTITY-FUNNEL.md",
+   "line": 668,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "| 6 One claim identity | `apps/three-surface-poc/src/trajectory.ts`, `orrery.ts`, `exact-tables.ts`, `routes.ts`, `materialize-action.ts`, and `packages/three-surface-poc-core/src/model.ts` for slice 6b, which makes the artifact identity the canonical join key"
+  },
+  {
+   "file": "docs/design/POLARIS-M9-ONE-IDENTITY-FUNNEL.md",
+   "line": 924,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "Orrery. Derive fragment ids from that identity, keeping the old ids as aliases"
+  },
+  {
+   "file": "docs/design/POLARIS-M9-ONE-IDENTITY-FUNNEL.md",
+   "line": 928,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "cross-surface resolution sweep fails. (b) Remove the alias for one renamed"
+  },
+  {
+   "file": "docs/design/POLARIS-M9-ONE-IDENTITY-FUNNEL.md",
+   "line": 1508,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "| F10 slice 6's model.ts membership is self-contradictory | non-blocking | **CONFIRMED**, and resolved the way the review reads it. Slice 6b makes the artifact identity the canonical join key and derives fragment ids from it while keeping the old ids as aliase"
+  },
+  {
+   "file": "docs/evidence/argv-guards-round-1-dispositions-2026-10-25.md",
+   "line": 94,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "condition. R-X6 and R-X6b (a package.json `imports` alias to the dossier"
+  },
+  {
+   "file": "docs/evidence/argv-guards-round-1-dispositions-2026-10-25.md",
+   "line": 105,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "`imports` alias and a runtime condition ordered ahead of `import` are not"
+  },
+  {
+   "file": "docs/evidence/argv-guards-round-1-dispositions-2026-10-25.md",
+   "line": 113,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "import in `cli.ts`) and R-Y7 (an extra call through an alias) both pass 74/74."
+  },
+  {
+   "file": "docs/evidence/argv-table-round-1-dispositions-2026-10-25.md",
+   "line": 116,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "- OE4, a `createRequire` under an alias in `main.ts`;"
+  },
+  {
+   "file": "docs/evidence/consent-live-module-round-1-dispositions-2026-10-24.md",
+   "line": 152,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "reviewer's R5, which points the Vitest alias at `src/index.ts`, survives the"
+  },
+  {
+   "file": "docs/evidence/consent-live-module-round-1-dispositions-2026-10-24.md",
+   "line": 156,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "key in the Vitest alias map resolves to the `src/` module its package's"
+  },
+  {
+   "file": "docs/evidence/guard-pins-followup-2-review-2026-10-27/r2/f1-r2-replacement.txt",
+   "line": 1,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "* - `npm:`: an alias. npm-package-arg 12.0.2 accepts only a registry spec after `npm:`, and npm 11.5.1 fetches that spec from"
+  },
+  {
+   "file": "docs/evidence/guard-pins-followup-2-review-2026-10-27/r2/f1-r2-replacement.txt",
+   "line": 2,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "*   the registry unless the alias is declared under a workspace's own name and either the root's manifest declares it or the"
+  },
+  {
+   "file": "docs/evidence/guard-pins-followup-2-review-2026-10-27/r2/f1-r2-replacement.txt",
+   "line": 3,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "*   alias's range is `*`, absent or one that workspace's version satisfies; then npm links the workspace, as for a plain range"
+  },
+  {
+   "file": "docs/evidence/guard-pins-followup-2-review-2026-10-27/r2/f1-r2-replacement.txt",
+   "line": 6,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "*   a workspace package's name, which other package managers can link locally; every alias is refused, failing closed."
+  },
+  {
+   "file": "docs/evidence/guard-pins-followup-2-review-2026-10-27/r2/n2-resolver-answers.txt",
+   "line": 6,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "R541B-ANSWER [\"U6 @syzygy workspace name declared as an alias npm does not link\",\"@syzygy/slib\",\"packages/slib/src/index.ts\"]"
+  },
+  {
+   "file": "docs/evidence/guard-pins-followup-2-review-2026-10-27/r2/pr-paths-ever.txt",
+   "line": 7,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "docs/evidence/syzygy-bpyt-8-39/npm-alias-probe.json"
+  },
+  {
+   "file": "docs/evidence/guard-pins-followup-2-review-2026-10-27/r2/pr-paths.txt",
+   "line": 7,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "docs/evidence/syzygy-bpyt-8-39/npm-alias-probe.json"
+  },
+  {
+   "file": "docs/evidence/guard-pins-followup-2-review-2026-10-27/r3/branch-paths.txt",
+   "line": 7,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "docs/evidence/syzygy-bpyt-8-39/npm-alias-probe.json"
+  },
+  {
+   "file": "docs/evidence/guard-pins-followup-2-review-2026-10-27/r3/f1-r3-replacement.txt",
+   "line": 1,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "* - `npm:`: an alias. npm-package-arg 12.0.2 accepts only a registry spec after `npm:`. npm 11.5.1 skips each declaration in the"
+  },
+  {
+   "file": "docs/evidence/guard-pins-followup-2-review-2026-10-27/r3/f1-r3-replacement.txt",
+   "line": 3,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "*   npm fetches the alias's spec from the registry unless that declaration is under a workspace's own name and the alias's range"
+  },
+  {
+   "file": "docs/evidence/guard-pins-followup-2-review-2026-10-27/r3/f1-r3-replacement.txt",
+   "line": 6,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "*   carry a workspace package's name, which other package managers can link locally; every alias is refused, failing closed."
+  },
+  {
+   "file": "docs/evidence/guard-pins-followup-2-review-2026-10-27/r3/npmrc-sentinel-lane.txt",
+   "line": 6,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "out.json byte-equal to the committed npm-alias-probe.json: yes"
+  },
+  {
+   "file": "docs/evidence/guard-pins-followup-2-round-3-dispositions-2026-10-27.md",
+   "line": 34,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "testkit's `npm:` clause, which states what npm installs for an `npm:` alias."
+  },
+  {
+   "file": "docs/evidence/guard-pins-followup-2-round-3-dispositions-2026-10-27.md",
+   "line": 37,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "`npm:` alias is refused (failing closed), every workspace is"
+  },
+  {
+   "file": "docs/evidence/guard-pins-followup-2-round-3-dispositions-2026-10-27.md",
+   "line": 43,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "manifest and a workspace's manifest both declare the same alias (case Q1,"
+  },
+  {
+   "file": "docs/evidence/guard-pins-followup-2-round-3-dispositions-2026-10-27.md",
+   "line": 102,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "- **F1** (\"npm installs it from the registry\" is false: npm links an alias"
+  },
+  {
+   "file": "docs/evidence/guard-pins-followup-2-round-3-dispositions-2026-10-27.md",
+   "line": 109,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "git spec ending in a tarball extension and an unversioned `npm:` alias each"
+  },
+  {
+   "file": "docs/evidence/guard-pins-followup-2-round-3-dispositions-2026-10-27.md",
+   "line": 123,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "the alias target from the registry\". This does not hold when the"
+  },
+  {
+   "file": "docs/evidence/guard-pins-followup-2-round-3-dispositions-2026-10-27.md",
+   "line": 129,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "\"the `npm:` comment clause does not say that npm installs every alias from"
+  },
+  {
+   "file": "docs/evidence/guard-pins-followup-2-round-3-dispositions-2026-10-27.md",
+   "line": 165,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "the testkit until that bead lands. Every alias is refused, failing"
+  },
+  {
+   "file": "docs/evidence/guard-pins-followup-review-2026-10-27/main-changed-paths.txt",
+   "line": 37,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "docs/evidence/support-leaf-review-2026-10-27/round-1/egress-alias-check.json"
+  },
+  {
+   "file": "docs/evidence/guard-pins-followup-review-2026-10-27/main-changed-paths.txt",
+   "line": 38,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "docs/evidence/support-leaf-review-2026-10-27/round-1/egress-alias-check.log"
+  },
+  {
+   "file": "docs/evidence/guard-pins-followup-review-2026-10-27/main-changed-paths.txt",
+   "line": 93,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "docs/evidence/support-leaf-review-2026-10-27/round-2/alias-subpath-probe.json"
+  },
+  {
+   "file": "docs/evidence/guard-pins-followup-review-2026-10-27/main-changed-paths.txt",
+   "line": 179,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "docs/evidence/syzygy-bpyt-6-3/egress-alias-check.py"
+  },
+  {
+   "file": "docs/evidence/guard-pins-followup-round-1-dispositions-2026-10-27.md",
+   "line": 93,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "- **N2** (three refusals the comment names have no row): an `npm:` alias of a"
+  },
+  {
+   "file": "docs/evidence/guard-pins-followup-round-1-dispositions-2026-10-27.md",
+   "line": 97,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "URL row pins. It is false of the `npm:` registry alias. Corrected here:"
+  },
+  {
+   "file": "docs/evidence/guard-pins-followup-round-1-dispositions-2026-10-27.md",
+   "line": 117,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "alias from the registry). No sentence is false. A comment-only rewrite is"
+  },
+  {
+   "file": "docs/evidence/guard-pins-review-2026-10-27/pr-body-live.txt",
+   "line": 3,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "- `workspace-reach.test.ts` gains the reviewer's three `#` alias rows:"
+  },
+  {
+   "file": "docs/evidence/guard-pins-review-2026-10-27/pr-body-live.txt",
+   "line": 69,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "| RV-T18 `file:` alias `dossier` imported by `main.ts` | survives 27/27 | killed, 1 row |"
+  },
+  {
+   "file": "docs/evidence/guard-pins-review-2026-10-27/pr-body-live.txt",
+   "line": 87,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "- `link:`, `workspace:`, `npm:` and path aliases imported by `apps/syzygy/src/main.ts`;"
+  },
+  {
+   "file": "docs/evidence/guard-pins-review-2026-10-27/pr-body-live.txt",
+   "line": 88,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "- a `file:` alias's `/argv` subpath;"
+  },
+  {
+   "file": "docs/evidence/guard-pins-review-2026-10-27/pr-body-live.txt",
+   "line": 90,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "- a `file:` alias of `polaris-generation-consent` imported by a module the CLI reaches (the island guard);"
+  },
+  {
+   "file": "docs/evidence/guard-pins-round-1-dispositions-2026-10-27.md",
+   "line": 101,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "- An `npm:` alias of a registry package is refused too. That is the bead's"
+  },
+  {
+   "file": "docs/evidence/guard-pins-round-1-dispositions-2026-10-27.md",
+   "line": 133,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "versions, local tarball names, remote tarball URLs, `npm:` aliases of"
+  },
+  {
+   "file": "docs/evidence/http-host-round-1-dispositions-2026-10-27.md",
+   "line": 101,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "aliased to another binding in the shim, and R14, a dropped type re-export,"
+  },
+  {
+   "file": "docs/evidence/p110-span-install-corrections-2026-10-21.md",
+   "line": 51,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "| The fresh verifier compared only redacted rows in a mixed request | [Observed] Independent review at `01acff07` reproduced an ordinary self-hashing replacement reaching the local provider stub despite the fresh pinned corpus. `1cdb7480` binds the complete va"
+  },
+  {
+   "file": "docs/evidence/p110-span-install-corrections-2026-10-21.md",
+   "line": 87,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "their opaque identifier/path aliases; exclusion reasons and multiplicity stay"
+  },
+  {
+   "file": "docs/evidence/p110-span-install-corrections-2026-10-21.md",
+   "line": 88,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "bound. The pipeline uses the fresh records, retaining only those opaque aliases"
+  },
+  {
+   "file": "docs/evidence/p110-span-install-corrections-2026-10-21.md",
+   "line": 105,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "and body-free opaque aliases, while substituting fresh branded records."
+  },
+  {
+   "file": "docs/evidence/polaris-understanding-reconciliation-2026-09-28/HISTORY-READING.md",
+   "line": 239,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "- Normalizing a later package's path: an aliased later claim can only"
+  },
+  {
+   "file": "docs/evidence/polaris-understanding-reconciliation-2026-09-28/HISTORY-READING.md",
+   "line": 339,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "normalization and an aliased-claimant fixture. N1, an untested"
+  },
+  {
+   "file": "docs/evidence/polaris-understanding-reconciliation-2026-09-28/HISTORY-REVIEW-10-RAW.md",
+   "line": 84,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "| R7 N2 | two-claimant refusal (displacement rule withdrawn) | Holds for identical spellings. An aliased spelling escapes (M1) [Observed] |"
+  },
+  {
+   "file": "docs/evidence/polaris-understanding-reconciliation-2026-09-28/HISTORY-REVIEW-10-RAW.md",
+   "line": 139,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "aliased package can never grant, because the recorder never looks up its"
+  },
+  {
+   "file": "docs/evidence/polaris-understanding-reconciliation-2026-09-28/HISTORY-REVIEW-10-RAW.md",
+   "line": 150,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "are not already canonical as failing (it grants nothing). Add an aliased"
+  },
+  {
+   "file": "docs/evidence/polaris-understanding-reconciliation-2026-09-28/HISTORY-REVIEW-10-RAW.md",
+   "line": 154,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "the same spelling\". Say that an aliased spelling is not detected."
+  },
+  {
+   "file": "docs/evidence/polaris-understanding-reconciliation-2026-09-28/HISTORY-REVIEW-11-RAW.md",
+   "line": 34,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "(tool `:68-72`). So every alias of one file the tool will read"
+  },
+  {
+   "file": "docs/evidence/polaris-understanding-reconciliation-2026-09-28/HISTORY-REVIEW-11-RAW.md",
+   "line": 86,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "| R10 M1 | path normalization and an aliased-claimant fixture | Holds (`:319`; the selftest's second package spells `\u2026/./proposal.md`; row 74 kills dropping `normpath`) [Observed] |"
+  },
+  {
+   "file": "docs/evidence/polaris-understanding-reconciliation-2026-09-28/HISTORY-REVIEW-14-RAW.md",
+   "line": 32,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "(`hist14/bf/fixture.py`, `hist14/bf/alias.py`), and a brute-force model over"
+  },
+  {
+   "file": "docs/evidence/polaris-understanding-reconciliation-2026-09-28/HISTORY-REVIEW-14-RAW.md",
+   "line": 61,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "aliased claim. They are nonetheless exactly the classes the brief names."
+  },
+  {
+   "file": "docs/evidence/polaris-understanding-reconciliation-2026-09-28/HISTORY-REVIEW-14-RAW.md",
+   "line": 113,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "keys, so an aliased key can only be a kept claim; a kept (x, x) step adds no"
+  },
+  {
+   "file": "docs/evidence/polaris-understanding-reconciliation-2026-09-28/HISTORY-REVIEW-15-RAW.md",
+   "line": 32,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "`hist14/bf/`. I copied `fixture.py`, `alias.py` and `bf.py` into `hist15/bf/` with"
+  },
+  {
+   "file": "docs/evidence/polaris-understanding-reconciliation-2026-09-28/HISTORY-REVIEW-15-RAW.md",
+   "line": 43,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "[Observed] M3 (own row). With `alias.py` on the new tool, a package naming"
+  },
+  {
+   "file": "docs/evidence/polaris-understanding-reconciliation-2026-09-28/HISTORY-REVIEW-15-RAW.md",
+   "line": 116,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "drift`), unperformed, partial, an own-row alias (M3) and backdating (P5). The"
+  },
+  {
+   "file": "docs/evidence/polaris-understanding-reconciliation-2026-09-28/HISTORY-REVIEW-15-RAW.md",
+   "line": 145,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "normalized relative paths, so an aliased key can only be a kept claim. A kept"
+  },
+  {
+   "file": "docs/evidence/polaris-understanding-reconciliation-2026-09-28/HISTORY-REVIEW-16-RAW.md",
+   "line": 75,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "as claims (row 120 kills its removal; the drifted fixture includes a `./` alias)."
+  },
+  {
+   "file": "docs/evidence/skipped-population-review-2026-10-25/skip-sweep-head.txt",
+   "line": 8,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "files swept: 12; hits: {'modifier': 5, 'runtime': 1, 'guarded': 1, 'aliased': 0}"
+  },
+  {
+   "file": "docs/evidence/support-followups-review-2026-10-27/r2/dirscan-tests.txt",
+   "line": 2,
+   "predicate": "BUILD_OUTPUT",
+   "retained": false,
+   "text": "apps/three-surface-poc/src/build-output.test.ts"
+  },
+  {
+   "file": "docs/evidence/support-leaf-review-2026-10-27/round-1/pr-body.txt",
+   "line": 45,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "Changed repository artifacts that are not outputs of the above: `package-lock.json` (+17 lines, the workspace entry, no external dependency), `package.json` build/typecheck lists, `vitest.config.ts` alias and project, the workspace dependency and tsconfig refe"
+  },
+  {
+   "file": "docs/evidence/support-leaf-review-2026-10-27/round-2/pr-body.txt",
+   "line": 41,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "Changed repository artifacts that are not outputs of the above: `package-lock.json` (+17 lines, the workspace entry, no external dependency), `package.json` build/typecheck lists, `vitest.config.ts` alias and project, the workspace dependency and tsconfig refe"
+  },
+  {
+   "file": "docs/evidence/support-leaf-review-2026-10-27/round-2/pr-body.txt",
+   "line": 47,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- **F1, blocking: fixed.** The alias map of `no-egress.test.ts` gains `'@syzygy/support': src('packages/support/src/index.ts')`. `egress-alias-check.py` runs the proof in four arms of one built clone: a support source that binds a loopback UDP socket (`AF_INET"
+  },
+  {
+   "file": "docs/evidence/support-leaf-review-2026-10-27/round-2/pr-body.txt",
+   "line": 57,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "`docs/evidence/syzygy-bpyt-6-3/`: `dc3-support-module-differential-2026-10-25.json` (the record: subject commits, tool digests, every figure above, the 24 mutants with `old`/`new` fragments), `probe-output.json`, and the tools `sweep.py`, `site-equivalence.py`"
+  },
+  {
+   "file": "docs/evidence/support-leaf-review-2026-10-27/round-2/pr-body.txt",
+   "line": 72,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "Tests: +22 ~2 -0 (9 package tests from the first round, 13 purity tests from this repair; the alias line in `no-egress.test.ts` changes no assertion and is not counted)"
+  },
+  {
+   "file": "docs/evidence/support-leaf-review-2026-10-27/round-2/pr-body.txt",
+   "line": 80,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "[Observed] Test delta against main `546f1ff0`, by `vitest list` title and file on both trees: 242 files / 5,333 collected tests at the head against 239 / 5,311 at main; the head adds 22 and removes 0 (`support-purity.test.ts` 13, `sha256.test.ts` 4, `deep-free"
+  },
+  {
+   "file": "docs/evidence/support-leaf-review-2026-10-27/round-2/rec-n.txt",
+   "line": 371,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "n1.disposition: \"both sites are left in place by this repair and are not \\\"left on purpose by the sweep\\\": the sweep did not see them. Replacing them edits two more production-reachable files, which needs its own differential and a review round, and the round-"
+  },
+  {
+   "file": "docs/evidence/support-leaf-review-2026-10-27/round-2/subject-paths.txt",
+   "line": 29,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "docs/evidence/syzygy-bpyt-6-3/egress-alias-check.py"
+  },
+  {
+   "file": "docs/evidence/support-leaf-round-2-dispositions-2026-10-27.md",
+   "line": 84,
+   "predicate": "DIST_DECL",
+   "retained": false,
+   "text": "failed with 32 unresolved imports; with a stale `dist/`, it proved the old"
+  },
+  {
+   "file": "docs/evidence/support-leaf-round-2-dispositions-2026-10-27.md",
+   "line": 86,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "aliases the package to its source. Round 2 confirmed it. Eight support"
+  },
+  {
+   "file": "docs/evidence/support-leaf-round-2-dispositions-2026-10-27.md",
+   "line": 147,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "- **N10** (the S10 alias map can drift from a package's real entry with the"
+  },
+  {
+   "file": "docs/evidence/support-leaf-round-2-dispositions-2026-10-27.md",
+   "line": 148,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "proof green): this predates the PR and affects all ten aliases. Filed as"
+  },
+  {
+   "file": "docs/evidence/support-leaf-round-2-dispositions-2026-10-27.md",
+   "line": 149,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "`syzygy-bpyt.6.14`, item 2: derive or assert the aliases from each"
+  },
+  {
+   "file": "docs/evidence/support-leaf-round-2-dispositions-2026-10-27.md",
+   "line": 205,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "re-derived, and the 13 purity tests round 2 counted. The alias line in"
+  },
+  {
+   "file": "docs/evidence/syzygy-bpyt-7-2/vitest-full.files.txt",
+   "line": 231,
+   "predicate": "BUILD_OUTPUT",
+   "retained": false,
+   "text": "\u2713 |@syzygy/three-surface-poc-app| apps/three-surface-poc/src/build-output.test.ts (1 test) 49174ms"
+  },
+  {
+   "file": "docs/evidence/test-clocks-review-2026-10-27/r2/results/main-moved-paths.txt",
+   "line": 423,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "docs/evidence/support-leaf-review-2026-10-27/round-1/egress-alias-check.json"
+  },
+  {
+   "file": "docs/evidence/test-clocks-review-2026-10-27/r2/results/main-moved-paths.txt",
+   "line": 424,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "docs/evidence/support-leaf-review-2026-10-27/round-1/egress-alias-check.log"
+  },
+  {
+   "file": "docs/evidence/test-clocks-review-2026-10-27/r2/results/main-moved-paths.txt",
+   "line": 479,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "docs/evidence/support-leaf-review-2026-10-27/round-2/alias-subpath-probe.json"
+  },
+  {
+   "file": "docs/evidence/test-clocks-review-2026-10-27/r2/results/main-moved-paths.txt",
+   "line": 565,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "docs/evidence/syzygy-bpyt-6-3/egress-alias-check.py"
+  },
+  {
+   "file": "docs/evidence/test-timeouts-review-2026-10-27/r1/all-keys.txt",
+   "line": 1,
+   "predicate": "BUILD_OUTPUT",
+   "retained": false,
+   "text": "apps/three-surface-poc/src/build-output.test.ts:62"
+  },
+  {
+   "file": "docs/evidence/test-timeouts-review-2026-10-27/r1/cite-lookup-all.txt",
+   "line": 2,
+   "predicate": "BUILD_OUTPUT",
+   "retained": false,
+   "text": "apps/three-surface-poc/src/build-output.test.ts:62 test value 240000 | title: re-emits ignored JavaScript before the launcher executes it"
+  },
+  {
+   "file": "docs/evidence/test-timeouts-review-2026-10-27/r1/cite-lookup-all.txt",
+   "line": 3,
+   "predicate": "FORCE",
+   "retained": false,
+   "text": "reason: // A private copy and `npm ci` (a few seconds from a warm cache), then two // sequential `tsc -b --force` builds (~7.5s each on an unloaded machine). // The forced rebuild itself is the trust boundary and must stay. 15s // (syzygy-gk9) and then 60s tim"
+  },
+  {
+   "file": "docs/evidence/test-timeouts-review-2026-10-27/r1/cite-lookup-all.txt",
+   "line": 4,
+   "predicate": "BUILD_OUTPUT",
+   "retained": false,
+   "text": "record docs/evidence/load-timeouts-gb4l-2026-10-03.json: title hits 25, strings naming 'build-output.test.ts': 34"
+  },
+  {
+   "file": "docs/evidence/test-timeouts-review-2026-10-27/r1/cite-lookup-all.txt",
+   "line": 5,
+   "predicate": "BUILD_OUTPUT",
+   "retained": false,
+   "text": "{\"at\": [\"before\", \"perTest\", \"build-output.test.ts > re-emits ignored JavaScript before the launcher executes it\"], \"string\": \"build-output.test.ts > re-emits ignored JavaScript before the launcher executes it\", \"numericSiblings\": {\"executions\": 46, \"worstMs\":"
+  },
+  {
+   "file": "docs/evidence/test-timeouts-review-2026-10-27/r1/cite-lookup-all.txt",
+   "line": 6,
+   "predicate": "BUILD_OUTPUT",
+   "retained": false,
+   "text": "{\"at\": [\"after\", \"perTest\", \"build-output.test.ts > re-emits ignored JavaScript before the launcher executes it\"], \"string\": \"build-output.test.ts > re-emits ignored JavaScript before the launcher executes it\", \"numericSiblings\": {\"executions\": 20, \"worstMs\": "
+  },
+  {
+   "file": "docs/evidence/test-timeouts-review-2026-10-27/r1/cite-lookup-all.txt",
+   "line": 10,
+   "predicate": "BUILD_OUTPUT",
+   "retained": false,
+   "text": "{\"at\": [\"after\", \"fullRuns\", 0, \"measured\", \"inScope\", \"build-output.test.ts\", 0, \"title\"], \"string\": \"re-emits ignored JavaScript before the launcher executes it\", \"numericSiblings\": {\"durationMs\": 49216}}"
+  },
+  {
+   "file": "docs/evidence/test-timeouts-review-2026-10-27/r1/cite-lookup-sample.txt",
+   "line": 113,
+   "predicate": "BUILD_OUTPUT",
+   "retained": false,
+   "text": "apps/three-surface-poc/src/build-output.test.ts:62 test value 240000 | title: re-emits ignored JavaScript before the launcher executes it"
+  },
+  {
+   "file": "docs/evidence/test-timeouts-review-2026-10-27/r1/cite-lookup-sample.txt",
+   "line": 114,
+   "predicate": "FORCE",
+   "retained": false,
+   "text": "reason: // A private copy and `npm ci` (a few seconds from a warm cache), then two // sequential `tsc -b --force` builds (~7.5s each on an unloaded machine). // The forced rebuild itself is the trust boundary and must stay. 15s // (syzygy-gk9) and then 60s tim"
+  },
+  {
+   "file": "docs/evidence/test-timeouts-review-2026-10-27/r1/cite-lookup-sample.txt",
+   "line": 115,
+   "predicate": "BUILD_OUTPUT",
+   "retained": false,
+   "text": "record docs/evidence/load-timeouts-gb4l-2026-10-03.json: title hits 25, strings naming 'build-output.test.ts': 34"
+  },
+  {
+   "file": "docs/evidence/test-timeouts-review-2026-10-27/r1/cite-lookup-sample.txt",
+   "line": 116,
+   "predicate": "BUILD_OUTPUT",
+   "retained": false,
+   "text": "{\"at\": [\"before\", \"perTest\", \"build-output.test.ts > re-emits ignored JavaScript before the launcher executes it\"], \"string\": \"build-output.test.ts > re-emits ignored JavaScript before the launcher executes it\", \"numericSiblings\": {\"executions\": 46, \"worstMs\":"
+  },
+  {
+   "file": "docs/evidence/test-timeouts-review-2026-10-27/r1/cite-lookup-sample.txt",
+   "line": 117,
+   "predicate": "BUILD_OUTPUT",
+   "retained": false,
+   "text": "{\"at\": [\"after\", \"perTest\", \"build-output.test.ts > re-emits ignored JavaScript before the launcher executes it\"], \"string\": \"build-output.test.ts > re-emits ignored JavaScript before the launcher executes it\", \"numericSiblings\": {\"executions\": 20, \"worstMs\": "
+  },
+  {
+   "file": "docs/evidence/test-timeouts-review-2026-10-27/r1/cite-lookup-sample.txt",
+   "line": 121,
+   "predicate": "BUILD_OUTPUT",
+   "retained": false,
+   "text": "{\"at\": [\"after\", \"fullRuns\", 0, \"measured\", \"inScope\", \"build-output.test.ts\", 0, \"title\"], \"string\": \"re-emits ignored JavaScript before the launcher executes it\", \"numericSiblings\": {\"durationMs\": 49216}}"
+  },
+  {
+   "file": "docs/evidence/test-timeouts-review-2026-10-27/r1/pr-body.txt",
+   "line": 37,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "- a test or suite registration carrying a timeout, in either form, through any modifier chain or `const` alias;"
+  },
+  {
+   "file": "docs/evidence/test-timeouts-review-2026-10-27/r1/pr-body.txt",
+   "line": 75,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "| alias resolution | M3 (`const` aliases resolve) |"
+  },
+  {
+   "file": "docs/evidence/test-timeouts-review-2026-10-27/r1/sample-keys.txt",
+   "line": 1,
+   "predicate": "BUILD_OUTPUT",
+   "retained": false,
+   "text": "apps/three-surface-poc/src/build-output.test.ts:62 test re-emits ignored JavaScript before the launcher executes it {'commits': [], 'measurements': ['docs/evidence/load-timeouts-gb4l-2026-10-03.json']}"
+  },
+  {
+   "file": "docs/evidence/test-timeouts-review-2026-10-27/r1/tools/fixture/forms.test.ts.txt",
+   "line": 22,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "live('cond alias suite', () => {}, 1013);"
+  },
+  {
+   "file": "docs/evidence/test-timeouts-review-2026-10-27/r1/tools/fixture/forms.test.ts.txt",
+   "line": 23,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "liveIt('cond alias test', () => {}, 1014);"
+  },
+  {
+   "file": "docs/evidence/test-timeouts-review-2026-10-27/r1/tools/fixture/forms.test.ts.txt",
+   "line": 24,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "letAlias('let alias', () => {}, 1015);"
+  },
+  {
+   "file": "docs/evidence/test-timeouts-review-2026-10-27/r1/tools/fixture/forms.test.ts.txt",
+   "line": 25,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "each('const curried alias %s', () => {}, 1016);"
+  },
+  {
+   "file": "docs/evidence/test-timeouts-review-2026-10-27/r2/pr-body.txt",
+   "line": 59,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "- a test or suite registration carrying a timeout, in either form, through any modifier chain or `const` alias;"
+  },
+  {
+   "file": "docs/evidence/test-timeouts-review-2026-10-27/r2/pr-body.txt",
+   "line": 97,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "| alias resolution | M3 (`const` aliases resolve) |"
+  },
+  {
+   "file": "docs/plans/2026-10-21-greenfield-parity-audit.md",
+   "line": 285,
+   "predicate": "FORCE",
+   "retained": false,
+   "text": "| 38 | dist as an executable input; tests emitted; --force; aliases | source condition; product-only build | residue | tooling sprawl | TB-2 |"
+  },
+  {
+   "file": "docs/plans/2026-10-21-greenfield-parity-audit.md",
+   "line": 285,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "| 38 | dist as an executable input; tests emitted; --force; aliases | source condition; product-only build | residue | tooling sprawl | TB-2 |"
+  },
+  {
+   "file": "docs/pursuits/2026-09-22-vision-pursuit.md",
+   "line": 60,
+   "predicate": "FORCE",
+   "retained": false,
+   "text": "| Daemon operability | S10 | weak | weak | none [Observed] | Zero request logging including the cause of a 500; build commit is not a status fact; tsc -b --force on every start (5.5 s); no timeouts or supervision |"
+  },
+  {
+   "file": "docs/pursuits/2026-09-22-vision-pursuit.md",
+   "line": 119,
+   "predicate": "FORCE",
+   "retained": false,
+   "text": "- **What.** No code. (a) Encode the P-74 Q7 WIP-one rule for PocModel as edges: syzygy-dov.2.1 -> .8.1 and .5.1 -> .8.1, and label the four PocModel-touching slices shared-model, so bd ready cannot offer two of them at once (today it offers .2.1, .5.1 and .8.1"
+  },
+  {
+   "file": "docs/pursuits/2026-09-22-vision-pursuit.md",
+   "line": 338,
+   "predicate": "FORCE",
+   "retained": false,
+   "text": "request log line per response carrying a 500's cause (S10-M1), drop `tsc -b --force` from"
+  },
+  {
+   "file": "docs/reviews/R-CAPTURE-TEST-ARTIFACT-NO-SPAWN-2-RAW.md",
+   "line": 44,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "| 3 | REVISE (AC5): source check missed `getBuiltinModule`; M6 killed incidentally | **Repaired as specified; a residual of the same class remains (new finding 1)** | [Observed] A TypeScript-AST check now forbids these identifiers: `getBuiltinModule`, `dlopen`"
+  },
+  {
+   "file": "docs/reviews/R-CAPTURE-TEST-ARTIFACT-NO-SPAWN-3-RAW.md",
+   "line": 94,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "alias or a namespace import.**"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-ACT-FAMILIES-1-RAW.md",
+   "line": 137,
+   "predicate": "FORCE",
+   "retained": true,
+   "text": "rebuilt with `tsc -b --force` afterwards and the edit confirmed gone (`grep -c` of the original line: 1)."
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-ACT-FAMILIES-1-RAW.md",
+   "line": 154,
+   "predicate": "FORCE",
+   "retained": true,
+   "text": "*Build check.* The `tsc -b --force` in item 7 that restored head's `dist` ran at 04:09. My item-9 replay was editing"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-ACT-FAMILIES-1-RAW.md",
+   "line": 157,
+   "predicate": "FORCE",
+   "retained": true,
+   "text": "`ebf5cbf4\u2026` and `6efd4c4e\u2026`, a fresh `npx tsc -b --force packages/polaris-generation-consent` in each tree left"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-ACT-FAMILIES-1-RAW.md",
+   "line": 161,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "(`vitest.config.ts` aliases the package to `src`)."
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-ARGV-FAIL-CLOSED-1-RAW.md",
+   "line": 21,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- one unnamed residual, a dependency alias;"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-ARGV-FAIL-CLOSED-1-RAW.md",
+   "line": 325,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- A dependency alias `dossier` (a `node_modules` symlink to `packages/polaris-dossier`) resolves to"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-ARGV-FAIL-CLOSED-1-RAW.md",
+   "line": 345,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- **RV-P6**, `workspace-reach.testkit.ts:62` without `|| target.startsWith('../')`. The row \"reads a # alias whose target leaves"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-ARGV-FAIL-CLOSED-1-RAW.md",
+   "line": 367,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "CI stays green. Then a `#` alias or export to `./build/index.js` reads as outside and the walk stops there, or"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-ARGV-FAIL-CLOSED-1-RAW.md",
+   "line": 371,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- In `workspace-reach.test.ts`'s \"reads a # alias %s as naming no module\" table:"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-ARGV-FAIL-CLOSED-1-RAW.md",
+   "line": 389,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- Node v24.6.0 resolves such an alias to `packages/polaris-dossier/dist/index.js`, the barrel (`node-probe.jsonl`)."
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-ARGV-FAIL-CLOSED-1-RAW.md",
+   "line": 399,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- **Failure scenario.** A later change adds a local alias dependency for a build or packaging reason and imports through it on the"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-ARGV-FAIL-CLOSED-1-RAW.md",
+   "line": 499,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- **Bar 7 (names), met.** Titles state behavior (\"reads a # alias whose target is another alias as naming no module\"). The"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-ARGV-GUARDS-1-RAW.md",
+   "line": 181,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "| R-X6b | the same alias (`#cli`) used from an intermediate module | survives | **survives** (N1) |"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-ARGV-GUARDS-1-RAW.md",
+   "line": 247,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- R-X6 (a package.json `imports` alias `#dossier` \u2192 `@syzygy/polaris-dossier`, imported from `main.ts`) and R-X6b (the same alias"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-ARGV-GUARDS-1-RAW.md",
+   "line": 248,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "used from an intermediate module) pass all 27 rows of `subpath-imports.test.ts`. Node loads the barrel through the alias, and"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-ARGV-GUARDS-1-RAW.md",
+   "line": 268,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "### N2 \u2014 The spec-copy lift sees only identifier calls; an extra namespace or aliased call passes (low)"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-ARGV-TABLE-1-RAW.md",
+   "line": 244,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- It lifts the aliases by syntax tree from `review.ts` at `ce322e1a` (before), `df6046a1` (was) and `e3e6a78b` (head), and uses"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-ARGV-TABLE-1-RAW.md",
+   "line": 251,
+   "predicate": "FORCE",
+   "retained": true,
+   "text": "- **Emitted JavaScript: real `tsc -b --force packages/polaris-dossier` builds at the three commits.** The lane used"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-ARGV-TABLE-1-RAW.md",
+   "line": 365,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- **OE4**, `createRequire` under an alias in `main.ts`. The exact built-in pin covers only `argv.ts` and `state-directory.ts`,"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-CAP1-DEAD-PLANES-1-RAW.md",
+   "line": 215,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "`./testing` and the root vitest config aliases it, so any production module can import it"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-CONSENT-LIVE-MODULE-1-RAW.md",
+   "line": 132,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- It asserts, under the root `vitest.config.ts` aliases:"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-CONSENT-LIVE-MODULE-1-RAW.md",
+   "line": 138,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "`screen.ts` and `gate-sources.ts` with `no-egress.test.ts`'s alias map, same keys and same order."
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-CONSENT-LIVE-MODULE-1-RAW.md",
+   "line": 144,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- So `package.json` `exports` (`./dist/live.js`, compiled from `src/live.ts`), the vitest alias and the esbuild alias"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-CONSENT-LIVE-MODULE-1-RAW.md",
+   "line": 166,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "| R5 (mine) | the vitest alias for consent `./live` pointed at `src/index.ts` | **survived** (see N6) |"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-CONSENT-LIVE-MODULE-1-RAW.md",
+   "line": 336,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- [Observed] My R5, the vitest alias pointed at `src/index.ts`, survives `island-boundary.test.ts`. The boundary test"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-CONSENT-LIVE-MODULE-1-RAW.md",
+   "line": 338,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- **Failure scenario:** the aliases drift. The suite then exercises the root under the `./live` name, while the shipped"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-CONSENT-LIVE-MODULE-1-RAW.md",
+   "line": 341,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- **Proposed fix:** under 8.23, add a test that every `@syzygy/*` key in `vitest.config.ts`'s alias map resolves to the"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-CONSENT-LIVE-MODULE-1-RAW.md",
+   "line": 404,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- Boundary: 10 recorded, plus my 5. 2 are mine that survive (N2's class) and 1 is the alias drift (N6)."
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-CONSENT-RECOGNITION-1-RAW.md",
+   "line": 90,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "| 22 | Importers of the testing entry (`git grep` at `c08a015d` over packages, apps, scripts and `vitest.config.ts`) | Only `*.test.ts`, `testing.ts` itself, the `vitest.config.ts:8` alias and the evidence scripts (via `dist/testing.js`) import it. None of the"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-CONSENT-RECOGNITION-2-RAW.md",
+   "line": 126,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "| 25 | Importers of the testing entry and the testkit at `09a9807a` (`git grep` over packages, apps, scripts, `vitest.config.ts`, `package.json`) | Only `*.test.ts`, `testing.ts` itself, the `vitest.config.ts:8` alias, a string key in `sync-child-process-guard"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-FIXTURE-PID-SWEEP-2-RAW.md",
+   "line": 131,
+   "predicate": "BUILD_OUTPUT",
+   "retained": true,
+   "text": "passed | 2 skipped (1113)\". The failure is `build-output.test.ts`, \"Test timed out in 240000ms.\" Afterwards there"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-1-RAW.md",
+   "line": 111,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "gives `../x`, `./x`, `.`, `..`, `/x` and `~/x` the type `directory`, the same type it gives `file:../x`. So a `../` alias is the"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-1-RAW.md",
+   "line": 112,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "same installation as RV-T18's `file:` alias, and leaving it out would leave N2's failure scenario one spelling away. It types a"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-1-RAW.md",
+   "line": 141,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "| RV-P3 | survives, \"Tests  52 passed (52)\" | killed, \"Tests  1 failed \\| 71 passed (72)\" | \"reads a # alias whose target is a module of its own package outside dist as naming no module\" |"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-1-RAW.md",
+   "line": 142,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "| RV-P4 | survives, 52/52 | killed, 1 of 72 | \"reads a # alias whose target names no source module as naming no module\" |"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-1-RAW.md",
+   "line": 143,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "| RV-P6 | survives, 52/52 | killed, 1 of 72 | \"reads a # alias whose target leaves its package for a module that exists as naming no module\" |"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-1-RAW.md",
+   "line": 287,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "`alias`."
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-1-RAW.md",
+   "line": 338,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- **T4.** An `npm:` alias of a *registry* package (`\"ts5\": \"npm:typescript@^5.5.0\"`) is also refused at head. That is the bead's"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-1-RAW.md",
+   "line": 341,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "tarball name] as `file:`\". npm installs an `npm:` alias from the registry. It does not install `link:` or `workspace:` at all:"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-1-RAW.md",
+   "line": 344,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- **Failure scenario.** A later change adds a URL tarball or an `npm:` registry alias and imports it on the daemon path or the CLI"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-1-RAW.md",
+   "line": 349,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "and `npm:` registry aliases. Fix the comment at `:59-60` as well."
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-1-RAW.md",
+   "line": 430,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- `npm:` aliases of registry packages;"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-1-RAW.md",
+   "line": 491,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- +24, \u22120. Five of the rows extend existing `it.each` tables: the three `#` alias rows and the two census rows."
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-1-RAW.md",
+   "line": 109,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "| M7 | the `npm:` arm refuses only `npm:@syzygy/\u2026`, so a registry alias reads as outside | survives | **survives 165/165** | \u2014 | not named; the PR says it is pinned (N2) |"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-1-RAW.md",
+   "line": 118,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- in \"reads a bare name declared as %s as naming no module\": `['a remote http tarball URL dependency', 'dossier', { dependencies: { dossier: 'http://example.com/lib-1.0.0.tar.gz' } }, {}]`, `['an npm: alias of a registry package', 'dossier', { dependencies: { "
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-1-RAW.md",
+   "line": 125,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- [Observed] The lane's `npa_probe.cjs` (sha256 `61da250ff658e7c75e876e5586d4576dca97141adcd94e49a701df6a54670053`) reads npm-package-arg from this node's bundled npm: `\"version\": \"12.0.2\"`. Its output at `c1227667` parses equal to the lane's `npa-probe.json` "
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-1-RAW.md",
+   "line": 137,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "| `npm:typescript@^5.5.0` | `alias` (subSpec `range typescript`) | refused |"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-1-RAW.md",
+   "line": 138,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "| `npm:@syzygy/lib@*` | `alias` (subSpec `range @syzygy/lib`) | refused |"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-1-RAW.md",
+   "line": 149,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "Also [Observed]: npa refuses an alias of a non-registry spec (`npm:../../packages/lib` and `npm:lib@file:../x` both throw \"aliases only work for registry deps\"), and `npa.resolve('dossier', 'npm:@syzygy/polaris-dossier@*')` has `name` `dossier` and subSpec `{\""
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-1-RAW.md",
+   "line": 150,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- [Observed, by reading npm's own source, @npmcli/arborist `9.1.3` as bundled with npm 11.5.1] `lib/arborist/build-ideal-tree.js:1227` \"const isWorkspace = this.idealTree.workspaces && this.idealTree.workspaces.has(spec.name)\", and `:1250-1258` return the work"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-1-RAW.md",
+   "line": 211,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- The test comment above the table (`:81-82`) says \"Any manifest's declaration counts, the workspace root's among them\". The #531 tree mutant T1 (a root `./packages/polaris-dossier` alias) is killed only as a tree mutant, not by a row."
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-1-RAW.md",
+   "line": 220,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- M7: the `npm:` arm narrowed to `npm:@syzygy/`, so an alias of a registry package reads as outside. The table's only `npm:` row (`:90`) aliases `@syzygy/lib`."
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-1-RAW.md",
+   "line": 223,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- The PR body says: \"The two refusals the #531 notice already names are now pinned and described.\" That is true of the tarball URL (O1 and M1 are each killed by the URL row alone) and false of the `npm:` registry alias, which no row pins. The test comment at `"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-1-RAW.md",
+   "line": 225,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- **Failure scenario.** A later ruling or tidy narrows the `npm:` arm to workspace-named aliases, or writes the path arm as `\\.\\/|\\.$|\\.\\.\\/`, with CI green. The comment and the owner notice still say the form is refused, so the record says one thing and the g"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-1-RAW.md",
+   "line": 226,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- **Proposed fix**, checked in \u00a73.5 (each kills its own mutant alone): add to \"reads a bare name declared as %s as naming no module\" the rows `['an npm: alias of a registry package', 'dossier', { dependencies: { dossier: 'npm:typescript@^5.5.0' } }, {}]`, `['a"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-1-RAW.md",
+   "line": 232,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- The testkit comment's tarball sentence (`:66`) names only the `remote` tarball URL. The #531 dispositions' list of refusals beyond the bead's (N6) and its owner notice name path versions, local tarball names, remote tarball URLs, `npm:` registry aliases and "
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-1-RAW.md",
+   "line": 238,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "### N4 \u2014 The `npm:` clause does not say that npm installs every alias from the registry (low)"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-1-RAW.md",
+   "line": 241,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- The bead's N2 fix direction: \"Fix the testkit comment at :59-60: npm installs an `npm:` alias from the registry, does not install `link:` or `workspace:` at all (npm-package-arg 12.0.2 throws EUNSUPPORTEDPROTOCOL), and types a tarball URL as `remote`.\""
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-1-RAW.md",
+   "line": 242,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- The comment (`testkit:64-65`): \"`npm:`: an alias of another package, which may be a workspace package's name. An alias of a registry package is refused too, failing closed.\" It covers the other two points (`:62`, `:66`), but not \"from the registry\"."
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-1-RAW.md",
+   "line": 243,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- [Observed, \u00a73.6] npa accepts only a registry spec after `npm:` (\"aliases only work for registry deps\"). The alias's own `name` is the dependency name, and arborist 9.1.3 links a workspace only when that name is a workspace's (`build-ideal-tree.js:1227`, `:12"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-1-RAW.md",
+   "line": 244,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- So under npm every `npm:` alias is \"an alias of a registry package\", and the comment's implied contrast between a workspace-named alias and a registry alias does not exist for npm. [Inferred, from package-manager documentation, not probed] Other package mana"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-1-RAW.md",
+   "line": 246,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- **Failure scenario.** A reader takes the clause to mean that npm may install an `npm:` alias from the workspace, and relies on that when the owner rules on N2's kept refusals or on narrowing the arm. That ruling is then made on a premise npm does not hold."
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-1-RAW.md",
+   "line": 247,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- **Proposed fix**, a comment-only follow-up with no gate change: \"`npm:`: an alias. npm installs it from the registry (npm-package-arg 12.0.2 accepts only a registry spec after `npm:`), but its target may carry a workspace package's name, which other package "
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-1-RAW.md",
+   "line": 112,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "| **M7 `npm:` arm `npm:@syzygy/` only** | **survives 165/165** | **killed, 1 row** | killed, 1 row | \"\u2026an npm: alias of a registry package\u2026\" |"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-1-RAW.md",
+   "line": 142,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "| X3 | the `npm:` arm refuses only an alias with an explicit `@version` (`npm:(?:@[^/@]+\\/)?[^@]+@`) | survives | **survives 169/169** | survives | \u2014 (N1) |"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-1-RAW.md",
+   "line": 152,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "whose spec ends in a tarball extension\u2026\". With X3, it is killed 170/171 and the one failing row is \"\u2026an npm: alias with no"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-1-RAW.md",
+   "line": 170,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- npa accepts an alias only when the spec after `npm:` is a registry spec, with `subRegistry: true` in every accepted case. The"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-1-RAW.md",
+   "line": 171,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "accepted forms are `npm:@scope/lib@^1.0.0` (an alias of a `range`), the unversioned `npm:@syzygy/polaris-dossier` and"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-1-RAW.md",
+   "line": 173,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- Every non-registry form throws \"aliases only work for registry deps\": `npm:github:\u2026`, `npm:git+https://\u2026`, `npm:https://\u2026.tgz`,"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-1-RAW.md",
+   "line": 175,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "`npm:npm:lodash@1` throws \"nested aliases not supported\"."
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-1-RAW.md",
+   "line": 177,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- [Observed] **What npm installs for an alias** (`tools/npm_alias_probe.py`, `npm-alias-probe.json`, npm `11.5.1`). Each case is a"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-1-RAW.md",
+   "line": 199,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- `lib/dep-valid.js:61-63`: \"case 'alias': // check that the alias target is valid / return depValid(child, requested.subSpec,"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-1-RAW.md",
+   "line": 202,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- So npm links a workspace for an `npm:` alias declared under that workspace's own name whenever the workspace's version"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-1-RAW.md",
+   "line": 203,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "satisfies the alias's range, whatever the target names (cases 0\u20132). It fetches from the registry otherwise (cases 3\u20136). That is"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-1-RAW.md",
+   "line": 275,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- The sentence, `workspace-reach.testkit.ts:64-66` at `5db78a26`: \"- `npm:`: an alias. npm installs it from the registry"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-1-RAW.md",
+   "line": 277,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "other package managers can link locally; every alias is refused, failing closed.\""
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-1-RAW.md",
+   "line": 278,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- [Observed, \u00a73.5, cases 0\u20132] npm 11.5.1 does not install an `npm:` alias from the registry when the alias is declared under a"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-1-RAW.md",
+   "line": 279,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "workspace's own name and that workspace's version satisfies the alias's range. It links the workspace, fetches nothing, and Node"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-1-RAW.md",
+   "line": 281,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "dependency is declared under (`build-ideal-tree.js:1227`, `:1250-1255`). For an alias it checks only the target's range against"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-1-RAW.md",
+   "line": 286,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- The PR body repeats the claim (\"**N4: the `npm:` clause says npm installs every alias from the registry.**\","
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-1-RAW.md",
+   "line": 289,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- Origin: the bead's item 3 prescribes the text (\"to say npm installs every alias from the registry\"). That text came from the #536"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-1-RAW.md",
+   "line": 290,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "raw's inference (`docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-1-RAW.md:150`): \"For an `npm:` alias, `spec.name` is the"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-1-RAW.md",
+   "line": 291,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "dependency's own name (above), so npm fetches the alias target from the registry.\" The step missed that the dependency's own"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-1-RAW.md",
+   "line": 296,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- **The alternative reading, disclosed.** Read \"it\" as only the aliases whose bare name this pattern decides: names outside"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-1-RAW.md",
+   "line": 299,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- **Failure scenario.** This is the failure N4 was filed to prevent. A reader takes \"npm installs every alias from the registry\" as"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-1-RAW.md",
+   "line": 302,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "directs the reader to the alias's target as the possibly-local part, when for npm it is the declared name."
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-1-RAW.md",
+   "line": 305,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "* - `npm:`: an alias. npm-package-arg 12.0.2 accepts only a registry spec after `npm:`, and npm fetches that spec from the"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-1-RAW.md",
+   "line": 306,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "*   registry unless the alias is declared under a workspace's own name and that workspace's version satisfies it; then npm links"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-1-RAW.md",
+   "line": 309,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "*   package managers can link locally; every alias is refused, failing closed."
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-1-RAW.md",
+   "line": 315,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- attach `npm-alias-probe.json`, or an equivalent run, as the evidence for the new clause."
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-1-RAW.md",
+   "line": 317,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "### N1 \u2014 Two refusals the comment states have no row: a git spec ending in a tarball extension, and an unversioned `npm:` alias (low)"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-1-RAW.md",
+   "line": 323,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "npm types as `git`; both are refused too, failing closed\". The `npm:` clause covers the second (\"every alias is refused\"). npa"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-1-RAW.md",
+   "line": 324,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "types `npm:typescript` as an alias of a range (\u00a73.5)."
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-1-RAW.md",
+   "line": 333,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "`['an npm: alias with no version', 'dossier', { dependencies: { dossier: 'npm:typescript' } }, {}],`."
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-1-RAW.md",
+   "line": 435,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "on its parent directory\u2026\", \"\u2026an npm: alias of a registry package\u2026\"."
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-1-RAW.md",
+   "line": 441,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- **Bar 3** (`:60-63`, edge paths): the new rows are edge forms (`..` alone, `http:` against `https:`, an alias of a non-workspace"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-1-RAW.md",
+   "line": 483,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "| `npm-alias-probe.json` | `79313bc54deb8d9a4dcfaf9dde5fdb2c16b9a27243488d591076f224eef54e95` |"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-2-RAW.md",
+   "line": 13,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "workspace's name and links the workspace, whatever the alias's range. \u00a74 gives the exact replacement text for a narrow round 3."
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-2-RAW.md",
+   "line": 121,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- [Observed] **The lane's `npm_alias_probe.py`, re-run** offline (`npm-alias-probe-lane-rerun.json`, load1 76.7 \u2192 70.0) is"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-2-RAW.md",
+   "line": 122,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "byte-identical to the lane's `npm-alias-probe.json` (`cmp`). Its nine outcomes reproduce. The cache held only `_logs` afterwards."
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-2-RAW.md",
+   "line": 162,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- An alias under a workspace's name whose range the workspace does not satisfy: A1, A2, F4 and F6 request the registry, as the"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-2-RAW.md",
+   "line": 164,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- An alias whose target carries a workspace's name: B1, B2 and R8 request that name from the registry, and never link."
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-2-RAW.md",
+   "line": 177,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- `lib/dep-valid.js:61-63`: \"case 'alias': // check that the alias target is valid / return depValid(child, requested.subSpec,"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-2-RAW.md",
+   "line": 183,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "are both `false` under npm's semver 7.7.2. Yet npm links for `*` and for an alias with no version (C3, F2), because of the `*`"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-2-RAW.md",
+   "line": 190,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "versions is an `npm:` alias. So the counterexample is not reachable in this tree."
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-2-RAW.md",
+   "line": 197,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "| R541-X3 (the `npm:` arm needs an explicit `@version`) | **survives 169/169** | **killed 170/171, 1 row** | killed 170/171, 1 row | \"\u2026reads a bare name declared as an npm: alias with no version as naming no module\" |"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-2-RAW.md",
+   "line": 209,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- [Observed] **M7 at `5db78a26`:** `killed 168/169`, 1 failing row, \"\u2026an npm: alias of a registry package\u2026\". **At the repair:**"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-2-RAW.md",
+   "line": 210,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "`killed 169/171`, 2 failing rows: that row and \"\u2026an npm: alias with no version\u2026\". So round 0's \"killed by its own row alone\" was"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-2-RAW.md",
+   "line": 217,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "| Y1 | the `npm:` arm refuses only an alias with no version (X3 inverted) | killed, 2 rows | killed, 2 rows | the registry-alias row, and the pre-existing peer-dependency row (`npm:@syzygy/lib@*`) |"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-2-RAW.md",
+   "line": 221,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "| Y5 | the `npm:` arm needs a scoped target or a version (`npm:(?=@\\|[^@]*@)`) | **survives 169/169** | **killed, 1 row** | the unversioned-alias row alone |"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-2-RAW.md",
+   "line": 222,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "| Y6 | the `npm:` arm refuses only a scoped or unversioned alias (`npm:(?=@\\|[^@]*$)`) | killed, 1 row | **killed, 1 row** | the registry-alias (M7) row alone |"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-2-RAW.md",
+   "line": 231,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "\"M7 by its own row and the round-1 unversioned-alias row\"."
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-2-RAW.md",
+   "line": 256,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- [Observed, recorded, not a finding] An alias under an `@syzygy/*` workspace's name that npm does not link (A2) reads through the"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-2-RAW.md",
+   "line": 333,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "`npm:`, and npm fetches that spec from the registry unless the alias is declared under a workspace's own name and that"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-2-RAW.md",
+   "line": 336,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "version does not satisfy (`npm:typescript@^5.5.0` against 1.0.0), the alias is not fetched from the registry. npm links the"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-2-RAW.md",
+   "line": 343,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "This holds for all four of the root's fields, and for a scoped name (R1). The control R3, the same alias under a name no"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-2-RAW.md",
+   "line": 351,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- The PR body states the same rule three times: the clause quoted verbatim (`pr-body-now.md:4`); \"So the alias follows the same"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-2-RAW.md",
+   "line": 353,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "alias from the registry, unless the alias is declared under a workspace's name and the workspace's version satisfies it\""
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-2-RAW.md",
+   "line": 365,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "workspace's version satisfies it\". It then concludes that a root-level alias under a workspace's name with a non-matching range"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-2-RAW.md",
+   "line": 369,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "`workspace-reach.testkit.ts:64-68` at `58e8f604`, the five lines from \" * - `npm:`: an alias.\" through \"every alias is refused,"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-2-RAW.md",
+   "line": 372,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "* - `npm:`: an alias. npm-package-arg 12.0.2 accepts only a registry spec after `npm:`, and npm 11.5.1 fetches that spec from"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-2-RAW.md",
+   "line": 373,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "*   the registry unless the alias is declared under a workspace's own name and either the root's manifest declares it or the"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-2-RAW.md",
+   "line": 374,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "*   alias's range is `*`, absent or one that workspace's version satisfies; then npm links the workspace, as for a plain range"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-2-RAW.md",
+   "line": 377,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "*   a workspace package's name, which other package managers can link locally; every alias is refused, failing closed."
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-2-RAW.md",
+   "line": 482,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "Y2 alone, and the unversioned-alias row kills X3 and Y5 alone. All four survive at `5db78a26`."
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-2-RAW.md",
+   "line": 490,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "dependency whose spec ends in a tarball extension\u2026\", \"\u2026an npm: alias with no version\u2026\"."
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-2-RAW.md",
+   "line": 542,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "| `npm-alias-probe-lane-rerun.json` | `a0570c51e453e2944faa575e670321e819b911160e5dfba13cbb1a43856cf480` |"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-2-RAW.md",
+   "line": 543,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "| `npm-alias-probe-lane-rerun.load` | `7e9cc86f4b11780ff6759a0d25ecb4006e09445563c5f376df5ba47ec8f65603` |"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-2-RAW.md",
+   "line": 544,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "| `npm-alias-probe-r2-fix.json` | `d656fc2519e8c3397e63503fa923b3826618cd4cf14dd93ce21a10d5ddf78c96` |"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-2-RAW.md",
+   "line": 545,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "| `npm-alias-probe-r2-root.json` | `f292ab87ad9c3410ab6d80576259f8bbabaa9b83f035937ed30873f3953159cd` |"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-2-RAW.md",
+   "line": 546,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "| `npm-alias-probe-r2.json` | `19d8766e55fd7d56a6ffd4add54c70c0cfa5d749eee39a7b5bd30ececd578745` |"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-2-RAW.md",
+   "line": 547,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "| `npm-alias-probe-r2.load` | `8a9ede4bfa8940a8ddd597b7bdfbcc986c560e09a35a93f49685dde5c7c6d141` |"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-3-RAW.md",
+   "line": 12,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "declares the same alias (F1). It is comment-only to fix, and the guards are unaffected. Under the stopping rule, the exact"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-3-RAW.md",
+   "line": 85,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "committed `npm-alias-probe.json`: 14 cases, npm 11.5.1, arborist 9.1.3, node v24.6.0, registry `http://127.0.0.1:9/`. (Load1"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-3-RAW.md",
+   "line": 86,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "17.26 before, 17.00 after.) File: `npm-alias-probe-lane-rerun.json`."
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-3-RAW.md",
+   "line": 94,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "`npm-alias-probe-r3.json`."
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-3-RAW.md",
+   "line": 122,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "path and tarball forms throw \"aliases only work for registry deps\"; `workspace:` and `link:` throw EUNSUPPORTEDPROTOCOL; `npm:npm:\u2026`"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-3-RAW.md",
+   "line": 123,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "throws \"nested aliases not supported\". So the six lines' first sentence holds."
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-3-RAW.md",
+   "line": 127,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "`lib/dep-valid.js:61-63` (\"case 'alias': \u2026 return depValid(child, requested.subSpec, requestor)\") and `:46-53` (range `*` is true,"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-3-RAW.md",
+   "line": 234,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "### F1 \u2014 The six lines are still false, as written, for a workspace's declaration when the root's manifest declares the same alias (blocking: a sentence of the new clause is false)"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-3-RAW.md",
+   "line": 236,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- **The sentence**, `workspace-reach.testkit.ts:64-67` at `93dc0390`: \"npm 11.5.1 fetches that spec from the registry unless the alias"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-3-RAW.md",
+   "line": 237,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "is declared under a workspace's own name and either the root's manifest declares it or the alias's range is `*`, absent or one that"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-3-RAW.md",
+   "line": 255,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- every `npm:` alias is refused (failing closed);"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-3-RAW.md",
+   "line": 263,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "when the root's manifest declares an alias under a workspace's name, the same alias in a workspace's manifest links the workspace,"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-3-RAW.md",
+   "line": 271,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "* - `npm:`: an alias. npm-package-arg 12.0.2 accepts only a registry spec after `npm:`. npm 11.5.1 skips each declaration in the"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-3-RAW.md",
+   "line": 273,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "*   npm fetches the alias's spec from the registry unless that declaration is under a workspace's own name and the alias's range"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-3-RAW.md",
+   "line": 276,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "*   carry a workspace package's name, which other package managers can link locally; every alias is refused, failing closed."
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-3-RAW.md",
+   "line": 279,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- only a registry spec after `npm:`: the lane's `npa-probe.json` and \u00a73.2 `npa-alias-r3.json`;"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-3-RAW.md",
+   "line": 336,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "`--check` and `--selftest`. The added text is \"unless the alias is declared under a workspace's own name and that workspace's"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-3-RAW.md",
+   "line": 367,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "[Unknown] whether any package manager links an `npm:` alias whose target names a workspace."
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-3-RAW.md",
+   "line": 368,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- **Failure scenario.** A later ruling cites the clause as evidence that some package manager links such an alias locally. That would"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-3-RAW.md",
+   "line": 409,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "| F1 (the `npm:` sentence false for a root declaration) | **Applied exactly, not cleared.** Lines 64\u201369 are round 2's six lines, byte-equal, and the root-declared cases reproduce (lane 10\u201313, 14/14 byte-equal). But round 2's text is itself false as written whe"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-3-RAW.md",
+   "line": 455,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "| `npa-alias-r3.json` | `ba6a38bd89b42f7a5cb723a351349d1eaff9a388e34b22af6b8f215f7acb155c` |"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-3-RAW.md",
+   "line": 456,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "| `npm-alias-probe-lane-rerun.json` | `e85c699bfa3515d563c5e66dbeb7db4f03de9f99214089bc755d93178232ddb5` |"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-3-RAW.md",
+   "line": 457,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "| `npm-alias-probe-lane-rerun.load` | `c10a8f8201c93878ff1d884742bce97ed1817db32622e0ad980d7f9dfa094371` |"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-3-RAW.md",
+   "line": 458,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "| `npm-alias-probe-lane-rerun.log` | `ccc71773ec37536c5c2808c646630fecfaf6c60e6ed5c6d9779337f45f85866a` |"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-3-RAW.md",
+   "line": 459,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "| `npm-alias-probe-r3.json` | `3c06b6ce7e67df743d44f0a5b3df83aa1b99e498040e2b9365f6b14b6504bec2` |"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-GUARD-PINS-FOLLOWUP-2-3-RAW.md",
+   "line": 460,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "| `npm-alias-probe-r3.load` | `c0153b1cae67729f54c97cc3e6768493e8d62e80c59981233734ca7928ff2851` |"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-HOST-PINS-1-RAW.md",
+   "line": 491,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- **The dist-absent run.** [Observed] The root Vitest config aliases `@syzygy/cap1-core`, `@syzygy/cap1-daemon` and"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-HOST-PINS-FOLLOWUP-1-RAW.md",
+   "line": 118,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "(resolving `.js` \u2192 `.ts` and the root `vitest.config.ts` aliases) and asks which of the 246 test files in the root"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-HOST-TIDY-1-RAW.md",
+   "line": 86,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- the guardrail at l.282: \"Root Vitest `test.projects` must alias `@syzygy/cap1-core`, `@syzygy/cap1-daemon` and"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-HOST-TIDY-1-RAW.md",
+   "line": 141,
+   "predicate": "FORCE",
+   "retained": true,
+   "text": "- [Observed] `build:poc` still runs `tsc -b --force \u2026 packages/cap1-daemon \u2026`, so a broken cap1-daemon can still fail"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-HOST-TIDY-1-RAW.md",
+   "line": 290,
+   "predicate": "FORCE",
+   "retained": true,
+   "text": "- [Observed] **Build order** (`tsc -b --dry --force`):"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-HOST-TIDY-1-RAW.md",
+   "line": 295,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- [Observed] **Root Vitest aliases** (the AGENTS.md l.282 guardrail): `vitest.config.ts` is not in the subject and"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-HOST-TIDY-1-RAW.md",
+   "line": 296,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "still aliases `@syzygy/cap1-core`, `@syzygy/cap1-daemon` and `@syzygy/http-host` to source."
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-HOST-TIDY-1-RAW.md",
+   "line": 410,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "aliases cap1-daemon to source."
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-HOST-TIDY-1-RAW.md",
+   "line": 429,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "`surfaceEqual` true (3.4). The cause is that `surface.mjs:27\u201335` reads `value`/`type` from the alias **target's**"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-HTTP-HOST-1-RAW.md",
+   "line": 88,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- l.275: \"Root Vitest `test.projects` must alias `@syzygy/cap1-core`, \u2026\"."
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-HTTP-HOST-1-RAW.md",
+   "line": 296,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- [Observed] `vitest.config.ts` aliases `@syzygy/http-host` to `packages/http-host/src/index.ts` and adds a project."
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-HTTP-HOST-1-RAW.md",
+   "line": 297,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "`@syzygy/cap1-core` and `@syzygy/cap1-daemon` stay aliased."
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-HTTP-HOST-1-RAW.md",
+   "line": 328,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- [Observed] The no-egress alias is inert here. The driver's static closure (126 files) reaches neither `cap1-daemon`"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-HTTP-HOST-1-RAW.md",
+   "line": 329,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "nor `http-host`, as at base for the existing `cap1-daemon` alias. The strace test that would use it was skipped on"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-HTTP-HOST-1-RAW.md",
+   "line": 453,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- Failure scenario: a later edit to a shim aliases one name to another binding. Every test stays green, and an external"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-ISLAND-DECOUPLING-1-RAW.md",
+   "line": 437,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- The `vitest.config.ts` alias and the no-egress esbuild alias list `/live` before the root."
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-LAUNCH-FORM-CTIME-1-RAW.md",
+   "line": 34,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "None of them is imported by `launched.test.ts` or `launched.ts`. `vitest.config.ts` gains one alias and a `globalSetup` for"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-LAUNCH-FORM-POSTCONDITION-1-RAW.md",
+   "line": 366,
+   "predicate": "FORCE",
+   "retained": true,
+   "text": "- [Observed] The base worktree (`git worktree remove --force`), the scratch clone, the harnesses' vitest report directory"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-PACKAGE-READER-TIMEOUTS-1-RAW.md",
+   "line": 29,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- [Observed] #509's `vitest.config.ts` change adds a `/live` alias and a `globalSetup` to the `@syzygy/three-surface-poc-app`"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-POC-APP-HYGIENE-1-RAW.md",
+   "line": 238,
+   "predicate": "BUILD_OUTPUT",
+   "retained": true,
+   "text": "`fresh-checkout-demo-main.ts:98`, `restart.ts:79`, `build-output.test.ts:47` and"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-POC-CORE-HYGIENE-1-RAW.md",
+   "line": 152,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "`FactFamilyKind` (coverage) were type aliases. [Observed] Their deletion"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-SCRATCH-PREFIX-CENSUS-1-RAW.md",
+   "line": 28,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "for one added alias line. The census is not staled by main's movement."
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-SKIPPED-POPULATION-1-RAW.md",
+   "line": 262,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "`tools/skip_sweep.py` at `1e444071` covers \"files swept: 12; hits: {'modifier': 5, 'runtime': 1, 'guarded': 1, 'aliased': 0}\""
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-SUPPORT-FOLLOWUPS-2-RAW.md",
+   "line": 150,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "aliases);"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-SUPPORT-LEAF-1-RAW.md",
+   "line": 11,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "One blocking finding (F1): the S10 no-egress proof's esbuild alias map does not map the new `@syzygy/support` package to"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-SUPPORT-LEAF-1-RAW.md",
+   "line": 12,
+   "predicate": "DIST_DECL",
+   "retained": true,
+   "text": "its source. With every `dist/` absent the proof fails deterministically. With a stale `dist/` it proves the old bytes,"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-SUPPORT-LEAF-1-RAW.md",
+   "line": 68,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- confirm both `vitest.config.ts` aliases and projects are present;"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-SUPPORT-LEAF-1-RAW.md",
+   "line": 100,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- guardrail (`:282-283`): \"Root Vitest `test.projects` must alias both `@syzygy/cap1-core` and `@syzygy/cap1-daemon` to source; verify with every `dist/` absent.\""
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-SUPPORT-LEAF-1-RAW.md",
+   "line": 145,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- local `digest(` alias \u2192 `sha256(`;"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-SUPPORT-LEAF-1-RAW.md",
+   "line": 150,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "hunks (alias at `:7`, project at `:35-41`). So 163 of 163 non-package production hunks are the mechanical rewrite and"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-SUPPORT-LEAF-1-RAW.md",
+   "line": 153,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "**Removed definitions.** 25 file-local `sha256` definitions and 2 local `digest` aliases [Observed: listed in"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-SUPPORT-LEAF-1-RAW.md",
+   "line": 359,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- `vitest.config.ts:7` aliases `@syzygy/support` to source, and `:35-41` adds the project."
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-SUPPORT-LEAF-1-RAW.md",
+   "line": 392,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- **The alias map.** `packages/polaris-dossier/src/no-egress.test.ts:35-44` bundles the dossier driver with esbuild."
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-SUPPORT-LEAF-1-RAW.md",
+   "line": 393,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "Its `alias` map sends 8 workspace specifiers to `src/`: polaris-generation-core (+`/live`),"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-SUPPORT-LEAF-1-RAW.md",
+   "line": 402,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- **Six-arm check** (`tools/egress_alias_check.py`, `egress-alias-check.json`). The single file was run in each arm:"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-SUPPORT-LEAF-1-RAW.md",
+   "line": 407,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "| B | as A, plus the one-line alias | `Tests  1 failed \\| 1 passed \\| 1 skipped (3)`. The capture shows `socket(AF_INET, SOCK_DGRAM\\|SOCK_CLOEXEC\\|SOCK_NONBLOCK, IPPROTO_IP) = 21` and `bind(21, {sa_family=AF_INET, sin_port=htons(0), sin_addr=inet_addr(\"127.0.0"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-SUPPORT-LEAF-1-RAW.md",
+   "line": 408,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "| C | `dist/` present, alias, no mutant | `Tests  2 passed \\| 1 skipped (3)` |"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-SUPPORT-LEAF-1-RAW.md",
+   "line": 410,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "| E | every `dist/` absent, alias | `Tests  2 passed \\| 1 skipped (3)` |"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-SUPPORT-LEAF-1-RAW.md",
+   "line": 423,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "proof covered them [Inferred: from the removed definitions' files and the alias map]."
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-SUPPORT-LEAF-1-RAW.md",
+   "line": 425,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- **Proposed fix:** add one line to the alias map in `packages/polaris-dossier/src/no-egress.test.ts`, after `:43`:"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-SUPPORT-LEAF-1-RAW.md",
+   "line": 603,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- Not modified: `no-egress.test.ts`, which needed the alias (F1)."
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-SUPPORT-LEAF-1-RAW.md",
+   "line": 676,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "9ca36bf98fdf842900c6f5437312ea4d0614c05fab2dc6abf11991a1cd3829ba  egress-alias-check.json"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-SUPPORT-LEAF-1-RAW.md",
+   "line": 677,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "0feebd75b24231080c3be73d77425156df47c9ca98f35f255154bbb380d29690  egress-alias-check.log"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-SUPPORT-LEAF-2-RAW.md",
+   "line": 12,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "Summary. F1 is repaired: I reproduced the arms at `fe3855a1` and at `a5ab2b28`. With the alias in place, the S10 proof"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-SUPPORT-LEAF-2-RAW.md",
+   "line": 82,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- `:282-284`: \"Root Vitest `test.projects` must alias `@syzygy/cap1-core`, `@syzygy/cap1-daemon` and `@syzygy/http-host` to source; verify with every `dist/` absent.\""
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-SUPPORT-LEAF-2-RAW.md",
+   "line": 226,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "**Could the alias drift from the package's real entry with the proof green?**"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-SUPPORT-LEAF-2-RAW.md",
+   "line": 229,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "directory` (`alias-subpath-probe.json`)."
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-SUPPORT-LEAF-2-RAW.md",
+   "line": 232,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "because the alias still bundles `index.ts`. Node's own resolution of `@syzygy/support`, from"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-SUPPORT-LEAF-2-RAW.md",
+   "line": 235,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- **A new workspace package with no alias** reopens F1's class: it resolves to its `dist`."
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-SUPPORT-LEAF-2-RAW.md",
+   "line": 236,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- These are N10. All ten hard-coded aliases share the property. It predates this PR."
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-SUPPORT-LEAF-2-RAW.md",
+   "line": 419,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- `no-egress.test.ts`: the one alias line;"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-SUPPORT-LEAF-2-RAW.md",
+   "line": 423,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- **The no-egress alias map** at `a5ab2b28` holds both `'@syzygy/http-host'` (`:43`) and `'@syzygy/support'` (`:45`)."
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-SUPPORT-LEAF-2-RAW.md",
+   "line": 425,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- `vitest.config.ts:7` aliases `@syzygy/support`, and `:14-25` alias `@syzygy/cap1-core/testing`, `@syzygy/cap1-core`,"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-SUPPORT-LEAF-2-RAW.md",
+   "line": 497,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "### N10 \u2014 note. The S10 alias map can drift from a package's real entry with the proof green"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-SUPPORT-LEAF-2-RAW.md",
+   "line": 499,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- **Severity:** low. The property is pre-existing: all ten aliases hard-code `src/index.ts`. It needs an entry redirect"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-SUPPORT-LEAF-2-RAW.md",
+   "line": 505,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- A new workspace package with no alias resolves through `node_modules` to its `dist`, which is F1's class (round 1's"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-SUPPORT-LEAF-2-RAW.md",
+   "line": 510,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- derive the alias map from each workspace `package.json` `exports`, mapping `./dist/X.js` to `./src/X.ts`;"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-SUPPORT-LEAF-2-RAW.md",
+   "line": 511,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- or assert, per alias, that its target is that mapping of the package's `exports[\".\"].import`."
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-SUPPORT-LEAF-2-RAW.md",
+   "line": 635,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "| `alias-subpath-probe.json` | `788114e1e294a7b67979d473f46e1152bad880a19ee4aa6210e11b95102e1bfc` |"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-TEST-TIMEOUTS-1-RAW.md",
+   "line": 159,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "parentheses, property access or calls counts as an alias of that API."
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-TEST-TIMEOUTS-1-RAW.md",
+   "line": 163,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- A candidate whose root is a test API, by name or by alias. Its timeout expression is the argument after the last"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-TEST-TIMEOUTS-1-RAW.md",
+   "line": 192,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "(47\u219248, 84\u219285, 92\u219293). Main added the `'@syzygy/support'` alias line to that file's esbuild options."
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-TEST-TIMEOUTS-1-RAW.md",
+   "line": 202,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- a conditional suite alias, `c ? describe : describe.skip` (`:22`);"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-TEST-TIMEOUTS-1-RAW.md",
+   "line": 203,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- a conditional test alias (`:23`);"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-TEST-TIMEOUTS-1-RAW.md",
+   "line": 204,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- a `let` alias (`:24`);"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-TEST-TIMEOUTS-1-RAW.md",
+   "line": 627,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- The forms: `{ timeout }` shorthand, `c ? describe : describe.skip` and `c ? it : it.skip` aliases, `let` aliases,"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-TEST-TIMEOUTS-1-RAW.md",
+   "line": 652,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- The bundle that `no-egress`'s hook builds gained the `@syzygy/support` alias in the merge. My head runs cover the"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-TEST-TIMEOUTS-1-RAW.md",
+   "line": 756,
+   "predicate": "FORCE",
+   "retained": true,
+   "text": "- the `trial`, `lt` and `base` worktrees (`git worktree remove --force`);"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-TEST-TIMEOUTS-2-RAW.md",
+   "line": 582,
+   "predicate": "FORCE",
+   "retained": true,
+   "text": "- the `base` and `merge` worktrees (`git worktree remove --force`);"
+  },
+  {
+   "file": "docs/reviews/R-GP-IMPL-UTF8-CANONICAL-2-RAW.md",
+   "line": 166,
+   "predicate": "FORCE",
+   "retained": true,
+   "text": "| Typecheck at the reviewed commit | `npx tsc -b --force <build list>`, then `npm run typecheck` | `forced build exit=0`, `typecheck exit=0` (load 21.74 \u2192 22.62) |"
+  },
+  {
+   "file": "docs/reviews/R-LIVE-TEST-NO-SPAWN-1-RAW.md",
+   "line": 100,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "execFileSync('git', ['-c', 'alias.probe=!touch <scratchpad>/EVADED-P2', 'probe']);"
+  },
+  {
+   "file": "docs/reviews/R-LIVE-TEST-NO-SPAWN-1-RAW.md",
+   "line": 104,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "ran. An alias such as `!cd <repo> && python3 -m pytest \u2026` would start"
+  },
+  {
+   "file": "docs/reviews/R-LIVE-TEST-NO-SPAWN-1-RAW.md",
+   "line": 116,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "`-c`, `--config-env`, `--exec-path`, `-p`/`--paginate` and any `alias.`"
+  },
+  {
+   "file": "docs/reviews/R-LIVE-TEST-NO-SPAWN-1-RAW.md",
+   "line": 163,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "evasions are rejected: `.call`, `.apply` and the alias are `it.each`"
+  },
+  {
+   "file": "docs/reviews/R-LIVE-TEST-NO-SPAWN-2-RAW.md",
+   "line": 56,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "| 2 REVISE: a literal `git` starts a shell via `-c alias.\u2026` | Capture tool's call exactly `('git', ['rev-parse','HEAD'], {cwd, encoding})`; the closure refuses `-c`, `--config-env*`, `--exec-path*`, `alias.`, and `process.env` writes; residuals stated | Captur"
+  },
+  {
+   "file": "docs/reviews/R-LIVE-TEST-NO-SPAWN-2-RAW.md",
+   "line": 84,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "writeFileSync(`${PROBES}/cfgD`, `[alias]\\n\\tprobe = !touch ${PROBES}/EVADED-D-envconfig\\n`);"
+  },
+  {
+   "file": "docs/reviews/R-LIVE-TEST-NO-SPAWN-2-RAW.md",
+   "line": 93,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- A takes no `-c`, and its key is `core.fsmonitor`, not `alias.`;"
+  },
+  {
+   "file": "docs/reviews/R-LIVE-TEST-NO-SPAWN-2-RAW.md",
+   "line": 95,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- D's config section header `[alias]` does not contain `alias.`, and an"
+  },
+  {
+   "file": "docs/reviews/R-LIVE-TEST-NO-SPAWN-3-RAW.md",
+   "line": 144,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- `.call`, `.apply`, aliases, renames, `env` and spreads are each refused"
+  },
+  {
+   "file": "docs/reviews/R-P110-CODE-SECURITY-1CDB-1-RAW.md",
+   "line": 23,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "Opaque excluded aliases receive a narrow equivalence: only a bodyless, anchorless, object-id-null excluded row whose path is exactly `withheld/<its sourceId>` may differ in source id/path across fresh reads. All remaining metadata, repository/revision, evaluat"
+  },
+  {
+   "file": "docs/reviews/R-P110-CODE-SECURITY-1CDB-1-RAW.md",
+   "line": 25,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "I independently exercised 16 further cases with actual consent and fresh-verifier adapters. Four positives cover the mixed serialized population, reordering, four changed opaque aliases, and ordinary-only duplicate-body compaction. Twelve negatives cover missi"
+  },
+  {
+   "file": "docs/reviews/R-P110-CODE-SECURITY-1CDB-1-RAW.md",
+   "line": 49,
+   "predicate": "FORCE",
+   "retained": true,
+   "text": "`npm run typecheck -- --force` passed across the workspace projects in this cache clone. The original two-case Important replay and the separate 16-case alias/membership suite passed. The three additional executing mutants were killed, and the restored control"
+  },
+  {
+   "file": "docs/reviews/R-P110-CODE-SECURITY-1CDB-1-RAW.md",
+   "line": 49,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "`npm run typecheck -- --force` passed across the workspace projects in this cache clone. The original two-case Important replay and the separate 16-case alias/membership suite passed. The three additional executing mutants were killed, and the restored control"
+  },
+  {
+   "file": "docs/reviews/R-P110-CODE-SECURITY-PROBES-1CDB-1-RAW.md",
+   "line": 84,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "\"name\": \"four opaque alias changes\","
+  },
+  {
+   "file": "docs/reviews/R-P110-CODE-SECURITY-PROBES-1CDB-1-RAW.md",
+   "line": 275,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "\"name\": \"duplicate opaque source alias\","
+  },
+  {
+   "file": "docs/reviews/R-P110-CODE-SECURITY-PROBES-1CDB-1-RAW.md",
+   "line": 419,
+   "predicate": "FORCE",
+   "retained": true,
+   "text": "Command: npm run typecheck -- --force"
+  },
+  {
+   "file": "docs/reviews/R-P110-CODE-SECURITY-PROBES-1CDB-1-RAW.md",
+   "line": 423,
+   "predicate": "FORCE",
+   "retained": true,
+   "text": "> tsc -b packages/cap1-core packages/cap1-daemon packages/cap1-conformance packages/three-surface-poc-core apps/syzygy apps/three-surface-poc packages/cap1-system packages/polaris-generation-core packages/polaris-generation-consent packages/polaris-dossier --f"
+  },
+  {
+   "file": "docs/reviews/R-POC-CONFIRMATION-REVIEW.md",
+   "line": 79,
+   "predicate": "FORCE",
+   "retained": true,
+   "text": "genuine `tsc -b --force` rebuild, then `npm run poc -- --repo"
+  },
+  {
+   "file": "docs/reviews/R-POC-CYCLE-2-CONFIRMATION.md",
+   "line": 114,
+   "predicate": "FORCE",
+   "retained": true,
+   "text": "packages/three-surface-poc-core apps/three-surface-poc --force` (run this"
+  },
+  {
+   "file": "docs/reviews/R-POC-CYCLE-2-CONFIRMATION.md",
+   "line": 167,
+   "predicate": "FORCE",
+   "retained": true,
+   "text": "`npx tsc -b packages/three-surface-poc-core apps/three-surface-poc --force`"
+  },
+  {
+   "file": "docs/reviews/R-POC-CYCLE-3-CONFIRMATION.md",
+   "line": 159,
+   "predicate": "BUILD_OUTPUT",
+   "retained": true,
+   "text": "**The 1 failing test, `build-output.test.ts`'s \"re-emits ignored JavaScript"
+  },
+  {
+   "file": "docs/reviews/R-POC-CYCLE-3-CONFIRMATION.md",
+   "line": 164,
+   "predicate": "FORCE",
+   "retained": true,
+   "text": "--force`) twice inside a 15-second `it()` timeout. Timed alone: `time npm"
+  },
+  {
+   "file": "docs/reviews/R-POC-CYCLE-3-CONFIRMATION.md",
+   "line": 236,
+   "predicate": "BUILD_OUTPUT",
+   "retained": true,
+   "text": "the one failure (`build-output.test.ts`) is a pre-existing timeout-margin"
+  },
+  {
+   "file": "docs/reviews/R-POC-CYCLE-4-CONFIRMATION.md",
+   "line": 10,
+   "predicate": "BUILD_OUTPUT",
+   "retained": true,
+   "text": "and the `build-output.test.ts` timing flake recorded in"
+  },
+  {
+   "file": "docs/reviews/R-POC-CYCLE-4-CONFIRMATION.md",
+   "line": 22,
+   "predicate": "BUILD_OUTPUT",
+   "retained": true,
+   "text": "polaris.test.ts build-output.test.ts` returns the same commit for each \u2014"
+  },
+  {
+   "file": "docs/reviews/R-POC-CYCLE-4-CONFIRMATION.md",
+   "line": 26,
+   "predicate": "BUILD_OUTPUT",
+   "retained": true,
+   "text": "insertions, 9 deletions \u2014 `apps/three-surface-poc/src/build-output.test.ts`,"
+  },
+  {
+   "file": "docs/reviews/R-POC-CYCLE-4-CONFIRMATION.md",
+   "line": 85,
+   "predicate": "BUILD_OUTPUT",
+   "retained": true,
+   "text": "### syzygy-gk9 \u2014 `build-output.test.ts` 15s timeout flake"
+  },
+  {
+   "file": "docs/reviews/R-POC-CYCLE-4-CONFIRMATION.md",
+   "line": 89,
+   "predicate": "FORCE",
+   "retained": true,
+   "text": "`tsc -b --force` builds run here (~7.5s each unloaded) and that 15s"
+  },
+  {
+   "file": "docs/reviews/R-POC-CYCLE-4-CONFIRMATION.md",
+   "line": 95,
+   "predicate": "FORCE",
+   "retained": true,
+   "text": "weakening `tsc -b --force` from the test or from `build:poc`'s script"
+  },
+  {
+   "file": "docs/reviews/R-POC-CYCLE-4-CONFIRMATION.md",
+   "line": 96,
+   "predicate": "BUILD_OUTPUT",
+   "retained": true,
+   "text": "definition). This session's run of `build-output.test.ts` completed in"
+  },
+  {
+   "file": "docs/reviews/R-POC-CYCLE-4-CONFIRMATION.md",
+   "line": 130,
+   "predicate": "BUILD_OUTPUT",
+   "retained": true,
+   "text": "failing `build-output.test.ts` case, now passing under the raised budget)"
+  },
+  {
+   "file": "docs/reviews/R-POC-CYCLE-4-CONFIRMATION.md",
+   "line": 136,
+   "predicate": "BUILD_OUTPUT",
+   "retained": true,
+   "text": "`polaris.test.ts` and `build-output.test.ts`."
+  },
+  {
+   "file": "docs/reviews/R-POC-CYCLE-4-CONFIRMATION.md",
+   "line": 169,
+   "predicate": "BUILD_OUTPUT",
+   "retained": true,
+   "text": "`build-output.test.ts` changed behavior."
+  },
+  {
+   "file": "docs/reviews/R-POC-CYCLE-4-CONFIRMATION.md",
+   "line": 190,
+   "predicate": "FORCE",
+   "retained": true,
+   "text": "the forced double `tsc -b --force` rebuild \u2014 the actual trust boundary \u2014"
+  },
+  {
+   "file": "docs/reviews/R-POC-PRODUCT-REVIEW.md",
+   "line": 25,
+   "predicate": "FORCE",
+   "retained": true,
+   "text": "force a real `tsc -b --force` build, not a cached one): daemon printed its"
+  },
+  {
+   "file": "docs/reviews/R-POLARIS-DOSSIER-LOCAL-AGENT-MODE-2-RAW.md",
+   "line": 365,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "\"| work item identity + substrate alias | R | ... Unattributable runs are"
+  },
+  {
+   "file": "docs/reviews/R-POLARIS-DOSSIER-ONE-COMMAND-RUN-3-RAW.md",
+   "line": 108,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "| N1 | Closed. Spec 112 and 114 exclude checkout and gate records, aliases and mounted ancestors; the shim loads no checkout content, role commands execute outside the view, and the falsifier at 146 covers a shim or broker leak. Spec 260 separately gates every"
+  },
+  {
+   "file": "docs/reviews/R-POLARIS-M6-GENERATOR-HONESTY-FUNNEL-2-RAW.md",
+   "line": 332,
+   "predicate": "FORCE",
+   "retained": true,
+   "text": "**Defect.** \"`build:poc` (`package.json` line 15) is `tsc -b --force` over"
+  },
+  {
+   "file": "docs/reviews/R-POLARIS-M6-GENERATOR-HONESTY-FUNNEL-RAW.md",
+   "line": 85,
+   "predicate": "FORCE",
+   "retained": true,
+   "text": "- **`build:poc`.** `package.json` line 15 is `tsc -b --force` over four"
+  },
+  {
+   "file": "docs/reviews/R-POLARIS-M9-ONE-IDENTITY-FUNNEL-2-RAW.md",
+   "line": 67,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "| F10 | non-blocking | **REPAIRED** | Gate 3's slice 6 row now carries `packages/three-surface-poc-core/src/model.ts` with the reason (slice 6b's canonical identity and its alias list live on the model), the superseded omission marked, and the four-slice work-"
+  },
+  {
+   "file": "docs/reviews/R-PR408-WAITING-SESSIONS-2-RAW.md",
+   "line": 49,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "- `--permission-mode`'s listed choices are acceptEdits, auto, bypassPermissions, manual, dontAsk and plan, so `default` is not listed. However, `claude --permission-mode default --version` exits 0, while `--permission-mode bogusmode` exits 1 with \"argument 'bo"
+  },
+  {
+   "file": "docs/reviews/R-PWB-N11-SLICES1-3-CONFIRMATION-RAW.md",
+   "line": 157,
+   "predicate": "FORCE",
+   "retained": true,
+   "text": "- `npx tsc -b packages/polaris-generation-core --force`: exit 0, clean"
+  },
+  {
+   "file": "docs/reviews/R-PWB-N3-SLICE4-CONFIRMATION-RAW.md",
+   "line": 191,
+   "predicate": "APP_TC",
+   "retained": true,
+   "text": "- **`npx tsc --noEmit -p apps/three-surface-poc`** \u2192 clean (exit 0), but"
+  },
+  {
+   "file": "docs/reviews/R-PWB-N3-SLICE4-CONFIRMATION-RAW.md",
+   "line": 192,
+   "predicate": "FORCE",
+   "retained": true,
+   "text": "only *after* first running `npx tsc -b --force packages/cap1-core"
+  },
+  {
+   "file": "docs/reviews/R-PWB-N3-SLICE4-CONFIRMATION-RAW.md",
+   "line": 197,
+   "predicate": "DIST_DECL",
+   "retained": true,
+   "text": "core through `dist` declarations: run `tsc -b` first... or the app reports"
+  },
+  {
+   "file": "docs/reviews/R-PWB-N3-SLICE4-REVIEW-RAW.md",
+   "line": 202,
+   "predicate": "FORCE",
+   "retained": true,
+   "text": "- `npm run build:poc` (full `tsc -b --force` across cap1-core, cap1-daemon,"
+  },
+  {
+   "file": "docs/reviews/R-PWB-N3-SLICE4-REVIEW-RAW.md",
+   "line": 205,
+   "predicate": "APP_TC",
+   "retained": true,
+   "text": "- `npx tsc --noEmit -p apps/three-surface-poc`: clean, no output."
+  },
+  {
+   "file": "docs/reviews/R-PWB-N3-SLICES1-2-CONFIRMATION-2-RAW.md",
+   "line": 241,
+   "predicate": "APP_TC",
+   "retained": true,
+   "text": "- `npx tsc --noEmit -p apps/three-surface-poc` \u2014 clean (run after the core"
+  },
+  {
+   "file": "docs/reviews/R-PWB-N3-SLICES1-2-CONFIRMATION-2-RAW.md",
+   "line": 242,
+   "predicate": "DIST_DECL",
+   "retained": true,
+   "text": "build, per the AGENTS.md guardrail on stale `dist` declarations)."
+  },
+  {
+   "file": "docs/reviews/R-PWB-N3-SLICES1-2-CONFIRMATION-2-RAW.md",
+   "line": 243,
+   "predicate": "FORCE",
+   "retained": true,
+   "text": "- `npm run build:poc` (`tsc -b --force` across all four packages) \u2014 clean."
+  },
+  {
+   "file": "docs/reviews/R-PWB-N3-SLICES1-2-CONFIRMATION-2-RAW.md",
+   "line": 292,
+   "predicate": "APP_TC",
+   "retained": true,
+   "text": "npx tsc --noEmit -p apps/three-surface-poc"
+  },
+  {
+   "file": "docs/reviews/R-PWB-N3-SLICES1-2-CONFIRMATION-RAW.md",
+   "line": 181,
+   "predicate": "APP_TC",
+   "retained": true,
+   "text": "- `tsc --noEmit -p apps/three-surface-poc` \u2014 clean (run after the core"
+  },
+  {
+   "file": "docs/reviews/R-PWB-N3-SLICES1-2-CONFIRMATION-RAW.md",
+   "line": 182,
+   "predicate": "DIST_DECL",
+   "retained": true,
+   "text": "build per the AGENTS.md guardrail on stale `dist` declarations)."
+  },
+  {
+   "file": "docs/reviews/R-PWB-N3-SLICES1-2-CONFIRMATION-RAW.md",
+   "line": 210,
+   "predicate": "APP_TC",
+   "retained": true,
+   "text": "npx tsc --noEmit -p apps/three-surface-poc"
+  },
+  {
+   "file": "docs/reviews/R-PWB-N3-SLICES1-2-REVIEW-RAW.md",
+   "line": 209,
+   "predicate": "FORCE",
+   "retained": true,
+   "text": "- `npm run build:poc` (`tsc -b --force` across `cap1-core`, `cap1-daemon`,"
+  },
+  {
+   "file": "docs/reviews/R-PWB-N4-SLICES3-4-CONFIRMATION-RAW.md",
+   "line": 14,
+   "predicate": "FORCE",
+   "retained": true,
+   "text": "worktree was removed (`git worktree remove --force`) after the review"
+  },
+  {
+   "file": "docs/reviews/R-PWB-N4-SLICES3-4-REVIEW-RAW.md",
+   "line": 56,
+   "predicate": "FORCE",
+   "retained": true,
+   "text": "- `npm run build:poc` (`tsc -b --force packages/cap1-core packages/cap1-daemon packages/three-surface-poc-core apps/three-surface-poc`): no output, exit clean."
+  },
+  {
+   "file": "docs/reviews/R-PWB-N8-SLICE1-REVIEW-RAW.md",
+   "line": 296,
+   "predicate": "FORCE",
+   "retained": true,
+   "text": "> tsc -b --force packages/cap1-core packages/cap1-daemon packages/three-surface-poc-core apps/three-surface-poc"
+  },
+  {
+   "file": "docs/reviews/R-PWB-N8-SLICE2-CONFIRMATION-RAW.md",
+   "line": 73,
+   "predicate": "APP_TC",
+   "retained": true,
+   "text": "- **App typecheck** (`npx tsc --noEmit -p apps/three-surface-poc`): clean, no output."
+  },
+  {
+   "file": "docs/reviews/R-PWB-N8-SLICE2-CONFIRMATION-RAW.md",
+   "line": 74,
+   "predicate": "FORCE",
+   "retained": true,
+   "text": "- **`npm run build:poc`** (`tsc -b --force` over cap1-core, cap1-daemon, three-surface-poc-core, apps/three-surface-poc): clean."
+  },
+  {
+   "file": "docs/reviews/R-PWB-N8-SLICE3-REVIEW-RAW.md",
+   "line": 70,
+   "predicate": "FORCE",
+   "retained": true,
+   "text": "use (`git worktree remove --force`)."
+  },
+  {
+   "file": "docs/reviews/R-PWB-N8-SLICE3-REVIEW-RAW.md",
+   "line": 136,
+   "predicate": "FORCE",
+   "retained": true,
+   "text": "- `npm run build:poc` (`tsc -b --force` across `cap1-core`, `cap1-daemon`,"
+  },
+  {
+   "file": "docs/reviews/R-PWB-N8-SLICE3-REVIEW-RAW.md",
+   "line": 138,
+   "predicate": "FORCE",
+   "retained": true,
+   "text": "- `npx tsc -b packages/polaris-generation-core --force` and `npx tsc"
+  },
+  {
+   "file": "docs/reviews/R-PWB-N8-SLICE3-REVIEW-RAW.md",
+   "line": 195,
+   "predicate": "FORCE",
+   "retained": true,
+   "text": "git worktree remove <scratch>/base-main --force"
+  },
+  {
+   "file": "docs/reviews/R-PWB-N8-SLICE3-REVIEW-RAW.md",
+   "line": 205,
+   "predicate": "FORCE",
+   "retained": true,
+   "text": "npx tsc -b packages/polaris-generation-core --force"
+  },
+  {
+   "file": "docs/reviews/R-PWB-N8-SLICE3-REVIEW-RAW.md",
+   "line": 206,
+   "predicate": "APP_TC",
+   "retained": true,
+   "text": "npx tsc --noEmit -p apps/three-surface-poc"
+  },
+  {
+   "file": "docs/reviews/R-PWB-N8-SLICE4-REVIEW-RAW.md",
+   "line": 72,
+   "predicate": "DIST_DECL",
+   "retained": true,
+   "text": "- `npx tsc --noEmit -p apps/three-surface-poc` \u2014 **initially failed** with `Cannot find module '@syzygy/cap1-daemon'` across many files (not this PR's files) because `packages/cap1-core`/`packages/cap1-daemon` had no `dist/` yet in the fresh worktree (per AGEN"
+  },
+  {
+   "file": "docs/reviews/R-PWB-N8-SLICE4-REVIEW-RAW.md",
+   "line": 72,
+   "predicate": "APP_TC",
+   "retained": true,
+   "text": "- `npx tsc --noEmit -p apps/three-surface-poc` \u2014 **initially failed** with `Cannot find module '@syzygy/cap1-daemon'` across many files (not this PR's files) because `packages/cap1-core`/`packages/cap1-daemon` had no `dist/` yet in the fresh worktree (per AGEN"
+  },
+  {
+   "file": "docs/reviews/R-PWB-OPENING-BAND-SCENARIO-DELTA-CONFIRMATION-7-RAW.md",
+   "line": 120,
+   "predicate": "ALIAS",
+   "retained": true,
+   "text": "`_SUBJECTS` aliases all first appear in that diff. The pointer claim the"
+  },
+  {
+   "file": "docs/reviews/R-PWB-U05-16-REVIEW-RAW.md",
+   "line": 109,
+   "predicate": "FORCE",
+   "retained": true,
+   "text": "<scratchpad>/pr90-base origin/main`, later `git worktree remove --force`;"
+  },
+  {
+   "file": "docs/reviews/R-PWB-U05-17-REVIEW-RAW.md",
+   "line": 166,
+   "predicate": "FORCE",
+   "retained": true,
+   "text": "git worktree remove --force <scratch>/rev94"
+  },
+  {
+   "file": "docs/reviews/R-TREE-STYLE-ROUTE-1-RAW.md",
+   "line": 49,
+   "predicate": "FORCE",
+   "retained": true,
+   "text": "- OLD, one paragraph: \"**No new language, package, runtime dependency or route.** `[Observed]` The adopted registry entry names \u2026 so no `tsc -b` project list or Vitest project entry changes. TypeScript on Node \u226522.15, Vitest, `tsc -b --force` for `build:poc`, "
+  },
+  {
+   "file": "docs/reviews/R-TREE-STYLE-ROUTE-2-RAW.md",
+   "line": 25,
+   "predicate": "FORCE",
+   "retained": true,
+   "text": "- **M5 RESOLVED.** Now reads: \"`[Observed]` The adopted registry entry \u2026 Vitest project entry changes. TypeScript on Node \u226522.15, Vitest, `tsc -b --force` for `build:poc`, exactly as today.\" Both sentences are in one labelled bullet, as in OLD. The code span `"
+  },
+  {
+   "file": "docs/superpowers/plans/2026-08-24-cap1-runtime-hardening-followups.md",
+   "line": 854,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "- Produces: root `test.projects`, source aliases for no-prebuild tests,"
+  },
+  {
+   "file": "docs/superpowers/plans/2026-08-24-cap1-runtime-hardening-followups.md",
+   "line": 866,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "alias: {"
+  },
+  {
+   "file": "docs/superpowers/plans/2026-08-24-cap1-runtime-hardening-followups.md",
+   "line": 910,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "Vitest's explicit source aliases are the only no-prebuild path. Node and"
+  },
+  {
+   "file": "docs/superpowers/plans/2026-08-24-cap1-runtime-hardening-followups.md",
+   "line": 934,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "static imports from `@syzygy/cap1-daemon`. Do not retain an alias, fallback, or"
+  },
+  {
+   "file": "docs/superpowers/plans/2026-08-24-cap1-runtime-hardening-followups.md",
+   "line": 970,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "built execution fails. Remove one Vitest alias and prove no-prebuild tests fail."
+  },
+  {
+   "file": "openspec/changes/polaris-dossier-one-command-run/REVIEW-BRIEF-ROUND-3.md",
+   "line": 56,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "aliases and mounted ancestors included. The minimal shim supplies only"
+  },
+  {
+   "file": "openspec/changes/polaris-dossier-one-command-run/ROUND-3-REPAIRS.md",
+   "line": 39,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "| N1 | REQ-042 removes the Syzygy checkout and gate records from every role view, including aliases and mounted ancestors. Only a minimal command shim remains; allowed role commands execute through the supervisor outside the view. The scenario and falsifier co"
+  },
+  {
+   "file": "openspec/changes/polaris-dossier-one-command-run/proposed/polaris-generation/spec.md",
+   "line": 112,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "In a launched run Syzygy SHALL start every session inside a file-system view it builds for that session's role before the session's process starts, so that the session and every process it starts can reach only: for the authoring session, the clone read-only, "
+  },
+  {
+   "file": "openspec/changes/polaris-dossier-one-command-run/proposed/polaris-generation/spec.md",
+   "line": 130,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "- **WHEN** any launched session, or a process it starts, tries to list, read or write the Syzygy checkout or a gate record, directly or through an alias or mounted ancestor"
+  },
+  {
+   "file": "openspec/changes/polaris-dossier-one-command-run/proposed/polaris-generation/spec.md",
+   "line": 146,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "- **Falsifier:** Any session or its child reads, lists or writes a path the matrix forbids, including the Syzygy checkout through an alias, ancestor, shim or broker response; a gate record's bytes change; a session starts without a fresh host check or without "
+  },
+  {
+   "file": "openspec/changes/polaris-manifesto-generation/ADAPTER-DECLARATIONS.md",
+   "line": 19,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "| Scheduler adapter | Captured work export/history (3), adapter/mapping versions (7/8), materialization and warranted intent (2/6), effective acts (11) | Capture-stamped external lifecycle and qualified aliases; scheduler remains authoritative | Existing expli"
+  },
+  {
+   "file": "openspec/changes/polaris-manifesto-generation/ADAPTER-DECLARATIONS.md",
+   "line": 41,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "| Identity | Stable opaque role identity and distinct implementation identity; project identity and external authority answered. Names, paths and provider aliases are descriptive locators. |"
+  },
+  {
+   "file": "openspec/changes/polaris-manifesto-generation/ADAPTER-DECLARATIONS.md",
+   "line": 62,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "role identity and historical implementation identity/aliases; it does not migrate"
+  },
+  {
+   "file": "openspec/changes/polaris-manifesto-generation/ADAPTER-DECLARATIONS.md",
+   "line": 63,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "old native aliases into a new provider or scheduler namespace."
+  },
+  {
+   "file": "openspec/changes/polaris-manifesto-generation/ADAPTER-DECLARATIONS.md",
+   "line": 95,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "| Work-item identity and qualified substrate alias | Required representation; unattributable execution remains visible as execution noise, never silently dropped |"
+  },
+  {
+   "file": "openspec/changes/polaris-manifesto-generation/ASSET-CONTRACT.md",
+   "line": 37,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "| Glossary | Term, supported explanation, aliases where supported, relevant block references | Explain unfamiliar project vocabulary. Preserve unresolved meanings as Unknown; no invented definitions to fill a template. Contextual definitions and glossary links"
+  },
+  {
+   "file": "openspec/changes/polaris-manifesto-generation/INTERFACES.md",
+   "line": 43,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "filled from an assumption about an alias. The declared reproducibility standard"
+  },
+  {
+   "file": "openspec/changes/polaris-manifesto-generation/specs/polaris-generation/spec.md",
+   "line": 903,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "Every generator observer or adapter SHALL resolve a per-project registry entry with RFC4-2's declared role/implementation identities, versions, inputs and snapshot mapping, output classes and identity schemes, per-output determinism class, failure mapping and "
+  },
+  {
+   "file": "openspec/changes/polaris-manifesto-generation/specs/polaris-generation/spec.md",
+   "line": 918,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "- **THEN** new snapshot inputs identify the change while historical records keep their original identities, versions and aliases"
+  },
+  {
+   "file": "openspec/changes/polaris-project-wide-butlers-model/contract-coverage-matrix/RFC-0004-0006.md",
+   "line": 47,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "| RFC4-6.c1 | RFC4-6 | .syzygy/governance/contracts/rfcs/RFC-0004/general-contract.md:137-143 | Scheduler terminology and aliases translated without impersonating kernel vocabulary | no | [Inferred] This capability adds project-shape observation and Polaris pr"
+  },
+  {
+   "file": "openspec/changes/polaris-project-wide-butlers-model/contract-coverage-matrix/RFC-0004-0006.md",
+   "line": 57,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "| RFC4-9.c2 | RFC4-9 | .syzygy/governance/contracts/rfcs/RFC-0004/general-contract.md:175-179 | History remains under old implementation identity; aliases are not migrated | yes | [Inferred] No historical substitution case exists. | unknown-uncovered |"
+  },
+  {
+   "file": "openspec/changes/polaris-project-wide-butlers-model/contract-coverage-parts/RFC-0004-0006.md",
+   "line": 47,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "| RFC4-6 | R4G:137-143 | Scheduler terminology and aliases translated without impersonating kernel vocabulary | no | [Inferred] This capability adds project-shape observation and Polaris presentation, not scheduler-state translation. | believed not applicable "
+  },
+  {
+   "file": "openspec/changes/polaris-project-wide-butlers-model/contract-coverage-parts/RFC-0004-0006.md",
+   "line": 56,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "| RFC4-9 | R4G:175-179 | History remains under old implementation identity; aliases are not migrated | yes | [Inferred] No historical substitution case exists. | Unknown uncovered |"
+  },
+  {
+   "file": "openspec/changes/polaris-project-wide-butlers-model/contract-coverage-parts/RFC-0007-0009.md",
+   "line": 14,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "Path aliases below resolve to authoritative accepted bytes:"
+  },
+  {
+   "file": "openspec/changes/three-surface-poc-experience/CONTRACT-COVERAGE.md",
+   "line": 133,
+   "predicate": "ALIAS",
+   "retained": false,
+   "text": "| RFC4-6 | Substrate-native identifiers (bead id / bead-prefix) carried as qualified alias, never primary key | **Unknown** \u2014 POC-REQ-011 checks prefix membership but no requirement confirms bead_id isn't used as primary identity elsewhere | \u2014 |"
+  },
+  {
+   "file": "openspec/changes/three-surface-poc-experience/tasks.md",
+   "line": 42,
+   "predicate": "FORCE",
+   "retained": false,
+   "text": "is inline text compiled by the normal `tsc -b --force` build rather"
+  }
+ ]
+}

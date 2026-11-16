@@ -1,0 +1,515 @@
+{
+ "head": "b214ef1015c134dbc821c4f4dec654a16314c354",
+ "node": "v24.6.0",
+ "buildCommand": "npm run build:poc",
+ "summary": {
+  "mutants": 9,
+  "rowsOk": 9,
+  "rowsNotOk": [],
+  "controlKilledByNothing": true,
+  "killedByProbe": [
+   "J1-digest-drops-the-first-byte",
+   "J2-digest-over-the-whole-backing-buffer",
+   "J3-digest-over-the-decoded-text",
+   "J4-prefix-dropped",
+   "W1-run-digest-over-changed-text",
+   "W2-judgment-digest-drops-the-first-character",
+   "W3-stale-latin1-local-copy"
+  ],
+  "killedByTests": [
+   "J1-digest-drops-the-first-byte",
+   "J2-digest-over-the-whole-backing-buffer",
+   "J3-digest-over-the-decoded-text",
+   "J4-prefix-dropped",
+   "W1-run-digest-over-changed-text",
+   "W2-judgment-digest-drops-the-first-character",
+   "W3-stale-latin1-local-copy"
+  ],
+  "killedBySweep": [
+   "J5-equivalent-local-copy",
+   "W3-stale-latin1-local-copy",
+   "W4-equivalent-local-copy"
+  ]
+ },
+ "control": {
+  "commit": "b214ef1015c134dbc821c4f4dec654a16314c354",
+  "sweep": {
+   "createHashSha256Sites": 6,
+   "localSha256Definitions": 1,
+   "killed": false
+  },
+  "probe": {
+   "killed": false,
+   "compareExit": 0,
+   "rowsCompared": 40,
+   "rowsThatDiffer": 0,
+   "differ": []
+  },
+  "tests": {
+   "killed": false,
+   "exit": 0,
+   "total": 127,
+   "failedTestCount": 0,
+   "failedTests": [],
+   "files": [
+    "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+    "apps/three-surface-poc/src/test-artifact-verification-consumers.test.ts",
+    "apps/three-surface-poc/src/keyboard-sweep-record.test.ts",
+    "apps/three-surface-poc/src/polaris-copy.test.ts",
+    "apps/three-surface-poc/src/polaris-parity-sweep.test.ts",
+    "apps/three-surface-poc/src/polaris-walkthrough-readiness.test.ts",
+    "apps/three-surface-poc/src/response-identity-independent.test.ts"
+   ]
+  },
+  "killedBy": [],
+  "ok": true
+ },
+ "rows": [
+  {
+   "id": "J1-digest-drops-the-first-byte",
+   "expect": "killed",
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.ts",
+   "old": "  return `sha256:${sha256(rawJUnit)}`;",
+   "new": "  return `sha256:${sha256(rawJUnit.subarray(1))}`;",
+   "note": "",
+   "commit": "6f9af8d96cddabb403307d46d38bd99f11ccdb16",
+   "sweep": {
+    "createHashSha256Sites": 6,
+    "localSha256Definitions": 1,
+    "killed": false
+   },
+   "probe": {
+    "killed": true,
+    "compareExit": 1,
+    "rowsCompared": 40,
+    "rowsThatDiffer": 11,
+    "differ": [
+     "A-junitDigest/at-the-ceiling",
+     "A-junitDigest/empty-run-exit-5",
+     "A-junitDigest/failing-exit-1",
+     "A-junitDigest/invalid-utf8-tail",
+     "A-junitDigest/multibyte-names",
+     "A-junitDigest/passing-buffer",
+     "A-junitDigest/passing-plain-uint8array",
+     "A-junitDigest/passing-pooled-small-buffer",
+     "A-junitDigest/passing-subarray-view-offset-17",
+     "A-junitDigest/passing-uint8array-view-offset-5",
+     "A-junitDigest/utf8-bom"
+    ]
+   },
+   "tests": {
+    "killed": true,
+    "exit": 1,
+    "total": 41,
+    "failedTestCount": 1,
+    "failedTests": [
+     "buildOperatorReportedTestArtifactRecord digests the file's own bytes, which equal sha256sum even when they are not valid UTF-8"
+    ],
+    "files": [
+     "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+     "apps/three-surface-poc/src/test-artifact-verification-consumers.test.ts"
+    ]
+   },
+   "killedBy": [
+    "probe",
+    "tests"
+   ],
+   "ok": true
+  },
+  {
+   "id": "J2-digest-over-the-whole-backing-buffer",
+   "expect": "killed",
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.ts",
+   "old": "  return `sha256:${sha256(rawJUnit)}`;",
+   "new": "  return `sha256:${sha256(Buffer.from(rawJUnit.buffer))}`;",
+   "note": "the review's R1: a view into a larger buffer",
+   "commit": "d2f958c99b3556e2d5504cb687251e96c16ac85c",
+   "sweep": {
+    "createHashSha256Sites": 6,
+    "localSha256Definitions": 1,
+    "killed": false
+   },
+   "probe": {
+    "killed": true,
+    "compareExit": 1,
+    "rowsCompared": 40,
+    "rowsThatDiffer": 9,
+    "differ": [
+     "A-junitDigest/empty-run-exit-5",
+     "A-junitDigest/failing-exit-1",
+     "A-junitDigest/invalid-utf8-tail",
+     "A-junitDigest/multibyte-names",
+     "A-junitDigest/passing-buffer",
+     "A-junitDigest/passing-pooled-small-buffer",
+     "A-junitDigest/passing-subarray-view-offset-17",
+     "A-junitDigest/passing-uint8array-view-offset-5",
+     "A-junitDigest/utf8-bom"
+    ]
+   },
+   "tests": {
+    "killed": true,
+    "exit": 1,
+    "total": 41,
+    "failedTestCount": 1,
+    "failedTests": [
+     "buildOperatorReportedTestArtifactRecord digests the file's own bytes, which equal sha256sum even when they are not valid UTF-8"
+    ],
+    "files": [
+     "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+     "apps/three-surface-poc/src/test-artifact-verification-consumers.test.ts"
+    ]
+   },
+   "killedBy": [
+    "probe",
+    "tests"
+   ],
+   "ok": true
+  },
+  {
+   "id": "J3-digest-over-the-decoded-text",
+   "expect": "killed",
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.ts",
+   "old": "  return `sha256:${sha256(rawJUnit)}`;",
+   "new": "  return `sha256:${sha256(new TextDecoder().decode(rawJUnit))}`;",
+   "note": "the defect round 2 note 5 of the test-artifact review fixed",
+   "commit": "d6c32c108f3f10da13b62abff64aa4fbeef76b73",
+   "sweep": {
+    "createHashSha256Sites": 6,
+    "localSha256Definitions": 1,
+    "killed": false
+   },
+   "probe": {
+    "killed": true,
+    "compareExit": 1,
+    "rowsCompared": 40,
+    "rowsThatDiffer": 2,
+    "differ": [
+     "A-junitDigest/invalid-utf8-tail",
+     "A-junitDigest/utf8-bom"
+    ]
+   },
+   "tests": {
+    "killed": true,
+    "exit": 1,
+    "total": 41,
+    "failedTestCount": 1,
+    "failedTests": [
+     "buildOperatorReportedTestArtifactRecord digests the file's own bytes, which equal sha256sum even when they are not valid UTF-8"
+    ],
+    "files": [
+     "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+     "apps/three-surface-poc/src/test-artifact-verification-consumers.test.ts"
+    ]
+   },
+   "killedBy": [
+    "probe",
+    "tests"
+   ],
+   "ok": true
+  },
+  {
+   "id": "J4-prefix-dropped",
+   "expect": "killed",
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.ts",
+   "old": "  return `sha256:${sha256(rawJUnit)}`;",
+   "new": "  return `${sha256(rawJUnit)}`;",
+   "note": "",
+   "commit": "e990550c36a5904e33476773503351400cc180e3",
+   "sweep": {
+    "createHashSha256Sites": 6,
+    "localSha256Definitions": 1,
+    "killed": false
+   },
+   "probe": {
+    "killed": true,
+    "compareExit": 1,
+    "rowsCompared": 40,
+    "rowsThatDiffer": 11,
+    "differ": [
+     "A-junitDigest/at-the-ceiling",
+     "A-junitDigest/empty-run-exit-5",
+     "A-junitDigest/failing-exit-1",
+     "A-junitDigest/invalid-utf8-tail",
+     "A-junitDigest/multibyte-names",
+     "A-junitDigest/passing-buffer",
+     "A-junitDigest/passing-plain-uint8array",
+     "A-junitDigest/passing-pooled-small-buffer",
+     "A-junitDigest/passing-subarray-view-offset-17",
+     "A-junitDigest/passing-uint8array-view-offset-5",
+     "A-junitDigest/utf8-bom"
+    ]
+   },
+   "tests": {
+    "killed": true,
+    "exit": 1,
+    "total": 41,
+    "failedTestCount": 1,
+    "failedTests": [
+     "buildOperatorReportedTestArtifactRecord digests the file's own bytes, which equal sha256sum even when they are not valid UTF-8"
+    ],
+    "files": [
+     "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+     "apps/three-surface-poc/src/test-artifact-verification-consumers.test.ts"
+    ]
+   },
+   "killedBy": [
+    "probe",
+    "tests"
+   ],
+   "ok": true
+  },
+  {
+   "id": "J5-equivalent-local-copy",
+   "expect": "sweep-only",
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.ts",
+   "old": "import { sha256 } from '@syzygy/support';\n",
+   "new": "import { createHash } from 'node:crypto';\nconst sha256 = (value: Uint8Array): string => createHash('sha256').update(value).digest('hex');\n",
+   "note": "createHash and a local sha256 back in the file; the same bytes",
+   "commit": "2a11bf9a5cff27dbe55530e503194c3349809d07",
+   "sweep": {
+    "createHashSha256Sites": 7,
+    "localSha256Definitions": 2,
+    "killed": true
+   },
+   "probe": {
+    "killed": false,
+    "compareExit": 0,
+    "rowsCompared": 40,
+    "rowsThatDiffer": 0,
+    "differ": []
+   },
+   "tests": {
+    "killed": false,
+    "exit": 0,
+    "total": 41,
+    "failedTestCount": 0,
+    "failedTests": [],
+    "files": [
+     "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+     "apps/three-surface-poc/src/test-artifact-verification-consumers.test.ts"
+    ]
+   },
+   "killedBy": [
+    "sweep"
+   ],
+   "ok": true
+  },
+  {
+   "id": "W1-run-digest-over-changed-text",
+   "expect": "killed",
+   "file": "apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts",
+   "old": "  const runDigest = sha256(runText);",
+   "new": "  const runDigest = sha256(runText + ' ');",
+   "note": "",
+   "commit": "261abd938acc227fe2bd719bd53573f69b52b909",
+   "sweep": {
+    "createHashSha256Sites": 6,
+    "localSha256Definitions": 1,
+    "killed": false
+   },
+   "probe": {
+    "killed": true,
+    "compareExit": 1,
+    "rowsCompared": 40,
+    "rowsThatDiffer": 25,
+    "differ": [
+     "B-walkthrough-judgment-fixture/default/absent-judgment",
+     "B-walkthrough-judgment-fixture/default/absent-run-record",
+     "B-walkthrough-judgment-fixture/default/lawful-state-1",
+     "B-walkthrough-judgment-fixture/default/lawful-state-2",
+     "B-walkthrough-judgment-fixture/default/unlawful",
+     "B-walkthrough-judgment-fixture/lone-surrogate-answer-text/absent-judgment",
+     "B-walkthrough-judgment-fixture/lone-surrogate-answer-text/absent-run-record",
+     "B-walkthrough-judgment-fixture/lone-surrogate-answer-text/lawful-state-1",
+     "B-walkthrough-judgment-fixture/lone-surrogate-answer-text/lawful-state-2",
+     "B-walkthrough-judgment-fixture/lone-surrogate-answer-text/unlawful",
+     "B-walkthrough-judgment-fixture/no-answers-section/absent-judgment",
+     "B-walkthrough-judgment-fixture/no-answers-section/absent-run-record"
+    ]
+   },
+   "tests": {
+    "killed": true,
+    "exit": 1,
+    "total": 86,
+    "failedTestCount": 5,
+    "failedTests": [
+     "Polaris copy roles (PWB-REQ-012) keeps the copy table closed and rendered: unique ids, roles and kinds from the closed sets, and every row present with its role in some rendered state",
+     "PWB-REQ-020 exhaustive Polaris parity sweep the observed-degraded / lawful-state-2 matrix cell carries every marker family with a non-empty denominator, and state (2) alone claims independent verification",
+     "PWB-REQ-021 readiness on Polaris is ready and lawful together for a `/polaris`-only record",
+     "PWB-REQ-021 readiness on Polaris the default fixture record (through `/entry`) is not ready for path-outside-polaris even when the judgment is lawful",
+     "PWB-REQ-021 readiness on Polaris an unlawful judgment does not make readiness false, and a not-ready record does not make the judgment unlawful"
+    ],
+    "files": [
+     "apps/three-surface-poc/src/keyboard-sweep-record.test.ts",
+     "apps/three-surface-poc/src/polaris-copy.test.ts",
+     "apps/three-surface-poc/src/polaris-parity-sweep.test.ts",
+     "apps/three-surface-poc/src/polaris-walkthrough-readiness.test.ts",
+     "apps/three-surface-poc/src/response-identity-independent.test.ts"
+    ]
+   },
+   "killedBy": [
+    "probe",
+    "tests"
+   ],
+   "ok": true
+  },
+  {
+   "id": "W2-judgment-digest-drops-the-first-character",
+   "expect": "killed",
+   "file": "apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts",
+   "old": "  const judgmentDigest = sha256(judgmentText);",
+   "new": "  const judgmentDigest = sha256(judgmentText.slice(1));",
+   "note": "",
+   "commit": "0bd7990da8dcb0b3841c41e5f8dfc83734b7a911",
+   "sweep": {
+    "createHashSha256Sites": 6,
+    "localSha256Definitions": 1,
+    "killed": false
+   },
+   "probe": {
+    "killed": true,
+    "compareExit": 1,
+    "rowsCompared": 40,
+    "rowsThatDiffer": 25,
+    "differ": [
+     "B-walkthrough-judgment-fixture/default/absent-judgment",
+     "B-walkthrough-judgment-fixture/default/absent-run-record",
+     "B-walkthrough-judgment-fixture/default/lawful-state-1",
+     "B-walkthrough-judgment-fixture/default/lawful-state-2",
+     "B-walkthrough-judgment-fixture/default/unlawful",
+     "B-walkthrough-judgment-fixture/lone-surrogate-answer-text/absent-judgment",
+     "B-walkthrough-judgment-fixture/lone-surrogate-answer-text/absent-run-record",
+     "B-walkthrough-judgment-fixture/lone-surrogate-answer-text/lawful-state-1",
+     "B-walkthrough-judgment-fixture/lone-surrogate-answer-text/lawful-state-2",
+     "B-walkthrough-judgment-fixture/lone-surrogate-answer-text/unlawful",
+     "B-walkthrough-judgment-fixture/no-answers-section/absent-judgment",
+     "B-walkthrough-judgment-fixture/no-answers-section/absent-run-record"
+    ]
+   },
+   "tests": {
+    "killed": true,
+    "exit": 1,
+    "total": 86,
+    "failedTestCount": 5,
+    "failedTests": [
+     "Polaris copy roles (PWB-REQ-012) keeps the copy table closed and rendered: unique ids, roles and kinds from the closed sets, and every row present with its role in some rendered state",
+     "PWB-REQ-020 exhaustive Polaris parity sweep the observed-degraded / lawful-state-2 matrix cell carries every marker family with a non-empty denominator, and state (2) alone claims independent verification",
+     "PWB-REQ-021 readiness on Polaris is ready and lawful together for a `/polaris`-only record",
+     "PWB-REQ-021 readiness on Polaris the default fixture record (through `/entry`) is not ready for path-outside-polaris even when the judgment is lawful",
+     "PWB-REQ-021 readiness on Polaris an unlawful judgment does not make readiness false, and a not-ready record does not make the judgment unlawful"
+    ],
+    "files": [
+     "apps/three-surface-poc/src/keyboard-sweep-record.test.ts",
+     "apps/three-surface-poc/src/polaris-copy.test.ts",
+     "apps/three-surface-poc/src/polaris-parity-sweep.test.ts",
+     "apps/three-surface-poc/src/polaris-walkthrough-readiness.test.ts",
+     "apps/three-surface-poc/src/response-identity-independent.test.ts"
+    ]
+   },
+   "killedBy": [
+    "probe",
+    "tests"
+   ],
+   "ok": true
+  },
+  {
+   "id": "W3-stale-latin1-local-copy",
+   "expect": "killed",
+   "file": "apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts",
+   "old": "import { sha256 } from '@syzygy/support';\n",
+   "new": "import { createHash } from 'node:crypto';\nconst sha256 = (text: string): string => createHash('sha256').update(text, 'latin1').digest('hex');\n",
+   "note": "the review's R5 shape: differs on non-ASCII answer text",
+   "commit": "4a342501ee95b6d83f247d765ef363b046a9da13",
+   "sweep": {
+    "createHashSha256Sites": 7,
+    "localSha256Definitions": 2,
+    "killed": true
+   },
+   "probe": {
+    "killed": true,
+    "compareExit": 1,
+    "rowsCompared": 40,
+    "rowsThatDiffer": 25,
+    "differ": [
+     "B-walkthrough-judgment-fixture/default/absent-judgment",
+     "B-walkthrough-judgment-fixture/default/absent-run-record",
+     "B-walkthrough-judgment-fixture/default/lawful-state-1",
+     "B-walkthrough-judgment-fixture/default/lawful-state-2",
+     "B-walkthrough-judgment-fixture/default/unlawful",
+     "B-walkthrough-judgment-fixture/lone-surrogate-answer-text/absent-judgment",
+     "B-walkthrough-judgment-fixture/lone-surrogate-answer-text/absent-run-record",
+     "B-walkthrough-judgment-fixture/lone-surrogate-answer-text/lawful-state-1",
+     "B-walkthrough-judgment-fixture/lone-surrogate-answer-text/lawful-state-2",
+     "B-walkthrough-judgment-fixture/lone-surrogate-answer-text/unlawful",
+     "B-walkthrough-judgment-fixture/no-answers-section/absent-judgment",
+     "B-walkthrough-judgment-fixture/no-answers-section/absent-run-record"
+    ]
+   },
+   "tests": {
+    "killed": true,
+    "exit": 1,
+    "total": 86,
+    "failedTestCount": 5,
+    "failedTests": [
+     "Polaris copy roles (PWB-REQ-012) keeps the copy table closed and rendered: unique ids, roles and kinds from the closed sets, and every row present with its role in some rendered state",
+     "PWB-REQ-020 exhaustive Polaris parity sweep the observed-degraded / lawful-state-2 matrix cell carries every marker family with a non-empty denominator, and state (2) alone claims independent verification",
+     "PWB-REQ-021 readiness on Polaris is ready and lawful together for a `/polaris`-only record",
+     "PWB-REQ-021 readiness on Polaris the default fixture record (through `/entry`) is not ready for path-outside-polaris even when the judgment is lawful",
+     "PWB-REQ-021 readiness on Polaris an unlawful judgment does not make readiness false, and a not-ready record does not make the judgment unlawful"
+    ],
+    "files": [
+     "apps/three-surface-poc/src/keyboard-sweep-record.test.ts",
+     "apps/three-surface-poc/src/polaris-copy.test.ts",
+     "apps/three-surface-poc/src/polaris-parity-sweep.test.ts",
+     "apps/three-surface-poc/src/polaris-walkthrough-readiness.test.ts",
+     "apps/three-surface-poc/src/response-identity-independent.test.ts"
+    ]
+   },
+   "killedBy": [
+    "probe",
+    "tests",
+    "sweep"
+   ],
+   "ok": true
+  },
+  {
+   "id": "W4-equivalent-local-copy",
+   "expect": "sweep-only",
+   "file": "apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts",
+   "old": "import { sha256 } from '@syzygy/support';\n",
+   "new": "import { createHash } from 'node:crypto';\nconst sha256 = (text: string): string => createHash('sha256').update(text).digest('hex');\n",
+   "note": "the same UTF-8 digest; a copy only the sweep can see",
+   "commit": "ee03ed3ec004254abf1ec70922d183910721cc5c",
+   "sweep": {
+    "createHashSha256Sites": 7,
+    "localSha256Definitions": 2,
+    "killed": true
+   },
+   "probe": {
+    "killed": false,
+    "compareExit": 0,
+    "rowsCompared": 40,
+    "rowsThatDiffer": 0,
+    "differ": []
+   },
+   "tests": {
+    "killed": false,
+    "exit": 0,
+    "total": 86,
+    "failedTestCount": 0,
+    "failedTests": [],
+    "files": [
+     "apps/three-surface-poc/src/keyboard-sweep-record.test.ts",
+     "apps/three-surface-poc/src/polaris-copy.test.ts",
+     "apps/three-surface-poc/src/polaris-parity-sweep.test.ts",
+     "apps/three-surface-poc/src/polaris-walkthrough-readiness.test.ts",
+     "apps/three-surface-poc/src/response-identity-independent.test.ts"
+    ]
+   },
+   "killedBy": [
+    "sweep"
+   ],
+   "ok": true
+  }
+ ]
+}

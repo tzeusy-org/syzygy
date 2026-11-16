@@ -1,0 +1,9 @@
+# Source-time supplement to the shared mutation runner owner answer
+
+[Observed 2026-10-29] The retained harness source records the owner’s **A** message at **2026-10-29T00:21:31.700Z**. The preceding question’s source event is dated **2026-10-28T00:30:32.863Z** and its exact question/option text matches the already retained offering. This supplements the same `SHARED-MUTATION-RUNNER-20261028-R1` selection recorded by [the owner direction](../../../.syzygy/governance/decisions/OWNER-DIRECTION-SHARED-MUTATION-RUNNER-2026-10-29.md); it introduces no new authorization or scope.
+
+The chat input available when the direction was transcribed supplied no separate message timestamp. This later recovery uses this session’s harness source, and preserves the original direction and `OWNER-ANSWER.json` unchanged. Their transcription time remains a transcription time. The recovered timestamp identifies the owner-message event as captured by the harness; it is not a claim about device-keystroke time or an independently verified ceremony clock.
+
+[OWNER-MESSAGE-SOURCE.json](OWNER-MESSAGE-SOURCE.json) binds the exact retained source records, source line locators, session identity, event timestamps and offered-packet digest. [The question record](OWNER-QUESTION-HARNESS-RECORD.json) and [the answer record](OWNER-ANSWER-HARNESS-RECORD.json) preserve their source-line bytes. Their contents and hashes are checked against the source and the retained offering; these checks do not authenticate the human independently. No A1 correlation identity or Syzygy-verified status is claimed.
+
+The original selected scope, original retention manifest and raw reviews remain unchanged. Ownership, implementation, review and runtime evidence gates still apply. This factual source supplement neither performs a different act nor transfers the runner answer to RFC2, P111 or any other decision.

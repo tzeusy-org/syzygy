@@ -1,0 +1,2680 @@
+{
+ "format": "vision-pursuit-data/1",
+ "run": "2026-11-09 Polaris dossier generation",
+ "audited_commit": "fd08ea62",
+ "origin_main_at_write": "256a41b9",
+ "subject_run": "run-ffe579c77dc21d9f6dd87ca6e2bc9301 (Redis 8.10.2)",
+ "corrections": [
+  "rev 6 fidelity verdict is not-ready/blocking (lanes ideas and design said it passed)",
+  "renderDossierSite is 563 lines by brace count (dossier-site.ts:238-800)",
+  "12 test timeouts measured at host load 26-34 on 12 cores"
+ ],
+ "orchestrator_verified": [
+  "render only at draftRevision 5 (steps.jsonl)",
+  "fidelity-verdict-6 readiness not-ready",
+  "brief.md never states the audience (1 occurrence: 'the stated audience')",
+  "20 credential copies, 16 at mode 777, state root 777, ~/.local 700 (paths/modes only)",
+  "glossary 1 entry, u-term",
+  "0 judgement marks in rev-6.json",
+  "0 of 45 pages carry a script",
+  "one 64-hex digest on index.html"
+ ],
+ "ranked_moves": [
+  {
+   "id": "P1",
+   "title": "Honest close and a review loop on every revision",
+   "owner_value": 5,
+   "build_cost": 2,
+   "prereq": "spec amendment; sequenced after dossier spec v1.6 (syzygy-pdja.26, PR #808) or folded into it; travels with P3+P5",
+   "merges": [
+    "E1-M1",
+    "E1-M6",
+    "D2-M1",
+    "I7-M1",
+    "S-M1"
+   ],
+   "relates": [
+    "syzygy-pdja.26",
+    "syzygy-1z8m"
+   ],
+   "slices": [
+    "polaris.ts supervisor: render every checked revision; mechanical design pre-pass before fidelity repairs",
+    "separate fidelity/design repair budgets (check.ts maxRepairCycles split)",
+    "close.ts: site/review stage; record final standing per review kind, site of record, field-revision provenance, end state; refuse or label a newer unrendered passed draft",
+    "re-stamp review-status region on every page"
+   ]
+  },
+  {
+   "id": "P2",
+   "title": "The record tells the truth about credentials",
+   "owner_value": 5,
+   "build_cost": 2,
+   "prereq": "slice 1 none; slice 2 waits on P-117 Q1 (syzygy-bpyt.8.15)",
+   "merges": [
+    "E1-M2"
+   ],
+   "relates": [],
+   "slices": [
+    "mode-aware record sentences (launched vs operator-started)",
+    "delete agent-home credential copies at stop/close or broker hand-over",
+    "refuse a state root wider than 0700; test with a 777 fixture"
+   ]
+  },
+  {
+   "id": "P3",
+   "title": "Thesis-first landing and a spine",
+   "owner_value": 5,
+   "build_cost": 2,
+   "prereq": "spec amendment (local-agent-mode spec lines 247, 259); travels with P1+P5",
+   "merges": [
+    "D1-M1",
+    "I2-M1",
+    "I2-M5",
+    "D4-M2",
+    "S-M3"
+   ],
+   "relates": [],
+   "slices": [
+    "renderer-owned landing order: title, one-sentence thesis, hero slot; no apparatus above",
+    "schema thesis + 3-5 pillars with cost and substantiating Pole; check requires each pillar served",
+    "one-line draft/provenance ribbon replaces notice, legend, review status",
+    "brief compaction: drop overridden pipeline rules"
+   ]
+  },
+  {
+   "id": "P4",
+   "title": "Make the reader explicit",
+   "owner_value": 5,
+   "build_cost": 2,
+   "prereq": "none",
+   "merges": [
+    "I5-M1",
+    "I5-M2",
+    "I5-M3",
+    "S-M2"
+   ],
+   "relates": [],
+   "slices": [
+    "audience into brief and RS-2 (bug-sized)",
+    "landing reader-intent routes",
+    "skim view",
+    "optional persona lenses"
+   ]
+  },
+  {
+   "id": "P5",
+   "title": "Show, then tell",
+   "owner_value": 5,
+   "build_cost": 2,
+   "prereq": "spec amendment (landing and quotation clauses); travels with P1+P3",
+   "merges": [
+    "D1-M2",
+    "I3-M3",
+    "S-M7"
+   ],
+   "relates": [],
+   "slices": [
+    "hero element: verified, screened code/CLI/usage excerpt byte-checked like a quote",
+    "annotated code walk: rendered cited lines + cited margin notes",
+    "check advice when no hero artifact"
+   ]
+  },
+  {
+   "id": "P6",
+   "title": "Rendered reader probe: give readiness pixels",
+   "owner_value": 5,
+   "build_cost": 3,
+   "prereq": "spec amendment",
+   "merges": [
+    "E2-M1",
+    "D6-M1",
+    "E2-M2",
+    "I4-M2"
+   ],
+   "relates": [],
+   "slices": [
+    "headless Chrome 1440x900 and 390x844, light/dark; assertions: no h-scroll, h1+thesis on first screen, no diagram overflow, word budget",
+    "screenshots to the design reviewer",
+    "reader metrics stored in check/render records and diffed run over run (advice)",
+    "render-regression script over every stored draft"
+   ]
+  },
+  {
+   "id": "P7",
+   "title": "Comprehension probe as a readiness input",
+   "owner_value": 5,
+   "build_cost": 3,
+   "prereq": "spec amendment",
+   "merges": [
+    "E4-M1",
+    "I4-M1",
+    "S-M4",
+    "I4-M3"
+   ],
+   "relates": [
+    "syzygy-mea"
+   ],
+   "slices": [
+    "fresh newcomer-reader session sees only the rendered site",
+    "answers TARGETS' seven frozen questions via ReaderAnswerPort; graded against understanding record",
+    "result on review page and in readiness",
+    "scored archetype corpus (owner act)"
+   ]
+  },
+  {
+   "id": "P8",
+   "title": "Opinion with receipts",
+   "owner_value": 5,
+   "build_cost": 3,
+   "prereq": "spec amendment (quotation syntax)",
+   "merges": [
+    "D5-M1",
+    "I2-M2",
+    "D5-M2",
+    "I2-M4",
+    "S-M8"
+   ],
+   "relates": [
+    "syzygy-cnwp"
+   ],
+   "slices": [
+    "one labelled judgement per Pole, counted by check",
+    "decision-record cards + 'Choices and costs' index",
+    "free quotation syntax; strip comment markers in display, raw in evidence view",
+    "maintainers' voice strip"
+   ]
+  },
+  {
+   "id": "P9",
+   "title": "Archetype awareness",
+   "owner_value": 5,
+   "build_cost": 3,
+   "prereq": "spec amendment; corpus admission is an owner act",
+   "merges": [
+    "I1-M1",
+    "I1-M2",
+    "I1-M3",
+    "D2-M4",
+    "S-M6",
+    "I1-M4"
+   ],
+   "relates": [
+    "syzygy-mea.2"
+   ],
+   "slices": [
+    "repo-shape fingerprint from the tree listing; author confirms archetype",
+    "archetype question packs, elements, tech-table dimensions, templates",
+    "maintainer IA (mkdocs/Sphinx/SUMMARY.md) seeds Poles in project vocabulary",
+    "archetype-diverse proving corpus"
+   ]
+  },
+  {
+   "id": "P10",
+   "title": "Hierarchical exploration with a coverage map",
+   "owner_value": 5,
+   "build_cost": 3,
+   "prereq": "none",
+   "merges": [
+    "I6-M1",
+    "S-M9"
+   ],
+   "relates": [],
+   "slices": [
+    "partition pinned tree into subsystems",
+    "scout sessions return cited subsystem cards",
+    "check: card or deferred-by-budget per subsystem",
+    "subsystem atlas page"
+   ]
+  },
+  {
+   "id": "P11",
+   "title": "Owner steering, end to end",
+   "owner_value": 5,
+   "build_cost": 3,
+   "prereq": "spec amendment (annotations)",
+   "merges": [
+    "I7-M2",
+    "I7-M3",
+    "I7-M4",
+    "S-M10"
+   ],
+   "relates": [],
+   "slices": [
+    "owner steering record beside run config",
+    "outline sitting before drafting",
+    "annotate-and-rerender feedback loop"
+   ]
+  },
+  {
+   "id": "P12",
+   "title": "A diagram grammar that matches the question",
+   "owner_value": 5,
+   "build_cost": 4,
+   "prereq": "spec amendment (required diagrams)",
+   "merges": [
+    "I3-M1",
+    "D3-M1",
+    "D3-M2",
+    "D3-M3",
+    "D3-M4",
+    "I3-M5"
+   ],
+   "relates": [],
+   "slices": [
+    "sequence, layers/containment, state, timeline, data-layout kinds with own layouts",
+    "responsive LR/TB via container query; wrap long chains",
+    "per-diagram epistemic encoding",
+    "progressive-enhancement script: zoom/pan/step sync; static fallback"
+   ]
+  },
+  {
+   "id": "P13",
+   "title": "Wayfinding and line-precise evidence",
+   "owner_value": 4,
+   "build_cost": 1,
+   "prereq": "none, subject to a check that no signed clause is touched",
+   "merges": [
+    "D4-M1",
+    "D2-M2",
+    "D2-M3",
+    "D6-M2",
+    "D1-M3"
+   ],
+   "relates": [
+    "syzygy-dov.16.6"
+   ],
+   "slices": [
+    "line-numbered source pages, #L<a>-L<b> citations, :target highlight",
+    "sticky sidebar aria-current + prev/next",
+    "real glossary: display terms, dfn, native popover",
+    "mobile: digest off per-page aside, overflow-wrap",
+    "clean-text quotes from Markdown sources"
+   ]
+  },
+  {
+   "id": "P14",
+   "title": "Engine foundation",
+   "owner_value": 4,
+   "build_cost": 3,
+   "prereq": "none; operator-mode retirement (E1-M5) is an owner act",
+   "merges": [
+    "E1-M3",
+    "E1-M4",
+    "E5-M1",
+    "E3-M1",
+    "E3-M2",
+    "E6-M1",
+    "E6-M3",
+    "E2-M3",
+    "E4-M2",
+    "E1-M5"
+   ],
+   "relates": [
+    "syzygy-bpyt.8",
+    "syzygy-bpyt.5.2"
+   ],
+   "slices": [
+    "typed RunEngine state machine + table-driven transition tests",
+    "broker-acknowledged message rounds; retire tmux send-keys",
+    "SiteModel -> components renderer; one live mode, provider copy parked",
+    "Authority snapshot port; ratcheting size budget"
+   ]
+  },
+  {
+   "id": "P15",
+   "title": "Regeneration and a dossier diff",
+   "owner_value": 4,
+   "build_cost": 4,
+   "prereq": "none",
+   "merges": [
+    "I6-M2",
+    "I6-M3",
+    "S-M11",
+    "I6-M5"
+   ],
+   "relates": [],
+   "slices": [
+    "init --from <sealed run>: re-locate citations moved/stale/broken",
+    "repair only what changed",
+    "claim-level diff page proven on the Redis licence trio",
+    "measured cost per stage"
+   ]
+  }
+ ],
+ "units": [
+  {
+   "lane": "design",
+   "unit": "first-screen",
+   "tier": "functional",
+   "gap": "A cold reader on a 1440x900 laptop does get a correct one-line 'what' (thesis top at y=735px, 4 of its 5 lines visible), but only after 141 words of apparatus: a draft banner, a 35-word provenance sentence flush against the window edge, and a six-item marks legend with both 'Show the evidence view' and 'Back to the reading view' printed at once. The thesis spends its second sentence on the event loop (a mechanism) instead of who Redis serves and why it matters; 'who' and 'the problem' arrive at ~1.9 screens, after a heading and a diagram. On a 390px phone the first screen holds no thesis at all (h1 top at 759px of 844) and every page scrolls sideways. Against the owner's bar (requests: title, one-sentence thesis, then an eight-line session; redis.io: one sentence plus five uses) the order is inverted: legend and provenance first, thesis third, the 'show' (a diagram, not a session) at 1.5 screens, and no code/CLI artifact anywhere on the reading path. Real movement since run-d9411d26: index went from 30.7 to 4.6 screens and pre-thesis apparatus from 544 to 141 words; but versus run-2ecdcab0 the thesis moved down 155px (580 to 735) because the legend grew.",
+   "findings": [
+    {
+     "id": "D1-F1",
+     "label": "Observed",
+     "severity": "high",
+     "ledger": null,
+     "claim": "Apparatus precedes the thesis: 141 words (excluding nav) render before the thesis's first word; the thesis starts at y=735px of a 900px viewport and the 233px-tall, 72px-weight-400 three-line H1 takes 26% of the screen. At 390x844 the thesis starts at y=1072, below the first screen.",
+     "evidence": [
+      "shots/ffe-index-1440-scr0.png",
+      "shots/ffe-index-390-cdp.png",
+      "tools/before.js run over run-ffe…/site/0/index.html: wordsBeforeThesisExclNav=141 (run-2ecdcab0: 136; run-d9411d26: 544)",
+      "tools/firstscreen.js: h1 rect top 473 bottom 706 size 72px; thesis top 735 (2ecdcab0: 580; d9411d26: 502)",
+      "index.html aside.reading-legend precedes header h1"
+     ]
+    },
+    {
+     "id": "D1-F2",
+     "label": "Observed",
+     "severity": "medium",
+     "ledger": null,
+     "claim": "The marks legend shows both view links simultaneously ('Show the evidence view · Back to the reading view') on the default reading view, so the reader cannot tell which view they are in; the legend explains six evidence marks the reading view mostly hides.",
+     "evidence": [
+      "index.html aside.reading-legend > p.view-switch",
+      "shots/ffe-index-1440-scr0.png"
+     ]
+    },
+    {
+     "id": "D1-F3",
+     "label": "Inferred",
+     "severity": "medium",
+     "ledger": null,
+     "claim": "RS-8 (what, who, problem, central idea on the first screen) is half met: the first-screen thesis gives 'what' and a mechanism-level 'central idea' (one loop, one thread); 'who it serves' and 'the problem it solves' first appear in section 01 prose at ~1.9 screens (after the 464px diagram). The thesis is 94 words / 2 sentences, not L1's one sentence.",
+     "evidence": [
+      "index.html header + p (thesis, 94 words incl. markers)",
+      "index.html section#section-why-the-project-exists p:first-of-type ('built for developers of real-time, data-driven applications')",
+      ".claude/skills/polaris-dossier/references/reader-standards.md RS-8",
+      "docs/polaris-generation/LEARNING-LOG.md:22-32 (L1)"
+     ]
+    },
+    {
+     "id": "D1-F4",
+     "label": "Observed",
+     "severity": "medium",
+     "ledger": null,
+     "claim": "No 'show' artifact of the requests kind exists anywhere on the reading path: 0 code excerpts across index, 3 poles and the deep dive; the only <pre> elements are collapsed Mermaid sources. The first visual is a fan-out diagram 1.51 screens down whose six nodes and five edges are all dashed (Inferred).",
+     "evidence": [
+      "grep counts: class=\"code-excerpt\" = 0 in index.html, poles/1-3.html, deep-dives/mechanism-deep-dive.html",
+      "tools/firstscreen.js firstDiagram.screensDown=1.51",
+      "index.html figure details 'Read every component and relationship': 11 of 11 items [Inferred]",
+      "docs/polaris-generation/LEARNING-LOG.md:34-45 (L2)"
+     ]
+    },
+    {
+     "id": "D1-F5",
+     "label": "Observed",
+     "severity": "medium",
+     "ledger": null,
+     "claim": "Two of 24 verified quotes on the reading pages render raw Markdown link syntax, and in the 'Extensibility' value card an unbreakable URL overflows into the neighbouring 'Simplicity' card, overprinting its text and citation marks.",
+     "evidence": [
+      "index.html q.verified-quote containing '[modules API](https://redis.io/docs/latest/develop/reference/modules/)'",
+      "index.html q.verified-quote ending '[well-documented command set'",
+      "shots/cards-zoom.png",
+      "sweep: 24 q.verified-quote on non-source pages, 2 with ']('/unclosed '['"
+     ]
+    },
+    {
+     "id": "D1-F6",
+     "label": "Observed",
+     "severity": "low",
+     "ledger": null,
+     "claim": "The draft banner's provenance sentence sits at x=0 with no gutter, outside the page grid that every other block aligns to (main column starts at x=351/367).",
+     "evidence": [
+      "shots/ffe-index-1440-scr0.png",
+      "shots/ffe-index-390-cdp.png",
+      "index.html p.run-sentence"
+     ]
+    }
+   ],
+   "moves": [
+    {
+     "id": "D1-M1",
+     "what": "Fixed landing order owned by the renderer: title (version as a kicker, not in the H1) → one-sentence thesis (what + for whom + why) → the project's own 'behold' artifact (a short verified CLI/API session or the one end-to-end diagram) → three to five 'why' cards → routes. Move the draft banner to a one-line footer-style ribbon and the marks legend to the evidence view / appendix, so the reading view has zero words of apparatus above the thesis. Add a check: thesis is one sentence, starts within the first 30% of a 1440x900 and 390x844 viewport.",
+     "why": "VIS-3; RS-1, RS-3, RS-8; LEARNING-LOG L1, L2, L4; design-bar walkthrough 'First glance'",
+     "integration_points": [
+      "packages/polaris-dossier render (landing template, legend placement)",
+      "draft.schema.json (thesis as its own single-sentence field; optional 'show' artifact)",
+      "brief.md / reader-standards RS-8 (counted)",
+      "design-review rubric (viewport-position check)"
+     ],
+     "owner_value": 5,
+     "build_cost": 2,
+     "prereq": "none"
+    },
+    {
+     "id": "D1-M2",
+     "what": "Add a 'show' artifact kind: a verified, screened code/CLI excerpt (byte-checked against the repo like a quote) that the author places after the thesis; for Redis a 6-8 line redis-cli session from README/docs.",
+     "why": "LEARNING-LOG L2 (requests' eight-line session); RS-16 show then tell; VIS-1 truth (verified bytes)",
+     "integration_points": [
+      "draft.schema.json new element kind",
+      "check (byte verification, screening)",
+      "renderer figure.code-excerpt (CSS already exists)"
+     ],
+     "owner_value": 4,
+     "build_cost": 3,
+     "prereq": "none"
+    },
+    {
+     "id": "D1-M3",
+     "what": "Render verified quotes from Markdown sources through an inline-Markdown-to-text pass (links → link text, emphasis stripped) while keeping the byte-verified span for the evidence view; add overflow-wrap:anywhere to cards.",
+     "why": "VIS-7 (encoding means what it says); RS-25; design-bar bias 5 consistency",
+     "integration_points": [
+      "renderer quote component",
+      "q.verified-quote / li.card CSS"
+     ],
+     "owner_value": 3,
+     "build_cost": 1,
+     "prereq": "none"
+    }
+   ]
+  },
+  {
+   "lane": "design",
+   "unit": "poles-and-navigation",
+   "tier": "weak",
+   "gap": "The split into pages landed and is real movement: index.html fell from 30.7 screens (run-d9411d26) to 4.6, with three Poles and one deep dive. But the reading path is short and generic, and wayfinding is not there yet. It is 5 pages and about 3,900 reading words (index 685, poles 717 / 675 / 1,556, deep dive 265) for all of Redis. The Poles are the brief's own reader questions ('Purpose and ideas', 'Workflows', 'Mechanisms and costs'), not Redis's own categories. Each Pole page has a single H2: Mechanisms runs 1,434 words with no subheading. Nothing marks the current page. The nav scrolls away. No page ends with a 'next' link. The glossary is unusable. Worst, the site the owner opens is not the final draft. The design reviewer marked this render not-ready with two blocking findings (the Mechanisms wall and the glossary). The author fixed both in draft rev 6 (16 glossary terms, 6 diagrams, 2 deep dives). Fidelity passed rev 6 and the run closed without rendering it, while every page still says 'Rendered-design review: none counts [Unknown]'. requests' and Sentry's bar (L3) routes by reader intent with a one-line purpose per entry; this contents page lists bare headings, and the nav and contents disagree on what each page is called.",
+   "findings": [
+    {
+     "id": "D2-F1",
+     "label": "Observed",
+     "severity": "high",
+     "ledger": null,
+     "claim": "The rendered site is stale relative to the run's final passed draft. render ran on draft revision 5 at 03:31; the design review of that render returned readiness 'not-ready' with 2 blocking findings; the author then produced revision 6 (glossary terminology 1 → 16 items, diagrams 5 → 6, deep dives 1 → 2), check and fidelity round 6 passed, and the run closed at 04:07 with no further render. The close command has no stage requiring the latest passed revision to be rendered or design readiness to be met. Every page's Review status says 'Rendered-design review: none counts (no design verdict has been checked) [Unknown]' although a not-ready verdict exists.",
+     "evidence": [
+      "run-ffe…/steps.jsonl: render outcome rendered draftRevision 5 at 03:31:01; check passed revision 6 at 03:39:51; close at 04:07:27",
+      "run-ffe…/reviews/design-verdict-0.json readiness 'not-ready', 2 findings severity 'blocking'",
+      "run-ffe…/drafts/rev-5.json vs rev-6.json (understanding.terminology 1 vs 16; diagrams 5 vs 6; deepDives 1 vs 2)",
+      "packages/polaris-dossier/src/close.ts:44 CloseStage union has no render/design stage",
+      "site/0/*.html aside.review-status (45 of 45 pages)"
+     ]
+    },
+    {
+     "id": "D2-F2",
+     "label": "Observed",
+     "severity": "high",
+     "ledger": "syzygy-pdja",
+     "claim": "Persists (owner point 15, carried by pdja.1): the glossary page has one entry titled with an internal id ('u-term') whose definition is a comma list of term names; the reading pages carry no glossary markup (0 dfn/abbr/.gloss/popover across index, 3 poles and the deep dive), so no term has a hover or link definition. The same defect shape appears in run-2ecdcab0 (2 entries, 'u-term-rdb', 'u-term-slot') and run-d9411d26 (1 entry, 'u-term-1'): the renderer uses the item id as the visible term.",
+     "evidence": [
+      "site/0/glossary.html dt#term-glossary/u-term",
+      "shots/ffe-glossary-1440.png",
+      "packages/polaris-dossier/src/render.ts:647 (title: text(record['id']))",
+      "grep counts on index.html, poles/1-3.html, deep-dives/mechanism-deep-dive.html: <dfn 0, <abbr 0, class=\"gloss 0, popover 0"
+     ]
+    },
+    {
+     "id": "D2-F3",
+     "label": "Observed",
+     "severity": "medium",
+     "ledger": null,
+     "claim": "Wayfinding fails RS-24. Nothing marks the current page (0 aria-current, 0 current/active classes). The left nav is not sticky (no position:sticky in the stylesheet), so it is gone after the first screen. The 3 Poles and the deep dive end with no next or previous link: their only non-citation page links are the breadcrumb and one 'Explore' link. A reader finishing Workflows must scroll 5.1 screens back up to continue.",
+     "evidence": [
+      "poles/1.html nav[aria-label=Dossier] (no aria-current)",
+      "poles/1.html <style> .layout grid, no sticky rule",
+      "tools/links.js: poles/1 non-cite links 2, poles/2 1, poles/3 2, deep dive 1",
+      "shots/ffe-poles_1-s3.png, ffe-poles_1-s4.png (page ends in Review status)"
+     ]
+    },
+    {
+     "id": "D2-F4",
+     "label": "Inferred",
+     "severity": "medium",
+     "ledger": null,
+     "claim": "The Poles copy the brief's rubric instead of naming categories a Redis newcomer would recognise (data types, persistence, replication and cluster, extensibility). Each page has three names: nav 'Purpose and ideas', H1 'Purpose and ideas', and contents and H2 'Core ideas: a key space of typed values…'. Pole 1 opens with a cross-reference stub ('Why Redis exists… is on the overview.') rather than its answer (RS-3).",
+     "evidence": [
+      "shots/ffe-poles_1-1440.png",
+      "site/0/contents.html vs nav li text",
+      "site/0/index.html nav.pole-map",
+      "docs/polaris-generation/LEARNING-LOG.md:47-60 (L3)"
+     ]
+    },
+    {
+     "id": "D2-F5",
+     "label": "Observed",
+     "severity": "medium",
+     "ledger": null,
+     "claim": "Mechanisms and costs is one H2 holding 1,434 reading words and ten-odd mechanisms with no H3 (RS-19 budget ~300, so 4.8x). The design reviewer marked it blocking, and the owner-facing render still shows it.",
+     "evidence": [
+      "tools/page.js on poles/3.html: sections=[1], words 1434",
+      "outline: poles/3.html has h2 at line 55 and next h2 'Review status'",
+      "reviews/design-verdict-0.json finding 1 (blocking)",
+      "shots/ffe-poles_3-s2.png, s4.png"
+     ]
+    },
+    {
+     "id": "D2-F6",
+     "label": "Observed",
+     "severity": "low",
+     "ledger": null,
+     "claim": "Nav craft: the Contents panel lists 'Contents' as item 5. The deep dive sits flat between Contents and Glossary, not under its Pole. The ordinal markers 6 and 8 are clipped at the left edge. The DOM ships two identically labelled nav[aria-label=Dossier] (desktop and mobile), so screen readers announce two 'Dossier' navigations.",
+     "evidence": [
+      "shots/nav-zoom.png",
+      "index.html: details.desktop-contents nav[aria-label=Dossier] and details.mobile-contents nav[aria-label=Dossier]"
+     ]
+    }
+   ],
+   "moves": [
+    {
+     "id": "D2-M1",
+     "what": "Make 'close' (or a 'finish' gate before it) refuse, or close-with-finding, unless the latest passed draft revision has a render and that render has a validated design verdict. Render the verdict's readiness into the Review report, not 'none counts'. One-command runs should end at render → design → (repair → render)* → close.",
+     "why": "VIS-2 (no evidence → Unknown, never a stale success); VIS-1 truth of what the owner sees; design-bar 'Walkthrough passed' done-criterion",
+     "integration_points": [
+      "packages/polaris-dossier/src/close.ts CloseStage",
+      "render step / steps.jsonl",
+      "review-status renderer",
+      "one-command run spec (syzygy-zwja / 1z8m)"
+     ],
+     "owner_value": 5,
+     "build_cost": 2,
+     "prereq": "none"
+    },
+    {
+     "id": "D2-M2",
+     "what": "Wayfinding kit in the renderer: sticky collapsible sidebar with aria-current on the current page, Pole pages nesting their deep dives, and a prev/next footer on every reading page, all pure CSS/HTML.",
+     "why": "RS-24; design-bar bias 1 (never hunt); discoverability",
+     "integration_points": [
+      "render.ts layout/nav template",
+      "CSS tokens"
+     ],
+     "owner_value": 4,
+     "build_cost": 1,
+     "prereq": "none"
+    },
+    {
+     "id": "D2-M3",
+     "what": "Glossary as a first-class rendered element: term = the item's display term (never its id), one entry per term, and first-use inline <dfn>/popover in reading pages (native popover needs no script). Add a check that rejects an id-shaped term and a definition with no verb.",
+     "why": "RS-2; owner point 15; VIS-3",
+     "integration_points": [
+      "render.ts:647 understandingItem title",
+      "draft.schema.json terminology {term, definition}",
+      "check advisories"
+     ],
+     "owner_value": 4,
+     "build_cost": 2,
+     "prereq": "none"
+    },
+    {
+     "id": "D2-M4",
+     "what": "Poles are project-derived: the brief asks the author to name 3 to 5 categories in the project's own vocabulary, each with a one-line reader-intent purpose ('If you want to know how data survives a crash…'). The contents page shows that line under each entry, and each Pole page has one name used everywhere.",
+     "why": "LEARNING-LOG L3; RS-13; owner point 7 (agent-chosen Poles)",
+     "integration_points": [
+      "brief.md / reader-standards (Pole naming)",
+      "draft.schema.json poles[].title + purpose",
+      "contents renderer"
+     ],
+     "owner_value": 4,
+     "build_cost": 2,
+     "prereq": "none"
+    }
+   ]
+  },
+  {
+   "lane": "design",
+   "unit": "diagrams-and-visuals",
+   "tier": "functional",
+   "gap": "The diagram machinery is sound underneath. All 5 diagrams have role=img with a title, a typed relationship line ('FLOW: each step hands the client to the next'), a line-style legend, a full text list of components and edges, and the Mermaid source as a static fallback. Fills use the Pole colours, and dark mode follows the theme. As pictures that explain Redis they fall short of the bar. There are 5 diagrams in the whole reading path, all left-to-right boxes-and-arrows flowcharts: no sequence, timeline, state or layered view, and none on the deep dive, Redis's most step-shaped mechanism (persistence). Two are lists drawn as graphs: four 'serves as' edges, and a hub with spokes. One is an 8-step chain that the numbered list beneath it repeats step for step. Every node and edge in every diagram is dashed (Inferred), so the solid/dashed/dotted legend shown five times never distinguishes anything, and the dashing lowers legibility everywhere. Plain-English labels such as 'Cache' are set in 12-13px monospace. Layout does not adapt: two of five diagrams are wider than their 981px column at 1440 (2,248px and 1,448px single rows, with 'Execution unit en…' cut at the edge). At 390px every diagram is an 860px-plus canvas in a 276px box, so about a third is visible and labels render at 10.7px. Owner point 10 (interactivity) is absent: 0 scripts and 0 links in any SVG, so nothing zooms, pans or clicks through to its step.",
+   "findings": [
+    {
+     "id": "D3-F1",
+     "label": "Observed",
+     "severity": "high",
+     "ledger": "syzygy-pdja",
+     "claim": "Diagrams do not fit their container: at 1440x900, 2 of 5 overflow horizontally (poles/2 'How a write reaches the log and the replicas' 2248px in 981px; poles/3 'Where work runs' 1448px in 981px). At 390x844, 3 of 3 measured overflow (860-2248px in a 276px box), with minimum label size 10.7px. The layout never switches direction for narrow viewports.",
+     "evidence": [
+      "tools/diag.js output: svgW/containerW/overflowsContainer per figure",
+      "shots/diag-write.png (third node cut: 'Execution unit en')",
+      "shots/ffe-poles2-390-diag.png",
+      "poles/2.html .diagram-scroll{overflow:auto}"
+     ]
+    },
+    {
+     "id": "D3-F2",
+     "label": "Observed",
+     "severity": "medium",
+     "ledger": null,
+     "claim": "The three-state line legend carries no information. In each of the 5 diagrams the only undashed SVG shape is one path (likely the arrowhead marker); every node box and edge is stroke-dasharray 6px,4px (Inferred), yet each figure shows 'Solid: observed / Dashed: inferred / Dotted: unknown'. The node lists confirm it: for example, 11 of 11 items on the index diagram are [Inferred].",
+     "evidence": [
+      "tools/diag.js dash counts: index {none:1, 6px 4px:21}, poles/1 {1,25}, poles/2 {1,29},{1,25}, poles/3 {1,20}",
+      "index.html figure details list (11 items, all [Inferred])",
+      "VIS-7 (every encoding means what its legend says)"
+     ]
+    },
+    {
+     "id": "D3-F3",
+     "label": "Inferred",
+     "severity": "medium",
+     "ledger": "syzygy-pdja",
+     "claim": "Diagrams mostly illustrate lists rather than explain mechanisms. The index diagram is a fan-out of four identical 'serves as' edges. 'The parts of a Redis deployment' is a hub and spokes. 'How one command is served' is an 8-box chain followed by an 8-item numbered list saying the same thing (the design review flagged this as RS-20). The deep dive 'How a write survives a crash', a stepwise fork, buffer and fsync mechanism, has 0 diagrams. All 5 are LR flowcharts, with no sequence or time axis for request and replication flows. Persists the owner's point 10 ('more of them', 'lists collapse when a diagram exists').",
+     "evidence": [
+      "shots/ffe-index-1440-scr1.png",
+      "shots/ffe-poles_1-s1.png",
+      "shots/ffe-poles_2-s1.png and s3.png (diagram, then the same 8 steps as a list)",
+      "deep-dives/mechanism-deep-dive.html: 0 <svg>",
+      "reviews/design-verdict-0.json advisories on poles/2 and the deep dive"
+     ]
+    },
+    {
+     "id": "D3-F4",
+     "label": "Observed",
+     "severity": "medium",
+     "ledger": "syzygy-pdja",
+     "claim": "No diagram interactivity shipped, although the screening scope v7 act that permits a hash-allowed script was installed (pdja.5 closed). 0 of 45 pages carry a <script> (checked with grep -rlF and with a Python sweep), the CSP is default-src 'none' with no script-src, and 0 SVGs contain <a>. So there is no zoom or pan for the overflowing diagrams, no node click-through to its step, and no remembered navigation state.",
+     "evidence": [
+      "sweep: 45 pages, 0 with <script>",
+      "index.html meta CSP: default-src 'none'; style-src 'unsafe-inline'; …",
+      "tools/diag.js links: 0 per figure",
+      "bd show syzygy-pdja.5 (features listed: zoom/pan, node click-through, remembered nav state)"
+     ]
+    },
+    {
+     "id": "D3-F5",
+     "label": "Observed",
+     "severity": "low",
+     "ledger": null,
+     "claim": "Node and edge labels are plain English set in 12-13px monospace (ui-monospace), signalling 'code' for 'Cache', 'Session store' and 'Reply'. The figure kicker words (DEPENDENCY, BOUNDARY, FLOW) are schema vocabulary shown to readers.",
+     "evidence": [
+      "tools/diag.js font: ui-monospace…; minRenderedFontPx 12.2-13",
+      "index.html p.diagram-relationship"
+     ]
+    }
+   ],
+   "moves": [
+    {
+     "id": "D3-M1",
+     "what": "Responsive diagram layout: lay out each diagram twice at render time (LR for wide, TB for narrow) and switch with a CSS container query, and wrap any chain longer than about four nodes. Use a proportional sans for labels, monospace only for code identifiers, and a 14px minimum label size. Add a render check that fails a diagram wider than its column at 1440 or wider than 1.2x at 390.",
+     "why": "design-bar bias 1 and the 390px no-horizontal-scroll contract; RS-25; owner point 10 (readable labels)",
+     "integration_points": [
+      "renderer diagram layout (svg-inert / layout module)",
+      "diagram CSS",
+      "design-review rubric"
+     ],
+     "owner_value": 5,
+     "build_cost": 3,
+     "prereq": "none"
+    },
+    {
+     "id": "D3-M2",
+     "what": "Diagram vocabulary beyond flowcharts: sequence (client/server/replica lanes for request and replication flows), timeline (fork, buffer, fsync), state, and layered architecture. Require a diagram on every deep dive and on every Pole's central mechanism. The numbered list collapses into the figure's 'read every step' disclosure instead of repeating it below.",
+     "why": "RS-16, RS-20; LEARNING-LOG L2; owner point 10",
+     "integration_points": [
+      "draft.schema.json diagram kinds",
+      "renderer layout per kind",
+      "check: deep dive without diagram becomes a counted advisory"
+     ],
+     "owner_value": 4,
+     "build_cost": 4,
+     "prereq": "spec amendment"
+    },
+    {
+     "id": "D3-M3",
+     "what": "Encode epistemic state per diagram, not per stroke: when every element shares a label, draw solid lines and print one line ('All parts inferred from README.md and src/server.c'), and dash only the exceptions. Drop the three-state legend when it has one state.",
+     "why": "VIS-7; LEARNING-LOG L6 (label at the right scope); u05.5 N5 analogue",
+     "integration_points": [
+      "renderer diagram stroke/legend logic",
+      "machine.json parity unaffected"
+     ],
+     "owner_value": 3,
+     "build_cost": 1,
+     "prereq": "none"
+    },
+    {
+     "id": "D3-M4",
+     "what": "Ship the pdja.5-permitted progressive-enhancement script: zoom and pan for wide diagrams, nodes linking to their step anchors, and remembered sidebar and evidence-view state, with the static fallback unchanged.",
+     "why": "owner points 10 and 17; design-bar bias 7",
+     "integration_points": [
+      "renderer script emission + CSP hash",
+      "pageSinkUnconfirmed",
+      "svg-inert allow-list (<a>)"
+     ],
+     "owner_value": 3,
+     "build_cost": 3,
+     "prereq": "none"
+    }
+   ]
+  },
+  {
+   "lane": "design",
+   "unit": "deep-dives-and-reference",
+   "tier": "functional",
+   "gap": "Evidence is closer than in run-d9411d26. Every citation has a hover/focus pop naming the file and lines. The sources index says on which pages and why each file was cited (pdja.15). The run's own pages (Understanding, Discovery, Clarifications, Executions, Review, Size report, Appendix) sit in a collapsed 'Review report' group. But 'one step away' still fails twice. First, the step lands in the wrong place: all 263 citation links on the five reading pages go to #exact-text, the top of a source page that has no line numbers, no line anchors and no highlight. The redis.conf page is 55.6 screens tall, so 'redis.conf, line 1534' is one click and then a hunt. Second, the apparatus is still in the way: every reading page opens with a 47-word draft notice and a 79-word marks legend and closes with a 42-word Review status (168 words of run machinery per page) whose heading is the same 43.2px as the content's section headings and whose body carries a 64-hex packet digest. The only deep dive is good prose and a good table, but it is 265 words with no diagram, and its policy table's row headers uppercase the config literals (everysec shows as EVERYSEC). The glossary, the third reference surface, is broken (D2-F2).",
+   "findings": [
+    {
+     "id": "D4-F1",
+     "label": "Observed",
+     "severity": "high",
+     "ledger": null,
+     "claim": "Citations do not land on the evidence. All 263 source links on index, the 3 Poles and the deep dive target '#exact-text' (index 43, poles 44/63/100, deep dive 13). Source pages have 0 line anchors (id=\"L…\") and 0 <mark> highlights, and show the file without line numbers. The redis.conf source page is 49,999px (55.6 screens at 1440x900).",
+     "evidence": [
+      "grep href=…sources/…#… counts per reading page",
+      "site/0/sources/66f18f6391f32f67310648e3.html: id=\"L 0, <mark 0",
+      "tools/firstscreen.js on that page: docHeight 49999",
+      "reviews/design-verdict-0.json advisory on sources/66f18f…html (same point, not carried into a bead)"
+     ]
+    },
+    {
+     "id": "D4-F2",
+     "label": "Observed",
+     "severity": "medium",
+     "ledger": "syzygy-pdja",
+     "claim": "Persists (owner point 5, 'warnings at the top instead of an appendix', and RS-1): run machinery frames every reading page. Each page carries a 47-word draft notice and provenance sentence above everything, a 79-word marks legend above the title, and a 42-word Review status at the foot, styled as a peer of content (h2 43.2px, the same as the section h2) and quoting a 64-hex packet digest. This is 168 words per page on 5 of 5 reading pages; the aside appears on 45 of 45 pages.",
+     "evidence": [
+      "tools/app.js: banner 47, legend 79, reviewStatus 42 on index, poles/1-3, deep dive",
+      "h2ReviewStatusFont 43.2px = sectionH2Font 43.2px",
+      "shots/ffe-deep-dives_mechanism-deep-dive-s1.png (Review status block)",
+      "sweep: aside.review-status on 45/45 pages"
+     ]
+    },
+    {
+     "id": "D4-F3",
+     "label": "Observed",
+     "severity": "medium",
+     "ledger": null,
+     "claim": "Table row headers misrender data. The th style (0.72rem/11.5px monospace, muted colour, text-transform uppercase) applies to scope=row cells, so source literals are re-cased ('everysec' renders as EVERYSEC, 'always' as ALWAYS) and the key column of the technology-choices table becomes the smallest, lowest-contrast text on the page.",
+     "evidence": [
+      "deep-dives/mechanism-deep-dive.html th[scope=row] <code>everysec</code> (source lowercase; 'EVERYSEC' occurs 0 times in the HTML)",
+      "CSS rule th{…font-size:.72rem;text-transform:uppercase}",
+      "shots/ffe-deep-dives_mechanism-deep-dive-s1.png",
+      "shots/ffe-poles_3-s2.png (NETWORKING, STATE AND PERSISTENCE row heads)"
+     ]
+    },
+    {
+     "id": "D4-F4",
+     "label": "Observed",
+     "severity": "low",
+     "ledger": "syzygy-pdja",
+     "claim": "Persists (owner point 1): raw source ids remain reader-visible. 30 of 45 pages (every source page) show 'src-<24 hex>-pN' in their 'Source identity' disclosure, beside a blob sha1, byte range and 'RFC7-10' anchor-class wording.",
+     "evidence": [
+      "sweep over visible text: 30 'src-[0-9a-f]{12,}' hits on 30 pages",
+      "sources/66f18f6391f32f67310648e3.html details.source-identity"
+     ]
+    },
+    {
+     "id": "D4-F5",
+     "label": "Inferred",
+     "severity": "low",
+     "ledger": null,
+     "claim": "The deep dive does not answer a question its parent cannot (RS-14). At 265 words with 0 diagrams it re-states Pole 3's fsync default and fork points. Its title (14 words, 'How a write survives a crash: snapshots, the log and the fsync choice') spans four 72px lines.",
+     "evidence": [
+      "tools/page.js deep dive readingWords 265, svgs 0",
+      "reviews/design-verdict-0.json advisory on the deep dive",
+      "shots/ffe-deep-dives_mechanism-deep-dive-s0.png"
+     ]
+    }
+   ],
+   "moves": [
+    {
+     "id": "D4-M1",
+     "what": "Line-precise evidence: render source pages with line numbers and an id per line, link each citation to #L<start>-L<end>, and highlight the cited span with :target CSS (no script). Collapse the uncited parts of very long files around cited spans ('… 1,200 lines …').",
+     "why": "Owner's target 'evidence one step away'; VIS-1; design-bar bias 1 (never hunt)",
+     "integration_points": [
+      "render.ts source page template",
+      "citation href builder",
+      "sources CSS",
+      ":target highlight"
+     ],
+     "owner_value": 5,
+     "build_cost": 2,
+     "prereq": "none"
+    },
+    {
+     "id": "D4-M2",
+     "what": "Move run machinery off the reading path: a single 1-line 'Draft · how this was made →' ribbon replaces the notice, the provenance sentence and the Review status. The marks legend moves into the evidence view, and digests appear only on the Review page.",
+     "why": "RS-1; owner point 5; LEARNING-LOG L4",
+     "integration_points": [
+      "render.ts page chrome",
+      "review-status component",
+      "VIS-4 draft disclosure kept, one line"
+     ],
+     "owner_value": 4,
+     "build_cost": 1,
+     "prereq": "none"
+    },
+    {
+     "id": "D4-M3",
+     "what": "Separate column-header and row-header table styles: row headers in body sans at body size, never text-transformed; uppercase small caps only for th[scope=col], and never on <code>.",
+     "why": "VIS-7 (literal fidelity); visual-language consistency; contrast",
+     "integration_points": [
+      "renderer table CSS"
+     ],
+     "owner_value": 2,
+     "build_cost": 1,
+     "prereq": "none"
+    }
+   ]
+  },
+  {
+   "lane": "design",
+   "unit": "voice-and-prose",
+   "tier": "solid",
+   "gap": "This unit moved the most since run-d9411d26. On the overview, 'The project states/the agent/Unknown' meta-language fell from 53/8/23 occurrences in 6,801 words to 5/0/0 in 640. Sampled prose (index, Workflows, Mechanisms) is clear and plain: mean sentence 19-24 words, median 19-23, and the Mechanisms page pairs each mechanism with its cost ('The cost is that one slow command stalls every client.'). It is not yet opinionated. The owner allowed Polaris judgements (point 16), yet the render carries 0 judgement-marked and 0 framing claims among 136 claims on the reading pages: everything is cited restatement. The schema makes quotation a fixed formula, so all 24 verified quotes open with the identical 'The project states:' (17 times on Mechanisms alone). 10 of those 24 quotes carry raw source syntax: 8 with redis.conf '#' comment markers mid-sentence, 2 with Markdown link syntax. Where the sources are silent, the dossier says so three times in renderer-generated process language ('Not established. No inspected source states why Redis is written in C. (the agent labels this block Unknown)') rather than offering a labelled judgement. Workflows is written in C identifiers: 27 function or field names in 51 code spans (connSocketAcceptHandler, processCommandAndResetClient, c->cmd->proc(c)) on a page meant for a newcomer. The reference voice (requests' 'built for human beings', L5) is absent: competent, careful, and impersonal.",
+   "findings": [
+    {
+     "id": "D5-F1",
+     "label": "Observed",
+     "severity": "high",
+     "ledger": "syzygy-pdja",
+     "claim": "Persists (owner points 11 and 16): no opinion appears in the reading path. Of 136 claims on index, the 3 Poles and the deep dive, all 136 are data-claim-kind 'anchored'; 0 carry the judgement mark (rev-5 and rev-6 drafts: 0 'judgement'). On each page the only JUDGEMENT text is the legend explaining a mark that is never used.",
+     "evidence": [
+      "grep data-claim-kind on index.html, poles/*.html, deep-dives/*.html: 136 anchored",
+      "drafts/rev-5.json, rev-6.json: '\"judgement\"' 0",
+      "tools/jm.js: only legend hits",
+      "packages/polaris-dossier/src/draft-schema.ts:90-92 (JUDGEMENT_DESCRIPTION exists)"
+     ]
+    },
+    {
+     "id": "D5-F2",
+     "label": "Observed",
+     "severity": "medium",
+     "ledger": null,
+     "claim": "Quotation is a fixed formula, so the voice repeats. The schema's quotation form is the literal span 'The project states: \"…\"', and all 24 verified quotes on the reading pages use it (17 on Mechanisms and costs). Each quote also shows its citation twice ('[1]†2 [1]†2': a large mark for the quote and a small one for the claim).",
+     "evidence": [
+      "packages/polaris-dossier/src/draft-schema.ts:95 (quotation form)",
+      "tools/meta.js projectStates: index 5, poles/1 2, poles/3 17",
+      "shots/ffe-index-1440-scr2.png (value cards)",
+      "shots/ffe-poles_1-s3.png"
+     ]
+    },
+    {
+     "id": "D5-F3",
+     "label": "Observed",
+     "severity": "medium",
+     "ledger": null,
+     "claim": "10 of 24 verified quotes render source syntax as prose: 8 contain redis.conf comment markers ('provides # much better durability', 'the server can block for # a long time') and 2 contain Markdown link syntax. The byte-exact verification makes the quote faithful to the file, not to what the sentence says.",
+     "evidence": [
+      "sweep over q.verified-quote on the 5 reading pages: 24 total, 8 with standalone '#', 2 with '](' or an unclosed '['",
+      "shots/ffe-poles_3-s2.png, ffe-poles_3-s4.png"
+     ]
+    },
+    {
+     "id": "D5-F4",
+     "label": "Observed",
+     "severity": "medium",
+     "ledger": null,
+     "claim": "Workflows, a Pole meant for newcomers, is written in implementation identifiers: 51 inline code spans, 27 of them C function or field names, used as the subjects of its numbered steps (RS-2, RS-5). The design review flagged the same thing as an advisory.",
+     "evidence": [
+      "tools/prose.js poles/2: codeSpans 51, cIdentifiers 27, sample connSocketAcceptHandler … server.clients_pending_write",
+      "shots/ffe-poles_2-s3.png",
+      "reviews/design-verdict-0.json advisory on poles/2 (RS-5/RS-2)"
+     ]
+    },
+    {
+     "id": "D5-F5",
+     "label": "Observed",
+     "severity": "low",
+     "ledger": null,
+     "claim": "Unknowns read as process, not as insight. Three of the seven technology-choice rows say 'Not established. No inspected source states why … (the agent labels this block Unknown)': language, wire format, interface stability. The parenthetical is renderer boilerplate, not author text.",
+     "evidence": [
+      "packages/polaris-dossier/src/render.ts:496",
+      "tools/meta.js poles/3: notEstablished 3, theAgent 3",
+      "shots/ffe-poles_3-s2.png"
+     ]
+    }
+   ],
+   "moves": [
+    {
+     "id": "D5-M1",
+     "what": "Make judgement a required, counted part of the argument. The brief asks for one labelled Polaris judgement per Pole (for example 'the single thread is the right trade for Redis's workload because…'), with premises cited and the JUDGEMENT mark. check advises when a Pole has none. Where a reason is Unknown, the author may add a judgement beside it rather than leaving the cell as process text.",
+     "why": "owner points 11 and 16; LEARNING-LOG L5 (personality is allowed); RS-21 stays satisfied through the mark",
+     "integration_points": [
+      "brief.md / reader-standards (new counted RS)",
+      "check advisories",
+      "render.ts:496 Unknown wording"
+     ],
+     "owner_value": 4,
+     "build_cost": 1,
+     "prereq": "none"
+    },
+    {
+     "id": "D5-M2",
+     "what": "Free the quotation syntax. Accept any lead-in, or none (a set-off pull-quote), while keeping the verified span and its citation. Strip source comment markers and line-continuation '#' from the displayed quote, show the raw bytes in the evidence view, and render one citation mark per quote.",
+     "why": "VIS-1 (truth kept by the verified span), VIS-3 comprehension; design-bar bias 5 (one meaning per pattern)",
+     "integration_points": [
+      "draft-schema.ts:95 QUOTATION_FORM",
+      "check quotation verification",
+      "renderer quote component"
+     ],
+     "owner_value": 3,
+     "build_cost": 2,
+     "prereq": "spec amendment"
+    },
+    {
+     "id": "D5-M3",
+     "what": "An identifier budget per depth. Pole pages name behaviours; C identifiers move to the deep dive or to an 'in the code' disclosure under each step. check counts code identifiers per Pole section as an advisory.",
+     "why": "RS-2, RS-5; design review advisory",
+     "integration_points": [
+      "reader-standards RS-5 (counted)",
+      "check advisories",
+      "renderer steps component (code disclosure)"
+     ],
+     "owner_value": 3,
+     "build_cost": 1,
+     "prereq": "none"
+    }
+   ]
+  },
+  {
+   "lane": "design",
+   "unit": "craft-sweep",
+   "tier": "functional",
+   "gap": "The accessibility floor is mostly met. An automated sweep of 532 visible text nodes on index, Mechanisms and the deep dive found 0 WCAG AA contrast failures in light and dark. Each page has one h1, no heading-level skips, a skip link, lang=en, and 12 focus rules with no outline:none. The pages load no webfonts and run no scripts, and the entry page is 67 KB. Above that floor the craft is not finished. On a 390px phone, 45 of 45 pages scroll sideways (document width 613px, 658px on review.html). The cause is a 64-hex packet digest in the Review status aside. That same phone shows no page title on the first screen, because the draft notice, the provenance sentence, the contents toggle and the marks legend fill it: the h1 sits at y=759-803 of 844. There is no type scale: 14 distinct font sizes render on one page (9.4 to 72px, including 14.4/14.7/14.8 and 16/16.8/17.6). Body measure is about 91 characters per line at 1440 against a 45-75 norm. The font token named --font-serif holds a sans stack and is defined three ways. Each page inlines 23.4 KB of CSS, including 2.4 KB of developer comments, about 1 MB across the 45 pages. There are no print rules: Mechanisms prints to 7 pages with the apparatus on page 1 and the diagram clipped inside a printed scrollbar. Colour is used with discipline (one hue per Pole, carried into the nav dots, the h1 rule and the diagram fills).",
+   "findings": [
+    {
+     "id": "D6-F1",
+     "label": "Observed",
+     "severity": "high",
+     "ledger": null,
+     "claim": "Every page scrolls horizontally on a phone (WCAG 1.4.10 reflow; design-bar 390px contract). At 390x844, scrollWidth is 613 on index, all 3 Poles, the deep dive, glossary, sources index and appendix, and 658 on review.html. DOM bisection isolates the cause to aside.review-status > ul > li: an unbroken 64-character packet digest, which every page carries (45/45). Under mobile emulation Chrome widens the layout viewport to 613, shrinking the whole page.",
+     "evidence": [
+      "tools/overflow.js and ov8.js on site/0 pages at 390x844 (scrollW 613/658)",
+      "tools/ov8.js bisection: DIV.layout > MAIN > ASIDE.review-status > UL > LI",
+      "sweep: 'bound to packet [0-9a-f]{64}' on 45/45 pages",
+      "mobile emulation innerWidth 613"
+     ]
+    },
+    {
+     "id": "D6-F2",
+     "label": "Observed",
+     "severity": "high",
+     "ledger": null,
+     "claim": "On a 390x844 phone the first screen of every reading page is apparatus: the h1 starts at y=759 (index) and y=803 (Mechanisms) of 844, below the draft notice, the 35-word provenance sentence, the 'In this dossier' toggle and the 6-item legend. Mechanisms is 13.7 phone screens long.",
+     "evidence": [
+      "shots/ffe-index-390-cdp.png",
+      "shots/ffe-poles2-390-fig.png",
+      "tools/firstscreen.js at 390: index h1 top 759; poles/3 h1 top 803, docHeight 11586"
+     ]
+    },
+    {
+     "id": "D6-F3",
+     "label": "Observed",
+     "severity": "medium",
+     "ledger": null,
+     "claim": "No type scale: one page renders 14 distinct font sizes (words by px on poles/3: 17.6, 14.7, 16.8, 14.4, 12.8, 16.0, 13.6, 9.4, 11.5, 14.8, plus 22.4, 43.2 and 72 elsewhere), with near-duplicate steps and citation marks at 9.4px. The body measure is about 91 characters per line at 1440 (765px column at 17.6px). The token --font-serif is defined three times (a Georgia stack, an Iowan Old Style stack and a sans override) and finally holds a sans stack.",
+     "evidence": [
+      "tools/craft.js wordsByFontPx (index, poles/3, deep dive)",
+      "tools/cpl.js: pWidth 765, 17.6px, ~91 cpl",
+      "index.html <style>: three --font-serif definitions; --cyan:#ad4f2c (an orange named cyan)"
+     ]
+    },
+    {
+     "id": "D6-F4",
+     "label": "Observed",
+     "severity": "low",
+     "ledger": null,
+     "claim": "Weight and print. Every page inlines 23,378 bytes of CSS (2,402 of them comments about tokens and review tickets), about 1.05 MB repeated across 45 pages of a 3.4 MB site. The CSS has 0 @media print rules: Mechanisms prints to 7 pages that open with the notice and legend, keep the diagram's horizontal scrollbar, and cut the diagram.",
+     "evidence": [
+      "tools/craft.js styleBytes 23378, cssComments 2402",
+      "du -sh site: 3.4M; size-report.json entryPageBytes 67243",
+      "shots/poles3.pdf (7 pages), shots/print-1.png, print-2.png",
+      "reviews/design-verdict-0.json advisory on CSS comments"
+     ]
+    },
+    {
+     "id": "D6-F5",
+     "label": "Observed",
+     "severity": "low",
+     "ledger": null,
+     "claim": "Landmark noise: each page has 3 <nav>, two of them labelled 'Dossier' (desktop and mobile copies), and no <footer>. Citation links are 9.4-12.5px superscripts (all 43/100/13 under 24px), acceptable only under the inline-link exception of WCAG 2.5.8 and hard to hit on touch.",
+     "evidence": [
+      "tools/firstscreen.js landmarks nav 3, footer 0",
+      "tools/craft.js citeLinksUnder24px = citeLinks"
+     ]
+    }
+   ],
+   "moves": [
+    {
+     "id": "D6-M1",
+     "what": "A reader-view render probe as part of 'render' or the design review. Headless Chrome at 1440x900 and 390x844, light and dark, checks every page. It asserts: no horizontal scroll; thesis and h1 within the first screen; no diagram wider than its column; every citation href resolves to a line anchor; 0 AA contrast failures; the count of words before the thesis, of judgements per Pole and of 'The project states:'. Results go into machine.json and the design packet, so readiness measures what the owner reviews.",
+     "why": "syzygy-pdja framing ('Readiness does not currently measure them'); VIS-2; design-bar Definition of Done; AGENTS.md verification rule 6 (mutate and confirm the check fails)",
+     "integration_points": [
+      "packages/polaris-dossier render/design-review",
+      "design packet schema",
+      "check advisories",
+      "CI fixture dossier"
+     ],
+     "owner_value": 5,
+     "build_cost": 3,
+     "prereq": "none"
+    },
+    {
+     "id": "D6-M2",
+     "what": "Fix mobile now: drop the digest from the per-page aside (keep it on review.html with overflow-wrap:anywhere), and add a global overflow-wrap:anywhere for code, digests and paths. Below 40rem, collapse the notice and legend into one line.",
+     "why": "WCAG 1.4.10; design-bar 390px contract",
+     "integration_points": [
+      "review-status component",
+      "base CSS"
+     ],
+     "owner_value": 4,
+     "build_cost": 1,
+     "prereq": "none"
+    },
+    {
+     "id": "D6-M3",
+     "what": "A dossier design-token pass: a 6-step modular type scale (for example 14/16/18/24/32/48) with the h1 capped near 48px, a 65-72ch measure, honest token names (--font-sans, --accent), comments stripped at render, and one shared stylesheet if the CSP can name it (style-src 'self'); otherwise keep inline CSS but minified.",
+     "why": "visual-language consistency; design-bar bias 5; LEARNING-LOG L4 (short at the top)",
+     "integration_points": [
+      "renderer CSS tokens",
+      "CSP renderCondition (only if moving to a shared stylesheet)"
+     ],
+     "owner_value": 2,
+     "build_cost": 2,
+     "prereq": "none"
+    },
+    {
+     "id": "D6-M4",
+     "what": "A print stylesheet: hide the chrome, the legend and the nav; expand details; scale diagrams to the page width; append source paths after citations.",
+     "why": "static-site completeness (owner direction: fully functional static site)",
+     "integration_points": [
+      "renderer CSS @media print"
+     ],
+     "owner_value": 2,
+     "build_cost": 1,
+     "prereq": "none"
+    }
+   ],
+   "verdict": "Not yet something to be proud of, and not yet at the /th-design bar, though it is now a careful, legible and honest draft rather than a wall. The measured movement is real: the overview went from 30.7 screens to 4.6, words before the thesis from 544 to 141, and stock meta-language from 53/8/23 to 5/0/0, with AA contrast clean in both themes and a static fallback under every diagram. But the reader the owner chose as the bar (requests: title, one-sentence thesis, an eight-line session, routes) would meet 141 words of apparatus before the thesis, no title at all on a phone, sideways scrolling on every page, diagrams cut off at their edges, a glossary with one entry named 'u-term', citations that land at the top of 55-screen files, and no opinion: 0 judgements in 136 claims, with 24 quotes all introduced by 'The project states:'. The deepest problem is not on the page. The site the owner opens is draft rev 5, which the design reviewer had already judged not-ready, and nothing stopped the run from closing on it. Readiness still does not measure what the owner reviews. Fix the gate (D2-M1, D6-M1) and the landing order (D1-M1) first; they are cheap and they change every future dossier."
+  },
+  {
+   "lane": "eng",
+   "unit": "run-lifecycle",
+   "tier": "functional",
+   "gap": "The step commands are well built: a frozen command table (cli.ts:261-435) with JSON/human output that cannot drift (renderHuman), per-session bubblewrap views and a broker socket whose rule admits only that session's commands. The run that is actually used is a different program. All 5 runs on this host were launched with `syzygy polaris`, which is still labelled 'prototype'. polaris.ts drives the step CLI in process: it captures stdout, parses it back as JSON, and reads the result through untyped string keys. It polls the files every 3 s and types messages into the agent TUIs with `tmux send-keys`. The ideal is one typed run engine with an explicit state machine, typed records, an acknowledged message channel to every session, and a close step that seals what actually happened. Today close seals neither the review outcome nor the site of record. In launched mode it also writes fixed sentences that are false.",
+   "findings": [
+    {
+     "id": "E1-F1",
+     "claim": "A launched run's Execution Record makes fixed claims that are false in launched mode. close.ts writes 'Syzygy issued no credential for this run and wrote none to the state directory'. Yet polaris.ts:403-414 copies the operator's ~/.claude/.credentials.json into <stateRoot>/<runId>.agents/<role>/.claude/ for all four roles. Nothing removes the copies at stop or close: 20 copies persist across the 5 runs (paths and modes listed only; contents not read). The 4 older runs' copies are mode 777, and the state root itself is mode 777. Exposure is bounded by ~/.local at 700. NO_PROVIDER_CALL also calls the sessions' provider traffic 'the operator's act', but in launched mode Syzygy started those sessions.",
+     "label": "Observed",
+     "evidence": [
+      "packages/polaris-dossier/src/close.ts:35",
+      "packages/polaris-dossier/src/close.ts:34",
+      "packages/polaris-dossier/src/close.ts:151",
+      "packages/polaris-dossier/src/polaris.ts:403-414",
+      "~/.local/state/syzygy-dossier/run-ffe579c77dc21d9f6dd87ca6e2bc9301/record.json .credentialsIssued",
+      "find ~/.local/state/syzygy-dossier/run-*.agents -name .credentials.json -> 20 files; run-d9411d26/2ecdcab0/36df95fa/4465d22f copies mode 777, run-ffe579c7 copies 600; state root mode 777"
+     ],
+     "severity": "high",
+     "ledger": null
+    },
+    {
+     "id": "E1-F2",
+     "claim": "Close seals a run without recording how its reviews ended, and the sealed site misstates the design review. In run-ffe579c7, design verdict 0 (site 0) was validated as not-ready/blocking. Fidelity verdict 6 (draft 6) was also not-ready, and the supervisor stopped blocked with all 6 repair cycles spent. The operator then closed the run by hand. The site of record (site/0, from draft 5) still says in its review-status footer 'Rendered-design review: none counts (no design verdict has been checked) [Unknown]'. record.json has no readiness, final-state or site-of-record field (its 23 keys enumerated), and close.ts reads no review record. Close also builds the record from a different revision than the site. close.ts has no render, site or review stage (CloseStage, close.ts:55). reportedCommands takes latestPassedDraft, which is revision 6 (close.ts:181), while the only site, site/0, renders revision 5. So record.json mixes draft 6's commands with site 0's digests, and nothing says that revision 6 passed check but was never rendered, or why. Correction to the relayed premise: revision 6 did not pass fidelity. fidelity-verdict-6 was validated but declares not-ready (blocking: true), which is why the supervisor did not render it (polaris.ts:712 renders only on a ready fidelity verdict). Leaving site/0 as the site of record is defensible; leaving that choice unstated is the defect.",
+     "label": "Observed",
+     "evidence": [
+      "run-ffe579c7…/reviews/checks/design-verdict-0.json readiness {declared:not-ready, blocking:true}",
+      "run-ffe579c7…/reviews/checks/fidelity-verdict-6.json readiness blocking:true, packet.draftRevision 6",
+      "run-ffe579c7….supervisor.json: no 'done', stopped 2026-11-08T04:12:06Z; steps.jsonl close at 04:07:27Z",
+      "run-ffe579c7…/site/0/index.html .review-status text",
+      "packages/polaris-dossier/src/close.ts:118-155 (record fields; no review/site input)",
+      "packages/polaris-dossier/src/close.ts:55",
+      "packages/polaris-dossier/src/close.ts:181-182",
+      "run-ffe579c7…/record.json .reportedCommands.draftRevision = 6; .stored.files lists only site/0/*",
+      "run-ffe579c7…/steps.jsonl render draftRevision 5 at 03:31:01; check rev 6 passed 03:39:51; review-check fidelity 6 validated 03:44:29; close 04:07:27",
+      "packages/polaris-dossier/src/polaris.ts:712"
+     ],
+     "severity": "high",
+     "ledger": null
+    },
+    {
+     "id": "E1-F8",
+     "claim": "Fidelity repairs, design repairs and drafts that check refuses all draw on one repair budget, and design always comes last. Draft revision n is repair cycle n: check refuses revision > maxRepairCycles (check.ts:172-173), refused drafts included (polaris.ts:60-63). The supervisor stops on a blocking fidelity verdict when draft.n >= max (polaris.ts:547-551). It stops on a blocking design verdict on the same draft count (repairsSpent, polaris.ts:671, 699). The inventory alone has its own count (inventory.ts:155). The design review runs only after fidelity is ready and a site is rendered (polaris.ts:712-723), and each design repair needs a new fidelity round before re-render. In run-ffe579c7 (max 6), the design review got its first and only verdict at draft 5. Revisions 1-4 had gone to check and fidelity repairs, so one design repair was possible. Its fidelity review blocked, and the run ended at the limit. As built, design quality is whatever budget fidelity leaves over.",
+     "label": "Observed",
+     "evidence": [
+      "packages/polaris-dossier/src/check.ts:172-173",
+      "packages/polaris-dossier/src/polaris.ts:60-63",
+      "packages/polaris-dossier/src/polaris.ts:547-551",
+      "packages/polaris-dossier/src/polaris.ts:671",
+      "packages/polaris-dossier/src/polaris.ts:699",
+      "packages/polaris-dossier/src/polaris.ts:712-723",
+      "run-ffe579c7…/steps.jsonl (check revs 0-6, fidelity verdicts 0-6, design verdict 0)"
+     ],
+     "severity": "medium",
+     "ledger": null
+    },
+    {
+     "id": "E1-F3",
+     "claim": "The launched supervisor talks to its own library through a text interface. step() runs runDossierCli in process, captures stdout and JSON.parses it. Results are then read through untyped keys: 42 string-key lookups and 10 `as Record<string, unknown>` casts in polaris.ts. readState casts unvalidated JSON to SupervisorState. The run's state is re-derived by a 114-line polling loop that reads files every 3 s. Messages to sessions are typed into their TUIs with `tmux send-keys -l` plus Enter, with no acknowledgement, and that races an agent that is mid-turn.",
+     "label": "Observed",
+     "evidence": [
+      "packages/polaris-dossier/src/polaris.ts:264-272",
+      "packages/polaris-dossier/src/polaris.ts:231-234",
+      "packages/polaris-dossier/src/polaris.ts:619-623",
+      "packages/polaris-dossier/src/polaris.ts:646-758"
+     ],
+     "severity": "medium",
+     "ledger": null
+    },
+    {
+     "id": "E1-F4",
+     "claim": "Readiness is defined in three places that have drifted. derivedBlocking excludes withheld and advisory rows. The supervisor's repairSides and blockingWhy count every row that is not 'supported' or 'accurate', withheld and advisory rows included. So once a verdict blocks for one real row, the supervisor can ask the inventory session to repair entries that screening withheld and that no revision can fix. It can also stop the run as 'inventory repair cycles spent' because of those same rows.",
+     "label": "Observed",
+     "evidence": [
+      "packages/polaris-dossier/src/review-verdict.ts:37-43",
+      "packages/polaris-dossier/src/polaris.ts:508-516",
+      "packages/polaris-dossier/src/polaris.ts:634-644",
+      "packages/polaris-dossier/src/polaris.ts:547-551"
+     ],
+     "severity": "medium",
+     "ledger": null
+    },
+    {
+     "id": "E1-F5",
+     "claim": "Silent fallbacks sit on lifecycle-critical reads. readMaxRepairCycles returns Infinity when run.json cannot be read, so a damaged run.json switches the repair limit off. readVerdict returns {} on a read or parse failure. A corrupt supervisor state reads as 'no launched run'. Across dossier product code, 97 catch blocks fall back to a value (16 in waiting-sessions.ts, 10 in polaris.ts). This cuts against bias 6.",
+     "label": "Observed",
+     "evidence": [
+      "packages/polaris-dossier/src/polaris.ts:625-630",
+      "packages/polaris-dossier/src/polaris.ts:518-521",
+      "packages/polaris-dossier/src/polaris.ts:232-234",
+      "regex sweep over 50 non-test dossier src files: catch(...){return|x =} = 97"
+     ],
+     "severity": "medium",
+     "ledger": null
+    },
+    {
+     "id": "E1-F6",
+     "claim": "Two orchestration modes are kept as product surface, and only one is used. The operator-started ceremony is still in the CLI: session-prompt with tool, version and model flags, launch-form terminal|bang, inventory-brief and allow-execution. So is the permitting arm, switched off by PERMITTING_ARM_ENABLED=false: execution-rule 172 + execution-choice 182 + execution-flags 75 + credential-probe 208 lines. DOSSIER_USAGE is 120 lines of governance prose for 15 commands. All 5 runs on this host carry launched.json, and allow-execution refuses launched runs.",
+     "label": "Observed",
+     "evidence": [
+      "packages/polaris-dossier/src/execution-rule.ts:16",
+      "packages/polaris-dossier/src/cli.ts:35-153",
+      "packages/polaris-dossier/src/cli.ts:304-310",
+      "~/.local/state/syzygy-dossier/run-*/launched.json present in 5 of 5"
+     ],
+     "severity": "medium",
+     "ledger": null
+    },
+    {
+     "id": "E1-F7",
+     "claim": "Run-directory primitives live in a feature module. openRun, logStep, readRecord and errno are defined in inventory.ts, and close, render, review, review-packet and design-review import them from there. run-dir.ts (77 lines) exists beside it. The supervisor also writes a Claude Code internal config file with lastOnboardingVersion '2.1.299' and trust flags, and it calls process.exit inside parseArgs.",
+     "label": "Observed",
+     "evidence": [
+      "packages/polaris-dossier/src/close.ts:9",
+      "packages/polaris-dossier/src/render.ts:18",
+      "packages/polaris-dossier/src/review.ts:9",
+      "packages/polaris-dossier/src/polaris.ts:411",
+      "packages/polaris-dossier/src/polaris.ts:200"
+     ],
+     "severity": "low",
+     "ledger": null
+    }
+   ],
+   "moves": [
+    {
+     "id": "E1-M1",
+     "what": "Make close seal the truth. Record each review kind's final standing (counted verdict, readiness, bound packet and site), the site of record, and how the run ended (closed-ready, closed-not-ready, blocked-at-limit, deadline). Re-stamp the review-status region of the site of record at close, which is the one region a later render may change. Label a not-ready close as such on every page and in record.json. Add a 'site' stage to CloseStage. Refuse or label a close when the latest passed draft is newer than the site of record. Name the revision every record field derives from.",
+     "why": "VIS-2: the sealed artifact must not show Unknown or 'none counts' where a not-ready verdict exists. Engineering bar: failure paths diagnosable (bias 3).",
+     "integration_points": [
+      "packages/polaris-dossier/src/close.ts",
+      "packages/polaris-dossier/src/render.ts (region re-stamp)",
+      "Execution Record format polaris-dossier-execution-record/1",
+      "REQ-polaris-generation-018/033"
+     ],
+     "owner_value": 5,
+     "build_cost": 2,
+     "prereq": "spec amendment"
+    },
+    {
+     "id": "E1-M2",
+     "what": "Make the record's sentences mode-aware, and stop leaving credentials behind. Pick the record sentences by mode (launched vs operator-started). Delete each agent home's credential copy at stop and close, or hand the credential over without copying it. Refuse a state root whose mode is wider than 0700.",
+     "why": "VIS-2: no false Observed-style sentence. SEC posture: no lingering secret copies. Bias 6: fail closed.",
+     "integration_points": [
+      "packages/polaris-dossier/src/close.ts",
+      "packages/polaris-dossier/src/polaris.ts prepareAgentHome/stop/loop end",
+      "packages/polaris-dossier/src/state-directory.ts"
+     ],
+     "owner_value": 4,
+     "build_cost": 2,
+     "prereq": "none"
+    },
+    {
+     "id": "E1-M3",
+     "what": "Replace the stdout-parsing supervisor with a typed RunEngine. Steps are called as functions that return Outcome. RunState is parsed once with validation. The engine is an explicit state machine (drafting → inventory → fidelity → render → design → repair* → sealed | blocked) with a transition table and a single readiness function shared with review-check.",
+     "why": "Bias 2 and 5 (explicit control flow), bias 6. It fixes E1-F3 and E1-F4 at the root.",
+     "integration_points": [
+      "packages/polaris-dossier/src/polaris.ts",
+      "packages/polaris-dossier/src/review-verdict.ts derivedBlocking",
+      "packages/polaris-dossier/src/cli.ts DOSSIER_COMMANDS"
+     ],
+     "owner_value": 4,
+     "build_cost": 3,
+     "prereq": "none"
+    },
+    {
+     "id": "E1-M4",
+     "what": "Deliver every Syzygy-to-session message, the author's included, through the broker or await channel as a numbered, acknowledged round recorded in the run. Retire `tmux send-keys`.",
+     "why": "Bias 5 and 6. Messages become part of the run's evidence trail.",
+     "integration_points": [
+      "packages/polaris-dossier/src/polaris.ts tell()",
+      "packages/polaris-dossier/src/waiting-sessions.ts",
+      "packages/polaris-dossier/src/broker.ts authorRule"
+     ],
+     "owner_value": 3,
+     "build_cost": 3,
+     "prereq": "spec amendment"
+    },
+    {
+     "id": "E1-M5",
+     "what": "Make the launched run the product and drop the 'prototype' label. Retire the operator-started ceremony (launch-form, per-session prompt printing) and the dormant permitting arm from the default build, or move them behind one module.",
+     "why": "Engineering bias 1 (no same-repo cruft) and bias 10 (greenfield parity).",
+     "integration_points": [
+      "packages/polaris-dossier/src/cli.ts",
+      "execution-rule.ts, execution-choice.ts, execution-flags.ts, credential-probe.ts",
+      "session-handover.ts"
+     ],
+     "owner_value": 3,
+     "build_cost": 2,
+     "prereq": "owner act"
+    },
+    {
+     "id": "E1-M6",
+     "what": "Give fidelity and design repairs separate budgets, with check-refused drafts on their own smaller count. Run a mechanical design pre-pass on the first rendered site before fidelity repairs are spent (see E2-M1), so design findings arrive early instead of last.",
+     "why": "With one shared, last-in-line budget, the design review can block but rarely gets a repair. This is part of why the reading quality the owner judges lags (pdja).",
+     "integration_points": [
+      "packages/polaris-dossier/src/check.ts:172",
+      "packages/polaris-dossier/src/polaris.ts loop",
+      "run.json declared.maxRepairCycles",
+      "REQ-polaris-generation-034 repair-cycle limit"
+     ],
+     "owner_value": 4,
+     "build_cost": 2,
+     "prereq": "spec amendment"
+    }
+   ]
+  },
+  {
+   "lane": "eng",
+   "unit": "check-and-schema",
+   "tier": "functional",
+   "gap": "As an integrity machine the check is close to world-class. Every citation and quotation is re-derived from Git objects at the pinned revision, Observed is reserved for quotations Syzygy verifies itself, and verdicts are bound to packet digests. What it measures is that a dossier is safe and well formed, not that it is good. About 29 finding kinds are structural. Reader quality reaches the check only as 4 advisory counters, which set no outcome and are not stored. Both readiness gates are LLM sessions, and their verdicts are validated for internal consistency only. The 'rendered-design' reviewer never sees a rendering: it reads 3.4 MB of HTML source. That explains how fidelity and design both reached 'ready' while the owner found 16 problems. The ideal keeps this integrity core. It adds mechanical reader metrics measured on the rendered pages and stored with the run, a design reviewer that looks at pixels, and a typed draft model so the schema is declared once.",
+   "findings": [
+    {
+     "id": "E2-F1",
+     "claim": "The check's outcome measures safety, not quality. By a sweep of `kind: '…'` literals, check-derive.ts emits 27 finding kinds and check.ts 2 more. All 29 are structural: schema, ids, citations resolve, ranges, quotation form and verbatim match, labels, versions, pole validity, question limit. Reader quality is represented only by reader-advice.ts: RS-13 code symbols in titles, RS-14 at most 3 deep dives, RS-16 a diagram per section, RS-19 300 words of prose. These are advice that 'sets no outcome and is not stored in the check record'.",
+     "label": "Observed",
+     "evidence": [
+      "packages/polaris-dossier/src/check-derive.ts (distinct `kind: '…'` literals: 27)",
+      "packages/polaris-dossier/src/reader-advice.ts:1-27",
+      "packages/polaris-dossier/src/reader-advice.ts:57-81"
+     ],
+     "severity": "high",
+     "ledger": null
+    },
+    {
+     "id": "E2-F2",
+     "claim": "The rendered-design review never sees a rendered page. Its packet is the site's HTML as JSON strings: 3.4 MB in run-ffe579c7. 32% of the site's bytes are inline CSS (1,052,010 of 3,285,836 bytes over 45 pages). Waiting sessions get only Read, Glob, Grep and Bash. No screenshot or browser step exists, although the repo has a CDP harness used for /polaris sweeps and a dossier browser test. Layout, diagram legibility, colour and hue problems are invisible to this reviewer by construction.",
+     "label": "Observed",
+     "evidence": [
+      "run-ffe579c7…/reviews/design-packet-79a8de21…/ (du 3.4M)",
+      "packages/polaris-dossier/src/design-review.ts:11-17",
+      "packages/polaris-dossier/src/session-handover.ts:65-69",
+      "apps/three-surface-poc/src/cdp-browser.ts",
+      "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts"
+     ],
+     "severity": "high",
+     "ledger": null
+    },
+    {
+     "id": "E2-F3",
+     "claim": "A ready verdict means the verdict is self-consistent, not that it is right. validateVerdict checks the schema, packet digest, pinned revision, session identifiers, completeness, quotations and consistency between rows and declared readiness. Blocking is derived from the reviewer's own rows. Nothing independent of the reviewing LLM measures the dossier, which is consistent with REQ-014 ('never a completion oracle'). The evaluation harness that could do so (evaluateDossier, runReaderTest) is wired only to a dev script; see generation-core.",
+     "label": "Observed",
+     "evidence": [
+      "packages/polaris-dossier/src/review-verdict.ts:37-46",
+      "packages/polaris-dossier/src/reader-standards.ts:4-6",
+      "package.json:39 poc:dossier-evaluation"
+     ],
+     "severity": "medium",
+     "ledger": "syzygy-u05.13"
+    },
+    {
+     "id": "E2-F4",
+     "claim": "The draft has no typed model. draft-schema.ts builds JSON Schema from combinators, and no TypeScript type is derived from it. Every consumer walks the draft as `unknown`: 650 bracket string-key reads (x['field']) across dossier product code, including 171 in render.ts, 100 in check-derive.ts and 45 in review-verdict.ts. Three draft schema versions are accepted at once (v2, v3, v4), with field-version and element-version findings. Each schema change has to be re-validated by hand in every reader.",
+     "label": "Observed",
+     "evidence": [
+      "packages/polaris-dossier/src/draft-schema.ts:20-30",
+      "packages/polaris-dossier/src/draft-schema.ts:44-48",
+      "regex sweep \\['[a-zA-Z]+'\\] over non-test dossier src: 650"
+     ],
+     "severity": "medium",
+     "ledger": null
+    },
+    {
+     "id": "E2-F5",
+     "claim": "Author guidance comes in three separately versioned layers in one brief: DOSSIER_GUIDANCE polaris-author-dossier-v2 (5.3 KB), Readability polaris-dossier-readability-v4 (4.3 KB) and Reader standards v1 (about 8 KB), inside a 30 KB brief.md. They overlap on structure, voice and diagrams, so they can contradict each other and drift apart. Only the reader standards are held byte-equal to the skill's copy.",
+     "label": "Observed",
+     "evidence": [
+      "run-ffe579c7…/brief.md section sizes",
+      "packages/polaris-dossier/src/brief.ts:60-61",
+      "packages/polaris-dossier/src/reader-standards.ts:7-8"
+     ],
+     "severity": "low",
+     "ledger": null
+    }
+   ],
+   "moves": [
+    {
+     "id": "E2-M1",
+     "what": "Add a rendered audit and give the design reviewer pixels. After render, Syzygy opens each page in headless Chrome (the existing cdp-browser) at desktop and phone widths and stores screenshots. It computes mechanical metrics: screens to the first diagram, words per page, Unknown density on the reading path, contrast, horizontal overflow, smallest diagram label size and link resolution. The design packet carries the screenshots and metrics instead of raw HTML and CSS.",
+     "why": "VIS-3 (digestible to a newcomer) is judged on what a reader sees. VIS-7 is made mechanical. It closes the gap that let design reach 'ready' while the owner found 16 problems.",
+     "integration_points": [
+      "packages/polaris-dossier/src/design-review.ts packet",
+      "packages/polaris-dossier/src/render.ts",
+      "apps/three-surface-poc/src/cdp-browser.ts",
+      "REQ-polaris-generation-035 design packet"
+     ],
+     "owner_value": 5,
+     "build_cost": 3,
+     "prereq": "spec amendment"
+    },
+    {
+     "id": "E2-M2",
+     "what": "Store the reader metrics: the counted RS advice plus the rendered metrics from E2-M1, in the check and render records, shown by `status`, and diffed against the previous run of the same repository. They stay advice, never an oracle, but they become visible and trend-able.",
+     "why": "Engineering bias 8 (evidence beats assertion). REQ-014 stays respected: a metric is not a completion verdict.",
+     "integration_points": [
+      "packages/polaris-dossier/src/reader-advice.ts",
+      "packages/polaris-dossier/src/check.ts record",
+      "packages/polaris-dossier/src/status.ts"
+     ],
+     "owner_value": 4,
+     "build_cost": 2,
+     "prereq": "spec amendment"
+    },
+    {
+     "id": "E2-M3",
+     "what": "Declare the draft schema once and get types from it. Declare the draft in a combinator that infers TypeScript types (or generate .d.ts from closed-schema), parse it once in check into a typed Draft, and pass typed objects to render, review and advice. Drop v2 and v3 acceptance unless a live run still needs it.",
+     "why": "Bias 2 (readability), bias 10 (greenfield parity), bias 1 (compat cruft without an external consumer).",
+     "integration_points": [
+      "packages/polaris-generation-core/src/closed-schema.ts",
+      "packages/polaris-dossier/src/draft-schema.ts",
+      "check-derive.ts, render.ts, review-verdict.ts, reader-advice.ts"
+     ],
+     "owner_value": 3,
+     "build_cost": 3,
+     "prereq": "none"
+    },
+    {
+     "id": "E2-M4",
+     "what": "Merge the three author-guidance layers into one ordered, versioned reader-standards document. The brief composes from it. Each counted rule names the metric that measures it.",
+     "why": "One source of truth for 'what good means' (VIS-1 comprehension), and less prompt drift.",
+     "integration_points": [
+      "packages/polaris-dossier/src/brief.ts",
+      "packages/polaris-dossier/src/reader-standards.ts",
+      ".claude/skills/polaris-dossier/references/reader-standards.md"
+     ],
+     "owner_value": 3,
+     "build_cost": 2,
+     "prereq": "none"
+    }
+   ]
+  },
+  {
+   "lane": "eng",
+   "unit": "renderer",
+   "tier": "functional",
+   "gap": "The output is sound where it counts. All 1,923 internal links across the 45 pages of the latest site resolve. The SVG is asserted inert. Pages render under a CSP sink contract, and governance identifiers stay off the reading pages. The code that produces it is the weakest part of the codebase to change. Two functions do most of the work. renderDossierSite is one 565-line closure that concatenates HTML strings with 88 manual escape() calls. buildLocalInput is a 473-line adapter that turns the local draft into the parked provider pipeline's draft shape so the old renderer can draw it. The renderer still carries both modes, and the provider mode's output is byte-pinned by a golden file. It lives in the Butlers POC app and overrides that app's theme. Greenfield, it would be a SiteModel built once from a typed draft, with each page type a small pure component, one escaping template, one theme stylesheet and one mode. That would make a new page type or visual element a local change instead of surgery inside a closure.",
+   "findings": [
+    {
+     "id": "E3-F1",
+     "claim": "Two functions hold the whole render path. renderDossierSite is a single 565-line function. Dozens of inner closures share mutable maps (numbering, citedOn, pending, termsShown), and the markup is built by string concatenation with 88 manual escape() calls. The file has 86 lines over 200 characters, the longest 731. render.ts's buildLocalInput is a 473-line adapter. Together they are the 2 largest of 400 top-level functions in the Polaris code. Adding a page type or visual element means editing inside both.",
+     "label": "Observed",
+     "evidence": [
+      "apps/three-surface-poc/src/polaris-generation/dossier-site.ts:238-803",
+      "packages/polaris-dossier/src/render.ts:315-788",
+      "function-length sweep over polaris-dossier, polaris-generation-core and dossier-site.ts: 15 of 400 top-level functions exceed 100 lines"
+     ],
+     "severity": "high",
+     "ledger": "syzygy-bpyt.5.3"
+    },
+    {
+     "id": "E3-F2",
+     "claim": "The parked provider mode taxes every change to the live renderer. dossier-site.ts branches on mode 32 times (`local === undefined` 21, `local !== undefined` 11). The provider output is byte-pinned by dossier-render-provider-golden.json (12.9 KB, 6 pages × synthetic projects), so live changes have to route around it ('the provider mode's bytes are pinned').",
+     "label": "Observed",
+     "evidence": [
+      "apps/three-surface-poc/src/polaris-generation/dossier-site.ts:108",
+      "apps/three-surface-poc/src/polaris-generation/dossier-site.ts:332",
+      "apps/three-surface-poc/src/polaris-generation/dossier-site.ts:560",
+      "apps/three-surface-poc/src/polaris-generation/dossier-site.ts:613",
+      "apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.test.ts:13-46"
+     ],
+     "severity": "medium",
+     "ledger": "syzygy-bpyt.8"
+    },
+    {
+     "id": "E3-F3",
+     "claim": "The dossier renderer lives in the Butlers POC app and pulls its import closure from there. It reaches 10 app files (2,812 lines), among them design-tokens.ts, draft-preview.ts (escapeHtml, CSS), capability-detail.ts, polaris-copy.ts and polaris-narrative.ts. The dossier theme overrides the /polaris tokens, so every page carries 5 `:root{` blocks. apps/syzygy imports it with a TODO.",
+     "label": "Observed",
+     "evidence": [
+      "apps/three-surface-poc/src/polaris-generation/dossier-site.ts:1-13",
+      "apps/syzygy/src/main.ts (TODO(syzygy-qkea.19))",
+      "run-ffe579c7…/site/0/index.html (5 ':root{' occurrences)"
+     ],
+     "severity": "medium",
+     "ledger": "syzygy-qkea.19"
+    },
+    {
+     "id": "E3-F4",
+     "claim": "Developer review notes ship to readers. Every page inlines about 23 KB of CSS, 32% of the site's 3.29 MB. That CSS includes design-tokens.ts comments such as 'S11-F2, repaired after independent review' and 'polaris.ts is out of scope for this change (owned by another slice)': 2 comments, 2,394 bytes, on every page.",
+     "label": "Observed",
+     "evidence": [
+      "apps/three-surface-poc/src/design-tokens.ts:198-204",
+      "run-ffe579c7…/site/0/index.html <style> comments",
+      "site/0: 45 pages, inline CSS 1,052,010 of 3,285,836 bytes"
+     ],
+     "severity": "low",
+     "ledger": null
+    }
+   ],
+   "moves": [
+    {
+     "id": "E3-M1",
+     "what": "Rebuild the renderer as model → components. One pass builds a typed SiteModel (pages, sections, claims, citations with per-page numbering, glossary, nav, review status) from the typed draft. Each page type is a small pure function over the model. Markup goes through one escaping html tagged template (bpyt.5.3's component layer), and the theme is one stylesheet. Test the model, and snapshot only a few components.",
+     "why": "Bias 2 (readability) and bias 10 (greenfield parity). The owner asks for new visual elements and page types (pdja epic), and each one is cheap only with this shape.",
+     "integration_points": [
+      "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "packages/polaris-dossier/src/render.ts buildLocalInput",
+      "syzygy-qkea.19 renderer package",
+      "syzygy-bpyt.5.3"
+     ],
+     "owner_value": 4,
+     "build_cost": 4,
+     "prereq": "none"
+    },
+    {
+     "id": "E3-M2",
+     "what": "Give the live renderer one mode. Freeze a copy of the provider-mode renderer beside its golden file, inside the parked island, so it is parked, not deleted, and delete every `local === undefined` branch from the live renderer.",
+     "why": "Bias 1 (no same-repo compat cruft). This honours the owner's 'nothing is deleted' direction while removing the tax.",
+     "integration_points": [
+      "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "dossier-render-provider-golden.test.ts",
+      "island-boundary.test.ts"
+     ],
+     "owner_value": 3,
+     "build_cost": 2,
+     "prereq": "none"
+    },
+    {
+     "id": "E3-M3",
+     "what": "Emit the theme once as site/assets/dossier.css with comments stripped. If the page-sink contract requires inline CSS, minify it at build and strip comments instead.",
+     "why": "Output hygiene: reader-facing bytes should carry no developer chatter. A third of the site's weight is repeated CSS.",
+     "integration_points": [
+      "apps/three-surface-poc/src/design-tokens.ts",
+      "packages/polaris-generation-core/src/page-sink.ts PAGE_SINK_CONTRACT"
+     ],
+     "owner_value": 2,
+     "build_cost": 1,
+     "prereq": "none"
+    }
+   ]
+  },
+  {
+   "lane": "eng",
+   "unit": "generation-core",
+   "tier": "functional",
+   "gap": "I traced imports from the dossier package's product files and from the dossier-site renderer's closure. The live path reaches 18 of the core's 27 product modules (3,438 lines): screening and redaction, generation-source, quote locating and verification, closed-schema, canonical JSON, draft-model, local-render types, page-sink and the site evaluation. Those modules are careful, well-bounded code. The other 9 modules (2,097 lines) are the parked provider island: pipeline, discovery, discovery-provider, excerpt, prompts, provider-draft, admitted-input, reader-questions and rendered-design. The live renderer is still shaped by the island's draft model. The package name no longer describes its contents, which are evidence and screening plus site evaluation. The most valuable live-ready asset is unused: a reader-test evaluation harness (evaluateDossier, runReaderTest) that answers frozen reader questions from the rendered site and reports Unknown, never a pass, when evidence is absent. It runs only from a dev script with scripted answers.",
+   "findings": [
+    {
+     "id": "E4-F1",
+     "claim": "The parked island is still in place, and `live` does not mean live. 9 core modules (2,097 lines) are reached by no live entry: admitted-input 139, discovery 454, discovery-provider 177, excerpt 193, pipeline 473, prompts 200, provider-draft 240, reader-questions 39, rendered-design 182. live.ts, the barrel the CLI may import, still exports prompts.ts and reader-questions.ts, and no live entry reaches either. island-boundary.test.ts checks that live entries import no island module. It does not check that the live barrel exports only modules a live entry reaches.",
+     "label": "Observed",
+     "evidence": [
+      "packages/polaris-generation-core/src/live.ts:1-35",
+      "packages/polaris-generation-core/src/index.ts:1-27",
+      "import-closure sweep from packages/polaris-dossier/src/*.ts (non-test) + apps/three-surface-poc/src/polaris-generation/dossier-site.ts closure"
+     ],
+     "severity": "medium",
+     "ledger": "syzygy-bpyt.8"
+    },
+    {
+     "id": "E4-F2",
+     "claim": "A reader-test evaluation harness exists and dossier runs never use it. dossier-evaluation.ts evaluates a rendered dossier against frozen reader questions through an answer port, measures where each answer was found and what it cost the reader, and reports Unknown where evidence is absent. Its only caller outside tests is the dev script `poc:dossier-evaluation`, with scripted answers. Live runs use only readerCost, a page-cost measure, inside dossier-site.",
+     "label": "Observed",
+     "evidence": [
+      "packages/polaris-generation-core/src/dossier-evaluation.ts:17-25",
+      "apps/three-surface-poc/src/polaris-generation/dossier-evaluation-main.ts:5-24",
+      "package.json:39",
+      "apps/three-surface-poc/src/polaris-generation/dossier-site.ts:767-768"
+     ],
+     "severity": "medium",
+     "ledger": "syzygy-u05.13"
+    },
+    {
+     "id": "E4-F3",
+     "claim": "The package mixes three concerns under a misleading name. Screening and redaction (public-source-classification 380, secret-redaction 331, generation-source 456), evidence verification (quote-fidelity 319, quote-locate 150) and site evaluation (dossier-evaluation 248, dossier-page-scan 161, dossier-manifest 71) share the 'generation-core' package with the parked generator. The live local draft is converted into the island's DossierDraft shape (draft-model) before it renders.",
+     "label": "Observed",
+     "evidence": [
+      "packages/polaris-generation-core/src/*.ts line counts",
+      "packages/polaris-dossier/src/render.ts:315",
+      "packages/polaris-generation-core/src/draft-model.ts"
+     ],
+     "severity": "low",
+     "ledger": "syzygy-qkea.17"
+    }
+   ],
+   "moves": [
+    {
+     "id": "E4-M1",
+     "what": "Wire the reader test into launched runs. Add a fifth, fresh 'newcomer reader' session that sees only the rendered site and answers the run's frozen reader questions through ReaderAnswerPort. Store the answers with their page locations and reader cost. Report unanswered questions as Unknown, on the review page and in the record, never as a pass.",
+     "why": "VIS-3 is tested directly: can someone unfamiliar with the project understand it from the site? It is the independent evaluation the reader standards say decides done. Most of the code exists.",
+     "integration_points": [
+      "packages/polaris-generation-core/src/dossier-evaluation.ts",
+      "packages/polaris-generation-core/src/dossier-reader-test.ts",
+      "packages/polaris-dossier/src/polaris.ts (new role), session-view.ts, broker.ts rule",
+      "REQ-polaris-generation-035 session roles"
+     ],
+     "owner_value": 5,
+     "build_cost": 3,
+     "prereq": "spec amendment"
+    },
+    {
+     "id": "E4-M2",
+     "what": "Make `live` mean live. Move prompts.ts and reader-questions.ts behind the island barrel. Add the inverse of the island-boundary test: every module exported from live.ts must be reached by a live entry. Then split the remaining live core into an evidence package (screening, generation-source, quote verification; this absorbs qkea.17) and a site-evaluation module.",
+     "why": "Engineering bias 10 and bias 1. It keeps the parked island deletable in one step if the owner rules on Q8.",
+     "integration_points": [
+      "packages/polaris-generation-core/src/live.ts",
+      "packages/polaris-generation-core/src/island-boundary.test.ts",
+      "syzygy-qkea.17"
+     ],
+     "owner_value": 2,
+     "build_cost": 1,
+     "prereq": "none"
+    }
+   ]
+  },
+  {
+   "lane": "eng",
+   "unit": "test-rigor",
+   "tier": "solid",
+   "gap": "The suites are large and serious. Test tiers are enforced mechanically: a unit guard refuses processes and sockets, and vitest.tiers.ts partitions every file into a tier. Expected values are literals. Mutation evidence is retained per change in docs/evidence (for example dossier-engine-*-mutants.json). Failure and refusal paths are first-class: most tests are refusal cases. Four gaps remain against the ideal. The riskiest runtime code, the launched supervisor loop, has no test. The integration tier is slow and timeout-sensitive under load. Prompt and copy prose is pinned by long substring literals, which taxes the very iteration that improves quality. Tests have grown far faster than source.",
+   "findings": [
+    {
+     "id": "E5-F1",
+     "claim": "I ran `npx vitest run packages/polaris-dossier packages/polaris-generation-core` once, in a scratch clone at fd08ea62 because the main checkout has no node_modules. Result: 66 files, 2,846 tests, 2,833 passed, 1 skipped, 12 failed. Wall time was 157.5 s; test time 676 s. All 12 failures were 5,000 ms default timeouts in integration files that spawn git or child processes: review.test 7, render.test 3, screen-scope-v6 1, island-boundary 1. The host load average was 26 to 34 on 12 cores, from other lanes. An isolated rerun of those 4 files still had 2 timeouts out of 192 tests (142 s). The integration tier is 20 files and 1,290 tests, and takes 618 s of the 676 s. review.test.ts alone took 149 s and render.test.ts 117 s.",
+     "label": "Observed",
+     "evidence": [
+      "scratchpad/pursuit/eng-vitest.log (summary block and per-file lines)",
+      "uptime at 14:48: load average 26.64, 33.81, 26.77; nproc 12"
+     ],
+     "severity": "medium",
+     "ledger": null
+    },
+    {
+     "id": "E5-F2",
+     "claim": "The launched supervisor, the code path behind every real run, has no test of its state machine. polaris.ts supervise, setUp, launchSession and loop (about 430 lines, including the delivery, repair and stop decisions) are exercised by no test. Only its exported pure helpers are: 32 tests in polaris-launch-guidance.test.ts and 9 in session-view.test.ts. A stand-in agent hook exists (SYZYGY_POLARIS_AGENT) but no test uses it to drive a run. This misses test-rigor bar 3.",
+     "label": "Observed",
+     "evidence": [
+      "packages/polaris-dossier/src/polaris.ts:286-758",
+      "grep for runPolarisCli/supervise/SYZYGY_POLARIS_AGENT across *.test.ts: only argv.test.ts (argument parsing) and session-view.test.ts",
+      "packages/polaris-dossier/src/polaris.ts:395-401"
+     ],
+     "severity": "medium",
+     "ledger": null
+    },
+    {
+     "id": "E5-F3",
+     "claim": "Prompt and page prose is pinned verbatim. Across the 66 test files there are 483 toContain assertions, 89 of them with literals of 60 or more characters. Examples are the author self-check sentences in polaris-launch-guidance.test.ts:48-51 and the appendix sentences in render.test.ts:509-511. Prompt text is the main lever on dossier quality, so each wording iteration costs test edits. Such a test catches a deletion, but it cannot tell whether a change made the prompt better or worse.",
+     "label": "Observed",
+     "evidence": [
+      "packages/polaris-dossier/src/polaris-launch-guidance.test.ts:16",
+      "packages/polaris-dossier/src/polaris-launch-guidance.test.ts:48-51",
+      "packages/polaris-dossier/src/render.test.ts:509-511"
+     ],
+     "severity": "low",
+     "ledger": null
+    },
+    {
+     "id": "E5-F4",
+     "claim": "Tests grew much faster than the source they cover. Between dd520e8d (2026-10-20) and fd08ea62 (2026-11-08), polaris-dossier src grew from 9,781 to 11,480 non-test lines (+17%) while its tests grew from 9,768 to 14,293 lines (+46%). The largest files are render.test.ts (126 KB), waiting-sessions.test.ts (100 KB) and start-gates.test.ts (87 KB). This is adds-only growth in a maturing area, which test-rigor bar 10 says needs review.",
+     "label": "Observed",
+     "evidence": [
+      "git show <rev>:packages/polaris-dossier/src/*.ts line sums at dd520e8d and fd08ea62",
+      "wc -c packages/polaris-dossier/src/*.test.ts"
+     ],
+     "severity": "low",
+     "ledger": null
+    }
+   ],
+   "moves": [
+    {
+     "id": "E5-M1",
+     "what": "Test the supervisor as a state machine. Inject tmux, process and clock ports; use the existing stand-in agent; drive table-driven transitions: deliveries, repair split, limit stop, deadline, render, close and resume. This pairs with E1-M3.",
+     "why": "Test-rigor bars 3 and 1: the highest-blast-radius path gets behavioural tests.",
+     "integration_points": [
+      "packages/polaris-dossier/src/polaris.ts",
+      "packages/polaris-dossier/src/polaris-launch-guidance.test.ts"
+     ],
+     "owner_value": 4,
+     "build_cost": 2,
+     "prereq": "none"
+    },
+    {
+     "id": "E5-M2",
+     "what": "Make the integration tier load-robust and faster. Build each file's git fixture repository once (beforeAll) and reuse it across cases. Give child-process tests explicit timeouts sized from measured p95. Record per-file duration as a tracked budget.",
+     "why": "Test-rigor bar 6 (deterministic) and bar 9 (targetable tiers).",
+     "integration_points": [
+      "packages/polaris-dossier/src/review.test.ts",
+      "packages/polaris-dossier/src/render.test.ts",
+      "vitest.tiers.ts"
+     ],
+     "owner_value": 3,
+     "build_cost": 2,
+     "prereq": "none"
+    },
+    {
+     "id": "E5-M3",
+     "what": "Pin prompts by structure, not prose. Hold required clauses as data (id plus intent) that the prompt renders, and test that each id is present and ordered. Keep one golden prompt per role as a reviewable snapshot.",
+     "why": "Test-rigor bar 1. It frees the prompt iteration that dossier quality depends on.",
+     "integration_points": [
+      "packages/polaris-dossier/src/polaris.ts AUTHOR_SELF_CHECK/LAUNCHED_GUIDANCE",
+      "packages/polaris-dossier/src/session-handover.ts prompts",
+      "packages/polaris-dossier/src/brief.ts"
+     ],
+     "owner_value": 2,
+     "build_cost": 2,
+     "prereq": "none"
+    }
+   ]
+  },
+  {
+   "lane": "eng",
+   "unit": "greenfield-parity",
+   "tier": "functional",
+   "gap": "Disclosure: this sketch is anchored, because I read the code first. The un-anchored baseline is the 2026-10-21 audit's fresh-context sketch (docs/plans/2026-10-21-greenfield-parity-audit.md §3). It sized 'operator-agent dossier mode plus NGP' at 4.0-6.5k lines and the narrative-site renderer at 3.0-4.5k; with screening (1.0-1.7k) and an authority module (1.0-1.6k), that is about 9-14k. The live path today is about 19.1k lines: polaris-dossier 11.5k non-test, the renderer's app closure 2.8k, the 18 core modules it reaches 3.4k, and the consent package 1.4k. That is roughly 1.4-2x the sketch, and the excess is shape, not bulk. A greenfield 'point at a repo URL, get a beautiful dossier' has a few parts. A typed Draft declared once (types, JSON Schema, parser). An Evidence package (pinned Git reads, screening, quotation verification). A RunEngine state machine over typed records, with one acknowledged message channel per session. An Authority snapshot loaded once from the act records and passed in as a port. A SiteModel with page components and one theme. A quality loop: rendered audit, a reader-test session, and stored metrics compared run over run. Against that sketch, the current code is missing the quality loop and the typed model. Instead it carries two orchestration modes, a dormant permitting arm, a parked provider renderer mode and runtime parsing of governance markdown in feature modules. The core is genuinely strong. The shape around it is accreted.",
+   "findings": [
+    {
+     "id": "E6-F1",
+     "claim": "Governance machinery is wired into product code at runtime. gate-sources.ts (549 lines) and waiting-sessions.ts's sign-off reader (lines 67-235) parse decision Markdown, dates and manifest digests from `.syzygy/governance/decisions/` every time a command runs. So do the consent package (1,400 lines) and the dormant permitting arm (about 640 lines). Dossier product source names a requirement, doctrine, RFC, bead or owner-act identifier 301 times: gate-sources 56, execution-rule 24, render 18. Records are located relative to the package (`new URL('../../..', import.meta.url)`), so the binary only works from inside a Syzygy checkout. The authority itself is an owner constraint (VIS-4). Its shape is scattered parsing in feature modules, where it should be one typed Authority snapshot passed in as a port.",
+     "label": "Observed",
+     "evidence": [
+      "packages/polaris-dossier/src/gate-sources.ts",
+      "packages/polaris-dossier/src/waiting-sessions.ts:67-235",
+      "packages/polaris-dossier/src/cli.ts:181",
+      "packages/polaris-dossier/src/polaris.ts:56",
+      "regex sweep of identifier mentions over non-test dossier src: 301"
+     ],
+     "severity": "medium",
+     "ledger": null
+    },
+    {
+     "id": "E6-F2",
+     "claim": "The live path is about 1.4-2x the un-anchored greenfield estimate, and it is still growing. Live lines: dossier 11,480, renderer app closure 2,812, core reached 3,438, consent 1,400; about 19.1k in all. The prior sketch gives about 9-14k for the same scope. polaris-dossier src grew 17% in 19 days after the parity audit, and its tests grew 46%. The audit's PD items are partly done: the CLI is now a command table, while the island (bpyt.8) and the renderer package (qkea.19) are still open.",
+     "label": "Observed",
+     "evidence": [
+      "docs/plans/2026-10-21-greenfield-parity-audit.md:144-171",
+      "line sums at dd520e8d and fd08ea62",
+      "packages/polaris-dossier/src/cli.ts:261-435"
+     ],
+     "severity": "medium",
+     "ledger": "syzygy-bpyt.8"
+    },
+    {
+     "id": "E6-F3",
+     "claim": "Readability falls short of the bar at the large scale; local quality is high. Dossier product code averages 71.5 bytes per line (render.ts 87, dossier-site.ts about 101). dossier-site.ts has 86 lines over 200 characters. 15 functions exceed 100 lines, and the two largest are 565 and 473. Docblocks cite requirements densely: good traceability, but heavy reading. Names mislead in places: run primitives live in inventory.ts, screening and evidence live in 'generation-core', and the path every real run takes is labelled 'prototype'. On the other side, the Outcome<R,F> results, frozen constants, bounded JSON parsing and path-intent resolution are consistently good.",
+     "label": "Observed",
+     "evidence": [
+      "byte/line ratio over 50 non-test dossier src files: 847,148 / 11,846",
+      "apps/three-surface-poc/src/polaris-generation/dossier-site.ts (86 lines >200 chars)",
+      "packages/polaris-dossier/src/polaris.ts:27"
+     ],
+     "severity": "medium",
+     "ledger": null
+    },
+    {
+     "id": "E6-F4",
+     "claim": "Overall verdict (the owner's question): I would be proud of the integrity core and not yet of the product around it. It is clearly proud work in places. Every citation and quotation is re-derived from Git objects at a pinned commit. Observed is reserved for what Syzygy verifies. Each session gets its own bubblewrap view and broker. All 1,923 links on the latest site resolve. The test tiers are enforced, and mutation evidence is kept. On bias 8 (verification depth) and most of VIS-2 it meets or exceeds the /th-engineering bar. It falls short elsewhere. Bias 1: the dormant permitting arm, the operator-started mode that no run used, and the provider mode still pinned inside the live renderer. Bias 2: a 565-line renderer closure and 700-character lines. Bias 5: a supervisor that parses its own stdout and types into TUIs with tmux. Bias 6: Infinity and {} fallbacks on critical reads. Bias 10: about 1.4-2x the greenfield size. Most importantly, the system measures 'safe' rigorously and 'good' barely: no mechanical reader metric is stored, the design reviewer never sees pixels, and a sealed run can show 'none counts' beside a not-ready verdict, with an Execution Record whose credential sentence is false in launched mode. Fix the truth-at-close and credential items first, then the quality loop, then the typed-model and renderer rebuild.",
+     "label": "Inferred",
+     "evidence": [
+      "harvest-eng-01..05 findings"
+     ],
+     "severity": "high",
+     "ledger": null
+    }
+   ],
+   "moves": [
+    {
+     "id": "E6-M1",
+     "what": "Add one Authority module. At startup, load every act, consent, sign-off and screening record once into a typed, digest-stamped Authority snapshot. Feature modules take it as a port and ask questions such as `authority.waitMode()` or `authority.consentFor(url)`. Remove the RECORDS_ROOT-relative parsing from feature modules.",
+     "why": "Bias 5 (explicit data movement) and bias 10. VIS-4 authority is preserved, but contained in one place.",
+     "integration_points": [
+      "packages/polaris-dossier/src/gate-sources.ts",
+      "packages/polaris-dossier/src/waiting-sessions.ts",
+      "packages/polaris-generation-consent",
+      "packages/polaris-dossier/src/cli.ts cliGateSources"
+     ],
+     "owner_value": 4,
+     "build_cost": 3,
+     "prereq": "none"
+    },
+    {
+     "id": "E6-M2",
+     "what": "Redraw the package boundaries to the sketch. polaris-evidence: git-object-reader, screening, quotation verification (absorbs qkea.17). polaris-draft: typed model, schema, check. polaris-site: SiteModel, components and theme (qkea.19, out of the POC app). polaris-run: engine, sessions, broker, views, records. The CLI is a thin table over polaris-run. The parked island stays parked, self-contained.",
+     "why": "Bias 10 and dependency hygiene: deep modules behind small interfaces.",
+     "integration_points": [
+      "packages/polaris-dossier",
+      "packages/polaris-generation-core",
+      "apps/three-surface-poc/src/polaris-generation",
+      "syzygy-bpyt.8",
+      "syzygy-qkea.17",
+      "syzygy-qkea.19"
+     ],
+     "owner_value": 3,
+     "build_cost": 4,
+     "prereq": "none"
+    },
+    {
+     "id": "E6-M3",
+     "what": "Add a ratcheting size budget to the Polaris packages: a maximum line length of about 140 for code, a maximum function length of about 120 lines, and a file-size ceiling. Existing offenders are listed and shrink only.",
+     "why": "Bias 2. It stops the accretion that produced 565-line closures, at a cost of one lint rule.",
+     "integration_points": [
+      "repo lint config",
+      "packages/polaris-dossier",
+      "apps/three-surface-poc/src/polaris-generation"
+     ],
+     "owner_value": 2,
+     "build_cost": 1,
+     "prereq": "none"
+    }
+   ]
+  },
+  {
+   "lane": "ideas",
+   "unit": "archetype-generality",
+   "tier": "n/a",
+   "gap": "[Observed] Every dossier is cut from one template: four owner-set topics in a fixed order (packages/polaris-dossier/src/brief.ts:40, :129), one fixed technology-choices table whose seven dimensions are server-shaped (reader-standards.md:95-113), six graph-only diagram kinds, and the same Poles mechanism. Only one target has ever been run live (Redis, three runs); requests (mea.2) and Sentry are still unadmitted, so generality is unmeasured (L8, persists). [Inferred] A library (requests) is understood through its public API and a five-line example; a CLI (ripgrep) through its command and flag surface and an input-to-output pipeline; a monorepo (Sentry) through a subsystem atlas; a framework through its lifecycle and extension points; a data/ML project through data flow and model lifecycle; infra-as-code through resource topology and environments; a thin-doc repo through reconstruction from code. Today the agent must discover the right shape on its own inside a server-shaped template, and nothing checks that it did. The ideal: Syzygy deterministically fingerprints the repository's shape from the tree listing it already reads, the author confirms an archetype as a cited understanding item, and the archetype selects a question pack, page template, element set and calibration target, while the four owner topics stay the spine.",
+   "findings": [
+    {
+     "id": "I1-F1",
+     "claim": "The reader topics and section ids are a single constant for every repository; the brief cannot vary the questions by what kind of project it is.",
+     "label": "Observed",
+     "evidence": [
+      "packages/polaris-dossier/src/brief.ts:40",
+      "packages/polaris-dossier/src/brief.ts:129",
+      "/home/orca/.local/state/syzygy-dossier/run-ffe579c77dc21d9f6dd87ca6e2bc9301/brief.md:16-23"
+     ],
+     "severity": "medium",
+     "ledger": null
+    },
+    {
+     "id": "I1-F2",
+     "claim": "The latest Redis author session inspected 22 paths, selected 17 and cited 19 distinct files (README.md 91 citations, redis.conf 88, src/server.c 52), stopping because 'further files would add depth beyond the newcomer audience'; no rule obliges coverage of the tree's top-level structure, which on a monorepo would leave most subsystems unnamed.",
+     "label": "Observed",
+     "evidence": [
+      "/home/orca/.local/state/syzygy-dossier/run-ffe579c77dc21d9f6dd87ca6e2bc9301/drafts/rev-6.json discovery.inspected/selected/stoppingReason",
+      "citation path sweep over drafts/rev-6.json (19 distinct paths)"
+     ],
+     "severity": "medium",
+     "ledger": null
+    },
+    {
+     "id": "I1-F3",
+     "claim": "The technology-choices standard asks every dossier for networking, peer discovery, persistence and concurrency rows; for a pure library or an IaC repo most rows become 'does not apply' padding rather than the dimensions that matter there (API stability, error model, extension points; providers, state backends, environments).",
+     "label": "Inferred",
+     "evidence": [
+      ".claude/skills/polaris-dossier/references/reader-standards.md:95-113"
+     ],
+     "severity": "low",
+     "ledger": null
+    }
+   ],
+   "moves": [
+    {
+     "id": "I1-M1",
+     "what": "Repository-shape fingerprint and archetype stage. Syzygy computes a path-only shape census from the pinned tree listing it already reads (manifest kinds: pyproject/setup.py, Cargo.toml [[bin]], package.json workspaces, go.mod, *.tf/helm/kustomize, notebooks, Dockerfile; language mix by bytes; doc volume; entry points; size) and hands it in the brief. The author records an `archetype` (library, cli, server/daemon, framework, monorepo/platform, data-ml, infra-as-code, docs-thin; multi-valued) as a cited understanding item; check validates it against the census (e.g. 'cli' needs a binary target).",
+     "why": "[mandate-grounded] REQ-polaris-generation-030 (discovery honest on arbitrary repos), L8, TARGETS 'arbitrary means arbitrary'; VIS-3. Deterministic census keeps VIS-1 ordering: the observation is Syzygy's, the classification is the agent's Inferred claim.",
+     "integration_points": [
+      "packages/polaris-dossier/src/census.ts (reuse tree listing) -> new repo-shape.ts",
+      "packages/polaris-dossier/src/brief.ts (shape section)",
+      "draft.schema understanding.archetype",
+      "packages/polaris-dossier/src/check.ts (archetype vs census consistency)"
+     ],
+     "owner_value": 4,
+     "build_cost": 2,
+     "prereq": "none"
+    },
+    {
+     "id": "I1-M2",
+     "what": "Archetype question packs and page templates layered under the four owner topics: each archetype adds 2-4 required sub-questions and preferred elements (library: hello-world, public API map, error model, extension points; CLI: command tree, flags-to-behaviour table, input->output pipeline, performance claims; monorepo: subsystem atlas with one-line purpose card per subsystem; framework: request/component lifecycle, plugin model, inversion of control; data-ml: data lineage, training/serving lifecycle, evaluation; IaC: resource topology, environments, blast radius; docs-thin: explicit reconstructed-from-code mode). The technology-choices table's dimensions become archetype-conditioned.",
+     "why": "[mandate-grounded for packs under existing topics; spec amendment where a pack changes required topics] REQ-004 reading depths, RS-11, L3 (route by intent), L4.",
+     "integration_points": [
+      "packages/polaris-dossier/src/brief.ts BRIEF_TOPICS -> topic packs keyed by archetype",
+      ".claude/skills/polaris-dossier/references/reader-standards.md RS-11 (archetype appendix)",
+      "packages/polaris-dossier/src/reader-advice.ts (pack coverage advice)",
+      "apps/three-surface-poc/src/polaris-generation/dossier-site.ts (subsystem-atlas, api-surface, command-tree components)",
+      "openspec polaris-generation REQ-004 delta (topic set is owner-set)"
+     ],
+     "owner_value": 5,
+     "build_cost": 4,
+     "prereq": "spec amendment"
+    },
+    {
+     "id": "I1-M3",
+     "what": "Use the maintainers' own information architecture as a calibration seed: detect in-tree doc-site configs (mkdocs.yml nav, Sphinx toctree, Docusaurus sidebars, mdBook SUMMARY.md, README heading outline) and give the author that outline as the project's own routing, so Poles and reader routes start from how the maintainers already divide the project rather than a template.",
+     "why": "[mandate-grounded] L3 (route in the reader's words, as requests/Redis/Sentry do), brief Poles rule 'choose from what the repository holds'; reads only consented in-tree files.",
+     "integration_points": [
+      "packages/polaris-dossier/src/brief.ts (Poles section gets the detected outline)",
+      "discovery seeds in SKILL.md step 5",
+      "check.ts advice when Poles ignore a detected nav"
+     ],
+     "owner_value": 3,
+     "build_cost": 2,
+     "prereq": "none"
+    },
+    {
+     "id": "I1-M4",
+     "what": "Archetype-diverse proving corpus: admit one target per archetype (requests, ripgrep, a Sentry subtree, one framework, one IaC repo, one data-ml repo, one thin-doc repo) so every pack is exercised before it is trusted; pairs with the evaluation-loop scorecard.",
+     "why": "[mandate-grounded] L8, L12 (second and third targets should cost a params.json), TARGETS stretch list; dov.8.6 and mea.2 are the first two steps.",
+     "integration_points": [
+      "docs/polaris-generation/TARGETS.md",
+      "launch-time consent (pdja.21) so each target is one sitting",
+      "evaluation scorecard (I4-M3)"
+     ],
+     "owner_value": 4,
+     "build_cost": 3,
+     "prereq": "owner act"
+    }
+   ]
+  },
+  {
+   "lane": "ideas",
+   "unit": "argument-and-thesis",
+   "tier": "n/a",
+   "gap": "[Observed] The draft has a title and a two-to-three-sentence introduction, then four fixed topic sections; the schema has no thesis, no load-bearing claims and no link from a claim to the section that proves it. Section titles in the latest run do argue ('speed from one thread and RAM, paid for in limits'), but that is the author's craft, not a structure Syzygy asks for or checks. The owner allowed Polaris judgements (pdja point 16), yet all seven Redis draft revisions carry zero `judgement` marks, so the dossier still describes rather than argues. History is unavailable by construction: init accepts a one-commit clone only, and the history option of REQ-038 (packet Q2) is candidate. The brief also still hands the author contradictory voice rules inherited from the provider pipeline. The ideal: a thesis-first spine (one-sentence thesis, three to five pillars, each with its cost), design decisions rendered as decision records with the alternatives the sources name, a timeline of how the project got here when history is consented, and the maintainers' own voice quoted where it carries the argument.",
+   "findings": [
+    {
+     "id": "I2-F1",
+     "claim": "Zero judgement marks across all seven Redis draft revisions of the latest run, although the brief permits them and the owner asked for an opinionated account; the only 'judgement' text on the site is the legend.",
+     "label": "Observed",
+     "evidence": [
+      "/home/orca/.local/state/syzygy-dossier/run-ffe579c77dc21d9f6dd87ca6e2bc9301/drafts/rev-0.json..rev-6.json: grep -c '\"judgement\"' = 0 each (7 files)",
+      "/home/orca/.local/state/syzygy-dossier/run-ffe579c77dc21d9f6dd87ca6e2bc9301/brief.md:40,56",
+      "bd syzygy-pdja point 16"
+     ],
+     "severity": "high",
+     "ledger": "syzygy-pdja"
+    },
+    {
+     "id": "I2-F2",
+     "claim": "The brief still carries the pipeline's 'begin every inferential block Inferred:' and 'write each stated advantage as a quotation (rule 4)' instructions after the paragraph that overrides them, so the author reads three mutually contradicting voice rules in one brief; the citation-anxious voice the owner called 'neurotic' is partly instructed.",
+     "label": "Observed",
+     "evidence": [
+      "packages/polaris-dossier/src/brief.ts:61 (DOSSIER_GUIDANCE rules 4 and 6)",
+      "packages/polaris-dossier/src/brief.ts:70 (Begin every inferential block Inferred:)",
+      "packages/polaris-dossier/src/brief.ts:193 (override: begin no text with Inferred:)",
+      "/home/orca/.local/state/syzygy-dossier/run-ffe579c77dc21d9f6dd87ca6e2bc9301/brief.md:102,108,110,113"
+     ],
+     "severity": "medium",
+     "ledger": null
+    },
+    {
+     "id": "I2-F3",
+     "claim": "No structured thesis exists in the draft schema: required top-level fields are title, introduction, understanding, sections, diagrams, deepDives, unresolved, discovery, clarifications, executions; LEARNING-LOG L1 (thesis is one sentence, first) remains status open.",
+     "label": "Observed",
+     "evidence": [
+      "/home/orca/.local/state/syzygy-dossier/run-ffe579c77dc21d9f6dd87ca6e2bc9301/draft.schema.json required[]",
+      "docs/polaris-generation/LEARNING-LOG.md:22-32"
+     ],
+     "severity": "medium",
+     "ledger": null
+    }
+   ],
+   "moves": [
+    {
+     "id": "I2-M1",
+     "what": "Thesis-and-spine stage. Schema gains `thesis` (one sentence, word-capped, cited or a marked judgement) and `pillars` (3-5 load-bearing claims, each naming the section or Pole that substantiates it and the cost it pays). Check: every pillar resolves to content and every section serves a pillar; the landing first screen renders thesis + pillars as the map; the design review and any reader probe test 'can a reader quote the thesis after ten seconds'. The four owner topics stay as the evidence order beneath the spine.",
+     "why": "[mandate-grounded] REQ-polaris-generation-002 (argument, not catalogue), L1, L7, RS-3/RS-8, owner pdja outcome 'opinionated account of why a project exists'.",
+     "integration_points": [
+      "packages/polaris-dossier/src/draft-schema.ts (thesis, pillars)",
+      "packages/polaris-dossier/src/check.ts (pillar resolution)",
+      "packages/polaris-dossier/src/brief.ts (why-first topic text)",
+      "apps/three-surface-poc/src/polaris-generation/dossier-site.ts (landing hero)",
+      "reader-standards RS-8"
+     ],
+     "owner_value": 5,
+     "build_cost": 2,
+     "prereq": "none"
+    },
+    {
+     "id": "I2-M2",
+     "what": "Decision records as a first-class element: context -> choice -> alternatives the sources name -> what it buys -> what it costs -> basis (maintainer-stated or reconstructed, REQ-038) -> evidence. Rendered as decision cards beside the mechanism they shape and aggregated into a 'Choices and costs' index that replaces the flat technology table's prose cells. Judgements attach to a decision ('a sound trade for a cache, a poor one for a ledger') as the place opinion is allowed and expected.",
+     "why": "[mandate-grounded] REQ-002 design choices, RS-10/RS-12 (trade-off beside the mechanism), pdja point 12 (advantages are really the why), owner direction 16 (judgements allowed).",
+     "integration_points": [
+      "draft.schema $defs element `decision`",
+      "packages/polaris-dossier/src/check.ts (alternatives cited or unknown; basis per REQ-038 when it lands)",
+      "dossier-site.ts decision-card component and index page",
+      "reader-standards RS-11/RS-12 table links to decisions"
+     ],
+     "owner_value": 5,
+     "build_cost": 3,
+     "prereq": "none"
+    },
+    {
+     "id": "I2-M3",
+     "what": "Consented history mining: a depth-bounded history fetch (tags, release notes, merge messages touching the files the dossier cites, ADR/RFC/design-doc directories) under an identity screen, producing a cited `timeline` element ('how it got here') and history premises for reconstructed motivations. Redis's 00-RELEASENOTES (cited 9 times already) shows the in-tree half works today; commit history is the missing half.",
+     "why": "[mandate-grounded once REQ-037/038 history option is signed] REQ-038 premises, VIS-2 (motives without premises stay Unknown, so more premises = fewer Unknown whys).",
+     "integration_points": [
+      "packages/polaris-dossier/src/clone-shape.ts and init.ts (accept bounded history)",
+      "packages/polaris-dossier/src/git-object-reader.ts (commit objects)",
+      "screen.ts identity screen for author names/emails",
+      "draft.schema element `timeline`; citation form for commit messages",
+      "openspec polaris-dossier-arbitrary-public-repo packet Q2"
+     ],
+     "owner_value": 4,
+     "build_cost": 4,
+     "prereq": "owner act"
+    },
+    {
+     "id": "I2-M4",
+     "what": "Maintainers' voice strip: the author selects 2-4 verified quotations that carry the project's own voice and position (requests: 'built for human beings'; Redis MANIFESTO lines) rendered as pull quotes on the landing page and Pole openers. Quotations are already verified against the pinned revision, so this is selection and presentation only.",
+     "why": "[mandate-grounded] L5 (personality is allowed), VIS-3, REQ-034 quotation verification; makes Observed text carry the argument instead of decorating it.",
+     "integration_points": [
+      "draft.schema `voice` (refs to verified quotation blocks)",
+      "dossier-site.ts pull-quote component",
+      "brief.ts Voice section"
+     ],
+     "owner_value": 4,
+     "build_cost": 1,
+     "prereq": "none"
+    },
+    {
+     "id": "I2-M5",
+     "what": "Brief compaction: stop pasting the provider-pipeline guidance and overriding it; generate one coherent voice-and-claims section for the operator-agent brief so the author never reads a rule and its reversal.",
+     "why": "[mandate-grounded] pdja points 11 and 16; a brief that contradicts itself trains the hedged voice the owner rejected.",
+     "integration_points": [
+      "packages/polaris-dossier/src/brief.ts:61,70,193",
+      "packages/polaris-generation-core/src/prompts.ts:54 (keep for the parked pipeline only)"
+     ],
+     "owner_value": 3,
+     "build_cost": 1,
+     "prereq": "none"
+    }
+   ]
+  },
+  {
+   "lane": "ideas",
+   "unit": "visual-storytelling",
+   "tier": "n/a",
+   "gap": "[Observed] Diagrams are already first-class in the schema (six kinds; every node and edge cited and labelled inferred/unknown) and the latest Redis draft drew six of them. But one deterministic layered left-to-right layout serves every kind, so a state machine, a lifecycle, a containment boundary and a flow all render as the same column-of-boxes picture; there is no sequence diagram (actors over time), no nesting (layers, process and thread boundaries), no data-layout picture (a file format, a struct, a key space), and no timeline. Show-then-tell is unrealised: the `code` element exists, yet the latest draft used it zero times and the one rendered deep dive holds no figure at all. And because diagram edges can only be `inferred` or `unknown`, a structural fact a parser could establish deterministically (A's body calls B; module X imports Y) is drawn with the same weight as the agent's reading. The ideal: a diagram grammar whose kinds match the questions mechanisms raise (what happens in what order, what contains what, how bytes are laid out, how state changes), laid out by kind; a hero artifact (snippet, command, transcript) right after the thesis; and a deterministic structure index that lets Syzygy, not the agent, vouch for the skeleton of an architecture picture.",
+   "findings": [
+    {
+     "id": "I3-F1",
+     "claim": "All six diagram kinds share one layered DAG layout (DFS back-edge removal, longest-path layering, curves right-to-left), so kind changes the legend, not the picture; nesting, lifelines and cyclic state layouts are not expressible.",
+     "label": "Observed",
+     "evidence": [
+      "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts:3-17",
+      "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts:65",
+      "/home/orca/.local/state/syzygy-dossier/run-ffe579c77dc21d9f6dd87ca6e2bc9301/draft.schema.json properties.diagrams.items.properties.kind.enum (flow, lifecycle, state-machine, boundary, dependency, placement)"
+     ],
+     "severity": "medium",
+     "ledger": null
+    },
+    {
+     "id": "I3-F2",
+     "claim": "The latest Redis draft used 0 `code` elements (element census of drafts/rev-6.json: callout 6, steps 3, details 2, table 2, cards 1, definitions 1), and the rendered deep dive page contains 0 <svg> figures; LEARNING-LOG L2 'show, then tell' stays open.",
+     "label": "Observed",
+     "evidence": [
+      "/home/orca/.local/state/syzygy-dossier/run-ffe579c77dc21d9f6dd87ca6e2bc9301/drafts/rev-6.json (kind census)",
+      "/home/orca/.local/state/syzygy-dossier/run-ffe579c77dc21d9f6dd87ca6e2bc9301/site/0/deep-dives/mechanism-deep-dive.html (grep -c '<svg' = 0)",
+      "docs/polaris-generation/LEARNING-LOG.md:34-45"
+     ],
+     "severity": "medium",
+     "ledger": "syzygy-mea.10"
+    }
+   ],
+   "moves": [
+    {
+     "id": "I3-M1",
+     "what": "Diagram grammar by question, each kind with its own layout: `sequence` (participants x time; how one request is served), `layers`/`containment` (nested groups: process, thread, module boundaries), `state-machine` with cyclic layout, `data-layout` (fields/byte ranges of a format or struct, e.g. an on-disk file format or a key-space entry), `timeline` (versions, history). Schema per kind (lifelines and messages; groups with children; fields with widths). RS-16 maps each question type to its kind so the author picks by question, not by habit.",
+     "why": "[mandate-grounded] RS-16/RS-17, REQ-004 'diagrams where prose explains worse', pdja point 10 (more diagrams), owner's 'beautiful and intuitive'.",
+     "integration_points": [
+      "draft.schema diagrams.kind enum + per-kind shapes (packages/polaris-dossier/src/draft-schema.ts)",
+      "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts -> per-kind layout modules (sequence, nested, record)",
+      "apps/three-surface-poc/src/polaris-generation/svg-inert.ts (inertness for new shapes)",
+      "reader-standards RS-16 kind table",
+      "check.ts: every node/edge/field cited, as today"
+     ],
+     "owner_value": 5,
+     "build_cost": 4,
+     "prereq": "none"
+    },
+    {
+     "id": "I3-M2",
+     "what": "Deterministic structure index: Syzygy parses the consented pinned tree (no execution; tree-sitter-class parsing of blobs it already reads) into a symbol and reference index (definitions, calls, imports, module graph). Offered to the author as candidate edges with exact spans; an edge drawn from the index renders as `derived` with tool provenance and a different line style, distinguishable from the agent's reading. The index also powers 'where does X live' links and stale-citation relocation.",
+     "why": "[vision-extending at the label layer] VIS-1 orders truth/determinism first: a deterministic parse is an observation Syzygy makes, so structure need not wait on an agent's Inferred claim. Rendering such an edge as Observed (or a new 'derived' label) needs an RFC7 epistemic-label amendment; offering it as an Inferred aid needs none. SEC-3 holds (parsing is not running).",
+     "integration_points": [
+      "new packages/polaris-dossier/src/symbol-index.ts over git-object-reader blobs",
+      "brief.ts (index summary + query file)",
+      "draft.schema edge `basis: derived`",
+      "check.ts (derived edges must match the index exactly)",
+      "diagram legend in dossier-site.ts",
+      "RFC7 label amendment if derived renders Observed"
+     ],
+     "owner_value": 4,
+     "build_cost": 4,
+     "prereq": "spec amendment"
+    },
+    {
+     "id": "I3-M3",
+     "what": "Hero artifact and annotated code walk. The landing page gets a `hero` slot right after the thesis: a cited code excerpt, a CLI invocation or a usage transcript from the project's own docs (requests' eight-line session; redis-cli SET/GET), plus an `annotated-code` element: a cited 5-40 line span rendered by Syzygy from its own read with numbered margin notes keyed to lines, each note a cited claim. Check advises when the landing has no hero and the archetype has an obvious one.",
+     "why": "[mandate-grounded] L2 (show, then tell; an adjective needs an artifact that earns it), RS-16, VIS-3. Syzygy already renders code from its own read, so fidelity is preserved.",
+     "integration_points": [
+      "draft.schema `hero` and element `annotated-code` (extends `code`)",
+      "dossier-site.ts landing + annotated-code component",
+      "reader-advice.ts (hero advice)",
+      "brief.ts Readability rule 5"
+     ],
+     "owner_value": 5,
+     "build_cost": 2,
+     "prereq": "none"
+    },
+    {
+     "id": "I3-M4",
+     "what": "Executed examples under the existing opt-in execution choice: when the owner has typed allow-execution for the run, the author may capture a short transcript of running the hero example (command, output, exit status) into the run directory; Syzygy renders it as a transcript element labelled Inferred with basis: execution and the recorded command. Without the choice, the hero stays a cited excerpt.",
+     "why": "[mandate-grounded, gated] SEC-3 and D9 already define the gate; makes 'show' literal for CLIs and libraries.",
+     "integration_points": [
+      "executions[] gains an output file reference",
+      "dossier-site.ts transcript component",
+      "check.ts (transcript names an execution id)"
+     ],
+     "owner_value": 3,
+     "build_cost": 3,
+     "prereq": "owner act"
+    },
+    {
+     "id": "I3-M5",
+     "what": "Scrollytelling sync between a flow/sequence diagram and its `steps` element: as the reader moves through step n, hop n highlights (hash-allowed script, static fallback shows the numbered hops). Turns the two representations into one explanation instead of a picture and a retelling.",
+     "why": "[mandate-grounded] RS-20 (say each thing once), pdja point 10 (interactivity), pdja.5 script-with-static-fallback model.",
+     "integration_points": [
+      "dossier-site.ts (steps <-> diagram edge ids)",
+      "draft.schema steps.items.edgeRef",
+      "screening scope script hash"
+     ],
+     "owner_value": 3,
+     "build_cost": 2,
+     "prereq": "none"
+    }
+   ]
+  },
+  {
+   "lane": "ideas",
+   "unit": "evaluation-loop",
+   "tier": "n/a",
+   "gap": "[Observed] Readiness today is three gates: the mechanical check, the fidelity verdict and the design verdict (a per-page acceptable/deficient judgement against RS-1..RS-25). None of them measures whether a reader understands the project: the pdja epic's framing finding is that fidelity and design both reached ready on run d9411d26 (62/62 pages acceptable) while every owner point went uncaught. A reader-test engine exists (`runReaderTest`, `evaluateDossier`, topic coverage, reader cost) but only in the generation-core evaluation harness with scripted answers; the `syzygy dossier` loop never calls it. The size report computes words to the first reading level but every budget is Unknown ('no-budget-declared'). TARGETS defines a good scoring protocol (seven frozen questions, a second reader on the reference site, reader cost, unchanged process) that has never run. And there is no regression signal across generator changes: each brief, schema or renderer change is judged by the next owner-started Redis run. The ideal: comprehension is measured by a fresh reader with only the site, compared to a reference answer, scored per run into a scorecard; renderer changes are regression-tested for free by re-rendering every stored draft; and 'beautiful' has counted proxies the design reviewer starts from rather than ends at.",
+   "findings": [
+    {
+     "id": "I4-F1",
+     "claim": "The reader test is wired only into the scripted evaluation harness; the live dossier package never invokes it, so no run's readiness rests on a reader answering anything.",
+     "label": "Observed",
+     "evidence": [
+      "packages/polaris-generation-core/src/dossier-reader-test.ts:57 (runReaderTest)",
+      "packages/polaris-generation-core/src/live.ts:27 (exported)",
+      "apps/three-surface-poc/src/polaris-generation/dossier-evaluation-main.ts:21 ('Scripted answers only ... no provider call exists here')",
+      "grep -rn runReaderTest packages/polaris-dossier apps/syzygy: 0 hits"
+     ],
+     "severity": "high",
+     "ledger": "syzygy-u05.13"
+    },
+    {
+     "id": "I4-F2",
+     "claim": "Reader-cost budgets are never declared, so the one mechanical comprehension-cost measure renders Unknown on every run (first level 112 words / 30,121 bytes; depth-1 pages 12,890 words over 13 pages).",
+     "label": "Observed",
+     "evidence": [
+      "/home/orca/.local/state/syzygy-dossier/run-ffe579c77dc21d9f6dd87ca6e2bc9301/site/0/size-report.json firstReadingLevel.wordBudget.reason = no-budget-declared"
+     ],
+     "severity": "low",
+     "ledger": null
+    }
+   ],
+   "moves": [
+    {
+     "id": "I4-M1",
+     "what": "Comprehension probe as a live readiness input: a fourth fresh session (reader kind) receives only the rendered site, answers frozen questions (TARGETS' seven: purpose, beneficiary, thesis, capabilities, one architectural choice, a limit, an uncertainty; plus archetype-pack questions) recording the pages visited and clicks to each answer; Syzygy grades answers against the understanding record and any frozen answer key (graded by a separate fresh grader session, never the author). Result renders on the review page as a scored comprehension line and feeds readiness (advisory first, gating once calibrated).",
+     "why": "[mandate-grounded] VIS-3 (digestible by a human unfamiliar with the project) is the property no current gate measures; pdja framing finding; TARGETS scoring item 1; L1 ten-second thesis test.",
+     "integration_points": [
+      "packages/polaris-generation-core/src/dossier-reader-test.ts -> live path",
+      "packages/polaris-dossier/src/waiting-sessions.ts, session-handover.ts (new reader kind)",
+      "packages/polaris-dossier/src/review-packet.ts (site-only packet)",
+      "packages/polaris-dossier/src/review-verdict.ts (reader verdict schema)",
+      "status.ts readiness; one-command-run spec (zwja) session list"
+     ],
+     "owner_value": 5,
+     "build_cost": 3,
+     "prereq": "spec amendment"
+    },
+    {
+     "id": "I4-M2",
+     "what": "Render regression over every stored draft: a script that re-renders each retained run's checked drafts with the current renderer (no model call, no new read beyond the consented pinned trees) and emits a per-draft scorecard diff: words and bytes per depth, max unbroken prose run, figures per section, label/marker density, broken links, RS advisory counts, page count. Any renderer PR attaches the diff. Drafts are already immutable inputs in run directories.",
+     "why": "[mandate-grounded] VIS-1 reproducibility, rule 6/7 discipline applied to the product; cheapest way to stop renderer regressions reaching the owner's next run.",
+     "integration_points": [
+      "new scripts/dossier_render_regression.mjs over ~/.local/state/syzygy-dossier/run-*/drafts",
+      "packages/polaris-dossier/src/render.ts (pure render entry)",
+      "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "size-report.json extended with layout proxies"
+     ],
+     "owner_value": 4,
+     "build_cost": 2,
+     "prereq": "none"
+    },
+    {
+     "id": "I4-M3",
+     "what": "Scored corpus and generator scorecard: a frozen set of pinned targets (one per archetype) with frozen question sets and answer keys; each generator version (brief, schema, standards, renderer digests) is scored on the corpus: comprehension, words-to-all-answers, Unknown share, judgement count, diagram coverage per mechanism, reviewer findings by RS id. Stored as dated evidence records so 'better' is a measured claim across generator changes, not an impression from one Redis run.",
+     "why": "[mandate-grounded] L8, TARGETS 'how a page is scored' and 'unchanged process', REQ-006/014 evaluation; extends N13 (claim ledger + frozen-case corpus) from the parked pipeline to the live one.",
+     "integration_points": [
+      "docs/polaris-generation/TARGETS.md (answer keys)",
+      "apps/three-surface-poc/src/polaris-generation/dossier-evaluation-main.ts -> live scorecard",
+      "docs/evidence/ scorecard records",
+      "observation consents per target (pdja.21 launch-time consent)"
+     ],
+     "owner_value": 5,
+     "build_cost": 4,
+     "prereq": "owner act"
+    },
+    {
+     "id": "I4-M4",
+     "what": "Reference-site comparison: for targets with an official site, the operator captures the reference pages once into the evaluation inputs; a second fresh reader answers the same probes from the reference; the scorecard reports generated-vs-reference comprehension and reader cost. Never an input to authoring, so it cannot leak into the dossier as an unverified external claim.",
+     "why": "[mandate-grounded for evaluation] TARGETS 'a reference answer exists', L1-L4 came from those sites; keeps REQ-039's line between clone evidence and external text.",
+     "integration_points": [
+      "evaluation harness inputs",
+      "TARGETS.md reference captures",
+      "owner ruling: reference capture is the operator's own act, outside the consent records"
+     ],
+     "owner_value": 4,
+     "build_cost": 3,
+     "prereq": "owner act"
+    },
+    {
+     "id": "I4-M5",
+     "what": "Declare reader-cost budgets per archetype (first screen <= ~150 words, section <= 300 words, landing <= N bytes) so the size report and design review start from counted pass/fail instead of 'Unknown, no budget declared'.",
+     "why": "[mandate-grounded] RS-7/RS-19, L4, gap-analysis item 19 (owner sign-off on budgets after first measurement — the measurements now exist).",
+     "integration_points": [
+      "run-config.ts / profile (budget fields)",
+      "size-report.json",
+      "reader-advice.ts"
+     ],
+     "owner_value": 3,
+     "build_cost": 1,
+     "prereq": "owner act"
+    }
+   ]
+  },
+  {
+   "lane": "ideas",
+   "unit": "reader-experience",
+   "tier": "n/a",
+   "gap": "[Observed] The site is a well-behaved static document: landing, Pole pages, a deep dive, contents, glossary, sources, review report; reading and evidence views; collapsible navigation and glossary popups landed in pdja.1. As a product it still assumes one reader on one path. The operator is required to name an audience at launch, and it is recorded, but it never reaches the author's brief; the brief and the reader standards instead fix 'an engineer new to the project'. The landing page offers no routing by intent (use it, run it in production, contribute, evaluate it), so every reader takes the same path. Across all 45 rendered pages there is no search and no script (the pdja.5 script-with-static-fallback model is available but unused by the latest render), no skim mode even though the abstraction-tree standard makes headings-plus-opening-sentences a true summary by construction, and no share affordances (per-claim permalinks, preview cards, print/one-file export). The ideal: the landing asks 'what are you here to do?' and routes; the configured audience shapes depth; a skim view turns RS-4 into a feature; search and deep links make the dossier a reference people return to and share; all of it a presentation layer over identical content (VIS-1: simplify presentation, never content).",
+   "findings": [
+    {
+     "id": "I5-F1",
+     "claim": "The audience the launcher requires is dropped before the author sees it: `polaris` refuses to start without one and the run record stores it ('Operators and integrators deploying or building on Redis'), but brief.ts never interpolates it, and the brief's rule 7 refers to 'the stated audience' that the brief never states; RS-2 meanwhile fixes the reader as a newcomer engineer.",
+     "label": "Observed",
+     "evidence": [
+      "packages/polaris-dossier/src/polaris.ts:165-169",
+      "packages/polaris-dossier/src/run-record.ts:81",
+      "packages/polaris-dossier/src/brief.ts:82 (only 'audience' occurrence in brief.ts)",
+      "/home/orca/.local/state/syzygy-dossier/run-ffe579c77dc21d9f6dd87ca6e2bc9301/record.json configuration.declared.audience",
+      "/home/orca/.local/state/syzygy-dossier/run-ffe579c77dc21d9f6dd87ca6e2bc9301/brief.md:125 (grep -i audience: 1 hit)"
+     ],
+     "severity": "high",
+     "ledger": null
+    },
+    {
+     "id": "I5-F2",
+     "claim": "No rendered page carries search or any script: 45 HTML files, 0 <script> elements, 0 search inputs.",
+     "label": "Observed",
+     "evidence": [
+      "/home/orca/.local/state/syzygy-dossier/run-ffe579c77dc21d9f6dd87ca6e2bc9301/site/0/**/*.html (45 files; grep -c '<script' sum = 0; type=\"search\" files = 0)"
+     ],
+     "severity": "low",
+     "ledger": null
+    }
+   ],
+   "moves": [
+    {
+     "id": "I5-M1",
+     "what": "Audience to brief, then persona lenses. Step 1 (bug-sized): put the declared audience in the brief's 'What the dossier answers' and in RS-2's reader sentence. Step 2: optional `personas` (newcomer, operator, contributor, evaluator) where blocks and elements may carry an `audience` tag; the renderer offers a persona switch that changes default expansion and the primary route, never which facts exist (static fallback: everything expanded).",
+     "why": "[mandate-grounded] VIS-3, VIS-1 (simplify presentation, never content); the launcher already asks the question (polaris.ts:168) so the owner expects it to matter.",
+     "integration_points": [
+      "packages/polaris-dossier/src/brief.ts (audience line)",
+      "reader-standards RS-2",
+      "draft.schema block.audience",
+      "dossier-site.ts persona toggle (hash-allowed script)"
+     ],
+     "owner_value": 5,
+     "build_cost": 2,
+     "prereq": "none"
+    },
+    {
+     "id": "I5-M2",
+     "what": "Reader-intent routes on the landing page: the author writes 3-5 `routes` ('I want to use it', 'I run it in production', 'I want to change it', 'Is it right for me?'), each an ordered list of section/element anchors with a one-line promise; check resolves every anchor; the landing renders them as route cards under the thesis and each page shows 'next on your route'.",
+     "why": "[mandate-grounded] L3 (great sites route by reader intent in the reader's words), RS-24 (always oriented), owner pdja 'navigable pages'.",
+     "integration_points": [
+      "draft.schema `routes`",
+      "packages/polaris-dossier/src/check.ts (anchor resolution)",
+      "dossier-site.ts landing route cards + per-page next-on-route link"
+     ],
+     "owner_value": 5,
+     "build_cost": 2,
+     "prereq": "none"
+    },
+    {
+     "id": "I5-M3",
+     "what": "Skim view: a reading-view toggle that renders only headings, opening sentences, diagrams and callouts (the RS-4 abstraction-tree summary), so a reader can take the whole dossier in two minutes and drill where they care. Doubles as an evaluation input: the skim text alone is what the comprehension probe's ten-second/two-minute questions are asked against.",
+     "why": "[mandate-grounded] RS-3/RS-4 make this summary true by construction; L4 (short at the top, deep below).",
+     "integration_points": [
+      "dossier-site.ts (data-depth markers; CSS-only toggle)",
+      "evaluation harness (skim extract)"
+     ],
+     "owner_value": 4,
+     "build_cost": 1,
+     "prereq": "none"
+    },
+    {
+     "id": "I5-M4",
+     "what": "Static search and identifier index: build-time inverted index over headings, glossary terms, identifiers and claim text, served as JSON with a small hash-allowed script; the contents page is the no-script fallback. Includes 'where does X live' for every backticked identifier, linking claim -> source page.",
+     "why": "[mandate-grounded] RS-24 orientation; VIS-7 (every link resolves) extends naturally to an index the renderer generates and checks.",
+     "integration_points": [
+      "dossier-site.ts emits search-index.json",
+      "screening scope script hash (pdja.5 model)",
+      "contents.html fallback"
+     ],
+     "owner_value": 4,
+     "build_cost": 2,
+     "prereq": "none"
+    },
+    {
+     "id": "I5-M5",
+     "what": "Shareability: stable per-claim permalinks ('copy link to this claim' with its label and citation), Open Graph preview cards from thesis and title, a print stylesheet and a one-file export (inlined site) for sending a dossier to someone without hosting.",
+     "why": "[mandate-grounded] owner goal of a manifesto people read; VIS-7 stable links.",
+     "integration_points": [
+      "dossier-site.ts (anchors, meta tags, print CSS)",
+      "new export step in render.ts"
+     ],
+     "owner_value": 3,
+     "build_cost": 2,
+     "prereq": "none"
+    }
+   ]
+  },
+  {
+   "lane": "ideas",
+   "unit": "scale-cost-and-regeneration",
+   "tier": "n/a",
+   "gap": "[Observed] A run is one author session reading a one-commit clone from scratch: for Redis 8.10.2 it inspected 22 paths and cited 19 files, and the whole run took about 81 minutes (brief 02:46, close 04:07). That works for a project whose story lives in README, MANIFESTO and a few core C files; it will not scale to a Sentry-sized monorepo, where nothing obliges the author to name every subsystem or to say which it deferred. Cost is invisible: usage is an operator declaration and the latest run recorded none. Every run starts cold: the brief carries no prior run, nothing re-locates the previous dossier's citations at a new revision, and there is no way to show what changed between two revisions, which is exactly what TARGETS' licence-trio portability proof (7.2.4 -> 7.4.0 -> 8.0.0) needs. The ideal: hierarchical exploration with a coverage map Syzygy can check; regeneration that carries forward what still holds and re-verifies what moved; a claim-level dossier diff between revisions; a content-addressed understanding cache keyed by blob id; and measured cost per run so budgets can be set from data.",
+   "findings": [
+    {
+     "id": "I6-F1",
+     "claim": "No regeneration path exists: the brief, check, inventory and step-guard modules carry no prior-run input (0 matches for regenerat|previous run|prior run|incremental across brief.ts, check.ts, inventory.ts, reverify.ts), so a new revision is a full cold run.",
+     "label": "Observed",
+     "evidence": [
+      "packages/polaris-dossier/src/brief.ts",
+      "packages/polaris-dossier/src/check.ts",
+      "packages/polaris-dossier/src/inventory.ts",
+      "packages/polaris-dossier/src/reverify.ts",
+      "grep -n -i -E over those 4 files: 0 lines"
+     ],
+     "severity": "medium",
+     "ledger": null
+    },
+    {
+     "id": "I6-F2",
+     "claim": "Run cost is unrecorded: agentUsage state 'not-recorded' (operator declared none); only the step log's wall clock is known (~81 min).",
+     "label": "Observed",
+     "evidence": [
+      "/home/orca/.local/state/syzygy-dossier/run-ffe579c77dc21d9f6dd87ca6e2bc9301/record.json agentUsage",
+      "/home/orca/.local/state/syzygy-dossier/run-ffe579c77dc21d9f6dd87ca6e2bc9301/steps.jsonl first and last entries"
+     ],
+     "severity": "low",
+     "ledger": null
+    }
+   ],
+   "moves": [
+    {
+     "id": "I6-M1",
+     "what": "Hierarchical exploration with a checkable coverage map: Syzygy partitions the pinned tree from its path-only census and manifests (workspaces, packages, top-level dirs above a size threshold) into subsystems and puts the partition in the brief; the author dispatches scout subagents per subsystem (same rules, same clone, no execution) that each return a cited subsystem card (purpose, entry points, talks-to); check requires a card or a `deferred-by-budget` entry for every partition member. The cards render as a subsystem atlas (Sentry's 'one line per subsystem' shape) and feed the boundary diagram.",
+     "why": "[mandate-grounded] REQ-polaris-generation-030 (hierarchical, budgeted discovery with deferred-by-budget accounting), L3/L4, VIS-2 (an unvisited subsystem is Unknown, not absent).",
+     "integration_points": [
+      "packages/polaris-dossier/src/census.ts -> partition",
+      "packages/polaris-dossier/src/brief.ts (partition + coverage rule)",
+      "draft.schema understanding.components -> subsystem cards",
+      "packages/polaris-dossier/src/check.ts (coverage)",
+      ".claude/skills/polaris-dossier/SKILL.md step 5 (scouts)",
+      "dossier-site.ts atlas page"
+     ],
+     "owner_value": 5,
+     "build_cost": 3,
+     "prereq": "none"
+    },
+    {
+     "id": "I6-M2",
+     "what": "Carry-forward regeneration: `syzygy dossier init --from <sealed run>` pins a new consented revision, computes the tree diff, re-locates every prior citation at the new revision (same bytes found elsewhere -> moved; changed -> stale; gone -> broken), and issues a brief listing stale and broken blocks plus changed paths; the author repairs only those and re-examines the thesis. Fidelity review covers the changed blocks plus a sample of carried ones.",
+     "why": "[mandate-grounded] VIS-1 reproducibility and VIS-2 currency (stale evidence is not success); TARGETS changed-source regeneration; cuts cost per rerun.",
+     "integration_points": [
+      "new packages/polaris-dossier/src/carry-forward.ts (uses quote-locate.ts / git-object-reader.ts)",
+      "init.ts --from",
+      "brief.ts 'since revision X' section",
+      "check.ts stale-citation findings",
+      "review-packet.ts (delta packet)"
+     ],
+     "owner_value": 5,
+     "build_cost": 4,
+     "prereq": "none"
+    },
+    {
+     "id": "I6-M3",
+     "what": "Dossier diff page: given two sealed runs of one repository, render 'what changed between A and B': claims retracted, qualified, added, thesis and pillar changes, decision records whose cost changed; keyed by stable block ids and citation re-location, with an Unknown bucket for blocks that cannot be matched. The licence trio is the acceptance test (every licence statement must change).",
+     "why": "[mandate-grounded] TARGETS portability proof ('retract a claim, qualify a promise'), VIS-2.",
+     "integration_points": [
+      "new diff renderer beside dossier-site.ts",
+      "machine.json claim ids as the join key",
+      "evaluation scorecard (licence-trio check)"
+     ],
+     "owner_value": 4,
+     "build_cost": 3,
+     "prereq": "none"
+    },
+    {
+     "id": "I6-M4",
+     "what": "Content-addressed understanding cache: per-blob and per-subsystem cards keyed by blob id + brief/standards digest + model, reused by later runs when the blob is unchanged; each reuse is disclosed as such, labelled Inferred, never Observed.",
+     "why": "[vision-extending on retention] keeps cost proportional to change; but storing derived understanding of observed code across runs is a retention posture change, an escalation trigger needing an owner act.",
+     "integration_points": [
+      "state-root cache directory",
+      "brief.ts (cached cards offered as inputs)",
+      "run-record.ts disclosure",
+      "retention policy / consent record"
+     ],
+     "owner_value": 3,
+     "build_cost": 3,
+     "prereq": "owner act"
+    },
+    {
+     "id": "I6-M5",
+     "what": "Measured cost: when Syzygy launches the sessions (one-command run), capture each session's usage from the agent CLI's structured output into the run record mechanically, with tokens, turns and wall time per stage; publish cost per archetype and repository size so budgets and deadlines are set from data.",
+     "why": "[mandate-grounded] VIS-2 (usage today is Unknown by declaration); gap-analysis item 21 (rate limits / feasibility).",
+     "integration_points": [
+      "one-command-run runner (syzygy-1z8m / zwja)",
+      "run-record.ts agentUsage (observed from subprocess output vs declared)",
+      "status.ts"
+     ],
+     "owner_value": 3,
+     "build_cost": 2,
+     "prereq": "spec amendment"
+    }
+   ]
+  },
+  {
+   "lane": "ideas",
+   "unit": "steering-and-authoring-loop",
+   "tier": "n/a",
+   "gap": "[Observed] Humans steer a run at three points today: the launch configuration, up to N in-session clarification questions, and the owner reading the finished site and filing beads against the generator. In the latest Redis run the author asked 0 of its 3 permitted questions; the audience the operator declared never reached the brief (I5-F1); and the loop's ordering left the owner reading a draft the design reviewer had already blocked: render happened once, at draft revision 5, after five repair cycles had gone to fidelity; the design review then found two blocking pages (Pole 3 a ~2,000-word wall; the glossary rendering a raw internal identifier and no definitions); the author repaired in revision 6 (a second deep dive, a larger understanding record), which was checked and fidelity-reviewed but never rendered or design-reviewed, and the run closed with site/0 = revision 5. Owner feedback has no per-dossier channel: it becomes generator beads, so one wrong claim in one dossier cannot be corrected without a new run. The ideal (VIS-4: humans steer, agents draft): an owner-side steering record the brief carries; an outline sitting before drafting; render and design review on every checked revision so presentation feedback arrives early; the owner annotating the rendered site and those notes returning as repair findings; and an explicit, owner-performed acceptance of a dossier revision.",
+   "findings": [
+    {
+     "id": "I7-F1",
+     "claim": "The run closed with its final checked draft (revision 6) unrendered: the only render is site/0 from draft revision 5, whose design verdict is not-ready with 2 blocking findings; revision 6 was checked (03:39) and fidelity-reviewed (03:44) after it, and close followed at 04:07. The repair-cycle limit (6) was spent before design feedback could be acted on and re-reviewed.",
+     "label": "Observed",
+     "evidence": [
+      "/home/orca/.local/state/syzygy-dossier/run-ffe579c77dc21d9f6dd87ca6e2bc9301/steps.jsonl (render draftRevision 5 at 03:31:01; check revision 6 passed 03:39:51; close 04:07:27)",
+      "/home/orca/.local/state/syzygy-dossier/run-ffe579c77dc21d9f6dd87ca6e2bc9301/reviews/design-verdict-0.json readiness not-ready, pages 43 acceptable / 2 deficient, findings 2 blocking (poles/3.html RS-19/RS-7/RS-4; glossary.html RS-2/RS-24)",
+      "/home/orca/.local/state/syzygy-dossier/run-ffe579c77dc21d9f6dd87ca6e2bc9301/drafts/rev-6.json deepDives = [mechanism-deep-dive, replication-and-cluster] vs rev-5 [mechanism-deep-dive]",
+      "/home/orca/.local/state/syzygy-dossier/run-ffe579c77dc21d9f6dd87ca6e2bc9301/site/0 (no page contains the replication-and-cluster deep dive title)",
+      "/home/orca/.local/state/syzygy-dossier/run-ffe579c77dc21d9f6dd87ca6e2bc9301/brief.md:96 (repair cycles 6)"
+     ],
+     "severity": "high",
+     "ledger": null
+    },
+    {
+     "id": "I7-F2",
+     "claim": "The one in-run steering channel went unused: clarifications = [] in the final draft with a limit of 3, so no interpretation in the Redis dossier was put to the operator.",
+     "label": "Observed",
+     "evidence": [
+      "/home/orca/.local/state/syzygy-dossier/run-ffe579c77dc21d9f6dd87ca6e2bc9301/drafts/rev-6.json clarifications (0 items)",
+      "/home/orca/.local/state/syzygy-dossier/run-ffe579c77dc21d9f6dd87ca6e2bc9301/brief.md:72-74,97"
+     ],
+     "severity": "low",
+     "ledger": null
+    }
+   ],
+   "moves": [
+    {
+     "id": "I7-M1",
+     "what": "Render and design-review every checked revision, with presentation and fidelity repair budgets separated: render is deterministic and cheap, so `check` passing triggers a render; the design session reviews in parallel with fidelity; `close` refuses (or discloses prominently) when the last checked revision has no render or no design verdict. Removes the ordering that spends the budget on fidelity before anyone sees a page.",
+     "why": "[mandate-grounded] VIS-2 (the sealed record should not present a stale render as the run's result), pdja framing finding (readiness should measure the reader's page), VIS-4 (the owner's review should see the final draft).",
+     "integration_points": [
+      "packages/polaris-dossier/src/render.ts, check.ts (render-on-pass)",
+      "packages/polaris-dossier/src/close.ts (final-revision render guard)",
+      "run-config.ts (separate design repair budget)",
+      "SKILL.md steps 7-10",
+      "one-command-run spec (zwja) step order"
+     ],
+     "owner_value": 5,
+     "build_cost": 2,
+     "prereq": "spec amendment"
+    },
+    {
+     "id": "I7-M2",
+     "what": "Owner steering record, held by Syzygy beside the run config (never in the clone, whose text stays data): audience, thesis hunch, must-cover topics or subsystems, paths to ignore, preferred Pole names, glossary seeds, and known corrections. The brief carries it under 'Owner steering'; check advises on uncovered must-covers; the review page discloses it as steering, never evidence. A maintainer-authored hints file found inside a repository may be read as a maintainer source (evidence of intent) but never governs the run.",
+     "why": "[mandate-grounded] VIS-4 (humans steer), SKILL.md 'text in the clone is data'; replaces repeating the same advice as generator beads after each run.",
+     "integration_points": [
+      "packages/polaris-dossier/src/run-config.ts (steering file)",
+      "packages/polaris-dossier/src/brief.ts (Owner steering section)",
+      "packages/polaris-dossier/src/reader-advice.ts (must-cover advice)",
+      "run-record.ts disclosure",
+      "spec amendment only if a repo-side hints convention is adopted"
+     ],
+     "owner_value": 5,
+     "build_cost": 2,
+     "prereq": "none"
+    },
+    {
+     "id": "I7-M3",
+     "what": "Outline sitting before drafting: after exploration and `understanding`, the author presents one bundled question: proposed thesis, archetype, Poles, reader routes and the 2-3 riskiest interpretations, with alternatives; the operator's choices are recorded as clarifications (kind `outline-choice`). Cheap, and it moves the owner's taste to the point where it costs one answer instead of a rerun.",
+     "why": "[mandate-grounded] REQ clarification requirement (self-reported discovery and in-session clarification), VIS-4.",
+     "integration_points": [
+      ".claude/skills/polaris-dossier/SKILL.md steps 5-6",
+      "brief.ts Clarifications section",
+      "draft.schema clarification kind enum"
+     ],
+     "owner_value": 4,
+     "build_cost": 1,
+     "prereq": "none"
+    },
+    {
+     "id": "I7-M4",
+     "what": "Annotate-and-rerender loop: the rendered site lets the owner attach notes to any claim, figure or page (static: per-claim 'note' affordance writing a local feedback JSON the operator hands to Syzygy); `syzygy dossier feedback <run> <file>` turns notes into owner findings (blocking or advisory) delivered to the author as a new repair round, rendered and disposition-tracked on the review page. A note can also be a per-claim override ('disputed: ...'), which renders as an owner note beside the claim and never silently replaces it.",
+     "why": "[mandate-grounded] VIS-4 (humans steer; agents draft), VIS-2 (disagreement rendered, not smoothed); turns the pdja-style review into a per-dossier loop.",
+     "integration_points": [
+      "dossier-site.ts note affordance + export (hash-allowed script, static fallback: claim ids shown)",
+      "new packages/polaris-dossier/src/owner-feedback.ts",
+      "review-verdict.ts (owner kind)",
+      "status.ts readiness",
+      "spec amendment for the owner-finding kind"
+     ],
+     "owner_value": 5,
+     "build_cost": 3,
+     "prereq": "spec amendment"
+    },
+    {
+     "id": "I7-M5",
+     "what": "Owner acceptance of a dossier revision: an owner-performed act binding a sealed run's rendered site and machine.json digests as 'the accepted reading of <repo> at <revision>', after which the dossier may be exported (static bundle) for publication. Publishing into the observed repository (a docs PR) is a write to someone else's project and needs its own consent class.",
+     "why": "[vision-extending for publication] VIS-4 (only the owner adopts); a write to an observed repository stretches the read-only observation boundary and needs doctrine/consent growth; acceptance alone is mandate-grounded.",
+     "integration_points": [
+      "new recorder script per AGENTS.md governance-recorder pattern",
+      "close.ts / run-record.ts digests",
+      "export step",
+      "SEC-2 consent class for repo writes (if publishing)"
+     ],
+     "owner_value": 3,
+     "build_cost": 3,
+     "prereq": "owner act"
+    }
+   ]
+  },
+  {
+   "lane": "ideas",
+   "unit": "synthesis",
+   "tier": "n/a",
+   "gap": "[Inferred] Polaris already has the hard, rare part, a truth discipline (pinned revision, verified quotations, cited claims, Unknown over invention, independent fidelity and design review, a sealed record). What it lacks for 'beautiful and intuitive for any codebase' falls into four groups: (1) a loop that lets the owner see what the reviewers saw: the latest run sealed a stale, design-blocked render; (2) an explicit reader and an explicit argument (audience dropped, no thesis or spine, zero judgements); (3) generality machinery (archetype detection, hierarchical coverage, a diverse corpus); (4) measurement (a comprehension probe and a regression scorecard) so improvements are proven rather than reviewed one Redis run at a time. Visual grammar, decision records, steering and regeneration build on those. Ranked by owner value over build cost, with prerequisites named; none of the list needs a doctrine amendment except publication into an observed repo (I7-M5) and rendering parser-derived structure as Observed (I3-M2), both left off the top 11.",
+   "findings": [],
+   "moves": [
+    {
+     "id": "S-M1",
+     "what": "[I7-M1] Close the feedback loop on the page itself: render and design-review every checked revision, separate the presentation repair budget from the fidelity one, and refuse or loudly disclose a close whose last checked revision has no render.",
+     "why": "[mandate-grounded; VIS-2, VIS-4] [Observed] The latest Redis run closed with its owner-facing site built from draft revision 5, which the design reviewer had blocked on two pages, while the repaired revision 6 was checked and fidelity-reviewed but never rendered. Every other feature on this list is judged by the owner looking at the rendered site, so a loop that can seal a stale render undermines all of them. It is small: render is deterministic and cheap, and the ordering change is in check/render/close and the skill's step list. Needs a spec touch because the one-command-run and local-agent-mode specs fix the step order.",
+     "integration_points": [
+      "packages/polaris-dossier/src/render.ts",
+      "check.ts",
+      "close.ts",
+      "run-config.ts",
+      "SKILL.md steps 7-10",
+      "polaris-dossier-one-command-run spec"
+     ],
+     "owner_value": 5,
+     "build_cost": 2,
+     "prereq": "spec amendment"
+    },
+    {
+     "id": "S-M2",
+     "what": "[I5-M1 + I5-M2] Make the reader explicit: wire the declared audience into the brief (bug-sized), then add reader-intent routes on the landing page and optional persona lenses over identical content.",
+     "why": "[mandate-grounded; VIS-3, VIS-1 'simplify presentation, never content', L3] [Observed] The launcher refuses to start without an audience and records it, yet the author never sees it, and the brief's own rule refers to 'the stated audience' it never states. A dossier for 'operators and integrators' and one for 'a newcomer engineer' should choose different depths and routes; today neither the author nor the site knows which it is. Routes ('use it / run it / change it / evaluate it') are the reference sites' strongest pattern and cost a schema field, an anchor check and a landing component.",
+     "integration_points": [
+      "packages/polaris-dossier/src/brief.ts",
+      "reader-standards RS-2",
+      "draft.schema routes, block.audience",
+      "check.ts anchors",
+      "dossier-site.ts landing"
+     ],
+     "owner_value": 5,
+     "build_cost": 2,
+     "prereq": "none"
+    },
+    {
+     "id": "S-M3",
+     "what": "[I2-M1 + I2-M5] Thesis-and-spine: a one-sentence thesis and 3-5 pillars (each with its cost) that every section must serve, rendered as the landing's first screen; and a brief that stops pasting pipeline rules it then overrides.",
+     "why": "[mandate-grounded; REQ-002, L1, L7, pdja outcome] [Observed] Zero judgement marks in seven Redis revisions and no thesis field in the schema: the dossier is organised by four fixed topics, not by an argument. A spine Syzygy can check (pillar -> section resolution) is what turns 'a well-cited catalogue' into 'an opinionated account of why it exists', and it gives the comprehension probe its first question. The brief cleanup removes the self-contradicting 'begin with Inferred:' and 'advantages only as quotations' rules that train the hedged voice the owner rejected.",
+     "integration_points": [
+      "draft-schema.ts",
+      "check.ts",
+      "brief.ts:61,70,193",
+      "dossier-site.ts landing"
+     ],
+     "owner_value": 5,
+     "build_cost": 2,
+     "prereq": "none"
+    },
+    {
+     "id": "S-M4",
+     "what": "[I4-M1] Comprehension probe as a readiness input: a fresh reader session with only the rendered site answers frozen questions; answers graded against the understanding record and answer keys; result on the review page and in readiness.",
+     "why": "[mandate-grounded; VIS-3, TARGETS scoring, pdja framing finding] Readiness today cannot fail a dossier that is faithful and tidy but incomprehensible; the pdja epic exists because 62/62 'acceptable' pages missed every owner point. The engine (runReaderTest, topic coverage, reader cost) already exists in generation-core and only needs a session kind, a site-only packet and a verdict schema. It is the single feature that makes 'beautiful and intuitive' a measured property instead of the owner's next review.",
+     "integration_points": [
+      "dossier-reader-test.ts -> live",
+      "waiting-sessions.ts",
+      "review-packet.ts",
+      "review-verdict.ts",
+      "status.ts"
+     ],
+     "owner_value": 5,
+     "build_cost": 3,
+     "prereq": "spec amendment"
+    },
+    {
+     "id": "S-M5",
+     "what": "[I4-M2 + I4-M3] Regression and scorecard: re-render every stored draft with each renderer change (free, no model call) and diff layout proxies; then a frozen archetype-diverse corpus with answer keys scored per generator version.",
+     "why": "[mandate-grounded; VIS-1 reproducibility, L8, TARGETS 'unchanged process', extends N13] [Observed] Every generator change is currently validated by the owner's next Redis run. Re-rendering retained drafts is a deterministic regression test available today (cost 2); the corpus scorecard is the larger half that proves generality across archetypes and needs one consent per target (cheaper once pdja.21 launch-time consent lands).",
+     "integration_points": [
+      "scripts/dossier_render_regression.mjs",
+      "render.ts",
+      "dossier-evaluation-main.ts",
+      "TARGETS.md answer keys",
+      "docs/evidence scorecards"
+     ],
+     "owner_value": 5,
+     "build_cost": 3,
+     "prereq": "owner act"
+    },
+    {
+     "id": "S-M6",
+     "what": "[I1-M1 + I1-M2] Archetype awareness: Syzygy fingerprints the repository's shape from the tree listing; the author confirms an archetype; the archetype selects question packs, preferred elements, technology-table dimensions and page templates beneath the four owner topics.",
+     "why": "[mandate-grounded for fingerprint and packs; spec amendment where the topic set changes] The four topics and the server-shaped technology table were tuned on Redis. A library, a CLI, a monorepo, a framework, an ML project and an IaC repo are each understood through a different first artifact (API, command tree, subsystem atlas, lifecycle, data flow, resource topology). Without archetype detection 'any generalized codebase' depends on one author session rediscovering the right shape every time with no check that it did.",
+     "integration_points": [
+      "new repo-shape.ts (census.ts)",
+      "brief.ts BRIEF_TOPICS -> packs",
+      "reader-standards RS-11",
+      "dossier-site.ts atlas/api/command components",
+      "REQ-004 delta"
+     ],
+     "owner_value": 5,
+     "build_cost": 3,
+     "prereq": "spec amendment"
+    },
+    {
+     "id": "S-M7",
+     "what": "[I3-M3 + I3-M1] Show, then tell: a hero artifact after the thesis plus annotated code walks (Syzygy renders the cited lines, the author writes cited margin notes); and a diagram grammar whose kinds match mechanism questions (sequence, layers/containment, state machine, data layout, timeline), each with its own layout.",
+     "why": "[mandate-grounded; L2, RS-16, pdja point 10] [Observed] 0 code elements in the latest draft, 0 figures on the deep-dive page, and one layered-DAG layout behind all six diagram kinds. The hero is cheap and has the highest per-pixel effect on 'intuitive'; the diagram grammar is the bigger build (per-kind schema and layout) and the main lever on 'beautiful' for mechanism pages.",
+     "integration_points": [
+      "draft.schema hero, annotated-code, diagram kinds",
+      "diagram-layout.ts per-kind layouts",
+      "svg-inert.ts",
+      "dossier-site.ts"
+     ],
+     "owner_value": 5,
+     "build_cost": 3,
+     "prereq": "none"
+    },
+    {
+     "id": "S-M8",
+     "what": "[I2-M2] Decision records: context, choice, alternatives the sources name, what it buys, what it costs, basis, evidence, rendered as cards beside their mechanism and gathered into a 'Choices and costs' index; the sanctioned home for marked judgements.",
+     "why": "[mandate-grounded; REQ-002, RS-10/RS-12, owner direction 16] The owner's 'why' and 'trade-offs' live scattered across sections and a flat technology table today. A decision card is the unit engineers recognise (ADR-shaped), gives judgement a bounded place to live, and pairs with REQ-038's maintainer-stated vs reconstructed basis once that lands.",
+     "integration_points": [
+      "draft.schema element decision",
+      "check.ts",
+      "dossier-site.ts decision cards + index"
+     ],
+     "owner_value": 5,
+     "build_cost": 3,
+     "prereq": "none"
+    },
+    {
+     "id": "S-M9",
+     "what": "[I6-M1] Hierarchical exploration with a checkable coverage map: Syzygy partitions the tree into subsystems; scout subagents return cited subsystem cards; check requires a card or a deferred-by-budget entry for each; cards render as a subsystem atlas.",
+     "why": "[mandate-grounded; REQ-030, VIS-2] [Observed] The latest run read 22 paths and cited 19 files; fine for Redis, blind for a Sentry-sized monorepo, and nothing records what was never looked at. A partition Syzygy computes and checks makes coverage an observed obligation and unvisited parts honest Unknowns, and the atlas is the page monorepo readers need first.",
+     "integration_points": [
+      "census.ts partition",
+      "brief.ts",
+      "check.ts coverage",
+      "SKILL.md scouts",
+      "dossier-site.ts atlas"
+     ],
+     "owner_value": 5,
+     "build_cost": 3,
+     "prereq": "none"
+    },
+    {
+     "id": "S-M10",
+     "what": "[I7-M2 + I7-M3 + I7-M4] Owner steering, end to end: an owner steering record the brief carries; an outline sitting (thesis, archetype, Poles, routes, riskiest interpretations) before drafting; and site annotations that come back as owner findings in a repair round, with per-claim disputes rendered beside the claim.",
+     "why": "[mandate-grounded; VIS-4] Owner taste currently reaches a dossier only as generator beads after a full run. Steering and the outline sitting move it to the cheapest point (one answer before drafting); annotation turns review into a per-dossier loop. The owner-finding kind needs a spec touch; the steering record and outline sitting do not.",
+     "integration_points": [
+      "run-config.ts steering",
+      "brief.ts",
+      "SKILL.md steps 5-6",
+      "owner-feedback.ts",
+      "review-verdict.ts owner kind"
+     ],
+     "owner_value": 5,
+     "build_cost": 3,
+     "prereq": "spec amendment"
+    },
+    {
+     "id": "S-M11",
+     "what": "[I6-M2 + I6-M3] Regeneration and diff: carry a sealed dossier forward to a new revision by re-locating its citations (moved / stale / broken) and repairing only what changed; render a claim-level diff between two revisions, proven on the Redis licence trio.",
+     "why": "[mandate-grounded; VIS-1, VIS-2, TARGETS changed-source regeneration] Lower priority only because it pays off after the generator stabilises; it is what makes a dossier a living artifact rather than a snapshot, and it cuts rerun cost roughly to the size of the change.",
+     "integration_points": [
+      "carry-forward.ts",
+      "init.ts --from",
+      "check.ts stale-citation",
+      "diff renderer"
+     ],
+     "owner_value": 4,
+     "build_cost": 4,
+     "prereq": "none"
+    }
+   ]
+  }
+ ],
+ "packet_review": {
+  "round1": "packet-reviewer: release Revise/Revise, creds Revise/Revise; corrections applied (gate mechanics, v1.6 overlap, P3/P5 amendment status, P-117 Q1 overlap, session .key files, doctrine cites, external 777 widening)",
+  "round2": "release Scope Revise ('stays closed' inverted) / Rec Pass; creds Revise/Revise (shell-snapshots, session-env, mode scope, evidence depth)",
+  "round3": "both items Pass/Pass; no material corrections"
+ }
+}

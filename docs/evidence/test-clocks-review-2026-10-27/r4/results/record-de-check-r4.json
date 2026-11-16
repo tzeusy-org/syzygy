@@ -1,0 +1,30 @@
+{
+ "recordHeadCommit": "ba9d990a2b80b9aa5b3d78801b938280ee9988d7",
+ "recordHeadTestSha256": "a05821cb1115018c7a92f38b50709f99a9bad344805760da8c5a70a416cb02bd",
+ "compared": [
+  "control",
+  "Y1-dossier-serve-falls-through",
+  "Y2-dossier-serve-reenters-main",
+  "Y3-flag-rewrites-argv-into-dossier",
+  "Y4-polaris-labelled-break",
+  "Y5-dossier-serve-callback-after-branch",
+  "E-comment-in-branch",
+  "E-renamed-binding",
+  "E-branch-swap",
+  "L2-nested-function-in-dossier",
+  "L3-nested-try-in-polaris"
+ ],
+ "notInRecord": [
+  "G1-allman-brace-and-wrapped-import",
+  "G2-commented-else-if-chain",
+  "G3-else-if-order-swap"
+ ],
+ "disagree": [],
+ "oldPinFailsY": {
+  "Y1-dossier-serve-falls-through": true,
+  "Y2-dossier-serve-reenters-main": true,
+  "Y3-flag-rewrites-argv-into-dossier": true,
+  "Y4-polaris-labelled-break": true,
+  "Y5-dossier-serve-callback-after-branch": true
+ }
+}

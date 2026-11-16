@@ -1,0 +1,650 @@
+{
+ "commit": "330dd89458801e7a150134efa15f3d4af8215304",
+ "dists": [
+  "apps/syzygy/dist",
+  "apps/three-surface-poc/dist",
+  "packages/cap1-core/dist",
+  "packages/cap1-daemon/dist",
+  "packages/http-host/dist",
+  "packages/polaris-dossier/dist",
+  "packages/polaris-generation-consent/dist",
+  "packages/polaris-generation-core/dist",
+  "packages/support/dist",
+  "packages/three-surface-poc-core/dist"
+ ],
+ "node": "v24.6.0",
+ "rows": [
+  {
+   "id": "H-E4-lane",
+   "tests": [
+    "packages/polaris-dossier/src/no-egress.test.ts",
+    "packages/polaris-dossier/src/subpath-imports.test.ts",
+    "packages/polaris-generation-core/src/island-boundary.test.ts",
+    "packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "apps/three-surface-poc/src/sync-child-process-guard.test.ts",
+    "apps/three-surface-poc/src/product-build.test.ts",
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/polaris-dossier/package.json",
+     "old": "      \"import\": \"./dist/state-directory.js\",\n      \"default\": \"./dist/state-directory.js\"\n",
+     "new": "      \"import\": \"./dist/x/../state-directory.js\",\n      \"default\": \"./dist/x/../state-directory.js\"\n"
+    }
+   ],
+   "prediction": "head: no-egress fails at file level by the /../ throw",
+   "load1": "28.41",
+   "failing": [
+    "file: @syzygy/polaris-dossier/state-directory: its entry has a /../ segment, which Node refuses",
+    "the daemon path, every module the entry reaches outside its dossier and polaris branches reaches this package through argv.ts and state-directory.ts alone",
+    "the daemon path, every module the entry reaches outside its dossier and polaris branches resolves every workspace specifier on it, and reaches past the entry's own imports",
+    "the syzygy CLI and the parked provider island resolves every workspace import the CLI reaches, dynamic ones included",
+    "the tree's own exports put a source condition first in every entry, naming the module the built target is read as"
+   ],
+   "messages": {
+    "the syzygy CLI and the parked provider island resolves every workspace import the CLI reaches, dynamic ones included": "AssertionError: expected [ Array(1) ] to deeply equal []",
+    "the tree's own exports put a source condition first in every entry, naming the module the built target is read as": "AssertionError: expected [ Array(1) ] to deeply equal []",
+    "the daemon path, every module the entry reaches outside its dossier and polaris branches resolves every workspace specifier on it, and reaches past the entry's own imports": "AssertionError: expected [ Array(1) ] to deeply equal []",
+    "the daemon path, every module the entry reaches outside its dossier and polaris branches reaches this package through argv.ts and state-directory.ts alone": "AssertionError: expected [ Array(1) ] to deeply equal [ \u2026(2) ]"
+   },
+   "exit": 1,
+   "passed": 126,
+   "failed": 4,
+   "pending": 7,
+   "total": 137,
+   "failedFiles": [
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-554-r2/packages/polaris-generation-core/src/island-boundary.test.ts",
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-554-r2/packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-554-r2/packages/polaris-dossier/src/no-egress.test.ts",
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-554-r2/packages/polaris-dossier/src/subpath-imports.test.ts"
+   ],
+   "error": null,
+   "stderrTail": null
+  },
+  {
+   "id": "H-E4S-all-but-types",
+   "tests": [
+    "packages/polaris-dossier/src/no-egress.test.ts",
+    "packages/polaris-dossier/src/subpath-imports.test.ts",
+    "packages/polaris-generation-core/src/island-boundary.test.ts",
+    "packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "apps/three-surface-poc/src/sync-child-process-guard.test.ts",
+    "apps/three-surface-poc/src/product-build.test.ts",
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/polaris-dossier/package.json",
+     "old": "      \"source\": \"./src/state-directory.ts\",\n      \"types\": \"./dist/state-directory.d.ts\",\n      \"import\": \"./dist/state-directory.js\",\n      \"default\": \"./dist/state-directory.js\"\n",
+     "new": "      \"source\": \"./src/x/../state-directory.ts\",\n      \"types\": \"./dist/state-directory.d.ts\",\n      \"import\": \"./dist/x/../state-directory.js\",\n      \"default\": \"./dist/x/../state-directory.js\"\n"
+    }
+   ],
+   "prediction": "head: no-egress fails by the /../ throw",
+   "load1": "27.68",
+   "failing": [
+    "file: @syzygy/polaris-dossier/state-directory: its entry has a /../ segment, which Node refuses"
+   ],
+   "messages": {},
+   "exit": 1,
+   "passed": 130,
+   "failed": 0,
+   "pending": 7,
+   "total": 137,
+   "failedFiles": [
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-554-r2/packages/polaris-dossier/src/no-egress.test.ts"
+   ],
+   "error": null,
+   "stderrTail": null
+  },
+  {
+   "id": "H-types-only",
+   "tests": [
+    "packages/polaris-dossier/src/no-egress.test.ts",
+    "packages/polaris-dossier/src/subpath-imports.test.ts",
+    "packages/polaris-generation-core/src/island-boundary.test.ts",
+    "packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "apps/three-surface-poc/src/sync-child-process-guard.test.ts",
+    "apps/three-surface-poc/src/product-build.test.ts",
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/polaris-dossier/package.json",
+     "old": "      \"types\": \"./dist/state-directory.d.ts\",\n",
+     "new": "      \"types\": \"./dist/x/../state-directory.d.ts\",\n"
+    }
+   ],
+   "prediction": "head: no-egress fails by the /../ throw",
+   "load1": "30.23",
+   "failing": [
+    "file: @syzygy/polaris-dossier/state-directory: its entry has a /../ segment, which Node refuses"
+   ],
+   "messages": {},
+   "exit": 1,
+   "passed": 130,
+   "failed": 0,
+   "pending": 7,
+   "total": 137,
+   "failedFiles": [
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-554-r2/packages/polaris-dossier/src/no-egress.test.ts"
+   ],
+   "error": null,
+   "stderrTail": null
+  },
+  {
+   "id": "H-main",
+   "tests": [
+    "packages/polaris-dossier/src/no-egress.test.ts",
+    "packages/polaris-dossier/src/subpath-imports.test.ts",
+    "packages/polaris-generation-core/src/island-boundary.test.ts",
+    "packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "apps/three-surface-poc/src/sync-child-process-guard.test.ts",
+    "apps/three-surface-poc/src/product-build.test.ts",
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "apps/syzygy/package.json",
+     "old": "\"main\": \"./dist/main.js\"",
+     "new": "\"main\": \"./dist/x/../main.js\""
+    }
+   ],
+   "prediction": "head: no-egress fails by the /../ throw",
+   "load1": "29.64",
+   "failing": [
+    "file: @syzygy/app: its entry has a /../ segment, which Node refuses"
+   ],
+   "messages": {},
+   "exit": 1,
+   "passed": 130,
+   "failed": 0,
+   "pending": 7,
+   "total": 137,
+   "failedFiles": [
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-554-r2/packages/polaris-dossier/src/no-egress.test.ts"
+   ],
+   "error": null,
+   "stderrTail": null
+  },
+  {
+   "id": "M1-E1-plus-lane-E4",
+   "tests": [
+    "packages/polaris-dossier/src/no-egress.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "      if (JSON.stringify(entry).includes('/../')) throw new Error(`${specifier}: its entry has a /../ segment, which Node refuses`);\n",
+     "new": ""
+    },
+    {
+     "path": "packages/polaris-dossier/package.json",
+     "old": "      \"import\": \"./dist/state-directory.js\",\n      \"default\": \"./dist/state-directory.js\"\n",
+     "new": "      \"import\": \"./dist/x/../state-directory.js\",\n      \"default\": \"./dist/x/../state-directory.js\"\n"
+    }
+   ],
+   "prediction": "killed, by the unreadable-entry throw, not the /../ check",
+   "load1": "28.34",
+   "failing": [
+    "file: @syzygy/polaris-dossier/state-directory: its entry is not a ./dist/X.js whose src/X.ts exists"
+   ],
+   "messages": {},
+   "exit": 1,
+   "passed": 0,
+   "failed": 0,
+   "pending": 7,
+   "total": 7,
+   "failedFiles": [
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-554-r2/packages/polaris-dossier/src/no-egress.test.ts"
+   ],
+   "error": null,
+   "stderrTail": null
+  },
+  {
+   "id": "M2-E1-plus-E4S",
+   "tests": [
+    "packages/polaris-dossier/src/no-egress.test.ts",
+    "packages/polaris-dossier/src/subpath-imports.test.ts",
+    "packages/polaris-generation-core/src/island-boundary.test.ts",
+    "packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "apps/three-surface-poc/src/sync-child-process-guard.test.ts",
+    "apps/three-surface-poc/src/product-build.test.ts",
+    "apps/three-surface-poc/src/git-observation.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "      if (JSON.stringify(entry).includes('/../')) throw new Error(`${specifier}: its entry has a /../ segment, which Node refuses`);\n",
+     "new": ""
+    },
+    {
+     "path": "packages/polaris-dossier/package.json",
+     "old": "      \"source\": \"./src/state-directory.ts\",\n      \"types\": \"./dist/state-directory.d.ts\",\n      \"import\": \"./dist/state-directory.js\",\n      \"default\": \"./dist/state-directory.js\"\n",
+     "new": "      \"source\": \"./src/x/../state-directory.ts\",\n      \"types\": \"./dist/state-directory.d.ts\",\n      \"import\": \"./dist/x/../state-directory.js\",\n      \"default\": \"./dist/x/../state-directory.js\"\n"
+    }
+   ],
+   "prediction": "survives no-egress (the X2e residual, in its post-#549 form)",
+   "load1": "28.24",
+   "failing": [
+    "the workspace entry modules throws on a /../ segment that the resolver would join away, since Node refuses the entry"
+   ],
+   "messages": {
+    "the workspace entry modules throws on a /../ segment that the resolver would join away, since Node refuses the entry": "AssertionError: expected [Function] to throw an error"
+   },
+   "exit": 1,
+   "passed": 135,
+   "failed": 1,
+   "pending": 1,
+   "total": 137,
+   "failedFiles": [
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-554-r2/packages/polaris-generation-core/src/workspace-reach.test.ts"
+   ],
+   "error": null,
+   "stderrTail": null
+  },
+  {
+   "id": "M3-check-reads-only-the-first-condition",
+   "tests": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "if (JSON.stringify(entry).includes('/../'))",
+     "new": "if (JSON.stringify(typeof entry === 'object' && entry !== null ? Object.values(entry)[0] : entry).includes('/../'))"
+    }
+   ],
+   "prediction": "killed by the /../ row (F2 case: types comes first)",
+   "load1": "30.61",
+   "failing": [
+    "the workspace entry modules throws on a /../ segment that the resolver would join away, since Node refuses the entry"
+   ],
+   "messages": {
+    "the workspace entry modules throws on a /../ segment that the resolver would join away, since Node refuses the entry": "AssertionError: expected [Function] to throw an error"
+   },
+   "exit": 1,
+   "passed": 63,
+   "failed": 1,
+   "pending": 0,
+   "total": 64,
+   "failedFiles": [
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-554-r2/packages/polaris-generation-core/src/workspace-reach.test.ts"
+   ],
+   "error": null,
+   "stderrTail": null
+  },
+  {
+   "id": "M4-check-skips-types",
+   "tests": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "packages/polaris-dossier/src/no-egress.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "if (JSON.stringify(entry).includes('/../'))",
+     "new": "if (JSON.stringify(entry, (key, value) => key === 'types' ? undefined : value).includes('/../'))"
+    }
+   ],
+   "prediction": "survives: no row pins \"types included\"",
+   "load1": "30.08",
+   "failing": [],
+   "messages": {},
+   "exit": 0,
+   "passed": 70,
+   "failed": 0,
+   "pending": 1,
+   "total": 71,
+   "failedFiles": [],
+   "error": null,
+   "stderrTail": null
+  },
+  {
+   "id": "M4b-check-skips-types-plus-types-only",
+   "tests": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "packages/polaris-dossier/src/no-egress.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "if (JSON.stringify(entry).includes('/../'))",
+     "new": "if (JSON.stringify(entry, (key, value) => key === 'types' ? undefined : value).includes('/../'))"
+    },
+    {
+     "path": "packages/polaris-dossier/package.json",
+     "old": "      \"types\": \"./dist/state-directory.d.ts\",\n",
+     "new": "      \"types\": \"./dist/x/../state-directory.d.ts\",\n"
+    }
+   ],
+   "prediction": "survives: the body's \"types included\" refusal is gone",
+   "load1": "29.21",
+   "failing": [],
+   "messages": {},
+   "exit": 0,
+   "passed": 70,
+   "failed": 0,
+   "pending": 1,
+   "total": 71,
+   "failedFiles": [],
+   "error": null,
+   "stderrTail": null
+  },
+  {
+   "id": "M5-write-reader-object-rest-arm-dropped",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": " : ts.isSpreadAssignment(property) ? targets(property.expression) : []",
+     "new": " : []"
+    }
+   ],
+   "prediction": "survives: no reader row for an object rest target",
+   "load1": "29.99",
+   "failing": [],
+   "messages": {},
+   "exit": 0,
+   "passed": 50,
+   "failed": 0,
+   "pending": 0,
+   "total": 50,
+   "failedFiles": [],
+   "error": null,
+   "stderrTail": null
+  },
+  {
+   "id": "M5b-object-rest-arm-dropped-plus-object-rest-write",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": " : ts.isSpreadAssignment(property) ? targets(property.expression) : []",
+     "new": " : []"
+    },
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\n\n({ ...Object.freeze } = {});\n"
+    }
+   ],
+   "prediction": "survives: an object-rest write to Object passes the no-write row",
+   "load1": "28.95",
+   "failing": [],
+   "messages": {},
+   "exit": 0,
+   "passed": 50,
+   "failed": 0,
+   "pending": 0,
+   "total": 50,
+   "failedFiles": [],
+   "error": null,
+   "stderrTail": null
+  },
+  {
+   "id": "M5c-object-rest-write-control",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\n\n({ ...Object.freeze } = {});\n"
+    }
+   ],
+   "prediction": "killed by the no-write row (and the identifier row? freeze/Object are listed)",
+   "load1": "28.95",
+   "failing": [
+    "@syzygy/support stays a pure leaf assigns to no property in any source, so no allowed global is rewritten"
+   ],
+   "messages": {
+    "@syzygy/support stays a pure leaf assigns to no property in any source, so no allowed global is rewritten": "AssertionError: expected [ Array(1) ] to deeply equal []"
+   },
+   "exit": 1,
+   "passed": 49,
+   "failed": 1,
+   "pending": 0,
+   "total": 50,
+   "failedFiles": [
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-554-r2/packages/support/src/support-purity.test.ts"
+   ],
+   "error": null,
+   "stderrTail": null
+  },
+  {
+   "id": "M6-import-reader-reads-only-a-top-level-statement",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "if (ts.isCallExpression(node) && node.expression.kind === ts.SyntaxKind.ImportKeyword) calls.push(node.getText(file));",
+     "new": "if (ts.isCallExpression(node) && node.expression.kind === ts.SyntaxKind.ImportKeyword && ts.isExpressionStatement(node.parent)) calls.push(node.getText(file));"
+    }
+   ],
+   "prediction": "killed by the arrow-body and void reader rows",
+   "load1": "29.04",
+   "failing": [
+    "the import() reader the import() row stands on reads \"const value = 'node:f' + 's';\\nvoid import (value);\"",
+    "the import() reader the import() row stands on reads \"export const value = () => import ('node:crypto');\"",
+    "the import() reader the import() row stands on reads \"void import/**/('node:fs');\""
+   ],
+   "messages": {
+    "the import() reader the import() row stands on reads \"export const value = () => import ('node:crypto');\"": "TypeError: Cannot read properties of undefined (reading 'kind')",
+    "the import() reader the import() row stands on reads \"const value = 'node:f' + 's';\\nvoid import (value);\"": "TypeError: Cannot read properties of undefined (reading 'kind')",
+    "the import() reader the import() row stands on reads \"void import/**/('node:fs');\"": "TypeError: Cannot read properties of undefined (reading 'kind')"
+   },
+   "exit": 1,
+   "passed": 47,
+   "failed": 3,
+   "pending": 0,
+   "total": 50,
+   "failedFiles": [
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-554-r2/packages/support/src/support-purity.test.ts"
+   ],
+   "error": null,
+   "stderrTail": null
+  },
+  {
+   "id": "M6b-import-reader-skips-function-bodies",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "calls.push(node.getText(file));\n    ts.forEachChild(node, visit);",
+     "new": "calls.push(node.getText(file));\n    if (!ts.isArrowFunction(node)) ts.forEachChild(node, visit);"
+    }
+   ],
+   "prediction": "killed by the arrow-body reader row alone",
+   "load1": "28.55",
+   "failing": [
+    "the import() reader the import() row stands on reads \"export const value = () => import ('node:crypto');\""
+   ],
+   "messages": {
+    "the import() reader the import() row stands on reads \"export const value = () => import ('node:crypto');\"": "AssertionError: expected [] to deeply equal [ 'import (\\'node:crypto\\')' ]"
+   },
+   "exit": 1,
+   "passed": 49,
+   "failed": 1,
+   "pending": 0,
+   "total": 50,
+   "failedFiles": [
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-554-r2/packages/support/src/support-purity.test.ts"
+   ],
+   "error": null,
+   "stderrTail": null
+  },
+  {
+   "id": "M7-write-reader-default-arm-only-for-identifiers",
+   "tests": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": ": ts.isBinaryExpression(node) && node.operatorToken.kind === ts.SyntaxKind.EqualsToken ? targets(node.left)\n",
+     "new": ""
+    }
+   ],
+   "prediction": "killed? round 1 X5: a default is itself a read assignment",
+   "load1": "28.19",
+   "failing": [],
+   "messages": {},
+   "exit": 0,
+   "passed": 50,
+   "failed": 0,
+   "pending": 0,
+   "total": 50,
+   "failedFiles": [],
+   "error": null,
+   "stderrTail": null
+  },
+  {
+   "id": "S1-alias-key-wrong-target",
+   "tests": [
+    "apps/three-surface-poc/src/sync-child-process-guard.test.ts",
+    "packages/polaris-generation-core/src/workspace-reach.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "vitest.config.ts",
+     "old": "  ssr: { resolve: { conditions: ['source', 'module', 'node', 'development|production'] } },\n",
+     "new": "  ssr: { resolve: { conditions: ['source', 'module', 'node', 'development|production'] } },\n  resolve: { alias: { '@syzygy/polaris-dossier/argv': fileURLToPath(new URL('./packages/polaris-dossier/src/index.ts', import.meta.url)) } },\n"
+    }
+   ],
+   "prediction": "guard row and the load row fail",
+   "load1": "28.19",
+   "failing": [
+    "suite child processes and the vitest worker RPC runs only short local tools synchronously in a suite test file or any module it imports",
+    "the tree's own exports load, under the suite, each entry from its source module"
+   ],
+   "messages": {
+    "the tree's own exports load, under the suite, each entry from its source module": "AssertionError: @syzygy/polaris-dossier/argv: expected { \u2026(182), \u2026(1) } to be { \u2026(2), \u2026(1) } // Object.is equality",
+    "suite child processes and the vitest worker RPC runs only short local tools synchronously in a suite test file or any module it imports": "Error: vitest.config.ts: workspace packages do not load by their source condition alone"
+   },
+   "exit": 1,
+   "passed": 68,
+   "failed": 2,
+   "pending": 0,
+   "total": 70,
+   "failedFiles": [
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-554-r2/packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-554-r2/apps/three-surface-poc/src/sync-child-process-guard.test.ts"
+   ],
+   "error": null,
+   "stderrTail": null
+  },
+  {
+   "id": "S2-shorthand-alias-wrong-target",
+   "tests": [
+    "apps/three-surface-poc/src/sync-child-process-guard.test.ts",
+    "packages/polaris-generation-core/src/workspace-reach.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "vitest.config.ts",
+     "old": "export default defineConfig({\n",
+     "new": "const alias = { '@syzygy/polaris-dossier/argv': fileURLToPath(new URL('./packages/polaris-dossier/src/index.ts', import.meta.url)) };\n\nexport default defineConfig({\n"
+    },
+    {
+     "path": "vitest.config.ts",
+     "old": "  ssr: { resolve: { conditions: ['source', 'module', 'node', 'development|production'] } },\n",
+     "new": "  ssr: { resolve: { conditions: ['source', 'module', 'node', 'development|production'] } },\n  resolve: { alias },\n"
+    }
+   ],
+   "prediction": "the ALIAS_KEY text test misses it; the load row fails",
+   "load1": "30.74",
+   "failing": [
+    "the tree's own exports load, under the suite, each entry from its source module"
+   ],
+   "messages": {
+    "the tree's own exports load, under the suite, each entry from its source module": "AssertionError: @syzygy/polaris-dossier/argv: expected { \u2026(182), \u2026(1) } to be { \u2026(2), \u2026(1) } // Object.is equality"
+   },
+   "exit": 1,
+   "passed": 69,
+   "failed": 1,
+   "pending": 0,
+   "total": 70,
+   "failedFiles": [
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-554-r2/packages/polaris-generation-core/src/workspace-reach.test.ts"
+   ],
+   "error": null,
+   "stderrTail": null
+  },
+  {
+   "id": "S3-shorthand-alias-right-target",
+   "tests": [
+    "apps/three-surface-poc/src/sync-child-process-guard.test.ts",
+    "packages/polaris-generation-core/src/workspace-reach.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "vitest.config.ts",
+     "old": "export default defineConfig({\n",
+     "new": "const alias = { '@syzygy/polaris-dossier/argv': fileURLToPath(new URL('./packages/polaris-dossier/src/argv.ts', import.meta.url)) };\n\nexport default defineConfig({\n"
+    },
+    {
+     "path": "vitest.config.ts",
+     "old": "  ssr: { resolve: { conditions: ['source', 'module', 'node', 'development|production'] } },\n",
+     "new": "  ssr: { resolve: { conditions: ['source', 'module', 'node', 'development|production'] } },\n  resolve: { alias },\n"
+    }
+   ],
+   "prediction": "passes: a right alias is harmless",
+   "load1": "34.87",
+   "failing": [],
+   "messages": {},
+   "exit": 0,
+   "passed": 70,
+   "failed": 0,
+   "pending": 0,
+   "total": 70,
+   "failedFiles": [],
+   "error": null,
+   "stderrTail": null
+  },
+  {
+   "id": "S4-source-condition-dropped",
+   "tests": [
+    "apps/three-surface-poc/src/sync-child-process-guard.test.ts",
+    "packages/polaris-generation-core/src/workspace-reach.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "vitest.config.ts",
+     "old": "conditions: ['source', 'module',",
+     "new": "conditions: ['module',"
+    }
+   ],
+   "prediction": "guard row fails; the load row fails or loads dist",
+   "load1": "34.96",
+   "failing": [
+    "suite child processes and the vitest worker RPC runs only short local tools synchronously in a suite test file or any module it imports",
+    "the tree's own exports load, under the suite, each entry from its source module"
+   ],
+   "messages": {
+    "the tree's own exports load, under the suite, each entry from its source module": "AssertionError: @syzygy/three-surface-poc-app/dossier-render: expected { \u2026(3), \u2026(1) } to be { \u2026(3), \u2026(1) } // Object.is equality",
+    "suite child processes and the vitest worker RPC runs only short local tools synchronously in a suite test file or any module it imports": "Error: vitest.config.ts: workspace packages do not load by their source condition alone"
+   },
+   "exit": 1,
+   "passed": 68,
+   "failed": 2,
+   "pending": 0,
+   "total": 70,
+   "failedFiles": [
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-554-r2/packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-554-r2/apps/three-surface-poc/src/sync-child-process-guard.test.ts"
+   ],
+   "error": null,
+   "stderrTail": null
+  }
+ ],
+ "statusAfter": ""
+}

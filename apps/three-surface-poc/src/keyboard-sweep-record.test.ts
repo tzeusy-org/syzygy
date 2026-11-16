@@ -56,7 +56,7 @@ describe('the evaluation a swept page names (rule 11; syzygy-buzg)', () => {
     const other = buildFixtureModel(cleanups, { projectShape: { authority: ADMITTING_AUTHORITY, runGit: projectShapeFixtureGit() }, walkthroughJudgment: walkthroughJudgmentFixture('absent-run-record'), evaluationAsOf: '2026-09-01T00:00:00Z' });
     expect(servedEvaluationBinding(renderPolarisPage(other))).toEqual({ butlersRevision: other.evaluation.evidence.pinnedRevision, evaluationIdentity: evaluationIdentity(other), walkthroughEvaluationIdentity: expected.walkthroughEvaluationIdentity });
     expect(evaluationIdentity(other)).not.toBe(expected.evaluationIdentity);
-  }, 30_000); // two fixture model builds, ~1.5 s each unloaded; the 5 s default failed such tests under suite load (syzygy-k66p)
+  }, 30_000); // two fixture model builds: worst 4.9 s over 5 alone runs at load1 86-114 (docs/evidence/syzygy-bpyt-4-31/durations/keyboard-sweep-record.test.tests.json); the 5 s default failed such tests under suite load (syzygy-k66p)
 
   it('decodes the escaped footer and refuses a page that names no evaluation, two, or an abbreviated revision', () => {
     expect(servedEvaluationBinding(page(probe(REVISION) + footer('repository:x@y|inputs:a&amp;b', '2026-10-04T00:00:00Z') + expectedBinding(WALKTHROUGH)))).toEqual({

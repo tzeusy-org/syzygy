@@ -1,0 +1,2217 @@
+{
+ "tool": "rev523_mutants.py",
+ "toolSha256": "0894f493f45427d290e7b53d49d1b4ebcf674a3ed5afea1a272ccd52af70feeb",
+ "reviewedCommit": "d17425890c0b5211714fce1be90b32a90b5f7747",
+ "base": "df6046a153fe130202abdf6bd3045a79ba143879",
+ "kernel": "7.0.0-38-generic",
+ "node": "v24.6.0",
+ "tmpRoot": "/tmp/r523-t/main",
+ "statF": "tmpfs",
+ "dfT": "tmpfs",
+ "recordFragmentsFrom": "d17425890c0b5211714fce1be90b32a90b5f7747:docs/evidence/launch-form-target-ctime-2026-10-25/mutants-tmpfs.json",
+ "runs": [
+  {
+   "id": "unmutated",
+   "side": "base",
+   "rep": 0,
+   "testSha256": "73fd8fe0c835e3910fbc45e2ea026b0b6ec54ac7c04657aeed9aa2311440fa5e",
+   "edits": [],
+   "oldOccursOnce": true,
+   "exitCode": 0,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 43,
+    "numFailedTests": 0
+   },
+   "failedTests": [],
+   "failedRows": [],
+   "linkRowFailed": false,
+   "outcome": "survived",
+   "load1": 20.81,
+   "seconds": 2.2,
+   "restored": true
+  },
+  {
+   "id": "unmutated",
+   "side": "base",
+   "rep": 1,
+   "testSha256": "73fd8fe0c835e3910fbc45e2ea026b0b6ec54ac7c04657aeed9aa2311440fa5e",
+   "edits": [],
+   "oldOccursOnce": true,
+   "exitCode": 0,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 43,
+    "numFailedTests": 0
+   },
+   "failedTests": [],
+   "failedRows": [],
+   "linkRowFailed": false,
+   "outcome": "survived",
+   "load1": 20.81,
+   "seconds": 2.1,
+   "restored": true
+  },
+  {
+   "id": "unmutated",
+   "side": "base",
+   "rep": 2,
+   "testSha256": "73fd8fe0c835e3910fbc45e2ea026b0b6ec54ac7c04657aeed9aa2311440fa5e",
+   "edits": [],
+   "oldOccursOnce": true,
+   "exitCode": 0,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 43,
+    "numFailedTests": 0
+   },
+   "failedTests": [],
+   "failedRows": [],
+   "linkRowFailed": false,
+   "outcome": "survived",
+   "load1": 21.87,
+   "seconds": 1.7,
+   "restored": true
+  },
+  {
+   "id": "unmutated",
+   "side": "fix",
+   "rep": 0,
+   "testSha256": "5dd0d6c74f5c8de9998d82cf6b8989e24e09f293202eebb3fd0969cfa79bd63c",
+   "edits": [],
+   "oldOccursOnce": true,
+   "exitCode": 0,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 43,
+    "numFailedTests": 0
+   },
+   "failedTests": [],
+   "failedRows": [],
+   "linkRowFailed": false,
+   "outcome": "survived",
+   "load1": 21.87,
+   "seconds": 1.6,
+   "restored": true
+  },
+  {
+   "id": "unmutated",
+   "side": "fix",
+   "rep": 1,
+   "testSha256": "5dd0d6c74f5c8de9998d82cf6b8989e24e09f293202eebb3fd0969cfa79bd63c",
+   "edits": [],
+   "oldOccursOnce": true,
+   "exitCode": 0,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 43,
+    "numFailedTests": 0
+   },
+   "failedTests": [],
+   "failedRows": [],
+   "linkRowFailed": false,
+   "outcome": "survived",
+   "load1": 21.87,
+   "seconds": 1.5,
+   "restored": true
+  },
+  {
+   "id": "unmutated",
+   "side": "fix",
+   "rep": 2,
+   "testSha256": "5dd0d6c74f5c8de9998d82cf6b8989e24e09f293202eebb3fd0969cfa79bd63c",
+   "edits": [],
+   "oldOccursOnce": true,
+   "exitCode": 0,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 43,
+    "numFailedTests": 0
+   },
+   "failedTests": [],
+   "failedRows": [],
+   "linkRowFailed": false,
+   "outcome": "survived",
+   "load1": 21.96,
+   "seconds": 1.5,
+   "restored": true
+  },
+  {
+   "id": "O1-same-bytes-rewrite",
+   "side": "base",
+   "rep": 0,
+   "testSha256": "73fd8fe0c835e3910fbc45e2ea026b0b6ec54ac7c04657aeed9aa2311440fa5e",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { const p = path.join(runDir, RUN_LAYOUT.launched); const s = fs.lstatSync(p); if (fs.statSync(p).isFile()) { const b = fs.readFileSync(p); fs.writeFileSync(p, b); } } catch { /* rev519 mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "oldOccursOnce": true,
+   "exitCode": 1,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 33,
+    "numFailedTests": 10
+   },
+   "failedTests": [
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: an empty file",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163039140n, \u2026(4) } to deeply equal { mode: 33188n, ino: 163039140n, \u2026(4) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: invalid JSON",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163039162n, \u2026(4) } to deeply equal { mode: 33188n, ino: 163039162n, \u2026(4) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: JSON null",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163039183n, \u2026(4) } to deeply equal { mode: 33188n, ino: 163039183n, \u2026(4) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a JSON array",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163039189n, \u2026(4) } to deeply equal { mode: 33188n, ino: 163039189n, \u2026(4) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a JSON string",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163039191n, \u2026(4) } to deeply equal { mode: 33188n, ino: 163039191n, \u2026(4) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: another format",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163039193n, \u2026(4) } to deeply equal { mode: 33188n, ino: 163039193n, \u2026(4) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: no format",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163039195n, \u2026(4) } to deeply equal { mode: 33188n, ino: 163039195n, \u2026(4) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a format that is not a string",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163039198n, \u2026(4) } to deeply equal { mode: 33188n, ino: 163039198n, \u2026(4) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a byte-order mark before the marker",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163039207n, \u2026(4) } to deeply equal { mode: 33188n, ino: 163039207n, \u2026(4) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a marker of 4097 bytes, one past the bound",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163039290n, \u2026(4) } to deeply equal { mode: 33188n, ino: 163039290n, \u2026(4) }"
+    }
+   ],
+   "failedRows": [
+    "JSON null",
+    "a JSON array",
+    "a JSON string",
+    "a byte-order mark before the marker",
+    "a format that is not a string",
+    "a marker of 4097 bytes, one past the bound",
+    "an empty file",
+    "another format",
+    "invalid JSON",
+    "no format"
+   ],
+   "linkRowFailed": false,
+   "outcome": "killed",
+   "load1": 21.96,
+   "seconds": 1.5,
+   "restored": true
+  },
+  {
+   "id": "O1-same-bytes-rewrite",
+   "side": "base",
+   "rep": 1,
+   "testSha256": "73fd8fe0c835e3910fbc45e2ea026b0b6ec54ac7c04657aeed9aa2311440fa5e",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { const p = path.join(runDir, RUN_LAYOUT.launched); const s = fs.lstatSync(p); if (fs.statSync(p).isFile()) { const b = fs.readFileSync(p); fs.writeFileSync(p, b); } } catch { /* rev519 mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "oldOccursOnce": true,
+   "exitCode": 1,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 33,
+    "numFailedTests": 10
+   },
+   "failedTests": [
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: an empty file",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163041632n, \u2026(4) } to deeply equal { mode: 33188n, ino: 163041632n, \u2026(4) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: invalid JSON",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163041634n, \u2026(4) } to deeply equal { mode: 33188n, ino: 163041634n, \u2026(4) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: JSON null",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163041636n, \u2026(4) } to deeply equal { mode: 33188n, ino: 163041636n, \u2026(4) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a JSON array",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163041638n, \u2026(4) } to deeply equal { mode: 33188n, ino: 163041638n, \u2026(4) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a JSON string",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163041640n, \u2026(4) } to deeply equal { mode: 33188n, ino: 163041640n, \u2026(4) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: another format",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163041642n, \u2026(4) } to deeply equal { mode: 33188n, ino: 163041642n, \u2026(4) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: no format",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163041644n, \u2026(4) } to deeply equal { mode: 33188n, ino: 163041644n, \u2026(4) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a format that is not a string",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163041646n, \u2026(4) } to deeply equal { mode: 33188n, ino: 163041646n, \u2026(4) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a byte-order mark before the marker",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163041648n, \u2026(4) } to deeply equal { mode: 33188n, ino: 163041648n, \u2026(4) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a marker of 4097 bytes, one past the bound",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163041692n, \u2026(4) } to deeply equal { mode: 33188n, ino: 163041692n, \u2026(4) }"
+    }
+   ],
+   "failedRows": [
+    "JSON null",
+    "a JSON array",
+    "a JSON string",
+    "a byte-order mark before the marker",
+    "a format that is not a string",
+    "a marker of 4097 bytes, one past the bound",
+    "an empty file",
+    "another format",
+    "invalid JSON",
+    "no format"
+   ],
+   "linkRowFailed": false,
+   "outcome": "killed",
+   "load1": 21.96,
+   "seconds": 1.6,
+   "restored": true
+  },
+  {
+   "id": "O1-same-bytes-rewrite",
+   "side": "base",
+   "rep": 2,
+   "testSha256": "73fd8fe0c835e3910fbc45e2ea026b0b6ec54ac7c04657aeed9aa2311440fa5e",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { const p = path.join(runDir, RUN_LAYOUT.launched); const s = fs.lstatSync(p); if (fs.statSync(p).isFile()) { const b = fs.readFileSync(p); fs.writeFileSync(p, b); } } catch { /* rev519 mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "oldOccursOnce": true,
+   "exitCode": 1,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 33,
+    "numFailedTests": 10
+   },
+   "failedTests": [
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: an empty file",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163044362n, \u2026(4) } to deeply equal { mode: 33188n, ino: 163044362n, \u2026(4) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: invalid JSON",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163044413n, \u2026(4) } to deeply equal { mode: 33188n, ino: 163044413n, \u2026(4) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: JSON null",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163044430n, \u2026(4) } to deeply equal { mode: 33188n, ino: 163044430n, \u2026(4) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a JSON array",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163044443n, \u2026(4) } to deeply equal { mode: 33188n, ino: 163044443n, \u2026(4) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a JSON string",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163044455n, \u2026(4) } to deeply equal { mode: 33188n, ino: 163044455n, \u2026(4) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: another format",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163044468n, \u2026(4) } to deeply equal { mode: 33188n, ino: 163044468n, \u2026(4) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: no format",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163044477n, \u2026(4) } to deeply equal { mode: 33188n, ino: 163044477n, \u2026(4) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a format that is not a string",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163044488n, \u2026(4) } to deeply equal { mode: 33188n, ino: 163044488n, \u2026(4) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a byte-order mark before the marker",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163044500n, \u2026(4) } to deeply equal { mode: 33188n, ino: 163044500n, \u2026(4) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a marker of 4097 bytes, one past the bound",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163044669n, \u2026(4) } to deeply equal { mode: 33188n, ino: 163044669n, \u2026(4) }"
+    }
+   ],
+   "failedRows": [
+    "JSON null",
+    "a JSON array",
+    "a JSON string",
+    "a byte-order mark before the marker",
+    "a format that is not a string",
+    "a marker of 4097 bytes, one past the bound",
+    "an empty file",
+    "another format",
+    "invalid JSON",
+    "no format"
+   ],
+   "linkRowFailed": false,
+   "outcome": "killed",
+   "load1": 21.24,
+   "seconds": 1.4,
+   "restored": true
+  },
+  {
+   "id": "O1-same-bytes-rewrite",
+   "side": "fix",
+   "rep": 0,
+   "testSha256": "5dd0d6c74f5c8de9998d82cf6b8989e24e09f293202eebb3fd0969cfa79bd63c",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { const p = path.join(runDir, RUN_LAYOUT.launched); const s = fs.lstatSync(p); if (fs.statSync(p).isFile()) { const b = fs.readFileSync(p); fs.writeFileSync(p, b); } } catch { /* rev519 mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "oldOccursOnce": true,
+   "exitCode": 1,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 32,
+    "numFailedTests": 11
+   },
+   "failedTests": [
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: an empty file",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163046969n, \u2026(5) } to deeply equal { mode: 33188n, ino: 163046969n, \u2026(5) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: invalid JSON",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163047033n, \u2026(5) } to deeply equal { mode: 33188n, ino: 163047033n, \u2026(5) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: JSON null",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163047050n, \u2026(5) } to deeply equal { mode: 33188n, ino: 163047050n, \u2026(5) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a JSON array",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163047063n, \u2026(5) } to deeply equal { mode: 33188n, ino: 163047063n, \u2026(5) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a JSON string",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163047076n, \u2026(5) } to deeply equal { mode: 33188n, ino: 163047076n, \u2026(5) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: another format",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163047091n, \u2026(5) } to deeply equal { mode: 33188n, ino: 163047091n, \u2026(5) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: no format",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163047104n, \u2026(5) } to deeply equal { mode: 33188n, ino: 163047104n, \u2026(5) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a format that is not a string",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163047120n, \u2026(5) } to deeply equal { mode: 33188n, ino: 163047120n, \u2026(5) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a byte-order mark before the marker",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163047134n, \u2026(5) } to deeply equal { mode: 33188n, ino: 163047134n, \u2026(5) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to the marker Syzygy writes",
+     "firstErrorLine": "AssertionError: expected { mode: 41471n, ino: 163047185n, \u2026(5) } to deeply equal { mode: 41471n, ino: 163047185n, \u2026(5) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a marker of 4097 bytes, one past the bound",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163047322n, \u2026(5) } to deeply equal { mode: 33188n, ino: 163047322n, \u2026(5) }"
+    }
+   ],
+   "failedRows": [
+    "JSON null",
+    "a JSON array",
+    "a JSON string",
+    "a byte-order mark before the marker",
+    "a format that is not a string",
+    "a marker of 4097 bytes, one past the bound",
+    "a symbolic link to the marker Syzygy writes",
+    "an empty file",
+    "another format",
+    "invalid JSON",
+    "no format"
+   ],
+   "linkRowFailed": true,
+   "outcome": "killed",
+   "load1": 21.24,
+   "seconds": 1.4,
+   "restored": true
+  },
+  {
+   "id": "O1-same-bytes-rewrite",
+   "side": "fix",
+   "rep": 1,
+   "testSha256": "5dd0d6c74f5c8de9998d82cf6b8989e24e09f293202eebb3fd0969cfa79bd63c",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { const p = path.join(runDir, RUN_LAYOUT.launched); const s = fs.lstatSync(p); if (fs.statSync(p).isFile()) { const b = fs.readFileSync(p); fs.writeFileSync(p, b); } } catch { /* rev519 mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "oldOccursOnce": true,
+   "exitCode": 1,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 32,
+    "numFailedTests": 11
+   },
+   "failedTests": [
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: an empty file",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163049911n, \u2026(5) } to deeply equal { mode: 33188n, ino: 163049911n, \u2026(5) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: invalid JSON",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163049913n, \u2026(5) } to deeply equal { mode: 33188n, ino: 163049913n, \u2026(5) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: JSON null",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163049915n, \u2026(5) } to deeply equal { mode: 33188n, ino: 163049915n, \u2026(5) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a JSON array",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163049917n, \u2026(5) } to deeply equal { mode: 33188n, ino: 163049917n, \u2026(5) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a JSON string",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163049919n, \u2026(5) } to deeply equal { mode: 33188n, ino: 163049919n, \u2026(5) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: another format",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163049921n, \u2026(5) } to deeply equal { mode: 33188n, ino: 163049921n, \u2026(5) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: no format",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163049923n, \u2026(5) } to deeply equal { mode: 33188n, ino: 163049923n, \u2026(5) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a format that is not a string",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163049925n, \u2026(5) } to deeply equal { mode: 33188n, ino: 163049925n, \u2026(5) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a byte-order mark before the marker",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163049927n, \u2026(5) } to deeply equal { mode: 33188n, ino: 163049927n, \u2026(5) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to the marker Syzygy writes",
+     "firstErrorLine": "AssertionError: expected { mode: 41471n, ino: 163049943n, \u2026(5) } to deeply equal { mode: 41471n, ino: 163049943n, \u2026(5) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a marker of 4097 bytes, one past the bound",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163049963n, \u2026(5) } to deeply equal { mode: 33188n, ino: 163049963n, \u2026(5) }"
+    }
+   ],
+   "failedRows": [
+    "JSON null",
+    "a JSON array",
+    "a JSON string",
+    "a byte-order mark before the marker",
+    "a format that is not a string",
+    "a marker of 4097 bytes, one past the bound",
+    "a symbolic link to the marker Syzygy writes",
+    "an empty file",
+    "another format",
+    "invalid JSON",
+    "no format"
+   ],
+   "linkRowFailed": true,
+   "outcome": "killed",
+   "load1": 21.24,
+   "seconds": 1.4,
+   "restored": true
+  },
+  {
+   "id": "O1-same-bytes-rewrite",
+   "side": "fix",
+   "rep": 2,
+   "testSha256": "5dd0d6c74f5c8de9998d82cf6b8989e24e09f293202eebb3fd0969cfa79bd63c",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { const p = path.join(runDir, RUN_LAYOUT.launched); const s = fs.lstatSync(p); if (fs.statSync(p).isFile()) { const b = fs.readFileSync(p); fs.writeFileSync(p, b); } } catch { /* rev519 mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "oldOccursOnce": true,
+   "exitCode": 1,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 32,
+    "numFailedTests": 11
+   },
+   "failedTests": [
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: an empty file",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163052490n, \u2026(5) } to deeply equal { mode: 33188n, ino: 163052490n, \u2026(5) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: invalid JSON",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163052492n, \u2026(5) } to deeply equal { mode: 33188n, ino: 163052492n, \u2026(5) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: JSON null",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163052494n, \u2026(5) } to deeply equal { mode: 33188n, ino: 163052494n, \u2026(5) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a JSON array",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163052496n, \u2026(5) } to deeply equal { mode: 33188n, ino: 163052496n, \u2026(5) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a JSON string",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163052498n, \u2026(5) } to deeply equal { mode: 33188n, ino: 163052498n, \u2026(5) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: another format",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163052515n, \u2026(5) } to deeply equal { mode: 33188n, ino: 163052515n, \u2026(5) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: no format",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163052527n, \u2026(5) } to deeply equal { mode: 33188n, ino: 163052527n, \u2026(5) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a format that is not a string",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163052538n, \u2026(5) } to deeply equal { mode: 33188n, ino: 163052538n, \u2026(5) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a byte-order mark before the marker",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163052549n, \u2026(5) } to deeply equal { mode: 33188n, ino: 163052549n, \u2026(5) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to the marker Syzygy writes",
+     "firstErrorLine": "AssertionError: expected { mode: 41471n, ino: 163052602n, \u2026(5) } to deeply equal { mode: 41471n, ino: 163052602n, \u2026(5) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a marker of 4097 bytes, one past the bound",
+     "firstErrorLine": "AssertionError: expected { mode: 33188n, ino: 163052789n, \u2026(5) } to deeply equal { mode: 33188n, ino: 163052789n, \u2026(5) }"
+    }
+   ],
+   "failedRows": [
+    "JSON null",
+    "a JSON array",
+    "a JSON string",
+    "a byte-order mark before the marker",
+    "a format that is not a string",
+    "a marker of 4097 bytes, one past the bound",
+    "a symbolic link to the marker Syzygy writes",
+    "an empty file",
+    "another format",
+    "invalid JSON",
+    "no format"
+   ],
+   "linkRowFailed": true,
+   "outcome": "killed",
+   "load1": 21.24,
+   "seconds": 1.8,
+   "restored": true
+  },
+  {
+   "id": "O8-link-target-chmod-cycle-rewrite",
+   "side": "base",
+   "rep": 0,
+   "testSha256": "73fd8fe0c835e3910fbc45e2ea026b0b6ec54ac7c04657aeed9aa2311440fa5e",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { const p = path.join(runDir, RUN_LAYOUT.launched); const s = fs.lstatSync(p); if (s.isSymbolicLink()) { const t = fs.statSync(p); if (t.isFile()) { const b = fs.readFileSync(p); fs.chmodSync(p, 0); fs.chmodSync(p, 0o600); fs.writeFileSync(p, b); fs.chmodSync(p, t.mode & 0o777); } } } catch { /* rev519 mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "oldOccursOnce": true,
+   "exitCode": 0,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 43,
+    "numFailedTests": 0
+   },
+   "failedTests": [],
+   "failedRows": [],
+   "linkRowFailed": false,
+   "outcome": "survived",
+   "load1": 21.06,
+   "seconds": 1.4,
+   "restored": true
+  },
+  {
+   "id": "O8-link-target-chmod-cycle-rewrite",
+   "side": "base",
+   "rep": 1,
+   "testSha256": "73fd8fe0c835e3910fbc45e2ea026b0b6ec54ac7c04657aeed9aa2311440fa5e",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { const p = path.join(runDir, RUN_LAYOUT.launched); const s = fs.lstatSync(p); if (s.isSymbolicLink()) { const t = fs.statSync(p); if (t.isFile()) { const b = fs.readFileSync(p); fs.chmodSync(p, 0); fs.chmodSync(p, 0o600); fs.writeFileSync(p, b); fs.chmodSync(p, t.mode & 0o777); } } } catch { /* rev519 mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "oldOccursOnce": true,
+   "exitCode": 0,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 43,
+    "numFailedTests": 0
+   },
+   "failedTests": [],
+   "failedRows": [],
+   "linkRowFailed": false,
+   "outcome": "survived",
+   "load1": 21.06,
+   "seconds": 1.5,
+   "restored": true
+  },
+  {
+   "id": "O8-link-target-chmod-cycle-rewrite",
+   "side": "base",
+   "rep": 2,
+   "testSha256": "73fd8fe0c835e3910fbc45e2ea026b0b6ec54ac7c04657aeed9aa2311440fa5e",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { const p = path.join(runDir, RUN_LAYOUT.launched); const s = fs.lstatSync(p); if (s.isSymbolicLink()) { const t = fs.statSync(p); if (t.isFile()) { const b = fs.readFileSync(p); fs.chmodSync(p, 0); fs.chmodSync(p, 0o600); fs.writeFileSync(p, b); fs.chmodSync(p, t.mode & 0o777); } } } catch { /* rev519 mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "oldOccursOnce": true,
+   "exitCode": 0,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 43,
+    "numFailedTests": 0
+   },
+   "failedTests": [],
+   "failedRows": [],
+   "linkRowFailed": false,
+   "outcome": "survived",
+   "load1": 21.06,
+   "seconds": 1.9,
+   "restored": true
+  },
+  {
+   "id": "O8-link-target-chmod-cycle-rewrite",
+   "side": "fix",
+   "rep": 0,
+   "testSha256": "5dd0d6c74f5c8de9998d82cf6b8989e24e09f293202eebb3fd0969cfa79bd63c",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { const p = path.join(runDir, RUN_LAYOUT.launched); const s = fs.lstatSync(p); if (s.isSymbolicLink()) { const t = fs.statSync(p); if (t.isFile()) { const b = fs.readFileSync(p); fs.chmodSync(p, 0); fs.chmodSync(p, 0o600); fs.writeFileSync(p, b); fs.chmodSync(p, t.mode & 0o777); } } } catch { /* rev519 mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "oldOccursOnce": true,
+   "exitCode": 1,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 42,
+    "numFailedTests": 1
+   },
+   "failedTests": [
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to the marker Syzygy writes",
+     "firstErrorLine": "AssertionError: expected { mode: 41471n, ino: 163064811n, \u2026(5) } to deeply equal { mode: 41471n, ino: 163064811n, \u2026(5) }"
+    }
+   ],
+   "failedRows": [
+    "a symbolic link to the marker Syzygy writes"
+   ],
+   "linkRowFailed": true,
+   "outcome": "killed",
+   "load1": 20.82,
+   "seconds": 1.6,
+   "restored": true
+  },
+  {
+   "id": "O8-link-target-chmod-cycle-rewrite",
+   "side": "fix",
+   "rep": 1,
+   "testSha256": "5dd0d6c74f5c8de9998d82cf6b8989e24e09f293202eebb3fd0969cfa79bd63c",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { const p = path.join(runDir, RUN_LAYOUT.launched); const s = fs.lstatSync(p); if (s.isSymbolicLink()) { const t = fs.statSync(p); if (t.isFile()) { const b = fs.readFileSync(p); fs.chmodSync(p, 0); fs.chmodSync(p, 0o600); fs.writeFileSync(p, b); fs.chmodSync(p, t.mode & 0o777); } } } catch { /* rev519 mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "oldOccursOnce": true,
+   "exitCode": 1,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 42,
+    "numFailedTests": 1
+   },
+   "failedTests": [
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to the marker Syzygy writes",
+     "firstErrorLine": "AssertionError: expected { mode: 41471n, ino: 163067607n, \u2026(5) } to deeply equal { mode: 41471n, ino: 163067607n, \u2026(5) }"
+    }
+   ],
+   "failedRows": [
+    "a symbolic link to the marker Syzygy writes"
+   ],
+   "linkRowFailed": true,
+   "outcome": "killed",
+   "load1": 20.82,
+   "seconds": 1.6,
+   "restored": true
+  },
+  {
+   "id": "O8-link-target-chmod-cycle-rewrite",
+   "side": "fix",
+   "rep": 2,
+   "testSha256": "5dd0d6c74f5c8de9998d82cf6b8989e24e09f293202eebb3fd0969cfa79bd63c",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { const p = path.join(runDir, RUN_LAYOUT.launched); const s = fs.lstatSync(p); if (s.isSymbolicLink()) { const t = fs.statSync(p); if (t.isFile()) { const b = fs.readFileSync(p); fs.chmodSync(p, 0); fs.chmodSync(p, 0o600); fs.writeFileSync(p, b); fs.chmodSync(p, t.mode & 0o777); } } } catch { /* rev519 mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "oldOccursOnce": true,
+   "exitCode": 1,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 42,
+    "numFailedTests": 1
+   },
+   "failedTests": [
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to the marker Syzygy writes",
+     "firstErrorLine": "AssertionError: expected { mode: 41471n, ino: 163069982n, \u2026(5) } to deeply equal { mode: 41471n, ino: 163069982n, \u2026(5) }"
+    }
+   ],
+   "failedRows": [
+    "a symbolic link to the marker Syzygy writes"
+   ],
+   "linkRowFailed": true,
+   "outcome": "killed",
+   "load1": 20.82,
+   "seconds": 1.5,
+   "restored": true
+  },
+  {
+   "id": "R-chmod-cycle-rewrite",
+   "side": "base",
+   "rep": 0,
+   "testSha256": "73fd8fe0c835e3910fbc45e2ea026b0b6ec54ac7c04657aeed9aa2311440fa5e",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { const p = path.join(runDir, RUN_LAYOUT.launched); const s = fs.lstatSync(p); if (s.isFile() && (s.mode & 0o777) === 0) { fs.chmodSync(p, 0o600); fs.writeFileSync(p, ' '.repeat(s.size)); fs.chmodSync(p, 0o000); } } catch { /* reviewer mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "oldOccursOnce": true,
+   "exitCode": 1,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 42,
+    "numFailedTests": 1
+   },
+   "failedTests": [
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a file its reader may not read",
+     "firstErrorLine": "AssertionError: expected { mode: 32768n, ino: 163073262n, \u2026(4) } to deeply equal { mode: 32768n, ino: 163073262n, \u2026(4) }"
+    }
+   ],
+   "failedRows": [
+    "a file its reader may not read"
+   ],
+   "linkRowFailed": false,
+   "outcome": "killed",
+   "load1": 21.31,
+   "seconds": 1.5,
+   "restored": true
+  },
+  {
+   "id": "R-chmod-cycle-rewrite",
+   "side": "base",
+   "rep": 1,
+   "testSha256": "73fd8fe0c835e3910fbc45e2ea026b0b6ec54ac7c04657aeed9aa2311440fa5e",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { const p = path.join(runDir, RUN_LAYOUT.launched); const s = fs.lstatSync(p); if (s.isFile() && (s.mode & 0o777) === 0) { fs.chmodSync(p, 0o600); fs.writeFileSync(p, ' '.repeat(s.size)); fs.chmodSync(p, 0o000); } } catch { /* reviewer mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "oldOccursOnce": true,
+   "exitCode": 1,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 42,
+    "numFailedTests": 1
+   },
+   "failedTests": [
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a file its reader may not read",
+     "firstErrorLine": "AssertionError: expected { mode: 32768n, ino: 163076133n, \u2026(4) } to deeply equal { mode: 32768n, ino: 163076133n, \u2026(4) }"
+    }
+   ],
+   "failedRows": [
+    "a file its reader may not read"
+   ],
+   "linkRowFailed": false,
+   "outcome": "killed",
+   "load1": 21.31,
+   "seconds": 1.9,
+   "restored": true
+  },
+  {
+   "id": "R-chmod-cycle-rewrite",
+   "side": "base",
+   "rep": 2,
+   "testSha256": "73fd8fe0c835e3910fbc45e2ea026b0b6ec54ac7c04657aeed9aa2311440fa5e",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { const p = path.join(runDir, RUN_LAYOUT.launched); const s = fs.lstatSync(p); if (s.isFile() && (s.mode & 0o777) === 0) { fs.chmodSync(p, 0o600); fs.writeFileSync(p, ' '.repeat(s.size)); fs.chmodSync(p, 0o000); } } catch { /* reviewer mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "oldOccursOnce": true,
+   "exitCode": 1,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 42,
+    "numFailedTests": 1
+   },
+   "failedTests": [
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a file its reader may not read",
+     "firstErrorLine": "AssertionError: expected { mode: 32768n, ino: 163079024n, \u2026(4) } to deeply equal { mode: 32768n, ino: 163079024n, \u2026(4) }"
+    }
+   ],
+   "failedRows": [
+    "a file its reader may not read"
+   ],
+   "linkRowFailed": false,
+   "outcome": "killed",
+   "load1": 21.31,
+   "seconds": 1.5,
+   "restored": true
+  },
+  {
+   "id": "R-chmod-cycle-rewrite",
+   "side": "fix",
+   "rep": 0,
+   "testSha256": "5dd0d6c74f5c8de9998d82cf6b8989e24e09f293202eebb3fd0969cfa79bd63c",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { const p = path.join(runDir, RUN_LAYOUT.launched); const s = fs.lstatSync(p); if (s.isFile() && (s.mode & 0o777) === 0) { fs.chmodSync(p, 0o600); fs.writeFileSync(p, ' '.repeat(s.size)); fs.chmodSync(p, 0o000); } } catch { /* reviewer mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "oldOccursOnce": true,
+   "exitCode": 1,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 42,
+    "numFailedTests": 1
+   },
+   "failedTests": [
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a file its reader may not read",
+     "firstErrorLine": "AssertionError: expected { mode: 32768n, ino: 163081871n, \u2026(5) } to deeply equal { mode: 32768n, ino: 163081871n, \u2026(5) }"
+    }
+   ],
+   "failedRows": [
+    "a file its reader may not read"
+   ],
+   "linkRowFailed": false,
+   "outcome": "killed",
+   "load1": 21.93,
+   "seconds": 1.4,
+   "restored": true
+  },
+  {
+   "id": "R-chmod-cycle-rewrite",
+   "side": "fix",
+   "rep": 1,
+   "testSha256": "5dd0d6c74f5c8de9998d82cf6b8989e24e09f293202eebb3fd0969cfa79bd63c",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { const p = path.join(runDir, RUN_LAYOUT.launched); const s = fs.lstatSync(p); if (s.isFile() && (s.mode & 0o777) === 0) { fs.chmodSync(p, 0o600); fs.writeFileSync(p, ' '.repeat(s.size)); fs.chmodSync(p, 0o000); } } catch { /* reviewer mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "oldOccursOnce": true,
+   "exitCode": 1,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 42,
+    "numFailedTests": 1
+   },
+   "failedTests": [
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a file its reader may not read",
+     "firstErrorLine": "AssertionError: expected { mode: 32768n, ino: 163084634n, \u2026(5) } to deeply equal { mode: 32768n, ino: 163084634n, \u2026(5) }"
+    }
+   ],
+   "failedRows": [
+    "a file its reader may not read"
+   ],
+   "linkRowFailed": false,
+   "outcome": "killed",
+   "load1": 21.93,
+   "seconds": 1.6,
+   "restored": true
+  },
+  {
+   "id": "R-chmod-cycle-rewrite",
+   "side": "fix",
+   "rep": 2,
+   "testSha256": "5dd0d6c74f5c8de9998d82cf6b8989e24e09f293202eebb3fd0969cfa79bd63c",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { const p = path.join(runDir, RUN_LAYOUT.launched); const s = fs.lstatSync(p); if (s.isFile() && (s.mode & 0o777) === 0) { fs.chmodSync(p, 0o600); fs.writeFileSync(p, ' '.repeat(s.size)); fs.chmodSync(p, 0o000); } } catch { /* reviewer mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "oldOccursOnce": true,
+   "exitCode": 1,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 42,
+    "numFailedTests": 1
+   },
+   "failedTests": [
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a file its reader may not read",
+     "firstErrorLine": "AssertionError: expected { mode: 32768n, ino: 163087605n, \u2026(5) } to deeply equal { mode: 32768n, ino: 163087605n, \u2026(5) }"
+    }
+   ],
+   "failedRows": [
+    "a file its reader may not read"
+   ],
+   "linkRowFailed": false,
+   "outcome": "killed",
+   "load1": 21.93,
+   "seconds": 1.8,
+   "restored": true
+  },
+  {
+   "id": "X1-target-chmod-cycle-utimes-restored",
+   "side": "base",
+   "rep": 0,
+   "testSha256": "73fd8fe0c835e3910fbc45e2ea026b0b6ec54ac7c04657aeed9aa2311440fa5e",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { const p = path.join(runDir, RUN_LAYOUT.launched); const s = fs.lstatSync(p); if (s.isSymbolicLink()) { const t = fs.statSync(p); if (t.isFile()) { fs.chmodSync(p, 0); fs.chmodSync(p, t.mode & 0o777); fs.utimesSync(p, t.atime, t.mtime); } } } catch { /* rev523 mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "oldOccursOnce": true,
+   "exitCode": 0,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 43,
+    "numFailedTests": 0
+   },
+   "failedTests": [],
+   "failedRows": [],
+   "linkRowFailed": false,
+   "outcome": "survived",
+   "load1": 22.01,
+   "seconds": 1.5,
+   "restored": true
+  },
+  {
+   "id": "X1-target-chmod-cycle-utimes-restored",
+   "side": "base",
+   "rep": 1,
+   "testSha256": "73fd8fe0c835e3910fbc45e2ea026b0b6ec54ac7c04657aeed9aa2311440fa5e",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { const p = path.join(runDir, RUN_LAYOUT.launched); const s = fs.lstatSync(p); if (s.isSymbolicLink()) { const t = fs.statSync(p); if (t.isFile()) { fs.chmodSync(p, 0); fs.chmodSync(p, t.mode & 0o777); fs.utimesSync(p, t.atime, t.mtime); } } } catch { /* rev523 mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "oldOccursOnce": true,
+   "exitCode": 0,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 43,
+    "numFailedTests": 0
+   },
+   "failedTests": [],
+   "failedRows": [],
+   "linkRowFailed": false,
+   "outcome": "survived",
+   "load1": 22.01,
+   "seconds": 1.7,
+   "restored": true
+  },
+  {
+   "id": "X1-target-chmod-cycle-utimes-restored",
+   "side": "base",
+   "rep": 2,
+   "testSha256": "73fd8fe0c835e3910fbc45e2ea026b0b6ec54ac7c04657aeed9aa2311440fa5e",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { const p = path.join(runDir, RUN_LAYOUT.launched); const s = fs.lstatSync(p); if (s.isSymbolicLink()) { const t = fs.statSync(p); if (t.isFile()) { fs.chmodSync(p, 0); fs.chmodSync(p, t.mode & 0o777); fs.utimesSync(p, t.atime, t.mtime); } } } catch { /* rev523 mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "oldOccursOnce": true,
+   "exitCode": 0,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 43,
+    "numFailedTests": 0
+   },
+   "failedTests": [],
+   "failedRows": [],
+   "linkRowFailed": false,
+   "outcome": "survived",
+   "load1": 22.01,
+   "seconds": 1.7,
+   "restored": true
+  },
+  {
+   "id": "X1-target-chmod-cycle-utimes-restored",
+   "side": "fix",
+   "rep": 0,
+   "testSha256": "5dd0d6c74f5c8de9998d82cf6b8989e24e09f293202eebb3fd0969cfa79bd63c",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { const p = path.join(runDir, RUN_LAYOUT.launched); const s = fs.lstatSync(p); if (s.isSymbolicLink()) { const t = fs.statSync(p); if (t.isFile()) { fs.chmodSync(p, 0); fs.chmodSync(p, t.mode & 0o777); fs.utimesSync(p, t.atime, t.mtime); } } } catch { /* rev523 mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "oldOccursOnce": true,
+   "exitCode": 1,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 42,
+    "numFailedTests": 1
+   },
+   "failedTests": [
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to the marker Syzygy writes",
+     "firstErrorLine": "AssertionError: expected { mode: 41471n, ino: 163098679n, \u2026(5) } to deeply equal { mode: 41471n, ino: 163098679n, \u2026(5) }"
+    }
+   ],
+   "failedRows": [
+    "a symbolic link to the marker Syzygy writes"
+   ],
+   "linkRowFailed": true,
+   "outcome": "killed",
+   "load1": 22.73,
+   "seconds": 1.7,
+   "restored": true
+  },
+  {
+   "id": "X1-target-chmod-cycle-utimes-restored",
+   "side": "fix",
+   "rep": 1,
+   "testSha256": "5dd0d6c74f5c8de9998d82cf6b8989e24e09f293202eebb3fd0969cfa79bd63c",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { const p = path.join(runDir, RUN_LAYOUT.launched); const s = fs.lstatSync(p); if (s.isSymbolicLink()) { const t = fs.statSync(p); if (t.isFile()) { fs.chmodSync(p, 0); fs.chmodSync(p, t.mode & 0o777); fs.utimesSync(p, t.atime, t.mtime); } } } catch { /* rev523 mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "oldOccursOnce": true,
+   "exitCode": 1,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 42,
+    "numFailedTests": 1
+   },
+   "failedTests": [
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to the marker Syzygy writes",
+     "firstErrorLine": "AssertionError: expected { mode: 41471n, ino: 163101741n, \u2026(5) } to deeply equal { mode: 41471n, ino: 163101741n, \u2026(5) }"
+    }
+   ],
+   "failedRows": [
+    "a symbolic link to the marker Syzygy writes"
+   ],
+   "linkRowFailed": true,
+   "outcome": "killed",
+   "load1": 22.73,
+   "seconds": 1.6,
+   "restored": true
+  },
+  {
+   "id": "X1-target-chmod-cycle-utimes-restored",
+   "side": "fix",
+   "rep": 2,
+   "testSha256": "5dd0d6c74f5c8de9998d82cf6b8989e24e09f293202eebb3fd0969cfa79bd63c",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { const p = path.join(runDir, RUN_LAYOUT.launched); const s = fs.lstatSync(p); if (s.isSymbolicLink()) { const t = fs.statSync(p); if (t.isFile()) { fs.chmodSync(p, 0); fs.chmodSync(p, t.mode & 0o777); fs.utimesSync(p, t.atime, t.mtime); } } } catch { /* rev523 mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "oldOccursOnce": true,
+   "exitCode": 1,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 42,
+    "numFailedTests": 1
+   },
+   "failedTests": [
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to the marker Syzygy writes",
+     "firstErrorLine": "AssertionError: expected { mode: 41471n, ino: 163104700n, \u2026(5) } to deeply equal { mode: 41471n, ino: 163104700n, \u2026(5) }"
+    }
+   ],
+   "failedRows": [
+    "a symbolic link to the marker Syzygy writes"
+   ],
+   "linkRowFailed": true,
+   "outcome": "killed",
+   "load1": 22.73,
+   "seconds": 1.8,
+   "restored": true
+  },
+  {
+   "id": "X2-target-rename-away-and-back",
+   "side": "base",
+   "rep": 0,
+   "testSha256": "73fd8fe0c835e3910fbc45e2ea026b0b6ec54ac7c04657aeed9aa2311440fa5e",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { const p = path.join(runDir, RUN_LAYOUT.launched); const s = fs.lstatSync(p); if (s.isSymbolicLink() && fs.statSync(p).isFile()) { const t = fs.realpathSync(p); fs.renameSync(t, `${t}.away`); fs.renameSync(`${t}.away`, t); } } catch { /* rev523 mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "oldOccursOnce": true,
+   "exitCode": 0,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 43,
+    "numFailedTests": 0
+   },
+   "failedTests": [],
+   "failedRows": [],
+   "linkRowFailed": false,
+   "outcome": "survived",
+   "load1": 22.59,
+   "seconds": 1.7,
+   "restored": true
+  },
+  {
+   "id": "X2-target-rename-away-and-back",
+   "side": "base",
+   "rep": 1,
+   "testSha256": "73fd8fe0c835e3910fbc45e2ea026b0b6ec54ac7c04657aeed9aa2311440fa5e",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { const p = path.join(runDir, RUN_LAYOUT.launched); const s = fs.lstatSync(p); if (s.isSymbolicLink() && fs.statSync(p).isFile()) { const t = fs.realpathSync(p); fs.renameSync(t, `${t}.away`); fs.renameSync(`${t}.away`, t); } } catch { /* rev523 mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "oldOccursOnce": true,
+   "exitCode": 0,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 43,
+    "numFailedTests": 0
+   },
+   "failedTests": [],
+   "failedRows": [],
+   "linkRowFailed": false,
+   "outcome": "survived",
+   "load1": 22.59,
+   "seconds": 1.7,
+   "restored": true
+  },
+  {
+   "id": "X2-target-rename-away-and-back",
+   "side": "base",
+   "rep": 2,
+   "testSha256": "73fd8fe0c835e3910fbc45e2ea026b0b6ec54ac7c04657aeed9aa2311440fa5e",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { const p = path.join(runDir, RUN_LAYOUT.launched); const s = fs.lstatSync(p); if (s.isSymbolicLink() && fs.statSync(p).isFile()) { const t = fs.realpathSync(p); fs.renameSync(t, `${t}.away`); fs.renameSync(`${t}.away`, t); } } catch { /* rev523 mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "oldOccursOnce": true,
+   "exitCode": 0,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 43,
+    "numFailedTests": 0
+   },
+   "failedTests": [],
+   "failedRows": [],
+   "linkRowFailed": false,
+   "outcome": "survived",
+   "load1": 22.59,
+   "seconds": 1.9,
+   "restored": true
+  },
+  {
+   "id": "X2-target-rename-away-and-back",
+   "side": "fix",
+   "rep": 0,
+   "testSha256": "5dd0d6c74f5c8de9998d82cf6b8989e24e09f293202eebb3fd0969cfa79bd63c",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { const p = path.join(runDir, RUN_LAYOUT.launched); const s = fs.lstatSync(p); if (s.isSymbolicLink() && fs.statSync(p).isFile()) { const t = fs.realpathSync(p); fs.renameSync(t, `${t}.away`); fs.renameSync(`${t}.away`, t); } } catch { /* rev523 mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "oldOccursOnce": true,
+   "exitCode": 1,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 42,
+    "numFailedTests": 1
+   },
+   "failedTests": [
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to the marker Syzygy writes",
+     "firstErrorLine": "AssertionError: expected { mode: 41471n, ino: 163115869n, \u2026(5) } to deeply equal { mode: 41471n, ino: 163115869n, \u2026(5) }"
+    }
+   ],
+   "failedRows": [
+    "a symbolic link to the marker Syzygy writes"
+   ],
+   "linkRowFailed": true,
+   "outcome": "killed",
+   "load1": 21.99,
+   "seconds": 2.0,
+   "restored": true
+  },
+  {
+   "id": "X2-target-rename-away-and-back",
+   "side": "fix",
+   "rep": 1,
+   "testSha256": "5dd0d6c74f5c8de9998d82cf6b8989e24e09f293202eebb3fd0969cfa79bd63c",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { const p = path.join(runDir, RUN_LAYOUT.launched); const s = fs.lstatSync(p); if (s.isSymbolicLink() && fs.statSync(p).isFile()) { const t = fs.realpathSync(p); fs.renameSync(t, `${t}.away`); fs.renameSync(`${t}.away`, t); } } catch { /* rev523 mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "oldOccursOnce": true,
+   "exitCode": 1,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 42,
+    "numFailedTests": 1
+   },
+   "failedTests": [
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to the marker Syzygy writes",
+     "firstErrorLine": "AssertionError: expected { mode: 41471n, ino: 163116651n, \u2026(5) } to deeply equal { mode: 41471n, ino: 163116651n, \u2026(5) }"
+    }
+   ],
+   "failedRows": [
+    "a symbolic link to the marker Syzygy writes"
+   ],
+   "linkRowFailed": true,
+   "outcome": "killed",
+   "load1": 21.99,
+   "seconds": 2.7,
+   "restored": true
+  },
+  {
+   "id": "X2-target-rename-away-and-back",
+   "side": "fix",
+   "rep": 2,
+   "testSha256": "5dd0d6c74f5c8de9998d82cf6b8989e24e09f293202eebb3fd0969cfa79bd63c",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { const p = path.join(runDir, RUN_LAYOUT.launched); const s = fs.lstatSync(p); if (s.isSymbolicLink() && fs.statSync(p).isFile()) { const t = fs.realpathSync(p); fs.renameSync(t, `${t}.away`); fs.renameSync(`${t}.away`, t); } } catch { /* rev523 mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "oldOccursOnce": true,
+   "exitCode": 1,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 42,
+    "numFailedTests": 1
+   },
+   "failedTests": [
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to the marker Syzygy writes",
+     "firstErrorLine": "AssertionError: expected { mode: 41471n, ino: 163117463n, \u2026(5) } to deeply equal { mode: 41471n, ino: 163117463n, \u2026(5) }"
+    }
+   ],
+   "failedRows": [
+    "a symbolic link to the marker Syzygy writes"
+   ],
+   "linkRowFailed": true,
+   "outcome": "killed",
+   "load1": 23.83,
+   "seconds": 2.0,
+   "restored": true
+  },
+  {
+   "id": "X3-target-replaced-by-identical-copy",
+   "side": "base",
+   "rep": 0,
+   "testSha256": "73fd8fe0c835e3910fbc45e2ea026b0b6ec54ac7c04657aeed9aa2311440fa5e",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { const p = path.join(runDir, RUN_LAYOUT.launched); const s = fs.lstatSync(p); if (s.isSymbolicLink()) { const t = fs.statSync(p); if (t.isFile()) { const real = fs.realpathSync(p); const b = fs.readFileSync(real); fs.writeFileSync(`${real}.tmp`, b, { mode: t.mode & 0o777 }); fs.chmodSync(`${real}.tmp`, t.mode & 0o777); fs.renameSync(`${real}.tmp`, real); } } } catch { /* rev523 mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "oldOccursOnce": true,
+   "exitCode": 0,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 43,
+    "numFailedTests": 0
+   },
+   "failedTests": [],
+   "failedRows": [],
+   "linkRowFailed": false,
+   "outcome": "survived",
+   "load1": 23.83,
+   "seconds": 1.7,
+   "restored": true
+  },
+  {
+   "id": "X3-target-replaced-by-identical-copy",
+   "side": "base",
+   "rep": 1,
+   "testSha256": "73fd8fe0c835e3910fbc45e2ea026b0b6ec54ac7c04657aeed9aa2311440fa5e",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { const p = path.join(runDir, RUN_LAYOUT.launched); const s = fs.lstatSync(p); if (s.isSymbolicLink()) { const t = fs.statSync(p); if (t.isFile()) { const real = fs.realpathSync(p); const b = fs.readFileSync(real); fs.writeFileSync(`${real}.tmp`, b, { mode: t.mode & 0o777 }); fs.chmodSync(`${real}.tmp`, t.mode & 0o777); fs.renameSync(`${real}.tmp`, real); } } } catch { /* rev523 mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "oldOccursOnce": true,
+   "exitCode": 0,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 43,
+    "numFailedTests": 0
+   },
+   "failedTests": [],
+   "failedRows": [],
+   "linkRowFailed": false,
+   "outcome": "survived",
+   "load1": 23.83,
+   "seconds": 1.6,
+   "restored": true
+  },
+  {
+   "id": "X3-target-replaced-by-identical-copy",
+   "side": "base",
+   "rep": 2,
+   "testSha256": "73fd8fe0c835e3910fbc45e2ea026b0b6ec54ac7c04657aeed9aa2311440fa5e",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { const p = path.join(runDir, RUN_LAYOUT.launched); const s = fs.lstatSync(p); if (s.isSymbolicLink()) { const t = fs.statSync(p); if (t.isFile()) { const real = fs.realpathSync(p); const b = fs.readFileSync(real); fs.writeFileSync(`${real}.tmp`, b, { mode: t.mode & 0o777 }); fs.chmodSync(`${real}.tmp`, t.mode & 0o777); fs.renameSync(`${real}.tmp`, real); } } } catch { /* rev523 mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "oldOccursOnce": true,
+   "exitCode": 0,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 43,
+    "numFailedTests": 0
+   },
+   "failedTests": [],
+   "failedRows": [],
+   "linkRowFailed": false,
+   "outcome": "survived",
+   "load1": 23.2,
+   "seconds": 1.5,
+   "restored": true
+  },
+  {
+   "id": "X3-target-replaced-by-identical-copy",
+   "side": "fix",
+   "rep": 0,
+   "testSha256": "5dd0d6c74f5c8de9998d82cf6b8989e24e09f293202eebb3fd0969cfa79bd63c",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { const p = path.join(runDir, RUN_LAYOUT.launched); const s = fs.lstatSync(p); if (s.isSymbolicLink()) { const t = fs.statSync(p); if (t.isFile()) { const real = fs.realpathSync(p); const b = fs.readFileSync(real); fs.writeFileSync(`${real}.tmp`, b, { mode: t.mode & 0o777 }); fs.chmodSync(`${real}.tmp`, t.mode & 0o777); fs.renameSync(`${real}.tmp`, real); } } } catch { /* rev523 mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "oldOccursOnce": true,
+   "exitCode": 1,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 42,
+    "numFailedTests": 1
+   },
+   "failedTests": [
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to the marker Syzygy writes",
+     "firstErrorLine": "AssertionError: expected { mode: 41471n, ino: 163120511n, \u2026(5) } to deeply equal { mode: 41471n, ino: 163120511n, \u2026(5) }"
+    }
+   ],
+   "failedRows": [
+    "a symbolic link to the marker Syzygy writes"
+   ],
+   "linkRowFailed": true,
+   "outcome": "killed",
+   "load1": 23.2,
+   "seconds": 1.9,
+   "restored": true
+  },
+  {
+   "id": "X3-target-replaced-by-identical-copy",
+   "side": "fix",
+   "rep": 1,
+   "testSha256": "5dd0d6c74f5c8de9998d82cf6b8989e24e09f293202eebb3fd0969cfa79bd63c",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { const p = path.join(runDir, RUN_LAYOUT.launched); const s = fs.lstatSync(p); if (s.isSymbolicLink()) { const t = fs.statSync(p); if (t.isFile()) { const real = fs.realpathSync(p); const b = fs.readFileSync(real); fs.writeFileSync(`${real}.tmp`, b, { mode: t.mode & 0o777 }); fs.chmodSync(`${real}.tmp`, t.mode & 0o777); fs.renameSync(`${real}.tmp`, real); } } } catch { /* rev523 mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "oldOccursOnce": true,
+   "exitCode": 1,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 42,
+    "numFailedTests": 1
+   },
+   "failedTests": [
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to the marker Syzygy writes",
+     "firstErrorLine": "AssertionError: expected { mode: 41471n, ino: 163121257n, \u2026(5) } to deeply equal { mode: 41471n, ino: 163121257n, \u2026(5) }"
+    }
+   ],
+   "failedRows": [
+    "a symbolic link to the marker Syzygy writes"
+   ],
+   "linkRowFailed": true,
+   "outcome": "killed",
+   "load1": 23.2,
+   "seconds": 1.9,
+   "restored": true
+  },
+  {
+   "id": "X3-target-replaced-by-identical-copy",
+   "side": "fix",
+   "rep": 2,
+   "testSha256": "5dd0d6c74f5c8de9998d82cf6b8989e24e09f293202eebb3fd0969cfa79bd63c",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { const p = path.join(runDir, RUN_LAYOUT.launched); const s = fs.lstatSync(p); if (s.isSymbolicLink()) { const t = fs.statSync(p); if (t.isFile()) { const real = fs.realpathSync(p); const b = fs.readFileSync(real); fs.writeFileSync(`${real}.tmp`, b, { mode: t.mode & 0o777 }); fs.chmodSync(`${real}.tmp`, t.mode & 0o777); fs.renameSync(`${real}.tmp`, real); } } } catch { /* rev523 mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "oldOccursOnce": true,
+   "exitCode": 1,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 42,
+    "numFailedTests": 1
+   },
+   "failedTests": [
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to the marker Syzygy writes",
+     "firstErrorLine": "AssertionError: expected { mode: 41471n, ino: 163122117n, \u2026(5) } to deeply equal { mode: 41471n, ino: 163122117n, \u2026(5) }"
+    }
+   ],
+   "failedRows": [
+    "a symbolic link to the marker Syzygy writes"
+   ],
+   "linkRowFailed": true,
+   "outcome": "killed",
+   "load1": 22.62,
+   "seconds": 1.5,
+   "restored": true
+  },
+  {
+   "id": "X3b-target-replaced-by-copy-mode-0644",
+   "side": "base",
+   "rep": 0,
+   "testSha256": "73fd8fe0c835e3910fbc45e2ea026b0b6ec54ac7c04657aeed9aa2311440fa5e",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { const p = path.join(runDir, RUN_LAYOUT.launched); const s = fs.lstatSync(p); if (s.isSymbolicLink()) { const t = fs.statSync(p); if (t.isFile()) { const real = fs.realpathSync(p); const b = fs.readFileSync(real); fs.writeFileSync(`${real}.tmp`, b); fs.chmodSync(`${real}.tmp`, 0o644); fs.renameSync(`${real}.tmp`, real); } } } catch { /* rev523 mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "oldOccursOnce": true,
+   "exitCode": 0,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 43,
+    "numFailedTests": 0
+   },
+   "failedTests": [],
+   "failedRows": [],
+   "linkRowFailed": false,
+   "outcome": "survived",
+   "load1": 22.62,
+   "seconds": 1.3,
+   "restored": true
+  },
+  {
+   "id": "X3b-target-replaced-by-copy-mode-0644",
+   "side": "base",
+   "rep": 1,
+   "testSha256": "73fd8fe0c835e3910fbc45e2ea026b0b6ec54ac7c04657aeed9aa2311440fa5e",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { const p = path.join(runDir, RUN_LAYOUT.launched); const s = fs.lstatSync(p); if (s.isSymbolicLink()) { const t = fs.statSync(p); if (t.isFile()) { const real = fs.realpathSync(p); const b = fs.readFileSync(real); fs.writeFileSync(`${real}.tmp`, b); fs.chmodSync(`${real}.tmp`, 0o644); fs.renameSync(`${real}.tmp`, real); } } } catch { /* rev523 mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "oldOccursOnce": true,
+   "exitCode": 0,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 43,
+    "numFailedTests": 0
+   },
+   "failedTests": [],
+   "failedRows": [],
+   "linkRowFailed": false,
+   "outcome": "survived",
+   "load1": 22.62,
+   "seconds": 1.3,
+   "restored": true
+  },
+  {
+   "id": "X3b-target-replaced-by-copy-mode-0644",
+   "side": "base",
+   "rep": 2,
+   "testSha256": "73fd8fe0c835e3910fbc45e2ea026b0b6ec54ac7c04657aeed9aa2311440fa5e",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { const p = path.join(runDir, RUN_LAYOUT.launched); const s = fs.lstatSync(p); if (s.isSymbolicLink()) { const t = fs.statSync(p); if (t.isFile()) { const real = fs.realpathSync(p); const b = fs.readFileSync(real); fs.writeFileSync(`${real}.tmp`, b); fs.chmodSync(`${real}.tmp`, 0o644); fs.renameSync(`${real}.tmp`, real); } } } catch { /* rev523 mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "oldOccursOnce": true,
+   "exitCode": 0,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 43,
+    "numFailedTests": 0
+   },
+   "failedTests": [],
+   "failedRows": [],
+   "linkRowFailed": false,
+   "outcome": "survived",
+   "load1": 24.74,
+   "seconds": 1.3,
+   "restored": true
+  },
+  {
+   "id": "X3b-target-replaced-by-copy-mode-0644",
+   "side": "fix",
+   "rep": 0,
+   "testSha256": "5dd0d6c74f5c8de9998d82cf6b8989e24e09f293202eebb3fd0969cfa79bd63c",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { const p = path.join(runDir, RUN_LAYOUT.launched); const s = fs.lstatSync(p); if (s.isSymbolicLink()) { const t = fs.statSync(p); if (t.isFile()) { const real = fs.realpathSync(p); const b = fs.readFileSync(real); fs.writeFileSync(`${real}.tmp`, b); fs.chmodSync(`${real}.tmp`, 0o644); fs.renameSync(`${real}.tmp`, real); } } } catch { /* rev523 mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "oldOccursOnce": true,
+   "exitCode": 1,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 42,
+    "numFailedTests": 1
+   },
+   "failedTests": [
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to the marker Syzygy writes",
+     "firstErrorLine": "AssertionError: expected { mode: 41471n, ino: 163125134n, \u2026(5) } to deeply equal { mode: 41471n, ino: 163125134n, \u2026(5) }"
+    }
+   ],
+   "failedRows": [
+    "a symbolic link to the marker Syzygy writes"
+   ],
+   "linkRowFailed": true,
+   "outcome": "killed",
+   "load1": 24.74,
+   "seconds": 1.4,
+   "restored": true
+  },
+  {
+   "id": "X3b-target-replaced-by-copy-mode-0644",
+   "side": "fix",
+   "rep": 1,
+   "testSha256": "5dd0d6c74f5c8de9998d82cf6b8989e24e09f293202eebb3fd0969cfa79bd63c",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { const p = path.join(runDir, RUN_LAYOUT.launched); const s = fs.lstatSync(p); if (s.isSymbolicLink()) { const t = fs.statSync(p); if (t.isFile()) { const real = fs.realpathSync(p); const b = fs.readFileSync(real); fs.writeFileSync(`${real}.tmp`, b); fs.chmodSync(`${real}.tmp`, 0o644); fs.renameSync(`${real}.tmp`, real); } } } catch { /* rev523 mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "oldOccursOnce": true,
+   "exitCode": 1,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 42,
+    "numFailedTests": 1
+   },
+   "failedTests": [
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to the marker Syzygy writes",
+     "firstErrorLine": "AssertionError: expected { mode: 41471n, ino: 163125883n, \u2026(5) } to deeply equal { mode: 41471n, ino: 163125883n, \u2026(5) }"
+    }
+   ],
+   "failedRows": [
+    "a symbolic link to the marker Syzygy writes"
+   ],
+   "linkRowFailed": true,
+   "outcome": "killed",
+   "load1": 24.74,
+   "seconds": 1.3,
+   "restored": true
+  },
+  {
+   "id": "X3b-target-replaced-by-copy-mode-0644",
+   "side": "fix",
+   "rep": 2,
+   "testSha256": "5dd0d6c74f5c8de9998d82cf6b8989e24e09f293202eebb3fd0969cfa79bd63c",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { const p = path.join(runDir, RUN_LAYOUT.launched); const s = fs.lstatSync(p); if (s.isSymbolicLink()) { const t = fs.statSync(p); if (t.isFile()) { const real = fs.realpathSync(p); const b = fs.readFileSync(real); fs.writeFileSync(`${real}.tmp`, b); fs.chmodSync(`${real}.tmp`, 0o644); fs.renameSync(`${real}.tmp`, real); } } } catch { /* rev523 mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "oldOccursOnce": true,
+   "exitCode": 1,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 42,
+    "numFailedTests": 1
+   },
+   "failedTests": [
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to the marker Syzygy writes",
+     "firstErrorLine": "AssertionError: expected { mode: 41471n, ino: 163126631n, \u2026(5) } to deeply equal { mode: 41471n, ino: 163126631n, \u2026(5) }"
+    }
+   ],
+   "failedRows": [
+    "a symbolic link to the marker Syzygy writes"
+   ],
+   "linkRowFailed": true,
+   "outcome": "killed",
+   "load1": 24.74,
+   "seconds": 1.5,
+   "restored": true
+  },
+  {
+   "id": "X4-link-retargeted-to-identical-copy",
+   "side": "base",
+   "rep": 0,
+   "testSha256": "73fd8fe0c835e3910fbc45e2ea026b0b6ec54ac7c04657aeed9aa2311440fa5e",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { const p = path.join(runDir, RUN_LAYOUT.launched); const s = fs.lstatSync(p); if (s.isSymbolicLink()) { const t = fs.statSync(p); if (t.isFile()) { const copy = path.join(runDir, 'copy.json'); fs.copyFileSync(fs.realpathSync(p), copy); fs.unlinkSync(p); fs.symlinkSync(copy, p); } } } catch { /* rev523 mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "oldOccursOnce": true,
+   "exitCode": 1,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 42,
+    "numFailedTests": 1
+   },
+   "failedTests": [
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to the marker Syzygy writes",
+     "firstErrorLine": "AssertionError: expected { mode: 41471n, ino: 163127380n, \u2026(4) } to deeply equal { mode: 41471n, ino: 163127378n, \u2026(4) }"
+    }
+   ],
+   "failedRows": [
+    "a symbolic link to the marker Syzygy writes"
+   ],
+   "linkRowFailed": true,
+   "outcome": "killed",
+   "load1": 23.96,
+   "seconds": 1.3,
+   "restored": true
+  },
+  {
+   "id": "X4-link-retargeted-to-identical-copy",
+   "side": "base",
+   "rep": 1,
+   "testSha256": "73fd8fe0c835e3910fbc45e2ea026b0b6ec54ac7c04657aeed9aa2311440fa5e",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { const p = path.join(runDir, RUN_LAYOUT.launched); const s = fs.lstatSync(p); if (s.isSymbolicLink()) { const t = fs.statSync(p); if (t.isFile()) { const copy = path.join(runDir, 'copy.json'); fs.copyFileSync(fs.realpathSync(p), copy); fs.unlinkSync(p); fs.symlinkSync(copy, p); } } } catch { /* rev523 mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "oldOccursOnce": true,
+   "exitCode": 1,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 42,
+    "numFailedTests": 1
+   },
+   "failedTests": [
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to the marker Syzygy writes",
+     "firstErrorLine": "AssertionError: expected { mode: 41471n, ino: 163128127n, \u2026(4) } to deeply equal { mode: 41471n, ino: 163128125n, \u2026(4) }"
+    }
+   ],
+   "failedRows": [
+    "a symbolic link to the marker Syzygy writes"
+   ],
+   "linkRowFailed": true,
+   "outcome": "killed",
+   "load1": 23.96,
+   "seconds": 1.6,
+   "restored": true
+  },
+  {
+   "id": "X4-link-retargeted-to-identical-copy",
+   "side": "base",
+   "rep": 2,
+   "testSha256": "73fd8fe0c835e3910fbc45e2ea026b0b6ec54ac7c04657aeed9aa2311440fa5e",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { const p = path.join(runDir, RUN_LAYOUT.launched); const s = fs.lstatSync(p); if (s.isSymbolicLink()) { const t = fs.statSync(p); if (t.isFile()) { const copy = path.join(runDir, 'copy.json'); fs.copyFileSync(fs.realpathSync(p), copy); fs.unlinkSync(p); fs.symlinkSync(copy, p); } } } catch { /* rev523 mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "oldOccursOnce": true,
+   "exitCode": 1,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 42,
+    "numFailedTests": 1
+   },
+   "failedTests": [
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to the marker Syzygy writes",
+     "firstErrorLine": "AssertionError: expected { mode: 41471n, ino: 163128875n, \u2026(4) } to deeply equal { mode: 41471n, ino: 163128873n, \u2026(4) }"
+    }
+   ],
+   "failedRows": [
+    "a symbolic link to the marker Syzygy writes"
+   ],
+   "linkRowFailed": true,
+   "outcome": "killed",
+   "load1": 23.96,
+   "seconds": 1.5,
+   "restored": true
+  },
+  {
+   "id": "X4-link-retargeted-to-identical-copy",
+   "side": "fix",
+   "rep": 0,
+   "testSha256": "5dd0d6c74f5c8de9998d82cf6b8989e24e09f293202eebb3fd0969cfa79bd63c",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { const p = path.join(runDir, RUN_LAYOUT.launched); const s = fs.lstatSync(p); if (s.isSymbolicLink()) { const t = fs.statSync(p); if (t.isFile()) { const copy = path.join(runDir, 'copy.json'); fs.copyFileSync(fs.realpathSync(p), copy); fs.unlinkSync(p); fs.symlinkSync(copy, p); } } } catch { /* rev523 mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "oldOccursOnce": true,
+   "exitCode": 1,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 42,
+    "numFailedTests": 1
+   },
+   "failedTests": [
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to the marker Syzygy writes",
+     "firstErrorLine": "AssertionError: expected { mode: 41471n, ino: 163129626n, \u2026(5) } to deeply equal { mode: 41471n, ino: 163129624n, \u2026(5) }"
+    }
+   ],
+   "failedRows": [
+    "a symbolic link to the marker Syzygy writes"
+   ],
+   "linkRowFailed": true,
+   "outcome": "killed",
+   "load1": 23.0,
+   "seconds": 1.3,
+   "restored": true
+  },
+  {
+   "id": "X4-link-retargeted-to-identical-copy",
+   "side": "fix",
+   "rep": 1,
+   "testSha256": "5dd0d6c74f5c8de9998d82cf6b8989e24e09f293202eebb3fd0969cfa79bd63c",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { const p = path.join(runDir, RUN_LAYOUT.launched); const s = fs.lstatSync(p); if (s.isSymbolicLink()) { const t = fs.statSync(p); if (t.isFile()) { const copy = path.join(runDir, 'copy.json'); fs.copyFileSync(fs.realpathSync(p), copy); fs.unlinkSync(p); fs.symlinkSync(copy, p); } } } catch { /* rev523 mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "oldOccursOnce": true,
+   "exitCode": 1,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 42,
+    "numFailedTests": 1
+   },
+   "failedTests": [
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to the marker Syzygy writes",
+     "firstErrorLine": "AssertionError: expected { mode: 41471n, ino: 163130377n, \u2026(5) } to deeply equal { mode: 41471n, ino: 163130375n, \u2026(5) }"
+    }
+   ],
+   "failedRows": [
+    "a symbolic link to the marker Syzygy writes"
+   ],
+   "linkRowFailed": true,
+   "outcome": "killed",
+   "load1": 23.0,
+   "seconds": 1.8,
+   "restored": true
+  },
+  {
+   "id": "X4-link-retargeted-to-identical-copy",
+   "side": "fix",
+   "rep": 2,
+   "testSha256": "5dd0d6c74f5c8de9998d82cf6b8989e24e09f293202eebb3fd0969cfa79bd63c",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { const p = path.join(runDir, RUN_LAYOUT.launched); const s = fs.lstatSync(p); if (s.isSymbolicLink()) { const t = fs.statSync(p); if (t.isFile()) { const copy = path.join(runDir, 'copy.json'); fs.copyFileSync(fs.realpathSync(p), copy); fs.unlinkSync(p); fs.symlinkSync(copy, p); } } } catch { /* rev523 mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "oldOccursOnce": true,
+   "exitCode": 1,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 42,
+    "numFailedTests": 1
+   },
+   "failedTests": [
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to the marker Syzygy writes",
+     "firstErrorLine": "AssertionError: expected { mode: 41471n, ino: 163131124n, \u2026(5) } to deeply equal { mode: 41471n, ino: 163131122n, \u2026(5) }"
+    }
+   ],
+   "failedRows": [
+    "a symbolic link to the marker Syzygy writes"
+   ],
+   "linkRowFailed": true,
+   "outcome": "killed",
+   "load1": 23.0,
+   "seconds": 1.4,
+   "restored": true
+  },
+  {
+   "id": "X4b-link-recreated-same-string",
+   "side": "base",
+   "rep": 0,
+   "testSha256": "73fd8fe0c835e3910fbc45e2ea026b0b6ec54ac7c04657aeed9aa2311440fa5e",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { const p = path.join(runDir, RUN_LAYOUT.launched); const s = fs.lstatSync(p); if (s.isSymbolicLink()) { const to = fs.readlinkSync(p); fs.unlinkSync(p); fs.symlinkSync(to, p); } } catch { /* rev523 mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "oldOccursOnce": true,
+   "exitCode": 1,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 40,
+    "numFailedTests": 3
+   },
+   "failedTests": [
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a dangling symbolic link",
+     "firstErrorLine": "AssertionError: expected { mode: 41471n, ino: 163131862n, \u2026(4) } to deeply equal { mode: 41471n, ino: 163131861n, \u2026(4) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to the marker Syzygy writes",
+     "firstErrorLine": "AssertionError: expected { mode: 41471n, ino: 163131867n, \u2026(4) } to deeply equal { mode: 41471n, ino: 163131866n, \u2026(4) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to a character device",
+     "firstErrorLine": "AssertionError: expected { mode: 41471n, ino: 163131870n, \u2026(4) } to deeply equal { mode: 41471n, ino: 163131869n, \u2026(4) }"
+    }
+   ],
+   "failedRows": [
+    "a dangling symbolic link",
+    "a symbolic link to a character device",
+    "a symbolic link to the marker Syzygy writes"
+   ],
+   "linkRowFailed": true,
+   "outcome": "killed",
+   "load1": 23.0,
+   "seconds": 1.4,
+   "restored": true
+  },
+  {
+   "id": "X4b-link-recreated-same-string",
+   "side": "base",
+   "rep": 1,
+   "testSha256": "73fd8fe0c835e3910fbc45e2ea026b0b6ec54ac7c04657aeed9aa2311440fa5e",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { const p = path.join(runDir, RUN_LAYOUT.launched); const s = fs.lstatSync(p); if (s.isSymbolicLink()) { const to = fs.readlinkSync(p); fs.unlinkSync(p); fs.symlinkSync(to, p); } } catch { /* rev523 mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "oldOccursOnce": true,
+   "exitCode": 1,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 40,
+    "numFailedTests": 3
+   },
+   "failedTests": [
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a dangling symbolic link",
+     "firstErrorLine": "AssertionError: expected { mode: 41471n, ino: 163132604n, \u2026(4) } to deeply equal { mode: 41471n, ino: 163132603n, \u2026(4) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to the marker Syzygy writes",
+     "firstErrorLine": "AssertionError: expected { mode: 41471n, ino: 163132609n, \u2026(4) } to deeply equal { mode: 41471n, ino: 163132608n, \u2026(4) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to a character device",
+     "firstErrorLine": "AssertionError: expected { mode: 41471n, ino: 163132612n, \u2026(4) } to deeply equal { mode: 41471n, ino: 163132611n, \u2026(4) }"
+    }
+   ],
+   "failedRows": [
+    "a dangling symbolic link",
+    "a symbolic link to a character device",
+    "a symbolic link to the marker Syzygy writes"
+   ],
+   "linkRowFailed": true,
+   "outcome": "killed",
+   "load1": 22.28,
+   "seconds": 1.4,
+   "restored": true
+  },
+  {
+   "id": "X4b-link-recreated-same-string",
+   "side": "base",
+   "rep": 2,
+   "testSha256": "73fd8fe0c835e3910fbc45e2ea026b0b6ec54ac7c04657aeed9aa2311440fa5e",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { const p = path.join(runDir, RUN_LAYOUT.launched); const s = fs.lstatSync(p); if (s.isSymbolicLink()) { const to = fs.readlinkSync(p); fs.unlinkSync(p); fs.symlinkSync(to, p); } } catch { /* rev523 mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "oldOccursOnce": true,
+   "exitCode": 1,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 40,
+    "numFailedTests": 3
+   },
+   "failedTests": [
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a dangling symbolic link",
+     "firstErrorLine": "AssertionError: expected { mode: 41471n, ino: 163133344n, \u2026(4) } to deeply equal { mode: 41471n, ino: 163133343n, \u2026(4) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to the marker Syzygy writes",
+     "firstErrorLine": "AssertionError: expected { mode: 41471n, ino: 163133349n, \u2026(4) } to deeply equal { mode: 41471n, ino: 163133348n, \u2026(4) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to a character device",
+     "firstErrorLine": "AssertionError: expected { mode: 41471n, ino: 163133352n, \u2026(4) } to deeply equal { mode: 41471n, ino: 163133351n, \u2026(4) }"
+    }
+   ],
+   "failedRows": [
+    "a dangling symbolic link",
+    "a symbolic link to a character device",
+    "a symbolic link to the marker Syzygy writes"
+   ],
+   "linkRowFailed": true,
+   "outcome": "killed",
+   "load1": 22.28,
+   "seconds": 1.3,
+   "restored": true
+  },
+  {
+   "id": "X4b-link-recreated-same-string",
+   "side": "fix",
+   "rep": 0,
+   "testSha256": "5dd0d6c74f5c8de9998d82cf6b8989e24e09f293202eebb3fd0969cfa79bd63c",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { const p = path.join(runDir, RUN_LAYOUT.launched); const s = fs.lstatSync(p); if (s.isSymbolicLink()) { const to = fs.readlinkSync(p); fs.unlinkSync(p); fs.symlinkSync(to, p); } } catch { /* rev523 mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "oldOccursOnce": true,
+   "exitCode": 1,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 40,
+    "numFailedTests": 3
+   },
+   "failedTests": [
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a dangling symbolic link",
+     "firstErrorLine": "AssertionError: expected { mode: 41471n, ino: 163134087n, \u2026(5) } to deeply equal { mode: 41471n, ino: 163134086n, \u2026(5) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to the marker Syzygy writes",
+     "firstErrorLine": "AssertionError: expected { mode: 41471n, ino: 163134092n, \u2026(5) } to deeply equal { mode: 41471n, ino: 163134091n, \u2026(5) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to a character device",
+     "firstErrorLine": "AssertionError: expected { mode: 41471n, ino: 163134095n, \u2026(5) } to deeply equal { mode: 41471n, ino: 163134094n, \u2026(5) }"
+    }
+   ],
+   "failedRows": [
+    "a dangling symbolic link",
+    "a symbolic link to a character device",
+    "a symbolic link to the marker Syzygy writes"
+   ],
+   "linkRowFailed": true,
+   "outcome": "killed",
+   "load1": 22.28,
+   "seconds": 1.3,
+   "restored": true
+  },
+  {
+   "id": "X4b-link-recreated-same-string",
+   "side": "fix",
+   "rep": 1,
+   "testSha256": "5dd0d6c74f5c8de9998d82cf6b8989e24e09f293202eebb3fd0969cfa79bd63c",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { const p = path.join(runDir, RUN_LAYOUT.launched); const s = fs.lstatSync(p); if (s.isSymbolicLink()) { const to = fs.readlinkSync(p); fs.unlinkSync(p); fs.symlinkSync(to, p); } } catch { /* rev523 mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "oldOccursOnce": true,
+   "exitCode": 1,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 40,
+    "numFailedTests": 3
+   },
+   "failedTests": [
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a dangling symbolic link",
+     "firstErrorLine": "AssertionError: expected { mode: 41471n, ino: 163134828n, \u2026(5) } to deeply equal { mode: 41471n, ino: 163134827n, \u2026(5) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to the marker Syzygy writes",
+     "firstErrorLine": "AssertionError: expected { mode: 41471n, ino: 163134833n, \u2026(5) } to deeply equal { mode: 41471n, ino: 163134832n, \u2026(5) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to a character device",
+     "firstErrorLine": "AssertionError: expected { mode: 41471n, ino: 163134836n, \u2026(5) } to deeply equal { mode: 41471n, ino: 163134835n, \u2026(5) }"
+    }
+   ],
+   "failedRows": [
+    "a dangling symbolic link",
+    "a symbolic link to a character device",
+    "a symbolic link to the marker Syzygy writes"
+   ],
+   "linkRowFailed": true,
+   "outcome": "killed",
+   "load1": 21.06,
+   "seconds": 1.4,
+   "restored": true
+  },
+  {
+   "id": "X4b-link-recreated-same-string",
+   "side": "fix",
+   "rep": 2,
+   "testSha256": "5dd0d6c74f5c8de9998d82cf6b8989e24e09f293202eebb3fd0969cfa79bd63c",
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/launched.ts",
+     "old": "  if (state === 'unreadable') return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';",
+     "new": "  if (state === 'unreadable') { try { const p = path.join(runDir, RUN_LAYOUT.launched); const s = fs.lstatSync(p); if (s.isSymbolicLink()) { const to = fs.readlinkSync(p); fs.unlinkSync(p); fs.symlinkSync(to, p); } } catch { /* rev523 mutant */ }\n    return 'the run\\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched'; }"
+    }
+   ],
+   "oldOccursOnce": true,
+   "exitCode": 1,
+   "counts": {
+    "numTotalTests": 43,
+    "numPassedTests": 40,
+    "numFailedTests": 3
+   },
+   "failedTests": [
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a dangling symbolic link",
+     "firstErrorLine": "AssertionError: expected { mode: 41471n, ino: 163135569n, \u2026(5) } to deeply equal { mode: 41471n, ino: 163135568n, \u2026(5) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to the marker Syzygy writes",
+     "firstErrorLine": "AssertionError: expected { mode: 41471n, ino: 163135574n, \u2026(5) } to deeply equal { mode: 41471n, ino: 163135573n, \u2026(5) }"
+    },
+    {
+     "test": "launch forms in a run whose marker is unreadable count neither a declared form nor a syzygy-launched one: a symbolic link to a character device",
+     "firstErrorLine": "AssertionError: expected { mode: 41471n, ino: 163135577n, \u2026(5) } to deeply equal { mode: 41471n, ino: 163135576n, \u2026(5) }"
+    }
+   ],
+   "failedRows": [
+    "a dangling symbolic link",
+    "a symbolic link to a character device",
+    "a symbolic link to the marker Syzygy writes"
+   ],
+   "linkRowFailed": true,
+   "outcome": "killed",
+   "load1": 21.06,
+   "seconds": 1.3,
+   "restored": true
+  }
+ ],
+ "trackedTreeCleanAfter": true
+}

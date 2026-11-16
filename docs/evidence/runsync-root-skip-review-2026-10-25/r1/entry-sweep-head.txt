@@ -1,0 +1,16 @@
+f7bbb93a: 252 files in the population
+apps/three-surface-poc/src/materialize-action.test.ts: entry lines [246, 280, 295, 323, 351, 383]…; '--port' lines 0; SYZYGY_PORT lines 0
+packages/cap1-daemon/src/routes-human.test.ts: entry lines [147, 204, 215, 242, 270, 295]…; '--port' lines 0; SYZYGY_PORT lines 0
+packages/cap1-daemon/src/server.test.ts: entry lines [48, 98, 135, 149, 167, 175]…; '--port' lines 0; SYZYGY_PORT lines 0
+packages/cap1-system/src/credentials.system.test.ts: entry lines [31]; '--port' lines 0; SYZYGY_PORT lines 0
+packages/cap1-system/src/daemon-entry-unchanged.system.test.ts: entry lines [2, 26, 31, 212]; '--port' lines 4; SYZYGY_PORT lines 4
+packages/cap1-system/src/degradation.system.test.ts: entry lines [34, 78, 96]; '--port' lines 0; SYZYGY_PORT lines 0
+packages/cap1-system/src/fresh-clone.system.test.ts: entry lines [82]; '--port' lines 0; SYZYGY_PORT lines 0
+packages/cap1-system/src/full-facts.system.test.ts: entry lines [35]; '--port' lines 0; SYZYGY_PORT lines 0
+packages/cap1-system/src/harness.ts: entry lines [29, 121, 126, 131]; '--port' lines 1; SYZYGY_PORT lines 0
+packages/cap1-system/src/process.system.test.ts: entry lines [26]; '--port' lines 0; SYZYGY_PORT lines 0
+packages/cap1-system/src/state-dir.system.test.ts: entry lines [166, 285]; '--port' lines 5; SYZYGY_PORT lines 0
+packages/cap1-system/src/write-boundary.system.test.ts: entry lines [44]; '--port' lines 0; SYZYGY_PORT lines 0
+packages/polaris-dossier/src/argv.test.ts: entry lines [5]; '--port' lines 12; SYZYGY_PORT lines 0
+packages/polaris-dossier/src/subpath-imports.test.ts: entry lines [16]; '--port' lines 0; SYZYGY_PORT lines 0
+packages/polaris-generation-core/src/island-boundary.test.ts: entry lines [16]; '--port' lines 0; SYZYGY_PORT lines 0

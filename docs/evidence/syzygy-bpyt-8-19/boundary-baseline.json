@@ -1,0 +1,31 @@
+{
+ "schema": "boundary-test-baseline/1",
+ "bead": "syzygy-bpyt.8.19",
+ "text": "Evidence record, not authority: the unmutated run of the island boundary test that the rule-6 mutants in boundary-mutants.json are measured against. Reduced from the vitest JSON report; do not edit.",
+ "commit": "8c711bbf1933e05575b50a204f1c334e1448c005",
+ "test": "packages/polaris-generation-core/src/island-boundary.test.ts",
+ "testSha256": "a32d3ddc8f1ef6d7fc0c199bf910ed21722b35dfe6fccb3a08df6c42d22eb3c1",
+ "command": "npx vitest run --project @syzygy/polaris-generation-core packages/polaris-generation-core/src/island-boundary.test.ts --reporter=json",
+ "success": true,
+ "total": 4,
+ "passed": 4,
+ "failed": 0,
+ "tests": [
+  {
+   "name": "the syzygy CLI and the parked provider island lists twenty island modules, each a file in the tree",
+   "status": "passed"
+  },
+  {
+   "name": "the syzygy CLI and the parked provider island resolves every workspace import the CLI reaches, dynamic ones included",
+   "status": "passed"
+  },
+  {
+   "name": "the syzygy CLI and the parked provider island reaches no island module from the CLI entry",
+   "status": "passed"
+  },
+  {
+   "name": "the syzygy CLI and the parked provider island reaches the island from the consent package root, which the CLI does not import",
+   "status": "passed"
+  }
+ ]
+}

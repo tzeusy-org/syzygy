@@ -1,0 +1,19 @@
+{
+ "commit": "1ff3ed7dac9e7a615852cbd998b87174b62fe4a4",
+ "loadBefore": "21.25 22.59 23.24 13/9679 3867503",
+ "loadAfter": "32.71 29.01 25.72 14/9689 3954330",
+ "exit": 0,
+ "files": 253,
+ "filesAllSkipped": [
+  "packages/three-surface-poc-core/src/test-artifact-verification.live.test.ts",
+  "packages/three-surface-poc-core/src/work-items.live.test.ts",
+  "apps/three-surface-poc/src/project-shape-discovery.live.test.ts"
+ ],
+ "suites": 894,
+ "tests": 5563,
+ "passed": 5558,
+ "failed": 0,
+ "pending": 5,
+ "todo": 0,
+ "success": true
+}

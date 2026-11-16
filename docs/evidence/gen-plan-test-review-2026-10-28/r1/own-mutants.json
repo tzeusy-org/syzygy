@@ -1,0 +1,727 @@
+{
+  "subject": "generation-mutation.test.ts at the reviewed commit, reviewer mutants (R-GP-IMPL-GEN-PLAN-TEST-1)",
+  "commit": "02eb444f22a673748567620c5f0d45877a27f2ff",
+  "tool": {
+    "path": "rev-546/tools/own_mutants.py",
+    "sha256": "d7a91eb5dfe1707328d464dce4b9009462e361790797a3f53c9d15ac0ba87b05"
+  },
+  "control": {
+    "exit": 0,
+    "total": 13,
+    "failed": 0,
+    "failedTitles": [],
+    "failureMessages": [],
+    "fileErrors": []
+  },
+  "controlPassed": true,
+  "mutants": [
+    {
+      "id": "Q1",
+      "aim": "R1: the fragment's only occurrence is inside a string literal (guard rewritten)",
+      "edits": {
+        "packages/polaris-generation-core/src/pipeline.ts": [
+          {
+            "old": "      if (calls >= budget.maxCalls) stop('budget-exhausted');",
+            "new": "      if (budget.maxCalls <= calls) stop('budget-exhausted'); void \"if (calls >= budget.maxCalls) stop('budget-exhausted');\";"
+          }
+        ]
+      },
+      "creates": {},
+      "prediction": "survived",
+      "why": "a string literal survives removeComments, so the emit still changes",
+      "observed": {
+        "exit": 0,
+        "total": 13,
+        "failed": 0,
+        "failedTitles": [],
+        "failureMessages": [],
+        "fileErrors": []
+      },
+      "outcome": "survived",
+      "matchesPrediction": true,
+      "restored": true
+    },
+    {
+      "id": "Q2",
+      "aim": "R1: the fragment's only occurrence is inside a template literal (guard rewritten)",
+      "edits": {
+        "packages/polaris-generation-core/src/pipeline.ts": [
+          {
+            "old": "      if (calls >= budget.maxCalls) stop('budget-exhausted');",
+            "new": "      if (budget.maxCalls <= calls) stop('budget-exhausted'); void `if (calls >= budget.maxCalls) stop('budget-exhausted');`;"
+          }
+        ]
+      },
+      "creates": {},
+      "prediction": "survived",
+      "why": "as Q1",
+      "observed": {
+        "exit": 0,
+        "total": 13,
+        "failed": 0,
+        "failedTitles": [],
+        "failureMessages": [],
+        "fileErrors": []
+      },
+      "outcome": "survived",
+      "matchesPrediction": true,
+      "restored": true
+    },
+    {
+      "id": "Q3",
+      "aim": "R1: the fragment's only occurrence is inside a /*! comment (guard rewritten)",
+      "edits": {
+        "packages/polaris-generation-core/src/pipeline.ts": [
+          {
+            "old": "      if (calls >= budget.maxCalls) stop('budget-exhausted');",
+            "new": "      if (budget.maxCalls <= calls) stop('budget-exhausted'); /*! was: if (calls >= budget.maxCalls) stop('budget-exhausted'); */"
+          }
+        ]
+      },
+      "creates": {},
+      "prediction": "unknown",
+      "why": "depends on whether removeComments keeps /*! comments in statement position",
+      "observed": {
+        "exit": 1,
+        "total": 13,
+        "failed": 1,
+        "failedTitles": [
+          "pipeline-max-calls-disabled: names a non-test file under polaris-generation-core/src, holds its fragment once there, changes the emit and names must-fail tests the runner runs"
+        ],
+        "failureMessages": [
+          "AssertionError: pipeline-max-calls-disabled: the mutation changes the emitted JavaScript: expected 'import { quotableGenerationSources, v…' not to be 'import { quotableGenerationSources, v…' // Object.is equality"
+        ],
+        "fileErrors": []
+      },
+      "outcome": "killed",
+      "matchesPrediction": true,
+      "restored": true
+    },
+    {
+      "id": "Q3b",
+      "aim": "R1: the fragment's only occurrence is inside a detached /*! comment at the head of the file (guard rewritten)",
+      "edits": {
+        "packages/polaris-generation-core/src/pipeline.ts": [
+          {
+            "old": "import { quotableGenerationSources,",
+            "new": "/*! was: if (calls >= budget.maxCalls) stop('budget-exhausted'); */\n\nimport { quotableGenerationSources,"
+          },
+          {
+            "old": "      if (calls >= budget.maxCalls) stop('budget-exhausted');",
+            "new": "      if (budget.maxCalls <= calls) stop('budget-exhausted');"
+          }
+        ]
+      },
+      "creates": {},
+      "prediction": "survived",
+      "why": "removeComments keeps a detached /*! comment at the head of a file (probed beforehand on a scratch input)",
+      "observed": {
+        "exit": 0,
+        "total": 13,
+        "failed": 0,
+        "failedTitles": [],
+        "failureMessages": [],
+        "fileErrors": []
+      },
+      "outcome": "survived",
+      "matchesPrediction": true,
+      "restored": true
+    },
+    {
+      "id": "Q4",
+      "aim": "R1: the fragment's only occurrence is inside a JSDoc on an exported declaration (guard rewritten)",
+      "edits": {
+        "packages/polaris-generation-core/src/pipeline.ts": [
+          {
+            "old": "      if (calls >= budget.maxCalls) stop('budget-exhausted');",
+            "new": "      if (budget.maxCalls <= calls) stop('budget-exhausted');"
+          },
+          {
+            "old": "",
+            "new": "\n/** was: if (calls >= budget.maxCalls) stop('budget-exhausted'); */\nexport const WAS_GUARD = 1;\n"
+          }
+        ]
+      },
+      "creates": {},
+      "prediction": "killed",
+      "why": "removeComments drops JSDoc",
+      "observed": {
+        "exit": 1,
+        "total": 13,
+        "failed": 1,
+        "failedTitles": [
+          "pipeline-max-calls-disabled: names a non-test file under polaris-generation-core/src, holds its fragment once there, changes the emit and names must-fail tests the runner runs"
+        ],
+        "failureMessages": [
+          "AssertionError: pipeline-max-calls-disabled: the mutation changes the emitted JavaScript: expected 'import { quotableGenerationSources, v…' not to be 'import { quotableGenerationSources, v…' // Object.is equality"
+        ],
+        "fileErrors": []
+      },
+      "outcome": "killed",
+      "matchesPrediction": true,
+      "restored": true
+    },
+    {
+      "id": "Q5",
+      "aim": "R5: a `to` that changes only a type assertion, which emit drops",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "to: 'const sorted = (keys as string[]);',",
+            "new": "to: 'const sorted = (keys as readonly string[]).sort();',"
+          }
+        ]
+      },
+      "creates": {},
+      "prediction": "killed",
+      "why": "type syntax is erased, so the emit is unchanged",
+      "observed": {
+        "exit": 1,
+        "total": 13,
+        "failed": 1,
+        "failedTitles": [
+          "canonical-json-sorted-keys-disabled: names a non-test file under polaris-generation-core/src, holds its fragment once there, changes the emit and names must-fail tests the runner runs"
+        ],
+        "failureMessages": [
+          "AssertionError: canonical-json-sorted-keys-disabled: the mutation changes the emitted JavaScript: expected 'import { types } from \\'node:util\\';\\…' not to be 'import { types } from \\'node:util\\';\\…' // Object.is equality"
+        ],
+        "fileErrors": []
+      },
+      "outcome": "killed",
+      "matchesPrediction": true,
+      "restored": true
+    },
+    {
+      "id": "Q6",
+      "aim": "R5: a `to` that differs from `from` only by redundant parentheses",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "to: \"if (false) stop('budget-exhausted');\",",
+            "new": "to: \"if ((calls >= budget.maxCalls)) stop('budget-exhausted');\","
+          }
+        ]
+      },
+      "creates": {},
+      "prediction": "survived",
+      "why": "TypeScript's emitter keeps parenthesized expressions",
+      "observed": {
+        "exit": 0,
+        "total": 13,
+        "failed": 0,
+        "failedTitles": [],
+        "failureMessages": [],
+        "fileErrors": []
+      },
+      "outcome": "survived",
+      "matchesPrediction": true,
+      "restored": true
+    },
+    {
+      "id": "Q7",
+      "aim": "R5: a `to` that differs from `from` only in quote style",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "to: \"if (false) stop('budget-exhausted');\",",
+            "new": "to: \"if (calls >= budget.maxCalls) stop(\\\"budget-exhausted\\\");\","
+          }
+        ]
+      },
+      "creates": {},
+      "prediction": "survived",
+      "why": "the emitter keeps a string literal's source spelling",
+      "observed": {
+        "exit": 0,
+        "total": 13,
+        "failed": 0,
+        "failedTitles": [],
+        "failureMessages": [],
+        "fileErrors": []
+      },
+      "outcome": "survived",
+      "matchesPrediction": true,
+      "restored": true
+    },
+    {
+      "id": "Q8",
+      "aim": "R4: a must-fail name that matches a describe title only",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "mustFail: ['rejects pollution keys'],",
+            "new": "mustFail: ['bounded provider JSON parsing'],"
+          }
+        ]
+      },
+      "creates": {},
+      "prediction": "killed",
+      "why": "the reader reads it/test titles, not describe titles",
+      "observed": {
+        "exit": 1,
+        "total": 13,
+        "failed": 1,
+        "failedTitles": [
+          "parse-json-pollution-key-check-disabled: names a non-test file under polaris-generation-core/src, holds its fragment once there, changes the emit and names must-fail tests the runner runs"
+        ],
+        "failureMessages": [
+          "AssertionError: parse-json-pollution-key-check-disabled: must-fail \"bounded provider JSON parsing\" is in a test title: expected false to be true // Object.is equality"
+        ],
+        "fileErrors": []
+      },
+      "outcome": "killed",
+      "matchesPrediction": true,
+      "restored": true
+    },
+    {
+      "id": "Q9",
+      "aim": "R4: a must-fail name that is a strict substring of a longer title",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "mustFail: ['rejects pollution keys'],",
+            "new": "mustFail: ['rejects pollution'],"
+          }
+        ]
+      },
+      "creates": {},
+      "prediction": "survived",
+      "why": "the check matches by substring, as the runner does",
+      "observed": {
+        "exit": 0,
+        "total": 13,
+        "failed": 0,
+        "failedTitles": [],
+        "failureMessages": [],
+        "fileErrors": []
+      },
+      "outcome": "survived",
+      "matchesPrediction": true,
+      "restored": true
+    },
+    {
+      "id": "Q10",
+      "aim": "R4: a must-fail name that is a title in a test file the runner does not run",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "mustFail: ['rejects pollution keys'],",
+            "new": "mustFail: ['reaches no island module from the CLI entry'],"
+          }
+        ]
+      },
+      "creates": {},
+      "prediction": "killed",
+      "why": "island-boundary.test.ts is not among the four files read",
+      "observed": {
+        "exit": 1,
+        "total": 13,
+        "failed": 1,
+        "failedTitles": [
+          "parse-json-pollution-key-check-disabled: names a non-test file under polaris-generation-core/src, holds its fragment once there, changes the emit and names must-fail tests the runner runs"
+        ],
+        "failureMessages": [
+          "AssertionError: parse-json-pollution-key-check-disabled: must-fail \"reaches no island module from the CLI entry\" is in a test title: expected false to be true // Object.is equality"
+        ],
+        "fileErrors": []
+      },
+      "outcome": "killed",
+      "matchesPrediction": true,
+      "restored": true
+    },
+    {
+      "id": "Q11",
+      "aim": "R4: a must-fail name that carries the each template's literal %s",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "mustFail: ['rejects pollution keys'],",
+            "new": "mustFail: ['rejects pollution keys: %s'],"
+          }
+        ]
+      },
+      "creates": {},
+      "prediction": "survived",
+      "why": "the template title contains %s; vitest's fullName never does",
+      "observed": {
+        "exit": 0,
+        "total": 13,
+        "failed": 0,
+        "failedTitles": [],
+        "failureMessages": [],
+        "fileErrors": []
+      },
+      "outcome": "survived",
+      "matchesPrediction": true,
+      "restored": true
+    },
+    {
+      "id": "Q12",
+      "aim": "R4: a must-fail name that carries an each row's substituted value",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "mustFail: ['rejects pollution keys'],",
+            "new": "mustFail: ['rejects pollution keys: __proto__'],"
+          }
+        ]
+      },
+      "creates": {},
+      "prediction": "killed",
+      "why": "the template keeps %s, so the instantiated name is not a substring of it",
+      "observed": {
+        "exit": 1,
+        "total": 13,
+        "failed": 1,
+        "failedTitles": [
+          "parse-json-pollution-key-check-disabled: names a non-test file under polaris-generation-core/src, holds its fragment once there, changes the emit and names must-fail tests the runner runs"
+        ],
+        "failureMessages": [
+          "AssertionError: parse-json-pollution-key-check-disabled: must-fail \"rejects pollution keys: __proto__\" is in a test title: expected false to be true // Object.is equality"
+        ],
+        "fileErrors": []
+      },
+      "outcome": "killed",
+      "matchesPrediction": true,
+      "restored": true
+    },
+    {
+      "id": "Q13",
+      "aim": "R4: a must-fail name spanning the describe title and the test title (vitest's fullName form)",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "mustFail: ['rejects pollution keys'],",
+            "new": "mustFail: ['bounded provider JSON parsing rejects pollution keys'],"
+          }
+        ]
+      },
+      "creates": {},
+      "prediction": "killed",
+      "why": "the reader holds the it title alone",
+      "observed": {
+        "exit": 1,
+        "total": 13,
+        "failed": 1,
+        "failedTitles": [
+          "parse-json-pollution-key-check-disabled: names a non-test file under polaris-generation-core/src, holds its fragment once there, changes the emit and names must-fail tests the runner runs"
+        ],
+        "failureMessages": [
+          "AssertionError: parse-json-pollution-key-check-disabled: must-fail \"bounded provider JSON parsing rejects pollution keys\" is in a test title: expected false to be true // Object.is equality"
+        ],
+        "fileErrors": []
+      },
+      "outcome": "killed",
+      "matchesPrediction": true,
+      "restored": true
+    },
+    {
+      "id": "Q14",
+      "aim": "R4: an empty must-fail name",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "mustFail: ['rejects pollution keys'],",
+            "new": "mustFail: [''],"
+          }
+        ]
+      },
+      "creates": {},
+      "prediction": "survived",
+      "why": "every string includes the empty string",
+      "observed": {
+        "exit": 0,
+        "total": 13,
+        "failed": 0,
+        "failedTitles": [],
+        "failureMessages": [],
+        "fileErrors": []
+      },
+      "outcome": "survived",
+      "matchesPrediction": true,
+      "restored": true
+    },
+    {
+      "id": "Q15",
+      "aim": "the runner check: a TEST_FILES entry commented out, its quoted path kept in the comment",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation-run-main.ts": [
+          {
+            "old": "  'packages/polaris-generation-core/src/provider-draft.test.ts',\n] as const;",
+            "new": "  // 'packages/polaris-generation-core/src/provider-draft.test.ts',\n] as const;"
+          }
+        ]
+      },
+      "creates": {},
+      "prediction": "survived",
+      "why": "the check is a textual toContain of the quoted path",
+      "observed": {
+        "exit": 0,
+        "total": 13,
+        "failed": 0,
+        "failedTitles": [],
+        "failureMessages": [],
+        "fileErrors": []
+      },
+      "outcome": "survived",
+      "matchesPrediction": true,
+      "restored": true
+    },
+    {
+      "id": "Q16",
+      "aim": "R2: a path with .. that starts with the prefix and resolves to the plan module",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "    file: DRAFT_MODEL_SOURCE,",
+            "new": "    file: 'packages/polaris-generation-core/src/../../../apps/three-surface-poc/src/polaris-generation/generation-mutation.ts',"
+          }
+        ]
+      },
+      "creates": {},
+      "prediction": "survived",
+      "why": "startsWith on the unnormalized path; join() resolves the .. on read; the plan holds the fragment once in a string",
+      "observed": {
+        "exit": 0,
+        "total": 13,
+        "failed": 0,
+        "failedTitles": [],
+        "failureMessages": [],
+        "fileErrors": []
+      },
+      "outcome": "survived",
+      "matchesPrediction": true,
+      "restored": true
+    },
+    {
+      "id": "Q17",
+      "aim": "R2: a .spec.ts copy of draft-model.ts under the prefix",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "    file: DRAFT_MODEL_SOURCE,",
+            "new": "    file: 'packages/polaris-generation-core/src/draft-model.spec.ts',"
+          }
+        ]
+      },
+      "creates": {
+        "packages/polaris-generation-core/src/draft-model.spec.ts": "packages/polaris-generation-core/src/draft-model.ts"
+      },
+      "prediction": "survived",
+      "why": "only .test.ts is excluded",
+      "observed": {
+        "exit": 0,
+        "total": 13,
+        "failed": 0,
+        "failedTitles": [],
+        "failureMessages": [],
+        "fileErrors": []
+      },
+      "outcome": "survived",
+      "matchesPrediction": true,
+      "restored": true
+    },
+    {
+      "id": "Q18",
+      "aim": "R2: a .test.tsx copy of draft-model.ts under the prefix",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "    file: DRAFT_MODEL_SOURCE,",
+            "new": "    file: 'packages/polaris-generation-core/src/draft-model.test.tsx',"
+          }
+        ]
+      },
+      "creates": {
+        "packages/polaris-generation-core/src/draft-model.test.tsx": "packages/polaris-generation-core/src/draft-model.ts"
+      },
+      "prediction": "survived",
+      "why": "only .test.ts is excluded",
+      "observed": {
+        "exit": 0,
+        "total": 13,
+        "failed": 0,
+        "failedTitles": [],
+        "failureMessages": [],
+        "fileErrors": []
+      },
+      "outcome": "survived",
+      "matchesPrediction": true,
+      "restored": true
+    },
+    {
+      "id": "Q19",
+      "aim": "R2: a .d.ts copy of draft-model.ts under the prefix",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "    file: DRAFT_MODEL_SOURCE,",
+            "new": "    file: 'packages/polaris-generation-core/src/draft-model.d.ts',"
+          }
+        ]
+      },
+      "creates": {
+        "packages/polaris-generation-core/src/draft-model.d.ts": "packages/polaris-generation-core/src/draft-model.ts"
+      },
+      "prediction": "unknown",
+      "why": "R2 admits it; the emit check may refuse it if a .d.ts emits nothing",
+      "observed": {
+        "exit": 1,
+        "total": 13,
+        "failed": 1,
+        "failedTitles": [
+          "provider-draft-duplicate-handle-check-disabled: names a non-test file under polaris-generation-core/src, holds its fragment once there, changes the emit and names must-fail tests the runner runs"
+        ],
+        "failureMessages": [
+          "Error: Debug Failure. Output generation failed"
+        ],
+        "fileErrors": []
+      },
+      "outcome": "killed",
+      "matchesPrediction": true,
+      "restored": true
+    },
+    {
+      "id": "Q20",
+      "aim": "N2: three drifts at once (R4's name, T3's twice-occurring fragment, R2's wrong file)",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts": [
+          {
+            "old": "mustFail: ['rejects pollution keys'],",
+            "new": "mustFail: ['rejects pollution keyz'],"
+          },
+          {
+            "old": "from: \"if (Array.isArray(record.sourceIds) && record.sourceIds.some(id => !sources.has(id))) throw new Error('unknown-source');\",",
+            "new": "from: \"throw new Error('unknown-source');\","
+          },
+          {
+            "old": "    file: DRAFT_MODEL_SOURCE,",
+            "new": "    file: 'apps/three-surface-poc/src/polaris-generation/generation-mutation.ts',"
+          }
+        ]
+      },
+      "creates": {},
+      "prediction": "killed",
+      "why": "three rows fail, each naming its id",
+      "observed": {
+        "exit": 1,
+        "total": 13,
+        "failed": 3,
+        "failedTitles": [
+          "parse-json-pollution-key-check-disabled: names a non-test file under polaris-generation-core/src, holds its fragment once there, changes the emit and names must-fail tests the runner runs",
+          "provider-draft-duplicate-handle-check-disabled: names a non-test file under polaris-generation-core/src, holds its fragment once there, changes the emit and names must-fail tests the runner runs",
+          "provider-draft-unknown-source-check-disabled: names a non-test file under polaris-generation-core/src, holds its fragment once there, changes the emit and names must-fail tests the runner runs"
+        ],
+        "failureMessages": [
+          "AssertionError: parse-json-pollution-key-check-disabled: must-fail \"rejects pollution keyz\" is in a test title: expected false to be true // Object.is equality",
+          "AssertionError: provider-draft-duplicate-handle-check-disabled: apps/three-surface-poc/src/polaris-generation/generation-mutation.ts is a non-test file under packages/polaris-generation-core/src/: expected false to be true // Object.is equality",
+          "AssertionError: provider-draft-unknown-source-check-disabled: occurrences of the fragment in packages/polaris-generation-core/src/provider-draft.ts: expected 2 to be 1 // Object.is equality"
+        ],
+        "fileErrors": []
+      },
+      "outcome": "killed",
+      "matchesPrediction": true,
+      "restored": true
+    },
+    {
+      "id": "Q21",
+      "aim": "robustness: the TypeScript import cannot be resolved",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.test.ts": [
+          {
+            "old": "import ts from 'typescript';",
+            "new": "import ts from 'typescript-missing';"
+          }
+        ]
+      },
+      "creates": {},
+      "prediction": "killed",
+      "why": "the file fails to load; vitest reports a failed file and exits non-zero",
+      "observed": {
+        "exit": 1,
+        "total": 0,
+        "failed": 0,
+        "failedTitles": [],
+        "failureMessages": [],
+        "fileErrors": [
+          "Cannot find package 'typescript-missing' imported from '/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-546/clone/apps/three-surface-poc/src/polaris-generation/generation-mutation.test.ts'"
+        ]
+      },
+      "outcome": "killed",
+      "matchesPrediction": true,
+      "restored": true
+    },
+    {
+      "id": "Q22",
+      "aim": "check-side: removeComments dropped, with R1's source edit",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.test.ts": [
+          {
+            "old": "compilerOptions: { removeComments: true, target:",
+            "new": "compilerOptions: { target:"
+          }
+        ],
+        "packages/polaris-generation-core/src/pipeline.ts": [
+          {
+            "old": "      if (calls >= budget.maxCalls) stop('budget-exhausted');",
+            "new": "      if (budget.maxCalls <= calls) stop('budget-exhausted'); // was: if (calls >= budget.maxCalls) stop('budget-exhausted');"
+          }
+        ]
+      },
+      "creates": {},
+      "prediction": "survived",
+      "why": "without removeComments the comment edit changes the emit; shows the option is load-bearing",
+      "observed": {
+        "exit": 0,
+        "total": 13,
+        "failed": 0,
+        "failedTitles": [],
+        "failureMessages": [],
+        "fileErrors": []
+      },
+      "outcome": "survived",
+      "matchesPrediction": true,
+      "restored": true
+    },
+    {
+      "id": "Q23",
+      "aim": "check-side: substring title match replaced by equality",
+      "edits": {
+        "apps/three-surface-poc/src/polaris-generation/generation-mutation.test.ts": [
+          {
+            "old": "titles.some((title) => title.includes(name))",
+            "new": "titles.some((title) => title === name)"
+          }
+        ]
+      },
+      "creates": {},
+      "prediction": "killed",
+      "why": "the two parse-json names are prefixes of each templates, so substring matching is load-bearing",
+      "observed": {
+        "exit": 1,
+        "total": 13,
+        "failed": 2,
+        "failedTitles": [
+          "parse-json-duplicate-key-check-disabled: names a non-test file under polaris-generation-core/src, holds its fragment once there, changes the emit and names must-fail tests the runner runs",
+          "parse-json-pollution-key-check-disabled: names a non-test file under polaris-generation-core/src, holds its fragment once there, changes the emit and names must-fail tests the runner runs"
+        ],
+        "failureMessages": [
+          "AssertionError: parse-json-duplicate-key-check-disabled: must-fail \"rejects duplicate decoded keys\" is in a test title: expected false to be true // Object.is equality",
+          "AssertionError: parse-json-pollution-key-check-disabled: must-fail \"rejects pollution keys\" is in a test title: expected false to be true // Object.is equality"
+        ],
+        "fileErrors": []
+      },
+      "outcome": "killed",
+      "matchesPrediction": true,
+      "restored": true
+    }
+  ],
+  "treeCleanAfter": true,
+  "summary": {
+    "mutants": 24,
+    "killed": 11,
+    "survived": 13,
+    "matchesPrediction": 24,
+    "restored": 24
+  }
+}

@@ -1,0 +1,10 @@
+apps/three-surface-poc/src/capture-test-artifact-main.test.ts
+apps/three-surface-poc/src/main.test.ts
+apps/three-surface-poc/src/polaris-generation/redis-shaped-discovery.test.ts
+apps/three-surface-poc/src/polaris-generation/self-corpus.test.ts
+packages/cap1-system/src/daemon-entry-unchanged.system.test.ts
+packages/polaris-dossier/src/git-object-reader.test.ts
+packages/polaris-generation-core/src/dossier-evaluation.test.ts
+packages/polaris-generation-core/src/dossier-profile.test.ts
+packages/polaris-generation-core/src/excerpt.test.ts
+packages/three-surface-poc-core/src/test-artifact-verification.test.ts

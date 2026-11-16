@@ -1,0 +1,9 @@
+{
+  "epistemic": "Observed",
+  "purpose": "Independent synthetic literal projections, not generated pages or complete PocModel instances. The omitted unrelated entities/relationships/verification/shape fields are outside the sample.",
+  "provenance": "Written here from literals; no imports of product code, candidate builder, candidate fixtures, serializer, renderer, reader, provider or daemon.",
+  "selection": "Both served items are rendered. This does not exercise or change current 200/50 selection.",
+  "unknownSubjects": "Only the three governing-intent subjects are included. No subject is pooled or renamed; unrelated subjects are omitted from both projections.",
+  "bodyB": "Separate evaluation and observation. Its shared value happens to have the same literal bytes; a successful prior body must not fill a missing value in this body.",
+  "failure": "EXPECTED-REFUSAL.json is a normative expected example only; no runtime refusal or HTTP conformance is claimed."
+}

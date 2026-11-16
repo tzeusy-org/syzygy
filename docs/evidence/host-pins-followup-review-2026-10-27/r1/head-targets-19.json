@@ -1,0 +1,364 @@
+{
+ "tree": "clone",
+ "commit": "fb481b4d3b815e20ceeb245a22f6e8c6e6e32788",
+ "results": [
+  {
+   "id": "CONTROL",
+   "commit": "fb481b4d3b815e20ceeb245a22f6e8c6e6e32788",
+   "edits": [],
+   "files": [
+    "packages/http-host/src/credentials.test.ts",
+    "packages/http-host/src/shutdown.test.ts",
+    "packages/http-host/src/package.test.ts",
+    "packages/cap1-daemon/src/",
+    "packages/cap1-conformance/src/",
+    "apps/three-surface-poc/src/routes.test.ts",
+    "apps/three-surface-poc/src/response-limits.test.ts",
+    "apps/three-surface-poc/src/main.test.ts",
+    "apps/three-surface-poc/src/surface-routes.test.ts",
+    "apps/three-surface-poc/src/reobserve-action.test.ts",
+    "apps/three-surface-poc/src/materialize-action.test.ts",
+    "apps/three-surface-poc/src/browser-origin.test.ts",
+    "apps/three-surface-poc/src/git-observation.test.ts",
+    "apps/three-surface-poc/src/verbatim-route.test.ts",
+    "apps/three-surface-poc/src/polaris-source-route.test.ts",
+    "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+    "apps/three-surface-poc/src/evaluation-footer.test.ts",
+    "apps/three-surface-poc/src/page-size-delta.test.ts",
+    "apps/three-surface-poc/src/tuple-encoding.test.ts"
+   ],
+   "loadBefore": "24.82",
+   "seconds": 16.3,
+   "loadAfter": "25.46",
+   "exit": 0,
+   "totalTests": 582,
+   "passedTests": 582,
+   "failedTests": 0,
+   "pendingTests": 0,
+   "todoTests": 0,
+   "testFiles": 69,
+   "failedFiles": 0,
+   "failed": [],
+   "outcome": "survived",
+   "cleanAfter": true
+  },
+  {
+   "id": "V2-bearer-leading-whitespace-admitted",
+   "commit": "fb481b4d3b815e20ceeb245a22f6e8c6e6e32788",
+   "edits": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "old": "  const match = /^Bearer (.+)$/.exec(header);",
+     "new": "  const match = /^\\s*Bearer (.+)$/.exec(header);"
+    }
+   ],
+   "files": [
+    "packages/http-host/src/credentials.test.ts",
+    "packages/http-host/src/shutdown.test.ts",
+    "packages/http-host/src/package.test.ts",
+    "packages/cap1-daemon/src/",
+    "packages/cap1-conformance/src/",
+    "apps/three-surface-poc/src/routes.test.ts",
+    "apps/three-surface-poc/src/response-limits.test.ts",
+    "apps/three-surface-poc/src/main.test.ts",
+    "apps/three-surface-poc/src/surface-routes.test.ts",
+    "apps/three-surface-poc/src/reobserve-action.test.ts",
+    "apps/three-surface-poc/src/materialize-action.test.ts",
+    "apps/three-surface-poc/src/browser-origin.test.ts",
+    "apps/three-surface-poc/src/git-observation.test.ts",
+    "apps/three-surface-poc/src/verbatim-route.test.ts",
+    "apps/three-surface-poc/src/polaris-source-route.test.ts",
+    "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+    "apps/three-surface-poc/src/evaluation-footer.test.ts",
+    "apps/three-surface-poc/src/page-size-delta.test.ts",
+    "apps/three-surface-poc/src/tuple-encoding.test.ts"
+   ],
+   "loadBefore": "25.46",
+   "seconds": 19.4,
+   "loadAfter": "26.76",
+   "exit": 1,
+   "totalTests": 582,
+   "passedTests": 581,
+   "failedTests": 1,
+   "pendingTests": 0,
+   "todoTests": 0,
+   "testFiles": 69,
+   "failedFiles": 1,
+   "failed": [
+    {
+     "file": "packages/http-host/src/credentials.test.ts",
+     "title": "RT3 \u2014 credential verification through core admission the minted token behind any other whitespace refuses, named",
+     "timedOut": false,
+     "message": "AssertionError: \" Bearer aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\": expected { admitted: true, \u2026(1) } to deeply equal { admitted: false, served: 'nothing' }\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-542/clone/packages/"
+    }
+   ],
+   "outcome": "killed",
+   "cleanAfter": true
+  },
+  {
+   "id": "V4-containment-case-insensitive",
+   "commit": "fb481b4d3b815e20ceeb245a22f6e8c6e6e32788",
+   "edits": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "old": "  return candidate === root || candidate.startsWith(root + path.sep);",
+     "new": "  return candidate.toLowerCase() === root.toLowerCase() || candidate.toLowerCase().startsWith(root.toLowerCase() + path.sep);"
+    }
+   ],
+   "files": [
+    "packages/http-host/src/credentials.test.ts",
+    "packages/http-host/src/shutdown.test.ts",
+    "packages/http-host/src/package.test.ts",
+    "packages/cap1-daemon/src/",
+    "packages/cap1-conformance/src/",
+    "apps/three-surface-poc/src/routes.test.ts",
+    "apps/three-surface-poc/src/response-limits.test.ts",
+    "apps/three-surface-poc/src/main.test.ts",
+    "apps/three-surface-poc/src/surface-routes.test.ts",
+    "apps/three-surface-poc/src/reobserve-action.test.ts",
+    "apps/three-surface-poc/src/materialize-action.test.ts",
+    "apps/three-surface-poc/src/browser-origin.test.ts",
+    "apps/three-surface-poc/src/git-observation.test.ts",
+    "apps/three-surface-poc/src/verbatim-route.test.ts",
+    "apps/three-surface-poc/src/polaris-source-route.test.ts",
+    "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+    "apps/three-surface-poc/src/evaluation-footer.test.ts",
+    "apps/three-surface-poc/src/page-size-delta.test.ts",
+    "apps/three-surface-poc/src/tuple-encoding.test.ts"
+   ],
+   "loadBefore": "26.76",
+   "seconds": 20.2,
+   "loadAfter": "27.50",
+   "exit": 1,
+   "totalTests": 582,
+   "passedTests": 581,
+   "failedTests": 1,
+   "pendingTests": 0,
+   "todoTests": 0,
+   "testFiles": 69,
+   "failedFiles": 1,
+   "failed": [
+    {
+     "file": "packages/http-host/src/credentials.test.ts",
+     "title": "RT3 \u2014 state-write boundary refuses a sibling whose name differs from the state dir name only in case, as traversal",
+     "timedOut": false,
+     "message": "AssertionError: expected true to be false // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-542/clone/packages/http-host/src/credentials.test.ts:305:33\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a3"
+    }
+   ],
+   "outcome": "killed",
+   "cleanAfter": true
+  },
+  {
+   "id": "V6-origin-suffix-match",
+   "commit": "fb481b4d3b815e20ceeb245a22f6e8c6e6e32788",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/browser-origin.ts",
+     "old": "  return origin === undefined || origin === expectedOrigin(host);",
+     "new": "  return origin === undefined || origin.endsWith(expectedOrigin(host));"
+    }
+   ],
+   "files": [
+    "packages/http-host/src/credentials.test.ts",
+    "packages/http-host/src/shutdown.test.ts",
+    "packages/http-host/src/package.test.ts",
+    "packages/cap1-daemon/src/",
+    "packages/cap1-conformance/src/",
+    "apps/three-surface-poc/src/routes.test.ts",
+    "apps/three-surface-poc/src/response-limits.test.ts",
+    "apps/three-surface-poc/src/main.test.ts",
+    "apps/three-surface-poc/src/surface-routes.test.ts",
+    "apps/three-surface-poc/src/reobserve-action.test.ts",
+    "apps/three-surface-poc/src/materialize-action.test.ts",
+    "apps/three-surface-poc/src/browser-origin.test.ts",
+    "apps/three-surface-poc/src/git-observation.test.ts",
+    "apps/three-surface-poc/src/verbatim-route.test.ts",
+    "apps/three-surface-poc/src/polaris-source-route.test.ts",
+    "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+    "apps/three-surface-poc/src/evaluation-footer.test.ts",
+    "apps/three-surface-poc/src/page-size-delta.test.ts",
+    "apps/three-surface-poc/src/tuple-encoding.test.ts"
+   ],
+   "loadBefore": "27.50",
+   "seconds": 19.9,
+   "loadAfter": "30.73",
+   "exit": 1,
+   "totalTests": 582,
+   "passedTests": 581,
+   "failedTests": 1,
+   "pendingTests": 0,
+   "todoTests": 0,
+   "testFiles": 69,
+   "failedFiles": 1,
+   "failed": [
+    {
+     "file": "apps/three-surface-poc/src/browser-origin.test.ts",
+     "title": "browserRequestAllowed \u2014 the Origin is compared whole refuses an origin that only ends with the host origin, and the opaque origin null",
+     "timedOut": false,
+     "message": "AssertionError: expected true to be false // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-542/clone/apps/three-surface-poc/src/browser-origin.test.ts:32:120\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-"
+    }
+   ],
+   "outcome": "killed",
+   "cleanAfter": true
+  },
+  {
+   "id": "V10-listed-reason-matched-case-insensitively",
+   "commit": "fb481b4d3b815e20ceeb245a22f6e8c6e6e32788",
+   "edits": [
+    {
+     "file": "packages/http-host/src/server.ts",
+     "old": "['project shape not-evaluated', 'project shape not-admitted', 'project shape observation-failed'].includes(population.reason)",
+     "new": "['project shape not-evaluated', 'project shape not-admitted', 'project shape observation-failed'].includes(population.reason.toLowerCase())"
+    }
+   ],
+   "files": [
+    "packages/http-host/src/credentials.test.ts",
+    "packages/http-host/src/shutdown.test.ts",
+    "packages/http-host/src/package.test.ts",
+    "packages/cap1-daemon/src/",
+    "packages/cap1-conformance/src/",
+    "apps/three-surface-poc/src/routes.test.ts",
+    "apps/three-surface-poc/src/response-limits.test.ts",
+    "apps/three-surface-poc/src/main.test.ts",
+    "apps/three-surface-poc/src/surface-routes.test.ts",
+    "apps/three-surface-poc/src/reobserve-action.test.ts",
+    "apps/three-surface-poc/src/materialize-action.test.ts",
+    "apps/three-surface-poc/src/browser-origin.test.ts",
+    "apps/three-surface-poc/src/git-observation.test.ts",
+    "apps/three-surface-poc/src/verbatim-route.test.ts",
+    "apps/three-surface-poc/src/polaris-source-route.test.ts",
+    "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+    "apps/three-surface-poc/src/evaluation-footer.test.ts",
+    "apps/three-surface-poc/src/page-size-delta.test.ts",
+    "apps/three-surface-poc/src/tuple-encoding.test.ts"
+   ],
+   "loadBefore": "30.73",
+   "seconds": 18.1,
+   "loadAfter": "29.74",
+   "exit": 1,
+   "totalTests": 582,
+   "passedTests": 581,
+   "failedTests": 1,
+   "pendingTests": 0,
+   "todoTests": 0,
+   "testFiles": 69,
+   "failedFiles": 1,
+   "failed": [
+    {
+     "file": "packages/cap1-daemon/src/server.test.ts",
+     "title": "RT3 \u2014 credential-classed admission at the transport logs a 503 breach diagnostic for each listed Unknown population and withholds an unlisted one",
+     "timedOut": false,
+     "message": "AssertionError: expected [ { \u2026(12) }, { \u2026(12) }, \u2026(3) ] to deeply equal [ { \u2026(12) }, { \u2026(12) }, \u2026(3) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-542/clone/packages/cap1-daemon/src/server.test.ts:161:58\n    at processTicksAndRejections (node:i"
+    }
+   ],
+   "outcome": "killed",
+   "cleanAfter": true
+  },
+  {
+   "id": "O1-bearer-no-break-space-admitted",
+   "commit": "fb481b4d3b815e20ceeb245a22f6e8c6e6e32788",
+   "edits": [
+    {
+     "file": "packages/http-host/src/credentials.ts",
+     "old": "  const match = /^Bearer (.+)$/.exec(header);",
+     "new": "  const match = /^Bearer[ \\u00a0](.+)$/.exec(header);"
+    }
+   ],
+   "files": [
+    "packages/http-host/src/credentials.test.ts",
+    "packages/http-host/src/shutdown.test.ts",
+    "packages/http-host/src/package.test.ts",
+    "packages/cap1-daemon/src/",
+    "packages/cap1-conformance/src/",
+    "apps/three-surface-poc/src/routes.test.ts",
+    "apps/three-surface-poc/src/response-limits.test.ts",
+    "apps/three-surface-poc/src/main.test.ts",
+    "apps/three-surface-poc/src/surface-routes.test.ts",
+    "apps/three-surface-poc/src/reobserve-action.test.ts",
+    "apps/three-surface-poc/src/materialize-action.test.ts",
+    "apps/three-surface-poc/src/browser-origin.test.ts",
+    "apps/three-surface-poc/src/git-observation.test.ts",
+    "apps/three-surface-poc/src/verbatim-route.test.ts",
+    "apps/three-surface-poc/src/polaris-source-route.test.ts",
+    "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+    "apps/three-surface-poc/src/evaluation-footer.test.ts",
+    "apps/three-surface-poc/src/page-size-delta.test.ts",
+    "apps/three-surface-poc/src/tuple-encoding.test.ts"
+   ],
+   "loadBefore": "29.74",
+   "seconds": 17.3,
+   "loadAfter": "31.18",
+   "exit": 1,
+   "totalTests": 582,
+   "passedTests": 581,
+   "failedTests": 1,
+   "pendingTests": 0,
+   "todoTests": 0,
+   "testFiles": 69,
+   "failedFiles": 1,
+   "failed": [
+    {
+     "file": "packages/http-host/src/credentials.test.ts",
+     "title": "RT3 \u2014 credential verification through core admission the minted token behind any other whitespace refuses, named",
+     "timedOut": false,
+     "message": "AssertionError: \"Bearer\u00a0aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\": expected { admitted: true, \u2026(1) } to deeply equal { admitted: false, served: 'nothing' }\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-542/clone/packages/h"
+    }
+   ],
+   "outcome": "killed",
+   "cleanAfter": true
+  },
+  {
+   "id": "O2-origin-null-allowed",
+   "commit": "fb481b4d3b815e20ceeb245a22f6e8c6e6e32788",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/browser-origin.ts",
+     "old": "  return origin === undefined || origin === expectedOrigin(host);",
+     "new": "  return origin === undefined || origin === 'null' || origin === expectedOrigin(host);"
+    }
+   ],
+   "files": [
+    "packages/http-host/src/credentials.test.ts",
+    "packages/http-host/src/shutdown.test.ts",
+    "packages/http-host/src/package.test.ts",
+    "packages/cap1-daemon/src/",
+    "packages/cap1-conformance/src/",
+    "apps/three-surface-poc/src/routes.test.ts",
+    "apps/three-surface-poc/src/response-limits.test.ts",
+    "apps/three-surface-poc/src/main.test.ts",
+    "apps/three-surface-poc/src/surface-routes.test.ts",
+    "apps/three-surface-poc/src/reobserve-action.test.ts",
+    "apps/three-surface-poc/src/materialize-action.test.ts",
+    "apps/three-surface-poc/src/browser-origin.test.ts",
+    "apps/three-surface-poc/src/git-observation.test.ts",
+    "apps/three-surface-poc/src/verbatim-route.test.ts",
+    "apps/three-surface-poc/src/polaris-source-route.test.ts",
+    "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+    "apps/three-surface-poc/src/evaluation-footer.test.ts",
+    "apps/three-surface-poc/src/page-size-delta.test.ts",
+    "apps/three-surface-poc/src/tuple-encoding.test.ts"
+   ],
+   "loadBefore": "31.18",
+   "seconds": 18.2,
+   "loadAfter": "31.23",
+   "exit": 1,
+   "totalTests": 582,
+   "passedTests": 581,
+   "failedTests": 1,
+   "pendingTests": 0,
+   "todoTests": 0,
+   "testFiles": 69,
+   "failedFiles": 1,
+   "failed": [
+    {
+     "file": "apps/three-surface-poc/src/browser-origin.test.ts",
+     "title": "browserRequestAllowed \u2014 the Origin is compared whole refuses an origin that only ends with the host origin, and the opaque origin null",
+     "timedOut": false,
+     "message": "AssertionError: expected true to be false // Object.is equality\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-542/clone/apps/three-surface-poc/src/browser-origin.test.ts:33:79\n    at file:///tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4"
+    }
+   ],
+   "outcome": "killed",
+   "cleanAfter": true
+  }
+ ]
+}

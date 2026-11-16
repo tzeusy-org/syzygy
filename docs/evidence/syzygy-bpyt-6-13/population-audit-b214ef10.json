@@ -1,0 +1,103 @@
+{
+ "commit": "b214ef10",
+ "populationAllTsUnderSrc": 512,
+ "nameRule": {
+  "files": 241,
+  "createHashSha256Sites": 6,
+  "localSha256Definitions": 1,
+  "localDeepFreezeDefinitions": 1
+ },
+ "reachabilityRule": {
+  "files": 245,
+  "createHashSha256Sites": 6,
+  "localSha256Definitions": 1,
+  "localDeepFreezeDefinitions": 1
+ },
+ "basenameOnlyFiles": [
+  {
+   "file": "apps/three-surface-poc/src/test-deep-dive-markers.ts",
+   "importers": 2,
+   "productionImporters": [],
+   "sites": [],
+   "inUnderReachability": false
+  },
+  {
+   "file": "apps/three-surface-poc/src/test-fixture-sweep.global-setup.ts",
+   "importers": 1,
+   "productionImporters": [],
+   "sites": [],
+   "inUnderReachability": false
+  },
+  {
+   "file": "apps/three-surface-poc/src/test-http-client.ts",
+   "importers": 4,
+   "productionImporters": [],
+   "sites": [],
+   "inUnderReachability": false
+  },
+  {
+   "file": "apps/three-surface-poc/src/test-model-fixture.ts",
+   "importers": 41,
+   "productionImporters": [
+    "apps/three-surface-poc/src/polaris-accessibility-variants.ts"
+   ],
+   "sites": [],
+   "inUnderReachability": true
+  },
+  {
+   "file": "apps/three-surface-poc/src/test-project-shape-fixture.ts",
+   "importers": 27,
+   "productionImporters": [
+    "apps/three-surface-poc/src/polaris-accessibility-variants.ts"
+   ],
+   "sites": [],
+   "inUnderReachability": true
+  },
+  {
+   "file": "apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts",
+   "importers": 6,
+   "productionImporters": [
+    "apps/three-surface-poc/src/polaris-accessibility-variants.ts"
+   ],
+   "sites": [],
+   "inUnderReachability": true
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-artifact-verification.ts",
+   "importers": 5,
+   "productionImporters": [
+    "packages/three-surface-poc-core/src/index.ts",
+    "packages/three-surface-poc-core/src/model.ts"
+   ],
+   "sites": [],
+   "inUnderReachability": true
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-cleanup.ts",
+   "importers": 2,
+   "productionImporters": [],
+   "sites": [],
+   "inUnderReachability": false
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/test-frozen.ts",
+   "importers": 3,
+   "productionImporters": [],
+   "sites": [],
+   "inUnderReachability": false
+  }
+ ],
+ "secondMethod": {
+  "createHashSha256PerBasenameOnlyFile": {
+   "apps/three-surface-poc/src/test-deep-dive-markers.ts": 0,
+   "apps/three-surface-poc/src/test-fixture-sweep.global-setup.ts": 0,
+   "apps/three-surface-poc/src/test-http-client.ts": 0,
+   "apps/three-surface-poc/src/test-model-fixture.ts": 0,
+   "apps/three-surface-poc/src/test-project-shape-fixture.ts": 0,
+   "apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts": 0,
+   "packages/three-surface-poc-core/src/test-artifact-verification.ts": 0,
+   "packages/three-surface-poc-core/src/test-cleanup.ts": 0,
+   "packages/three-surface-poc-core/src/test-frozen.ts": 0
+  }
+ }
+}

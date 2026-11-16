@@ -1,0 +1,13 @@
+[
+ {
+  "id": "E9-obfuscated-file-read-at-import (RP6 form)",
+  "kind": "globalThis['process'].getBuiltinModule('node:f' + 's').readFileSync('/etc/hostname') at import: non-network I/O in a form the purity test accepts",
+  "edits": [
+   {
+    "path": "packages/support/src/sha256.ts",
+    "old": "import { createHash } from 'node:crypto';\n",
+    "new": "import { createHash } from 'node:crypto';\nconst p = (globalThis as Record<string, any>)['process'];\nexport const HOST: string = p.getBuiltinModule('node:f' + 's').readFileSync('/etc/hostname', 'utf8');\n"
+   }
+  ]
+ }
+]

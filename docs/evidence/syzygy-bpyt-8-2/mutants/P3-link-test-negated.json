@@ -1,0 +1,11 @@
+{
+ "id": "P3-link-test-negated",
+ "command": "TMPDIR=/tmp/la-b82/g CI=1 npx vitest run --project @syzygy/polaris-dossier packages/polaris-dossier/src/state-directory.test.ts",
+ "edits": [
+  {
+   "file": "packages/polaris-dossier/src/state-directory.ts",
+   "old": "if (!stats.isSymbolicLink()) continue;",
+   "new": "if (stats.isSymbolicLink()) continue;"
+  }
+ ]
+}

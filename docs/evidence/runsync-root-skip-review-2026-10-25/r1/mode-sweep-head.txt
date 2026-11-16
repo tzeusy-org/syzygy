@@ -1,0 +1,7 @@
+commit f7bbb93a005b45c2866d8a9993afbca44cd1a34f: 14 tracked files under packages/cap1-system
+packages/cap1-system/src/fresh-clone.system.test.ts:37: [skip] it.skipIf(!RUN_FRESH_CLONE)(
+packages/cap1-system/src/state-dir.system.test.ts:34: [skip] const isRoot = process.getuid?.() === 0;
+packages/cap1-system/src/state-dir.system.test.ts:358: [skip] it.skipIf(isRoot)('rejects an unreadable state-dir path as named invalid before writes or a listener', async () => {
+packages/cap1-system/src/state-dir.system.test.ts:366: [chmod,mode000] chmodSync(blocked, 0o000);
+packages/cap1-system/src/state-dir.system.test.ts:367: [chmod] cleanups.push(() => chmodSync(blocked, 0o700));
+totals (lines) {'chmod': 2, 'mode000': 1, 'skip': 3}

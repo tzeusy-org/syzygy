@@ -1,0 +1,1330 @@
+{
+ "tool": "digest_sweep.py",
+ "population": "abc40c9a",
+ "filesInPopulation": 5930,
+ "needles": [
+  {
+   "path": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "side": "base",
+   "commit": "a5ab2b28",
+   "bytes": 6712,
+   "sha256": "01fc903901fc09082ce4923bf7bdcf4937b492ef93e62058be5a7c04ca87395e",
+   "gitBlob": "4435c52a53aa467cf955523922557fcf5aa62ab2"
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "side": "head",
+   "commit": "abc40c9a",
+   "bytes": 6593,
+   "sha256": "6098ed3fdd6d5055cf7952e836c25c9474239f6b2e2ac60d8e03af836be4d8dc",
+   "gitBlob": "82494cbd10999a1825e703aefe51daaf0337c1ef"
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/code-structure.ts",
+   "side": "base",
+   "commit": "a5ab2b28",
+   "bytes": 6943,
+   "sha256": "ef137dafdd666104b9249d5516b0567e8daf9db7a5814c68c29e362f87ca56c1",
+   "gitBlob": "adb48b93859e51ed02fa370a06c71574c678e6f4"
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/code-structure.ts",
+   "side": "head",
+   "commit": "abc40c9a",
+   "bytes": 7244,
+   "sha256": "bc56dca9270b397298a578f109ddfee47ccbf9b7b9830eb9f3dfef2c68e241b1",
+   "gitBlob": "d866e4b578c29d404cae38c35f0af9f4e9dff4b4"
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/git-object-reader.ts",
+   "side": "base",
+   "commit": "a5ab2b28",
+   "bytes": 19016,
+   "sha256": "19405187526e79585f92b65a926a07492929ea7335dd5a4994b8f204b7a0bf46",
+   "gitBlob": "637769ce407210155130e0581791676bcac0a2bd"
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/git-object-reader.ts",
+   "side": "head",
+   "commit": "abc40c9a",
+   "bytes": 18816,
+   "sha256": "76ac22aab6091645ea4ed6a562efc4984e7a4e38a7fb1777aa2fe3bd738f7b65",
+   "gitBlob": "26d231faabbce957d4d8d70f379d0925220c04a8"
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+   "side": "base",
+   "commit": "a5ab2b28",
+   "bytes": 23190,
+   "sha256": "c32ab4e3dbe509413a4d31afc1bb7a68c1a5a8b2b1d21945b72deb9e54617e34",
+   "gitBlob": "c2d2d95640a96bf4232c64330332f3dc7cad5517"
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+   "side": "head",
+   "commit": "abc40c9a",
+   "bytes": 23450,
+   "sha256": "a6401c017b2743d11d72b71532372c412a9c91287cecd3ebe60df40b4a37b852",
+   "gitBlob": "35fa82a5f0ea8fefebb8c37cef788997ed23f55c"
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+   "side": "base",
+   "commit": "a5ab2b28",
+   "bytes": 29620,
+   "sha256": "db2cd5cfb37f45895ca0794169339ca680918d0111c658534e6ede301a8d04a0",
+   "gitBlob": "1aeafc325cab69e22e795872bea5b81e27a64240"
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+   "side": "head",
+   "commit": "abc40c9a",
+   "bytes": 29420,
+   "sha256": "b57746bb67286dfbe3ed0deaaf844e11d8568936b94c79cc0262ea912b635bff",
+   "gitBlob": "3b6d754b7a30e9a67c893fa0215d2c646109dcce"
+  },
+  {
+   "path": "packages/polaris-generation-core/src/canonical-json.ts",
+   "side": "base",
+   "commit": "a5ab2b28",
+   "bytes": 4829,
+   "sha256": "4d7e745dc505c0de74666511a90ccda4673a5bc3d3e9deb73f424bce92875608",
+   "gitBlob": "4925daed61da1c21d34ba6335f5cb16863312f1e"
+  },
+  {
+   "path": "packages/polaris-generation-core/src/canonical-json.ts",
+   "side": "head",
+   "commit": "abc40c9a",
+   "bytes": 4971,
+   "sha256": "c51a3ca5ec1210e06fb462088c8a9fd541168de9c333b114cb8369621ebce7ed",
+   "gitBlob": "a2324fcc59e90bd791a07646042880f0fe781889"
+  },
+  {
+   "path": "packages/support/src/index.ts",
+   "side": "base",
+   "commit": "a5ab2b28",
+   "bytes": 531,
+   "sha256": "9b82aa1f60a468084496a62c2dc22775171c4678f663761e463e3f120a99d1bb",
+   "gitBlob": "11bd1b83b741d61264e31db01b86e019ff5ee4ac"
+  },
+  {
+   "path": "packages/support/src/index.ts",
+   "side": "head",
+   "commit": "abc40c9a",
+   "bytes": 578,
+   "sha256": "a4b3aa184877c9851ee46623e00c33a5ebbf25029d7ca16ff7324a6e7d31ea56",
+   "gitBlob": "41a9a88a9a2b771a4709f5d8dc450f296fb4815d"
+  },
+  {
+   "path": "packages/support/src/decode-utf8.ts",
+   "side": "head",
+   "commit": "abc40c9a",
+   "bytes": 433,
+   "sha256": "f57863901787c528672976af4efd285d6daf8d3895df9d332c28724ac435ca27",
+   "gitBlob": "953a049f8b1453e5ab04d61f9a33725f40c48e8d"
+  }
+ ],
+ "needleCount": 30,
+ "hits": [
+  {
+   "needle": "packages/three-surface-poc-core/src/authority-artifact-fields.ts@base:sha256",
+   "file": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/STATIC-TRACE.json",
+   "offset": 165216,
+   "matchedHex": 64,
+   "governedTree": true
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/authority-artifact-fields.ts@base:sha256",
+   "file": "docs/evidence/live-verification-test-no-spawn-mutants-2026-10-07.json",
+   "offset": 916,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/authority-artifact-fields.ts@base:sha256",
+   "file": "docs/evidence/live-verification-test-no-spawn-mutants-round1-repairs-2026-10-07.json",
+   "offset": 1018,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/authority-artifact-fields.ts@base:sha256",
+   "file": "docs/evidence/live-verification-test-no-spawn-mutants-round2-repairs-2026-10-07.json",
+   "offset": 1131,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/authority-artifact-fields.ts@base:sha256",
+   "file": "docs/evidence/live-verification-test-no-spawn-mutants-round3-repairs-2026-10-07.json",
+   "offset": 1241,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/authority-artifact-fields.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/comment-only-merged-a5ab2b28-a5b1d532.json",
+   "offset": 4219,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/authority-artifact-fields.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "offset": 1530,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/authority-artifact-fields.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json",
+   "offset": 2057,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/authority-artifact-fields.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json",
+   "offset": 4499,
+   "matchedHex": 8,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/authority-artifact-fields.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json",
+   "offset": 4987,
+   "matchedHex": 12,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/authority-artifact-fields.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json",
+   "offset": 5430,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/authority-artifact-fields.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json",
+   "offset": 1789,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/authority-artifact-fields.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json",
+   "offset": 3631,
+   "matchedHex": 12,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/authority-artifact-fields.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json",
+   "offset": 4074,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/authority-artifact-fields.ts@base:sha256",
+   "file": "docs/reviews/R-LIVE-TEST-NO-SPAWN-1-RAW.md",
+   "offset": 11634,
+   "matchedHex": 8,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/authority-artifact-fields.ts@base:sha256",
+   "file": "docs/reviews/R-P110-EXPLICIT-SELECTION-PROBES-EFCBB78F-1-RAW.md",
+   "offset": 5417,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/authority-artifact-fields.ts@base:gitBlob",
+   "file": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/STATIC-TRACE.json",
+   "offset": 165156,
+   "matchedHex": 40,
+   "governedTree": true
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/authority-artifact-fields.ts@base:gitBlob",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json",
+   "offset": 2141,
+   "matchedHex": 40,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/authority-artifact-fields.ts@head:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/comment-only-merged-a5ab2b28-a5b1d532.json",
+   "offset": 4310,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/authority-artifact-fields.ts@head:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "offset": 1616,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/authority-artifact-fields.ts@head:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json",
+   "offset": 2302,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/authority-artifact-fields.ts@head:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json",
+   "offset": 1974,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/authority-artifact-fields.ts@head:gitBlob",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json",
+   "offset": 2386,
+   "matchedHex": 40,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/code-structure.ts@base:sha256",
+   "file": "docs/evidence/code-structure-ls-tree-z-differential-2026-10-21-r3.json",
+   "offset": 812,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/code-structure.ts@base:sha256",
+   "file": "docs/evidence/code-structure-ls-tree-z-differential-2026-10-21-r3.json",
+   "offset": 28897,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/code-structure.ts@base:sha256",
+   "file": "docs/evidence/code-structure-ls-tree-z-mutants-2026-10-21-r3.json",
+   "offset": 257,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/code-structure.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/comment-only-merged-a5ab2b28-a5b1d532.json",
+   "offset": 4698,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/code-structure.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "offset": 1781,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/code-structure.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json",
+   "offset": 2536,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/code-structure.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json",
+   "offset": 5925,
+   "matchedHex": 8,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/code-structure.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json",
+   "offset": 6147,
+   "matchedHex": 12,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/code-structure.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json",
+   "offset": 6373,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/code-structure.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json",
+   "offset": 2148,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/code-structure.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json",
+   "offset": 4569,
+   "matchedHex": 12,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/code-structure.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json",
+   "offset": 4795,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/code-structure.ts@base:sha256",
+   "file": "docs/reviews/R-GP-IMPL-CODE-STRUCTURE-3-RAW.md",
+   "offset": 3391,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/code-structure.ts@base:gitBlob",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json",
+   "offset": 2620,
+   "matchedHex": 40,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/code-structure.ts@head:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/comment-only-merged-a5ab2b28-a5b1d532.json",
+   "offset": 4789,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/code-structure.ts@head:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "offset": 2138,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/code-structure.ts@head:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "offset": 4016,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/code-structure.ts@head:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "offset": 48733,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/code-structure.ts@head:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json",
+   "offset": 2770,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/code-structure.ts@head:gitBlob",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json",
+   "offset": 2854,
+   "matchedHex": 40,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/git-object-reader.ts@base:sha256",
+   "file": "docs/evidence/fence-rules-review-2026-10-27/r1/negctl.json",
+   "offset": 26610,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/git-object-reader.ts@base:sha256",
+   "file": "docs/evidence/fence-rules-review-2026-10-27/r2/out/neg-pr1-ll.json",
+   "offset": 44722,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/git-object-reader.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/comment-only-merged-a5ab2b28-a5b1d532.json",
+   "offset": 5180,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/git-object-reader.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/comment-only-negative-control.json",
+   "offset": 26610,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/git-object-reader.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "offset": 2306,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/git-object-reader.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json",
+   "offset": 3007,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/git-object-reader.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json",
+   "offset": 2499,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/git-object-reader.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/repair1-neg-pr1-line-level.json",
+   "offset": 44786,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/git-object-reader.ts@base:gitBlob",
+   "file": "docs/evidence/support-leaf-review-2026-10-27/round-1/code.diff",
+   "offset": 84182,
+   "matchedHex": 8,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/git-object-reader.ts@base:gitBlob",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json",
+   "offset": 3091,
+   "matchedHex": 40,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/git-object-reader.ts@head:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/comment-only-merged-a5ab2b28-a5b1d532.json",
+   "offset": 5271,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/git-object-reader.ts@head:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "offset": 2392,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/git-object-reader.ts@head:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json",
+   "offset": 3244,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/git-object-reader.ts@head:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json",
+   "offset": 2676,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/git-object-reader.ts@head:gitBlob",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json",
+   "offset": 3328,
+   "matchedHex": 40,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-manifest.ts@base:sha256",
+   "file": "docs/evidence/fence-rules-review-2026-10-27/r1/comment-only-delta.json",
+   "offset": 2340,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-manifest.ts@base:sha256",
+   "file": "docs/evidence/fence-rules-review-2026-10-27/r1/comment-only-mutant-code.json",
+   "offset": 2404,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-manifest.ts@base:sha256",
+   "file": "docs/evidence/fence-rules-review-2026-10-27/r1/comment-only-mutant-typeonly.json",
+   "offset": 2336,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-manifest.ts@base:sha256",
+   "file": "docs/evidence/fence-rules-review-2026-10-27/r1/comment-only-record-range.json",
+   "offset": 2340,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-manifest.ts@base:sha256",
+   "file": "docs/evidence/fence-rules-review-2026-10-27/r1/digest-citers-9d9c98a6.json",
+   "offset": 2090,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-manifest.ts@base:sha256",
+   "file": "docs/evidence/fence-rules-review-2026-10-27/r1/negctl.json",
+   "offset": 28523,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-manifest.ts@base:sha256",
+   "file": "docs/evidence/fence-rules-review-2026-10-27/r2/out/co-f74-ba7.json",
+   "offset": 2340,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-manifest.ts@base:sha256",
+   "file": "docs/evidence/fence-rules-review-2026-10-27/r2/out/ll-f74-ba7.json",
+   "offset": 2955,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-manifest.ts@base:sha256",
+   "file": "docs/evidence/fence-rules-review-2026-10-27/r2/out/neg-code-co.json",
+   "offset": 2440,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-manifest.ts@base:sha256",
+   "file": "docs/evidence/fence-rules-review-2026-10-27/r2/out/neg-code-ll.json",
+   "offset": 3040,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-manifest.ts@base:sha256",
+   "file": "docs/evidence/fence-rules-review-2026-10-27/r2/out/neg-pr1-ll.json",
+   "offset": 48078,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-manifest.ts@base:sha256",
+   "file": "docs/evidence/fence-rules-review-2026-10-27/r2/out/neg-typeonly-co.json",
+   "offset": 2372,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-manifest.ts@base:sha256",
+   "file": "docs/evidence/fence-rules-review-2026-10-27/r2/out/neg-typeonly-ll.json",
+   "offset": 3055,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-manifest.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/comment-only-merged-a5ab2b28-a5b1d532.json",
+   "offset": 6640,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-manifest.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/comment-only-negative-control.json",
+   "offset": 28523,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-manifest.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/comment-only-stack2-a.json",
+   "offset": 956,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-manifest.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/comment-only-stack2-b.json",
+   "offset": 957,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-manifest.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "offset": 2565,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-manifest.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "offset": 64763,
+   "matchedHex": 8,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-manifest.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/dc3-fence-rules-2026-10-25.json",
+   "offset": 4070,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-manifest.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json",
+   "offset": 3486,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-manifest.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json",
+   "offset": 2858,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-manifest.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/fence-digest-citers.json",
+   "offset": 2186,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-manifest.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/repair1-comment-only-f7477f52-ba7fce36.json",
+   "offset": 2340,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-manifest.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/repair1-line-level-f7477f52-ba7fce36.json",
+   "offset": 2955,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-manifest.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/repair1-neg-code-comment-only.json",
+   "offset": 2440,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-manifest.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/repair1-neg-code-line-level.json",
+   "offset": 3040,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-manifest.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/repair1-neg-pr1-line-level.json",
+   "offset": 48142,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-manifest.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/repair1-neg-typeonly-comment-only.json",
+   "offset": 2372,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-manifest.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/repair1-neg-typeonly-line-level.json",
+   "offset": 3055,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-manifest.ts@base:gitBlob",
+   "file": "docs/evidence/support-leaf-review-2026-10-27/round-1/code.diff",
+   "offset": 90466,
+   "matchedHex": 8,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-manifest.ts@base:gitBlob",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json",
+   "offset": 3570,
+   "matchedHex": 40,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-manifest.ts@base:gitBlob",
+   "file": "docs/reviews/R-GP-IMPL-FENCE-RULES-2-RAW.md",
+   "offset": 4119,
+   "matchedHex": 8,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-manifest.ts@head:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/comment-only-merged-a5ab2b28-a5b1d532.json",
+   "offset": 6731,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-manifest.ts@head:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "offset": 64775,
+   "matchedHex": 8,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-observation.ts@base:sha256",
+   "file": "docs/evidence/fence-rules-review-2026-10-27/r1/negctl.json",
+   "offset": 29013,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-observation.ts@base:sha256",
+   "file": "docs/evidence/fence-rules-review-2026-10-27/r2/out/neg-pr1-ll.json",
+   "offset": 48871,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-observation.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/comment-only-merged-a5ab2b28-a5b1d532.json",
+   "offset": 7129,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-observation.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/comment-only-negative-control.json",
+   "offset": 29013,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-observation.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "offset": 2827,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-observation.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json",
+   "offset": 3973,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-observation.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json",
+   "offset": 3225,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-observation.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/repair1-neg-pr1-line-level.json",
+   "offset": 48935,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-observation.ts@base:gitBlob",
+   "file": "docs/evidence/support-leaf-review-2026-10-27/round-1/code.diff",
+   "offset": 91942,
+   "matchedHex": 8,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-observation.ts@base:gitBlob",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json",
+   "offset": 4057,
+   "matchedHex": 40,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-observation.ts@head:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/comment-only-merged-a5ab2b28-a5b1d532.json",
+   "offset": 7220,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-observation.ts@head:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "offset": 2913,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-observation.ts@head:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json",
+   "offset": 4218,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-observation.ts@head:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json",
+   "offset": 3410,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/project-shape-observation.ts@head:gitBlob",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json",
+   "offset": 4302,
+   "matchedHex": 40,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/polaris-generation-core/src/canonical-json.ts@base:sha256",
+   "file": "docs/evidence/fence-rules-review-2026-10-27/r1/negctl.json",
+   "offset": 21506,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/polaris-generation-core/src/canonical-json.ts@base:sha256",
+   "file": "docs/evidence/fence-rules-review-2026-10-27/r2/out/neg-pr1-ll.json",
+   "offset": 36544,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/polaris-generation-core/src/canonical-json.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/comment-only-merged-a5ab2b28-a5b1d532.json",
+   "offset": 2685,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/polaris-generation-core/src/canonical-json.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/comment-only-negative-control.json",
+   "offset": 21506,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/polaris-generation-core/src/canonical-json.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/comment-only-stack2-a.json",
+   "offset": 470,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/polaris-generation-core/src/canonical-json.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/comment-only-stack2-b.json",
+   "offset": 471,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/polaris-generation-core/src/canonical-json.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "offset": 870,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/polaris-generation-core/src/canonical-json.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json",
+   "offset": 941,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/polaris-generation-core/src/canonical-json.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json",
+   "offset": 973,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/polaris-generation-core/src/canonical-json.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/repair1-neg-pr1-line-level.json",
+   "offset": 36608,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/polaris-generation-core/src/canonical-json.ts@base:gitBlob",
+   "file": "docs/evidence/support-leaf-review-2026-10-27/round-1/code.diff",
+   "offset": 62693,
+   "matchedHex": 8,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/polaris-generation-core/src/canonical-json.ts@base:gitBlob",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json",
+   "offset": 1025,
+   "matchedHex": 40,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/polaris-generation-core/src/canonical-json.ts@head:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/comment-only-merged-a5ab2b28-a5b1d532.json",
+   "offset": 2776,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/polaris-generation-core/src/canonical-json.ts@head:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/comment-only-stack2-a.json",
+   "offset": 561,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/polaris-generation-core/src/canonical-json.ts@head:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/comment-only-stack2-b.json",
+   "offset": 562,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/polaris-generation-core/src/canonical-json.ts@head:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "offset": 956,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/polaris-generation-core/src/canonical-json.ts@head:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json",
+   "offset": 1176,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/polaris-generation-core/src/canonical-json.ts@head:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json",
+   "offset": 1148,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/polaris-generation-core/src/canonical-json.ts@head:gitBlob",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json",
+   "offset": 1260,
+   "matchedHex": 40,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/support/src/index.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/comment-only-merged-a5ab2b28-a5b1d532.json",
+   "offset": 3729,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/support/src/index.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "offset": 1268,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/support/src/index.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json",
+   "offset": 1602,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/support/src/index.ts@base:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json",
+   "offset": 1454,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/support/src/index.ts@base:gitBlob",
+   "file": "docs/evidence/support-leaf-review-2026-10-27/round-1/code.diff",
+   "offset": 78044,
+   "matchedHex": 8,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/support/src/index.ts@base:gitBlob",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json",
+   "offset": 1686,
+   "matchedHex": 40,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/support/src/index.ts@head:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/comment-only-merged-a5ab2b28-a5b1d532.json",
+   "offset": 3820,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/support/src/index.ts@head:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "offset": 1354,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/support/src/index.ts@head:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json",
+   "offset": 1812,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/support/src/index.ts@head:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json",
+   "offset": 1604,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/support/src/index.ts@head:gitBlob",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json",
+   "offset": 1896,
+   "matchedHex": 40,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/support/src/decode-utf8.ts@head:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "offset": 1127,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/support/src/decode-utf8.ts@head:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json",
+   "offset": 1392,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/support/src/decode-utf8.ts@head:sha256",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json",
+   "offset": 1304,
+   "matchedHex": 64,
+   "governedTree": false
+  },
+  {
+   "needle": "packages/support/src/decode-utf8.ts@head:gitBlob",
+   "file": "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json",
+   "offset": 1476,
+   "matchedHex": 40,
+   "governedTree": false
+  }
+ ],
+ "hitsInGovernedTrees": [
+  {
+   "needle": "packages/three-surface-poc-core/src/authority-artifact-fields.ts@base:sha256",
+   "file": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/STATIC-TRACE.json",
+   "offset": 165216,
+   "matchedHex": 64,
+   "governedTree": true
+  },
+  {
+   "needle": "packages/three-surface-poc-core/src/authority-artifact-fields.ts@base:gitBlob",
+   "file": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/STATIC-TRACE.json",
+   "offset": 165156,
+   "matchedHex": 40,
+   "governedTree": true
+  }
+ ],
+ "method2FileSets": {
+  "packages/three-surface-poc-core/src/authority-artifact-fields.ts@base:sha256": [
+   ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/STATIC-TRACE.json",
+   "docs/evidence/live-verification-test-no-spawn-mutants-2026-10-07.json",
+   "docs/evidence/live-verification-test-no-spawn-mutants-round1-repairs-2026-10-07.json",
+   "docs/evidence/live-verification-test-no-spawn-mutants-round2-repairs-2026-10-07.json",
+   "docs/evidence/live-verification-test-no-spawn-mutants-round3-repairs-2026-10-07.json",
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-merged-a5ab2b28-a5b1d532.json",
+   "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json",
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json",
+   "docs/reviews/R-LIVE-TEST-NO-SPAWN-1-RAW.md",
+   "docs/reviews/R-P110-EXPLICIT-SELECTION-PROBES-EFCBB78F-1-RAW.md"
+  ],
+  "packages/three-surface-poc-core/src/authority-artifact-fields.ts@base:gitBlob": [
+   ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/STATIC-TRACE.json",
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json"
+  ],
+  "packages/three-surface-poc-core/src/authority-artifact-fields.ts@head:sha256": [
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-merged-a5ab2b28-a5b1d532.json",
+   "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json",
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json"
+  ],
+  "packages/three-surface-poc-core/src/authority-artifact-fields.ts@head:gitBlob": [
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json"
+  ],
+  "packages/three-surface-poc-core/src/code-structure.ts@base:sha256": [
+   "docs/evidence/code-structure-ls-tree-z-differential-2026-10-21-r3.json",
+   "docs/evidence/code-structure-ls-tree-z-mutants-2026-10-21-r3.json",
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-merged-a5ab2b28-a5b1d532.json",
+   "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json",
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json",
+   "docs/reviews/R-GP-IMPL-CODE-STRUCTURE-3-RAW.md"
+  ],
+  "packages/three-surface-poc-core/src/code-structure.ts@base:gitBlob": [
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json"
+  ],
+  "packages/three-surface-poc-core/src/code-structure.ts@head:sha256": [
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-merged-a5ab2b28-a5b1d532.json",
+   "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json"
+  ],
+  "packages/three-surface-poc-core/src/code-structure.ts@head:gitBlob": [
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json"
+  ],
+  "packages/three-surface-poc-core/src/git-object-reader.ts@base:sha256": [
+   "docs/evidence/fence-rules-review-2026-10-27/r1/negctl.json",
+   "docs/evidence/fence-rules-review-2026-10-27/r2/out/neg-pr1-ll.json",
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-merged-a5ab2b28-a5b1d532.json",
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-negative-control.json",
+   "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json",
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json",
+   "docs/evidence/syzygy-bpyt-6-3/repair1-neg-pr1-line-level.json"
+  ],
+  "packages/three-surface-poc-core/src/git-object-reader.ts@base:gitBlob": [
+   "docs/evidence/support-leaf-review-2026-10-27/round-1/code.diff",
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json"
+  ],
+  "packages/three-surface-poc-core/src/git-object-reader.ts@head:sha256": [
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-merged-a5ab2b28-a5b1d532.json",
+   "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json",
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json"
+  ],
+  "packages/three-surface-poc-core/src/git-object-reader.ts@head:gitBlob": [
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json"
+  ],
+  "packages/three-surface-poc-core/src/project-shape-manifest.ts@base:sha256": [
+   "docs/evidence/fence-rules-review-2026-10-27/r1/comment-only-delta.json",
+   "docs/evidence/fence-rules-review-2026-10-27/r1/comment-only-mutant-code.json",
+   "docs/evidence/fence-rules-review-2026-10-27/r1/comment-only-mutant-typeonly.json",
+   "docs/evidence/fence-rules-review-2026-10-27/r1/comment-only-record-range.json",
+   "docs/evidence/fence-rules-review-2026-10-27/r1/digest-citers-9d9c98a6.json",
+   "docs/evidence/fence-rules-review-2026-10-27/r1/negctl.json",
+   "docs/evidence/fence-rules-review-2026-10-27/r2/out/co-f74-ba7.json",
+   "docs/evidence/fence-rules-review-2026-10-27/r2/out/ll-f74-ba7.json",
+   "docs/evidence/fence-rules-review-2026-10-27/r2/out/neg-code-co.json",
+   "docs/evidence/fence-rules-review-2026-10-27/r2/out/neg-code-ll.json",
+   "docs/evidence/fence-rules-review-2026-10-27/r2/out/neg-pr1-ll.json",
+   "docs/evidence/fence-rules-review-2026-10-27/r2/out/neg-typeonly-co.json",
+   "docs/evidence/fence-rules-review-2026-10-27/r2/out/neg-typeonly-ll.json",
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-merged-a5ab2b28-a5b1d532.json",
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-negative-control.json",
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-stack2-a.json",
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-stack2-b.json",
+   "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "docs/evidence/syzygy-bpyt-6-3/dc3-fence-rules-2026-10-25.json",
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json",
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json",
+   "docs/evidence/syzygy-bpyt-6-3/fence-digest-citers.json",
+   "docs/evidence/syzygy-bpyt-6-3/repair1-comment-only-f7477f52-ba7fce36.json",
+   "docs/evidence/syzygy-bpyt-6-3/repair1-line-level-f7477f52-ba7fce36.json",
+   "docs/evidence/syzygy-bpyt-6-3/repair1-neg-code-comment-only.json",
+   "docs/evidence/syzygy-bpyt-6-3/repair1-neg-code-line-level.json",
+   "docs/evidence/syzygy-bpyt-6-3/repair1-neg-pr1-line-level.json",
+   "docs/evidence/syzygy-bpyt-6-3/repair1-neg-typeonly-comment-only.json",
+   "docs/evidence/syzygy-bpyt-6-3/repair1-neg-typeonly-line-level.json"
+  ],
+  "packages/three-surface-poc-core/src/project-shape-manifest.ts@base:gitBlob": [
+   "docs/evidence/support-leaf-review-2026-10-27/round-1/code.diff",
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json",
+   "docs/reviews/R-GP-IMPL-FENCE-RULES-2-RAW.md"
+  ],
+  "packages/three-surface-poc-core/src/project-shape-manifest.ts@head:sha256": [
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-merged-a5ab2b28-a5b1d532.json",
+   "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json"
+  ],
+  "packages/three-surface-poc-core/src/project-shape-manifest.ts@head:gitBlob": [],
+  "packages/three-surface-poc-core/src/project-shape-observation.ts@base:sha256": [
+   "docs/evidence/fence-rules-review-2026-10-27/r1/negctl.json",
+   "docs/evidence/fence-rules-review-2026-10-27/r2/out/neg-pr1-ll.json",
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-merged-a5ab2b28-a5b1d532.json",
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-negative-control.json",
+   "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json",
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json",
+   "docs/evidence/syzygy-bpyt-6-3/repair1-neg-pr1-line-level.json"
+  ],
+  "packages/three-surface-poc-core/src/project-shape-observation.ts@base:gitBlob": [
+   "docs/evidence/support-leaf-review-2026-10-27/round-1/code.diff",
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json"
+  ],
+  "packages/three-surface-poc-core/src/project-shape-observation.ts@head:sha256": [
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-merged-a5ab2b28-a5b1d532.json",
+   "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json",
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json"
+  ],
+  "packages/three-surface-poc-core/src/project-shape-observation.ts@head:gitBlob": [
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json"
+  ],
+  "packages/polaris-generation-core/src/canonical-json.ts@base:sha256": [
+   "docs/evidence/fence-rules-review-2026-10-27/r1/negctl.json",
+   "docs/evidence/fence-rules-review-2026-10-27/r2/out/neg-pr1-ll.json",
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-merged-a5ab2b28-a5b1d532.json",
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-negative-control.json",
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-stack2-a.json",
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-stack2-b.json",
+   "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json",
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json",
+   "docs/evidence/syzygy-bpyt-6-3/repair1-neg-pr1-line-level.json"
+  ],
+  "packages/polaris-generation-core/src/canonical-json.ts@base:gitBlob": [
+   "docs/evidence/support-leaf-review-2026-10-27/round-1/code.diff",
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json"
+  ],
+  "packages/polaris-generation-core/src/canonical-json.ts@head:sha256": [
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-merged-a5ab2b28-a5b1d532.json",
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-stack2-a.json",
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-stack2-b.json",
+   "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json",
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json"
+  ],
+  "packages/polaris-generation-core/src/canonical-json.ts@head:gitBlob": [
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json"
+  ],
+  "packages/support/src/index.ts@base:sha256": [
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-merged-a5ab2b28-a5b1d532.json",
+   "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json",
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json"
+  ],
+  "packages/support/src/index.ts@base:gitBlob": [
+   "docs/evidence/support-leaf-review-2026-10-27/round-1/code.diff",
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json"
+  ],
+  "packages/support/src/index.ts@head:sha256": [
+   "docs/evidence/syzygy-bpyt-6-3/comment-only-merged-a5ab2b28-a5b1d532.json",
+   "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json",
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json"
+  ],
+  "packages/support/src/index.ts@head:gitBlob": [
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json"
+  ],
+  "packages/support/src/decode-utf8.ts@head:sha256": [
+   "docs/evidence/syzygy-bpyt-6-3/dc3-decode-and-canonical-json-2026-10-25.json",
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json",
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2.json"
+  ],
+  "packages/support/src/decode-utf8.ts@head:gitBlob": [
+   "docs/evidence/syzygy-bpyt-6-3/digest-citers-stack2-repair1.json"
+  ]
+ },
+ "methodsAgree": true
+}

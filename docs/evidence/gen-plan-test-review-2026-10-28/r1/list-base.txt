@@ -1,0 +1,1 @@
+[@syzygy/three-surface-poc-app] apps/three-surface-poc/src/polaris-generation/generation-mutation.test.ts > generation mutation plan > every literal mutation fragment occurs exactly once in its current source and names a must-fail test

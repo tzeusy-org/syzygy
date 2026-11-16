@@ -1,9 +1,11 @@
-import { execFileSync } from 'node:child_process';
+
+import { decodeUtf8 } from '@syzygy/support';
 
 import { parseGitLsTree } from './git-tree.js';
+import { gitRunnerFor } from './project-shape-observation.js';
 import type { PocProvenance } from './model.js';
 
-export const CODE_LANGUAGE_CLASSIFICATIONS = [
+const CODE_LANGUAGE_CLASSIFICATIONS = [
   'typescript',
   'javascript',
   'python',
@@ -72,7 +74,7 @@ export interface CodeStructureObserved {
   readonly files: readonly CodeStructureFileEntry[];
 }
 
-export interface CodeStructureUnknown {
+interface CodeStructureUnknown {
   readonly kind: 'unknown';
   readonly reason: string;
 }
@@ -92,11 +94,13 @@ export interface ObserveCodeStructureInput {
 /** Git's output is not valid UTF-8: a path a JS string cannot carry exactly. */
 class NonUtf8GitOutput extends Error {}
 
-const STRICT_UTF8 = new TextDecoder('utf-8', { fatal: true });
-const GITLINK_RECORD = Buffer.from('160000 ');
+/** The head git prints for every gitlink (`-l` pads the size column, which is `-`). A record is dropped only when it starts with this. */
+const GITLINK_HEAD = /^160000 commit [0-9a-f]{40,64} +-\t/;
+/** Longest head git can print: mode, type, a 64-digit id, the padded size column and the tab. */
+const GITLINK_HEAD_BYTES = 128;
 
 /**
- * Drops each NUL-terminated gitlink (mode 160000) record. A gitlink is a commit of another repository, not a file of this revision,
+ * Drops each NUL-terminated record whose head is a well-formed gitlink (mode 160000); any other record, a malformed one starting `160000` included, is kept for the parser to refuse. A gitlink is a commit of another repository, not a file of this revision,
  * and its path is never recorded, so a submodule path that is not UTF-8, or that the parser cannot read, must not fail the listing.
  * An unterminated tail is kept, for the NUL-termination check to refuse.
  */
@@ -105,7 +109,9 @@ function withoutGitlinkRecords(bytes: Buffer): Buffer {
   let start = 0;
   for (let end = bytes.indexOf(0, start); end !== -1; end = bytes.indexOf(0, start)) {
     const record = bytes.subarray(start, end + 1);
-    if (!record.subarray(0, GITLINK_RECORD.length).equals(GITLINK_RECORD)) kept.push(record);
+    // The head is ASCII; latin1 maps each byte to one code unit, so the path after the tab, whatever its bytes, is never decoded.
+    const head = record.subarray(0, GITLINK_HEAD_BYTES).toString('latin1');
+    if (!GITLINK_HEAD.test(head)) kept.push(record);
     start = end + 1;
   }
   if (start < bytes.length) kept.push(bytes.subarray(start));
@@ -113,15 +119,18 @@ function withoutGitlinkRecords(bytes: Buffer): Buffer {
 }
 
 function defaultRunGit(repoRoot: string, args: readonly string[]): string {
-  const bytes = execFileSync('git', ['--no-optional-locks', '-C', repoRoot, ...args], {
-    maxBuffer: 256 * 1024 * 1024,
-    stdio: ['ignore', 'pipe', 'ignore'],
-  });
+  // G5 profile 5 shares profile 6's transport (flags, 256 MiB bound and stdio); this adapter keeps strict decode and gitlink filtering.
+  const stdout = gitRunnerFor(repoRoot)(args);
+  const bytes = Buffer.from(stdout.buffer, stdout.byteOffset, stdout.byteLength);
+  // The gitlink filter runs inside the try, as the decode always did: a copy it cannot allocate is reported like the bytes that
+  // could not be decoded, so the Unknown reason for a failure here is the one this module has always given.
   try {
-    return STRICT_UTF8.decode(withoutGitlinkRecords(bytes));
+    const text = decodeUtf8(withoutGitlinkRecords(bytes));
+    if (text !== undefined) return text;
   } catch {
-    throw new NonUtf8GitOutput();
+    // falls through to the refusal below
   }
+  throw new NonUtf8GitOutput();
 }
 
 const SHA1_OBJECT_ID = /^[0-9a-f]{40}$/;
@@ -134,9 +143,11 @@ const SHA1_OBJECT_ID = /^[0-9a-f]{40}$/;
  * form was recorded as the path (syzygy-bpyt.6.1). The bytes are decoded as
  * strict UTF-8, so a path that is not valid UTF-8 makes the inventory
  * Unknown instead of a replacement-character path that can collide with
- * another. Submodule gitlink records are dropped first, before decoding and
- * before parsing, since their paths are never recorded. A record the shared
- * parser cannot read, or a listing that is not NUL-terminated, makes the
+ * another. A path that begins with `"` or holds a newline is recorded
+ * exactly as committed: under `-z` it is never a quoted form. Submodule
+ * gitlink records are dropped first, before decoding and before parsing,
+ * since their paths are never recorded. A record the shared parser cannot
+ * read, or a listing that is not NUL-terminated, makes the
  * whole inventory Unknown, never a skip.
  */
 export function observeCodeStructure(input: ObserveCodeStructureInput): CodeStructureResult {
@@ -164,7 +175,8 @@ export function observeCodeStructure(input: ObserveCodeStructureInput): CodeStru
   }
   // A submodule gitlink (mode 160000) is not a file of this revision and its path is never recorded, so its record is dropped before
   // parsing, whichever runner answered; the default runner already dropped it from git's bytes, before decoding.
-  const parsed = parseGitLsTree(raw.split('\0').filter((record) => !record.startsWith('160000 ')).join('\0'));
+  // Under `-z` a path that begins with `"` or holds a newline is the committed name itself, so the parser takes it verbatim (syzygy-bpyt.6.7).
+  const parsed = parseGitLsTree(raw.split('\0').filter((record) => !GITLINK_HEAD.test(record)).join('\0'), { nulTerminated: true });
   if (parsed.kind === 'malformed') {
     return malformed;
   }

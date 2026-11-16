@@ -1,0 +1,57 @@
+=== P0 head x1 --no-profile start 20:03:19 load 14.33
+P0-np head None #1: exit 0 (claimed 0, as claimed), exited 13.303 s, tree clean, 0 survivors of 29 seen, vitest seen True, record runs 1 tests 299, exercised - -> pass
+SUMMARY P0-np {"head": {"attempts": 1, "passed": 1, "dirty": 0, "withSurvivors": 0, "exitAsClaimed": 1, "exercised": 1}}
+=== P0 exit 0 end 20:03:36 load 14.09
+=== G head x2 --no-profile start 20:03:36 load 14.09
+G-np head 0 #1: exit 143 (claimed 143, as claimed), exited 1.194 s, tree clean, 0 survivors of 2 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G-np head 30 #1: exit 143 (claimed 143, as claimed), exited 2.501 s, tree clean, 0 survivors of 10 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G-np head 60 #1: exit 143 (claimed 143, as claimed), exited 1.157 s, tree clean, 0 survivors of 4 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G-np head 100 #1: exit 143 (claimed 143, as claimed), exited 1.312 s, tree clean, 0 survivors of 10 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G-np head 150 #1: exit 143 (claimed 143, as claimed), exited 1.258 s, tree clean, 0 survivors of 4 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G-np head 200 #1: exit 143 (claimed 143, as claimed), exited 1.132 s, tree clean, 0 survivors of 4 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G-np head 300 #1: exit 143 (claimed 143, as claimed), exited 1.175 s, tree clean, 0 survivors of 5 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G-np head 500 #1: exit 143 (claimed 143, as claimed), exited 1.146 s, tree clean, 0 survivors of 4 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G-np head 1000 #1: exit 143 (claimed 143, as claimed), exited 1.202 s, tree clean, 0 survivors of 4 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G-np head 0 #2: exit 143 (claimed 143, as claimed), exited 1.163 s, tree clean, 0 survivors of 4 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G-np head 30 #2: exit 143 (claimed 143, as claimed), exited 1.207 s, tree clean, 0 survivors of 4 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G-np head 60 #2: exit 143 (claimed 143, as claimed), exited 2.028 s, tree clean, 0 survivors of 4 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G-np head 100 #2: exit 143 (claimed 143, as claimed), exited 1.195 s, tree clean, 0 survivors of 4 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G-np head 150 #2: exit 143 (claimed 143, as claimed), exited 1.922 s, tree clean, 0 survivors of 5 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G-np head 200 #2: exit 143 (claimed 143, as claimed), exited 1.082 s, tree clean, 0 survivors of 4 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G-np head 300 #2: exit 143 (claimed 143, as claimed), exited 2.085 s, tree clean, 0 survivors of 4 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G-np head 500 #2: exit 143 (claimed 143, as claimed), exited 1.349 s, tree clean, 0 survivors of 4 seen, vitest seen True, record runs None tests None, exercised True -> pass
+G-np head 1000 #2: exit 143 (claimed 143, as claimed), exited 2.266 s, tree clean, 0 survivors of 4 seen, vitest seen True, record runs None tests None, exercised True -> pass
+SUMMARY G-np {"head": {"attempts": 18, "passed": 18, "dirty": 0, "withSurvivors": 0, "exitAsClaimed": 18, "exercised": 18}}
+=== G exit 0 end 20:05:02 load 21.87
+=== EARLYS head x1 --no-profile start 20:05:02 load 21.87
+EARLYS-np head 0 #1: exit -15 (claimed 143, NOT as claimed), exited 0.344 s, tree clean, 0 survivors of 0 seen, vitest seen False, record runs None tests None, exercised True -> pass
+EARLYS-np head 20 #1: exit -15 (claimed 143, NOT as claimed), exited 0.216 s, tree clean, 0 survivors of 0 seen, vitest seen False, record runs None tests None, exercised True -> pass
+EARLYS-np head 40 #1: exit -15 (claimed 143, NOT as claimed), exited 0.197 s, tree clean, 0 survivors of 0 seen, vitest seen False, record runs None tests None, exercised True -> pass
+EARLYS-np head 60 #1: exit -15 (claimed 143, NOT as claimed), exited 0.265 s, tree clean, 0 survivors of 0 seen, vitest seen False, record runs None tests None, exercised True -> pass
+EARLYS-np head 100 #1: exit -15 (claimed 143, NOT as claimed), exited 0.402 s, tree clean, 0 survivors of 0 seen, vitest seen False, record runs None tests None, exercised True -> pass
+EARLYS-np head 150 #1: exit 143 (claimed 143, as claimed), exited 0.399 s, tree clean, 0 survivors of 0 seen, vitest seen False, record runs None tests None, exercised True -> pass
+   trace: ["TRACE 0.0231 popen-enter ['git', 'status', '--porcelain'] stopped []", 'TRACE 0.0350 popen-return 1205129 stopped []', "TRACE 0.0899 popen-enter ['git', 'rev-parse', 'HEAD'] stopped []", 'TRACE 0.0909 popen-return 1205142 stopped []', "TRACE 0.1034 popen-enter ['git', 'show', 'HEAD:packages/polaris-generation-consent/src/package-reader.test.ts'] stopped []", 'TRACE 0.1076 popen-return 1205143 stopped []', "TRACE 0.1317 popen-enter ['git', 'show', 'HEAD:packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts'] stopped [15]", 'TRACE 0.1353 popen-return 1205155 stopped [15]', "TRACE 0.1500 popen-enter ['node', '--version'] stopped [15]", 'TRACE 0.1510 popen-return 1205165 stopped [15]', 'TRACE 0.1583 exit 143 stopped [15]']
+EARLYS-np head 250 #1: exit -15 (claimed 143, NOT as claimed), exited 0.77 s, tree clean, 0 survivors of 0 seen, vitest seen False, record runs None tests None, exercised True -> pass
+EARLYS-np head 400 #1: exit 143 (claimed 143, as claimed), exited 1.065 s, tree clean, 0 survivors of 0 seen, vitest seen False, record runs None tests None, exercised True -> pass
+   trace: ["TRACE 0.0229 popen-enter ['git', 'status', '--porcelain'] stopped []", 'TRACE 0.0963 popen-return 1209815 stopped []', "TRACE 0.2621 popen-enter ['git', 'rev-parse', 'HEAD'] stopped []", 'TRACE 0.2672 popen-return 1209876 stopped []', "TRACE 0.2763 popen-enter ['git', 'show', 'HEAD:packages/polaris-generation-consent/src/package-reader.test.ts'] stopped []", 'TRACE 0.2777 popen-return 1209877 stopped []', "TRACE 0.3005 popen-enter ['git', 'show', 'HEAD:packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts'] stopped []", 'TRACE 0.3051 popen-return 1209882 stopped []', "TRACE 0.3214 popen-enter ['node', '--version'] stopped []", 'TRACE 0.3225 popen-return 1209883 stopped []', 'TRACE 0.3536 exit 143 stopped [15]']
+SUMMARY EARLYS-np {"head": {"attempts": 8, "passed": 8, "dirty": 0, "withSurvivors": 0, "exitAsClaimed": 2, "exercised": 8}}
+=== EARLYS exit 0 end 20:05:37 load 30.23
+=== MIX head x1 --no-profile start 20:05:37 load 30.23
+MIX-np head write #1: exit 0 (claimed 0, as claimed), exited 30.922 s, tree clean, 0 survivors of 0 seen, vitest seen False, record runs 1 tests 299, exercised False -> FAIL
+   trace: ["TRACE 0.0280 popen-enter ['git', 'status', '--porcelain'] stopped []", 'TRACE 0.0944 popen-return 1212084 stopped []', "TRACE 0.1174 popen-enter ['git', 'rev-parse', 'HEAD'] stopped []", 'TRACE 0.1187 popen-return 1212101 stopped []', "TRACE 0.1483 popen-enter ['git', 'show', 'HEAD:packages/polaris-generation-consent/src/package-reader.test.ts'] stopped []", 'TRACE 0.1526 popen-return 1212105 stopped []', "TRACE 0.1802 popen-enter ['git', 'show', 'HEAD:packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts'] stopped []", 'TRACE 0.1909 popen-return 1212137 stopped []', "TRACE 0.2485 popen-enter ['node', '--version'] stopped []", 'TRACE 0.2683 popen-return 1212154 stopped []', "TRACE 0.3083 popen-enter ['npx', 'vitest', 'run'] stopped []", 'TRACE 0.3183 popen-return 1212171 stopped []']
+MIX-np head run #1: exit 129 (claimed 143, NOT as claimed), exited 4.483 s, tree clean, 0 survivors of 4 seen, vitest seen True, record runs None tests None, exercised True -> pass
+   trace: ["TRACE 0.1023 popen-enter ['git', 'status', '--porcelain'] stopped []", 'TRACE 0.1050 popen-return 1229752 stopped []', "TRACE 0.2790 popen-enter ['git', 'rev-parse', 'HEAD'] stopped []", 'TRACE 0.3232 popen-return 1229774 stopped []', "TRACE 0.3647 popen-enter ['git', 'show', 'HEAD:packages/polaris-generation-consent/src/package-reader.test.ts'] stopped []", 'TRACE 0.3753 popen-return 1229776 stopped []', "TRACE 0.4498 popen-enter ['git', 'show', 'HEAD:packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts'] stopped []", 'TRACE 0.4522 popen-return 1229778 stopped []', "TRACE 0.4955 popen-enter ['node', '--version'] stopped []", 'TRACE 0.5182 popen-return 1229791 stopped []', "TRACE 0.5793 popen-enter ['npx', 'vitest', 'run'] stopped []", 'TRACE 0.5901 popen-return 1229793 stopped []']
+MIX-np head cleanup #1: exit -15 (claimed 130, NOT as claimed), exited 4.057 s, tree clean, 0 survivors of 8 seen, vitest seen True, record runs None tests None, exercised True -> pass
+   trace: ["TRACE 0.0233 popen-enter ['git', 'status', '--porcelain'] stopped []", 'TRACE 0.0242 popen-return 1232796 stopped []', "TRACE 0.0722 popen-enter ['git', 'rev-parse', 'HEAD'] stopped []", 'TRACE 0.0742 popen-return 1232809 stopped []', "TRACE 0.1046 popen-enter ['git', 'show', 'HEAD:packages/polaris-generation-consent/src/package-reader.test.ts'] stopped []", 'TRACE 0.1086 popen-return 1232817 stopped []', "TRACE 0.1278 popen-enter ['git', 'show', 'HEAD:packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts'] stopped []", 'TRACE 0.1302 popen-return 1232819 stopped []', "TRACE 0.1339 popen-enter ['node', '--version'] stopped []", 'TRACE 0.1475 popen-return 1232825 stopped []', "TRACE 0.1635 popen-enter ['npx', 'vitest', 'run'] stopped []", 'TRACE 0.1662 popen-return 1232839 stopped []']
+SUMMARY MIX-np {"head": {"attempts": 3, "passed": 2, "dirty": 0, "withSurvivors": 0, "exitAsClaimed": 1, "exercised": 2}}
+=== MIX exit 0 end 20:06:30 load 39.60
+=== H head x1 --no-profile start 20:06:30 load 39.60
+H-np head None #1: exit 0 (claimed 129, NOT as claimed), exited 30.686 s, tree clean, 0 survivors of 29 seen, vitest seen True, record runs 1 tests 299, exercised True -> pass
+SUMMARY H-np {"head": {"attempts": 1, "passed": 1, "dirty": 0, "withSurvivors": 0, "exitAsClaimed": 0, "exercised": 1}}
+=== H exit 0 end 20:07:05 load 41.87
+=== K head x1 --no-profile start 20:07:05 load 41.87
+K-np head None #1: exit 0 (claimed 0, as claimed), exited 19.717 s, tree clean, 0 survivors of 25 seen, vitest seen True, record runs 1 tests 299, exercised True -> pass
+   trace: ['KILLPG 1252003 0 -> ESRCH, answered alive (injected)', 'KILLPG 1252003 15 -> ESRCH', 'KILLPG 1252003 0 -> ESRCH', 'KILLPG 1252003 0 -> ESRCH']
+SUMMARY K-np {"head": {"attempts": 1, "passed": 1, "dirty": 0, "withSurvivors": 0, "exitAsClaimed": 1, "exercised": 1}}
+=== K exit 0 end 20:07:29 load 36.76
+=== ALL DONE 20:07:29

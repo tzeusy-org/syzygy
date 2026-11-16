@@ -1,0 +1,854 @@
+{
+ "bead": "syzygy-exj7",
+ "foldedBeads": {
+  "syzygy-ijij": "folded: the same polaris-authority-sweep.test.ts test and the same 5 s timeout under load, reproduced here at 5 of 20 standalone runs under load (unreproduced unloaded).",
+  "syzygy-y3uc": "not folded: start-gates.test.ts init (packages/polaris-dossier) spends its time in git subprocesses for a consented clone, not an in-process file scan or a /proc race; a different cause in a different package, left to its own bead."
+ },
+ "date": "2026-11-04",
+ "baseCommit": "92eafd01d2d13958c3d28c944262fb283e0659b8",
+ "host": {
+  "cores": 12,
+  "tool": "no stress-ng on the host; load is N `yes > /dev/null` processes started and stopped by recorded PID"
+ },
+ "method": "Each run is one `npx vitest run --project integration <file> --reporter=json` in the worktree with TMPDIR=/tmp/wexj7, sequential, with 36 CPU hogs (3 per core) started 10-20 s before the batch; load1AtStart is /proc/loadavg at each run start (it includes other lanes on the host). Harness: a scratch runmany.py (not committed).",
+ "subjects": [
+  {
+   "test": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts > Zero downstream citations of Polaris as authority (PWB-REQ-014) > no source/authority/provenance field in the governance, spec, code or docs trees names the Polaris surface",
+   "cause": "The test reads every .md/.json/.ya?ml/.ts file under .syzygy/governance, openspec, packages, apps and docs (5,848 files, 138,887,337 UTF-16 code units at the base commit, about 135 MB of it docs/) synchronously and tests each of 2,797,710 lines. 0.56 s alone, unloaded; under CPU contention it stretches past the 5,000 ms default.",
+   "costBreakdownAloneMs": {
+    "walk": 71,
+    "gitLsFiles": 8,
+    "readUtf8": 362,
+    "splitAndLineRegex": 256
+   },
+   "whyNotCheaper": "Reading is half the cost and the file population is what the sweep is for (expectPopulationCovered pins it against git ls-files). Equivalent scans were measured, five repetitions alone: original 443-519 ms, a sound per-file prefilter (/polaris|\\/api\\/poc/i, implied by every POLARIS_SURFACE alternative) 414-509 ms, read alone 228-281 ms; a multiline keyed-line scan was 419-437 ms against 502-575 ms. At most about 20 % saved, not enough to leave the 5 s default, so no scan change was made.",
+   "fix": "An explicit 25,000 ms timeout on this one test, sized by scripts/size_vitest_test_timeouts.py's rule (worst measured duration x 3, rounded up to a whole 5,000 ms): worst 8,029 ms x 3 = 24,087 -> 25,000 ms. The other five tests keep the default (worst 1,192 ms).",
+   "before": {
+    "timeoutMs": 5000,
+    "runs": 20,
+    "failed": 5,
+    "maxMs": 5954,
+    "medianMs": 3879,
+    "perRun": [
+     {
+      "run": 0,
+      "load1AtStart": 18.15,
+      "status": "failed",
+      "durationMs": 5808
+     },
+     {
+      "run": 1,
+      "load1AtStart": 27.98,
+      "status": "failed",
+      "durationMs": 5954
+     },
+     {
+      "run": 2,
+      "load1AtStart": 35.02,
+      "status": "failed",
+      "durationMs": 5391
+     },
+     {
+      "run": 3,
+      "load1AtStart": 40.2,
+      "status": "failed",
+      "durationMs": 5536
+     },
+     {
+      "run": 4,
+      "load1AtStart": 40.39,
+      "status": "passed",
+      "durationMs": 3879
+     },
+     {
+      "run": 5,
+      "load1AtStart": 42.56,
+      "status": "passed",
+      "durationMs": 1360
+     },
+     {
+      "run": 6,
+      "load1AtStart": 43.47,
+      "status": "passed",
+      "durationMs": 2079
+     },
+     {
+      "run": 7,
+      "load1AtStart": 43.38,
+      "status": "passed",
+      "durationMs": 1603
+     },
+     {
+      "run": 8,
+      "load1AtStart": 45.93,
+      "status": "passed",
+      "durationMs": 4255
+     },
+     {
+      "run": 9,
+      "load1AtStart": 45.66,
+      "status": "passed",
+      "durationMs": 3657
+     },
+     {
+      "run": 10,
+      "load1AtStart": 50.06,
+      "status": "passed",
+      "durationMs": 4002
+     },
+     {
+      "run": 11,
+      "load1AtStart": 50.97,
+      "status": "passed",
+      "durationMs": 2825
+     },
+     {
+      "run": 12,
+      "load1AtStart": 49.63,
+      "status": "passed",
+      "durationMs": 4876
+     },
+     {
+      "run": 13,
+      "load1AtStart": 50.77,
+      "status": "passed",
+      "durationMs": 2197
+     },
+     {
+      "run": 14,
+      "load1AtStart": 49.8,
+      "status": "passed",
+      "durationMs": 3338
+     },
+     {
+      "run": 15,
+      "load1AtStart": 49.71,
+      "status": "passed",
+      "durationMs": 4772
+     },
+     {
+      "run": 16,
+      "load1AtStart": 49.75,
+      "status": "passed",
+      "durationMs": 1310
+     },
+     {
+      "run": 17,
+      "load1AtStart": 48.72,
+      "status": "passed",
+      "durationMs": 2744
+     },
+     {
+      "run": 18,
+      "load1AtStart": 50.22,
+      "status": "passed",
+      "durationMs": 3239
+     },
+     {
+      "run": 19,
+      "load1AtStart": 50.17,
+      "status": "failed",
+      "durationMs": 5766
+     }
+    ]
+   },
+   "unclippedUnderLoad": {
+    "timeoutMs": 120000,
+    "note": "--testTimeout=120000 on the command line, to measure the distribution the default clips",
+    "runs": 30,
+    "failed": 0,
+    "maxMs": 8029,
+    "medianMs": 4560,
+    "perRun": [
+     {
+      "run": 0,
+      "load1AtStart": 44.11,
+      "status": "passed",
+      "durationMs": 4446
+     },
+     {
+      "run": 1,
+      "load1AtStart": 51.29,
+      "status": "passed",
+      "durationMs": 7307
+     },
+     {
+      "run": 2,
+      "load1AtStart": 53.43,
+      "status": "passed",
+      "durationMs": 4952
+     },
+     {
+      "run": 3,
+      "load1AtStart": 54.93,
+      "status": "passed",
+      "durationMs": 3133
+     },
+     {
+      "run": 4,
+      "load1AtStart": 57.43,
+      "status": "passed",
+      "durationMs": 4799
+     },
+     {
+      "run": 5,
+      "load1AtStart": 55.97,
+      "status": "passed",
+      "durationMs": 2961
+     },
+     {
+      "run": 6,
+      "load1AtStart": 53.92,
+      "status": "passed",
+      "durationMs": 5762
+     },
+     {
+      "run": 7,
+      "load1AtStart": 54.87,
+      "status": "passed",
+      "durationMs": 4577
+     },
+     {
+      "run": 8,
+      "load1AtStart": 58.04,
+      "status": "passed",
+      "durationMs": 2871
+     },
+     {
+      "run": 9,
+      "load1AtStart": 57.71,
+      "status": "passed",
+      "durationMs": 5982
+     },
+     {
+      "run": 10,
+      "load1AtStart": 57.89,
+      "status": "passed",
+      "durationMs": 5737
+     },
+     {
+      "run": 11,
+      "load1AtStart": 55.68,
+      "status": "passed",
+      "durationMs": 4526
+     },
+     {
+      "run": 12,
+      "load1AtStart": 55.73,
+      "status": "passed",
+      "durationMs": 8029
+     },
+     {
+      "run": 13,
+      "load1AtStart": 55.69,
+      "status": "passed",
+      "durationMs": 4095
+     },
+     {
+      "run": 14,
+      "load1AtStart": 59.23,
+      "status": "passed",
+      "durationMs": 2536
+     },
+     {
+      "run": 15,
+      "load1AtStart": 57.8,
+      "status": "passed",
+      "durationMs": 5623
+     },
+     {
+      "run": 16,
+      "load1AtStart": 60.45,
+      "status": "passed",
+      "durationMs": 2896
+     },
+     {
+      "run": 17,
+      "load1AtStart": 64.74,
+      "status": "passed",
+      "durationMs": 6830
+     },
+     {
+      "run": 18,
+      "load1AtStart": 63.97,
+      "status": "passed",
+      "durationMs": 3187
+     },
+     {
+      "run": 19,
+      "load1AtStart": 64.54,
+      "status": "passed",
+      "durationMs": 4665
+     },
+     {
+      "run": 20,
+      "load1AtStart": 62.9,
+      "status": "passed",
+      "durationMs": 2290
+     },
+     {
+      "run": 21,
+      "load1AtStart": 63.33,
+      "status": "passed",
+      "durationMs": 3722
+     },
+     {
+      "run": 22,
+      "load1AtStart": 61.14,
+      "status": "passed",
+      "durationMs": 2606
+     },
+     {
+      "run": 23,
+      "load1AtStart": 62.94,
+      "status": "passed",
+      "durationMs": 2751
+     },
+     {
+      "run": 24,
+      "load1AtStart": 61.68,
+      "status": "passed",
+      "durationMs": 4745
+     },
+     {
+      "run": 25,
+      "load1AtStart": 60.35,
+      "status": "passed",
+      "durationMs": 2783
+     },
+     {
+      "run": 26,
+      "load1AtStart": 58.94,
+      "status": "passed",
+      "durationMs": 1726
+     },
+     {
+      "run": 27,
+      "load1AtStart": 58.87,
+      "status": "passed",
+      "durationMs": 5372
+     },
+     {
+      "run": 28,
+      "load1AtStart": 58.61,
+      "status": "passed",
+      "durationMs": 7646
+     },
+     {
+      "run": 29,
+      "load1AtStart": 61.15,
+      "status": "passed",
+      "durationMs": 4560
+     }
+    ]
+   },
+   "after": {
+    "timeoutMs": 25000,
+    "runs": 20,
+    "failed": 0,
+    "maxMs": 4701,
+    "medianMs": 3506,
+    "perRun": [
+     {
+      "run": 0,
+      "load1AtStart": 40.57,
+      "status": "passed",
+      "durationMs": 4348
+     },
+     {
+      "run": 1,
+      "load1AtStart": 45.28,
+      "status": "passed",
+      "durationMs": 2975
+     },
+     {
+      "run": 2,
+      "load1AtStart": 47.2,
+      "status": "passed",
+      "durationMs": 1883
+     },
+     {
+      "run": 3,
+      "load1AtStart": 48.67,
+      "status": "passed",
+      "durationMs": 3506
+     },
+     {
+      "run": 4,
+      "load1AtStart": 51.21,
+      "status": "passed",
+      "durationMs": 3946
+     },
+     {
+      "run": 5,
+      "load1AtStart": 54.84,
+      "status": "passed",
+      "durationMs": 2382
+     },
+     {
+      "run": 6,
+      "load1AtStart": 54.4,
+      "status": "passed",
+      "durationMs": 2856
+     },
+     {
+      "run": 7,
+      "load1AtStart": 54.65,
+      "status": "passed",
+      "durationMs": 3911
+     },
+     {
+      "run": 8,
+      "load1AtStart": 56.58,
+      "status": "passed",
+      "durationMs": 4504
+     },
+     {
+      "run": 9,
+      "load1AtStart": 57.54,
+      "status": "passed",
+      "durationMs": 4701
+     },
+     {
+      "run": 10,
+      "load1AtStart": 57.92,
+      "status": "passed",
+      "durationMs": 3864
+     },
+     {
+      "run": 11,
+      "load1AtStart": 57.61,
+      "status": "passed",
+      "durationMs": 1769
+     },
+     {
+      "run": 12,
+      "load1AtStart": 56.94,
+      "status": "passed",
+      "durationMs": 3498
+     },
+     {
+      "run": 13,
+      "load1AtStart": 56.72,
+      "status": "passed",
+      "durationMs": 3937
+     },
+     {
+      "run": 14,
+      "load1AtStart": 54.55,
+      "status": "passed",
+      "durationMs": 2689
+     },
+     {
+      "run": 15,
+      "load1AtStart": 54.0,
+      "status": "passed",
+      "durationMs": 3663
+     },
+     {
+      "run": 16,
+      "load1AtStart": 53.71,
+      "status": "passed",
+      "durationMs": 3313
+     },
+     {
+      "run": 17,
+      "load1AtStart": 53.6,
+      "status": "passed",
+      "durationMs": 3604
+     },
+     {
+      "run": 18,
+      "load1AtStart": 54.07,
+      "status": "passed",
+      "durationMs": 2924
+     },
+     {
+      "run": 19,
+      "load1AtStart": 58.37,
+      "status": "passed",
+      "durationMs": 1437
+     }
+    ]
+   },
+   "rule6": "The before batch is the reverted state (the base commit): 5 of 20 runs failed at the 5 s default under the same load; with the 25 s timeout 0 of 20 failed. The unclipped batch shows 7 of 30 runs over 5,000 ms."
+  },
+  {
+   "test": "apps/three-surface-poc/src/restart.test.ts > afterEach (drainPrivateFixtureProcesses, then the strict cleanup observation); seen in CI as 'waits through one vanished post-SIGTERM identity...' with 'cannot read identity for /proc/9125' and afterAll 'expected 15 to be 16' (node-ci run 41584397097 attempt 1)",
+   "cause": "A race, not a timeout. An exiting node process passes through /proc states the test helpers classify inconsistently: once its cwd link is released readProcessIdentity returns undefined (absent), and while its command line is empty but its state is not yet Z it throws private-process-identity-unreadable. The drain returned on its first empty scan, which could fall in the first window; afterEach's observation scan, which does not retry, could then fall in the second and throw. The afterEach failure leaves its observation unpushed, so afterAll's denominator is one short.",
+   "kernelWindowProbe": {
+    "method": "scratch exitprobe.mjs: spawn a node child, SIGTERM it, poll /proc/<pid> in a tight loop classifying each sample like readProcessIdentity, 200 children per batch",
+    "unloaded": {
+     "runs": 200,
+     "sawEmptyArgvLive": 171,
+     "sawCwdEnoentWithArgv": 30,
+     "sawAbsentThenUnreadable": 11
+    },
+    "cpu36": {
+     "runs": 200,
+     "sawEmptyArgvLive": 31,
+     "sawCwdEnoentWithArgv": 75,
+     "sawAbsentThenUnreadable": 7
+    }
+   },
+   "fix": "drainPrivateFixtureProcesses returns on an empty scan only when every registered PID and every PID the drain saw reads as a zombie or absent through readProcessProvenance (injectable), the two states that never revert; otherwise it sleeps and rescans within its deadline. A new deterministic test pins it.",
+   "naturalRate": {
+    "before": {
+     "runs": 30,
+     "note": "the unmodified file, 16 tests per run, 36 hogs",
+     "failedRuns": 0,
+     "perRun": [
+      {
+       "run": 0,
+       "load1AtStart": 25.25,
+       "wallS": 28.34,
+       "testsCollected": 16,
+       "failures": []
+      },
+      {
+       "run": 1,
+       "load1AtStart": 37.23,
+       "wallS": 26.57,
+       "testsCollected": 16,
+       "failures": []
+      },
+      {
+       "run": 2,
+       "load1AtStart": 40.24,
+       "wallS": 28.69,
+       "testsCollected": 16,
+       "failures": []
+      },
+      {
+       "run": 3,
+       "load1AtStart": 46.68,
+       "wallS": 37.71,
+       "testsCollected": 16,
+       "failures": []
+      },
+      {
+       "run": 4,
+       "load1AtStart": 52.05,
+       "wallS": 31.47,
+       "testsCollected": 16,
+       "failures": []
+      },
+      {
+       "run": 5,
+       "load1AtStart": 54.93,
+       "wallS": 31.52,
+       "testsCollected": 16,
+       "failures": []
+      },
+      {
+       "run": 6,
+       "load1AtStart": 56.17,
+       "wallS": 34.32,
+       "testsCollected": 16,
+       "failures": []
+      },
+      {
+       "run": 7,
+       "load1AtStart": 55.01,
+       "wallS": 24.59,
+       "testsCollected": 16,
+       "failures": []
+      },
+      {
+       "run": 8,
+       "load1AtStart": 54.91,
+       "wallS": 27.76,
+       "testsCollected": 16,
+       "failures": []
+      },
+      {
+       "run": 9,
+       "load1AtStart": 53.06,
+       "wallS": 26.03,
+       "testsCollected": 16,
+       "failures": []
+      },
+      {
+       "run": 10,
+       "load1AtStart": 50.41,
+       "wallS": 28.75,
+       "testsCollected": 16,
+       "failures": []
+      },
+      {
+       "run": 11,
+       "load1AtStart": 51.91,
+       "wallS": 29.28,
+       "testsCollected": 16,
+       "failures": []
+      },
+      {
+       "run": 12,
+       "load1AtStart": 51.32,
+       "wallS": 26.28,
+       "testsCollected": 16,
+       "failures": []
+      },
+      {
+       "run": 13,
+       "load1AtStart": 50.44,
+       "wallS": 29.02,
+       "testsCollected": 16,
+       "failures": []
+      },
+      {
+       "run": 14,
+       "load1AtStart": 51.25,
+       "wallS": 32.36,
+       "testsCollected": 16,
+       "failures": []
+      },
+      {
+       "run": 15,
+       "load1AtStart": 53.08,
+       "wallS": 32.25,
+       "testsCollected": 16,
+       "failures": []
+      },
+      {
+       "run": 16,
+       "load1AtStart": 51.79,
+       "wallS": 23.69,
+       "testsCollected": 16,
+       "failures": []
+      },
+      {
+       "run": 17,
+       "load1AtStart": 48.89,
+       "wallS": 26.76,
+       "testsCollected": 16,
+       "failures": []
+      },
+      {
+       "run": 18,
+       "load1AtStart": 48.4,
+       "wallS": 23.27,
+       "testsCollected": 16,
+       "failures": []
+      },
+      {
+       "run": 19,
+       "load1AtStart": 47.4,
+       "wallS": 27.82,
+       "testsCollected": 16,
+       "failures": []
+      },
+      {
+       "run": 20,
+       "load1AtStart": 48.61,
+       "wallS": 25.64,
+       "testsCollected": 16,
+       "failures": []
+      },
+      {
+       "run": 21,
+       "load1AtStart": 49.98,
+       "wallS": 23.83,
+       "testsCollected": 16,
+       "failures": []
+      },
+      {
+       "run": 22,
+       "load1AtStart": 49.3,
+       "wallS": 25.25,
+       "testsCollected": 16,
+       "failures": []
+      },
+      {
+       "run": 23,
+       "load1AtStart": 49.18,
+       "wallS": 26.76,
+       "testsCollected": 16,
+       "failures": []
+      },
+      {
+       "run": 24,
+       "load1AtStart": 50.65,
+       "wallS": 29.17,
+       "testsCollected": 16,
+       "failures": []
+      },
+      {
+       "run": 25,
+       "load1AtStart": 52.11,
+       "wallS": 27.44,
+       "testsCollected": 16,
+       "failures": []
+      },
+      {
+       "run": 26,
+       "load1AtStart": 53.85,
+       "wallS": 26.06,
+       "testsCollected": 16,
+       "failures": []
+      },
+      {
+       "run": 27,
+       "load1AtStart": 52.33,
+       "wallS": 28.76,
+       "testsCollected": 16,
+       "failures": []
+      },
+      {
+       "run": 28,
+       "load1AtStart": 51.16,
+       "wallS": 25.22,
+       "testsCollected": 16,
+       "failures": []
+      },
+      {
+       "run": 29,
+       "load1AtStart": 52.99,
+       "wallS": 27.88,
+       "testsCollected": 16,
+       "failures": []
+      }
+     ]
+    }
+   },
+   "amplifiedReproduction": {
+    "harness": "Scratch edits to restart.test.ts, never committed: (1) the drain's default sleep changed so it rescans immediately, and (2) 150 extra cases each starting one fixture and leaving it to afterEach's drain and observation.",
+    "mutations": [
+     {
+      "old": "const sleep = options.sleep ?? (() => new Promise(resolveWait => setTimeout(resolveWait, 25)));",
+      "new": "const sleep = options.sleep ?? (() => new Promise(resolveWait => setImmediate(resolveWait)));"
+     },
+     {
+      "old": "});  (end of file)",
+      "new": "  it.each(Array.from({ length: 150 }, (_, i) => i))('amplify drain-then-observe %i', async () => { await startedFixture(); });\n});"
+     }
+    ],
+    "revertedFix": {
+     "old": "        if ([...new Set([...pids, ...seen.keys()])].every(pid => readProvenance(pid) === undefined)) return;",
+     "new": "        return;"
+    },
+    "beforeWith25msSleep": {
+     "note": "fix reverted, amplify cases only (no sleep change), 3 runs x 150 drains: 0 amplify failures",
+     "perRun": [
+      {
+       "run": 0,
+       "load1AtStart": 28.4,
+       "wallS": 141.55,
+       "testsCollected": 167,
+       "failures": [
+        {
+         "title": "waits for a process that left the scan mid-exit to become a zombie or vanish before draining (syzygy-exj7)",
+         "message": "AssertionError: expected +0 to be 3 // Object.is equality"
+        }
+       ]
+      },
+      {
+       "run": 1,
+       "load1AtStart": 67.15,
+       "wallS": 120.41,
+       "testsCollected": 167,
+       "failures": [
+        {
+         "title": "waits for a process that left the scan mid-exit to become a zombie or vanish before draining (syzygy-exj7)",
+         "message": "AssertionError: expected +0 to be 3 // Object.is equality"
+        }
+       ]
+      },
+      {
+       "run": 2,
+       "load1AtStart": 61.88,
+       "wallS": 93.77,
+       "testsCollected": 167,
+       "failures": [
+        {
+         "title": "waits for a process that left the scan mid-exit to become a zombie or vanish before draining (syzygy-exj7)",
+         "message": "AssertionError: expected +0 to be 3 // Object.is equality"
+        }
+       ]
+      }
+     ]
+    },
+    "beforeTight": {
+     "note": "fix reverted, tight rescans, 2 runs x 150 drains: 4 of 300 drains failed with the CI signature",
+     "perRun": [
+      {
+       "run": 0,
+       "load1AtStart": 49.26,
+       "wallS": 116.28,
+       "testsCollected": 167,
+       "failures": [
+        {
+         "title": "<file>",
+         "message": "expected 165 to be 167 // Object.is equality"
+        },
+        {
+         "title": "waits for a process that left the scan mid-exit to become a zombie or vanish before draining (syzygy-exj7)",
+         "message": "AssertionError: expected +0 to be 3 // Object.is equality"
+        },
+        {
+         "title": "amplify drain-then-observe 9",
+         "message": "Error: cannot read identity for /proc/4141766"
+        },
+        {
+         "title": "amplify drain-then-observe 136",
+         "message": "Error: cannot read identity for /proc/4159469"
+        }
+       ]
+      },
+      {
+       "run": 1,
+       "load1AtStart": 59.92,
+       "wallS": 106.09,
+       "testsCollected": 167,
+       "failures": [
+        {
+         "title": "<file>",
+         "message": "expected 165 to be 167 // Object.is equality"
+        },
+        {
+         "title": "waits for a process that left the scan mid-exit to become a zombie or vanish before draining (syzygy-exj7)",
+         "message": "AssertionError: expected +0 to be 3 // Object.is equality"
+        },
+        {
+         "title": "amplify drain-then-observe 112",
+         "message": "Error: cannot read identity for /proc/4184888"
+        },
+        {
+         "title": "amplify drain-then-observe 135",
+         "message": "Error: cannot read identity for /proc/4187767"
+        }
+       ]
+      }
+     ]
+    },
+    "afterTight": {
+     "note": "fix applied, tight rescans, 3 runs x 150 drains: 0 of 450 failed",
+     "perRun": [
+      {
+       "run": 0,
+       "load1AtStart": 48.26,
+       "wallS": 98.35,
+       "testsCollected": 167,
+       "failures": []
+      },
+      {
+       "run": 1,
+       "load1AtStart": 51.79,
+       "wallS": 101.99,
+       "testsCollected": 167,
+       "failures": []
+      },
+      {
+       "run": 2,
+       "load1AtStart": 54.58,
+       "wallS": 102.16,
+       "testsCollected": 167,
+       "failures": []
+      }
+     ]
+    }
+   },
+   "rule6Deterministic": "With revertedFix applied, the new test 'waits for a process that left the scan mid-exit to become a zombie or vanish before draining (syzygy-exj7)' fails: 'expected +0 to be 3' (no provenance read before returning). With the fix it passes."
+  }
+ ]
+}

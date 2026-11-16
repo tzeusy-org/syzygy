@@ -1,0 +1,90 @@
+{
+  "classes": [
+    {
+      "id": 1,
+      "class": "authority boundaries",
+      "authorDisposition": "conservative review class: test/evidence checks of boundaries; no authority behavior change",
+      "finalClassification": "independent reviewer or owner"
+    },
+    {
+      "id": 2,
+      "class": "graph identity",
+      "authorDisposition": "no implementing delta",
+      "finalClassification": "independent reviewer or owner"
+    },
+    {
+      "id": 3,
+      "class": "deterministic observation",
+      "authorDisposition": "test/evidence population, source identity and deterministic record checks",
+      "finalClassification": "independent reviewer or owner"
+    },
+    {
+      "id": 4,
+      "class": "security",
+      "authorDisposition": "island/no-load and fixture authenticated-route coverage; no security posture change",
+      "finalClassification": "independent reviewer or owner"
+    },
+    {
+      "id": 5,
+      "class": "data migration",
+      "authorDisposition": "no implementing delta",
+      "finalClassification": "independent reviewer or owner"
+    },
+    {
+      "id": 6,
+      "class": "public interface",
+      "authorDisposition": "CLI/endpoint test coverage and evidence-tool output; no product endpoint removal/change",
+      "finalClassification": "independent reviewer or owner"
+    },
+    {
+      "id": 7,
+      "class": "certificate logic",
+      "authorDisposition": "no implementing delta",
+      "finalClassification": "independent reviewer or owner"
+    }
+  ],
+  "floors": [
+    {
+      "id": 1,
+      "floor": "truth",
+      "preservation": "Exact source/row identities, observed failure attribution and limited claims"
+    },
+    {
+      "id": 2,
+      "floor": "evidence",
+      "preservation": "Current timing and all unperformed gates remain Unknown/pending"
+    },
+    {
+      "id": 3,
+      "floor": "inference",
+      "preservation": "Author classification and interpretation labelled Inferred; no owner verdict"
+    },
+    {
+      "id": 4,
+      "floor": "write",
+      "preservation": "Only ROOT-allocated implementation/evidence paths; no product observed-plane writes"
+    },
+    {
+      "id": 5,
+      "floor": "sign-off",
+      "preservation": "No act, normative/adopted bytes, security/retention posture or gate change"
+    },
+    {
+      "id": 6,
+      "floor": "security",
+      "preservation": "Fixture credentials stay process-to-fetch; private offline namespace/cache; no observed-body/provider access"
+    },
+    {
+      "id": 7,
+      "floor": "identity",
+      "preservation": "No graph IDs, kernel identities, or schema/store migration"
+    }
+  ],
+  "remaining": [
+    "fresh independent exact-subject review",
+    "ROOT non-blocking .10 notice",
+    "final integrated check:all",
+    "hosted exact landing checks",
+    "ROOT lawful landing"
+  ]
+}

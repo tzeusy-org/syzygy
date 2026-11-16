@@ -1,0 +1,3163 @@
+{
+ "subject": "NON_HUMAN_PRINCIPAL (act-fields.ts), single-deletion mutants against body-read-authority.test.ts and walkthrough-judgment.test.ts",
+ "commit": "bf5f5263a04677e90aaaa4946308651e70046767",
+ "trackedTreeDirtyBefore": [],
+ "subjectDigests": {
+  "packages/three-surface-poc-core/src/act-fields.ts": "dcc451e83fc1ad97ef3cc5b1cf97dd979d1fba9de4588fc841958c03e8243fef",
+  "packages/three-surface-poc-core/src/body-read-authority.test.ts": "66778d5d32249d1d00f5cedd4077006facc41964a106fff65a0ceba578cae6cc",
+  "packages/three-surface-poc-core/src/walkthrough-judgment.test.ts": "aaf0713769982329d958d88d5d89b83a07c204c9dce11a9914e8f5c8a6d513f5"
+ },
+ "harnessDigests": {
+  "mutate_non_human_principal.py": "6d7ab39a9ac1ceeb74e66a2031848b3269e3194e5c7f36aed8a3868d3da20f92",
+  "regex-differential.mjs": "b748775a5bdd59d9c0b38950126d93b3641f1744a0cdd7c489eb804f29b035ef"
+ },
+ "testFiles": [
+  "packages/three-surface-poc-core/src/body-read-authority.test.ts",
+  "packages/three-surface-poc-core/src/walkthrough-judgment.test.ts"
+ ],
+ "rule": {
+  "literal": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i",
+  "arms": 4
+ },
+ "corpus": {
+  "strings": 12355,
+  "originalMatches": 4198
+ },
+ "baseline": {
+  "total": 464,
+  "passed": 464,
+  "failed": 0,
+  "failing": []
+ },
+ "trackedTreeDirtyAfter": [],
+ "mutants": [
+  {
+   "id": "both-arms-drop-agent",
+   "class": "section-3H",
+   "description": "agent deleted from both line-start arms",
+   "fragments": [
+    {
+     "old": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i",
+     "new": "/^(bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i"
+    }
+   ],
+   "differentialOverCorpus": {
+    "valid": true,
+    "narrower": 33,
+    "broader": 0,
+    "narrowerWitnesses": [
+     "AGENT",
+     "Agent",
+     "agent",
+     "AGENT ",
+     "AGENT-"
+    ],
+    "broaderWitnesses": []
+   },
+   "observed": {
+    "total": 464,
+    "passed": 456,
+    "failed": 8
+   },
+   "failing": [
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"agent: nightly\" (role prefix agent with no model name) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"agent/triage\" (role prefix agent with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"agent: nightly\" (role prefix agent with no model name) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"agent/triage\" (role prefix agent with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"agent: nightly\" (role prefix agent with no model name) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"agent/triage\" (role prefix agent with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"agent: nightly\" (role prefix agent with no model name) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"agent/triage\" (role prefix agent with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    }
+   ],
+   "killed": true,
+   "equivalentOnCorpus": false,
+   "equivalenceArgument": null,
+   "restored": true
+  },
+  {
+   "id": "both-arms-drop-bot",
+   "class": "section-3H",
+   "description": "bot deleted from both line-start arms",
+   "fragments": [
+    {
+     "old": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i",
+     "new": "/^(agent|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i"
+    }
+   ],
+   "differentialOverCorpus": {
+    "valid": true,
+    "narrower": 33,
+    "broader": 0,
+    "narrowerWitnesses": [
+     "BOT",
+     "Bot",
+     "bot",
+     "BOT ",
+     "BOT-"
+    ],
+    "broaderWitnesses": []
+   },
+   "observed": {
+    "total": 464,
+    "passed": 456,
+    "failed": 8
+   },
+   "failing": [
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"bot\" (role prefix bot, bare) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"bot/deploy\" (role prefix bot with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"bot\" (role prefix bot, bare) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"bot/deploy\" (role prefix bot with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"bot\" (role prefix bot, bare) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"bot/deploy\" (role prefix bot with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"bot\" (role prefix bot, bare) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"bot/deploy\" (role prefix bot with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    }
+   ],
+   "killed": true,
+   "equivalentOnCorpus": false,
+   "equivalenceArgument": null,
+   "restored": true
+  },
+  {
+   "id": "both-arms-drop-service",
+   "class": "section-3H",
+   "description": "service deleted from both line-start arms",
+   "fragments": [
+    {
+     "old": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i",
+     "new": "/^(agent|bot|machine|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i"
+    }
+   ],
+   "differentialOverCorpus": {
+    "valid": true,
+    "narrower": 33,
+    "broader": 0,
+    "narrowerWitnesses": [
+     "SERVICE",
+     "Service",
+     "service",
+     "SERVICE ",
+     "SERVICE-"
+    ],
+    "broaderWitnesses": []
+   },
+   "observed": {
+    "total": 464,
+    "passed": 456,
+    "failed": 8
+   },
+   "failing": [
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"service: deploy\" (role prefix service, colon) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"service/gateway\" (role prefix service with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"service: deploy\" (role prefix service, colon) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"service/gateway\" (role prefix service with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"service: deploy\" (role prefix service, colon) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"service/gateway\" (role prefix service with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"service: deploy\" (role prefix service, colon) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"service/gateway\" (role prefix service with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    }
+   ],
+   "killed": true,
+   "equivalentOnCorpus": false,
+   "equivalenceArgument": null,
+   "restored": true
+  },
+  {
+   "id": "both-arms-drop-system",
+   "class": "section-3H",
+   "description": "system deleted from both line-start arms",
+   "fragments": [
+    {
+     "old": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i",
+     "new": "/^(agent|bot|machine|service|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i"
+    }
+   ],
+   "differentialOverCorpus": {
+    "valid": true,
+    "narrower": 33,
+    "broader": 0,
+    "narrowerWitnesses": [
+     "SYSTEM",
+     "System",
+     "system",
+     "SYSTEM ",
+     "SYSTEM-"
+    ],
+    "broaderWitnesses": []
+   },
+   "observed": {
+    "total": 464,
+    "passed": 456,
+    "failed": 8
+   },
+   "failing": [
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"system\" (role prefix system, bare) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"system/cron\" (role prefix system with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"system\" (role prefix system, bare) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"system/cron\" (role prefix system with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"system\" (role prefix system, bare) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"system/cron\" (role prefix system with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"system\" (role prefix system, bare) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"system/cron\" (role prefix system with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    }
+   ],
+   "killed": true,
+   "equivalentOnCorpus": false,
+   "equivalenceArgument": null,
+   "restored": true
+  },
+  {
+   "id": "both-arms-drop-ci",
+   "class": "section-3H",
+   "description": "ci deleted from both line-start arms",
+   "fragments": [
+    {
+     "old": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i",
+     "new": "/^(agent|bot|machine|service|system|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i"
+    }
+   ],
+   "differentialOverCorpus": {
+    "valid": true,
+    "narrower": 34,
+    "broader": 0,
+    "narrowerWitnesses": [
+     "CI",
+     "Ci",
+     "ci",
+     "CI ",
+     "CI-"
+    ],
+    "broaderWitnesses": []
+   },
+   "observed": {
+    "total": 464,
+    "passed": 460,
+    "failed": 4
+   },
+   "failing": [
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"ci/release\" (role prefix ci with a slash (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"ci/release\" (role prefix ci with a slash (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"ci/release\" (role prefix ci with a slash (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"ci/release\" (role prefix ci with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    }
+   ],
+   "killed": true,
+   "equivalentOnCorpus": false,
+   "equivalenceArgument": null,
+   "restored": true
+  },
+  {
+   "id": "both-arms-drop-pipeline",
+   "class": "section-3H",
+   "description": "pipeline deleted from both line-start arms",
+   "fragments": [
+    {
+     "old": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i",
+     "new": "/^(agent|bot|machine|service|system|ci|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i"
+    }
+   ],
+   "differentialOverCorpus": {
+    "valid": true,
+    "narrower": 33,
+    "broader": 0,
+    "narrowerWitnesses": [
+     "PIPELINE",
+     "Pipeline",
+     "pipeline",
+     "PIPELINE ",
+     "PIPELINE-"
+    ],
+    "broaderWitnesses": []
+   },
+   "observed": {
+    "total": 464,
+    "passed": 456,
+    "failed": 8
+   },
+   "failing": [
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"pipeline-7\" (role prefix pipeline, hyphen) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"pipeline/build\" (role prefix pipeline with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"pipeline-7\" (role prefix pipeline, hyphen) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"pipeline/build\" (role prefix pipeline with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"pipeline-7\" (role prefix pipeline, hyphen) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"pipeline/build\" (role prefix pipeline with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"pipeline-7\" (role prefix pipeline, hyphen) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"pipeline/build\" (role prefix pipeline with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    }
+   ],
+   "killed": true,
+   "equivalentOnCorpus": false,
+   "equivalenceArgument": null,
+   "restored": true
+  },
+  {
+   "id": "both-arms-drop-model",
+   "class": "section-3H",
+   "description": "model deleted from both line-start arms",
+   "fragments": [
+    {
+     "old": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i",
+     "new": "/^(agent|bot|machine|service|system|ci|pipeline)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i"
+    }
+   ],
+   "differentialOverCorpus": {
+    "valid": true,
+    "narrower": 33,
+    "broader": 0,
+    "narrowerWitnesses": [
+     "MODEL",
+     "Model",
+     "model",
+     "MODEL ",
+     "MODEL-"
+    ],
+    "broaderWitnesses": []
+   },
+   "observed": {
+    "total": 464,
+    "passed": 456,
+    "failed": 8
+   },
+   "failing": [
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"model: x\" (role prefix model, colon) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"model/v2\" (role prefix model with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"model: x\" (role prefix model, colon) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"model/v2\" (role prefix model with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"model: x\" (role prefix model, colon) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"model/v2\" (role prefix model with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"model: x\" (role prefix model, colon) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"model/v2\" (role prefix model with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    }
+   ],
+   "killed": true,
+   "equivalentOnCorpus": false,
+   "equivalenceArgument": null,
+   "restored": true
+  },
+  {
+   "id": "arm1-sep-drop-colon",
+   "class": "section-3H",
+   "description": "the colon deleted from the first arm's separator class",
+   "fragments": [
+    {
+     "old": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i",
+     "new": "/^(agent|bot|machine|service|system|ci|pipeline|model)([\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i"
+    }
+   ],
+   "differentialOverCorpus": {
+    "valid": true,
+    "narrower": 6,
+    "broader": 0,
+    "narrowerWitnesses": [
+     "MACHINE:",
+     "Machine:",
+     "machine:",
+     "MACHINE: x",
+     "Machine: x"
+    ],
+    "broaderWitnesses": []
+   },
+   "observed": {
+    "total": 464,
+    "passed": 460,
+    "failed": 4
+   },
+   "failing": [
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"machine: build-42\" (role prefix machine, colon (only the first arm lists machine)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"machine: build-42\" (role prefix machine, colon (only the first arm lists machine)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"machine: build-42\" (role prefix machine, colon (only the first arm lists machine)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"machine: build-42\" (role prefix machine, colon (only the first arm lists machine)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    }
+   ],
+   "killed": true,
+   "equivalentOnCorpus": false,
+   "equivalenceArgument": null,
+   "restored": true
+  },
+  {
+   "id": "arm1-drop-agent",
+   "class": "single-arm-word",
+   "description": "agent deleted from the first line-start arm only",
+   "fragments": [
+    {
+     "old": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i",
+     "new": "/^(bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i"
+    }
+   ],
+   "differentialOverCorpus": {
+    "valid": true,
+    "narrower": 0,
+    "broader": 0,
+    "narrowerWitnesses": [],
+    "broaderWitnesses": []
+   },
+   "observed": {
+    "total": 464,
+    "passed": 464,
+    "failed": 0
+   },
+   "failing": [],
+   "killed": false,
+   "equivalentOnCorpus": true,
+   "equivalenceArgument": "the second line-start arm lists agent with the same start anchor and a separator class (whitespace, colon, slash, hyphen, end) that contains every separator of the first arm, so it matches whatever the first arm's agent matched",
+   "restored": true
+  },
+  {
+   "id": "arm1-drop-bot",
+   "class": "single-arm-word",
+   "description": "bot deleted from the first line-start arm only",
+   "fragments": [
+    {
+     "old": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i",
+     "new": "/^(agent|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i"
+    }
+   ],
+   "differentialOverCorpus": {
+    "valid": true,
+    "narrower": 0,
+    "broader": 0,
+    "narrowerWitnesses": [],
+    "broaderWitnesses": []
+   },
+   "observed": {
+    "total": 464,
+    "passed": 464,
+    "failed": 0
+   },
+   "failing": [],
+   "killed": false,
+   "equivalentOnCorpus": true,
+   "equivalenceArgument": "the second line-start arm lists bot with the same start anchor and a separator class (whitespace, colon, slash, hyphen, end) that contains every separator of the first arm, so it matches whatever the first arm's bot matched",
+   "restored": true
+  },
+  {
+   "id": "arm1-drop-machine",
+   "class": "single-arm-word",
+   "description": "machine deleted from the first line-start arm only",
+   "fragments": [
+    {
+     "old": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i",
+     "new": "/^(agent|bot|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i"
+    }
+   ],
+   "differentialOverCorpus": {
+    "valid": true,
+    "narrower": 27,
+    "broader": 0,
+    "narrowerWitnesses": [
+     "MACHINE",
+     "Machine",
+     "machine",
+     "MACHINE ",
+     "MACHINE-"
+    ],
+    "broaderWitnesses": []
+   },
+   "observed": {
+    "total": 464,
+    "passed": 448,
+    "failed": 16
+   },
+   "failing": [
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"machine\" (role prefix machine) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"machine: build-42\" (role prefix machine, colon (only the first arm lists machine)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"machine runner\" (role prefix machine, whitespace) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"machine-7\" (role prefix machine, hyphen) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"machine\" (role prefix machine) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"machine: build-42\" (role prefix machine, colon (only the first arm lists machine)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"machine runner\" (role prefix machine, whitespace) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"machine-7\" (role prefix machine, hyphen) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"machine\" (role prefix machine) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"machine: build-42\" (role prefix machine, colon (only the first arm lists machine)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"machine runner\" (role prefix machine, whitespace) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"machine-7\" (role prefix machine, hyphen) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"machine\" (role prefix machine (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"machine: build-42\" (role prefix machine, colon (only the first arm lists machine)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"machine runner\" (role prefix machine, whitespace) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"machine-7\" (role prefix machine, hyphen) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    }
+   ],
+   "killed": true,
+   "equivalentOnCorpus": false,
+   "equivalenceArgument": null,
+   "restored": true
+  },
+  {
+   "id": "arm1-drop-service",
+   "class": "single-arm-word",
+   "description": "service deleted from the first line-start arm only",
+   "fragments": [
+    {
+     "old": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i",
+     "new": "/^(agent|bot|machine|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i"
+    }
+   ],
+   "differentialOverCorpus": {
+    "valid": true,
+    "narrower": 0,
+    "broader": 0,
+    "narrowerWitnesses": [],
+    "broaderWitnesses": []
+   },
+   "observed": {
+    "total": 464,
+    "passed": 464,
+    "failed": 0
+   },
+   "failing": [],
+   "killed": false,
+   "equivalentOnCorpus": true,
+   "equivalenceArgument": "the second line-start arm lists service with the same start anchor and a separator class (whitespace, colon, slash, hyphen, end) that contains every separator of the first arm, so it matches whatever the first arm's service matched",
+   "restored": true
+  },
+  {
+   "id": "arm1-drop-system",
+   "class": "single-arm-word",
+   "description": "system deleted from the first line-start arm only",
+   "fragments": [
+    {
+     "old": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i",
+     "new": "/^(agent|bot|machine|service|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i"
+    }
+   ],
+   "differentialOverCorpus": {
+    "valid": true,
+    "narrower": 0,
+    "broader": 0,
+    "narrowerWitnesses": [],
+    "broaderWitnesses": []
+   },
+   "observed": {
+    "total": 464,
+    "passed": 464,
+    "failed": 0
+   },
+   "failing": [],
+   "killed": false,
+   "equivalentOnCorpus": true,
+   "equivalenceArgument": "the second line-start arm lists system with the same start anchor and a separator class (whitespace, colon, slash, hyphen, end) that contains every separator of the first arm, so it matches whatever the first arm's system matched",
+   "restored": true
+  },
+  {
+   "id": "arm1-drop-ci",
+   "class": "single-arm-word",
+   "description": "ci deleted from the first line-start arm only",
+   "fragments": [
+    {
+     "old": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i",
+     "new": "/^(agent|bot|machine|service|system|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i"
+    }
+   ],
+   "differentialOverCorpus": {
+    "valid": true,
+    "narrower": 0,
+    "broader": 0,
+    "narrowerWitnesses": [],
+    "broaderWitnesses": []
+   },
+   "observed": {
+    "total": 464,
+    "passed": 464,
+    "failed": 0
+   },
+   "failing": [],
+   "killed": false,
+   "equivalentOnCorpus": true,
+   "equivalenceArgument": "the second line-start arm lists ci with the same start anchor and a separator class (whitespace, colon, slash, hyphen, end) that contains every separator of the first arm, so it matches whatever the first arm's ci matched",
+   "restored": true
+  },
+  {
+   "id": "arm1-drop-pipeline",
+   "class": "single-arm-word",
+   "description": "pipeline deleted from the first line-start arm only",
+   "fragments": [
+    {
+     "old": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i",
+     "new": "/^(agent|bot|machine|service|system|ci|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i"
+    }
+   ],
+   "differentialOverCorpus": {
+    "valid": true,
+    "narrower": 0,
+    "broader": 0,
+    "narrowerWitnesses": [],
+    "broaderWitnesses": []
+   },
+   "observed": {
+    "total": 464,
+    "passed": 464,
+    "failed": 0
+   },
+   "failing": [],
+   "killed": false,
+   "equivalentOnCorpus": true,
+   "equivalenceArgument": "the second line-start arm lists pipeline with the same start anchor and a separator class (whitespace, colon, slash, hyphen, end) that contains every separator of the first arm, so it matches whatever the first arm's pipeline matched",
+   "restored": true
+  },
+  {
+   "id": "arm1-drop-model",
+   "class": "single-arm-word",
+   "description": "model deleted from the first line-start arm only",
+   "fragments": [
+    {
+     "old": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i",
+     "new": "/^(agent|bot|machine|service|system|ci|pipeline)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i"
+    }
+   ],
+   "differentialOverCorpus": {
+    "valid": true,
+    "narrower": 0,
+    "broader": 0,
+    "narrowerWitnesses": [],
+    "broaderWitnesses": []
+   },
+   "observed": {
+    "total": 464,
+    "passed": 464,
+    "failed": 0
+   },
+   "failing": [],
+   "killed": false,
+   "equivalentOnCorpus": true,
+   "equivalenceArgument": "the second line-start arm lists model with the same start anchor and a separator class (whitespace, colon, slash, hyphen, end) that contains every separator of the first arm, so it matches whatever the first arm's model matched",
+   "restored": true
+  },
+  {
+   "id": "arm3-drop-agent",
+   "class": "single-arm-word",
+   "description": "agent deleted from the second line-start arm only",
+   "fragments": [
+    {
+     "old": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i",
+     "new": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i"
+    }
+   ],
+   "differentialOverCorpus": {
+    "valid": true,
+    "narrower": 6,
+    "broader": 0,
+    "narrowerWitnesses": [
+     "AGENT/",
+     "Agent/",
+     "agent/",
+     "AGENT/x",
+     "Agent/x"
+    ],
+    "broaderWitnesses": []
+   },
+   "observed": {
+    "total": 464,
+    "passed": 460,
+    "failed": 4
+   },
+   "failing": [
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"agent/triage\" (role prefix agent with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"agent/triage\" (role prefix agent with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"agent/triage\" (role prefix agent with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"agent/triage\" (role prefix agent with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    }
+   ],
+   "killed": true,
+   "equivalentOnCorpus": false,
+   "equivalenceArgument": null,
+   "restored": true
+  },
+  {
+   "id": "arm3-drop-bot",
+   "class": "single-arm-word",
+   "description": "bot deleted from the second line-start arm only",
+   "fragments": [
+    {
+     "old": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i",
+     "new": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i"
+    }
+   ],
+   "differentialOverCorpus": {
+    "valid": true,
+    "narrower": 6,
+    "broader": 0,
+    "narrowerWitnesses": [
+     "BOT/",
+     "Bot/",
+     "bot/",
+     "BOT/x",
+     "Bot/x"
+    ],
+    "broaderWitnesses": []
+   },
+   "observed": {
+    "total": 464,
+    "passed": 460,
+    "failed": 4
+   },
+   "failing": [
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"bot/deploy\" (role prefix bot with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"bot/deploy\" (role prefix bot with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"bot/deploy\" (role prefix bot with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"bot/deploy\" (role prefix bot with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    }
+   ],
+   "killed": true,
+   "equivalentOnCorpus": false,
+   "equivalenceArgument": null,
+   "restored": true
+  },
+  {
+   "id": "arm3-drop-ci",
+   "class": "single-arm-word",
+   "description": "ci deleted from the second line-start arm only",
+   "fragments": [
+    {
+     "old": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i",
+     "new": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i"
+    }
+   ],
+   "differentialOverCorpus": {
+    "valid": true,
+    "narrower": 7,
+    "broader": 0,
+    "narrowerWitnesses": [
+     "CI/",
+     "Ci/",
+     "ci/",
+     "CI/x",
+     "Ci/x"
+    ],
+    "broaderWitnesses": []
+   },
+   "observed": {
+    "total": 464,
+    "passed": 460,
+    "failed": 4
+   },
+   "failing": [
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"ci/release\" (role prefix ci with a slash (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"ci/release\" (role prefix ci with a slash (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"ci/release\" (role prefix ci with a slash (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"ci/release\" (role prefix ci with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    }
+   ],
+   "killed": true,
+   "equivalentOnCorpus": false,
+   "equivalenceArgument": null,
+   "restored": true
+  },
+  {
+   "id": "arm3-drop-system",
+   "class": "single-arm-word",
+   "description": "system deleted from the second line-start arm only",
+   "fragments": [
+    {
+     "old": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i",
+     "new": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i"
+    }
+   ],
+   "differentialOverCorpus": {
+    "valid": true,
+    "narrower": 6,
+    "broader": 0,
+    "narrowerWitnesses": [
+     "SYSTEM/",
+     "System/",
+     "system/",
+     "SYSTEM/x",
+     "System/x"
+    ],
+    "broaderWitnesses": []
+   },
+   "observed": {
+    "total": 464,
+    "passed": 460,
+    "failed": 4
+   },
+   "failing": [
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"system/cron\" (role prefix system with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"system/cron\" (role prefix system with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"system/cron\" (role prefix system with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"system/cron\" (role prefix system with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    }
+   ],
+   "killed": true,
+   "equivalentOnCorpus": false,
+   "equivalenceArgument": null,
+   "restored": true
+  },
+  {
+   "id": "arm3-drop-daemon",
+   "class": "single-arm-word",
+   "description": "daemon deleted from the second line-start arm only",
+   "fragments": [
+    {
+     "old": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i",
+     "new": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i"
+    }
+   ],
+   "differentialOverCorpus": {
+    "valid": true,
+    "narrower": 33,
+    "broader": 0,
+    "narrowerWitnesses": [
+     "DAEMON",
+     "Daemon",
+     "daemon",
+     "DAEMON ",
+     "DAEMON-"
+    ],
+    "broaderWitnesses": []
+   },
+   "observed": {
+    "total": 464,
+    "passed": 452,
+    "failed": 12
+   },
+   "failing": [
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"daemon\" (role prefix daemon (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"daemon nightly\" (role prefix daemon, whitespace) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"daemon-7\" (role prefix daemon, hyphen) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"daemon\" (role prefix daemon (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"daemon nightly\" (role prefix daemon, whitespace) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"daemon-7\" (role prefix daemon, hyphen) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"daemon\" (role prefix daemon (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"daemon nightly\" (role prefix daemon, whitespace) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"daemon-7\" (role prefix daemon, hyphen) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"daemon\" (role prefix daemon) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"daemon nightly\" (role prefix daemon, whitespace) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"daemon-7\" (role prefix daemon, hyphen) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    }
+   ],
+   "killed": true,
+   "equivalentOnCorpus": false,
+   "equivalenceArgument": null,
+   "restored": true
+  },
+  {
+   "id": "arm3-drop-service",
+   "class": "single-arm-word",
+   "description": "service deleted from the second line-start arm only",
+   "fragments": [
+    {
+     "old": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i",
+     "new": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i"
+    }
+   ],
+   "differentialOverCorpus": {
+    "valid": true,
+    "narrower": 6,
+    "broader": 0,
+    "narrowerWitnesses": [
+     "SERVICE/",
+     "Service/",
+     "service/",
+     "SERVICE/x",
+     "Service/x"
+    ],
+    "broaderWitnesses": []
+   },
+   "observed": {
+    "total": 464,
+    "passed": 460,
+    "failed": 4
+   },
+   "failing": [
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"service/gateway\" (role prefix service with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"service/gateway\" (role prefix service with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"service/gateway\" (role prefix service with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"service/gateway\" (role prefix service with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    }
+   ],
+   "killed": true,
+   "equivalentOnCorpus": false,
+   "equivalenceArgument": null,
+   "restored": true
+  },
+  {
+   "id": "arm3-drop-pipeline",
+   "class": "single-arm-word",
+   "description": "pipeline deleted from the second line-start arm only",
+   "fragments": [
+    {
+     "old": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i",
+     "new": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i"
+    }
+   ],
+   "differentialOverCorpus": {
+    "valid": true,
+    "narrower": 6,
+    "broader": 0,
+    "narrowerWitnesses": [
+     "PIPELINE/",
+     "Pipeline/",
+     "pipeline/",
+     "PIPELINE/x",
+     "Pipeline/x"
+    ],
+    "broaderWitnesses": []
+   },
+   "observed": {
+    "total": 464,
+    "passed": 460,
+    "failed": 4
+   },
+   "failing": [
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"pipeline/build\" (role prefix pipeline with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"pipeline/build\" (role prefix pipeline with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"pipeline/build\" (role prefix pipeline with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"pipeline/build\" (role prefix pipeline with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    }
+   ],
+   "killed": true,
+   "equivalentOnCorpus": false,
+   "equivalenceArgument": null,
+   "restored": true
+  },
+  {
+   "id": "arm3-drop-automation",
+   "class": "single-arm-word",
+   "description": "automation deleted from the second line-start arm only",
+   "fragments": [
+    {
+     "old": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i",
+     "new": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i"
+    }
+   ],
+   "differentialOverCorpus": {
+    "valid": true,
+    "narrower": 34,
+    "broader": 0,
+    "narrowerWitnesses": [
+     "AUTOMATION",
+     "Automation",
+     "automation",
+     "AUTOMATION ",
+     "AUTOMATION-"
+    ],
+    "broaderWitnesses": []
+   },
+   "observed": {
+    "total": 464,
+    "passed": 460,
+    "failed": 4
+   },
+   "failing": [
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"automation: nightly\" (role prefix automation (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"automation: nightly\" (role prefix automation (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"automation: nightly\" (role prefix automation (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"automation: nightly\" (role prefix automation) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    }
+   ],
+   "killed": true,
+   "equivalentOnCorpus": false,
+   "equivalenceArgument": null,
+   "restored": true
+  },
+  {
+   "id": "arm3-drop-model",
+   "class": "single-arm-word",
+   "description": "model deleted from the second line-start arm only",
+   "fragments": [
+    {
+     "old": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i",
+     "new": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i"
+    }
+   ],
+   "differentialOverCorpus": {
+    "valid": true,
+    "narrower": 6,
+    "broader": 0,
+    "narrowerWitnesses": [
+     "MODEL/",
+     "Model/",
+     "model/",
+     "MODEL/x",
+     "Model/x"
+    ],
+    "broaderWitnesses": []
+   },
+   "observed": {
+    "total": 464,
+    "passed": 460,
+    "failed": 4
+   },
+   "failing": [
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"model/v2\" (role prefix model with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"model/v2\" (role prefix model with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"model/v2\" (role prefix model with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"model/v2\" (role prefix model with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    }
+   ],
+   "killed": true,
+   "equivalentOnCorpus": false,
+   "equivalenceArgument": null,
+   "restored": true
+  },
+  {
+   "id": "arm3-drop-claude",
+   "class": "single-arm-word",
+   "description": "claude deleted from the second line-start arm only",
+   "fragments": [
+    {
+     "old": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i",
+     "new": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i"
+    }
+   ],
+   "differentialOverCorpus": {
+    "valid": true,
+    "narrower": 0,
+    "broader": 0,
+    "narrowerWitnesses": [],
+    "broaderWitnesses": []
+   },
+   "observed": {
+    "total": 464,
+    "passed": 464,
+    "failed": 0
+   },
+   "failing": [],
+   "killed": false,
+   "equivalentOnCorpus": true,
+   "equivalenceArgument": "the model-name arm matches claude as a word; the second arm's claude needs a start anchor and then a separator or end, all non-word, so a word boundary holds on both sides and the model-name arm matches too",
+   "restored": true
+  },
+  {
+   "id": "arm3-drop-syzygy",
+   "class": "single-arm-word",
+   "description": "syzygy deleted from the second line-start arm only",
+   "fragments": [
+    {
+     "old": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i",
+     "new": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i"
+    }
+   ],
+   "differentialOverCorpus": {
+    "valid": true,
+    "narrower": 33,
+    "broader": 0,
+    "narrowerWitnesses": [
+     "SYZYGY",
+     "Syzygy",
+     "syzygy",
+     "SYZYGY ",
+     "SYZYGY-"
+    ],
+    "broaderWitnesses": []
+   },
+   "observed": {
+    "total": 464,
+    "passed": 460,
+    "failed": 4
+   },
+   "failing": [
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"syzygy\" (role prefix syzygy (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"syzygy\" (role prefix syzygy (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"syzygy\" (role prefix syzygy (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"syzygy\" (role prefix syzygy) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    }
+   ],
+   "killed": true,
+   "equivalentOnCorpus": false,
+   "equivalenceArgument": null,
+   "restored": true
+  },
+  {
+   "id": "arm2-drop-claude",
+   "class": "model-name-word",
+   "description": "claude deleted from the model-name arm",
+   "fragments": [
+    {
+     "old": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i",
+     "new": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i"
+    }
+   ],
+   "differentialOverCorpus": {
+    "valid": true,
+    "narrower": 763,
+    "broader": 0,
+    "narrowerWitnesses": [
+     "CLAUDE.x",
+     "Claude.x",
+     "claude.x",
+     "x-CLAUDE",
+     "x-Claude"
+    ],
+    "broaderWitnesses": []
+   },
+   "observed": {
+    "total": 464,
+    "passed": 460,
+    "failed": 4
+   },
+   "failing": [
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"Anthropic Claude\" (model name claude as a word) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"Anthropic Claude\" (model name claude as a word) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"Anthropic Claude\" (model name claude as a word) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"Anthropic Claude\" (model name claude as a word (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    }
+   ],
+   "killed": true,
+   "equivalentOnCorpus": false,
+   "equivalenceArgument": null,
+   "restored": true
+  },
+  {
+   "id": "arm2-drop-codex",
+   "class": "model-name-word",
+   "description": "codex deleted from the model-name arm",
+   "fragments": [
+    {
+     "old": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i",
+     "new": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i"
+    }
+   ],
+   "differentialOverCorpus": {
+    "valid": true,
+    "narrower": 216,
+    "broader": 0,
+    "narrowerWitnesses": [
+     "CODEX",
+     "Codex",
+     "codex",
+     "CODEX ",
+     "CODEX-"
+    ],
+    "broaderWitnesses": []
+   },
+   "observed": {
+    "total": 464,
+    "passed": 460,
+    "failed": 4
+   },
+   "failing": [
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"codex\" (model name codex) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"codex\" (model name codex) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"codex\" (model name codex) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"codex\" (model name codex (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    }
+   ],
+   "killed": true,
+   "equivalentOnCorpus": false,
+   "equivalenceArgument": null,
+   "restored": true
+  },
+  {
+   "id": "arm2-drop-gpt",
+   "class": "model-name-word",
+   "description": "gpt deleted from the model-name arm",
+   "fragments": [
+    {
+     "old": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i",
+     "new": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i"
+    }
+   ],
+   "differentialOverCorpus": {
+    "valid": true,
+    "narrower": 217,
+    "broader": 0,
+    "narrowerWitnesses": [
+     "GPT",
+     "Gpt",
+     "gpt",
+     "GPT ",
+     "GPT-"
+    ],
+    "broaderWitnesses": []
+   },
+   "observed": {
+    "total": 464,
+    "passed": 460,
+    "failed": 4
+   },
+   "failing": [
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"gpt-5\" (model name gpt) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"gpt-5\" (model name gpt) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"gpt-5\" (model name gpt) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"gpt-5\" (model name gpt (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    }
+   ],
+   "killed": true,
+   "equivalentOnCorpus": false,
+   "equivalenceArgument": null,
+   "restored": true
+  },
+  {
+   "id": "arm2-drop-copilot",
+   "class": "model-name-word",
+   "description": "copilot deleted from the model-name arm",
+   "fragments": [
+    {
+     "old": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i",
+     "new": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i"
+    }
+   ],
+   "differentialOverCorpus": {
+    "valid": true,
+    "narrower": 217,
+    "broader": 0,
+    "narrowerWitnesses": [
+     "COPILOT",
+     "Copilot",
+     "copilot",
+     "COPILOT ",
+     "COPILOT-"
+    ],
+    "broaderWitnesses": []
+   },
+   "observed": {
+    "total": 464,
+    "passed": 460,
+    "failed": 4
+   },
+   "failing": [
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"GitHub Copilot\" (model name copilot) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"GitHub Copilot\" (model name copilot) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"GitHub Copilot\" (model name copilot) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"GitHub Copilot\" (model name copilot (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    }
+   ],
+   "killed": true,
+   "equivalentOnCorpus": false,
+   "equivalenceArgument": null,
+   "restored": true
+  },
+  {
+   "id": "arm2-drop-llm",
+   "class": "model-name-word",
+   "description": "llm deleted from the model-name arm",
+   "fragments": [
+    {
+     "old": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i",
+     "new": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i"
+    }
+   ],
+   "differentialOverCorpus": {
+    "valid": true,
+    "narrower": 216,
+    "broader": 0,
+    "narrowerWitnesses": [
+     "LLM",
+     "Llm",
+     "llm",
+     "LLM ",
+     "LLM-"
+    ],
+    "broaderWitnesses": []
+   },
+   "observed": {
+    "total": 464,
+    "passed": 460,
+    "failed": 4
+   },
+   "failing": [
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"an llm\" (model name llm) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"an llm\" (model name llm) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"an llm\" (model name llm) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"an llm\" (model name llm (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    }
+   ],
+   "killed": true,
+   "equivalentOnCorpus": false,
+   "equivalenceArgument": null,
+   "restored": true
+  },
+  {
+   "id": "arm4-drop-\\[bot\\]",
+   "class": "suffix-form",
+   "description": "the suffix \\[bot\\] deleted",
+   "fragments": [
+    {
+     "old": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i",
+     "new": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:-bot|-agent)$/i"
+    }
+   ],
+   "differentialOverCorpus": {
+    "valid": true,
+    "narrower": 598,
+    "broader": 0,
+    "narrowerWitnesses": [
+     "X[bot]",
+     "x[bot]",
+     "CI[bot]",
+     "Ci[bot]",
+     "ci[bot]"
+    ],
+    "broaderWitnesses": []
+   },
+   "observed": {
+    "total": 464,
+    "passed": 460,
+    "failed": 4
+   },
+   "failing": [
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"renovate[bot]\" (suffix [bot] (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"renovate[bot]\" (suffix [bot] (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"renovate[bot]\" (suffix [bot] (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"renovate[bot]\" (suffix [bot]) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    }
+   ],
+   "killed": true,
+   "equivalentOnCorpus": false,
+   "equivalenceArgument": null,
+   "restored": true
+  },
+  {
+   "id": "arm4-drop--bot",
+   "class": "suffix-form",
+   "description": "the suffix -bot deleted",
+   "fragments": [
+    {
+     "old": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i",
+     "new": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-agent)$/i"
+    }
+   ],
+   "differentialOverCorpus": {
+    "valid": true,
+    "narrower": 567,
+    "broader": 0,
+    "narrowerWitnesses": [
+     "X-bot",
+     "x-BOT",
+     "x-Bot",
+     "x-bot",
+     "xX-bot"
+    ],
+    "broaderWitnesses": []
+   },
+   "observed": {
+    "total": 464,
+    "passed": 460,
+    "failed": 4
+   },
+   "failing": [
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"deploy-bot\" (suffix -bot (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"deploy-bot\" (suffix -bot (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"deploy-bot\" (suffix -bot (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"deploy-bot\" (suffix -bot) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    }
+   ],
+   "killed": true,
+   "equivalentOnCorpus": false,
+   "equivalenceArgument": null,
+   "restored": true
+  },
+  {
+   "id": "arm4-drop--agent",
+   "class": "suffix-form",
+   "description": "the suffix -agent deleted",
+   "fragments": [
+    {
+     "old": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i",
+     "new": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot)$/i"
+    }
+   ],
+   "differentialOverCorpus": {
+    "valid": true,
+    "narrower": 567,
+    "broader": 0,
+    "narrowerWitnesses": [
+     "X-agent",
+     "x-AGENT",
+     "x-Agent",
+     "x-agent",
+     "xX-agent"
+    ],
+    "broaderWitnesses": []
+   },
+   "observed": {
+    "total": 464,
+    "passed": 460,
+    "failed": 4
+   },
+   "failing": [
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"review-agent\" (suffix -agent (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"review-agent\" (suffix -agent (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"review-agent\" (suffix -agent (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"review-agent\" (suffix -agent) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    }
+   ],
+   "killed": true,
+   "equivalentOnCorpus": false,
+   "equivalenceArgument": null,
+   "restored": true
+  },
+  {
+   "id": "arm1-sep-drop-\\s",
+   "class": "separator",
+   "description": "\\s deleted from the first arm's separator class",
+   "fragments": [
+    {
+     "old": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i",
+     "new": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i"
+    }
+   ],
+   "differentialOverCorpus": {
+    "valid": true,
+    "narrower": 9,
+    "broader": 0,
+    "narrowerWitnesses": [
+     "MACHINE ",
+     "Machine ",
+     "machine ",
+     "MACHINE x",
+     "Machine x"
+    ],
+    "broaderWitnesses": []
+   },
+   "observed": {
+    "total": 464,
+    "passed": 460,
+    "failed": 4
+   },
+   "failing": [
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"machine runner\" (role prefix machine, whitespace) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"machine runner\" (role prefix machine, whitespace) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"machine runner\" (role prefix machine, whitespace) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"machine runner\" (role prefix machine, whitespace) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    }
+   ],
+   "killed": true,
+   "equivalentOnCorpus": false,
+   "equivalenceArgument": null,
+   "restored": true
+  },
+  {
+   "id": "arm1-sep-drop--",
+   "class": "separator",
+   "description": "- deleted from the first arm's separator class",
+   "fragments": [
+    {
+     "old": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i",
+     "new": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i"
+    }
+   ],
+   "differentialOverCorpus": {
+    "valid": true,
+    "narrower": 9,
+    "broader": 0,
+    "narrowerWitnesses": [
+     "MACHINE-",
+     "Machine-",
+     "machine-",
+     "MACHINE-7",
+     "MACHINE-x"
+    ],
+    "broaderWitnesses": []
+   },
+   "observed": {
+    "total": 464,
+    "passed": 460,
+    "failed": 4
+   },
+   "failing": [
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"machine-7\" (role prefix machine, hyphen) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"machine-7\" (role prefix machine, hyphen) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"machine-7\" (role prefix machine, hyphen) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"machine-7\" (role prefix machine, hyphen) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    }
+   ],
+   "killed": true,
+   "equivalentOnCorpus": false,
+   "equivalenceArgument": null,
+   "restored": true
+  },
+  {
+   "id": "arm1-sep-drop-end",
+   "class": "separator",
+   "description": "end of input deleted from the first arm's separator",
+   "fragments": [
+    {
+     "old": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i",
+     "new": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-])|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i"
+    }
+   ],
+   "differentialOverCorpus": {
+    "valid": true,
+    "narrower": 3,
+    "broader": 0,
+    "narrowerWitnesses": [
+     "MACHINE",
+     "Machine",
+     "machine"
+    ],
+    "broaderWitnesses": []
+   },
+   "observed": {
+    "total": 464,
+    "passed": 460,
+    "failed": 4
+   },
+   "failing": [
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"machine\" (role prefix machine) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"machine\" (role prefix machine) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"machine\" (role prefix machine) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"machine\" (role prefix machine (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    }
+   ],
+   "killed": true,
+   "equivalentOnCorpus": false,
+   "equivalenceArgument": null,
+   "restored": true
+  },
+  {
+   "id": "arm3-sep-drop-\\s",
+   "class": "separator",
+   "description": "\\s deleted from the second arm's separator class",
+   "fragments": [
+    {
+     "old": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i",
+     "new": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i"
+    }
+   ],
+   "differentialOverCorpus": {
+    "valid": true,
+    "narrower": 27,
+    "broader": 0,
+    "narrowerWitnesses": [
+     "DAEMON ",
+     "Daemon ",
+     "SYZYGY ",
+     "Syzygy ",
+     "daemon "
+    ],
+    "broaderWitnesses": []
+   },
+   "observed": {
+    "total": 464,
+    "passed": 460,
+    "failed": 4
+   },
+   "failing": [
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"daemon nightly\" (role prefix daemon, whitespace) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"daemon nightly\" (role prefix daemon, whitespace) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"daemon nightly\" (role prefix daemon, whitespace) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"daemon nightly\" (role prefix daemon, whitespace) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    }
+   ],
+   "killed": true,
+   "equivalentOnCorpus": false,
+   "equivalenceArgument": null,
+   "restored": true
+  },
+  {
+   "id": "arm3-sep-drop-:",
+   "class": "separator",
+   "description": ": deleted from the second arm's separator class",
+   "fragments": [
+    {
+     "old": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i",
+     "new": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i"
+    }
+   ],
+   "differentialOverCorpus": {
+    "valid": true,
+    "narrower": 19,
+    "broader": 0,
+    "narrowerWitnesses": [
+     "DAEMON:",
+     "Daemon:",
+     "SYZYGY:",
+     "Syzygy:",
+     "daemon:"
+    ],
+    "broaderWitnesses": []
+   },
+   "observed": {
+    "total": 464,
+    "passed": 460,
+    "failed": 4
+   },
+   "failing": [
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"automation: nightly\" (role prefix automation (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"automation: nightly\" (role prefix automation (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"automation: nightly\" (role prefix automation (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"automation: nightly\" (role prefix automation) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    }
+   ],
+   "killed": true,
+   "equivalentOnCorpus": false,
+   "equivalenceArgument": null,
+   "restored": true
+  },
+  {
+   "id": "arm3-sep-drop-/",
+   "class": "separator",
+   "description": "/ deleted from the second arm's separator class",
+   "fragments": [
+    {
+     "old": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i",
+     "new": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:-]|$)|(?:\\[bot\\]|-bot|-agent)$/i"
+    }
+   ],
+   "differentialOverCorpus": {
+    "valid": true,
+    "narrower": 61,
+    "broader": 0,
+    "narrowerWitnesses": [
+     "CI/",
+     "Ci/",
+     "ci/",
+     "BOT/",
+     "Bot/"
+    ],
+    "broaderWitnesses": []
+   },
+   "observed": {
+    "total": 464,
+    "passed": 436,
+    "failed": 28
+   },
+   "failing": [
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"ci/release\" (role prefix ci with a slash (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"agent/triage\" (role prefix agent with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"bot/deploy\" (role prefix bot with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"system/cron\" (role prefix system with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"service/gateway\" (role prefix service with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"pipeline/build\" (role prefix pipeline with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"model/v2\" (role prefix model with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"ci/release\" (role prefix ci with a slash (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"agent/triage\" (role prefix agent with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"bot/deploy\" (role prefix bot with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"system/cron\" (role prefix system with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"service/gateway\" (role prefix service with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"pipeline/build\" (role prefix pipeline with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"model/v2\" (role prefix model with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"ci/release\" (role prefix ci with a slash (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"agent/triage\" (role prefix agent with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"bot/deploy\" (role prefix bot with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"system/cron\" (role prefix system with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"service/gateway\" (role prefix service with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"pipeline/build\" (role prefix pipeline with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"model/v2\" (role prefix model with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"ci/release\" (role prefix ci with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"agent/triage\" (role prefix agent with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"bot/deploy\" (role prefix bot with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"system/cron\" (role prefix system with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"service/gateway\" (role prefix service with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"pipeline/build\" (role prefix pipeline with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"model/v2\" (role prefix model with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    }
+   ],
+   "killed": true,
+   "equivalentOnCorpus": false,
+   "equivalenceArgument": null,
+   "restored": true
+  },
+  {
+   "id": "arm3-sep-drop--",
+   "class": "separator",
+   "description": "- deleted from the second arm's separator class",
+   "fragments": [
+    {
+     "old": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i",
+     "new": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/]|$)|(?:\\[bot\\]|-bot|-agent)$/i"
+    }
+   ],
+   "differentialOverCorpus": {
+    "valid": true,
+    "narrower": 27,
+    "broader": 0,
+    "narrowerWitnesses": [
+     "DAEMON-",
+     "Daemon-",
+     "SYZYGY-",
+     "Syzygy-",
+     "daemon-"
+    ],
+    "broaderWitnesses": []
+   },
+   "observed": {
+    "total": 464,
+    "passed": 460,
+    "failed": 4
+   },
+   "failing": [
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"daemon-7\" (role prefix daemon, hyphen) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"daemon-7\" (role prefix daemon, hyphen) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"daemon-7\" (role prefix daemon, hyphen) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"daemon-7\" (role prefix daemon, hyphen) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    }
+   ],
+   "killed": true,
+   "equivalentOnCorpus": false,
+   "equivalenceArgument": null,
+   "restored": true
+  },
+  {
+   "id": "arm3-sep-drop-end",
+   "class": "separator",
+   "description": "end of input deleted from the second arm's separator",
+   "fragments": [
+    {
+     "old": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i",
+     "new": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-])|(?:\\[bot\\]|-bot|-agent)$/i"
+    }
+   ],
+   "differentialOverCorpus": {
+    "valid": true,
+    "narrower": 9,
+    "broader": 0,
+    "narrowerWitnesses": [
+     "DAEMON",
+     "Daemon",
+     "SYZYGY",
+     "Syzygy",
+     "daemon"
+    ],
+    "broaderWitnesses": []
+   },
+   "observed": {
+    "total": 464,
+    "passed": 456,
+    "failed": 8
+   },
+   "failing": [
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"daemon\" (role prefix daemon (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"syzygy\" (role prefix syzygy (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"daemon\" (role prefix daemon (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"syzygy\" (role prefix syzygy (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"daemon\" (role prefix daemon (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"syzygy\" (role prefix syzygy (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"daemon\" (role prefix daemon) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"syzygy\" (role prefix syzygy) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    }
+   ],
+   "killed": true,
+   "equivalentOnCorpus": false,
+   "equivalenceArgument": null,
+   "restored": true
+  },
+  {
+   "id": "anchor-arm1-start",
+   "class": "anchor",
+   "description": "the start anchor of the first arm deleted",
+   "fragments": [
+    {
+     "old": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i",
+     "new": "/(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i"
+    }
+   ],
+   "differentialOverCorpus": {
+    "valid": true,
+    "narrower": 0,
+    "broader": 1506,
+    "narrowerWitnesses": [],
+    "broaderWitnesses": [
+     "xCI",
+     "xCi",
+     "xci",
+     "x-CI",
+     "x-Ci"
+    ]
+   },
+   "observed": {
+    "total": 464,
+    "passed": 462,
+    "failed": 2
+   },
+   "failing": [
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator a human name \"Anna Model\" stays owner-another-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-non-human' to be 'consent:owner-another-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate a human name \"Anna Model\" stays owner-another-human",
+     "firstErrorLine": "AssertionError: expected 'owner-non-human' to be 'owner-another-human' // Object.is equality"
+    }
+   ],
+   "killed": true,
+   "equivalentOnCorpus": false,
+   "equivalenceArgument": null,
+   "restored": true
+  },
+  {
+   "id": "anchor-arm3-start",
+   "class": "anchor",
+   "description": "the start anchor of the second arm deleted",
+   "fragments": [
+    {
+     "old": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i",
+     "new": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i"
+    }
+   ],
+   "differentialOverCorpus": {
+    "valid": true,
+    "narrower": 0,
+    "broader": 2370,
+    "narrowerWitnesses": [],
+    "broaderWitnesses": [
+     "xCI",
+     "xCi",
+     "xci",
+     "x-CI",
+     "x-Ci"
+    ]
+   },
+   "observed": {
+    "total": 464,
+    "passed": 460,
+    "failed": 4
+   },
+   "failing": [
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator a human name \"Anna Model\" stays owner-another-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-non-human' to be 'consent:owner-another-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator a human name \"Anna Daemon\" stays owner-another-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-non-human' to be 'consent:owner-another-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate a human name \"Anna Model\" stays owner-another-human",
+     "firstErrorLine": "AssertionError: expected 'owner-non-human' to be 'owner-another-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate a human name \"Anna Daemon\" stays owner-another-human",
+     "firstErrorLine": "AssertionError: expected 'owner-non-human' to be 'owner-another-human' // Object.is equality"
+    }
+   ],
+   "killed": true,
+   "equivalentOnCorpus": false,
+   "equivalenceArgument": null,
+   "restored": true
+  },
+  {
+   "id": "anchor-arm2-leading-boundary",
+   "class": "anchor",
+   "description": "the leading word boundary of the model-name arm deleted",
+   "fragments": [
+    {
+     "old": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i",
+     "new": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i"
+    }
+   ],
+   "differentialOverCorpus": {
+    "valid": true,
+    "narrower": 0,
+    "broader": 360,
+    "narrowerWitnesses": [],
+    "broaderWitnesses": [
+     "xGPT",
+     "xGpt",
+     "xLLM",
+     "xLlm",
+     "xgpt"
+    ]
+   },
+   "observed": {
+    "total": 464,
+    "passed": 462,
+    "failed": 2
+   },
+   "failing": [
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator a human name \"Annagpt Lee\" stays owner-another-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-non-human' to be 'consent:owner-another-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate a human name \"Annagpt Lee\" stays owner-another-human",
+     "firstErrorLine": "AssertionError: expected 'owner-non-human' to be 'owner-another-human' // Object.is equality"
+    }
+   ],
+   "killed": true,
+   "equivalentOnCorpus": false,
+   "equivalenceArgument": null,
+   "restored": true
+  },
+  {
+   "id": "anchor-arm2-trailing-boundary",
+   "class": "anchor",
+   "description": "the trailing word boundary of the model-name arm deleted",
+   "fragments": [
+    {
+     "old": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i",
+     "new": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i"
+    }
+   ],
+   "differentialOverCorpus": {
+    "valid": true,
+    "narrower": 0,
+    "broader": 432,
+    "narrowerWitnesses": [],
+    "broaderWitnesses": [
+     "GPT_x",
+     "GPTha",
+     "Gpt_x",
+     "Gptha",
+     "LLM_x"
+    ]
+   },
+   "observed": {
+    "total": 464,
+    "passed": 462,
+    "failed": 2
+   },
+   "failing": [
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator a human name \"Claudette\" stays owner-another-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-non-human' to be 'consent:owner-another-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate a human name \"Claudette\" stays owner-another-human",
+     "firstErrorLine": "AssertionError: expected 'owner-non-human' to be 'owner-another-human' // Object.is equality"
+    }
+   ],
+   "killed": true,
+   "equivalentOnCorpus": false,
+   "equivalenceArgument": null,
+   "restored": true
+  },
+  {
+   "id": "anchor-arm4-end",
+   "class": "anchor",
+   "description": "the end anchor of the suffix arm deleted",
+   "fragments": [
+    {
+     "old": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i",
+     "new": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)/i"
+    }
+   ],
+   "differentialOverCorpus": {
+    "valid": true,
+    "narrower": 0,
+    "broader": 159,
+    "narrowerWitnesses": [],
+    "broaderWitnesses": [
+     "x-BOT ",
+     "x-BOT-",
+     "x-BOT/",
+     "x-BOT:",
+     "x-Bot "
+    ]
+   },
+   "observed": {
+    "total": 464,
+    "passed": 462,
+    "failed": 2
+   },
+   "failing": [
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator a human name \"Jean-Botha\" stays owner-another-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-non-human' to be 'consent:owner-another-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate a human name \"Jean-Botha\" stays owner-another-human",
+     "firstErrorLine": "AssertionError: expected 'owner-non-human' to be 'owner-another-human' // Object.is equality"
+    }
+   ],
+   "killed": true,
+   "equivalentOnCorpus": false,
+   "equivalenceArgument": null,
+   "restored": true
+  },
+  {
+   "id": "drop-arm-1",
+   "class": "whole-arm",
+   "description": "the first line-start arm deleted",
+   "fragments": [
+    {
+     "old": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i",
+     "new": "/\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i"
+    }
+   ],
+   "differentialOverCorpus": {
+    "valid": true,
+    "narrower": 27,
+    "broader": 0,
+    "narrowerWitnesses": [
+     "MACHINE",
+     "Machine",
+     "machine",
+     "MACHINE ",
+     "MACHINE-"
+    ],
+    "broaderWitnesses": []
+   },
+   "observed": {
+    "total": 464,
+    "passed": 448,
+    "failed": 16
+   },
+   "failing": [
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"machine\" (role prefix machine) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"machine: build-42\" (role prefix machine, colon (only the first arm lists machine)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"machine runner\" (role prefix machine, whitespace) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"machine-7\" (role prefix machine, hyphen) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"machine\" (role prefix machine) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"machine: build-42\" (role prefix machine, colon (only the first arm lists machine)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"machine runner\" (role prefix machine, whitespace) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"machine-7\" (role prefix machine, hyphen) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"machine\" (role prefix machine) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"machine: build-42\" (role prefix machine, colon (only the first arm lists machine)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"machine runner\" (role prefix machine, whitespace) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"machine-7\" (role prefix machine, hyphen) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"machine\" (role prefix machine (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"machine: build-42\" (role prefix machine, colon (only the first arm lists machine)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"machine runner\" (role prefix machine, whitespace) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"machine-7\" (role prefix machine, hyphen) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    }
+   ],
+   "killed": true,
+   "equivalentOnCorpus": false,
+   "equivalenceArgument": null,
+   "restored": true
+  },
+  {
+   "id": "drop-arm-2",
+   "class": "whole-arm",
+   "description": "the model-name arm deleted",
+   "fragments": [
+    {
+     "old": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i",
+     "new": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i"
+    }
+   ],
+   "differentialOverCorpus": {
+    "valid": true,
+    "narrower": 1701,
+    "broader": 0,
+    "narrowerWitnesses": [
+     "GPT",
+     "Gpt",
+     "LLM",
+     "Llm",
+     "gpt"
+    ],
+    "broaderWitnesses": []
+   },
+   "observed": {
+    "total": 464,
+    "passed": 444,
+    "failed": 20
+   },
+   "failing": [
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"Anthropic Claude\" (model name claude as a word) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"codex\" (model name codex) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"gpt-5\" (model name gpt) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"GitHub Copilot\" (model name copilot) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"an llm\" (model name llm) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"Anthropic Claude\" (model name claude as a word) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"codex\" (model name codex) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"gpt-5\" (model name gpt) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"GitHub Copilot\" (model name copilot) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"an llm\" (model name llm) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"Anthropic Claude\" (model name claude as a word) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"codex\" (model name codex) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"gpt-5\" (model name gpt) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"GitHub Copilot\" (model name copilot) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"an llm\" (model name llm) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"Anthropic Claude\" (model name claude as a word (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"codex\" (model name codex (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"gpt-5\" (model name gpt (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"GitHub Copilot\" (model name copilot (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"an llm\" (model name llm (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    }
+   ],
+   "killed": true,
+   "equivalentOnCorpus": false,
+   "equivalenceArgument": null,
+   "restored": true
+  },
+  {
+   "id": "drop-arm-3",
+   "class": "whole-arm",
+   "description": "the second line-start arm deleted",
+   "fragments": [
+    {
+     "old": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i",
+     "new": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|(?:\\[bot\\]|-bot|-agent)$/i"
+    }
+   ],
+   "differentialOverCorpus": {
+    "valid": true,
+    "narrower": 143,
+    "broader": 0,
+    "narrowerWitnesses": [
+     "CI/",
+     "Ci/",
+     "ci/",
+     "BOT/",
+     "Bot/"
+    ],
+    "broaderWitnesses": []
+   },
+   "observed": {
+    "total": 464,
+    "passed": 416,
+    "failed": 48
+   },
+   "failing": [
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"daemon\" (role prefix daemon (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"automation: nightly\" (role prefix automation (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"syzygy\" (role prefix syzygy (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"ci/release\" (role prefix ci with a slash (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"agent/triage\" (role prefix agent with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"bot/deploy\" (role prefix bot with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"system/cron\" (role prefix system with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"service/gateway\" (role prefix service with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"pipeline/build\" (role prefix pipeline with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"model/v2\" (role prefix model with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"daemon nightly\" (role prefix daemon, whitespace) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"daemon-7\" (role prefix daemon, hyphen) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"daemon\" (role prefix daemon (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"automation: nightly\" (role prefix automation (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"syzygy\" (role prefix syzygy (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"ci/release\" (role prefix ci with a slash (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"agent/triage\" (role prefix agent with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"bot/deploy\" (role prefix bot with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"system/cron\" (role prefix system with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"service/gateway\" (role prefix service with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"pipeline/build\" (role prefix pipeline with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"model/v2\" (role prefix model with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"daemon nightly\" (role prefix daemon, whitespace) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"daemon-7\" (role prefix daemon, hyphen) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"daemon\" (role prefix daemon (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"automation: nightly\" (role prefix automation (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"syzygy\" (role prefix syzygy (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"ci/release\" (role prefix ci with a slash (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"agent/triage\" (role prefix agent with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"bot/deploy\" (role prefix bot with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"system/cron\" (role prefix system with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"service/gateway\" (role prefix service with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"pipeline/build\" (role prefix pipeline with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"model/v2\" (role prefix model with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"daemon nightly\" (role prefix daemon, whitespace) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"daemon-7\" (role prefix daemon, hyphen) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"daemon\" (role prefix daemon) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"automation: nightly\" (role prefix automation) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"syzygy\" (role prefix syzygy) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"ci/release\" (role prefix ci with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"agent/triage\" (role prefix agent with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"bot/deploy\" (role prefix bot with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"system/cron\" (role prefix system with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"service/gateway\" (role prefix service with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"pipeline/build\" (role prefix pipeline with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"model/v2\" (role prefix model with a slash) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"daemon nightly\" (role prefix daemon, whitespace) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"daemon-7\" (role prefix daemon, hyphen) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    }
+   ],
+   "killed": true,
+   "equivalentOnCorpus": false,
+   "equivalenceArgument": null,
+   "restored": true
+  },
+  {
+   "id": "drop-arm-4",
+   "class": "whole-arm",
+   "description": "the suffix arm deleted",
+   "fragments": [
+    {
+     "old": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i",
+     "new": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)/i"
+    }
+   ],
+   "differentialOverCorpus": {
+    "valid": true,
+    "narrower": 1732,
+    "broader": 0,
+    "narrowerWitnesses": [
+     "X-bot",
+     "x-BOT",
+     "x-Bot",
+     "x-bot",
+     "X[bot]"
+    ],
+    "broaderWitnesses": []
+   },
+   "observed": {
+    "total": 464,
+    "passed": 452,
+    "failed": 12
+   },
+   "failing": [
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"renovate[bot]\" (suffix [bot] (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"deploy-bot\" (suffix -bot (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"review-agent\" (suffix -agent (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"renovate[bot]\" (suffix [bot] (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"deploy-bot\" (suffix -bot (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"review-agent\" (suffix -agent (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"renovate[bot]\" (suffix [bot] (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"deploy-bot\" (suffix -bot (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"review-agent\" (suffix -agent (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"renovate[bot]\" (suffix [bot]) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"deploy-bot\" (suffix -bot) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"review-agent\" (suffix -agent) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    }
+   ],
+   "killed": true,
+   "equivalentOnCorpus": false,
+   "equivalenceArgument": null,
+   "restored": true
+  },
+  {
+   "id": "flag-case-insensitive",
+   "class": "flag",
+   "description": "the case-insensitive flag deleted",
+   "fragments": [
+    {
+     "old": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/i",
+     "new": "/^(agent|bot|machine|service|system|ci|pipeline|model)([:\\s-]|$)|\\b(claude|codex|gpt|copilot|llm)\\b|^(?:agent|bot|ci|system|daemon|service|pipeline|automation|model|claude|syzygy)(?:[\\s:/-]|$)|(?:\\[bot\\]|-bot|-agent)$/"
+    }
+   ],
+   "differentialOverCorpus": {
+    "valid": true,
+    "narrower": 1610,
+    "broader": 0,
+    "narrowerWitnesses": [
+     "CI",
+     "Ci",
+     "BOT",
+     "Bot",
+     "CI "
+    ],
+    "broaderWitnesses": []
+   },
+   "observed": {
+    "total": 464,
+    "passed": 456,
+    "failed": 8
+   },
+   "failing": [
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"Anthropic Claude\" (model name claude as a word) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator consent: owner \"GitHub Copilot\" (model name copilot) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'consent:owner-another-human' to be 'consent:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"Anthropic Claude\" (model name claude as a word) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator policy: owner \"GitHub Copilot\" (model name copilot) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'policy:owner-another-human' to be 'policy:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"Anthropic Claude\" (model name claude as a word) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "body-read-authority.test.ts > PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator registry: owner \"GitHub Copilot\" (model name copilot) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'registry:owner-another-human' to be 'registry:owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"Anthropic Claude\" (model name claude as a word (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    },
+    {
+     "test": "walkthrough-judgment.test.ts > PWB-REQ-022 owner-non-human: one rule shared with the body-read gate owner \"GitHub Copilot\" (model name copilot (flipped)) \u2192 owner-non-human",
+     "firstErrorLine": "AssertionError: expected 'owner-another-human' to be 'owner-non-human' // Object.is equality"
+    }
+   ],
+   "killed": true,
+   "equivalentOnCorpus": false,
+   "equivalenceArgument": null,
+   "restored": true
+  }
+ ],
+ "summary": {
+  "planned": 53,
+  "killed": 45,
+  "survivors": 8,
+  "survivorsEquivalentWithArgument": [
+   "arm1-drop-agent",
+   "arm1-drop-bot",
+   "arm1-drop-service",
+   "arm1-drop-system",
+   "arm1-drop-ci",
+   "arm1-drop-pipeline",
+   "arm1-drop-model",
+   "arm3-drop-claude"
+  ],
+  "survivorsEquivalentOnCorpusWithoutArgument": [],
+  "survivorsWithCorpusWitness": [],
+  "section3HKilled": "8 of 8",
+  "allRestored": true
+ }
+}

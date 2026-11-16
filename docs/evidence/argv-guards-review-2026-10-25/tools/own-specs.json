@@ -1,0 +1,406 @@
+{
+ "mutants": [
+  {
+   "id": "R-OR3-empty-value-missing-only-under-refuse",
+   "expect": "killed",
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/argv.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.ts",
+     "old": "      if (token.value === undefined || (spec.dashValue === 'refuse' && token.value.startsWith('-'))) return { fault: 'missing-value', arg };",
+     "new": "      if (token.value === undefined || (spec.dashValue === 'refuse' && (token.value === '' || token.value.startsWith('-')))) return { fault: 'missing-value', arg };"
+    }
+   ]
+  },
+  {
+   "id": "R-OR4-empty-value-missing-only-under-take",
+   "expect": "killed",
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/argv.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.ts",
+     "old": "      if (token.value === undefined || (spec.dashValue === 'refuse' && token.value.startsWith('-'))) return { fault: 'missing-value', arg };",
+     "new": "      if (token.value === undefined || (spec.dashValue === 'take' && token.value === '') || (spec.dashValue === 'refuse' && token.value.startsWith('-'))) return { fault: 'missing-value', arg };"
+    }
+   ]
+  },
+  {
+   "id": "R-Y1-polaris-valued-entry-added",
+   "expect": "killed",
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/argv.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/polaris.ts",
+     "old": "'--resume', '--tmux-session'],",
+     "new": "'--resume', '--tmux-session', '--extra'],"
+    }
+   ]
+  },
+  {
+   "id": "R-Y2-daemon-positionals-true",
+   "expect": "killed",
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/argv.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "    positionals: false,\n  });",
+     "new": "    positionals: true,\n  });"
+    }
+   ]
+  },
+  {
+   "id": "R-Y3-daemon-spec-through-a-variable",
+   "expect": "killed",
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/argv.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "  const read = readArgv(argv, {\n    valued: ['--root', '--state-dir', '--port'],\n    stopAt: ['--help', '-h'],\n    dashValue: 'take',\n    repeat: 'last',\n    positionals: false,\n  });",
+     "new": "  const spec = {\n    valued: ['--root', '--state-dir', '--port'],\n    stopAt: ['--help', '-h'],\n    dashValue: 'take',\n    repeat: 'last',\n    positionals: false,\n  } as const;\n  const read = readArgv(argv, spec);"
+    }
+   ]
+  },
+  {
+   "id": "R-Y4-polaris-booleans-through-a-spread",
+   "expect": "killed",
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/argv.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/polaris.ts",
+     "old": "    booleans: ['--author-skip-permissions', '--no-attach', '--supervise', '--help', '-h'], dashValue: 'take', repeat: 'last', positionals: true,",
+     "new": "    ...{ booleans: ['--author-skip-permissions', '--no-attach', '--supervise', '--help', '-h'] }, dashValue: 'take', repeat: 'last', positionals: true,"
+    }
+   ]
+  },
+  {
+   "id": "R-Y5-second-identifier-call-in-cli",
+   "expect": "killed",
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/argv.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/cli.ts",
+     "old": "    const read = readArgv(rest, { valued: [], dashValue: 'refuse', repeat: 'refuse', positionals: true });",
+     "new": "    const read = readArgv(rest, { valued: [], dashValue: 'refuse', repeat: 'refuse', positionals: true });\n    void readArgv(rest, { valued: [], dashValue: 'refuse', repeat: 'refuse', positionals: true });"
+    }
+   ]
+  },
+  {
+   "id": "R-Y6-extra-namespace-call-in-cli",
+   "expect": "survives",
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/argv.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/cli.ts",
+     "old": "import { isArgvFault, readArgv } from './argv.js';\n",
+     "new": "import { isArgvFault, readArgv } from './argv.js';\nimport * as argvNs from './argv.js';\n"
+    },
+    {
+     "file": "packages/polaris-dossier/src/cli.ts",
+     "old": "    const read = readArgv(rest, { valued: [], dashValue: 'refuse', repeat: 'refuse', positionals: true });",
+     "new": "    const read = readArgv(rest, { valued: [], dashValue: 'refuse', repeat: 'refuse', positionals: true });\n    void argvNs.readArgv(rest, { valued: ['--drift'], dashValue: 'take', repeat: 'last', positionals: true });"
+    }
+   ]
+  },
+  {
+   "id": "R-Y7-extra-aliased-call-in-cli",
+   "expect": "survives",
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/argv.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/cli.ts",
+     "old": "import { isArgvFault, readArgv } from './argv.js';\n",
+     "new": "import { isArgvFault, readArgv } from './argv.js';\nconst readArgs = readArgv;\n"
+    },
+    {
+     "file": "packages/polaris-dossier/src/cli.ts",
+     "old": "    const read = readArgv(rest, { valued: [], dashValue: 'refuse', repeat: 'refuse', positionals: true });",
+     "new": "    const read = readArgv(rest, { valued: [], dashValue: 'refuse', repeat: 'refuse', positionals: true });\n    void readArgs(rest, { valued: ['--drift'], dashValue: 'take', repeat: 'last', positionals: true });"
+    }
+   ]
+  },
+  {
+   "id": "R-Y8-another-options-command-gains-a-valued-option",
+   "expect": "survives",
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/argv.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/cli.ts",
+     "old": "args: { kind: 'options', options: ['--draft'], noun: RUN },",
+     "new": "args: { kind: 'options', options: ['--draft', '--extra'], noun: RUN },"
+    }
+   ]
+  },
+  {
+   "id": "R-X1-two-deep-local-re-export-chain",
+   "expect": "killed",
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/subpath-imports.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "apps/syzygy/src/bridge-a.ts",
+     "create": "export * from './bridge-b.js';\n"
+    },
+    {
+     "file": "apps/syzygy/src/bridge-b.ts",
+     "create": "export { runDossierCli } from '@syzygy/polaris-dossier';\n"
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nimport './bridge-a.js';\n"
+    }
+   ]
+  },
+  {
+   "id": "R-X2-chain-through-another-workspace-package",
+   "expect": "killed",
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/subpath-imports.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "packages/cap1-daemon/src/zz-bridge.ts",
+     "create": "export { runDossierCli } from '@syzygy/polaris-dossier';\n"
+    },
+    {
+     "file": "packages/cap1-daemon/src/index.ts",
+     "old": "export * from './observation.js';\n",
+     "new": "export * from './observation.js';\nexport * from './zz-bridge.js';\n"
+    }
+   ]
+  },
+  {
+   "id": "R-X3-create-require-in-an-intermediate-module",
+   "expect": "killed",
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/subpath-imports.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "apps/syzygy/src/bridge-req.ts",
+     "create": "import { createRequire } from 'node:module';\nconst load = createRequire(import.meta.url);\nexport const lazy = (): unknown => load('@syzygy/polaris-dossier');\n"
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nimport './bridge-req.js';\n"
+    }
+   ]
+  },
+  {
+   "id": "R-X3b-bare-module-specifier-in-main",
+   "expect": "killed",
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/subpath-imports.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nimport { createRequire as cr } from 'module';\nexport const lazy = (): unknown => cr(import.meta.url)('@syzygy/polaris-dossier');\n"
+    }
+   ]
+  },
+  {
+   "id": "R-X4-import-meta-resolve-into-import",
+   "expect": "killed",
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/subpath-imports.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nexport const lazyDossier = async (): Promise<unknown> => import(import.meta.resolve('@syzygy/polaris-dossier'));\n"
+    }
+   ]
+  },
+  {
+   "id": "R-X5-literal-dynamic-import-outside-the-two-branches",
+   "expect": "killed",
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/subpath-imports.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "  if (parsed.kind === 'help') {\n    process.stdout.write(USAGE);",
+     "new": "  if (parsed.kind === 'help') {\n    await import('@syzygy/polaris-dossier');\n    process.stdout.write(USAGE);"
+    }
+   ]
+  },
+  {
+   "id": "R-X6-package-imports-alias-to-the-barrel",
+   "expect": "survives",
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/subpath-imports.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "apps/syzygy/package.json",
+     "old": "  \"main\": \"./dist/main.js\",\n",
+     "new": "  \"main\": \"./dist/main.js\",\n  \"imports\": { \"#dossier\": \"@syzygy/polaris-dossier\" },\n"
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nimport '#dossier';\n"
+    }
+   ]
+  },
+  {
+   "id": "R-X6b-package-imports-alias-in-an-intermediate-module",
+   "expect": "survives",
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/subpath-imports.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "apps/syzygy/package.json",
+     "old": "  \"main\": \"./dist/main.js\",\n",
+     "new": "  \"main\": \"./dist/main.js\",\n  \"imports\": { \"#cli\": \"@syzygy/polaris-dossier\" },\n"
+    },
+    {
+     "file": "apps/syzygy/src/bridge-hash.ts",
+     "create": "export { runDossierCli } from '#cli';\n"
+    },
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nimport './bridge-hash.js';\n"
+    }
+   ]
+  },
+  {
+   "id": "R-X8-get-builtin-module-create-require",
+   "expect": "survives",
+   "projects": [
+    "@syzygy/polaris-dossier"
+   ],
+   "files": [
+    "packages/polaris-dossier/src/subpath-imports.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "apps/syzygy/src/main.ts",
+     "old": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\n",
+     "new": "import { resolvePathIntent } from '@syzygy/polaris-dossier/state-directory';\nexport const lazy = (): unknown => process.getBuiltinModule('node:module').createRequire(import.meta.url)('@syzygy/polaris-dossier');\n"
+    }
+   ]
+  },
+  {
+   "id": "R-X6i-island-package-imports-alias-to-consent-root",
+   "expect": "survives",
+   "projects": [
+    "@syzygy/polaris-generation-core"
+   ],
+   "files": [
+    "packages/polaris-generation-core/src/island-boundary.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/package.json",
+     "old": "  \"main\": \"./dist/main.js\",\n",
+     "new": "  \"main\": \"./dist/main.js\",\n  \"imports\": { \"#consent\": \"@syzygy/polaris-generation-consent\" },\n"
+    },
+    {
+     "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+     "old": "import { assertInertSvg } from './svg-inert.js';\n",
+     "new": "import { assertInertSvg } from './svg-inert.js';\nimport '#consent';\n"
+    }
+   ]
+  },
+  {
+   "id": "R-X6j-island-control-same-edge-by-name",
+   "expect": "killed",
+   "projects": [
+    "@syzygy/polaris-generation-core"
+   ],
+   "files": [
+    "packages/polaris-generation-core/src/island-boundary.test.ts"
+   ],
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+     "old": "import { assertInertSvg } from './svg-inert.js';\n",
+     "new": "import { assertInertSvg } from './svg-inert.js';\nimport '@syzygy/polaris-generation-consent';\n"
+    }
+   ]
+  }
+ ]
+}

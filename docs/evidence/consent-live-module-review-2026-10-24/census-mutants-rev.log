@@ -1,0 +1,10 @@
+M0-unmutated survived
+C1-type-dropped-from-consent-ports killed
+C2-value-dropped-from-consent-ports killed
+C3-name-added-to-consent-ports killed
+C4-live-exports-a-non-root-name killed
+C5-live-value-is-not-the-root-object killed
+C6-live-type-is-not-the-root-declaration killed
+C7-subpath-removed killed
+totals {'mutants': 8, 'asExpected': 8}
+exit=0

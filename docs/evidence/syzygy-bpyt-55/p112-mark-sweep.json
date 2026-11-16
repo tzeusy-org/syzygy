@@ -1,0 +1,42 @@
+{
+ "subject": ".syzygy/governance/decisions/PENDING-OWNER-DECISIONS.md",
+ "baseCommit": "eb6183b5",
+ "digestBefore": "8cdedc89bf52eeb9180c9a2aba007a63da36a9a4681a14e1233eb2632f8ca70a",
+ "digestAfter": "39863f2bb5f8b969eaced582bb3912898d94355a3669b2e41087577cbacbbdf6",
+ "trackedFilesAtBase": 7994,
+ "trackedFilesHoldingTheBeforeDigest": {
+  "gitGrep": [],
+  "python": []
+ },
+ "manifestsNamingThePath": {
+  "files": [
+   "docs/evidence/p115-implementation-authorization-2026-10-28/MANIFEST.json"
+  ],
+  "recordedSnapshot": {
+   "docs/evidence/p115-implementation-authorization-2026-10-28/MANIFEST.json": {
+    "recordedSha256": null,
+    "equalsFileDigest": false
+   }
+  }
+ },
+ "acceptanceRecords": {
+  ".syzygy/governance/decisions/ACCEPTANCE-ACT-RECORD.md": {
+   "grepFixedP112": 0,
+   "pythonP112": 0,
+   "pythonLoadedProfile": 0
+  },
+  ".syzygy/governance/contracts/candidates/FINAL-FOUNDATIONAL-CONTRACT-ACCEPTANCE-RECORD.md": {
+   "grepFixedP112": 0,
+   "pythonP112": 0,
+   "pythonLoadedProfile": 0
+  }
+ },
+ "afterTheEdit": {
+  "linesChanged": [
+   1344
+  ],
+  "oldRowWithTheMarkRemovedIsTheBeforeRow": true,
+  "markText": "*(Marked 2026-10-29, `syzygy-bpyt.55`, as the owner's direction of 2026-10-28 asks (`OWNER-DIRECTION-GREENFIELD-PARITY-FOLLOWUPS-2026-10-28.md`, lines 162-163): that direction takes GP-B2 Q2, answer C, so the extractor, the index-link reader and the root-index reader recognize fences by the PWB-REQ-006 profile, and the link reader also its code spans, and it says \"P-112 is not performed at its current bytes\" (same file, line 168). The implementation is `syzygy-bpyt.55`. This mark changes no packet byte, offers nothing and records no ruling: the act still waits, and the status above stands.)*",
+  "headBannerAndAsOfLineUntouched": true
+ }
+}

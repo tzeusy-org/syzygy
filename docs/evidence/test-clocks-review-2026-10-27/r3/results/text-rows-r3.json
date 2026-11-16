@@ -1,0 +1,799 @@
+{
+ "tool": {
+  "name": "text_rows_r3.py"
+ },
+ "commit": "d0467aeb44a1a980572118f20d322be519b72bbe",
+ "oldPinFrom": "d38d7a3ce632a34c2a41bdb77ad323ba0b05b777",
+ "mainSha256": "07404d93c055c83c9334880c062e98687a4c78a99a104049df0e95076c6555e6",
+ "results": [
+  {
+   "id": "control",
+   "kind": "control",
+   "note": null,
+   "edits": [],
+   "started": 1793097460.2246807,
+   "new": {
+    "status": "passed",
+    "failure": "",
+    "load1": "26.48"
+   },
+   "old": {
+    "status": "passed",
+    "failure": "",
+    "load1": "31.89"
+   }
+  },
+  {
+   "id": "S1-else-if-flag-after-dossier",
+   "kind": "lane:defect",
+   "note": "an `else if` on the dossier branch: on every non-dossier argv with the flag set, the POC app loads",
+   "edits": [
+    [
+     "    }, { renderer: renderLocalDossier });\n  }\n",
+     "    }, { renderer: renderLocalDossier });\n  } else if (process.env.SYZYGY_PRELOAD_RENDERER === '1') {\n    await import('@syzygy/three-surface-poc-app/dossier-site');\n  }\n"
+    ]
+   ],
+   "started": 1793097469.8489006,
+   "new": {
+    "status": "failed",
+    "failure": "AssertionError: expected false to be true // Object.is equality",
+    "load1": "36.06"
+   },
+   "old": {
+    "status": "failed",
+    "failure": "AssertionError: expected [ \u2026(3) ] to deeply equal [ \u2026(2) ]",
+    "load1": "36.06"
+   }
+  },
+  {
+   "id": "S2-same-line-if-after-dossier",
+   "kind": "lane:defect",
+   "note": "the dossier close and a flag-gated import on one line",
+   "edits": [
+    [
+     "    }, { renderer: renderLocalDossier });\n  }\n",
+     "    }, { renderer: renderLocalDossier });\n  } if (process.env.SYZYGY_PRELOAD_RENDERER === '1') await import('@syzygy/three-surface-poc-app/dossier-site');\n"
+    ]
+   ],
+   "started": 1793097477.1388414,
+   "new": {
+    "status": "failed",
+    "failure": "AssertionError: expected [ Array(1) ] to deeply equal []",
+    "load1": "36.06"
+   },
+   "old": {
+    "status": "failed",
+    "failure": "AssertionError: expected [ \u2026(3) ] to deeply equal [ \u2026(2) ]",
+    "load1": "36.29"
+   }
+  },
+  {
+   "id": "S3-else-if-flag-after-polaris",
+   "kind": "lane:defect",
+   "note": "an `else if` on the polaris branch, just before the daemon path",
+   "edits": [
+    [
+     "    return runPolarisCli(argv.slice(1), { renderer: renderLocalDossier });\n  }\n",
+     "    return runPolarisCli(argv.slice(1), { renderer: renderLocalDossier });\n  } else if (process.env.SYZYGY_PRELOAD_RENDERER === '1') {\n    await import('@syzygy/three-surface-poc-app/dossier-site');\n  }\n"
+    ]
+   ],
+   "started": 1793097485.735983,
+   "new": {
+    "status": "failed",
+    "failure": "AssertionError: expected false to be true // Object.is equality",
+    "load1": "36.11"
+   },
+   "old": {
+    "status": "failed",
+    "failure": "AssertionError: expected [ \u2026(3) ] to deeply equal [ \u2026(2) ]",
+    "load1": "35.78"
+   }
+  },
+  {
+   "id": "S4-else-runtime-hook-after-dossier",
+   "kind": "lane:defect",
+   "note": "R3's runtime hook and import in an unconditional `else` on the dossier branch: every non-dossier argv loads the POC app, unseen by the test's hook",
+   "edits": [
+    [
+     "    }, { renderer: renderLocalDossier });\n  }\n",
+     "    }, { renderer: renderLocalDossier });\n  } else {\n    const { registerHooks } = process.getBuiltinModule('node:module');\n    const { readFileSync } = process.getBuiltinModule('node:fs');\n    registerHooks({ load: (url, context, nextLoad) => (url.includes('/apps/three-surface-poc/')\n      ? { format: 'module', source: readFileSync(new URL(url), 'utf8'), shortCircuit: true } : nextLoad(url, context)) });\n    await import('@syzygy/three-surface-poc-app/dossier-site');\n  }\n"
+    ]
+   ],
+   "started": 1793097494.61173,
+   "new": {
+    "status": "failed",
+    "failure": "AssertionError: expected false to be true // Object.is equality",
+    "load1": "36.60"
+   },
+   "old": {
+    "status": "failed",
+    "failure": "AssertionError: expected [ \u2026(3) ] to deeply equal [ \u2026(2) ]",
+    "load1": "37.27"
+   }
+  },
+  {
+   "id": "S5-else-createRequire-flag-after-polaris",
+   "kind": "lane:defect",
+   "note": "R2's createRequire in an `else if` on the polaris branch",
+   "edits": [
+    [
+     "    return runPolarisCli(argv.slice(1), { renderer: renderLocalDossier });\n  }\n",
+     "    return runPolarisCli(argv.slice(1), { renderer: renderLocalDossier });\n  } else if (process.env.SYZYGY_PRELOAD_RENDERER === '1') {\n    process.getBuiltinModule('node:module').createRequire(import.meta.url)('@syzygy/three-surface-poc-app/dossier-site');\n  }\n"
+    ]
+   ],
+   "started": 1793097504.1536481,
+   "new": {
+    "status": "failed",
+    "failure": "AssertionError: expected false to be true // Object.is equality",
+    "load1": "37.41"
+   },
+   "old": {
+    "status": "failed",
+    "failure": "AssertionError: expected [ \u2026(3) ] to deeply equal [ \u2026(2) ]",
+    "load1": "37.41"
+   }
+  },
+  {
+   "id": "S6-misindented-close-after-dossier",
+   "kind": "lane:defect",
+   "note": "the dossier branch closed by a 4-space `}` on a line that opens a flag-gated block, closed by `  }`",
+   "edits": [
+    [
+     "    }, { renderer: renderLocalDossier });\n  }\n",
+     "    }, { renderer: renderLocalDossier });\n    } if (process.env.SYZYGY_PRELOAD_RENDERER === '1') {\n    await import('@syzygy/three-surface-poc-app/dossier-site');\n  }\n"
+    ]
+   ],
+   "started": 1793097511.0128348,
+   "new": {
+    "status": "failed",
+    "failure": "AssertionError: expected [ Array(1) ] to deeply equal []",
+    "load1": "36.82"
+   },
+   "old": {
+    "status": "failed",
+    "failure": "AssertionError: expected [ \u2026(3) ] to deeply equal [ \u2026(2) ]",
+    "load1": "35.71"
+   }
+  },
+  {
+   "id": "S7-else-split-specifier-after-dossier",
+   "kind": "lane:defect",
+   "note": "S1's `else if` with the specifier split in two, so no text in main.ts names the POC app",
+   "edits": [
+    [
+     "    }, { renderer: renderLocalDossier });\n  }\n",
+     "    }, { renderer: renderLocalDossier });\n  } else if (process.env.SYZYGY_PRELOAD_RENDERER === '1') {\n    await import('@syzygy/three-surface-poc' + '-app/dossier-site');\n  }\n"
+    ]
+   ],
+   "started": 1793097516.5955236,
+   "new": {
+    "status": "failed",
+    "failure": "AssertionError: expected false to be true // Object.is equality",
+    "load1": "35.71"
+   },
+   "old": {
+    "status": "passed",
+    "failure": "",
+    "load1": "35.25"
+   }
+  },
+  {
+   "id": "L1-else-if-chain",
+   "kind": "lane:equivalent",
+   "note": "the two branches chained as `if \u2026 else if (argv[0] === 'polaris')`",
+   "edits": [
+    [
+     "  }\n\n  // `syzygy polaris <url>` is the one-command launched run (prototype under\n  // owner direction POLARIS-DOSSIER-ONE-COMMAND-RUN-2026-10-14): it runs the\n  // `dossier` steps in process and starts the agent sessions in views.\n  if (argv[0] === 'polaris') {\n",
+     "  } else if (argv[0] === 'polaris') {\n    // `syzygy polaris <url>` is the one-command launched run (prototype under\n    // owner direction POLARIS-DOSSIER-ONE-COMMAND-RUN-2026-10-14): it runs the\n    // `dossier` steps in process and starts the agent sessions in views.\n"
+    ]
+   ],
+   "started": 1793097521.6110344,
+   "new": {
+    "status": "passed",
+    "failure": "",
+    "load1": "35.25"
+   },
+   "old": {
+    "status": "passed",
+    "failure": "",
+    "load1": "34.11"
+   }
+  },
+  {
+   "id": "L2-nested-function-in-dossier",
+   "kind": "lane:equivalent",
+   "note": "the dossier import moved into a nested async function inside the branch",
+   "edits": [
+    [
+     "    const { renderLocalDossier } = await import('@syzygy/three-surface-poc-app/dossier-site');\n    return runDossierCli(",
+     "    const renderLocalDossier = await (async () => {\n      const site = await import('@syzygy/three-surface-poc-app/dossier-site');\n      return site.renderLocalDossier;\n    })();\n    return runDossierCli("
+    ]
+   ],
+   "started": 1793097527.8282523,
+   "new": {
+    "status": "passed",
+    "failure": "",
+    "load1": "34.11"
+   },
+   "old": {
+    "status": "failed",
+    "failure": "AssertionError: expected [ \u2026(2) ] to deeply equal [ \u2026(2) ]",
+    "load1": "34.18"
+   }
+  },
+  {
+   "id": "L3-nested-try-in-polaris",
+   "kind": "lane:equivalent",
+   "note": "the polaris import inside a nested try block in the branch",
+   "edits": [
+    [
+     "    const { runPolarisCli } = await import('@syzygy/polaris-dossier');\n    const { renderLocalDossier } = await import('@syzygy/three-surface-poc-app/dossier-site');\n    return runPolarisCli(argv.slice(1), { renderer: renderLocalDossier });\n",
+     "    const { runPolarisCli } = await import('@syzygy/polaris-dossier');\n    try {\n      const { renderLocalDossier } = await import('@syzygy/three-surface-poc-app/dossier-site');\n      return runPolarisCli(argv.slice(1), { renderer: renderLocalDossier });\n    } catch (cause: unknown) {\n      throw cause;\n    }\n"
+    ]
+   ],
+   "started": 1793097534.8176038,
+   "new": {
+    "status": "passed",
+    "failure": "",
+    "load1": "33.37"
+   },
+   "old": {
+    "status": "failed",
+    "failure": "AssertionError: expected [ \u2026(2) ] to deeply equal [ \u2026(2) ]",
+    "load1": "33.37"
+   }
+  },
+  {
+   "id": "C1-comment-outside-branches",
+   "kind": "lane:equivalent",
+   "note": "a comment naming the POC app in the header, outside both branches (a disclosed residual: the text row fails it)",
+   "edits": [
+    [
+     "// One exception to all of the above:",
+     "// The dossier renderer is @syzygy/three-surface-poc-app/dossier-site.\n// One exception to all of the above:"
+    ]
+   ],
+   "started": 1793097540.7150373,
+   "new": {
+    "status": "failed",
+    "failure": "AssertionError: expected [ Array(1) ] to deeply equal []",
+    "load1": "32.46"
+   },
+   "old": {
+    "status": "failed",
+    "failure": "AssertionError: expected [ \u2026(3) ] to deeply equal [ \u2026(2) ]",
+    "load1": "32.42"
+   }
+  },
+  {
+   "id": "Y1-dossier-serve-falls-through",
+   "kind": "load",
+   "note": "a missing `return`: `dossier serve` loads the app in the dossier then-block, drops its two words from process.argv and falls through to the daemon path",
+   "edits": [
+    [
+     "    return runDossierCli(argv.slice(1), {\n",
+     "    if (argv[1] === 'serve') {\n      // `syzygy dossier serve \u2026` serves the daemon below, with the renderer loaded for its routes.\n      await import('@syzygy/three-surface-poc-app/dossier-site');\n      process.argv.splice(2, 2);\n    } else return runDossierCli(argv.slice(1), {\n"
+    ]
+   ],
+   "started": 1793097547.9546618,
+   "new": {
+    "status": "passed",
+    "failure": "",
+    "load1": "32.42"
+   },
+   "old": {
+    "status": "failed",
+    "failure": "AssertionError: expected [ \u2026(3) ] to deeply equal [ \u2026(2) ]",
+    "load1": "31.51"
+   }
+  },
+  {
+   "id": "Y1b-dossier-serve-falls-through-no-new-mention",
+   "kind": "load-both",
+   "note": "Y1 without a new line naming the app: the branch's own import has already loaded it",
+   "edits": [
+    [
+     "    return runDossierCli(argv.slice(1), {\n",
+     "    if (argv[1] === 'serve') process.argv.splice(2, 2); // `syzygy dossier serve \u2026`: the daemon below\n    else return runDossierCli(argv.slice(1), {\n"
+    ]
+   ],
+   "started": 1793097553.8627987,
+   "new": {
+    "status": "passed",
+    "failure": "",
+    "load1": "31.51"
+   },
+   "old": {
+    "status": "passed",
+    "failure": "",
+    "load1": "31.63"
+   }
+  },
+  {
+   "id": "Y2-dossier-serve-reenters-main",
+   "kind": "load",
+   "note": "the then-block returns, but through `return main()` after loading the app, so the daemon path runs in the same process",
+   "edits": [
+    [
+     "  if (argv[0] === 'dossier') {\n",
+     "  if (argv[0] === 'dossier') {\n    if (argv[1] === 'serve') {\n      // `syzygy dossier serve \u2026`: load the renderer, then serve the daemon with the rest of argv.\n      await import('@syzygy/three-surface-poc-app/dossier-site');\n      process.argv.splice(2, 2);\n      return main();\n    }\n"
+    ]
+   ],
+   "started": 1793097559.3815567,
+   "new": {
+    "status": "passed",
+    "failure": "",
+    "load1": "32.70"
+   },
+   "old": {
+    "status": "failed",
+    "failure": "AssertionError: expected [ \u2026(3) ] to deeply equal [ \u2026(2) ]",
+    "load1": "32.70"
+   }
+  },
+  {
+   "id": "Y3-flag-rewrites-argv-into-dossier",
+   "kind": "load",
+   "note": "a rewritten argv: with the flag set, a plain daemon invocation enters the dossier then-block, loads the app and re-enters main() as the daemon (round 1's R1 scenario, inside a branch)",
+   "edits": [
+    [
+     "  const argv = process.argv.slice(2);\n  if (argv[0] === 'dossier') {\n",
+     "  const argv = process.env.SYZYGY_PRELOAD_RENDERER === '1' ? ['dossier', '--preload'] : process.argv.slice(2);\n  if (argv[0] === 'dossier') {\n    if (argv[1] === '--preload') {\n      // SYZYGY_PRELOAD_RENDERER=1 warms the renderer, then serves the daemon as asked.\n      await import('@syzygy/three-surface-poc-app/dossier-site');\n      delete process.env.SYZYGY_PRELOAD_RENDERER;\n      return main();\n    }\n"
+    ]
+   ],
+   "started": 1793097565.0070157,
+   "new": {
+    "status": "passed",
+    "failure": "",
+    "load1": "33.60"
+   },
+   "old": {
+    "status": "failed",
+    "failure": "AssertionError: expected [ \u2026(3) ] to deeply equal [ \u2026(2) ]",
+    "load1": "33.71"
+   }
+  },
+  {
+   "id": "Y4-polaris-labelled-break",
+   "kind": "load",
+   "note": "a nested labelled block in the polaris then-block: `break` leaves the branch after loading the app, and control falls through to the daemon path",
+   "edits": [
+    [
+     "    const { runPolarisCli } = await import('@syzygy/polaris-dossier');\n    const { renderLocalDossier } = await import('@syzygy/three-surface-poc-app/dossier-site');\n    return runPolarisCli(argv.slice(1), { renderer: renderLocalDossier });\n  }\n",
+     "    polaris: {\n      if (argv[1] === '--serve') {\n        // `syzygy polaris --serve \u2026`: the daemon below, with the renderer loaded for its routes.\n        await import('@syzygy/three-surface-poc-app/dossier-site');\n        process.argv.splice(2, 2);\n        break polaris;\n      }\n      const { runPolarisCli } = await import('@syzygy/polaris-dossier');\n      const { renderLocalDossier } = await import('@syzygy/three-surface-poc-app/dossier-site');\n      return runPolarisCli(argv.slice(1), { renderer: renderLocalDossier });\n    }\n  }\n"
+    ]
+   ],
+   "started": 1793097571.556781,
+   "new": {
+    "status": "passed",
+    "failure": "",
+    "load1": "33.71"
+   },
+   "old": {
+    "status": "failed",
+    "failure": "AssertionError: expected [ \u2026(3) ] to deeply equal [ \u2026(2) ]",
+    "load1": "33.42"
+   }
+  },
+  {
+   "id": "Y5-dossier-serve-callback-after-branch",
+   "kind": "load",
+   "note": "a callback scheduled in the dossier then-block that runs after the branch, while the daemon starts",
+   "edits": [
+    [
+     "    return runDossierCli(argv.slice(1), {\n",
+     "    if (argv[1] === 'serve') {\n      // `syzygy dossier serve \u2026` serves the daemon below; the renderer loads once it is up.\n      setImmediate(() => void import('@syzygy/three-surface-poc-app/dossier-site'));\n      process.argv.splice(2, 2);\n    } else return runDossierCli(argv.slice(1), {\n"
+    ]
+   ],
+   "started": 1793097578.304169,
+   "new": {
+    "status": "passed",
+    "failure": "",
+    "load1": "33.42"
+   },
+   "old": {
+    "status": "failed",
+    "failure": "AssertionError: expected [ \u2026(3) ] to deeply equal [ \u2026(2) ]",
+    "load1": "32.90"
+   }
+  },
+  {
+   "id": "Z1-eager-import-held-in-variable-before-if",
+   "kind": "load",
+   "note": "an import() started before the dossier `if` and held in a variable",
+   "edits": [
+    [
+     "  const argv = process.argv.slice(2);\n",
+     "  const argv = process.argv.slice(2);\n  const renderer = process.env.SYZYGY_PRELOAD_RENDERER === '1' ? import('@syzygy/three-surface-poc-app/dossier-site') : undefined;\n  void renderer;\n"
+    ]
+   ],
+   "started": 1793097585.2291796,
+   "new": {
+    "status": "failed",
+    "failure": "AssertionError: expected [ Array(1) ] to deeply equal []",
+    "load1": "41.08"
+   },
+   "old": {
+    "status": "failed",
+    "failure": "AssertionError: expected [ \u2026(3) ] to deeply equal [ \u2026(2) ]",
+    "load1": "39.71"
+   }
+  },
+  {
+   "id": "Z2-conditional-expression-between-branches",
+   "kind": "load",
+   "note": "a conditional expression statement between the branches",
+   "edits": [
+    [
+     "  // `syzygy polaris <url>` is the one-command launched run",
+     "  process.env.SYZYGY_PRELOAD_RENDERER === '1' ? await import('@syzygy/three-surface-poc-app/dossier-site') : undefined;\n\n  // `syzygy polaris <url>` is the one-command launched run"
+    ]
+   ],
+   "started": 1793097592.105768,
+   "new": {
+    "status": "failed",
+    "failure": "AssertionError: expected [ Array(1) ] to deeply equal []",
+    "load1": "39.71"
+   },
+   "old": {
+    "status": "failed",
+    "failure": "AssertionError: expected [ \u2026(3) ] to deeply equal [ \u2026(2) ]",
+    "load1": "41.26"
+   }
+  },
+  {
+   "id": "Z3-comma-in-polaris-condition",
+   "kind": "load",
+   "note": "a comma expression in the polaris condition that loads the app before testing argv[0]",
+   "edits": [
+    [
+     "  if (argv[0] === 'polaris') {\n",
+     "  if ((process.env.SYZYGY_PRELOAD_RENDERER === '1' && void import('@syzygy/three-surface-poc-app/dossier-site'), argv[0] === 'polaris')) {\n"
+    ]
+   ],
+   "started": 1793097598.7834995,
+   "new": {
+    "status": "failed",
+    "failure": "AssertionError: expected [ 1, +0 ] to deeply equal [ 1, 1 ]",
+    "load1": "41.26"
+   },
+   "old": {
+    "status": "failed",
+    "failure": "AssertionError: expected [ \u2026(3) ] to deeply equal [ \u2026(2) ]",
+    "load1": "41.00"
+   }
+  },
+  {
+   "id": "Z4-second-if-same-condition",
+   "kind": "load",
+   "note": "a second top-level `if (argv[0] === 'dossier')` before the daemon path, on an argv the flag rewrites",
+   "edits": [
+    [
+     "  const argv = process.argv.slice(2);\n",
+     "  let argv = process.argv.slice(2);\n"
+    ],
+    [
+     "  let parsed = parseCli(process.argv.slice(2), process.env);\n",
+     "  argv = process.env.SYZYGY_PRELOAD_RENDERER === '1' ? ['dossier'] : argv;\n  if (argv[0] === 'dossier') await import('@syzygy/three-surface-poc-app/dossier-site');\n  let parsed = parseCli(process.argv.slice(2), process.env);\n"
+    ]
+   ],
+   "started": 1793097606.9444811,
+   "new": {
+    "status": "failed",
+    "failure": "AssertionError: expected [ 2, 1 ] to deeply equal [ 1, 1 ]",
+    "load1": "40.51"
+   },
+   "old": {
+    "status": "failed",
+    "failure": "AssertionError: expected [ \u2026(3) ] to deeply equal [ \u2026(2) ]",
+    "load1": "40.07"
+   }
+  },
+  {
+   "id": "Z5-switch-before-daemon",
+   "kind": "load",
+   "note": "a switch on the flag just before the daemon path",
+   "edits": [
+    [
+     "  let parsed = parseCli(process.argv.slice(2), process.env);\n",
+     "  switch (process.env.SYZYGY_PRELOAD_RENDERER) {\n    case '1':\n      await import('@syzygy/three-surface-poc-app/dossier-site');\n  }\n  let parsed = parseCli(process.argv.slice(2), process.env);\n"
+    ]
+   ],
+   "started": 1793097613.0122736,
+   "new": {
+    "status": "failed",
+    "failure": "AssertionError: expected [ Array(1) ] to deeply equal []",
+    "load1": "40.07"
+   },
+   "old": {
+    "status": "failed",
+    "failure": "AssertionError: expected [ \u2026(3) ] to deeply equal [ \u2026(2) ]",
+    "load1": "38.22"
+   }
+  },
+  {
+   "id": "Z6-shadowed-argv-in-block",
+   "kind": "load",
+   "note": "a block between the branches that shadows argv and loads the app on `argv[0] === 'dossier'`",
+   "edits": [
+    [
+     "  // `syzygy polaris <url>` is the one-command launched run",
+     "  {\n    const argv = process.env.SYZYGY_PRELOAD_RENDERER === '1' ? ['dossier'] : [];\n    if (argv[0] === 'dossier') await import('@syzygy/three-surface-poc-app/dossier-site');\n  }\n\n  // `syzygy polaris <url>` is the one-command launched run"
+    ]
+   ],
+   "started": 1793097618.319757,
+   "new": {
+    "status": "failed",
+    "failure": "AssertionError: expected [ Array(1) ] to deeply equal []",
+    "load1": "38.22"
+   },
+   "old": {
+    "status": "failed",
+    "failure": "AssertionError: expected [ \u2026(3) ] to deeply equal [ \u2026(2) ]",
+    "load1": "37.33"
+   }
+  },
+  {
+   "id": "Z7-template-literal-before-daemon",
+   "kind": "load",
+   "note": "a template-literal specifier behind the flag before the daemon path",
+   "edits": [
+    [
+     "  let parsed = parseCli(process.argv.slice(2), process.env);\n",
+     "  if (process.env.SYZYGY_PRELOAD_RENDERER === '1') await import(`@syzygy/three-surface-poc-app/${'dossier-site'}`);\n  let parsed = parseCli(process.argv.slice(2), process.env);\n"
+    ]
+   ],
+   "started": 1793097623.7360053,
+   "new": {
+    "status": "failed",
+    "failure": "AssertionError: expected [ Array(1) ] to deeply equal []",
+    "load1": "37.33"
+   },
+   "old": {
+    "status": "failed",
+    "failure": "AssertionError: expected [ \u2026(3) ] to deeply equal [ \u2026(2) ]",
+    "load1": "36.74"
+   }
+  },
+  {
+   "id": "Z8-concatenated-specifier-between-branches",
+   "kind": "load-both",
+   "note": "round 1's R1 with the specifier split in two: no line names the app, and no else is involved",
+   "edits": [
+    [
+     "  // `syzygy polaris <url>` is the one-command launched run",
+     "  if (process.env.SYZYGY_PRELOAD_RENDERER === '1') await import('@syzygy/three-surface-' + 'poc-app/dossier-site');\n\n  // `syzygy polaris <url>` is the one-command launched run"
+    ]
+   ],
+   "started": 1793097629.6623302,
+   "new": {
+    "status": "passed",
+    "failure": "",
+    "load1": "36.76"
+   },
+   "old": {
+    "status": "passed",
+    "failure": "",
+    "load1": "36.76"
+   }
+  },
+  {
+   "id": "Z9-function-in-branch-called-later",
+   "kind": "load",
+   "note": "a function declared in the dossier then-block and called on the daemon path (block-scoped in a module: tsc must refuse it)",
+   "edits": [
+    [
+     "  if (argv[0] === 'dossier') {\n",
+     "  if (argv[0] === 'dossier') {\n    function warm(): Promise<unknown> { return import('@syzygy/three-surface-poc-app/dossier-site'); }\n"
+    ],
+    [
+     "  let parsed = parseCli(process.argv.slice(2), process.env);\n",
+     "  if (process.env.SYZYGY_PRELOAD_RENDERER === '1') await warm();\n  let parsed = parseCli(process.argv.slice(2), process.env);\n"
+    ]
+   ],
+   "started": 1793097636.07134,
+   "new": {
+    "status": "passed",
+    "failure": "",
+    "load1": "36.62"
+   },
+   "old": {
+    "status": "failed",
+    "failure": "AssertionError: expected [ \u2026(3) ] to deeply equal [ \u2026(2) ]",
+    "load1": "37.13"
+   }
+  },
+  {
+   "id": "Z10-hoisted-var-in-branch-called-later",
+   "kind": "inert",
+   "note": "a `var` arrow declared in the dossier then-block and called (optionally) on the daemon path: hoisted but unassigned there, so nothing loads",
+   "edits": [
+    [
+     "  if (argv[0] === 'dossier') {\n",
+     "  if (argv[0] === 'dossier') {\n    var warm = (): Promise<unknown> => import('@syzygy/three-surface-poc-app/dossier-site');\n"
+    ],
+    [
+     "  let parsed = parseCli(process.argv.slice(2), process.env);\n",
+     "  if (process.env.SYZYGY_PRELOAD_RENDERER === '1') await warm?.();\n  let parsed = parseCli(process.argv.slice(2), process.env);\n"
+    ]
+   ],
+   "started": 1793097643.0604422,
+   "new": {
+    "status": "passed",
+    "failure": "",
+    "load1": "37.13"
+   },
+   "old": {
+    "status": "failed",
+    "failure": "AssertionError: expected [ \u2026(3) ] to deeply equal [ \u2026(2) ]",
+    "load1": "36.56"
+   }
+  },
+  {
+   "id": "G1-allman-brace-and-wrapped-import",
+   "kind": "shape",
+   "note": "the dossier brace on its own line and the import wrapped over three lines, as a formatter would print it",
+   "edits": [
+    [
+     "  if (argv[0] === 'dossier') {\n",
+     "  if (argv[0] === 'dossier')\n  {\n"
+    ],
+    [
+     "    const { renderLocalDossier } = await import('@syzygy/three-surface-poc-app/dossier-site');\n    return runDossierCli(argv.slice(1), {\n",
+     "    const { renderLocalDossier } = await import(\n      '@syzygy/three-surface-poc-app/dossier-site'\n    );\n    return runDossierCli(argv.slice(1), {\n"
+    ]
+   ],
+   "started": 1793097649.598523,
+   "new": {
+    "status": "passed",
+    "failure": "",
+    "load1": "37.40"
+   },
+   "old": {
+    "status": "failed",
+    "failure": "AssertionError: expected [ \u2026(2) ] to deeply equal [ \u2026(2) ]",
+    "load1": "37.40"
+   }
+  },
+  {
+   "id": "G2-commented-else-if-chain",
+   "kind": "shape",
+   "note": "the two branches chained, with block comments around `else` and inside the condition",
+   "edits": [
+    [
+     "  }\n\n  // `syzygy polaris <url>` is the one-command launched run (prototype under\n  // owner direction POLARIS-DOSSIER-ONE-COMMAND-RUN-2026-10-14): it runs the\n  // `dossier` steps in process and starts the agent sessions in views.\n  if (argv[0] === 'polaris') {\n",
+     "  } /* else: the one-command launched run */ else if (/* exact */ argv[0] === 'polaris' /* only */) {\n    // `syzygy polaris <url>` is the one-command launched run (prototype under\n    // owner direction POLARIS-DOSSIER-ONE-COMMAND-RUN-2026-10-14): it runs the\n    // `dossier` steps in process and starts the agent sessions in views.\n"
+    ]
+   ],
+   "started": 1793097654.5740452,
+   "new": {
+    "status": "passed",
+    "failure": "",
+    "load1": "37.52"
+   },
+   "old": {
+    "status": "failed",
+    "failure": "AssertionError: expected -1 to be greater than 7254",
+    "load1": "37.52"
+   }
+  },
+  {
+   "id": "G3-else-if-order-swap",
+   "kind": "shape",
+   "note": "the polaris branch first, with the dossier branch as its `else if`",
+   "edits": [
+    [
+     "  if (argv[0] === 'dossier') {\n    const { runDossierCli } = await import('@syzygy/polaris-dossier');\n    // `render` draws through the existing multi-page dossier renderer, injected\n    // here and loaded only on this branch, so the daemon path never loads the\n    // POC app. Its operator-agent entry imports nothing from the parked\n    // provider island (island-boundary.test.ts in polaris-generation-core).\n    // TODO(syzygy-qkea.19): import it from a renderer package once\n    // the renderer stack moves out of apps/three-surface-poc.\n    const { renderLocalDossier } = await import('@syzygy/three-surface-poc-app/dossier-site');\n    return runDossierCli(argv.slice(1), {\n      stdout: (text) => process.stdout.write(text),\n      stderr: (text) => process.stderr.write(text),\n    }, { renderer: renderLocalDossier });\n  }\n\n  // `syzygy polaris <url>` is the one-command launched run (prototype under\n  // owner direction POLARIS-DOSSIER-ONE-COMMAND-RUN-2026-10-14): it runs the\n  // `dossier` steps in process and starts the agent sessions in views.\n  if (argv[0] === 'polaris') {\n    const { runPolarisCli } = await import('@syzygy/polaris-dossier');\n    const { renderLocalDossier } = await import('@syzygy/three-surface-poc-app/dossier-site');\n    return runPolarisCli(argv.slice(1), { renderer: renderLocalDossier });\n  }\n\n",
+     "  // `syzygy polaris <url>` is the one-command launched run (prototype under\n  // owner direction POLARIS-DOSSIER-ONE-COMMAND-RUN-2026-10-14): it runs the\n  // `dossier` steps in process and starts the agent sessions in views.\n  if (argv[0] === 'polaris') {\n    const { runPolarisCli } = await import('@syzygy/polaris-dossier');\n    const { renderLocalDossier } = await import('@syzygy/three-surface-poc-app/dossier-site');\n    return runPolarisCli(argv.slice(1), { renderer: renderLocalDossier });\n  } else if (argv[0] === 'dossier') {\n    const { runDossierCli } = await import('@syzygy/polaris-dossier');\n    // `render` draws through the existing multi-page dossier renderer, injected\n    // here and loaded only on this branch, so the daemon path never loads the\n    // POC app. Its operator-agent entry imports nothing from the parked\n    // provider island (island-boundary.test.ts in polaris-generation-core).\n    // TODO(syzygy-qkea.19): import it from a renderer package once\n    // the renderer stack moves out of apps/three-surface-poc.\n    const { renderLocalDossier } = await import('@syzygy/three-surface-poc-app/dossier-site');\n    return runDossierCli(argv.slice(1), {\n      stdout: (text) => process.stdout.write(text),\n      stderr: (text) => process.stderr.write(text),\n    }, { renderer: renderLocalDossier });\n  }\n\n"
+    ]
+   ],
+   "started": 1793097659.272853,
+   "new": {
+    "status": "passed",
+    "failure": "",
+    "load1": "36.60"
+   },
+   "old": {
+    "status": "failed",
+    "failure": "AssertionError: expected 7481 to be greater than 7760",
+    "load1": "36.60"
+   }
+  },
+  {
+   "id": "G4-trailing-comments-and-return-await",
+   "kind": "shape",
+   "note": "a trailing line comment after each close, a blank line, and `return await`",
+   "edits": [
+    [
+     "    return runDossierCli(argv.slice(1), {\n",
+     "    return await runDossierCli(argv.slice(1), {\n"
+    ],
+    [
+     "    }, { renderer: renderLocalDossier });\n  }\n",
+     "    }, { renderer: renderLocalDossier });\n  } // the dossier branch returns above\n\n"
+    ],
+    [
+     "    const { runPolarisCli } = await import('@syzygy/polaris-dossier');\n    const { renderLocalDossier } = await import('@syzygy/three-surface-poc-app/dossier-site');\n    return runPolarisCli(argv.slice(1), { renderer: renderLocalDossier });\n  }\n",
+     "    const { runPolarisCli } = await import('@syzygy/polaris-dossier');\n    const { renderLocalDossier } = await import('@syzygy/three-surface-poc-app/dossier-site');\n    return runPolarisCli(argv.slice(1), { renderer: renderLocalDossier });\n  } // the polaris branch returns above\n"
+    ]
+   ],
+   "started": 1793097664.4945717,
+   "new": {
+    "status": "passed",
+    "failure": "",
+    "load1": "36.63"
+   },
+   "old": {
+    "status": "passed",
+    "failure": "",
+    "load1": "36.63"
+   }
+  },
+  {
+   "id": "G5-double-quoted-condition",
+   "kind": "shape",
+   "note": "the dossier condition written with double quotes",
+   "edits": [
+    [
+     "  if (argv[0] === 'dossier') {\n",
+     "  if (argv[0] === \"dossier\") {\n"
+    ]
+   ],
+   "started": 1793097670.0981662,
+   "new": {
+    "status": "failed",
+    "failure": "AssertionError: expected [ +0, 1 ] to deeply equal [ 1, 1 ]",
+    "load1": "36.02"
+   },
+   "old": {
+    "status": "failed",
+    "failure": "AssertionError: expected -1 to be greater than -1",
+    "load1": "36.02"
+   }
+  },
+  {
+   "id": "G6-unspaced-condition",
+   "kind": "shape",
+   "note": "the dossier condition written `argv[0]==='dossier'`",
+   "edits": [
+    [
+     "  if (argv[0] === 'dossier') {\n",
+     "  if (argv[0]==='dossier') {\n"
+    ]
+   ],
+   "started": 1793097675.3242047,
+   "new": {
+    "status": "failed",
+    "failure": "AssertionError: expected [ +0, 1 ] to deeply equal [ 1, 1 ]",
+    "load1": "34.66"
+   },
+   "old": {
+    "status": "failed",
+    "failure": "AssertionError: expected -1 to be greater than -1",
+    "load1": "34.66"
+   }
+  },
+  {
+   "id": "G7-parenthesised-condition",
+   "kind": "shape",
+   "note": "the dossier condition in a second pair of parentheses",
+   "edits": [
+    [
+     "  if (argv[0] === 'dossier') {\n",
+     "  if ((argv[0] === 'dossier')) {\n"
+    ]
+   ],
+   "started": 1793097680.2666926,
+   "new": {
+    "status": "failed",
+    "failure": "AssertionError: expected [ +0, 1 ] to deeply equal [ 1, 1 ]",
+    "load1": "33.48"
+   },
+   "old": {
+    "status": "failed",
+    "failure": "AssertionError: expected -1 to be greater than -1",
+    "load1": "33.48"
+   }
+  }
+ ]
+}

@@ -1,0 +1,556 @@
+{
+ "tool": "mutate_sweep.py",
+ "testFiles": [
+  "apps/three-surface-poc/src/fixture-directories.test.ts",
+  "apps/three-surface-poc/src/test-model-fixture.test.ts"
+ ],
+ "command": "npx vitest run apps/three-surface-poc/src/fixture-directories.test.ts apps/three-surface-poc/src/test-model-fixture.test.ts --project @syzygy/three-surface-poc-app",
+ "treeCommit": "564ec47c79e855fed1a4807ebef6f9c82567dc6b",
+ "sha256AtCommit": {
+  "apps/three-surface-poc/src/fixture-directories.test.ts": "193ec560ce383654480c4ab856b8ab99bc4f85a672e6083cd99cc69f96fe3e6e",
+  "apps/three-surface-poc/src/fixture-directories.ts": "329b3fc400b7b8f6d43d8ce8f86d344095bbb02797012be0e6f9b7252aac959c",
+  "apps/three-surface-poc/src/test-fixture-sweep.global-setup.ts": "8f68850a773daf21fde1174532826c5ded2ae372dd89db9ab3b32487e9135317",
+  "apps/three-surface-poc/src/test-model-fixture.test.ts": "88e13927235530bf7ea1b3eef96d3c88419db2e24068325845461ee433625beb",
+  "apps/three-surface-poc/src/test-model-fixture.ts": "58497e91d23c7244a76ceff055d590dd264c9c09dddbdd647604689b820d413e",
+  "vitest.config.ts": "8e8d698a90f37b1a340e4b9c6500981dda87bb56bd348980a648d1f3d89b625d"
+ },
+ "control": {
+  "exit": 0,
+  "testsRun": 19,
+  "failing": [],
+  "fixtureDirectoriesLeftInPrivateTmpdir": 0,
+  "holds": true
+ },
+ "mutants": 22,
+ "killed": 22,
+ "results": [
+  {
+   "id": "live-pid-removed",
+   "meaning": "a directory whose pid is alive is removed too",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/fixture-directories.ts",
+     "old": "if (owner === null || owner[2] !== namespace || ownerMayBeAlive(Number(owner[1]))) continue;",
+     "new": "if (owner === null || owner[2] !== namespace) continue;"
+    }
+   ],
+   "exit": 1,
+   "outcome": "killed",
+   "testsRun": 19,
+   "failing": [
+    {
+     "test": "fixture directories a killed run left behind (syzygy-bpyt.4.10) keeps the directories of a live process, the current one included",
+     "firstErrorLine": "AssertionError: expected [] to deeply equal [ \u2026(2) ]"
+    },
+    {
+     "test": "fixture directories a killed run left behind (syzygy-bpyt.4.10) keeps a directory whose pid fails with anything but ESRCH",
+     "firstErrorLine": "AssertionError: expected [] to deeply equal [ \u2026(2) ]"
+    },
+    {
+     "test": "fixture directories a killed run left behind (syzygy-bpyt.4.10) sweeps the temp directory the process runs under when the global setup runs, and keeps the live and the legacy",
+     "firstErrorLine": "AssertionError: expected [ \u2026(2) ] to deeply equal [ \u2026(3) ]"
+    },
+    {
+     "test": "fixture directories a killed run left behind (syzygy-bpyt.4.10) asks the operating system for the temp directory, so it sweeps the same directory the copies are made in when TMPDIR is unset",
+     "firstErrorLine": "AssertionError: expected [] to deeply equal [ Array(1) ]"
+    }
+   ],
+   "fixtureDirectoriesLeftInPrivateTmpdir": 0
+  },
+  {
+   "id": "foreign-namespace-swept",
+   "meaning": "a dead pid from another PID namespace is judged by this namespace and removed (review round 1, F1)",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/fixture-directories.ts",
+     "old": "if (owner === null || owner[2] !== namespace || ownerMayBeAlive(Number(owner[1]))) continue;",
+     "new": "if (owner === null || ownerMayBeAlive(Number(owner[1]))) continue;"
+    }
+   ],
+   "exit": 1,
+   "outcome": "killed",
+   "testsRun": 19,
+   "failing": [
+    {
+     "test": "fixture directories a killed run left behind (syzygy-bpyt.4.10) keeps the directories of a dead pid that belong to another PID namespace",
+     "firstErrorLine": "AssertionError: expected [] to deeply equal [ \u2026(2) ]"
+    }
+   ],
+   "fixtureDirectoriesLeftInPrivateTmpdir": 0
+  },
+  {
+   "id": "every-error-means-dead",
+   "meaning": "EPERM and an out-of-range pid count as dead",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/fixture-directories.ts",
+     "old": "return (error as NodeJS.ErrnoException).code !== 'ESRCH';",
+     "new": "return false;"
+    }
+   ],
+   "exit": 1,
+   "outcome": "killed",
+   "testsRun": 19,
+   "failing": [
+    {
+     "test": "fixture directories a killed run left behind (syzygy-bpyt.4.10) keeps a directory whose pid fails with anything but ESRCH",
+     "firstErrorLine": "AssertionError: expected [] to deeply equal [ \u2026(2) ]"
+    }
+   ],
+   "fixtureDirectoriesLeftInPrivateTmpdir": 0
+  },
+  {
+   "id": "name-without-pid-is-dead",
+   "meaning": "a name with no pid segment is swept as pid 4194305",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/fixture-directories.ts",
+     "old": "const owner = FIXTURE_NAME_WITH_OWNER.exec(name);",
+     "new": "const owner = FIXTURE_NAME_WITH_OWNER.exec(name) ?? [name, '4194305', namespace];"
+    }
+   ],
+   "exit": 1,
+   "outcome": "killed",
+   "testsRun": 19,
+   "failing": [
+    {
+     "test": "fixture directories a killed run left behind (syzygy-bpyt.4.10) keeps a name that carries no pid and namespace segment, whatever its suffix",
+     "firstErrorLine": "AssertionError: expected [] to deeply equal [ \u2026(13) ]"
+    },
+    {
+     "test": "fixture directories a killed run left behind (syzygy-bpyt.4.10) lists only the directory it is given: nothing beside it, nothing below a non-fixture entry",
+     "firstErrorLine": "AssertionError: expected false to be true // Object.is equality"
+    },
+    {
+     "test": "fixture directories a killed run left behind (syzygy-bpyt.4.10) sweeps the temp directory the process runs under when the global setup runs, and keeps the live and the legacy",
+     "firstErrorLine": "AssertionError: expected [ Array(1) ] to deeply equal [ \u2026(3) ]"
+    }
+   ],
+   "fixtureDirectoriesLeftInPrivateTmpdir": 0
+  },
+  {
+   "id": "hyphen-after-namespace-dropped",
+   "meaning": "a namespace with no hyphen after it matches",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/fixture-directories.ts",
+     "old": "p(\\d+)-n(\\d+)-/;",
+     "new": "p(\\d+)-n(\\d+)/;"
+    }
+   ],
+   "exit": 1,
+   "outcome": "killed",
+   "testsRun": 19,
+   "failing": [
+    {
+     "test": "fixture directories a killed run left behind (syzygy-bpyt.4.10) keeps a name that carries no pid and namespace segment, whatever its suffix",
+     "firstErrorLine": "AssertionError: expected [ \u2026(12) ] to deeply equal [ \u2026(13) ]"
+    }
+   ],
+   "fixtureDirectoriesLeftInPrivateTmpdir": 0
+  },
+  {
+   "id": "anchor-dropped",
+   "meaning": "the prefix may sit inside a longer name",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/fixture-directories.ts",
+     "old": "const FIXTURE_NAME_WITH_OWNER = /^syzygy-",
+     "new": "const FIXTURE_NAME_WITH_OWNER = /syzygy-"
+    }
+   ],
+   "exit": 1,
+   "outcome": "killed",
+   "testsRun": 19,
+   "failing": [
+    {
+     "test": "fixture directories a killed run left behind (syzygy-bpyt.4.10) keeps a name that carries no pid and namespace segment, whatever its suffix",
+     "firstErrorLine": "AssertionError: expected [ \u2026(12) ] to deeply equal [ \u2026(13) ]"
+    }
+   ],
+   "fixtureDirectoriesLeftInPrivateTmpdir": 0
+  },
+  {
+   "id": "template-form-unmatched",
+   "meaning": "a template directory of a dead process is never swept",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/fixture-directories.ts",
+     "old": "(?:template-)?p(\\d+)-n(\\d+)-/;",
+     "new": "p(\\d+)-n(\\d+)-/;"
+    }
+   ],
+   "exit": 1,
+   "outcome": "killed",
+   "testsRun": 19,
+   "failing": [
+    {
+     "test": "fixture directories a killed run left behind (syzygy-bpyt.4.10) removes the copy and the template of a process that is gone",
+     "firstErrorLine": "AssertionError: expected [ Array(1) ] to deeply equal []"
+    },
+    {
+     "test": "fixture directories a killed run left behind (syzygy-bpyt.4.10) does not fail the run when a dead process's directory cannot be removed",
+     "firstErrorLine": "AssertionError: expected [ \u2026(2) ] to not include 'syzygy-poc-surface-fixture-template-p\u2026'"
+    },
+    {
+     "test": "fixture directories a killed run left behind (syzygy-bpyt.4.10) sweeps the temp directory the process runs under when the global setup runs, and keeps the live and the legacy",
+     "firstErrorLine": "AssertionError: expected [ \u2026(4) ] to deeply equal [ \u2026(3) ]"
+    }
+   ],
+   "fixtureDirectoriesLeftInPrivateTmpdir": 0
+  },
+  {
+   "id": "is-directory-guard-dropped",
+   "meaning": "a regular file or a symlink with a dead-pid name is removed, not only a directory (review round 1, F3)",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/fixture-directories.ts",
+     "old": "if (stat.isDirectory() && (user === undefined || stat.uid === user)) rmSync(",
+     "new": "if (user === undefined || stat.uid === user) rmSync("
+    }
+   ],
+   "exit": 1,
+   "outcome": "killed",
+   "testsRun": 19,
+   "failing": [
+    {
+     "test": "fixture directories a killed run left behind (syzygy-bpyt.4.10) follows no symlink and removes no file: only a directory with a dead pid in its name goes",
+     "firstErrorLine": "AssertionError: expected [] to deeply equal [ \u2026(2) ]"
+    }
+   ],
+   "fixtureDirectoriesLeftInPrivateTmpdir": 0
+  },
+  {
+   "id": "uid-guard-dropped",
+   "meaning": "a directory of another user with a dead-pid name is entered and removed (review round 1, F3)",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/fixture-directories.ts",
+     "old": "if (stat.isDirectory() && (user === undefined || stat.uid === user)) rmSync(",
+     "new": "if (stat.isDirectory()) rmSync("
+    }
+   ],
+   "exit": 1,
+   "outcome": "killed",
+   "testsRun": 19,
+   "failing": [
+    {
+     "test": "fixture directories a killed run left behind (syzygy-bpyt.4.10) keeps a directory that belongs to another user, the sweep never descending into it",
+     "firstErrorLine": "AssertionError: expected [] to deeply equal [ Array(1) ]"
+    }
+   ],
+   "fixtureDirectoriesLeftInPrivateTmpdir": 0
+  },
+  {
+   "id": "stat-follows-symlink",
+   "meaning": "a symlink to a directory is judged by its target, not by itself",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/fixture-directories.ts",
+     "old": "import { lstatSync, readdirSync, readlinkSync, rmSync } from 'node:fs';",
+     "new": "import { lstatSync, readdirSync, readlinkSync, rmSync, statSync } from 'node:fs';"
+    },
+    {
+     "file": "apps/three-surface-poc/src/fixture-directories.ts",
+     "old": "const stat = lstatSync(entry);",
+     "new": "const stat = statSync(entry);"
+    }
+   ],
+   "exit": 1,
+   "outcome": "killed",
+   "testsRun": 19,
+   "failing": [
+    {
+     "test": "fixture directories a killed run left behind (syzygy-bpyt.4.10) follows no symlink and removes no file: only a directory with a dead pid in its name goes",
+     "firstErrorLine": "AssertionError: expected [ Array(1) ] to deeply equal [ \u2026(2) ]"
+    }
+   ],
+   "fixtureDirectoriesLeftInPrivateTmpdir": 0
+  },
+  {
+   "id": "removal-failure-propagates",
+   "meaning": "a directory that cannot be removed fails the run that sweeps",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/fixture-directories.ts",
+     "old": "    try {\n      const stat = lstatSync(entry);\n      if (stat.isDirectory() && (user === undefined || stat.uid === user)) rmSync(entry, { recursive: true, force: true });\n    } catch {\n      // Left for the next run.\n    }\n",
+     "new": "    const stat = lstatSync(entry);\n    if (stat.isDirectory() && (user === undefined || stat.uid === user)) rmSync(entry, { recursive: true, force: true });\n"
+    }
+   ],
+   "exit": 1,
+   "outcome": "killed",
+   "testsRun": 19,
+   "failing": [
+    {
+     "test": "fixture directories a killed run left behind (syzygy-bpyt.4.10) does not fail the run when a dead process's directory cannot be removed",
+     "firstErrorLine": "AssertionError: expected [Function] to not throw an error but 'Error: EACCES, Permission denied: /tm\u2026' was thrown"
+    }
+   ],
+   "fixtureDirectoriesLeftInPrivateTmpdir": 0
+  },
+  {
+   "id": "readdir-outside-try",
+   "meaning": "a temp directory that cannot be listed fails the run that sweeps (review round 1, N1)",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/fixture-directories.ts",
+     "old": "  let names: string[];\n  try {\n    names = readdirSync(directory);\n  } catch {\n    return;\n  }\n",
+     "new": "  const names = readdirSync(directory);\n"
+    }
+   ],
+   "exit": 1,
+   "outcome": "killed",
+   "testsRun": 19,
+   "failing": [
+    {
+     "test": "fixture directories a killed run left behind (syzygy-bpyt.4.10) does not fail the run when the temp directory cannot be listed",
+     "firstErrorLine": "AssertionError: expected [Function] to not throw an error but 'Error: EACCES: permission denied, sca\u2026' was thrown"
+    }
+   ],
+   "fixtureDirectoriesLeftInPrivateTmpdir": 0
+  },
+  {
+   "id": "lists-the-parent",
+   "meaning": "the sweep lists the parent of the directory it is given",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/fixture-directories.ts",
+     "old": "names = readdirSync(directory);",
+     "new": "names = readdirSync(join(directory, '..'));"
+    }
+   ],
+   "exit": 1,
+   "outcome": "killed",
+   "testsRun": 19,
+   "failing": [
+    {
+     "test": "fixture directories a killed run left behind (syzygy-bpyt.4.10) removes the copy and the template of a process that is gone",
+     "firstErrorLine": "AssertionError: expected [ \u2026(2) ] to deeply equal []"
+    },
+    {
+     "test": "fixture directories a killed run left behind (syzygy-bpyt.4.10) follows no symlink and removes no file: only a directory with a dead pid in its name goes",
+     "firstErrorLine": "AssertionError: expected [ \u2026(3) ] to deeply equal [ \u2026(2) ]"
+    },
+    {
+     "test": "fixture directories a killed run left behind (syzygy-bpyt.4.10) keeps the directories of a dead pid that belong to another PID namespace",
+     "firstErrorLine": "AssertionError: expected [ \u2026(3) ] to deeply equal [ \u2026(2) ]"
+    },
+    {
+     "test": "fixture directories a killed run left behind (syzygy-bpyt.4.10) checks no user where the system has no user ids, and removes the dead process's directory",
+     "firstErrorLine": "AssertionError: expected [ Array(1) ] to deeply equal []"
+    },
+    {
+     "test": "fixture directories a killed run left behind (syzygy-bpyt.4.10) does not fail the run when a dead process's directory cannot be removed",
+     "firstErrorLine": "AssertionError: expected [ \u2026(2) ] to not include 'syzygy-poc-surface-fixture-template-p\u2026'"
+    },
+    {
+     "test": "fixture directories a killed run left behind (syzygy-bpyt.4.10) sweeps the temp directory the process runs under when the global setup runs, and keeps the live and the legacy",
+     "firstErrorLine": "AssertionError: expected [ \u2026(5) ] to deeply equal [ \u2026(3) ]"
+    },
+    {
+     "test": "fixture directories a killed run left behind (syzygy-bpyt.4.10) asks the operating system for the temp directory, so it sweeps the same directory the copies are made in when TMPDIR is unset",
+     "firstErrorLine": "AssertionError: expected [ \u2026(2) ] to deeply equal [ Array(1) ]"
+    }
+   ],
+   "fixtureDirectoriesLeftInPrivateTmpdir": 0
+  },
+  {
+   "id": "tmpdir-read-from-the-variable",
+   "meaning": "the default directory is the TMPDIR variable itself, not what the operating system answers for the temp directory",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/fixture-directories.ts",
+     "old": "directory: string = tmpdir()",
+     "new": "directory: string = process.env['TMPDIR'] as string"
+    }
+   ],
+   "exit": 1,
+   "outcome": "killed",
+   "testsRun": 19,
+   "failing": [
+    {
+     "test": "fixture directories a killed run left behind (syzygy-bpyt.4.10) asks the operating system for the temp directory, so it sweeps the same directory the copies are made in when TMPDIR is unset",
+     "firstErrorLine": "AssertionError: expected [ \u2026(2) ] to deeply equal [ Array(1) ]"
+    }
+   ],
+   "fixtureDirectoriesLeftInPrivateTmpdir": 0
+  },
+  {
+   "id": "copy-name-without-pid",
+   "meaning": "a copy is named as before, with no pid",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/fixture-directories.ts",
+     "old": "`${FIXTURE_PREFIX}p${process.pid}-n${pidNamespace()}-`",
+     "new": "`${FIXTURE_PREFIX}`"
+    }
+   ],
+   "exit": 1,
+   "outcome": "killed",
+   "testsRun": 19,
+   "failing": [
+    {
+     "test": "fixture directory names (syzygy-bpyt.4.10) names the template and each copy with the pid and PID namespace of the process that made them",
+     "firstErrorLine": "AssertionError: expected [] to have a length of 2 but got +0"
+    }
+   ],
+   "fixtureDirectoriesLeftInPrivateTmpdir": 0
+  },
+  {
+   "id": "copy-name-without-namespace",
+   "meaning": "a copy is named with its pid but not its PID namespace",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/fixture-directories.ts",
+     "old": "`${FIXTURE_PREFIX}p${process.pid}-n${pidNamespace()}-`",
+     "new": "`${FIXTURE_PREFIX}p${process.pid}-`"
+    }
+   ],
+   "exit": 1,
+   "outcome": "killed",
+   "testsRun": 19,
+   "failing": [
+    {
+     "test": "fixture directory names (syzygy-bpyt.4.10) names the template and each copy with the pid and PID namespace of the process that made them",
+     "firstErrorLine": "AssertionError: expected [] to have a length of 2 but got +0"
+    }
+   ],
+   "fixtureDirectoriesLeftInPrivateTmpdir": 0
+  },
+  {
+   "id": "template-name-without-pid",
+   "meaning": "the template is named as before, with no pid",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/fixture-directories.ts",
+     "old": "`${FIXTURE_PREFIX}template-p${process.pid}-n${pidNamespace()}-`",
+     "new": "`${FIXTURE_PREFIX}template-`"
+    }
+   ],
+   "exit": 1,
+   "outcome": "killed",
+   "testsRun": 19,
+   "failing": [
+    {
+     "test": "fixture directory names (syzygy-bpyt.4.10) names the template and each copy with the pid and PID namespace of the process that made them",
+     "firstErrorLine": "AssertionError: expected [] to have a length of 1 but got +0"
+    }
+   ],
+   "fixtureDirectoriesLeftInPrivateTmpdir": 0
+  },
+  {
+   "id": "template-name-without-namespace",
+   "meaning": "the template is named with its pid but not its PID namespace",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/fixture-directories.ts",
+     "old": "`${FIXTURE_PREFIX}template-p${process.pid}-n${pidNamespace()}-`",
+     "new": "`${FIXTURE_PREFIX}template-p${process.pid}-`"
+    }
+   ],
+   "exit": 1,
+   "outcome": "killed",
+   "testsRun": 19,
+   "failing": [
+    {
+     "test": "fixture directory names (syzygy-bpyt.4.10) names the template and each copy with the pid and PID namespace of the process that made them",
+     "firstErrorLine": "AssertionError: expected [] to have a length of 1 but got +0"
+    }
+   ],
+   "fixtureDirectoriesLeftInPrivateTmpdir": 0
+  },
+  {
+   "id": "global-setup-does-not-sweep",
+   "meaning": "the global setup runs and sweeps nothing",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/test-fixture-sweep.global-setup.ts",
+     "old": "  removeFixturesOfDeadProcesses();\n",
+     "new": ""
+    }
+   ],
+   "exit": 1,
+   "outcome": "killed",
+   "testsRun": 19,
+   "failing": [
+    {
+     "test": "fixture directories a killed run left behind (syzygy-bpyt.4.10) sweeps the temp directory the process runs under when the global setup runs, and keeps the live and the legacy",
+     "firstErrorLine": "AssertionError: expected [ \u2026(5) ] to deeply equal [ \u2026(3) ]"
+    },
+    {
+     "test": "fixture directories a killed run left behind (syzygy-bpyt.4.10) asks the operating system for the temp directory, so it sweeps the same directory the copies are made in when TMPDIR is unset",
+     "firstErrorLine": "AssertionError: expected [ \u2026(2) ] to deeply equal [ Array(1) ]"
+    }
+   ],
+   "fixtureDirectoriesLeftInPrivateTmpdir": 0
+  },
+  {
+   "id": "global-setup-not-registered",
+   "meaning": "the app project registers no global setup: no sweep at all",
+   "edits": [
+    {
+     "file": "vitest.config.ts",
+     "old": "          // Once per run: removes the fixture directories of killed runs (syzygy-bpyt.4.10).\n          globalSetup: [fileURLToPath(new URL('./apps/three-surface-poc/src/test-fixture-sweep.global-setup.ts', import.meta.url))],\n",
+     "new": ""
+    }
+   ],
+   "exit": 1,
+   "outcome": "killed",
+   "testsRun": 19,
+   "failing": [
+    {
+     "test": "fixture directories a killed run left behind (syzygy-bpyt.4.10) is registered as a global setup of the app project and of no other project, so it runs once per run",
+     "firstErrorLine": "AssertionError: expected [] to deeply equal [ '@syzygy/three-surface-poc-app' ]"
+    }
+   ],
+   "fixtureDirectoriesLeftInPrivateTmpdir": 0
+  },
+  {
+   "id": "global-setup-on-every-project",
+   "meaning": "the global setup is registered at the root, so every project runs it",
+   "edits": [
+    {
+     "file": "vitest.config.ts",
+     "old": "    maxWorkers: '50%',\n",
+     "new": "    maxWorkers: '50%',\n    globalSetup: [fileURLToPath(new URL('./apps/three-surface-poc/src/test-fixture-sweep.global-setup.ts', import.meta.url))],\n"
+    }
+   ],
+   "exit": 1,
+   "outcome": "killed",
+   "testsRun": 19,
+   "failing": [
+    {
+     "test": "fixture directories a killed run left behind (syzygy-bpyt.4.10) is registered as a global setup of the app project and of no other project, so it runs once per run",
+     "firstErrorLine": "AssertionError: expected [ Array(1) ] to be undefined"
+    }
+   ],
+   "fixtureDirectoriesLeftInPrivateTmpdir": 0
+  },
+  {
+   "id": "sweep-per-file",
+   "meaning": "every file sweeps when it makes its template, as well as the global setup",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/test-model-fixture.ts",
+     "old": "import { ownedCopyPrefix, ownedTemplatePrefix } from './fixture-directories.js';",
+     "new": "import { ownedCopyPrefix, ownedTemplatePrefix, removeFixturesOfDeadProcesses } from './fixture-directories.js';"
+    },
+    {
+     "file": "apps/three-surface-poc/src/test-model-fixture.ts",
+     "old": "  const root = mkdtempSync(join(tmpdir(), ownedTemplatePrefix()));",
+     "new": "  removeFixturesOfDeadProcesses();\n  const root = mkdtempSync(join(tmpdir(), ownedTemplatePrefix()));"
+    }
+   ],
+   "exit": 1,
+   "outcome": "killed",
+   "testsRun": 19,
+   "failing": [
+    {
+     "test": "fixture directory names (syzygy-bpyt.4.10) does not sweep when a file makes its template: the sweep is the global setup's, once per run",
+     "firstErrorLine": "AssertionError: expected false to be true // Object.is equality"
+    }
+   ],
+   "fixtureDirectoriesLeftInPrivateTmpdir": 0
+  }
+ ]
+}

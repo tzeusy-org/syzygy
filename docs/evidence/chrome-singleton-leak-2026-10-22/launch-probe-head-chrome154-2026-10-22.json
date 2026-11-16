@@ -1,0 +1,216 @@
+{
+ "tool": "launch_probe.py",
+ "treeCommit": "dccd484f4749b55f981f2e5211de4112ab7951de",
+ "mode": "head",
+ "file": "apps/three-surface-poc/src/cdp-browser.ts",
+ "sha256AtCommit": "c6c0ac6cc626b76155d870502c5549aa430d7cee35a058b0001d849586842033",
+ "launchesRequested": 24,
+ "build": {
+  "command": "npx tsc -b apps/three-surface-poc",
+  "exit": 0,
+  "firstLine": []
+ },
+ "run": {
+  "command": "TMPDIR=<private> node launch_close.mjs <worktree> <launches>",
+  "exit": 0,
+  "stderrFirstLine": []
+ },
+ "executable": "/home/tze/.cache/puppeteer/chrome/linux-154.0.8037.57/chrome-linux64/chrome",
+ "browserVersion": "Google Chrome for Testing 154.0.8037.57",
+ "privateTmpdirLength": 16,
+ "rows": [
+  {
+   "launch": 1,
+   "closeMs": 1390,
+   "exitCode": 0,
+   "signalCode": null,
+   "newEntries": []
+  },
+  {
+   "launch": 2,
+   "closeMs": 3158,
+   "exitCode": 0,
+   "signalCode": null,
+   "newEntries": []
+  },
+  {
+   "launch": 3,
+   "closeMs": 3985,
+   "exitCode": null,
+   "signalCode": "SIGKILL",
+   "newEntries": []
+  },
+  {
+   "launch": 4,
+   "error": "private browser profile drain did not verify two empty scans before deadline",
+   "newEntries": [
+    "syzygy-poc-browser-en55La"
+   ]
+  },
+  {
+   "launch": 5,
+   "closeMs": 1362,
+   "exitCode": 0,
+   "signalCode": null,
+   "newEntries": []
+  },
+  {
+   "launch": 6,
+   "closeMs": 1389,
+   "exitCode": 0,
+   "signalCode": null,
+   "newEntries": []
+  },
+  {
+   "launch": 7,
+   "closeMs": 1769,
+   "exitCode": 0,
+   "signalCode": null,
+   "newEntries": []
+  },
+  {
+   "launch": 8,
+   "closeMs": 819,
+   "exitCode": 0,
+   "signalCode": null,
+   "newEntries": []
+  },
+  {
+   "launch": 9,
+   "closeMs": 2378,
+   "exitCode": 0,
+   "signalCode": null,
+   "newEntries": []
+  },
+  {
+   "launch": 10,
+   "closeMs": 1817,
+   "exitCode": 0,
+   "signalCode": null,
+   "newEntries": []
+  },
+  {
+   "launch": 11,
+   "closeMs": 1374,
+   "exitCode": 0,
+   "signalCode": null,
+   "newEntries": []
+  },
+  {
+   "launch": 12,
+   "closeMs": 1376,
+   "exitCode": 0,
+   "signalCode": null,
+   "newEntries": []
+  },
+  {
+   "launch": 13,
+   "closeMs": 1826,
+   "exitCode": 0,
+   "signalCode": null,
+   "newEntries": []
+  },
+  {
+   "launch": 14,
+   "closeMs": 2168,
+   "exitCode": null,
+   "signalCode": "SIGKILL",
+   "newEntries": []
+  },
+  {
+   "launch": 15,
+   "closeMs": 2734,
+   "exitCode": 0,
+   "signalCode": null,
+   "newEntries": []
+  },
+  {
+   "launch": 16,
+   "closeMs": 2115,
+   "exitCode": 0,
+   "signalCode": null,
+   "newEntries": []
+  },
+  {
+   "launch": 17,
+   "error": "private browser profile drain did not verify two empty scans before deadline",
+   "newEntries": [
+    "syzygy-poc-browser-tPfDdu"
+   ]
+  },
+  {
+   "launch": 18,
+   "closeMs": 1876,
+   "exitCode": 0,
+   "signalCode": null,
+   "newEntries": []
+  },
+  {
+   "launch": 19,
+   "closeMs": 2107,
+   "exitCode": 0,
+   "signalCode": null,
+   "newEntries": []
+  },
+  {
+   "launch": 20,
+   "closeMs": 2029,
+   "exitCode": 0,
+   "signalCode": null,
+   "newEntries": []
+  },
+  {
+   "launch": 21,
+   "closeMs": 3149,
+   "exitCode": 0,
+   "signalCode": null,
+   "newEntries": []
+  },
+  {
+   "launch": 22,
+   "closeMs": 2143,
+   "exitCode": 0,
+   "signalCode": null,
+   "newEntries": []
+  },
+  {
+   "launch": 23,
+   "closeMs": 871,
+   "exitCode": 0,
+   "signalCode": null,
+   "newEntries": []
+  },
+  {
+   "launch": 24,
+   "error": "private browser profile drain did not verify two empty scans before deadline",
+   "newEntries": [
+    "syzygy-poc-browser-XcqRh3"
+   ]
+  }
+ ],
+ "summary": {
+  "launches": 24,
+  "launchesThatClosed": 21,
+  "launchesWhoseCloseThrew": 3,
+  "closeErrors": [
+   "private browser profile drain did not verify two empty scans before deadline"
+  ],
+  "killed": 2,
+  "exitedCleanly": 19,
+  "killedAndLeftAChromeDirectory": 0,
+  "exitedAndLeftAChromeDirectory": 0,
+  "closedLaunchesThatLeftAnything": 0,
+  "leftByLaunchesWhoseCloseThrew": [
+   "syzygy-poc-browser-XcqRh3",
+   "syzygy-poc-browser-en55La",
+   "syzygy-poc-browser-tPfDdu"
+  ],
+  "entriesInPrivateTmpdirAtTheEnd": [
+   "syzygy-poc-browser-XcqRh3",
+   "syzygy-poc-browser-en55La",
+   "syzygy-poc-browser-tPfDdu"
+  ],
+  "entriesAtTheEndNotLeftByAThrownClose": [],
+  "holds": true
+ }
+}

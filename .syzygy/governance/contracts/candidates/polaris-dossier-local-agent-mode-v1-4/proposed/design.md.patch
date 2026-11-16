@@ -1,0 +1,88 @@
+--- a/openspec/changes/polaris-dossier-local-agent-mode/design.md
++++ b/openspec/changes/polaris-dossier-local-agent-mode/design.md
+@@ -3,7 +3,7 @@
+ > **Version 1.3.** Explains the requirements in
+ > specs/polaris-generation/spec.md; version 1.0 was signed off by the owner
+ > on 2026-10-06, version 1.1 on 2026-10-07 and version 1.2 on 2026-10-14,
+-> and this text binds only by the owner's sign-off of version 1.3. It is not an
++> and this text binds only by the owner's sign-off of version 1.4. It is not an
+ > implementation. It contains no code. The command surface below is a design
+ > for implementation after the owner's sign-off (direction item 5); the
+ > requirements are the controlling text, and doctrine, accepted contracts,
+@@ -388,7 +388,10 @@
+ 
+ Since version 1.3 the schema is `polaris-dossier-local-draft-v3`, and Syzygy
+ still accepts a `polaris-dossier-local-draft-v2` draft, which uses no
+-element. Version 3 adds presentation elements (owner direction
++element. Version 1.4 changes no schema field or identifier: v2 stays
++element-free, and both accepted versions retain every claim, quotation,
++citation and review obligation; v3 presentation follows version 1.4 only
++after its owner sign-off. Version 3 adds presentation elements (owner direction
+ `OWNER-DIRECTION-DOSSIER-RICH-ELEMENTS-2026-11-04`). They sit in the existing
+ `paragraphs` arrays of sections and deep dives, whose name stays. An entry
+ without `kind` is the existing block. An entry with `kind` is one of the
+@@ -399,32 +402,52 @@
+ 
+ | `kind` | Fields | Limits | Renders as |
+ |---|---|---|---|
+-| `table` | `id`, `caption`, `columns` (column labels), `rowHeaders` (boolean), `rows`, each `{id, cells}`; a cell is a claim form or `{kind: "empty"}`, which states nothing and renders the words "no entry" | 1 to 8 columns; 1 to 40 rows; each row has exactly one cell per column | a `table` with its `caption`; each column label is a header cell scoped to its column, and with `rowHeaders` each row's first cell is a header cell scoped to its row |
++| `table` | `id`, `caption`, `columns` (column labels), `rowHeaders` (boolean), `rows`, each `{id, cells}`; a cell is a claim form or `{kind: "empty"}`, which states nothing and renders the marker "-" (U+002D), meaning only that the cell states nothing in this dossier | 1 to 8 columns; 1 to 40 rows; each row has exactly one cell per column | a `table` with its `caption`; each column label is a header cell scoped to its column, and with `rowHeaders` each row's first cell is a header cell scoped to its row |
+ | `callout` | `id`, `tone` (`note`, `tip`, `caution` or `important`), `title`, `children` (blocks) | 1 to 12 children | an `aside` whose tone is written as a word beside the title, with its colour as a second cue only |
+ | `steps` | `id`, `items` (blocks without children) | 2 to 20 items | an `ol` |
+ | `definitions` | `id`, `entries`, each `{term, definition}`; the definition is a claim form | 1 to 40 entries | a `dl` |
+ | `cards` | `id`, `items`, each `{label, body}`; the body is a claim form | 2 to 6 items | a list whose items are each headed by their label |
+-| `details` | `id`, `summary`, `elements` (blocks, or any element but `details`) | 1 to 30 elements | `details` with its `summary`, holding no fragment target |
++| `details` | `id`, `summary`, `elements` (blocks, or any element but `details`) | 1 to 30 elements | `details` with its `summary` and a derived count of its Unknown claims visible while collapsed, holding no fragment target |
+ | `code` | `id`, optional `language` (a short label), `citation` (`{id, path, startLine, endLine}`) | 1 to 60 lines | `pre` and `code`, the lines as Syzygy read them at the pinned revision, with their anchor |
+ 
+ The short labels are `caption`, each column label, `title`, `term`, `label`,
+-`summary` and `language`. Each is plain text of at most 120 characters, never
++`summary` and `language`. Each is plain text of at most 120 Unicode code points, never
+ a quotation, and carries no citation and no markup (no `<`, `&` or backtick
+ character, and no Markdown link, image or paired emphasis mark). Every claim form inside an element is
+ checked as a claim block is: its label, its citations, its quotations and,
+ for `unknown`, its RFC2-24 reason. Each counts in the fidelity verdict's
+-`blockSupport` by its own `id`, and each renders with its marking. Element
++`blockSupport` by its own `id`, and each renders with its marking. A table
++cell is judged with its row and column labels. Callout tone and step
++order are presentation within the same agent-reported, independently
++reviewed residual as short labels; neither may introduce an unlabelled
++fact. The collapsed Unknown count is a derived disclosure beside the
++agent summary, not part of its 120-code-point limit. Element
+ `id`s, row `id`s and the code citation's `id` share the draft's one space of
+ identities.
+ 
+-A `code` element is not a claim: the agent supplies only the citation.
+-Syzygy renders the cited lines from the blob it verified, as an Observed
+-excerpt with the RFC7-10 anchor a verified quotation has. When the cited file
+-is excluded by classification or withheld by screening, the excerpt renders
+-Unknown with `excluded-content` in its place, as a quotation from that file
+-would, and carries none of its bytes. A `code` element has no `blockSupport`
+-entry of its own; its span is one of the cited spans the fidelity packet
+-carries.
++A `code` element is not a claim: the agent supplies only the citation and
++an optional language presentation hint, never a verified fact about the file.
++When the hint is absent, Syzygy derives a language label from the path where
++one can be determined. Syzygy renders admitted cited lines from the blob it
++verified, byte for byte as text with HTML text escaping, as an Observed
++excerpt with the RFC7-10 anchor a verified quotation has.
++
++REQ-polaris-generation-034's path-and-range check applies to the excerpt.
++For an existing path excluded before any body read, Syzygy leaves the body
++unread and performs no body-end check; missing/non-blob paths, malformed or
++reversed ranges and citations of more than 60 lines still cause findings.
++For a body actually read and then excluded by content screening or invalid
++UTF-8, the check retains the line boundaries obtainable from that read and
++reports an out-of-range citation without excluded bytes or the blob's line
++count. This exception is confined to code excerpts; the ordinary-block
++citation obligation in 034 is unchanged.
++
++For an excluded or invalid-UTF-8 blob, the excerpt renders Unknown with
++`excluded-content` and no blob bytes; its exclusion is not a finding. Any
++displayed submitted range is disclosed within that Unknown presentation as
++agent-supplied and unverified, never as the blob's length or a verified range.
++A `code` element has no `blockSupport` entry of its own; its admitted span
++is one of the cited spans the fidelity packet carries.
+ 
+ Every element renders as inert static HTML. Pages carry no script, and their
+ content security policy is unchanged. No meaning is carried by colour alone.

@@ -1,0 +1,8 @@
+control head 0 ['299 collected, 16 sized (10 from a lower bound), 0 problems']
+control old-3e563ec4 0 ['299 collected, 16 sized (10 from a lower bound), 0 problems']
+R5 head 1 299 collected, 16 sized (10 from a lower bound), 1 problems | problem: the default the tests carry is 60000 ms, not 5000 ms: the threshold assumes a 5000 ms default
+R5 old-3e563ec4 0 299 collected, 16 sized (10 from a lower bound), 0 problems
+R6 head 1 299 collected, 16 sized (10 from a lower bound), 1 problems | problem: the default the tests carry is 2000 ms, not 5000 ms: the threshold assumes a 5000 ms default
+R6 old-3e563ec4 0 299 collected, 16 sized (10 from a lower bound), 0 problems
+R7 head 1 299 collected, 16 sized (10 from a lower bound), 1 problems | problem: the default the tests carry is 60000 ms, not 5000 ms: the threshold assumes a 5000 ms default
+R7 old-3e563ec4 0 299 collected, 16 sized (10 from a lower bound), 0 problems

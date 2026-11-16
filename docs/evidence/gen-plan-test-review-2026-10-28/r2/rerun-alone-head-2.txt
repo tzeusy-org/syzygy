@@ -1,0 +1,16 @@
+== packages/polaris-dossier/src/run-evidence.test.ts start 00:46:57 load 28.55 40.84 43.93
+ Test Files  1 passed (1)
+      Tests  4 passed (4)
+== packages/polaris-dossier/src/run-evidence.test.ts end 00:47:10 load 32.12 41.05 43.95
+== packages/polaris-dossier/src/start-gates.test.ts start 00:47:10 load 32.12 41.05 43.95
+     → Test timed out in 5000ms.
+ FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/start-gates.test.ts > init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses config naming a remote, a promisor, an include or a command the agent's git would run (R-POLARIS-DOSSIER-CLONE-SHAPE-2 finding 1)
+Error: Test timed out in 5000ms.
+ Test Files  1 failed (1)
+      Tests  1 failed | 103 passed (104)
+== packages/polaris-dossier/src/start-gates.test.ts end 00:48:07 load 30.80 39.20 43.15
+== packages/polaris-generation-consent/src/act-families.test.ts start 00:48:07 load 30.80 39.20 43.15
+ Test Files  1 passed (1)
+      Tests  65 passed (65)
+== packages/polaris-generation-consent/src/act-families.test.ts end 00:48:14 load 31.81 39.14 43.09
+ALLDONE

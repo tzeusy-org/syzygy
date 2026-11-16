@@ -9,7 +9,6 @@
 // absent and the evaluation is `absent` (Unknown, never met) — no verdict is
 // invented, and nothing here performs an owner act.
 
-import { createHash } from 'node:crypto';
 import { readFileSync, readdirSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 
@@ -22,6 +21,7 @@ import {
   type WalkthroughJudgmentInputs,
   type WalkthroughJudgmentInputsFor,
 } from '@syzygy/three-surface-poc-core';
+import { sha256 } from '@syzygy/support';
 
 import { POLARIS_HUMAN_PATH, POLARIS_TAILNET_PATH, sourceSlug } from './polaris.js';
 import { POLARIS_SOURCE_PATH, POLARIS_SOURCE_TAILNET_PATH, SOURCE_IDENTITY_PARAM } from './polaris-source.js';
@@ -95,7 +95,7 @@ export function pwbSurfaceVersion(runGit: (repoRoot: string, args: readonly stri
     if (!/^[0-9a-f]{40,64}$/.test(tree)) return `${POLARIS_SURFACE_NAME}@unresolved`;
     trees.push(tree);
   }
-  return `${POLARIS_SURFACE_NAME}@${createHash('sha256').update(trees.join('\n')).digest('hex').slice(0, 12)}`;
+  return `${POLARIS_SURFACE_NAME}@${sha256(trees.join('\n')).slice(0, 12)}`;
 }
 
 // The other act-bound artifacts a judgment act could be mis-paired to.

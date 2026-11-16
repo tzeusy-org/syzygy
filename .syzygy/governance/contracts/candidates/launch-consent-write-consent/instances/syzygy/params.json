@@ -1,0 +1,18 @@
+{
+  "WRITE-CONSENT-LAUNCH-RECORDS.md": {
+    "template": "WRITE-CONSENT-TEMPLATE.md",
+    "fields": {
+      "REPOSITORY_ID": "tzeusy-org-syzygy",
+      "UPSTREAM_URL": "https://github.com/tzeusy-org/syzygy",
+      "REFERENCE": "refs/heads/launch-consent-records",
+      "LOCATION": ".syzygy/governance/decisions/launch-consent/",
+      "TRUNK": "refs/heads/main",
+      "REVOCATION": "active; supersedes no earlier consent"
+    }
+  },
+  "common": {
+    "DRAFT_DATE": "2026-11-09",
+    "OWNER": "Tzeusy",
+    "VERSION": "0.1.0-candidate.1"
+  }
+}

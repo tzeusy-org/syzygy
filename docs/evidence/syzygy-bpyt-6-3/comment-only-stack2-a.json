@@ -1,0 +1,30 @@
+{
+ "base": "2ea14d941f377e92884f593f6f1dd7f6291c3e87",
+ "head": "16fe240d3932737342994985dcc988bc1def2858",
+ "method": "ts.transpileModule, target ES2022, module NodeNext, removeComments, per file, before against after",
+ "typescriptVersion": "5.9.3",
+ "changedFiles": 9,
+ "changedProductionFiles": 2,
+ "commentOnly": 2,
+ "notCommentOnly": [],
+ "rows": [
+  {
+   "path": "packages/polaris-generation-core/src/canonical-json.ts",
+   "status": "M",
+   "sourceSha256Base": "4d7e745dc505c0de74666511a90ccda4673a5bc3d3e9deb73f424bce92875608",
+   "sourceSha256Head": "c51a3ca5ec1210e06fb462088c8a9fd541168de9c333b114cb8369621ebce7ed",
+   "emitSha256Base": "7be90db9325aeeb4c6a78224840b1f894593db5e5e5cc6a7ce940ea585ef6b20",
+   "emitSha256Head": "7be90db9325aeeb4c6a78224840b1f894593db5e5e5cc6a7ce940ea585ef6b20",
+   "commentOnly": true
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+   "status": "M",
+   "sourceSha256Base": "c32ab4e3dbe509413a4d31afc1bb7a68c1a5a8b2b1d21945b72deb9e54617e34",
+   "sourceSha256Head": "a70be15e9c6d1af6325c234c83e389adf7291140e9a3dccbb1847e8210b3299f",
+   "emitSha256Base": "d4b1ba58de41ac3fa7d665f7a25ac93b77e2d640a08fedb4e42fa9b676ccff30",
+   "emitSha256Head": "d4b1ba58de41ac3fa7d665f7a25ac93b77e2d640a08fedb4e42fa9b676ccff30",
+   "commentOnly": true
+  }
+ ]
+}

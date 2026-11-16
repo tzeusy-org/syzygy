@@ -1,0 +1,164 @@
+{
+ "files": [
+  {
+   "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-537/clone/apps/three-surface-poc/src/polaris-reconciliation.test.ts",
+   "project": "@syzygy/three-surface-poc-app",
+   "type": "suite",
+   "name": "apps/three-surface-poc/src/polaris-reconciliation.test.ts",
+   "line": null,
+   "mode": "run",
+   "state": "pass",
+   "durationMs": 1006.459593,
+   "errors": [],
+   "tasks": [
+    {
+     "type": "suite",
+     "name": "M14 slice 3: one legend sentence for the source-identity grammar",
+     "line": 166,
+     "mode": "run",
+     "state": "pass",
+     "durationMs": 81.50417100000004,
+     "errors": [],
+     "tasks": [
+      {
+       "type": "test",
+       "name": "renders the legend once beside the sources table, which it describes, as a scope instruction outside any disclosure",
+       "line": 167,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 22.91479500000014,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "names every identity part and field, and says the digest is neither permission nor verification",
+       "line": 189,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 5.033289999999852,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "names the identity suffix for each of the three anchor kinds sourceIdentityOf writes (syzygy-ccqk)",
+       "line": 198,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 1.3748209999998835,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "holds the legend to the five rules, the anchor union and the outcomes the table renders (drift)",
+       "line": 218,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 46.193271000000095,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "shows a digest only where a body was read, and leaves the withheld sources unread and unlinked",
+       "line": 238,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 4.880790000000161,
+       "errors": []
+      }
+     ],
+     "hookMs": 1
+    },
+    {
+     "type": "suite",
+     "name": "M14 slice 4: the catalog reconciliation line",
+     "line": 258,
+     "mode": "run",
+     "state": "pass",
+     "durationMs": 41.43830900000012,
+     "errors": [],
+     "tasks": [
+      {
+       "type": "test",
+       "name": "labels the machine counts Observed and gives the hard-coded fixture values",
+       "line": 259,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 1.2004000000001724,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "labels both class sums Inferred, each the arithmetic of the Observed counts",
+       "line": 278,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 0.6030249999998887,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "counts item markers by occurrence in the final HTML, states the predicate, and labels the remainder Unknown with its reason and claim-identity route",
+       "line": 288,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 1.199008000000049,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "reproduces the funnel capture: 417 markers over 415 items, 409 outside the account, an Unknown remainder of 2",
+       "line": 302,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 4.6646709999999985,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "a duplicated marker placement moves only the marker count and the remainder",
+       "line": 323,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 2.452056999999968,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "renders an unobserved shape as Unknown with its reason and route, and never a number",
+       "line": 334,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 1.1915839999996933,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "aborts on a missing, repeated or truncated placeholder, and on a line that would add a marker",
+       "line": 350,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 3.6949389999999767,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "places the line once, at the head of the catalog group and outside any class section or disclosure, with each state readable as text and the render deterministic",
+       "line": 360,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 24.459387999999763,
+       "errors": []
+      }
+     ],
+     "hookMs": 2
+    }
+   ],
+   "hookMs": 884,
+   "collectMs": 2251.341187,
+   "setupMs": 22.758609999999976,
+   "prepareMs": 161.56343800000008,
+   "environmentMs": 0.20949799999993957
+  }
+ ],
+ "unhandled": []
+}

@@ -1,0 +1,13 @@
+in-scope sites 123 evaluated 119 below default 0 not evaluated 4
+  NOT EVALUATED apps/three-surface-poc/src/polaris-first-reading.test.ts:52 'SHARED_FIXTURE_TIMEOUT_MS'
+  NOT EVALUATED apps/three-surface-poc/src/polaris-generation/pipeline-demo.test.ts:73 'ONRAMP_TEST_BUDGET_MS'
+  NOT EVALUATED apps/three-surface-poc/src/polaris-narrative.test.ts:59 'SHARED_FIXTURE_TIMEOUT_MS'
+  NOT EVALUATED apps/three-surface-poc/src/tuple-encoding.test.ts:94 'SHARED_FIXTURE_TIMEOUT_MS'
+exit 0
+$ positive control: the same at f7477f52 with no file deferred (main.test.ts:555 holds 2000)
+in-scope sites 140 evaluated 136 below default 1 not evaluated 4
+  BELOW apps/three-surface-poc/src/main.test.ts:555 2000 < 5000
+  NOT EVALUATED apps/three-surface-poc/src/polaris-first-reading.test.ts:52 'SHARED_FIXTURE_TIMEOUT_MS'
+  NOT EVALUATED apps/three-surface-poc/src/polaris-generation/pipeline-demo.test.ts:73 'ONRAMP_TEST_BUDGET_MS'
+$ by hand (not evaluated above): SHARED_FIXTURE_TIMEOUT_MS is `export const SHARED_FIXTURE_TIMEOUT_MS = 60_000;` at apps/three-surface-poc/src/test-model-fixture.ts:248 (f7477f52), imported by the three files: 60000 >= 10000 (hooks). ONRAMP_TEST_BUDGET_MS is the sum of ONRAMP_STEP_TIMEOUT_MS, read below.
+ONRAMP_STEP_TIMEOUT_MS = { clone: 30_000, refusedRun: 30_000, install: 120_000, documented: 270_000 } (pipeline-demo.test.ts:18 at f7477f52); sum 450000 >= 5000. By hand: 4 of 4 not-evaluated sites are at or above their default, so 0 of 123 are below.

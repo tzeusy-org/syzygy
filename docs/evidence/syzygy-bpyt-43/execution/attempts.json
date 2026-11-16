@@ -1,0 +1,949 @@
+{
+  "schema": "all-pre-gate-attempts/1",
+  "captures": [
+    {
+      "capture": "logs/close-failure-system.json",
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--config",
+        "packages/cap1-system/vitest.config.ts",
+        "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts"
+      ],
+      "subject": null,
+      "afterSubject": null,
+      "exit": 0,
+      "lifetimeComplete": true,
+      "stream": {
+        "path": "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/logs/close-failure-system.log",
+        "bytes": 522,
+        "sha256": "9cf2bae9b7060b36b245bcb68dbd81e44a3d231c490ab6f4d82534887c569cdb"
+      }
+    },
+    {
+      "capture": "logs/core-island-positive-control.json",
+      "command": [
+        "python3",
+        "-I",
+        "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/core_hook_witness.py"
+      ],
+      "subject": {
+        "head": "7b9dc83a315e32e98549f3c1cb1cdfde25ae2984",
+        "trackedDiffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "changedPaths": [],
+        "daemonEntryTestSha256": "b629e399a2c4b72e00c3a764181f1b938985d6a992c44ffcb320af3bebebec69"
+      },
+      "afterSubject": {
+        "head": "7b9dc83a315e32e98549f3c1cb1cdfde25ae2984",
+        "trackedDiffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "changedPaths": [],
+        "daemonEntryTestSha256": "b629e399a2c4b72e00c3a764181f1b938985d6a992c44ffcb320af3bebebec69"
+      },
+      "exit": 0,
+      "lifetimeComplete": true,
+      "stream": {
+        "path": "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/logs/core-island-positive-control.log",
+        "bytes": 141,
+        "sha256": "320154693f8c8a02e11fc073b59141a4fa5768c5106b4e9cfd7f9b198551e128"
+      }
+    },
+    {
+      "capture": "logs/current-record-mutants-repair.json",
+      "command": [
+        "python3",
+        "-I",
+        "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/current_record_mutants_repair.py",
+        "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.43",
+        "4b28caccc115ab7e4ac89800120d54d816f9ff3f",
+        "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/campaigns-validated-v2",
+        "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/current-record-mutants-repair.json"
+      ],
+      "subject": {
+        "head": "4b28caccc115ab7e4ac89800120d54d816f9ff3f",
+        "trackedDiffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "changedPaths": [],
+        "daemonEntryTestSha256": "b629e399a2c4b72e00c3a764181f1b938985d6a992c44ffcb320af3bebebec69"
+      },
+      "afterSubject": {
+        "head": "4b28caccc115ab7e4ac89800120d54d816f9ff3f",
+        "trackedDiffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "changedPaths": [],
+        "daemonEntryTestSha256": "b629e399a2c4b72e00c3a764181f1b938985d6a992c44ffcb320af3bebebec69"
+      },
+      "exit": 0,
+      "lifetimeComplete": true,
+      "stream": {
+        "path": "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/logs/current-record-mutants-repair.log",
+        "bytes": 834,
+        "sha256": "cd7d2faeb20cb775e18871b9029ca9e4f58886b7b13755b8ec71a2f61b09519c"
+      }
+    },
+    {
+      "capture": "logs/current-record-mutants.json",
+      "command": [
+        "python3",
+        "-I",
+        "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/current_record_mutants.py",
+        "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.43",
+        "4b28caccc115ab7e4ac89800120d54d816f9ff3f",
+        "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/campaigns-validated-v2",
+        "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/current-record-mutants.json"
+      ],
+      "subject": {
+        "head": "4b28caccc115ab7e4ac89800120d54d816f9ff3f",
+        "trackedDiffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "changedPaths": [],
+        "daemonEntryTestSha256": "b629e399a2c4b72e00c3a764181f1b938985d6a992c44ffcb320af3bebebec69"
+      },
+      "afterSubject": {
+        "head": "4b28caccc115ab7e4ac89800120d54d816f9ff3f",
+        "trackedDiffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "changedPaths": [],
+        "daemonEntryTestSha256": "b629e399a2c4b72e00c3a764181f1b938985d6a992c44ffcb320af3bebebec69"
+      },
+      "exit": 1,
+      "lifetimeComplete": true,
+      "stream": {
+        "path": "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/logs/current-record-mutants.log",
+        "bytes": 5170,
+        "sha256": "612c6e06239e2862da9435f71988c76ad2783164b116cdbfb02444a171a90e58"
+      }
+    },
+    {
+      "capture": "logs/daemon-head-campaign.json",
+      "command": [
+        "python3",
+        "-I",
+        "docs/evidence/syzygy-bpyt-43/tools/daemon_entry_probe.py",
+        "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/subject",
+        "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/campaigns-6b8/daemon-entry-head.json"
+      ],
+      "subject": null,
+      "afterSubject": null,
+      "exit": 0,
+      "lifetimeComplete": true,
+      "stream": {
+        "path": "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/logs/daemon-head-campaign.log",
+        "bytes": 25511,
+        "sha256": "2aaab60ae9f48efe74d3c59ad89bd0e3df306e7c2669b3a098de0fb1fb8f237b"
+      }
+    },
+    {
+      "capture": "logs/entry-route-system.json",
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--config",
+        "packages/cap1-system/vitest.config.ts",
+        "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts"
+      ],
+      "subject": null,
+      "afterSubject": null,
+      "exit": 0,
+      "lifetimeComplete": true,
+      "stream": {
+        "path": "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/logs/entry-route-system.log",
+        "bytes": 524,
+        "sha256": "07385e8694010002f271c820a8e8e34ea2f2861d36acd1e9ff94f709b2336df6"
+      }
+    },
+    {
+      "capture": "logs/final-daemon-base-test.json",
+      "command": [
+        "python3",
+        "-I",
+        "docs/evidence/syzygy-bpyt-43/tools/daemon_entry_probe.py",
+        "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/subject",
+        "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/campaigns-final/daemon-entry-base-test.json",
+        "c104771ff90f47ffd070f2339c36010458679c71"
+      ],
+      "subject": {
+        "head": "7b9dc83a315e32e98549f3c1cb1cdfde25ae2984",
+        "trackedDiffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "changedPaths": [],
+        "daemonEntryTestSha256": "b629e399a2c4b72e00c3a764181f1b938985d6a992c44ffcb320af3bebebec69"
+      },
+      "afterSubject": {
+        "head": "7b9dc83a315e32e98549f3c1cb1cdfde25ae2984",
+        "trackedDiffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "changedPaths": [],
+        "daemonEntryTestSha256": "b629e399a2c4b72e00c3a764181f1b938985d6a992c44ffcb320af3bebebec69"
+      },
+      "exit": 0,
+      "lifetimeComplete": true,
+      "stream": {
+        "path": "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/logs/final-daemon-base-test.log",
+        "bytes": 16488,
+        "sha256": "d42146d0e6261ef7386c2fca41b9bda627d68f7fc04ae3903c0ea1bd8fb40e2c"
+      }
+    },
+    {
+      "capture": "logs/final-daemon-head.json",
+      "command": [
+        "python3",
+        "-I",
+        "docs/evidence/syzygy-bpyt-43/tools/daemon_entry_probe.py",
+        "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/subject",
+        "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/campaigns-final/daemon-entry-head.json"
+      ],
+      "subject": {
+        "head": "7b9dc83a315e32e98549f3c1cb1cdfde25ae2984",
+        "trackedDiffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "changedPaths": [],
+        "daemonEntryTestSha256": "b629e399a2c4b72e00c3a764181f1b938985d6a992c44ffcb320af3bebebec69"
+      },
+      "afterSubject": {
+        "head": "7b9dc83a315e32e98549f3c1cb1cdfde25ae2984",
+        "trackedDiffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "changedPaths": [],
+        "daemonEntryTestSha256": "b629e399a2c4b72e00c3a764181f1b938985d6a992c44ffcb320af3bebebec69"
+      },
+      "exit": 0,
+      "lifetimeComplete": true,
+      "stream": {
+        "path": "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/logs/final-daemon-head.log",
+        "bytes": 25826,
+        "sha256": "55fee333dd23174113a95e9bbce20aadec08a3903fb76c3bdeee11cb11262521"
+      }
+    },
+    {
+      "capture": "logs/final-daemon-prior-test.json",
+      "command": [
+        "python3",
+        "-I",
+        "docs/evidence/syzygy-bpyt-43/tools/daemon_entry_probe.py",
+        "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/subject",
+        "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/campaigns-final/daemon-entry-prior-test.json",
+        "447d9f083fb120c14ddd8da646c03675f3ce7bc7"
+      ],
+      "subject": {
+        "head": "7b9dc83a315e32e98549f3c1cb1cdfde25ae2984",
+        "trackedDiffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "changedPaths": [],
+        "daemonEntryTestSha256": "b629e399a2c4b72e00c3a764181f1b938985d6a992c44ffcb320af3bebebec69"
+      },
+      "afterSubject": {
+        "head": "7b9dc83a315e32e98549f3c1cb1cdfde25ae2984",
+        "trackedDiffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "changedPaths": [],
+        "daemonEntryTestSha256": "b629e399a2c4b72e00c3a764181f1b938985d6a992c44ffcb320af3bebebec69"
+      },
+      "exit": 0,
+      "lifetimeComplete": true,
+      "stream": {
+        "path": "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/logs/final-daemon-prior-test.log",
+        "bytes": 14880,
+        "sha256": "76894c0c56364183f315f066a677119500a6cfc4c4250e0571226e2b0120b38f"
+      }
+    },
+    {
+      "capture": "logs/final-daemon-round1-test.json",
+      "command": [
+        "python3",
+        "-I",
+        "docs/evidence/syzygy-bpyt-43/tools/daemon_entry_probe.py",
+        "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/subject",
+        "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/campaigns-final/daemon-entry-round1-test.json",
+        "9e00252ae134accc4a42604445a4db66f68d5100"
+      ],
+      "subject": {
+        "head": "7b9dc83a315e32e98549f3c1cb1cdfde25ae2984",
+        "trackedDiffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "changedPaths": [],
+        "daemonEntryTestSha256": "b629e399a2c4b72e00c3a764181f1b938985d6a992c44ffcb320af3bebebec69"
+      },
+      "afterSubject": {
+        "head": "7b9dc83a315e32e98549f3c1cb1cdfde25ae2984",
+        "trackedDiffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "changedPaths": [],
+        "daemonEntryTestSha256": "b629e399a2c4b72e00c3a764181f1b938985d6a992c44ffcb320af3bebebec69"
+      },
+      "exit": 0,
+      "lifetimeComplete": true,
+      "stream": {
+        "path": "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/logs/final-daemon-round1-test.log",
+        "bytes": 15912,
+        "sha256": "4288dc19709f0d93d4bacc2e37fb28220aedc996eacc68f17a9719eb38ee4537"
+      }
+    },
+    {
+      "capture": "logs/historical-checker-mutants-v2.json",
+      "command": [
+        "python3",
+        "-I",
+        "docs/evidence/syzygy-bpyt-43/tools/build_record_mutants.py",
+        "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.43",
+        "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/historical-checker-mutants-v2.json",
+        "c104771ff90f47ffd070f2339c36010458679c71",
+        "d38d7a3ce632a34c2a41bdb77ad323ba0b05b777",
+        "ba9d990a2b80b9aa5b3d78801b938280ee9988d7",
+        "447d9f083fb120c14ddd8da646c03675f3ce7bc7",
+        "9e00252ae134accc4a42604445a4db66f68d5100",
+        "b7064e19"
+      ],
+      "subject": {
+        "head": "b7064e19621a1efb921d6ad810c178b90bdc8236",
+        "trackedDiffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "changedPaths": [],
+        "daemonEntryTestSha256": "b629e399a2c4b72e00c3a764181f1b938985d6a992c44ffcb320af3bebebec69"
+      },
+      "afterSubject": {
+        "head": "4b28caccc115ab7e4ac89800120d54d816f9ff3f",
+        "trackedDiffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "changedPaths": [],
+        "daemonEntryTestSha256": "b629e399a2c4b72e00c3a764181f1b938985d6a992c44ffcb320af3bebebec69"
+      },
+      "exit": 0,
+      "lifetimeComplete": true,
+      "stream": {
+        "path": "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/logs/historical-checker-mutants-v2.log",
+        "bytes": 5609,
+        "sha256": "73dfeca740e95becf87fa964ddf71ec290b0e8778d78352a8a2f4e855603020a"
+      }
+    },
+    {
+      "capture": "logs/historical-checker-mutants.json",
+      "command": [
+        "python3",
+        "-I",
+        "docs/evidence/syzygy-bpyt-43/tools/build_record_mutants.py",
+        "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.43",
+        "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/historical-checker-mutants.json",
+        "c104771ff90f47ffd070f2339c36010458679c71",
+        "d38d7a3ce632a34c2a41bdb77ad323ba0b05b777",
+        "ba9d990a2b80b9aa5b3d78801b938280ee9988d7",
+        "447d9f083fb120c14ddd8da646c03675f3ce7bc7",
+        "9e00252ae134accc4a42604445a4db66f68d5100",
+        "6b8ac546"
+      ],
+      "subject": null,
+      "afterSubject": null,
+      "exit": 0,
+      "lifetimeComplete": true,
+      "stream": {
+        "path": "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/logs/historical-checker-mutants.log",
+        "bytes": 5023,
+        "sha256": "f7268b93e932e0e453cf85a23cd31a08a07572ff8598d6089fb11bd171e59a2b"
+      }
+    },
+    {
+      "capture": "logs/initial-build.json",
+      "command": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "subject": null,
+      "afterSubject": null,
+      "exit": 0,
+      "lifetimeComplete": true,
+      "stream": {
+        "path": "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/logs/initial-build.log",
+        "bytes": 278,
+        "sha256": "7b88d163164f97a86ff952c81601237ddbc564661a9874939f72c90233eb1cf4"
+      }
+    },
+    {
+      "capture": "logs/initial-check.json",
+      "command": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "subject": null,
+      "afterSubject": null,
+      "exit": 0,
+      "lifetimeComplete": true,
+      "stream": {
+        "path": "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/logs/initial-check.log",
+        "bytes": 1259436,
+        "sha256": "6e3ba9c6b07cc97d68c33b23e2ab97dc931dc5e8a05da719b98591a9030dadcc"
+      }
+    },
+    {
+      "capture": "logs/initial-historical-validator.json",
+      "command": [
+        "python3",
+        "-c",
+        "import os,runpy,sys; os.environ[\"SYZYGY_CLOCK_HISTORICAL_OUTPUT\"]=\"/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/historical-validation-initial.json\"; sys.argv=[\"historical_record.py\",os.getcwd(),\"c104771ff90f47ffd070f2339c36010458679c71\",\"d38d7a3ce632a34c2a41bdb77ad323ba0b05b777\",\"ba9d990a2b80b9aa5b3d78801b938280ee9988d7\",\"447d9f083fb120c14ddd8da646c03675f3ce7bc7\",\"9e00252ae134accc4a42604445a4db66f68d5100\",\"740279435178a882f1c2d526a2a7ea0bf2b52cbc\"]; runpy.run_path(\"docs/evidence/syzygy-bpyt-43/tools/historical_record.py\",run_name=\"__main__\")"
+      ],
+      "subject": null,
+      "afterSubject": null,
+      "exit": 1,
+      "lifetimeComplete": true,
+      "stream": {
+        "path": "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/logs/initial-historical-validator.log",
+        "bytes": 112,
+        "sha256": "db943b442e06b8cd7d4515aaa6634098ccf53190429bfaf3076a3ab796fc7fed"
+      }
+    },
+    {
+      "capture": "logs/initial-system.json",
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--config",
+        "packages/cap1-system/vitest.config.ts",
+        "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts"
+      ],
+      "subject": null,
+      "afterSubject": null,
+      "exit": 0,
+      "lifetimeComplete": true,
+      "stream": {
+        "path": "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/logs/initial-system.log",
+        "bytes": 522,
+        "sha256": "5f4396356237808b767ee9d81cfee1dfc9a854f39ed8106f06a8979b84aa4afa"
+      }
+    },
+    {
+      "capture": "logs/initial-typecheck.json",
+      "command": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "subject": null,
+      "afterSubject": null,
+      "exit": 2,
+      "lifetimeComplete": true,
+      "stream": {
+        "path": "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/logs/initial-typecheck.log",
+        "bytes": 627,
+        "sha256": "1fe1d9d35b74e8917e5ea28a07a6e83ab313923dbf431962790d668113b9e1fb"
+      }
+    },
+    {
+      "capture": "logs/offline-npm-ci.json",
+      "command": [
+        "npm",
+        "ci",
+        "--offline",
+        "--ignore-scripts",
+        "--no-audit",
+        "--no-fund"
+      ],
+      "subject": null,
+      "afterSubject": null,
+      "exit": 0,
+      "lifetimeComplete": true,
+      "stream": {
+        "path": "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/logs/offline-npm-ci.log",
+        "bytes": 26,
+        "sha256": "ebe85f03f5800e3488b3600bae373fbf9fd5f545d8a0eb649f043d1b694bb4b9"
+      }
+    },
+    {
+      "capture": "logs/old-new-differential-current-validator.json",
+      "command": [
+        "python3",
+        "-I",
+        "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/old_new_differential_v4.py"
+      ],
+      "subject": {
+        "head": "4b28caccc115ab7e4ac89800120d54d816f9ff3f",
+        "trackedDiffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "changedPaths": [],
+        "daemonEntryTestSha256": "b629e399a2c4b72e00c3a764181f1b938985d6a992c44ffcb320af3bebebec69"
+      },
+      "afterSubject": {
+        "head": "4b28caccc115ab7e4ac89800120d54d816f9ff3f",
+        "trackedDiffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "changedPaths": [],
+        "daemonEntryTestSha256": "b629e399a2c4b72e00c3a764181f1b938985d6a992c44ffcb320af3bebebec69"
+      },
+      "exit": 0,
+      "lifetimeComplete": true,
+      "stream": {
+        "path": "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/logs/old-new-differential-current-validator.log",
+        "bytes": 517,
+        "sha256": "cd21ee97288c4a029dae7d78b807422f11c46200a8b0148db11a4538873e3d63"
+      }
+    },
+    {
+      "capture": "logs/old-new-differential-v2.json",
+      "command": [
+        "python3",
+        "-I",
+        "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/old_new_differential_v2.py"
+      ],
+      "subject": {
+        "head": "7b9dc83a315e32e98549f3c1cb1cdfde25ae2984",
+        "trackedDiffSha256": "9ba7db46b4d4fe68c3777b71e915ea183749e2524d589ea8b4ea947a13807e29",
+        "changedPaths": [
+          {
+            "path": "docs/evidence/syzygy-bpyt-43/tools/build_record.py",
+            "sha256": "bdc7aa1777be5183ac6a3c5fc67c581d805c6b141621e4b93ba37d6d77511a3b"
+          }
+        ],
+        "daemonEntryTestSha256": "b629e399a2c4b72e00c3a764181f1b938985d6a992c44ffcb320af3bebebec69"
+      },
+      "afterSubject": {
+        "head": "7b9dc83a315e32e98549f3c1cb1cdfde25ae2984",
+        "trackedDiffSha256": "9ba7db46b4d4fe68c3777b71e915ea183749e2524d589ea8b4ea947a13807e29",
+        "changedPaths": [
+          {
+            "path": "docs/evidence/syzygy-bpyt-43/tools/build_record.py",
+            "sha256": "bdc7aa1777be5183ac6a3c5fc67c581d805c6b141621e4b93ba37d6d77511a3b"
+          }
+        ],
+        "daemonEntryTestSha256": "b629e399a2c4b72e00c3a764181f1b938985d6a992c44ffcb320af3bebebec69"
+      },
+      "exit": 1,
+      "lifetimeComplete": true,
+      "stream": {
+        "path": "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/logs/old-new-differential-v2.log",
+        "bytes": 522,
+        "sha256": "d08fa0bf1bd8c3e36805c9bea128784d2e574952cc3e821718e3ca1cd728a843"
+      }
+    },
+    {
+      "capture": "logs/old-new-differential-v3.json",
+      "command": [
+        "python3",
+        "-I",
+        "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/old_new_differential_v3.py"
+      ],
+      "subject": {
+        "head": "7b9dc83a315e32e98549f3c1cb1cdfde25ae2984",
+        "trackedDiffSha256": "9ba7db46b4d4fe68c3777b71e915ea183749e2524d589ea8b4ea947a13807e29",
+        "changedPaths": [
+          {
+            "path": "docs/evidence/syzygy-bpyt-43/tools/build_record.py",
+            "sha256": "bdc7aa1777be5183ac6a3c5fc67c581d805c6b141621e4b93ba37d6d77511a3b"
+          }
+        ],
+        "daemonEntryTestSha256": "b629e399a2c4b72e00c3a764181f1b938985d6a992c44ffcb320af3bebebec69"
+      },
+      "afterSubject": {
+        "head": "7b9dc83a315e32e98549f3c1cb1cdfde25ae2984",
+        "trackedDiffSha256": "9ba7db46b4d4fe68c3777b71e915ea183749e2524d589ea8b4ea947a13807e29",
+        "changedPaths": [
+          {
+            "path": "docs/evidence/syzygy-bpyt-43/tools/build_record.py",
+            "sha256": "bdc7aa1777be5183ac6a3c5fc67c581d805c6b141621e4b93ba37d6d77511a3b"
+          }
+        ],
+        "daemonEntryTestSha256": "b629e399a2c4b72e00c3a764181f1b938985d6a992c44ffcb320af3bebebec69"
+      },
+      "exit": 0,
+      "lifetimeComplete": true,
+      "stream": {
+        "path": "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/logs/old-new-differential-v3.log",
+        "bytes": 517,
+        "sha256": "cd21ee97288c4a029dae7d78b807422f11c46200a8b0148db11a4538873e3d63"
+      }
+    },
+    {
+      "capture": "logs/old-new-differential.json",
+      "command": [
+        "python3",
+        "-I",
+        "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/old_new_differential.py"
+      ],
+      "subject": {
+        "head": "7b9dc83a315e32e98549f3c1cb1cdfde25ae2984",
+        "trackedDiffSha256": "9ba7db46b4d4fe68c3777b71e915ea183749e2524d589ea8b4ea947a13807e29",
+        "changedPaths": [
+          {
+            "path": "docs/evidence/syzygy-bpyt-43/tools/build_record.py",
+            "sha256": "bdc7aa1777be5183ac6a3c5fc67c581d805c6b141621e4b93ba37d6d77511a3b"
+          }
+        ],
+        "daemonEntryTestSha256": "b629e399a2c4b72e00c3a764181f1b938985d6a992c44ffcb320af3bebebec69"
+      },
+      "afterSubject": {
+        "head": "7b9dc83a315e32e98549f3c1cb1cdfde25ae2984",
+        "trackedDiffSha256": "9ba7db46b4d4fe68c3777b71e915ea183749e2524d589ea8b4ea947a13807e29",
+        "changedPaths": [
+          {
+            "path": "docs/evidence/syzygy-bpyt-43/tools/build_record.py",
+            "sha256": "bdc7aa1777be5183ac6a3c5fc67c581d805c6b141621e4b93ba37d6d77511a3b"
+          }
+        ],
+        "daemonEntryTestSha256": "b629e399a2c4b72e00c3a764181f1b938985d6a992c44ffcb320af3bebebec69"
+      },
+      "exit": 1,
+      "lifetimeComplete": true,
+      "stream": {
+        "path": "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/logs/old-new-differential.log",
+        "bytes": 1987,
+        "sha256": "9bc708747b584412f8097fed9902f1e08572c9509d09603037d02310c8e604fa"
+      }
+    },
+    {
+      "capture": "logs/population-historical-validator.json",
+      "command": [
+        "python3",
+        "-c",
+        "import os,runpy,sys; os.environ[\"SYZYGY_CLOCK_HISTORICAL_OUTPUT\"]=\"/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/historical-validation-population.json\"; sys.argv=[\"historical_record.py\",os.getcwd(),\"c104771ff90f47ffd070f2339c36010458679c71\",\"d38d7a3ce632a34c2a41bdb77ad323ba0b05b777\",\"ba9d990a2b80b9aa5b3d78801b938280ee9988d7\",\"447d9f083fb120c14ddd8da646c03675f3ce7bc7\",\"9e00252ae134accc4a42604445a4db66f68d5100\",\"740279435178a882f1c2d526a2a7ea0bf2b52cbc\"]; runpy.run_path(\"docs/evidence/syzygy-bpyt-43/tools/historical_record.py\",run_name=\"__main__\")"
+      ],
+      "subject": null,
+      "afterSubject": null,
+      "exit": 0,
+      "lifetimeComplete": true,
+      "stream": {
+        "path": "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/logs/population-historical-validator.log",
+        "bytes": 3293,
+        "sha256": "16729849c691909a781c55085f9f7639979cb0846f634e58a45787140e6f6dba"
+      }
+    },
+    {
+      "capture": "logs/source-applicability-525.json",
+      "command": [
+        "node",
+        "docs/evidence/syzygy-bpyt-43/tools/source_applicability.mjs",
+        "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.43",
+        "ba9d990a2b80b9aa5b3d78801b938280ee9988d7",
+        "d38d7a3ce632a34c2a41bdb77ad323ba0b05b777",
+        "525ad75a",
+        "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/source-applicability-525.json"
+      ],
+      "subject": {
+        "head": "525ad75ac98f6c2b3cbca528ce9d2069eb1c6a24",
+        "trackedDiffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "changedPaths": [],
+        "daemonEntryTestSha256": "b629e399a2c4b72e00c3a764181f1b938985d6a992c44ffcb320af3bebebec69"
+      },
+      "afterSubject": {
+        "head": "525ad75ac98f6c2b3cbca528ce9d2069eb1c6a24",
+        "trackedDiffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "changedPaths": [],
+        "daemonEntryTestSha256": "b629e399a2c4b72e00c3a764181f1b938985d6a992c44ffcb320af3bebebec69"
+      },
+      "exit": 0,
+      "lifetimeComplete": true,
+      "stream": {
+        "path": "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/logs/source-applicability-525.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "capture": "logs/source-applicability-actual-arms.json",
+      "command": [
+        "node",
+        "docs/evidence/syzygy-bpyt-43/tools/source_applicability.mjs",
+        "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.43",
+        "722231fe0365eccd0239fb63edee92e7c5239531",
+        "bb5df68080b00a08557f64156c9bf3b4d9d25ed4",
+        "2f23d97ef854a0297fdc8a0cdb34b9688531dfd0",
+        "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/source-applicability-actual-arms.json"
+      ],
+      "subject": {
+        "head": "2f23d97ef854a0297fdc8a0cdb34b9688531dfd0",
+        "trackedDiffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "changedPaths": [],
+        "daemonEntryTestSha256": "b629e399a2c4b72e00c3a764181f1b938985d6a992c44ffcb320af3bebebec69"
+      },
+      "afterSubject": {
+        "head": "2f23d97ef854a0297fdc8a0cdb34b9688531dfd0",
+        "trackedDiffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "changedPaths": [],
+        "daemonEntryTestSha256": "b629e399a2c4b72e00c3a764181f1b938985d6a992c44ffcb320af3bebebec69"
+      },
+      "exit": 0,
+      "lifetimeComplete": true,
+      "stream": {
+        "path": "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/logs/source-applicability-actual-arms.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "capture": "logs/source-applicability-collection-fix.json",
+      "command": [
+        "node",
+        "docs/evidence/syzygy-bpyt-43/tools/source_applicability.mjs",
+        "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.43",
+        "722231fe0365eccd0239fb63edee92e7c5239531",
+        "bb5df68080b00a08557f64156c9bf3b4d9d25ed4",
+        "4b28caccc115ab7e4ac89800120d54d816f9ff3f",
+        "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/source-applicability-collection-fix.json"
+      ],
+      "subject": {
+        "head": "4b28caccc115ab7e4ac89800120d54d816f9ff3f",
+        "trackedDiffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "changedPaths": [],
+        "daemonEntryTestSha256": "b629e399a2c4b72e00c3a764181f1b938985d6a992c44ffcb320af3bebebec69"
+      },
+      "afterSubject": {
+        "head": "4b28caccc115ab7e4ac89800120d54d816f9ff3f",
+        "trackedDiffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "changedPaths": [],
+        "daemonEntryTestSha256": "b629e399a2c4b72e00c3a764181f1b938985d6a992c44ffcb320af3bebebec69"
+      },
+      "exit": 0,
+      "lifetimeComplete": true,
+      "stream": {
+        "path": "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/logs/source-applicability-collection-fix.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "capture": "logs/source-applicability-frozen.json",
+      "command": [
+        "node",
+        "docs/evidence/syzygy-bpyt-43/tools/source_applicability.mjs",
+        "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.43",
+        "722231fe0365eccd0239fb63edee92e7c5239531",
+        "bb5df68080b00a08557f64156c9bf3b4d9d25ed4",
+        "b7064e19621a1efb921d6ad810c178b90bdc8236",
+        "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/source-applicability-frozen.json"
+      ],
+      "subject": {
+        "head": "b7064e19621a1efb921d6ad810c178b90bdc8236",
+        "trackedDiffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "changedPaths": [],
+        "daemonEntryTestSha256": "b629e399a2c4b72e00c3a764181f1b938985d6a992c44ffcb320af3bebebec69"
+      },
+      "afterSubject": {
+        "head": "b7064e19621a1efb921d6ad810c178b90bdc8236",
+        "trackedDiffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "changedPaths": [],
+        "daemonEntryTestSha256": "b629e399a2c4b72e00c3a764181f1b938985d6a992c44ffcb320af3bebebec69"
+      },
+      "exit": 0,
+      "lifetimeComplete": true,
+      "stream": {
+        "path": "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/logs/source-applicability-frozen.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "capture": "logs/source-applicability.json",
+      "command": [
+        "node",
+        "docs/evidence/syzygy-bpyt-43/tools/source_applicability.mjs",
+        "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.43",
+        "722231fe0365eccd0239fb63edee92e7c5239531",
+        "bb5df68080b00a08557f64156c9bf3b4d9d25ed4",
+        "7b9dc83a315e32e98549f3c1cb1cdfde25ae2984",
+        "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/campaigns-final/source-applicability.json"
+      ],
+      "subject": {
+        "head": "7b9dc83a315e32e98549f3c1cb1cdfde25ae2984",
+        "trackedDiffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "changedPaths": [],
+        "daemonEntryTestSha256": "b629e399a2c4b72e00c3a764181f1b938985d6a992c44ffcb320af3bebebec69"
+      },
+      "afterSubject": {
+        "head": "7b9dc83a315e32e98549f3c1cb1cdfde25ae2984",
+        "trackedDiffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "changedPaths": [],
+        "daemonEntryTestSha256": "b629e399a2c4b72e00c3a764181f1b938985d6a992c44ffcb320af3bebebec69"
+      },
+      "exit": 0,
+      "lifetimeComplete": true,
+      "stream": {
+        "path": "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/logs/source-applicability.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "capture": "logs/subject-baseline-build.json",
+      "command": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "subject": null,
+      "afterSubject": null,
+      "exit": 0,
+      "lifetimeComplete": true,
+      "stream": {
+        "path": "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/logs/subject-baseline-build.log",
+        "bytes": 278,
+        "sha256": "7b88d163164f97a86ff952c81601237ddbc564661a9874939f72c90233eb1cf4"
+      }
+    },
+    {
+      "capture": "logs/subject-offline-npm-ci.json",
+      "command": [
+        "npm",
+        "ci",
+        "--offline",
+        "--ignore-scripts",
+        "--no-audit",
+        "--no-fund"
+      ],
+      "subject": null,
+      "afterSubject": null,
+      "exit": 0,
+      "lifetimeComplete": true,
+      "stream": {
+        "path": "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/logs/subject-offline-npm-ci.log",
+        "bytes": 29,
+        "sha256": "90c40f607704f2f78f02d43158a4a77b0a9de6e2ab4bf220a53ffcf3edf0a0cb"
+      }
+    },
+    {
+      "capture": "logs/successor-record-attempt1.json",
+      "command": [
+        "python3",
+        "-I",
+        "docs/evidence/syzygy-bpyt-43/tools/build_record.py",
+        "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.43",
+        "b7064e19621a1efb921d6ad810c178b90bdc8236",
+        "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/successor-record-attempt1.json",
+        "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/campaigns-current-validation"
+      ],
+      "subject": {
+        "head": "b7064e19621a1efb921d6ad810c178b90bdc8236",
+        "trackedDiffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "changedPaths": [],
+        "daemonEntryTestSha256": "b629e399a2c4b72e00c3a764181f1b938985d6a992c44ffcb320af3bebebec69"
+      },
+      "afterSubject": {
+        "head": "b7064e19621a1efb921d6ad810c178b90bdc8236",
+        "trackedDiffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "changedPaths": [],
+        "daemonEntryTestSha256": "b629e399a2c4b72e00c3a764181f1b938985d6a992c44ffcb320af3bebebec69"
+      },
+      "exit": 1,
+      "lifetimeComplete": true,
+      "stream": {
+        "path": "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/logs/successor-record-attempt1.log",
+        "bytes": 65,
+        "sha256": "bb0c0c148ad9d97b70653d4a984c005be65a49251f4572bcc910778cf02e14b0"
+      }
+    },
+    {
+      "capture": "logs/successor-record-attempt2.json",
+      "command": [
+        "python3",
+        "-I",
+        "docs/evidence/syzygy-bpyt-43/tools/build_record.py",
+        "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.43",
+        "4b28caccc115ab7e4ac89800120d54d816f9ff3f",
+        "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/successor-record-attempt2.json",
+        "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/campaigns-validated-v2"
+      ],
+      "subject": {
+        "head": "4b28caccc115ab7e4ac89800120d54d816f9ff3f",
+        "trackedDiffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "changedPaths": [],
+        "daemonEntryTestSha256": "b629e399a2c4b72e00c3a764181f1b938985d6a992c44ffcb320af3bebebec69"
+      },
+      "afterSubject": {
+        "head": "4b28caccc115ab7e4ac89800120d54d816f9ff3f",
+        "trackedDiffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "changedPaths": [],
+        "daemonEntryTestSha256": "b629e399a2c4b72e00c3a764181f1b938985d6a992c44ffcb320af3bebebec69"
+      },
+      "exit": 0,
+      "lifetimeComplete": true,
+      "stream": {
+        "path": "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/logs/successor-record-attempt2.log",
+        "bytes": 293,
+        "sha256": "baebe7af3e0e4dba7a4f74561c4e484ee5a09ad894fce42ef58ee326eb50ab7d"
+      }
+    },
+    {
+      "capture": "logs/successor-record-identical-rebuild.json",
+      "command": [
+        "python3",
+        "-I",
+        "docs/evidence/syzygy-bpyt-43/tools/build_record.py",
+        "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.43",
+        "4b28caccc115ab7e4ac89800120d54d816f9ff3f",
+        "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/successor-record-rebuild.json",
+        "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/campaigns-validated-v2"
+      ],
+      "subject": {
+        "head": "4b28caccc115ab7e4ac89800120d54d816f9ff3f",
+        "trackedDiffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "changedPaths": [],
+        "daemonEntryTestSha256": "b629e399a2c4b72e00c3a764181f1b938985d6a992c44ffcb320af3bebebec69"
+      },
+      "afterSubject": {
+        "head": "4b28caccc115ab7e4ac89800120d54d816f9ff3f",
+        "trackedDiffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "changedPaths": [],
+        "daemonEntryTestSha256": "b629e399a2c4b72e00c3a764181f1b938985d6a992c44ffcb320af3bebebec69"
+      },
+      "exit": 0,
+      "lifetimeComplete": true,
+      "stream": {
+        "path": "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/logs/successor-record-identical-rebuild.log",
+        "bytes": 293,
+        "sha256": "baebe7af3e0e4dba7a4f74561c4e484ee5a09ad894fce42ef58ee326eb50ab7d"
+      }
+    }
+  ],
+  "staticAndProofDispositions": [
+    {
+      "attempt": "logs/initial-typecheck.json",
+      "disposition": "Failed author TypeScript narrowing predicate; repaired before the successful working check. Early subject source is reconstructed/Inferred, not a contemporaneous capture."
+    },
+    {
+      "attempt": "logs/initial-historical-validator.json",
+      "disposition": "Failed author denominator assumption: HOSTILE has two parameter regions. Corrected expected multiplicity, preserving the failed raw."
+    },
+    {
+      "attempt": "STATIC-SYNTAX-ATTEMPT1.json",
+      "disposition": "New Python builder f-string syntax defect; repaired; no product execution in that static parse."
+    },
+    {
+      "attempt": "STATIC-CURRENT-CPU-CENSUS-SPLITLINES-ATTEMPT1.json",
+      "disposition": "splitlines includes embedded Unicode separators; literal LF re-count and independent rg give exact source line identities."
+    },
+    {
+      "attempt": "HEAD-CAMPAIGN-ATTEMPT1-DISPOSITION.json",
+      "disposition": "First 57-case head attempt retained stale /entry fragment and an else witness build error. Neither counted as kill. Four complete retargeted campaigns followed changed sources."
+    },
+    {
+      "attempt": "OLD-NEW-MUTATED-RECORD-DIFFERENTIAL.json",
+      "disposition": "M5-node22 deletion changed the minimum but left its summary stale; old and new both refused. Not an isolated population differential."
+    },
+    {
+      "attempt": "OLD-NEW-MUTATED-RECORD-DIFFERENTIAL-V2.json",
+      "disposition": "First summary repair mistakenly included the declared unreached near-miss row; old and new still refused. Not proof."
+    },
+    {
+      "attempt": "OLD-NEW-MUTATED-RECORD-DIFFERENTIAL-V3.json",
+      "disposition": "Consistent reached-row summaries isolate old acceptance/new exact-population rejection, with altered-prose and restored controls."
+    },
+    {
+      "attempt": "OLD-NEW-MUTATED-RECORD-DIFFERENTIAL-V4.json",
+      "disposition": "The same consistent witness and controls were executed against the final historical validator bytes; all intended outcomes."
+    },
+    {
+      "attempt": "SOURCE-APPLICABILITY-PRIOR-DISPOSITION.json",
+      "disposition": "Early inventories were static evidence/main snapshots, not exact CPU-arm subjects; final inventory uses both actual separation tree commits. No inventory establishes current timing."
+    },
+    {
+      "attempt": "SUCCESSOR-RECORD-ATTEMPT1-DISPOSITION.json",
+      "disposition": "Checker expected17 for round-one copy; actual collection/source16. Literal corrected; source/campaign records unchanged."
+    },
+    {
+      "attempt": "current-record-mutants.json",
+      "disposition": "Four non-mutating predecessor witnesses failed expectations; full attempt retained. The four actual hook-row retargets all reject at intended survivor checks and restore."
+    },
+    {
+      "attempt": "logs/historical-checker-mutants-v2.json",
+      "disposition": "Historical checker inputs/tool bytes and explicit b7064e19 subject stayed fixed. W HEAD advanced to4b28 only through the independent successor builder round-one collection correction; this is not a claim that W HEAD stayed unchanged."
+    }
+  ],
+  "allLogBytesVerifiedBy": [
+    "Python SHA-256 and byte counts",
+    "native sha256sum for every capture stream"
+  ],
+  "earlySourceQualification": "See EARLY-ATTEMPT-SUBJECT-RECONSTRUCTION.json; final campaigns/captures have contemporaneous identities.",
+  "outsideCodeFailureClassification": "none asserted by author",
+  "pending": [
+    "final check:all not yet attempted",
+    "fresh independent review",
+    "hosted checks",
+    "ROOT notice/lawful landing"
+  ]
+}

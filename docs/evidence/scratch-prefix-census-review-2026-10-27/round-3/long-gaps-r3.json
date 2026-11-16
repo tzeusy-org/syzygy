@@ -1,0 +1,310 @@
+{
+ "interval": 0.5,
+ "instantsWithStart": 256,
+ "tracedNames": 2443,
+ "tracedNamesTheSamplerSaw": 895,
+ "namesWhoseSmallestTIsNotTheirFirstRow": 0,
+ "window": {
+  "lower": 1792853789.244,
+  "upper": 1792853789.241,
+  "width": -0.003,
+  "mid": 1792853789.243
+ },
+ "long": {
+  "gaps": 12,
+  "names": 445,
+  "sampled": 15,
+  "seconds": 33.82
+ },
+ "short": {
+  "gaps": 243,
+  "names": 1998,
+  "sampled": 880,
+  "seconds": 123.19
+ },
+ "createdInNoGap": 0,
+ "publishedClasses": 34,
+ "upperBoundSites": 51,
+ "upperBoundRoots": [
+  "/exposureRanking",
+  "/leftBySIGKILL",
+  "/namedInTheBeadObservation/chrome-singleton-directory",
+  "/namedInTheBeadObservation/syzygy-build-output-",
+  "/namedInTheBeadObservation/syzygy-dossier-src-",
+  "/namedInTheBeadObservation/syzygy-poc-browser-",
+  "/namedInTheBeadObservation/syzygy-poc-surface-fixture-p<pid>-n<ns>-",
+  "/namedInTheBeadObservation/syzygy-poc-surface-state-",
+  "/namedInTheBeadObservation/syzygy-public-screen-",
+  "/namedInTheBeadObservation/syzygy-trigger-",
+  "/namedInTheBeadObservation/syzygy-trigger-repo-"
+ ],
+ "dependent": [
+  "dossier-gate-acts-",
+  "dossier-origin-",
+  "dossier-records-",
+  "dossier-state-",
+  "nanoid-21",
+  "syzygy-poc-browser-",
+  "syzygy-poc-surface-fixture-p<pid>-n<ns>-",
+  "syzygy-poc-surface-fixture-template-p<pid>-n<ns>-"
+ ],
+ "dependentDetail": {
+  "dossier-gate-acts-": {
+   "names": 143,
+   "sampled": 58,
+   "neverSampled": 85,
+   "neverSampledInALongGap": 1,
+   "sampledBesideALongGap": 0
+  },
+  "dossier-origin-": {
+   "names": 1,
+   "sampled": 1,
+   "neverSampled": 0,
+   "neverSampledInALongGap": 0,
+   "sampledBesideALongGap": 1
+  },
+  "dossier-records-": {
+   "names": 164,
+   "sampled": 64,
+   "neverSampled": 100,
+   "neverSampledInALongGap": 2,
+   "sampledBesideALongGap": 0
+  },
+  "dossier-state-": {
+   "names": 157,
+   "sampled": 54,
+   "neverSampled": 103,
+   "neverSampledInALongGap": 13,
+   "sampledBesideALongGap": 0
+  },
+  "nanoid-21": {
+   "names": 7,
+   "sampled": 7,
+   "neverSampled": 0,
+   "neverSampledInALongGap": 0,
+   "sampledBesideALongGap": 7
+  },
+  "syzygy-poc-browser-": {
+   "names": 12,
+   "sampled": 12,
+   "neverSampled": 0,
+   "neverSampledInALongGap": 0,
+   "sampledBesideALongGap": 1
+  },
+  "syzygy-poc-surface-fixture-p<pid>-n<ns>-": {
+   "names": 398,
+   "sampled": 139,
+   "neverSampled": 259,
+   "neverSampledInALongGap": 5,
+   "sampledBesideALongGap": 23
+  },
+  "syzygy-poc-surface-fixture-template-p<pid>-n<ns>-": {
+   "names": 44,
+   "sampled": 39,
+   "neverSampled": 5,
+   "neverSampledInALongGap": 0,
+   "sampledBesideALongGap": 12
+  }
+ },
+ "findingFourClasses": [
+  "syzygy-dossier-src-",
+  "syzygy-poc-surface-state-",
+  "syzygy-public-screen-",
+  "syzygy-trigger-",
+  "syzygy-trigger-repo-"
+ ],
+ "findingFourDependent": [],
+ "perClassCountMismatchWithRecord": {},
+ "classesCrossChecked": 32,
+ "publishedWithNoNameInTheCleanRun": [],
+ "agreesWithStored": {
+  "tracedNames": true,
+  "long": true,
+  "short": true,
+  "dependentSet": true,
+  "dependentDetail": true,
+  "publishedCount": true,
+  "windowWidth": true
+ },
+ "sensitivity": {
+  "lower": {
+   "long": {
+    "gaps": 12,
+    "names": 445,
+    "sampled": 15,
+    "seconds": 33.82
+   },
+   "short": {
+    "gaps": 243,
+    "names": 1998,
+    "sampled": 880,
+    "seconds": 123.19
+   },
+   "createdInNoGap": 0,
+   "dependent": 8,
+   "dependentSameAsMid": true
+  },
+  "upper": {
+   "long": {
+    "gaps": 12,
+    "names": 446,
+    "sampled": 15,
+    "seconds": 33.82
+   },
+   "short": {
+    "gaps": 243,
+    "names": 1997,
+    "sampled": 880,
+    "seconds": 123.19
+   },
+   "createdInNoGap": 0,
+   "dependent": 8,
+   "dependentSameAsMid": true
+  },
+  "mid-0.01": {
+   "long": {
+    "gaps": 12,
+    "names": 445,
+    "sampled": 14,
+    "seconds": 33.82
+   },
+   "short": {
+    "gaps": 243,
+    "names": 1998,
+    "sampled": 881,
+    "seconds": 123.19
+   },
+   "createdInNoGap": 0,
+   "dependent": 8,
+   "dependentSameAsMid": true
+  },
+  "mid+0.01": {
+   "long": {
+    "gaps": 12,
+    "names": 444,
+    "sampled": 15,
+    "seconds": 33.82
+   },
+   "short": {
+    "gaps": 243,
+    "names": 1999,
+    "sampled": 880,
+    "seconds": 123.19
+   },
+   "createdInNoGap": 0,
+   "dependent": 8,
+   "dependentSameAsMid": true
+  },
+  "mid-0.05": {
+   "long": {
+    "gaps": 12,
+    "names": 456,
+    "sampled": 15,
+    "seconds": 33.82
+   },
+   "short": {
+    "gaps": 243,
+    "names": 1987,
+    "sampled": 880,
+    "seconds": 123.19
+   },
+   "createdInNoGap": 0,
+   "dependent": 8,
+   "dependentSameAsMid": true
+  },
+  "mid+0.05": {
+   "long": {
+    "gaps": 12,
+    "names": 439,
+    "sampled": 15,
+    "seconds": 33.82
+   },
+   "short": {
+    "gaps": 243,
+    "names": 2004,
+    "sampled": 880,
+    "seconds": 123.19
+   },
+   "createdInNoGap": 0,
+   "dependent": 8,
+   "dependentSameAsMid": true
+  },
+  "mid-0.25": {
+   "long": {
+    "gaps": 12,
+    "names": 538,
+    "sampled": 21,
+    "seconds": 33.82
+   },
+   "short": {
+    "gaps": 243,
+    "names": 1905,
+    "sampled": 874,
+    "seconds": 123.19
+   },
+   "createdInNoGap": 0,
+   "dependent": 8,
+   "dependentSameAsMid": true
+  },
+  "mid+0.25": {
+   "long": {
+    "gaps": 12,
+    "names": 445,
+    "sampled": 17,
+    "seconds": 33.82
+   },
+   "short": {
+    "gaps": 243,
+    "names": 1998,
+    "sampled": 878,
+    "seconds": 123.19
+   },
+   "createdInNoGap": 0,
+   "dependent": 8,
+   "dependentSameAsMid": true
+  },
+  "withoutTheStartInstant": {
+   "window": [
+    1792853789.244,
+    1792853789.241
+   ],
+   "long": {
+    "gaps": 12,
+    "names": 445,
+    "sampled": 15,
+    "seconds": 33.82
+   },
+   "short": {
+    "gaps": 242,
+    "names": 1998,
+    "sampled": 880,
+    "seconds": 122.69
+   },
+   "createdInNoGap": 0,
+   "dependent": 8
+  },
+  "strictGapTest": {
+   "long": {
+    "gaps": 10,
+    "names": 438,
+    "sampled": 9,
+    "seconds": 31.82
+   },
+   "short": {
+    "gaps": 245,
+    "names": 2005,
+    "sampled": 886,
+    "seconds": 125.19
+   },
+   "dependent": [
+    "dossier-origin-",
+    "dossier-records-",
+    "dossier-state-",
+    "nanoid-21",
+    "syzygy-poc-browser-",
+    "syzygy-poc-surface-fixture-p<pid>-n<ns>-",
+    "syzygy-poc-surface-fixture-template-p<pid>-n<ns>-"
+   ]
+  }
+ }
+}

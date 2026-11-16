@@ -1,7 +1,7 @@
 import { rmSync } from 'node:fs';
 import { afterEach, describe, expect, it } from 'vitest';
 
-import { escapeHtml } from '@syzygy/cap1-daemon';
+import { escapeHtml } from '@syzygy/http-host';
 
 import { compositeEvaluationLine, substrateEvaluationFooter } from './evaluation-footer.js';
 import { buildFixtureModel } from './test-model-fixture.js';

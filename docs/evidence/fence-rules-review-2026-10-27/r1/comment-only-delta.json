@@ -1,0 +1,57 @@
+{
+ "base": "a5ab2b28",
+ "head": "9d9c98a6",
+ "method": "ts.transpileModule, target ES2022, module NodeNext, removeComments, per file, before against after",
+ "typescriptVersion": "5.9.3",
+ "changedFiles": 18,
+ "changedProductionFiles": 5,
+ "commentOnly": 5,
+ "notCommentOnly": [],
+ "rows": [
+  {
+   "path": "apps/three-surface-poc/src/polaris-markdown.ts",
+   "status": "M",
+   "sourceSha256Base": "c0f2395109fd2f25fdc314a5ea7fd3360f58675250b7425b943b3b543fc8373c",
+   "sourceSha256Head": "7e70894ee6e3717ada76026004754c521858427abb14a103f591b31cd3727a21",
+   "emitSha256Base": "91b0edc7829313a17db2c8ffe69f5e82b9b0e1069f447bbe55421eb034ff2f9e",
+   "emitSha256Head": "91b0edc7829313a17db2c8ffe69f5e82b9b0e1069f447bbe55421eb034ff2f9e",
+   "commentOnly": true
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.ts",
+   "status": "M",
+   "sourceSha256Base": "4804e2e90fd7ab043be1871ec27229955978ba13df345e2fdf84668abfc054b1",
+   "sourceSha256Head": "cb1566140cdf7d02b9991f8564d121e21d90480a791879a74e1889557930f067",
+   "emitSha256Base": "6cfff1b6ac098dc62a6b8527cb72ab9fc683fdb12281299b56b7a0b2011d49f1",
+   "emitSha256Head": "6cfff1b6ac098dc62a6b8527cb72ab9fc683fdb12281299b56b7a0b2011d49f1",
+   "commentOnly": true
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+   "status": "M",
+   "sourceSha256Base": "dc888664f2392a4abd55b68627226e6734ecb7e35a1d22cfa74eaaca76c52a2f",
+   "sourceSha256Head": "a02c105a483d11a9e90d27aade01ef5ddee6b60b9e165a9a7193c5baaa21f8fe",
+   "emitSha256Base": "ae464baf90c1d54270e6c366d21c2cceadcdf6fd020f2f55c7a1e884b0b8b186",
+   "emitSha256Head": "ae464baf90c1d54270e6c366d21c2cceadcdf6fd020f2f55c7a1e884b0b8b186",
+   "commentOnly": true
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+   "status": "M",
+   "sourceSha256Base": "baf09d80d52c2c5bf16b1a6036913de0609ca8512976b8fd221a032c7a701219",
+   "sourceSha256Head": "642cf156ed37bfc0ced7cb338e640268fc0e02648913dd71be5dc4efe6ed0dbd",
+   "emitSha256Base": "17d56f45f8a8373b6847555023a9c8dce21685b93a2c0e8e6f4e28a47fc10b06",
+   "emitSha256Head": "17d56f45f8a8373b6847555023a9c8dce21685b93a2c0e8e6f4e28a47fc10b06",
+   "commentOnly": true
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+   "status": "M",
+   "sourceSha256Base": "c32ab4e3dbe509413a4d31afc1bb7a68c1a5a8b2b1d21945b72deb9e54617e34",
+   "sourceSha256Head": "47435438b5d14c944e2c53a510d07b0a3253758d2628f5332123155831494d49",
+   "emitSha256Base": "d4b1ba58de41ac3fa7d665f7a25ac93b77e2d640a08fedb4e42fa9b676ccff30",
+   "emitSha256Head": "d4b1ba58de41ac3fa7d665f7a25ac93b77e2d640a08fedb4e42fa9b676ccff30",
+   "commentOnly": true
+  }
+ ]
+}

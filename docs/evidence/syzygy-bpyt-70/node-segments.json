@@ -1,0 +1,181 @@
+{
+ "subject": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+ "subjectSha256": "3695543f4779dadaa87bb928cdd28c9499a95e3ea97fdd76462890139e0711f5",
+ "casesFrom": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+ "casesFromSha256": "42f7cef5110649cd577f7b6bd118e550763b0713b4fa4ee45ea04d6a306000b8",
+ "node": "v24.6.0",
+ "nodeFile": "lib/internal/modules/esm/resolve.js",
+ "regexes": [
+  {
+   "node": "invalidSegmentRegEx",
+   "nodeLiteral": "/(^|\\\\|\\/)((\\.|%2e)(\\.|%2e)?|(n|%6e|%4e)(o|%6f|%4f)(d|%64|%44)(e|%65|%45)(_|%5f)(m|%6d|%4d)(o|%6f|%4f)(d|%64|%44)(u|%75|%55)(l|%6c|%4c)(e|%65|%45)(s|%73|%53))?(\\\\|\\/|$)/i",
+   "copy": "/(^|\\\\|\\/)((\\.|%2e)(\\.|%2e)?|(n|%6e|%4e)(o|%6f|%4f)(d|%64|%44)(e|%65|%45)(_|%5f)(m|%6d|%4d)(o|%6f|%4f)(d|%64|%44)(u|%75|%55)(l|%6c|%4c)(e|%65|%45)(s|%73|%53))?(\\\\|\\/|$)/i",
+   "equal": true
+  },
+  {
+   "node": "deprecatedInvalidSegmentRegEx",
+   "nodeLiteral": "/(^|\\\\|\\/)((\\.|%2e)(\\.|%2e)?|(n|%6e|%4e)(o|%6f|%4f)(d|%64|%44)(e|%65|%45)(_|%5f)(m|%6d|%4d)(o|%6f|%4f)(d|%64|%44)(u|%75|%55)(l|%6c|%4c)(e|%65|%45)(s|%73|%53))(\\\\|\\/|$)/i",
+   "copy": "/(^|\\\\|\\/)((\\.|%2e)(\\.|%2e)?|(n|%6e|%4e)(o|%6f|%4f)(d|%64|%44)(e|%65|%45)(_|%5f)(m|%6d|%4d)(o|%6f|%4f)(d|%64|%44)(u|%75|%55)(l|%6c|%4c)(e|%65|%45)(s|%73|%53))(\\\\|\\/|$)/i",
+   "equal": true
+  }
+ ],
+ "cases": [
+  {
+   "target": "./dist/index.js",
+   "node": "loads",
+   "then": "loads",
+   "reader": "loads",
+   "test": "loads",
+   "equal": true,
+   "status": 0,
+   "stderr": []
+  },
+  {
+   "target": "./dist/.hidden/index.js",
+   "node": "loads",
+   "then": "loads",
+   "reader": "loads",
+   "test": "loads",
+   "equal": true,
+   "status": 0,
+   "stderr": []
+  },
+  {
+   "target": "./dist/..x/index.js",
+   "node": "loads",
+   "then": "loads",
+   "reader": "loads",
+   "test": "loads",
+   "equal": true,
+   "status": 0,
+   "stderr": []
+  },
+  {
+   "target": "./dist/node_modules_x/index.js",
+   "node": "loads",
+   "then": "loads",
+   "reader": "loads",
+   "test": "loads",
+   "equal": true,
+   "status": 0,
+   "stderr": []
+  },
+  {
+   "target": "./dist/x/../index.js",
+   "node": "refuses",
+   "then": "ERR_INVALID_PACKAGE_TARGET",
+   "reader": "refuses",
+   "test": "refuses",
+   "equal": true,
+   "status": 0,
+   "stderr": []
+  },
+  {
+   "target": "./dist/./index.js",
+   "node": "refuses",
+   "then": "ERR_INVALID_PACKAGE_TARGET",
+   "reader": "refuses",
+   "test": "refuses",
+   "equal": true,
+   "status": 0,
+   "stderr": []
+  },
+  {
+   "target": "./dist/node_modules/index.js",
+   "node": "refuses",
+   "then": "ERR_INVALID_PACKAGE_TARGET",
+   "reader": "refuses",
+   "test": "refuses",
+   "equal": true,
+   "status": 0,
+   "stderr": []
+  },
+  {
+   "target": "./dist/NODE_MODULES/index.js",
+   "node": "refuses",
+   "then": "ERR_INVALID_PACKAGE_TARGET",
+   "reader": "refuses",
+   "test": "refuses",
+   "equal": true,
+   "status": 0,
+   "stderr": []
+  },
+  {
+   "target": "./dist/%2e%2e/index.js",
+   "node": "refuses",
+   "then": "ERR_INVALID_PACKAGE_TARGET",
+   "reader": "refuses",
+   "test": "refuses",
+   "equal": true,
+   "status": 0,
+   "stderr": []
+  },
+  {
+   "target": "./dist/%2E/index.js",
+   "node": "refuses",
+   "then": "ERR_INVALID_PACKAGE_TARGET",
+   "reader": "refuses",
+   "test": "refuses",
+   "equal": true,
+   "status": 0,
+   "stderr": []
+  },
+  {
+   "target": "./dist/%6eode_modules/index.js",
+   "node": "refuses",
+   "then": "ERR_INVALID_PACKAGE_TARGET",
+   "reader": "refuses",
+   "test": "refuses",
+   "equal": true,
+   "status": 0,
+   "stderr": []
+  },
+  {
+   "target": "./dist/x\\..\\index.js",
+   "node": "refuses",
+   "then": "ERR_INVALID_PACKAGE_TARGET",
+   "reader": "refuses",
+   "test": "refuses",
+   "equal": true,
+   "status": 0,
+   "stderr": []
+  },
+  {
+   "target": "./dist//index.js",
+   "node": "warns",
+   "then": "loads",
+   "reader": "warns",
+   "test": "warns",
+   "equal": true,
+   "status": 0,
+   "stderr": [
+    "(node:1577149) [DEP0166] DeprecationWarning: Use of deprecated double slash resolving \"./dist//index.js\" for module request \".\" in the \"exports\" field module resolution of the package at /tmp/la70m/n/",
+    "(Use `node --trace-deprecation ...` to show where the warning was created)"
+   ]
+  },
+  {
+   "target": "./dist/%4Eode_modules/index.js",
+   "node": "refuses",
+   "then": "ERR_INVALID_PACKAGE_TARGET",
+   "reader": "refuses",
+   "test": "refuses",
+   "equal": true,
+   "status": 0,
+   "stderr": []
+  },
+  {
+   "target": "./dist/",
+   "node": "warns",
+   "then": "ERR_UNSUPPORTED_DIR_IMPORT",
+   "reader": "warns",
+   "test": "warns",
+   "equal": true,
+   "status": 0,
+   "stderr": [
+    "(node:1577183) [DEP0166] DeprecationWarning: Use of deprecated leading or trailing slash matching resolving \"./dist/\" for module request \".\" in the \"exports\" field module resolution of the package at ",
+    "(Use `node --trace-deprecation ...` to show where the warning was created)"
+   ]
+  }
+ ],
+ "mismatches": 0
+}

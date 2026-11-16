@@ -1,0 +1,150 @@
+{
+ "head": "58e8f60456e9de8d06cd4f8db5defe23e69b7112",
+ "headTestkitSha256": "440209bb6d876b7ae1240a88cd4cf5913b01750a0d9ffa56f90c072be7f76951",
+ "results": [
+  {
+   "mutant": "D0 control: both island records re-serialized, no value changed",
+   "file": "island-diff.json",
+   "changed": [
+    "M",
+    "docs/evidence/syzygy-bpyt-8-39/island-diff.json"
+   ],
+   "checkExit": 0,
+   "checkOut": [
+    "summary.json matches ; problems: 0"
+   ],
+   "caught": false
+  },
+  {
+   "mutant": "D1 island-diff.json: scratchSha256 set to HEAD's testkit digest",
+   "file": "island-diff.json",
+   "changed": [
+    "M",
+    "docs/evidence/syzygy-bpyt-8-39/island-diff.json"
+   ],
+   "checkExit": 1,
+   "checkOut": [
+    "summary.json DIFFERS ; problems: 1"
+   ],
+   "caught": true
+  },
+  {
+   "mutant": "D2 island-diff-selftest.json: scratchSha256 set to HEAD's testkit digest",
+   "file": "island-diff-selftest.json",
+   "changed": [
+    "M",
+    "docs/evidence/syzygy-bpyt-8-39/island-diff-selftest.json"
+   ],
+   "checkExit": 1,
+   "checkOut": [
+    "summary.json DIFFERS ; problems: 1"
+   ],
+   "caught": true
+  },
+  {
+   "mutant": "D3 island-diff.json: the scratchSha256 field removed",
+   "file": "island-diff.json",
+   "changed": [
+    "M",
+    "docs/evidence/syzygy-bpyt-8-39/island-diff.json"
+   ],
+   "checkExit": 1,
+   "checkOut": [
+    "summary.json DIFFERS ; problems: 1"
+   ],
+   "caught": true
+  },
+  {
+   "mutant": "D4 island-diff-selftest.json: one hex digit of scratchSha256 changed",
+   "file": "island-diff-selftest.json",
+   "changed": [
+    "M",
+    "docs/evidence/syzygy-bpyt-8-39/island-diff-selftest.json"
+   ],
+   "checkExit": 1,
+   "checkOut": [
+    "summary.json DIFFERS ; problems: 1"
+   ],
+   "caught": true
+  },
+  {
+   "mutant": "C1 record.py: the scratchSha256 check removed",
+   "file": "record.py",
+   "changed": [
+    "M",
+    "docs/evidence/syzygy-bpyt-8-39/record.py"
+   ],
+   "checkExit": 1,
+   "checkOut": [
+    "summary.json DIFFERS ; problems: 0"
+   ],
+   "selftestExit": 1,
+   "selftestLast": [
+    "selftest: 62/64 mutations make a check fail"
+   ],
+   "selftestSurvived": [
+    "SURVIVED | an island diff over another old testkit | []",
+    "SURVIVED | an island selftest over another old testkit | []"
+   ],
+   "caught": true
+  },
+  {
+   "mutant": "C2 record.py: the check applied to island-diff.json only",
+   "file": "record.py",
+   "changed": [
+    "M",
+    "docs/evidence/syzygy-bpyt-8-39/record.py"
+   ],
+   "checkExit": 1,
+   "checkOut": [
+    "summary.json DIFFERS ; problems: 0"
+   ],
+   "selftestExit": 1,
+   "selftestLast": [
+    "selftest: 63/64 mutations make a check fail"
+   ],
+   "selftestSurvived": [
+    "SURVIVED | an island selftest over another old testkit | []"
+   ],
+   "caught": true
+  },
+  {
+   "mutant": "C3 record.py: the check compares against HEAD's testkit blob",
+   "file": "record.py",
+   "changed": [
+    "M",
+    "docs/evidence/syzygy-bpyt-8-39/record.py"
+   ],
+   "checkExit": 1,
+   "checkOut": [
+    "summary.json DIFFERS ; problems: 2"
+   ],
+   "selftestExit": 1,
+   "selftestLast": [
+    "selftest: the unmutated inputs already fail"
+   ],
+   "selftestSurvived": [],
+   "caught": true
+  },
+  {
+   "mutant": "C4 record.py: the check only asks for a 64-hex value",
+   "file": "record.py",
+   "changed": [
+    "M",
+    "docs/evidence/syzygy-bpyt-8-39/record.py"
+   ],
+   "checkExit": 1,
+   "checkOut": [
+    "summary.json DIFFERS ; problems: 0"
+   ],
+   "selftestExit": 1,
+   "selftestLast": [
+    "selftest: 63/64 mutations make a check fail"
+   ],
+   "selftestSurvived": [
+    "SURVIVED | an island diff over another old testkit | []"
+   ],
+   "caught": true
+  }
+ ]
+}

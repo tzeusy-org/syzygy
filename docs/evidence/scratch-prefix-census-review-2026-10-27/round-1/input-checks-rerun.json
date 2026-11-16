@@ -1,0 +1,50 @@
+{
+ "tool": "input_checks.py",
+ "treeCommit": "a864e999645a071dda40325b2235976590e02973",
+ "assemblerSha256": "6c651b650fef0baea1768dc862410d8998bfc1e3d4bce0cb21c417baf538fdfb",
+ "runsChecked": "k2-kill-75s",
+ "control": {
+  "exit": 0,
+  "lastLine": "",
+  "wroteTheRecord": true,
+  "meets": true
+ },
+ "cases": {
+  "trace-byte-changed": {
+   "exit": 1,
+   "lastLine": "AssertionError: ('k2-kill-75s', 'the trace is not the one the record names')",
+   "wroteTheRecord": false,
+   "expectedMessage": "the trace is not the one the record names",
+   "refused": true
+  },
+  "trace-line-removed": {
+   "exit": 1,
+   "lastLine": "AssertionError: ('k2-kill-75s', 'the trace is not the one the record names')",
+   "wroteTheRecord": false,
+   "expectedMessage": "the trace is not the one the record names",
+   "refused": true
+  },
+  "run-record-names-another-commit": {
+   "exit": 1,
+   "lastLine": "AssertionError: ('k2-kill-75s', 'the run names another commit')",
+   "wroteTheRecord": false,
+   "expectedMessage": "the run names another commit",
+   "refused": true
+  },
+  "static-census-names-another-commit": {
+   "exit": 1,
+   "lastLine": "AssertionError: the static census names another commit",
+   "wroteTheRecord": false,
+   "expectedMessage": "the static census names another commit",
+   "refused": true
+  },
+  "sampler-record-missing": {
+   "exit": 1,
+   "lastLine": "FileNotFoundError: [Errno 2] No such file or directory: '/tmp/r522i/sampler-record-missing/runs/k2-kill-75s.samples.json'",
+   "wroteTheRecord": false,
+   "expectedMessage": "FileNotFoundError",
+   "refused": true
+  }
+ },
+ "holds": true
+}

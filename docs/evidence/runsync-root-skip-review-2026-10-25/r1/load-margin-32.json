@@ -1,0 +1,81 @@
+{
+ "tool": "rev-525/tools/load_margin.py",
+ "copies": 32,
+ "wallSeconds": 30.2,
+ "exitCodes": [
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0
+ ],
+ "rows": 480,
+ "runSyncRows": 384,
+ "failed": 0,
+ "slowestRunSync": [
+  {
+   "name": "[\"--help\"] prints the usage and exits 0",
+   "status": "passed",
+   "ms": 4382
+  },
+  {
+   "name": "[\"--port\",\"0\",\"dossier\"] is refused with exit 1 and the same message",
+   "status": "passed",
+   "ms": 3961
+  },
+  {
+   "name": "[\"-h\"] prints the usage and exits 0",
+   "status": "passed",
+   "ms": 3525
+  },
+  {
+   "name": "[\"--help\"] prints the usage and exits 0",
+   "status": "passed",
+   "ms": 3288
+  },
+  {
+   "name": "[\"Dossier\"] is refused with exit 1 and the same message",
+   "status": "passed",
+   "ms": 3268
+  }
+ ],
+ "load1Max": 75.75,
+ "loadFirst": [
+  "20.83",
+  "22.47",
+  "29.32"
+ ],
+ "loadLast": [
+  "73.72",
+  "35.55",
+  "33.48"
+ ],
+ "survivors": []
+}

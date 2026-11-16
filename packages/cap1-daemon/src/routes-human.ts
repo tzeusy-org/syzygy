@@ -1,5 +1,7 @@
 import {
   aggregate,
+  consentDecisionTuple,
+  evaluationId,
   coverageBoundary,
   explainAnswer,
   extractDistinctions,
@@ -16,12 +18,16 @@ import {
   type ExplanationFactSet,
   type FacetAnswer,
   type HumanView,
+  type ConsentCitation,
   type RepositoryCoverage,
   type ServedFact,
+  type UntrustedConsentRecordView,
 } from '@syzygy/cap1-core';
+import { escapeHtml, type Route, type RouteResponse } from '@syzygy/http-host';
 
-import type { Route, RouteResponse } from './server.js';
 import type { ProjectEvaluation } from './pipeline.js';
+
+export { escapeHtml };
 
 // RT5 — the server-rendered human page and the "Why this answer?"
 // explanation drawer (CAP1-REQ-020…023, 040…046, 050…053), plus the
@@ -62,11 +68,11 @@ export const HUMAN_ENTRY_ROUTE_PATH = '/entry' as const;
 
 // --- Injected dependencies ----------------------------------------------
 
-// The entry document's source, read from disk BY THE COMPOSITION ROOT —
-// a named result, so an unreadable entry arrives as its named state and
-// renders honestly (CAP1-REQ-022), never as a thrown error and never as
-// a fake page. This module defines the type; it never touches the
-// filesystem itself.
+// The entry document's source as the capture recorded it — a named
+// result, so an unreadable entry arrives as its named state and renders
+// honestly (CAP1-REQ-022), never as a thrown error and never as a fake
+// page. The route never touches the filesystem: it renders the bytes the
+// evaluation's capture read, or the named reason none were read.
 export type EntrySourceRead =
   | { readonly state: 'present'; readonly text: string }
   | { readonly state: 'absent' }
@@ -77,12 +83,6 @@ export interface HumanRouteDependencies {
   // is composed over, so both channels serve identical fact sets by
   // construction (CAP1-REQ-041/043).
   readonly getEvaluation: () => ProjectEvaluation | Promise<ProjectEvaluation>;
-  // Reads the entry document at its fixed publication location,
-  // relative to the observed repository root. Called with
-  // HUMAN_ENTRY_PATH verbatim — the read subject is not configurable.
-  readonly readEntrySource: (
-    entryPath: typeof HUMAN_ENTRY_PATH,
-  ) => EntrySourceRead | Promise<EntrySourceRead>;
   // Authority citations the entry routes its reader to (CAP1-REQ-021).
   // Supplied by composition; absence renders as an empty citation list,
   // never as invented citations.
@@ -104,17 +104,9 @@ export interface HumanRouteDependencies {
 
 // --- HTML escaping -------------------------------------------------------
 
-// Every interpolated value passes through here: observed-file content is
-// untrusted. Escapes the five characters that can change HTML context,
-// so escaped output is safe in both text and double-quoted attributes.
-export function escapeHtml(value: string): string {
-  return value
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-}
+// Every interpolated value passes through escapeHtml, which the host
+// package owns (@syzygy/http-host, syzygy-bpyt.7.3) and this module
+// re-exports, as it did when the function was defined here.
 
 function attr(name: string, value: string): string {
   return ` ${name}="${escapeHtml(value)}"`;
@@ -246,10 +238,53 @@ function knownReferences(evaluation: EvaluatedArm): ReadonlySet<string> {
     : []) {
     known.add(entry.id);
   }
-  for (const record of evaluation.consent.records) {
-    known.add(record.id);
+  for (const input of evaluation.capture.consentInputs) {
+    if (input.artifact.state === 'loaded') known.add(input.artifact.record.id);
   }
   return known;
+}
+
+// CAP1-REQ-046 v1.0: the consent decision per repository, as text — the
+// same tuple the machine answer carries (`consentDecisionTuple`), each
+// field readable without colour, position or hover, inside the
+// keyboard-reachable explanation (a native <details>).
+export const CONSENT_EFFECT_DISCLAIMER =
+  'Consent authorizes observation only; it is not evidence that any effect succeeded.';
+
+function renderConsentDecisions(evaluation: EvaluatedArm): string {
+  const id = evaluationId(evaluation.model.evaluation);
+  const items = evaluation.consentDecisions.map((decision) => {
+    const tuple = consentDecisionTuple(decision);
+    const base =
+      attr('data-consent-decision', tuple.repositoryId) +
+      attr('data-consent-reference', tuple.reference) +
+      attr('data-consent-authorization', tuple.authorization) +
+      attr('data-evaluation-id', id);
+    if (tuple.authorization === 'admitted') {
+      const a1 =
+        tuple.a1AuditRecord === null || typeof tuple.a1AuditRecord === 'string'
+          ? 'explicitly absent'
+          : `${tuple.a1AuditRecord.id} (${tuple.a1AuditRecord.digest})`;
+      return (
+        `<li${base}${attr('data-consent-provenance', tuple.provenance ?? '')}>` +
+        `${escapeHtml(tuple.repositoryId)}: observation admitted — provenance ${escapeHtml(tuple.provenance ?? '')}; ` +
+        `consent artifact ${escapeHtml(tuple.artifactId ?? '')} (${escapeHtml(tuple.artifactDigest ?? '')}); ` +
+        `owner act ${escapeHtml(tuple.actId ?? '')} (${escapeHtml(tuple.actRecordDigest ?? '')}) by ${escapeHtml(tuple.owner ?? '')} at ${escapeHtml(tuple.actInstant ?? '')}, scope ${escapeHtml(tuple.scope ?? '')}; ` +
+        `A1 audit identity: ${escapeHtml(a1)}; evaluation ${escapeHtml(id)}.</li>`
+      );
+    }
+    const untrusted = tuple.untrustedRecord;
+    const untrustedText =
+      untrusted === null
+        ? ''
+        : ` Recorded consent ${escapeHtml(untrusted.recordId)} (${escapeHtml(untrusted.artifactDigest)}) — untrusted content, not honored: project ${escapeHtml(untrusted.projectId)}, repository ${escapeHtml(untrusted.repositoryId)}, scope ${escapeHtml(untrusted.scope)}, attribution ${escapeHtml(untrusted.attribution)}, grant state ${escapeHtml(untrusted.grantState)}.`;
+    return (
+      `<li${base}${attr('data-epistemic-label', 'Unknown')}${attr('data-unknown-reason', tuple.reason ?? '')}${attr('data-consent-diagnostic', tuple.diagnostic ?? '')}${attr('data-consent-diagnostic-reference', tuple.diagnosticReference ?? '')}${attr('data-resolution-route', tuple.route ?? '')}>` +
+      `${escapeHtml(tuple.repositoryId)}: authorization Unknown — reason ${escapeHtml(tuple.reason ?? '')}; diagnostic ${escapeHtml(tuple.diagnostic ?? '')} (reference ${escapeHtml(tuple.diagnosticReference ?? '')}); route ${escapeHtml(tuple.route ?? '')}; evaluation ${escapeHtml(id)}.` +
+      `${untrustedText}</li>`
+    );
+  });
+  return `<ul>${items.join('')}</ul><p>${escapeHtml(CONSENT_EFFECT_DISCLAIMER)}</p>`;
 }
 
 function renderDrawer(evaluation: EvaluatedArm, answer: FacetAnswer): string {
@@ -297,6 +332,9 @@ function renderDrawer(evaluation: EvaluatedArm, answer: FacetAnswer): string {
       `<dt>Unknown reasons</dt><dd${attr('data-unknown-reason-primary', factSet.unknownReasons.primary)}>primary: ${escapeHtml(factSet.unknownReasons.primary)}; secondary: [${escapeHtml(factSet.unknownReasons.secondary.join(', '))}]</dd>`,
     );
   }
+  rows.push(
+    `<dt>Consent decisions</dt><dd>${renderConsentDecisions(evaluation)}</dd>`,
+  );
   if (boundary !== undefined) {
     rows.push(
       `<dt>Coverage and consent boundary</dt><dd>${boundary.records
@@ -338,41 +376,125 @@ function renderDrawer(evaluation: EvaluatedArm, answer: FacetAnswer): string {
 
 // --- Coverage and consent (CAP1-REQ-010…016 exposure on the page) ----------
 
+// One coverage row: every field of the core `RepositoryCoverage` entry
+// travels as a data-* attribute on the row AND as literal text, so the
+// whole tuple is recoverable without colour, position or hover
+// (CAP1-REQ-064) and the machine channel's `coverageBoundary` row can be
+// compared to it field by field (CAP1-REQ-041). Scope, attribution and grant
+// state render with the boundary (CAP1-REQ-011).
+function citationAttrs(citation: ConsentCitation): string {
+  return (
+    attr('data-consent-record-reference', citation.reference) +
+    attr('data-consent-record-id', citation.recordId) +
+    attr('data-consent-record-digest', citation.artifactDigest) +
+    attr('data-consent-scope', citation.scope) +
+    attr('data-consent-attribution', citation.attribution) +
+    attr('data-consent-grant-state', citation.grantState) +
+    attr('data-consent-provenance', citation.provenance)
+  );
+}
+
+function citationText(citation: ConsentCitation): string {
+  return (
+    `consent record ${escapeHtml(citation.recordId)} (${escapeHtml(citation.artifactDigest)}) via reference ${escapeHtml(citation.reference)}: ` +
+    `scope ${escapeHtml(citation.scope)}, attribution ${escapeHtml(citation.attribution)}, grant state ${escapeHtml(citation.grantState)}, provenance ${escapeHtml(citation.provenance)}`
+  );
+}
+
+function untrustedAttrs(view: UntrustedConsentRecordView | null): string {
+  if (view === null) return '';
+  return (
+    attr('data-untrusted-trust', view.trust) +
+    attr('data-untrusted-record-id', view.recordId) +
+    attr('data-untrusted-record-digest', view.artifactDigest) +
+    attr('data-untrusted-project-id', view.projectId) +
+    attr('data-untrusted-repository-id', view.repositoryId) +
+    attr('data-untrusted-scope', view.scope) +
+    attr('data-untrusted-attribution', view.attribution) +
+    attr('data-untrusted-grant-state', view.grantState)
+  );
+}
+
+function untrustedText(view: UntrustedConsentRecordView | null): string {
+  if (view === null) return '';
+  return (
+    ` Recorded consent ${escapeHtml(view.recordId)} (${escapeHtml(view.artifactDigest)}) — ${escapeHtml(view.trust)}, not honored: ` +
+    `project ${escapeHtml(view.projectId)}, repository ${escapeHtml(view.repositoryId)}, scope ${escapeHtml(view.scope)}, attribution ${escapeHtml(view.attribution)}, grant state ${escapeHtml(view.grantState)}.`
+  );
+}
+
+function coverageRow(attrs: string, text: string): string {
+  return `<span class="coverage-record"${attrs}>${text}</span> `;
+}
+
 function renderBoundaryRecord(record: RepositoryCoverage): string {
-  const base = attr('data-repository-id', record.repositoryId);
+  const base =
+    attr('data-repository-id', record.repositoryId) + attr('data-coverage-state', record.state);
+  const repo = escapeHtml(record.repositoryId);
   switch (record.state) {
     case 'observed':
-      return (
-        `<span class="coverage-record"${base}${attr('data-coverage-state', record.state)}${attr('data-consent-state', record.consent.grantState)}>` +
-        `${escapeHtml(record.repositoryId)}: observed; consent ${escapeHtml(record.consent.recordId)} ${escapeHtml(record.consent.grantState)}; captured scope ${escapeHtml(record.capturedScope)}</span> `
+      return coverageRow(
+        base +
+          attr('data-consent-state', record.consent.grantState) +
+          attr('data-captured-scope', record.capturedScope) +
+          citationAttrs(record.consent),
+        `${repo}: observed; captured scope ${escapeHtml(record.capturedScope)}; ${citationText(record.consent)}`,
       );
     case 'unconsented': {
-      // R-S2 finding #4: a withdrawn pair cites WHICH withdrawal record
-      // defeated the grant, the same way an in-force citation names its
-      // record below — a record-absence unconsented entry has no record
-      // to cite, so it renders exactly as before.
-      const citation = record.basis === 'withdrawn' ? record.consent : undefined;
-      const citationAttrs =
-        citation !== undefined ? attr('data-withdrawn-record-id', citation.recordId) : '';
-      const citationText =
-        citation !== undefined
-          ? ` Withdrawn consent ${escapeHtml(citation.recordId)} (${escapeHtml(citation.grantState)}).`
-          : '';
-      return (
-        `<span class="coverage-record"${base}${attr('data-coverage-state', record.state)}${attr('data-consent-state', 'unconsented')}${citationAttrs}${attr('data-epistemic-label', record.label)}${attr('data-unknown-reason', record.reason)}${attr('data-presentation', record.presentation)}>` +
-        `${escapeHtml(record.repositoryId)}: ${escapeHtml(record.label)} — ${escapeHtml(record.reason)} (a standing policy state; resolution route: ${escapeHtml(record.resolutionRoute)}).${citationText}</span> `
+      const unknown =
+        attr('data-epistemic-label', record.label) +
+        attr('data-unknown-reason', record.reason) +
+        attr('data-presentation', record.presentation) +
+        attr('data-policy-resolution-route', record.resolutionRoute) +
+        attr('data-coverage-basis', record.basis) +
+        attr('data-consent-reference', record.reference) +
+        attr('data-resolution-route', record.route);
+      const lead =
+        `${repo}: ${escapeHtml(record.label)} — ${escapeHtml(record.reason)} (a standing policy state; resolution route: ${escapeHtml(record.resolutionRoute)}). ` +
+        `Declared consent reference ${escapeHtml(record.reference)}; `;
+      if (record.basis === 'withdrawn') {
+        // R-S2 finding #4: a withdrawn pair cites WHICH withdrawal record
+        // defeated the grant.
+        return coverageRow(
+          base +
+            attr('data-consent-state', 'unconsented') +
+            unknown +
+            attr('data-withdrawn-record-id', record.consent.recordId) +
+            citationAttrs(record.consent) +
+            untrustedAttrs(record.untrustedRecord),
+          `${lead}withdrawn by ${citationText(record.consent)}; route ${escapeHtml(record.route)}.${untrustedText(record.untrustedRecord)}`,
+        );
+      }
+      return coverageRow(
+        base +
+          attr('data-consent-state', 'unconsented') +
+          unknown +
+          attr('data-consent-diagnostic', record.diagnostic) +
+          attr('data-consent-diagnostic-reference', record.diagnosticReference) +
+          untrustedAttrs(record.untrustedRecord),
+        `${lead}diagnostic ${escapeHtml(record.diagnostic)} (reference ${escapeHtml(record.diagnosticReference)}); route ${escapeHtml(record.route)}.${untrustedText(record.untrustedRecord)}`,
       );
     }
     case 'capture-failed':
     case 'stale':
-      return (
-        `<span class="coverage-record"${base}${attr('data-coverage-state', record.state)}${attr('data-consent-state', record.consent.grantState)}${attr('data-epistemic-label', record.label)}${attr('data-unknown-reason', record.reason)}>` +
-        `${escapeHtml(record.repositoryId)}: ${escapeHtml(record.label)} — ${escapeHtml(record.reason)}; consent ${escapeHtml(record.consent.recordId)} ${escapeHtml(record.consent.grantState)}</span> `
+      return coverageRow(
+        base +
+          attr('data-consent-state', record.consent.grantState) +
+          attr('data-epistemic-label', record.label) +
+          attr('data-unknown-reason', record.reason) +
+          citationAttrs(record.consent),
+        `${repo}: ${escapeHtml(record.label)} — ${escapeHtml(record.reason)}; ${citationText(record.consent)}`,
       );
     case 'degraded-partial':
-      return (
-        `<span class="coverage-record"${base}${attr('data-coverage-state', record.state)}${attr('data-consent-state', record.consent.grantState)}${attr('data-uncaptured-reason', record.uncaptured.reason)}>` +
-        `${escapeHtml(record.repositoryId)}: partial — captured ${escapeHtml(record.capturedScope)} of ${escapeHtml(record.declaredScope)}; remainder ${escapeHtml(record.uncaptured.label)} (${escapeHtml(record.uncaptured.reason)})</span> `
+      return coverageRow(
+        base +
+          attr('data-consent-state', record.consent.grantState) +
+          attr('data-captured-scope', record.capturedScope) +
+          attr('data-declared-scope', record.declaredScope) +
+          attr('data-uncaptured-label', record.uncaptured.label) +
+          attr('data-uncaptured-reason', record.uncaptured.reason) +
+          citationAttrs(record.consent),
+        `${repo}: partial — captured ${escapeHtml(record.capturedScope)} of ${escapeHtml(record.declaredScope)}; remainder ${escapeHtml(record.uncaptured.label)} (${escapeHtml(record.uncaptured.reason)}); ${citationText(record.consent)}`,
       );
   }
 }
@@ -591,6 +713,32 @@ function renderEvaluatedPage(
 function renderDegradedPage(
   evaluation: Exclude<ProjectEvaluation, EvaluatedArm>,
 ): string {
+  if (evaluation.kind === 'capture-failed') {
+    const failure = evaluation.failure;
+    const changed =
+      failure.kind === 'source-changed-during-capture'
+        ? `<ul class="changed">${failure.changed
+            .map(
+              (input) =>
+                `<li${attr('data-changed-kind', input.kind)}${attr('data-changed-subject', input.subjectId)}>${escapeHtml(input.kind)}: ${escapeHtml(input.subjectId)}</li>`,
+            )
+            .join('')}</ul>`
+        : '';
+    const body =
+      '<header><h1>No project evaluated</h1></header>' +
+      '<section data-section="degradation">' +
+      `<p${attr('data-capture-failure', failure.kind)} data-epistemic-label="Unknown">` +
+      `The capture failed (${escapeHtml(failure.kind)}); nothing was evaluated and no partial snapshot is served. Nothing is retried.</p>` +
+      changed +
+      '</section>';
+    return page(
+      'No project evaluated',
+      attr('data-evaluation-kind', evaluation.kind) +
+        ' data-non-citable="true" data-artifact-class="presentation-artifact"',
+      body,
+    );
+  }
+
   if (evaluation.kind === 'no-declaration-observed') {
     const observation = evaluation.declarationObservation;
     const body =
@@ -630,6 +778,26 @@ function renderDegradedPage(
 }
 
 // --- The entry document route (CAP1-REQ-020…023) ---------------------------
+
+// The entry as the evaluation's capture holds it. The capture read the
+// entry only when the governance root's consent was admitted (CAP1-REQ-016);
+// otherwise the entry is Unknown for that reason — never re-read here.
+function entrySourceFrom(evaluation: ProjectEvaluation): EntrySourceRead {
+  if (evaluation.kind === 'capture-failed') {
+    return { state: 'unreadable', reason: evaluation.failure.kind };
+  }
+  const entry = evaluation.capture.entry;
+  switch (entry.state) {
+    case 'captured':
+      return { state: 'present', text: entry.text };
+    case 'missing':
+      return { state: 'absent' };
+    case 'unreadable':
+      return { state: 'unreadable', reason: entry.failureCode };
+    case 'not-read':
+      return { state: 'unreadable', reason: 'unconsented-source-or-provider' };
+  }
+}
 
 function entryContentFrom(read: EntrySourceRead): EntryContent {
   switch (read.state) {
@@ -750,8 +918,10 @@ export function humanRoutes(deps: HumanRouteDependencies): Route[] {
       path: HUMAN_ENTRY_ROUTE_PATH,
       credentialClass: 'human-open',
       async handle(): Promise<RouteResponse> {
-        const read = await deps.readEntrySource(HUMAN_ENTRY_PATH);
-        return htmlResponse(renderEntryPage(read, deps.entryAuthorities ?? []));
+        const evaluation = await deps.getEvaluation();
+        return htmlResponse(
+          renderEntryPage(entrySourceFrom(evaluation), deps.entryAuthorities ?? []),
+        );
       },
     },
   ];

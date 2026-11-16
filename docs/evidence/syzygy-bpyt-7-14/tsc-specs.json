@@ -1,0 +1,154 @@
+{
+ "mutants": [
+  {
+   "id": "T-drop-CredentialInspection",
+   "edits": [
+    {
+     "file": "packages/cap1-daemon/src/credentials.ts",
+     "old": "  type CredentialInspection,\n",
+     "new": ""
+    }
+   ]
+  },
+  {
+   "id": "T-drop-CredentialProvision",
+   "edits": [
+    {
+     "file": "packages/cap1-daemon/src/credentials.ts",
+     "old": "  type CredentialProvision,\n",
+     "new": ""
+    }
+   ]
+  },
+  {
+   "id": "T-drop-CredentialStat",
+   "edits": [
+    {
+     "file": "packages/cap1-daemon/src/credentials.ts",
+     "old": "  type CredentialStat,\n",
+     "new": ""
+    }
+   ]
+  },
+  {
+   "id": "T-drop-StateWriteAuthorization",
+   "edits": [
+    {
+     "file": "packages/cap1-daemon/src/credentials.ts",
+     "old": "  type StateWriteAuthorization,\n",
+     "new": ""
+    }
+   ]
+  },
+  {
+   "id": "T-drop-StateWriteRefusalName",
+   "edits": [
+    {
+     "file": "packages/cap1-daemon/src/credentials.ts",
+     "old": "  type StateWriteRefusalName,\n",
+     "new": ""
+    }
+   ]
+  },
+  {
+   "id": "T-drop-CredentialClass",
+   "edits": [
+    {
+     "file": "packages/cap1-daemon/src/server.ts",
+     "old": "  type CredentialClass,\n",
+     "new": ""
+    }
+   ]
+  },
+  {
+   "id": "T-drop-DaemonOptions",
+   "edits": [
+    {
+     "file": "packages/cap1-daemon/src/server.ts",
+     "old": "  type DaemonOptions,\n",
+     "new": ""
+    }
+   ]
+  },
+  {
+   "id": "T-drop-DaemonStart",
+   "edits": [
+    {
+     "file": "packages/cap1-daemon/src/server.ts",
+     "old": "  type DaemonStart,\n",
+     "new": ""
+    }
+   ]
+  },
+  {
+   "id": "T-drop-Route",
+   "edits": [
+    {
+     "file": "packages/cap1-daemon/src/server.ts",
+     "old": "  type Route,\n",
+     "new": ""
+    }
+   ]
+  },
+  {
+   "id": "T-drop-RouteContext",
+   "edits": [
+    {
+     "file": "packages/cap1-daemon/src/server.ts",
+     "old": "  type RouteContext,\n",
+     "new": ""
+    }
+   ]
+  },
+  {
+   "id": "T-drop-RouteRequest",
+   "edits": [
+    {
+     "file": "packages/cap1-daemon/src/server.ts",
+     "old": "  type RouteRequest,\n",
+     "new": ""
+    }
+   ]
+  },
+  {
+   "id": "T-drop-RouteResponse",
+   "edits": [
+    {
+     "file": "packages/cap1-daemon/src/server.ts",
+     "old": "  type RouteResponse,\n",
+     "new": ""
+    }
+   ]
+  },
+  {
+   "id": "T-drop-RunningDaemon",
+   "edits": [
+    {
+     "file": "packages/cap1-daemon/src/server.ts",
+     "old": "  type RunningDaemon,\n",
+     "new": ""
+    }
+   ]
+  },
+  {
+   "id": "T-swap-RouteContext",
+   "edits": [
+    {
+     "file": "packages/cap1-daemon/src/server.ts",
+     "old": "  type RouteContext,\n",
+     "new": "  type RouteRequest as RouteContext,\n"
+    }
+   ]
+  },
+  {
+   "id": "T-swap-CredentialStat",
+   "edits": [
+    {
+     "file": "packages/cap1-daemon/src/credentials.ts",
+     "old": "  type CredentialStat,\n",
+     "new": "  type CredentialInspection as CredentialStat,\n"
+    }
+   ]
+  }
+ ]
+}

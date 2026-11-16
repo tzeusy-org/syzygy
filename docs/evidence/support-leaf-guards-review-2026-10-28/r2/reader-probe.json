@@ -1,0 +1,27 @@
+{
+ "testkit": "packages/support/src/purity.testkit.ts at ecea355b",
+ "reads": [
+  [
+   "export const value = () => import ('node:crypto');",
+   [
+    "node:crypto"
+   ]
+  ],
+  [
+   "import value = require ('node:crypto');",
+   [
+    "node:crypto"
+   ]
+  ],
+  [
+   "void import (value);",
+   []
+  ],
+  [
+   "const fs = await import ('node:fs');",
+   [
+    "node:fs"
+   ]
+  ]
+ ]
+}

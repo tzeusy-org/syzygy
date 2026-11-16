@@ -1,0 +1,57 @@
+{
+ "commit": "81862261ddbc2b3c8e8481851f3c27129217d477",
+ "record": "docs/evidence/syzygy-bpyt-8-39/record.py",
+ "recordSha256": "e4e27739587babcbb10e2b601b1b356987e824fda747a2dcc856e97f1bcedc1b",
+ "clean": true,
+ "rows": [
+  {
+   "id": "S0-unmutated",
+   "old": null,
+   "new": null,
+   "exit": 0,
+   "survived": [],
+   "tally": "selftest: 74/74",
+   "expected": [],
+   "asExpected": true
+  },
+  {
+   "id": "S5-path-test-dropped",
+   "old": "    if since != [KIT] or not late or any(late_spans[s] is None or not late_spans[s][0] < n <= late_spans[s][1] or not re.match(r' \\* ', text)\n",
+   "new": "    if not late or any(late_spans[s] is None or not late_spans[s][0] < n <= late_spans[s][1] or not re.match(r' \\* ', text)\n",
+   "exit": 0,
+   "survived": [],
+   "tally": "selftest: 74/74",
+   "expected": [
+    "a non-evidence path changed since the suite ran"
+   ],
+   "asExpected": false
+  },
+  {
+   "id": "S4-prefix-test-dropped",
+   "old": "    if since != [KIT] or not late or any(late_spans[s] is None or not late_spans[s][0] < n <= late_spans[s][1] or not re.match(r' \\* ', text)\n",
+   "new": "    if since != [KIT] or not late or any(late_spans[s] is None or not late_spans[s][0] < n <= late_spans[s][1]\n",
+   "exit": 0,
+   "survived": [],
+   "tally": "selftest: 74/74",
+   "expected": [
+    "a non-comment line inside the span since the suite ran"
+   ],
+   "asExpected": false
+  },
+  {
+   "id": "S6-span-test-dropped",
+   "old": "    if since != [KIT] or not late or any(late_spans[s] is None or not late_spans[s][0] < n <= late_spans[s][1] or not re.match(r' \\* ', text)\n",
+   "new": "    if since != [KIT] or not late or any(late_spans[s] is None or not re.match(r' \\* ', text)\n",
+   "exit": 1,
+   "survived": [
+    "a comment line changed since the suite ran on the LOCAL_VERSION line"
+   ],
+   "tally": "selftest: 73/74",
+   "expected": [
+    "a comment line changed since the suite ran on the LOCAL_VERSION line"
+   ],
+   "asExpected": true
+  }
+ ],
+ "allAsExpected": false
+}

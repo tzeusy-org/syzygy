@@ -1,0 +1,9 @@
+R-Y6-extra-namespace-call-in-cli survives 0 ['Tests  74 passed (74)'] 5.1 clean
+R-Y7-extra-aliased-call-in-cli survives 0 ['Tests  74 passed (74)'] 4.6 clean
+R-X6-package-imports-alias-to-the-barrel survives 0 ['Tests  27 passed (27)'] 5.4 clean
+R-X6b-package-imports-alias-in-an-intermediate-module survives 0 ['Tests  27 passed (27)'] 4.7 clean
+R-X6i-island-package-imports-alias-to-consent-root survives 0 ['Tests  4 passed (4)'] 5.2 clean
+R-X6j-island-control-same-edge-by-name killed 1 ['Tests  1 failed | 3 passed (4)'] 5.9 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > reaches no island module from the CLI entry
+R-X9-node-condition-ahead-of-import-in-the-argv-export survives 0 ['Tests  27 passed (27)'] 4.3 clean
+wrote named-base.json 7

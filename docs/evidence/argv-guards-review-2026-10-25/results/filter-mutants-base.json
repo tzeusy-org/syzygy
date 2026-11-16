@@ -1,0 +1,64 @@
+{
+ "tree": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-524/base",
+ "head": "3ec6929951080613b3c5cb7205fe303c5449be58",
+ "results": [
+  {
+   "id": "R-IF1b-into-island-never-recorded",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 3 passed (4)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > reaches the island from the consent package root, which the CLI does not import"
+   ],
+   "timeouts": 0,
+   "seconds": 4.0,
+   "counts": [
+    {
+     "file": "packages/polaris-generation-core/src/island-boundary.test.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/island-boundary.test.ts",
+     "old": "      if (island.has(to) && !island.has(file)) intoIsland.push({ from: file, specifier, to });",
+     "new": "      if (false) intoIsland.push({ from: file, specifier, to });"
+    }
+   ]
+  },
+  {
+   "id": "R-IF2b-into-island-from-island-counted",
+   "outcome": "survives",
+   "exit": 0,
+   "tests": [
+    "Tests  4 passed (4)"
+   ],
+   "testFiles": [
+    "Test Files  1 passed (1)"
+   ],
+   "failed": [],
+   "timeouts": 0,
+   "seconds": 4.2,
+   "counts": [
+    {
+     "file": "packages/polaris-generation-core/src/island-boundary.test.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/island-boundary.test.ts",
+     "old": "      if (island.has(to) && !island.has(file)) intoIsland.push({ from: file, specifier, to });",
+     "new": "      if (island.has(to)) intoIsland.push({ from: file, specifier, to });"
+    }
+   ]
+  }
+ ]
+}

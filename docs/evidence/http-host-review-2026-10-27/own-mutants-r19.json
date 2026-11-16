@@ -1,0 +1,40 @@
+{
+ "commit": "c68fc5ca6ec99a08c118e112df362bfa8ab01070",
+ "mutants": [
+  {
+   "id": "R19-state-write-containment-without-separator",
+   "file": "packages/http-host/src/credentials.ts",
+   "old": "  return candidate === root || candidate.startsWith(root + path.sep);",
+   "new": "  return candidate === root || candidate.startsWith(root);",
+   "commit": "c68fc5ca6ec99a08c118e112df362bfa8ab01070",
+   "files": [
+    "packages/http-host/src/credentials.test.ts",
+    "packages/http-host/src/shutdown.test.ts",
+    "packages/http-host/src/package.test.ts",
+    "packages/cap1-daemon/src/",
+    "packages/cap1-conformance/src/",
+    "apps/three-surface-poc/src/routes.test.ts",
+    "apps/three-surface-poc/src/response-limits.test.ts",
+    "apps/three-surface-poc/src/main.test.ts",
+    "apps/three-surface-poc/src/surface-routes.test.ts",
+    "apps/three-surface-poc/src/reobserve-action.test.ts",
+    "apps/three-surface-poc/src/materialize-action.test.ts",
+    "apps/three-surface-poc/src/browser-origin.test.ts",
+    "apps/three-surface-poc/src/git-observation.test.ts",
+    "apps/three-surface-poc/src/verbatim-route.test.ts",
+    "apps/three-surface-poc/src/polaris-source-route.test.ts",
+    "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+    "apps/three-surface-poc/src/evaluation-footer.test.ts",
+    "apps/three-surface-poc/src/page-size-delta.test.ts",
+    "apps/three-surface-poc/src/tuple-encoding.test.ts"
+   ],
+   "exit": 0,
+   "failedTests": 0,
+   "failedFiles": 0,
+   "totalTests": 571,
+   "outcome": "survived",
+   "cleanAfter": true,
+   "failedTitles": []
+  }
+ ]
+}

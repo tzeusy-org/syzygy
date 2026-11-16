@@ -1,0 +1,708 @@
+{
+ "rows": [
+  {
+   "driver": "authority-consent",
+   "input": "empty",
+   "reachedDecode": true,
+   "decoderRefused": false,
+   "calls": 1,
+   "outcome": "{\"kind\":\"parsed\",\"fields\":{\"observingProject\":{\"kind\":\"missing\"},\"configuredRepository\":{\"kind\":\"missing\"},\"contentClass\":{\"kind\":\"missing\"}}}"
+  },
+  {
+   "driver": "authority-consent",
+   "input": "bom-only",
+   "reachedDecode": true,
+   "decoderRefused": false,
+   "calls": 1,
+   "outcome": "{\"kind\":\"parsed\",\"fields\":{\"observingProject\":{\"kind\":\"missing\"},\"configuredRepository\":{\"kind\":\"missing\"},\"contentClass\":{\"kind\":\"missing\"}}}"
+  },
+  {
+   "driver": "authority-consent",
+   "input": "bom-led-text",
+   "reachedDecode": true,
+   "decoderRefused": false,
+   "calls": 1,
+   "outcome": "{\"kind\":\"parsed\",\"fields\":{\"observingProject\":{\"kind\":\"missing\"},\"configuredRepository\":{\"kind\":\"missing\"},\"contentClass\":{\"kind\":\"missing\"}}}"
+  },
+  {
+   "driver": "authority-consent",
+   "input": "bom-led-consent",
+   "reachedDecode": true,
+   "decoderRefused": false,
+   "calls": 1,
+   "outcome": "{\"kind\":\"parsed\",\"fields\":{\"observingProject\":{\"kind\":\"present\",\"value\":\"project:syzygy\"},\"configuredRepository\":{\"kind\":\"present\",\"value\":\"repository:butlers\"}"
+  },
+  {
+   "driver": "authority-consent",
+   "input": "truncated-3-at-end",
+   "reachedDecode": true,
+   "decoderRefused": true,
+   "calls": 1,
+   "outcome": "{\"kind\":\"undecodable\",\"detail\":\"not strict UTF-8\"}"
+  },
+  {
+   "driver": "authority-consent",
+   "input": "truncated-4-at-end",
+   "reachedDecode": true,
+   "decoderRefused": true,
+   "calls": 1,
+   "outcome": "{\"kind\":\"undecodable\",\"detail\":\"not strict UTF-8\"}"
+  },
+  {
+   "driver": "authority-consent",
+   "input": "surrogate-ed-a0-80",
+   "reachedDecode": true,
+   "decoderRefused": true,
+   "calls": 1,
+   "outcome": "{\"kind\":\"undecodable\",\"detail\":\"not strict UTF-8\"}"
+  },
+  {
+   "driver": "authority-consent",
+   "input": "overlong-c0-80",
+   "reachedDecode": true,
+   "decoderRefused": true,
+   "calls": 1,
+   "outcome": "{\"kind\":\"undecodable\",\"detail\":\"not strict UTF-8\"}"
+  },
+  {
+   "driver": "authority-consent",
+   "input": "overlong-e0-80-af",
+   "reachedDecode": true,
+   "decoderRefused": true,
+   "calls": 1,
+   "outcome": "{\"kind\":\"undecodable\",\"detail\":\"not strict UTF-8\"}"
+  },
+  {
+   "driver": "authority-consent",
+   "input": "overlong-f0-80-80-af",
+   "reachedDecode": true,
+   "decoderRefused": true,
+   "calls": 1,
+   "outcome": "{\"kind\":\"undecodable\",\"detail\":\"not strict UTF-8\"}"
+  },
+  {
+   "driver": "authority-consent",
+   "input": "bom-then-bad",
+   "reachedDecode": true,
+   "decoderRefused": true,
+   "calls": 1,
+   "outcome": "{\"kind\":\"undecodable\",\"detail\":\"not strict UTF-8\"}"
+  },
+  {
+   "driver": "authority-policy",
+   "input": "empty",
+   "reachedDecode": true,
+   "decoderRefused": false,
+   "calls": 1,
+   "outcome": "{\"kind\":\"undecodable\",\"detail\":\"not JSON\"}"
+  },
+  {
+   "driver": "authority-policy",
+   "input": "bom-only",
+   "reachedDecode": true,
+   "decoderRefused": false,
+   "calls": 1,
+   "outcome": "{\"kind\":\"undecodable\",\"detail\":\"not JSON\"}"
+  },
+  {
+   "driver": "authority-policy",
+   "input": "bom-led-text",
+   "reachedDecode": true,
+   "decoderRefused": false,
+   "calls": 1,
+   "outcome": "{\"kind\":\"undecodable\",\"detail\":\"not JSON\"}"
+  },
+  {
+   "driver": "authority-policy",
+   "input": "bom-led-consent",
+   "reachedDecode": true,
+   "decoderRefused": false,
+   "calls": 1,
+   "outcome": "{\"kind\":\"undecodable\",\"detail\":\"not JSON\"}"
+  },
+  {
+   "driver": "authority-policy",
+   "input": "truncated-3-at-end",
+   "reachedDecode": true,
+   "decoderRefused": true,
+   "calls": 1,
+   "outcome": "{\"kind\":\"undecodable\",\"detail\":\"not strict UTF-8\"}"
+  },
+  {
+   "driver": "authority-policy",
+   "input": "truncated-4-at-end",
+   "reachedDecode": true,
+   "decoderRefused": true,
+   "calls": 1,
+   "outcome": "{\"kind\":\"undecodable\",\"detail\":\"not strict UTF-8\"}"
+  },
+  {
+   "driver": "authority-policy",
+   "input": "surrogate-ed-a0-80",
+   "reachedDecode": true,
+   "decoderRefused": true,
+   "calls": 1,
+   "outcome": "{\"kind\":\"undecodable\",\"detail\":\"not strict UTF-8\"}"
+  },
+  {
+   "driver": "authority-policy",
+   "input": "overlong-c0-80",
+   "reachedDecode": true,
+   "decoderRefused": true,
+   "calls": 1,
+   "outcome": "{\"kind\":\"undecodable\",\"detail\":\"not strict UTF-8\"}"
+  },
+  {
+   "driver": "authority-policy",
+   "input": "overlong-e0-80-af",
+   "reachedDecode": true,
+   "decoderRefused": true,
+   "calls": 1,
+   "outcome": "{\"kind\":\"undecodable\",\"detail\":\"not strict UTF-8\"}"
+  },
+  {
+   "driver": "authority-policy",
+   "input": "overlong-f0-80-80-af",
+   "reachedDecode": true,
+   "decoderRefused": true,
+   "calls": 1,
+   "outcome": "{\"kind\":\"undecodable\",\"detail\":\"not strict UTF-8\"}"
+  },
+  {
+   "driver": "authority-policy",
+   "input": "bom-then-bad",
+   "reachedDecode": true,
+   "decoderRefused": true,
+   "calls": 1,
+   "outcome": "{\"kind\":\"undecodable\",\"detail\":\"not strict UTF-8\"}"
+  },
+  {
+   "driver": "authority-registry",
+   "input": "empty",
+   "reachedDecode": true,
+   "decoderRefused": false,
+   "calls": 1,
+   "outcome": "{\"kind\":\"undecodable\",\"detail\":\"not JSON\"}"
+  },
+  {
+   "driver": "authority-registry",
+   "input": "bom-only",
+   "reachedDecode": true,
+   "decoderRefused": false,
+   "calls": 1,
+   "outcome": "{\"kind\":\"undecodable\",\"detail\":\"not JSON\"}"
+  },
+  {
+   "driver": "authority-registry",
+   "input": "bom-led-text",
+   "reachedDecode": true,
+   "decoderRefused": false,
+   "calls": 1,
+   "outcome": "{\"kind\":\"undecodable\",\"detail\":\"not JSON\"}"
+  },
+  {
+   "driver": "authority-registry",
+   "input": "bom-led-consent",
+   "reachedDecode": true,
+   "decoderRefused": false,
+   "calls": 1,
+   "outcome": "{\"kind\":\"undecodable\",\"detail\":\"not JSON\"}"
+  },
+  {
+   "driver": "authority-registry",
+   "input": "truncated-3-at-end",
+   "reachedDecode": true,
+   "decoderRefused": true,
+   "calls": 1,
+   "outcome": "{\"kind\":\"undecodable\",\"detail\":\"not strict UTF-8\"}"
+  },
+  {
+   "driver": "authority-registry",
+   "input": "truncated-4-at-end",
+   "reachedDecode": true,
+   "decoderRefused": true,
+   "calls": 1,
+   "outcome": "{\"kind\":\"undecodable\",\"detail\":\"not strict UTF-8\"}"
+  },
+  {
+   "driver": "authority-registry",
+   "input": "surrogate-ed-a0-80",
+   "reachedDecode": true,
+   "decoderRefused": true,
+   "calls": 1,
+   "outcome": "{\"kind\":\"undecodable\",\"detail\":\"not strict UTF-8\"}"
+  },
+  {
+   "driver": "authority-registry",
+   "input": "overlong-c0-80",
+   "reachedDecode": true,
+   "decoderRefused": true,
+   "calls": 1,
+   "outcome": "{\"kind\":\"undecodable\",\"detail\":\"not strict UTF-8\"}"
+  },
+  {
+   "driver": "authority-registry",
+   "input": "overlong-e0-80-af",
+   "reachedDecode": true,
+   "decoderRefused": true,
+   "calls": 1,
+   "outcome": "{\"kind\":\"undecodable\",\"detail\":\"not strict UTF-8\"}"
+  },
+  {
+   "driver": "authority-registry",
+   "input": "overlong-f0-80-80-af",
+   "reachedDecode": true,
+   "decoderRefused": true,
+   "calls": 1,
+   "outcome": "{\"kind\":\"undecodable\",\"detail\":\"not strict UTF-8\"}"
+  },
+  {
+   "driver": "authority-registry",
+   "input": "bom-then-bad",
+   "reachedDecode": true,
+   "decoderRefused": true,
+   "calls": 1,
+   "outcome": "{\"kind\":\"undecodable\",\"detail\":\"not strict UTF-8\"}"
+  },
+  {
+   "driver": "object-reader",
+   "input": "empty",
+   "reachedDecode": true,
+   "decoderRefused": false,
+   "calls": 1,
+   "outcome": "{\"kind\":\"text\",\"text\":\"\",\"record\":{\"path\":\"about/heart-and-soul/vision.md\",\"objectId\":\"e69de29bb2d1d6434b8b29ae775ad8c2e48c5391\",\"bytes\":0,\"contentDigest\":\"sha2"
+  },
+  {
+   "driver": "object-reader",
+   "input": "bom-only",
+   "reachedDecode": true,
+   "decoderRefused": false,
+   "calls": 1,
+   "outcome": "{\"kind\":\"text\",\"text\":\"\",\"record\":{\"path\":\"about/heart-and-soul/vision.md\",\"objectId\":\"5f282702bb03ef11d7184d19c80927b47f919764\",\"bytes\":3,\"contentDigest\":\"sha2"
+  },
+  {
+   "driver": "object-reader",
+   "input": "bom-led-text",
+   "reachedDecode": true,
+   "decoderRefused": false,
+   "calls": 1,
+   "outcome": "{\"kind\":\"text\",\"text\":\"a\\n\",\"record\":{\"path\":\"about/heart-and-soul/vision.md\",\"objectId\":\"7a2a9ee4f512b845f3e1296343cfa646f2d47624\",\"bytes\":5,\"contentDigest\":\"s"
+  },
+  {
+   "driver": "object-reader",
+   "input": "bom-led-consent",
+   "reachedDecode": true,
+   "decoderRefused": false,
+   "calls": 1,
+   "outcome": "{\"kind\":\"text\",\"text\":\"Subject: `(project:syzygy, repository:butlers)`\\nObservation content class: `declared-project-shape-text`\\n\",\"record\":{\"path\":\"about/hear"
+  },
+  {
+   "driver": "object-reader",
+   "input": "truncated-3-at-end",
+   "reachedDecode": true,
+   "decoderRefused": true,
+   "calls": 1,
+   "outcome": "{\"kind\":\"unavailable\",\"record\":{\"path\":\"about/heart-and-soul/vision.md\",\"objectId\":\"05a6576769a2dbc85b3f4b8e5d9c9b56c0f61742\",\"bytes\":4,\"contentDigest\":\"sha256:"
+  },
+  {
+   "driver": "object-reader",
+   "input": "truncated-4-at-end",
+   "reachedDecode": true,
+   "decoderRefused": true,
+   "calls": 1,
+   "outcome": "{\"kind\":\"unavailable\",\"record\":{\"path\":\"about/heart-and-soul/vision.md\",\"objectId\":\"2656354579ca3eca7d6b36314f190c76350a7651\",\"bytes\":5,\"contentDigest\":\"sha256:"
+  },
+  {
+   "driver": "object-reader",
+   "input": "surrogate-ed-a0-80",
+   "reachedDecode": true,
+   "decoderRefused": true,
+   "calls": 1,
+   "outcome": "{\"kind\":\"unavailable\",\"record\":{\"path\":\"about/heart-and-soul/vision.md\",\"objectId\":\"a455cee0bc8b11ebc60ab70fff2d2c7e44741d0d\",\"bytes\":5,\"contentDigest\":\"sha256:"
+  },
+  {
+   "driver": "object-reader",
+   "input": "overlong-c0-80",
+   "reachedDecode": true,
+   "decoderRefused": true,
+   "calls": 1,
+   "outcome": "{\"kind\":\"unavailable\",\"record\":{\"path\":\"about/heart-and-soul/vision.md\",\"objectId\":\"85f96d7a2866871fabb292d2e62edc3afe786777\",\"bytes\":4,\"contentDigest\":\"sha256:"
+  },
+  {
+   "driver": "object-reader",
+   "input": "overlong-e0-80-af",
+   "reachedDecode": true,
+   "decoderRefused": true,
+   "calls": 1,
+   "outcome": "{\"kind\":\"unavailable\",\"record\":{\"path\":\"about/heart-and-soul/vision.md\",\"objectId\":\"2cb21f296c36770b97837af8bc0b76153b20f7bf\",\"bytes\":5,\"contentDigest\":\"sha256:"
+  },
+  {
+   "driver": "object-reader",
+   "input": "overlong-f0-80-80-af",
+   "reachedDecode": true,
+   "decoderRefused": true,
+   "calls": 1,
+   "outcome": "{\"kind\":\"unavailable\",\"record\":{\"path\":\"about/heart-and-soul/vision.md\",\"objectId\":\"a011f71be6f804747ae9fc5ce77f4f1993c3c676\",\"bytes\":6,\"contentDigest\":\"sha256:"
+  },
+  {
+   "driver": "object-reader",
+   "input": "bom-then-bad",
+   "reachedDecode": true,
+   "decoderRefused": true,
+   "calls": 1,
+   "outcome": "{\"kind\":\"unavailable\",\"record\":{\"path\":\"about/heart-and-soul/vision.md\",\"objectId\":\"92762cb9407f9fa91766309ef049d956cead3863\",\"bytes\":5,\"contentDigest\":\"sha256:"
+  },
+  {
+   "driver": "seed-reader",
+   "input": "empty",
+   "reachedDecode": true,
+   "decoderRefused": false,
+   "calls": 1,
+   "outcome": "{\"result\":{\"kind\":\"text\",\"text\":\"\",\"pillarRoots\":{}},\"reads\":[{\"path\":\"about/README.md\",\"objectId\":\"e69de29bb2d1d6434b8b29ae775ad8c2e48c5391\",\"outcome\":\"read\",\""
+  },
+  {
+   "driver": "seed-reader",
+   "input": "bom-only",
+   "reachedDecode": true,
+   "decoderRefused": false,
+   "calls": 1,
+   "outcome": "{\"result\":{\"kind\":\"text\",\"text\":\"\",\"pillarRoots\":{}},\"reads\":[{\"path\":\"about/README.md\",\"objectId\":\"5f282702bb03ef11d7184d19c80927b47f919764\",\"outcome\":\"read\",\""
+  },
+  {
+   "driver": "seed-reader",
+   "input": "bom-led-text",
+   "reachedDecode": true,
+   "decoderRefused": false,
+   "calls": 1,
+   "outcome": "{\"result\":{\"kind\":\"text\",\"text\":\"a\\n\",\"pillarRoots\":{}},\"reads\":[{\"path\":\"about/README.md\",\"objectId\":\"7a2a9ee4f512b845f3e1296343cfa646f2d47624\",\"outcome\":\"read"
+  },
+  {
+   "driver": "seed-reader",
+   "input": "bom-led-consent",
+   "reachedDecode": true,
+   "decoderRefused": false,
+   "calls": 1,
+   "outcome": "{\"result\":{\"kind\":\"text\",\"text\":\"Subject: `(project:syzygy, repository:butlers)`\\nObservation content class: `declared-project-shape-text`\\n\",\"pillarRoots\":{}},"
+  },
+  {
+   "driver": "seed-reader",
+   "input": "truncated-3-at-end",
+   "reachedDecode": true,
+   "decoderRefused": true,
+   "calls": 1,
+   "outcome": "{\"result\":{\"kind\":\"unavailable\",\"reason\":\"seed is not valid UTF-8\"},\"reads\":[{\"path\":\"about/README.md\",\"objectId\":\"05a6576769a2dbc85b3f4b8e5d9c9b56c0f61742\",\"ou"
+  },
+  {
+   "driver": "seed-reader",
+   "input": "truncated-4-at-end",
+   "reachedDecode": true,
+   "decoderRefused": true,
+   "calls": 1,
+   "outcome": "{\"result\":{\"kind\":\"unavailable\",\"reason\":\"seed is not valid UTF-8\"},\"reads\":[{\"path\":\"about/README.md\",\"objectId\":\"2656354579ca3eca7d6b36314f190c76350a7651\",\"ou"
+  },
+  {
+   "driver": "seed-reader",
+   "input": "surrogate-ed-a0-80",
+   "reachedDecode": true,
+   "decoderRefused": true,
+   "calls": 1,
+   "outcome": "{\"result\":{\"kind\":\"unavailable\",\"reason\":\"seed is not valid UTF-8\"},\"reads\":[{\"path\":\"about/README.md\",\"objectId\":\"a455cee0bc8b11ebc60ab70fff2d2c7e44741d0d\",\"ou"
+  },
+  {
+   "driver": "seed-reader",
+   "input": "overlong-c0-80",
+   "reachedDecode": true,
+   "decoderRefused": true,
+   "calls": 1,
+   "outcome": "{\"result\":{\"kind\":\"unavailable\",\"reason\":\"seed is not valid UTF-8\"},\"reads\":[{\"path\":\"about/README.md\",\"objectId\":\"85f96d7a2866871fabb292d2e62edc3afe786777\",\"ou"
+  },
+  {
+   "driver": "seed-reader",
+   "input": "overlong-e0-80-af",
+   "reachedDecode": true,
+   "decoderRefused": true,
+   "calls": 1,
+   "outcome": "{\"result\":{\"kind\":\"unavailable\",\"reason\":\"seed is not valid UTF-8\"},\"reads\":[{\"path\":\"about/README.md\",\"objectId\":\"2cb21f296c36770b97837af8bc0b76153b20f7bf\",\"ou"
+  },
+  {
+   "driver": "seed-reader",
+   "input": "overlong-f0-80-80-af",
+   "reachedDecode": true,
+   "decoderRefused": true,
+   "calls": 1,
+   "outcome": "{\"result\":{\"kind\":\"unavailable\",\"reason\":\"seed is not valid UTF-8\"},\"reads\":[{\"path\":\"about/README.md\",\"objectId\":\"a011f71be6f804747ae9fc5ce77f4f1993c3c676\",\"ou"
+  },
+  {
+   "driver": "seed-reader",
+   "input": "bom-then-bad",
+   "reachedDecode": true,
+   "decoderRefused": true,
+   "calls": 1,
+   "outcome": "{\"result\":{\"kind\":\"unavailable\",\"reason\":\"seed is not valid UTF-8\"},\"reads\":[{\"path\":\"about/README.md\",\"objectId\":\"92762cb9407f9fa91766309ef049d956cead3863\",\"ou"
+  },
+  {
+   "driver": "observe-rev-parse",
+   "input": "empty",
+   "reachedDecode": true,
+   "decoderRefused": false,
+   "calls": 1,
+   "outcome": "{\"kind\":\"unknown\",\"failureState\":\"gitCaptureFailed\",\"detail\":\"rev-parse produced no object id for main\"}"
+  },
+  {
+   "driver": "observe-rev-parse",
+   "input": "bom-only",
+   "reachedDecode": true,
+   "decoderRefused": false,
+   "calls": 1,
+   "outcome": "{\"kind\":\"unknown\",\"failureState\":\"gitCaptureFailed\",\"detail\":\"rev-parse produced no object id for main\"}"
+  },
+  {
+   "driver": "observe-rev-parse",
+   "input": "bom-led-text",
+   "reachedDecode": true,
+   "decoderRefused": false,
+   "calls": 1,
+   "outcome": "{\"kind\":\"unknown\",\"failureState\":\"gitCaptureFailed\",\"detail\":\"rev-parse produced no object id for main\"}"
+  },
+  {
+   "driver": "observe-rev-parse",
+   "input": "bom-led-consent",
+   "reachedDecode": true,
+   "decoderRefused": false,
+   "calls": 1,
+   "outcome": "{\"kind\":\"unknown\",\"failureState\":\"gitCaptureFailed\",\"detail\":\"rev-parse produced no object id for main\"}"
+  },
+  {
+   "driver": "observe-rev-parse",
+   "input": "truncated-3-at-end",
+   "reachedDecode": true,
+   "decoderRefused": true,
+   "calls": 1,
+   "outcome": "{\"kind\":\"unknown\",\"failureState\":\"gitCaptureFailed\",\"detail\":\"git rev-parse produced non-UTF-8 output\"}"
+  },
+  {
+   "driver": "observe-rev-parse",
+   "input": "truncated-4-at-end",
+   "reachedDecode": true,
+   "decoderRefused": true,
+   "calls": 1,
+   "outcome": "{\"kind\":\"unknown\",\"failureState\":\"gitCaptureFailed\",\"detail\":\"git rev-parse produced non-UTF-8 output\"}"
+  },
+  {
+   "driver": "observe-rev-parse",
+   "input": "surrogate-ed-a0-80",
+   "reachedDecode": true,
+   "decoderRefused": true,
+   "calls": 1,
+   "outcome": "{\"kind\":\"unknown\",\"failureState\":\"gitCaptureFailed\",\"detail\":\"git rev-parse produced non-UTF-8 output\"}"
+  },
+  {
+   "driver": "observe-rev-parse",
+   "input": "overlong-c0-80",
+   "reachedDecode": true,
+   "decoderRefused": true,
+   "calls": 1,
+   "outcome": "{\"kind\":\"unknown\",\"failureState\":\"gitCaptureFailed\",\"detail\":\"git rev-parse produced non-UTF-8 output\"}"
+  },
+  {
+   "driver": "observe-rev-parse",
+   "input": "overlong-e0-80-af",
+   "reachedDecode": true,
+   "decoderRefused": true,
+   "calls": 1,
+   "outcome": "{\"kind\":\"unknown\",\"failureState\":\"gitCaptureFailed\",\"detail\":\"git rev-parse produced non-UTF-8 output\"}"
+  },
+  {
+   "driver": "observe-rev-parse",
+   "input": "overlong-f0-80-80-af",
+   "reachedDecode": true,
+   "decoderRefused": true,
+   "calls": 1,
+   "outcome": "{\"kind\":\"unknown\",\"failureState\":\"gitCaptureFailed\",\"detail\":\"git rev-parse produced non-UTF-8 output\"}"
+  },
+  {
+   "driver": "observe-rev-parse",
+   "input": "bom-then-bad",
+   "reachedDecode": true,
+   "decoderRefused": true,
+   "calls": 1,
+   "outcome": "{\"kind\":\"unknown\",\"failureState\":\"gitCaptureFailed\",\"detail\":\"git rev-parse produced non-UTF-8 output\"}"
+  },
+  {
+   "driver": "observe-show",
+   "input": "empty",
+   "reachedDecode": true,
+   "decoderRefused": false,
+   "calls": 2,
+   "outcome": "{\"kind\":\"unknown\",\"failureState\":\"gitCaptureFailed\",\"detail\":\"committer instant of 3333333333333333333333333333333333333333 is not an ISO-8601 instant\"}"
+  },
+  {
+   "driver": "observe-show",
+   "input": "bom-only",
+   "reachedDecode": true,
+   "decoderRefused": false,
+   "calls": 2,
+   "outcome": "{\"kind\":\"unknown\",\"failureState\":\"gitCaptureFailed\",\"detail\":\"committer instant of 3333333333333333333333333333333333333333 is not an ISO-8601 instant\"}"
+  },
+  {
+   "driver": "observe-show",
+   "input": "bom-led-text",
+   "reachedDecode": true,
+   "decoderRefused": false,
+   "calls": 2,
+   "outcome": "{\"kind\":\"unknown\",\"failureState\":\"gitCaptureFailed\",\"detail\":\"committer instant of 3333333333333333333333333333333333333333 is not an ISO-8601 instant\"}"
+  },
+  {
+   "driver": "observe-show",
+   "input": "bom-led-consent",
+   "reachedDecode": true,
+   "decoderRefused": false,
+   "calls": 2,
+   "outcome": "{\"kind\":\"unknown\",\"failureState\":\"gitCaptureFailed\",\"detail\":\"committer instant of 3333333333333333333333333333333333333333 is not an ISO-8601 instant\"}"
+  },
+  {
+   "driver": "observe-show",
+   "input": "truncated-3-at-end",
+   "reachedDecode": true,
+   "decoderRefused": true,
+   "calls": 2,
+   "outcome": "{\"kind\":\"unknown\",\"failureState\":\"gitCaptureFailed\",\"detail\":\"git show produced non-UTF-8 output\"}"
+  },
+  {
+   "driver": "observe-show",
+   "input": "truncated-4-at-end",
+   "reachedDecode": true,
+   "decoderRefused": true,
+   "calls": 2,
+   "outcome": "{\"kind\":\"unknown\",\"failureState\":\"gitCaptureFailed\",\"detail\":\"git show produced non-UTF-8 output\"}"
+  },
+  {
+   "driver": "observe-show",
+   "input": "surrogate-ed-a0-80",
+   "reachedDecode": true,
+   "decoderRefused": true,
+   "calls": 2,
+   "outcome": "{\"kind\":\"unknown\",\"failureState\":\"gitCaptureFailed\",\"detail\":\"git show produced non-UTF-8 output\"}"
+  },
+  {
+   "driver": "observe-show",
+   "input": "overlong-c0-80",
+   "reachedDecode": true,
+   "decoderRefused": true,
+   "calls": 2,
+   "outcome": "{\"kind\":\"unknown\",\"failureState\":\"gitCaptureFailed\",\"detail\":\"git show produced non-UTF-8 output\"}"
+  },
+  {
+   "driver": "observe-show",
+   "input": "overlong-e0-80-af",
+   "reachedDecode": true,
+   "decoderRefused": true,
+   "calls": 2,
+   "outcome": "{\"kind\":\"unknown\",\"failureState\":\"gitCaptureFailed\",\"detail\":\"git show produced non-UTF-8 output\"}"
+  },
+  {
+   "driver": "observe-show",
+   "input": "overlong-f0-80-80-af",
+   "reachedDecode": true,
+   "decoderRefused": true,
+   "calls": 2,
+   "outcome": "{\"kind\":\"unknown\",\"failureState\":\"gitCaptureFailed\",\"detail\":\"git show produced non-UTF-8 output\"}"
+  },
+  {
+   "driver": "observe-show",
+   "input": "bom-then-bad",
+   "reachedDecode": true,
+   "decoderRefused": true,
+   "calls": 2,
+   "outcome": "{\"kind\":\"unknown\",\"failureState\":\"gitCaptureFailed\",\"detail\":\"git show produced non-UTF-8 output\"}"
+  },
+  {
+   "driver": "observe-ls-tree",
+   "input": "empty",
+   "reachedDecode": true,
+   "decoderRefused": false,
+   "calls": 3,
+   "outcome": "{\"kind\":\"observed\"}"
+  },
+  {
+   "driver": "observe-ls-tree",
+   "input": "bom-only",
+   "reachedDecode": true,
+   "decoderRefused": false,
+   "calls": 3,
+   "outcome": "{\"kind\":\"observed\"}"
+  },
+  {
+   "driver": "observe-ls-tree",
+   "input": "bom-led-text",
+   "reachedDecode": true,
+   "decoderRefused": false,
+   "calls": 3,
+   "outcome": "{\"kind\":\"unknown\",\"failureState\":\"gitCaptureFailed\",\"detail\":\"ls-tree record is malformed: a\"}"
+  },
+  {
+   "driver": "observe-ls-tree",
+   "input": "bom-led-consent",
+   "reachedDecode": true,
+   "decoderRefused": false,
+   "calls": 3,
+   "outcome": "{\"kind\":\"unknown\",\"failureState\":\"gitCaptureFailed\",\"detail\":\"ls-tree record is malformed: Subject: `(project:syzygy, repository:butlers)`\"}"
+  },
+  {
+   "driver": "observe-ls-tree",
+   "input": "truncated-3-at-end",
+   "reachedDecode": true,
+   "decoderRefused": true,
+   "calls": 3,
+   "outcome": "{\"kind\":\"unknown\",\"failureState\":\"gitCaptureFailed\",\"detail\":\"git ls-tree produced non-UTF-8 output\"}"
+  },
+  {
+   "driver": "observe-ls-tree",
+   "input": "truncated-4-at-end",
+   "reachedDecode": true,
+   "decoderRefused": true,
+   "calls": 3,
+   "outcome": "{\"kind\":\"unknown\",\"failureState\":\"gitCaptureFailed\",\"detail\":\"git ls-tree produced non-UTF-8 output\"}"
+  },
+  {
+   "driver": "observe-ls-tree",
+   "input": "surrogate-ed-a0-80",
+   "reachedDecode": true,
+   "decoderRefused": true,
+   "calls": 3,
+   "outcome": "{\"kind\":\"unknown\",\"failureState\":\"gitCaptureFailed\",\"detail\":\"git ls-tree produced non-UTF-8 output\"}"
+  },
+  {
+   "driver": "observe-ls-tree",
+   "input": "overlong-c0-80",
+   "reachedDecode": true,
+   "decoderRefused": true,
+   "calls": 3,
+   "outcome": "{\"kind\":\"unknown\",\"failureState\":\"gitCaptureFailed\",\"detail\":\"git ls-tree produced non-UTF-8 output\"}"
+  },
+  {
+   "driver": "observe-ls-tree",
+   "input": "overlong-e0-80-af",
+   "reachedDecode": true,
+   "decoderRefused": true,
+   "calls": 3,
+   "outcome": "{\"kind\":\"unknown\",\"failureState\":\"gitCaptureFailed\",\"detail\":\"git ls-tree produced non-UTF-8 output\"}"
+  },
+  {
+   "driver": "observe-ls-tree",
+   "input": "overlong-f0-80-80-af",
+   "reachedDecode": true,
+   "decoderRefused": true,
+   "calls": 3,
+   "outcome": "{\"kind\":\"unknown\",\"failureState\":\"gitCaptureFailed\",\"detail\":\"git ls-tree produced non-UTF-8 output\"}"
+  },
+  {
+   "driver": "observe-ls-tree",
+   "input": "bom-then-bad",
+   "reachedDecode": true,
+   "decoderRefused": true,
+   "calls": 3,
+   "outcome": "{\"kind\":\"unknown\",\"failureState\":\"gitCaptureFailed\",\"detail\":\"git ls-tree produced non-UTF-8 output\"}"
+  }
+ ]
+}

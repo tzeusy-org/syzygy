@@ -1,0 +1,851 @@
+{
+ "head": "815d93bb2315bf535ae4a7244eac2efd229fc025",
+ "mutants": [
+  {
+   "id": "FX1-extraction-indented-closer-closes",
+   "purpose": "fix G2 (indent direction only)",
+   "file": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+   "old": "if (line.trimEnd() === fence ||",
+   "new": "if (line.replace(/^ {1,3}/, '').trimEnd() === fence ||",
+   "head": "815d93bb2315bf535ae4a7244eac2efd229fc025",
+   "oldCount": 1,
+   "testFiles": [
+    "apps/three-surface-poc/src/fence-rules.test.ts",
+    "packages/three-surface-poc-core/src/project-shape-extraction.test.ts",
+    "packages/three-surface-poc-core/src/project-shape-coverage.test.ts"
+   ],
+   "run": {
+    "exit": 1,
+    "killed": true,
+    "perFile": {
+     "packages/three-surface-poc-core/src/project-shape-coverage.test.ts": {
+      "tests": 32,
+      "failed": [],
+      "fileStatus": "passed",
+      "fileMessage": ""
+     },
+     "packages/three-surface-poc-core/src/project-shape-extraction.test.ts": {
+      "tests": 87,
+      "failed": [],
+      "fileStatus": "passed",
+      "fileMessage": ""
+     },
+     "apps/three-surface-poc/src/fence-rules.test.ts": {
+      "tests": 57,
+      "failed": [
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence 'closer-indent1'",
+        "message": "AssertionError: closer-indent1 extraction: expected 'VHHVV' to be 'VHHHH' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence 'closer-indent3'",
+        "message": "AssertionError: closer-indent3 extraction: expected 'VHHVV' to be 'VHHHH' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence links, extraction and the renderer read CRLF exactly as they read LF; only the profile does not",
+        "message": "AssertionError: closer-indent1 extraction: expected 'VHHVV' to be 'VHHHH' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence GAP G2: the extractor keeps its own fence closer a closer indented one space: the profile closes the fence, the extractor never does, and the denominator is 1 of 3",
+        "message": "AssertionError: expected { kind: 'extracted', \u2026(2) } to deeply equal { kind: 'extracted', \u2026(2) }"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence GAP G2: the extractor keeps its own fence closer a closer indented three spaces: the profile closes the fence, the extractor never does, and the denominator is 1 of 3",
+        "message": "AssertionError: expected { kind: 'extracted', \u2026(2) } to deeply equal { kind: 'extracted', \u2026(2) }"
+       }
+      ],
+      "fileStatus": "failed",
+      "fileMessage": ""
+     }
+    },
+    "numTotalTests": 176,
+    "numFailedTests": 5
+   },
+   "killedBy": [
+    "apps/three-surface-poc/src/fence-rules.test.ts"
+   ],
+   "verdict": "killed by fence-rules.test.ts"
+  },
+  {
+   "id": "FX2-extraction-tab-line-does-not-close",
+   "purpose": "fix G2 (tab direction only)",
+   "file": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+   "old": "if (line.trimEnd() === fence || (line.startsWith(fence) && line.trim().replace(/[`~]/g, '') === '')) fence = undefined;",
+   "new": "if (line.replace(/ +$/, '') === fence || (line.startsWith(fence) && line.replace(/ +$/, '').replace(/[`~]/g, '') === '')) fence = undefined;",
+   "head": "815d93bb2315bf535ae4a7244eac2efd229fc025",
+   "oldCount": 1,
+   "testFiles": [
+    "apps/three-surface-poc/src/fence-rules.test.ts",
+    "packages/three-surface-poc-core/src/project-shape-extraction.test.ts",
+    "packages/three-surface-poc-core/src/project-shape-coverage.test.ts"
+   ],
+   "run": {
+    "exit": 1,
+    "killed": true,
+    "perFile": {
+     "packages/three-surface-poc-core/src/project-shape-coverage.test.ts": {
+      "tests": 32,
+      "failed": [],
+      "fileStatus": "passed",
+      "fileMessage": ""
+     },
+     "packages/three-surface-poc-core/src/project-shape-extraction.test.ts": {
+      "tests": 87,
+      "failed": [],
+      "fileStatus": "passed",
+      "fileMessage": ""
+     },
+     "apps/three-surface-poc/src/fence-rules.test.ts": {
+      "tests": 57,
+      "failed": [
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence 'closer-trailing-tab'",
+        "message": "AssertionError: closer-trailing-tab extraction: expected 'VHHH' to be 'VHHV' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence 'closer-trailing-tab-then-closer'",
+        "message": "AssertionError: closer-trailing-tab-then-closer extraction: expected 'VHHHHV' to be 'VHHVVH' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence links, extraction and the renderer read CRLF exactly as they read LF; only the profile does not",
+        "message": "AssertionError: closer-trailing-tab extraction: expected 'VHHH' to be 'VHHV' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence GAP G2: the extractor keeps its own fence closer a closer-shaped line ending in a tab: the profile keeps the fence open to the plain closer, the extractor closes early and the plain closer then hides the rest",
+        "message": "AssertionError: expected { kind: 'extracted', \u2026(2) } to deeply equal { kind: 'extracted', \u2026(2) }"
+       }
+      ],
+      "fileStatus": "failed",
+      "fileMessage": ""
+     }
+    },
+    "numTotalTests": 176,
+    "numFailedTests": 4
+   },
+   "killedBy": [
+    "apps/three-surface-poc/src/fence-rules.test.ts"
+   ],
+   "verdict": "killed by fence-rules.test.ts"
+  },
+  {
+   "id": "FX3-links-span-across-lines-blanked",
+   "purpose": "fix G3 (multi-line span direction only)",
+   "file": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+   "old": "    kept.push(stripInlineCode ? line.replace(/`[^`]*`/g, '') : line);\n  }\n  return kept;",
+   "new": "    kept.push(line);\n  }\n  if (!stripInlineCode) return kept;\n  return kept.join('\\n').replace(/(?<!`)(`+)(?!`)([\\s\\S]*?[^`])\\1(?!`)/g, (m) => m.replace(/[^\\n]/g, '')).split('\\n');",
+   "head": "815d93bb2315bf535ae4a7244eac2efd229fc025",
+   "oldCount": 1,
+   "testFiles": [
+    "apps/three-surface-poc/src/fence-rules.test.ts",
+    "packages/three-surface-poc-core/src/project-shape-manifest.test.ts"
+   ],
+   "run": {
+    "exit": 1,
+    "killed": true,
+    "perFile": {
+     "packages/three-surface-poc-core/src/project-shape-manifest.test.ts": {
+      "tests": 24,
+      "failed": [],
+      "fileStatus": "passed",
+      "fileMessage": ""
+     },
+     "apps/three-surface-poc/src/fence-rules.test.ts": {
+      "tests": 57,
+      "failed": [
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-indent4'",
+        "message": "AssertionError: backtick-indent4 links: expected 'VHHV' to be 'VVVV' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence 'two-backticks'",
+        "message": "AssertionError: two-backticks links: expected 'VHHV' to be 'VVVV' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence 'blockquote'",
+        "message": "AssertionError: blockquote links: expected 'VHHV' to be 'VVVV' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence links, extraction and the renderer read CRLF exactly as they read LF; only the profile does not",
+        "message": "AssertionError: backtick-indent4 links: expected 'VHHV' to be 'VVVV' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence inline span: 'inside-double-span'",
+        "message": "AssertionError: expected { profile: 'H', links: 'H' } to deeply equal { profile: 'H', links: 'V' }"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence inline span: 'double-span-with-inner-backtick-aroun\u2026'",
+        "message": "AssertionError: expected { profile: 'H', links: 'H' } to deeply equal { profile: 'H', links: 'V' }"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence GAP G3: the link reader keeps its own fence and span rules a link on a line inside a span that runs across lines is indexed, though the profile hides it: 'double-backtick-span-over-three-lines'",
+        "message": "AssertionError: expected [] to deeply equal [ 'probe.md' ]"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence GAP G3: the link reader keeps its own fence and span rules a link on a line inside a span that runs across lines is indexed, though the profile hides it: 'single-backtick-span-over-three-lines'",
+        "message": "AssertionError: expected [] to deeply equal [ 'probe.md' ]"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence GAP G3: the link reader keeps its own fence and span rules a link on a line inside a span that runs across lines is indexed, though the profile hides it: 'span-opened-mid-line'",
+        "message": "AssertionError: expected [] to deeply equal [ 'probe.md' ]"
+       }
+      ],
+      "fileStatus": "failed",
+      "fileMessage": ""
+     }
+    },
+    "numTotalTests": 81,
+    "numFailedTests": 9
+   },
+   "killedBy": [
+    "apps/three-surface-poc/src/fence-rules.test.ts"
+   ],
+   "verdict": "killed by fence-rules.test.ts"
+  },
+  {
+   "id": "FX4-links-closer-needs-only-spaces-after",
+   "purpose": "fix G3 (early-close and hide direction only)",
+   "file": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+   "old": "(opener[1] ?? '').length >= fence.length) {",
+   "new": "(opener[1] ?? '').length >= fence.length && line.trimStart().slice((opener[1] ?? '').length).replace(/ /g, '') === '') {",
+   "head": "815d93bb2315bf535ae4a7244eac2efd229fc025",
+   "oldCount": 1,
+   "testFiles": [
+    "apps/three-surface-poc/src/fence-rules.test.ts",
+    "packages/three-surface-poc-core/src/project-shape-manifest.test.ts"
+   ],
+   "run": {
+    "exit": 1,
+    "killed": true,
+    "perFile": {
+     "packages/three-surface-poc-core/src/project-shape-manifest.test.ts": {
+      "tests": 24,
+      "failed": [],
+      "fileStatus": "passed",
+      "fileMessage": ""
+     },
+     "apps/three-surface-poc/src/fence-rules.test.ts": {
+      "tests": 57,
+      "failed": [
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence 'closer-trailing-tab'",
+        "message": "AssertionError: closer-trailing-tab links: expected 'VHHH' to be 'VHHV' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence 'closer-trailing-tab-then-closer'",
+        "message": "AssertionError: closer-trailing-tab-then-closer links: expected 'VHHHHV' to be 'VHHVVH' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence 'closer-with-info'",
+        "message": "AssertionError: closer-with-info links: expected 'VHHHHV' to be 'VHHVVH' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence 'closer-longer-with-info'",
+        "message": "AssertionError: closer-longer-with-info links: expected 'VHHHV' to be 'VHVVH' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence 'closer-with-text'",
+        "message": "AssertionError: closer-with-text links: expected 'VHHHHV' to be 'VHHVVH' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence links, extraction and the renderer read CRLF exactly as they read LF; only the profile does not",
+        "message": "AssertionError: backtick-col0 links: expected 'VHHH' to be 'VHHV' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence GAP G3: the link reader keeps its own fence and span rules a closer-shaped line with an info string closes the fence early, and the real closer hides every later link",
+        "message": "AssertionError: expected [ 'a.md' ] to deeply equal []"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence GAP G3: the link reader keeps its own fence and span rules a closer-shaped line ending in a tab, on a text the profile reads as well formed, mints the link inside the fence and hides the one after it",
+        "message": "AssertionError: expected [ 'hide.md' ] to deeply equal [ 'mint.md' ]"
+       }
+      ],
+      "fileStatus": "failed",
+      "fileMessage": ""
+     }
+    },
+    "numTotalTests": 81,
+    "numFailedTests": 8
+   },
+   "killedBy": [
+    "apps/three-surface-poc/src/fence-rules.test.ts"
+   ],
+   "verdict": "killed by fence-rules.test.ts"
+  },
+  {
+   "id": "WS1-extraction-backtick-fence-closed-by-tildes",
+   "purpose": "worse G2 (a further early close)",
+   "file": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+   "old": "(line.startsWith(fence) && line.trim().replace(/[`~]/g, '') === '')",
+   "new": "(/^[`~]{3,}/.test(line) && line.trim().replace(/[`~]/g, '') === '')",
+   "head": "815d93bb2315bf535ae4a7244eac2efd229fc025",
+   "oldCount": 1,
+   "testFiles": [
+    "apps/three-surface-poc/src/fence-rules.test.ts",
+    "packages/three-surface-poc-core/src/project-shape-extraction.test.ts",
+    "packages/three-surface-poc-core/src/project-shape-coverage.test.ts"
+   ],
+   "run": {
+    "exit": 1,
+    "killed": true,
+    "perFile": {
+     "packages/three-surface-poc-core/src/project-shape-coverage.test.ts": {
+      "tests": 32,
+      "failed": [],
+      "fileStatus": "passed",
+      "fileMessage": ""
+     },
+     "packages/three-surface-poc-core/src/project-shape-extraction.test.ts": {
+      "tests": 87,
+      "failed": [],
+      "fileStatus": "passed",
+      "fileMessage": ""
+     },
+     "apps/three-surface-poc/src/fence-rules.test.ts": {
+      "tests": 57,
+      "failed": [
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence 'opener-four-closer-three'",
+        "message": "AssertionError: opener-four-closer-three extraction: expected 'VHHVVH' to be 'VHHHHV' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence 'closer-other-char'",
+        "message": "AssertionError: closer-other-char extraction: expected 'VHHVVH' to be 'VHHHHV' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-fence-backtick-line'",
+        "message": "AssertionError: tilde-fence-backtick-line extraction: expected 'VHHVVH' to be 'VHHHHV' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-opener-four-closer-three'",
+        "message": "AssertionError: tilde-opener-four-closer-three extraction: expected 'VHHVVH' to be 'VHHHHV' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence links, extraction and the renderer read CRLF exactly as they read LF; only the profile does not",
+        "message": "AssertionError: opener-four-closer-three extraction: expected 'VHHVVH' to be 'VHHHHV' // Object.is equality"
+       }
+      ],
+      "fileStatus": "failed",
+      "fileMessage": ""
+     }
+    },
+    "numTotalTests": 176,
+    "numFailedTests": 5
+   },
+   "killedBy": [
+    "apps/three-surface-poc/src/fence-rules.test.ts"
+   ],
+   "verdict": "killed by fence-rules.test.ts"
+  },
+  {
+   "id": "WS2-extraction-opener-anywhere-in-line",
+   "purpose": "worse G2 (a further hide)",
+   "file": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+   "old": "const FENCE = /^(`{3,}|~{3,})/;",
+   "new": "const FENCE = /(`{3,}|~{3,})/;",
+   "head": "815d93bb2315bf535ae4a7244eac2efd229fc025",
+   "oldCount": 1,
+   "testFiles": [
+    "apps/three-surface-poc/src/fence-rules.test.ts",
+    "packages/three-surface-poc-core/src/project-shape-extraction.test.ts",
+    "packages/three-surface-poc-core/src/project-shape-coverage.test.ts"
+   ],
+   "run": {
+    "exit": 1,
+    "killed": true,
+    "perFile": {
+     "packages/three-surface-poc-core/src/project-shape-coverage.test.ts": {
+      "tests": 32,
+      "failed": [],
+      "fileStatus": "passed",
+      "fileMessage": ""
+     },
+     "packages/three-surface-poc-core/src/project-shape-extraction.test.ts": {
+      "tests": 87,
+      "failed": [],
+      "fileStatus": "passed",
+      "fileMessage": ""
+     },
+     "apps/three-surface-poc/src/fence-rules.test.ts": {
+      "tests": 57,
+      "failed": [
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-indent1'",
+        "message": "AssertionError: backtick-indent1 extraction: expected 'VHHH' to be 'VVVV' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-indent2'",
+        "message": "AssertionError: backtick-indent2 extraction: expected 'VHHH' to be 'VVVV' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-indent3'",
+        "message": "AssertionError: backtick-indent3 extraction: expected 'VHHH' to be 'VVVV' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-indent4'",
+        "message": "AssertionError: backtick-indent4 extraction: expected 'VHHH' to be 'VVVV' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-tab'",
+        "message": "AssertionError: backtick-tab extraction: expected 'VHHH' to be 'VVVV' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-indent3'",
+        "message": "AssertionError: tilde-indent3 extraction: expected 'VHHH' to be 'VVVV' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-indent4'",
+        "message": "AssertionError: tilde-indent4 extraction: expected 'VHHH' to be 'VVVV' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence 'blockquote'",
+        "message": "AssertionError: blockquote extraction: expected 'VHHH' to be 'VVVV' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence 'list-item'",
+        "message": "AssertionError: list-item extraction: expected 'VHHH' to be 'VVVV' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence links, extraction and the renderer read CRLF exactly as they read LF; only the profile does not",
+        "message": "AssertionError: backtick-indent1 extraction: expected 'VHHH' to be 'VVVV' // Object.is equality"
+       }
+      ],
+      "fileStatus": "failed",
+      "fileMessage": ""
+     }
+    },
+    "numTotalTests": 176,
+    "numFailedTests": 10
+   },
+   "killedBy": [
+    "apps/three-surface-poc/src/fence-rules.test.ts"
+   ],
+   "verdict": "killed by fence-rules.test.ts"
+  },
+  {
+   "id": "WS3-links-closer-any-fence-char",
+   "purpose": "worse G3 (a further early close, then a hide)",
+   "file": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+   "old": "if (opener !== null && (opener[1] ?? '').startsWith(fence[0] ?? '') && ",
+   "new": "if (opener !== null && ",
+   "head": "815d93bb2315bf535ae4a7244eac2efd229fc025",
+   "oldCount": 1,
+   "testFiles": [
+    "apps/three-surface-poc/src/fence-rules.test.ts",
+    "packages/three-surface-poc-core/src/project-shape-manifest.test.ts"
+   ],
+   "run": {
+    "exit": 1,
+    "killed": true,
+    "perFile": {
+     "packages/three-surface-poc-core/src/project-shape-manifest.test.ts": {
+      "tests": 24,
+      "failed": [],
+      "fileStatus": "passed",
+      "fileMessage": ""
+     },
+     "apps/three-surface-poc/src/fence-rules.test.ts": {
+      "tests": 57,
+      "failed": [
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence 'closer-other-char'",
+        "message": "AssertionError: closer-other-char links: expected 'VHHVVH' to be 'VHHHHV' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-fence-backtick-line'",
+        "message": "AssertionError: tilde-fence-backtick-line links: expected 'VHHVVH' to be 'VHHHHV' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence links, extraction and the renderer read CRLF exactly as they read LF; only the profile does not",
+        "message": "AssertionError: closer-other-char links: expected 'VHHVVH' to be 'VHHHHV' // Object.is equality"
+       }
+      ],
+      "fileStatus": "failed",
+      "fileMessage": ""
+     }
+    },
+    "numTotalTests": 81,
+    "numFailedTests": 3
+   },
+   "killedBy": [
+    "apps/three-surface-poc/src/fence-rules.test.ts"
+   ],
+   "verdict": "killed by fence-rules.test.ts"
+  },
+  {
+   "id": "WS4-links-inline-strip-greedy",
+   "purpose": "worse G3 (a further hidden link on one line)",
+   "file": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+   "old": "line.replace(/`[^`]*`/g, '')",
+   "new": "line.replace(/`.*`/g, '')",
+   "head": "815d93bb2315bf535ae4a7244eac2efd229fc025",
+   "oldCount": 1,
+   "testFiles": [
+    "apps/three-surface-poc/src/fence-rules.test.ts",
+    "packages/three-surface-poc-core/src/project-shape-manifest.test.ts"
+   ],
+   "run": {
+    "exit": 1,
+    "killed": true,
+    "perFile": {
+     "packages/three-surface-poc-core/src/project-shape-manifest.test.ts": {
+      "tests": 24,
+      "failed": [],
+      "fileStatus": "passed",
+      "fileMessage": ""
+     },
+     "apps/three-surface-poc/src/fence-rules.test.ts": {
+      "tests": 57,
+      "failed": [
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence inline span: 'inside-double-span'",
+        "message": "AssertionError: expected { profile: 'H', links: 'H' } to deeply equal { profile: 'H', links: 'V' }"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence inline span: 'link-between-spans'",
+        "message": "AssertionError: expected { profile: 'V', links: 'H' } to deeply equal { profile: 'V', links: 'V' }"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence inline span: 'double-span-with-inner-backtick-aroun\u2026'",
+        "message": "AssertionError: expected { profile: 'H', links: 'H' } to deeply equal { profile: 'H', links: 'V' }"
+       }
+      ],
+      "fileStatus": "failed",
+      "fileMessage": ""
+     }
+    },
+    "numTotalTests": 81,
+    "numFailedTests": 3
+   },
+   "killedBy": [
+    "apps/three-surface-poc/src/fence-rules.test.ts"
+   ],
+   "verdict": "killed by fence-rules.test.ts"
+  },
+  {
+   "id": "WS5-links-line-after-a-closer-dropped",
+   "purpose": "worse G3 (a further hidden link after a fence)",
+   "file": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+   "old": "        fence = undefined;\n      }\n      continue;",
+   "new": "        fence = undefined;\n        skip = true;\n      }\n      continue;\n    }\n    if (skip) {\n      skip = false;\n      continue;",
+   "head": "815d93bb2315bf535ae4a7244eac2efd229fc025",
+   "oldCount": 1,
+   "testFiles": [
+    "apps/three-surface-poc/src/fence-rules.test.ts",
+    "packages/three-surface-poc-core/src/project-shape-manifest.test.ts"
+   ],
+   "run": {
+    "exit": 1,
+    "killed": true,
+    "perFile": {
+     "packages/three-surface-poc-core/src/project-shape-manifest.test.ts": {
+      "tests": 24,
+      "failed": [
+       {
+        "test": "index link grammar extracts inline links and reference definitions; skips images, fenced blocks and code spans",
+        "message": "AssertionError: expected [ 'one.md', 'two three.md', \u2026(2) ] to deeply equal [ 'one.md', 'two three.md', \u2026(3) ]"
+       }
+      ],
+      "fileStatus": "failed",
+      "fileMessage": ""
+     },
+     "apps/three-surface-poc/src/fence-rules.test.ts": {
+      "tests": 57,
+      "failed": [
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-col0'",
+        "message": "AssertionError: backtick-col0 links: expected 'VHHH' to be 'VHHV' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-indent1'",
+        "message": "AssertionError: backtick-indent1 links: expected 'VHHH' to be 'VHHV' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-indent2'",
+        "message": "AssertionError: backtick-indent2 links: expected 'VHHH' to be 'VHHV' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-indent3'",
+        "message": "AssertionError: backtick-indent3 links: expected 'VHHH' to be 'VHHV' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-tab'",
+        "message": "AssertionError: backtick-tab links: expected 'VHHH' to be 'VHHV' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-col0'",
+        "message": "AssertionError: tilde-col0 links: expected 'VHHH' to be 'VHHV' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-indent3'",
+        "message": "AssertionError: tilde-indent3 links: expected 'VHHH' to be 'VHHV' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence 'opener-four-closer-three'",
+        "message": "AssertionError: opener-four-closer-three links: expected 'VHHHHH' to be 'VHHHHV' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence 'closer-longer'",
+        "message": "AssertionError: closer-longer links: expected 'VHHH' to be 'VHHV' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence 'closer-indent1'",
+        "message": "AssertionError: closer-indent1 links: expected 'VHHHV' to be 'VHHVV' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence 'closer-indent3'",
+        "message": "AssertionError: closer-indent3 links: expected 'VHHHV' to be 'VHHVV' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence 'closer-indent4'",
+        "message": "AssertionError: closer-indent4 links: expected 'VHHHHH' to be 'VHHHHV' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence 'closer-trailing-space'",
+        "message": "AssertionError: closer-trailing-space links: expected 'VHHH' to be 'VHHV' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence 'closer-trailing-tab'",
+        "message": "AssertionError: closer-trailing-tab links: expected 'VHHH' to be 'VHHV' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence 'closer-trailing-tab-then-closer'",
+        "message": "AssertionError: closer-trailing-tab-then-closer links: expected 'VHHHVH' to be 'VHHVVH' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence 'closer-with-info'",
+        "message": "AssertionError: closer-with-info links: expected 'VHHHVH' to be 'VHHVVH' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence 'closer-longer-with-info'",
+        "message": "AssertionError: closer-longer-with-info links: expected 'VHHVH' to be 'VHVVH' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence 'closer-with-text'",
+        "message": "AssertionError: closer-with-text links: expected 'VHHHVH' to be 'VHHVVH' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence 'closer-other-char'",
+        "message": "AssertionError: closer-other-char links: expected 'VHHHHH' to be 'VHHHHV' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-fence-backtick-line'",
+        "message": "AssertionError: tilde-fence-backtick-line links: expected 'VHHHHH' to be 'VHHHHV' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-opener-four-closer-three'",
+        "message": "AssertionError: tilde-opener-four-closer-three links: expected 'VHHHHH' to be 'VHHHHV' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence 'info-string'",
+        "message": "AssertionError: info-string links: expected 'VHHH' to be 'VHHV' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence 'info-string-space'",
+        "message": "AssertionError: info-string-space links: expected 'VHHH' to be 'VHHV' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-info-with-backtick'",
+        "message": "AssertionError: backtick-info-with-backtick links: expected 'VHHH' to be 'VHHV' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-info-with-backtick'",
+        "message": "AssertionError: tilde-info-with-backtick links: expected 'VHHH' to be 'VHHV' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence 'empty-fence'",
+        "message": "AssertionError: empty-fence links: expected 'VHH' to be 'VHV' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence 'two-fences'",
+        "message": "AssertionError: two-fences links: expected 'VHHHHHH' to be 'VHHVHHV' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence links, extraction and the renderer read CRLF exactly as they read LF; only the profile does not",
+        "message": "AssertionError: backtick-col0 links: expected 'VHHH' to be 'VHHV' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence GAP G3: the link reader keeps its own fence and span rules a closer-shaped line ending in a tab, on a text the profile reads as well formed, mints the link inside the fence and hides the one after it",
+        "message": "AssertionError: expected [] to deeply equal [ 'mint.md' ]"
+       }
+      ],
+      "fileStatus": "failed",
+      "fileMessage": ""
+     }
+    },
+    "numTotalTests": 81,
+    "numFailedTests": 30
+   },
+   "killedBy": [
+    "packages/three-surface-poc-core/src/project-shape-manifest.test.ts",
+    "apps/three-surface-poc/src/fence-rules.test.ts"
+   ],
+   "verdict": "killed by project-shape-manifest.test.ts, fence-rules.test.ts"
+  },
+  {
+   "id": "KC1-consent-opener-any-indent",
+   "purpose": "consent opener indent",
+   "file": "packages/polaris-generation-consent/src/package-reader.ts",
+   "old": "const m = /^ {0,3}(`{3,}|~{3,})(.*)$/.exec(line);",
+   "new": "const m = /^ *(`{3,}|~{3,})(.*)$/.exec(line);",
+   "head": "815d93bb2315bf535ae4a7244eac2efd229fc025",
+   "oldCount": 1,
+   "testFiles": [
+    "packages/polaris-generation-consent/src/package-reader.test.ts"
+   ],
+   "run": {
+    "exit": 1,
+    "killed": true,
+    "perFile": {
+     "packages/polaris-generation-consent/src/package-reader.test.ts": {
+      "tests": 303,
+      "failed": [
+       {
+        "test": "fence reading of the act records a line indented four spaces is not a fence opener: the record stays in force",
+        "message": "AdmissionRecordError: invalid-records"
+       }
+      ],
+      "fileStatus": "failed",
+      "fileMessage": ""
+     }
+    },
+    "numTotalTests": 303,
+    "numFailedTests": 1
+   },
+   "killedBy": [
+    "packages/polaris-generation-consent/src/package-reader.test.ts"
+   ],
+   "verdict": "killed by package-reader.test.ts"
+  },
+  {
+   "id": "KC2-consent-shorter-closer-closes",
+   "purpose": "consent closer length, the other direction",
+   "file": "packages/polaris-generation-consent/src/package-reader.ts",
+   "old": "m[1]!.length >= open.length",
+   "new": "m[1]!.length >= 3",
+   "head": "815d93bb2315bf535ae4a7244eac2efd229fc025",
+   "oldCount": 1,
+   "testFiles": [
+    "packages/polaris-generation-consent/src/package-reader.test.ts"
+   ],
+   "run": {
+    "exit": 1,
+    "killed": true,
+    "perFile": {
+     "packages/polaris-generation-consent/src/package-reader.test.ts": {
+      "tests": 303,
+      "failed": [
+       {
+        "test": "round-3 review notes closes a fence as CommonMark does: a field a renderer shows inside a code block is not in the prose (N-1)",
+        "message": "Error: promise resolved \"[ { \u2026(16) }, { \u2026(16) } ]\" instead of rejecting"
+       }
+      ],
+      "fileStatus": "failed",
+      "fileMessage": ""
+     }
+    },
+    "numTotalTests": 303,
+    "numFailedTests": 1
+   },
+   "killedBy": [
+    "packages/polaris-generation-consent/src/package-reader.test.ts"
+   ],
+   "verdict": "killed by package-reader.test.ts"
+  },
+  {
+   "id": "KC3-consent-fence-guard-cr-tolerant",
+   "purpose": "consent: G4 mechanism closed (the pins say they pin the refusal, not this)",
+   "file": "packages/polaris-generation-consent/src/package-reader.ts",
+   "old": "const unfenced = text.split('\\n').map(line => {\n    const m = /^ {0,3}(`{3,}|~{3,})(.*)$/.exec(line);",
+   "new": "const unfenced = text.split('\\n').map(line => {\n    const m = /^ {0,3}(`{3,}|~{3,})(.*?)\\r?$/.exec(line);",
+   "head": "815d93bb2315bf535ae4a7244eac2efd229fc025",
+   "oldCount": 1,
+   "testFiles": [
+    "packages/polaris-generation-consent/src/package-reader.test.ts"
+   ],
+   "run": {
+    "exit": 0,
+    "killed": false,
+    "perFile": {
+     "packages/polaris-generation-consent/src/package-reader.test.ts": {
+      "tests": 303,
+      "failed": [],
+      "fileStatus": "passed",
+      "fileMessage": ""
+     }
+    },
+    "numTotalTests": 303,
+    "numFailedTests": 0
+   },
+   "killedBy": [],
+   "verdict": "SURVIVED"
+  },
+  {
+   "id": "KC4-consent-section-heading-tolerates-cr",
+   "purpose": "consent: the third LF-exact check the record names (:153)",
+   "file": "packages/polaris-generation-consent/src/package-reader.ts",
+   "old": "const at = lines.map((line, i) => (line === heading ? i : -1)).filter(i => i >= 0);\n  if (at.length !== 1 || source.split('\\n').filter(line => line === heading).length !== 1) return refuse();",
+   "new": "const at = lines.map((line, i) => (line.replace(/\\r$/, '') === heading ? i : -1)).filter(i => i >= 0);\n  if (at.length !== 1 || source.split('\\n').filter(line => line.replace(/\\r$/, '') === heading).length !== 1) return refuse();",
+   "head": "815d93bb2315bf535ae4a7244eac2efd229fc025",
+   "oldCount": 1,
+   "testFiles": [
+    "packages/polaris-generation-consent/src/package-reader.test.ts"
+   ],
+   "run": {
+    "exit": 0,
+    "killed": false,
+    "perFile": {
+     "packages/polaris-generation-consent/src/package-reader.test.ts": {
+      "tests": 303,
+      "failed": [],
+      "fileStatus": "passed",
+      "fileMessage": ""
+     }
+    },
+    "numTotalTests": 303,
+    "numFailedTests": 0
+   },
+   "killedBy": [],
+   "verdict": "SURVIVED"
+  },
+  {
+   "id": "WR1-profile-unclosed-fence-reported-as-span",
+   "purpose": "profile malformation reason swapped",
+   "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+   "old": "reason: 'unclosed-fence'",
+   "new": "reason: 'unclosed-inline-span'",
+   "head": "815d93bb2315bf535ae4a7244eac2efd229fc025",
+   "oldCount": 1,
+   "testFiles": [
+    "apps/three-surface-poc/src/fence-rules.test.ts"
+   ],
+   "run": {
+    "exit": 1,
+    "killed": true,
+    "perFile": {
+     "apps/three-surface-poc/src/fence-rules.test.ts": {
+      "tests": 57,
+      "failed": [
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence 'closer-trailing-tab'",
+        "message": "AssertionError: closer-trailing-tab whole: expected 'malformed:unclosed-inline-span' to be 'malformed:unclosed-fence' // Object.is equality"
+       },
+       {
+        "test": "Markdown fence recognizers: what each reader treats as inside a fence 'unclosed'",
+        "message": "AssertionError: unclosed whole: expected 'malformed:unclosed-inline-span' to be 'malformed:unclosed-fence' // Object.is equality"
+       }
+      ],
+      "fileStatus": "failed",
+      "fileMessage": ""
+     }
+    },
+    "numTotalTests": 57,
+    "numFailedTests": 2
+   },
+   "killedBy": [
+    "apps/three-surface-poc/src/fence-rules.test.ts"
+   ],
+   "verdict": "killed by fence-rules.test.ts"
+  }
+ ],
+ "treeCleanAfter": true
+}

@@ -1,0 +1,49 @@
+{
+ "mode": "hup",
+ "version": "old",
+ "param": null,
+ "inject": null,
+ "script": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520b/tools/old_measure_vitest_test_durations.py",
+ "scriptSha256": "0ef82cd0563f4e09646a51234a33a835ec3f676150456d35a84835b08c128290",
+ "commit": "dc60c5bcb6ae6f1f31beee3aa0f6117adff5d6cf",
+ "command": "python3 -I /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-520b/tools/old_measure_vitest_test_durations.py . --file packages/polaris-generation-consent/src/package-reader.test.ts --project @syzygy/polaris-generation-consent --mode alone --runs 1 --out <tmp>/measure-out.json --profile",
+ "events": [
+  {
+   "t": 0.2299,
+   "what": "vitest worker seen",
+   "groupAlive": true
+  },
+  {
+   "t": 3.5064,
+   "what": "tree at signal: ' M packages/polaris-generation-consent/src/package-reader.test.ts\\n M packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts\\n'",
+   "groupAlive": true
+  },
+  {
+   "t": 3.5067,
+   "what": "sent SIGHUP to pid",
+   "groupAlive": true
+  }
+ ],
+ "scriptExitAt": 3.725,
+ "exitCode": -1,
+ "outputTail": "",
+ "descendantsSeen": 15,
+ "descendantsByCwdOnly": 1,
+ "treeAfterExit": " M packages/polaris-generation-consent/src/package-reader.test.ts\n M packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts\n",
+ "diffStatAfterExit": " packages/polaris-generation-consent/src/package-reader.test.ts       | 4 ++++\n packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts | 4 +++-\n 2 files changed, 7 insertions(+), 1 deletion(-)\n",
+ "survivors3sAfterExit": {
+  "2757734": {
+   "cmdline": "node (vitest 1)",
+   "state": "R",
+   "pgid": 2757572,
+   "sid": 2757572
+  }
+ },
+ "recordWritten": false,
+ "recordTests": null,
+ "recordProfileRows": null,
+ "writtenSnapshot": null,
+ "treeCleanAfterReviewerRestore": true,
+ "clean": false,
+ "noSurvivor": false
+}

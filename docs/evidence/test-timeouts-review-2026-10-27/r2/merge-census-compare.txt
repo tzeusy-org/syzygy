@@ -1,0 +1,20 @@
+dup keys head [] merge 0
+head 92 merge 92 keys equal True
+moved 15
+  ('packages/polaris-generation-consent/src/package-reader.test.ts', 259, 289)
+  ('packages/polaris-generation-consent/src/package-reader.test.ts', 327, 357)
+  ('packages/polaris-generation-consent/src/package-reader.test.ts', 368, 398)
+  ('packages/polaris-generation-consent/src/package-reader.test.ts', 375, 405)
+  ('packages/polaris-generation-consent/src/package-reader.test.ts', 381, 411)
+  ('packages/polaris-generation-consent/src/package-reader.test.ts', 443, 473)
+  ('packages/polaris-generation-consent/src/package-reader.test.ts', 498, 528)
+  ('packages/polaris-generation-consent/src/package-reader.test.ts', 541, 571)
+  ('packages/polaris-generation-consent/src/package-reader.test.ts', 563, 593)
+  ('packages/polaris-generation-consent/src/package-reader.test.ts', 581, 611)
+  ('packages/polaris-generation-consent/src/package-reader.test.ts', 710, 740)
+  ('packages/polaris-generation-consent/src/package-reader.test.ts', 779, 809)
+  ('packages/polaris-generation-consent/src/package-reader.test.ts', 804, 834)
+  ('packages/polaris-generation-consent/src/package-reader.test.ts', 947, 977)
+  ('packages/polaris-generation-consent/src/package-reader.test.ts', 1061, 1091)
+same line 77
+reason or citation text differs 0

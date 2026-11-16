@@ -1,0 +1,13 @@
+{
+ "commit": "e2077444dc739ea15db69f424c2372f89b1996de",
+ "dist": "absent",
+ "command": "npx vitest run --reporter=json (whole suite, clean clone after npm ci)",
+ "files": 254,
+ "filesPassed": 254,
+ "numTotalTests": 5649,
+ "numPassedTests": 5644,
+ "numFailedTests": 0,
+ "numPendingTests": 5,
+ "success": true,
+ "reportSha256": "52e31df882e61e1b765ce708ef3aa000cb45459d0dcaee1df33ff89b2d2f061a"
+}

@@ -1,0 +1,4899 @@
+{
+ "tool": "static_sites.py",
+ "treeCommit": "a864e999645a071dda40325b2235976590e02973",
+ "patterns": {
+  "js-mkdtemp": "\\bmkdtemp(?:Sync)?\\(",
+  "js-mkdtemp-disposable": "\\bmkdtempDisposable(?:Sync)?\\(",
+  "js-tmpdir": "\\btmpdir\\(\\)",
+  "py-tempfile": "\\btempfile\\.(?:mkdtemp|TemporaryDirectory|NamedTemporaryFile|mkstemp|gettempdir)\\(",
+  "sh-mktemp": "\\bmktemp\\b",
+  "literal-tmp-path": "['\"`]/tmp/"
+ },
+ "filePopulation": {
+  "suffixes": [
+   ".ts",
+   ".mts",
+   ".cts",
+   ".js",
+   ".mjs",
+   ".cjs",
+   ".py",
+   ".sh"
+  ],
+  "blobsRead": 818
+ },
+ "filesWithASite": 260,
+ "sites": 591,
+ "sitesByKind": {
+  "js-mkdtemp": 191,
+  "js-mkdtemp-disposable": 0,
+  "js-tmpdir": 176,
+  "py-tempfile": 353,
+  "sh-mktemp": 1,
+  "literal-tmp-path": 53
+ },
+ "byTree": {
+  ".syzygy": {
+   "files": 5,
+   "sites": 5
+  },
+  "apps": {
+   "files": 56,
+   "sites": 104
+  },
+  "docs": {
+   "files": 60,
+   "sites": 85
+  },
+  "packages": {
+   "files": 46,
+   "sites": 71
+  },
+  "scripts": {
+   "files": 93,
+   "sites": 326
+  }
+ },
+ "files": {
+  ".syzygy/governance/contracts/candidates/scripts/build_active_manifest.py": [
+   {
+    "line": 459,
+    "kinds": [
+     "js-mkdtemp",
+     "py-tempfile"
+    ],
+    "literal": "manifest-selftest-"
+   }
+  ],
+  ".syzygy/governance/contracts/candidates/scripts/build_budget_report.py": [
+   {
+    "line": 563,
+    "kinds": [
+     "sh-mktemp"
+    ],
+    "literal": null
+   }
+  ],
+  ".syzygy/governance/contracts/candidates/scripts/build_contract_index.py": [
+   {
+    "line": 373,
+    "kinds": [
+     "js-mkdtemp",
+     "py-tempfile"
+    ],
+    "literal": "index-selftest-"
+   }
+  ],
+  ".syzygy/governance/contracts/candidates/scripts/build_dependency_index.py": [
+   {
+    "line": 448,
+    "kinds": [
+     "js-mkdtemp",
+     "py-tempfile"
+    ],
+    "literal": "depindex-selftest-"
+   }
+  ],
+  ".syzygy/governance/contracts/candidates/scripts/verify_final_prespec.py": [
+   {
+    "line": 396,
+    "kinds": [
+     "js-mkdtemp",
+     "py-tempfile"
+    ],
+    "literal": "prespec-selftest-"
+   }
+  ],
+  "apps/three-surface-poc/src/build-output.test.ts": [
+   {
+    "line": 24,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-build-output-"
+   }
+  ],
+  "apps/three-surface-poc/src/capture-test-artifact-main.test.ts": [
+   {
+    "line": 43,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-capture-cli-"
+   }
+  ],
+  "apps/three-surface-poc/src/capture-test-artifact.test.ts": [
+   {
+    "line": 23,
+    "kinds": [
+     "literal-tmp-path"
+    ],
+    "literal": null
+   },
+   {
+    "line": 40,
+    "kinds": [
+     "literal-tmp-path"
+    ],
+    "literal": null
+   },
+   {
+    "line": 49,
+    "kinds": [
+     "literal-tmp-path"
+    ],
+    "literal": null
+   },
+   {
+    "line": 55,
+    "kinds": [
+     "literal-tmp-path"
+    ],
+    "literal": null
+   }
+  ],
+  "apps/three-surface-poc/src/cdp-browser.test.ts": [
+   {
+    "line": 31,
+    "kinds": [
+     "literal-tmp-path"
+    ],
+    "literal": null
+   },
+   {
+    "line": 56,
+    "kinds": [
+     "literal-tmp-path"
+    ],
+    "literal": null
+   },
+   {
+    "line": 71,
+    "kinds": [
+     "literal-tmp-path"
+    ],
+    "literal": null
+   },
+   {
+    "line": 84,
+    "kinds": [
+     "literal-tmp-path"
+    ],
+    "literal": null
+   },
+   {
+    "line": 92,
+    "kinds": [
+     "literal-tmp-path"
+    ],
+    "literal": null
+   },
+   {
+    "line": 101,
+    "kinds": [
+     "literal-tmp-path"
+    ],
+    "literal": null
+   },
+   {
+    "line": 109,
+    "kinds": [
+     "literal-tmp-path"
+    ],
+    "literal": null
+   },
+   {
+    "line": 126,
+    "kinds": [
+     "literal-tmp-path"
+    ],
+    "literal": null
+   },
+   {
+    "line": 150,
+    "kinds": [
+     "literal-tmp-path"
+    ],
+    "literal": null
+   },
+   {
+    "line": 207,
+    "kinds": [
+     "literal-tmp-path"
+    ],
+    "literal": null
+   },
+   {
+    "line": 218,
+    "kinds": [
+     "literal-tmp-path"
+    ],
+    "literal": null
+   },
+   {
+    "line": 231,
+    "kinds": [
+     "literal-tmp-path"
+    ],
+    "literal": null
+   },
+   {
+    "line": 247,
+    "kinds": [
+     "literal-tmp-path"
+    ],
+    "literal": null
+   }
+  ],
+  "apps/three-surface-poc/src/cdp-browser.ts": [
+   {
+    "line": 445,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-poc-browser-"
+   }
+  ],
+  "apps/three-surface-poc/src/cli.test.ts": [
+   {
+    "line": 12,
+    "kinds": [
+     "literal-tmp-path"
+    ],
+    "literal": null
+   },
+   {
+    "line": 20,
+    "kinds": [
+     "literal-tmp-path"
+    ],
+    "literal": null
+   }
+  ],
+  "apps/three-surface-poc/src/fixture-directories.test.ts": [
+   {
+    "line": 37,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-fixture-sweep-"
+   }
+  ],
+  "apps/three-surface-poc/src/fixture-directories.ts": [
+   {
+    "line": 55,
+    "kinds": [
+     "js-tmpdir"
+    ],
+    "literal": null
+   }
+  ],
+  "apps/three-surface-poc/src/fresh-checkout-demo-main.ts": [
+   {
+    "line": 349,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-poc-fresh-"
+   }
+  ],
+  "apps/three-surface-poc/src/git-blob-batch.test.ts": [
+   {
+    "line": 256,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-svoj-gitlink-"
+   }
+  ],
+  "apps/three-surface-poc/src/git-observation.test.ts": [
+   {
+    "line": 43,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-poc-git-"
+   }
+  ],
+  "apps/three-surface-poc/src/governance-inputs.test.ts": [
+   {
+    "line": 48,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-pwb-governance-"
+   }
+  ],
+  "apps/three-surface-poc/src/keyboard-sweep-record.test.ts": [
+   {
+    "line": 36,
+    "kinds": [
+     "literal-tmp-path"
+    ],
+    "literal": null
+   }
+  ],
+  "apps/three-surface-poc/src/main.test.ts": [
+   {
+    "line": 55,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "poc-main-test-"
+   },
+   {
+    "line": 386,
+    "kinds": [
+     "js-tmpdir"
+    ],
+    "literal": null
+   },
+   {
+    "line": 446,
+    "kinds": [
+     "js-tmpdir"
+    ],
+    "literal": null
+   }
+  ],
+  "apps/three-surface-poc/src/materialize-action.test.ts": [
+   {
+    "line": 41,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": null
+   }
+  ],
+  "apps/three-surface-poc/src/orrery.browser.test.ts": [
+   {
+    "line": 33,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-orrery-geometry-"
+   }
+  ],
+  "apps/three-surface-poc/src/poc-main.ts": [
+   {
+    "line": 161,
+    "kinds": [
+     "js-tmpdir"
+    ],
+    "literal": null
+   }
+  ],
+  "apps/three-surface-poc/src/polaris-accessibility-main.ts": [
+   {
+    "line": 37,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-poc-a11y-"
+   }
+  ],
+  "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts": [
+   {
+    "line": 82,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-poc-a11y-"
+   },
+   {
+    "line": 299,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-poc-a11y-budget-"
+   }
+  ],
+  "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts": [
+   {
+    "line": 186,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-poc-names-"
+   },
+   {
+    "line": 198,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-poc-names-daemon-"
+   }
+  ],
+  "apps/three-surface-poc/src/polaris-generation/dossier-cap-measure.test.ts": [
+   {
+    "line": 10,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-dossier-cap-"
+   }
+  ],
+  "apps/three-surface-poc/src/polaris-generation/dossier-evaluation-main.test.ts": [
+   {
+    "line": 26,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-dossier-eval-"
+   }
+  ],
+  "apps/three-surface-poc/src/polaris-generation/dossier-render-main.ts": [
+   {
+    "line": 55,
+    "kinds": [
+     "js-mkdtemp"
+    ],
+    "literal": null
+   }
+  ],
+  "apps/three-surface-poc/src/polaris-generation/dossier-render.test.ts": [
+   {
+    "line": 280,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-dossier-run-"
+   },
+   {
+    "line": 290,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-dossier-run-"
+   },
+   {
+    "line": 297,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-dossier-link-"
+   },
+   {
+    "line": 311,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-dossier-gitdir-"
+   },
+   {
+    "line": 325,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-dossier-dotgit-"
+   },
+   {
+    "line": 333,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-dossier-real-"
+   },
+   {
+    "line": 343,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-dossier-nogit-"
+   },
+   {
+    "line": 350,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-dossier-partial-"
+   },
+   {
+    "line": 359,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-dossier-git-"
+   }
+  ],
+  "apps/three-surface-poc/src/polaris-generation/dossier-trigger-isolation.test.ts": [
+   {
+    "line": 22,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-trigger-iso-"
+   },
+   {
+    "line": 33,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-trigger-iso-dst-"
+   }
+  ],
+  "apps/three-surface-poc/src/polaris-generation/dossier-trigger.test.ts": [
+   {
+    "line": 17,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-trigger-"
+   },
+   {
+    "line": 88,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-trigger-repo-"
+   },
+   {
+    "line": 318,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-trigger-other-"
+   },
+   {
+    "line": 362,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-trigger-cmd-"
+   }
+  ],
+  "apps/three-surface-poc/src/polaris-generation/dossier-trigger.ts": [
+   {
+    "line": 42,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-lsremote-"
+   },
+   {
+    "line": 143,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-dossier-"
+   },
+   {
+    "line": 145,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-dossier-src-"
+   },
+   {
+    "line": 210,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-materialize-home-"
+   }
+  ],
+  "apps/three-surface-poc/src/polaris-generation/draft-preview.browser.test.ts": [
+   {
+    "line": 14,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "polaris-draft-browser-"
+   }
+  ],
+  "apps/three-surface-poc/src/polaris-generation/durable-lifecycle-generate.test.ts": [
+   {
+    "line": 13,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-lifecycle-generate-"
+   }
+  ],
+  "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts": [
+   {
+    "line": 13,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-generator-lifecycle-"
+   }
+  ],
+  "apps/three-surface-poc/src/polaris-generation/generation-mutation-run-main.ts": [
+   {
+    "line": 113,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "generation-mutation-"
+   }
+  ],
+  "apps/three-surface-poc/src/polaris-generation/pipeline-demo.test.ts": [
+   {
+    "line": 55,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-generator-onramp-"
+   }
+  ],
+  "apps/three-surface-poc/src/polaris-generation/public-source-screening.test.ts": [
+   {
+    "line": 88,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-public-screen-"
+   }
+  ],
+  "apps/three-surface-poc/src/polaris-generation/redis-shaped-discovery.test.ts": [
+   {
+    "line": 14,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-redis-shaped-test-"
+   }
+  ],
+  "apps/three-surface-poc/src/polaris-generation/redis-shaped-measure-main.ts": [
+   {
+    "line": 22,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-redis-shaped-"
+   }
+  ],
+  "apps/three-surface-poc/src/polaris-generation/repo-corpus-isolation.test.ts": [
+   {
+    "line": 26,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-iso-"
+   },
+   {
+    "line": 85,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-iso-empty-"
+   }
+  ],
+  "apps/three-surface-poc/src/polaris-generation/repo-corpus.test.ts": [
+   {
+    "line": 26,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-repo-corpus-"
+   },
+   {
+    "line": 50,
+    "kinds": [
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-fsmonitor-sentinel-"
+   },
+   {
+    "line": 52,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-repo-hostile-"
+   },
+   {
+    "line": 247,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-repo-cli-"
+   }
+  ],
+  "apps/three-surface-poc/src/polaris-generation/self-corpus.test.ts": [
+   {
+    "line": 53,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-self-corpus-fixture-"
+   }
+  ],
+  "apps/three-surface-poc/src/polaris-generation/self-corpus.ts": [
+   {
+    "line": 122,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-self-corpus-run-"
+   }
+  ],
+  "apps/three-surface-poc/src/polaris-keyboard-sweep-main.ts": [
+   {
+    "line": 66,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-poc-keyboard-sweep-"
+   }
+  ],
+  "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts": [
+   {
+    "line": 315,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-poc-opening-index-"
+   }
+  ],
+  "apps/three-surface-poc/src/polaris-presentation-route.test.ts": [
+   {
+    "line": 33,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-poc-presentation-"
+   }
+  ],
+  "apps/three-surface-poc/src/polaris-source-route.test.ts": [
+   {
+    "line": 88,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-poc-source-route-"
+   }
+  ],
+  "apps/three-surface-poc/src/production-reobserve.test.ts": [
+   {
+    "line": 88,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-production-reobserve-state-"
+   },
+   {
+    "line": 103,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-production-reobserve-state-"
+   },
+   {
+    "line": 136,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-production-reobserve-state-"
+   },
+   {
+    "line": 164,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-production-reobserve-state-"
+   }
+  ],
+  "apps/three-surface-poc/src/proposal-disclosure.test.ts": [
+   {
+    "line": 133,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-dov32-proposal-"
+   }
+  ],
+  "apps/three-surface-poc/src/pwb-mutation-run-main.ts": [
+   {
+    "line": 121,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "pwb-mutation-"
+   }
+  ],
+  "apps/three-surface-poc/src/pwb-mutation-sweep-main.ts": [
+   {
+    "line": 145,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "pwb-mutation-sweep-"
+   }
+  ],
+  "apps/three-surface-poc/src/response-limits.test.ts": [
+   {
+    "line": 61,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-poc-limit-socket-"
+   }
+  ],
+  "apps/three-surface-poc/src/restart.test.ts": [
+   {
+    "line": 78,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-private-restart-"
+   },
+   {
+    "line": 492,
+    "kinds": [
+     "literal-tmp-path"
+    ],
+    "literal": null
+   }
+  ],
+  "apps/three-surface-poc/src/restart.ts": [
+   {
+    "line": 105,
+    "kinds": [
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-poc-restart-"
+   }
+  ],
+  "apps/three-surface-poc/src/routes.test.ts": [
+   {
+    "line": 29,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": null
+   }
+  ],
+  "apps/three-surface-poc/src/surface-routes.test.ts": [
+   {
+    "line": 38,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": null
+   },
+   {
+    "line": 303,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-cross-links-state-"
+   },
+   {
+    "line": 309,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-cross-links-pages-"
+   }
+  ],
+  "apps/three-surface-poc/src/test-model-fixture.test.ts": [
+   {
+    "line": 76,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-k66p-shared-"
+   },
+   {
+    "line": 104,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-fixture-names-"
+   }
+  ],
+  "apps/three-surface-poc/src/test-model-fixture.ts": [
+   {
+    "line": 46,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": null
+   },
+   {
+    "line": 68,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": null
+   }
+  ],
+  "apps/three-surface-poc/src/trajectory-narrowing.browser.test.ts": [
+   {
+    "line": 40,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-trajectory-narrowing-"
+   },
+   {
+    "line": 77,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-trajectory-narrowing-"
+   }
+  ],
+  "apps/three-surface-poc/src/tuple-encoding.test.ts": [
+   {
+    "line": 73,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": null
+   }
+  ],
+  "docs/evidence/fixture-pid-sweep-review-2026-10-24/r1/count_sweeps.py": [
+   {
+    "line": 15,
+    "kinds": [
+     "literal-tmp-path"
+    ],
+    "literal": null
+   },
+   {
+    "line": 22,
+    "kinds": [
+     "js-tmpdir"
+    ],
+    "literal": null
+   }
+  ],
+  "docs/evidence/fixture-pid-sweep-review-2026-10-24/r1/inner_sweep.mjs": [
+   {
+    "line": 4,
+    "kinds": [
+     "literal-tmp-path"
+    ],
+    "literal": null
+   }
+  ],
+  "docs/evidence/fixture-pid-sweep-review-2026-10-24/r1/my_kill_probe.py": [
+   {
+    "line": 25,
+    "kinds": [
+     "literal-tmp-path"
+    ],
+    "literal": null
+   },
+   {
+    "line": 27,
+    "kinds": [
+     "js-mkdtemp"
+    ],
+    "literal": null
+   },
+   {
+    "line": 28,
+    "kinds": [
+     "js-mkdtemp"
+    ],
+    "literal": null
+   }
+  ],
+  "docs/evidence/fixture-pid-sweep-review-2026-10-24/r1/my_mutants.py": [
+   {
+    "line": 17,
+    "kinds": [
+     "literal-tmp-path"
+    ],
+    "literal": null
+   },
+   {
+    "line": 20,
+    "kinds": [
+     "literal-tmp-path"
+    ],
+    "literal": null
+   },
+   {
+    "line": 23,
+    "kinds": [
+     "js-tmpdir"
+    ],
+    "literal": null
+   }
+  ],
+  "docs/evidence/fixture-pid-sweep-review-2026-10-24/r1/ns_probe.mjs": [
+   {
+    "line": 8,
+    "kinds": [
+     "literal-tmp-path"
+    ],
+    "literal": null
+   }
+  ],
+  "docs/evidence/fixture-pid-sweep-review-2026-10-24/r1/race_probe.mjs": [
+   {
+    "line": 9,
+    "kinds": [
+     "literal-tmp-path"
+    ],
+    "literal": null
+   }
+  ],
+  "docs/evidence/fixture-pid-sweep-review-2026-10-24/r1/safety_probe.mjs": [
+   {
+    "line": 10,
+    "kinds": [
+     "literal-tmp-path"
+    ],
+    "literal": null
+   }
+  ],
+  "docs/evidence/fixture-pid-sweep-review-2026-10-24/r1/term_probe.py": [
+   {
+    "line": 19,
+    "kinds": [
+     "literal-tmp-path"
+    ],
+    "literal": null
+   }
+  ],
+  "docs/evidence/fixture-pid-sweep-review-2026-10-24/r2/cli_probe.py": [
+   {
+    "line": 18,
+    "kinds": [
+     "literal-tmp-path"
+    ],
+    "literal": null
+   }
+  ],
+  "docs/evidence/fixture-pid-sweep-review-2026-10-24/r2/fixture-directories.built.mjs": [
+   {
+    "line": 46,
+    "kinds": [
+     "js-tmpdir"
+    ],
+    "literal": null
+   }
+  ],
+  "docs/evidence/fixture-pid-sweep-review-2026-10-24/r2/fixture-directories.uid-guard-dropped.mjs": [
+   {
+    "line": 46,
+    "kinds": [
+     "js-tmpdir"
+    ],
+    "literal": null
+   }
+  ],
+  "docs/evidence/fixture-pid-sweep-review-2026-10-24/r2/foreign_owner_probe.py": [
+   {
+    "line": 20,
+    "kinds": [
+     "literal-tmp-path"
+    ],
+    "literal": null
+   }
+  ],
+  "docs/evidence/fixture-pid-sweep-review-2026-10-24/r2/holder.mjs": [
+   {
+    "line": 10,
+    "kinds": [
+     "js-mkdtemp"
+    ],
+    "literal": null
+   }
+  ],
+  "docs/evidence/fixture-pid-sweep-review-2026-10-24/r2/kill_probe.py": [
+   {
+    "line": 24,
+    "kinds": [
+     "literal-tmp-path"
+    ],
+    "literal": null
+   }
+  ],
+  "docs/evidence/fixture-pid-sweep-review-2026-10-24/r2/my_mutants.py": [
+   {
+    "line": 21,
+    "kinds": [
+     "literal-tmp-path"
+    ],
+    "literal": null
+   }
+  ],
+  "docs/evidence/fixture-pid-sweep-review-2026-10-24/r2/race_probe.mjs": [
+   {
+    "line": 24,
+    "kinds": [
+     "js-mkdtemp"
+    ],
+    "literal": null
+   }
+  ],
+  "docs/evidence/fixture-pid-sweep-review-2026-10-24/r3/cli_probe.py": [
+   {
+    "line": 37,
+    "kinds": [
+     "literal-tmp-path"
+    ],
+    "literal": null
+   }
+  ],
+  "docs/evidence/fixture-pid-sweep-review-2026-10-24/r3/find_mine.py": [
+   {
+    "line": 19,
+    "kinds": [
+     "literal-tmp-path"
+    ],
+    "literal": null
+   }
+  ],
+  "docs/evidence/fixture-pid-sweep-review-2026-10-24/r3/fixture-directories.head.mjs": [
+   {
+    "line": 51,
+    "kinds": [
+     "js-tmpdir"
+    ],
+    "literal": null
+   }
+  ],
+  "docs/evidence/fixture-pid-sweep-review-2026-10-24/r3/fixture-directories.reads-as-0.mjs": [
+   {
+    "line": 51,
+    "kinds": [
+     "js-tmpdir"
+    ],
+    "literal": null
+   }
+  ],
+  "docs/evidence/fixture-pid-sweep-review-2026-10-24/r3/holder.mjs": [
+   {
+    "line": 10,
+    "kinds": [
+     "js-mkdtemp"
+    ],
+    "literal": null
+   }
+  ],
+  "docs/evidence/fixture-pid-sweep-review-2026-10-24/r3/kill_probe.py": [
+   {
+    "line": 23,
+    "kinds": [
+     "literal-tmp-path"
+    ],
+    "literal": null
+   }
+  ],
+  "docs/evidence/fixture-pid-sweep-review-2026-10-24/r3/my_mutants.py": [
+   {
+    "line": 20,
+    "kinds": [
+     "literal-tmp-path"
+    ],
+    "literal": null
+   }
+  ],
+  "docs/evidence/fixture-pid-sweep-review-2026-10-24/r3/ns_probe.py": [
+   {
+    "line": 24,
+    "kinds": [
+     "literal-tmp-path"
+    ],
+    "literal": null
+   }
+  ],
+  "docs/evidence/island-decoupling-review-2026-10-22/tools/mutate.py": [
+   {
+    "line": 30,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "docs/evidence/launch-form-postcondition-review-2026-10-22/tools/compare.py": [
+   {
+    "line": 6,
+    "kinds": [
+     "literal-tmp-path"
+    ],
+    "literal": null
+   }
+  ],
+  "docs/evidence/launch-form-snapshot-review-2026-10-22/tools/fifo_probe.mjs": [
+   {
+    "line": 9,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "r516-probe-"
+   }
+  ],
+  "docs/evidence/non-human-principal-pins-2026-10-22/mutate_non_human_principal.py": [
+   {
+    "line": 130,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "docs/evidence/poc-core-hygiene-2026-10-22/export_census.py": [
+   {
+    "line": 217,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "docs/evidence/poc-core-hygiene-2026-10-22/mutate_census.py": [
+   {
+    "line": 56,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "docs/evidence/poc-core-hygiene-2026-10-22/mutate_comment_only.py": [
+   {
+    "line": 57,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "docs/evidence/poc-core-hygiene-2026-10-22/mutate_compare_captures.py": [
+   {
+    "line": 59,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "docs/evidence/poc-core-hygiene-2026-10-22/route-capture.mjs": [
+   {
+    "line": 53,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "zz-route-capture-"
+   }
+  ],
+  "docs/evidence/poc-core-hygiene-2026-10-22/route_capture_leak_check.py": [
+   {
+    "line": 31,
+    "kinds": [
+     "js-mkdtemp",
+     "py-tempfile"
+    ],
+    "literal": "zz-leak-check-"
+   }
+  ],
+  "docs/evidence/poc-fixture-leak-2026-10-22/cli_sweep_probe.py": [
+   {
+    "line": 37,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "docs/evidence/poc-fixture-leak-2026-10-22/guard_probe.py": [
+   {
+    "line": 11,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "docs/evidence/poc-fixture-leak-2026-10-22/interrupt_probe.py": [
+   {
+    "line": 32,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "docs/evidence/poc-fixture-leak-2026-10-22/kill_then_fresh_run.py": [
+   {
+    "line": 40,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 132,
+    "kinds": [
+     "js-mkdtemp",
+     "py-tempfile"
+    ],
+    "literal": "zz-kill-fresh-"
+   }
+  ],
+  "docs/evidence/poc-fixture-leak-2026-10-22/mutate_sweep.py": [
+   {
+    "line": 41,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 94,
+    "kinds": [
+     "js-tmpdir"
+    ],
+    "literal": null
+   },
+   {
+    "line": 121,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": null
+   },
+   {
+    "line": 131,
+    "kinds": [
+     "js-mkdtemp",
+     "py-tempfile"
+    ],
+    "literal": "zz-mutate-sweep-"
+   }
+  ],
+  "docs/evidence/poc-fixture-leak-2026-10-22/ns_holder.mjs": [
+   {
+    "line": 10,
+    "kinds": [
+     "js-mkdtemp"
+    ],
+    "literal": null
+   }
+  ],
+  "docs/evidence/poc-fixture-leak-2026-10-22/ns_sandbox_probe.py": [
+   {
+    "line": 42,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "docs/evidence/poc-hygiene-2026-10-22/assemble_census.py": [
+   {
+    "line": 29,
+    "kinds": [
+     "js-mkdtemp",
+     "py-tempfile"
+    ],
+    "literal": "zz-assemble-census-"
+   }
+  ],
+  "docs/evidence/poc-hygiene-2026-10-22/invocation_forms.py": [
+   {
+    "line": 30,
+    "kinds": [
+     "js-mkdtemp",
+     "py-tempfile"
+    ],
+    "literal": "zz-invocation-forms-"
+   }
+  ],
+  "docs/evidence/poc-hygiene-2026-10-22/limb_isolation.py": [
+   {
+    "line": 75,
+    "kinds": [
+     "js-mkdtemp",
+     "py-tempfile"
+    ],
+    "literal": "zz-limb-isolation-"
+   }
+  ],
+  "docs/evidence/poc-hygiene-2026-10-22/mutate_main.py": [
+   {
+    "line": 67,
+    "kinds": [
+     "js-mkdtemp",
+     "py-tempfile"
+    ],
+    "literal": "zz-mutate-main-"
+   }
+  ],
+  "docs/evidence/poc-hygiene-2026-10-22/route-capture.mjs": [
+   {
+    "line": 51,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "zz-route-capture-"
+   }
+  ],
+  "docs/evidence/poc-hygiene-2026-10-22/run_differential.py": [
+   {
+    "line": 31,
+    "kinds": [
+     "js-mkdtemp",
+     "py-tempfile"
+    ],
+    "literal": "zz-differential-"
+   }
+  ],
+  "docs/evidence/poc-main-wiring-2026-10-22/mutate_comparators.py": [
+   {
+    "line": 137,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": "zz-mutate-comparators-"
+   }
+  ],
+  "docs/evidence/poc-main-wiring-2026-10-22/mutate_dist_compare.py": [
+   {
+    "line": 67,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": "zz-mutate-dist-"
+   }
+  ],
+  "docs/evidence/poc-main-wiring-2026-10-22/mutate_sweep_waits.py": [
+   {
+    "line": 41,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": "zz-sweep-waits-"
+   }
+  ],
+  "docs/evidence/poc-main-wiring-2026-10-22/mutate_wiring.py": [
+   {
+    "line": 80,
+    "kinds": [
+     "js-mkdtemp",
+     "py-tempfile"
+    ],
+    "literal": "zz-mutate-wiring-"
+   }
+  ],
+  "docs/evidence/poc-main-wiring-2026-10-22/run_differential_fixed_roots.py": [
+   {
+    "line": 44,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "zz-main-repo-"
+   },
+   {
+    "line": 68,
+    "kinds": [
+     "js-mkdtemp",
+     "py-tempfile"
+    ],
+    "literal": "zz-differential-"
+   }
+  ],
+  "docs/evidence/scratch-prefix-census-2026-10-23/census_run.py": [
+   {
+    "line": 56,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "docs/evidence/scratch-prefix-census-2026-10-23/scratch_trace.cjs": [
+   {
+    "line": 9,
+    "kinds": [
+     "js-tmpdir"
+    ],
+    "literal": null
+   },
+   {
+    "line": 40,
+    "kinds": [
+     "js-tmpdir"
+    ],
+    "literal": null
+   }
+  ],
+  "docs/evidence/scratch-prefix-census-2026-10-23/static_sites.py": [
+   {
+    "line": 9,
+    "kinds": [
+     "js-mkdtemp"
+    ],
+    "literal": null
+   },
+   {
+    "line": 10,
+    "kinds": [
+     "js-tmpdir"
+    ],
+    "literal": null
+   },
+   {
+    "line": 11,
+    "kinds": [
+     "js-mkdtemp",
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "docs/evidence/scratch-prefix-census-2026-10-23/trace_fixture.mjs": [
+   {
+    "line": 9,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "st-sync-"
+   },
+   {
+    "line": 10,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "st-promise-"
+   },
+   {
+    "line": 11,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "st-callback-"
+   },
+   {
+    "line": 12,
+    "kinds": [
+     "js-tmpdir"
+    ],
+    "literal": null
+   },
+   {
+    "line": 13,
+    "kinds": [
+     "js-tmpdir"
+    ],
+    "literal": null
+   },
+   {
+    "line": 14,
+    "kinds": [
+     "js-tmpdir"
+    ],
+    "literal": null
+   },
+   {
+    "line": 15,
+    "kinds": [
+     "js-tmpdir"
+    ],
+    "literal": null
+   },
+   {
+    "line": 16,
+    "kinds": [
+     "js-tmpdir"
+    ],
+    "literal": null
+   },
+   {
+    "line": 18,
+    "kinds": [
+     "js-tmpdir"
+    ],
+    "literal": null
+   },
+   {
+    "line": 19,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "st-nested-"
+   },
+   {
+    "line": 21,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "st-child-"
+   }
+  ],
+  "docs/evidence/scratch-prefix-census-2026-10-23/trace_selftest.py": [
+   {
+    "line": 26,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 71,
+    "kinds": [
+     "js-tmpdir"
+    ],
+    "literal": null
+   },
+   {
+    "line": 73,
+    "kinds": [
+     "js-tmpdir"
+    ],
+    "literal": null
+   }
+  ],
+  "docs/evidence/syzygy-bpyt-7-2/route-diff.mjs": [
+   {
+    "line": 89,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "zz-rd-"
+   }
+  ],
+  "docs/evidence/syzygy-bpyt-8-1/mutate.py": [
+   {
+    "line": 30,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "docs/evidence/syzygy-bpyt-8-1/regen_check.py": [
+   {
+    "line": 19,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "packages/cap1-conformance/src/consent-record-convention.conformance.test.ts": [
+   {
+    "line": 25,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-a08-consent-convention-"
+   }
+  ],
+  "packages/cap1-daemon/src/consent-loading.test.ts": [
+   {
+    "line": 35,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-rt2-consent-"
+   }
+  ],
+  "packages/cap1-daemon/src/credentials.test.ts": [
+   {
+    "line": 33,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "rt3-cred-"
+   }
+  ],
+  "packages/cap1-daemon/src/observation.test.ts": [
+   {
+    "line": 25,
+    "kinds": [
+     "js-tmpdir"
+    ],
+    "literal": null
+   },
+   {
+    "line": 66,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-rt1-"
+   }
+  ],
+  "packages/cap1-daemon/src/pipeline.test.ts": [
+   {
+    "line": 28,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": null
+   }
+  ],
+  "packages/cap1-daemon/src/routes-human.test.ts": [
+   {
+    "line": 49,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": null
+   }
+  ],
+  "packages/cap1-daemon/src/routes-machine.test.ts": [
+   {
+    "line": 46,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": null
+   }
+  ],
+  "packages/cap1-daemon/src/server.test.ts": [
+   {
+    "line": 34,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": null
+   }
+  ],
+  "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts": [
+   {
+    "line": 56,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syz-entry-"
+   }
+  ],
+  "packages/cap1-system/src/effect-observer.ts": [
+   {
+    "line": 74,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syz-effect-trace-"
+   }
+  ],
+  "packages/cap1-system/src/harness.ts": [
+   {
+    "line": 95,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": null
+   }
+  ],
+  "packages/polaris-dossier/src/brief.test.ts": [
+   {
+    "line": 53,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "dossier-brief-"
+   },
+   {
+    "line": 295,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "dossier-records-"
+   }
+  ],
+  "packages/polaris-dossier/src/check.test.ts": [
+   {
+    "line": 63,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "dossier-check-origin-"
+   },
+   {
+    "line": 84,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": null
+   },
+   {
+    "line": 567,
+    "kinds": [
+     "literal-tmp-path"
+    ],
+    "literal": null
+   },
+   {
+    "line": 568,
+    "kinds": [
+     "literal-tmp-path"
+    ],
+    "literal": null
+   },
+   {
+    "line": 569,
+    "kinds": [
+     "literal-tmp-path"
+    ],
+    "literal": null
+   }
+  ],
+  "packages/polaris-dossier/src/cli.test.ts": [
+   {
+    "line": 30,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "dossier-cli-"
+   }
+  ],
+  "packages/polaris-dossier/src/close.test.ts": [
+   {
+    "line": 26,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": null
+   },
+   {
+    "line": 144,
+    "kinds": [
+     "literal-tmp-path"
+    ],
+    "literal": null
+   }
+  ],
+  "packages/polaris-dossier/src/credential-probe.test.ts": [
+   {
+    "line": 15,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "dossier-cred-"
+   }
+  ],
+  "packages/polaris-dossier/src/design-review.test.ts": [
+   {
+    "line": 78,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "dossier-design-site-"
+   }
+  ],
+  "packages/polaris-dossier/src/doctrine-quote.test.ts": [
+   {
+    "line": 65,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "dossier-doctrine-"
+   }
+  ],
+  "packages/polaris-dossier/src/execution-choice.test.ts": [
+   {
+    "line": 37,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": null
+   }
+  ],
+  "packages/polaris-dossier/src/execution-flags.test.ts": [
+   {
+    "line": 25,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": null
+   }
+  ],
+  "packages/polaris-dossier/src/full-run.testkit.ts": [
+   {
+    "line": 113,
+    "kinds": [
+     "literal-tmp-path"
+    ],
+    "literal": null
+   }
+  ],
+  "packages/polaris-dossier/src/gate-acts.test.ts": [
+   {
+    "line": 49,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "dossier-gate-acts-"
+   }
+  ],
+  "packages/polaris-dossier/src/gate-parts.test.ts": [
+   {
+    "line": 17,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": null
+   }
+  ],
+  "packages/polaris-dossier/src/git-object-reader.test.ts": [
+   {
+    "line": 82,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "git-object-reader-"
+   }
+  ],
+  "packages/polaris-dossier/src/inventory.test.ts": [
+   {
+    "line": 49,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "dossier-inventory-origin-"
+   },
+   {
+    "line": 67,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": null
+   }
+  ],
+  "packages/polaris-dossier/src/launched.test.ts": [
+   {
+    "line": 15,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "polaris-marker-"
+   }
+  ],
+  "packages/polaris-dossier/src/no-egress.test.ts": [
+   {
+    "line": 27,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "dossier-no-egress-"
+   }
+  ],
+  "packages/polaris-dossier/src/polaris.ts": [
+   {
+    "line": 379,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "polaris-"
+   }
+  ],
+  "packages/polaris-dossier/src/render.test.ts": [
+   {
+    "line": 59,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "dossier-render-origin-"
+   },
+   {
+    "line": 78,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": null
+   }
+  ],
+  "packages/polaris-dossier/src/review.test.ts": [
+   {
+    "line": 60,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "dossier-review-origin-"
+   },
+   {
+    "line": 79,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": null
+   }
+  ],
+  "packages/polaris-dossier/src/run-evidence.test.ts": [
+   {
+    "line": 26,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": null
+   }
+  ],
+  "packages/polaris-dossier/src/screen.test.ts": [
+   {
+    "line": 38,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "dossier-screen-"
+   }
+  ],
+  "packages/polaris-dossier/src/session-view.test.ts": [
+   {
+    "line": 20,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "polaris-view-"
+   },
+   {
+    "line": 99,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "polaris-launched-"
+   },
+   {
+    "line": 119,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "polaris-why-"
+   }
+  ],
+  "packages/polaris-dossier/src/session-view.ts": [
+   {
+    "line": 99,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "polaris-view-probe-"
+   }
+  ],
+  "packages/polaris-dossier/src/start-gates.test.ts": [
+   {
+    "line": 36,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": null
+   },
+   {
+    "line": 46,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "dossier-origin-"
+   }
+  ],
+  "packages/polaris-dossier/src/state-directory.test.ts": [
+   {
+    "line": 12,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "dossier-state-"
+   }
+  ],
+  "packages/polaris-dossier/src/status.test.ts": [
+   {
+    "line": 28,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "dossier-status-"
+   }
+  ],
+  "packages/polaris-dossier/src/waiting-sessions.test.ts": [
+   {
+    "line": 28,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": null
+   }
+  ],
+  "packages/three-surface-poc-core/src/code-structure.test.ts": [
+   {
+    "line": 25,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-poc-code-structure-"
+   },
+   {
+    "line": 80,
+    "kinds": [
+     "js-tmpdir"
+    ],
+    "literal": null
+   },
+   {
+    "line": 161,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-poc-fake-git-"
+   }
+  ],
+  "packages/three-surface-poc-core/src/materialization.test.ts": [
+   {
+    "line": 26,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-poc-materialize-state-"
+   }
+  ],
+  "packages/three-surface-poc-core/src/model-observations.test.ts": [
+   {
+    "line": 26,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-poc-model-obs-"
+   }
+  ],
+  "packages/three-surface-poc-core/src/model.test.ts": [
+   {
+    "line": 28,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-poc-butlers-"
+   },
+   {
+    "line": 95,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-poc-butlers-git-"
+   },
+   {
+    "line": 107,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-poc-butlers-git-template-"
+   },
+   {
+    "line": 731,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-poc-empty-seeds-"
+   }
+  ],
+  "packages/three-surface-poc-core/src/test-artifact-verification-live-source.test.ts": [
+   {
+    "line": 323,
+    "kinds": [
+     "literal-tmp-path"
+    ],
+    "literal": null
+   },
+   {
+    "line": 327,
+    "kinds": [
+     "literal-tmp-path"
+    ],
+    "literal": null
+   }
+  ],
+  "packages/three-surface-poc-core/src/test-artifact-verification.test.ts": [
+   {
+    "line": 31,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-poc-test-artifact-"
+   },
+   {
+    "line": 431,
+    "kinds": [
+     "literal-tmp-path"
+    ],
+    "literal": null
+   },
+   {
+    "line": 432,
+    "kinds": [
+     "literal-tmp-path"
+    ],
+    "literal": null
+   },
+   {
+    "line": 433,
+    "kinds": [
+     "literal-tmp-path"
+    ],
+    "literal": null
+   }
+  ],
+  "packages/three-surface-poc-core/src/test-cleanup.test.ts": [
+   {
+    "line": 8,
+    "kinds": [
+     "literal-tmp-path"
+    ],
+    "literal": null
+   },
+   {
+    "line": 19,
+    "kinds": [
+     "literal-tmp-path"
+    ],
+    "literal": null
+   },
+   {
+    "line": 32,
+    "kinds": [
+     "literal-tmp-path"
+    ],
+    "literal": null
+   }
+  ],
+  "packages/three-surface-poc-core/src/worker-change-observation.test.ts": [
+   {
+    "line": 44,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-poc-worker-change-"
+   },
+   {
+    "line": 76,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-poc-worker-change-noorigin-"
+   }
+  ],
+  "scripts/build_cap1_trusted_bootstrap_consent_adoption.py": [
+   {
+    "line": 440,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 476,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 484,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 506,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/build_contract_readability_restyle.py": [
+   {
+    "line": 177,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 275,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 513,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/build_dossier_agent_provider_v2.py": [
+   {
+    "line": 182,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 188,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 242,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/build_dossier_local_agent_acts.py": [
+   {
+    "line": 161,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 167,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 216,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/build_general_trusted_bootstrap_impact_ledger.py": [
+   {
+    "line": 451,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": "general-bootstrap-impact-"
+   }
+  ],
+  "scripts/build_general_trusted_bootstrap_transaction.py": [
+   {
+    "line": 429,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": "general-bootstrap-tx-"
+   }
+  ],
+  "scripts/build_polaris_dependency_unions.py": [
+   {
+    "line": 282,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/build_polaris_dossier_local_agent_mode.py": [
+   {
+    "line": 144,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": "dossier-recount-"
+   },
+   {
+    "line": 368,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 387,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 433,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 463,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 485,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 493,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 507,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 518,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 527,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 534,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 541,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 549,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/build_polaris_dossier_local_agent_mode_v1_1.py": [
+   {
+    "line": 198,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": "dossier-v11-"
+   },
+   {
+    "line": 210,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": "dossier-v11-"
+   },
+   {
+    "line": 356,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": "dossier-v11-"
+   },
+   {
+    "line": 473,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/build_polaris_dossier_local_agent_mode_v1_2.py": [
+   {
+    "line": 116,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": "dossier-v12-"
+   },
+   {
+    "line": 304,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/build_polaris_edit_repair_deletion_scenario.py": [
+   {
+    "line": 128,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": "polaris-edit-repair-deletion-"
+   },
+   {
+    "line": 362,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": "polaris-edit-repair-deletion-selftest-"
+   }
+  ],
+  "scripts/build_provider_route_messages_api_entry.py": [
+   {
+    "line": 606,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/build_public_admission_registry_entries.py": [
+   {
+    "line": 412,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/build_public_egress_v2.py": [
+   {
+    "line": 215,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/build_public_git_source_acquisition_local_agent.py": [
+   {
+    "line": 271,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 277,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 332,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 353,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 362,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 371,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/build_public_repo_admission.py": [
+   {
+    "line": 130,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 169,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 210,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 222,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/build_public_source_screening_scope.py": [
+   {
+    "line": 272,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 398,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 471,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 524,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 562,
+    "kinds": [
+     "js-mkdtemp",
+     "py-tempfile"
+    ],
+    "literal": "reader-mutant-"
+   }
+  ],
+  "scripts/build_public_source_screening_scope_v2.py": [
+   {
+    "line": 349,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 645,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 704,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 878,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 896,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/build_public_source_screening_scope_v3.py": [
+   {
+    "line": 369,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 375,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 408,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/build_public_source_screening_scope_v4.py": [
+   {
+    "line": 576,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 581,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 613,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 663,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 717,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/build_pwb_anchor_resolution_amendment.py": [
+   {
+    "line": 155,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 505,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 823,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/build_pwb_behavior_contract_repin.py": [
+   {
+    "line": 250,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 550,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 620,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/build_pwb_behavior_contract_repin_tree_framing.py": [
+   {
+    "line": 380,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/build_pwb_class_granular_extraction_amendment.py": [
+   {
+    "line": 322,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 495,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 892,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/build_pwb_container_shape_profile_amendment.py": [
+   {
+    "line": 915,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 1361,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 1666,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 1786,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 1814,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/build_pwb_dismissal_expiry_amendment.py": [
+   {
+    "line": 606,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 1267,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 1318,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/build_pwb_exact_source_render_mode_amendment.py": [
+   {
+    "line": 139,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 191,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 248,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 392,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 432,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 472,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/build_pwb_item_depth_amendment.py": [
+   {
+    "line": 142,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 216,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 229,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 621,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/build_pwb_machine_view_amendment.py": [
+   {
+    "line": 130,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 152,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 309,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 374,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/build_pwb_missing_currency_disclosure_scenario.py": [
+   {
+    "line": 169,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 269,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 283,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 503,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 536,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/build_pwb_opening_band_scenario.py": [
+   {
+    "line": 137,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 173,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 207,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 315,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 361,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/build_pwb_readability_successor.py": [
+   {
+    "line": 222,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 454,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 800,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/build_pwb_registry_currency_briefing_amendment.py": [
+   {
+    "line": 186,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 379,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/build_pwb_registry_loaded_profile_amendment.py": [
+   {
+    "line": 312,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 875,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 1826,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 1853,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/build_pwb_registry_machine_ceiling_amendment.py": [
+   {
+    "line": 167,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 337,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 446,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/build_pwb_release_label_amendment.py": [
+   {
+    "line": 377,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 587,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 1157,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/build_pwb_scoped_attributes_amendment.py": [
+   {
+    "line": 114,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 136,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 269,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 291,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/build_pwb_tree_framing_amendment.py": [
+   {
+    "line": 176,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 250,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 263,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 788,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/build_pwb_truth_policy_amendment.py": [
+   {
+    "line": 308,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/build_rfc5_project_documentation_class.py": [
+   {
+    "line": 254,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/build_rfc7_scoped_values_successor.py": [
+   {
+    "line": 172,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 350,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/build_spec_policy_readability_restyle.py": [
+   {
+    "line": 109,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 320,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/build_three_surface_poc_identity_amendment.py": [
+   {
+    "line": 245,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 863,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/build_three_surface_poc_readability_successor.py": [
+   {
+    "line": 142,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 169,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 211,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 518,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/build_three_surface_poc_vocabulary_epistemic_amendment.py": [
+   {
+    "line": 255,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 1015,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/check_docs_review_campaign_partition.py": [
+   {
+    "line": 991,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": "review-partition-selftest-"
+   }
+  ],
+  "scripts/check_evidence_currency.py": [
+   {
+    "line": 781,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": "check-evidence-currency-selftest-"
+   }
+  ],
+  "scripts/check_governance.py": [
+   {
+    "line": 8630,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 8662,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 8688,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 9098,
+    "kinds": [
+     "js-mkdtemp",
+     "py-tempfile"
+    ],
+    "literal": "cg1g-selftest-"
+   },
+   {
+    "line": 9138,
+    "kinds": [
+     "js-mkdtemp",
+     "py-tempfile"
+    ],
+    "literal": "cg1a-selftest-"
+   },
+   {
+    "line": 9169,
+    "kinds": [
+     "js-mkdtemp",
+     "py-tempfile"
+    ],
+    "literal": "cg1i-selftest-"
+   },
+   {
+    "line": 9209,
+    "kinds": [
+     "js-mkdtemp",
+     "py-tempfile"
+    ],
+    "literal": "cg7d-selftest-"
+   },
+   {
+    "line": 9295,
+    "kinds": [
+     "js-mkdtemp",
+     "py-tempfile"
+    ],
+    "literal": "cg7e-history-selftest-"
+   },
+   {
+    "line": 9361,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": "cg7-restyle-packet-"
+   },
+   {
+    "line": 9379,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": "cg7-edit-repair-candidate-"
+   },
+   {
+    "line": 9412,
+    "kinds": [
+     "js-mkdtemp",
+     "py-tempfile"
+    ],
+    "literal": "cg7e-pwb-absent-selftest-"
+   },
+   {
+    "line": 9447,
+    "kinds": [
+     "js-mkdtemp",
+     "py-tempfile"
+    ],
+    "literal": "cg7e-pwb-act-selftest-"
+   },
+   {
+    "line": 9542,
+    "kinds": [
+     "js-mkdtemp",
+     "py-tempfile"
+    ],
+    "literal": "cg7e-bare-manifest-selftest-"
+   },
+   {
+    "line": 9666,
+    "kinds": [
+     "js-mkdtemp",
+     "py-tempfile"
+    ],
+    "literal": "cg7e-near-miss-selftest-"
+   },
+   {
+    "line": 9783,
+    "kinds": [
+     "js-mkdtemp",
+     "py-tempfile"
+    ],
+    "literal": "cg7e-pinned-copy-selftest-"
+   },
+   {
+    "line": 9859,
+    "kinds": [
+     "js-mkdtemp",
+     "py-tempfile"
+    ],
+    "literal": "cg7e-pwb-effect-act-selftest-"
+   },
+   {
+    "line": 9925,
+    "kinds": [
+     "js-mkdtemp",
+     "py-tempfile"
+    ],
+    "literal": "cg7e-pwb-effect-amendment-selftest-"
+   },
+   {
+    "line": 10579,
+    "kinds": [
+     "js-mkdtemp",
+     "py-tempfile"
+    ],
+    "literal": "cg7-selftest-"
+   },
+   {
+    "line": 10674,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/check_polaris_response_ceiling_reading.py": [
+   {
+    "line": 181,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 317,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 566,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/check_quotations.py": [
+   {
+    "line": 550,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/check_spec_reconciliation.py": [
+   {
+    "line": 543,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 1980,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/count_polaris_effective_scenarios.py": [
+   {
+    "line": 485,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": "polaris-scenario-recount-"
+   },
+   {
+    "line": 678,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": "polaris-scenario-count-selftest-"
+   }
+  ],
+  "scripts/install_redis_local_agent_sitting.py": [
+   {
+    "line": 907,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 991,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/install_redis_sitting.py": [
+   {
+    "line": 1278,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 1282,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 1287,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 1292,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 1315,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 1318,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 1502,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 1538,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 1596,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 1624,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 1658,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 1747,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 1774,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/launch_gate_results.py": [
+   {
+    "line": 1884,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 2466,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 2469,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 2492,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 2495,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 2515,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 2518,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 2700,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 2704,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/polaris_generator_approval.py": [
+   {
+    "line": 285,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 353,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/probe_superseded_policy_act_regeneration.py": [
+   {
+    "line": 136,
+    "kinds": [
+     "js-mkdtemp",
+     "py-tempfile"
+    ],
+    "literal": "probe-superseded-policy-acts-"
+   }
+  ],
+  "scripts/pwb_requirement_amendment.py": [
+   {
+    "line": 193,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 336,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 408,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 458,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 723,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/pwb_signed_selftest.py": [
+   {
+    "line": 56,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 108,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/readability_successor.py": [
+   {
+    "line": 454,
+    "kinds": [
+     "js-mkdtemp",
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/record_contract_readability_restyle.py": [
+   {
+    "line": 308,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 417,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/record_dossier_agent_provider_v2_act.py": [
+   {
+    "line": 640,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/record_dossier_local_agent_acts.py": [
+   {
+    "line": 663,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/record_messages_api_route_registry_act.py": [
+   {
+    "line": 550,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 669,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/record_narrative_profile_adoption.py": [
+   {
+    "line": 321,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/record_polaris_understanding_adoption.py": [
+   {
+    "line": 188,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 782,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 1248,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 1324,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 1340,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 1370,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 1401,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 1442,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 1486,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/record_public_admission_registry_entries_acts.py": [
+   {
+    "line": 524,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 633,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/record_public_egress_v2_act.py": [
+   {
+    "line": 550,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 684,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/record_public_repo_admission_acts.py": [
+   {
+    "line": 538,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 636,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 670,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/record_public_source_screening_scope_act.py": [
+   {
+    "line": 540,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 626,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/record_public_source_screening_scope_v2_act.py": [
+   {
+    "line": 631,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 769,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/record_public_source_screening_scope_v3_act.py": [
+   {
+    "line": 661,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 725,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/record_public_source_screening_scope_v4_act.py": [
+   {
+    "line": 722,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 766,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 838,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/record_pwb_behavior_amendment_acts.py": [
+   {
+    "line": 1110,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 1767,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/record_pwb_behavior_contract_repin_acts.py": [
+   {
+    "line": 675,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/record_pwb_registry_machine_ceiling_act.py": [
+   {
+    "line": 304,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": ".p114-"
+   },
+   {
+    "line": 481,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/record_rfc7_scoped_values_successor.py": [
+   {
+    "line": 316,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 423,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/record_spec_policy_readability_restyle.py": [
+   {
+    "line": 372,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 501,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 508,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 524,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 542,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/record_three_surface_poc_readability_successor.py": [
+   {
+    "line": 291,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/record_versioned_signoff.py": [
+   {
+    "line": 289,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 1566,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 1573,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 1593,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 1628,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 1661,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 1761,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 1771,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 1807,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 1829,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 1874,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 1880,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 1951,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 1959,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 1999,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 2015,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 2071,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 2123,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 2144,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 2208,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 2218,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 2224,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 2229,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 2234,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 2242,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 2255,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 2259,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 2264,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 2277,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 2283,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 2289,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 2324,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/redis_screening_remeasure.mjs": [
+   {
+    "line": 274,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "redis-remeasure-root-"
+   },
+   {
+    "line": 276,
+    "kinds": [
+     "js-tmpdir"
+    ],
+    "literal": null
+   },
+   {
+    "line": 301,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "redis-remeasure-mutants-"
+   },
+   {
+    "line": 451,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "redis-remeasure-view-"
+   }
+  ],
+  "scripts/render_launch_administration.py": [
+   {
+    "line": 487,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 553,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 576,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 619,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 662,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 728,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 781,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 804,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 836,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 862,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 887,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 902,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/rerun_rule6_mutants_selected_tests.py": [
+   {
+    "line": 30,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/rule6_mutation_runner.py": [
+   {
+    "line": 38,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/rule6_timeout_rerun.py": [
+   {
+    "line": 24,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/run_line_slot_rule6_mutants.py": [
+   {
+    "line": 47,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/run_m13_literal_mutations.mjs": [
+   {
+    "line": 85,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-m13-mutation-"
+   }
+  ],
+  "scripts/run_m7_literal_mutations.mjs": [
+   {
+    "line": 57,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-m7-mutation-"
+   }
+  ],
+  "scripts/run_m9_literal_mutations.mjs": [
+   {
+    "line": 66,
+    "kinds": [
+     "js-mkdtemp",
+     "js-tmpdir"
+    ],
+    "literal": "syzygy-m9-mutation-"
+   }
+  ],
+  "scripts/simulate_public_source_screening_scope_act.py": [
+   {
+    "line": 98,
+    "kinds": [
+     "js-mkdtemp",
+     "py-tempfile"
+    ],
+    "literal": "screening-scope-sim-"
+   }
+  ],
+  "scripts/simulate_redis_local_agent_sitting.py": [
+   {
+    "line": 249,
+    "kinds": [
+     "js-mkdtemp",
+     "py-tempfile"
+    ],
+    "literal": "local-agent-sitting-"
+   }
+  ],
+  "scripts/simulate_redis_sitting.py": [
+   {
+    "line": 790,
+    "kinds": [
+     "js-mkdtemp",
+     "py-tempfile"
+    ],
+    "literal": "sitting-sim-"
+   },
+   {
+    "line": 892,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 918,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ],
+  "scripts/validate_launch_administration.py": [
+   {
+    "line": 1715,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 2019,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 2324,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 2351,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 2394,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 2436,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 2519,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 2570,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 2728,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   },
+   {
+    "line": 2887,
+    "kinds": [
+     "py-tempfile"
+    ],
+    "literal": null
+   }
+  ]
+ }
+}

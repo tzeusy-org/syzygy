@@ -1,0 +1,173 @@
+# Polaris dossier reader standards
+
+Version: `polaris-reader-standards-v1`
+
+A good Polaris dossier lets someone open one place and understand what a
+project is for, how it works, and what it chose to give up. These standards
+describe that dossier in terms a writer and a reviewer can check. The author
+reads them before outlining and checks the draft against them before
+submitting; the design reviewer judges every rendered page against them.
+
+They are working guidance drawn from Syzygy's vision and the Polaris
+generation specification, which win wherever the two differ. Meeting them
+does not prove a dossier is done: an independent evaluation decides that.
+
+- Source: VIS-1 to VIS-3; REQ-polaris-generation-002, -004, -014.
+
+How to use them:
+
+- **Author:** check each standard against the draft; fix each failure, or
+  record why it stands.
+- **Design reviewer:** for each standard and page, answer pass, fail (name
+  the page and what you saw) or not applicable (say why).
+- Standards marked *counted* are also measured by `syzygy dossier check`.
+  A count is advice; the reviewer still judges the page.
+
+## Reader and purpose
+
+- **RS-1 Explain the product, not the process.** The dossier is about the
+  project: what it is, why it exists, how it works and what it costs. How
+  the dossier itself was made (the run, its sources, reviews and coverage)
+  stays reachable but off the reading path.
+  - Check: following the reading path from the overview never lands on run
+    machinery.
+- **RS-2 Write for one reader:** an engineer new to the project and its
+  domain. Define each term where it first appears or in the glossary, and
+  never assume the reader knows the code or Syzygy's vocabulary.
+  - Check: no sentence a newcomer would need to read twice.
+- Source: VIS-3; REQ-002.
+
+## Abstraction tree
+
+Every page, section and list is an abstraction tree: the most important
+idea first, then increasing detail, so a reader can stop at any level and
+still hold a true answer.
+
+- **RS-3 Answer first.** Each page opens with its answer, each section with
+  one sentence that states its point, each list with its summary item.
+  Background, evidence and caveats follow.
+  - Weak: "This section covers the replication module in `replication.c`."
+  - Strong: "Replicas copy the primary asynchronously, so a failover can
+    lose the latest writes."
+- **RS-4 Every level summarises what lies beneath it.** A parent states the
+  gist of its children, one zoom level out. Going deeper adds resolution,
+  never a new conclusion, and a caveat that changes the answer belongs in
+  the parent.
+  - Check: reading only the headings and opening sentences still tells the
+    whole story, more coarsely.
+- **RS-5 Each depth makes a different kind of statement.** The overview gives
+  outcome and purpose; sections give concepts, components and trade-offs;
+  deep dives give mechanisms; source pages and the appendix give evidence.
+  Specifics (names, paths, flags, numbers) sink to the lowest level that
+  needs them: a parent names the concept, its children name the artifacts.
+  - Check: no heading or opening sentence holds a path, flag or number its
+    children could hold.
+- **RS-6 Branches stand alone.** A section or deep dive reads correctly
+  without its siblings, and one concept lives in one branch, never split
+  across two.
+- **RS-7 Short and few.** Titles read like headlines. A list item holds one
+  idea in about ten words; past about five siblings, group them under a new
+  parent. A long item is a structure problem: split it into a parent and
+  children rather than squeezing the words.
+- Source: CC-REV-8; REQ-004 (each depth a true, coarser account).
+
+## Reading depths
+
+- **RS-8 The opening.** From the overview alone, a cold reader can say what
+  the product is, who it serves, the problem it solves and its central idea.
+  - Check: all four appear in plain words on the overview's first screen.
+- **RS-9 The concise account** gives the motives, promises and boundaries:
+  what the project commits to and what it deliberately leaves out, all
+  answered before any deep dive is needed.
+- **RS-10 The deeper account** gives the capabilities, how they relate and
+  the design choices that shape them, with each trade-off beside the
+  mechanism it shapes.
+  - Check: a reader can explain why the main mechanisms are built as they
+    are, citing the page.
+- Source: REQ-004; VIS-3.
+
+## Technology choices
+
+The dossier lists the product's technology choices in one table, in the
+deeper account: one row per dimension, giving the choice, its reason and its
+source, and linking to where the mechanism is explained.
+
+- **RS-11 Cover every dimension that applies.**
+  - Language and runtime: languages, runtime or VM, and versions where they
+    matter.
+  - Architecture: how the product is deployed and divided (server and
+    clients, embedded library, single process or distributed cluster), and
+    which part holds what.
+  - Networking: protocols and transports (TCP, UDP, HTTP, gRPC, a custom
+    wire protocol), the wire format, and how peers find each other.
+  - State and persistence: where state lives (memory, files, an embedded or
+    external database), how it is made durable, and what consistency it
+    promises.
+  - Concurrency: threads, event loop, processes or actors, and what that
+    means for throughput and ordering.
+  - Interfaces: how people and programs reach it (CLI, API, SDK, protocol)
+    and which of these are stable.
+  - Platforms and dependencies: supported systems and hardware, and the
+    dependencies the design rests on.
+  - Check: every dimension has a row, and a dimension that does not apply
+    says so and why.
+- **RS-12 Every choice comes with its reason as the sources give it:** the
+  problem it solves and what it gives up. Where no source states the reason,
+  the row says the reason is Unknown rather than supplying a plausible one.
+  - Check: every reason is cited, or marked Inferred with its premises.
+- Source: REQ-002 (design choices; no invented motive); REQ-004; VIS-2.
+
+## Structure
+
+- **RS-13 Titles say what a page explains**, such as "How a write reaches the
+  replicas", never a function, type or file name. *Counted.*
+- **RS-14 A deep dive answers a question its parent cannot.** Two that serve
+  one question are one, and a dossier has at most three. *Counted.*
+- **RS-15 Sections follow one line of argument,** each building on the last.
+  None reads as a renamed source heading or a standalone summary.
+- Source: REQ-002; REQ-004.
+
+## Show, then tell
+
+- **RS-16 Draw it first.** Every end-to-end workflow, every mechanism with
+  steps and every set of components that talk to each other is drawn. The
+  prose then explains what the picture cannot: why a step exists and what it
+  costs. *Counted* for sections with no diagram.
+- **RS-17 Diagrams carry only facts.** Each names the relationship it shows,
+  and every node, edge and label it draws is supported and marked.
+- **RS-18 Structured content looks structured.** Comparisons, options,
+  sequences and lists of three or more are tables, cards or steps, not
+  paragraphs.
+- Source: REQ-004 (diagrams where prose explains worse; a figure quota is not
+  value).
+
+## Concision
+
+- **RS-19 Sections stay short:** about 300 words of their own prose, outside
+  diagrams and elements. *Counted.*
+- **RS-20 Say each thing once.** No paragraph restates a diagram, a parent or
+  a sibling. A qualification that changes a claim's meaning stays with the
+  claim.
+- Source: REQ-004.
+
+## Truth
+
+- **RS-21 Nothing is invented.** Every claim is supported by a cited source
+  or marked Inferred with its premises. A motive, history or advantage no
+  source states is left out or marked Unknown, never filled in.
+- **RS-22 Stated, not sold.** Advantages and trade-offs appear as the sources
+  state them, never as marketing.
+- **RS-23 Gaps show where they matter.** An Unknown or open question that
+  affects a passage appears at that passage, not only in the appendix.
+- Source: VIS-1; VIS-2; REQ-002; REQ-004.
+
+## Navigation and look
+
+- **RS-24 The reader is always oriented.** From any page they can reach the
+  overview, the contents, the next page in reading order and the appendix,
+  and they can tell where they are.
+- **RS-25 Easy on the eye.** Colour, cards and diagrams divide each page
+  into visible parts; no page is an unbroken wall of text, and colour never
+  carries a claim's meaning on its own.
+- Source: VIS-1 (comprehension comes from simplifying presentation, never
+  content).

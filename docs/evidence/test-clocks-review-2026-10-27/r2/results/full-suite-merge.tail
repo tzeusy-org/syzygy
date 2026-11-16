@@ -1,0 +1,9 @@
+      1      → Test timed out in 5000ms.
+      1  FAIL  |@syzygy/polaris-dossier| packages/polaris-dossier/src/start-gates.test.ts > init: a run that passes every start gate > pins the consented HEAD, records the subject and writes only run.json under the state root
+      1 Error: Test timed out in 5000ms.
+ Test Files  1 failed | 242 passed | 3 skipped (246)
+      Tests  1 failed | 5373 passed | 5 skipped (5379)
+   Start at  15:14:21
+   Duration  410.77s (transform 44.13s, setup 9.26s, collect 231.06s, tests 1580.26s, environment 172ms, prepare 93.61s)
+
+JSON report written to /tmp/r532b-10/full-merge.json

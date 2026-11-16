@@ -1,0 +1,169 @@
+R-IF1-into-island-never-recorded killed 1 ['Tests  1 failed | 3 passed (4)'] 4.0 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > reaches the island from the consent package root, which the CLI does not import
+R-IF2-into-island-from-island-counted survives 0 ['Tests  4 passed (4)'] 4.0 clean
+GM7-entry-re-exports-the-barrel-as-a-namespace killed 1 ['Tests  5 failed | 22 passed (27)'] 3.9 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > has no node:module edge, and no import() or require of a computed name
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > leaves the entry by every edge but the four dynamic imports inside those branches
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > reaches this package through argv.ts and state-directory.ts alone
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > resolves every workspace specifier on it, and reaches past the entry's own imports
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the subpaths the daemon entry imports > are /argv and /state-directory, imported statically, and the barrel only dynamically inside the dossier and polaris branches
+OE2-walker-drops-require killed 1 ['Tests  3 failed | 24 passed (27)'] 4.7 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the subpaths the daemon entry imports > the check sees a forbidden import in const fs = require('fs'); (its own mutant)
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the subpaths the daemon entry imports > the entry check sees if (argv[0] !== 'dossier') require('@syzygy/polaris-dossier'); (its own mutant)
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the subpaths the daemon entry imports > the walk returns a computed specifier in "const name = '@syzygy/polaris-dossier';\nif (argv[0] === 'dossier') require(name);" as its 
+island:R1-non-literal-dynamic-import-of-core-root-in-render-step survives 0 ['Tests  4 passed (4)'] 3.1 clean
+island:R2-template-literal-dynamic-import-of-core-root-in-render-step killed 1 ['Tests  1 failed | 3 passed (4)'] 3.5 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > reaches no island module from the CLI entry
+island:R3-export-star-of-core-root-in-class-gate killed 1 ['Tests  1 failed | 3 passed (4)'] 5.0 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > reaches no island module from the CLI entry
+island:R4-live-subpath-node-condition-resolves-to-core-root killed 1 ['Tests  1 failed | 3 passed (4)'] 3.9 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > resolves every workspace import the CLI reaches, dynamic ones included
+island:R5-broker-client-entry-imports-core-root survives 0 ['Tests  4 passed (4)'] 4.1 clean
+island:R6-create-require-of-core-root-in-render-step survives 0 ['Tests  4 passed (4)'] 3.5 clean
+island:R7-import-type-node-of-core-root-in-class-gate killed 1 ['Tests  1 failed | 3 passed (4)'] 4.0 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > reaches no island module from the CLI entry
+island:R8-relative-cross-package-island-import-in-screen killed 1 ['Tests  1 failed | 3 passed (4)'] 3.6 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > reaches no island module from the CLI entry
+island:R9-island-import-hidden-inside-the-exception survives 0 ['Tests  4 passed (4)'] 2.8 clean
+island:B1-type-import-of-core-root-in-dossier-site killed 1 ['Tests  1 failed | 3 passed (4)'] 2.6 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > reaches no island module from the CLI entry
+island:B2-relative-island-import-in-live killed 1 ['Tests  1 failed | 3 passed (4)'] 2.6 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > reaches no island module from the CLI entry
+island:B3-dynamic-core-root-import-in-dossier-render-step killed 1 ['Tests  1 failed | 3 passed (4)'] 2.4 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > reaches no island module from the CLI entry
+island:B4-cli-subpath-resolves-to-provider-adapter killed 1 ['Tests  1 failed | 3 passed (4)'] 2.9 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > reaches no island module from the CLI entry
+island:B5-cli-imports-the-kept-provider-renderer-subpath killed 1 ['Tests  1 failed | 3 passed (4)'] 2.3 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > reaches no island module from the CLI entry
+island:B5b-cli-imports-a-subpath-the-app-does-not-export killed 1 ['Tests  1 failed | 3 passed (4)'] 2.2 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > resolves every workspace import the CLI reaches, dynamic ones included
+island:B7-exception-outlives-its-reason killed 1 ['Tests  1 failed | 3 passed (4)'] 2.6 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > reaches the island from the consent package root, which the CLI does not import
+island:B8-island-entry-names-no-file killed 1 ['Tests  1 failed | 3 passed (4)'] 2.2 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > lists twenty island modules, each a file in the tree
+island:B9-island-entry-dropped killed 1 ['Tests  1 failed | 3 passed (4)'] 2.4 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > lists twenty island modules, each a file in the tree
+consen:B1-core-root-import-in-in-force killed 1 ['Tests  1 failed | 3 passed (4)'] 2.0 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > reaches no island module from the CLI entry
+consen:B4-consent-ports-reexport-in-live killed 1 ['Tests  1 failed | 3 passed (4)'] 2.1 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > reaches no island module from the CLI entry
+consen:R1-literal-dynamic-import-of-core-root-in-in-force killed 1 ['Tests  1 failed | 3 passed (4)'] 2.5 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > reaches no island module from the CLI entry
+consen:R2-export-star-consent-ports-in-live killed 1 ['Tests  1 failed | 3 passed (4)'] 2.0 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > reaches no island module from the CLI entry
+consen:R3-computed-dynamic-import-of-core-root-in-in-force survives 0 ['Tests  4 passed (4)'] 2.3 clean
+consen:R4-node-condition-ahead-of-import-in-live-subpath killed 1 ['Tests  1 failed | 3 passed (4)'] 2.9 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > resolves every workspace import the CLI reaches, dynamic ones included
+consen:R5-vitest-alias-for-live-points-at-root survives 0 ['Tests  4 passed (4)'] 2.3 clean
+C0-argv survives 0 ['Tests  81 passed (81)'] 2.8 clean
+C0-guard survives 0 ['Tests  27 passed (27)'] 2.7 clean
+C0-both-guards survives 0 ['Tests  31 passed (31)'] 4.5 clean
+OR1-missing-value-judged-before-repeat killed 1 ['Tests  2 failed | 79 passed (81)'] 2.6 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > readArgv under the dossier options policy: a dash-led value and a repeat refused > ["run","--revision","a","--revision","-x"] reads as {"fault":"repeated","arg":"--revision"}
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > readArgv under the dossier options policy: a dash-led value and a repeat refused > ["run","--revision","a","--revision"] reads as {"fault":"repeated","arg":"--revision"}
+OR2-empty-value-read-as-missing killed 1 ['Tests  3 failed | 78 passed (81)'] 2.7 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > readArgv under the daemon policy: values taken whatever they start with, the last of a repeat, no positionals, stop at help > ["--root",""] reads as {"values":{"--root":""},"flags":[],
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > readArgv under the dossier options policy: a dash-led value and a repeat refused > ["run","--revision",""] reads as {"values":{"--revision":""},"flags":[],"positional":["run"]}
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > readArgv under the polaris policy: boolean options, values taken whatever they start with, the last of a repeat > ["--model","","url"] reads as {"values":{"--model":""},"flags":[],"pos
+D1-polaris-repeat-refused killed 1 ['Tests  1 failed | 80 passed (81)'] 2.2 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > is the spec of every readArgv call, and no other module names readArgv
+D2-daemon-repeat-refused killed 1 ['Tests  1 failed | 80 passed (81)'] 2.5 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > is the spec of every readArgv call, and no other module names readArgv
+D3-dossier-dash-value-taken killed 1 ['Tests  1 failed | 80 passed (81)'] 2.9 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > is the spec of every readArgv call, and no other module names readArgv
+OE1-agreement-one-way killed 1 ['Tests  1 failed | 26 passed (27)'] 2.4 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the subpaths the daemon entry imports > fails on a form only the preprocessor reports rather than passing it unseen
+OE3-main-computed-dynamic-import killed 1 ['Tests  1 failed | 26 passed (27)'] 2.5 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > has no node:module edge, and no import() or require of a computed name
+OE4-main-create-require-alias killed 1 ['Tests  1 failed | 26 passed (27)'] 2.2 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > has no node:module edge, and no import() or require of a computed name
+OE5-main-intermediate-local-module killed 1 ['Tests  1 failed | 26 passed (27)'] 3.2 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > reaches this package through argv.ts and state-directory.ts alone
+OS1-guard-after-the-read killed 1 ['Tests  1 failed | 80 passed (81)'] 2.5 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > a spec naming an option readArgv could never see > throws for such a spec even when the arguments would fault first
+OS2-long-form-allows-a-trailing-equals killed 1 ['Tests  1 failed | 80 passed (81)'] 2.3 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > a spec naming an option readArgv could never see > throws for {"valued":["--out="],"dashValue":"refuse","repeat":"refuse","positionals":true}, before reading anything
+OB1-condition-counts-as-inside killed 1 ['Tests  1 failed | 26 passed (27)'] 2.9 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the subpaths the daemon entry imports > the entry check sees if (await import('@syzygy/polaris-dossier')) {} (its own mutant)
+OB2-outermost-if-not-nearest killed 1 ['Tests  1 failed | 26 passed (27)'] 2.9 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the subpaths the daemon entry imports > the entry check sees if (a) {} else if (argv[0] === 'dossier') { await import('@syzygy/polaris-dossier'); } (its own mutant)
+OB3-shadowed-argv-replaces-the-polaris-branch-import survives 0 ['Tests  27 passed (27)'] 3.3 clean
+GM1-entry-re-exports-the-barrel killed 1 ['Tests  2 failed | 25 passed (27)'] 4.2 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > reaches this package through argv.ts and state-directory.ts alone
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the subpaths the daemon entry imports > are /argv and /state-directory, imported statically, and the barrel only dynamically inside the dossier and polaris branches
+GM3-argv-loads-the-cli-through-node-module killed 1 ['Tests  2 failed | 25 passed (27)'] 5.4 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > has no node:module edge, and no import() or require of a computed name
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the subpaths the daemon entry imports > ./argv is packages/polaris-dossier/src/argv.ts, which imports exactly ["node:util"]
+D4-a-new-readArgv-caller killed 1 ['Tests  1 failed | 80 passed (81)'] 4.1 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > is the spec of every readArgv call, and no other module names readArgv
+D5-readArgv-under-another-name-in-a-new-module killed 1 ['Tests  2 failed | 79 passed (81)'] 5.6 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > is the spec of every readArgv call, and no other module names readArgv
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > names readArgv only where the lift reads it: its declaration, an import or export of it, and the callee of a call
+D6-allow-execution-options-change killed 1 ['Tests  1 failed | 80 passed (81)'] 4.1 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > names allow-execution's options as the dossier options policy's
+OE6-main-imports-a-subpath-no-package-exports killed 1 ['Tests  2 failed | 29 passed (31)'] 4.6 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > resolves every workspace specifier on it, and reaches past the entry's own imports
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > resolves every workspace import the CLI reaches, dynamic ones included
+CE1-computed-edge-dropped killed 1 ['Tests  2 failed | 25 passed (27)'] 4.2 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the subpaths the daemon entry imports > the walk returns a computed specifier in "const barrel = '@syzygy/polaris-dossier';\nawait import(barrel);" as its own edge (its own 
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the subpaths the daemon entry imports > the walk returns a computed specifier in "const name = '@syzygy/polaris-dossier';\nif (argv[0] === 'dossier') require(name);" as its 
+SK1-every-entry-dynamic-import-skipped killed 1 ['Tests  1 failed | 26 passed (27)'] 3.5 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > leaves the entry by every edge but the four dynamic imports inside those branches
+SK2-branch-edges-followed killed 1 ['Tests  2 failed | 25 passed (27)'] 4.9 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > leaves the entry by every edge but the four dynamic imports inside those branches
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > reaches this package through argv.ts and state-directory.ts alone
+RW1-reach-stops-at-the-entry killed 1 ['Tests  3 failed | 28 passed (31)'] 3.0 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > resolves every workspace specifier on it, and reaches past the entry's own imports
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > reaches the island from the consent package root, which the CLI does not import
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > resolves every workspace import the CLI reaches, dynamic ones included
+RW2-workspace-packages-not-followed killed 1 ['Tests  4 failed | 27 passed (31)'] 4.2 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > reaches this package through argv.ts and state-directory.ts alone
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > resolves every workspace specifier on it, and reaches past the entry's own imports
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > reaches the island from the consent package root, which the CLI does not import
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > resolves every workspace import the CLI reaches, dynamic ones included
+R-OR3-empty-value-missing-only-under-refuse killed 1 ['Tests  1 failed | 80 passed (81)'] 4.8 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > readArgv under the dossier options policy: a dash-led value and a repeat refused > ["run","--revision",""] reads as {"values":{"--revision":""},"flags":[],"positional":["run"]}
+R-OR4-empty-value-missing-only-under-take killed 1 ['Tests  2 failed | 79 passed (81)'] 4.9 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > readArgv under the daemon policy: values taken whatever they start with, the last of a repeat, no positionals, stop at help > ["--root",""] reads as {"values":{"--root":""},"flags":[],
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > readArgv under the polaris policy: boolean options, values taken whatever they start with, the last of a repeat > ["--model","","url"] reads as {"values":{"--model":""},"flags":[],"pos
+R-Y1-polaris-valued-entry-added killed 1 ['Tests  1 failed | 80 passed (81)'] 4.2 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > is the spec of every readArgv call, and no other module names readArgv
+R-Y2-daemon-positionals-true killed 1 ['Tests  1 failed | 80 passed (81)'] 4.1 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > is the spec of every readArgv call, and no other module names readArgv
+R-Y3-daemon-spec-through-a-variable killed 1 ['Tests  1 failed | 80 passed (81)'] 5.2 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > is the spec of every readArgv call, and no other module names readArgv
+R-Y4-polaris-booleans-through-a-spread killed 1 ['Tests  1 failed | 80 passed (81)'] 5.5 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > is the spec of every readArgv call, and no other module names readArgv
+R-Y5-second-identifier-call-in-cli killed 1 ['Tests  1 failed | 80 passed (81)'] 4.7 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > is the spec of every readArgv call, and no other module names readArgv
+R-Y6-extra-namespace-call-in-cli killed 1 ['Tests  1 failed | 80 passed (81)'] 5.4 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > names readArgv only where the lift reads it: its declaration, an import or export of it, and the callee of a call
+R-Y7-extra-aliased-call-in-cli killed 1 ['Tests  1 failed | 80 passed (81)'] 5.5 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > names readArgv only where the lift reads it: its declaration, an import or export of it, and the callee of a call
+R-Y8-another-options-command-gains-a-valued-option survives 0 ['Tests  81 passed (81)'] 4.9 clean
+R-X1-two-deep-local-re-export-chain killed 1 ['Tests  1 failed | 26 passed (27)'] 5.6 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > reaches this package through argv.ts and state-directory.ts alone
+R-X2-chain-through-another-workspace-package killed 1 ['Tests  1 failed | 26 passed (27)'] 5.3 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > reaches this package through argv.ts and state-directory.ts alone
+R-X3-create-require-in-an-intermediate-module killed 1 ['Tests  1 failed | 26 passed (27)'] 5.0 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > has no node:module edge, and no import() or require of a computed name
+R-X3b-bare-module-specifier-in-main killed 1 ['Tests  1 failed | 26 passed (27)'] 4.5 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > has no node:module edge, and no import() or require of a computed name
+R-X4-import-meta-resolve-into-import killed 1 ['Tests  1 failed | 26 passed (27)'] 4.8 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > has no node:module edge, and no import() or require of a computed name
+R-X5-literal-dynamic-import-outside-the-two-branches killed 1 ['Tests  2 failed | 25 passed (27)'] 6.0 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > reaches this package through argv.ts and state-directory.ts alone
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the subpaths the daemon entry imports > are /argv and /state-directory, imported statically, and the barrel only dynamically inside the dossier and polaris branches
+R-X6-package-imports-alias-to-the-barrel killed 1 ['Tests  1 failed | 26 passed (27)'] 5.3 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > reaches this package through argv.ts and state-directory.ts alone
+R-X6b-package-imports-alias-in-an-intermediate-module killed 1 ['Tests  1 failed | 26 passed (27)'] 6.7 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > reaches this package through argv.ts and state-directory.ts alone
+R-X8-get-builtin-module-create-require survives 0 ['Tests  27 passed (27)'] 4.8 clean
+R-X6i-island-package-imports-alias-to-consent-root killed 1 ['Tests  1 failed | 3 passed (4)'] 4.9 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > reaches no island module from the CLI entry
+R-X6j-island-control-same-edge-by-name killed 1 ['Tests  1 failed | 3 passed (4)'] 4.0 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/island-boundary.test.ts > the syzygy CLI and the parked provider island > reaches no island module from the CLI entry
+R-X9-node-condition-ahead-of-import-in-the-argv-export killed 1 ['Tests  2 failed | 25 passed (27)'] 4.9 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > reaches this package through argv.ts and state-directory.ts alone
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/subpath-imports.test.ts > the daemon path, every module the entry reaches outside its dossier and polaris branches > resolves every workspace specifier on it, and reaches past the entry's own imports
+wrote /var/tmp/la-b836/out/reviewer-head.json 79

@@ -1,0 +1,960 @@
+{
+ "tool": "build_record_mutants.py",
+ "commit": "97c4af30d6d083028d7add60b1359e05d48f3e52",
+ "args": [
+  "c104771ff90f47ffd070f2339c36010458679c71",
+  "d38d7a3c",
+  "ba9d990a2b80b9aa5b3d78801b938280ee9988d7",
+  "447d9f083fb120c14ddd8da646c03675f3ce7bc7",
+  "9e00252ae134accc4a42604445a4db66f68d5100",
+  "d621bfa267f24ff68f6f83ac7bfba44b81a32a34"
+ ],
+ "allAsExpected": true,
+ "results": [
+  {
+   "id": "control",
+   "note": "no edit: the rebuild exits 0",
+   "edits": [],
+   "expect": "pass",
+   "exit": 0,
+   "outcome": "pass",
+   "asExpected": true,
+   "lastLine": "{\"rowDelta\": \"Tests: +2 ~17 -0\", \"testFiles\": 10, \"productFilesChanged\": [], \"mutantTotals\": {\"cases\": 33, \"sides\": 65, \"asExpected\": 65}, \"ac1\": 0, \"bounds\": {\"EDGE_TRIM_CPU_MS\": [1900, 29.4, 31.6], \"HOSTILE_LINE_CPU_MS\": [140, 68.6, 109.5], \"TAG_SCAN_CPU_MS\": [1500, 22.7, 40.0], \"ATTRIBUTE_SCAN_CPU_MS\": [3000, 20.1, 20.0]}, \"pinRowAlone\": {\"defects\": [\"Y1-dossier-serve-falls-through\", \"Y2-dossie"
+  },
+  {
+   "id": "K1-thread-headMax-9.97x",
+   "note": "thread-CPU ATTRIBUTE_SCAN head max raised to 301 ms: bound / head = 9.97x",
+   "edits": [
+    {
+     "file": "cpu-separation.json",
+     "pointer": "/sites/3/headMaxMs",
+     "old": 148.918,
+     "new": 301.0
+    }
+   ],
+   "expect": "fail",
+   "exit": 1,
+   "outcome": "fail",
+   "asExpected": true,
+   "lastLine": "cpu-separation: ATTRIBUTE_SCAN_CPU_MS: the runs give head max 148.918 and mutant min 60001.8 (lower bound True); the separation records 301.0, 60001.8 (True)"
+  },
+  {
+   "id": "K2-thread-mutantMin-9.67x",
+   "note": "thread-CPU ATTRIBUTE_SCAN mutant min lowered to 29,000 ms: 9.67x",
+   "edits": [
+    {
+     "file": "cpu-separation.json",
+     "pointer": "/sites/3/mutantMinMs",
+     "old": 60001.8,
+     "new": 29000.0
+    }
+   ],
+   "expect": "fail",
+   "exit": 1,
+   "outcome": "fail",
+   "asExpected": true,
+   "lastLine": "cpu-separation: ATTRIBUTE_SCAN_CPU_MS: the runs give head max 148.918 and mutant min 60001.8 (lower bound True); the separation records 148.918, 29000.0 (True)"
+  },
+  {
+   "id": "K3-node22-headMax-9.97x",
+   "note": "Node 22 ATTRIBUTE_SCAN head max raised to 301 ms; fileBound left as measured",
+   "edits": [
+    {
+     "file": "cpu-separation-node22.json",
+     "pointer": "/sites/3/headMaxMs",
+     "old": 191.092,
+     "new": 301.0
+    }
+   ],
+   "expect": "fail",
+   "exit": 1,
+   "outcome": "fail",
+   "asExpected": true,
+   "lastLine": "cpu-separation-node22: ATTRIBUTE_SCAN_CPU_MS: the runs give head max 191.092 and mutant min 60008.8 (lower bound True); the separation records 301.0, 60008.8 (True)"
+  },
+  {
+   "id": "K4-node22-mutantMin-9.67x",
+   "note": "Node 22 ATTRIBUTE_SCAN mutant min lowered to 29,000 ms; fileBound left as measured",
+   "edits": [
+    {
+     "file": "cpu-separation-node22.json",
+     "pointer": "/sites/3/mutantMinMs",
+     "old": 60008.8,
+     "new": 29000.0
+    }
+   ],
+   "expect": "fail",
+   "exit": 1,
+   "outcome": "fail",
+   "asExpected": true,
+   "lastLine": "cpu-separation-node22: ATTRIBUTE_SCAN_CPU_MS: the runs give head max 191.092 and mutant min 60008.8 (lower bound True); the separation records 191.092, 29000.0 (True)"
+  },
+  {
+   "id": "K5-node22-recorded-margin-9.5x",
+   "note": "Node 22 ATTRIBUTE_SCAN's recorded fileBound.overHeadMax set to 9.5",
+   "edits": [
+    {
+     "file": "cpu-separation-node22.json",
+     "pointer": "/sites/3/fileBound/overHeadMax",
+     "old": 15.7,
+     "new": 9.5
+    }
+   ],
+   "expect": "fail",
+   "exit": 1,
+   "outcome": "fail",
+   "asExpected": true,
+   "lastLine": "cpu-separation-node22: ATTRIBUTE_SCAN_CPU_MS: fileBound records {'ms': 3000, 'overHeadMax': 9.5, 'mutantMinOver': 20.0, 'separated': True}; the runs give 15.7x and 20.0x"
+  },
+  {
+   "id": "K6-node22-separated-false",
+   "note": "Node 22 ATTRIBUTE_SCAN's fileBound.separated set false",
+   "edits": [
+    {
+     "file": "cpu-separation-node22.json",
+     "pointer": "/sites/3/fileBound/separated",
+     "old": true,
+     "new": false
+    }
+   ],
+   "expect": "fail",
+   "exit": 1,
+   "outcome": "fail",
+   "asExpected": true,
+   "lastLine": "cpu-separation-node22: ATTRIBUTE_SCAN_CPU_MS: fileBound records {'ms': 3000, 'overHeadMax': 15.7, 'mutantMinOver': 20.0, 'separated': False}; the runs give 15.7x and 20.0x"
+  },
+  {
+   "id": "K7-thread-headRun-over-max",
+   "note": "one thread-CPU ATTRIBUTE_SCAN head-run region set to 400 ms (7.5x), headMaxMs left as recorded",
+   "edits": [
+    {
+     "file": "cpu-separation.json",
+     "pointer": "/sites/3/headRuns/0/regions/0/cpuMs",
+     "old": 144.733,
+     "new": 400.0
+    }
+   ],
+   "expect": "fail",
+   "exit": 1,
+   "outcome": "fail",
+   "asExpected": true,
+   "lastLine": "cpu-separation: ATTRIBUTE_SCAN_CPU_MS: the runs give head max 400.0 and mutant min 60001.8 (lower bound True); the separation records 148.918, 60001.8 (True)"
+  },
+  {
+   "id": "K8-node22-cases-digest",
+   "note": "the Node 22 separation's cases digest replaced",
+   "edits": [
+    {
+     "file": "cpu-separation-node22.json",
+     "pointer": "/cases/sha256",
+     "old": "80a34aae115f99b80d2cafdd0928aa5e93126d786fb729242b39bb1029745583",
+     "new": "0000000000000000000000000000000000000000000000000000000000000000"
+    }
+   ],
+   "expect": "fail",
+   "exit": 1,
+   "outcome": "fail",
+   "asExpected": true,
+   "lastLine": "cpu-separation-node22 used a mutant-cases.json other than the one at ba9d990a2b80b9aa5b3d78801b938280ee9988d7"
+  },
+  {
+   "id": "K9-node22-on-node24",
+   "note": "the fallback separation claims Node 24",
+   "edits": [
+    {
+     "file": "cpu-separation-node22.json",
+     "pointer": "/node",
+     "old": "v22.18.0",
+     "new": "v24.6.0"
+    }
+   ],
+   "expect": "fail",
+   "exit": 1,
+   "outcome": "fail",
+   "asExpected": true,
+   "lastLine": "the CPU separations are not one thread-CPU run and one process-CPU run on Node 22"
+  },
+  {
+   "id": "K10-de-head-R1-passes",
+   "note": "R1 recorded as passing the new test",
+   "edits": [
+    {
+     "file": "daemon-entry-head.json",
+     "pointer": "/results/12/failed",
+     "old": [
+      "daemon entry: the one changed input, `dossier` as the first argument every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, whose only else is the other, before the daemon path",
+      "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+     ],
+     "new": []
+    }
+   ],
+   "expect": "fail",
+   "exit": 1,
+   "outcome": "fail",
+   "asExpected": true,
+   "lastLine": "R1-flag-between-branches: the new text row passes it"
+  },
+  {
+   "id": "K11-de-prior-R2-fails",
+   "note": "R2 recorded as failing the prior test",
+   "edits": [
+    {
+     "file": "daemon-entry-prior-test.json",
+     "pointer": "/results/13/failed",
+     "old": [],
+     "new": [
+      "x every line of main.ts naming the POC app sits in the `dossier` and `polaris` branches"
+     ]
+    }
+   ],
+   "expect": "fail",
+   "exit": 1,
+   "outcome": "fail",
+   "asExpected": true,
+   "lastLine": "R2-flag-createRequire-before-daemon: fails the kept text row as it stood at 447d9f083fb120c14ddd8da646c03675f3ce7bc7, so it is not the survivor rev-532 found"
+  },
+  {
+   "id": "K12-de-head-equivalent-fails",
+   "note": "E-branch-swap recorded as failing the new test",
+   "edits": [
+    {
+     "file": "daemon-entry-head.json",
+     "pointer": "/results/34/failed",
+     "old": [
+      "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+     ],
+     "new": [
+      "daemon entry: the one changed input, `dossier` as the first argument > every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, x"
+     ]
+    }
+   ],
+   "expect": "fail",
+   "exit": 1,
+   "outcome": "fail",
+   "asExpected": true,
+   "lastLine": "E-branch-swap: an equivalent the new test fails at ['text']; the record discloses ['pin']"
+  },
+  {
+   "id": "K13-mutants-timeout-text",
+   "note": "reader-no-depth-cap's byTimeout flags cleared: the record then says `fail`, not `fail (by the test timeout)` (wording, not a check)",
+   "edits": [
+    {
+     "file": "bound-and-pin-mutants.json",
+     "pointer": "/results/8/sides/0/rows/0/byTimeout",
+     "old": true,
+     "new": false
+    },
+    {
+     "file": "bound-and-pin-mutants.json",
+     "pointer": "/results/8/sides/1/rows/0/byTimeout",
+     "old": true,
+     "new": false
+    }
+   ],
+   "expect": "pass",
+   "exit": 0,
+   "outcome": "pass",
+   "asExpected": true,
+   "lastLine": "{\"rowDelta\": \"Tests: +2 ~17 -0\", \"testFiles\": 10, \"productFilesChanged\": [], \"mutantTotals\": {\"cases\": 33, \"sides\": 65, \"asExpected\": 65}, \"ac1\": 0, \"bounds\": {\"EDGE_TRIM_CPU_MS\": [1900, 29.4, 31.6], \"HOSTILE_LINE_CPU_MS\": [140, 68.6, 109.5], \"TAG_SCAN_CPU_MS\": [1500, 22.7, 40.0], \"ATTRIBUTE_SCAN_CPU_MS\": [3000, 20.1, 20.0]}, \"pinRowAlone\": {\"defects\": [\"Y1-dossier-serve-falls-through\", \"Y2-dossie"
+  },
+  {
+   "id": "K14-thread-mutant-row-min",
+   "note": "a thread-CPU mutant row's recorded min no longer its runs' minimum",
+   "edits": [
+    {
+     "file": "cpu-separation.json",
+     "pointer": "/sites/0/mutants/0/min",
+     "old": 60066.3,
+     "new": 1.0
+    }
+   ],
+   "expect": "fail",
+   "exit": 1,
+   "outcome": "fail",
+   "asExpected": true,
+   "lastLine": "cpu-separation: EDGE_TRIM_CPU_MS: edge-backtracking-regex records min 1.0 over 3 capped runs; its runs give 60066.3 over 3"
+  },
+  {
+   "id": "K15-node22-fastest-run-lowered",
+   "note": "the Node 22 ATTRIBUTE_SCAN run giving the mutant minimum lowered to 1,000 ms, every summary figure left as recorded",
+   "edits": [
+    {
+     "file": "cpu-separation-node22.json",
+     "pointer": "/sites/3/mutants/0/runs/1/capped/regionCpuMsAtLeast",
+     "old": 60008.8,
+     "new": 1000.0
+    }
+   ],
+   "expect": "fail",
+   "exit": 1,
+   "outcome": "fail",
+   "asExpected": true,
+   "lastLine": "cpu-separation-node22: ATTRIBUTE_SCAN_CPU_MS: junit-attr-regex records min 60008.8 over 3 capped runs; its runs give 1000.0 over 3"
+  },
+  {
+   "id": "K16-thread-capped-count",
+   "note": "a thread-CPU mutant row's capped-run count no longer its runs'",
+   "edits": [
+    {
+     "file": "cpu-separation.json",
+     "pointer": "/sites/0/mutants/0/cappedRuns",
+     "old": 3,
+     "new": 0
+    }
+   ],
+   "expect": "fail",
+   "exit": 1,
+   "outcome": "fail",
+   "asExpected": true,
+   "lastLine": "cpu-separation: EDGE_TRIM_CPU_MS: edge-backtracking-regex records min 60066.3 over 0 capped runs; its runs give 60066.3 over 3"
+  },
+  {
+   "id": "K17-node22-lower-bound-flag",
+   "note": "Node 22 EDGE_TRIM's lower-bound flag flipped",
+   "edits": [
+    {
+     "file": "cpu-separation-node22.json",
+     "pointer": "/sites/0/mutantMinIsLowerBound",
+     "old": true,
+     "new": false
+    }
+   ],
+   "expect": "fail",
+   "exit": 1,
+   "outcome": "fail",
+   "asExpected": true,
+   "lastLine": "cpu-separation-node22: EDGE_TRIM_CPU_MS: the runs give head max 88.331 and mutant min 60019.1 (lower bound True); the separation records 88.331, 60019.1 (False)"
+  },
+  {
+   "id": "K18-thread-tree-not-emit-equal",
+   "note": "the thread separation claims to have run at BASE, whose timed test files differ from the evidence commit in code",
+   "edits": [
+    {
+     "file": "cpu-separation.json",
+     "pointer": "/tree",
+     "old": "722231fe0365eccd0239fb63edee92e7c5239531",
+     "new": "c104771ff90f47ffd070f2339c36010458679c71"
+    }
+   ],
+   "expect": "fail",
+   "exit": 1,
+   "outcome": "fail",
+   "asExpected": true,
+   "lastLine": "cpu-separation: a timed test file is not emit-equal between c104771ff90f47ffd070f2339c36010458679c71 and ba9d990a2b80b9aa5b3d78801b938280ee9988d7: {'packages/polaris-generation-core/src/dossier-profile.test.ts': False, 'packages/polaris-generation-core/src/excerpt.test.ts': False, 'packages/three-surface-poc-core/src/test-artifact-verification.test.ts': False}"
+  },
+  {
+   "id": "K19-de-head-S1-passes",
+   "note": "S1 recorded as passing the new test",
+   "edits": [
+    {
+     "file": "daemon-entry-head.json",
+     "pointer": "/results/18/failed",
+     "old": [
+      "daemon entry: the one changed input, `dossier` as the first argument every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, whose only else is the other, before the daemon path",
+      "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+     ],
+     "new": []
+    }
+   ],
+   "expect": "fail",
+   "exit": 1,
+   "outcome": "fail",
+   "asExpected": true,
+   "lastLine": "S1-else-if-flag-after-dossier: the new text row passes it"
+  },
+  {
+   "id": "K20-de-round1-S2-fails",
+   "note": "S2 recorded as failing the round-1 test",
+   "edits": [
+    {
+     "file": "daemon-entry-round1-test.json",
+     "pointer": "/results/19/failed",
+     "old": [],
+     "new": [
+      "x"
+     ]
+    }
+   ],
+   "expect": "fail",
+   "exit": 1,
+   "outcome": "fail",
+   "asExpected": true,
+   "lastLine": "S2-same-line-if-after-dossier: fails the test as it stood at 9e00252ae134accc4a42604445a4db66f68d5100, so it is not the survivor rev-532b found"
+  },
+  {
+   "id": "K21-de-old-S3-passes-pin",
+   "note": "S3 recorded as passing the old pin",
+   "edits": [
+    {
+     "file": "daemon-entry-base-test.json",
+     "pointer": "/results/20/failed",
+     "old": [
+      "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+     ],
+     "new": []
+    }
+   ],
+   "expect": "fail",
+   "exit": 1,
+   "outcome": "fail",
+   "asExpected": true,
+   "lastLine": "S3-else-if-flag-after-polaris: the old pin passes it"
+  },
+  {
+   "id": "K22-de-head-L1-fails",
+   "note": "L1 recorded as failing the new text row",
+   "edits": [
+    {
+     "file": "daemon-entry-head.json",
+     "pointer": "/results/26/failed",
+     "old": [],
+     "new": [
+      "daemon entry: the one changed input, `dossier` as the first argument > every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, x"
+     ]
+    }
+   ],
+   "expect": "fail",
+   "exit": 1,
+   "outcome": "fail",
+   "asExpected": true,
+   "lastLine": "L1-else-if-chain: an equivalent the new test fails at ['text']; the record discloses []"
+  },
+  {
+   "id": "K23-de-head-X2-fails",
+   "note": "X2 recorded as failing the new test",
+   "edits": [
+    {
+     "file": "daemon-entry-head.json",
+     "pointer": "/results/10/failed",
+     "old": [],
+     "new": [
+      "daemon entry: the one changed input, `dossier` as the first argument > every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, x"
+     ]
+    }
+   ],
+   "expect": "fail",
+   "exit": 1,
+   "outcome": "fail",
+   "asExpected": true,
+   "lastLine": "X2-close-failure-in-http-host: a residual some test now fails, so the record's residual is stale"
+  },
+  {
+   "id": "K24-de-prior-X2-fails",
+   "note": "X2 recorded as failing the prior test",
+   "edits": [
+    {
+     "file": "daemon-entry-prior-test.json",
+     "pointer": "/results/10/failed",
+     "old": [],
+     "new": [
+      "x"
+     ]
+    }
+   ],
+   "expect": "fail",
+   "exit": 1,
+   "outcome": "fail",
+   "asExpected": true,
+   "lastLine": "X2-close-failure-in-http-host: a residual some test now fails, so the record's residual is stale"
+  },
+  {
+   "id": "K25-de-head-C1-fails-hook",
+   "note": "C1 recorded as failing the load-hook row too",
+   "edits": [
+    {
+     "file": "daemon-entry-head.json",
+     "pointer": "/results/25/failed",
+     "old": [
+      "daemon entry: the one changed input, `dossier` as the first argument every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, whose only else is the other, before the daemon path",
+      "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+     ],
+     "new": [
+      "daemon entry: the one changed input, `dossier` as the first argument > every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, x",
+      "daemon entry: the one changed input, `dossier` as the first argument > the daemon path never loads the POC app, and the `dossier render` branch does"
+     ]
+    }
+   ],
+   "expect": "fail",
+   "exit": 1,
+   "outcome": "fail",
+   "asExpected": true,
+   "lastLine": "C1-comment-outside-branches: an equivalent the new test fails at ['hook', 'text']; the record discloses ['pin', 'text']"
+  },
+  {
+   "id": "K26-de-head-X3-passes-hook",
+   "note": "X3 recorded as failing some row other than the load-hook row",
+   "edits": [
+    {
+     "file": "daemon-entry-head.json",
+     "pointer": "/results/9/failed",
+     "old": [
+      "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app, and the `dossier render` branch does"
+     ],
+     "new": [
+      "x"
+     ]
+    }
+   ],
+   "expect": "fail",
+   "exit": 1,
+   "outcome": "fail",
+   "asExpected": true,
+   "lastLine": "X1 passes the text row or X3 the load-hook row, so the X2 residual misstates them"
+  },
+  {
+   "id": "K27-de-head-S4-skipped",
+   "note": "S4 recorded as skipped in the new run",
+   "edits": [
+    {
+     "file": "daemon-entry-head.json",
+     "pointer": "/results/21/skipped",
+     "old": null,
+     "oldAbsent": true,
+     "new": "old occurs 0 times"
+    }
+   ],
+   "expect": "fail",
+   "exit": 1,
+   "outcome": "fail",
+   "asExpected": true,
+   "lastLine": "S4-else-runtime-hook-after-dossier: skipped in the new-test run (old occurs 0 times)"
+  },
+  {
+   "id": "K28-de-relabel-S5",
+   "note": "S5 relabelled an equivalent in all four runs",
+   "edits": [
+    {
+     "file": "daemon-entry-head.json",
+     "pointer": "/results/22/mutant/kind",
+     "old": "defect",
+     "new": "equivalent"
+    },
+    {
+     "file": "daemon-entry-base-test.json",
+     "pointer": "/results/22/mutant/kind",
+     "old": "defect",
+     "new": "equivalent"
+    },
+    {
+     "file": "daemon-entry-prior-test.json",
+     "pointer": "/results/22/mutant/kind",
+     "old": "defect",
+     "new": "equivalent"
+    },
+    {
+     "file": "daemon-entry-round1-test.json",
+     "pointer": "/results/22/mutant/kind",
+     "old": "defect",
+     "new": "equivalent"
+    }
+   ],
+   "expect": "fail",
+   "exit": 1,
+   "outcome": "fail",
+   "asExpected": true,
+   "lastLine": "a named mutant carries another kind: [('S5-else-createRequire-flag-after-polaris', 'equivalent')]"
+  },
+  {
+   "id": "K29-de-round1-from",
+   "note": "the round-1 run names the prior commit as its test source",
+   "edits": [
+    {
+     "file": "daemon-entry-round1-test.json",
+     "pointer": "/testFileFrom",
+     "old": "9e00252ae134accc4a42604445a4db66f68d5100",
+     "new": "447d9f083fb120c14ddd8da646c03675f3ce7bc7"
+    }
+   ],
+   "expect": "fail",
+   "exit": 1,
+   "outcome": "fail",
+   "asExpected": true,
+   "lastLine": "daemon-entry-round1-test ran the test from 447d9f083fb120c14ddd8da646c03675f3ce7bc7, not 9e00252ae134accc4a42604445a4db66f68d5100"
+  },
+  {
+   "id": "K30-de-old-drops-L3",
+   "note": "L3's row removed from the old-test run",
+   "edits": [
+    {
+     "file": "daemon-entry-base-test.json",
+     "pointer": "/results/28",
+     "old": {
+      "mutant": {
+       "id": "L3-nested-try-in-polaris",
+       "kind": "equivalent",
+       "file": "apps/syzygy/src/main.ts",
+       "old": "    const { runPolarisCli } = await import('@syzygy/polaris-dossier');\n    const { renderLocalDossier } = await import('@syzygy/three-surface-poc-app/dossier-site');\n    return runPolarisCli(argv.slice(1), { renderer: renderLocalDossier });\n",
+       "new": "    const { runPolarisCli } = await import('@syzygy/polaris-dossier');\n    try {\n      const { renderLocalDossier } = await import('@syzygy/three-surface-poc-app/dossier-site');\n      return runPolarisCli(argv.slice(1), { renderer: renderLocalDossier });\n    } catch (cause: unknown) {\n      throw cause;\n    }\n",
+       "note": "the polaris import inside a nested try block in the branch"
+      },
+      "exit": 1,
+      "killedAfterLimit": false,
+      "seconds": 7.0,
+      "load1Start": 32.62,
+      "rows": [
+       {
+        "title": "daemon entry: every invocation but `dossier` is unchanged [\"--help\"] prints the usage and exits 0",
+        "status": "passed",
+        "failure": ""
+       },
+       {
+        "title": "daemon entry: every invocation but `dossier` is unchanged [\"-h\"] prints the usage and exits 0",
+        "status": "passed",
+        "failure": ""
+       },
+       {
+        "title": "daemon entry: every invocation but `dossier` is unchanged [\"--help\",\"dossier\"] prints the usage and exits 0",
+        "status": "passed",
+        "failure": ""
+       },
+       {
+        "title": "daemon entry: every invocation but `dossier` is unchanged [\"--bogus\"] is refused with exit 1 and the same message",
+        "status": "passed",
+        "failure": ""
+       },
+       {
+        "title": "daemon entry: every invocation but `dossier` is unchanged [\"--port\",\"0\",\"dossier\"] is refused with exit 1 and the same message",
+        "status": "passed",
+        "failure": ""
+       },
+       {
+        "title": "daemon entry: every invocation but `dossier` is unchanged [\"Dossier\"] is refused with exit 1 and the same message",
+        "status": "passed",
+        "failure": ""
+       },
+       {
+        "title": "daemon entry: every invocation but `dossier` is unchanged [\"--port\"] is refused with exit 1 and the same message",
+        "status": "passed",
+        "failure": ""
+       },
+       {
+        "title": "daemon entry: every invocation but `dossier` is unchanged [\"--port\",\"70000\"] is refused with exit 1 and the same message",
+        "status": "passed",
+        "failure": ""
+       },
+       {
+        "title": "daemon entry: every invocation but `dossier` is unchanged a state directory inside the governed plane is refused with the same message",
+        "status": "passed",
+        "failure": ""
+       },
+       {
+        "title": "daemon entry: every invocation but `dossier` is unchanged with no arguments it serves from the working directory, writes the same state and shuts down the same way",
+        "status": "passed",
+        "failure": ""
+       },
+       {
+        "title": "daemon entry: every invocation but `dossier` is unchanged with explicit flags it serves, writes the same state and shuts down the same way",
+        "status": "passed",
+        "failure": ""
+       },
+       {
+        "title": "daemon entry: the one changed input, `dossier` as the first argument `dossier` alone is a dossier usage error (exit 2), not the daemon's refusal",
+        "status": "passed",
+        "failure": ""
+       },
+       {
+        "title": "daemon entry: the one changed input, `dossier` as the first argument `dossier status <missing>` is a dossier refusal (exit 1) and starts no daemon",
+        "status": "passed",
+        "failure": ""
+       },
+       {
+        "title": "daemon entry: the one changed input, `dossier` as the first argument `dossier render <missing>` reaches the run with the renderer injected, and starts no daemon",
+        "status": "passed",
+        "failure": ""
+       },
+       {
+        "title": "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch",
+        "status": "failed",
+        "failure": "AssertionError: expected [ \u2026(2) ] to deeply equal [ \u2026(2) ]\n    at /tmp/laneb-45r3/clone/packages/cap1-system/src/daemon-entry-unchanged.system.test.ts:217:22\n    at file:///tmp/laneb-45r3/clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/laneb-45r3/clone/node_modules/@v"
+       }
+      ],
+      "failed": [
+       "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+      ],
+      "passed": 14
+     },
+     "new": null
+    }
+   ],
+   "expect": "fail",
+   "exit": 1,
+   "outcome": "fail",
+   "asExpected": true,
+   "lastLine": "the old-test run holds other mutants than the new-test run"
+  },
+  {
+   "id": "K31-de-head-S7-passes",
+   "note": "S7 recorded as passing the new test",
+   "edits": [
+    {
+     "file": "daemon-entry-head.json",
+     "pointer": "/results/24/failed",
+     "old": [
+      "daemon entry: the one changed input, `dossier` as the first argument every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, whose only else is the other, before the daemon path"
+     ],
+     "new": []
+    }
+   ],
+   "expect": "fail",
+   "exit": 1,
+   "outcome": "fail",
+   "asExpected": true,
+   "lastLine": "S7-else-split-specifier-after-dossier: the new text row passes it, or the round-1 test fails it"
+  },
+  {
+   "id": "B3-thread-tag-plural-row-under-bound",
+   "note": "rev-532c's B3: thread-CPU TAG_SCAN's `plural` row finishes its runs uncapped at 600 ms, under the 1,500 bound, every summary agreeing",
+   "edits": [
+    {
+     "file": "cpu-separation.json",
+     "pointer": "/sites/2/mutants/1/runs/0/exit",
+     "old": -9,
+     "new": 0
+    },
+    {
+     "file": "cpu-separation.json",
+     "pointer": "/sites/2/mutants/1/runs/1/exit",
+     "old": -9,
+     "new": 0
+    },
+    {
+     "file": "cpu-separation.json",
+     "pointer": "/sites/2/mutants/1/runs/2/exit",
+     "old": -9,
+     "new": 0
+    },
+    {
+     "file": "cpu-separation.json",
+     "pointer": "/sites/2/mutants/1/runs/0/capped",
+     "old": {
+      "line": 108,
+      "regionCpuMsAtLeast": 60050.7
+     },
+     "new": null,
+     "newIsJsonNull": true
+    },
+    {
+     "file": "cpu-separation.json",
+     "pointer": "/sites/2/mutants/1/runs/1/capped",
+     "old": {
+      "line": 108,
+      "regionCpuMsAtLeast": 60069.9
+     },
+     "new": null,
+     "newIsJsonNull": true
+    },
+    {
+     "file": "cpu-separation.json",
+     "pointer": "/sites/2/mutants/1/runs/2/capped",
+     "old": {
+      "line": 108,
+      "regionCpuMsAtLeast": 60038.6
+     },
+     "new": null,
+     "newIsJsonNull": true
+    },
+    {
+     "file": "cpu-separation.json",
+     "pointer": "/sites/2/mutants/1/runs/0/regions",
+     "old": [],
+     "new": [
+      {
+       "line": 110,
+       "bound": "TAG_SCAN_CPU_MS",
+       "cpuMs": 600.0
+      }
+     ]
+    },
+    {
+     "file": "cpu-separation.json",
+     "pointer": "/sites/2/mutants/1/runs/1/regions",
+     "old": [],
+     "new": [
+      {
+       "line": 110,
+       "bound": "TAG_SCAN_CPU_MS",
+       "cpuMs": 600.0
+      }
+     ]
+    },
+    {
+     "file": "cpu-separation.json",
+     "pointer": "/sites/2/mutants/1/runs/2/regions",
+     "old": [],
+     "new": [
+      {
+       "line": 110,
+       "bound": "TAG_SCAN_CPU_MS",
+       "cpuMs": 600.0
+      }
+     ]
+    },
+    {
+     "file": "cpu-separation.json",
+     "pointer": "/sites/2/mutants/1/min",
+     "old": 60038.6,
+     "new": 600.0
+    },
+    {
+     "file": "cpu-separation.json",
+     "pointer": "/sites/2/mutants/1/cappedRuns",
+     "old": 3,
+     "new": 0
+    },
+    {
+     "file": "cpu-separation.json",
+     "pointer": "/sites/2/mutants/1/reached",
+     "old": true,
+     "new": false
+    }
+   ],
+   "expect": "fail",
+   "exit": 1,
+   "outcome": "fail",
+   "asExpected": true,
+   "lastLine": "cpu-separation: TAG_SCAN_CPU_MS: the rows not reached are ['scans near-miss tag names at the ceiling', 'scans unterminated plural tags at the ceiling'], not the declared ['scans near-miss tag names at the ceiling']"
+  },
+  {
+   "id": "B4-thread-attr-geometric-mean",
+   "note": "rev-532c's B4: thread-CPU ATTRIBUTE_SCAN's recorded geometric mean 2900 -> 9900, which its runs do not give",
+   "edits": [
+    {
+     "file": "cpu-separation.json",
+     "pointer": "/sites/3/proposedBoundMs",
+     "old": 2900,
+     "new": 9900
+    }
+   ],
+   "expect": "fail",
+   "exit": 1,
+   "outcome": "fail",
+   "asExpected": true,
+   "lastLine": "cpu-separation: ATTRIBUTE_SCAN_CPU_MS: the runs give a geometric mean of 2900; the separation records 9900"
+  },
+  {
+   "id": "K32-de-head-Y2-fails-hook-not-pin",
+   "note": "Y2 recorded as failing the load-hook row and passing the restored pin",
+   "edits": [
+    {
+     "file": "daemon-entry-head.json",
+     "pointer": "/results/30/failed",
+     "old": [
+      "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+     ],
+     "new": [
+      "daemon entry: the one changed input, `dossier` as the first argument > the daemon path never loads the POC app, and the `dossier render` branch does"
+     ]
+    }
+   ],
+   "expect": "fail",
+   "exit": 1,
+   "outcome": "fail",
+   "asExpected": true,
+   "lastLine": "Y2-dossier-serve-reenters-main: the record says the new test fails it at the restored pin alone"
+  },
+  {
+   "id": "K33-de-head-Y3-fails-text-row-too",
+   "note": "Y3 recorded as failing the text row as well as the restored pin",
+   "edits": [
+    {
+     "file": "daemon-entry-head.json",
+     "pointer": "/results/31/failed",
+     "old": [
+      "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+     ],
+     "new": [
+      "daemon entry: the one changed input, `dossier` as the first argument > the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch",
+      "daemon entry: the one changed input, `dossier` as the first argument > every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, x"
+     ]
+    }
+   ],
+   "expect": "fail",
+   "exit": 1,
+   "outcome": "fail",
+   "asExpected": true,
+   "lastLine": "Y3-flag-rewrites-argv-into-dossier: the record says the new test fails it at the restored pin alone"
+  },
+  {
+   "id": "K34-de-old-Y4-passes-pin",
+   "note": "Y4 recorded as passing the old pin",
+   "edits": [
+    {
+     "file": "daemon-entry-base-test.json",
+     "pointer": "/results/32/failed",
+     "old": [
+      "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+     ],
+     "new": []
+    }
+   ],
+   "expect": "fail",
+   "exit": 1,
+   "outcome": "fail",
+   "asExpected": true,
+   "lastLine": "Y4-polaris-labelled-break: the old pin passes it, so it is not the load rev-532c found"
+  },
+  {
+   "id": "K35-de-head-L2-passes-pin",
+   "note": "L2, a known false refusal of the restored pin, recorded as passing it",
+   "edits": [
+    {
+     "file": "daemon-entry-head.json",
+     "pointer": "/results/27/failed",
+     "old": [
+      "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+     ],
+     "new": []
+    }
+   ],
+   "expect": "fail",
+   "exit": 1,
+   "outcome": "fail",
+   "asExpected": true,
+   "lastLine": "L2-nested-function-in-dossier: an equivalent the new test fails at []; the record discloses ['pin']"
+  },
+  {
+   "id": "K36-de-head-E-comment-fails-text-too",
+   "note": "E-comment-in-branch recorded as failing the text row as well as the restored pin",
+   "edits": [
+    {
+     "file": "daemon-entry-head.json",
+     "pointer": "/results/16/failed",
+     "old": [
+      "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+     ],
+     "new": [
+      "daemon entry: the one changed input, `dossier` as the first argument > the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch",
+      "daemon entry: the one changed input, `dossier` as the first argument > every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, x"
+     ]
+    }
+   ],
+   "expect": "fail",
+   "exit": 1,
+   "outcome": "fail",
+   "asExpected": true,
+   "lastLine": "E-comment-in-branch: an equivalent the new test fails at ['pin', 'text']; the record discloses ['pin']"
+  },
+  {
+   "id": "K37-de-head-C1-passes-pin",
+   "note": "C1 recorded as failing the text row and passing the restored pin",
+   "edits": [
+    {
+     "file": "daemon-entry-head.json",
+     "pointer": "/results/25/failed",
+     "old": [
+      "daemon entry: the one changed input, `dossier` as the first argument every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, whose only else is the other, before the daemon path",
+      "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+     ],
+     "new": [
+      "daemon entry: the one changed input, `dossier` as the first argument > every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, x"
+     ]
+    }
+   ],
+   "expect": "fail",
+   "exit": 1,
+   "outcome": "fail",
+   "asExpected": true,
+   "lastLine": "C1-comment-outside-branches: an equivalent the new test fails at ['text']; the record discloses ['pin', 'text']"
+  }
+ ]
+}

@@ -1,0 +1,6 @@
+{
+ "id": "GM3-argv-loads-the-cli-through-node-module",
+ "file": "packages/polaris-dossier/src/argv.ts",
+ "old": "import { parseArgs } from 'node:util';\n",
+ "new": "import { parseArgs } from 'node:util';\nimport { createRequire } from 'node:module';\nexport const usage = (): unknown => createRequire(import.meta.url)('./cli.js');\n"
+}

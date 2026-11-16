@@ -1,0 +1,475 @@
+{
+ "commit": "191d82779ea07f45be612b00ff3cafc9aa7446b8",
+ "dist": "present",
+ "distDirs": [
+  "apps/syzygy/dist",
+  "apps/three-surface-poc/dist",
+  "packages/cap1-conformance/dist",
+  "packages/cap1-core/dist",
+  "packages/cap1-daemon/dist",
+  "packages/cap1-system/dist",
+  "packages/http-host/dist",
+  "packages/polaris-dossier/dist",
+  "packages/polaris-generation-consent/dist",
+  "packages/polaris-generation-core/dist",
+  "packages/support/dist",
+  "packages/three-surface-poc-core/dist"
+ ],
+ "node": "v24.6.0",
+ "summary": {
+  "rows": 17,
+  "asExpected": 17,
+  "unexpected": []
+ },
+ "statusAfter": "",
+ "rows": [
+  {
+   "id": "C0-purity-unmutated",
+   "edits": [],
+   "expected": "pass",
+   "expectedFailing": null,
+   "observed": "pass",
+   "asExpected": true,
+   "load1": "26.21",
+   "statusAfter": "",
+   "exit": 0,
+   "passed": 33,
+   "failed": 0,
+   "total": 33,
+   "failedFileMessages": [],
+   "failing": [],
+   "messages": [],
+   "wall": 2.7
+  },
+  {
+   "id": "W5-filter-drops-the-x-forms",
+   "edits": [
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "/\\.[cm]?[jt]sx?$/u.test(name)",
+     "new": "/\\.[cm]?[jt]s$/u.test(name)"
+    }
+   ],
+   "expected": "killed",
+   "expectedFailing": [
+    "@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit"
+   ],
+   "observed": "killed",
+   "asExpected": true,
+   "load1": "26.21",
+   "statusAfter": "",
+   "exit": 1,
+   "passed": 32,
+   "failed": 1,
+   "total": 33,
+   "failedFileMessages": [],
+   "failing": [
+    "@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit"
+   ],
+   "messages": [
+    "AssertionError: expected [ 'a.ts', 'c.mts', 'd.cjs', \u2026(3) ] to deeply equal [ 'a.ts', 'c.mts', 'd.cjs', \u2026(5) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r3/head/packages/support/src/support-purity.test.ts:64:54\n    at file:///tmp/claude-1"
+   ],
+   "wall": 3.2
+  },
+  {
+   "id": "W6-test-exclusion-broadened-to-any-test-substring",
+   "edits": [
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "!name.endsWith('.test.ts')",
+     "new": "!name.includes('test')"
+    }
+   ],
+   "expected": "killed",
+   "expectedFailing": [
+    "@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit"
+   ],
+   "observed": "killed",
+   "asExpected": true,
+   "load1": "27.88",
+   "statusAfter": "",
+   "exit": 1,
+   "passed": 32,
+   "failed": 1,
+   "total": 33,
+   "failedFileMessages": [],
+   "failing": [
+    "@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit"
+   ],
+   "messages": [
+    "AssertionError: expected [ 'a.ts', 'c.mts', 'd.cjs', \u2026(3) ] to deeply equal [ 'a.ts', 'c.mts', 'd.cjs', \u2026(5) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r3/head/packages/support/src/support-purity.test.ts:64:54\n    at file:///tmp/claude-1"
+   ],
+   "wall": 2.4
+  },
+  {
+   "id": "W7-testkit-exclusion-broadened-to-any-depth",
+   "edits": [
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "name !== 'purity.testkit.ts'",
+     "new": "!name.endsWith('purity.testkit.ts')"
+    }
+   ],
+   "expected": "killed",
+   "expectedFailing": [
+    "@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit"
+   ],
+   "observed": "killed",
+   "asExpected": true,
+   "load1": "27.25",
+   "statusAfter": "",
+   "exit": 1,
+   "passed": 32,
+   "failed": 1,
+   "total": 33,
+   "failedFileMessages": [],
+   "failing": [
+    "@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit"
+   ],
+   "messages": [
+    "AssertionError: expected [ 'a.ts', 'c.mts', 'd.cjs', \u2026(4) ] to deeply equal [ 'a.ts', 'c.mts', 'd.cjs', \u2026(5) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r3/head/packages/support/src/support-purity.test.ts:64:54\n    at file:///tmp/claude-1"
+   ],
+   "wall": 2.8
+  },
+  {
+   "id": "W6b-W6-plus-latest-ts-exporting-node-crypto",
+   "edits": [
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "!name.endsWith('.test.ts')",
+     "new": "!name.includes('test')"
+    },
+    {
+     "path": "packages/support/src/latest.ts",
+     "old": null,
+     "new": "export * from 'node:crypto';\n"
+    },
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { decodeUtf8 } from './decode-utf8.js';\n",
+     "new": "export { decodeUtf8 } from './decode-utf8.js';\nexport * from './latest.js';\n"
+    }
+   ],
+   "expected": "killed",
+   "expectedFailing": [
+    "@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit"
+   ],
+   "observed": "killed",
+   "asExpected": true,
+   "load1": "27.25",
+   "statusAfter": "",
+   "exit": 1,
+   "passed": 32,
+   "failed": 1,
+   "total": 33,
+   "failedFileMessages": [],
+   "failing": [
+    "@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit"
+   ],
+   "messages": [
+    "AssertionError: expected [ 'a.ts', 'c.mts', 'd.cjs', \u2026(3) ] to deeply equal [ 'a.ts', 'c.mts', 'd.cjs', \u2026(5) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r3/head/packages/support/src/support-purity.test.ts:64:54\n    at file:///tmp/claude-1"
+   ],
+   "wall": 3.3
+  },
+  {
+   "id": "W8-test-exclusion-drops-the-dot",
+   "edits": [
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "!name.endsWith('.test.ts')",
+     "new": "!name.endsWith('test.ts')"
+    }
+   ],
+   "expected": "killed",
+   "expectedFailing": [
+    "@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit"
+   ],
+   "observed": "killed",
+   "asExpected": true,
+   "load1": "28.99",
+   "statusAfter": "",
+   "exit": 1,
+   "passed": 32,
+   "failed": 1,
+   "total": 33,
+   "failedFileMessages": [],
+   "failing": [
+    "@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit"
+   ],
+   "messages": [
+    "AssertionError: expected [ 'a.ts', 'c.mts', 'd.cjs', \u2026(4) ] to deeply equal [ 'a.ts', 'c.mts', 'd.cjs', \u2026(5) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r3/head/packages/support/src/support-purity.test.ts:64:54\n    at file:///tmp/claude-1"
+   ],
+   "wall": 3.9
+  },
+  {
+   "id": "W9-testkit-exclusion-any-testkit-substring",
+   "edits": [
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "name !== 'purity.testkit.ts'",
+     "new": "!name.includes('testkit')"
+    }
+   ],
+   "expected": "killed",
+   "expectedFailing": [
+    "@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit"
+   ],
+   "observed": "killed",
+   "asExpected": true,
+   "load1": "28.91",
+   "statusAfter": "",
+   "exit": 1,
+   "passed": 32,
+   "failed": 1,
+   "total": 33,
+   "failedFileMessages": [],
+   "failing": [
+    "@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit"
+   ],
+   "messages": [
+    "AssertionError: expected [ 'a.ts', 'c.mts', 'd.cjs', \u2026(4) ] to deeply equal [ 'a.ts', 'c.mts', 'd.cjs', \u2026(5) ]\n    at /tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-545-r3/head/packages/support/src/support-purity.test.ts:64:54\n    at file:///tmp/claude-1"
+   ],
+   "wall": 3.6
+  },
+  {
+   "id": "V7-import-equals-require-with-a-space",
+   "edits": [
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { decodeUtf8 } from './decode-utf8.js';\n",
+     "new": "export { decodeUtf8 } from './decode-utf8.js';\nimport value = require ('node:crypto');\nexport { value };\n"
+    }
+   ],
+   "expected": "survives",
+   "expectedFailing": null,
+   "observed": "survives",
+   "asExpected": true,
+   "load1": "28.91",
+   "statusAfter": "",
+   "exit": 0,
+   "passed": 33,
+   "failed": 0,
+   "total": 33,
+   "failedFileMessages": [],
+   "failing": [],
+   "messages": [],
+   "wall": 3.7
+  },
+  {
+   "id": "V9-literal-dynamic-import-of-node-crypto-with-a-space",
+   "edits": [
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { decodeUtf8 } from './decode-utf8.js';\n",
+     "new": "export { decodeUtf8 } from './decode-utf8.js';\nexport const value = () => import ('node:crypto');\n"
+    }
+   ],
+   "expected": "survives",
+   "expectedFailing": null,
+   "observed": "survives",
+   "asExpected": true,
+   "load1": "29.00",
+   "statusAfter": "",
+   "exit": 0,
+   "passed": 33,
+   "failed": 0,
+   "total": 33,
+   "failedFileMessages": [],
+   "failing": [],
+   "messages": [],
+   "wall": 3.1
+  },
+  {
+   "id": "V8-local-re-export-of-createHash",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "  return createHash('sha256').update(value).digest('hex');\n}\n",
+     "new": "  return createHash('sha256').update(value).digest('hex');\n}\nexport { createHash };\n"
+    }
+   ],
+   "expected": "survives",
+   "expectedFailing": null,
+   "observed": "survives",
+   "asExpected": true,
+   "load1": "28.60",
+   "statusAfter": "",
+   "exit": 0,
+   "passed": 33,
+   "failed": 0,
+   "total": 33,
+   "failedFileMessages": [],
+   "failing": [],
+   "messages": [],
+   "wall": 3.2
+  },
+  {
+   "id": "U4-array-destructuring-write",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "  return createHash('sha256').update(value).digest('hex');\n}\n",
+     "new": "  return createHash('sha256').update(value).digest('hex');\n}\n[Object.freeze] = [(value) => value];\n"
+    }
+   ],
+   "expected": "survives",
+   "expectedFailing": null,
+   "observed": "survives",
+   "asExpected": true,
+   "load1": "28.60",
+   "statusAfter": "",
+   "exit": 0,
+   "passed": 33,
+   "failed": 0,
+   "total": 33,
+   "failedFileMessages": [],
+   "failing": [],
+   "messages": [],
+   "wall": 4.8
+  },
+  {
+   "id": "U5-object-destructuring-write",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "  return createHash('sha256').update(value).digest('hex');\n}\n",
+     "new": "  return createHash('sha256').update(value).digest('hex');\n}\n({ value: Object.freeze } = { value: (bytes) => bytes });\n"
+    }
+   ],
+   "expected": "survives",
+   "expectedFailing": null,
+   "observed": "survives",
+   "asExpected": true,
+   "load1": "29.75",
+   "statusAfter": "",
+   "exit": 0,
+   "passed": 33,
+   "failed": 0,
+   "total": 33,
+   "failedFileMessages": [],
+   "failing": [],
+   "messages": [],
+   "wall": 3.7
+  },
+  {
+   "id": "U6-for-of-target",
+   "edits": [
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { decodeUtf8 } from './decode-utf8.js';\n",
+     "new": "export { decodeUtf8 } from './decode-utf8.js';\nfor (Object.freeze of [(value) => value]);\n"
+    }
+   ],
+   "expected": "survives",
+   "expectedFailing": null,
+   "observed": "survives",
+   "asExpected": true,
+   "load1": "29.37",
+   "statusAfter": "",
+   "exit": 0,
+   "passed": 33,
+   "failed": 0,
+   "total": 33,
+   "failedFileMessages": [],
+   "failing": [],
+   "messages": [],
+   "wall": 3.9
+  },
+  {
+   "id": "U7-for-in-target",
+   "edits": [
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { decodeUtf8 } from './decode-utf8.js';\n",
+     "new": "export { decodeUtf8 } from './decode-utf8.js';\nfor (Object.values in Object);\n"
+    }
+   ],
+   "expected": "survives",
+   "expectedFailing": null,
+   "observed": "survives",
+   "asExpected": true,
+   "load1": "29.58",
+   "statusAfter": "",
+   "exit": 0,
+   "passed": 33,
+   "failed": 0,
+   "total": 33,
+   "failedFileMessages": [],
+   "failing": [],
+   "messages": [],
+   "wall": 2.9
+  },
+  {
+   "id": "U8-postfix-increment",
+   "edits": [
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { decodeUtf8 } from './decode-utf8.js';\n",
+     "new": "export { decodeUtf8 } from './decode-utf8.js';\nObject.isFrozen++;\n"
+    }
+   ],
+   "expected": "survives",
+   "expectedFailing": null,
+   "observed": "survives",
+   "asExpected": true,
+   "load1": "29.58",
+   "statusAfter": "",
+   "exit": 0,
+   "passed": 33,
+   "failed": 0,
+   "total": 33,
+   "failedFileMessages": [],
+   "failing": [],
+   "messages": [],
+   "wall": 3.0
+  },
+  {
+   "id": "U9-postfix-decrement",
+   "edits": [
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { decodeUtf8 } from './decode-utf8.js';\n",
+     "new": "export { decodeUtf8 } from './decode-utf8.js';\nObject.values--;\n"
+    }
+   ],
+   "expected": "survives",
+   "expectedFailing": null,
+   "observed": "survives",
+   "asExpected": true,
+   "load1": "29.85",
+   "statusAfter": "",
+   "exit": 0,
+   "passed": 33,
+   "failed": 0,
+   "total": 33,
+   "failedFileMessages": [],
+   "failing": [],
+   "messages": [],
+   "wall": 3.6
+  },
+  {
+   "id": "U10-delete",
+   "edits": [
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { decodeUtf8 } from './decode-utf8.js';\n",
+     "new": "export { decodeUtf8 } from './decode-utf8.js';\ndelete Object.freeze;\n"
+    }
+   ],
+   "expected": "survives",
+   "expectedFailing": null,
+   "observed": "survives",
+   "asExpected": true,
+   "load1": "29.95",
+   "statusAfter": "",
+   "exit": 0,
+   "passed": 33,
+   "failed": 0,
+   "total": 33,
+   "failedFileMessages": [],
+   "failing": [],
+   "messages": [],
+   "wall": 4.2
+  }
+ ]
+}

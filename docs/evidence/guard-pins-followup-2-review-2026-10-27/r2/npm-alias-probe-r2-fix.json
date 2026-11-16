@@ -1,0 +1,246 @@
+{
+ "npm": "11.5.1",
+ "node": "v24.6.0",
+ "arborist": "9.1.3",
+ "npa": "12.0.2",
+ "caseSet": "fix",
+ "registry": "http://127.0.0.1:9/",
+ "offline": true,
+ "workspaces": {
+  "w": [
+   "wlib",
+   "1.0.0"
+  ],
+  "s": [
+   "@syzygy/slib",
+   "1.0.0"
+  ],
+  "p": [
+   "plib",
+   "1.0.0-beta.1"
+  ]
+ },
+ "cacheAfter": [
+  "_logs"
+ ],
+ "results": [
+  {
+   "id": "F1",
+   "shows": "alias under a workspace's name, no version",
+   "declaredIn": "app",
+   "declared": {
+    "wlib": "npm:typescript"
+   },
+   "lockExit": 0,
+   "errorCode": null,
+   "wouldRequest": null,
+   "lockEntries": {
+    "node_modules/@syzygy/slib": {
+     "resolved": "s",
+     "link": true
+    },
+    "node_modules/app": {
+     "resolved": "app",
+     "link": true
+    },
+    "node_modules/plib": {
+     "resolved": "p",
+     "link": true
+    },
+    "node_modules/wlib": {
+     "resolved": "w",
+     "link": true
+    }
+   },
+   "installExit": 0,
+   "lsExit": 0,
+   "lockWarnings": [],
+   "links": {
+    "node_modules/wlib": "../w"
+   },
+   "appLoads": {
+    "wlib": {
+     "path": "<scratch>/F1/w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    }
+   },
+   "rootLoads": {
+    "wlib": {
+     "path": "<scratch>/F1/w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    }
+   }
+  },
+  {
+   "id": "F2",
+   "shows": "alias under a prerelease workspace's name, no version",
+   "declaredIn": "app",
+   "declared": {
+    "plib": "npm:typescript"
+   },
+   "lockExit": 0,
+   "errorCode": null,
+   "wouldRequest": null,
+   "lockEntries": {
+    "node_modules/@syzygy/slib": {
+     "resolved": "s",
+     "link": true
+    },
+    "node_modules/app": {
+     "resolved": "app",
+     "link": true
+    },
+    "node_modules/plib": {
+     "resolved": "p",
+     "link": true
+    },
+    "node_modules/wlib": {
+     "resolved": "w",
+     "link": true
+    }
+   },
+   "installExit": 0,
+   "lsExit": 0,
+   "lockWarnings": [],
+   "links": {
+    "node_modules/plib": "../p"
+   },
+   "appLoads": {
+    "plib": {
+     "path": "<scratch>/F2/p/package.json",
+     "name": "plib",
+     "version": "1.0.0-beta.1"
+    }
+   },
+   "rootLoads": {
+    "plib": {
+     "path": "<scratch>/F2/p/package.json",
+     "name": "plib",
+     "version": "1.0.0-beta.1"
+    }
+   }
+  },
+  {
+   "id": "F3",
+   "shows": "ROOT dependencies: alias under a workspace's name; a dist-tag",
+   "declaredIn": "root",
+   "declared": {
+    "wlib": "npm:typescript@latest"
+   },
+   "lockExit": 0,
+   "errorCode": null,
+   "wouldRequest": null,
+   "lockEntries": {
+    "node_modules/@syzygy/slib": {
+     "resolved": "s",
+     "link": true
+    },
+    "node_modules/app": {
+     "resolved": "app",
+     "link": true
+    },
+    "node_modules/plib": {
+     "resolved": "p",
+     "link": true
+    },
+    "node_modules/wlib": {
+     "resolved": "w",
+     "link": true
+    }
+   },
+   "installExit": 0,
+   "lsExit": 0,
+   "lockWarnings": [],
+   "links": {
+    "node_modules/wlib": "../w"
+   },
+   "appLoads": {
+    "wlib": {
+     "path": "<scratch>/F3/w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    }
+   },
+   "rootLoads": {
+    "wlib": {
+     "path": "<scratch>/F3/w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    }
+   }
+  },
+  {
+   "id": "F4",
+   "shows": "alias under a workspace's name; a range below its version",
+   "declaredIn": "app",
+   "declared": {
+    "wlib": "npm:typescript@<1.0.0"
+   },
+   "lockExit": 1,
+   "errorCode": "ENOTCACHED",
+   "wouldRequest": "http://127.0.0.1:9/typescript"
+  },
+  {
+   "id": "F5",
+   "shows": "another WORKSPACE (s) declares an alias under wlib's name; range satisfied",
+   "declaredIn": "s",
+   "declared": {
+    "wlib": "npm:typescript@*"
+   },
+   "lockExit": 0,
+   "errorCode": null,
+   "wouldRequest": null,
+   "lockEntries": {
+    "node_modules/@syzygy/slib": {
+     "resolved": "s",
+     "link": true
+    },
+    "node_modules/app": {
+     "resolved": "app",
+     "link": true
+    },
+    "node_modules/plib": {
+     "resolved": "p",
+     "link": true
+    },
+    "node_modules/wlib": {
+     "resolved": "w",
+     "link": true
+    }
+   },
+   "installExit": 0,
+   "lsExit": 0,
+   "lockWarnings": [],
+   "links": {
+    "node_modules/wlib": "../w"
+   },
+   "appLoads": {
+    "wlib": {
+     "path": "<scratch>/F5/w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    }
+   },
+   "rootLoads": {
+    "wlib": {
+     "path": "<scratch>/F5/w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    }
+   }
+  },
+  {
+   "id": "F6",
+   "shows": "another WORKSPACE (s) declares an alias under wlib's name; range not satisfied",
+   "declaredIn": "s",
+   "declared": {
+    "wlib": "npm:typescript@^5.5.0"
+   },
+   "lockExit": 1,
+   "errorCode": "ENOTCACHED",
+   "wouldRequest": "http://127.0.0.1:9/typescript"
+  }
+ ]
+}

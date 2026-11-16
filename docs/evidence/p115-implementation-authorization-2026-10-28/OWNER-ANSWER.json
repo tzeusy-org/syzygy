@@ -1,0 +1,11 @@
+{
+  "decisionId": "P115-IMPLEMENTATION-20261027-R1",
+  "answer": "A",
+  "source": "Authenticated owner message in this attended session",
+  "approvalDate": "2026-10-28",
+  "recordedAtUtc": "2026-10-28T00:08:15.555202+00:00",
+  "messageTimestamp": "Not separately supplied; recordedAtUtc is recording time, not message time",
+  "question": "Authorize the reviewed P115 implementation packet: one protected PR updating the machine response, four owned readers and verification, preserving the signed specification and 16 MiB ceiling? A also authorizes recording the direction and preparing the implementation handoff; live probes, restarts and deployment remain excluded. The existing P115 sign-off explicitly grants no implementation authority, so this is a separate decision.",
+  "option": "A \u2014 Authorize the reviewed packet (Recommended)",
+  "packet": "p115-implementation-packet-2026-10-27-r1"
+}

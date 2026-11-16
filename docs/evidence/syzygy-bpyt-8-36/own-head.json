@@ -1,0 +1,447 @@
+{
+ "tree": "/var/tmp/la-b836/head",
+ "head": "1447b6bbd3954a271a1716d7866266e0fb908cfb",
+ "results": [
+  {
+   "id": "P1-hash-alias-outside-the-workspace",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  11 failed | 10 passed (21)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > follows a # alias its package declares for a module of its own package",
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > follows a # alias its package declares for a package by name",
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > follows a # alias its package declares for a subpath by name",
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > follows a # alias its package declares for agreeing conditions",
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a # alias from a module of another package as naming no module",
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a # alias its package does not declare as naming no module",
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a # alias under a name its package does not declare as naming no module",
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a # alias whose conditions disagree as naming no module",
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a # alias whose target is an absolute path as naming no module",
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a # alias whose target is another alias as naming no module",
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a # alias whose target leaves its package as naming no module"
+   ],
+   "timeouts": 0,
+   "seconds": 3.9,
+   "counts": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "  if (specifier.startsWith('#')) {\n    const owner = [...workspace.manifests.values()].find((manifest) => from.startsWith(`${manifest.dir}/`));\n    const target = owner?.imports === undefined ? undefined : targetOf(owner.imports[specifier]);\n    if (owner === undefined || target === undefined || target.startsWith('#') || target.startsWith('../')) return undefined;\n    return target.startsWith('./') ? moduleIn(workspace, owner.dir, target) : resolveIn(workspace, from, target);\n  }\n",
+     "new": ""
+    }
+   ]
+  },
+  {
+   "id": "P2-absolute-path-outside-the-workspace",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  2 failed | 19 passed (21)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a # alias whose target is an absolute path as naming no module",
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads an absolute path to the barrel as naming no module"
+   ],
+   "timeouts": 0,
+   "seconds": 3.8,
+   "counts": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "  if (specifier.startsWith('/') || /^file:/iu.test(specifier)) return undefined;\n",
+     "new": "  if (/^file:/iu.test(specifier)) return undefined;\n"
+    }
+   ]
+  },
+  {
+   "id": "P3-file-url-outside-the-workspace",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  2 failed | 19 passed (21)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a FILE: URL of the barrel as naming no module",
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a file: URL of the barrel as naming no module"
+   ],
+   "timeouts": 0,
+   "seconds": 2.7,
+   "counts": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "  if (specifier.startsWith('/') || /^file:/iu.test(specifier)) return undefined;\n",
+     "new": "  if (specifier.startsWith('/')) return undefined;\n"
+    }
+   ]
+  },
+  {
+   "id": "P3b-file-url-case-sensitive",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 20 passed (21)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a FILE: URL of the barrel as naming no module"
+   ],
+   "timeouts": 0,
+   "seconds": 3.2,
+   "counts": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "/^file:/iu.test(specifier)",
+     "new": "/^file:/u.test(specifier)"
+    }
+   ]
+  },
+  {
+   "id": "P4-import-condition-first",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  5 failed | 16 passed (21)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a # alias whose conditions disagree as naming no module",
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads an export whose default condition names another target as naming no module",
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads an export whose module-sync condition names another target as naming no module",
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads an export whose node condition names another target as naming no module",
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads an export whose require condition names another target as naming no module"
+   ],
+   "timeouts": 0,
+   "seconds": 2.6,
+   "counts": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "  const targets = Object.entries(entry).filter(([condition]) => condition !== 'types').map(([, target]) => target);\n  const [first] = targets;\n  return typeof first === 'string' && targets.every((target) => target === first) ? first : undefined;\n",
+     "new": "  const target = (entry as { import?: unknown; default?: unknown }).import ?? (entry as { default?: unknown }).default;\n  return typeof target === 'string' ? target : undefined;\n"
+    }
+   ]
+  },
+  {
+   "id": "P5-node-condition-ignored",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  2 failed | 19 passed (21)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a # alias whose conditions disagree as naming no module",
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads an export whose node condition names another target as naming no module"
+   ],
+   "timeouts": 0,
+   "seconds": 3.5,
+   "counts": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "filter(([condition]) => condition !== 'types')",
+     "new": "filter(([condition]) => condition !== 'types' && condition !== 'node')"
+    }
+   ]
+  },
+  {
+   "id": "P6-module-sync-ignored",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 20 passed (21)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads an export whose module-sync condition names another target as naming no module"
+   ],
+   "timeouts": 0,
+   "seconds": 3.3,
+   "counts": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "filter(([condition]) => condition !== 'types')",
+     "new": "filter(([condition]) => condition !== 'types' && condition !== 'module-sync')"
+    }
+   ]
+  },
+  {
+   "id": "P7-hash-alias-never-followed",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  4 failed | 17 passed (21)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > follows a # alias its package declares for a module of its own package",
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > follows a # alias its package declares for a package by name",
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > follows a # alias its package declares for a subpath by name",
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > follows a # alias its package declares for agreeing conditions"
+   ],
+   "timeouts": 0,
+   "seconds": 3.6,
+   "counts": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "    return target.startsWith('./') ? moduleIn(workspace, owner.dir, target) : resolveIn(workspace, from, target);\n",
+     "new": "    return undefined;\n"
+    }
+   ]
+  },
+  {
+   "id": "P8-any-package-imports",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 20 passed (21)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a # alias from a module of another package as naming no module"
+   ],
+   "timeouts": 0,
+   "seconds": 2.4,
+   "counts": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "find((manifest) => from.startsWith(`${manifest.dir}/`))",
+     "new": "find((manifest) => manifest.imports !== undefined)"
+    }
+   ]
+  },
+  {
+   "id": "P9-alias-to-alias-followed",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 20 passed (21)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a # alias whose target is another alias as naming no module"
+   ],
+   "timeouts": 0,
+   "seconds": 1.9,
+   "counts": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "target.startsWith('#') || target.startsWith('../')",
+     "new": "target.startsWith('../')"
+    }
+   ]
+  },
+  {
+   "id": "Q1-property-access-allowed",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  2 failed | 79 passed (81)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > the census sees a reading the lift does not in \"import * as argvNs from './argv.js';\\nvoid argvNs.readArgv([], { valued: [] });\" (its own mutant)",
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > the census sees a reading the lift does not in \"import { readArgv } from './argv.js';\\n[[]].map((args) => readArgv.call(undefined, args, { valued: [] }));\" (its own mutant)"
+   ],
+   "timeouts": 0,
+   "seconds": 4.0,
+   "counts": [
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": "        || (ts.isCallExpression(parent) && parent.expression === node);\n",
+     "new": "        || (ts.isCallExpression(parent) && parent.expression === node)\n        || ts.isPropertyAccessExpression(parent);\n"
+    }
+   ]
+  },
+  {
+   "id": "Q2-string-literal-ignored",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 80 passed (81)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > the census sees a reading the lift does not in \"import * as argvNs from './argv.js';\\nvoid argvNs['readArgv']([], { valued: [] });\" (its own mutant)"
+   ],
+   "timeouts": 0,
+   "seconds": 3.9,
+   "counts": [
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": "if ((ts.isIdentifier(node) || ts.isStringLiteralLike(node)) && node.text === 'readArgv') {",
+     "new": "if (ts.isIdentifier(node) && node.text === 'readArgv') {"
+    }
+   ]
+  },
+  {
+   "id": "Q3-renamed-import-allowed",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 80 passed (81)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > the census sees a reading the lift does not in \"import { readArgv as readArgs } from './argv.js';\\nvoid readArgs([], { valued: [] });\" (its own mutant)"
+   ],
+   "timeouts": 0,
+   "seconds": 3.7,
+   "counts": [
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": "parent.name === node && parent.propertyName === undefined)",
+     "new": "(parent.name === node || parent.propertyName === node))"
+    }
+   ]
+  },
+  {
+   "id": "Q4-alias-initializer-allowed",
+   "outcome": "killed",
+   "exit": 1,
+   "tests": [
+    "Tests  1 failed | 80 passed (81)"
+   ],
+   "testFiles": [
+    "Test Files  1 failed (1)"
+   ],
+   "failed": [
+    "FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > the census sees a reading the lift does not in \"import { readArgv } from './argv.js';\\nconst readArgs = readArgv;\\nvoid readArgs([], { valued: [] });\" (its own mutant)"
+   ],
+   "timeouts": 0,
+   "seconds": 3.5,
+   "counts": [
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "oldCount": 1
+    }
+   ],
+   "cleanAfter": true,
+   "edits": [
+    {
+     "file": "packages/polaris-dossier/src/argv.test.ts",
+     "old": "        || (ts.isCallExpression(parent) && parent.expression === node);\n",
+     "new": "        || (ts.isCallExpression(parent) && parent.expression === node)\n        || ts.isVariableDeclaration(parent);\n"
+    }
+   ]
+  }
+ ]
+}

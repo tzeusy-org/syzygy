@@ -1,0 +1,103 @@
+records: 19
+
+== browser-files-base-2026-10-22.json
+  keys: ['tool', 'treeCommit', 'label', 'project', 'attemptsPerFile', 'listA', 'listB', 'perFile', 'combinedRun', 'summary']
+  commit40 9a30237ed700e6579f3fcc1c6292e6c759861c3f: 1 at e.g. ['$.treeCommit']
+  digest64 fields: 0
+
+== browser-files-head-2026-10-22.json
+  keys: ['tool', 'treeCommit', 'label', 'browserExecutable', 'browserVersion', 'project', 'attemptsPerFile', 'listA', 'listB', 'perFile', 'combinedRun', 'summary']
+  commit40 dccd484f4749b55f981f2e5211de4112ab7951de: 1 at e.g. ['$.treeCommit']
+  digest64 fields: 0
+
+== browser-files-head-chrome154-2026-10-22.json
+  keys: ['tool', 'treeCommit', 'label', 'browserExecutable', 'browserVersion', 'project', 'attemptsPerFile', 'listA', 'listB', 'perFile', 'combinedRun', 'summary']
+  commit40 dccd484f4749b55f981f2e5211de4112ab7951de: 1 at e.g. ['$.treeCommit']
+  digest64 fields: 0
+
+== chrome-matrix-head-2026-10-22.json
+  keys: ['tool', 'treeCommit', 'mode', 'sha256AtCommit', 'project', 'testFile', 'command', 'loadSignatures', 'rows', 'holds']
+  commit40 dccd484f4749b55f981f2e5211de4112ab7951de: 1 at e.g. ['$.treeCommit']
+  digest64 fields: 2
+
+== chrome-matrix-pre-fix-2026-10-22.json
+  keys: ['tool', 'treeCommit', 'mode', 'sha256AtCommit', 'project', 'testFile', 'command', 'loadSignatures', 'mutant', 'rows', 'holds']
+  commit40 dccd484f4749b55f981f2e5211de4112ab7951de: 1 at e.g. ['$.treeCommit']
+  digest64 fields: 2
+
+== chrome-names-2026-10-22.json
+  keys: ['tool', 'command', 'chromes']
+  digest64 fields: 6
+
+== launch-failure-base-2026-10-22.json
+  keys: ['tool', 'treeCommit', 'mode', 'file', 'sha256AtCommit', 'command', 'mutant', 'exit', 'testsRun', 'failing', 'left', 'draftPreviewDirectoriesLeft', 'retainedProfilesLeft', 'launchFailedAsExpected', 'holds']
+  commit40 dccd484f4749b55f981f2e5211de4112ab7951de: 1 at e.g. ['$.treeCommit']
+  digest64 fields: 1
+
+== launch-failure-head-2026-10-22.json
+  keys: ['tool', 'treeCommit', 'mode', 'file', 'sha256AtCommit', 'command', 'exit', 'testsRun', 'failing', 'left', 'draftPreviewDirectoriesLeft', 'retainedProfilesLeft', 'launchFailedAsExpected', 'holds']
+  commit40 dccd484f4749b55f981f2e5211de4112ab7951de: 1 at e.g. ['$.treeCommit']
+  digest64 fields: 1
+
+== launch-probe-base-2026-10-22.json
+  keys: ['tool', 'treeCommit', 'mode', 'file', 'sha256AtCommit', 'launchesRequested', 'mutant', 'build', 'run', 'executable', 'browserVersion', 'privateTmpdirLength', 'rows', 'summary']
+  commit40 dccd484f4749b55f981f2e5211de4112ab7951de: 1 at e.g. ['$.treeCommit']
+  digest64 fields: 1
+
+== launch-probe-base-chrome154-2026-10-22.json
+  keys: ['tool', 'treeCommit', 'mode', 'file', 'sha256AtCommit', 'launchesRequested', 'mutant', 'build', 'run', 'executable', 'browserVersion', 'privateTmpdirLength', 'rows', 'summary']
+  commit40 dccd484f4749b55f981f2e5211de4112ab7951de: 1 at e.g. ['$.treeCommit']
+  digest64 fields: 1
+
+== launch-probe-head-2026-10-22.json
+  keys: ['tool', 'treeCommit', 'mode', 'file', 'sha256AtCommit', 'launchesRequested', 'build', 'run', 'executable', 'browserVersion', 'privateTmpdirLength', 'rows', 'summary']
+  commit40 dccd484f4749b55f981f2e5211de4112ab7951de: 1 at e.g. ['$.treeCommit']
+  digest64 fields: 1
+
+== launch-probe-head-chrome154-2026-10-22.json
+  keys: ['tool', 'treeCommit', 'mode', 'file', 'sha256AtCommit', 'launchesRequested', 'build', 'run', 'executable', 'browserVersion', 'privateTmpdirLength', 'rows', 'summary']
+  commit40 dccd484f4749b55f981f2e5211de4112ab7951de: 1 at e.g. ['$.treeCommit']
+  digest64 fields: 1
+
+== mutants-cdp-2026-10-22.json
+  keys: ['tool', 'treeCommit', 'sha256AtCommit', 'browserExecutable', 'browserVersion', 'project', 'control', 'controlLaunchFailure', 'mutants', 'killed', 'results']
+  commit40 dccd484f4749b55f981f2e5211de4112ab7951de: 1 at e.g. ['$.treeCommit']
+  digest64 fields: 4
+
+== test-lists-2026-10-22.json
+  keys: ['tool', 'baseTree', 'headTree', 'baseLines', 'headLines', 'baseDistinctNames', 'headDistinctNames', 'added', 'removed', 'addedByFile', 'removedByFile', 'testsLine']
+  commit40 9a30237ed700e6579f3fcc1c6292e6c759861c3f: 1 at e.g. ['$.baseTree.commit']
+  commit40 dccd484f4749b55f981f2e5211de4112ab7951de: 1 at e.g. ['$.headTree.commit']
+  digest64 fields: 2
+
+== test-lists-attempt-1-2026-10-22.json
+  keys: ['tool', 'baseTree', 'headTree', 'baseLines', 'headLines', 'baseDistinctNames', 'headDistinctNames', 'added', 'removed', 'addedByFile', 'removedByFile', 'testsLine']
+  commit40 9a30237ed700e6579f3fcc1c6292e6c759861c3f: 1 at e.g. ['$.baseTree.commit']
+  commit40 8dc316a79ce1310af0ab7c88a7b8f35a740718ad: 1 at e.g. ['$.headTree.commit']
+  digest64 fields: 2
+
+== tmpdir-length-base-2026-10-22.json
+  keys: ['tool', 'treeCommit', 'mode', 'file', 'sha256AtCommit', 'mutant', 'lengthsTried', 'attemptsPerLength', 'rows', 'longestLaunched', 'shortestFailed', 'inconclusiveBecauseOfLoad', 'monotone']
+  commit40 6f84e689dddc7cf23411da761f8754dd99741d2c: 1 at e.g. ['$.treeCommit']
+  digest64 fields: 1
+
+== tmpdir-length-head-2026-10-22.json
+  keys: ['tool', 'treeCommit', 'mode', 'file', 'sha256AtCommit', 'lengthsTried', 'attemptsPerLength', 'rows', 'longestLaunched', 'shortestFailed', 'inconclusiveBecauseOfLoad', 'monotone']
+  commit40 6f84e689dddc7cf23411da761f8754dd99741d2c: 1 at e.g. ['$.treeCommit']
+  digest64 fields: 1
+
+== tmpdir-length-rejected-2026-10-22.json
+  keys: ['tool', 'treeCommit', 'mode', 'file', 'sha256AtCommit', 'mutant', 'lengthsTried', 'attemptsPerLength', 'rows', 'longestLaunched', 'shortestFailed', 'inconclusiveBecauseOfLoad', 'monotone']
+  commit40 6f84e689dddc7cf23411da761f8754dd99741d2c: 1 at e.g. ['$.treeCommit']
+  digest64 fields: 1
+
+== verification-2026-10-22.json
+  keys: ['subject', 'appsAndConfigDiffSinceCodeCommit', 'toolDigests', 'diagnosis', 'ac1', 'closeThrewUnderLoad', 'repair', 'ac2', 'ac3', 'tmpdirLength', 'mutants', 'tests', 'gates']
+  commit40 9a30237ed700e6579f3fcc1c6292e6c759861c3f: 2 at e.g. ['$.subject.baseCommit', '$.ac1.atBase.treeCommit']
+  commit40 aa74cbb92f2624640b44e09c38f31a6f333a29f8: 1 at e.g. ['$.subject.codeCommit']
+  commit40 0856f92213d04085088cfa199caa6a94af7569b4: 1 at e.g. ['$.subject.firstApproachCommit']
+  commit40 012e6c84229aa4b4657108fd58f5f524df501bb8: 2 at e.g. ['$.subject.headAtRecording', '$.subject.gatesRunAtCommit']
+  commit40 dccd484f4749b55f981f2e5211de4112ab7951de: 5 at e.g. ['$.ac1.atHead.treeCommit', '$.repair.hostedRunAfterTheFix.headCommit', '$.repair.matrixPreFix.treeCommit']
+  commit40 8dc316a79ce1310af0ab7c88a7b8f35a740718ad: 10 at e.g. ['$.repair.replacedRecords.launch-probe-head-2026-10-22.json.treeCommit', '$.repair.replacedRecords.launch-probe-base-2026-10-22.json.treeCommit', '$.repair.replacedRecords.tmpdir-length-head-2026-10-22.json.treeCommit']
+  commit40 ba857fd4d1f1697227398b210419b1bd507bf8eb: 10 at e.g. ['$.repair.replacedRecords.launch-probe-head-2026-10-22.json.lastCommitHoldingIt', '$.repair.replacedRecords.launch-probe-base-2026-10-22.json.lastCommitHoldingIt', '$.repair.replacedRecords.tmpdir-length-head-2026-10-22.json.lastCommitHoldingIt']
+  digest64 fields: 15

@@ -1,0 +1,3 @@
+function
+"```" extracted {"principle":3} [ 'First.', 'Second.', 'Third.' ]
+" ```" extracted {"principle":1} [ 'First.' ]

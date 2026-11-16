@@ -1,0 +1,5 @@
+O1-tarball-url-reads-outside survives 0 ['Tests  72 passed (72)'] 8.1 clean
+O2-tar-unread survives 0 ['Tests  72 passed (72)'] 9.2 clean
+O3-tar-gz-unread survives 0 ['Tests  72 passed (72)'] 6.1 clean
+O4-root-dev-dependencies-dropped survives 0 ['Tests  72 passed (72)'] 5.3 clean
+wrote /tmp/la-b838/own-base.json 4

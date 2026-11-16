@@ -12,7 +12,6 @@
 // controlled evaluation input", so the input must come from outside the
 // artifacts being judged.
 
-import { execFileSync } from 'node:child_process';
 import { readFileSync, readdirSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 
@@ -20,6 +19,7 @@ import { readGitBlobsBatch, type ReadGitBlobs } from './git-blob-batch.js';
 
 import {
   A1_CORRELATION_UNAVAILABLE,
+  createGitRunner,
   AUTHORITY_KINDS,
   supersessionTargetsOf,
   type ActRecordInput,
@@ -56,19 +56,19 @@ export const PWB_AUTHORITY_ARTIFACTS: Readonly<Record<AuthorityKind, string>> = 
 // changes only these pointers, identities, tags and targets. Nothing here
 // reads `governingBehaviorContract`, and the 2026-09-30 direction's bar on
 // the entry's currency and briefing fields still holds.
-// The policy act is the 2026-10-20 public-source screening-scope version 4 act, superseding the
-// 2026-10-08 version-3 act. The registry machine-ceiling act supersedes its
+// The policy act is the 2026-11-09 public-source screening-scope version 8 act (variant pv), superseding the
+// 2026-11-06 version-7 act. The registry machine-ceiling act supersedes its
 // 2026-10-02 re-pin under OWNER-DIRECTION-MACHINE-CEILING-INSTALL-2026-10-20:
 // only that registry row, its pointers and the matching runtime ceiling change.
 export const PWB_ACT_RECORDS: Readonly<Record<AuthorityKind, string>> = {
   consent: '.syzygy/governance/decisions/PWB-BUTLERS-OBSERVATION-CONSENT-ACT.md',
-  policy: '.syzygy/governance/decisions/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V4-ACT.md',
+  policy: '.syzygy/governance/decisions/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V8-ACT.md',
   registry: '.syzygy/governance/decisions/PWB-OBSERVER-REGISTRY-MACHINE-CEILING-ACT.md',
 };
 
 // Parse anchor: scripts/{build_pwb_registry_machine_ceiling_amendment,record_pwb_registry_machine_ceiling_act}.py find PWB_SUPERSEDED_ACT_RECORDS by its `export const` text; keep the keyword.
 export const PWB_SUPERSEDED_ACT_RECORDS: Readonly<Record<Exclude<AuthorityKind, 'consent'>, string>> = {
-  policy: '.syzygy/governance/decisions/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V3-ACT.md',
+  policy: '.syzygy/governance/decisions/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V7-ACT.md',
   registry: '.syzygy/governance/decisions/PWB-OBSERVER-REGISTRY-BEHAVIOR-CONTRACT-REPIN-ACT.md',
 };
 
@@ -87,7 +87,7 @@ function pwbSyzygyButlersExpectations(evaluationInstant: string): BodyReadAuthor
     contentClass: 'declared-project-shape-text',
     owner: 'Tzeusy',
     governanceHome: '.syzygy/governance/declarations/adapter-registry',
-    policyVersion: '1.5.0-public-source-candidate.1.none.code-all.redact-span',
+    policyVersion: '1.9.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd.v6-p.v7-s.v8-pv',
     evaluationInstant,
     // The PWB state-(1) amendment sign-off; earlier acts predate the
     // authority that makes state (1) acceptable for PWB-REQ-005.
@@ -104,11 +104,11 @@ function pwbSyzygyButlersExpectations(evaluationInstant: string): BodyReadAuthor
       },
       policy: {
         artifactPath: PWB_AUTHORITY_ARTIFACTS.policy,
-        actIdentity: 'PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V4-APPROVAL-2026-10-20',
+        actIdentity: 'PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V8-APPROVAL-2026-11-09',
         actType: 'approve-policy',
         phrasePrefix: 'APPROVE POLARIS BUTLERS SECRET-CLASSIFICATION POLICY',
-        recordingTag: 'pwb-approve-policy-public-source-scope-v4-signed-2026-10-20',
-        scopeAnchors: ['polaris-butlers-project-shape-secrets', '1.5.0-public-source-candidate.1.none.code-all.redact-span', 'project:syzygy'],
+        recordingTag: 'pwb-approve-policy-public-source-scope-v8-signed-2026-11-09',
+        scopeAnchors: ['polaris-butlers-project-shape-secrets', '1.9.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd.v6-p.v7-s.v8-pv', 'project:syzygy'],
         a1: { kind: 'absent' },
         supersession: { kind: 'supersedes', target: PWB_SUPERSEDED_ACT_RECORDS.policy },
       },
@@ -194,18 +194,18 @@ export interface LoadGovernanceInputsOptions {
 }
 
 function defaultRunGit(repoRoot: string, args: readonly string[]): string {
-  const stdout = execFileSync('git', ['--no-optional-locks', '-C', repoRoot, ...args], {
+  const stdout = createGitRunner({
+    prefix: ['--no-optional-locks', '-C', repoRoot],
     stdio: ['ignore', 'pipe', 'ignore'],
-  });
+  })(args);
   return new TextDecoder('utf-8', { fatal: true }).decode(stdout);
 }
 
 function defaultReadGitBlob(repoRoot: string, object: string): Uint8Array {
-  return new Uint8Array(
-    execFileSync('git', ['--no-optional-locks', '-C', repoRoot, 'cat-file', 'blob', object], {
-      stdio: ['ignore', 'pipe', 'ignore'],
-    }),
-  );
+  return new Uint8Array(createGitRunner({
+    prefix: ['--no-optional-locks', '-C', repoRoot],
+    stdio: ['ignore', 'pipe', 'ignore'],
+  })(['cat-file', 'blob', object]));
 }
 
 function readArtifact(read: (path: string) => Uint8Array, absolutePath: string): ArtifactInput {
@@ -242,6 +242,7 @@ function sameBytes(left: Uint8Array, right: Uint8Array): boolean {
 }
 
 function batchReaderFor(options: Pick<LoadGovernanceInputsOptions, 'readGitBlob' | 'readGitBlobs'>): ReadGitBlobs | undefined {
+  // G5 exception 8: isolated batch keeps its allowlisted env, config flags, piped input and framing.
   return options.readGitBlobs ?? (options.readGitBlob === undefined ? readGitBlobsBatch : undefined);
 }
 

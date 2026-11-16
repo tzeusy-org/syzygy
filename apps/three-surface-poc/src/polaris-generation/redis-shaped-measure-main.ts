@@ -1,9 +1,9 @@
 import { execFileSync } from 'node:child_process';
-import { createHash } from 'node:crypto';
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { sha256 } from '@syzygy/support';
 
 import { measureRedisShapedDiscovery } from './redis-shaped-measure.js';
 
@@ -12,7 +12,7 @@ const SUBJECTS = ['packages/polaris-generation-core/src/excerpt.ts', 'packages/p
 function subjects(): { readonly commit: string; readonly sha256: Readonly<Record<string, string>> } {
   const root = execFileSync('git', ['rev-parse', '--show-toplevel'], { encoding: 'utf8' }).trim();
   const commit = execFileSync('git', ['-C', root, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
-  return { commit, sha256: Object.fromEntries(SUBJECTS.map(path => [path, createHash('sha256').update(readFileSync(join(root, path))).digest('hex')])) };
+  return { commit, sha256: Object.fromEntries(SUBJECTS.map(path => [path, sha256(readFileSync(join(root, path)))])) };
 }
 
 /** `poc:redis-shaped-discovery [--out <file>]`: builds the synthetic fixture in a scratch directory, measures heuristic discovery, prints or writes the measurement. No real repository is read and no provider is called. */

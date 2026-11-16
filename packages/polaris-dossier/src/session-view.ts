@@ -1,8 +1,8 @@
-import { createHash } from 'node:crypto';
 import { spawnSync } from 'node:child_process';
 import * as fs from 'node:fs';
 import * as os from 'node:os';
 import * as path from 'node:path';
+import { sha256 } from '@syzygy/support';
 
 /** Session views for launched runs (candidate REQ-polaris-generation-042).
  *
@@ -75,7 +75,7 @@ export function viewFor(inputs: ViewInputs): ViewSpec {
   }
 }
 
-export const viewSha256 = (spec: ViewSpec): string => createHash('sha256').update(JSON.stringify(spec), 'utf8').digest('hex');
+export const viewSha256 = (spec: ViewSpec): string => sha256(JSON.stringify(spec));
 
 /** The bubblewrap argument list that builds the view, ending before the command it runs. */
 export function bwrapArgs(spec: ViewSpec): string[] {

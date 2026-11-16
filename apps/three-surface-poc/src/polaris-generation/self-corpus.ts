@@ -1,11 +1,11 @@
 import { execFileSync } from 'node:child_process';
-import { createHash } from 'node:crypto';
 import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
 import { generationAnchorId, generationSourcesForBody, gitBlobObjectId, runGenerationPipeline, stageSchema, validateGenerationSources,
   validateStage, reviewVerdict, type GenerationSource, type PipelineRequest, type PipelineResult, type ProviderDraft } from '@syzygy/polaris-generation-core';
+import { sha256 } from '@syzygy/support';
 
 import { readGitBlobsBatch, type ReadGitBlobs } from '../git-blob-batch.js';
 import { createDurableScriptedLifecycle } from './durable-lifecycle.js';
@@ -13,7 +13,6 @@ import { renderDraftPreview } from './draft-preview.js';
 
 const roots = ['.syzygy/governance/doctrine', '.syzygy/governance/decisions', '.syzygy/governance/contracts/rfcs'] as const;
 const profile = 'syzygy-self-governance-markdown-v1';
-const sha256 = (value: string): string => createHash('sha256').update(value).digest('hex');
 const git = (repoRoot: string, args: readonly string[]): Buffer => execFileSync('git', ['-C', repoRoot, ...args], { maxBuffer: 12_000_000 });
 
 function inProfile(path: string): boolean {

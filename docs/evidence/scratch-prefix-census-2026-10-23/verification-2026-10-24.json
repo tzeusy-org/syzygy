@@ -1,0 +1,77 @@
+{
+ "subject": "docs/evidence/scratch-prefix-census-2026-10-23/",
+ "gatesRanAtCommit": "9c04ea82441b2605781d41d544989425aec99391",
+ "censusRunCommit": "a864e999645a071dda40325b2235976590e02973",
+ "gates": {
+  "check_governance": {
+   "command": "python3 scripts/check_governance.py",
+   "exit": 0,
+   "summary": [
+    "32 OK, 21 WARN, 0 FAIL (53 checks) \u2014 counts derived, not asserted"
+   ]
+  },
+  "check_quotations": {
+   "command": "python3 scripts/check_quotations.py",
+   "exit": 0,
+   "summary": [
+    "OK    QC-1  a quotation beside a path:line locator was said by that file \u2014 37 quotations examined in 18 of 943 .md files scanned (loc-paren-quote 2, loc-colon-quote 25, quote-paren-loc 10), 0 findings"
+   ]
+  },
+  "authoritySweep": {
+   "command": "TMPDIR=<short private> npx vitest run apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+   "exit": 0,
+   "summary": [
+    "Test Files  1 passed (1)",
+    "Tests  5 passed (5)"
+   ]
+  }
+ },
+ "rule6": {
+  "trace-selftest": true,
+  "assemble-selftest": true,
+  "static-selftest": true,
+  "input-checks": true
+ },
+ "fileSha256": {
+  "assemble-selftest-2026-10-24.json": "919a913b862fe96e255962cd6e80cf258e98d4d9208f1497cb09016858f4be89",
+  "assemble_census.py": "ffbc0f974967a1899e4d1b4f18b580b04e088e1cf01d6489f42a9432c2d501f8",
+  "census-2026-10-24.json": "8bb12c8a5adb7522ba15293b9df16fc3ea4e39cbb2928661e386c974904f3002",
+  "census_run.py": "6039545e993610ef67dff1fc60103ade0fe197ab55638c1f9cdec7504b16fe8d",
+  "collect_runs.py": "79ff2c4602eea9aaa45f5713354c7b99c562c41f409b1a424a563e61759a7765",
+  "input-checks-2026-10-24.json": "133eafe218b0b0ed27b1076986a438d0c4ab5f0a811c1d5fffc94187fb9daa6e",
+  "input_checks.py": "3f06ff7aa8e9de882339e7eed9ff6b29da08149d262694921e7276f5e17eb633",
+  "make_verification.py": "769381437c18025c860df4bbb4715ca793aa4de82b9b6c21e5f90abfe1550730",
+  "runs/c0-clean.json": "85b705b681dbb1222ed4943c7bc589ddd1fb7b0113e291496d66bded3a58d9ad",
+  "runs/c0-clean.samples.json": "40dd6a1c1f64bf7aa6a3ee11d673e69c57ce4d998f9a3424c278bf1b0ad6a258",
+  "runs/c0-clean.trace.jsonl.gz": "adda95833b107cc08bf15e62c3b7af7fceb089fb12aa51f6126a362f33235f63",
+  "runs/carried-observations.json": "9cc913450afc04168a73de85b8df97210eb90cef62e89c3ab6e823353adb2bd2",
+  "runs/f1-fresh-after-k1.json": "f8a9e08a8a2caffa4a60c670578280dbba0d8fbc6c9eede629969af6eb6eb096",
+  "runs/f1-fresh-after-k1.samples.json": "f75026bcd451ed46464a0a2aea7e04fb8de373ba892b382f45aced4a25c47a1d",
+  "runs/f1-fresh-after-k1.trace.jsonl.gz": "78ace3b6900bdb59843b82bc7d12c14dc43f08bc9417624a640a833293d4d25b",
+  "runs/f2-fresh-after-k2.json": "75261f5b919b9801db9e1d65e2608b8485a3d0ffb26b91ddb0626717645a10bc",
+  "runs/f2-fresh-after-k2.samples.json": "a1f86f2d1189113cd46b90b9b2e1e6286bbb2fbab0c6909a75238acbd4f5c65f",
+  "runs/f2-fresh-after-k2.trace.jsonl.gz": "25317fbf06f1428cc8aabfbc2019adf55ceafba7ee3266c13fc0c2cb14912671",
+  "runs/f3-fresh-after-k3.json": "6991afeb7fe36f17f67fa46322c249f03edc6f28ee1f9e5ee1c8112caa75a947",
+  "runs/f3-fresh-after-k3.samples.json": "b8148a14fc3cc5231a358dd942008f877689968a5c7eafd012ea0e410f89e9b0",
+  "runs/f3-fresh-after-k3.trace.jsonl.gz": "180e5fa2c98f42f95a9e31380c13985f3f471e16247365a6044591a9fb5e221b",
+  "runs/k1-kill-40s.json": "b49d709f2e5767fc9c1f3bc22f3d47097edefeca103eaf62f7bdeca2f269eca6",
+  "runs/k1-kill-40s.samples.json": "29a492a98acc0f0bc133099a0b2162c20287faedf972213e8a75adb3469db27d",
+  "runs/k1-kill-40s.trace.jsonl.gz": "1ec3b51005f0ef761e9cde00d3460e413fda4101263f090c62e87679624f2400",
+  "runs/k2-kill-75s.json": "0acf5076b6e088fbaf4eac2de7783d6da04f6670b0975cff17ae5b77337a8b0d",
+  "runs/k2-kill-75s.samples.json": "a0c1894f84018f71d374f9604121f9904d5a12b58f88c3232c49f4a22703ced0",
+  "runs/k2-kill-75s.trace.jsonl.gz": "9c3d0c9580cdf286e8183d8c849433137d53b526ccdaf69ce47d5aedd10f32e7",
+  "runs/k3-kill-115s.json": "d8edb19a314dd3e7a123dcde5ff269721de2f6b17a4f71bde42e860f3e4fca59",
+  "runs/k3-kill-115s.samples.json": "fd02d8576854a3d231cd2271cfc9e9859e0a47df3226c192dd51a223b48f667c",
+  "runs/k3-kill-115s.trace.jsonl.gz": "24ccf8fdde6511ec68f8e1782c7583dde2ff01520f8a5156969fa91699f26854",
+  "runs/operator-notes.json": "355763db041a27869d6f10957a67e55ee4122f83719a9fa9064ef5fd881e12fc",
+  "runs/sampler-digests.json": "33efd09fdf57a12139e8e5ea7cab6d1533ca918b55878771f0796342b9040094",
+  "scratch_trace.cjs": "c9ff0cbbd2c9162c8483082f24202e18fa52f414c9c18a648723285de2ec2688",
+  "static-selftest-2026-10-25.json": "5317528c225d377fe3c2a528c21461076d96a57bb346ebb98a026f7f2a173303",
+  "static-sites-2026-10-24.json": "f5ad2571ddf5b9caab1aafb5c9de3a70d94fdf6a9992af2faa789672b24a2a69",
+  "static_sites.py": "9e03dc1e6f79180d32b709b59110160a3b202da2c05870ec79d0f1c7795b46bf",
+  "tmp_sampler.py": "3e34f06abe672f405ae7107b9e55472e22299dddef2634b167c9373008c2125d",
+  "trace-selftest-2026-10-23.json": "60912cf982643b4fb0ecf98e661efafd3a703b78eea2247b0247322a72321311",
+  "trace_fixture.mjs": "ac9ee31565342b0c9b004e590413062cb370013cc3eecf4dad88a9b263e55888",
+  "trace_selftest.py": "41dd066dfb8f9c82b1f2db6a3fa18e7d9e3b77e7712c947f9846d7f96e36d70f"
+ }
+}

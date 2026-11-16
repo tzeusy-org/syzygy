@@ -1,4 +1,4 @@
-import { escapeHtml, type Route, type RouteResponse } from '@syzygy/cap1-daemon';
+import { escapeHtml, type Route, type RouteResponse } from '@syzygy/http-host';
 import { PWB_RESOURCE_LIMITS, buildResponseIdentity, withServedResourceBreaches, type PocEntity, type PocModel, type PocSurface, type PwbResourceLimits, type Reevaluation } from '@syzygy/three-surface-poc-core';
 
 import { BROWSER_ORIGIN_REFUSAL, browserRequestAllowed } from './browser-origin.js';

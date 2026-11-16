@@ -1,0 +1,10 @@
+{
+ "rowsCompared": 12841,
+ "rowsDiffer": 0,
+ "missing": 0,
+ "extra": 0,
+ "differPerDriver": {},
+ "firstDiffering": [],
+ "corpusEqual": true
+}
+cmp exit=0

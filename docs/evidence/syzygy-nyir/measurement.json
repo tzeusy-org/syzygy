@@ -1,0 +1,233 @@
+{
+ "schema": "syzygy-nyir-measurement/1",
+ "bead": "syzygy-nyir",
+ "text": "Evidence record, not authority. Re-measurement of packages/polaris-generation-consent/src/package-reader.test.ts after syzygy-bpyt.4.8 moved every recorder render to one asynchronous python3 run at the top of the file, and the re-sizing of the fifteen timeouts PR #520 sized for their renders (syzygy-bpyt.4.8 comment of 2026-10-24). Also the rule-6 mutants of the two testkit pins (review N1, N2 of docs/reviews/R-GP-IMPL-RECORDER-BATCHED-RENDER-RAW.md).",
+ "host": {
+  "cores": 12,
+  "load1": {
+   "min": 6.26,
+   "max": 21.37
+  },
+  "note": "load1 stayed under 22 during every run; the host did not reach load1 >= 100 and no load was generated, since other lanes share it. The fifteen were last sized at load1 up to 127 (docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json); this record does not measure that load."
+ },
+ "before": {
+  "commit": "395830d1875e3a7fcb743f56f6c6f63882d1e74b",
+  "commands": [
+   "python3 -I scripts/measure_vitest_test_durations.py . --file packages/polaris-generation-consent/src/package-reader.test.ts --project integration --mode alone --runs 3 --out before-alone.json",
+   "python3 -I scripts/measure_vitest_test_durations.py . --file packages/polaris-generation-consent/src/package-reader.test.ts --project integration --mode full --runs 1 --out before-full-1.json",
+   "python3 -I scripts/measure_vitest_test_durations.py . --file packages/polaris-generation-consent/src/package-reader.test.ts --project integration --mode full --runs 1 --out before-full-2.json"
+  ],
+  "records": {
+   "before-alone.json": "36b72d9651db1ae40ee4dd632be4eb4810e328f2be2a15d9e5003b5c7ba5315e",
+   "before-full-1.json": "38c362764f4234cb86b678a19f763c5525467fc2f73a9cb1d8d630ec6617bcb3",
+   "before-full-2.json": "20571b3019c5329ab2076635dc6bca4abcb9efcbcb2cbbe88cab97094cf95948"
+  }
+ },
+ "after": {
+  "commit": "e59c163d0a33ba6a7f2e2564c01a1a86b8e26230",
+  "commands": [
+   "python3 -I scripts/measure_vitest_test_durations.py . --file packages/polaris-generation-consent/src/package-reader.test.ts --project integration --mode alone --runs 5 --out after-alone.json"
+  ],
+  "records": {
+   "after-alone.json": "3cf4a4d9feeb69300c67a8c4d209631edbb91f571bb7e89aaa7220103a2b23fd"
+  }
+ },
+ "sizing": {
+  "subject": {
+   "commit": "1dc8510a26d679160ac8f39f666a4a37a391549f",
+   "dirty": false,
+   "file": "packages/polaris-generation-consent/src/package-reader.test.ts",
+   "fileSha256": "655afa3a45034536436a767c9014fcc1609a9a39882b124e3673733e2bc813f1",
+   "project": "integration"
+  },
+  "record": {
+   "path": "timeout-sizing.json",
+   "sha256": "d451aca8d2276a9837e715176392a62319aa81a0073cadf545318cb85f7cfb11"
+  },
+  "command": "python3 -I scripts/size_vitest_test_timeouts.py . --file packages/polaris-generation-consent/src/package-reader.test.ts --project integration --record before-alone.json --record before-full-1.json --record before-full-2.json --after after-alone.json --out timeout-sizing.json --check",
+  "exit": 1,
+  "problems": [
+   "carries 50000 ms, the rule gives 15000 ms: the policy port and the strict policy chain agree on every world in the fixture set, at every instant"
+  ],
+  "whyTheOneProblemStands": "The agreement sweep carries 50000 ms and these records alone give it 15000 ms (worst 3794 ms at load1 <= 21.4). It keeps 50000 ms: its cost is syzygy-bpyt.4.23's (R-GP-IMPL-PACKAGE-READER-TIMEOUTS-1 N2), and a run at load1 127.56 cut it at 16465 ms (docs/evidence/syzygy-bpyt-4-13/load-127-report-extract.json), above 15000 ms."
+ },
+ "fifteen": {
+  "count": 15,
+  "worstMs": 52,
+  "worstAfterMs": 42,
+  "rule": "Each measured at or under 2500 ms in all 5 before observations and all 5 after observations, every run passed, so each keeps the 5000 ms default (the rule of scripts/size_vitest_test_timeouts.py). Hosted runs were not consulted.",
+  "rows": [
+   {
+    "name": "screening scope version 2 policy act counts the version 2 act when the policy carries the version 2 bytes, and the version 1 act goes quiet",
+    "timeoutBeforeMs": 45000,
+    "worstMsInSyzygyBpyt413": 14198,
+    "worstMs": 4,
+    "worstAfterMs": 3,
+    "timeoutAfterMs": null
+   },
+   {
+    "name": "package admission reader returns a record only for an instance that an act record names by path and digest",
+    "timeoutBeforeMs": 45000,
+    "worstMsInSyzygyBpyt413": 14149,
+    "worstMs": 11,
+    "worstAfterMs": 8,
+    "timeoutAfterMs": null
+   },
+   {
+    "name": "egress version 2 record refuses when version 2 did not take effect strictly after version 1: the same instant, or earlier",
+    "timeoutBeforeMs": 45000,
+    "worstMsInSyzygyBpyt413": 13826,
+    "worstMs": 22,
+    "worstAfterMs": 16,
+    "timeoutAfterMs": null
+   },
+   {
+    "name": "strict act reads policy chain: absent without acts; refused for a missing version 1, equal or earlier instants, equal arguments, a supersession that does not name version 1, or other policy bytes",
+    "timeoutBeforeMs": 40000,
+    "worstMsInSyzygyBpyt413": 12015,
+    "worstMs": 17,
+    "worstAfterMs": 13,
+    "timeoutAfterMs": null
+   },
+   {
+    "name": "egress version 2 record is read from the recorder's act: version 2 supersedes version 1 once in force",
+    "timeoutBeforeMs": 40000,
+    "worstMsInSyzygyBpyt413": 11817,
+    "worstMs": 12,
+    "worstAfterMs": 9,
+    "timeoutAfterMs": null
+   },
+   {
+    "name": "egress version 2 record the RFC5-14 class amendment version 2 depends on is required: no record, an edited module, a wrong form, or an amendment later than version 2 all refuse",
+    "timeoutBeforeMs": 40000,
+    "worstMsInSyzygyBpyt413": 11800,
+    "worstMs": 52,
+    "worstAfterMs": 42,
+    "timeoutAfterMs": null
+   },
+   {
+    "name": "egress version 2 record withdrawal and forgery forms the reader does not define does not refuse the recorders' other act records or the aggregate acceptance record they append to",
+    "timeoutBeforeMs": 25000,
+    "worstMsInSyzygyBpyt413": 8089,
+    "worstMs": 8,
+    "worstAfterMs": 8,
+    "timeoutAfterMs": null
+   },
+   {
+    "name": "egress version 2 record leaves version 1 standing before the version 2 act takes effect, and with no version 1 act at all",
+    "timeoutBeforeMs": 20000,
+    "worstMsInSyzygyBpyt413": 5040,
+    "worstMs": 12,
+    "worstAfterMs": 12,
+    "timeoutAfterMs": null
+   },
+   {
+    "name": "screening scope version 2 policy act a version 2 act not yet in force leaves version 1 in force, in both views",
+    "timeoutBeforeMs": 20000,
+    "worstMsInSyzygyBpyt413": 5039,
+    "worstMs": 8,
+    "worstAfterMs": 5,
+    "timeoutAfterMs": null
+   },
+   {
+    "name": "public-source policy act refuses the recorder's file when its act type, identity, title or provenance is not the recorder's form",
+    "timeoutBeforeMs": 15000,
+    "worstMsInSyzygyBpyt413": 4808,
+    "worstMs": 10,
+    "worstAfterMs": 7,
+    "timeoutAfterMs": null
+   },
+   {
+    "name": "round-3 review notes takes a time: a strict read of an act recorded after now is absent (N-4)",
+    "timeoutBeforeMs": 15000,
+    "worstMsInSyzygyBpyt413": 4266,
+    "worstMs": 3,
+    "worstAfterMs": 3,
+    "timeoutAfterMs": null
+   },
+   {
+    "name": "public-source policy act recognises the recorder's record by its exact path and format, in force from its instant",
+    "timeoutBeforeMs": 15000,
+    "worstMsInSyzygyBpyt413": 3866,
+    "worstMs": 9,
+    "worstAfterMs": 7,
+    "timeoutAfterMs": null
+   },
+   {
+    "name": "screening scope version 2 policy act refuses an unlisted record that names the policy: another file, a subdirectory, a loose field spelling, a Unicode-hyphen identity",
+    "timeoutBeforeMs": 15000,
+    "worstMsInSyzygyBpyt413": 3452,
+    "worstMs": 8,
+    "worstAfterMs": 8,
+    "timeoutAfterMs": null
+   },
+   {
+    "name": "round-3 review notes folds soft hyphens, zero-width spaces, underscores and spaces before matching a withdrawal stem (N-2)",
+    "timeoutBeforeMs": 15000,
+    "worstMsInSyzygyBpyt413": 3348,
+    "worstMs": 5,
+    "worstAfterMs": 4,
+    "timeoutAfterMs": null
+   },
+   {
+    "name": "package admission reader refuses the whole read on unknown shapes instead of guessing",
+    "timeoutBeforeMs": 10000,
+    "worstMsInSyzygyBpyt413": 2564,
+    "worstMs": 24,
+    "worstAfterMs": 18,
+    "timeoutAfterMs": null
+   }
+  ]
+ },
+ "mutants": {
+  "ranAt": "395830d1875e3a7fcb743f56f6c6f63882d1e74b",
+  "command": "npx vitest run --project integration packages/polaris-generation-consent/src/recorder-fixtures.testkit.test.ts",
+  "note": "N1-invert-filter is killed at beforeAll (the installed-path probe renders over a root with no entry and now throws ENOENT), not by the edge case it targets.",
+  "rows": [
+   {
+    "id": "N1-bare-catch",
+    "file": "packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts",
+    "old": "  const installed = stat?.isFile() === true ? readFileSync(entry) : null;\n",
+    "new": "  let installed: Uint8Array | null = null;\n  try { if (stat?.isFile() === true) installed = readFileSync(entry); } catch { /* bare */ }\n",
+    "outcome": "killed",
+    "summary": [
+     "Test Files  1 failed (1)",
+     "Tests  1 failed | 4 passed (5)"
+    ]
+   },
+   {
+    "id": "N1-invert-filter",
+    "file": "packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts",
+    "old": "    if (!PATHLIB_NO_FILE.has(",
+    "new": "    if (PATHLIB_NO_FILE.has(",
+    "outcome": "killed",
+    "summary": [
+     "Test Files  1 failed (1)",
+     "Tests  5 skipped (5)"
+    ]
+   },
+   {
+    "id": "N1-drop-ENOTDIR",
+    "file": "packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts",
+    "old": "new Set(['ENOENT', 'ENOTDIR', 'EBADF', 'ELOOP'])",
+    "new": "new Set(['ENOENT', 'EBADF', 'ELOOP'])",
+    "outcome": "killed",
+    "summary": [
+     "Test Files  1 failed (1)",
+     "Tests  1 failed | 4 passed (5)"
+    ]
+   },
+   {
+    "id": "N2-no-residual-check",
+    "file": "packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts",
+    "old": "  if (filled.includes('\\0')) throw",
+    "new": "  if (false && filled.includes('\\0')) throw",
+    "outcome": "killed",
+    "summary": [
+     "Test Files  1 failed (1)",
+     "Tests  1 failed | 4 passed (5)"
+    ]
+   }
+  ]
+ }
+}

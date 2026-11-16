@@ -11,6 +11,7 @@ import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
 import type { GitTreeEntry } from './git-tree.js';
+import { maskMarkdownCodeContexts } from './markdown-code-context.js';
 import {
   PILLAR_KEYS,
   PWB_DISCOVERY_VERSION,
@@ -516,6 +517,13 @@ describe('deriveProjectShapeManifest — determinism and identity', () => {
     expect(manifestIdentity(first)).toBe(`repository:butlers-configured-poc@${REVISION}/pwb-discovery-v2-candidate.1/${first.digest}`);
   });
 
+  // Expected value derived outside this module: Python's json.dumps(sort_keys=True, separators=(',', ':'), ensure_ascii=False) over
+  // the manifest without its digest, then SHA-256 (docs/evidence/syzygy-bpyt-6-13/derive-literals.py). A change to the fixture tree,
+  // the seed texts or the manifest shape moves it, on purpose: the manifest digest is an identity (class 3).
+  it('digests the canonical manifest JSON: the fixture manifest has this digest', () => {
+    expect(derive().manifest.digest).toBe('sha256:ef8f9f0a722c28406e434ffe3d0706565c02dd5b9f56c4a5d05aead1fffc1373');
+  });
+
   it('an unlinked extra file leaves the digest unchanged; a changed source blob, revision or discovery version changes it', () => {
     const base = derive().manifest;
     expect(derive({ tree: [...TREE, blob('about/heart-and-soul/extra.md', 50)] }).manifest.digest).toBe(base.digest);
@@ -567,6 +575,124 @@ describe('index link grammar', () => {
       '[e][ref]',
     ].join('\n');
     expect(indexLinkTargets(text)).toEqual(['one.md', 'two three.md', 'three.md', 'four.md', 'five.md#frag']);
+  });
+});
+
+// syzygy-bpyt.55 (the owner's GP-B2 Q2 answer C, G3): the index-link reader and the root-index reader recognize fences by the PWB-REQ-006
+// profile, and the link reader alone its code spans, on its LF-split lines. Expected values are literals.
+describe('index link grammar — the profile\'s fences and spans', () => {
+  const B = '```';
+  const links = (...lines: string[]): readonly string[] => indexLinkTargets(lines.join('\n'));
+
+  it('a span that opens and closes on other lines hides the links between them', () => {
+    expect(links('see `', '[a](a.md)', '` end', '[b](b.md)')).toEqual(['b.md']);
+    expect(links('see ``', '[a](a.md)', '`` end', '[b](b.md)')).toEqual(['b.md']);
+    expect(links('x `a', '[a](a.md)', 'b` y [c](c.md)')).toEqual(['c.md']);
+  });
+
+  it('a span closes only at a run of the same length, so a double-backtick span may hold a single backtick and its link', () => {
+    expect(links('``[a](a.md)``', '[b](b.md)')).toEqual(['b.md']);
+    expect(links('`` x ` [a](a.md) ` ``', '[b](b.md)')).toEqual(['b.md']);
+    expect(links('`a` [c](c.md) `b`')).toEqual(['c.md']);
+  });
+
+  // Round 1 F2: deletion joined the text around a span into a link the text never writes.
+  it('a span is blanked and not deleted: the characters around it never join into a link', () => {
+    expect(links('[a]`x`(a.md)')).toEqual([]);
+    expect(links('[a](b`x`.md)')).toEqual([]);
+    expect(links('[a`x`](a.md)')).toEqual(['a.md']);
+  });
+
+  // Round 1 F1: the reader sampled a fence only at an LF line's first character, so a fence opening or closing at a bare CR read a
+  // link inside it or hid the one after it. Every fenced character is blanked; what lies outside the fence on the same LF line stays.
+  it('a fence that opens or closes at a bare CR inside an LF line hides exactly its own characters', () => {
+    expect(indexLinkTargets(['[a](a.md)\r' + B + '\r[b](b.md)\r' + B, '[c](c.md)'].join('\n'))).toEqual(['a.md', 'c.md']);
+    expect(indexLinkTargets([B, '[a](a.md)\r' + B + '\r[b](b.md)'].join('\n'))).toEqual(['b.md']);
+    expect([...rootIndexPillarRoots(['x\r' + B + '\r| Pillar | Directory |', '| --- | --- |', '| Heart and Soul | `about/heart-and-soul/` |', B].join('\n'))]).toEqual([]);
+  });
+
+  it('a closer-shaped line with an info string or a trailing tab does not close a fence; the real closer does', () => {
+    expect(links(B, '[a](a.md)', B + 'js', '[b](b.md)', B, '[c](c.md)')).toEqual(['c.md']);
+    expect(links(B, '[a](a.md)', B + '\t', '[b](b.md)', B, '[c](c.md)')).toEqual(['c.md']);
+    expect(links(B, '[a](a.md)', '````', '[b](b.md)')).toEqual(['b.md']);
+  });
+
+  it('an opener indented four spaces is not a fence; its backticks are a span', () => {
+    expect(links('    ' + B, '[a](a.md)', '    ' + B, '[b](b.md)')).toEqual(['b.md']);
+    // Never closed: the profile calls the text malformed and the reader excludes it, so no reader is handed it; recovery drops the span.
+    expect(links('    ' + B, '[a](a.md)', '[b](b.md)')).toEqual(['a.md', 'b.md']);
+  });
+
+  it('a line inside a fence is dropped whole, in CRLF text too', () => {
+    expect(indexLinkTargets(['[a](a.md)', B, '[b](b.md)', B, '[c](c.md)', ''].join('\r\n'))).toEqual(['a.md', 'c.md']);
+    expect(indexLinkTargets(['see `', '[a](a.md)', '` end', '[b](b.md)', ''].join('\r\n'))).toEqual(['b.md']);
+    for (const separator of ['\u2028', '\u2029']) {
+      for (const end of ['\n', '\r\n', '\r']) {
+        for (const delimiter of ['```', '~~~']) {
+          expect(indexLinkTargets(['[a](a.md)', delimiter + separator, '[b](b.md)', delimiter, '[c](c.md)', ''].join(end))).toEqual(['a.md', 'c.md']);
+        }
+        // Blanking preserves the gap; deleting the span would manufacture a joined target.
+        expect(indexLinkTargets('[fake]`' + separator + '`(joined.md)' + end + '[outside](outside.md)')).toEqual(['outside.md']);
+      }
+    }
+  });
+
+  // RESIDUAL, named by the owner's Q2 answer C: two stray single backticks around a list of links make those links code, and the links drop
+  // with no signal. The profile closes the span at the second backtick, so the text is well formed and the gate admits it.
+  it('RESIDUAL: two stray single backticks around a list of links drop the links, and the text is well formed', () => {
+    const text = ['Note: use the `foo flag.', '', '- [a](a.md)', '- [b](b.md)', '', 'and the bar` flag.', '- [c](c.md)', ''].join('\n');
+    expect(maskMarkdownCodeContexts(text).kind).toBe('masked');
+    expect(indexLinkTargets(text)).toEqual(['c.md']);
+  });
+
+  it('the root-index pillar table is read outside fences only, with its code-span directory cells intact', () => {
+    const table = ['| Pillar | Directory |', '| --- | --- |', '| Heart and Soul | `about/heart-and-soul/` |', ''];
+    expect([...rootIndexPillarRoots(table.join('\n'))]).toEqual([['heart-and-soul', ['about/heart-and-soul']]]);
+    expect([...rootIndexPillarRoots(['  ' + B, ...table, '  ' + B].join('\n'))]).toEqual([]);
+    // The info-string line does not close the fence, so the table stays inside it until the real closer.
+    expect([...rootIndexPillarRoots([B, 'x', B + 'js', ...table, B].join('\n'))]).toEqual([]);
+    expect([...rootIndexPillarRoots([B, 'x', B, ...table].join('\n'))]).toEqual([['heart-and-soul', ['about/heart-and-soul']]]);
+    // A fenced line is dropped whole, so a fence between the delimiter and a row does not end the table, in CRLF text too.
+    const split = [table[0], table[1], B, 'x', B, table[2], ''];
+    for (const end of ['\n', '\r\n']) expect([...rootIndexPillarRoots(split.join(end))], JSON.stringify(end)).toEqual([['heart-and-soul', ['about/heart-and-soul']]]);
+    for (const separator of ['\u2028', '\u2029']) {
+      for (const end of ['\n', '\r\n']) {
+        for (const delimiter of ['```', '~~~']) {
+          expect([...rootIndexPillarRoots([delimiter + separator, ...table, delimiter].join(end))]).toEqual([]);
+          expect([...rootIndexPillarRoots([delimiter + separator, ...table, delimiter, ...table].join(end))]).toEqual([['heart-and-soul', ['about/heart-and-soul']]]);
+        }
+      }
+    }
+  });
+
+  it('phase A: a pillar link hidden by a code span names no pillar, and the pillar index is never read', () => {
+    const base = INDEXES['about/README.md'] as string;
+    for (const rootText of [
+      base.replace('[Heart and Soul](heart-and-soul/)', '``[Heart and Soul](heart-and-soul/)``'),
+      base.replace('Read [Heart and Soul](heart-and-soul/) first', 'Read `\n[Heart and Soul](heart-and-soul/)\n` first'),
+    ]) {
+      const { manifest, asked } = derive({ rootText });
+      expect(manifest.pillars[0]).toEqual({ key: 'heart-and-soul', state: 'unknown', reason: 'not-named-in-root-index', ignoredLinks: [] });
+      expect(asked.map((seed) => seed.path)).toEqual([ROOT, `${LL}/README.md`, `${SS}/README.md`, `${LA}/README.md`, `${CC}/README.md`]);
+    }
+    expect(derive({}).asked.map((seed) => seed.path)).toEqual(EXPECTED_PHASE_A_READS);
+    for (const separator of ['\u2028', '\u2029']) {
+      for (const delimiter of ['```', '~~~']) {
+        const hidden = [delimiter + separator, '[Heart and Soul](heart-and-soul/)', delimiter].join('\n');
+        const rootText = base.replace('Read [Heart and Soul](heart-and-soul/) first, then ', hidden + '\n');
+        const { manifest, asked } = derive({ rootText });
+        expect(asked.map((seed) => seed.path)).toEqual([ROOT, `${LL}/README.md`, `${SS}/README.md`, `${LA}/README.md`, `${CC}/README.md`]);
+        expect(manifest.phaseAReads).toEqual([ROOT, `${LL}/README.md`, `${SS}/README.md`, `${LA}/README.md`, `${CC}/README.md`]);
+        expect(manifest.sources.filter((source) => source.pillar === 'heart-and-soul')).toEqual([]);
+        expect(manifest.sources.map((source) => source.path)).toEqual([
+          'about/README.md', 'about/craft-and-care/README.md', 'about/craft-and-care/policies/link', 'about/craft-and-care/policies/testing.md',
+          'about/lay-and-land/README.md', 'about/lay-and-land/components.md', 'about/legends-and-lore/README.md',
+          'about/legends-and-lore/rfcs/0001-example.md', 'about/spec-and-spine/README.md',
+          'openspec/specs/alpha/spec.md', 'openspec/specs/beta/spec.md', 'roster/atlas/MANIFESTO.md', 'roster/atlas/butler.toml', 'roster/bravo/butler.toml',
+        ]);
+        expect(derive({ rootText: rootText + '\n[Heart and Soul](heart-and-soul/)\n' }).asked.map((seed) => seed.path)).toEqual(EXPECTED_PHASE_A_READS);
+      }
+    }
   });
 });
 

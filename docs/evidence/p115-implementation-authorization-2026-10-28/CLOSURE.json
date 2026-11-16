@@ -1,0 +1,21 @@
+{
+  "payloadFiles": 750,
+  "physicalFilesIncludingMetadata": 752,
+  "physicalDirectoriesIncludingRoot": 64,
+  "metadataExclusions": [
+    "CLOSURE.json",
+    "MANIFEST.json"
+  ],
+  "manifestPythonSha256": "2a4b38fbae2034e83141425454fcce0a8c0f33c20e3c5e8cb47eddaa22e2ee3a",
+  "manifestGnuSha256": "2a4b38fbae2034e83141425454fcce0a8c0f33c20e3c5e8cb47eddaa22e2ee3a",
+  "retainedFilesMode": "0444",
+  "retainedDirectoriesMode": "0555",
+  "readOnlyScope": "source inspection, draft packet and cold-start handoff; no source/tracker/PR/product/live mutation",
+  "openGates": [
+    "independent scope/recommendation review",
+    "actual owner selection",
+    "canonical direction on main",
+    "fresh canonical dedupe/dependencies/ownership/overlap and current-head checks before dispatch"
+  ],
+  "excludedClaim": "No product implementation, runtime conformance, actual response saving, external compatibility, merge approval or owner act is established."
+}

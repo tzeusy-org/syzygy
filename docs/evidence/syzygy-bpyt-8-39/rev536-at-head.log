@@ -1,0 +1,26 @@
+RV536-M1-https-url-reads-outside killed 1 ['Tests  1 failed | 170 passed (171)'] 5.1 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a remote tarball URL dependency as naming no module
+RV536-M2-http-url-reads-outside killed 1 ['Tests  1 failed | 170 passed (171)'] 4.5 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a remote http tarball URL dependency as naming no module
+RV536-M3-tarball-needs-dot-slash killed 1 ['Tests  6 failed | 165 passed (171)'] 4.5 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a .tar dependency as naming no module
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a .tar.gz dependency as naming no module
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a git dependency whose spec ends in a tarball extension as naming no module
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a remote http tarball URL dependency as naming no module
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a remote tarball URL dependency as naming no module
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a tarball dependency as naming no module
+RV536-M4-census-takes-ts-md killed 1 ['Tests  1 failed | 170 passed (171)'] 5.3 clean
+    FAIL   @syzygy/polaris-dossier  packages/polaris-dossier/src/argv.test.ts > each policy copy above, against the spec its caller passes > reads every module TypeScript compiles under src, .mts, .cts and .tsx among them, and no test module
+RV536-M5-tree-depth-two survives 0 ['Tests  171 passed (171)'] 4.6 clean
+RV536-M6-root-keeps-only-dependencies killed 1 ['Tests  1 failed | 170 passed (171)'] 6.1 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads the workspace root's manifest beside the packages'
+RV536-M7-npm-alias-workspace-scope-only killed 1 ['Tests  2 failed | 169 passed (171)'] 7.2 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as an npm: alias of a registry package as naming no module
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as an npm: alias with no version as naming no module
+RV536-M8-root-declarations-unread killed 1 ['Tests  1 failed | 170 passed (171)'] 7.6 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name the workspace root's manifest declares as a local dependency as naming no module
+RV536-M9-dotdot-alone-outside killed 1 ['Tests  1 failed | 170 passed (171)'] 8.7 clean
+    FAIL   @syzygy/polaris-generation-core  packages/polaris-generation-core/src/workspace-reach.test.ts > the shared workspace resolver > reads a bare name declared as a dependency on its parent directory as naming no module
+RV536-M10-test-exclusion-end-anchor-dropped survives 0 ['Tests  171 passed (171)'] 9.9 clean
+RV536-M11-residual-widened survives 0 ['Tests  171 passed (171)'] 9.0 clean
+wrote /home/tze/GitHub/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.39/docs/evidence/syzygy-bpyt-8-39/rev536-at-head.json 11

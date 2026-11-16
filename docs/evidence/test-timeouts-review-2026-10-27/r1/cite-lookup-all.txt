@@ -1,0 +1,543 @@
+====================================================================================================
+apps/three-surface-poc/src/build-output.test.ts:62 test value 240000 | title: re-emits ignored JavaScript before the launcher executes it
+  reason: // A private copy and `npm ci` (a few seconds from a warm cache), then two // sequential `tsc -b --force` builds (~7.5s each on an unloaded machine). // The forced rebuild itself is the trust boundary and must stay. 15s // (syzygy-gk9) and then 60s timed out under load: the two builds alone // measured 69.9s at worst under the parallel-load protocol (syzygy-gb4l, // docs/evidence/load-timeouts-gb4
+  record docs/evidence/load-timeouts-gb4l-2026-10-03.json: title hits 25, strings naming 'build-output.test.ts': 34
+     {"at": ["before", "perTest", "build-output.test.ts > re-emits ignored JavaScript before the launcher executes it"], "string": "build-output.test.ts > re-emits ignored JavaScript before the launcher executes it", "numericSiblings": {"executions": 46, "worstMs": 69926}}
+     {"at": ["after", "perTest", "build-output.test.ts > re-emits ignored JavaScript before the launcher executes it"], "string": "build-output.test.ts > re-emits ignored JavaScript before the launcher executes it", "numericSiblings": {"executions": 20, "worstMs": 50649}}
+     {"at": ["after", "aloneRuns", 0, "tests", 0, "title"], "string": "re-emits ignored JavaScript before the launcher executes it", "numericSiblings": {"durationMs": 15036}}
+     {"at": ["after", "aloneRuns", 1, "tests", 0, "title"], "string": "re-emits ignored JavaScript before the launcher executes it", "numericSiblings": {"durationMs": 14609}}
+     {"at": ["after", "aloneRuns", 2, "tests", 0, "title"], "string": "re-emits ignored JavaScript before the launcher executes it", "numericSiblings": {"durationMs": 14389}}
+     {"at": ["after", "fullRuns", 0, "measured", "inScope", "build-output.test.ts", 0, "title"], "string": "re-emits ignored JavaScript before the launcher executes it", "numericSiblings": {"durationMs": 49216}}
+====================================================================================================
+apps/three-surface-poc/src/cdp-browser.browser.test.ts:82 test value 60000 | title: closes and drains even when a helper cannot exit on its own
+  reason: a real Chrome launch and forced teardown: worst 15.8 s over 5 alone runs at load1 91-138, the worst run failing not by timeout (docs/evidence/syzygy-bpyt-4-31/durations/cdp-browser.browser.test.tests.json)
+  record docs/evidence/syzygy-bpyt-4-31/durations/cdp-browser.browser.test.tests.json: title hits 5, strings naming 'cdp-browser.browser.test.ts': 12
+     {"at": ["runs", 0, "tests", 0, "name"], "string": "disposable Chrome teardown in a real browser closes and drains even when a helper cannot exit on its own", "numericSiblings": {"durationMs": 3360}}
+     {"at": ["runs", 1, "tests", 0, "name"], "string": "disposable Chrome teardown in a real browser closes and drains even when a helper cannot exit on its own", "numericSiblings": {"durationMs": 5309}}
+     {"at": ["runs", 2, "tests", 0, "name"], "string": "disposable Chrome teardown in a real browser closes and drains even when a helper cannot exit on its own", "numericSiblings": {"durationMs": 8274}}
+     {"at": ["runs", 3, "tests", 0, "name"], "string": "disposable Chrome teardown in a real browser closes and drains even when a helper cannot exit on its own", "numericSiblings": {"durationMs": 8616}}
+     {"at": ["runs", 4, "tests", 0, "name"], "string": "disposable Chrome teardown in a real browser closes and drains even when a helper cannot exit on its own", "numericSiblings": {"durationMs": 15824}}
+====================================================================================================
+apps/three-surface-poc/src/cdp-browser.browser.test.ts:112 test value 60000 | title: leaves no Chrome singleton directory behind when the leader is killed
+  reason: a real Chrome launch and forced teardown: worst 12.6 s over 5 alone runs at load1 91-138 (docs/evidence/syzygy-bpyt-4-31/durations/cdp-browser.browser.test.tests.json)
+  record docs/evidence/syzygy-bpyt-4-31/durations/cdp-browser.browser.test.tests.json: title hits 5, strings naming 'cdp-browser.browser.test.ts': 12
+     {"at": ["runs", 0, "tests", 1, "name"], "string": "disposable Chrome teardown in a real browser leaves no Chrome singleton directory behind when the leader is killed", "numericSiblings": {"durationMs": 4128}}
+     {"at": ["runs", 1, "tests", 1, "name"], "string": "disposable Chrome teardown in a real browser leaves no Chrome singleton directory behind when the leader is killed", "numericSiblings": {"durationMs": 6863}}
+     {"at": ["runs", 2, "tests", 1, "name"], "string": "disposable Chrome teardown in a real browser leaves no Chrome singleton directory behind when the leader is killed", "numericSiblings": {"durationMs": 12616}}
+     {"at": ["runs", 3, "tests", 1, "name"], "string": "disposable Chrome teardown in a real browser leaves no Chrome singleton directory behind when the leader is killed", "numericSiblings": {"durationMs": 9701}}
+     {"at": ["runs", 4, "tests", 1, "name"], "string": "disposable Chrome teardown in a real browser leaves no Chrome singleton directory behind when the leader is killed", "numericSiblings": {"durationMs": 11093}}
+====================================================================================================
+apps/three-surface-poc/src/fixture-directories.test.ts:294 test value 30000 | title: is registered as a global setup of the app project and of no other project, so it runs once per run
+  reason: importing the config timed out at the 5 s default at load 95 (3f08143c)
+  commit 3f08143c: touches the file: True
+     msg| test: give the fixture-directory tests the 30 s timeout their neighbours use [syzygy-bpyt.4.10]
+     msg| Under a load average of 95 the config-pin test timed out at the 5 s default in
+     add| // 30 s each, as in test-model-fixture.test.ts: importing the config took more than the 5 s default under a load
+====================================================================================================
+apps/three-surface-poc/src/git-blob-batch.test.ts:242 test value 120000 | title: reads the same objects and returns the same inputs and evaluation for the governance load
+  reason: // Real-tree reads spawn git, once per single read: the three real-tree // tests took up to 28.4 s over 5 alone runs at load1 60-88 // (docs/evidence/syzygy-bpyt-4-31/durations/git-blob-batch.test.tests.json), // so they carry an explicit budget.
+  record docs/evidence/syzygy-bpyt-4-31/durations/git-blob-batch.test.tests.json: title hits 5, strings naming 'git-blob-batch.test.ts': 12
+     {"at": ["runs", 0, "tests", 17, "name"], "string": "batched reads over the real tree (oracle: one git cat-file blob per object) reads the same objects and returns the same inputs and evaluation for the governance", "numericSiblings": {"durationMs": 20464}}
+     {"at": ["runs", 1, "tests", 17, "name"], "string": "batched reads over the real tree (oracle: one git cat-file blob per object) reads the same objects and returns the same inputs and evaluation for the governance", "numericSiblings": {"durationMs": 21487}}
+     {"at": ["runs", 2, "tests", 17, "name"], "string": "batched reads over the real tree (oracle: one git cat-file blob per object) reads the same objects and returns the same inputs and evaluation for the governance", "numericSiblings": {"durationMs": 24664}}
+     {"at": ["runs", 3, "tests", 17, "name"], "string": "batched reads over the real tree (oracle: one git cat-file blob per object) reads the same objects and returns the same inputs and evaluation for the governance", "numericSiblings": {"durationMs": 22567}}
+     {"at": ["runs", 4, "tests", 17, "name"], "string": "batched reads over the real tree (oracle: one git cat-file blob per object) reads the same objects and returns the same inputs and evaluation for the governance", "numericSiblings": {"durationMs": 28374}}
+====================================================================================================
+apps/three-surface-poc/src/git-blob-batch.test.ts:254 test value 120000 | title: reads the same blobs with the same bytes for the self-corpus at the pinned commit
+  reason: // Real-tree reads spawn git, once per single read: the three real-tree // tests took up to 28.4 s over 5 alone runs at load1 60-88 // (docs/evidence/syzygy-bpyt-4-31/durations/git-blob-batch.test.tests.json), // so they carry an explicit budget.
+  record docs/evidence/syzygy-bpyt-4-31/durations/git-blob-batch.test.tests.json: title hits 5, strings naming 'git-blob-batch.test.ts': 12
+     {"at": ["runs", 0, "tests", 18, "name"], "string": "batched reads over the real tree (oracle: one git cat-file blob per object) reads the same blobs with the same bytes for the self-corpus at the pinned commit", "numericSiblings": {"durationMs": 8382}}
+     {"at": ["runs", 1, "tests", 18, "name"], "string": "batched reads over the real tree (oracle: one git cat-file blob per object) reads the same blobs with the same bytes for the self-corpus at the pinned commit", "numericSiblings": {"durationMs": 8229}}
+     {"at": ["runs", 2, "tests", 18, "name"], "string": "batched reads over the real tree (oracle: one git cat-file blob per object) reads the same blobs with the same bytes for the self-corpus at the pinned commit", "numericSiblings": {"durationMs": 18885}}
+     {"at": ["runs", 3, "tests", 18, "name"], "string": "batched reads over the real tree (oracle: one git cat-file blob per object) reads the same blobs with the same bytes for the self-corpus at the pinned commit", "numericSiblings": {"durationMs": 8014}}
+     {"at": ["runs", 4, "tests", 18, "name"], "string": "batched reads over the real tree (oracle: one git cat-file blob per object) reads the same blobs with the same bytes for the self-corpus at the pinned commit", "numericSiblings": {"durationMs": 10729}}
+====================================================================================================
+apps/three-surface-poc/src/git-blob-batch.test.ts:287 test value 120000 | title: fails the self-corpus read on a missing, unread or altered blob
+  reason: // Real-tree reads spawn git, once per single read: the three real-tree // tests took up to 28.4 s over 5 alone runs at load1 60-88 // (docs/evidence/syzygy-bpyt-4-31/durations/git-blob-batch.test.tests.json), // so they carry an explicit budget.
+  record docs/evidence/syzygy-bpyt-4-31/durations/git-blob-batch.test.tests.json: title hits 5, strings naming 'git-blob-batch.test.ts': 12
+     {"at": ["runs", 0, "tests", 20, "name"], "string": "batched reads over the real tree (oracle: one git cat-file blob per object) fails the self-corpus read on a missing, unread or altered blob", "numericSiblings": {"durationMs": 9020}}
+     {"at": ["runs", 1, "tests", 20, "name"], "string": "batched reads over the real tree (oracle: one git cat-file blob per object) fails the self-corpus read on a missing, unread or altered blob", "numericSiblings": {"durationMs": 8678}}
+     {"at": ["runs", 2, "tests", 20, "name"], "string": "batched reads over the real tree (oracle: one git cat-file blob per object) fails the self-corpus read on a missing, unread or altered blob", "numericSiblings": {"durationMs": 9934}}
+     {"at": ["runs", 3, "tests", 20, "name"], "string": "batched reads over the real tree (oracle: one git cat-file blob per object) fails the self-corpus read on a missing, unread or altered blob", "numericSiblings": {"durationMs": 9352}}
+     {"at": ["runs", 4, "tests", 20, "name"], "string": "batched reads over the real tree (oracle: one git cat-file blob per object) fails the self-corpus read on a missing, unread or altered blob", "numericSiblings": {"durationMs": 8625}}
+====================================================================================================
+apps/three-surface-poc/src/governance-inputs.test.ts:504 test value 60000 | title: evaluates the three real current PWB acts without reading any body
+  reason: // The production reader spawns one `git cat-file` per blob: 123 over the real // tree (about 1 s alone), the cost this test exists to exercise. Measured // worst case 8.5 s under the parallel-load protocol (syzygy-pln3, // docs/evidence/governance-inputs-timeout-2026-10-03.json).
+  record docs/evidence/governance-inputs-timeout-2026-10-03.json: title hits 1, strings naming 'governance-inputs.test.ts': 8
+     {"at": ["subject"], "string": "apps/three-surface-poc/src/governance-inputs.test.ts > 'evaluates the three real current PWB acts without reading any body' timing out at the default 5 s under ", "numericSiblings": {}}
+====================================================================================================
+apps/three-surface-poc/src/keyboard-sweep-record.test.ts:59 test value 30000 | title: reads the Butlers revision and evaluation identity a served Polaris page renders, on both mounts
+  reason: two fixture model builds: worst 4.9 s over 5 alone runs at load1 86-114 (docs/evidence/syzygy-bpyt-4-31/durations/keyboard-sweep-record.test.tests.json); the 5 s default failed such tests under suite load (syzygy-k66p)
+  record docs/evidence/syzygy-bpyt-4-31/durations/keyboard-sweep-record.test.tests.json: title hits 5, strings naming 'keyboard-sweep-record.test.ts': 12
+     {"at": ["runs", 0, "tests", 2, "name"], "string": "the evaluation a swept page names (rule 11; syzygy-buzg) reads the Butlers revision and evaluation identity a served Polaris page renders, on both mounts", "numericSiblings": {"durationMs": 4907}}
+     {"at": ["runs", 1, "tests", 2, "name"], "string": "the evaluation a swept page names (rule 11; syzygy-buzg) reads the Butlers revision and evaluation identity a served Polaris page renders, on both mounts", "numericSiblings": {"durationMs": 1159}}
+     {"at": ["runs", 2, "tests", 2, "name"], "string": "the evaluation a swept page names (rule 11; syzygy-buzg) reads the Butlers revision and evaluation identity a served Polaris page renders, on both mounts", "numericSiblings": {"durationMs": 763}}
+     {"at": ["runs", 3, "tests", 2, "name"], "string": "the evaluation a swept page names (rule 11; syzygy-buzg) reads the Butlers revision and evaluation identity a served Polaris page renders, on both mounts", "numericSiblings": {"durationMs": 1092}}
+     {"at": ["runs", 4, "tests", 2, "name"], "string": "the evaluation a swept page names (rule 11; syzygy-buzg) reads the Butlers revision and evaluation identity a served Polaris page renders, on both mounts", "numericSiblings": {"durationMs": 979}}
+====================================================================================================
+apps/three-surface-poc/src/polaris-accessibility.browser.test.ts:91 hook value 60000 | title: (none)
+  reason: launches Chrome and loads one page: up to 2.8 s in 10 alone runs, but a full-suite run at load1 56-58 left up to 8.0 s of its file's time to its hooks (docs/evidence/syzygy-bpyt-4-31/full-runs.json)
+  record docs/evidence/syzygy-bpyt-4-31/full-runs.json: title hits 0, strings naming 'polaris-accessibility.browser.test.ts': 20
+====================================================================================================
+apps/three-surface-poc/src/polaris-accessibility.browser.test.ts:310 test value 240000 | title: activates more fragment links than Chrome's navigation budget, including a second link to the current hash
+  reason: over two hundred fragment activations in a real browser: worst 74.6 s over 5 alone runs at load1 20-91 (docs/evidence/syzygy-bpyt-4-31/durations/polaris-accessibility.browser.test.tests.json)
+  record docs/evidence/syzygy-bpyt-4-31/durations/polaris-accessibility.browser.test.tests.json: title hits 5, strings naming 'polaris-accessibility.browser.test.ts': 12
+     {"at": ["runs", 0, "tests", 8, "name"], "string": "Polaris keyboard, non-visual and contrast checks in a real browser activates more fragment links than Chrome's navigation budget, including a second link to the", "numericSiblings": {"durationMs": 9020}}
+     {"at": ["runs", 1, "tests", 8, "name"], "string": "Polaris keyboard, non-visual and contrast checks in a real browser activates more fragment links than Chrome's navigation budget, including a second link to the", "numericSiblings": {"durationMs": 11326}}
+     {"at": ["runs", 2, "tests", 8, "name"], "string": "Polaris keyboard, non-visual and contrast checks in a real browser activates more fragment links than Chrome's navigation budget, including a second link to the", "numericSiblings": {"durationMs": 37090}}
+     {"at": ["runs", 3, "tests", 8, "name"], "string": "Polaris keyboard, non-visual and contrast checks in a real browser activates more fragment links than Chrome's navigation budget, including a second link to the", "numericSiblings": {"durationMs": 74589}}
+     {"at": ["runs", 4, "tests", 8, "name"], "string": "Polaris keyboard, non-visual and contrast checks in a real browser activates more fragment links than Chrome's navigation budget, including a second link to the", "numericSiblings": {"durationMs": 48828}}
+====================================================================================================
+apps/three-surface-poc/src/polaris-accessibility.browser.test.ts:332 test value 240000 | title: `${variant.id}: every distinction is keyboard-operable, named for assistive technology, and AA-contrasting`
+  reason: a full keyboard, accessibility-tree and contrast sweep of one page: worst 77.4 s over 30 alone runs (6 variants) at load1 20-91 (docs/evidence/syzygy-bpyt-4-31/durations/polaris-accessibility.browser.test.tests.json)
+  record docs/evidence/syzygy-bpyt-4-31/durations/polaris-accessibility.browser.test.tests.json: title hits 30, strings naming 'polaris-accessibility.browser.test.ts': 12
+     {"at": ["runs", 0, "tests", 9, "name"], "string": "Polaris keyboard, non-visual and contrast checks in a real browser observed: every distinction is keyboard-operable, named for assistive technology, and AA-cont", "numericSiblings": {"durationMs": 13488}}
+     {"at": ["runs", 0, "tests", 10, "name"], "string": "Polaris keyboard, non-visual and contrast checks in a real browser observed-lawful-state-1: every distinction is keyboard-operable, named for assistive technolo", "numericSiblings": {"durationMs": 19420}}
+     {"at": ["runs", 0, "tests", 11, "name"], "string": "Polaris keyboard, non-visual and contrast checks in a real browser observed-degraded-unlawful: every distinction is keyboard-operable, named for assistive techn", "numericSiblings": {"durationMs": 31920}}
+     {"at": ["runs", 0, "tests", 12, "name"], "string": "Polaris keyboard, non-visual and contrast checks in a real browser not-admitted: every distinction is keyboard-operable, named for assistive technology, and AA-", "numericSiblings": {"durationMs": 5109}}
+     {"at": ["runs", 0, "tests", 13, "name"], "string": "Polaris keyboard, non-visual and contrast checks in a real browser observation-failed: every distinction is keyboard-operable, named for assistive technology, a", "numericSiblings": {"durationMs": 5951}}
+     {"at": ["runs", 0, "tests", 14, "name"], "string": "Polaris keyboard, non-visual and contrast checks in a real browser not-evaluated: every distinction is keyboard-operable, named for assistive technology, and AA", "numericSiblings": {"durationMs": 5673}}
+====================================================================================================
+apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts:315 test value 240000 | title: passes every Polaris page one whole-project evaluation serves, the pages listed from the machine answer
+  reason: a fixture model build and a browser sweep of every served page: worst 5.6 s over 5 alone runs at load1 35-42 (docs/evidence/syzygy-bpyt-4-31/durations/polaris-accessible-names.browser.test.tests.json)
+  record docs/evidence/syzygy-bpyt-4-31/durations/polaris-accessible-names.browser.test.tests.json: title hits 5, strings naming 'polaris-accessible-names.browser.test.ts': 12
+     {"at": ["runs", 0, "tests", 18, "name"], "string": "PWB-REQ-016 names and headings in a real browser passes every Polaris page one whole-project evaluation serves, the pages listed from the machine answer", "numericSiblings": {"durationMs": 3162}}
+     {"at": ["runs", 1, "tests", 18, "name"], "string": "PWB-REQ-016 names and headings in a real browser passes every Polaris page one whole-project evaluation serves, the pages listed from the machine answer", "numericSiblings": {"durationMs": 2235}}
+     {"at": ["runs", 2, "tests", 18, "name"], "string": "PWB-REQ-016 names and headings in a real browser passes every Polaris page one whole-project evaluation serves, the pages listed from the machine answer", "numericSiblings": {"durationMs": 2443}}
+     {"at": ["runs", 3, "tests", 18, "name"], "string": "PWB-REQ-016 names and headings in a real browser passes every Polaris page one whole-project evaluation serves, the pages listed from the machine answer", "numericSiblings": {"durationMs": 4113}}
+     {"at": ["runs", 4, "tests", 18, "name"], "string": "PWB-REQ-016 names and headings in a real browser passes every Polaris page one whole-project evaluation serves, the pages listed from the machine answer", "numericSiblings": {"durationMs": 5567}}
+====================================================================================================
+apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts:329 test value 240000 | title: fails a listed page the daemon does not serve, never skipping it
+  reason: a fixture model build, a daemon and a browser sweep: worst 4.1 s over 5 alone runs at load1 35-42 (docs/evidence/syzygy-bpyt-4-31/durations/polaris-accessible-names.browser.test.tests.json)
+  record docs/evidence/syzygy-bpyt-4-31/durations/polaris-accessible-names.browser.test.tests.json: title hits 5, strings naming 'polaris-accessible-names.browser.test.ts': 12
+     {"at": ["runs", 0, "tests", 19, "name"], "string": "PWB-REQ-016 names and headings in a real browser fails a listed page the daemon does not serve, never skipping it", "numericSiblings": {"durationMs": 2469}}
+     {"at": ["runs", 1, "tests", 19, "name"], "string": "PWB-REQ-016 names and headings in a real browser fails a listed page the daemon does not serve, never skipping it", "numericSiblings": {"durationMs": 1639}}
+     {"at": ["runs", 2, "tests", 19, "name"], "string": "PWB-REQ-016 names and headings in a real browser fails a listed page the daemon does not serve, never skipping it", "numericSiblings": {"durationMs": 2499}}
+     {"at": ["runs", 3, "tests", 19, "name"], "string": "PWB-REQ-016 names and headings in a real browser fails a listed page the daemon does not serve, never skipping it", "numericSiblings": {"durationMs": 4084}}
+     {"at": ["runs", 4, "tests", 19, "name"], "string": "PWB-REQ-016 names and headings in a real browser fails a listed page the daemon does not serve, never skipping it", "numericSiblings": {"durationMs": 3152}}
+====================================================================================================
+apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts:343 test value 240000 | title: `${variant.id}: every served Polaris page passes both checks`
+  reason: a browser sweep of every served page: worst 5.0 s over 30 alone runs (6 variants) at load1 35-42 (docs/evidence/syzygy-bpyt-4-31/durations/polaris-accessible-names.browser.test.tests.json)
+  record docs/evidence/syzygy-bpyt-4-31/durations/polaris-accessible-names.browser.test.tests.json: title hits 30, strings naming 'polaris-accessible-names.browser.test.ts': 12
+     {"at": ["runs", 0, "tests", 20, "name"], "string": "PWB-REQ-016 names and headings in a real browser observed: every served Polaris page passes both checks", "numericSiblings": {"durationMs": 3764}}
+     {"at": ["runs", 0, "tests", 21, "name"], "string": "PWB-REQ-016 names and headings in a real browser observed-lawful-state-1: every served Polaris page passes both checks", "numericSiblings": {"durationMs": 2399}}
+     {"at": ["runs", 0, "tests", 22, "name"], "string": "PWB-REQ-016 names and headings in a real browser observed-degraded-unlawful: every served Polaris page passes both checks", "numericSiblings": {"durationMs": 2103}}
+     {"at": ["runs", 0, "tests", 23, "name"], "string": "PWB-REQ-016 names and headings in a real browser not-admitted: every served Polaris page passes both checks", "numericSiblings": {"durationMs": 552}}
+     {"at": ["runs", 0, "tests", 24, "name"], "string": "PWB-REQ-016 names and headings in a real browser observation-failed: every served Polaris page passes both checks", "numericSiblings": {"durationMs": 818}}
+     {"at": ["runs", 0, "tests", 25, "name"], "string": "PWB-REQ-016 names and headings in a real browser not-evaluated: every served Polaris page passes both checks", "numericSiblings": {"durationMs": 500}}
+====================================================================================================
+apps/three-surface-poc/src/polaris-copy.test.ts:226 hook value 60000 | title: (none)
+  reason: before this hoist, tests building these models took up to 13.1 s each under parallel load (docs/evidence/poc-test-timeouts-2026-10-03.json)
+  record docs/evidence/poc-test-timeouts-2026-10-03.json: title hits 0, strings naming 'polaris-copy.test.ts': 62
+====================================================================================================
+apps/three-surface-poc/src/polaris-first-reading.test.ts:52 hook value 60000 | title: (none)
+  reason: /** * Budget for building a file's shared fixture models once. Five or six * builds took 4.1-10.9 s across five full-suite runs under eight CPU burners * (docs/evidence/shared-fixture-models-k66p-2026-10-03.json), past the 10 s * hook default at the top. */
+  record docs/evidence/shared-fixture-models-k66p-2026-10-03.json: title hits 0, strings naming 'polaris-first-reading.test.ts': 0
+====================================================================================================
+apps/three-surface-poc/src/polaris-generation/draft-preview.browser.test.ts:47 test value 30000 | title: renders the pipeline draft with working diagram, source and keyboard deep-dive paths at both widths
+  reason: a pipeline draft in a real browser: timed out at the 5 s default in 1 of 5 full-suite runs at load1 38-71, up to 4.1 s in the others (docs/evidence/syzygy-bpyt-4-31/full-runs.json)
+  record docs/evidence/syzygy-bpyt-4-31/full-runs.json: title hits 10, strings naming 'draft-preview.browser.test.ts': 20
+     {"at": ["runs", 0, "files", 32, "slowTests", 0, "name"], "string": "renders the pipeline draft with working diagram, source and keyboard deep-dive paths at both widths", "numericSiblings": {"ms": 3280}}
+     {"at": ["runs", 0, "files", 32, "slowTests", 0, "line"], "string": "\u2713 renders the pipeline draft with working diagram, source and keyboard deep-dive paths at both widths  3280ms", "numericSiblings": {"ms": 3280}}
+     {"at": ["runs", 1, "files", 20, "slowTests", 0, "name"], "string": "renders the pipeline draft with working diagram, source and keyboard deep-dive paths at both widths", "numericSiblings": {"ms": 4070}}
+     {"at": ["runs", 1, "files", 20, "slowTests", 0, "line"], "string": "\u2713 renders the pipeline draft with working diagram, source and keyboard deep-dive paths at both widths  4070ms", "numericSiblings": {"ms": 4070}}
+     {"at": ["runs", 2, "files", 25, "slowTests", 0, "name"], "string": "renders the pipeline draft with working diagram, source and keyboard deep-dive paths at both widths", "numericSiblings": {"ms": 3929}}
+     {"at": ["runs", 2, "files", 25, "slowTests", 0, "line"], "string": "\u2713 renders the pipeline draft with working diagram, source and keyboard deep-dive paths at both widths  3929ms", "numericSiblings": {"ms": 3929}}
+====================================================================================================
+apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts:55 test value 30000 | title: reuses four verified checkpoints and sends only the missing fidelity stage after restart
+  reason: // Each test runs scripted pipelines over a journal that fsyncs every write // (2-20 fsyncs, about 0.3 s alone); a loaded host stalled one to 6.3 s under // the parallel-load protocol (syzygy-gb4l, // docs/evidence/load-timeouts-gb4l-2026-10-03.json).
+  record docs/evidence/load-timeouts-gb4l-2026-10-03.json: title hits 25, strings naming 'durable-lifecycle.test.ts': 36
+     {"at": ["before", "perTest", "durable-lifecycle.test.ts > reuses four verified checkpoints and sends only the missing fidelity stage after restart"], "string": "durable-lifecycle.test.ts > reuses four verified checkpoints and sends only the missing fidelity stage after restart", "numericSiblings": {"executions": 46, "worstMs": 6271}}
+     {"at": ["after", "perTest", "durable-lifecycle.test.ts > reuses four verified checkpoints and sends only the missing fidelity stage after restart"], "string": "durable-lifecycle.test.ts > reuses four verified checkpoints and sends only the missing fidelity stage after restart", "numericSiblings": {"executions": 20, "worstMs": 483}}
+     {"at": ["after", "aloneRuns", 3, "tests", 0, "title"], "string": "reuses four verified checkpoints and sends only the missing fidelity stage after restart", "numericSiblings": {"durationMs": 110}}
+     {"at": ["after", "aloneRuns", 4, "tests", 0, "title"], "string": "reuses four verified checkpoints and sends only the missing fidelity stage after restart", "numericSiblings": {"durationMs": 138}}
+     {"at": ["after", "aloneRuns", 5, "tests", 0, "title"], "string": "reuses four verified checkpoints and sends only the missing fidelity stage after restart", "numericSiblings": {"durationMs": 97}}
+     {"at": ["after", "fullRuns", 0, "measured", "inScope", "durable-lifecycle.test.ts", 0, "title"], "string": "reuses four verified checkpoints and sends only the missing fidelity stage after restart", "numericSiblings": {"durationMs": 220}}
+====================================================================================================
+apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts:79 test value 30000 | title: refuses changed request, route or current permission and a forged completed artifact
+  reason: // Each test runs scripted pipelines over a journal that fsyncs every write // (2-20 fsyncs, about 0.3 s alone); a loaded host stalled one to 6.3 s under // the parallel-load protocol (syzygy-gb4l, // docs/evidence/load-timeouts-gb4l-2026-10-03.json).
+  record docs/evidence/load-timeouts-gb4l-2026-10-03.json: title hits 25, strings naming 'durable-lifecycle.test.ts': 36
+     {"at": ["before", "perTest", "durable-lifecycle.test.ts > refuses changed request, route or current permission and a forged completed artifact"], "string": "durable-lifecycle.test.ts > refuses changed request, route or current permission and a forged completed artifact", "numericSiblings": {"executions": 46, "worstMs": 3557}}
+     {"at": ["after", "perTest", "durable-lifecycle.test.ts > refuses changed request, route or current permission and a forged completed artifact"], "string": "durable-lifecycle.test.ts > refuses changed request, route or current permission and a forged completed artifact", "numericSiblings": {"executions": 20, "worstMs": 471}}
+     {"at": ["after", "aloneRuns", 3, "tests", 1, "title"], "string": "refuses changed request, route or current permission and a forged completed artifact", "numericSiblings": {"durationMs": 106}}
+     {"at": ["after", "aloneRuns", 4, "tests", 1, "title"], "string": "refuses changed request, route or current permission and a forged completed artifact", "numericSiblings": {"durationMs": 112}}
+     {"at": ["after", "aloneRuns", 5, "tests", 1, "title"], "string": "refuses changed request, route or current permission and a forged completed artifact", "numericSiblings": {"durationMs": 144}}
+     {"at": ["after", "fullRuns", 0, "measured", "inScope", "durable-lifecycle.test.ts", 1, "title"], "string": "refuses changed request, route or current permission and a forged completed artifact", "numericSiblings": {"durationMs": 157}}
+====================================================================================================
+apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts:96 test value 30000 | title: keeps uncertain maximum reserved despite missing receipts and an expired lease field
+  reason: // Each test runs scripted pipelines over a journal that fsyncs every write // (2-20 fsyncs, about 0.3 s alone); a loaded host stalled one to 6.3 s under // the parallel-load protocol (syzygy-gb4l, // docs/evidence/load-timeouts-gb4l-2026-10-03.json).
+  record docs/evidence/load-timeouts-gb4l-2026-10-03.json: title hits 25, strings naming 'durable-lifecycle.test.ts': 36
+     {"at": ["before", "perTest", "durable-lifecycle.test.ts > keeps uncertain maximum reserved despite missing receipts and an expired lease field"], "string": "durable-lifecycle.test.ts > keeps uncertain maximum reserved despite missing receipts and an expired lease field", "numericSiblings": {"executions": 46, "worstMs": 1045}}
+     {"at": ["after", "perTest", "durable-lifecycle.test.ts > keeps uncertain maximum reserved despite missing receipts and an expired lease field"], "string": "durable-lifecycle.test.ts > keeps uncertain maximum reserved despite missing receipts and an expired lease field", "numericSiblings": {"executions": 20, "worstMs": 74}}
+     {"at": ["after", "aloneRuns", 3, "tests", 2, "title"], "string": "keeps uncertain maximum reserved despite missing receipts and an expired lease field", "numericSiblings": {"durationMs": 11}}
+     {"at": ["after", "aloneRuns", 4, "tests", 2, "title"], "string": "keeps uncertain maximum reserved despite missing receipts and an expired lease field", "numericSiblings": {"durationMs": 38}}
+     {"at": ["after", "aloneRuns", 5, "tests", 2, "title"], "string": "keeps uncertain maximum reserved despite missing receipts and an expired lease field", "numericSiblings": {"durationMs": 37}}
+     {"at": ["after", "fullRuns", 0, "measured", "inScope", "durable-lifecycle.test.ts", 2, "title"], "string": "keeps uncertain maximum reserved despite missing receipts and an expired lease field", "numericSiblings": {"durationMs": 64}}
+====================================================================================================
+apps/three-surface-poc/src/polaris-generation/durable-lifecycle.test.ts:116 test value 30000 | title: admits at most one concurrent dispatch and keeps distinct run artifacts separate
+  reason: // Each test runs scripted pipelines over a journal that fsyncs every write // (2-20 fsyncs, about 0.3 s alone); a loaded host stalled one to 6.3 s under // the parallel-load protocol (syzygy-gb4l, // docs/evidence/load-timeouts-gb4l-2026-10-03.json).
+  record docs/evidence/load-timeouts-gb4l-2026-10-03.json: title hits 25, strings naming 'durable-lifecycle.test.ts': 36
+     {"at": ["before", "perTest", "durable-lifecycle.test.ts > admits at most one concurrent dispatch and keeps distinct run artifacts separate"], "string": "durable-lifecycle.test.ts > admits at most one concurrent dispatch and keeps distinct run artifacts separate", "numericSiblings": {"executions": 46, "worstMs": 3871}}
+     {"at": ["after", "perTest", "durable-lifecycle.test.ts > admits at most one concurrent dispatch and keeps distinct run artifacts separate"], "string": "durable-lifecycle.test.ts > admits at most one concurrent dispatch and keeps distinct run artifacts separate", "numericSiblings": {"executions": 20, "worstMs": 846}}
+     {"at": ["after", "aloneRuns", 3, "tests", 3, "title"], "string": "admits at most one concurrent dispatch and keeps distinct run artifacts separate", "numericSiblings": {"durationMs": 237}}
+     {"at": ["after", "aloneRuns", 4, "tests", 3, "title"], "string": "admits at most one concurrent dispatch and keeps distinct run artifacts separate", "numericSiblings": {"durationMs": 198}}
+     {"at": ["after", "aloneRuns", 5, "tests", 3, "title"], "string": "admits at most one concurrent dispatch and keeps distinct run artifacts separate", "numericSiblings": {"durationMs": 176}}
+     {"at": ["after", "fullRuns", 0, "measured", "inScope", "durable-lifecycle.test.ts", 3, "title"], "string": "admits at most one concurrent dispatch and keeps distinct run artifacts separate", "numericSiblings": {"durationMs": 387}}
+====================================================================================================
+apps/three-surface-poc/src/polaris-generation/pipeline-demo.test.ts:73 test value None | title: runs the README command after a clean install and requires exactly seven synthetic output files
+  reason: // Onramp step budgets (syzygy-128g). The test budget is the sum of the inner // timeouts so no step can outlive the test; the figures come from // docs/evidence/pipeline-demo-onramp-budget-2026-10-15.json (max measured // total 225 s at load1 55-90, about 2x margin). The documented command runs // build:poc itself, so the onramp test does not build separately.
+  record docs/evidence/pipeline-demo-onramp-budget-2026-10-15.json: title hits 0, strings naming 'pipeline-demo.test.ts': 6
+====================================================================================================
+apps/three-surface-poc/src/polaris-generation/self-corpus.test.ts:32 test value 60000 | title: reads only tracked blobs from the pinned commit and independently recounts its denominator
+  reason: // readSelfCorpus spawns one `git cat-file` per selected blob, over a hundred // at the pinned commit (about 1-2 s alone). Measured worst case 7.8 s under // the parallel-load protocol (syzygy-gb4l, // docs/evidence/load-timeouts-gb4l-2026-10-03.json).
+  record docs/evidence/load-timeouts-gb4l-2026-10-03.json: title hits 25, strings naming 'self-corpus.test.ts': 36
+     {"at": ["before", "perTest", "self-corpus.test.ts > reads only tracked blobs from the pinned commit and independently recounts its denominator"], "string": "self-corpus.test.ts > reads only tracked blobs from the pinned commit and independently recounts its denominator", "numericSiblings": {"executions": 46, "worstMs": 7797}}
+     {"at": ["after", "perTest", "self-corpus.test.ts > reads only tracked blobs from the pinned commit and independently recounts its denominator"], "string": "self-corpus.test.ts > reads only tracked blobs from the pinned commit and independently recounts its denominator", "numericSiblings": {"executions": 20, "worstMs": 4894}}
+     {"at": ["after", "aloneRuns", 6, "tests", 0, "title"], "string": "reads only tracked blobs from the pinned commit and independently recounts its denominator", "numericSiblings": {"durationMs": 865}}
+     {"at": ["after", "aloneRuns", 7, "tests", 0, "title"], "string": "reads only tracked blobs from the pinned commit and independently recounts its denominator", "numericSiblings": {"durationMs": 1000}}
+     {"at": ["after", "aloneRuns", 8, "tests", 0, "title"], "string": "reads only tracked blobs from the pinned commit and independently recounts its denominator", "numericSiblings": {"durationMs": 854}}
+     {"at": ["after", "fullRuns", 0, "measured", "inScope", "self-corpus.test.ts", 0, "title"], "string": "reads only tracked blobs from the pinned commit and independently recounts its denominator", "numericSiblings": {"durationMs": 4894}}
+====================================================================================================
+apps/three-surface-poc/src/polaris-generation/self-corpus.test.ts:46 test value 30000 | title: refuses a 1 MB corpus budget without truncation or a scripted send, then completes on sufficient budget and isolates one source perturbation
+  reason: the self-corpus proof over the real tree: timed out at the 5 s default in 2 of 5 full-suite runs at load1 38-71, up to 4.6 s in the others (docs/evidence/syzygy-bpyt-4-31/full-runs.json)
+  record docs/evidence/syzygy-bpyt-4-31/full-runs.json: title hits 10, strings naming 'self-corpus.test.ts': 20
+     {"at": ["runs", 0, "files", 30, "slowTests", 1, "name"], "string": "zero-egress Syzygy self-corpus proof > refuses a 1 MB corpus budget without truncation or a scripted send, then completes on sufficient budget and isolates one ", "numericSiblings": {"ms": 2436}}
+     {"at": ["runs", 0, "files", 30, "slowTests", 1, "line"], "string": "\u2713 zero-egress Syzygy self-corpus proof > refuses a 1 MB corpus budget without truncation or a scripted send, then completes on sufficient budget and isolates on", "numericSiblings": {"ms": 2436}}
+     {"at": ["runs", 1, "files", 22, "slowTests", 1, "name"], "string": "zero-egress Syzygy self-corpus proof > refuses a 1 MB corpus budget without truncation or a scripted send, then completes on sufficient budget and isolates one ", "numericSiblings": {"ms": 4628}}
+     {"at": ["runs", 1, "files", 22, "slowTests", 1, "line"], "string": "\u2713 zero-egress Syzygy self-corpus proof > refuses a 1 MB corpus budget without truncation or a scripted send, then completes on sufficient budget and isolates on", "numericSiblings": {"ms": 4628}}
+     {"at": ["runs", 2, "files", 18, "slowTests", 1, "name"], "string": "zero-egress Syzygy self-corpus proof > refuses a 1 MB corpus budget without truncation or a scripted send, then completes on sufficient budget and isolates one ", "numericSiblings": {"ms": 5610}}
+     {"at": ["runs", 2, "files", 18, "slowTests", 1, "line"], "string": "\u00d7 zero-egress Syzygy self-corpus proof > refuses a 1 MB corpus budget without truncation or a scripted send, then completes on sufficient budget and isolates on", "numericSiblings": {"ms": 5610}}
+====================================================================================================
+apps/three-surface-poc/src/polaris-narrative.test.ts:59 hook value 60000 | title: (none)
+  reason: /** * Budget for building a file's shared fixture models once. Five or six * builds took 4.1-10.9 s across five full-suite runs under eight CPU burners * (docs/evidence/shared-fixture-models-k66p-2026-10-03.json), past the 10 s * hook default at the top. */
+  record docs/evidence/shared-fixture-models-k66p-2026-10-03.json: title hits 0, strings naming 'polaris-narrative.test.ts': 0
+====================================================================================================
+apps/three-surface-poc/src/polaris-opening-index.browser.test.ts:316 hook value 60000 | title: (none)
+  reason: launches Chrome: under 0.6 s in 10 alone runs, but a full-suite run at load1 56-71 left up to 5.1 s of its file's time to its hooks (docs/evidence/syzygy-bpyt-4-31/full-runs.json)
+  record docs/evidence/syzygy-bpyt-4-31/full-runs.json: title hits 0, strings naming 'polaris-opening-index.browser.test.ts': 20
+====================================================================================================
+apps/three-surface-poc/src/polaris-opening-index.browser.test.ts:352 test value 60000 | title: `every indexed target renders (${viewport.width}x${viewport.height}): nine routed rows, recounted offsets, one line after the last-beginning target`
+  reason: up to 4.2 s in 5 full-suite runs at load1 38-71 (docs/evidence/syzygy-bpyt-4-31/full-runs.json)
+  record docs/evidence/syzygy-bpyt-4-31/full-runs.json: title hits 20, strings naming 'polaris-opening-index.browser.test.ts': 20
+     {"at": ["runs", 0, "files", 8, "slowTests", 1, "name"], "string": "opening index in a real browser (PWB-REQ-010, P-98) > every indexed target renders (1280x900): nine routed rows, recounted offsets, one line after the last-begi", "numericSiblings": {"ms": 1247}}
+     {"at": ["runs", 0, "files", 8, "slowTests", 1, "line"], "string": "\u2713 opening index in a real browser (PWB-REQ-010, P-98) > every indexed target renders (1280x900): nine routed rows, recounted offsets, one line after the last-be", "numericSiblings": {"ms": 1247}}
+     {"at": ["runs", 0, "files", 8, "slowTests", 4, "name"], "string": "opening index in a real browser (PWB-REQ-010, P-98) > every indexed target renders (390x844): nine routed rows, recounted offsets, one line after the last-begin", "numericSiblings": {"ms": 1082}}
+     {"at": ["runs", 0, "files", 8, "slowTests", 4, "line"], "string": "\u2713 opening index in a real browser (PWB-REQ-010, P-98) > every indexed target renders (390x844): nine routed rows, recounted offsets, one line after the last-beg", "numericSiblings": {"ms": 1082}}
+     {"at": ["runs", 1, "files", 14, "slowTests", 1, "name"], "string": "opening index in a real browser (PWB-REQ-010, P-98) > every indexed target renders (1280x900): nine routed rows, recounted offsets, one line after the last-begi", "numericSiblings": {"ms": 2320}}
+     {"at": ["runs", 1, "files", 14, "slowTests", 1, "line"], "string": "\u2713 opening index in a real browser (PWB-REQ-010, P-98) > every indexed target renders (1280x900): nine routed rows, recounted offsets, one line after the last-be", "numericSiblings": {"ms": 2320}}
+====================================================================================================
+apps/three-surface-poc/src/polaris-opening-index.browser.test.ts:370 test value 60000 | title: `an unobserved shape (${viewport.width}x${viewport.height}): only the gaps and claim-strength targets render`
+  reason: up to 2.7 s in 5 full-suite runs at load1 38-71 (docs/evidence/syzygy-bpyt-4-31/full-runs.json)
+  record docs/evidence/syzygy-bpyt-4-31/full-runs.json: title hits 20, strings naming 'polaris-opening-index.browser.test.ts': 20
+     {"at": ["runs", 0, "files", 8, "slowTests", 3, "name"], "string": "opening index in a real browser (PWB-REQ-010, P-98) > an unobserved shape (1280x900): only the gaps and claim-strength targets render", "numericSiblings": {"ms": 1089}}
+     {"at": ["runs", 0, "files", 8, "slowTests", 3, "line"], "string": "\u2713 opening index in a real browser (PWB-REQ-010, P-98) > an unobserved shape (1280x900): only the gaps and claim-strength targets render  1089ms", "numericSiblings": {"ms": 1089}}
+     {"at": ["runs", 0, "files", 8, "slowTests", 6, "name"], "string": "opening index in a real browser (PWB-REQ-010, P-98) > an unobserved shape (390x844): only the gaps and claim-strength targets render", "numericSiblings": {"ms": 474}}
+     {"at": ["runs", 0, "files", 8, "slowTests", 6, "line"], "string": "\u2713 opening index in a real browser (PWB-REQ-010, P-98) > an unobserved shape (390x844): only the gaps and claim-strength targets render  474ms", "numericSiblings": {"ms": 474}}
+     {"at": ["runs", 1, "files", 14, "slowTests", 3, "name"], "string": "opening index in a real browser (PWB-REQ-010, P-98) > an unobserved shape (1280x900): only the gaps and claim-strength targets render", "numericSiblings": {"ms": 875}}
+     {"at": ["runs", 1, "files", 14, "slowTests", 3, "line"], "string": "\u2713 opening index in a real browser (PWB-REQ-010, P-98) > an unobserved shape (1280x900): only the gaps and claim-strength targets render  875ms", "numericSiblings": {"ms": 875}}
+====================================================================================================
+apps/three-surface-poc/src/polaris-opening-index.browser.test.ts:424 test value 60000 | title: a captured /polaris page meets the oracle at both viewports
+  reason: unmeasured: it runs only on an operator's capture of a served /polaris page (SYZYGY_P98_PAGE, da936967), which no hosted or local run sets; the commit holds no measurement, so this is an unmeasured residual of syzygy-bpyt.4.31
+  commit da936967: touches the file: True
+====================================================================================================
+apps/three-surface-poc/src/production-reobserve.test.ts:99 test value 60000 | title: keeps served bytes and asOf stable when the same capture is rebuilt across wall-clock instants
+  reason: // Each test below runs two full production builds (about 1.4 s each alone; // the observer root is the real tree), so no cheaper fixture keeps what they // test. Measured worst case 18.0 s under the parallel-load protocol // (syzygy-4d15, docs/evidence/poc-test-timeouts-2026-10-03.json).
+  record docs/evidence/poc-test-timeouts-2026-10-03.json: title hits 27, strings naming 'production-reobserve.test.ts': 44
+     {"at": ["worstFullRunDurationMsPerTest", "before", "production-reobserve.test.ts > keeps served bytes and asOf stable when the same capture is rebuilt across wall-clock instants"], "string": "production-reobserve.test.ts > keeps served bytes and asOf stable when the same capture is rebuilt across wall-clock instants", "numericSiblings": {"production-reobserve.test.ts > keeps served bytes and asOf 
+     {"at": ["worstFullRunDurationMsPerTest", "after", "production-reobserve.test.ts > keeps served bytes and asOf stable when the same capture is rebuilt across wall-clock instants"], "string": "production-reobserve.test.ts > keeps served bytes and asOf stable when the same capture is rebuilt across wall-clock instants", "numericSiblings": {"production-reobserve.test.ts > keeps served bytes and asOf s
+     {"at": ["before", "aloneRuns", 5, "tests", "production-reobserve.test.ts", 1, "title"], "string": "keeps served bytes and asOf stable when the same capture is rebuilt across wall-clock instants", "numericSiblings": {"durationMs": 2645}}
+     {"at": ["before", "aloneRuns", 6, "tests", "production-reobserve.test.ts", 1, "title"], "string": "keeps served bytes and asOf stable when the same capture is rebuilt across wall-clock instants", "numericSiblings": {"durationMs": 2096}}
+     {"at": ["before", "aloneRuns", 7, "tests", "production-reobserve.test.ts", 1, "title"], "string": "keeps served bytes and asOf stable when the same capture is rebuilt across wall-clock instants", "numericSiblings": {"durationMs": 2240}}
+     {"at": ["before", "aloneRuns", 8, "tests", "production-reobserve.test.ts", 1, "title"], "string": "keeps served bytes and asOf stable when the same capture is rebuilt across wall-clock instants", "numericSiblings": {"durationMs": 2788}}
+====================================================================================================
+apps/three-surface-poc/src/production-reobserve.test.ts:132 test value 60000 | title: uses the production builder for an atomic successful swap with identity advancement and one in-flight observation
+  reason: // Each test below runs two full production builds (about 1.4 s each alone; // the observer root is the real tree), so no cheaper fixture keeps what they // test. Measured worst case 18.0 s under the parallel-load protocol // (syzygy-4d15, docs/evidence/poc-test-timeouts-2026-10-03.json).
+  record docs/evidence/poc-test-timeouts-2026-10-03.json: title hits 27, strings naming 'production-reobserve.test.ts': 44
+     {"at": ["worstFullRunDurationMsPerTest", "before", "production-reobserve.test.ts > uses the production builder for an atomic successful swap with identity advancement and one in-flight observation"], "string": "production-reobserve.test.ts > uses the production builder for an atomic successful swap with identity advancement and one in-flight observation", "numericSiblings": {"production-reobserve.
+     {"at": ["worstFullRunDurationMsPerTest", "after", "production-reobserve.test.ts > uses the production builder for an atomic successful swap with identity advancement and one in-flight observation"], "string": "production-reobserve.test.ts > uses the production builder for an atomic successful swap with identity advancement and one in-flight observation", "numericSiblings": {"production-reobserve.t
+     {"at": ["before", "aloneRuns", 5, "tests", "production-reobserve.test.ts", 2, "title"], "string": "uses the production builder for an atomic successful swap with identity advancement and one in-flight observation", "numericSiblings": {"durationMs": 2833}}
+     {"at": ["before", "aloneRuns", 6, "tests", "production-reobserve.test.ts", 2, "title"], "string": "uses the production builder for an atomic successful swap with identity advancement and one in-flight observation", "numericSiblings": {"durationMs": 2070}}
+     {"at": ["before", "aloneRuns", 7, "tests", "production-reobserve.test.ts", 2, "title"], "string": "uses the production builder for an atomic successful swap with identity advancement and one in-flight observation", "numericSiblings": {"durationMs": 2639}}
+     {"at": ["before", "aloneRuns", 8, "tests", "production-reobserve.test.ts", 2, "title"], "string": "uses the production builder for an atomic successful swap with identity advancement and one in-flight observation", "numericSiblings": {"durationMs": 2936}}
+====================================================================================================
+apps/three-surface-poc/src/production-reobserve.test.ts:160 test value 60000 | title: re-evaluates an unchanged repository twice: two distinct named identities, the first result unchanged (syzygy-u05.2)
+  reason: // Each test below runs two full production builds (about 1.4 s each alone; // the observer root is the real tree), so no cheaper fixture keeps what they // test. Measured worst case 18.0 s under the parallel-load protocol // (syzygy-4d15, docs/evidence/poc-test-timeouts-2026-10-03.json).
+  record docs/evidence/poc-test-timeouts-2026-10-03.json: title hits 0, strings naming 'production-reobserve.test.ts': 44
+====================================================================================================
+apps/three-surface-poc/src/production-reobserve.test.ts:182 test value 60000 | title: retains the prior production model and non-zero drift when the production build fails
+  reason: // Each test below runs two full production builds (about 1.4 s each alone; // the observer root is the real tree), so no cheaper fixture keeps what they // test. Measured worst case 18.0 s under the parallel-load protocol // (syzygy-4d15, docs/evidence/poc-test-timeouts-2026-10-03.json).
+  record docs/evidence/poc-test-timeouts-2026-10-03.json: title hits 27, strings naming 'production-reobserve.test.ts': 44
+     {"at": ["worstFullRunDurationMsPerTest", "before", "production-reobserve.test.ts > retains the prior production model and non-zero drift when the production build fails"], "string": "production-reobserve.test.ts > retains the prior production model and non-zero drift when the production build fails", "numericSiblings": {"production-reobserve.test.ts > retains the prior production model and non-zer
+     {"at": ["worstFullRunDurationMsPerTest", "after", "production-reobserve.test.ts > retains the prior production model and non-zero drift when the production build fails"], "string": "production-reobserve.test.ts > retains the prior production model and non-zero drift when the production build fails", "numericSiblings": {"production-reobserve.test.ts > retains the prior production model and non-zero
+     {"at": ["before", "aloneRuns", 5, "tests", "production-reobserve.test.ts", 3, "title"], "string": "retains the prior production model and non-zero drift when the production build fails", "numericSiblings": {"durationMs": 2707}}
+     {"at": ["before", "aloneRuns", 6, "tests", "production-reobserve.test.ts", 3, "title"], "string": "retains the prior production model and non-zero drift when the production build fails", "numericSiblings": {"durationMs": 2160}}
+     {"at": ["before", "aloneRuns", 7, "tests", "production-reobserve.test.ts", 3, "title"], "string": "retains the prior production model and non-zero drift when the production build fails", "numericSiblings": {"durationMs": 2552}}
+     {"at": ["before", "aloneRuns", 8, "tests", "production-reobserve.test.ts", 3, "title"], "string": "retains the prior production model and non-zero drift when the production build fails", "numericSiblings": {"durationMs": 3194}}
+====================================================================================================
+apps/three-surface-poc/src/proposal-disclosure.test.ts:147 test value 45000 | title: renders every served proposal and the legend row in the declared token and symbol after scripts
+  reason: two rendered pages in a real browser: worst 8.3 s over 5 alone runs at load1 59-69 (docs/evidence/syzygy-bpyt-4-31/durations/proposal-disclosure.test.tests.json)
+  record docs/evidence/syzygy-bpyt-4-31/durations/proposal-disclosure.test.tests.json: title hits 5, strings naming 'proposal-disclosure.test.ts': 12
+     {"at": ["runs", 0, "tests", 4, "name"], "string": "proposal disclosure row (syzygy-dov.3.2; P-70 M3 slice 6) renders every served proposal and the legend row in the declared token and symbol after scripts", "numericSiblings": {"durationMs": 8257}}
+     {"at": ["runs", 1, "tests", 4, "name"], "string": "proposal disclosure row (syzygy-dov.3.2; P-70 M3 slice 6) renders every served proposal and the legend row in the declared token and symbol after scripts", "numericSiblings": {"durationMs": 4759}}
+     {"at": ["runs", 2, "tests", 4, "name"], "string": "proposal disclosure row (syzygy-dov.3.2; P-70 M3 slice 6) renders every served proposal and the legend row in the declared token and symbol after scripts", "numericSiblings": {"durationMs": 2838}}
+     {"at": ["runs", 3, "tests", 4, "name"], "string": "proposal disclosure row (syzygy-dov.3.2; P-70 M3 slice 6) renders every served proposal and the legend row in the declared token and symbol after scripts", "numericSiblings": {"durationMs": 3303}}
+     {"at": ["runs", 4, "tests", 4, "name"], "string": "proposal disclosure row (syzygy-dov.3.2; P-70 M3 slice 6) renders every served proposal and the legend row in the declared token and symbol after scripts", "numericSiblings": {"durationMs": 4068}}
+====================================================================================================
+apps/three-surface-poc/src/restart.test.ts:321 hook value 180000 | title: (none)
+  reason: // Two kinds of wall-clock bound live in this file, and they are kept apart // (syzygy-ve8n: three tests failed under a full suite at load average 60-90). // // LIVENESS_MS bounds a wait for a state the test goes on to assert: a fixture // binding, a marker file, a process exit, a successor listener. It never // decides an outcome, so it is generous; under load it only waits longer. // The same bu
+  commit b48d86fa: touches the file: True
+     msg| failed: two hit vitest's 5 s default and one reported
+     msg| restart timeoutMs expected not to fire, now use one 30 s liveness
+     msg| 180 s.
+     msg| - Outcome deadlines (100 ms, 150 ms) stay short only where the test makes
+     msg| - The 150 ms case now waits for the signalled listener to exit before
+     add| // to finish before its deadline (30 s is restart.ts's own ceiling).
+     add| // An outcome deadline (100 ms, 150 ms) is kept short only where the test makes
+====================================================================================================
+apps/three-surface-poc/src/restart.test.ts:331 suite value 180000 | title: one-listener POC restart on private fixture sockets
+  reason: // Two kinds of wall-clock bound live in this file, and they are kept apart // (syzygy-ve8n: three tests failed under a full suite at load average 60-90). // // LIVENESS_MS bounds a wait for a state the test goes on to assert: a fixture // binding, a marker file, a process exit, a successor listener. It never // decides an outcome, so it is generous; under load it only waits longer. // The same bu
+  commit b48d86fa: touches the file: True
+     msg| failed: two hit vitest's 5 s default and one reported
+     msg| restart timeoutMs expected not to fire, now use one 30 s liveness
+     msg| 180 s.
+     msg| - Outcome deadlines (100 ms, 150 ms) stay short only where the test makes
+     msg| - The 150 ms case now waits for the signalled listener to exit before
+     add| // to finish before its deadline (30 s is restart.ts's own ceiling).
+     add| // An outcome deadline (100 ms, 150 ms) is kept short only where the test makes
+====================================================================================================
+apps/three-surface-poc/src/surface-routes.test.ts:313 hook value 60000 | title: (none)
+  reason: a fixture model, a daemon and Chrome: at most 0.5 s in 5 alone runs, but hosted run 40428762919 spent at least 9.0 s in this beforeAll and the afterAll together (docs/evidence/syzygy-bpyt-4-31/ci-durations.json)
+  record docs/evidence/syzygy-bpyt-4-31/ci-durations.json: title hits 0, strings naming 'surface-routes.test.ts': 20
+====================================================================================================
+apps/three-surface-poc/src/surface-routes.test.ts:328 hook value 60000 | title: (none)
+  reason: closes Chrome and the daemon: at most 1.1 s in 5 alone runs, but hosted run 40428762919 spent at least 9.0 s in the beforeAll and this afterAll together (docs/evidence/syzygy-bpyt-4-31/ci-durations.json)
+  record docs/evidence/syzygy-bpyt-4-31/ci-durations.json: title hits 0, strings naming 'surface-routes.test.ts': 20
+====================================================================================================
+apps/three-surface-poc/src/surface-routes.test.ts:420 test value 15000 | title: exhausts 15 runtime cross-surface links over six classes and fetches every %s target
+  reason: hosted runs timed out at the 5 s default (docs/evidence/syzygy-bul-browser-ci-correction-2026-09-23.json)
+  record docs/evidence/syzygy-bul-browser-ci-correction-2026-09-23.json: title hits 0, strings naming 'surface-routes.test.ts': 1
+====================================================================================================
+apps/three-surface-poc/src/surface-routes.test.ts:453 test value 10000 | title: withholds the post-script Orrery capability href when that exact capability is absent
+  reason: a hosted run timed out at the 5 s default (docs/evidence/syzygy-bul-browser-ci-correction-2026-09-23.json)
+  record docs/evidence/syzygy-bul-browser-ci-correction-2026-09-23.json: title hits 0, strings naming 'surface-routes.test.ts': 1
+====================================================================================================
+apps/three-surface-poc/src/surface-routes.test.ts:537 test value 45000 | title: counts the post-JavaScript DOM on all three served surfaces and kills an unmarked Orrery region
+  reason: timed out at the 5 s default in 4 of 5 full-suite runs at load1 38-71 (docs/evidence/syzygy-bpyt-4-31/full-runs.json), and took up to 5.1 s in 5 alone runs at load1 30-37 (docs/evidence/syzygy-bpyt-4-31/head-durations/surface-routes.test.tests.json)
+  record docs/evidence/syzygy-bpyt-4-31/full-runs.json: title hits 10, strings naming 'surface-routes.test.ts': 20
+     {"at": ["runs", 0, "files", 3, "slowTests", 4, "name"], "string": "surface routes > counts the post-JavaScript DOM on all three served surfaces and kills an unmarked Orrery region", "numericSiblings": {"ms": 3611}}
+     {"at": ["runs", 0, "files", 3, "slowTests", 4, "line"], "string": "\u2713 surface routes > counts the post-JavaScript DOM on all three served surfaces and kills an unmarked Orrery region  3611ms", "numericSiblings": {"ms": 3611}}
+     {"at": ["runs", 1, "files", 13, "slowTests", 6, "name"], "string": "surface routes > counts the post-JavaScript DOM on all three served surfaces and kills an unmarked Orrery region", "numericSiblings": {"ms": 5074}}
+     {"at": ["runs", 1, "files", 13, "slowTests", 6, "line"], "string": "\u00d7 surface routes > counts the post-JavaScript DOM on all three served surfaces and kills an unmarked Orrery region 5074ms", "numericSiblings": {"ms": 5074}}
+     {"at": ["runs", 2, "files", 1, "slowTests", 6, "name"], "string": "surface routes > counts the post-JavaScript DOM on all three served surfaces and kills an unmarked Orrery region", "numericSiblings": {"ms": 5094}}
+     {"at": ["runs", 2, "files", 1, "slowTests", 6, "line"], "string": "\u00d7 surface routes > counts the post-JavaScript DOM on all three served surfaces and kills an unmarked Orrery region 5094ms", "numericSiblings": {"ms": 5094}}
+  record docs/evidence/syzygy-bpyt-4-31/head-durations/surface-routes.test.tests.json: title hits 5, strings naming 'surface-routes.test.ts': 12
+     {"at": ["runs", 0, "tests", 6, "name"], "string": "surface routes counts the post-JavaScript DOM on all three served surfaces and kills an unmarked Orrery region", "numericSiblings": {"durationMs": 2454}}
+     {"at": ["runs", 1, "tests", 6, "name"], "string": "surface routes counts the post-JavaScript DOM on all three served surfaces and kills an unmarked Orrery region", "numericSiblings": {"durationMs": 3046}}
+     {"at": ["runs", 2, "tests", 6, "name"], "string": "surface routes counts the post-JavaScript DOM on all three served surfaces and kills an unmarked Orrery region", "numericSiblings": {"durationMs": 5060}}
+     {"at": ["runs", 3, "tests", 6, "name"], "string": "surface routes counts the post-JavaScript DOM on all three served surfaces and kills an unmarked Orrery region", "numericSiblings": {"durationMs": 3115}}
+     {"at": ["runs", 4, "tests", 6, "name"], "string": "surface routes counts the post-JavaScript DOM on all three served surfaces and kills an unmarked Orrery region", "numericSiblings": {"durationMs": 2477}}
+====================================================================================================
+apps/three-surface-poc/src/test-model-fixture.test.ts:120 test value 30000 | title: names the template and each copy with the pid and PID namespace of the process that made them
+  reason: makes a template and two fixture copies with git: worst 3.5 s over 5 alone runs at load1 107-143 (docs/evidence/syzygy-bpyt-4-31/durations/test-model-fixture.test.tests.json)
+  record docs/evidence/syzygy-bpyt-4-31/durations/test-model-fixture.test.tests.json: title hits 5, strings naming 'test-model-fixture.test.ts': 12
+     {"at": ["runs", 0, "tests", 3, "name"], "string": "fixture directory names (syzygy-bpyt.4.10) names the template and each copy with the pid and PID namespace of the process that made them", "numericSiblings": {"durationMs": 1187}}
+     {"at": ["runs", 1, "tests", 3, "name"], "string": "fixture directory names (syzygy-bpyt.4.10) names the template and each copy with the pid and PID namespace of the process that made them", "numericSiblings": {"durationMs": 3452}}
+     {"at": ["runs", 2, "tests", 3, "name"], "string": "fixture directory names (syzygy-bpyt.4.10) names the template and each copy with the pid and PID namespace of the process that made them", "numericSiblings": {"durationMs": 1790}}
+     {"at": ["runs", 3, "tests", 3, "name"], "string": "fixture directory names (syzygy-bpyt.4.10) names the template and each copy with the pid and PID namespace of the process that made them", "numericSiblings": {"durationMs": 1283}}
+     {"at": ["runs", 4, "tests", 3, "name"], "string": "fixture directory names (syzygy-bpyt.4.10) names the template and each copy with the pid and PID namespace of the process that made them", "numericSiblings": {"durationMs": 744}}
+====================================================================================================
+apps/three-surface-poc/src/test-model-fixture.test.ts:131 test value 30000 | title: does not sweep when a file makes its template: the sweep is the global setup's, once per run
+  reason: makes a template and one fixture copy with git: worst 4.3 s over 5 alone runs at load1 107-143 (docs/evidence/syzygy-bpyt-4-31/durations/test-model-fixture.test.tests.json)
+  record docs/evidence/syzygy-bpyt-4-31/durations/test-model-fixture.test.tests.json: title hits 5, strings naming 'test-model-fixture.test.ts': 12
+     {"at": ["runs", 0, "tests", 4, "name"], "string": "fixture directory names (syzygy-bpyt.4.10) does not sweep when a file makes its template: the sweep is the global setup's, once per run", "numericSiblings": {"durationMs": 2990}}
+     {"at": ["runs", 1, "tests", 4, "name"], "string": "fixture directory names (syzygy-bpyt.4.10) does not sweep when a file makes its template: the sweep is the global setup's, once per run", "numericSiblings": {"durationMs": 1982}}
+     {"at": ["runs", 2, "tests", 4, "name"], "string": "fixture directory names (syzygy-bpyt.4.10) does not sweep when a file makes its template: the sweep is the global setup's, once per run", "numericSiblings": {"durationMs": 4269}}
+     {"at": ["runs", 3, "tests", 4, "name"], "string": "fixture directory names (syzygy-bpyt.4.10) does not sweep when a file makes its template: the sweep is the global setup's, once per run", "numericSiblings": {"durationMs": 1479}}
+     {"at": ["runs", 4, "tests", 4, "name"], "string": "fixture directory names (syzygy-bpyt.4.10) does not sweep when a file makes its template: the sweep is the global setup's, once per run", "numericSiblings": {"durationMs": 722}}
+====================================================================================================
+apps/three-surface-poc/src/tuple-encoding.test.ts:94 hook value 60000 | title: (none)
+  reason: /** * Budget for building a file's shared fixture models once. Five or six * builds took 4.1-10.9 s across five full-suite runs under eight CPU burners * (docs/evidence/shared-fixture-models-k66p-2026-10-03.json), past the 10 s * hook default at the top. */
+  record docs/evidence/shared-fixture-models-k66p-2026-10-03.json: title hits 0, strings naming 'tuple-encoding.test.ts': 0
+====================================================================================================
+apps/three-surface-poc/src/tuple-encoding.test.ts:312 test value 60000 | title: sweeps the post-JavaScript DOM of the three surfaces, Home apart: every tuple field and glossary row renders its declared symbol and token
+  reason: eight served-page loads in a real browser: worst 7.6 s over 5 alone runs at load1 62-71 (docs/evidence/syzygy-bpyt-4-31/durations/tuple-encoding.test.tests.json)
+  record docs/evidence/syzygy-bpyt-4-31/durations/tuple-encoding.test.tests.json: title hits 5, strings naming 'tuple-encoding.test.ts': 12
+     {"at": ["runs", 0, "tests", 5, "name"], "string": "tuple field encoding tables (syzygy-dov.3.2; P-70 M3 slice 5) sweeps the post-JavaScript DOM of the three surfaces, Home apart: every tuple field and glossary r", "numericSiblings": {"durationMs": 7630}}
+     {"at": ["runs", 1, "tests", 5, "name"], "string": "tuple field encoding tables (syzygy-dov.3.2; P-70 M3 slice 5) sweeps the post-JavaScript DOM of the three surfaces, Home apart: every tuple field and glossary r", "numericSiblings": {"durationMs": 4610}}
+     {"at": ["runs", 2, "tests", 5, "name"], "string": "tuple field encoding tables (syzygy-dov.3.2; P-70 M3 slice 5) sweeps the post-JavaScript DOM of the three surfaces, Home apart: every tuple field and glossary r", "numericSiblings": {"durationMs": 6558}}
+     {"at": ["runs", 3, "tests", 5, "name"], "string": "tuple field encoding tables (syzygy-dov.3.2; P-70 M3 slice 5) sweeps the post-JavaScript DOM of the three surfaces, Home apart: every tuple field and glossary r", "numericSiblings": {"durationMs": 2860}}
+     {"at": ["runs", 4, "tests", 5, "name"], "string": "tuple field encoding tables (syzygy-dov.3.2; P-70 M3 slice 5) sweeps the post-JavaScript DOM of the three surfaces, Home apart: every tuple field and glossary r", "numericSiblings": {"durationMs": 2422}}
+====================================================================================================
+packages/cap1-system/src/fresh-clone.system.test.ts:117 test value 600000 | title: a fresh clone installs, builds, starts the daemon, and serves the same facts on both channels
+  reason: clones, installs and builds: worst 77.5 s over 5 runs at load1 47-75 (docs/evidence/syzygy-bpyt-4-31/durations/cap1-system.hooks.json); 12-19 s on the hosted runs in docs/evidence/syzygy-bpyt-4-31/ci-durations.json
+  record docs/evidence/syzygy-bpyt-4-31/durations/cap1-system.hooks.json: title hits 5, strings naming 'fresh-clone.system.test.ts': 30
+     {"at": ["runs", 0, "tests", 36, "name"], "string": "RT6 \u2014 fresh-clone demonstration a fresh clone installs, builds, starts the daemon, and serves the same facts on both channels", "numericSiblings": {"durationMs": 62226}}
+     {"at": ["runs", 1, "tests", 36, "name"], "string": "RT6 \u2014 fresh-clone demonstration a fresh clone installs, builds, starts the daemon, and serves the same facts on both channels", "numericSiblings": {"durationMs": 70950}}
+     {"at": ["runs", 2, "tests", 36, "name"], "string": "RT6 \u2014 fresh-clone demonstration a fresh clone installs, builds, starts the daemon, and serves the same facts on both channels", "numericSiblings": {"durationMs": 71081}}
+     {"at": ["runs", 3, "tests", 36, "name"], "string": "RT6 \u2014 fresh-clone demonstration a fresh clone installs, builds, starts the daemon, and serves the same facts on both channels", "numericSiblings": {"durationMs": 59777}}
+     {"at": ["runs", 4, "tests", 36, "name"], "string": "RT6 \u2014 fresh-clone demonstration a fresh clone installs, builds, starts the daemon, and serves the same facts on both channels", "numericSiblings": {"durationMs": 77485}}
+  record docs/evidence/syzygy-bpyt-4-31/ci-durations.json: title hits 10, strings naming 'fresh-clone.system.test.ts': 20
+     {"at": ["runs", 0, "files", 38, "slowTests", 0, "name"], "string": "RT6 \u2014 fresh-clone demonstration > a fresh clone installs, builds, starts the daemon, and serves the same facts on both channels", "numericSiblings": {"ms": 18861}}
+     {"at": ["runs", 0, "files", 38, "slowTests", 0, "line"], "string": "\u2713 RT6 \u2014 fresh-clone demonstration > a fresh clone installs, builds, starts the daemon, and serves the same facts on both channels  18861ms", "numericSiblings": {"ms": 18861}}
+     {"at": ["runs", 1, "files", 38, "slowTests", 0, "name"], "string": "RT6 \u2014 fresh-clone demonstration > a fresh clone installs, builds, starts the daemon, and serves the same facts on both channels", "numericSiblings": {"ms": 13450}}
+     {"at": ["runs", 1, "files", 38, "slowTests", 0, "line"], "string": "\u2713 RT6 \u2014 fresh-clone demonstration > a fresh clone installs, builds, starts the daemon, and serves the same facts on both channels  13450ms", "numericSiblings": {"ms": 13450}}
+     {"at": ["runs", 2, "files", 38, "slowTests", 0, "name"], "string": "RT6 \u2014 fresh-clone demonstration > a fresh clone installs, builds, starts the daemon, and serves the same facts on both channels", "numericSiblings": {"ms": 12093}}
+     {"at": ["runs", 2, "files", 38, "slowTests", 0, "line"], "string": "\u2713 RT6 \u2014 fresh-clone demonstration > a fresh clone installs, builds, starts the daemon, and serves the same facts on both channels  12093ms", "numericSiblings": {"ms": 12093}}
+====================================================================================================
+packages/cap1-system/vitest.config.ts:18 config value 60000 | title: (none)
+  reason: every test without its own timeout: worst 10.7 s over 5 runs at load1 47-75 (docs/evidence/syzygy-bpyt-4-31/durations/cap1-system.hooks.json)
+  record docs/evidence/syzygy-bpyt-4-31/durations/cap1-system.hooks.json: title hits 0, strings naming 'cap1-system': 714
+====================================================================================================
+packages/cap1-system/vitest.config.ts:19 config value 60000 | title: (none)
+  reason: also each afterEach, which stops daemons and removes fixture trees inside tests of up to 77.5 s (docs/evidence/syzygy-bpyt-4-31/durations/cap1-system.hooks.json)
+  record docs/evidence/syzygy-bpyt-4-31/durations/cap1-system.hooks.json: title hits 0, strings naming 'cap1-system': 714
+====================================================================================================
+packages/polaris-dossier/src/gate-acts.test.ts:98 test value 60000 | title: follow this checkout's tree: each source absent while its act record is, and established once the sitting records it
+  reason: /** These walk the whole real decisions tree, or eight worlds in turn: about 2-5 s unloaded, past vitest's 5 s default under load (0a08add9). */
+  commit 0a08add9: touches the file: True
+     msg| test(polaris-dossier): a 60 s timeout for the two tree-walking gate-acts tests, which time out under load at the 5 s default [syzygy-qkea.21]
+     add| /** These walk the whole real decisions tree, or eight worlds in turn: about 2-5 s unloaded, past vitest's 5 s default under load. */
+====================================================================================================
+packages/polaris-dossier/src/gate-acts.test.ts:106 test value 60000 | title: follow the tree in either state: no records, every record, and each act alone
+  reason: /** These walk the whole real decisions tree, or eight worlds in turn: about 2-5 s unloaded, past vitest's 5 s default under load (0a08add9). */
+  commit 0a08add9: touches the file: True
+     msg| test(polaris-dossier): a 60 s timeout for the two tree-walking gate-acts tests, which time out under load at the 5 s default [syzygy-qkea.21]
+     add| /** These walk the whole real decisions tree, or eight worlds in turn: about 2-5 s unloaded, past vitest's 5 s default under load. */
+====================================================================================================
+packages/polaris-dossier/src/no-egress.test.ts:85 test value 240000 | title: creates no Internet-family socket over the whole run, from preflight to close
+  reason: a full fixture run under strace: timed out at the 5 s default in 1 of 5 full-suite runs at load1 38-71, up to 4.8 s in the others (docs/evidence/syzygy-bpyt-4-31/full-runs.json)
+  record docs/evidence/syzygy-bpyt-4-31/full-runs.json: title hits 10, strings naming 'no-egress.test.ts': 20
+     {"at": ["runs", 0, "files", 26, "slowTests", 0, "name"], "string": "no provider call and no transmission (S10): an operating-system capture of a full fixture run > creates no Internet-family socket over the whole run, from prefl", "numericSiblings": {"ms": 4839}}
+     {"at": ["runs", 0, "files", 26, "slowTests", 0, "line"], "string": "\u2713 no provider call and no transmission (S10): an operating-system capture of a full fixture run > creates no Internet-family socket over the whole run, from pre", "numericSiblings": {"ms": 4839}}
+     {"at": ["runs", 1, "files", 0, "slowTests", 0, "name"], "string": "no provider call and no transmission (S10): an operating-system capture of a full fixture run > creates no Internet-family socket over the whole run, from prefl", "numericSiblings": {"ms": 2894}}
+     {"at": ["runs", 1, "files", 0, "slowTests", 0, "line"], "string": "\u2713 no provider call and no transmission (S10): an operating-system capture of a full fixture run > creates no Internet-family socket over the whole run, from pre", "numericSiblings": {"ms": 2894}}
+     {"at": ["runs", 2, "files", 17, "slowTests", 0, "name"], "string": "no provider call and no transmission (S10): an operating-system capture of a full fixture run > creates no Internet-family socket over the whole run, from prefl", "numericSiblings": {"ms": 3380}}
+     {"at": ["runs", 2, "files", 17, "slowTests", 0, "line"], "string": "\u2713 no provider call and no transmission (S10): an operating-system capture of a full fixture run > creates no Internet-family socket over the whole run, from pre", "numericSiblings": {"ms": 3380}}
+====================================================================================================
+packages/polaris-dossier/src/no-egress.test.ts:93 test value 240000 | title: sees the canary: one loopback datagram sent before the same run is in the capture
+  reason: the same run with the canary: timed out at the 5 s default in 3 of 5 full-suite runs at load1 38-71, up to 3.5 s in the others (docs/evidence/syzygy-bpyt-4-31/full-runs.json)
+  record docs/evidence/syzygy-bpyt-4-31/full-runs.json: title hits 10, strings naming 'no-egress.test.ts': 20
+     {"at": ["runs", 0, "files", 26, "slowTests", 1, "name"], "string": "no provider call and no transmission (S10): an operating-system capture of a full fixture run > sees the canary: one loopback datagram sent before the same run ", "numericSiblings": {"ms": 5040}}
+     {"at": ["runs", 0, "files", 26, "slowTests", 1, "line"], "string": "\u00d7 no provider call and no transmission (S10): an operating-system capture of a full fixture run > sees the canary: one loopback datagram sent before the same ru", "numericSiblings": {"ms": 5040}}
+     {"at": ["runs", 1, "files", 0, "slowTests", 1, "name"], "string": "no provider call and no transmission (S10): an operating-system capture of a full fixture run > sees the canary: one loopback datagram sent before the same run ", "numericSiblings": {"ms": 3530}}
+     {"at": ["runs", 1, "files", 0, "slowTests", 1, "line"], "string": "\u2713 no provider call and no transmission (S10): an operating-system capture of a full fixture run > sees the canary: one loopback datagram sent before the same ru", "numericSiblings": {"ms": 3530}}
+     {"at": ["runs", 2, "files", 17, "slowTests", 1, "name"], "string": "no provider call and no transmission (S10): an operating-system capture of a full fixture run > sees the canary: one loopback datagram sent before the same run ", "numericSiblings": {"ms": 2958}}
+     {"at": ["runs", 2, "files", 17, "slowTests", 1, "line"], "string": "\u2713 no provider call and no transmission (S10): an operating-system capture of a full fixture run > sees the canary: one loopback datagram sent before the same ru", "numericSiblings": {"ms": 2958}}
+====================================================================================================
+packages/polaris-dossier/src/start-gates.test.ts:1015 test value 60000 | title: reports D9 established on this checkout only once an act record binds it, though the doctrine amendment log records its adoption
+  reason: // After the sitting the real-tree preflight reads every act record and sweeps every decisions file (about 4.4 s alone), past Vitest's 5 s default under load; gate-acts.test.ts gives its real-tree tests the same budget (30d2c2c9).
+  commit 30d2c2c9: touches the file: True
+     msg| test(polaris-dossier): give the real-tree D9 preflight pin the 60 s real-tree budget; post-sitting it sweeps every record [syzygy-s6xo]
+     msg| On main with #394 the post-sitting tree takes the preflight about 4.4 s alone,
+     msg| past Vitest's 5 s default under full-suite load. gate-acts.test.ts already gives
+     add| // After the sitting the real-tree preflight reads every act record and sweeps every decisions file (about 4.4 s alone), past Vitest's 5 s default under load; gate-acts.test.ts gives its real-tree tes
+====================================================================================================
+packages/polaris-generation-consent/src/package-reader.test.ts:111 test value 45000 | title: returns a record only for an instance that an act record names by path and digest
+  reason: sized from its worst measured run: docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json
+  record docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json: title hits 1, strings naming 'package-reader.test.ts': 2
+     {"at": ["tests", 2, "name"], "string": "package admission reader returns a record only for an instance that an act record names by path and digest", "numericSiblings": {"worstMs": 14149, "timeoutMs": 45000, "collectedTimeoutMs": 45000}}
+====================================================================================================
+packages/polaris-generation-consent/src/package-reader.test.ts:141 test value 10000 | title: refuses the whole read on unknown shapes instead of guessing
+  reason: sized from its worst measured run: docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json
+  record docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json: title hits 1, strings naming 'package-reader.test.ts': 2
+     {"at": ["tests", 15, "name"], "string": "package admission reader refuses the whole read on unknown shapes instead of guessing", "numericSiblings": {"worstMs": 2564, "timeoutMs": 10000, "collectedTimeoutMs": 10000}}
+====================================================================================================
+packages/polaris-generation-consent/src/package-reader.test.ts:259 test value 15000 | title: recognises the recorder's record by its exact path and format, in force from its instant
+  reason: sized from its worst measured run: docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json
+  record docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json: title hits 1, strings naming 'package-reader.test.ts': 2
+     {"at": ["tests", 12, "name"], "string": "public-source policy act recognises the recorder's record by its exact path and format, in force from its instant", "numericSiblings": {"worstMs": 3866, "timeoutMs": 15000, "collectedTimeoutMs": 15000}}
+====================================================================================================
+packages/polaris-generation-consent/src/package-reader.test.ts:327 test value 15000 | title: refuses the recorder's file when its act type, identity, title or provenance is not the recorder's form
+  reason: sized from its worst measured run: docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json
+  record docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json: title hits 1, strings naming 'package-reader.test.ts': 2
+     {"at": ["tests", 10, "name"], "string": "public-source policy act refuses the recorder's file when its act type, identity, title or provenance is not the recorder's form", "numericSiblings": {"worstMs": 4808, "timeoutMs": 15000, "collectedTimeoutMs": 15000}}
+====================================================================================================
+packages/polaris-generation-consent/src/package-reader.test.ts:368 test value 40000 | title: is read from the recorder's act: version 2 supersedes version 1 once in force
+  reason: sized from its worst measured run: docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json
+  record docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json: title hits 1, strings naming 'package-reader.test.ts': 2
+     {"at": ["tests", 5, "name"], "string": "egress version 2 record is read from the recorder's act: version 2 supersedes version 1 once in force", "numericSiblings": {"worstMs": 11817, "timeoutMs": 40000, "collectedTimeoutMs": 40000}}
+====================================================================================================
+packages/polaris-generation-consent/src/package-reader.test.ts:375 test value 20000 | title: leaves version 1 standing before the version 2 act takes effect, and with no version 1 act at all
+  reason: sized from its worst measured run: docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json
+  record docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json: title hits 1, strings naming 'package-reader.test.ts': 2
+     {"at": ["tests", 8, "name"], "string": "egress version 2 record leaves version 1 standing before the version 2 act takes effect, and with no version 1 act at all", "numericSiblings": {"worstMs": 5040, "timeoutMs": 20000, "collectedTimeoutMs": 20000}}
+====================================================================================================
+packages/polaris-generation-consent/src/package-reader.test.ts:381 test value 45000 | title: refuses when version 2 did not take effect strictly after version 1: the same instant, or earlier
+  reason: sized from its worst measured run: docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json
+  record docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json: title hits 1, strings naming 'package-reader.test.ts': 2
+     {"at": ["tests", 3, "name"], "string": "egress version 2 record refuses when version 2 did not take effect strictly after version 1: the same instant, or earlier", "numericSiblings": {"worstMs": 13826, "timeoutMs": 45000, "collectedTimeoutMs": 45000}}
+====================================================================================================
+packages/polaris-generation-consent/src/package-reader.test.ts:443 test value 40000 | title: is required: no record, an edited module, a wrong form, or an amendment later than version 2 all refuse
+  reason: sized from its worst measured run: docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json
+  record docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json: title hits 1, strings naming 'package-reader.test.ts': 2
+     {"at": ["tests", 6, "name"], "string": "egress version 2 record the RFC5-14 class amendment version 2 depends on is required: no record, an edited module, a wrong form, or an amendment later than vers", "numericSiblings": {"worstMs": 11800, "timeoutMs": 40000, "collectedTimeoutMs": 40000}}
+====================================================================================================
+packages/polaris-generation-consent/src/package-reader.test.ts:498 test value 25000 | title: does not refuse the recorders' other act records or the aggregate acceptance record they append to
+  reason: sized from its worst measured run: docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json
+  record docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json: title hits 1, strings naming 'package-reader.test.ts': 2
+     {"at": ["tests", 7, "name"], "string": "egress version 2 record withdrawal and forgery forms the reader does not define does not refuse the recorders' other act records or the aggregate acceptance rec", "numericSiblings": {"worstMs": 8089, "timeoutMs": 25000, "collectedTimeoutMs": 25000}}
+====================================================================================================
+packages/polaris-generation-consent/src/package-reader.test.ts:541 test value 45000 | title: counts the version 2 act when the policy carries the version 2 bytes, and the version 1 act goes quiet
+  reason: sized from its worst measured run: docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json
+  record docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json: title hits 1, strings naming 'package-reader.test.ts': 2
+     {"at": ["tests", 1, "name"], "string": "screening scope version 2 policy act counts the version 2 act when the policy carries the version 2 bytes, and the version 1 act goes quiet", "numericSiblings": {"worstMs": 14198, "timeoutMs": 45000, "collectedTimeoutMs": 45000}}
+====================================================================================================
+packages/polaris-generation-consent/src/package-reader.test.ts:563 test value 20000 | title: a version 2 act not yet in force leaves version 1 in force, in both views
+  reason: sized from its worst measured run: docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json
+  record docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json: title hits 1, strings naming 'package-reader.test.ts': 2
+     {"at": ["tests", 9, "name"], "string": "screening scope version 2 policy act a version 2 act not yet in force leaves version 1 in force, in both views", "numericSiblings": {"worstMs": 5039, "timeoutMs": 20000, "collectedTimeoutMs": 20000}}
+====================================================================================================
+packages/polaris-generation-consent/src/package-reader.test.ts:581 test value 15000 | title: refuses an unlisted record that names the policy: another file, a subdirectory, a loose field spelling, a Unicode-hyphen identity
+  reason: sized from its worst measured run: docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json
+  record docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json: title hits 1, strings naming 'package-reader.test.ts': 2
+     {"at": ["tests", 13, "name"], "string": "screening scope version 2 policy act refuses an unlisted record that names the policy: another file, a subdirectory, a loose field spelling, a Unicode-hyphen id", "numericSiblings": {"worstMs": 3452, "timeoutMs": 15000, "collectedTimeoutMs": 15000}}
+====================================================================================================
+packages/polaris-generation-consent/src/package-reader.test.ts:710 test value 40000 | title: policy chain: absent without acts; refused for a missing version 1, equal or earlier instants, equal arguments, a supersession that does not name vers
+  reason: sized from its worst measured run: docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json
+  record docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json: title hits 1, strings naming 'package-reader.test.ts': 2
+     {"at": ["tests", 4, "name"], "string": "strict act reads policy chain: absent without acts; refused for a missing version 1, equal or earlier instants, equal arguments, a supersession that does not na", "numericSiblings": {"worstMs": 12015, "timeoutMs": 40000, "collectedTimeoutMs": 40000}}
+====================================================================================================
+packages/polaris-generation-consent/src/package-reader.test.ts:779 test value 15000 | title: folds soft hyphens, zero-width spaces, underscores and spaces before matching a withdrawal stem (N-2)
+  reason: sized from its worst measured run: docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json
+  record docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json: title hits 1, strings naming 'package-reader.test.ts': 2
+     {"at": ["tests", 14, "name"], "string": "round-3 review notes folds soft hyphens, zero-width spaces, underscores and spaces before matching a withdrawal stem (N-2)", "numericSiblings": {"worstMs": 3348, "timeoutMs": 15000, "collectedTimeoutMs": 15000}}
+====================================================================================================
+packages/polaris-generation-consent/src/package-reader.test.ts:804 test value 15000 | title: takes a time: a strict read of an act recorded after now is absent (N-4)
+  reason: sized from its worst measured run: docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json
+  record docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json: title hits 1, strings naming 'package-reader.test.ts': 2
+     {"at": ["tests", 11, "name"], "string": "round-3 review notes takes a time: a strict read of an act recorded after now is absent (N-4)", "numericSiblings": {"worstMs": 4266, "timeoutMs": 15000, "collectedTimeoutMs": 15000}}
+====================================================================================================
+packages/polaris-generation-consent/src/package-reader.test.ts:947 hook value 60000 | title: (none)
+  reason: five Python renders took about 3 s of a cold 4.5 s run (6c91e65a)
+  commit 6c91e65a: touches the file: True
+     msg| A CPU profile of the case alone: about 3 s of a cold 4.5 s run was five Python spawns rendering the recorders' acts on the first full() call, landing inside the 5 s budget under suite load. A beforeAl
+     add| // syzygy-786c: the first `full` spawns Python five times to render the recorders' acts (about 3 s of a cold 4.5 s run, by CPU
+     add| // profile), which landed inside this test's 5 s budget. Render them once here, under a budget of their own; the renders are cached.
+     add| // One case per row then keeps each read (about 20 ms) far from the budget whatever the suite load.
+====================================================================================================
+packages/polaris-generation-consent/src/package-reader.test.ts:1061 test value 50000 | title: on every world in the fixture set, at every instant
+  reason: sized from its worst measured run: docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json
+  record docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json: title hits 1, strings naming 'package-reader.test.ts': 2
+     {"at": ["tests", 0, "name"], "string": "the policy port and the strict policy chain agree on every world in the fixture set, at every instant", "numericSiblings": {"worstMs": 16465, "timeoutMs": 50000, "collectedTimeoutMs": 50000}}
+====================================================================================================
+packages/polaris-generation-consent/src/real-tree.test.ts:50 test value 120000 | title: refuse nothing: no file in decisions/ trips a sweep or breaks a recorder's form
+  reason: each read walks the whole decisions tree: worst 8.0 s over 5 alone runs at load1 39-47 (docs/evidence/syzygy-bpyt-4-31/durations/real-tree.test.tests.json)
+  record docs/evidence/syzygy-bpyt-4-31/durations/real-tree.test.tests.json: title hits 5, strings naming 'real-tree.test.ts': 12
+     {"at": ["runs", 0, "tests", 0, "name"], "string": "the readers over this checkout's decisions directory refuse nothing: no file in decisions/ trips a sweep or breaks a recorder's form", "numericSiblings": {"durationMs": 3563}}
+     {"at": ["runs", 1, "tests", 0, "name"], "string": "the readers over this checkout's decisions directory refuse nothing: no file in decisions/ trips a sweep or breaks a recorder's form", "numericSiblings": {"durationMs": 5060}}
+     {"at": ["runs", 2, "tests", 0, "name"], "string": "the readers over this checkout's decisions directory refuse nothing: no file in decisions/ trips a sweep or breaks a recorder's form", "numericSiblings": {"durationMs": 8045}}
+     {"at": ["runs", 3, "tests", 0, "name"], "string": "the readers over this checkout's decisions directory refuse nothing: no file in decisions/ trips a sweep or breaks a recorder's form", "numericSiblings": {"durationMs": 3489}}
+     {"at": ["runs", 4, "tests", 0, "name"], "string": "the readers over this checkout's decisions directory refuse nothing: no file in decisions/ trips a sweep or breaks a recorder's form", "numericSiblings": {"durationMs": 4498}}
+====================================================================================================
+packages/polaris-generation-consent/src/real-tree.test.ts:58 test value 120000 | title: do reach that directory: one added file naming a record or the class act refuses the reads that sweep for it
+  reason: each read walks the whole decisions tree: worst 8.0 s over 5 alone runs at load1 39-47 (docs/evidence/syzygy-bpyt-4-31/durations/real-tree.test.tests.json)
+  record docs/evidence/syzygy-bpyt-4-31/durations/real-tree.test.tests.json: title hits 5, strings naming 'real-tree.test.ts': 12
+     {"at": ["runs", 0, "tests", 1, "name"], "string": "the readers over this checkout's decisions directory do reach that directory: one added file naming a record or the class act refuses the reads that sweep for i", "numericSiblings": {"durationMs": 2318}}
+     {"at": ["runs", 1, "tests", 1, "name"], "string": "the readers over this checkout's decisions directory do reach that directory: one added file naming a record or the class act refuses the reads that sweep for i", "numericSiblings": {"durationMs": 5684}}
+     {"at": ["runs", 2, "tests", 1, "name"], "string": "the readers over this checkout's decisions directory do reach that directory: one added file naming a record or the class act refuses the reads that sweep for i", "numericSiblings": {"durationMs": 4858}}
+     {"at": ["runs", 3, "tests", 1, "name"], "string": "the readers over this checkout's decisions directory do reach that directory: one added file naming a record or the class act refuses the reads that sweep for i", "numericSiblings": {"durationMs": 3533}}
+     {"at": ["runs", 4, "tests", 1, "name"], "string": "the readers over this checkout's decisions directory do reach that directory: one added file naming a record or the class act refuses the reads that sweep for i", "numericSiblings": {"durationMs": 3154}}
+====================================================================================================
+packages/three-surface-poc-core/src/test-artifact-verification.live.test.ts:139 test value 120000 | title: ingests one real, passing operator-reported focused-pytest artifact and resolves it to report-fact, never Verified, through the full model (AC1/AC3, R
+  reason: unmeasured: it runs only against an operator's real Butlers checkout (SYZYGY_POC_BUTLERS_REPO, 2c1f8d5a), which no hosted or local run sets; the commit holds no measurement, so this is an unmeasured residual of syzygy-bpyt.4.31
+  commit 2c1f8d5a: touches the file: True

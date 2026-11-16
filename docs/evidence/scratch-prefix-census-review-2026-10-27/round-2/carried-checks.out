@@ -1,0 +1,11 @@
+1. sampler records at r1 7 at r2 7 digest entries 7
+   digests == r1 blobs: True  digests == r2 blobs: True
+2. runs/ files r1 22 r2 24 added at r2 ['docs/evidence/scratch-prefix-census-2026-10-23/runs/carried-observations.json', 'docs/evidence/scratch-prefix-census-2026-10-23/runs/sampler-digests.json'] removed [] changed []
+3. carriedFrom blobSha256 ok True  atCommit is r1 True  row 26 class nanoid-21  value ['ssr']  carried ['ssr']  equal True
+   rows of r1 carrying the field [(26, 'nanoid-21')]
+   r2 value ['ssr'] carriedFrom True
+   census subject samplerRecordSha256 == digests True  carriedObservationsSha256 ok True
+   toolSha256 at r2: {'assemble_census.py': True, 'census_run.py': True, 'collect_runs.py': True, 'scratch_trace.cjs': True, 'static_sites.py': True, 'tmp_sampler.py': True}  staticSitesSha256 ok True
+4. verification keys ['subject', 'gatesRanAtCommit', 'censusRunCommit', 'gates', 'rule6', 'fileSha256']
+   digest map under fileSha256 40
+   listed 40 on disk 41 listedNotOnDisk [] onDiskNotListed ['verification-2026-10-24.json'] mismatched []

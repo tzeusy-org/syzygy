@@ -1,0 +1,21 @@
+N3-control-head exit 0 0/38 failed | 
+N3-O8-at-head exit 1 1/38 failed | readSecretRedaction refuses what it does not implement refuses a declaration that is a function that carries every field
+N3-O8-without-the-function-row exit 0 0/37 failed | 
+AL-control-head exit 0 0/33 failed | 
+AL-remove-Array exit 1 1/33 failed | @syzygy/support stays a pure leaf names no identifier outside its literal list in any source
+AL-remove-Readonly exit 1 1/33 failed | @syzygy/support stays a pure leaf names no identifier outside its literal list in any source
+AL-remove-Record exit 1 1/33 failed | @syzygy/support stays a pure leaf names no identifier outside its literal list in any source
+AL-remove-isArray exit 1 1/33 failed | @syzygy/support stays a pure leaf names no identifier outside its literal list in any source
+AL-remove-isRecord exit 1 1/33 failed | @syzygy/support stays a pure leaf names no identifier outside its literal list in any source
+PIN-RP2-globalThis-bracket-read-of-process-env exit 1 1/33 failed | @syzygy/support stays a pure leaf names no identifier outside its literal list in any source
+PIN-RP5-WebSocket exit 1 1/33 failed | @syzygy/support stays a pure leaf names no identifier outside its literal list in any source
+PIN-RP7-performance-now exit 1 1/33 failed | @syzygy/support stays a pure leaf names no identifier outside its literal list in any source
+PIN-RP16-optional-chained-process-env-read exit 1 1/33 failed | @syzygy/support stays a pure leaf names no identifier outside its literal list in any source
+PIN-Y1-reflect-get-globalThis-env exit 1 1/33 failed | @syzygy/support stays a pure leaf names no identifier outside its literal list in any source
+PIN-Y2-eval-under-an-allowed-name exit 1 1/33 failed | @syzygy/support stays a pure leaf names no identifier outside its literal list in any source
+PIN-Y4-new-Function exit 1 1/33 failed | @syzygy/support stays a pure leaf names no identifier outside its literal list in any source
+PIN-Y13-import-meta exit 1 1/33 failed | @syzygy/support stays a pure leaf names no identifier outside its literal list in any source
+OWN-Array-constructor-chain exit 1 1/33 failed | @syzygy/support stays a pure leaf names no identifier outside its literal list in any source
+OWN-Array-from-globalThis exit 1 1/33 failed | @syzygy/support stays a pure leaf names no identifier outside its literal list in any source
+OWN-Record-typed-only exit 1 1/33 failed | @syzygy/support stays a pure leaf names no identifier outside its literal list in any source
+exit 0

@@ -1,0 +1,40 @@
+{
+ "commit": "ecb1afb4",
+ "files": [
+  {
+   "name": "packages/support/src/support-purity.test.ts",
+   "status": "passed",
+   "tests": 50,
+   "passed": 50,
+   "message": ""
+  },
+  {
+   "name": "packages/polaris-generation-core/src/root-vitest-aliases.test.ts",
+   "status": "failed",
+   "tests": 0,
+   "passed": 0,
+   "message": "Cannot read properties of undefined (reading 'alias')"
+  },
+  {
+   "name": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+   "status": "passed",
+   "tests": 64,
+   "passed": 64,
+   "message": ""
+  },
+  {
+   "name": "packages/polaris-dossier/src/no-egress.test.ts",
+   "status": "passed",
+   "tests": 7,
+   "passed": 6,
+   "message": ""
+  },
+  {
+   "name": "packages/three-surface-poc-core/src/owner-act-drafter.test.ts",
+   "status": "passed",
+   "tests": 4,
+   "passed": 4,
+   "message": ""
+  }
+ ]
+}

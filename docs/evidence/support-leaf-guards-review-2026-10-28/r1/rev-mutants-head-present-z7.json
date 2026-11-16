@@ -1,0 +1,93 @@
+{
+ "commit": "5995aa3c0a23f4862f7107c401a72a222b8a7998",
+ "dist": "present",
+ "distDirs": [
+  "apps/syzygy/dist",
+  "apps/three-surface-poc/dist",
+  "packages/cap1-conformance/dist",
+  "packages/cap1-core/dist",
+  "packages/cap1-daemon/dist",
+  "packages/cap1-system/dist",
+  "packages/http-host/dist",
+  "packages/polaris-dossier/dist",
+  "packages/polaris-generation-consent/dist",
+  "packages/polaris-generation-core/dist",
+  "packages/support/dist",
+  "packages/three-surface-poc-core/dist"
+ ],
+ "summary": {
+  "rows": 2,
+  "asExpected": 2,
+  "unexpected": []
+ },
+ "statusAfter": "",
+ "leftovers": [],
+ "rows": [
+  {
+   "id": "N0-no-egress-unmutated",
+   "probe": "baseline",
+   "tests": [
+    "packages/polaris-dossier/src/no-egress.test.ts"
+   ],
+   "edits": [],
+   "expected": "pass",
+   "observed": "pass",
+   "loadavg": [
+    "21.50",
+    "26.67",
+    "25.91"
+   ],
+   "exit": 0,
+   "passed": 5,
+   "failed": 0,
+   "pending": 1,
+   "total": 6,
+   "failedFiles": [],
+   "fileMessages": [],
+   "failedTests": []
+  },
+  {
+   "id": "Z7-unscoped-workspace-with-no-entry",
+   "probe": "M2 under a name outside @syzygy/",
+   "tests": [
+    "packages/polaris-dossier/src/no-egress.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/leak/package.json",
+     "old": null,
+     "new": "{\n  \"name\": \"leak\",\n  \"version\": \"0.0.0\",\n  \"private\": true,\n  \"type\": \"module\"\n}\n"
+    },
+    {
+     "path": "packages/leak/index.js",
+     "old": null,
+     "new": "export const LEAK = 1;\n"
+    },
+    {
+     "path": "node_modules/leak",
+     "link": "../packages/leak"
+    },
+    {
+     "path": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+     "old": "import { DESIGN_TOKENS_CSS } from '../design-tokens.js';\n",
+     "new": "import 'leak';\nimport { DESIGN_TOKENS_CSS } from '../design-tokens.js';\n"
+    }
+   ],
+   "expected": "survives",
+   "observed": "survives",
+   "loadavg": [
+    "20.50",
+    "26.29",
+    "25.80"
+   ],
+   "exit": 0,
+   "passed": 5,
+   "failed": 0,
+   "pending": 1,
+   "total": 6,
+   "failedFiles": [],
+   "fileMessages": [],
+   "failedTests": []
+  }
+ ]
+}

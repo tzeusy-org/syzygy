@@ -1,0 +1,302 @@
+{
+ "subject": {
+  "baseCommit": {
+   "value": "a088f1caf061c1a2062527ce8521c9b64c3c7fd1",
+   "type": "commit",
+   "ancestorOfReviewed": true
+  },
+  "headCommit": {
+   "value": "9029e1cfb7a5ca1b02dbddaa450ac61349639bd7",
+   "type": "commit",
+   "ancestorOfReviewed": true
+  }
+ },
+ "tools": {
+  "sweep.py": true,
+  "site-equivalence.py": true,
+  "diff-probe.mjs": true,
+  "compare-probe.py": true,
+  "compare-hash-trace.py": true,
+  "exports-probe.mjs": true,
+  "mutants.py": true,
+  "hash-trace.cjs": true
+ },
+ "mutants": [
+  {
+   "id": "S1-algorithm-sha1",
+   "oldCountAtHead": 1,
+   "mutantCommit": "",
+   "mutantCommitReachableFrom": null,
+   "mutantCommitIsExactlyOldToNew": null,
+   "verdictConsistent": true,
+   "testsKilledAgreesWithSummary": true,
+   "probeKilledAgreesWithRows": true,
+   "staticKilledAgreesWithFiles": true
+  },
+  {
+   "id": "S2-encoding-base64",
+   "oldCountAtHead": 1,
+   "mutantCommit": "",
+   "mutantCommitReachableFrom": null,
+   "mutantCommitIsExactlyOldToNew": null,
+   "verdictConsistent": true,
+   "testsKilledAgreesWithSummary": true,
+   "probeKilledAgreesWithRows": true,
+   "staticKilledAgreesWithFiles": true
+  },
+  {
+   "id": "S3-update-latin1",
+   "oldCountAtHead": 1,
+   "mutantCommit": "",
+   "mutantCommitReachableFrom": null,
+   "mutantCommitIsExactlyOldToNew": null,
+   "verdictConsistent": true,
+   "testsKilledAgreesWithSummary": true,
+   "probeKilledAgreesWithRows": true,
+   "staticKilledAgreesWithFiles": true
+  },
+  {
+   "id": "S4-update-stringified",
+   "oldCountAtHead": 1,
+   "mutantCommit": "",
+   "mutantCommitReachableFrom": null,
+   "mutantCommitIsExactlyOldToNew": null,
+   "verdictConsistent": true,
+   "testsKilledAgreesWithSummary": true,
+   "probeKilledAgreesWithRows": true,
+   "staticKilledAgreesWithFiles": true
+  },
+  {
+   "id": "S5-freeze-without-descent",
+   "oldCountAtHead": 1,
+   "mutantCommit": "",
+   "mutantCommitReachableFrom": null,
+   "mutantCommitIsExactlyOldToNew": null,
+   "verdictConsistent": true,
+   "testsKilledAgreesWithSummary": true,
+   "probeKilledAgreesWithRows": true,
+   "staticKilledAgreesWithFiles": true
+  },
+  {
+   "id": "S6-freeze-nothing",
+   "oldCountAtHead": 1,
+   "mutantCommit": "",
+   "mutantCommitReachableFrom": null,
+   "mutantCommitIsExactlyOldToNew": null,
+   "verdictConsistent": true,
+   "testsKilledAgreesWithSummary": true,
+   "probeKilledAgreesWithRows": true,
+   "staticKilledAgreesWithFiles": true
+  },
+  {
+   "id": "S7-freeze-without-guard",
+   "oldCountAtHead": 1,
+   "mutantCommit": "",
+   "mutantCommitReachableFrom": null,
+   "mutantCommitIsExactlyOldToNew": null,
+   "verdictConsistent": true,
+   "testsKilledAgreesWithSummary": true,
+   "probeKilledAgreesWithRows": true,
+   "staticKilledAgreesWithFiles": true
+  },
+  {
+   "id": "S8-forbidden-token-in-closure",
+   "oldCountAtHead": 1,
+   "mutantCommit": "",
+   "mutantCommitReachableFrom": null,
+   "mutantCommitIsExactlyOldToNew": null,
+   "verdictConsistent": true,
+   "testsKilledAgreesWithSummary": true,
+   "probeKilledAgreesWithRows": "n/a",
+   "staticKilledAgreesWithFiles": true
+  },
+  {
+   "id": "C1-manifest-digest",
+   "oldCountAtHead": 1,
+   "mutantCommit": "",
+   "mutantCommitReachableFrom": null,
+   "mutantCommitIsExactlyOldToNew": null,
+   "verdictConsistent": true,
+   "testsKilledAgreesWithSummary": true,
+   "probeKilledAgreesWithRows": true,
+   "staticKilledAgreesWithFiles": true
+  },
+  {
+   "id": "C2-observation-digest",
+   "oldCountAtHead": 1,
+   "mutantCommit": "",
+   "mutantCommitReachableFrom": null,
+   "mutantCommitIsExactlyOldToNew": null,
+   "verdictConsistent": true,
+   "testsKilledAgreesWithSummary": true,
+   "probeKilledAgreesWithRows": true,
+   "staticKilledAgreesWithFiles": true
+  },
+  {
+   "id": "C3-model-artifact-digest",
+   "oldCountAtHead": 1,
+   "mutantCommit": "",
+   "mutantCommitReachableFrom": null,
+   "mutantCommitIsExactlyOldToNew": null,
+   "verdictConsistent": true,
+   "testsKilledAgreesWithSummary": true,
+   "probeKilledAgreesWithRows": true,
+   "staticKilledAgreesWithFiles": true
+  },
+  {
+   "id": "C4-response-identity",
+   "oldCountAtHead": 1,
+   "mutantCommit": "",
+   "mutantCommitReachableFrom": null,
+   "mutantCommitIsExactlyOldToNew": null,
+   "verdictConsistent": true,
+   "testsKilledAgreesWithSummary": true,
+   "probeKilledAgreesWithRows": true,
+   "staticKilledAgreesWithFiles": true
+  },
+  {
+   "id": "C5-content-digest",
+   "oldCountAtHead": 1,
+   "mutantCommit": "",
+   "mutantCommitReachableFrom": null,
+   "mutantCommitIsExactlyOldToNew": null,
+   "verdictConsistent": true,
+   "testsKilledAgreesWithSummary": true,
+   "probeKilledAgreesWithRows": true,
+   "staticKilledAgreesWithFiles": true
+  },
+  {
+   "id": "C6-canonical-json-digest",
+   "oldCountAtHead": 1,
+   "mutantCommit": "",
+   "mutantCommitReachableFrom": null,
+   "mutantCommitIsExactlyOldToNew": null,
+   "verdictConsistent": true,
+   "testsKilledAgreesWithSummary": true,
+   "probeKilledAgreesWithRows": true,
+   "staticKilledAgreesWithFiles": true
+  },
+  {
+   "id": "C7-drafter-frozen-digest",
+   "oldCountAtHead": 1,
+   "mutantCommit": "",
+   "mutantCommitReachableFrom": null,
+   "mutantCommitIsExactlyOldToNew": null,
+   "verdictConsistent": true,
+   "testsKilledAgreesWithSummary": true,
+   "probeKilledAgreesWithRows": true,
+   "staticKilledAgreesWithFiles": true
+  },
+  {
+   "id": "C8-body-read-authority-digest",
+   "oldCountAtHead": 1,
+   "mutantCommit": "",
+   "mutantCommitReachableFrom": null,
+   "mutantCommitIsExactlyOldToNew": null,
+   "verdictConsistent": true,
+   "testsKilledAgreesWithSummary": true,
+   "probeKilledAgreesWithRows": true,
+   "staticKilledAgreesWithFiles": true
+  },
+  {
+   "id": "C9-judgment-run-digest",
+   "oldCountAtHead": 1,
+   "mutantCommit": "",
+   "mutantCommitReachableFrom": null,
+   "mutantCommitIsExactlyOldToNew": null,
+   "verdictConsistent": true,
+   "testsKilledAgreesWithSummary": true,
+   "probeKilledAgreesWithRows": true,
+   "staticKilledAgreesWithFiles": true
+  },
+  {
+   "id": "C10-consent-module-digest",
+   "oldCountAtHead": 1,
+   "mutantCommit": "",
+   "mutantCommitReachableFrom": null,
+   "mutantCommitIsExactlyOldToNew": null,
+   "verdictConsistent": true,
+   "testsKilledAgreesWithSummary": true,
+   "probeKilledAgreesWithRows": "n/a",
+   "staticKilledAgreesWithFiles": true
+  },
+  {
+   "id": "C11-dossier-evaluation-questions",
+   "oldCountAtHead": 1,
+   "mutantCommit": "",
+   "mutantCommitReachableFrom": null,
+   "mutantCommitIsExactlyOldToNew": null,
+   "verdictConsistent": true,
+   "testsKilledAgreesWithSummary": true,
+   "probeKilledAgreesWithRows": "n/a",
+   "staticKilledAgreesWithFiles": true
+  },
+  {
+   "id": "C12-handover-prompt-digest",
+   "oldCountAtHead": 1,
+   "mutantCommit": "",
+   "mutantCommitReachableFrom": null,
+   "mutantCommitIsExactlyOldToNew": null,
+   "verdictConsistent": true,
+   "testsKilledAgreesWithSummary": true,
+   "probeKilledAgreesWithRows": "n/a",
+   "staticKilledAgreesWithFiles": true
+  },
+  {
+   "id": "F1-headroom-not-frozen",
+   "oldCountAtHead": 1,
+   "mutantCommit": "",
+   "mutantCommitReachableFrom": null,
+   "mutantCommitIsExactlyOldToNew": null,
+   "verdictConsistent": true,
+   "testsKilledAgreesWithSummary": true,
+   "probeKilledAgreesWithRows": true,
+   "staticKilledAgreesWithFiles": true
+  },
+  {
+   "id": "F2-observation-not-frozen",
+   "oldCountAtHead": 1,
+   "mutantCommit": "",
+   "mutantCommitReachableFrom": null,
+   "mutantCommitIsExactlyOldToNew": null,
+   "verdictConsistent": true,
+   "testsKilledAgreesWithSummary": true,
+   "probeKilledAgreesWithRows": true,
+   "staticKilledAgreesWithFiles": true
+  },
+  {
+   "id": "F3-body-authority-not-frozen",
+   "oldCountAtHead": 1,
+   "mutantCommit": "",
+   "mutantCommitReachableFrom": null,
+   "mutantCommitIsExactlyOldToNew": null,
+   "verdictConsistent": true,
+   "testsKilledAgreesWithSummary": true,
+   "probeKilledAgreesWithRows": true,
+   "staticKilledAgreesWithFiles": true
+  },
+  {
+   "id": "F4-manifest-not-frozen",
+   "oldCountAtHead": 1,
+   "mutantCommit": "",
+   "mutantCommitReachableFrom": null,
+   "mutantCommitIsExactlyOldToNew": null,
+   "verdictConsistent": true,
+   "testsKilledAgreesWithSummary": true,
+   "probeKilledAgreesWithRows": true,
+   "staticKilledAgreesWithFiles": true
+  }
+ ],
+ "summary": {
+  "killed": 24,
+  "survived": 0,
+  "testsMissed": [
+   "C1-manifest-digest",
+   "C2-observation-digest",
+   "C3-model-artifact-digest",
+   "C11-dossier-evaluation-questions",
+   "F1-headroom-not-frozen",
+   "F3-body-authority-not-frozen"
+  ]
+ }
+}

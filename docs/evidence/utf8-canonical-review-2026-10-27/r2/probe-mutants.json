@@ -1,0 +1,102 @@
+{
+ "commit": "b81010c8",
+ "expected": "/tmp/r534b-2/expected-probe.json",
+ "rows": [
+  {
+   "id": "X2",
+   "file": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+   "old": "const text = decodeUtf8(bytes);\n    if (text === undefined) {\n      reads.push(",
+   "new": "const text = decodeUtf8(bytes)?.replace(/^\\uFEFF/, '');\n    if (text === undefined) {\n      reads.push(",
+   "oldCount": 1,
+   "loadavgBefore": "18.40 19.84 22.16 41/9602 3159647",
+   "buildExit": 0,
+   "probeExit": 0,
+   "compareExit": 1,
+   "compare": {
+    "rowsCompared": 12841,
+    "rowsDiffer": 7,
+    "missing": 0,
+    "extra": 0,
+    "differPerDriver": {
+     "seed-reader": 7
+    },
+    "firstDiffering": [
+     [
+      "seed-reader",
+      "bom-bom-text"
+     ],
+     [
+      "seed-reader",
+      "consent+bom-bom"
+     ],
+     [
+      "seed-reader",
+      "instant+bom-bom"
+     ],
+     [
+      "seed-reader",
+      "markdown+bom-bom"
+     ],
+     [
+      "seed-reader",
+      "policy+bom-bom"
+     ],
+     [
+      "seed-reader",
+      "registry+bom-bom"
+     ]
+    ],
+    "corpusEqual": true
+   },
+   "loadavgAfter": "23.45 20.86 22.46 26/9620 3164377"
+  },
+  {
+   "id": "X6",
+   "file": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+   "old": "const text = decodeUtf8(bytes);\n  return text === undefined ? { kind: 'failed'",
+   "new": "const text = decodeUtf8(bytes)?.replace(/^\\uFEFF/, '');\n  return text === undefined ? { kind: 'failed'",
+   "oldCount": 1,
+   "loadavgBefore": "23.45 20.86 22.46 35/9621 3164378",
+   "buildExit": 0,
+   "probeExit": 0,
+   "compareExit": 1,
+   "compare": {
+    "rowsCompared": 12841,
+    "rowsDiffer": 8,
+    "missing": 0,
+    "extra": 0,
+    "differPerDriver": {
+     "observe-ls-tree": 8
+    },
+    "firstDiffering": [
+     [
+      "observe-ls-tree",
+      "bom-bom-text"
+     ],
+     [
+      "observe-ls-tree",
+      "consent+bom-bom"
+     ],
+     [
+      "observe-ls-tree",
+      "instant+bom-bom"
+     ],
+     [
+      "observe-ls-tree",
+      "ls-tree+bom-bom"
+     ],
+     [
+      "observe-ls-tree",
+      "markdown+bom-bom"
+     ],
+     [
+      "observe-ls-tree",
+      "policy+bom-bom"
+     ]
+    ],
+    "corpusEqual": true
+   },
+   "loadavgAfter": "22.70 20.84 22.42 18/9604 3168502"
+  }
+ ]
+}

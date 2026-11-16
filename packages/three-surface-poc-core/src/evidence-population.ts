@@ -37,13 +37,13 @@ export interface ProjectShapePopulationView {
   };
 }
 
-export interface PopulationBlock {
+interface PopulationBlock {
   readonly itemCount: number;
   readonly claimIdCount: number;
   readonly butlersRevision: string;
 }
 
-export interface PopulationSources {
+interface PopulationSources {
   // The `projectShape` field of the parsed JSON body of GET /api/poc (or
   // any object of that shape) -- the model's own declared population,
   // never reconstructed from HTML.

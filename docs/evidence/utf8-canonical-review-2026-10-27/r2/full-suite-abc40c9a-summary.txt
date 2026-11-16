@@ -1,0 +1,16 @@
+{'numTotalTestSuites': 885, 'numPassedTestSuites': 885, 'numFailedTestSuites': 0, 'numPendingTestSuites': 0, 'numTotalTests': 5481, 'numPassedTests': 5476, 'numFailedTests': 0, 'numPendingTests': 5, 'success': True}
+packages/support/src/decode-utf8.test.ts 6 {'passed': 6}
+packages/three-surface-poc-core/src/authority-artifact-fields.test.ts 5 {'passed': 5}
+packages/three-surface-poc-core/src/code-structure.test.ts 12 {'passed': 12}
+packages/three-surface-poc-core/src/git-object-reader.test.ts 73 {'passed': 73}
+packages/three-surface-poc-core/src/project-shape-git-text.test.ts 4 {'passed': 4}
+packages/three-surface-poc-core/src/project-shape-observation.test.ts 41 {'passed': 41}
+apps/three-surface-poc/src/canonical-json-divergence.test.ts 21 {'passed': 21}
+PR test files total 162
+('packages/three-surface-poc-core/src/git-object-reader.test.ts', 'passed') drops one leading byte-order mark from the decoded text and keeps a second
+('packages/three-surface-poc-core/src/project-shape-observation.test.ts', 'passed') a seed with a leading byte-order mark is read without it
+('packages/three-surface-poc-core/src/project-shape-observation.test.ts', 'passed') a seed whose bytes are not UTF-8 is refused with its reason and a not-utf-8 read record
+('packages/three-surface-poc-core/src/project-shape-git-text.test.ts', 'passed') drops one leading byte-order mark from the tree listing before parsing it
+('packages/three-surface-poc-core/src/code-structure.test.ts', 'passed') drops one leading byte-order mark from git's listing before parsing it
+('packages/three-surface-poc-core/src/code-structure.test.ts', 'passed') reports a gitlink filter that cannot allocate its copy as it reports bytes it cannot decode
+('packages/three-surface-poc-core/src/project-shape-git-text.test.ts', 'passed') goes on past a rev-parse answer that is well-formed

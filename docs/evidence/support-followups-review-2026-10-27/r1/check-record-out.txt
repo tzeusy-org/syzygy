@@ -1,0 +1,171 @@
+ok  base commit resolves
+ok  tested commit resolves
+ok  tested commit is the last code commit before the evidence commit  [b214ef10]
+ok  own delta digest  [7eb6c896dd4f49ce]
+ok  own delta paths  [14 paths]
+ok  tool digest derive-literals.py
+ok  tool digest compare-rows.py
+ok  tool digest junit-fixture-differential.mjs
+ok  tool digest pins-mutants.py
+ok  tool digest item4-mutants.py
+ok  pins record base/head
+ok  pins C1-manifest-digest old once at before f7477f52  [count=1]
+ok  pins C1-manifest-digest before failedTestCount matches failed and list  [0/0/0]
+ok  pins C1-manifest-digest before exit agrees with failures  [exit=0 failed=0]
+ok  pins C1-manifest-digest old once at after b214ef10  [count=1]
+ok  pins C1-manifest-digest after failedTestCount matches failed and list  [2/2/2]
+ok  pins C1-manifest-digest after exit agrees with failures  [exit=1 failed=2]
+ok  pins C1-manifest-digest ok flag follows from exits
+ok  pins C1-manifest-digest after-kill test file exists at head: project-shape-manifest.test.ts  [1 paths]
+ok  pins C1-manifest-digest after-kill test file exists at head: project-shape-observation.test.ts  [1 paths]
+ok  pins C2-observation-digest old once at before f7477f52  [count=1]
+ok  pins C2-observation-digest before failedTestCount matches failed and list  [0/0/0]
+ok  pins C2-observation-digest before exit agrees with failures  [exit=0 failed=0]
+ok  pins C2-observation-digest old once at after b214ef10  [count=1]
+ok  pins C2-observation-digest after failedTestCount matches failed and list  [1/1/1]
+ok  pins C2-observation-digest after exit agrees with failures  [exit=1 failed=1]
+ok  pins C2-observation-digest ok flag follows from exits
+ok  pins C2-observation-digest after-kill test file exists at head: project-shape-observation.test.ts  [1 paths]
+ok  pins C3-model-artifact-digest old once at before f7477f52  [count=1]
+ok  pins C3-model-artifact-digest before failedTestCount matches failed and list  [0/0/0]
+ok  pins C3-model-artifact-digest before exit agrees with failures  [exit=0 failed=0]
+ok  pins C3-model-artifact-digest old once at after b214ef10  [count=1]
+ok  pins C3-model-artifact-digest after failedTestCount matches failed and list  [1/1/1]
+ok  pins C3-model-artifact-digest after exit agrees with failures  [exit=1 failed=1]
+ok  pins C3-model-artifact-digest ok flag follows from exits
+ok  pins C3-model-artifact-digest after-kill test file exists at head: model.test.ts  [1 paths]
+ok  pins C11-dossier-evaluation-questions old once at before f7477f52  [count=1]
+ok  pins C11-dossier-evaluation-questions before failedTestCount matches failed and list  [0/0/0]
+ok  pins C11-dossier-evaluation-questions before exit agrees with failures  [exit=0 failed=0]
+ok  pins C11-dossier-evaluation-questions old once at after b214ef10  [count=1]
+ok  pins C11-dossier-evaluation-questions after failedTestCount matches failed and list  [1/1/1]
+ok  pins C11-dossier-evaluation-questions after exit agrees with failures  [exit=1 failed=1]
+ok  pins C11-dossier-evaluation-questions ok flag follows from exits
+ok  pins C11-dossier-evaluation-questions after-kill test file exists at head: dossier-evaluation.test.ts  [1 paths]
+ok  pins F1-headroom-not-frozen old once at before f7477f52  [count=1]
+ok  pins F1-headroom-not-frozen before failedTestCount matches failed and list  [0/0/0]
+ok  pins F1-headroom-not-frozen before exit agrees with failures  [exit=0 failed=0]
+ok  pins F1-headroom-not-frozen old once at after b214ef10  [count=1]
+ok  pins F1-headroom-not-frozen after failedTestCount matches failed and list  [1/1/1]
+ok  pins F1-headroom-not-frozen after exit agrees with failures  [exit=1 failed=1]
+ok  pins F1-headroom-not-frozen ok flag follows from exits
+ok  pins F1-headroom-not-frozen after-kill test file exists at head: model.test.ts  [1 paths]
+ok  pins F3-body-authority-not-frozen old once at before f7477f52  [count=1]
+ok  pins F3-body-authority-not-frozen before failedTestCount matches failed and list  [0/0/0]
+ok  pins F3-body-authority-not-frozen before exit agrees with failures  [exit=0 failed=0]
+ok  pins F3-body-authority-not-frozen old once at after b214ef10  [count=1]
+ok  pins F3-body-authority-not-frozen after failedTestCount matches failed and list  [1/1/1]
+ok  pins F3-body-authority-not-frozen after exit agrees with failures  [exit=1 failed=1]
+ok  pins F3-body-authority-not-frozen ok flag follows from exits
+ok  pins F3-body-authority-not-frozen after-kill test file exists at head: body-read-authority.test.ts  [1 paths]
+ok  pins R3-equal-length-reordered-question-digest old once at before f7477f52  [count=1]
+ok  pins R3-equal-length-reordered-question-digest before failedTestCount matches failed and list  [0/0/0]
+ok  pins R3-equal-length-reordered-question-digest before exit agrees with failures  [exit=0 failed=0]
+ok  pins R3-equal-length-reordered-question-digest old once at after b214ef10  [count=1]
+ok  pins R3-equal-length-reordered-question-digest after failedTestCount matches failed and list  [1/1/1]
+ok  pins R3-equal-length-reordered-question-digest after exit agrees with failures  [exit=1 failed=1]
+ok  pins R3-equal-length-reordered-question-digest ok flag follows from exits
+ok  pins R3-equal-length-reordered-question-digest after-kill test file exists at head: dossier-profile.test.ts  [1 paths]
+ok  pins R9-equal-length-reordered-attempt-id old once at before f7477f52  [count=1]
+ok  pins R9-equal-length-reordered-attempt-id before failedTestCount matches failed and list  [0/0/0]
+ok  pins R9-equal-length-reordered-attempt-id before exit agrees with failures  [exit=0 failed=0]
+ok  pins R9-equal-length-reordered-attempt-id old once at after b214ef10  [count=1]
+ok  pins R9-equal-length-reordered-attempt-id after failedTestCount matches failed and list  [1/1/1]
+ok  pins R9-equal-length-reordered-attempt-id after exit agrees with failures  [exit=1 failed=1]
+ok  pins R9-equal-length-reordered-attempt-id ok flag follows from exits
+ok  pins R9-equal-length-reordered-attempt-id after-kill test file exists at head: durable-lifecycle.test.ts  [1 paths]
+ok  pins D1-freeze-after-the-walk old once at before f7477f52  [count=1]
+ok  pins D1-freeze-after-the-walk before failedTestCount matches failed and list  [1/1/1]
+ok  pins D1-freeze-after-the-walk before exit agrees with failures  [exit=1 failed=1]
+ok  pins D1-freeze-after-the-walk old once at after b214ef10  [count=1]
+ok  pins D1-freeze-after-the-walk after failedTestCount matches failed and list  [2/2/2]
+ok  pins D1-freeze-after-the-walk after exit agrees with failures  [exit=1 failed=2]
+ok  pins D1-freeze-after-the-walk ok flag follows from exits
+ok  pins D1-freeze-after-the-walk after-kill test file exists at head: deep-freeze.test.ts  [1 paths]
+ok  pins D1-freeze-after-the-walk after-kill test file exists at head: deep-freeze.test.ts  [1 paths]
+ok  pins D3-members-read-before-the-owner-is-frozen old once at before f7477f52  [count=1]
+ok  pins D3-members-read-before-the-owner-is-frozen before failedTestCount matches failed and list  [0/0/0]
+ok  pins D3-members-read-before-the-owner-is-frozen before exit agrees with failures  [exit=0 failed=0]
+ok  pins D3-members-read-before-the-owner-is-frozen old once at after b214ef10  [count=1]
+ok  pins D3-members-read-before-the-owner-is-frozen after failedTestCount matches failed and list  [1/1/1]
+ok  pins D3-members-read-before-the-owner-is-frozen after exit agrees with failures  [exit=1 failed=1]
+ok  pins D3-members-read-before-the-owner-is-frozen ok flag follows from exits
+ok  pins D3-members-read-before-the-owner-is-frozen after-kill test file exists at head: deep-freeze.test.ts  [1 paths]
+ok  pins H1-census-never-reports old once at after b214ef10  [count=1]
+ok  pins H1-census-never-reports after failedTestCount matches failed and list  [2/2/2]
+ok  pins H1-census-never-reports after exit agrees with failures  [exit=1 failed=2]
+ok  pins H1-census-never-reports ok flag follows from exits
+ok  pins H1-census-never-reports after-kill test file exists at head: test-frozen.test.ts  [1 paths]
+ok  pins H1-census-never-reports after-kill test file exists at head: test-frozen.test.ts  [1 paths]
+ok  pins H2-census-stops-at-a-frozen-shell old once at after b214ef10  [count=1]
+ok  pins H2-census-stops-at-a-frozen-shell after failedTestCount matches failed and list  [2/2/2]
+ok  pins H2-census-stops-at-a-frozen-shell after exit agrees with failures  [exit=1 failed=2]
+ok  pins H2-census-stops-at-a-frozen-shell ok flag follows from exits
+ok  pins H2-census-stops-at-a-frozen-shell after-kill test file exists at head: test-frozen.test.ts  [1 paths]
+ok  pins H2-census-stops-at-a-frozen-shell after-kill test file exists at head: test-frozen.test.ts  [1 paths]
+ok  pins H3-census-counts-nothing old once at after b214ef10  [count=1]
+ok  pins H3-census-counts-nothing after failedTestCount matches failed and list  [3/3/3]
+ok  pins H3-census-counts-nothing after exit agrees with failures  [exit=1 failed=3]
+ok  pins H3-census-counts-nothing ok flag follows from exits
+ok  pins H3-census-counts-nothing after-kill test file exists at head: test-frozen.test.ts  [1 paths]
+ok  pins H3-census-counts-nothing after-kill test file exists at head: test-frozen.test.ts  [1 paths]
+ok  pins H3-census-counts-nothing after-kill test file exists at head: test-frozen.test.ts  [1 paths]
+ok  pins I1-support-not-required old once at after b214ef10  [count=1]
+ok  pins I1-support-not-required after failedTestCount matches failed and list  [1/1/1]
+ok  pins I1-support-not-required after exit agrees with failures  [exit=1 failed=1]
+ok  pins I1-support-not-required ok flag follows from exits
+ok  pins I1-support-not-required after-kill test file exists at head: generator-install-check.test.ts  [1 paths]
+ok  pins I2-generation-core-not-required old once at after b214ef10  [count=1]
+ok  pins I2-generation-core-not-required after failedTestCount matches failed and list  [1/1/1]
+ok  pins I2-generation-core-not-required after exit agrees with failures  [exit=1 failed=1]
+ok  pins I2-generation-core-not-required ok flag follows from exits
+ok  pins I2-generation-core-not-required after-kill test file exists at head: generator-install-check.test.ts  [1 paths]
+ok  pins I3-tsc-not-required old once at after b214ef10  [count=1]
+ok  pins I3-tsc-not-required after failedTestCount matches failed and list  [1/1/1]
+ok  pins I3-tsc-not-required after exit agrees with failures  [exit=1 failed=1]
+ok  pins I3-tsc-not-required ok flag follows from exits
+ok  pins I3-tsc-not-required after-kill test file exists at head: generator-install-check.test.ts  [1 paths]
+ok  pins I4-refusal-exits-zero old once at after b214ef10  [count=1]
+ok  pins I4-refusal-exits-zero after failedTestCount matches failed and list  [4/4/4]
+ok  pins I4-refusal-exits-zero after exit agrees with failures  [exit=1 failed=4]
+ok  pins I4-refusal-exits-zero ok flag follows from exits
+ok  pins I4-refusal-exits-zero after-kill test file exists at head: generator-install-check.test.ts  [1 paths]
+ok  pins I4-refusal-exits-zero after-kill test file exists at head: generator-install-check.test.ts  [1 paths]
+ok  pins I4-refusal-exits-zero after-kill test file exists at head: generator-install-check.test.ts  [1 paths]
+ok  pins I4-refusal-exits-zero after-kill test file exists at head: generator-install-check.test.ts  [1 paths]
+ok  pins I5-wrong-entry-name-for-support old once at after b214ef10  [count=1]
+ok  pins I5-wrong-entry-name-for-support after failedTestCount matches failed and list  [2/2/2]
+ok  pins I5-wrong-entry-name-for-support after exit agrees with failures  [exit=1 failed=2]
+ok  pins I5-wrong-entry-name-for-support ok flag follows from exits
+ok  pins I5-wrong-entry-name-for-support after-kill test file exists at head: generator-install-check.test.ts  [1 paths]
+ok  pins I5-wrong-entry-name-for-support after-kill test file exists at head: generator-install-check.test.ts  [1 paths]
+ok  pins I6-refusal-says-nothing old once at after b214ef10  [count=1]
+ok  pins I6-refusal-says-nothing after failedTestCount matches failed and list  [4/4/4]
+ok  pins I6-refusal-says-nothing after exit agrees with failures  [exit=1 failed=4]
+ok  pins I6-refusal-says-nothing ok flag follows from exits
+ok  pins I6-refusal-says-nothing after-kill test file exists at head: generator-install-check.test.ts  [1 paths]
+ok  pins I6-refusal-says-nothing after-kill test file exists at head: generator-install-check.test.ts  [1 paths]
+ok  pins I6-refusal-says-nothing after-kill test file exists at head: generator-install-check.test.ts  [1 paths]
+ok  pins I6-refusal-says-nothing after-kill test file exists at head: generator-install-check.test.ts  [1 paths]
+ok  pins N1-support-checked-first old once at after b214ef10  [count=1]
+ok  pins N1-support-checked-first after failedTestCount matches failed and list  [0/0/0]
+ok  pins N1-support-checked-first after exit agrees with failures  [exit=0 failed=0]
+ok  pins N1-support-checked-first ok flag follows from exits
+ok  pins N2-freeze-comment-only old once at before f7477f52  [count=1]
+ok  pins N2-freeze-comment-only before failedTestCount matches failed and list  [0/0/0]
+ok  pins N2-freeze-comment-only before exit agrees with failures  [exit=0 failed=0]
+ok  pins N2-freeze-comment-only old once at after b214ef10  [count=1]
+ok  pins N2-freeze-comment-only after failedTestCount matches failed and list  [0/0/0]
+ok  pins N2-freeze-comment-only after exit agrees with failures  [exit=0 failed=0]
+ok  pins N2-freeze-comment-only ok flag follows from exits
+ok  pins N3-census-comment-only old once at after b214ef10  [count=1]
+ok  pins N3-census-comment-only after failedTestCount matches failed and list  [0/0/0]
+ok  pins N3-census-comment-only after exit agrees with failures  [exit=0 failed=0]
+ok  pins N3-census-comment-only ok flag follows from exits
+ok  pins summary mutants  [19]
+ok  pins summary killedAfterAndSurvivedBefore
+ok  pins summary negative controls
+ok  pins controls all pass
+ok  pins survive at base except D1
+item4 keys: ['buildCommand', 'control', 'head', 'node', 'rows', 'summary']
+checks=169 failed=0

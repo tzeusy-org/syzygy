@@ -1,0 +1,4 @@
+{"mode": "hup-nohup", "version": "new", "param": null, "inject": null, "exitCode": 129, "scriptExitAt": 3.6, "clean": true, "noSurvivor": true, "descendantsSeen": 14, "recordTests": null, "recordProfileRows": null}
+  events: [(0.2131, 'vitest worker seen', True), (3.3225, "tree at signal: ' M packages/polaris-generation-consent/src/", True), (3.3228, 'sent SIGHUP to pid', True)]
+{"mode": "hup-nohup", "version": "old", "param": null, "inject": null, "exitCode": 0, "scriptExitAt": 9.933, "clean": true, "noSurvivor": true, "descendantsSeen": 17, "recordTests": 299, "recordProfileRows": 299}
+  events: [(0.2304, 'vitest worker seen', True), (3.3079, "tree at signal: ' M packages/polaris-generation-consent/src/", True), (3.3081, 'sent SIGHUP to pid', True)]

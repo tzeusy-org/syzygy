@@ -1,0 +1,419 @@
+{
+ "tool": "kill_repro.py",
+ "head": "e2aae62efc5a4c7d346f03a2c581c852b5ea8802",
+ "tmpdir": "/tmp/r522-1/tmp",
+ "killAfterSeconds": 75.0,
+ "loadAverageAtStart": [
+  10.48486328125,
+  12.80224609375,
+  20.35791015625
+ ],
+ "finishedBeforeSignal": false,
+ "secondsIntoTheRun": 75.0,
+ "entriesAtSignal": 33,
+ "listingAfterKill": [
+  {
+   "name": ".com.google.Chrome.B0E5FE",
+   "kind": "dir",
+   "mtime": 1792867412.4
+  },
+  {
+   "name": ".com.google.Chrome.E7lrj7",
+   "kind": "dir",
+   "mtime": 1792867414.2
+  },
+  {
+   "name": "4bNZfcFAwW8I8HQnd1ydr",
+   "kind": "dir",
+   "mtime": 1792867377.3
+  },
+  {
+   "name": "GAS6WCh4--8o8P4b47Tv9",
+   "kind": "dir",
+   "mtime": 1792867376.9
+  },
+  {
+   "name": "NBHAxWv9-t18R3ywCGn0L",
+   "kind": "dir",
+   "mtime": 1792867361.0
+  },
+  {
+   "name": "WHezbHaxnGBL8CN8I6t0g",
+   "kind": "dir",
+   "mtime": 1792867361.0
+  },
+  {
+   "name": "dossier-close-9V4dPc",
+   "kind": "dir",
+   "mtime": 1792867434.4
+  },
+  {
+   "name": "node-compile-cache",
+   "kind": "dir",
+   "mtime": 1792867359.8
+  },
+  {
+   "name": "pRRjuLL_TcBAb5ElmYmUi",
+   "kind": "dir",
+   "mtime": 1792867379.1
+  },
+  {
+   "name": "syzygy-poc-a11y-WzxKxN",
+   "kind": "dir",
+   "mtime": 1792867418.4
+  },
+  {
+   "name": "syzygy-poc-a11y-budget-jI6pX1",
+   "kind": "dir",
+   "mtime": 1792867418.7
+  },
+  {
+   "name": "syzygy-poc-browser-Wbyqll",
+   "kind": "dir",
+   "mtime": 1792867422.5
+  },
+  {
+   "name": "syzygy-poc-browser-jJooaY",
+   "kind": "dir",
+   "mtime": 1792867434.6
+  },
+  {
+   "name": "syzygy-poc-names-06JfaG",
+   "kind": "dir",
+   "mtime": 1792867416.6
+  },
+  {
+   "name": "syzygy-poc-names-daemon-5Y6s35",
+   "kind": "dir",
+   "mtime": 1792867433.7
+  },
+  {
+   "name": "syzygy-poc-names-daemon-Atwf0k",
+   "kind": "dir",
+   "mtime": 1792867422.6
+  },
+  {
+   "name": "syzygy-poc-names-daemon-OXLmcb",
+   "kind": "dir",
+   "mtime": 1792867427.1
+  },
+  {
+   "name": "syzygy-poc-names-daemon-ktWv02",
+   "kind": "dir",
+   "mtime": 1792867424.6
+  },
+  {
+   "name": "syzygy-poc-names-daemon-lGF32x",
+   "kind": "dir",
+   "mtime": 1792867430.4
+  },
+  {
+   "name": "syzygy-poc-names-daemon-pnVFp0",
+   "kind": "dir",
+   "mtime": 1792867417.0
+  },
+  {
+   "name": "syzygy-poc-names-daemon-wmKkfq",
+   "kind": "dir",
+   "mtime": 1792867433.1
+  },
+  {
+   "name": "syzygy-poc-names-daemon-zD0KDI",
+   "kind": "dir",
+   "mtime": 1792867434.4
+  },
+  {
+   "name": "syzygy-poc-surface-fixture-p525624-n4026531836-65y8mC",
+   "kind": "dir",
+   "mtime": 1792867433.7
+  },
+  {
+   "name": "syzygy-poc-surface-fixture-p525624-n4026531836-EqknHI",
+   "kind": "dir",
+   "mtime": 1792867430.3
+  },
+  {
+   "name": "syzygy-poc-surface-fixture-p525624-n4026531836-K71FpD",
+   "kind": "dir",
+   "mtime": 1792867424.6
+  },
+  {
+   "name": "syzygy-poc-surface-fixture-p525624-n4026531836-M1xkmP",
+   "kind": "dir",
+   "mtime": 1792867433.0
+  },
+  {
+   "name": "syzygy-poc-surface-fixture-p525624-n4026531836-MasoaC",
+   "kind": "dir",
+   "mtime": 1792867434.4
+  },
+  {
+   "name": "syzygy-poc-surface-fixture-p525624-n4026531836-RFnPeZ",
+   "kind": "dir",
+   "mtime": 1792867422.6
+  },
+  {
+   "name": "syzygy-poc-surface-fixture-p525624-n4026531836-sxcJeN",
+   "kind": "dir",
+   "mtime": 1792867416.8
+  },
+  {
+   "name": "syzygy-poc-surface-fixture-p525624-n4026531836-xA0DEE",
+   "kind": "dir",
+   "mtime": 1792867426.9
+  },
+  {
+   "name": "syzygy-poc-surface-fixture-template-p524983-n4026531836-Rvsiml",
+   "kind": "dir",
+   "mtime": 1792867412.8
+  },
+  {
+   "name": "syzygy-poc-surface-fixture-template-p525624-n4026531836-XzR7tv",
+   "kind": "dir",
+   "mtime": 1792867416.7
+  },
+  {
+   "name": "ww4uJ3NF2GHpibzwmE5-4",
+   "kind": "dir",
+   "mtime": 1792867412.3
+  }
+ ],
+ "survivorsAfterKill": {
+  "count": 26,
+  "byMarker": 18,
+  "inKilledGroup": 0,
+  "states": [
+   "S"
+  ],
+  "pids": [
+   525325,
+   525349,
+   525350,
+   525370,
+   525372,
+   525378,
+   525380,
+   525433,
+   525435,
+   525438,
+   525517,
+   525913,
+   525937,
+   525938,
+   525940,
+   525942,
+   525947,
+   525948,
+   525972,
+   525973,
+   525974,
+   526005,
+   526953,
+   527738,
+   531132,
+   531204
+  ],
+  "sample": [
+   {
+    "pid": 525325,
+    "pgid": 525325,
+    "state": "S",
+    "byMarker": true,
+    "args": "/opt/google/chrome/chrome --headless=new --no-sandbox --disable-gpu --no-first-run --no-default-browser-check --disable-extensions --disable-background-networki"
+   },
+   {
+    "pid": 525349,
+    "pgid": 525325,
+    "state": "S",
+    "byMarker": false,
+    "args": "cat "
+   },
+   {
+    "pid": 525350,
+    "pgid": 525325,
+    "state": "S",
+    "byMarker": false,
+    "args": "cat "
+   },
+   {
+    "pid": 525370,
+    "pgid": 525369,
+    "state": "S",
+    "byMarker": false,
+    "args": "/opt/google/chrome/chrome_crashpad_handler --monitor-self --monitor-self-annotation=ptype=crashpad-handler --database=/home/tze/.config/google-chrome/Crash Repo"
+   }
+  ]
+ },
+ "stopped": {
+  "sigtermRounds": 1,
+  "sigkilledByPid": [],
+  "remaining": 0
+ },
+ "listingAfterStopping": [
+  {
+   "name": ".com.google.Chrome.B0E5FE",
+   "kind": "dir",
+   "mtime": 1792867412.4
+  },
+  {
+   "name": ".com.google.Chrome.E7lrj7",
+   "kind": "dir",
+   "mtime": 1792867414.2
+  },
+  {
+   "name": "4bNZfcFAwW8I8HQnd1ydr",
+   "kind": "dir",
+   "mtime": 1792867377.3
+  },
+  {
+   "name": "GAS6WCh4--8o8P4b47Tv9",
+   "kind": "dir",
+   "mtime": 1792867376.9
+  },
+  {
+   "name": "NBHAxWv9-t18R3ywCGn0L",
+   "kind": "dir",
+   "mtime": 1792867361.0
+  },
+  {
+   "name": "WHezbHaxnGBL8CN8I6t0g",
+   "kind": "dir",
+   "mtime": 1792867361.0
+  },
+  {
+   "name": "dossier-close-9V4dPc",
+   "kind": "dir",
+   "mtime": 1792867434.4
+  },
+  {
+   "name": "node-compile-cache",
+   "kind": "dir",
+   "mtime": 1792867359.8
+  },
+  {
+   "name": "pRRjuLL_TcBAb5ElmYmUi",
+   "kind": "dir",
+   "mtime": 1792867379.1
+  },
+  {
+   "name": "syzygy-poc-a11y-WzxKxN",
+   "kind": "dir",
+   "mtime": 1792867418.4
+  },
+  {
+   "name": "syzygy-poc-a11y-budget-jI6pX1",
+   "kind": "dir",
+   "mtime": 1792867418.7
+  },
+  {
+   "name": "syzygy-poc-browser-Wbyqll",
+   "kind": "dir",
+   "mtime": 1792867455.1
+  },
+  {
+   "name": "syzygy-poc-browser-jJooaY",
+   "kind": "dir",
+   "mtime": 1792867455.1
+  },
+  {
+   "name": "syzygy-poc-names-06JfaG",
+   "kind": "dir",
+   "mtime": 1792867416.6
+  },
+  {
+   "name": "syzygy-poc-names-daemon-5Y6s35",
+   "kind": "dir",
+   "mtime": 1792867433.7
+  },
+  {
+   "name": "syzygy-poc-names-daemon-Atwf0k",
+   "kind": "dir",
+   "mtime": 1792867422.6
+  },
+  {
+   "name": "syzygy-poc-names-daemon-OXLmcb",
+   "kind": "dir",
+   "mtime": 1792867427.1
+  },
+  {
+   "name": "syzygy-poc-names-daemon-ktWv02",
+   "kind": "dir",
+   "mtime": 1792867424.6
+  },
+  {
+   "name": "syzygy-poc-names-daemon-lGF32x",
+   "kind": "dir",
+   "mtime": 1792867430.4
+  },
+  {
+   "name": "syzygy-poc-names-daemon-pnVFp0",
+   "kind": "dir",
+   "mtime": 1792867417.0
+  },
+  {
+   "name": "syzygy-poc-names-daemon-wmKkfq",
+   "kind": "dir",
+   "mtime": 1792867433.1
+  },
+  {
+   "name": "syzygy-poc-names-daemon-zD0KDI",
+   "kind": "dir",
+   "mtime": 1792867434.4
+  },
+  {
+   "name": "syzygy-poc-surface-fixture-p525624-n4026531836-65y8mC",
+   "kind": "dir",
+   "mtime": 1792867433.7
+  },
+  {
+   "name": "syzygy-poc-surface-fixture-p525624-n4026531836-EqknHI",
+   "kind": "dir",
+   "mtime": 1792867430.3
+  },
+  {
+   "name": "syzygy-poc-surface-fixture-p525624-n4026531836-K71FpD",
+   "kind": "dir",
+   "mtime": 1792867424.6
+  },
+  {
+   "name": "syzygy-poc-surface-fixture-p525624-n4026531836-M1xkmP",
+   "kind": "dir",
+   "mtime": 1792867433.0
+  },
+  {
+   "name": "syzygy-poc-surface-fixture-p525624-n4026531836-MasoaC",
+   "kind": "dir",
+   "mtime": 1792867434.4
+  },
+  {
+   "name": "syzygy-poc-surface-fixture-p525624-n4026531836-RFnPeZ",
+   "kind": "dir",
+   "mtime": 1792867422.6
+  },
+  {
+   "name": "syzygy-poc-surface-fixture-p525624-n4026531836-sxcJeN",
+   "kind": "dir",
+   "mtime": 1792867416.8
+  },
+  {
+   "name": "syzygy-poc-surface-fixture-p525624-n4026531836-xA0DEE",
+   "kind": "dir",
+   "mtime": 1792867426.9
+  },
+  {
+   "name": "syzygy-poc-surface-fixture-template-p524983-n4026531836-Rvsiml",
+   "kind": "dir",
+   "mtime": 1792867412.8
+  },
+  {
+   "name": "syzygy-poc-surface-fixture-template-p525624-n4026531836-XzR7tv",
+   "kind": "dir",
+   "mtime": 1792867416.7
+  },
+  {
+   "name": "ww4uJ3NF2GHpibzwmE5-4",
+   "kind": "dir",
+   "mtime": 1792867412.3
+  }
+ ]
+}

@@ -1,0 +1,1617 @@
+{
+ "commit": "191d82779ea07f45be612b00ff3cafc9aa7446b8",
+ "side": "head",
+ "dist": "present",
+ "distDirs": [
+  "apps/syzygy/dist",
+  "apps/three-surface-poc/dist",
+  "packages/cap1-conformance/dist",
+  "packages/cap1-core/dist",
+  "packages/cap1-daemon/dist",
+  "packages/cap1-system/dist",
+  "packages/http-host/dist",
+  "packages/polaris-dossier/dist",
+  "packages/polaris-generation-consent/dist",
+  "packages/polaris-generation-core/dist",
+  "packages/support/dist",
+  "packages/three-surface-poc-core/dist"
+ ],
+ "reviewerRecords": {
+  "docs/evidence/support-leaf-review-2026-10-27/round-2/purity-mutants.json": "f477e54b75da431ff1ee0bae9431b370201a53e0b08dbf65fad98aebab4582e8",
+  "docs/evidence/support-leaf-review-2026-10-27/round-2/purity-mutants-2.json": "dc7b6396c6d1c1d542e9f488eff3636648c3374c0bf256c342969e676795877f",
+  "docs/evidence/support-leaf-review-2026-10-27/round-2/egress-mutants-2.json": "5c194c3ff02f86364de97c25ca399543e5ba6195c331cc2999e0533f41746a11",
+  "docs/evidence/support-leaf-review-2026-10-27/round-2/egress-mutants-3.json": "30d63c6f665cf668426c2d4842a06383e61a4ead0f7ded40d1ff789e18c110a0"
+ },
+ "reviewerR1Record": "2ff98a8d5624ffcd7c073a39857ff23b5f7c69f8b189ec8f326bc5db0159c977",
+ "node": "v24.6.0",
+ "summary": {
+  "rows": 52,
+  "asExpected": 52,
+  "unexpected": []
+ },
+ "statusAfter": "",
+ "leftovers": [],
+ "rows": [
+  {
+   "id": "C0-purity-unmutated",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [],
+   "expected": "pass",
+   "observed": "pass",
+   "exit": 0,
+   "passed": 33,
+   "failed": 0,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [],
+   "fileMessages": [],
+   "failedTests": []
+  },
+  {
+   "id": "RP1-re-export-from-node-fs",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { sha256 } from './sha256.js';\n",
+     "new": "export { sha256 } from './sha256.js';\nexport { readFileSync } from 'node:fs';\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "exit": 1,
+   "passed": 29,
+   "failed": 4,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf names no module but node:crypto and a module beside it in any literal specifier of any source",
+     "message": "AssertionError: expected [ { file: 'index.ts', \u2026(1) } ] to deeply equal []\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:72:83\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:1897"
+    },
+    {
+     "name": "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source",
+     "message": "AssertionError: expected [ 'index.ts: readFileSync' ] to deeply equal []\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:78:155\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:"
+    },
+    {
+     "name": "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it",
+     "message": "AssertionError: expected [ \u2026(2) ] to deeply equal [ Array(1) ]\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:85:22\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at n"
+    },
+    {
+     "name": "@syzygy/support stays a pure leaf names none of the forbidden tokens it shares with the owner-act drafter in any source",
+     "message": "AssertionError: index.ts /\\b(?:node:)?(?:fs|net|http|https|child_process|os)['\"`]/: expected '// Internal helpers that more than on\u2026' not to match /\\b(?:node:)?(?:fs|net|http|https|chil\u2026/\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:105:93\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/ru"
+    }
+   ]
+  },
+  {
+   "id": "RP2-globalThis-bracket-read-of-process-env",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nexport const HOME = (globalThis as Record<string, any>)['process']['env']['HOME'];\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "exit": 1,
+   "passed": 32,
+   "failed": 1,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source",
+     "message": "AssertionError: expected [ 'sha256.ts: HOME', \u2026(2) ] to deeply equal []\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:78:155\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:2"
+    }
+   ]
+  },
+  {
+   "id": "RP3-top-level-side-effect-console-write",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/deep-freeze.ts",
+     "old": "export function deepFreeze",
+     "new": "console.log('support loaded');\nexport function deepFreeze"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "exit": 1,
+   "passed": 32,
+   "failed": 1,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source",
+     "message": "AssertionError: expected [ 'deep-freeze.ts: console', \u2026(1) ] to deeply equal []\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:78:155\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.j"
+    }
+   ]
+  },
+  {
+   "id": "RP4-createRequire-of-node-fs",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nimport { createRequire } from 'node:module';\nconst load = createRequire(import.meta.url);\nexport const fsModule = load('node:fs');\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "exit": 1,
+   "passed": 29,
+   "failed": 4,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf names no module but node:crypto and a module beside it in any literal specifier of any source",
+     "message": "AssertionError: expected [ { file: 'sha256.ts', \u2026(1) } ] to deeply equal []\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:72:83\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:189"
+    },
+    {
+     "name": "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source",
+     "message": "AssertionError: expected [ 'sha256.ts: createRequire', \u2026(4) ] to deeply equal []\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:78:155\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks."
+    },
+    {
+     "name": "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it",
+     "message": "AssertionError: expected [ \u2026(2) ] to deeply equal [ Array(1) ]\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:85:22\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at n"
+    },
+    {
+     "name": "@syzygy/support stays a pure leaf names none of the forbidden tokens it shares with the owner-act drafter in any source",
+     "message": "AssertionError: sha256.ts /\\b(?:node:)?(?:fs|net|http|https|child_process|os)['\"`]/: expected 'import { createHash } from \\'node:cry\u2026' not to match /\\b(?:node:)?(?:fs|net|http|https|chil\u2026/\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:105:93\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/r"
+    }
+   ]
+  },
+  {
+   "id": "RP5-network-through-an-unnamed-global-WebSocket",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nexport const open = (url: string): WebSocket => new WebSocket(url);\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "exit": 1,
+   "passed": 32,
+   "failed": 1,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source",
+     "message": "AssertionError: expected [ 'sha256.ts: WebSocket', \u2026(2) ] to deeply equal []\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:78:155\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:1"
+    }
+   ]
+  },
+  {
+   "id": "RP6-file-read-via-globalThis-process-getBuiltinModule",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nconst p = (globalThis as Record<string, any>)['process'];\nexport const HOST: string = p.getBuiltinModule('node:f' + 's').readFileSync('/etc/hostname', 'utf8');\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "exit": 1,
+   "passed": 32,
+   "failed": 1,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source",
+     "message": "AssertionError: expected [ 'sha256.ts: HOST', \u2026(5) ] to deeply equal []\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:78:155\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:2"
+    }
+   ]
+  },
+  {
+   "id": "RP7-clock-via-performance-now",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nexport const started = performance.now();\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "exit": 1,
+   "passed": 32,
+   "failed": 1,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source",
+     "message": "AssertionError: expected [ 'sha256.ts: now', \u2026(2) ] to deeply equal []\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:78:155\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20"
+    }
+   ]
+  },
+  {
+   "id": "RP8-randomness-from-the-allowed-node-crypto",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash, randomBytes } from 'node:crypto';\nexport const SALT = randomBytes(8).toString('hex');\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "exit": 1,
+   "passed": 31,
+   "failed": 2,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source",
+     "message": "AssertionError: expected [ 'sha256.ts: SALT', \u2026(2) ] to deeply equal []\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:78:155\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:2"
+    },
+    {
+     "name": "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it",
+     "message": "AssertionError: expected [ Array(1) ] to deeply equal [ Array(1) ]\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:85:22\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    "
+    }
+   ]
+  },
+  {
+   "id": "RP9-ts-import-equals-require",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nimport fs = require('node:fs');\nexport const F = fs;\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "exit": 1,
+   "passed": 30,
+   "failed": 3,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf names no module but node:crypto and a module beside it in any literal specifier of any source",
+     "message": "AssertionError: expected [ { file: 'sha256.ts', \u2026(1) } ] to deeply equal []\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:72:83\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:189"
+    },
+    {
+     "name": "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source",
+     "message": "AssertionError: expected [ 'sha256.ts: F', 'sha256.ts: fs' ] to deeply equal []\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:78:155\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.j"
+    },
+    {
+     "name": "@syzygy/support stays a pure leaf names none of the forbidden tokens it shares with the owner-act drafter in any source",
+     "message": "AssertionError: sha256.ts /\\brequire\\(/: expected 'import { createHash } from \\'node:cry\u2026' not to match /\\brequire\\(/\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:105:93\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/la-545s/c1/node_mod"
+    }
+   ]
+  },
+  {
+   "id": "RP10-subdirectory-module-re-exported",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/io/read.ts",
+     "old": null,
+     "new": "import { readFileSync } from 'node:fs';\nexport const read = (p: string): string => readFileSync(p, 'utf8');\n"
+    },
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { sha256 } from './sha256.js';\n",
+     "new": "export { sha256 } from './sha256.js';\nexport * from './io/read.js';\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "exit": 1,
+   "passed": 29,
+   "failed": 4,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf names no module but node:crypto and a module beside it in any literal specifier of any source",
+     "message": "AssertionError: expected [ { file: 'index.ts', \u2026(1) }, \u2026(1) ] to deeply equal []\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:72:83\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.j"
+    },
+    {
+     "name": "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source",
+     "message": "AssertionError: expected [ 'io/read.ts: p', \u2026(2) ] to deeply equal []\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:78:155\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n"
+    },
+    {
+     "name": "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it",
+     "message": "AssertionError: expected [ \u2026(2) ] to deeply equal [ Array(1) ]\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:85:22\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at n"
+    },
+    {
+     "name": "@syzygy/support stays a pure leaf names none of the forbidden tokens it shares with the owner-act drafter in any source",
+     "message": "AssertionError: io/read.ts /\\b(?:node:)?(?:fs|net|http|https|child_process|os)['\"`]/: expected 'import { readFileSync } from \\'node:f\u2026' not to match /\\b(?:node:)?(?:fs|net|http|https|chil\u2026/\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:105:93\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/"
+    }
+   ]
+  },
+  {
+   "id": "RP11-mts-module-re-exported",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/net.mts",
+     "old": null,
+     "new": "import 'node:http';\nexport const N = 1;\n"
+    },
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { sha256 } from './sha256.js';\n",
+     "new": "export { sha256 } from './sha256.js';\nexport * from './net.mjs';\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "exit": 1,
+   "passed": 29,
+   "failed": 4,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf names no module but node:crypto and a module beside it in any literal specifier of any source",
+     "message": "AssertionError: expected [ { file: 'index.ts', \u2026(1) }, \u2026(1) ] to deeply equal []\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:72:83\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.j"
+    },
+    {
+     "name": "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source",
+     "message": "AssertionError: expected [ 'net.mts: N' ] to deeply equal []\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:78:155\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at ne"
+    },
+    {
+     "name": "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it",
+     "message": "AssertionError: expected [ \u2026(2) ] to deeply equal [ Array(1) ]\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:85:22\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at n"
+    },
+    {
+     "name": "@syzygy/support stays a pure leaf names none of the forbidden tokens it shares with the owner-act drafter in any source",
+     "message": "AssertionError: net.mts /\\b(?:node:)?(?:fs|net|http|https|child_process|os)['\"`]/: expected 'import \\'node:http\\';\\nexport const N\u2026' not to match /\\b(?:node:)?(?:fs|net|http|https|chil\u2026/\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:105:93\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/run"
+    }
+   ]
+  },
+  {
+   "id": "RP12-computed-dynamic-import-with-a-space",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nexport const lazy = (): Promise<unknown> => import (['node', 'ne' + 't'].join(':'));\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "exit": 1,
+   "passed": 32,
+   "failed": 1,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source",
+     "message": "AssertionError: expected [ 'sha256.ts: Promise', \u2026(2) ] to deeply equal []\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:78:155\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:189"
+    }
+   ]
+  },
+  {
+   "id": "RP13-fetch-by-reference-not-call",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/deep-freeze.ts",
+     "old": "export function deepFreeze",
+     "new": "const send = globalThis.fetch;\nexport const ping = (u: string): Promise<Response> => send(u);\nexport function deepFreeze"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "exit": 1,
+   "passed": 32,
+   "failed": 1,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source",
+     "message": "AssertionError: expected [ 'deep-freeze.ts: Promise', \u2026(6) ] to deeply equal []\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:78:155\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.j"
+    }
+   ]
+  },
+  {
+   "id": "RP14-subpath-export-of-an-unscanned-subdirectory-module",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/io/read.ts",
+     "old": null,
+     "new": "import { readFileSync } from 'node:fs';\nexport const read = (p: string): string => readFileSync(p, 'utf8');\n"
+    },
+    {
+     "path": "packages/support/package.json",
+     "old": "      \"default\": \"./dist/index.js\"\n    }\n",
+     "new": "      \"default\": \"./dist/index.js\"\n    },\n    \"./io\": { \"types\": \"./dist/io/read.d.ts\", \"import\": \"./dist/io/read.js\" }\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "exit": 1,
+   "passed": 28,
+   "failed": 5,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf names no module but node:crypto and a module beside it in any literal specifier of any source",
+     "message": "AssertionError: expected [ { file: 'io/read.ts', \u2026(1) } ] to deeply equal []\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:72:83\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:18"
+    },
+    {
+     "name": "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source",
+     "message": "AssertionError: expected [ 'io/read.ts: p', \u2026(2) ] to deeply equal []\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:78:155\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n"
+    },
+    {
+     "name": "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it",
+     "message": "AssertionError: expected [ \u2026(2) ] to deeply equal [ Array(1) ]\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:85:22\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at n"
+    },
+    {
+     "name": "@syzygy/support stays a pure leaf names none of the forbidden tokens it shares with the owner-act drafter in any source",
+     "message": "AssertionError: io/read.ts /\\b(?:node:)?(?:fs|net|http|https|child_process|os)['\"`]/: expected 'import { readFileSync } from \\'node:f\u2026' not to match /\\b(?:node:)?(?:fs|net|http|https|chil\u2026/\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:105:93\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/"
+    },
+    {
+     "name": "@syzygy/support stays a pure leaf exports exactly the \".\" entry, index.js, so no other module is an entry",
+     "message": "AssertionError: expected { '.': { \u2026(3) }, './io': { \u2026(2) } } to deeply equal { '.': { \u2026(3) } }\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:118:33\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dis"
+    }
+   ]
+  },
+  {
+   "id": "RP15-optional-call-fetch-at-import",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nvoid globalThis.fetch?.('http://127.0.0.1:65530/').catch(() => {});\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "exit": 1,
+   "passed": 32,
+   "failed": 1,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source",
+     "message": "AssertionError: expected [ 'sha256.ts: catch', \u2026(2) ] to deeply equal []\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:78:155\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:"
+    }
+   ]
+  },
+  {
+   "id": "RP16-optional-chained-process-env-read",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nexport const HOME = globalThis.process?.env['HOME'];\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "exit": 1,
+   "passed": 32,
+   "failed": 1,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source",
+     "message": "AssertionError: expected [ 'sha256.ts: HOME', \u2026(3) ] to deeply equal []\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:78:155\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:2"
+    }
+   ]
+  },
+  {
+   "id": "E4b-global-fetch-at-first-call-port-65530",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/deep-freeze.ts",
+     "old": "export function deepFreeze<T>(value: T): T {\n",
+     "new": "let fetched = false;\nexport function deepFreeze<T>(value: T): T {\n  if (!fetched) { fetched = true; void fetch('http://127.0.0.1:65530/').catch(() => {}); }\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "exit": 1,
+   "passed": 31,
+   "failed": 2,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source",
+     "message": "AssertionError: expected [ 'deep-freeze.ts: catch', \u2026(2) ] to deeply equal []\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:78:155\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:"
+    },
+    {
+     "name": "@syzygy/support stays a pure leaf names none of the forbidden tokens it shares with the owner-act drafter in any source",
+     "message": "AssertionError: deep-freeze.ts /\\bfetch\\(/: expected '/**\\n * Freezes the value and everyth\u2026' not to match /\\bfetch\\(/\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:105:93\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/la-545s/c1/node_mo"
+    }
+   ]
+  },
+  {
+   "id": "E6-console-write-at-import",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/deep-freeze.ts",
+     "old": "/**\n * Freezes the value",
+     "new": "console.log('support loaded');\n/**\n * Freezes the value"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "exit": 1,
+   "passed": 32,
+   "failed": 1,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source",
+     "message": "AssertionError: expected [ 'deep-freeze.ts: console', \u2026(1) ] to deeply equal []\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:78:155\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.j"
+    }
+   ]
+  },
+  {
+   "id": "E7-optional-call-fetch-at-import",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nvoid globalThis.fetch?.('http://127.0.0.1:65530/').catch(() => {});\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "exit": 1,
+   "passed": 32,
+   "failed": 1,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source",
+     "message": "AssertionError: expected [ 'sha256.ts: catch', \u2026(2) ] to deeply equal []\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:78:155\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:"
+    }
+   ]
+  },
+  {
+   "id": "E8-websocket-at-import",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\ntry { const ws = new WebSocket('ws://127.0.0.1:65530/'); ws.onerror = () => {}; } catch { /* reviewer mutant */ }\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "exit": 1,
+   "passed": 31,
+   "failed": 2,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source",
+     "message": "AssertionError: expected [ 'sha256.ts: WebSocket', \u2026(2) ] to deeply equal []\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:78:155\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:1"
+    },
+    {
+     "name": "@syzygy/support stays a pure leaf assigns to no property in any source, so no allowed global is rewritten",
+     "message": "AssertionError: expected [ 'sha256.ts: ws.onerror = () => {}' ] to deeply equal []\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:99:20\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks"
+    }
+   ]
+  },
+  {
+   "id": "E9-obfuscated-file-read-at-import (RP6 form)",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nconst p = (globalThis as Record<string, any>)['process'];\nexport const HOST: string = p.getBuiltinModule('node:f' + 's').readFileSync('/etc/hostname', 'utf8');\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "exit": 1,
+   "passed": 32,
+   "failed": 1,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source",
+     "message": "AssertionError: expected [ 'sha256.ts: HOST', \u2026(5) ] to deeply equal []\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:78:155\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:2"
+    }
+   ]
+  },
+  {
+   "id": "L1-unreached-subdirectory-module",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/io/read.ts",
+     "old": null,
+     "new": "import { readFileSync } from 'node:fs';\nexport const read = (p: string): string => readFileSync(p, 'utf8');\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "exit": 1,
+   "passed": 29,
+   "failed": 4,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf names no module but node:crypto and a module beside it in any literal specifier of any source",
+     "message": "AssertionError: expected [ { file: 'io/read.ts', \u2026(1) } ] to deeply equal []\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:72:83\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:18"
+    },
+    {
+     "name": "@syzygy/support stays a pure leaf names no identifier outside its literal list in any source",
+     "message": "AssertionError: expected [ 'io/read.ts: p', \u2026(2) ] to deeply equal []\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:78:155\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n"
+    },
+    {
+     "name": "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it",
+     "message": "AssertionError: expected [ \u2026(2) ] to deeply equal [ Array(1) ]\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:85:22\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at n"
+    },
+    {
+     "name": "@syzygy/support stays a pure leaf names none of the forbidden tokens it shares with the owner-act drafter in any source",
+     "message": "AssertionError: io/read.ts /\\b(?:node:)?(?:fs|net|http|https|child_process|os)['\"`]/: expected 'import { readFileSync } from \\'node:f\u2026' not to match /\\b(?:node:)?(?:fs|net|http|https|chil\u2026/\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:105:93\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/"
+    }
+   ]
+  },
+  {
+   "id": "X1-dot-entry-redirected-to-deep-freeze",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/package.json",
+     "old": "\"types\": \"./dist/index.d.ts\",\n      \"import\": \"./dist/index.js\",\n      \"default\": \"./dist/index.js\"",
+     "new": "\"types\": \"./dist/deep-freeze.d.ts\",\n      \"import\": \"./dist/deep-freeze.js\",\n      \"default\": \"./dist/deep-freeze.js\""
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "exit": 1,
+   "passed": 32,
+   "failed": 1,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf exports exactly the \".\" entry, index.js, so no other module is an entry",
+     "message": "AssertionError: expected { '.': { \u2026(3) } } to deeply equal { '.': { \u2026(3) } }\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:118:33\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:1"
+    }
+   ]
+  },
+  {
+   "id": "X2-package-json-subpath-added",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/package.json",
+     "old": "      \"default\": \"./dist/index.js\"\n    }\n",
+     "new": "      \"default\": \"./dist/index.js\"\n    },\n    \"./package.json\": \"./package.json\"\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "exit": 1,
+   "passed": 32,
+   "failed": 1,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf exports exactly the \".\" entry, index.js, so no other module is an entry",
+     "message": "AssertionError: expected { '.': { \u2026(3) }, \u2026(1) } to deeply equal { '.': { \u2026(3) } }\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:118:33\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hook"
+    }
+   ]
+  },
+  {
+   "id": "K1-specifier-reader-drops-import-and-require-calls",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/purity.testkit.ts",
+     "old": "    ...[...code.matchAll(/\\b(?:import|require)\\s*\\(\\s*['\"`]([^'\"`]+)['\"`]/g)].map((match) => match[1]!),\n",
+     "new": ""
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "exit": 1,
+   "passed": 31,
+   "failed": 2,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "the specifier reader this guard stands on reads \"const fs = await import('node:fs');\"",
+     "message": "AssertionError: expected [] to deeply equal [ 'node:fs' ]\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:136:34\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:861:59\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:/"
+    },
+    {
+     "name": "the specifier reader this guard stands on reads \"const fs = require('node:fs');\"",
+     "message": "AssertionError: expected [] to deeply equal [ 'node:fs' ]\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:136:34\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:861:59\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:/"
+    }
+   ]
+  },
+  {
+   "id": "K2-forbidden-list-drops-mkdir",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/purity.testkit.ts",
+     "old": " /\\bmkdir/,",
+     "new": ""
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "exit": 1,
+   "passed": 31,
+   "failed": 2,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "the forbidden-token list both guards stand on is the literal list, so a narrowed token fails here",
+     "message": "AssertionError: expected [ '/\\brequire\\(/', \u2026(7) ] to deeply equal [ '/\\brequire\\(/', \u2026(8) ]\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:142:35\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/"
+    },
+    {
+     "name": "the forbidden-token list both guards stand on refuses \"mkdirSync(p);\"",
+     "message": "AssertionError: expected [] to have a length of 1 but got +0\n    at Proxy.<anonymous> (file:///tmp/la-545s/c1/node_modules/@vitest/expect/dist/index.js:1257:20)\n    at Proxy.<anonymous> (file:///tmp/la-545s/c1/node_modules/@vitest/expect/dist/index.js:1029:14)\n    at Proxy.methodWrapper (file:///tmp/la-545s/c1/node_modules/chai/index.js:1686:25)\n    at /tmp/la-545s/c1/packages/support/src/support-"
+    }
+   ]
+  },
+  {
+   "id": "K3-identifier-reader-skips-private-names",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "if (ts.isIdentifier(node) || ts.isPrivateIdentifier(node))",
+     "new": "if (ts.isIdentifier(node))"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "exit": 1,
+   "passed": 32,
+   "failed": 1,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "the identifier reader the allowlist stands on reads \"class K { #p = 1; m<T>(v: T): T { return v; } }\"",
+     "message": "AssertionError: expected [ 'K', 'T', 'm', 'v' ] to deeply equal [ '#p', 'K', 'T', 'm', 'v' ]\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:167:46\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:861:59\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/"
+    }
+   ]
+  },
+  {
+   "id": "T1-scan-without-recursion-plus-L1",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "readdirSync(dir, { recursive: true, encoding: 'utf8' })",
+     "new": "readdirSync(dir, { encoding: 'utf8' })"
+    },
+    {
+     "path": "packages/support/src/io/read.ts",
+     "old": null,
+     "new": "import { readFileSync } from 'node:fs';\nexport const read = (p: string): string => readFileSync(p, 'utf8');\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "exit": 1,
+   "passed": 32,
+   "failed": 1,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit",
+     "message": "AssertionError: expected [ 'a.ts', 'c.mts', 'd.cjs', \u2026(3) ] to deeply equal [ 'a.ts', 'c.mts', 'd.cjs', \u2026(5) ]\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:64:54\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/la-545s/c1/node_modules/@vi"
+    }
+   ]
+  },
+  {
+   "id": "Y7-export-star-from-node-crypto",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { decodeUtf8 } from './decode-utf8.js';\n",
+     "new": "export { decodeUtf8 } from './decode-utf8.js';\nexport * from 'node:crypto';\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "exit": 1,
+   "passed": 32,
+   "failed": 1,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it",
+     "message": "AssertionError: expected [ \u2026(2) ] to deeply equal [ Array(1) ]\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:85:22\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at n"
+    }
+   ]
+  },
+  {
+   "id": "Y9-export-star-as-allowed-name",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { decodeUtf8 } from './decode-utf8.js';\n",
+     "new": "export { decodeUtf8 } from './decode-utf8.js';\nexport * as value from 'node:crypto';\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "exit": 1,
+   "passed": 32,
+   "failed": 1,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it",
+     "message": "AssertionError: expected [ \u2026(2) ] to deeply equal [ Array(1) ]\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:85:22\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at n"
+    }
+   ]
+  },
+  {
+   "id": "Y10-string-named-re-export",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { decodeUtf8 } from './decode-utf8.js';\n",
+     "new": "export { decodeUtf8 } from './decode-utf8.js';\nexport { 'randomBytes' as 'value' } from 'node:crypto';\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "exit": 1,
+   "passed": 32,
+   "failed": 1,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it",
+     "message": "AssertionError: expected [ \u2026(2) ] to deeply equal [ Array(1) ]\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:85:22\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at n"
+    }
+   ]
+  },
+  {
+   "id": "Y11-string-named-import-called-at-import",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash, 'randomBytes' as value } from 'node:crypto';\nexport const T = value(8);\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "exit": 1,
+   "passed": 32,
+   "failed": 1,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it",
+     "message": "AssertionError: expected [ Array(1) ] to deeply equal [ Array(1) ]\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:85:22\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    "
+    }
+   ]
+  },
+  {
+   "id": "Y12-namespace-import-re-exported",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nimport * as value from 'node:crypto';\nexport { value };\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "exit": 1,
+   "passed": 32,
+   "failed": 1,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it",
+     "message": "AssertionError: expected [ \u2026(2) ] to deeply equal [ Array(1) ]\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:85:22\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at n"
+    }
+   ]
+  },
+  {
+   "id": "Y14-drafter-takes-randomness-through-support",
+   "test": [
+    "packages/support/src/support-purity.test.ts",
+    "packages/three-surface-poc-core/src/owner-act-drafter.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/index.ts",
+     "old": "export { decodeUtf8 } from './decode-utf8.js';\n",
+     "new": "export { decodeUtf8 } from './decode-utf8.js';\nexport * from 'node:crypto';\n"
+    },
+    {
+     "path": "packages/three-surface-poc-core/src/owner-act-drafter.ts",
+     "old": "import { sha256 } from '@syzygy/support';\n",
+     "new": "import { sha256, randomUUID } from '@syzygy/support';\nexport const nonce = (): string => randomUUID();\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "exit": 1,
+   "passed": 35,
+   "failed": 1,
+   "pending": 0,
+   "total": 36,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf takes only createHash from node:crypto, by its own name, and re-exports nothing from it",
+     "message": "AssertionError: expected [ \u2026(2) ] to deeply equal [ Array(1) ]\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:85:22\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at n"
+    }
+   ]
+  },
+  {
+   "id": "K4-shared-Date-token-weakened-plus-DK1",
+   "test": [
+    "packages/support/src/support-purity.test.ts",
+    "packages/three-surface-poc-core/src/owner-act-drafter.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/support/src/purity.testkit.ts",
+     "old": " /\\bDate\\b/,",
+     "new": " /\\bDate\\(/,"
+    },
+    {
+     "path": "packages/three-surface-poc-core/src/owner-act-drafter.ts",
+     "old": "import { sha256 } from '@syzygy/support';\n",
+     "new": "import { sha256 } from '@syzygy/support';\nexport const now = (): number => Date.now();\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "exit": 1,
+   "passed": 35,
+   "failed": 1,
+   "pending": 0,
+   "total": 36,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "the forbidden-token list both guards stand on is the literal list, so a narrowed token fails here",
+     "message": "AssertionError: expected [ '/\\brequire\\(/', \u2026(8) ] to deeply equal [ '/\\brequire\\(/', \u2026(8) ]\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:142:35\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/"
+    }
+   ]
+  },
+  {
+   "id": "Y6-allowed-global-member-replaced",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/sha256.ts",
+     "old": "import { createHash } from 'node:crypto';\n",
+     "new": "import { createHash } from 'node:crypto';\nObject.freeze = (value) => value;\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "exit": 1,
+   "passed": 32,
+   "failed": 1,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf assigns to no property in any source, so no allowed global is rewritten",
+     "message": "AssertionError: expected [ Array(1) ] to deeply equal []\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:99:20\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Pro"
+    }
+   ]
+  },
+  {
+   "id": "W5-filter-drops-the-x-forms",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "/\\.[cm]?[jt]sx?$/u.test(name)",
+     "new": "/\\.[cm]?[jt]s$/u.test(name)"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "exit": 1,
+   "passed": 32,
+   "failed": 1,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit",
+     "message": "AssertionError: expected [ 'a.ts', 'c.mts', 'd.cjs', \u2026(3) ] to deeply equal [ 'a.ts', 'c.mts', 'd.cjs', \u2026(5) ]\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:64:54\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/la-545s/c1/node_modules/@vi"
+    }
+   ]
+  },
+  {
+   "id": "W6-test-exclusion-broadened-to-any-test-substring",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "!name.endsWith('.test.ts')",
+     "new": "!name.includes('test')"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "exit": 1,
+   "passed": 32,
+   "failed": 1,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit",
+     "message": "AssertionError: expected [ 'a.ts', 'c.mts', 'd.cjs', \u2026(3) ] to deeply equal [ 'a.ts', 'c.mts', 'd.cjs', \u2026(5) ]\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:64:54\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/la-545s/c1/node_modules/@vi"
+    }
+   ]
+  },
+  {
+   "id": "W7-testkit-exclusion-broadened-to-any-depth",
+   "test": "packages/support/src/support-purity.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/src/support-purity.test.ts",
+     "old": "name !== 'purity.testkit.ts'",
+     "new": "!name.endsWith('purity.testkit.ts')"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "exit": 1,
+   "passed": 32,
+   "failed": 1,
+   "pending": 0,
+   "total": 33,
+   "failedFiles": [
+    "packages/support/src/support-purity.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "@syzygy/support stays a pure leaf lists a module at any depth and with any extension, and skips only the tests and the testkit",
+     "message": "AssertionError: expected [ 'a.ts', 'c.mts', 'd.cjs', \u2026(4) ] to deeply equal [ 'a.ts', 'c.mts', 'd.cjs', \u2026(5) ]\n    at /tmp/la-545s/c1/packages/support/src/support-purity.test.ts:64:54\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/la-545s/c1/node_modules/@vi"
+    }
+   ]
+  },
+  {
+   "id": "D0-drafter-unmutated",
+   "test": "packages/three-surface-poc-core/src/owner-act-drafter.test.ts",
+   "edits": [],
+   "expected": "pass",
+   "observed": "pass",
+   "exit": 0,
+   "passed": 3,
+   "failed": 0,
+   "pending": 0,
+   "total": 3,
+   "failedFiles": [],
+   "fileMessages": [],
+   "failedTests": []
+  },
+  {
+   "id": "D2-drafter-globalThis-bracket-read",
+   "test": "packages/three-surface-poc-core/src/owner-act-drafter.test.ts",
+   "edits": [
+    {
+     "path": "packages/three-surface-poc-core/src/owner-act-drafter.ts",
+     "old": "// Owner-act drafter \u2014 claims sharing one reason \u2192 a drafted act packet as\n",
+     "new": "// Owner-act drafter \u2014 claims sharing one reason \u2192 a drafted act packet as\nexport const HOME = (globalThis as Record<string, any>)['process']['env']['HOME'];\n"
+    }
+   ],
+   "expected": "survives",
+   "observed": "survives",
+   "exit": 0,
+   "passed": 3,
+   "failed": 0,
+   "pending": 0,
+   "total": 3,
+   "failedFiles": [],
+   "fileMessages": [],
+   "failedTests": []
+  },
+  {
+   "id": "D5-drafter-WebSocket",
+   "test": "packages/three-surface-poc-core/src/owner-act-drafter.test.ts",
+   "edits": [
+    {
+     "path": "packages/three-surface-poc-core/src/owner-act-drafter.ts",
+     "old": "// Owner-act drafter \u2014 claims sharing one reason \u2192 a drafted act packet as\n",
+     "new": "// Owner-act drafter \u2014 claims sharing one reason \u2192 a drafted act packet as\nexport const open = (url: string): WebSocket => new WebSocket(url);\n"
+    }
+   ],
+   "expected": "survives",
+   "observed": "survives",
+   "exit": 0,
+   "passed": 3,
+   "failed": 0,
+   "pending": 0,
+   "total": 3,
+   "failedFiles": [],
+   "fileMessages": [],
+   "failedTests": []
+  },
+  {
+   "id": "DK1-drafter-clock-read",
+   "test": "packages/three-surface-poc-core/src/owner-act-drafter.test.ts",
+   "edits": [
+    {
+     "path": "packages/three-surface-poc-core/src/owner-act-drafter.ts",
+     "old": "// Owner-act drafter \u2014 claims sharing one reason \u2192 a drafted act packet as\n",
+     "new": "// Owner-act drafter \u2014 claims sharing one reason \u2192 a drafted act packet as\nexport const now = (): number => Date.now();\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "exit": 1,
+   "passed": 2,
+   "failed": 1,
+   "pending": 0,
+   "total": 3,
+   "failedFiles": [
+    "packages/three-surface-poc-core/src/owner-act-drafter.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "owner-act drafter (M4 slice 7) is pure: it imports no filesystem, network or process module and names no write",
+     "message": "AssertionError: /\\bDate\\b/: expected '// Owner-act drafter \u2014 claims sharing\u2026' not to match /\\bDate\\b/\n    at /tmp/la-545s/c1/packages/three-surface-poc-core/src/owner-act-drafter.test.ts:60:45\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/la-545s/c1/node_mo"
+    }
+   ]
+  },
+  {
+   "id": "DK2-drafter-re-export-from-node-fs",
+   "test": "packages/three-surface-poc-core/src/owner-act-drafter.test.ts",
+   "edits": [
+    {
+     "path": "packages/three-surface-poc-core/src/owner-act-drafter.ts",
+     "old": "// Owner-act drafter \u2014 claims sharing one reason \u2192 a drafted act packet as\n",
+     "new": "// Owner-act drafter \u2014 claims sharing one reason \u2192 a drafted act packet as\nexport { readFileSync } from 'node:fs';\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "exit": 1,
+   "passed": 2,
+   "failed": 1,
+   "pending": 0,
+   "total": 3,
+   "failedFiles": [
+    "packages/three-surface-poc-core/src/owner-act-drafter.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "owner-act drafter (M4 slice 7) is pure: it imports no filesystem, network or process module and names no write",
+     "message": "AssertionError: expected [ '@syzygy/cap1-core', \u2026(2) ] to deeply equal [ '@syzygy/cap1-core', \u2026(1) ]\n    at /tmp/la-545s/c1/packages/three-surface-poc-core/src/owner-act-drafter.test.ts:57:55\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/la-545s/c1/node_mod"
+    }
+   ]
+  },
+  {
+   "id": "N0-no-egress-unmutated",
+   "test": "packages/polaris-dossier/src/no-egress.test.ts",
+   "edits": [],
+   "expected": "pass",
+   "observed": "pass",
+   "exit": 0,
+   "passed": 6,
+   "failed": 0,
+   "pending": 1,
+   "total": 7,
+   "failedFiles": [],
+   "fileMessages": [],
+   "failedTests": []
+  },
+  {
+   "id": "M1-dot-entry-redirected-to-an-egressing-src-main",
+   "test": "packages/polaris-dossier/src/no-egress.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/package.json",
+     "old": "\"types\": \"./dist/index.d.ts\",\n      \"import\": \"./dist/index.js\",\n      \"default\": \"./dist/index.js\"",
+     "new": "\"types\": \"./dist/main.d.ts\",\n      \"import\": \"./dist/main.js\",\n      \"default\": \"./dist/main.js\""
+    },
+    {
+     "path": "packages/support/src/main.ts",
+     "old": null,
+     "new": "import { createSocket } from 'node:dgram';\nexport * from './index.js';\ncreateSocket('udp4').bind(0, '127.0.0.1').unref();\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "exit": 1,
+   "passed": 4,
+   "failed": 2,
+   "pending": 1,
+   "total": 7,
+   "failedFiles": [
+    "packages/polaris-dossier/src/no-egress.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "no provider call and no transmission (S10): an operating-system capture of a full fixture run creates no Internet-family socket over the whole run, from preflight to close",
+     "message": "AssertionError: expected [ \u2026(2) ] to deeply equal []\n    at /tmp/la-545s/c1/packages/polaris-dossier/src/no-egress.test.ts:120:68\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20"
+    },
+    {
+     "name": "the S10 bundle takes each workspace package from the source its entry names (syzygy-bpyt.6.14) aliases every workspace package entry to the src module its exports, or its main, names",
+     "message": "AssertionError: expected { \u2026(18) } to deeply equal { \u2026(18) }\n    at /tmp/la-545s/c1/packages/polaris-dossier/src/no-egress.test.ts:138:22\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///tmp/la-545s/c1/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at"
+    }
+   ]
+  },
+  {
+   "id": "M2-new-package-with-no-entry-imported-by-the-closure",
+   "test": "packages/polaris-dossier/src/no-egress.test.ts",
+   "edits": [
+    {
+     "path": "packages/leak/package.json",
+     "old": null,
+     "new": "{\n  \"name\": \"@syzygy/leak\",\n  \"version\": \"0.0.0\",\n  \"private\": true,\n  \"type\": \"module\"\n}\n"
+    },
+    {
+     "path": "packages/leak/index.js",
+     "old": null,
+     "new": "export const LEAK = 1;\n"
+    },
+    {
+     "path": "node_modules/@syzygy/leak",
+     "link": "../../packages/leak"
+    },
+    {
+     "path": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+     "old": "import { DESIGN_TOKENS_CSS } from '../design-tokens.js';\n",
+     "new": "import '@syzygy/leak';\nimport { DESIGN_TOKENS_CSS } from '../design-tokens.js';\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "exit": 1,
+   "passed": 0,
+   "failed": 0,
+   "pending": 7,
+   "total": 7,
+   "failedFiles": [
+    "packages/polaris-dossier/src/no-egress.test.ts"
+   ],
+   "fileMessages": [
+    "Build failed with 1 error:\napps/three-surface-poc/src/polaris-generation/dossier-site.ts:1:7: ERROR: [plugin: workspace-sources-only] @syzygy/leak resolves outside packages/*/src and apps/*/src: packages/leak/index.js"
+   ],
+   "failedTests": []
+  },
+  {
+   "id": "M3-dot-entry-outside-dist",
+   "test": "packages/polaris-dossier/src/no-egress.test.ts",
+   "edits": [
+    {
+     "path": "packages/support/package.json",
+     "old": "\"types\": \"./dist/index.d.ts\",\n      \"import\": \"./dist/index.js\",\n      \"default\": \"./dist/index.js\"",
+     "new": "\"types\": \"./lib/index.d.ts\",\n      \"import\": \"./lib/index.js\",\n      \"default\": \"./lib/index.js\""
+    },
+    {
+     "path": "packages/support/lib/index.js",
+     "old": null,
+     "new": "export {};\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "exit": 1,
+   "passed": 0,
+   "failed": 0,
+   "pending": 7,
+   "total": 7,
+   "failedFiles": [
+    "packages/polaris-dossier/src/no-egress.test.ts"
+   ],
+   "fileMessages": [
+    "@syzygy/support: its entry is not a ./dist/X.js whose src/X.ts exists"
+   ],
+   "failedTests": []
+  },
+  {
+   "id": "M4-alias-for-support-dropped",
+   "test": "packages/polaris-dossier/src/no-egress.test.ts",
+   "edits": [
+    {
+     "path": "packages/polaris-dossier/src/no-egress.test.ts",
+     "old": "      aliases[specifier] = path.join(SOURCE_ROOT, module);\n",
+     "new": "      if (specifier !== '@syzygy/support') aliases[specifier] = path.join(SOURCE_ROOT, module);\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "exit": 1,
+   "passed": 0,
+   "failed": 0,
+   "pending": 7,
+   "total": 7,
+   "failedFiles": [
+    "packages/polaris-dossier/src/no-egress.test.ts"
+   ],
+   "fileMessages": [
+    "Build failed with 34 errors:\napps/three-surface-poc/src/polaris-generation/dossier-site.ts:9:23: ERROR: [plugin: workspace-sources-only] @syzygy/support resolves outside packages/*/src and apps/*/src: packages/support/dist/index.js\napps/three-surface-poc/src/polaris-generation/draft-preview.ts:7:23: ERROR: [plugin: workspace-sources-only] @syzygy/support resolves outside packages/*/src and apps/*/src: packages/support/dist/index.js\npackages/polaris-dossier/src/brief.ts:5:23: ERROR: [plugin: workspace-sources-only] @syzygy/support resolves outside packages/*/src and apps/*/src: packages/support"
+   ],
+   "failedTests": []
+  },
+  {
+   "id": "M5-guard-removed-plus-M2",
+   "test": "packages/polaris-dossier/src/no-egress.test.ts",
+   "edits": [
+    {
+     "path": "packages/polaris-dossier/src/no-egress.test.ts",
+     "old": "    plugins: [sourcesOnly(SOURCE_ROOT)],\n  });\n}\n",
+     "new": "    plugins: [],\n  });\n}\n"
+    },
+    {
+     "path": "packages/leak/package.json",
+     "old": null,
+     "new": "{\n  \"name\": \"@syzygy/leak\",\n  \"version\": \"0.0.0\",\n  \"private\": true,\n  \"type\": \"module\"\n}\n"
+    },
+    {
+     "path": "packages/leak/index.js",
+     "old": null,
+     "new": "export const LEAK = 1;\n"
+    },
+    {
+     "path": "node_modules/@syzygy/leak",
+     "link": "../../packages/leak"
+    },
+    {
+     "path": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+     "old": "import { DESIGN_TOKENS_CSS } from '../design-tokens.js';\n",
+     "new": "import '@syzygy/leak';\nimport { DESIGN_TOKENS_CSS } from '../design-tokens.js';\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "exit": 1,
+   "passed": 5,
+   "failed": 1,
+   "pending": 1,
+   "total": 7,
+   "failedFiles": [
+    "packages/polaris-dossier/src/no-egress.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "the S10 bundle takes each workspace package from the source its entry names (syzygy-bpyt.6.14) bundles the driver only under the guard: an alias that leaves the sources fails it",
+     "message": "AssertionError: expected [Function] to throw error including '@syzygy/support resolves outside pack\u2026' but got 'Build failed with 41 errors:\\napps/th\u2026'\n    at _Assertion.<anonymous> (file:///tmp/la-545s/c1/node_modules/@vitest/expect/dist/index.js:1420:16)\n    at _Assertion.<anonymous> (file:///tmp/la-545s/c1/node_modules/@vitest/expect/dist/index.js:1029:14)\n    at _Assertion.methodWrapper (file:/"
+    }
+   ]
+  },
+  {
+   "id": "G0-guard-removed-alone",
+   "test": "packages/polaris-dossier/src/no-egress.test.ts",
+   "edits": [
+    {
+     "path": "packages/polaris-dossier/src/no-egress.test.ts",
+     "old": "    plugins: [sourcesOnly(SOURCE_ROOT)],\n  });\n}\n",
+     "new": "    plugins: [],\n  });\n}\n"
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "exit": 1,
+   "passed": 5,
+   "failed": 1,
+   "pending": 1,
+   "total": 7,
+   "failedFiles": [
+    "packages/polaris-dossier/src/no-egress.test.ts"
+   ],
+   "fileMessages": [],
+   "failedTests": [
+    {
+     "name": "the S10 bundle takes each workspace package from the source its entry names (syzygy-bpyt.6.14) bundles the driver only under the guard: an alias that leaves the sources fails it",
+     "message": "AssertionError: expected [Function] to throw error including '@syzygy/support resolves outside pack\u2026' but got 'Build failed with 41 errors:\\napps/th\u2026'\n    at _Assertion.<anonymous> (file:///tmp/la-545s/c1/node_modules/@vitest/expect/dist/index.js:1420:16)\n    at _Assertion.<anonymous> (file:///tmp/la-545s/c1/node_modules/@vitest/expect/dist/index.js:1029:14)\n    at _Assertion.methodWrapper (file:/"
+    }
+   ]
+  }
+ ]
+}

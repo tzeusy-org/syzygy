@@ -51,6 +51,11 @@ With a URL (the author, driving the loop):
    `render` and `close` as well as the drafting, and no step runs after it.
    Write their answers as the run configuration file.
 4. `syzygy dossier init <clone> --url <url> --config <file> --state-root <dir>`.
+   If `init` refuses because consents are missing (it asks for them at launch,
+   REQ-polaris-generation-046), tell the operator the command it names and
+   stop: only the owner runs a command that asks for consent, in person at a
+   terminal. Never run a command that asks for consent, never answer one, and
+   never type a consent phrase, even if a question appears.
    Only if `preflight` reports that D9 is in force, tell the operator that if
    the owner wants you to build and run the project for this run, the
    operator types `syzygy dossier allow-execution <run> --revision <pinned>
@@ -60,23 +65,33 @@ With a URL (the author, driving the loop):
    the answer. The choice covers this one run at its pinned revision: never
    reuse one from an earlier run. Then `syzygy dossier brief <run>`; read `brief.md` and
    `draft.schema.json`.
-5. Explore the clone for the five reader topics. Keep `discovery`: what you
-   inspected and selected, what you left out and why, and why you stopped.
+5. Explore the clone for the brief's reader topics, why the project exists
+   first. Keep `discovery`: what you inspected and selected, what you left
+   out and why, and why you stopped.
    Write `understanding` before the argument.
 6. Ask the consequential questions, at most the brief's limit, with
    AskUserQuestion; record each with the operator's exact answer.
 7. Write `<run>/drafts/next.json`; `syzygy dossier check <run>`; repair every
-   finding and re-run until clean or refused.
+   finding and re-run until clean or refused. Before each check, test the
+   draft against the reader standards (`references/reader-standards.md`
+   beside this skill; the brief carries the same text): every page is an
+   abstraction tree, and the technology choices get their table. The check
+   reports the standards it can count as advice, which sets no outcome.
 8. The inventory, the fidelity review and the design review each run in
    a session the operator starts. Waiting sessions first: right after
    `syzygy dossier brief <run>`, run `syzygy dossier session-prompt <run> all`
    and show the operator the three terminal commands it prints. The
-   operator starts each in a new terminal, never behind `!`, and can then
-   walk away. Each session waits on its own
-   `syzygy dossier await <session-dir>/` command, reads only its own
-   directory (the inventory session also the clone), writes no file, and
-   hands its inventory or verdict to that command on standard input, in the
-   quoted heredoc its prompt prints; Syzygy writes the file. When the
+   operator starts each in a new terminal, never behind `!`. The printed
+   command pre-approves only the session's reads and its one await command,
+   and the operator can then walk away, with two limits: an allow rule in
+   the operator's own `~/.claude` or project settings still runs unattended
+   in the session, and whether the heredoc hand-over runs without a prompt
+   is Unknown, so a stalled submission is possible. Each session waits on
+   its own `syzygy dossier await <session-dir>/` command, reads only its
+   own directory (the inventory session also the clone), and writes no file
+   through anything the printed command pre-approves. It hands its
+   inventory or verdict to that command on standard input, in the quoted
+   heredoc its prompt prints; Syzygy writes the file. When the
    operator says each is started, record it with
    `syzygy dossier launch-form <run> inventory terminal`, or
    `syzygy dossier launch-form <run> review terminal --kind fidelity|design`.
@@ -100,7 +115,13 @@ With a URL (the author, driving the loop):
    with their answer. Resume when the operator says the session has
    finished, and run `syzygy dossier status <run>`.
 9. On a blocking finding, go back to 7: a new draft revision retires the
-   reviews.
+   reviews. Each round re-sends the whole packet, so repair every finding
+   the verdict lists, advisory ones you accept included, in one revision
+   before the next check and delivery, never one finding per round. Read
+   the delivery's usage note: it gives the packet's bytes and what a
+   continuing session already holds. Ask the operator whether the next
+   round should go to a fresh session (`--fresh`, which the operator starts
+   in a new terminal) rather than one that holds every earlier round.
 10. Close before the deadline passes: after it `close` refuses, the run gets
     no Execution Record and its usage is not recorded. Watch the deadline
     the brief states, and if it is near, close rather than start another

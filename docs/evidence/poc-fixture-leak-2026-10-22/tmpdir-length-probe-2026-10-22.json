@@ -1,0 +1,29 @@
+{
+ "tool": "tmpdir_length_probe.py",
+ "treeCommit": "d8532f1a",
+ "testFile": "apps/three-surface-poc/src/orrery.browser.test.ts",
+ "results": [
+  {
+   "label": "long",
+   "tmpdirLength": 110,
+   "profilePathLength": 136,
+   "exit": 1,
+   "summary": [
+    "Test Files  1 failed (1)",
+    "Tests  1 skipped (1)"
+   ],
+   "firstBrowserErrorLine": "Error: browser exited with signal before announcing a DevTools endpoint:"
+  },
+  {
+   "label": "short",
+   "tmpdirLength": 16,
+   "profilePathLength": 42,
+   "exit": 0,
+   "summary": [
+    "Test Files  1 passed (1)",
+    "Tests  1 passed (1)"
+   ],
+   "firstBrowserErrorLine": ""
+  }
+ ]
+}

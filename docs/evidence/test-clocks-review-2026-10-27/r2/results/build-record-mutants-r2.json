@@ -1,0 +1,272 @@
+{
+ "tool": "build_record_mutants_r2.py",
+ "tree": "9e00252ae134accc4a42604445a4db66f68d5100",
+ "args": [
+  "c104771f",
+  "8ff50172",
+  "bb5df680",
+  "447d9f08"
+ ],
+ "results": [
+  {
+   "id": "control",
+   "file": "cpu-separation.json",
+   "note": "no edit: the rebuild exits 0",
+   "expect": "pass",
+   "exit": 0,
+   "outcome": "pass",
+   "survives": false,
+   "lastLine": "{\"rowDelta\": \"Tests: +2 ~17 -1\", \"testFiles\": 10, \"productFilesChanged\": [], \"mutantTotals\": {\"cases\": 33, \"sides\": 65, \"asExpected\": 65}, \"ac1\": 0, \"bounds\": {\"EDGE_TRIM_CPU_MS\": [1900, 29.4, 31.6], \"HOSTILE_LINE_CPU_MS\": [140, 68.6, 109.5], \"TAG_SCAN_CPU_MS\": [1500, 22.7, 40.0], \"ATTRIBUTE_SCAN_CPU_MS\": [3000, 20.1, 20.0]}, \"pinKillsDropped\": [\"E-comment-in-branch\", \"E-renamed-binding\", \"E-branc",
+   "recordedAttribute": {
+    "headMaxMs": 148.918,
+    "mutantMinMs": 60001.8,
+    "boundOverHeadMax": 20.1,
+    "mutantMinOverBound": 20.0
+   },
+   "recordedAttributeFallback": {
+    "headMaxMs": 191.092,
+    "mutantMinMs": 60008.8,
+    "boundOverHeadMax": 15.7,
+    "mutantMinOverBound": 20.0
+   },
+   "recordedReaderNoDepthCap": {
+    "base": "fail (by the test timeout)",
+    "head": "fail (by the test timeout)"
+   }
+  },
+  {
+   "id": "K1-thread-headMax-9.97x",
+   "file": "cpu-separation.json",
+   "note": "Node 24 thread-CPU ATTRIBUTE_SCAN head max raised to 301 ms: bound / head = 9.97x",
+   "expect": "fail",
+   "exit": 1,
+   "outcome": "fail",
+   "survives": false,
+   "lastLine": "ATTRIBUTE_SCAN_CPU_MS: not 10x from both sides",
+   "recordedAttribute": null,
+   "recordedAttributeFallback": null,
+   "recordedReaderNoDepthCap": null
+  },
+  {
+   "id": "K2-thread-mutantMin-9.67x",
+   "file": "cpu-separation.json",
+   "note": "Node 24 thread-CPU ATTRIBUTE_SCAN mutant min lowered to 29,000 ms: mutant / bound = 9.67x",
+   "expect": "fail",
+   "exit": 1,
+   "outcome": "fail",
+   "survives": false,
+   "lastLine": "ATTRIBUTE_SCAN_CPU_MS: not 10x from both sides",
+   "recordedAttribute": null,
+   "recordedAttributeFallback": null,
+   "recordedReaderNoDepthCap": null
+  },
+  {
+   "id": "K3-node22-headMax-9.97x",
+   "file": "cpu-separation-node22.json",
+   "note": "Node 22 process-CPU ATTRIBUTE_SCAN head max raised to 301 ms (bound / head = 9.97x); fileBound left as measured",
+   "expect": "fail",
+   "exit": 0,
+   "outcome": "pass",
+   "survives": true,
+   "lastLine": "{\"rowDelta\": \"Tests: +2 ~17 -1\", \"testFiles\": 10, \"productFilesChanged\": [], \"mutantTotals\": {\"cases\": 33, \"sides\": 65, \"asExpected\": 65}, \"ac1\": 0, \"bounds\": {\"EDGE_TRIM_CPU_MS\": [1900, 29.4, 31.6], \"HOSTILE_LINE_CPU_MS\": [140, 68.6, 109.5], \"TAG_SCAN_CPU_MS\": [1500, 22.7, 40.0], \"ATTRIBUTE_SCAN_CPU_MS\": [3000, 20.1, 20.0]}, \"pinKillsDropped\": [\"E-comment-in-branch\", \"E-renamed-binding\", \"E-branc",
+   "recordedAttribute": {
+    "headMaxMs": 148.918,
+    "mutantMinMs": 60001.8,
+    "boundOverHeadMax": 20.1,
+    "mutantMinOverBound": 20.0
+   },
+   "recordedAttributeFallback": {
+    "headMaxMs": 301.0,
+    "mutantMinMs": 60008.8,
+    "boundOverHeadMax": 15.7,
+    "mutantMinOverBound": 20.0
+   },
+   "recordedReaderNoDepthCap": {
+    "base": "fail (by the test timeout)",
+    "head": "fail (by the test timeout)"
+   }
+  },
+  {
+   "id": "K4-node22-mutantMin-9.67x",
+   "file": "cpu-separation-node22.json",
+   "note": "Node 22 process-CPU ATTRIBUTE_SCAN mutant min lowered to 29,000 ms (9.67x); fileBound left as measured",
+   "expect": "fail",
+   "exit": 0,
+   "outcome": "pass",
+   "survives": true,
+   "lastLine": "{\"rowDelta\": \"Tests: +2 ~17 -1\", \"testFiles\": 10, \"productFilesChanged\": [], \"mutantTotals\": {\"cases\": 33, \"sides\": 65, \"asExpected\": 65}, \"ac1\": 0, \"bounds\": {\"EDGE_TRIM_CPU_MS\": [1900, 29.4, 31.6], \"HOSTILE_LINE_CPU_MS\": [140, 68.6, 109.5], \"TAG_SCAN_CPU_MS\": [1500, 22.7, 40.0], \"ATTRIBUTE_SCAN_CPU_MS\": [3000, 20.1, 20.0]}, \"pinKillsDropped\": [\"E-comment-in-branch\", \"E-renamed-binding\", \"E-branc",
+   "recordedAttribute": {
+    "headMaxMs": 148.918,
+    "mutantMinMs": 60001.8,
+    "boundOverHeadMax": 20.1,
+    "mutantMinOverBound": 20.0
+   },
+   "recordedAttributeFallback": {
+    "headMaxMs": 191.092,
+    "mutantMinMs": 29000.0,
+    "boundOverHeadMax": 15.7,
+    "mutantMinOverBound": 20.0
+   },
+   "recordedReaderNoDepthCap": {
+    "base": "fail (by the test timeout)",
+    "head": "fail (by the test timeout)"
+   }
+  },
+  {
+   "id": "K5-node22-recorded-margin-9.5x",
+   "file": "cpu-separation-node22.json",
+   "note": "Node 22 ATTRIBUTE_SCAN's recorded margin fileBound.overHeadMax set to 9.5 (the figure build_record copies into the record)",
+   "expect": "fail",
+   "exit": 0,
+   "outcome": "pass",
+   "survives": true,
+   "lastLine": "{\"rowDelta\": \"Tests: +2 ~17 -1\", \"testFiles\": 10, \"productFilesChanged\": [], \"mutantTotals\": {\"cases\": 33, \"sides\": 65, \"asExpected\": 65}, \"ac1\": 0, \"bounds\": {\"EDGE_TRIM_CPU_MS\": [1900, 29.4, 31.6], \"HOSTILE_LINE_CPU_MS\": [140, 68.6, 109.5], \"TAG_SCAN_CPU_MS\": [1500, 22.7, 40.0], \"ATTRIBUTE_SCAN_CPU_MS\": [3000, 20.1, 20.0]}, \"pinKillsDropped\": [\"E-comment-in-branch\", \"E-renamed-binding\", \"E-branc",
+   "recordedAttribute": {
+    "headMaxMs": 148.918,
+    "mutantMinMs": 60001.8,
+    "boundOverHeadMax": 20.1,
+    "mutantMinOverBound": 20.0
+   },
+   "recordedAttributeFallback": {
+    "headMaxMs": 191.092,
+    "mutantMinMs": 60008.8,
+    "boundOverHeadMax": 9.5,
+    "mutantMinOverBound": 20.0
+   },
+   "recordedReaderNoDepthCap": {
+    "base": "fail (by the test timeout)",
+    "head": "fail (by the test timeout)"
+   }
+  },
+  {
+   "id": "K6-node22-separated-false",
+   "file": "cpu-separation-node22.json",
+   "note": "Node 22 ATTRIBUTE_SCAN's fileBound.separated flag set false",
+   "expect": "fail",
+   "exit": 1,
+   "outcome": "fail",
+   "survives": false,
+   "lastLine": "ATTRIBUTE_SCAN_CPU_MS: not 10x from both sides under the process-CPU fallback",
+   "recordedAttribute": null,
+   "recordedAttributeFallback": null,
+   "recordedReaderNoDepthCap": null
+  },
+  {
+   "id": "K7-thread-headRun-over-max",
+   "file": "cpu-separation.json",
+   "note": "one Node 24 ATTRIBUTE_SCAN head run region set to 400 ms (bound / 400 = 7.5x) with headMaxMs left at 148.9",
+   "expect": "fail",
+   "exit": 0,
+   "outcome": "pass",
+   "survives": true,
+   "lastLine": "{\"rowDelta\": \"Tests: +2 ~17 -1\", \"testFiles\": 10, \"productFilesChanged\": [], \"mutantTotals\": {\"cases\": 33, \"sides\": 65, \"asExpected\": 65}, \"ac1\": 0, \"bounds\": {\"EDGE_TRIM_CPU_MS\": [1900, 29.4, 31.6], \"HOSTILE_LINE_CPU_MS\": [140, 68.6, 109.5], \"TAG_SCAN_CPU_MS\": [1500, 22.7, 40.0], \"ATTRIBUTE_SCAN_CPU_MS\": [3000, 20.1, 20.0]}, \"pinKillsDropped\": [\"E-comment-in-branch\", \"E-renamed-binding\", \"E-branc",
+   "recordedAttribute": {
+    "headMaxMs": 148.918,
+    "mutantMinMs": 60001.8,
+    "boundOverHeadMax": 20.1,
+    "mutantMinOverBound": 20.0
+   },
+   "recordedAttributeFallback": {
+    "headMaxMs": 191.092,
+    "mutantMinMs": 60008.8,
+    "boundOverHeadMax": 15.7,
+    "mutantMinOverBound": 20.0
+   },
+   "recordedReaderNoDepthCap": {
+    "base": "fail (by the test timeout)",
+    "head": "fail (by the test timeout)"
+   }
+  },
+  {
+   "id": "K8-node22-cases-digest",
+   "file": "cpu-separation-node22.json",
+   "note": "Node 22 separation's cases digest replaced",
+   "expect": "fail",
+   "exit": 1,
+   "outcome": "fail",
+   "survives": false,
+   "lastLine": "cpu-separation-node22 used a mutant-cases.json other than the one at bb5df68080b00a08557f64156c9bf3b4d9d25ed4",
+   "recordedAttribute": null,
+   "recordedAttributeFallback": null,
+   "recordedReaderNoDepthCap": null
+  },
+  {
+   "id": "K9-node22-on-node24",
+   "file": "cpu-separation-node22.json",
+   "note": "the fallback separation claims Node 24",
+   "expect": "fail",
+   "exit": 1,
+   "outcome": "fail",
+   "survives": false,
+   "lastLine": "the CPU separations are not one thread-CPU run and one process-CPU run on Node 22",
+   "recordedAttribute": null,
+   "recordedAttributeFallback": null,
+   "recordedReaderNoDepthCap": null
+  },
+  {
+   "id": "K10-de-head-S1-shape-R1-passes",
+   "file": "daemon-entry-head.json",
+   "note": "R1 recorded as passing the new test",
+   "expect": "fail",
+   "exit": 1,
+   "outcome": "fail",
+   "survives": false,
+   "lastLine": "R1-flag-between-branches: the narrowed text row passes it",
+   "recordedAttribute": null,
+   "recordedAttributeFallback": null,
+   "recordedReaderNoDepthCap": null
+  },
+  {
+   "id": "K11-de-prior-R2-fails",
+   "file": "daemon-entry-prior-test.json",
+   "note": "R2 recorded as failing the 447d9f08 test (so not the survivor round 1 found)",
+   "expect": "fail",
+   "exit": 1,
+   "outcome": "fail",
+   "survives": false,
+   "lastLine": "R2-flag-createRequire-before-daemon: fails the kept text row as it stood at 447d9f083fb120c14ddd8da646c03675f3ce7bc7, so it is not the survivor rev-532 found",
+   "recordedAttribute": null,
+   "recordedAttributeFallback": null,
+   "recordedReaderNoDepthCap": null
+  },
+  {
+   "id": "K12-de-head-equivalent-fails",
+   "file": "daemon-entry-head.json",
+   "note": "E-branch-swap recorded as failing the new test",
+   "expect": "fail",
+   "exit": 1,
+   "outcome": "fail",
+   "survives": false,
+   "lastLine": "E-branch-swap: an equivalent the new test fails",
+   "recordedAttribute": null,
+   "recordedAttributeFallback": null,
+   "recordedReaderNoDepthCap": null
+  },
+  {
+   "id": "K13-mutants-timeout-text",
+   "file": "bound-and-pin-mutants.json",
+   "note": "reader-no-depth-cap's byTimeout flags cleared: the record should then say `fail`, not `fail (by the test timeout)` (a wording change, not a check)",
+   "expect": "pass",
+   "exit": 0,
+   "outcome": "pass",
+   "survives": false,
+   "lastLine": "{\"rowDelta\": \"Tests: +2 ~17 -1\", \"testFiles\": 10, \"productFilesChanged\": [], \"mutantTotals\": {\"cases\": 33, \"sides\": 65, \"asExpected\": 65}, \"ac1\": 0, \"bounds\": {\"EDGE_TRIM_CPU_MS\": [1900, 29.4, 31.6], \"HOSTILE_LINE_CPU_MS\": [140, 68.6, 109.5], \"TAG_SCAN_CPU_MS\": [1500, 22.7, 40.0], \"ATTRIBUTE_SCAN_CPU_MS\": [3000, 20.1, 20.0]}, \"pinKillsDropped\": [\"E-comment-in-branch\", \"E-renamed-binding\", \"E-branc",
+   "recordedAttribute": {
+    "headMaxMs": 148.918,
+    "mutantMinMs": 60001.8,
+    "boundOverHeadMax": 20.1,
+    "mutantMinOverBound": 20.0
+   },
+   "recordedAttributeFallback": {
+    "headMaxMs": 191.092,
+    "mutantMinMs": 60008.8,
+    "boundOverHeadMax": 15.7,
+    "mutantMinOverBound": 20.0
+   },
+   "recordedReaderNoDepthCap": {
+    "base": "fail",
+    "head": "fail"
+   }
+  }
+ ]
+}

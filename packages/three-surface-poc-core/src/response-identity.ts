@@ -1,4 +1,4 @@
-import { createHash } from 'node:crypto';
+import { sha256 } from '@syzygy/support';
 
 import { canonicalJson } from './project-shape-manifest.js';
 
@@ -26,7 +26,7 @@ export interface ResponseIdentityDeclaration {
  * wildcard for every member of the named array.  Keep this set unique and
  * lexically ordered: it is part of the response's inspectable contract.
  */
-export const RESPONSE_IDENTITY_EXCLUDES = Object.freeze([
+const RESPONSE_IDENTITY_EXCLUDES = Object.freeze([
   'codeStructure.capturedAt',
   'evaluation.asOf',
   'projectShape.authority.evaluationId',
@@ -54,11 +54,11 @@ export const RESPONSE_IDENTITY_EXCLUDES = Object.freeze([
   'workItems.capturedAt',
 ] as const);
 
-export const RESPONSE_IDENTITY_STABLE_ACROSS = Object.freeze([
+const RESPONSE_IDENTITY_STABLE_ACROSS = Object.freeze([
   'daemon restart at one evaluation input set',
 ] as const);
 
-export const RESPONSE_IDENTITY_VARYING_WITH = Object.freeze([
+const RESPONSE_IDENTITY_VARYING_WITH = Object.freeze([
   'butlers revision',
   'observer revision',
   'project shape',
@@ -74,7 +74,7 @@ interface ParsedPath {
   readonly segments: readonly PathSegment[];
 }
 
-export interface ResponseIdentityPreimage {
+interface ResponseIdentityPreimage {
   /** The cloned model after the response identity self-field and exclusions. */
   readonly value: unknown;
   /** Declared paths that found at least one property in the input. */
@@ -230,7 +230,7 @@ export function buildResponseIdentity(
       `response identity canonicalization failed: ${cause instanceof Error ? cause.message : String(cause)}`,
     );
   }
-  const contentKey = `sha256:${createHash('sha256').update(serialized).digest('hex')}`;
+  const contentKey = `sha256:${sha256(serialized)}`;
   return Object.freeze({
     contentKey,
     excludes: Object.freeze([...activeDeclaration.excludes]),

@@ -1,0 +1,69 @@
+{
+ "baseCommit": "fe3855a1b4f2164da3274e02d868399236c45c9c",
+ "codeHeadCommit": "7e58cd1f9e1be0c4d79ebff298cc97261a79f6ce",
+ "populationCommit": "88029248e7759205a139bc28860df1ef6e3acf44",
+ "population": "5021 tracked files at the population commit, excluding docs/evidence/syzygy-bpyt-6-3/",
+ "editedProductionFiles": [
+  "apps/three-surface-poc/src/polaris-markdown.ts",
+  "packages/polaris-generation-consent/src/package-reader.ts",
+  "packages/three-surface-poc-core/src/markdown-code-context.ts",
+  "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+  "packages/three-surface-poc-core/src/project-shape-manifest.ts"
+ ],
+ "digests": [
+  {
+   "path": "apps/three-surface-poc/src/polaris-markdown.ts",
+   "at": "base",
+   "sha256": "c0f2395109fd2f25fdc314a5ea7fd3360f58675250b7425b943b3b543fc8373c"
+  },
+  {
+   "path": "apps/three-surface-poc/src/polaris-markdown.ts",
+   "at": "head",
+   "sha256": "7e70894ee6e3717ada76026004754c521858427abb14a103f591b31cd3727a21"
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.ts",
+   "at": "base",
+   "sha256": "4804e2e90fd7ab043be1871ec27229955978ba13df345e2fdf84668abfc054b1"
+  },
+  {
+   "path": "packages/polaris-generation-consent/src/package-reader.ts",
+   "at": "head",
+   "sha256": "cb1566140cdf7d02b9991f8564d121e21d90480a791879a74e1889557930f067"
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+   "at": "base",
+   "sha256": "dc888664f2392a4abd55b68627226e6734ecb7e35a1d22cfa74eaaca76c52a2f"
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+   "at": "head",
+   "sha256": "a02c105a483d11a9e90d27aade01ef5ddee6b60b9e165a9a7193c5baaa21f8fe"
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+   "at": "base",
+   "sha256": "baf09d80d52c2c5bf16b1a6036913de0609ca8512976b8fd221a032c7a701219"
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+   "at": "head",
+   "sha256": "642cf156ed37bfc0ced7cb338e640268fc0e02648913dd71be5dc4efe6ed0dbd"
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+   "at": "base",
+   "sha256": "c32ab4e3dbe509413a4d31afc1bb7a68c1a5a8b2b1d21945b72deb9e54617e34"
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+   "at": "head",
+   "sha256": "47435438b5d14c944e2c53a510d07b0a3253758d2628f5332123155831494d49"
+  }
+ ],
+ "needles": 20,
+ "methods": "one: Python bytes.find over every blob; two: git grep -F -l per needle",
+ "methodsAgree": true,
+ "needlesCited": {}
+}

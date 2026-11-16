@@ -1,0 +1,32 @@
+{
+ "merge": "767588d4e1be3916839d57de5a976fe69885d6f7",
+ "parents": [
+  "094cc542c127bdf672f9b676f959f44867c222ab",
+  "546f1ff066e2ffef749c757cdb4621336039113b"
+ ],
+ "computedTree": "f6b5e1da2b5e6b0f5e1c6f64c365493baa610501",
+ "mergeTree": "e49bd8c1b34e3d53207acfc4c517ce7791aad11f",
+ "mergeTreeExit": 1,
+ "paths": 5098,
+ "pathsEqualToGitsMerge": 5097,
+ "conflictedPathsResolvedByHand": [
+  {
+   "path": "package.json",
+   "regions": [
+    {
+     "ours": "    \"build\": \"tsc -b packages/support packages/cap1-core packages/cap1-daemon packages/cap1-conformance packages/three-surface-poc-core apps/syzygy apps/three-surface-poc packages/cap1-system packages/polaris-generation-core packages/polaris-generation-consent packages/polaris-dossier\",\n    \"build:poc\": \"tsc -b --force packages/support packages/cap1-core packages/cap1-daemon packages/three-surface-poc-core packages/polaris-generation-core apps/three-surface-poc\",\n",
+     "base": "    \"build\": \"tsc -b packages/cap1-core packages/cap1-daemon packages/cap1-conformance packages/three-surface-poc-core apps/syzygy apps/three-surface-poc packages/cap1-system packages/polaris-generation-core packages/polaris-generation-consent packages/polaris-dossier\",\n    \"build:poc\": \"tsc -b --force packages/cap1-core packages/cap1-daemon packages/three-surface-poc-core packages/polaris-generation-core apps/three-surface-poc\",\n",
+     "theirs": "    \"build\": \"tsc -b packages/cap1-core packages/http-host packages/cap1-daemon packages/cap1-conformance packages/three-surface-poc-core apps/syzygy apps/three-surface-poc packages/cap1-system packages/polaris-generation-core packages/polaris-generation-consent packages/polaris-dossier\",\n    \"build:poc\": \"tsc -b --force packages/cap1-core packages/http-host packages/cap1-daemon packages/three-surface-poc-core packages/polaris-generation-core apps/three-surface-poc\",\n",
+     "resolution": "    \"build\": \"tsc -b packages/support packages/cap1-core packages/http-host packages/cap1-daemon packages/cap1-conformance packages/three-surface-poc-core apps/syzygy apps/three-surface-poc packages/cap1-system packages/polaris-generation-core packages/polaris-generation-consent packages/polaris-dossier\",\n    \"build:poc\": \"tsc -b --force packages/support packages/cap1-core packages/http-host packages/cap1-daemon packages/three-surface-poc-core packages/polaris-generation-core apps/three-surface-poc\",\n"
+    },
+    {
+     "ours": "    \"typecheck\": \"tsc -b packages/support packages/cap1-core packages/cap1-daemon packages/cap1-conformance packages/three-surface-poc-core apps/syzygy apps/three-surface-poc packages/cap1-system packages/polaris-generation-core packages/polaris-generation-consent packages/polaris-dossier\",\n",
+     "base": "    \"typecheck\": \"tsc -b packages/cap1-core packages/cap1-daemon packages/cap1-conformance packages/three-surface-poc-core apps/syzygy apps/three-surface-poc packages/cap1-system packages/polaris-generation-core packages/polaris-generation-consent packages/polaris-dossier\",\n",
+     "theirs": "    \"typecheck\": \"tsc -b packages/cap1-core packages/http-host packages/cap1-daemon packages/cap1-conformance packages/three-surface-poc-core apps/syzygy apps/three-surface-poc packages/cap1-system packages/polaris-generation-core packages/polaris-generation-consent packages/polaris-dossier\",\n",
+     "resolution": "    \"typecheck\": \"tsc -b packages/support packages/cap1-core packages/http-host packages/cap1-daemon packages/cap1-conformance packages/three-surface-poc-core apps/syzygy apps/three-surface-poc packages/cap1-system packages/polaris-generation-core packages/polaris-generation-consent packages/polaris-dossier\",\n"
+    }
+   ]
+  }
+ ],
+ "pathsThatDifferWithoutBeingAResolvedConflict": []
+}

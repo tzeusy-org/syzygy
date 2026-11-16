@@ -1,0 +1,432 @@
+{
+ "bead": "syzygy-bpyt.7.14",
+ "base": "546f1ff066e2ffef749c757cdb4621336039113b",
+ "head": "01df68eab9ef3f9b6f556c6aa00f28c70ba6e5f1",
+ "subject": {
+  "what": "git diff 546f1ff0 01df68ea",
+  "sha256": "cf8756c6b3cebc47b11509ae7dc1f4d039c702c54a3df4510e2338a9936d6aa1",
+  "files": {
+   "apps/three-surface-poc/src/browser-origin.test.ts": {
+    "base": null,
+    "head": "f06ee5f98dcbeda165b1944b73c0b1357fa71c6949b295b3aaab88b7adf762f2"
+   },
+   "apps/three-surface-poc/src/git-observation.test.ts": {
+    "base": "9036e822662fb2c40ad3b57f07b6d264633a3703931c796435efdd52843f1cf4",
+    "head": "d37e33e7075f2d04bca61d25ecfd5d6c8172c6afc8cdd5877cd8f812b512b94a"
+   },
+   "packages/cap1-daemon/src/package.test.ts": {
+    "base": "05e8af171b045f2336b3d6332ff6900ea6dcd20751d86251e9656e54c39792ea",
+    "head": "66cdab6e58f5e3ff914ebecf686054e7fb922d3d260634adc5952947acb68226"
+   },
+   "packages/cap1-daemon/src/server.test.ts": {
+    "base": "c14580d2aae0c7e4dafcf08f175814ae98c63af9f0eb27044bbd860120af83f9",
+    "head": "d7164b734808687db6a8b5e061648da2cb4b7588f224265b938a3a1c141cd4ec"
+   },
+   "packages/http-host/src/credentials.test.ts": {
+    "base": "9fa65c4494644a505cc6af28739b3da60598391510c87794f117f18df446aaec",
+    "head": "41ee07c5d1c3e909f0ebe142f08539ff7631fa0ec91fab17dc727b6fba2c8069"
+   }
+  }
+ },
+ "productFilesChanged": [],
+ "toolSha256": {
+  "docs/evidence/http-host-review-2026-10-27/tools/mutants.py": "31f0579ac464173e81e2d8f9ca3713c4f6f4574dcd74c1169aa95db9c8865830",
+  "docs/evidence/argv-guards-review-2026-10-25/tools/mut.py": "ca2b8eadc503305bb3767b7220b02775429164ef6c183ac9854acf9d8ed9b6a5"
+ },
+ "targets": {
+  "R3-bearer-token-whitespace-trimmed": {
+   "base": "survived",
+   "head": "killed",
+   "headNewRowsFailed": [
+    "packages/http-host/src/credentials.test.ts > RT3 — credential verification through core admission the minted token behind any other whitespace refuses, named"
+   ],
+   "headFailedTitles": 1
+  },
+  "R8-not-admitted-population-dropped": {
+   "base": "survived",
+   "head": "killed",
+   "headNewRowsFailed": [
+    "packages/cap1-daemon/src/server.test.ts > RT3 — credential-classed admission at the transport logs a 503 breach diagnostic for each listed Unknown population and withholds an unlisted one"
+   ],
+   "headFailedTitles": 1
+  },
+  "R13-shim-unknown-route-status-swapped": {
+   "base": "survived",
+   "head": "killed",
+   "headNewRowsFailed": [
+    "packages/cap1-daemon/src/package.test.ts > cap1-daemon package re-exports each host value as the host binding of the same name"
+   ],
+   "headFailedTitles": 1
+  },
+  "R17-gate-host-prefix-narrowed-to-src": {
+   "base": "survived",
+   "head": "killed",
+   "headNewRowsFailed": [
+    "apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation protects the HTTP host package the POC serves through"
+   ],
+   "headFailedTitles": 1
+  },
+  "R18-origin-prefix-match": {
+   "base": "survived",
+   "head": "killed",
+   "headNewRowsFailed": [
+    "apps/three-surface-poc/src/browser-origin.test.ts > browserRequestAllowed — the Origin is compared whole refuses an origin that only begins with the host origin"
+   ],
+   "headFailedTitles": 1
+  },
+  "R19-state-write-containment-without-separator": {
+   "base": "survived",
+   "head": "killed",
+   "headNewRowsFailed": [
+    "packages/http-host/src/credentials.test.ts > RT3 — state-write boundary refuses a sibling directory whose name extends the state dir name, as traversal",
+    "packages/http-host/src/credentials.test.ts > RT3 — state-write boundary refuses a symlink into a sibling whose name extends the state dir name, named"
+   ],
+   "headFailedTitles": 2
+  }
+ },
+ "typeTarget": {
+  "vitest": {
+   "base": "survived",
+   "head": "survived"
+  },
+  "typecheck": {
+   "base": "survived",
+   "head": "killed",
+   "headPinErrors": 1,
+   "baseErrorFiles": []
+  }
+ },
+ "reviewMutants": {
+  "total": 19,
+  "base": {
+   "killed": 12,
+   "survived": 7,
+   "error": 0
+  },
+  "head": {
+   "killed": 18,
+   "survived": 1,
+   "error": 0
+  },
+  "unchanged": 9,
+  "stronger": [
+   "R1-hash-compares-presented-to-itself",
+   "R3-bearer-token-whitespace-trimmed",
+   "R4-loopback-address-admits",
+   "R6-handler-invoked-before-admission",
+   "R7-breach-line-loses-its-reason",
+   "R8-not-admitted-population-dropped",
+   "R13-shim-unknown-route-status-swapped",
+   "R17-gate-host-prefix-narrowed-to-src",
+   "R18-origin-prefix-match",
+   "R19-state-write-containment-without-separator"
+  ],
+  "weaker": [],
+  "survivingAtHead": [
+   "R14-credentials-shim-drops-a-type"
+  ]
+ },
+ "own": {
+  "O1-bearer-separator-space-run": {
+   "row": "R3",
+   "base": "survived",
+   "head": "killed",
+   "headNewRowsFailed": [
+    "FAIL   @syzygy/http-host  packages/http-host/src/credentials.test.ts > RT3 — credential verification through core admission > the minted token behind any other whitespace refuses, named"
+   ]
+  },
+  "O2-bearer-separator-any-whitespace": {
+   "row": "R3",
+   "base": "survived",
+   "head": "killed",
+   "headNewRowsFailed": [
+    "FAIL   @syzygy/http-host  packages/http-host/src/credentials.test.ts > RT3 — credential verification through core admission > the minted token behind any other whitespace refuses, named"
+   ]
+  },
+  "O3-bearer-trailing-whitespace-trimmed": {
+   "row": "R3",
+   "base": "survived",
+   "head": "killed",
+   "headNewRowsFailed": [
+    "FAIL   @syzygy/http-host  packages/http-host/src/credentials.test.ts > RT3 — credential verification through core admission > the minted token behind any other whitespace refuses, named"
+   ]
+  },
+  "O4-bearer-end-matches-before-newline": {
+   "row": "R3",
+   "base": "survived",
+   "head": "killed",
+   "headNewRowsFailed": [
+    "FAIL   @syzygy/http-host  packages/http-host/src/credentials.test.ts > RT3 — credential verification through core admission > the minted token behind any other whitespace refuses, named"
+   ]
+  },
+  "O5-presented-token-trimmed-before-compare": {
+   "row": "R3",
+   "base": "survived",
+   "head": "killed",
+   "headNewRowsFailed": [
+    "FAIL   @syzygy/http-host  packages/http-host/src/credentials.test.ts > RT3 — credential verification through core admission > the minted token behind any other whitespace refuses, named"
+   ],
+   "rerun": {
+    "head": "killed",
+    "failedRows": [
+     "FAIL   @syzygy/http-host  packages/http-host/src/credentials.test.ts > RT3 — credential verification through core admission > the minted token behind any other whitespace refuses, named"
+    ]
+   }
+  },
+  "O6-lexical-containment-without-separator": {
+   "row": "R19",
+   "base": "survived",
+   "head": "killed",
+   "headNewRowsFailed": [
+    "FAIL   @syzygy/http-host  packages/http-host/src/credentials.test.ts > RT3 — state-write boundary > refuses a sibling directory whose name extends the state dir name, as traversal"
+   ]
+  },
+  "O7-real-containment-without-separator": {
+   "row": "R19",
+   "base": "survived",
+   "head": "killed",
+   "headNewRowsFailed": [
+    "FAIL   @syzygy/http-host  packages/http-host/src/credentials.test.ts > RT3 — state-write boundary > refuses a symlink into a sibling whose name extends the state dir name, named"
+   ]
+  },
+  "O8-not-evaluated-population-dropped": {
+   "row": "R8",
+   "base": "killed",
+   "head": "killed",
+   "headNewRowsFailed": [
+    "FAIL   @syzygy/cap1-daemon  packages/cap1-daemon/src/server.test.ts > RT3 — credential-classed admission at the transport > logs a 503 breach diagnostic for each listed Unknown population and withholds an unlisted one"
+   ]
+  },
+  "O9-observation-failed-population-dropped": {
+   "row": "R8",
+   "base": "survived",
+   "head": "killed",
+   "headNewRowsFailed": [
+    "FAIL   @syzygy/cap1-daemon  packages/cap1-daemon/src/server.test.ts > RT3 — credential-classed admission at the transport > logs a 503 breach diagnostic for each listed Unknown population and withholds an unlisted one"
+   ]
+  },
+  "O10-any-project-shape-reason-logged": {
+   "row": "R8",
+   "base": "survived",
+   "head": "killed",
+   "headNewRowsFailed": [
+    "FAIL   @syzygy/cap1-daemon  packages/cap1-daemon/src/server.test.ts > RT3 — credential-classed admission at the transport > logs a 503 breach diagnostic for each listed Unknown population and withholds an unlisted one"
+   ]
+  },
+  "O11-breach-reason-keyed-by-status": {
+   "row": "R8",
+   "base": "survived",
+   "head": "killed",
+   "headNewRowsFailed": [
+    "FAIL   @syzygy/cap1-daemon  packages/cap1-daemon/src/server.test.ts > RT3 — credential-classed admission at the transport > logs a 503 breach diagnostic for each listed Unknown population and withholds an unlisted one"
+   ]
+  },
+  "O12-origin-reversed-prefix": {
+   "row": "R18",
+   "base": "survived",
+   "head": "killed",
+   "headNewRowsFailed": [
+    "FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/browser-origin.test.ts > browserRequestAllowed — the Origin is compared whole > refuses an origin that the host origin only begins with"
+   ]
+  },
+  "O13-origin-required": {
+   "row": "R18",
+   "base": "killed",
+   "head": "killed",
+   "headNewRowsFailed": [
+    "FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/browser-origin.test.ts > browserRequestAllowed — the Origin is compared whole > allows no Origin and the exact origin of each allowed host"
+   ]
+  },
+  "O14-tailnet-origin-over-http": {
+   "row": "R18",
+   "base": "killed",
+   "head": "killed",
+   "headNewRowsFailed": [
+    "FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/browser-origin.test.ts > browserRequestAllowed — the Origin is compared whole > allows no Origin and the exact origin of each allowed host"
+   ]
+  },
+  "O15-shim-function-aliased": {
+   "row": "R13",
+   "base": "survived",
+   "head": "killed",
+   "headNewRowsFailed": [
+    "FAIL   @syzygy/cap1-daemon  packages/cap1-daemon/src/package.test.ts > cap1-daemon package > re-exports each host value as the host binding of the same name"
+   ]
+  },
+  "O16-shim-constant-aliased": {
+   "row": "R13",
+   "base": "survived",
+   "head": "killed",
+   "headNewRowsFailed": [
+    "FAIL   @syzygy/cap1-daemon  packages/cap1-daemon/src/package.test.ts > cap1-daemon package > re-exports each host value as the host binding of the same name"
+   ]
+  },
+  "O17-shim-equal-local-constant": {
+   "row": "residual",
+   "base": "survived",
+   "head": "survived",
+   "headNewRowsFailed": []
+  }
+ },
+ "types": {
+  "T-drop-CredentialInspection": {
+   "base": "survived",
+   "head": "killed",
+   "headPinErrors": 1,
+   "baseErrorFiles": []
+  },
+  "T-drop-CredentialProvision": {
+   "base": "survived",
+   "head": "killed",
+   "headPinErrors": 1,
+   "baseErrorFiles": []
+  },
+  "T-drop-CredentialStat": {
+   "base": "survived",
+   "head": "killed",
+   "headPinErrors": 1,
+   "baseErrorFiles": []
+  },
+  "T-drop-StateWriteAuthorization": {
+   "base": "survived",
+   "head": "killed",
+   "headPinErrors": 1,
+   "baseErrorFiles": []
+  },
+  "T-drop-StateWriteRefusalName": {
+   "base": "survived",
+   "head": "killed",
+   "headPinErrors": 1,
+   "baseErrorFiles": []
+  },
+  "T-drop-CredentialClass": {
+   "base": "survived",
+   "head": "killed",
+   "headPinErrors": 1,
+   "baseErrorFiles": []
+  },
+  "T-drop-DaemonOptions": {
+   "base": "killed",
+   "head": "killed",
+   "headPinErrors": 1,
+   "baseErrorFiles": [
+    "apps/three-surface-poc/src/main.test.ts"
+   ]
+  },
+  "T-drop-DaemonStart": {
+   "base": "killed",
+   "head": "killed",
+   "headPinErrors": 1,
+   "baseErrorFiles": [
+    "apps/three-surface-poc/src/main.test.ts"
+   ]
+  },
+  "T-drop-Route": {
+   "base": "killed",
+   "head": "killed",
+   "headPinErrors": 1,
+   "baseErrorFiles": [
+    "apps/three-surface-poc/src/main.test.ts",
+    "apps/three-surface-poc/src/routes.test.ts",
+    "apps/three-surface-poc/src/verbatim-route.test.ts",
+    "packages/cap1-daemon/src/routes-human.test.ts",
+    "packages/cap1-daemon/src/server.test.ts"
+   ]
+  },
+  "T-drop-RouteContext": {
+   "base": "killed",
+   "head": "killed",
+   "headPinErrors": 1,
+   "baseErrorFiles": [
+    "apps/three-surface-poc/src/reobserve-action.test.ts",
+    "apps/three-surface-poc/src/response-limits.test.ts",
+    "apps/three-surface-poc/src/verbatim-route.test.ts"
+   ]
+  },
+  "T-drop-RouteRequest": {
+   "base": "survived",
+   "head": "killed",
+   "headPinErrors": 1,
+   "baseErrorFiles": []
+  },
+  "T-drop-RouteResponse": {
+   "base": "killed",
+   "head": "killed",
+   "headPinErrors": 1,
+   "baseErrorFiles": [
+    "apps/three-surface-poc/src/response-limits.test.ts",
+    "apps/three-surface-poc/src/verbatim-route.test.ts"
+   ]
+  },
+  "T-drop-RunningDaemon": {
+   "base": "killed",
+   "head": "killed",
+   "headPinErrors": 1,
+   "baseErrorFiles": [
+    "apps/three-surface-poc/src/materialize-action.test.ts",
+    "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+    "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+    "apps/three-surface-poc/src/polaris-source-route.test.ts",
+    "apps/three-surface-poc/src/routes.test.ts",
+    "apps/three-surface-poc/src/surface-routes.test.ts",
+    "apps/three-surface-poc/src/tuple-encoding.test.ts",
+    "packages/cap1-daemon/src/routes-human.test.ts",
+    "packages/cap1-daemon/src/routes-machine.test.ts",
+    "packages/cap1-daemon/src/server.test.ts"
+   ]
+  },
+  "T-swap-RouteContext": {
+   "base": "killed",
+   "head": "killed",
+   "headPinErrors": 1,
+   "baseErrorFiles": [
+    "apps/three-surface-poc/src/reobserve-action.test.ts",
+    "apps/three-surface-poc/src/response-limits.test.ts",
+    "apps/three-surface-poc/src/verbatim-route.test.ts"
+   ]
+  },
+  "T-swap-CredentialStat": {
+   "base": "survived",
+   "head": "killed",
+   "headPinErrors": 1,
+   "baseErrorFiles": []
+  }
+ },
+ "repeats": {
+  "runs": 5,
+  "tests": [
+   "Tests  68 passed (68)",
+   "Tests  68 passed (68)",
+   "Tests  68 passed (68)",
+   "Tests  68 passed (68)",
+   "Tests  68 passed (68)"
+  ],
+  "load1": [
+   55.97,
+   56.66,
+   56.19,
+   57.07,
+   56.83
+  ]
+ },
+ "titles": {
+  "base": 5311,
+  "head": 5320,
+  "added": 9,
+  "removed": 0,
+  "addedPerFile": {
+   "apps/three-surface-poc/src/browser-origin.test.ts": 3,
+   "packages/cap1-daemon/src/package.test.ts": 2,
+   "packages/cap1-daemon/src/server.test.ts": 1,
+   "packages/http-host/src/credentials.test.ts": 3
+  },
+  "modified": [
+   [
+    "apps/three-surface-poc/src/git-observation.test.ts",
+    "protects the HTTP host package the POC serves through"
+   ]
+  ],
+  "line": "Tests: +9 ~1 -0"
+ },
+ "problems": []
+}

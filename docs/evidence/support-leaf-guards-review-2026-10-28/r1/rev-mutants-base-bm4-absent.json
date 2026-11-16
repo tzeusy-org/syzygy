@@ -1,0 +1,47 @@
+{
+ "commit": "f7ea858480b30ffc4407154a84d1d03f3fe4a549",
+ "dist": "absent",
+ "distDirs": [],
+ "summary": {
+  "rows": 1,
+  "asExpected": 1,
+  "unexpected": []
+ },
+ "statusAfter": "",
+ "leftovers": [],
+ "rows": [
+  {
+   "id": "BM4-base-alias-for-support-dropped",
+   "probe": "base only",
+   "tests": [
+    "packages/polaris-dossier/src/no-egress.test.ts"
+   ],
+   "edits": [
+    {
+     "path": "packages/polaris-dossier/src/no-egress.test.ts",
+     "old": "      '@syzygy/support': src('packages/support/src/index.ts'),\n",
+     "new": ""
+    }
+   ],
+   "expected": "killed",
+   "observed": "killed",
+   "loadavg": [
+    "38.55",
+    "37.81",
+    "33.70"
+   ],
+   "exit": 1,
+   "passed": 0,
+   "failed": 0,
+   "pending": 3,
+   "total": 3,
+   "failedFiles": [
+    "packages/polaris-dossier/src/no-egress.test.ts"
+   ],
+   "fileMessages": [
+    "Build failed with 34 errors:\napps/three-surface-poc/src/polaris-generation/dossier-site.ts:9:23: ERROR: Could not resolve \"@syzygy/support\"\napps/three-surface-poc/src/polaris-generation/draft-preview.ts:7:23: ERROR: Could not resolve \"@syzygy/support\"\npackages/polaris-dossier/src/brief.ts:5:23: ERROR: Could not resolve \"@syzygy/support\"\npackages/polaris-dossier/src/check.ts:5:23: ERROR: Could not resolve \"@syzygy/support\"\npackages/polaris-dossier/src/close.ts:4:23: ERROR: Could not resolve \"@syzygy/support\"\n..."
+   ],
+   "failedTests": []
+  }
+ ]
+}

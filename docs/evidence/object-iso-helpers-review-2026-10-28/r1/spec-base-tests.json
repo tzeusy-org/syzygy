@@ -1,0 +1,639 @@
+{
+ "rows": [
+  {
+   "id": "base-tests control screen.ts",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 1,
+   "old": null,
+   "new": null,
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  },
+  {
+   "id": "base-tests control public-source-classification.ts",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 1,
+   "old": null,
+   "new": null,
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  },
+  {
+   "id": "base-tests control secret-redaction.ts",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "line": 1,
+   "old": null,
+   "new": null,
+   "tests": [
+    "packages/polaris-generation-core/src/secret-redaction.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  },
+  {
+   "id": "base-tests control authority-artifact-fields.ts",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 1,
+   "old": null,
+   "new": null,
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  },
+  {
+   "id": "base-tests C-authority-artifact-fields-L102n0-A",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 102,
+   "old": "isRecord(json.value)",
+   "new": "(typeof json.value === 'object' && json.value !== null)",
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  },
+  {
+   "id": "base-tests C-authority-artifact-fields-L102n0-B",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 102,
+   "old": "isRecord(json.value)",
+   "new": "(typeof json.value === 'object' && !Array.isArray(json.value))",
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  },
+  {
+   "id": "base-tests C-authority-artifact-fields-L102n0-D",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 102,
+   "old": "isRecord(json.value)",
+   "new": "true",
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  },
+  {
+   "id": "base-tests C-authority-artifact-fields-L121n1-A",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 121,
+   "old": "isRecord(json.value)",
+   "new": "(typeof json.value === 'object' && json.value !== null)",
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  },
+  {
+   "id": "base-tests C-authority-artifact-fields-L121n1-B",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 121,
+   "old": "isRecord(json.value)",
+   "new": "(typeof json.value === 'object' && !Array.isArray(json.value))",
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  },
+  {
+   "id": "base-tests C-authority-artifact-fields-L121n1-D",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 121,
+   "old": "isRecord(json.value)",
+   "new": "true",
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  },
+  {
+   "id": "base-tests C-authority-artifact-fields-L132n2-A",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 132,
+   "old": "isRecord(entry)",
+   "new": "(typeof entry === 'object' && entry !== null)",
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  },
+  {
+   "id": "base-tests C-authority-artifact-fields-L132n2-B",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 132,
+   "old": "isRecord(entry)",
+   "new": "(typeof entry === 'object' && !Array.isArray(entry))",
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  },
+  {
+   "id": "base-tests C-authority-artifact-fields-L132n2-D",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 132,
+   "old": "isRecord(entry)",
+   "new": "true",
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  },
+  {
+   "id": "base-tests C-authority-artifact-fields-L136n3-A",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 136,
+   "old": "isRecord(subject)",
+   "new": "(typeof subject === 'object' && subject !== null)",
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  },
+  {
+   "id": "base-tests C-authority-artifact-fields-L136n3-B",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 136,
+   "old": "isRecord(subject)",
+   "new": "(typeof subject === 'object' && !Array.isArray(subject))",
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  },
+  {
+   "id": "base-tests C-authority-artifact-fields-L136n3-D",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 136,
+   "old": "isRecord(subject)",
+   "new": "true",
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  },
+  {
+   "id": "base-tests C-authority-artifact-fields-L141n4-B",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 141,
+   "old": "isRecord(authority)",
+   "new": "(typeof authority === 'object' && !Array.isArray(authority))",
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  },
+  {
+   "id": "base-tests C-authority-artifact-fields-L141n4-D",
+   "file": "packages/three-surface-poc-core/src/authority-artifact-fields.ts",
+   "line": 141,
+   "old": "isRecord(authority)",
+   "new": "true",
+   "tests": [
+    "packages/three-surface-poc-core/src/authority-artifact-fields.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  },
+  {
+   "id": "base-tests C-secret-redaction-L71n0-A",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "line": 71,
+   "old": "isRecord(scope)",
+   "new": "(typeof scope === 'object' && scope !== null)",
+   "tests": [
+    "packages/polaris-generation-core/src/secret-redaction.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  },
+  {
+   "id": "base-tests C-secret-redaction-L71n0-B",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "line": 71,
+   "old": "isRecord(scope)",
+   "new": "(typeof scope === 'object' && !Array.isArray(scope))",
+   "tests": [
+    "packages/polaris-generation-core/src/secret-redaction.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  },
+  {
+   "id": "base-tests C-secret-redaction-L71n0-D",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "line": 71,
+   "old": "isRecord(scope)",
+   "new": "true",
+   "tests": [
+    "packages/polaris-generation-core/src/secret-redaction.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  },
+  {
+   "id": "base-tests C-secret-redaction-L73n1-A",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "line": 73,
+   "old": "isRecord(red)",
+   "new": "(typeof red === 'object' && red !== null)",
+   "tests": [
+    "packages/polaris-generation-core/src/secret-redaction.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  },
+  {
+   "id": "base-tests C-secret-redaction-L73n1-B",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "line": 73,
+   "old": "isRecord(red)",
+   "new": "(typeof red === 'object' && !Array.isArray(red))",
+   "tests": [
+    "packages/polaris-generation-core/src/secret-redaction.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  },
+  {
+   "id": "base-tests C-secret-redaction-L73n1-D",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "line": 73,
+   "old": "isRecord(red)",
+   "new": "true",
+   "tests": [
+    "packages/polaris-generation-core/src/secret-redaction.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  },
+  {
+   "id": "base-tests C-public-source-classification-L68n0-A",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 68,
+   "old": "isRecord(rule)",
+   "new": "(typeof rule === 'object' && rule !== null)",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  },
+  {
+   "id": "base-tests C-public-source-classification-L68n0-B",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 68,
+   "old": "isRecord(rule)",
+   "new": "(typeof rule === 'object' && !Array.isArray(rule))",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  },
+  {
+   "id": "base-tests C-public-source-classification-L68n0-D",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 68,
+   "old": "isRecord(rule)",
+   "new": "true",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  },
+  {
+   "id": "base-tests C-public-source-classification-L78n1-A",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 78,
+   "old": "isRecord(pathRule)",
+   "new": "(typeof pathRule === 'object' && pathRule !== null)",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  },
+  {
+   "id": "base-tests C-public-source-classification-L78n1-B",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 78,
+   "old": "isRecord(pathRule)",
+   "new": "(typeof pathRule === 'object' && !Array.isArray(pathRule))",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  },
+  {
+   "id": "base-tests C-public-source-classification-L78n1-D",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 78,
+   "old": "isRecord(pathRule)",
+   "new": "true",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  },
+  {
+   "id": "base-tests C-public-source-classification-L83n2-A",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 83,
+   "old": "isRecord(prefix)",
+   "new": "(typeof prefix === 'object' && prefix !== null)",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  },
+  {
+   "id": "base-tests C-public-source-classification-L83n2-B",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 83,
+   "old": "isRecord(prefix)",
+   "new": "(typeof prefix === 'object' && !Array.isArray(prefix))",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  },
+  {
+   "id": "base-tests C-public-source-classification-L83n2-D",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 83,
+   "old": "isRecord(prefix)",
+   "new": "true",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  },
+  {
+   "id": "base-tests C-public-source-classification-L204n3-A",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 204,
+   "old": "isRecord(scope)",
+   "new": "(typeof scope === 'object' && scope !== null)",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  },
+  {
+   "id": "base-tests C-public-source-classification-L204n3-B",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 204,
+   "old": "isRecord(scope)",
+   "new": "(typeof scope === 'object' && !Array.isArray(scope))",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  },
+  {
+   "id": "base-tests C-public-source-classification-L204n3-D",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 204,
+   "old": "isRecord(scope)",
+   "new": "true",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  },
+  {
+   "id": "base-tests C-public-source-classification-L205n4-A",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 205,
+   "old": "isRecord(active)",
+   "new": "(typeof active === 'object' && active !== null)",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  },
+  {
+   "id": "base-tests C-public-source-classification-L205n4-B",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 205,
+   "old": "isRecord(active)",
+   "new": "(typeof active === 'object' && !Array.isArray(active))",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  },
+  {
+   "id": "base-tests C-public-source-classification-L205n4-D",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 205,
+   "old": "isRecord(active)",
+   "new": "true",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  },
+  {
+   "id": "base-tests C-public-source-classification-L207n5-A",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 207,
+   "old": "isRecord(exemption)",
+   "new": "(typeof exemption === 'object' && exemption !== null)",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  },
+  {
+   "id": "base-tests C-public-source-classification-L207n5-B",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 207,
+   "old": "isRecord(exemption)",
+   "new": "(typeof exemption === 'object' && !Array.isArray(exemption))",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  },
+  {
+   "id": "base-tests C-public-source-classification-L207n5-D",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "line": 207,
+   "old": "isRecord(exemption)",
+   "new": "true",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-generation-core/src/public-source-exemption.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  },
+  {
+   "id": "base-tests C-screen-L81n0-B",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 81,
+   "old": "isRecord(doc)",
+   "new": "(typeof doc === 'object' && !Array.isArray(doc))",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  },
+  {
+   "id": "base-tests C-screen-L81n0-D",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 81,
+   "old": "isRecord(doc)",
+   "new": "true",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  },
+  {
+   "id": "base-tests C-screen-L83n1-A",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 83,
+   "old": "isRecord(scope)",
+   "new": "(typeof scope === 'object' && scope !== null)",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  },
+  {
+   "id": "base-tests C-screen-L83n1-B",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 83,
+   "old": "isRecord(scope)",
+   "new": "(typeof scope === 'object' && !Array.isArray(scope))",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  },
+  {
+   "id": "base-tests C-screen-L83n1-D",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 83,
+   "old": "isRecord(scope)",
+   "new": "true",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  },
+  {
+   "id": "base-tests C-screen-L84n2-B",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 84,
+   "old": "isRecord(admission)",
+   "new": "(typeof admission === 'object' && !Array.isArray(admission))",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  },
+  {
+   "id": "base-tests C-screen-L84n2-D",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 84,
+   "old": "isRecord(admission)",
+   "new": "true",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  },
+  {
+   "id": "base-tests C-screen-L88n3-B",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 88,
+   "old": "isRecord(classification)",
+   "new": "(typeof classification === 'object' && !Array.isArray(classification))",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  },
+  {
+   "id": "base-tests C-screen-L88n3-D",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 88,
+   "old": "isRecord(classification)",
+   "new": "true",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  },
+  {
+   "id": "base-tests C-screen-L89n4-B",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 89,
+   "old": "isRecord(rule)",
+   "new": "(typeof rule === 'object' && !Array.isArray(rule))",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  },
+  {
+   "id": "base-tests C-screen-L89n4-D",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 89,
+   "old": "isRecord(rule)",
+   "new": "true",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  },
+  {
+   "id": "base-tests C-screen-L90n5-D",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 90,
+   "old": "isRecord(codeContent[0])",
+   "new": "true",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  },
+  {
+   "id": "base-tests C-screen-L100n6-B",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 100,
+   "old": "isRecord(d)",
+   "new": "(typeof d === 'object' && !Array.isArray(d))",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  },
+  {
+   "id": "base-tests C-screen-L100n6-D",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "line": 100,
+   "old": "isRecord(d)",
+   "new": "true",
+   "tests": [
+    "packages/polaris-dossier/src/screen.test.ts"
+   ],
+   "testsAt": "81862261ddbc2b3c8e8481851f3c27129217d477"
+  }
+ ]
+}

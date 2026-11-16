@@ -1,0 +1,232 @@
+{
+ "tool": "launch_probe.py",
+ "treeCommit": "dccd484f4749b55f981f2e5211de4112ab7951de",
+ "mode": "base",
+ "file": "apps/three-surface-poc/src/cdp-browser.ts",
+ "sha256AtCommit": "c6c0ac6cc626b76155d870502c5549aa430d7cee35a058b0001d849586842033",
+ "launchesRequested": 24,
+ "mutant": {
+  "id": "singleton-directory-kept",
+  "file": "apps/three-surface-poc/src/cdp-browser.ts",
+  "edits": [
+   {
+    "old": "  if (singleton !== undefined) removeChromeSingletonDirectory(singleton);\n",
+    "new": "  if (singleton !== undefined) void singleton;\n"
+   }
+  ]
+ },
+ "build": {
+  "command": "npx tsc -b apps/three-surface-poc",
+  "exit": 0,
+  "firstLine": []
+ },
+ "run": {
+  "command": "TMPDIR=<private> node launch_close.mjs <worktree> <launches>",
+  "exit": 0,
+  "stderrFirstLine": []
+ },
+ "executable": "/home/tze/.cache/puppeteer/chrome/linux-154.0.8037.57/chrome-linux64/chrome",
+ "browserVersion": "Google Chrome for Testing 154.0.8037.57",
+ "privateTmpdirLength": 16,
+ "rows": [
+  {
+   "launch": 1,
+   "closeMs": 1820,
+   "exitCode": 0,
+   "signalCode": null,
+   "newEntries": []
+  },
+  {
+   "launch": 2,
+   "closeMs": 3476,
+   "exitCode": 0,
+   "signalCode": null,
+   "newEntries": []
+  },
+  {
+   "launch": 3,
+   "error": "private browser profile drain did not verify two empty scans before deadline",
+   "newEntries": [
+    "syzygy-poc-browser-Sp03Q6"
+   ]
+  },
+  {
+   "launch": 4,
+   "closeMs": 1234,
+   "exitCode": 0,
+   "signalCode": null,
+   "newEntries": []
+  },
+  {
+   "launch": 5,
+   "closeMs": 2682,
+   "exitCode": 0,
+   "signalCode": null,
+   "newEntries": []
+  },
+  {
+   "launch": 6,
+   "closeMs": 1269,
+   "exitCode": 0,
+   "signalCode": null,
+   "newEntries": []
+  },
+  {
+   "launch": 7,
+   "error": "private browser profile drain did not verify two empty scans before deadline",
+   "newEntries": [
+    "org.chromium.Chromium.XlLtPA",
+    "syzygy-poc-browser-Q2zgcZ"
+   ]
+  },
+  {
+   "launch": 8,
+   "closeMs": 2342,
+   "exitCode": 0,
+   "signalCode": null,
+   "newEntries": []
+  },
+  {
+   "launch": 9,
+   "closeMs": 2064,
+   "exitCode": 0,
+   "signalCode": null,
+   "newEntries": []
+  },
+  {
+   "launch": 10,
+   "closeMs": 1492,
+   "exitCode": 0,
+   "signalCode": null,
+   "newEntries": []
+  },
+  {
+   "launch": 11,
+   "closeMs": 1271,
+   "exitCode": 0,
+   "signalCode": null,
+   "newEntries": []
+  },
+  {
+   "launch": 12,
+   "closeMs": 2084,
+   "exitCode": 0,
+   "signalCode": null,
+   "newEntries": []
+  },
+  {
+   "launch": 13,
+   "closeMs": 2848,
+   "exitCode": 0,
+   "signalCode": null,
+   "newEntries": []
+  },
+  {
+   "launch": 14,
+   "closeMs": 2997,
+   "exitCode": 0,
+   "signalCode": null,
+   "newEntries": []
+  },
+  {
+   "launch": 15,
+   "closeMs": 925,
+   "exitCode": 0,
+   "signalCode": null,
+   "newEntries": []
+  },
+  {
+   "launch": 16,
+   "closeMs": 2357,
+   "exitCode": 0,
+   "signalCode": null,
+   "newEntries": []
+  },
+  {
+   "launch": 17,
+   "closeMs": 1595,
+   "exitCode": 0,
+   "signalCode": null,
+   "newEntries": []
+  },
+  {
+   "launch": 18,
+   "closeMs": 2319,
+   "exitCode": 0,
+   "signalCode": null,
+   "newEntries": []
+  },
+  {
+   "launch": 19,
+   "closeMs": 697,
+   "exitCode": 0,
+   "signalCode": null,
+   "newEntries": []
+  },
+  {
+   "launch": 20,
+   "closeMs": 2156,
+   "exitCode": null,
+   "signalCode": "SIGKILL",
+   "newEntries": [
+    "org.chromium.Chromium.m6cgMJ"
+   ]
+  },
+  {
+   "launch": 21,
+   "closeMs": 1272,
+   "exitCode": 0,
+   "signalCode": null,
+   "newEntries": []
+  },
+  {
+   "launch": 22,
+   "closeMs": 1069,
+   "exitCode": 0,
+   "signalCode": null,
+   "newEntries": []
+  },
+  {
+   "launch": 23,
+   "closeMs": 1540,
+   "exitCode": 0,
+   "signalCode": null,
+   "newEntries": []
+  },
+  {
+   "launch": 24,
+   "closeMs": 2154,
+   "exitCode": 0,
+   "signalCode": null,
+   "newEntries": []
+  }
+ ],
+ "summary": {
+  "launches": 24,
+  "launchesThatClosed": 22,
+  "launchesWhoseCloseThrew": 2,
+  "closeErrors": [
+   "private browser profile drain did not verify two empty scans before deadline"
+  ],
+  "killed": 1,
+  "exitedCleanly": 21,
+  "killedAndLeftAChromeDirectory": 1,
+  "exitedAndLeftAChromeDirectory": 0,
+  "closedLaunchesThatLeftAnything": 1,
+  "leftByLaunchesWhoseCloseThrew": [
+   "org.chromium.Chromium.XlLtPA",
+   "syzygy-poc-browser-Q2zgcZ",
+   "syzygy-poc-browser-Sp03Q6"
+  ],
+  "entriesInPrivateTmpdirAtTheEnd": [
+   "org.chromium.Chromium.XlLtPA",
+   "org.chromium.Chromium.m6cgMJ",
+   "syzygy-poc-browser-Q2zgcZ",
+   "syzygy-poc-browser-Sp03Q6"
+  ],
+  "entriesAtTheEndNotLeftByAThrownClose": [
+   "org.chromium.Chromium.m6cgMJ"
+  ],
+  "holds": true
+ }
+}

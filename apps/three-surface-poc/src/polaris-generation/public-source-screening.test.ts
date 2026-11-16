@@ -1,11 +1,11 @@
 import { execFile, execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
-import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
+import { applyUnifiedPatch, tempDir } from '@syzygy/test-kit';
 
 import { withConsent, POLICY_ACT_FORMS, type AdmissionRecord } from '@syzygy/polaris-generation-consent';
 import { DEFAULT_DISCOVERY_BUDGET, discoverAndSelect, excludedSourceId, generationSourceIdentity, generationSourcesForBody, gitBlobObjectId, runGenerationPipeline, stageSchema, validateGenerationSources, validateStage, reviewVerdict, type GenerationSource, type PipelinePorts, type PipelineResult } from '@syzygy/polaris-generation-core';
@@ -83,10 +83,8 @@ const goodPolicy = policyBytes();
 const goodPort = port(actRecord(sha(goodPolicy)), goodPolicy);
 
 let root = '', commit = '', emptyRoot = '', emptyCommit = '';
-const scratch: string[] = [];
 const fixtureRepo = (files: Record<string, string | Buffer>): { root: string; commit: string } => {
-  const dir = mkdtempSync(join(tmpdir(), 'syzygy-public-screen-'));
-  scratch.push(dir);
+  const dir = tempDir('syzygy-public-screen-');
   const run = (...args: string[]): string => execFileSync('git', ['-C', dir, ...args], { encoding: 'utf8' }).trim();
   run('init', '-q'); run('config', 'gc.auto', '0'); run('config', 'maintenance.auto', 'false'); run('config', 'user.email', 'f@example.invalid'); run('config', 'user.name', 'F');
   for (const [path, body] of Object.entries(files)) { mkdirSync(dirname(join(dir, path)), { recursive: true }); writeFileSync(join(dir, path), body); }
@@ -97,7 +95,6 @@ beforeAll(() => {
   ({ root, commit } = fixtureRepo(FILES));
   ({ root: emptyRoot, commit: emptyCommit } = fixtureRepo({}));
 });
-afterAll(() => { for (const dir of scratch) rmSync(dir, { recursive: true, force: true }); });
 
 const cfg = (revision = commit) => ({ repositoryId: 'repository:fixture', revision, include: ['**'], exclude: [], oversize: 'split' as const });
 const leaks = (text: string): string[] => [SENTINEL, PATH_TOKEN, DIR_TOKEN, 'filler_line_of_code', ...Object.values(SECRETS).map(secret => secret.trim()), ...WITHHELD].filter(needle => text.includes(needle));
@@ -321,7 +318,8 @@ describe('the policy act gate fails closed', () => {
     const port = checkoutPolicyActPort();
     if (latest === undefined) { await expect(loadPublicSourceScreen(port)).rejects.toThrow(/^Corpus read refused: public-source-policy: no screening-scope policy act is in force/u); return; }
     const argument = /^Exact digest \(SHA-256\): `([0-9a-f]{64})`$/mu.exec(fs.readFileSync(latest, 'utf8'))?.[1];
-    const screen = await loadPublicSourceScreen(port);
+    // A version-8 policy needs the pair's visibility, which an earlier one ignores: given public.
+    const screen = await loadPublicSourceScreen(port, undefined, null, 'public');
     expect(screen.policyId).toBe('polaris-butlers-project-shape-secrets');
     expect(screen.policySha256).toBe(argument);
   });
@@ -361,6 +359,19 @@ describe('policy residuals (the detectors see literal forms only)', () => {
     expect(corpus.sources.every(source => !source.exclusion.excluded)).toBe(true);
   });
 
+  // syzygy-bpyt.16 (ruled on syzygy-bpyt.1.14): a CRLF or CR body gets the active-content decision its LF form gets. The first body was
+  // admitted under CRLF and CR before the fix (a backtick opener with a backtick in its info text hides a script element as an inline
+  // span), the second withheld (a tilde fence the mask did not recognize, leaving the script element it holds in the open).
+  it.each([['LF', '\n'], ['CRLF', '\r\n'], ['CR', '\r']])('%s: a body is withheld as active content or admitted as its LF form is', async (_name, end) => {
+    const screen = await loadPublicSourceScreen(goodPort);
+    const failOpen = ['# Guide', '', '```a`b', '<script>alert(1)</script>', '```', ''].join(end);
+    const benign = ['# Guide', '', '~~~', '<script>alert(1)</script>', '~~~', 'after', ''].join(end);
+    expect(screen.screenBody(failOpen)).toBe('active-content');
+    expect(screen.screenBody(benign)).toBeUndefined();
+    expect(screen.screenTargetBody(failOpen, 'README.md')).toEqual({ kind: 'excluded', outcome: 'active-content' });
+    expect(screen.screenTargetBody(benign, 'README.md')).toEqual({ kind: 'admitted' });
+  });
+
   it('a path secret is caught in the file name and in a directory name, in literal form only', async () => {
     const screen = await loadPublicSourceScreen(goodPort);
     expect(screen.screenPath(`src/${PATH_TOKEN}.ts`)).toBe('secret-detector-match');
@@ -373,9 +384,10 @@ describe('policy residuals (the detectors see literal forms only)', () => {
 // syzygy-2coz: the project-documentation class of screening scope version 2, under the live scope's rules. It is classified only while
 // the RFC5-14 class amendment act is confirmed (the scope's prerequisite); its bodies pass every detector and the active-content scan.
 describe('the project-documentation class', () => {
-  const LIVE_RULES = (JSON.parse(readFileSync(new URL('../../../../.syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json', import.meta.url), 'utf8'))
-    .publicSourceScope.contentClassification.rules) as Record<string, unknown>[];
-  const livePolicy = policyBytes({ publicSourceScope: { contentClassification: { rules: LIVE_RULES } } });
+  const LIVE_CLASSIFICATION = (JSON.parse(readFileSync(new URL('../../../../.syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json', import.meta.url), 'utf8'))
+    .publicSourceScope.contentClassification) as Record<string, unknown>;
+  const LIVE_RULES = LIVE_CLASSIFICATION['rules'] as Record<string, unknown>[];
+  const livePolicy = policyBytes({ publicSourceScope: { contentClassification: LIVE_CLASSIFICATION } });
   // The port states the prerequisite; the checkout port decides it with the strict class act reader at its clock, which the dossier's
   // screen test drives over records roots (a future-dated act, a withdrawal) against both screens. No default for `inForce`: an absent
   // answer is passed as `undefined`, which a default would replace.
@@ -385,8 +397,9 @@ describe('the project-documentation class', () => {
   it('admits a root document, a docs guide and a license text, and keeps withholding the rest', async () => {
     const screen = await loadPublicSourceScreen(docPort(true));
     expect(screen.projectDocumentation).toBe(true);
+    // Version 5: a root MANIFESTO is governance-text, admitted under that class rather than withheld.
     expect(['README.md', 'docs/guide.md', 'licenses/MIT.txt', 'src/server.c', 'MANIFESTO', 'docs/design.md', 'src/README.md', 'redis.conf'].map(path => screen.screenPath(path)))
-      .toEqual([undefined, undefined, undefined, undefined, 'unknown-extraction-class', 'unknown-extraction-class', 'unknown-extraction-class', 'unknown-extraction-class']);
+      .toEqual([undefined, undefined, undefined, undefined, undefined, 'unknown-extraction-class', 'unknown-extraction-class', 'unknown-extraction-class']);
     expect(['README.md', 'licenses/MIT.txt', 'src/server.c', 'docs/design.md'].map(path => screen.contentClass(path)))
       .toEqual(['project-documentation', 'project-documentation', 'code-content', undefined]);
   });
@@ -404,7 +417,7 @@ describe('the project-documentation class', () => {
 
   it('refuses a malformed project-documentation rule whether or not the class act is in force', async () => {
     const rules = LIVE_RULES.map(rule => (rule['class'] === 'project-documentation' ? { ...rule, docTreeRoots: ['docs/api'] } : rule));
-    const policy = policyBytes({ publicSourceScope: { contentClassification: { rules } } });
+    const policy = policyBytes({ publicSourceScope: { contentClassification: { ...LIVE_CLASSIFICATION, rules } } });
     for (const inForce of [true, false]) {
       const error = await loadPublicSourceScreen(docPort(inForce, policy)).then(() => undefined, (caught: unknown) => caught);
       expect(error).toBeInstanceOf(CorpusRefusal);
@@ -438,8 +451,19 @@ describe('the code-content exemption (screening scope version 3)', () => {
   let exemption: Record<string, unknown> = {};
   beforeAll(async () => {
     const py = `import json, sys; sys.path.insert(0, 'scripts')
-import build_public_source_screening_scope_v2 as b2, build_public_source_screening_scope_v3 as b, build_public_source_screening_scope_v4 as b4
-v3_all, _mode = b4.base_bytes()
+import build_public_source_screening_scope_v2 as b2, build_public_source_screening_scope_v3 as b, build_public_source_screening_scope_v4 as b4, build_public_source_screening_scope_v5 as b5
+import build_public_source_screening_scope_v6 as b6
+import build_public_source_screening_scope_v7 as b7
+import build_public_source_screening_scope_v8 as b8
+v7_s, _m8 = b8.base_bytes()
+assert _m8 == 'performed-v8' and b8.propose(v7_s) == open(str(b8.ROOT / b7.POLICY)).read()
+v6_p = b7.v2.reverse_patch((b7.ROOT / b7.patch_path('s')).read_text(), v7_s)
+assert b7.propose(v6_p) == v7_s
+v5_bcd = b2.reverse_patch((b6.ROOT / b6.patch_path('p')).read_text(), v6_p)
+v4_span = b2.reverse_patch((b5.ROOT / b5.patch_path(b6.V5_BASE_VARIANT)).read_text(), v5_bcd)
+assert b5.sha(v4_span) == b5.v4.manifest_rows(b5.ROOT)[b5.V4_BASE_VARIANT] and b5.propose(v4_span, b6.V5_BASE_VARIANT) == v5_bcd
+v3_all = b2.reverse_patch((b4.ROOT / b4.patch_path(b5.V4_BASE_VARIANT)).read_text(), v4_span)
+assert b4.sha(v3_all) == b4.v3.manifest_rows(b4.ROOT)[b4.V3_BASE_VARIANT] and b4.propose(v3_all, b5.V4_BASE_VARIANT) == v4_span
 base = b2.reverse_patch((b.ROOT / b.patch_path('all')).read_text(), v3_all)
 assert b.propose(base, 'all') == v3_all
 sys.stdout.write(json.dumps(json.loads(b.propose(base, 'all'))[b.SCOPE_KEY]['activeContent']['codeContentExemption']))`;
@@ -476,13 +500,15 @@ sys.stdout.write(json.dumps(json.loads(b.propose(base, 'all'))[b.SCOPE_KEY]['act
 
   it('refuses an exemption whose texts or extensions this screen does not implement', async () => {
     expect(await loadPublicSourceScreen(exemptPort(exemptPolicy({ rule: 'another rule' }))).then(() => '', (error: unknown) => (error as CorpusRefusal).reason))
-      .toBe('public-source-policy: policy code-content exemption rule is not the text this screen implements');
+      .toBe('public-source-policy: policy code-content exemption rule is not a text this screen implements');
     expect(await loadPublicSourceScreen(exemptPort(exemptPolicy({ exemptExtensions: ['.h'] }))).then(() => '', (error: unknown) => (error as CorpusRefusal).reason))
       .toBe('public-source-policy: policy code-content exemption exemptExtensions is not a non-empty list of distinct sourceExtensions entries');
   });
 });
 
 
+// The live bytes carry sourceVisibility since the version-8 act, so each read through them is given the pair's visibility: public, the
+// visibility under which version 8 keeps these rules.
 describe('the v4 redacted corpus behind the original-object verification boundary', () => {
   const mixed = 'a\rg\ntoken=abcdefghij\nh\nvisible\nlast\n';
   const current = new Uint8Array(readFileSync(new URL('../../../../.syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json', import.meta.url)));
@@ -490,7 +516,7 @@ describe('the v4 redacted corpus behind the original-object verification boundar
 
   it('returns only marked retained material with original identity, line coordinates and exact counts', async () => {
     const only = fixtureRepo({ 'docs/mixed.md': mixed, 'src/secret.c': 'token=abcdefghij\n' });
-    const corpus = await readScreenedRepoCorpus(only.root, cfg(only.commit), { admission: allow, policyAct });
+    const corpus = await readScreenedRepoCorpus(only.root, cfg(only.commit), { admission: allow, policyAct, visibility: 'public' });
     expect(corpus.count).toMatchObject({ listed: 2, selected: 2, sourceRows: 2, redactedFiles: 1, withheldLines: 3, secretDetectorMatches: 1 });
     const kept = corpus.sources.find(source => source.path === 'docs/mixed.md')!;
     expect(kept.objectId).toBe(objectIdOf('docs/mixed.md', only.root, only.commit));
@@ -502,22 +528,22 @@ describe('the v4 redacted corpus behind the original-object verification boundar
     expect(JSON.stringify(corpus)).not.toContain('token=');
     expect(validateGenerationSources(corpus.sources)).toHaveLength(2);
     const request = buildPipelineRequest(corpus, { ...cfg(only.commit), budget, readerQuestions: [{ id: 'why', topics: [], text: 'Why?' }], requestedAssets: [] }, Date.now());
-    const fresh = await screenedRepoCorpusVerifier(only.root, cfg(only.commit), { admission: allow, policyAct })(request);
+    const fresh = await screenedRepoCorpusVerifier(only.root, cfg(only.commit), { admission: allow, policyAct, visibility: 'public' })(request);
     expect(Array.isArray(fresh)).toBe(true);
     expect(validateGenerationSources(fresh as readonly GenerationSource[]).find(source => source.path === 'docs/mixed.md')?.body).toBe(kept.body);
   });
 
   it('refuses wrong original bytes before screening and fails replay closed when the fresh object read changes', async () => {
     const only = fixtureRepo({ 'docs/mixed.md': mixed });
-    const corpus = await readScreenedRepoCorpus(only.root, cfg(only.commit), { admission: allow, policyAct });
-    const ports = { admission: allow, policyAct, readBlobs: (_repo: string, objects: readonly string[]) => new Map(objects.map(oid => [oid, Buffer.from('arbitrary safe body\n')])) };
+    const corpus = await readScreenedRepoCorpus(only.root, cfg(only.commit), { admission: allow, policyAct, visibility: 'public' });
+    const ports = { admission: allow, policyAct, visibility: 'public' as const, readBlobs: (_repo: string, objects: readonly string[]) => new Map(objects.map(oid => [oid, Buffer.from('arbitrary safe body\n')])) };
     await expect(readScreenedRepoCorpus(only.root, cfg(only.commit), ports)).rejects.toThrow('corpus-object-mismatch');
     expect(await screenedRepoCorpusVerifier(only.root, cfg(only.commit), ports)(buildPipelineRequest(corpus, { ...cfg(only.commit), budget, readerQuestions: [{ id: 'why', topics: [], text: 'Why?' }], requestedAssets: [] }, Date.now()))).toBe(false);
   });
 
   it('binds the complete mixed population through fresh verification and consent before any provider input', async () => {
     const only = fixtureRepo({ 'docs/mixed.md': mixed, 'src/control.c': 'int ordinary = 7;\n', '.env': 'withheld-fixture\n' });
-    const corpus = await readScreenedRepoCorpus(only.root, cfg(only.commit), { admission: allow, policyAct });
+    const corpus = await readScreenedRepoCorpus(only.root, cfg(only.commit), { admission: allow, policyAct, visibility: 'public' });
     const now = Date.now(), sent: string[] = [];
     const request = buildPipelineRequest(corpus, { ...cfg(only.commit), budget,
       readerQuestions: [{ id: 'why', topics: [], text: 'Why?' }], requestedAssets: [] }, now);
@@ -530,7 +556,7 @@ describe('the v4 redacted corpus behind the original-object verification boundar
       { ...recordBase, recordId: 'fixture-egress', class: 'egress', repositoryId: null, providerId: 'fixture-provider', admittedRevisions: [],
         admittedRepositories: ['repository:fixture'], contentClasses: ['project-documentation', 'code-content'] },
     ];
-    const base: PipelinePorts = { now: () => now, verifySources: screenedRepoCorpusVerifier(only.root, cfg(only.commit), { admission: allow, policyAct }),
+    const base: PipelinePorts = { now: () => now, verifySources: screenedRepoCorpusVerifier(only.root, cfg(only.commit), { admission: allow, policyAct, visibility: 'public' }),
       permissionIdentity: async () => { throw Error('consent must replace this port'); },
       admit: async input => ({ kind: 'reserved', permit: { attemptId: String(input.ordinal), maxUsageUnits: 1, maxOutputBytes: 1_000 } }),
       permitted: async () => true, releaseUnsent: async () => undefined, responseSchema: () => ({ version: 'fixture', schema: {} }),
@@ -564,4 +590,77 @@ describe('the v4 redacted corpus behind the original-object verification boundar
     expect(sent.join('\n')).not.toContain('forged-secret-sentinel');
   });
 
+});
+
+// P-116 (screening scope version 5, D): the reader loads the screen for the repository it reads (its consent identity, as configured)
+// at the revision it reads, so an owner placement applies only there. The live policy with its one placement re-pointed at this fixture.
+describe('the version-5 owner placements through the corpus reader', () => {
+  const live = JSON.parse(readFileSync(new URL('../../../../.syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json', import.meta.url), 'utf8')) as Record<string, any>;
+  const placing = (repository: string, commits: readonly string[]): PublicSourcePolicyActPort => {
+    const doc = structuredClone(live);
+    const rule = (doc.publicSourceScope.contentClassification.rules as Record<string, unknown>[]).find(entry => entry['class'] === 'project-documentation')!;
+    rule['ownerPlacements'] = [{ repository, commits, paths: ['tls.md'] }];
+    const bytes = new TextEncoder().encode(`${JSON.stringify(doc, null, 2)}\n`);
+    return { read: async () => ({ actRecord: actRecord(sha(bytes)), policy: bytes, classActInForce: true }) };
+  };
+  let placed: { root: string; commit: string };
+  beforeAll(() => { placed = fixtureRepo({ 'TLS.md': '# TLS\nUse port 6380.\n', 'src/a.c': 'int a;\n' }); });
+  const paths = async (policyAct: PublicSourcePolicyActPort): Promise<string[]> =>
+    (await readScreenedRepoCorpus(placed.root, cfg(placed.commit), { admission: allow, policyAct, visibility: 'public' })).sources.filter(source => !source.exclusion.excluded).map(source => source.path).sort();
+
+  it('admits the placed path for the configured repository at the read revision', async () => {
+    expect(await paths(placing('repository:fixture', [placed.commit]))).toEqual(['TLS.md', 'src/a.c']);
+  });
+  it.each<[string, string, () => string[]]>([
+    ['another revision', 'repository:fixture', () => ['0'.repeat(40)]],
+    ['another repository', 'repository:other', () => [placed.commit]],
+  ])('withholds it for %s', async (_name, repository, commits) => {
+    expect(await paths(placing(repository, commits()))).toEqual(['src/a.c']);
+  });
+});
+
+// Screening scope version 8 (variant `pv`): the provider mode's reader reads only when its caller gives the pair's visibility, and only a
+// public one; a private pair is refused (no egress consent stating a private pair, and the acquisition fetches). The bytes are the
+// package's patch over the version-7 policy on disk, refused unless they hash to the package manifest's one row.
+describe('the provider-mode reader under screening scope version 8', () => {
+  const REPO_ROOT = join(dirname(fileURLToPath(import.meta.url)), '../../../..');
+  const POLICY = '.syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json';
+  const PATCH = '.syzygy/governance/contracts/candidates/public-source-screening-scope-v8/proposed/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json.pv.patch';
+  const ROW = '44153bbe210c7a724f224f2bc1c9255db43cf0887b6ad22dd24884514f21bbe8';
+  const disk = readFileSync(join(REPO_ROOT, POLICY), 'utf8');
+  const v8 = new TextEncoder().encode(sha(new TextEncoder().encode(disk)) === ROW ? disk : applyUnifiedPatch(disk, readFileSync(join(REPO_ROOT, PATCH), 'utf8')));
+  const v8Port = port(actRecord(sha(v8)), v8);
+  const subject = { repository: 'repository:redis-redis', commit: '498ecd0d6d007db11ddb3aea9428552598a78622' };
+  it('the fixture is the manifest row', () => {
+    expect(sha(v8)).toBe(ROW);
+  });
+  it('reads a public pair', async () => {
+    const screen = await loadPublicSourceScreen(v8Port, Buffer.alloc(32, 1), subject, 'public');
+    expect(screen.policyVersion).toBe('1.9.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd.v6-p.v7-s.v8-pv');
+  });
+  it.each([
+    ['no decision', undefined, 'public-source-policy: policy version 8 decides each pair\'s visibility from its observation consent records, launch consent records included, and this reader was given no decision'],
+    ['a private pair', 'private' as const, 'public-source-policy: the pair is private; the provider mode reads no private repository (no egress consent stating a private pair is in force, and it fetches from an upstream)'],
+  ])('refuses %s', async (_name, visibility, message) => {
+    await expect(loadPublicSourceScreen(v8Port, Buffer.alloc(32, 1), subject, visibility)).rejects.toThrow(message);
+  });
+  // A malformed sourceVisibility under a bound act: the reader's own refusal, whatever decision it is given.
+  const malformed = (mutate: (sv: Record<string, unknown>) => void): Uint8Array => {
+    const doc = JSON.parse(new TextDecoder().decode(v8)) as { publicSourceScope: { sourceVisibility: Record<string, unknown> } };
+    mutate(doc.publicSourceScope.sourceVisibility);
+    return new TextEncoder().encode(`${JSON.stringify(doc, null, 2)}\n`);
+  };
+  it.each([
+    ['values not exactly public, private', (sv: Record<string, unknown>) => { sv['values'] = ['public']; }, 'public-source-policy: policy source visibility values is not exactly public, private'],
+    ['an altered rule text', (sv: Record<string, unknown>) => { sv['rule'] = `${String(sv['rule'])} `; }, 'public-source-policy: policy source visibility rule is not the text this screen implements'],
+  ])('refuses a malformed sourceVisibility (%s), even given a public decision', async (_name, mutate, message) => {
+    const bytes = malformed(mutate);
+    await expect(loadPublicSourceScreen(port(actRecord(sha(bytes)), bytes), Buffer.alloc(32, 1), subject, 'public')).rejects.toThrow(message);
+  });
+  it('refuses a private pair under a policy without sourceVisibility too', async () => {
+    await expect(loadPublicSourceScreen(goodPort, Buffer.alloc(32, 1), subject, 'private')).rejects.toThrow('public-source-policy: the pair is private');
+  });
+  it('reads a policy without sourceVisibility given no decision, as before', async () => {
+    await expect(loadPublicSourceScreen(goodPort, Buffer.alloc(32, 1), subject)).resolves.toMatchObject({ policyVersion: '9.9.0-fixture.1' });
+  });
 });

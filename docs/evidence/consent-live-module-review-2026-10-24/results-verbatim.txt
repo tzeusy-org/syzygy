@@ -1,0 +1,39 @@
+removed non-blank lines from consent-ports.ts: 36
+in-force.ts non-blank body lines (no import, no // header): 36
+lines added to consent-ports.ts:
+  + import { effective, ref, type Dead } from './in-force.js';
+  + 
+  + export { inForceRecords, notInForceRecords, type NotInForce } from './in-force.js';
+in-force.ts lines starting with "export ": 6
+   export const ref = (r: AdmissionRecord): string => `${r.recordId}@${r.version}`;
+   export type Dead = 'withdrawn' | 'future-dated' | 'not-in-force' | 'ambiguous-records';
+   export function effective(records: readonly AdmissionRecord[], now: number): { readonly live: AdmissionRecord[
+   export function inForceRecords(records: readonly AdmissionRecord[], now: number): readonly AdmissionRecord[] {
+   export type NotInForce = Dead | 'superseded';
+   export function notInForceRecords(records: readonly AdmissionRecord[], now: number): ReadonlyMap<AdmissionReco
+differences removed vs in-force with export stripped: 6
+   --- removed
+   +++ in-force(export-stripped)
+   @@ -25 +25 @@
+   -export function inForceRecords(records: readonly AdmissionRecord[], now: number): readonly AdmissionRecord[] {
+   +function inForceRecords(records: readonly AdmissionRecord[], now: number): readonly AdmissionRecord[] {
+   @@ -28 +28 @@
+   -export type NotInForce = Dead | 'superseded';
+   +type NotInForce = Dead | 'superseded';
+   @@ -30 +30 @@
+   -export function notInForceRecords(records: readonly AdmissionRecord[], now: number): ReadonlyMap<AdmissionRecord, NotInForce> {
+   +function notInForceRecords(records: readonly AdmissionRecord[], now: number): ReadonlyMap<AdmissionRecord, NotInForce> {
+every stripped line occurs in old consent-ports.ts: False
+--- direct comparison, removed vs in-force body, no normalisation
+   --- removed
+   +++ in-force
+   @@ -1,2 +1,2 @@
+   -const ref = (r: AdmissionRecord): string => `${r.recordId}@${r.version}`;
+   -type Dead = 'withdrawn' | 'future-dated' | 'not-in-force' | 'ambiguous-records';
+   +export const ref = (r: AdmissionRecord): string => `${r.recordId}@${r.version}`;
+   +export type Dead = 'withdrawn' | 'future-dated' | 'not-in-force' | 'ambiguous-records';
+   @@ -6 +6 @@
+   -function effective(records: readonly AdmissionRecord[], now: number): { readonly live: AdmissionRecord[]; readonly dead: ReadonlyMap<AdmissionRecord, Dead> } {
+   +export function effective(records: readonly AdmissionRecord[], now: number): { readonly live: AdmissionRecord[]; readonly dead: ReadonlyMap<AdmissionRecord, De
+positional pairs differing: 3 of 36
+each differing pair differs only by a leading "export ": True

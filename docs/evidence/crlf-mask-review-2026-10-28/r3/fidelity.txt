@@ -1,0 +1,36 @@
+raw 324: '  ```ts'  raw 336: '  ```'
+N1 pin occurrences at 1ff3ed7d: 1  at 561e4f77: 0
+N2 row occurrences at head: 1
+raw N2 shape present in row: True
+markdown test: head minus row+pin == 561e4f77: True
+git-object-reader test: head minus RW10 pin == 561e4f77: True 1
+md U+00A0 0 U+FEFF 0 CR 0 nonascii 5
+gor U+00A0 0 U+FEFF 0 CR 0 nonascii 2
+production-path population 437
+production paths differing 561e4f77 vs 1ff3ed7d: 0 []
+  6928b50a!=561e4f77: AGENTS.md 561e4f77 blob == main f7ea8584 blob: False ; 6928b50a blob == d621bfa2 blob: False
+  6928b50a!=561e4f77: packages/cap1-system/vitest.config.ts 561e4f77 blob == main f7ea8584 blob: True ; 6928b50a blob == d621bfa2 blob: True
+  6928b50a!=561e4f77: packages/polaris-generation-core/src/canonical-json.ts 561e4f77 blob == main f7ea8584 blob: True ; 6928b50a blob == d621bfa2 blob: True
+  6928b50a!=561e4f77: packages/support/src/decode-utf8.ts 561e4f77 blob == main f7ea8584 blob: True ; 6928b50a blob == d621bfa2 blob: True
+  6928b50a!=561e4f77: packages/support/src/index.ts 561e4f77 blob == main f7ea8584 blob: True ; 6928b50a blob == d621bfa2 blob: True
+  6928b50a!=561e4f77: packages/three-surface-poc-core/src/authority-artifact-fields.ts 561e4f77 blob == main f7ea8584 blob: True ; 6928b50a blob == d621bfa2 blob: True
+  6928b50a!=561e4f77: packages/three-surface-poc-core/src/code-structure.ts 561e4f77 blob == main f7ea8584 blob: True ; 6928b50a blob == d621bfa2 blob: True
+  6928b50a!=561e4f77: packages/three-surface-poc-core/src/git-object-reader.ts 561e4f77 blob == main f7ea8584 blob: True ; 6928b50a blob == d621bfa2 blob: True
+  6928b50a!=561e4f77: packages/three-surface-poc-core/src/project-shape-manifest.ts 561e4f77 blob == main f7ea8584 blob: True ; 6928b50a blob == d621bfa2 blob: True
+  6928b50a!=561e4f77: packages/three-surface-poc-core/src/project-shape-observation.ts 561e4f77 blob == main f7ea8584 blob: True ; 6928b50a blob == d621bfa2 blob: True
+6928b50a packages/three-surface-poc-core/src/markdown-code-context.ts 93b95f6d4eabc440344404d01040ba1f10bdceb65e69ab74c4ea59c1fa5831f7
+561e4f77 packages/three-surface-poc-core/src/markdown-code-context.ts 93b95f6d4eabc440344404d01040ba1f10bdceb65e69ab74c4ea59c1fa5831f7
+1ff3ed7d packages/three-surface-poc-core/src/markdown-code-context.ts 93b95f6d4eabc440344404d01040ba1f10bdceb65e69ab74c4ea59c1fa5831f7
+changed paths 12
+  docs/evidence/syzygy-bpyt-16/build-record.py
+  docs/evidence/syzygy-bpyt-16/crlf-differential-output.json
+  docs/evidence/syzygy-bpyt-16/crlf-differential-selftest-output.json
+  docs/evidence/syzygy-bpyt-16/crlf-differential-selftest.mjs
+  docs/evidence/syzygy-bpyt-16/crlf-differential.mjs
+  docs/evidence/syzygy-bpyt-16/crlf-mask-2026-10-27.json
+  docs/evidence/syzygy-bpyt-16/crlf-mask-mutants-output.json
+  docs/evidence/syzygy-bpyt-16/crlf-mask-mutants.py
+  docs/evidence/syzygy-bpyt-16/test-delta-output.json
+  docs/evidence/syzygy-bpyt-16/vt-ff-slice-necessity.json
+  packages/three-surface-poc-core/src/git-object-reader.test.ts
+  packages/three-surface-poc-core/src/markdown-code-context.test.ts

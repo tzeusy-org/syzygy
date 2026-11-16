@@ -1,0 +1,6 @@
+
+> typecheck
+> tsc -b packages/cap1-core packages/http-host packages/cap1-daemon packages/cap1-conformance packages/three-surface-poc-core apps/syzygy apps/three-surface-poc packages/cap1-system packages/polaris-generation-core packages/polaris-generation-consent packages/polaris-dossier
+
+packages/cap1-daemon/src/package.test.ts(72,25): error TS2724: '"/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-535/head/packages/cap1-daemon/src/index"' has no exported member named 'StateWriteRefusalName'. Did you mean 'STATE_WRITE_REFUSALS'?
+exit 2

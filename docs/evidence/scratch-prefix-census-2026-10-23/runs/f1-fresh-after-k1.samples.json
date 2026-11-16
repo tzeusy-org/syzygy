@@ -1,0 +1,6773 @@
+{
+"tool": "tmp_sampler.py",
+"directory": "/tmp/lc418/f1/tmp",
+"intervalSeconds": 0.5,
+"seconds": 188.1,
+"final": true,
+"entries": {
+"syzygy-poc-surface-fixture-template-p1746490-n4026531836-1v9N7q": {
+"first": 0.0,
+"kind": "dir",
+"uid": 1000,
+"last": 1.01
+},
+"syzygy-poc-browser-yXLBDA": {
+"first": 0.0,
+"kind": "dir",
+"uid": 1000,
+"last": 188.09
+},
+"syzygy-poc-a11y-budget-MSyaIz": {
+"first": 0.0,
+"kind": "dir",
+"uid": 1000,
+"last": 188.09
+},
+"syzygy-poc-a11y-1QRcap": {
+"first": 0.0,
+"kind": "dir",
+"uid": 1000,
+"last": 188.09
+},
+"syzygy-build-output-l41wDx": {
+"first": 0.0,
+"kind": "dir",
+"uid": 1000,
+"last": 188.09
+},
+"node-compile-cache": {
+"first": 0.0,
+"kind": "dir",
+"uid": 1000,
+"last": 188.09
+},
+"git-object-reader-HkCTH2": {
+"first": 0.0,
+"kind": "dir",
+"uid": 1000,
+"last": 188.09
+},
+"dossier-waiting-HmQ43G": {
+"first": 0.0,
+"kind": "dir",
+"uid": 1000,
+"last": 188.09
+},
+"dossier-state-jjNLKN": {
+"first": 0.0,
+"kind": "dir",
+"uid": 1000,
+"last": 188.09
+},
+"dossier-records-yaAv2Z": {
+"first": 0.0,
+"kind": "dir",
+"uid": 1000,
+"last": 188.09
+},
+"dossier-origin-0gdUJr": {
+"first": 0.0,
+"kind": "dir",
+"uid": 1000,
+"last": 188.09
+},
+"dossier-gate-acts-p8YcD5": {
+"first": 0.0,
+"kind": "dir",
+"uid": 1000,
+"last": 188.09
+},
+"dossier-clone-g5U4a6": {
+"first": 0.0,
+"kind": "dir",
+"uid": 1000,
+"last": 188.09
+},
+"YgwnH4DvW-JSNHWkt_vWK": {
+"first": 0.0,
+"kind": "dir",
+"uid": 1000,
+"last": 188.09
+},
+"MtKnQPnthe7BWZEzUcREK": {
+"first": 0.0,
+"kind": "dir",
+"uid": 1000,
+"last": 188.09
+},
+".com.google.Chrome.N4WJkS": {
+"first": 0.0,
+"kind": "dir",
+"uid": 1000,
+"last": 188.09
+},
+"WyK8YGPqw5-DXe4PWblfu": {
+"first": 2.01,
+"kind": "dir",
+"uid": 1000,
+"last": 182.03
+},
+"1C_I46bkcUEL7UgtOJY7y": {
+"first": 2.01,
+"kind": "dir",
+"uid": 1000,
+"last": 182.03
+},
+"syzygy-build-output-fOkT2A": {
+"first": 2.52,
+"kind": "dir",
+"uid": 1000,
+"last": 71.97
+},
+"git-object-reader-50ZT77": {
+"first": 3.03,
+"kind": "dir",
+"uid": 1000,
+"last": 54.64
+},
+"syzygy-poc-browser-Csv1EA": {
+"first": 6.55,
+"kind": "dir",
+"uid": 1000,
+"last": 165.36
+},
+"syzygy-poc-surface-fixture-template-p1913865-n4026531836-65n2aC": {
+"first": 7.05,
+"kind": "dir",
+"uid": 1000,
+"last": 165.36
+},
+"syzygy-poc-a11y-0GAnfB": {
+"first": 7.05,
+"kind": "dir",
+"uid": 1000,
+"last": 165.36
+},
+"dossier-waiting-d9hKOc": {
+"first": 7.05,
+"kind": "dir",
+"uid": 1000,
+"last": 7.05
+},
+".com.google.Chrome.VOJRvO": {
+"first": 7.05,
+"kind": "dir",
+"uid": 1000,
+"last": 164.86
+},
+"dossier-origin-z43zx0": {
+"first": 7.05,
+"kind": "dir",
+"uid": 1000,
+"last": 77.08
+},
+"dossier-waiting-ziaHlf": {
+"first": 7.56,
+"kind": "dir",
+"uid": 1000,
+"last": 7.56
+},
+"dossier-signoff-JDEyAX": {
+"first": 7.56,
+"kind": "dir",
+"uid": 1000,
+"last": 7.56
+},
+"syzygy-poc-surface-fixture-p1913865-n4026531836-t8cN6y": {
+"first": 7.56,
+"kind": "dir",
+"uid": 1000,
+"last": 9.59
+},
+"dossier-waiting-mAN4V2": {
+"first": 8.06,
+"kind": "dir",
+"uid": 1000,
+"last": 8.06
+},
+"dossier-clone-bt5KnJ": {
+"first": 8.06,
+"kind": "dir",
+"uid": 1000,
+"last": 8.56
+},
+"dossier-state-r3wXxi": {
+"first": 8.56,
+"kind": "dir",
+"uid": 1000,
+"last": 8.56
+},
+"dossier-records-C94vpm": {
+"first": 8.56,
+"kind": "dir",
+"uid": 1000,
+"last": 8.56
+},
+"dossier-waiting-PChL1n": {
+"first": 8.56,
+"kind": "dir",
+"uid": 1000,
+"last": 8.56
+},
+"dossier-state-abcYYq": {
+"first": 8.56,
+"kind": "dir",
+"uid": 1000,
+"last": 8.56
+},
+"dossier-records-iRdO3R": {
+"first": 8.56,
+"kind": "dir",
+"uid": 1000,
+"last": 8.56
+},
+"dossier-clone-link-QdXtxg": {
+"first": 8.56,
+"kind": "dir",
+"uid": 1000,
+"last": 8.56
+},
+"dossier-state-t34EeT": {
+"first": 9.08,
+"kind": "dir",
+"uid": 1000,
+"last": 9.08
+},
+"dossier-records-0FILTY": {
+"first": 9.08,
+"kind": "dir",
+"uid": 1000,
+"last": 9.08
+},
+"dossier-link-AN5in8": {
+"first": 9.08,
+"kind": "dir",
+"uid": 1000,
+"last": 9.08
+},
+"dossier-waiting-VRujTC": {
+"first": 9.08,
+"kind": "dir",
+"uid": 1000,
+"last": 9.08
+},
+"dossier-clone-TzI7tH": {
+"first": 9.08,
+"kind": "dir",
+"uid": 1000,
+"last": 9.08
+},
+"dossier-waiting-hiZY3r": {
+"first": 9.59,
+"kind": "dir",
+"uid": 1000,
+"last": 10.1
+},
+"dossier-clone-ZGMDWA": {
+"first": 9.59,
+"kind": "dir",
+"uid": 1000,
+"last": 9.59
+},
+"syzygy-poc-surface-fixture-p1913865-n4026531836-V24OY6": {
+"first": 10.1,
+"kind": "dir",
+"uid": 1000,
+"last": 11.1
+},
+"dossier-clone-AjOuwR": {
+"first": 10.1,
+"kind": "dir",
+"uid": 1000,
+"last": 10.1
+},
+"dossier-waiting-sQf3gr": {
+"first": 10.6,
+"kind": "dir",
+"uid": 1000,
+"last": 11.1
+},
+"dossier-clone-TwV1G5": {
+"first": 10.6,
+"kind": "dir",
+"uid": 1000,
+"last": 10.6
+},
+"dossier-state-UuVyTJ": {
+"first": 11.1,
+"kind": "dir",
+"uid": 1000,
+"last": 11.1
+},
+"dossier-records-no8tM8": {
+"first": 11.1,
+"kind": "dir",
+"uid": 1000,
+"last": 11.1
+},
+"dossier-full-clone-9W77GX": {
+"first": 11.1,
+"kind": "dir",
+"uid": 1000,
+"last": 11.1
+},
+"dossier-gate-acts-6aotOO": {
+"first": 11.1,
+"kind": "dir",
+"uid": 1000,
+"last": 14.13
+},
+"dossier-gate-acts-fWezqU": {
+"first": 11.1,
+"kind": "dir",
+"uid": 1000,
+"last": 14.13
+},
+"dossier-state-MqiJOO": {
+"first": 11.6,
+"kind": "dir",
+"uid": 1000,
+"last": 11.6
+},
+"dossier-records-D0Botu": {
+"first": 11.6,
+"kind": "dir",
+"uid": 1000,
+"last": 11.6
+},
+"dossier-waiting-4UaBB9": {
+"first": 11.6,
+"kind": "dir",
+"uid": 1000,
+"last": 11.6
+},
+"syzygy-poc-surface-fixture-p1913865-n4026531836-VUBZ9P": {
+"first": 11.6,
+"kind": "dir",
+"uid": 1000,
+"last": 12.11
+},
+"dossier-clone-ijQKzh": {
+"first": 11.6,
+"kind": "dir",
+"uid": 1000,
+"last": 11.6
+},
+"dossier-state-6JhmrO": {
+"first": 12.11,
+"kind": "dir",
+"uid": 1000,
+"last": 12.11
+},
+"dossier-records-RP43LE": {
+"first": 12.11,
+"kind": "dir",
+"uid": 1000,
+"last": 12.11
+},
+"dossier-waiting-IcLJpz": {
+"first": 12.11,
+"kind": "dir",
+"uid": 1000,
+"last": 12.61
+},
+"dossier-state-lGilLu": {
+"first": 12.11,
+"kind": "dir",
+"uid": 1000,
+"last": 12.11
+},
+"dossier-records-ngmH02": {
+"first": 12.11,
+"kind": "dir",
+"uid": 1000,
+"last": 12.11
+},
+"dossier-clone-lpZEkU": {
+"first": 12.11,
+"kind": "dir",
+"uid": 1000,
+"last": 12.11
+},
+"dossier-state-yghlGo": {
+"first": 12.61,
+"kind": "dir",
+"uid": 1000,
+"last": 12.61
+},
+"dossier-records-q1KoaG": {
+"first": 12.61,
+"kind": "dir",
+"uid": 1000,
+"last": 12.61
+},
+"dossier-gate-acts-AiwCMZ": {
+"first": 12.61,
+"kind": "dir",
+"uid": 1000,
+"last": 14.13
+},
+"dossier-state-WVIb6u": {
+"first": 12.61,
+"kind": "dir",
+"uid": 1000,
+"last": 12.61
+},
+"dossier-records-hQBERT": {
+"first": 12.61,
+"kind": "dir",
+"uid": 1000,
+"last": 12.61
+},
+"dossier-clone-0Efk7z": {
+"first": 12.61,
+"kind": "dir",
+"uid": 1000,
+"last": 12.61
+},
+"dossier-state-llvjrL": {
+"first": 13.11,
+"kind": "dir",
+"uid": 1000,
+"last": 14.64
+},
+"dossier-records-cinBnY": {
+"first": 13.11,
+"kind": "dir",
+"uid": 1000,
+"last": 14.64
+},
+"dossier-gate-acts-INNmuk": {
+"first": 13.11,
+"kind": "dir",
+"uid": 1000,
+"last": 14.13
+},
+"dossier-full-clone-xCRhGp": {
+"first": 13.11,
+"kind": "dir",
+"uid": 1000,
+"last": 14.64
+},
+"dossier-waiting-ooQL7Y": {
+"first": 13.11,
+"kind": "dir",
+"uid": 1000,
+"last": 13.11
+},
+"dossier-gate-acts-j85nKp": {
+"first": 13.11,
+"kind": "dir",
+"uid": 1000,
+"last": 14.13
+},
+"dossier-clone-4Pj4f9": {
+"first": 13.11,
+"kind": "dir",
+"uid": 1000,
+"last": 14.64
+},
+"dossier-gate-acts-zakCG5": {
+"first": 13.62,
+"kind": "dir",
+"uid": 1000,
+"last": 14.13
+},
+"dossier-clone-AnhjZQ": {
+"first": 13.62,
+"kind": "dir",
+"uid": 1000,
+"last": 14.64
+},
+"syzygy-poc-surface-fixture-p1913865-n4026531836-yTNb84": {
+"first": 13.62,
+"kind": "dir",
+"uid": 1000,
+"last": 14.13
+},
+"dossier-waiting-apyLFM": {
+"first": 13.62,
+"kind": "dir",
+"uid": 1000,
+"last": 13.62
+},
+"dossier-gate-acts-FgTRoZ": {
+"first": 13.62,
+"kind": "dir",
+"uid": 1000,
+"last": 14.13
+},
+"dossier-state-CuGgWW": {
+"first": 13.62,
+"kind": "dir",
+"uid": 1000,
+"last": 14.64
+},
+"dossier-records-BmcYY6": {
+"first": 13.62,
+"kind": "dir",
+"uid": 1000,
+"last": 14.64
+},
+"dossier-gate-acts-Vj95PT": {
+"first": 13.62,
+"kind": "dir",
+"uid": 1000,
+"last": 14.13
+},
+"dossier-clone-EjXkaf": {
+"first": 13.62,
+"kind": "dir",
+"uid": 1000,
+"last": 14.64
+},
+"dossier-gate-acts-PJXdXo": {
+"first": 13.62,
+"kind": "dir",
+"uid": 1000,
+"last": 14.13
+},
+"dossier-gate-acts-ixbC3P": {
+"first": 14.13,
+"kind": "dir",
+"uid": 1000,
+"last": 14.13
+},
+"dossier-clone-AzIFBX": {
+"first": 14.13,
+"kind": "dir",
+"uid": 1000,
+"last": 14.13
+},
+"dossier-state-FhMEvp": {
+"first": 14.13,
+"kind": "dir",
+"uid": 1000,
+"last": 14.13
+},
+"dossier-records-f6RlTc": {
+"first": 14.13,
+"kind": "dir",
+"uid": 1000,
+"last": 14.13
+},
+"dossier-waiting-5xrmAL": {
+"first": 14.13,
+"kind": "dir",
+"uid": 1000,
+"last": 14.13
+},
+"dossier-clone-8cCASQ": {
+"first": 14.13,
+"kind": "dir",
+"uid": 1000,
+"last": 14.13
+},
+"dossier-state-2IR0Ju": {
+"first": 14.13,
+"kind": "dir",
+"uid": 1000,
+"last": 14.13
+},
+"dossier-records-vOnuPj": {
+"first": 14.13,
+"kind": "dir",
+"uid": 1000,
+"last": 14.13
+},
+"dossier-full-clone-9xjNTr": {
+"first": 14.13,
+"kind": "dir",
+"uid": 1000,
+"last": 14.13
+},
+"dossier-waiting-JbRnZE": {
+"first": 14.64,
+"kind": "dir",
+"uid": 1000,
+"last": 14.64
+},
+"dossier-gate-acts-Oa3zFp": {
+"first": 14.64,
+"kind": "dir",
+"uid": 1000,
+"last": 14.64
+},
+"syzygy-poc-a11y-budget-HXhA68": {
+"first": 14.64,
+"kind": "dir",
+"uid": 1000,
+"last": 52.11
+},
+"dossier-waiting-B4HxJx": {
+"first": 15.14,
+"kind": "dir",
+"uid": 1000,
+"last": 15.65
+},
+"dossier-clone-ORU10v": {
+"first": 15.14,
+"kind": "dir",
+"uid": 1000,
+"last": 16.66
+},
+"dossier-state-3Lwr86": {
+"first": 15.14,
+"kind": "dir",
+"uid": 1000,
+"last": 16.66
+},
+"dossier-records-BOAjjU": {
+"first": 15.14,
+"kind": "dir",
+"uid": 1000,
+"last": 16.66
+},
+"dossier-full-clone-Ohk3l7": {
+"first": 15.14,
+"kind": "dir",
+"uid": 1000,
+"last": 16.66
+},
+"dossier-gate-acts-ItuNVz": {
+"first": 15.14,
+"kind": "dir",
+"uid": 1000,
+"last": 15.14
+},
+"dossier-clone-qJe1xY": {
+"first": 15.14,
+"kind": "dir",
+"uid": 1000,
+"last": 16.66
+},
+"dossier-state-jkutbX": {
+"first": 15.65,
+"kind": "dir",
+"uid": 1000,
+"last": 16.66
+},
+"dossier-records-k1edrI": {
+"first": 15.65,
+"kind": "dir",
+"uid": 1000,
+"last": 16.66
+},
+"dossier-full-clone-VRbjAO": {
+"first": 15.65,
+"kind": "dir",
+"uid": 1000,
+"last": 16.66
+},
+"dossier-gate-acts-9HjMFv": {
+"first": 15.65,
+"kind": "dir",
+"uid": 1000,
+"last": 16.15
+},
+"dossier-clone-QnxlGE": {
+"first": 15.65,
+"kind": "dir",
+"uid": 1000,
+"last": 16.66
+},
+"dossier-state-5vl0YM": {
+"first": 15.65,
+"kind": "dir",
+"uid": 1000,
+"last": 16.66
+},
+"dossier-records-EmF64D": {
+"first": 15.65,
+"kind": "dir",
+"uid": 1000,
+"last": 16.66
+},
+"dossier-state-uUtVcu": {
+"first": 16.15,
+"kind": "dir",
+"uid": 1000,
+"last": 16.66
+},
+"dossier-records-QGip97": {
+"first": 16.15,
+"kind": "dir",
+"uid": 1000,
+"last": 16.66
+},
+"dossier-clone-fHrCWi": {
+"first": 16.15,
+"kind": "dir",
+"uid": 1000,
+"last": 16.66
+},
+"dossier-waiting-NrL9qg": {
+"first": 16.15,
+"kind": "dir",
+"uid": 1000,
+"last": 16.15
+},
+"dossier-state-KSPq6N": {
+"first": 16.66,
+"kind": "dir",
+"uid": 1000,
+"last": 16.66
+},
+"dossier-records-GbwWoN": {
+"first": 16.66,
+"kind": "dir",
+"uid": 1000,
+"last": 16.66
+},
+"dossier-full-clone-6kWoXG": {
+"first": 16.66,
+"kind": "dir",
+"uid": 1000,
+"last": 16.66
+},
+"dossier-gate-acts-fjrGmW": {
+"first": 16.66,
+"kind": "dir",
+"uid": 1000,
+"last": 16.66
+},
+"dossier-waiting-0FQuak": {
+"first": 16.66,
+"kind": "dir",
+"uid": 1000,
+"last": 16.66
+},
+"dossier-clone-gttjYn": {
+"first": 16.66,
+"kind": "dir",
+"uid": 1000,
+"last": 16.66
+},
+"dossier-clone-Q6jmf8": {
+"first": 17.16,
+"kind": "dir",
+"uid": 1000,
+"last": 18.17
+},
+"dossier-state-PW3BuX": {
+"first": 17.16,
+"kind": "dir",
+"uid": 1000,
+"last": 18.17
+},
+"dossier-records-QJEk1W": {
+"first": 17.16,
+"kind": "dir",
+"uid": 1000,
+"last": 18.17
+},
+"dossier-clone-DbxPyQ": {
+"first": 17.16,
+"kind": "dir",
+"uid": 1000,
+"last": 18.17
+},
+"dossier-gate-acts-qqAoiY": {
+"first": 17.16,
+"kind": "dir",
+"uid": 1000,
+"last": 17.16
+},
+"dossier-waiting-xgZCtu": {
+"first": 17.16,
+"kind": "dir",
+"uid": 1000,
+"last": 17.16
+},
+"dossier-state-9IFJq5": {
+"first": 17.16,
+"kind": "dir",
+"uid": 1000,
+"last": 18.17
+},
+"dossier-records-25JtlO": {
+"first": 17.16,
+"kind": "dir",
+"uid": 1000,
+"last": 18.17
+},
+"dossier-clone-NWK6uN": {
+"first": 17.16,
+"kind": "dir",
+"uid": 1000,
+"last": 18.17
+},
+"dossier-clone-O4Xl1P": {
+"first": 17.67,
+"kind": "dir",
+"uid": 1000,
+"last": 18.17
+},
+"dossier-gate-acts-DuT5DP": {
+"first": 17.67,
+"kind": "dir",
+"uid": 1000,
+"last": 17.67
+},
+"dossier-state-tYnfqk": {
+"first": 17.67,
+"kind": "dir",
+"uid": 1000,
+"last": 18.17
+},
+"dossier-records-9WOtSB": {
+"first": 17.67,
+"kind": "dir",
+"uid": 1000,
+"last": 18.17
+},
+"dossier-waiting-4EBomb": {
+"first": 17.67,
+"kind": "dir",
+"uid": 1000,
+"last": 17.67
+},
+"dossier-clone-cM3cJ5": {
+"first": 17.67,
+"kind": "dir",
+"uid": 1000,
+"last": 18.17
+},
+"dossier-state-6WJDPN": {
+"first": 17.67,
+"kind": "dir",
+"uid": 1000,
+"last": 18.17
+},
+"dossier-records-uHPU8y": {
+"first": 17.67,
+"kind": "dir",
+"uid": 1000,
+"last": 18.17
+},
+"dossier-clone-UjZxWW": {
+"first": 18.17,
+"kind": "dir",
+"uid": 1000,
+"last": 18.17
+},
+"dossier-gate-acts-sMKkjE": {
+"first": 18.17,
+"kind": "dir",
+"uid": 1000,
+"last": 18.17
+},
+"dossier-state-jg2uZx": {
+"first": 18.17,
+"kind": "dir",
+"uid": 1000,
+"last": 18.17
+},
+"dossier-records-8EpxAe": {
+"first": 18.17,
+"kind": "dir",
+"uid": 1000,
+"last": 18.17
+},
+"dossier-waiting-HNEoZq": {
+"first": 18.17,
+"kind": "dir",
+"uid": 1000,
+"last": 18.17
+},
+"dossier-clone-E73Pif": {
+"first": 18.17,
+"kind": "dir",
+"uid": 1000,
+"last": 18.17
+},
+"dossier-state-tAdIPT": {
+"first": 18.17,
+"kind": "dir",
+"uid": 1000,
+"last": 18.17
+},
+"dossier-records-cRI9GL": {
+"first": 18.17,
+"kind": "dir",
+"uid": 1000,
+"last": 18.17
+},
+"dossier-clone-pBJIn2": {
+"first": 18.68,
+"kind": "dir",
+"uid": 1000,
+"last": 19.19
+},
+"dossier-state-PBrGee": {
+"first": 18.68,
+"kind": "dir",
+"uid": 1000,
+"last": 19.19
+},
+"dossier-records-07END8": {
+"first": 18.68,
+"kind": "dir",
+"uid": 1000,
+"last": 19.19
+},
+"dossier-gate-acts-quvIY8": {
+"first": 18.68,
+"kind": "dir",
+"uid": 1000,
+"last": 18.68
+},
+"dossier-clone-XMxvNh": {
+"first": 18.68,
+"kind": "dir",
+"uid": 1000,
+"last": 19.19
+},
+"dossier-waiting-dd1FAk": {
+"first": 18.68,
+"kind": "dir",
+"uid": 1000,
+"last": 18.68
+},
+"dossier-gate-acts-mjV0HQ": {
+"first": 19.19,
+"kind": "dir",
+"uid": 1000,
+"last": 19.19
+},
+"dossier-clone-lRpK3z": {
+"first": 19.19,
+"kind": "dir",
+"uid": 1000,
+"last": 19.19
+},
+"dossier-waiting-xIBRCr": {
+"first": 19.19,
+"kind": "dir",
+"uid": 1000,
+"last": 19.19
+},
+"dossier-state-v5nJEX": {
+"first": 19.19,
+"kind": "dir",
+"uid": 1000,
+"last": 19.19
+},
+"dossier-records-KChlfi": {
+"first": 19.19,
+"kind": "dir",
+"uid": 1000,
+"last": 19.19
+},
+"dossier-state-GL3ZRu": {
+"first": 19.69,
+"kind": "dir",
+"uid": 1000,
+"last": 19.69
+},
+"dossier-records-q4mgkB": {
+"first": 19.69,
+"kind": "dir",
+"uid": 1000,
+"last": 19.69
+},
+"dossier-waiting-l0cMM5": {
+"first": 19.69,
+"kind": "dir",
+"uid": 1000,
+"last": 20.19
+},
+"dossier-gate-acts-VfO27J": {
+"first": 19.69,
+"kind": "dir",
+"uid": 1000,
+"last": 19.69
+},
+"dossier-clone-KnZqF8": {
+"first": 19.69,
+"kind": "dir",
+"uid": 1000,
+"last": 19.69
+},
+"dossier-gate-acts-oa8uwl": {
+"first": 20.19,
+"kind": "dir",
+"uid": 1000,
+"last": 20.19
+},
+"dossier-clone-KaE05b": {
+"first": 20.19,
+"kind": "dir",
+"uid": 1000,
+"last": 21.22
+},
+"dossier-state-pg3OZn": {
+"first": 20.19,
+"kind": "dir",
+"uid": 1000,
+"last": 21.22
+},
+"dossier-records-wQkPsp": {
+"first": 20.19,
+"kind": "dir",
+"uid": 1000,
+"last": 21.22
+},
+"dossier-clone-1Qq5iz": {
+"first": 20.19,
+"kind": "dir",
+"uid": 1000,
+"last": 21.22
+},
+"dossier-clone-IUNNVT": {
+"first": 20.19,
+"kind": "dir",
+"uid": 1000,
+"last": 21.22
+},
+"dossier-gate-acts-qCzXmj": {
+"first": 20.72,
+"kind": "dir",
+"uid": 1000,
+"last": 21.22
+},
+"dossier-clone-YkLrxx": {
+"first": 20.72,
+"kind": "dir",
+"uid": 1000,
+"last": 21.22
+},
+"dossier-state-doZrs7": {
+"first": 20.72,
+"kind": "dir",
+"uid": 1000,
+"last": 21.22
+},
+"dossier-records-3jn9QO": {
+"first": 20.72,
+"kind": "dir",
+"uid": 1000,
+"last": 21.22
+},
+"dossier-clone-e6uFCg": {
+"first": 20.72,
+"kind": "dir",
+"uid": 1000,
+"last": 21.22
+},
+"dossier-state-fC6HjM": {
+"first": 20.72,
+"kind": "dir",
+"uid": 1000,
+"last": 21.22
+},
+"dossier-records-y3AYod": {
+"first": 20.72,
+"kind": "dir",
+"uid": 1000,
+"last": 21.22
+},
+"dossier-full-clone-whMWsz": {
+"first": 20.72,
+"kind": "dir",
+"uid": 1000,
+"last": 21.22
+},
+"dossier-waiting-nbVIbj": {
+"first": 20.72,
+"kind": "dir",
+"uid": 1000,
+"last": 20.72
+},
+"dossier-clone-hMngbb": {
+"first": 21.22,
+"kind": "dir",
+"uid": 1000,
+"last": 21.22
+},
+"dossier-state-Nz6GNA": {
+"first": 21.22,
+"kind": "dir",
+"uid": 1000,
+"last": 21.22
+},
+"dossier-records-HJNQ3H": {
+"first": 21.22,
+"kind": "dir",
+"uid": 1000,
+"last": 21.22
+},
+"dossier-waiting-DO3Adg": {
+"first": 21.22,
+"kind": "dir",
+"uid": 1000,
+"last": 21.22
+},
+"dossier-full-clone-y5T5we": {
+"first": 21.22,
+"kind": "dir",
+"uid": 1000,
+"last": 21.22
+},
+"dossier-clone-ycmL0Q": {
+"first": 21.73,
+"kind": "dir",
+"uid": 1000,
+"last": 21.73
+},
+"dossier-gate-acts-BaSAt1": {
+"first": 21.73,
+"kind": "dir",
+"uid": 1000,
+"last": 22.24
+},
+"dossier-waiting-7BoaCT": {
+"first": 21.73,
+"kind": "dir",
+"uid": 1000,
+"last": 22.76
+},
+"dossier-clone-8JmM5S": {
+"first": 22.24,
+"kind": "dir",
+"uid": 1000,
+"last": 22.76
+},
+"dossier-clone-netLYT": {
+"first": 22.76,
+"kind": "dir",
+"uid": 1000,
+"last": 22.76
+},
+"dossier-gate-acts-vIrVXk": {
+"first": 22.76,
+"kind": "dir",
+"uid": 1000,
+"last": 22.76
+},
+"dossier-clone-eEJwLg": {
+"first": 22.76,
+"kind": "dir",
+"uid": 1000,
+"last": 22.76
+},
+"dossier-gate-acts-FawJBI": {
+"first": 23.26,
+"kind": "dir",
+"uid": 1000,
+"last": 23.26
+},
+"dossier-clone-0rj3uQ": {
+"first": 23.26,
+"kind": "dir",
+"uid": 1000,
+"last": 23.76
+},
+"dossier-waiting-fuqlCG": {
+"first": 23.26,
+"kind": "dir",
+"uid": 1000,
+"last": 23.76
+},
+"dossier-clone-nUnklA": {
+"first": 23.76,
+"kind": "dir",
+"uid": 1000,
+"last": 23.76
+},
+"dossier-gate-acts-tC5Iih": {
+"first": 23.76,
+"kind": "dir",
+"uid": 1000,
+"last": 23.76
+},
+"dossier-state-AgSm38": {
+"first": 23.76,
+"kind": "dir",
+"uid": 1000,
+"last": 23.76
+},
+"dossier-records-bk9jpk": {
+"first": 23.76,
+"kind": "dir",
+"uid": 1000,
+"last": 23.76
+},
+"dossier-gate-acts-t9eKCV": {
+"first": 23.76,
+"kind": "dir",
+"uid": 1000,
+"last": 23.76
+},
+"dossier-waiting-QD5wUv": {
+"first": 24.28,
+"kind": "dir",
+"uid": 1000,
+"last": 24.79
+},
+"dossier-clone-HImx42": {
+"first": 24.28,
+"kind": "dir",
+"uid": 1000,
+"last": 24.28
+},
+"dossier-gate-acts-21y3Lk": {
+"first": 24.28,
+"kind": "dir",
+"uid": 1000,
+"last": 24.28
+},
+"dossier-state-b9FNdm": {
+"first": 24.28,
+"kind": "dir",
+"uid": 1000,
+"last": 24.28
+},
+"dossier-records-tetk2T": {
+"first": 24.28,
+"kind": "dir",
+"uid": 1000,
+"last": 24.28
+},
+"dossier-clone-wXdtny": {
+"first": 24.28,
+"kind": "dir",
+"uid": 1000,
+"last": 24.28
+},
+"dossier-clone-HJbM6g": {
+"first": 24.79,
+"kind": "dir",
+"uid": 1000,
+"last": 25.3
+},
+"dossier-gate-acts-4daLVj": {
+"first": 24.79,
+"kind": "dir",
+"uid": 1000,
+"last": 24.79
+},
+"dossier-waiting-9y167N": {
+"first": 25.3,
+"kind": "dir",
+"uid": 1000,
+"last": 25.8
+},
+"dossier-gate-acts-JF7BN7": {
+"first": 25.3,
+"kind": "dir",
+"uid": 1000,
+"last": 25.3
+},
+"dossier-clone-2LxRDV": {
+"first": 25.3,
+"kind": "dir",
+"uid": 1000,
+"last": 25.3
+},
+"dossier-state-FvJgT0": {
+"first": 25.3,
+"kind": "dir",
+"uid": 1000,
+"last": 25.3
+},
+"dossier-records-3mmlUR": {
+"first": 25.3,
+"kind": "dir",
+"uid": 1000,
+"last": 25.3
+},
+"dossier-state-6qFUIh": {
+"first": 25.8,
+"kind": "dir",
+"uid": 1000,
+"last": 26.81
+},
+"dossier-records-ZyIMxR": {
+"first": 25.8,
+"kind": "dir",
+"uid": 1000,
+"last": 26.81
+},
+"dossier-gate-acts-UFJ8OC": {
+"first": 25.8,
+"kind": "dir",
+"uid": 1000,
+"last": 25.8
+},
+"dossier-clone-YMPkw4": {
+"first": 25.8,
+"kind": "dir",
+"uid": 1000,
+"last": 26.81
+},
+"dossier-gate-acts-BN6lPD": {
+"first": 26.3,
+"kind": "dir",
+"uid": 1000,
+"last": 26.3
+},
+"dossier-clone-Woxttb": {
+"first": 26.3,
+"kind": "dir",
+"uid": 1000,
+"last": 26.81
+},
+"dossier-state-haY9dB": {
+"first": 26.3,
+"kind": "dir",
+"uid": 1000,
+"last": 26.81
+},
+"dossier-records-jj04jJ": {
+"first": 26.3,
+"kind": "dir",
+"uid": 1000,
+"last": 26.81
+},
+"dossier-waiting-RTagSH": {
+"first": 26.3,
+"kind": "dir",
+"uid": 1000,
+"last": 26.81
+},
+"dossier-clone-2Y9Iec": {
+"first": 26.3,
+"kind": "dir",
+"uid": 1000,
+"last": 26.81
+},
+"dossier-state-ST666o": {
+"first": 26.3,
+"kind": "dir",
+"uid": 1000,
+"last": 26.81
+},
+"dossier-records-RyGr7e": {
+"first": 26.3,
+"kind": "dir",
+"uid": 1000,
+"last": 26.81
+},
+"dossier-clone-pPYV6N": {
+"first": 26.81,
+"kind": "dir",
+"uid": 1000,
+"last": 26.81
+},
+"dossier-gate-acts-cY9vBl": {
+"first": 26.81,
+"kind": "dir",
+"uid": 1000,
+"last": 26.81
+},
+"dossier-waiting-9MdoGu": {
+"first": 27.32,
+"kind": "dir",
+"uid": 1000,
+"last": 28.83
+},
+"dossier-gate-acts-K8CrJ5": {
+"first": 27.32,
+"kind": "dir",
+"uid": 1000,
+"last": 27.32
+},
+"dossier-clone-A8NBYp": {
+"first": 27.32,
+"kind": "dir",
+"uid": 1000,
+"last": 31.87
+},
+"dossier-clone-cnMMJd": {
+"first": 27.83,
+"kind": "dir",
+"uid": 1000,
+"last": 31.87
+},
+"dossier-gate-acts-CFi4kS": {
+"first": 27.83,
+"kind": "dir",
+"uid": 1000,
+"last": 27.83
+},
+"dossier-state-eaiGAa": {
+"first": 27.83,
+"kind": "dir",
+"uid": 1000,
+"last": 31.87
+},
+"dossier-records-tYOmg6": {
+"first": 27.83,
+"kind": "dir",
+"uid": 1000,
+"last": 31.87
+},
+"dossier-clone-jDTo6T": {
+"first": 28.33,
+"kind": "dir",
+"uid": 1000,
+"last": 31.87
+},
+"dossier-gate-acts-DSi1Nw": {
+"first": 28.33,
+"kind": "dir",
+"uid": 1000,
+"last": 28.33
+},
+"dossier-state-bUyjgS": {
+"first": 28.33,
+"kind": "dir",
+"uid": 1000,
+"last": 31.87
+},
+"dossier-records-kjZLH7": {
+"first": 28.33,
+"kind": "dir",
+"uid": 1000,
+"last": 31.87
+},
+"dossier-gate-acts-pP8eFP": {
+"first": 28.83,
+"kind": "dir",
+"uid": 1000,
+"last": 28.83
+},
+"dossier-state-C07H41": {
+"first": 28.83,
+"kind": "dir",
+"uid": 1000,
+"last": 31.87
+},
+"dossier-records-WBhyo6": {
+"first": 28.83,
+"kind": "dir",
+"uid": 1000,
+"last": 31.87
+},
+"dossier-clone-zsLTpe": {
+"first": 28.83,
+"kind": "dir",
+"uid": 1000,
+"last": 31.87
+},
+"dossier-state-nEOSM5": {
+"first": 28.83,
+"kind": "dir",
+"uid": 1000,
+"last": 31.87
+},
+"dossier-records-vVswRB": {
+"first": 28.83,
+"kind": "dir",
+"uid": 1000,
+"last": 31.87
+},
+"dossier-gate-acts-mTcjBg": {
+"first": 29.33,
+"kind": "dir",
+"uid": 1000,
+"last": 29.33
+},
+"dossier-clone-34UR0r": {
+"first": 29.33,
+"kind": "dir",
+"uid": 1000,
+"last": 31.87
+},
+"dossier-waiting-MGvnZd": {
+"first": 29.33,
+"kind": "dir",
+"uid": 1000,
+"last": 29.84
+},
+"dossier-clone-XojC6F": {
+"first": 29.84,
+"kind": "dir",
+"uid": 1000,
+"last": 31.87
+},
+"dossier-gate-acts-qVaE7u": {
+"first": 29.84,
+"kind": "dir",
+"uid": 1000,
+"last": 29.84
+},
+"dossier-state-79vO93": {
+"first": 29.84,
+"kind": "dir",
+"uid": 1000,
+"last": 31.87
+},
+"dossier-records-AC9HZM": {
+"first": 29.84,
+"kind": "dir",
+"uid": 1000,
+"last": 31.87
+},
+"dossier-clone-Cqlryi": {
+"first": 30.34,
+"kind": "dir",
+"uid": 1000,
+"last": 31.87
+},
+"dossier-state-ZDc7cF": {
+"first": 30.34,
+"kind": "dir",
+"uid": 1000,
+"last": 31.87
+},
+"dossier-records-ynp8CH": {
+"first": 30.34,
+"kind": "dir",
+"uid": 1000,
+"last": 31.87
+},
+"dossier-gate-acts-Ot1sgh": {
+"first": 30.34,
+"kind": "dir",
+"uid": 1000,
+"last": 30.34
+},
+"dossier-clone-1Jmjpo": {
+"first": 30.34,
+"kind": "dir",
+"uid": 1000,
+"last": 31.87
+},
+"dossier-state-QXHSNR": {
+"first": 30.34,
+"kind": "dir",
+"uid": 1000,
+"last": 31.87
+},
+"dossier-records-8ICRmC": {
+"first": 30.34,
+"kind": "dir",
+"uid": 1000,
+"last": 31.87
+},
+"dossier-waiting-6qjURf": {
+"first": 30.34,
+"kind": "dir",
+"uid": 1000,
+"last": 30.34
+},
+"dossier-gate-acts-kM0hPq": {
+"first": 30.86,
+"kind": "dir",
+"uid": 1000,
+"last": 30.86
+},
+"dossier-clone-iF5XfL": {
+"first": 30.86,
+"kind": "dir",
+"uid": 1000,
+"last": 31.87
+},
+"dossier-state-7m6XGa": {
+"first": 30.86,
+"kind": "dir",
+"uid": 1000,
+"last": 31.87
+},
+"dossier-records-aG7lhZ": {
+"first": 30.86,
+"kind": "dir",
+"uid": 1000,
+"last": 31.87
+},
+"dossier-clone-teqyGN": {
+"first": 30.86,
+"kind": "dir",
+"uid": 1000,
+"last": 31.87
+},
+"dossier-waiting-OGjGrY": {
+"first": 30.86,
+"kind": "dir",
+"uid": 1000,
+"last": 30.86
+},
+"dossier-state-L4aQxo": {
+"first": 30.86,
+"kind": "dir",
+"uid": 1000,
+"last": 31.87
+},
+"dossier-records-e8wnqN": {
+"first": 30.86,
+"kind": "dir",
+"uid": 1000,
+"last": 31.87
+},
+"dossier-gate-acts-dLJebB": {
+"first": 31.36,
+"kind": "dir",
+"uid": 1000,
+"last": 31.36
+},
+"dossier-clone-X4N2KJ": {
+"first": 31.36,
+"kind": "dir",
+"uid": 1000,
+"last": 31.87
+},
+"dossier-state-kBam5T": {
+"first": 31.36,
+"kind": "dir",
+"uid": 1000,
+"last": 31.87
+},
+"dossier-records-OV8yFB": {
+"first": 31.36,
+"kind": "dir",
+"uid": 1000,
+"last": 31.87
+},
+"dossier-clone-2Vhp8D": {
+"first": 31.36,
+"kind": "dir",
+"uid": 1000,
+"last": 31.87
+},
+"dossier-state-EmepTU": {
+"first": 31.36,
+"kind": "dir",
+"uid": 1000,
+"last": 31.87
+},
+"dossier-records-O8P5Y0": {
+"first": 31.36,
+"kind": "dir",
+"uid": 1000,
+"last": 31.87
+},
+"dossier-state-nRnglV": {
+"first": 31.87,
+"kind": "dir",
+"uid": 1000,
+"last": 31.87
+},
+"dossier-records-n1tv72": {
+"first": 31.87,
+"kind": "dir",
+"uid": 1000,
+"last": 31.87
+},
+"dossier-gate-acts-0ZGrAq": {
+"first": 31.87,
+"kind": "dir",
+"uid": 1000,
+"last": 31.87
+},
+"dossier-clone-dOb6xs": {
+"first": 31.87,
+"kind": "dir",
+"uid": 1000,
+"last": 31.87
+},
+"dossier-state-tjs4PC": {
+"first": 31.87,
+"kind": "dir",
+"uid": 1000,
+"last": 31.87
+},
+"dossier-records-rgEEIy": {
+"first": 31.87,
+"kind": "dir",
+"uid": 1000,
+"last": 31.87
+},
+"dossier-waiting-Gt7com": {
+"first": 31.87,
+"kind": "dir",
+"uid": 1000,
+"last": 31.87
+},
+"dossier-state-TphsAF": {
+"first": 32.37,
+"kind": "dir",
+"uid": 1000,
+"last": 32.37
+},
+"dossier-records-YN4gyy": {
+"first": 32.37,
+"kind": "dir",
+"uid": 1000,
+"last": 32.37
+},
+"dossier-gate-acts-KF2Z0i": {
+"first": 32.37,
+"kind": "dir",
+"uid": 1000,
+"last": 32.37
+},
+"dossier-clone-ECsx0G": {
+"first": 32.37,
+"kind": "dir",
+"uid": 1000,
+"last": 32.37
+},
+"dossier-template-5azOXQ": {
+"first": 32.37,
+"kind": "dir",
+"uid": 1000,
+"last": 32.37
+},
+"dossier-waiting-RdKVAu": {
+"first": 32.37,
+"kind": "dir",
+"uid": 1000,
+"last": 32.37
+},
+"dossier-gate-acts-O6LwoW": {
+"first": 32.87,
+"kind": "dir",
+"uid": 1000,
+"last": 32.87
+},
+"dossier-waiting-3PaDFz": {
+"first": 32.87,
+"kind": "dir",
+"uid": 1000,
+"last": 33.38
+},
+"dossier-clone-rDIvs7": {
+"first": 32.87,
+"kind": "dir",
+"uid": 1000,
+"last": 33.38
+},
+"dossier-state-MlEpmZ": {
+"first": 33.38,
+"kind": "dir",
+"uid": 1000,
+"last": 33.38
+},
+"dossier-records-nBq2TH": {
+"first": 33.38,
+"kind": "dir",
+"uid": 1000,
+"last": 33.38
+},
+"dossier-gate-acts-1R4GTY": {
+"first": 33.38,
+"kind": "dir",
+"uid": 1000,
+"last": 33.38
+},
+"dossier-state-za6pi9": {
+"first": 33.38,
+"kind": "dir",
+"uid": 1000,
+"last": 33.38
+},
+"dossier-records-CYbGlQ": {
+"first": 33.38,
+"kind": "dir",
+"uid": 1000,
+"last": 33.38
+},
+"dossier-state-JpDoXv": {
+"first": 33.38,
+"kind": "dir",
+"uid": 1000,
+"last": 33.38
+},
+"dossier-records-VUjbKK": {
+"first": 33.38,
+"kind": "dir",
+"uid": 1000,
+"last": 33.38
+},
+"dossier-waiting-uNaqM1": {
+"first": 33.88,
+"kind": "dir",
+"uid": 1000,
+"last": 34.39
+},
+"dossier-gate-acts-0bzFI3": {
+"first": 33.88,
+"kind": "dir",
+"uid": 1000,
+"last": 33.88
+},
+"dossier-clone-ecdLqE": {
+"first": 33.88,
+"kind": "dir",
+"uid": 1000,
+"last": 33.88
+},
+"dossier-clone-FQ8Qlr": {
+"first": 34.39,
+"kind": "dir",
+"uid": 1000,
+"last": 34.39
+},
+"dossier-records-cBy0aD": {
+"first": 34.39,
+"kind": "dir",
+"uid": 1000,
+"last": 34.39
+},
+"dossier-gate-acts-AVC38d": {
+"first": 34.39,
+"kind": "dir",
+"uid": 1000,
+"last": 34.39
+},
+"dossier-state-bkxzzv": {
+"first": 34.89,
+"kind": "dir",
+"uid": 1000,
+"last": 34.89
+},
+"dossier-gate-acts-kQ7ABE": {
+"first": 34.89,
+"kind": "dir",
+"uid": 1000,
+"last": 34.89
+},
+"dossier-clone-sJkof4": {
+"first": 34.89,
+"kind": "dir",
+"uid": 1000,
+"last": 34.89
+},
+"dossier-records-CuDXB5": {
+"first": 34.89,
+"kind": "dir",
+"uid": 1000,
+"last": 34.89
+},
+"dossier-waiting-FYhhYZ": {
+"first": 34.89,
+"kind": "dir",
+"uid": 1000,
+"last": 34.89
+},
+"dossier-clone-L9BXOJ": {
+"first": 35.39,
+"kind": "dir",
+"uid": 1000,
+"last": 35.39
+},
+"dossier-records-SpRVKU": {
+"first": 35.39,
+"kind": "dir",
+"uid": 1000,
+"last": 35.39
+},
+"dossier-gate-acts-Gllbi5": {
+"first": 35.39,
+"kind": "dir",
+"uid": 1000,
+"last": 35.91
+},
+"dossier-waiting-1WGYjR": {
+"first": 35.39,
+"kind": "dir",
+"uid": 1000,
+"last": 35.91
+},
+"dossier-clone-DqJYdn": {
+"first": 35.91,
+"kind": "dir",
+"uid": 1000,
+"last": 35.91
+},
+"dossier-records-SvSxjU": {
+"first": 35.91,
+"kind": "dir",
+"uid": 1000,
+"last": 35.91
+},
+"dossier-gate-acts-997X3b": {
+"first": 36.41,
+"kind": "dir",
+"uid": 1000,
+"last": 36.41
+},
+"dossier-waiting-sTgkid": {
+"first": 36.41,
+"kind": "dir",
+"uid": 1000,
+"last": 36.92
+},
+"dossier-clone-IIlnQh": {
+"first": 36.41,
+"kind": "dir",
+"uid": 1000,
+"last": 36.41
+},
+"dossier-records-AXBZyq": {
+"first": 36.41,
+"kind": "dir",
+"uid": 1000,
+"last": 36.41
+},
+"dossier-gate-acts-GtH7ea": {
+"first": 36.92,
+"kind": "dir",
+"uid": 1000,
+"last": 37.43
+},
+"dossier-signoff-rtREce": {
+"first": 36.92,
+"kind": "dir",
+"uid": 1000,
+"last": 37.93
+},
+"dossier-state-Qs3me0": {
+"first": 37.43,
+"kind": "dir",
+"uid": 1000,
+"last": 37.93
+},
+"dossier-waiting-JuleP7": {
+"first": 37.43,
+"kind": "dir",
+"uid": 1000,
+"last": 37.93
+},
+"dossier-clone-5xbwWn": {
+"first": 37.43,
+"kind": "dir",
+"uid": 1000,
+"last": 37.93
+},
+"dossier-records-G5EE1X": {
+"first": 37.43,
+"kind": "dir",
+"uid": 1000,
+"last": 37.93
+},
+"dossier-clone-mV4eO2": {
+"first": 37.93,
+"kind": "dir",
+"uid": 1000,
+"last": 37.93
+},
+"dossier-records-ZSSSZD": {
+"first": 37.93,
+"kind": "dir",
+"uid": 1000,
+"last": 37.93
+},
+"dossier-gate-acts-43sPgx": {
+"first": 37.93,
+"kind": "dir",
+"uid": 1000,
+"last": 37.93
+},
+"dossier-signoff-JqeCOQ": {
+"first": 37.93,
+"kind": "dir",
+"uid": 1000,
+"last": 37.93
+},
+"dossier-clone-dDMT4I": {
+"first": 38.43,
+"kind": "dir",
+"uid": 1000,
+"last": 38.43
+},
+"dossier-records-mc8SAm": {
+"first": 38.43,
+"kind": "dir",
+"uid": 1000,
+"last": 38.43
+},
+"dossier-gate-acts-qzFD4z": {
+"first": 38.43,
+"kind": "dir",
+"uid": 1000,
+"last": 38.43
+},
+"dossier-waiting-VQsFYC": {
+"first": 38.43,
+"kind": "dir",
+"uid": 1000,
+"last": 38.43
+},
+"dossier-clone-wQpelU": {
+"first": 38.94,
+"kind": "dir",
+"uid": 1000,
+"last": 38.94
+},
+"dossier-records-dmO3NI": {
+"first": 38.94,
+"kind": "dir",
+"uid": 1000,
+"last": 38.94
+},
+"dossier-waiting-BiQMLC": {
+"first": 38.94,
+"kind": "dir",
+"uid": 1000,
+"last": 39.44
+},
+"dossier-gate-acts-pDoodG": {
+"first": 38.94,
+"kind": "dir",
+"uid": 1000,
+"last": 38.94
+},
+"dossier-clone-LB3k5V": {
+"first": 39.44,
+"kind": "dir",
+"uid": 1000,
+"last": 39.95
+},
+"dossier-gate-acts-ZmA81i": {
+"first": 39.44,
+"kind": "dir",
+"uid": 1000,
+"last": 39.44
+},
+"dossier-waiting-Ad89rs": {
+"first": 39.95,
+"kind": "dir",
+"uid": 1000,
+"last": 41.48
+},
+"dossier-clone-OXKrg1": {
+"first": 39.95,
+"kind": "dir",
+"uid": 1000,
+"last": 39.95
+},
+"dossier-gate-acts-6tPXVb": {
+"first": 39.95,
+"kind": "dir",
+"uid": 1000,
+"last": 39.95
+},
+"dossier-state-4s320G": {
+"first": 39.95,
+"kind": "dir",
+"uid": 1000,
+"last": 39.95
+},
+"dossier-records-rUeh1z": {
+"first": 39.95,
+"kind": "dir",
+"uid": 1000,
+"last": 39.95
+},
+"dossier-gate-acts-ToFMo7": {
+"first": 40.45,
+"kind": "dir",
+"uid": 1000,
+"last": 40.45
+},
+"dossier-clone-4FQLCg": {
+"first": 40.45,
+"kind": "dir",
+"uid": 1000,
+"last": 40.45
+},
+"dossier-gate-acts-hxrudz": {
+"first": 40.97,
+"kind": "dir",
+"uid": 1000,
+"last": 40.97
+},
+"dossier-state-0lsXdd": {
+"first": 40.97,
+"kind": "dir",
+"uid": 1000,
+"last": 40.97
+},
+"dossier-records-6twNAe": {
+"first": 40.97,
+"kind": "dir",
+"uid": 1000,
+"last": 40.97
+},
+"dossier-clone-XdnKMz": {
+"first": 40.97,
+"kind": "dir",
+"uid": 1000,
+"last": 40.97
+},
+"dossier-clone-A7gIDb": {
+"first": 41.48,
+"kind": "dir",
+"uid": 1000,
+"last": 41.98
+},
+"dossier-gate-acts-XFFITp": {
+"first": 41.48,
+"kind": "dir",
+"uid": 1000,
+"last": 41.48
+},
+"dossier-gate-acts-1Stjwm": {
+"first": 41.98,
+"kind": "dir",
+"uid": 1000,
+"last": 41.98
+},
+"dossier-state-Nab8Cv": {
+"first": 41.98,
+"kind": "dir",
+"uid": 1000,
+"last": 41.98
+},
+"dossier-records-JDxsIC": {
+"first": 41.98,
+"kind": "dir",
+"uid": 1000,
+"last": 41.98
+},
+"dossier-waiting-09QSAH": {
+"first": 41.98,
+"kind": "dir",
+"uid": 1000,
+"last": 43.5
+},
+"dossier-clone-oPEvSr": {
+"first": 42.48,
+"kind": "dir",
+"uid": 1000,
+"last": 42.99
+},
+"dossier-records-CGJ2uP": {
+"first": 42.48,
+"kind": "dir",
+"uid": 1000,
+"last": 42.99
+},
+"dossier-gate-acts-Hj4wta": {
+"first": 42.48,
+"kind": "dir",
+"uid": 1000,
+"last": 42.99
+},
+"dossier-clone-aF6DXx": {
+"first": 42.99,
+"kind": "dir",
+"uid": 1000,
+"last": 42.99
+},
+"dossier-state-xwjQtv": {
+"first": 42.99,
+"kind": "dir",
+"uid": 1000,
+"last": 42.99
+},
+"dossier-gate-acts-sPx8ii": {
+"first": 43.5,
+"kind": "dir",
+"uid": 1000,
+"last": 43.5
+},
+"dossier-gate-acts-fjq4JU": {
+"first": 44.01,
+"kind": "dir",
+"uid": 1000,
+"last": 44.01
+},
+"dossier-waiting-D412Wc": {
+"first": 44.01,
+"kind": "dir",
+"uid": 1000,
+"last": 45.01
+},
+"dossier-state-WdFeM0": {
+"first": 44.01,
+"kind": "dir",
+"uid": 1000,
+"last": 44.01
+},
+"dossier-clone-VvgTQC": {
+"first": 44.01,
+"kind": "dir",
+"uid": 1000,
+"last": 44.01
+},
+"dossier-records-2HDo9Z": {
+"first": 44.01,
+"kind": "dir",
+"uid": 1000,
+"last": 44.01
+},
+"dossier-clone-kIvPui": {
+"first": 44.51,
+"kind": "dir",
+"uid": 1000,
+"last": 44.51
+},
+"dossier-records-n5zDE4": {
+"first": 44.51,
+"kind": "dir",
+"uid": 1000,
+"last": 44.51
+},
+"dossier-gate-acts-oH1mwy": {
+"first": 44.51,
+"kind": "dir",
+"uid": 1000,
+"last": 44.51
+},
+"dossier-clone-D8H1V1": {
+"first": 45.01,
+"kind": "dir",
+"uid": 1000,
+"last": 45.01
+},
+"dossier-gate-acts-uERUWH": {
+"first": 45.01,
+"kind": "dir",
+"uid": 1000,
+"last": 45.01
+},
+"dossier-state-YRvZUp": {
+"first": 45.52,
+"kind": "dir",
+"uid": 1000,
+"last": 45.52
+},
+"dossier-records-5504QS": {
+"first": 45.52,
+"kind": "dir",
+"uid": 1000,
+"last": 45.52
+},
+"dossier-waiting-AAsUr3": {
+"first": 45.52,
+"kind": "dir",
+"uid": 1000,
+"last": 47.53
+},
+"dossier-gate-acts-7EJ7e8": {
+"first": 45.52,
+"kind": "dir",
+"uid": 1000,
+"last": 46.02
+},
+"dossier-clone-Eow1hC": {
+"first": 45.52,
+"kind": "dir",
+"uid": 1000,
+"last": 45.52
+},
+"dossier-clone-SMZwxQ": {
+"first": 46.02,
+"kind": "dir",
+"uid": 1000,
+"last": 46.02
+},
+"dossier-clone-D8ABKI": {
+"first": 46.52,
+"kind": "dir",
+"uid": 1000,
+"last": 46.52
+},
+"dossier-gate-acts-dwq8xf": {
+"first": 46.52,
+"kind": "dir",
+"uid": 1000,
+"last": 46.52
+},
+"dossier-clone-kFQ9ob": {
+"first": 47.03,
+"kind": "dir",
+"uid": 1000,
+"last": 47.53
+},
+"dossier-gate-acts-Tfciri": {
+"first": 47.03,
+"kind": "dir",
+"uid": 1000,
+"last": 47.03
+},
+"dossier-clone-K70a58": {
+"first": 47.53,
+"kind": "dir",
+"uid": 1000,
+"last": 47.53
+},
+"dossier-records-KCdzLU": {
+"first": 47.53,
+"kind": "dir",
+"uid": 1000,
+"last": 47.53
+},
+"dossier-gate-acts-cWaczN": {
+"first": 47.53,
+"kind": "dir",
+"uid": 1000,
+"last": 47.53
+},
+"dossier-state-sAts0Y": {
+"first": 47.53,
+"kind": "dir",
+"uid": 1000,
+"last": 47.53
+},
+"dossier-records-WwXhQJ": {
+"first": 47.53,
+"kind": "dir",
+"uid": 1000,
+"last": 47.53
+},
+"dossier-gate-acts-MS8WEq": {
+"first": 48.04,
+"kind": "dir",
+"uid": 1000,
+"last": 48.04
+},
+"dossier-waiting-JiRWCx": {
+"first": 48.04,
+"kind": "dir",
+"uid": 1000,
+"last": 51.11
+},
+"dossier-clone-5Qbwr8": {
+"first": 48.04,
+"kind": "dir",
+"uid": 1000,
+"last": 48.04
+},
+"dossier-records-qNTW0A": {
+"first": 48.04,
+"kind": "dir",
+"uid": 1000,
+"last": 48.04
+},
+"dossier-gate-acts-q5fkuu": {
+"first": 48.54,
+"kind": "dir",
+"uid": 1000,
+"last": 48.54
+},
+"dossier-clone-6oT28o": {
+"first": 48.54,
+"kind": "dir",
+"uid": 1000,
+"last": 48.54
+},
+"dossier-records-4lAdI4": {
+"first": 48.54,
+"kind": "dir",
+"uid": 1000,
+"last": 48.54
+},
+"dossier-gate-acts-vpM1TM": {
+"first": 49.05,
+"kind": "dir",
+"uid": 1000,
+"last": 49.05
+},
+"dossier-clone-0FvK5u": {
+"first": 49.05,
+"kind": "dir",
+"uid": 1000,
+"last": 49.05
+},
+"dossier-records-1qbDf9": {
+"first": 49.05,
+"kind": "dir",
+"uid": 1000,
+"last": 49.05
+},
+"dossier-clone-3rFTKj": {
+"first": 49.6,
+"kind": "dir",
+"uid": 1000,
+"last": 50.11
+},
+"dossier-records-A6a5Ub": {
+"first": 49.6,
+"kind": "dir",
+"uid": 1000,
+"last": 50.11
+},
+"dossier-gate-acts-fdfXcL": {
+"first": 49.6,
+"kind": "dir",
+"uid": 1000,
+"last": 49.6
+},
+"dossier-gate-acts-UTwFlD": {
+"first": 50.11,
+"kind": "dir",
+"uid": 1000,
+"last": 50.11
+},
+"dossier-state-7QTId5": {
+"first": 50.11,
+"kind": "dir",
+"uid": 1000,
+"last": 50.11
+},
+"dossier-state-yWudzx": {
+"first": 50.61,
+"kind": "dir",
+"uid": 1000,
+"last": 50.61
+},
+"dossier-gate-acts-oPuV7K": {
+"first": 50.61,
+"kind": "dir",
+"uid": 1000,
+"last": 50.61
+},
+"dossier-clone-6OeZfE": {
+"first": 50.61,
+"kind": "dir",
+"uid": 1000,
+"last": 50.61
+},
+"dossier-records-kfsvGx": {
+"first": 50.61,
+"kind": "dir",
+"uid": 1000,
+"last": 50.61
+},
+"dossier-clone-7MlHZV": {
+"first": 51.11,
+"kind": "dir",
+"uid": 1000,
+"last": 51.11
+},
+"dossier-records-JieVSc": {
+"first": 51.11,
+"kind": "dir",
+"uid": 1000,
+"last": 51.11
+},
+"dossier-gate-acts-7cls67": {
+"first": 51.11,
+"kind": "dir",
+"uid": 1000,
+"last": 51.11
+},
+"dossier-state-uZP6PO": {
+"first": 51.61,
+"kind": "dir",
+"uid": 1000,
+"last": 51.61
+},
+"dossier-gate-acts-DPxi90": {
+"first": 51.61,
+"kind": "dir",
+"uid": 1000,
+"last": 51.61
+},
+"dossier-clone-fVi0P7": {
+"first": 51.61,
+"kind": "dir",
+"uid": 1000,
+"last": 51.61
+},
+"dossier-records-foHAtk": {
+"first": 51.61,
+"kind": "dir",
+"uid": 1000,
+"last": 51.61
+},
+"dossier-waiting-5I9Xmk": {
+"first": 51.61,
+"kind": "dir",
+"uid": 1000,
+"last": 51.61
+},
+"dossier-state-6vwreb": {
+"first": 52.11,
+"kind": "dir",
+"uid": 1000,
+"last": 52.11
+},
+"dossier-clone-6zXoTE": {
+"first": 52.11,
+"kind": "dir",
+"uid": 1000,
+"last": 52.11
+},
+"dossier-records-ERP2Pf": {
+"first": 52.11,
+"kind": "dir",
+"uid": 1000,
+"last": 52.11
+},
+"dossier-waiting-wAvar8": {
+"first": 52.11,
+"kind": "dir",
+"uid": 1000,
+"last": 52.11
+},
+"dossier-gate-acts-mCnVNh": {
+"first": 52.11,
+"kind": "dir",
+"uid": 1000,
+"last": 52.11
+},
+"dossier-gate-acts-4qPknY": {
+"first": 52.62,
+"kind": "dir",
+"uid": 1000,
+"last": 52.62
+},
+"dossier-state-GF1eFg": {
+"first": 52.62,
+"kind": "dir",
+"uid": 1000,
+"last": 52.62
+},
+"dossier-waiting-IrTCBb": {
+"first": 52.62,
+"kind": "dir",
+"uid": 1000,
+"last": 53.13
+},
+"dossier-clone-g3AhgJ": {
+"first": 52.62,
+"kind": "dir",
+"uid": 1000,
+"last": 52.62
+},
+"dossier-records-fhePJ0": {
+"first": 52.62,
+"kind": "dir",
+"uid": 1000,
+"last": 52.62
+},
+"dossier-gate-acts-cirovj": {
+"first": 53.13,
+"kind": "dir",
+"uid": 1000,
+"last": 53.13
+},
+"dossier-clone-0FXiCC": {
+"first": 53.13,
+"kind": "dir",
+"uid": 1000,
+"last": 53.13
+},
+"dossier-records-drQtvM": {
+"first": 53.13,
+"kind": "dir",
+"uid": 1000,
+"last": 53.13
+},
+"dossier-clone-mSFQ1g": {
+"first": 53.63,
+"kind": "dir",
+"uid": 1000,
+"last": 54.14
+},
+"dossier-gate-acts-TJjdHn": {
+"first": 53.63,
+"kind": "dir",
+"uid": 1000,
+"last": 53.63
+},
+"dossier-records-QMzSBZ": {
+"first": 53.63,
+"kind": "dir",
+"uid": 1000,
+"last": 54.14
+},
+"dossier-waiting-cxsH4D": {
+"first": 53.63,
+"kind": "dir",
+"uid": 1000,
+"last": 54.14
+},
+"dossier-state-HFZdlC": {
+"first": 54.14,
+"kind": "dir",
+"uid": 1000,
+"last": 54.14
+},
+"dossier-gate-acts-YhgKju": {
+"first": 54.14,
+"kind": "dir",
+"uid": 1000,
+"last": 54.14
+},
+"dossier-state-NWrYYh": {
+"first": 54.64,
+"kind": "dir",
+"uid": 1000,
+"last": 54.64
+},
+"dossier-clone-xH7TK9": {
+"first": 54.64,
+"kind": "dir",
+"uid": 1000,
+"last": 54.64
+},
+"dossier-records-DlCVvv": {
+"first": 54.64,
+"kind": "dir",
+"uid": 1000,
+"last": 54.64
+},
+"dossier-gate-acts-LeiCZ6": {
+"first": 54.64,
+"kind": "dir",
+"uid": 1000,
+"last": 54.64
+},
+"dossier-waiting-EV9hQU": {
+"first": 54.64,
+"kind": "dir",
+"uid": 1000,
+"last": 54.64
+},
+"dossier-state-bU2QeQ": {
+"first": 55.14,
+"kind": "dir",
+"uid": 1000,
+"last": 55.14
+},
+"dossier-waiting-4hAkee": {
+"first": 55.14,
+"kind": "dir",
+"uid": 1000,
+"last": 55.65
+},
+"dossier-clone-siTauN": {
+"first": 55.14,
+"kind": "dir",
+"uid": 1000,
+"last": 55.14
+},
+"dossier-records-N6KO3I": {
+"first": 55.14,
+"kind": "dir",
+"uid": 1000,
+"last": 55.14
+},
+"dossier-clone-5LNiQw": {
+"first": 55.65,
+"kind": "dir",
+"uid": 1000,
+"last": 56.15
+},
+"dossier-state-90os5a": {
+"first": 56.15,
+"kind": "dir",
+"uid": 1000,
+"last": 56.15
+},
+"dossier-records-epbuAm": {
+"first": 56.15,
+"kind": "dir",
+"uid": 1000,
+"last": 56.15
+},
+"dossier-waiting-av7IM7": {
+"first": 56.15,
+"kind": "dir",
+"uid": 1000,
+"last": 56.65
+},
+"dossier-gate-acts-hBNqoE": {
+"first": 56.15,
+"kind": "dir",
+"uid": 1000,
+"last": 56.65
+},
+"dossier-clone-5VIW59": {
+"first": 56.65,
+"kind": "dir",
+"uid": 1000,
+"last": 56.65
+},
+"dossier-clone-t8LyXZ": {
+"first": 57.15,
+"kind": "dir",
+"uid": 1000,
+"last": 57.15
+},
+"dossier-waiting-J9TA9N": {
+"first": 57.15,
+"kind": "dir",
+"uid": 1000,
+"last": 57.15
+},
+"dossier-gate-acts-QZSvUm": {
+"first": 57.15,
+"kind": "dir",
+"uid": 1000,
+"last": 57.15
+},
+"dossier-state-P7vQrq": {
+"first": 57.69,
+"kind": "dir",
+"uid": 1000,
+"last": 58.19
+},
+"dossier-records-ynoAId": {
+"first": 57.69,
+"kind": "dir",
+"uid": 1000,
+"last": 58.19
+},
+"dossier-review-origin-KCDs3g": {
+"first": 57.69,
+"kind": "dir",
+"uid": 1000,
+"last": 99.0
+},
+"dossier-clone-RSXwAT": {
+"first": 57.69,
+"kind": "dir",
+"uid": 1000,
+"last": 58.19
+},
+"dossier-waiting-LCpyBy": {
+"first": 57.69,
+"kind": "dir",
+"uid": 1000,
+"last": 58.19
+},
+"dossier-gate-acts-DsvIEp": {
+"first": 57.69,
+"kind": "dir",
+"uid": 1000,
+"last": 57.69
+},
+"dossier-state-lHTkLb": {
+"first": 58.19,
+"kind": "dir",
+"uid": 1000,
+"last": 58.19
+},
+"dossier-records-rbtHKk": {
+"first": 58.19,
+"kind": "dir",
+"uid": 1000,
+"last": 58.19
+},
+"dossier-clone-xGoffi": {
+"first": 58.19,
+"kind": "dir",
+"uid": 1000,
+"last": 58.19
+},
+"dossier-review-state-FOqi8H": {
+"first": 58.19,
+"kind": "dir",
+"uid": 1000,
+"last": 58.19
+},
+"dossier-review-clone-GUgKGS": {
+"first": 58.19,
+"kind": "dir",
+"uid": 1000,
+"last": 58.19
+},
+"dossier-state-cmN3MS": {
+"first": 58.7,
+"kind": "dir",
+"uid": 1000,
+"last": 58.7
+},
+"JPCZOtwr8Ubb4i91Zgs02": {
+"first": 58.7,
+"kind": "dir",
+"uid": 1000,
+"last": 182.03
+},
+"dossier-review-state-7cTuyG": {
+"first": 58.7,
+"kind": "dir",
+"uid": 1000,
+"last": 59.2
+},
+"dossier-review-clone-UkU5Tg": {
+"first": 58.7,
+"kind": "dir",
+"uid": 1000,
+"last": 59.2
+},
+"dossier-clone-IuuOjP": {
+"first": 58.7,
+"kind": "dir",
+"uid": 1000,
+"last": 58.7
+},
+"dossier-records-kCn7NS": {
+"first": 58.7,
+"kind": "dir",
+"uid": 1000,
+"last": 58.7
+},
+"dossier-waiting-fiDAtP": {
+"first": 58.7,
+"kind": "dir",
+"uid": 1000,
+"last": 59.2
+},
+"dossier-clone-bGcyFR": {
+"first": 59.2,
+"kind": "dir",
+"uid": 1000,
+"last": 59.2
+},
+"dossier-records-FGtlff": {
+"first": 59.2,
+"kind": "dir",
+"uid": 1000,
+"last": 59.2
+},
+"dossier-clone-Luubhq": {
+"first": 59.74,
+"kind": "dir",
+"uid": 1000,
+"last": 59.74
+},
+"dossier-records-BF8puk": {
+"first": 59.74,
+"kind": "dir",
+"uid": 1000,
+"last": 59.74
+},
+"dossier-review-state-KosWGH": {
+"first": 59.74,
+"kind": "dir",
+"uid": 1000,
+"last": 59.74
+},
+"dossier-review-clone-iaYiTx": {
+"first": 59.74,
+"kind": "dir",
+"uid": 1000,
+"last": 59.74
+},
+"dossier-waiting-afKvaN": {
+"first": 59.74,
+"kind": "dir",
+"uid": 1000,
+"last": 60.77
+},
+"dossier-review-state-8jIxKR": {
+"first": 60.25,
+"kind": "dir",
+"uid": 1000,
+"last": 60.77
+},
+"dossier-review-clone-QpnLpd": {
+"first": 60.25,
+"kind": "dir",
+"uid": 1000,
+"last": 60.77
+},
+"dossier-clone-xi9ov9": {
+"first": 60.25,
+"kind": "dir",
+"uid": 1000,
+"last": 60.25
+},
+"dossier-records-sDZLft": {
+"first": 60.25,
+"kind": "dir",
+"uid": 1000,
+"last": 60.25
+},
+"dossier-clone-OmExKp": {
+"first": 60.77,
+"kind": "dir",
+"uid": 1000,
+"last": 61.39
+},
+"dossier-records-DI0bOR": {
+"first": 60.77,
+"kind": "dir",
+"uid": 1000,
+"last": 61.39
+},
+"dossier-review-state-Gy6yeg": {
+"first": 61.39,
+"kind": "dir",
+"uid": 1000,
+"last": 61.91
+},
+"dossier-review-clone-czreBn": {
+"first": 61.39,
+"kind": "dir",
+"uid": 1000,
+"last": 61.91
+},
+"dossier-waiting-5c22ua": {
+"first": 61.39,
+"kind": "dir",
+"uid": 1000,
+"last": 61.39
+},
+"dossier-state-wO2TUx": {
+"first": 61.39,
+"kind": "dir",
+"uid": 1000,
+"last": 61.39
+},
+"dossier-waiting-p6J6ZP": {
+"first": 61.91,
+"kind": "dir",
+"uid": 1000,
+"last": 62.44
+},
+"dossier-clone-NZEgal": {
+"first": 61.91,
+"kind": "dir",
+"uid": 1000,
+"last": 61.91
+},
+"dossier-review-clone-AYVUSS": {
+"first": 62.44,
+"kind": "dir",
+"uid": 1000,
+"last": 62.95
+},
+"dossier-clone-5wXqSP": {
+"first": 62.44,
+"kind": "dir",
+"uid": 1000,
+"last": 62.95
+},
+"dossier-records-ajvhLo": {
+"first": 62.44,
+"kind": "dir",
+"uid": 1000,
+"last": 62.95
+},
+"dossier-waiting-gOwU9a": {
+"first": 62.95,
+"kind": "dir",
+"uid": 1000,
+"last": 63.98
+},
+"dossier-state-BYvzJb": {
+"first": 62.95,
+"kind": "dir",
+"uid": 1000,
+"last": 62.95
+},
+"dossier-review-state-hTh3Ur": {
+"first": 62.95,
+"kind": "dir",
+"uid": 1000,
+"last": 62.95
+},
+"dossier-review-state-4iFGtM": {
+"first": 63.48,
+"kind": "dir",
+"uid": 1000,
+"last": 63.98
+},
+"dossier-review-clone-mumOAl": {
+"first": 63.48,
+"kind": "dir",
+"uid": 1000,
+"last": 63.98
+},
+"dossier-clone-DSqxpV": {
+"first": 63.98,
+"kind": "dir",
+"uid": 1000,
+"last": 63.98
+},
+"dossier-records-7WKqdn": {
+"first": 63.98,
+"kind": "dir",
+"uid": 1000,
+"last": 63.98
+},
+"dossier-records-TIPNcq": {
+"first": 64.49,
+"kind": "dir",
+"uid": 1000,
+"last": 64.49
+},
+"dossier-review-state-PMmPPr": {
+"first": 64.49,
+"kind": "dir",
+"uid": 1000,
+"last": 64.99
+},
+"dossier-waiting-LVNP3n": {
+"first": 64.49,
+"kind": "dir",
+"uid": 1000,
+"last": 64.49
+},
+"dossier-review-clone-55PVcM": {
+"first": 64.49,
+"kind": "dir",
+"uid": 1000,
+"last": 64.99
+},
+"dossier-waiting-NHcMUC": {
+"first": 64.99,
+"kind": "dir",
+"uid": 1000,
+"last": 65.52
+},
+"preflight-clone-2Mbu7t": {
+"first": 64.99,
+"kind": "dir",
+"uid": 1000,
+"last": 65.52
+},
+"preflight-upstream-mgmyFU": {
+"first": 64.99,
+"kind": "dir",
+"uid": 1000,
+"last": 65.52
+},
+"dossier-records-7nqgij": {
+"first": 64.99,
+"kind": "dir",
+"uid": 1000,
+"last": 65.52
+},
+"dossier-review-state-W1s8MB": {
+"first": 65.52,
+"kind": "dir",
+"uid": 1000,
+"last": 66.02
+},
+"dossier-review-clone-l22MXW": {
+"first": 65.52,
+"kind": "dir",
+"uid": 1000,
+"last": 66.02
+},
+"dossier-state-4smW5L": {
+"first": 65.52,
+"kind": "dir",
+"uid": 1000,
+"last": 65.52
+},
+"dossier-records-ik0lBZ": {
+"first": 65.52,
+"kind": "dir",
+"uid": 1000,
+"last": 65.52
+},
+"dossier-waiting-vHI1pf": {
+"first": 66.02,
+"kind": "dir",
+"uid": 1000,
+"last": 66.02
+},
+"dossier-waiting-rAW4dQ": {
+"first": 66.52,
+"kind": "dir",
+"uid": 1000,
+"last": 67.11
+},
+"dossier-review-state-XHYGp0": {
+"first": 66.52,
+"kind": "dir",
+"uid": 1000,
+"last": 67.11
+},
+"dossier-review-clone-smrp5y": {
+"first": 66.52,
+"kind": "dir",
+"uid": 1000,
+"last": 67.11
+},
+"dossier-review-state-3H7xHg": {
+"first": 67.74,
+"kind": "dir",
+"uid": 1000,
+"last": 68.24
+},
+".com.google.Chrome.m9E0qz": {
+"first": 67.74,
+"kind": "dir",
+"uid": 1000,
+"last": 69.31
+},
+"dossier-review-clone-b120MS": {
+"first": 67.74,
+"kind": "dir",
+"uid": 1000,
+"last": 68.24
+},
+"dossier-waiting-T9wBvM": {
+"first": 67.74,
+"kind": "dir",
+"uid": 1000,
+"last": 68.24
+},
+"dossier-review-state-SCJQFt": {
+"first": 68.8,
+"kind": "dir",
+"uid": 1000,
+"last": 68.8
+},
+"dossier-review-clone-rPgoBx": {
+"first": 68.8,
+"kind": "dir",
+"uid": 1000,
+"last": 68.8
+},
+"dossier-waiting-QZT7Bn": {
+"first": 68.8,
+"kind": "dir",
+"uid": 1000,
+"last": 68.8
+},
+"dossier-waiting-VOIrXJ": {
+"first": 69.31,
+"kind": "dir",
+"uid": 1000,
+"last": 69.9
+},
+"dossier-review-state-61LFBp": {
+"first": 69.31,
+"kind": "dir",
+"uid": 1000,
+"last": 69.9
+},
+"dossier-review-clone-YkpS3E": {
+"first": 69.31,
+"kind": "dir",
+"uid": 1000,
+"last": 69.9
+},
+"dossier-review-state-bXAfCI": {
+"first": 70.4,
+"kind": "dir",
+"uid": 1000,
+"last": 70.4
+},
+"dossier-review-clone-0RASxa": {
+"first": 70.4,
+"kind": "dir",
+"uid": 1000,
+"last": 70.4
+},
+"dossier-waiting-LMOz3T": {
+"first": 70.4,
+"kind": "dir",
+"uid": 1000,
+"last": 70.9
+},
+"dossier-review-state-lw6C6S": {
+"first": 70.9,
+"kind": "dir",
+"uid": 1000,
+"last": 70.9
+},
+"dossier-review-clone-JERfYr": {
+"first": 70.9,
+"kind": "dir",
+"uid": 1000,
+"last": 70.9
+},
+"dossier-waiting-kdF6g4": {
+"first": 71.4,
+"kind": "dir",
+"uid": 1000,
+"last": 71.4
+},
+"dossier-review-state-B2Mr9Q": {
+"first": 71.4,
+"kind": "dir",
+"uid": 1000,
+"last": 71.4
+},
+"dossier-review-clone-xwWaxo": {
+"first": 71.4,
+"kind": "dir",
+"uid": 1000,
+"last": 71.4
+},
+"dossier-waiting-2qsyqr": {
+"first": 71.97,
+"kind": "dir",
+"uid": 1000,
+"last": 72.48
+},
+".com.google.Chrome.QhdtQb": {
+"first": 71.97,
+"kind": "dir",
+"uid": 1000,
+"last": 71.97
+},
+"dossier-review-state-ymPQVB": {
+"first": 71.97,
+"kind": "dir",
+"uid": 1000,
+"last": 71.97
+},
+"dossier-review-clone-TkmhOZ": {
+"first": 71.97,
+"kind": "dir",
+"uid": 1000,
+"last": 71.97
+},
+"dossier-review-state-ApXjID": {
+"first": 72.48,
+"kind": "dir",
+"uid": 1000,
+"last": 73.0
+},
+"dossier-review-clone-WoyLUD": {
+"first": 72.48,
+"kind": "dir",
+"uid": 1000,
+"last": 73.0
+},
+"dossier-waiting-fqeTkE": {
+"first": 73.0,
+"kind": "dir",
+"uid": 1000,
+"last": 73.51
+},
+"dossier-review-state-1ryMtJ": {
+"first": 73.51,
+"kind": "dir",
+"uid": 1000,
+"last": 74.03
+},
+"dossier-review-clone-atRudk": {
+"first": 73.51,
+"kind": "dir",
+"uid": 1000,
+"last": 74.03
+},
+"dossier-render-origin-1slMm1": {
+"first": 74.03,
+"kind": "dir",
+"uid": 1000,
+"last": 102.53
+},
+"dossier-waiting-vqV4PH": {
+"first": 74.03,
+"kind": "dir",
+"uid": 1000,
+"last": 74.03
+},
+".com.google.Chrome.EOcuNM": {
+"first": 74.53,
+"kind": "dir",
+"uid": 1000,
+"last": 74.53
+},
+"dossier-render-state-IGpGfd": {
+"first": 74.53,
+"kind": "dir",
+"uid": 1000,
+"last": 74.53
+},
+".com.google.Chrome.SKuWqL": {
+"first": 74.53,
+"kind": "dir",
+"uid": 1000,
+"last": 74.53
+},
+"dossier-review-state-8dPrg7": {
+"first": 74.53,
+"kind": "dir",
+"uid": 1000,
+"last": 74.53
+},
+"dossier-render-clone-B3qcqm": {
+"first": 74.53,
+"kind": "dir",
+"uid": 1000,
+"last": 74.53
+},
+"dossier-review-clone-aboUBB": {
+"first": 74.53,
+"kind": "dir",
+"uid": 1000,
+"last": 74.53
+},
+"dossier-waiting-NotsN5": {
+"first": 74.53,
+"kind": "dir",
+"uid": 1000,
+"last": 74.53
+},
+"dossier-review-clone-Y5mJox": {
+"first": 75.04,
+"kind": "dir",
+"uid": 1000,
+"last": 75.54
+},
+"dossier-render-state-oCLnSY": {
+"first": 75.04,
+"kind": "dir",
+"uid": 1000,
+"last": 75.04
+},
+"dossier-waiting-3lsgLT": {
+"first": 75.04,
+"kind": "dir",
+"uid": 1000,
+"last": 75.04
+},
+"dossier-render-clone-RiRcL9": {
+"first": 75.04,
+"kind": "dir",
+"uid": 1000,
+"last": 75.04
+},
+"dossier-render-state-csnvS5": {
+"first": 75.54,
+"kind": "dir",
+"uid": 1000,
+"last": 76.04
+},
+"dossier-render-clone-FXMR0O": {
+"first": 75.54,
+"kind": "dir",
+"uid": 1000,
+"last": 76.04
+},
+"dossier-records-eUUD8l": {
+"first": 75.54,
+"kind": "dir",
+"uid": 1000,
+"last": 75.54
+},
+"dossier-waiting-BRMsY7": {
+"first": 75.54,
+"kind": "dir",
+"uid": 1000,
+"last": 76.04
+},
+"dossier-review-state-W7Tqe7": {
+"first": 75.54,
+"kind": "dir",
+"uid": 1000,
+"last": 75.54
+},
+"dossier-review-state-3VUfPc": {
+"first": 76.04,
+"kind": "dir",
+"uid": 1000,
+"last": 76.04
+},
+"dossier-clone-fbIoWj": {
+"first": 76.04,
+"kind": "dir",
+"uid": 1000,
+"last": 76.04
+},
+"dossier-review-clone-5UuLwA": {
+"first": 76.04,
+"kind": "dir",
+"uid": 1000,
+"last": 76.04
+},
+"dossier-review-clone-I7OpD2": {
+"first": 76.57,
+"kind": "dir",
+"uid": 1000,
+"last": 76.57
+},
+"dossier-records-jnUeIR": {
+"first": 76.57,
+"kind": "dir",
+"uid": 1000,
+"last": 76.57
+},
+"dossier-config-UeKUto": {
+"first": 76.57,
+"kind": "dir",
+"uid": 1000,
+"last": 76.57
+},
+"dossier-waiting-tuPXlp": {
+"first": 76.57,
+"kind": "dir",
+"uid": 1000,
+"last": 77.08
+},
+"dossier-render-state-dECuZI": {
+"first": 76.57,
+"kind": "dir",
+"uid": 1000,
+"last": 76.57
+},
+"dossier-clone-lPyd6B": {
+"first": 76.57,
+"kind": "dir",
+"uid": 1000,
+"last": 76.57
+},
+"dossier-state-BRvkrm": {
+"first": 76.57,
+"kind": "dir",
+"uid": 1000,
+"last": 76.57
+},
+"dossier-render-clone-icltNR": {
+"first": 76.57,
+"kind": "dir",
+"uid": 1000,
+"last": 76.57
+},
+".com.google.Chrome.lz34Vu": {
+"first": 77.08,
+"kind": "dir",
+"uid": 1000,
+"last": 77.08
+},
+"dossier-clone-ozNt0A": {
+"first": 77.08,
+"kind": "dir",
+"uid": 1000,
+"last": 77.08
+},
+".com.google.Chrome.dfp6Pd": {
+"first": 77.08,
+"kind": "dir",
+"uid": 1000,
+"last": 77.08
+},
+"dossier-config-QUGVGy": {
+"first": 77.08,
+"kind": "dir",
+"uid": 1000,
+"last": 77.08
+},
+"dossier-review-state-8QOZzd": {
+"first": 77.08,
+"kind": "dir",
+"uid": 1000,
+"last": 77.58
+},
+"dossier-render-state-A0nPRT": {
+"first": 77.08,
+"kind": "dir",
+"uid": 1000,
+"last": 77.08
+},
+"dossier-review-clone-gO23wv": {
+"first": 77.08,
+"kind": "dir",
+"uid": 1000,
+"last": 77.58
+},
+"dossier-render-clone-BEZimQ": {
+"first": 77.08,
+"kind": "dir",
+"uid": 1000,
+"last": 77.08
+},
+"dossier-render-state-peIvlz": {
+"first": 77.58,
+"kind": "dir",
+"uid": 1000,
+"last": 77.58
+},
+"dossier-render-clone-M92jfd": {
+"first": 77.58,
+"kind": "dir",
+"uid": 1000,
+"last": 77.58
+},
+"dossier-waiting-fJmoyI": {
+"first": 77.58,
+"kind": "dir",
+"uid": 1000,
+"last": 77.58
+},
+"dossier-render-state-AEe1DX": {
+"first": 78.1,
+"kind": "dir",
+"uid": 1000,
+"last": 78.1
+},
+"dossier-render-clone-SOAHNq": {
+"first": 78.1,
+"kind": "dir",
+"uid": 1000,
+"last": 78.1
+},
+"dossier-review-state-CbwjPF": {
+"first": 78.1,
+"kind": "dir",
+"uid": 1000,
+"last": 79.62
+},
+"dossier-review-clone-p1LOVi": {
+"first": 78.1,
+"kind": "dir",
+"uid": 1000,
+"last": 79.62
+},
+"dossier-waiting-SAG0qg": {
+"first": 78.1,
+"kind": "dir",
+"uid": 1000,
+"last": 78.1
+},
+"dossier-render-state-f22lef": {
+"first": 78.61,
+"kind": "dir",
+"uid": 1000,
+"last": 79.11
+},
+"dossier-render-clone-q5t8Sw": {
+"first": 78.61,
+"kind": "dir",
+"uid": 1000,
+"last": 79.11
+},
+"dossier-waiting-lz2RX6": {
+"first": 78.61,
+"kind": "dir",
+"uid": 1000,
+"last": 78.61
+},
+"dossier-review-state-DaoYc3": {
+"first": 79.11,
+"kind": "dir",
+"uid": 1000,
+"last": 79.62
+},
+"dossier-review-clone-7rRAMB": {
+"first": 79.11,
+"kind": "dir",
+"uid": 1000,
+"last": 79.62
+},
+"dossier-waiting-DCDuU0": {
+"first": 79.11,
+"kind": "dir",
+"uid": 1000,
+"last": 79.11
+},
+"dossier-review-state-C9pJB3": {
+"first": 79.11,
+"kind": "dir",
+"uid": 1000,
+"last": 79.62
+},
+"dossier-review-clone-Va2SP6": {
+"first": 79.11,
+"kind": "dir",
+"uid": 1000,
+"last": 79.62
+},
+"dossier-render-state-c9264M": {
+"first": 79.62,
+"kind": "dir",
+"uid": 1000,
+"last": 80.16
+},
+"dossier-render-clone-YL8jvD": {
+"first": 79.62,
+"kind": "dir",
+"uid": 1000,
+"last": 80.16
+},
+"dossier-waiting-TCbmwF": {
+"first": 79.62,
+"kind": "dir",
+"uid": 1000,
+"last": 79.62
+},
+"dossier-waiting-wkoJiE": {
+"first": 80.16,
+"kind": "dir",
+"uid": 1000,
+"last": 80.66
+},
+"dossier-review-state-EB1Js8": {
+"first": 80.16,
+"kind": "dir",
+"uid": 1000,
+"last": 80.16
+},
+"dossier-review-clone-tIEWqY": {
+"first": 80.16,
+"kind": "dir",
+"uid": 1000,
+"last": 80.16
+},
+"dossier-review-state-5j4EVP": {
+"first": 80.66,
+"kind": "dir",
+"uid": 1000,
+"last": 81.69
+},
+"dossier-review-clone-8zqUMm": {
+"first": 80.66,
+"kind": "dir",
+"uid": 1000,
+"last": 81.69
+},
+"dossier-render-state-1d9piG": {
+"first": 80.66,
+"kind": "dir",
+"uid": 1000,
+"last": 80.66
+},
+"dossier-render-clone-ing0iH": {
+"first": 80.66,
+"kind": "dir",
+"uid": 1000,
+"last": 80.66
+},
+"dossier-render-state-8rRN9e": {
+"first": 81.18,
+"kind": "dir",
+"uid": 1000,
+"last": 81.18
+},
+"dossier-render-clone-9ZtreJ": {
+"first": 81.18,
+"kind": "dir",
+"uid": 1000,
+"last": 81.18
+},
+"dossier-review-state-dbVfoI": {
+"first": 81.18,
+"kind": "dir",
+"uid": 1000,
+"last": 81.69
+},
+"dossier-review-clone-jcicrn": {
+"first": 81.18,
+"kind": "dir",
+"uid": 1000,
+"last": 81.69
+},
+"dossier-waiting-HoT7y4": {
+"first": 81.18,
+"kind": "dir",
+"uid": 1000,
+"last": 81.18
+},
+"dossier-render-clone-vbpmmC": {
+"first": 81.69,
+"kind": "dir",
+"uid": 1000,
+"last": 82.19
+},
+"dossier-review-state-zQIzfm": {
+"first": 81.69,
+"kind": "dir",
+"uid": 1000,
+"last": 81.69
+},
+"dossier-review-clone-YYaNml": {
+"first": 81.69,
+"kind": "dir",
+"uid": 1000,
+"last": 81.69
+},
+"dossier-review-state-liXdbs": {
+"first": 81.69,
+"kind": "dir",
+"uid": 1000,
+"last": 81.69
+},
+"dossier-review-clone-MRIqXB": {
+"first": 81.69,
+"kind": "dir",
+"uid": 1000,
+"last": 81.69
+},
+"dossier-review-state-cPTZ5N": {
+"first": 82.19,
+"kind": "dir",
+"uid": 1000,
+"last": 82.19
+},
+"dossier-render-state-uxcW2w": {
+"first": 82.19,
+"kind": "dir",
+"uid": 1000,
+"last": 82.19
+},
+"dossier-review-clone-6awik2": {
+"first": 82.19,
+"kind": "dir",
+"uid": 1000,
+"last": 82.19
+},
+"dossier-review-state-76eOVP": {
+"first": 82.72,
+"kind": "dir",
+"uid": 1000,
+"last": 83.22
+},
+"dossier-render-clone-nsESyM": {
+"first": 82.72,
+"kind": "dir",
+"uid": 1000,
+"last": 83.73
+},
+"dossier-review-clone-AzUFHn": {
+"first": 82.72,
+"kind": "dir",
+"uid": 1000,
+"last": 83.22
+},
+"syzygy-generator-onramp-xgHvpt": {
+"first": 82.72,
+"kind": "dir",
+"uid": 1000,
+"last": 118.15
+},
+"dossier-render-state-k8a4cp": {
+"first": 83.22,
+"kind": "dir",
+"uid": 1000,
+"last": 83.73
+},
+"dossier-review-clone-pC2mmB": {
+"first": 83.73,
+"kind": "dir",
+"uid": 1000,
+"last": 83.73
+},
+"syzygy-poc-surface-fixture-p1913865-n4026531836-WlbQ1l": {
+"first": 83.73,
+"kind": "dir",
+"uid": 1000,
+"last": 113.61
+},
+"dossier-review-state-kSCjn0": {
+"first": 84.29,
+"kind": "dir",
+"uid": 1000,
+"last": 84.29
+},
+"dossier-review-clone-AND6Fb": {
+"first": 84.29,
+"kind": "dir",
+"uid": 1000,
+"last": 84.29
+},
+"dossier-render-state-RwlLx3": {
+"first": 84.29,
+"kind": "dir",
+"uid": 1000,
+"last": 84.8
+},
+"dossier-render-clone-g5Tqui": {
+"first": 84.29,
+"kind": "dir",
+"uid": 1000,
+"last": 84.8
+},
+"dossier-review-state-nOPePS": {
+"first": 84.8,
+"kind": "dir",
+"uid": 1000,
+"last": 84.8
+},
+"dossier-review-clone-aS81ij": {
+"first": 84.8,
+"kind": "dir",
+"uid": 1000,
+"last": 84.8
+},
+"dossier-review-clone-V3Jetd": {
+"first": 85.3,
+"kind": "dir",
+"uid": 1000,
+"last": 85.3
+},
+"dossier-render-state-ZTUfZd": {
+"first": 85.3,
+"kind": "dir",
+"uid": 1000,
+"last": 86.81
+},
+"dossier-render-clone-GjLqTn": {
+"first": 85.3,
+"kind": "dir",
+"uid": 1000,
+"last": 86.81
+},
+"dossier-review-clone-OvnsGz": {
+"first": 85.8,
+"kind": "dir",
+"uid": 1000,
+"last": 85.8
+},
+".com.google.Chrome.sPCbWH": {
+"first": 85.8,
+"kind": "dir",
+"uid": 1000,
+"last": 85.8
+},
+"dossier-review-state-Ha7MVb": {
+"first": 86.31,
+"kind": "dir",
+"uid": 1000,
+"last": 86.31
+},
+"dossier-review-clone-tyd2Pq": {
+"first": 86.31,
+"kind": "dir",
+"uid": 1000,
+"last": 86.31
+},
+"dossier-review-state-PAbDr3": {
+"first": 86.81,
+"kind": "dir",
+"uid": 1000,
+"last": 87.31
+},
+"dossier-review-clone-xbrgHC": {
+"first": 86.81,
+"kind": "dir",
+"uid": 1000,
+"last": 87.31
+},
+"dossier-review-state-X2OUkk": {
+"first": 87.31,
+"kind": "dir",
+"uid": 1000,
+"last": 87.31
+},
+"dossier-review-clone-Biy9hk": {
+"first": 87.31,
+"kind": "dir",
+"uid": 1000,
+"last": 87.31
+},
+".com.google.Chrome.gCsSsK": {
+"first": 87.31,
+"kind": "dir",
+"uid": 1000,
+"last": 87.31
+},
+"dossier-render-state-PJYbbX": {
+"first": 87.31,
+"kind": "dir",
+"uid": 1000,
+"last": 87.31
+},
+"dossier-render-clone-1vgAJc": {
+"first": 87.31,
+"kind": "dir",
+"uid": 1000,
+"last": 87.31
+},
+"dossier-review-state-LothDv": {
+"first": 87.31,
+"kind": "dir",
+"uid": 1000,
+"last": 87.31
+},
+"dossier-review-clone-JlTwtw": {
+"first": 87.31,
+"kind": "dir",
+"uid": 1000,
+"last": 87.31
+},
+"dossier-render-clone-XMynRc": {
+"first": 87.82,
+"kind": "dir",
+"uid": 1000,
+"last": 87.82
+},
+"dossier-review-state-yjgGWs": {
+"first": 87.82,
+"kind": "dir",
+"uid": 1000,
+"last": 88.85
+},
+"dossier-review-clone-c7UBDi": {
+"first": 87.82,
+"kind": "dir",
+"uid": 1000,
+"last": 88.85
+},
+"dossier-render-state-zdXPsn": {
+"first": 88.35,
+"kind": "dir",
+"uid": 1000,
+"last": 88.35
+},
+"dossier-render-clone-aoYQQJ": {
+"first": 88.35,
+"kind": "dir",
+"uid": 1000,
+"last": 88.35
+},
+"dossier-review-state-KZLaMl": {
+"first": 88.35,
+"kind": "dir",
+"uid": 1000,
+"last": 88.85
+},
+"dossier-review-clone-CSfMNg": {
+"first": 88.35,
+"kind": "dir",
+"uid": 1000,
+"last": 88.85
+},
+"dossier-render-state-Z10Jq7": {
+"first": 88.85,
+"kind": "dir",
+"uid": 1000,
+"last": 88.85
+},
+"dossier-render-clone-lTdBOx": {
+"first": 88.85,
+"kind": "dir",
+"uid": 1000,
+"last": 88.85
+},
+"dossier-review-state-nh4Ffi": {
+"first": 88.85,
+"kind": "dir",
+"uid": 1000,
+"last": 88.85
+},
+"dossier-review-clone-ZnB7Oa": {
+"first": 88.85,
+"kind": "dir",
+"uid": 1000,
+"last": 88.85
+},
+"dossier-review-clone-bnKo9V": {
+"first": 89.36,
+"kind": "dir",
+"uid": 1000,
+"last": 90.36
+},
+"dossier-render-state-x5Bajk": {
+"first": 89.36,
+"kind": "dir",
+"uid": 1000,
+"last": 90.36
+},
+"dossier-render-clone-KgckCm": {
+"first": 89.36,
+"kind": "dir",
+"uid": 1000,
+"last": 90.36
+},
+"dossier-review-state-XD9gXj": {
+"first": 89.36,
+"kind": "dir",
+"uid": 1000,
+"last": 90.36
+},
+"dossier-review-clone-3nyiTT": {
+"first": 89.36,
+"kind": "dir",
+"uid": 1000,
+"last": 90.36
+},
+"dossier-review-clone-ggaG7L": {
+"first": 89.86,
+"kind": "dir",
+"uid": 1000,
+"last": 90.36
+},
+"dossier-review-state-7pSm8v": {
+"first": 89.86,
+"kind": "dir",
+"uid": 1000,
+"last": 90.36
+},
+"dossier-review-state-GahgUb": {
+"first": 90.36,
+"kind": "dir",
+"uid": 1000,
+"last": 90.36
+},
+"dossier-review-state-dzefwA": {
+"first": 90.86,
+"kind": "dir",
+"uid": 1000,
+"last": 90.86
+},
+"dossier-review-clone-qk2Brf": {
+"first": 90.86,
+"kind": "dir",
+"uid": 1000,
+"last": 90.86
+},
+"dossier-render-state-aOpJua": {
+"first": 90.86,
+"kind": "dir",
+"uid": 1000,
+"last": 90.86
+},
+"dossier-render-clone-lwHAv5": {
+"first": 90.86,
+"kind": "dir",
+"uid": 1000,
+"last": 90.86
+},
+"dossier-review-state-7I7u89": {
+"first": 90.86,
+"kind": "dir",
+"uid": 1000,
+"last": 90.86
+},
+"dossier-review-clone-yXenOu": {
+"first": 90.86,
+"kind": "dir",
+"uid": 1000,
+"last": 90.86
+},
+"dossier-review-clone-stbCGc": {
+"first": 91.37,
+"kind": "dir",
+"uid": 1000,
+"last": 91.9
+},
+"dossier-render-state-FRYvxO": {
+"first": 91.37,
+"kind": "dir",
+"uid": 1000,
+"last": 91.9
+},
+"dossier-render-clone-Itbsih": {
+"first": 91.37,
+"kind": "dir",
+"uid": 1000,
+"last": 91.9
+},
+"dossier-review-state-KvyDOc": {
+"first": 91.9,
+"kind": "dir",
+"uid": 1000,
+"last": 91.9
+},
+"dossier-review-clone-KUlghM": {
+"first": 91.9,
+"kind": "dir",
+"uid": 1000,
+"last": 91.9
+},
+"dossier-review-state-8KASoT": {
+"first": 91.9,
+"kind": "dir",
+"uid": 1000,
+"last": 91.9
+},
+"dossier-review-clone-MNNJsl": {
+"first": 92.41,
+"kind": "dir",
+"uid": 1000,
+"last": 93.41
+},
+"dossier-render-state-T1T4OB": {
+"first": 92.41,
+"kind": "dir",
+"uid": 1000,
+"last": 92.91
+},
+"dossier-render-clone-B3pbvH": {
+"first": 92.41,
+"kind": "dir",
+"uid": 1000,
+"last": 92.91
+},
+"dossier-review-clone-XRwPs4": {
+"first": 92.91,
+"kind": "dir",
+"uid": 1000,
+"last": 93.41
+},
+"dossier-review-state-RmnKXx": {
+"first": 92.91,
+"kind": "dir",
+"uid": 1000,
+"last": 93.41
+},
+"dossier-review-state-5ocjtC": {
+"first": 93.41,
+"kind": "dir",
+"uid": 1000,
+"last": 93.41
+},
+"dossier-render-state-1GLjjz": {
+"first": 93.41,
+"kind": "dir",
+"uid": 1000,
+"last": 94.42
+},
+"dossier-review-clone-gNC4AM": {
+"first": 93.41,
+"kind": "dir",
+"uid": 1000,
+"last": 93.41
+},
+"dossier-render-clone-a63k9W": {
+"first": 93.41,
+"kind": "dir",
+"uid": 1000,
+"last": 94.42
+},
+"dossier-review-state-vvaDV4": {
+"first": 93.41,
+"kind": "dir",
+"uid": 1000,
+"last": 93.41
+},
+"dossier-review-state-rfpqaD": {
+"first": 93.92,
+"kind": "dir",
+"uid": 1000,
+"last": 93.92
+},
+"dossier-review-clone-1PLEJM": {
+"first": 93.92,
+"kind": "dir",
+"uid": 1000,
+"last": 93.92
+},
+"dossier-review-state-Xaq4ox": {
+"first": 93.92,
+"kind": "dir",
+"uid": 1000,
+"last": 93.92
+},
+"dossier-review-clone-381rlj": {
+"first": 93.92,
+"kind": "dir",
+"uid": 1000,
+"last": 93.92
+},
+"dossier-review-clone-j4aOwR": {
+"first": 94.42,
+"kind": "dir",
+"uid": 1000,
+"last": 94.93
+},
+"dossier-review-state-QWq3F5": {
+"first": 94.93,
+"kind": "dir",
+"uid": 1000,
+"last": 94.93
+},
+"dossier-review-clone-EMatTX": {
+"first": 94.93,
+"kind": "dir",
+"uid": 1000,
+"last": 94.93
+},
+"dossier-render-state-PKXXuj": {
+"first": 94.93,
+"kind": "dir",
+"uid": 1000,
+"last": 95.95
+},
+"dossier-render-clone-7BpdEy": {
+"first": 94.93,
+"kind": "dir",
+"uid": 1000,
+"last": 95.95
+},
+"dossier-review-state-h2Lpd2": {
+"first": 94.93,
+"kind": "dir",
+"uid": 1000,
+"last": 94.93
+},
+"dossier-review-state-EPurTw": {
+"first": 95.45,
+"kind": "dir",
+"uid": 1000,
+"last": 95.45
+},
+"dossier-review-clone-joS3D2": {
+"first": 95.45,
+"kind": "dir",
+"uid": 1000,
+"last": 95.45
+},
+"dossier-review-state-fkDZXH": {
+"first": 95.95,
+"kind": "dir",
+"uid": 1000,
+"last": 95.95
+},
+"dossier-review-clone-6H2emG": {
+"first": 95.95,
+"kind": "dir",
+"uid": 1000,
+"last": 95.95
+},
+"dossier-render-state-Tvo3Rv": {
+"first": 96.47,
+"kind": "dir",
+"uid": 1000,
+"last": 97.5
+},
+"dossier-render-clone-scmbZr": {
+"first": 96.47,
+"kind": "dir",
+"uid": 1000,
+"last": 97.5
+},
+"dossier-review-state-N5ZTqa": {
+"first": 96.47,
+"kind": "dir",
+"uid": 1000,
+"last": 96.47
+},
+"dossier-review-clone-geXSOK": {
+"first": 96.47,
+"kind": "dir",
+"uid": 1000,
+"last": 96.47
+},
+"dossier-review-clone-5VGbKQ": {
+"first": 96.98,
+"kind": "dir",
+"uid": 1000,
+"last": 96.98
+},
+"dossier-review-clone-1Kyg1S": {
+"first": 97.5,
+"kind": "dir",
+"uid": 1000,
+"last": 98.0
+},
+"dossier-render-state-mAcefq": {
+"first": 98.0,
+"kind": "dir",
+"uid": 1000,
+"last": 98.0
+},
+"dossier-render-clone-RcpwFk": {
+"first": 98.0,
+"kind": "dir",
+"uid": 1000,
+"last": 98.0
+},
+"dossier-review-state-c9mCI8": {
+"first": 98.0,
+"kind": "dir",
+"uid": 1000,
+"last": 98.0
+},
+"dossier-render-state-hWwouw": {
+"first": 98.5,
+"kind": "dir",
+"uid": 1000,
+"last": 99.0
+},
+"dossier-render-clone-vC53Lr": {
+"first": 98.5,
+"kind": "dir",
+"uid": 1000,
+"last": 99.0
+},
+"dossier-review-state-8rHgSX": {
+"first": 98.5,
+"kind": "dir",
+"uid": 1000,
+"last": 98.5
+},
+"dossier-review-clone-tzqi9n": {
+"first": 98.5,
+"kind": "dir",
+"uid": 1000,
+"last": 98.5
+},
+"dossier-review-state-hoIphB": {
+"first": 99.0,
+"kind": "dir",
+"uid": 1000,
+"last": 99.0
+},
+"dossier-review-clone-Nk1FJo": {
+"first": 99.0,
+"kind": "dir",
+"uid": 1000,
+"last": 99.0
+},
+"dossier-render-state-aSD8LY": {
+"first": 99.51,
+"kind": "dir",
+"uid": 1000,
+"last": 100.01
+},
+"dossier-render-clone-l1i5X5": {
+"first": 99.51,
+"kind": "dir",
+"uid": 1000,
+"last": 100.01
+},
+"syzygy-poc-browser-TE2zcV": {
+"first": 100.51,
+"kind": "dir",
+"uid": 1000,
+"last": 126.26
+},
+"dossier-render-state-KrlwoI": {
+"first": 100.51,
+"kind": "dir",
+"uid": 1000,
+"last": 101.02
+},
+"VlKfHGQ2vJ3HCMpy2OZnE": {
+"first": 100.51,
+"kind": "dir",
+"uid": 1000,
+"last": 182.03
+},
+"dossier-render-clone-WXKLyp": {
+"first": 100.51,
+"kind": "dir",
+"uid": 1000,
+"last": 101.02
+},
+".com.google.Chrome.WrzYlH": {
+"first": 101.02,
+"kind": "dir",
+"uid": 1000,
+"last": 126.26
+},
+"dossier-render-state-RCEkIi": {
+"first": 101.52,
+"kind": "dir",
+"uid": 1000,
+"last": 101.52
+},
+"dossier-render-clone-kn7lLm": {
+"first": 101.52,
+"kind": "dir",
+"uid": 1000,
+"last": 101.52
+},
+"syzygy-poc-names-USyL9c": {
+"first": 101.52,
+"kind": "dir",
+"uid": 1000,
+"last": 126.77
+},
+"dossier-render-state-nmTtql": {
+"first": 102.02,
+"kind": "dir",
+"uid": 1000,
+"last": 102.53
+},
+"dossier-render-clone-WjrRFz": {
+"first": 102.02,
+"kind": "dir",
+"uid": 1000,
+"last": 102.53
+},
+"syzygy-poc-surface-fixture-template-p1932860-n4026531836-vk1F9o": {
+"first": 104.04,
+"kind": "dir",
+"uid": 1000,
+"last": 126.77
+},
+"dossier-check-origin-EgcvkK": {
+"first": 104.54,
+"kind": "dir",
+"uid": 1000,
+"last": 119.66
+},
+"syzygy-poc-names-daemon-514D98": {
+"first": 104.54,
+"kind": "dir",
+"uid": 1000,
+"last": 126.77
+},
+"syzygy-poc-surface-fixture-p1932860-n4026531836-1KBgbt": {
+"first": 104.54,
+"kind": "dir",
+"uid": 1000,
+"last": 126.77
+},
+"dossier-check-state-VjJKZM": {
+"first": 105.04,
+"kind": "dir",
+"uid": 1000,
+"last": 105.04
+},
+"dossier-check-clone-QI2Gxa": {
+"first": 105.04,
+"kind": "dir",
+"uid": 1000,
+"last": 105.04
+},
+"dossier-check-state-aTAs9m": {
+"first": 105.55,
+"kind": "dir",
+"uid": 1000,
+"last": 105.55
+},
+"dossier-check-clone-sJ10mJ": {
+"first": 105.55,
+"kind": "dir",
+"uid": 1000,
+"last": 105.55
+},
+"dossier-check-state-NfDpRg": {
+"first": 106.05,
+"kind": "dir",
+"uid": 1000,
+"last": 106.05
+},
+"dossier-check-clone-UY65Ub": {
+"first": 106.05,
+"kind": "dir",
+"uid": 1000,
+"last": 106.05
+},
+"dossier-check-state-li7eOB": {
+"first": 106.55,
+"kind": "dir",
+"uid": 1000,
+"last": 106.55
+},
+"dossier-check-clone-7xZYpu": {
+"first": 106.55,
+"kind": "dir",
+"uid": 1000,
+"last": 106.55
+},
+"dossier-check-state-eRKwL7": {
+"first": 107.06,
+"kind": "dir",
+"uid": 1000,
+"last": 107.06
+},
+"dossier-check-clone-oJHjQp": {
+"first": 107.06,
+"kind": "dir",
+"uid": 1000,
+"last": 107.06
+},
+"dossier-check-state-ilRrYJ": {
+"first": 107.56,
+"kind": "dir",
+"uid": 1000,
+"last": 107.56
+},
+"dossier-check-clone-liVIZ1": {
+"first": 107.56,
+"kind": "dir",
+"uid": 1000,
+"last": 107.56
+},
+"dossier-check-state-CERQwr": {
+"first": 108.07,
+"kind": "dir",
+"uid": 1000,
+"last": 108.07
+},
+"dossier-check-clone-AT3CM8": {
+"first": 108.07,
+"kind": "dir",
+"uid": 1000,
+"last": 108.07
+},
+"dossier-check-state-Apznd8": {
+"first": 108.57,
+"kind": "dir",
+"uid": 1000,
+"last": 108.57
+},
+"dossier-check-clone-ADTevf": {
+"first": 108.57,
+"kind": "dir",
+"uid": 1000,
+"last": 108.57
+},
+"syzygy-poc-names-daemon-y4xsBN": {
+"first": 109.07,
+"kind": "dir",
+"uid": 1000,
+"last": 126.77
+},
+"dossier-check-state-D9wPJU": {
+"first": 109.07,
+"kind": "dir",
+"uid": 1000,
+"last": 109.07
+},
+"syzygy-poc-surface-fixture-p1932860-n4026531836-qoRZGH": {
+"first": 109.07,
+"kind": "dir",
+"uid": 1000,
+"last": 126.77
+},
+"dossier-check-clone-hDmWSI": {
+"first": 109.07,
+"kind": "dir",
+"uid": 1000,
+"last": 109.07
+},
+"dossier-check-state-tfHCOC": {
+"first": 109.58,
+"kind": "dir",
+"uid": 1000,
+"last": 109.58
+},
+"dossier-check-clone-xXsPrn": {
+"first": 109.58,
+"kind": "dir",
+"uid": 1000,
+"last": 109.58
+},
+"dossier-check-state-ag5mwi": {
+"first": 110.08,
+"kind": "dir",
+"uid": 1000,
+"last": 110.08
+},
+"dossier-check-clone-tFjs1Q": {
+"first": 110.08,
+"kind": "dir",
+"uid": 1000,
+"last": 110.08
+},
+"dossier-check-state-o5xK3N": {
+"first": 110.58,
+"kind": "dir",
+"uid": 1000,
+"last": 110.58
+},
+"dossier-check-clone-iph9xU": {
+"first": 110.58,
+"kind": "dir",
+"uid": 1000,
+"last": 110.58
+},
+"dossier-check-state-NZEGbW": {
+"first": 111.09,
+"kind": "dir",
+"uid": 1000,
+"last": 111.09
+},
+"dossier-check-clone-pbcCix": {
+"first": 111.09,
+"kind": "dir",
+"uid": 1000,
+"last": 111.09
+},
+"dossier-check-state-U7wKye": {
+"first": 111.59,
+"kind": "dir",
+"uid": 1000,
+"last": 111.59
+},
+"dossier-check-clone-IRydWl": {
+"first": 111.59,
+"kind": "dir",
+"uid": 1000,
+"last": 111.59
+},
+"dossier-check-state-3Gj7ni": {
+"first": 112.1,
+"kind": "dir",
+"uid": 1000,
+"last": 112.1
+},
+"dossier-check-clone-zJGDh9": {
+"first": 112.1,
+"kind": "dir",
+"uid": 1000,
+"last": 112.1
+},
+"syzygy-poc-surface-fixture-p1932860-n4026531836-sgWFW1": {
+"first": 112.61,
+"kind": "dir",
+"uid": 1000,
+"last": 126.77
+},
+"dossier-check-clone-WjDFgU": {
+"first": 112.61,
+"kind": "dir",
+"uid": 1000,
+"last": 112.61
+},
+"dossier-check-clone-T6DBHt": {
+"first": 113.11,
+"kind": "dir",
+"uid": 1000,
+"last": 113.11
+},
+"syzygy-poc-names-daemon-rOWTcO": {
+"first": 113.11,
+"kind": "dir",
+"uid": 1000,
+"last": 126.77
+},
+"dossier-check-clone-rww9VQ": {
+"first": 113.61,
+"kind": "dir",
+"uid": 1000,
+"last": 113.61
+},
+"dossier-check-state-YYxdiP": {
+"first": 114.12,
+"kind": "dir",
+"uid": 1000,
+"last": 114.12
+},
+"dossier-check-clone-Ce1i1q": {
+"first": 114.12,
+"kind": "dir",
+"uid": 1000,
+"last": 114.12
+},
+"syzygy-poc-surface-fixture-p1913865-n4026531836-FQhNCu": {
+"first": 114.12,
+"kind": "dir",
+"uid": 1000,
+"last": 141.98
+},
+"dossier-check-state-jgWB2a": {
+"first": 114.62,
+"kind": "dir",
+"uid": 1000,
+"last": 114.62
+},
+"dossier-check-clone-AgTW2G": {
+"first": 114.62,
+"kind": "dir",
+"uid": 1000,
+"last": 114.62
+},
+"dossier-check-clone-sX17FG": {
+"first": 115.12,
+"kind": "dir",
+"uid": 1000,
+"last": 115.12
+},
+"dossier-check-state-0JSLJU": {
+"first": 115.63,
+"kind": "dir",
+"uid": 1000,
+"last": 115.63
+},
+"dossier-check-clone-fbnbeX": {
+"first": 115.63,
+"kind": "dir",
+"uid": 1000,
+"last": 115.63
+},
+"dossier-check-state-yrIn8y": {
+"first": 116.13,
+"kind": "dir",
+"uid": 1000,
+"last": 116.13
+},
+"dossier-check-clone-MFZM1a": {
+"first": 116.13,
+"kind": "dir",
+"uid": 1000,
+"last": 116.13
+},
+"dossier-check-state-uNx8uG": {
+"first": 116.63,
+"kind": "dir",
+"uid": 1000,
+"last": 116.63
+},
+"dossier-check-clone-HKGl8N": {
+"first": 116.63,
+"kind": "dir",
+"uid": 1000,
+"last": 116.63
+},
+"dossier-check-state-nU5KgS": {
+"first": 117.14,
+"kind": "dir",
+"uid": 1000,
+"last": 117.14
+},
+"dossier-check-clone-KmhV7L": {
+"first": 117.14,
+"kind": "dir",
+"uid": 1000,
+"last": 117.14
+},
+"dossier-check-clone-Ej1B21": {
+"first": 117.65,
+"kind": "dir",
+"uid": 1000,
+"last": 117.65
+},
+"syzygy-poc-names-daemon-eJB5Uw": {
+"first": 117.65,
+"kind": "dir",
+"uid": 1000,
+"last": 126.77
+},
+"syzygy-poc-surface-fixture-p1932860-n4026531836-eC4VSD": {
+"first": 117.65,
+"kind": "dir",
+"uid": 1000,
+"last": 126.77
+},
+"dossier-check-clone-aYDHCI": {
+"first": 118.15,
+"kind": "dir",
+"uid": 1000,
+"last": 118.15
+},
+"dossier-check-state-FHj3xh": {
+"first": 118.65,
+"kind": "dir",
+"uid": 1000,
+"last": 118.65
+},
+"dossier-check-clone-Ybv6UY": {
+"first": 118.65,
+"kind": "dir",
+"uid": 1000,
+"last": 118.65
+},
+"syzygy-private-restart-LybJhv": {
+"first": 119.15,
+"kind": "dir",
+"uid": 1000,
+"last": 120.66
+},
+"dossier-check-state-6Wlbar": {
+"first": 119.15,
+"kind": "dir",
+"uid": 1000,
+"last": 119.66
+},
+"dossier-check-clone-pjFqqS": {
+"first": 119.15,
+"kind": "dir",
+"uid": 1000,
+"last": 119.66
+},
+"syzygy-poc-restart-1000-37645.lock": {
+"first": 119.66,
+"kind": "file",
+"uid": 1000,
+"last": 120.66
+},
+"syzygy-private-restart-qnuebu": {
+"first": 121.17,
+"kind": "dir",
+"uid": 1000,
+"last": 121.17
+},
+"syzygy-private-restart-0Z4UVw": {
+"first": 121.69,
+"kind": "dir",
+"uid": 1000,
+"last": 121.69
+},
+"syzygy-poc-names-daemon-N5KBr3": {
+"first": 121.69,
+"kind": "dir",
+"uid": 1000,
+"last": 126.77
+},
+"syzygy-poc-surface-fixture-p1932860-n4026531836-3e9nEq": {
+"first": 121.69,
+"kind": "dir",
+"uid": 1000,
+"last": 126.77
+},
+"syzygy-private-restart-ZJXYDR": {
+"first": 122.21,
+"kind": "dir",
+"uid": 1000,
+"last": 122.72
+},
+"syzygy-poc-browser-DLiSLZ": {
+"first": 122.21,
+"kind": "dir",
+"uid": 1000,
+"last": 124.24
+},
+"syzygy-cross-links-pages-Z5b1JJ": {
+"first": 122.21,
+"kind": "dir",
+"uid": 1000,
+"last": 124.24
+},
+"syzygy-cross-links-state-eSFJjA": {
+"first": 122.21,
+"kind": "dir",
+"uid": 1000,
+"last": 124.24
+},
+"syzygy-poc-surface-fixture-p1935610-n4026531836-Ccamge": {
+"first": 122.21,
+"kind": "dir",
+"uid": 1000,
+"last": 124.24
+},
+"syzygy-poc-surface-fixture-template-p1935610-n4026531836-YdIgmO": {
+"first": 122.21,
+"kind": "dir",
+"uid": 1000,
+"last": 131.34
+},
+".com.google.Chrome.bavT4f": {
+"first": 122.72,
+"kind": "dir",
+"uid": 1000,
+"last": 124.24
+},
+"syzygy-poc-restart-1000-38511.lock": {
+"first": 122.72,
+"kind": "file",
+"uid": 1000,
+"last": 122.72
+},
+"syzygy-poc-restart-1000-39995.lock": {
+"first": 123.23,
+"kind": "file",
+"uid": 1000,
+"last": 123.23
+},
+"dossier-close-tNkWoE": {
+"first": 123.23,
+"kind": "dir",
+"uid": 1000,
+"last": 123.23
+},
+"syzygy-private-restart-XeukJ0": {
+"first": 123.23,
+"kind": "dir",
+"uid": 1000,
+"last": 123.23
+},
+"dossier-close-IRw2Uo": {
+"first": 123.74,
+"kind": "dir",
+"uid": 1000,
+"last": 124.24
+},
+"syzygy-private-restart-j33Sh3": {
+"first": 123.74,
+"kind": "dir",
+"uid": 1000,
+"last": 123.74
+},
+"syzygy-private-restart-euBKEB": {
+"first": 124.24,
+"kind": "dir",
+"uid": 1000,
+"last": 124.75
+},
+"syzygy-poc-names-daemon-hIsRgy": {
+"first": 124.24,
+"kind": "dir",
+"uid": 1000,
+"last": 126.77
+},
+"syzygy-poc-surface-fixture-p1932860-n4026531836-sCxE8E": {
+"first": 124.24,
+"kind": "dir",
+"uid": 1000,
+"last": 126.77
+},
+"syzygy-poc-surface-fixture-p1935610-n4026531836-KIJnED": {
+"first": 124.75,
+"kind": "dir",
+"uid": 1000,
+"last": 124.75
+},
+"syzygy-poc-names-daemon-MAWLvq": {
+"first": 124.75,
+"kind": "dir",
+"uid": 1000,
+"last": 126.77
+},
+"syzygy-poc-surface-fixture-p1932860-n4026531836-2GR7Ps": {
+"first": 124.75,
+"kind": "dir",
+"uid": 1000,
+"last": 126.77
+},
+"dossier-close-5hbL8l": {
+"first": 124.75,
+"kind": "dir",
+"uid": 1000,
+"last": 125.26
+},
+"syzygy-poc-restart-1000-45789.lock": {
+"first": 124.75,
+"kind": "file",
+"uid": 1000,
+"last": 124.75
+},
+"dossier-screen-Q8mhZQ": {
+"first": 125.26,
+"kind": "dir",
+"uid": 1000,
+"last": 125.26
+},
+"syzygy-poc-restart-1000-44125.lock": {
+"first": 125.26,
+"kind": "file",
+"uid": 1000,
+"last": 125.76
+},
+".com.google.Chrome.IiIbma": {
+"first": 125.26,
+"kind": "dir",
+"uid": 1000,
+"last": 188.09
+},
+"syzygy-private-restart-HTiiIg": {
+"first": 125.26,
+"kind": "dir",
+"uid": 1000,
+"last": 125.76
+},
+"syzygy-poc-browser-SbxNyA": {
+"first": 125.26,
+"kind": "dir",
+"uid": 1000,
+"last": 127.27
+},
+"syzygy-missing-capability-X69VIm": {
+"first": 125.26,
+"kind": "dir",
+"uid": 1000,
+"last": 127.27
+},
+"syzygy-poc-surface-fixture-p1935610-n4026531836-nHzXzV": {
+"first": 125.26,
+"kind": "dir",
+"uid": 1000,
+"last": 127.27
+},
+"dossier-close-8EnhPq": {
+"first": 125.76,
+"kind": "dir",
+"uid": 1000,
+"last": 126.26
+},
+"dossier-screen-vecs1F": {
+"first": 125.76,
+"kind": "dir",
+"uid": 1000,
+"last": 125.76
+},
+"syzygy-poc-names-daemon-PPJKyN": {
+"first": 125.76,
+"kind": "dir",
+"uid": 1000,
+"last": 126.77
+},
+"syzygy-poc-surface-fixture-p1932860-n4026531836-TutTGP": {
+"first": 125.76,
+"kind": "dir",
+"uid": 1000,
+"last": 126.77
+},
+"syzygy-poc-restart-1000-39857.lock": {
+"first": 126.26,
+"kind": "file",
+"uid": 1000,
+"last": 126.26
+},
+"syzygy-poc-restart-1000-46313.lock": {
+"first": 126.77,
+"kind": "file",
+"uid": 1000,
+"last": 126.77
+},
+"dossier-close-3zmzQx": {
+"first": 126.77,
+"kind": "dir",
+"uid": 1000,
+"last": 127.78
+},
+"syzygy-private-restart-VAOrGm": {
+"first": 126.77,
+"kind": "dir",
+"uid": 1000,
+"last": 127.27
+},
+"syzygy-poc-browser-HMcyGA": {
+"first": 127.78,
+"kind": "dir",
+"uid": 1000,
+"last": 130.33
+},
+"syzygy-poc-runtime-pages-Tk0WK6": {
+"first": 127.78,
+"kind": "dir",
+"uid": 1000,
+"last": 130.33
+},
+"syzygy-poc-runtime-state-d47TWg": {
+"first": 127.78,
+"kind": "dir",
+"uid": 1000,
+"last": 130.33
+},
+"syzygy-poc-surface-fixture-p1935610-n4026531836-Wm2Nbe": {
+"first": 127.78,
+"kind": "dir",
+"uid": 1000,
+"last": 130.33
+},
+"syzygy-poc-restart-1000-43051.lock": {
+"first": 127.78,
+"kind": "file",
+"uid": 1000,
+"last": 128.28
+},
+"syzygy-private-restart-FHTQb4": {
+"first": 127.78,
+"kind": "dir",
+"uid": 1000,
+"last": 128.28
+},
+"dossier-close-cM5mLA": {
+"first": 128.28,
+"kind": "dir",
+"uid": 1000,
+"last": 129.31
+},
+".com.google.Chrome.M29K1W": {
+"first": 128.28,
+"kind": "dir",
+"uid": 1000,
+"last": 130.33
+},
+"syzygy-private-restart-lgnsTn": {
+"first": 128.79,
+"kind": "dir",
+"uid": 1000,
+"last": 130.83
+},
+"syzygy-poc-surface-fixture-p1936917-n4026531836-7KGwqS": {
+"first": 129.31,
+"kind": "dir",
+"uid": 1000,
+"last": 129.31
+},
+"syzygy-poc-surface-fixture-template-p1936917-n4026531836-bfuk14": {
+"first": 129.31,
+"kind": "dir",
+"uid": 1000,
+"last": 134.88
+},
+"syzygy-poc-restart-1000-44273.lock": {
+"first": 129.31,
+"kind": "file",
+"uid": 1000,
+"last": 129.82
+},
+"syzygy-poc-surface-fixture-p1936917-n4026531836-3Dnsl2": {
+"first": 129.82,
+"kind": "dir",
+"uid": 1000,
+"last": 129.82
+},
+"dossier-close-NtamhL": {
+"first": 129.82,
+"kind": "dir",
+"uid": 1000,
+"last": 130.33
+},
+"syzygy-poc-surface-fixture-p1936917-n4026531836-kKivys": {
+"first": 130.33,
+"kind": "dir",
+"uid": 1000,
+"last": 130.33
+},
+"syzygy-poc-restart-1000-45021.lock": {
+"first": 130.33,
+"kind": "file",
+"uid": 1000,
+"last": 130.83
+},
+"syzygy-private-restart-f5xpSP": {
+"first": 130.33,
+"kind": "dir",
+"uid": 1000,
+"last": 130.83
+},
+"syzygy-poc-surface-fixture-p1935610-n4026531836-cP4ALs": {
+"first": 130.83,
+"kind": "dir",
+"uid": 1000,
+"last": 130.83
+},
+"syzygy-poc-surface-fixture-p1936917-n4026531836-fMLlIy": {
+"first": 130.83,
+"kind": "dir",
+"uid": 1000,
+"last": 130.83
+},
+"dossier-close-xEz809": {
+"first": 130.83,
+"kind": "dir",
+"uid": 1000,
+"last": 130.83
+},
+"dossier-close-credential-yzxLhm": {
+"first": 130.83,
+"kind": "dir",
+"uid": 1000,
+"last": 130.83
+},
+"syzygy-poc-surface-fixture-p1936917-n4026531836-rwaCSl": {
+"first": 131.34,
+"kind": "dir",
+"uid": 1000,
+"last": 131.34
+},
+"syzygy-poc-surface-fixture-p1935610-n4026531836-0sHCjl": {
+"first": 131.34,
+"kind": "dir",
+"uid": 1000,
+"last": 131.34
+},
+"syzygy-poc-surface-fixture-template-p1937632-n4026531836-wb8lJB": {
+"first": 131.84,
+"kind": "dir",
+"uid": 1000,
+"last": 138.44
+},
+"syzygy-poc-surface-fixture-p1936917-n4026531836-tJfYmJ": {
+"first": 131.84,
+"kind": "dir",
+"uid": 1000,
+"last": 131.84
+},
+"syzygy-poc-surface-fixture-p1936917-n4026531836-Kw8zy3": {
+"first": 132.34,
+"kind": "dir",
+"uid": 1000,
+"last": 132.34
+},
+"syzygy-poc-surface-fixture-template-p1937788-n4026531836-tQ7B6A": {
+"first": 132.34,
+"kind": "dir",
+"uid": 1000,
+"last": 138.94
+},
+"syzygy-poc-browser-GRevlu": {
+"first": 132.34,
+"kind": "dir",
+"uid": 1000,
+"last": 138.44
+},
+"dossier-evidence-xshRdr": {
+"first": 132.34,
+"kind": "dir",
+"uid": 1000,
+"last": 132.85
+},
+"syzygy-redis-shaped-test-oiDgwC": {
+"first": 132.85,
+"kind": "dir",
+"uid": 1000,
+"last": 136.89
+},
+"syzygy-poc-surface-fixture-p1936917-n4026531836-G6ZqTn": {
+"first": 132.85,
+"kind": "dir",
+"uid": 1000,
+"last": 132.85
+},
+"syzygy-production-reobserve-state-BqijpK": {
+"first": 132.85,
+"kind": "dir",
+"uid": 1000,
+"last": 133.35
+},
+"syzygy-poc-surface-fixture-p1937788-n4026531836-m8rCYM": {
+"first": 132.85,
+"kind": "dir",
+"uid": 1000,
+"last": 133.35
+},
+".com.google.Chrome.pTkHxp": {
+"first": 132.85,
+"kind": "dir",
+"uid": 1000,
+"last": 137.92
+},
+"syzygy-poc-surface-fixture-p1936917-n4026531836-1txS0f": {
+"first": 133.35,
+"kind": "dir",
+"uid": 1000,
+"last": 133.85
+},
+"dossier-evidence-evUPMP": {
+"first": 133.35,
+"kind": "dir",
+"uid": 1000,
+"last": 134.36
+},
+"syzygy-poc-surface-fixture-p1937632-n4026531836-COz1kt": {
+"first": 133.35,
+"kind": "dir",
+"uid": 1000,
+"last": 138.44
+},
+"syzygy-poc-opening-index-1LcfXc": {
+"first": 133.35,
+"kind": "dir",
+"uid": 1000,
+"last": 138.44
+},
+"syzygy-poc-surface-fixture-p1937788-n4026531836-Lk1vBP": {
+"first": 133.85,
+"kind": "dir",
+"uid": 1000,
+"last": 135.38
+},
+"syzygy-poc-surface-fixture-p1936917-n4026531836-xm2Tr9": {
+"first": 133.85,
+"kind": "dir",
+"uid": 1000,
+"last": 133.85
+},
+"syzygy-poc-surface-fixture-p1937632-n4026531836-iPecec": {
+"first": 133.85,
+"kind": "dir",
+"uid": 1000,
+"last": 138.44
+},
+"syzygy-poc-surface-fixture-p1936917-n4026531836-6ZmubV": {
+"first": 133.85,
+"kind": "dir",
+"uid": 1000,
+"last": 133.85
+},
+"syzygy-poc-surface-fixture-p1936917-n4026531836-iYN2U3": {
+"first": 133.85,
+"kind": "dir",
+"uid": 1000,
+"last": 133.85
+},
+"syzygy-poc-surface-fixture-p1936917-n4026531836-Q4rPXv": {
+"first": 134.36,
+"kind": "dir",
+"uid": 1000,
+"last": 134.36
+},
+"syzygy-production-reobserve-state-pWwnHt": {
+"first": 134.36,
+"kind": "dir",
+"uid": 1000,
+"last": 135.38
+},
+"syzygy-poc-surface-fixture-p1936917-n4026531836-KwMfcX": {
+"first": 134.88,
+"kind": "dir",
+"uid": 1000,
+"last": 134.88
+},
+"syzygy-poc-surface-fixture-p1937632-n4026531836-h0dy2B": {
+"first": 134.88,
+"kind": "dir",
+"uid": 1000,
+"last": 138.44
+},
+"dossier-evidence-RX7Mxe": {
+"first": 134.88,
+"kind": "dir",
+"uid": 1000,
+"last": 135.38
+},
+"syzygy-poc-surface-fixture-p1937632-n4026531836-94MgLp": {
+"first": 135.38,
+"kind": "dir",
+"uid": 1000,
+"last": 138.44
+},
+"syzygy-redis-shaped-rNs0e5": {
+"first": 135.38,
+"kind": "dir",
+"uid": 1000,
+"last": 135.88
+},
+"syzygy-production-reobserve-state-BdsEMA": {
+"first": 135.88,
+"kind": "dir",
+"uid": 1000,
+"last": 137.41
+},
+"syzygy-poc-surface-fixture-p1937788-n4026531836-xX0QcG": {
+"first": 135.88,
+"kind": "dir",
+"uid": 1000,
+"last": 137.41
+},
+"syzygy-poc-surface-fixture-p1937632-n4026531836-7SAZbO": {
+"first": 135.88,
+"kind": "dir",
+"uid": 1000,
+"last": 138.44
+},
+"dossier-evidence-eqAdhi": {
+"first": 135.88,
+"kind": "dir",
+"uid": 1000,
+"last": 136.89
+},
+"syzygy-poc-surface-fixture-p1937632-n4026531836-8LC0TF": {
+"first": 136.39,
+"kind": "dir",
+"uid": 1000,
+"last": 138.44
+},
+"syzygy-redis-shaped-jEqq9O": {
+"first": 136.39,
+"kind": "dir",
+"uid": 1000,
+"last": 136.89
+},
+"syzygy-public-screen-9hfA3N": {
+"first": 136.89,
+"kind": "dir",
+"uid": 1000,
+"last": 140.97
+},
+"syzygy-poc-surface-fixture-p1937632-n4026531836-9ZqePj": {
+"first": 136.89,
+"kind": "dir",
+"uid": 1000,
+"last": 138.44
+},
+"syzygy-public-screen-REsk7Q": {
+"first": 136.89,
+"kind": "dir",
+"uid": 1000,
+"last": 140.97
+},
+"syzygy-public-screen-zrX7oE": {
+"first": 137.92,
+"kind": "dir",
+"uid": 1000,
+"last": 140.97
+},
+"syzygy-production-reobserve-state-IPBWSC": {
+"first": 137.92,
+"kind": "dir",
+"uid": 1000,
+"last": 138.94
+},
+"syzygy-poc-surface-fixture-p1937788-n4026531836-wRzkJX": {
+"first": 137.92,
+"kind": "dir",
+"uid": 1000,
+"last": 138.94
+},
+"syzygy-public-screen-iIXsKa": {
+"first": 137.92,
+"kind": "dir",
+"uid": 1000,
+"last": 140.97
+},
+"syzygy-poc-surface-fixture-p1938965-n4026531836-bbkAnU": {
+"first": 138.44,
+"kind": "dir",
+"uid": 1000,
+"last": 141.47
+},
+"dossier-inventory-clone-RGOR9V": {
+"first": 138.44,
+"kind": "dir",
+"uid": 1000,
+"last": 138.44
+},
+"syzygy-poc-surface-fixture-template-p1938965-n4026531836-Fywm2s": {
+"first": 138.44,
+"kind": "dir",
+"uid": 1000,
+"last": 141.47
+},
+"dossier-inventory-origin-q87ctD": {
+"first": 138.44,
+"kind": "dir",
+"uid": 1000,
+"last": 141.47
+},
+"syzygy-public-screen-8IkRHh": {
+"first": 138.44,
+"kind": "dir",
+"uid": 1000,
+"last": 140.97
+},
+"dossier-inventory-clone-iyt19d": {
+"first": 138.94,
+"kind": "dir",
+"uid": 1000,
+"last": 138.94
+},
+"syzygy-poc-surface-fixture-p1938965-n4026531836-BUfGuF": {
+"first": 138.94,
+"kind": "dir",
+"uid": 1000,
+"last": 141.47
+},
+"syzygy-poc-surface-fixture-p1938965-n4026531836-nxOlF9": {
+"first": 138.94,
+"kind": "dir",
+"uid": 1000,
+"last": 141.47
+},
+"syzygy-poc-surface-fixture-p1938965-n4026531836-s7SXtL": {
+"first": 138.94,
+"kind": "dir",
+"uid": 1000,
+"last": 141.47
+},
+"syzygy-poc-surface-fixture-p1938965-n4026531836-51FJTu": {
+"first": 138.94,
+"kind": "dir",
+"uid": 1000,
+"last": 141.47
+},
+"dossier-inventory-state-egylGV": {
+"first": 139.45,
+"kind": "dir",
+"uid": 1000,
+"last": 139.45
+},
+"dossier-inventory-clone-WOTVFR": {
+"first": 139.45,
+"kind": "dir",
+"uid": 1000,
+"last": 139.45
+},
+".com.google.Chrome.Wpn6UO": {
+"first": 139.45,
+"kind": "dir",
+"uid": 1000,
+"last": 140.97
+},
+"syzygy-poc-browser-lE5YnA": {
+"first": 139.45,
+"kind": "dir",
+"uid": 1000,
+"last": 141.47
+},
+"syzygy-dov32-pages-7pd6zf": {
+"first": 139.45,
+"kind": "dir",
+"uid": 1000,
+"last": 141.47
+},
+"syzygy-dov32-state-Vm5dYy": {
+"first": 139.45,
+"kind": "dir",
+"uid": 1000,
+"last": 141.47
+},
+"dossier-inventory-clone-9vNl7m": {
+"first": 139.95,
+"kind": "dir",
+"uid": 1000,
+"last": 139.95
+},
+"syzygy-dossier-src-AFiLp0": {
+"first": 139.95,
+"kind": "dir",
+"uid": 1000,
+"last": 139.95
+},
+"syzygy-trigger-Z3LM1E": {
+"first": 139.95,
+"kind": "dir",
+"uid": 1000,
+"last": 139.95
+},
+"syzygy-public-screen-MG6zjV": {
+"first": 139.95,
+"kind": "dir",
+"uid": 1000,
+"last": 140.97
+},
+"syzygy-trigger-repo-ZGXRmT": {
+"first": 139.95,
+"kind": "dir",
+"uid": 1000,
+"last": 141.47
+},
+"syzygy-public-screen-JSBvQO": {
+"first": 139.95,
+"kind": "dir",
+"uid": 1000,
+"last": 140.97
+},
+"dossier-inventory-state-YQtOAI": {
+"first": 140.46,
+"kind": "dir",
+"uid": 1000,
+"last": 140.46
+},
+"syzygy-trigger-OWkxxZ": {
+"first": 140.46,
+"kind": "dir",
+"uid": 1000,
+"last": 140.46
+},
+"syzygy-public-screen-lX6DIs": {
+"first": 140.46,
+"kind": "dir",
+"uid": 1000,
+"last": 140.97
+},
+"dossier-inventory-clone-boyDJB": {
+"first": 140.46,
+"kind": "dir",
+"uid": 1000,
+"last": 140.46
+},
+"syzygy-trigger-C13a4u": {
+"first": 140.46,
+"kind": "dir",
+"uid": 1000,
+"last": 140.46
+},
+"syzygy-public-screen-koJB5D": {
+"first": 140.46,
+"kind": "dir",
+"uid": 1000,
+"last": 140.97
+},
+"dossier-no-egress-3IPyLA": {
+"first": 140.46,
+"kind": "dir",
+"uid": 1000,
+"last": 142.98
+},
+"syzygy-public-screen-ZOLC4G": {
+"first": 140.46,
+"kind": "dir",
+"uid": 1000,
+"last": 140.97
+},
+"syzygy-dossier-src-fUJCe4": {
+"first": 140.97,
+"kind": "dir",
+"uid": 1000,
+"last": 140.97
+},
+"syzygy-trigger-wSr5Xg": {
+"first": 140.97,
+"kind": "dir",
+"uid": 1000,
+"last": 140.97
+},
+"syzygy-public-screen-Nr41zY": {
+"first": 140.97,
+"kind": "dir",
+"uid": 1000,
+"last": 140.97
+},
+"syzygy-trigger-4iBfhx": {
+"first": 140.97,
+"kind": "dir",
+"uid": 1000,
+"last": 140.97
+},
+"dossier-loose-kkzOzx": {
+"first": 140.97,
+"kind": "dir",
+"uid": 1000,
+"last": 140.97
+},
+"dossier-inventory-state-CPzIL3": {
+"first": 140.97,
+"kind": "dir",
+"uid": 1000,
+"last": 140.97
+},
+"dossier-inventory-clone-89Ip4I": {
+"first": 140.97,
+"kind": "dir",
+"uid": 1000,
+"last": 140.97
+},
+"dossier-inventory-clone-SIm0uR": {
+"first": 141.47,
+"kind": "dir",
+"uid": 1000,
+"last": 141.47
+},
+"syzygy-lsremote-dFEl4H": {
+"first": 141.47,
+"kind": "dir",
+"uid": 1000,
+"last": 141.47
+},
+"syzygy-trigger-lMlXif": {
+"first": 141.47,
+"kind": "dir",
+"uid": 1000,
+"last": 141.47
+},
+"syzygy-poc-route-butlers-Ha5dVG": {
+"first": 142.48,
+"kind": "dir",
+"uid": 1000,
+"last": 142.48
+},
+"syzygy-poc-surface-fixture-p1913865-n4026531836-9iHU4q": {
+"first": 142.48,
+"kind": "dir",
+"uid": 1000,
+"last": 149.11
+},
+"syzygy-poc-route-butlers-jnUFJ4": {
+"first": 142.98,
+"kind": "dir",
+"uid": 1000,
+"last": 142.98
+},
+".com.google.Chrome.cMElNB": {
+"first": 142.98,
+"kind": "dir",
+"uid": 1000,
+"last": 188.09
+},
+"syzygy-self-corpus-run-QdHeny": {
+"first": 142.98,
+"kind": "dir",
+"uid": 1000,
+"last": 143.49
+},
+"syzygy-poc-browser-ZHvRKR": {
+"first": 142.98,
+"kind": "dir",
+"uid": 1000,
+"last": 145.0
+},
+"syzygy-poc-surface-fixture-template-p1940275-n4026531836-X1Im3Z": {
+"first": 142.98,
+"kind": "dir",
+"uid": 1000,
+"last": 145.51
+},
+"syzygy-poc-route-butlers-y0BsCZ": {
+"first": 143.49,
+"kind": "dir",
+"uid": 1000,
+"last": 143.49
+},
+"syzygy-trajectory-narrowing-mPyMBG": {
+"first": 143.49,
+"kind": "dir",
+"uid": 1000,
+"last": 143.49
+},
+"syzygy-poc-surface-fixture-p1940276-n4026531836-zYoV6V": {
+"first": 143.49,
+"kind": "dir",
+"uid": 1000,
+"last": 143.49
+},
+"syzygy-poc-surface-fixture-template-p1940276-n4026531836-i5t2fG": {
+"first": 143.49,
+"kind": "dir",
+"uid": 1000,
+"last": 145.0
+},
+"syzygy-poc-surface-fixture-template-p1940050-n4026531836-oANneh": {
+"first": 143.49,
+"kind": "dir",
+"uid": 1000,
+"last": 143.99
+},
+"syzygy-poc-worker-change-noorigin-4FHZEs": {
+"first": 143.99,
+"kind": "dir",
+"uid": 1000,
+"last": 143.99
+},
+"syzygy-poc-route-state-rviuP7": {
+"first": 143.99,
+"kind": "dir",
+"uid": 1000,
+"last": 143.99
+},
+"syzygy-poc-surface-fixture-p1940050-n4026531836-I9PjrP": {
+"first": 143.99,
+"kind": "dir",
+"uid": 1000,
+"last": 143.99
+},
+"syzygy-self-corpus-run-r9m1A5": {
+"first": 143.99,
+"kind": "dir",
+"uid": 1000,
+"last": 143.99
+},
+"syzygy-poc-worker-change-jTIOnI": {
+"first": 144.49,
+"kind": "dir",
+"uid": 1000,
+"last": 144.49
+},
+".com.google.Chrome.K33skr": {
+"first": 145.0,
+"kind": "dir",
+"uid": 1000,
+"last": 188.09
+},
+"syzygy-poc-browser-j8e0ar": {
+"first": 145.0,
+"kind": "dir",
+"uid": 1000,
+"last": 146.04
+},
+"syzygy-poc-surface-fixture-p1941102-n4026531836-SqGxTQ": {
+"first": 145.51,
+"kind": "dir",
+"uid": 1000,
+"last": 145.51
+},
+"syzygy-poc-surface-fixture-p1941102-n4026531836-dYl5Nr": {
+"first": 145.51,
+"kind": "dir",
+"uid": 1000,
+"last": 145.51
+},
+"syzygy-poc-surface-fixture-p1941102-n4026531836-VSbmAi": {
+"first": 145.51,
+"kind": "dir",
+"uid": 1000,
+"last": 145.51
+},
+"syzygy-poc-surface-fixture-template-p1941102-n4026531836-7ofX9c": {
+"first": 145.51,
+"kind": "dir",
+"uid": 1000,
+"last": 148.06
+},
+".com.google.Chrome.xwRUml": {
+"first": 146.04,
+"kind": "dir",
+"uid": 1000,
+"last": 147.56
+},
+".com.google.Chrome.5B1gao": {
+"first": 146.04,
+"kind": "dir",
+"uid": 1000,
+"last": 147.56
+},
+"syzygy-poc-browser-w5iJy7": {
+"first": 146.04,
+"kind": "dir",
+"uid": 1000,
+"last": 148.06
+},
+"polaris-draft-browser-4rQI2C": {
+"first": 146.04,
+"kind": "dir",
+"uid": 1000,
+"last": 148.06
+},
+"syzygy-poc-browser-wLr36T": {
+"first": 146.04,
+"kind": "dir",
+"uid": 1000,
+"last": 148.06
+},
+"syzygy-dov32-proposal-N9GVxz": {
+"first": 146.04,
+"kind": "dir",
+"uid": 1000,
+"last": 148.06
+},
+"syzygy-poc-surface-fixture-p1941102-n4026531836-BfFGvA": {
+"first": 146.55,
+"kind": "dir",
+"uid": 1000,
+"last": 148.06
+},
+"syzygy-poc-surface-fixture-p1941102-n4026531836-P95tvS": {
+"first": 146.55,
+"kind": "dir",
+"uid": 1000,
+"last": 148.06
+},
+"syzygy-poc-surface-fixture-template-p1941680-n4026531836-4eHsmc": {
+"first": 147.05,
+"kind": "dir",
+"uid": 1000,
+"last": 148.56
+},
+"syzygy-iso-nnVVNq": {
+"first": 147.56,
+"kind": "dir",
+"uid": 1000,
+"last": 149.11
+},
+"syzygy-poc-surface-fixture-p1941680-n4026531836-QlRfwU": {
+"first": 147.56,
+"kind": "dir",
+"uid": 1000,
+"last": 147.56
+},
+"syzygy-iso-empty-szRwWR": {
+"first": 147.56,
+"kind": "dir",
+"uid": 1000,
+"last": 149.11
+},
+"syzygy-poc-surface-fixture-p1941680-n4026531836-97XSTH": {
+"first": 147.56,
+"kind": "dir",
+"uid": 1000,
+"last": 148.56
+},
+"syzygy-poc-surface-fixture-p1941680-n4026531836-UPjGKA": {
+"first": 147.56,
+"kind": "dir",
+"uid": 1000,
+"last": 148.56
+},
+"syzygy-poc-surface-fixture-p1941680-n4026531836-tzR7ij": {
+"first": 147.56,
+"kind": "dir",
+"uid": 1000,
+"last": 148.56
+},
+"syzygy-poc-surface-fixture-p1941680-n4026531836-QDVtyp": {
+"first": 147.56,
+"kind": "dir",
+"uid": 1000,
+"last": 148.56
+},
+"syzygy-poc-surface-fixture-p1941680-n4026531836-AznrT9": {
+"first": 147.56,
+"kind": "dir",
+"uid": 1000,
+"last": 148.56
+},
+"syzygy-iso-TVO0IB": {
+"first": 147.56,
+"kind": "dir",
+"uid": 1000,
+"last": 149.11
+},
+"syzygy-poc-surface-fixture-p1941680-n4026531836-OViW8f": {
+"first": 147.56,
+"kind": "dir",
+"uid": 1000,
+"last": 148.56
+},
+"syzygy-poc-surface-fixture-p1941680-n4026531836-Sf7W1D": {
+"first": 147.56,
+"kind": "dir",
+"uid": 1000,
+"last": 148.56
+},
+"syzygy-poc-surface-fixture-p1941680-n4026531836-RGOyRR": {
+"first": 147.56,
+"kind": "dir",
+"uid": 1000,
+"last": 148.56
+},
+"syzygy-poc-surface-fixture-p1941680-n4026531836-C6BFvy": {
+"first": 147.56,
+"kind": "dir",
+"uid": 1000,
+"last": 148.56
+},
+"syzygy-iso-VzQtse": {
+"first": 147.56,
+"kind": "dir",
+"uid": 1000,
+"last": 149.11
+},
+"syzygy-poc-surface-fixture-p1941680-n4026531836-inYmMX": {
+"first": 147.56,
+"kind": "dir",
+"uid": 1000,
+"last": 148.56
+},
+"syzygy-poc-surface-fixture-p1941680-n4026531836-Ld3MvK": {
+"first": 147.56,
+"kind": "dir",
+"uid": 1000,
+"last": 148.56
+},
+"syzygy-poc-surface-fixture-p1941680-n4026531836-dd5dPO": {
+"first": 147.56,
+"kind": "dir",
+"uid": 1000,
+"last": 148.56
+},
+"syzygy-iso-1XtHye": {
+"first": 148.06,
+"kind": "dir",
+"uid": 1000,
+"last": 149.11
+},
+"syzygy-poc-surface-fixture-template-p1942092-n4026531836-xmPW6k": {
+"first": 148.56,
+"kind": "dir",
+"uid": 1000,
+"last": 150.12
+},
+"syzygy-iso-A7jhc3": {
+"first": 148.56,
+"kind": "dir",
+"uid": 1000,
+"last": 149.11
+},
+"syzygy-iso-TnNMKS": {
+"first": 148.56,
+"kind": "dir",
+"uid": 1000,
+"last": 149.11
+},
+"syzygy-poc-surface-fixture-p1942092-n4026531836-12DOFn": {
+"first": 149.11,
+"kind": "dir",
+"uid": 1000,
+"last": 149.11
+},
+"syzygy-poc-browser-nex38E": {
+"first": 149.11,
+"kind": "dir",
+"uid": 1000,
+"last": 150.12
+},
+"syzygy-poc-surface-fixture-p1942092-n4026531836-CwfmEJ": {
+"first": 149.11,
+"kind": "dir",
+"uid": 1000,
+"last": 149.11
+},
+"syzygy-poc-surface-fixture-p1942092-n4026531836-2hmFzE": {
+"first": 149.11,
+"kind": "dir",
+"uid": 1000,
+"last": 149.11
+},
+"syzygy-iso-O2UtYw": {
+"first": 149.11,
+"kind": "dir",
+"uid": 1000,
+"last": 149.11
+},
+"syzygy-iso-oRO2I8": {
+"first": 149.11,
+"kind": "dir",
+"uid": 1000,
+"last": 149.11
+},
+"syzygy-fixture-sweep-2sH7X5": {
+"first": 149.61,
+"kind": "dir",
+"uid": 1000,
+"last": 149.61
+},
+"syzygy-poc-surface-fixture-p1942092-n4026531836-qxrzy2": {
+"first": 149.61,
+"kind": "dir",
+"uid": 1000,
+"last": 149.61
+},
+"syzygy-poc-surface-fixture-p1913865-n4026531836-gfv5OC": {
+"first": 149.61,
+"kind": "dir",
+"uid": 1000,
+"last": 156.21
+},
+".com.google.Chrome.khO0i9": {
+"first": 149.61,
+"kind": "dir",
+"uid": 1000,
+"last": 150.12
+},
+"syzygy-fixture-sweep-Y70uBe": {
+"first": 150.12,
+"kind": "dir",
+"uid": 1000,
+"last": 150.12
+},
+"syzygy-poc-surface-fixture-p1942092-n4026531836-ktwTMd": {
+"first": 150.12,
+"kind": "dir",
+"uid": 1000,
+"last": 150.12
+},
+"syzygy-poc-surface-fixture-p1942092-n4026531836-K5oSbQ": {
+"first": 150.12,
+"kind": "dir",
+"uid": 1000,
+"last": 150.12
+},
+"syzygy-orrery-geometry-h7DsBp": {
+"first": 150.12,
+"kind": "dir",
+"uid": 1000,
+"last": 150.12
+},
+"syzygy-poc-surface-fixture-p1942231-n4026531836-PbCV1k": {
+"first": 150.12,
+"kind": "dir",
+"uid": 1000,
+"last": 150.12
+},
+"syzygy-poc-surface-fixture-template-p1942231-n4026531836-kBZ7n6": {
+"first": 150.12,
+"kind": "dir",
+"uid": 1000,
+"last": 150.12
+},
+"syzygy-poc-butlers-6FwbEd": {
+"first": 150.62,
+"kind": "dir",
+"uid": 1000,
+"last": 150.62
+},
+"syzygy-poc-surface-fixture-p1942574-n4026531836-qFWaNO": {
+"first": 150.62,
+"kind": "dir",
+"uid": 1000,
+"last": 150.62
+},
+"syzygy-poc-surface-fixture-template-p1942574-n4026531836-G1PKRj": {
+"first": 150.62,
+"kind": "dir",
+"uid": 1000,
+"last": 151.12
+},
+"syzygy-poc-surface-fixture-p1942574-n4026531836-2vcaTz": {
+"first": 151.12,
+"kind": "dir",
+"uid": 1000,
+"last": 151.12
+},
+"syzygy-pwb-governance-4KEPLe": {
+"first": 151.12,
+"kind": "dir",
+"uid": 1000,
+"last": 151.12
+},
+"syzygy-poc-butlers-git-hzV6g0": {
+"first": 151.12,
+"kind": "dir",
+"uid": 1000,
+"last": 151.12
+},
+"syzygy-poc-butlers-git-template-QaHEDe": {
+"first": 151.12,
+"kind": "dir",
+"uid": 1000,
+"last": 151.12
+},
+"syzygy-poc-surface-fixture-p1943117-n4026531836-gHxsHw": {
+"first": 151.63,
+"kind": "dir",
+"uid": 1000,
+"last": 151.63
+},
+"syzygy-repo-hostile-nHNWFX": {
+"first": 151.63,
+"kind": "dir",
+"uid": 1000,
+"last": 152.13
+},
+"syzygy-poc-surface-fixture-template-p1943117-n4026531836-3W5FMv": {
+"first": 151.63,
+"kind": "dir",
+"uid": 1000,
+"last": 152.13
+},
+"syzygy-repo-corpus-3W6LsR": {
+"first": 151.63,
+"kind": "dir",
+"uid": 1000,
+"last": 152.13
+},
+"syzygy-poc-surface-fixture-p1943117-n4026531836-FVFR1P": {
+"first": 152.13,
+"kind": "dir",
+"uid": 1000,
+"last": 152.13
+},
+"syzygy-poc-surface-fixture-p1943556-n4026531836-I3tkf3": {
+"first": 152.66,
+"kind": "dir",
+"uid": 1000,
+"last": 152.66
+},
+"syzygy-poc-surface-fixture-p1943556-n4026531836-4yV6mT": {
+"first": 152.66,
+"kind": "dir",
+"uid": 1000,
+"last": 152.66
+},
+"syzygy-poc-surface-fixture-p1943556-n4026531836-fCtD7Y": {
+"first": 152.66,
+"kind": "dir",
+"uid": 1000,
+"last": 152.66
+},
+"syzygy-poc-surface-fixture-template-p1943556-n4026531836-xPNCMP": {
+"first": 152.66,
+"kind": "dir",
+"uid": 1000,
+"last": 153.17
+},
+"dossier-flags-UYGlLG": {
+"first": 152.66,
+"kind": "dir",
+"uid": 1000,
+"last": 152.66
+},
+"syzygy-capture-cli-nqG7f7": {
+"first": 153.17,
+"kind": "dir",
+"uid": 1000,
+"last": 153.17
+},
+"syzygy-fixture-names-DUZvUm": {
+"first": 153.17,
+"kind": "dir",
+"uid": 1000,
+"last": 153.17
+},
+"syzygy-poc-surface-fixture-p1943716-n4026531836-Qqyxgc": {
+"first": 153.69,
+"kind": "dir",
+"uid": 1000,
+"last": 153.69
+},
+"syzygy-dossier-link-YkZmI8": {
+"first": 153.69,
+"kind": "dir",
+"uid": 1000,
+"last": 153.69
+},
+"syzygy-poc-surface-fixture-template-p1943716-n4026531836-70OHgC": {
+"first": 153.69,
+"kind": "dir",
+"uid": 1000,
+"last": 154.2
+},
+"syzygy-poc-surface-fixture-p1943875-n4026531836-QhUtN7": {
+"first": 154.2,
+"kind": "dir",
+"uid": 1000,
+"last": 155.2
+},
+"syzygy-poc-surface-fixture-p1943716-n4026531836-tLoaoM": {
+"first": 154.2,
+"kind": "dir",
+"uid": 1000,
+"last": 154.2
+},
+"syzygy-poc-surface-fixture-p1943716-n4026531836-FWslZL": {
+"first": 154.2,
+"kind": "dir",
+"uid": 1000,
+"last": 154.2
+},
+"syzygy-poc-surface-fixture-p1943875-n4026531836-TYC2eb": {
+"first": 154.2,
+"kind": "dir",
+"uid": 1000,
+"last": 155.2
+},
+"syzygy-poc-surface-fixture-p1943875-n4026531836-1LSvWC": {
+"first": 154.2,
+"kind": "dir",
+"uid": 1000,
+"last": 155.2
+},
+"syzygy-poc-surface-fixture-p1943875-n4026531836-lfLde5": {
+"first": 154.2,
+"kind": "dir",
+"uid": 1000,
+"last": 155.2
+},
+"syzygy-poc-git-bWv1HR": {
+"first": 154.2,
+"kind": "dir",
+"uid": 1000,
+"last": 154.2
+},
+"syzygy-poc-surface-fixture-template-p1943875-n4026531836-CHPEW6": {
+"first": 154.2,
+"kind": "dir",
+"uid": 1000,
+"last": 155.2
+},
+"syzygy-poc-surface-fixture-p1944036-n4026531836-GfAWSX": {
+"first": 154.7,
+"kind": "dir",
+"uid": 1000,
+"last": 154.7
+},
+"syzygy-poc-git-er4YQO": {
+"first": 154.7,
+"kind": "dir",
+"uid": 1000,
+"last": 154.7
+},
+"syzygy-poc-surface-fixture-template-p1944036-n4026531836-C5b1St": {
+"first": 154.7,
+"kind": "dir",
+"uid": 1000,
+"last": 154.7
+},
+"syzygy-poc-git-WYfUix": {
+"first": 154.7,
+"kind": "dir",
+"uid": 1000,
+"last": 154.7
+},
+"syzygy-poc-surface-fixture-p1943875-n4026531836-q9b5oN": {
+"first": 154.7,
+"kind": "dir",
+"uid": 1000,
+"last": 155.2
+},
+"syzygy-poc-surface-fixture-p1944133-n4026531836-YITV3C": {
+"first": 155.2,
+"kind": "dir",
+"uid": 1000,
+"last": 155.2
+},
+"syzygy-poc-surface-fixture-template-p1944158-n4026531836-aLD5d6": {
+"first": 155.2,
+"kind": "dir",
+"uid": 1000,
+"last": 155.71
+},
+"syzygy-poc-surface-fixture-template-p1944133-n4026531836-jCzs3K": {
+"first": 155.2,
+"kind": "dir",
+"uid": 1000,
+"last": 155.71
+},
+"syzygy-poc-surface-fixture-p1944158-n4026531836-YXdNHH": {
+"first": 155.71,
+"kind": "dir",
+"uid": 1000,
+"last": 155.71
+},
+"syzygy-poc-surface-fixture-p1944133-n4026531836-7bEtZs": {
+"first": 155.71,
+"kind": "dir",
+"uid": 1000,
+"last": 155.71
+},
+"syzygy-poc-surface-fixture-p1944347-n4026531836-WH2jlz": {
+"first": 156.21,
+"kind": "dir",
+"uid": 1000,
+"last": 156.21
+},
+"syzygy-poc-surface-fixture-p1944347-n4026531836-6TIIxC": {
+"first": 156.21,
+"kind": "dir",
+"uid": 1000,
+"last": 156.21
+},
+"syzygy-poc-surface-fixture-p1944347-n4026531836-yo9Oti": {
+"first": 156.21,
+"kind": "dir",
+"uid": 1000,
+"last": 156.21
+},
+"syzygy-poc-surface-fixture-p1944347-n4026531836-lJOCFr": {
+"first": 156.21,
+"kind": "dir",
+"uid": 1000,
+"last": 156.21
+},
+"syzygy-poc-surface-fixture-p1944347-n4026531836-Uenkzo": {
+"first": 156.21,
+"kind": "dir",
+"uid": 1000,
+"last": 156.21
+},
+"syzygy-poc-surface-fixture-p1944347-n4026531836-8cDRFT": {
+"first": 156.21,
+"kind": "dir",
+"uid": 1000,
+"last": 156.21
+},
+"syzygy-poc-surface-fixture-template-p1944347-n4026531836-wnzuYY": {
+"first": 156.21,
+"kind": "dir",
+"uid": 1000,
+"last": 156.21
+},
+"syzygy-poc-surface-fixture-p1944489-n4026531836-HpsT1o": {
+"first": 156.71,
+"kind": "dir",
+"uid": 1000,
+"last": 156.71
+},
+"syzygy-poc-surface-fixture-p1913865-n4026531836-kJvKQQ": {
+"first": 156.71,
+"kind": "dir",
+"uid": 1000,
+"last": 164.86
+},
+"syzygy-poc-surface-fixture-p1944404-n4026531836-rqw8Ym": {
+"first": 156.71,
+"kind": "dir",
+"uid": 1000,
+"last": 156.71
+},
+"syzygy-poc-surface-fixture-p1944404-n4026531836-cQHVD0": {
+"first": 156.71,
+"kind": "dir",
+"uid": 1000,
+"last": 156.71
+},
+"syzygy-poc-surface-fixture-p1944404-n4026531836-UBHV8f": {
+"first": 156.71,
+"kind": "dir",
+"uid": 1000,
+"last": 156.71
+},
+"CD0elRQaFcc1GTgfmzdV9": {
+"first": 156.71,
+"kind": "dir",
+"uid": 1000,
+"last": 182.03
+},
+"syzygy-poc-surface-fixture-template-p1944489-n4026531836-yVXywa": {
+"first": 156.71,
+"kind": "dir",
+"uid": 1000,
+"last": 156.71
+},
+"syzygy-poc-surface-fixture-template-p1944404-n4026531836-OAYjLR": {
+"first": 156.71,
+"kind": "dir",
+"uid": 1000,
+"last": 156.71
+},
+"syzygy-poc-code-structure-Zv2kFB": {
+"first": 157.79,
+"kind": "dir",
+"uid": 1000,
+"last": 157.79
+},
+"syzygy-poc-surface-fixture-p1945005-n4026531836-c7w9yo": {
+"first": 158.3,
+"kind": "dir",
+"uid": 1000,
+"last": 158.3
+},
+"syzygy-poc-surface-fixture-p1945005-n4026531836-avXlLD": {
+"first": 158.3,
+"kind": "dir",
+"uid": 1000,
+"last": 158.3
+},
+"syzygy-poc-surface-fixture-p1945005-n4026531836-msk5jN": {
+"first": 158.3,
+"kind": "dir",
+"uid": 1000,
+"last": 158.3
+},
+"syzygy-poc-surface-fixture-template-p1945005-n4026531836-jS1yHi": {
+"first": 158.3,
+"kind": "dir",
+"uid": 1000,
+"last": 158.3
+},
+"syzygy-dossier-cap-OzuKw4": {
+"first": 158.3,
+"kind": "dir",
+"uid": 1000,
+"last": 158.3
+},
+"polaris-view-9Sn7E3": {
+"first": 158.8,
+"kind": "dir",
+"uid": 1000,
+"last": 159.3
+},
+"syzygy-poc-surface-fixture-p1945572-n4026531836-2ZFtV2": {
+"first": 159.81,
+"kind": "dir",
+"uid": 1000,
+"last": 160.31
+},
+"syzygy-poc-surface-fixture-template-p1945572-n4026531836-GgNTuz": {
+"first": 159.81,
+"kind": "dir",
+"uid": 1000,
+"last": 160.31
+},
+"syzygy-poc-surface-fixture-template-p1945571-n4026531836-Iq9qGX": {
+"first": 159.81,
+"kind": "dir",
+"uid": 1000,
+"last": 160.31
+},
+"syzygy-poc-surface-fixture-p1945717-n4026531836-9YKFfE": {
+"first": 160.31,
+"kind": "dir",
+"uid": 1000,
+"last": 160.81
+},
+"syzygy-poc-surface-fixture-p1945571-n4026531836-4Vny9Q": {
+"first": 160.31,
+"kind": "dir",
+"uid": 1000,
+"last": 160.31
+},
+"syzygy-poc-materialize-state-GW2vDi": {
+"first": 160.31,
+"kind": "dir",
+"uid": 1000,
+"last": 160.31
+},
+"syzygy-poc-surface-fixture-template-p1945717-n4026531836-jpWb3c": {
+"first": 160.31,
+"kind": "dir",
+"uid": 1000,
+"last": 160.81
+},
+"syzygy-poc-surface-fixture-p1945572-n4026531836-2uA8hQ": {
+"first": 160.31,
+"kind": "dir",
+"uid": 1000,
+"last": 160.31
+},
+"syzygy-poc-surface-fixture-p1945572-n4026531836-xbBGed": {
+"first": 160.31,
+"kind": "dir",
+"uid": 1000,
+"last": 160.31
+},
+"syzygy-poc-surface-fixture-p1945572-n4026531836-qlI5b8": {
+"first": 160.31,
+"kind": "dir",
+"uid": 1000,
+"last": 160.31
+},
+"syzygy-poc-surface-fixture-p1946025-n4026531836-NQ0SAh": {
+"first": 160.81,
+"kind": "dir",
+"uid": 1000,
+"last": 160.81
+},
+"syzygy-poc-surface-fixture-p1945717-n4026531836-VTGNAT": {
+"first": 160.81,
+"kind": "dir",
+"uid": 1000,
+"last": 160.81
+},
+"syzygy-poc-surface-fixture-p1945717-n4026531836-I1bMNW": {
+"first": 160.81,
+"kind": "dir",
+"uid": 1000,
+"last": 160.81
+},
+"syzygy-poc-surface-fixture-p1945822-n4026531836-G5Re1z": {
+"first": 160.81,
+"kind": "dir",
+"uid": 1000,
+"last": 160.81
+},
+"syzygy-poc-surface-fixture-p1945717-n4026531836-5J1mUh": {
+"first": 160.81,
+"kind": "dir",
+"uid": 1000,
+"last": 160.81
+},
+"syzygy-poc-surface-fixture-template-p1946025-n4026531836-oysyND": {
+"first": 160.81,
+"kind": "dir",
+"uid": 1000,
+"last": 161.32
+},
+"syzygy-poc-surface-fixture-p1945717-n4026531836-Z9KPfR": {
+"first": 160.81,
+"kind": "dir",
+"uid": 1000,
+"last": 160.81
+},
+"syzygy-poc-surface-fixture-p1945717-n4026531836-3gSuvJ": {
+"first": 160.81,
+"kind": "dir",
+"uid": 1000,
+"last": 160.81
+},
+"syzygy-poc-surface-fixture-p1945717-n4026531836-o8MBQl": {
+"first": 160.81,
+"kind": "dir",
+"uid": 1000,
+"last": 160.81
+},
+"syzygy-poc-surface-fixture-template-p1945822-n4026531836-9Ce6yP": {
+"first": 160.81,
+"kind": "dir",
+"uid": 1000,
+"last": 161.32
+},
+"syzygy-poc-surface-fixture-p1946025-n4026531836-LXhYBW": {
+"first": 161.32,
+"kind": "dir",
+"uid": 1000,
+"last": 161.32
+},
+"syzygy-poc-surface-fixture-p1945822-n4026531836-7whNTg": {
+"first": 161.32,
+"kind": "dir",
+"uid": 1000,
+"last": 161.32
+},
+"poc-main-test-i0T59J": {
+"first": 161.82,
+"kind": "dir",
+"uid": 1000,
+"last": 161.82
+},
+"syzygy-poc-model-obs-RHSzlR": {
+"first": 161.82,
+"kind": "dir",
+"uid": 1000,
+"last": 161.82
+},
+"syzygy-poc-surface-fixture-p1946556-n4026531836-DprOOM": {
+"first": 162.34,
+"kind": "dir",
+"uid": 1000,
+"last": 162.34
+},
+"syzygy-poc-model-obs-egx46m": {
+"first": 162.34,
+"kind": "dir",
+"uid": 1000,
+"last": 162.34
+},
+"syzygy-poc-surface-fixture-template-p1946556-n4026531836-vYib32": {
+"first": 162.34,
+"kind": "dir",
+"uid": 1000,
+"last": 162.85
+},
+"syzygy-poc-surface-fixture-p1946778-n4026531836-lwiZVE": {
+"first": 162.85,
+"kind": "dir",
+"uid": 1000,
+"last": 162.85
+},
+"syzygy-poc-surface-fixture-p1946556-n4026531836-getMBc": {
+"first": 162.85,
+"kind": "dir",
+"uid": 1000,
+"last": 162.85
+},
+"syzygy-poc-model-obs-IzOhyo": {
+"first": 162.85,
+"kind": "dir",
+"uid": 1000,
+"last": 162.85
+},
+"syzygy-poc-surface-fixture-template-p1946778-n4026531836-RZwBzD": {
+"first": 162.85,
+"kind": "dir",
+"uid": 1000,
+"last": 162.85
+},
+"syzygy-poc-surface-fixture-p1946987-n4026531836-cz4rPG": {
+"first": 163.85,
+"kind": "dir",
+"uid": 1000,
+"last": 163.85
+},
+"syzygy-poc-surface-fixture-template-p1946987-n4026531836-hbST5z": {
+"first": 163.85,
+"kind": "dir",
+"uid": 1000,
+"last": 163.85
+},
+"syzygy-poc-surface-fixture-p1947164-n4026531836-kSUPl0": {
+"first": 164.36,
+"kind": "dir",
+"uid": 1000,
+"last": 164.36
+},
+"syzygy-poc-surface-fixture-p1947164-n4026531836-p41Pni": {
+"first": 164.36,
+"kind": "dir",
+"uid": 1000,
+"last": 164.36
+},
+"syzygy-poc-surface-fixture-template-p1947164-n4026531836-0j24HZ": {
+"first": 164.36,
+"kind": "dir",
+"uid": 1000,
+"last": 164.36
+},
+"Ja9XJfDEjMKnZxyatRswy": {
+"first": 165.36,
+"kind": "dir",
+"uid": 1000,
+"last": 182.03
+},
+"rt5-human-state-7RYPWr": {
+"first": 165.86,
+"kind": "dir",
+"uid": 1000,
+"last": 165.86
+},
+"rt5-human-invalid-3VyQKC": {
+"first": 165.86,
+"kind": "dir",
+"uid": 1000,
+"last": 165.86
+},
+"syzygy-poc-surface-fixture-p1947765-n4026531836-D8c2qD": {
+"first": 165.86,
+"kind": "dir",
+"uid": 1000,
+"last": 165.86
+},
+"syzygy-poc-surface-fixture-template-p1947765-n4026531836-8CtEbU": {
+"first": 165.86,
+"kind": "dir",
+"uid": 1000,
+"last": 165.86
+},
+"rt4-mach-root-XrRs8u": {
+"first": 166.87,
+"kind": "dir",
+"uid": 1000,
+"last": 166.87
+},
+"syzygy-poc-limit-socket-I16NoD": {
+"first": 167.38,
+"kind": "dir",
+"uid": 1000,
+"last": 167.38
+},
+"syzygy-poc-surface-fixture-p1947990-n4026531836-qmCGDg": {
+"first": 167.38,
+"kind": "dir",
+"uid": 1000,
+"last": 167.38
+},
+"syzygy-poc-surface-fixture-template-p1947990-n4026531836-otCPdt": {
+"first": 167.38,
+"kind": "dir",
+"uid": 1000,
+"last": 167.38
+},
+"dossier-brief-sAK1DQ": {
+"first": 169.41,
+"kind": "dir",
+"uid": 1000,
+"last": 169.41
+},
+"dossier-head-UwRc54": {
+"first": 169.91,
+"kind": "dir",
+"uid": 1000,
+"last": 169.91
+},
+"dossier-cli-1IvOne": {
+"first": 169.91,
+"kind": "dir",
+"uid": 1000,
+"last": 169.91
+},
+"AiogbUE_SYDjhPczhDvTG": {
+"first": 170.42,
+"kind": "dir",
+"uid": 1000,
+"last": 182.03
+},
+"syzygy-dossier-eval-Mf1ywy": {
+"first": 171.42,
+"kind": "dir",
+"uid": 1000,
+"last": 171.42
+},
+"syzygy-rt1-NmRUod": {
+"first": 172.42,
+"kind": "dir",
+"uid": 1000,
+"last": 172.42
+},
+"dossier-status-ve37Sv": {
+"first": 173.46,
+"kind": "dir",
+"uid": 1000,
+"last": 173.46
+},
+"rt3-cred-iVbrND": {
+"first": 174.48,
+"kind": "dir",
+"uid": 1000,
+"last": 174.48
+},
+"rt3-cred-eovGKM": {
+"first": 174.48,
+"kind": "dir",
+"uid": 1000,
+"last": 174.48
+},
+"rt3-cred-gE22YT": {
+"first": 174.48,
+"kind": "dir",
+"uid": 1000,
+"last": 174.48
+},
+"rt3-cred-ZyNi2X": {
+"first": 174.48,
+"kind": "dir",
+"uid": 1000,
+"last": 174.48
+},
+"rt3-cred-Xh1yKI": {
+"first": 174.48,
+"kind": "dir",
+"uid": 1000,
+"last": 174.48
+},
+"rt3-cred-PbAibH": {
+"first": 174.48,
+"kind": "dir",
+"uid": 1000,
+"last": 174.48
+},
+"dossier-cred-qi3SJT": {
+"first": 176.5,
+"kind": "dir",
+"uid": 1000,
+"last": 176.5
+}
+},
+"present": [
+".com.google.Chrome.IiIbma",
+".com.google.Chrome.K33skr",
+".com.google.Chrome.N4WJkS",
+".com.google.Chrome.cMElNB",
+"MtKnQPnthe7BWZEzUcREK",
+"YgwnH4DvW-JSNHWkt_vWK",
+"dossier-clone-g5U4a6",
+"dossier-gate-acts-p8YcD5",
+"dossier-origin-0gdUJr",
+"dossier-records-yaAv2Z",
+"dossier-state-jjNLKN",
+"dossier-waiting-HmQ43G",
+"git-object-reader-HkCTH2",
+"node-compile-cache",
+"syzygy-build-output-l41wDx",
+"syzygy-poc-a11y-1QRcap",
+"syzygy-poc-a11y-budget-MSyaIz",
+"syzygy-poc-browser-yXLBDA"
+]
+}

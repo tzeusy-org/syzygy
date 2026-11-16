@@ -1,0 +1,16 @@
+modifier credentials.system.test.ts:39: it.each([
+modifier daemon-entry-unchanged.system.test.ts:108: it.each([[['--help']], [['-h']], [['--help', 'dossier']]])('%j prints the usage and exits 0', (args) => {
+modifier daemon-entry-unchanged.system.test.ts:113: it.each([
+modifier fresh-clone.system.test.ts:37: it.skipIf(!RUN_FRESH_CLONE)(
+modifier skipped-population.system.test.ts:12: // Collection sees `skip`, `skipIf`, `todo`, `only` and `describe.skip`. A
+runtime  skipped-population.system.test.ts:13: // test that skips itself while it runs (`ctx.skip()`) is not seen; the tier
+guarded  skipped-population.system.test.ts:40: file: module.moduleId, name: test.fullName, state: test.result().state,
+files swept: 12; hits: {'modifier': 5, 'runtime': 1, 'guarded': 1, 'aliased': 0}
+.skip 1e444071:packages/cap1-system/src/fresh-clone.system.test.ts:1 1e444071:packages/cap1-system/src/skipped-population.system.test.ts:2 
+.skipIf 1e444071:packages/cap1-system/src/fresh-clone.system.test.ts:1 
+.runIf 
+.todo 
+.only 
+.each 1e444071:packages/cap1-system/src/credentials.system.test.ts:1 1e444071:packages/cap1-system/src/daemon-entry-unchanged.system.test.ts:2 
+ctx.skip 1e444071:packages/cap1-system/src/skipped-population.system.test.ts:1 
+context.skip 

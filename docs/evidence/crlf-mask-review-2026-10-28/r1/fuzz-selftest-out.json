@@ -1,0 +1,106 @@
+{
+ "tool": "rev-544/tools/fuzz-selftest.mjs",
+ "mutants": 8,
+ "killed": 8,
+ "results": [
+  {
+   "id": "F1-lf-only",
+   "file": "markdown-code-context.js",
+   "old": "const LINE_END = /\\r\\n|\\r|\\n/g;",
+   "new": "const LINE_END = /\\n/g;",
+   "exit": 1,
+   "killed": true,
+   "failedChecks": {
+    "H2fail": 5816,
+    "H3fail": 4804,
+    "H4fail": 1065,
+    "H5fail": 1652
+   }
+  },
+  {
+   "id": "F2-no-bare-cr",
+   "file": "markdown-code-context.js",
+   "old": "const LINE_END = /\\r\\n|\\r|\\n/g;",
+   "new": "const LINE_END = /\\r?\\n/g;",
+   "exit": 1,
+   "killed": true,
+   "failedChecks": {
+    "H2fail": 4399,
+    "H3fail": 3529,
+    "H5fail": 1213
+   }
+  },
+  {
+   "id": "F3-crlf-as-two",
+   "file": "markdown-code-context.js",
+   "old": "const LINE_END = /\\r\\n|\\r|\\n/g;",
+   "new": "const LINE_END = /\\r|\\n/g;",
+   "exit": 1,
+   "killed": true,
+   "failedChecks": {
+    "H2fail": 1524,
+    "H3fail": 1524,
+    "H4fail": 908
+   }
+  },
+  {
+   "id": "F4-join-lf",
+   "file": "markdown-code-context.js",
+   "old": "out.map((line, index) => line + (terminators[index] ?? '')).join('')",
+   "new": "out.join('\\n')",
+   "exit": 1,
+   "killed": true,
+   "failedChecks": {
+    "H2fail": 2868,
+    "H5fail": 2868
+   }
+  },
+  {
+   "id": "F5-drop-final-terminator",
+   "file": "markdown-code-context.js",
+   "old": "out.map((line, index) => line + (terminators[index] ?? '')).join('')",
+   "new": "out.map((line, index) => line + (index === out.length - 2 && out[out.length - 1] === '' ? '' : (terminators[index] ?? ''))).join('')",
+   "exit": 1,
+   "killed": true,
+   "failedChecks": {
+    "H1fail": 2302,
+    "H2fail": 1044,
+    "H5fail": 2302
+   }
+  },
+  {
+   "id": "F6-u2028-is-a-line-end",
+   "file": "markdown-code-context.js",
+   "old": "const LINE_END = /\\r\\n|\\r|\\n/g;",
+   "new": "const LINE_END = /\\r\\n|\\r|\\n|\\u2028/g;",
+   "exit": 1,
+   "killed": true,
+   "failedChecks": {
+    "H1fail": 4811
+   }
+  },
+  {
+   "id": "F7-cr-blanked-length-kept",
+   "file": "markdown-code-context.js",
+   "old": "out.map((line, index) => line + (terminators[index] ?? '')).join('')",
+   "new": "out.map((line, index) => line + (terminators[index] ?? '').replace('\\r', ' ')).join('')",
+   "exit": 1,
+   "killed": true,
+   "failedChecks": {
+    "H2fail": 2868,
+    "H5fail": 2868
+   }
+  },
+  {
+   "id": "F8-positionOf-counts-cr",
+   "file": "git-object-reader.js",
+   "old": "if (text.charCodeAt(i) === 10) {",
+   "new": "if (text.charCodeAt(i) === 10 || text.charCodeAt(i) === 13) {",
+   "exit": 1,
+   "killed": true,
+   "failedChecks": {
+    "H4fail": 75
+   }
+  }
+ ]
+}

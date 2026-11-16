@@ -1,0 +1,56 @@
+json files 70 records with timed runs 52 timed runs 258 without load1 0
+files carrying a host object 53
+  HOST docs/evidence/syzygy-bpyt-4-31/durations/cap1-system.hooks.json {"cores": 12, "node": "v24.6.0"}
+  HOST docs/evidence/syzygy-bpyt-4-31/durations/cdp-browser.browser.test.tests.json {"cores": 12, "node": "v24.6.0"}
+  HOST docs/evidence/syzygy-bpyt-4-31/durations/cdp-browser.test.tests.json {"cores": 12, "node": "v24.6.0"}
+  HOST docs/evidence/syzygy-bpyt-4-31/durations/dossier-cap-measure.test.hooks.json {"cores": 12, "node": "v24.6.0"}
+  HOST docs/evidence/syzygy-bpyt-4-31/durations/draft-preview.browser.test.tests.json {"cores": 12, "node": "v24.6.0"}
+  HOST docs/evidence/syzygy-bpyt-4-31/durations/durable-lifecycle-generate.test.tests.json {"cores": 12, "node": "v24.6.0"}
+  HOST docs/evidence/syzygy-bpyt-4-31/durations/fixture-directories.test.tests.json {"cores": 12, "node": "v24.6.0"}
+  HOST docs/evidence/syzygy-bpyt-4-31/durations/git-blob-batch.test.tests.json {"cores": 12, "node": "v24.6.0"}
+  HOST docs/evidence/syzygy-bpyt-4-31/durations/governing-intent-sweep.test.hooks.json {"cores": 12, "node": "v24.6.0"}
+  HOST docs/evidence/syzygy-bpyt-4-31/durations/governing-intent-sweep.test.tests.json {"cores": 12, "node": "v24.6.0"}
+  HOST docs/evidence/syzygy-bpyt-4-31/durations/keyboard-sweep-record.test.tests.json {"cores": 12, "node": "v24.6.0"}
+  HOST docs/evidence/syzygy-bpyt-4-31/durations/no-egress.test.hooks.json {"cores": 12, "node": "v24.6.0"}
+  HOST docs/evidence/syzygy-bpyt-4-31/durations/no-egress.test.tests.json {"cores": 12, "node": "v24.6.0"}
+  HOST docs/evidence/syzygy-bpyt-4-31/durations/orrery.browser.test.hooks.json {"cores": 12, "node": "v24.6.0"}
+  HOST docs/evidence/syzygy-bpyt-4-31/durations/polaris-accessibility.browser.test.hooks.json {"cores": 12, "node": "v24.6.0"}
+  HOST docs/evidence/syzygy-bpyt-4-31/durations/polaris-accessibility.browser.test.tests.json {"cores": 12, "node": "v24.6.0"}
+  HOST docs/evidence/syzygy-bpyt-4-31/durations/polaris-accessible-names.browser.test.hooks.json {"cores": 12, "node": "v24.6.0"}
+  HOST docs/evidence/syzygy-bpyt-4-31/durations/polaris-accessible-names.browser.test.tests.json {"cores": 12, "node": "v24.6.0"}
+  HOST docs/evidence/syzygy-bpyt-4-31/durations/polaris-copy.test.hooks.json {"cores": 12, "node": "v24.6.0"}
+  HOST docs/evidence/syzygy-bpyt-4-31/durations/polaris-opening-index.browser.test.hooks.json {"cores": 12, "node": "v24.6.0"}
+  HOST docs/evidence/syzygy-bpyt-4-31/durations/polaris-opening-index.browser.test.tests.json {"cores": 12, "node": "v24.6.0"}
+  HOST docs/evidence/syzygy-bpyt-4-31/durations/polaris-reconciliation.test.hooks.json {"cores": 12, "node": "v24.6.0"}
+  HOST docs/evidence/syzygy-bpyt-4-31/durations/proposal-disclosure.test.tests.json {"cores": 12, "node": "v24.6.0"}
+  HOST docs/evidence/syzygy-bpyt-4-31/durations/real-tree.test.tests.json {"cores": 12, "node": "v24.6.0"}
+  HOST docs/evidence/syzygy-bpyt-4-31/durations/restart.test.hooks.json {"cores": 12, "node": "v24.6.0"}
+  HOST docs/evidence/syzygy-bpyt-4-31/durations/self-corpus.test.tests.json {"cores": 12, "node": "v24.6.0"}
+  HOST docs/evidence/syzygy-bpyt-4-31/durations/surface-routes.test.hooks.json {"cores": 12, "node": "v24.6.0"}
+  HOST docs/evidence/syzygy-bpyt-4-31/durations/surface-routes.test.tests.json {"cores": 12, "node": "v24.6.0"}
+  HOST docs/evidence/syzygy-bpyt-4-31/durations/test-artifact-verification.live.test.tests.json {"cores": 12, "node": "v24.6.0"}
+  HOST docs/evidence/syzygy-bpyt-4-31/durations/test-model-fixture.test.tests.json {"cores": 12, "node": "v24.6.0"}
+  HOST docs/evidence/syzygy-bpyt-4-31/durations/trajectory-narrowing.browser.test.hooks.json {"cores": 12, "node": "v24.6.0"}
+  HOST docs/evidence/syzygy-bpyt-4-31/durations/tuple-encoding.test.tests.json {"cores": 12, "node": "v24.6.0"}
+  HOST docs/evidence/syzygy-bpyt-4-31/durations/unknown-route-sweep.test.hooks.json {"cores": 12, "node": "v24.6.0"}
+  HOST docs/evidence/syzygy-bpyt-4-31/head-durations/cdp-browser.test.tests.json {"cores": 12, "node": "v24.6.0"}
+  HOST docs/evidence/syzygy-bpyt-4-31/head-durations/dossier-cap-measure.test.hooks.json {"cores": 12, "node": "v24.6.0"}
+  HOST docs/evidence/syzygy-bpyt-4-31/head-durations/draft-preview.browser.test.tests.json {"cores": 12, "node": "v24.6.0"}
+  HOST docs/evidence/syzygy-bpyt-4-31/head-durations/durable-lifecycle-generate.test.tests.json {"cores": 12, "node": "v24.6.0"}
+  HOST docs/evidence/syzygy-bpyt-4-31/head-durations/fixture-directories.test.tests.json {"cores": 12, "node": "v24.6.0"}
+  HOST docs/evidence/syzygy-bpyt-4-31/head-durations/governing-intent-sweep.test.hooks.json {"cores": 12, "node": "v24.6.0"}
+  HOST docs/evidence/syzygy-bpyt-4-31/head-durations/no-egress.test.hooks.json {"cores": 12, "node": "v24.6.0"}
+  HOST docs/evidence/syzygy-bpyt-4-31/head-durations/no-egress.test.tests.json {"cores": 12, "node": "v24.6.0"}
+  HOST docs/evidence/syzygy-bpyt-4-31/head-durations/orrery.browser.test.hooks.json {"cores": 12, "node": "v24.6.0"}
+  HOST docs/evidence/syzygy-bpyt-4-31/head-durations/polaris-accessibility.browser.test.hooks.json {"cores": 12, "node": "v24.6.0"}
+  HOST docs/evidence/syzygy-bpyt-4-31/head-durations/polaris-accessible-names.browser.test.hooks.json {"cores": 12, "node": "v24.6.0"}
+  HOST docs/evidence/syzygy-bpyt-4-31/head-durations/polaris-opening-index.browser.test.hooks.json {"cores": 12, "node": "v24.6.0"}
+  HOST docs/evidence/syzygy-bpyt-4-31/head-durations/polaris-opening-index.browser.test.tests.json {"cores": 12, "node": "v24.6.0"}
+  HOST docs/evidence/syzygy-bpyt-4-31/head-durations/polaris-reconciliation.test.hooks.json {"cores": 12, "node": "v24.6.0"}
+  HOST docs/evidence/syzygy-bpyt-4-31/head-durations/self-corpus.test.tests.json {"cores": 12, "node": "v24.6.0"}
+  HOST docs/evidence/syzygy-bpyt-4-31/head-durations/surface-routes.test.tests.json {"cores": 12, "node": "v24.6.0"}
+  HOST docs/evidence/syzygy-bpyt-4-31/head-durations/trajectory-narrowing.browser.test.hooks.json {"cores": 12, "node": "v24.6.0"}
+  HOST docs/evidence/syzygy-bpyt-4-31/head-durations/unknown-route-sweep.test.hooks.json {"cores": 12, "node": "v24.6.0"}
+  HOST docs/evidence/syzygy-bpyt-4-31/hook-tool-validation/record.json {"cores": 12, "node": "v24.6.0"}
+  HOST docs/evidence/syzygy-bpyt-4-31/host.json {"subject": "the host every local measurement under docs/evidence/syzygy-bpyt-4-31/ ran on (syzygy-bpyt.4.31): the alone runs in durations/ 
+exit 0

@@ -1,0 +1,7 @@
+# npm run typecheck at the repair commit 28024ade30ac30ffeac3bb09fe0833fe63a43981, a clean detached worktree whose node_modules came from an npm ci at an earlier commit of the same lockfile (syzygy-bpyt.6.3 stack 4, round 1 repair)
+
+> typecheck
+> tsc -b packages/support packages/cap1-core packages/http-host packages/cap1-daemon packages/cap1-conformance packages/three-surface-poc-core apps/syzygy apps/three-surface-poc packages/cap1-system packages/polaris-generation-core packages/polaris-generation-consent packages/polaris-dossier
+
+
+exit status: 0

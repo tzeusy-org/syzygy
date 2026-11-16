@@ -1,0 +1,847 @@
+{
+ "npm": "11.5.1",
+ "arborist": "9.1.3",
+ "npa": "12.0.2",
+ "node": "v24.6.0",
+ "registry": "http://127.0.0.1:9/",
+ "offline": true,
+ "workspaces": {
+  "w": [
+   "wlib",
+   "1.0.0"
+  ],
+  "s": [
+   "@syzygy/slib",
+   "1.0.0"
+  ]
+ },
+ "results": [
+  {
+   "id": "R1",
+   "shows": "the root's manifest declares . under a workspace's name",
+   "declarations": {
+    "": {
+     "dependencies": {
+      "wlib": "."
+     }
+    }
+   },
+   "inspect": "wlib",
+   "lockExit": 0,
+   "errorCode": null,
+   "wouldRequest": null,
+   "errorLines": [],
+   "warnLines": [],
+   "lockEntries": {
+    "node_modules/wlib": {
+     "resolved": "w",
+     "link": true
+    }
+   },
+   "installExit": 0,
+   "installErrorLines": [],
+   "rootLink": "../w",
+   "loads": {
+    "app": {
+     "path": "w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    },
+    "w": {
+     "path": "w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    },
+    "s": {
+     "path": "w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    }
+   }
+  },
+  {
+   "id": "R2",
+   "shows": "the root's manifest declares .. under a workspace's name",
+   "declarations": {
+    "": {
+     "dependencies": {
+      "wlib": ".."
+     }
+    }
+   },
+   "inspect": "wlib",
+   "lockExit": 0,
+   "errorCode": null,
+   "wouldRequest": null,
+   "errorLines": [],
+   "warnLines": [],
+   "lockEntries": {
+    "node_modules/wlib": {
+     "resolved": "w",
+     "link": true
+    }
+   },
+   "installExit": 0,
+   "installErrorLines": [],
+   "rootLink": "../w",
+   "loads": {
+    "app": {
+     "path": "w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    },
+    "w": {
+     "path": "w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    },
+    "s": {
+     "path": "w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    }
+   }
+  },
+  {
+   "id": "R3",
+   "shows": "the root's manifest declares ../x under a workspace's name",
+   "declarations": {
+    "": {
+     "dependencies": {
+      "wlib": "../nowhere"
+     }
+    }
+   },
+   "inspect": "wlib",
+   "lockExit": 0,
+   "errorCode": null,
+   "wouldRequest": null,
+   "errorLines": [],
+   "warnLines": [],
+   "lockEntries": {
+    "node_modules/wlib": {
+     "resolved": "w",
+     "link": true
+    }
+   },
+   "installExit": 0,
+   "installErrorLines": [],
+   "rootLink": "../w",
+   "loads": {
+    "app": {
+     "path": "w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    },
+    "w": {
+     "path": "w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    },
+    "s": {
+     "path": "w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    }
+   }
+  },
+  {
+   "id": "R4",
+   "shows": "the root's manifest declares /x under a workspace's name",
+   "declarations": {
+    "": {
+     "dependencies": {
+      "wlib": "/nonexistent-r547/nowhere"
+     }
+    }
+   },
+   "inspect": "wlib",
+   "lockExit": 0,
+   "errorCode": null,
+   "wouldRequest": null,
+   "errorLines": [],
+   "warnLines": [],
+   "lockEntries": {
+    "node_modules/wlib": {
+     "resolved": "w",
+     "link": true
+    }
+   },
+   "installExit": 0,
+   "installErrorLines": [],
+   "rootLink": "../w",
+   "loads": {
+    "app": {
+     "path": "w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    },
+    "w": {
+     "path": "w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    },
+    "s": {
+     "path": "w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    }
+   }
+  },
+  {
+   "id": "R5",
+   "shows": "the root's manifest declares ~/x under a workspace's name",
+   "declarations": {
+    "": {
+     "dependencies": {
+      "wlib": "~/nowhere"
+     }
+    }
+   },
+   "inspect": "wlib",
+   "lockExit": 0,
+   "errorCode": null,
+   "wouldRequest": null,
+   "errorLines": [],
+   "warnLines": [],
+   "lockEntries": {
+    "node_modules/wlib": {
+     "resolved": "w",
+     "link": true
+    }
+   },
+   "installExit": 0,
+   "installErrorLines": [],
+   "rootLink": "../w",
+   "loads": {
+    "app": {
+     "path": "w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    },
+    "w": {
+     "path": "w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    },
+    "s": {
+     "path": "w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    }
+   }
+  },
+  {
+   "id": "R6",
+   "shows": "the root's manifest declares x.tar under a workspace's name",
+   "declarations": {
+    "": {
+     "dependencies": {
+      "wlib": "nowhere.tar"
+     }
+    }
+   },
+   "inspect": "wlib",
+   "lockExit": 0,
+   "errorCode": null,
+   "wouldRequest": null,
+   "errorLines": [],
+   "warnLines": [],
+   "lockEntries": {
+    "node_modules/wlib": {
+     "resolved": "w",
+     "link": true
+    }
+   },
+   "installExit": 0,
+   "installErrorLines": [],
+   "rootLink": "../w",
+   "loads": {
+    "app": {
+     "path": "w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    },
+    "w": {
+     "path": "w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    },
+    "s": {
+     "path": "w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    }
+   }
+  },
+  {
+   "id": "R7",
+   "shows": "the root's manifest declares x.tar.gz under a workspace's name",
+   "declarations": {
+    "": {
+     "dependencies": {
+      "wlib": "nowhere.tar.gz"
+     }
+    }
+   },
+   "inspect": "wlib",
+   "lockExit": 0,
+   "errorCode": null,
+   "wouldRequest": null,
+   "errorLines": [],
+   "warnLines": [],
+   "lockEntries": {
+    "node_modules/wlib": {
+     "resolved": "w",
+     "link": true
+    }
+   },
+   "installExit": 0,
+   "installErrorLines": [],
+   "rootLink": "../w",
+   "loads": {
+    "app": {
+     "path": "w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    },
+    "w": {
+     "path": "w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    },
+    "s": {
+     "path": "w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    }
+   }
+  },
+  {
+   "id": "A1",
+   "shows": "control: app's manifest declares . under a workspace's name",
+   "declarations": {
+    "app": {
+     "dependencies": {
+      "wlib": "."
+     }
+    }
+   },
+   "inspect": "wlib",
+   "lockExit": 0,
+   "errorCode": null,
+   "wouldRequest": null,
+   "errorLines": [],
+   "warnLines": [],
+   "lockEntries": {
+    "app/node_modules/wlib": {
+     "resolved": "app",
+     "link": true
+    },
+    "node_modules/wlib": {
+     "resolved": "w",
+     "link": true
+    }
+   },
+   "installExit": 0,
+   "installErrorLines": [],
+   "rootLink": "../w",
+   "loads": {
+    "app": {
+     "path": "app/package.json",
+     "name": "app",
+     "version": "0.0.0"
+    },
+    "w": {
+     "path": "w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    },
+    "s": {
+     "path": "w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    }
+   }
+  },
+  {
+   "id": "A2",
+   "shows": "control: app's manifest declares .. under a workspace's name",
+   "declarations": {
+    "app": {
+     "dependencies": {
+      "wlib": ".."
+     }
+    }
+   },
+   "inspect": "wlib",
+   "lockExit": 0,
+   "errorCode": null,
+   "wouldRequest": null,
+   "errorLines": [],
+   "warnLines": [],
+   "lockEntries": {
+    "app/node_modules/wlib": {
+     "resolved": "",
+     "link": true
+    },
+    "node_modules/wlib": {
+     "resolved": "w",
+     "link": true
+    }
+   },
+   "installExit": 0,
+   "installErrorLines": [],
+   "rootLink": "../w",
+   "loads": {
+    "app": {
+     "path": "package.json",
+     "name": "probe-root",
+     "version": "0.0.0"
+    },
+    "w": {
+     "path": "w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    },
+    "s": {
+     "path": "w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    }
+   }
+  },
+  {
+   "id": "A3",
+   "shows": "control: app's manifest declares ../x under a workspace's name",
+   "declarations": {
+    "app": {
+     "dependencies": {
+      "wlib": "../nowhere"
+     }
+    }
+   },
+   "inspect": "wlib",
+   "lockExit": 0,
+   "errorCode": null,
+   "wouldRequest": null,
+   "errorLines": [],
+   "warnLines": [],
+   "lockEntries": {
+    "app/node_modules/wlib": {
+     "resolved": "nowhere",
+     "link": true
+    },
+    "node_modules/wlib": {
+     "resolved": "w",
+     "link": true
+    }
+   },
+   "installExit": 0,
+   "installErrorLines": [],
+   "rootLink": "../w",
+   "loads": {
+    "app": {
+     "path": "w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    },
+    "w": {
+     "path": "w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    },
+    "s": {
+     "path": "w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    }
+   }
+  },
+  {
+   "id": "A4",
+   "shows": "control: app's manifest declares /x under a workspace's name",
+   "declarations": {
+    "app": {
+     "dependencies": {
+      "wlib": "/nonexistent-r547/nowhere"
+     }
+    }
+   },
+   "inspect": "wlib",
+   "lockExit": 0,
+   "errorCode": null,
+   "wouldRequest": null,
+   "errorLines": [],
+   "warnLines": [],
+   "lockEntries": {
+    "app/node_modules/wlib": {
+     "resolved": "../../../../nonexistent-r547/nowhere",
+     "link": true
+    },
+    "node_modules/wlib": {
+     "resolved": "w",
+     "link": true
+    }
+   },
+   "installExit": 0,
+   "installErrorLines": [],
+   "rootLink": "../w",
+   "loads": {
+    "app": {
+     "path": "w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    },
+    "w": {
+     "path": "w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    },
+    "s": {
+     "path": "w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    }
+   }
+  },
+  {
+   "id": "A5",
+   "shows": "control: app's manifest declares ~/x under a workspace's name",
+   "declarations": {
+    "app": {
+     "dependencies": {
+      "wlib": "~/nowhere"
+     }
+    }
+   },
+   "inspect": "wlib",
+   "lockExit": 0,
+   "errorCode": null,
+   "wouldRequest": null,
+   "errorLines": [],
+   "warnLines": [],
+   "lockEntries": {
+    "app/node_modules/wlib": {
+     "resolved": "../home/nowhere",
+     "link": true
+    },
+    "node_modules/wlib": {
+     "resolved": "w",
+     "link": true
+    }
+   },
+   "installExit": 0,
+   "installErrorLines": [],
+   "rootLink": "../w",
+   "loads": {
+    "app": {
+     "path": "w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    },
+    "w": {
+     "path": "w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    },
+    "s": {
+     "path": "w/package.json",
+     "name": "wlib",
+     "version": "1.0.0"
+    }
+   }
+  },
+  {
+   "id": "A6",
+   "shows": "control: app's manifest declares x.tar under a workspace's name",
+   "declarations": {
+    "app": {
+     "dependencies": {
+      "wlib": "nowhere.tar"
+     }
+    }
+   },
+   "inspect": "wlib",
+   "lockExit": 254,
+   "errorCode": "ENOENT",
+   "wouldRequest": null,
+   "errorLines": [
+    "npm error code ENOENT",
+    "npm error syscall open",
+    "npm error path <scratch>/A6/app/nowhere.tar",
+    "npm error errno -2"
+   ],
+   "warnLines": [
+    "npm warn tarball tarball data for wlib@file:nowhere.tar (null) seems to be corrupted. Trying again.",
+    "npm warn tarball tarball data for wlib@file:nowhere.tar (null) seems to be corrupted. Trying again."
+   ]
+  },
+  {
+   "id": "A7",
+   "shows": "control: app's manifest declares x.tar.gz under a workspace's name",
+   "declarations": {
+    "app": {
+     "dependencies": {
+      "wlib": "nowhere.tar.gz"
+     }
+    }
+   },
+   "inspect": "wlib",
+   "lockExit": 254,
+   "errorCode": "ENOENT",
+   "wouldRequest": null,
+   "errorLines": [
+    "npm error code ENOENT",
+    "npm error syscall open",
+    "npm error path <scratch>/A7/app/nowhere.tar.gz",
+    "npm error errno -2"
+   ],
+   "warnLines": [
+    "npm warn tarball tarball data for wlib@file:nowhere.tar.gz (null) seems to be corrupted. Trying again.",
+    "npm warn tarball tarball data for wlib@file:nowhere.tar.gz (null) seems to be corrupted. Trying again."
+   ]
+  },
+  {
+   "id": "N1",
+   "shows": "control: the root's manifest declares . under a name no workspace has",
+   "declarations": {
+    "": {
+     "dependencies": {
+      "dossier": "."
+     }
+    }
+   },
+   "inspect": "dossier",
+   "lockExit": 0,
+   "errorCode": null,
+   "wouldRequest": null,
+   "errorLines": [],
+   "warnLines": [],
+   "lockEntries": {
+    "node_modules/dossier": {
+     "resolved": "",
+     "link": true
+    }
+   },
+   "installExit": 0,
+   "installErrorLines": [],
+   "rootLink": "..",
+   "loads": {
+    "app": {
+     "path": "package.json",
+     "name": "probe-root",
+     "version": "0.0.0"
+    },
+    "w": {
+     "path": "package.json",
+     "name": "probe-root",
+     "version": "0.0.0"
+    },
+    "s": {
+     "path": "package.json",
+     "name": "probe-root",
+     "version": "0.0.0"
+    }
+   }
+  },
+  {
+   "id": "N2",
+   "shows": "control: the root's manifest declares .. under a name no workspace has",
+   "declarations": {
+    "": {
+     "dependencies": {
+      "dossier": ".."
+     }
+    }
+   },
+   "inspect": "dossier",
+   "lockExit": 0,
+   "errorCode": null,
+   "wouldRequest": null,
+   "errorLines": [],
+   "warnLines": [],
+   "lockEntries": {
+    "node_modules/dossier": {
+     "resolved": "..",
+     "link": true
+    }
+   },
+   "installExit": 0,
+   "installErrorLines": [],
+   "rootLink": "../..",
+   "loads": {
+    "app": {
+     "error": "MODULE_NOT_FOUND"
+    },
+    "w": {
+     "error": "MODULE_NOT_FOUND"
+    },
+    "s": {
+     "error": "MODULE_NOT_FOUND"
+    }
+   }
+  },
+  {
+   "id": "N3",
+   "shows": "control: the root's manifest declares ../x under a name no workspace has",
+   "declarations": {
+    "": {
+     "dependencies": {
+      "dossier": "../nowhere"
+     }
+    }
+   },
+   "inspect": "dossier",
+   "lockExit": 0,
+   "errorCode": null,
+   "wouldRequest": null,
+   "errorLines": [],
+   "warnLines": [],
+   "lockEntries": {
+    "node_modules/dossier": {
+     "resolved": "../nowhere",
+     "link": true
+    }
+   },
+   "installExit": 0,
+   "installErrorLines": [],
+   "rootLink": "../../nowhere",
+   "loads": {
+    "app": {
+     "error": "MODULE_NOT_FOUND"
+    },
+    "w": {
+     "error": "MODULE_NOT_FOUND"
+    },
+    "s": {
+     "error": "MODULE_NOT_FOUND"
+    }
+   }
+  },
+  {
+   "id": "N4",
+   "shows": "control: the root's manifest declares /x under a name no workspace has",
+   "declarations": {
+    "": {
+     "dependencies": {
+      "dossier": "/nonexistent-r547/nowhere"
+     }
+    }
+   },
+   "inspect": "dossier",
+   "lockExit": 0,
+   "errorCode": null,
+   "wouldRequest": null,
+   "errorLines": [],
+   "warnLines": [],
+   "lockEntries": {
+    "node_modules/dossier": {
+     "resolved": "../../../../nonexistent-r547/nowhere",
+     "link": true
+    }
+   },
+   "installExit": 0,
+   "installErrorLines": [],
+   "rootLink": "../../../../../nonexistent-r547/nowhere",
+   "loads": {
+    "app": {
+     "error": "MODULE_NOT_FOUND"
+    },
+    "w": {
+     "error": "MODULE_NOT_FOUND"
+    },
+    "s": {
+     "error": "MODULE_NOT_FOUND"
+    }
+   }
+  },
+  {
+   "id": "N5",
+   "shows": "control: the root's manifest declares ~/x under a name no workspace has",
+   "declarations": {
+    "": {
+     "dependencies": {
+      "dossier": "~/nowhere"
+     }
+    }
+   },
+   "inspect": "dossier",
+   "lockExit": 0,
+   "errorCode": null,
+   "wouldRequest": null,
+   "errorLines": [],
+   "warnLines": [],
+   "lockEntries": {
+    "node_modules/dossier": {
+     "resolved": "../home/nowhere",
+     "link": true
+    }
+   },
+   "installExit": 0,
+   "installErrorLines": [],
+   "rootLink": "../../home/nowhere",
+   "loads": {
+    "app": {
+     "error": "MODULE_NOT_FOUND"
+    },
+    "w": {
+     "error": "MODULE_NOT_FOUND"
+    },
+    "s": {
+     "error": "MODULE_NOT_FOUND"
+    }
+   }
+  },
+  {
+   "id": "N6",
+   "shows": "control: the root's manifest declares x.tar under a name no workspace has",
+   "declarations": {
+    "": {
+     "dependencies": {
+      "dossier": "nowhere.tar"
+     }
+    }
+   },
+   "inspect": "dossier",
+   "lockExit": 254,
+   "errorCode": "ENOENT",
+   "wouldRequest": null,
+   "errorLines": [
+    "npm error code ENOENT",
+    "npm error syscall open",
+    "npm error path <scratch>/N6/nowhere.tar",
+    "npm error errno -2"
+   ],
+   "warnLines": [
+    "npm warn tarball tarball data for dossier@file:nowhere.tar (null) seems to be corrupted. Trying again.",
+    "npm warn tarball tarball data for dossier@file:nowhere.tar (null) seems to be corrupted. Trying again."
+   ]
+  },
+  {
+   "id": "N7",
+   "shows": "control: the root's manifest declares x.tar.gz under a name no workspace has",
+   "declarations": {
+    "": {
+     "dependencies": {
+      "dossier": "nowhere.tar.gz"
+     }
+    }
+   },
+   "inspect": "dossier",
+   "lockExit": 254,
+   "errorCode": "ENOENT",
+   "wouldRequest": null,
+   "errorLines": [
+    "npm error code ENOENT",
+    "npm error syscall open",
+    "npm error path <scratch>/N7/nowhere.tar.gz",
+    "npm error errno -2"
+   ],
+   "warnLines": [
+    "npm warn tarball tarball data for dossier@file:nowhere.tar.gz (null) seems to be corrupted. Trying again.",
+    "npm warn tarball tarball data for dossier@file:nowhere.tar.gz (null) seems to be corrupted. Trying again."
+   ]
+  }
+ ]
+}

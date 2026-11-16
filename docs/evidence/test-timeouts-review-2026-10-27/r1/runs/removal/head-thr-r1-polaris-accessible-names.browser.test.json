@@ -1,0 +1,305 @@
+{
+ "files": [
+  {
+   "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-537/clone/apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+   "project": "@syzygy/three-surface-poc-app",
+   "type": "suite",
+   "name": "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+   "line": null,
+   "mode": "run",
+   "state": "pass",
+   "durationMs": 24636.985644,
+   "errors": [],
+   "tasks": [
+    {
+     "type": "suite",
+     "name": "PWB-REQ-016 distinct-name rules (pure)",
+     "line": 55,
+     "mode": "run",
+     "state": "pass",
+     "durationMs": 14.134891000000152,
+     "errors": [],
+     "tasks": [
+      {
+       "type": "test",
+       "name": "passes different names for different targets and a shared name for one target",
+       "line": 56,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 5.61687000000029,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "fails two different targets sharing one name",
+       "line": 65,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 1.2801580000000286,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "treats a summary's details and a control's aria-controls as targets",
+       "line": 70,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 0.8747730000000047,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "requires each differently targeted element sharing a visible label to have a name beginning with it",
+       "line": 78,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 1.2954979999999523,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "requires the machine answer's source path after a shared label on an exact-source target",
+       "line": 93,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 2.9866619999997965,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "binds no element whose label no differently targeted element shares",
+       "line": 112,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 0.3441800000000512,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "recognises the exact-source route under either mount and nothing else",
+       "line": 116,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 0.5963369999999486,
+       "errors": []
+      }
+     ],
+     "hookMs": 1
+    },
+    {
+     "type": "suite",
+     "name": "PWB-REQ-016 heading-order rules (pure)",
+     "line": 124,
+     "mode": "run",
+     "state": "pass",
+     "durationMs": 1.7813649999998233,
+     "errors": [],
+     "tasks": [
+      {
+       "type": "test",
+       "name": "passes one h1 with no skipped level, including returns to shallower levels",
+       "line": 125,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 0.3870910000000549,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "fails a skipped level",
+       "line": 129,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 0.7245389999998224,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "fails a second level-1 heading and a missing one",
+       "line": 134,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 0.5534550000002127,
+       "errors": []
+      }
+     ],
+     "hookMs": 0
+    },
+    {
+     "type": "suite",
+     "name": "PWB-REQ-016 whole-surface page list (pure)",
+     "line": 140,
+     "mode": "run",
+     "state": "pass",
+     "durationMs": 1.999076999999943,
+     "errors": [],
+     "tasks": [
+      {
+       "type": "test",
+       "name": "lists the entry page and one route response per machine-answer source",
+       "line": 141,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 0.9573780000000625,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "fails a listed page missing from the sweep and an extra one",
+       "line": 152,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 0.9198879999999008,
+       "errors": []
+      }
+     ],
+     "hookMs": 0
+    },
+    {
+     "type": "suite",
+     "name": "PWB-REQ-016 names and headings in a real browser",
+     "line": 178,
+     "mode": "run",
+     "state": "pass",
+     "durationMs": 24616.820793,
+     "errors": [],
+     "tasks": [
+      {
+       "type": "test",
+       "name": "enumerates the signed populations: closed details included; hidden, aria-hidden and display:none excluded",
+       "line": 226,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 288.9625669999996,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "excludes an element carrying the hidden attribute even where CSS or until-found leaves it displayed",
+       "line": 240,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 108.73634200000015,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "reads a role=\"heading\" at its aria-level and treats each summary's details as its target",
+       "line": 250,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 156.84201200000007,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "computes the name of a link inside a closed details, as the browser would once it opens",
+       "line": 260,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 249.84558500000003,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "reads names from the browser: aria-label and aria-labelledby beat text content",
+       "line": 273,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 92.10315099999934,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "fails each falsifier limb in the browser",
+       "line": 284,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 267.408281,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "passes every Polaris page one whole-project evaluation serves, the pages listed from the machine answer",
+       "line": 298,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 3472.2561370000003,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "fails a listed page the daemon does not serve, never skipping it",
+       "line": 317,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 5835.858826,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "observed: every served Polaris page passes both checks",
+       "line": 338,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 4107.139144000001,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "observed-lawful-state-1: every served Polaris page passes both checks",
+       "line": 338,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 3351.4317569999985,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "observed-degraded-unlawful: every served Polaris page passes both checks",
+       "line": 338,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 3635.209417000002,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "not-admitted: every served Polaris page passes both checks",
+       "line": 338,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 583.4016649999976,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "observation-failed: every served Polaris page passes both checks",
+       "line": 338,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 667.3226820000018,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "not-evaluated: every served Polaris page passes both checks",
+       "line": 338,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 728.4592190000003,
+       "errors": []
+      }
+     ],
+     "hookMs": 1072
+    }
+   ],
+   "hookMs": 2,
+   "collectMs": 2561.060132,
+   "setupMs": 30.40784999999994,
+   "prepareMs": 151.93105499999996,
+   "environmentMs": 0.2355450000000019
+  }
+ ],
+ "unhandled": []
+}

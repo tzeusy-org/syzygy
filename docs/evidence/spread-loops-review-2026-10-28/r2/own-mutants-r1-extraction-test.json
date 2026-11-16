@@ -1,0 +1,22 @@
+[
+ {
+  "id": "CONTROL",
+  "ranAt": "45f7d85571f2d216313a2ee399b9d091c37a9e68",
+  "testFrom": "241b28ff:packages/three-surface-poc-core/src/project-shape-extraction.test.ts",
+  "tests": 265,
+  "loadavg1": "24.91",
+  "failing": []
+ },
+ {
+  "id": "R9-extractor-swaps-at-global-index",
+  "ranAt": "45f7d85571f2d216313a2ee399b9d091c37a9e68",
+  "file": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+  "old": "    for (const item of result.items) all.push(item);\n",
+  "new": "    for (const item of result.items) all.push(item);\n    if (all.length > 130_000) { const a = all[65_000] as ExtractedItem; all[65_000] = all[65_001] as ExtractedItem; all[65_001] = a; }\n",
+  "mutatedFileSha256": "fff5a63b63c80c2a7d860b5c1c7cd28d5aabc30fc16b9e580b4beabad270ed9e",
+  "outcome": "SURVIVED",
+  "tests": 265,
+  "loadavg1": "24.44",
+  "failing": []
+ }
+]

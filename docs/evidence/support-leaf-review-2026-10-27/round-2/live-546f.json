@@ -1,0 +1,4658 @@
+{
+  "revision": "a088f1caf061c1a2062527ce8521c9b64c3c7fd1",
+  "names": 3976,
+  "textFiles": 3972,
+  "binaryOrInvalid": 4,
+  "ownerFields": 153,
+  "distinctOwners": [
+    "Tzeusy",
+    "{{OWNER}}",
+    "{owner}"
+  ],
+  "owners": [
+    {
+      "path": ".syzygy/governance/contracts/candidates/dossier-agent-provider-v2/instances/redis/AGENT-PROVIDER-STATEMENT-ANTHROPIC.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/dossier-agent-provider-v2/templates/AGENT-PROVIDER-STATEMENT-TEMPLATE-V2.md",
+      "kind": "present",
+      "value": "{{OWNER}}"
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/dossier-local-agent-acts/instances/in-force/D9-IN-FORCE-RECORD.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/dossier-local-agent-acts/instances/in-force/RFC7-20-READING-IN-FORCE-RECORD.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/dossier-local-agent-acts/instances/redis/AGENT-PROVIDER-STATEMENT-ANTHROPIC.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/dossier-local-agent-acts/instances/redis/AGENT-PROVIDER-STATEMENT-OPENAI.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/dossier-local-agent-acts/instances/redis/NO-EVIDENCE-DRAWER-STATEMENT.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/dossier-local-agent-acts/templates/AGENT-PROVIDER-STATEMENT-TEMPLATE.md",
+      "kind": "present",
+      "value": "{{OWNER}}"
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/dossier-local-agent-acts/templates/D9-IN-FORCE-RECORD-TEMPLATE.md",
+      "kind": "present",
+      "value": "{{OWNER}}"
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/dossier-local-agent-acts/templates/NO-EVIDENCE-DRAWER-STATEMENT-TEMPLATE.md",
+      "kind": "present",
+      "value": "{{OWNER}}"
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/dossier-local-agent-acts/templates/RFC7-20-READING-IN-FORCE-RECORD-TEMPLATE.md",
+      "kind": "present",
+      "value": "{{OWNER}}"
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/public-egress-v2/instances/egress-anthropic/EGRESS-CONSENT-ANTHROPIC.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/public-egress-v2/templates/EGRESS-CONSENT-TEMPLATE-V2.md",
+      "kind": "present",
+      "value": "{{OWNER}}"
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/public-repo-admission/instances/egress-anthropic/EGRESS-CONSENT-ANTHROPIC.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/public-repo-admission/instances/redis/OBSERVATION-CONSENT.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/public-repo-admission/instances/requests/OBSERVATION-CONSENT.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/public-repo-admission/templates/EGRESS-CONSENT-TEMPLATE.md",
+      "kind": "present",
+      "value": "{{OWNER}}"
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/public-repo-admission/templates/OBSERVATION-CONSENT-TEMPLATE.md",
+      "kind": "present",
+      "value": "{{OWNER}}"
+    },
+    {
+      "path": ".syzygy/governance/decisions/ARBITRARY-PUBLIC-REPO-DOSSIER-DIRECTION.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/BOUNDED-MISSION-DOCTRINE-INTERPRETATION-ACT.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/BUTLERS-PROJECT-SHAPE-OBSERVATION-CONSENT.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/CAP1-TRUSTED-BOOTSTRAP-CONSENT-SIGNOFF-v1.0.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/CAPABILITY-1-READABILITY-SUCCESSOR-ACT.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/CONTRACT-READABILITY-RESTYLE-ADOPTION-ACT.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/DOSSIER-AGENT-PROVIDER-V2-REDIS-ANTHROPIC-ACT.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/DOSSIER-LOCAL-AGENT-D9-IN-FORCE-ACT.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/DOSSIER-LOCAL-AGENT-REDIS-AGENT-ANTHROPIC-ACT.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/DOSSIER-LOCAL-AGENT-RFC7-20-READING-IN-FORCE-ACT.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/GENERAL-TRUSTED-BOOTSTRAP-AUTHORIZATION-ACT.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/GENERAL-TRUSTED-BOOTSTRAP-AUTHORIZATION-DIRECTION.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/OPENSPEC-MULTI-CHANGE-DIRECTION.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/OWNER-DIRECTION-2026-10-03-OVERNIGHT-BEADS-LOOP.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/OWNER-DIRECTION-CAP1-CONSENT-IMPLEMENTATION-2026-10-15.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/OWNER-DIRECTION-DOSSIER-CLI-RUNNER-REPAIR-AND-DISCLOSE-2026-10-15.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/OWNER-DIRECTION-DOSSIER-LOCAL-CLI-SUBPROCESS-2026-10-15.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/OWNER-DIRECTION-GREENFIELD-PARITY-ANSWERS-2026-10-21.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/OWNER-DIRECTION-GREENFIELD-PARITY-LAUNCHED-MARKER-SCOPE-2026-10-21.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/OWNER-DIRECTION-GREENFIELD-PARITY-SIMPLIFICATION-2026-10-20.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/OWNER-DIRECTION-IMPLEMENTATION-SIGNED-AMENDMENTS-2026-10-15.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/OWNER-DIRECTION-IMPLEMENTATION-SIGNED-AMENDMENTS-2026-10-20.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/OWNER-DIRECTION-MACHINE-CEILING-2026-10-15.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/OWNER-DIRECTION-MACHINE-CEILING-INSTALL-2026-10-20.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/OWNER-DIRECTION-P108-IMPLEMENTATION-2026-10-21.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/OWNER-DIRECTION-SCOPE-A-CAP1-TRUSTED-BOOTSTRAP-CONSENT-2026-10-15.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/OWNER-DIRECTION-SCOPE-A-POC-AMENDMENTS-2026-10-14.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/OWNER-DIRECTION-SCREENING-V4-SPAN-INSTALL-2026-10-20.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/OWNER-DIRECTION-VERSIONED-SIGNOFF-SCOPE-A-2026-10-02.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/OWNER-INSTRUCTIONS-2026-09-29-30-READABILITY-AND-REGISTRY.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/OWNER-INSTRUCTIONS-2026-10-02-POLARIS-UNDERSTANDING-DEPENDENCY-UNION.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/OWNER-INSTRUCTIONS-2026-10-02-PWB-BEHAVIOR-CONTRACT-REPIN.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-D9-ROUND-2-DIRECTION.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-DIRECTION.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.0.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.1.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.2.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-RECORDS-DIRECTION.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-REVIEW-1-RULINGS-DIRECTION.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-RULINGS-DIRECTION.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-SCOPE-REVIEW-SIGNOFF-DIRECTION.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/POLARIS-DOSSIER-ONE-COMMAND-RUN-DIRECTION.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/POLARIS-DOSSIER-WAITING-SESSIONS-DIRECTION.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/POLARIS-GENERATOR-APPLICABILITY-ACT.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/POLARIS-GENERATOR-BASE-READABILITY-SUCCESSOR-ACT.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/POLARIS-GENERATOR-IMPLEMENTATION-AUTHORIZATION-ACT.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/POLARIS-GENERATOR-SPECIFICATION-ADOPTION-ACT.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/POLARIS-LANE-B-DECLINED-AND-TARGET-REVISED-DIRECTION.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/POLARIS-NON-GOVERNED-NARRATIVE-PROFILE-ADOPTION.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/POLARIS-POST-CEILING-CORRECTION-AUTHORIZATION.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/POLARIS-PROJECT-WIDE-POC-EVALUATION-DIRECTION.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/POLARIS-PROJECT-WIDE-SPEC-SIGNOFF-ACT.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/POLARIS-RESPONSE-CEILING-READING-DIRECTION.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/POLARIS-RETAINED-EVALUATIONS-CLAIM-STATES-RULING-2026-10-21.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/POLARIS-RETAINED-EVALUATIONS-RETENTION-POSTURE-DIRECTION.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/POLARIS-TRUSTED-BOOTSTRAP-OBSERVATION-DIRECTION.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/POLARIS-UNDERSTANDING-DEPENDENCY-UNION-SUCCESSOR-ACT.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/POLARIS-UNDERSTANDING-READABILITY-SUCCESSOR-ACT.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/POLARIS-UNDERSTANDING-SPECIFICATION-ADOPTION-ACT.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-SIGNOFF-v1.0.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/PUBLIC-REPO-ADMISSION-OWNER-ANSWERS-2026-10-03.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/PUBLIC-REPO-ADMISSION-REDIS-OBSERVATION-ACT.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/PWB-ACCESSIBLE-NAME-AMENDMENT-SIGNOFF-v1.0.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/PWB-ANCHOR-RESOLUTION-AMENDMENT-SIGNOFF-v1.0.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/PWB-BUTLERS-OBSERVATION-CONSENT-ACT.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/PWB-CLASS-GRANULAR-EXTRACTION-AMENDMENT-SIGNOFF-v1.0.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/PWB-CONTAINER-SHAPE-PROFILE-AMENDMENT-SIGNOFF-v1.0.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/PWB-DISMISSAL-EXPIRY-AMENDMENT-SIGNOFF-v1.0.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/PWB-DISMISSAL-RECORDS-AND-RETENTION-RULING-2026-10-21.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/PWB-EXACT-SOURCE-RENDER-MODE-AMENDMENT-ACT.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/PWB-ITEM-DEPTH-AMENDMENT-SIGNOFF-v1.0.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/PWB-MACHINE-VIEW-AMENDMENT-ACT.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/PWB-MISSING-CURRENCY-DISCLOSURE-SCENARIO-SIGNOFF-v1.0.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/PWB-OBSERVER-REGISTRY-BEHAVIOR-CONTRACT-REPIN-ACT.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/PWB-OBSERVER-REGISTRY-CURRENCY-BRIEFING-AMENDMENT-ACT.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/PWB-OBSERVER-REGISTRY-ENTRY-ACT.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/PWB-OBSERVER-REGISTRY-ENTRY-AMENDMENT-ACT.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/PWB-OBSERVER-REGISTRY-MACHINE-CEILING-ACT.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/PWB-OPENING-BAND-SCENARIO-ACT.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/PWB-OPENING-INDEX-AMENDMENT-SIGNOFF-v1.0.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/PWB-READABILITY-SUCCESSOR-SIGNOFF-v1.0.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/PWB-SECRET-CLASSIFICATION-POLICY-ACT.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/PWB-SECRET-CLASSIFICATION-POLICY-AMENDMENT-ACT.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/PWB-SECRET-CLASSIFICATION-POLICY-BEHAVIOR-CONTRACT-REPIN-ACT.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-ACT.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V2-ACT.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V3-ACT.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V4-ACT.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/PWB-STATE1-AMENDMENT-ACT.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/PWB-STATE1-AMENDMENT-DIRECTION.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/PWB-TREE-FRAMING-AMENDMENT-SIGNOFF-v1.0.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/PWB-TRUTH-READINESS-AMENDMENT-ACT.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/REDIS-LOCAL-AGENT-SITTING-DIRECTION.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/RFC5-PROJECT-DOCUMENTATION-CLASS-AMENDMENT-ACT.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/SPEC-POLICY-READABILITY-RESTYLE-ADOPTION-ACT.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/THREE-SURFACE-POC-BLOCK-PROVENANCE-AMENDMENT-SIGNOFF-v1.0.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/THREE-SURFACE-POC-GOVERNING-INTENT-AMENDMENT-SIGNOFF-v1.0.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/THREE-SURFACE-POC-IMPROVEMENT-CYCLES-DIRECTION.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/THREE-SURFACE-POC-MODE-DIRECTION.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/THREE-SURFACE-POC-READABILITY-SUCCESSOR-ACT.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/THREE-SURFACE-POC-REDESIGN-DIRECTION.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/THREE-SURFACE-POC-SPEC-AUTHORIZATION.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/THREE-SURFACE-POC-SPEC-SIGNOFF-ACT.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": ".syzygy/governance/decisions/THREE-SURFACE-POC-VOCABULARY-EPISTEMIC-AMENDMENT-SIGNOFF-v1.0.md",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": "packages/polaris-dossier/src/gate-sources.ts",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": "packages/polaris-generation-consent/src/package-reader.ts",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/owner-act-record.test.ts",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": "scripts/polaris_generator_approval.py",
+      "kind": "present",
+      "value": "{owner}"
+    },
+    {
+      "path": "scripts/readability_successor.py",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": "scripts/record_contract_readability_restyle.py",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": "scripts/record_dossier_agent_provider_v2_act.py",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": "scripts/record_dossier_local_agent_acts.py",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": "scripts/record_messages_api_route_registry_act.py",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": "scripts/record_narrative_profile_adoption.py",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": "scripts/record_polaris_understanding_adoption.py",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": "scripts/record_public_admission_registry_entries_acts.py",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": "scripts/record_public_egress_v2_act.py",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": "scripts/record_public_repo_admission_acts.py",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": "scripts/record_public_source_screening_scope_act.py",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": "scripts/record_public_source_screening_scope_v2_act.py",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": "scripts/record_public_source_screening_scope_v3_act.py",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": "scripts/record_public_source_screening_scope_v4_act.py",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": "scripts/record_pwb_behavior_amendment_acts.py",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": "scripts/record_pwb_behavior_contract_repin_acts.py",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": "scripts/record_pwb_effect_acts.py",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": "scripts/record_pwb_effect_amendment_acts.py",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": "scripts/record_pwb_registry_currency_amendment.py",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": "scripts/record_pwb_registry_machine_ceiling_act.py",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": "scripts/record_pwb_state1_amendment.py",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": "scripts/record_pwb_truth_amendment.py",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": "scripts/record_rfc5_project_documentation_act.py",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": "scripts/record_rfc7_scoped_values_successor.py",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": "scripts/record_spec_policy_readability_restyle.py",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": "scripts/record_three_surface_poc_readability_successor.py",
+      "kind": "present",
+      "value": "Tzeusy"
+    },
+    {
+      "path": "scripts/record_versioned_signoff.py",
+      "kind": "present",
+      "value": "Tzeusy"
+    }
+  ],
+  "body": {
+    "evaluationId": "evaluation:reviewer-live",
+    "evaluationInstant": "2026-10-21T18:00:00Z",
+    "admits": true,
+    "authorizationMode": "owner-trusted-bootstrap",
+    "consent": {
+      "kind": "valid",
+      "provenance": "state-1",
+      "actIdentity": "PWB-BUTLERS-OBSERVATION-CONSENT-2026-09-02",
+      "artifactDigest": "5d705d75f993059d5ae5561b1a6f99d143462d9d2e5bcea8ecc9b0c258777841",
+      "actInstant": "2026-09-02"
+    },
+    "policy": {
+      "kind": "valid",
+      "provenance": "state-1",
+      "actIdentity": "PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V4-APPROVAL-2026-10-20",
+      "artifactDigest": "319e404ee413220550d65644f6c93db096ed1cda431760baec70a1e190adb0bd",
+      "actInstant": "2026-10-20"
+    },
+    "registry": {
+      "kind": "valid",
+      "provenance": "state-1",
+      "actIdentity": "PWB-OBSERVER-REGISTRY-ENTRY-MACHINE-CEILING-2026-10-20",
+      "artifactDigest": "f2b3573cfe35169f449a9eed36b4c3330ef037d6668bab0548dd5d5939293556",
+      "actInstant": "2026-10-20"
+    }
+  },
+  "judgment": {
+    "evaluationId": "evaluation:reviewer-live-judgment",
+    "evaluationInstant": "2026-10-21T18:00:00Z",
+    "outcome": {
+      "kind": "absent",
+      "what": "no-run-record",
+      "detail": "walkthrough execution record missing",
+      "criterion": "unknown-never-met"
+    }
+  },
+  "mutated": [
+    {
+      "kind": "consent",
+      "prose": "none",
+      "owner": "<live>",
+      "state": "valid",
+      "caseId": null,
+      "admits": true
+    },
+    {
+      "kind": "consent",
+      "prose": "none",
+      "owner": "Tzeusy",
+      "state": "valid",
+      "caseId": null,
+      "admits": true
+    },
+    {
+      "kind": "consent",
+      "prose": "none",
+      "owner": "codex",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "none",
+      "owner": "gpt-5",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "none",
+      "owner": "GitHub Copilot",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "none",
+      "owner": "machine",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "none",
+      "owner": "Anthropic Claude",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "none",
+      "owner": "an llm",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "none",
+      "owner": "daemon",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "none",
+      "owner": "automation: nightly",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "none",
+      "owner": "syzygy",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "none",
+      "owner": "ci/release",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "none",
+      "owner": "renovate[bot]",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "none",
+      "owner": "deploy-bot",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "none",
+      "owner": "review-agent",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "none",
+      "owner": "agent: Claude Code",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "none",
+      "owner": "Somebody Else",
+      "state": "invalid",
+      "caseId": "consent:owner-another-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "none",
+      "owner": "Claudette",
+      "state": "invalid",
+      "caseId": "consent:owner-another-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "none",
+      "owner": "Tzeusy-bot",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "none",
+      "owner": "Tzeusy (via a Claude Code session)",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "title-claims-agent",
+      "owner": "<live>",
+      "state": "valid",
+      "caseId": null,
+      "admits": true
+    },
+    {
+      "kind": "consent",
+      "prose": "title-claims-agent",
+      "owner": "Tzeusy",
+      "state": "valid",
+      "caseId": null,
+      "admits": true
+    },
+    {
+      "kind": "consent",
+      "prose": "title-claims-agent",
+      "owner": "codex",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "title-claims-agent",
+      "owner": "gpt-5",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "title-claims-agent",
+      "owner": "GitHub Copilot",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "title-claims-agent",
+      "owner": "machine",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "title-claims-agent",
+      "owner": "Anthropic Claude",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "title-claims-agent",
+      "owner": "an llm",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "title-claims-agent",
+      "owner": "daemon",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "title-claims-agent",
+      "owner": "automation: nightly",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "title-claims-agent",
+      "owner": "syzygy",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "title-claims-agent",
+      "owner": "ci/release",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "title-claims-agent",
+      "owner": "renovate[bot]",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "title-claims-agent",
+      "owner": "deploy-bot",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "title-claims-agent",
+      "owner": "review-agent",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "title-claims-agent",
+      "owner": "agent: Claude Code",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "title-claims-agent",
+      "owner": "Somebody Else",
+      "state": "invalid",
+      "caseId": "consent:owner-another-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "title-claims-agent",
+      "owner": "Claudette",
+      "state": "invalid",
+      "caseId": "consent:owner-another-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "title-claims-agent",
+      "owner": "Tzeusy-bot",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "title-claims-agent",
+      "owner": "Tzeusy (via a Claude Code session)",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "<live>",
+      "state": "valid",
+      "caseId": null,
+      "admits": true
+    },
+    {
+      "kind": "consent",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "Tzeusy",
+      "state": "valid",
+      "caseId": null,
+      "admits": true
+    },
+    {
+      "kind": "consent",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "codex",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "gpt-5",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "GitHub Copilot",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "machine",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "Anthropic Claude",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "an llm",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "daemon",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "automation: nightly",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "syzygy",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "ci/release",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "renovate[bot]",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "deploy-bot",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "review-agent",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "agent: Claude Code",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "Somebody Else",
+      "state": "invalid",
+      "caseId": "consent:owner-another-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "Claudette",
+      "state": "invalid",
+      "caseId": "consent:owner-another-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "Tzeusy-bot",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "Tzeusy (via a Claude Code session)",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "effect-reflowed",
+      "owner": "<live>",
+      "state": "valid",
+      "caseId": null,
+      "admits": true
+    },
+    {
+      "kind": "consent",
+      "prose": "effect-reflowed",
+      "owner": "Tzeusy",
+      "state": "valid",
+      "caseId": null,
+      "admits": true
+    },
+    {
+      "kind": "consent",
+      "prose": "effect-reflowed",
+      "owner": "codex",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "effect-reflowed",
+      "owner": "gpt-5",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "effect-reflowed",
+      "owner": "GitHub Copilot",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "effect-reflowed",
+      "owner": "machine",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "effect-reflowed",
+      "owner": "Anthropic Claude",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "effect-reflowed",
+      "owner": "an llm",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "effect-reflowed",
+      "owner": "daemon",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "effect-reflowed",
+      "owner": "automation: nightly",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "effect-reflowed",
+      "owner": "syzygy",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "effect-reflowed",
+      "owner": "ci/release",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "effect-reflowed",
+      "owner": "renovate[bot]",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "effect-reflowed",
+      "owner": "deploy-bot",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "effect-reflowed",
+      "owner": "review-agent",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "effect-reflowed",
+      "owner": "agent: Claude Code",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "effect-reflowed",
+      "owner": "Somebody Else",
+      "state": "invalid",
+      "caseId": "consent:owner-another-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "effect-reflowed",
+      "owner": "Claudette",
+      "state": "invalid",
+      "caseId": "consent:owner-another-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "effect-reflowed",
+      "owner": "Tzeusy-bot",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "effect-reflowed",
+      "owner": "Tzeusy (via a Claude Code session)",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "<live>",
+      "state": "valid",
+      "caseId": null,
+      "admits": true
+    },
+    {
+      "kind": "consent",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "Tzeusy",
+      "state": "valid",
+      "caseId": null,
+      "admits": true
+    },
+    {
+      "kind": "consent",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "codex",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "gpt-5",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "GitHub Copilot",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "machine",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "Anthropic Claude",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "an llm",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "daemon",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "automation: nightly",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "syzygy",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "ci/release",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "renovate[bot]",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "deploy-bot",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "review-agent",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "agent: Claude Code",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "Somebody Else",
+      "state": "invalid",
+      "caseId": "consent:owner-another-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "Claudette",
+      "state": "invalid",
+      "caseId": "consent:owner-another-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "Tzeusy-bot",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "Tzeusy (via a Claude Code session)",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "owner-trailing-prose",
+      "owner": "<live>",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "owner-trailing-prose",
+      "owner": "Tzeusy",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "owner-trailing-prose",
+      "owner": "codex",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "owner-trailing-prose",
+      "owner": "gpt-5",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "owner-trailing-prose",
+      "owner": "GitHub Copilot",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "owner-trailing-prose",
+      "owner": "machine",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "owner-trailing-prose",
+      "owner": "Anthropic Claude",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "owner-trailing-prose",
+      "owner": "an llm",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "owner-trailing-prose",
+      "owner": "daemon",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "owner-trailing-prose",
+      "owner": "automation: nightly",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "owner-trailing-prose",
+      "owner": "syzygy",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "owner-trailing-prose",
+      "owner": "ci/release",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "owner-trailing-prose",
+      "owner": "renovate[bot]",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "owner-trailing-prose",
+      "owner": "deploy-bot",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "owner-trailing-prose",
+      "owner": "review-agent",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "owner-trailing-prose",
+      "owner": "agent: Claude Code",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "owner-trailing-prose",
+      "owner": "Somebody Else",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "owner-trailing-prose",
+      "owner": "Claudette",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "owner-trailing-prose",
+      "owner": "Tzeusy-bot",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "owner-trailing-prose",
+      "owner": "Tzeusy (via a Claude Code session)",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "owner-continued",
+      "owner": "<live>",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "owner-continued",
+      "owner": "Tzeusy",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "owner-continued",
+      "owner": "codex",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "owner-continued",
+      "owner": "gpt-5",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "owner-continued",
+      "owner": "GitHub Copilot",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "owner-continued",
+      "owner": "machine",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "owner-continued",
+      "owner": "Anthropic Claude",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "owner-continued",
+      "owner": "an llm",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "owner-continued",
+      "owner": "daemon",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "owner-continued",
+      "owner": "automation: nightly",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "owner-continued",
+      "owner": "syzygy",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "owner-continued",
+      "owner": "ci/release",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "owner-continued",
+      "owner": "renovate[bot]",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "owner-continued",
+      "owner": "deploy-bot",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "owner-continued",
+      "owner": "review-agent",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "owner-continued",
+      "owner": "agent: Claude Code",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "owner-continued",
+      "owner": "Somebody Else",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "owner-continued",
+      "owner": "Claudette",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "owner-continued",
+      "owner": "Tzeusy-bot",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "owner-continued",
+      "owner": "Tzeusy (via a Claude Code session)",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "body-owner-after-heading",
+      "owner": "<live>",
+      "state": "valid",
+      "caseId": null,
+      "admits": true
+    },
+    {
+      "kind": "consent",
+      "prose": "body-owner-after-heading",
+      "owner": "Tzeusy",
+      "state": "valid",
+      "caseId": null,
+      "admits": true
+    },
+    {
+      "kind": "consent",
+      "prose": "body-owner-after-heading",
+      "owner": "codex",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "body-owner-after-heading",
+      "owner": "gpt-5",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "body-owner-after-heading",
+      "owner": "GitHub Copilot",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "body-owner-after-heading",
+      "owner": "machine",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "body-owner-after-heading",
+      "owner": "Anthropic Claude",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "body-owner-after-heading",
+      "owner": "an llm",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "body-owner-after-heading",
+      "owner": "daemon",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "body-owner-after-heading",
+      "owner": "automation: nightly",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "body-owner-after-heading",
+      "owner": "syzygy",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "body-owner-after-heading",
+      "owner": "ci/release",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "body-owner-after-heading",
+      "owner": "renovate[bot]",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "body-owner-after-heading",
+      "owner": "deploy-bot",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "body-owner-after-heading",
+      "owner": "review-agent",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "body-owner-after-heading",
+      "owner": "agent: Claude Code",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "body-owner-after-heading",
+      "owner": "Somebody Else",
+      "state": "invalid",
+      "caseId": "consent:owner-another-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "body-owner-after-heading",
+      "owner": "Claudette",
+      "state": "invalid",
+      "caseId": "consent:owner-another-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "body-owner-after-heading",
+      "owner": "Tzeusy-bot",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "consent",
+      "prose": "body-owner-after-heading",
+      "owner": "Tzeusy (via a Claude Code session)",
+      "state": "invalid",
+      "caseId": "consent:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "none",
+      "owner": "<live>",
+      "state": "valid",
+      "caseId": null,
+      "admits": true
+    },
+    {
+      "kind": "policy",
+      "prose": "none",
+      "owner": "Tzeusy",
+      "state": "valid",
+      "caseId": null,
+      "admits": true
+    },
+    {
+      "kind": "policy",
+      "prose": "none",
+      "owner": "codex",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "none",
+      "owner": "gpt-5",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "none",
+      "owner": "GitHub Copilot",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "none",
+      "owner": "machine",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "none",
+      "owner": "Anthropic Claude",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "none",
+      "owner": "an llm",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "none",
+      "owner": "daemon",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "none",
+      "owner": "automation: nightly",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "none",
+      "owner": "syzygy",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "none",
+      "owner": "ci/release",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "none",
+      "owner": "renovate[bot]",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "none",
+      "owner": "deploy-bot",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "none",
+      "owner": "review-agent",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "none",
+      "owner": "agent: Claude Code",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "none",
+      "owner": "Somebody Else",
+      "state": "invalid",
+      "caseId": "policy:owner-another-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "none",
+      "owner": "Claudette",
+      "state": "invalid",
+      "caseId": "policy:owner-another-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "none",
+      "owner": "Tzeusy-bot",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "none",
+      "owner": "Tzeusy (via a Claude Code session)",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "title-claims-agent",
+      "owner": "<live>",
+      "state": "valid",
+      "caseId": null,
+      "admits": true
+    },
+    {
+      "kind": "policy",
+      "prose": "title-claims-agent",
+      "owner": "Tzeusy",
+      "state": "valid",
+      "caseId": null,
+      "admits": true
+    },
+    {
+      "kind": "policy",
+      "prose": "title-claims-agent",
+      "owner": "codex",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "title-claims-agent",
+      "owner": "gpt-5",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "title-claims-agent",
+      "owner": "GitHub Copilot",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "title-claims-agent",
+      "owner": "machine",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "title-claims-agent",
+      "owner": "Anthropic Claude",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "title-claims-agent",
+      "owner": "an llm",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "title-claims-agent",
+      "owner": "daemon",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "title-claims-agent",
+      "owner": "automation: nightly",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "title-claims-agent",
+      "owner": "syzygy",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "title-claims-agent",
+      "owner": "ci/release",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "title-claims-agent",
+      "owner": "renovate[bot]",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "title-claims-agent",
+      "owner": "deploy-bot",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "title-claims-agent",
+      "owner": "review-agent",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "title-claims-agent",
+      "owner": "agent: Claude Code",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "title-claims-agent",
+      "owner": "Somebody Else",
+      "state": "invalid",
+      "caseId": "policy:owner-another-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "title-claims-agent",
+      "owner": "Claudette",
+      "state": "invalid",
+      "caseId": "policy:owner-another-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "title-claims-agent",
+      "owner": "Tzeusy-bot",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "title-claims-agent",
+      "owner": "Tzeusy (via a Claude Code session)",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "<live>",
+      "state": "valid",
+      "caseId": null,
+      "admits": true
+    },
+    {
+      "kind": "policy",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "Tzeusy",
+      "state": "valid",
+      "caseId": null,
+      "admits": true
+    },
+    {
+      "kind": "policy",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "codex",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "gpt-5",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "GitHub Copilot",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "machine",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "Anthropic Claude",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "an llm",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "daemon",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "automation: nightly",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "syzygy",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "ci/release",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "renovate[bot]",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "deploy-bot",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "review-agent",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "agent: Claude Code",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "Somebody Else",
+      "state": "invalid",
+      "caseId": "policy:owner-another-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "Claudette",
+      "state": "invalid",
+      "caseId": "policy:owner-another-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "Tzeusy-bot",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "Tzeusy (via a Claude Code session)",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "effect-reflowed",
+      "owner": "<live>",
+      "state": "valid",
+      "caseId": null,
+      "admits": true
+    },
+    {
+      "kind": "policy",
+      "prose": "effect-reflowed",
+      "owner": "Tzeusy",
+      "state": "valid",
+      "caseId": null,
+      "admits": true
+    },
+    {
+      "kind": "policy",
+      "prose": "effect-reflowed",
+      "owner": "codex",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "effect-reflowed",
+      "owner": "gpt-5",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "effect-reflowed",
+      "owner": "GitHub Copilot",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "effect-reflowed",
+      "owner": "machine",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "effect-reflowed",
+      "owner": "Anthropic Claude",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "effect-reflowed",
+      "owner": "an llm",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "effect-reflowed",
+      "owner": "daemon",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "effect-reflowed",
+      "owner": "automation: nightly",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "effect-reflowed",
+      "owner": "syzygy",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "effect-reflowed",
+      "owner": "ci/release",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "effect-reflowed",
+      "owner": "renovate[bot]",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "effect-reflowed",
+      "owner": "deploy-bot",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "effect-reflowed",
+      "owner": "review-agent",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "effect-reflowed",
+      "owner": "agent: Claude Code",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "effect-reflowed",
+      "owner": "Somebody Else",
+      "state": "invalid",
+      "caseId": "policy:owner-another-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "effect-reflowed",
+      "owner": "Claudette",
+      "state": "invalid",
+      "caseId": "policy:owner-another-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "effect-reflowed",
+      "owner": "Tzeusy-bot",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "effect-reflowed",
+      "owner": "Tzeusy (via a Claude Code session)",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "<live>",
+      "state": "valid",
+      "caseId": null,
+      "admits": true
+    },
+    {
+      "kind": "policy",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "Tzeusy",
+      "state": "valid",
+      "caseId": null,
+      "admits": true
+    },
+    {
+      "kind": "policy",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "codex",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "gpt-5",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "GitHub Copilot",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "machine",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "Anthropic Claude",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "an llm",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "daemon",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "automation: nightly",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "syzygy",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "ci/release",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "renovate[bot]",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "deploy-bot",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "review-agent",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "agent: Claude Code",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "Somebody Else",
+      "state": "invalid",
+      "caseId": "policy:owner-another-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "Claudette",
+      "state": "invalid",
+      "caseId": "policy:owner-another-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "Tzeusy-bot",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "Tzeusy (via a Claude Code session)",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "owner-trailing-prose",
+      "owner": "<live>",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "owner-trailing-prose",
+      "owner": "Tzeusy",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "owner-trailing-prose",
+      "owner": "codex",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "owner-trailing-prose",
+      "owner": "gpt-5",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "owner-trailing-prose",
+      "owner": "GitHub Copilot",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "owner-trailing-prose",
+      "owner": "machine",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "owner-trailing-prose",
+      "owner": "Anthropic Claude",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "owner-trailing-prose",
+      "owner": "an llm",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "owner-trailing-prose",
+      "owner": "daemon",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "owner-trailing-prose",
+      "owner": "automation: nightly",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "owner-trailing-prose",
+      "owner": "syzygy",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "owner-trailing-prose",
+      "owner": "ci/release",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "owner-trailing-prose",
+      "owner": "renovate[bot]",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "owner-trailing-prose",
+      "owner": "deploy-bot",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "owner-trailing-prose",
+      "owner": "review-agent",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "owner-trailing-prose",
+      "owner": "agent: Claude Code",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "owner-trailing-prose",
+      "owner": "Somebody Else",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "owner-trailing-prose",
+      "owner": "Claudette",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "owner-trailing-prose",
+      "owner": "Tzeusy-bot",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "owner-trailing-prose",
+      "owner": "Tzeusy (via a Claude Code session)",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "owner-continued",
+      "owner": "<live>",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "owner-continued",
+      "owner": "Tzeusy",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "owner-continued",
+      "owner": "codex",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "owner-continued",
+      "owner": "gpt-5",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "owner-continued",
+      "owner": "GitHub Copilot",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "owner-continued",
+      "owner": "machine",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "owner-continued",
+      "owner": "Anthropic Claude",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "owner-continued",
+      "owner": "an llm",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "owner-continued",
+      "owner": "daemon",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "owner-continued",
+      "owner": "automation: nightly",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "owner-continued",
+      "owner": "syzygy",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "owner-continued",
+      "owner": "ci/release",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "owner-continued",
+      "owner": "renovate[bot]",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "owner-continued",
+      "owner": "deploy-bot",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "owner-continued",
+      "owner": "review-agent",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "owner-continued",
+      "owner": "agent: Claude Code",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "owner-continued",
+      "owner": "Somebody Else",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "owner-continued",
+      "owner": "Claudette",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "owner-continued",
+      "owner": "Tzeusy-bot",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "owner-continued",
+      "owner": "Tzeusy (via a Claude Code session)",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "body-owner-after-heading",
+      "owner": "<live>",
+      "state": "valid",
+      "caseId": null,
+      "admits": true
+    },
+    {
+      "kind": "policy",
+      "prose": "body-owner-after-heading",
+      "owner": "Tzeusy",
+      "state": "valid",
+      "caseId": null,
+      "admits": true
+    },
+    {
+      "kind": "policy",
+      "prose": "body-owner-after-heading",
+      "owner": "codex",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "body-owner-after-heading",
+      "owner": "gpt-5",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "body-owner-after-heading",
+      "owner": "GitHub Copilot",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "body-owner-after-heading",
+      "owner": "machine",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "body-owner-after-heading",
+      "owner": "Anthropic Claude",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "body-owner-after-heading",
+      "owner": "an llm",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "body-owner-after-heading",
+      "owner": "daemon",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "body-owner-after-heading",
+      "owner": "automation: nightly",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "body-owner-after-heading",
+      "owner": "syzygy",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "body-owner-after-heading",
+      "owner": "ci/release",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "body-owner-after-heading",
+      "owner": "renovate[bot]",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "body-owner-after-heading",
+      "owner": "deploy-bot",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "body-owner-after-heading",
+      "owner": "review-agent",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "body-owner-after-heading",
+      "owner": "agent: Claude Code",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "body-owner-after-heading",
+      "owner": "Somebody Else",
+      "state": "invalid",
+      "caseId": "policy:owner-another-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "body-owner-after-heading",
+      "owner": "Claudette",
+      "state": "invalid",
+      "caseId": "policy:owner-another-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "body-owner-after-heading",
+      "owner": "Tzeusy-bot",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "policy",
+      "prose": "body-owner-after-heading",
+      "owner": "Tzeusy (via a Claude Code session)",
+      "state": "invalid",
+      "caseId": "policy:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "none",
+      "owner": "<live>",
+      "state": "valid",
+      "caseId": null,
+      "admits": true
+    },
+    {
+      "kind": "registry",
+      "prose": "none",
+      "owner": "Tzeusy",
+      "state": "valid",
+      "caseId": null,
+      "admits": true
+    },
+    {
+      "kind": "registry",
+      "prose": "none",
+      "owner": "codex",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "none",
+      "owner": "gpt-5",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "none",
+      "owner": "GitHub Copilot",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "none",
+      "owner": "machine",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "none",
+      "owner": "Anthropic Claude",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "none",
+      "owner": "an llm",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "none",
+      "owner": "daemon",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "none",
+      "owner": "automation: nightly",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "none",
+      "owner": "syzygy",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "none",
+      "owner": "ci/release",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "none",
+      "owner": "renovate[bot]",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "none",
+      "owner": "deploy-bot",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "none",
+      "owner": "review-agent",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "none",
+      "owner": "agent: Claude Code",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "none",
+      "owner": "Somebody Else",
+      "state": "invalid",
+      "caseId": "registry:owner-another-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "none",
+      "owner": "Claudette",
+      "state": "invalid",
+      "caseId": "registry:owner-another-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "none",
+      "owner": "Tzeusy-bot",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "none",
+      "owner": "Tzeusy (via a Claude Code session)",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "title-claims-agent",
+      "owner": "<live>",
+      "state": "valid",
+      "caseId": null,
+      "admits": true
+    },
+    {
+      "kind": "registry",
+      "prose": "title-claims-agent",
+      "owner": "Tzeusy",
+      "state": "valid",
+      "caseId": null,
+      "admits": true
+    },
+    {
+      "kind": "registry",
+      "prose": "title-claims-agent",
+      "owner": "codex",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "title-claims-agent",
+      "owner": "gpt-5",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "title-claims-agent",
+      "owner": "GitHub Copilot",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "title-claims-agent",
+      "owner": "machine",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "title-claims-agent",
+      "owner": "Anthropic Claude",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "title-claims-agent",
+      "owner": "an llm",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "title-claims-agent",
+      "owner": "daemon",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "title-claims-agent",
+      "owner": "automation: nightly",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "title-claims-agent",
+      "owner": "syzygy",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "title-claims-agent",
+      "owner": "ci/release",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "title-claims-agent",
+      "owner": "renovate[bot]",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "title-claims-agent",
+      "owner": "deploy-bot",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "title-claims-agent",
+      "owner": "review-agent",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "title-claims-agent",
+      "owner": "agent: Claude Code",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "title-claims-agent",
+      "owner": "Somebody Else",
+      "state": "invalid",
+      "caseId": "registry:owner-another-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "title-claims-agent",
+      "owner": "Claudette",
+      "state": "invalid",
+      "caseId": "registry:owner-another-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "title-claims-agent",
+      "owner": "Tzeusy-bot",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "title-claims-agent",
+      "owner": "Tzeusy (via a Claude Code session)",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "<live>",
+      "state": "valid",
+      "caseId": null,
+      "admits": true
+    },
+    {
+      "kind": "registry",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "Tzeusy",
+      "state": "valid",
+      "caseId": null,
+      "admits": true
+    },
+    {
+      "kind": "registry",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "codex",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "gpt-5",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "GitHub Copilot",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "machine",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "Anthropic Claude",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "an llm",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "daemon",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "automation: nightly",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "syzygy",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "ci/release",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "renovate[bot]",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "deploy-bot",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "review-agent",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "agent: Claude Code",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "Somebody Else",
+      "state": "invalid",
+      "caseId": "registry:owner-another-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "Claudette",
+      "state": "invalid",
+      "caseId": "registry:owner-another-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "Tzeusy-bot",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "effect-appended-agent-sentence",
+      "owner": "Tzeusy (via a Claude Code session)",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "effect-reflowed",
+      "owner": "<live>",
+      "state": "valid",
+      "caseId": null,
+      "admits": true
+    },
+    {
+      "kind": "registry",
+      "prose": "effect-reflowed",
+      "owner": "Tzeusy",
+      "state": "valid",
+      "caseId": null,
+      "admits": true
+    },
+    {
+      "kind": "registry",
+      "prose": "effect-reflowed",
+      "owner": "codex",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "effect-reflowed",
+      "owner": "gpt-5",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "effect-reflowed",
+      "owner": "GitHub Copilot",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "effect-reflowed",
+      "owner": "machine",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "effect-reflowed",
+      "owner": "Anthropic Claude",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "effect-reflowed",
+      "owner": "an llm",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "effect-reflowed",
+      "owner": "daemon",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "effect-reflowed",
+      "owner": "automation: nightly",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "effect-reflowed",
+      "owner": "syzygy",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "effect-reflowed",
+      "owner": "ci/release",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "effect-reflowed",
+      "owner": "renovate[bot]",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "effect-reflowed",
+      "owner": "deploy-bot",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "effect-reflowed",
+      "owner": "review-agent",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "effect-reflowed",
+      "owner": "agent: Claude Code",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "effect-reflowed",
+      "owner": "Somebody Else",
+      "state": "invalid",
+      "caseId": "registry:owner-another-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "effect-reflowed",
+      "owner": "Claudette",
+      "state": "invalid",
+      "caseId": "registry:owner-another-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "effect-reflowed",
+      "owner": "Tzeusy-bot",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "effect-reflowed",
+      "owner": "Tzeusy (via a Claude Code session)",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "<live>",
+      "state": "valid",
+      "caseId": null,
+      "admits": true
+    },
+    {
+      "kind": "registry",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "Tzeusy",
+      "state": "valid",
+      "caseId": null,
+      "admits": true
+    },
+    {
+      "kind": "registry",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "codex",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "gpt-5",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "GitHub Copilot",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "machine",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "Anthropic Claude",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "an llm",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "daemon",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "automation: nightly",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "syzygy",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "ci/release",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "renovate[bot]",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "deploy-bot",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "review-agent",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "agent: Claude Code",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "Somebody Else",
+      "state": "invalid",
+      "caseId": "registry:owner-another-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "Claudette",
+      "state": "invalid",
+      "caseId": "registry:owner-another-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "Tzeusy-bot",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "extra-head-recorded-by-agent",
+      "owner": "Tzeusy (via a Claude Code session)",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "owner-trailing-prose",
+      "owner": "<live>",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "owner-trailing-prose",
+      "owner": "Tzeusy",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "owner-trailing-prose",
+      "owner": "codex",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "owner-trailing-prose",
+      "owner": "gpt-5",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "owner-trailing-prose",
+      "owner": "GitHub Copilot",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "owner-trailing-prose",
+      "owner": "machine",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "owner-trailing-prose",
+      "owner": "Anthropic Claude",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "owner-trailing-prose",
+      "owner": "an llm",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "owner-trailing-prose",
+      "owner": "daemon",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "owner-trailing-prose",
+      "owner": "automation: nightly",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "owner-trailing-prose",
+      "owner": "syzygy",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "owner-trailing-prose",
+      "owner": "ci/release",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "owner-trailing-prose",
+      "owner": "renovate[bot]",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "owner-trailing-prose",
+      "owner": "deploy-bot",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "owner-trailing-prose",
+      "owner": "review-agent",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "owner-trailing-prose",
+      "owner": "agent: Claude Code",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "owner-trailing-prose",
+      "owner": "Somebody Else",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "owner-trailing-prose",
+      "owner": "Claudette",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "owner-trailing-prose",
+      "owner": "Tzeusy-bot",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "owner-trailing-prose",
+      "owner": "Tzeusy (via a Claude Code session)",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "owner-continued",
+      "owner": "<live>",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "owner-continued",
+      "owner": "Tzeusy",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "owner-continued",
+      "owner": "codex",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "owner-continued",
+      "owner": "gpt-5",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "owner-continued",
+      "owner": "GitHub Copilot",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "owner-continued",
+      "owner": "machine",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "owner-continued",
+      "owner": "Anthropic Claude",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "owner-continued",
+      "owner": "an llm",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "owner-continued",
+      "owner": "daemon",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "owner-continued",
+      "owner": "automation: nightly",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "owner-continued",
+      "owner": "syzygy",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "owner-continued",
+      "owner": "ci/release",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "owner-continued",
+      "owner": "renovate[bot]",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "owner-continued",
+      "owner": "deploy-bot",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "owner-continued",
+      "owner": "review-agent",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "owner-continued",
+      "owner": "agent: Claude Code",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "owner-continued",
+      "owner": "Somebody Else",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "owner-continued",
+      "owner": "Claudette",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "owner-continued",
+      "owner": "Tzeusy-bot",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "owner-continued",
+      "owner": "Tzeusy (via a Claude Code session)",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "body-owner-after-heading",
+      "owner": "<live>",
+      "state": "valid",
+      "caseId": null,
+      "admits": true
+    },
+    {
+      "kind": "registry",
+      "prose": "body-owner-after-heading",
+      "owner": "Tzeusy",
+      "state": "valid",
+      "caseId": null,
+      "admits": true
+    },
+    {
+      "kind": "registry",
+      "prose": "body-owner-after-heading",
+      "owner": "codex",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "body-owner-after-heading",
+      "owner": "gpt-5",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "body-owner-after-heading",
+      "owner": "GitHub Copilot",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "body-owner-after-heading",
+      "owner": "machine",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "body-owner-after-heading",
+      "owner": "Anthropic Claude",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "body-owner-after-heading",
+      "owner": "an llm",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "body-owner-after-heading",
+      "owner": "daemon",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "body-owner-after-heading",
+      "owner": "automation: nightly",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "body-owner-after-heading",
+      "owner": "syzygy",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "body-owner-after-heading",
+      "owner": "ci/release",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "body-owner-after-heading",
+      "owner": "renovate[bot]",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "body-owner-after-heading",
+      "owner": "deploy-bot",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "body-owner-after-heading",
+      "owner": "review-agent",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "body-owner-after-heading",
+      "owner": "agent: Claude Code",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "body-owner-after-heading",
+      "owner": "Somebody Else",
+      "state": "invalid",
+      "caseId": "registry:owner-another-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "body-owner-after-heading",
+      "owner": "Claudette",
+      "state": "invalid",
+      "caseId": "registry:owner-another-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "body-owner-after-heading",
+      "owner": "Tzeusy-bot",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    },
+    {
+      "kind": "registry",
+      "prose": "body-owner-after-heading",
+      "owner": "Tzeusy (via a Claude Code session)",
+      "state": "invalid",
+      "caseId": "registry:owner-non-human",
+      "admits": false
+    }
+  ]
+}

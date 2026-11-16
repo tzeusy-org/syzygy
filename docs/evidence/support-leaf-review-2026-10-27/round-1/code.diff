@@ -1,0 +1,1829 @@
+diff --git a/AGENTS.md b/AGENTS.md
+index 10615a99..f7c4b7fc 100644
+--- a/AGENTS.md
++++ b/AGENTS.md
+@@ -181,6 +181,13 @@ sweep lessons added 2026-09-23; the raw-head digest lesson the same day.
+   the barrel; conformance fixtures build through
+   `packages/cap1-conformance/src/fixtures/` (inputs only, expected values
+   stay literals).
++- `packages/support/` (`@syzygy/support`): the one `sha256` and the one
++  `deepFreeze`, a leaf with no workspace dependency, imported by the PWB
++  core, the Polaris generation packages, the dossier and the POC app. The
++  cap1 packages never import it (`cap1-system` is an independent oracle).
++  After a merge that adds a workspace package, run `npm ci` in every checkout
++  that builds or serves from it: until the `node_modules/@syzygy/` link
++  exists, the package does not resolve.
+ - Three-Surface POC: `packages/three-surface-poc-core/` (one shared
+   `PocModel`) and `apps/three-surface-poc/` read the same instance — never
+   split surface truth stores. `build:poc` keeps `tsc -b --force`: ignored
+diff --git a/apps/three-surface-poc/package.json b/apps/three-surface-poc/package.json
+index 7b40e76d..7ffb57a8 100644
+--- a/apps/three-surface-poc/package.json
++++ b/apps/three-surface-poc/package.json
+@@ -13,6 +13,7 @@
+     "@syzygy/cap1-daemon": "0.0.0",
+     "@syzygy/three-surface-poc-core": "0.0.0",
+     "@syzygy/polaris-generation-consent": "0.0.0",
+-    "@syzygy/polaris-generation-core": "0.0.0"
++    "@syzygy/polaris-generation-core": "0.0.0",
++    "@syzygy/support": "0.0.0"
+   }
+ }
+diff --git a/apps/three-surface-poc/src/capability-detail.ts b/apps/three-surface-poc/src/capability-detail.ts
+index a879e1cb..c0a327d5 100644
+--- a/apps/three-surface-poc/src/capability-detail.ts
++++ b/apps/three-surface-poc/src/capability-detail.ts
+@@ -19,7 +19,6 @@
+  * Nothing here stores requirement, scenario, doctrine or non-goal text: the
+  * verbatim reader is a render-time parameter and production passes none.
+  */
+-import { createHash } from 'node:crypto';
+ 
+ import {
+   UNKNOWN_REASON_ROUTES,
+@@ -30,6 +29,7 @@ import {
+   type ProposedWork,
+   type ProposedWorkCurrentAuthority,
+ } from '@syzygy/three-surface-poc-core';
++import { sha256 } from '@syzygy/support';
+ 
+ const DEEP_DIVE_BANDS = ['argument', 'contract', 'reality'] as const;
+ export type DeepDiveBand = (typeof DEEP_DIVE_BANDS)[number];
+@@ -216,7 +216,7 @@ function notRendered(reason: UnknownReason, detail: string): VerbatimResolution
+ 
+ function identityMatches(identity: string, bytes: Uint8Array): boolean | undefined {
+   if (identity.startsWith('sha256:')) {
+-    return createHash('sha256').update(bytes).digest('hex') === identity.slice('sha256:'.length);
++    return sha256(bytes) === identity.slice('sha256:'.length);
+   }
+   const hash = identity.lastIndexOf('#');
+   if (hash === -1) return undefined;
+diff --git a/apps/three-surface-poc/src/fresh-checkout-demo-main.ts b/apps/three-surface-poc/src/fresh-checkout-demo-main.ts
+index f714c291..e5f7016e 100644
+--- a/apps/three-surface-poc/src/fresh-checkout-demo-main.ts
++++ b/apps/three-surface-poc/src/fresh-checkout-demo-main.ts
+@@ -29,12 +29,12 @@
+ // The daemon (`main.ts`) never imports this file.
+ import { execFileSync, spawn } from 'node:child_process';
+ import * as http from 'node:http';
+-import { createHash } from 'node:crypto';
+ import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+ import { homedir, tmpdir } from 'node:os';
+ import { join, resolve } from 'node:path';
+ 
+ import type { PocModel, ProjectShape } from '@syzygy/three-surface-poc-core';
++import { sha256 } from '@syzygy/support';
+ 
+ import { TAILNET_HOST } from './browser-origin.js';
+ import { FRESH_CHECKOUT_INVARIANTS, freshCheckoutVerdict, parseDaemonStderr, type ExpectedDaemonDiagnostic, type FreshCheckoutParity } from './fresh-checkout-verdict.js';
+@@ -49,10 +49,6 @@ function argument(name: string): string | undefined {
+   return index === -1 ? undefined : process.argv[index + 1];
+ }
+ 
+-function sha256(bytes: Uint8Array | string): string {
+-  return createHash('sha256').update(bytes).digest('hex');
+-}
+-
+ function git(cwd: string, args: readonly string[]): string {
+   return execFileSync('git', args, { cwd, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
+ }
+diff --git a/apps/three-surface-poc/src/git-observation.ts b/apps/three-surface-poc/src/git-observation.ts
+index 6173ae64..4ea9b477 100644
+--- a/apps/three-surface-poc/src/git-observation.ts
++++ b/apps/three-surface-poc/src/git-observation.ts
+@@ -1,7 +1,7 @@
+-import { createHash } from 'node:crypto';
+ import { execFileSync } from 'node:child_process';
+ import { realpathSync } from 'node:fs';
+ import { join, resolve } from 'node:path';
++import { sha256 } from '@syzygy/support';
+ 
+ // Test seam: exported for the tests; production code reaches it only inside this file.
+ export const PWB_APPROVED_REPOSITORY_LOCATOR = '/home/tze/GitHub/butlers';
+@@ -80,7 +80,7 @@ export function observeGitRepository(root: string): GitObservation {
+   return {
+     revision,
+     committerInstant,
+-    worktreeMetadataDigest: `sha256:${createHash('sha256').update(worktreeRecord).digest('hex')}`,
++    worktreeMetadataDigest: `sha256:${sha256(worktreeRecord)}`,
+     clean: worktreeRecord.length === 0,
+     changedPaths: [...new Set(changedPaths)].sort(),
+   };
+diff --git a/apps/three-surface-poc/src/poc-main.ts b/apps/three-surface-poc/src/poc-main.ts
+index 1c0c9cd1..c181bfe4 100644
+--- a/apps/three-surface-poc/src/poc-main.ts
++++ b/apps/three-surface-poc/src/poc-main.ts
+@@ -1,4 +1,3 @@
+-import { createHash } from 'node:crypto';
+ import { realpathSync } from 'node:fs';
+ import { tmpdir } from 'node:os';
+ import { join, resolve } from 'node:path';
+@@ -9,6 +8,7 @@ import {
+   PocObservationError,
+   type PocModel,
+ } from '@syzygy/three-surface-poc-core';
++import { sha256 } from '@syzygy/support';
+ 
+ import { parsePocCli, type PocCliConfig } from './cli.js';
+ import {
+@@ -160,7 +160,7 @@ async function serveBoundRepository(repoRoot: string, config: PocCliConfig, io:
+   const stateDir = resolve(config.stateDir ?? join(
+     tmpdir(),
+     'syzygy-three-surface-poc',
+-    createHash('sha256').update(repoRoot).digest('hex').slice(0, 16),
++    sha256(repoRoot).slice(0, 16),
+   ));
+   const buildModel = (currentCapture: PocRuntimeCapture): PocModel => deps.buildProductionPocModel({
+     capture: currentCapture,
+diff --git a/apps/three-surface-poc/src/polaris-accessible-names-main.ts b/apps/three-surface-poc/src/polaris-accessible-names-main.ts
+index 744c8d9b..bb3a7b2d 100644
+--- a/apps/three-surface-poc/src/polaris-accessible-names-main.ts
++++ b/apps/three-surface-poc/src/polaris-accessible-names-main.ts
+@@ -16,9 +16,9 @@
+ // It reads no repository itself; the daemon (`main.ts`) never imports it.
+ // Exits 0 only when every listed page was served and has zero violations.
+ import { execFileSync } from 'node:child_process';
+-import { createHash } from 'node:crypto';
+ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+ import { dirname, join } from 'node:path';
++import { sha256 } from '@syzygy/support';
+ 
+ import { findBrowserExecutable, launchBrowser } from './cdp-browser.js';
+ import { sweepPolarisNamesAndHeadings, type MachineAnswerSources, type NameHeadingViolation, type WholeSurfaceReport } from './polaris-accessible-names.js';
+@@ -33,10 +33,6 @@ function argument(name: string): string | undefined {
+   return index === -1 ? undefined : process.argv[index + 1];
+ }
+ 
+-function sha256(text: string): string {
+-  return createHash('sha256').update(text).digest('hex');
+-}
+-
+ function byKind(violations: readonly NameHeadingViolation[]): Record<string, number> {
+   const counts: Record<string, number> = {};
+   for (const violation of violations) counts[violation.kind] = (counts[violation.kind] ?? 0) + 1;
+diff --git a/apps/three-surface-poc/src/polaris-generation/dossier-site.ts b/apps/three-surface-poc/src/polaris-generation/dossier-site.ts
+index f063fdb2..3664b967 100644
+--- a/apps/three-surface-poc/src/polaris-generation/dossier-site.ts
++++ b/apps/three-surface-poc/src/polaris-generation/dossier-site.ts
+@@ -1,5 +1,3 @@
+-import { createHash } from 'node:crypto';
+-
+ import { DESIGN_TOKENS_CSS } from '../design-tokens.js';
+ 
+ import {
+@@ -8,6 +6,7 @@ import {
+   type DossierDraft, type DossierManifest, type DraftBlock, type DraftDiagram, type DraftParagraph, type EpistemicMarking, type GenerationSource, type LocalPageItem,
+   type LocalRenderInput, type LocalSegment, type OwnerTopic, type QuoteFinding,
+ } from '@syzygy/polaris-generation-core/live';
++import { sha256 } from '@syzygy/support';
+ import { renderDiagramSvg } from './diagram-layout.js';
+ import { LOCAL_CSS, LOCAL_MACHINE_VIEW, anchorAttributes, anchorDetails, disclosureMarkup, regionMarkup } from './dossier-render-local.js';
+ import { DRAFT_PREVIEW_CSP_META, DRAFT_PREVIEW_CSS, MARKING_LABEL, escapeHtml as escape } from './draft-preview.js';
+@@ -83,13 +82,11 @@ export class DossierRenderError extends Error {
+   }
+ }
+ 
+-const digest = (value: string): string => createHash('sha256').update(value).digest('hex');
+-
+ // Test seam: exported for the tests; production code reaches it only inside this file.
+ /** The page a quotable source's exact text lives on, from its anchor alone. */
+ export function sourceRoute(source: Pick<GenerationSource, 'spans' | 'redaction'>): string {
+   if (source.spans.length === 0 || (source.redaction === undefined && source.spans.length !== 1)) throw new DossierRenderError('ambiguous-source-anchor');
+-  return `sources/${digest(source.spans.map(span => span.anchorId).join('\n')).slice(0, 24)}.html`;
++  return `sources/${sha256(source.spans.map(span => span.anchorId).join('\n')).slice(0, 24)}.html`;
+ }
+ 
+ const deepDivePath = (id: string): string => `deep-dives/${id.replace(/[^A-Za-z0-9_.-]/gu, '_')}.html`;
+diff --git a/apps/three-surface-poc/src/polaris-generation/draft-preview.ts b/apps/three-surface-poc/src/polaris-generation/draft-preview.ts
+index 3d653ea2..e72aeba8 100644
+--- a/apps/three-surface-poc/src/polaris-generation/draft-preview.ts
++++ b/apps/three-surface-poc/src/polaris-generation/draft-preview.ts
+@@ -1,11 +1,10 @@
+-import { createHash } from 'node:crypto';
+-
+ import { DESIGN_TOKENS_CSS } from '../design-tokens.js';
+ 
+ import {
+   diagramToMermaid, validateGenerationSources,
+   type EpistemicMarking, type GenerationSource, type DossierDraft, type DraftBlock, type DraftDiagram, type DraftParagraph,
+ } from '@syzygy/polaris-generation-core/live';
++import { sha256 } from '@syzygy/support';
+ import { renderDiagramSvg } from './diagram-layout.js';
+ import { assertInertSvg } from './svg-inert.js';
+ 
+@@ -35,7 +34,7 @@ export function renderDraftPreview(draft: DossierDraft, sources: readonly Genera
+   validateGenerationSources(sources);
+   const sourceIndex = new Map(sources.map(source => [source.sourceId, source]));
+   if (sourceIndex.size !== sources.length) throw new Error('duplicate-source');
+-  const localAnchor = (anchorId: string): string => `source-${createHash('sha256').update(anchorId).digest('hex').slice(0, 24)}`;
++  const localAnchor = (anchorId: string): string => `source-${sha256(anchorId).slice(0, 24)}`;
+   const sourceAnchor = (source: GenerationSource): string => {
+     if (source.exclusion.excluded || source.classificationBasis !== 'body' || source.spans.length === 0) throw new Error('unquotable-source');
+     if (source.spans.length !== 1) throw new Error('ambiguous-source-anchor');
+@@ -117,7 +116,7 @@ export function renderDraftPreview(draft: DossierDraft, sources: readonly Genera
+   const unresolved = draft.unresolved.map(item => `<aside class="unresolved-asset" data-asset-disposition="unresolved"><strong>${escape(item.question)}</strong>: ${escape(item.reason)} <span class="asset-references">(${escape(item.references.join(', '))})</span></aside>`).join('');
+   const sourceList = sources.map(source => {
+     const quotable = !source.exclusion.excluded && source.classificationBasis === 'body' && source.spans.length === 1;
+-    const id = quotable ? localAnchor(source.spans[0]!.anchorId) : `source-unavailable-${createHash('sha256').update(source.sourceId).digest('hex').slice(0, 24)}`;
++    const id = quotable ? localAnchor(source.spans[0]!.anchorId) : `source-unavailable-${sha256(source.sourceId).slice(0, 24)}`;
+     const reason = source.exclusion.excluded ? source.exclusion.reason : source.classificationBasis === 'path-only' ? 'path-only; body not read' : 'body unavailable for citation';
+     return `<article class="source-item" id="${id}"><h3>${escape(source.path)}</h3>${quotable ? `<div class="exact-source">${escape(source.spans[0]!.text)}</div>` : `<p>Source counted; exact text unavailable: ${escape(reason)}.</p>`}</article>`;
+   }).join('');
+diff --git a/apps/three-surface-poc/src/polaris-generation/durable-lifecycle.ts b/apps/three-surface-poc/src/polaris-generation/durable-lifecycle.ts
+index 67f5abce..7f3ab95a 100644
+--- a/apps/three-surface-poc/src/polaris-generation/durable-lifecycle.ts
++++ b/apps/three-surface-poc/src/polaris-generation/durable-lifecycle.ts
+@@ -1,8 +1,9 @@
+-import { createHash, randomUUID } from 'node:crypto';
++import { randomUUID } from 'node:crypto';
+ import { closeSync, existsSync, fsyncSync, mkdirSync, openSync, readFileSync, readdirSync, renameSync, unlinkSync, writeSync } from 'node:fs';
+ import { join } from 'node:path';
+ 
+ import type { AdmissionDecision, AttemptInput, AttemptOutcome, DispatchPermit, PipelinePorts, ProviderReply } from '@syzygy/polaris-generation-core';
++import { sha256 } from '@syzygy/support';
+ 
+ // Test seam: exported type the tests name; production code uses it only inside this file.
+ /** A private durable lifecycle adapter. Files are outside a governed tree; this
+@@ -49,8 +50,7 @@ interface JournalEntry {
+   readonly late?: { readonly model: string | null; readonly usageUnits: number | null };
+ }
+ 
+-const digest = (value: string): string => createHash('sha256').update(value).digest('hex');
+-const attemptId = (input: AttemptInput): string => `attempt-${digest(`${input.requestId}\0${input.stage}\0${input.ordinal}`)}`;
++const attemptId = (input: AttemptInput): string => `attempt-${sha256(`${input.requestId}\0${input.stage}\0${input.ordinal}`)}`;
+ 
+ function writeExclusive(path: string, value: unknown): void {
+   const fd = openSync(path, 'wx', 0o600);
+@@ -85,7 +85,7 @@ export function createDurableLifecycle(options: DurableLifecycleOptions): Pipeli
+     verifySources: options.verifySources,
+     permissionIdentity: async () => options.permissionIdentity(),
+     admit: async (input): Promise<AdmissionDecision> => {
+-      const lock = join(options.stateDir, `request-${digest(input.requestId)}.lock`);
++      const lock = join(options.stateDir, `request-${sha256(input.requestId)}.lock`);
+       let fd: number;
+       try { fd = openSync(lock, 'wx', 0o600); }
+       catch { return { kind: 'refused', reason: 'uncertain' }; }
+diff --git a/apps/three-surface-poc/src/polaris-generation/generation-mutation-run-main.ts b/apps/three-surface-poc/src/polaris-generation/generation-mutation-run-main.ts
+index 89cc98ac..34c40757 100644
+--- a/apps/three-surface-poc/src/polaris-generation/generation-mutation-run-main.ts
++++ b/apps/three-surface-poc/src/polaris-generation/generation-mutation-run-main.ts
+@@ -18,11 +18,11 @@
+ //   npm run poc:generation-mutation-run -- --only canonical-json-cycle-check-disabled
+ 
+ import { execFileSync, spawnSync } from 'node:child_process';
+-import { createHash } from 'node:crypto';
+ import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+ import { tmpdir } from 'node:os';
+ import { join, resolve } from 'node:path';
+ import { fileURLToPath } from 'node:url';
++import { sha256 } from '@syzygy/support';
+ 
+ import { GENERATION_LITERAL_MUTATIONS, applyLiteralMutation, type LiteralMutation } from './generation-mutation.js';
+ 
+@@ -50,10 +50,6 @@ interface TestRun {
+   readonly failing: readonly string[];
+ }
+ 
+-function sha256(bytes: Uint8Array): string {
+-  return createHash('sha256').update(bytes).digest('hex');
+-}
+-
+ function runTests(scratch: string, label: string): TestRun {
+   const outputFile = join(scratch, `${label}.json`);
+   spawnSync('npx', ['vitest', 'run', ...TEST_FILES, '--reporter=json', `--outputFile=${outputFile}`], {
+diff --git a/apps/three-surface-poc/src/polaris-generation/public-source-screening.ts b/apps/three-surface-poc/src/polaris-generation/public-source-screening.ts
+index 63ce3724..bb26c061 100644
+--- a/apps/three-surface-poc/src/polaris-generation/public-source-screening.ts
++++ b/apps/three-surface-poc/src/polaris-generation/public-source-screening.ts
+@@ -49,7 +49,6 @@
+ // instruction-text rules. Admitting a body is not consent to send it:
+ // `contentClass` names its class for whoever gates egress by consent; this
+ // reader has no production caller that hands its corpus on.
+-import { createHash } from 'node:crypto';
+ import { readFile } from 'node:fs/promises';
+ import { join } from 'node:path';
+ import { fileURLToPath } from 'node:url';
+@@ -57,6 +56,7 @@ import { fileURLToPath } from 'node:url';
+ import { POLICY_ACT_FORMS, readClassActState, readPolicyActChain } from '@syzygy/polaris-generation-consent';
+ import { codeContentExempt, compileEveryOffsetMatcher, publicSourceContentClass, readCodeContentExemption, readProjectDocumentationRule, readSecretRedaction, redactBody, type PipelinePorts, type PublicSourceContentClass, type RedactionDetector } from '@syzygy/polaris-generation-core';
+ import { compileDetectors, deniedPathReason, detectSecrets, scanActiveContent, type DeniedPathRules, type SecretDetector } from '@syzygy/three-surface-poc-core';
++import { sha256 } from '@syzygy/support';
+ 
+ import { excludedSourceId, newGenerationRunKey } from './run-key.js';
+ import { CorpusRefusal, readRepoCorpus, type CorpusScreen, type ReaderConfig, type RepoCorpus, type RepoCorpusPorts } from './repo-corpus.js';
+@@ -143,7 +143,7 @@ export async function loadPublicSourceScreen(port: PublicSourcePolicyActPort = c
+     || !act.includes('\nProject identity: `project:syzygy`\n')) refuse('act record is not a public-source scope approve-policy act');
+   const digests = [...act.matchAll(EXACT_DIGEST)].map(match => match[1]!);
+   if (digests.length !== 1) refuse('act record does not name exactly one exact digest');
+-  const policySha256 = createHash('sha256').update(policy!).digest('hex');
++  const policySha256 = sha256(policy!);
+   if (policySha256 !== digests[0]) refuse('policy bytes do not hash to the act argument');
+   let doc: Record<string, unknown>;
+   try { doc = JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(policy!)) as Record<string, unknown>; } catch { return refuse('policy is not UTF-8 JSON'); }
+diff --git a/apps/three-surface-poc/src/polaris-generation/redis-shaped-measure-main.ts b/apps/three-surface-poc/src/polaris-generation/redis-shaped-measure-main.ts
+index 1abaad69..019c4b51 100644
+--- a/apps/three-surface-poc/src/polaris-generation/redis-shaped-measure-main.ts
++++ b/apps/three-surface-poc/src/polaris-generation/redis-shaped-measure-main.ts
+@@ -1,9 +1,9 @@
+ import { execFileSync } from 'node:child_process';
+-import { createHash } from 'node:crypto';
+ import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+ import { tmpdir } from 'node:os';
+ import { join, resolve } from 'node:path';
+ import { pathToFileURL } from 'node:url';
++import { sha256 } from '@syzygy/support';
+ 
+ import { measureRedisShapedDiscovery } from './redis-shaped-measure.js';
+ 
+@@ -12,7 +12,7 @@ const SUBJECTS = ['packages/polaris-generation-core/src/excerpt.ts', 'packages/p
+ function subjects(): { readonly commit: string; readonly sha256: Readonly<Record<string, string>> } {
+   const root = execFileSync('git', ['rev-parse', '--show-toplevel'], { encoding: 'utf8' }).trim();
+   const commit = execFileSync('git', ['-C', root, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
+-  return { commit, sha256: Object.fromEntries(SUBJECTS.map(path => [path, createHash('sha256').update(readFileSync(join(root, path))).digest('hex')])) };
++  return { commit, sha256: Object.fromEntries(SUBJECTS.map(path => [path, sha256(readFileSync(join(root, path)))])) };
+ }
+ 
+ /** `poc:redis-shaped-discovery [--out <file>]`: builds the synthetic fixture in a scratch directory, measures heuristic discovery, prints or writes the measurement. No real repository is read and no provider is called. */
+diff --git a/apps/three-surface-poc/src/polaris-generation/repo-corpus.ts b/apps/three-surface-poc/src/polaris-generation/repo-corpus.ts
+index 8d0abb29..20f42954 100644
+--- a/apps/three-surface-poc/src/polaris-generation/repo-corpus.ts
++++ b/apps/three-surface-poc/src/polaris-generation/repo-corpus.ts
+@@ -1,13 +1,11 @@
+-import { createHash } from 'node:crypto';
+-
+ import { DOSSIER_READER_QUESTIONS, DOSSIER_REQUESTED_ASSETS, SOURCE_TEXT_MAX_LENGTH, generationSourceIdentity, generationSourcesForBody, generationSourcesForRedactedBody, gitBlobObjectId, validateGenerationSources, verifiedRedactedBody, validateReaderQuestions, validateRequestedAssets,
+   type GenerationBudget, type GenerationExclusionReason, type ReaderQuestion, type GenerationSource, type GenerationStage, type PipelineRequest, type RequestedAsset } from '@syzygy/polaris-generation-core';
++import { sha256 } from '@syzygy/support';
+ 
+ import { isolatedGit } from './isolated-git.js';
+ import { excludedSourceId, keyedDigest, newGenerationRunKey } from './run-key.js';
+ import { readGitBlobsBatch, type ReadGitBlobs } from '../git-blob-batch.js';
+ 
+-const sha256 = (value: string): string => createHash('sha256').update(value).digest('hex');
+ const git = isolatedGit;
+ const BLOB_BATCH = 200;
+ const STAGES: readonly GenerationStage[] = ['inventory', 'plan', 'author', 'edit', 'fidelity', 'repair'];
+diff --git a/apps/three-surface-poc/src/polaris-generation/self-corpus.ts b/apps/three-surface-poc/src/polaris-generation/self-corpus.ts
+index 98214aea..fa545367 100644
+--- a/apps/three-surface-poc/src/polaris-generation/self-corpus.ts
++++ b/apps/three-surface-poc/src/polaris-generation/self-corpus.ts
+@@ -1,11 +1,11 @@
+ import { execFileSync } from 'node:child_process';
+-import { createHash } from 'node:crypto';
+ import { mkdtempSync, rmSync } from 'node:fs';
+ import { tmpdir } from 'node:os';
+ import { join } from 'node:path';
+ 
+ import { generationAnchorId, generationSourcesForBody, gitBlobObjectId, runGenerationPipeline, stageSchema, validateGenerationSources,
+   validateStage, reviewVerdict, type GenerationSource, type PipelineRequest, type PipelineResult, type ProviderDraft } from '@syzygy/polaris-generation-core';
++import { sha256 } from '@syzygy/support';
+ 
+ import { readGitBlobsBatch, type ReadGitBlobs } from '../git-blob-batch.js';
+ import { createDurableScriptedLifecycle } from './durable-lifecycle.js';
+@@ -13,7 +13,6 @@ import { renderDraftPreview } from './draft-preview.js';
+ 
+ const roots = ['.syzygy/governance/doctrine', '.syzygy/governance/decisions', '.syzygy/governance/contracts/rfcs'] as const;
+ const profile = 'syzygy-self-governance-markdown-v1';
+-const sha256 = (value: string): string => createHash('sha256').update(value).digest('hex');
+ const git = (repoRoot: string, args: readonly string[]): Buffer => execFileSync('git', ['-C', repoRoot, ...args], { maxBuffer: 12_000_000 });
+ 
+ function inProfile(path: string): boolean {
+diff --git a/apps/three-surface-poc/src/polaris-keyboard-sweep-main.ts b/apps/three-surface-poc/src/polaris-keyboard-sweep-main.ts
+index fd6c5c4b..1638c919 100644
+--- a/apps/three-surface-poc/src/polaris-keyboard-sweep-main.ts
++++ b/apps/three-surface-poc/src/polaris-keyboard-sweep-main.ts
+@@ -18,12 +18,12 @@
+ // It reads no Butlers repository itself; the daemon (`main.ts`) never
+ // imports it. Exits 0 only when every swept page has zero violations.
+ import { execFileSync } from 'node:child_process';
+-import { createHash } from 'node:crypto';
+ import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+ import * as http from 'node:http';
+ import { tmpdir } from 'node:os';
+ import { join, resolve } from 'node:path';
+ import { pathToFileURL } from 'node:url';
++import { sha256 } from '@syzygy/support';
+ 
+ import { TAILNET_HOST } from './browser-origin.js';
+ import { findBrowserExecutable, launchBrowser } from './cdp-browser.js';
+@@ -93,7 +93,7 @@ async function main(): Promise<number> {
+         const page = await browser.newPage();
+         try {
+           const report = await checkPolarisAccessibility(page, pathToFileURL(file).href, target.mount);
+-          sweeps.push({ mount: target.mount, measuredOn: target.measuredOn, bytes: target.body.byteLength, sha256: createHash('sha256').update(target.body).digest('hex'), report });
++          sweeps.push({ mount: target.mount, measuredOn: target.measuredOn, bytes: target.body.byteLength, sha256: sha256(target.body), report });
+           process.stdout.write(`${target.mount}: focusables ${report.focusTrace.reached}/${report.focusTrace.population}, activations ${report.activations.length}, violations ${report.violations.length} ${JSON.stringify(violationsByKind(report))}\n`);
+         } finally {
+           await page.close();
+diff --git a/apps/three-surface-poc/src/polaris-narrative.ts b/apps/three-surface-poc/src/polaris-narrative.ts
+index b6ef05d8..03ce4245 100644
+--- a/apps/three-surface-poc/src/polaris-narrative.ts
++++ b/apps/three-surface-poc/src/polaris-narrative.ts
+@@ -15,6 +15,7 @@ import type {
+   ProjectShapeSupport,
+   ProposedWork,
+ } from '@syzygy/three-surface-poc-core';
++import { deepFreeze } from '@syzygy/support';
+ 
+ import type { DeepDiveMachineForm } from './capability-detail.js';
+ 
+@@ -129,14 +130,6 @@ export function capturedStateOf(claim: ProjectShapeClaim): CapturedTargetState {
+   return { label: epistemic.label, tier: epistemic.tier ?? 'unstated', reason };
+ }
+ 
+-function deepFreeze<T>(value: T): T {
+-  if (value !== null && typeof value === 'object') {
+-    for (const inner of Object.values(value as Record<string, unknown>)) deepFreeze(inner);
+-    Object.freeze(value);
+-  }
+-  return value;
+-}
+-
+ /** Collects the blocks one render emits. Blocks are cloned and deep-frozen at
+  * registration: a later mutation of the model cannot rewrite a captured
+  * target state (PWB-REQ-014 later-read mutation case). */
+diff --git a/apps/three-surface-poc/src/polaris-reading.ts b/apps/three-surface-poc/src/polaris-reading.ts
+index 52de2eae..99686a1b 100644
+--- a/apps/three-surface-poc/src/polaris-reading.ts
++++ b/apps/three-surface-poc/src/polaris-reading.ts
+@@ -1,4 +1,4 @@
+-import { createHash } from 'node:crypto';
++import { sha256 } from '@syzygy/support';
+ 
+ import { ARCHITECTURE_READING_PLAN, V1_READING_PLAN } from './polaris-reading-plan.js';
+ 
+@@ -45,7 +45,7 @@ export interface ReadingPlan {
+ export function applyReadingPlan(text: string, plan: ReadingPlan): ProjectReading {
+   const full = { summary: text, full: text, condensed: false };
+   const failed = (withdrawalReason: ProjectReading['withdrawalReason']): ProjectReading => ({ ...full, withdrawalReason });
+-  if (createHash('sha256').update(text, 'utf8').digest('hex') !== plan.statementSha256) return failed('digest-mismatch');
++  if (sha256(text) !== plan.statementSha256) return failed('digest-mismatch');
+   if (plan.passages.length === 0) return failed('no-passages');
+   let previousEnd = 0;
+   for (const passage of plan.passages) {
+diff --git a/apps/three-surface-poc/src/polaris.ts b/apps/three-surface-poc/src/polaris.ts
+index 9d5df03c..edf9bf2b 100644
+--- a/apps/three-surface-poc/src/polaris.ts
++++ b/apps/three-surface-poc/src/polaris.ts
+@@ -1,5 +1,3 @@
+-import { createHash } from 'node:crypto';
+-
+ import { renderPolarisMarkdown } from './polaris-markdown.js';
+ import { projectReading, type ProjectReading, type ReadingFigure } from './polaris-reading.js';
+ import { escapeHtml } from '@syzygy/cap1-daemon';
+@@ -33,6 +31,7 @@ import {
+   type ReasonCounts,
+   type RootSummaryDisclosure,
+ } from '@syzygy/three-surface-poc-core';
++import { sha256 } from '@syzygy/support';
+ 
+ import {
+   DEFAULT_READING_MODE,
+@@ -728,7 +727,7 @@ function capabilityGuide(shape: Extract<ProjectShape, { kind: 'observed' }>): st
+   return `<section class="capability-guide" id="polaris-capability-guide">
+     <p class="guide-intro"${copyAttr('label.guide-intro')}>${copy('label.guide-intro')} <a href="#polaris-class-catalog-entry"${copyAttr('label.complete-catalog')}>${copy('label.complete-catalog')}</a></p>
+     <div class="guide-grid">${entries.map(([context, members]) => {
+-      const guideId = `polaris-guide-context-${sourceSlug(context)}-${createHash('sha256').update(context).digest('hex').slice(0, 12)}`;
++      const guideId = `polaris-guide-context-${sourceSlug(context)}-${sha256(context).slice(0, 12)}`;
+       const example = members.find((item) => item.claim.epistemic.label === 'Observed' && item.statement !== undefined);
+       if (example === undefined) return `<section class="guide-entry"><h3 id="${escapeHtml(guideId)}"${FACT}>${escapeHtml(context)}</h3><p${SCOPE}>${copy('label.complete-catalog')}</p></section>`;
+       const block = shapeClaimBlock(example.claim, shape.identity.revision, 'evidence', `guide:${example.claim.claimId}`);
+diff --git a/apps/three-surface-poc/src/pwb-mutation-run-main.ts b/apps/three-surface-poc/src/pwb-mutation-run-main.ts
+index 3edeeda9..7c50c5ce 100644
+--- a/apps/three-surface-poc/src/pwb-mutation-run-main.ts
++++ b/apps/three-surface-poc/src/pwb-mutation-run-main.ts
+@@ -15,13 +15,13 @@
+ //   npm run poc:pwb-mutation-run -- --only exact-state-collapse
+ 
+ import { execFileSync, spawnSync } from 'node:child_process';
+-import { createHash } from 'node:crypto';
+ import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+ import { tmpdir } from 'node:os';
+ import { join, resolve } from 'node:path';
+ import { fileURLToPath } from 'node:url';
+ 
+ import { INVALID_CASE_IDS } from '@syzygy/three-surface-poc-core';
++import { sha256 } from '@syzygy/support';
+ 
+ import {
+   CORE_SOURCE,
+@@ -55,10 +55,6 @@ interface TestRun {
+   readonly failing: readonly string[];
+ }
+ 
+-function sha256(bytes: Uint8Array): string {
+-  return createHash('sha256').update(bytes).digest('hex');
+-}
+-
+ function runTests(scratch: string, label: string): TestRun {
+   const outputFile = join(scratch, `${label}.json`);
+   spawnSync('npx', ['vitest', 'run', ...TEST_FILES, '--reporter=json', `--outputFile=${outputFile}`], {
+diff --git a/apps/three-surface-poc/src/pwb-mutation-sweep-main.ts b/apps/three-surface-poc/src/pwb-mutation-sweep-main.ts
+index afc68b34..bf65720c 100644
+--- a/apps/three-surface-poc/src/pwb-mutation-sweep-main.ts
++++ b/apps/three-surface-poc/src/pwb-mutation-sweep-main.ts
+@@ -16,13 +16,13 @@
+ //   npm run poc:pwb-mutation-sweep -- --only detect-none
+ 
+ import { execFileSync, spawnSync } from 'node:child_process';
+-import { createHash } from 'node:crypto';
+ import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+ import { tmpdir } from 'node:os';
+ import { join, resolve } from 'node:path';
+ import { fileURLToPath } from 'node:url';
+ 
+ import { INVALID_CASE_IDS } from '@syzygy/three-surface-poc-core';
++import { sha256 } from '@syzygy/support';
+ 
+ import { applyMutation, expectedFailuresForPredicate, type Mutation, type PredicateMutation } from './pwb-mutation.js';
+ import { SWEEP_CLASSES, SWEEP_GROUPS, groupSubjectFiles, judgmentExpectedFailures, listGroupPredicateMutations, type SweepGroup } from './pwb-mutation-sweep.js';
+@@ -45,10 +45,6 @@ interface TestRun {
+   readonly failing: readonly string[];
+ }
+ 
+-function sha256(bytes: Uint8Array): string {
+-  return createHash('sha256').update(bytes).digest('hex');
+-}
+-
+ function runTests(scratch: string, label: string, testFiles: readonly string[]): TestRun {
+   const outputFile = join(scratch, `${label}.json`);
+   spawnSync('npx', ['vitest', 'run', ...testFiles, '--reporter=json', `--outputFile=${outputFile}`], {
+diff --git a/apps/three-surface-poc/src/restart.ts b/apps/three-surface-poc/src/restart.ts
+index 40c213b8..6db610a4 100644
+--- a/apps/three-surface-poc/src/restart.ts
++++ b/apps/three-surface-poc/src/restart.ts
+@@ -1,8 +1,8 @@
+ import { spawn, execFileSync } from 'node:child_process';
+-import { createHash } from 'node:crypto';
+ import { closeSync, constants, openSync, readFileSync, readlinkSync, realpathSync, statSync, unlinkSync } from 'node:fs';
+ import { tmpdir } from 'node:os';
+ import { isAbsolute, join, resolve } from 'node:path';
++import { sha256 } from '@syzygy/support';
+ 
+ // Test seam: exported type the tests name; production code uses it only inside this file.
+ export interface PocListener {
+@@ -89,7 +89,7 @@ function targetOf(listener: PocListener, options: RestartOptions): { readonly st
+ }
+ 
+ function credentialDigest(path: string): string {
+-  try { return createHash('sha256').update(readFileSync(path)).digest('hex'); }
++  try { return sha256(readFileSync(path)); }
+   catch { throw new RestartRefusal('credential-unreadable'); }
+ }
+ 
+diff --git a/apps/three-surface-poc/src/walkthrough-inputs.ts b/apps/three-surface-poc/src/walkthrough-inputs.ts
+index 61e5b885..e28e4ddb 100644
+--- a/apps/three-surface-poc/src/walkthrough-inputs.ts
++++ b/apps/three-surface-poc/src/walkthrough-inputs.ts
+@@ -9,7 +9,6 @@
+ // absent and the evaluation is `absent` (Unknown, never met) — no verdict is
+ // invented, and nothing here performs an owner act.
+ 
+-import { createHash } from 'node:crypto';
+ import { readFileSync, readdirSync } from 'node:fs';
+ import { join, resolve } from 'node:path';
+ 
+@@ -22,6 +21,7 @@ import {
+   type WalkthroughJudgmentInputs,
+   type WalkthroughJudgmentInputsFor,
+ } from '@syzygy/three-surface-poc-core';
++import { sha256 } from '@syzygy/support';
+ 
+ import { POLARIS_HUMAN_PATH, POLARIS_TAILNET_PATH, sourceSlug } from './polaris.js';
+ import { POLARIS_SOURCE_PATH, POLARIS_SOURCE_TAILNET_PATH, SOURCE_IDENTITY_PARAM } from './polaris-source.js';
+@@ -95,7 +95,7 @@ export function pwbSurfaceVersion(runGit: (repoRoot: string, args: readonly stri
+     if (!/^[0-9a-f]{40,64}$/.test(tree)) return `${POLARIS_SURFACE_NAME}@unresolved`;
+     trees.push(tree);
+   }
+-  return `${POLARIS_SURFACE_NAME}@${createHash('sha256').update(trees.join('\n')).digest('hex').slice(0, 12)}`;
++  return `${POLARIS_SURFACE_NAME}@${sha256(trees.join('\n')).slice(0, 12)}`;
+ }
+ 
+ // The other act-bound artifacts a judgment act could be mis-paired to.
+diff --git a/apps/three-surface-poc/tsconfig.json b/apps/three-surface-poc/tsconfig.json
+index acf34fc9..9fc98eba 100644
+--- a/apps/three-surface-poc/tsconfig.json
++++ b/apps/three-surface-poc/tsconfig.json
+@@ -20,6 +20,9 @@
+     },
+     {
+       "path": "../../packages/polaris-generation-consent"
++    },
++    {
++      "path": "../../packages/support"
+     }
+   ]
+ }
+diff --git a/package.json b/package.json
+index 2659a7e1..ae6779fd 100644
+--- a/package.json
++++ b/package.json
+@@ -11,8 +11,8 @@
+   "scripts": {
+     "test": "vitest run",
+     "test:system": "npm run build && vitest run --config packages/cap1-system/vitest.config.ts",
+-    "build": "tsc -b packages/cap1-core packages/cap1-daemon packages/cap1-conformance packages/three-surface-poc-core apps/syzygy apps/three-surface-poc packages/cap1-system packages/polaris-generation-core packages/polaris-generation-consent packages/polaris-dossier",
+-    "build:poc": "tsc -b --force packages/cap1-core packages/cap1-daemon packages/three-surface-poc-core packages/polaris-generation-core apps/three-surface-poc",
++    "build": "tsc -b packages/support packages/cap1-core packages/cap1-daemon packages/cap1-conformance packages/three-surface-poc-core apps/syzygy apps/three-surface-poc packages/cap1-system packages/polaris-generation-core packages/polaris-generation-consent packages/polaris-dossier",
++    "build:poc": "tsc -b --force packages/support packages/cap1-core packages/cap1-daemon packages/three-surface-poc-core packages/polaris-generation-core apps/three-surface-poc",
+     "poc": "npm run build:poc --silent && node apps/three-surface-poc/dist/main.js",
+     "poc:restart": "node apps/three-surface-poc/dist/restart-main.js",
+     "poc:capture-test-artifact": "npm run build:poc --silent && node apps/three-surface-poc/dist/capture-test-artifact-main.js",
+@@ -24,7 +24,7 @@
+     "poc:accessible-names-sweep": "npm run build:poc --silent && node apps/three-surface-poc/dist/polaris-accessible-names-main.js",
+     "poc:pwb-mutation-sweep": "npm run build:poc --silent && node apps/three-surface-poc/dist/pwb-mutation-sweep-main.js",
+     "poc:pwb-n8-coverage-matrix": "npm run build:poc --silent && node apps/three-surface-poc/dist/pwb-n8-synthetic-corpus-coverage-matrix-main.js",
+-    "typecheck": "tsc -b packages/cap1-core packages/cap1-daemon packages/cap1-conformance packages/three-surface-poc-core apps/syzygy apps/three-surface-poc packages/cap1-system packages/polaris-generation-core packages/polaris-generation-consent packages/polaris-dossier",
++    "typecheck": "tsc -b packages/support packages/cap1-core packages/cap1-daemon packages/cap1-conformance packages/three-surface-poc-core apps/syzygy apps/three-surface-poc packages/cap1-system packages/polaris-generation-core packages/polaris-generation-consent packages/polaris-dossier",
+     "test:polaris-generation": "vitest run --project @syzygy/polaris-generation-core --project @syzygy/polaris-generation-consent --project @syzygy/polaris-dossier",
+     "poc:dossier": "node scripts/check_generator_install.mjs && npm run build:poc --silent && node apps/three-surface-poc/dist/polaris-generation/dossier-main.js",
+     "poc:generator-demo": "node scripts/check_generator_install.mjs && npm run build:poc --silent && node apps/three-surface-poc/dist/polaris-generation/pipeline-demo-main.js",
+diff --git a/packages/polaris-dossier/package.json b/packages/polaris-dossier/package.json
+index e18a3f62..2cec448c 100644
+--- a/packages/polaris-dossier/package.json
++++ b/packages/polaris-dossier/package.json
+@@ -24,6 +24,7 @@
+     "@syzygy/cap1-core": "0.0.0",
+     "@syzygy/polaris-generation-consent": "0.0.0",
+     "@syzygy/polaris-generation-core": "0.0.0",
++    "@syzygy/support": "0.0.0",
+     "@syzygy/three-surface-poc-core": "0.0.0"
+   }
+ }
+diff --git a/packages/polaris-dossier/src/brief.ts b/packages/polaris-dossier/src/brief.ts
+index 50b6f302..bddce1af 100644
+--- a/packages/polaris-dossier/src/brief.ts
++++ b/packages/polaris-dossier/src/brief.ts
+@@ -1,8 +1,8 @@
+-import { createHash } from 'node:crypto';
+ import * as fs from 'node:fs';
+ import * as path from 'node:path';
+ import { UNKNOWN_REASONS } from '@syzygy/cap1-core';
+ import { DOSSIER_READER_QUESTIONS, DOSSIER_REQUESTED_ASSETS, OWNER_TOPICS } from '@syzygy/polaris-generation-core/live';
++import { sha256 } from '@syzygy/support';
+ import { readSec3 } from './doctrine-quote.js';
+ import { CLARIFICATION_ANSWER_KINDS, LOCAL_DRAFT_SCHEMA_VERSION, QUOTATION_FORM, SESSION_ID_RULE, UNDERSTANDING_ITEMS, draftSchemaDocument } from './draft-schema.js';
+ import { PERMITTING_ARM_ENABLED, decideExecutionRule, executionRuleSection, type ExecutionRule, type PermittingArm } from './execution-rule.js';
+@@ -199,8 +199,6 @@ const DISCLOSURES = [
+ 
+ type ReverifyFailure = Extract<ReverifyResult, { readonly ok: false }>;
+ 
+-const sha256 = (text: string): string => createHash('sha256').update(text, 'utf8').digest('hex');
+-
+ export async function issueBrief(runDir: string, deps: BriefDeps): Promise<BriefResult> {
+   const run = path.resolve(runDir);
+   const refuse = (stage: BriefStage, reason: string, reasons?: readonly string[], refusals?: readonly ReverifyRefusal[]): BriefResult =>
+diff --git a/packages/polaris-dossier/src/check.ts b/packages/polaris-dossier/src/check.ts
+index f0db5a5d..f2a03725 100644
+--- a/packages/polaris-dossier/src/check.ts
++++ b/packages/polaris-dossier/src/check.ts
+@@ -1,8 +1,8 @@
+-import { createHash } from 'node:crypto';
+ import * as fs from 'node:fs';
+ import * as path from 'node:path';
+ import { UNKNOWN_REASONS } from '@syzygy/cap1-core';
+ import { leadInQuotations, lineCount, locateQuote, normaliseTracked, parseBoundedJson, retainedWithMarkers, spanTouchesWithheld, verifiedRedactedBody, type VerifiedRedactedBody, type TrackedText } from '@syzygy/polaris-generation-core/live';
++import { sha256 } from '@syzygy/support';
+ import { CREDENTIAL_CHECK_DISCLOSURE, credentialStepCheck, storedBriefArm, type CredentialStepResult } from './credential-probe.js';
+ import { SESSION_ID_PATTERN, UNDERSTANDING_ITEMS, checkDraftShape, localDraftSchema, type DraftSchemaWithDefs } from './draft-schema.js';
+ import { EXECUTION_FLAGS_BASIS, executionFlags, type ExecutionFlags } from './execution-flags.js';
+@@ -195,7 +195,6 @@ const isObj = (value: unknown): value is Readonly<Record<string, unknown>> => va
+ const list = (value: unknown): readonly unknown[] => (Array.isArray(value) ? value : []);
+ const text = (value: unknown): string | undefined => (typeof value === 'string' ? value : undefined);
+ const line = (value: unknown): number | undefined => (typeof value === 'number' && Number.isSafeInteger(value) && value >= 1 ? value : undefined);
+-const sha256 = (bytes: Uint8Array): string => createHash('sha256').update(bytes).digest('hex');
+ const errno = (cause: unknown): string => (cause as NodeJS.ErrnoException).code ?? 'unknown-error';
+ 
+ /** What one checked revision yields, from which each subject builds its own record. */
+diff --git a/packages/polaris-dossier/src/close.ts b/packages/polaris-dossier/src/close.ts
+index 57841f5d..ae89ab80 100644
+--- a/packages/polaris-dossier/src/close.ts
++++ b/packages/polaris-dossier/src/close.ts
+@@ -1,7 +1,7 @@
+-import { createHash } from 'node:crypto';
+ import * as fs from 'node:fs';
+ import * as path from 'node:path';
+ import { parseBoundedJson } from '@syzygy/polaris-generation-core/live';
++import { sha256 } from '@syzygy/support';
+ import { CREDENTIAL_CHECK_DISCLOSURE, credentialStepCheck, storedBriefArm, type CredentialStepResult } from './credential-probe.js';
+ import { executionFlags } from './execution-flags.js';
+ import type { CredentialProbe } from './execution-rule.js';
+@@ -86,7 +86,6 @@ const DISCLOSURES = [
+ const isObj = (value: unknown): value is Readonly<Record<string, unknown>> => value !== null && typeof value === 'object' && !Array.isArray(value);
+ const text = (value: unknown): string | undefined => (typeof value === 'string' ? value : undefined);
+ const isoOf = (instant: number): string => new Date(instant).toISOString();
+-const sha256 = (bytes: string | Uint8Array): string => createHash('sha256').update(bytes).digest('hex');
+ 
+ /** A declared usage figure: a positive integer, written in decimal without sign or leading zero; a description of the fault otherwise. */
+ export function parseUsageFigure(name: string, value: string | undefined): number | null | string {
+diff --git a/packages/polaris-dossier/src/design-review.ts b/packages/polaris-dossier/src/design-review.ts
+index ea1bc36a..6c9bbc64 100644
+--- a/packages/polaris-dossier/src/design-review.ts
++++ b/packages/polaris-dossier/src/design-review.ts
+@@ -1,7 +1,7 @@
+-import { createHash } from 'node:crypto';
+ import * as fs from 'node:fs';
+ import * as path from 'node:path';
+ import { REVIEW_STATUS_REGION, isDossierPagePath, leadInQuotations, withoutReviewStatusRegion } from '@syzygy/polaris-generation-core/live';
++import { sha256 } from '@syzygy/support';
+ import { declaredSessionId } from './check.js';
+ import { DEFICIENT_SUBJECTS, checkDraftShape, designVerdictSchemaDocument, localDesignVerdictSchema } from './draft-schema.js';
+ import { errno } from './inventory.js';
+@@ -28,7 +28,6 @@ const SITE_MAX_BYTES = 64 * 1024 * 1024;
+ const isObj = (value: unknown): value is Readonly<Record<string, unknown>> => value !== null && typeof value === 'object' && !Array.isArray(value);
+ const list = (value: unknown): readonly unknown[] => (Array.isArray(value) ? value : []);
+ const text = (value: unknown): string | undefined => (typeof value === 'string' ? value : undefined);
+-const sha256 = (bytes: string | Uint8Array): string => createHash('sha256').update(bytes).digest('hex');
+ const byCodeUnit = (a: string, b: string): number => (a < b ? -1 : a > b ? 1 : 0);
+ 
+ export type SiteRead =
+diff --git a/packages/polaris-dossier/src/doctrine-quote.ts b/packages/polaris-dossier/src/doctrine-quote.ts
+index f25a4dc9..2e9835d6 100644
+--- a/packages/polaris-dossier/src/doctrine-quote.ts
++++ b/packages/polaris-dossier/src/doctrine-quote.ts
+@@ -1,6 +1,6 @@
+-import { createHash } from 'node:crypto';
+ import * as fs from 'node:fs';
+ import * as path from 'node:path';
++import { sha256 } from '@syzygy/support';
+ 
+ /** SEC-3's text as adopted, read live from the doctrine file each time a brief is issued (REQ-polaris-generation-033, 034).
+  *
+@@ -48,7 +48,7 @@ export function readSec3(recordsRoot: string): Sec3Read {
+   if (Buffer.from(text, 'utf8').compare(bytes) !== 0) return { ok: false, reason: `${SECURITY_DOCTRINE_PATH} is not valid UTF-8` };
+   const cut = cutSec3(text);
+   if (typeof cut === 'string') return { ok: false, reason: cut };
+-  return { ok: true, sec3: { path: SECURITY_DOCTRINE_PATH, sha256: createHash('sha256').update(bytes).digest('hex'), ...cut } };
++  return { ok: true, sec3: { path: SECURITY_DOCTRINE_PATH, sha256: sha256(bytes), ...cut } };
+ }
+ 
+ /** The cut itself, over the decoded file text; a reason string when the text does not have the shape described above. */
+diff --git a/packages/polaris-dossier/src/inventory.ts b/packages/polaris-dossier/src/inventory.ts
+index e0246089..22f24a02 100644
+--- a/packages/polaris-dossier/src/inventory.ts
++++ b/packages/polaris-dossier/src/inventory.ts
+@@ -1,8 +1,8 @@
+-import { createHash } from 'node:crypto';
+ import * as fs from 'node:fs';
+ import * as path from 'node:path';
+ import { UNKNOWN_REASONS } from '@syzygy/cap1-core';
+ import { parseBoundedJson } from '@syzygy/polaris-generation-core/live';
++import { sha256 } from '@syzygy/support';
+ import { QUOTATION_RULE } from './brief.js';
+ import {
+   briefIssuedAt, checkSubject, declaredSessionId, type CheckDeps, type CheckFinding, type CheckRecord, type CheckRefusal, type CheckedRevision,
+@@ -75,7 +75,6 @@ const DRAFT_JSON_LIMITS = Object.freeze({ maxBytes: 4 * 1024 * 1024, maxNodes: 5
+ 
+ const isoOf = (instant: number): string => new Date(instant).toISOString();
+ const isObj = (value: unknown): value is Readonly<Record<string, unknown>> => value !== null && typeof value === 'object' && !Array.isArray(value);
+-const sha256 = (bytes: string | Uint8Array): string => createHash('sha256').update(bytes).digest('hex');
+ export const errno = (cause: unknown): string => (cause as NodeJS.ErrnoException).code ?? 'unknown-error';
+ 
+ /** A run step's common opening: the run directory, the pinned revision verified again, a brief issued and its deadline not passed.
+diff --git a/packages/polaris-dossier/src/launched.ts b/packages/polaris-dossier/src/launched.ts
+index 8012623e..3f83a6b4 100644
+--- a/packages/polaris-dossier/src/launched.ts
++++ b/packages/polaris-dossier/src/launched.ts
+@@ -1,6 +1,6 @@
+-import { createHash } from 'node:crypto';
+ import * as fs from 'node:fs';
+ import * as path from 'node:path';
++import { sha256 } from '@syzygy/support';
+ import { RUN_LAYOUT } from './state-directory.js';
+ 
+ /** Launched runs (candidate REQ-polaris-generation-040 to 044; prototype under owner direction
+@@ -16,8 +16,6 @@ export const LAUNCHED_FORMAT = 'polaris-dossier-launched/1';
+ export const LAUNCH_RECORD_FORMAT = 'polaris-dossier-launch-record/1';
+ export const SYZYGY_LAUNCHED = 'syzygy-launched' as const;
+ 
+-const sha256 = (text: string): string => createHash('sha256').update(text, 'utf8').digest('hex');
+-
+ export interface LaunchedMarker {
+   readonly format: typeof LAUNCHED_FORMAT;
+   readonly runId: string;
+diff --git a/packages/polaris-dossier/src/polaris.ts b/packages/polaris-dossier/src/polaris.ts
+index ae0e7326..f63102d9 100644
+--- a/packages/polaris-dossier/src/polaris.ts
++++ b/packages/polaris-dossier/src/polaris.ts
+@@ -1,9 +1,9 @@
+-import { createHash } from 'node:crypto';
+ import { spawnSync } from 'node:child_process';
+ import * as fs from 'node:fs';
+ import * as os from 'node:os';
+ import * as path from 'node:path';
+ import { fileURLToPath } from 'node:url';
++import { sha256 } from '@syzygy/support';
+ import { isArgvFault, readArgv } from './argv.js';
+ import { authorRule, awaitRule, startBroker, type Broker, type BrokerResponse } from './broker.js';
+ import { cliGateSources, runDossierCli, STATE_ROOT_ENV, type CliPorts } from './cli.js';
+@@ -53,7 +53,6 @@ code, and a launched run executes nothing. Network is left to the agent tool.
+ const CHECKOUT = fileURLToPath(new URL('../../..', import.meta.url));
+ const BROKER_CLIENT = fileURLToPath(new URL('./broker-client.js', import.meta.url));
+ const MAIN = path.join(CHECKOUT, 'apps/syzygy/dist/main.js');
+-const sha256 = (text: string): string => createHash('sha256').update(text, 'utf8').digest('hex');
+ const POLL_MS = 3000;
+ 
+ interface Options {
+diff --git a/packages/polaris-dossier/src/render.ts b/packages/polaris-dossier/src/render.ts
+index 08e785c7..29964a5f 100644
+--- a/packages/polaris-dossier/src/render.ts
++++ b/packages/polaris-dossier/src/render.ts
+@@ -7,6 +7,7 @@ import {
+   type LocalDisclosureItem, type LocalDraftLayer, type LocalPage, type LocalPageItem, type LocalRenderInput, type LocalSegment,
+   type DossierDraft, type DraftBlock, type DraftParagraph,
+ } from '@syzygy/polaris-generation-core/live';
++import { sha256 } from '@syzygy/support';
+ import { collectBlocks, deriveFindings, draftRules, type Derived } from './check.js';
+ import { CREDENTIAL_CHECK_DISCLOSURE, credentialStepCheck, storedBriefArm, type CredentialStepResult } from './credential-probe.js';
+ import { UNDERSTANDING_ITEMS } from './draft-schema.js';
+@@ -120,7 +121,6 @@ const DISCLOSURES = [
+ const isObj = (value: unknown): value is Readonly<Record<string, unknown>> => value !== null && typeof value === 'object' && !Array.isArray(value);
+ const list = (value: unknown): readonly unknown[] => (Array.isArray(value) ? value : []);
+ const text = (value: unknown): string | undefined => (typeof value === 'string' ? value : undefined);
+-const sha256 = (value: string | Uint8Array): string => createHash('sha256').update(value).digest('hex');
+ const SUBJECT_JSON_LIMITS = Object.freeze({ maxBytes: 4 * 1024 * 1024, maxNodes: 500_000, maxDepth: 16 });
+ 
+ const EXCLUSION_REASON: Readonly<Record<ScreenExclusion, GenerationExclusionReason>> = {
+diff --git a/packages/polaris-dossier/src/review.ts b/packages/polaris-dossier/src/review.ts
+index 90a3972b..5c225318 100644
+--- a/packages/polaris-dossier/src/review.ts
++++ b/packages/polaris-dossier/src/review.ts
+@@ -1,7 +1,7 @@
+-import { createHash } from 'node:crypto';
+ import * as fs from 'node:fs';
+ import * as path from 'node:path';
+ import { bodyLines, leadInQuotations, locateQuote, normaliseTracked, parseBoundedJson, retainedWithMarkers, reviewVerdict, spanTouchesWithheld, type TrackedText } from '@syzygy/polaris-generation-core/live';
++import { sha256 } from '@syzygy/support';
+ import { expectedLaunch, launchFormRefusal, launchedMarkerState } from './launched.js';
+ import { CHECK_RECORD_FORMAT, collectBlocks, collectCitations, declaredSessionId, nextRevision } from './check.js';
+ import { DEFICIENT_SUBJECTS, LOCAL_FIDELITY_VERDICT_SCHEMA_VERSION, VERDICT_QUOTATION_FORM, checkDraftShape, localVerdictSchema, verdictSchemaDocument } from './draft-schema.js';
+@@ -61,7 +61,6 @@ const isoOf = (instant: number): string => new Date(instant).toISOString();
+ const isObj = (value: unknown): value is Readonly<Record<string, unknown>> => value !== null && typeof value === 'object' && !Array.isArray(value);
+ const list = (value: unknown): readonly unknown[] => (Array.isArray(value) ? value : []);
+ const text = (value: unknown): string | undefined => (typeof value === 'string' ? value : undefined);
+-const sha256 = (bytes: string | Uint8Array): string => createHash('sha256').update(bytes).digest('hex');
+ 
+ /** The highest review session number of a kind with a prompt record, or 0. */
+ export function latestReviewSession(run: string, kind: ReviewKind): number {
+diff --git a/packages/polaris-dossier/src/screen.ts b/packages/polaris-dossier/src/screen.ts
+index 91bc9c8e..683e7ca2 100644
+--- a/packages/polaris-dossier/src/screen.ts
++++ b/packages/polaris-dossier/src/screen.ts
+@@ -1,9 +1,9 @@
+-import { createHash } from 'node:crypto';
+ import * as fs from 'node:fs';
+ import * as path from 'node:path';
+ import { POLICY_PATH, readClassActState, readPolicyActChain } from '@syzygy/polaris-generation-consent/live';
+ import { codeContentExempt, compileEveryOffsetMatcher, publicSourceContentClass, readCodeContentExemption, readProjectDocumentationRule, readSecretRedaction, redactBody, type PublicSourceContentClass, type RedactionDetector } from '@syzygy/polaris-generation-core/live';
+ import { compileDetectors, deniedPathReason, detectSecrets, scanActiveContent, type DeniedPathRules, type SecretDetector } from '@syzygy/three-surface-poc-core';
++import { sha256 } from '@syzygy/support';
+ 
+ /** Classification and screening of every blob Syzygy reads for a check (REQ-polaris-generation-033: "every object SHALL be classified
+  * and screened under the observing project's effective policies (REQ-polaris-generation-025) before its content is used in a check").
+@@ -123,7 +123,7 @@ export function buildDossierScreen(policy: Uint8Array, classActInForce = false):
+   return {
+     ok: true,
+     screen: {
+-      policyId: doc['policyId'], policyVersion: doc['policyVersion'], policySha256: createHash('sha256').update(policy).digest('hex'),
++      policyId: doc['policyId'], policyVersion: doc['policyVersion'], policySha256: sha256(policy),
+       projectDocumentation: documentation !== null,
+       codeContentExemption: exemption !== null,
+       screenPath,
+@@ -148,7 +148,7 @@ export async function loadDossierScreen(root: string, now: number, readBytes: (f
+   try { bytes = readBytes(path.join(root, POLICY_PATH)); } catch (cause) {
+     return { ok: false, why: `the screening policy cannot be read (${(cause as NodeJS.ErrnoException).code ?? 'unknown-error'})` };
+   }
+-  if (createHash('sha256').update(bytes).digest('hex') !== chain.final.digest) return { ok: false, why: 'the screening policy changed after its act was checked; its bytes differ from the act\'s argument' };
++  if (sha256(bytes) !== chain.final.digest) return { ok: false, why: 'the screening policy changed after its act was checked; its bytes differ from the act\'s argument' };
+   const classAct = await readClassActState({ root, now });
+   return buildDossierScreen(new Uint8Array(bytes), classAct.state === 'ok');
+ }
+diff --git a/packages/polaris-dossier/src/session-handover.ts b/packages/polaris-dossier/src/session-handover.ts
+index 0db9dbee..7e25a842 100644
+--- a/packages/polaris-dossier/src/session-handover.ts
++++ b/packages/polaris-dossier/src/session-handover.ts
+@@ -1,6 +1,6 @@
+-import { createHash } from 'node:crypto';
+ import * as fs from 'node:fs';
+ import * as path from 'node:path';
++import { sha256 } from '@syzygy/support';
+ import { RECORDS_WITHIN_REACH, providerStatementGate, statementContentClasses, type GateSources } from './gate-sources.js';
+ import {
+   INVENTORY_BRIEF_FILE, LAUNCH_FORMS, buildInventoryBrief, errno, latestInventorySession, launchRecordName, logStep, openRun, promptRecordName,
+@@ -42,7 +42,6 @@ export const LAUNCH_FORM_FORMAT = 'polaris-dossier-launch-form/1';
+ const CONTEXT_TEXT = /^[^\u0000-\u001f\u007f]{1,200}$/u;
+ 
+ const isoOf = (instant: number): string => new Date(instant).toISOString();
+-const sha256 = (text: string): string => createHash('sha256').update(text, 'utf8').digest('hex');
+ 
+ /** One shell word: the text in single quotes, each single quote closed, escaped and reopened. */
+ export const shellQuote = (text: string): string => `'${text.replace(/'/gu, `'\\''`)}'`;
+diff --git a/packages/polaris-dossier/src/session-view.ts b/packages/polaris-dossier/src/session-view.ts
+index 0c651867..3c02ac3a 100644
+--- a/packages/polaris-dossier/src/session-view.ts
++++ b/packages/polaris-dossier/src/session-view.ts
+@@ -1,8 +1,8 @@
+-import { createHash } from 'node:crypto';
+ import { spawnSync } from 'node:child_process';
+ import * as fs from 'node:fs';
+ import * as os from 'node:os';
+ import * as path from 'node:path';
++import { sha256 } from '@syzygy/support';
+ 
+ /** Session views for launched runs (candidate REQ-polaris-generation-042).
+  *
+@@ -75,7 +75,7 @@ export function viewFor(inputs: ViewInputs): ViewSpec {
+   }
+ }
+ 
+-export const viewSha256 = (spec: ViewSpec): string => createHash('sha256').update(JSON.stringify(spec), 'utf8').digest('hex');
++export const viewSha256 = (spec: ViewSpec): string => sha256(JSON.stringify(spec));
+ 
+ /** The bubblewrap argument list that builds the view, ending before the command it runs. */
+ export function bwrapArgs(spec: ViewSpec): string[] {
+diff --git a/packages/polaris-dossier/src/waiting-sessions.ts b/packages/polaris-dossier/src/waiting-sessions.ts
+index 6e9a7af4..f97e6407 100644
+--- a/packages/polaris-dossier/src/waiting-sessions.ts
++++ b/packages/polaris-dossier/src/waiting-sessions.ts
+@@ -1,7 +1,7 @@
+-import { createHash } from 'node:crypto';
+ import * as fs from 'node:fs';
+ import * as path from 'node:path';
+ import { parseBoundedJson } from '@syzygy/polaris-generation-core/live';
++import { sha256 } from '@syzygy/support';
+ import { DRAFT_MAX_BYTES, type CheckDeps } from './check.js';
+ import { RECORDS_WITHIN_REACH, type GateSources } from './gate-sources.js';
+ import {
+@@ -69,7 +69,6 @@ const DELIVERY_JSON_LIMITS = Object.freeze({ maxBytes: 65_536, maxNodes: 256, ma
+ 
+ const isoOf = (instant: number): string => new Date(instant).toISOString();
+ const isObj = (value: unknown): value is Readonly<Record<string, unknown>> => value !== null && typeof value === 'object' && !Array.isArray(value);
+-const sha256 = (bytes: string | Uint8Array): string => createHash('sha256').update(bytes).digest('hex');
+ 
+ const SIGNOFF_PACKAGE = 'polaris-dossier-local-agent-mode';
+ const AGGREGATE = 'ACCEPTANCE-ACT-RECORD.md';
+diff --git a/packages/polaris-dossier/tsconfig.json b/packages/polaris-dossier/tsconfig.json
+index cbe45b4b..66c6fe90 100644
+--- a/packages/polaris-dossier/tsconfig.json
++++ b/packages/polaris-dossier/tsconfig.json
+@@ -18,6 +18,9 @@
+     },
+     {
+       "path": "../three-surface-poc-core"
++    },
++    {
++      "path": "../support"
+     }
+   ]
+ }
+diff --git a/packages/polaris-generation-consent/package.json b/packages/polaris-generation-consent/package.json
+index d1c729b7..dc792ab3 100644
+--- a/packages/polaris-generation-consent/package.json
++++ b/packages/polaris-generation-consent/package.json
+@@ -21,6 +21,7 @@
+     }
+   },
+   "dependencies": {
+-    "@syzygy/polaris-generation-core": "0.0.0"
++    "@syzygy/polaris-generation-core": "0.0.0",
++    "@syzygy/support": "0.0.0"
+   }
+ }
+diff --git a/packages/polaris-generation-consent/src/consent-ports.ts b/packages/polaris-generation-consent/src/consent-ports.ts
+index 9fc9ff50..5482658e 100644
+--- a/packages/polaris-generation-consent/src/consent-ports.ts
++++ b/packages/polaris-generation-consent/src/consent-ports.ts
+@@ -1,5 +1,5 @@
+-import { createHash } from 'node:crypto';
+ import { digestCanonicalJson, type AdmissionDecision, type AttemptInput, type DispatchPermit, type GenerationSource, type PipelinePorts, type PipelineRequest } from '@syzygy/polaris-generation-core';
++import { sha256 } from '@syzygy/support';
+ import { COMMIT_OBJECT_ID, parseAdmissionRecords, type AdmissionRecord, type AdmissionRecordReader } from './admission-record.js';
+ import { effective, ref, type Dead } from './in-force.js';
+ 
+@@ -57,7 +57,6 @@ export interface ConsentPorts {
+ }
+ 
+ const LIMITS = { maxBytes: 4_000_000, maxNodes: 200_000, maxDepth: 16 };
+-const sha256 = (text: string): string => createHash('sha256').update(text, 'utf8').digest('hex');
+ /** Every property of the source, with bodies and span texts replaced by their digests, so the
+  * digest binds what would be sent (bodies, spans, classification basis, any segment fields), not just names. */
+ const sourceKey = (s: GenerationSource): Record<string, unknown> => {
+diff --git a/packages/polaris-generation-consent/src/package-reader.ts b/packages/polaris-generation-consent/src/package-reader.ts
+index 17a87ffc..2603a2de 100644
+--- a/packages/polaris-generation-consent/src/package-reader.ts
++++ b/packages/polaris-generation-consent/src/package-reader.ts
+@@ -1,6 +1,6 @@
+-import { createHash } from 'node:crypto';
+ import { readFile as nodeReadFile, readdir as nodeReaddir } from 'node:fs/promises';
+ import path from 'node:path';
++import { sha256 } from '@syzygy/support';
+ import { AdmissionRecordError, COMMIT_OBJECT_ID, type AdmissionRecord, type AdmissionRecordReader } from './admission-record.js';
+ import { inForceRecords, notInForceRecords, type NotInForce } from './in-force.js';
+ import { CITATION_ALLOWLIST } from './citation-allowlist.js';
+@@ -54,7 +54,6 @@ export interface PackageReaderFs {
+ const nodeFs: PackageReaderFs = { readdir: dir => nodeReaddir(dir), readFile: file => nodeReadFile(file, 'utf8') };
+ 
+ const refuse = (): never => { throw new AdmissionRecordError('invalid-records'); };
+-const sha256 = (text: string): string => createHash('sha256').update(text, 'utf8').digest('hex');
+ 
+ /** The text with every fenced code block and every HTML comment blanked. Fences follow CommonMark: one opens on a line of three or
+  * more backticks or tildes, up to three spaces in (a backtick opener's info string holds no backtick), and closes only on a run of
+diff --git a/packages/polaris-generation-consent/tsconfig.json b/packages/polaris-generation-consent/tsconfig.json
+index 3fc1124c..89cd2310 100644
+--- a/packages/polaris-generation-consent/tsconfig.json
++++ b/packages/polaris-generation-consent/tsconfig.json
+@@ -9,6 +9,9 @@
+   "references": [
+     {
+       "path": "../polaris-generation-core"
++    },
++    {
++      "path": "../support"
+     }
+   ]
+ }
+diff --git a/packages/polaris-generation-core/package.json b/packages/polaris-generation-core/package.json
+index 6e38e1a5..cd6629a9 100644
+--- a/packages/polaris-generation-core/package.json
++++ b/packages/polaris-generation-core/package.json
+@@ -14,5 +14,8 @@
+       "import": "./dist/live.js",
+       "default": "./dist/live.js"
+     }
++  },
++  "dependencies": {
++    "@syzygy/support": "0.0.0"
+   }
+ }
+diff --git a/packages/polaris-generation-core/src/canonical-json.ts b/packages/polaris-generation-core/src/canonical-json.ts
+index 999ac02b..4925daed 100644
+--- a/packages/polaris-generation-core/src/canonical-json.ts
++++ b/packages/polaris-generation-core/src/canonical-json.ts
+@@ -1,5 +1,5 @@
+-import { createHash } from 'node:crypto';
+ import { types } from 'node:util';
++import { sha256 } from '@syzygy/support';
+ 
+ export const CANONICAL_JSON_ENCODING = 'polaris-json-v1' as const;
+ 
+@@ -122,6 +122,6 @@ export function digestCanonicalJson(value: unknown, limits: CanonicalJsonLimits)
+   return {
+     encoding: CANONICAL_JSON_ENCODING,
+     algorithm: 'sha256',
+-    digest: createHash('sha256').update(encodeCanonicalJson(value, limits), 'utf8').digest('hex'),
++    digest: sha256(encodeCanonicalJson(value, limits)),
+   };
+ }
+diff --git a/packages/polaris-generation-core/src/dossier-evaluation.ts b/packages/polaris-generation-core/src/dossier-evaluation.ts
+index 6539d072..3e853304 100644
+--- a/packages/polaris-generation-core/src/dossier-evaluation.ts
++++ b/packages/polaris-generation-core/src/dossier-evaluation.ts
+@@ -1,4 +1,4 @@
+-import { createHash } from 'node:crypto';
++import { sha256 } from '@syzygy/support';
+ 
+ import { digestCanonicalJson } from './canonical-json.js';
+ import { parseBoundedJson } from './parse-json.js';
+@@ -508,8 +508,6 @@ export interface DossierEvaluationInput {
+   readonly readers?: ReaderPortFactory;
+ }
+ 
+-const sha256 = (bytes: Uint8Array | string): string => createHash('sha256').update(bytes).digest('hex');
+-
+ /** Canonical digest over the admitted population: each source's identity,
+  * segment, exclusion and a SHA-256 of its body, in source-id order. */
+ export function admittedSourcesDigest(sources: readonly GenerationSource[]): { readonly count: number; readonly sha256: string } {
+diff --git a/packages/polaris-generation-core/src/dossier-profile.ts b/packages/polaris-generation-core/src/dossier-profile.ts
+index fb6df066..9bea49a0 100644
+--- a/packages/polaris-generation-core/src/dossier-profile.ts
++++ b/packages/polaris-generation-core/src/dossier-profile.ts
+@@ -5,7 +5,7 @@
+  * instead the questions it would have asked and the limitation each leaves.
+  */
+ 
+-import { createHash } from 'node:crypto';
++import { sha256 } from '@syzygy/support';
+ 
+ import type { RequestedAsset } from './draft-model.js';
+ import type { GenerationSource } from './generation-source.js';
+@@ -108,7 +108,7 @@ export interface ClarificationRecord {
+ 
+ const PURPOSE_DOC = /(^|\/)(readme|overview|about|intro(duction)?|manifesto|vision|why|philosophy)[^/]*$/iu;
+ const digestOf = (q: Omit<ClarificationQuestion, 'contentDigest'>): string =>
+-  createHash('sha256').update(JSON.stringify([q.id, q.question, q.scope, q.reason])).digest('hex');
++  sha256(JSON.stringify([q.id, q.question, q.scope, q.reason]));
+ const withDigest = (q: Omit<ClarificationQuestion, 'contentDigest'>): ClarificationQuestion => ({ ...q, contentDigest: digestOf(q) });
+ 
+ /** Which consequential questions the population leaves open, in priority order. */
+diff --git a/packages/polaris-generation-core/src/generation-source.ts b/packages/polaris-generation-core/src/generation-source.ts
+index 13c207ec..673cf9a0 100644
+--- a/packages/polaris-generation-core/src/generation-source.ts
++++ b/packages/polaris-generation-core/src/generation-source.ts
+@@ -1,4 +1,5 @@
+ import { createHash, createHmac, randomBytes } from 'node:crypto';
++import { sha256 } from '@syzygy/support';
+ 
+ import { SOURCE_ID_MAX_LENGTH, SOURCE_ID_PATTERN, SOURCE_TEXT_MAX_LENGTH } from './source-model.js';
+ import { bodyLines, redactionMarker } from './secret-redaction.js';
+@@ -213,7 +214,7 @@ function validateSources(value: readonly GenerationSource[], requireVerified: bo
+     // reader (and verifySources) bind the whole blob.
+     if (segment !== undefined) { if (bytes.length !== segment.end - segment.start) fail('body-mismatch'); }
+     else if (redaction !== undefined) {
+-      if (createHash('sha256').update(body).digest('hex') !== redaction.retainedSha256) fail('body-mismatch');
++      if (sha256(body) !== redaction.retainedSha256) fail('body-mismatch');
+     } else if (gitBlobObjectId(body, objectId.length === 40 ? 'sha1' : 'sha256') !== objectId) fail('object-mismatch');
+     if (redaction !== undefined) blob.bodies.push({ index: segment?.index ?? 0, body });
+     const anchorBase = segment?.start ?? 0;
+@@ -250,7 +251,7 @@ function validateSources(value: readonly GenerationSource[], requireVerified: bo
+     if (blob.whole || pieces.some((piece, i) => piece.index !== i || piece.count !== pieces[0]!.count || piece.blobBytes !== pieces[0]!.blobBytes
+       || piece.start !== (i === 0 ? 0 : pieces[i - 1]!.end)) || (complete ? blob.deferred : !blob.deferred || pieces.length >= pieces[0]!.count)) fail('invalid-segments');
+     if (complete && blob.redaction !== undefined
+-      && createHash('sha256').update(blob.bodies.sort((a, b) => a.index - b.index).map(piece => piece.body).join('')).digest('hex') !== blob.redaction.retainedSha256) fail('body-mismatch');
++      && sha256(blob.bodies.sort((a, b) => a.index - b.index).map(piece => piece.body).join('')) !== blob.redaction.retainedSha256) fail('body-mismatch');
+   }
+   return value;
+ }
+@@ -332,7 +333,7 @@ export function verifiedRedactedBody(body: string, objectId: string, repositoryP
+   if (screened.kind !== 'redacted' || !('retainedLines' in screened)) fail('unquotable-source');
+   const lines = bodyLines(body), held = new Set(screened.withheld);
+   let byte = 0;
+-  if (screened.originalBytes !== Buffer.byteLength(body) || screened.contentSha256 !== createHash('sha256').update(body).digest('hex')
++  if (screened.originalBytes !== Buffer.byteLength(body) || screened.contentSha256 !== sha256(body)
+     || screened.retainedLines.length !== lines.length || screened.lineByteOffsets.length !== lines.length
+     || lines.some((line, index) => {
+       const offset = byte; byte += Buffer.byteLength(line);
+@@ -396,7 +397,7 @@ export function generationSourcesForRedactedBody(input: RedactedBodySourceInput)
+   flush();
+   const safe = pieces.map(piece => piece.body).join(''), blobBytes = Buffer.byteLength(safe);
+   const redaction: SourceRedaction = { redactionClass: 'redacted-span', withheldLines: withheld.length, withheld: [...withheld], originalLines: retainedLines.length,
+-    originalBytes, contentSha256, retainedSha256: createHash('sha256').update(safe).digest('hex'), policySha256 };
++    originalBytes, contentSha256, retainedSha256: sha256(safe), policySha256 };
+   Object.freeze(redaction.withheld); Object.freeze(redaction);
+   const trust = (source: GenerationSource): GenerationSource => {
+     for (const span of source.spans) { if (span.original !== undefined) Object.freeze(span.original); Object.freeze(span); }
+diff --git a/packages/polaris-generation-core/src/pipeline.ts b/packages/polaris-generation-core/src/pipeline.ts
+index 0f93ce52..3b2b61f1 100644
+--- a/packages/polaris-generation-core/src/pipeline.ts
++++ b/packages/polaris-generation-core/src/pipeline.ts
+@@ -1,7 +1,7 @@
+ import { quotableGenerationSources, validateGenerationSources, validateGenerationSourceTransport, type GenerationSource } from './generation-source.js';
+ import { CanonicalJsonError, digestCanonicalJson, encodeCanonicalJson, type CanonicalJsonLimits } from './canonical-json.js';
+ import { parseBoundedJson } from './parse-json.js';
+-import { createHash } from 'node:crypto';
++import { sha256 } from '@syzygy/support';
+ 
+ import { promptForStage, type GenerationStage, type PromptProfile } from './prompts.js';
+ import { validateRequestedAssets, type RequestedAsset } from './provider-draft.js';
+@@ -303,7 +303,7 @@ export async function runGenerationPipeline(request: PipelineRequest, ports: Pip
+       check();
+       if (calls >= budget.maxCalls) stop('budget-exhausted');
+       const prompt = promptForStage(name, promptProfile);
+-      const promptDigest = createHash('sha256').update(prompt.system).digest('hex');
++      const promptDigest = sha256(prompt.system);
+       const schema = ports.responseSchema(name);
+       const envelope = { promptVersion: prompt.version, system: prompt.system, responseSchemaVersion: schema.version, responseSchema: schema.schema, inputs };
+       let encoded: string;
+diff --git a/packages/polaris-generation-core/src/prompts.ts b/packages/polaris-generation-core/src/prompts.ts
+index 8bd11e0c..5eb89558 100644
+--- a/packages/polaris-generation-core/src/prompts.ts
++++ b/packages/polaris-generation-core/src/prompts.ts
+@@ -1,3 +1,5 @@
++import { deepFreeze } from '@syzygy/support';
++
+ export type GenerationStage = 'inventory' | 'plan' | 'author' | 'edit' | 'fidelity' | 'repair';
+ /** Hierarchical discovery's two provider calls (REQ-polaris-generation-030). */
+ export type DiscoveryStage = 'discovery-map' | 'discovery-reduce';
+@@ -147,15 +149,6 @@ const reviewIllustration = {
+   findings: [],
+ };
+ 
+-/** Freezes a value and everything it holds, so no importer can change it. */
+-function deepFreeze<T>(value: T): T {
+-  if (value !== null && typeof value === 'object' && !Object.isFrozen(value)) {
+-    Object.freeze(value);
+-    for (const child of Object.values(value)) deepFreeze(child);
+-  }
+-  return value;
+-}
+-
+ /** One illustration per stage; edit and repair return the author's shape. Frozen; the prompts
+  * embed the JSON serialized once at load (below), never these objects at call time. */
+ export const DOSSIER_STAGE_ILLUSTRATIONS: Readonly<Record<GenerationStage, unknown>> = deepFreeze({
+diff --git a/packages/polaris-generation-core/src/public-source-classification.ts b/packages/polaris-generation-core/src/public-source-classification.ts
+index 8de309f2..1a2334b1 100644
+--- a/packages/polaris-generation-core/src/public-source-classification.ts
++++ b/packages/polaris-generation-core/src/public-source-classification.ts
+@@ -1,4 +1,4 @@
+-import { createHash } from 'node:crypto';
++import { sha256 } from '@syzygy/support';
+ 
+ /** The public-source screening scope's `project-documentation` class (policy version 2, `publicSourceScope.contentClassification`,
+  * the rule whose `class` is `project-documentation`; RFC5-14 as amended 2026-10-07), shared by the any-repo reader's screen and the
+@@ -54,7 +54,6 @@ export interface ProjectDocumentationRule {
+ export type ProjectDocumentationRead = { readonly ok: true; readonly rule: ProjectDocumentationRule | null } | { readonly ok: false; readonly why: string };
+ 
+ const isObject = (value: unknown): value is Readonly<Record<string, unknown>> => value !== null && typeof value === 'object' && !Array.isArray(value);
+-const sha256 = (text: string): string => createHash('sha256').update(text, 'utf8').digest('hex');
+ // Never matchable against a folded path: an A-Z letter (folded away), a separator of segments, or a backslash (matches nothing).
+ const unmatchable = (entry: string): boolean => /[A-Z/\\]/u.test(entry);
+ const names = (value: unknown, minimum: number, valid: (entry: string) => boolean): value is readonly string[] =>
+diff --git a/packages/polaris-generation-core/src/secret-redaction.ts b/packages/polaris-generation-core/src/secret-redaction.ts
+index 6af1c3fc..5d1a5827 100644
+--- a/packages/polaris-generation-core/src/secret-redaction.ts
++++ b/packages/polaris-generation-core/src/secret-redaction.ts
+@@ -1,4 +1,4 @@
+-import { createHash } from 'node:crypto';
++import { sha256 } from '@syzygy/support';
+ 
+ import type { PublicSourceContentClass } from './public-source-classification.js';
+ 
+@@ -32,7 +32,6 @@ import type { PublicSourceContentClass } from './public-source-classification.js
+  * a secret no detector matches, beyond the guard lines or continuing past
+  * them, is admitted; the whole body's digest and object id stay recorded and can check a guess at a short withheld line. */
+ 
+-const sha256 = (text: string): string => createHash('sha256').update(text, 'utf8').digest('hex');
+ const isObject = (value: unknown): value is Readonly<Record<string, unknown>> => value !== null && typeof value === 'object' && !Array.isArray(value);
+ 
+ /** sha256 of each text this module implements, UTF-8 (the version-4 bytes approved 2026-10-20). */
+diff --git a/packages/polaris-generation-core/tsconfig.json b/packages/polaris-generation-core/tsconfig.json
+index c047a030..f91b3b86 100644
+--- a/packages/polaris-generation-core/tsconfig.json
++++ b/packages/polaris-generation-core/tsconfig.json
+@@ -5,5 +5,10 @@
+     "outDir": "dist",
+     "tsBuildInfoFile": "dist/.tsbuildinfo"
+   },
+-  "include": ["src"]
++  "include": ["src"],
++  "references": [
++    {
++      "path": "../support"
++    }
++  ]
+ }
+diff --git a/packages/support/package.json b/packages/support/package.json
+new file mode 100644
+index 00000000..57517804
+--- /dev/null
++++ b/packages/support/package.json
+@@ -0,0 +1,13 @@
++{
++  "name": "@syzygy/support",
++  "version": "0.0.0",
++  "private": true,
++  "type": "module",
++  "exports": {
++    ".": {
++      "types": "./dist/index.d.ts",
++      "import": "./dist/index.js",
++      "default": "./dist/index.js"
++    }
++  }
++}
+diff --git a/packages/support/src/deep-freeze.test.ts b/packages/support/src/deep-freeze.test.ts
+new file mode 100644
+index 00000000..3a7a0710
+--- /dev/null
++++ b/packages/support/src/deep-freeze.test.ts
+@@ -0,0 +1,40 @@
++import { describe, expect, it } from 'vitest';
++import { deepFreeze } from './deep-freeze.js';
++
++describe('deepFreeze', () => {
++  it('returns the value it was given and freezes every object it reaches', () => {
++    const value = { a: { b: [{ c: 1 }, 2] }, d: 'text' };
++    const returned = deepFreeze(value);
++    expect(returned).toBe(value);
++    expect(Object.isFrozen(value)).toBe(true);
++    expect(Object.isFrozen(value.a)).toBe(true);
++    expect(Object.isFrozen(value.a.b)).toBe(true);
++    expect(Object.isFrozen(value.a.b[0])).toBe(true);
++  });
++
++  it('passes primitives, null and undefined through', () => {
++    expect(deepFreeze(7)).toBe(7);
++    expect(deepFreeze('s')).toBe('s');
++    expect(deepFreeze(null)).toBeNull();
++    expect(deepFreeze(undefined)).toBeUndefined();
++  });
++
++  it('ends the walk at an object that is already frozen', () => {
++    const inner = { x: 1 };
++    const shell = Object.freeze({ inner });
++    deepFreeze(shell);
++    expect(Object.isFrozen(inner)).toBe(false);
++  });
++
++  it('terminates on a cycle', () => {
++    const node: { self?: unknown } = {};
++    node.self = node;
++    deepFreeze(node);
++    expect(Object.isFrozen(node)).toBe(true);
++  });
++
++  it('makes a later write fail', () => {
++    const value = deepFreeze({ list: [1] });
++    expect(() => { (value.list as number[]).push(2); }).toThrow(TypeError);
++  });
++});
+diff --git a/packages/support/src/deep-freeze.ts b/packages/support/src/deep-freeze.ts
+new file mode 100644
+index 00000000..1e7ee38d
+--- /dev/null
++++ b/packages/support/src/deep-freeze.ts
+@@ -0,0 +1,13 @@
++/**
++ * Freezes the value and everything it reaches through own enumerable
++ * properties. An object that is already frozen ends the walk there, so a
++ * frozen shell around an unfrozen member keeps the member unfrozen, and a
++ * cycle terminates.
++ */
++export function deepFreeze<T>(value: T): T {
++  if (value !== null && typeof value === 'object' && !Object.isFrozen(value)) {
++    Object.freeze(value);
++    for (const member of Object.values(value)) deepFreeze(member);
++  }
++  return value;
++}
+diff --git a/packages/support/src/index.ts b/packages/support/src/index.ts
+new file mode 100644
+index 00000000..11bd1b83
+--- /dev/null
++++ b/packages/support/src/index.ts
+@@ -0,0 +1,8 @@
++// Internal helpers that more than one workspace package needs and that have
++// one meaning everywhere (syzygy-bpyt.6.3). The package depends on nothing in
++// the workspace: the import graph has two leaves that cannot import each other
++// (`@syzygy/cap1-core` and `@syzygy/polaris-generation-core`), and the helpers
++// are needed on both sides of the Polaris generation kit's boundary, so they
++// sit below both. Pure: no file, process or clock.
++export { sha256 } from './sha256.js';
++export { deepFreeze } from './deep-freeze.js';
+diff --git a/packages/support/src/sha256.test.ts b/packages/support/src/sha256.test.ts
+new file mode 100644
+index 00000000..2b4b8424
+--- /dev/null
++++ b/packages/support/src/sha256.test.ts
+@@ -0,0 +1,29 @@
++import { describe, expect, it } from 'vitest';
++import { sha256 } from './sha256.js';
++
++// Expected values come from Python's hashlib, not from this module.
++describe('sha256', () => {
++  it('hashes text as its UTF-8 bytes', () => {
++    expect(sha256('')).toBe('e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855');
++    expect(sha256('abc')).toBe('ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad');
++    expect(sha256('é')).toBe('4a99557e4033c3539de2eb65472017cad5f9557f7a0625a09f1c3f6e2ba69c4c');
++    expect(sha256('\u{1F600}')).toBe('f0443a342c5ef54783a111b51ba56c938e474c32324d90c3a60c9c8e3a37e2d9');
++    expect(sha256('a'.repeat(1000))).toBe('41edece42d63e8d9bf515a9ba6932e1c20cbc9f5a5d134645adb5db1b9737ea3');
++    expect(sha256('a\0b\nc')).toBe('214df3f68e1a607f5baa40cc3315f4316ae58b282b6c0bf288b89fec4da7aa80');
++  });
++
++  it('hashes a lone surrogate as the replacement character, as the UTF-8 encoder writes it', () => {
++    expect(sha256('\ud800')).toBe('83d544ccc223c057d2bf80d3f2a32982c32c3c0db8e2674820da5064783fb097');
++  });
++
++  it('hashes bytes as given, a Uint8Array and a Buffer alike', () => {
++    expect(sha256(new Uint8Array([0x61, 0x62, 0x63]))).toBe('ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad');
++    expect(sha256(Buffer.from('abc'))).toBe('ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad');
++    expect(sha256(new Uint8Array([0xef, 0xbf, 0xbd]))).toBe('83d544ccc223c057d2bf80d3f2a32982c32c3c0db8e2674820da5064783fb097');
++  });
++
++  it('hashes only the view, not the buffer behind it', () => {
++    const behind = new Uint8Array([0x00, 0x61, 0x62, 0x63, 0xff]);
++    expect(sha256(behind.subarray(1, 4))).toBe('ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad');
++  });
++});
+diff --git a/packages/support/src/sha256.ts b/packages/support/src/sha256.ts
+new file mode 100644
+index 00000000..1d2721ef
+--- /dev/null
++++ b/packages/support/src/sha256.ts
+@@ -0,0 +1,6 @@
++import { createHash } from 'node:crypto';
++
++/** Lowercase hex SHA-256 of the bytes, or of the UTF-8 bytes of the text. */
++export function sha256(value: string | Uint8Array): string {
++  return createHash('sha256').update(value).digest('hex');
++}
+diff --git a/packages/support/tsconfig.json b/packages/support/tsconfig.json
+new file mode 100644
+index 00000000..c047a030
+--- /dev/null
++++ b/packages/support/tsconfig.json
+@@ -0,0 +1,9 @@
++{
++  "extends": "../../tsconfig.base.json",
++  "compilerOptions": {
++    "rootDir": "src",
++    "outDir": "dist",
++    "tsBuildInfoFile": "dist/.tsbuildinfo"
++  },
++  "include": ["src"]
++}
+diff --git a/packages/three-surface-poc-core/package.json b/packages/three-surface-poc-core/package.json
+index a80cced7..d7f849bc 100644
+--- a/packages/three-surface-poc-core/package.json
++++ b/packages/three-surface-poc-core/package.json
+@@ -11,6 +11,7 @@
+     }
+   },
+   "dependencies": {
+-    "@syzygy/cap1-core": "0.0.0"
++    "@syzygy/cap1-core": "0.0.0",
++    "@syzygy/support": "0.0.0"
+   }
+ }
+diff --git a/packages/three-surface-poc-core/src/act-fields.ts b/packages/three-surface-poc-core/src/act-fields.ts
+index df4f8858..f132a570 100644
+--- a/packages/three-surface-poc-core/src/act-fields.ts
++++ b/packages/three-surface-poc-core/src/act-fields.ts
+@@ -12,8 +12,6 @@
+ //
+ // Pure: no file, process or clock.
+ 
+-import { createHash } from 'node:crypto';
+-
+ // RFC3-16(c)'s two provenance states, by the labels the act records use.
+ export const STATE_1_LABEL = 'owner-adopted (bootstrap, uncorrelated)' as const;
+ export const STATE_2_LABEL = 'Syzygy-verified' as const;
+@@ -44,20 +42,8 @@ export function isIsoDate(value: string): boolean {
+ export function isHumanName(value: string): boolean {
+   return value.length > 0 && value.length <= 200 && !/[`*\n]/.test(value);
+ }
+-export function sha256(bytes: Uint8Array): string {
+-  return createHash('sha256').update(bytes).digest('hex');
+-}
+ export function provenanceFromLabel(label: string): ProvenanceLabel | undefined {
+   if (label === STATE_1_LABEL) return 'state-1';
+   if (label === STATE_2_LABEL) return 'state-2';
+   return undefined;
+ }
+-export function deepFreeze<T>(value: T): T {
+-  if (typeof value === 'object' && value !== null && !Object.isFrozen(value)) {
+-    Object.freeze(value);
+-    for (const key of Object.keys(value as object)) {
+-      deepFreeze((value as Record<string, unknown>)[key]);
+-    }
+-  }
+-  return value;
+-}
+diff --git a/packages/three-surface-poc-core/src/body-read-authority.ts b/packages/three-surface-poc-core/src/body-read-authority.ts
+index c1337a19..9d765e31 100644
+--- a/packages/three-surface-poc-core/src/body-read-authority.ts
++++ b/packages/three-surface-poc-core/src/body-read-authority.ts
+@@ -34,6 +34,7 @@
+ // correlator; a failed, unavailable or indeterminate correlation is
+ // invalid and never falls back to state (1).
+ 
++import { deepFreeze, sha256 } from '@syzygy/support';
+ import {
+   ACT_IDENTITY,
+   ISO_DATE,
+@@ -43,12 +44,10 @@ import {
+   SHA256,
+   SLUG,
+   TAG,
+-  deepFreeze,
+   isGovernancePath,
+   isHumanName,
+   isIsoDate,
+   provenanceFromLabel,
+-  sha256,
+   type ProvenanceLabel,
+ } from './act-fields.js';
+ import {
+diff --git a/packages/three-surface-poc-core/src/git-object-reader.ts b/packages/three-surface-poc-core/src/git-object-reader.ts
+index 298ec051..637769ce 100644
+--- a/packages/three-surface-poc-core/src/git-object-reader.ts
++++ b/packages/three-surface-poc-core/src/git-object-reader.ts
+@@ -26,7 +26,7 @@
+ // and bytes; the observer for index depth; later extraction/rendering for
+ // parse time and rendered bytes), so a breach is always the same shape.
+ 
+-import { createHash } from 'node:crypto';
++import { sha256 } from '@syzygy/support';
+ 
+ import { type GitTreeEntry, type GitTreeIndex, normalizeRepositoryPath, posixBasename } from './git-tree.js';
+ import { type MalformedCodeContext, maskMarkdownCodeContexts } from './markdown-code-context.js';
+@@ -285,7 +285,7 @@ function decodeUtf8(bytes: Uint8Array): string | undefined {
+ }
+ 
+ export function contentDigestOf(bytes: Uint8Array): string {
+-  return `sha256:${createHash('sha256').update(bytes).digest('hex')}`;
++  return `sha256:${sha256(bytes)}`;
+ }
+ 
+ export function createExactObjectReader(input: ExactObjectReaderInput): ExactObjectReader {
+diff --git a/packages/three-surface-poc-core/src/model.ts b/packages/three-surface-poc-core/src/model.ts
+index c46c38e4..7928256c 100644
+--- a/packages/three-surface-poc-core/src/model.ts
++++ b/packages/three-surface-poc-core/src/model.ts
+@@ -1,4 +1,3 @@
+-import { createHash } from 'node:crypto';
+ import { readFileSync, statSync } from 'node:fs';
+ import { resolve } from 'node:path';
+ 
+@@ -11,6 +10,7 @@ import { buildDispatchDisclosure, type DispatchDisclosure, type MaterializationR
+ import type { BodyReadAuthorityEvaluation } from './body-read-authority.js';
+ import { gitRunnerFor, type GitRunner, type PwbResourceLimits } from './project-shape-observation.js';
+ import type { UnknownReason } from '@syzygy/cap1-core';
++import { deepFreeze, sha256 } from '@syzygy/support';
+ 
+ import {
+   buildProjectShape,
+@@ -379,13 +379,6 @@ function duplicateValues(values: readonly string[], label: string, errors: strin
+   }
+ }
+ 
+-function deepFreeze<T>(value: T): T {
+-  if (typeof value !== 'object' || value === null || Object.isFrozen(value)) return value;
+-  Object.freeze(value);
+-  for (const child of Object.values(value as Record<string, unknown>)) deepFreeze(child);
+-  return value;
+-}
+-
+ function validateSeedGraph(seeds: PocSeedInput): void {
+   const errors: string[] = [];
+   const entityIds = new Set<string>();
+@@ -470,10 +463,6 @@ interface ObservedArtifact {
+   readonly digest: string;
+ }
+ 
+-function sha256(bytes: Uint8Array | string): string {
+-  return createHash('sha256').update(bytes).digest('hex');
+-}
+-
+ function observeArtifact(
+   repoRoot: string,
+   artifactPath: string,
+diff --git a/packages/three-surface-poc-core/src/owner-act-drafter.test.ts b/packages/three-surface-poc-core/src/owner-act-drafter.test.ts
+index 05118c13..77574e8f 100644
+--- a/packages/three-surface-poc-core/src/owner-act-drafter.test.ts
++++ b/packages/three-surface-poc-core/src/owner-act-drafter.test.ts
+@@ -59,7 +59,7 @@ describe('owner-act drafter (M4 slice 7)', () => {
+       ...[...code.matchAll(/^\s*import\s*['"`]([^'"`]+)['"`]/gm)].map((match) => match[1]),
+       ...[...code.matchAll(/\b(?:import|require)\s*\(\s*['"`]([^'"`]+)['"`]/g)].map((match) => match[1]),
+     ]);
+-    expect([...specifiers].sort()).toEqual(['@syzygy/cap1-core', 'node:crypto']);
++    expect([...specifiers].sort()).toEqual(['@syzygy/cap1-core', '@syzygy/support']);
+     expect(/^import type .* from '@syzygy\/cap1-core';$/m.test(source)).toBe(true);
+     for (const forbidden of [/\brequire\(/, /\bimport\(/, /\bfetch\(/, /\bwriteFile/, /\bappendFile/, /\bmkdir/, /\bprocess\./, /\bDate\b/, /\b(?:node:)?(?:fs|net|http|https|child_process|os)['"`]/]) {
+       expect(source, String(forbidden)).not.toMatch(forbidden);
+diff --git a/packages/three-surface-poc-core/src/owner-act-drafter.ts b/packages/three-surface-poc-core/src/owner-act-drafter.ts
+index e1eb6c8d..164f2cca 100644
+--- a/packages/three-surface-poc-core/src/owner-act-drafter.ts
++++ b/packages/three-surface-poc-core/src/owner-act-drafter.ts
+@@ -14,9 +14,8 @@
+ // arm (b) nothing persists it: no file under `.syzygy/` is written, no
+ // phrase is registered, and no claim changes state because a draft exists.
+ 
+-import { createHash } from 'node:crypto';
+-
+ import type { EpistemicState, UnknownReason } from '@syzygy/cap1-core';
++import { sha256 } from '@syzygy/support';
+ 
+ /** The act types a draft can name, each with the ceremony verb the owner
+  * would write and the reasons it can discharge. Only owner-actor reasons
+@@ -90,7 +89,7 @@ export function draftOwnerAct(input: DraftInput): DraftResult {
+   const ids = input.claims.map((claim) => claim.claimId);
+   if (new Set(ids).size !== ids.length) return { kind: 'refused', refusal: 'a claim is named twice' };
+   if (!relativePath(input.artifact.path)) return { kind: 'refused', refusal: `not a repository-relative path: ${input.artifact.path}` };
+-  const frozenDigest = createHash('sha256').update(input.artifact.bytes, 'utf8').digest('hex');
++  const frozenDigest = sha256(input.artifact.bytes);
+   return {
+     kind: 'drafted',
+     draft: {
+diff --git a/packages/three-surface-poc-core/src/poc-seeds.ts b/packages/three-surface-poc-core/src/poc-seeds.ts
+index 52b16d92..8da7b194 100644
+--- a/packages/three-surface-poc-core/src/poc-seeds.ts
++++ b/packages/three-surface-poc-core/src/poc-seeds.ts
+@@ -1,3 +1,4 @@
++import { deepFreeze } from '@syzygy/support';
+ import type { OrreryDeclaredMapping } from './orrery-projection.js';
+ import type { PocEntity, PocRelationship, PocSurface } from './model.js';
+ import type { WorkerChangeSeam } from './worker-change-observation.js';
+@@ -84,17 +85,6 @@ export interface PocSeedInput {
+   readonly orreryMappings: readonly OrreryDeclaredMapping[];
+ }
+ 
+-function deepFreeze<T>(value: T): T {
+-  if (typeof value !== 'object' || value === null || Object.isFrozen(value)) {
+-    return value;
+-  }
+-  Object.freeze(value);
+-  for (const child of Object.values(value as Record<string, unknown>)) {
+-    deepFreeze(child);
+-  }
+-  return value;
+-}
+-
+ /**
+  * The current Butlers proving-case seed.  It is the only default supplied by
+  * the application; the model builder has no implicit fallback to it.
+diff --git a/packages/three-surface-poc-core/src/project-shape-manifest.ts b/packages/three-surface-poc-core/src/project-shape-manifest.ts
+index 1d85bb89..c2d2d956 100644
+--- a/packages/three-surface-poc-core/src/project-shape-manifest.ts
++++ b/packages/three-surface-poc-core/src/project-shape-manifest.ts
+@@ -24,7 +24,7 @@
+ // the PWB-REQ-005 gate admits, and only for the paths listed in
+ // `phaseAReads`. Rules 3 and 4 use tree metadata alone.
+ 
+-import { createHash } from 'node:crypto';
++import { deepFreeze, sha256 } from '@syzygy/support';
+ 
+ import {
+   indexGitTree,
+@@ -339,7 +339,7 @@ export function canonicalManifestJson(manifest: Omit<ProjectShapeSourceManifest,
+ }
+ 
+ function digestOf(manifest: Omit<ProjectShapeSourceManifest, 'digest'>): string {
+-  return `sha256:${createHash('sha256').update(canonicalManifestJson(manifest)).digest('hex')}`;
++  return `sha256:${sha256(canonicalManifestJson(manifest))}`;
+ }
+ 
+ // The registry's `project-shape-source-manifest` output identity:
+@@ -517,11 +517,3 @@ export function deriveProjectShapeManifest(input: DeriveManifestInput): DeriveMa
+   };
+   return { kind: 'manifest', manifest: deepFreeze({ ...body, digest: digestOf(body) }) };
+ }
+-
+-function deepFreeze<T>(value: T): T {
+-  if (value !== null && typeof value === 'object' && !Object.isFrozen(value)) {
+-    Object.freeze(value);
+-    for (const inner of Object.values(value as Record<string, unknown>)) deepFreeze(inner);
+-  }
+-  return value;
+-}
+diff --git a/packages/three-surface-poc-core/src/project-shape-observation.ts b/packages/three-surface-poc-core/src/project-shape-observation.ts
+index 098875d2..1aeafc32 100644
+--- a/packages/three-surface-poc-core/src/project-shape-observation.ts
++++ b/packages/three-surface-poc-core/src/project-shape-observation.ts
+@@ -24,6 +24,7 @@
+ 
+ import { execFileSync } from 'node:child_process';
+ import { createHash } from 'node:crypto';
++import { deepFreeze, sha256 } from '@syzygy/support';
+ 
+ import type { AuthorityKind, AuthorityState, BodyReadAuthorityEvaluation } from './body-read-authority.js';
+ import type { PhaseAClassification } from './content-classification.js';
+@@ -334,7 +335,7 @@ export function sourceIdentityOf(repositoryId: string, revision: string, source:
+ }
+ 
+ export function resourceLimitsDigest(limits: PwbResourceLimits): string {
+-  return `sha256:${createHash('sha256').update(canonicalJson(limits)).digest('hex')}`;
++  return `sha256:${sha256(canonicalJson(limits))}`;
+ }
+ 
+ function authorityIdentity(state: AuthorityState): AuthorityInputIdentity {
+@@ -354,14 +355,6 @@ function authorityInputs(evaluation: BodyReadAuthorityEvaluation | undefined): D
+   return { kind: 'evaluated', evaluationId: evaluation.evaluationId, consent: pick('consent'), policy: pick('policy'), registry: pick('registry') };
+ }
+ 
+-function deepFreeze<T>(value: T): T {
+-  if (value !== null && typeof value === 'object' && !Object.isFrozen(value)) {
+-    Object.freeze(value);
+-    for (const member of Object.values(value as Record<string, unknown>)) deepFreeze(member);
+-  }
+-  return value;
+-}
+-
+ function isIsoInstant(text: string): boolean {
+   return /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})$/.test(text) && !Number.isNaN(Date.parse(text));
+ }
+@@ -640,7 +633,7 @@ export function observeProjectShapeSources(input: ObserveProjectShapeSourcesInpu
+     deterministicInputs,
+   };
+   const { capturedAt: _capturedAt, ...stable } = body;
+-  const observationDigest = `sha256:${createHash('sha256').update(canonicalJson(stripCaptureInstant(stable))).digest('hex')}`;
++  const observationDigest = `sha256:${sha256(canonicalJson(stripCaptureInstant(stable)))}`;
+   return deepFreeze({ ...body, observationDigest });
+ }
+ 
+diff --git a/packages/three-surface-poc-core/src/response-identity.ts b/packages/three-surface-poc-core/src/response-identity.ts
+index 1c981c48..cec48739 100644
+--- a/packages/three-surface-poc-core/src/response-identity.ts
++++ b/packages/three-surface-poc-core/src/response-identity.ts
+@@ -1,4 +1,4 @@
+-import { createHash } from 'node:crypto';
++import { sha256 } from '@syzygy/support';
+ 
+ import { canonicalJson } from './project-shape-manifest.js';
+ 
+@@ -230,7 +230,7 @@ export function buildResponseIdentity(
+       `response identity canonicalization failed: ${cause instanceof Error ? cause.message : String(cause)}`,
+     );
+   }
+-  const contentKey = `sha256:${createHash('sha256').update(serialized).digest('hex')}`;
++  const contentKey = `sha256:${sha256(serialized)}`;
+   return Object.freeze({
+     contentKey,
+     excludes: Object.freeze([...activeDeclaration.excludes]),
+diff --git a/packages/three-surface-poc-core/src/test-artifact-verification-live-source.test.ts b/packages/three-surface-poc-core/src/test-artifact-verification-live-source.test.ts
+index 91044e7b..3401966f 100644
+--- a/packages/three-surface-poc-core/src/test-artifact-verification-live-source.test.ts
++++ b/packages/three-surface-poc-core/src/test-artifact-verification-live-source.test.ts
+@@ -108,6 +108,7 @@ function isLiteralKey(node: ts.Expression): boolean {
+ /** Workspace packages in the closure, followed into their sources. */
+ const WORKSPACE_PACKAGES: Readonly<Record<string, string>> = {
+   '@syzygy/cap1-core': '../../cap1-core/src/index.ts',
++  '@syzygy/support': '../../support/src/index.ts',
+ };
+ 
+ /** The only members of `process` the closure may touch. */
+@@ -268,7 +269,7 @@ describe('the live verification test, and every module it imports, runs no obser
+     const { files, violations } = closure(LIVE);
+     // Denominator: the closure must actually include the modules that hold
+     // process starts, or the check proves nothing about them.
+-    for (const expected of [LIVE, 'model.ts', 'test-artifact-verification.ts', 'worker-change-observation.ts', 'work-items.ts', 'code-structure.ts', '../../cap1-core/src/index.ts']) {
++    for (const expected of [LIVE, 'model.ts', 'test-artifact-verification.ts', 'worker-change-observation.ts', 'work-items.ts', 'code-structure.ts', '../../cap1-core/src/index.ts', '../../support/src/index.ts', '../../support/src/sha256.ts', '../../support/src/deep-freeze.ts']) {
+       expect(files).toContain(expected);
+     }
+     expect(violations).toEqual([]);
+diff --git a/packages/three-surface-poc-core/src/walkthrough-judgment.ts b/packages/three-surface-poc-core/src/walkthrough-judgment.ts
+index 1390a0b4..00965085 100644
+--- a/packages/three-surface-poc-core/src/walkthrough-judgment.ts
++++ b/packages/three-surface-poc-core/src/walkthrough-judgment.ts
+@@ -32,6 +32,7 @@
+ // append-only: later correlation never rewrites the provenance under
+ // which an earlier judgment took effect.
+ 
++import { deepFreeze, sha256 } from '@syzygy/support';
+ import {
+   ACT_IDENTITY,
+   ISO_DATE,
+@@ -43,12 +44,10 @@ import {
+   STATE_1_LABEL,
+   STATE_2_LABEL,
+   TAG,
+-  deepFreeze,
+   isGovernancePath,
+   isHumanName,
+   isIsoDate,
+   provenanceFromLabel,
+-  sha256,
+   type ProvenanceLabel,
+ } from './act-fields.js';
+ import {
+diff --git a/packages/three-surface-poc-core/src/walkthrough-readiness.ts b/packages/three-surface-poc-core/src/walkthrough-readiness.ts
+index 148127e2..2738686c 100644
+--- a/packages/three-surface-poc-core/src/walkthrough-readiness.ts
++++ b/packages/three-surface-poc-core/src/walkthrough-readiness.ts
+@@ -17,7 +17,7 @@
+ // act can retain a negative judgment. Every arm below is evaluated (a
+ // sweep, not a first-failure), so the owner sees every reason at once.
+ 
+-import { createHash } from 'node:crypto';
++import { sha256 } from '@syzygy/support';
+ 
+ import { canonicalJson } from './project-shape-manifest.js';
+ import type { ProjectShape } from './project-shape-model.js';
+@@ -123,7 +123,7 @@ export function walkthroughEvaluationIdentity(shape: ProjectShape): string {
+     ? { kind: 'evaluated', consent: inputs.authority.consent, policy: inputs.authority.policy, registry: inputs.authority.registry }
+     : { kind: inputs.authority.kind };
+   const stable = { ...inputs, authority };
+-  const digest = createHash('sha256').update(canonicalJson(stable)).digest('hex');
++  const digest = sha256(canonicalJson(stable));
+   return `pwb-eval-${digest.slice(0, 24)}`;
+ }
+ 
+diff --git a/packages/three-surface-poc-core/tsconfig.json b/packages/three-surface-poc-core/tsconfig.json
+index aa7a0cff..57ed206f 100644
+--- a/packages/three-surface-poc-core/tsconfig.json
++++ b/packages/three-surface-poc-core/tsconfig.json
+@@ -11,6 +11,9 @@
+   "references": [
+     {
+       "path": "../cap1-core"
++    },
++    {
++      "path": "../support"
+     }
+   ]
+ }
+diff --git a/vitest.config.ts b/vitest.config.ts
+index 94068e18..27463e7b 100644
+--- a/vitest.config.ts
++++ b/vitest.config.ts
+@@ -4,6 +4,7 @@ import { defineConfig } from 'vitest/config';
+ export default defineConfig({
+   resolve: {
+     alias: {
++      '@syzygy/support': fileURLToPath(new URL('./packages/support/src/index.ts', import.meta.url)),
+       '@syzygy/polaris-generation-core/live': fileURLToPath(new URL('./packages/polaris-generation-core/src/live.ts', import.meta.url)),
+       '@syzygy/polaris-generation-core': fileURLToPath(new URL('./packages/polaris-generation-core/src/index.ts', import.meta.url)),
+       '@syzygy/polaris-generation-consent/live': fileURLToPath(new URL('./packages/polaris-generation-consent/src/live.ts', import.meta.url)),
+@@ -31,6 +32,13 @@ export default defineConfig({
+     maxWorkers: '50%',
+     setupFiles: [fileURLToPath(new URL('./vitest.setup.ts', import.meta.url))],
+     projects: [
++      {
++        extends: true,
++        test: {
++          name: '@syzygy/support',
++          include: ['packages/support/src/**/*.test.ts'],
++        },
++      },
+       {
+         extends: true,
+         test: {

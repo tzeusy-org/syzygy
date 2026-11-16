@@ -1,0 +1,21 @@
+CONTROL: survived exit=0 failed=0/580 files=0 timeouts=0 25.4s clean=True
+V1-token-compare-not-constant-time: survived exit=0 failed=0/580 files=0 timeouts=0 27.9s clean=True
+V2-bearer-leading-whitespace-admitted: survived exit=0 failed=0/580 files=0 timeouts=0 24.9s clean=True
+V3-bearer-token-first-non-space-run: killed exit=1 failed=1/580 files=1 timeouts=0 28.0s clean=True
+     packages/http-host/src/credentials.test.ts > RT3 — credential verification through core admission the minted token behind any other whitespace refuses, named
+V4-containment-case-insensitive: survived exit=0 failed=0/580 files=0 timeouts=0 22.8s clean=True
+V5-lexical-check-before-normalising: killed exit=1 failed=2/580 files=1 timeouts=0 25.3s clean=True
+     packages/http-host/src/credentials.test.ts > RT3 — state-write boundary refuses traversal out of the state dir, named
+     packages/http-host/src/credentials.test.ts > RT3 — state-write boundary refuses a sibling directory whose name extends the state dir name, as traversal
+V6-origin-suffix-match: survived exit=0 failed=0/580 files=0 timeouts=0 24.1s clean=True
+V7-origin-compared-case-insensitively: survived exit=0 failed=0/580 files=0 timeouts=0 28.3s clean=True
+V8-host-lower-cased-before-check: survived exit=0 failed=0/580 files=0 timeouts=0 27.0s clean=True
+V9-withheld-diagnostic-leaks-one-reason-character: killed exit=1 failed=1/580 files=1 timeouts=0 26.6s clean=True
+     packages/cap1-daemon/src/server.test.ts > RT3 — credential-classed admission at the transport logs a 503 breach diagnostic for each listed Unknown population and withholds an unlisted one
+V10-listed-reason-matched-case-insensitively: survived exit=0 failed=0/580 files=0 timeouts=0 25.6s clean=True
+V11-gate-prefix-without-trailing-slash: survived exit=0 failed=0/580 files=0 timeouts=0 27.1s clean=True
+V12-gate-prefix-src-and-manifest-only: survived exit=0 failed=0/580 files=0 timeouts=0 28.9s clean=True
+V13-shim-local-copy-of-object-export: killed exit=1 failed=1/580 files=1 timeouts=0 26.3s clean=True
+     packages/cap1-daemon/src/package.test.ts > cap1-daemon package re-exports each host value as the host binding of the same name
+killed 4 survived 10 error 0 of 14
+done 0

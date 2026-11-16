@@ -1,0 +1,358 @@
+{
+ "tool": "de_rows_r4.py",
+ "commit": "3a05f9b4fb49aca38c1049865f6f103c88eacde4",
+ "results": [
+  {
+   "id": "control",
+   "source": null,
+   "file": null,
+   "edits": [],
+   "build": 0,
+   "exit": 0,
+   "killed": false,
+   "seconds": 7.2,
+   "load1": [
+    "28.80",
+    "29.18"
+   ],
+   "rows": [
+    {
+     "title": "[\"--help\"] prints the usage and exits 0",
+     "status": "passed",
+     "durationMs": 258.37164000000007,
+     "failure": ""
+    },
+    {
+     "title": "[\"-h\"] prints the usage and exits 0",
+     "status": "passed",
+     "durationMs": 237.93244299999992,
+     "failure": ""
+    },
+    {
+     "title": "[\"--help\",\"dossier\"] prints the usage and exits 0",
+     "status": "passed",
+     "durationMs": 229.3718510000001,
+     "failure": ""
+    },
+    {
+     "title": "[\"--bogus\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 245.16606199999978,
+     "failure": ""
+    },
+    {
+     "title": "[\"--port\",\"0\",\"dossier\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 185.07571000000007,
+     "failure": ""
+    },
+    {
+     "title": "[\"Dossier\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 152.455285,
+     "failure": ""
+    },
+    {
+     "title": "[\"--port\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 201.27202499999976,
+     "failure": ""
+    },
+    {
+     "title": "[\"--port\",\"70000\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 174.023189,
+     "failure": ""
+    },
+    {
+     "title": "a state directory inside the governed plane is refused with the same message",
+     "status": "passed",
+     "durationMs": 159.58371799999986,
+     "failure": ""
+    },
+    {
+     "title": "with no arguments it serves from the working directory, writes the same state and shuts down the same way",
+     "status": "passed",
+     "durationMs": 209.5035630000002,
+     "failure": ""
+    },
+    {
+     "title": "with explicit flags it serves, writes the same state and shuts down the same way",
+     "status": "passed",
+     "durationMs": 183.64696800000002,
+     "failure": ""
+    },
+    {
+     "title": "`dossier` alone is a dossier usage error (exit 2), not the daemon's refusal",
+     "status": "passed",
+     "durationMs": 291.58108500000026,
+     "failure": ""
+    },
+    {
+     "title": "`dossier status <missing>` is a dossier refusal (exit 1) and starts no daemon",
+     "status": "passed",
+     "durationMs": 301.16049699999985,
+     "failure": ""
+    },
+    {
+     "title": "`dossier render <missing>` reaches the run with the renderer injected, and starts no daemon",
+     "status": "passed",
+     "durationMs": 317.08720300000004,
+     "failure": ""
+    },
+    {
+     "title": "the daemon path never loads the POC app, and the `dossier render` branch does",
+     "status": "passed",
+     "durationMs": 1327.503331,
+     "failure": ""
+    },
+    {
+     "title": "every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, whose only else is the other, before the daemon path",
+     "status": "passed",
+     "durationMs": 33.385849000000235,
+     "failure": ""
+    }
+   ],
+   "passed": 16,
+   "failed": []
+  },
+  {
+   "id": "Y1-dossier-serve-falls-through",
+   "source": "lane",
+   "file": "apps/syzygy/src/main.ts",
+   "edits": [
+    [
+     "    return runDossierCli(argv.slice(1), {\n",
+     "    if (argv[1] === 'serve') {\n      // `syzygy dossier serve …` serves the daemon below, with the renderer loaded for its routes.\n      await import('@syzygy/three-surface-poc-app/dossier-site');\n      process.argv.splice(2, 2);\n    } else return runDossierCli(argv.slice(1), {\n"
+    ]
+   ],
+   "build": 0,
+   "exit": 0,
+   "killed": false,
+   "seconds": 6.9,
+   "load1": [
+    "29.18",
+    "28.43"
+   ],
+   "rows": [
+    {
+     "title": "[\"--help\"] prints the usage and exits 0",
+     "status": "passed",
+     "durationMs": 172.12357899999984,
+     "failure": ""
+    },
+    {
+     "title": "[\"-h\"] prints the usage and exits 0",
+     "status": "passed",
+     "durationMs": 191.61039800000003,
+     "failure": ""
+    },
+    {
+     "title": "[\"--help\",\"dossier\"] prints the usage and exits 0",
+     "status": "passed",
+     "durationMs": 249.13870099999986,
+     "failure": ""
+    },
+    {
+     "title": "[\"--bogus\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 197.521436,
+     "failure": ""
+    },
+    {
+     "title": "[\"--port\",\"0\",\"dossier\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 209.96851100000003,
+     "failure": ""
+    },
+    {
+     "title": "[\"Dossier\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 161.24489700000004,
+     "failure": ""
+    },
+    {
+     "title": "[\"--port\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 169.00517899999977,
+     "failure": ""
+    },
+    {
+     "title": "[\"--port\",\"70000\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 141.97175100000004,
+     "failure": ""
+    },
+    {
+     "title": "a state directory inside the governed plane is refused with the same message",
+     "status": "passed",
+     "durationMs": 145.411971,
+     "failure": ""
+    },
+    {
+     "title": "with no arguments it serves from the working directory, writes the same state and shuts down the same way",
+     "status": "passed",
+     "durationMs": 247.6685520000001,
+     "failure": ""
+    },
+    {
+     "title": "with explicit flags it serves, writes the same state and shuts down the same way",
+     "status": "passed",
+     "durationMs": 190.19893899999988,
+     "failure": ""
+    },
+    {
+     "title": "`dossier` alone is a dossier usage error (exit 2), not the daemon's refusal",
+     "status": "passed",
+     "durationMs": 287.04715399999986,
+     "failure": ""
+    },
+    {
+     "title": "`dossier status <missing>` is a dossier refusal (exit 1) and starts no daemon",
+     "status": "passed",
+     "durationMs": 269.4638970000001,
+     "failure": ""
+    },
+    {
+     "title": "`dossier render <missing>` reaches the run with the renderer injected, and starts no daemon",
+     "status": "passed",
+     "durationMs": 314.70647899999994,
+     "failure": ""
+    },
+    {
+     "title": "the daemon path never loads the POC app, and the `dossier render` branch does",
+     "status": "passed",
+     "durationMs": 1347.571739,
+     "failure": ""
+    },
+    {
+     "title": "every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, whose only else is the other, before the daemon path",
+     "status": "passed",
+     "durationMs": 36.812738999999965,
+     "failure": ""
+    }
+   ],
+   "passed": 16,
+   "failed": []
+  },
+  {
+   "id": "Y3-flag-rewrites-argv-into-dossier",
+   "source": "lane",
+   "file": "apps/syzygy/src/main.ts",
+   "edits": [
+    [
+     "  const argv = process.argv.slice(2);\n  if (argv[0] === 'dossier') {\n",
+     "  const argv = process.env.SYZYGY_PRELOAD_RENDERER === '1' ? ['dossier', '--preload'] : process.argv.slice(2);\n  if (argv[0] === 'dossier') {\n    if (argv[1] === '--preload') {\n      // SYZYGY_PRELOAD_RENDERER=1 warms the renderer, then serves the daemon as asked.\n      await import('@syzygy/three-surface-poc-app/dossier-site');\n      delete process.env.SYZYGY_PRELOAD_RENDERER;\n      return main();\n    }\n"
+    ]
+   ],
+   "build": 0,
+   "exit": 0,
+   "killed": false,
+   "seconds": 7.5,
+   "load1": [
+    "28.43",
+    "27.59"
+   ],
+   "rows": [
+    {
+     "title": "[\"--help\"] prints the usage and exits 0",
+     "status": "passed",
+     "durationMs": 184.95544199999995,
+     "failure": ""
+    },
+    {
+     "title": "[\"-h\"] prints the usage and exits 0",
+     "status": "passed",
+     "durationMs": 167.48879499999998,
+     "failure": ""
+    },
+    {
+     "title": "[\"--help\",\"dossier\"] prints the usage and exits 0",
+     "status": "passed",
+     "durationMs": 144.75543000000016,
+     "failure": ""
+    },
+    {
+     "title": "[\"--bogus\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 133.4147170000001,
+     "failure": ""
+    },
+    {
+     "title": "[\"--port\",\"0\",\"dossier\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 163.99694999999974,
+     "failure": ""
+    },
+    {
+     "title": "[\"Dossier\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 205.6472729999996,
+     "failure": ""
+    },
+    {
+     "title": "[\"--port\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 209.13156600000002,
+     "failure": ""
+    },
+    {
+     "title": "[\"--port\",\"70000\"] is refused with exit 1 and the same message",
+     "status": "passed",
+     "durationMs": 436.09707100000014,
+     "failure": ""
+    },
+    {
+     "title": "a state directory inside the governed plane is refused with the same message",
+     "status": "passed",
+     "durationMs": 244.70575899999994,
+     "failure": ""
+    },
+    {
+     "title": "with no arguments it serves from the working directory, writes the same state and shuts down the same way",
+     "status": "passed",
+     "durationMs": 449.06363199999987,
+     "failure": ""
+    },
+    {
+     "title": "with explicit flags it serves, writes the same state and shuts down the same way",
+     "status": "passed",
+     "durationMs": 279.924301,
+     "failure": ""
+    },
+    {
+     "title": "`dossier` alone is a dossier usage error (exit 2), not the daemon's refusal",
+     "status": "passed",
+     "durationMs": 323.3416529999995,
+     "failure": ""
+    },
+    {
+     "title": "`dossier status <missing>` is a dossier refusal (exit 1) and starts no daemon",
+     "status": "passed",
+     "durationMs": 298.76864000000023,
+     "failure": ""
+    },
+    {
+     "title": "`dossier render <missing>` reaches the run with the renderer injected, and starts no daemon",
+     "status": "passed",
+     "durationMs": 289.62233299999934,
+     "failure": ""
+    },
+    {
+     "title": "the daemon path never loads the POC app, and the `dossier render` branch does",
+     "status": "passed",
+     "durationMs": 1162.669707,
+     "failure": ""
+    },
+    {
+     "title": "every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, whose only else is the other, before the daemon path",
+     "status": "passed",
+     "durationMs": 35.563984999999775,
+     "failure": ""
+    }
+   ],
+   "passed": 16,
+   "failed": []
+  }
+ ]
+}

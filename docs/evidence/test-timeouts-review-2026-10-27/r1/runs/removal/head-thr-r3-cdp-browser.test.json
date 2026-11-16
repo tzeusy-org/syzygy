@@ -1,0 +1,332 @@
+{
+ "files": [
+  {
+   "file": "/tmp/claude-1000/-home-tze-GitHub-syzygy/9297eba3-858b-4aca-a313-05ea0802ad02/scratchpad/rev-537/clone/apps/three-surface-poc/src/cdp-browser.test.ts",
+   "project": "@syzygy/three-surface-poc-app",
+   "type": "suite",
+   "name": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "line": null,
+   "mode": "run",
+   "state": "pass",
+   "durationMs": 492.6300120000001,
+   "errors": [],
+   "tasks": [
+    {
+     "type": "suite",
+     "name": "disposable browser shutdown",
+     "line": 11,
+     "mode": "run",
+     "state": "pass",
+     "durationMs": 400.7539320000001,
+     "errors": [],
+     "tasks": [
+      {
+       "type": "test",
+       "name": "closes an unresponsive protocol socket, kills the child, then removes its profile",
+       "line": 12,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 45.408500000000004,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "lets an acknowledged close exit before removing the profile without a hard kill",
+       "line": 42,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 26.90788100000009,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "cleans a child whose signal exit was already observed without waiting for a second exit event",
+       "line": 66,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 26.162152000000106,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "waits for private Chrome group members before removal and retains the profile on drain timeout",
+       "line": 79,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 136.827317,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "retains an already-exited parent profile through a late descendant beyond the former one-second drain",
+       "line": 120,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 109.55608899999993,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "stops helpers orphaned by a killed leader with their group, then drains before removal",
+       "line": 141,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 53.901092999999946,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "kills the whole private group first, then each live member, tolerating members already gone",
+       "line": 169,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 0.6755670000002283,
+       "errors": []
+      }
+     ],
+     "hookMs": 1
+    },
+    {
+     "type": "suite",
+     "name": "browser page lifetime",
+     "line": 181,
+     "mode": "run",
+     "state": "pass",
+     "durationMs": 4.841396000000259,
+     "errors": [],
+     "tasks": [
+      {
+       "type": "test",
+       "name": "closes the private browser when newPage rejects before a page exists",
+       "line": 182,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 0.6048319999999876,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "closes the private browser even when page.close rejects",
+       "line": 194,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 3.174145999999837,
+       "errors": []
+      }
+     ],
+     "hookMs": 1
+    },
+    {
+     "type": "suite",
+     "name": "browser profile cleanup",
+     "line": 208,
+     "mode": "run",
+     "state": "pass",
+     "durationMs": 24.301196999999775,
+     "errors": [],
+     "tasks": [
+      {
+       "type": "test",
+       "name": "retries transient ENOTEMPTY failures and succeeds within the bound",
+       "line": 223,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 1.3847759999998743,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "does not retry a permanent profile cleanup failure",
+       "line": 234,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 1.5212839999999233,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "preserves a retryable failure at the exact total-call bound",
+       "line": 246,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 0.44922900000028676,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "stays bounded across repeated transient profile cleanup races",
+       "line": 259,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 20.820721999999932,
+       "errors": []
+      }
+     ],
+     "hookMs": 0
+    },
+    {
+     "type": "suite",
+     "name": "Chrome singleton directory (syzygy-bpyt.4.11)",
+     "line": 279,
+     "mode": "run",
+     "state": "pass",
+     "durationMs": 61.832414999999855,
+     "errors": [],
+     "tasks": [
+      {
+       "type": "test",
+       "name": "removes the singleton directory read while Chrome ran, with the profile, and only that one",
+       "line": 329,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 3.043960999999854,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "reads the directory from the profile's link when none was read while Chrome ran",
+       "line": 337,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 4.900276999999733,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "removes the Chromium form of the name too",
+       "line": 346,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 0.6163639999999759,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "removes the name without a leading dot too, which Chrome 147 to 155 make, whether given or read from the link",
+       "line": 353,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 15.346250000000055,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "removes the profile and nothing else when Chrome left no singleton directory (a clean exit)",
+       "line": 366,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 2.3849460000001272,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "keeps a directory that is not directly under the temp directory, whether it was given or read from the link",
+       "line": 373,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 0.8536120000003393,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "keeps a directory whose name is not exactly Chrome's: another prefix, no suffix, a longer name, a symbol in the suffix",
+       "line": 385,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 3.7624979999995958,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "follows no link and removes no file: a link to a directory and a plain file with Chrome's name both stay",
+       "line": 403,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 10.493363000000045,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "keeps a directory that belongs to another user, never entering it",
+       "line": 419,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 7.273290000000088,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "checks no user where the system has no user ids, and removes the directory",
+       "line": 428,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 0.5864270000001852,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "removes the directory a profile's link names when the profile and the link are the running user's, whatever removes the profile",
+       "line": 441,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 5.005975999999919,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "keeps the directory a link names when the profile is not the running user's, as in a shared temp directory where another user made it first",
+       "line": 447,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 0.8590730000000804,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "keeps the directory a link names when the link is not the running user's",
+       "line": 453,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 0.5628930000002583,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "keeps a directory made under the same name after the one that was read, as when Chrome exits cleanly and another Chrome follows",
+       "line": 460,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 0.5217659999998432,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "keeps a directory with the recorded inode number on another device",
+       "line": 472,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 2.828954000000067,
+       "errors": []
+      },
+      {
+       "type": "test",
+       "name": "does not fail the run when the singleton directory cannot be removed",
+       "line": 480,
+       "mode": "run",
+       "state": "pass",
+       "durationMs": 2.529537999999775,
+       "errors": []
+      }
+     ],
+     "hookMs": 0
+    }
+   ],
+   "hookMs": 1,
+   "collectMs": 642.672693,
+   "setupMs": 15.554243000000042,
+   "prepareMs": 244.93019900000002,
+   "environmentMs": 0.27209399999992456
+  }
+ ],
+ "unhandled": []
+}

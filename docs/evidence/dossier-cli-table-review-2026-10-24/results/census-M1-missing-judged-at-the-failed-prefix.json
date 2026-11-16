@@ -1,0 +1,6101 @@
+{
+ "summary": {
+  "inputs": 376,
+  "daemonAnswers": {
+   "resolved": 310,
+   "symlink-loop": 27,
+   "path-unreadable": 39
+  },
+  "daemonVsBaseState": 0,
+  "daemonVsShared": 56,
+  "baseStateVsSharedOnStateFields": 56,
+  "sharedKeys": [
+   "realPath,resolved",
+   "detail,reason,resolved"
+  ]
+ },
+ "rows": [
+  {
+   "input": "/",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/"
+   }
+  },
+  {
+   "input": "//",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/"
+   }
+  },
+  {
+   "input": "///",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/"
+   }
+  },
+  {
+   "input": "/.",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/"
+   }
+  },
+  {
+   "input": "/..",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/"
+   }
+  },
+  {
+   "input": "/tmp/..",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx//",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/abs-dir",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/abs-dir/",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/abs-dir/x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/abs-dir/x/",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/abs-dir/..",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/abs-dir/../x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/abs-dir/.",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/abs-dir//x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/abs-dir/x/../y",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/y",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/y"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/y"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/abs-dir/sub",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/sub",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/abs-dir/sub/z",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/sub/z",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub/z"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub/z"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/rel-dir",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/rel-dir/",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/rel-dir/x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/rel-dir/x/",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/rel-dir/..",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/rel-dir/../x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/rel-dir/.",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/rel-dir//x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/rel-dir/x/../y",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/y",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/y"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/y"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/rel-dir/sub",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/sub",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/rel-dir/sub/z",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/sub/z",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub/z"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub/z"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/rel-up",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/rel-up/",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/rel-up/x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/rel-up/x/",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/rel-up/..",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/rel-up/../x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/rel-up/.",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/rel-up//x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/rel-up/x/../y",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/y",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/y"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/y"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/rel-up/sub",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/sub",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/rel-up/sub/z",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/sub/z",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub/z"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub/z"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/dangling-abs",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/nowhere/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/nowhere/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/nowhere"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/dangling-abs/",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/nowhere/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/nowhere/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/nowhere"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/dangling-abs/x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/nowhere/x/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/nowhere/x/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/nowhere"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/dangling-abs/x/",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/nowhere/x/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/nowhere/x/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/nowhere"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/dangling-abs/..",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/dangling-abs/../x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/dangling-abs/.",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/nowhere/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/nowhere/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/nowhere"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/dangling-abs//x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/nowhere/x/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/nowhere/x/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/nowhere"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/dangling-abs/x/../y",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/nowhere/x/y",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/nowhere/x/y"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/nowhere"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/dangling-abs/sub",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/nowhere/x/sub",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/nowhere/x/sub"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/nowhere"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/dangling-abs/sub/z",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/nowhere/x/sub/z",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/nowhere/x/sub/z"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/nowhere"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/dangling-rel",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/nowhere/y",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/nowhere/y"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/nowhere"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/dangling-rel/",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/nowhere/y",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/nowhere/y"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/nowhere"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/dangling-rel/x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/nowhere/y/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/nowhere/y/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/nowhere"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/dangling-rel/x/",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/nowhere/y/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/nowhere/y/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/nowhere"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/dangling-rel/..",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/dangling-rel/../x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/dangling-rel/.",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/nowhere/y",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/nowhere/y"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/nowhere"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/dangling-rel//x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/nowhere/y/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/nowhere/y/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/nowhere"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/dangling-rel/x/../y",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/nowhere/y/y",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/nowhere/y/y"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/nowhere"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/dangling-rel/sub",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/nowhere/y/sub",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/nowhere/y/sub"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/nowhere"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/dangling-rel/sub/z",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/nowhere/y/sub/z",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/nowhere/y/sub/z"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/nowhere"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/chain-1",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/chain-1/",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/chain-1/x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/chain-1/x/",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/chain-1/..",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/chain-1/../x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/chain-1/.",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/chain-1//x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/chain-1/x/../y",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/y",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/y"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/y"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/chain-1/sub",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/sub",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/chain-1/sub/z",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/sub/z",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub/z"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub/z"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/loop-a",
+   "daemon": {
+    "resolved": false,
+    "reason": "symlink-loop",
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/loop-a"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/loop-a"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "symlink-loop",
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/loop-a"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/loop-a/",
+   "daemon": {
+    "resolved": false,
+    "reason": "symlink-loop",
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/loop-a"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/loop-a"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "symlink-loop",
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/loop-a"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/loop-a/x",
+   "daemon": {
+    "resolved": false,
+    "reason": "symlink-loop",
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/loop-a"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/loop-a"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "symlink-loop",
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/loop-a"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/loop-a/x/",
+   "daemon": {
+    "resolved": false,
+    "reason": "symlink-loop",
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/loop-a"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/loop-a"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "symlink-loop",
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/loop-a"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/loop-a/..",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/loop-a/../x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/loop-a/.",
+   "daemon": {
+    "resolved": false,
+    "reason": "symlink-loop",
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/loop-a"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/loop-a"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "symlink-loop",
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/loop-a"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/loop-a//x",
+   "daemon": {
+    "resolved": false,
+    "reason": "symlink-loop",
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/loop-a"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/loop-a"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "symlink-loop",
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/loop-a"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/loop-a/x/../y",
+   "daemon": {
+    "resolved": false,
+    "reason": "symlink-loop",
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/loop-a"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/loop-a"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "symlink-loop",
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/loop-a"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/loop-a/sub",
+   "daemon": {
+    "resolved": false,
+    "reason": "symlink-loop",
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/loop-a"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/loop-a"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "symlink-loop",
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/loop-a"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/loop-a/sub/z",
+   "daemon": {
+    "resolved": false,
+    "reason": "symlink-loop",
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/loop-a"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/loop-a"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "symlink-loop",
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/loop-a"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/self",
+   "daemon": {
+    "resolved": false,
+    "reason": "symlink-loop",
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/self"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/self"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "symlink-loop",
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/self"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/self/",
+   "daemon": {
+    "resolved": false,
+    "reason": "symlink-loop",
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/self"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/self"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "symlink-loop",
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/self"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/self/x",
+   "daemon": {
+    "resolved": false,
+    "reason": "symlink-loop",
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/self"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/self"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "symlink-loop",
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/self"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/self/x/",
+   "daemon": {
+    "resolved": false,
+    "reason": "symlink-loop",
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/self"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/self"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "symlink-loop",
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/self"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/self/..",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/self/../x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/self/.",
+   "daemon": {
+    "resolved": false,
+    "reason": "symlink-loop",
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/self"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/self"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "symlink-loop",
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/self"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/self//x",
+   "daemon": {
+    "resolved": false,
+    "reason": "symlink-loop",
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/self"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/self"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "symlink-loop",
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/self"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/self/x/../y",
+   "daemon": {
+    "resolved": false,
+    "reason": "symlink-loop",
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/self"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/self"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "symlink-loop",
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/self"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/self/sub",
+   "daemon": {
+    "resolved": false,
+    "reason": "symlink-loop",
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/self"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/self"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "symlink-loop",
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/self"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/self/sub/z",
+   "daemon": {
+    "resolved": false,
+    "reason": "symlink-loop",
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/self"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/self"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "symlink-loop",
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/self"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/to-root",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/to-root/",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/to-root/x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/to-root/x/",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/to-root/..",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/to-root/../x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/to-root/.",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/to-root//x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/to-root/x/../y",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/y",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/y"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/y"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/to-root/sub",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/sub",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/sub"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/sub"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/to-root/sub/z",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/sub/z",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/sub/z"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/sub"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/to-file",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/file.txt",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/file.txt"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/file.txt"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/to-file/",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/file.txt",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/file.txt"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/file.txt"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/to-file/x",
+   "daemon": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/real/file.txt/x (ENOTDIR)"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/real/file.txt/x (ENOTDIR)"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/real/file.txt/x (ENOTDIR)"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/to-file/x/",
+   "daemon": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/real/file.txt/x (ENOTDIR)"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/real/file.txt/x (ENOTDIR)"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/real/file.txt/x (ENOTDIR)"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/to-file/..",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/to-file/../x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/to-file/.",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/file.txt",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/file.txt"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/file.txt"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/to-file//x",
+   "daemon": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/real/file.txt/x (ENOTDIR)"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/real/file.txt/x (ENOTDIR)"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/real/file.txt/x (ENOTDIR)"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/to-file/x/../y",
+   "daemon": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/real/file.txt/y (ENOTDIR)"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/real/file.txt/y (ENOTDIR)"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/real/file.txt/y (ENOTDIR)"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/to-file/sub",
+   "daemon": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/real/file.txt/sub (ENOTDIR)"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/real/file.txt/sub (ENOTDIR)"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/real/file.txt/sub (ENOTDIR)"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/to-file/sub/z",
+   "daemon": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/real/file.txt/sub (ENOTDIR)"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/real/file.txt/sub (ENOTDIR)"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/real/file.txt/sub (ENOTDIR)"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/trailing",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/trailing/",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/trailing/x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/trailing/x/",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/trailing/..",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/trailing/../x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/trailing/.",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/trailing//x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/trailing/x/../y",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/y",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/y"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/y"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/trailing/sub",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/sub",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/trailing/sub/z",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/sub/z",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub/z"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub/z"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/dotdot",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/sub",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/dotdot/",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/sub",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/dotdot/x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/sub/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/dotdot/x/",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/sub/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/dotdot/..",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/dotdot/../x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/dotdot/.",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/sub",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/dotdot//x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/sub/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/dotdot/x/../y",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/sub/y",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub/y"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub/y"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/dotdot/sub",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/sub/sub",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub/sub"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub/sub"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/dotdot/sub/z",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/sub/sub/z",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub/sub/z"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub/sub"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/slashes",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/sub",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/slashes/",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/sub",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/slashes/x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/sub/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/slashes/x/",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/sub/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/slashes/..",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/slashes/../x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/slashes/.",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/sub",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/slashes//x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/sub/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/slashes/x/../y",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/sub/y",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub/y"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub/y"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/slashes/sub",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/sub/sub",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub/sub"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub/sub"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/slashes/sub/z",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/sub/sub/z",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub/sub/z"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub/sub"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/into-gov",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/root/.syzygy/gov/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/.syzygy/gov/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/.syzygy/gov/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/into-gov/",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/root/.syzygy/gov/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/.syzygy/gov/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/.syzygy/gov/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/into-gov/x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/root/.syzygy/gov/x/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/.syzygy/gov/x/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/.syzygy/gov/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/into-gov/x/",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/root/.syzygy/gov/x/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/.syzygy/gov/x/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/.syzygy/gov/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/into-gov/..",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/into-gov/../x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/into-gov/.",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/root/.syzygy/gov/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/.syzygy/gov/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/.syzygy/gov/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/into-gov//x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/root/.syzygy/gov/x/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/.syzygy/gov/x/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/.syzygy/gov/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/into-gov/x/../y",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/root/.syzygy/gov/x/y",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/.syzygy/gov/x/y"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/.syzygy/gov/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/into-gov/sub",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/root/.syzygy/gov/x/sub",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/.syzygy/gov/x/sub"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/.syzygy/gov/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/into-gov/sub/z",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/root/.syzygy/gov/x/sub/z",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/.syzygy/gov/x/sub/z"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/.syzygy/gov/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/into-gov-rel",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/root/openspec/y",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/openspec/y"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/openspec/y"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/into-gov-rel/",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/root/openspec/y",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/openspec/y"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/openspec/y"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/into-gov-rel/x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/root/openspec/y/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/openspec/y/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/openspec/y"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/into-gov-rel/x/",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/root/openspec/y/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/openspec/y/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/openspec/y"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/into-gov-rel/..",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/into-gov-rel/../x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/into-gov-rel/.",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/root/openspec/y",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/openspec/y"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/openspec/y"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/into-gov-rel//x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/root/openspec/y/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/openspec/y/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/openspec/y"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/into-gov-rel/x/../y",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/root/openspec/y/y",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/openspec/y/y"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/openspec/y"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/into-gov-rel/sub",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/root/openspec/y/sub",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/openspec/y/sub"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/openspec/y"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/into-gov-rel/sub/z",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/root/openspec/y/sub/z",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/openspec/y/sub/z"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/openspec/y"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/to-locked",
+   "daemon": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/in (EACCES)"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/in (EACCES)"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/in (EACCES)"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/to-locked/",
+   "daemon": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/in (EACCES)"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/in (EACCES)"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/in (EACCES)"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/to-locked/x",
+   "daemon": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/in (EACCES)"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/in (EACCES)"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/in (EACCES)"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/to-locked/x/",
+   "daemon": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/in (EACCES)"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/in (EACCES)"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/in (EACCES)"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/to-locked/..",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/to-locked/../x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/to-locked/.",
+   "daemon": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/in (EACCES)"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/in (EACCES)"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/in (EACCES)"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/to-locked//x",
+   "daemon": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/in (EACCES)"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/in (EACCES)"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/in (EACCES)"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/to-locked/x/../y",
+   "daemon": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/in (EACCES)"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/in (EACCES)"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/in (EACCES)"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/to-locked/sub",
+   "daemon": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/in (EACCES)"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/in (EACCES)"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/in (EACCES)"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/to-locked/sub/z",
+   "daemon": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/in (EACCES)"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/in (EACCES)"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/in (EACCES)"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/real/dir/up",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/real/dir/up/",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/real/dir/up/x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/real/dir/up/x/",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/real/dir/up/..",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/real/dir/up/../x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/real/dir/up/.",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/real/dir/up//x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/real/dir/up/x/../y",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/y",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/y"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/y"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/real/dir/up/sub",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/sub",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/sub"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/sub"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/real/dir/up/sub/z",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/sub/z",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/sub/z"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/sub"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/real/dir/dot",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/real/dir/dot/",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/real/dir/dot/x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/real/dir/dot/x/",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/real/dir/dot/..",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/real/dir/dot/../x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/real/dir/dot/.",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/real/dir/dot//x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/real/dir/dot/x/../y",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/y",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/y"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/y"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/real/dir/dot/sub",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/sub",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/real/dir/dot/sub/z",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/sub/z",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub/z"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub/z"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/real/dir/back",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/real/dir/back/",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/real/dir/back/x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/real/dir/back/x/",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/real/dir/back/..",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/real/dir/back/../x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/real/dir/back/.",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/real/dir/back//x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/real/dir/back/x/../y",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/y",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/y"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/y"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/real/dir/back/sub",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/sub",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/real/dir/back/sub/z",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/sub/z",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub/z"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub/z"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/deep/a/b/c/out",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/deep/a/b/c/out/",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/deep/a/b/c/out/x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/deep/a/b/c/out/x/",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/deep/a/b/c/out/..",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/deep/a/b/c",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/deep/a/b/c"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/deep/a/b/c"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/deep/a/b/c/out/../x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/deep/a/b/c/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/deep/a/b/c/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/deep/a/b/c/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/deep/a/b/c/out/.",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/deep/a/b/c/out//x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/deep/a/b/c/out/x/../y",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/y",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/y"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/y"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/deep/a/b/c/out/sub",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/sub",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/sub"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/sub"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/deep/a/b/c/out/sub/z",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/sub/z",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/sub/z"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/sub"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/through-loop",
+   "daemon": {
+    "resolved": false,
+    "reason": "symlink-loop",
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/loop-a"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/loop-a"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "symlink-loop",
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/loop-a"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/through-loop/",
+   "daemon": {
+    "resolved": false,
+    "reason": "symlink-loop",
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/loop-a"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/loop-a"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "symlink-loop",
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/loop-a"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/through-loop/x",
+   "daemon": {
+    "resolved": false,
+    "reason": "symlink-loop",
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/loop-a"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/loop-a"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "symlink-loop",
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/loop-a"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/through-loop/x/",
+   "daemon": {
+    "resolved": false,
+    "reason": "symlink-loop",
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/loop-a"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/loop-a"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "symlink-loop",
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/loop-a"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/through-loop/..",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/through-loop/../x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/through-loop/.",
+   "daemon": {
+    "resolved": false,
+    "reason": "symlink-loop",
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/loop-a"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/loop-a"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "symlink-loop",
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/loop-a"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/through-loop//x",
+   "daemon": {
+    "resolved": false,
+    "reason": "symlink-loop",
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/loop-a"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/loop-a"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "symlink-loop",
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/loop-a"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/through-loop/x/../y",
+   "daemon": {
+    "resolved": false,
+    "reason": "symlink-loop",
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/loop-a"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/loop-a"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "symlink-loop",
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/loop-a"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/through-loop/sub",
+   "daemon": {
+    "resolved": false,
+    "reason": "symlink-loop",
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/loop-a"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/loop-a"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "symlink-loop",
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/loop-a"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/through-loop/sub/z",
+   "daemon": {
+    "resolved": false,
+    "reason": "symlink-loop",
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/loop-a"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/loop-a"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "symlink-loop",
+    "detail": "symbolic link cycle revisits /tmp/r518-7/fx/loop-a"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/to-dangling-chain",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/nowhere/y/z",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/nowhere/y/z"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/nowhere"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/to-dangling-chain/",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/nowhere/y/z",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/nowhere/y/z"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/nowhere"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/to-dangling-chain/x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/nowhere/y/z/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/nowhere/y/z/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/nowhere"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/to-dangling-chain/x/",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/nowhere/y/z/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/nowhere/y/z/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/nowhere"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/to-dangling-chain/..",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/to-dangling-chain/../x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/to-dangling-chain/.",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/nowhere/y/z",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/nowhere/y/z"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/nowhere"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/to-dangling-chain//x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/nowhere/y/z/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/nowhere/y/z/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/nowhere"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/to-dangling-chain/x/../y",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/nowhere/y/z/y",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/nowhere/y/z/y"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/nowhere"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/to-dangling-chain/sub",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/nowhere/y/z/sub",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/nowhere/y/z/sub"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/nowhere"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/to-dangling-chain/sub/z",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/nowhere/y/z/sub/z",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/nowhere/y/z/sub/z"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/nowhere"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/root/.syzygy/link-out",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/elsewhere",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/elsewhere"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/elsewhere"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/root/.syzygy/link-out/",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/elsewhere",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/elsewhere"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/elsewhere"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/root/.syzygy/link-out/x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/elsewhere/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/elsewhere/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/elsewhere/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/root/.syzygy/link-out/x/",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/elsewhere/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/elsewhere/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/elsewhere/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/root/.syzygy/link-out/..",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/root/.syzygy",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/.syzygy"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/.syzygy"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/root/.syzygy/link-out/../x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/root/.syzygy/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/.syzygy/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/.syzygy/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/root/.syzygy/link-out/.",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/elsewhere",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/elsewhere"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/elsewhere"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/root/.syzygy/link-out//x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/elsewhere/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/elsewhere/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/elsewhere/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/root/.syzygy/link-out/x/../y",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/elsewhere/y",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/elsewhere/y"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/elsewhere/y"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/root/.syzygy/link-out/sub",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/elsewhere/sub",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/elsewhere/sub"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/elsewhere/sub"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/root/.syzygy/link-out/sub/z",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/elsewhere/sub/z",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/elsewhere/sub/z"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/elsewhere/sub"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/gov-link",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/root/.syzygy",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/.syzygy"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/.syzygy"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/gov-link/",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/root/.syzygy",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/.syzygy"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/.syzygy"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/gov-link/x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/root/.syzygy/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/.syzygy/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/.syzygy/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/gov-link/x/",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/root/.syzygy/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/.syzygy/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/.syzygy/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/gov-link/..",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/gov-link/../x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/gov-link/.",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/root/.syzygy",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/.syzygy"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/.syzygy"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/gov-link//x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/root/.syzygy/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/.syzygy/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/.syzygy/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/gov-link/x/../y",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/root/.syzygy/y",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/.syzygy/y"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/.syzygy/y"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/gov-link/sub",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/root/.syzygy/sub",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/.syzygy/sub"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/.syzygy/sub"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/gov-link/sub/z",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/root/.syzygy/sub/z",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/.syzygy/sub/z"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/.syzygy/sub"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/link-to-link-dir",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/sub",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/link-to-link-dir/",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/sub",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/link-to-link-dir/x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/sub/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/link-to-link-dir/x/",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/sub/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/link-to-link-dir/..",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/link-to-link-dir/../x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/link-to-link-dir/.",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/sub",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/link-to-link-dir//x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/sub/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/link-to-link-dir/x/../y",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/sub/y",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub/y"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub/y"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/link-to-link-dir/sub",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/sub/sub",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub/sub"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub/sub"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/link-to-link-dir/sub/z",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/sub/sub/z",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub/sub/z"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub/sub"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/real/dir",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/real/dir/",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/real/dir/x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/real/dir/x/",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/real/dir/..",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/real/dir/../x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/real/dir/.",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/real/dir//x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/real/dir/x/../y",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/y",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/y"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/y"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/real/dir/sub",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/sub",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/real/dir/sub/z",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir/sub/z",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub/z"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir/sub/z"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/real/file.txt",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/file.txt",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/file.txt"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/file.txt"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/real/file.txt/",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/file.txt",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/file.txt"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/file.txt"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/real/file.txt/x",
+   "daemon": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/real/file.txt/x (ENOTDIR)"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/real/file.txt/x (ENOTDIR)"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/real/file.txt/x (ENOTDIR)"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/real/file.txt/x/",
+   "daemon": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/real/file.txt/x (ENOTDIR)"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/real/file.txt/x (ENOTDIR)"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/real/file.txt/x (ENOTDIR)"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/real/file.txt/..",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/real/file.txt/../x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/real/file.txt/.",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/file.txt",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/file.txt"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/file.txt"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/real/file.txt//x",
+   "daemon": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/real/file.txt/x (ENOTDIR)"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/real/file.txt/x (ENOTDIR)"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/real/file.txt/x (ENOTDIR)"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/real/file.txt/x/../y",
+   "daemon": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/real/file.txt/y (ENOTDIR)"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/real/file.txt/y (ENOTDIR)"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/real/file.txt/y (ENOTDIR)"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/real/file.txt/sub",
+   "daemon": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/real/file.txt/sub (ENOTDIR)"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/real/file.txt/sub (ENOTDIR)"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/real/file.txt/sub (ENOTDIR)"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/real/file.txt/sub/z",
+   "daemon": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/real/file.txt/sub (ENOTDIR)"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/real/file.txt/sub (ENOTDIR)"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/real/file.txt/sub (ENOTDIR)"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/locked",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/locked",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/locked"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/locked"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/locked/",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/locked",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/locked"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/locked"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/locked/x",
+   "daemon": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/x (EACCES)"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/x (EACCES)"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/x (EACCES)"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/locked/x/",
+   "daemon": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/x (EACCES)"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/x (EACCES)"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/x (EACCES)"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/locked/..",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/locked/../x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/locked/.",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/locked",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/locked"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/locked"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/locked//x",
+   "daemon": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/x (EACCES)"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/x (EACCES)"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/x (EACCES)"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/locked/x/../y",
+   "daemon": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/y (EACCES)"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/y (EACCES)"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/y (EACCES)"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/locked/sub",
+   "daemon": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/sub (EACCES)"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/sub (EACCES)"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/sub (EACCES)"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/locked/sub/z",
+   "daemon": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/sub (EACCES)"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/sub (EACCES)"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/sub (EACCES)"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/locked/in",
+   "daemon": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/in (EACCES)"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/in (EACCES)"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/in (EACCES)"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/locked/in/",
+   "daemon": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/in (EACCES)"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/in (EACCES)"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/in (EACCES)"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/locked/in/x",
+   "daemon": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/in (EACCES)"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/in (EACCES)"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/in (EACCES)"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/locked/in/x/",
+   "daemon": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/in (EACCES)"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/in (EACCES)"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/in (EACCES)"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/locked/in/..",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/locked",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/locked"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/locked"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/locked/in/../x",
+   "daemon": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/x (EACCES)"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/x (EACCES)"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/x (EACCES)"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/locked/in/.",
+   "daemon": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/in (EACCES)"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/in (EACCES)"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/in (EACCES)"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/locked/in//x",
+   "daemon": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/in (EACCES)"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/in (EACCES)"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/in (EACCES)"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/locked/in/x/../y",
+   "daemon": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/in (EACCES)"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/in (EACCES)"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/in (EACCES)"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/locked/in/sub",
+   "daemon": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/in (EACCES)"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/in (EACCES)"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/in (EACCES)"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/locked/in/sub/z",
+   "daemon": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/in (EACCES)"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/in (EACCES)"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/locked/in (EACCES)"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/root",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/root",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/root/",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/root",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/root/x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/root/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/root/x/",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/root/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/root/..",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/root/../x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/root/.",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/root",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/root//x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/root/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/root/x/../y",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/root/y",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/y"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/y"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/root/sub",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/root/sub",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/sub"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/sub"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/root/sub/z",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/root/sub/z",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/sub/z"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/sub"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/root/.syzygy",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/root/.syzygy",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/.syzygy"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/.syzygy"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/root/.syzygy/",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/root/.syzygy",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/.syzygy"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/.syzygy"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/root/.syzygy/x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/root/.syzygy/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/.syzygy/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/.syzygy/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/root/.syzygy/x/",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/root/.syzygy/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/.syzygy/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/.syzygy/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/root/.syzygy/..",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/root",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/root/.syzygy/../x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/root/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/root/.syzygy/.",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/root/.syzygy",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/.syzygy"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/.syzygy"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/root/.syzygy//x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/root/.syzygy/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/.syzygy/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/.syzygy/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/root/.syzygy/x/../y",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/root/.syzygy/y",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/.syzygy/y"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/.syzygy/y"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/root/.syzygy/sub",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/root/.syzygy/sub",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/.syzygy/sub"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/.syzygy/sub"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/root/.syzygy/sub/z",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/root/.syzygy/sub/z",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/.syzygy/sub/z"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/root/.syzygy/sub"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/missing",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/missing",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/missing"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/missing"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/missing/",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/missing",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/missing"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/missing"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/missing/x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/missing/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/missing/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/missing"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/missing/x/",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/missing/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/missing/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/missing"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/missing/..",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/missing/../x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/missing/.",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/missing",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/missing"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/missing"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/missing//x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/missing/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/missing/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/missing"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/missing/x/../y",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/missing/y",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/missing/y"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/missing"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/missing/sub",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/missing/sub",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/missing/sub"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/missing"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/missing/sub/z",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/missing/sub/z",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/missing/sub/z"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/missing"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/x/",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/..",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/../x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/.",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx//x",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/x",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/x"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/x"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/x/../y",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/y",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/y"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/y"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/sub",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/sub",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/sub"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/sub"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/sub/z",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/sub/z",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/sub/z"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/sub"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    "dangling": true
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+   "daemon": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx (ENAMETOOLONG)"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx (ENAMETOOLONG)"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx (ENAMETOOLONG)"
+   }
+  },
+  {
+   "input": "/tmp/r518-7/fx/real/yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy/z",
+   "daemon": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/real/yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy (ENAMETOOLONG)"
+   },
+   "baseState": {
+    "resolved": false,
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/real/yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy (ENAMETOOLONG)"
+   },
+   "shared": {
+    "resolved": false,
+    "reason": "path-unreadable",
+    "detail": "filesystem inspection failed at /tmp/r518-7/fx/real/yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy (ENAMETOOLONG)"
+   }
+  },
+  {
+   "input": "real/dir",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir"
+   }
+  },
+  {
+   "input": "./rel-dir",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx/real/dir",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx/real/dir"
+   }
+  },
+  {
+   "input": "",
+   "daemon": {
+    "resolved": true,
+    "intendedRealPath": "/tmp/r518-7/fx",
+    "dangling": false
+   },
+   "baseState": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx"
+   },
+   "shared": {
+    "resolved": true,
+    "realPath": "/tmp/r518-7/fx"
+   }
+  }
+ ]
+}

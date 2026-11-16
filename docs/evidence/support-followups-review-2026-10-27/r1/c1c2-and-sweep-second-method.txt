@@ -1,0 +1,27 @@
+# C1/C2 third method: module output dumped by a scratch-only test at 663061c4, hashed by jq -S -c + sha256sum (no hashlib, no module hashing)
+104ce3fdf993d8ca93181660d41f05c5c5f74b96897fcfe2edf0ae9165115be4  reviewer-dump:manifest.json
+a9ee883767f47c7b15950ddbc4a84a7e66aff8817fb266ccb513e5cf09e1eb4c  reviewer-dump:observation.json
+104ce3fdf993d8ca93181660d41f05c5c5f74b96897fcfe2edf0ae9165115be4  lane:derivation-inputs/manifest-dump.json
+a9ee883767f47c7b15950ddbc4a84a7e66aff8817fb266ccb513e5cf09e1eb4c  lane:derivation-inputs/observation-dump.json
+C1 jq: sha256:ef8f9f0a722c28406e434ffe3d0706565c02dd5b9f56c4a5d05aead1fffc1373
+C2 jq: sha256:adeac2c5388357ea3b14ab865f65cb6864753a95f98553fe5fdce0b1f03cb428
+project-shape-manifest.test.ts literal: toBe('sha256:ef8f9f0a722c28406e434ffe3d0706565c02dd5b9f56c4a5d05aead1fffc1373')
+project-shape-observation.test.ts literal: toBe('sha256:adeac2c5388357ea3b14ab865f65cb6864753a95f98553fe5fdce0b1f03cb428')
+
+# second-method sweep: git grep -F "createHash('sha256')" over non-test .ts under apps/*/src and packages/*/src
+f7477f52: 8 sites
+   apps/three-surface-poc/src/polaris-generation/redis-shaped-measure.ts:91
+   apps/three-surface-poc/src/test-walkthrough-judgment-fixture.ts:44
+   packages/cap1-system/src/harness.ts:246
+   packages/http-host/src/credentials.ts:379
+   packages/http-host/src/credentials.ts:380
+   packages/polaris-dossier/src/render.ts:310
+   packages/support/src/sha256.ts:5
+   packages/three-surface-poc-core/src/test-artifact-verification.ts:309
+b214ef10: 6 sites
+   apps/three-surface-poc/src/polaris-generation/redis-shaped-measure.ts:91
+   packages/cap1-system/src/harness.ts:246
+   packages/http-host/src/credentials.ts:379
+   packages/http-host/src/credentials.ts:380
+   packages/polaris-dossier/src/render.ts:310
+   packages/support/src/sha256.ts:5

@@ -1,0 +1,59 @@
+S1-second-signal-closes-again killed 1 ['Tests  1 failed | 5 passed (6)'] 1.9 clean
+    FAIL   @syzygy/http-host  packages/http-host/src/shutdown.test.ts > closeOnSignal > does nothing on a signal after the first
+S2-announce-after-close-starts killed 1 ['Tests  5 failed | 1 passed (6)'] 1.7 clean
+    FAIL   @syzygy/http-host  packages/http-host/src/shutdown.test.ts > closeOnSignal > announces SIGINT, closes the daemon once and resolves
+    FAIL   @syzygy/http-host  packages/http-host/src/shutdown.test.ts > closeOnSignal > announces SIGTERM, closes the daemon once and resolves
+    FAIL   @syzygy/http-host  packages/http-host/src/shutdown.test.ts > closeOnSignal > does nothing on a signal after the first
+    FAIL   @syzygy/http-host  packages/http-host/src/shutdown.test.ts > closeOnSignal > resolves quietly on a failed close when nothing listens for one
+    FAIL   @syzygy/http-host  packages/http-host/src/shutdown.test.ts > closeOnSignal > tells a failed close to closeFailed and still resolves
+S3-close-failure-unreported killed 1 ['Tests  1 failed | 5 passed (6)'] 1.4 clean
+    FAIL   @syzygy/http-host  packages/http-host/src/shutdown.test.ts > closeOnSignal > tells a failed close to closeFailed and still resolves
+S4-close-failure-never-resolves killed 1 ['Tests  2 failed | 4 passed (6)'] 11.7 clean
+    FAIL   @syzygy/http-host  packages/http-host/src/shutdown.test.ts > closeOnSignal > resolves quietly on a failed close when nothing listens for one
+    FAIL   @syzygy/http-host  packages/http-host/src/shutdown.test.ts > closeOnSignal > tells a failed close to closeFailed and still resolves
+S5-sigterm-not-handled killed 1 ['Tests  6 failed (6)'] 7.3 clean
+    FAIL   @syzygy/http-host  packages/http-host/src/shutdown.test.ts > closeOnSignal > announces SIGINT, closes the daemon once and resolves
+    FAIL   @syzygy/http-host  packages/http-host/src/shutdown.test.ts > closeOnSignal > announces SIGTERM, closes the daemon once and resolves
+    FAIL   @syzygy/http-host  packages/http-host/src/shutdown.test.ts > closeOnSignal > does nothing on a signal after the first
+    FAIL   @syzygy/http-host  packages/http-host/src/shutdown.test.ts > closeOnSignal > resolves quietly on a failed close when nothing listens for one
+    FAIL   @syzygy/http-host  packages/http-host/src/shutdown.test.ts > closeOnSignal > stays pending until a signal arrives
+    FAIL   @syzygy/http-host  packages/http-host/src/shutdown.test.ts > closeOnSignal > tells a failed close to closeFailed and still resolves
+S6-sigterm-announced-as-sigint killed 1 ['Tests  2 failed | 4 passed (6)'] 1.5 clean
+    FAIL   @syzygy/http-host  packages/http-host/src/shutdown.test.ts > closeOnSignal > announces SIGTERM, closes the daemon once and resolves
+    FAIL   @syzygy/http-host  packages/http-host/src/shutdown.test.ts > closeOnSignal > does nothing on a signal after the first
+G1-observer-gate-leaves-out-the-host killed 1 ['Tests  1 failed | 10 passed (11)'] 2.8 clean
+    FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/git-observation.test.ts > read-only Git observation > protects the HTTP host package the POC serves through
+B1-cap1-barrel-loses-escapeHtml killed 1 ['Tests  1 failed | 1 passed (2)'] 2.2 clean
+    FAIL   @syzygy/cap1-daemon  packages/cap1-daemon/src/package.test.ts > cap1-daemon package > exports the values it exported before the host moved out
+B2-credentials-shim-loses-verifyCredential killed 1 ['Tests  1 failed | 1 passed (2)'] 2.0 clean
+    FAIL   @syzygy/cap1-daemon  packages/cap1-daemon/src/package.test.ts > cap1-daemon package > exports the values it exported before the host moved out
+B3-server-shim-loses-createDaemon killed 1 ['Tests  1 failed | 1 passed (2)'] 2.2 clean
+    FAIL   @syzygy/cap1-daemon  packages/cap1-daemon/src/package.test.ts > cap1-daemon package > exports the values it exported before the host moved out
+B4-server-shim-gains-closeOnSignal killed 1 ['Tests  1 failed | 1 passed (2)'] 2.0 clean
+    FAIL   @syzygy/cap1-daemon  packages/cap1-daemon/src/package.test.ts > cap1-daemon package > exports the values it exported before the host moved out
+B5-host-barrel-drops-escape-html killed 1 ['Tests  1 failed | 1 passed (2)'] 2.0 clean
+    FAIL   @syzygy/http-host  packages/http-host/src/package.test.ts > http-host package > exports the host and nothing of the Capability 1 app
+B6-host-barrel-gains-a-cap1-name killed 1 ['Tests  1 failed | 1 passed (2)'] 2.1 clean
+    FAIL   @syzygy/http-host  packages/http-host/src/package.test.ts > http-host package > exports the host and nothing of the Capability 1 app
+C1-any-presented-token-admitted killed 1 ['Tests  1 failed | 25 passed (26)'] 2.1 clean
+    FAIL   @syzygy/http-host  packages/http-host/src/credentials.test.ts > RT3 — credential verification through core admission > a wrong token refuses with the named vocabulary, never a bare string
+C2-group-readable-file-reused killed 1 ['Tests  2 failed | 24 passed (26)'] 2.2 clean
+    FAIL   @syzygy/http-host  packages/http-host/src/credentials.test.ts > RT3 — credential reuse inspection > refuses a group-readable 0640 file
+    FAIL   @syzygy/http-host  packages/http-host/src/credentials.test.ts > RT3 — credential reuse inspection > the six refusals carry six distinct details
+C3-auth-order-bypass killed 1 ['Tests  9 failed | 11 passed (20)'] 2.0 clean
+    FAIL   @syzygy/cap1-daemon  packages/cap1-daemon/src/server.test.ts > RT3 — credential-classed admission at the transport > refuses empty bearer token credentials before invoking the handler
+    FAIL   @syzygy/cap1-daemon  packages/cap1-daemon/src/server.test.ts > RT3 — credential-classed admission at the transport > refuses malformed scheme casing credentials before invoking the handler
+    FAIL   @syzygy/cap1-daemon  packages/cap1-daemon/src/server.test.ts > RT3 — credential-classed admission at the transport > refuses missing credentials before invoking the handler
+    FAIL   @syzygy/cap1-daemon  packages/cap1-daemon/src/server.test.ts > RT3 — credential-classed admission at the transport > refuses scheme without separator credentials before invoking the handler
+    FAIL   @syzygy/cap1-daemon  packages/cap1-daemon/src/server.test.ts > RT3 — credential-classed admission at the transport > refuses whitespace-only bearer token credentials before invoking the handler
+    FAIL   @syzygy/cap1-daemon  packages/cap1-daemon/src/server.test.ts > RT3 — credential-classed admission at the transport > refuses wrong bearer token credentials before invoking the handler
+    FAIL   @syzygy/cap1-daemon  packages/cap1-daemon/src/server.test.ts > RT3 — credential-classed admission at the transport > refuses wrong scheme credentials before invoking the handler
+    FAIL   @syzygy/cap1-daemon  packages/cap1-daemon/src/server.test.ts > RT3 — credential-classed admission at the transport > refuses wrong-length bearer token credentials before invoking the handler
+    FAIL   @syzygy/cap1-daemon  packages/cap1-daemon/src/server.test.ts > RT3 — credential-classed admission at the transport > writes one content-blind JSONL diagnostic per non-2xx socket outcome and none for success
+E1-apostrophe-left-unescaped killed 1 ['Tests  5 failed | 21 passed (26)'] 3.7 clean
+    FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/orrery.test.ts > Orrery > footer: composite evaluation identity and substrate revision (N4) > renders an explicit Skew line when the code-structure capture instant answers at a different evaluati
+    FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/orrery.test.ts > Orrery > footer: composite evaluation identity and substrate revision (N4) > renders an explicit Skew line when this surface's code-structure revision differs from the composite 
+    FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/trajectory.test.ts > Trajectory > footer: composite evaluation identity and substrate revision (N4) > renders an explicit Skew line when the work-item capture instant answers at a different evalu
+    FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/trajectory.test.ts > Trajectory > renders a matching operator-reported run as report-fact and an unmarked record as Not verified, never Verified, for governing intent REQ-alternate-governing-inte
+    FAIL   @syzygy/three-surface-poc-app  apps/three-surface-poc/src/trajectory.test.ts > Trajectory > renders a matching operator-reported run as report-fact and an unmarked record as Not verified, never Verified, for governing intent REQ-alternate-governing-inte
+wrote /tmp/la-b73/own-head.json 17
